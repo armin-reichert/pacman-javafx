@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.scene.common;
+package de.amr.games.pacman.ui.fx.common;
 
 import java.util.Optional;
 
@@ -6,9 +6,8 @@ import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.PacManGameAnimation;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
-import de.amr.games.pacman.ui.fx.rendering.MsPacManSceneRendering;
-import de.amr.games.pacman.ui.fx.rendering.PacManSceneRendering;
-import de.amr.games.pacman.ui.fx.rendering.SceneRendering;
+import de.amr.games.pacman.ui.fx.mspacman.MsPacManSceneRendering;
+import de.amr.games.pacman.ui.fx.pacman.PacManSceneRendering;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;

@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.scene.pacman;
+package de.amr.games.pacman.ui.fx.pacman;
 
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.model.PacManGame;
@@ -6,8 +6,8 @@ import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.sound.PacManGameSoundAssets;
 import de.amr.games.pacman.sound.PacManGameSoundManager;
 import de.amr.games.pacman.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.scene.common.PacManGameScene;
-import de.amr.games.pacman.ui.fx.scene.common.PlayScene;
+import de.amr.games.pacman.ui.fx.common.PacManGameScene;
+import de.amr.games.pacman.ui.fx.common.PlayScene;
 
 /**
  * The scenes of the Pac-Man game.

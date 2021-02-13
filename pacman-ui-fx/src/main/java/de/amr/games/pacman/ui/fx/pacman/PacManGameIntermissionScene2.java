@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.scene.pacman;
+package de.amr.games.pacman.ui.fx.pacman;
 
 import static de.amr.games.pacman.heaven.God.clock;
 import static de.amr.games.pacman.lib.Direction.LEFT;
@@ -14,7 +14,7 @@ import de.amr.games.pacman.model.Pac;
 import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.scene.common.AbstractPacManGameScene;
+import de.amr.games.pacman.ui.fx.common.AbstractPacManGameScene;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.paint.Color;
 

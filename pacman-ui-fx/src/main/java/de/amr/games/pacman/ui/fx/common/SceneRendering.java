@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.rendering;
+package de.amr.games.pacman.ui.fx.common;
 
 import java.util.Map;
 import java.util.function.Predicate;

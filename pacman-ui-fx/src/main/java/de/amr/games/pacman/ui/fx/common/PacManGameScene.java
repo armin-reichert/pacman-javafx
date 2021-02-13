@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.scene.common;
+package de.amr.games.pacman.ui.fx.common;
 
 import java.util.Optional;
 
