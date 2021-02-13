@@ -22,7 +22,7 @@ public class PacManGameAppFX extends Application {
 	public void start(Stage stage) throws IOException {
 		PacManGameController controller = new PacManGameController();
 		controller.playMsPacMan();
-		controller.addView(new PacManGameFXUI(stage, controller, 28, 36, 2));
+		controller.addView(new PacManGameFXUI(stage, controller, 2.0));
 		controller.showViews();
 		controller.startGame();
 	}

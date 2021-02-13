@@ -36,11 +36,11 @@ public class PacManGameFXUI implements PacManGameUI {
 	private PacManGameScene currentScene;
 	private boolean muted;
 
-	public PacManGameFXUI(Stage stage, PacManGameController controller, int tilesX, int tilesY, double scaling) {
+	public PacManGameFXUI(Stage stage, PacManGameController controller, double scaling) {
 		this.scaling = scaling;
 		this.stage = stage;
-		sizeX = tilesX * TS * scaling;
-		sizeY = tilesY * TS * scaling;
+		sizeX = 28 * TS * scaling;
+		sizeY = 36 * TS * scaling;
 		pacManGameScenes = new PacManGameScenes();
 		msPacManGameScenes = new MsPacManGameScenes();
 		stage.setTitle("JavaFX: Pac-Man / Ms. Pac-Man");
