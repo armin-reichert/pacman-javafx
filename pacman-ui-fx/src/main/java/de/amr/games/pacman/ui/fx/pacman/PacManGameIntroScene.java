@@ -29,7 +29,7 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 	private Ghost[] ghostGallery;
 	private int currentGhost;
 	private boolean[] characterVisible;
-	private boolean[] nicknameVisible;
+	private boolean[] nickVisible;
 	private Pac pac;
 	private Ghost[] ghosts;
 	private Animation<Boolean> blinking = Animation.pulse().frameDuration(20).restart();
@@ -65,7 +65,7 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 				new Ghost(3, "Clyde", Direction.RIGHT), //
 		};
 		characterVisible = new boolean[4];
-		nicknameVisible = new boolean[4];
+		nickVisible = new boolean[4];
 
 		pac = new Pac("Ms. Pac-Man", Direction.LEFT);
 		ghosts = new Ghost[] { //
@@ -96,7 +96,7 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 				characterVisible[currentGhost] = true;
 			}
 			if (phaseAt(clock.sec(1))) {
-				nicknameVisible[currentGhost] = true;
+				nickVisible[currentGhost] = true;
 			}
 			if (phaseAt(clock.sec(2))) {
 				if (currentGhost < 3) {
@@ -144,17 +144,13 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 	}
 
 	private void drawGhostGallery() {
-		drawGhostInGallery(ghostGallery[0], "SHADOW", Color.RED, t(3), titleY + t(2), characterVisible[0],
-				nicknameVisible[0]);
-		drawGhostInGallery(ghostGallery[1], "SPEEDY", Color.PINK, t(3), titleY + t(5), characterVisible[1],
-				nicknameVisible[1]);
-		drawGhostInGallery(ghostGallery[2], "BASHFUL", Color.CYAN, t(3), titleY + t(8), characterVisible[2],
-				nicknameVisible[2]);
-		drawGhostInGallery(ghostGallery[3], "POKEY", Color.ORANGE, t(3), titleY + t(11), characterVisible[3],
-				nicknameVisible[3]);
+		showInGallery(ghostGallery[0], "SHADOW", Color.RED, t(3), titleY + t(2), characterVisible[0], nickVisible[0]);
+		showInGallery(ghostGallery[1], "SPEEDY", Color.PINK, t(3), titleY + t(5), characterVisible[1], nickVisible[1]);
+		showInGallery(ghostGallery[2], "BASHFUL", Color.CYAN, t(3), titleY + t(8), characterVisible[2], nickVisible[2]);
+		showInGallery(ghostGallery[3], "POKEY", Color.ORANGE, t(3), titleY + t(11), characterVisible[3], nickVisible[3]);
 	}
 
-	private void drawGhostInGallery(Ghost ghost, String character, Color color, int x, int y, boolean showCharacter,
+	private void showInGallery(Ghost ghost, String character, Color color, int x, int y, boolean showCharacter,
 			boolean showName) {
 		if (!ghost.visible) {
 			return;
