@@ -2,6 +2,7 @@ package de.amr.games.pacman.ui.fx.common;
 
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
+import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.model.PacManGameModel;
 import javafx.scene.paint.Color;
 
@@ -10,10 +11,10 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class PlayScene extends AbstractPacManGameScene {
+public class PlayScene<R extends SceneRendering> extends AbstractPacManGameScene<R> {
 
-	public PlayScene(PacManGameModel game, double width, double height, double scaling, boolean msPacMan) {
-		super(game, null, width, height, scaling, msPacMan);
+	public PlayScene(PacManGameModel game, double width, double height, double scaling) {
+		super(game, null, width, height, scaling);
 	}
 
 	@Override
@@ -30,7 +31,7 @@ public class PlayScene extends AbstractPacManGameScene {
 		rendering.drawPac(game.pac, game);
 		game.ghosts().forEach(ghost -> rendering.drawGhost(ghost, game));
 		rendering.drawBonus(game.bonus, game);
-		rendering.drawScore(game);
+		rendering.drawScore(game, game.state == PacManGameState.INTRO || game.attractMode);
 		if (!game.attractMode) {
 			rendering.drawLivesCounter(game, t(2), t(34));
 			rendering.drawLevelCounter(game, t(25), t(34));

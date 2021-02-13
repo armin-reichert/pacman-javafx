@@ -5,6 +5,7 @@ import java.util.Optional;
 import de.amr.games.pacman.ui.PacManGameAnimation;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import javafx.scene.Scene;
+import javafx.scene.canvas.GraphicsContext;
 
 /**
  * Interface implemented by each scene.
@@ -14,6 +15,8 @@ import javafx.scene.Scene;
 public interface PacManGameScene {
 
 	Scene getFXScene();
+
+	GraphicsContext gc();
 
 	void start();
 

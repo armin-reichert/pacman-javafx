@@ -78,11 +78,10 @@ public class PacManSceneRendering implements SceneRendering {
 		return new Rectangle2D(x, y, width, height);
 	}
 
-	private void drawRegion(Creature guy, Rectangle2D region) {
-		if (guy.visible && region != null) {
-			g.drawImage(spritesheet, region.getMinX() * 16, region.getMinY() * 16, region.getWidth() * 16,
-					region.getHeight() * 16, guy.position.x - 4, guy.position.y - 4, region.getWidth() * 16,
-					region.getHeight() * 16);
+	private void drawTile(Creature guy, Rectangle2D tile) {
+		if (guy.visible && tile != null) {
+			g.drawImage(spritesheet, tile.getMinX() * 16, tile.getMinY() * 16, tile.getWidth() * 16, tile.getHeight() * 16,
+					guy.position.x - 4, guy.position.y - 4, tile.getWidth() * 16, tile.getHeight() * 16);
 		}
 	}
 
@@ -197,14 +196,14 @@ public class PacManSceneRendering implements SceneRendering {
 	}
 
 	@Override
-	public void drawScore(PacManGameModel game) {
+	public void drawScore(PacManGameModel game, boolean titleOnly) {
 		g.setFont(scoreFont);
 		g.translate(0, 1);
 		g.setFill(Color.WHITE);
 		g.fillText("SCORE", t(1), t(1));
-		g.fillText("HIGHSCORE", t(15), t(1));
+		g.fillText("HIGH SCORE", t(15), t(1));
 		g.translate(0, 1);
-		if (game.state != PacManGameState.INTRO && !game.attractMode) {
+		if (!titleOnly) {
 			g.setFill(Color.YELLOW);
 			g.fillText(String.format("%08d", game.score), t(1), t(2));
 			g.setFill(Color.LIGHTGRAY);
@@ -252,17 +251,17 @@ public class PacManSceneRendering implements SceneRendering {
 
 	@Override
 	public void drawPac(Pac pac, PacManGameModel game) {
-		drawRegion(pac, pacSprite(pac, game));
+		drawTile(pac, pacSprite(pac, game));
 	}
 
 	@Override
 	public void drawGhost(Ghost ghost, PacManGameModel game) {
-		drawRegion(ghost, ghostSprite(ghost, game));
+		drawTile(ghost, ghostSprite(ghost, game));
 	}
 
 	@Override
 	public void drawBonus(Bonus bonus, PacManGameModel game) {
-		drawRegion(bonus, bonusSprite(bonus, game));
+		drawTile(bonus, bonusSprite(bonus, game));
 	}
 
 	@Override

@@ -24,9 +24,16 @@ public class PacManGameScenes {
 	private PacManGameScene intermissionScene2;
 	private PacManGameScene intermissionScene3;
 
+	public static PlayScene<PacManSceneRendering> createPlayScene(PacManGameModel game, double width, double height,
+			double scaling) {
+		PlayScene<PacManSceneRendering> scene = new PlayScene<>(game, width, height, scaling);
+		scene.setRendering(new PacManSceneRendering(scene.gc()));
+		return scene;
+	}
+
 	public void createScenes(PacManGame game, double sizeX, double sizeY, double scaling) {
 		introScene = new PacManGameIntroScene(game, sizeX, sizeY, scaling);
-		playScene = new PlayScene(game, sizeX, sizeY, scaling, false);
+		playScene = createPlayScene(game, sizeX, sizeY, scaling);
 		intermissionScene1 = new PacManGameIntermissionScene1(game, soundManager, sizeX, sizeY, scaling);
 		intermissionScene2 = new PacManGameIntermissionScene2(game, soundManager, sizeX, sizeY, scaling);
 		intermissionScene3 = new PacManGameIntermissionScene3(game, soundManager, sizeX, sizeY, scaling);

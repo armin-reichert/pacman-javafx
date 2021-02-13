@@ -6,8 +6,6 @@ import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.PacManGameAnimation;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
-import de.amr.games.pacman.ui.fx.mspacman.MsPacManSceneRendering;
-import de.amr.games.pacman.ui.fx.pacman.PacManSceneRendering;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -20,17 +18,17 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public abstract class AbstractPacManGameScene implements PacManGameScene {
+public abstract class AbstractPacManGameScene<R extends SceneRendering> implements PacManGameScene {
 
 	protected final Scene scene;
 	protected final Keyboard keyboard;
 	protected final PacManGameModel game;
 	protected final GraphicsContext g;
-	protected final SceneRendering rendering;
+	protected R rendering;
 	protected final SoundManager soundManager;
 
 	public AbstractPacManGameScene(PacManGameModel game, SoundManager soundManager, double width, double height,
-			double scaling, boolean msPacMan) {
+			double scaling) {
 		this.game = game;
 		this.soundManager = soundManager;
 		Canvas canvas = new Canvas(width, height);
@@ -40,7 +38,15 @@ public abstract class AbstractPacManGameScene implements PacManGameScene {
 		pane.getChildren().add(canvas);
 		scene = new Scene(pane, width, height);
 		keyboard = new Keyboard(scene);
-		rendering = msPacMan ? new MsPacManSceneRendering(g) : new PacManSceneRendering(g);
+	}
+
+	public void setRendering(R rendering) {
+		this.rendering = rendering;
+	}
+
+	@Override
+	public GraphicsContext gc() {
+		return g;
 	}
 
 	public void fill(Color color) {

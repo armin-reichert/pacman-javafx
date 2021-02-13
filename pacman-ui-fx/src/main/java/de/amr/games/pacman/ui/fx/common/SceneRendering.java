@@ -51,6 +51,10 @@ public interface SceneRendering extends PacManGameAnimation {
 				region.getWidth(), region.getHeight());
 	}
 
+	default Rectangle2D toRegion(Rectangle2D tile) {
+		return new Rectangle2D(16 * tile.getMinX(), 16 * tile.getMinY(), 16 * tile.getWidth(), 16 * tile.getHeight());
+	}
+
 	Rectangle2D bonusSprite(Bonus bonus, PacManGameModel game);
 
 	Rectangle2D pacSprite(Pac pac, PacManGameModel game);
@@ -71,7 +75,7 @@ public interface SceneRendering extends PacManGameAnimation {
 
 	void drawEnergizerTiles(Stream<V2i> energizerTiles);
 
-	void drawScore(PacManGameModel game);
+	void drawScore(PacManGameModel game, boolean titleOnly);
 
 	void drawLivesCounter(PacManGameModel game, int x, int y);
 

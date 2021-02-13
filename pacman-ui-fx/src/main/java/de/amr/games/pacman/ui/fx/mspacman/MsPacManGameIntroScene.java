@@ -22,23 +22,25 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public class MsPacManGameIntroScene extends AbstractPacManGameScene {
+public class MsPacManGameIntroScene extends AbstractPacManGameScene<MsPacManSceneRendering> {
 
 	enum Phase {
 		BEGIN, BLINKY, PINKY, INKY, SUE, MSPACMAN, END
 	}
 
-	private Pac pac;
-	private Ghost[] ghosts;
 	private Phase phase;
 	private long phaseStartTime;
+
+	private Pac pac;
+	private Ghost[] ghosts;
 	private final V2i frameTopLeftTile = new V2i(6, 8);
 	private final int belowFrame = t(17);
 	private final int leftOfFrame = t(4);
 	private final Animation<Boolean> blinking = Animation.pulse().frameDuration(30).restart();
 
 	public MsPacManGameIntroScene(PacManGameModel game, double width, double height, double scaling) {
-		super(game, null, width, height, scaling, true);
+		super(game, null, width, height, scaling);
+		rendering = new MsPacManSceneRendering(g);
 	}
 
 	private boolean phaseAt(long ticks) {
