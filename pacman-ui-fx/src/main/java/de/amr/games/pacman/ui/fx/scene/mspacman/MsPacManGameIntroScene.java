@@ -16,6 +16,11 @@ import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.ui.fx.scene.common.AbstractPacManGameScene;
 import javafx.scene.paint.Color;
 
+/**
+ * Intro scene of the Ms. Pac-Man game. The ghosts and Ms. Pac-Man are introduced one after another.
+ * 
+ * @author Armin Reichert
+ */
 public class MsPacManGameIntroScene extends AbstractPacManGameScene {
 
 	enum Phase {

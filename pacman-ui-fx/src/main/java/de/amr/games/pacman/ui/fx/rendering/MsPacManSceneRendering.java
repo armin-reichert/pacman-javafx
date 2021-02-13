@@ -35,7 +35,12 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public class MsPacManGameRendering implements RenderingWithAnimatedSprites, PacManGameAnimation {
+/**
+ * Rendering for the scenes of the Ms. Pac-Man game.
+ * 
+ * @author Armin Reichert
+ */
+public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimation {
 
 	private final GraphicsContext g;
 	private final Image spritesheet = new Image("/mspacman/graphics/sprites.png", false);
@@ -67,7 +72,7 @@ public class MsPacManGameRendering implements RenderingWithAnimatedSprites, PacM
 		return r(456, 0, tileX, tileY, 1, 1);
 	}
 
-	public MsPacManGameRendering(GraphicsContext g) {
+	public MsPacManSceneRendering(GraphicsContext g) {
 		this.g = g;
 
 		scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), 8);
@@ -102,7 +107,7 @@ public class MsPacManGameRendering implements RenderingWithAnimatedSprites, PacM
 					Color.BLACK);
 			WritableImage mazeEmpty = new WritableImage(226, 248);
 			mazeEmpty.getPixelWriter().setPixels(0, 0, 226, 248, spritesheet.getPixelReader(), 226, 248 * mazeIndex);
-			Image mazeEmptyBright = RenderingWithAnimatedSprites.exchangeColors(mazeEmpty, exchanges);
+			Image mazeEmptyBright = SceneRendering.exchangeColors(mazeEmpty, exchanges);
 			mazesFlashing.add(Animation.of(mazeEmptyBright, mazeEmpty).frameDuration(15));
 		}
 
@@ -213,18 +218,17 @@ public class MsPacManGameRendering implements RenderingWithAnimatedSprites, PacM
 	}
 
 	@Override
-	public void signalReadyState(PacManGameModel game) {
-		g.setFont(scoreFont);
-		g.setFill(Color.YELLOW);
-		g.fillText("READY", t(11), t(21));
-	}
-
-	@Override
-	public void signalGameOverState(PacManGameModel game) {
-		g.setFont(scoreFont);
-		g.setFill(Color.RED);
-		g.fillText("GAME", t(9), t(21));
-		g.fillText("OVER", t(15), t(21));
+	public void showGameState(PacManGameModel game) {
+		if (game.state == PacManGameState.GAME_OVER || game.attractMode) {
+			g.setFont(scoreFont);
+			g.setFill(Color.RED);
+			g.fillText("GAME", t(9), t(21));
+			g.fillText("OVER", t(15), t(21));
+		} else if (game.state == PacManGameState.READY) {
+			g.setFont(scoreFont);
+			g.setFill(Color.YELLOW);
+			g.fillText("READY", t(11), t(21));
+		}
 	}
 
 	@Override

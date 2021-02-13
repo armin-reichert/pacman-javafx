@@ -5,6 +5,11 @@ import java.util.BitSet;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 
+/**
+ * Keyboard input for a scene.
+ * 
+ * @author Armin Reichert
+ */
 public class Keyboard {
 
 	private final BitSet pressedKeys = new BitSet(256);

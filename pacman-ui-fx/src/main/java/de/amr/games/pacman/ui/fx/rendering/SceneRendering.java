@@ -17,7 +17,13 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public interface RenderingWithAnimatedSprites extends PacManGameAnimation {
+/**
+ * Interface implemented by each scene rendering. Currently only spritesheet based rendering is
+ * supported.
+ * 
+ * @author Armin Reichert
+ */
+public interface SceneRendering extends PacManGameAnimation {
 
 	static Image exchangeColors(Image source, Map<Color, Color> exchanges) {
 		WritableImage newImage = new WritableImage((int) source.getWidth(), (int) source.getHeight());
@@ -71,7 +77,5 @@ public interface RenderingWithAnimatedSprites extends PacManGameAnimation {
 
 	void drawLevelCounter(PacManGameModel game, int x, int y);
 
-	void signalGameOverState(PacManGameModel game);
-
-	void signalReadyState(PacManGameModel game);
+	void showGameState(PacManGameModel game);
 }

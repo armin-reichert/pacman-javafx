@@ -2,7 +2,6 @@ package de.amr.games.pacman.ui.fx.scene.common;
 
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
-import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.model.PacManGameModel;
 import javafx.scene.paint.Color;
 
@@ -27,11 +26,7 @@ public class PlayScene extends AbstractPacManGameScene {
 					game.level::containsEatenFood);
 			rendering.drawEnergizerTiles(game.level.world.energizerTiles());
 		}
-		if (game.attractMode || game.state == PacManGameState.GAME_OVER) {
-			rendering.signalGameOverState(game);
-		} else if (game.state == PacManGameState.READY) {
-			rendering.signalReadyState(game);
-		}
+		rendering.showGameState(game);
 		rendering.drawPac(game.pac, game);
 		game.ghosts().forEach(ghost -> rendering.drawGhost(ghost, game));
 		rendering.drawBonus(game.bonus, game);

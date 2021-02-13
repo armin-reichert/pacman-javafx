@@ -6,9 +6,9 @@ import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.PacManGameAnimation;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
-import de.amr.games.pacman.ui.fx.rendering.MsPacManGameRendering;
-import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering;
-import de.amr.games.pacman.ui.fx.rendering.RenderingWithAnimatedSprites;
+import de.amr.games.pacman.ui.fx.rendering.MsPacManSceneRendering;
+import de.amr.games.pacman.ui.fx.rendering.PacManSceneRendering;
+import de.amr.games.pacman.ui.fx.rendering.SceneRendering;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -16,13 +16,18 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
+/**
+ * Common base class for scenes. Each game scene corresponds to a JavaFX scene.
+ * 
+ * @author Armin Reichert
+ */
 public abstract class AbstractPacManGameScene implements PacManGameScene {
 
 	protected final Scene scene;
 	protected final Keyboard keyboard;
 	protected final PacManGameModel game;
 	protected final GraphicsContext g;
-	protected final RenderingWithAnimatedSprites rendering;
+	protected final SceneRendering rendering;
 	protected final SoundManager soundManager;
 
 	public AbstractPacManGameScene(PacManGameModel game, SoundManager soundManager, double width, double height,
@@ -36,7 +41,7 @@ public abstract class AbstractPacManGameScene implements PacManGameScene {
 		pane.getChildren().add(canvas);
 		scene = new Scene(pane, width, height);
 		keyboard = new Keyboard(scene);
-		rendering = msPacMan ? new MsPacManGameRendering(g) : new PacManGameRendering(g);
+		rendering = msPacMan ? new MsPacManSceneRendering(g) : new PacManSceneRendering(g);
 	}
 
 	public void fill(Color color) {
@@ -63,7 +68,7 @@ public abstract class AbstractPacManGameScene implements PacManGameScene {
 	}
 
 	@Override
-	public Optional<PacManGameAnimation> animations() {
+	public Optional<PacManGameAnimation> animation() {
 		return rendering instanceof PacManGameAnimation ? Optional.of(rendering) : Optional.empty();
 	}
 

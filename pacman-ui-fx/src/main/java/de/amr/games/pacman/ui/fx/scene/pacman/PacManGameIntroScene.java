@@ -5,6 +5,11 @@ import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.ui.fx.scene.common.AbstractPacManGameScene;
 import javafx.scene.paint.Color;
 
+/**
+ * Intro scene of the PacMan game.
+ * 
+ * @author Armin Reichert
+ */
 public class PacManGameIntroScene extends AbstractPacManGameScene {
 
 	public PacManGameIntroScene(PacManGameModel game, double width, double height, double scaling) {

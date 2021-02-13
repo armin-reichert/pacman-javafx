@@ -33,7 +33,12 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public class PacManGameRendering implements RenderingWithAnimatedSprites {
+/**
+ * Rendering for the scenes of the Pac-Man game.
+ * 
+ * @author Armin Reichert
+ */
+public class PacManSceneRendering implements SceneRendering {
 
 	private final GraphicsContext g;
 	private final Image spritesheet = new Image("/pacman/graphics/sprites.png", false);
@@ -80,7 +85,7 @@ public class PacManGameRendering implements RenderingWithAnimatedSprites {
 		}
 	}
 
-	public PacManGameRendering(GraphicsContext g) {
+	public PacManSceneRendering(GraphicsContext g) {
 		this.g = g;
 
 		scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), 8);
@@ -107,8 +112,7 @@ public class PacManGameRendering implements RenderingWithAnimatedSprites {
 
 		// Animations
 
-		Image mazeEmptyBright = RenderingWithAnimatedSprites.exchangeColors(mazeEmpty,
-				Map.of(Color.rgb(33, 33, 255), Color.WHITE));
+		Image mazeEmptyBright = SceneRendering.exchangeColors(mazeEmpty, Map.of(Color.rgb(33, 33, 255), Color.WHITE));
 		mazeFlashing = Animation.of(mazeEmptyBright, mazeEmpty).frameDuration(15);
 
 		energizerBlinking = Animation.pulse().frameDuration(15);
@@ -163,18 +167,17 @@ public class PacManGameRendering implements RenderingWithAnimatedSprites {
 	}
 
 	@Override
-	public void signalReadyState(PacManGameModel game) {
-		g.setFont(scoreFont);
-		g.setFill(Color.YELLOW);
-		g.fillText("READY", t(11), t(21));
-	}
-
-	@Override
-	public void signalGameOverState(PacManGameModel game) {
-		g.setFont(scoreFont);
-		g.setFill(Color.RED);
-		g.fillText("GAME", t(9), t(21));
-		g.fillText("OVER", t(15), t(21));
+	public void showGameState(PacManGameModel game) {
+		if (game.state == PacManGameState.GAME_OVER || game.attractMode) {
+			g.setFont(scoreFont);
+			g.setFill(Color.RED);
+			g.fillText("GAME", t(9), t(21));
+			g.fillText("OVER", t(15), t(21));
+		} else if (game.state == PacManGameState.READY) {
+			g.setFont(scoreFont);
+			g.setFill(Color.YELLOW);
+			g.fillText("READY", t(11), t(21));
+		}
 	}
 
 	@Override

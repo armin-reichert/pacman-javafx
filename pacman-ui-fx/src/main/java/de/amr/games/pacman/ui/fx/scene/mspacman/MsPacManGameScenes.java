@@ -9,6 +9,11 @@ import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.scene.common.PacManGameScene;
 import de.amr.games.pacman.ui.fx.scene.common.PlayScene;
 
+/**
+ * The scenes of the Ms. Pac-Man game.
+ * 
+ * @author Armin Reichert
+ */
 public class MsPacManGameScenes {
 
 	public final SoundManager soundManager = new PacManGameSoundManager(PacManGameSoundAssets::getMsPacManSoundURL);

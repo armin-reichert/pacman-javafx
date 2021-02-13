@@ -150,6 +150,6 @@ public class PacManGameFXUI implements PacManGameUI {
 
 	@Override
 	public Optional<PacManGameAnimation> animation() {
-		return currentScene.animations();
+		return currentScene.animation();
 	}
 }
