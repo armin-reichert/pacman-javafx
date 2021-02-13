@@ -22,16 +22,17 @@ import javafx.scene.text.Font;
 public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRendering> {
 
 	enum Phase {
-		BEGIN, BLINKY, PINKY, INKY, CLYDE, CHASING_PAC, CHASING_GHOSTS, READY_TO_PLAY
+		BEGIN, GHOST_GALLERY, CHASING_PAC, CHASING_GHOSTS, READY_TO_PLAY
 	}
 
 	private final int titleY = t(6);
 	private Ghost[] ghostGallery;
+	private int currentGhost;
 	private boolean[] characterVisible;
 	private boolean[] nicknameVisible;
 	private Pac pac;
 	private Ghost[] ghosts;
-	private Animation<Boolean> blinking = Animation.pulse().frameDuration(10).restart();
+	private Animation<Boolean> blinking = Animation.pulse().frameDuration(20).restart();
 
 	private Phase phase;
 	private long phaseStartTime;
@@ -87,54 +88,23 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 		case BEGIN:
 			if (phaseAt(clock.sec(2))) {
 				uncoverGhost(0);
-				enterPhase(Phase.BLINKY);
+				enterPhase(Phase.GHOST_GALLERY);
 			}
 			break;
-		case BLINKY:
+		case GHOST_GALLERY:
 			if (phaseAt(clock.sec(0.5))) {
-				characterVisible[0] = true;
+				characterVisible[currentGhost] = true;
 			}
 			if (phaseAt(clock.sec(1))) {
-				nicknameVisible[0] = true;
+				nicknameVisible[currentGhost] = true;
 			}
 			if (phaseAt(clock.sec(2))) {
-				uncoverGhost(1);
-				enterPhase(Phase.PINKY);
-			}
-			break;
-		case PINKY:
-			if (phaseAt(clock.sec(0.5))) {
-				characterVisible[1] = true;
-			}
-			if (phaseAt(clock.sec(1))) {
-				nicknameVisible[1] = true;
-			}
-			if (phaseAt(clock.sec(2))) {
-				uncoverGhost(2);
-				enterPhase(Phase.INKY);
-			}
-			break;
-		case INKY:
-			if (phaseAt(clock.sec(0.5))) {
-				characterVisible[2] = true;
-			}
-			if (phaseAt(clock.sec(1))) {
-				nicknameVisible[2] = true;
-			}
-			if (phaseAt(clock.sec(2))) {
-				uncoverGhost(3);
-				enterPhase(Phase.CLYDE);
-			}
-			break;
-		case CLYDE:
-			if (phaseAt(clock.sec(0.5))) {
-				characterVisible[3] = true;
-			}
-			if (phaseAt(clock.sec(1))) {
-				nicknameVisible[3] = true;
-			}
-			if (phaseAt(clock.sec(2))) {
-				enterPhase(Phase.CHASING_PAC);
+				if (currentGhost < 3) {
+					uncoverGhost(currentGhost + 1);
+					enterPhase(Phase.GHOST_GALLERY);
+				} else {
+					enterPhase(Phase.CHASING_PAC);
+				}
 			}
 			break;
 		case CHASING_PAC:
@@ -170,6 +140,7 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 	private void uncoverGhost(int id) {
 		ghostGallery[id].visible = true;
 		ghostGallery[id].dir = ghostGallery[id].wishDir = Direction.RIGHT;
+		currentGhost = id;
 	}
 
 	private void drawGhostGallery() {
