@@ -10,7 +10,7 @@ import de.amr.games.pacman.model.MsPacManGame;
 import de.amr.games.pacman.model.PacManGame;
 import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.sound.SoundManager;
-import de.amr.games.pacman.ui.PacManGameAnimations;
+import de.amr.games.pacman.ui.PacManGameAnimation;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.scene.common.PacManGameScene;
 import de.amr.games.pacman.ui.fx.scene.mspacman.MsPacManGameScenes;
@@ -45,7 +45,10 @@ public class PacManGameFXUI implements PacManGameUI {
 		msPacManGameScenes = new MsPacManGameScenes();
 		stage.setTitle("JavaFX: Pac-Man / Ms. Pac-Man");
 		stage.getIcons().add(new Image("/pacman/graphics/pacman.png"));
-		stage.setOnCloseRequest(e -> controller.exitGame());
+		stage.setOnCloseRequest(e -> {
+			controller.endGame();
+			Platform.exit();
+		});
 		setGame(controller.getGame());
 		log("Pac-Man game JavaFX UI created");
 	}
@@ -135,7 +138,7 @@ public class PacManGameFXUI implements PacManGameUI {
 	}
 
 	@Override
-	public Optional<SoundManager> sounds() {
+	public Optional<SoundManager> sound() {
 		return muted ? Optional.empty()
 				: Optional.of(game instanceof PacManGame ? pacManGameScenes.soundManager : msPacManGameScenes.soundManager);
 	}
@@ -146,12 +149,7 @@ public class PacManGameFXUI implements PacManGameUI {
 	}
 
 	@Override
-	public Optional<PacManGameAnimations> animations() {
+	public Optional<PacManGameAnimation> animation() {
 		return currentScene.animations();
-	}
-
-	@Override
-	public String toString() {
-		return getClass().getSimpleName();
 	}
 }

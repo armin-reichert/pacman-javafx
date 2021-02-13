@@ -2,7 +2,7 @@ package de.amr.games.pacman.ui.fx.scene.common;
 
 import java.util.Optional;
 
-import de.amr.games.pacman.ui.PacManGameAnimations;
+import de.amr.games.pacman.ui.PacManGameAnimation;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import javafx.scene.Scene;
 
@@ -18,5 +18,5 @@ public interface PacManGameScene {
 
 	Keyboard keyboard();
 
-	Optional<PacManGameAnimations> animations();
+	Optional<PacManGameAnimation> animations();
 }

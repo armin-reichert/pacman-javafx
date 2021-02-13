@@ -9,7 +9,7 @@ import de.amr.games.pacman.model.Bonus;
 import de.amr.games.pacman.model.Ghost;
 import de.amr.games.pacman.model.Pac;
 import de.amr.games.pacman.model.PacManGameModel;
-import de.amr.games.pacman.ui.PacManGameAnimations;
+import de.amr.games.pacman.ui.PacManGameAnimation;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -17,7 +17,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public interface RenderingWithAnimatedSprites extends PacManGameAnimations {
+public interface RenderingWithAnimatedSprites extends PacManGameAnimation {
 
 	static Image exchangeColors(Image source, Map<Color, Color> exchanges) {
 		WritableImage newImage = new WritableImage((int) source.getWidth(), (int) source.getHeight());

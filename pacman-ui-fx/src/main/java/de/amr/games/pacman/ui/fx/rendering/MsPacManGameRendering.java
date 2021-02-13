@@ -27,7 +27,7 @@ import de.amr.games.pacman.model.Creature;
 import de.amr.games.pacman.model.Ghost;
 import de.amr.games.pacman.model.Pac;
 import de.amr.games.pacman.model.PacManGameModel;
-import de.amr.games.pacman.ui.PacManGameAnimations;
+import de.amr.games.pacman.ui.PacManGameAnimation;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -35,7 +35,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public class MsPacManGameRendering implements RenderingWithAnimatedSprites, PacManGameAnimations {
+public class MsPacManGameRendering implements RenderingWithAnimatedSprites, PacManGameAnimation {
 
 	private final GraphicsContext g;
 	private final Image spritesheet = new Image("/mspacman/graphics/sprites.png", false);

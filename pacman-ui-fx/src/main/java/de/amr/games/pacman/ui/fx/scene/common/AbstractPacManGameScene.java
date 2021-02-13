@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.sound.SoundManager;
-import de.amr.games.pacman.ui.PacManGameAnimations;
+import de.amr.games.pacman.ui.PacManGameAnimation;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering.MsPacManGameRendering;
 import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering;
@@ -63,8 +63,8 @@ public abstract class AbstractPacManGameScene implements PacManGameScene {
 	}
 
 	@Override
-	public Optional<PacManGameAnimations> animations() {
-		return rendering instanceof PacManGameAnimations ? Optional.of(rendering) : Optional.empty();
+	public Optional<PacManGameAnimation> animations() {
+		return rendering instanceof PacManGameAnimation ? Optional.of(rendering) : Optional.empty();
 	}
 
 	public Rectangle2D tileRegion(int tileX, int tileY, int cols, int rows) {
