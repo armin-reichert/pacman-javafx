@@ -125,16 +125,7 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 			break;
 		}
 		rendering.drawScore(game, true);
-		drawTitle();
 		drawGhostGallery();
-	}
-
-	private void drawTitle() {
-		g.setFill(Color.WHITE);
-		g.setFont(rendering.getScoreFont());
-		g.fillText("CHARACTER", t(6), titleY);
-		g.fillText("/", t(16), titleY);
-		g.fillText("NICKNAME", t(18), titleY);
 	}
 
 	private void uncoverGhost(int id) {
@@ -144,6 +135,11 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 	}
 
 	private void drawGhostGallery() {
+		g.setFill(Color.WHITE);
+		g.setFont(rendering.getScoreFont());
+		g.fillText("CHARACTER", t(6), titleY);
+		g.fillText("/", t(16), titleY);
+		g.fillText("NICKNAME", t(18), titleY);
 		showInGallery(ghostGallery[0], "SHADOW", Color.RED, t(3), titleY + t(2), characterVisible[0], nickVisible[0]);
 		showInGallery(ghostGallery[1], "SPEEDY", Color.PINK, t(3), titleY + t(5), characterVisible[1], nickVisible[1]);
 		showInGallery(ghostGallery[2], "BASHFUL", Color.CYAN, t(3), titleY + t(8), characterVisible[2], nickVisible[2]);
