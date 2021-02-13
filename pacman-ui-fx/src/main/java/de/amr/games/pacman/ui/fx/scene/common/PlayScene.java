@@ -7,7 +7,7 @@ import de.amr.games.pacman.model.PacManGameModel;
 import javafx.scene.paint.Color;
 
 /**
- * Common scene used by Pac-Man and Ms. Pac-Man game.
+ * This is where the action is.
  * 
  * @author Armin Reichert
  */
@@ -21,10 +21,8 @@ public class PlayScene extends AbstractPacManGameScene {
 	public void render() {
 		fill(Color.BLACK);
 		boolean flashing = rendering.mazeFlashing(game.level.mazeNumber).hasStarted();
-		if (flashing) {
-			rendering.drawMaze(game.level.mazeNumber, 0, t(3), true);
-		} else {
-			rendering.drawMaze(game.level.mazeNumber, 0, t(3), false);
+		rendering.drawMaze(game.level.mazeNumber, 0, t(3), flashing);
+		if (!flashing) {
 			rendering.drawFoodTiles(game.level.world.tiles().filter(game.level.world::isFoodTile),
 					game.level::containsEatenFood);
 			rendering.drawEnergizerTiles(game.level.world.energizerTiles());
