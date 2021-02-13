@@ -15,6 +15,7 @@ import de.amr.games.pacman.model.Pac;
 import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.ui.fx.scene.common.AbstractPacManGameScene;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 /**
  * Intro scene of the Ms. Pac-Man game. The ghosts and Ms. Pac-Man are introduced one after another.
@@ -143,7 +144,6 @@ public class MsPacManGameIntroScene extends AbstractPacManGameScene {
 
 	private void letGhostWalkToEndPosition(Ghost ghost, Phase nextPhase) {
 		if (phaseAt(1)) {
-			ghost.visible = true;
 			ghost.speed = 1;
 			rendering.ghostKicking(ghost).forEach(Animation::restart);
 		}
@@ -218,8 +218,8 @@ public class MsPacManGameIntroScene extends AbstractPacManGameScene {
 		g.setFont(rendering.getScoreFont());
 		g.fillText("10", t(10), t(yTile));
 		g.fillText("50", t(10), t(yTile + 2));
-		g.setFont(rendering.getScoreFont());
-		g.fillText("POINTS", t(13), t(yTile));
-		g.fillText("POINTS", t(13), t(yTile + 2));
+		g.setFont(Font.font(rendering.getScoreFont().getName(), 6));
+		g.fillText("PTS", t(13), t(yTile));
+		g.fillText("PTS", t(13), t(yTile + 2));
 	}
 }
