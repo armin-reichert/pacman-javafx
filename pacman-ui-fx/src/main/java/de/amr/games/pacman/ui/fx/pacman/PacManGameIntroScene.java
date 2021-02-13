@@ -14,6 +14,7 @@ import de.amr.games.pacman.model.GhostState;
 import de.amr.games.pacman.model.Pac;
 import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.ui.fx.common.AbstractPacManGameScene;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -108,13 +109,17 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 			}
 			break;
 		case CHASING_PAC:
-			showGhostsChasingPac();
+			showGuysMoving();
 			if (pac.position.x < t(3)) {
+				startPacChasingGhosts();
 				enterPhase(Phase.CHASING_GHOSTS);
 			}
 			break;
 		case CHASING_GHOSTS:
-			enterPhase(Phase.READY_TO_PLAY);
+			showGuysMoving();
+			if (pac.position.x > t(28)) {
+				enterPhase(Phase.READY_TO_PLAY);
+			}
 			break;
 		case READY_TO_PLAY:
 			blinking.animate();
@@ -154,7 +159,8 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 		if (!ghost.visible) {
 			return;
 		}
-		rendering.drawRegion(rendering.toRegion(rendering.ghostSprite(ghost, game)), x, y - 4);
+		Rectangle2D ghostTile = rendering.ghostKickingToDir(ghost, ghost.wishDir).frame(0);
+		rendering.drawRegion(rendering.toRegion(ghostTile), x, y - 4);
 		g.setFill(color);
 		g.setFont(rendering.getScoreFont());
 		if (showCharacter) {
@@ -206,7 +212,7 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 		}
 	}
 
-	private void showGhostsChasingPac() {
+	private void showGuysMoving() {
 		pac.move();
 		rendering.drawPac(pac, game);
 		for (Ghost ghost : ghosts) {
@@ -215,4 +221,10 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 		}
 	}
 
+	private void startPacChasingGhosts() {
+		pac.dir = Direction.RIGHT;
+		for (Ghost ghost : ghosts) {
+			ghost.dir = ghost.wishDir = Direction.RIGHT;
+		}
+	}
 }
