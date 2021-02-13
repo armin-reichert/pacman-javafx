@@ -4,7 +4,6 @@ import static de.amr.games.pacman.heaven.God.clock;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
-import de.amr.games.pacman.heaven.God;
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.Ghost;
@@ -79,10 +78,6 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 
 	@Override
 	public void render() {
-		if (game.state.ticksRun() == God.clock.sec(30)) { // TODO
-			game.attractMode = true;
-			return;
-		}
 		fill(Color.BLACK);
 		switch (phase) {
 		case BEGIN:
