@@ -160,14 +160,12 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 			return;
 		}
 		rendering.drawRegion(rendering.toRegion(rendering.ghostSprite(ghost, game)), x, y - 4);
+		g.setFill(color);
+		g.setFont(rendering.getScoreFont());
 		if (showCharacter) {
-			g.setFill(color);
-			g.setFont(rendering.getScoreFont());
 			g.fillText("-" + character, t(6), y + 8);
 		}
 		if (showName) {
-			g.setFill(color);
-			g.setFont(rendering.getScoreFont());
 			g.fillText("\"" + ghost.name + "\"", t(18), y + 8);
 		}
 	}
