@@ -4,9 +4,13 @@ import static de.amr.games.pacman.heaven.God.clock;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
+import java.util.stream.Stream;
+
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.V2f;
 import de.amr.games.pacman.model.Ghost;
+import de.amr.games.pacman.model.GhostState;
 import de.amr.games.pacman.model.Pac;
 import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.ui.fx.common.AbstractPacManGameScene;
@@ -98,12 +102,16 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 					uncoverGhost(currentGhost + 1);
 					enterPhase(Phase.GHOST_GALLERY);
 				} else {
+					startGhostsChasingPac();
 					enterPhase(Phase.CHASING_PAC);
 				}
 			}
 			break;
 		case CHASING_PAC:
-			enterPhase(Phase.CHASING_GHOSTS);
+			showGhostsChasingPac();
+			if (pac.position.x < t(3)) {
+				enterPhase(Phase.CHASING_GHOSTS);
+			}
 			break;
 		case CHASING_GHOSTS:
 			enterPhase(Phase.READY_TO_PLAY);
@@ -179,4 +187,32 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 		g.fillText("PTS", t(13), t(yTile));
 		g.fillText("PTS", t(13), t(yTile + 2));
 	}
+
+	private void startGhostsChasingPac() {
+		pac.position = new V2f(t(28), t(22));
+		pac.visible = true;
+		pac.speed = 1;
+		pac.dir = Direction.LEFT;
+		pac.couldMove = true;
+		rendering.pacMunching().forEach(Animation::restart);
+
+		for (Ghost ghost : ghosts) {
+			ghost.position = pac.position.sum((ghost.id + 1) * 18, 0);
+			ghost.visible = true;
+			ghost.dir = ghost.wishDir = Direction.LEFT;
+			ghost.speed = pac.speed;
+			ghost.state = GhostState.HUNTING_PAC;
+			rendering.ghostsKicking(Stream.of(ghosts)).forEach(Animation::restart);
+		}
+	}
+
+	private void showGhostsChasingPac() {
+		pac.move();
+		rendering.drawPac(pac, game);
+		for (Ghost ghost : ghosts) {
+			ghost.move();
+			rendering.drawGhost(ghost, game);
+		}
+	}
+
 }
