@@ -1,0 +1,46 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>de.amr.games.pacman.ui.multi</groupId>
+    <artifactId>pacman-ui-multi</artifactId>
+    <version>1.0</version>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>15</version>
+        </dependency>
+        <dependency>
+        	<groupId>de.amr.games.pacman.ui.fx</groupId>
+        	<artifactId>pacman-ui-fx</artifactId>
+        	<version>1.0</version>
+        </dependency>
+        <dependency>
+        	<groupId>de.amr.games.pacman.ui.swing</groupId>
+        	<artifactId>pacman-ui-swing</artifactId>
+        	<version>1.0</version>
+        </dependency>
+        <dependency>
+        	<groupId>de.amr.games.pacman</groupId>
+        	<artifactId>pacman-basic</artifactId>
+        	<version>1.0</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.5</version>
+                <configuration>
+                    <mainClass>de.amr.games.pacman.ui.multi.app.PacManGameAppMulti</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
