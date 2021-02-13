@@ -59,7 +59,7 @@ public class MsPacManGameIntroScene extends AbstractPacManGameScene {
 
 		pac = new Pac("Ms. Pac-Man", LEFT);
 		pac.position = new V2f(t(37), belowFrame);
-		pac.visible = false;
+		pac.visible = true;
 		pac.speed = 0;
 		pac.dead = false;
 		pac.dir = LEFT;
@@ -68,7 +68,7 @@ public class MsPacManGameIntroScene extends AbstractPacManGameScene {
 				new Ghost(3, "Sue", LEFT), };
 		for (Ghost ghost : ghosts) {
 			ghost.position = new V2f(t(37), belowFrame);
-			ghost.visible = false;
+			ghost.visible = true;
 			ghost.dir = ghost.wishDir = LEFT;
 			ghost.bounty = 0;
 			ghost.speed = 0;
@@ -79,21 +79,11 @@ public class MsPacManGameIntroScene extends AbstractPacManGameScene {
 
 	@Override
 	public void render() {
+		fill(Color.BLACK);
 		for (Ghost ghost : ghosts) {
 			ghost.move();
 		}
 		pac.move();
-
-		fill(Color.BLACK);
-		g.setFont(rendering.getScoreFont());
-		g.setFill(Color.ORANGE);
-		g.fillText("\"MS PAC-MAN\"", t(8), t(5));
-		drawAnimatedFrame(32, 16, game.state.ticksRun());
-		for (Ghost ghost : ghosts) {
-			rendering.drawGhost(ghost, game);
-		}
-		rendering.drawPac(pac, game);
-
 		switch (phase) {
 		case BEGIN:
 			if (phaseAfter(clock.sec(1))) {
@@ -131,6 +121,14 @@ public class MsPacManGameIntroScene extends AbstractPacManGameScene {
 		default:
 			break;
 		}
+		g.setFont(rendering.getScoreFont());
+		g.setFill(Color.ORANGE);
+		g.fillText("\"MS PAC-MAN\"", t(8), t(5));
+		drawAnimatedFrame(32, 16, game.state.ticksRun());
+		for (Ghost ghost : ghosts) {
+			rendering.drawGhost(ghost, game);
+		}
+		rendering.drawPac(pac, game);
 	}
 
 	private void showGhostName(String with, String name, Color color, int tileX) {
