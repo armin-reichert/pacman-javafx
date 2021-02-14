@@ -196,8 +196,10 @@ public class IntroScene extends AbstractPacManGameScene<PacManSceneRendering> {
 			}
 		}
 		drawGuys();
-		if (phase == Phase.READY_TO_PLAY) {
+		if (phase.ordinal() >= Phase.CHASING_GHOSTS.ordinal()) {
 			drawPointsAnimation(11, 26);
+		}
+		if (phase == Phase.READY_TO_PLAY) {
 			drawPressKeyToStart(32);
 		}
 	}
