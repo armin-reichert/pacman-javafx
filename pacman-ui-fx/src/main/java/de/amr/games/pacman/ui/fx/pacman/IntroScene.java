@@ -2,6 +2,7 @@ package de.amr.games.pacman.ui.fx.pacman;
 
 import static de.amr.games.pacman.heaven.God.clock;
 import static de.amr.games.pacman.lib.Logging.log;
+import static de.amr.games.pacman.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import java.util.stream.Stream;
@@ -44,6 +45,7 @@ public class IntroScene extends AbstractPacManGameScene<PacManSceneRendering> {
 	private int currentGhost;
 	private boolean[] characterVisible;
 	private boolean[] nickVisible;
+	private long ghostKilledTime;
 
 	private Pac pac;
 	private Ghost[] ghosts;
@@ -115,7 +117,7 @@ public class IntroScene extends AbstractPacManGameScene<PacManSceneRendering> {
 			}
 			break;
 		case CHASING_PAC:
-			if (pac.position.x < t(3)) {
+			if (pac.position.x < t(2)) {
 				startPacChasingGhosts();
 				enterPhase(Phase.CHASING_GHOSTS);
 			}
@@ -123,6 +125,25 @@ public class IntroScene extends AbstractPacManGameScene<PacManSceneRendering> {
 		case CHASING_GHOSTS:
 			if (pac.position.x > t(28)) {
 				enterPhase(Phase.READY_TO_PLAY);
+			}
+			if (clock.ticksTotal - ghostKilledTime == clock.sec(0.25)) {
+				ghostKilledTime = 0;
+				pac.visible = true;
+				pac.speed = 1;
+				for (Ghost ghost : ghosts) {
+					if (ghost.state == GhostState.DEAD) {
+						ghost.visible = false;
+					}
+				}
+			}
+			for (Ghost ghost : ghosts) {
+				if (pac.meets(ghost) && ghost.state != GhostState.DEAD) {
+					ghost.state = GhostState.DEAD;
+					ghost.bounty = (int) Math.pow(2, ghost.id + 1) * 100;
+					pac.visible = false;
+					pac.speed = 0;
+					ghostKilledTime = clock.ticksTotal;
+				}
 			}
 			break;
 		case READY_TO_PLAY:
@@ -137,20 +158,54 @@ public class IntroScene extends AbstractPacManGameScene<PacManSceneRendering> {
 		}
 	}
 
+	private void startGhostsChasingPac() {
+		pac.position = new V2f(t(28), t(22));
+		pac.visible = true;
+		pac.speed = 1;
+		pac.dir = Direction.LEFT;
+		pac.couldMove = true;
+		rendering.pacMunching(pac).forEach(Animation::restart);
+
+		for (Ghost ghost : ghosts) {
+			ghost.position = pac.position.sum(8 + (ghost.id + 1) * 18, 0);
+			ghost.visible = true;
+			ghost.dir = ghost.wishDir = Direction.LEFT;
+			ghost.speed = pac.speed * 1.05f;
+			ghost.state = GhostState.HUNTING_PAC;
+			rendering.ghostsKicking(Stream.of(ghosts)).forEach(Animation::restart);
+		}
+	}
+
+	private void startPacChasingGhosts() {
+		pac.dir = Direction.RIGHT;
+		for (Ghost ghost : ghosts) {
+			ghost.dir = ghost.wishDir = Direction.RIGHT;
+			ghost.speed = 0.5f;
+		}
+	}
+
 	@Override
 	public void render() {
 		fill(Color.BLACK);
 		rendering.drawScore(game, true);
 		drawGallery();
-		if (phase == Phase.CHASING_GHOSTS || phase == Phase.CHASING_PAC) {
-			rendering.drawPac(pac, game);
-			for (Ghost ghost : ghosts) {
-				rendering.drawGhost(ghost, game);
+		if (phase == Phase.CHASING_PAC) {
+			if (blinking.animate()) {
+				g.setFill(Color.PINK);
+				g.fillOval(t(2), pac.position.y, TS, TS);
 			}
 		}
+		drawGuys();
 		if (phase == Phase.READY_TO_PLAY) {
 			drawPointsAnimation(11, 26);
 			drawPressKeyToStart(32);
+		}
+	}
+
+	private void drawGuys() {
+		rendering.drawPac(pac, game);
+		for (Ghost ghost : ghosts) {
+			rendering.drawGhost(ghost, game);
 		}
 	}
 
@@ -211,30 +266,5 @@ public class IntroScene extends AbstractPacManGameScene<PacManSceneRendering> {
 		g.setFont(Font.font(rendering.getScoreFont().getName(), 6));
 		g.fillText("PTS", t(tileX + 5), t(tileY));
 		g.fillText("PTS", t(tileX + 5), t(tileY + 2));
-	}
-
-	private void startGhostsChasingPac() {
-		pac.position = new V2f(t(28), t(22));
-		pac.visible = true;
-		pac.speed = 1;
-		pac.dir = Direction.LEFT;
-		pac.couldMove = true;
-		rendering.pacMunching(pac).forEach(Animation::restart);
-
-		for (Ghost ghost : ghosts) {
-			ghost.position = pac.position.sum((ghost.id + 1) * 18, 0);
-			ghost.visible = true;
-			ghost.dir = ghost.wishDir = Direction.LEFT;
-			ghost.speed = pac.speed;
-			ghost.state = GhostState.HUNTING_PAC;
-			rendering.ghostsKicking(Stream.of(ghosts)).forEach(Animation::restart);
-		}
-	}
-
-	private void startPacChasingGhosts() {
-		pac.dir = Direction.RIGHT;
-		for (Ghost ghost : ghosts) {
-			ghost.dir = ghost.wishDir = Direction.RIGHT;
-		}
 	}
 }
