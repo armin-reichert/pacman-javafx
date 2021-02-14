@@ -22,7 +22,7 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public class MsPacManGameIntroScene extends AbstractPacManGameScene<MsPacManSceneRendering> {
+public class IntroScene extends AbstractPacManGameScene<MsPacManSceneRendering> {
 
 	enum Phase {
 
@@ -49,7 +49,7 @@ public class MsPacManGameIntroScene extends AbstractPacManGameScene<MsPacManScen
 	private Ghost currentGhost;
 	private boolean presentingMsPac;
 
-	public MsPacManGameIntroScene(PacManGameModel game, double width, double height, double scaling) {
+	public IntroScene(PacManGameModel game, double width, double height, double scaling) {
 		super(game, null, width, height, scaling);
 		rendering = new MsPacManSceneRendering(g);
 	}

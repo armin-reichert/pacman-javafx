@@ -35,11 +35,11 @@ public class PacManGameScenes {
 	}
 
 	public void createScenes(PacManGame game, double sizeX, double sizeY, double scaling) {
-		introScene = new PacManGameIntroScene(game, sizeX, sizeY, scaling);
+		introScene = new IntroScene(game, sizeX, sizeY, scaling);
 		playScene = createPlayScene(game, sizeX, sizeY, scaling);
-		intermissionScene1 = new PacManGameIntermissionScene1(game, soundManager, sizeX, sizeY, scaling);
-		intermissionScene2 = new PacManGameIntermissionScene2(game, soundManager, sizeX, sizeY, scaling);
-		intermissionScene3 = new PacManGameIntermissionScene3(game, soundManager, sizeX, sizeY, scaling);
+		intermissionScene1 = new IntermissionScene1(game, soundManager, sizeX, sizeY, scaling);
+		intermissionScene2 = new IntermissionScene2(game, soundManager, sizeX, sizeY, scaling);
+		intermissionScene3 = new IntermissionScene3(game, soundManager, sizeX, sizeY, scaling);
 		Logging.log("Pac-Man game scenes created at %d", clock.ticksTotal);
 	}
 

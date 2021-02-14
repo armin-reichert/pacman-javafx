@@ -23,7 +23,7 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class PacManGameIntermissionScene2 extends AbstractPacManGameScene<PacManSceneRendering> {
+public class IntermissionScene2 extends AbstractPacManGameScene<PacManSceneRendering> {
 
 	enum Phase {
 		APPROACHING_NAIL, HITTING_NAIL, STRETCHED_1, STRETCHED_2, STRETCHED_3, LOOKING_UP, LOOKING_RIGHT;
@@ -38,7 +38,7 @@ public class PacManGameIntermissionScene2 extends AbstractPacManGameScene<PacMan
 	private Phase phase;
 	private long timer;
 
-	public PacManGameIntermissionScene2(PacManGameModel game, SoundManager soundManager, double width, double height,
+	public IntermissionScene2(PacManGameModel game, SoundManager soundManager, double width, double height,
 			double scaling) {
 		super(game, soundManager, width, height, scaling);
 		rendering = new PacManSceneRendering(g);

@@ -32,7 +32,7 @@ public class MsPacManGameScenes {
 	}
 
 	public void createScenes(MsPacManGame game, double sizeX, double sizeY, double scaling) {
-		introScene = new MsPacManGameIntroScene(game, sizeX, sizeY, scaling);
+		introScene = new IntroScene(game, sizeX, sizeY, scaling);
 		playScene = createPlayScene(game, sizeX, sizeY, scaling);
 		intermissionScene1 = introScene; // TODO
 		intermissionScene2 = introScene; // TODO
