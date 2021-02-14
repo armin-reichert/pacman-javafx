@@ -1,5 +1,6 @@
 package de.amr.games.pacman.ui.fx.pacman;
 
+import static de.amr.games.pacman.heaven.God.clock;
 import static de.amr.games.pacman.lib.Direction.LEFT;
 import static de.amr.games.pacman.lib.Direction.RIGHT;
 import static de.amr.games.pacman.lib.Logging.log;
@@ -7,8 +8,8 @@ import static de.amr.games.pacman.model.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.GhostState.HUNTING_PAC;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
-import de.amr.games.pacman.heaven.God;
 import de.amr.games.pacman.lib.Animation;
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2f;
 import de.amr.games.pacman.model.Ghost;
 import de.amr.games.pacman.model.Pac;
@@ -40,28 +41,26 @@ public class IntermissionScene1 extends AbstractPacManGameScene<PacManSceneRende
 			double scaling) {
 		super(game, soundManager, width, height, scaling);
 		rendering = new PacManSceneRendering(g);
-		blinky = game.ghosts[0];
-		pac = game.pac;
+		blinky = new Ghost(0, "Blinky", Direction.LEFT);
+		pac = new Pac("Pac-Man", Direction.LEFT);
 		bigPac = Animation.of(tileRegion(2, 1, 2, 2), tileRegion(4, 1, 2, 2), tileRegion(6, 1, 2, 2));
 		bigPac.endless().frameDuration(4).run();
 	}
 
 	@Override
 	public void start() {
-		log("Start of intermission scene %s at tick %d", getClass().getSimpleName(), God.clock.ticksTotal);
-
-		phase = Phase.BLINKY_CHASING_PACMAN;
+		log("Start of intermission scene %s at tick %d", this, clock.ticksTotal);
 
 		pac.visible = true;
 		pac.dead = false;
 		pac.couldMove = true;
-		pac.position = new V2f(t(28) + 50, baselineY);
-		pac.speed = 1f;
+		pac.position = new V2f(t(30), baselineY);
+		pac.speed = 1;
 		pac.dir = LEFT;
 
 		blinky.visible = true;
 		blinky.state = HUNTING_PAC;
-		blinky.position = pac.position.sum(30, 0);
+		blinky.position = pac.position.sum(t(4), 0);
 		blinky.speed = pac.speed * 1.04f;
 		blinky.dir = blinky.wishDir = LEFT;
 
@@ -69,6 +68,8 @@ public class IntermissionScene1 extends AbstractPacManGameScene<PacManSceneRende
 		rendering.ghostKickingToDir(blinky, blinky.dir).restart();
 		rendering.ghostFrightenedToDir(blinky, blinky.dir).restart();
 		soundManager.loop(PacManGameSound.INTERMISSION_1, 2);
+
+		phase = Phase.BLINKY_CHASING_PACMAN;
 	}
 
 	@Override

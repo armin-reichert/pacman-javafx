@@ -7,6 +7,7 @@ import static de.amr.games.pacman.model.GhostState.HUNTING_PAC;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.Animation;
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2f;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.Ghost;
@@ -42,9 +43,8 @@ public class IntermissionScene2 extends AbstractPacManGameScene<PacManSceneRende
 			double scaling) {
 		super(game, soundManager, width, height, scaling);
 		rendering = new PacManSceneRendering(g);
-
-		pac = game.pac;
-		blinky = game.ghosts[0];
+		blinky = new Ghost(0, "Blinky", Direction.LEFT);
+		pac = new Pac("Pac-Man", Direction.LEFT);
 		chaseTileY = 20;
 		nailPosition = new V2i(t(14), t(chaseTileY) - 6);
 
@@ -62,9 +62,9 @@ public class IntermissionScene2 extends AbstractPacManGameScene<PacManSceneRende
 
 		pac.visible = true;
 		pac.dead = false;
-		pac.position = new V2f(t(28) + 50, t(chaseTileY));
-		pac.speed = 1;
 		pac.couldMove = true;
+		pac.position = new V2f(t(30), t(chaseTileY));
+		pac.speed = 1;
 		pac.dir = LEFT;
 
 		blinky.visible = true;
@@ -190,5 +190,4 @@ public class IntermissionScene2 extends AbstractPacManGameScene<PacManSceneRende
 			break;
 		}
 	}
-
 }
