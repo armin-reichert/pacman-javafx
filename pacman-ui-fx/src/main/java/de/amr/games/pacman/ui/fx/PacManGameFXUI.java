@@ -105,15 +105,15 @@ public class PacManGameFXUI implements PacManGameUI {
 
 	@Override
 	public void render() {
-		try {
-			Platform.runLater(() -> {
-				stage.setScene(currentScene.getFXScene());
+		Platform.runLater(() -> {
+			stage.setScene(currentScene.getFXScene());
+			try {
 				currentScene.render();
-			});
-		} catch (Exception x) {
-			log("Exception occurred when rendering scene %s", currentScene);
-			x.printStackTrace();
-		}
+			} catch (Exception x) {
+				log("Exception occurred when rendering scene %s", currentScene);
+				x.printStackTrace();
+			}
+		});
 	}
 
 	@Override
