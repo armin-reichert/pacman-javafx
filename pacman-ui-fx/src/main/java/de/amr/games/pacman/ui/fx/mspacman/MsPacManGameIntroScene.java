@@ -233,23 +233,23 @@ public class MsPacManGameIntroScene extends AbstractPacManGameScene<MsPacManScen
 			String text = "PRESS SPACE TO PLAY";
 			g.setFill(Color.ORANGE);
 			g.setFont(rendering.getScoreFont());
-			g.fillText(text, t(14 - text.length() / 2), t(tileY));
+			g.fillText(text, t(13 - text.length() / 2), t(tileY));
 		}
 	}
 
 	private void drawPointsAnimation(int tileY) {
-		int tileX = 10;
+		int x = t(10), y = t(tileY);
 		if (blinking.animate()) {
 			g.setFill(Color.PINK);
-			g.fillRect(t(tileX) + 6, t(tileY - 1) + 2, 2, 2);
-			g.fillOval(t(tileX), t(tileY + 1) - 2, 10, 10);
+			g.fillOval(x, y + t(1) - 2, 10, 10);
+			g.fillRect(x + 6, y - t(1) + 2, 2, 2);
 		}
 		g.setFill(Color.WHITE);
 		g.setFont(rendering.getScoreFont());
-		g.fillText("10", t(tileX + 2), t(tileY));
-		g.fillText("50", t(tileX + 2), t(tileY + 2));
+		g.fillText("10", x + t(2), y);
+		g.fillText("50", x + t(2), y + t(2));
 		g.setFont(Font.font(rendering.getScoreFont().getName(), 6));
-		g.fillText("PTS", t(tileX + 5), t(tileY));
-		g.fillText("PTS", t(tileX + 5), t(tileY + 2));
+		g.fillText("PTS", x + t(5), y);
+		g.fillText("PTS", x + t(5), y + t(2));
 	}
 }
