@@ -1,6 +1,9 @@
 package de.amr.games.pacman.ui.fx.pacman;
 
+import static de.amr.games.pacman.heaven.God.clock;
+
 import de.amr.games.pacman.controller.PacManGameState;
+import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.model.PacManGame;
 import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.sound.PacManGameSoundAssets;
@@ -37,6 +40,7 @@ public class PacManGameScenes {
 		intermissionScene1 = new PacManGameIntermissionScene1(game, soundManager, sizeX, sizeY, scaling);
 		intermissionScene2 = new PacManGameIntermissionScene2(game, soundManager, sizeX, sizeY, scaling);
 		intermissionScene3 = new PacManGameIntermissionScene3(game, soundManager, sizeX, sizeY, scaling);
+		Logging.log("Pac-Man game scenes created at %d", clock.ticksTotal);
 	}
 
 	public PacManGameScene selectScene(PacManGameModel game) {

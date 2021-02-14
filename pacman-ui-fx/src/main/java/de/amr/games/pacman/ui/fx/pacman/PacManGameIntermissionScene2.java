@@ -95,7 +95,8 @@ public class PacManGameIntermissionScene2 extends AbstractPacManGameScene<PacMan
 		return timer == -1;
 	}
 
-	private void update() {
+	@Override
+	public void update() {
 		int distFromNail = (int) (blinky.position.x - nailPosition.x) - 6;
 		switch (phase) {
 		case APPROACHING_NAIL:
@@ -150,9 +151,6 @@ public class PacManGameIntermissionScene2 extends AbstractPacManGameScene<PacMan
 
 	@Override
 	public void render() {
-
-		update();
-
 		fill(Color.BLACK);
 		rendering.drawLevelCounter(game, t(25), t(34));
 		rendering.drawRegion(nail, nailPosition.x, nailPosition.y);

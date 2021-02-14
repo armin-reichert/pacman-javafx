@@ -68,23 +68,6 @@ public class PacManGameFXUI implements PacManGameUI {
 		}
 	}
 
-	private boolean updateScene() {
-		PacManGameScene newScene = selectScene();
-		if (newScene == null) {
-			log("%s: No scene matches current game state %s", this, game.state);
-			return false;
-		}
-		if (currentScene != newScene) {
-			currentScene.end();
-			currentScene = newScene;
-			log("%s: Scene changed from %s to %s", this, currentScene.getClass().getSimpleName(),
-					newScene.getClass().getSimpleName());
-			newScene.start();
-			return true;
-		}
-		return false;
-	}
-
 	private PacManGameScene selectScene() {
 		if (game instanceof MsPacManGame) {
 			return msPacManGameScenes.selectScene(game);
@@ -106,22 +89,30 @@ public class PacManGameFXUI implements PacManGameUI {
 	}
 
 	@Override
+	public void update() {
+		PacManGameScene newScene = selectScene();
+		if (newScene == null) {
+			throw new IllegalStateException("No scene matches current game state " + game.state);
+		}
+		if (currentScene != newScene) {
+			log("%s: Scene changes from %s to %s", this, currentScene, newScene);
+			currentScene.end();
+			newScene.start();
+			currentScene = newScene;
+		}
+		currentScene.update();
+	}
+
+	@Override
 	public void render() {
-		boolean sceneChanged = updateScene();
-		if (currentScene != null) {
+		try {
 			Platform.runLater(() -> {
-				try {
-					if (sceneChanged) {
-						stage.setScene(currentScene.getFXScene());
-					}
-					currentScene.render();
-				} catch (Exception x) {
-					log("Exception occurred when rendering scene %s", currentScene);
-					x.printStackTrace();
-				}
+				stage.setScene(currentScene.getFXScene());
+				currentScene.render();
 			});
-		} else {
-			throw new IllegalStateException("No scene selected");
+		} catch (Exception x) {
+			log("Exception occurred when rendering scene %s", currentScene);
+			x.printStackTrace();
 		}
 	}
 
@@ -129,7 +120,6 @@ public class PacManGameFXUI implements PacManGameUI {
 	public void reset() {
 		currentScene.end();
 		setGame(game);
-		updateScene();
 	}
 
 	@Override

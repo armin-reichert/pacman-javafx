@@ -71,7 +71,8 @@ public class PacManGameIntermissionScene1 extends AbstractPacManGameScene<PacMan
 		soundManager.loop(PacManGameSound.INTERMISSION_1, 2);
 	}
 
-	private void update() {
+	@Override
+	public void update() {
 		switch (phase) {
 		case BLINKY_CHASING_PACMAN:
 			if (pac.position.x < -50) {
@@ -102,8 +103,6 @@ public class PacManGameIntermissionScene1 extends AbstractPacManGameScene<PacMan
 
 	@Override
 	public void render() {
-		update();
-
 		fill(Color.BLACK);
 		rendering.drawGhost(blinky, game);
 		if (phase == Phase.BLINKY_CHASING_PACMAN) {

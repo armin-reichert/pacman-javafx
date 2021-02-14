@@ -25,18 +25,22 @@ import javafx.scene.text.Font;
 public class MsPacManGameIntroScene extends AbstractPacManGameScene<MsPacManSceneRendering> {
 
 	enum Phase {
-		BEGIN, BLINKY, PINKY, INKY, SUE, MSPACMAN, END
+		BEGIN, GHOSTS, MSPACMAN, END
 	}
 
-	private Phase phase;
-	private long phaseStartTime;
-
-	private Pac pac;
-	private Ghost[] ghosts;
 	private final V2i frameTopLeftTile = new V2i(6, 8);
 	private final int belowFrame = t(17);
 	private final int leftOfFrame = t(4);
 	private final Animation<Boolean> blinking = Animation.pulse().frameDuration(30).restart();
+
+	private Phase phase;
+	private long phaseStartTime;
+
+	private Pac msPac;
+	private Ghost[] ghosts;
+
+	private Ghost currentGhost;
+	private boolean presentingMsPac;
 
 	public MsPacManGameIntroScene(PacManGameModel game, double width, double height, double scaling) {
 		super(game, null, width, height, scaling);
@@ -60,12 +64,12 @@ public class MsPacManGameIntroScene extends AbstractPacManGameScene<MsPacManScen
 	public void start() {
 		log("Intro scene started at clock time %d", clock.ticksTotal);
 
-		pac = new Pac("Ms. Pac-Man", LEFT);
-		pac.position = new V2f(t(37), belowFrame);
-		pac.visible = true;
-		pac.speed = 0;
-		pac.dead = false;
-		pac.dir = LEFT;
+		msPac = new Pac("Ms. Pac-Man", LEFT);
+		msPac.position = new V2f(t(37), belowFrame);
+		msPac.visible = true;
+		msPac.speed = 0;
+		msPac.dead = false;
+		msPac.dir = LEFT;
 
 		ghosts = new Ghost[] { new Ghost(0, "Blinky", LEFT), new Ghost(1, "Pinky", LEFT), new Ghost(2, "Inky", LEFT),
 				new Ghost(3, "Sue", LEFT), };
@@ -77,97 +81,75 @@ public class MsPacManGameIntroScene extends AbstractPacManGameScene<MsPacManScen
 			ghost.speed = 0;
 			ghost.state = GhostState.HUNTING_PAC;
 		}
+
+		currentGhost = null;
+		presentingMsPac = false;
+
 		enterPhase(Phase.BEGIN);
 	}
 
 	@Override
-	public void render() {
-		fill(Color.BLACK);
+	public void update() {
 		for (Ghost ghost : ghosts) {
 			ghost.move();
 		}
-		pac.move();
+		msPac.move();
 		switch (phase) {
 		case BEGIN:
 			if (phaseAfter(clock.sec(1))) {
-				enterPhase(Phase.BLINKY);
+				currentGhost = ghosts[0];
+				enterPhase(Phase.GHOSTS);
 			}
 			break;
-		case BLINKY:
-			showGhostName("WITH", "BLINKY", Color.RED, 11);
-			letGhostWalkToEndPosition(ghosts[0], Phase.PINKY);
-			break;
-		case PINKY:
-			showGhostName("", "PINKY", Color.PINK, 11);
-			letGhostWalkToEndPosition(ghosts[1], Phase.INKY);
-			break;
-		case INKY:
-			showGhostName("", "INKY", Color.CYAN, 11);
-			letGhostWalkToEndPosition(ghosts[2], Phase.SUE);
-			break;
-		case SUE:
-			showGhostName("", "Sue", Color.ORANGE, 12);
-			letGhostWalkToEndPosition(ghosts[3], Phase.MSPACMAN);
+		case GHOSTS:
+			boolean ghostComplete = letCurrentGhostWalkToEndPosition();
+			if (ghostComplete) {
+				if (currentGhost == ghosts[3]) {
+					currentGhost = null;
+					presentingMsPac = true;
+					enterPhase(Phase.MSPACMAN);
+				} else {
+					currentGhost = ghosts[currentGhost.id + 1];
+					enterPhase(Phase.GHOSTS);
+				}
+			}
 			break;
 		case MSPACMAN:
-			showPacName();
-			letMsPacManWalkToEndPosition(pac, Phase.END);
+			boolean msPacComplete = letMsPacManWalkToEndPosition();
+			if (msPacComplete) {
+				enterPhase(Phase.END);
+			}
 			break;
 		case END:
-			showPacName();
-			showPointsAnimation(26);
-			showPressKeyToStart(32);
-			if (phaseAt(clock.sec(10))) {
+			if (phaseAt(clock.sec(5))) {
 				game.attractMode = true;
 			}
 			break;
 		default:
 			break;
 		}
-		g.setFont(rendering.getScoreFont());
-		g.setFill(Color.ORANGE);
-		g.fillText("\"MS PAC-MAN\"", t(8), t(5));
-		drawAnimatedFrame(32, 16, game.state.ticksRun());
-		for (Ghost ghost : ghosts) {
-			rendering.drawGhost(ghost, game);
-		}
-		rendering.drawPac(pac, game);
 	}
 
-	private void showGhostName(String with, String name, Color color, int tileX) {
-		g.setFill(Color.WHITE);
-		g.setFont(rendering.getScoreFont());
-		if (with.length() > 0) {
-			g.fillText(with, t(8), t(11));
+	private boolean letCurrentGhostWalkToEndPosition() {
+		if (currentGhost == null) {
+			return false;
 		}
-		g.setFill(color);
-		g.fillText(name, t(tileX), t(14));
-	}
-
-	private void letGhostWalkToEndPosition(Ghost ghost, Phase nextPhase) {
 		if (phaseAt(1)) {
-			ghost.speed = 1;
-			rendering.ghostKicking(ghost).forEach(Animation::restart);
+			currentGhost.speed = 1;
+			rendering.ghostKicking(currentGhost).forEach(Animation::restart);
 		}
-		if (ghost.dir == LEFT && ghost.position.x <= leftOfFrame) {
-			ghost.dir = ghost.wishDir = UP;
+		if (currentGhost.dir == LEFT && currentGhost.position.x <= leftOfFrame) {
+			currentGhost.dir = currentGhost.wishDir = UP;
 		}
-		if (ghost.dir == UP && ghost.position.y <= t(frameTopLeftTile.y) + ghost.id * 18) {
-			ghost.speed = 0;
-			rendering.ghostKicking(ghost).forEach(Animation::reset);
-			enterPhase(nextPhase);
+		if (currentGhost.dir == UP && currentGhost.position.y <= t(frameTopLeftTile.y) + currentGhost.id * 18) {
+			currentGhost.speed = 0;
+			rendering.ghostKicking(currentGhost).forEach(Animation::reset);
+			return true;
 		}
+		return false;
 	}
 
-	private void showPacName() {
-		g.setFill(Color.WHITE);
-		g.setFont(rendering.getScoreFont());
-		g.fillText("STARRING", t(8), t(11));
-		g.setFill(Color.YELLOW);
-		g.fillText("MS PAC-MAN", t(8), t(14));
-	}
-
-	private void letMsPacManWalkToEndPosition(Pac msPac, Phase nextPhase) {
+	private boolean letMsPacManWalkToEndPosition() {
 		if (phaseAt(1)) {
 			msPac.visible = true;
 			msPac.couldMove = true;
@@ -178,8 +160,53 @@ public class MsPacManGameIntroScene extends AbstractPacManGameScene<MsPacManScen
 		if (msPac.speed != 0 && msPac.position.x <= t(13)) {
 			msPac.speed = 0;
 			rendering.pacMunching().forEach(Animation::reset);
-			enterPhase(nextPhase);
+			return true;
 		}
+		return false;
+	}
+
+	@Override
+	public void render() {
+		fill(Color.BLACK);
+		g.setFont(rendering.getScoreFont());
+		g.setFill(Color.ORANGE);
+		g.fillText("\"MS PAC-MAN\"", t(8), t(5));
+		drawAnimatedFrame(32, 16, game.state.ticksRun());
+		for (Ghost ghost : ghosts) {
+			rendering.drawGhost(ghost, game);
+		}
+		rendering.drawPac(msPac, game);
+		presentGhost();
+		presentMsPacMan();
+		if (phase == Phase.END) {
+			drawPointsAnimation(26);
+			drawPressKeyToStart(32);
+		}
+	}
+
+	private void presentGhost() {
+		if (currentGhost == null) {
+			return;
+		}
+		g.setFill(Color.WHITE);
+		g.setFont(rendering.getScoreFont());
+		if (currentGhost == ghosts[0]) {
+			g.fillText("WITH", t(8), t(11));
+		}
+		g.setFill(currentGhost.id == 0 ? Color.RED
+				: currentGhost.id == 1 ? Color.PINK : currentGhost.id == 2 ? Color.CYAN : Color.ORANGE);
+		g.fillText(currentGhost.name.toUpperCase(), t(13 - currentGhost.name.length() / 2), t(14));
+	}
+
+	private void presentMsPacMan() {
+		if (!presentingMsPac) {
+			return;
+		}
+		g.setFill(Color.WHITE);
+		g.setFont(rendering.getScoreFont());
+		g.fillText("STARRING", t(8), t(11));
+		g.setFill(Color.YELLOW);
+		g.fillText("MS PAC-MAN", t(8), t(14));
 	}
 
 	private void drawAnimatedFrame(int numDotsX, int numDotsY, long time) {
@@ -202,26 +229,28 @@ public class MsPacManGameIntroScene extends AbstractPacManGameScene<MsPacManScen
 		}
 	}
 
-	private void showPressKeyToStart(int yTile) {
+	private void drawPressKeyToStart(int tileY) {
 		if (blinking.animate()) {
+			String text = "PRESS SPACE TO PLAY";
 			g.setFill(Color.ORANGE);
 			g.setFont(rendering.getScoreFont());
-			g.fillText("PRESS SPACE KEY TO PLAY", t(2), t(yTile));
+			g.fillText(text, t(14 - text.length() / 2), t(tileY));
 		}
 	}
 
-	private void showPointsAnimation(int yTile) {
+	private void drawPointsAnimation(int tileY) {
+		int tileX = 10;
 		if (blinking.animate()) {
 			g.setFill(Color.PINK);
-			g.fillRect(t(8) + 6, t(yTile - 1) + 2, 2, 2);
-			g.fillOval(t(8), t(yTile + 1) - 2, 10, 10);
+			g.fillRect(t(tileX) + 6, t(tileY - 1) + 2, 2, 2);
+			g.fillOval(t(tileX), t(tileY + 1) - 2, 10, 10);
 		}
 		g.setFill(Color.WHITE);
 		g.setFont(rendering.getScoreFont());
-		g.fillText("10", t(10), t(yTile));
-		g.fillText("50", t(10), t(yTile + 2));
+		g.fillText("10", t(tileX + 2), t(tileY));
+		g.fillText("50", t(tileX + 2), t(tileY + 2));
 		g.setFont(Font.font(rendering.getScoreFont().getName(), 6));
-		g.fillText("PTS", t(13), t(yTile));
-		g.fillText("PTS", t(13), t(yTile + 2));
+		g.fillText("PTS", t(tileX + 5), t(tileY));
+		g.fillText("PTS", t(tileX + 5), t(tileY + 2));
 	}
 }

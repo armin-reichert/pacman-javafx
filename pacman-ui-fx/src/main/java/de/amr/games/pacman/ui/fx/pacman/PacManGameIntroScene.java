@@ -29,14 +29,17 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 		BEGIN, GHOST_GALLERY, CHASING_PAC, CHASING_GHOSTS, READY_TO_PLAY
 	}
 
-	private final int titleY = t(6);
+	private final Animation<Boolean> blinking = Animation.pulse().frameDuration(20).restart();
+
+	private final int topY = t(6);
+
 	private Ghost[] gallery;
 	private int currentGhost;
 	private boolean[] characterVisible;
 	private boolean[] nickVisible;
+
 	private Pac pac;
 	private Ghost[] ghosts;
-	private Animation<Boolean> blinking = Animation.pulse().frameDuration(20).restart();
 
 	private Phase phase;
 	private long phaseStartTime;
@@ -68,18 +71,23 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 		nickVisible = new boolean[4];
 
 		pac = new Pac("Ms. Pac-Man", Direction.LEFT);
+
 		ghosts = new Ghost[] { //
 				new Ghost(0, "Blinky", Direction.LEFT), //
 				new Ghost(1, "Pinky", Direction.LEFT), //
 				new Ghost(2, "Inky", Direction.LEFT), //
 				new Ghost(3, "Clyde", Direction.LEFT), //
 		};
+
 		enterPhase(Phase.BEGIN);
 	}
 
 	@Override
-	public void render() {
-		fill(Color.BLACK);
+	public void update() {
+		pac.move();
+		for (Ghost ghost : ghosts) {
+			ghost.move();
+		}
 		switch (phase) {
 		case BEGIN:
 			if (phaseAt(clock.sec(2))) {
@@ -105,31 +113,43 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 			}
 			break;
 		case CHASING_PAC:
-			showGuysMoving();
 			if (pac.position.x < t(3)) {
 				startPacChasingGhosts();
 				enterPhase(Phase.CHASING_GHOSTS);
 			}
 			break;
 		case CHASING_GHOSTS:
-			showGuysMoving();
 			if (pac.position.x > t(28)) {
 				enterPhase(Phase.READY_TO_PLAY);
 			}
 			break;
 		case READY_TO_PLAY:
 			blinking.animate();
-			showPointsAnimation(26);
-			showPressKeyToStart(32);
-			if (phaseAt(clock.sec(10))) {
+			if (phaseAt(clock.sec(5))) {
 				game.attractMode = true;
+				log("Entering attract mode at %d", clock.ticksTotal);
 			}
 			break;
 		default:
 			break;
 		}
+	}
+
+	@Override
+	public void render() {
+		fill(Color.BLACK);
 		rendering.drawScore(game, true);
 		drawGallery();
+		if (phase == Phase.CHASING_GHOSTS || phase == Phase.CHASING_PAC) {
+			rendering.drawPac(pac, game);
+			for (Ghost ghost : ghosts) {
+				rendering.drawGhost(ghost, game);
+			}
+		}
+		if (phase == Phase.READY_TO_PLAY) {
+			drawPointsAnimation(11, 26);
+			drawPressKeyToStart(32);
+		}
 	}
 
 	private void presentGhost(int id) {
@@ -138,15 +158,16 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 	}
 
 	private void drawGallery() {
+		int x = t(2);
 		g.setFill(Color.WHITE);
 		g.setFont(rendering.getScoreFont());
-		g.fillText("CHARACTER", t(6), titleY);
-		g.fillText("/", t(16), titleY);
-		g.fillText("NICKNAME", t(18), titleY);
-		showInGallery(gallery[0], "SHADOW", Color.RED, t(3), titleY + t(2), characterVisible[0], nickVisible[0]);
-		showInGallery(gallery[1], "SPEEDY", Color.PINK, t(3), titleY + t(5), characterVisible[1], nickVisible[1]);
-		showInGallery(gallery[2], "BASHFUL", Color.CYAN, t(3), titleY + t(8), characterVisible[2], nickVisible[2]);
-		showInGallery(gallery[3], "POKEY", Color.ORANGE, t(3), titleY + t(11), characterVisible[3], nickVisible[3]);
+		g.fillText("CHARACTER", t(6), topY);
+		g.fillText("/", t(16), topY);
+		g.fillText("NICKNAME", t(18), topY);
+		showInGallery(gallery[0], "SHADOW", Color.RED, x, topY + t(2), characterVisible[0], nickVisible[0]);
+		showInGallery(gallery[1], "SPEEDY", Color.PINK, x, topY + t(5), characterVisible[1], nickVisible[1]);
+		showInGallery(gallery[2], "BASHFUL", Color.CYAN, x, topY + t(8), characterVisible[2], nickVisible[2]);
+		showInGallery(gallery[3], "POKEY", Color.ORANGE, x, topY + t(11), characterVisible[3], nickVisible[3]);
 	}
 
 	private void showInGallery(Ghost ghost, String character, Color color, int x, int y, boolean showCharacter,
@@ -166,27 +187,28 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 		}
 	}
 
-	private void showPressKeyToStart(int yTile) {
+	private void drawPressKeyToStart(int yTile) {
 		if (blinking.frame()) {
+			String text = "PRESS SPACE TO PLAY";
 			g.setFill(Color.ORANGE);
 			g.setFont(rendering.getScoreFont());
-			g.fillText("PRESS SPACE KEY TO PLAY", t(2), t(yTile));
+			g.fillText(text, t(14 - text.length() / 2), t(yTile));
 		}
 	}
 
-	private void showPointsAnimation(int yTile) {
+	private void drawPointsAnimation(int tileX, int tileY) {
 		if (blinking.frame()) {
 			g.setFill(Color.PINK);
-			g.fillRect(t(8) + 6, t(yTile - 1) + 2, 2, 2);
-			g.fillOval(t(8), t(yTile + 1) - 2, 10, 10);
+			g.fillRect(t(tileX) + 6, t(tileY - 1) + 2, 2, 2);
+			g.fillOval(t(tileX), t(tileY + 1) - 2, 10, 10);
 		}
 		g.setFill(Color.WHITE);
 		g.setFont(rendering.getScoreFont());
-		g.fillText("10", t(10), t(yTile));
-		g.fillText("50", t(10), t(yTile + 2));
+		g.fillText("10", t(tileX + 2), t(tileY));
+		g.fillText("50", t(tileX + 2), t(tileY + 2));
 		g.setFont(Font.font(rendering.getScoreFont().getName(), 6));
-		g.fillText("PTS", t(13), t(yTile));
-		g.fillText("PTS", t(13), t(yTile + 2));
+		g.fillText("PTS", t(tileX + 5), t(tileY));
+		g.fillText("PTS", t(tileX + 5), t(tileY + 2));
 	}
 
 	private void startGhostsChasingPac() {
@@ -204,15 +226,6 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 			ghost.speed = pac.speed;
 			ghost.state = GhostState.HUNTING_PAC;
 			rendering.ghostsKicking(Stream.of(ghosts)).forEach(Animation::restart);
-		}
-	}
-
-	private void showGuysMoving() {
-		pac.move();
-		rendering.drawPac(pac, game);
-		for (Ghost ghost : ghosts) {
-			ghost.move();
-			rendering.drawGhost(ghost, game);
 		}
 	}
 

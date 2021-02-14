@@ -75,7 +75,8 @@ public class PacManGameIntermissionScene3 extends AbstractPacManGameScene<PacMan
 		phase = Phase.CHASING_PACMAN;
 	}
 
-	private void update() {
+	@Override
+	public void update() {
 		switch (phase) {
 		case CHASING_PACMAN:
 			if (blinky.position.x <= -50) {
@@ -102,9 +103,6 @@ public class PacManGameIntermissionScene3 extends AbstractPacManGameScene<PacMan
 
 	@Override
 	public void render() {
-
-		update();
-
 		fill(Color.BLACK);
 		rendering.drawLevelCounter(game, t(25), t(34));
 		rendering.drawPac(pac, game);

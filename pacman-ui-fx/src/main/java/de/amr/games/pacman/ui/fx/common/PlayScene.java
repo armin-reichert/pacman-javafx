@@ -18,6 +18,10 @@ public class PlayScene<R extends SceneRendering> extends AbstractPacManGameScene
 	}
 
 	@Override
+	public void update() {
+	}
+
+	@Override
 	public void render() {
 		fill(Color.BLACK);
 		boolean flashing = rendering.mazeFlashing(game.level.mazeNumber).hasStarted();

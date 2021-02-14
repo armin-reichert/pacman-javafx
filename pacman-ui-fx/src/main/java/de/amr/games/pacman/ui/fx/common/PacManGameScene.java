@@ -22,6 +22,8 @@ public interface PacManGameScene {
 
 	void end();
 
+	void update();
+
 	void render();
 
 	Keyboard keyboard();
