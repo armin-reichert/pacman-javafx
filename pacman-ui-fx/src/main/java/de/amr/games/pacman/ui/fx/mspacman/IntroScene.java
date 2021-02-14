@@ -157,11 +157,11 @@ public class IntroScene extends AbstractPacManGameScene<MsPacManSceneRendering> 
 			msPac.couldMove = true;
 			msPac.speed = 1;
 			msPac.dir = LEFT;
-			rendering.pacMunching().forEach(Animation::restart);
+			rendering.pacMunching(msPac).forEach(Animation::restart);
 		}
 		if (msPac.speed != 0 && msPac.position.x <= t(13)) {
 			msPac.speed = 0;
-			rendering.pacMunching().forEach(Animation::reset);
+			rendering.pacMunching(msPac).forEach(Animation::reset);
 			return true;
 		}
 		return false;

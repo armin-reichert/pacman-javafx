@@ -68,7 +68,7 @@ public class IntermissionScene3 extends AbstractPacManGameScene<PacManSceneRende
 		blinky.speed = pac.speed;
 		blinky.dir = blinky.wishDir = LEFT;
 
-		rendering.pacMunching().forEach(Animation::restart);
+		rendering.pacMunching(pac).forEach(Animation::restart);
 		blinkyDamaged.restart();
 		soundManager.loop(PacManGameSound.INTERMISSION_3, 2);
 

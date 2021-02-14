@@ -278,15 +278,15 @@ public class PacManSceneRendering implements SceneRendering {
 	@Override
 	public Rectangle2D pacSprite(Pac pac, PacManGameModel game) {
 		if (pac.dead) {
-			return pacDying().hasStarted() ? pacDying().animate() : pacMunchingToDir(pac.dir).frame();
+			return pacDying().hasStarted() ? pacDying().animate() : pacMunchingToDir(pac, pac.dir).frame();
 		}
 		if (pac.speed == 0) {
-			return pacMunchingToDir(pac.dir).frame(0);
+			return pacMunchingToDir(pac, pac.dir).frame(0);
 		}
 		if (!pac.couldMove) {
-			return pacMunchingToDir(pac.dir).frame(1);
+			return pacMunchingToDir(pac, pac.dir).frame(1);
 		}
-		return pacMunchingToDir(pac.dir).animate();
+		return pacMunchingToDir(pac, pac.dir).animate();
 	}
 
 	@Override
@@ -307,7 +307,7 @@ public class PacManSceneRendering implements SceneRendering {
 	}
 
 	@Override
-	public Animation<Rectangle2D> pacMunchingToDir(Direction dir) {
+	public Animation<Rectangle2D> pacMunchingToDir(Pac pac, Direction dir) {
 		return pacMunching.get(ensureNotNull(dir));
 	}
 
