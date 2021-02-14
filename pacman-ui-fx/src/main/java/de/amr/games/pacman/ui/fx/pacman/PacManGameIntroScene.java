@@ -26,7 +26,14 @@ import javafx.scene.text.Font;
 public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRendering> {
 
 	enum Phase {
-		BEGIN, GHOST_GALLERY, CHASING_PAC, CHASING_GHOSTS, READY_TO_PLAY
+
+		BEGIN, GHOST_GALLERY, CHASING_PAC, CHASING_GHOSTS, READY_TO_PLAY;
+
+		public long start;
+
+		private boolean at(long ticks) {
+			return clock.ticksTotal - start == ticks;
+		}
 	}
 
 	private final Animation<Boolean> blinking = Animation.pulse().frameDuration(20).restart();
@@ -42,16 +49,11 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 	private Ghost[] ghosts;
 
 	private Phase phase;
-	private long phaseStartTime;
-
-	private boolean phaseAt(long ticks) {
-		return clock.ticksTotal - phaseStartTime == ticks;
-	}
 
 	private void enterPhase(Phase newPhase) {
 		phase = newPhase;
-		phaseStartTime = clock.ticksTotal;
-		log("Phase %s entered at %d", phase, phaseStartTime);
+		phase.start = clock.ticksTotal;
+		log("Phase %s entered at %d", phase, phase.start);
 	}
 
 	public PacManGameIntroScene(PacManGameModel game, double width, double height, double scaling) {
@@ -90,19 +92,19 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 		}
 		switch (phase) {
 		case BEGIN:
-			if (phaseAt(clock.sec(2))) {
+			if (phase.at(clock.sec(2))) {
 				presentGhost(0);
 				enterPhase(Phase.GHOST_GALLERY);
 			}
 			break;
 		case GHOST_GALLERY:
-			if (phaseAt(clock.sec(0.5))) {
+			if (phase.at(clock.sec(0.5))) {
 				characterVisible[currentGhost] = true;
 			}
-			if (phaseAt(clock.sec(1))) {
+			if (phase.at(clock.sec(1))) {
 				nickVisible[currentGhost] = true;
 			}
-			if (phaseAt(clock.sec(2))) {
+			if (phase.at(clock.sec(2))) {
 				if (currentGhost < 3) {
 					presentGhost(currentGhost + 1);
 					enterPhase(Phase.GHOST_GALLERY);
@@ -125,7 +127,7 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 			break;
 		case READY_TO_PLAY:
 			blinking.animate();
-			if (phaseAt(clock.sec(5))) {
+			if (phase.at(clock.sec(5))) {
 				game.attractMode = true;
 				log("Entering attract mode at %d", clock.ticksTotal);
 			}
