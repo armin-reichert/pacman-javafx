@@ -57,7 +57,7 @@ public class PacManGameIntermissionScene3 extends AbstractPacManGameScene<PacMan
 
 		pac.visible = true;
 		pac.dead = false;
-		pac.position = new V2f(t(28) + 50, t(chaseTileY));
+		pac.position = new V2f(t(30), t(chaseTileY));
 		pac.speed = 1;
 		pac.couldMove = true;
 		pac.dir = LEFT;
