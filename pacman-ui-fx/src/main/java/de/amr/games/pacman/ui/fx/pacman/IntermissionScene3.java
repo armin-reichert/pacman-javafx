@@ -6,6 +6,7 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.Animation;
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2f;
 import de.amr.games.pacman.model.Ghost;
 import de.amr.games.pacman.model.GhostState;
@@ -41,8 +42,8 @@ public class IntermissionScene3 extends AbstractPacManGameScene<PacManSceneRende
 		super(game, soundManager, width, height, scaling);
 		rendering = new PacManSceneRendering(g);
 
-		pac = game.pac;
-		blinky = game.ghosts[0];
+		pac = new Pac("Pac-Man", Direction.LEFT);
+		blinky = new Ghost(0, "Blinky", Direction.LEFT);
 		chaseTileY = 20;
 
 		blinkyDamaged = Animation.of(tileRegion(10, 7, 1, 1), tileRegion(11, 7, 1, 1));
@@ -58,9 +59,10 @@ public class IntermissionScene3 extends AbstractPacManGameScene<PacManSceneRende
 		pac.visible = true;
 		pac.dead = false;
 		pac.position = new V2f(t(30), t(chaseTileY));
-		pac.speed = 1;
+		pac.speed = 1.2f;
 		pac.couldMove = true;
 		pac.dir = LEFT;
+		pac.couldMove = true;
 
 		blinky.visible = true;
 		blinky.state = GhostState.HUNTING_PAC;
@@ -87,7 +89,7 @@ public class IntermissionScene3 extends AbstractPacManGameScene<PacManSceneRende
 			}
 			break;
 		case RETURNING_HALF_NAKED:
-			if (blinky.position.x > t(28) + 50) {
+			if (blinky.position.x > t(28) + 200) {
 				game.state.duration(0); // end scene
 			}
 			break;
