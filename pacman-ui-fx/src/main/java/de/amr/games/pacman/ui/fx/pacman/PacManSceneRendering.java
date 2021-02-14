@@ -167,7 +167,7 @@ public class PacManSceneRendering implements SceneRendering {
 	}
 
 	@Override
-	public void showGameState(PacManGameModel game) {
+	public void signalGameState(PacManGameModel game) {
 		if (game.state == PacManGameState.GAME_OVER || game.attractMode) {
 			g.setFont(scoreFont);
 			g.setFill(Color.RED);

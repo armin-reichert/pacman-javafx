@@ -81,5 +81,5 @@ public interface SceneRendering extends PacManGameAnimation {
 
 	void drawLevelCounter(PacManGameModel game, int x, int y);
 
-	void showGameState(PacManGameModel game);
+	void signalGameState(PacManGameModel game);
 }

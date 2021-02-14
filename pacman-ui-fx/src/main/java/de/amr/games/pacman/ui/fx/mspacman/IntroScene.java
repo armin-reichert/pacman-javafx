@@ -28,12 +28,11 @@ public class IntroScene extends AbstractPacManGameScene<MsPacManSceneRendering> 
 
 		BEGIN, GHOSTS, MSPACMAN, END;
 
-		public long start;
+		private long start;
 
-		public boolean at(long ticks) {
+		private boolean at(long ticks) {
 			return clock.ticksTotal - start == ticks;
 		}
-
 	}
 
 	private final V2i frameTopLeftTile = new V2i(6, 8);
@@ -70,12 +69,16 @@ public class IntroScene extends AbstractPacManGameScene<MsPacManSceneRendering> 
 		msPac.dead = false;
 		msPac.dir = LEFT;
 
-		ghosts = new Ghost[] { new Ghost(0, "Blinky", LEFT), new Ghost(1, "Pinky", LEFT), new Ghost(2, "Inky", LEFT),
-				new Ghost(3, "Sue", LEFT), };
+		ghosts = new Ghost[] { //
+				new Ghost(0, "Blinky", LEFT), //
+				new Ghost(1, "Pinky", LEFT), //
+				new Ghost(2, "Inky", LEFT), //
+				new Ghost(3, "Sue", LEFT),//
+		};
+
 		for (Ghost ghost : ghosts) {
 			ghost.position = new V2f(t(37), belowFrame);
 			ghost.visible = true;
-			ghost.dir = ghost.wishDir = LEFT;
 			ghost.bounty = 0;
 			ghost.speed = 0;
 			ghost.state = GhostState.HUNTING_PAC;

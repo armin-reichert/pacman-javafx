@@ -31,7 +31,7 @@ public class PlayScene<R extends SceneRendering> extends AbstractPacManGameScene
 					game.level::containsEatenFood);
 			rendering.drawEnergizerTiles(game.level.world.energizerTiles());
 		}
-		rendering.showGameState(game);
+		rendering.signalGameState(game);
 		rendering.drawPac(game.pac, game);
 		game.ghosts().forEach(ghost -> rendering.drawGhost(ghost, game));
 		rendering.drawBonus(game.bonus, game);
