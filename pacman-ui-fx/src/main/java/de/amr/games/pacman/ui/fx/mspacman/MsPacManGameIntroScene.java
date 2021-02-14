@@ -25,7 +25,15 @@ import javafx.scene.text.Font;
 public class MsPacManGameIntroScene extends AbstractPacManGameScene<MsPacManSceneRendering> {
 
 	enum Phase {
-		BEGIN, GHOSTS, MSPACMAN, END
+
+		BEGIN, GHOSTS, MSPACMAN, END;
+
+		public long start;
+
+		public boolean at(long ticks) {
+			return clock.ticksTotal - start == ticks;
+		}
+
 	}
 
 	private final V2i frameTopLeftTile = new V2i(6, 8);
@@ -34,7 +42,6 @@ public class MsPacManGameIntroScene extends AbstractPacManGameScene<MsPacManScen
 	private final Animation<Boolean> blinking = Animation.pulse().frameDuration(30).restart();
 
 	private Phase phase;
-	private long phaseStartTime;
 
 	private Pac msPac;
 	private Ghost[] ghosts;
@@ -47,17 +54,9 @@ public class MsPacManGameIntroScene extends AbstractPacManGameScene<MsPacManScen
 		rendering = new MsPacManSceneRendering(g);
 	}
 
-	private boolean phaseAt(long ticks) {
-		return game.state.ticksRun() - phaseStartTime == ticks;
-	}
-
-	private boolean phaseAfter(long ticks) {
-		return game.state.ticksRun() - phaseStartTime >= ticks;
-	}
-
 	private void enterPhase(Phase newPhase) {
 		phase = newPhase;
-		phaseStartTime = game.state.ticksRun();
+		phase.start = clock.ticksTotal;
 	}
 
 	@Override
@@ -96,7 +95,7 @@ public class MsPacManGameIntroScene extends AbstractPacManGameScene<MsPacManScen
 		msPac.move();
 		switch (phase) {
 		case BEGIN:
-			if (phaseAfter(clock.sec(1))) {
+			if (phase.at(clock.sec(1))) {
 				currentGhost = ghosts[0];
 				enterPhase(Phase.GHOSTS);
 			}
@@ -121,7 +120,7 @@ public class MsPacManGameIntroScene extends AbstractPacManGameScene<MsPacManScen
 			}
 			break;
 		case END:
-			if (phaseAt(clock.sec(5))) {
+			if (phase.at(clock.sec(5))) {
 				game.attractMode = true;
 			}
 			break;
@@ -134,7 +133,7 @@ public class MsPacManGameIntroScene extends AbstractPacManGameScene<MsPacManScen
 		if (currentGhost == null) {
 			return false;
 		}
-		if (phaseAt(1)) {
+		if (phase.at(1)) {
 			currentGhost.speed = 1;
 			rendering.ghostKicking(currentGhost).forEach(Animation::restart);
 		}
@@ -150,7 +149,7 @@ public class MsPacManGameIntroScene extends AbstractPacManGameScene<MsPacManScen
 	}
 
 	private boolean letMsPacManWalkToEndPosition() {
-		if (phaseAt(1)) {
+		if (phase.at(1)) {
 			msPac.visible = true;
 			msPac.couldMove = true;
 			msPac.speed = 1;
