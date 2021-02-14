@@ -120,6 +120,8 @@ public class PacManGameFXUI implements PacManGameUI {
 					x.printStackTrace();
 				}
 			});
+		} else {
+			throw new IllegalStateException("No scene selected");
 		}
 	}
 

@@ -34,7 +34,7 @@ public class PlayScene<R extends SceneRendering> extends AbstractPacManGameScene
 		rendering.drawScore(game, game.state == PacManGameState.INTRO || game.attractMode);
 		if (!game.attractMode) {
 			rendering.drawLivesCounter(game, t(2), t(34));
-			rendering.drawLevelCounter(game, t(25), t(34));
 		}
+		rendering.drawLevelCounter(game, t(25), t(34));
 	}
 }

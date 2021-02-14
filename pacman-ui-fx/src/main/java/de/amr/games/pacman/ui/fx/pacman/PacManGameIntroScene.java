@@ -30,7 +30,7 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 	}
 
 	private final int titleY = t(6);
-	private Ghost[] ghostGallery;
+	private Ghost[] gallery;
 	private int currentGhost;
 	private boolean[] characterVisible;
 	private boolean[] nickVisible;
@@ -42,16 +42,12 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 	private long phaseStartTime;
 
 	private boolean phaseAt(long ticks) {
-		return game.state.ticksRun() - phaseStartTime == ticks;
-	}
-
-	private boolean phaseAfter(long ticks) {
-		return game.state.ticksRun() - phaseStartTime >= ticks;
+		return clock.ticksTotal - phaseStartTime == ticks;
 	}
 
 	private void enterPhase(Phase newPhase) {
 		phase = newPhase;
-		phaseStartTime = game.state.ticksRun();
+		phaseStartTime = clock.ticksTotal;
 		log("Phase %s entered at %d", phase, phaseStartTime);
 	}
 
@@ -62,7 +58,7 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 
 	@Override
 	public void start() {
-		ghostGallery = new Ghost[] { //
+		gallery = new Ghost[] { //
 				new Ghost(0, "Blinky", Direction.RIGHT), //
 				new Ghost(1, "Pinky", Direction.RIGHT), //
 				new Ghost(2, "Inky", Direction.RIGHT), //
@@ -87,7 +83,7 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 		switch (phase) {
 		case BEGIN:
 			if (phaseAt(clock.sec(2))) {
-				uncoverGhost(0);
+				presentGhost(0);
 				enterPhase(Phase.GHOST_GALLERY);
 			}
 			break;
@@ -100,7 +96,7 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 			}
 			if (phaseAt(clock.sec(2))) {
 				if (currentGhost < 3) {
-					uncoverGhost(currentGhost + 1);
+					presentGhost(currentGhost + 1);
 					enterPhase(Phase.GHOST_GALLERY);
 				} else {
 					startGhostsChasingPac();
@@ -133,25 +129,24 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 			break;
 		}
 		rendering.drawScore(game, true);
-		drawGhostGallery();
+		drawGallery();
 	}
 
-	private void uncoverGhost(int id) {
-		ghostGallery[id].visible = true;
-		ghostGallery[id].dir = ghostGallery[id].wishDir = Direction.RIGHT;
+	private void presentGhost(int id) {
 		currentGhost = id;
+		gallery[id].visible = true;
 	}
 
-	private void drawGhostGallery() {
+	private void drawGallery() {
 		g.setFill(Color.WHITE);
 		g.setFont(rendering.getScoreFont());
 		g.fillText("CHARACTER", t(6), titleY);
 		g.fillText("/", t(16), titleY);
 		g.fillText("NICKNAME", t(18), titleY);
-		showInGallery(ghostGallery[0], "SHADOW", Color.RED, t(3), titleY + t(2), characterVisible[0], nickVisible[0]);
-		showInGallery(ghostGallery[1], "SPEEDY", Color.PINK, t(3), titleY + t(5), characterVisible[1], nickVisible[1]);
-		showInGallery(ghostGallery[2], "BASHFUL", Color.CYAN, t(3), titleY + t(8), characterVisible[2], nickVisible[2]);
-		showInGallery(ghostGallery[3], "POKEY", Color.ORANGE, t(3), titleY + t(11), characterVisible[3], nickVisible[3]);
+		showInGallery(gallery[0], "SHADOW", Color.RED, t(3), titleY + t(2), characterVisible[0], nickVisible[0]);
+		showInGallery(gallery[1], "SPEEDY", Color.PINK, t(3), titleY + t(5), characterVisible[1], nickVisible[1]);
+		showInGallery(gallery[2], "BASHFUL", Color.CYAN, t(3), titleY + t(8), characterVisible[2], nickVisible[2]);
+		showInGallery(gallery[3], "POKEY", Color.ORANGE, t(3), titleY + t(11), characterVisible[3], nickVisible[3]);
 	}
 
 	private void showInGallery(Ghost ghost, String character, Color color, int x, int y, boolean showCharacter,
@@ -159,7 +154,7 @@ public class PacManGameIntroScene extends AbstractPacManGameScene<PacManSceneRen
 		if (!ghost.visible) {
 			return;
 		}
-		Rectangle2D ghostTile = rendering.ghostKickingToDir(ghost, ghost.wishDir).frame(0);
+		Rectangle2D ghostTile = rendering.ghostKickingToDir(ghost, Direction.RIGHT).frame(0);
 		rendering.drawRegion(rendering.toRegion(ghostTile), x, y - 4);
 		g.setFill(color);
 		g.setFont(rendering.getScoreFont());
