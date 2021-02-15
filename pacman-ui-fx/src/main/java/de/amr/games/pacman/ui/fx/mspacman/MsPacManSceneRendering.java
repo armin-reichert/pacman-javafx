@@ -261,8 +261,9 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 		int x = rightX;
 		int firstLevel = Math.max(1, game.currentLevelNumber - 6);
 		for (int level = firstLevel; level <= game.currentLevelNumber; ++level) {
-			Rectangle2D region = symbols[game.levelSymbols.get(level - 1)]; // TODO how can an IndexOutOfBoundsException occur
-																																			// here?
+			byte symbol = game.levelSymbols.get(level - 1);
+			// TODO how can an IndexOutOfBoundsException occur here?
+			Rectangle2D region = symbols[symbol];
 			g.drawImage(spritesheet, region.getMinX(), region.getMinY(), 16, 16, x, y, 16, 16);
 			x -= t(2);
 		}

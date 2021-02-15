@@ -181,7 +181,7 @@ public class PacManGameFXUI implements PacManGameUI {
 			g.fillRect(0, t(34), t(28), t(2));
 			g.setFill(Color.rgb(255, 255, 0, alpha));
 			g.setFont(font);
-			g.fillText(text, t(10), t(35)); // TODO center over scene width
+			g.fillText(text, t(10), t(35) + 5); // TODO center over scene width
 			--flashMessageTicksLeft;
 			if (flashMessageTicksLeft == 0) {
 				flashMessages.remove(0);
