@@ -27,25 +27,37 @@ import javafx.scene.paint.Color;
 public class IntermissionScene2 extends AbstractPacManGameScene<PacManSceneRendering> {
 
 	enum Phase {
+
 		APPROACHING_NAIL, HITTING_NAIL, STRETCHED_1, STRETCHED_2, STRETCHED_3, LOOKING_UP, LOOKING_RIGHT;
+
+		private long timer;
+
+		private boolean isComplete() {
+			return timer == -1;
+		}
+
+		private void tick() {
+			if (timer > -1) {
+				--timer;
+			}
+		}
 	}
 
-	private final int chaseTileY;
+	private final int chaseTileY = 20;
 	private final Ghost blinky;
 	private final Pac pac;
 	private final Rectangle2D nail, blinkyLookingUp, blinkyLookingRight, shred, stretchedDress[];
 	private final V2i nailPosition;
 
 	private Phase phase;
-	private long timer;
 
 	public IntermissionScene2(PacManGameModel game, SoundManager soundManager, double width, double height,
 			double scaling) {
 		super(game, soundManager, width, height, scaling);
 		rendering = new PacManSceneRendering(g);
+
 		blinky = new Ghost(0, "Blinky", Direction.LEFT);
 		pac = new Pac("Pac-Man", Direction.LEFT);
-		chaseTileY = 20;
 		nailPosition = new V2i(t(14), t(chaseTileY) - 6);
 
 		// Sprites
@@ -53,12 +65,15 @@ public class IntermissionScene2 extends AbstractPacManGameScene<PacManSceneRende
 		shred = tileRegion(12, 6, 1, 1);
 		blinkyLookingUp = tileRegion(8, 7, 1, 1);
 		blinkyLookingRight = tileRegion(9, 7, 1, 1);
-		stretchedDress = new Rectangle2D[] { tileRegion(9, 6, 1, 1), tileRegion(10, 6, 1, 1), tileRegion(11, 6, 1, 1) };
+		stretchedDress = new Rectangle2D[] { //
+				tileRegion(9, 6, 1, 1), //
+				tileRegion(10, 6, 1, 1), //
+				tileRegion(11, 6, 1, 1) };
 	}
 
 	@Override
 	public void start() {
-		log("Start of intermission scene %s", getClass().getSimpleName());
+		log("Start of intermission scene %s at %d", this, clock.ticksTotal);
 
 		pac.visible = true;
 		pac.dead = false;
@@ -77,22 +92,16 @@ public class IntermissionScene2 extends AbstractPacManGameScene<PacManSceneRende
 		rendering.ghostKickingToDir(blinky, blinky.dir).restart();
 		soundManager.play(PacManGameSound.INTERMISSION_2);
 
-		phase = Phase.APPROACHING_NAIL;
-		timer = -1;
+		enter(Phase.APPROACHING_NAIL);
 	}
 
 	private void enter(Phase nextPhase, long ticks) {
 		phase = nextPhase;
-		timer = ticks;
+		phase.timer = ticks;
 	}
 
 	private void enter(Phase nextPhase) {
-		phase = nextPhase;
-		timer = -1;
-	}
-
-	private boolean timeout() {
-		return timer == -1;
+		enter(nextPhase, -1);
 	}
 
 	@Override
@@ -106,7 +115,7 @@ public class IntermissionScene2 extends AbstractPacManGameScene<PacManSceneRende
 			}
 			break;
 		case HITTING_NAIL:
-			if (timeout()) {
+			if (phase.isComplete()) {
 				blinky.speed = 0.3f;
 				enter(Phase.STRETCHED_1);
 			}
@@ -130,12 +139,12 @@ public class IntermissionScene2 extends AbstractPacManGameScene<PacManSceneRende
 			}
 			break;
 		case LOOKING_UP:
-			if (timeout()) {
+			if (phase.isComplete()) {
 				enter(Phase.LOOKING_RIGHT, clock.sec(3));
 			}
 			break;
 		case LOOKING_RIGHT:
-			if (timeout()) {
+			if (phase.isComplete()) {
 				game.state.duration(0); // signal end of this scene
 			}
 			break;
@@ -144,9 +153,7 @@ public class IntermissionScene2 extends AbstractPacManGameScene<PacManSceneRende
 		}
 		blinky.move();
 		pac.move();
-		if (timer >= 0) {
-			--timer;
-		}
+		phase.tick();
 	}
 
 	@Override

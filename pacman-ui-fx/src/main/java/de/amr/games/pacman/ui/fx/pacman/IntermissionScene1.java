@@ -35,14 +35,16 @@ public class IntermissionScene1 extends AbstractPacManGameScene<PacManSceneRende
 	private final Ghost blinky;
 	private final Pac pac;
 	private final Animation<Rectangle2D> bigPac;
+
 	private Phase phase;
 
 	public IntermissionScene1(PacManGameModel game, SoundManager soundManager, double width, double height,
 			double scaling) {
 		super(game, soundManager, width, height, scaling);
 		rendering = new PacManSceneRendering(g);
-		blinky = new Ghost(0, "Blinky", Direction.LEFT);
+
 		pac = new Pac("Pac-Man", Direction.LEFT);
+		blinky = new Ghost(0, "Blinky", Direction.LEFT);
 		bigPac = Animation.of(tileRegion(2, 1, 2, 2), tileRegion(4, 1, 2, 2), tileRegion(6, 1, 2, 2));
 		bigPac.endless().frameDuration(4).run();
 	}
@@ -88,8 +90,8 @@ public class IntermissionScene1 extends AbstractPacManGameScene<PacManSceneRende
 			}
 			break;
 		case BIGPACMAN_CHASING_BLINKY:
-			if ((int) blinky.position.x + 4 == t(14)) {
-				pac.speed = blinky.speed * 1.9f;
+			if ((int) blinky.position.x + 4 == t(13)) {
+				pac.speed = blinky.speed * 1.8f;
 			}
 			if (pac.position.x > t(28) + 100) {
 				game.state.duration(0);
