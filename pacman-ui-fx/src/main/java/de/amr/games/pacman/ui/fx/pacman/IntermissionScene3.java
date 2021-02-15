@@ -1,5 +1,6 @@
 package de.amr.games.pacman.ui.fx.pacman;
 
+import static de.amr.games.pacman.heaven.God.clock;
 import static de.amr.games.pacman.lib.Direction.LEFT;
 import static de.amr.games.pacman.lib.Direction.RIGHT;
 import static de.amr.games.pacman.lib.Logging.log;
@@ -27,15 +28,14 @@ import javafx.scene.paint.Color;
 public class IntermissionScene3 extends AbstractPacManGameScene<PacManSceneRendering> {
 
 	enum Phase {
-		CHASING_PACMAN, RETURNING_HALF_NAKED
+		CHASING_PACMAN, RETURNING_HALF_NAKED;
 	}
 
 	private final Animation<Rectangle2D> blinkyDamaged, blinkyHalfNaked;
-	private final int chaseTileY;
+	private final int chaseTileY = 20;
 	private final Ghost blinky;
 	private final Pac pac;
 	private Phase phase;
-	private long timer;
 
 	public IntermissionScene3(PacManGameModel game, SoundManager soundManager, double width, double height,
 			double scaling) {
@@ -44,7 +44,6 @@ public class IntermissionScene3 extends AbstractPacManGameScene<PacManSceneRende
 
 		pac = new Pac("Pac-Man", Direction.LEFT);
 		blinky = new Ghost(0, "Blinky", Direction.LEFT);
-		chaseTileY = 20;
 
 		blinkyDamaged = Animation.of(tileRegion(10, 7, 1, 1), tileRegion(11, 7, 1, 1));
 		blinkyDamaged.frameDuration(4).endless();
@@ -54,7 +53,7 @@ public class IntermissionScene3 extends AbstractPacManGameScene<PacManSceneRende
 
 	@Override
 	public void start() {
-		log("Start intermission scene %s", getClass().getSimpleName());
+		log("Start intermission scene %s at %d", this, clock.ticksTotal);
 
 		pac.visible = true;
 		pac.dead = false;
@@ -98,9 +97,6 @@ public class IntermissionScene3 extends AbstractPacManGameScene<PacManSceneRende
 		}
 		blinky.move();
 		pac.move();
-		if (timer >= 0) {
-			--timer;
-		}
 	}
 
 	@Override
