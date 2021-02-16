@@ -7,6 +7,7 @@ import static de.amr.games.pacman.model.GhostState.HUNTING_PAC;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.Animation;
+import de.amr.games.pacman.lib.CountdownTimer;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2f;
 import de.amr.games.pacman.lib.V2i;
@@ -30,17 +31,7 @@ public class IntermissionScene2 extends AbstractPacManGameScene<PacManSceneRende
 
 		APPROACHING_NAIL, HITTING_NAIL, STRETCHED_1, STRETCHED_2, STRETCHED_3, LOOKING_UP, LOOKING_RIGHT;
 
-		private long timer;
-
-		private boolean isComplete() {
-			return timer == -1;
-		}
-
-		private void tick() {
-			if (timer > -1) {
-				--timer;
-			}
-		}
+		final CountdownTimer timer = new CountdownTimer();
 	}
 
 	private final int chaseTileY = 20;
@@ -97,7 +88,7 @@ public class IntermissionScene2 extends AbstractPacManGameScene<PacManSceneRende
 
 	private void enter(Phase nextPhase, long ticks) {
 		phase = nextPhase;
-		phase.timer = ticks;
+		phase.timer.setDuration(ticks);
 	}
 
 	private void enter(Phase nextPhase) {
@@ -115,21 +106,21 @@ public class IntermissionScene2 extends AbstractPacManGameScene<PacManSceneRende
 			}
 			break;
 		case HITTING_NAIL:
-			if (phase.isComplete()) {
-				blinky.speed = 0.3f;
-				enter(Phase.STRETCHED_1);
+			if (phase.timer.expired()) {
+				blinky.speed = 0.2f;
+				enter(Phase.STRETCHED_1, Long.MAX_VALUE);
 			}
 			break;
 		case STRETCHED_1:
 			if (distFromNail == -3) {
-				blinky.speed = 0.2f;
-				enter(Phase.STRETCHED_2);
+				blinky.speed = 0.15f;
+				enter(Phase.STRETCHED_2, Long.MAX_VALUE);
 			}
 			break;
 		case STRETCHED_2:
 			if (distFromNail == -6) {
 				blinky.speed = 0.1f;
-				enter(Phase.STRETCHED_3);
+				enter(Phase.STRETCHED_3, Long.MAX_VALUE);
 			}
 			break;
 		case STRETCHED_3:
@@ -139,12 +130,12 @@ public class IntermissionScene2 extends AbstractPacManGameScene<PacManSceneRende
 			}
 			break;
 		case LOOKING_UP:
-			if (phase.isComplete()) {
+			if (phase.timer.expired()) {
 				enter(Phase.LOOKING_RIGHT, clock.sec(3));
 			}
 			break;
 		case LOOKING_RIGHT:
-			if (phase.isComplete()) {
+			if (phase.timer.expired()) {
 				game.state.duration(0); // signal end of this scene
 			}
 			break;
@@ -153,7 +144,7 @@ public class IntermissionScene2 extends AbstractPacManGameScene<PacManSceneRende
 		}
 		blinky.move();
 		pac.move();
-		phase.tick();
+		phase.timer.tick();
 	}
 
 	@Override
