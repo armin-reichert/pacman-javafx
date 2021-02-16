@@ -16,7 +16,8 @@ import de.amr.games.pacman.ui.fx.common.PlayScene;
  */
 public class MsPacManGameScenes {
 
-	public final SoundManager soundManager = new PacManGameSoundManager(PacManGameSoundAssets::getMsPacManSoundURL);
+	public static final SoundManager soundManager = new PacManGameSoundManager(
+			PacManGameSoundAssets::getMsPacManSoundURL);
 
 	private PacManGameScene introScene;
 	private PacManGameScene playScene;
@@ -31,10 +32,10 @@ public class MsPacManGameScenes {
 		return scene;
 	}
 
-	public void createScenes(MsPacManGame game, double sizeX, double sizeY, double scaling) {
-		introScene = new IntroScene(game, sizeX, sizeY, scaling);
-		playScene = createPlayScene(game, sizeX, sizeY, scaling);
-		intermissionScene1 = introScene; // TODO
+	public void createScenes(MsPacManGame game, double width, double height, double scaling) {
+		introScene = new IntroScene(game, width, height, scaling);
+		playScene = createPlayScene(game, width, height, scaling);
+		intermissionScene1 = new IntermissionScene1(game, width, height, scaling);
 		intermissionScene2 = introScene; // TODO
 		intermissionScene3 = introScene; // TODO
 	}

@@ -157,7 +157,7 @@ public class PacManGameFXUI implements PacManGameUI {
 	@Override
 	public Optional<SoundManager> sound() {
 		return muted ? Optional.empty()
-				: Optional.of(game instanceof PacManGame ? pacManGameScenes.soundManager : msPacManGameScenes.soundManager);
+				: Optional.of(game instanceof PacManGame ? pacManGameScenes.soundManager : MsPacManGameScenes.soundManager);
 	}
 
 	@Override

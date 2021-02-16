@@ -44,13 +44,14 @@ import javafx.scene.text.Font;
 public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimation {
 
 	private final GraphicsContext g;
-	private final Image spritesheet = new Image("/mspacman/graphics/sprites.png", false);
+	private final Image sheet = new Image("/mspacman/graphics/sprites.png", false);
 
 	private final Rectangle2D[] symbols;
 	private final Map<Integer, Rectangle2D> bonusValues;
 	private final Map<Integer, Rectangle2D> bountyValues;
-	private final Map<Direction, Animation<Rectangle2D>> pacMunching;
-	private final Animation<Rectangle2D> pacSpinning;
+	private final Map<Direction, Animation<Rectangle2D>> msPacMunching;
+	private final Map<Direction, Animation<Rectangle2D>> pacManMunching; // used in intermission scene
+	private final Animation<Rectangle2D> msPacSpinning;
 	private final List<EnumMap<Direction, Animation<Rectangle2D>>> ghostsKicking;
 	private final EnumMap<Direction, Animation<Rectangle2D>> ghostEyes;
 	private final Animation<Rectangle2D> ghostBlue;
@@ -58,6 +59,7 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 	private final Animation<Integer> bonusJumps;
 	private final List<Animation<Image>> mazesFlashing;
 	private final Animation<Boolean> energizerBlinking;
+	private final Animation<Rectangle2D> flapAnim;
 
 	private final Font scoreFont;
 
@@ -107,21 +109,27 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 			Map<Color, Color> exchanges = Map.of(getMazeWallBorderColor(mazeIndex), Color.WHITE, getMazeWallColor(mazeIndex),
 					Color.BLACK);
 			WritableImage mazeEmpty = new WritableImage(226, 248);
-			mazeEmpty.getPixelWriter().setPixels(0, 0, 226, 248, spritesheet.getPixelReader(), 226, 248 * mazeIndex);
+			mazeEmpty.getPixelWriter().setPixels(0, 0, 226, 248, sheet.getPixelReader(), 226, 248 * mazeIndex);
 			Image mazeEmptyBright = SceneRendering.exchangeColors(mazeEmpty, exchanges);
 			mazesFlashing.add(Animation.of(mazeEmptyBright, mazeEmpty).frameDuration(15));
 		}
 
-		pacMunching = new EnumMap<>(Direction.class);
+		msPacMunching = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = index(dir);
 			Animation<Rectangle2D> munching = Animation.of(s(1, d), s(1, d), s(2, d), s(0, d));
 			munching.frameDuration(2).endless();
-			pacMunching.put(dir, munching);
+			msPacMunching.put(dir, munching);
 		}
 
-		pacSpinning = Animation.of(s(0, 3), s(0, 0), s(0, 1), s(0, 2));
-		pacSpinning.frameDuration(10).repetitions(2);
+		pacManMunching = new EnumMap<>(Direction.class);
+		pacManMunching.put(Direction.RIGHT, Animation.of(s(0, 9), s(1, 9), s(2, 9)).endless().frameDuration(2));
+		pacManMunching.put(Direction.LEFT, Animation.of(s(0, 10), s(1, 10), s(2, 9)).endless().frameDuration(2));
+		pacManMunching.put(Direction.UP, Animation.of(s(0, 11), s(1, 11), s(2, 9)).endless().frameDuration(2));
+		pacManMunching.put(Direction.DOWN, Animation.of(s(0, 12), s(1, 12), s(2, 9)).endless().frameDuration(2));
+
+		msPacSpinning = Animation.of(s(0, 3), s(0, 0), s(0, 1), s(0, 2));
+		msPacSpinning.frameDuration(10).repetitions(2);
 
 		ghostsKicking = new ArrayList<>(4);
 		for (int id = 0; id < 4; ++id) {
@@ -147,11 +155,20 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 		ghostFlashing.frameDuration(5).endless();
 
 		bonusJumps = Animation.of(0, 2, 0, -2).frameDuration(20).endless().run();
+
+		flapAnim = Animation.of( //
+				new Rectangle2D(456, 208, 32, 32), //
+				new Rectangle2D(488, 208, 32, 32), //
+				new Rectangle2D(520, 208, 32, 32), //
+				new Rectangle2D(488, 208, 32, 32), //
+				new Rectangle2D(456, 208, 32, 32)//
+		);
+		flapAnim.repetitions(1).frameDuration(4);
 	}
 
 	@Override
 	public Image spritesheet() {
-		return spritesheet;
+		return sheet;
 	}
 
 	@Override
@@ -162,6 +179,18 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 	@Override
 	public Font getScoreFont() {
 		return scoreFont;
+	}
+
+	public Map<Direction, Animation<Rectangle2D>> getPacManMunching() {
+		return pacManMunching;
+	}
+
+	public Rectangle2D getHeart() {
+		return s(2, 10);
+	}
+
+	public Animation<Rectangle2D> getFlapAnim() {
+		return flapAnim;
 	}
 
 	/**
@@ -239,7 +268,7 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 			g.drawImage(mazeFlashing(mazeNumber).animate(), x, y);
 		} else {
 			Rectangle2D fullMazeRegion = new Rectangle2D(0, 248 * index, 226, 248);
-			g.drawImage(spritesheet, fullMazeRegion.getMinX(), fullMazeRegion.getMinY(), fullMazeRegion.getWidth(),
+			g.drawImage(sheet, fullMazeRegion.getMinX(), fullMazeRegion.getMinY(), fullMazeRegion.getWidth(),
 					fullMazeRegion.getHeight(), x, y, fullMazeRegion.getWidth(), fullMazeRegion.getHeight());
 		}
 	}
@@ -264,7 +293,7 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 			byte symbol = game.levelSymbols.get(level - 1);
 			// TODO how can an IndexOutOfBoundsException occur here?
 			Rectangle2D region = symbols[symbol];
-			g.drawImage(spritesheet, region.getMinX(), region.getMinY(), 16, 16, x, y, 16, 16);
+			g.drawImage(sheet, region.getMinX(), region.getMinY(), 16, 16, x, y, 16, 16);
 			x -= t(2);
 		}
 	}
@@ -274,7 +303,7 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 		int maxLivesDisplayed = 5;
 		int livesDisplayed = game.started ? game.lives - 1 : game.lives;
 		for (int i = 0; i < Math.min(livesDisplayed, maxLivesDisplayed); ++i) {
-			g.drawImage(spritesheet, 456 + 16, 0, 16, 16, x + t(2 * i), y, 16, 16);
+			g.drawImage(sheet, 456 + 16, 0, 16, 16, x + t(2 * i), y, 16, 16);
 		}
 	}
 
@@ -307,8 +336,8 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 
 	private void drawRegion(Creature guy, Rectangle2D region) {
 		if (guy.visible && region != null) {
-			g.drawImage(spritesheet, region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(),
-					guy.position.x - 4, guy.position.y - 4, region.getWidth(), region.getHeight());
+			g.drawImage(sheet, region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(), guy.position.x - 4,
+					guy.position.y - 4, region.getWidth(), region.getHeight());
 		}
 	}
 
@@ -374,12 +403,12 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 
 	@Override
 	public Animation<Rectangle2D> pacMunchingToDir(Pac pac, Direction dir) {
-		return pacMunching.get(ensureNotNull(dir));
+		return msPacMunching.get(ensureNotNull(dir));
 	}
 
 	@Override
 	public Animation<Rectangle2D> pacDying() {
-		return pacSpinning;
+		return msPacSpinning;
 	}
 
 	@Override
