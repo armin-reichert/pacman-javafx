@@ -7,6 +7,7 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.Animation;
+import de.amr.games.pacman.lib.CountdownTimer;
 import de.amr.games.pacman.lib.V2f;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.Ghost;
@@ -28,11 +29,7 @@ public class IntroScene extends AbstractPacManGameScene<MsPacManSceneRendering> 
 
 		BEGIN, GHOSTS, MSPACMAN, END;
 
-		private long start;
-
-		private boolean at(long ticks) {
-			return clock.ticksTotal - start == ticks;
-		}
+		CountdownTimer timer = new CountdownTimer();
 	}
 
 	private final V2i frameTopLeftTile = new V2i(6, 8);
@@ -53,9 +50,9 @@ public class IntroScene extends AbstractPacManGameScene<MsPacManSceneRendering> 
 		rendering = new MsPacManSceneRendering(g);
 	}
 
-	private void enterPhase(Phase newPhase) {
+	private void enter(Phase newPhase, long ticks) {
 		phase = newPhase;
-		phase.start = clock.ticksTotal;
+		phase.timer.setDuration(ticks);
 	}
 
 	@Override
@@ -87,7 +84,7 @@ public class IntroScene extends AbstractPacManGameScene<MsPacManSceneRendering> 
 		currentGhost = null;
 		presentingMsPac = false;
 
-		enterPhase(Phase.BEGIN);
+		enter(Phase.BEGIN, Long.MAX_VALUE);
 	}
 
 	@Override
@@ -98,9 +95,9 @@ public class IntroScene extends AbstractPacManGameScene<MsPacManSceneRendering> 
 		msPac.move();
 		switch (phase) {
 		case BEGIN:
-			if (phase.at(clock.sec(1))) {
+			if (phase.timer.running() == clock.sec(1)) {
 				currentGhost = ghosts[0];
-				enterPhase(Phase.GHOSTS);
+				enter(Phase.GHOSTS, Long.MAX_VALUE);
 			}
 			break;
 		case GHOSTS:
@@ -109,34 +106,35 @@ public class IntroScene extends AbstractPacManGameScene<MsPacManSceneRendering> 
 				if (currentGhost == ghosts[3]) {
 					currentGhost = null;
 					presentingMsPac = true;
-					enterPhase(Phase.MSPACMAN);
+					enter(Phase.MSPACMAN, Long.MAX_VALUE);
 				} else {
 					currentGhost = ghosts[currentGhost.id + 1];
-					enterPhase(Phase.GHOSTS);
+					enter(Phase.GHOSTS, Long.MAX_VALUE);
 				}
 			}
 			break;
 		case MSPACMAN:
 			boolean msPacComplete = letMsPacManWalkToEndPosition();
 			if (msPacComplete) {
-				enterPhase(Phase.END);
+				enter(Phase.END, Long.MAX_VALUE);
 			}
 			break;
 		case END:
-			if (phase.at(clock.sec(5))) {
+			if (phase.timer.running() == clock.sec(5)) {
 				game.attractMode = true;
 			}
 			break;
 		default:
 			break;
 		}
+		phase.timer.tick();
 	}
 
 	private boolean letCurrentGhostWalkToEndPosition() {
 		if (currentGhost == null) {
 			return false;
 		}
-		if (phase.at(1)) {
+		if (phase.timer.running() == 1) {
 			currentGhost.speed = 1;
 			rendering.ghostKicking(currentGhost).forEach(Animation::restart);
 		}
@@ -152,7 +150,7 @@ public class IntroScene extends AbstractPacManGameScene<MsPacManSceneRendering> 
 	}
 
 	private boolean letMsPacManWalkToEndPosition() {
-		if (phase.at(1)) {
+		if (phase.timer.running() == 1) {
 			msPac.visible = true;
 			msPac.couldMove = true;
 			msPac.speed = 1;
