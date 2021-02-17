@@ -35,7 +35,8 @@ public class PacManGameFXUI implements PacManGameUI {
 
 	private final Stage stage;
 	private final double scaling;
-	private final double sizeX, sizeY;
+	private final double width;
+	private final double height;
 
 	private PacManGameModel game;
 	private PacManGameScene currentScene;
@@ -48,8 +49,8 @@ public class PacManGameFXUI implements PacManGameUI {
 	public PacManGameFXUI(Stage stage, PacManGameController controller, double scaling) {
 		this.scaling = scaling;
 		this.stage = stage;
-		sizeX = 28 * TS * scaling;
-		sizeY = 36 * TS * scaling;
+		width = 28 * TS * scaling;
+		height = 36 * TS * scaling;
 		stage.setTitle("JavaFX: Pac-Man / Ms. Pac-Man");
 		stage.getIcons().add(new Image("/pacman/graphics/pacman.png"));
 		stage.setOnCloseRequest(e -> {
@@ -67,9 +68,9 @@ public class PacManGameFXUI implements PacManGameUI {
 		}
 		this.game = game;
 		if (game instanceof MsPacManGame) {
-			de.amr.games.pacman.ui.fx.mspacman.Scenes.createScenes((MsPacManGame) game, sizeX, sizeY, scaling);
+			de.amr.games.pacman.ui.fx.mspacman.Scenes.createScenes((MsPacManGame) game, width, height, scaling);
 		} else if (game instanceof PacManGame) {
-			de.amr.games.pacman.ui.fx.pacman.Scenes.createScenes((PacManGame) game, sizeX, sizeY, scaling);
+			de.amr.games.pacman.ui.fx.pacman.Scenes.createScenes((PacManGame) game, width, height, scaling);
 		} else {
 			log("%s: Cannot create scenes for invalid game: %s", this, game);
 		}
