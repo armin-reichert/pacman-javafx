@@ -59,8 +59,7 @@ public class IntroScene extends AbstractPacManGameScene<PacManSceneRendering> {
 	}
 
 	public IntroScene(PacManGameModel game, double width, double height, double scaling) {
-		super(game, null, width, height, scaling);
-		setRendering(new PacManSceneRendering(g));
+		super(game, null, width, height, scaling, PacManGameScenes.rendering);
 	}
 
 	@Override
@@ -187,7 +186,7 @@ public class IntroScene extends AbstractPacManGameScene<PacManSceneRendering> {
 	@Override
 	public void render() {
 		fill(Color.BLACK);
-		rendering.drawScore(game, true);
+		rendering.drawScore(g, game, true);
 		drawGallery();
 		if (phase == Phase.CHASING_PAC) {
 			if (blinking.animate()) {
@@ -205,9 +204,9 @@ public class IntroScene extends AbstractPacManGameScene<PacManSceneRendering> {
 	}
 
 	private void drawGuys() {
-		rendering.drawPac(pac, game);
+		rendering.drawPac(g, pac, game);
 		for (Ghost ghost : ghosts) {
-			rendering.drawGhost(ghost, game);
+			rendering.drawGhost(g, ghost, game);
 		}
 	}
 
@@ -235,7 +234,7 @@ public class IntroScene extends AbstractPacManGameScene<PacManSceneRendering> {
 			return;
 		}
 		Rectangle2D ghostTile = rendering.ghostKickingToDir(ghost, Direction.RIGHT).frame(0);
-		rendering.drawRegion(rendering.toRegion(ghostTile), x, y - 4);
+		rendering.drawRegion(g, rendering.toRegion(ghostTile), x, y - 4);
 		g.setFill(color);
 		g.setFont(rendering.getScoreFont());
 		if (showCharacter) {

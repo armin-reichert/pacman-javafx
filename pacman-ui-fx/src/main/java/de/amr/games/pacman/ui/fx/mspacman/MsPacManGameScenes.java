@@ -19,6 +19,8 @@ public class MsPacManGameScenes {
 	public static final SoundManager soundManager = new PacManGameSoundManager(
 			PacManGameSoundAssets::getMsPacManSoundURL);
 
+	public static final MsPacManSceneRendering rendering = new MsPacManSceneRendering();
+
 	private IntroScene introScene;
 	private PlayScene<MsPacManSceneRendering> playScene;
 	private IntermissionScene1 intermissionScene1;
@@ -27,8 +29,7 @@ public class MsPacManGameScenes {
 
 	public void createScenes(MsPacManGame game, double width, double height, double scaling) {
 		introScene = new IntroScene(game, width, height, scaling);
-		playScene = new PlayScene<>(game, width, height, scaling);
-		playScene.setRendering(new MsPacManSceneRendering(playScene.gc()));
+		playScene = new PlayScene<>(game, width, height, scaling, rendering);
 		intermissionScene1 = new IntermissionScene1(game, width, height, scaling);
 		intermissionScene2 = new IntermissionScene2(game, width, height, scaling);
 		intermissionScene3 = new IntermissionScene3(game, width, height, scaling);

@@ -43,7 +43,6 @@ import javafx.scene.text.Font;
  */
 public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimation {
 
-	private final GraphicsContext g;
 	private final Image sheet = new Image("/mspacman/graphics/sprites.png", false);
 
 	private final Rectangle2D[] symbols;
@@ -75,8 +74,7 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 		return r(456, 0, tileX, tileY, 1, 1);
 	}
 
-	public MsPacManSceneRendering(GraphicsContext g) {
-		this.g = g;
+	public MsPacManSceneRendering() {
 
 		scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), 8);
 
@@ -172,11 +170,6 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 	}
 
 	@Override
-	public GraphicsContext gc() {
-		return g;
-	}
-
-	@Override
 	public Font getScoreFont() {
 		return scoreFont;
 	}
@@ -248,7 +241,7 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 	}
 
 	@Override
-	public void signalGameState(PacManGameModel game) {
+	public void signalGameState(GraphicsContext g, PacManGameModel game) {
 		if (game.state == PacManGameState.GAME_OVER || game.attractMode) {
 			g.setFont(scoreFont);
 			g.setFill(Color.RED);
@@ -262,7 +255,7 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 	}
 
 	@Override
-	public void drawMaze(int mazeNumber, int x, int y, boolean flashing) {
+	public void drawMaze(GraphicsContext g, int mazeNumber, int x, int y, boolean flashing) {
 		int index = mazeNumber - 1;
 		if (flashing) {
 			g.drawImage(mazeFlashing(mazeNumber).animate(), x, y);
@@ -274,19 +267,19 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 	}
 
 	@Override
-	public void drawFoodTiles(Stream<V2i> tiles, Predicate<V2i> eaten) {
-		tiles.filter(eaten).forEach(this::hideTile);
+	public void drawFoodTiles(GraphicsContext g, Stream<V2i> tiles, Predicate<V2i> eaten) {
+		tiles.filter(eaten).forEach(tile -> hideTile(g, tile));
 	}
 
 	@Override
-	public void drawEnergizerTiles(Stream<V2i> energizerTiles) {
+	public void drawEnergizerTiles(GraphicsContext g, Stream<V2i> energizerTiles) {
 		if (energizerBlinking.animate()) {
-			energizerTiles.forEach(this::hideTile);
+			energizerTiles.forEach(tile -> hideTile(g, tile));
 		}
 	}
 
 	@Override
-	public void drawLevelCounter(PacManGameModel game, int rightX, int y) {
+	public void drawLevelCounter(GraphicsContext g, PacManGameModel game, int rightX, int y) {
 		int x = rightX;
 		int firstLevel = Math.max(1, game.currentLevelNumber - 6);
 		for (int level = firstLevel; level <= game.currentLevelNumber; ++level) {
@@ -299,7 +292,7 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 	}
 
 	@Override
-	public void drawLivesCounter(PacManGameModel game, int x, int y) {
+	public void drawLivesCounter(GraphicsContext g, PacManGameModel game, int x, int y) {
 		int maxLivesDisplayed = 5;
 		int livesDisplayed = game.started ? game.lives - 1 : game.lives;
 		for (int i = 0; i < Math.min(livesDisplayed, maxLivesDisplayed); ++i) {
@@ -308,7 +301,7 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 	}
 
 	@Override
-	public void drawScore(PacManGameModel game, boolean titleOnly) {
+	public void drawScore(GraphicsContext g, PacManGameModel game, boolean titleOnly) {
 		g.setFont(scoreFont);
 		g.translate(0, 2);
 		g.setFill(Color.WHITE);
@@ -329,12 +322,12 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 	}
 
 	@Override
-	public void hideTile(V2i tile) {
+	public void hideTile(GraphicsContext g, V2i tile) {
 		g.setFill(Color.BLACK);
 		g.fillRect(tile.x * TS, tile.y * TS, TS, TS);
 	}
 
-	private void drawRegion(Creature guy, Rectangle2D region) {
+	private void drawRegion(GraphicsContext g, Creature guy, Rectangle2D region) {
 		if (guy.visible && region != null) {
 			g.drawImage(sheet, region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(), guy.position.x - 4,
 					guy.position.y - 4, region.getWidth(), region.getHeight());
@@ -342,20 +335,20 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 	}
 
 	@Override
-	public void drawPac(Pac pac, PacManGameModel game) {
-		drawRegion(pac, pacSprite(pac, game));
+	public void drawPac(GraphicsContext g, Pac pac, PacManGameModel game) {
+		drawRegion(g, pac, pacSprite(pac, game));
 	}
 
 	@Override
-	public void drawGhost(Ghost ghost, PacManGameModel game) {
-		drawRegion(ghost, ghostSprite(ghost, game));
+	public void drawGhost(GraphicsContext g, Ghost ghost, PacManGameModel game) {
+		drawRegion(g, ghost, ghostSprite(ghost, game));
 	}
 
 	@Override
-	public void drawBonus(Bonus bonus, PacManGameModel game) {
+	public void drawBonus(GraphicsContext g, Bonus bonus, PacManGameModel game) {
 		g.save();
 		g.translate(0, bonusJumps.animate());
-		drawRegion(bonus, bonusSprite(bonus, game));
+		drawRegion(g, bonus, bonusSprite(bonus, game));
 		g.restore();
 	}
 

@@ -46,8 +46,7 @@ public class IntroScene extends AbstractPacManGameScene<MsPacManSceneRendering> 
 	private boolean presentingMsPac;
 
 	public IntroScene(PacManGameModel game, double width, double height, double scaling) {
-		super(game, null, width, height, scaling);
-		rendering = new MsPacManSceneRendering(g);
+		super(game, null, width, height, scaling, MsPacManGameScenes.rendering);
 	}
 
 	private void enter(Phase newPhase, long ticks) {
@@ -173,9 +172,9 @@ public class IntroScene extends AbstractPacManGameScene<MsPacManSceneRendering> 
 		g.fillText("\"MS PAC-MAN\"", t(8), t(5));
 		drawAnimatedFrame(32, 16, game.state.ticksRun());
 		for (Ghost ghost : ghosts) {
-			rendering.drawGhost(ghost, game);
+			rendering.drawGhost(g, ghost, game);
 		}
-		rendering.drawPac(msPac, game);
+		rendering.drawPac(g, msPac, game);
 		presentGhost();
 		presentMsPacMan();
 		if (phase == Phase.END) {

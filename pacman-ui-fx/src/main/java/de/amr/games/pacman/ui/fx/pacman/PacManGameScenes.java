@@ -19,7 +19,8 @@ import de.amr.games.pacman.ui.fx.common.PlayScene;
  */
 public class PacManGameScenes {
 
-	public final SoundManager soundManager = new PacManGameSoundManager(PacManGameSoundAssets::getPacManSoundURL);;
+	public static final PacManSceneRendering rendering = new PacManSceneRendering();
+	public static final SoundManager soundManager = new PacManGameSoundManager(PacManGameSoundAssets::getPacManSoundURL);
 
 	private IntroScene introScene;
 	private PlayScene<PacManSceneRendering> playScene;
@@ -29,11 +30,10 @@ public class PacManGameScenes {
 
 	public void createScenes(PacManGame game, double width, double height, double scaling) {
 		introScene = new IntroScene(game, width, height, scaling);
-		playScene = new PlayScene<>(game, width, height, scaling);
-		playScene.setRendering(new PacManSceneRendering(playScene.gc()));
-		intermissionScene1 = new IntermissionScene1(game, soundManager, width, height, scaling);
-		intermissionScene2 = new IntermissionScene2(game, soundManager, width, height, scaling);
-		intermissionScene3 = new IntermissionScene3(game, soundManager, width, height, scaling);
+		playScene = new PlayScene<>(game, width, height, scaling, rendering);
+		intermissionScene1 = new IntermissionScene1(game, width, height, scaling);
+		intermissionScene2 = new IntermissionScene2(game, width, height, scaling);
+		intermissionScene3 = new IntermissionScene3(game, width, height, scaling);
 		Logging.log("Pac-Man game scenes created at %d", clock.ticksTotal);
 	}
 

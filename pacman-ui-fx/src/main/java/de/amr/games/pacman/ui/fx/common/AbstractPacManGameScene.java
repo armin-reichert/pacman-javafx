@@ -24,11 +24,11 @@ public abstract class AbstractPacManGameScene<R extends SceneRendering> implemen
 	protected final Keyboard keyboard;
 	protected final PacManGameModel game;
 	protected final GraphicsContext g;
-	protected R rendering;
+	protected final R rendering;
 	protected final SoundManager soundManager;
 
 	public AbstractPacManGameScene(PacManGameModel game, SoundManager soundManager, double width, double height,
-			double scaling) {
+			double scaling, R rendering) {
 		this.game = game;
 		this.soundManager = soundManager;
 		Canvas canvas = new Canvas(width, height);
@@ -38,15 +38,7 @@ public abstract class AbstractPacManGameScene<R extends SceneRendering> implemen
 		pane.getChildren().add(canvas);
 		scene = new Scene(pane, width, height);
 		keyboard = new Keyboard(scene);
-	}
-
-	public void setRendering(R rendering) {
 		this.rendering = rendering;
-	}
-
-	@Override
-	public GraphicsContext gc() {
-		return g;
 	}
 
 	public void fill(Color color) {

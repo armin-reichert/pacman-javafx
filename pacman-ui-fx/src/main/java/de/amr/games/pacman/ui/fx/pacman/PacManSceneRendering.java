@@ -41,7 +41,6 @@ import javafx.scene.text.Font;
  */
 public class PacManSceneRendering implements SceneRendering {
 
-	private final GraphicsContext g;
 	private final Image spritesheet = new Image("/pacman/graphics/sprites.png", false);
 
 	private final Image mazeFull = new Image("/pacman/graphics/maze_full.png", false);
@@ -78,15 +77,14 @@ public class PacManSceneRendering implements SceneRendering {
 		return new Rectangle2D(x, y, width, height);
 	}
 
-	private void drawTile(Creature guy, Rectangle2D tile) {
+	private void drawTile(GraphicsContext g, Creature guy, Rectangle2D tile) {
 		if (guy.visible && tile != null) {
 			g.drawImage(spritesheet, tile.getMinX() * 16, tile.getMinY() * 16, tile.getWidth() * 16, tile.getHeight() * 16,
 					guy.position.x - 4, guy.position.y - 4, tile.getWidth() * 16, tile.getHeight() * 16);
 		}
 	}
 
-	public PacManSceneRendering(GraphicsContext g) {
-		this.g = g;
+	public PacManSceneRendering() {
 
 		scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), 8);
 
@@ -157,17 +155,12 @@ public class PacManSceneRendering implements SceneRendering {
 	}
 
 	@Override
-	public GraphicsContext gc() {
-		return g;
-	}
-
-	@Override
 	public Font getScoreFont() {
 		return scoreFont;
 	}
 
 	@Override
-	public void signalGameState(PacManGameModel game) {
+	public void signalGameState(GraphicsContext g, PacManGameModel game) {
 		if (game.state == PacManGameState.GAME_OVER || game.attractMode) {
 			g.setFont(scoreFont);
 			g.setFill(Color.RED);
@@ -181,13 +174,13 @@ public class PacManSceneRendering implements SceneRendering {
 	}
 
 	@Override
-	public void hideTile(V2i tile) {
+	public void hideTile(GraphicsContext g, V2i tile) {
 		g.setFill(Color.BLACK);
 		g.fillRect(tile.x * TS, tile.y * TS, TS, TS);
 	}
 
 	@Override
-	public void drawMaze(int mazeNumber, int x, int y, boolean flashing) {
+	public void drawMaze(GraphicsContext g, int mazeNumber, int x, int y, boolean flashing) {
 		if (flashing) {
 			g.drawImage(mazeFlashing(mazeNumber).animate(), x, y);
 		} else {
@@ -196,7 +189,7 @@ public class PacManSceneRendering implements SceneRendering {
 	}
 
 	@Override
-	public void drawScore(PacManGameModel game, boolean titleOnly) {
+	public void drawScore(GraphicsContext g, PacManGameModel game, boolean titleOnly) {
 		g.setFont(scoreFont);
 		g.translate(0, 1);
 		g.setFill(Color.WHITE);
@@ -217,7 +210,7 @@ public class PacManSceneRendering implements SceneRendering {
 	}
 
 	@Override
-	public void drawLevelCounter(PacManGameModel game, int rightX, int y) {
+	public void drawLevelCounter(GraphicsContext g, PacManGameModel game, int rightX, int y) {
 		int x = rightX;
 		int firstLevel = Math.max(1, game.currentLevelNumber - 6);
 		for (int level = firstLevel; level <= game.currentLevelNumber; ++level) {
@@ -228,7 +221,7 @@ public class PacManSceneRendering implements SceneRendering {
 	}
 
 	@Override
-	public void drawLivesCounter(PacManGameModel game, int x, int y) {
+	public void drawLivesCounter(GraphicsContext g, PacManGameModel game, int x, int y) {
 		int maxLivesDisplayed = 5;
 		int livesDisplayed = game.started ? game.lives - 1 : game.lives;
 		Rectangle2D region = s(8, 1);
@@ -238,30 +231,30 @@ public class PacManSceneRendering implements SceneRendering {
 	}
 
 	@Override
-	public void drawFoodTiles(Stream<V2i> tiles, Predicate<V2i> eaten) {
-		tiles.filter(eaten).forEach(this::hideTile);
+	public void drawFoodTiles(GraphicsContext g, Stream<V2i> tiles, Predicate<V2i> eaten) {
+		tiles.filter(eaten).forEach(tile -> hideTile(g, tile));
 	}
 
 	@Override
-	public void drawEnergizerTiles(Stream<V2i> energizerTiles) {
+	public void drawEnergizerTiles(GraphicsContext g, Stream<V2i> energizerTiles) {
 		if (energizerBlinking.animate()) {
-			energizerTiles.forEach(this::hideTile);
+			energizerTiles.forEach(tile -> hideTile(g, tile));
 		}
 	}
 
 	@Override
-	public void drawPac(Pac pac, PacManGameModel game) {
-		drawTile(pac, pacSprite(pac, game));
+	public void drawPac(GraphicsContext g, Pac pac, PacManGameModel game) {
+		drawTile(g, pac, pacSprite(pac, game));
 	}
 
 	@Override
-	public void drawGhost(Ghost ghost, PacManGameModel game) {
-		drawTile(ghost, ghostSprite(ghost, game));
+	public void drawGhost(GraphicsContext g, Ghost ghost, PacManGameModel game) {
+		drawTile(g, ghost, ghostSprite(ghost, game));
 	}
 
 	@Override
-	public void drawBonus(Bonus bonus, PacManGameModel game) {
-		drawTile(bonus, bonusSprite(bonus, game));
+	public void drawBonus(GraphicsContext g, Bonus bonus, PacManGameModel game) {
+		drawTile(g, bonus, bonusSprite(bonus, game));
 	}
 
 	@Override

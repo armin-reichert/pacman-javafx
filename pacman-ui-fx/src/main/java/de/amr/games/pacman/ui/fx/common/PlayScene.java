@@ -13,8 +13,8 @@ import javafx.scene.paint.Color;
  */
 public class PlayScene<R extends SceneRendering> extends AbstractPacManGameScene<R> {
 
-	public PlayScene(PacManGameModel game, double width, double height, double scaling) {
-		super(game, null, width, height, scaling);
+	public PlayScene(PacManGameModel game, double width, double height, double scaling, R rendering) {
+		super(game, null, width, height, scaling, rendering);
 	}
 
 	@Override
@@ -25,20 +25,20 @@ public class PlayScene<R extends SceneRendering> extends AbstractPacManGameScene
 	public void render() {
 		fill(Color.BLACK);
 		boolean flashing = rendering.mazeFlashing(game.level.mazeNumber).hasStarted();
-		rendering.drawMaze(game.level.mazeNumber, 0, t(3), flashing);
+		rendering.drawMaze(g, game.level.mazeNumber, 0, t(3), flashing);
 		if (!flashing) {
-			rendering.drawFoodTiles(game.level.world.tiles().filter(game.level.world::isFoodTile),
+			rendering.drawFoodTiles(g, game.level.world.tiles().filter(game.level.world::isFoodTile),
 					game.level::containsEatenFood);
-			rendering.drawEnergizerTiles(game.level.world.energizerTiles());
+			rendering.drawEnergizerTiles(g, game.level.world.energizerTiles());
 		}
-		rendering.signalGameState(game);
-		rendering.drawPac(game.pac, game);
-		game.ghosts().forEach(ghost -> rendering.drawGhost(ghost, game));
-		rendering.drawBonus(game.bonus, game);
-		rendering.drawScore(game, game.state == PacManGameState.INTRO || game.attractMode);
+		rendering.signalGameState(g, game);
+		rendering.drawPac(g, game.pac, game);
+		game.ghosts().forEach(ghost -> rendering.drawGhost(g, ghost, game));
+		rendering.drawBonus(g, game.bonus, game);
+		rendering.drawScore(g, game, game.state == PacManGameState.INTRO || game.attractMode);
 		if (!game.attractMode) {
-			rendering.drawLivesCounter(game, t(2), t(34));
+			rendering.drawLivesCounter(g, game, t(2), t(34));
 		}
-		rendering.drawLevelCounter(game, t(25), t(34));
+		rendering.drawLevelCounter(g, game, t(25), t(34));
 	}
 }

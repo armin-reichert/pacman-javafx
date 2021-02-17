@@ -15,7 +15,6 @@ import de.amr.games.pacman.model.Ghost;
 import de.amr.games.pacman.model.Pac;
 import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.sound.PacManGameSound;
-import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.common.AbstractPacManGameScene;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.paint.Color;
@@ -38,10 +37,8 @@ public class IntermissionScene1 extends AbstractPacManGameScene<PacManSceneRende
 
 	private Phase phase;
 
-	public IntermissionScene1(PacManGameModel game, SoundManager soundManager, double width, double height,
-			double scaling) {
-		super(game, soundManager, width, height, scaling);
-		rendering = new PacManSceneRendering(g);
+	public IntermissionScene1(PacManGameModel game, double width, double height, double scaling) {
+		super(game, PacManGameScenes.soundManager, width, height, scaling, PacManGameScenes.rendering);
 
 		pac = new Pac("Pac-Man", Direction.LEFT);
 		blinky = new Ghost(0, "Blinky", Direction.LEFT);
@@ -107,12 +104,12 @@ public class IntermissionScene1 extends AbstractPacManGameScene<PacManSceneRende
 	@Override
 	public void render() {
 		fill(Color.BLACK);
-		rendering.drawGhost(blinky, game);
+		rendering.drawGhost(g, blinky, game);
 		if (phase == Phase.BLINKY_CHASING_PACMAN) {
-			rendering.drawPac(pac, game);
+			rendering.drawPac(g, pac, game);
 		} else {
-			rendering.drawRegion(bigPac.animate(), pac.position.x - 12, pac.position.y - 22);
+			rendering.drawRegion(g, bigPac.animate(), pac.position.x - 12, pac.position.y - 22);
 		}
-		rendering.drawLevelCounter(game, t(25), t(34));
+		rendering.drawLevelCounter(g, game, t(25), t(34));
 	}
 }

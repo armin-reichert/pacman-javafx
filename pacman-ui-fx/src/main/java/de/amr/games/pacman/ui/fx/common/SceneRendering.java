@@ -42,12 +42,16 @@ public interface SceneRendering extends PacManGameAnimation {
 
 	Image spritesheet();
 
-	GraphicsContext gc();
+	Rectangle2D bonusSprite(Bonus bonus, PacManGameModel game);
+
+	Rectangle2D pacSprite(Pac pac, PacManGameModel game);
+
+	Rectangle2D ghostSprite(Ghost ghost, PacManGameModel game);
 
 	Font getScoreFont();
 
-	default void drawRegion(Rectangle2D region, double x, double y) {
-		gc().drawImage(spritesheet(), region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(), x, y,
+	default void drawRegion(GraphicsContext g, Rectangle2D region, double x, double y) {
+		g.drawImage(spritesheet(), region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(), x, y,
 				region.getWidth(), region.getHeight());
 	}
 
@@ -55,31 +59,25 @@ public interface SceneRendering extends PacManGameAnimation {
 		return new Rectangle2D(16 * tile.getMinX(), 16 * tile.getMinY(), 16 * tile.getWidth(), 16 * tile.getHeight());
 	}
 
-	Rectangle2D bonusSprite(Bonus bonus, PacManGameModel game);
+	void drawPac(GraphicsContext g, Pac pac, PacManGameModel game);
 
-	Rectangle2D pacSprite(Pac pac, PacManGameModel game);
+	void drawGhost(GraphicsContext g, Ghost ghost, PacManGameModel game);
 
-	Rectangle2D ghostSprite(Ghost ghost, PacManGameModel game);
+	void drawBonus(GraphicsContext g, Bonus bonus, PacManGameModel game);
 
-	void drawPac(Pac pac, PacManGameModel game);
+	void hideTile(GraphicsContext g, V2i tile);
 
-	void drawGhost(Ghost ghost, PacManGameModel game);
+	void drawMaze(GraphicsContext g, int mazeNumber, int x, int y, boolean flashing);
 
-	void drawBonus(Bonus bonus, PacManGameModel game);
+	void drawFoodTiles(GraphicsContext g, Stream<V2i> tiles, Predicate<V2i> eaten);
 
-	void hideTile(V2i tile);
+	void drawEnergizerTiles(GraphicsContext g, Stream<V2i> energizerTiles);
 
-	void drawMaze(int mazeNumber, int x, int y, boolean flashing);
+	void drawScore(GraphicsContext g, PacManGameModel game, boolean titleOnly);
 
-	void drawFoodTiles(Stream<V2i> tiles, Predicate<V2i> eaten);
+	void drawLivesCounter(GraphicsContext g, PacManGameModel game, int x, int y);
 
-	void drawEnergizerTiles(Stream<V2i> energizerTiles);
+	void drawLevelCounter(GraphicsContext g, PacManGameModel game, int x, int y);
 
-	void drawScore(PacManGameModel game, boolean titleOnly);
-
-	void drawLivesCounter(PacManGameModel game, int x, int y);
-
-	void drawLevelCounter(PacManGameModel game, int x, int y);
-
-	void signalGameState(PacManGameModel game);
+	void signalGameState(GraphicsContext g, PacManGameModel game);
 }
