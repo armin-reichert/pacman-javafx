@@ -18,12 +18,10 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.paint.Color;
 
 /**
- * Intermission scene 2: "They meet".
+ * Intermission scene 2: "The chase".
  * <p>
- * Pac-Man leads Inky and Ms. Pac-Man leads Pinky. Soon, the two Pac-Men are about to collide, they
- * quickly move upwards, causing Inky and Pinky to collide and vanish. Finally, Pac-Man and Ms.
- * Pac-Man face each other at the top of the screen and a big pink heart appears above them. (Played
- * after round 2)
+ * Pac-Man and Ms. Pac-Man chase each other across the screen over and over. After three turns, they
+ * both rapidly run from left to right and right to left. (Played after round 5)
  * 
  * @author Armin Reichert
  */
