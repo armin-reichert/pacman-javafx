@@ -6,7 +6,6 @@ import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.PacManGameAnimation;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -71,7 +70,4 @@ public abstract class AbstractPacManGameScene<R extends SceneRendering> implemen
 		return rendering instanceof PacManGameAnimation ? Optional.of(rendering) : Optional.empty();
 	}
 
-	public Rectangle2D tileRegion(int tileX, int tileY, int cols, int rows) {
-		return new Rectangle2D(tileX * 16, tileY * 16, cols * 16, rows * 16);
-	}
 }

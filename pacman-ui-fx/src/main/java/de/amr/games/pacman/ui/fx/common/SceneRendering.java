@@ -40,6 +40,10 @@ public interface SceneRendering extends PacManGameAnimation {
 		return newImage;
 	}
 
+	static Rectangle2D tileRegion(int tileX, int tileY, int cols, int rows) {
+		return new Rectangle2D(tileX * 16, tileY * 16, cols * 16, rows * 16);
+	}
+
 	Image spritesheet();
 
 	Rectangle2D bonusSprite(Bonus bonus, PacManGameModel game);
