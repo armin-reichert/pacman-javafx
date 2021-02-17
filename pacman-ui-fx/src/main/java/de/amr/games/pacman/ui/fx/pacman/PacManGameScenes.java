@@ -30,7 +30,7 @@ public class PacManGameScenes {
 
 	public void createScenes(PacManGame game, double width, double height, double scaling) {
 		introScene = new IntroScene(game, width, height, scaling);
-		playScene = new PlayScene<>(game, width, height, scaling, rendering);
+		playScene = new PlayScene<>(game, width, height, scaling, rendering, soundManager);
 		intermissionScene1 = new IntermissionScene1(game, width, height, scaling);
 		intermissionScene2 = new IntermissionScene2(game, width, height, scaling);
 		intermissionScene3 = new IntermissionScene3(game, width, height, scaling);

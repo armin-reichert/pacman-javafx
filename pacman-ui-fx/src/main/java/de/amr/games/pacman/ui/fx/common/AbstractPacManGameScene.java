@@ -20,25 +20,27 @@ import javafx.scene.paint.Color;
  */
 public abstract class AbstractPacManGameScene<R extends SceneRendering> implements PacManGameScene {
 
-	protected final Scene scene;
+	protected final Scene fxScene;
 	protected final Keyboard keyboard;
-	protected final PacManGameModel game;
 	protected final GraphicsContext g;
 	protected final R rendering;
 	protected final SoundManager soundManager;
+	protected final PacManGameModel game;
 
-	public AbstractPacManGameScene(PacManGameModel game, SoundManager soundManager, double width, double height,
-			double scaling, R rendering) {
-		this.game = game;
-		this.soundManager = soundManager;
+	public AbstractPacManGameScene(double width, double height, double scaling, PacManGameModel game, R rendering,
+			SoundManager soundManager) {
+
 		Canvas canvas = new Canvas(width, height);
 		g = canvas.getGraphicsContext2D();
 		g.scale(scaling, scaling);
+		this.game = game;
+		this.rendering = rendering;
+		this.soundManager = soundManager;
+
 		StackPane pane = new StackPane();
 		pane.getChildren().add(canvas);
-		scene = new Scene(pane, width, height);
-		keyboard = new Keyboard(scene);
-		this.rendering = rendering;
+		fxScene = new Scene(pane, width, height);
+		keyboard = new Keyboard(fxScene);
 	}
 
 	public void fill(Color color) {
@@ -56,7 +58,7 @@ public abstract class AbstractPacManGameScene<R extends SceneRendering> implemen
 
 	@Override
 	public Scene getFXScene() {
-		return scene;
+		return fxScene;
 	}
 
 	@Override

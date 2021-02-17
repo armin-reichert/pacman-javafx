@@ -4,6 +4,7 @@ import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.model.PacManGameModel;
+import de.amr.games.pacman.sound.SoundManager;
 import javafx.scene.paint.Color;
 
 /**
@@ -13,8 +14,9 @@ import javafx.scene.paint.Color;
  */
 public class PlayScene<R extends SceneRendering> extends AbstractPacManGameScene<R> {
 
-	public PlayScene(PacManGameModel game, double width, double height, double scaling, R rendering) {
-		super(game, null, width, height, scaling, rendering);
+	public PlayScene(PacManGameModel game, double width, double height, double scaling, R rendering,
+			SoundManager soundManager) {
+		super(width, height, scaling, game, rendering, soundManager);
 	}
 
 	@Override

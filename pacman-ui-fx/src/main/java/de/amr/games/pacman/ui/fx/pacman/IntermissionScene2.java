@@ -42,7 +42,7 @@ public class IntermissionScene2 extends AbstractPacManGameScene<PacManSceneRende
 	private Phase phase;
 
 	public IntermissionScene2(PacManGameModel game, double width, double height, double scaling) {
-		super(game, PacManGameScenes.soundManager, width, height, scaling, PacManGameScenes.rendering);
+		super(width, height, scaling, game, PacManGameScenes.rendering, PacManGameScenes.soundManager);
 
 		blinky = new Ghost(0, "Blinky", Direction.LEFT);
 		pac = new Pac("Pac-Man", Direction.LEFT);

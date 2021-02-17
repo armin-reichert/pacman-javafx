@@ -59,7 +59,7 @@ public class IntroScene extends AbstractPacManGameScene<PacManSceneRendering> {
 	}
 
 	public IntroScene(PacManGameModel game, double width, double height, double scaling) {
-		super(game, null, width, height, scaling, PacManGameScenes.rendering);
+		super(width, height, scaling, game, PacManGameScenes.rendering, PacManGameScenes.soundManager);
 	}
 
 	@Override
