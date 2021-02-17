@@ -14,7 +14,7 @@ import javafx.scene.paint.Color;
  */
 public class PlayScene<R extends SceneRendering> extends AbstractPacManGameScene<R> {
 
-	public PlayScene(PacManGameModel game, double width, double height, double scaling, R rendering,
+	public PlayScene(double width, double height, double scaling, PacManGameModel game, R rendering,
 			SoundManager soundManager) {
 		super(width, height, scaling, game, rendering, soundManager);
 	}
