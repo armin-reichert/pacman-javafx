@@ -18,16 +18,16 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.paint.Color;
 
 /**
- * Intermission scene 1: "They meet".
+ * Intermission scene 3: "Junior".
+ * 
  * <p>
- * Pac-Man leads Inky and Ms. Pac-Man leads Pinky. Soon, the two Pac-Men are about to collide, they
- * quickly move upwards, causing Inky and Pinky to collide and vanish. Finally, Pac-Man and Ms.
- * Pac-Man face each other at the top of the screen and a big pink heart appears above them. (Played
- * after round 2)
+ * Pac-Man and Ms. Pac-Man gradually wait for a stork, who flies overhead with a little blue bundle.
+ * The stork drops the bundle, which falls to the ground in front of Pac-Man and Ms. Pac-Man, and
+ * finally opens up to reveal a tiny Pac-Man. (Played after rounds 9, 13, and 17)
  * 
  * @author Armin Reichert
  */
-public class IntermissionScene1 extends AbstractPacManGameScene<MsPacManSceneRendering> {
+public class IntermissionScene3 extends AbstractPacManGameScene<MsPacManSceneRendering> {
 
 	enum Phase {
 
@@ -49,7 +49,7 @@ public class IntermissionScene1 extends AbstractPacManGameScene<MsPacManSceneRen
 		phase.timer.setDuration(ticks);
 	}
 
-	public IntermissionScene1(PacManGameModel game, double width, double height, double scaling) {
+	public IntermissionScene3(PacManGameModel game, double width, double height, double scaling) {
 		super(game, MsPacManGameScenes.soundManager, width, height, scaling);
 		rendering = new MsPacManSceneRendering(g);
 	}

@@ -18,7 +18,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.paint.Color;
 
 /**
- * Intermission scene 1: "They meet".
+ * Intermission scene 2: "They meet".
  * <p>
  * Pac-Man leads Inky and Ms. Pac-Man leads Pinky. Soon, the two Pac-Men are about to collide, they
  * quickly move upwards, causing Inky and Pinky to collide and vanish. Finally, Pac-Man and Ms.
@@ -27,7 +27,7 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class IntermissionScene1 extends AbstractPacManGameScene<MsPacManSceneRendering> {
+public class IntermissionScene2 extends AbstractPacManGameScene<MsPacManSceneRendering> {
 
 	enum Phase {
 
@@ -49,7 +49,7 @@ public class IntermissionScene1 extends AbstractPacManGameScene<MsPacManSceneRen
 		phase.timer.setDuration(ticks);
 	}
 
-	public IntermissionScene1(PacManGameModel game, double width, double height, double scaling) {
+	public IntermissionScene2(PacManGameModel game, double width, double height, double scaling) {
 		super(game, MsPacManGameScenes.soundManager, width, height, scaling);
 		rendering = new MsPacManSceneRendering(g);
 	}
