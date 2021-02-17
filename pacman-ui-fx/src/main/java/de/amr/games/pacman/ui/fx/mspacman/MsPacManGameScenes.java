@@ -19,25 +19,19 @@ public class MsPacManGameScenes {
 	public static final SoundManager soundManager = new PacManGameSoundManager(
 			PacManGameSoundAssets::getMsPacManSoundURL);
 
-	private PacManGameScene introScene;
-	private PacManGameScene playScene;
-	private PacManGameScene intermissionScene1;
-	private PacManGameScene intermissionScene2;
-	private PacManGameScene intermissionScene3;
-
-	public static PlayScene<MsPacManSceneRendering> createPlayScene(PacManGameModel game, double width, double height,
-			double scaling) {
-		PlayScene<MsPacManSceneRendering> scene = new PlayScene<>(game, width, height, scaling);
-		scene.setRendering(new MsPacManSceneRendering(scene.gc()));
-		return scene;
-	}
+	private IntroScene introScene;
+	private PlayScene<MsPacManSceneRendering> playScene;
+	private IntermissionScene1 intermissionScene1;
+	private IntermissionScene2 intermissionScene2;
+	private IntermissionScene3 intermissionScene3;
 
 	public void createScenes(MsPacManGame game, double width, double height, double scaling) {
 		introScene = new IntroScene(game, width, height, scaling);
-		playScene = createPlayScene(game, width, height, scaling);
+		playScene = new PlayScene<>(game, width, height, scaling);
+		playScene.setRendering(new MsPacManSceneRendering(playScene.gc()));
 		intermissionScene1 = new IntermissionScene1(game, width, height, scaling);
-		intermissionScene2 = introScene; // TODO
-		intermissionScene3 = introScene; // TODO
+		intermissionScene2 = new IntermissionScene2(game, width, height, scaling);
+		intermissionScene3 = new IntermissionScene3(game, width, height, scaling);
 	}
 
 	public PacManGameScene selectScene(PacManGameModel game) {

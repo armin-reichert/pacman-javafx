@@ -21,25 +21,19 @@ public class PacManGameScenes {
 
 	public final SoundManager soundManager = new PacManGameSoundManager(PacManGameSoundAssets::getPacManSoundURL);;
 
-	private PacManGameScene introScene;
-	private PacManGameScene playScene;
-	private PacManGameScene intermissionScene1;
-	private PacManGameScene intermissionScene2;
-	private PacManGameScene intermissionScene3;
+	private IntroScene introScene;
+	private PlayScene<PacManSceneRendering> playScene;
+	private IntermissionScene1 intermissionScene1;
+	private IntermissionScene2 intermissionScene2;
+	private IntermissionScene3 intermissionScene3;
 
-	public static PlayScene<PacManSceneRendering> createPlayScene(PacManGameModel game, double width, double height,
-			double scaling) {
-		PlayScene<PacManSceneRendering> scene = new PlayScene<>(game, width, height, scaling);
-		scene.setRendering(new PacManSceneRendering(scene.gc()));
-		return scene;
-	}
-
-	public void createScenes(PacManGame game, double sizeX, double sizeY, double scaling) {
-		introScene = new IntroScene(game, sizeX, sizeY, scaling);
-		playScene = createPlayScene(game, sizeX, sizeY, scaling);
-		intermissionScene1 = new IntermissionScene1(game, soundManager, sizeX, sizeY, scaling);
-		intermissionScene2 = new IntermissionScene2(game, soundManager, sizeX, sizeY, scaling);
-		intermissionScene3 = new IntermissionScene3(game, soundManager, sizeX, sizeY, scaling);
+	public void createScenes(PacManGame game, double width, double height, double scaling) {
+		introScene = new IntroScene(game, width, height, scaling);
+		playScene = new PlayScene<>(game, width, height, scaling);
+		playScene.setRendering(new PacManSceneRendering(playScene.gc()));
+		intermissionScene1 = new IntermissionScene1(game, soundManager, width, height, scaling);
+		intermissionScene2 = new IntermissionScene2(game, soundManager, width, height, scaling);
+		intermissionScene3 = new IntermissionScene3(game, soundManager, width, height, scaling);
 		Logging.log("Pac-Man game scenes created at %d", clock.ticksTotal);
 	}
 
