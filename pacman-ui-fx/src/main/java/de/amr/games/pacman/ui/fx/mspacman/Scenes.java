@@ -1,10 +1,7 @@
-package de.amr.games.pacman.ui.fx.pacman;
-
-import static de.amr.games.pacman.heaven.God.clock;
+package de.amr.games.pacman.ui.fx.mspacman;
 
 import de.amr.games.pacman.controller.PacManGameState;
-import de.amr.games.pacman.lib.Logging;
-import de.amr.games.pacman.model.PacManGame;
+import de.amr.games.pacman.model.MsPacManGame;
 import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.sound.PacManGameSoundAssets;
 import de.amr.games.pacman.sound.PacManGameSoundManager;
@@ -13,31 +10,32 @@ import de.amr.games.pacman.ui.fx.common.PacManGameScene;
 import de.amr.games.pacman.ui.fx.common.PlayScene;
 
 /**
- * The scenes of the Pac-Man game.
+ * The scenes of the Ms. Pac-Man game.
  * 
  * @author Armin Reichert
  */
-public class PacManGameScenes {
+public class Scenes {
 
-	public static final PacManSceneRendering rendering = new PacManSceneRendering();
-	public static final SoundManager soundManager = new PacManGameSoundManager(PacManGameSoundAssets::getPacManSoundURL);
+	public static final SoundManager soundManager = new PacManGameSoundManager(
+			PacManGameSoundAssets::getMsPacManSoundURL);
 
-	private IntroScene introScene;
-	private PlayScene<PacManSceneRendering> playScene;
-	private IntermissionScene1 intermissionScene1;
-	private IntermissionScene2 intermissionScene2;
-	private IntermissionScene3 intermissionScene3;
+	public static final MsPacManSceneRendering rendering = new MsPacManSceneRendering();
 
-	public void createScenes(PacManGame game, double width, double height, double scaling) {
+	private static IntroScene introScene;
+	private static PlayScene<MsPacManSceneRendering> playScene;
+	private static IntermissionScene1 intermissionScene1;
+	private static IntermissionScene2 intermissionScene2;
+	private static IntermissionScene3 intermissionScene3;
+
+	public static void createScenes(MsPacManGame game, double width, double height, double scaling) {
 		introScene = new IntroScene(game, width, height, scaling);
 		playScene = new PlayScene<>(width, height, scaling, game, rendering, soundManager);
 		intermissionScene1 = new IntermissionScene1(game, width, height, scaling);
 		intermissionScene2 = new IntermissionScene2(game, width, height, scaling);
 		intermissionScene3 = new IntermissionScene3(game, width, height, scaling);
-		Logging.log("Pac-Man game scenes created at %d", clock.ticksTotal);
 	}
 
-	public PacManGameScene selectScene(PacManGameModel game) {
+	public static PacManGameScene selectScene(PacManGameModel game) {
 		if (game.state == PacManGameState.INTRO) {
 			return introScene;
 		}

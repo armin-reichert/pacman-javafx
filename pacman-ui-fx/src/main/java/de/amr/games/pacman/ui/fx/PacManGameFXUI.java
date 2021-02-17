@@ -15,8 +15,6 @@ import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.PacManGameAnimation;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.common.PacManGameScene;
-import de.amr.games.pacman.ui.fx.mspacman.MsPacManGameScenes;
-import de.amr.games.pacman.ui.fx.pacman.PacManGameScenes;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -33,8 +31,6 @@ public class PacManGameFXUI implements PacManGameUI {
 	private final Stage stage;
 	private final double scaling;
 	private final double sizeX, sizeY;
-	private final PacManGameScenes pacManGameScenes;
-	private final MsPacManGameScenes msPacManGameScenes;
 
 	private PacManGameModel game;
 	private PacManGameScene currentScene;
@@ -49,8 +45,6 @@ public class PacManGameFXUI implements PacManGameUI {
 		this.stage = stage;
 		sizeX = 28 * TS * scaling;
 		sizeY = 36 * TS * scaling;
-		pacManGameScenes = new PacManGameScenes();
-		msPacManGameScenes = new MsPacManGameScenes();
 		stage.setTitle("JavaFX: Pac-Man / Ms. Pac-Man");
 		stage.getIcons().add(new Image("/pacman/graphics/pacman.png"));
 		stage.setOnCloseRequest(e -> {
@@ -68,9 +62,9 @@ public class PacManGameFXUI implements PacManGameUI {
 		}
 		this.game = game;
 		if (game instanceof MsPacManGame) {
-			msPacManGameScenes.createScenes((MsPacManGame) game, sizeX, sizeY, scaling);
+			de.amr.games.pacman.ui.fx.mspacman.Scenes.createScenes((MsPacManGame) game, sizeX, sizeY, scaling);
 		} else if (game instanceof PacManGame) {
-			pacManGameScenes.createScenes((PacManGame) game, sizeX, sizeY, scaling);
+			de.amr.games.pacman.ui.fx.pacman.Scenes.createScenes((PacManGame) game, sizeX, sizeY, scaling);
 		} else {
 			log("%s: Cannot create scenes for invalid game: %s", this, game);
 		}
@@ -78,10 +72,10 @@ public class PacManGameFXUI implements PacManGameUI {
 
 	private PacManGameScene selectScene() {
 		if (game instanceof MsPacManGame) {
-			return msPacManGameScenes.selectScene(game);
+			return de.amr.games.pacman.ui.fx.mspacman.Scenes.selectScene(game);
 		}
 		if (game instanceof PacManGame) {
-			return pacManGameScenes.selectScene(game);
+			return de.amr.games.pacman.ui.fx.pacman.Scenes.selectScene(game);
 		}
 		throw new IllegalStateException("No scene found for game state " + game.stateDescription());
 	}
@@ -150,8 +144,16 @@ public class PacManGameFXUI implements PacManGameUI {
 
 	@Override
 	public Optional<SoundManager> sound() {
-		return muted ? Optional.empty()
-				: Optional.of(game instanceof PacManGame ? PacManGameScenes.soundManager : MsPacManGameScenes.soundManager);
+		if (muted) {
+			return Optional.empty();
+		}
+		if (game instanceof PacManGame) {
+			return Optional.of(de.amr.games.pacman.ui.fx.pacman.Scenes.soundManager);
+		}
+		if (game instanceof MsPacManGame) {
+			return Optional.of(de.amr.games.pacman.ui.fx.mspacman.Scenes.soundManager);
+		}
+		return Optional.empty();
 	}
 
 	@Override

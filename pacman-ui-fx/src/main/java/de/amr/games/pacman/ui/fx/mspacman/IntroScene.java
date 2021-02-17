@@ -46,7 +46,7 @@ public class IntroScene extends AbstractPacManGameScene<MsPacManSceneRendering> 
 	private boolean presentingMsPac;
 
 	public IntroScene(PacManGameModel game, double width, double height, double scaling) {
-		super(width, height, scaling, game, MsPacManGameScenes.rendering, MsPacManGameScenes.soundManager);
+		super(width, height, scaling, game, Scenes.rendering, Scenes.soundManager);
 	}
 
 	private void enter(Phase newPhase, long ticks) {

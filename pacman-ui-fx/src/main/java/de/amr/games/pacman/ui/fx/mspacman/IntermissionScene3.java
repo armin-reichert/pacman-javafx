@@ -50,7 +50,7 @@ public class IntermissionScene3 extends AbstractPacManGameScene<MsPacManSceneRen
 	}
 
 	public IntermissionScene3(PacManGameModel game, double width, double height, double scaling) {
-		super(width, height, scaling, game, MsPacManGameScenes.rendering, MsPacManGameScenes.soundManager);
+		super(width, height, scaling, game, Scenes.rendering, Scenes.soundManager);
 	}
 
 	@Override
