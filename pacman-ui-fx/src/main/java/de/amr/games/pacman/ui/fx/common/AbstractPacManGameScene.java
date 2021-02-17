@@ -48,6 +48,11 @@ public abstract class AbstractPacManGameScene<R extends SceneRendering> implemen
 	}
 
 	@Override
+	public GraphicsContext gc() {
+		return g;
+	}
+
+	@Override
 	public void start() {
 	}
 

@@ -2,6 +2,7 @@ package de.amr.games.pacman.ui.fx;
 
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.world.PacManGameWorld.TS;
+import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,11 @@ import de.amr.games.pacman.ui.PacManGameAnimation;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.common.PacManGameScene;
 import javafx.application.Platform;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 /**
@@ -167,24 +172,24 @@ public class PacManGameFXUI implements PacManGameUI {
 	}
 
 	private void drawFlashMessages() {
-//		if (flashMessages.size() > 0 && flashMessageTicksLeft > 0) {
-//			String text = flashMessages.get(0);
-//			float t = FLASH_MESSAGE_TICKS - flashMessageTicksLeft;
-//			float alpha = (float) cos(Math.PI * t / (2 * FLASH_MESSAGE_TICKS));
-//			Font font = Font.font("Serif", FontWeight.BOLD, 10);
-//			GraphicsContext g = currentScene.gc();
-//			g.setFill(Color.BLACK);
-//			g.fillRect(0, t(34), t(28), t(2));
-//			g.setFill(Color.rgb(255, 255, 0, alpha));
-//			g.setFont(font);
-//			g.fillText(text, t(10), t(35) + 5); // TODO center over scene width
-//			--flashMessageTicksLeft;
-//			if (flashMessageTicksLeft == 0) {
-//				flashMessages.remove(0);
-//				if (flashMessages.size() > 0) {
-//					flashMessageTicksLeft = FLASH_MESSAGE_TICKS;
-//				}
-//			}
-//		}
+		if (flashMessages.size() > 0 && flashMessageTicksLeft > 0) {
+			String text = flashMessages.get(0);
+			float t = FLASH_MESSAGE_TICKS - flashMessageTicksLeft;
+			float alpha = (float) Math.cos(Math.PI * t / (2 * FLASH_MESSAGE_TICKS));
+			Font font = Font.font("Serif", FontWeight.BOLD, 10);
+			GraphicsContext g = currentScene.gc();
+			g.setFill(Color.BLACK);
+			g.fillRect(0, t(34), t(28), t(2));
+			g.setFill(Color.rgb(255, 255, 0, alpha));
+			g.setFont(font);
+			g.fillText(text, t(10), t(35) + 5); // TODO center over scene width
+			--flashMessageTicksLeft;
+			if (flashMessageTicksLeft == 0) {
+				flashMessages.remove(0);
+				if (flashMessages.size() > 0) {
+					flashMessageTicksLeft = FLASH_MESSAGE_TICKS;
+				}
+			}
+		}
 	}
 }
