@@ -333,36 +333,30 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 		g.fillRect(tile.x * TS, tile.y * TS, TS, TS);
 	}
 
-	private void drawRegion(GraphicsContext g, Creature guy, Rectangle2D region) {
+	// draw creature sprite centered over creature collision box
+	private void drawCreature(GraphicsContext g, Creature guy, Rectangle2D region) {
 		if (guy.visible && region != null) {
-			g.drawImage(sheet, region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(), guy.position.x - 4,
-					guy.position.y - 4, region.getWidth(), region.getHeight());
+			g.drawImage(sheet, region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(),
+					guy.position.x - region.getWidth() / 2 + 4, guy.position.y - region.getHeight() / 2 + 4, region.getWidth(),
+					region.getHeight());
 		}
 	}
 
 	@Override
 	public void drawPac(GraphicsContext g, Pac pac, PacManGameModel game) {
-		drawRegion(g, pac, pacSprite(pac, game));
-	}
-
-	public void drawMrPacMan(GraphicsContext g, Pac pacMan) {
-		if (pacMan.visible) {
-			Animation<Rectangle2D> munching = pacManMunching().get(pacMan.dir);
-			drawRegion(g, pacMan.speed > 0 ? munching.animate() : munching.frame(1), pacMan.position.x - 4,
-					pacMan.position.y - 4);
-		}
+		drawCreature(g, pac, pacSprite(pac, game));
 	}
 
 	@Override
 	public void drawGhost(GraphicsContext g, Ghost ghost, PacManGameModel game) {
-		drawRegion(g, ghost, ghostSprite(ghost, game));
+		drawCreature(g, ghost, ghostSprite(ghost, game));
 	}
 
 	@Override
 	public void drawBonus(GraphicsContext g, Bonus bonus, PacManGameModel game) {
 		g.save();
 		g.translate(0, bonusJumps.animate());
-		drawRegion(g, bonus, bonusSprite(bonus, game));
+		drawCreature(g, bonus, bonusSprite(bonus, game));
 		g.restore();
 	}
 
@@ -376,16 +370,25 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 		}
 	}
 
+	public void drawMrPacMan(GraphicsContext g, Pac pacMan) {
+		if (pacMan.visible) {
+			Animation<Rectangle2D> munching = pacManMunching().get(pacMan.dir);
+			drawRegion(g, pacMan.speed > 0 ? munching.animate() : munching.frame(1), pacMan.position.x - 4,
+					pacMan.position.y - 4);
+		}
+	}
+
 	public void drawBirdAnim(GraphicsContext g, double x, double y) {
-		drawRegion(g, birdAnim.animate(), x, y);
+		birdAnim.animate();
+		drawRegion(g, birdAnim.frame(), x + 4 - birdAnim.frame().getWidth() / 2, y + 4 - birdAnim.frame().getHeight() / 2);
 	}
 
 	public void drawBlueBag(GraphicsContext g, double x, double y) {
-		drawRegion(g, new Rectangle2D(488, 199, 7, 8), x, y);
+		drawRegion(g, new Rectangle2D(488, 199, 8, 8), x, y);
 	}
 
 	public void drawJunior(GraphicsContext g, double x, double y) {
-		drawRegion(g, new Rectangle2D(509, 200, 7, 7), x, y);
+		drawRegion(g, new Rectangle2D(509, 200, 8, 8), x, y);
 	}
 
 	@Override
