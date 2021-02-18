@@ -100,12 +100,14 @@ public abstract class AbstractPacManGameScene<R extends SceneRendering> implemen
 		return rendering instanceof PacManGameAnimation ? Optional.of(rendering) : Optional.empty();
 	}
 
-	protected void drawFlashMessages() {
+	protected void drawFlashMessage() {
 		FlashMessage message = flashMessageSupplier.get();
 		if (message != null) {
-			float alpha = (float) Math.cos(Math.PI * message.timer.running() / (2 * message.timer.getDuration()));
+			double alpha = Math.cos((message.timer.running() * Math.PI / 2.0) / message.timer.getDuration());
 			flashMessageView.setFill(Color.rgb(255, 255, 0, alpha));
 			flashMessageView.setText(message.text);
+		} else {
+			flashMessageView.setText(null);
 		}
 	}
 

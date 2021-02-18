@@ -39,7 +39,7 @@ public class PlayScene<R extends SceneRendering> extends AbstractPacManGameScene
 		rendering.drawBonus(g, game.bonus, game);
 		rendering.drawScore(g, game, game.state == PacManGameState.INTRO || game.attractMode);
 		if (isFlashMessageAvailable()) {
-			drawFlashMessages();
+			drawFlashMessage();
 		} else {
 			if (!game.attractMode) {
 				rendering.drawLivesCounter(g, game, t(2), t(34));
