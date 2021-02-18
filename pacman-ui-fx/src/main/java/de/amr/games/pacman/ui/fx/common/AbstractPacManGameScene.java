@@ -25,8 +25,6 @@ import javafx.scene.text.Text;
  */
 public abstract class AbstractPacManGameScene<R extends SceneRendering> implements PacManGameScene {
 
-	static final long FLASH_MESSAGE_TICKS = 90;
-
 	protected final Scene fxScene;
 	protected final Keyboard keyboard;
 	protected final GraphicsContext g;
@@ -104,7 +102,7 @@ public abstract class AbstractPacManGameScene<R extends SceneRendering> implemen
 		}
 		FlashMessage first = flashMessageQ.get(0);
 		if (first.timer.remaining() > 1) {
-			float alpha = (float) Math.cos(Math.PI * first.timer.running() / (2 * FLASH_MESSAGE_TICKS));
+			float alpha = (float) Math.cos(Math.PI * first.timer.running() / (2 * first.timer.getDuration()));
 			flashMessageView.setFill(Color.rgb(255, 255, 0, alpha));
 			flashMessageView.setText(first.text);
 			first.timer.tick();
