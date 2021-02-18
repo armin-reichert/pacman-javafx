@@ -1,9 +1,7 @@
 package de.amr.games.pacman.ui.fx.common;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
-import de.amr.games.pacman.ui.FlashMessage;
 import de.amr.games.pacman.ui.PacManGameAnimation;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import javafx.scene.Scene;
@@ -31,6 +29,4 @@ public interface PacManGameScene {
 	Keyboard keyboard();
 
 	Optional<PacManGameAnimation> animation();
-
-	Supplier<FlashMessage> getFlashMessageSupplier();
 }

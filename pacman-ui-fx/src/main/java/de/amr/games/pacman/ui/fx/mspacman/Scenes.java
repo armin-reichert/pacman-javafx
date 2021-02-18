@@ -23,7 +23,6 @@ public class Scenes {
 	public static void createScenes(MsPacManGame game, double width, double height, double scaling) {
 		introScene = new IntroScene(game, width, height, scaling);
 		playScene = new PlayScene<>(width, height, scaling, game, MsPacManSceneRendering.IT, PacManGameFXUI.msPacManSounds);
-		playScene.setFlashMessageSupplier(PacManGameFXUI.flashMessageQ::peek);
 		intermissionScene1 = new IntermissionScene1(game, width, height, scaling);
 		intermissionScene2 = new IntermissionScene2(game, width, height, scaling);
 		intermissionScene3 = new IntermissionScene3(game, width, height, scaling);

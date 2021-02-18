@@ -1,12 +1,12 @@
 package de.amr.games.pacman.ui.fx.common;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
 import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.FlashMessage;
 import de.amr.games.pacman.ui.PacManGameAnimation;
+import de.amr.games.pacman.ui.fx.PacManGameFXUI;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -32,7 +32,6 @@ public abstract class AbstractPacManGameScene<R extends SceneRendering> implemen
 	protected final SoundManager soundManager;
 	protected final PacManGameModel game;
 
-	private Supplier<FlashMessage> flashMessageSupplier = () -> null;
 	private final Text flashMessageView;
 
 	public AbstractPacManGameScene(double width, double height, double scaling, PacManGameModel game, R rendering,
@@ -56,15 +55,6 @@ public abstract class AbstractPacManGameScene<R extends SceneRendering> implemen
 
 		fxScene = new Scene(pane, width, height);
 		keyboard = new Keyboard(fxScene);
-	}
-
-	public void setFlashMessageSupplier(Supplier<FlashMessage> flashMessageSupplier) {
-		this.flashMessageSupplier = flashMessageSupplier;
-	}
-
-	@Override
-	public Supplier<FlashMessage> getFlashMessageSupplier() {
-		return flashMessageSupplier;
 	}
 
 	public void fill(Color color) {
@@ -101,7 +91,7 @@ public abstract class AbstractPacManGameScene<R extends SceneRendering> implemen
 	}
 
 	protected void drawFlashMessage() {
-		FlashMessage message = flashMessageSupplier.get();
+		FlashMessage message = PacManGameFXUI.flashMessageQ.peek();
 		if (message != null) {
 			double alpha = Math.cos((message.timer.running() * Math.PI / 2.0) / message.timer.getDuration());
 			flashMessageView.setFill(Color.rgb(255, 255, 0, alpha));
@@ -112,6 +102,6 @@ public abstract class AbstractPacManGameScene<R extends SceneRendering> implemen
 	}
 
 	protected boolean isFlashMessageAvailable() {
-		return flashMessageSupplier.get() != null;
+		return PacManGameFXUI.flashMessageQ.peek() != null;
 	}
 }
