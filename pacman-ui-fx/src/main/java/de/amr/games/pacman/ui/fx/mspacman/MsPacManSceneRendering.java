@@ -339,6 +339,12 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 		drawRegion(g, pac, pacSprite(pac, game));
 	}
 
+	public void drawMrPacMan(GraphicsContext g, Pac pacMan) {
+		Animation<Rectangle2D> munching = pacManMunching().get(pacMan.dir);
+		drawRegion(g, pacMan.speed > 0 ? munching.animate() : munching.frame(1), pacMan.position.x - 4,
+				pacMan.position.y - 4);
+	}
+
 	@Override
 	public void drawGhost(GraphicsContext g, Ghost ghost, PacManGameModel game) {
 		drawRegion(g, ghost, ghostSprite(ghost, game));

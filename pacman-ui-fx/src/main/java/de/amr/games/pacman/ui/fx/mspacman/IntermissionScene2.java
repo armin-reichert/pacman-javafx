@@ -11,7 +11,6 @@ import de.amr.games.pacman.model.Pac;
 import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.ui.fx.common.AbstractPacManGameScene;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.paint.Color;
 
 /**
@@ -34,7 +33,7 @@ public class IntermissionScene2 extends AbstractPacManGameScene<MsPacManSceneRen
 	private Phase phase;
 
 	private int upperY = t(12), lowerY = t(24), middleY = t(18);
-	private Pac pac, msPac;
+	private Pac pacMan, msPac;
 	private boolean flapVisible;
 
 	public IntermissionScene2(PacManGameModel game, double width, double height, double scaling) {
@@ -48,7 +47,7 @@ public class IntermissionScene2 extends AbstractPacManGameScene<MsPacManSceneRen
 
 	@Override
 	public void start() {
-		pac = new Pac("Pac-Man", Direction.RIGHT);
+		pacMan = new Pac("Pac-Man", Direction.RIGHT);
 		msPac = new Pac("Ms. Pac-Man", Direction.RIGHT);
 		enter(Phase.ANIMATION, Long.MAX_VALUE);
 	}
@@ -66,39 +65,39 @@ public class IntermissionScene2 extends AbstractPacManGameScene<MsPacManSceneRen
 				flapVisible = false;
 			}
 			if (phase.timer.running() == clock.sec(4.5)) {
-				pac.visible = true;
-				pac.position = new V2f(-t(2), upperY);
+				pacMan.visible = true;
+				pacMan.position = new V2f(-t(2), upperY);
 				msPac.visible = true;
 				msPac.position = new V2f(-t(8), upperY);
-				pac.dir = msPac.dir = Direction.RIGHT;
-				pac.speed = msPac.speed = 2;
+				pacMan.dir = msPac.dir = Direction.RIGHT;
+				pacMan.speed = msPac.speed = 2;
 				rendering.pacManMunching().values().forEach(Animation::restart);
 				rendering.pacMunching(msPac).forEach(Animation::restart);
 			}
 			if (phase.timer.running() == clock.sec(9)) {
 				msPac.position = new V2f(t(30), lowerY);
 				msPac.visible = true;
-				pac.position = new V2f(t(36), lowerY);
-				msPac.dir = pac.dir = Direction.LEFT;
-				msPac.speed = pac.speed = 2;
+				pacMan.position = new V2f(t(36), lowerY);
+				msPac.dir = pacMan.dir = Direction.LEFT;
+				msPac.speed = pacMan.speed = 2;
 			}
 			if (phase.timer.running() == clock.sec(13.5)) {
 				msPac.position = new V2f(t(-8), middleY);
-				pac.position = new V2f(t(-2), middleY);
-				msPac.dir = pac.dir = Direction.RIGHT;
-				msPac.speed = pac.speed = 2;
+				pacMan.position = new V2f(t(-2), middleY);
+				msPac.dir = pacMan.dir = Direction.RIGHT;
+				msPac.speed = pacMan.speed = 2;
 			}
 			if (phase.timer.running() == clock.sec(18)) {
 				msPac.position = new V2f(t(30), upperY);
-				pac.position = new V2f(t(42), upperY);
-				msPac.dir = pac.dir = Direction.LEFT;
-				msPac.speed = pac.speed = 4;
+				pacMan.position = new V2f(t(42), upperY);
+				msPac.dir = pacMan.dir = Direction.LEFT;
+				msPac.speed = pacMan.speed = 4;
 			}
 			if (phase.timer.running() == clock.sec(19)) {
 				msPac.position = new V2f(t(-14), lowerY);
-				pac.position = new V2f(t(-2), lowerY);
-				msPac.dir = pac.dir = Direction.RIGHT;
-				msPac.speed = pac.speed = 4;
+				pacMan.position = new V2f(t(-2), lowerY);
+				msPac.dir = pacMan.dir = Direction.RIGHT;
+				msPac.speed = pacMan.speed = 4;
 			}
 			if (phase.timer.running() == clock.sec(24)) {
 				game.state.duration(0);
@@ -107,7 +106,7 @@ public class IntermissionScene2 extends AbstractPacManGameScene<MsPacManSceneRen
 		default:
 			break;
 		}
-		pac.move();
+		pacMan.move();
 		msPac.move();
 		phase.timer.run();
 	}
@@ -118,18 +117,7 @@ public class IntermissionScene2 extends AbstractPacManGameScene<MsPacManSceneRen
 		if (flapVisible) {
 			rendering.drawFlapAnimation(g, t(3), t(10), "2", "THE CHASE");
 		}
-		drawPacMan();
+		rendering.drawMrPacMan(g, pacMan);
 		rendering.drawPac(g, msPac, game);
-	}
-
-	private void drawPacMan() {
-		if (pac.visible) {
-			Animation<Rectangle2D> munching = rendering.pacManMunching().get(pac.dir);
-			if (pac.speed > 0) {
-				rendering.drawRegion(g, munching.animate(), pac.position.x - 4, pac.position.y - 4);
-			} else {
-				rendering.drawRegion(g, munching.frame(1), pac.position.x - 4, pac.position.y - 4);
-			}
-		}
 	}
 }

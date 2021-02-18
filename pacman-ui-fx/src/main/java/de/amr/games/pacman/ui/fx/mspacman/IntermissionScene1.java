@@ -14,7 +14,6 @@ import de.amr.games.pacman.model.Pac;
 import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.ui.fx.common.AbstractPacManGameScene;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.paint.Color;
 
 /**
@@ -39,7 +38,7 @@ public class IntermissionScene1 extends AbstractPacManGameScene<MsPacManSceneRen
 	private Phase phase;
 
 	private int upperY = t(12), lowerY = t(24), middleY = t(18);
-	private Pac pac, msPac;
+	private Pac pacMan, msPac;
 	private Ghost pinky, inky;
 	private boolean heartVisible;
 	private boolean ghostsMet;
@@ -56,14 +55,14 @@ public class IntermissionScene1 extends AbstractPacManGameScene<MsPacManSceneRen
 	@Override
 	public void start() {
 
-		pac = new Pac("Pac-Man", Direction.RIGHT);
-		pac.position = new V2f(-t(2), upperY);
-		pac.visible = true;
-		pac.couldMove = true;
+		pacMan = new Pac("Pac-Man", Direction.RIGHT);
+		pacMan.position = new V2f(-t(2), upperY);
+		pacMan.visible = true;
+		pacMan.couldMove = true;
 		rendering.pacManMunching().values().forEach(Animation::restart);
 
 		inky = new Ghost(2, "Inky", Direction.RIGHT);
-		inky.position = pac.position.sum(-t(3), 0);
+		inky.position = pacMan.position.sum(-t(3), 0);
 		inky.visible = true;
 
 		msPac = new Pac("Ms. Pac-Man", Direction.LEFT);
@@ -96,7 +95,7 @@ public class IntermissionScene1 extends AbstractPacManGameScene<MsPacManSceneRen
 			break;
 		case CHASED_BY_GHOSTS:
 			inky.move();
-			pac.move();
+			pacMan.move();
 			pinky.move();
 			msPac.move();
 			if (inky.position.x > t(30)) {
@@ -106,14 +105,14 @@ public class IntermissionScene1 extends AbstractPacManGameScene<MsPacManSceneRen
 		case COMING_TOGETHER:
 			inky.move();
 			pinky.move();
-			pac.move();
+			pacMan.move();
 			msPac.move();
-			if (pac.dir == Direction.LEFT && pac.position.x < t(15)) {
-				pac.dir = msPac.dir = Direction.UP;
+			if (pacMan.dir == Direction.LEFT && pacMan.position.x < t(15)) {
+				pacMan.dir = msPac.dir = Direction.UP;
 			}
-			if (pac.dir == Direction.UP && pac.position.y < upperY) {
-				pac.speed = msPac.speed = 0;
-				pac.dir = Direction.LEFT;
+			if (pacMan.dir == Direction.UP && pacMan.position.y < upperY) {
+				pacMan.speed = msPac.speed = 0;
+				pacMan.dir = Direction.LEFT;
 				msPac.dir = Direction.RIGHT;
 				heartVisible = true;
 				rendering.ghostKicking(inky).forEach(Animation::reset);
@@ -128,7 +127,7 @@ public class IntermissionScene1 extends AbstractPacManGameScene<MsPacManSceneRen
 			}
 			break;
 		case READY_TO_PLAY:
-			if (phase.timer.running() == clock.sec(1)) {
+			if (phase.timer.running() == clock.sec(0.5)) {
 				inky.visible = false;
 				pinky.visible = false;
 			}
@@ -143,15 +142,15 @@ public class IntermissionScene1 extends AbstractPacManGameScene<MsPacManSceneRen
 	}
 
 	private void startChasedByGhosts() {
-		pac.speed = msPac.speed = 1;
+		pacMan.speed = msPac.speed = 1;
 		inky.speed = pinky.speed = 1.04f;
 		enter(Phase.CHASED_BY_GHOSTS, Long.MAX_VALUE);
 	}
 
 	private void startComingTogether() {
-		pac.position = new V2f(t(30), middleY);
+		pacMan.position = new V2f(t(30), middleY);
 		inky.position = new V2f(t(33), middleY);
-		pac.dir = Direction.LEFT;
+		pacMan.dir = Direction.LEFT;
 		inky.dir = inky.wishDir = Direction.LEFT;
 		pinky.position = new V2f(t(-5), middleY);
 		msPac.position = new V2f(t(-2), middleY);
@@ -166,21 +165,12 @@ public class IntermissionScene1 extends AbstractPacManGameScene<MsPacManSceneRen
 		if (phase == Phase.FLAP) {
 			rendering.drawFlapAnimation(g, t(3), t(10), "1", "THEY MEET");
 		}
-		drawPacMan();
+		rendering.drawMrPacMan(g, pacMan);
 		rendering.drawGhost(g, inky, game);
 		rendering.drawPac(g, msPac, game);
 		rendering.drawGhost(g, pinky, game);
 		if (heartVisible) {
-			rendering.drawRegion(g, rendering.getHeart(), msPac.position.x + 4, pac.position.y - 20);
-		}
-	}
-
-	private void drawPacMan() {
-		Animation<Rectangle2D> munching = rendering.pacManMunching().get(pac.dir);
-		if (pac.speed > 0) {
-			rendering.drawRegion(g, munching.animate(), pac.position.x - 4, pac.position.y - 4);
-		} else {
-			rendering.drawRegion(g, munching.frame(1), pac.position.x - 4, pac.position.y - 4);
+			rendering.drawRegion(g, rendering.getHeart(), msPac.position.x + 4, pacMan.position.y - 20);
 		}
 	}
 }

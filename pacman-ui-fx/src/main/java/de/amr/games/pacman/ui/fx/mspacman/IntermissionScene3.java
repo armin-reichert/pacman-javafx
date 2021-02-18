@@ -3,14 +3,12 @@ package de.amr.games.pacman.ui.fx.mspacman;
 import static de.amr.games.pacman.heaven.God.clock;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
-import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.CountdownTimer;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.Pac;
 import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.ui.fx.common.AbstractPacManGameScene;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.paint.Color;
 
 /**
@@ -85,12 +83,7 @@ public class IntermissionScene3 extends AbstractPacManGameScene<MsPacManSceneRen
 		if (flapVisible) {
 			rendering.drawFlapAnimation(g, t(3), t(10), "3", "JUNIOR");
 		}
-		drawPacMan();
-	}
-
-	private void drawPacMan() {
-		Animation<Rectangle2D> munching = rendering.pacManMunching().get(pacMan.dir);
-		rendering.drawRegion(g, pacMan.speed > 0 ? munching.animate() : munching.frame(1), pacMan.position.x - 4,
-				pacMan.position.y - 4);
+		rendering.drawPac(g, msPacMan, game);
+		rendering.drawMrPacMan(g, pacMan);
 	}
 }
