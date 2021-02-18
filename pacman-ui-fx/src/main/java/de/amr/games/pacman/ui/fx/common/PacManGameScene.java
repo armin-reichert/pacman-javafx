@@ -1,6 +1,7 @@
 package de.amr.games.pacman.ui.fx.common;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import de.amr.games.pacman.ui.PacManGameAnimation;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
@@ -30,5 +31,5 @@ public interface PacManGameScene {
 
 	Optional<PacManGameAnimation> animation();
 
-	void showFlashMessage(String text, long ticks);
+	Supplier<FlashMessage> getFlashMessageSupplier();
 }

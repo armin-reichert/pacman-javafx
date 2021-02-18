@@ -3,6 +3,8 @@ package de.amr.games.pacman.ui.fx;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.world.PacManGameWorld.TS;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Optional;
 
 import de.amr.games.pacman.controller.PacManGameController;
@@ -12,6 +14,7 @@ import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.PacManGameAnimation;
 import de.amr.games.pacman.ui.PacManGameUI;
+import de.amr.games.pacman.ui.fx.common.FlashMessage;
 import de.amr.games.pacman.ui.fx.common.PacManGameScene;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
@@ -33,6 +36,8 @@ public class PacManGameFXUI implements PacManGameUI {
 	private PacManGameScene currentScene;
 
 	private boolean muted;
+
+	public static final Deque<FlashMessage> flashMessageQ = new ArrayDeque<>();
 
 	public PacManGameFXUI(Stage stage, PacManGameController controller, double scaling) {
 		this.scaling = scaling;
@@ -97,6 +102,14 @@ public class PacManGameFXUI implements PacManGameUI {
 			currentScene = newScene;
 		}
 		currentScene.update();
+
+		FlashMessage message = flashMessageQ.peek();
+		if (message != null) {
+			message.timer.tick();
+			if (message.timer.expired()) {
+				flashMessageQ.remove();
+			}
+		}
 	}
 
 	@Override
@@ -122,7 +135,7 @@ public class PacManGameFXUI implements PacManGameUI {
 
 	@Override
 	public void showFlashMessage(String message, long ticks) {
-		currentScene.showFlashMessage(message, ticks);
+		flashMessageQ.add(new FlashMessage(message, ticks));
 	}
 
 	@Override

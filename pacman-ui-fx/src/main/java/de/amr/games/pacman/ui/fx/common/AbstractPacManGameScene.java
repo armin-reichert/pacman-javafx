@@ -1,8 +1,7 @@
 package de.amr.games.pacman.ui.fx.common;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.sound.SoundManager;
@@ -32,7 +31,7 @@ public abstract class AbstractPacManGameScene<R extends SceneRendering> implemen
 	protected final SoundManager soundManager;
 	protected final PacManGameModel game;
 
-	private final List<FlashMessage> flashMessageQ = new ArrayList<>();
+	private Supplier<FlashMessage> flashMessageSupplier = () -> null;
 	private final Text flashMessageView;
 
 	public AbstractPacManGameScene(double width, double height, double scaling, PacManGameModel game, R rendering,
@@ -56,6 +55,15 @@ public abstract class AbstractPacManGameScene<R extends SceneRendering> implemen
 
 		fxScene = new Scene(pane, width, height);
 		keyboard = new Keyboard(fxScene);
+	}
+
+	public void setFlashMessageSupplier(Supplier<FlashMessage> flashMessageSupplier) {
+		this.flashMessageSupplier = flashMessageSupplier;
+	}
+
+	@Override
+	public Supplier<FlashMessage> getFlashMessageSupplier() {
+		return flashMessageSupplier;
 	}
 
 	public void fill(Color color) {
@@ -91,27 +99,16 @@ public abstract class AbstractPacManGameScene<R extends SceneRendering> implemen
 		return rendering instanceof PacManGameAnimation ? Optional.of(rendering) : Optional.empty();
 	}
 
-	@Override
-	public void showFlashMessage(String message, long ticks) {
-		flashMessageQ.add(new FlashMessage(message, ticks));
-	}
-
 	protected void drawFlashMessages() {
-		if (flashMessageQ.isEmpty()) {
-			return;
-		}
-		FlashMessage first = flashMessageQ.get(0);
-		if (first.timer.remaining() > 1) {
-			float alpha = (float) Math.cos(Math.PI * first.timer.running() / (2 * first.timer.getDuration()));
+		FlashMessage message = flashMessageSupplier.get();
+		if (message != null) {
+			float alpha = (float) Math.cos(Math.PI * message.timer.running() / (2 * message.timer.getDuration()));
 			flashMessageView.setFill(Color.rgb(255, 255, 0, alpha));
-			flashMessageView.setText(first.text);
-			first.timer.tick();
-		} else if (first.timer.remaining() == 1) {
-			flashMessageQ.remove(0);
+			flashMessageView.setText(message.text);
 		}
 	}
 
 	protected boolean isFlashMessageAvailable() {
-		return !flashMessageQ.isEmpty();
+		return flashMessageSupplier.get() != null;
 	}
 }
