@@ -81,16 +81,12 @@ public class IntermissionScene2 extends AbstractPacManGameScene<PacManSceneRende
 		rendering.ghostKickingToDir(blinky, blinky.dir).restart();
 		soundManager.play(PacManGameSound.INTERMISSION_2);
 
-		enter(Phase.APPROACHING_NAIL);
+		enter(Phase.APPROACHING_NAIL, Long.MAX_VALUE);
 	}
 
 	private void enter(Phase nextPhase, long ticks) {
 		phase = nextPhase;
 		phase.timer.setDuration(ticks);
-	}
-
-	private void enter(Phase nextPhase) {
-		enter(nextPhase, -1);
 	}
 
 	@Override
