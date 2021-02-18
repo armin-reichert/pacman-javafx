@@ -60,7 +60,7 @@ public class IntermissionScene1 extends AbstractPacManGameScene<MsPacManSceneRen
 		pac.position = new V2f(-t(2), upperY);
 		pac.visible = true;
 		pac.couldMove = true;
-		rendering.getPacManMunching().values().forEach(Animation::restart);
+		rendering.pacManMunching().values().forEach(Animation::restart);
 
 		inky = new Ghost(2, "Inky", Direction.RIGHT);
 		inky.position = pac.position.sum(-t(3), 0);
@@ -70,7 +70,7 @@ public class IntermissionScene1 extends AbstractPacManGameScene<MsPacManSceneRen
 		msPac.position = new V2f(t(30), lowerY);
 		msPac.visible = true;
 		msPac.couldMove = true;
-		rendering.pacMunching(msPac).forEach(Animation::restart);
+		rendering.msPacManMunching(msPac).forEach(Animation::restart);
 
 		pinky = new Ghost(1, "Pinky", Direction.LEFT);
 		pinky.position = msPac.position.sum(t(3), 0);
@@ -139,7 +139,7 @@ public class IntermissionScene1 extends AbstractPacManGameScene<MsPacManSceneRen
 		default:
 			break;
 		}
-		phase.timer.tick();
+		phase.timer.run();
 	}
 
 	private void startChasedByGhosts() {
@@ -168,7 +168,7 @@ public class IntermissionScene1 extends AbstractPacManGameScene<MsPacManSceneRen
 		}
 		drawPacMan();
 		rendering.drawGhost(g, inky, game);
-		rendering.drawPac(g, msPac, game);
+		rendering.drawMsPacMan(g, msPac, game);
 		rendering.drawGhost(g, pinky, game);
 		if (heartVisible) {
 			rendering.drawRegion(g, rendering.getHeart(), msPac.position.x + 4, pac.position.y - 20);
@@ -176,7 +176,7 @@ public class IntermissionScene1 extends AbstractPacManGameScene<MsPacManSceneRen
 	}
 
 	private void drawPacMan() {
-		Animation<Rectangle2D> munching = rendering.getPacManMunching().get(pac.dir);
+		Animation<Rectangle2D> munching = rendering.pacManMunching().get(pac.dir);
 		if (pac.speed > 0) {
 			rendering.drawRegion(g, munching.animate(), pac.position.x - 4, pac.position.y - 4);
 		} else {

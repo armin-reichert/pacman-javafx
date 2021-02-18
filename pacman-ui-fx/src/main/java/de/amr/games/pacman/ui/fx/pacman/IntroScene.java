@@ -163,7 +163,7 @@ public class IntroScene extends AbstractPacManGameScene<PacManSceneRendering> {
 		pac.speed = 1;
 		pac.dir = Direction.LEFT;
 		pac.couldMove = true;
-		rendering.pacMunching(pac).forEach(Animation::restart);
+		rendering.msPacManMunching(pac).forEach(Animation::restart);
 
 		for (Ghost ghost : ghosts) {
 			ghost.position = pac.position.sum(8 + (ghost.id + 1) * 18, 0);
@@ -204,7 +204,7 @@ public class IntroScene extends AbstractPacManGameScene<PacManSceneRendering> {
 	}
 
 	private void drawGuys() {
-		rendering.drawPac(g, pac, game);
+		rendering.drawMsPacMan(g, pac, game);
 		for (Ghost ghost : ghosts) {
 			rendering.drawGhost(g, ghost, game);
 		}

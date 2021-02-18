@@ -126,7 +126,7 @@ public class IntroScene extends AbstractPacManGameScene<MsPacManSceneRendering> 
 		default:
 			break;
 		}
-		phase.timer.tick();
+		phase.timer.run();
 	}
 
 	private boolean letCurrentGhostWalkToEndPosition() {
@@ -154,11 +154,11 @@ public class IntroScene extends AbstractPacManGameScene<MsPacManSceneRendering> 
 			msPac.couldMove = true;
 			msPac.speed = 1;
 			msPac.dir = LEFT;
-			rendering.pacMunching(msPac).forEach(Animation::restart);
+			rendering.msPacManMunching(msPac).forEach(Animation::restart);
 		}
 		if (msPac.speed != 0 && msPac.position.x <= t(13)) {
 			msPac.speed = 0;
-			rendering.pacMunching(msPac).forEach(Animation::reset);
+			rendering.msPacManMunching(msPac).forEach(Animation::reset);
 			return true;
 		}
 		return false;
@@ -174,7 +174,7 @@ public class IntroScene extends AbstractPacManGameScene<MsPacManSceneRendering> 
 		for (Ghost ghost : ghosts) {
 			rendering.drawGhost(g, ghost, game);
 		}
-		rendering.drawPac(g, msPac, game);
+		rendering.drawMsPacMan(g, msPac, game);
 		presentGhost();
 		presentMsPacMan();
 		if (phase == Phase.END) {

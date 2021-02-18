@@ -174,7 +174,7 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 		return scoreFont;
 	}
 
-	public Map<Direction, Animation<Rectangle2D>> getPacManMunching() {
+	public Map<Direction, Animation<Rectangle2D>> pacManMunching() {
 		return pacManMunching;
 	}
 
@@ -335,7 +335,7 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 	}
 
 	@Override
-	public void drawPac(GraphicsContext g, Pac pac, PacManGameModel game) {
+	public void drawMsPacMan(GraphicsContext g, Pac pac, PacManGameModel game) {
 		drawRegion(g, pac, pacSprite(pac, game));
 	}
 

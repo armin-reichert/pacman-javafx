@@ -243,7 +243,7 @@ public class PacManSceneRendering implements SceneRendering {
 	}
 
 	@Override
-	public void drawPac(GraphicsContext g, Pac pac, PacManGameModel game) {
+	public void drawMsPacMan(GraphicsContext g, Pac pac, PacManGameModel game) {
 		drawTile(g, pac, pacSprite(pac, game));
 	}
 

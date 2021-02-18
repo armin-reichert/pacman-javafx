@@ -105,7 +105,7 @@ public class PacManGameFXUI implements PacManGameUI {
 
 		FlashMessage message = flashMessageQ.peek();
 		if (message != null) {
-			message.timer.tick();
+			message.timer.run();
 			if (message.timer.expired()) {
 				flashMessageQ.remove();
 			}

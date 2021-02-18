@@ -77,7 +77,7 @@ public class IntermissionScene2 extends AbstractPacManGameScene<PacManSceneRende
 		blinky.speed = 1;
 		blinky.dir = blinky.wishDir = LEFT;
 
-		rendering.pacMunching(pac).forEach(Animation::restart);
+		rendering.msPacManMunching(pac).forEach(Animation::restart);
 		rendering.ghostKickingToDir(blinky, blinky.dir).restart();
 		soundManager.play(PacManGameSound.INTERMISSION_2);
 
@@ -142,7 +142,7 @@ public class IntermissionScene2 extends AbstractPacManGameScene<PacManSceneRende
 		}
 		blinky.move();
 		pac.move();
-		phase.timer.tick();
+		phase.timer.run();
 	}
 
 	@Override
@@ -150,7 +150,7 @@ public class IntermissionScene2 extends AbstractPacManGameScene<PacManSceneRende
 		fill(Color.BLACK);
 		rendering.drawLevelCounter(g, game, t(25), t(34));
 		rendering.drawRegion(g, nail, nailPosition.x, nailPosition.y);
-		rendering.drawPac(g, pac, game);
+		rendering.drawMsPacMan(g, pac, game);
 		drawBlinky();
 	}
 

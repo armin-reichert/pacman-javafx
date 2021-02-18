@@ -64,7 +64,7 @@ public class IntermissionScene1 extends AbstractPacManGameScene<PacManSceneRende
 		blinky.speed = pac.speed * 1.04f;
 		blinky.dir = blinky.wishDir = LEFT;
 
-		rendering.pacMunching(pac).forEach(Animation::restart);
+		rendering.msPacManMunching(pac).forEach(Animation::restart);
 		rendering.ghostKickingToDir(blinky, blinky.dir).restart();
 		rendering.ghostFrightenedToDir(blinky, blinky.dir).restart();
 		soundManager.loop(PacManGameSound.INTERMISSION_1, 2);
@@ -107,7 +107,7 @@ public class IntermissionScene1 extends AbstractPacManGameScene<PacManSceneRende
 		fill(Color.BLACK);
 		rendering.drawGhost(g, blinky, game);
 		if (phase == Phase.BLINKY_CHASING_PACMAN) {
-			rendering.drawPac(g, pac, game);
+			rendering.drawMsPacMan(g, pac, game);
 		} else {
 			rendering.drawRegion(g, bigPac.animate(), pac.position.x - 12, pac.position.y - 22);
 		}

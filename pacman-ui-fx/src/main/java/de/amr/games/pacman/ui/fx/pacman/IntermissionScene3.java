@@ -67,7 +67,7 @@ public class IntermissionScene3 extends AbstractPacManGameScene<PacManSceneRende
 		blinky.speed = pac.speed;
 		blinky.dir = blinky.wishDir = LEFT;
 
-		rendering.pacMunching(pac).forEach(Animation::restart);
+		rendering.msPacManMunching(pac).forEach(Animation::restart);
 		blinkyDamaged.restart();
 		soundManager.loop(PacManGameSound.INTERMISSION_3, 2);
 
@@ -101,7 +101,7 @@ public class IntermissionScene3 extends AbstractPacManGameScene<PacManSceneRende
 	public void render() {
 		fill(Color.BLACK);
 		rendering.drawLevelCounter(g, game, t(25), t(34));
-		rendering.drawPac(g, pac, game);
+		rendering.drawMsPacMan(g, pac, game);
 		drawBlinky();
 	}
 
