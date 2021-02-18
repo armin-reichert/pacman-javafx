@@ -29,4 +29,6 @@ public interface PacManGameScene {
 	Keyboard keyboard();
 
 	Optional<PacManGameAnimation> animation();
+
+	void showFlashMessage(String text, long ticks);
 }

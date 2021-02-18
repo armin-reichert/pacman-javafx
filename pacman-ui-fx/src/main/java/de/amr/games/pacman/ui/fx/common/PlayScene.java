@@ -38,9 +38,13 @@ public class PlayScene<R extends SceneRendering> extends AbstractPacManGameScene
 		game.ghosts().forEach(ghost -> rendering.drawGhost(g, ghost, game));
 		rendering.drawBonus(g, game.bonus, game);
 		rendering.drawScore(g, game, game.state == PacManGameState.INTRO || game.attractMode);
-		if (!game.attractMode) {
-			rendering.drawLivesCounter(g, game, t(2), t(34));
+		if (isFlashMessageAvailable()) {
+			drawFlashMessages();
+		} else {
+			if (!game.attractMode) {
+				rendering.drawLivesCounter(g, game, t(2), t(34));
+			}
+			rendering.drawLevelCounter(g, game, t(25), t(34));
 		}
-		rendering.drawLevelCounter(g, game, t(25), t(34));
 	}
 }
