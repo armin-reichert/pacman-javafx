@@ -11,6 +11,8 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.MsPacManGame;
 import de.amr.games.pacman.model.PacManGame;
 import de.amr.games.pacman.model.PacManGameModel;
+import de.amr.games.pacman.sound.PacManGameSoundManager;
+import de.amr.games.pacman.sound.PacManGameSounds;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.FlashMessage;
 import de.amr.games.pacman.ui.PacManGameAnimation;
@@ -27,6 +29,11 @@ import javafx.stage.Stage;
  */
 public class PacManGameFXUI implements PacManGameUI {
 
+	public static final SoundManager pacManSounds = new PacManGameSoundManager(PacManGameSounds::getPacManSoundURL);
+	public static final SoundManager msPacManSounds = new PacManGameSoundManager(PacManGameSounds::getMsPacManSoundURL);
+
+	public static final Deque<FlashMessage> flashMessageQ = new ArrayDeque<>();
+
 	private final Stage stage;
 	private final double scaling;
 	private final double width;
@@ -36,8 +43,6 @@ public class PacManGameFXUI implements PacManGameUI {
 	private PacManGameScene currentScene;
 
 	private boolean muted;
-
-	public static final Deque<FlashMessage> flashMessageQ = new ArrayDeque<>();
 
 	public PacManGameFXUI(Stage stage, PacManGameController controller, double scaling) {
 		this.scaling = scaling;
@@ -151,10 +156,10 @@ public class PacManGameFXUI implements PacManGameUI {
 			return Optional.empty();
 		}
 		if (game instanceof PacManGame) {
-			return Optional.of(de.amr.games.pacman.ui.fx.pacman.Scenes.soundManager);
+			return Optional.of(de.amr.games.pacman.ui.fx.PacManGameFXUI.pacManSounds);
 		}
 		if (game instanceof MsPacManGame) {
-			return Optional.of(de.amr.games.pacman.ui.fx.mspacman.Scenes.soundManager);
+			return Optional.of(de.amr.games.pacman.ui.fx.PacManGameFXUI.msPacManSounds);
 		}
 		return Optional.empty();
 	}

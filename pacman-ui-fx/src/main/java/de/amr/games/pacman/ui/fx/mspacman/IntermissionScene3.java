@@ -11,6 +11,7 @@ import de.amr.games.pacman.model.GameEntity;
 import de.amr.games.pacman.model.Pac;
 import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.sound.PacManGameSound;
+import de.amr.games.pacman.ui.fx.PacManGameFXUI;
 import de.amr.games.pacman.ui.fx.common.AbstractPacManGameScene;
 import javafx.scene.paint.Color;
 
@@ -49,7 +50,7 @@ public class IntermissionScene3 extends AbstractPacManGameScene<MsPacManSceneRen
 	private Phase phase;
 
 	public IntermissionScene3(PacManGameModel game, double width, double height, double scaling) {
-		super(width, height, scaling, game, Scenes.rendering, Scenes.soundManager);
+		super(width, height, scaling, game, MsPacManSceneRendering.IT, PacManGameFXUI.msPacManSounds);
 	}
 
 	private void enter(Phase newPhase, long ticks) {
