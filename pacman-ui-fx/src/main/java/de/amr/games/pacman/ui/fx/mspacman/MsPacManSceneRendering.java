@@ -59,6 +59,7 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 	private final List<Animation<Image>> mazesFlashing;
 	private final Animation<Boolean> energizerBlinking;
 	private final Animation<Rectangle2D> flapAnim;
+	private final Animation<Rectangle2D> birdAnim;
 
 	private final Font scoreFont;
 
@@ -162,6 +163,11 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 				new Rectangle2D(456, 208, 32, 32)//
 		);
 		flapAnim.repetitions(1).frameDuration(4);
+
+		birdAnim = Animation.of(//
+				new Rectangle2D(489, 176, 32, 16), //
+				new Rectangle2D(521, 176, 32, 16));
+		birdAnim.endless().frameDuration(10).restart();
 	}
 
 	@Override
@@ -340,9 +346,11 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 	}
 
 	public void drawMrPacMan(GraphicsContext g, Pac pacMan) {
-		Animation<Rectangle2D> munching = pacManMunching().get(pacMan.dir);
-		drawRegion(g, pacMan.speed > 0 ? munching.animate() : munching.frame(1), pacMan.position.x - 4,
-				pacMan.position.y - 4);
+		if (pacMan.visible) {
+			Animation<Rectangle2D> munching = pacManMunching().get(pacMan.dir);
+			drawRegion(g, pacMan.speed > 0 ? munching.animate() : munching.frame(1), pacMan.position.x - 4,
+					pacMan.position.y - 4);
+		}
 	}
 
 	@Override
@@ -366,6 +374,18 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 		if (getFlapAnim().isRunning()) {
 			g.fillText(sceneTitle, x + 40, y + 20);
 		}
+	}
+
+	public void drawBirdAnim(GraphicsContext g, double x, double y) {
+		drawRegion(g, birdAnim.animate(), x, y);
+	}
+
+	public void drawBlueBag(GraphicsContext g, double x, double y) {
+		drawRegion(g, new Rectangle2D(488, 199, 7, 8), x, y);
+	}
+
+	public void drawJunior(GraphicsContext g, double x, double y) {
+		drawRegion(g, new Rectangle2D(509, 200, 7, 7), x, y);
 	}
 
 	@Override
