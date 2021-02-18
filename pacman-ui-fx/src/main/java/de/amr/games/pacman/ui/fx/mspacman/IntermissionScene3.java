@@ -70,7 +70,7 @@ public class IntermissionScene3 extends AbstractPacManGameScene<MsPacManSceneRen
 		msPac.position = new V2f(t(30), lowerY);
 		msPac.visible = true;
 		msPac.couldMove = true;
-		rendering.msPacManMunching(msPac).forEach(Animation::restart);
+		rendering.pacMunching(msPac).forEach(Animation::restart);
 
 		pinky = new Ghost(1, "Pinky", Direction.LEFT);
 		pinky.position = msPac.position.sum(t(3), 0);

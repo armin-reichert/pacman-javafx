@@ -335,6 +335,11 @@ public class PacManSceneRendering implements SceneRendering {
 	}
 
 	@Override
+	public Stream<Animation<?>> mazeFlashings() {
+		return Stream.of(mazeFlashing);
+	}
+
+	@Override
 	public Animation<Boolean> energizerBlinking() {
 		return energizerBlinking;
 	}

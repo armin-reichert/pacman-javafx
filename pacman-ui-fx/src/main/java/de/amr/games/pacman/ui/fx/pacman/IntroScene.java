@@ -163,7 +163,7 @@ public class IntroScene extends AbstractPacManGameScene<PacManSceneRendering> {
 		pac.speed = 1;
 		pac.dir = Direction.LEFT;
 		pac.couldMove = true;
-		rendering.msPacManMunching(pac).forEach(Animation::restart);
+		rendering.pacMunching(pac).forEach(Animation::restart);
 
 		for (Ghost ghost : ghosts) {
 			ghost.position = pac.position.sum(8 + (ghost.id + 1) * 18, 0);

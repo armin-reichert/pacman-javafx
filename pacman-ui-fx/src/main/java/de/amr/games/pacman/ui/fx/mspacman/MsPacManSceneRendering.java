@@ -430,6 +430,11 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 	}
 
 	@Override
+	public Stream<Animation<?>> mazeFlashings() {
+		return mazesFlashing.stream().map(Animation.class::cast);
+	}
+
+	@Override
 	public Animation<Boolean> energizerBlinking() {
 		return energizerBlinking;
 	}

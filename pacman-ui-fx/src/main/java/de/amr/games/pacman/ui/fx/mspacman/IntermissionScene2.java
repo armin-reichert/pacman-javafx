@@ -73,7 +73,7 @@ public class IntermissionScene2 extends AbstractPacManGameScene<MsPacManSceneRen
 				pac.dir = msPac.dir = Direction.RIGHT;
 				pac.speed = msPac.speed = 2;
 				rendering.pacManMunching().values().forEach(Animation::restart);
-				rendering.msPacManMunching(msPac).forEach(Animation::restart);
+				rendering.pacMunching(msPac).forEach(Animation::restart);
 			}
 			if (phase.timer.running() == clock.sec(9)) {
 				msPac.position = new V2f(t(30), lowerY);
