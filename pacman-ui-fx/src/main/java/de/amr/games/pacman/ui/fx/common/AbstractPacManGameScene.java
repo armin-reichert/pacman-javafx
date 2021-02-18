@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 
 import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.sound.SoundManager;
+import de.amr.games.pacman.ui.FlashMessage;
 import de.amr.games.pacman.ui.PacManGameAnimation;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import javafx.geometry.Pos;
