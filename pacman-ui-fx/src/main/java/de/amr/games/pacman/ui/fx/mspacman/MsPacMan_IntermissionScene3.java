@@ -25,7 +25,7 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class IntermissionScene3 extends AbstractPacManGameScene<MsPacManSceneRendering> {
+public class MsPacMan_IntermissionScene3 extends AbstractPacManGameScene<MsPacManSceneRendering> {
 
 	enum Phase {
 
@@ -49,7 +49,7 @@ public class IntermissionScene3 extends AbstractPacManGameScene<MsPacManSceneRen
 
 	private Phase phase;
 
-	public IntermissionScene3(PacManGameModel game, double width, double height, double scaling) {
+	public MsPacMan_IntermissionScene3(PacManGameModel game, double width, double height, double scaling) {
 		super(width, height, scaling, game, MsPacManSceneRendering.IT, PacManGameFXUI.msPacManSounds);
 	}
 

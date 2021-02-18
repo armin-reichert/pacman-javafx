@@ -26,7 +26,7 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class IntermissionScene1 extends AbstractPacManGameScene<PacManSceneRendering> {
+public class PacMan_IntermissionScene1 extends AbstractPacManGameScene<PacManSceneRendering> {
 
 	enum Phase {
 		BLINKY_CHASING_PACMAN, BIGPACMAN_CHASING_BLINKY;
@@ -39,7 +39,7 @@ public class IntermissionScene1 extends AbstractPacManGameScene<PacManSceneRende
 
 	private Phase phase;
 
-	public IntermissionScene1(PacManGameModel game, double width, double height, double scaling) {
+	public PacMan_IntermissionScene1(PacManGameModel game, double width, double height, double scaling) {
 		super(width, height, scaling, game, PacManSceneRendering.IT, PacManGameFXUI.pacManSounds);
 
 		pac = new Pac("Pac-Man", Direction.LEFT);

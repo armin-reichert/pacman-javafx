@@ -26,7 +26,7 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class IntermissionScene2 extends AbstractPacManGameScene<PacManSceneRendering> {
+public class PacMan_IntermissionScene2 extends AbstractPacManGameScene<PacManSceneRendering> {
 
 	enum Phase {
 
@@ -43,7 +43,7 @@ public class IntermissionScene2 extends AbstractPacManGameScene<PacManSceneRende
 
 	private Phase phase;
 
-	public IntermissionScene2(PacManGameModel game, double width, double height, double scaling) {
+	public PacMan_IntermissionScene2(PacManGameModel game, double width, double height, double scaling) {
 		super(width, height, scaling, game, PacManSceneRendering.IT, PacManGameFXUI.pacManSounds);
 
 		blinky = new Ghost(0, "Blinky", Direction.LEFT);

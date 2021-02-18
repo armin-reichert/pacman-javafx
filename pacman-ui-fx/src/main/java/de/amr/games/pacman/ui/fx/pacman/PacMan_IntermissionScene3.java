@@ -26,7 +26,7 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class IntermissionScene3 extends AbstractPacManGameScene<PacManSceneRendering> {
+public class PacMan_IntermissionScene3 extends AbstractPacManGameScene<PacManSceneRendering> {
 
 	enum Phase {
 		CHASING_PACMAN, RETURNING_HALF_NAKED;
@@ -38,7 +38,7 @@ public class IntermissionScene3 extends AbstractPacManGameScene<PacManSceneRende
 	private final Pac pac;
 	private Phase phase;
 
-	public IntermissionScene3(PacManGameModel game, double width, double height, double scaling) {
+	public PacMan_IntermissionScene3(PacManGameModel game, double width, double height, double scaling) {
 		super(width, height, scaling, game, PacManSceneRendering.IT, PacManGameFXUI.pacManSounds);
 
 		pac = new Pac("Pac-Man", Direction.LEFT);

@@ -25,7 +25,7 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public class IntroScene extends AbstractPacManGameScene<PacManSceneRendering> {
+public class PacMan_IntroScene extends AbstractPacManGameScene<PacManSceneRendering> {
 
 	enum Phase {
 
@@ -59,7 +59,7 @@ public class IntroScene extends AbstractPacManGameScene<PacManSceneRendering> {
 		log("Phase %s entered at %d", phase, phase.start);
 	}
 
-	public IntroScene(PacManGameModel game, double width, double height, double scaling) {
+	public PacMan_IntroScene(PacManGameModel game, double width, double height, double scaling) {
 		super(width, height, scaling, game, PacManSceneRendering.IT, PacManGameFXUI.pacManSounds);
 	}
 
