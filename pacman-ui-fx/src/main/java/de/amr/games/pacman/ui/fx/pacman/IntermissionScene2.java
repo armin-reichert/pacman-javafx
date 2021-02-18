@@ -150,7 +150,7 @@ public class IntermissionScene2 extends AbstractPacManGameScene<PacManSceneRende
 		fill(Color.BLACK);
 		rendering.drawLevelCounter(g, game, t(25), t(34));
 		rendering.drawRegion(g, nail, nailPosition.x, nailPosition.y);
-		rendering.drawMsPacMan(g, pac, game);
+		rendering.drawPac(g, pac, game);
 		drawBlinky();
 	}
 

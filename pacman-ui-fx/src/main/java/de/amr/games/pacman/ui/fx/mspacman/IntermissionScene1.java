@@ -164,11 +164,11 @@ public class IntermissionScene1 extends AbstractPacManGameScene<MsPacManSceneRen
 	public void render() {
 		fill(Color.BLACK);
 		if (phase == Phase.FLAP) {
-			drawFlapAnimation(t(3), t(10));
+			rendering.drawFlapAnimation(g, t(3), t(10), "1", "THEY MEET");
 		}
 		drawPacMan();
 		rendering.drawGhost(g, inky, game);
-		rendering.drawMsPacMan(g, msPac, game);
+		rendering.drawPac(g, msPac, game);
 		rendering.drawGhost(g, pinky, game);
 		if (heartVisible) {
 			rendering.drawRegion(g, rendering.getHeart(), msPac.position.x + 4, pac.position.y - 20);
@@ -181,16 +181,6 @@ public class IntermissionScene1 extends AbstractPacManGameScene<MsPacManSceneRen
 			rendering.drawRegion(g, munching.animate(), pac.position.x - 4, pac.position.y - 4);
 		} else {
 			rendering.drawRegion(g, munching.frame(1), pac.position.x - 4, pac.position.y - 4);
-		}
-	}
-
-	private void drawFlapAnimation(int flapX, int flapY) {
-		rendering.drawRegion(g, rendering.getFlapAnim().animate(), flapX, flapY);
-		g.setFill(Color.rgb(222, 222, 225));
-		g.setFont(rendering.getScoreFont());
-		g.fillText("1", flapX + 20, flapY + 30);
-		if (rendering.getFlapAnim().isRunning()) {
-			g.fillText("THEY MEET", flapX + 40, flapY + 20);
 		}
 	}
 }

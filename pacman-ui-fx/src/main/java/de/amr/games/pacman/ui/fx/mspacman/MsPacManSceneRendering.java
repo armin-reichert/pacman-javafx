@@ -120,14 +120,14 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 			msPacMunching.put(dir, munching);
 		}
 
+		msPacSpinning = Animation.of(s(0, 3), s(0, 0), s(0, 1), s(0, 2));
+		msPacSpinning.frameDuration(10).repetitions(2);
+
 		pacManMunching = new EnumMap<>(Direction.class);
 		pacManMunching.put(Direction.RIGHT, Animation.of(s(0, 9), s(1, 9), s(2, 9)).endless().frameDuration(2));
 		pacManMunching.put(Direction.LEFT, Animation.of(s(0, 10), s(1, 10), s(2, 9)).endless().frameDuration(2));
 		pacManMunching.put(Direction.UP, Animation.of(s(0, 11), s(1, 11), s(2, 9)).endless().frameDuration(2));
 		pacManMunching.put(Direction.DOWN, Animation.of(s(0, 12), s(1, 12), s(2, 9)).endless().frameDuration(2));
-
-		msPacSpinning = Animation.of(s(0, 3), s(0, 0), s(0, 1), s(0, 2));
-		msPacSpinning.frameDuration(10).repetitions(2);
 
 		ghostsKicking = new ArrayList<>(4);
 		for (int id = 0; id < 4; ++id) {
@@ -335,7 +335,7 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 	}
 
 	@Override
-	public void drawMsPacMan(GraphicsContext g, Pac pac, PacManGameModel game) {
+	public void drawPac(GraphicsContext g, Pac pac, PacManGameModel game) {
 		drawRegion(g, pac, pacSprite(pac, game));
 	}
 
@@ -350,6 +350,16 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 		g.translate(0, bonusJumps.animate());
 		drawRegion(g, bonus, bonusSprite(bonus, game));
 		g.restore();
+	}
+
+	public void drawFlapAnimation(GraphicsContext g, double x, double y, String flapNumber, String sceneTitle) {
+		drawRegion(g, getFlapAnim().animate(), x, y);
+		g.setFill(Color.rgb(222, 222, 225));
+		g.setFont(scoreFont);
+		g.fillText(flapNumber, x + 20, y + 30);
+		if (getFlapAnim().isRunning()) {
+			g.fillText(sceneTitle, x + 40, y + 20);
+		}
 	}
 
 	@Override

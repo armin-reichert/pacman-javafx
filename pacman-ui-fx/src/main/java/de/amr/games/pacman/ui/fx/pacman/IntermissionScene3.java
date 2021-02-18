@@ -101,7 +101,7 @@ public class IntermissionScene3 extends AbstractPacManGameScene<PacManSceneRende
 	public void render() {
 		fill(Color.BLACK);
 		rendering.drawLevelCounter(g, game, t(25), t(34));
-		rendering.drawMsPacMan(g, pac, game);
+		rendering.drawPac(g, pac, game);
 		drawBlinky();
 	}
 

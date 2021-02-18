@@ -174,7 +174,7 @@ public class IntroScene extends AbstractPacManGameScene<MsPacManSceneRendering> 
 		for (Ghost ghost : ghosts) {
 			rendering.drawGhost(g, ghost, game);
 		}
-		rendering.drawMsPacMan(g, msPac, game);
+		rendering.drawPac(g, msPac, game);
 		presentGhost();
 		presentMsPacMan();
 		if (phase == Phase.END) {

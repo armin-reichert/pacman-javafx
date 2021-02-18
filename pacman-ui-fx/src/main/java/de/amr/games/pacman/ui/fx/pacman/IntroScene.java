@@ -204,7 +204,7 @@ public class IntroScene extends AbstractPacManGameScene<PacManSceneRendering> {
 	}
 
 	private void drawGuys() {
-		rendering.drawMsPacMan(g, pac, game);
+		rendering.drawPac(g, pac, game);
 		for (Ghost ghost : ghosts) {
 			rendering.drawGhost(g, ghost, game);
 		}

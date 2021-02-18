@@ -37,13 +37,13 @@ public class IntermissionScene2 extends AbstractPacManGameScene<MsPacManSceneRen
 	private Pac pac, msPac;
 	private boolean flapVisible;
 
+	public IntermissionScene2(PacManGameModel game, double width, double height, double scaling) {
+		super(width, height, scaling, game, Scenes.rendering, Scenes.soundManager);
+	}
+
 	private void enter(Phase newPhase, long ticks) {
 		phase = newPhase;
 		phase.timer.setDuration(ticks);
-	}
-
-	public IntermissionScene2(PacManGameModel game, double width, double height, double scaling) {
-		super(width, height, scaling, game, Scenes.rendering, Scenes.soundManager);
 	}
 
 	@Override
@@ -115,9 +115,11 @@ public class IntermissionScene2 extends AbstractPacManGameScene<MsPacManSceneRen
 	@Override
 	public void render() {
 		fill(Color.BLACK);
-		drawFlapAnimation(t(3), t(10));
+		if (flapVisible) {
+			rendering.drawFlapAnimation(g, t(3), t(10), "2", "THE CHASE");
+		}
 		drawPacMan();
-		rendering.drawMsPacMan(g, msPac, game);
+		rendering.drawPac(g, msPac, game);
 	}
 
 	private void drawPacMan() {
@@ -127,18 +129,6 @@ public class IntermissionScene2 extends AbstractPacManGameScene<MsPacManSceneRen
 				rendering.drawRegion(g, munching.animate(), pac.position.x - 4, pac.position.y - 4);
 			} else {
 				rendering.drawRegion(g, munching.frame(1), pac.position.x - 4, pac.position.y - 4);
-			}
-		}
-	}
-
-	private void drawFlapAnimation(int flapX, int flapY) {
-		if (flapVisible) {
-			rendering.drawRegion(g, rendering.getFlapAnim().animate(), flapX, flapY);
-			g.setFill(Color.rgb(222, 222, 225));
-			g.setFont(rendering.getScoreFont());
-			g.fillText("2", flapX + 20, flapY + 30);
-			if (rendering.getFlapAnim().isRunning()) {
-				g.fillText("THE CHASE", flapX + 40, flapY + 20);
 			}
 		}
 	}

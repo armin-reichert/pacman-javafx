@@ -63,7 +63,7 @@ public interface SceneRendering extends PacManGameAnimation {
 		return new Rectangle2D(16 * tile.getMinX(), 16 * tile.getMinY(), 16 * tile.getWidth(), 16 * tile.getHeight());
 	}
 
-	void drawMsPacMan(GraphicsContext g, Pac pac, PacManGameModel game);
+	void drawPac(GraphicsContext g, Pac pac, PacManGameModel game);
 
 	void drawGhost(GraphicsContext g, Ghost ghost, PacManGameModel game);
 
