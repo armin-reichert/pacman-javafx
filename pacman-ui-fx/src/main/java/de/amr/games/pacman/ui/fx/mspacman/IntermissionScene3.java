@@ -35,7 +35,7 @@ public class IntermissionScene3 extends AbstractPacManGameScene<MsPacManSceneRen
 	private Phase phase;
 
 	private final int upperY = t(12), lowerY = t(24);
-	private final V2f gravity = new V2f(0, 0.03f);
+	private final V2f gravity = new V2f(0, 0.04f);
 
 	private Pac pacMan, msPac;
 
@@ -48,7 +48,9 @@ public class IntermissionScene3 extends AbstractPacManGameScene<MsPacManSceneRen
 	private boolean bagVisible = false;
 	private V2f bagPosition = V2f.NULL;
 	private V2f bagVelocity = V2f.NULL;
+	private boolean bagDropped;
 	private long bagOpenTimer;
+	private int bounces;
 
 	public IntermissionScene3(PacManGameModel game, double width, double height, double scaling) {
 		super(width, height, scaling, game, Scenes.rendering, Scenes.soundManager);
@@ -70,11 +72,6 @@ public class IntermissionScene3 extends AbstractPacManGameScene<MsPacManSceneRen
 	public void update() {
 		switch (phase) {
 		case ANIMATION:
-			birdPosition = birdPosition.sum(birdVelocity);
-			bagPosition = bagPosition.sum(bagVelocity);
-			if (bagVelocity.y > 0) { // falling
-				bagVelocity = bagVelocity.sum(gravity);
-			}
 			if (phase.timer.running() == 0) {
 				flapVisible = true;
 				rendering.getFlapAnim().restart();
@@ -84,7 +81,12 @@ public class IntermissionScene3 extends AbstractPacManGameScene<MsPacManSceneRen
 				bagPosition = birdPosition.sum(-2, 6);
 				soundManager.play(PacManGameSound.INTERMISSION_3);
 			}
-			if (phase.timer.running() == clock.sec(2)) {
+			birdPosition = birdPosition.sum(birdVelocity);
+			bagPosition = bagPosition.sum(bagVelocity);
+			if (bagDropped) {
+				bagVelocity = bagVelocity.sum(gravity);
+			}
+			if (phase.timer.running() == clock.sec(1)) {
 				flapVisible = false;
 				pacMan.visible = true;
 				msPac.visible = true;
@@ -93,12 +95,20 @@ public class IntermissionScene3 extends AbstractPacManGameScene<MsPacManSceneRen
 				bagVisible = true;
 				bagVelocity = new V2f(-1, 0);
 			}
-			if (differsAtMost(birdPosition.x, t(20), 1)) {
-				bagVelocity = new V2f(-1, 0).sum(gravity);
+			if (differsAtMost(birdPosition.x, t(22), 1)) {
+				// drop bag
+				bagDropped = true;
+				bagVelocity = new V2f(-1f, 0).sum(gravity);
 			}
-			if (bagVisible && bagPosition.y >= lowerY) {
-				bagVelocity = V2f.NULL;
-				bagOpenTimer = clock.sec(1);
+			if (bagDropped && bagPosition.y > lowerY) {
+				++bounces;
+				if (bounces < 3) {
+					bagVelocity = new V2f(-0.2f, -0.8f / bounces);
+					bagPosition = new V2f(bagPosition.x, lowerY);
+				} else {
+					bagVelocity = V2f.NULL;
+					bagOpenTimer = clock.sec(2);
+				}
 			}
 			if (bagOpenTimer > 0) {
 				--bagOpenTimer;
