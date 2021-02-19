@@ -24,7 +24,7 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class MsPacMan_IntermissionScene3 extends AbstractPacManGameScene<MsPacManSceneRendering> {
+public class MsPacMan_IntermissionScene3 extends AbstractPacManGameScene<MsPacMan_SceneRendering> {
 
 	enum Phase {
 

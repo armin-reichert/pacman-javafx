@@ -22,12 +22,12 @@ import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.common.AbstractPacManGameScene;
 import de.amr.games.pacman.ui.fx.common.PacManGameScene;
 import de.amr.games.pacman.ui.fx.common.PlayScene;
-import de.amr.games.pacman.ui.fx.mspacman.MsPacManSceneRendering;
+import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_SceneRendering;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene1;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene2;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene3;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntroScene;
-import de.amr.games.pacman.ui.fx.pacman.PacManSceneRendering;
+import de.amr.games.pacman.ui.fx.pacman.PacMan_SceneRendering;
 import de.amr.games.pacman.ui.fx.pacman.PacMan_IntermissionScene1;
 import de.amr.games.pacman.ui.fx.pacman.PacMan_IntermissionScene2;
 import de.amr.games.pacman.ui.fx.pacman.PacMan_IntermissionScene3;
@@ -45,8 +45,8 @@ public class PacManGameFXUI implements PacManGameUI {
 
 	static final int MS_PACMAN = 0, PACMAN = 1;
 
-	public static PacManSceneRendering pacManRendering = new PacManSceneRendering();
-	public static MsPacManSceneRendering msPacManRendering = new MsPacManSceneRendering();
+	public static PacMan_SceneRendering pacManRendering = new PacMan_SceneRendering();
+	public static MsPacMan_SceneRendering msPacManRendering = new MsPacMan_SceneRendering();
 
 	public static final SoundManager pacManSounds = new PacManGameSoundManager(PacManGameSounds::getPacManSoundURL);
 	public static final SoundManager msPacManSounds = new PacManGameSoundManager(PacManGameSounds::getMsPacManSoundURL);

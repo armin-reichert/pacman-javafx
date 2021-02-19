@@ -24,7 +24,7 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public class PacMan_IntroScene extends AbstractPacManGameScene<PacManSceneRendering> {
+public class PacMan_IntroScene extends AbstractPacManGameScene<PacMan_SceneRendering> {
 
 	enum Phase {
 

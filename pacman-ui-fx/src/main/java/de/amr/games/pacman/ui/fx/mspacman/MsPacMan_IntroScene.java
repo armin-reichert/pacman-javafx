@@ -23,7 +23,7 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public class MsPacMan_IntroScene extends AbstractPacManGameScene<MsPacManSceneRendering> {
+public class MsPacMan_IntroScene extends AbstractPacManGameScene<MsPacMan_SceneRendering> {
 
 	enum Phase {
 

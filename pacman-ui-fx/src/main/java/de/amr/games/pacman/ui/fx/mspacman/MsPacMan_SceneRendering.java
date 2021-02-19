@@ -41,7 +41,7 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimation {
+public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimation {
 
 	private final Image sheet = new Image("/mspacman/graphics/sprites.png", false);
 
@@ -75,7 +75,7 @@ public class MsPacManSceneRendering implements SceneRendering, PacManGameAnimati
 		return r(456, 0, tileX, tileY, 1, 1);
 	}
 
-	public MsPacManSceneRendering() {
+	public MsPacMan_SceneRendering() {
 
 		scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), 8);
 
