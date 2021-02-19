@@ -30,7 +30,7 @@ public class MsPacMan_IntroScene extends GameScene {
 
 		BEGIN, GHOSTS, MSPACMAN, END;
 
-		CountdownTimer timer = new CountdownTimer();
+		final CountdownTimer timer = new CountdownTimer();
 	}
 
 	private final V2i frameTopLeftTile = new V2i(6, 8);
