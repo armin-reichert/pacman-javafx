@@ -46,7 +46,11 @@ public class PacManGameFXUI implements PacManGameUI {
 	public static final SoundManager pacManSounds = new PacManGameSoundManager(PacManGameSounds::getPacManSoundURL);
 	public static final SoundManager msPacManSounds = new PacManGameSoundManager(PacManGameSounds::getMsPacManSoundURL);
 
-	public static final Deque<FlashMessage> flashMessageQ = new ArrayDeque<>();
+	private static final Deque<FlashMessage> flashMessageQ = new ArrayDeque<>();
+
+	public static Optional<FlashMessage> flashMessage() {
+		return Optional.ofNullable(flashMessageQ.peek());
+	}
 
 	private final PacManGameScene[/* Game Type */][/* SceneID */] scenes = new PacManGameScene[2][5];
 

@@ -2,6 +2,7 @@ package de.amr.games.pacman.ui.fx.common;
 
 import java.util.Optional;
 
+import de.amr.games.pacman.lib.CountdownTimer;
 import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.FlashMessage;
@@ -91,17 +92,12 @@ public abstract class AbstractPacManGameScene<R extends SceneRendering> implemen
 	}
 
 	protected void drawFlashMessage() {
-		FlashMessage message = PacManGameFXUI.flashMessageQ.peek();
-		if (message != null) {
-			double alpha = Math.cos((message.timer.running() * Math.PI / 2.0) / message.timer.getDuration());
+		Optional<FlashMessage> message = PacManGameFXUI.flashMessage();
+		if (message.isPresent()) {
+			CountdownTimer timer = message.get().timer;
+			double alpha = Math.cos((timer.running() * Math.PI / 2.0) / timer.getDuration());
 			flashMessageView.setFill(Color.rgb(255, 255, 0, alpha));
-			flashMessageView.setText(message.text);
-		} else {
-			flashMessageView.setText(null);
 		}
-	}
-
-	protected boolean isFlashMessageAvailable() {
-		return PacManGameFXUI.flashMessageQ.peek() != null;
+		flashMessageView.setText(message.map(msg -> msg.text).orElse(null));
 	}
 }

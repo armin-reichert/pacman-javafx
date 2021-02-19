@@ -5,6 +5,7 @@ import static de.amr.games.pacman.world.PacManGameWorld.t;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.sound.SoundManager;
+import de.amr.games.pacman.ui.fx.PacManGameFXUI;
 import javafx.scene.paint.Color;
 
 /**
@@ -38,7 +39,7 @@ public class PlayScene<R extends SceneRendering> extends AbstractPacManGameScene
 		game.ghosts().forEach(ghost -> rendering.drawGhost(g, ghost, game));
 		rendering.drawBonus(g, game.bonus, game);
 		rendering.drawScore(g, game, game.state == PacManGameState.INTRO || game.attractMode);
-		if (isFlashMessageAvailable()) {
+		if (PacManGameFXUI.flashMessage().isPresent()) {
 			drawFlashMessage();
 		} else {
 			if (!game.attractMode) {
