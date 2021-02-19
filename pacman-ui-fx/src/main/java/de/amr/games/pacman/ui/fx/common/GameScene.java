@@ -31,7 +31,7 @@ public abstract class GameScene extends Scene {
 	protected PacManGameModel game;
 
 	public GameScene(Group root, double width, double height, double scaling) {
-		super(root, width, height);
+		super(root, width, height, Color.BLACK);
 		Canvas canvas = new Canvas(width, height);
 		g = canvas.getGraphicsContext2D();
 		g.scale(scaling, scaling);
