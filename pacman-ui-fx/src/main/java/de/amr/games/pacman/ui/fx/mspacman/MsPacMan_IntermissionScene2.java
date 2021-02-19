@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2f;
 import de.amr.games.pacman.model.Pac;
 import de.amr.games.pacman.sound.PacManGameSound;
+import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.PacManGameFXUI;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.scene.Group;
@@ -21,7 +22,7 @@ import javafx.scene.Group;
  * 
  * @author Armin Reichert
  */
-public class MsPacMan_IntermissionScene2 extends GameScene<MsPacMan_SceneRendering> {
+public class MsPacMan_IntermissionScene2 extends GameScene {
 
 	enum Phase {
 
@@ -30,6 +31,9 @@ public class MsPacMan_IntermissionScene2 extends GameScene<MsPacMan_SceneRenderi
 		final CountdownTimer timer = new CountdownTimer();
 	}
 
+	private final MsPacMan_SceneRendering rendering = PacManGameFXUI.MS_PACMAN_RENDERING;
+	private final SoundManager sounds = PacManGameFXUI.MS_PACMAN_SOUNDS;
+
 	private Phase phase;
 
 	private int upperY = t(12), lowerY = t(24), middleY = t(18);
@@ -37,7 +41,7 @@ public class MsPacMan_IntermissionScene2 extends GameScene<MsPacMan_SceneRenderi
 	private boolean flapVisible;
 
 	public MsPacMan_IntermissionScene2(Group root, double width, double height, double scaling) {
-		super(root, width, height, scaling, PacManGameFXUI.MS_PACMAN);
+		super(root, width, height, scaling);
 	}
 
 	private void enter(Phase newPhase, long ticks) {
@@ -57,9 +61,9 @@ public class MsPacMan_IntermissionScene2 extends GameScene<MsPacMan_SceneRenderi
 		switch (phase) {
 		case ANIMATION:
 			if (phase.timer.running() == 0) {
-				sound().play(PacManGameSound.INTERMISSION_2);
+				sounds.play(PacManGameSound.INTERMISSION_2);
 				flapVisible = true;
-				rendering().getFlapAnim().restart();
+				rendering.getFlapAnim().restart();
 			}
 			if (phase.timer.running() == clock.sec(2)) {
 				flapVisible = false;
@@ -71,8 +75,8 @@ public class MsPacMan_IntermissionScene2 extends GameScene<MsPacMan_SceneRenderi
 				msPac.position = new V2f(-t(8), upperY);
 				pacMan.dir = msPac.dir = Direction.RIGHT;
 				pacMan.speed = msPac.speed = 2;
-				rendering().pacManMunching().values().forEach(Animation::restart);
-				rendering().pacMunching(msPac).forEach(Animation::restart);
+				rendering.pacManMunching().values().forEach(Animation::restart);
+				rendering.pacMunching(msPac).forEach(Animation::restart);
 			}
 			if (phase.timer.running() == clock.sec(9)) {
 				msPac.position = new V2f(t(30), lowerY);
@@ -115,9 +119,9 @@ public class MsPacMan_IntermissionScene2 extends GameScene<MsPacMan_SceneRenderi
 	public void render() {
 		clear();
 		if (flapVisible) {
-			rendering().drawFlapAnimation(g, t(3), t(10), "2", "THE CHASE");
+			rendering.drawFlapAnimation(g, t(3), t(10), "2", "THE CHASE");
 		}
-		rendering().drawMrPacMan(g, pacMan);
-		rendering().drawPac(g, msPac, game);
+		rendering.drawMrPacMan(g, pacMan);
+		rendering.drawPac(g, msPac, game);
 	}
 }

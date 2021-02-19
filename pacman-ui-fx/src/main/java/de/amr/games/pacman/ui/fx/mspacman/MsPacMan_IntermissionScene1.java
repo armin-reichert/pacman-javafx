@@ -12,6 +12,7 @@ import de.amr.games.pacman.lib.V2f;
 import de.amr.games.pacman.model.Ghost;
 import de.amr.games.pacman.model.Pac;
 import de.amr.games.pacman.sound.PacManGameSound;
+import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.PacManGameFXUI;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.scene.Group;
@@ -26,7 +27,7 @@ import javafx.scene.Group;
  * 
  * @author Armin Reichert
  */
-public class MsPacMan_IntermissionScene1 extends GameScene<MsPacMan_SceneRendering> {
+public class MsPacMan_IntermissionScene1 extends GameScene {
 
 	enum Phase {
 
@@ -34,6 +35,9 @@ public class MsPacMan_IntermissionScene1 extends GameScene<MsPacMan_SceneRenderi
 
 		final CountdownTimer timer = new CountdownTimer();
 	}
+
+	private final MsPacMan_SceneRendering rendering = PacManGameFXUI.MS_PACMAN_RENDERING;
+	private final SoundManager sounds = PacManGameFXUI.MS_PACMAN_SOUNDS;
 
 	private Phase phase;
 
@@ -49,7 +53,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene<MsPacMan_SceneRenderi
 	}
 
 	public MsPacMan_IntermissionScene1(Group root, double width, double height, double scaling) {
-		super(root, width, height, scaling, PacManGameFXUI.MS_PACMAN);
+		super(root, width, height, scaling);
 	}
 
 	@Override
@@ -59,7 +63,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene<MsPacMan_SceneRenderi
 		pacMan.position = new V2f(-t(2), upperY);
 		pacMan.visible = true;
 		pacMan.couldMove = true;
-		rendering().pacManMunching().values().forEach(Animation::restart);
+		rendering.pacManMunching().values().forEach(Animation::restart);
 
 		inky = new Ghost(2, "Inky", Direction.RIGHT);
 		inky.position = pacMan.position.sum(-t(3), 0);
@@ -69,15 +73,15 @@ public class MsPacMan_IntermissionScene1 extends GameScene<MsPacMan_SceneRenderi
 		msPac.position = new V2f(t(30), lowerY);
 		msPac.visible = true;
 		msPac.couldMove = true;
-		rendering().pacMunching(msPac).forEach(Animation::restart);
+		rendering.pacMunching(msPac).forEach(Animation::restart);
 
 		pinky = new Ghost(1, "Pinky", Direction.LEFT);
 		pinky.position = msPac.position.sum(t(3), 0);
 		pinky.visible = true;
 
-		rendering().ghostsKicking(Stream.of(inky, pinky)).forEach(Animation::restart);
-		rendering().getFlapAnim().restart();
-		sound().loop(PacManGameSound.INTERMISSION_1, 1);
+		rendering.ghostsKicking(Stream.of(inky, pinky)).forEach(Animation::restart);
+		rendering.getFlapAnim().restart();
+		sounds.loop(PacManGameSound.INTERMISSION_1, 1);
 
 		heartVisible = false;
 		ghostsMet = false;
@@ -115,8 +119,8 @@ public class MsPacMan_IntermissionScene1 extends GameScene<MsPacMan_SceneRenderi
 				pacMan.dir = Direction.LEFT;
 				msPac.dir = Direction.RIGHT;
 				heartVisible = true;
-				rendering().ghostKicking(inky).forEach(Animation::reset);
-				rendering().ghostKicking(pinky).forEach(Animation::reset);
+				rendering.ghostKicking(inky).forEach(Animation::reset);
+				rendering.ghostKicking(pinky).forEach(Animation::reset);
 				enter(Phase.READY_TO_PLAY, clock.sec(3));
 			}
 			if (!ghostsMet && inky.position.x - pinky.position.x < 16) {
@@ -163,14 +167,14 @@ public class MsPacMan_IntermissionScene1 extends GameScene<MsPacMan_SceneRenderi
 	public void render() {
 		clear();
 		if (phase == Phase.FLAP) {
-			rendering().drawFlapAnimation(g, t(3), t(10), "1", "THEY MEET");
+			rendering.drawFlapAnimation(g, t(3), t(10), "1", "THEY MEET");
 		}
-		rendering().drawMrPacMan(g, pacMan);
-		rendering().drawGhost(g, inky, game);
-		rendering().drawPac(g, msPac, game);
-		rendering().drawGhost(g, pinky, game);
+		rendering.drawMrPacMan(g, pacMan);
+		rendering.drawGhost(g, inky, game);
+		rendering.drawPac(g, msPac, game);
+		rendering.drawGhost(g, pinky, game);
 		if (heartVisible) {
-			rendering().drawRegion(g, rendering().getHeart(), msPac.position.x + 4, pacMan.position.y - 20);
+			rendering.drawRegion(g, rendering.getHeart(), msPac.position.x + 4, pacMan.position.y - 20);
 		}
 	}
 }

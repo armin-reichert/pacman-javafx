@@ -58,10 +58,10 @@ public class PacManGameFXUI implements PacManGameUI {
 	}
 
 	private final Stage stage;
-	private final GameScene<?>[/* gameType */][/* sceneIndex */] scenes = new GameScene[2][5];
+	private final GameScene[/* gameType */][/* sceneIndex */] scenes = new GameScene[2][5];
 
 	private PacManGameModel game;
-	private GameScene<?> currentScene;
+	private GameScene currentScene;
 	private boolean muted;
 
 	public PacManGameFXUI(Stage stage, PacManGameController controller, double scaling) {
@@ -81,13 +81,13 @@ public class PacManGameFXUI implements PacManGameUI {
 		scenes[MS_PACMAN][1] = new MsPacMan_IntermissionScene1(new Group(), width, height, scaling);
 		scenes[MS_PACMAN][2] = new MsPacMan_IntermissionScene2(new Group(), width, height, scaling);
 		scenes[MS_PACMAN][3] = new MsPacMan_IntermissionScene3(new Group(), width, height, scaling);
-		scenes[MS_PACMAN][4] = new PlayScene<MsPacMan_SceneRendering>(new Group(), width, height, scaling, MS_PACMAN);
+		scenes[MS_PACMAN][4] = new PlayScene(new Group(), width, height, scaling, MS_PACMAN_RENDERING);
 
 		scenes[PACMAN][0] = new PacMan_IntroScene(new Group(), width, height, scaling);
 		scenes[PACMAN][1] = new PacMan_IntermissionScene1(new Group(), width, height, scaling);
 		scenes[PACMAN][2] = new PacMan_IntermissionScene2(new Group(), width, height, scaling);
 		scenes[PACMAN][3] = new PacMan_IntermissionScene3(new Group(), width, height, scaling);
-		scenes[PACMAN][4] = new PlayScene<PacMan_SceneRendering>(new Group(), width, height, scaling, PACMAN);
+		scenes[PACMAN][4] = new PlayScene(new Group(), width, height, scaling, PACMAN_RENDERING);
 
 		onGameChanged(controller.getGame());
 	}
@@ -102,7 +102,7 @@ public class PacManGameFXUI implements PacManGameUI {
 		throw new IllegalStateException("Illegal game type " + game);
 	}
 
-	private GameScene<?> currentGameScene() {
+	private GameScene currentGameScene() {
 		int gameType = currentGameType();
 		switch (game.state) {
 		case INTRO:
@@ -132,7 +132,7 @@ public class PacManGameFXUI implements PacManGameUI {
 
 	@Override
 	public void update() {
-		GameScene<?> newScene = currentGameScene();
+		GameScene newScene = currentGameScene();
 		if (currentScene != newScene) {
 			log("%s: Scene changes from %s to %s", this, currentScene, newScene);
 			if (currentScene != null) {
@@ -201,6 +201,6 @@ public class PacManGameFXUI implements PacManGameUI {
 
 	@Override
 	public Optional<PacManGameAnimation> animation() {
-		return currentScene.animation();
+		return Optional.of(currentGameType() == MS_PACMAN ? MS_PACMAN_RENDERING : PACMAN_RENDERING);
 	}
 }

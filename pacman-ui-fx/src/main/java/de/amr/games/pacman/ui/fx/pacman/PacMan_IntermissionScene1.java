@@ -15,6 +15,7 @@ import de.amr.games.pacman.lib.V2f;
 import de.amr.games.pacman.model.Ghost;
 import de.amr.games.pacman.model.Pac;
 import de.amr.games.pacman.sound.PacManGameSound;
+import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.PacManGameFXUI;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.geometry.Rectangle2D;
@@ -25,7 +26,7 @@ import javafx.scene.Group;
  * 
  * @author Armin Reichert
  */
-public class PacMan_IntermissionScene1 extends GameScene<PacMan_SceneRendering> {
+public class PacMan_IntermissionScene1 extends GameScene {
 
 	enum Phase {
 		BLINKY_CHASING_PACMAN, BIGPACMAN_CHASING_BLINKY;
@@ -33,13 +34,16 @@ public class PacMan_IntermissionScene1 extends GameScene<PacMan_SceneRendering> 
 
 	private static final int baselineY = t(20);
 
+	private final PacMan_SceneRendering rendering = PacManGameFXUI.PACMAN_RENDERING;
+	private final SoundManager sounds = PacManGameFXUI.PACMAN_SOUNDS;
+
 	private Ghost blinky;
 	private Pac pac;
 	private Animation<Rectangle2D> bigPac;
 	private Phase phase;
 
 	public PacMan_IntermissionScene1(Group root, double width, double height, double scaling) {
-		super(root, width, height, scaling, PacManGameFXUI.PACMAN);
+		super(root, width, height, scaling);
 	}
 
 	@Override
@@ -64,10 +68,10 @@ public class PacMan_IntermissionScene1 extends GameScene<PacMan_SceneRendering> 
 		blinky.speed = pac.speed * 1.04f;
 		blinky.dir = blinky.wishDir = LEFT;
 
-		rendering().pacMunching(pac).forEach(Animation::restart);
-		rendering().ghostKickingToDir(blinky, blinky.dir).restart();
-		rendering().ghostFrightenedToDir(blinky, blinky.dir).restart();
-		sound().loop(PacManGameSound.INTERMISSION_1, 2);
+		rendering.pacMunching(pac).forEach(Animation::restart);
+		rendering.ghostKickingToDir(blinky, blinky.dir).restart();
+		rendering.ghostFrightenedToDir(blinky, blinky.dir).restart();
+		sounds.loop(PacManGameSound.INTERMISSION_1, 2);
 
 		phase = Phase.BLINKY_CHASING_PACMAN;
 	}
@@ -105,12 +109,12 @@ public class PacMan_IntermissionScene1 extends GameScene<PacMan_SceneRendering> 
 	@Override
 	public void render() {
 		clear();
-		rendering().drawGhost(g, blinky, game);
+		rendering.drawGhost(g, blinky, game);
 		if (phase == Phase.BLINKY_CHASING_PACMAN) {
-			rendering().drawPac(g, pac, game);
+			rendering.drawPac(g, pac, game);
 		} else {
-			rendering().drawRegion(g, bigPac.animate(), pac.position.x - 12, pac.position.y - 22);
+			rendering.drawRegion(g, bigPac.animate(), pac.position.x - 12, pac.position.y - 22);
 		}
-		rendering().drawLevelCounter(g, game, t(25), t(34));
+		rendering.drawLevelCounter(g, game, t(25), t(34));
 	}
 }

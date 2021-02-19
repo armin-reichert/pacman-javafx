@@ -1,18 +1,10 @@
 package de.amr.games.pacman.ui.fx.common;
 
-import static de.amr.games.pacman.ui.fx.PacManGameFXUI.MS_PACMAN;
-import static de.amr.games.pacman.ui.fx.PacManGameFXUI.MS_PACMAN_RENDERING;
-import static de.amr.games.pacman.ui.fx.PacManGameFXUI.MS_PACMAN_SOUNDS;
-import static de.amr.games.pacman.ui.fx.PacManGameFXUI.PACMAN_RENDERING;
-import static de.amr.games.pacman.ui.fx.PacManGameFXUI.PACMAN_SOUNDS;
-
 import java.util.Optional;
 
 import de.amr.games.pacman.lib.CountdownTimer;
 import de.amr.games.pacman.model.PacManGameModel;
-import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.FlashMessage;
-import de.amr.games.pacman.ui.PacManGameAnimation;
 import de.amr.games.pacman.ui.fx.PacManGameFXUI;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import javafx.geometry.Pos;
@@ -31,17 +23,15 @@ import javafx.scene.text.Text;
  * 
  * @author Armin Reichert
  */
-public abstract class GameScene<RENDERING extends SceneRendering> extends Scene {
+public abstract class GameScene extends Scene {
 
 	protected final Text flashMessageView;
 	protected final Keyboard keyboard;
 	protected final GraphicsContext g;
-	protected final int gameType;
 	protected PacManGameModel game;
 
-	public GameScene(Group root, double width, double height, double scaling, int gameType) {
+	public GameScene(Group root, double width, double height, double scaling) {
 		super(root, width, height);
-		this.gameType = gameType;
 		Canvas canvas = new Canvas(width, height);
 		g = canvas.getGraphicsContext2D();
 		g.scale(scaling, scaling);
@@ -62,15 +52,6 @@ public abstract class GameScene<RENDERING extends SceneRendering> extends Scene 
 
 	public void setGame(PacManGameModel game) {
 		this.game = game;
-	}
-
-	@SuppressWarnings("unchecked")
-	public RENDERING rendering() {
-		return (RENDERING) (gameType == MS_PACMAN ? MS_PACMAN_RENDERING : PACMAN_RENDERING);
-	}
-
-	public SoundManager sound() {
-		return gameType == MS_PACMAN ? MS_PACMAN_SOUNDS : PACMAN_SOUNDS;
 	}
 
 	public Optional<PacManGameModel> game() {
@@ -94,10 +75,6 @@ public abstract class GameScene<RENDERING extends SceneRendering> extends Scene 
 
 	public Keyboard keyboard() {
 		return keyboard;
-	}
-
-	public Optional<PacManGameAnimation> animation() {
-		return rendering() instanceof PacManGameAnimation ? Optional.of(rendering()) : Optional.empty();
 	}
 
 	protected void drawFlashMessage() {
