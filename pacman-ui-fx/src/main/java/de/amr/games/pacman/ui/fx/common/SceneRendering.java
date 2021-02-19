@@ -73,7 +73,7 @@ public interface SceneRendering extends PacManGameAnimation {
 
 	void drawBonus(GraphicsContext g, Bonus bonus);
 
-	void hideTile(GraphicsContext g, V2i tile);
+	void drawTileCovered(GraphicsContext g, V2i tile);
 
 	void drawMaze(GraphicsContext g, int mazeNumber, int x, int y, boolean flashing);
 

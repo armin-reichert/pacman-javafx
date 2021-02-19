@@ -174,7 +174,7 @@ public class PacMan_SceneRendering implements SceneRendering {
 	}
 
 	@Override
-	public void hideTile(GraphicsContext g, V2i tile) {
+	public void drawTileCovered(GraphicsContext g, V2i tile) {
 		g.setFill(Color.BLACK);
 		g.fillRect(tile.x * TS, tile.y * TS, TS, TS);
 	}
@@ -232,13 +232,13 @@ public class PacMan_SceneRendering implements SceneRendering {
 
 	@Override
 	public void drawFoodTiles(GraphicsContext g, Stream<V2i> tiles, Predicate<V2i> eaten) {
-		tiles.filter(eaten).forEach(tile -> hideTile(g, tile));
+		tiles.filter(eaten).forEach(tile -> drawTileCovered(g, tile));
 	}
 
 	@Override
 	public void drawEnergizerTiles(GraphicsContext g, Stream<V2i> energizerTiles) {
 		if (energizerBlinking.animate()) {
-			energizerTiles.forEach(tile -> hideTile(g, tile));
+			energizerTiles.forEach(tile -> drawTileCovered(g, tile));
 		}
 	}
 
