@@ -11,14 +11,10 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class PlayScene<RENDERING extends SceneRendering> extends AbstractPacManGameScene<RENDERING> {
+public class PlayScene<RENDERING extends SceneRendering> extends GameScene<RENDERING> {
 
 	public PlayScene(double width, double height, double scaling, int gameType) {
 		super(width, height, scaling, gameType);
-	}
-
-	@Override
-	public void update() {
 	}
 
 	@Override

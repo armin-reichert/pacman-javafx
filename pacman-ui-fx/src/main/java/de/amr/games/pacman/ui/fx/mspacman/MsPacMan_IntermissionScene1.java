@@ -13,7 +13,7 @@ import de.amr.games.pacman.model.Ghost;
 import de.amr.games.pacman.model.Pac;
 import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.ui.fx.PacManGameFXUI;
-import de.amr.games.pacman.ui.fx.common.AbstractPacManGameScene;
+import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.scene.paint.Color;
 
 /**
@@ -26,7 +26,7 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class MsPacMan_IntermissionScene1 extends AbstractPacManGameScene<MsPacMan_SceneRendering> {
+public class MsPacMan_IntermissionScene1 extends GameScene<MsPacMan_SceneRendering> {
 
 	enum Phase {
 

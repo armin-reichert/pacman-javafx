@@ -16,7 +16,7 @@ import de.amr.games.pacman.model.Ghost;
 import de.amr.games.pacman.model.Pac;
 import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.ui.fx.PacManGameFXUI;
-import de.amr.games.pacman.ui.fx.common.AbstractPacManGameScene;
+import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.paint.Color;
 
@@ -25,7 +25,7 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class PacMan_IntermissionScene1 extends AbstractPacManGameScene<PacMan_SceneRendering> {
+public class PacMan_IntermissionScene1 extends GameScene<PacMan_SceneRendering> {
 
 	enum Phase {
 		BLINKY_CHASING_PACMAN, BIGPACMAN_CHASING_BLINKY;

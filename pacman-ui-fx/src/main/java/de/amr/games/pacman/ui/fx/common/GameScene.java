@@ -23,11 +23,11 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 /**
- * Common base class for scenes. Each game scene corresponds to a JavaFX scene.
+ * Each game scene corresponds to a JavaFX scene.
  * 
  * @author Armin Reichert
  */
-public abstract class AbstractPacManGameScene<RENDERING extends SceneRendering> implements PacManGameScene {
+public class GameScene<RENDERING extends SceneRendering> {
 
 	protected final double width;
 	protected final double height;
@@ -36,30 +36,30 @@ public abstract class AbstractPacManGameScene<RENDERING extends SceneRendering> 
 	protected final Keyboard keyboard;
 	protected final GraphicsContext g;
 	protected final int gameType;
-
 	protected PacManGameModel game;
 
-	public AbstractPacManGameScene(double width, double height, double scaling, int gameType) {
-
+	public GameScene(double width, double height, double scaling, int gameType) {
 		this.gameType = gameType;
-
 		this.width = width;
 		this.height = height;
 		Canvas canvas = new Canvas(width, height);
 		g = canvas.getGraphicsContext2D();
 		g.scale(scaling, scaling);
-
 		StackPane pane = new StackPane();
-
 		flashMessageView = new Text();
 		flashMessageView.setFont(Font.font("Serif", FontWeight.BOLD, 10 * scaling));
 		flashMessageView.setFill(Color.YELLOW);
 		StackPane.setAlignment(flashMessageView, Pos.BOTTOM_CENTER);
-
 		pane.getChildren().addAll(canvas, flashMessageView);
-
 		fxScene = new Scene(pane, width, height);
 		keyboard = new Keyboard(fxScene);
+	}
+
+	public void update() {
+	}
+
+	public void render() {
+
 	}
 
 	public void setGame(PacManGameModel game) {
@@ -75,7 +75,6 @@ public abstract class AbstractPacManGameScene<RENDERING extends SceneRendering> 
 		return PacManGameFXUI.sounds[gameType];
 	}
 
-	@Override
 	public Optional<PacManGameModel> game() {
 		return Optional.ofNullable(game);
 	}
@@ -85,30 +84,24 @@ public abstract class AbstractPacManGameScene<RENDERING extends SceneRendering> 
 		g.fillRect(0, 0, g.getCanvas().getWidth(), g.getCanvas().getHeight());
 	}
 
-	@Override
 	public GraphicsContext gc() {
 		return g;
 	}
 
-	@Override
 	public void start() {
 	}
 
-	@Override
 	public void end() {
 	}
 
-	@Override
 	public Scene getFXScene() {
 		return fxScene;
 	}
 
-	@Override
 	public Keyboard keyboard() {
 		return keyboard;
 	}
 
-	@Override
 	public Optional<PacManGameAnimation> animation() {
 		return rendering() instanceof PacManGameAnimation ? Optional.of(rendering()) : Optional.empty();
 	}

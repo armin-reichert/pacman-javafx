@@ -19,8 +19,7 @@ import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.FlashMessage;
 import de.amr.games.pacman.ui.PacManGameAnimation;
 import de.amr.games.pacman.ui.PacManGameUI;
-import de.amr.games.pacman.ui.fx.common.AbstractPacManGameScene;
-import de.amr.games.pacman.ui.fx.common.PacManGameScene;
+import de.amr.games.pacman.ui.fx.common.GameScene;
 import de.amr.games.pacman.ui.fx.common.PlayScene;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene1;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene2;
@@ -57,14 +56,14 @@ public class PacManGameFXUI implements PacManGameUI {
 		return Optional.ofNullable(flashMessageQ.peek());
 	}
 
-	private final AbstractPacManGameScene<?>[/* gameType */][/* sceneIndex */] scenes = new AbstractPacManGameScene[2][5];
+	private final GameScene<?>[/* gameType */][/* sceneIndex */] scenes = new GameScene[2][5];
 
 	private final Stage stage;
 	private final double width;
 	private final double height;
 
 	private PacManGameModel game;
-	private PacManGameScene currentScene;
+	private GameScene<?> currentScene;
 	private boolean muted;
 
 	public PacManGameFXUI(Stage stage, PacManGameController controller, double scaling) {
@@ -104,7 +103,7 @@ public class PacManGameFXUI implements PacManGameUI {
 		throw new IllegalStateException("Illegal game type " + game);
 	}
 
-	private PacManGameScene getScene() {
+	private GameScene<?> getScene() {
 		int gameType = currentGameType();
 		switch (game.state) {
 		case INTRO:
@@ -133,7 +132,7 @@ public class PacManGameFXUI implements PacManGameUI {
 
 	@Override
 	public void update() {
-		PacManGameScene newScene = getScene();
+		GameScene<?> newScene = getScene();
 		if (currentScene != newScene) {
 			log("%s: Scene changes from %s to %s", this, currentScene, newScene);
 			if (currentScene != null) {
