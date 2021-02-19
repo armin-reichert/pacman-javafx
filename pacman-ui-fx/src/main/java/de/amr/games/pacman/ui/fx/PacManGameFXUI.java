@@ -58,8 +58,9 @@ public class PacManGameFXUI implements PacManGameUI {
 	}
 
 	private final Stage stage;
-	private PacManGameModel game;
 	private final GameScene<?>[/* gameType */][/* sceneIndex */] scenes = new GameScene[2][5];
+
+	private PacManGameModel game;
 	private GameScene<?> currentScene;
 	private boolean muted;
 
@@ -125,6 +126,7 @@ public class PacManGameFXUI implements PacManGameUI {
 	public void show() {
 		stage.setScene(currentScene);
 		stage.sizeToScene();
+		stage.centerOnScreen();
 		stage.show();
 	}
 
