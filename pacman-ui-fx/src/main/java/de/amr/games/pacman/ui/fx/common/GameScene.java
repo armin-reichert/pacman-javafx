@@ -9,6 +9,7 @@ import de.amr.games.pacman.ui.fx.PacManGameFXUI;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -43,10 +44,11 @@ public abstract class GameScene extends Scene {
 		StackPane.setAlignment(flashMessageView, Pos.BOTTOM_CENTER);
 		pane.getChildren().addAll(canvas, flashMessageView);
 		keyboard = new Keyboard(this);
+
+		setCamera(new PerspectiveCamera());
 	}
 
-	public void update() {
-	}
+	public abstract void update();
 
 	public abstract void render();
 

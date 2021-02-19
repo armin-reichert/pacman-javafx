@@ -21,6 +21,10 @@ public class PlayScene extends GameScene {
 	}
 
 	@Override
+	public void update() {
+	}
+
+	@Override
 	public void render() {
 		clear();
 		boolean flashing = rendering.mazeFlashing(game.level.mazeNumber).hasStarted();
