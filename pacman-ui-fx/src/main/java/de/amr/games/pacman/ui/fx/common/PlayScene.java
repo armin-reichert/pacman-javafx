@@ -5,7 +5,6 @@ import static de.amr.games.pacman.world.PacManGameWorld.t;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.ui.fx.PacManGameFXUI;
 import javafx.scene.Group;
-import javafx.scene.paint.Color;
 
 /**
  * This is where the action is.
@@ -20,7 +19,7 @@ public class PlayScene<RENDERING extends SceneRendering> extends GameScene<RENDE
 
 	@Override
 	public void render() {
-		fill(Color.BLACK);
+		clear();
 		SceneRendering r = rendering();
 		boolean flashing = r.mazeFlashing(game.level.mazeNumber).hasStarted();
 		r.drawMaze(g, game.level.mazeNumber, 0, t(3), flashing);

@@ -28,7 +28,7 @@ import javafx.scene.text.Text;
  * 
  * @author Armin Reichert
  */
-public class GameScene<RENDERING extends SceneRendering> extends Scene {
+public abstract class GameScene<RENDERING extends SceneRendering> extends Scene {
 
 	protected final Text flashMessageView;
 	protected final Keyboard keyboard;
@@ -37,7 +37,7 @@ public class GameScene<RENDERING extends SceneRendering> extends Scene {
 	protected PacManGameModel game;
 
 	public GameScene(Group root, double width, double height, double scaling, int gameType) {
-		super(root, width, height, Color.BLACK);
+		super(root, width, height);
 		this.gameType = gameType;
 		Canvas canvas = new Canvas(width, height);
 		g = canvas.getGraphicsContext2D();
@@ -55,9 +55,7 @@ public class GameScene<RENDERING extends SceneRendering> extends Scene {
 	public void update() {
 	}
 
-	public void render() {
-
-	}
+	public abstract void render();
 
 	public void setGame(PacManGameModel game) {
 		this.game = game;
@@ -76,8 +74,8 @@ public class GameScene<RENDERING extends SceneRendering> extends Scene {
 		return Optional.ofNullable(game);
 	}
 
-	public void fill(Color color) {
-		g.setFill(color);
+	public void clear() {
+		g.setFill(Color.BLACK);
 		g.fillRect(0, 0, g.getCanvas().getWidth(), g.getCanvas().getHeight());
 	}
 

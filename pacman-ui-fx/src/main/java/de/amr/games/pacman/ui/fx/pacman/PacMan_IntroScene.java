@@ -186,7 +186,7 @@ public class PacMan_IntroScene extends GameScene<PacMan_SceneRendering> {
 
 	@Override
 	public void render() {
-		fill(Color.BLACK);
+		clear();
 		rendering().drawScore(g, game, true);
 		drawGallery();
 		if (phase == Phase.CHASING_PAC) {

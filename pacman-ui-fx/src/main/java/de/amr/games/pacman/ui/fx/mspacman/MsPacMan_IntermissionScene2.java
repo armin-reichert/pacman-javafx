@@ -12,7 +12,6 @@ import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.ui.fx.PacManGameFXUI;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.scene.Group;
-import javafx.scene.paint.Color;
 
 /**
  * Intermission scene 2: "The chase".
@@ -114,7 +113,7 @@ public class MsPacMan_IntermissionScene2 extends GameScene<MsPacMan_SceneRenderi
 
 	@Override
 	public void render() {
-		fill(Color.BLACK);
+		clear();
 		if (flapVisible) {
 			rendering().drawFlapAnimation(g, t(3), t(10), "2", "THE CHASE");
 		}

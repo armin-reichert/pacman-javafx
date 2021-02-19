@@ -15,7 +15,6 @@ import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.ui.fx.PacManGameFXUI;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.scene.Group;
-import javafx.scene.paint.Color;
 
 /**
  * Intermission scene 1: "They meet".
@@ -162,7 +161,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene<MsPacMan_SceneRenderi
 
 	@Override
 	public void render() {
-		fill(Color.BLACK);
+		clear();
 		if (phase == Phase.FLAP) {
 			rendering().drawFlapAnimation(g, t(3), t(10), "1", "THEY MEET");
 		}

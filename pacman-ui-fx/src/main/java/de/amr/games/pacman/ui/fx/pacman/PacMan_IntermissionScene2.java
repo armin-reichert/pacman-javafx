@@ -19,7 +19,6 @@ import de.amr.games.pacman.ui.fx.PacManGameFXUI;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
-import javafx.scene.paint.Color;
 
 /**
  * Second intermission scene: Blinky pursues Pac but kicks a nail that tears his dress apart.
@@ -144,7 +143,7 @@ public class PacMan_IntermissionScene2 extends GameScene<PacMan_SceneRendering> 
 
 	@Override
 	public void render() {
-		fill(Color.BLACK);
+		clear();
 		rendering().drawLevelCounter(g, game, t(25), t(34));
 		rendering().drawRegion(g, nail, nailPosition.x, nailPosition.y);
 		rendering().drawPac(g, pac, game);
