@@ -67,7 +67,7 @@ public class PacMan_IntermissionScene1 extends GameScene<PacMan_SceneRendering> 
 		rendering().pacMunching(pac).forEach(Animation::restart);
 		rendering().ghostKickingToDir(blinky, blinky.dir).restart();
 		rendering().ghostFrightenedToDir(blinky, blinky.dir).restart();
-		soundManager().loop(PacManGameSound.INTERMISSION_1, 2);
+		sound().loop(PacManGameSound.INTERMISSION_1, 2);
 
 		phase = Phase.BLINKY_CHASING_PACMAN;
 	}

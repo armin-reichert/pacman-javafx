@@ -57,7 +57,7 @@ public class MsPacMan_IntermissionScene2 extends GameScene<MsPacMan_SceneRenderi
 		switch (phase) {
 		case ANIMATION:
 			if (phase.timer.running() == 0) {
-				soundManager().play(PacManGameSound.INTERMISSION_2);
+				sound().play(PacManGameSound.INTERMISSION_2);
 				flapVisible = true;
 				rendering().getFlapAnim().restart();
 			}

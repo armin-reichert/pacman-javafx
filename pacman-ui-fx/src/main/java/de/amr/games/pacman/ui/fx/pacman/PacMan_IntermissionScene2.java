@@ -79,7 +79,7 @@ public class PacMan_IntermissionScene2 extends GameScene<PacMan_SceneRendering> 
 
 		rendering().pacMunching(pac).forEach(Animation::restart);
 		rendering().ghostKickingToDir(blinky, blinky.dir).restart();
-		soundManager().play(PacManGameSound.INTERMISSION_2);
+		sound().play(PacManGameSound.INTERMISSION_2);
 
 		enter(Phase.APPROACHING_NAIL, Long.MAX_VALUE);
 	}

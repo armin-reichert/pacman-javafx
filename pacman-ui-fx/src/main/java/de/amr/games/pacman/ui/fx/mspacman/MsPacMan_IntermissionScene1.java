@@ -77,7 +77,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene<MsPacMan_SceneRenderi
 
 		rendering().ghostsKicking(Stream.of(inky, pinky)).forEach(Animation::restart);
 		rendering().getFlapAnim().restart();
-		soundManager().loop(PacManGameSound.INTERMISSION_1, 1);
+		sound().loop(PacManGameSound.INTERMISSION_1, 1);
 
 		heartVisible = false;
 		ghostsMet = false;

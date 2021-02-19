@@ -1,7 +1,10 @@
 package de.amr.games.pacman.ui.fx.common;
 
-import static de.amr.games.pacman.ui.fx.PacManGameFXUI.msPacManRendering;
-import static de.amr.games.pacman.ui.fx.PacManGameFXUI.pacManRendering;
+import static de.amr.games.pacman.ui.fx.PacManGameFXUI.MS_PACMAN;
+import static de.amr.games.pacman.ui.fx.PacManGameFXUI.MS_PACMAN_RENDERING;
+import static de.amr.games.pacman.ui.fx.PacManGameFXUI.MS_PACMAN_SOUNDS;
+import static de.amr.games.pacman.ui.fx.PacManGameFXUI.PACMAN_RENDERING;
+import static de.amr.games.pacman.ui.fx.PacManGameFXUI.PACMAN_SOUNDS;
 
 import java.util.Optional;
 
@@ -63,11 +66,11 @@ public abstract class GameScene<RENDERING extends SceneRendering> extends Scene 
 
 	@SuppressWarnings("unchecked")
 	public RENDERING rendering() {
-		return (RENDERING) (gameType == PacManGameFXUI.MS_PACMAN ? msPacManRendering : pacManRendering);
+		return (RENDERING) (gameType == MS_PACMAN ? MS_PACMAN_RENDERING : PACMAN_RENDERING);
 	}
 
-	public SoundManager soundManager() {
-		return PacManGameFXUI.sounds[gameType];
+	public SoundManager sound() {
+		return gameType == MS_PACMAN ? MS_PACMAN_SOUNDS : PACMAN_SOUNDS;
 	}
 
 	public Optional<PacManGameModel> game() {

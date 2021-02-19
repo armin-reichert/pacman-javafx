@@ -69,7 +69,7 @@ public class PacMan_IntermissionScene3 extends GameScene<PacMan_SceneRendering> 
 
 		rendering().pacMunching(pac).forEach(Animation::restart);
 		blinkyDamaged.restart();
-		soundManager().loop(PacManGameSound.INTERMISSION_3, 2);
+		sound().loop(PacManGameSound.INTERMISSION_3, 2);
 
 		phase = Phase.CHASING_PACMAN;
 	}

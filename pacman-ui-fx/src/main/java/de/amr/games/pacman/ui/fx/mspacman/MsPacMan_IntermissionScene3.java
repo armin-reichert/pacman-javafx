@@ -67,7 +67,7 @@ public class MsPacMan_IntermissionScene3 extends GameScene<MsPacMan_SceneRenderi
 		msPac.position = new V2f(t(5), GROUND_Y - 4);
 		bird.position = new V2f(t(30), BIRD_Y);
 		bag.position = bird.position.sum(-14, 3);
-		soundManager().play(PacManGameSound.INTERMISSION_3);
+		sound().play(PacManGameSound.INTERMISSION_3);
 		enter(Phase.ANIMATION, Long.MAX_VALUE);
 	}
 

@@ -45,32 +45,29 @@ public class PacManGameFXUI implements PacManGameUI {
 
 	public static final int MS_PACMAN = 0, PACMAN = 1;
 
-	public static final MsPacMan_SceneRendering msPacManRendering = new MsPacMan_SceneRendering();
-	public static final PacMan_SceneRendering pacManRendering = new PacMan_SceneRendering();
+	public static final MsPacMan_SceneRendering MS_PACMAN_RENDERING = new MsPacMan_SceneRendering();
+	public static final PacMan_SceneRendering PACMAN_RENDERING = new PacMan_SceneRendering();
 
-	public static final SoundManager[] sounds = { new PacManGameSoundManager(PacManGameSounds::getMsPacManSoundURL),
-			new PacManGameSoundManager(PacManGameSounds::getPacManSoundURL) };
+	public static final SoundManager MS_PACMAN_SOUNDS = new PacManGameSoundManager(PacManGameSounds::getMsPacManSoundURL);
+	public static final SoundManager PACMAN_SOUNDS = new PacManGameSoundManager(PacManGameSounds::getPacManSoundURL);
 
-	private static final Deque<FlashMessage> flashMessageQ = new ArrayDeque<>();
+	private static final Deque<FlashMessage> FLASH_MESSAGE_Q = new ArrayDeque<>();
 
 	public static Optional<FlashMessage> flashMessage() {
-		return Optional.ofNullable(flashMessageQ.peek());
+		return Optional.ofNullable(FLASH_MESSAGE_Q.peek());
 	}
 
-	private final GameScene<?>[/* gameType */][/* sceneIndex */] scenes = new GameScene[2][5];
-
 	private final Stage stage;
-	private final double width;
-	private final double height;
-
 	private PacManGameModel game;
+	private final GameScene<?>[/* gameType */][/* sceneIndex */] scenes = new GameScene[2][5];
 	private GameScene<?> currentScene;
 	private boolean muted;
 
 	public PacManGameFXUI(Stage stage, PacManGameController controller, double scaling) {
 		this.stage = stage;
-		width = 28 * TS * scaling;
-		height = 36 * TS * scaling;
+
+		double width = 28 * TS * scaling;
+		double height = 36 * TS * scaling;
 
 		stage.setTitle("JavaFX: Pac-Man / Ms. Pac-Man");
 		stage.getIcons().add(new Image("/pacman/graphics/pacman.png"));
@@ -104,7 +101,7 @@ public class PacManGameFXUI implements PacManGameUI {
 		throw new IllegalStateException("Illegal game type " + game);
 	}
 
-	private GameScene<?> getScene() {
+	private GameScene<?> currentGameScene() {
 		int gameType = currentGameType();
 		switch (game.state) {
 		case INTRO:
@@ -120,7 +117,7 @@ public class PacManGameFXUI implements PacManGameUI {
 	public void onGameChanged(PacManGameModel newGame) {
 		this.game = Objects.requireNonNull(newGame);
 		Arrays.stream(scenes[currentGameType()]).forEach(scene -> scene.setGame(newGame));
-		currentScene = getScene();
+		currentScene = currentGameScene();
 		currentScene.start();
 	}
 
@@ -133,7 +130,7 @@ public class PacManGameFXUI implements PacManGameUI {
 
 	@Override
 	public void update() {
-		GameScene<?> newScene = getScene();
+		GameScene<?> newScene = currentGameScene();
 		if (currentScene != newScene) {
 			log("%s: Scene changes from %s to %s", this, currentScene, newScene);
 			if (currentScene != null) {
@@ -144,11 +141,11 @@ public class PacManGameFXUI implements PacManGameUI {
 		}
 		currentScene.update();
 
-		FlashMessage message = flashMessageQ.peek();
+		FlashMessage message = FLASH_MESSAGE_Q.peek();
 		if (message != null) {
 			message.timer.run();
 			if (message.timer.expired()) {
-				flashMessageQ.remove();
+				FLASH_MESSAGE_Q.remove();
 			}
 		}
 	}
@@ -177,7 +174,7 @@ public class PacManGameFXUI implements PacManGameUI {
 
 	@Override
 	public void showFlashMessage(String message, long ticks) {
-		flashMessageQ.add(new FlashMessage(message, ticks));
+		FLASH_MESSAGE_Q.add(new FlashMessage(message, ticks));
 	}
 
 	@Override
@@ -189,7 +186,10 @@ public class PacManGameFXUI implements PacManGameUI {
 
 	@Override
 	public Optional<SoundManager> sound() {
-		return muted ? Optional.empty() : Optional.of(sounds[currentGameType()]);
+		if (muted) {
+			return Optional.empty();
+		}
+		return Optional.of(currentGameType() == MS_PACMAN ? MS_PACMAN_SOUNDS : PACMAN_SOUNDS);
 	}
 
 	@Override
