@@ -175,7 +175,7 @@ public class MsPacMan_IntroScene extends GameScene {
 		g.fillText("\"MS PAC-MAN\"", t(8), t(5));
 		drawAnimatedFrame(32, 16, game.state.ticksRun());
 		for (Ghost ghost : ghosts) {
-			rendering.drawGhost(g, ghost, game);
+			rendering.drawGhost(g, ghost, false);
 		}
 		rendering.drawPac(g, msPac, game);
 		presentGhost();

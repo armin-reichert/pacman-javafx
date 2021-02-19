@@ -344,19 +344,19 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 
 	@Override
 	public void drawPac(GraphicsContext g, Pac pac, PacManGameModel game) {
-		drawCreature(g, pac, pacSprite(pac, game));
+		drawCreature(g, pac, pacSprite(pac));
 	}
 
 	@Override
-	public void drawGhost(GraphicsContext g, Ghost ghost, PacManGameModel game) {
-		drawCreature(g, ghost, ghostSprite(ghost, game));
+	public void drawGhost(GraphicsContext g, Ghost ghost, boolean frightened) {
+		drawCreature(g, ghost, ghostSprite(ghost, frightened));
 	}
 
 	@Override
 	public void drawBonus(GraphicsContext g, Bonus bonus, PacManGameModel game) {
 		g.save();
 		g.translate(0, bonusJumps.animate());
-		drawCreature(g, bonus, bonusSprite(bonus, game));
+		drawCreature(g, bonus, bonusSprite(bonus));
 		g.restore();
 	}
 
@@ -392,7 +392,7 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 	}
 
 	@Override
-	public Rectangle2D bonusSprite(Bonus bonus, PacManGameModel game) {
+	public Rectangle2D bonusSprite(Bonus bonus) {
 		if (bonus.edibleTicksLeft > 0) {
 			return symbols[bonus.symbol];
 		}
@@ -403,7 +403,7 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 	}
 
 	@Override
-	public Rectangle2D pacSprite(Pac pac, PacManGameModel game) {
+	public Rectangle2D pacSprite(Pac pac) {
 		if (pac.dead) {
 			return pacDying().hasStarted() ? pacDying().animate() : pacMunchingToDir(pac, pac.dir).frame();
 		}
@@ -417,7 +417,7 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 	}
 
 	@Override
-	public Rectangle2D ghostSprite(Ghost ghost, PacManGameModel game) {
+	public Rectangle2D ghostSprite(Ghost ghost, boolean frightened) {
 		if (ghost.bounty > 0) {
 			return bountyValues.get(ghost.bounty);
 		}
@@ -427,7 +427,7 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 		if (ghost.is(FRIGHTENED)) {
 			return ghostFlashing().isRunning() ? ghostFlashing().frame() : ghostFrightenedToDir(ghost, ghost.dir).animate();
 		}
-		if (ghost.is(LOCKED) && game.pac.powerTicksLeft > 0) {
+		if (ghost.is(LOCKED) && frightened) {
 			return ghostFrightenedToDir(ghost, ghost.dir).animate();
 		}
 		return ghostKickingToDir(ghost, ghost.wishDir).animate(); // Looks towards wish dir!

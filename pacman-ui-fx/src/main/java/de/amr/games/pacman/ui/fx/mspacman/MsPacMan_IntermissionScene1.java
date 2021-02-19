@@ -170,9 +170,9 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 			rendering.drawFlapAnimation(g, t(3), t(10), "1", "THEY MEET");
 		}
 		rendering.drawMrPacMan(g, pacMan);
-		rendering.drawGhost(g, inky, game);
+		rendering.drawGhost(g, inky, false);
 		rendering.drawPac(g, msPac, game);
-		rendering.drawGhost(g, pinky, game);
+		rendering.drawGhost(g, pinky, false);
 		if (heartVisible) {
 			rendering.drawRegion(g, rendering.getHeart(), msPac.position.x + 4, pacMan.position.y - 20);
 		}

@@ -25,6 +25,9 @@ import javafx.scene.text.Font;
  */
 public interface SceneRendering extends PacManGameAnimation {
 
+	/** Spritesheet raster size */
+	static final int RASTER = 16;
+
 	static Image exchangeColors(Image source, Map<Color, Color> exchanges) {
 		WritableImage newImage = new WritableImage((int) source.getWidth(), (int) source.getHeight());
 		for (int x = 0; x < source.getWidth(); ++x) {
@@ -41,16 +44,16 @@ public interface SceneRendering extends PacManGameAnimation {
 	}
 
 	static Rectangle2D tileRegion(int tileX, int tileY, int cols, int rows) {
-		return new Rectangle2D(tileX * 16, tileY * 16, cols * 16, rows * 16);
+		return new Rectangle2D(tileX * RASTER, tileY * RASTER, cols * RASTER, rows * RASTER);
 	}
 
 	Image spritesheet();
 
-	Rectangle2D bonusSprite(Bonus bonus, PacManGameModel game);
+	Rectangle2D bonusSprite(Bonus bonus);
 
-	Rectangle2D pacSprite(Pac pac, PacManGameModel game);
+	Rectangle2D pacSprite(Pac pac);
 
-	Rectangle2D ghostSprite(Ghost ghost, PacManGameModel game);
+	Rectangle2D ghostSprite(Ghost ghost, boolean frightened);
 
 	Font getScoreFont();
 
@@ -60,12 +63,13 @@ public interface SceneRendering extends PacManGameAnimation {
 	}
 
 	default Rectangle2D toRegion(Rectangle2D tile) {
-		return new Rectangle2D(16 * tile.getMinX(), 16 * tile.getMinY(), 16 * tile.getWidth(), 16 * tile.getHeight());
+		return new Rectangle2D(RASTER * tile.getMinX(), RASTER * tile.getMinY(), RASTER * tile.getWidth(),
+				RASTER * tile.getHeight());
 	}
 
 	void drawPac(GraphicsContext g, Pac pac, PacManGameModel game);
 
-	void drawGhost(GraphicsContext g, Ghost ghost, PacManGameModel game);
+	void drawGhost(GraphicsContext g, Ghost ghost, boolean frightened);
 
 	void drawBonus(GraphicsContext g, Bonus bonus, PacManGameModel game);
 

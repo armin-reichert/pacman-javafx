@@ -244,21 +244,21 @@ public class PacMan_SceneRendering implements SceneRendering {
 
 	@Override
 	public void drawPac(GraphicsContext g, Pac pac, PacManGameModel game) {
-		drawTile(g, pac, pacSprite(pac, game));
+		drawTile(g, pac, pacSprite(pac));
 	}
 
 	@Override
-	public void drawGhost(GraphicsContext g, Ghost ghost, PacManGameModel game) {
-		drawTile(g, ghost, ghostSprite(ghost, game));
+	public void drawGhost(GraphicsContext g, Ghost ghost, boolean frightened) {
+		drawTile(g, ghost, ghostSprite(ghost, frightened));
 	}
 
 	@Override
 	public void drawBonus(GraphicsContext g, Bonus bonus, PacManGameModel game) {
-		drawTile(g, bonus, bonusSprite(bonus, game));
+		drawTile(g, bonus, bonusSprite(bonus));
 	}
 
 	@Override
-	public Rectangle2D bonusSprite(Bonus bonus, PacManGameModel game) {
+	public Rectangle2D bonusSprite(Bonus bonus) {
 		if (bonus.edibleTicksLeft > 0) {
 			return symbols[bonus.symbol];
 		}
@@ -269,7 +269,7 @@ public class PacMan_SceneRendering implements SceneRendering {
 	}
 
 	@Override
-	public Rectangle2D pacSprite(Pac pac, PacManGameModel game) {
+	public Rectangle2D pacSprite(Pac pac) {
 		if (pac.dead) {
 			return pacDying().hasStarted() ? pacDying().animate() : pacMunchingToDir(pac, pac.dir).frame();
 		}
@@ -283,7 +283,7 @@ public class PacMan_SceneRendering implements SceneRendering {
 	}
 
 	@Override
-	public Rectangle2D ghostSprite(Ghost ghost, PacManGameModel game) {
+	public Rectangle2D ghostSprite(Ghost ghost, boolean frightened) {
 		if (ghost.bounty > 0) {
 			return numbers.get(ghost.bounty);
 		}
@@ -293,7 +293,7 @@ public class PacMan_SceneRendering implements SceneRendering {
 		if (ghost.is(FRIGHTENED)) {
 			return ghostFlashing().isRunning() ? ghostFlashing().frame() : ghostFrightenedToDir(ghost, ghost.dir).animate();
 		}
-		if (ghost.is(LOCKED) && game.pac.powerTicksLeft > 0) {
+		if (ghost.is(LOCKED) && frightened) {
 			return ghostFrightenedToDir(ghost, ghost.dir).animate();
 		}
 		return ghostKickingToDir(ghost, ghost.wishDir).animate(); // Looks towards wish dir!
