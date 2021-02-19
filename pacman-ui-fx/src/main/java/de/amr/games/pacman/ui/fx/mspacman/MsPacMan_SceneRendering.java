@@ -45,18 +45,18 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 
 	private final Image sheet = new Image("/mspacman/graphics/sprites.png", false);
 
-	private final Rectangle2D[] symbols;
-	private final Map<Integer, Rectangle2D> bonusValues;
-	private final Map<Integer, Rectangle2D> bountyValues;
-	private final Map<Direction, Animation<Rectangle2D>> msPacMunching;
-	private final Map<Direction, Animation<Rectangle2D>> pacManMunching; // used in intermission scene
-	private final Animation<Rectangle2D> msPacSpinning;
-	private final List<EnumMap<Direction, Animation<Rectangle2D>>> ghostsKicking;
-	private final EnumMap<Direction, Animation<Rectangle2D>> ghostEyes;
-	private final Animation<Rectangle2D> ghostBlue;
-	private final Animation<Rectangle2D> ghostFlashing;
-	private final Animation<Integer> bonusJumps;
-	private final List<Animation<Image>> mazesFlashing;
+	private final Rectangle2D[] symbolRegions;
+	private final Map<Integer, Rectangle2D> bonusValueRegions;
+	private final Map<Integer, Rectangle2D> bountyValueRegions;
+	private final Map<Direction, Animation<Rectangle2D>> msPacMunchingAnim;
+	private final Map<Direction, Animation<Rectangle2D>> pacManMunchingAnim; // used in intermission scene
+	private final Animation<Rectangle2D> msPacSpinningAnim;
+	private final List<EnumMap<Direction, Animation<Rectangle2D>>> ghostsKickingAnim;
+	private final EnumMap<Direction, Animation<Rectangle2D>> ghostEyesAnim;
+	private final Animation<Rectangle2D> ghostBlueAnim;
+	private final Animation<Rectangle2D> ghostFlashingAnim;
+	private final Animation<Integer> bonusJumpAnim;
+	private final List<Animation<Image>> mazesFlashingAnims;
 	private final Animation<Boolean> energizerBlinking;
 	private final Animation<Rectangle2D> flapAnim;
 	private final Animation<Rectangle2D> birdAnim;
@@ -67,93 +67,100 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 		return dir == RIGHT ? 0 : dir == LEFT ? 1 : dir == UP ? 2 : 3;
 	}
 
-	private Rectangle2D r(double x, double y, int tileX, int tileY, double xTiles, double yTiles) {
-		return new Rectangle2D(x + tileX * 16, y + tileY * 16, xTiles * 16, yTiles * 16);
+	/* Tile region relative to given origin */
+	private Rectangle2D trAt(int originX, int originY, int tileX, int tileY, int tilesWidth, int tilesHeight) {
+		return new Rectangle2D(originX + tileX * RASTER, originY + tileY * RASTER, tilesWidth * RASTER,
+				tilesHeight * RASTER);
 	}
 
-	private Rectangle2D s(int tileX, int tileY) {
-		return r(456, 0, tileX, tileY, 1, 1);
+	/* Tile region in right half of spritesheet */
+	private Rectangle2D trRH(int tileX, int tileY) {
+		return trAt(456, 0, tileX, tileY, 1, 1);
 	}
 
 	public MsPacMan_SceneRendering() {
 
 		scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), 8);
 
-		symbols = new Rectangle2D[] { s(3, 0), s(4, 0), s(5, 0), s(6, 0), s(7, 0), s(8, 0), s(9, 0) };
+		symbolRegions = new Rectangle2D[] { trRH(3, 0), trRH(4, 0), trRH(5, 0), trRH(6, 0), trRH(7, 0), trRH(8, 0),
+				trRH(9, 0) };
 
 		//@formatter:off
 
-		bonusValues = new HashMap<>();
-		bonusValues.put(100,  s(3, 1));
-		bonusValues.put(200,  s(4, 1));
-		bonusValues.put(500,  s(5, 1));
-		bonusValues.put(700,  s(6, 1));
-		bonusValues.put(1000, s(7, 1));
-		bonusValues.put(2000, s(8, 1));
-		bonusValues.put(5000, s(9, 1));
+		bonusValueRegions = new HashMap<>();
+		bonusValueRegions.put(100,  trRH(3, 1));
+		bonusValueRegions.put(200,  trRH(4, 1));
+		bonusValueRegions.put(500,  trRH(5, 1));
+		bonusValueRegions.put(700,  trRH(6, 1));
+		bonusValueRegions.put(1000, trRH(7, 1));
+		bonusValueRegions.put(2000, trRH(8, 1));
+		bonusValueRegions.put(5000, trRH(9, 1));
 		
-		bountyValues = new HashMap<>();
-		bountyValues.put(200,  s(0, 8));
-		bountyValues.put(400,  s(1, 8));
-		bountyValues.put(800,  s(2, 8));
-		bountyValues.put(1600, s(3, 8));
+		bountyValueRegions = new HashMap<>();
+		bountyValueRegions.put(200,  trRH(0, 8));
+		bountyValueRegions.put(400,  trRH(1, 8));
+		bountyValueRegions.put(800,  trRH(2, 8));
+		bountyValueRegions.put(1600, trRH(3, 8));
 		//@formatter:on
 
 		// Animations
 
 		energizerBlinking = Animation.pulse().frameDuration(10);
 
-		mazesFlashing = new ArrayList<>(6);
+		mazesFlashingAnims = new ArrayList<>(6);
 		for (int mazeIndex = 0; mazeIndex < 6; ++mazeIndex) {
 			Map<Color, Color> exchanges = Map.of(getMazeWallBorderColor(mazeIndex), Color.WHITE, getMazeWallColor(mazeIndex),
 					Color.BLACK);
 			WritableImage mazeEmpty = new WritableImage(226, 248);
 			mazeEmpty.getPixelWriter().setPixels(0, 0, 226, 248, sheet.getPixelReader(), 226, 248 * mazeIndex);
 			Image mazeEmptyBright = SceneRendering.exchangeColors(mazeEmpty, exchanges);
-			mazesFlashing.add(Animation.of(mazeEmptyBright, mazeEmpty).frameDuration(15));
+			mazesFlashingAnims.add(Animation.of(mazeEmptyBright, mazeEmpty).frameDuration(15));
 		}
 
-		msPacMunching = new EnumMap<>(Direction.class);
+		msPacMunchingAnim = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = index(dir);
-			Animation<Rectangle2D> munching = Animation.of(s(1, d), s(1, d), s(2, d), s(0, d));
+			Animation<Rectangle2D> munching = Animation.of(trRH(1, d), trRH(1, d), trRH(2, d), trRH(0, d));
 			munching.frameDuration(2).endless();
-			msPacMunching.put(dir, munching);
+			msPacMunchingAnim.put(dir, munching);
 		}
 
-		msPacSpinning = Animation.of(s(0, 3), s(0, 0), s(0, 1), s(0, 2));
-		msPacSpinning.frameDuration(10).repetitions(2);
+		msPacSpinningAnim = Animation.of(trRH(0, 3), trRH(0, 0), trRH(0, 1), trRH(0, 2));
+		msPacSpinningAnim.frameDuration(10).repetitions(2);
 
-		pacManMunching = new EnumMap<>(Direction.class);
-		pacManMunching.put(Direction.RIGHT, Animation.of(s(0, 9), s(1, 9), s(2, 9)).endless().frameDuration(2));
-		pacManMunching.put(Direction.LEFT, Animation.of(s(0, 10), s(1, 10), s(2, 9)).endless().frameDuration(2));
-		pacManMunching.put(Direction.UP, Animation.of(s(0, 11), s(1, 11), s(2, 9)).endless().frameDuration(2));
-		pacManMunching.put(Direction.DOWN, Animation.of(s(0, 12), s(1, 12), s(2, 9)).endless().frameDuration(2));
+		pacManMunchingAnim = new EnumMap<>(Direction.class);
+		pacManMunchingAnim.put(Direction.RIGHT,
+				Animation.of(trRH(0, 9), trRH(1, 9), trRH(2, 9)).endless().frameDuration(2));
+		pacManMunchingAnim.put(Direction.LEFT,
+				Animation.of(trRH(0, 10), trRH(1, 10), trRH(2, 9)).endless().frameDuration(2));
+		pacManMunchingAnim.put(Direction.UP, Animation.of(trRH(0, 11), trRH(1, 11), trRH(2, 9)).endless().frameDuration(2));
+		pacManMunchingAnim.put(Direction.DOWN,
+				Animation.of(trRH(0, 12), trRH(1, 12), trRH(2, 9)).endless().frameDuration(2));
 
-		ghostsKicking = new ArrayList<>(4);
+		ghostsKickingAnim = new ArrayList<>(4);
 		for (int id = 0; id < 4; ++id) {
 			EnumMap<Direction, Animation<Rectangle2D>> walkingTo = new EnumMap<>(Direction.class);
 			for (Direction dir : Direction.values()) {
 				int d = index(dir);
-				Animation<Rectangle2D> walking = Animation.of(s(2 * d, 4 + id), s(2 * d + 1, 4 + id));
+				Animation<Rectangle2D> walking = Animation.of(trRH(2 * d, 4 + id), trRH(2 * d + 1, 4 + id));
 				walking.frameDuration(4).endless();
 				walkingTo.put(dir, walking);
 			}
-			ghostsKicking.add(walkingTo);
+			ghostsKickingAnim.add(walkingTo);
 		}
 
-		ghostEyes = new EnumMap<>(Direction.class);
+		ghostEyesAnim = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
-			ghostEyes.put(dir, Animation.ofSingle(s(8 + index(dir), 5)));
+			ghostEyesAnim.put(dir, Animation.ofSingle(trRH(8 + index(dir), 5)));
 		}
 
-		ghostBlue = Animation.of(s(8, 4), s(9, 4));
-		ghostBlue.frameDuration(20).endless().run();
+		ghostBlueAnim = Animation.of(trRH(8, 4), trRH(9, 4));
+		ghostBlueAnim.frameDuration(20).endless().run();
 
-		ghostFlashing = Animation.of(s(8, 4), s(9, 4), s(10, 4), s(11, 4));
-		ghostFlashing.frameDuration(5).endless();
+		ghostFlashingAnim = Animation.of(trRH(8, 4), trRH(9, 4), trRH(10, 4), trRH(11, 4));
+		ghostFlashingAnim.frameDuration(5).endless();
 
-		bonusJumps = Animation.of(0, 2, 0, -2).frameDuration(20).endless().run();
+		bonusJumpAnim = Animation.of(0, 2, 0, -2).frameDuration(20).endless().run();
 
 		flapAnim = Animation.of( //
 				new Rectangle2D(456, 208, 32, 32), //
@@ -181,11 +188,11 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 	}
 
 	public Map<Direction, Animation<Rectangle2D>> pacManMunching() {
-		return pacManMunching;
+		return pacManMunchingAnim;
 	}
 
 	public Rectangle2D getHeart() {
-		return s(2, 10);
+		return trRH(2, 10);
 	}
 
 	public Animation<Rectangle2D> getFlapAnim() {
@@ -242,7 +249,7 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 		}
 	}
 
-	private Direction ensureNotNull(Direction dir) {
+	private Direction ensureDirection(Direction dir) {
 		return dir != null ? dir : Direction.RIGHT;
 	}
 
@@ -291,8 +298,8 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 		for (int level = firstLevel; level <= game.currentLevelNumber; ++level) {
 			byte symbol = game.levelSymbols.get(level - 1);
 			// TODO how can an IndexOutOfBoundsException occur here?
-			Rectangle2D region = symbols[symbol];
-			g.drawImage(sheet, region.getMinX(), region.getMinY(), 16, 16, x, y, 16, 16);
+			Rectangle2D region = symbolRegions[symbol];
+			g.drawImage(sheet, region.getMinX(), region.getMinY(), RASTER, RASTER, x, y, RASTER, RASTER);
 			x -= t(2);
 		}
 	}
@@ -302,7 +309,7 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 		int maxLivesDisplayed = 5;
 		int livesDisplayed = game.started ? game.lives - 1 : game.lives;
 		for (int i = 0; i < Math.min(livesDisplayed, maxLivesDisplayed); ++i) {
-			g.drawImage(sheet, 456 + 16, 0, 16, 16, x + t(2 * i), y, 16, 16);
+			g.drawImage(sheet, 456 + RASTER, 0, RASTER, RASTER, x + t(2 * i), y, RASTER, RASTER);
 		}
 	}
 
@@ -355,7 +362,7 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 	@Override
 	public void drawBonus(GraphicsContext g, Bonus bonus) {
 		g.save();
-		g.translate(0, bonusJumps.animate());
+		g.translate(0, bonusJumpAnim.animate());
 		drawCreature(g, bonus, bonusSpriteRegion(bonus));
 		g.restore();
 	}
@@ -394,10 +401,10 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 	@Override
 	public Rectangle2D bonusSpriteRegion(Bonus bonus) {
 		if (bonus.edibleTicksLeft > 0) {
-			return symbols[bonus.symbol];
+			return symbolRegions[bonus.symbol];
 		}
 		if (bonus.eatenTicksLeft > 0) {
-			return bonusValues.get(bonus.points);
+			return bonusValueRegions.get(bonus.points);
 		}
 		return null;
 	}
@@ -419,7 +426,7 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 	@Override
 	public Rectangle2D ghostSpriteRegion(Ghost ghost, boolean frightened) {
 		if (ghost.bounty > 0) {
-			return bountyValues.get(ghost.bounty);
+			return bountyValueRegions.get(ghost.bounty);
 		}
 		if (ghost.is(DEAD) || ghost.is(ENTERING_HOUSE)) {
 			return ghostReturningHomeToDir(ghost, ghost.dir).animate();
@@ -435,42 +442,42 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 
 	@Override
 	public Animation<Rectangle2D> pacMunchingToDir(Pac pac, Direction dir) {
-		return msPacMunching.get(ensureNotNull(dir));
+		return msPacMunchingAnim.get(ensureDirection(dir));
 	}
 
 	@Override
 	public Animation<Rectangle2D> pacDying() {
-		return msPacSpinning;
+		return msPacSpinningAnim;
 	}
 
 	@Override
 	public Animation<Rectangle2D> ghostKickingToDir(Ghost ghost, Direction dir) {
-		return ghostsKicking.get(ghost.id).get(ensureNotNull(dir));
+		return ghostsKickingAnim.get(ghost.id).get(ensureDirection(dir));
 	}
 
 	@Override
 	public Animation<Rectangle2D> ghostFrightenedToDir(Ghost ghost, Direction dir) {
-		return ghostBlue;
+		return ghostBlueAnim;
 	}
 
 	@Override
 	public Animation<Rectangle2D> ghostFlashing() {
-		return ghostFlashing;
+		return ghostFlashingAnim;
 	}
 
 	@Override
 	public Animation<Rectangle2D> ghostReturningHomeToDir(Ghost ghost, Direction dir) {
-		return ghostEyes.get(ensureNotNull(dir));
+		return ghostEyesAnim.get(ensureDirection(dir));
 	}
 
 	@Override
 	public Animation<Image> mazeFlashing(int mazeNumber) {
-		return mazesFlashing.get(mazeNumber - 1);
+		return mazesFlashingAnims.get(mazeNumber - 1);
 	}
 
 	@Override
 	public Stream<Animation<?>> mazeFlashings() {
-		return mazesFlashing.stream().map(Animation.class::cast);
+		return mazesFlashingAnims.stream().map(Animation.class::cast);
 	}
 
 	@Override
