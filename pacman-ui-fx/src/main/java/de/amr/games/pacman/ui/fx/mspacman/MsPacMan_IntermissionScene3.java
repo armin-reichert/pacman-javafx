@@ -37,13 +37,12 @@ public class MsPacMan_IntermissionScene3 extends GameScene<MsPacMan_SceneRenderi
 	private static final float BIRD_SPEED = 1.5f;
 	private static final V2f GRAVITY = new V2f(0, 0.04f);
 
-	private boolean flapVisible;
-
 	private Pac pacMan, msPac;
-	private GameEntity bird = new GameEntity();
-	private GameEntity bag = new GameEntity();
+	private GameEntity bird;
+	private GameEntity bag;
 	private boolean bagDropped;
 	private boolean bagOpened;
+	private boolean flapVisible;
 	private int bounces;
 
 	private Phase phase;
@@ -60,13 +59,21 @@ public class MsPacMan_IntermissionScene3 extends GameScene<MsPacMan_SceneRenderi
 	@Override
 	public void start() {
 		pacMan = new Pac("Pac-Man", Direction.RIGHT);
+		pacMan.position = new V2f(t(3), GROUND_Y - 4);
+
 		msPac = new Pac("Ms. Pac-Man", Direction.RIGHT);
+		msPac.position = new V2f(t(5), GROUND_Y - 4);
+
+		bird = new GameEntity();
+		bird.position = new V2f(t(30), BIRD_Y);
+
+		bag = new GameEntity();
+		bag.position = bird.position.sum(-14, 3);
+		bagDropped = bagOpened = false;
+
 		flapVisible = true;
 		rendering().getFlapAnim().restart();
-		pacMan.position = new V2f(t(3), GROUND_Y - 4);
-		msPac.position = new V2f(t(5), GROUND_Y - 4);
-		bird.position = new V2f(t(30), BIRD_Y);
-		bag.position = bird.position.sum(-14, 3);
+
 		sound().play(PacManGameSound.INTERMISSION_3);
 		enter(Phase.ANIMATION, Long.MAX_VALUE);
 	}
