@@ -59,7 +59,7 @@ public class PacMan_IntroScene extends AbstractPacManGameScene<PacManSceneRender
 	}
 
 	public PacMan_IntroScene(double width, double height, double scaling) {
-		super(width, height, scaling, PacManSceneRendering.IT, PacManGameFXUI.pacManSounds);
+		super(width, height, scaling, PacManGameFXUI.pacManRendering, PacManGameFXUI.pacManSounds);
 	}
 
 	@Override

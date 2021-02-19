@@ -49,7 +49,7 @@ public class MsPacMan_IntermissionScene1 extends AbstractPacManGameScene<MsPacMa
 	}
 
 	public MsPacMan_IntermissionScene1(double width, double height, double scaling) {
-		super(width, height, scaling, MsPacManSceneRendering.IT, PacManGameFXUI.msPacManSounds);
+		super(width, height, scaling, PacManGameFXUI.msPacManRendering, PacManGameFXUI.msPacManSounds);
 	}
 
 	@Override
