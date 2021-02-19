@@ -353,7 +353,7 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 	}
 
 	@Override
-	public void drawBonus(GraphicsContext g, Bonus bonus, PacManGameModel game) {
+	public void drawBonus(GraphicsContext g, Bonus bonus) {
 		g.save();
 		g.translate(0, bonusJumps.animate());
 		drawCreature(g, bonus, bonusSprite(bonus));

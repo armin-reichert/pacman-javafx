@@ -71,7 +71,7 @@ public interface SceneRendering extends PacManGameAnimation {
 
 	void drawGhost(GraphicsContext g, Ghost ghost, boolean frightened);
 
-	void drawBonus(GraphicsContext g, Bonus bonus, PacManGameModel game);
+	void drawBonus(GraphicsContext g, Bonus bonus);
 
 	void hideTile(GraphicsContext g, V2i tile);
 

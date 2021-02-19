@@ -37,7 +37,7 @@ public class PlayScene extends GameScene {
 		rendering.signalGameState(g, game);
 		rendering.drawPac(g, game.pac);
 		game.ghosts().forEach(ghost -> rendering.drawGhost(g, ghost, game.pac.powerTicksLeft > 0));
-		rendering.drawBonus(g, game.bonus, game);
+		rendering.drawBonus(g, game.bonus);
 		rendering.drawScore(g, game, game.state == PacManGameState.INTRO || game.attractMode);
 		if (PacManGameFXUI.flashMessage().isPresent()) {
 			drawFlashMessage();
