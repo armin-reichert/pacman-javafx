@@ -17,6 +17,7 @@ import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.ui.fx.PacManGameFXUI;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Group;
 import javafx.scene.paint.Color;
 
 /**
@@ -37,8 +38,8 @@ public class PacMan_IntermissionScene3 extends GameScene<PacMan_SceneRendering> 
 	private final Pac pac;
 	private Phase phase;
 
-	public PacMan_IntermissionScene3(double width, double height, double scaling) {
-		super(width, height, scaling, PacManGameFXUI.PACMAN);
+	public PacMan_IntermissionScene3(Group root, double width, double height, double scaling) {
+		super(root, width, height, scaling, PacManGameFXUI.PACMAN);
 
 		pac = new Pac("Pac-Man", Direction.LEFT);
 		blinky = new Ghost(0, "Blinky", Direction.LEFT);

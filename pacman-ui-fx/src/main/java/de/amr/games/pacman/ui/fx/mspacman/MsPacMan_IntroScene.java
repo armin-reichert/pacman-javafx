@@ -15,6 +15,7 @@ import de.amr.games.pacman.model.GhostState;
 import de.amr.games.pacman.model.Pac;
 import de.amr.games.pacman.ui.fx.PacManGameFXUI;
 import de.amr.games.pacman.ui.fx.common.GameScene;
+import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -45,8 +46,8 @@ public class MsPacMan_IntroScene extends GameScene<MsPacMan_SceneRendering> {
 	private Ghost currentGhost;
 	private boolean presentingMsPac;
 
-	public MsPacMan_IntroScene(double width, double height, double scaling) {
-		super(width, height, scaling, PacManGameFXUI.MS_PACMAN);
+	public MsPacMan_IntroScene(Group root, double width, double height, double scaling) {
+		super(root, width, height, scaling, PacManGameFXUI.MS_PACMAN);
 	}
 
 	private void enter(Phase newPhase, long ticks) {

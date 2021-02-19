@@ -4,6 +4,7 @@ import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.ui.fx.PacManGameFXUI;
+import javafx.scene.Group;
 import javafx.scene.paint.Color;
 
 /**
@@ -13,8 +14,8 @@ import javafx.scene.paint.Color;
  */
 public class PlayScene<RENDERING extends SceneRendering> extends GameScene<RENDERING> {
 
-	public PlayScene(double width, double height, double scaling, int gameType) {
-		super(width, height, scaling, gameType);
+	public PlayScene(Group root, double width, double height, double scaling, int gameType) {
+		super(root, width, height, scaling, gameType);
 	}
 
 	@Override

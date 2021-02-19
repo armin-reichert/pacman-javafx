@@ -13,6 +13,7 @@ import de.amr.games.pacman.ui.PacManGameAnimation;
 import de.amr.games.pacman.ui.fx.PacManGameFXUI;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -27,32 +28,28 @@ import javafx.scene.text.Text;
  * 
  * @author Armin Reichert
  */
-public class GameScene<RENDERING extends SceneRendering> {
+public class GameScene<RENDERING extends SceneRendering> extends Scene {
 
-	protected final double width;
-	protected final double height;
-	protected final Scene fxScene;
 	protected final Text flashMessageView;
 	protected final Keyboard keyboard;
 	protected final GraphicsContext g;
 	protected final int gameType;
 	protected PacManGameModel game;
 
-	public GameScene(double width, double height, double scaling, int gameType) {
+	public GameScene(Group root, double width, double height, double scaling, int gameType) {
+		super(root, width, height, Color.BLACK);
 		this.gameType = gameType;
-		this.width = width;
-		this.height = height;
 		Canvas canvas = new Canvas(width, height);
 		g = canvas.getGraphicsContext2D();
 		g.scale(scaling, scaling);
 		StackPane pane = new StackPane();
+		root.getChildren().add(pane);
 		flashMessageView = new Text();
 		flashMessageView.setFont(Font.font("Serif", FontWeight.BOLD, 10 * scaling));
 		flashMessageView.setFill(Color.YELLOW);
 		StackPane.setAlignment(flashMessageView, Pos.BOTTOM_CENTER);
 		pane.getChildren().addAll(canvas, flashMessageView);
-		fxScene = new Scene(pane, width, height);
-		keyboard = new Keyboard(fxScene);
+		keyboard = new Keyboard(this);
 	}
 
 	public void update() {
@@ -92,10 +89,6 @@ public class GameScene<RENDERING extends SceneRendering> {
 	}
 
 	public void end() {
-	}
-
-	public Scene getFXScene() {
-		return fxScene;
 	}
 
 	public Keyboard keyboard() {

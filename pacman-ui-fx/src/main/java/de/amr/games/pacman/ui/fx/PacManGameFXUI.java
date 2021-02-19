@@ -32,6 +32,7 @@ import de.amr.games.pacman.ui.fx.pacman.PacMan_IntermissionScene3;
 import de.amr.games.pacman.ui.fx.pacman.PacMan_IntroScene;
 import de.amr.games.pacman.ui.fx.pacman.PacMan_SceneRendering;
 import javafx.application.Platform;
+import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
@@ -78,17 +79,17 @@ public class PacManGameFXUI implements PacManGameUI {
 			Platform.exit();
 		});
 
-		scenes[MS_PACMAN][0] = new MsPacMan_IntroScene(width, height, scaling);
-		scenes[MS_PACMAN][1] = new MsPacMan_IntermissionScene1(width, height, scaling);
-		scenes[MS_PACMAN][2] = new MsPacMan_IntermissionScene2(width, height, scaling);
-		scenes[MS_PACMAN][3] = new MsPacMan_IntermissionScene3(width, height, scaling);
-		scenes[MS_PACMAN][4] = new PlayScene<MsPacMan_SceneRendering>(width, height, scaling, MS_PACMAN);
+		scenes[MS_PACMAN][0] = new MsPacMan_IntroScene(new Group(), width, height, scaling);
+		scenes[MS_PACMAN][1] = new MsPacMan_IntermissionScene1(new Group(), width, height, scaling);
+		scenes[MS_PACMAN][2] = new MsPacMan_IntermissionScene2(new Group(), width, height, scaling);
+		scenes[MS_PACMAN][3] = new MsPacMan_IntermissionScene3(new Group(), width, height, scaling);
+		scenes[MS_PACMAN][4] = new PlayScene<MsPacMan_SceneRendering>(new Group(), width, height, scaling, MS_PACMAN);
 
-		scenes[PACMAN][0] = new PacMan_IntroScene(width, height, scaling);
-		scenes[PACMAN][1] = new PacMan_IntermissionScene1(width, height, scaling);
-		scenes[PACMAN][2] = new PacMan_IntermissionScene2(width, height, scaling);
-		scenes[PACMAN][3] = new PacMan_IntermissionScene3(width, height, scaling);
-		scenes[PACMAN][4] = new PlayScene<PacMan_SceneRendering>(width, height, scaling, PACMAN);
+		scenes[PACMAN][0] = new PacMan_IntroScene(new Group(), width, height, scaling);
+		scenes[PACMAN][1] = new PacMan_IntermissionScene1(new Group(), width, height, scaling);
+		scenes[PACMAN][2] = new PacMan_IntermissionScene2(new Group(), width, height, scaling);
+		scenes[PACMAN][3] = new PacMan_IntermissionScene3(new Group(), width, height, scaling);
+		scenes[PACMAN][4] = new PlayScene<PacMan_SceneRendering>(new Group(), width, height, scaling, PACMAN);
 
 		onGameChanged(controller.getGame());
 	}
@@ -125,7 +126,7 @@ public class PacManGameFXUI implements PacManGameUI {
 
 	@Override
 	public void show() {
-		stage.setScene(currentScene.getFXScene());
+		stage.setScene(currentScene);
 		stage.sizeToScene();
 		stage.show();
 	}
@@ -156,8 +157,8 @@ public class PacManGameFXUI implements PacManGameUI {
 	public void render() {
 		// TODO Should the game loop also run on the JavaFX application thread?
 		Platform.runLater(() -> {
-			if (stage.getScene() != currentScene.getFXScene()) {
-				stage.setScene(currentScene.getFXScene());
+			if (stage.getScene() != currentScene) {
+				stage.setScene(currentScene);
 			}
 			try {
 				currentScene.render();

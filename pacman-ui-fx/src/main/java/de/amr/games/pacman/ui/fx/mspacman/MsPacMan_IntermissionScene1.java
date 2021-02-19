@@ -14,6 +14,7 @@ import de.amr.games.pacman.model.Pac;
 import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.ui.fx.PacManGameFXUI;
 import de.amr.games.pacman.ui.fx.common.GameScene;
+import javafx.scene.Group;
 import javafx.scene.paint.Color;
 
 /**
@@ -48,8 +49,8 @@ public class MsPacMan_IntermissionScene1 extends GameScene<MsPacMan_SceneRenderi
 		phase.timer.setDuration(ticks);
 	}
 
-	public MsPacMan_IntermissionScene1(double width, double height, double scaling) {
-		super(width, height, scaling, PacManGameFXUI.MS_PACMAN);
+	public MsPacMan_IntermissionScene1(Group root, double width, double height, double scaling) {
+		super(root, width, height, scaling, PacManGameFXUI.MS_PACMAN);
 	}
 
 	@Override

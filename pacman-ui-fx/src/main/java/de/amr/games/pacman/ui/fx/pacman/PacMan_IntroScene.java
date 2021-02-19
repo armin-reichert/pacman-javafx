@@ -16,6 +16,7 @@ import de.amr.games.pacman.model.Pac;
 import de.amr.games.pacman.ui.fx.PacManGameFXUI;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -58,8 +59,8 @@ public class PacMan_IntroScene extends GameScene<PacMan_SceneRendering> {
 		log("Phase %s entered at %d", phase, phase.start);
 	}
 
-	public PacMan_IntroScene(double width, double height, double scaling) {
-		super(width, height, scaling, PacManGameFXUI.PACMAN);
+	public PacMan_IntroScene(Group root, double width, double height, double scaling) {
+		super(root, width, height, scaling, PacManGameFXUI.PACMAN);
 	}
 
 	@Override

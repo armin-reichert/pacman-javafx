@@ -18,6 +18,7 @@ import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.ui.fx.PacManGameFXUI;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Group;
 import javafx.scene.paint.Color;
 
 /**
@@ -38,8 +39,8 @@ public class PacMan_IntermissionScene1 extends GameScene<PacMan_SceneRendering> 
 	private Animation<Rectangle2D> bigPac;
 	private Phase phase;
 
-	public PacMan_IntermissionScene1(double width, double height, double scaling) {
-		super(width, height, scaling, PacManGameFXUI.PACMAN);
+	public PacMan_IntermissionScene1(Group root, double width, double height, double scaling) {
+		super(root, width, height, scaling, PacManGameFXUI.PACMAN);
 	}
 
 	@Override

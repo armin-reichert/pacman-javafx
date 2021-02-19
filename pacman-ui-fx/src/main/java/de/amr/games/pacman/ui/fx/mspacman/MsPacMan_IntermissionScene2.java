@@ -11,6 +11,7 @@ import de.amr.games.pacman.model.Pac;
 import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.ui.fx.PacManGameFXUI;
 import de.amr.games.pacman.ui.fx.common.GameScene;
+import javafx.scene.Group;
 import javafx.scene.paint.Color;
 
 /**
@@ -36,8 +37,8 @@ public class MsPacMan_IntermissionScene2 extends GameScene<MsPacMan_SceneRenderi
 	private Pac pacMan, msPac;
 	private boolean flapVisible;
 
-	public MsPacMan_IntermissionScene2(double width, double height, double scaling) {
-		super(width, height, scaling, PacManGameFXUI.MS_PACMAN);
+	public MsPacMan_IntermissionScene2(Group root, double width, double height, double scaling) {
+		super(root, width, height, scaling, PacManGameFXUI.MS_PACMAN);
 	}
 
 	private void enter(Phase newPhase, long ticks) {
