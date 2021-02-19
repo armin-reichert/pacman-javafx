@@ -8,6 +8,7 @@ import de.amr.games.pacman.ui.FlashMessage;
 import de.amr.games.pacman.ui.fx.PacManGameFXUI;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import javafx.geometry.Pos;
+import javafx.scene.Camera;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
@@ -30,6 +31,7 @@ public abstract class GameScene extends Scene {
 	protected final Keyboard keyboard;
 	protected final GraphicsContext g;
 	protected PacManGameModel game;
+	protected Camera camera;
 
 	public GameScene(Group root, double width, double height, double scaling) {
 		super(root, width, height, Color.BLACK);
@@ -45,7 +47,39 @@ public abstract class GameScene extends Scene {
 		pane.getChildren().addAll(canvas, flashMessageView);
 		keyboard = new Keyboard(this);
 
-		setCamera(new PerspectiveCamera());
+		camera = new PerspectiveCamera();
+		setOnKeyPressed(e -> {
+			if (e.isControlDown()) {
+				switch (e.getCode()) {
+				case DIGIT0:
+					camera.setTranslateX(0);
+					camera.setTranslateY(0);
+					camera.setTranslateZ(0);
+					break;
+				case LEFT:
+					camera.setTranslateX(camera.getTranslateX() + 10);
+					break;
+				case RIGHT:
+					camera.setTranslateX(camera.getTranslateX() - 10);
+					break;
+				case UP:
+					camera.setTranslateY(camera.getTranslateY() + 10);
+					break;
+				case DOWN:
+					camera.setTranslateY(camera.getTranslateY() - 10);
+					break;
+				case PLUS:
+					camera.setTranslateZ(camera.getTranslateZ() + 10);
+					break;
+				case MINUS:
+					camera.setTranslateZ(camera.getTranslateZ() - 10);
+					break;
+				default:
+					break;
+				}
+			}
+		});
+		setCamera(camera);
 	}
 
 	public abstract void update();
