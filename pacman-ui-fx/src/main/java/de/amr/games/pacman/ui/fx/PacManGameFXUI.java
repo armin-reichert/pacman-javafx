@@ -22,16 +22,16 @@ import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.common.AbstractPacManGameScene;
 import de.amr.games.pacman.ui.fx.common.PacManGameScene;
 import de.amr.games.pacman.ui.fx.common.PlayScene;
-import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_SceneRendering;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene1;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene2;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene3;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntroScene;
-import de.amr.games.pacman.ui.fx.pacman.PacMan_SceneRendering;
+import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_SceneRendering;
 import de.amr.games.pacman.ui.fx.pacman.PacMan_IntermissionScene1;
 import de.amr.games.pacman.ui.fx.pacman.PacMan_IntermissionScene2;
 import de.amr.games.pacman.ui.fx.pacman.PacMan_IntermissionScene3;
 import de.amr.games.pacman.ui.fx.pacman.PacMan_IntroScene;
+import de.amr.games.pacman.ui.fx.pacman.PacMan_SceneRendering;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -60,7 +60,6 @@ public class PacManGameFXUI implements PacManGameUI {
 	private final AbstractPacManGameScene<?>[/* Game Type */][/* SceneID */] scenes = new AbstractPacManGameScene[2][5];
 
 	private final Stage stage;
-	private final double scaling;
 	private final double width;
 	private final double height;
 
@@ -71,7 +70,6 @@ public class PacManGameFXUI implements PacManGameUI {
 
 	public PacManGameFXUI(Stage stage, PacManGameController controller, double scaling) {
 		this.stage = stage;
-		this.scaling = scaling;
 		width = 28 * TS * scaling;
 		height = 36 * TS * scaling;
 
