@@ -65,11 +65,10 @@ public class PacManGameFXUI implements PacManGameUI {
 	private boolean muted;
 
 	public PacManGameFXUI(Stage stage, PacManGameController controller, double scaling) {
-		this.stage = stage;
-
 		double width = 28 * TS * scaling;
 		double height = 36 * TS * scaling;
 
+		this.stage = stage;
 		stage.setTitle("JavaFX: Pac-Man / Ms. Pac-Man");
 		stage.getIcons().add(new Image("/pacman/graphics/pacman.png"));
 		stage.setOnCloseRequest(e -> {
@@ -103,21 +102,20 @@ public class PacManGameFXUI implements PacManGameUI {
 	}
 
 	private GameScene currentGameScene() {
-		int gameType = currentGameType();
 		switch (game.state) {
 		case INTRO:
-			return scenes[gameType][0];
+			return scenes[currentGameType()][0];
 		case INTERMISSION:
-			return scenes[gameType][game.intermissionNumber];
+			return scenes[currentGameType()][game.intermissionNumber];
 		default:
-			return scenes[gameType][4];
+			return scenes[currentGameType()][4];
 		}
 	}
 
 	@Override
 	public void onGameChanged(PacManGameModel newGame) {
-		this.game = Objects.requireNonNull(newGame);
-		Arrays.stream(scenes[currentGameType()]).forEach(scene -> scene.setGame(newGame));
+		game = Objects.requireNonNull(newGame);
+		Arrays.stream(scenes[currentGameType()]).forEach(scene -> scene.setGame(game));
 		currentScene = currentGameScene();
 		currentScene.start();
 	}
@@ -132,14 +130,14 @@ public class PacManGameFXUI implements PacManGameUI {
 
 	@Override
 	public void update() {
-		GameScene newScene = currentGameScene();
-		if (currentScene != newScene) {
-			log("%s: Scene changes from %s to %s", this, currentScene, newScene);
+		GameScene sceneToDisplay = currentGameScene();
+		if (currentScene != sceneToDisplay) {
+			log("%s: Scene changes from %s to %s", this, currentScene, sceneToDisplay);
 			if (currentScene != null) {
 				currentScene.end();
 			}
-			newScene.start();
-			currentScene = newScene;
+			sceneToDisplay.start();
+			currentScene = sceneToDisplay;
 		}
 		currentScene.update();
 
@@ -154,7 +152,7 @@ public class PacManGameFXUI implements PacManGameUI {
 
 	@Override
 	public void render() {
-		// TODO Should the game loop also run on the JavaFX application thread?
+		// TODO Should the game loop run on the JavaFX application thread?
 		Platform.runLater(() -> {
 			if (stage.getScene() != currentScene) {
 				stage.setScene(currentScene);
@@ -189,14 +187,14 @@ public class PacManGameFXUI implements PacManGameUI {
 	@Override
 	public Optional<SoundManager> sound() {
 		if (muted) {
-			return Optional.empty();
+			return Optional.empty(); // TODO
 		}
 		return Optional.of(currentGameType() == MS_PACMAN ? MS_PACMAN_SOUNDS : PACMAN_SOUNDS);
 	}
 
 	@Override
-	public void mute(boolean muteState) {
-		muted = muteState;
+	public void mute(boolean state) {
+		muted = state;
 	}
 
 	@Override
