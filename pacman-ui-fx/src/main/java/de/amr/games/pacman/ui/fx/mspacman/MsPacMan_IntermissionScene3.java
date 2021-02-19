@@ -49,7 +49,7 @@ public class MsPacMan_IntermissionScene3 extends AbstractPacManGameScene<MsPacMa
 	private Phase phase;
 
 	public MsPacMan_IntermissionScene3(double width, double height, double scaling) {
-		super(width, height, scaling, PacManGameFXUI.msPacManRendering, PacManGameFXUI.msPacManSounds);
+		super(width, height, scaling, PacManGameFXUI.MS_PACMAN);
 	}
 
 	private void enter(Phase newPhase, long ticks) {
@@ -62,12 +62,12 @@ public class MsPacMan_IntermissionScene3 extends AbstractPacManGameScene<MsPacMa
 		pacMan = new Pac("Pac-Man", Direction.RIGHT);
 		msPac = new Pac("Ms. Pac-Man", Direction.RIGHT);
 		flapVisible = true;
-		rendering.getFlapAnim().restart();
+		rendering().getFlapAnim().restart();
 		pacMan.position = new V2f(t(3), GROUND_Y - 4);
 		msPac.position = new V2f(t(5), GROUND_Y - 4);
 		bird.position = new V2f(t(30), BIRD_Y);
 		bag.position = bird.position.sum(-14, 3);
-		soundManager.play(PacManGameSound.INTERMISSION_3);
+		soundManager().play(PacManGameSound.INTERMISSION_3);
 		enter(Phase.ANIMATION, Long.MAX_VALUE);
 	}
 
@@ -124,17 +124,17 @@ public class MsPacMan_IntermissionScene3 extends AbstractPacManGameScene<MsPacMa
 	public void render() {
 		fill(Color.BLACK);
 		if (flapVisible) {
-			rendering.drawFlapAnimation(g, t(3), t(10), "3", "JUNIOR");
+			rendering().drawFlapAnimation(g, t(3), t(10), "3", "JUNIOR");
 		}
-		rendering.drawPac(g, msPac, game);
-		rendering.drawMrPacMan(g, pacMan);
+		rendering().drawPac(g, msPac, game);
+		rendering().drawMrPacMan(g, pacMan);
 		if (bird.visible) {
-			rendering.drawBirdAnim(g, bird.position.x, bird.position.y);
+			rendering().drawBirdAnim(g, bird.position.x, bird.position.y);
 		}
 		if (bagOpened) {
-			rendering.drawJunior(g, bag.position.x, bag.position.y);
+			rendering().drawJunior(g, bag.position.x, bag.position.y);
 		} else {
-			rendering.drawBlueBag(g, bag.position.x, bag.position.y);
+			rendering().drawBlueBag(g, bag.position.x, bag.position.y);
 		}
 	}
 }

@@ -31,25 +31,25 @@ public class PacMan_IntermissionScene1 extends AbstractPacManGameScene<PacMan_Sc
 		BLINKY_CHASING_PACMAN, BIGPACMAN_CHASING_BLINKY;
 	}
 
-	private final int baselineY = t(20);
-	private final Ghost blinky;
-	private final Pac pac;
-	private final Animation<Rectangle2D> bigPac;
+	private static final int baselineY = t(20);
 
+	private Ghost blinky;
+	private Pac pac;
+	private Animation<Rectangle2D> bigPac;
 	private Phase phase;
 
 	public PacMan_IntermissionScene1(double width, double height, double scaling) {
-		super(width, height, scaling, PacManGameFXUI.pacManRendering, PacManGameFXUI.pacManSounds);
-
-		pac = new Pac("Pac-Man", Direction.LEFT);
-		blinky = new Ghost(0, "Blinky", Direction.LEFT);
-		bigPac = Animation.of(tileRegion(2, 1, 2, 2), tileRegion(4, 1, 2, 2), tileRegion(6, 1, 2, 2));
-		bigPac.endless().frameDuration(4).run();
+		super(width, height, scaling, PacManGameFXUI.PACMAN);
 	}
 
 	@Override
 	public void start() {
 		log("Start of intermission scene %s at tick %d", this, clock.ticksTotal);
+
+		pac = new Pac("Pac-Man", Direction.LEFT);
+		blinky = new Ghost(0, "Blinky", Direction.LEFT);
+		bigPac = Animation.of(tileRegion(2, 1, 2, 2), tileRegion(4, 1, 2, 2), tileRegion(6, 1, 2, 2));
+		bigPac.endless().frameDuration(4).run();
 
 		pac.visible = true;
 		pac.dead = false;
@@ -64,10 +64,10 @@ public class PacMan_IntermissionScene1 extends AbstractPacManGameScene<PacMan_Sc
 		blinky.speed = pac.speed * 1.04f;
 		blinky.dir = blinky.wishDir = LEFT;
 
-		rendering.pacMunching(pac).forEach(Animation::restart);
-		rendering.ghostKickingToDir(blinky, blinky.dir).restart();
-		rendering.ghostFrightenedToDir(blinky, blinky.dir).restart();
-		soundManager.loop(PacManGameSound.INTERMISSION_1, 2);
+		rendering().pacMunching(pac).forEach(Animation::restart);
+		rendering().ghostKickingToDir(blinky, blinky.dir).restart();
+		rendering().ghostFrightenedToDir(blinky, blinky.dir).restart();
+		soundManager().loop(PacManGameSound.INTERMISSION_1, 2);
 
 		phase = Phase.BLINKY_CHASING_PACMAN;
 	}
@@ -105,12 +105,12 @@ public class PacMan_IntermissionScene1 extends AbstractPacManGameScene<PacMan_Sc
 	@Override
 	public void render() {
 		fill(Color.BLACK);
-		rendering.drawGhost(g, blinky, game);
+		rendering().drawGhost(g, blinky, game);
 		if (phase == Phase.BLINKY_CHASING_PACMAN) {
-			rendering.drawPac(g, pac, game);
+			rendering().drawPac(g, pac, game);
 		} else {
-			rendering.drawRegion(g, bigPac.animate(), pac.position.x - 12, pac.position.y - 22);
+			rendering().drawRegion(g, bigPac.animate(), pac.position.x - 12, pac.position.y - 22);
 		}
-		rendering.drawLevelCounter(g, game, t(25), t(34));
+		rendering().drawLevelCounter(g, game, t(25), t(34));
 	}
 }

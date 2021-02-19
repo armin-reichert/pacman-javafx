@@ -38,7 +38,7 @@ public class PacMan_IntermissionScene3 extends AbstractPacManGameScene<PacMan_Sc
 	private Phase phase;
 
 	public PacMan_IntermissionScene3(double width, double height, double scaling) {
-		super(width, height, scaling, PacManGameFXUI.pacManRendering, PacManGameFXUI.pacManSounds);
+		super(width, height, scaling, PacManGameFXUI.PACMAN);
 
 		pac = new Pac("Pac-Man", Direction.LEFT);
 		blinky = new Ghost(0, "Blinky", Direction.LEFT);
@@ -67,9 +67,9 @@ public class PacMan_IntermissionScene3 extends AbstractPacManGameScene<PacMan_Sc
 		blinky.speed = pac.speed;
 		blinky.dir = blinky.wishDir = LEFT;
 
-		rendering.pacMunching(pac).forEach(Animation::restart);
+		rendering().pacMunching(pac).forEach(Animation::restart);
 		blinkyDamaged.restart();
-		soundManager.loop(PacManGameSound.INTERMISSION_3, 2);
+		soundManager().loop(PacManGameSound.INTERMISSION_3, 2);
 
 		phase = Phase.CHASING_PACMAN;
 	}
@@ -100,18 +100,18 @@ public class PacMan_IntermissionScene3 extends AbstractPacManGameScene<PacMan_Sc
 	@Override
 	public void render() {
 		fill(Color.BLACK);
-		rendering.drawLevelCounter(g, game, t(25), t(34));
-		rendering.drawPac(g, pac, game);
+		rendering().drawLevelCounter(g, game, t(25), t(34));
+		rendering().drawPac(g, pac, game);
 		drawBlinky();
 	}
 
 	private void drawBlinky() {
 		switch (phase) {
 		case CHASING_PACMAN:
-			rendering.drawRegion(g, blinkyDamaged.animate(), blinky.position.x - 4, blinky.position.y - 4);
+			rendering().drawRegion(g, blinkyDamaged.animate(), blinky.position.x - 4, blinky.position.y - 4);
 			break;
 		case RETURNING_HALF_NAKED:
-			rendering.drawRegion(g, blinkyHalfNaked.animate(), blinky.position.x - 4, blinky.position.y - 4);
+			rendering().drawRegion(g, blinkyHalfNaked.animate(), blinky.position.x - 4, blinky.position.y - 4);
 			break;
 		default:
 			break;

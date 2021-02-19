@@ -1,5 +1,8 @@
 package de.amr.games.pacman.ui.fx.common;
 
+import static de.amr.games.pacman.ui.fx.PacManGameFXUI.msPacManRendering;
+import static de.amr.games.pacman.ui.fx.PacManGameFXUI.pacManRendering;
+
 import java.util.Optional;
 
 import de.amr.games.pacman.lib.CountdownTimer;
@@ -24,7 +27,7 @@ import javafx.scene.text.Text;
  * 
  * @author Armin Reichert
  */
-public abstract class AbstractPacManGameScene<R extends SceneRendering> implements PacManGameScene {
+public abstract class AbstractPacManGameScene<RENDERING extends SceneRendering> implements PacManGameScene {
 
 	protected final double width;
 	protected final double height;
@@ -32,18 +35,19 @@ public abstract class AbstractPacManGameScene<R extends SceneRendering> implemen
 	protected final Text flashMessageView;
 	protected final Keyboard keyboard;
 	protected final GraphicsContext g;
-	protected final R rendering;
-	protected final SoundManager soundManager;
+	protected final int gameType;
+
 	protected PacManGameModel game;
 
-	public AbstractPacManGameScene(double width, double height, double scaling, R rendering, SoundManager soundManager) {
+	public AbstractPacManGameScene(double width, double height, double scaling, int gameType) {
+
+		this.gameType = gameType;
+
 		this.width = width;
 		this.height = height;
 		Canvas canvas = new Canvas(width, height);
 		g = canvas.getGraphicsContext2D();
 		g.scale(scaling, scaling);
-		this.rendering = rendering;
-		this.soundManager = soundManager;
 
 		StackPane pane = new StackPane();
 
@@ -60,6 +64,15 @@ public abstract class AbstractPacManGameScene<R extends SceneRendering> implemen
 
 	public void setGame(PacManGameModel game) {
 		this.game = game;
+	}
+
+	@SuppressWarnings("unchecked")
+	public RENDERING rendering() {
+		return (RENDERING) (gameType == PacManGameFXUI.MS_PACMAN ? msPacManRendering : pacManRendering);
+	}
+
+	public SoundManager soundManager() {
+		return PacManGameFXUI.sounds[gameType];
 	}
 
 	@Override
@@ -97,7 +110,7 @@ public abstract class AbstractPacManGameScene<R extends SceneRendering> implemen
 
 	@Override
 	public Optional<PacManGameAnimation> animation() {
-		return rendering instanceof PacManGameAnimation ? Optional.of(rendering) : Optional.empty();
+		return rendering() instanceof PacManGameAnimation ? Optional.of(rendering()) : Optional.empty();
 	}
 
 	protected void drawFlashMessage() {

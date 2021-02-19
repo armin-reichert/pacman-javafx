@@ -43,7 +43,7 @@ public class PacMan_IntermissionScene2 extends AbstractPacManGameScene<PacMan_Sc
 	private Phase phase;
 
 	public PacMan_IntermissionScene2(double width, double height, double scaling) {
-		super(width, height, scaling, PacManGameFXUI.pacManRendering, PacManGameFXUI.pacManSounds);
+		super(width, height, scaling, PacManGameFXUI.PACMAN);
 
 		blinky = new Ghost(0, "Blinky", Direction.LEFT);
 		pac = new Pac("Pac-Man", Direction.LEFT);
@@ -77,9 +77,9 @@ public class PacMan_IntermissionScene2 extends AbstractPacManGameScene<PacMan_Sc
 		blinky.speed = 1;
 		blinky.dir = blinky.wishDir = LEFT;
 
-		rendering.pacMunching(pac).forEach(Animation::restart);
-		rendering.ghostKickingToDir(blinky, blinky.dir).restart();
-		soundManager.play(PacManGameSound.INTERMISSION_2);
+		rendering().pacMunching(pac).forEach(Animation::restart);
+		rendering().ghostKickingToDir(blinky, blinky.dir).restart();
+		soundManager().play(PacManGameSound.INTERMISSION_2);
 
 		enter(Phase.APPROACHING_NAIL, Long.MAX_VALUE);
 	}
@@ -144,9 +144,9 @@ public class PacMan_IntermissionScene2 extends AbstractPacManGameScene<PacMan_Sc
 	@Override
 	public void render() {
 		fill(Color.BLACK);
-		rendering.drawLevelCounter(g, game, t(25), t(34));
-		rendering.drawRegion(g, nail, nailPosition.x, nailPosition.y);
-		rendering.drawPac(g, pac, game);
+		rendering().drawLevelCounter(g, game, t(25), t(34));
+		rendering().drawRegion(g, nail, nailPosition.x, nailPosition.y);
+		rendering().drawPac(g, pac, game);
 		drawBlinky();
 	}
 
@@ -156,27 +156,27 @@ public class PacMan_IntermissionScene2 extends AbstractPacManGameScene<PacMan_Sc
 		switch (phase) {
 		case APPROACHING_NAIL:
 		case HITTING_NAIL:
-			rendering.drawGhost(g, blinky, game);
+			rendering().drawGhost(g, blinky, game);
 			break;
 		case STRETCHED_1:
-			rendering.drawRegion(g, stretchedDress[0], blinkySpriteRightEdge - 8, baselineY);
-			rendering.drawGhost(g, blinky, game);
+			rendering().drawRegion(g, stretchedDress[0], blinkySpriteRightEdge - 8, baselineY);
+			rendering().drawGhost(g, blinky, game);
 			break;
 		case STRETCHED_2:
-			rendering.drawRegion(g, stretchedDress[1], blinkySpriteRightEdge - 4, baselineY);
-			rendering.drawGhost(g, blinky, game);
+			rendering().drawRegion(g, stretchedDress[1], blinkySpriteRightEdge - 4, baselineY);
+			rendering().drawGhost(g, blinky, game);
 			break;
 		case STRETCHED_3:
-			rendering.drawRegion(g, stretchedDress[2], blinkySpriteRightEdge - 2, baselineY);
-			rendering.drawGhost(g, blinky, game);
+			rendering().drawRegion(g, stretchedDress[2], blinkySpriteRightEdge - 2, baselineY);
+			rendering().drawGhost(g, blinky, game);
 			break;
 		case LOOKING_UP:
-			rendering.drawRegion(g, blinkyLookingUp, blinky.position.x - 4, blinky.position.y - 4);
-			rendering.drawRegion(g, shred, nailPosition.x, baselineY);
+			rendering().drawRegion(g, blinkyLookingUp, blinky.position.x - 4, blinky.position.y - 4);
+			rendering().drawRegion(g, shred, nailPosition.x, baselineY);
 			break;
 		case LOOKING_RIGHT:
-			rendering.drawRegion(g, blinkyLookingRight, blinky.position.x - 4, blinky.position.y - 4);
-			rendering.drawRegion(g, shred, nailPosition.x, baselineY);
+			rendering().drawRegion(g, blinkyLookingRight, blinky.position.x - 4, blinky.position.y - 4);
+			rendering().drawRegion(g, shred, nailPosition.x, baselineY);
 			break;
 		default:
 			break;

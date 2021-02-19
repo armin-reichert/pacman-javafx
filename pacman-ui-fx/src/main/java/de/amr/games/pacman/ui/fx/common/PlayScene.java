@@ -3,7 +3,6 @@ package de.amr.games.pacman.ui.fx.common;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.controller.PacManGameState;
-import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.PacManGameFXUI;
 import javafx.scene.paint.Color;
 
@@ -12,10 +11,10 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class PlayScene<R extends SceneRendering> extends AbstractPacManGameScene<R> {
+public class PlayScene<RENDERING extends SceneRendering> extends AbstractPacManGameScene<RENDERING> {
 
-	public PlayScene(double width, double height, double scaling, R rendering, SoundManager soundManager) {
-		super(width, height, scaling, rendering, soundManager);
+	public PlayScene(double width, double height, double scaling, int gameType) {
+		super(width, height, scaling, gameType);
 	}
 
 	@Override
@@ -25,25 +24,25 @@ public class PlayScene<R extends SceneRendering> extends AbstractPacManGameScene
 	@Override
 	public void render() {
 		fill(Color.BLACK);
-		boolean flashing = rendering.mazeFlashing(game.level.mazeNumber).hasStarted();
-		rendering.drawMaze(g, game.level.mazeNumber, 0, t(3), flashing);
+		SceneRendering r = rendering();
+		boolean flashing = r.mazeFlashing(game.level.mazeNumber).hasStarted();
+		r.drawMaze(g, game.level.mazeNumber, 0, t(3), flashing);
 		if (!flashing) {
-			rendering.drawFoodTiles(g, game.level.world.tiles().filter(game.level.world::isFoodTile),
-					game.level::containsEatenFood);
-			rendering.drawEnergizerTiles(g, game.level.world.energizerTiles());
+			r.drawFoodTiles(g, game.level.world.tiles().filter(game.level.world::isFoodTile), game.level::containsEatenFood);
+			r.drawEnergizerTiles(g, game.level.world.energizerTiles());
 		}
-		rendering.signalGameState(g, game);
-		rendering.drawPac(g, game.pac, game);
-		game.ghosts().forEach(ghost -> rendering.drawGhost(g, ghost, game));
-		rendering.drawBonus(g, game.bonus, game);
-		rendering.drawScore(g, game, game.state == PacManGameState.INTRO || game.attractMode);
+		r.signalGameState(g, game);
+		r.drawPac(g, game.pac, game);
+		game.ghosts().forEach(ghost -> r.drawGhost(g, ghost, game));
+		r.drawBonus(g, game.bonus, game);
+		r.drawScore(g, game, game.state == PacManGameState.INTRO || game.attractMode);
 		if (PacManGameFXUI.flashMessage().isPresent()) {
 			drawFlashMessage();
 		} else {
 			if (!game.attractMode) {
-				rendering.drawLivesCounter(g, game, t(2), t(34));
+				r.drawLivesCounter(g, game, t(2), t(34));
 			}
-			rendering.drawLevelCounter(g, game, t(25), t(34));
+			r.drawLevelCounter(g, game, t(25), t(34));
 		}
 	}
 }

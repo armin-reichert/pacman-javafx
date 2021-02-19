@@ -46,7 +46,7 @@ public class MsPacMan_IntroScene extends AbstractPacManGameScene<MsPacMan_SceneR
 	private boolean presentingMsPac;
 
 	public MsPacMan_IntroScene(double width, double height, double scaling) {
-		super(width, height, scaling, PacManGameFXUI.msPacManRendering, PacManGameFXUI.msPacManSounds);
+		super(width, height, scaling, PacManGameFXUI.MS_PACMAN);
 	}
 
 	private void enter(Phase newPhase, long ticks) {
@@ -135,14 +135,14 @@ public class MsPacMan_IntroScene extends AbstractPacManGameScene<MsPacMan_SceneR
 		}
 		if (phase.timer.running() == 1) {
 			currentGhost.speed = 1;
-			rendering.ghostKicking(currentGhost).forEach(Animation::restart);
+			rendering().ghostKicking(currentGhost).forEach(Animation::restart);
 		}
 		if (currentGhost.dir == LEFT && currentGhost.position.x <= leftOfFrame) {
 			currentGhost.dir = currentGhost.wishDir = UP;
 		}
 		if (currentGhost.dir == UP && currentGhost.position.y <= t(frameTopLeftTile.y) + currentGhost.id * 18) {
 			currentGhost.speed = 0;
-			rendering.ghostKicking(currentGhost).forEach(Animation::reset);
+			rendering().ghostKicking(currentGhost).forEach(Animation::reset);
 			return true;
 		}
 		return false;
@@ -154,11 +154,11 @@ public class MsPacMan_IntroScene extends AbstractPacManGameScene<MsPacMan_SceneR
 			msPac.couldMove = true;
 			msPac.speed = 1;
 			msPac.dir = LEFT;
-			rendering.pacMunching(msPac).forEach(Animation::restart);
+			rendering().pacMunching(msPac).forEach(Animation::restart);
 		}
 		if (msPac.speed != 0 && msPac.position.x <= t(13)) {
 			msPac.speed = 0;
-			rendering.pacMunching(msPac).forEach(Animation::reset);
+			rendering().pacMunching(msPac).forEach(Animation::reset);
 			return true;
 		}
 		return false;
@@ -167,14 +167,14 @@ public class MsPacMan_IntroScene extends AbstractPacManGameScene<MsPacMan_SceneR
 	@Override
 	public void render() {
 		fill(Color.BLACK);
-		g.setFont(rendering.getScoreFont());
+		g.setFont(rendering().getScoreFont());
 		g.setFill(Color.ORANGE);
 		g.fillText("\"MS PAC-MAN\"", t(8), t(5));
 		drawAnimatedFrame(32, 16, game.state.ticksRun());
 		for (Ghost ghost : ghosts) {
-			rendering.drawGhost(g, ghost, game);
+			rendering().drawGhost(g, ghost, game);
 		}
-		rendering.drawPac(g, msPac, game);
+		rendering().drawPac(g, msPac, game);
 		presentGhost();
 		presentMsPacMan();
 		if (phase == Phase.END) {
@@ -188,7 +188,7 @@ public class MsPacMan_IntroScene extends AbstractPacManGameScene<MsPacMan_SceneR
 			return;
 		}
 		g.setFill(Color.WHITE);
-		g.setFont(rendering.getScoreFont());
+		g.setFont(rendering().getScoreFont());
 		if (currentGhost == ghosts[0]) {
 			g.fillText("WITH", t(8), t(11));
 		}
@@ -202,7 +202,7 @@ public class MsPacMan_IntroScene extends AbstractPacManGameScene<MsPacMan_SceneR
 			return;
 		}
 		g.setFill(Color.WHITE);
-		g.setFont(rendering.getScoreFont());
+		g.setFont(rendering().getScoreFont());
 		g.fillText("STARRING", t(8), t(11));
 		g.setFill(Color.YELLOW);
 		g.fillText("MS PAC-MAN", t(8), t(14));
@@ -232,7 +232,7 @@ public class MsPacMan_IntroScene extends AbstractPacManGameScene<MsPacMan_SceneR
 		if (blinking.animate()) {
 			String text = "PRESS SPACE TO PLAY";
 			g.setFill(Color.ORANGE);
-			g.setFont(rendering.getScoreFont());
+			g.setFont(rendering().getScoreFont());
 			g.fillText(text, t(13 - text.length() / 2), t(tileY));
 		}
 	}
@@ -245,10 +245,10 @@ public class MsPacMan_IntroScene extends AbstractPacManGameScene<MsPacMan_SceneR
 			g.fillRect(x + 6, y - t(1) + 2, 2, 2);
 		}
 		g.setFill(Color.WHITE);
-		g.setFont(rendering.getScoreFont());
+		g.setFont(rendering().getScoreFont());
 		g.fillText("10", x + t(2), y);
 		g.fillText("50", x + t(2), y + t(2));
-		g.setFont(Font.font(rendering.getScoreFont().getName(), 6));
+		g.setFont(Font.font(rendering().getScoreFont().getName(), 6));
 		g.fillText("PTS", x + t(5), y);
 		g.fillText("PTS", x + t(5), y + t(2));
 	}

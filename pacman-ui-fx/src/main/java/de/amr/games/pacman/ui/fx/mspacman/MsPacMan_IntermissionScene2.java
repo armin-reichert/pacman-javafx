@@ -37,7 +37,7 @@ public class MsPacMan_IntermissionScene2 extends AbstractPacManGameScene<MsPacMa
 	private boolean flapVisible;
 
 	public MsPacMan_IntermissionScene2(double width, double height, double scaling) {
-		super(width, height, scaling, PacManGameFXUI.msPacManRendering, PacManGameFXUI.msPacManSounds);
+		super(width, height, scaling, PacManGameFXUI.MS_PACMAN);
 	}
 
 	private void enter(Phase newPhase, long ticks) {
@@ -57,9 +57,9 @@ public class MsPacMan_IntermissionScene2 extends AbstractPacManGameScene<MsPacMa
 		switch (phase) {
 		case ANIMATION:
 			if (phase.timer.running() == 0) {
-				soundManager.play(PacManGameSound.INTERMISSION_2);
+				soundManager().play(PacManGameSound.INTERMISSION_2);
 				flapVisible = true;
-				rendering.getFlapAnim().restart();
+				rendering().getFlapAnim().restart();
 			}
 			if (phase.timer.running() == clock.sec(2)) {
 				flapVisible = false;
@@ -71,8 +71,8 @@ public class MsPacMan_IntermissionScene2 extends AbstractPacManGameScene<MsPacMa
 				msPac.position = new V2f(-t(8), upperY);
 				pacMan.dir = msPac.dir = Direction.RIGHT;
 				pacMan.speed = msPac.speed = 2;
-				rendering.pacManMunching().values().forEach(Animation::restart);
-				rendering.pacMunching(msPac).forEach(Animation::restart);
+				rendering().pacManMunching().values().forEach(Animation::restart);
+				rendering().pacMunching(msPac).forEach(Animation::restart);
 			}
 			if (phase.timer.running() == clock.sec(9)) {
 				msPac.position = new V2f(t(30), lowerY);
@@ -115,9 +115,9 @@ public class MsPacMan_IntermissionScene2 extends AbstractPacManGameScene<MsPacMa
 	public void render() {
 		fill(Color.BLACK);
 		if (flapVisible) {
-			rendering.drawFlapAnimation(g, t(3), t(10), "2", "THE CHASE");
+			rendering().drawFlapAnimation(g, t(3), t(10), "2", "THE CHASE");
 		}
-		rendering.drawMrPacMan(g, pacMan);
-		rendering.drawPac(g, msPac, game);
+		rendering().drawMrPacMan(g, pacMan);
+		rendering().drawPac(g, msPac, game);
 	}
 }

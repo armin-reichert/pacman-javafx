@@ -43,20 +43,22 @@ import javafx.stage.Stage;
  */
 public class PacManGameFXUI implements PacManGameUI {
 
-	public static PacMan_SceneRendering pacManRendering = new PacMan_SceneRendering();
-	public static MsPacMan_SceneRendering msPacManRendering = new MsPacMan_SceneRendering();
+	public static final int MS_PACMAN = 0, PACMAN = 1;
 
-	public static final SoundManager pacManSounds = new PacManGameSoundManager(PacManGameSounds::getPacManSoundURL);
-	public static final SoundManager msPacManSounds = new PacManGameSoundManager(PacManGameSounds::getMsPacManSoundURL);
+	public static final MsPacMan_SceneRendering msPacManRendering = new MsPacMan_SceneRendering();
+	public static final PacMan_SceneRendering pacManRendering = new PacMan_SceneRendering();
+
+	public static final SoundManager[] sounds = { new PacManGameSoundManager(PacManGameSounds::getMsPacManSoundURL),
+			new PacManGameSoundManager(PacManGameSounds::getPacManSoundURL) };
+
+	private static final Deque<FlashMessage> flashMessageQ = new ArrayDeque<>();
 
 	public static Optional<FlashMessage> flashMessage() {
 		return Optional.ofNullable(flashMessageQ.peek());
 	}
 
-	private static final int MS_PACMAN = 0, PACMAN = 1;
-	private static final Deque<FlashMessage> flashMessageQ = new ArrayDeque<>();
+	private final AbstractPacManGameScene<?>[/* gameType */][/* sceneIndex */] scenes = new AbstractPacManGameScene[2][5];
 
-	private final AbstractPacManGameScene<?>[/* Game Type */][/* SceneID */] scenes = new AbstractPacManGameScene[2][5];
 	private final Stage stage;
 	private final double width;
 	private final double height;
@@ -81,13 +83,13 @@ public class PacManGameFXUI implements PacManGameUI {
 		scenes[MS_PACMAN][1] = new MsPacMan_IntermissionScene1(width, height, scaling);
 		scenes[MS_PACMAN][2] = new MsPacMan_IntermissionScene2(width, height, scaling);
 		scenes[MS_PACMAN][3] = new MsPacMan_IntermissionScene3(width, height, scaling);
-		scenes[MS_PACMAN][4] = new PlayScene<>(width, height, scaling, msPacManRendering, msPacManSounds);
+		scenes[MS_PACMAN][4] = new PlayScene<MsPacMan_SceneRendering>(width, height, scaling, MS_PACMAN);
 
 		scenes[PACMAN][0] = new PacMan_IntroScene(width, height, scaling);
 		scenes[PACMAN][1] = new PacMan_IntermissionScene1(width, height, scaling);
 		scenes[PACMAN][2] = new PacMan_IntermissionScene2(width, height, scaling);
 		scenes[PACMAN][3] = new PacMan_IntermissionScene3(width, height, scaling);
-		scenes[PACMAN][4] = new PlayScene<>(width, height, scaling, pacManRendering, pacManSounds);
+		scenes[PACMAN][4] = new PlayScene<PacMan_SceneRendering>(width, height, scaling, PACMAN);
 
 		onGameChanged(controller.getGame());
 	}
@@ -153,6 +155,7 @@ public class PacManGameFXUI implements PacManGameUI {
 
 	@Override
 	public void render() {
+		// TODO Should the game loop also run on the JavaFX application thread?
 		Platform.runLater(() -> {
 			if (stage.getScene() != currentScene.getFXScene()) {
 				stage.setScene(currentScene.getFXScene());
@@ -186,12 +189,12 @@ public class PacManGameFXUI implements PacManGameUI {
 
 	@Override
 	public Optional<SoundManager> sound() {
-		return muted ? Optional.empty() : Optional.of(currentGameType() == MS_PACMAN ? msPacManSounds : pacManSounds);
+		return muted ? Optional.empty() : Optional.of(sounds[currentGameType()]);
 	}
 
 	@Override
-	public void mute(boolean b) {
-		muted = b;
+	public void mute(boolean muteState) {
+		muted = muteState;
 	}
 
 	@Override

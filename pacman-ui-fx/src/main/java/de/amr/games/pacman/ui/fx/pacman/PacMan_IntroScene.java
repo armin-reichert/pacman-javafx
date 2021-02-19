@@ -59,7 +59,7 @@ public class PacMan_IntroScene extends AbstractPacManGameScene<PacMan_SceneRende
 	}
 
 	public PacMan_IntroScene(double width, double height, double scaling) {
-		super(width, height, scaling, PacManGameFXUI.pacManRendering, PacManGameFXUI.pacManSounds);
+		super(width, height, scaling, PacManGameFXUI.PACMAN);
 	}
 
 	@Override
@@ -163,7 +163,7 @@ public class PacMan_IntroScene extends AbstractPacManGameScene<PacMan_SceneRende
 		pac.speed = 1;
 		pac.dir = Direction.LEFT;
 		pac.couldMove = true;
-		rendering.pacMunching(pac).forEach(Animation::restart);
+		rendering().pacMunching(pac).forEach(Animation::restart);
 
 		for (Ghost ghost : ghosts) {
 			ghost.position = pac.position.sum(8 + (ghost.id + 1) * 18, 0);
@@ -171,7 +171,7 @@ public class PacMan_IntroScene extends AbstractPacManGameScene<PacMan_SceneRende
 			ghost.dir = ghost.wishDir = Direction.LEFT;
 			ghost.speed = pac.speed * 1.05f;
 			ghost.state = GhostState.HUNTING_PAC;
-			rendering.ghostsKicking(Stream.of(ghosts)).forEach(Animation::restart);
+			rendering().ghostsKicking(Stream.of(ghosts)).forEach(Animation::restart);
 		}
 	}
 
@@ -186,7 +186,7 @@ public class PacMan_IntroScene extends AbstractPacManGameScene<PacMan_SceneRende
 	@Override
 	public void render() {
 		fill(Color.BLACK);
-		rendering.drawScore(g, game, true);
+		rendering().drawScore(g, game, true);
 		drawGallery();
 		if (phase == Phase.CHASING_PAC) {
 			if (blinking.animate()) {
@@ -204,9 +204,9 @@ public class PacMan_IntroScene extends AbstractPacManGameScene<PacMan_SceneRende
 	}
 
 	private void drawGuys() {
-		rendering.drawPac(g, pac, game);
+		rendering().drawPac(g, pac, game);
 		for (Ghost ghost : ghosts) {
-			rendering.drawGhost(g, ghost, game);
+			rendering().drawGhost(g, ghost, game);
 		}
 	}
 
@@ -218,7 +218,7 @@ public class PacMan_IntroScene extends AbstractPacManGameScene<PacMan_SceneRende
 	private void drawGallery() {
 		int x = t(2);
 		g.setFill(Color.WHITE);
-		g.setFont(rendering.getScoreFont());
+		g.setFont(rendering().getScoreFont());
 		g.fillText("CHARACTER", t(6), topY);
 		g.fillText("/", t(16), topY);
 		g.fillText("NICKNAME", t(18), topY);
@@ -233,10 +233,10 @@ public class PacMan_IntroScene extends AbstractPacManGameScene<PacMan_SceneRende
 		if (!ghost.visible) {
 			return;
 		}
-		Rectangle2D ghostTile = rendering.ghostKickingToDir(ghost, Direction.RIGHT).frame(0);
-		rendering.drawRegion(g, rendering.toRegion(ghostTile), x, y - 4);
+		Rectangle2D ghostTile = rendering().ghostKickingToDir(ghost, Direction.RIGHT).frame(0);
+		rendering().drawRegion(g, rendering().toRegion(ghostTile), x, y - 4);
 		g.setFill(color);
-		g.setFont(rendering.getScoreFont());
+		g.setFont(rendering().getScoreFont());
 		if (showCharacter) {
 			g.fillText("-" + character, t(6), y + 8);
 		}
@@ -249,7 +249,7 @@ public class PacMan_IntroScene extends AbstractPacManGameScene<PacMan_SceneRende
 		if (blinking.frame()) {
 			String text = "PRESS SPACE TO PLAY";
 			g.setFill(Color.ORANGE);
-			g.setFont(rendering.getScoreFont());
+			g.setFont(rendering().getScoreFont());
 			g.fillText(text, t(14 - text.length() / 2), t(yTile));
 		}
 	}
@@ -261,10 +261,10 @@ public class PacMan_IntroScene extends AbstractPacManGameScene<PacMan_SceneRende
 			g.fillOval(t(tileX), t(tileY + 1) - 2, 10, 10);
 		}
 		g.setFill(Color.WHITE);
-		g.setFont(rendering.getScoreFont());
+		g.setFont(rendering().getScoreFont());
 		g.fillText("10", t(tileX + 2), t(tileY));
 		g.fillText("50", t(tileX + 2), t(tileY + 2));
-		g.setFont(Font.font(rendering.getScoreFont().getName(), 6));
+		g.setFont(Font.font(rendering().getScoreFont().getName(), 6));
 		g.fillText("PTS", t(tileX + 5), t(tileY));
 		g.fillText("PTS", t(tileX + 5), t(tileY + 2));
 	}
