@@ -9,7 +9,6 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2f;
 import de.amr.games.pacman.model.GameEntity;
 import de.amr.games.pacman.model.Pac;
-import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.ui.fx.PacManGameFXUI;
 import de.amr.games.pacman.ui.fx.common.AbstractPacManGameScene;
@@ -49,8 +48,8 @@ public class MsPacMan_IntermissionScene3 extends AbstractPacManGameScene<MsPacMa
 
 	private Phase phase;
 
-	public MsPacMan_IntermissionScene3(PacManGameModel game, double width, double height, double scaling) {
-		super(width, height, scaling, game, MsPacManSceneRendering.IT, PacManGameFXUI.msPacManSounds);
+	public MsPacMan_IntermissionScene3(double width, double height, double scaling) {
+		super(width, height, scaling, MsPacManSceneRendering.IT, PacManGameFXUI.msPacManSounds);
 	}
 
 	private void enter(Phase newPhase, long ticks) {

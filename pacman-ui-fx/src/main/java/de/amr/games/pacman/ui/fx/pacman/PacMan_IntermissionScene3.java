@@ -13,7 +13,6 @@ import de.amr.games.pacman.lib.V2f;
 import de.amr.games.pacman.model.Ghost;
 import de.amr.games.pacman.model.GhostState;
 import de.amr.games.pacman.model.Pac;
-import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.ui.fx.PacManGameFXUI;
 import de.amr.games.pacman.ui.fx.common.AbstractPacManGameScene;
@@ -38,8 +37,8 @@ public class PacMan_IntermissionScene3 extends AbstractPacManGameScene<PacManSce
 	private final Pac pac;
 	private Phase phase;
 
-	public PacMan_IntermissionScene3(PacManGameModel game, double width, double height, double scaling) {
-		super(width, height, scaling, game, PacManSceneRendering.IT, PacManGameFXUI.pacManSounds);
+	public PacMan_IntermissionScene3(double width, double height, double scaling) {
+		super(width, height, scaling, PacManSceneRendering.IT, PacManGameFXUI.pacManSounds);
 
 		pac = new Pac("Pac-Man", Direction.LEFT);
 		blinky = new Ghost(0, "Blinky", Direction.LEFT);

@@ -13,7 +13,6 @@ import de.amr.games.pacman.lib.V2f;
 import de.amr.games.pacman.model.Ghost;
 import de.amr.games.pacman.model.GhostState;
 import de.amr.games.pacman.model.Pac;
-import de.amr.games.pacman.model.PacManGameModel;
 import de.amr.games.pacman.ui.fx.PacManGameFXUI;
 import de.amr.games.pacman.ui.fx.common.AbstractPacManGameScene;
 import javafx.geometry.Rectangle2D;
@@ -59,8 +58,8 @@ public class PacMan_IntroScene extends AbstractPacManGameScene<PacManSceneRender
 		log("Phase %s entered at %d", phase, phase.start);
 	}
 
-	public PacMan_IntroScene(PacManGameModel game, double width, double height, double scaling) {
-		super(width, height, scaling, game, PacManSceneRendering.IT, PacManGameFXUI.pacManSounds);
+	public PacMan_IntroScene(double width, double height, double scaling) {
+		super(width, height, scaling, PacManSceneRendering.IT, PacManGameFXUI.pacManSounds);
 	}
 
 	@Override

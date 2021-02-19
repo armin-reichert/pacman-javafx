@@ -26,22 +26,22 @@ import javafx.scene.text.Text;
  */
 public abstract class AbstractPacManGameScene<R extends SceneRendering> implements PacManGameScene {
 
+	protected final double width;
+	protected final double height;
 	protected final Scene fxScene;
+	protected final Text flashMessageView;
 	protected final Keyboard keyboard;
 	protected final GraphicsContext g;
 	protected final R rendering;
 	protected final SoundManager soundManager;
-	protected final PacManGameModel game;
+	protected PacManGameModel game;
 
-	private final Text flashMessageView;
-
-	public AbstractPacManGameScene(double width, double height, double scaling, PacManGameModel game, R rendering,
-			SoundManager soundManager) {
-
+	public AbstractPacManGameScene(double width, double height, double scaling, R rendering, SoundManager soundManager) {
+		this.width = width;
+		this.height = height;
 		Canvas canvas = new Canvas(width, height);
 		g = canvas.getGraphicsContext2D();
 		g.scale(scaling, scaling);
-		this.game = game;
 		this.rendering = rendering;
 		this.soundManager = soundManager;
 
@@ -56,6 +56,15 @@ public abstract class AbstractPacManGameScene<R extends SceneRendering> implemen
 
 		fxScene = new Scene(pane, width, height);
 		keyboard = new Keyboard(fxScene);
+	}
+
+	public void setGame(PacManGameModel game) {
+		this.game = game;
+	}
+
+	@Override
+	public Optional<PacManGameModel> game() {
+		return Optional.ofNullable(game);
 	}
 
 	public void fill(Color color) {

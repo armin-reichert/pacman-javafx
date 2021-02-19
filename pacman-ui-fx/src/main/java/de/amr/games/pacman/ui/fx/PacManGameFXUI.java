@@ -4,6 +4,7 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.world.PacManGameWorld.TS;
 
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.Objects;
 import java.util.Optional;
@@ -18,6 +19,7 @@ import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.FlashMessage;
 import de.amr.games.pacman.ui.PacManGameAnimation;
 import de.amr.games.pacman.ui.PacManGameUI;
+import de.amr.games.pacman.ui.fx.common.AbstractPacManGameScene;
 import de.amr.games.pacman.ui.fx.common.PacManGameScene;
 import de.amr.games.pacman.ui.fx.common.PlayScene;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacManSceneRendering;
@@ -52,7 +54,7 @@ public class PacManGameFXUI implements PacManGameUI {
 		return Optional.ofNullable(flashMessageQ.peek());
 	}
 
-	private final PacManGameScene[/* Game Type */][/* SceneID */] scenes = new PacManGameScene[2][5];
+	private final AbstractPacManGameScene<?>[/* Game Type */][/* SceneID */] scenes = new AbstractPacManGameScene[2][5];
 
 	private final Stage stage;
 	private final double scaling;
@@ -79,21 +81,21 @@ public class PacManGameFXUI implements PacManGameUI {
 		log("Pac-Man game JavaFX UI created");
 	}
 
-	private void createScenes(int gameType) {
+	private void createScenes(int gameType, PacManGameModel game) {
 		switch (gameType) {
 		case MS_PACMAN:
-			scenes[MS_PACMAN][0] = new MsPacMan_IntroScene(game, width, height, scaling);
-			scenes[MS_PACMAN][1] = new MsPacMan_IntermissionScene1(game, width, height, scaling);
-			scenes[MS_PACMAN][2] = new MsPacMan_IntermissionScene2(game, width, height, scaling);
-			scenes[MS_PACMAN][3] = new MsPacMan_IntermissionScene3(game, width, height, scaling);
-			scenes[MS_PACMAN][4] = new PlayScene<>(width, height, scaling, game, MsPacManSceneRendering.IT, msPacManSounds);
+			scenes[MS_PACMAN][0] = new MsPacMan_IntroScene(width, height, scaling);
+			scenes[MS_PACMAN][1] = new MsPacMan_IntermissionScene1(width, height, scaling);
+			scenes[MS_PACMAN][2] = new MsPacMan_IntermissionScene2(width, height, scaling);
+			scenes[MS_PACMAN][3] = new MsPacMan_IntermissionScene3(width, height, scaling);
+			scenes[MS_PACMAN][4] = new PlayScene<>(width, height, scaling, MsPacManSceneRendering.IT, msPacManSounds);
 			break;
 		case PACMAN:
-			scenes[PACMAN][0] = new PacMan_IntroScene(game, width, height, scaling);
-			scenes[PACMAN][1] = new PacMan_IntermissionScene1(game, width, height, scaling);
-			scenes[PACMAN][2] = new PacMan_IntermissionScene2(game, width, height, scaling);
-			scenes[PACMAN][3] = new PacMan_IntermissionScene3(game, width, height, scaling);
-			scenes[PACMAN][4] = new PlayScene<>(width, height, scaling, game, PacManSceneRendering.IT, pacManSounds);
+			scenes[PACMAN][0] = new PacMan_IntroScene(width, height, scaling);
+			scenes[PACMAN][1] = new PacMan_IntermissionScene1(width, height, scaling);
+			scenes[PACMAN][2] = new PacMan_IntermissionScene2(width, height, scaling);
+			scenes[PACMAN][3] = new PacMan_IntermissionScene3(width, height, scaling);
+			scenes[PACMAN][4] = new PlayScene<>(width, height, scaling, PacManSceneRendering.IT, pacManSounds);
 			break;
 		default:
 			break;
@@ -116,9 +118,11 @@ public class PacManGameFXUI implements PacManGameUI {
 	public void setGame(PacManGameModel game) {
 		this.game = Objects.requireNonNull(game);
 		if (game instanceof MsPacManGame) {
-			createScenes(MS_PACMAN);
+			createScenes(MS_PACMAN, game);
+			Arrays.stream(scenes[MS_PACMAN]).forEach(scene -> scene.setGame(game));
 		} else {
-			createScenes(PACMAN);
+			createScenes(PACMAN, game);
+			Arrays.stream(scenes[PACMAN]).forEach(scene -> scene.setGame(game));
 		}
 		currentScene = getScene();
 		currentScene.start();
