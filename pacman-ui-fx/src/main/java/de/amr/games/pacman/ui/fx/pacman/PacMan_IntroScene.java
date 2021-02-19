@@ -173,6 +173,7 @@ public class PacMan_IntroScene extends GameScene {
 		default:
 			break;
 		}
+		phase.timer.run();
 	}
 
 	private void startGhostsChasingPac() {
@@ -243,7 +244,7 @@ public class PacMan_IntroScene extends GameScene {
 		for (int i = 0; i < 4; ++i) {
 			GhostPortrait portrait = gallery[i];
 			if (portrait.ghost.visible) {
-				int y = t(2 + 3 * i);
+				int y = topY + t(2 + 3 * i);
 				Rectangle2D ghostTile = rendering.ghostKickingToDir(portrait.ghost, Direction.RIGHT).frame(0);
 				rendering.drawRegion(g, rendering.toRegion(ghostTile), x, y - 4);
 				g.setFill(portrait.color);
