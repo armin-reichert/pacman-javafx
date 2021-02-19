@@ -1,8 +1,6 @@
 package de.amr.games.pacman.ui.fx.pacman;
 
 import static de.amr.games.pacman.heaven.God.clock;
-import static de.amr.games.pacman.lib.Direction.LEFT;
-import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.GhostState.HUNTING_PAC;
 import static de.amr.games.pacman.ui.fx.common.SceneRendering.tileRegion;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
@@ -39,50 +37,41 @@ public class PacMan_IntermissionScene2 extends GameScene {
 	private final SoundManager sounds = PacManGameFXUI.PACMAN_SOUNDS;
 
 	private final int chaseTileY = 20;
-	private final Ghost blinky;
-	private final Pac pac;
-	private final Rectangle2D nail, blinkyLookingUp, blinkyLookingRight, shred, stretchedDress[];
-	private final V2i nailPosition;
+	private final V2i nailPosition = new V2i(t(14), t(chaseTileY) - 6);
+
+	private final Rectangle2D nail = tileRegion(8, 6, 1, 1);
+	private final Rectangle2D blinkyLookingUp = tileRegion(8, 7, 1, 1);
+	private final Rectangle2D blinkyLookingRight = tileRegion(9, 7, 1, 1);
+	private final Rectangle2D shred = tileRegion(12, 6, 1, 1);
+	private final Rectangle2D[] stretchedDress = new Rectangle2D[] { //
+			tileRegion(9, 6, 1, 1), //
+			tileRegion(10, 6, 1, 1), //
+			tileRegion(11, 6, 1, 1) };
+
+	private Ghost blinky;
+	private Pac pac;
 
 	private Phase phase;
 
 	public PacMan_IntermissionScene2(Group root, double width, double height, double scaling) {
 		super(root, width, height, scaling);
-
-		blinky = new Ghost(0, "Blinky", Direction.LEFT);
-		pac = new Pac("Pac-Man", Direction.LEFT);
-		nailPosition = new V2i(t(14), t(chaseTileY) - 6);
-
-		// Sprites
-		nail = tileRegion(8, 6, 1, 1);
-		shred = tileRegion(12, 6, 1, 1);
-		blinkyLookingUp = tileRegion(8, 7, 1, 1);
-		blinkyLookingRight = tileRegion(9, 7, 1, 1);
-		stretchedDress = new Rectangle2D[] { //
-				tileRegion(9, 6, 1, 1), //
-				tileRegion(10, 6, 1, 1), //
-				tileRegion(11, 6, 1, 1) };
 	}
 
 	@Override
 	public void start() {
-		log("Start of intermission scene %s at %d", this, clock.ticksTotal);
-
+		pac = new Pac("Pac-Man", Direction.LEFT);
 		pac.visible = true;
-		pac.dead = false;
-		pac.couldMove = true;
 		pac.position = new V2f(t(30), t(chaseTileY));
 		pac.speed = 1;
-		pac.dir = LEFT;
+		rendering.pacMunching(pac).forEach(Animation::restart);
 
+		blinky = new Ghost(0, "Blinky", Direction.LEFT);
 		blinky.visible = true;
 		blinky.state = HUNTING_PAC;
 		blinky.position = pac.position.sum(t(14), 0);
 		blinky.speed = 1;
-		blinky.dir = blinky.wishDir = LEFT;
-
-		rendering.pacMunching(pac).forEach(Animation::restart);
 		rendering.ghostKickingToDir(blinky, blinky.dir).restart();
+
 		sounds.play(PacManGameSound.INTERMISSION_2);
 
 		enter(Phase.APPROACHING_NAIL, Long.MAX_VALUE);
