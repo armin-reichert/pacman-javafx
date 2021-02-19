@@ -245,8 +245,8 @@ public class PacMan_IntroScene extends GameScene {
 			GhostPortrait portrait = gallery[i];
 			if (portrait.ghost.visible) {
 				int y = topY + t(2 + 3 * i);
-				Rectangle2D ghostTile = rendering.ghostKickingToDir(portrait.ghost, Direction.RIGHT).frame(0);
-				rendering.drawRegion(g, rendering.toRegion(ghostTile), x, y - 4);
+				Rectangle2D ghostRegion = rendering.ghostKickingToDir(portrait.ghost, Direction.RIGHT).frame(0);
+				rendering.drawRegion(g, ghostRegion, x, y - 4);
 				g.setFill(portrait.color);
 				g.setFont(rendering.getScoreFont());
 				if (portrait.characterVisible) {

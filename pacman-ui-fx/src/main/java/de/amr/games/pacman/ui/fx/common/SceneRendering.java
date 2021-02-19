@@ -18,8 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
- * Interface implemented by each scene rendering. Currently only spritesheet based rendering is
- * supported.
+ * Common interface for scene renderings.
  * 
  * @author Armin Reichert
  */
@@ -47,25 +46,20 @@ public interface SceneRendering extends PacManGameAnimation {
 		return new Rectangle2D(tileX * RASTER, tileY * RASTER, cols * RASTER, rows * RASTER);
 	}
 
-	Image spritesheet();
-
-	Rectangle2D bonusSprite(Bonus bonus);
-
-	Rectangle2D pacSprite(Pac pac);
-
-	Rectangle2D ghostSprite(Ghost ghost, boolean frightened);
-
-	Font getScoreFont();
-
 	default void drawRegion(GraphicsContext g, Rectangle2D region, double x, double y) {
 		g.drawImage(spritesheet(), region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(), x, y,
 				region.getWidth(), region.getHeight());
 	}
 
-	default Rectangle2D toRegion(Rectangle2D tile) {
-		return new Rectangle2D(RASTER * tile.getMinX(), RASTER * tile.getMinY(), RASTER * tile.getWidth(),
-				RASTER * tile.getHeight());
-	}
+	Image spritesheet();
+
+	Rectangle2D bonusSpriteRegion(Bonus bonus);
+
+	Rectangle2D pacSpriteRegion(Pac pac);
+
+	Rectangle2D ghostSpriteRegion(Ghost ghost, boolean frightened);
+
+	Font getScoreFont();
 
 	void drawPac(GraphicsContext g, Pac pac);
 

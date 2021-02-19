@@ -344,19 +344,19 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 
 	@Override
 	public void drawPac(GraphicsContext g, Pac pac) {
-		drawCreature(g, pac, pacSprite(pac));
+		drawCreature(g, pac, pacSpriteRegion(pac));
 	}
 
 	@Override
 	public void drawGhost(GraphicsContext g, Ghost ghost, boolean frightened) {
-		drawCreature(g, ghost, ghostSprite(ghost, frightened));
+		drawCreature(g, ghost, ghostSpriteRegion(ghost, frightened));
 	}
 
 	@Override
 	public void drawBonus(GraphicsContext g, Bonus bonus) {
 		g.save();
 		g.translate(0, bonusJumps.animate());
-		drawCreature(g, bonus, bonusSprite(bonus));
+		drawCreature(g, bonus, bonusSpriteRegion(bonus));
 		g.restore();
 	}
 
@@ -392,7 +392,7 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 	}
 
 	@Override
-	public Rectangle2D bonusSprite(Bonus bonus) {
+	public Rectangle2D bonusSpriteRegion(Bonus bonus) {
 		if (bonus.edibleTicksLeft > 0) {
 			return symbols[bonus.symbol];
 		}
@@ -403,7 +403,7 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 	}
 
 	@Override
-	public Rectangle2D pacSprite(Pac pac) {
+	public Rectangle2D pacSpriteRegion(Pac pac) {
 		if (pac.dead) {
 			return pacDying().hasStarted() ? pacDying().animate() : pacMunchingToDir(pac, pac.dir).frame();
 		}
@@ -417,7 +417,7 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 	}
 
 	@Override
-	public Rectangle2D ghostSprite(Ghost ghost, boolean frightened) {
+	public Rectangle2D ghostSpriteRegion(Ghost ghost, boolean frightened) {
 		if (ghost.bounty > 0) {
 			return bountyValues.get(ghost.bounty);
 		}

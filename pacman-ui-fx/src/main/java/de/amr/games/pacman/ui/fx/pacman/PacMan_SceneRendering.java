@@ -42,45 +42,44 @@ import javafx.scene.text.Font;
 public class PacMan_SceneRendering implements SceneRendering {
 
 	private final Image spritesheet = new Image("/pacman/graphics/sprites.png", false);
-
 	private final Image mazeFull = new Image("/pacman/graphics/maze_full.png", false);
 	private final Image mazeEmpty = new Image("/pacman/graphics/maze_empty.png", false);
 
 	private final Font scoreFont;
 
-	private final Rectangle2D[] symbols;
-	private final Map<Integer, Rectangle2D> numbers;
+	private final Rectangle2D[] symbolTileRegions;
+	private final Map<Integer, Rectangle2D> numberTileRegions;
 
-	private final Map<Direction, Animation<Rectangle2D>> pacMunching;
-	private final Animation<Rectangle2D> pacCollapsing;
-	private final List<EnumMap<Direction, Animation<Rectangle2D>>> ghostsKicking;
-	private final EnumMap<Direction, Animation<Rectangle2D>> ghostEyes;
-	private final Animation<Rectangle2D> ghostBlue;
-	private final Animation<Rectangle2D> ghostFlashing;
+	private final Map<Direction, Animation<Rectangle2D>> pacMunchingAnim;
+	private final Animation<Rectangle2D> pacCollapsingAnim;
+	private final List<EnumMap<Direction, Animation<Rectangle2D>>> ghostsKickingAnim;
+	private final EnumMap<Direction, Animation<Rectangle2D>> ghostEyesAnim;
+	private final Animation<Rectangle2D> ghostBlueAnim;
+	private final Animation<Rectangle2D> ghostFlashingAnim;
 
-	private final Animation<Image> mazeFlashing;
+	private final Animation<Image> mazeFlashingAnim;
 	private final Animation<Boolean> energizerBlinking;
 
 	private int index(Direction dir) {
 		return dir == RIGHT ? 0 : dir == LEFT ? 1 : dir == UP ? 2 : 3;
 	}
 
-	private Direction ensureNotNull(Direction dir) {
+	private Direction ensureDirection(Direction dir) {
 		return dir != null ? dir : Direction.RIGHT;
 	}
 
-	private Rectangle2D s(int col, int row) {
-		return new Rectangle2D(col, row, 1, 1);
+	private Rectangle2D tileRegion(int col, int row) {
+		return new Rectangle2D(RASTER * col, RASTER * row, RASTER, RASTER);
 	}
 
-	private Rectangle2D r(double x, double y, double width, double height) {
-		return new Rectangle2D(x, y, width, height);
+	private Rectangle2D tileRegion(int col, int row, int tilesX, int tilesY) {
+		return new Rectangle2D(RASTER * col, RASTER * row, RASTER * tilesX, RASTER * tilesY);
 	}
 
-	private void drawTile(GraphicsContext g, Creature guy, Rectangle2D tile) {
-		if (guy.visible && tile != null) {
-			g.drawImage(spritesheet, tile.getMinX() * 16, tile.getMinY() * 16, tile.getWidth() * 16, tile.getHeight() * 16,
-					guy.position.x - 4, guy.position.y - 4, tile.getWidth() * 16, tile.getHeight() * 16);
+	private void drawCreatureRegion(GraphicsContext g, Creature guy, Rectangle2D region) {
+		if (guy.visible && region != null) {
+			g.drawImage(spritesheet, region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(),
+					guy.position.x - 4, guy.position.y - 4, region.getWidth(), region.getHeight());
 		}
 	}
 
@@ -88,65 +87,69 @@ public class PacMan_SceneRendering implements SceneRendering {
 
 		scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), 8);
 
-		symbols = new Rectangle2D[] { s(2, 3), s(3, 3), s(4, 3), s(5, 3), s(6, 3), s(7, 3), s(8, 3), s(9, 3) };
+		symbolTileRegions = new Rectangle2D[] { tileRegion(2, 3), tileRegion(3, 3), tileRegion(4, 3), tileRegion(5, 3),
+				tileRegion(6, 3), tileRegion(7, 3), tileRegion(8, 3), tileRegion(9, 3) };
 
 		//@formatter:off
-		numbers = new HashMap<>();
-		numbers.put(200,  r(0, 8, 1, 1));
-		numbers.put(400,  r(1, 8, 1, 1));
-		numbers.put(800,  r(2, 8, 1, 1));
-		numbers.put(1600, r(3, 8, 1, 1));
+		numberTileRegions = new HashMap<>();
+		numberTileRegions.put(200,  tileRegion(0, 8, 1, 1));
+		numberTileRegions.put(400,  tileRegion(1, 8, 1, 1));
+		numberTileRegions.put(800,  tileRegion(2, 8, 1, 1));
+		numberTileRegions.put(1600, tileRegion(3, 8, 1, 1));
 		
-		numbers.put(100,  r(0, 9, 1, 1));
-		numbers.put(300,  r(1, 9, 1, 1));
-		numbers.put(500,  r(2, 9, 1, 1));
-		numbers.put(700,  r(3, 9, 1, 1));
+		numberTileRegions.put(100,  tileRegion(0, 9, 1, 1));
+		numberTileRegions.put(300,  tileRegion(1, 9, 1, 1));
+		numberTileRegions.put(500,  tileRegion(2, 9, 1, 1));
+		numberTileRegions.put(700,  tileRegion(3, 9, 1, 1));
 		
-		numbers.put(1000, r(4, 9, 2, 1)); // left-aligned 
-		numbers.put(2000, r(3, 10, 3, 1));
-		numbers.put(3000, r(3, 11, 3, 1));
-		numbers.put(5000, r(3, 12, 3, 1));
+		numberTileRegions.put(1000, tileRegion(4, 9, 2, 1)); // left-aligned 
+		numberTileRegions.put(2000, tileRegion(3, 10, 3, 1));
+		numberTileRegions.put(3000, tileRegion(3, 11, 3, 1));
+		numberTileRegions.put(5000, tileRegion(3, 12, 3, 1));
 		//@formatter:on
 
 		// Animations
 
 		Image mazeEmptyBright = SceneRendering.exchangeColors(mazeEmpty, Map.of(Color.rgb(33, 33, 255), Color.WHITE));
-		mazeFlashing = Animation.of(mazeEmptyBright, mazeEmpty).frameDuration(15);
+		mazeFlashingAnim = Animation.of(mazeEmptyBright, mazeEmpty).frameDuration(15);
 
 		energizerBlinking = Animation.pulse().frameDuration(15);
 
-		pacMunching = new EnumMap<>(Direction.class);
+		pacMunchingAnim = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
-			Animation<Rectangle2D> animation = Animation.of(s(2, 0), s(1, index(dir)), s(0, index(dir)), s(1, index(dir)));
+			Animation<Rectangle2D> animation = Animation.of(tileRegion(2, 0), tileRegion(1, index(dir)),
+					tileRegion(0, index(dir)), tileRegion(1, index(dir)));
 			animation.frameDuration(2).endless().run();
-			pacMunching.put(dir, animation);
+			pacMunchingAnim.put(dir, animation);
 		}
 
-		pacCollapsing = Animation.of(s(3, 0), s(4, 0), s(5, 0), s(6, 0), s(7, 0), s(8, 0), s(9, 0), s(10, 0), s(11, 0),
-				s(12, 0), s(13, 0));
-		pacCollapsing.frameDuration(8);
+		pacCollapsingAnim = Animation.of(tileRegion(3, 0), tileRegion(4, 0), tileRegion(5, 0), tileRegion(6, 0),
+				tileRegion(7, 0), tileRegion(8, 0), tileRegion(9, 0), tileRegion(10, 0), tileRegion(11, 0), tileRegion(12, 0),
+				tileRegion(13, 0));
+		pacCollapsingAnim.frameDuration(8);
 
-		ghostsKicking = new ArrayList<>(4);
+		ghostsKickingAnim = new ArrayList<>(4);
 		for (int id = 0; id < 4; ++id) {
 			EnumMap<Direction, Animation<Rectangle2D>> walkingTo = new EnumMap<>(Direction.class);
 			for (Direction dir : Direction.values()) {
-				Animation<Rectangle2D> animation = Animation.of(s(2 * index(dir), 4 + id), s(2 * index(dir) + 1, 4 + id));
+				Animation<Rectangle2D> animation = Animation.of(tileRegion(2 * index(dir), 4 + id),
+						tileRegion(2 * index(dir) + 1, 4 + id));
 				animation.frameDuration(10).endless();
 				walkingTo.put(dir, animation);
 			}
-			ghostsKicking.add(walkingTo);
+			ghostsKickingAnim.add(walkingTo);
 		}
 
-		ghostEyes = new EnumMap<>(Direction.class);
+		ghostEyesAnim = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
-			ghostEyes.put(dir, Animation.ofSingle(s(8 + index(dir), 5)));
+			ghostEyesAnim.put(dir, Animation.ofSingle(tileRegion(8 + index(dir), 5)));
 		}
 
-		ghostBlue = Animation.of(s(8, 4), s(9, 4));
-		ghostBlue.frameDuration(20).endless();
+		ghostBlueAnim = Animation.of(tileRegion(8, 4), tileRegion(9, 4));
+		ghostBlueAnim.frameDuration(20).endless();
 
-		ghostFlashing = Animation.of(s(8, 4), s(9, 4), s(10, 4), s(11, 4));
-		ghostFlashing.frameDuration(5).endless();
+		ghostFlashingAnim = Animation.of(tileRegion(8, 4), tileRegion(9, 4), tileRegion(10, 4), tileRegion(11, 4));
+		ghostFlashingAnim.frameDuration(5).endless();
 	}
 
 	@Override
@@ -214,8 +217,9 @@ public class PacMan_SceneRendering implements SceneRendering {
 		int x = rightX;
 		int firstLevel = Math.max(1, game.currentLevelNumber - 6);
 		for (int level = firstLevel; level <= game.currentLevelNumber; ++level) {
-			Rectangle2D region = symbols[game.levelSymbols.get(level - 1)];
-			g.drawImage(spritesheet, region.getMinX() * 16, region.getMinY() * 16, 16, 16, x, y, 16, 16);
+			Rectangle2D region = symbolTileRegions[game.levelSymbols.get(level - 1)];
+			g.drawImage(spritesheet, region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(), x, y,
+					region.getWidth(), region.getHeight());
 			x -= t(2);
 		}
 	}
@@ -224,9 +228,10 @@ public class PacMan_SceneRendering implements SceneRendering {
 	public void drawLivesCounter(GraphicsContext g, PacManGameModel game, int x, int y) {
 		int maxLivesDisplayed = 5;
 		int livesDisplayed = game.started ? game.lives - 1 : game.lives;
-		Rectangle2D region = s(8, 1);
+		Rectangle2D region = tileRegion(8, 1);
 		for (int i = 0; i < Math.min(livesDisplayed, maxLivesDisplayed); ++i) {
-			g.drawImage(spritesheet, region.getMinX() * 16, region.getMinY() * 16, 16, 16, x + t(2 * i), y, 16, 16);
+			g.drawImage(spritesheet, region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(), x + t(2 * i),
+					y, region.getWidth(), region.getHeight());
 		}
 	}
 
@@ -244,32 +249,32 @@ public class PacMan_SceneRendering implements SceneRendering {
 
 	@Override
 	public void drawPac(GraphicsContext g, Pac pac) {
-		drawTile(g, pac, pacSprite(pac));
+		drawCreatureRegion(g, pac, pacSpriteRegion(pac));
 	}
 
 	@Override
 	public void drawGhost(GraphicsContext g, Ghost ghost, boolean frightened) {
-		drawTile(g, ghost, ghostSprite(ghost, frightened));
+		drawCreatureRegion(g, ghost, ghostSpriteRegion(ghost, frightened));
 	}
 
 	@Override
 	public void drawBonus(GraphicsContext g, Bonus bonus) {
-		drawTile(g, bonus, bonusSprite(bonus));
+		drawCreatureRegion(g, bonus, bonusSpriteRegion(bonus));
 	}
 
 	@Override
-	public Rectangle2D bonusSprite(Bonus bonus) {
+	public Rectangle2D bonusSpriteRegion(Bonus bonus) {
 		if (bonus.edibleTicksLeft > 0) {
-			return symbols[bonus.symbol];
+			return symbolTileRegions[bonus.symbol];
 		}
 		if (bonus.eatenTicksLeft > 0) {
-			return numbers.get(bonus.points);
+			return numberTileRegions.get(bonus.points);
 		}
 		return null;
 	}
 
 	@Override
-	public Rectangle2D pacSprite(Pac pac) {
+	public Rectangle2D pacSpriteRegion(Pac pac) {
 		if (pac.dead) {
 			return pacDying().hasStarted() ? pacDying().animate() : pacMunchingToDir(pac, pac.dir).frame();
 		}
@@ -283,9 +288,9 @@ public class PacMan_SceneRendering implements SceneRendering {
 	}
 
 	@Override
-	public Rectangle2D ghostSprite(Ghost ghost, boolean frightened) {
+	public Rectangle2D ghostSpriteRegion(Ghost ghost, boolean frightened) {
 		if (ghost.bounty > 0) {
-			return numbers.get(ghost.bounty);
+			return numberTileRegions.get(ghost.bounty);
 		}
 		if (ghost.is(DEAD) || ghost.is(ENTERING_HOUSE)) {
 			return ghostReturningHomeToDir(ghost, ghost.dir).animate();
@@ -301,42 +306,42 @@ public class PacMan_SceneRendering implements SceneRendering {
 
 	@Override
 	public Animation<Rectangle2D> pacMunchingToDir(Pac pac, Direction dir) {
-		return pacMunching.get(ensureNotNull(dir));
+		return pacMunchingAnim.get(ensureDirection(dir));
 	}
 
 	@Override
 	public Animation<Rectangle2D> pacDying() {
-		return pacCollapsing;
+		return pacCollapsingAnim;
 	}
 
 	@Override
 	public Animation<Rectangle2D> ghostKickingToDir(Ghost ghost, Direction dir) {
-		return ghostsKicking.get(ghost.id).get(ensureNotNull(dir));
+		return ghostsKickingAnim.get(ghost.id).get(ensureDirection(dir));
 	}
 
 	@Override
 	public Animation<Rectangle2D> ghostFrightenedToDir(Ghost ghost, Direction dir) {
-		return ghostBlue;
+		return ghostBlueAnim;
 	}
 
 	@Override
 	public Animation<Rectangle2D> ghostFlashing() {
-		return ghostFlashing;
+		return ghostFlashingAnim;
 	}
 
 	@Override
 	public Animation<Rectangle2D> ghostReturningHomeToDir(Ghost ghost, Direction dir) {
-		return ghostEyes.get(ensureNotNull(dir));
+		return ghostEyesAnim.get(ensureDirection(dir));
 	}
 
 	@Override
 	public Animation<Image> mazeFlashing(int mazeNumber) {
-		return mazeFlashing;
+		return mazeFlashingAnim;
 	}
 
 	@Override
 	public Stream<Animation<?>> mazeFlashings() {
-		return Stream.of(mazeFlashing);
+		return Stream.of(mazeFlashingAnim);
 	}
 
 	@Override
