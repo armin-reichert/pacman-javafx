@@ -134,7 +134,7 @@ public class MsPacMan_IntroScene extends GameScene<MsPacMan_SceneRendering> {
 		if (currentGhost == null) {
 			return false;
 		}
-		if (phase.timer.running() == 1) {
+		if (phase.timer.running() == 0) {
 			currentGhost.speed = 1;
 			rendering().ghostKicking(currentGhost).forEach(Animation::restart);
 		}
@@ -150,7 +150,7 @@ public class MsPacMan_IntroScene extends GameScene<MsPacMan_SceneRendering> {
 	}
 
 	private boolean letMsPacManWalkToEndPosition() {
-		if (phase.timer.running() == 1) {
+		if (phase.timer.running() == 0) {
 			msPac.visible = true;
 			msPac.couldMove = true;
 			msPac.speed = 1;
