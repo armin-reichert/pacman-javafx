@@ -343,7 +343,7 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 	}
 
 	@Override
-	public void drawPac(GraphicsContext g, Pac pac, PacManGameModel game) {
+	public void drawPac(GraphicsContext g, Pac pac) {
 		drawCreature(g, pac, pacSprite(pac));
 	}
 

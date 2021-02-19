@@ -102,7 +102,7 @@ public class PacMan_IntermissionScene1 extends GameScene {
 		clear();
 		rendering.drawGhost(g, blinky, false);
 		if (phase == Phase.BLINKY_CHASING_PACMAN) {
-			rendering.drawPac(g, pac, game);
+			rendering.drawPac(g, pac);
 		} else {
 			rendering.drawRegion(g, bigPac.animate(), pac.position.x - 12, pac.position.y - 22);
 		}

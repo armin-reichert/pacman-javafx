@@ -122,6 +122,6 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 			rendering.drawFlapAnimation(g, t(3), t(10), "2", "THE CHASE");
 		}
 		rendering.drawMrPacMan(g, pacMan);
-		rendering.drawPac(g, msPac, game);
+		rendering.drawPac(g, msPac);
 	}
 }

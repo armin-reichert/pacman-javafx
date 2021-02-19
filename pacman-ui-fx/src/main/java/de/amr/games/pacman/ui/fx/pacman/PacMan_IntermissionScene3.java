@@ -105,7 +105,7 @@ public class PacMan_IntermissionScene3 extends GameScene {
 	public void render() {
 		clear();
 		rendering.drawLevelCounter(g, game, t(25), t(34));
-		rendering.drawPac(g, pac, game);
+		rendering.drawPac(g, pac);
 		drawBlinky();
 	}
 

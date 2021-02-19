@@ -67,7 +67,7 @@ public interface SceneRendering extends PacManGameAnimation {
 				RASTER * tile.getHeight());
 	}
 
-	void drawPac(GraphicsContext g, Pac pac, PacManGameModel game);
+	void drawPac(GraphicsContext g, Pac pac);
 
 	void drawGhost(GraphicsContext g, Ghost ghost, boolean frightened);
 

@@ -138,7 +138,7 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 		if (flapVisible) {
 			rendering.drawFlapAnimation(g, t(3), t(10), "3", "JUNIOR");
 		}
-		rendering.drawPac(g, msPac, game);
+		rendering.drawPac(g, msPac);
 		rendering.drawMrPacMan(g, pacMan);
 		if (bird.visible) {
 			rendering.drawBirdAnim(g, bird.position.x, bird.position.y);

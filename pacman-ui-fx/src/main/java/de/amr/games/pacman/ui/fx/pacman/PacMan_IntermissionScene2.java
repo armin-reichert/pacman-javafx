@@ -139,7 +139,7 @@ public class PacMan_IntermissionScene2 extends GameScene {
 		clear();
 		rendering.drawLevelCounter(g, game, t(25), t(34));
 		rendering.drawRegion(g, nail, nailPosition.x, nailPosition.y);
-		rendering.drawPac(g, pac, game);
+		rendering.drawPac(g, pac);
 		drawBlinky();
 	}
 

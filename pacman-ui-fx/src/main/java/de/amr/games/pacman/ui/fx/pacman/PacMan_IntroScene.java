@@ -223,7 +223,7 @@ public class PacMan_IntroScene extends GameScene {
 	}
 
 	private void drawGuys() {
-		rendering.drawPac(g, pac, game);
+		rendering.drawPac(g, pac);
 		for (Ghost ghost : ghosts) {
 			rendering.drawGhost(g, ghost, pac.powerTicksLeft > 0);
 		}
