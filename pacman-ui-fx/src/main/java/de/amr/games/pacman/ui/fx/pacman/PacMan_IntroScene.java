@@ -10,7 +10,6 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.CountdownTimer;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.V2f;
 import de.amr.games.pacman.model.Ghost;
 import de.amr.games.pacman.model.GhostState;
 import de.amr.games.pacman.model.Pac;
@@ -177,7 +176,7 @@ public class PacMan_IntroScene extends GameScene {
 	}
 
 	private void startGhostsChasingPac() {
-		pac.position = new V2f(t(28), t(22));
+		pac.setPosition(t(28), t(22));
 		pac.visible = true;
 		pac.speed = 1;
 		pac.dir = Direction.LEFT;
@@ -185,7 +184,7 @@ public class PacMan_IntroScene extends GameScene {
 		rendering.pacMunching(pac).forEach(Animation::restart);
 
 		for (Ghost ghost : ghosts) {
-			ghost.position = pac.position.sum(8 + (ghost.id + 1) * 18, 0);
+			ghost.setPosition(pac.position.sum(8 + (ghost.id + 1) * 18, 0));
 			ghost.visible = true;
 			ghost.dir = ghost.wishDir = Direction.LEFT;
 			ghost.speed = pac.speed * 1.05f;

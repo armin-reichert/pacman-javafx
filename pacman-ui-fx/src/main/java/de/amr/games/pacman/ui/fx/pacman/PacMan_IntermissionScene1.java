@@ -8,7 +8,6 @@ import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.V2f;
 import de.amr.games.pacman.model.Ghost;
 import de.amr.games.pacman.model.Pac;
 import de.amr.games.pacman.sound.PacManGameSound;
@@ -47,7 +46,7 @@ public class PacMan_IntermissionScene1 extends GameScene {
 	public void start() {
 		pac = new Pac("Pac-Man", Direction.LEFT);
 		pac.visible = true;
-		pac.position = new V2f(t(30), baselineY);
+		pac.setPosition(t(30), baselineY);
 		pac.speed = 1;
 		rendering.pacMunching(pac).forEach(Animation::restart);
 
@@ -57,7 +56,7 @@ public class PacMan_IntermissionScene1 extends GameScene {
 		blinky = new Ghost(0, "Blinky", Direction.LEFT);
 		blinky.visible = true;
 		blinky.state = HUNTING_PAC;
-		blinky.position = pac.position.sum(t(3), 0);
+		blinky.setPosition(pac.position.sum(t(3), 0));
 		blinky.speed = pac.speed * 1.04f;
 		rendering.ghostKickingToDir(blinky, blinky.dir).restart();
 		rendering.ghostFrightenedToDir(blinky, blinky.dir).restart();
@@ -73,10 +72,10 @@ public class PacMan_IntermissionScene1 extends GameScene {
 		case BLINKY_CHASING_PACMAN:
 			if (pac.position.x < -50) {
 				pac.dir = RIGHT;
-				pac.position = new V2f(-20, baselineY);
+				pac.setPosition(-20, baselineY);
 				pac.speed = 0;
 				blinky.dir = blinky.wishDir = RIGHT;
-				blinky.position = new V2f(-20, baselineY);
+				blinky.setPosition(-20, baselineY);
 				blinky.speed = 0.8f;
 				blinky.state = FRIGHTENED;
 				phase = Phase.BIGPACMAN_CHASING_BLINKY;

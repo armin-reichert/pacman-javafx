@@ -63,17 +63,17 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 	@Override
 	public void start() {
 		pacMan = new Pac("Pac-Man", Direction.RIGHT);
-		pacMan.position = new V2f(t(3), GROUND_Y - 4);
+		pacMan.setPosition(t(3), GROUND_Y - 4);
 
 		msPac = new Pac("Ms. Pac-Man", Direction.RIGHT);
-		msPac.position = new V2f(t(5), GROUND_Y - 4);
+		msPac.setPosition(t(5), GROUND_Y - 4);
 
 		bird = new GameEntity();
-		bird.position = new V2f(t(30), BIRD_Y);
+		bird.setPosition(t(30), BIRD_Y);
 		rendering.getBirdAnim().restart();
 
 		bag = new GameEntity();
-		bag.position = bird.position.sum(-14, 3);
+		bag.setPosition(bird.position.sum(-14, 3));
 		bagDropped = bagOpened = false;
 		bagBounces = 0;
 
@@ -111,7 +111,7 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 				++bagBounces;
 				if (bagBounces < 3) {
 					bag.velocity = new V2f(-0.2f, -0.9f / bagBounces);
-					bag.position = new V2f(bag.position.x, GROUND_Y);
+					bag.setPosition(bag.position.x, GROUND_Y);
 				} else {
 					bag.velocity = V2f.NULL;
 					bagOpened = true;

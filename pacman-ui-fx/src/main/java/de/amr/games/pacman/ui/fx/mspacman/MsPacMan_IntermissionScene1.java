@@ -8,7 +8,6 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.CountdownTimer;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.V2f;
 import de.amr.games.pacman.model.Ghost;
 import de.amr.games.pacman.model.Pac;
 import de.amr.games.pacman.sound.PacManGameSound;
@@ -60,23 +59,23 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 	public void start() {
 
 		pacMan = new Pac("Pac-Man", Direction.RIGHT);
-		pacMan.position = new V2f(-t(2), upperY);
+		pacMan.setPosition(-t(2), upperY);
 		pacMan.visible = true;
 		pacMan.couldMove = true;
 		rendering.pacManMunching().values().forEach(Animation::restart);
 
 		inky = new Ghost(2, "Inky", Direction.RIGHT);
-		inky.position = pacMan.position.sum(-t(3), 0);
+		inky.setPosition(pacMan.position.sum(-t(3), 0));
 		inky.visible = true;
 
 		msPac = new Pac("Ms. Pac-Man", Direction.LEFT);
-		msPac.position = new V2f(t(30), lowerY);
+		msPac.setPosition(t(30), lowerY);
 		msPac.visible = true;
 		msPac.couldMove = true;
 		rendering.pacMunching(msPac).forEach(Animation::restart);
 
 		pinky = new Ghost(1, "Pinky", Direction.LEFT);
-		pinky.position = msPac.position.sum(t(3), 0);
+		pinky.setPosition(msPac.position.sum(t(3), 0));
 		pinky.visible = true;
 
 		rendering.ghostsKicking(Stream.of(inky, pinky)).forEach(Animation::restart);
@@ -152,12 +151,12 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 	}
 
 	private void startComingTogether() {
-		pacMan.position = new V2f(t(30), middleY);
-		inky.position = new V2f(t(33), middleY);
+		pacMan.setPosition(t(30), middleY);
+		inky.setPosition(t(33), middleY);
 		pacMan.dir = Direction.LEFT;
 		inky.dir = inky.wishDir = Direction.LEFT;
-		pinky.position = new V2f(t(-5), middleY);
-		msPac.position = new V2f(t(-2), middleY);
+		pinky.setPosition(t(-5), middleY);
+		msPac.setPosition(t(-2), middleY);
 		msPac.dir = Direction.RIGHT;
 		pinky.dir = pinky.wishDir = Direction.RIGHT;
 		enter(Phase.COMING_TOGETHER, Long.MAX_VALUE);

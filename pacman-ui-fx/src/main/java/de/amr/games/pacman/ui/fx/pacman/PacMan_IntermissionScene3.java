@@ -9,7 +9,6 @@ import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.V2f;
 import de.amr.games.pacman.model.Ghost;
 import de.amr.games.pacman.model.GhostState;
 import de.amr.games.pacman.model.Pac;
@@ -59,7 +58,7 @@ public class PacMan_IntermissionScene3 extends GameScene {
 
 		pac.visible = true;
 		pac.dead = false;
-		pac.position = new V2f(t(30), t(chaseTileY));
+		pac.setPosition(t(30), t(chaseTileY));
 		pac.speed = 1.2f;
 		pac.couldMove = true;
 		pac.dir = LEFT;
@@ -67,7 +66,7 @@ public class PacMan_IntermissionScene3 extends GameScene {
 
 		blinky.visible = true;
 		blinky.state = GhostState.HUNTING_PAC;
-		blinky.position = pac.position.sum(64, 0);
+		blinky.setPosition(pac.position.sum(64, 0));
 		blinky.speed = pac.speed;
 		blinky.dir = blinky.wishDir = LEFT;
 

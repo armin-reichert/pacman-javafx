@@ -8,7 +8,6 @@ import static de.amr.games.pacman.world.PacManGameWorld.t;
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.CountdownTimer;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.V2f;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.Ghost;
 import de.amr.games.pacman.model.Pac;
@@ -61,14 +60,14 @@ public class PacMan_IntermissionScene2 extends GameScene {
 	public void start() {
 		pac = new Pac("Pac-Man", Direction.LEFT);
 		pac.visible = true;
-		pac.position = new V2f(t(30), t(chaseTileY));
+		pac.setPosition(t(30), t(chaseTileY));
 		pac.speed = 1;
 		rendering.pacMunching(pac).forEach(Animation::restart);
 
 		blinky = new Ghost(0, "Blinky", Direction.LEFT);
 		blinky.visible = true;
 		blinky.state = HUNTING_PAC;
-		blinky.position = pac.position.sum(t(14), 0);
+		blinky.setPosition(pac.position.sum(t(14), 0));
 		blinky.speed = 1;
 		rendering.ghostKickingToDir(blinky, blinky.dir).restart();
 
