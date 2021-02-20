@@ -1,6 +1,8 @@
 package de.amr.games.pacman.ui.fx.mspacman;
 
 import static de.amr.games.pacman.heaven.God.clock;
+import static de.amr.games.pacman.ui.fx.PacManGameFXUI.MS_PACMAN_RENDERING;
+import static de.amr.games.pacman.ui.fx.PacManGameFXUI.MS_PACMAN_SOUNDS;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.Animation;
@@ -8,8 +10,6 @@ import de.amr.games.pacman.lib.CountdownTimer;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.guys.Pac;
 import de.amr.games.pacman.sound.PacManGameSound;
-import de.amr.games.pacman.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.PacManGameFXUI;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.scene.Group;
 
@@ -25,89 +25,92 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 
 	enum Phase {
 
-		ANIMATION;
+		FLAP, ACTION;
 
 		final CountdownTimer timer = new CountdownTimer();
 	}
 
-	private static final MsPacMan_SceneRendering rendering = PacManGameFXUI.MS_PACMAN_RENDERING;
-	private static final SoundManager sounds = PacManGameFXUI.MS_PACMAN_SOUNDS;
-	private static final int upperY = t(12), lowerY = t(24), middleY = t(18);
+	private static final int UPPER_Y = t(12), LOWER_Y = t(24), MIDDLE_Y = t(18);
 
 	private Phase phase;
 
 	private Flap flap;
-	private Pac pacMan, msPac;
-
-	public MsPacMan_IntermissionScene2(Group root, double width, double height, double scaling) {
-		super(root, width, height, scaling);
-	}
+	private Pac pacMan, msPacMan;
 
 	private void enter(Phase newPhase, long ticks) {
 		phase = newPhase;
 		phase.timer.setDuration(ticks);
 	}
 
+	public MsPacMan_IntermissionScene2(Group root, double width, double height, double scaling) {
+		super(root, width, height, scaling);
+	}
+
 	@Override
 	public void start() {
 		flap = new Flap();
 		flap.setPosition(t(3), t(10));
+		flap.visible = true;
 		flap.sceneNumber = 2;
 		flap.sceneTitle = "THE CHASE";
+		flap.animation.restart();
 
 		pacMan = new Pac("Pac-Man", Direction.RIGHT);
-		msPac = new Pac("Ms. Pac-Man", Direction.RIGHT);
-		enter(Phase.ANIMATION, Long.MAX_VALUE);
+		msPacMan = new Pac("Ms. Pac-Man", Direction.RIGHT);
+
+		MS_PACMAN_SOUNDS.play(PacManGameSound.INTERMISSION_2);
+		enter(Phase.FLAP, Long.MAX_VALUE);
 	}
 
 	@Override
 	public void update() {
 		switch (phase) {
-		case ANIMATION:
-			if (phase.timer.running() == 0) {
-				sounds.play(PacManGameSound.INTERMISSION_2);
-				flap.visible = true;
-				flap.animation.restart();
-			}
+		case FLAP:
 			if (phase.timer.running() == clock.sec(2)) {
 				flap.visible = false;
 			}
-			if (phase.timer.running() == clock.sec(4.5)) {
+			if (phase.timer.running() == clock.sec(3)) {
+				enter(Phase.ACTION, Long.MAX_VALUE);
+			}
+			break;
+
+		case ACTION:
+			if (phase.timer.running() == clock.sec(1.5)) {
 				pacMan.visible = true;
-				pacMan.setPosition(-t(2), upperY);
-				msPac.visible = true;
-				msPac.setPosition(-t(8), upperY);
-				pacMan.dir = msPac.dir = Direction.RIGHT;
-				pacMan.speed = msPac.speed = 2;
-				rendering.pacManMunching().values().forEach(Animation::restart);
-				rendering.pacMunching(msPac).forEach(Animation::restart);
+				pacMan.setPosition(-t(2), UPPER_Y);
+				msPacMan.visible = true;
+				msPacMan.setPosition(-t(8), UPPER_Y);
+				pacMan.dir = msPacMan.dir = Direction.RIGHT;
+				pacMan.speed = msPacMan.speed = 2;
+				MS_PACMAN_RENDERING.pacManMunching().values().forEach(Animation::restart);
+				MS_PACMAN_RENDERING.pacMunching(msPacMan).forEach(Animation::restart);
 			}
-			if (phase.timer.running() == clock.sec(9)) {
-				msPac.setPosition(t(30), lowerY);
-				msPac.visible = true;
-				pacMan.setPosition(t(36), lowerY);
-				msPac.dir = pacMan.dir = Direction.LEFT;
-				msPac.speed = pacMan.speed = 2;
+			if (phase.timer.running() == clock.sec(6)) {
+				msPacMan.setPosition(t(30), LOWER_Y);
+				msPacMan.visible = true;
+				pacMan.setPosition(t(36), LOWER_Y);
+				msPacMan.dir = pacMan.dir = Direction.LEFT;
+				msPacMan.speed = pacMan.speed = 2;
 			}
-			if (phase.timer.running() == clock.sec(13.5)) {
-				msPac.setPosition(t(-8), middleY);
-				pacMan.setPosition(t(-2), middleY);
-				msPac.dir = pacMan.dir = Direction.RIGHT;
-				msPac.speed = pacMan.speed = 2;
+			if (phase.timer.running() == clock.sec(10.5)) {
+				msPacMan.setPosition(t(-8), MIDDLE_Y);
+				pacMan.setPosition(t(-2), MIDDLE_Y);
+				msPacMan.dir = pacMan.dir = Direction.RIGHT;
+				msPacMan.speed = pacMan.speed = 2;
 			}
-			if (phase.timer.running() == clock.sec(18)) {
-				msPac.setPosition(t(30), upperY);
-				pacMan.setPosition(t(42), upperY);
-				msPac.dir = pacMan.dir = Direction.LEFT;
-				msPac.speed = pacMan.speed = 4;
+			if (phase.timer.running() == clock.sec(15)) {
+				msPacMan.setPosition(t(30), UPPER_Y);
+				pacMan.setPosition(t(42), UPPER_Y);
+				msPacMan.dir = pacMan.dir = Direction.LEFT;
+				msPacMan.speed = pacMan.speed = 4;
 			}
-			if (phase.timer.running() == clock.sec(19)) {
-				msPac.setPosition(t(-14), lowerY);
-				pacMan.setPosition(t(-2), lowerY);
-				msPac.dir = pacMan.dir = Direction.RIGHT;
-				msPac.speed = pacMan.speed = 4;
+			if (phase.timer.running() == clock.sec(16)) {
+				msPacMan.setPosition(t(-14), LOWER_Y);
+				pacMan.setPosition(t(-2), LOWER_Y);
+				msPacMan.dir = pacMan.dir = Direction.RIGHT;
+				msPacMan.speed = pacMan.speed = 4;
 			}
-			if (phase.timer.running() == clock.sec(24)) {
+			if (phase.timer.running() == clock.sec(22)) {
 				game.state.timer.setDuration(0);
 			}
 			break;
@@ -115,7 +118,7 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 			break;
 		}
 		pacMan.move();
-		msPac.move();
+		msPacMan.move();
 		phase.timer.run();
 	}
 
@@ -123,7 +126,7 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 	public void render() {
 		clear();
 		flap.draw(g);
-		rendering.drawMrPacMan(g, pacMan);
-		rendering.drawPac(g, msPac);
+		MS_PACMAN_RENDERING.drawMrPacMan(g, pacMan);
+		MS_PACMAN_RENDERING.drawPac(g, msPacMan);
 	}
 }
