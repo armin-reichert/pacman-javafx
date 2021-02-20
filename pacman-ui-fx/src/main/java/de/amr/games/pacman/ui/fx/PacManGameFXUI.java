@@ -1,5 +1,6 @@
 package de.amr.games.pacman.ui.fx;
 
+import static de.amr.games.pacman.heaven.God.clock;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.world.PacManGameWorld.TS;
 
@@ -34,6 +35,7 @@ import de.amr.games.pacman.ui.fx.pacman.PacMan_SceneRendering;
 import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 /**
@@ -75,6 +77,9 @@ public class PacManGameFXUI implements PacManGameUI {
 			controller.endGame();
 			Platform.exit();
 		});
+		stage.addEventHandler(javafx.scene.input.KeyEvent.KEY_PRESSED, e -> {
+			handleGlobalKeys(e);
+		});
 
 		scenes[MS_PACMAN][0] = new MsPacMan_IntroScene(new Group(), width, height, scaling);
 		scenes[MS_PACMAN][1] = new MsPacMan_IntermissionScene1(new Group(), width, height, scaling);
@@ -89,6 +94,27 @@ public class PacManGameFXUI implements PacManGameUI {
 		scenes[PACMAN][4] = new PlayScene(new Group(), width, height, scaling, PACMAN_RENDERING);
 
 		onGameChanged(controller.getGame());
+	}
+
+	private void handleGlobalKeys(KeyEvent e) {
+		switch (e.getCode()) {
+		case S: {
+			clock.targetFreq = clock.targetFreq == 60 ? 30 : 60;
+			String text = clock.targetFreq == 60 ? "Normal speed" : "Slow speed";
+			showFlashMessage(text, clock.sec(1.5));
+			log("Clock frequency changed to %d Hz", clock.targetFreq);
+			break;
+		}
+		case F: {
+			clock.targetFreq = clock.targetFreq == 60 ? 120 : 60;
+			String text = clock.targetFreq == 60 ? "Normal speed" : "Fast speed";
+			showFlashMessage(text, clock.sec(1.5));
+			log("Clock frequency changed to %d Hz", clock.targetFreq);
+			break;
+		}
+		default:
+			break;
+		}
 	}
 
 	private int currentGameType() {
