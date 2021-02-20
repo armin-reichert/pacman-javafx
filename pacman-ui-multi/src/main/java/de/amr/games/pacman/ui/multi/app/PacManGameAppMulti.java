@@ -23,12 +23,13 @@ public class PacManGameAppMulti extends Application {
 		PacManGameController controller = new PacManGameController();
 		controller.play(GameType.PACMAN);
 		controller.addView(new PacManGameFXUI(stage, controller, 2.0));
+		try {
+			Thread.sleep(300);
+		} catch (InterruptedException x) {
+			x.printStackTrace();
+		}
 		controller.addView(new PacManGameSwingUI(controller, 2.0));
 		controller.showViews();
-		try {
-			Thread.sleep(100);
-		} catch (Exception x) {
-		}
 		controller.startGameLoop();
 	}
 }

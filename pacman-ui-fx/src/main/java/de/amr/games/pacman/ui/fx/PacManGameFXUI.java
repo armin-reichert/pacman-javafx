@@ -75,7 +75,6 @@ public class PacManGameFXUI implements PacManGameUI {
 		stage.setTitle("JavaFX: Pac-Man / Ms. Pac-Man");
 		stage.getIcons().add(new Image("/pacman/graphics/pacman.png"));
 		stage.setOnCloseRequest(e -> {
-			controller.endGameLoop();
 			Platform.exit();
 		});
 		stage.addEventHandler(javafx.scene.input.KeyEvent.KEY_PRESSED, e -> {
