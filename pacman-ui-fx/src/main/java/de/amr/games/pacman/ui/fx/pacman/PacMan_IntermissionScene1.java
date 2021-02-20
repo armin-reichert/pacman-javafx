@@ -1,15 +1,15 @@
 package de.amr.games.pacman.ui.fx.pacman;
 
 import static de.amr.games.pacman.lib.Direction.RIGHT;
-import static de.amr.games.pacman.model.GhostState.FRIGHTENED;
-import static de.amr.games.pacman.model.GhostState.HUNTING_PAC;
+import static de.amr.games.pacman.model.guys.GhostState.FRIGHTENED;
+import static de.amr.games.pacman.model.guys.GhostState.HUNTING_PAC;
 import static de.amr.games.pacman.ui.fx.common.SceneRendering.tileRegion;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.model.Ghost;
-import de.amr.games.pacman.model.Pac;
+import de.amr.games.pacman.model.guys.Ghost;
+import de.amr.games.pacman.model.guys.Pac;
 import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.PacManGameFXUI;

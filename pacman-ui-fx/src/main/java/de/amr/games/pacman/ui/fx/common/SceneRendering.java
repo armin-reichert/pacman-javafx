@@ -5,10 +5,10 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.Bonus;
-import de.amr.games.pacman.model.Ghost;
-import de.amr.games.pacman.model.Pac;
-import de.amr.games.pacman.model.PacManGameModel;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.guys.Bonus;
+import de.amr.games.pacman.model.guys.Ghost;
+import de.amr.games.pacman.model.guys.Pac;
 import de.amr.games.pacman.ui.PacManGameAnimation;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -75,11 +75,11 @@ public interface SceneRendering extends PacManGameAnimation {
 
 	void drawEnergizerTiles(GraphicsContext g, Stream<V2i> energizerTiles);
 
-	void drawScore(GraphicsContext g, PacManGameModel game, boolean titleOnly);
+	void drawScore(GraphicsContext g, GameModel game, boolean titleOnly);
 
-	void drawLivesCounter(GraphicsContext g, PacManGameModel game, int x, int y);
+	void drawLivesCounter(GraphicsContext g, GameModel game, int x, int y);
 
-	void drawLevelCounter(GraphicsContext g, PacManGameModel game, int x, int y);
+	void drawLevelCounter(GraphicsContext g, GameModel game, int x, int y);
 
-	void signalGameState(GraphicsContext g, PacManGameModel game);
+	void signalGameState(GraphicsContext g, GameModel game);
 }

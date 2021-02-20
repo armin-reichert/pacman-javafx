@@ -3,7 +3,7 @@ package de.amr.games.pacman.ui.fx.common;
 import java.util.Optional;
 
 import de.amr.games.pacman.lib.CountdownTimer;
-import de.amr.games.pacman.model.PacManGameModel;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.FlashMessage;
 import de.amr.games.pacman.ui.fx.PacManGameFXUI;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
@@ -29,7 +29,7 @@ public abstract class GameScene extends Scene {
 	protected final Text flashMessageView;
 	protected final Keyboard keyboard;
 	protected final GraphicsContext g;
-	protected PacManGameModel game;
+	protected GameModel game;
 	protected Camera camera;
 
 	public GameScene(Group root, double width, double height, double scaling) {
@@ -85,11 +85,11 @@ public abstract class GameScene extends Scene {
 
 	public abstract void render();
 
-	public void setGame(PacManGameModel game) {
+	public void setGame(GameModel game) {
 		this.game = game;
 	}
 
-	public Optional<PacManGameModel> game() {
+	public Optional<GameModel> game() {
 		return Optional.ofNullable(game);
 	}
 

@@ -11,9 +11,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.model.MsPacManGame;
-import de.amr.games.pacman.model.PacManGame;
-import de.amr.games.pacman.model.PacManGameModel;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.mspacman.MsPacManGame;
+import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.sound.PacManGameSoundManager;
 import de.amr.games.pacman.sound.PacManGameSounds;
 import de.amr.games.pacman.sound.SoundManager;
@@ -62,7 +62,7 @@ public class PacManGameFXUI implements PacManGameUI {
 	private final Stage stage;
 	private final GameScene[/* gameType */][/* sceneIndex */] scenes = new GameScene[2][5];
 
-	private PacManGameModel game;
+	private GameModel game;
 	private GameScene currentScene;
 	private boolean muted;
 
@@ -141,7 +141,7 @@ public class PacManGameFXUI implements PacManGameUI {
 	}
 
 	@Override
-	public void onGameChanged(PacManGameModel newGame) {
+	public void onGameChanged(GameModel newGame) {
 		game = Objects.requireNonNull(newGame);
 		Arrays.stream(scenes[currentGameType()]).forEach(scene -> scene.setGame(game));
 		currentScene = currentGameScene();

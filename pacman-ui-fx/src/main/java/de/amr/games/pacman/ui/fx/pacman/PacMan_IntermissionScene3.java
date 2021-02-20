@@ -9,9 +9,9 @@ import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.model.Ghost;
-import de.amr.games.pacman.model.GhostState;
-import de.amr.games.pacman.model.Pac;
+import de.amr.games.pacman.model.guys.Ghost;
+import de.amr.games.pacman.model.guys.GhostState;
+import de.amr.games.pacman.model.guys.Pac;
 import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.PacManGameFXUI;

@@ -3,10 +3,10 @@ package de.amr.games.pacman.ui.fx.mspacman;
 import static de.amr.games.pacman.lib.Direction.LEFT;
 import static de.amr.games.pacman.lib.Direction.RIGHT;
 import static de.amr.games.pacman.lib.Direction.UP;
-import static de.amr.games.pacman.model.GhostState.DEAD;
-import static de.amr.games.pacman.model.GhostState.ENTERING_HOUSE;
-import static de.amr.games.pacman.model.GhostState.FRIGHTENED;
-import static de.amr.games.pacman.model.GhostState.LOCKED;
+import static de.amr.games.pacman.model.guys.GhostState.DEAD;
+import static de.amr.games.pacman.model.guys.GhostState.ENTERING_HOUSE;
+import static de.amr.games.pacman.model.guys.GhostState.FRIGHTENED;
+import static de.amr.games.pacman.model.guys.GhostState.LOCKED;
 import static de.amr.games.pacman.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
@@ -23,11 +23,11 @@ import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.Bonus;
-import de.amr.games.pacman.model.Creature;
-import de.amr.games.pacman.model.Ghost;
-import de.amr.games.pacman.model.Pac;
-import de.amr.games.pacman.model.PacManGameModel;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.guys.Bonus;
+import de.amr.games.pacman.model.guys.Creature;
+import de.amr.games.pacman.model.guys.Ghost;
+import de.amr.games.pacman.model.guys.Pac;
 import de.amr.games.pacman.ui.PacManGameAnimation;
 import de.amr.games.pacman.ui.fx.common.SceneRendering;
 import javafx.geometry.Rectangle2D;
@@ -252,7 +252,7 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 	}
 
 	@Override
-	public void signalGameState(GraphicsContext g, PacManGameModel game) {
+	public void signalGameState(GraphicsContext g, GameModel game) {
 		if (game.state == PacManGameState.GAME_OVER || game.attractMode) {
 			g.setFont(scoreFont);
 			g.setFill(Color.RED);
@@ -290,7 +290,7 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 	}
 
 	@Override
-	public void drawLevelCounter(GraphicsContext g, PacManGameModel game, int rightX, int y) {
+	public void drawLevelCounter(GraphicsContext g, GameModel game, int rightX, int y) {
 		int x = rightX;
 		int firstLevel = Math.max(1, game.currentLevelNumber - 6);
 		for (int level = firstLevel; level <= game.currentLevelNumber; ++level) {
@@ -303,7 +303,7 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 	}
 
 	@Override
-	public void drawLivesCounter(GraphicsContext g, PacManGameModel game, int x, int y) {
+	public void drawLivesCounter(GraphicsContext g, GameModel game, int x, int y) {
 		int maxLivesDisplayed = 5;
 		int livesDisplayed = game.started ? game.lives - 1 : game.lives;
 		for (int i = 0; i < Math.min(livesDisplayed, maxLivesDisplayed); ++i) {
@@ -312,7 +312,7 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 	}
 
 	@Override
-	public void drawScore(GraphicsContext g, PacManGameModel game, boolean titleOnly) {
+	public void drawScore(GraphicsContext g, GameModel game, boolean titleOnly) {
 		g.setFont(scoreFont);
 		g.translate(0, 2);
 		g.setFill(Color.WHITE);
