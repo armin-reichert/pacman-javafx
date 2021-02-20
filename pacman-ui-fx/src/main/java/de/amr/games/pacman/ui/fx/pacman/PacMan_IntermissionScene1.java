@@ -86,7 +86,7 @@ public class PacMan_IntermissionScene1 extends GameScene {
 				pac.speed = blinky.speed * 1.8f;
 			}
 			if (pac.position.x > t(28) + 100) {
-				game.state.duration(0);
+				game.state.timer.setDuration(0);
 			}
 			break;
 		default:

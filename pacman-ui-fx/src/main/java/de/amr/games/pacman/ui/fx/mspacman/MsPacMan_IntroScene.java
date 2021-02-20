@@ -172,7 +172,7 @@ public class MsPacMan_IntroScene extends GameScene {
 		g.setFont(rendering.getScoreFont());
 		g.setFill(Color.ORANGE);
 		g.fillText("\"MS PAC-MAN\"", t(8), t(5));
-		drawAnimatedFrame(32, 16, game.state.ticksRun());
+		drawAnimatedFrame(32, 16, game.state.timer.running());
 		for (Ghost ghost : ghosts) {
 			rendering.drawGhost(g, ghost, false);
 		}

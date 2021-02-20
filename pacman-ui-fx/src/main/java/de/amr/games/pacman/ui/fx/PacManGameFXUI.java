@@ -94,6 +94,8 @@ public class PacManGameFXUI implements PacManGameUI {
 		scenes[PACMAN][4] = new PlayScene(new Group(), width, height, scaling, PACMAN_RENDERING);
 
 		onGameChanged(controller.getGame());
+
+		log("JavaFX UI created at %d", clock.ticksTotal);
 	}
 
 	private void handleGlobalKeys(KeyEvent e) {

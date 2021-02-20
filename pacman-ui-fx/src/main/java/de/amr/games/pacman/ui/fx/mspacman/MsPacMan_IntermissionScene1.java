@@ -135,7 +135,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 				pinky.visible = false;
 			}
 			if (phase.timer.expired()) {
-				game.state.duration(0);
+				game.state.timer.setDuration(0);
 			}
 			break;
 		default:

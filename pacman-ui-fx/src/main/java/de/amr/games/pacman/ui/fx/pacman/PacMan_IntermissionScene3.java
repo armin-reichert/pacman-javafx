@@ -90,7 +90,7 @@ public class PacMan_IntermissionScene3 extends GameScene {
 			break;
 		case RETURNING_HALF_NAKED:
 			if (blinky.position.x > t(28) + 200) {
-				game.state.duration(0); // end scene
+				game.state.timer.setDuration(0); // end scene
 			}
 			break;
 		default:
