@@ -69,7 +69,6 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 		pacMan = new Pac("Pac-Man", Direction.RIGHT);
 		pacMan.setPosition(-t(2), upperY);
 		pacMan.visible = true;
-		pacMan.couldMove = true;
 		rendering.pacManMunching().values().forEach(Animation::restart);
 
 		inky = new Ghost(2, "Inky", Direction.RIGHT);
@@ -79,7 +78,6 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 		msPac = new Pac("Ms. Pac-Man", Direction.LEFT);
 		msPac.setPosition(t(30), lowerY);
 		msPac.visible = true;
-		msPac.couldMove = true;
 		rendering.pacMunching(msPac).forEach(Animation::restart);
 
 		pinky = new Ghost(1, "Pinky", Direction.LEFT);
@@ -104,6 +102,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 				startChasedByGhosts();
 			}
 			break;
+
 		case CHASED_BY_GHOSTS:
 			inky.move();
 			pacMan.move();
@@ -113,6 +112,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 				startComingTogether();
 			}
 			break;
+
 		case COMING_TOGETHER:
 			inky.move();
 			pinky.move();
