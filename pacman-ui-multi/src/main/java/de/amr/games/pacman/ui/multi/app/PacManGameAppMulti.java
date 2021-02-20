@@ -3,6 +3,7 @@ package de.amr.games.pacman.ui.multi.app;
 import java.io.IOException;
 
 import de.amr.games.pacman.controller.PacManGameController;
+import de.amr.games.pacman.model.GameType;
 import de.amr.games.pacman.ui.fx.PacManGameFXUI;
 import de.amr.games.pacman.ui.swing.PacManGameSwingUI;
 import javafx.application.Application;
@@ -22,10 +23,10 @@ public class PacManGameAppMulti extends Application {
 	@Override
 	public void start(Stage stage) throws IOException {
 		PacManGameController controller = new PacManGameController();
-		controller.playMsPacMan();
+		controller.play(GameType.PACMAN);
 		controller.addView(new PacManGameFXUI(stage, controller, 2.0));
 		controller.addView(new PacManGameSwingUI(controller, 2.0));
 		controller.showViews();
-		controller.startGame();
+		controller.startGameLoop();
 	}
 }

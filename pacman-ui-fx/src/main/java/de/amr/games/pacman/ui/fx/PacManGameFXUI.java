@@ -74,7 +74,7 @@ public class PacManGameFXUI implements PacManGameUI {
 		stage.setTitle("JavaFX: Pac-Man / Ms. Pac-Man");
 		stage.getIcons().add(new Image("/pacman/graphics/pacman.png"));
 		stage.setOnCloseRequest(e -> {
-			controller.endGame();
+			controller.endGameLoop();
 			Platform.exit();
 		});
 		stage.addEventHandler(javafx.scene.input.KeyEvent.KEY_PRESSED, e -> {
@@ -99,14 +99,14 @@ public class PacManGameFXUI implements PacManGameUI {
 	private void handleGlobalKeys(KeyEvent e) {
 		switch (e.getCode()) {
 		case S: {
-			clock.targetFreq = clock.targetFreq == 60 ? 30 : 60;
+			clock.targetFreq = clock.targetFreq != 30 ? 30 : 60;
 			String text = clock.targetFreq == 60 ? "Normal speed" : "Slow speed";
 			showFlashMessage(text, clock.sec(1.5));
 			log("Clock frequency changed to %d Hz", clock.targetFreq);
 			break;
 		}
 		case F: {
-			clock.targetFreq = clock.targetFreq == 60 ? 120 : 60;
+			clock.targetFreq = clock.targetFreq != 120 ? 120 : 60;
 			String text = clock.targetFreq == 60 ? "Normal speed" : "Fast speed";
 			showFlashMessage(text, clock.sec(1.5));
 			log("Clock frequency changed to %d Hz", clock.targetFreq);
