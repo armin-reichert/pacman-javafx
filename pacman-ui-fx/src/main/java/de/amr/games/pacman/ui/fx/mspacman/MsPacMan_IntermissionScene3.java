@@ -70,6 +70,7 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 
 		bird = new GameEntity();
 		bird.position = new V2f(t(30), BIRD_Y);
+		rendering.getBirdAnim().restart();
 
 		bag = new GameEntity();
 		bag.position = bird.position.sum(-14, 3);

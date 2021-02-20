@@ -11,6 +11,7 @@ import static de.amr.games.pacman.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +46,7 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 
 	private final Image sheet = new Image("/mspacman/graphics/sprites.png", false);
 
-	private final Rectangle2D[] symbolRegions;
+	private final List<Rectangle2D> symbolRegions;
 	private final Map<Integer, Rectangle2D> bonusValueRegions;
 	private final Map<Integer, Rectangle2D> bountyValueRegions;
 	private final Map<Direction, Animation<Rectangle2D>> msPacMunchingAnim;
@@ -82,8 +83,7 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 
 		scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), 8);
 
-		symbolRegions = new Rectangle2D[] { trRH(3, 0), trRH(4, 0), trRH(5, 0), trRH(6, 0), trRH(7, 0), trRH(8, 0),
-				trRH(9, 0) };
+		symbolRegions = Arrays.asList(trRH(3, 0), trRH(4, 0), trRH(5, 0), trRH(6, 0), trRH(7, 0), trRH(8, 0), trRH(9, 0));
 
 		//@formatter:off
 
@@ -129,24 +129,21 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 		msPacSpinningAnim.frameDuration(10).repetitions(2);
 
 		pacManMunchingAnim = new EnumMap<>(Direction.class);
-		pacManMunchingAnim.put(Direction.RIGHT,
-				Animation.of(trRH(0, 9), trRH(1, 9), trRH(2, 9)).endless().frameDuration(2));
-		pacManMunchingAnim.put(Direction.LEFT,
-				Animation.of(trRH(0, 10), trRH(1, 10), trRH(2, 9)).endless().frameDuration(2));
-		pacManMunchingAnim.put(Direction.UP, Animation.of(trRH(0, 11), trRH(1, 11), trRH(2, 9)).endless().frameDuration(2));
-		pacManMunchingAnim.put(Direction.DOWN,
-				Animation.of(trRH(0, 12), trRH(1, 12), trRH(2, 9)).endless().frameDuration(2));
+		for (Direction dir : Direction.values()) {
+			int d = index(dir);
+			pacManMunchingAnim.put(dir, Animation.of(trRH(0, 9 + d), trRH(1, 9 + d), trRH(2, 9)).frameDuration(2).endless());
+		}
 
 		ghostsKickingAnim = new ArrayList<>(4);
-		for (int id = 0; id < 4; ++id) {
-			EnumMap<Direction, Animation<Rectangle2D>> walkingTo = new EnumMap<>(Direction.class);
+		for (int ghostType = 0; ghostType < 4; ++ghostType) {
+			EnumMap<Direction, Animation<Rectangle2D>> kickingTo = new EnumMap<>(Direction.class);
 			for (Direction dir : Direction.values()) {
 				int d = index(dir);
-				Animation<Rectangle2D> walking = Animation.of(trRH(2 * d, 4 + id), trRH(2 * d + 1, 4 + id));
-				walking.frameDuration(4).endless();
-				walkingTo.put(dir, walking);
+				Animation<Rectangle2D> kicking = Animation.of(trRH(2 * d, 4 + ghostType), trRH(2 * d + 1, 4 + ghostType));
+				kicking.frameDuration(4).endless();
+				kickingTo.put(dir, kicking);
 			}
-			ghostsKickingAnim.add(walkingTo);
+			ghostsKickingAnim.add(kickingTo);
 		}
 
 		ghostEyesAnim = new EnumMap<>(Direction.class);
@@ -154,11 +151,8 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 			ghostEyesAnim.put(dir, Animation.ofSingle(trRH(8 + index(dir), 5)));
 		}
 
-		ghostBlueAnim = Animation.of(trRH(8, 4), trRH(9, 4));
-		ghostBlueAnim.frameDuration(20).endless().run();
-
-		ghostFlashingAnim = Animation.of(trRH(8, 4), trRH(9, 4), trRH(10, 4), trRH(11, 4));
-		ghostFlashingAnim.frameDuration(5).endless();
+		ghostBlueAnim = Animation.of(trRH(8, 4), trRH(9, 4)).frameDuration(20).endless().run();
+		ghostFlashingAnim = Animation.of(trRH(8, 4), trRH(9, 4), trRH(10, 4), trRH(11, 4)).frameDuration(5).endless();
 
 		bonusJumpAnim = Animation.of(0, 2, 0, -2).frameDuration(20).endless().run();
 
@@ -174,7 +168,7 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 		birdAnim = Animation.of(//
 				new Rectangle2D(489, 176, 32, 16), //
 				new Rectangle2D(521, 176, 32, 16));
-		birdAnim.endless().frameDuration(10).restart();
+		birdAnim.endless().frameDuration(10);
 	}
 
 	@Override
@@ -197,6 +191,10 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 
 	public Animation<Rectangle2D> getFlapAnim() {
 		return flapAnim;
+	}
+
+	public Animation<Rectangle2D> getBirdAnim() {
+		return birdAnim;
 	}
 
 	/**
@@ -298,7 +296,7 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 		for (int level = firstLevel; level <= game.currentLevelNumber; ++level) {
 			byte symbol = game.levelSymbols.get(level - 1);
 			// TODO how can an IndexOutOfBoundsException occur here?
-			Rectangle2D region = symbolRegions[symbol];
+			Rectangle2D region = symbolRegions.get(symbol);
 			g.drawImage(sheet, region.getMinX(), region.getMinY(), RASTER, RASTER, x, y, RASTER, RASTER);
 			x -= t(2);
 		}
@@ -401,7 +399,7 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 	@Override
 	public Rectangle2D bonusSpriteRegion(Bonus bonus) {
 		if (bonus.edibleTicksLeft > 0) {
-			return symbolRegions[bonus.symbol];
+			return symbolRegions.get(bonus.symbol);
 		}
 		if (bonus.eatenTicksLeft > 0) {
 			return bonusValueRegions.get(bonus.points);
