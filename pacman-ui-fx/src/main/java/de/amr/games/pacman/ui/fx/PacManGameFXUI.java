@@ -76,6 +76,7 @@ public class PacManGameFXUI implements PacManGameUI {
 		stage.getIcons().add(new Image("/pacman/graphics/pacman.png"));
 		stage.setOnCloseRequest(e -> {
 			Platform.exit();
+			System.exit(0); // TODO
 		});
 		stage.addEventHandler(javafx.scene.input.KeyEvent.KEY_PRESSED, e -> {
 			handleGlobalKeys(e);

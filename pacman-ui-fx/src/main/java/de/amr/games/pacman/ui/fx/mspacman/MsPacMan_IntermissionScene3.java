@@ -4,6 +4,7 @@ import static de.amr.games.pacman.heaven.God.clock;
 import static de.amr.games.pacman.heaven.God.differsAtMost;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
+import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.CountdownTimer;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2f;
@@ -13,7 +14,9 @@ import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.PacManGameFXUI;
 import de.amr.games.pacman.ui.fx.common.GameScene;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
+import javafx.scene.canvas.GraphicsContext;
 
 /**
  * Intermission scene 3: "Junior".
@@ -27,6 +30,40 @@ import javafx.scene.Group;
  */
 public class MsPacMan_IntermissionScene3 extends GameScene {
 
+	static class Bird extends GameEntity {
+
+		Animation<Rectangle2D> animation;
+
+		public void draw(GraphicsContext g) {
+			if (visible) {
+				rendering.drawBirdAnim(g, position.x, position.y);
+			}
+		}
+	}
+
+	static class Bag extends GameEntity {
+
+		boolean released;
+		boolean open;
+		int bounces;
+
+		@Override
+		public void move() {
+			if (released) {
+				velocity = velocity.sum(GRAVITY);
+			}
+			super.move();
+		}
+
+		public void draw(GraphicsContext g) {
+			if (open) {
+				rendering.drawJunior(g, position.x, position.y);
+			} else {
+				rendering.drawBlueBag(g, position.x, position.y);
+			}
+		}
+	}
+
 	enum Phase {
 
 		ANIMATION, READY_TO_PLAY;
@@ -35,18 +72,15 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 	}
 
 	private static final int BIRD_Y = t(12), GROUND_Y = t(24);
-	private static final float BIRD_SPEED = 1.5f;
 	private static final V2f GRAVITY = new V2f(0, 0.04f);
 
-	private final MsPacMan_SceneRendering rendering = PacManGameFXUI.MS_PACMAN_RENDERING;
-	private final SoundManager sounds = PacManGameFXUI.MS_PACMAN_SOUNDS;
+	private static final MsPacMan_SceneRendering rendering = PacManGameFXUI.MS_PACMAN_RENDERING;
+	private static final SoundManager sounds = PacManGameFXUI.MS_PACMAN_SOUNDS;
 
-	private Pac pacMan, msPac;
-	private GameEntity bird;
-	private GameEntity bag;
-	private boolean bagDropped;
-	private boolean bagOpened;
-	private int bagBounces;
+	private Pac pacMan;
+	private Pac msPac;
+	private Bird bird;
+	private Bag bag;
 	private boolean flapVisible;
 
 	private Phase phase;
@@ -68,14 +102,13 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 		msPac = new Pac("Ms. Pac-Man", Direction.RIGHT);
 		msPac.setPosition(t(5), GROUND_Y - 4);
 
-		bird = new GameEntity();
+		bird = new Bird();
 		bird.setPosition(t(30), BIRD_Y);
-		rendering.getBirdAnim().restart();
+		bird.animation = rendering.getBirdAnim();
+		bird.animation.restart();
 
-		bag = new GameEntity();
+		bag = new Bag();
 		bag.setPosition(bird.position.sum(-14, 3));
-		bagDropped = bagOpened = false;
-		bagBounces = 0;
 
 		flapVisible = true;
 		rendering.getFlapAnim().restart();
@@ -90,34 +123,31 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 		case ANIMATION:
 			bird.move();
 			bag.move();
-			if (bagDropped) {
-				bag.velocity = bag.velocity.sum(GRAVITY);
-			}
 			if (phase.timer.running() == clock.sec(1)) {
 				flapVisible = false;
 				pacMan.visible = true;
 				msPac.visible = true;
 				bird.visible = true;
-				bird.velocity = new V2f(-BIRD_SPEED, 0);
+				bird.velocity = new V2f(-1.25f, 0);
 				bag.visible = true;
-				bag.velocity = new V2f(-BIRD_SPEED, 0);
+				bag.velocity = bird.velocity;
 			}
 			// drop bag?
-			if (differsAtMost(bird.position.x, t(24), 1)) {
-				bagDropped = true;
+			if (differsAtMost(bird.position.x, t(22), 1)) {
+				bag.released = true;
 			}
 			// ground contact?
-			if (!bagOpened && bagDropped && bag.position.y > GROUND_Y) {
-				++bagBounces;
-				if (bagBounces < 3) {
-					bag.velocity = new V2f(-0.2f, -0.9f / bagBounces);
+			if (!bag.open && bag.released && bag.position.y > GROUND_Y) {
+				++bag.bounces;
+				if (bag.bounces < 3) {
+					bag.velocity = new V2f(-0.2f, -0.9f / bag.bounces);
 					bag.setPosition(bag.position.x, GROUND_Y);
 				} else {
 					bag.velocity = V2f.NULL;
-					bagOpened = true;
+					bag.open = true;
 				}
 			}
-			if (bagOpened) {
+			if (bag.open) {
 				enter(Phase.READY_TO_PLAY, clock.sec(3));
 			}
 			break;
@@ -141,13 +171,7 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 		}
 		rendering.drawPac(g, msPac);
 		rendering.drawMrPacMan(g, pacMan);
-		if (bird.visible) {
-			rendering.drawBirdAnim(g, bird.position.x, bird.position.y);
-		}
-		if (bagOpened) {
-			rendering.drawJunior(g, bag.position.x, bag.position.y);
-		} else {
-			rendering.drawBlueBag(g, bag.position.x, bag.position.y);
-		}
+		bird.draw(g);
+		bag.draw(g);
 	}
 }
