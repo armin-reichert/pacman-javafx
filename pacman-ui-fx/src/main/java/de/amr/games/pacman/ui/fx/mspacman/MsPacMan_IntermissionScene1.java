@@ -35,12 +35,13 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 		final CountdownTimer timer = new CountdownTimer();
 	}
 
-	private final MsPacMan_SceneRendering rendering = PacManGameFXUI.MS_PACMAN_RENDERING;
-	private final SoundManager sounds = PacManGameFXUI.MS_PACMAN_SOUNDS;
+	private static final MsPacMan_SceneRendering rendering = PacManGameFXUI.MS_PACMAN_RENDERING;
+	private static final SoundManager sounds = PacManGameFXUI.MS_PACMAN_SOUNDS;
+	private static int upperY = t(12), lowerY = t(24), middleY = t(18);
 
 	private Phase phase;
 
-	private int upperY = t(12), lowerY = t(24), middleY = t(18);
+	private Flap flap;
 	private Pac pacMan, msPac;
 	private Ghost pinky, inky;
 	private boolean heartVisible;
@@ -57,6 +58,13 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 
 	@Override
 	public void start() {
+
+		flap = new Flap();
+		flap.setPosition(t(3), t(10));
+		flap.visible = true;
+		flap.sceneNumber = 1;
+		flap.sceneTitle = "THEY MEET";
+		flap.animation.restart();
 
 		pacMan = new Pac("Pac-Man", Direction.RIGHT);
 		pacMan.setPosition(-t(2), upperY);
@@ -79,7 +87,6 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 		pinky.visible = true;
 
 		rendering.ghostsKicking(Stream.of(inky, pinky)).forEach(Animation::restart);
-		rendering.getFlapAnim().restart();
 		sounds.loop(PacManGameSound.INTERMISSION_1, 1);
 
 		heartVisible = false;
@@ -93,6 +100,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 		switch (phase) {
 		case FLAP:
 			if (phase.timer.expired()) {
+				flap.visible = false;
 				startChasedByGhosts();
 			}
 			break;
@@ -145,12 +153,13 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 	}
 
 	private void startChasedByGhosts() {
+		enter(Phase.CHASED_BY_GHOSTS, Long.MAX_VALUE);
 		pacMan.speed = msPac.speed = 1;
 		inky.speed = pinky.speed = 1.04f;
-		enter(Phase.CHASED_BY_GHOSTS, Long.MAX_VALUE);
 	}
 
 	private void startComingTogether() {
+		enter(Phase.COMING_TOGETHER, Long.MAX_VALUE);
 		pacMan.setPosition(t(30), middleY);
 		inky.setPosition(t(33), middleY);
 		pacMan.dir = Direction.LEFT;
@@ -159,15 +168,12 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 		msPac.setPosition(t(-2), middleY);
 		msPac.dir = Direction.RIGHT;
 		pinky.dir = pinky.wishDir = Direction.RIGHT;
-		enter(Phase.COMING_TOGETHER, Long.MAX_VALUE);
 	}
 
 	@Override
 	public void render() {
 		clear();
-		if (phase == Phase.FLAP) {
-			rendering.drawFlapAnimation(g, t(3), t(10), "1", "THEY MEET");
-		}
+		flap.draw(g);
 		rendering.drawMrPacMan(g, pacMan);
 		rendering.drawGhost(g, inky, false);
 		rendering.drawPac(g, msPac);

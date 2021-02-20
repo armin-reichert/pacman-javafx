@@ -30,14 +30,14 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 		final CountdownTimer timer = new CountdownTimer();
 	}
 
-	private final MsPacMan_SceneRendering rendering = PacManGameFXUI.MS_PACMAN_RENDERING;
-	private final SoundManager sounds = PacManGameFXUI.MS_PACMAN_SOUNDS;
+	private static final MsPacMan_SceneRendering rendering = PacManGameFXUI.MS_PACMAN_RENDERING;
+	private static final SoundManager sounds = PacManGameFXUI.MS_PACMAN_SOUNDS;
+	private static final int upperY = t(12), lowerY = t(24), middleY = t(18);
 
 	private Phase phase;
 
-	private int upperY = t(12), lowerY = t(24), middleY = t(18);
+	private Flap flap;
 	private Pac pacMan, msPac;
-	private boolean flapVisible;
 
 	public MsPacMan_IntermissionScene2(Group root, double width, double height, double scaling) {
 		super(root, width, height, scaling);
@@ -50,6 +50,11 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 
 	@Override
 	public void start() {
+		flap = new Flap();
+		flap.setPosition(t(3), t(10));
+		flap.sceneNumber = 2;
+		flap.sceneTitle = "THE CHASE";
+
 		pacMan = new Pac("Pac-Man", Direction.RIGHT);
 		msPac = new Pac("Ms. Pac-Man", Direction.RIGHT);
 		enter(Phase.ANIMATION, Long.MAX_VALUE);
@@ -61,11 +66,11 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 		case ANIMATION:
 			if (phase.timer.running() == 0) {
 				sounds.play(PacManGameSound.INTERMISSION_2);
-				flapVisible = true;
-				rendering.getFlapAnim().restart();
+				flap.visible = true;
+				flap.animation.restart();
 			}
 			if (phase.timer.running() == clock.sec(2)) {
-				flapVisible = false;
+				flap.visible = false;
 			}
 			if (phase.timer.running() == clock.sec(4.5)) {
 				pacMan.visible = true;
@@ -117,9 +122,7 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 	@Override
 	public void render() {
 		clear();
-		if (flapVisible) {
-			rendering.drawFlapAnimation(g, t(3), t(10), "2", "THE CHASE");
-		}
+		flap.draw(g);
 		rendering.drawMrPacMan(g, pacMan);
 		rendering.drawPac(g, msPac);
 	}

@@ -77,11 +77,11 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 	private static final MsPacMan_SceneRendering rendering = PacManGameFXUI.MS_PACMAN_RENDERING;
 	private static final SoundManager sounds = PacManGameFXUI.MS_PACMAN_SOUNDS;
 
+	private Flap flap;
 	private Pac pacMan;
 	private Pac msPac;
 	private Bird bird;
 	private Bag bag;
-	private boolean flapVisible;
 
 	private Phase phase;
 
@@ -96,6 +96,12 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 
 	@Override
 	public void start() {
+
+		flap = new Flap();
+		flap.setPosition(t(3), t(10));
+		flap.sceneNumber = 3;
+		flap.sceneTitle = "JUNIOR";
+
 		pacMan = new Pac("Pac-Man", Direction.RIGHT);
 		pacMan.setPosition(t(3), GROUND_Y - 4);
 
@@ -110,9 +116,6 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 		bag = new Bag();
 		bag.setPosition(bird.position.sum(-14, 3));
 
-		flapVisible = true;
-		rendering.getFlapAnim().restart();
-
 		sounds.play(PacManGameSound.INTERMISSION_3);
 		enter(Phase.ANIMATION, Long.MAX_VALUE);
 	}
@@ -123,8 +126,12 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 		case ANIMATION:
 			bird.move();
 			bag.move();
+			if (phase.timer.running() == 0) {
+				flap.visible = true;
+				flap.animation.restart();
+			}
 			if (phase.timer.running() == clock.sec(1)) {
-				flapVisible = false;
+				flap.visible = false;
 				pacMan.visible = true;
 				msPac.visible = true;
 				bird.visible = true;
@@ -166,9 +173,7 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 	@Override
 	public void render() {
 		clear();
-		if (flapVisible) {
-			rendering.drawFlapAnimation(g, t(3), t(10), "3", "JUNIOR");
-		}
+		flap.draw(g);
 		rendering.drawPac(g, msPac);
 		rendering.drawMrPacMan(g, pacMan);
 		bird.draw(g);
