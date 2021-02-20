@@ -97,7 +97,7 @@ public class PacManGameFXUI implements PacManGameUI {
 		));
 
 		onGameChanged(controller.getGame());
-		log("JavaFX UI created at %d", clock.ticksTotal);
+		log("JavaFX UI created at clock tick %d", clock.ticksTotal);
 	}
 
 	private void handleGlobalKeys(KeyEvent e) {

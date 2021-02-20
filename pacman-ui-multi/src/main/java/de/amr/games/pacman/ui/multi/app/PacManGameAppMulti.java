@@ -1,5 +1,7 @@
 package de.amr.games.pacman.ui.multi.app;
 
+import javax.swing.SwingUtilities;
+
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.GameType;
 import de.amr.games.pacman.ui.fx.PacManGameFXUI;
@@ -22,13 +24,10 @@ public class PacManGameAppMulti extends Application {
 	public void start(Stage stage) {
 		PacManGameController controller = new PacManGameController();
 		controller.play(GameType.PACMAN);
+		SwingUtilities.invokeLater(() -> {
+			controller.addView(new PacManGameSwingUI(controller, 2.0));
+		});
 		controller.addView(new PacManGameFXUI(stage, controller, 2.0));
-		try {
-			Thread.sleep(300);
-		} catch (InterruptedException x) {
-			x.printStackTrace();
-		}
-		controller.addView(new PacManGameSwingUI(controller, 2.0));
 		controller.showViews();
 		controller.startGameLoop();
 	}
