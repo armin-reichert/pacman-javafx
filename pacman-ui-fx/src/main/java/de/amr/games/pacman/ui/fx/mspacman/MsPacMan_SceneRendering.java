@@ -75,7 +75,7 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 	}
 
 	/* Tile region in right half of spritesheet */
-	private Rectangle2D trRH(int tileX, int tileY) {
+	private Rectangle2D s(int tileX, int tileY) {
 		return trAt(456, 0, tileX, tileY, 1, 1);
 	}
 
@@ -83,24 +83,24 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 
 		scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), 8);
 
-		symbolRegions = Arrays.asList(trRH(3, 0), trRH(4, 0), trRH(5, 0), trRH(6, 0), trRH(7, 0), trRH(8, 0), trRH(9, 0));
+		symbolRegions = Arrays.asList(s(3, 0), s(4, 0), s(5, 0), s(6, 0), s(7, 0), s(8, 0), s(9, 0));
 
 		//@formatter:off
 
 		bonusValueRegions = new HashMap<>();
-		bonusValueRegions.put(100,  trRH(3, 1));
-		bonusValueRegions.put(200,  trRH(4, 1));
-		bonusValueRegions.put(500,  trRH(5, 1));
-		bonusValueRegions.put(700,  trRH(6, 1));
-		bonusValueRegions.put(1000, trRH(7, 1));
-		bonusValueRegions.put(2000, trRH(8, 1));
-		bonusValueRegions.put(5000, trRH(9, 1));
+		bonusValueRegions.put(100,  s(3, 1));
+		bonusValueRegions.put(200,  s(4, 1));
+		bonusValueRegions.put(500,  s(5, 1));
+		bonusValueRegions.put(700,  s(6, 1));
+		bonusValueRegions.put(1000, s(7, 1));
+		bonusValueRegions.put(2000, s(8, 1));
+		bonusValueRegions.put(5000, s(9, 1));
 		
 		bountyValueRegions = new HashMap<>();
-		bountyValueRegions.put(200,  trRH(0, 8));
-		bountyValueRegions.put(400,  trRH(1, 8));
-		bountyValueRegions.put(800,  trRH(2, 8));
-		bountyValueRegions.put(1600, trRH(3, 8));
+		bountyValueRegions.put(200,  s(0, 8));
+		bountyValueRegions.put(400,  s(1, 8));
+		bountyValueRegions.put(800,  s(2, 8));
+		bountyValueRegions.put(1600, s(3, 8));
 		//@formatter:on
 
 		// Animations
@@ -120,18 +120,18 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 		msPacMunchingAnim = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = index(dir);
-			Animation<Rectangle2D> munching = Animation.of(trRH(1, d), trRH(1, d), trRH(2, d), trRH(0, d));
+			Animation<Rectangle2D> munching = Animation.of(s(1, d), s(1, d), s(2, d), s(0, d));
 			munching.frameDuration(2).endless();
 			msPacMunchingAnim.put(dir, munching);
 		}
 
-		msPacSpinningAnim = Animation.of(trRH(0, 3), trRH(0, 0), trRH(0, 1), trRH(0, 2));
+		msPacSpinningAnim = Animation.of(s(0, 3), s(0, 0), s(0, 1), s(0, 2));
 		msPacSpinningAnim.frameDuration(10).repetitions(2);
 
 		pacManMunchingAnim = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = index(dir);
-			pacManMunchingAnim.put(dir, Animation.of(trRH(0, 9 + d), trRH(1, 9 + d), trRH(2, 9)).frameDuration(2).endless());
+			pacManMunchingAnim.put(dir, Animation.of(s(0, 9 + d), s(1, 9 + d), s(2, 9)).frameDuration(2).endless());
 		}
 
 		ghostsKickingAnim = new ArrayList<>(4);
@@ -139,7 +139,7 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 			EnumMap<Direction, Animation<Rectangle2D>> kickingTo = new EnumMap<>(Direction.class);
 			for (Direction dir : Direction.values()) {
 				int d = index(dir);
-				Animation<Rectangle2D> kicking = Animation.of(trRH(2 * d, 4 + ghostType), trRH(2 * d + 1, 4 + ghostType));
+				Animation<Rectangle2D> kicking = Animation.of(s(2 * d, 4 + ghostType), s(2 * d + 1, 4 + ghostType));
 				kicking.frameDuration(4).endless();
 				kickingTo.put(dir, kicking);
 			}
@@ -148,11 +148,11 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 
 		ghostEyesAnim = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
-			ghostEyesAnim.put(dir, Animation.of(trRH(8 + index(dir), 5)));
+			ghostEyesAnim.put(dir, Animation.of(s(8 + index(dir), 5)));
 		}
 
-		ghostBlueAnim = Animation.of(trRH(8, 4), trRH(9, 4)).frameDuration(20).endless().run();
-		ghostFlashingAnim = Animation.of(trRH(8, 4), trRH(9, 4), trRH(10, 4), trRH(11, 4)).frameDuration(5).endless();
+		ghostBlueAnim = Animation.of(s(8, 4), s(9, 4)).frameDuration(20).endless().run();
+		ghostFlashingAnim = Animation.of(s(8, 4), s(9, 4), s(10, 4), s(11, 4)).frameDuration(5).endless();
 
 		bonusJumpAnim = Animation.of(0, 2, 0, -2).frameDuration(20).endless().run();
 
@@ -186,7 +186,7 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 	}
 
 	public Rectangle2D getHeart() {
-		return trRH(2, 10);
+		return s(2, 10);
 	}
 
 	public Animation<Rectangle2D> getFlapAnim() {
