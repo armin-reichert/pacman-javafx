@@ -148,7 +148,7 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 
 		ghostEyesAnim = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
-			ghostEyesAnim.put(dir, Animation.ofSingle(trRH(8 + index(dir), 5)));
+			ghostEyesAnim.put(dir, Animation.of(trRH(8 + index(dir), 5)));
 		}
 
 		ghostBlueAnim = Animation.of(trRH(8, 4), trRH(9, 4)).frameDuration(20).endless().run();

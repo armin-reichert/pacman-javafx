@@ -142,7 +142,7 @@ public class PacMan_SceneRendering implements SceneRendering {
 
 		ghostEyesAnim = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
-			ghostEyesAnim.put(dir, Animation.ofSingle(tileRegion(8 + index(dir), 5)));
+			ghostEyesAnim.put(dir, Animation.of(tileRegion(8 + index(dir), 5)));
 		}
 
 		ghostBlueAnim = Animation.of(tileRegion(8, 4), tileRegion(9, 4));
