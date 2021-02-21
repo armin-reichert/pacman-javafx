@@ -1,10 +1,5 @@
 package de.amr.games.pacman.ui.fx.pacman;
 
-import static de.amr.games.pacman.model.guys.GhostState.DEAD;
-import static de.amr.games.pacman.model.guys.GhostState.ENTERING_HOUSE;
-import static de.amr.games.pacman.model.guys.GhostState.FRIGHTENED;
-import static de.amr.games.pacman.model.guys.GhostState.LOCKED;
-import static de.amr.games.pacman.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import java.util.ArrayList;
@@ -12,16 +7,12 @@ import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.guys.Bonus;
-import de.amr.games.pacman.model.guys.Creature;
-import de.amr.games.pacman.model.guys.Ghost;
 import de.amr.games.pacman.model.guys.Pac;
 import de.amr.games.pacman.ui.fx.common.Helper;
 import de.amr.games.pacman.ui.fx.common.SpritesheetBasedRendering;
@@ -40,15 +31,8 @@ public class PacMan_Rendering extends SpritesheetBasedRendering {
 	private final Image mazeFull = new Image("/pacman/graphics/maze_full.png", false);
 	private final Image mazeEmpty = new Image("/pacman/graphics/maze_empty.png", false);
 
-	private final Animation<Rectangle2D> pacCollapsingAnim;
+	private final Animation<Rectangle2D> pacDyingAnim;
 	private final Animation<Image> mazeFlashingAnim;
-
-	private void drawCreatureRegion(GraphicsContext g, Creature guy, Rectangle2D region) {
-		if (guy.visible && region != null) {
-			g.drawImage(spritesheet, region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(),
-					guy.position.x - 4, guy.position.y - 4, region.getWidth(), region.getHeight());
-		}
-	}
 
 	public PacMan_Rendering() {
 		super(new Image("/pacman/graphics/sprites.png", false));
@@ -87,10 +71,10 @@ public class PacMan_Rendering extends SpritesheetBasedRendering {
 			pacManMunchingAnim.put(dir, animation);
 		}
 
-		pacCollapsingAnim = Animation.of(tileRegion(3, 0), tileRegion(4, 0), tileRegion(5, 0), tileRegion(6, 0),
+		pacDyingAnim = Animation.of(tileRegion(3, 0), tileRegion(4, 0), tileRegion(5, 0), tileRegion(6, 0),
 				tileRegion(7, 0), tileRegion(8, 0), tileRegion(9, 0), tileRegion(10, 0), tileRegion(11, 0), tileRegion(12, 0),
 				tileRegion(13, 0));
-		pacCollapsingAnim.frameDuration(8);
+		pacDyingAnim.frameDuration(8);
 
 		ghostsKickingAnim = new ArrayList<>(4);
 		for (int id = 0; id < 4; ++id) {
@@ -127,29 +111,11 @@ public class PacMan_Rendering extends SpritesheetBasedRendering {
 	}
 
 	@Override
-	public void drawTileCovered(GraphicsContext g, V2i tile) {
-		g.setFill(Color.BLACK);
-		g.fillRect(tile.x * TS, tile.y * TS, TS, TS);
-	}
-
-	@Override
 	public void drawMaze(GraphicsContext g, int mazeNumber, int x, int y, boolean flashing) {
 		if (flashing) {
 			g.drawImage(mazeFlashing(mazeNumber).animate(), x, y);
 		} else {
 			g.drawImage(mazeFull, x, y);
-		}
-	}
-
-	@Override
-	public void drawLevelCounter(GraphicsContext g, GameModel game, int rightX, int y) {
-		int x = rightX;
-		int firstLevel = Math.max(1, game.currentLevelNumber - 6);
-		for (int level = firstLevel; level <= game.currentLevelNumber; ++level) {
-			Rectangle2D region = symbolRegions.get(game.levelSymbols.get(level - 1));
-			g.drawImage(spritesheet, region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(), x, y,
-					region.getWidth(), region.getHeight());
-			x -= t(2);
 		}
 	}
 
@@ -165,102 +131,13 @@ public class PacMan_Rendering extends SpritesheetBasedRendering {
 	}
 
 	@Override
-	public void drawFoodTiles(GraphicsContext g, Stream<V2i> tiles, Predicate<V2i> eaten) {
-		tiles.filter(eaten).forEach(tile -> drawTileCovered(g, tile));
-	}
-
-	@Override
-	public void drawEnergizerTiles(GraphicsContext g, Stream<V2i> energizerTiles) {
-		if (energizerBlinking.animate()) {
-			energizerTiles.forEach(tile -> drawTileCovered(g, tile));
-		}
-	}
-
-	@Override
-	public void drawPac(GraphicsContext g, Pac pac) {
-		drawCreatureRegion(g, pac, pacSpriteRegion(pac));
-	}
-
-	@Override
-	public void drawGhost(GraphicsContext g, Ghost ghost, boolean frightened) {
-		drawCreatureRegion(g, ghost, ghostSpriteRegion(ghost, frightened));
-	}
-
-	@Override
 	public void drawBonus(GraphicsContext g, Bonus bonus) {
-		drawCreatureRegion(g, bonus, bonusSpriteRegion(bonus));
-	}
-
-	@Override
-	public Rectangle2D bonusSpriteRegion(Bonus bonus) {
-		if (bonus.edibleTicksLeft > 0) {
-			return symbolRegions.get(bonus.symbol);
-		}
-		if (bonus.eatenTicksLeft > 0) {
-			return bonusValueRegions.get(bonus.points);
-		}
-		return null;
-	}
-
-	@Override
-	public Rectangle2D pacSpriteRegion(Pac pac) {
-		if (pac.dead) {
-			return pacDying().hasStarted() ? pacDying().animate() : pacMunchingToDir(pac, pac.dir).frame();
-		}
-		if (pac.speed == 0) {
-			return pacMunchingToDir(pac, pac.dir).frame(0);
-		}
-		if (!pac.couldMove) {
-			return pacMunchingToDir(pac, pac.dir).frame(1);
-		}
-		return pacMunchingToDir(pac, pac.dir).animate();
-	}
-
-	@Override
-	public Rectangle2D ghostSpriteRegion(Ghost ghost, boolean frightened) {
-		if (ghost.bounty > 0) {
-			return bountyValueRegions.get(ghost.bounty);
-		}
-		if (ghost.is(DEAD) || ghost.is(ENTERING_HOUSE)) {
-			return ghostReturningHomeToDir(ghost, ghost.dir).animate();
-		}
-		if (ghost.is(FRIGHTENED)) {
-			return ghostFlashing().isRunning() ? ghostFlashing().frame() : ghostFrightenedToDir(ghost, ghost.dir).animate();
-		}
-		if (ghost.is(LOCKED) && frightened) {
-			return ghostFrightenedToDir(ghost, ghost.dir).animate();
-		}
-		return ghostKickingToDir(ghost, ghost.wishDir).animate(); // Looks towards wish dir!
+		drawCreature(g, bonus, bonusSpriteRegion(bonus));
 	}
 
 	@Override
 	public Animation<Rectangle2D> pacMunchingToDir(Pac pac, Direction dir) {
 		return pacManMunchingAnim.get(ensureDirection(dir));
-	}
-
-	@Override
-	public Animation<Rectangle2D> pacDying() {
-		return pacCollapsingAnim;
-	}
-
-	@Override
-	public Animation<Rectangle2D> ghostKickingToDir(Ghost ghost, Direction dir) {
-		return ghostsKickingAnim.get(ghost.id).get(ensureDirection(dir));
-	}
-
-	@Override
-	public Animation<Rectangle2D> ghostFrightenedToDir(Ghost ghost, Direction dir) {
-		return ghostBlueAnim;
-	}
-
-	@Override
-	public Animation<Rectangle2D> ghostFlashing() {
-		return ghostFlashingAnim;
-	}
-
-	@Override
-	public Animation<Rectangle2D> ghostReturningHomeToDir(Ghost ghost, Direction dir) {
-		return ghostEyesAnim.get(ensureDirection(dir));
 	}
 
 	@Override
@@ -271,10 +148,5 @@ public class PacMan_Rendering extends SpritesheetBasedRendering {
 	@Override
 	public Stream<Animation<?>> mazeFlashings() {
 		return Stream.of(mazeFlashingAnim);
-	}
-
-	@Override
-	public Animation<Boolean> energizerBlinking() {
-		return energizerBlinking;
 	}
 }
