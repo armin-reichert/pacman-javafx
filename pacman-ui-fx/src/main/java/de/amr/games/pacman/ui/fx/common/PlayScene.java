@@ -3,7 +3,7 @@ package de.amr.games.pacman.ui.fx.common;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.controller.PacManGameState;
-import de.amr.games.pacman.ui.fx.PacManGameFXUI;
+import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import javafx.scene.Group;
 
 /**
@@ -39,7 +39,7 @@ public class PlayScene extends GameScene {
 		game.ghosts().forEach(ghost -> rendering.drawGhost(g, ghost, game.pac.powerTicksLeft > 0));
 		rendering.drawBonus(g, game.bonus);
 		rendering.drawScore(g, game, game.state == PacManGameState.INTRO || game.attractMode);
-		if (PacManGameFXUI.flashMessage().isPresent()) {
+		if (PacManGameUI_JavaFX.flashMessage().isPresent()) {
 			drawFlashMessage();
 		} else {
 			if (!game.attractMode) {

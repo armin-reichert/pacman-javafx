@@ -12,7 +12,7 @@ import de.amr.games.pacman.model.guys.Ghost;
 import de.amr.games.pacman.model.guys.Pac;
 import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.PacManGameFXUI;
+import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
@@ -30,8 +30,8 @@ public class PacMan_IntermissionScene1 extends GameScene {
 
 	private static final int baselineY = t(20);
 
-	private final PacMan_SceneRendering rendering = PacManGameFXUI.PACMAN_RENDERING;
-	private final SoundManager sounds = PacManGameFXUI.PACMAN_SOUNDS;
+	private final PacMan_Rendering rendering = PacManGameUI_JavaFX.PACMAN_RENDERING;
+	private final SoundManager sounds = PacManGameUI_JavaFX.PACMAN_SOUNDS;
 
 	private Ghost blinky;
 	private Pac pac;

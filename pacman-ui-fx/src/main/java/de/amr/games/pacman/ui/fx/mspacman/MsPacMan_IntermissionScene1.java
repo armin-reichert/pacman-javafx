@@ -12,7 +12,7 @@ import de.amr.games.pacman.model.guys.Ghost;
 import de.amr.games.pacman.model.guys.Pac;
 import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.PacManGameFXUI;
+import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.scene.Group;
 
@@ -35,8 +35,8 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 		final CountdownTimer timer = new CountdownTimer();
 	}
 
-	private static final MsPacMan_SceneRendering rendering = PacManGameFXUI.MS_PACMAN_RENDERING;
-	private static final SoundManager sounds = PacManGameFXUI.MS_PACMAN_SOUNDS;
+	private static final MsPacMan_Rendering rendering = PacManGameUI_JavaFX.MS_PACMAN_RENDERING;
+	private static final SoundManager sounds = PacManGameUI_JavaFX.MS_PACMAN_SOUNDS;
 	private static int upperY = t(12), lowerY = t(24), middleY = t(18);
 
 	private Phase phase;
@@ -59,11 +59,9 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 	@Override
 	public void start() {
 
-		flap = new Flap();
+		flap = new Flap(1, "THEY MEET");
 		flap.setPosition(t(3), t(10));
 		flap.visible = true;
-		flap.sceneNumber = 1;
-		flap.sceneTitle = "THEY MEET";
 		flap.animation.restart();
 
 		pacMan = new Pac("Pac-Man", Direction.RIGHT);

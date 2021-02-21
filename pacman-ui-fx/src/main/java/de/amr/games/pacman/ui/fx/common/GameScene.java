@@ -5,7 +5,7 @@ import java.util.Optional;
 import de.amr.games.pacman.lib.CountdownTimer;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.FlashMessage;
-import de.amr.games.pacman.ui.fx.PacManGameFXUI;
+import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import javafx.geometry.Pos;
 import javafx.scene.Camera;
@@ -113,7 +113,7 @@ public abstract class GameScene extends Scene {
 	}
 
 	protected void drawFlashMessage() {
-		Optional<FlashMessage> message = PacManGameFXUI.flashMessage();
+		Optional<FlashMessage> message = PacManGameUI_JavaFX.flashMessage();
 		if (message.isPresent()) {
 			CountdownTimer timer = message.get().timer;
 			double alpha = Math.cos((timer.running() * Math.PI / 2.0) / timer.getDuration());

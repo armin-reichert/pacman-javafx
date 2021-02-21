@@ -39,7 +39,7 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public class PacMan_SceneRendering implements SceneRendering {
+public class PacMan_Rendering implements SceneRendering {
 
 	private final Image spritesheet = new Image("/pacman/graphics/sprites.png", false);
 	private final Image mazeFull = new Image("/pacman/graphics/maze_full.png", false);
@@ -83,7 +83,7 @@ public class PacMan_SceneRendering implements SceneRendering {
 		}
 	}
 
-	public PacMan_SceneRendering() {
+	public PacMan_Rendering() {
 
 		scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), 8);
 

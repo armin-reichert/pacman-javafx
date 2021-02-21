@@ -42,7 +42,7 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimation {
+public class MsPacMan_Rendering implements SceneRendering, PacManGameAnimation {
 
 	private final Image sheet = new Image("/mspacman/graphics/sprites.png", false);
 
@@ -59,7 +59,6 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 	private final Animation<Integer> bonusJumpAnim;
 	private final List<Animation<Image>> mazesFlashingAnims;
 	private final Animation<Boolean> energizerBlinking;
-	private final Animation<Rectangle2D> flapAnim;
 	private final Animation<Rectangle2D> birdAnim;
 
 	private final Font scoreFont;
@@ -79,7 +78,7 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 		return trAt(456, 0, tileX, tileY, 1, 1);
 	}
 
-	public MsPacMan_SceneRendering() {
+	public MsPacMan_Rendering() {
 
 		scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), 8);
 
@@ -155,16 +154,6 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 		ghostFlashingAnim = Animation.of(s(8, 4), s(9, 4), s(10, 4), s(11, 4)).frameDuration(5).endless();
 
 		bonusJumpAnim = Animation.of(0, 2, 0, -2).frameDuration(20).endless().run();
-
-		flapAnim = Animation.of( //
-				new Rectangle2D(456, 208, 32, 32), //
-				new Rectangle2D(488, 208, 32, 32), //
-				new Rectangle2D(520, 208, 32, 32), //
-				new Rectangle2D(488, 208, 32, 32), //
-				new Rectangle2D(456, 208, 32, 32)//
-		);
-		flapAnim.repetitions(1).frameDuration(4);
-
 		birdAnim = Animation.of(//
 				new Rectangle2D(489, 176, 32, 16), //
 				new Rectangle2D(521, 176, 32, 16));
@@ -187,10 +176,6 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 
 	public Rectangle2D getHeart() {
 		return s(2, 10);
-	}
-
-	public Animation<Rectangle2D> getFlapAnim() {
-		return flapAnim;
 	}
 
 	public Animation<Rectangle2D> getBirdAnim() {
@@ -363,16 +348,6 @@ public class MsPacMan_SceneRendering implements SceneRendering, PacManGameAnimat
 		g.translate(0, bonusJumpAnim.animate());
 		drawCreature(g, bonus, bonusSpriteRegion(bonus));
 		g.restore();
-	}
-
-	public void drawFlapAnimation(GraphicsContext g, double x, double y, String flapNumber, String sceneTitle) {
-		drawRegion(g, getFlapAnim().animate(), x, y);
-		g.setFill(Color.rgb(222, 222, 225));
-		g.setFont(scoreFont);
-		g.fillText(flapNumber, x + 20, y + 30);
-		if (getFlapAnim().isRunning()) {
-			g.fillText(sceneTitle, x + 40, y + 20);
-		}
 	}
 
 	public void drawMrPacMan(GraphicsContext g, Pac pacMan) {

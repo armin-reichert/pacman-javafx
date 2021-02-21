@@ -1,8 +1,8 @@
 package de.amr.games.pacman.ui.fx.mspacman;
 
 import static de.amr.games.pacman.heaven.God.clock;
-import static de.amr.games.pacman.ui.fx.PacManGameFXUI.MS_PACMAN_RENDERING;
-import static de.amr.games.pacman.ui.fx.PacManGameFXUI.MS_PACMAN_SOUNDS;
+import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.MS_PACMAN_RENDERING;
+import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.MS_PACMAN_SOUNDS;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.Animation;
@@ -93,11 +93,9 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 	@Override
 	public void start() {
 
-		flap = new Flap();
+		flap = new Flap(3, "JUNIOR");
 		flap.setPosition(t(3), t(10));
 		flap.visible = true;
-		flap.sceneNumber = 3;
-		flap.sceneTitle = "JUNIOR";
 		flap.animation.restart();
 
 		pacMan = new Pac("Pac-Man", Direction.RIGHT);

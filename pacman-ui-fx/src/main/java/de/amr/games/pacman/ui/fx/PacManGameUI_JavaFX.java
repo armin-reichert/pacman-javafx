@@ -27,12 +27,12 @@ import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene1;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene2;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene3;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntroScene;
-import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_SceneRendering;
+import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_Rendering;
 import de.amr.games.pacman.ui.fx.pacman.PacMan_IntermissionScene1;
 import de.amr.games.pacman.ui.fx.pacman.PacMan_IntermissionScene2;
 import de.amr.games.pacman.ui.fx.pacman.PacMan_IntermissionScene3;
 import de.amr.games.pacman.ui.fx.pacman.PacMan_IntroScene;
-import de.amr.games.pacman.ui.fx.pacman.PacMan_SceneRendering;
+import de.amr.games.pacman.ui.fx.pacman.PacMan_Rendering;
 import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
@@ -44,10 +44,10 @@ import javafx.stage.Stage;
  * 
  * @author Armin Reichert
  */
-public class PacManGameFXUI implements PacManGameUI {
+public class PacManGameUI_JavaFX implements PacManGameUI {
 
-	public static final MsPacMan_SceneRendering MS_PACMAN_RENDERING = new MsPacMan_SceneRendering();
-	public static final PacMan_SceneRendering PACMAN_RENDERING = new PacMan_SceneRendering();
+	public static final MsPacMan_Rendering MS_PACMAN_RENDERING = new MsPacMan_Rendering();
+	public static final PacMan_Rendering PACMAN_RENDERING = new PacMan_Rendering();
 
 	public static final SoundManager MS_PACMAN_SOUNDS = new PacManGameSoundManager(PacManGameSounds::msPacManSoundURL);
 	public static final SoundManager PACMAN_SOUNDS = new PacManGameSoundManager(PacManGameSounds::mrPacManSoundURL);
@@ -67,7 +67,7 @@ public class PacManGameFXUI implements PacManGameUI {
 	private GameModel game;
 	private boolean muted;
 
-	public PacManGameFXUI(Stage stage, PacManGameController controller, double scaling) {
+	public PacManGameUI_JavaFX(Stage stage, PacManGameController controller, double scaling) {
 		this.controller = controller;
 		double width = 28 * TS * scaling;
 		double height = 36 * TS * scaling;

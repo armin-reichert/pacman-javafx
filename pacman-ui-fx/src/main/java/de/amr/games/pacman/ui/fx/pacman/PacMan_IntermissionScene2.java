@@ -13,7 +13,7 @@ import de.amr.games.pacman.model.guys.Ghost;
 import de.amr.games.pacman.model.guys.Pac;
 import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.PacManGameFXUI;
+import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
@@ -32,8 +32,8 @@ public class PacMan_IntermissionScene2 extends GameScene {
 		final CountdownTimer timer = new CountdownTimer();
 	}
 
-	private final PacMan_SceneRendering rendering = PacManGameFXUI.PACMAN_RENDERING;
-	private final SoundManager sounds = PacManGameFXUI.PACMAN_SOUNDS;
+	private final PacMan_Rendering rendering = PacManGameUI_JavaFX.PACMAN_RENDERING;
+	private final SoundManager sounds = PacManGameUI_JavaFX.PACMAN_SOUNDS;
 
 	private final int chaseTileY = 20;
 	private final V2i nailPosition = new V2i(t(14), t(chaseTileY) - 6);

@@ -12,7 +12,7 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.guys.Ghost;
 import de.amr.games.pacman.model.guys.GhostState;
 import de.amr.games.pacman.model.guys.Pac;
-import de.amr.games.pacman.ui.fx.PacManGameFXUI;
+import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
@@ -37,7 +37,7 @@ public class MsPacMan_IntroScene extends GameScene {
 	private final int leftOfFrame = t(4);
 	private final Animation<Boolean> blinking = Animation.pulse().frameDuration(30).restart();
 
-	private final MsPacMan_SceneRendering rendering = PacManGameFXUI.MS_PACMAN_RENDERING;
+	private final MsPacMan_Rendering rendering = PacManGameUI_JavaFX.MS_PACMAN_RENDERING;
 
 	private Phase phase;
 
