@@ -1,2 +1,3 @@
 # pacman-javafx
-Pac-Man and Ms. Pac-Man with a JavaFX UI
+
+A JavaFX user interface for my Pac-Man/Ms. Pac-Man game implementation at [pacman-basic](pacman-basic).
