@@ -31,7 +31,6 @@ public class PacMan_Rendering extends SpritesheetBasedRendering {
 	private final Image mazeFull = new Image("/pacman/graphics/maze_full.png", false);
 	private final Image mazeEmpty = new Image("/pacman/graphics/maze_empty.png", false);
 
-	private final Animation<Rectangle2D> pacDyingAnim;
 	private final Animation<Image> mazeFlashingAnim;
 
 	public PacMan_Rendering() {
