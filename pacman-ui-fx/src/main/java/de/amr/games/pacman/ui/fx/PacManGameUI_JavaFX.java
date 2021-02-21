@@ -72,7 +72,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		double width = 28 * TS * scaling;
 		double height = 36 * TS * scaling;
 		this.stage = stage;
-		stage.setTitle("JavaFX: Pac-Man / Ms. Pac-Man");
+		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
 		stage.getIcons().add(new Image("/pacman/graphics/pacman.png"));
 		stage.setOnCloseRequest(e -> {
 			Platform.exit();
