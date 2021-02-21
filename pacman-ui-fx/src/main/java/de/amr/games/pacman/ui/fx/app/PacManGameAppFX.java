@@ -15,14 +15,19 @@ import javafx.stage.Stage;
  */
 public class PacManGameAppFX extends Application {
 
+	static boolean ms_pacman;
+
 	public static void main(String[] args) {
+		if (args.length > 0) {
+			ms_pacman = "-mspacman".equals(args[0]);
+		}
 		launch(args);
 	}
 
 	@Override
 	public void start(Stage stage) throws IOException {
 		PacManGameController controller = new PacManGameController();
-		controller.play(GameType.PACMAN);
+		controller.play(ms_pacman ? GameType.MS_PACMAN : GameType.PACMAN);
 		controller.addView(new PacManGameUI_JavaFX(stage, controller, 2.0));
 		controller.showViews();
 		controller.startGameLoop();
