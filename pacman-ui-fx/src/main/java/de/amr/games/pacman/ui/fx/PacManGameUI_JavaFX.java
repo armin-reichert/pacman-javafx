@@ -46,16 +46,16 @@ import javafx.stage.Stage;
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
 
-	public static final MsPacMan_Rendering MS_PACMAN_RENDERING = new MsPacMan_Rendering();
-	public static final PacMan_Rendering PACMAN_RENDERING = new PacMan_Rendering();
+	public static final MsPacMan_Rendering RENDERING_MSPACMAN = new MsPacMan_Rendering();
+	public static final PacMan_Rendering RENDERING_PACMAN = new PacMan_Rendering();
 
-	public static final SoundManager MS_PACMAN_SOUNDS = new PacManGameSoundManager(PacManGameSounds::msPacManSoundURL);
-	public static final SoundManager PACMAN_SOUNDS = new PacManGameSoundManager(PacManGameSounds::mrPacManSoundURL);
+	public static final SoundManager SOUNDS_MSPACMAN = new PacManGameSoundManager(PacManGameSounds::msPacManSoundURL);
+	public static final SoundManager SOUNDS_PACMAN = new PacManGameSoundManager(PacManGameSounds::mrPacManSoundURL);
 
-	private static final Deque<FlashMessage> FLASH_MESSAGE_Q = new ArrayDeque<>();
+	private static final Deque<FlashMessage> FLASH_MESSAGES_Q = new ArrayDeque<>();
 
 	public static Optional<FlashMessage> flashMessage() {
-		return Optional.ofNullable(FLASH_MESSAGE_Q.peek());
+		return Optional.ofNullable(FLASH_MESSAGES_Q.peek());
 	}
 
 	private final PacManGameController controller;
@@ -87,14 +87,14 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				new MsPacMan_IntermissionScene1(new Group(), width, height, scaling), //
 				new MsPacMan_IntermissionScene2(new Group(), width, height, scaling), //
 				new MsPacMan_IntermissionScene3(new Group(), width, height, scaling), //
-				new PlayScene(new Group(), width, height, scaling, MS_PACMAN_RENDERING)//
+				new PlayScene(new Group(), width, height, scaling, RENDERING_MSPACMAN)//
 		));
 		scenes.put(GameType.PACMAN, Arrays.asList(//
 				new PacMan_IntroScene(new Group(), width, height, scaling), //
 				new PacMan_IntermissionScene1(new Group(), width, height, scaling), //
 				new PacMan_IntermissionScene2(new Group(), width, height, scaling), //
 				new PacMan_IntermissionScene3(new Group(), width, height, scaling), //
-				new PlayScene(new Group(), width, height, scaling, PACMAN_RENDERING)//
+				new PlayScene(new Group(), width, height, scaling, RENDERING_PACMAN)//
 		));
 
 		onGameChanged(controller.getGame());
@@ -162,11 +162,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 		currentScene.update();
 
-		FlashMessage message = FLASH_MESSAGE_Q.peek();
+		FlashMessage message = FLASH_MESSAGES_Q.peek();
 		if (message != null) {
 			message.timer.run();
 			if (message.timer.expired()) {
-				FLASH_MESSAGE_Q.remove();
+				FLASH_MESSAGES_Q.remove();
 			}
 		}
 	}
@@ -195,7 +195,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void showFlashMessage(String message, long ticks) {
-		FLASH_MESSAGE_Q.add(new FlashMessage(message, ticks));
+		FLASH_MESSAGES_Q.add(new FlashMessage(message, ticks));
 	}
 
 	@Override
@@ -210,7 +210,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		if (muted) {
 			return Optional.empty(); // TODO
 		}
-		return Optional.of(controller.currentGameType() == GameType.MS_PACMAN ? MS_PACMAN_SOUNDS : PACMAN_SOUNDS);
+		return Optional.of(controller.currentGameType() == GameType.MS_PACMAN ? SOUNDS_MSPACMAN : SOUNDS_PACMAN);
 	}
 
 	@Override
@@ -220,6 +220,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public Optional<PacManGameAnimation> animation() {
-		return Optional.of(controller.currentGameType() == GameType.MS_PACMAN ? MS_PACMAN_RENDERING : PACMAN_RENDERING);
+		return Optional.of(controller.currentGameType() == GameType.MS_PACMAN ? RENDERING_MSPACMAN : RENDERING_PACMAN);
 	}
 }

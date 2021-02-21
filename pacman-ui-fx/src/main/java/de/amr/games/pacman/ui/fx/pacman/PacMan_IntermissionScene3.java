@@ -31,8 +31,8 @@ public class PacMan_IntermissionScene3 extends GameScene {
 		CHASING_PACMAN, RETURNING_HALF_NAKED;
 	}
 
-	private final PacMan_Rendering rendering = PacManGameUI_JavaFX.PACMAN_RENDERING;
-	private final SoundManager sounds = PacManGameUI_JavaFX.PACMAN_SOUNDS;
+	private final PacMan_Rendering rendering = PacManGameUI_JavaFX.RENDERING_PACMAN;
+	private final SoundManager sounds = PacManGameUI_JavaFX.SOUNDS_PACMAN;
 
 	private final Animation<Rectangle2D> blinkyDamaged, blinkyHalfNaked;
 	private final int chaseTileY = 20;

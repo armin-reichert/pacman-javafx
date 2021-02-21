@@ -1,8 +1,8 @@
 package de.amr.games.pacman.ui.fx.mspacman;
 
 import static de.amr.games.pacman.heaven.God.clock;
-import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.MS_PACMAN_RENDERING;
-import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.MS_PACMAN_SOUNDS;
+import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.RENDERING_MSPACMAN;
+import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.SOUNDS_MSPACMAN;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.Animation;
@@ -56,7 +56,7 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 		pacMan = new Pac("Pac-Man", Direction.RIGHT);
 		msPacMan = new Pac("Ms. Pac-Man", Direction.RIGHT);
 
-		MS_PACMAN_SOUNDS.play(PacManGameSound.INTERMISSION_2);
+		SOUNDS_MSPACMAN.play(PacManGameSound.INTERMISSION_2);
 		enter(Phase.FLAP, Long.MAX_VALUE);
 	}
 
@@ -80,8 +80,8 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 				msPacMan.setPosition(-t(8), UPPER_Y);
 				pacMan.dir = msPacMan.dir = Direction.RIGHT;
 				pacMan.speed = msPacMan.speed = 2;
-				MS_PACMAN_RENDERING.pacManMunching().values().forEach(Animation::restart);
-				MS_PACMAN_RENDERING.pacMunching(msPacMan).forEach(Animation::restart);
+				RENDERING_MSPACMAN.pacManMunching().values().forEach(Animation::restart);
+				RENDERING_MSPACMAN.pacMunching(msPacMan).forEach(Animation::restart);
 			}
 			if (phase.timer.running() == clock.sec(6)) {
 				msPacMan.setPosition(t(30), LOWER_Y);
@@ -124,7 +124,7 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 	public void render() {
 		clear();
 		flap.draw(g);
-		MS_PACMAN_RENDERING.drawMrPacMan(g, pacMan);
-		MS_PACMAN_RENDERING.drawPac(g, msPacMan);
+		RENDERING_MSPACMAN.drawMrPacMan(g, pacMan);
+		RENDERING_MSPACMAN.drawPac(g, msPacMan);
 	}
 }

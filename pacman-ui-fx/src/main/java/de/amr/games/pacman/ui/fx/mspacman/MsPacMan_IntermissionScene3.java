@@ -1,8 +1,8 @@
 package de.amr.games.pacman.ui.fx.mspacman;
 
 import static de.amr.games.pacman.heaven.God.clock;
-import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.MS_PACMAN_RENDERING;
-import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.MS_PACMAN_SOUNDS;
+import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.RENDERING_MSPACMAN;
+import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.SOUNDS_MSPACMAN;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.Animation;
@@ -35,7 +35,7 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 
 		public void draw(GraphicsContext g) {
 			if (visible) {
-				MS_PACMAN_RENDERING.drawBirdAnim(g, position.x, position.y);
+				RENDERING_MSPACMAN.drawBirdAnim(g, position.x, position.y);
 			}
 		}
 	}
@@ -56,9 +56,9 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 
 		public void draw(GraphicsContext g) {
 			if (open) {
-				MS_PACMAN_RENDERING.drawJunior(g, position.x, position.y);
+				RENDERING_MSPACMAN.drawJunior(g, position.x, position.y);
 			} else {
-				MS_PACMAN_RENDERING.drawBlueBag(g, position.x, position.y);
+				RENDERING_MSPACMAN.drawBlueBag(g, position.x, position.y);
 			}
 		}
 	}
@@ -106,13 +106,13 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 
 		bird = new Bird();
 		bird.setPosition(t(30), BIRD_Y);
-		bird.animation = MS_PACMAN_RENDERING.getBirdAnim();
+		bird.animation = RENDERING_MSPACMAN.getBirdAnim();
 		bird.animation.restart();
 
 		bag = new Bag();
 		bag.setPosition(bird.position.sum(-14, 3));
 
-		MS_PACMAN_SOUNDS.play(PacManGameSound.INTERMISSION_3);
+		SOUNDS_MSPACMAN.play(PacManGameSound.INTERMISSION_3);
 		enter(Phase.FLAP, Long.MAX_VALUE);
 	}
 
@@ -170,8 +170,8 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 	public void render() {
 		clear();
 		flap.draw(g);
-		MS_PACMAN_RENDERING.drawPac(g, msPacMan);
-		MS_PACMAN_RENDERING.drawMrPacMan(g, pacMan);
+		RENDERING_MSPACMAN.drawPac(g, msPacMan);
+		RENDERING_MSPACMAN.drawMrPacMan(g, pacMan);
 		bird.draw(g);
 		bag.draw(g);
 	}

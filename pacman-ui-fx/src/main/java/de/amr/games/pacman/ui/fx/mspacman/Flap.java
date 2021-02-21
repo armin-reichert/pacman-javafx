@@ -16,7 +16,7 @@ import javafx.scene.text.FontWeight;
  */
 class Flap extends GameEntity {
 
-	private final MsPacMan_Rendering rendering = PacManGameUI_JavaFX.MS_PACMAN_RENDERING;
+	private final MsPacMan_Rendering rendering = PacManGameUI_JavaFX.RENDERING_MSPACMAN;
 	private final Font font = Font.font(rendering.getScoreFont().getName(), FontWeight.THIN, 8);
 
 	public final Animation<Rectangle2D> animation = Animation.of( //

@@ -35,8 +35,8 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 		final CountdownTimer timer = new CountdownTimer();
 	}
 
-	private static final MsPacMan_Rendering rendering = PacManGameUI_JavaFX.MS_PACMAN_RENDERING;
-	private static final SoundManager sounds = PacManGameUI_JavaFX.MS_PACMAN_SOUNDS;
+	private static final MsPacMan_Rendering rendering = PacManGameUI_JavaFX.RENDERING_MSPACMAN;
+	private static final SoundManager sounds = PacManGameUI_JavaFX.SOUNDS_MSPACMAN;
 	private static int upperY = t(12), lowerY = t(24), middleY = t(18);
 
 	private Phase phase;

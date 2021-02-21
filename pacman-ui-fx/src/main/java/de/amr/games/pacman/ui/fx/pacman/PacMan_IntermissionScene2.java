@@ -32,8 +32,8 @@ public class PacMan_IntermissionScene2 extends GameScene {
 		final CountdownTimer timer = new CountdownTimer();
 	}
 
-	private final PacMan_Rendering rendering = PacManGameUI_JavaFX.PACMAN_RENDERING;
-	private final SoundManager sounds = PacManGameUI_JavaFX.PACMAN_SOUNDS;
+	private final PacMan_Rendering rendering = PacManGameUI_JavaFX.RENDERING_PACMAN;
+	private final SoundManager sounds = PacManGameUI_JavaFX.SOUNDS_PACMAN;
 
 	private final int chaseTileY = 20;
 	private final V2i nailPosition = new V2i(t(14), t(chaseTileY) - 6);

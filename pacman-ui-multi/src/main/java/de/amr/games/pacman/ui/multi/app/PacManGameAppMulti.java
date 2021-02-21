@@ -5,7 +5,7 @@ import javax.swing.SwingUtilities;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.GameType;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
-import de.amr.games.pacman.ui.swing.PacManGameSwingUI;
+import de.amr.games.pacman.ui.swing.PacManGameUI_Swing;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -25,7 +25,7 @@ public class PacManGameAppMulti extends Application {
 		PacManGameController controller = new PacManGameController();
 		controller.play(GameType.PACMAN);
 		SwingUtilities.invokeLater(() -> {
-			controller.addView(new PacManGameSwingUI(controller, 2.0));
+			controller.addView(new PacManGameUI_Swing(controller, 2.0));
 		});
 		controller.addView(new PacManGameUI_JavaFX(stage, controller, 2.0));
 		controller.showViews();
