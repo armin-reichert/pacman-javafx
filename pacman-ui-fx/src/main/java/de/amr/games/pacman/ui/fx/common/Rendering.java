@@ -1,6 +1,5 @@
 package de.amr.games.pacman.ui.fx.common;
 
-import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -13,8 +12,6 @@ import de.amr.games.pacman.ui.PacManGameAnimation;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
@@ -22,25 +19,10 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public interface SceneRendering extends PacManGameAnimation {
+public interface Rendering extends PacManGameAnimation {
 
 	/** Spritesheet raster size */
 	static final int RASTER = 16;
-
-	static Image exchangeColors(Image source, Map<Color, Color> exchanges) {
-		WritableImage newImage = new WritableImage((int) source.getWidth(), (int) source.getHeight());
-		for (int x = 0; x < source.getWidth(); ++x) {
-			for (int y = 0; y < source.getHeight(); ++y) {
-				Color oldColor = source.getPixelReader().getColor(x, y);
-				for (Map.Entry<Color, Color> entry : exchanges.entrySet()) {
-					if (oldColor.equals(entry.getKey())) {
-						newImage.getPixelWriter().setColor(x, y, entry.getValue());
-					}
-				}
-			}
-		}
-		return newImage;
-	}
 
 	static Rectangle2D tileRegion(int tileX, int tileY, int cols, int rows) {
 		return new Rectangle2D(tileX * RASTER, tileY * RASTER, cols * RASTER, rows * RASTER);

@@ -27,7 +27,8 @@ import de.amr.games.pacman.model.guys.Bonus;
 import de.amr.games.pacman.model.guys.Creature;
 import de.amr.games.pacman.model.guys.Ghost;
 import de.amr.games.pacman.model.guys.Pac;
-import de.amr.games.pacman.ui.fx.common.SceneRendering;
+import de.amr.games.pacman.ui.fx.common.Rendering;
+import de.amr.games.pacman.ui.fx.common.Helper;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -39,7 +40,7 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public class PacMan_Rendering implements SceneRendering {
+public class PacMan_Rendering implements Rendering {
 
 	private final Image spritesheet = new Image("/pacman/graphics/sprites.png", false);
 	private final Image mazeFull = new Image("/pacman/graphics/maze_full.png", false);
@@ -110,7 +111,7 @@ public class PacMan_Rendering implements SceneRendering {
 
 		// Animations
 
-		Image mazeEmptyBright = SceneRendering.exchangeColors(mazeEmpty, Map.of(Color.rgb(33, 33, 255), Color.WHITE));
+		Image mazeEmptyBright = Helper.exchangeColors(mazeEmpty, Map.of(Color.rgb(33, 33, 255), Color.WHITE));
 		mazeFlashingAnim = Animation.of(mazeEmptyBright, mazeEmpty).frameDuration(15);
 
 		energizerBlinking = Animation.pulse().frameDuration(15);

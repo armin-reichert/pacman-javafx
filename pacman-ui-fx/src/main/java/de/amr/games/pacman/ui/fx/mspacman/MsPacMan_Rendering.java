@@ -29,7 +29,8 @@ import de.amr.games.pacman.model.guys.Creature;
 import de.amr.games.pacman.model.guys.Ghost;
 import de.amr.games.pacman.model.guys.Pac;
 import de.amr.games.pacman.ui.PacManGameAnimation;
-import de.amr.games.pacman.ui.fx.common.SceneRendering;
+import de.amr.games.pacman.ui.fx.common.Rendering;
+import de.amr.games.pacman.ui.fx.common.Helper;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -42,7 +43,7 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public class MsPacMan_Rendering implements SceneRendering, PacManGameAnimation {
+public class MsPacMan_Rendering implements Rendering, PacManGameAnimation {
 
 	private final Image sheet = new Image("/mspacman/graphics/sprites.png", false);
 
@@ -112,7 +113,7 @@ public class MsPacMan_Rendering implements SceneRendering, PacManGameAnimation {
 					Color.BLACK);
 			WritableImage mazeEmpty = new WritableImage(226, 248);
 			mazeEmpty.getPixelWriter().setPixels(0, 0, 226, 248, sheet.getPixelReader(), 226, 248 * mazeIndex);
-			Image mazeEmptyBright = SceneRendering.exchangeColors(mazeEmpty, exchanges);
+			Image mazeEmptyBright = Helper.exchangeColors(mazeEmpty, exchanges);
 			mazesFlashingAnims.add(Animation.of(mazeEmptyBright, mazeEmpty).frameDuration(15));
 		}
 
