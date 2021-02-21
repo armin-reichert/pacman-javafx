@@ -8,8 +8,7 @@ SET "JFX_RT=C:\Users\armin\.m2\repository"
 SET "CLASSPATH=..\..\pacman-basic\pacman\target\pacman-basic-1.0.jar;.\target\pacman-ui-fx-1.0.jar;^
  "%JFX_HOME%\lib\javafx.base.jar";^
  "%JFX_HOME%\lib\javafx.controls.jar";^
- "%JFX_HOME%\lib\javafx.graphics.jar";^
- "%JFX_HOME%\lib\javafx.media.jar";^
+ "%JFX_HOME%\lib\javafx.graphics.jar";
  "%JFX_RT%\org\openjfx\javafx-controls\15\javafx-controls-15.jar";^
  "%JFX_RT%\org\openjfx\javafx-controls\15\javafx-controls-15-win.jar";^
  "%JFX_RT%\org\openjfx\javafx-graphics\15\javafx-graphics-15.jar";^
