@@ -1,8 +1,5 @@
 package de.amr.games.pacman.ui.fx.mspacman;
 
-import static de.amr.games.pacman.lib.Direction.LEFT;
-import static de.amr.games.pacman.lib.Direction.RIGHT;
-import static de.amr.games.pacman.lib.Direction.UP;
 import static de.amr.games.pacman.model.guys.GhostState.DEAD;
 import static de.amr.games.pacman.model.guys.GhostState.ENTERING_HOUSE;
 import static de.amr.games.pacman.model.guys.GhostState.FRIGHTENED;
@@ -19,7 +16,6 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
@@ -28,65 +24,38 @@ import de.amr.games.pacman.model.guys.Bonus;
 import de.amr.games.pacman.model.guys.Creature;
 import de.amr.games.pacman.model.guys.Ghost;
 import de.amr.games.pacman.model.guys.Pac;
-import de.amr.games.pacman.ui.PacManGameAnimation;
-import de.amr.games.pacman.ui.fx.common.Rendering;
 import de.amr.games.pacman.ui.fx.common.Helper;
+import de.amr.games.pacman.ui.fx.common.SpritesheetBasedRendering;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 /**
  * Rendering for the scenes of the Ms. Pac-Man game.
  * 
  * @author Armin Reichert
  */
-public class MsPacMan_Rendering implements Rendering, PacManGameAnimation {
+public class MsPacMan_Rendering extends SpritesheetBasedRendering {
 
-	private final Image sheet = new Image("/mspacman/graphics/sprites.png", false);
-
-	private final List<Rectangle2D> symbolRegions;
-	private final Map<Integer, Rectangle2D> bonusValueRegions;
-	private final Map<Integer, Rectangle2D> bountyValueRegions;
-	private final Map<Direction, Animation<Rectangle2D>> msPacMunchingAnim;
-	private final Map<Direction, Animation<Rectangle2D>> pacManMunchingAnim; // used in intermission scene
-	private final Animation<Rectangle2D> msPacSpinningAnim;
-	private final List<EnumMap<Direction, Animation<Rectangle2D>>> ghostsKickingAnim;
-	private final EnumMap<Direction, Animation<Rectangle2D>> ghostEyesAnim;
-	private final Animation<Rectangle2D> ghostBlueAnim;
-	private final Animation<Rectangle2D> ghostFlashingAnim;
-	private final Animation<Integer> bonusJumpAnim;
 	private final List<Animation<Image>> mazesFlashingAnims;
-	private final Animation<Boolean> energizerBlinking;
+	private final Map<Direction, Animation<Rectangle2D>> msPacMunchingAnim;
+	private final Animation<Rectangle2D> msPacSpinningAnim;
+	private final Animation<Integer> bonusJumpAnim;
 	private final Animation<Rectangle2D> birdAnim;
 
-	private final Font scoreFont;
-
-	private int index(Direction dir) {
-		return dir == RIGHT ? 0 : dir == LEFT ? 1 : dir == UP ? 2 : 3;
-	}
-
-	/* Tile region relative to given origin */
-	private Rectangle2D trAt(int originX, int originY, int tileX, int tileY, int tilesWidth, int tilesHeight) {
-		return new Rectangle2D(originX + tileX * RASTER, originY + tileY * RASTER, tilesWidth * RASTER,
-				tilesHeight * RASTER);
-	}
-
-	/* Tile region in right half of spritesheet */
+	/* Tiles in right half of spritesheet */
 	private Rectangle2D s(int tileX, int tileY) {
-		return trAt(456, 0, tileX, tileY, 1, 1);
+		return tileRegionAt(456, 0, tileX, tileY, 1, 1);
 	}
 
 	public MsPacMan_Rendering() {
-
-		scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), 8);
+		super(new Image("/mspacman/graphics/sprites.png", false));
 
 		symbolRegions = Arrays.asList(s(3, 0), s(4, 0), s(5, 0), s(6, 0), s(7, 0), s(8, 0), s(9, 0));
 
 		//@formatter:off
-
 		bonusValueRegions = new HashMap<>();
 		bonusValueRegions.put(100,  s(3, 1));
 		bonusValueRegions.put(200,  s(4, 1));
@@ -105,14 +74,12 @@ public class MsPacMan_Rendering implements Rendering, PacManGameAnimation {
 
 		// Animations
 
-		energizerBlinking = Animation.pulse().frameDuration(10);
-
 		mazesFlashingAnims = new ArrayList<>(6);
 		for (int mazeIndex = 0; mazeIndex < 6; ++mazeIndex) {
 			Map<Color, Color> exchanges = Map.of(getMazeWallBorderColor(mazeIndex), Color.WHITE, getMazeWallColor(mazeIndex),
 					Color.BLACK);
 			WritableImage mazeEmpty = new WritableImage(226, 248);
-			mazeEmpty.getPixelWriter().setPixels(0, 0, 226, 248, sheet.getPixelReader(), 226, 248 * mazeIndex);
+			mazeEmpty.getPixelWriter().setPixels(0, 0, 226, 248, spritesheet.getPixelReader(), 226, 248 * mazeIndex);
 			Image mazeEmptyBright = Helper.exchangeColors(mazeEmpty, exchanges);
 			mazesFlashingAnims.add(Animation.of(mazeEmptyBright, mazeEmpty).frameDuration(15));
 		}
@@ -161,16 +128,6 @@ public class MsPacMan_Rendering implements Rendering, PacManGameAnimation {
 		birdAnim.endless().frameDuration(10);
 	}
 
-	@Override
-	public Image spritesheet() {
-		return sheet;
-	}
-
-	@Override
-	public Font getScoreFont() {
-		return scoreFont;
-	}
-
 	public Map<Direction, Animation<Rectangle2D>> pacManMunching() {
 		return pacManMunchingAnim;
 	}
@@ -189,6 +146,7 @@ public class MsPacMan_Rendering implements Rendering, PacManGameAnimation {
 	 * @param mazeIndex
 	 * @return
 	 */
+	@Override
 	public Color getMazeWallColor(int mazeIndex) {
 		switch (mazeIndex) {
 		case 0:
@@ -214,6 +172,7 @@ public class MsPacMan_Rendering implements Rendering, PacManGameAnimation {
 	 * @param mazeIndex
 	 * @return
 	 */
+	@Override
 	public Color getMazeWallBorderColor(int mazeIndex) {
 		switch (mazeIndex) {
 		case 0:
@@ -233,24 +192,6 @@ public class MsPacMan_Rendering implements Rendering, PacManGameAnimation {
 		}
 	}
 
-	private Direction ensureDirection(Direction dir) {
-		return dir != null ? dir : Direction.RIGHT;
-	}
-
-	@Override
-	public void signalGameState(GraphicsContext g, GameModel game) {
-		if (game.state == PacManGameState.GAME_OVER || game.attractMode) {
-			g.setFont(scoreFont);
-			g.setFill(Color.RED);
-			g.fillText("GAME", t(9), t(21));
-			g.fillText("OVER", t(15), t(21));
-		} else if (game.state == PacManGameState.READY) {
-			g.setFont(scoreFont);
-			g.setFill(Color.YELLOW);
-			g.fillText("READY", t(11), t(21));
-		}
-	}
-
 	@Override
 	public void drawMaze(GraphicsContext g, int mazeNumber, int x, int y, boolean flashing) {
 		int index = mazeNumber - 1;
@@ -258,7 +199,7 @@ public class MsPacMan_Rendering implements Rendering, PacManGameAnimation {
 			g.drawImage(mazeFlashing(mazeNumber).animate(), x, y);
 		} else {
 			Rectangle2D fullMazeRegion = new Rectangle2D(0, 248 * index, 226, 248);
-			g.drawImage(sheet, fullMazeRegion.getMinX(), fullMazeRegion.getMinY(), fullMazeRegion.getWidth(),
+			g.drawImage(spritesheet, fullMazeRegion.getMinX(), fullMazeRegion.getMinY(), fullMazeRegion.getWidth(),
 					fullMazeRegion.getHeight(), x, y, fullMazeRegion.getWidth(), fullMazeRegion.getHeight());
 		}
 	}
@@ -283,7 +224,7 @@ public class MsPacMan_Rendering implements Rendering, PacManGameAnimation {
 			byte symbol = game.levelSymbols.get(level - 1);
 			// TODO how can an IndexOutOfBoundsException occur here?
 			Rectangle2D region = symbolRegions.get(symbol);
-			g.drawImage(sheet, region.getMinX(), region.getMinY(), RASTER, RASTER, x, y, RASTER, RASTER);
+			g.drawImage(spritesheet, region.getMinX(), region.getMinY(), RASTER, RASTER, x, y, RASTER, RASTER);
 			x -= t(2);
 		}
 	}
@@ -293,29 +234,8 @@ public class MsPacMan_Rendering implements Rendering, PacManGameAnimation {
 		int maxLivesDisplayed = 5;
 		int livesDisplayed = game.started ? game.lives - 1 : game.lives;
 		for (int i = 0; i < Math.min(livesDisplayed, maxLivesDisplayed); ++i) {
-			g.drawImage(sheet, 456 + RASTER, 0, RASTER, RASTER, x + t(2 * i), y, RASTER, RASTER);
+			g.drawImage(spritesheet, 456 + RASTER, 0, RASTER, RASTER, x + t(2 * i), y, RASTER, RASTER);
 		}
-	}
-
-	@Override
-	public void drawScore(GraphicsContext g, GameModel game, boolean titleOnly) {
-		g.setFont(scoreFont);
-		g.translate(0, 2);
-		g.setFill(Color.WHITE);
-		g.fillText("SCORE", t(1), t(1));
-		g.fillText("HIGHSCORE", t(15), t(1));
-		g.translate(0, 1);
-		if (!titleOnly) {
-			g.setFill(getMazeWallColor(game.level.mazeNumber - 1));
-			g.fillText(String.format("%08d", game.score), t(1), t(2));
-			g.setFill(Color.LIGHTGRAY);
-			g.fillText(String.format("L%02d", game.currentLevelNumber), t(9), t(2));
-			g.setFill(getMazeWallColor(game.level.mazeNumber - 1));
-			g.fillText(String.format("%08d", game.highscorePoints), t(15), t(2));
-			g.setFill(Color.LIGHTGRAY);
-			g.fillText(String.format("L%02d", game.highscoreLevel), t(23), t(2));
-		}
-		g.translate(0, -3);
 	}
 
 	@Override
@@ -327,7 +247,7 @@ public class MsPacMan_Rendering implements Rendering, PacManGameAnimation {
 	// draw creature sprite centered over creature collision box
 	private void drawCreature(GraphicsContext g, Creature guy, Rectangle2D region) {
 		if (guy.visible && region != null) {
-			g.drawImage(sheet, region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(),
+			g.drawImage(spritesheet, region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(),
 					guy.position.x - region.getWidth() / 2 + 4, guy.position.y - region.getHeight() / 2 + 4, region.getWidth(),
 					region.getHeight());
 		}

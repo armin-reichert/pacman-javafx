@@ -13,9 +13,9 @@ import javafx.scene.Group;
  */
 public class PlayScene extends GameScene {
 
-	private final Rendering rendering;
+	private final SpritesheetBasedRendering rendering;
 
-	public PlayScene(Group root, double width, double height, double scaling, Rendering rendering) {
+	public PlayScene(Group root, double width, double height, double scaling, SpritesheetBasedRendering rendering) {
 		super(root, width, height, scaling);
 		this.rendering = rendering;
 	}
