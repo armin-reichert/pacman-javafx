@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.Direction;
@@ -30,8 +29,6 @@ public class PacMan_Rendering extends SpritesheetBasedRendering {
 
 	private final Image mazeFull = new Image("/pacman/graphics/maze_full.png", false);
 	private final Image mazeEmpty = new Image("/pacman/graphics/maze_empty.png", false);
-
-	private final Animation<Image> mazeFlashingAnim;
 
 	public PacMan_Rendering() {
 		super(new Image("/pacman/graphics/sprites.png", false));
@@ -60,7 +57,7 @@ public class PacMan_Rendering extends SpritesheetBasedRendering {
 		// Animations
 
 		Image mazeEmptyBright = Helper.exchangeColors(mazeEmpty, Map.of(getMazeWallBorderColor(0), Color.WHITE));
-		mazeFlashingAnim = Animation.of(mazeEmptyBright, mazeEmpty).frameDuration(15);
+		mazeFlashingAnim = Arrays.asList(Animation.of(mazeEmptyBright, mazeEmpty).frameDuration(15));
 
 		pacManMunchingAnim = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
@@ -137,15 +134,5 @@ public class PacMan_Rendering extends SpritesheetBasedRendering {
 	@Override
 	public Animation<Rectangle2D> pacMunchingToDir(Pac pac, Direction dir) {
 		return pacManMunchingAnim.get(ensureDirection(dir));
-	}
-
-	@Override
-	public Animation<Image> mazeFlashing(int mazeNumber) {
-		return mazeFlashingAnim;
-	}
-
-	@Override
-	public Stream<Animation<?>> mazeFlashings() {
-		return Stream.of(mazeFlashingAnim);
 	}
 }

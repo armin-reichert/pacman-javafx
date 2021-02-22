@@ -52,6 +52,7 @@ public abstract class SpritesheetBasedRendering implements PacManGameAnimation {
 
 	protected final Image spritesheet;
 	protected final Font scoreFont;
+	protected List<Animation<Image>> mazeFlashingAnim;
 	protected final Animation<Boolean> energizerBlinking;
 	protected List<Rectangle2D> symbolRegions;
 	protected Map<Integer, Rectangle2D> bonusValueRegions;
@@ -235,6 +236,16 @@ public abstract class SpritesheetBasedRendering implements PacManGameAnimation {
 	}
 
 	// Animations
+
+	@Override
+	public Animation<Image> mazeFlashing(int mazeNumber) {
+		return mazeFlashingAnim.get(mazeNumber - 1);
+	}
+
+	@Override
+	public Stream<Animation<?>> mazeFlashings() {
+		return mazeFlashingAnim.stream().map(Animation.class::cast);
+	}
 
 	@Override
 	public Animation<Boolean> energizerBlinking() {
