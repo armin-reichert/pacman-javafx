@@ -10,16 +10,15 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 /**
- * The flap used in intermission scenes.
+ * The flap used in the intermission scenes.
  * 
  * @author Armin Reichert
  */
 class Flap extends GameEntity {
 
-	private final MsPacMan_Rendering rendering = PacManGameUI_JavaFX.RENDERING_MSPACMAN;
-	private final Font font = Font.font(rendering.getScoreFont().getName(), FontWeight.THIN, 8);
-
-	public final Animation<Rectangle2D> animation = Animation.of( //
+	final MsPacMan_Rendering rendering = PacManGameUI_JavaFX.RENDERING_MSPACMAN;
+	final Font font = Font.font(rendering.getScoreFont().getName(), FontWeight.THIN, 8);
+	final Animation<Rectangle2D> animation = Animation.of( //
 			new Rectangle2D(456, 208, 32, 32), //
 			new Rectangle2D(488, 208, 32, 32), //
 			new Rectangle2D(520, 208, 32, 32), //
@@ -27,8 +26,8 @@ class Flap extends GameEntity {
 			new Rectangle2D(456, 208, 32, 32)//
 	).repetitions(1).frameDuration(4);
 
-	public final int sceneNumber;
-	public final String sceneTitle;
+	final int sceneNumber;
+	final String sceneTitle;
 
 	public Flap(int number, String title) {
 		sceneNumber = number;

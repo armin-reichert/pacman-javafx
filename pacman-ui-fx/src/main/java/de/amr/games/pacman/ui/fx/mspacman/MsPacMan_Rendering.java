@@ -30,7 +30,6 @@ public class MsPacMan_Rendering extends SpritesheetBasedRendering {
 
 	private final Map<Direction, Animation<Rectangle2D>> msPacMunchingAnim;
 	private final Animation<Integer> bonusJumpAnim;
-	private final Animation<Rectangle2D> birdAnim;
 
 	/* Tiles in right half of spritesheet */
 	private Rectangle2D s(int tileX, int tileY) {
@@ -109,10 +108,6 @@ public class MsPacMan_Rendering extends SpritesheetBasedRendering {
 		ghostFlashingAnim = Animation.of(s(8, 4), s(9, 4), s(10, 4), s(11, 4)).frameDuration(5).endless();
 
 		bonusJumpAnim = Animation.of(0, 2, 0, -2).frameDuration(20).endless().run();
-		birdAnim = Animation.of(//
-				new Rectangle2D(489, 176, 32, 16), //
-				new Rectangle2D(521, 176, 32, 16));
-		birdAnim.endless().frameDuration(10);
 	}
 
 	public Map<Direction, Animation<Rectangle2D>> pacManMunching() {
@@ -121,10 +116,6 @@ public class MsPacMan_Rendering extends SpritesheetBasedRendering {
 
 	public Rectangle2D getHeart() {
 		return s(2, 10);
-	}
-
-	public Animation<Rectangle2D> getBirdAnim() {
-		return birdAnim;
 	}
 
 	/**
@@ -214,19 +205,6 @@ public class MsPacMan_Rendering extends SpritesheetBasedRendering {
 			drawRegion(g, pacMan.speed > 0 ? munching.animate() : munching.frame(1), pacMan.position.x - 4,
 					pacMan.position.y - 4);
 		}
-	}
-
-	public void drawBirdAnim(GraphicsContext g, double x, double y) {
-		birdAnim.animate();
-		drawRegion(g, birdAnim.frame(), x + 4 - birdAnim.frame().getWidth() / 2, y + 4 - birdAnim.frame().getHeight() / 2);
-	}
-
-	public void drawBlueBag(GraphicsContext g, double x, double y) {
-		drawRegion(g, new Rectangle2D(488, 199, 8, 8), x, y);
-	}
-
-	public void drawJunior(GraphicsContext g, double x, double y) {
-		drawRegion(g, new Rectangle2D(509, 200, 8, 8), x, y);
 	}
 
 	@Override
