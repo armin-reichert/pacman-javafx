@@ -97,9 +97,7 @@ public class MsPacMan_Rendering extends SpritesheetBasedRendering {
 		}
 
 		ghostEyesAnim = new EnumMap<>(Direction.class);
-		for (Direction dir : Direction.values()) {
-			ghostEyesAnim.put(dir, Animation.of(s(8 + index(dir), 5)));
-		}
+		Direction.stream().forEach(dir -> ghostEyesAnim.put(dir, Animation.of(s(8 + index(dir), 5))));
 
 		ghostBlueAnim = Animation.of(s(8, 4), s(9, 4)).frameDuration(20).endless().run();
 		ghostFlashingAnim = Animation.of(s(8, 4), s(9, 4), s(10, 4), s(11, 4)).frameDuration(5).endless();
@@ -193,7 +191,7 @@ public class MsPacMan_Rendering extends SpritesheetBasedRendering {
 	public void drawBonus(GraphicsContext g, Bonus bonus) {
 		g.save();
 		g.translate(0, bonusJumpAnim.animate());
-		drawCreature(g, bonus, bonusSpriteRegion(bonus));
+		drawGuy(g, bonus, bonusSpriteRegion(bonus));
 		g.restore();
 	}
 

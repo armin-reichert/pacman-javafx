@@ -119,7 +119,7 @@ public class PacMan_Rendering extends SpritesheetBasedRendering {
 
 	@Override
 	public void drawBonus(GraphicsContext g, Bonus bonus) {
-		drawCreature(g, bonus, bonusSpriteRegion(bonus));
+		drawGuy(g, bonus, bonusSpriteRegion(bonus));
 	}
 
 	@Override

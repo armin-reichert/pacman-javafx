@@ -33,7 +33,7 @@ public class PlayScene extends GameScene {
 					game.level::containsEatenFood);
 			rendering.drawEnergizerTiles(g, game.level.world.energizerTiles());
 		}
-		rendering.signalGameState(g, game);
+		rendering.drawGameState(g, game);
 		rendering.drawPac(g, game.pac);
 		game.ghosts().forEach(ghost -> rendering.drawGhost(g, ghost, game.pac.powerTicksLeft > 0));
 		rendering.drawBonus(g, game.bonus);

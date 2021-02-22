@@ -10,7 +10,6 @@ import static de.amr.games.pacman.model.guys.GhostState.LOCKED;
 import static de.amr.games.pacman.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
-import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -51,17 +50,17 @@ public abstract class SpritesheetBasedRendering implements PacManGameAnimations 
 		return new Rectangle2D(tileX * RASTER, tileY * RASTER, cols * RASTER, rows * RASTER);
 	}
 
-	protected final Image spritesheet;
-	protected final Font scoreFont;
+	protected Image spritesheet;
+	protected Font scoreFont;
 	protected List<Animation<Image>> mazeFlashingAnim;
-	protected final Animation<Boolean> energizerBlinking;
+	protected Animation<Boolean> energizerBlinking;
 	protected List<Rectangle2D> symbolRegions;
 	protected Map<Integer, Rectangle2D> bonusValueRegions;
 	protected Map<Integer, Rectangle2D> bountyValueRegions;
 	protected Map<Direction, Animation<Rectangle2D>> pacManMunchingAnim;
 	protected Animation<Rectangle2D> pacDyingAnim;
-	protected List<EnumMap<Direction, Animation<Rectangle2D>>> ghostsKickingAnim;
-	protected EnumMap<Direction, Animation<Rectangle2D>> ghostEyesAnim;
+	protected List<Map<Direction, Animation<Rectangle2D>>> ghostsKickingAnim;
+	protected Map<Direction, Animation<Rectangle2D>> ghostEyesAnim;
 	protected Animation<Rectangle2D> ghostBlueAnim;
 	protected Animation<Rectangle2D> ghostFlashingAnim;
 
@@ -75,11 +74,6 @@ public abstract class SpritesheetBasedRendering implements PacManGameAnimations 
 	public Rectangle2D tileRegionAt(int originX, int originY, int tileX, int tileY, int tilesWidth, int tilesHeight) {
 		return new Rectangle2D(originX + tileX * RASTER, originY + tileY * RASTER, tilesWidth * RASTER,
 				tilesHeight * RASTER);
-	}
-
-	public void drawRegion(GraphicsContext g, Rectangle2D region, double x, double y) {
-		g.drawImage(spritesheet, region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(), x, y,
-				region.getWidth(), region.getHeight());
 	}
 
 	protected int index(Direction dir) {
@@ -121,26 +115,17 @@ public abstract class SpritesheetBasedRendering implements PacManGameAnimations 
 			return ghostReturningHomeToDir(ghost, ghost.dir).animate();
 		}
 		if (ghost.is(FRIGHTENED)) {
-			return ghostFlashing().isRunning() ? ghostFlashing().frame() : ghostFrightenedToDir(ghost, ghost.dir).animate();
+			return ghostFlashing().isRunning() ? ghostFlashing().frame() : ghostFrightened(ghost, ghost.dir).animate();
 		}
 		if (ghost.is(LOCKED) && frightened) {
-			return ghostFrightenedToDir(ghost, ghost.dir).animate();
+			return ghostFrightened(ghost, ghost.dir).animate();
 		}
 		// Looks towards wish dir!
-		return ghostKickingToDir(ghost, ghost.wishDir).animate();
+		return ghostKicking(ghost, ghost.wishDir).animate();
 	}
 
 	public Font getScoreFont() {
 		return scoreFont;
-	}
-
-	// draw creature sprite centered over creature collision box
-	protected void drawCreature(GraphicsContext g, Creature guy, Rectangle2D region) {
-		if (guy.visible && region != null) {
-			g.drawImage(spritesheet, region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(),
-					guy.position.x - region.getWidth() / 2 + 4, guy.position.y - region.getHeight() / 2 + 4, region.getWidth(),
-					region.getHeight());
-		}
 	}
 
 	/**
@@ -159,6 +144,26 @@ public abstract class SpritesheetBasedRendering implements PacManGameAnimations 
 	 */
 	public abstract Color getMazeWallColor(int mazeIndex);
 
+	public void drawRegion(GraphicsContext g, Rectangle2D region, double x, double y) {
+		g.drawImage(spritesheet, region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(), x, y,
+				region.getWidth(), region.getHeight());
+	}
+
+	/**
+	 * Draws a guy centered over his collision box.
+	 * 
+	 * @param g      the graphics context
+	 * @param guy    the guy
+	 * @param region sprite region in spritsheet
+	 */
+	public void drawGuy(GraphicsContext g, Creature guy, Rectangle2D region) {
+		if (guy.visible && region != null) {
+			g.drawImage(spritesheet, region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(),
+					guy.position.x - region.getWidth() / 2 + 4, guy.position.y - region.getHeight() / 2 + 4, region.getWidth(),
+					region.getHeight());
+		}
+	}
+
 	public abstract void drawLifeCounterSymbol(GraphicsContext g, int x, int y);
 
 	public void drawLivesCounter(GraphicsContext g, GameModel game, int x, int y) {
@@ -175,11 +180,11 @@ public abstract class SpritesheetBasedRendering implements PacManGameAnimations 
 	}
 
 	public void drawPac(GraphicsContext g, Pac pac) {
-		drawCreature(g, pac, pacSpriteRegion(pac));
+		drawGuy(g, pac, pacSpriteRegion(pac));
 	}
 
 	public void drawGhost(GraphicsContext g, Ghost ghost, boolean frightened) {
-		drawCreature(g, ghost, ghostSpriteRegion(ghost, frightened));
+		drawGuy(g, ghost, ghostSpriteRegion(ghost, frightened));
 	}
 
 	public abstract void drawBonus(GraphicsContext g, Bonus bonus);
@@ -201,7 +206,7 @@ public abstract class SpritesheetBasedRendering implements PacManGameAnimations 
 		}
 	}
 
-	public void signalGameState(GraphicsContext g, GameModel game) {
+	public void drawGameState(GraphicsContext g, GameModel game) {
 		if (game.state == PacManGameState.GAME_OVER || game.attractMode) {
 			g.setFont(scoreFont);
 			g.setFill(Color.RED);
@@ -272,12 +277,12 @@ public abstract class SpritesheetBasedRendering implements PacManGameAnimations 
 	}
 
 	@Override
-	public Animation<Rectangle2D> ghostKickingToDir(Ghost ghost, Direction dir) {
+	public Animation<Rectangle2D> ghostKicking(Ghost ghost, Direction dir) {
 		return ghostsKickingAnim.get(ghost.id).get(ensureDirection(dir));
 	}
 
 	@Override
-	public Animation<Rectangle2D> ghostFrightenedToDir(Ghost ghost, Direction dir) {
+	public Animation<Rectangle2D> ghostFrightened(Ghost ghost, Direction dir) {
 		return ghostBlueAnim;
 	}
 
