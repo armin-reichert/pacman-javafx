@@ -203,7 +203,7 @@ public abstract class SpritesheetBasedRendering implements PacManGameAnimations 
 		g.translate(0, 2);
 		g.setFill(Color.WHITE);
 		g.fillText("SCORE", t(1), t(1));
-		g.fillText("HIGHSCORE", t(15), t(1));
+		g.fillText("HIGH SCORE", t(15), t(1));
 		g.translate(0, 1);
 		if (!titleOnly) {
 			Color pointsColor = getMazeWallColor(game.level.mazeNumber - 1);
