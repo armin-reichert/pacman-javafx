@@ -32,7 +32,7 @@ public class MsPacMan_Rendering extends SpritesheetBasedRendering {
 	private final Animation<Integer> bonusJumpAnim;
 
 	/* Tiles in right half of spritesheet */
-	private Rectangle2D s(int tileX, int tileY) {
+	public Rectangle2D s(int tileX, int tileY) {
 		return tileRegionAt(456, 0, tileX, tileY, 1, 1);
 	}
 
@@ -110,12 +110,17 @@ public class MsPacMan_Rendering extends SpritesheetBasedRendering {
 		bonusJumpAnim = Animation.of(0, 2, 0, -2).frameDuration(20).endless().run();
 	}
 
+	@Override
+	public Animation<Rectangle2D> playerMunching(Pac pac, Direction dir) {
+		return msPacMunchingAnim.get(ensureDirection(dir));
+	}
+
 	public Map<Direction, Animation<Rectangle2D>> pacManMunching() {
 		return pacManMunchingAnim;
 	}
 
-	public Rectangle2D getHeart() {
-		return s(2, 10);
+	public Animation<Rectangle2D> pacManMunching(Direction dir) {
+		return pacManMunchingAnim.get(dir);
 	}
 
 	/**
@@ -201,14 +206,9 @@ public class MsPacMan_Rendering extends SpritesheetBasedRendering {
 
 	public void drawMrPacMan(GraphicsContext g, Pac pacMan) {
 		if (pacMan.visible) {
-			Animation<Rectangle2D> munching = pacManMunching().get(pacMan.dir);
+			Animation<Rectangle2D> munching = pacManMunching(pacMan.dir);
 			drawRegion(g, pacMan.speed > 0 ? munching.animate() : munching.frame(1), pacMan.position.x - 4,
 					pacMan.position.y - 4);
 		}
-	}
-
-	@Override
-	public Animation<Rectangle2D> playerMunching(Pac pac, Direction dir) {
-		return msPacMunchingAnim.get(ensureDirection(dir));
 	}
 }
