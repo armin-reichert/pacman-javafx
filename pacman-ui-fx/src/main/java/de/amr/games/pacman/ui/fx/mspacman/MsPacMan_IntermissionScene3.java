@@ -133,7 +133,6 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 
 	@Override
 	public void render() {
-		clear();
 		flap.draw(g);
 		rendering.drawPac(g, msPacMan);
 		rendering.drawMrPacMan(g, pacMan);

@@ -2,7 +2,6 @@ package de.amr.games.pacman.ui.fx.mspacman;
 
 import static de.amr.games.pacman.heaven.God.clock;
 import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.RENDERING_MSPACMAN;
-import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.SOUNDS_MSPACMAN;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.Animation;
@@ -10,6 +9,8 @@ import de.amr.games.pacman.lib.CountdownTimer;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.guys.Pac;
 import de.amr.games.pacman.sound.PacManGameSound;
+import de.amr.games.pacman.sound.SoundManager;
+import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.scene.Group;
 
@@ -31,6 +32,9 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 	}
 
 	private static final int UPPER_Y = t(12), LOWER_Y = t(24), MIDDLE_Y = t(18);
+
+	private final MsPacMan_Rendering rendering = PacManGameUI_JavaFX.RENDERING_MSPACMAN;
+	private final SoundManager sounds = PacManGameUI_JavaFX.SOUNDS_MSPACMAN;
 
 	private Phase phase;
 
@@ -56,7 +60,7 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 		pacMan = new Pac("Pac-Man", Direction.RIGHT);
 		msPacMan = new Pac("Ms. Pac-Man", Direction.RIGHT);
 
-		SOUNDS_MSPACMAN.play(PacManGameSound.INTERMISSION_2);
+		sounds.play(PacManGameSound.INTERMISSION_2);
 		enter(Phase.FLAP, Long.MAX_VALUE);
 	}
 
@@ -122,9 +126,8 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 
 	@Override
 	public void render() {
-		clear();
 		flap.draw(g);
-		RENDERING_MSPACMAN.drawMrPacMan(g, pacMan);
-		RENDERING_MSPACMAN.drawPac(g, msPacMan);
+		rendering.drawMrPacMan(g, pacMan);
+		rendering.drawPac(g, msPacMan);
 	}
 }

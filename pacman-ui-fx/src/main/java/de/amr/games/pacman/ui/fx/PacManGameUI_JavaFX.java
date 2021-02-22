@@ -179,6 +179,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				stage.setScene(currentScene);
 			}
 			try {
+				currentScene.clear();
 				currentScene.render();
 			} catch (Exception x) {
 				log("Exception occurred when rendering scene %s", currentScene);
