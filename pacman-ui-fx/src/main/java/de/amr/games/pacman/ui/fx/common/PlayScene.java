@@ -4,6 +4,7 @@ import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
+import de.amr.games.pacman.ui.fx.rendering.DefaultRendering;
 import javafx.scene.Group;
 
 /**

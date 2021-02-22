@@ -11,6 +11,7 @@ import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.common.GameScene;
+import de.amr.games.pacman.ui.fx.rendering.MsPacMan_Rendering;
 import javafx.scene.Group;
 
 /**
@@ -73,7 +74,7 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 		stork.animation.restart();
 
 		bag = new Bag();
-		bag.setPosition(stork.position.sum(-14, 3));
+		bag.setPosition(stork.position.sum(-4, 6));
 
 		sounds.play(PacManGameSound.INTERMISSION_3);
 		enter(Phase.FLAP, Long.MAX_VALUE);
@@ -135,7 +136,7 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 	public void render() {
 		flap.draw(g);
 		rendering.drawPlayer(g, msPacMan);
-		rendering.drawMrPacMan(g, pacMan);
+		rendering.drawSpouse(g, pacMan);
 		stork.draw(g);
 		bag.draw(g);
 	}

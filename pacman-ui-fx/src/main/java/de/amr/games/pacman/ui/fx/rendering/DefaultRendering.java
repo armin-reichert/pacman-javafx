@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.common;
+package de.amr.games.pacman.ui.fx.rendering;
 
 import static de.amr.games.pacman.lib.Direction.LEFT;
 import static de.amr.games.pacman.lib.Direction.RIGHT;
@@ -128,9 +128,8 @@ public abstract class DefaultRendering implements Rendering, PacManGameAnimation
 		return scoreFont;
 	}
 
-	public void drawRegion(GraphicsContext g, Rectangle2D region, double x, double y) {
-		g.drawImage(spritesheet, region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(), x, y,
-				region.getWidth(), region.getHeight());
+	public void drawRegion(GraphicsContext g, Rectangle2D r, double x, double y) {
+		g.drawImage(spritesheet, r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y, r.getWidth(), r.getHeight());
 	}
 
 	/**
@@ -140,7 +139,7 @@ public abstract class DefaultRendering implements Rendering, PacManGameAnimation
 	 * @param guy    the guy
 	 * @param region sprite region in spritsheet
 	 */
-	public void drawGuy(GraphicsContext g, Creature guy, Rectangle2D region) {
+	protected void drawGuy(GraphicsContext g, Creature guy, Rectangle2D region) {
 		if (guy.visible && region != null) {
 			g.drawImage(spritesheet, region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(),
 					guy.position.x - region.getWidth() / 2 + 4, guy.position.y - region.getHeight() / 2 + 4, region.getWidth(),

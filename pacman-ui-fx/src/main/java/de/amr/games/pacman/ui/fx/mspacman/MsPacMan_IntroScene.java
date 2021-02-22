@@ -14,6 +14,7 @@ import de.amr.games.pacman.model.guys.GhostState;
 import de.amr.games.pacman.model.guys.Pac;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.common.GameScene;
+import de.amr.games.pacman.ui.fx.rendering.MsPacMan_Rendering;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;

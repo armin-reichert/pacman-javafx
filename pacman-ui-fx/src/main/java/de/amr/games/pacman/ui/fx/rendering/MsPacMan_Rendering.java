@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.mspacman;
+package de.amr.games.pacman.ui.fx.rendering;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,9 +9,9 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.guys.Bonus;
+import de.amr.games.pacman.model.guys.GameEntity;
 import de.amr.games.pacman.model.guys.Pac;
 import de.amr.games.pacman.ui.fx.common.Helper;
-import de.amr.games.pacman.ui.fx.common.DefaultRendering;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -106,19 +106,6 @@ public class MsPacMan_Rendering extends DefaultRendering {
 		bonusJumpingAnim = Animation.of(0, 2, 0, -2).frameDuration(20).endless().run();
 	}
 
-	@Override
-	public Animation<Rectangle2D> playerMunching(Pac pac, Direction dir) {
-		return msPacManMunchingAnim.get(ensureDirection(dir));
-	}
-
-	public Map<Direction, Animation<Rectangle2D>> pacManMunching() {
-		return pacManMunchingAnim;
-	}
-
-	public Animation<Rectangle2D> pacManMunching(Direction dir) {
-		return pacManMunchingAnim.get(dir);
-	}
-
 	/**
 	 * Note: maze numbers are 1-based, maze index as stored here is 0-based.
 	 * 
@@ -172,6 +159,27 @@ public class MsPacMan_Rendering extends DefaultRendering {
 	}
 
 	@Override
+	public Animation<Rectangle2D> playerMunching(Pac pac, Direction dir) {
+		return msPacManMunchingAnim.get(ensureDirection(dir));
+	}
+
+	public Map<Direction, Animation<Rectangle2D>> pacManMunching() {
+		return pacManMunchingAnim;
+	}
+
+	public Animation<Rectangle2D> pacManMunching(Direction dir) {
+		return pacManMunchingAnim.get(dir);
+	}
+
+	@Override
+	public Animation<?> storkFlying() {
+		return Animation.of(//
+				new Rectangle2D(489, 176, 32, 16), //
+				new Rectangle2D(521, 176, 32, 16)//
+		).endless().frameDuration(10);
+	}
+
+	@Override
 	public void drawMaze(GraphicsContext g, int mazeNumber, int x, int y, boolean flashing) {
 		int index = mazeNumber - 1;
 		if (flashing) {
@@ -196,11 +204,41 @@ public class MsPacMan_Rendering extends DefaultRendering {
 		g.restore();
 	}
 
-	public void drawMrPacMan(GraphicsContext g, Pac pacMan) {
+	@Override
+	public void drawSpouse(GraphicsContext g, Pac pacMan) {
 		if (pacMan.visible) {
 			Animation<Rectangle2D> munching = pacManMunching(pacMan.dir);
 			drawRegion(g, pacMan.speed > 0 ? munching.animate() : munching.frame(1), pacMan.position.x - 4,
 					pacMan.position.y - 4);
 		}
 	}
+
+	@Override
+	public void drawStork(GraphicsContext g, GameEntity stork) {
+		if (stork.visible) {
+			drawRegion(g, (Rectangle2D) stork.animation.animate(), stork.position.x, stork.position.y);
+		}
+	}
+
+	@Override
+	public void drawBag(GraphicsContext g, GameEntity bag) {
+		if (bag.visible) {
+			drawRegion(g, new Rectangle2D(488, 199, 8, 8), bag.position.x, bag.position.y);
+		}
+	}
+
+	@Override
+	public void drawJunior(GraphicsContext g, GameEntity junior) {
+		if (junior.visible) {
+			drawRegion(g, new Rectangle2D(509, 200, 8, 8), junior.position.x, junior.position.y);
+		}
+	}
+
+	@Override
+	public void drawHeart(GraphicsContext g, GameEntity heart) {
+		if (heart.visible) {
+
+		}
+	}
+
 }

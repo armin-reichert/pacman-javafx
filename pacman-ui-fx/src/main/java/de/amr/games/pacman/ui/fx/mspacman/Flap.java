@@ -3,6 +3,7 @@ package de.amr.games.pacman.ui.fx.mspacman;
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.model.guys.GameEntity;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
+import de.amr.games.pacman.ui.fx.rendering.MsPacMan_Rendering;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -14,7 +15,7 @@ import javafx.scene.text.FontWeight;
  * 
  * @author Armin Reichert
  */
-class Flap extends GameEntity {
+public class Flap extends GameEntity {
 
 	final MsPacMan_Rendering rendering = PacManGameUI_JavaFX.RENDERING_MSPACMAN;
 	final Font font = Font.font(rendering.getScoreFont().getName(), FontWeight.THIN, 8);

@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.common;
+package de.amr.games.pacman.ui.fx.rendering;
 
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.guys.Bonus;
+import de.amr.games.pacman.model.guys.GameEntity;
 import de.amr.games.pacman.model.guys.Ghost;
 import de.amr.games.pacman.model.guys.Pac;
 import javafx.scene.canvas.GraphicsContext;
@@ -52,5 +53,17 @@ public interface Rendering {
 	void drawScore(GraphicsContext g, GameModel game, boolean titleOnly);
 
 	void drawLevelCounter(GraphicsContext g, GameModel game, int rightX, int y);
+
+	// Ms. Pac-Man only
+
+	void drawSpouse(GraphicsContext g, Pac pac);
+
+	void drawStork(GraphicsContext g, GameEntity stork);
+
+	void drawBag(GraphicsContext g, GameEntity bag);
+
+	void drawJunior(GraphicsContext g, GameEntity junior);
+
+	void drawHeart(GraphicsContext g, GameEntity heart);
 
 }

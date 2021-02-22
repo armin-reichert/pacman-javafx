@@ -12,6 +12,7 @@ import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.common.GameScene;
+import de.amr.games.pacman.ui.fx.rendering.MsPacMan_Rendering;
 import javafx.scene.Group;
 
 /**
@@ -127,7 +128,7 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 	@Override
 	public void render() {
 		flap.draw(g);
-		rendering.drawMrPacMan(g, pacMan);
 		rendering.drawPlayer(g, msPacMan);
+		rendering.drawSpouse(g, pacMan);
 	}
 }

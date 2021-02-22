@@ -14,6 +14,7 @@ import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.common.GameScene;
+import de.amr.games.pacman.ui.fx.rendering.MsPacMan_Rendering;
 import javafx.scene.Group;
 
 /**
@@ -171,9 +172,9 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 	@Override
 	public void render() {
 		flap.draw(g);
-		rendering.drawMrPacMan(g, pacMan);
-		rendering.drawGhost(g, inky, false);
 		rendering.drawPlayer(g, msPac);
+		rendering.drawSpouse(g, pacMan);
+		rendering.drawGhost(g, inky, false);
 		rendering.drawGhost(g, pinky, false);
 		if (heartVisible) {
 			rendering.drawRegion(g, rendering.s(2, 10), msPac.position.x + 4, pacMan.position.y - 20);
