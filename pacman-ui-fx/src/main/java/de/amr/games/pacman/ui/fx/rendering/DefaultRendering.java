@@ -37,7 +37,7 @@ import javafx.scene.text.FontWeight;
  * 
  * @author Armin Reichert
  */
-public abstract class DefaultRendering implements Rendering, PacManGameAnimations {
+public abstract class DefaultRendering implements Rendering<GraphicsContext, Color>, PacManGameAnimations {
 
 	/** Spritesheet raster size */
 	public static final int RASTER = 16;
