@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.mspacman;
+package de.amr.games.pacman.ui.fx.mspacman.entities;
 
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.model.guys.GameEntity;
@@ -19,7 +19,7 @@ public class Flap extends GameEntity {
 
 	final MsPacMan_Rendering rendering = PacManGameUI_JavaFX.RENDERING_MSPACMAN;
 	final Font font = Font.font(rendering.getScoreFont().getName(), FontWeight.THIN, 8);
-	final Animation<Rectangle2D> animation = Animation.of( //
+	public final Animation<Rectangle2D> animation = Animation.of( //
 			new Rectangle2D(456, 208, 32, 32), //
 			new Rectangle2D(488, 208, 32, 32), //
 			new Rectangle2D(520, 208, 32, 32), //
@@ -37,7 +37,7 @@ public class Flap extends GameEntity {
 
 	public void draw(GraphicsContext g) {
 		if (visible) {
-			rendering.drawRegion(g, animation.animate(), position.x, position.y);
+			rendering.drawSprite(g, animation.animate(), position.x, position.y);
 			g.setFont(font);
 			g.setFill(Color.rgb(222, 222, 225, 0.75));
 			g.fillText(sceneNumber + "", position.x + 20, position.y + 30);

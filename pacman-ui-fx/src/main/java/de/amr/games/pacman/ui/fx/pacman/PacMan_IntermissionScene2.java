@@ -2,6 +2,7 @@ package de.amr.games.pacman.ui.fx.pacman;
 
 import static de.amr.games.pacman.heaven.God.clock;
 import static de.amr.games.pacman.model.guys.GhostState.HUNTING_PAC;
+import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.RENDERING_PACMAN;
 import static de.amr.games.pacman.ui.fx.rendering.DefaultRendering.tileRegion;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
@@ -15,7 +16,6 @@ import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.common.GameScene;
-import de.amr.games.pacman.ui.fx.rendering.PacMan_Rendering;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 
@@ -33,7 +33,6 @@ public class PacMan_IntermissionScene2 extends GameScene {
 		final CountdownTimer timer = new CountdownTimer();
 	}
 
-	private final PacMan_Rendering rendering = PacManGameUI_JavaFX.RENDERING_PACMAN;
 	private final SoundManager sounds = PacManGameUI_JavaFX.SOUNDS_PACMAN;
 
 	private final int chaseTileY = 20;
@@ -54,7 +53,7 @@ public class PacMan_IntermissionScene2 extends GameScene {
 	private Phase phase;
 
 	public PacMan_IntermissionScene2(Group root, double width, double height, double scaling) {
-		super(root, width, height, scaling);
+		super(root, width, height, scaling, RENDERING_PACMAN);
 	}
 
 	@Override
@@ -137,7 +136,7 @@ public class PacMan_IntermissionScene2 extends GameScene {
 	@Override
 	public void render() {
 		rendering.drawLevelCounter(g, game, t(25), t(34));
-		rendering.drawRegion(g, nail, nailPosition.x, nailPosition.y);
+		rendering.drawSprite(g, nail, nailPosition.x, nailPosition.y);
 		rendering.drawPlayer(g, pac);
 		drawBlinky();
 	}
@@ -151,24 +150,24 @@ public class PacMan_IntermissionScene2 extends GameScene {
 			rendering.drawGhost(g, blinky, false);
 			break;
 		case STRETCHED_1:
-			rendering.drawRegion(g, stretchedDress[0], blinkySpriteRightEdge - 8, baselineY);
+			rendering.drawSprite(g, stretchedDress[0], blinkySpriteRightEdge - 8, baselineY);
 			rendering.drawGhost(g, blinky, false);
 			break;
 		case STRETCHED_2:
-			rendering.drawRegion(g, stretchedDress[1], blinkySpriteRightEdge - 4, baselineY);
+			rendering.drawSprite(g, stretchedDress[1], blinkySpriteRightEdge - 4, baselineY);
 			rendering.drawGhost(g, blinky, false);
 			break;
 		case STRETCHED_3:
-			rendering.drawRegion(g, stretchedDress[2], blinkySpriteRightEdge - 2, baselineY);
+			rendering.drawSprite(g, stretchedDress[2], blinkySpriteRightEdge - 2, baselineY);
 			rendering.drawGhost(g, blinky, false);
 			break;
 		case LOOKING_UP:
-			rendering.drawRegion(g, blinkyLookingUp, blinky.position.x - 4, blinky.position.y - 4);
-			rendering.drawRegion(g, shred, nailPosition.x, baselineY);
+			rendering.drawSprite(g, blinkyLookingUp, blinky.position.x - 4, blinky.position.y - 4);
+			rendering.drawSprite(g, shred, nailPosition.x, baselineY);
 			break;
 		case LOOKING_RIGHT:
-			rendering.drawRegion(g, blinkyLookingRight, blinky.position.x - 4, blinky.position.y - 4);
-			rendering.drawRegion(g, shred, nailPosition.x, baselineY);
+			rendering.drawSprite(g, blinkyLookingRight, blinky.position.x - 4, blinky.position.y - 4);
+			rendering.drawSprite(g, shred, nailPosition.x, baselineY);
 			break;
 		default:
 			break;

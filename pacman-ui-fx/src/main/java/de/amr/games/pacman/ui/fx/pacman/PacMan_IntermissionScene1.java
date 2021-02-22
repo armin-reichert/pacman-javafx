@@ -3,7 +3,7 @@ package de.amr.games.pacman.ui.fx.pacman;
 import static de.amr.games.pacman.lib.Direction.RIGHT;
 import static de.amr.games.pacman.model.guys.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.guys.GhostState.HUNTING_PAC;
-import static de.amr.games.pacman.ui.fx.rendering.DefaultRendering.tileRegion;
+import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.RENDERING_PACMAN;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.Animation;
@@ -14,7 +14,6 @@ import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.common.GameScene;
-import de.amr.games.pacman.ui.fx.rendering.PacMan_Rendering;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 
@@ -31,16 +30,14 @@ public class PacMan_IntermissionScene1 extends GameScene {
 
 	private static final int baselineY = t(20);
 
-	private final PacMan_Rendering rendering = PacManGameUI_JavaFX.RENDERING_PACMAN;
 	private final SoundManager sounds = PacManGameUI_JavaFX.SOUNDS_PACMAN;
 
 	private Ghost blinky;
 	private Pac pac;
-	private Animation<Rectangle2D> bigPac;
 	private Phase phase;
 
 	public PacMan_IntermissionScene1(Group root, double width, double height, double scaling) {
-		super(root, width, height, scaling);
+		super(root, width, height, scaling, RENDERING_PACMAN);
 	}
 
 	@Override
@@ -50,9 +47,6 @@ public class PacMan_IntermissionScene1 extends GameScene {
 		pac.setPosition(t(30), baselineY);
 		pac.speed = 1;
 		rendering.playerMunching(pac).forEach(Animation::restart);
-
-		bigPac = Animation.of(tileRegion(2, 1, 2, 2), tileRegion(4, 1, 2, 2), tileRegion(6, 1, 2, 2));
-		bigPac.frameDuration(4).endless().run();
 
 		blinky = new Ghost(0, "Blinky", Direction.LEFT);
 		blinky.visible = true;
@@ -79,6 +73,7 @@ public class PacMan_IntermissionScene1 extends GameScene {
 				blinky.setPosition(-20, baselineY);
 				blinky.speed = 0.8f;
 				blinky.state = FRIGHTENED;
+				rendering.bigPacMan().restart();
 				phase = Phase.BIGPACMAN_CHASING_BLINKY;
 			}
 			break;
@@ -103,7 +98,8 @@ public class PacMan_IntermissionScene1 extends GameScene {
 		if (phase == Phase.BLINKY_CHASING_PACMAN) {
 			rendering.drawPlayer(g, pac);
 		} else {
-			rendering.drawRegion(g, bigPac.animate(), pac.position.x - 12, pac.position.y - 22);
+			Rectangle2D sprite = (Rectangle2D) rendering.bigPacMan().animate();
+			rendering.drawSprite(g, sprite, pac.position.x - 12, pac.position.y - 22);
 		}
 		rendering.drawLevelCounter(g, game, t(25), t(34));
 	}

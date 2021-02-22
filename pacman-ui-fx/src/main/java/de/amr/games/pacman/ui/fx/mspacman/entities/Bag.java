@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.mspacman;
+package de.amr.games.pacman.ui.fx.mspacman.entities;
 
 import de.amr.games.pacman.model.guys.GameEntity;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
@@ -14,9 +14,9 @@ public class Bag extends GameEntity {
 
 	final MsPacMan_Rendering rendering = PacManGameUI_JavaFX.RENDERING_MSPACMAN;
 
-	boolean released = false;
-	boolean open = false;
-	int bounces = 0;
+	public boolean released = false;
+	public boolean open = false;
+	public int bounces = 0;
 
 	@Override
 	public void move() {

@@ -1,6 +1,7 @@
 package de.amr.games.pacman.ui.fx.mspacman;
 
 import static de.amr.games.pacman.heaven.God.clock;
+import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.RENDERING_MSPACMAN;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.CountdownTimer;
@@ -11,7 +12,9 @@ import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.common.GameScene;
-import de.amr.games.pacman.ui.fx.rendering.MsPacMan_Rendering;
+import de.amr.games.pacman.ui.fx.mspacman.entities.Bag;
+import de.amr.games.pacman.ui.fx.mspacman.entities.Flap;
+import de.amr.games.pacman.ui.fx.mspacman.entities.Stork;
 import javafx.scene.Group;
 
 /**
@@ -35,7 +38,6 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 
 	private static final int CEILING_Y = t(12), GROUND_Y = t(24);
 
-	final MsPacMan_Rendering rendering = PacManGameUI_JavaFX.RENDERING_MSPACMAN;
 	final SoundManager sounds = PacManGameUI_JavaFX.SOUNDS_MSPACMAN;
 
 	private Flap flap;
@@ -47,7 +49,7 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 	private Phase phase;
 
 	public MsPacMan_IntermissionScene3(Group root, double width, double height, double scaling) {
-		super(root, width, height, scaling);
+		super(root, width, height, scaling, RENDERING_MSPACMAN);
 	}
 
 	private void enter(Phase newPhase, long ticks) {

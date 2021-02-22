@@ -14,11 +14,8 @@ import javafx.scene.Group;
  */
 public class PlayScene extends GameScene {
 
-	private final DefaultRendering rendering;
-
 	public PlayScene(Group root, double width, double height, double scaling, DefaultRendering rendering) {
-		super(root, width, height, scaling);
-		this.rendering = rendering;
+		super(root, width, height, scaling, rendering);
 	}
 
 	@Override

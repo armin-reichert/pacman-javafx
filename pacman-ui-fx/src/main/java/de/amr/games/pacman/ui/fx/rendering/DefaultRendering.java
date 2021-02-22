@@ -21,10 +21,11 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.guys.Bonus;
-import de.amr.games.pacman.model.guys.Creature;
+import de.amr.games.pacman.model.guys.GameEntity;
 import de.amr.games.pacman.model.guys.Ghost;
 import de.amr.games.pacman.model.guys.Pac;
 import de.amr.games.pacman.ui.PacManGameAnimations;
+import de.amr.games.pacman.ui.Rendering;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -128,7 +129,7 @@ public abstract class DefaultRendering implements Rendering<GraphicsContext, Col
 		return scoreFont;
 	}
 
-	public void drawRegion(GraphicsContext g, Rectangle2D r, double x, double y) {
+	public void drawSprite(GraphicsContext g, Rectangle2D r, double x, double y) {
 		g.drawImage(spritesheet, r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y, r.getWidth(), r.getHeight());
 	}
 
@@ -139,7 +140,7 @@ public abstract class DefaultRendering implements Rendering<GraphicsContext, Col
 	 * @param guy    the guy
 	 * @param region sprite region in spritsheet
 	 */
-	protected void drawGuy(GraphicsContext g, Creature guy, Rectangle2D region) {
+	protected void drawGuy(GraphicsContext g, GameEntity guy, Rectangle2D region) {
 		if (guy.visible && region != null) {
 			g.drawImage(spritesheet, region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(),
 					guy.position.x - region.getWidth() / 2 + 4, guy.position.y - region.getHeight() / 2 + 4, region.getWidth(),

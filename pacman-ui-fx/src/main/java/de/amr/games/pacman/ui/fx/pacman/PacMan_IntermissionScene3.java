@@ -4,7 +4,7 @@ import static de.amr.games.pacman.heaven.God.clock;
 import static de.amr.games.pacman.lib.Direction.LEFT;
 import static de.amr.games.pacman.lib.Direction.RIGHT;
 import static de.amr.games.pacman.lib.Logging.log;
-import static de.amr.games.pacman.ui.fx.rendering.DefaultRendering.tileRegion;
+import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.RENDERING_PACMAN;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.Animation;
@@ -16,7 +16,6 @@ import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.common.GameScene;
-import de.amr.games.pacman.ui.fx.rendering.PacMan_Rendering;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 
@@ -32,25 +31,20 @@ public class PacMan_IntermissionScene3 extends GameScene {
 		CHASING_PACMAN, RETURNING_HALF_NAKED;
 	}
 
-	private final PacMan_Rendering rendering = PacManGameUI_JavaFX.RENDERING_PACMAN;
 	private final SoundManager sounds = PacManGameUI_JavaFX.SOUNDS_PACMAN;
 
-	private final Animation<Rectangle2D> blinkyDamaged, blinkyHalfNaked;
+	private final Animation<?> blinkyDamaged, blinkyNaked;
 	private final int chaseTileY = 20;
 	private final Ghost blinky;
 	private final Pac pac;
 	private Phase phase;
 
 	public PacMan_IntermissionScene3(Group root, double width, double height, double scaling) {
-		super(root, width, height, scaling);
-
+		super(root, width, height, scaling, RENDERING_PACMAN);
+		blinkyDamaged = RENDERING_PACMAN.blinkyDamaged();
+		blinkyNaked = RENDERING_PACMAN.blinkyNaked();
 		pac = new Pac("Pac-Man", Direction.LEFT);
 		blinky = new Ghost(0, "Blinky", Direction.LEFT);
-
-		blinkyDamaged = Animation.of(tileRegion(10, 7, 1, 1), tileRegion(11, 7, 1, 1));
-		blinkyDamaged.frameDuration(4).endless();
-		blinkyHalfNaked = Animation.of(tileRegion(8, 8, 2, 1), tileRegion(10, 8, 2, 1));
-		blinkyHalfNaked.frameDuration(4).endless();
 	}
 
 	@Override
@@ -85,7 +79,7 @@ public class PacMan_IntermissionScene3 extends GameScene {
 			if (blinky.position.x <= -50) {
 				pac.speed = 0;
 				blinky.dir = blinky.wishDir = RIGHT;
-				blinkyHalfNaked.restart();
+				blinkyNaked.restart();
 				phase = Phase.RETURNING_HALF_NAKED;
 			}
 			break;
@@ -111,10 +105,10 @@ public class PacMan_IntermissionScene3 extends GameScene {
 	private void drawBlinky() {
 		switch (phase) {
 		case CHASING_PACMAN:
-			rendering.drawRegion(g, blinkyDamaged.animate(), blinky.position.x - 4, blinky.position.y - 4);
+			rendering.drawSprite(g, (Rectangle2D) blinkyDamaged.animate(), blinky.position.x - 4, blinky.position.y - 4);
 			break;
 		case RETURNING_HALF_NAKED:
-			rendering.drawRegion(g, blinkyHalfNaked.animate(), blinky.position.x - 4, blinky.position.y - 4);
+			rendering.drawSprite(g, (Rectangle2D) blinkyNaked.animate(), blinky.position.x - 4, blinky.position.y - 4);
 			break;
 		default:
 			break;

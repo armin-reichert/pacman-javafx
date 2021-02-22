@@ -12,7 +12,7 @@ import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.common.GameScene;
-import de.amr.games.pacman.ui.fx.rendering.MsPacMan_Rendering;
+import de.amr.games.pacman.ui.fx.mspacman.entities.Flap;
 import javafx.scene.Group;
 
 /**
@@ -34,7 +34,6 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 
 	private static final int UPPER_Y = t(12), LOWER_Y = t(24), MIDDLE_Y = t(18);
 
-	private final MsPacMan_Rendering rendering = PacManGameUI_JavaFX.RENDERING_MSPACMAN;
 	private final SoundManager sounds = PacManGameUI_JavaFX.SOUNDS_MSPACMAN;
 
 	private Phase phase;
@@ -48,7 +47,7 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 	}
 
 	public MsPacMan_IntermissionScene2(Group root, double width, double height, double scaling) {
-		super(root, width, height, scaling);
+		super(root, width, height, scaling, RENDERING_MSPACMAN);
 	}
 
 	@Override
@@ -85,8 +84,8 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 				msPacMan.setPosition(-t(8), UPPER_Y);
 				pacMan.dir = msPacMan.dir = Direction.RIGHT;
 				pacMan.speed = msPacMan.speed = 2;
-				RENDERING_MSPACMAN.pacManMunching().values().forEach(Animation::restart);
 				RENDERING_MSPACMAN.playerMunching(msPacMan).forEach(Animation::restart);
+				RENDERING_MSPACMAN.spouseMunching(pacMan).forEach(Animation::restart);
 			}
 			if (phase.timer.running() == clock.sec(6)) {
 				msPacMan.setPosition(t(30), LOWER_Y);

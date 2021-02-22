@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.mspacman;
+package de.amr.games.pacman.ui.fx.mspacman.entities;
 
 import de.amr.games.pacman.model.guys.GameEntity;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;

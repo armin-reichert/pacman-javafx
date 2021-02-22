@@ -4,6 +4,7 @@ import static de.amr.games.pacman.heaven.God.clock;
 import static de.amr.games.pacman.lib.Direction.LEFT;
 import static de.amr.games.pacman.lib.Direction.UP;
 import static de.amr.games.pacman.lib.Logging.log;
+import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.RENDERING_MSPACMAN;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.Animation;
@@ -12,9 +13,7 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.guys.Ghost;
 import de.amr.games.pacman.model.guys.GhostState;
 import de.amr.games.pacman.model.guys.Pac;
-import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.common.GameScene;
-import de.amr.games.pacman.ui.fx.rendering.MsPacMan_Rendering;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -38,8 +37,6 @@ public class MsPacMan_IntroScene extends GameScene {
 	private final int leftOfFrame = t(4);
 	private final Animation<Boolean> blinking = Animation.pulse().frameDuration(30).restart();
 
-	private final MsPacMan_Rendering rendering = PacManGameUI_JavaFX.RENDERING_MSPACMAN;
-
 	private Phase phase;
 
 	private Pac msPac;
@@ -49,7 +46,7 @@ public class MsPacMan_IntroScene extends GameScene {
 	private boolean presentingMsPac;
 
 	public MsPacMan_IntroScene(Group root, double width, double height, double scaling) {
-		super(root, width, height, scaling);
+		super(root, width, height, scaling, RENDERING_MSPACMAN);
 	}
 
 	private void enter(Phase newPhase, long ticks) {

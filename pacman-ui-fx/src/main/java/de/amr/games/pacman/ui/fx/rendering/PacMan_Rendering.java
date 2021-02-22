@@ -27,6 +27,10 @@ public class PacMan_Rendering extends DefaultRendering {
 	private final Image mazeFull = new Image("/pacman/graphics/maze_full.png", false);
 	private final Image mazeEmpty = new Image("/pacman/graphics/maze_empty.png", false);
 
+	private final Animation<Rectangle2D> bigPacManAnim;
+	private Animation<Rectangle2D> blinkyDamaged;
+	private Animation<Rectangle2D> blinkyNaked;
+
 	public PacMan_Rendering() {
 		super("/pacman/graphics/sprites.png");
 
@@ -69,6 +73,11 @@ public class PacMan_Rendering extends DefaultRendering {
 				tileRegion(13, 0));
 		pacDyingAnim.frameDuration(8);
 
+		bigPacManAnim = Animation.of(//
+				tileRegion(2, 1, 2, 2), //
+				tileRegion(4, 1, 2, 2), //
+				tileRegion(6, 1, 2, 2)).frameDuration(4).endless().run();
+
 		ghostsKickingAnim = new ArrayList<>(4);
 		for (int id = 0; id < 4; ++id) {
 			EnumMap<Direction, Animation<Rectangle2D>> walkingTo = new EnumMap<>(Direction.class);
@@ -91,6 +100,13 @@ public class PacMan_Rendering extends DefaultRendering {
 
 		ghostFlashingAnim = Animation.of(tileRegion(8, 4), tileRegion(9, 4), tileRegion(10, 4), tileRegion(11, 4));
 		ghostFlashingAnim.frameDuration(5).endless();
+
+		blinkyDamaged = Animation.of(tileRegion(10, 7, 1, 1), tileRegion(11, 7, 1, 1));
+		blinkyDamaged.frameDuration(4).endless();
+
+		blinkyNaked = Animation.of(tileRegion(8, 8, 2, 1), tileRegion(10, 8, 2, 1));
+		blinkyNaked.frameDuration(4).endless();
+
 	}
 
 	@Override
@@ -109,8 +125,28 @@ public class PacMan_Rendering extends DefaultRendering {
 	}
 
 	@Override
+	public Animation<?> spouseMunching(Pac spouse, Direction dir) {
+		return null;
+	}
+
+	@Override
 	public Animation<?> storkFlying() {
 		return null; // no stork in Pac-Man game
+	}
+
+	@Override
+	public Animation<?> bigPacMan() {
+		return bigPacManAnim;
+	}
+
+	@Override
+	public Animation<?> blinkyDamaged() {
+		return blinkyDamaged;
+	}
+
+	@Override
+	public Animation<?> blinkyNaked() {
+		return blinkyNaked;
 	}
 
 	@Override
@@ -124,7 +160,7 @@ public class PacMan_Rendering extends DefaultRendering {
 
 	@Override
 	public void drawLifeCounterSymbol(GraphicsContext g, int x, int y) {
-		drawRegion(g, tileRegion(8, 1), x, y);
+		drawSprite(g, tileRegion(8, 1), x, y);
 	}
 
 	@Override

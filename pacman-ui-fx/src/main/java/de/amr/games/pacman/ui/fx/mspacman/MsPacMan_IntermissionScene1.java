@@ -1,6 +1,8 @@
 package de.amr.games.pacman.ui.fx.mspacman;
 
 import static de.amr.games.pacman.heaven.God.clock;
+import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.RENDERING_MSPACMAN;
+import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.SOUNDS_MSPACMAN;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import java.util.stream.Stream;
@@ -11,10 +13,9 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.guys.Ghost;
 import de.amr.games.pacman.model.guys.Pac;
 import de.amr.games.pacman.sound.PacManGameSound;
-import de.amr.games.pacman.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.common.GameScene;
-import de.amr.games.pacman.ui.fx.rendering.MsPacMan_Rendering;
+import de.amr.games.pacman.ui.fx.mspacman.entities.Flap;
+import de.amr.games.pacman.ui.fx.mspacman.entities.Heart;
 import javafx.scene.Group;
 
 /**
@@ -36,8 +37,6 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 		final CountdownTimer timer = new CountdownTimer();
 	}
 
-	private static final MsPacMan_Rendering rendering = PacManGameUI_JavaFX.RENDERING_MSPACMAN;
-	private static final SoundManager sounds = PacManGameUI_JavaFX.SOUNDS_MSPACMAN;
 	private static int upperY = t(12), lowerY = t(24), middleY = t(18);
 
 	private Phase phase;
@@ -45,7 +44,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 	private Flap flap;
 	private Pac pacMan, msPac;
 	private Ghost pinky, inky;
-	private boolean heartVisible;
+	private Heart heart;
 	private boolean ghostsMet;
 
 	private void enter(Phase newPhase, long ticks) {
@@ -54,7 +53,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 	}
 
 	public MsPacMan_IntermissionScene1(Group root, double width, double height, double scaling) {
-		super(root, width, height, scaling);
+		super(root, width, height, scaling, RENDERING_MSPACMAN);
 	}
 
 	@Override
@@ -68,7 +67,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 		pacMan = new Pac("Pac-Man", Direction.RIGHT);
 		pacMan.setPosition(-t(2), upperY);
 		pacMan.visible = true;
-		rendering.pacManMunching().values().forEach(Animation::restart);
+		rendering.spouseMunching(pacMan).forEach(Animation::restart);
 
 		inky = new Ghost(2, "Inky", Direction.RIGHT);
 		inky.setPosition(pacMan.position.sum(-t(3), 0));
@@ -82,11 +81,13 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 		pinky = new Ghost(1, "Pinky", Direction.LEFT);
 		pinky.setPosition(msPac.position.sum(t(3), 0));
 		pinky.visible = true;
-
 		rendering.ghostsKicking(Stream.of(inky, pinky)).forEach(Animation::restart);
-		sounds.loop(PacManGameSound.INTERMISSION_1, 1);
 
-		heartVisible = false;
+		heart = new Heart();
+		heart.visible = false;
+
+		SOUNDS_MSPACMAN.loop(PacManGameSound.INTERMISSION_1, 1);
+
 		ghostsMet = false;
 
 		enter(Phase.FLAP, clock.sec(1));
@@ -124,7 +125,8 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 				pacMan.speed = msPac.speed = 0;
 				pacMan.dir = Direction.LEFT;
 				msPac.dir = Direction.RIGHT;
-				heartVisible = true;
+				heart.setPosition((pacMan.position.x + msPac.position.x) / 2, pacMan.position.y - t(2));
+				heart.visible = true;
 				rendering.ghostKicking(inky).forEach(Animation::reset);
 				rendering.ghostKicking(pinky).forEach(Animation::reset);
 				enter(Phase.READY_TO_PLAY, clock.sec(3));
@@ -158,7 +160,6 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 	}
 
 	private void startComingTogether() {
-		enter(Phase.COMING_TOGETHER, Long.MAX_VALUE);
 		pacMan.setPosition(t(30), middleY);
 		inky.setPosition(t(33), middleY);
 		pacMan.dir = Direction.LEFT;
@@ -167,6 +168,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 		msPac.setPosition(t(-2), middleY);
 		msPac.dir = Direction.RIGHT;
 		pinky.dir = pinky.wishDir = Direction.RIGHT;
+		enter(Phase.COMING_TOGETHER, Long.MAX_VALUE);
 	}
 
 	@Override
@@ -176,8 +178,6 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 		rendering.drawSpouse(g, pacMan);
 		rendering.drawGhost(g, inky, false);
 		rendering.drawGhost(g, pinky, false);
-		if (heartVisible) {
-			rendering.drawRegion(g, rendering.s(2, 10), msPac.position.x + 4, pacMan.position.y - 20);
-		}
+		heart.draw(g);
 	}
 }

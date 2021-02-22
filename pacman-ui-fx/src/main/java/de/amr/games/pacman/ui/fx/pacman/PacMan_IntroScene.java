@@ -2,6 +2,7 @@ package de.amr.games.pacman.ui.fx.pacman;
 
 import static de.amr.games.pacman.heaven.God.clock;
 import static de.amr.games.pacman.lib.Logging.log;
+import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.RENDERING_PACMAN;
 import static de.amr.games.pacman.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
@@ -13,9 +14,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.guys.Ghost;
 import de.amr.games.pacman.model.guys.GhostState;
 import de.amr.games.pacman.model.guys.Pac;
-import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.common.GameScene;
-import de.amr.games.pacman.ui.fx.rendering.PacMan_Rendering;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
@@ -49,8 +48,6 @@ public class PacMan_IntroScene extends GameScene {
 
 	private static final int TOP_Y = t(6);
 
-	private final PacMan_Rendering rendering = PacManGameUI_JavaFX.RENDERING_PACMAN;
-
 	private final Animation<Boolean> blinking = Animation.pulse().frameDuration(20).restart();
 	private GhostPortrait[] gallery;
 	private int presentedGhostIndex;
@@ -66,7 +63,7 @@ public class PacMan_IntroScene extends GameScene {
 	}
 
 	public PacMan_IntroScene(Group root, double width, double height, double scaling) {
-		super(root, width, height, scaling);
+		super(root, width, height, scaling, RENDERING_PACMAN);
 	}
 
 	@Override
@@ -245,7 +242,7 @@ public class PacMan_IntroScene extends GameScene {
 			if (portrait.ghost.visible) {
 				int y = TOP_Y + t(2 + 3 * i);
 				Rectangle2D ghostRegion = rendering.ghostKicking(portrait.ghost, Direction.RIGHT).frame(0);
-				rendering.drawRegion(g, ghostRegion, x, y - 4);
+				rendering.drawSprite(g, ghostRegion, x, y - 4);
 				g.setFill(portrait.color);
 				g.setFont(rendering.getScoreFont());
 				if (portrait.characterVisible) {

@@ -163,11 +163,8 @@ public class MsPacMan_Rendering extends DefaultRendering {
 		return msPacManMunchingAnim.get(ensureDirection(dir));
 	}
 
-	public Map<Direction, Animation<Rectangle2D>> pacManMunching() {
-		return pacManMunchingAnim;
-	}
-
-	public Animation<Rectangle2D> pacManMunching(Direction dir) {
+	@Override
+	public Animation<Rectangle2D> spouseMunching(Pac spouse, Direction dir) {
 		return pacManMunchingAnim.get(dir);
 	}
 
@@ -177,6 +174,21 @@ public class MsPacMan_Rendering extends DefaultRendering {
 				new Rectangle2D(489, 176, 32, 16), //
 				new Rectangle2D(521, 176, 32, 16)//
 		).endless().frameDuration(10);
+	}
+
+	@Override
+	public Animation<?> bigPacMan() {
+		return null;
+	}
+
+	@Override
+	public Animation<?> blinkyDamaged() {
+		return null;
+	}
+
+	@Override
+	public Animation<?> blinkyNaked() {
+		return null;
 	}
 
 	@Override
@@ -207,8 +219,8 @@ public class MsPacMan_Rendering extends DefaultRendering {
 	@Override
 	public void drawSpouse(GraphicsContext g, Pac pacMan) {
 		if (pacMan.visible) {
-			Animation<Rectangle2D> munching = pacManMunching(pacMan.dir);
-			drawRegion(g, pacMan.speed > 0 ? munching.animate() : munching.frame(1), pacMan.position.x - 4,
+			Animation<Rectangle2D> munching = spouseMunching(pacMan, pacMan.dir);
+			drawSprite(g, pacMan.speed > 0 ? munching.animate() : munching.frame(1), pacMan.position.x - 4,
 					pacMan.position.y - 4);
 		}
 	}
@@ -216,29 +228,26 @@ public class MsPacMan_Rendering extends DefaultRendering {
 	@Override
 	public void drawStork(GraphicsContext g, GameEntity stork) {
 		if (stork.visible) {
-			drawRegion(g, (Rectangle2D) stork.animation.animate(), stork.position.x, stork.position.y);
+			drawSprite(g, (Rectangle2D) stork.animation.animate(), stork.position.x, stork.position.y);
 		}
 	}
 
 	@Override
 	public void drawBag(GraphicsContext g, GameEntity bag) {
 		if (bag.visible) {
-			drawRegion(g, new Rectangle2D(488, 199, 8, 8), bag.position.x, bag.position.y);
+			drawSprite(g, new Rectangle2D(488, 199, 8, 8), bag.position.x, bag.position.y);
 		}
 	}
 
 	@Override
 	public void drawJunior(GraphicsContext g, GameEntity junior) {
 		if (junior.visible) {
-			drawRegion(g, new Rectangle2D(509, 200, 8, 8), junior.position.x, junior.position.y);
+			drawSprite(g, new Rectangle2D(509, 200, 8, 8), junior.position.x, junior.position.y);
 		}
 	}
 
 	@Override
 	public void drawHeart(GraphicsContext g, GameEntity heart) {
-		if (heart.visible) {
-
-		}
+		drawGuy(g, heart, s(2, 10));
 	}
-
 }
