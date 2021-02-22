@@ -28,7 +28,7 @@ public class PacMan_Rendering extends SpritesheetBasedRendering {
 	private final Image mazeEmpty = new Image("/pacman/graphics/maze_empty.png", false);
 
 	public PacMan_Rendering() {
-		super(new Image("/pacman/graphics/sprites.png", false));
+		super("/pacman/graphics/sprites.png");
 
 		symbolRegions = Arrays.asList(tileRegion(2, 3), tileRegion(3, 3), tileRegion(4, 3), tileRegion(5, 3),
 				tileRegion(6, 3), tileRegion(7, 3), tileRegion(8, 3), tileRegion(9, 3));

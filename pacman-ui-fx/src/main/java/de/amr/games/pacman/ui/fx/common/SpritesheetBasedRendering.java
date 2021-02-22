@@ -64,8 +64,8 @@ public abstract class SpritesheetBasedRendering implements PacManGameAnimations 
 	protected Animation<Rectangle2D> ghostBlueAnim;
 	protected Animation<Rectangle2D> ghostFlashingAnim;
 
-	public SpritesheetBasedRendering(Image spritesheet) {
-		this.spritesheet = spritesheet;
+	public SpritesheetBasedRendering(String spritesheetURL) {
+		spritesheet = new Image(spritesheetURL);
 		scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), 8);
 		energizerBlinking = Animation.pulse().frameDuration(15);
 	}

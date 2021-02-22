@@ -25,8 +25,8 @@ import javafx.scene.paint.Color;
  */
 public class MsPacMan_Rendering extends SpritesheetBasedRendering {
 
-	private final Map<Direction, Animation<Rectangle2D>> msPacMunchingAnim;
-	private final Animation<Integer> bonusJumpAnim;
+	private final Map<Direction, Animation<Rectangle2D>> msPacManMunchingAnim;
+	private final Animation<Integer> bonusJumpingAnim;
 
 	/* Tiles in right half of spritesheet */
 	public Rectangle2D s(int tileX, int tileY) {
@@ -34,7 +34,8 @@ public class MsPacMan_Rendering extends SpritesheetBasedRendering {
 	}
 
 	public MsPacMan_Rendering() {
-		super(new Image("/mspacman/graphics/sprites.png", false));
+
+		super("/mspacman/graphics/sprites.png");
 
 		symbolRegions = Arrays.asList(s(3, 0), s(4, 0), s(5, 0), s(6, 0), s(7, 0), s(8, 0), s(9, 0));
 
@@ -67,12 +68,12 @@ public class MsPacMan_Rendering extends SpritesheetBasedRendering {
 			mazeFlashingAnim.add(Animation.of(mazeEmptyBright, mazeEmpty).frameDuration(15));
 		}
 
-		msPacMunchingAnim = new EnumMap<>(Direction.class);
+		msPacManMunchingAnim = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = index(dir);
 			Animation<Rectangle2D> munching = Animation.of(s(1, d), s(1, d), s(2, d), s(0, d));
 			munching.frameDuration(2).endless();
-			msPacMunchingAnim.put(dir, munching);
+			msPacManMunchingAnim.put(dir, munching);
 		}
 
 		pacDyingAnim = Animation.of(s(0, 3), s(0, 0), s(0, 1), s(0, 2));
@@ -102,12 +103,12 @@ public class MsPacMan_Rendering extends SpritesheetBasedRendering {
 		ghostBlueAnim = Animation.of(s(8, 4), s(9, 4)).frameDuration(20).endless().run();
 		ghostFlashingAnim = Animation.of(s(8, 4), s(9, 4), s(10, 4), s(11, 4)).frameDuration(5).endless();
 
-		bonusJumpAnim = Animation.of(0, 2, 0, -2).frameDuration(20).endless().run();
+		bonusJumpingAnim = Animation.of(0, 2, 0, -2).frameDuration(20).endless().run();
 	}
 
 	@Override
 	public Animation<Rectangle2D> playerMunching(Pac pac, Direction dir) {
-		return msPacMunchingAnim.get(ensureDirection(dir));
+		return msPacManMunchingAnim.get(ensureDirection(dir));
 	}
 
 	public Map<Direction, Animation<Rectangle2D>> pacManMunching() {
@@ -190,7 +191,7 @@ public class MsPacMan_Rendering extends SpritesheetBasedRendering {
 	@Override
 	public void drawBonus(GraphicsContext g, Bonus bonus) {
 		g.save();
-		g.translate(0, bonusJumpAnim.animate());
+		g.translate(0, bonusJumpingAnim.animate());
 		drawGuy(g, bonus, bonusSpriteRegion(bonus));
 		g.restore();
 	}
