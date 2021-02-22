@@ -1,7 +1,5 @@
 package de.amr.games.pacman.ui.fx.mspacman;
 
-import static de.amr.games.pacman.world.PacManGameWorld.t;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -10,7 +8,6 @@ import java.util.Map;
 
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.guys.Bonus;
 import de.amr.games.pacman.model.guys.Pac;
 import de.amr.games.pacman.ui.fx.common.Helper;
@@ -188,12 +185,8 @@ public class MsPacMan_Rendering extends SpritesheetBasedRendering {
 	}
 
 	@Override
-	public void drawLivesCounter(GraphicsContext g, GameModel game, int x, int y) {
-		int maxLivesDisplayed = 5;
-		int livesDisplayed = game.started ? game.lives - 1 : game.lives;
-		for (int i = 0; i < Math.min(livesDisplayed, maxLivesDisplayed); ++i) {
-			g.drawImage(spritesheet, 456 + RASTER, 0, RASTER, RASTER, x + t(2 * i), y, RASTER, RASTER);
-		}
+	public void drawLifeCounterSymbol(GraphicsContext g, int x, int y) {
+		g.drawImage(spritesheet, 456 + RASTER, 0, RASTER, RASTER, x, y, RASTER, RASTER);
 	}
 
 	@Override

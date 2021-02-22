@@ -31,6 +31,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 /**
  * Common interface for the scene renderings.
@@ -158,6 +159,21 @@ public abstract class SpritesheetBasedRendering implements PacManGameAnimations 
 	 */
 	public abstract Color getMazeWallColor(int mazeIndex);
 
+	public abstract void drawLifeCounterSymbol(GraphicsContext g, int x, int y);
+
+	public void drawLivesCounter(GraphicsContext g, GameModel game, int x, int y) {
+		int maxLivesDisplayed = 5;
+		int livesDisplayed = game.started ? game.lives - 1 : game.lives;
+		for (int i = 0; i < Math.min(livesDisplayed, maxLivesDisplayed); ++i) {
+			drawLifeCounterSymbol(g, x + t(2 * i), y);
+		}
+		if (game.lives > maxLivesDisplayed) {
+			g.setFill(Color.YELLOW);
+			g.setFont(Font.font("Sans Serif", FontWeight.BOLD, 6));
+			g.fillText("+" + (game.lives - maxLivesDisplayed), x + t(10), y + t(1) - 2);
+		}
+	}
+
 	public void drawPac(GraphicsContext g, Pac pac) {
 		drawCreature(g, pac, pacSpriteRegion(pac));
 	}
@@ -221,8 +237,6 @@ public abstract class SpritesheetBasedRendering implements PacManGameAnimations 
 		}
 		g.translate(0, -3);
 	}
-
-	public abstract void drawLivesCounter(GraphicsContext g, GameModel game, int x, int y);
 
 	public void drawLevelCounter(GraphicsContext g, GameModel game, int rightX, int y) {
 		int x = rightX;
