@@ -12,7 +12,7 @@ import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.common.GameScene;
-import de.amr.games.pacman.ui.fx.mspacman.entities.Bag;
+import de.amr.games.pacman.ui.fx.mspacman.entities.JuniorBag;
 import de.amr.games.pacman.ui.fx.mspacman.entities.Flap;
 import de.amr.games.pacman.ui.fx.mspacman.entities.Stork;
 import javafx.scene.Group;
@@ -44,7 +44,7 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 	private Pac pacMan;
 	private Pac msPacMan;
 	private Stork stork;
-	private Bag bag;
+	private JuniorBag bag;
 
 	private Phase phase;
 
@@ -75,7 +75,7 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 		stork.setPosition(t(30), CEILING_Y);
 		stork.animation.restart();
 
-		bag = new Bag();
+		bag = new JuniorBag();
 		bag.setPosition(stork.position.sum(-4, 6));
 
 		sounds.play(PacManGameSound.INTERMISSION_3);

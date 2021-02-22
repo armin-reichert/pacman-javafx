@@ -10,7 +10,7 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class Bag extends GameEntity {
+public class JuniorBag extends GameEntity {
 
 	final MsPacMan_Rendering rendering = PacManGameUI_JavaFX.RENDERING_MSPACMAN;
 
