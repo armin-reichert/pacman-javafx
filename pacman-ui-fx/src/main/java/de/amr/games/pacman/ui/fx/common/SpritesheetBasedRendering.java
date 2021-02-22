@@ -25,7 +25,7 @@ import de.amr.games.pacman.model.guys.Bonus;
 import de.amr.games.pacman.model.guys.Creature;
 import de.amr.games.pacman.model.guys.Ghost;
 import de.amr.games.pacman.model.guys.Pac;
-import de.amr.games.pacman.ui.PacManGameAnimation;
+import de.amr.games.pacman.ui.PacManGameAnimations;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -37,7 +37,7 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public abstract class SpritesheetBasedRendering implements PacManGameAnimation {
+public abstract class SpritesheetBasedRendering implements PacManGameAnimations {
 
 	/** Spritesheet raster size */
 	public static final int RASTER = 16;
@@ -101,15 +101,15 @@ public abstract class SpritesheetBasedRendering implements PacManGameAnimation {
 
 	public Rectangle2D pacSpriteRegion(Pac pac) {
 		if (pac.dead) {
-			return pacDying().hasStarted() ? pacDying().animate() : (Rectangle2D) pacMunchingToDir(pac, pac.dir).frame();
+			return playerDying().hasStarted() ? playerDying().animate() : (Rectangle2D) playerMunching(pac, pac.dir).frame();
 		}
 		if (pac.speed == 0) {
-			return (Rectangle2D) pacMunchingToDir(pac, pac.dir).frame(0);
+			return (Rectangle2D) playerMunching(pac, pac.dir).frame(0);
 		}
 		if (!pac.couldMove) {
-			return (Rectangle2D) pacMunchingToDir(pac, pac.dir).frame(1);
+			return (Rectangle2D) playerMunching(pac, pac.dir).frame(1);
 		}
-		return (Rectangle2D) pacMunchingToDir(pac, pac.dir).animate();
+		return (Rectangle2D) playerMunching(pac, pac.dir).animate();
 	}
 
 	public Rectangle2D ghostSpriteRegion(Ghost ghost, boolean frightened) {
@@ -253,7 +253,7 @@ public abstract class SpritesheetBasedRendering implements PacManGameAnimation {
 	}
 
 	@Override
-	public Animation<Rectangle2D> pacDying() {
+	public Animation<Rectangle2D> playerDying() {
 		return pacDyingAnim;
 	}
 

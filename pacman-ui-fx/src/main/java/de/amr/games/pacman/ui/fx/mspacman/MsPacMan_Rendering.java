@@ -230,7 +230,7 @@ public class MsPacMan_Rendering extends SpritesheetBasedRendering {
 	}
 
 	@Override
-	public Animation<Rectangle2D> pacMunchingToDir(Pac pac, Direction dir) {
+	public Animation<Rectangle2D> playerMunching(Pac pac, Direction dir) {
 		return msPacMunchingAnim.get(ensureDirection(dir));
 	}
 }

@@ -156,11 +156,11 @@ public class MsPacMan_IntroScene extends GameScene {
 			msPac.couldMove = true;
 			msPac.speed = 1;
 			msPac.dir = LEFT;
-			rendering.pacMunching(msPac).forEach(Animation::restart);
+			rendering.playerMunching(msPac).forEach(Animation::restart);
 		}
 		if (msPac.speed != 0 && msPac.position.x <= t(13)) {
 			msPac.speed = 0;
-			rendering.pacMunching(msPac).forEach(Animation::reset);
+			rendering.playerMunching(msPac).forEach(Animation::reset);
 			return true;
 		}
 		return false;
