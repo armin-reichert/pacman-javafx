@@ -6,7 +6,7 @@ import de.amr.games.pacman.ui.fx.rendering.MsPacMan_Rendering;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
- * Blue bag dropped by the storch in intermission scene 3, contains Pac-Man junior.
+ * Blue bag dropped by the stork in intermission scene 3, contains Pac-Man junior.
  * 
  * @author Armin Reichert
  */
