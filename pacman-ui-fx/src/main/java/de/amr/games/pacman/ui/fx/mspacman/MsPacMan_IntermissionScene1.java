@@ -173,7 +173,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 		flap.draw(g);
 		rendering.drawMrPacMan(g, pacMan);
 		rendering.drawGhost(g, inky, false);
-		rendering.drawPac(g, msPac);
+		rendering.drawPlayer(g, msPac);
 		rendering.drawGhost(g, pinky, false);
 		if (heartVisible) {
 			rendering.drawRegion(g, rendering.s(2, 10), msPac.position.x + 4, pacMan.position.y - 20);

@@ -3,7 +3,7 @@ package de.amr.games.pacman.ui.fx.pacman;
 import static de.amr.games.pacman.lib.Direction.RIGHT;
 import static de.amr.games.pacman.model.guys.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.guys.GhostState.HUNTING_PAC;
-import static de.amr.games.pacman.ui.fx.common.SpritesheetBasedRendering.tileRegion;
+import static de.amr.games.pacman.ui.fx.common.DefaultRendering.tileRegion;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.Animation;
@@ -100,7 +100,7 @@ public class PacMan_IntermissionScene1 extends GameScene {
 	public void render() {
 		rendering.drawGhost(g, blinky, false);
 		if (phase == Phase.BLINKY_CHASING_PACMAN) {
-			rendering.drawPac(g, pac);
+			rendering.drawPlayer(g, pac);
 		} else {
 			rendering.drawRegion(g, bigPac.animate(), pac.position.x - 12, pac.position.y - 22);
 		}

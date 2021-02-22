@@ -11,7 +11,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.guys.Bonus;
 import de.amr.games.pacman.model.guys.Pac;
 import de.amr.games.pacman.ui.fx.common.Helper;
-import de.amr.games.pacman.ui.fx.common.SpritesheetBasedRendering;
+import de.amr.games.pacman.ui.fx.common.DefaultRendering;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -23,7 +23,7 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class MsPacMan_Rendering extends SpritesheetBasedRendering {
+public class MsPacMan_Rendering extends DefaultRendering {
 
 	private final Map<Direction, Animation<Rectangle2D>> msPacManMunchingAnim;
 	private final Animation<Integer> bonusJumpingAnim;

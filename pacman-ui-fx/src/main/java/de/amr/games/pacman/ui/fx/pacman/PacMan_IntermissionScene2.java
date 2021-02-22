@@ -2,7 +2,7 @@ package de.amr.games.pacman.ui.fx.pacman;
 
 import static de.amr.games.pacman.heaven.God.clock;
 import static de.amr.games.pacman.model.guys.GhostState.HUNTING_PAC;
-import static de.amr.games.pacman.ui.fx.common.SpritesheetBasedRendering.tileRegion;
+import static de.amr.games.pacman.ui.fx.common.DefaultRendering.tileRegion;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.Animation;
@@ -137,7 +137,7 @@ public class PacMan_IntermissionScene2 extends GameScene {
 	public void render() {
 		rendering.drawLevelCounter(g, game, t(25), t(34));
 		rendering.drawRegion(g, nail, nailPosition.x, nailPosition.y);
-		rendering.drawPac(g, pac);
+		rendering.drawPlayer(g, pac);
 		drawBlinky();
 	}
 

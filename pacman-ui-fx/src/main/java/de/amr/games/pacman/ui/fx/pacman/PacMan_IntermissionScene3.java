@@ -4,7 +4,7 @@ import static de.amr.games.pacman.heaven.God.clock;
 import static de.amr.games.pacman.lib.Direction.LEFT;
 import static de.amr.games.pacman.lib.Direction.RIGHT;
 import static de.amr.games.pacman.lib.Logging.log;
-import static de.amr.games.pacman.ui.fx.common.SpritesheetBasedRendering.tileRegion;
+import static de.amr.games.pacman.ui.fx.common.DefaultRendering.tileRegion;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.Animation;
@@ -103,7 +103,7 @@ public class PacMan_IntermissionScene3 extends GameScene {
 	@Override
 	public void render() {
 		rendering.drawLevelCounter(g, game, t(25), t(34));
-		rendering.drawPac(g, pac);
+		rendering.drawPlayer(g, pac);
 		drawBlinky();
 	}
 

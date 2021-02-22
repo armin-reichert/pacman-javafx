@@ -175,7 +175,7 @@ public class MsPacMan_IntroScene extends GameScene {
 		for (Ghost ghost : ghosts) {
 			rendering.drawGhost(g, ghost, false);
 		}
-		rendering.drawPac(g, msPac);
+		rendering.drawPlayer(g, msPac);
 		presentGhost();
 		presentMsPacMan();
 		if (phase == Phase.END) {

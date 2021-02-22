@@ -37,7 +37,7 @@ import javafx.scene.text.FontWeight;
  * 
  * @author Armin Reichert
  */
-public abstract class SpritesheetBasedRendering implements PacManGameAnimations {
+public abstract class DefaultRendering implements Rendering, PacManGameAnimations {
 
 	/** Spritesheet raster size */
 	public static final int RASTER = 16;
@@ -64,7 +64,7 @@ public abstract class SpritesheetBasedRendering implements PacManGameAnimations 
 	protected Animation<Rectangle2D> ghostBlueAnim;
 	protected Animation<Rectangle2D> ghostFlashingAnim;
 
-	public SpritesheetBasedRendering(String spritesheetURL) {
+	public DefaultRendering(String spritesheetURL) {
 		spritesheet = new Image(spritesheetURL);
 		scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), 8);
 		energizerBlinking = Animation.pulse().frameDuration(15);
@@ -128,22 +128,6 @@ public abstract class SpritesheetBasedRendering implements PacManGameAnimations 
 		return scoreFont;
 	}
 
-	/**
-	 * Note: maze numbers are 1-based, maze index as stored here is 0-based.
-	 * 
-	 * @param mazeIndex
-	 * @return
-	 */
-	public abstract Color getMazeWallBorderColor(int mazeIndex);
-
-	/**
-	 * Note: maze numbers are 1-based, maze index as stored here is 0-based.
-	 * 
-	 * @param mazeIndex
-	 * @return
-	 */
-	public abstract Color getMazeWallColor(int mazeIndex);
-
 	public void drawRegion(GraphicsContext g, Rectangle2D region, double x, double y) {
 		g.drawImage(spritesheet, region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(), x, y,
 				region.getWidth(), region.getHeight());
@@ -164,8 +148,7 @@ public abstract class SpritesheetBasedRendering implements PacManGameAnimations 
 		}
 	}
 
-	public abstract void drawLifeCounterSymbol(GraphicsContext g, int x, int y);
-
+	@Override
 	public void drawLivesCounter(GraphicsContext g, GameModel game, int x, int y) {
 		int maxLivesDisplayed = 5;
 		int livesDisplayed = game.started ? game.lives - 1 : game.lives;
@@ -179,33 +162,35 @@ public abstract class SpritesheetBasedRendering implements PacManGameAnimations 
 		}
 	}
 
-	public void drawPac(GraphicsContext g, Pac pac) {
+	@Override
+	public void drawPlayer(GraphicsContext g, Pac pac) {
 		drawGuy(g, pac, pacSpriteRegion(pac));
 	}
 
+	@Override
 	public void drawGhost(GraphicsContext g, Ghost ghost, boolean frightened) {
 		drawGuy(g, ghost, ghostSpriteRegion(ghost, frightened));
 	}
 
-	public abstract void drawBonus(GraphicsContext g, Bonus bonus);
-
+	@Override
 	public void drawTileCovered(GraphicsContext g, V2i tile) {
 		g.setFill(Color.BLACK);
 		g.fillRect(tile.x * TS, tile.y * TS, TS, TS);
 	}
 
-	public abstract void drawMaze(GraphicsContext g, int mazeNumber, int x, int y, boolean flashing);
-
+	@Override
 	public void drawFoodTiles(GraphicsContext g, Stream<V2i> tiles, Predicate<V2i> eaten) {
 		tiles.filter(eaten).forEach(tile -> drawTileCovered(g, tile));
 	}
 
+	@Override
 	public void drawEnergizerTiles(GraphicsContext g, Stream<V2i> energizerTiles) {
 		if (energizerBlinking.animate()) {
 			energizerTiles.forEach(tile -> drawTileCovered(g, tile));
 		}
 	}
 
+	@Override
 	public void drawGameState(GraphicsContext g, GameModel game) {
 		if (game.state == PacManGameState.GAME_OVER || game.attractMode) {
 			g.setFont(scoreFont);
@@ -219,6 +204,7 @@ public abstract class SpritesheetBasedRendering implements PacManGameAnimations 
 		}
 	}
 
+	@Override
 	public void drawScore(GraphicsContext g, GameModel game, boolean titleOnly) {
 		g.setFont(getScoreFont());
 		g.translate(0, 2);
@@ -243,6 +229,7 @@ public abstract class SpritesheetBasedRendering implements PacManGameAnimations 
 		g.translate(0, -3);
 	}
 
+	@Override
 	public void drawLevelCounter(GraphicsContext g, GameModel game, int rightX, int y) {
 		int x = rightX;
 		int firstLevel = Math.max(1, game.currentLevelNumber - 6);
@@ -295,5 +282,4 @@ public abstract class SpritesheetBasedRendering implements PacManGameAnimations 
 	public Animation<Rectangle2D> ghostReturningHomeToDir(Ghost ghost, Direction dir) {
 		return ghostEyesAnim.get(ensureDirection(dir));
 	}
-
 }

@@ -128,6 +128,6 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 	public void render() {
 		flap.draw(g);
 		rendering.drawMrPacMan(g, pacMan);
-		rendering.drawPac(g, msPacMan);
+		rendering.drawPlayer(g, msPacMan);
 	}
 }

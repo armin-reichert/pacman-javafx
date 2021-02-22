@@ -13,9 +13,9 @@ import javafx.scene.Group;
  */
 public class PlayScene extends GameScene {
 
-	private final SpritesheetBasedRendering rendering;
+	private final DefaultRendering rendering;
 
-	public PlayScene(Group root, double width, double height, double scaling, SpritesheetBasedRendering rendering) {
+	public PlayScene(Group root, double width, double height, double scaling, DefaultRendering rendering) {
 		super(root, width, height, scaling);
 		this.rendering = rendering;
 	}
@@ -34,7 +34,7 @@ public class PlayScene extends GameScene {
 			rendering.drawEnergizerTiles(g, game.level.world.energizerTiles());
 		}
 		rendering.drawGameState(g, game);
-		rendering.drawPac(g, game.pac);
+		rendering.drawPlayer(g, game.pac);
 		game.ghosts().forEach(ghost -> rendering.drawGhost(g, ghost, game.pac.powerTicksLeft > 0));
 		rendering.drawBonus(g, game.bonus);
 		rendering.drawScore(g, game, game.state == PacManGameState.INTRO || game.attractMode);
