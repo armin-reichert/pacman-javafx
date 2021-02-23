@@ -4,7 +4,6 @@ import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 
 /**
  * This is where the action is.
@@ -22,7 +21,7 @@ public class PlayScene extends GameScene {
 	}
 
 	@Override
-	public void render() {
+	public void renderContent() {
 		boolean flashing = rendering.mazeFlashing(game.level.mazeNumber).hasStarted();
 		rendering.drawMaze(g, game.level.mazeNumber, 0, t(3), flashing);
 		if (!flashing) {
@@ -35,13 +34,9 @@ public class PlayScene extends GameScene {
 		game.ghosts().forEach(ghost -> rendering.drawGhost(g, ghost, game.pac.powerTicksLeft > 0));
 		rendering.drawBonus(g, game.bonus);
 		rendering.drawScore(g, game, game.state == PacManGameState.INTRO || game.attractMode);
-		if (PacManGameUI_JavaFX.flashMessage().isPresent()) {
-			drawFlashMessage();
-		} else {
-			if (!game.attractMode) {
-				rendering.drawLivesCounter(g, game, t(2), t(34));
-			}
-			rendering.drawLevelCounter(g, game, t(25), t(34));
+		if (!game.attractMode) {
+			rendering.drawLivesCounter(g, game, t(2), t(34));
 		}
+		rendering.drawLevelCounter(g, game, t(25), t(34));
 	}
 }

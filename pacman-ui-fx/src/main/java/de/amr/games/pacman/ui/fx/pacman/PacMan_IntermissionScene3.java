@@ -92,7 +92,7 @@ public class PacMan_IntermissionScene3 extends GameScene {
 	}
 
 	@Override
-	public void render() {
+	public void renderContent() {
 		rendering.drawLevelCounter(g, game, t(25), t(34));
 		rendering.drawPlayer(g, pac);
 		drawBlinky();

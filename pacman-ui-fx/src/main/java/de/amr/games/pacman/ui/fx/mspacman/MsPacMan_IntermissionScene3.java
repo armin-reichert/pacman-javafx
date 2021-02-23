@@ -131,7 +131,7 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 	}
 
 	@Override
-	public void render() {
+	public void renderContent() {
 		flap.draw(g, rendering);
 		rendering.drawPlayer(g, msPacMan);
 		rendering.drawSpouse(g, pacMan);

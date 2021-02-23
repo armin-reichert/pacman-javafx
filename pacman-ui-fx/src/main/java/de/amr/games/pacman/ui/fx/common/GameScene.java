@@ -1,12 +1,15 @@
 package de.amr.games.pacman.ui.fx.common;
 
+import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.SCENE_HEIGHT;
+import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.SCENE_WIDTH;
+import static de.amr.games.pacman.world.PacManGameWorld.t;
+
 import java.util.Optional;
 
 import de.amr.games.pacman.lib.CountdownTimer;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.FlashMessage;
-import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import javafx.geometry.Pos;
 import javafx.scene.Camera;
 import javafx.scene.Group;
@@ -32,16 +35,18 @@ public abstract class GameScene {
 	protected final GraphicsContext g;
 	protected final FXRendering rendering;
 	protected final SoundManager sounds;
+	protected final double scaling;
 
 	protected GameModel game;
 
 	public GameScene(double scaling, FXRendering rendering, SoundManager sounds) {
 
+		this.scaling = scaling;
 		this.rendering = rendering;
 		this.sounds = sounds;
 
-		double width = PacManGameUI_JavaFX.SCENE_WIDTH * scaling;
-		double height = PacManGameUI_JavaFX.SCENE_HEIGHT * scaling;
+		double width = SCENE_WIDTH * scaling;
+		double height = SCENE_HEIGHT * scaling;
 
 		Canvas canvas = new Canvas(width, height);
 		StackPane pane = new StackPane();
@@ -52,10 +57,7 @@ public abstract class GameScene {
 		pane.getChildren().addAll(canvas, flashMessageView);
 		Group root = new Group();
 		root.getChildren().addAll(pane);
-
 		g = canvas.getGraphicsContext2D();
-		g.scale(scaling, scaling);
-
 		fxScene = new Scene(root, width, height, Color.BLACK);
 	}
 
@@ -98,7 +100,14 @@ public abstract class GameScene {
 
 	public abstract void update();
 
-	public abstract void render();
+	protected abstract void renderContent();
+
+	public void render() {
+		g.save();
+		g.scale(scaling, scaling);
+		renderContent();
+		g.restore();
+	}
 
 	public void setGame(GameModel game) {
 		this.game = game;
@@ -123,13 +132,16 @@ public abstract class GameScene {
 	public void end() {
 	}
 
-	protected void drawFlashMessage() {
-		Optional<FlashMessage> message = PacManGameUI_JavaFX.flashMessage();
-		if (message.isPresent()) {
-			CountdownTimer timer = message.get().timer;
+	public void drawFlashMessage(FlashMessage message) {
+		if (message != null) {
+			g.setFill(Color.BLACK);
+			g.fillRect(0, g.getCanvas().getHeight() - t(4), g.getCanvas().getWidth(), t(4));
+			CountdownTimer timer = message.timer;
 			double alpha = Math.cos((timer.running() * Math.PI / 2.0) / timer.getDuration());
 			flashMessageView.setFill(Color.rgb(255, 255, 0, alpha));
+			flashMessageView.setText(message.text);
+		} else {
+			flashMessageView.setText(null);
 		}
-		flashMessageView.setText(message.map(msg -> msg.text).orElse(null));
 	}
 }

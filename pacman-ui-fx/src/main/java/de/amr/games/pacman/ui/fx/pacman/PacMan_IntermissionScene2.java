@@ -130,7 +130,7 @@ public class PacMan_IntermissionScene2 extends GameScene {
 	}
 
 	@Override
-	public void render() {
+	public void renderContent() {
 		rendering.drawLevelCounter(g, game, t(25), t(34));
 		rendering.drawSprite(g, nail, nailPosition.x, nailPosition.y);
 		rendering.drawPlayer(g, pac);

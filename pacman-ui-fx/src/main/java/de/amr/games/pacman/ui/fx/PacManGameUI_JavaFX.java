@@ -50,11 +50,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	public static final int SCENE_WIDTH = 28 * TS;
 	public static final int SCENE_HEIGHT = 36 * TS;
 
-	private static final Deque<FlashMessage> FLASH_MESSAGES_Q = new ArrayDeque<>();
-
-	public static Optional<FlashMessage> flashMessage() {
-		return Optional.ofNullable(FLASH_MESSAGES_Q.peek());
-	}
+	private final Deque<FlashMessage> flashMessagesQ = new ArrayDeque<>();
 
 	private final EnumMap<GameType, FXRendering> renderings = new EnumMap<>(GameType.class);
 	private final EnumMap<GameType, SoundManager> soundManagers = new EnumMap<>(GameType.class);
@@ -69,8 +65,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController controller, double scaling) {
 		this.controller = controller;
-		double width = SCENE_WIDTH * scaling;
-		double height = SCENE_HEIGHT * scaling;
 		this.stage = stage;
 		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
 		stage.getIcons().add(new Image("/pacman/graphics/pacman.png"));
@@ -176,11 +170,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 		currentScene.update();
 
-		FlashMessage message = FLASH_MESSAGES_Q.peek();
+		FlashMessage message = flashMessagesQ.peek();
 		if (message != null) {
 			message.timer.run();
 			if (message.timer.expired()) {
-				FLASH_MESSAGES_Q.remove();
+				flashMessagesQ.remove();
 			}
 		}
 	}
@@ -195,6 +189,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			try {
 				currentScene.clear();
 				currentScene.render();
+				if (!flashMessagesQ.isEmpty()) {
+					currentScene.drawFlashMessage(flashMessagesQ.peek());
+				}
 			} catch (Exception x) {
 				log("Exception occurred when rendering scene %s", currentScene);
 				x.printStackTrace();
@@ -210,7 +207,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void showFlashMessage(String message, long ticks) {
-		FLASH_MESSAGES_Q.add(new FlashMessage(message, ticks));
+		flashMessagesQ.add(new FlashMessage(message, ticks));
 	}
 
 	@Override
