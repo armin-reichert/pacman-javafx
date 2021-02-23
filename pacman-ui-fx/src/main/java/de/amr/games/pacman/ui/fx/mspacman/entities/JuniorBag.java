@@ -1,8 +1,7 @@
 package de.amr.games.pacman.ui.fx.mspacman.entities;
 
 import de.amr.games.pacman.model.guys.GameEntity;
-import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
-import de.amr.games.pacman.ui.fx.rendering.MsPacMan_DefaultRendering;
+import de.amr.games.pacman.ui.fx.common.FXRendering;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -11,8 +10,6 @@ import javafx.scene.canvas.GraphicsContext;
  * @author Armin Reichert
  */
 public class JuniorBag extends GameEntity {
-
-	final MsPacMan_DefaultRendering rendering = PacManGameUI_JavaFX.RENDERING_MSPACMAN;
 
 	public boolean released = false;
 	public boolean open = false;
@@ -26,7 +23,7 @@ public class JuniorBag extends GameEntity {
 		super.move();
 	}
 
-	public void draw(GraphicsContext g) {
+	public void draw(GraphicsContext g, FXRendering rendering) {
 		if (open) {
 			rendering.drawJunior(g, this);
 		} else {

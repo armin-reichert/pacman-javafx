@@ -3,7 +3,6 @@ package de.amr.games.pacman.ui.fx.pacman;
 import static de.amr.games.pacman.lib.Direction.RIGHT;
 import static de.amr.games.pacman.model.guys.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.guys.GhostState.HUNTING_PAC;
-import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.RENDERING_PACMAN;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.Animation;
@@ -12,7 +11,7 @@ import de.amr.games.pacman.model.guys.Ghost;
 import de.amr.games.pacman.model.guys.Pac;
 import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
+import de.amr.games.pacman.ui.fx.common.FXRendering;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
@@ -30,14 +29,13 @@ public class PacMan_IntermissionScene1 extends GameScene {
 
 	private static final int baselineY = t(20);
 
-	private final SoundManager sounds = PacManGameUI_JavaFX.SOUNDS_PACMAN;
-
 	private Ghost blinky;
 	private Pac pac;
 	private Phase phase;
 
-	public PacMan_IntermissionScene1(Group root, double width, double height, double scaling) {
-		super(root, width, height, scaling, RENDERING_PACMAN);
+	public PacMan_IntermissionScene1(Group root, double width, double height, double scaling, FXRendering rendering,
+			SoundManager sounds) {
+		super(root, width, height, scaling, rendering, sounds);
 	}
 
 	@Override

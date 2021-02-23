@@ -1,7 +1,6 @@
 package de.amr.games.pacman.ui.fx.mspacman;
 
 import static de.amr.games.pacman.heaven.God.clock;
-import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.RENDERING_MSPACMAN;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.Animation;
@@ -10,7 +9,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.guys.Pac;
 import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
+import de.amr.games.pacman.ui.fx.common.FXRendering;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import de.amr.games.pacman.ui.fx.mspacman.entities.Flap;
 import javafx.scene.Group;
@@ -34,8 +33,6 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 
 	private static final int UPPER_Y = t(12), LOWER_Y = t(24), MIDDLE_Y = t(18);
 
-	private final SoundManager sounds = PacManGameUI_JavaFX.SOUNDS_MSPACMAN;
-
 	private Phase phase;
 
 	private Flap flap;
@@ -46,8 +43,9 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 		phase.timer.setDuration(ticks);
 	}
 
-	public MsPacMan_IntermissionScene2(Group root, double width, double height, double scaling) {
-		super(root, width, height, scaling, RENDERING_MSPACMAN);
+	public MsPacMan_IntermissionScene2(Group root, double width, double height, double scaling, FXRendering rendering,
+			SoundManager sounds) {
+		super(root, width, height, scaling, rendering, sounds);
 	}
 
 	@Override
@@ -84,8 +82,8 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 				msPacMan.setPosition(-t(8), UPPER_Y);
 				pacMan.dir = msPacMan.dir = Direction.RIGHT;
 				pacMan.speed = msPacMan.speed = 2;
-				RENDERING_MSPACMAN.playerMunching(msPacMan).forEach(Animation::restart);
-				RENDERING_MSPACMAN.spouseMunching(pacMan).forEach(Animation::restart);
+				rendering.playerMunching(msPacMan).forEach(Animation::restart);
+				rendering.spouseMunching(pacMan).forEach(Animation::restart);
 			}
 			if (phase.timer.running() == clock.sec(6)) {
 				msPacMan.setPosition(t(30), LOWER_Y);
@@ -126,7 +124,7 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 
 	@Override
 	public void render() {
-		flap.draw(g);
+		flap.draw(g, rendering);
 		rendering.drawPlayer(g, msPacMan);
 		rendering.drawSpouse(g, pacMan);
 	}

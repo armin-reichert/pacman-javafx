@@ -24,8 +24,7 @@ import de.amr.games.pacman.model.guys.Bonus;
 import de.amr.games.pacman.model.guys.GameEntity;
 import de.amr.games.pacman.model.guys.Ghost;
 import de.amr.games.pacman.model.guys.Pac;
-import de.amr.games.pacman.ui.PacManGameAnimations;
-import de.amr.games.pacman.ui.Rendering;
+import de.amr.games.pacman.ui.fx.common.FXRendering;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -38,7 +37,7 @@ import javafx.scene.text.FontWeight;
  * 
  * @author Armin Reichert
  */
-public abstract class DefaultRendering implements Rendering<GraphicsContext, Color>, PacManGameAnimations {
+public abstract class DefaultRendering implements FXRendering {
 
 	/** Spritesheet raster size */
 	public static final int RASTER = 16;
@@ -125,11 +124,13 @@ public abstract class DefaultRendering implements Rendering<GraphicsContext, Col
 		return ghostKicking(ghost, ghost.wishDir).animate();
 	}
 
+	@Override
 	public Font getScoreFont() {
 		return scoreFont;
 	}
 
-	public void drawSprite(GraphicsContext g, Rectangle2D r, double x, double y) {
+	@Override
+	public void drawSprite(GraphicsContext g, Rectangle2D r, float x, float y) {
 		g.drawImage(spritesheet, r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y, r.getWidth(), r.getHeight());
 	}
 
@@ -244,7 +245,7 @@ public abstract class DefaultRendering implements Rendering<GraphicsContext, Col
 	// Animations
 
 	@Override
-	public Animation<Image> mazeFlashing(int mazeNumber) {
+	public Animation<?> mazeFlashing(int mazeNumber) {
 		return mazeFlashingAnim.get(mazeNumber - 1);
 	}
 

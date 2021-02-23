@@ -152,7 +152,7 @@ public class PacMan_DefaultRendering extends DefaultRendering {
 	@Override
 	public void drawMaze(GraphicsContext g, int mazeNumber, int x, int y, boolean flashing) {
 		if (flashing) {
-			g.drawImage(mazeFlashing(mazeNumber).animate(), x, y);
+			g.drawImage((Image) mazeFlashing(mazeNumber).animate(), x, y);
 		} else {
 			g.drawImage(mazeFull, x, y);
 		}

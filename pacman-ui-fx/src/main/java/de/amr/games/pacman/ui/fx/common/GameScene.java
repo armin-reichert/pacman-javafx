@@ -4,9 +4,9 @@ import java.util.Optional;
 
 import de.amr.games.pacman.lib.CountdownTimer;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.FlashMessage;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
-import de.amr.games.pacman.ui.fx.rendering.DefaultRendering;
 import javafx.geometry.Pos;
 import javafx.scene.Camera;
 import javafx.scene.Group;
@@ -28,14 +28,17 @@ public abstract class GameScene extends Scene {
 
 	protected final Text flashMessageView;
 	protected final GraphicsContext g;
-	protected final DefaultRendering rendering;
+	protected final FXRendering rendering;
+	protected final SoundManager sounds;
 	protected GameModel game;
 
 	protected Camera camera;
 
-	public GameScene(Group root, double width, double height, double scaling, DefaultRendering rendering) {
+	public GameScene(Group root, double width, double height, double scaling, FXRendering rendering,
+			SoundManager sounds) {
 		super(root, width, height, Color.BLACK);
 		this.rendering = rendering;
+		this.sounds = sounds;
 		Canvas canvas = new Canvas(width, height);
 		g = canvas.getGraphicsContext2D();
 		g.scale(scaling, scaling);

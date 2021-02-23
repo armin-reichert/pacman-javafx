@@ -3,8 +3,8 @@ package de.amr.games.pacman.ui.fx.common;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.controller.PacManGameState;
+import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
-import de.amr.games.pacman.ui.fx.rendering.DefaultRendering;
 import javafx.scene.Group;
 
 /**
@@ -14,8 +14,9 @@ import javafx.scene.Group;
  */
 public class PlayScene extends GameScene {
 
-	public PlayScene(Group root, double width, double height, double scaling, DefaultRendering rendering) {
-		super(root, width, height, scaling, rendering);
+	public PlayScene(Group root, double width, double height, double scaling, FXRendering rendering,
+			SoundManager sounds) {
+		super(root, width, height, scaling, rendering, sounds);
 	}
 
 	@Override

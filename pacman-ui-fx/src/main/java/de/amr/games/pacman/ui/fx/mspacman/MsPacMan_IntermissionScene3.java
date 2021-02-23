@@ -1,7 +1,6 @@
 package de.amr.games.pacman.ui.fx.mspacman;
 
 import static de.amr.games.pacman.heaven.God.clock;
-import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.RENDERING_MSPACMAN;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.CountdownTimer;
@@ -10,10 +9,10 @@ import de.amr.games.pacman.lib.V2f;
 import de.amr.games.pacman.model.guys.Pac;
 import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
+import de.amr.games.pacman.ui.fx.common.FXRendering;
 import de.amr.games.pacman.ui.fx.common.GameScene;
-import de.amr.games.pacman.ui.fx.mspacman.entities.JuniorBag;
 import de.amr.games.pacman.ui.fx.mspacman.entities.Flap;
+import de.amr.games.pacman.ui.fx.mspacman.entities.JuniorBag;
 import de.amr.games.pacman.ui.fx.mspacman.entities.Stork;
 import javafx.scene.Group;
 
@@ -38,8 +37,6 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 
 	private static final int CEILING_Y = t(12), GROUND_Y = t(24);
 
-	final SoundManager sounds = PacManGameUI_JavaFX.SOUNDS_MSPACMAN;
-
 	private Flap flap;
 	private Pac pacMan;
 	private Pac msPacMan;
@@ -48,8 +45,9 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 
 	private Phase phase;
 
-	public MsPacMan_IntermissionScene3(Group root, double width, double height, double scaling) {
-		super(root, width, height, scaling, RENDERING_MSPACMAN);
+	public MsPacMan_IntermissionScene3(Group root, double width, double height, double scaling, FXRendering rendering,
+			SoundManager sounds) {
+		super(root, width, height, scaling, rendering, sounds);
 	}
 
 	private void enter(Phase newPhase, long ticks) {
@@ -71,7 +69,7 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 		msPacMan = new Pac("Ms. Pac-Man", Direction.RIGHT);
 		msPacMan.setPosition(t(5), GROUND_Y - 4);
 
-		stork = new Stork();
+		stork = new Stork(rendering.storkFlying());
 		stork.setPosition(t(30), CEILING_Y);
 		stork.animation.restart();
 
@@ -136,10 +134,10 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 
 	@Override
 	public void render() {
-		flap.draw(g);
+		flap.draw(g, rendering);
 		rendering.drawPlayer(g, msPacMan);
 		rendering.drawSpouse(g, pacMan);
-		stork.draw(g);
-		bag.draw(g);
+		stork.draw(g, rendering);
+		bag.draw(g, rendering);
 	}
 }

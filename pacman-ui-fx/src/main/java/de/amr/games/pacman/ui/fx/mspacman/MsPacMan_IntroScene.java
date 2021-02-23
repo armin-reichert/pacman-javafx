@@ -4,7 +4,6 @@ import static de.amr.games.pacman.heaven.God.clock;
 import static de.amr.games.pacman.lib.Direction.LEFT;
 import static de.amr.games.pacman.lib.Direction.UP;
 import static de.amr.games.pacman.lib.Logging.log;
-import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.RENDERING_MSPACMAN;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.Animation;
@@ -13,6 +12,8 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.guys.Ghost;
 import de.amr.games.pacman.model.guys.GhostState;
 import de.amr.games.pacman.model.guys.Pac;
+import de.amr.games.pacman.sound.SoundManager;
+import de.amr.games.pacman.ui.fx.common.FXRendering;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
@@ -45,8 +46,9 @@ public class MsPacMan_IntroScene extends GameScene {
 	private Ghost currentGhost;
 	private boolean presentingMsPac;
 
-	public MsPacMan_IntroScene(Group root, double width, double height, double scaling) {
-		super(root, width, height, scaling, RENDERING_MSPACMAN);
+	public MsPacMan_IntroScene(Group root, double width, double height, double scaling, FXRendering rendering,
+			SoundManager sounds) {
+		super(root, width, height, scaling, rendering, sounds);
 	}
 
 	private void enter(Phase newPhase, long ticks) {

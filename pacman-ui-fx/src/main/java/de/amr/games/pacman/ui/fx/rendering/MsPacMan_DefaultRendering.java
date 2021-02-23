@@ -195,7 +195,7 @@ public class MsPacMan_DefaultRendering extends DefaultRendering {
 	public void drawMaze(GraphicsContext g, int mazeNumber, int x, int y, boolean flashing) {
 		int index = mazeNumber - 1;
 		if (flashing) {
-			g.drawImage(mazeFlashing(mazeNumber).animate(), x, y);
+			g.drawImage((Image) mazeFlashing(mazeNumber).animate(), x, y);
 		} else {
 			Rectangle2D fullMazeRegion = new Rectangle2D(0, 248 * index, 226, 248);
 			g.drawImage(spritesheet, fullMazeRegion.getMinX(), fullMazeRegion.getMinY(), fullMazeRegion.getWidth(),

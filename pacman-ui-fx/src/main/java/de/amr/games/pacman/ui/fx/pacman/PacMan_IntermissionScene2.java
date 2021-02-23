@@ -2,7 +2,6 @@ package de.amr.games.pacman.ui.fx.pacman;
 
 import static de.amr.games.pacman.heaven.God.clock;
 import static de.amr.games.pacman.model.guys.GhostState.HUNTING_PAC;
-import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.RENDERING_PACMAN;
 import static de.amr.games.pacman.ui.fx.rendering.DefaultRendering.tileRegion;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
@@ -14,7 +13,7 @@ import de.amr.games.pacman.model.guys.Ghost;
 import de.amr.games.pacman.model.guys.Pac;
 import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
+import de.amr.games.pacman.ui.fx.common.FXRendering;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
@@ -33,8 +32,6 @@ public class PacMan_IntermissionScene2 extends GameScene {
 		final CountdownTimer timer = new CountdownTimer();
 	}
 
-	private final SoundManager sounds = PacManGameUI_JavaFX.SOUNDS_PACMAN;
-
 	private final int chaseTileY = 20;
 	private final V2i nailPosition = new V2i(t(14), t(chaseTileY) - 6);
 
@@ -52,8 +49,9 @@ public class PacMan_IntermissionScene2 extends GameScene {
 
 	private Phase phase;
 
-	public PacMan_IntermissionScene2(Group root, double width, double height, double scaling) {
-		super(root, width, height, scaling, RENDERING_PACMAN);
+	public PacMan_IntermissionScene2(Group root, double width, double height, double scaling, FXRendering rendering,
+			SoundManager sounds) {
+		super(root, width, height, scaling, rendering, sounds);
 	}
 
 	@Override

@@ -4,7 +4,6 @@ import static de.amr.games.pacman.heaven.God.clock;
 import static de.amr.games.pacman.lib.Direction.LEFT;
 import static de.amr.games.pacman.lib.Direction.RIGHT;
 import static de.amr.games.pacman.lib.Logging.log;
-import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.RENDERING_PACMAN;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.Animation;
@@ -14,7 +13,7 @@ import de.amr.games.pacman.model.guys.GhostState;
 import de.amr.games.pacman.model.guys.Pac;
 import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
+import de.amr.games.pacman.ui.fx.common.FXRendering;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
@@ -31,18 +30,17 @@ public class PacMan_IntermissionScene3 extends GameScene {
 		CHASING_PACMAN, RETURNING_HALF_NAKED;
 	}
 
-	private final SoundManager sounds = PacManGameUI_JavaFX.SOUNDS_PACMAN;
-
 	private final Animation<?> blinkyDamaged, blinkyNaked;
 	private final int chaseTileY = 20;
 	private final Ghost blinky;
 	private final Pac pac;
 	private Phase phase;
 
-	public PacMan_IntermissionScene3(Group root, double width, double height, double scaling) {
-		super(root, width, height, scaling, RENDERING_PACMAN);
-		blinkyDamaged = RENDERING_PACMAN.blinkyDamaged();
-		blinkyNaked = RENDERING_PACMAN.blinkyNaked();
+	public PacMan_IntermissionScene3(Group root, double width, double height, double scaling, FXRendering rendering,
+			SoundManager sounds) {
+		super(root, width, height, scaling, rendering, sounds);
+		blinkyDamaged = rendering.blinkyDamaged();
+		blinkyNaked = rendering.blinkyNaked();
 		pac = new Pac("Pac-Man", Direction.LEFT);
 		blinky = new Ghost(0, "Blinky", Direction.LEFT);
 	}

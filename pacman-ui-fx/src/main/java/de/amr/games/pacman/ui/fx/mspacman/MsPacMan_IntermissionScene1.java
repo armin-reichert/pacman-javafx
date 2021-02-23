@@ -1,8 +1,6 @@
 package de.amr.games.pacman.ui.fx.mspacman;
 
 import static de.amr.games.pacman.heaven.God.clock;
-import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.RENDERING_MSPACMAN;
-import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.SOUNDS_MSPACMAN;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import java.util.stream.Stream;
@@ -13,6 +11,8 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.guys.Ghost;
 import de.amr.games.pacman.model.guys.Pac;
 import de.amr.games.pacman.sound.PacManGameSound;
+import de.amr.games.pacman.sound.SoundManager;
+import de.amr.games.pacman.ui.fx.common.FXRendering;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import de.amr.games.pacman.ui.fx.mspacman.entities.Flap;
 import de.amr.games.pacman.ui.fx.mspacman.entities.Heart;
@@ -52,8 +52,9 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 		phase.timer.setDuration(ticks);
 	}
 
-	public MsPacMan_IntermissionScene1(Group root, double width, double height, double scaling) {
-		super(root, width, height, scaling, RENDERING_MSPACMAN);
+	public MsPacMan_IntermissionScene1(Group root, double width, double height, double scaling, FXRendering rendering,
+			SoundManager sounds) {
+		super(root, width, height, scaling, rendering, sounds);
 	}
 
 	@Override
@@ -86,7 +87,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 		heart = new Heart();
 		heart.visible = false;
 
-		SOUNDS_MSPACMAN.loop(PacManGameSound.INTERMISSION_1, 1);
+		sounds.loop(PacManGameSound.INTERMISSION_1, 1);
 
 		ghostsMet = false;
 
@@ -173,11 +174,11 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 
 	@Override
 	public void render() {
-		flap.draw(g);
+		flap.draw(g, rendering);
 		rendering.drawPlayer(g, msPac);
 		rendering.drawSpouse(g, pacMan);
 		rendering.drawGhost(g, inky, false);
 		rendering.drawGhost(g, pinky, false);
-		heart.draw(g);
+		heart.draw(g, rendering);
 	}
 }
