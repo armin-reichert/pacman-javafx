@@ -2,6 +2,8 @@ package de.amr.games.pacman.ui.fx;
 
 import static de.amr.games.pacman.heaven.God.clock;
 import static de.amr.games.pacman.lib.Logging.log;
+import static de.amr.games.pacman.model.GameType.MS_PACMAN;
+import static de.amr.games.pacman.model.GameType.PACMAN;
 import static de.amr.games.pacman.world.PacManGameWorld.TS;
 
 import java.util.ArrayDeque;
@@ -76,29 +78,26 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			handleGlobalKeys(e);
 		});
 
-		renderings.put(GameType.MS_PACMAN, new MsPacMan_DefaultRendering());
-		renderings.put(GameType.PACMAN, new PacMan_DefaultRendering());
+		renderings.put(MS_PACMAN, new MsPacMan_DefaultRendering());
+		renderings.put(PACMAN, new PacMan_DefaultRendering());
 
-		soundManagers.put(GameType.MS_PACMAN, new PacManGameSoundManager(PacManGameSounds::msPacManSoundURL));
-		soundManagers.put(GameType.PACMAN, new PacManGameSoundManager(PacManGameSounds::mrPacManSoundURL));
+		soundManagers.put(MS_PACMAN, new PacManGameSoundManager(PacManGameSounds::msPacManSoundURL));
+		soundManagers.put(PACMAN, new PacManGameSoundManager(PacManGameSounds::mrPacManSoundURL));
 
-		scenes.put(GameType.MS_PACMAN, Arrays.asList(//
-				new MsPacMan_IntroScene(scaling, renderings.get(GameType.MS_PACMAN), soundManagers.get(GameType.MS_PACMAN)), //
-				new MsPacMan_IntermissionScene1(scaling, renderings.get(GameType.MS_PACMAN),
-						soundManagers.get(GameType.MS_PACMAN)), //
-				new MsPacMan_IntermissionScene2(scaling, renderings.get(GameType.MS_PACMAN),
-						soundManagers.get(GameType.MS_PACMAN)), //
-				new MsPacMan_IntermissionScene3(scaling, renderings.get(GameType.MS_PACMAN),
-						soundManagers.get(GameType.MS_PACMAN)), //
-				new PlayScene(scaling, renderings.get(GameType.MS_PACMAN), soundManagers.get(GameType.MS_PACMAN))//
+		scenes.put(MS_PACMAN, Arrays.asList(//
+				new MsPacMan_IntroScene(scaling, renderings.get(MS_PACMAN), soundManagers.get(MS_PACMAN)), //
+				new MsPacMan_IntermissionScene1(scaling, renderings.get(MS_PACMAN), soundManagers.get(MS_PACMAN)), //
+				new MsPacMan_IntermissionScene2(scaling, renderings.get(MS_PACMAN), soundManagers.get(MS_PACMAN)), //
+				new MsPacMan_IntermissionScene3(scaling, renderings.get(MS_PACMAN), soundManagers.get(MS_PACMAN)), //
+				new PlayScene(scaling, renderings.get(MS_PACMAN), soundManagers.get(MS_PACMAN))//
 		));
 
-		scenes.put(GameType.PACMAN, Arrays.asList(//
-				new PacMan_IntroScene(scaling, renderings.get(GameType.PACMAN), soundManagers.get(GameType.PACMAN)), //
-				new PacMan_IntermissionScene1(scaling, renderings.get(GameType.PACMAN), soundManagers.get(GameType.PACMAN)), //
-				new PacMan_IntermissionScene2(scaling, renderings.get(GameType.PACMAN), soundManagers.get(GameType.PACMAN)), //
-				new PacMan_IntermissionScene3(scaling, renderings.get(GameType.PACMAN), soundManagers.get(GameType.PACMAN)), //
-				new PlayScene(scaling, renderings.get(GameType.PACMAN), soundManagers.get(GameType.PACMAN))//
+		scenes.put(PACMAN, Arrays.asList(//
+				new PacMan_IntroScene(scaling, renderings.get(PACMAN), soundManagers.get(PACMAN)), //
+				new PacMan_IntermissionScene1(scaling, renderings.get(PACMAN), soundManagers.get(PACMAN)), //
+				new PacMan_IntermissionScene2(scaling, renderings.get(PACMAN), soundManagers.get(PACMAN)), //
+				new PacMan_IntermissionScene3(scaling, renderings.get(PACMAN), soundManagers.get(PACMAN)), //
+				new PlayScene(scaling, renderings.get(PACMAN), soundManagers.get(PACMAN))//
 		));
 
 		onGameChanged(controller.getGame());
