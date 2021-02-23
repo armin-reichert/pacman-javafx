@@ -51,7 +51,7 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 		flap = new Flap(2, "THE CHASE");
 		flap.setPosition(t(3), t(10));
 		flap.visible = true;
-		flap.animation.restart();
+		flap.flapping.restart();
 
 		pacMan = new Pac("Pac-Man", Direction.RIGHT);
 		msPacMan = new Pac("Ms. Pac-Man", Direction.RIGHT);
@@ -122,7 +122,7 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 
 	@Override
 	public void renderContent() {
-		flap.draw(g, rendering);
+		rendering.drawFlap(g, flap);
 		rendering.drawPlayer(g, msPacMan);
 		rendering.drawSpouse(g, pacMan);
 	}

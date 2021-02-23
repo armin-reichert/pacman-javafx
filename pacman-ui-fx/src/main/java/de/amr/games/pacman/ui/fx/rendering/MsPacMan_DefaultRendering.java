@@ -12,11 +12,16 @@ import de.amr.games.pacman.model.guys.Bonus;
 import de.amr.games.pacman.model.guys.GameEntity;
 import de.amr.games.pacman.model.guys.Pac;
 import de.amr.games.pacman.ui.fx.common.Helper;
+import de.amr.games.pacman.ui.fx.mspacman.entities.Flap;
+import de.amr.games.pacman.ui.fx.mspacman.entities.JuniorBag;
+import de.amr.games.pacman.ui.fx.mspacman.entities.Stork;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 /**
  * Default rendering for the the Ms. Pac-Man game.
@@ -226,23 +231,32 @@ public class MsPacMan_DefaultRendering extends DefaultRendering {
 	}
 
 	@Override
-	public void drawStork(GraphicsContext g, GameEntity stork) {
+	public void drawFlap(GraphicsContext g, Flap flap) {
+		if (flap.visible) {
+			drawSprite(g, flap.flapping.animate(), flap.position.x, flap.position.y);
+			g.setFont(Font.font(getScoreFont().getName(), FontWeight.THIN, 8));
+			g.setFill(Color.rgb(222, 222, 225, 0.75));
+			g.fillText(flap.sceneNumber + "", flap.position.x + 20, flap.position.y + 30);
+			g.setFont(getScoreFont());
+			g.fillText(flap.sceneTitle, flap.position.x + 40, flap.position.y + 20);
+		}
+	}
+
+	@Override
+	public void drawStork(GraphicsContext g, Stork stork) {
 		if (stork.visible) {
-			drawSprite(g, (Rectangle2D) stork.animation.animate(), stork.position.x, stork.position.y);
+			drawSprite(g, stork.flying.animate(), stork.position.x, stork.position.y);
 		}
 	}
 
 	@Override
-	public void drawBag(GraphicsContext g, GameEntity bag) {
+	public void drawJuniorBag(GraphicsContext g, JuniorBag bag) {
 		if (bag.visible) {
-			drawSprite(g, new Rectangle2D(488, 199, 8, 8), bag.position.x, bag.position.y);
-		}
-	}
-
-	@Override
-	public void drawJunior(GraphicsContext g, GameEntity junior) {
-		if (junior.visible) {
-			drawSprite(g, new Rectangle2D(509, 200, 8, 8), junior.position.x, junior.position.y);
+			if (bag.open) {
+				drawEntity(g, bag, new Rectangle2D(509, 200, 8, 8));
+			} else {
+				drawEntity(g, bag, new Rectangle2D(488, 199, 8, 8));
+			}
 		}
 	}
 

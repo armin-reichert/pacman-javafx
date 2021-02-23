@@ -175,18 +175,6 @@ public class PacMan_DefaultRendering extends DefaultRendering {
 	}
 
 	@Override
-	public void drawStork(GraphicsContext g, GameEntity stork) {
-	}
-
-	@Override
-	public void drawBag(GraphicsContext g, GameEntity bag) {
-	}
-
-	@Override
-	public void drawJunior(GraphicsContext g, GameEntity junior) {
-	}
-
-	@Override
 	public void drawHeart(GraphicsContext g, GameEntity heart) {
 	}
 }
