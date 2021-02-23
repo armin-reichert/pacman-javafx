@@ -19,11 +19,11 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
 /**
- * Rendering for the scenes of the Ms. Pac-Man game.
+ * Default rendering for the the Ms. Pac-Man game.
  * 
  * @author Armin Reichert
  */
-public class MsPacMan_Rendering extends DefaultRendering {
+public class MsPacMan_DefaultRendering extends DefaultRendering {
 
 	private final Map<Direction, Animation<Rectangle2D>> msPacManMunchingAnim;
 	private final Animation<Integer> bonusJumpingAnim;
@@ -33,7 +33,7 @@ public class MsPacMan_Rendering extends DefaultRendering {
 		return tileRegionAt(456, 0, tileX, tileY, 1, 1);
 	}
 
-	public MsPacMan_Rendering() {
+	public MsPacMan_DefaultRendering() {
 
 		super("/mspacman/graphics/sprites.png");
 

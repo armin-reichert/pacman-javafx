@@ -32,8 +32,8 @@ import de.amr.games.pacman.ui.fx.pacman.PacMan_IntermissionScene1;
 import de.amr.games.pacman.ui.fx.pacman.PacMan_IntermissionScene2;
 import de.amr.games.pacman.ui.fx.pacman.PacMan_IntermissionScene3;
 import de.amr.games.pacman.ui.fx.pacman.PacMan_IntroScene;
-import de.amr.games.pacman.ui.fx.rendering.MsPacMan_Rendering;
-import de.amr.games.pacman.ui.fx.rendering.PacMan_Rendering;
+import de.amr.games.pacman.ui.fx.rendering.MsPacMan_DefaultRendering;
+import de.amr.games.pacman.ui.fx.rendering.PacMan_DefaultRendering;
 import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
@@ -47,8 +47,8 @@ import javafx.stage.Stage;
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
 
-	public static final MsPacMan_Rendering RENDERING_MSPACMAN = new MsPacMan_Rendering();
-	public static final PacMan_Rendering RENDERING_PACMAN = new PacMan_Rendering();
+	public static final MsPacMan_DefaultRendering RENDERING_MSPACMAN = new MsPacMan_DefaultRendering();
+	public static final PacMan_DefaultRendering RENDERING_PACMAN = new PacMan_DefaultRendering();
 
 	public static final SoundManager SOUNDS_MSPACMAN = new PacManGameSoundManager(PacManGameSounds::msPacManSoundURL);
 	public static final SoundManager SOUNDS_PACMAN = new PacManGameSoundManager(PacManGameSounds::mrPacManSoundURL);
@@ -80,7 +80,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			Platform.exit();
 			System.exit(0); // TODO
 		});
-		stage.addEventHandler(javafx.scene.input.KeyEvent.KEY_PRESSED, e -> {
+		stage.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
 			handleGlobalKeys(e);
 		});
 

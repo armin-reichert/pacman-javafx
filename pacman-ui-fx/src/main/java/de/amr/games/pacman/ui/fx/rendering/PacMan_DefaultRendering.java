@@ -18,11 +18,11 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 /**
- * Rendering for the scenes of the Pac-Man game.
+ * Default rendering for the scenes of the Pac-Man game.
  * 
  * @author Armin Reichert
  */
-public class PacMan_Rendering extends DefaultRendering {
+public class PacMan_DefaultRendering extends DefaultRendering {
 
 	private final Image mazeFull = new Image("/pacman/graphics/maze_full.png", false);
 	private final Image mazeEmpty = new Image("/pacman/graphics/maze_empty.png", false);
@@ -31,7 +31,7 @@ public class PacMan_Rendering extends DefaultRendering {
 	private Animation<Rectangle2D> blinkyDamaged;
 	private Animation<Rectangle2D> blinkyNaked;
 
-	public PacMan_Rendering() {
+	public PacMan_DefaultRendering() {
 		super("/pacman/graphics/sprites.png");
 
 		symbolRegions = Arrays.asList(tileRegion(2, 3), tileRegion(3, 3), tileRegion(4, 3), tileRegion(5, 3),

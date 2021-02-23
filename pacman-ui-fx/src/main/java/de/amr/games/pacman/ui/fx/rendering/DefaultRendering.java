@@ -34,7 +34,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 /**
- * Common interface for the scene renderings.
+ * Default implementation of scene rendering.
  * 
  * @author Armin Reichert
  */
@@ -72,7 +72,7 @@ public abstract class DefaultRendering implements Rendering<GraphicsContext, Col
 	}
 
 	/* Tile region relative to given origin */
-	public Rectangle2D tileRegionAt(int originX, int originY, int tileX, int tileY, int tilesWidth, int tilesHeight) {
+	protected Rectangle2D tileRegionAt(int originX, int originY, int tileX, int tileY, int tilesWidth, int tilesHeight) {
 		return new Rectangle2D(originX + tileX * RASTER, originY + tileY * RASTER, tilesWidth * RASTER,
 				tilesHeight * RASTER);
 	}
