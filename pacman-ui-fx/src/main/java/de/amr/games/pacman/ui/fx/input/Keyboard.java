@@ -34,39 +34,10 @@ public class Keyboard {
 	}
 
 	private int keyCode(String keySpec) {
-		keySpec = keySpec.toLowerCase();
-		if (keySpec.length() == 1) {
-			int c = keySpec.charAt(0);
-			int index = "abcdefghijklmnopqrstuvwxyz".indexOf(c);
-			if (index != -1) {
-				return KeyCode.A.getCode() + index;
-			}
-			index = "0123456789".indexOf(c);
-			if (index != -1) {
-				return KeyCode.DIGIT0.getCode() + index;
-			}
+		KeyCode keyCode = KeyCode.getKeyCode(keySpec);
+		if (keyCode != null) {
+			return keyCode.getCode();
 		}
-		switch (keySpec) {
-		case "up":
-			return KeyCode.UP.getCode();
-		case "down":
-			return KeyCode.DOWN.getCode();
-		case "left":
-			return KeyCode.LEFT.getCode();
-		case "right":
-			return KeyCode.RIGHT.getCode();
-		case "escape":
-			return KeyCode.ESCAPE.getCode();
-		case "space":
-			return KeyCode.SPACE.getCode();
-		case "plus":
-		case "+":
-			return KeyCode.PLUS.getCode();
-		case "minus":
-		case "-":
-			return KeyCode.MINUS.getCode();
-		default:
-			throw new IllegalArgumentException(String.format("Unknown key specification: %s", keySpec));
-		}
+		throw new IllegalArgumentException(String.format("Unkown key specification: '%s'", keySpec));
 	}
 }
