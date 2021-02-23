@@ -2,7 +2,7 @@ package de.amr.games.pacman.ui.fx.mspacman.entities;
 
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.model.guys.GameEntity;
-import de.amr.games.pacman.ui.fx.common.FXRendering;
+import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import javafx.scene.canvas.GraphicsContext;
 
 public class Stork extends GameEntity {

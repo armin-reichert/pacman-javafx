@@ -10,6 +10,7 @@ import de.amr.games.pacman.lib.CountdownTimer;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.FlashMessage;
+import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import javafx.geometry.Pos;
 import javafx.scene.Camera;
 import javafx.scene.Group;

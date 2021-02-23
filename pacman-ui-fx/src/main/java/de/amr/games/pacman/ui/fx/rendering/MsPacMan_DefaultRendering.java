@@ -212,7 +212,7 @@ public class MsPacMan_DefaultRendering extends DefaultRendering {
 	public void drawBonus(GraphicsContext g, Bonus bonus) {
 		g.save();
 		g.translate(0, bonusJumpingAnim.animate());
-		drawGuy(g, bonus, bonusSpriteRegion(bonus));
+		drawEntity(g, bonus, bonusSprite(bonus));
 		g.restore();
 	}
 
@@ -248,6 +248,6 @@ public class MsPacMan_DefaultRendering extends DefaultRendering {
 
 	@Override
 	public void drawHeart(GraphicsContext g, GameEntity heart) {
-		drawGuy(g, heart, s(2, 10));
+		drawEntity(g, heart, s(2, 10));
 	}
 }

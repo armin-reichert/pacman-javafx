@@ -9,11 +9,11 @@ import de.amr.games.pacman.lib.V2f;
 import de.amr.games.pacman.model.guys.Pac;
 import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.common.FXRendering;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import de.amr.games.pacman.ui.fx.mspacman.entities.Flap;
 import de.amr.games.pacman.ui.fx.mspacman.entities.JuniorBag;
 import de.amr.games.pacman.ui.fx.mspacman.entities.Stork;
+import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 
 /**
  * Intermission scene 3: "Junior".

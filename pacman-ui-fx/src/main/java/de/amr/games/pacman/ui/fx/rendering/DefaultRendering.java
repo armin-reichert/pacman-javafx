@@ -24,7 +24,6 @@ import de.amr.games.pacman.model.guys.Bonus;
 import de.amr.games.pacman.model.guys.GameEntity;
 import de.amr.games.pacman.model.guys.Ghost;
 import de.amr.games.pacman.model.guys.Pac;
-import de.amr.games.pacman.ui.fx.common.FXRendering;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -84,7 +83,7 @@ public abstract class DefaultRendering implements FXRendering {
 		return dir != null ? dir : Direction.RIGHT;
 	}
 
-	public Rectangle2D bonusSpriteRegion(Bonus bonus) {
+	public Rectangle2D bonusSprite(Bonus bonus) {
 		if (bonus.edibleTicksLeft > 0) {
 			return symbolRegions.get(bonus.symbol);
 		}
@@ -94,7 +93,7 @@ public abstract class DefaultRendering implements FXRendering {
 		return null;
 	}
 
-	public Rectangle2D pacSpriteRegion(Pac pac) {
+	public Rectangle2D pacSprite(Pac pac) {
 		if (pac.dead) {
 			return playerDying().hasStarted() ? playerDying().animate() : (Rectangle2D) playerMunching(pac, pac.dir).frame();
 		}
@@ -107,7 +106,7 @@ public abstract class DefaultRendering implements FXRendering {
 		return (Rectangle2D) playerMunching(pac, pac.dir).animate();
 	}
 
-	public Rectangle2D ghostSpriteRegion(Ghost ghost, boolean frightened) {
+	public Rectangle2D ghostSprite(Ghost ghost, boolean frightened) {
 		if (ghost.bounty > 0) {
 			return bountyValueRegions.get(ghost.bounty);
 		}
@@ -129,24 +128,25 @@ public abstract class DefaultRendering implements FXRendering {
 		return scoreFont;
 	}
 
-	@Override
-	public void drawSprite(GraphicsContext g, Rectangle2D r, float x, float y) {
-		g.drawImage(spritesheet, r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y, r.getWidth(), r.getHeight());
-	}
-
 	/**
-	 * Draws a guy centered over his collision box.
+	 * Draws a game entity centered over its collision box of size 8x8.
 	 * 
 	 * @param g      the graphics context
 	 * @param guy    the guy
-	 * @param region sprite region in spritsheet
+	 * @param sprite sprite (region) in spritsheet
 	 */
-	protected void drawGuy(GraphicsContext g, GameEntity guy, Rectangle2D region) {
-		if (guy.visible && region != null) {
-			g.drawImage(spritesheet, region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(),
-					guy.position.x - region.getWidth() / 2 + 4, guy.position.y - region.getHeight() / 2 + 4, region.getWidth(),
-					region.getHeight());
+	protected void drawEntity(GraphicsContext g, GameEntity guy, Rectangle2D sprite) {
+		if (guy.visible && sprite != null) {
+			g.drawImage(spritesheet, sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(),
+					guy.position.x - sprite.getWidth() / 2 + 4, guy.position.y - sprite.getHeight() / 2 + 4, sprite.getWidth(),
+					sprite.getHeight());
 		}
+	}
+
+	@Override
+	public void drawSprite(GraphicsContext g, Rectangle2D sprite, float x, float y) {
+		g.drawImage(spritesheet, sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(), x, y,
+				sprite.getWidth(), sprite.getHeight());
 	}
 
 	@Override
@@ -165,12 +165,12 @@ public abstract class DefaultRendering implements FXRendering {
 
 	@Override
 	public void drawPlayer(GraphicsContext g, Pac pac) {
-		drawGuy(g, pac, pacSpriteRegion(pac));
+		drawEntity(g, pac, pacSprite(pac));
 	}
 
 	@Override
 	public void drawGhost(GraphicsContext g, Ghost ghost, boolean frightened) {
-		drawGuy(g, ghost, ghostSpriteRegion(ghost, frightened));
+		drawEntity(g, ghost, ghostSprite(ghost, frightened));
 	}
 
 	@Override

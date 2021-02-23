@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.common;
+package de.amr.games.pacman.ui.fx.rendering;
 
 import de.amr.games.pacman.ui.PacManGameAnimations;
 import de.amr.games.pacman.ui.Rendering;

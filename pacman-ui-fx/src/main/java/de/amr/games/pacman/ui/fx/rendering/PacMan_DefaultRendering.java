@@ -165,7 +165,7 @@ public class PacMan_DefaultRendering extends DefaultRendering {
 
 	@Override
 	public void drawBonus(GraphicsContext g, Bonus bonus) {
-		drawGuy(g, bonus, bonusSpriteRegion(bonus));
+		drawEntity(g, bonus, bonusSprite(bonus));
 	}
 
 	// Ms. Pac-Man only:
