@@ -51,11 +51,11 @@ public abstract class DefaultRendering implements FXRendering {
 
 	protected Image spritesheet;
 	protected Font scoreFont;
+	protected List<Rectangle2D> symbolSprites;
+	protected Map<Integer, Rectangle2D> bonusValueSprites;
+	protected Map<Integer, Rectangle2D> bountyValueSprites;
 	protected List<Animation<Image>> mazeFlashingAnim;
 	protected Animation<Boolean> energizerBlinking;
-	protected List<Rectangle2D> symbolRegions;
-	protected Map<Integer, Rectangle2D> bonusValueRegions;
-	protected Map<Integer, Rectangle2D> bountyValueRegions;
 	protected Map<Direction, Animation<Rectangle2D>> pacManMunchingAnim;
 	protected Animation<Rectangle2D> pacDyingAnim;
 	protected List<Map<Direction, Animation<Rectangle2D>>> ghostsKickingAnim;
@@ -85,10 +85,10 @@ public abstract class DefaultRendering implements FXRendering {
 
 	public Rectangle2D bonusSprite(Bonus bonus) {
 		if (bonus.edibleTicksLeft > 0) {
-			return symbolRegions.get(bonus.symbol);
+			return symbolSprites.get(bonus.symbol);
 		}
 		if (bonus.eatenTicksLeft > 0) {
-			return bonusValueRegions.get(bonus.points);
+			return bonusValueSprites.get(bonus.points);
 		}
 		return null;
 	}
@@ -108,7 +108,7 @@ public abstract class DefaultRendering implements FXRendering {
 
 	public Rectangle2D ghostSprite(Ghost ghost, boolean frightened) {
 		if (ghost.bounty > 0) {
-			return bountyValueRegions.get(ghost.bounty);
+			return bountyValueSprites.get(ghost.bounty);
 		}
 		if (ghost.is(DEAD) || ghost.is(ENTERING_HOUSE)) {
 			return ghostReturningHomeToDir(ghost, ghost.dir).animate();
@@ -235,7 +235,7 @@ public abstract class DefaultRendering implements FXRendering {
 		int x = rightX;
 		int firstLevel = Math.max(1, game.currentLevelNumber - 6);
 		for (int level = firstLevel; level <= game.currentLevelNumber; ++level) {
-			Rectangle2D region = symbolRegions.get(game.levelSymbols.get(level - 1));
+			Rectangle2D region = symbolSprites.get(game.levelSymbols.get(level - 1));
 			g.drawImage(spritesheet, region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(), x, y,
 					region.getWidth(), region.getHeight());
 			x -= t(2);

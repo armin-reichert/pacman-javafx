@@ -37,23 +37,23 @@ public class MsPacMan_DefaultRendering extends DefaultRendering {
 
 		super("/mspacman/graphics/sprites.png");
 
-		symbolRegions = Arrays.asList(s(3, 0), s(4, 0), s(5, 0), s(6, 0), s(7, 0), s(8, 0), s(9, 0));
+		symbolSprites = Arrays.asList(s(3, 0), s(4, 0), s(5, 0), s(6, 0), s(7, 0), s(8, 0), s(9, 0));
 
 		//@formatter:off
-		bonusValueRegions = new HashMap<>();
-		bonusValueRegions.put(100,  s(3, 1));
-		bonusValueRegions.put(200,  s(4, 1));
-		bonusValueRegions.put(500,  s(5, 1));
-		bonusValueRegions.put(700,  s(6, 1));
-		bonusValueRegions.put(1000, s(7, 1));
-		bonusValueRegions.put(2000, s(8, 1));
-		bonusValueRegions.put(5000, s(9, 1));
+		bonusValueSprites = new HashMap<>();
+		bonusValueSprites.put(100,  s(3, 1));
+		bonusValueSprites.put(200,  s(4, 1));
+		bonusValueSprites.put(500,  s(5, 1));
+		bonusValueSprites.put(700,  s(6, 1));
+		bonusValueSprites.put(1000, s(7, 1));
+		bonusValueSprites.put(2000, s(8, 1));
+		bonusValueSprites.put(5000, s(9, 1));
 		
-		bountyValueRegions = new HashMap<>();
-		bountyValueRegions.put(200,  s(0, 8));
-		bountyValueRegions.put(400,  s(1, 8));
-		bountyValueRegions.put(800,  s(2, 8));
-		bountyValueRegions.put(1600, s(3, 8));
+		bountyValueSprites = new HashMap<>();
+		bountyValueSprites.put(200,  s(0, 8));
+		bountyValueSprites.put(400,  s(1, 8));
+		bountyValueSprites.put(800,  s(2, 8));
+		bountyValueSprites.put(1600, s(3, 8));
 		//@formatter:on
 
 		// Animations

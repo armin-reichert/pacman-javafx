@@ -34,25 +34,25 @@ public class PacMan_DefaultRendering extends DefaultRendering {
 	public PacMan_DefaultRendering() {
 		super("/pacman/graphics/sprites.png");
 
-		symbolRegions = Arrays.asList(tileRegion(2, 3), tileRegion(3, 3), tileRegion(4, 3), tileRegion(5, 3),
+		symbolSprites = Arrays.asList(tileRegion(2, 3), tileRegion(3, 3), tileRegion(4, 3), tileRegion(5, 3),
 				tileRegion(6, 3), tileRegion(7, 3), tileRegion(8, 3), tileRegion(9, 3));
 
 		//@formatter:off
-		bonusValueRegions = new HashMap<>();
-		bonusValueRegions.put(100,  tileRegion(0, 9, 1, 1));
-		bonusValueRegions.put(300,  tileRegion(1, 9, 1, 1));
-		bonusValueRegions.put(500,  tileRegion(2, 9, 1, 1));
-		bonusValueRegions.put(700,  tileRegion(3, 9, 1, 1));
-		bonusValueRegions.put(1000, tileRegion(4, 9, 2, 1)); // left-aligned 
-		bonusValueRegions.put(2000, tileRegion(3, 10, 3, 1));
-		bonusValueRegions.put(3000, tileRegion(3, 11, 3, 1));
-		bonusValueRegions.put(5000, tileRegion(3, 12, 3, 1));
+		bonusValueSprites = new HashMap<>();
+		bonusValueSprites.put(100,  tileRegion(0, 9, 1, 1));
+		bonusValueSprites.put(300,  tileRegion(1, 9, 1, 1));
+		bonusValueSprites.put(500,  tileRegion(2, 9, 1, 1));
+		bonusValueSprites.put(700,  tileRegion(3, 9, 1, 1));
+		bonusValueSprites.put(1000, tileRegion(4, 9, 2, 1)); // left-aligned 
+		bonusValueSprites.put(2000, tileRegion(3, 10, 3, 1));
+		bonusValueSprites.put(3000, tileRegion(3, 11, 3, 1));
+		bonusValueSprites.put(5000, tileRegion(3, 12, 3, 1));
 
-		bountyValueRegions = new HashMap<>();
-		bountyValueRegions.put(200,  tileRegion(0, 8, 1, 1));
-		bountyValueRegions.put(400,  tileRegion(1, 8, 1, 1));
-		bountyValueRegions.put(800,  tileRegion(2, 8, 1, 1));
-		bountyValueRegions.put(1600, tileRegion(3, 8, 1, 1));
+		bountyValueSprites = new HashMap<>();
+		bountyValueSprites.put(200,  tileRegion(0, 8, 1, 1));
+		bountyValueSprites.put(400,  tileRegion(1, 8, 1, 1));
+		bountyValueSprites.put(800,  tileRegion(2, 8, 1, 1));
+		bountyValueSprites.put(1600, tileRegion(3, 8, 1, 1));
 		//@formatter:on
 
 		// Animations
