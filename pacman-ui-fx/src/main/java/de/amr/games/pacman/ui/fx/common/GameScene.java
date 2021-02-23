@@ -4,6 +4,7 @@ import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.SCENE_HEIGHT;
 import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.SCENE_WIDTH;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import de.amr.games.pacman.lib.CountdownTimer;
@@ -13,7 +14,6 @@ import de.amr.games.pacman.ui.FlashMessage;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import javafx.geometry.Pos;
 import javafx.scene.Camera;
-import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -32,6 +32,7 @@ import javafx.scene.text.Text;
 public abstract class GameScene {
 
 	public final Scene fxScene;
+
 	protected final Text flashMessageView;
 	protected final GraphicsContext g;
 	protected final FXRendering rendering;
@@ -43,23 +44,68 @@ public abstract class GameScene {
 	public GameScene(double scaling, FXRendering rendering, SoundManager sounds) {
 
 		this.scaling = scaling;
-		this.rendering = rendering;
-		this.sounds = sounds;
+		this.rendering = Objects.requireNonNull(rendering);
+		this.sounds = Objects.requireNonNull(sounds);
 
 		double width = SCENE_WIDTH * scaling;
 		double height = SCENE_HEIGHT * scaling;
 
-		Canvas canvas = new Canvas(width, height);
 		StackPane pane = new StackPane();
+
+		Canvas canvas = new Canvas(width, height);
+		g = canvas.getGraphicsContext2D();
+
 		flashMessageView = new Text();
 		flashMessageView.setFont(Font.font("Serif", FontWeight.BOLD, 10 * scaling));
 		flashMessageView.setFill(Color.YELLOW);
 		StackPane.setAlignment(flashMessageView, Pos.BOTTOM_CENTER);
+
 		pane.getChildren().addAll(canvas, flashMessageView);
-		Group root = new Group();
-		root.getChildren().addAll(pane);
-		g = canvas.getGraphicsContext2D();
-		fxScene = new Scene(root, width, height, Color.BLACK);
+
+		fxScene = new Scene(pane, width, height, Color.BLACK);
+	}
+
+	public void start() {
+	}
+
+	public abstract void update();
+
+	public void end() {
+	}
+
+	protected abstract void renderContent();
+
+	public final void render() {
+		g.save();
+		g.scale(scaling, scaling);
+		renderContent();
+		g.restore();
+	}
+
+	public void setGame(GameModel game) {
+		this.game = game;
+	}
+
+	public Optional<GameModel> game() {
+		return Optional.ofNullable(game);
+	}
+
+	public void clear() {
+		g.setFill(Color.BLACK);
+		g.fillRect(0, 0, g.getCanvas().getWidth(), g.getCanvas().getHeight());
+	}
+
+	public void drawFlashMessage(FlashMessage message) {
+		if (message != null) {
+			g.setFill(Color.BLACK);
+			g.fillRect(0, g.getCanvas().getHeight() - t(4), g.getCanvas().getWidth(), t(4));
+			CountdownTimer timer = message.timer;
+			double alpha = Math.cos((timer.running() * Math.PI / 2.0) / timer.getDuration());
+			flashMessageView.setFill(Color.rgb(255, 255, 0, alpha));
+			flashMessageView.setText(message.text);
+		} else {
+			flashMessageView.setText(null);
+		}
 	}
 
 	@SuppressWarnings("unused")
@@ -99,50 +145,4 @@ public abstract class GameScene {
 		fxScene.setCamera(camera);
 	}
 
-	public abstract void update();
-
-	protected abstract void renderContent();
-
-	public void render() {
-		g.save();
-		g.scale(scaling, scaling);
-		renderContent();
-		g.restore();
-	}
-
-	public void setGame(GameModel game) {
-		this.game = game;
-	}
-
-	public Optional<GameModel> game() {
-		return Optional.ofNullable(game);
-	}
-
-	public void clear() {
-		g.setFill(Color.BLACK);
-		g.fillRect(0, 0, g.getCanvas().getWidth(), g.getCanvas().getHeight());
-	}
-
-	public GraphicsContext gc() {
-		return g;
-	}
-
-	public void start() {
-	}
-
-	public void end() {
-	}
-
-	public void drawFlashMessage(FlashMessage message) {
-		if (message != null) {
-			g.setFill(Color.BLACK);
-			g.fillRect(0, g.getCanvas().getHeight() - t(4), g.getCanvas().getWidth(), t(4));
-			CountdownTimer timer = message.timer;
-			double alpha = Math.cos((timer.running() * Math.PI / 2.0) / timer.getDuration());
-			flashMessageView.setFill(Color.rgb(255, 255, 0, alpha));
-			flashMessageView.setText(message.text);
-		} else {
-			flashMessageView.setText(null);
-		}
-	}
 }
