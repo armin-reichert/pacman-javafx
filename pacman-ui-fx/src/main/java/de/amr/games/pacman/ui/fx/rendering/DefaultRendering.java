@@ -164,8 +164,8 @@ public abstract class DefaultRendering implements FXRendering {
 	}
 
 	@Override
-	public void drawPlayer(GraphicsContext g, Pac pac) {
-		drawEntity(g, pac, pacSprite(pac));
+	public void drawPlayer(GraphicsContext g, Pac player) {
+		drawEntity(g, player, pacSprite(player));
 	}
 
 	@Override
