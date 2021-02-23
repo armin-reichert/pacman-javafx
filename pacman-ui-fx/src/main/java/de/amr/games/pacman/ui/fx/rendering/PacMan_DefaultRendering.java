@@ -9,7 +9,6 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.guys.Bonus;
-import de.amr.games.pacman.model.guys.GameEntity;
 import de.amr.games.pacman.model.guys.Pac;
 import de.amr.games.pacman.ui.fx.common.Helper;
 import javafx.geometry.Rectangle2D;
@@ -172,9 +171,5 @@ public class PacMan_DefaultRendering extends DefaultRendering {
 
 	@Override
 	public void drawSpouse(GraphicsContext g, Pac pac) {
-	}
-
-	@Override
-	public void drawHeart(GraphicsContext g, GameEntity heart) {
 	}
 }

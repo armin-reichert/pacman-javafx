@@ -9,10 +9,10 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.guys.Bonus;
-import de.amr.games.pacman.model.guys.GameEntity;
 import de.amr.games.pacman.model.guys.Pac;
 import de.amr.games.pacman.ui.fx.common.Helper;
 import de.amr.games.pacman.ui.fx.mspacman.entities.Flap;
+import de.amr.games.pacman.ui.fx.mspacman.entities.Heart;
 import de.amr.games.pacman.ui.fx.mspacman.entities.JuniorBag;
 import de.amr.games.pacman.ui.fx.mspacman.entities.Stork;
 import javafx.geometry.Rectangle2D;
@@ -261,7 +261,7 @@ public class MsPacMan_DefaultRendering extends DefaultRendering {
 	}
 
 	@Override
-	public void drawHeart(GraphicsContext g, GameEntity heart) {
+	public void drawHeart(GraphicsContext g, Heart heart) {
 		drawEntity(g, heart, s(2, 10));
 	}
 }
