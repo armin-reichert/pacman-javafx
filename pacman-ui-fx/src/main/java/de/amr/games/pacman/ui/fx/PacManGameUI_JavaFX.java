@@ -74,9 +74,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			Platform.exit();
 			System.exit(0); // TODO
 		});
-		stage.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-			handleGlobalKeys(e);
-		});
+		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::handleGlobalKeys);
 
 		renderings.put(MS_PACMAN, new MsPacMan_DefaultRendering());
 		renderings.put(PACMAN, new PacMan_DefaultRendering());
