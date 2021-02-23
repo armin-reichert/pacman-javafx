@@ -6,7 +6,6 @@ import de.amr.games.pacman.lib.CountdownTimer;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.FlashMessage;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
-import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering.DefaultRendering;
 import javafx.geometry.Pos;
 import javafx.scene.Camera;
@@ -28,7 +27,6 @@ import javafx.scene.text.Text;
 public abstract class GameScene extends Scene {
 
 	protected final Text flashMessageView;
-	protected final Keyboard keyboard;
 	protected final GraphicsContext g;
 	protected final DefaultRendering rendering;
 	protected GameModel game;
@@ -48,7 +46,6 @@ public abstract class GameScene extends Scene {
 		flashMessageView.setFill(Color.YELLOW);
 		StackPane.setAlignment(flashMessageView, Pos.BOTTOM_CENTER);
 		pane.getChildren().addAll(canvas, flashMessageView);
-		keyboard = new Keyboard(this);
 
 //		camera = new PerspectiveCamera();
 //		setOnKeyPressed(e -> {
@@ -110,10 +107,6 @@ public abstract class GameScene extends Scene {
 	}
 
 	public void end() {
-	}
-
-	public Keyboard keyboard() {
-		return keyboard;
 	}
 
 	protected void drawFlashMessage() {

@@ -23,6 +23,7 @@ import de.amr.games.pacman.ui.PacManGameAnimations;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import de.amr.games.pacman.ui.fx.common.PlayScene;
+import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene1;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene2;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene3;
@@ -63,6 +64,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private final EnumMap<GameType, List<GameScene>> scenes = new EnumMap<>(GameType.class);
 	private GameScene currentScene;
+	private Keyboard keyboard;
 
 	private GameModel game;
 	private boolean muted;
@@ -122,7 +124,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 	}
 
-	private GameScene currentGameScene() {
+	private GameScene selectGameScene() {
 		switch (game.state) {
 		case INTRO:
 			return scenes.get(controller.currentGameType()).get(0);
@@ -137,7 +139,12 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	public void onGameChanged(GameModel newGame) {
 		game = Objects.requireNonNull(newGame);
 		scenes.get(controller.currentGameType()).forEach(scene -> scene.setGame(game));
-		currentScene = currentGameScene();
+		changeScene(selectGameScene());
+	}
+
+	private void changeScene(GameScene newScene) {
+		currentScene = newScene;
+		keyboard = new Keyboard(currentScene);
 		currentScene.start();
 	}
 
@@ -151,14 +158,13 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void update() {
-		GameScene sceneToDisplay = currentGameScene();
+		GameScene sceneToDisplay = selectGameScene();
 		if (currentScene != sceneToDisplay) {
 			log("%s: Scene changes from %s to %s", this, currentScene, sceneToDisplay);
 			if (currentScene != null) {
 				currentScene.end();
 			}
-			sceneToDisplay.start();
-			currentScene = sceneToDisplay;
+			changeScene(sceneToDisplay);
 		}
 		currentScene.update();
 
@@ -201,8 +207,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public boolean keyPressed(String keySpec) {
-		boolean pressed = currentScene.keyboard().keyPressed(keySpec);
-		currentScene.keyboard().clearKey(keySpec); // TODO
+		boolean pressed = keyboard.keyPressed(keySpec);
+		keyboard.clearKey(keySpec);
 		return pressed;
 	}
 
