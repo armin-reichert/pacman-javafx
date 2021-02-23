@@ -10,6 +10,7 @@ import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import javafx.geometry.Pos;
 import javafx.scene.Camera;
 import javafx.scene.Group;
+import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -24,65 +25,75 @@ import javafx.scene.text.Text;
  * 
  * @author Armin Reichert
  */
-public abstract class GameScene extends Scene {
+public abstract class GameScene {
 
+	public final Scene fxScene;
 	protected final Text flashMessageView;
 	protected final GraphicsContext g;
 	protected final FXRendering rendering;
 	protected final SoundManager sounds;
+
 	protected GameModel game;
 
-	protected Camera camera;
+	public GameScene(double scaling, FXRendering rendering, SoundManager sounds) {
 
-	public GameScene(Group root, double width, double height, double scaling, FXRendering rendering,
-			SoundManager sounds) {
-		super(root, width, height, Color.BLACK);
 		this.rendering = rendering;
 		this.sounds = sounds;
+
+		double width = PacManGameUI_JavaFX.SCENE_WIDTH * scaling;
+		double height = PacManGameUI_JavaFX.SCENE_HEIGHT * scaling;
+
 		Canvas canvas = new Canvas(width, height);
-		g = canvas.getGraphicsContext2D();
-		g.scale(scaling, scaling);
 		StackPane pane = new StackPane();
-		root.getChildren().add(pane);
 		flashMessageView = new Text();
 		flashMessageView.setFont(Font.font("Serif", FontWeight.BOLD, 10 * scaling));
 		flashMessageView.setFill(Color.YELLOW);
 		StackPane.setAlignment(flashMessageView, Pos.BOTTOM_CENTER);
 		pane.getChildren().addAll(canvas, flashMessageView);
+		Group root = new Group();
+		root.getChildren().addAll(pane);
 
-//		camera = new PerspectiveCamera();
-//		setOnKeyPressed(e -> {
-//			if (e.isControlDown()) {
-//				switch (e.getCode()) {
-//				case DIGIT0:
-//					camera.setTranslateX(0);
-//					camera.setTranslateY(0);
-//					camera.setTranslateZ(0);
-//					break;
-//				case LEFT:
-//					camera.setTranslateX(camera.getTranslateX() + 10);
-//					break;
-//				case RIGHT:
-//					camera.setTranslateX(camera.getTranslateX() - 10);
-//					break;
-//				case UP:
-//					camera.setTranslateY(camera.getTranslateY() + 10);
-//					break;
-//				case DOWN:
-//					camera.setTranslateY(camera.getTranslateY() - 10);
-//					break;
-//				case PLUS:
-//					camera.setTranslateZ(camera.getTranslateZ() + 10);
-//					break;
-//				case MINUS:
-//					camera.setTranslateZ(camera.getTranslateZ() - 10);
-//					break;
-//				default:
-//					break;
-//				}
-//			}
-//		});
-//		setCamera(camera);
+		g = canvas.getGraphicsContext2D();
+		g.scale(scaling, scaling);
+
+		fxScene = new Scene(root, width, height, Color.BLACK);
+	}
+
+	@SuppressWarnings("unused")
+	private void testCamera() {
+		Camera camera = new PerspectiveCamera();
+		fxScene.setOnKeyPressed(e -> {
+			if (e.isControlDown()) {
+				switch (e.getCode()) {
+				case DIGIT0:
+					camera.setTranslateX(0);
+					camera.setTranslateY(0);
+					camera.setTranslateZ(0);
+					break;
+				case LEFT:
+					camera.setTranslateX(camera.getTranslateX() + 10);
+					break;
+				case RIGHT:
+					camera.setTranslateX(camera.getTranslateX() - 10);
+					break;
+				case UP:
+					camera.setTranslateY(camera.getTranslateY() + 10);
+					break;
+				case DOWN:
+					camera.setTranslateY(camera.getTranslateY() - 10);
+					break;
+				case PLUS:
+					camera.setTranslateZ(camera.getTranslateZ() + 10);
+					break;
+				case MINUS:
+					camera.setTranslateZ(camera.getTranslateZ() - 10);
+					break;
+				default:
+					break;
+				}
+			}
+		});
+		fxScene.setCamera(camera);
 	}
 
 	public abstract void update();

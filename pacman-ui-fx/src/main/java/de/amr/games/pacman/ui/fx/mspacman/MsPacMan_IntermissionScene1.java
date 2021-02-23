@@ -16,7 +16,6 @@ import de.amr.games.pacman.ui.fx.common.FXRendering;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import de.amr.games.pacman.ui.fx.mspacman.entities.Flap;
 import de.amr.games.pacman.ui.fx.mspacman.entities.Heart;
-import javafx.scene.Group;
 
 /**
  * Intermission scene 1: "They meet".
@@ -52,9 +51,8 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 		phase.timer.setDuration(ticks);
 	}
 
-	public MsPacMan_IntermissionScene1(Group root, double width, double height, double scaling, FXRendering rendering,
-			SoundManager sounds) {
-		super(root, width, height, scaling, rendering, sounds);
+	public MsPacMan_IntermissionScene1(double scaling, FXRendering rendering, SoundManager sounds) {
+		super(scaling, rendering, sounds);
 	}
 
 	@Override

@@ -5,7 +5,6 @@ import static de.amr.games.pacman.world.PacManGameWorld.t;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
-import javafx.scene.Group;
 
 /**
  * This is where the action is.
@@ -14,9 +13,8 @@ import javafx.scene.Group;
  */
 public class PlayScene extends GameScene {
 
-	public PlayScene(Group root, double width, double height, double scaling, FXRendering rendering,
-			SoundManager sounds) {
-		super(root, width, height, scaling, rendering, sounds);
+	public PlayScene(double scaling, FXRendering rendering, SoundManager sounds) {
+		super(scaling, rendering, sounds);
 	}
 
 	@Override

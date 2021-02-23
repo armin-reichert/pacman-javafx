@@ -15,7 +15,6 @@ import de.amr.games.pacman.model.guys.Pac;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.common.FXRendering;
 import de.amr.games.pacman.ui.fx.common.GameScene;
-import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -46,9 +45,8 @@ public class MsPacMan_IntroScene extends GameScene {
 	private Ghost currentGhost;
 	private boolean presentingMsPac;
 
-	public MsPacMan_IntroScene(Group root, double width, double height, double scaling, FXRendering rendering,
-			SoundManager sounds) {
-		super(root, width, height, scaling, rendering, sounds);
+	public MsPacMan_IntroScene(double scaling, FXRendering rendering, SoundManager sounds) {
+		super(scaling, rendering, sounds);
 	}
 
 	private void enter(Phase newPhase, long ticks) {

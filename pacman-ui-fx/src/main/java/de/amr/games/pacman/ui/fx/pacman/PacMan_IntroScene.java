@@ -17,7 +17,6 @@ import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.common.FXRendering;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -63,9 +62,8 @@ public class PacMan_IntroScene extends GameScene {
 		phase.timer.setDuration(Long.MAX_VALUE);
 	}
 
-	public PacMan_IntroScene(Group root, double width, double height, double scaling, FXRendering rendering,
-			SoundManager sounds) {
-		super(root, width, height, scaling, rendering, sounds);
+	public PacMan_IntroScene(double scaling, FXRendering rendering, SoundManager sounds) {
+		super(scaling, rendering, sounds);
 	}
 
 	@Override

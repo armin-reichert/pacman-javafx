@@ -12,7 +12,6 @@ import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.common.FXRendering;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import de.amr.games.pacman.ui.fx.mspacman.entities.Flap;
-import javafx.scene.Group;
 
 /**
  * Intermission scene 2: "The chase".
@@ -43,9 +42,8 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 		phase.timer.setDuration(ticks);
 	}
 
-	public MsPacMan_IntermissionScene2(Group root, double width, double height, double scaling, FXRendering rendering,
-			SoundManager sounds) {
-		super(root, width, height, scaling, rendering, sounds);
+	public MsPacMan_IntermissionScene2(double scaling, FXRendering rendering, SoundManager sounds) {
+		super(scaling, rendering, sounds);
 	}
 
 	@Override

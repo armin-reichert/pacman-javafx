@@ -14,7 +14,6 @@ import de.amr.games.pacman.ui.fx.common.GameScene;
 import de.amr.games.pacman.ui.fx.mspacman.entities.Flap;
 import de.amr.games.pacman.ui.fx.mspacman.entities.JuniorBag;
 import de.amr.games.pacman.ui.fx.mspacman.entities.Stork;
-import javafx.scene.Group;
 
 /**
  * Intermission scene 3: "Junior".
@@ -45,9 +44,8 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 
 	private Phase phase;
 
-	public MsPacMan_IntermissionScene3(Group root, double width, double height, double scaling, FXRendering rendering,
-			SoundManager sounds) {
-		super(root, width, height, scaling, rendering, sounds);
+	public MsPacMan_IntermissionScene3(double scaling, FXRendering rendering, SoundManager sounds) {
+		super(scaling, rendering, sounds);
 	}
 
 	private void enter(Phase newPhase, long ticks) {

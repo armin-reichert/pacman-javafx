@@ -36,7 +36,6 @@ import de.amr.games.pacman.ui.fx.pacman.PacMan_IntroScene;
 import de.amr.games.pacman.ui.fx.rendering.MsPacMan_DefaultRendering;
 import de.amr.games.pacman.ui.fx.rendering.PacMan_DefaultRendering;
 import javafx.application.Platform;
-import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
@@ -47,6 +46,9 @@ import javafx.stage.Stage;
  * @author Armin Reichert
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
+
+	public static final int SCENE_WIDTH = 28 * TS;
+	public static final int SCENE_HEIGHT = 36 * TS;
 
 	private static final Deque<FlashMessage> FLASH_MESSAGES_Q = new ArrayDeque<>();
 
@@ -67,8 +69,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController controller, double scaling) {
 		this.controller = controller;
-		double width = 28 * TS * scaling;
-		double height = 36 * TS * scaling;
+		double width = SCENE_WIDTH * scaling;
+		double height = SCENE_HEIGHT * scaling;
 		this.stage = stage;
 		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
 		stage.getIcons().add(new Image("/pacman/graphics/pacman.png"));
@@ -87,29 +89,22 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		soundManagers.put(GameType.PACMAN, new PacManGameSoundManager(PacManGameSounds::mrPacManSoundURL));
 
 		scenes.put(GameType.MS_PACMAN, Arrays.asList(//
-				new MsPacMan_IntroScene(new Group(), width, height, scaling, renderings.get(GameType.MS_PACMAN),
+				new MsPacMan_IntroScene(scaling, renderings.get(GameType.MS_PACMAN), soundManagers.get(GameType.MS_PACMAN)), //
+				new MsPacMan_IntermissionScene1(scaling, renderings.get(GameType.MS_PACMAN),
 						soundManagers.get(GameType.MS_PACMAN)), //
-				new MsPacMan_IntermissionScene1(new Group(), width, height, scaling, renderings.get(GameType.MS_PACMAN),
+				new MsPacMan_IntermissionScene2(scaling, renderings.get(GameType.MS_PACMAN),
 						soundManagers.get(GameType.MS_PACMAN)), //
-				new MsPacMan_IntermissionScene2(new Group(), width, height, scaling, renderings.get(GameType.MS_PACMAN),
+				new MsPacMan_IntermissionScene3(scaling, renderings.get(GameType.MS_PACMAN),
 						soundManagers.get(GameType.MS_PACMAN)), //
-				new MsPacMan_IntermissionScene3(new Group(), width, height, scaling, renderings.get(GameType.MS_PACMAN),
-						soundManagers.get(GameType.MS_PACMAN)), //
-				new PlayScene(new Group(), width, height, scaling, renderings.get(GameType.MS_PACMAN),
-						soundManagers.get(GameType.MS_PACMAN))//
+				new PlayScene(scaling, renderings.get(GameType.MS_PACMAN), soundManagers.get(GameType.MS_PACMAN))//
 		));
 
 		scenes.put(GameType.PACMAN, Arrays.asList(//
-				new PacMan_IntroScene(new Group(), width, height, scaling, renderings.get(GameType.PACMAN),
-						soundManagers.get(GameType.PACMAN)), //
-				new PacMan_IntermissionScene1(new Group(), width, height, scaling, renderings.get(GameType.PACMAN),
-						soundManagers.get(GameType.PACMAN)), //
-				new PacMan_IntermissionScene2(new Group(), width, height, scaling, renderings.get(GameType.PACMAN),
-						soundManagers.get(GameType.PACMAN)), //
-				new PacMan_IntermissionScene3(new Group(), width, height, scaling, renderings.get(GameType.PACMAN),
-						soundManagers.get(GameType.PACMAN)), //
-				new PlayScene(new Group(), width, height, scaling, renderings.get(GameType.PACMAN),
-						soundManagers.get(GameType.PACMAN))//
+				new PacMan_IntroScene(scaling, renderings.get(GameType.PACMAN), soundManagers.get(GameType.PACMAN)), //
+				new PacMan_IntermissionScene1(scaling, renderings.get(GameType.PACMAN), soundManagers.get(GameType.PACMAN)), //
+				new PacMan_IntermissionScene2(scaling, renderings.get(GameType.PACMAN), soundManagers.get(GameType.PACMAN)), //
+				new PacMan_IntermissionScene3(scaling, renderings.get(GameType.PACMAN), soundManagers.get(GameType.PACMAN)), //
+				new PlayScene(scaling, renderings.get(GameType.PACMAN), soundManagers.get(GameType.PACMAN))//
 		));
 
 		onGameChanged(controller.getGame());
@@ -157,13 +152,13 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private void changeScene(GameScene newScene) {
 		currentScene = newScene;
-		keyboard = new Keyboard(currentScene);
+		keyboard = new Keyboard(currentScene.fxScene);
 		currentScene.start();
 	}
 
 	@Override
 	public void show() {
-		stage.setScene(currentScene);
+		stage.setScene(currentScene.fxScene);
 		stage.sizeToScene();
 		stage.centerOnScreen();
 		stage.show();
@@ -194,8 +189,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	public void render() {
 		// TODO Should the game loop run on the JavaFX application thread?
 		Platform.runLater(() -> {
-			if (stage.getScene() != currentScene) {
-				stage.setScene(currentScene);
+			if (stage.getScene() != currentScene.fxScene) {
+				stage.setScene(currentScene.fxScene);
 			}
 			try {
 				currentScene.clear();

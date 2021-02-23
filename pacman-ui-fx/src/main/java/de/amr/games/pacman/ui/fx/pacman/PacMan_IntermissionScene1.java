@@ -14,7 +14,6 @@ import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.common.FXRendering;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Group;
 
 /**
  * First intermission scene: Blinky chases Pac-Man and is then chased by a huge Pac-Man.
@@ -33,9 +32,8 @@ public class PacMan_IntermissionScene1 extends GameScene {
 	private Pac pac;
 	private Phase phase;
 
-	public PacMan_IntermissionScene1(Group root, double width, double height, double scaling, FXRendering rendering,
-			SoundManager sounds) {
-		super(root, width, height, scaling, rendering, sounds);
+	public PacMan_IntermissionScene1(double scaling, FXRendering rendering, SoundManager sounds) {
+		super(scaling, rendering, sounds);
 	}
 
 	@Override
