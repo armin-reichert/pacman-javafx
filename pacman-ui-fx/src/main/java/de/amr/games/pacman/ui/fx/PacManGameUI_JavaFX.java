@@ -55,7 +55,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private final Deque<FlashMessage> flashMessagesQ = new ArrayDeque<>();
 
 	private final EnumMap<GameType, FXRendering> renderings = new EnumMap<>(GameType.class);
-	private final EnumMap<GameType, SoundManager> soundManagers = new EnumMap<>(GameType.class);
+	private final EnumMap<GameType, SoundManager> sounds = new EnumMap<>(GameType.class);
 	private final EnumMap<GameType, List<GameScene>> scenes = new EnumMap<>(GameType.class);
 
 	private final PacManGameController controller;
@@ -79,23 +79,23 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		renderings.put(MS_PACMAN, new MsPacMan_DefaultRendering());
 		renderings.put(PACMAN, new PacMan_DefaultRendering());
 
-		soundManagers.put(MS_PACMAN, new PacManGameSoundManager(PacManGameSounds::msPacManSoundURL));
-		soundManagers.put(PACMAN, new PacManGameSoundManager(PacManGameSounds::mrPacManSoundURL));
+		sounds.put(MS_PACMAN, new PacManGameSoundManager(PacManGameSounds::msPacManSoundURL));
+		sounds.put(PACMAN, new PacManGameSoundManager(PacManGameSounds::mrPacManSoundURL));
 
 		scenes.put(MS_PACMAN, Arrays.asList(//
-				new MsPacMan_IntroScene(scaling, renderings.get(MS_PACMAN), soundManagers.get(MS_PACMAN)), //
-				new MsPacMan_IntermissionScene1(scaling, renderings.get(MS_PACMAN), soundManagers.get(MS_PACMAN)), //
-				new MsPacMan_IntermissionScene2(scaling, renderings.get(MS_PACMAN), soundManagers.get(MS_PACMAN)), //
-				new MsPacMan_IntermissionScene3(scaling, renderings.get(MS_PACMAN), soundManagers.get(MS_PACMAN)), //
-				new PlayScene(scaling, renderings.get(MS_PACMAN), soundManagers.get(MS_PACMAN))//
+				new MsPacMan_IntroScene(scaling, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
+				new MsPacMan_IntermissionScene1(scaling, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
+				new MsPacMan_IntermissionScene2(scaling, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
+				new MsPacMan_IntermissionScene3(scaling, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
+				new PlayScene(scaling, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN))//
 		));
 
 		scenes.put(PACMAN, Arrays.asList(//
-				new PacMan_IntroScene(scaling, renderings.get(PACMAN), soundManagers.get(PACMAN)), //
-				new PacMan_IntermissionScene1(scaling, renderings.get(PACMAN), soundManagers.get(PACMAN)), //
-				new PacMan_IntermissionScene2(scaling, renderings.get(PACMAN), soundManagers.get(PACMAN)), //
-				new PacMan_IntermissionScene3(scaling, renderings.get(PACMAN), soundManagers.get(PACMAN)), //
-				new PlayScene(scaling, renderings.get(PACMAN), soundManagers.get(PACMAN))//
+				new PacMan_IntroScene(scaling, renderings.get(PACMAN), sounds.get(PACMAN)), //
+				new PacMan_IntermissionScene1(scaling, renderings.get(PACMAN), sounds.get(PACMAN)), //
+				new PacMan_IntermissionScene2(scaling, renderings.get(PACMAN), sounds.get(PACMAN)), //
+				new PacMan_IntermissionScene3(scaling, renderings.get(PACMAN), sounds.get(PACMAN)), //
+				new PlayScene(scaling, renderings.get(PACMAN), sounds.get(PACMAN))//
 		));
 
 		onGameChanged(controller.getGame());
@@ -215,21 +215,20 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	@Override
-	public Optional<SoundManager> sound() {
-		if (muted) {
-			return Optional.empty(); // TODO
-		}
-		return Optional.of(soundManagers.get(controller.currentGameType()));
-	}
-
-	@Override
 	public void mute(boolean state) {
 		muted = state;
 	}
 
 	@Override
+	public Optional<SoundManager> sound() {
+		if (muted) {
+			return Optional.empty(); // TODO
+		}
+		return Optional.of(sounds.get(controller.currentGameType()));
+	}
+
+	@Override
 	public Optional<PacManGameAnimations> animation() {
-		FXRendering rendering = renderings.get(controller.currentGameType());
-		return rendering instanceof PacManGameAnimations ? Optional.of((PacManGameAnimations) rendering) : Optional.empty();
+		return Optional.of(renderings.get(controller.currentGameType()));
 	}
 }
