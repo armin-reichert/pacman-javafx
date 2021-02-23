@@ -95,17 +95,17 @@ public abstract class DefaultRendering implements FXRendering {
 		return null;
 	}
 
-	public Rectangle2D pacSprite(Pac pac) {
-		if (pac.dead) {
-			return playerDying().hasStarted() ? playerDying().animate() : (Rectangle2D) playerMunching(pac, pac.dir).frame();
+	public Rectangle2D playerSprite(Pac player) {
+		if (player.dead) {
+			return playerDying().hasStarted() ? playerDying().animate() : (Rectangle2D) playerMunching(player, player.dir).frame();
 		}
-		if (pac.speed == 0) {
-			return (Rectangle2D) playerMunching(pac, pac.dir).frame(0);
+		if (player.speed == 0) {
+			return (Rectangle2D) playerMunching(player, player.dir).frame(0);
 		}
-		if (!pac.couldMove) {
-			return (Rectangle2D) playerMunching(pac, pac.dir).frame(1);
+		if (!player.couldMove) {
+			return (Rectangle2D) playerMunching(player, player.dir).frame(1);
 		}
-		return (Rectangle2D) playerMunching(pac, pac.dir).animate();
+		return (Rectangle2D) playerMunching(player, player.dir).animate();
 	}
 
 	public Rectangle2D ghostSprite(Ghost ghost, boolean frightened) {
@@ -167,7 +167,7 @@ public abstract class DefaultRendering implements FXRendering {
 
 	@Override
 	public void drawPlayer(GraphicsContext g, Pac player) {
-		drawEntity(g, player, pacSprite(player));
+		drawEntity(g, player, playerSprite(player));
 	}
 
 	@Override
