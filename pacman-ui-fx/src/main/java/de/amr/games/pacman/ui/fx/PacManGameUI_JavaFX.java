@@ -54,16 +54,14 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		return Optional.ofNullable(FLASH_MESSAGES_Q.peek());
 	}
 
-	private EnumMap<GameType, FXRendering> renderings = new EnumMap<>(GameType.class);
-	private EnumMap<GameType, SoundManager> soundManagers = new EnumMap<>(GameType.class);
+	private final EnumMap<GameType, FXRendering> renderings = new EnumMap<>(GameType.class);
+	private final EnumMap<GameType, SoundManager> soundManagers = new EnumMap<>(GameType.class);
+	private final EnumMap<GameType, List<GameScene>> scenes = new EnumMap<>(GameType.class);
 
 	private final PacManGameController controller;
 	private final Stage stage;
-
-	private final EnumMap<GameType, List<GameScene>> scenes = new EnumMap<>(GameType.class);
 	private GameScene currentScene;
 	private Keyboard keyboard;
-
 	private GameModel game;
 	private boolean muted;
 
