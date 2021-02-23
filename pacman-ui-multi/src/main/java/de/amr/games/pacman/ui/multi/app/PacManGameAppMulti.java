@@ -3,7 +3,7 @@ package de.amr.games.pacman.ui.multi.app;
 import javax.swing.SwingUtilities;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.model.GameType;
+import de.amr.games.pacman.model.common.GameType;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.swing.PacManGameUI_Swing;
 import javafx.application.Application;

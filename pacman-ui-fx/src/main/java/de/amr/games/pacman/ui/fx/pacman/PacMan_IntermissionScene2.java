@@ -1,16 +1,16 @@
 package de.amr.games.pacman.ui.fx.pacman;
 
 import static de.amr.games.pacman.heaven.God.clock;
-import static de.amr.games.pacman.model.guys.GhostState.HUNTING_PAC;
-import static de.amr.games.pacman.ui.fx.rendering.DefaultRendering.tileRegion;
+import static de.amr.games.pacman.model.common.GhostState.HUNTING_PAC;
+import static de.amr.games.pacman.ui.fx.rendering.DefaultRendering.spriteRegion;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.CountdownTimer;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.guys.Ghost;
-import de.amr.games.pacman.model.guys.Pac;
+import de.amr.games.pacman.model.common.Ghost;
+import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.common.GameScene;
@@ -34,14 +34,14 @@ public class PacMan_IntermissionScene2 extends GameScene {
 	private final int chaseTileY = 20;
 	private final V2i nailPosition = new V2i(t(14), t(chaseTileY) - 6);
 
-	private final Rectangle2D nail = tileRegion(8, 6, 1, 1);
-	private final Rectangle2D blinkyLookingUp = tileRegion(8, 7, 1, 1);
-	private final Rectangle2D blinkyLookingRight = tileRegion(9, 7, 1, 1);
-	private final Rectangle2D shred = tileRegion(12, 6, 1, 1);
+	private final Rectangle2D nail = spriteRegion(8, 6, 1, 1);
+	private final Rectangle2D blinkyLookingUp = spriteRegion(8, 7, 1, 1);
+	private final Rectangle2D blinkyLookingRight = spriteRegion(9, 7, 1, 1);
+	private final Rectangle2D shred = spriteRegion(12, 6, 1, 1);
 	private final Rectangle2D[] stretchedDress = new Rectangle2D[] { //
-			tileRegion(9, 6, 1, 1), //
-			tileRegion(10, 6, 1, 1), //
-			tileRegion(11, 6, 1, 1) };
+			spriteRegion(9, 6, 1, 1), //
+			spriteRegion(10, 6, 1, 1), //
+			spriteRegion(11, 6, 1, 1) };
 
 	private Ghost blinky;
 	private Pac pac;

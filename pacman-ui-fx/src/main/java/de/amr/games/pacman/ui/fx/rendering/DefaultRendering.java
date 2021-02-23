@@ -3,10 +3,10 @@ package de.amr.games.pacman.ui.fx.rendering;
 import static de.amr.games.pacman.lib.Direction.LEFT;
 import static de.amr.games.pacman.lib.Direction.RIGHT;
 import static de.amr.games.pacman.lib.Direction.UP;
-import static de.amr.games.pacman.model.guys.GhostState.DEAD;
-import static de.amr.games.pacman.model.guys.GhostState.ENTERING_HOUSE;
-import static de.amr.games.pacman.model.guys.GhostState.FRIGHTENED;
-import static de.amr.games.pacman.model.guys.GhostState.LOCKED;
+import static de.amr.games.pacman.model.common.GhostState.DEAD;
+import static de.amr.games.pacman.model.common.GhostState.ENTERING_HOUSE;
+import static de.amr.games.pacman.model.common.GhostState.FRIGHTENED;
+import static de.amr.games.pacman.model.common.GhostState.LOCKED;
 import static de.amr.games.pacman.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
@@ -19,11 +19,11 @@ import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.guys.Bonus;
-import de.amr.games.pacman.model.guys.GameEntity;
-import de.amr.games.pacman.model.guys.Ghost;
-import de.amr.games.pacman.model.guys.Pac;
+import de.amr.games.pacman.model.common.GameEntity;
+import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.Ghost;
+import de.amr.games.pacman.model.common.Pac;
+import de.amr.games.pacman.model.pacman.Bonus;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -41,20 +41,28 @@ public abstract class DefaultRendering implements FXRendering {
 	/** Spritesheet raster size */
 	public static final int RASTER = 16;
 
-	public static Rectangle2D tileRegion(int tileX, int tileY) {
-		return tileRegion(tileX, tileY, 1, 1);
+	public static Rectangle2D sprite(int col, int row) {
+		return spriteRegion(col, row, 1, 1);
 	}
 
-	public static Rectangle2D tileRegion(int tileX, int tileY, int cols, int rows) {
-		return new Rectangle2D(tileX * RASTER, tileY * RASTER, cols * RASTER, rows * RASTER);
+	public static Rectangle2D spriteRegion(int col, int row, int numCols, int numRows) {
+		return new Rectangle2D(col * RASTER, row * RASTER, numCols * RASTER, numRows * RASTER);
+	}
+
+	/* Sprite region relative to given origin pixel position */
+	public static Rectangle2D spriteRegionAt(int originX, int originY, int col, int row, int numCols, int numRows) {
+		return new Rectangle2D(originX + col * RASTER, originY + row * RASTER, numCols * RASTER, numRows * RASTER);
 	}
 
 	protected Image spritesheet;
+
 	protected Font scoreFont;
+
 	protected List<Rectangle2D> symbolSprites;
 	protected Map<Integer, Rectangle2D> bonusValueSprites;
 	protected Map<Integer, Rectangle2D> bountyValueSprites;
 	protected List<Animation<Image>> mazeFlashingAnim;
+
 	protected Animation<Boolean> energizerBlinking;
 	protected Map<Direction, Animation<Rectangle2D>> pacManMunchingAnim;
 	protected Animation<Rectangle2D> pacDyingAnim;
@@ -67,12 +75,6 @@ public abstract class DefaultRendering implements FXRendering {
 		spritesheet = new Image(spritesheetURL);
 		scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), 8);
 		energizerBlinking = Animation.pulse().frameDuration(15);
-	}
-
-	/* Tile region relative to given origin */
-	protected Rectangle2D tileRegionAt(int originX, int originY, int tileX, int tileY, int tilesWidth, int tilesHeight) {
-		return new Rectangle2D(originX + tileX * RASTER, originY + tileY * RASTER, tilesWidth * RASTER,
-				tilesHeight * RASTER);
 	}
 
 	protected int index(Direction dir) {

@@ -1,7 +1,7 @@
 package de.amr.games.pacman.ui.fx.mspacman.entities;
 
 import de.amr.games.pacman.lib.Animation;
-import de.amr.games.pacman.model.guys.GameEntity;
+import de.amr.games.pacman.model.common.GameEntity;
 import javafx.geometry.Rectangle2D;
 
 public class Stork extends GameEntity {

@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import de.amr.games.pacman.lib.CountdownTimer;
-import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.FlashMessage;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;

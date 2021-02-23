@@ -8,8 +8,8 @@ import java.util.Map;
 
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.model.guys.Bonus;
-import de.amr.games.pacman.model.guys.Pac;
+import de.amr.games.pacman.model.common.Pac;
+import de.amr.games.pacman.model.pacman.Bonus;
 import de.amr.games.pacman.ui.fx.common.Helper;
 import de.amr.games.pacman.ui.fx.mspacman.entities.Flap;
 import de.amr.games.pacman.ui.fx.mspacman.entities.Heart;
@@ -35,7 +35,7 @@ public class MsPacMan_DefaultRendering extends DefaultRendering {
 
 	/* Tiles in right half of spritesheet */
 	public Rectangle2D s(int tileX, int tileY) {
-		return tileRegionAt(456, 0, tileX, tileY, 1, 1);
+		return spriteRegionAt(456, 0, tileX, tileY, 1, 1);
 	}
 
 	public MsPacMan_DefaultRendering() {

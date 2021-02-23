@@ -3,7 +3,7 @@ package de.amr.games.pacman.ui.fx.app;
 import java.io.IOException;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.model.GameType;
+import de.amr.games.pacman.model.common.GameType;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import javafx.application.Application;
 import javafx.stage.Stage;
