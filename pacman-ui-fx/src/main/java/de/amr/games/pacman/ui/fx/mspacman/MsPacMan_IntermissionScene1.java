@@ -154,8 +154,8 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 
 	private void startChasedByGhosts() {
 		enter(Phase.CHASED_BY_GHOSTS, Long.MAX_VALUE);
-		pacMan.speed = msPac.speed = 1;
-		inky.speed = pinky.speed = 1.04f;
+		pacMan.speed = msPac.speed = 1.25f;
+		inky.speed = pinky.speed = 1.30f;
 	}
 
 	private void startComingTogether() {
