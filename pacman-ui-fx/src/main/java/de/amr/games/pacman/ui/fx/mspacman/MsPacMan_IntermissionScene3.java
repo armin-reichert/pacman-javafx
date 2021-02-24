@@ -72,9 +72,8 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 		stork.flying.restart();
 
 		bag = new JuniorBag();
-		bag.setPositionRelativeTo(stork, -4, 6);
+		bag.setPositionRelativeTo(stork, -14, 3);
 
-		sounds.play(PacManGameSound.INTERMISSION_3);
 		enter(Phase.FLAP, Long.MAX_VALUE);
 	}
 
@@ -82,8 +81,9 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 	public void update() {
 		switch (phase) {
 		case FLAP:
-			if (phase.timer.running() == clock.sec(1)) {
+			if (phase.timer.running() == clock.sec(2)) {
 				flap.visible = false;
+				sounds.play(PacManGameSound.INTERMISSION_3);
 				enter(Phase.ACTION, Long.MAX_VALUE);
 			}
 			break;

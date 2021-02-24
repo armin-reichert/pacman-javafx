@@ -245,7 +245,7 @@ public class MsPacMan_DefaultRendering extends DefaultRendering {
 	@Override
 	public void drawStork(GraphicsContext g, Stork stork) {
 		if (stork.visible) {
-			drawSprite(g, stork.flying.animate(), stork.position.x, stork.position.y);
+			drawEntity(g, stork, stork.flying.animate());
 		}
 	}
 

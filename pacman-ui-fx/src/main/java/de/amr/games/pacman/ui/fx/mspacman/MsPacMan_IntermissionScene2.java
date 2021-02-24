@@ -56,7 +56,6 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 		pacMan = new Pac("Pac-Man", Direction.RIGHT);
 		msPacMan = new Pac("Ms. Pac-Man", Direction.RIGHT);
 
-		sounds.play(PacManGameSound.INTERMISSION_2);
 		enter(Phase.FLAP, Long.MAX_VALUE);
 	}
 
@@ -66,8 +65,9 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 		case FLAP:
 			if (phase.timer.running() == clock.sec(2)) {
 				flap.visible = false;
+				sounds.play(PacManGameSound.INTERMISSION_2);
 			}
-			if (phase.timer.running() == clock.sec(3)) {
+			if (phase.timer.running() == clock.sec(4.5)) {
 				enter(Phase.ACTION, Long.MAX_VALUE);
 			}
 			break;
@@ -96,19 +96,19 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 				msPacMan.dir = pacMan.dir = Direction.RIGHT;
 				msPacMan.speed = pacMan.speed = 2;
 			}
-			if (phase.timer.running() == clock.sec(15)) {
+			if (phase.timer.running() == clock.sec(14.5)) {
 				msPacMan.setPosition(t(30), UPPER_Y);
 				pacMan.setPosition(t(42), UPPER_Y);
 				msPacMan.dir = pacMan.dir = Direction.LEFT;
 				msPacMan.speed = pacMan.speed = 4;
 			}
-			if (phase.timer.running() == clock.sec(16)) {
+			if (phase.timer.running() == clock.sec(15.5)) {
 				msPacMan.setPosition(t(-14), LOWER_Y);
 				pacMan.setPosition(t(-2), LOWER_Y);
 				msPacMan.dir = pacMan.dir = Direction.RIGHT;
 				msPacMan.speed = pacMan.speed = 4;
 			}
-			if (phase.timer.running() == clock.sec(22)) {
+			if (phase.timer.running() == clock.sec(20)) {
 				game.state.timer.setDuration(0);
 			}
 			break;
