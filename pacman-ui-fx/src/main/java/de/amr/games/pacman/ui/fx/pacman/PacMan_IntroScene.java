@@ -194,6 +194,7 @@ public class PacMan_IntroScene extends GameScene {
 	private void startPacChasingGhosts() {
 		pac.dir = Direction.RIGHT;
 		for (Ghost ghost : ghosts) {
+			ghost.state = GhostState.FRIGHTENED;
 			ghost.dir = ghost.wishDir = Direction.RIGHT;
 			ghost.speed = 0.5f;
 		}
