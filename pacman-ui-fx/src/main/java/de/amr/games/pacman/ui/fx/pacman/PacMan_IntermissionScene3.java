@@ -49,7 +49,7 @@ public class PacMan_IntermissionScene3 extends GameScene {
 
 		pac.visible = true;
 		pac.dead = false;
-		pac.setPosition(t(30), t(chaseTileY));
+		pac.setTilePosition(30, chaseTileY);
 		pac.speed = 1.2f;
 		pac.couldMove = true;
 		pac.dir = LEFT;
@@ -57,7 +57,7 @@ public class PacMan_IntermissionScene3 extends GameScene {
 
 		blinky.visible = true;
 		blinky.state = GhostState.HUNTING_PAC;
-		blinky.setPosition(pac.position.sum(64, 0));
+		blinky.setPositionRelativeTo(pac, t(8), 0);
 		blinky.speed = pac.speed;
 		blinky.dir = blinky.wishDir = LEFT;
 

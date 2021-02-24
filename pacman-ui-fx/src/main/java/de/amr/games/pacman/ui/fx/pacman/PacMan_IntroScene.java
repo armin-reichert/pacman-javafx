@@ -174,7 +174,7 @@ public class PacMan_IntroScene extends GameScene {
 	}
 
 	private void startGhostsChasingPac() {
-		pac.setPosition(t(28), t(22));
+		pac.setTilePosition(28, 22);
 		pac.visible = true;
 		pac.speed = 1;
 		pac.dir = Direction.LEFT;
@@ -182,7 +182,7 @@ public class PacMan_IntroScene extends GameScene {
 		rendering.playerMunching(pac).forEach(Animation::restart);
 
 		for (Ghost ghost : ghosts) {
-			ghost.setPosition(pac.position.sum(8 + (ghost.id + 1) * 18, 0));
+			ghost.setPositionRelativeTo(pac, 8 + (ghost.id + 1) * 18, 0);
 			ghost.visible = true;
 			ghost.dir = ghost.wishDir = Direction.LEFT;
 			ghost.speed = pac.speed * 1.05f;

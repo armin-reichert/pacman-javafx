@@ -57,7 +57,7 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 	public void start() {
 
 		flap = new Flap(3, "JUNIOR");
-		flap.setPosition(t(3), t(10));
+		flap.setTilePosition(3, 10);
 		flap.visible = true;
 		flap.flapping.restart();
 
@@ -72,7 +72,7 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 		stork.flying.restart();
 
 		bag = new JuniorBag();
-		bag.setPosition(stork.position.sum(-4, 6));
+		bag.setPositionRelativeTo(stork, -4, 6);
 
 		sounds.play(PacManGameSound.INTERMISSION_3);
 		enter(Phase.FLAP, Long.MAX_VALUE);

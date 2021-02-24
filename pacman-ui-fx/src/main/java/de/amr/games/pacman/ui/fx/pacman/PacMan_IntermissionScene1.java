@@ -47,7 +47,7 @@ public class PacMan_IntermissionScene1 extends GameScene {
 		blinky = new Ghost(0, "Blinky", Direction.LEFT);
 		blinky.visible = true;
 		blinky.state = HUNTING_PAC;
-		blinky.setPosition(pac.position.sum(t(3), 0));
+		blinky.setPositionRelativeTo(pac, t(3), 0);
 		blinky.speed = pac.speed * 1.04f;
 		rendering.ghostKicking(blinky, blinky.dir).restart();
 		rendering.ghostFrightened(blinky, blinky.dir).restart();

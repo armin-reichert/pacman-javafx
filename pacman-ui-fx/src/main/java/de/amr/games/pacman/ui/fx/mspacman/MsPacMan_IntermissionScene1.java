@@ -59,7 +59,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 	public void start() {
 
 		flap = new Flap(1, "THEY MEET");
-		flap.setPosition(t(3), t(10));
+		flap.setTilePosition(3, 10);
 		flap.visible = true;
 		flap.flapping.restart();
 
@@ -69,7 +69,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 		rendering.spouseMunching(pacMan).forEach(Animation::restart);
 
 		inky = new Ghost(2, "Inky", Direction.RIGHT);
-		inky.setPosition(pacMan.position.sum(-t(3), 0));
+		inky.setPositionRelativeTo(pacMan, -t(3), 0);
 		inky.visible = true;
 
 		msPac = new Pac("Ms. Pac-Man", Direction.LEFT);
@@ -78,7 +78,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 		rendering.playerMunching(msPac).forEach(Animation::restart);
 
 		pinky = new Ghost(1, "Pinky", Direction.LEFT);
-		pinky.setPosition(msPac.position.sum(t(3), 0));
+		pinky.setPositionRelativeTo(msPac, t(3), 0);
 		pinky.visible = true;
 		rendering.ghostsKicking(Stream.of(inky, pinky)).forEach(Animation::restart);
 
