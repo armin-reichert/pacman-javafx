@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.rendering;
+package de.amr.games.pacman.ui.fx.rendering.standard;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +28,7 @@ import javafx.scene.text.FontWeight;
  * 
  * @author Armin Reichert
  */
-public class MsPacMan_DefaultRendering extends DefaultRendering {
+public class MsPacMan_StandardRendering extends StandardRendering {
 
 	private final Map<Direction, Animation<Rectangle2D>> msPacManMunchingAnim;
 	private final Animation<Integer> bonusJumpingAnim;
@@ -38,7 +38,7 @@ public class MsPacMan_DefaultRendering extends DefaultRendering {
 		return spriteRegionAt(456, 0, tileX, tileY, 1, 1);
 	}
 
-	public MsPacMan_DefaultRendering() {
+	public MsPacMan_StandardRendering() {
 
 		super("/mspacman/graphics/sprites.png");
 

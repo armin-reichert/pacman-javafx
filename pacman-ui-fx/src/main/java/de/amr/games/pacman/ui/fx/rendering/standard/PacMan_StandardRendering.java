@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.rendering;
+package de.amr.games.pacman.ui.fx.rendering.standard;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,7 +21,7 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class PacMan_DefaultRendering extends DefaultRendering {
+public class PacMan_StandardRendering extends StandardRendering {
 
 	private final Image mazeFull = new Image("/pacman/graphics/maze_full.png", false);
 	private final Image mazeEmpty = new Image("/pacman/graphics/maze_empty.png", false);
@@ -30,7 +30,7 @@ public class PacMan_DefaultRendering extends DefaultRendering {
 	private Animation<Rectangle2D> blinkyDamaged;
 	private Animation<Rectangle2D> blinkyNaked;
 
-	public PacMan_DefaultRendering() {
+	public PacMan_StandardRendering() {
 		super("/pacman/graphics/sprites.png");
 
 		symbolSprites = Arrays.asList(sprite(2, 3), sprite(3, 3), sprite(4, 3), sprite(5, 3),

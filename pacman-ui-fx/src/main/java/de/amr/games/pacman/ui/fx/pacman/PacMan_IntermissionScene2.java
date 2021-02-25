@@ -2,7 +2,7 @@ package de.amr.games.pacman.ui.fx.pacman;
 
 import static de.amr.games.pacman.heaven.God.clock;
 import static de.amr.games.pacman.model.common.GhostState.HUNTING_PAC;
-import static de.amr.games.pacman.ui.fx.rendering.DefaultRendering.spriteRegion;
+import static de.amr.games.pacman.ui.fx.rendering.standard.StandardRendering.spriteRegion;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.Animation;

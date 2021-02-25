@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.rendering;
+package de.amr.games.pacman.ui.fx.rendering.standard;
 
 import static de.amr.games.pacman.lib.Direction.LEFT;
 import static de.amr.games.pacman.lib.Direction.RIGHT;
@@ -24,6 +24,7 @@ import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.model.common.PacManGameState;
 import de.amr.games.pacman.model.pacman.PacManBonus;
+import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -36,7 +37,7 @@ import javafx.scene.text.FontWeight;
  * 
  * @author Armin Reichert
  */
-public abstract class DefaultRendering implements FXRendering {
+public abstract class StandardRendering implements FXRendering {
 
 	/** Spritesheet raster size */
 	public static final int RASTER = 16;
@@ -71,7 +72,7 @@ public abstract class DefaultRendering implements FXRendering {
 	protected Animation<Rectangle2D> ghostBlueAnim;
 	protected Animation<Rectangle2D> ghostFlashingAnim;
 
-	public DefaultRendering(String spritesheetURL) {
+	public StandardRendering(String spritesheetURL) {
 		spritesheet = new Image(spritesheetURL);
 		scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), 8);
 		energizerBlinking = Animation.pulse().frameDuration(15);
