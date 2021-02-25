@@ -14,6 +14,12 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+/**
+ * Interface for drawing all scenes and accessing all animations of the Pac-Man and Ms. Pac-Man
+ * games.
+ * 
+ * @author Armin Reichert
+ */
 public interface FXRendering extends Rendering<GraphicsContext, Color, Font, Rectangle2D>, PacManGameAnimations {
 
 	void drawSprite(GraphicsContext g, Rectangle2D sprite, float x, float y);
@@ -23,6 +29,10 @@ public interface FXRendering extends Rendering<GraphicsContext, Color, Font, Rec
 	void drawNail(GraphicsContext g, GameEntity nail);
 
 	void drawStretchedBlinky(GraphicsContext g, Ghost blinky, V2f nailPosition, int stretching);
+
+	void drawPatchedBlinky(GraphicsContext g, Ghost blinky);
+
+	void drawNakedBlinky(GraphicsContext g, Ghost blinky);
 
 	// Ms. Pac-Man game only:
 

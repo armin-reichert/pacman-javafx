@@ -34,9 +34,10 @@ public class PacMan_StandardRendering extends StandardRendering {
 	private final Image mazeEmpty = new Image("/pacman/graphics/maze_empty.png", false);
 
 	private final Animation<Rectangle2D> bigPacManAnim;
+	private Animation<Rectangle2D> blinkyStretched;
 	private Animation<Rectangle2D> blinkyDamaged;
-	private Animation<Rectangle2D> blinkyNaked;
-	private Animation<Rectangle2D> stretchedDress;
+	private Animation<Rectangle2D> blinkyPatched;
+	private Animation<Rectangle2D> blinkyHalfNaked;
 
 	public PacMan_StandardRendering() {
 		super("/pacman/graphics/sprites.png");
@@ -107,14 +108,11 @@ public class PacMan_StandardRendering extends StandardRendering {
 		ghostFlashingAnim = Animation.of(sprite(8, 4), sprite(9, 4), sprite(10, 4), sprite(11, 4));
 		ghostFlashingAnim.frameDuration(5).endless();
 
-		stretchedDress = Animation.of(sprite(9, 6), sprite(10, 6), sprite(11, 6), sprite(12, 6));
-
-		blinkyDamaged = Animation.of(spriteRegion(10, 7, 1, 1), spriteRegion(11, 7, 1, 1));
-		blinkyDamaged.frameDuration(4).endless();
-
-		blinkyNaked = Animation.of(spriteRegion(8, 8, 2, 1), spriteRegion(10, 8, 2, 1));
-		blinkyNaked.frameDuration(4).endless();
-
+		blinkyPatched = Animation.of(sprite(10, 7), sprite(11, 7)).restart().frameDuration(4).endless();
+		blinkyDamaged = Animation.of(sprite(8, 7), sprite(9, 7));
+		blinkyStretched = Animation.of(sprite(9, 6), sprite(10, 6), sprite(11, 6), sprite(12, 6));
+		blinkyHalfNaked = Animation.of(spriteRegion(8, 8, 2, 1), spriteRegion(10, 8, 2, 1)).endless().frameDuration(4)
+				.restart();
 	}
 
 	@Override
@@ -138,23 +136,8 @@ public class PacMan_StandardRendering extends StandardRendering {
 	}
 
 	@Override
-	public Animation<?> storkFlying() {
-		return null; // no stork in Pac-Man game
-	}
-
-	@Override
 	public Animation<?> bigPacMan() {
 		return bigPacManAnim;
-	}
-
-	@Override
-	public Animation<?> blinkyDamaged() {
-		return blinkyDamaged;
-	}
-
-	@Override
-	public Animation<?> blinkyNaked() {
-		return blinkyNaked;
 	}
 
 	@Override
@@ -185,12 +168,22 @@ public class PacMan_StandardRendering extends StandardRendering {
 
 	@Override
 	public void drawStretchedBlinky(GraphicsContext g, Ghost blinky, V2f nailPosition, int stretching) {
-		drawSprite(g, stretchedDress.frame(stretching), nailPosition.x - 4, nailPosition.y - 4);
+		drawSprite(g, blinkyStretched.frame(stretching), nailPosition.x - 4, nailPosition.y - 4);
 		if (stretching < 3) {
 			drawGhost(g, blinky, false);
 		} else {
-			drawEntity(g, blinky, blinky.dir == Direction.RIGHT ? sprite(9, 7) : sprite(8, 7));
+			drawEntity(g, blinky, blinkyDamaged.frame(blinky.dir == Direction.UP ? 0 : 1));
 		}
+	}
+
+	@Override
+	public void drawPatchedBlinky(GraphicsContext g, Ghost blinky) {
+		drawEntity(g, blinky, blinkyPatched.animate());
+	}
+
+	@Override
+	public void drawNakedBlinky(GraphicsContext g, Ghost blinky) {
+		drawEntity(g, blinky, blinkyHalfNaked.animate());
 	}
 
 	// Ms. Pac-Man only:

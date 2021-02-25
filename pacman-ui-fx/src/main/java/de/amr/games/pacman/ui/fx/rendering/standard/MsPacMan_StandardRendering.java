@@ -177,25 +177,7 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 	}
 
 	@Override
-	public Animation<?> storkFlying() {
-		return Animation.of(//
-				new Rectangle2D(489, 176, 32, 16), //
-				new Rectangle2D(521, 176, 32, 16)//
-		).endless().frameDuration(10);
-	}
-
-	@Override
 	public Animation<?> bigPacMan() {
-		return null;
-	}
-
-	@Override
-	public Animation<?> blinkyDamaged() {
-		return null;
-	}
-
-	@Override
-	public Animation<?> blinkyNaked() {
 		return null;
 	}
 
@@ -218,24 +200,32 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 
 	@Override
 	public void drawBonus(GraphicsContext g, PacManBonus bonus) {
-		g.save();
-		g.translate(0, bonusJumpingAnim.animate());
-		drawEntity(g, bonus, bonusSprite(bonus));
-		g.restore();
+		if (bonus.edibleTicksLeft > 0) {
+			g.save();
+			g.translate(0, bonusJumpingAnim.animate());
+			drawEntity(g, bonus, bonusSprite(bonus));
+			g.restore();
+		} else {
+			drawEntity(g, bonus, bonusSprite(bonus));
+		}
 	}
 
 	// Pac-Man game only:
 
 	@Override
 	public void drawNail(GraphicsContext g, GameEntity nail) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void drawStretchedBlinky(GraphicsContext g, Ghost blinky, V2f nailPosition, int stretching) {
-		// TODO Auto-generated method stub
+	}
 
+	@Override
+	public void drawPatchedBlinky(GraphicsContext g, Ghost blinky) {
+	}
+
+	@Override
+	public void drawNakedBlinky(GraphicsContext g, Ghost blinky) {
 	}
 
 	// Ms. Pac-Man game only:

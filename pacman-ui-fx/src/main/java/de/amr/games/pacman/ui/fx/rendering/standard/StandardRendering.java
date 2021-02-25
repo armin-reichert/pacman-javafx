@@ -98,7 +98,8 @@ public abstract class StandardRendering implements FXRendering {
 
 	public Rectangle2D playerSprite(Pac player) {
 		if (player.dead) {
-			return playerDying().hasStarted() ? playerDying().animate() : (Rectangle2D) playerMunching(player, player.dir).frame();
+			return playerDying().hasStarted() ? playerDying().animate()
+					: (Rectangle2D) playerMunching(player, player.dir).frame();
 		}
 		if (player.speed == 0) {
 			return (Rectangle2D) playerMunching(player, player.dir).frame(0);
