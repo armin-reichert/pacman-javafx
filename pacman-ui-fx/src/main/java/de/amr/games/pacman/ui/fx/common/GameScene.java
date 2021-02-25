@@ -13,7 +13,6 @@ import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.FlashMessage;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import javafx.geometry.Pos;
-import javafx.scene.Camera;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -63,6 +62,7 @@ public abstract class GameScene {
 		pane.getChildren().addAll(canvas, flashMessageView);
 
 		fxScene = new Scene(pane, width, height, Color.BLACK);
+		fxScene.setCamera(new PerspectiveCamera());
 	}
 
 	public void start() {
@@ -106,43 +106,6 @@ public abstract class GameScene {
 		} else {
 			flashMessageView.setText(null);
 		}
-	}
-
-	@SuppressWarnings("unused")
-	private void testCamera() {
-		Camera camera = new PerspectiveCamera();
-		fxScene.setOnKeyPressed(e -> {
-			if (e.isControlDown()) {
-				switch (e.getCode()) {
-				case DIGIT0:
-					camera.setTranslateX(0);
-					camera.setTranslateY(0);
-					camera.setTranslateZ(0);
-					break;
-				case LEFT:
-					camera.setTranslateX(camera.getTranslateX() + 10);
-					break;
-				case RIGHT:
-					camera.setTranslateX(camera.getTranslateX() - 10);
-					break;
-				case UP:
-					camera.setTranslateY(camera.getTranslateY() + 10);
-					break;
-				case DOWN:
-					camera.setTranslateY(camera.getTranslateY() - 10);
-					break;
-				case PLUS:
-					camera.setTranslateZ(camera.getTranslateZ() + 10);
-					break;
-				case MINUS:
-					camera.setTranslateZ(camera.getTranslateZ() - 10);
-					break;
-				default:
-					break;
-				}
-			}
-		});
-		fxScene.setCamera(camera);
 	}
 
 }
