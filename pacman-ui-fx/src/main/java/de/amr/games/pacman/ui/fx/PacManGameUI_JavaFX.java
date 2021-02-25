@@ -50,8 +50,11 @@ import javafx.stage.Stage;
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
 
-	public static final int SCENE_WIDTH = 28 * TS;
-	public static final int SCENE_HEIGHT = 36 * TS;
+	public static final int SCENE_WIDTH_TILES = 28;
+	public static final int SCENE_HEIGHT_TILES = 36;
+
+	public static final int SCENE_WIDTH_PX = SCENE_WIDTH_TILES * TS;
+	public static final int SCENE_HEIGHT_PX = SCENE_HEIGHT_TILES * TS;
 
 	private final Deque<FlashMessage> flashMessagesQ = new ArrayDeque<>();
 

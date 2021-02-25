@@ -240,7 +240,7 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 	public void drawFlap(GraphicsContext g, Flap flap) {
 		if (flap.visible) {
 			FlapUI flapUI = (FlapUI) flap;
-			drawSprite(g, flapUI.flapping.animate(), flap.position.x, flap.position.y);
+			drawSprite(g, (Rectangle2D) flapUI.flapping.animate(), flap.position.x, flap.position.y);
 			g.setFont(Font.font(getScoreFont().getName(), FontWeight.THIN, 8));
 			g.setFill(Color.rgb(222, 222, 225, 0.75));
 			g.fillText(flap.sceneNumber + "", flap.position.x + 20, flap.position.y + 30);
@@ -250,11 +250,30 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 	}
 
 	@Override
+	public Animation<?> flapFlapping() {
+		return Animation.of( //
+				new Rectangle2D(456, 208, 32, 32), //
+				new Rectangle2D(488, 208, 32, 32), //
+				new Rectangle2D(520, 208, 32, 32), //
+				new Rectangle2D(488, 208, 32, 32), //
+				new Rectangle2D(456, 208, 32, 32)//
+		).repetitions(1).frameDuration(4);
+	}
+
+	@Override
 	public void drawStork(GraphicsContext g, GameEntity stork) {
 		if (stork.visible) {
 			StorkUI storkUI = (StorkUI) stork;
-			drawEntity(g, stork, storkUI.flying.animate());
+			drawEntity(g, stork, (Rectangle2D) storkUI.flying.animate());
 		}
+	}
+
+	@Override
+	public Animation<?> storkFlying() {
+		return Animation.of(//
+				new Rectangle2D(489, 176, 32, 16), //
+				new Rectangle2D(521, 176, 32, 16)//
+		).endless().frameDuration(10);
 	}
 
 	@Override

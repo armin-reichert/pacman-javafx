@@ -56,10 +56,9 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 	@Override
 	public void start() {
 
-		flap = new FlapUI(3, "JUNIOR");
+		flap = new FlapUI(3, "JUNIOR", rendering);
 		flap.setTilePosition(3, 10);
 		flap.visible = true;
-		flap.flapping.restart();
 
 		pacMan = new Pac("Pac-Man", Direction.RIGHT);
 		pacMan.setPosition(t(3), GROUND_Y - 4);
@@ -67,9 +66,8 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 		msPacMan = new Pac("Ms. Pac-Man", Direction.RIGHT);
 		msPacMan.setPosition(t(5), GROUND_Y - 4);
 
-		stork = new StorkUI();
+		stork = new StorkUI(rendering);
 		stork.setPosition(t(30), CEILING_Y);
-		stork.flying.restart();
 
 		bag = new JuniorBag();
 		bag.setPositionRelativeTo(stork, -14, 3);

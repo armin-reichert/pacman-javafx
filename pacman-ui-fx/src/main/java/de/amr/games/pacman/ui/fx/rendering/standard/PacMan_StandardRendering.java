@@ -203,4 +203,14 @@ public class PacMan_StandardRendering extends StandardRendering {
 	@Override
 	public void drawJuniorBag(GraphicsContext g, JuniorBag bag) {
 	}
+
+	@Override
+	public Animation<?> flapFlapping() {
+		return null;
+	}
+
+	@Override
+	public Animation<?> storkFlying() {
+		return null;
+	}
 }

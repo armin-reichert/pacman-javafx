@@ -58,10 +58,9 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 	@Override
 	public void start() {
 
-		flap = new FlapUI(1, "THEY MEET");
+		flap = new FlapUI(1, "THEY MEET", rendering);
 		flap.setTilePosition(3, 10);
 		flap.visible = true;
-		flap.flapping.restart();
 
 		pacMan = new Pac("Pac-Man", Direction.RIGHT);
 		pacMan.setPosition(-t(2), upperY);

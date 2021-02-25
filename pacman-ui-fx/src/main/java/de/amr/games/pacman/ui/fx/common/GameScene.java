@@ -1,7 +1,7 @@
 package de.amr.games.pacman.ui.fx.common;
 
-import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.SCENE_HEIGHT;
-import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.SCENE_WIDTH;
+import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.SCENE_HEIGHT_PX;
+import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.SCENE_WIDTH_PX;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import java.util.Objects;
@@ -47,8 +47,8 @@ public abstract class GameScene {
 		this.rendering = Objects.requireNonNull(rendering);
 		this.sounds = Objects.requireNonNull(sounds);
 
-		double width = SCENE_WIDTH * scaling;
-		double height = SCENE_HEIGHT * scaling;
+		double width = SCENE_WIDTH_PX * scaling;
+		double height = SCENE_HEIGHT_PX * scaling;
 
 		StackPane pane = new StackPane();
 
