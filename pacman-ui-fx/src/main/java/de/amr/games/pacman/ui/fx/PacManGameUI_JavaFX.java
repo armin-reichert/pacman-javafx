@@ -13,6 +13,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameModel;
@@ -123,22 +124,27 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 	}
 
-	private GameScene selectGameScene() {
+	private GameType currentGame() {
+		return Stream.of(GameType.values()).filter(controller::isPlaying).findFirst().get();
+	}
+
+	private GameScene currentScene() {
+		GameType currentGame = currentGame();
 		switch (game.state) {
 		case INTRO:
-			return scenes.get(controller.currentGameType()).get(0);
+			return scenes.get(currentGame).get(0);
 		case INTERMISSION:
-			return scenes.get(controller.currentGameType()).get(game.intermissionNumber);
+			return scenes.get(currentGame).get(game.intermissionNumber);
 		default:
-			return scenes.get(controller.currentGameType()).get(4);
+			return scenes.get(currentGame).get(4);
 		}
 	}
 
 	@Override
 	public void onGameChanged(GameModel newGame) {
 		game = Objects.requireNonNull(newGame);
-		scenes.get(controller.currentGameType()).forEach(scene -> scene.setGame(game));
-		changeScene(selectGameScene());
+		scenes.get(currentGame()).forEach(scene -> scene.setGame(game));
+		changeScene(currentScene());
 	}
 
 	private void changeScene(GameScene newScene) {
@@ -157,7 +163,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void update() {
-		GameScene sceneToDisplay = selectGameScene();
+		GameScene sceneToDisplay = currentScene();
 		if (currentScene != sceneToDisplay) {
 			log("%s: Scene changes from %s to %s", this, currentScene, sceneToDisplay);
 			if (currentScene != null) {
@@ -224,11 +230,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		if (muted) {
 			return Optional.empty(); // TODO
 		}
-		return Optional.of(sounds.get(controller.currentGameType()));
+		return Optional.of(sounds.get(currentGame()));
 	}
 
 	@Override
 	public Optional<PacManGameAnimations> animation() {
-		return Optional.of(renderings.get(controller.currentGameType()));
+		return Optional.of(renderings.get(currentGame()));
 	}
 }

@@ -23,7 +23,7 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.model.common.PacManGameState;
-import de.amr.games.pacman.model.pacman.Bonus;
+import de.amr.games.pacman.model.pacman.PacManBonus;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -85,7 +85,7 @@ public abstract class DefaultRendering implements FXRendering {
 		return dir != null ? dir : Direction.RIGHT;
 	}
 
-	public Rectangle2D bonusSprite(Bonus bonus) {
+	public Rectangle2D bonusSprite(PacManBonus bonus) {
 		if (bonus.edibleTicksLeft > 0) {
 			return symbolSprites.get(bonus.symbol);
 		}

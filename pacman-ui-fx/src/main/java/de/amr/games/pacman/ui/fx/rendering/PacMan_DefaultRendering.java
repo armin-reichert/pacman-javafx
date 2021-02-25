@@ -9,7 +9,7 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Pac;
-import de.amr.games.pacman.model.pacman.Bonus;
+import de.amr.games.pacman.model.pacman.PacManBonus;
 import de.amr.games.pacman.ui.fx.common.Helper;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -163,7 +163,7 @@ public class PacMan_DefaultRendering extends DefaultRendering {
 	}
 
 	@Override
-	public void drawBonus(GraphicsContext g, Bonus bonus) {
+	public void drawBonus(GraphicsContext g, PacManBonus bonus) {
 		drawEntity(g, bonus, bonusSprite(bonus));
 	}
 

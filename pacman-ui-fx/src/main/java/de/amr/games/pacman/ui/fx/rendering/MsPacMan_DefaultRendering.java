@@ -9,7 +9,7 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Pac;
-import de.amr.games.pacman.model.pacman.Bonus;
+import de.amr.games.pacman.model.pacman.PacManBonus;
 import de.amr.games.pacman.ui.fx.common.Helper;
 import de.amr.games.pacman.ui.fx.mspacman.entities.Flap;
 import de.amr.games.pacman.ui.fx.mspacman.entities.Heart;
@@ -214,7 +214,7 @@ public class MsPacMan_DefaultRendering extends DefaultRendering {
 	}
 
 	@Override
-	public void drawBonus(GraphicsContext g, Bonus bonus) {
+	public void drawBonus(GraphicsContext g, PacManBonus bonus) {
 		g.save();
 		g.translate(0, bonusJumpingAnim.animate());
 		drawEntity(g, bonus, bonusSprite(bonus));
