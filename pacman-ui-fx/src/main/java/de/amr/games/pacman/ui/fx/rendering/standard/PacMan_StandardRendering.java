@@ -9,15 +9,13 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2f;
+import de.amr.games.pacman.model.common.Flap;
 import de.amr.games.pacman.model.common.GameEntity;
 import de.amr.games.pacman.model.common.Ghost;
+import de.amr.games.pacman.model.common.JuniorBag;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.model.pacman.PacManBonus;
 import de.amr.games.pacman.ui.fx.common.Helper;
-import de.amr.games.pacman.ui.fx.mspacman.entities.Flap;
-import de.amr.games.pacman.ui.fx.mspacman.entities.Heart;
-import de.amr.games.pacman.ui.fx.mspacman.entities.JuniorBag;
-import de.amr.games.pacman.ui.fx.mspacman.entities.Stork;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -197,11 +195,11 @@ public class PacMan_StandardRendering extends StandardRendering {
 	}
 
 	@Override
-	public void drawHeart(GraphicsContext g, Heart heart) {
+	public void drawHeart(GraphicsContext g, GameEntity heart) {
 	}
 
 	@Override
-	public void drawStork(GraphicsContext g, Stork stork) {
+	public void drawStork(GraphicsContext g, GameEntity stork) {
 	}
 
 	@Override

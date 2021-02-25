@@ -9,15 +9,13 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2f;
+import de.amr.games.pacman.model.common.Flap;
 import de.amr.games.pacman.model.common.GameEntity;
 import de.amr.games.pacman.model.common.Ghost;
+import de.amr.games.pacman.model.common.JuniorBag;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.model.pacman.PacManBonus;
 import de.amr.games.pacman.ui.fx.common.Helper;
-import de.amr.games.pacman.ui.fx.mspacman.entities.Flap;
-import de.amr.games.pacman.ui.fx.mspacman.entities.Heart;
-import de.amr.games.pacman.ui.fx.mspacman.entities.JuniorBag;
-import de.amr.games.pacman.ui.fx.mspacman.entities.Stork;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -242,7 +240,8 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 	@Override
 	public void drawFlap(GraphicsContext g, Flap flap) {
 		if (flap.visible) {
-			drawSprite(g, flap.flapping.animate(), flap.position.x, flap.position.y);
+			FlapUI flapUI = (FlapUI) flap;
+			drawSprite(g, flapUI.flapping.animate(), flap.position.x, flap.position.y);
 			g.setFont(Font.font(getScoreFont().getName(), FontWeight.THIN, 8));
 			g.setFill(Color.rgb(222, 222, 225, 0.75));
 			g.fillText(flap.sceneNumber + "", flap.position.x + 20, flap.position.y + 30);
@@ -252,9 +251,10 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 	}
 
 	@Override
-	public void drawStork(GraphicsContext g, Stork stork) {
+	public void drawStork(GraphicsContext g, GameEntity stork) {
 		if (stork.visible) {
-			drawEntity(g, stork, stork.flying.animate());
+			StorkUI storkUI = (StorkUI) stork;
+			drawEntity(g, stork, storkUI.flying.animate());
 		}
 	}
 
@@ -270,7 +270,7 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 	}
 
 	@Override
-	public void drawHeart(GraphicsContext g, Heart heart) {
+	public void drawHeart(GraphicsContext g, GameEntity heart) {
 		drawEntity(g, heart, s(2, 10));
 	}
 }
