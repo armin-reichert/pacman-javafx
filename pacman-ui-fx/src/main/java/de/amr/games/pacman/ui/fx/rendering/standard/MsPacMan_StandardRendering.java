@@ -198,7 +198,7 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 			g.translate(0, bonusJumpingAnim.animate());
 			drawEntity(g, bonus, bonusSprite(bonus));
 			g.restore();
-		} else {
+		} else if (bonus.eatenTicksLeft > 0) {
 			drawEntity(g, bonus, bonusSprite(bonus));
 		}
 	}
