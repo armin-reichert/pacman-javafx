@@ -181,7 +181,7 @@ public abstract class StandardRendering implements FXRendering {
 	 * @param sprite sprite (region) in spritsheet
 	 */
 	protected void drawEntity(GraphicsContext g, GameEntity entity, Rectangle2D sprite) {
-		if (entity.visible) {
+		if (entity.visible && sprite != null) {
 			g.drawImage(spritesheet, sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(),
 					entity.position.x - sprite.getWidth() / 2 + HTS, entity.position.y - sprite.getHeight() / 2 + HTS,
 					sprite.getWidth(), sprite.getHeight());
