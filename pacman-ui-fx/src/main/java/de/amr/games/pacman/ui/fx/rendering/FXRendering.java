@@ -28,11 +28,11 @@ public interface FXRendering extends Rendering<GraphicsContext, Color, Font, Rec
 
 	void drawNail(GraphicsContext g, GameEntity nail);
 
-	void drawStretchedBlinky(GraphicsContext g, Ghost blinky, V2f nailPosition, int stretching);
+	void drawBlinkyStretched(GraphicsContext g, Ghost blinky, V2f nailPosition, int stretching);
 
-	void drawPatchedBlinky(GraphicsContext g, Ghost blinky);
+	void drawBlinkyPatched(GraphicsContext g, Ghost blinky);
 
-	void drawNakedBlinky(GraphicsContext g, Ghost blinky);
+	void drawBlinkyNaked(GraphicsContext g, Ghost blinky);
 
 	// Ms. Pac-Man game only:
 

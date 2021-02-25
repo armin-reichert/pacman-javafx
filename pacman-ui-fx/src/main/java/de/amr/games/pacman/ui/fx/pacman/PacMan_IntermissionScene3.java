@@ -90,9 +90,9 @@ public class PacMan_IntermissionScene3 extends GameScene {
 		rendering.drawLevelCounter(g, game, t(25), t(34));
 		rendering.drawPlayer(g, pac);
 		if (phase == Phase.CHASING_PACMAN) {
-			rendering.drawPatchedBlinky(g, blinky);
+			rendering.drawBlinkyPatched(g, blinky);
 		} else {
-			rendering.drawNakedBlinky(g, blinky);
+			rendering.drawBlinkyNaked(g, blinky);
 		}
 	}
 }

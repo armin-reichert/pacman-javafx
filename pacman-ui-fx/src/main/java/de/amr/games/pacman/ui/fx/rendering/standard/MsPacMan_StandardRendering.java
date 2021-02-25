@@ -217,15 +217,15 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 	}
 
 	@Override
-	public void drawStretchedBlinky(GraphicsContext g, Ghost blinky, V2f nailPosition, int stretching) {
+	public void drawBlinkyStretched(GraphicsContext g, Ghost blinky, V2f nailPosition, int stretching) {
 	}
 
 	@Override
-	public void drawPatchedBlinky(GraphicsContext g, Ghost blinky) {
+	public void drawBlinkyPatched(GraphicsContext g, Ghost blinky) {
 	}
 
 	@Override
-	public void drawNakedBlinky(GraphicsContext g, Ghost blinky) {
+	public void drawBlinkyNaked(GraphicsContext g, Ghost blinky) {
 	}
 
 	// Ms. Pac-Man game only:

@@ -167,7 +167,7 @@ public class PacMan_StandardRendering extends StandardRendering {
 	}
 
 	@Override
-	public void drawStretchedBlinky(GraphicsContext g, Ghost blinky, V2f nailPosition, int stretching) {
+	public void drawBlinkyStretched(GraphicsContext g, Ghost blinky, V2f nailPosition, int stretching) {
 		drawSprite(g, blinkyStretched.frame(stretching), nailPosition.x - 4, nailPosition.y - 4);
 		if (stretching < 3) {
 			drawGhost(g, blinky, false);
@@ -177,12 +177,12 @@ public class PacMan_StandardRendering extends StandardRendering {
 	}
 
 	@Override
-	public void drawPatchedBlinky(GraphicsContext g, Ghost blinky) {
+	public void drawBlinkyPatched(GraphicsContext g, Ghost blinky) {
 		drawEntity(g, blinky, blinkyPatched.animate());
 	}
 
 	@Override
-	public void drawNakedBlinky(GraphicsContext g, Ghost blinky) {
+	public void drawBlinkyNaked(GraphicsContext g, Ghost blinky) {
 		drawEntity(g, blinky, blinkyHalfNaked.animate());
 	}
 

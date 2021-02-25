@@ -116,7 +116,7 @@ public class PacMan_IntermissionScene2 extends GameScene {
 		if (nailDistance() < 0) {
 			rendering.drawGhost(g, blinky, false);
 		} else {
-			rendering.drawStretchedBlinky(g, blinky, nail.position, nailDistance() / 4);
+			rendering.drawBlinkyStretched(g, blinky, nail.position, nailDistance() / 4);
 		}
 	}
 }
