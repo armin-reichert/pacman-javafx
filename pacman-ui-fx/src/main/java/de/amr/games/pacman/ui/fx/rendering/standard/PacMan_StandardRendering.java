@@ -31,7 +31,7 @@ public class PacMan_StandardRendering extends StandardRendering {
 	private final Image mazeFull = new Image("/pacman/graphics/maze_full.png", false);
 	private final Image mazeEmpty = new Image("/pacman/graphics/maze_empty.png", false);
 
-	private final Animation<Rectangle2D> bigPacManAnim;
+	private Animation<Rectangle2D> bigPacMan;
 	private Animation<Rectangle2D> blinkyStretched;
 	private Animation<Rectangle2D> blinkyDamaged;
 	private Animation<Rectangle2D> blinkyPatched;
@@ -45,20 +45,20 @@ public class PacMan_StandardRendering extends StandardRendering {
 
 		//@formatter:off
 		bonusValueSprites = new HashMap<>();
-		bonusValueSprites.put(100,  spriteRegion(0, 9, 1, 1));
-		bonusValueSprites.put(300,  spriteRegion(1, 9, 1, 1));
-		bonusValueSprites.put(500,  spriteRegion(2, 9, 1, 1));
-		bonusValueSprites.put(700,  spriteRegion(3, 9, 1, 1));
-		bonusValueSprites.put(1000, spriteRegion(4, 9, 2, 1)); // left-aligned 
-		bonusValueSprites.put(2000, spriteRegion(3, 10, 3, 1));
-		bonusValueSprites.put(3000, spriteRegion(3, 11, 3, 1));
-		bonusValueSprites.put(5000, spriteRegion(3, 12, 3, 1));
+		bonusValueSprites.put(100,  gridCells(0, 9, 1, 1));
+		bonusValueSprites.put(300,  gridCells(1, 9, 1, 1));
+		bonusValueSprites.put(500,  gridCells(2, 9, 1, 1));
+		bonusValueSprites.put(700,  gridCells(3, 9, 1, 1));
+		bonusValueSprites.put(1000, gridCells(4, 9, 2, 1)); // left-aligned 
+		bonusValueSprites.put(2000, gridCells(3, 10, 3, 1));
+		bonusValueSprites.put(3000, gridCells(3, 11, 3, 1));
+		bonusValueSprites.put(5000, gridCells(3, 12, 3, 1));
 
 		bountyValueSprites = new HashMap<>();
-		bountyValueSprites.put(200,  spriteRegion(0, 8, 1, 1));
-		bountyValueSprites.put(400,  spriteRegion(1, 8, 1, 1));
-		bountyValueSprites.put(800,  spriteRegion(2, 8, 1, 1));
-		bountyValueSprites.put(1600, spriteRegion(3, 8, 1, 1));
+		bountyValueSprites.put(200,  gridCells(0, 8, 1, 1));
+		bountyValueSprites.put(400,  gridCells(1, 8, 1, 1));
+		bountyValueSprites.put(800,  gridCells(2, 8, 1, 1));
+		bountyValueSprites.put(1600, gridCells(3, 8, 1, 1));
 		//@formatter:on
 
 		// Animations
@@ -75,13 +75,12 @@ public class PacMan_StandardRendering extends StandardRendering {
 		}
 
 		pacDyingAnim = Animation.of(sprite(3, 0), sprite(4, 0), sprite(5, 0), sprite(6, 0), sprite(7, 0), sprite(8, 0),
-				sprite(9, 0), sprite(10, 0), sprite(11, 0), sprite(12, 0), sprite(13, 0));
-		pacDyingAnim.frameDuration(8);
+				sprite(9, 0), sprite(10, 0), sprite(11, 0), sprite(12, 0), sprite(13, 0)).frameDuration(8);
 
-		bigPacManAnim = Animation.of(//
-				spriteRegion(2, 1, 2, 2), //
-				spriteRegion(4, 1, 2, 2), //
-				spriteRegion(6, 1, 2, 2)).frameDuration(4).endless().run();
+		bigPacMan = Animation.of(//
+				gridCells(2, 1, 2, 2), //
+				gridCells(4, 1, 2, 2), //
+				gridCells(6, 1, 2, 2)).frameDuration(4).endless().run();
 
 		ghostsKickingAnim = new ArrayList<>(4);
 		for (int id = 0; id < 4; ++id) {
@@ -109,8 +108,7 @@ public class PacMan_StandardRendering extends StandardRendering {
 		blinkyPatched = Animation.of(sprite(10, 7), sprite(11, 7)).restart().frameDuration(4).endless();
 		blinkyDamaged = Animation.of(sprite(8, 7), sprite(9, 7));
 		blinkyStretched = Animation.of(sprite(9, 6), sprite(10, 6), sprite(11, 6), sprite(12, 6));
-		blinkyHalfNaked = Animation.of(spriteRegion(8, 8, 2, 1), spriteRegion(10, 8, 2, 1)).endless().frameDuration(4)
-				.restart();
+		blinkyHalfNaked = Animation.of(gridCells(8, 8, 2, 1), gridCells(10, 8, 2, 1)).endless().frameDuration(4).restart();
 	}
 
 	@Override
@@ -134,11 +132,6 @@ public class PacMan_StandardRendering extends StandardRendering {
 	}
 
 	@Override
-	public Animation<?> bigPacMan() {
-		return bigPacManAnim;
-	}
-
-	@Override
 	public void drawMaze(GraphicsContext g, int mazeNumber, int x, int y, boolean flashing) {
 		if (flashing) {
 			g.drawImage((Image) mazeFlashing(mazeNumber).animate(), x, y);
@@ -158,6 +151,11 @@ public class PacMan_StandardRendering extends StandardRendering {
 	}
 
 	// Pac-Man only:
+
+	@Override
+	public void drawBigPacMan(GraphicsContext g, Pac bigPac) {
+		drawEntity(g, bigPac, bigPacMan.animate());
+	}
 
 	@Override
 	public void drawNail(GraphicsContext g, GameEntity nail) {

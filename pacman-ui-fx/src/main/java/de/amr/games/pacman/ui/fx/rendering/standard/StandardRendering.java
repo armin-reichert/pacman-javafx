@@ -7,6 +7,7 @@ import static de.amr.games.pacman.model.common.GhostState.DEAD;
 import static de.amr.games.pacman.model.common.GhostState.ENTERING_HOUSE;
 import static de.amr.games.pacman.model.common.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.common.GhostState.LOCKED;
+import static de.amr.games.pacman.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
@@ -33,38 +34,23 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 /**
- * Default implementation of scene rendering.
+ * Standard implementation of scene rendering using sprites.
  * 
  * @author Armin Reichert
  */
 public abstract class StandardRendering implements FXRendering {
 
-	/** Spritesheet raster size */
-	public static final int RASTER = 16;
+	/** Spritesheet grid cell size */
+	public static final int GRID_CELLSIZE = 16;
 
-	public static Rectangle2D sprite(int col, int row) {
-		return spriteRegion(col, row, 1, 1);
-	}
-
-	public static Rectangle2D spriteRegion(int col, int row, int numCols, int numRows) {
-		return new Rectangle2D(col * RASTER, row * RASTER, numCols * RASTER, numRows * RASTER);
-	}
-
-	/* Sprite region relative to given origin pixel position */
-	public static Rectangle2D spriteRegionAt(int originX, int originY, int col, int row, int numCols, int numRows) {
-		return new Rectangle2D(originX + col * RASTER, originY + row * RASTER, numCols * RASTER, numRows * RASTER);
-	}
-
-	protected Image spritesheet;
-
-	protected Font scoreFont;
+	protected final Image spritesheet;
+	protected final Font scoreFont;
+	protected final Animation<Boolean> energizerBlinking;
 
 	protected List<Rectangle2D> symbolSprites;
 	protected Map<Integer, Rectangle2D> bonusValueSprites;
 	protected Map<Integer, Rectangle2D> bountyValueSprites;
 	protected List<Animation<Image>> mazeFlashingAnim;
-
-	protected Animation<Boolean> energizerBlinking;
 	protected Map<Direction, Animation<Rectangle2D>> pacManMunchingAnim;
 	protected Animation<Rectangle2D> pacDyingAnim;
 	protected List<Map<Direction, Animation<Rectangle2D>>> ghostsKickingAnim;
@@ -78,14 +64,60 @@ public abstract class StandardRendering implements FXRendering {
 		energizerBlinking = Animation.pulse().frameDuration(15);
 	}
 
+	/**
+	 * @param col grid column (x)
+	 * @param row grid row (y)
+	 * @return grid cell at given coordinates
+	 */
+	protected Rectangle2D sprite(int col, int row) {
+		return gridCells(col, row, 1, 1);
+	}
+
+	/**
+	 * @param col     grid column (x)
+	 * @param row     grid row (y)
+	 * @param numCols number of grid columns
+	 * @param numRows number of grid rows
+	 * @return grid cell region at given coordinates of given size
+	 */
+	protected Rectangle2D gridCells(int col, int row, int numCols, int numRows) {
+		return new Rectangle2D(col * GRID_CELLSIZE, row * GRID_CELLSIZE, numCols * GRID_CELLSIZE, numRows * GRID_CELLSIZE);
+	}
+
+	/**
+	 * @param startX  absolute x-coordinate of left-upper corner of region
+	 * @param startY  absolute y-coordinate of left-upper corner of region
+	 * @param col     grid column (x)
+	 * @param row     grid row (y)
+	 * @param numCols number of grid columns
+	 * @param numRows number of grid rows
+	 * @return grid cell region at given coordinates of given size
+	 */
+	protected Rectangle2D gridCellsStartingAt(int startX, int startY, int col, int row, int numCols, int numRows) {
+		return new Rectangle2D(startX + col * GRID_CELLSIZE, startY + row * GRID_CELLSIZE, numCols * GRID_CELLSIZE,
+				numRows * GRID_CELLSIZE);
+	}
+
+	/**
+	 * @param dir direction
+	 * @return index used for this direction in spritesheet
+	 */
 	protected int index(Direction dir) {
 		return dir == RIGHT ? 0 : dir == LEFT ? 1 : dir == UP ? 2 : 3;
 	}
 
+	/**
+	 * @param dir direction or null
+	 * @return direction or default value if null
+	 */
 	protected Direction ensureDirection(Direction dir) {
 		return dir != null ? dir : Direction.RIGHT;
 	}
 
+	/**
+	 * @param bonus game bonus
+	 * @return sprite for bonus depending on its state
+	 */
 	public Rectangle2D bonusSprite(PacManBonus bonus) {
 		if (bonus.edibleTicksLeft > 0) {
 			return symbolSprites.get(bonus.symbol);
@@ -96,6 +128,10 @@ public abstract class StandardRendering implements FXRendering {
 		return null;
 	}
 
+	/**
+	 * @param player player (Pac-Man or Ms. Pac-Man)
+	 * @return sprite for player depending on its state
+	 */
 	public Rectangle2D playerSprite(Pac player) {
 		if (player.dead) {
 			return playerDying().hasStarted() ? playerDying().animate()
@@ -110,6 +146,11 @@ public abstract class StandardRendering implements FXRendering {
 		return (Rectangle2D) playerMunching(player, player.dir).animate();
 	}
 
+	/**
+	 * @param ghost      ghost
+	 * @param frightened if ghost is frightened
+	 * @return sprite for ghost depending on its state
+	 */
 	public Rectangle2D ghostSprite(Ghost ghost, boolean frightened) {
 		if (ghost.bounty > 0) {
 			return bountyValueSprites.get(ghost.bounty);
@@ -123,7 +164,7 @@ public abstract class StandardRendering implements FXRendering {
 		if (ghost.is(LOCKED) && frightened) {
 			return ghostFrightened(ghost, ghost.dir).animate();
 		}
-		// Looks towards wish dir!
+		// Sprite looking towards *wish* dir!
 		return ghostKicking(ghost, ghost.wishDir).animate();
 	}
 
@@ -133,17 +174,17 @@ public abstract class StandardRendering implements FXRendering {
 	}
 
 	/**
-	 * Draws a game entity centered over its collision box of size 8x8.
+	 * Draws a game entity centered over its collision box (of size one tile)
 	 * 
 	 * @param g      the graphics context
-	 * @param guy    the guy
+	 * @param entity the guy
 	 * @param sprite sprite (region) in spritsheet
 	 */
-	protected void drawEntity(GraphicsContext g, GameEntity guy, Rectangle2D sprite) {
-		if (guy.visible && sprite != null) {
+	protected void drawEntity(GraphicsContext g, GameEntity entity, Rectangle2D sprite) {
+		if (entity.visible) {
 			g.drawImage(spritesheet, sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(),
-					guy.position.x - sprite.getWidth() / 2 + 4, guy.position.y - sprite.getHeight() / 2 + 4, sprite.getWidth(),
-					sprite.getHeight());
+					entity.position.x - sprite.getWidth() / 2 + HTS, entity.position.y - sprite.getHeight() / 2 + HTS,
+					sprite.getWidth(), sprite.getHeight());
 		}
 	}
 

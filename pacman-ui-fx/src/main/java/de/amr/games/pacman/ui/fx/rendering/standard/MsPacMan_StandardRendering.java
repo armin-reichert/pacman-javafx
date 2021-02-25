@@ -36,7 +36,7 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 
 	/* Tiles in right half of spritesheet */
 	public Rectangle2D s(int tileX, int tileY) {
-		return spriteRegionAt(456, 0, tileX, tileY, 1, 1);
+		return gridCellsStartingAt(456, 0, tileX, tileY, 1, 1);
 	}
 
 	public MsPacMan_StandardRendering() {
@@ -175,11 +175,6 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 	}
 
 	@Override
-	public Animation<?> bigPacMan() {
-		return null;
-	}
-
-	@Override
 	public void drawMaze(GraphicsContext g, int mazeNumber, int x, int y, boolean flashing) {
 		int index = mazeNumber - 1;
 		if (flashing) {
@@ -193,7 +188,7 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 
 	@Override
 	public void drawLifeCounterSymbol(GraphicsContext g, int x, int y) {
-		g.drawImage(spritesheet, 456 + RASTER, 0, RASTER, RASTER, x, y, RASTER, RASTER);
+		g.drawImage(spritesheet, 456 + GRID_CELLSIZE, 0, GRID_CELLSIZE, GRID_CELLSIZE, x, y, GRID_CELLSIZE, GRID_CELLSIZE);
 	}
 
 	@Override
@@ -209,6 +204,10 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 	}
 
 	// Pac-Man game only:
+
+	@Override
+	public void drawBigPacMan(GraphicsContext g, Pac bigPacMan) {
+	}
 
 	@Override
 	public void drawNail(GraphicsContext g, GameEntity nail) {

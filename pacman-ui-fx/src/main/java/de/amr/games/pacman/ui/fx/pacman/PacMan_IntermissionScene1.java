@@ -13,7 +13,6 @@ import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
-import javafx.geometry.Rectangle2D;
 
 /**
  * First intermission scene: Blinky chases Pac-Man and is then chased by a huge Pac-Man.
@@ -69,7 +68,6 @@ public class PacMan_IntermissionScene1 extends GameScene {
 				blinky.setPosition(-20, baselineY);
 				blinky.speed = 0.8f;
 				blinky.state = FRIGHTENED;
-				rendering.bigPacMan().restart();
 				phase = Phase.BIGPACMAN_CHASING_BLINKY;
 			}
 			break;
@@ -94,8 +92,7 @@ public class PacMan_IntermissionScene1 extends GameScene {
 		if (phase == Phase.BLINKY_CHASING_PACMAN) {
 			rendering.drawPlayer(g, pac);
 		} else {
-			Rectangle2D sprite = (Rectangle2D) rendering.bigPacMan().animate();
-			rendering.drawSprite(g, sprite, pac.position.x - 12, pac.position.y - 22);
+			rendering.drawBigPacMan(g, pac);
 		}
 		rendering.drawLevelCounter(g, game, t(25), t(34));
 	}
