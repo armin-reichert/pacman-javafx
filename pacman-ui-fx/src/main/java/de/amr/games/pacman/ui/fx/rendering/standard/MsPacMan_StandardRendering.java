@@ -8,6 +8,9 @@ import java.util.Map;
 
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.V2f;
+import de.amr.games.pacman.model.common.GameEntity;
+import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.model.pacman.PacManBonus;
 import de.amr.games.pacman.ui.fx.common.Helper;
@@ -220,6 +223,22 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 		drawEntity(g, bonus, bonusSprite(bonus));
 		g.restore();
 	}
+
+	// Pac-Man game only:
+
+	@Override
+	public void drawNail(GraphicsContext g, GameEntity nail) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void drawStretchedBlinky(GraphicsContext g, Ghost blinky, V2f nailPosition, int stretching) {
+		// TODO Auto-generated method stub
+
+	}
+
+	// Ms. Pac-Man game only:
 
 	@Override
 	public void drawSpouse(GraphicsContext g, Pac pacMan) {
