@@ -1,7 +1,7 @@
 package de.amr.games.pacman.ui.fx.rendering;
 
-import de.amr.games.pacman.ui.PacManGameAnimations;
 import de.amr.games.pacman.ui.Rendering;
+import de.amr.games.pacman.ui.animation.PacManGameAnimations;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;

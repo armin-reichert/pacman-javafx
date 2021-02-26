@@ -25,9 +25,9 @@ import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.model.common.PacManGameState;
 import de.amr.games.pacman.model.pacman.PacManBonus;
-import de.amr.games.pacman.ui.GhostAnimations;
-import de.amr.games.pacman.ui.MazeAnimations;
-import de.amr.games.pacman.ui.PlayerAnimations;
+import de.amr.games.pacman.ui.animation.GhostAnimations;
+import de.amr.games.pacman.ui.animation.MazeAnimations;
+import de.amr.games.pacman.ui.animation.PlayerAnimations;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -272,7 +272,7 @@ public abstract class StandardRendering implements FXRendering, MazeAnimations, 
 			g.setFill(pointsColor);
 			g.fillText(String.format("%08d", game.score), t(1), t(2));
 			g.setFill(Color.LIGHTGRAY);
-			g.fillText(String.format("L%02d", game.currentLevelNumber), t(9), t(2));
+			g.fillText(String.format("L%02d", game.levelNumber), t(9), t(2));
 			g.setFill(pointsColor);
 			g.fillText(String.format("%08d", game.highscorePoints), t(15), t(2));
 			g.setFill(Color.LIGHTGRAY);
@@ -284,8 +284,8 @@ public abstract class StandardRendering implements FXRendering, MazeAnimations, 
 	@Override
 	public void drawLevelCounter(GraphicsContext g, GameModel game, int rightX, int y) {
 		int x = rightX;
-		int firstLevel = Math.max(1, game.currentLevelNumber - 6);
-		for (int level = firstLevel; level <= game.currentLevelNumber; ++level) {
+		int firstLevel = Math.max(1, game.levelNumber - 6);
+		for (int level = firstLevel; level <= game.levelNumber; ++level) {
 			Rectangle2D region = symbolSprites.get(game.levelSymbols.get(level - 1));
 			g.drawImage(spritesheet, region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(), x, y,
 					region.getWidth(), region.getHeight());
