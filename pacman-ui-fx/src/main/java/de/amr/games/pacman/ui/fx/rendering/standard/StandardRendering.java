@@ -237,7 +237,7 @@ public abstract class StandardRendering implements FXRendering, MazeAnimations, 
 
 	@Override
 	public void drawEnergizerTiles(GraphicsContext g, Stream<V2i> energizerTiles) {
-		if (energizerBlinking.animate()) {
+		if (!energizerBlinking.frame()) {
 			energizerTiles.forEach(tile -> drawTileCovered(g, tile));
 		}
 	}
