@@ -6,4 +6,4 @@ Currently, the game can only be started with the supplied batch file. Adapt the 
 
 YouTube video
 
-[![YouTube video](https://i9.ytimg.com/vi/q5biOTj9GIU/mq2.jpg?sqp=CMTI3IEG&rs=AOn4CLDNhugLyh6O0LgjaKK55FgUxOfimw)](https://youtu.be/q5biOTj9GIU)
+[![YouTube video](https://i9.ytimg.com/vi/q5biOTj9GIU/mq2.jpg?sqp=CODn4oEG&rs=AOn4CLDJlnpUng1Ng40TFVsq3jHPbg0IFQ)](https://youtu.be/q5biOTj9GIU)
