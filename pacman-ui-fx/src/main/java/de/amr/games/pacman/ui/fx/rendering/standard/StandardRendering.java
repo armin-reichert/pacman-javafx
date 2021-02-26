@@ -26,6 +26,7 @@ import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.model.common.PacManGameState;
 import de.amr.games.pacman.model.pacman.PacManBonus;
 import de.amr.games.pacman.ui.GhostAnimations;
+import de.amr.games.pacman.ui.MazeAnimations;
 import de.amr.games.pacman.ui.PlayerAnimations;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import javafx.geometry.Rectangle2D;
@@ -40,7 +41,7 @@ import javafx.scene.text.FontWeight;
  * 
  * @author Armin Reichert
  */
-public abstract class StandardRendering implements FXRendering, PlayerAnimations, GhostAnimations {
+public abstract class StandardRendering implements FXRendering, MazeAnimations, PlayerAnimations, GhostAnimations {
 
 	/** Spritesheet grid cell size */
 	public static final int GRID_CELLSIZE = 16;
@@ -293,6 +294,11 @@ public abstract class StandardRendering implements FXRendering, PlayerAnimations
 	}
 
 	// Animations
+
+	@Override
+	public MazeAnimations mazeAnimations() {
+		return this;
+	}
 
 	@Override
 	public PlayerAnimations playerAnimations() {
