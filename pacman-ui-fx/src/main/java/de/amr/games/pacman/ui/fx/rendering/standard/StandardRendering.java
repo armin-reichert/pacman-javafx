@@ -45,17 +45,20 @@ public abstract class StandardRendering implements FXRendering {
 
 	protected final Image spritesheet;
 	protected final Font scoreFont;
-	protected final Animation<Boolean> energizerBlinking;
 
 	protected List<Rectangle2D> symbolSprites;
 	protected Map<Integer, Rectangle2D> bonusValueSprites;
 	protected Map<Integer, Rectangle2D> bountyValueSprites;
+
+	protected Animation<Boolean> energizerBlinking;
 	protected List<Animation<Image>> mazeFlashingAnim;
+
 	protected Map<Direction, Animation<Rectangle2D>> pacManMunchingAnim;
-	protected Animation<Rectangle2D> pacDyingAnim;
+	protected Animation<Rectangle2D> playerDyingAnim;
+
 	protected List<Map<Direction, Animation<Rectangle2D>>> ghostsKickingAnim;
 	protected Map<Direction, Animation<Rectangle2D>> ghostEyesAnim;
-	protected Animation<Rectangle2D> ghostBlueAnim;
+	protected Animation<Rectangle2D> ghostFrightenedAnim;
 	protected Animation<Rectangle2D> ghostFlashingAnim;
 
 	public StandardRendering(String spritesheetURL) {
@@ -81,7 +84,7 @@ public abstract class StandardRendering implements FXRendering {
 	 * @return grid cell region at given coordinates of given size
 	 */
 	protected Rectangle2D gridCells(int col, int row, int numCols, int numRows) {
-		return new Rectangle2D(col * GRID_CELLSIZE, row * GRID_CELLSIZE, numCols * GRID_CELLSIZE, numRows * GRID_CELLSIZE);
+		return gridCellsStartingAt(0, 0, col, row, numCols, numRows);
 	}
 
 	/**
@@ -125,7 +128,7 @@ public abstract class StandardRendering implements FXRendering {
 		if (bonus.eatenTicksLeft > 0) {
 			return bonusValueSprites.get(bonus.points);
 		}
-		return null;
+		return null; // should not happen
 	}
 
 	/**
@@ -306,7 +309,7 @@ public abstract class StandardRendering implements FXRendering {
 
 	@Override
 	public Animation<Rectangle2D> playerDying() {
-		return pacDyingAnim;
+		return playerDyingAnim;
 	}
 
 	@Override
@@ -316,7 +319,7 @@ public abstract class StandardRendering implements FXRendering {
 
 	@Override
 	public Animation<Rectangle2D> ghostFrightened(Ghost ghost, Direction dir) {
-		return ghostBlueAnim;
+		return ghostFrightenedAnim;
 	}
 
 	@Override

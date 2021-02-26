@@ -82,8 +82,8 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 			msPacManMunchingAnim.put(dir, munching);
 		}
 
-		pacDyingAnim = Animation.of(s(0, 3), s(0, 0), s(0, 1), s(0, 2));
-		pacDyingAnim.frameDuration(10).repetitions(2);
+		playerDyingAnim = Animation.of(s(0, 3), s(0, 0), s(0, 1), s(0, 2));
+		playerDyingAnim.frameDuration(10).repetitions(2);
 
 		pacManMunchingAnim = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
@@ -106,7 +106,7 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 		ghostEyesAnim = new EnumMap<>(Direction.class);
 		Direction.stream().forEach(dir -> ghostEyesAnim.put(dir, Animation.of(s(8 + index(dir), 5))));
 
-		ghostBlueAnim = Animation.of(s(8, 4), s(9, 4)).frameDuration(20).endless().run();
+		ghostFrightenedAnim = Animation.of(s(8, 4), s(9, 4)).frameDuration(20).endless().run();
 		ghostFlashingAnim = Animation.of(s(8, 4), s(9, 4), s(10, 4), s(11, 4)).frameDuration(5).endless();
 
 		bonusJumpingAnim = Animation.of(0, 2, 0, -2).frameDuration(20).endless().run();

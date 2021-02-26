@@ -74,7 +74,7 @@ public class PacMan_StandardRendering extends StandardRendering {
 			pacManMunchingAnim.put(dir, animation);
 		}
 
-		pacDyingAnim = Animation.of(sprite(3, 0), sprite(4, 0), sprite(5, 0), sprite(6, 0), sprite(7, 0), sprite(8, 0),
+		playerDyingAnim = Animation.of(sprite(3, 0), sprite(4, 0), sprite(5, 0), sprite(6, 0), sprite(7, 0), sprite(8, 0),
 				sprite(9, 0), sprite(10, 0), sprite(11, 0), sprite(12, 0), sprite(13, 0)).frameDuration(8);
 
 		bigPacMan = Animation.of(//
@@ -99,8 +99,8 @@ public class PacMan_StandardRendering extends StandardRendering {
 			ghostEyesAnim.put(dir, Animation.of(sprite(8 + index(dir), 5)));
 		}
 
-		ghostBlueAnim = Animation.of(sprite(8, 4), sprite(9, 4));
-		ghostBlueAnim.frameDuration(20).endless();
+		ghostFrightenedAnim = Animation.of(sprite(8, 4), sprite(9, 4));
+		ghostFrightenedAnim.frameDuration(20).endless();
 
 		ghostFlashingAnim = Animation.of(sprite(8, 4), sprite(9, 4), sprite(10, 4), sprite(11, 4));
 		ghostFlashingAnim.frameDuration(5).endless();
