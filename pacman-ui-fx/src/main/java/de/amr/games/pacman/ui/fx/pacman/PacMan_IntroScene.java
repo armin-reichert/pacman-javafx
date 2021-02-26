@@ -195,6 +195,7 @@ public class PacMan_IntroScene extends GameScene {
 			ghost.state = GhostState.FRIGHTENED;
 			ghost.dir = ghost.wishDir = Direction.RIGHT;
 			ghost.speed = 0.5f;
+			rendering.ghostAnimations().ghostFrightened(ghost).forEach(Animation::restart);
 		}
 	}
 
