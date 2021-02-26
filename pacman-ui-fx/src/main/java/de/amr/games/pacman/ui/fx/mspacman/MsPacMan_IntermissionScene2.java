@@ -79,8 +79,8 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 				msPacMan.setPosition(-t(8), UPPER_Y);
 				pacMan.dir = msPacMan.dir = Direction.RIGHT;
 				pacMan.speed = msPacMan.speed = 2;
-				rendering.playerMunching(msPacMan).forEach(Animation::restart);
-				rendering.spouseMunching(pacMan).forEach(Animation::restart);
+				rendering.playerAnimations().playerMunching(msPacMan).forEach(Animation::restart);
+				rendering.playerAnimations().spouseMunching(pacMan).forEach(Animation::restart);
 			}
 			if (phase.timer.running() == clock.sec(6)) {
 				msPacMan.setPosition(t(30), LOWER_Y);

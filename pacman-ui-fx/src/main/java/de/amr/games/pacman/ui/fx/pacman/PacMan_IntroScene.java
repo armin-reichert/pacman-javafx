@@ -177,7 +177,7 @@ public class PacMan_IntroScene extends GameScene {
 		pac.speed = 1;
 		pac.dir = Direction.LEFT;
 		pac.couldMove = true;
-		rendering.playerMunching(pac).forEach(Animation::restart);
+		rendering.playerAnimations().playerMunching(pac).forEach(Animation::restart);
 
 		for (Ghost ghost : ghosts) {
 			ghost.setPositionRelativeTo(pac, 8 + (ghost.id + 1) * 18, 0);

@@ -65,7 +65,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 		pacMan = new Pac("Pac-Man", Direction.RIGHT);
 		pacMan.setPosition(-t(2), upperY);
 		pacMan.visible = true;
-		rendering.spouseMunching(pacMan).forEach(Animation::restart);
+		rendering.playerAnimations().spouseMunching(pacMan).forEach(Animation::restart);
 
 		inky = new Ghost(2, "Inky", Direction.RIGHT);
 		inky.setPositionRelativeTo(pacMan, -t(3), 0);
@@ -74,7 +74,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 		msPac = new Pac("Ms. Pac-Man", Direction.LEFT);
 		msPac.setPosition(t(30), lowerY);
 		msPac.visible = true;
-		rendering.playerMunching(msPac).forEach(Animation::restart);
+		rendering.playerAnimations().playerMunching(msPac).forEach(Animation::restart);
 
 		pinky = new Ghost(1, "Pinky", Direction.LEFT);
 		pinky.setPositionRelativeTo(msPac, t(3), 0);

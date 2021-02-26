@@ -47,7 +47,7 @@ public class PacMan_IntermissionScene1 extends GameScene {
 		pac.visible = true;
 		pac.setPosition(t(30), groundY);
 		pac.speed = 1.0f;
-		rendering.playerMunching(pac).forEach(Animation::restart);
+		rendering.playerAnimations().playerMunching(pac).forEach(Animation::restart);
 
 		blinky = new Ghost(0, "Blinky", Direction.LEFT);
 		blinky.visible = true;
