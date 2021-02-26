@@ -54,7 +54,7 @@ public class PacMan_IntermissionScene2 extends GameScene {
 		blinky.visible = true;
 		blinky.state = HUNTING_PAC;
 		blinky.speed = 1;
-		rendering.ghostKicking(blinky, blinky.dir).restart();
+		rendering.ghostAnimations().ghostKicking(blinky, blinky.dir).restart();
 
 		nail = new GameEntity();
 		nail.visible = true;

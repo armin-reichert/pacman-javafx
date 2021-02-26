@@ -135,14 +135,14 @@ public class MsPacMan_IntroScene extends GameScene {
 		}
 		if (phase.timer.running() == 0) {
 			currentGhost.speed = 1;
-			rendering.ghostKicking(currentGhost).forEach(Animation::restart);
+			rendering.ghostAnimations().ghostKicking(currentGhost).forEach(Animation::restart);
 		}
 		if (currentGhost.dir == LEFT && currentGhost.position.x <= leftOfFrame) {
 			currentGhost.dir = currentGhost.wishDir = UP;
 		}
 		if (currentGhost.dir == UP && currentGhost.position.y <= t(frameTopLeftTile.y) + currentGhost.id * 18) {
 			currentGhost.speed = 0;
-			rendering.ghostKicking(currentGhost).forEach(Animation::reset);
+			rendering.ghostAnimations().ghostKicking(currentGhost).forEach(Animation::reset);
 			return true;
 		}
 		return false;

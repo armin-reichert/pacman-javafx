@@ -25,6 +25,7 @@ import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.model.common.PacManGameState;
 import de.amr.games.pacman.model.pacman.PacManBonus;
+import de.amr.games.pacman.ui.GhostAnimations;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -38,7 +39,7 @@ import javafx.scene.text.FontWeight;
  * 
  * @author Armin Reichert
  */
-public abstract class StandardRendering implements FXRendering {
+public abstract class StandardRendering implements FXRendering, GhostAnimations {
 
 	/** Spritesheet grid cell size */
 	public static final int GRID_CELLSIZE = 16;
@@ -159,7 +160,7 @@ public abstract class StandardRendering implements FXRendering {
 			return bountyValueSprites.get(ghost.bounty);
 		}
 		if (ghost.is(DEAD) || ghost.is(ENTERING_HOUSE)) {
-			return ghostReturningHomeToDir(ghost, ghost.dir).animate();
+			return ghostReturningHome(ghost, ghost.dir).animate();
 		}
 		if (ghost.is(FRIGHTENED)) {
 			return ghostFlashing().isRunning() ? ghostFlashing().frame() : ghostFrightened(ghost, ghost.dir).animate();
@@ -293,6 +294,11 @@ public abstract class StandardRendering implements FXRendering {
 	// Animations
 
 	@Override
+	public GhostAnimations ghostAnimations() {
+		return this;
+	}
+
+	@Override
 	public Animation<?> mazeFlashing(int mazeNumber) {
 		return mazeFlashingAnim.get(mazeNumber - 1);
 	}
@@ -328,7 +334,7 @@ public abstract class StandardRendering implements FXRendering {
 	}
 
 	@Override
-	public Animation<Rectangle2D> ghostReturningHomeToDir(Ghost ghost, Direction dir) {
+	public Animation<Rectangle2D> ghostReturningHome(Ghost ghost, Direction dir) {
 		return ghostEyesAnim.get(ensureDirection(dir));
 	}
 }

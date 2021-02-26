@@ -79,8 +79,9 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 		pinky = new Ghost(1, "Pinky", Direction.LEFT);
 		pinky.setPositionRelativeTo(msPac, t(3), 0);
 		pinky.visible = true;
-
-		rendering.ghostsKicking(Stream.of(inky, pinky)).forEach(Animation::restart);
+		Stream.of(inky, pinky).forEach(ghost -> {
+			rendering.ghostAnimations().ghostKicking(ghost).forEach(Animation::restart);
+		});
 
 		heart = new GameEntity();
 
@@ -124,8 +125,8 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 				msPac.dir = Direction.RIGHT;
 				heart.setPosition((pacMan.position.x + msPac.position.x) / 2, pacMan.position.y - t(2));
 				heart.visible = true;
-				rendering.ghostKicking(inky).forEach(Animation::reset);
-				rendering.ghostKicking(pinky).forEach(Animation::reset);
+				rendering.ghostAnimations().ghostKicking(inky).forEach(Animation::reset);
+				rendering.ghostAnimations().ghostKicking(pinky).forEach(Animation::reset);
 				enter(Phase.READY_TO_PLAY, clock.sec(3));
 			}
 			if (!ghostsMet && inky.position.x - pinky.position.x < 16) {
