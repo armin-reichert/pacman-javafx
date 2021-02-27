@@ -13,6 +13,7 @@ import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.FlashMessage;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import javafx.geometry.Pos;
+import javafx.scene.Camera;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -32,6 +33,7 @@ public abstract class GameScene {
 
 	public final Scene fxScene;
 
+	protected final double width, height;
 	protected final Text flashMessageView;
 	protected final GraphicsContext g;
 	protected final FXRendering rendering;
@@ -40,14 +42,16 @@ public abstract class GameScene {
 
 	protected GameModel game;
 
+	protected Camera cam = new PerspectiveCamera();
+
 	public GameScene(double scaling, FXRendering rendering, SoundManager sounds) {
 
 		this.scaling = scaling;
 		this.rendering = Objects.requireNonNull(rendering);
 		this.sounds = Objects.requireNonNull(sounds);
 
-		double width = SCENE_WIDTH_PX * scaling;
-		double height = SCENE_HEIGHT_PX * scaling;
+		width = SCENE_WIDTH_PX * scaling;
+		height = SCENE_HEIGHT_PX * scaling;
 
 		StackPane pane = new StackPane();
 
@@ -62,7 +66,7 @@ public abstract class GameScene {
 		pane.getChildren().addAll(canvas, flashMessageView);
 
 		fxScene = new Scene(pane, width, height, Color.BLACK);
-		fxScene.setCamera(new PerspectiveCamera());
+		fxScene.setCamera(cam);
 	}
 
 	public void start() {
@@ -107,5 +111,4 @@ public abstract class GameScene {
 			flashMessageView.setText(null);
 		}
 	}
-
 }

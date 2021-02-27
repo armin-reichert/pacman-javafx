@@ -80,10 +80,10 @@ public class Keyboard {
 		}
 		if (e.isShiftDown()) {
 			switch (e.getCode()) {
-			case LEFT:
+			case DOWN:
 				camera.setRotate(camera.getRotate() - 10);
 				break;
-			case RIGHT:
+			case UP:
 				camera.setRotate(camera.getRotate() + 10);
 				break;
 			default:
