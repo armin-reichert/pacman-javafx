@@ -15,7 +15,6 @@ import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.JuniorBag;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.model.pacman.PacManBonus;
-import de.amr.games.pacman.ui.fx.common.Helper;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -70,7 +69,7 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 					Color.BLACK);
 			WritableImage mazeEmpty = new WritableImage(226, 248);
 			mazeEmpty.getPixelWriter().setPixels(0, 0, 226, 248, spritesheet.getPixelReader(), 226, 248 * mazeIndex);
-			Image mazeEmptyBright = Helper.exchangeColors(mazeEmpty, exchanges);
+			Image mazeEmptyBright = exchangeColors(mazeEmpty, exchanges);
 			mazeFlashingAnim.add(Animation.of(mazeEmptyBright, mazeEmpty).frameDuration(15));
 		}
 
