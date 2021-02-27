@@ -35,7 +35,7 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 
 	/* Tiles in right half of spritesheet */
 	public Rectangle2D s(int tileX, int tileY) {
-		return gridCellsStartingAt(456, 0, tileX, tileY, 1, 1);
+		return cellsStartingAt(456, 0, tileX, tileY, 1, 1);
 	}
 
 	public MsPacMan_StandardRendering() {

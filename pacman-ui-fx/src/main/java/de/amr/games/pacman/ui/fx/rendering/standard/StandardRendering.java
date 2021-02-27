@@ -77,7 +77,7 @@ public abstract class StandardRendering implements FXRendering, MazeAnimations, 
 	 * @return grid cell at given coordinates
 	 */
 	protected Rectangle2D sprite(int col, int row) {
-		return gridCells(col, row, 1, 1);
+		return cells(col, row, 1, 1);
 	}
 
 	/**
@@ -87,8 +87,8 @@ public abstract class StandardRendering implements FXRendering, MazeAnimations, 
 	 * @param numRows number of grid rows
 	 * @return grid cell region at given coordinates of given size
 	 */
-	protected Rectangle2D gridCells(int col, int row, int numCols, int numRows) {
-		return gridCellsStartingAt(0, 0, col, row, numCols, numRows);
+	protected Rectangle2D cells(int col, int row, int numCols, int numRows) {
+		return cellsStartingAt(0, 0, col, row, numCols, numRows);
 	}
 
 	/**
@@ -100,7 +100,7 @@ public abstract class StandardRendering implements FXRendering, MazeAnimations, 
 	 * @param numRows number of grid rows
 	 * @return grid cell region at given coordinates of given size
 	 */
-	protected Rectangle2D gridCellsStartingAt(int startX, int startY, int col, int row, int numCols, int numRows) {
+	protected Rectangle2D cellsStartingAt(int startX, int startY, int col, int row, int numCols, int numRows) {
 		return new Rectangle2D(startX + col * GRID_CELLSIZE, startY + row * GRID_CELLSIZE, numCols * GRID_CELLSIZE,
 				numRows * GRID_CELLSIZE);
 	}

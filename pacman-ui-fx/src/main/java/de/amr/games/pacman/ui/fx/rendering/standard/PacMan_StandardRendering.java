@@ -44,20 +44,20 @@ public class PacMan_StandardRendering extends StandardRendering {
 
 		//@formatter:off
 		bonusValueSprites = new HashMap<>();
-		bonusValueSprites.put(100,  gridCells(0, 9, 1, 1));
-		bonusValueSprites.put(300,  gridCells(1, 9, 1, 1));
-		bonusValueSprites.put(500,  gridCells(2, 9, 1, 1));
-		bonusValueSprites.put(700,  gridCells(3, 9, 1, 1));
-		bonusValueSprites.put(1000, gridCells(4, 9, 2, 1)); // left-aligned 
-		bonusValueSprites.put(2000, gridCells(3, 10, 3, 1));
-		bonusValueSprites.put(3000, gridCells(3, 11, 3, 1));
-		bonusValueSprites.put(5000, gridCells(3, 12, 3, 1));
+		bonusValueSprites.put(100,  cells(0, 9, 1, 1));
+		bonusValueSprites.put(300,  cells(1, 9, 1, 1));
+		bonusValueSprites.put(500,  cells(2, 9, 1, 1));
+		bonusValueSprites.put(700,  cells(3, 9, 1, 1));
+		bonusValueSprites.put(1000, cells(4, 9, 2, 1)); // left-aligned 
+		bonusValueSprites.put(2000, cells(3, 10, 3, 1));
+		bonusValueSprites.put(3000, cells(3, 11, 3, 1));
+		bonusValueSprites.put(5000, cells(3, 12, 3, 1));
 
 		bountyValueSprites = new HashMap<>();
-		bountyValueSprites.put(200,  gridCells(0, 8, 1, 1));
-		bountyValueSprites.put(400,  gridCells(1, 8, 1, 1));
-		bountyValueSprites.put(800,  gridCells(2, 8, 1, 1));
-		bountyValueSprites.put(1600, gridCells(3, 8, 1, 1));
+		bountyValueSprites.put(200,  cells(0, 8, 1, 1));
+		bountyValueSprites.put(400,  cells(1, 8, 1, 1));
+		bountyValueSprites.put(800,  cells(2, 8, 1, 1));
+		bountyValueSprites.put(1600, cells(3, 8, 1, 1));
 		//@formatter:on
 
 		// Animations
@@ -77,9 +77,9 @@ public class PacMan_StandardRendering extends StandardRendering {
 				sprite(9, 0), sprite(10, 0), sprite(11, 0), sprite(12, 0), sprite(13, 0)).frameDuration(8);
 
 		bigPacMan = Animation.of(//
-				gridCells(2, 1, 2, 2), //
-				gridCells(4, 1, 2, 2), //
-				gridCells(6, 1, 2, 2)).frameDuration(4).endless().run();
+				cells(2, 1, 2, 2), //
+				cells(4, 1, 2, 2), //
+				cells(6, 1, 2, 2)).frameDuration(4).endless().run();
 
 		ghostsKickingAnim = new ArrayList<>(4);
 		for (int id = 0; id < 4; ++id) {
@@ -107,7 +107,7 @@ public class PacMan_StandardRendering extends StandardRendering {
 		blinkyPatched = Animation.of(sprite(10, 7), sprite(11, 7)).restart().frameDuration(4).endless();
 		blinkyDamaged = Animation.of(sprite(8, 7), sprite(9, 7));
 		blinkyStretched = Animation.of(sprite(9, 6), sprite(10, 6), sprite(11, 6), sprite(12, 6));
-		blinkyHalfNaked = Animation.of(gridCells(8, 8, 2, 1), gridCells(10, 8, 2, 1)).endless().frameDuration(4).restart();
+		blinkyHalfNaked = Animation.of(cells(8, 8, 2, 1), cells(10, 8, 2, 1)).endless().frameDuration(4).restart();
 	}
 
 	@Override
