@@ -8,4 +8,4 @@ Currently, the game can only be started with the supplied batch file. Adapt the 
 
 YouTube video
 
-[![YouTube video](https://i9.ytimg.com/vi/q5biOTj9GIU/mq2.jpg?sqp=CODn4oEG&rs=AOn4CLDJlnpUng1Ng40TFVsq3jHPbg0IFQ)](https://youtu.be/q5biOTj9GIU)
+[![YouTube video](pacman-ui-fx/doc/thumbnail.png](https://youtu.be/q5biOTj9GIU)
