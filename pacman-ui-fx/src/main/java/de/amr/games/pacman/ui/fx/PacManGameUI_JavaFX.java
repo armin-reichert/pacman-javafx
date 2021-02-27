@@ -275,6 +275,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 						cam.getTranslateY(), cam.getTranslateZ(), cam.getRotate());
 				scene.camInfo.setText(text);
 			}
+		} else {
+			scene.camInfo.setText("");
 		}
 	}
 
