@@ -8,7 +8,7 @@ import java.util.Map;
 
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.V2f;
+import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.Flap;
 import de.amr.games.pacman.model.common.GameEntity;
 import de.amr.games.pacman.model.common.Ghost;
@@ -163,7 +163,7 @@ public class PacMan_StandardRendering extends StandardRendering {
 	}
 
 	@Override
-	public void drawBlinkyStretched(GraphicsContext g, Ghost blinky, V2f nailPosition, int stretching) {
+	public void drawBlinkyStretched(GraphicsContext g, Ghost blinky, V2d nailPosition, int stretching) {
 		drawSprite(g, blinkyStretched.frame(stretching), nailPosition.x - 4, nailPosition.y - 4);
 		if (stretching < 3) {
 			drawGhost(g, blinky, false);

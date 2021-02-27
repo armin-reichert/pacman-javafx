@@ -195,7 +195,7 @@ public abstract class StandardRendering implements FXRendering, MazeAnimations, 
 	}
 
 	@Override
-	public void drawSprite(GraphicsContext g, Rectangle2D sprite, float x, float y) {
+	public void drawSprite(GraphicsContext g, Rectangle2D sprite, double x, double y) {
 		g.drawImage(spritesheet, sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(), x, y,
 				sprite.getWidth(), sprite.getHeight());
 	}

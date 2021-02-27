@@ -5,7 +5,7 @@ import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.CountdownTimer;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.V2f;
+import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.JuniorBag;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.sound.PacManGameSound;
@@ -94,7 +94,7 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 				msPacMan.visible = true;
 				stork.visible = true;
 				bag.visible = true;
-				stork.velocity = new V2f(-1.25f, 0);
+				stork.velocity = new V2d(-1.25f, 0);
 				bag.velocity = stork.velocity;
 			}
 			// release bag?
@@ -105,11 +105,11 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 			if (!bag.open && bag.position.y > GROUND_Y) {
 				++bag.bounces;
 				if (bag.bounces < 5) {
-					bag.velocity = new V2f(-0.2f, -1f / bag.bounces);
+					bag.velocity = new V2d(-0.2f, -1f / bag.bounces);
 					bag.setPosition(bag.position.x, GROUND_Y);
 				} else {
 					bag.open = true;
-					bag.velocity = V2f.NULL;
+					bag.velocity = V2d.NULL;
 					enter(Phase.READY_TO_PLAY, clock.sec(3));
 				}
 			}
