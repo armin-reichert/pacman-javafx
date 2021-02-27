@@ -231,22 +231,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private void handleGlobalKeys() {
 		if (keyboard.keyPressed("C")) {
-			Scene scene = currentScene.fxScene;
-			if (scene.getCamera() == null) {
-				Camera cam = new PerspectiveCamera();
-				cam.setTranslateZ(300);
-				scene.setCamera(cam);
-				updateCamera(currentScene);
-				showFlashMessage("Camera ON", clock.sec(1));
-			} else {
-				Camera cam = scene.getCamera();
-				cam.setTranslateX(0);
-				cam.setTranslateY(0);
-				cam.setTranslateZ(0);
-				cam.setRotate(0);
-				scene.setCamera(null);
-				showFlashMessage("Camera OFF", clock.sec(1));
-			}
+			toggleSceneCamera();
 		}
 		if (keyboard.keyPressed("S")) {
 			clock.targetFreq = clock.targetFreq != 30 ? 30 : 60;
@@ -259,6 +244,25 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			String text = clock.targetFreq == 60 ? "Normal speed" : "Fast speed";
 			showFlashMessage(text, clock.sec(1.5));
 			log("Clock frequency changed to %d Hz", clock.targetFreq);
+		}
+	}
+
+	private void toggleSceneCamera() {
+		Scene scene = currentScene.fxScene;
+		if (scene.getCamera() == null) {
+			Camera cam = new PerspectiveCamera();
+			cam.setTranslateZ(300);
+			scene.setCamera(cam);
+			updateCamera(currentScene);
+			showFlashMessage("Camera ON", clock.sec(1));
+		} else {
+			Camera cam = scene.getCamera();
+			cam.setTranslateX(0);
+			cam.setTranslateY(0);
+			cam.setTranslateZ(0);
+			cam.setRotate(0);
+			scene.setCamera(null);
+			showFlashMessage("Camera OFF", clock.sec(1));
 		}
 	}
 
