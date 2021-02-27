@@ -39,6 +39,9 @@ import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import de.amr.games.pacman.ui.fx.rendering.standard.MsPacMan_StandardRendering;
 import de.amr.games.pacman.ui.fx.rendering.standard.PacMan_StandardRendering;
 import javafx.application.Platform;
+import javafx.scene.Camera;
+import javafx.scene.PerspectiveCamera;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
@@ -70,15 +73,20 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private boolean muted;
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController controller, double scaling) {
-		this.controller = controller;
 		this.stage = stage;
+		this.controller = controller;
+
 		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
 		stage.getIcons().add(new Image("/pacman/graphics/pacman.png"));
 		stage.setOnCloseRequest(e -> {
 			Platform.exit();
 			System.exit(0); // TODO
 		});
-		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::handleGlobalKeys);
+
+		keyboard = new Keyboard();
+		stage.addEventHandler(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
+		stage.addEventHandler(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
+		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::handleCameraKeys);
 
 		renderings.put(MS_PACMAN, new MsPacMan_StandardRendering());
 		renderings.put(PACMAN, new PacMan_StandardRendering());
@@ -106,27 +114,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		log("JavaFX UI created at clock tick %d", clock.ticksTotal);
 	}
 
-	private void handleGlobalKeys(KeyEvent e) {
-		switch (e.getCode()) {
-		case S: {
-			clock.targetFreq = clock.targetFreq != 30 ? 30 : 60;
-			String text = clock.targetFreq == 60 ? "Normal speed" : "Slow speed";
-			showFlashMessage(text, clock.sec(1.5));
-			log("Clock frequency changed to %d Hz", clock.targetFreq);
-			break;
-		}
-		case F: {
-			clock.targetFreq = clock.targetFreq != 120 ? 120 : 60;
-			String text = clock.targetFreq == 60 ? "Normal speed" : "Fast speed";
-			showFlashMessage(text, clock.sec(1.5));
-			log("Clock frequency changed to %d Hz", clock.targetFreq);
-			break;
-		}
-		default:
-			break;
-		}
-	}
-
 	private GameType currentGame() {
 		return Stream.of(GameType.values()).filter(controller::isPlaying).findFirst().get();
 	}
@@ -152,7 +139,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private void changeScene(GameScene newScene) {
 		currentScene = newScene;
-		keyboard = new Keyboard(currentScene.fxScene);
 		currentScene.start();
 	}
 
@@ -166,6 +152,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void update() {
+		handleGlobalKeys();
 		GameScene sceneToDisplay = currentScene();
 		if (currentScene != sceneToDisplay) {
 			log("%s: Scene changes from %s to %s", this, currentScene, sceneToDisplay);
@@ -175,6 +162,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			changeScene(sceneToDisplay);
 		}
 		currentScene.update();
+		updateCamera(currentScene);
 
 		FlashMessage message = flashMessagesQ.peek();
 		if (message != null) {
@@ -194,7 +182,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			}
 			try {
 				currentScene.clear();
-				currentScene.render();
+				currentScene.doRender();
 				if (!flashMessagesQ.isEmpty()) {
 					currentScene.drawFlashMessage(flashMessagesQ.peek());
 				}
@@ -239,5 +227,106 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	@Override
 	public Optional<PacManGameAnimations> animation() {
 		return Optional.of(renderings.get(currentGame()));
+	}
+
+	private void handleGlobalKeys() {
+		if (keyboard.keyPressed("C")) {
+			Scene scene = currentScene.fxScene;
+			if (scene.getCamera() == null) {
+				Camera cam = new PerspectiveCamera();
+				cam.setTranslateZ(300);
+				scene.setCamera(cam);
+				updateCamera(currentScene);
+				showFlashMessage("Camera ON", clock.sec(1));
+			} else {
+				Camera cam = scene.getCamera();
+				cam.setTranslateX(0);
+				cam.setTranslateY(0);
+				cam.setTranslateZ(0);
+				cam.setRotate(0);
+				scene.setCamera(null);
+				showFlashMessage("Camera OFF", clock.sec(1));
+			}
+		}
+		if (keyboard.keyPressed("S")) {
+			clock.targetFreq = clock.targetFreq != 30 ? 30 : 60;
+			String text = clock.targetFreq == 60 ? "Normal speed" : "Slow speed";
+			showFlashMessage(text, clock.sec(1.5));
+			log("Clock frequency changed to %d Hz", clock.targetFreq);
+		}
+		if (keyboard.keyPressed("F")) {
+			clock.targetFreq = clock.targetFreq != 120 ? 120 : 60;
+			String text = clock.targetFreq == 60 ? "Normal speed" : "Fast speed";
+			showFlashMessage(text, clock.sec(1.5));
+			log("Clock frequency changed to %d Hz", clock.targetFreq);
+		}
+	}
+
+	private void updateCamera(GameScene scene) {
+		Camera cam = scene.fxScene.getCamera();
+		if (cam != null) {
+			scene.updateCamera(cam);
+			if (clock.ticksTotal % 20 == 0) {
+				String text = String.format("Camera\nx:%3.0f y:%3.0f z:%3.0f rot:%3.0f", cam.getTranslateX(),
+						cam.getTranslateY(), cam.getTranslateZ(), cam.getRotate());
+				scene.camInfo.setText(text);
+			}
+		}
+	}
+
+	private void handleCameraKeys(KeyEvent e) {
+		Camera camera = currentScene().fxScene.getCamera();
+		if (camera == null) {
+			return;
+		}
+		if (e.isControlDown()) {
+			switch (e.getCode()) {
+			case DIGIT0:
+				camera.setTranslateX(0);
+				camera.setTranslateY(0);
+				camera.setTranslateZ(0);
+				break;
+			case LEFT:
+				camera.setTranslateX(camera.getTranslateX() + 10);
+				log("Cam moves LEFT");
+				break;
+			case RIGHT:
+				camera.setTranslateX(camera.getTranslateX() - 10);
+				log("Cam moves RIGHT");
+				break;
+			case UP:
+				camera.setTranslateY(camera.getTranslateY() + 10);
+				log("Cam moves UP");
+				break;
+			case DOWN:
+				camera.setTranslateY(camera.getTranslateY() - 10);
+				log("Cam moves DOWN");
+				break;
+			case PLUS:
+				camera.setTranslateZ(camera.getTranslateZ() + 10);
+				log("Cam zoomes IN");
+				break;
+			case MINUS:
+				camera.setTranslateZ(camera.getTranslateZ() - 10);
+				log("Cam zoomes OUT");
+				break;
+			default:
+				break;
+			}
+		}
+		if (e.isShiftDown()) {
+			switch (e.getCode()) {
+			case DOWN:
+				camera.setRotate(camera.getRotate() - 10);
+				log("Cam rotates FORWARD");
+				break;
+			case UP:
+				camera.setRotate(camera.getRotate() + 10);
+				log("Cam rotates BACKWARDS");
+				break;
+			default:
+				break;
+			}
+		}
 	}
 }

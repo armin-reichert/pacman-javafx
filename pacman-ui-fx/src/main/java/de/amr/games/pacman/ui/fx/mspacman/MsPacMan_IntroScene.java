@@ -165,7 +165,7 @@ public class MsPacMan_IntroScene extends GameScene {
 	}
 
 	@Override
-	public void renderContent() {
+	public void render() {
 		g.setFont(rendering.getScoreFont());
 		g.setFill(Color.ORANGE);
 		g.fillText("\"MS PAC-MAN\"", t(8), t(5));

@@ -14,7 +14,6 @@ import de.amr.games.pacman.ui.FlashMessage;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import javafx.geometry.Pos;
 import javafx.scene.Camera;
-import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -23,6 +22,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 /**
  * Each game scene corresponds to a JavaFX scene.
@@ -31,21 +31,18 @@ import javafx.scene.text.Text;
  */
 public abstract class GameScene {
 
+	public final double width, height;
+	public final double scaling;
+	public final GraphicsContext g;
 	public final Scene fxScene;
-
-	protected final double width, height;
-	protected final Text flashMessageView;
-	protected final GraphicsContext g;
-	protected final FXRendering rendering;
-	protected final SoundManager sounds;
-	protected final double scaling;
+	public final FXRendering rendering;
+	public final SoundManager sounds;
+	public final Text flashMessageView;
+	public final Text camInfo;
 
 	protected GameModel game;
 
-	protected Camera cam = new PerspectiveCamera();
-
 	public GameScene(double scaling, FXRendering rendering, SoundManager sounds) {
-
 		this.scaling = scaling;
 		this.rendering = Objects.requireNonNull(rendering);
 		this.sounds = Objects.requireNonNull(sounds);
@@ -56,6 +53,7 @@ public abstract class GameScene {
 		StackPane pane = new StackPane();
 
 		Canvas canvas = new Canvas(width, height);
+		canvas.setViewOrder(1);
 		g = canvas.getGraphicsContext2D();
 
 		flashMessageView = new Text();
@@ -63,10 +61,15 @@ public abstract class GameScene {
 		flashMessageView.setFill(Color.YELLOW);
 		StackPane.setAlignment(flashMessageView, Pos.BOTTOM_CENTER);
 
-		pane.getChildren().addAll(canvas, flashMessageView);
+		camInfo = new Text();
+		camInfo.setTextAlignment(TextAlignment.CENTER);
+		camInfo.setFill(Color.WHITE);
+		camInfo.setFont(Font.font("Sans", 6 * scaling));
+		StackPane.setAlignment(camInfo, Pos.CENTER);
+
+		pane.getChildren().addAll(camInfo, flashMessageView, canvas);
 
 		fxScene = new Scene(pane, width, height, Color.BLACK);
-		fxScene.setCamera(cam);
 	}
 
 	public void start() {
@@ -77,13 +80,16 @@ public abstract class GameScene {
 	public void end() {
 	}
 
-	protected abstract void renderContent();
+	protected abstract void render();
 
-	public final void render() {
+	public final void doRender() {
 		g.save();
 		g.scale(scaling, scaling);
-		renderContent();
+		render();
 		g.restore();
+	}
+
+	public void updateCamera(Camera cam) {
 	}
 
 	public void setGame(GameModel game) {

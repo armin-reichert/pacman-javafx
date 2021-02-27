@@ -95,7 +95,7 @@ public class PacMan_IntermissionScene1 extends GameScene {
 	}
 
 	@Override
-	public void renderContent() {
+	public void render() {
 		rendering.drawGhost(g, blinky, false);
 		if (phase == Phase.BLINKY_CHASING_PACMAN) {
 			rendering.drawPlayer(g, pac);

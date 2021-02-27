@@ -2,11 +2,11 @@ package de.amr.games.pacman.ui.fx.common;
 
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
-import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.model.common.PacManGameState;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import javafx.geometry.Point3D;
+import javafx.scene.Camera;
 
 /**
  * This is where the action is.
@@ -21,20 +21,10 @@ public class PlayScene extends GameScene {
 
 	@Override
 	public void update() {
-		double lerp = 0.02;
-		double targetX = scaling * game.pac.position.x - width / 2;
-		double targetY = scaling * game.pac.position.y - height / 2;
-		double dx = (targetX - cam.getTranslateX()) * lerp;
-		double dy = (targetY - cam.getTranslateY()) * lerp;
-		cam.setTranslateX(cam.getTranslateX() + dx);
-		cam.setTranslateY(cam.getTranslateY() + dy);
-		cam.setRotationAxis(new Point3D(1, 0, 0));
-
-		Logging.log("Camera translation x=%g y=%g", cam.getTranslateX(), cam.getTranslateY());
 	}
 
 	@Override
-	public void renderContent() {
+	public void render() {
 		boolean flashing = rendering.mazeAnimations().mazeFlashing(game.level.mazeNumber).hasStarted();
 		rendering.drawMaze(g, game.level.mazeNumber, 0, t(3), flashing);
 		if (!flashing) {
@@ -51,5 +41,17 @@ public class PlayScene extends GameScene {
 			rendering.drawLivesCounter(g, game, t(2), t(34));
 		}
 		rendering.drawLevelCounter(g, game, t(25), t(34));
+	}
+
+	@Override
+	public void updateCamera(Camera cam) {
+		double lerp = 0.02;
+		double targetX = scaling * game.pac.position.x - width / 2;
+		double targetY = scaling * game.pac.position.y - height / 2;
+		double dx = (targetX - cam.getTranslateX()) * lerp;
+		double dy = (targetY - cam.getTranslateY()) * lerp;
+		cam.setTranslateX(cam.getTranslateX() + dx);
+		cam.setTranslateY(cam.getTranslateY() + dy);
+		cam.setRotationAxis(new Point3D(1, 0, 0));
 	}
 }
