@@ -63,11 +63,8 @@ import javafx.stage.Stage;
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
 
-	public static final int SCENE_WIDTH_TILES = 28;
-	public static final int SCENE_HEIGHT_TILES = 36;
-
-	public static final int UNSCALED_SCENE_WIDTH_PX = SCENE_WIDTH_TILES * TS;
-	public static final int UNSCALED_SCENE_HEIGHT_PX = SCENE_HEIGHT_TILES * TS;
+	public static final int PLAYGROUND_WIDTH_UNSCALED = 28 * TS;
+	public static final int PLAYGROUND_HEIGHT_UNSCALED = 36 * TS;
 
 	private final Deque<FlashMessage> flashMessagesQ = new ArrayDeque<>();
 
@@ -170,7 +167,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		flashMessageView.setFont(Font.font("Serif", FontWeight.BOLD, 10 * scaling));
 		flashMessageView.setFill(Color.YELLOW);
 
-		canvas = new Canvas(UNSCALED_SCENE_WIDTH_PX * scaling, UNSCALED_SCENE_HEIGHT_PX * scaling);
+		canvas = new Canvas(PLAYGROUND_WIDTH_UNSCALED * scaling, PLAYGROUND_HEIGHT_UNSCALED * scaling);
 		canvas.getGraphicsContext2D().scale(scaling, scaling);
 
 		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
@@ -264,6 +261,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private void onGameChangedFX(GameModel newGame) {
 		game = Objects.requireNonNull(newGame);
 		setGameScene(currentGameScene());
+		if (!currentGameScene.cameraAllowed) {
+			cameraOff();
+		}
 	}
 
 	private void setGameScene(GameScene newGameScene) {
@@ -338,14 +338,15 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private void toggleCamera() {
-		if (currentGameScene.cameraAllowed) {
-			if (stage.getScene().getCamera() == null) {
-				cameraOn();
-				showFlashMessage("Camera ON", clock.sec(1));
-			} else {
-				cameraOff();
-				showFlashMessage("Camera OFF", clock.sec(1));
-			}
+		if (!currentGameScene.cameraAllowed) {
+			return;
+		}
+		if (stage.getScene().getCamera() == null) {
+			cameraOn();
+			showFlashMessage("Camera ON", clock.sec(1));
+		} else {
+			cameraOff();
+			showFlashMessage("Camera OFF", clock.sec(1));
 		}
 	}
 }
