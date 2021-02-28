@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.transform.Rotate;
 
 /**
  * Perspective camera that an be controlled using keys.
@@ -17,6 +18,7 @@ public class ControllablePerspectiveCamera extends PerspectiveCamera {
 	public StringProperty infoProperty = new SimpleStringProperty();
 
 	public ControllablePerspectiveCamera() {
+		setRotationAxis(Rotate.X_AXIS);
 		// TODO is this the right way?
 		translateXProperty().addListener((source, oldValue, newValue) -> infoProperty.set(getInfo()));
 		translateYProperty().addListener((source, oldValue, newValue) -> infoProperty.set(getInfo()));
@@ -31,6 +33,7 @@ public class ControllablePerspectiveCamera extends PerspectiveCamera {
 				setTranslateX(0);
 				setTranslateY(0);
 				setTranslateZ(0);
+				setRotate(0);
 				break;
 			case LEFT:
 				setTranslateX(getTranslateX() + 10);

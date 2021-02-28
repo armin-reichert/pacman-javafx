@@ -42,8 +42,6 @@ import de.amr.games.pacman.ui.fx.rendering.standard.PacMan_StandardRendering;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -55,7 +53,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 
 /**
@@ -85,10 +82,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private final double scaling;
 	private final Stage stage;
-	private final Scene mainScene;
-	private Text camInfoView;
-	private Text flashMessageView;
-	private final ControllablePerspectiveCamera cam = new ControllablePerspectiveCamera();
+	private final Text camInfoView;
+	private final Text flashMessageView;
+	private final ControllablePerspectiveCamera cam;
 
 	private boolean muted;
 
@@ -105,10 +101,19 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		createGameScenes();
 
-		mainScene = new Scene(createMainSceneContent(null), UNSCALED_SCENE_WIDTH_PX * scaling,
-				UNSCALED_SCENE_HEIGHT_PX * scaling, Color.BLACK);
+		cam = new ControllablePerspectiveCamera();
+		camInfoView = new Text();
+		camInfoView.setTextAlignment(TextAlignment.CENTER);
+		camInfoView.setFill(Color.WHITE);
+		camInfoView.setFont(Font.font("Sans", 6 * scaling));
+		Bindings.bindBidirectional(camInfoView.textProperty(), cam.infoProperty);
 
-		stage.setScene(mainScene);
+		flashMessageView = new Text();
+		flashMessageView.setFont(Font.font("Serif", FontWeight.BOLD, 10 * scaling));
+		flashMessageView.setFill(Color.YELLOW);
+
+		stage.setScene(new Scene(createStageContent(null), UNSCALED_SCENE_WIDTH_PX * scaling,
+				UNSCALED_SCENE_HEIGHT_PX * scaling, Color.BLACK));
 		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
 		stage.getIcons().add(new Image("/pacman/graphics/pacman.png"));
 		stage.setOnCloseRequest(e -> {
@@ -122,6 +127,99 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		onGameChangedFX(controller.getGame());
 
 		log("JavaFX UI created at clock tick %d", clock.ticksTotal);
+	}
+
+	@Override
+	public void show() {
+		stage.sizeToScene();
+		stage.centerOnScreen();
+		stage.show();
+	}
+
+	@Override
+	public void onGameChanged(GameModel newGame) {
+		Platform.runLater(() -> onGameChangedFX(newGame));
+	}
+
+	@Override
+	public void reset() {
+		currentGameScene.end();
+		onGameChanged(game);
+	}
+
+	@Override
+	public void update() {
+		Platform.runLater(this::updateFX);
+	}
+
+	@Override
+	public void render() {
+		Platform.runLater(this::renderFX);
+	}
+
+	@Override
+	public void showFlashMessage(String message, long ticks) {
+		flashMessagesQ.add(new FlashMessage(message, ticks));
+	}
+
+	@Override
+	public boolean keyPressed(String keySpec) {
+		boolean pressed = keyboard.keyPressed(keySpec);
+		keyboard.clearKey(keySpec);
+		return pressed;
+	}
+
+	@Override
+	public Optional<SoundManager> sound() {
+		if (muted) {
+			return Optional.empty(); // TODO
+		}
+		return Optional.of(sounds.get(currentGame()));
+	}
+
+	@Override
+	public void mute(boolean state) {
+		muted = state;
+	}
+
+	@Override
+	public Optional<PacManGameAnimations> animation() {
+		return Optional.of(renderings.get(currentGame()));
+	}
+
+	private void handleGlobalKeys() {
+		if (keyboard.keyPressed(KeyCode.F11.getName())) {
+			stage.setFullScreen(true);
+		}
+		if (keyboard.keyPressed("C")) {
+			toggleCamera();
+		}
+		if (keyboard.keyPressed("S")) {
+			clock.targetFreq = clock.targetFreq != 30 ? 30 : 60;
+			String text = clock.targetFreq == 60 ? "Normal speed" : "Slow speed";
+			showFlashMessage(text, clock.sec(1.5));
+			log("Clock frequency changed to %d Hz", clock.targetFreq);
+		}
+		if (keyboard.keyPressed("F")) {
+			clock.targetFreq = clock.targetFreq != 120 ? 120 : 60;
+			String text = clock.targetFreq == 60 ? "Normal speed" : "Fast speed";
+			showFlashMessage(text, clock.sec(1.5));
+			log("Clock frequency changed to %d Hz", clock.targetFreq);
+		}
+	}
+
+	private Parent createStageContent(GameScene gameScene) {
+		StackPane layout = new StackPane();
+		StackPane messageBox = new StackPane(flashMessageView);
+		StackPane.setAlignment(flashMessageView, Pos.BOTTOM_CENTER);
+		if (gameScene != null) {
+			layout.getChildren().addAll(gameScene.content, camInfoView, messageBox);
+		} else {
+			layout.getChildren().addAll(camInfoView, messageBox);
+		}
+		StackPane.setAlignment(camInfoView, Pos.CENTER);
+		StackPane.setAlignment(messageBox, Pos.BOTTOM_CENTER);
+		return layout;
 	}
 
 	private void createGameScenes() {
@@ -144,13 +242,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		gameScenes.get(PACMAN).get(4).cameraAllowed = true;
 	}
 
-	@Override
-	public void show() {
-		stage.sizeToScene();
-		stage.centerOnScreen();
-		stage.show();
-	}
-
 	private GameType currentGame() {
 		return Stream.of(GameType.values()).filter(controller::isPlaying).findFirst().get();
 	}
@@ -167,50 +258,17 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 	}
 
-	@Override
-	public void onGameChanged(GameModel newGame) {
-		Platform.runLater(() -> onGameChangedFX(newGame));
-	}
-
 	private void onGameChangedFX(GameModel newGame) {
 		game = Objects.requireNonNull(newGame);
-		gameScenes.get(currentGame()).forEach(scene -> scene.setGame(game));
+		gameScenes.get(currentGame()).forEach(gameScene -> gameScene.setGame(game));
 		setGameScene(currentGameScene());
 	}
 
-	private void setGameScene(GameScene newScene) {
-		currentGameScene = newScene;
+	private void setGameScene(GameScene newGameScene) {
+		currentGameScene = newGameScene;
 		currentGameScene.start();
-		mainScene.setRoot(createMainSceneContent(newScene));
+		stage.getScene().setRoot(createStageContent(newGameScene));
 		cameraOff();
-	}
-
-	private Parent createMainSceneContent(GameScene gameScene) {
-		StackPane layout = new StackPane();
-
-		camInfoView = new Text();
-		camInfoView.setTextAlignment(TextAlignment.CENTER);
-		camInfoView.setFill(Color.WHITE);
-		camInfoView.setFont(Font.font("Sans", 6 * scaling));
-		Bindings.bindBidirectional(camInfoView.textProperty(), cam.infoProperty);
-		StackPane.setAlignment(camInfoView, Pos.CENTER);
-
-		flashMessageView = new Text();
-		flashMessageView.setFont(Font.font("Serif", FontWeight.BOLD, 10 * scaling));
-		flashMessageView.setFill(Color.YELLOW);
-		StackPane messageBox = new StackPane(flashMessageView);
-		StackPane.setAlignment(flashMessageView, Pos.BOTTOM_CENTER);
-		StackPane.setAlignment(messageBox, Pos.BOTTOM_CENTER);
-
-		Node sceneContent = gameScene == null ? new Group() : gameScene.content;
-		layout.getChildren().addAll(sceneContent, camInfoView, messageBox);
-
-		return layout;
-	}
-
-	@Override
-	public void update() {
-		Platform.runLater(this::updateFX);
 	}
 
 	private void updateFX() {
@@ -244,11 +302,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 	}
 
-	@Override
-	public void render() {
-		Platform.runLater(this::renderFX);
-	}
-
 	private void renderFX() {
 		try {
 			if (cam != null) {
@@ -261,73 +314,12 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 	}
 
-	@Override
-	public void reset() {
-		currentGameScene.end();
-		onGameChanged(game);
-	}
-
-	@Override
-	public void showFlashMessage(String message, long ticks) {
-		flashMessagesQ.add(new FlashMessage(message, ticks));
-	}
-
-	@Override
-	public boolean keyPressed(String keySpec) {
-		boolean pressed = keyboard.keyPressed(keySpec);
-		keyboard.clearKey(keySpec);
-		return pressed;
-	}
-
-	@Override
-	public void mute(boolean state) {
-		muted = state;
-	}
-
-	@Override
-	public Optional<SoundManager> sound() {
-		if (muted) {
-			return Optional.empty(); // TODO
-		}
-		return Optional.of(sounds.get(currentGame()));
-	}
-
-	@Override
-	public Optional<PacManGameAnimations> animation() {
-		return Optional.of(renderings.get(currentGame()));
-	}
-
-	private void handleGlobalKeys() {
-		if (keyboard.keyPressed(KeyCode.F11.getName())) {
-			stage.setFullScreen(true);
-		}
-		if (keyboard.keyPressed("C")) {
-			toggleSceneCamera();
-		}
-		if (keyboard.keyPressed("S")) {
-			clock.targetFreq = clock.targetFreq != 30 ? 30 : 60;
-			String text = clock.targetFreq == 60 ? "Normal speed" : "Slow speed";
-			showFlashMessage(text, clock.sec(1.5));
-			log("Clock frequency changed to %d Hz", clock.targetFreq);
-		}
-		if (keyboard.keyPressed("F")) {
-			clock.targetFreq = clock.targetFreq != 120 ? 120 : 60;
-			String text = clock.targetFreq == 60 ? "Normal speed" : "Fast speed";
-			showFlashMessage(text, clock.sec(1.5));
-			log("Clock frequency changed to %d Hz", clock.targetFreq);
-		}
-	}
-
-	private void toggleSceneCamera() {
-		if (currentGameScene.cameraAllowed) {
-			if (mainScene.getCamera() == null) {
-				cameraOn();
-				showFlashMessage("Camera ON", clock.sec(1));
-			} else {
-				cameraOff();
-				showFlashMessage("Camera OFF", clock.sec(1));
-			}
-		}
+	private void cameraOn() {
+		cam.setRotate(30);
+		cam.setTranslateZ(-240);
+		stage.getScene().setCamera(cam);
+		stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, cam::onKeyPressed);
+		camInfoView.setVisible(true);
 	}
 
 	private void cameraOff() {
@@ -335,17 +327,20 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		cam.setTranslateY(0);
 		cam.setTranslateZ(0);
 		cam.setRotate(0);
-		mainScene.removeEventHandler(KeyEvent.KEY_PRESSED, cam::onKeyPressed);
-		mainScene.setCamera(null);
+		stage.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, cam::onKeyPressed);
+		stage.getScene().setCamera(null);
 		camInfoView.setVisible(false);
 	}
 
-	private void cameraOn() {
-		cam.setRotationAxis(Rotate.X_AXIS);
-		cam.setRotate(30);
-		cam.setTranslateZ(-240);
-		mainScene.setCamera(cam);
-		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, cam::onKeyPressed);
-		camInfoView.setVisible(true);
+	private void toggleCamera() {
+		if (currentGameScene.cameraAllowed) {
+			if (stage.getScene().getCamera() == null) {
+				cameraOn();
+				showFlashMessage("Camera ON", clock.sec(1));
+			} else {
+				cameraOff();
+				showFlashMessage("Camera OFF", clock.sec(1));
+			}
+		}
 	}
 }
