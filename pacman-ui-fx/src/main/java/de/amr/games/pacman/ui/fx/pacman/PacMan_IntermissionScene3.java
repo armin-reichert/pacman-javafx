@@ -6,6 +6,7 @@ import static de.amr.games.pacman.lib.Direction.RIGHT;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
+import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Ghost;
@@ -34,8 +35,9 @@ public class PacMan_IntermissionScene3 extends GameScene {
 	private Pac pac;
 	private Phase phase;
 
-	public PacMan_IntermissionScene3(double scaling, FXRendering rendering, SoundManager sounds) {
-		super(scaling, rendering, sounds);
+	public PacMan_IntermissionScene3(PacManGameController controller, double scaling, FXRendering rendering,
+			SoundManager sounds) {
+		super(controller, scaling, rendering, sounds);
 	}
 
 	@Override
@@ -76,7 +78,7 @@ public class PacMan_IntermissionScene3 extends GameScene {
 			break;
 		case RETURNING_HALF_NAKED:
 			if (blinky.position.x > t(28) + 200) {
-				game.state.timer.setDuration(0); // end scene
+				controller.finishCurrentState();
 			}
 			break;
 		default:
@@ -87,8 +89,8 @@ public class PacMan_IntermissionScene3 extends GameScene {
 	}
 
 	@Override
-	public void drawCanvas(GraphicsContext g) {
-		rendering.drawLevelCounter(g, game, t(25), t(34));
+	public void draw(GraphicsContext g) {
+		rendering.drawLevelCounter(g, controller.getGame(), t(25), t(34));
 		rendering.drawPlayer(g, pac);
 		if (phase == Phase.CHASING_PACMAN) {
 			rendering.drawBlinkyPatched(g, blinky);

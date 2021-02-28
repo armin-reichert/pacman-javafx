@@ -3,6 +3,7 @@ package de.amr.games.pacman.ui.fx.mspacman;
 import static de.amr.games.pacman.heaven.God.clock;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
+import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.CountdownTimer;
 import de.amr.games.pacman.lib.Direction;
@@ -43,8 +44,9 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 		phase.timer.setDuration(ticks);
 	}
 
-	public MsPacMan_IntermissionScene2(double scaling, FXRendering rendering, SoundManager sounds) {
-		super(scaling, rendering, sounds);
+	public MsPacMan_IntermissionScene2(PacManGameController controller, double scaling, FXRendering rendering,
+			SoundManager sounds) {
+		super(controller, scaling, rendering, sounds);
 	}
 
 	@Override
@@ -109,7 +111,7 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 				msPacMan.speed = pacMan.speed = 4;
 			}
 			if (phase.timer.running() == clock.sec(20)) {
-				game.state.timer.setDuration(0);
+				controller.finishCurrentState();
 			}
 			break;
 		default:
@@ -121,7 +123,7 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 	}
 
 	@Override
-	public void drawCanvas(GraphicsContext g) {
+	public void draw(GraphicsContext g) {
 		rendering.drawFlap(g, flap);
 		rendering.drawPlayer(g, msPacMan);
 		rendering.drawSpouse(g, pacMan);

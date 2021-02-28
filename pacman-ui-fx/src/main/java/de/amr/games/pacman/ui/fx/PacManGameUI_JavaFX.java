@@ -45,6 +45,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -191,22 +192,22 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		renderings.put(MS_PACMAN, new MsPacMan_StandardRendering());
 		sounds.put(MS_PACMAN, new PacManGameSoundManager(PacManGameSounds::msPacManSoundURL));
 		gameScenes.put(MS_PACMAN, Arrays.asList(//
-				new MsPacMan_IntroScene(scaling, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
-				new MsPacMan_IntermissionScene1(scaling, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
-				new MsPacMan_IntermissionScene2(scaling, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
-				new MsPacMan_IntermissionScene3(scaling, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
-				new PlayScene(scaling, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN))//
+				new MsPacMan_IntroScene(controller, scaling, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
+				new MsPacMan_IntermissionScene1(controller, scaling, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
+				new MsPacMan_IntermissionScene2(controller, scaling, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
+				new MsPacMan_IntermissionScene3(controller, scaling, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
+				new PlayScene(controller, scaling, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN))//
 		));
 		gameScenes.get(MS_PACMAN).get(4).cameraAllowed = true;
 
 		renderings.put(PACMAN, new PacMan_StandardRendering());
 		sounds.put(PACMAN, new PacManGameSoundManager(PacManGameSounds::mrPacManSoundURL));
 		gameScenes.put(PACMAN, Arrays.asList(//
-				new PacMan_IntroScene(scaling, renderings.get(PACMAN), sounds.get(PACMAN)), //
-				new PacMan_IntermissionScene1(scaling, renderings.get(PACMAN), sounds.get(PACMAN)), //
-				new PacMan_IntermissionScene2(scaling, renderings.get(PACMAN), sounds.get(PACMAN)), //
-				new PacMan_IntermissionScene3(scaling, renderings.get(PACMAN), sounds.get(PACMAN)), //
-				new PlayScene(scaling, renderings.get(PACMAN), sounds.get(PACMAN))//
+				new PacMan_IntroScene(controller, scaling, renderings.get(PACMAN), sounds.get(PACMAN)), //
+				new PacMan_IntermissionScene1(controller, scaling, renderings.get(PACMAN), sounds.get(PACMAN)), //
+				new PacMan_IntermissionScene2(controller, scaling, renderings.get(PACMAN), sounds.get(PACMAN)), //
+				new PacMan_IntermissionScene3(controller, scaling, renderings.get(PACMAN), sounds.get(PACMAN)), //
+				new PlayScene(controller, scaling, renderings.get(PACMAN), sounds.get(PACMAN))//
 		));
 		gameScenes.get(PACMAN).get(4).cameraAllowed = true;
 	}
@@ -264,7 +265,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private void onGameChangedFX(GameModel newGame) {
 		game = Objects.requireNonNull(newGame);
-		gameScenes.get(currentGame()).forEach(gameScene -> gameScene.setGame(game));
 		setGameScene(currentGameScene());
 	}
 
@@ -311,11 +311,20 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			if (cam != null) {
 				currentGameScene.updateCamera(cam);
 			}
-			currentGameScene.draw(canvas.getGraphicsContext2D());
+			drawCurrentScene(canvas.getGraphicsContext2D());
 		} catch (Exception x) {
 			log("Exception occurred when rendering scene %s", currentGameScene);
 			x.printStackTrace();
 		}
+	}
+
+	private void drawCurrentScene(GraphicsContext g) {
+		g.save();
+		g.scale(scaling, scaling);
+		g.setFill(Color.BLACK);
+		g.fillRect(0, 0, g.getCanvas().getWidth(), g.getCanvas().getHeight());
+		currentGameScene.draw(g);
+		g.restore();
 	}
 
 	private void cameraOn() {

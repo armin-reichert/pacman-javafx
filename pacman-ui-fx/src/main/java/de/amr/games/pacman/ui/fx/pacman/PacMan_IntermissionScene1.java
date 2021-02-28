@@ -6,6 +6,7 @@ import static de.amr.games.pacman.model.common.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.common.GhostState.HUNTING_PAC;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
+import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.CountdownTimer;
 import de.amr.games.pacman.lib.Direction;
@@ -38,8 +39,9 @@ public class PacMan_IntermissionScene1 extends GameScene {
 
 	private Phase phase;
 
-	public PacMan_IntermissionScene1(double scaling, FXRendering rendering, SoundManager sounds) {
-		super(scaling, rendering, sounds);
+	public PacMan_IntermissionScene1(PacManGameController controller, double scaling, FXRendering rendering,
+			SoundManager sounds) {
+		super(controller, scaling, rendering, sounds);
 	}
 
 	@Override
@@ -84,7 +86,7 @@ public class PacMan_IntermissionScene1 extends GameScene {
 				pac.setPositionRelativeTo(blinky, -t(13), 0);
 			}
 			if (phase.timer.expired()) {
-				game.state.timer.setDuration(0);
+				controller.finishCurrentState();
 			}
 			break;
 		default:
@@ -96,7 +98,7 @@ public class PacMan_IntermissionScene1 extends GameScene {
 	}
 
 	@Override
-	public void drawCanvas(GraphicsContext g) {
+	public void draw(GraphicsContext g) {
 		rendering.drawGhost(g, blinky, false);
 		if (phase == Phase.BLINKY_CHASING_PACMAN) {
 			rendering.drawPlayer(g, pac);
@@ -105,6 +107,6 @@ public class PacMan_IntermissionScene1 extends GameScene {
 			rendering.drawBigPacMan(g, pac);
 			g.translate(0, 12);
 		}
-		rendering.drawLevelCounter(g, game, t(25), t(34));
+		rendering.drawLevelCounter(g, controller.getGame(), t(25), t(34));
 	}
 }

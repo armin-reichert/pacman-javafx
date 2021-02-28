@@ -5,6 +5,7 @@ import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import java.util.stream.Stream;
 
+import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.CountdownTimer;
 import de.amr.games.pacman.lib.Direction;
@@ -52,8 +53,9 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 		phase.timer.setDuration(ticks);
 	}
 
-	public MsPacMan_IntermissionScene1(double scaling, FXRendering rendering, SoundManager sounds) {
-		super(scaling, rendering, sounds);
+	public MsPacMan_IntermissionScene1(PacManGameController controller, double scaling, FXRendering rendering,
+			SoundManager sounds) {
+		super(controller, scaling, rendering, sounds);
 	}
 
 	@Override
@@ -143,7 +145,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 				pinky.visible = false;
 			}
 			if (phase.timer.expired()) {
-				game.state.timer.setDuration(0);
+				controller.finishCurrentState();
 			}
 			break;
 		default:
@@ -171,7 +173,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 	}
 
 	@Override
-	public void drawCanvas(GraphicsContext g) {
+	public void draw(GraphicsContext g) {
 		rendering.drawFlap(g, flap);
 		rendering.drawPlayer(g, msPac);
 		rendering.drawSpouse(g, pacMan);

@@ -6,6 +6,7 @@ import static de.amr.games.pacman.lib.Direction.UP;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
+import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.CountdownTimer;
 import de.amr.games.pacman.lib.V2i;
@@ -46,8 +47,9 @@ public class MsPacMan_IntroScene extends GameScene {
 	private Ghost currentGhost;
 	private boolean presentingMsPac;
 
-	public MsPacMan_IntroScene(double scaling, FXRendering rendering, SoundManager sounds) {
-		super(scaling, rendering, sounds);
+	public MsPacMan_IntroScene(PacManGameController controller, double scaling, FXRendering rendering,
+			SoundManager sounds) {
+		super(controller, scaling, rendering, sounds);
 	}
 
 	private void enter(Phase newPhase, long ticks) {
@@ -121,7 +123,8 @@ public class MsPacMan_IntroScene extends GameScene {
 			break;
 		case END:
 			if (phase.timer.running() == clock.sec(5)) {
-				game.attractMode = true;
+				// TODO
+				controller.getGame().attractMode = true;
 			}
 			break;
 		default:
@@ -166,11 +169,11 @@ public class MsPacMan_IntroScene extends GameScene {
 	}
 
 	@Override
-	public void drawCanvas(GraphicsContext g) {
+	public void draw(GraphicsContext g) {
 		g.setFont(rendering.getScoreFont());
 		g.setFill(Color.ORANGE);
 		g.fillText("\"MS PAC-MAN\"", t(8), t(5));
-		drawAnimatedFrame(g, 32, 16, game.state.timer.running());
+		drawAnimatedFrame(g, 32, 16, clock.ticksTotal);
 		for (Ghost ghost : ghosts) {
 			rendering.drawGhost(g, ghost, false);
 		}

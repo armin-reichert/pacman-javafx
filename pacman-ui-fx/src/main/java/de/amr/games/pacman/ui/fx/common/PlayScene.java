@@ -3,7 +3,9 @@ package de.amr.games.pacman.ui.fx.common;
 import static de.amr.games.pacman.heaven.God.clock;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
+import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.V2d;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.PacManGameState;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
@@ -18,16 +20,13 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class PlayScene extends GameScene {
 
-	public PlayScene(double scaling, FXRendering rendering, SoundManager sounds) {
-		super(scaling, rendering, sounds);
+	public PlayScene(PacManGameController controller, double scaling, FXRendering rendering, SoundManager sounds) {
+		super(controller, scaling, rendering, sounds);
 	}
 
 	@Override
-	public void update() {
-	}
-
-	@Override
-	public void drawCanvas(GraphicsContext g) {
+	public void draw(GraphicsContext g) {
+		GameModel game = controller.getGame();
 		boolean flashing = rendering.mazeAnimations().mazeFlashing(game.level.mazeNumber).hasStarted();
 		rendering.drawMaze(g, game.level.mazeNumber, 0, t(3), flashing);
 		if (!flashing) {
@@ -52,7 +51,7 @@ public class PlayScene extends GameScene {
 		double height = PacManGameUI_JavaFX.UNSCALED_SCENE_HEIGHT_PX * scaling;
 		double speed = 1.0 / clock.sec(1);
 		V2d camPosition = new V2d(cam.getTranslateX(), cam.getTranslateY());
-		V2d playerPosition = game.pac.position.scaled(scaling);
+		V2d playerPosition = controller.getGame().pac.position.scaled(scaling);
 		// TODO how to position the camera such that the player gets centered on the rotated scene?
 		V2d target = playerPosition.minus(width / 2, height / 2);
 		V2d velocity = target.minus(camPosition).scaled(speed);

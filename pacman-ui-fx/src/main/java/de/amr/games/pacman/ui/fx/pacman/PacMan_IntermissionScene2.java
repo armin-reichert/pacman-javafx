@@ -4,6 +4,7 @@ import static de.amr.games.pacman.heaven.God.clock;
 import static de.amr.games.pacman.model.common.GhostState.HUNTING_PAC;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
+import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.CountdownTimer;
 import de.amr.games.pacman.lib.Direction;
@@ -23,8 +24,9 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class PacMan_IntermissionScene2 extends GameScene {
 
-	public PacMan_IntermissionScene2(double scaling, FXRendering rendering, SoundManager sounds) {
-		super(scaling, rendering, sounds);
+	public PacMan_IntermissionScene2(PacManGameController controller, double scaling, FXRendering rendering,
+			SoundManager sounds) {
+		super(controller, scaling, rendering, sounds);
 	}
 
 	enum Phase {
@@ -98,7 +100,7 @@ public class PacMan_IntermissionScene2 extends GameScene {
 				blinky.dir = Direction.RIGHT;
 			}
 			if (phase.timer.running() == clock.sec(6)) {
-				game.state.timer.setDuration(0); // signal end of this scene
+				controller.finishCurrentState();
 			}
 			break;
 		default:
@@ -110,8 +112,8 @@ public class PacMan_IntermissionScene2 extends GameScene {
 	}
 
 	@Override
-	public void drawCanvas(GraphicsContext g) {
-		rendering.drawLevelCounter(g, game, t(25), t(34));
+	public void draw(GraphicsContext g) {
+		rendering.drawLevelCounter(g, controller.getGame(), t(25), t(34));
 		rendering.drawNail(g, nail);
 		rendering.drawPlayer(g, pac);
 		if (nailDistance() < 0) {

@@ -5,6 +5,7 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
+import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.CountdownTimer;
 import de.amr.games.pacman.lib.Direction;
@@ -61,8 +62,9 @@ public class PacMan_IntroScene extends GameScene {
 		phase.timer.setDuration(Long.MAX_VALUE);
 	}
 
-	public PacMan_IntroScene(double scaling, FXRendering rendering, SoundManager sounds) {
-		super(scaling, rendering, sounds);
+	public PacMan_IntroScene(PacManGameController controller, double scaling, FXRendering rendering,
+			SoundManager sounds) {
+		super(controller, scaling, rendering, sounds);
 	}
 
 	@Override
@@ -162,7 +164,8 @@ public class PacMan_IntroScene extends GameScene {
 		case READY_TO_PLAY:
 			blinking.animate();
 			if (phase.timer.running() == clock.sec(5)) {
-				game.attractMode = true;
+				// TODO
+				controller.getGame().attractMode = true;
 				log("Entering attract mode at %d", clock.ticksTotal);
 			}
 			break;
@@ -201,8 +204,8 @@ public class PacMan_IntroScene extends GameScene {
 	}
 
 	@Override
-	public void drawCanvas(GraphicsContext g) {
-		rendering.drawScore(g, game, true);
+	public void draw(GraphicsContext g) {
+		rendering.drawScore(g, controller.getGame(), true);
 		drawGallery(g);
 		if (phase == Phase.CHASING_PAC) {
 			if (blinking.animate()) {
