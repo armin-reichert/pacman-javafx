@@ -174,6 +174,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		flashMessageView.setFill(Color.YELLOW);
 
 		canvas = new Canvas(UNSCALED_SCENE_WIDTH_PX * scaling, UNSCALED_SCENE_HEIGHT_PX * scaling);
+		canvas.getGraphicsContext2D().scale(scaling, scaling);
 
 		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
 		stage.getIcons().add(new Image("/pacman/graphics/pacman.png"));
@@ -319,12 +320,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private void drawCurrentScene(GraphicsContext g) {
-		g.save();
-		g.scale(scaling, scaling);
 		g.setFill(Color.BLACK);
 		g.fillRect(0, 0, g.getCanvas().getWidth(), g.getCanvas().getHeight());
 		currentGameScene.draw(g);
-		g.restore();
 	}
 
 	private void cameraOn() {
