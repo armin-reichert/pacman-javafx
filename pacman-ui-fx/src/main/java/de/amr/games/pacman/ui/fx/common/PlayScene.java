@@ -1,7 +1,9 @@
 package de.amr.games.pacman.ui.fx.common;
 
+import static de.amr.games.pacman.heaven.God.clock;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
+import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.PacManGameState;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
@@ -46,14 +48,12 @@ public class PlayScene extends GameScene {
 
 	@Override
 	public void updateCamera(Camera cam) {
-		double lerp = 1.0 / 60;
-		double sx = scaling * game.pac.position.x;
-		double sy = scaling * game.pac.position.y;
-		double targetX = sx - width / 2;
-		double targetY = sy - height / 2;
-		double dx = targetX - cam.getTranslateX();
-		double dy = targetY - cam.getTranslateY();
-		cam.setTranslateX(cam.getTranslateX() + dx * lerp);
-		cam.setTranslateY(cam.getTranslateY() + dy * lerp);
+		double speed = 1.0 / clock.sec(1);
+		V2d camPosition = new V2d(cam.getTranslateX(), cam.getTranslateY());
+		V2d playerPosition = game.pac.position.scaled(scaling);
+		V2d target = playerPosition.minus(width / 2, height / 2);
+		V2d velocity = target.minus(camPosition).scaled(speed);
+		cam.setTranslateX(cam.getTranslateX() + velocity.x);
+		cam.setTranslateY(cam.getTranslateY() + velocity.y);
 	}
 }
