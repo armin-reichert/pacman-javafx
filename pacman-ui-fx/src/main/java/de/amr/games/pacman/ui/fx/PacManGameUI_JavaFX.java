@@ -44,6 +44,7 @@ import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -86,6 +87,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private Text camInfoView;
 	private Text flashMessageView;
 	private ControllablePerspectiveCamera cam;
+	private Canvas canvas;
 
 	private boolean muted;
 
@@ -170,6 +172,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		flashMessageView.setFont(Font.font("Serif", FontWeight.BOLD, 10 * scaling));
 		flashMessageView.setFill(Color.YELLOW);
 
+		canvas = new Canvas(UNSCALED_SCENE_WIDTH_PX * scaling, UNSCALED_SCENE_HEIGHT_PX * scaling);
+
 		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
 		stage.getIcons().add(new Image("/pacman/graphics/pacman.png"));
 		stage.setOnCloseRequest(e -> {
@@ -233,7 +237,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		StackPane messageBox = new StackPane(flashMessageView);
 		StackPane.setAlignment(flashMessageView, Pos.BOTTOM_CENTER);
 		if (gameScene != null) {
-			layout.getChildren().addAll(gameScene.content, camInfoView, messageBox);
+			layout.getChildren().addAll(canvas, camInfoView, messageBox);
 		} else {
 			layout.getChildren().addAll(camInfoView, messageBox);
 		}
@@ -307,7 +311,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			if (cam != null) {
 				currentGameScene.updateCamera(cam);
 			}
-			currentGameScene.draw();
+			currentGameScene.draw(canvas.getGraphicsContext2D());
 		} catch (Exception x) {
 			log("Exception occurred when rendering scene %s", currentGameScene);
 			x.printStackTrace();

@@ -87,8 +87,7 @@ public class PacMan_IntermissionScene3 extends GameScene {
 	}
 
 	@Override
-	public void drawCanvas() {
-		GraphicsContext g = canvas.getGraphicsContext2D();
+	public void drawCanvas(GraphicsContext g) {
 		rendering.drawLevelCounter(g, game, t(25), t(34));
 		rendering.drawPlayer(g, pac);
 		if (phase == Phase.CHASING_PACMAN) {

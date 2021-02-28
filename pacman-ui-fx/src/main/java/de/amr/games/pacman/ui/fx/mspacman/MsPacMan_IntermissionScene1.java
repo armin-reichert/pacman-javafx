@@ -171,8 +171,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 	}
 
 	@Override
-	public void drawCanvas() {
-		GraphicsContext g = canvas.getGraphicsContext2D();
+	public void drawCanvas(GraphicsContext g) {
 		rendering.drawFlap(g, flap);
 		rendering.drawPlayer(g, msPac);
 		rendering.drawSpouse(g, pacMan);

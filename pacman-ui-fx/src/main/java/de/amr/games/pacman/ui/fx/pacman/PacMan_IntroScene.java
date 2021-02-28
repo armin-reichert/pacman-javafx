@@ -201,27 +201,25 @@ public class PacMan_IntroScene extends GameScene {
 	}
 
 	@Override
-	public void drawCanvas() {
-		GraphicsContext g = canvas.getGraphicsContext2D();
+	public void drawCanvas(GraphicsContext g) {
 		rendering.drawScore(g, game, true);
-		drawGallery();
+		drawGallery(g);
 		if (phase == Phase.CHASING_PAC) {
 			if (blinking.animate()) {
 				g.setFill(Color.PINK);
 				g.fillOval(t(2), pac.position.y, TS, TS);
 			}
 		}
-		drawGuys();
+		drawGuys(g);
 		if (phase.ordinal() >= Phase.CHASING_GHOSTS.ordinal()) {
-			drawPointsAnimation(11, 26);
+			drawPointsAnimation(g, 11, 26);
 		}
 		if (phase == Phase.READY_TO_PLAY) {
-			drawPressKeyToStart(32);
+			drawPressKeyToStart(g, 32);
 		}
 	}
 
-	private void drawGuys() {
-		GraphicsContext g = canvas.getGraphicsContext2D();
+	private void drawGuys(GraphicsContext g) {
 		rendering.drawPlayer(g, pac);
 		for (Ghost ghost : ghosts) {
 			rendering.drawGhost(g, ghost, pac.powerTicksLeft > 0);
@@ -233,9 +231,8 @@ public class PacMan_IntroScene extends GameScene {
 		gallery[presentedGhostIndex].ghost.visible = true;
 	}
 
-	private void drawGallery() {
+	private void drawGallery(GraphicsContext g) {
 		int x = t(2);
-		GraphicsContext g = canvas.getGraphicsContext2D();
 		g.setFill(Color.WHITE);
 		g.setFont(rendering.getScoreFont());
 		g.fillText("CHARACTER", t(6), TOP_Y);
@@ -260,18 +257,16 @@ public class PacMan_IntroScene extends GameScene {
 		}
 	}
 
-	private void drawPressKeyToStart(int yTile) {
+	private void drawPressKeyToStart(GraphicsContext g, int yTile) {
 		if (blinking.frame()) {
 			String text = "PRESS SPACE TO PLAY";
-			GraphicsContext g = canvas.getGraphicsContext2D();
 			g.setFill(Color.ORANGE);
 			g.setFont(rendering.getScoreFont());
 			g.fillText(text, t(14 - text.length() / 2), t(yTile));
 		}
 	}
 
-	private void drawPointsAnimation(int tileX, int tileY) {
-		GraphicsContext g = canvas.getGraphicsContext2D();
+	private void drawPointsAnimation(GraphicsContext g, int tileX, int tileY) {
 		if (blinking.frame()) {
 			g.setFill(Color.PINK);
 			g.fillRect(t(tileX) + 6, t(tileY - 1) + 2, 2, 2);

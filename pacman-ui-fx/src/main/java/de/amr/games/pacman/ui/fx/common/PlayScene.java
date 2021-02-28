@@ -6,6 +6,7 @@ import static de.amr.games.pacman.world.PacManGameWorld.t;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.PacManGameState;
 import de.amr.games.pacman.sound.SoundManager;
+import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import javafx.scene.Camera;
 import javafx.scene.canvas.GraphicsContext;
@@ -26,8 +27,7 @@ public class PlayScene extends GameScene {
 	}
 
 	@Override
-	public void drawCanvas() {
-		GraphicsContext g = canvas.getGraphicsContext2D();
+	public void drawCanvas(GraphicsContext g) {
 		boolean flashing = rendering.mazeAnimations().mazeFlashing(game.level.mazeNumber).hasStarted();
 		rendering.drawMaze(g, game.level.mazeNumber, 0, t(3), flashing);
 		if (!flashing) {
@@ -48,6 +48,8 @@ public class PlayScene extends GameScene {
 
 	@Override
 	public void updateCamera(Camera cam) {
+		double width = PacManGameUI_JavaFX.UNSCALED_SCENE_WIDTH_PX * scaling;
+		double height = PacManGameUI_JavaFX.UNSCALED_SCENE_HEIGHT_PX * scaling;
 		double speed = 1.0 / clock.sec(1);
 		V2d camPosition = new V2d(cam.getTranslateX(), cam.getTranslateY());
 		V2d playerPosition = game.pac.position.scaled(scaling);

@@ -166,29 +166,27 @@ public class MsPacMan_IntroScene extends GameScene {
 	}
 
 	@Override
-	public void drawCanvas() {
-		GraphicsContext g = canvas.getGraphicsContext2D();
+	public void drawCanvas(GraphicsContext g) {
 		g.setFont(rendering.getScoreFont());
 		g.setFill(Color.ORANGE);
 		g.fillText("\"MS PAC-MAN\"", t(8), t(5));
-		drawAnimatedFrame(32, 16, game.state.timer.running());
+		drawAnimatedFrame(g, 32, 16, game.state.timer.running());
 		for (Ghost ghost : ghosts) {
 			rendering.drawGhost(g, ghost, false);
 		}
 		rendering.drawPlayer(g, msPac);
-		presentGhost();
-		presentMsPacMan();
+		presentGhost(g);
+		presentMsPacMan(g);
 		if (phase == Phase.END) {
-			drawPointsAnimation(26);
-			drawPressKeyToStart(32);
+			drawPointsAnimation(g, 26);
+			drawPressKeyToStart(g, 32);
 		}
 	}
 
-	private void presentGhost() {
+	private void presentGhost(GraphicsContext g) {
 		if (currentGhost == null) {
 			return;
 		}
-		GraphicsContext g = canvas.getGraphicsContext2D();
 		g.setFill(Color.WHITE);
 		g.setFont(rendering.getScoreFont());
 		if (currentGhost == ghosts[0]) {
@@ -199,11 +197,10 @@ public class MsPacMan_IntroScene extends GameScene {
 		g.fillText(currentGhost.name.toUpperCase(), t(13 - currentGhost.name.length() / 2), t(14));
 	}
 
-	private void presentMsPacMan() {
+	private void presentMsPacMan(GraphicsContext g) {
 		if (!presentingMsPac) {
 			return;
 		}
-		GraphicsContext g = canvas.getGraphicsContext2D();
 		g.setFill(Color.WHITE);
 		g.setFont(rendering.getScoreFont());
 		g.fillText("STARRING", t(8), t(11));
@@ -211,7 +208,7 @@ public class MsPacMan_IntroScene extends GameScene {
 		g.fillText("MS PAC-MAN", t(8), t(14));
 	}
 
-	private void drawAnimatedFrame(int numDotsX, int numDotsY, long time) {
+	private void drawAnimatedFrame(GraphicsContext g, int numDotsX, int numDotsY, long time) {
 		int light = (int) (time / 2) % (numDotsX / 2);
 		for (int dot = 0; dot < 2 * (numDotsX + numDotsY); ++dot) {
 			int x = 0, y = 0;
@@ -226,24 +223,21 @@ public class MsPacMan_IntroScene extends GameScene {
 			} else {
 				y = 2 * (numDotsX + numDotsY) - dot;
 			}
-			GraphicsContext g = canvas.getGraphicsContext2D();
 			g.setFill((dot + light) % (numDotsX / 2) == 0 ? Color.PINK : Color.RED);
 			g.fillRect(t(frameTopLeftTile.x) + 4 * x, t(frameTopLeftTile.y) + 4 * y, 2, 2);
 		}
 	}
 
-	private void drawPressKeyToStart(int tileY) {
+	private void drawPressKeyToStart(GraphicsContext g, int tileY) {
 		if (blinking.animate()) {
 			String text = "PRESS SPACE TO PLAY";
-			GraphicsContext g = canvas.getGraphicsContext2D();
 			g.setFill(Color.ORANGE);
 			g.setFont(rendering.getScoreFont());
 			g.fillText(text, t(13 - text.length() / 2), t(tileY));
 		}
 	}
 
-	private void drawPointsAnimation(int tileY) {
-		GraphicsContext g = canvas.getGraphicsContext2D();
+	private void drawPointsAnimation(GraphicsContext g, int tileY) {
 		int x = t(10), y = t(tileY);
 		if (blinking.animate()) {
 			g.setFill(Color.PINK);
