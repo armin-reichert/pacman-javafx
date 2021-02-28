@@ -230,6 +230,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private void renderFX() {
 		try {
+			if (cam != null) {
+				currentGameScene.updateCamera(cam);
+			}
 			currentGameScene.draw();
 			// TODO more FX-like solution
 			if (!flashMessagesQ.isEmpty()) {
