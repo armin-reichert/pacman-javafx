@@ -15,6 +15,7 @@ import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -200,7 +201,8 @@ public class PacMan_IntroScene extends GameScene {
 	}
 
 	@Override
-	public void render() {
+	public void drawCanvas() {
+		GraphicsContext g = canvas.getGraphicsContext2D();
 		rendering.drawScore(g, game, true);
 		drawGallery();
 		if (phase == Phase.CHASING_PAC) {
@@ -219,6 +221,7 @@ public class PacMan_IntroScene extends GameScene {
 	}
 
 	private void drawGuys() {
+		GraphicsContext g = canvas.getGraphicsContext2D();
 		rendering.drawPlayer(g, pac);
 		for (Ghost ghost : ghosts) {
 			rendering.drawGhost(g, ghost, pac.powerTicksLeft > 0);
@@ -232,6 +235,7 @@ public class PacMan_IntroScene extends GameScene {
 
 	private void drawGallery() {
 		int x = t(2);
+		GraphicsContext g = canvas.getGraphicsContext2D();
 		g.setFill(Color.WHITE);
 		g.setFont(rendering.getScoreFont());
 		g.fillText("CHARACTER", t(6), TOP_Y);
@@ -259,6 +263,7 @@ public class PacMan_IntroScene extends GameScene {
 	private void drawPressKeyToStart(int yTile) {
 		if (blinking.frame()) {
 			String text = "PRESS SPACE TO PLAY";
+			GraphicsContext g = canvas.getGraphicsContext2D();
 			g.setFill(Color.ORANGE);
 			g.setFont(rendering.getScoreFont());
 			g.fillText(text, t(14 - text.length() / 2), t(yTile));
@@ -266,6 +271,7 @@ public class PacMan_IntroScene extends GameScene {
 	}
 
 	private void drawPointsAnimation(int tileX, int tileY) {
+		GraphicsContext g = canvas.getGraphicsContext2D();
 		if (blinking.frame()) {
 			g.setFill(Color.PINK);
 			g.fillRect(t(tileX) + 6, t(tileY - 1) + 2, 2, 2);

@@ -15,6 +15,7 @@ import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
+import javafx.scene.canvas.GraphicsContext;
 
 /**
  * First intermission scene: Blinky chases Pac-Man and is then chased by a huge Pac-Man.
@@ -95,7 +96,8 @@ public class PacMan_IntermissionScene1 extends GameScene {
 	}
 
 	@Override
-	public void render() {
+	public void drawCanvas() {
+		GraphicsContext g = canvas.getGraphicsContext2D();
 		rendering.drawGhost(g, blinky, false);
 		if (phase == Phase.BLINKY_CHASING_PACMAN) {
 			rendering.drawPlayer(g, pac);

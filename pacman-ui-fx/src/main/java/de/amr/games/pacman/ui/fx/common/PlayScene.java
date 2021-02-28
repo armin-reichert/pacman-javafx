@@ -5,8 +5,8 @@ import static de.amr.games.pacman.world.PacManGameWorld.t;
 import de.amr.games.pacman.model.common.PacManGameState;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
-import javafx.geometry.Point3D;
 import javafx.scene.Camera;
+import javafx.scene.canvas.GraphicsContext;
 
 /**
  * This is where the action is.
@@ -24,7 +24,8 @@ public class PlayScene extends GameScene {
 	}
 
 	@Override
-	public void render() {
+	public void drawCanvas() {
+		GraphicsContext g = canvas.getGraphicsContext2D();
 		boolean flashing = rendering.mazeAnimations().mazeFlashing(game.level.mazeNumber).hasStarted();
 		rendering.drawMaze(g, game.level.mazeNumber, 0, t(3), flashing);
 		if (!flashing) {
@@ -45,13 +46,14 @@ public class PlayScene extends GameScene {
 
 	@Override
 	public void updateCamera(Camera cam) {
-		double lerp = 0.02;
-		double targetX = scaling * game.pac.position.x - width / 2;
-		double targetY = scaling * game.pac.position.y - height / 2;
-		double dx = (targetX - cam.getTranslateX()) * lerp;
-		double dy = (targetY - cam.getTranslateY()) * lerp;
-		cam.setTranslateX(cam.getTranslateX() + dx);
-		cam.setTranslateY(cam.getTranslateY() + dy);
-		cam.setRotationAxis(new Point3D(1, 0, 0));
+		double lerp = 1.0 / 60;
+		double sx = scaling * game.pac.position.x;
+		double sy = scaling * game.pac.position.y;
+		double targetX = sx - width / 2;
+		double targetY = sy - height / 2;
+		double dx = targetX - cam.getTranslateX();
+		double dy = targetY - cam.getTranslateY();
+		cam.setTranslateX(cam.getTranslateX() + dx * lerp);
+		cam.setTranslateY(cam.getTranslateY() + dy * lerp);
 	}
 }

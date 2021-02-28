@@ -40,10 +40,15 @@ import de.amr.games.pacman.ui.fx.rendering.standard.MsPacMan_StandardRendering;
 import de.amr.games.pacman.ui.fx.rendering.standard.PacMan_StandardRendering;
 import javafx.application.Platform;
 import javafx.scene.Camera;
+import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 
 /**
@@ -63,13 +68,17 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private final EnumMap<GameType, FXRendering> renderings = new EnumMap<>(GameType.class);
 	private final EnumMap<GameType, SoundManager> sounds = new EnumMap<>(GameType.class);
-	private final EnumMap<GameType, List<GameScene>> scenes = new EnumMap<>(GameType.class);
+	private final EnumMap<GameType, List<GameScene>> gameScenes = new EnumMap<>(GameType.class);
+
+	private GameModel game;
 
 	private final PacManGameController controller;
+	private final Keyboard keyboard = new Keyboard();
+
 	private final Stage stage;
-	private GameScene currentScene;
-	private Keyboard keyboard;
-	private GameModel game;
+	private final Scene primaryScene;
+	private GameScene currentGameScene;
+
 	private boolean muted;
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController controller, double scaling) {
@@ -83,7 +92,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			System.exit(0); // TODO
 		});
 
-		keyboard = new Keyboard();
+		primaryScene = new Scene(new Group(), UNSCALED_SCENE_WIDTH_PX * scaling, UNSCALED_SCENE_HEIGHT_PX * scaling,
+				Color.BLACK);
+		stage.setScene(primaryScene);
+
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
 		stage.addEventHandler(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::handleCameraKeys);
@@ -94,7 +106,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		sounds.put(MS_PACMAN, new PacManGameSoundManager(PacManGameSounds::msPacManSoundURL));
 		sounds.put(PACMAN, new PacManGameSoundManager(PacManGameSounds::mrPacManSoundURL));
 
-		scenes.put(MS_PACMAN, Arrays.asList(//
+		gameScenes.put(MS_PACMAN, Arrays.asList(//
 				new MsPacMan_IntroScene(scaling, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
 				new MsPacMan_IntermissionScene1(scaling, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
 				new MsPacMan_IntermissionScene2(scaling, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
@@ -102,7 +114,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				new PlayScene(scaling, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN))//
 		));
 
-		scenes.put(PACMAN, Arrays.asList(//
+		gameScenes.put(PACMAN, Arrays.asList(//
 				new PacMan_IntroScene(scaling, renderings.get(PACMAN), sounds.get(PACMAN)), //
 				new PacMan_IntermissionScene1(scaling, renderings.get(PACMAN), sounds.get(PACMAN)), //
 				new PacMan_IntermissionScene2(scaling, renderings.get(PACMAN), sounds.get(PACMAN)), //
@@ -114,55 +126,57 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		log("JavaFX UI created at clock tick %d", clock.ticksTotal);
 	}
 
+	@Override
+	public void show() {
+		stage.sizeToScene();
+		stage.centerOnScreen();
+		stage.show();
+	}
+
 	private GameType currentGame() {
 		return Stream.of(GameType.values()).filter(controller::isPlaying).findFirst().get();
 	}
 
-	private GameScene currentScene() {
+	private GameScene currentGameScene() {
 		GameType currentGame = currentGame();
 		switch (game.state) {
 		case INTRO:
-			return scenes.get(currentGame).get(0);
+			return gameScenes.get(currentGame).get(0);
 		case INTERMISSION:
-			return scenes.get(currentGame).get(game.intermissionNumber);
+			return gameScenes.get(currentGame).get(game.intermissionNumber);
 		default:
-			return scenes.get(currentGame).get(4);
+			return gameScenes.get(currentGame).get(4);
 		}
 	}
 
 	@Override
 	public void onGameChanged(GameModel newGame) {
 		game = Objects.requireNonNull(newGame);
-		scenes.get(currentGame()).forEach(scene -> scene.setGame(game));
-		changeScene(currentScene());
+		gameScenes.get(currentGame()).forEach(scene -> scene.setGame(game));
+		setGameScene(currentGameScene());
 	}
 
-	private void changeScene(GameScene newScene) {
-		currentScene = newScene;
-		currentScene.start();
-	}
-
-	@Override
-	public void show() {
-		stage.setScene(currentScene.fxScene);
-		stage.sizeToScene();
-		stage.centerOnScreen();
-		stage.show();
+	private void setGameScene(GameScene newScene) {
+		currentGameScene = newScene;
+		currentGameScene.start();
+		Platform.runLater(() -> {
+			primaryScene.setRoot(new StackPane(newScene.root));
+		});
 	}
 
 	@Override
 	public void update() {
 		handleGlobalKeys();
-		GameScene sceneToDisplay = currentScene();
-		if (currentScene != sceneToDisplay) {
-			log("%s: Scene changes from %s to %s", this, currentScene, sceneToDisplay);
-			if (currentScene != null) {
-				currentScene.end();
+		GameScene sceneToDisplay = currentGameScene();
+		if (currentGameScene != sceneToDisplay) {
+			log("%s: Scene changes from %s to %s", this, currentGameScene, sceneToDisplay);
+			if (currentGameScene != null) {
+				currentGameScene.end();
 			}
-			changeScene(sceneToDisplay);
+			setGameScene(sceneToDisplay);
 		}
-		currentScene.update();
-		updateCamera(currentScene);
+		currentGameScene.update();
+		updateCamera();
 
 		FlashMessage message = flashMessagesQ.peek();
 		if (message != null) {
@@ -177,17 +191,14 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	public void render() {
 		// TODO Should the game loop run on the JavaFX application thread?
 		Platform.runLater(() -> {
-			if (stage.getScene() != currentScene.fxScene) {
-				stage.setScene(currentScene.fxScene);
-			}
 			try {
-				currentScene.clear();
-				currentScene.doRender();
+				currentGameScene.draw();
+				// TODO more FX-like solution
 				if (!flashMessagesQ.isEmpty()) {
-					currentScene.drawFlashMessage(flashMessagesQ.peek());
+					currentGameScene.drawFlashMessage(flashMessagesQ.peek());
 				}
 			} catch (Exception x) {
-				log("Exception occurred when rendering scene %s", currentScene);
+				log("Exception occurred when rendering scene %s", currentGameScene);
 				x.printStackTrace();
 			}
 		});
@@ -195,7 +206,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void reset() {
-		currentScene.end();
+		currentGameScene.end();
 		onGameChanged(game);
 	}
 
@@ -230,6 +241,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private void handleGlobalKeys() {
+		if (keyboard.keyPressed(KeyCode.F11.getName())) {
+			Platform.runLater(() -> stage.setFullScreen(true));
+		}
 		if (keyboard.keyPressed("C")) {
 			toggleSceneCamera();
 		}
@@ -248,40 +262,40 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private void toggleSceneCamera() {
-		Scene scene = currentScene.fxScene;
-		if (scene.getCamera() == null) {
+		if (primaryScene.getCamera() == null) {
 			Camera cam = new PerspectiveCamera();
+			cam.setRotationAxis(Rotate.X_AXIS);
 			cam.setTranslateZ(300);
-			scene.setCamera(cam);
-			updateCamera(currentScene);
+			primaryScene.setCamera(cam);
+			updateCamera();
 			showFlashMessage("Camera ON", clock.sec(1));
 		} else {
-			Camera cam = scene.getCamera();
+			Camera cam = primaryScene.getCamera();
 			cam.setTranslateX(0);
 			cam.setTranslateY(0);
 			cam.setTranslateZ(0);
 			cam.setRotate(0);
-			scene.setCamera(null);
+			primaryScene.setCamera(null);
 			showFlashMessage("Camera OFF", clock.sec(1));
 		}
 	}
 
-	private void updateCamera(GameScene scene) {
-		Camera cam = scene.fxScene.getCamera();
+	private void updateCamera() {
+		Camera cam = primaryScene.getCamera();
 		if (cam != null) {
-			scene.updateCamera(cam);
+			currentGameScene.updateCamera(cam);
 			if (clock.ticksTotal % 20 == 0) {
 				String text = String.format("Camera\nx:%3.0f y:%3.0f z:%3.0f rot:%3.0f", cam.getTranslateX(),
 						cam.getTranslateY(), cam.getTranslateZ(), cam.getRotate());
-				scene.camInfo.setText(text);
+				currentGameScene.camInfo.setText(text);
 			}
 		} else {
-			scene.camInfo.setText("");
+			currentGameScene.camInfo.setText("");
 		}
 	}
 
 	private void handleCameraKeys(KeyEvent e) {
-		Camera camera = currentScene().fxScene.getCamera();
+		Camera camera = primaryScene.getCamera();
 		if (camera == null) {
 			return;
 		}
@@ -323,11 +337,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		if (e.isShiftDown()) {
 			switch (e.getCode()) {
 			case DOWN:
-				camera.setRotate(camera.getRotate() - 10);
+				camera.setRotate(camera.getRotate() - 1);
 				log("Cam rotates FORWARD");
 				break;
 			case UP:
-				camera.setRotate(camera.getRotate() + 10);
+				camera.setRotate(camera.getRotate() + 1);
 				log("Cam rotates BACKWARDS");
 				break;
 			default:

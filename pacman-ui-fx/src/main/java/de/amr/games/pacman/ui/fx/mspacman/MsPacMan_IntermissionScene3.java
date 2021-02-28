@@ -14,6 +14,7 @@ import de.amr.games.pacman.ui.fx.common.GameScene;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import de.amr.games.pacman.ui.fx.rendering.standard.FlapUI;
 import de.amr.games.pacman.ui.fx.rendering.standard.StorkUI;
+import javafx.scene.canvas.GraphicsContext;
 
 /**
  * Intermission scene 3: "Junior".
@@ -129,7 +130,8 @@ public class MsPacMan_IntermissionScene3 extends GameScene {
 	}
 
 	@Override
-	public void render() {
+	public void drawCanvas() {
+		GraphicsContext g = canvas.getGraphicsContext2D();
 		rendering.drawFlap(g, flap);
 		rendering.drawStork(g, stork);
 		rendering.drawPlayer(g, msPacMan);

@@ -15,6 +15,7 @@ import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -165,7 +166,8 @@ public class MsPacMan_IntroScene extends GameScene {
 	}
 
 	@Override
-	public void render() {
+	public void drawCanvas() {
+		GraphicsContext g = canvas.getGraphicsContext2D();
 		g.setFont(rendering.getScoreFont());
 		g.setFill(Color.ORANGE);
 		g.fillText("\"MS PAC-MAN\"", t(8), t(5));
@@ -186,6 +188,7 @@ public class MsPacMan_IntroScene extends GameScene {
 		if (currentGhost == null) {
 			return;
 		}
+		GraphicsContext g = canvas.getGraphicsContext2D();
 		g.setFill(Color.WHITE);
 		g.setFont(rendering.getScoreFont());
 		if (currentGhost == ghosts[0]) {
@@ -200,6 +203,7 @@ public class MsPacMan_IntroScene extends GameScene {
 		if (!presentingMsPac) {
 			return;
 		}
+		GraphicsContext g = canvas.getGraphicsContext2D();
 		g.setFill(Color.WHITE);
 		g.setFont(rendering.getScoreFont());
 		g.fillText("STARRING", t(8), t(11));
@@ -222,6 +226,7 @@ public class MsPacMan_IntroScene extends GameScene {
 			} else {
 				y = 2 * (numDotsX + numDotsY) - dot;
 			}
+			GraphicsContext g = canvas.getGraphicsContext2D();
 			g.setFill((dot + light) % (numDotsX / 2) == 0 ? Color.PINK : Color.RED);
 			g.fillRect(t(frameTopLeftTile.x) + 4 * x, t(frameTopLeftTile.y) + 4 * y, 2, 2);
 		}
@@ -230,6 +235,7 @@ public class MsPacMan_IntroScene extends GameScene {
 	private void drawPressKeyToStart(int tileY) {
 		if (blinking.animate()) {
 			String text = "PRESS SPACE TO PLAY";
+			GraphicsContext g = canvas.getGraphicsContext2D();
 			g.setFill(Color.ORANGE);
 			g.setFont(rendering.getScoreFont());
 			g.fillText(text, t(13 - text.length() / 2), t(tileY));
@@ -237,6 +243,7 @@ public class MsPacMan_IntroScene extends GameScene {
 	}
 
 	private void drawPointsAnimation(int tileY) {
+		GraphicsContext g = canvas.getGraphicsContext2D();
 		int x = t(10), y = t(tileY);
 		if (blinking.animate()) {
 			g.setFill(Color.PINK);

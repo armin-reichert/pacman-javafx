@@ -14,7 +14,7 @@ import de.amr.games.pacman.ui.FlashMessage;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import javafx.geometry.Pos;
 import javafx.scene.Camera;
-import javafx.scene.Scene;
+import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
@@ -25,7 +25,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 /**
- * Each game scene corresponds to a JavaFX scene.
+ * A game scene.
  * 
  * @author Armin Reichert
  */
@@ -33,12 +33,15 @@ public abstract class GameScene {
 
 	public final double width, height;
 	public final double scaling;
-	public final GraphicsContext g;
-	public final Scene fxScene;
-	public final FXRendering rendering;
-	public final SoundManager sounds;
+
+	public final Group root;
+
+	protected final Canvas canvas;
 	public final Text flashMessageView;
 	public final Text camInfo;
+
+	public final FXRendering rendering;
+	public final SoundManager sounds;
 
 	protected GameModel game;
 
@@ -50,11 +53,10 @@ public abstract class GameScene {
 		width = UNSCALED_SCENE_WIDTH_PX * scaling;
 		height = UNSCALED_SCENE_HEIGHT_PX * scaling;
 
-		StackPane pane = new StackPane();
+		StackPane layout = new StackPane();
 
-		Canvas canvas = new Canvas(width, height);
+		canvas = new Canvas(width, height);
 		canvas.setViewOrder(1);
-		g = canvas.getGraphicsContext2D();
 
 		flashMessageView = new Text();
 		flashMessageView.setFont(Font.font("Serif", FontWeight.BOLD, 10 * scaling));
@@ -67,9 +69,10 @@ public abstract class GameScene {
 		camInfo.setFont(Font.font("Sans", 6 * scaling));
 		StackPane.setAlignment(camInfo, Pos.CENTER);
 
-		pane.getChildren().addAll(camInfo, flashMessageView, canvas);
+		layout.getChildren().addAll(camInfo, flashMessageView, canvas);
 
-		fxScene = new Scene(pane, width, height, Color.BLACK);
+		root = new Group();
+		root.getChildren().add(layout);
 	}
 
 	public void start() {
@@ -80,12 +83,14 @@ public abstract class GameScene {
 	public void end() {
 	}
 
-	protected abstract void render();
+	protected abstract void drawCanvas();
 
-	public final void doRender() {
+	public final void draw() {
+		GraphicsContext g = canvas.getGraphicsContext2D();
 		g.save();
 		g.scale(scaling, scaling);
-		render();
+		clearCanvas();
+		drawCanvas();
 		g.restore();
 	}
 
@@ -100,13 +105,16 @@ public abstract class GameScene {
 		return Optional.ofNullable(game);
 	}
 
-	public void clear() {
+	public void clearCanvas() {
+		GraphicsContext g = canvas.getGraphicsContext2D();
 		g.setFill(Color.BLACK);
-		g.fillRect(0, 0, g.getCanvas().getWidth(), g.getCanvas().getHeight());
+		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	}
 
+	// TODO do this more "FX-like"
 	public void drawFlashMessage(FlashMessage message) {
 		if (message != null) {
+			GraphicsContext g = canvas.getGraphicsContext2D();
 			g.setFill(Color.BLACK);
 			g.fillRect(0, g.getCanvas().getHeight() - t(4), g.getCanvas().getWidth(), t(4));
 			CountdownTimer timer = message.timer;
@@ -114,6 +122,7 @@ public abstract class GameScene {
 			flashMessageView.setFill(Color.rgb(255, 255, 0, alpha));
 			flashMessageView.setText(message.text);
 		} else {
+			flashMessageView.setVisible(false);
 			flashMessageView.setText(null);
 		}
 	}
