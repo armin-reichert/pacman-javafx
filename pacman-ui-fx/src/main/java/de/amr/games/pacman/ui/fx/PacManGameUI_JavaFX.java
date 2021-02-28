@@ -137,9 +137,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public boolean keyPressed(String keySpec) {
-		boolean pressed = keyboard.keyPressed(keySpec);
-		keyboard.clearKey(keySpec);
-		return pressed;
+		return keyboard.keyPressed(keySpec);
 	}
 
 	@Override
