@@ -179,7 +179,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
 		stage.addEventHandler(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
 
-		Parent sceneContent = updateContent(null);
+		Parent sceneContent = updateStage(null);
 		stage.setScene(new Scene(sceneContent, Color.BLACK));
 	}
 
@@ -228,7 +228,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 	}
 
-	private Parent updateContent(GameScene gameScene) {
+	private Parent updateStage(GameScene gameScene) {
 		StackPane layout = new StackPane();
 		StackPane messageBox = new StackPane(flashMessageView);
 		StackPane.setAlignment(flashMessageView, Pos.BOTTOM_CENTER);
@@ -267,7 +267,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private void setGameScene(GameScene newGameScene) {
 		currentGameScene = newGameScene;
 		currentGameScene.start();
-		stage.getScene().setRoot(updateContent(newGameScene));
+		stage.getScene().setRoot(updateStage(newGameScene));
 		cameraOff();
 	}
 
