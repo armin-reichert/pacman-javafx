@@ -16,6 +16,14 @@ public class ControllablePerspectiveCamera extends PerspectiveCamera {
 
 	public StringProperty infoProperty = new SimpleStringProperty();
 
+	public ControllablePerspectiveCamera() {
+		// TODO is this the right way?
+		translateXProperty().addListener((source, oldValue, newValue) -> infoProperty.set(getInfo()));
+		translateYProperty().addListener((source, oldValue, newValue) -> infoProperty.set(getInfo()));
+		translateZProperty().addListener((source, oldValue, newValue) -> infoProperty.set(getInfo()));
+		rotateProperty().addListener((source, oldValue, newValue) -> infoProperty.set(getInfo()));
+	}
+
 	public void onKeyPressed(KeyEvent e) {
 		if (e.isControlDown()) {
 			switch (e.getCode()) {
@@ -66,7 +74,6 @@ public class ControllablePerspectiveCamera extends PerspectiveCamera {
 				break;
 			}
 		}
-		infoProperty.setValue(getInfo());
 	}
 
 	public String getInfo() {

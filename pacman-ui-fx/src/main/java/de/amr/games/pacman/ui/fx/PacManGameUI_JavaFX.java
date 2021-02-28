@@ -52,6 +52,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Rotate;
@@ -85,6 +86,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private final double scaling;
 	private final Stage stage;
 	private final Scene mainScene;
+	private Text camInfoView;
+	private Text flashMessageView;
 	private final ControllablePerspectiveCamera cam = new ControllablePerspectiveCamera();
 
 	private boolean muted;
@@ -179,21 +182,29 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		currentGameScene = newScene;
 		currentGameScene.start();
 		mainScene.setRoot(createMainSceneContent(newScene));
-		if (!newScene.cameraAllowed) {
-			cameraOff();
-		}
+		cameraOff();
 	}
 
 	private Parent createMainSceneContent(GameScene gameScene) {
 		StackPane layout = new StackPane();
-		Text camInfo = new Text();
-		camInfo.setTextAlignment(TextAlignment.CENTER);
-		camInfo.setFill(Color.WHITE);
-		camInfo.setFont(Font.font("Sans", 6 * scaling));
-		Bindings.bindBidirectional(camInfo.textProperty(), cam.infoProperty);
-		StackPane.setAlignment(camInfo, Pos.CENTER);
-		Node sceneRoot = gameScene == null ? new Group() : gameScene.root;
-		layout.getChildren().addAll(camInfo, sceneRoot);
+
+		camInfoView = new Text();
+		camInfoView.setTextAlignment(TextAlignment.CENTER);
+		camInfoView.setFill(Color.WHITE);
+		camInfoView.setFont(Font.font("Sans", 6 * scaling));
+		Bindings.bindBidirectional(camInfoView.textProperty(), cam.infoProperty);
+		StackPane.setAlignment(camInfoView, Pos.CENTER);
+
+		flashMessageView = new Text();
+		flashMessageView.setFont(Font.font("Serif", FontWeight.BOLD, 10 * scaling));
+		flashMessageView.setFill(Color.YELLOW);
+		StackPane messageBox = new StackPane(flashMessageView);
+		StackPane.setAlignment(flashMessageView, Pos.BOTTOM_CENTER);
+		StackPane.setAlignment(messageBox, Pos.BOTTOM_CENTER);
+
+		Node sceneContent = gameScene == null ? new Group() : gameScene.content;
+		layout.getChildren().addAll(sceneContent, camInfoView, messageBox);
+
 		return layout;
 	}
 
@@ -213,13 +224,23 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			setGameScene(sceneToDisplay);
 		}
 		currentGameScene.update();
+		updateFlashMessages();
+	}
 
+	private void updateFlashMessages() {
 		FlashMessage message = flashMessagesQ.peek();
 		if (message != null) {
-			message.timer.run();
+			// a message is available
 			if (message.timer.expired()) {
 				flashMessagesQ.remove();
+				flashMessageView.setVisible(false);
+				return;
 			}
+			message.timer.run();
+			flashMessageView.setVisible(true);
+			flashMessageView.setText(message.text);
+			double alpha = Math.cos((message.timer.running() * Math.PI / 2.0) / message.timer.getDuration());
+			flashMessageView.setFill(Color.rgb(255, 255, 0, alpha));
 		}
 	}
 
@@ -234,10 +255,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				currentGameScene.updateCamera(cam);
 			}
 			currentGameScene.draw();
-			// TODO more FX-like solution
-			if (!flashMessagesQ.isEmpty()) {
-				currentGameScene.drawFlashMessage(flashMessagesQ.peek());
-			}
 		} catch (Exception x) {
 			log("Exception occurred when rendering scene %s", currentGameScene);
 			x.printStackTrace();
@@ -305,8 +322,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		if (currentGameScene.cameraAllowed) {
 			if (mainScene.getCamera() == null) {
 				cameraOn();
+				showFlashMessage("Camera ON", clock.sec(1));
 			} else {
 				cameraOff();
+				showFlashMessage("Camera OFF", clock.sec(1));
 			}
 		}
 	}
@@ -318,14 +337,15 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		cam.setRotate(0);
 		mainScene.removeEventHandler(KeyEvent.KEY_PRESSED, cam::onKeyPressed);
 		mainScene.setCamera(null);
-		showFlashMessage("Camera OFF", clock.sec(1));
+		camInfoView.setVisible(false);
 	}
 
 	private void cameraOn() {
 		cam.setRotationAxis(Rotate.X_AXIS);
-		cam.setTranslateZ(300);
+		cam.setRotate(30);
+		cam.setTranslateZ(-240);
 		mainScene.setCamera(cam);
 		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, cam::onKeyPressed);
-		showFlashMessage("Camera ON", clock.sec(1));
+		camInfoView.setVisible(true);
 	}
 }
