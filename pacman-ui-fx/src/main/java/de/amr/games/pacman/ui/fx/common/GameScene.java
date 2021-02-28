@@ -22,7 +22,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 
 /**
  * A game scene.
@@ -35,15 +34,17 @@ public abstract class GameScene {
 	public final double scaling;
 
 	public final Group root;
-
 	protected final Canvas canvas;
+
+	// TODO remove
 	public final Text flashMessageView;
-	public final Text camInfo;
 
 	public final FXRendering rendering;
 	public final SoundManager sounds;
 
 	protected GameModel game;
+
+	public boolean cameraAllowed;
 
 	public GameScene(double scaling, FXRendering rendering, SoundManager sounds) {
 		this.scaling = scaling;
@@ -63,13 +64,7 @@ public abstract class GameScene {
 		flashMessageView.setFill(Color.YELLOW);
 		StackPane.setAlignment(flashMessageView, Pos.BOTTOM_CENTER);
 
-		camInfo = new Text();
-		camInfo.setTextAlignment(TextAlignment.CENTER);
-		camInfo.setFill(Color.WHITE);
-		camInfo.setFont(Font.font("Sans", 6 * scaling));
-		StackPane.setAlignment(camInfo, Pos.CENTER);
-
-		layout.getChildren().addAll(camInfo, flashMessageView, canvas);
+		layout.getChildren().addAll(flashMessageView, canvas);
 
 		root = new Group();
 		root.getChildren().add(layout);
