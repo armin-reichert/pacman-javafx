@@ -47,7 +47,6 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -212,7 +211,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private void handleGlobalKeys() {
-		if (keyboard.keyPressed(KeyCode.F11.getName())) {
+		if (keyboard.keyPressed("F11")) {
 			stage.setFullScreen(true);
 		}
 		if (keyboard.keyPressed("C")) {
