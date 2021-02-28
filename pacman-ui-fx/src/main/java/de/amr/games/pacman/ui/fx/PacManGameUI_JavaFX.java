@@ -309,17 +309,14 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			if (cam != null) {
 				currentGameScene.updateCamera(cam);
 			}
-			drawCurrentScene(canvas.getGraphicsContext2D());
+			GraphicsContext g = canvas.getGraphicsContext2D();
+			g.setFill(Color.BLACK);
+			g.fillRect(0, 0, g.getCanvas().getWidth(), g.getCanvas().getHeight());
+			currentGameScene.draw(g);
 		} catch (Exception x) {
 			log("Exception occurred when rendering scene %s", currentGameScene);
 			x.printStackTrace();
 		}
-	}
-
-	private void drawCurrentScene(GraphicsContext g) {
-		g.setFill(Color.BLACK);
-		g.fillRect(0, 0, g.getCanvas().getWidth(), g.getCanvas().getHeight());
-		currentGameScene.draw(g);
 	}
 
 	private void cameraOn() {
