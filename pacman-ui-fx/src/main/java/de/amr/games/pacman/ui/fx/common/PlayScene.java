@@ -51,6 +51,7 @@ public class PlayScene extends GameScene {
 		double speed = 1.0 / clock.sec(1);
 		V2d camPosition = new V2d(cam.getTranslateX(), cam.getTranslateY());
 		V2d playerPosition = game.pac.position.scaled(scaling);
+		// TODO how to position the camera such that the player gets centered on the rotated scene?
 		V2d target = playerPosition.minus(width / 2, height / 2);
 		V2d velocity = target.minus(camPosition).scaled(speed);
 		cam.setTranslateX(cam.getTranslateX() + velocity.x);
