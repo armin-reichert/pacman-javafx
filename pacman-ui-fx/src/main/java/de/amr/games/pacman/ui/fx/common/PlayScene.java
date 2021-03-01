@@ -48,15 +48,15 @@ public class PlayScene extends GameScene {
 
 	@Override
 	public void updateCamera(Camera cam) {
-		double width = PLAYGROUND_WIDTH_UNSCALED * scaling;
-		double height = PLAYGROUND_HEIGHT_UNSCALED * scaling;
+		// TODO how to position the camera such that the player gets centered on the *rotated* scene?
 		double speed = 1.0 / clock.sec(1);
+		V2d size = new V2d(PLAYGROUND_WIDTH_UNSCALED, PLAYGROUND_HEIGHT_UNSCALED).scaled(scaling);
 		V2d camPosition = new V2d(cam.getTranslateX(), cam.getTranslateY());
 		V2d playerPosition = controller.getGame().pac.position.scaled(scaling);
-		// TODO how to position the camera such that the player gets centered on the rotated scene?
-		V2d target = playerPosition.minus(width / 2, height / 2);
+		V2d target = playerPosition.minus(size.x / 2, size.y / 2);
 		V2d velocity = target.minus(camPosition).scaled(speed);
-		cam.setTranslateX(cam.getTranslateX() + velocity.x);
-		cam.setTranslateY(cam.getTranslateY() + velocity.y);
+		V2d newCamPosition = camPosition.plus(velocity);
+		cam.setTranslateX(newCamPosition.x);
+		cam.setTranslateY(newCamPosition.y);
 	}
 }

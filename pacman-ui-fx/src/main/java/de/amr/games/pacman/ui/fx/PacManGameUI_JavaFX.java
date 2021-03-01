@@ -218,13 +218,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			clock.targetFreq = clock.targetFreq != 30 ? 30 : 60;
 			String text = clock.targetFreq == 60 ? "Normal speed" : "Slow speed";
 			showFlashMessage(text, clock.sec(1.5));
-			log("Clock frequency changed to %d Hz", clock.targetFreq);
 		}
 		if (keyboard.keyPressed("F")) {
 			clock.targetFreq = clock.targetFreq != 120 ? 120 : 60;
 			String text = clock.targetFreq == 60 ? "Normal speed" : "Fast speed";
 			showFlashMessage(text, clock.sec(1.5));
-			log("Clock frequency changed to %d Hz", clock.targetFreq);
 		}
 	}
 
@@ -261,16 +259,15 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private void onGameChangedFX(GameModel newGame) {
 		game = Objects.requireNonNull(newGame);
 		setGameScene(currentGameScene());
-		if (!currentGameScene.cameraAllowed) {
-			cameraOff();
-		}
 	}
 
 	private void setGameScene(GameScene newGameScene) {
 		currentGameScene = newGameScene;
 		currentGameScene.start();
 		stage.getScene().setRoot(updateStage(newGameScene));
-		cameraOff();
+		if (!currentGameScene.cameraAllowed) {
+			cameraOff();
+		}
 	}
 
 	private void updateFX() {
@@ -284,10 +281,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			setGameScene(sceneToDisplay);
 		}
 		currentGameScene.update();
-		updateFlashMessages();
+		processFlashMessages();
 	}
 
-	private void updateFlashMessages() {
+	private void processFlashMessages() {
 		FlashMessage message = flashMessagesQ.peek();
 		if (message != null) {
 			// a message is available
