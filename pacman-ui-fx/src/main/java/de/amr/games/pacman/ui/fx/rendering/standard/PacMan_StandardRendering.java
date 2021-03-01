@@ -14,6 +14,7 @@ import de.amr.games.pacman.model.common.GameEntity;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.JuniorBag;
 import de.amr.games.pacman.model.common.Pac;
+import de.amr.games.pacman.model.common.Stork;
 import de.amr.games.pacman.model.pacman.PacManBonus;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -196,7 +197,7 @@ public class PacMan_StandardRendering extends StandardRendering {
 	}
 
 	@Override
-	public void drawStork(GraphicsContext g, GameEntity stork) {
+	public void drawStork(GraphicsContext g, Stork stork) {
 	}
 
 	@Override

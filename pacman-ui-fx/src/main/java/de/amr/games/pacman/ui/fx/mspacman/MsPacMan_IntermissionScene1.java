@@ -1,22 +1,10 @@
 package de.amr.games.pacman.ui.fx.mspacman;
 
-import static de.amr.games.pacman.heaven.God.clock;
-import static de.amr.games.pacman.world.PacManGameWorld.t;
-
-import java.util.stream.Stream;
-
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.lib.Animation;
-import de.amr.games.pacman.lib.CountdownTimer;
-import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.model.common.GameEntity;
-import de.amr.games.pacman.model.common.Ghost;
-import de.amr.games.pacman.model.common.Pac;
-import de.amr.games.pacman.sound.PacManGameSound;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
-import de.amr.games.pacman.ui.fx.rendering.standard.FlapUI;
+import de.amr.games.pacman.ui.mspacman.MsPacMan_IntermissionScene1_Controller;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -31,27 +19,7 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class MsPacMan_IntermissionScene1 extends GameScene {
 
-	enum Phase {
-
-		FLAP, CHASED_BY_GHOSTS, COMING_TOGETHER, READY_TO_PLAY;
-
-		final CountdownTimer timer = new CountdownTimer();
-	}
-
-	private static int upperY = t(12), lowerY = t(24), middleY = t(18);
-
-	private Phase phase;
-
-	private FlapUI flap;
-	private Pac pacMan, msPac;
-	private Ghost pinky, inky;
-	private GameEntity heart;
-	private boolean ghostsMet;
-
-	private void enter(Phase newPhase, long ticks) {
-		phase = newPhase;
-		phase.timer.setDuration(ticks);
-	}
+	private MsPacMan_IntermissionScene1_Controller animation;
 
 	public MsPacMan_IntermissionScene1(PacManGameController controller, double scaling, FXRendering rendering,
 			SoundManager sounds) {
@@ -60,125 +28,22 @@ public class MsPacMan_IntermissionScene1 extends GameScene {
 
 	@Override
 	public void start() {
-
-		flap = new FlapUI(1, "THEY MEET", rendering);
-		flap.setTilePosition(3, 10);
-		flap.visible = true;
-
-		pacMan = new Pac("Pac-Man", Direction.RIGHT);
-		pacMan.setPosition(-t(2), upperY);
-		pacMan.visible = true;
-		rendering.playerAnimations().spouseMunching(pacMan).forEach(Animation::restart);
-
-		inky = new Ghost(2, "Inky", Direction.RIGHT);
-		inky.setPositionRelativeTo(pacMan, -t(3), 0);
-		inky.visible = true;
-
-		msPac = new Pac("Ms. Pac-Man", Direction.LEFT);
-		msPac.setPosition(t(30), lowerY);
-		msPac.visible = true;
-		rendering.playerAnimations().playerMunching(msPac).forEach(Animation::restart);
-
-		pinky = new Ghost(1, "Pinky", Direction.LEFT);
-		pinky.setPositionRelativeTo(msPac, t(3), 0);
-		pinky.visible = true;
-		Stream.of(inky, pinky).forEach(ghost -> {
-			rendering.ghostAnimations().ghostKicking(ghost).forEach(Animation::restart);
-		});
-
-		heart = new GameEntity();
-
-		ghostsMet = false;
-
-		enter(Phase.FLAP, clock.sec(2));
+		animation = new MsPacMan_IntermissionScene1_Controller(controller, rendering, sounds);
+		animation.start();
 	}
 
 	@Override
 	public void update() {
-		switch (phase) {
-		case FLAP:
-			if (phase.timer.expired()) {
-				flap.visible = false;
-				sounds.loop(PacManGameSound.INTERMISSION_1, 1);
-				startChasedByGhosts();
-			}
-			break;
-
-		case CHASED_BY_GHOSTS:
-			inky.move();
-			pacMan.move();
-			pinky.move();
-			msPac.move();
-			if (inky.position.x > t(30)) {
-				startComingTogether();
-			}
-			break;
-
-		case COMING_TOGETHER:
-			inky.move();
-			pinky.move();
-			pacMan.move();
-			msPac.move();
-			if (pacMan.dir == Direction.LEFT && pacMan.position.x < t(15)) {
-				pacMan.dir = msPac.dir = Direction.UP;
-			}
-			if (pacMan.dir == Direction.UP && pacMan.position.y < upperY) {
-				pacMan.speed = msPac.speed = 0;
-				pacMan.dir = Direction.LEFT;
-				msPac.dir = Direction.RIGHT;
-				heart.setPosition((pacMan.position.x + msPac.position.x) / 2, pacMan.position.y - t(2));
-				heart.visible = true;
-				rendering.ghostAnimations().ghostKicking(inky).forEach(Animation::reset);
-				rendering.ghostAnimations().ghostKicking(pinky).forEach(Animation::reset);
-				enter(Phase.READY_TO_PLAY, clock.sec(3));
-			}
-			if (!ghostsMet && inky.position.x - pinky.position.x < 16) {
-				ghostsMet = true;
-				inky.dir = inky.wishDir = inky.dir.opposite();
-				pinky.dir = pinky.wishDir = pinky.dir.opposite();
-				inky.speed = pinky.speed = 0.2f;
-			}
-			break;
-		case READY_TO_PLAY:
-			if (phase.timer.running() == clock.sec(0.5)) {
-				inky.visible = false;
-				pinky.visible = false;
-			}
-			if (phase.timer.expired()) {
-				controller.finishCurrentState();
-			}
-			break;
-		default:
-			break;
-		}
-		phase.timer.run();
-	}
-
-	private void startChasedByGhosts() {
-		enter(Phase.CHASED_BY_GHOSTS, Long.MAX_VALUE);
-		pacMan.speed = msPac.speed = 1.2f;
-		inky.speed = pinky.speed = 1.25f;
-	}
-
-	private void startComingTogether() {
-		pacMan.setPosition(t(30), middleY);
-		inky.setPosition(t(33), middleY);
-		pacMan.dir = Direction.LEFT;
-		inky.dir = inky.wishDir = Direction.LEFT;
-		pinky.setPosition(t(-5), middleY);
-		msPac.setPosition(t(-2), middleY);
-		msPac.dir = Direction.RIGHT;
-		pinky.dir = pinky.wishDir = Direction.RIGHT;
-		enter(Phase.COMING_TOGETHER, Long.MAX_VALUE);
+		animation.update();
 	}
 
 	@Override
 	public void draw(GraphicsContext g) {
-		rendering.drawFlap(g, flap);
-		rendering.drawPlayer(g, msPac);
-		rendering.drawSpouse(g, pacMan);
-		rendering.drawGhost(g, inky, false);
-		rendering.drawGhost(g, pinky, false);
-		rendering.drawHeart(g, heart);
+		rendering.drawFlap(g, animation.flap);
+		rendering.drawPlayer(g, animation.msPac);
+		rendering.drawSpouse(g, animation.pacMan);
+		rendering.drawGhost(g, animation.inky, false);
+		rendering.drawGhost(g, animation.pinky, false);
+		rendering.drawHeart(g, animation.heart);
 	}
 }

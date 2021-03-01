@@ -14,6 +14,7 @@ import de.amr.games.pacman.model.common.GameEntity;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.JuniorBag;
 import de.amr.games.pacman.model.common.Pac;
+import de.amr.games.pacman.model.common.Stork;
 import de.amr.games.pacman.model.pacman.PacManBonus;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -238,8 +239,7 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 	@Override
 	public void drawFlap(GraphicsContext g, Flap flap) {
 		if (flap.visible) {
-			FlapUI flapUI = (FlapUI) flap;
-			drawSprite(g, (Rectangle2D) flapUI.flapping.animate(), flap.position.x, flap.position.y);
+			drawSprite(g, (Rectangle2D) flap.flapping.frame(), flap.position.x, flap.position.y);
 			g.setFont(Font.font(getScoreFont().getName(), FontWeight.THIN, 8));
 			g.setFill(Color.rgb(222, 222, 225, 0.75));
 			g.fillText(flap.sceneNumber + "", flap.position.x + 20, flap.position.y + 30);
@@ -260,10 +260,9 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 	}
 
 	@Override
-	public void drawStork(GraphicsContext g, GameEntity stork) {
+	public void drawStork(GraphicsContext g, Stork stork) {
 		if (stork.visible) {
-			StorkUI storkUI = (StorkUI) stork;
-			drawEntity(g, stork, (Rectangle2D) storkUI.flying.animate());
+			drawEntity(g, stork, (Rectangle2D) stork.flying.frame());
 		}
 	}
 
