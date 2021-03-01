@@ -6,8 +6,8 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
-import de.amr.games.pacman.ui.pacman.PacMan_Intermission1Animation;
-import de.amr.games.pacman.ui.pacman.PacMan_Intermission1Animation.Phase;
+import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene1_Controller;
+import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene1_Controller.Phase;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -17,7 +17,7 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class PacMan_IntermissionScene1 extends GameScene {
 
-	private PacMan_Intermission1Animation animation;
+	private PacMan_IntermissionScene1_Controller animation;
 
 	public PacMan_IntermissionScene1(PacManGameController controller, double scaling, FXRendering rendering,
 			SoundManager sounds) {
@@ -26,7 +26,7 @@ public class PacMan_IntermissionScene1 extends GameScene {
 
 	@Override
 	public void start() {
-		animation = new PacMan_Intermission1Animation(controller, rendering, sounds);
+		animation = new PacMan_IntermissionScene1_Controller(controller, rendering, sounds);
 		animation.start();
 	}
 
