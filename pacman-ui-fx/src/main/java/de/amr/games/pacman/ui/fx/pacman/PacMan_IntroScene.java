@@ -15,7 +15,6 @@ import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -48,7 +47,7 @@ public class PacMan_IntroScene extends GameScene {
 
 	private static final int TOP_Y = t(6);
 
-	private final Animation<Boolean> blinking = Animation.pulse().frameDuration(20).restart();
+	private final Animation<Boolean> blinking = Animation.pulse().frameDuration(20);
 	private GhostPortrait[] gallery;
 	private int presentedGhostIndex;
 	private long ghostKilledTime;
@@ -76,18 +75,22 @@ public class PacMan_IntroScene extends GameScene {
 		gallery[0].ghost = new Ghost(0, "Blinky", Direction.RIGHT);
 		gallery[0].character = "SHADOW";
 		gallery[0].color = Color.RED;
+		gallery[0].ghost.setPosition(t(2), TOP_Y + t(2));
 
 		gallery[1].ghost = new Ghost(1, "Pinky", Direction.RIGHT);
 		gallery[1].character = "SPEEDY";
 		gallery[1].color = Color.PINK;
+		gallery[1].ghost.setPosition(t(2), TOP_Y + t(5));
 
 		gallery[2].ghost = new Ghost(2, "Inky", Direction.RIGHT);
 		gallery[2].character = "BASHFUL";
 		gallery[2].color = Color.CYAN;
+		gallery[2].ghost.setPosition(t(2), TOP_Y + t(8));
 
 		gallery[3].ghost = new Ghost(3, "Clyde", Direction.RIGHT);
 		gallery[3].character = "POKEY";
 		gallery[3].color = Color.ORANGE;
+		gallery[3].ghost.setPosition(t(2), TOP_Y + t(11));
 
 		pac = new Pac("Ms. Pac-Man", Direction.LEFT);
 
@@ -162,12 +165,15 @@ public class PacMan_IntroScene extends GameScene {
 			}
 			break;
 		case READY_TO_PLAY:
-			blinking.animate();
-			if (phase.timer.running() == clock.sec(5)) {
-				// TODO
-				controller.getGame().attractMode = true;
-				log("Entering attract mode at %d", clock.ticksTotal);
+			if (phase.timer.running() == 0) {
+				blinking.restart();
 			}
+			if (phase.timer.running() == clock.sec(5)) {
+				// TODO write access to model needs to be synchronized?
+				controller.getGame().attractMode = true;
+				log("Entering attract mode at clock tick %d", clock.ticksTotal);
+			}
+			blinking.animate();
 			break;
 		default:
 			break;
@@ -235,7 +241,6 @@ public class PacMan_IntroScene extends GameScene {
 	}
 
 	private void drawGallery(GraphicsContext g) {
-		int x = t(2);
 		g.setFill(Color.WHITE);
 		g.setFont(rendering.getScoreFont());
 		g.fillText("CHARACTER", t(6), TOP_Y);
@@ -245,9 +250,7 @@ public class PacMan_IntroScene extends GameScene {
 			GhostPortrait portrait = gallery[i];
 			if (portrait.ghost.visible) {
 				int y = TOP_Y + t(2 + 3 * i);
-				Rectangle2D ghostRegion = (Rectangle2D) rendering.ghostAnimations()
-						.ghostKicking(portrait.ghost, Direction.RIGHT).frame(0);
-				rendering.drawSprite(g, ghostRegion, x, y - 4);
+				rendering.drawGhost(g, gallery[i].ghost, false);
 				g.setFill(portrait.color);
 				g.setFont(rendering.getScoreFont());
 				if (portrait.characterVisible) {

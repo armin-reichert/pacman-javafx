@@ -36,9 +36,9 @@ public class PlayScene extends GameScene {
 			rendering.drawEnergizerTiles(g, game.level.world.energizerTiles());
 		}
 		rendering.drawGameState(g, game);
+		rendering.drawBonus(g, game.bonus);
 		rendering.drawPlayer(g, game.pac);
 		game.ghosts().forEach(ghost -> rendering.drawGhost(g, ghost, game.pac.powerTicksLeft > 0));
-		rendering.drawBonus(g, game.bonus);
 		rendering.drawScore(g, game, game.state == PacManGameState.INTRO || game.attractMode);
 		if (!game.attractMode) {
 			rendering.drawLivesCounter(g, game, t(2), t(34));
