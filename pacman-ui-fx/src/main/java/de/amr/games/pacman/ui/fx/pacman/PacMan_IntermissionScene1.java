@@ -41,9 +41,9 @@ public class PacMan_IntermissionScene1 extends GameScene {
 		if (animation.phase == Phase.BLINKY_CHASING_PACMAN) {
 			rendering.drawPlayer(g, animation.pac);
 		} else {
-			g.translate(0, -12);
+			g.translate(0, -10);
 			rendering.drawBigPacMan(g, animation.pac);
-			g.translate(0, 12);
+			g.translate(0, 10);
 		}
 		rendering.drawLevelCounter(g, controller.getGame(), t(25), t(34));
 	}
