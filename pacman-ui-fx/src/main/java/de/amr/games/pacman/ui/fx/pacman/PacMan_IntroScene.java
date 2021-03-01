@@ -1,20 +1,19 @@
 package de.amr.games.pacman.ui.fx.pacman;
 
-import static de.amr.games.pacman.heaven.God.clock;
 import static de.amr.games.pacman.lib.Logging.log;
+import static de.amr.games.pacman.ui.pacman.PacMan_IntroAnimation.TOP_Y;
 import static de.amr.games.pacman.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.lib.Animation;
-import de.amr.games.pacman.lib.CountdownTimer;
-import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.heaven.God;
 import de.amr.games.pacman.model.common.Ghost;
-import de.amr.games.pacman.model.common.GhostState;
-import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
+import de.amr.games.pacman.ui.pacman.PacMan_IntroAnimation;
+import de.amr.games.pacman.ui.pacman.PacMan_IntroAnimation.GhostPortrait;
+import de.amr.games.pacman.ui.pacman.PacMan_IntroAnimation.Phase;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -29,37 +28,7 @@ import javafx.scene.text.Font;
  */
 public class PacMan_IntroScene extends GameScene {
 
-	static class GhostPortrait {
-
-		Ghost ghost;
-		String character;
-		boolean characterVisible;
-		boolean nicknameVisible;
-		Color color;
-	}
-
-	enum Phase {
-
-		BEGIN, PRESENTING, CHASING_PAC, CHASING_GHOSTS, READY_TO_PLAY;
-
-		final CountdownTimer timer = new CountdownTimer();
-	}
-
-	private static final int TOP_Y = t(6);
-
-	private final Animation<Boolean> blinking = Animation.pulse().frameDuration(20);
-	private GhostPortrait[] gallery;
-	private int presentedGhostIndex;
-	private long ghostKilledTime;
-	private Pac pac;
-	private Ghost[] ghosts;
-
-	private Phase phase;
-
-	private void enterPhase(Phase newPhase) {
-		phase = newPhase;
-		phase.timer.setDuration(Long.MAX_VALUE);
-	}
+	private PacMan_IntroAnimation animation;
 
 	public PacMan_IntroScene(PacManGameController controller, double scaling, FXRendering rendering,
 			SoundManager sounds) {
@@ -68,181 +37,40 @@ public class PacMan_IntroScene extends GameScene {
 
 	@Override
 	public void start() {
-		gallery = new GhostPortrait[4];
-		for (int i = 0; i < 4; ++i) {
-			gallery[i] = new GhostPortrait();
-		}
-		gallery[0].ghost = new Ghost(0, "Blinky", Direction.RIGHT);
-		gallery[0].character = "SHADOW";
-		gallery[0].color = Color.RED;
-		gallery[0].ghost.setPosition(t(2), TOP_Y + t(2));
-
-		gallery[1].ghost = new Ghost(1, "Pinky", Direction.RIGHT);
-		gallery[1].character = "SPEEDY";
-		gallery[1].color = Color.PINK;
-		gallery[1].ghost.setPosition(t(2), TOP_Y + t(5));
-
-		gallery[2].ghost = new Ghost(2, "Inky", Direction.RIGHT);
-		gallery[2].character = "BASHFUL";
-		gallery[2].color = Color.CYAN;
-		gallery[2].ghost.setPosition(t(2), TOP_Y + t(8));
-
-		gallery[3].ghost = new Ghost(3, "Clyde", Direction.RIGHT);
-		gallery[3].character = "POKEY";
-		gallery[3].color = Color.ORANGE;
-		gallery[3].ghost.setPosition(t(2), TOP_Y + t(11));
-
-		for (int i = 0; i < 4; ++i) {
-			rendering.ghostAnimations().ghostKicking(gallery[i].ghost).forEach(Animation::reset);
-		}
-
-		pac = new Pac("Ms. Pac-Man", Direction.LEFT);
-
-		ghosts = new Ghost[] { //
-				new Ghost(0, "Blinky", Direction.LEFT), //
-				new Ghost(1, "Pinky", Direction.LEFT), //
-				new Ghost(2, "Inky", Direction.LEFT), //
-				new Ghost(3, "Clyde", Direction.LEFT), //
-		};
-
-		enterPhase(Phase.BEGIN);
+		animation = new PacMan_IntroAnimation(controller, rendering);
+		animation.start();
+		log("%s: PacMan intro scene started at clock tick %d", this, God.clock.ticksTotal);
 	}
 
 	@Override
 	public void update() {
-		pac.move();
-		for (Ghost ghost : ghosts) {
-			ghost.move();
-		}
-		switch (phase) {
-		case BEGIN:
-			if (phase.timer.running() == clock.sec(2)) {
-				presentedGhostIndex = -1;
-				enterPhase(Phase.PRESENTING);
-			}
-			break;
-		case PRESENTING:
-			if (phase.timer.running() == 0) {
-				presentGhost(presentedGhostIndex + 1);
-			}
-			if (phase.timer.running() == clock.sec(0.5)) {
-				gallery[presentedGhostIndex].characterVisible = true;
-			}
-			if (phase.timer.running() == clock.sec(1)) {
-				gallery[presentedGhostIndex].nicknameVisible = true;
-			}
-			if (phase.timer.running() == clock.sec(2)) {
-				if (presentedGhostIndex < 3) {
-					enterPhase(Phase.PRESENTING);
-				} else {
-					startGhostsChasingPac();
-					enterPhase(Phase.CHASING_PAC);
-				}
-			}
-			break;
-		case CHASING_PAC:
-			if (pac.position.x < t(2)) {
-				startPacChasingGhosts();
-				enterPhase(Phase.CHASING_GHOSTS);
-			}
-			break;
-		case CHASING_GHOSTS:
-			if (pac.position.x > t(28)) {
-				enterPhase(Phase.READY_TO_PLAY);
-			}
-			if (clock.ticksTotal - ghostKilledTime == clock.sec(0.25)) {
-				ghostKilledTime = 0;
-				pac.visible = true;
-				pac.speed = 1;
-				for (Ghost ghost : ghosts) {
-					if (ghost.state == GhostState.DEAD) {
-						ghost.visible = false;
-					}
-				}
-			}
-			for (Ghost ghost : ghosts) {
-				if (pac.meets(ghost) && ghost.state != GhostState.DEAD) {
-					ghost.state = GhostState.DEAD;
-					ghost.bounty = (int) Math.pow(2, ghost.id + 1) * 100;
-					pac.visible = false;
-					pac.speed = 0;
-					ghostKilledTime = clock.ticksTotal;
-				}
-			}
-			break;
-		case READY_TO_PLAY:
-			if (phase.timer.running() == 0) {
-				blinking.restart();
-			}
-			if (phase.timer.running() == clock.sec(5)) {
-				controller.getGame().attractMode = true;
-				log("Entering attract mode at clock tick %d", clock.ticksTotal);
-			}
-			blinking.animate();
-			break;
-		default:
-			break;
-		}
-		phase.timer.run();
-	}
-
-	private void startGhostsChasingPac() {
-		pac.setTilePosition(28, 22);
-		pac.visible = true;
-		pac.speed = 1;
-		pac.dir = Direction.LEFT;
-		pac.couldMove = true;
-		rendering.playerAnimations().playerMunching(pac).forEach(Animation::restart);
-
-		for (Ghost ghost : ghosts) {
-			ghost.setPositionRelativeTo(pac, 8 + (ghost.id + 1) * 18, 0);
-			ghost.visible = true;
-			ghost.dir = ghost.wishDir = Direction.LEFT;
-			ghost.speed = pac.speed * 1.05f;
-			ghost.state = GhostState.HUNTING_PAC;
-			rendering.ghostAnimations().ghostKicking(ghost).forEach(Animation::restart);
-		}
-	}
-
-	private void startPacChasingGhosts() {
-		pac.dir = Direction.RIGHT;
-		for (Ghost ghost : ghosts) {
-			ghost.state = GhostState.FRIGHTENED;
-			ghost.dir = ghost.wishDir = Direction.RIGHT;
-			ghost.speed = 0.5f;
-			rendering.ghostAnimations().ghostFrightened(ghost).forEach(Animation::restart);
-		}
+		animation.update();
 	}
 
 	@Override
 	public void draw(GraphicsContext g) {
 		rendering.drawScore(g, controller.getGame(), true);
 		drawGallery(g);
-		if (phase == Phase.CHASING_PAC) {
-			if (blinking.animate()) {
+		if (animation.phase == Phase.CHASING_PAC) {
+			if (animation.blinking.animate()) {
 				g.setFill(Color.PINK);
-				g.fillOval(t(2), pac.position.y, TS, TS);
+				g.fillOval(t(2), animation.pac.position.y, TS, TS);
 			}
 		}
 		drawGuys(g);
-		if (phase.ordinal() >= Phase.CHASING_GHOSTS.ordinal()) {
+		if (animation.phase.ordinal() >= Phase.CHASING_GHOSTS.ordinal()) {
 			drawPointsAnimation(g, 11, 26);
 		}
-		if (phase == Phase.READY_TO_PLAY) {
+		if (animation.phase == Phase.READY_TO_PLAY) {
 			drawPressKeyToStart(g, 32);
 		}
 	}
 
 	private void drawGuys(GraphicsContext g) {
-		rendering.drawPlayer(g, pac);
-		for (Ghost ghost : ghosts) {
-			rendering.drawGhost(g, ghost, pac.powerTicksLeft > 0);
+		rendering.drawPlayer(g, animation.pac);
+		for (Ghost ghost : animation.ghosts) {
+			rendering.drawGhost(g, ghost, animation.pac.powerTicksLeft > 0);
 		}
-	}
-
-	private void presentGhost(int ghostIndex) {
-		presentedGhostIndex = ghostIndex;
-		gallery[presentedGhostIndex].ghost.visible = true;
 	}
 
 	private void drawGallery(GraphicsContext g) {
@@ -252,11 +80,11 @@ public class PacMan_IntroScene extends GameScene {
 		g.fillText("/", t(16), TOP_Y);
 		g.fillText("NICKNAME", t(18), TOP_Y);
 		for (int i = 0; i < 4; ++i) {
-			GhostPortrait portrait = gallery[i];
+			GhostPortrait portrait = animation.gallery[i];
 			if (portrait.ghost.visible) {
 				int y = TOP_Y + t(2 + 3 * i);
-				rendering.drawGhost(g, gallery[i].ghost, false);
-				g.setFill(portrait.color);
+				rendering.drawGhost(g, animation.gallery[i].ghost, false);
+				g.setFill(getGhostColor(i));
 				g.setFont(rendering.getScoreFont());
 				if (portrait.characterVisible) {
 					g.fillText("-" + portrait.character, t(6), y + 8);
@@ -268,8 +96,12 @@ public class PacMan_IntroScene extends GameScene {
 		}
 	}
 
+	private Color getGhostColor(int i) {
+		return i == 0 ? Color.RED : i == 1 ? Color.PINK : i == 2 ? Color.CYAN : Color.ORANGE;
+	}
+
 	private void drawPressKeyToStart(GraphicsContext g, int yTile) {
-		if (blinking.frame()) {
+		if (animation.blinking.frame()) {
 			String text = "PRESS SPACE TO PLAY";
 			g.setFill(Color.ORANGE);
 			g.setFont(rendering.getScoreFont());
@@ -278,7 +110,7 @@ public class PacMan_IntroScene extends GameScene {
 	}
 
 	private void drawPointsAnimation(GraphicsContext g, int tileX, int tileY) {
-		if (blinking.frame()) {
+		if (animation.blinking.frame()) {
 			g.setFill(Color.PINK);
 			g.fillRect(t(tileX) + 6, t(tileY - 1) + 2, 2, 2);
 			g.fillOval(t(tileX), t(tileY + 1) - 2, 10, 10);

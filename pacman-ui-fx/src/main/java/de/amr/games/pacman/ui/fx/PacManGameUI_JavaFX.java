@@ -119,12 +119,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void update() {
-		Platform.runLater(this::updateFX);
-	}
-
-	@Override
-	public void render() {
-		Platform.runLater(this::renderFX);
+		Platform.runLater(() -> {
+			updateFX();
+			renderFX();
+		});
 	}
 
 	@Override
