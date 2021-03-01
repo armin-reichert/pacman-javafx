@@ -1,7 +1,7 @@
 package de.amr.games.pacman.ui.fx.pacman;
 
 import static de.amr.games.pacman.lib.Logging.log;
-import static de.amr.games.pacman.ui.pacman.PacMan_IntroAnimation.TOP_Y;
+import static de.amr.games.pacman.ui.pacman.PacMan_IntroScene_Controller.TOP_Y;
 import static de.amr.games.pacman.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
@@ -11,9 +11,9 @@ import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
-import de.amr.games.pacman.ui.pacman.PacMan_IntroAnimation;
-import de.amr.games.pacman.ui.pacman.PacMan_IntroAnimation.GhostPortrait;
-import de.amr.games.pacman.ui.pacman.PacMan_IntroAnimation.Phase;
+import de.amr.games.pacman.ui.pacman.PacMan_IntroScene_Controller;
+import de.amr.games.pacman.ui.pacman.PacMan_IntroScene_Controller.GhostPortrait;
+import de.amr.games.pacman.ui.pacman.PacMan_IntroScene_Controller.Phase;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -28,7 +28,7 @@ import javafx.scene.text.Font;
  */
 public class PacMan_IntroScene extends GameScene {
 
-	private PacMan_IntroAnimation animation;
+	private PacMan_IntroScene_Controller animation;
 
 	public PacMan_IntroScene(PacManGameController controller, double scaling, FXRendering rendering,
 			SoundManager sounds) {
@@ -37,7 +37,7 @@ public class PacMan_IntroScene extends GameScene {
 
 	@Override
 	public void start() {
-		animation = new PacMan_IntroAnimation(controller, rendering);
+		animation = new PacMan_IntroScene_Controller(controller, rendering);
 		animation.start();
 		log("%s: PacMan intro scene started at clock tick %d", this, God.clock.ticksTotal);
 	}
