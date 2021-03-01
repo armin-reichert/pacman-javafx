@@ -15,12 +15,10 @@ import javafx.stage.Stage;
  */
 public class PacManGameAppFX extends Application {
 
-	static boolean ms_pacman;
+	private static CommandLineArgs options;
 
 	public static void main(String[] args) {
-		if (args.length > 0) {
-			ms_pacman = "-mspacman".equals(args[0]);
-		}
+		options = new CommandLineArgs(args);
 		launch(args);
 	}
 
@@ -28,8 +26,8 @@ public class PacManGameAppFX extends Application {
 	public void start(Stage stage) throws IOException {
 		try {
 			PacManGameController controller = new PacManGameController();
-			controller.play(ms_pacman ? GameType.MS_PACMAN : GameType.PACMAN);
-			controller.addView(new PacManGameUI_JavaFX(stage, controller, 2.0));
+			controller.play(options.pacman ? GameType.PACMAN : GameType.MS_PACMAN);
+			controller.addView(new PacManGameUI_JavaFX(stage, controller, options.height));
 			controller.showViews();
 			controller.startGameLoop();
 		} catch (Exception x) {

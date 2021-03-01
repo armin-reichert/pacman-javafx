@@ -25,9 +25,9 @@ public class PacManGameAppMulti extends Application {
 		PacManGameController controller = new PacManGameController();
 		controller.play(GameType.PACMAN);
 		SwingUtilities.invokeLater(() -> {
-			controller.addView(new PacManGameUI_Swing(controller, 2.0));
+			controller.addView(new PacManGameUI_Swing(controller, 576));
 		});
-		controller.addView(new PacManGameUI_JavaFX(stage, controller, 2.0));
+		controller.addView(new PacManGameUI_JavaFX(stage, controller, 576));
 		controller.showViews();
 		controller.startGameLoop();
 	}

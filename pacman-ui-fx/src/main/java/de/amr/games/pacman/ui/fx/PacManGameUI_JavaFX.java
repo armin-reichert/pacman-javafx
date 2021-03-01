@@ -88,10 +88,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private boolean muted;
 
-	public PacManGameUI_JavaFX(Stage stage, PacManGameController controller, double scaling) {
+	public PacManGameUI_JavaFX(Stage stage, PacManGameController controller, double height) {
 		this.stage = stage;
 		this.controller = controller;
-		this.scaling = scaling;
+		scaling = Math.round(height / PLAYGROUND_HEIGHT_UNSCALED);
+		log("Scaling is %.2f", scaling);
 		buildStage();
 		createGameScenes();
 		onGameChangedFX(controller.getGame());
