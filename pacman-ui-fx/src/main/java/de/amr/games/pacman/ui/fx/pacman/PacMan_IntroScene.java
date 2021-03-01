@@ -40,7 +40,7 @@ public class PacMan_IntroScene extends GameScene {
 
 	enum Phase {
 
-		BEGIN, GHOST_GALLERY, CHASING_PAC, CHASING_GHOSTS, READY_TO_PLAY;
+		BEGIN, PRESENTING, CHASING_PAC, CHASING_GHOSTS, READY_TO_PLAY;
 
 		final CountdownTimer timer = new CountdownTimer();
 	}
@@ -92,6 +92,10 @@ public class PacMan_IntroScene extends GameScene {
 		gallery[3].color = Color.ORANGE;
 		gallery[3].ghost.setPosition(t(2), TOP_Y + t(11));
 
+		for (int i = 0; i < 4; ++i) {
+			rendering.ghostAnimations().ghostKicking(gallery[i].ghost).forEach(Animation::reset);
+		}
+
 		pac = new Pac("Ms. Pac-Man", Direction.LEFT);
 
 		ghosts = new Ghost[] { //
@@ -113,11 +117,14 @@ public class PacMan_IntroScene extends GameScene {
 		switch (phase) {
 		case BEGIN:
 			if (phase.timer.running() == clock.sec(2)) {
-				presentGhost(0);
-				enterPhase(Phase.GHOST_GALLERY);
+				presentedGhostIndex = -1;
+				enterPhase(Phase.PRESENTING);
 			}
 			break;
-		case GHOST_GALLERY:
+		case PRESENTING:
+			if (phase.timer.running() == 0) {
+				presentGhost(presentedGhostIndex + 1);
+			}
 			if (phase.timer.running() == clock.sec(0.5)) {
 				gallery[presentedGhostIndex].characterVisible = true;
 			}
@@ -126,8 +133,7 @@ public class PacMan_IntroScene extends GameScene {
 			}
 			if (phase.timer.running() == clock.sec(2)) {
 				if (presentedGhostIndex < 3) {
-					presentGhost(presentedGhostIndex + 1);
-					enterPhase(Phase.GHOST_GALLERY);
+					enterPhase(Phase.PRESENTING);
 				} else {
 					startGhostsChasingPac();
 					enterPhase(Phase.CHASING_PAC);
@@ -169,7 +175,6 @@ public class PacMan_IntroScene extends GameScene {
 				blinking.restart();
 			}
 			if (phase.timer.running() == clock.sec(5)) {
-				// TODO write access to model needs to be synchronized?
 				controller.getGame().attractMode = true;
 				log("Entering attract mode at clock tick %d", clock.ticksTotal);
 			}
