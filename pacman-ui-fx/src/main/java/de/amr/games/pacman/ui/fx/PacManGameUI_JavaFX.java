@@ -6,9 +6,7 @@ import static de.amr.games.pacman.model.common.GameType.MS_PACMAN;
 import static de.amr.games.pacman.model.common.GameType.PACMAN;
 import static de.amr.games.pacman.world.PacManGameWorld.TS;
 
-import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.Deque;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Objects;
@@ -21,10 +19,10 @@ import de.amr.games.pacman.model.common.GameType;
 import de.amr.games.pacman.sound.PacManGameSoundManager;
 import de.amr.games.pacman.sound.PacManGameSounds;
 import de.amr.games.pacman.sound.SoundManager;
-import de.amr.games.pacman.ui.FlashMessage;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations;
 import de.amr.games.pacman.ui.fx.common.ControllablePerspectiveCamera;
+import de.amr.games.pacman.ui.fx.common.FlashMessageView;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import de.amr.games.pacman.ui.fx.common.PlayScene;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
@@ -51,7 +49,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
@@ -65,8 +62,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	public static final int PLAYGROUND_WIDTH_UNSCALED = 28 * TS;
 	public static final int PLAYGROUND_HEIGHT_UNSCALED = 36 * TS;
-
-	private final Deque<FlashMessage> flashMessagesQ = new ArrayDeque<>();
 
 	private final EnumMap<GameType, FXRendering> renderings = new EnumMap<>(GameType.class);
 	private final EnumMap<GameType, SoundManager> sounds = new EnumMap<>(GameType.class);
@@ -82,7 +77,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private Stage stage;
 	private Text camInfoView;
-	private Text flashMessageView;
+	private FlashMessageView flashMessageView;
 	private ControllablePerspectiveCamera cam;
 	private Canvas canvas;
 
@@ -92,11 +87,38 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		this.stage = stage;
 		this.controller = controller;
 		scaling = Math.round(height / PLAYGROUND_HEIGHT_UNSCALED);
-		log("Scaling is %.2f", scaling);
 		buildStage();
 		createGameScenes();
 		onGameChangedFX(controller.getGame());
-		log("JavaFX UI created at clock tick %d", clock.ticksTotal);
+		log("JavaFX UI (scaling: %.2f) created at clock tick %d", scaling, clock.ticksTotal);
+	}
+
+	private void buildStage() {
+		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
+		stage.getIcons().add(new Image("/pacman/graphics/pacman.png"));
+		stage.setOnCloseRequest(e -> {
+			Platform.exit();
+			System.exit(0); // TODO
+		});
+		stage.addEventHandler(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
+		stage.addEventHandler(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
+
+		// build scene
+		cam = new ControllablePerspectiveCamera();
+
+		camInfoView = new Text();
+		camInfoView.setTextAlignment(TextAlignment.CENTER);
+		camInfoView.setFill(Color.WHITE);
+		camInfoView.setFont(Font.font("Sans", 24));
+		Bindings.bindBidirectional(camInfoView.textProperty(), cam.infoProperty);
+
+		flashMessageView = new FlashMessageView();
+
+		canvas = new Canvas(PLAYGROUND_WIDTH_UNSCALED * scaling, PLAYGROUND_HEIGHT_UNSCALED * scaling);
+		canvas.getGraphicsContext2D().scale(scaling, scaling);
+
+		Parent sceneContent = updateStage(null);
+		stage.setScene(new Scene(sceneContent, Color.BLACK));
 	}
 
 	@Override
@@ -127,7 +149,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void showFlashMessage(String message, long ticks) {
-		flashMessagesQ.add(new FlashMessage(message, ticks));
+		flashMessageView.showMessage(message, ticks);
 	}
 
 	@Override
@@ -151,35 +173,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	@Override
 	public Optional<PacManGameAnimations> animation() {
 		return Optional.of(renderings.get(currentGame()));
-	}
-
-	private void buildStage() {
-		cam = new ControllablePerspectiveCamera();
-
-		camInfoView = new Text();
-		camInfoView.setTextAlignment(TextAlignment.CENTER);
-		camInfoView.setFill(Color.WHITE);
-		camInfoView.setFont(Font.font("Sans", 6 * scaling));
-		Bindings.bindBidirectional(camInfoView.textProperty(), cam.infoProperty);
-
-		flashMessageView = new Text();
-		flashMessageView.setFont(Font.font("Serif", FontWeight.BOLD, 10 * scaling));
-		flashMessageView.setFill(Color.YELLOW);
-
-		canvas = new Canvas(PLAYGROUND_WIDTH_UNSCALED * scaling, PLAYGROUND_HEIGHT_UNSCALED * scaling);
-		canvas.getGraphicsContext2D().scale(scaling, scaling);
-
-		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
-		stage.getIcons().add(new Image("/pacman/graphics/pacman.png"));
-		stage.setOnCloseRequest(e -> {
-			Platform.exit();
-			System.exit(0); // TODO
-		});
-		stage.addEventHandler(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
-		stage.addEventHandler(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
-
-		Parent sceneContent = updateStage(null);
-		stage.setScene(new Scene(sceneContent, Color.BLACK));
 	}
 
 	private void createGameScenes() {
@@ -227,15 +220,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private Parent updateStage(GameScene gameScene) {
 		StackPane layout = new StackPane();
-		StackPane messageBox = new StackPane(flashMessageView);
 		StackPane.setAlignment(flashMessageView, Pos.BOTTOM_CENTER);
-		if (gameScene != null) {
-			layout.getChildren().addAll(canvas, camInfoView, messageBox);
-		} else {
-			layout.getChildren().addAll(camInfoView, messageBox);
-		}
-		StackPane.setAlignment(camInfoView, Pos.CENTER);
-		StackPane.setAlignment(messageBox, Pos.BOTTOM_CENTER);
+		layout.getChildren().addAll(canvas, camInfoView, flashMessageView);
 		return layout;
 	}
 
@@ -280,24 +266,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			setGameScene(sceneToDisplay);
 		}
 		currentGameScene.update();
-		processFlashMessages();
-	}
-
-	private void processFlashMessages() {
-		FlashMessage message = flashMessagesQ.peek();
-		if (message != null) {
-			// a message is available
-			if (message.timer.expired()) {
-				flashMessagesQ.remove();
-				flashMessageView.setVisible(false);
-				return;
-			}
-			message.timer.run();
-			flashMessageView.setVisible(true);
-			flashMessageView.setText(message.text);
-			double alpha = Math.cos((message.timer.running() * Math.PI / 2.0) / message.timer.getDuration());
-			flashMessageView.setFill(Color.rgb(255, 255, 0, alpha));
-		}
+		flashMessageView.update();
 	}
 
 	private void renderFX() {
