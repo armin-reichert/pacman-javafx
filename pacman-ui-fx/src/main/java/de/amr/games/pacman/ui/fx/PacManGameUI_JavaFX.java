@@ -38,14 +38,13 @@ import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import de.amr.games.pacman.ui.fx.rendering.standard.MsPacMan_StandardRendering;
 import de.amr.games.pacman.ui.fx.rendering.standard.PacMan_StandardRendering;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -69,6 +68,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private GameModel game;
 	private GameScene currentGameScene;
+	private ControllablePerspectiveCamera cam = new ControllablePerspectiveCamera();
 
 	private final PacManGameController controller;
 	private final Keyboard keyboard = new Keyboard();
@@ -76,10 +76,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private final double scaling;
 
 	private Stage stage;
+	private SubScene canvasScene;
+	private Canvas canvas;
 	private Text camInfoView;
 	private FlashMessageView flashMessageView;
-	private ControllablePerspectiveCamera cam;
-	private Canvas canvas;
 
 	private boolean muted;
 
@@ -103,22 +103,33 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
 		stage.addEventHandler(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
 
-		// build scene
-		cam = new ControllablePerspectiveCamera();
-
 		camInfoView = new Text();
 		camInfoView.setTextAlignment(TextAlignment.CENTER);
 		camInfoView.setFill(Color.WHITE);
-		camInfoView.setFont(Font.font("Sans", 24));
-		Bindings.bindBidirectional(camInfoView.textProperty(), cam.infoProperty);
+		camInfoView.setFont(Font.font("Sans", 12));
+		camInfoView.textProperty().bind(cam.infoProperty);
 
 		flashMessageView = new FlashMessageView();
 
 		canvas = new Canvas(PLAYGROUND_WIDTH_UNSCALED * scaling, PLAYGROUND_HEIGHT_UNSCALED * scaling);
 		canvas.getGraphicsContext2D().scale(scaling, scaling);
 
-		Parent sceneContent = updateStage(null);
-		stage.setScene(new Scene(sceneContent, Color.BLACK));
+		StackPane layers = new StackPane();
+
+		BorderPane hudLayer = new BorderPane();
+		hudLayer.setTop(camInfoView);
+		hudLayer.setBottom(flashMessageView);
+
+		BorderPane canvasParent = new BorderPane(canvas);
+		canvasScene = new SubScene(canvasParent, canvas.getWidth(), canvas.getHeight());
+		stage.widthProperty().addListener((source, oldValue, newValue) -> canvasScene.setWidth(newValue.doubleValue()));
+		stage.heightProperty().addListener((source, oldValue, newValue) -> canvasScene.setHeight(newValue.doubleValue()));
+
+		BorderPane canvasLayer = new BorderPane(canvasScene);
+		layers.getChildren().addAll(hudLayer, canvasLayer);
+
+		Scene mainScene = new Scene(layers, Color.BLACK);
+		stage.setScene(mainScene);
 	}
 
 	@Override
@@ -218,13 +229,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 	}
 
-	private Parent updateStage(GameScene gameScene) {
-		StackPane layout = new StackPane();
-		StackPane.setAlignment(flashMessageView, Pos.BOTTOM_CENTER);
-		layout.getChildren().addAll(canvas, camInfoView, flashMessageView);
-		return layout;
-	}
-
 	private GameType currentGame() {
 		return Stream.of(GameType.values()).filter(controller::isPlaying).findFirst().get();
 	}
@@ -249,7 +253,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private void setGameScene(GameScene newGameScene) {
 		currentGameScene = newGameScene;
 		currentGameScene.start();
-		stage.getScene().setRoot(updateStage(newGameScene));
 		if (!currentGameScene.cameraAllowed) {
 			cameraOff();
 		}
@@ -287,9 +290,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private void cameraOn() {
 		cam.setRotate(30);
 		cam.setTranslateZ(-240);
-		stage.getScene().setCamera(cam);
-		stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, cam::onKeyPressed);
+		canvasScene.setCamera(cam);
 		camInfoView.setVisible(true);
+		stage.addEventHandler(KeyEvent.KEY_PRESSED, cam::onKeyPressed);
 	}
 
 	private void cameraOff() {
@@ -297,16 +300,16 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		cam.setTranslateY(0);
 		cam.setTranslateZ(0);
 		cam.setRotate(0);
-		stage.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, cam::onKeyPressed);
-		stage.getScene().setCamera(null);
+		canvasScene.setCamera(null);
 		camInfoView.setVisible(false);
+		stage.removeEventHandler(KeyEvent.KEY_PRESSED, cam::onKeyPressed);
 	}
 
 	private void toggleCamera() {
 		if (!currentGameScene.cameraAllowed) {
 			return;
 		}
-		if (stage.getScene().getCamera() == null) {
+		if (canvasScene.getCamera() == null) {
 			cameraOn();
 			showFlashMessage("Camera ON", clock.sec(1));
 		} else {
