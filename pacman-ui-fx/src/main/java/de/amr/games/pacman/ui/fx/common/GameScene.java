@@ -1,8 +1,10 @@
 package de.amr.games.pacman.ui.fx.common;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import de.amr.games.pacman.controller.PacManGameController;
+import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import javafx.scene.canvas.GraphicsContext;
@@ -25,7 +27,6 @@ public abstract class GameScene {
 		this.controller = controller;
 		this.rendering = Objects.requireNonNull(rendering);
 		this.sounds = Objects.requireNonNull(sounds);
-		this.cam = new ControllablePerspectiveCamera();
 	}
 
 	public abstract void draw(GraphicsContext g);
@@ -39,10 +40,10 @@ public abstract class GameScene {
 	public void end() {
 	}
 
-	public ControllablePerspectiveCamera getCam() {
-		return cam;
+	public Optional<ControllablePerspectiveCamera> getCam() {
+		return Optional.ofNullable(cam);
 	}
 
-	public void updateCamera(Scale scale) {
+	public void updateCamera(V2d sceneSize, Scale scale) {
 	}
 }

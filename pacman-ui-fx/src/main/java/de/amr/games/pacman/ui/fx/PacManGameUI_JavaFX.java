@@ -4,7 +4,6 @@ import static de.amr.games.pacman.heaven.God.clock;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.GameType.MS_PACMAN;
 import static de.amr.games.pacman.model.common.GameType.PACMAN;
-import static de.amr.games.pacman.world.PacManGameWorld.TS;
 
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -21,7 +20,6 @@ import de.amr.games.pacman.sound.PacManGameSounds;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations;
-import de.amr.games.pacman.ui.fx.common.ControllablePerspectiveCamera;
 import de.amr.games.pacman.ui.fx.common.FlashMessageView;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import de.amr.games.pacman.ui.fx.common.PlayScene;
@@ -40,18 +38,13 @@ import de.amr.games.pacman.ui.fx.rendering.standard.PacMan_StandardRendering;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.SubScene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 
 /**
@@ -60,11 +53,6 @@ import javafx.stage.Stage;
  * @author Armin Reichert
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
-
-	public static final int MAZE_WIDTH_UNSCALED = 28 * TS;
-	public static final int MAZE_HEIGHT_UNSCALED = 36 * TS;
-
-	private static final double ASPECT_RATIO = (double) MAZE_WIDTH_UNSCALED / MAZE_HEIGHT_UNSCALED;
 
 	private final EnumMap<GameType, FXRendering> renderings = new EnumMap<>(GameType.class);
 	private final EnumMap<GameType, SoundManager> sounds = new EnumMap<>(GameType.class);
@@ -75,14 +63,12 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private final PacManGameController controller;
 	private final Keyboard keyboard = new Keyboard();
 
-	private final Canvas playground = new Canvas();
 	private final Text camInfoView = new Text();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 
 	private Stage stage;
 	private Scene mainScene;
-	private SubScene playgroundScene;
-	private Scale playgroundScale;
+	private Playground playground;
 
 	private boolean muted;
 
@@ -105,31 +91,21 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
 		stage.addEventHandler(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
 
-		camInfoView.setTextAlignment(TextAlignment.CENTER);
 		camInfoView.setFill(Color.WHITE);
 		camInfoView.setFont(Font.font("Sans", 12));
+		camInfoView.setTextAlignment(TextAlignment.CENTER);
 		StackPane.setAlignment(camInfoView, Pos.TOP_LEFT);
 
-		resizePlayground(height);
-		VBox canvasContainer = new VBox(playground);
-		playgroundScene = new SubScene(canvasContainer, playground.getWidth(), playground.getHeight());
+		playground = new Playground(height);
 
-		mainScene = new Scene(new StackPane(playgroundScene, flashMessageView, camInfoView), Color.DARKSLATEBLUE);
+		mainScene = new Scene(new StackPane(playground.getScene(), flashMessageView, camInfoView), Color.DARKSLATEBLUE);
 		stage.setScene(mainScene);
 
 		mainScene.heightProperty().addListener((s, o, n) -> {
 			double newHeight = n.doubleValue();
 			log("New main scene height: %f", newHeight);
-			resizePlayground(newHeight);
+			playground.resize(newHeight);
 		});
-	}
-
-	private void resizePlayground(double newHeight) {
-		playground.setHeight(newHeight);
-		playground.setWidth(ASPECT_RATIO * newHeight);
-		playgroundScale = new Scale(newHeight / MAZE_HEIGHT_UNSCALED, newHeight / MAZE_HEIGHT_UNSCALED);
-		log("Canvas w=%.2f h=%.2f h/w=%.2f", playground.getWidth(), playground.getHeight(),
-				playground.getHeight() / playground.getWidth());
 	}
 
 	@Override
@@ -251,7 +227,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private void setGameScene(GameScene newGameScene) {
 		currentGameScene = newGameScene;
 		currentGameScene.start();
-		cameraOff();
+		playground.cameraOff(currentGameScene);
 	}
 
 	private void updateFX() {
@@ -270,46 +246,25 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private void renderFX() {
 		try {
-			GraphicsContext g = playground.getGraphicsContext2D();
-			g.setFill(Color.BLACK);
-			g.fillRect(0, 0, playground.getWidth(), playground.getHeight());
-			currentGameScene.updateCamera(playgroundScale);
-			camInfoView.setText(currentGameScene.getCam().getInfo());
-			g.save();
-			g.scale(playgroundScale.getX(), playgroundScale.getY());
-			currentGameScene.draw(g);
-			g.restore();
+			playground.draw(currentGameScene);
+			if (currentGameScene.getCam().isPresent()) {
+				camInfoView.setVisible(true);
+				camInfoView.setText(currentGameScene.getCam().get().getInfo());
+			} else {
+				camInfoView.setVisible(false);
+			}
 		} catch (Exception x) {
 			log("Exception occurred when rendering scene %s", currentGameScene);
 			x.printStackTrace();
 		}
 	}
 
-	private void cameraOn() {
-		ControllablePerspectiveCamera cam = currentGameScene.getCam();
-		stage.addEventHandler(KeyEvent.KEY_PRESSED, cam::onKeyPressed);
-		cam.setTranslateZ(-240);
-		playgroundScene.setCamera(cam);
-		camInfoView.setVisible(true);
-	}
-
-	private void cameraOff() {
-		ControllablePerspectiveCamera cam = currentGameScene.getCam();
-		stage.removeEventHandler(KeyEvent.KEY_PRESSED, cam::onKeyPressed);
-		cam.setTranslateX(0);
-		cam.setTranslateY(0);
-		cam.setTranslateZ(0);
-		cam.setRotate(0);
-		playgroundScene.setCamera(null);
-		camInfoView.setVisible(false);
-	}
-
 	private void toggleCamera() {
-		if (playgroundScene.getCamera() == null) {
-			cameraOn();
+		if (playground.getScene().getCamera() == null) {
+			playground.cameraOn(currentGameScene);
 			showFlashMessage("Camera ON", clock.sec(1));
 		} else {
-			cameraOff();
+			playground.cameraOff(currentGameScene);
 			showFlashMessage("Camera OFF", clock.sec(1));
 		}
 	}

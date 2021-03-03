@@ -1,8 +1,6 @@
 package de.amr.games.pacman.ui.fx.common;
 
 import static de.amr.games.pacman.heaven.God.clock;
-import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.MAZE_HEIGHT_UNSCALED;
-import static de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX.MAZE_WIDTH_UNSCALED;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.controller.PacManGameController;
@@ -47,13 +45,12 @@ public class PlayScene extends GameScene {
 	}
 
 	@Override
-	public void updateCamera(Scale scale) {
+	public void updateCamera(V2d sceneSize, Scale scale) {
 		// TODO how to position the camera such that the player gets centered on the *rotated* scene?
 		double speed = 1.0 / clock.sec(1);
-		V2d size = new V2d(MAZE_WIDTH_UNSCALED, MAZE_HEIGHT_UNSCALED).scaled(scale.getX());
 		V2d camPosition = new V2d(cam.getTranslateX(), cam.getTranslateY());
 		V2d playerPosition = controller.getGame().pac.position.scaled(scale.getX());
-		V2d target = playerPosition.minus(size.x / 2, size.y / 2);
+		V2d target = playerPosition.minus(sceneSize.x / 2, sceneSize.y / 2);
 		V2d velocity = target.minus(camPosition).scaled(speed);
 		V2d newCamPosition = camPosition.plus(velocity);
 		cam.setTranslateX(newCamPosition.x);
