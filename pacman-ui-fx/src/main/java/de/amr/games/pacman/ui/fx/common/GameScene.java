@@ -5,8 +5,8 @@ import java.util.Objects;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
-import javafx.scene.Camera;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.transform.Scale;
 
 /**
  * A game scene that gets drawn into a canvas.
@@ -18,15 +18,14 @@ public abstract class GameScene {
 	protected final PacManGameController controller;
 	protected final FXRendering rendering;
 	protected final SoundManager sounds;
-	protected double scaling;
 
-	public boolean cameraAllowed;
+	protected ControllablePerspectiveCamera cam;
 
-	public GameScene(PacManGameController controller, double scaling, FXRendering rendering, SoundManager sounds) {
+	public GameScene(PacManGameController controller, FXRendering rendering, SoundManager sounds) {
 		this.controller = controller;
-		this.scaling = scaling;
 		this.rendering = Objects.requireNonNull(rendering);
 		this.sounds = Objects.requireNonNull(sounds);
+		this.cam = new ControllablePerspectiveCamera();
 	}
 
 	public abstract void draw(GraphicsContext g);
@@ -40,6 +39,10 @@ public abstract class GameScene {
 	public void end() {
 	}
 
-	public void updateCamera(Camera cam) {
+	public ControllablePerspectiveCamera getCam() {
+		return cam;
+	}
+
+	public void updateCamera(Scale scale) {
 	}
 }

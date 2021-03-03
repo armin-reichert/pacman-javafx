@@ -176,10 +176,10 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 
 	@Override
 	public void drawMaze(GraphicsContext g, int mazeNumber, int x, int y, boolean flashing) {
-		int index = mazeNumber - 1;
 		if (flashing) {
 			g.drawImage((Image) mazeFlashing(mazeNumber).animate(), x, y);
 		} else {
+			int index = mazeNumber - 1;
 			Rectangle2D fullMazeRegion = new Rectangle2D(0, 248 * index, 226, 248);
 			g.drawImage(spritesheet, fullMazeRegion.getMinX(), fullMazeRegion.getMinY(), fullMazeRegion.getWidth(),
 					fullMazeRegion.getHeight(), x, y, fullMazeRegion.getWidth(), fullMazeRegion.getHeight());

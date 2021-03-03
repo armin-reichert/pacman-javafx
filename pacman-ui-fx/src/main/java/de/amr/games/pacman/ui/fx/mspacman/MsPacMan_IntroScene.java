@@ -23,9 +23,8 @@ public class MsPacMan_IntroScene extends GameScene {
 
 	private MsPacMan_IntroScene_Controller animation;
 
-	public MsPacMan_IntroScene(PacManGameController controller, double scaling, FXRendering rendering,
-			SoundManager sounds) {
-		super(controller, scaling, rendering, sounds);
+	public MsPacMan_IntroScene(PacManGameController controller, FXRendering rendering, SoundManager sounds) {
+		super(controller, rendering, sounds);
 	}
 
 	@Override

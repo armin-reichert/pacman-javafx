@@ -30,9 +30,8 @@ public class PacMan_IntroScene extends GameScene {
 
 	private PacMan_IntroScene_Controller animation;
 
-	public PacMan_IntroScene(PacManGameController controller, double scaling, FXRendering rendering,
-			SoundManager sounds) {
-		super(controller, scaling, rendering, sounds);
+	public PacMan_IntroScene(PacManGameController controller, FXRendering rendering, SoundManager sounds) {
+		super(controller, rendering, sounds);
 	}
 
 	@Override

@@ -20,9 +20,8 @@ public class PacMan_IntermissionScene3 extends GameScene {
 
 	private PacMan_IntermissionScene3_Controller animation;
 
-	public PacMan_IntermissionScene3(PacManGameController controller, double scaling, FXRendering rendering,
-			SoundManager sounds) {
-		super(controller, scaling, rendering, sounds);
+	public PacMan_IntermissionScene3(PacManGameController controller, FXRendering rendering, SoundManager sounds) {
+		super(controller, rendering, sounds);
 	}
 
 	@Override

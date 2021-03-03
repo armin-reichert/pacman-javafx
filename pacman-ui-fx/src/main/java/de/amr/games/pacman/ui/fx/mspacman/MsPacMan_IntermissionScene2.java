@@ -19,9 +19,8 @@ public class MsPacMan_IntermissionScene2 extends GameScene {
 
 	private MsPacMan_IntermissionScene2_Controller animation;
 
-	public MsPacMan_IntermissionScene2(PacManGameController controller, double scaling, FXRendering rendering,
-			SoundManager sounds) {
-		super(controller, scaling, rendering, sounds);
+	public MsPacMan_IntermissionScene2(PacManGameController controller, FXRendering rendering, SoundManager sounds) {
+		super(controller, rendering, sounds);
 	}
 
 	@Override

@@ -38,18 +38,20 @@ import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import de.amr.games.pacman.ui.fx.rendering.standard.MsPacMan_StandardRendering;
 import de.amr.games.pacman.ui.fx.rendering.standard.PacMan_StandardRendering;
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 
 /**
@@ -59,8 +61,10 @@ import javafx.stage.Stage;
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
 
-	public static final int PLAYGROUND_WIDTH_UNSCALED = 28 * TS;
-	public static final int PLAYGROUND_HEIGHT_UNSCALED = 36 * TS;
+	public static final int MAZE_WIDTH_UNSCALED = 28 * TS;
+	public static final int MAZE_HEIGHT_UNSCALED = 36 * TS;
+
+	private static final double ASPECT_RATIO = (double) MAZE_WIDTH_UNSCALED / MAZE_HEIGHT_UNSCALED;
 
 	private final EnumMap<GameType, FXRendering> renderings = new EnumMap<>(GameType.class);
 	private final EnumMap<GameType, SoundManager> sounds = new EnumMap<>(GameType.class);
@@ -68,68 +72,64 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private GameModel game;
 	private GameScene currentGameScene;
-	private ControllablePerspectiveCamera cam = new ControllablePerspectiveCamera();
-
 	private final PacManGameController controller;
 	private final Keyboard keyboard = new Keyboard();
 
-	private final double scaling;
+	private final Canvas playground = new Canvas();
+	private final Text camInfoView = new Text();
+	private final FlashMessageView flashMessageView = new FlashMessageView();
 
 	private Stage stage;
-	private SubScene canvasScene;
-	private Canvas canvas;
-	private Text camInfoView;
-	private FlashMessageView flashMessageView;
+	private Scene mainScene;
+	private SubScene playgroundScene;
+	private Scale playgroundScale;
 
 	private boolean muted;
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController controller, double height) {
 		this.stage = stage;
 		this.controller = controller;
-		scaling = Math.round(height / PLAYGROUND_HEIGHT_UNSCALED);
-		buildStage();
 		createGameScenes();
+		buildStage(height);
 		onGameChangedFX(controller.getGame());
-		log("JavaFX UI (scaling: %.2f) created at clock tick %d", scaling, clock.ticksTotal);
+		log("JavaFX UI created at clock tick %d", clock.ticksTotal);
 	}
 
-	private void buildStage() {
+	private void buildStage(double height) {
 		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
 		stage.getIcons().add(new Image("/pacman/graphics/pacman.png"));
 		stage.setOnCloseRequest(e -> {
+			controller.endGameLoop();
 			Platform.exit();
-			System.exit(0); // TODO
 		});
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
 		stage.addEventHandler(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
 
-		camInfoView = new Text();
 		camInfoView.setTextAlignment(TextAlignment.CENTER);
 		camInfoView.setFill(Color.WHITE);
 		camInfoView.setFont(Font.font("Sans", 12));
-		camInfoView.textProperty().bind(cam.infoProperty);
+		StackPane.setAlignment(camInfoView, Pos.TOP_LEFT);
 
-		flashMessageView = new FlashMessageView();
+		resizePlayground(height);
+		VBox canvasContainer = new VBox(playground);
+		playgroundScene = new SubScene(canvasContainer, playground.getWidth(), playground.getHeight());
 
-		canvas = new Canvas(PLAYGROUND_WIDTH_UNSCALED * scaling, PLAYGROUND_HEIGHT_UNSCALED * scaling);
-		canvas.getGraphicsContext2D().scale(scaling, scaling);
-
-		StackPane layers = new StackPane();
-
-		BorderPane hudLayer = new BorderPane();
-		hudLayer.setTop(camInfoView);
-		hudLayer.setBottom(flashMessageView);
-
-		BorderPane canvasParent = new BorderPane(canvas);
-		canvasScene = new SubScene(canvasParent, canvas.getWidth(), canvas.getHeight());
-		stage.widthProperty().addListener((source, oldValue, newValue) -> canvasScene.setWidth(newValue.doubleValue()));
-		stage.heightProperty().addListener((source, oldValue, newValue) -> canvasScene.setHeight(newValue.doubleValue()));
-
-		BorderPane canvasLayer = new BorderPane(canvasScene);
-		layers.getChildren().addAll(hudLayer, canvasLayer);
-
-		Scene mainScene = new Scene(layers, Color.BLACK);
+		mainScene = new Scene(new StackPane(playgroundScene, flashMessageView, camInfoView), Color.DARKSLATEBLUE);
 		stage.setScene(mainScene);
+
+		mainScene.heightProperty().addListener((s, o, n) -> {
+			double newHeight = n.doubleValue();
+			log("New main scene height: %f", newHeight);
+			resizePlayground(newHeight);
+		});
+	}
+
+	private void resizePlayground(double newHeight) {
+		playground.setHeight(newHeight);
+		playground.setWidth(ASPECT_RATIO * newHeight);
+		playgroundScale = new Scale(newHeight / MAZE_HEIGHT_UNSCALED, newHeight / MAZE_HEIGHT_UNSCALED);
+		log("Canvas w=%.2f h=%.2f h/w=%.2f", playground.getWidth(), playground.getHeight(),
+				playground.getHeight() / playground.getWidth());
 	}
 
 	@Override
@@ -190,24 +190,22 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		renderings.put(MS_PACMAN, new MsPacMan_StandardRendering());
 		sounds.put(MS_PACMAN, new PacManGameSoundManager(PacManGameSounds::msPacManSoundURL));
 		gameScenes.put(MS_PACMAN, Arrays.asList(//
-				new MsPacMan_IntroScene(controller, scaling, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
-				new MsPacMan_IntermissionScene1(controller, scaling, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
-				new MsPacMan_IntermissionScene2(controller, scaling, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
-				new MsPacMan_IntermissionScene3(controller, scaling, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
-				new PlayScene(controller, scaling, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN))//
+				new MsPacMan_IntroScene(controller, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
+				new MsPacMan_IntermissionScene1(controller, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
+				new MsPacMan_IntermissionScene2(controller, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
+				new MsPacMan_IntermissionScene3(controller, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
+				new PlayScene(controller, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN))//
 		));
-		gameScenes.get(MS_PACMAN).get(4).cameraAllowed = true;
 
 		renderings.put(PACMAN, new PacMan_StandardRendering());
 		sounds.put(PACMAN, new PacManGameSoundManager(PacManGameSounds::mrPacManSoundURL));
 		gameScenes.put(PACMAN, Arrays.asList(//
-				new PacMan_IntroScene(controller, scaling, renderings.get(PACMAN), sounds.get(PACMAN)), //
-				new PacMan_IntermissionScene1(controller, scaling, renderings.get(PACMAN), sounds.get(PACMAN)), //
-				new PacMan_IntermissionScene2(controller, scaling, renderings.get(PACMAN), sounds.get(PACMAN)), //
-				new PacMan_IntermissionScene3(controller, scaling, renderings.get(PACMAN), sounds.get(PACMAN)), //
-				new PlayScene(controller, scaling, renderings.get(PACMAN), sounds.get(PACMAN))//
+				new PacMan_IntroScene(controller, renderings.get(PACMAN), sounds.get(PACMAN)), //
+				new PacMan_IntermissionScene1(controller, renderings.get(PACMAN), sounds.get(PACMAN)), //
+				new PacMan_IntermissionScene2(controller, renderings.get(PACMAN), sounds.get(PACMAN)), //
+				new PacMan_IntermissionScene3(controller, renderings.get(PACMAN), sounds.get(PACMAN)), //
+				new PlayScene(controller, renderings.get(PACMAN), sounds.get(PACMAN))//
 		));
-		gameScenes.get(PACMAN).get(4).cameraAllowed = true;
 	}
 
 	private void handleGlobalKeys() {
@@ -253,9 +251,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private void setGameScene(GameScene newGameScene) {
 		currentGameScene = newGameScene;
 		currentGameScene.start();
-		if (!currentGameScene.cameraAllowed) {
-			cameraOff();
-		}
+		cameraOff();
 	}
 
 	private void updateFX() {
@@ -274,13 +270,15 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private void renderFX() {
 		try {
-			if (cam != null) {
-				currentGameScene.updateCamera(cam);
-			}
-			GraphicsContext g = canvas.getGraphicsContext2D();
+			GraphicsContext g = playground.getGraphicsContext2D();
 			g.setFill(Color.BLACK);
-			g.fillRect(0, 0, g.getCanvas().getWidth(), g.getCanvas().getHeight());
+			g.fillRect(0, 0, playground.getWidth(), playground.getHeight());
+			currentGameScene.updateCamera(playgroundScale);
+			camInfoView.setText(currentGameScene.getCam().getInfo());
+			g.save();
+			g.scale(playgroundScale.getX(), playgroundScale.getY());
 			currentGameScene.draw(g);
+			g.restore();
 		} catch (Exception x) {
 			log("Exception occurred when rendering scene %s", currentGameScene);
 			x.printStackTrace();
@@ -288,28 +286,26 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private void cameraOn() {
-		cam.setRotate(30);
-		cam.setTranslateZ(-240);
-		canvasScene.setCamera(cam);
-		camInfoView.setVisible(true);
+		ControllablePerspectiveCamera cam = currentGameScene.getCam();
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, cam::onKeyPressed);
+		cam.setTranslateZ(-240);
+		playgroundScene.setCamera(cam);
+		camInfoView.setVisible(true);
 	}
 
 	private void cameraOff() {
+		ControllablePerspectiveCamera cam = currentGameScene.getCam();
+		stage.removeEventHandler(KeyEvent.KEY_PRESSED, cam::onKeyPressed);
 		cam.setTranslateX(0);
 		cam.setTranslateY(0);
 		cam.setTranslateZ(0);
 		cam.setRotate(0);
-		canvasScene.setCamera(null);
+		playgroundScene.setCamera(null);
 		camInfoView.setVisible(false);
-		stage.removeEventHandler(KeyEvent.KEY_PRESSED, cam::onKeyPressed);
 	}
 
 	private void toggleCamera() {
-		if (!currentGameScene.cameraAllowed) {
-			return;
-		}
-		if (canvasScene.getCamera() == null) {
+		if (playgroundScene.getCamera() == null) {
 			cameraOn();
 			showFlashMessage("Camera ON", clock.sec(1));
 		} else {
