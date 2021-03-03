@@ -15,6 +15,9 @@ public class Keyboard {
 	private final BitSet pressedKeys = new BitSet(256);
 
 	public void onKeyPressed(KeyEvent e) {
+		if (e.isAltDown() || e.isControlDown() || e.isShiftDown()) {
+			return;
+		}
 		if (e.getCode().getCode() != 0 && e.getCode().getCode() < 256) {
 			pressedKeys.set(e.getCode().getCode());
 		}

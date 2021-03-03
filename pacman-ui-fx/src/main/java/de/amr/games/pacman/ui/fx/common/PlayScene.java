@@ -2,24 +2,36 @@ package de.amr.games.pacman.ui.fx.common;
 
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
+import java.util.Optional;
+
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.PacManGameState;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.transform.Scale;
 
 /**
  * This is where the action is.
  * 
  * @author Armin Reichert
  */
-public class PlayScene extends GameScene {
+public class PlayScene implements GameScene {
+
+	public final BooleanProperty cameraEnabledProperty = new SimpleBooleanProperty();
+
+	protected final PacManGameController controller;
+	protected final FXRendering rendering;
+	protected final SoundManager sounds;
+	protected final ControllableCamera camera;
 
 	public PlayScene(PacManGameController controller, FXRendering rendering, SoundManager sounds) {
-		super(controller, rendering, sounds);
+		this.controller = controller;
+		this.rendering = rendering;
+		this.sounds = sounds;
+		camera = new ControllableCamera();
 	}
 
 	@Override
@@ -44,7 +56,22 @@ public class PlayScene extends GameScene {
 	}
 
 	@Override
-	public void updateCamera(V2d sceneSize, Scale scale) {
+	public void enableCamera(boolean state) {
+		cameraEnabledProperty.set(state);
+	}
+
+	@Override
+	public boolean isCameraEnabled() {
+		return cameraEnabledProperty.get();
+	}
+
+	@Override
+	public Optional<ControllableCamera> getCamera() {
+		return Optional.of(camera);
+	}
+
+	@Override
+	public void updateCamera() {
 		// TODO how to position the camera such that the player gets centered on the *rotated* scene?
 //		double speed = 1.0 / clock.sec(1);
 //		V2d camPosition = new V2d(cam.getTranslateX(), cam.getTranslateY());
@@ -54,5 +81,17 @@ public class PlayScene extends GameScene {
 //		V2d newCamPosition = camPosition.plus(velocity);
 //		cam.setTranslateX(newCamPosition.x);
 //		cam.setTranslateY(newCamPosition.y);
+	}
+
+	@Override
+	public void start() {
+	}
+
+	@Override
+	public void update() {
+	}
+
+	@Override
+	public void end() {
 	}
 }

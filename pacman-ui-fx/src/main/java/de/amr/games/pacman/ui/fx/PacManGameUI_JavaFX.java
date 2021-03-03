@@ -123,10 +123,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			playground.resize(Math.max(newWidth, initialWidth), newHeight);
 			log("New main scene height: %f", newHeight);
 		});
-
-		// assign camera to play scenes only
-		gameScenes.get(MS_PACMAN).get(4).createCamera();
-		gameScenes.get(PACMAN).get(4).createCamera();
 	}
 
 	@Override
@@ -249,9 +245,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		currentGameScene = newGameScene;
 		currentGameScene.start();
 		playground.cameraOff(currentGameScene);
-		currentGameScene.getCam().ifPresent(cam -> {
+		currentGameScene.getCamera().ifPresent(cam -> {
 			camInfoView.textProperty().bind(cam.infoProperty);
-			camInfoView.visibleProperty().bind(currentGameScene.camEnabledProperty);
 		});
 	}
 
@@ -270,10 +265,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private void renderFX() {
+		camInfoView.setVisible(currentGameScene.isCameraEnabled());
+		sceneInfoView.setText(String.format("Main scene: w=%.2f h=%.2f, Playground: w=%.2f, h=%.2f", mainScene.getWidth(),
+				mainScene.getHeight(), playground.getScene().getWidth(), playground.getScene().getHeight()));
 		try {
 			playground.draw(currentGameScene);
-			sceneInfoView.setText(String.format("Main scene w=%.2f h=%.2f, Playground w=%.2f, h=%.2f", mainScene.getWidth(),
-					mainScene.getHeight(), playground.getScene().getWidth(), playground.getScene().getHeight()));
 		} catch (Exception x) {
 			log("Exception occurred when rendering scene %s", currentGameScene);
 			x.printStackTrace();
@@ -281,13 +277,13 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private void toggleCamera() {
-		if (currentGameScene.isCamEnabled()) {
-			stage.removeEventHandler(KeyEvent.KEY_PRESSED, currentGameScene.getCam().get()::onKeyPressed);
+		if (currentGameScene.isCameraEnabled()) {
+			stage.removeEventHandler(KeyEvent.KEY_PRESSED, currentGameScene.getCamera().get()::onKeyPressed);
 			playground.cameraOff(currentGameScene);
 			showFlashMessage("Camera OFF", clock.sec(0.5));
-		} else if (currentGameScene.getCam().isPresent()) {
+		} else if (currentGameScene.getCamera().isPresent()) {
 			playground.cameraOn(currentGameScene);
-			stage.addEventHandler(KeyEvent.KEY_PRESSED, currentGameScene.getCam().get()::onKeyPressed);
+			stage.addEventHandler(KeyEvent.KEY_PRESSED, currentGameScene.getCamera().get()::onKeyPressed);
 			showFlashMessage("Camera ON", clock.sec(0.5));
 		}
 	}

@@ -13,11 +13,11 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class ControllablePerspectiveCamera extends PerspectiveCamera {
+public class ControllableCamera extends PerspectiveCamera {
 
 	public StringProperty infoProperty = new SimpleStringProperty();
 
-	public ControllablePerspectiveCamera() {
+	public ControllableCamera() {
 		setRotationAxis(Rotate.X_AXIS);
 		// TODO is this the right way to do this?
 		translateXProperty().addListener((source, oldValue, newValue) -> infoProperty.set(getInfo()));
@@ -80,7 +80,7 @@ public class ControllablePerspectiveCamera extends PerspectiveCamera {
 	}
 
 	public String getInfo() {
-		return String.format("Camera\nx:%3.0f y:%3.0f z:%3.0f rot:%3.0f", getTranslateX(), getTranslateY(), getTranslateZ(),
+		return String.format("Camera: x=%3.0f y=%3.0f z=%3.0f rot=%3.0f", getTranslateX(), getTranslateY(), getTranslateZ(),
 				getRotate());
 	}
 }

@@ -14,18 +14,27 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class PacMan_IntermissionScene2 extends GameScene {
+public class PacMan_IntermissionScene2 implements GameScene {
 
+	protected final PacManGameController controller;
+	protected final FXRendering rendering;
+	protected final SoundManager sounds;
 	private PacMan_IntermissionScene2_Controller animation;
 
 	public PacMan_IntermissionScene2(PacManGameController controller, FXRendering rendering, SoundManager sounds) {
-		super(controller, rendering, sounds);
+		this.controller = controller;
+		this.rendering = rendering;
+		this.sounds = sounds;
 	}
 
 	@Override
 	public void start() {
 		animation = new PacMan_IntermissionScene2_Controller(controller, rendering, sounds);
 		animation.start();
+	}
+
+	@Override
+	public void end() {
 	}
 
 	@Override

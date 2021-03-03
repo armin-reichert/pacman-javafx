@@ -3,7 +3,6 @@ package de.amr.games.pacman.ui.fx.common;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.world.PacManGameWorld.TS;
 
-import de.amr.games.pacman.lib.V2d;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -35,6 +34,7 @@ public class Playground {
 		root.getChildren().add(canvas);
 		scene = new SubScene(root, width, height);
 		scale = new Scale(canvasHeight / WIDTH_UNSCALED, canvasHeight / HEIGHT_UNSCALED);
+
 		log("Playground got initial size: w=%f h=%f, canvas w=%f h=%f", width, height, canvas.getWidth(),
 				canvas.getHeight());
 	}
@@ -60,8 +60,8 @@ public class Playground {
 		GraphicsContext g = canvas.getGraphicsContext2D();
 		g.setFill(Color.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		gameScene.getCam().ifPresent(cam -> {
-			gameScene.updateCamera(new V2d(scene.getWidth(), scene.getHeight()), scale);
+		gameScene.getCamera().ifPresent(cam -> {
+			gameScene.updateCamera();
 		});
 		g.save();
 		g.scale(scale.getX(), scale.getY());
@@ -74,20 +74,20 @@ public class Playground {
 	}
 
 	public void cameraOn(GameScene gameScene) {
-		gameScene.getCam().ifPresent(cam -> {
+		gameScene.getCamera().ifPresent(cam -> {
 			cam.setTranslateZ(-240);
 			scene.setCamera(cam);
-			gameScene.enableCam(true);
+			gameScene.enableCamera(true);
 		});
 	}
 
 	public void cameraOff(GameScene gameScene) {
-		gameScene.getCam().ifPresent(cam -> {
+		gameScene.getCamera().ifPresent(cam -> {
 			cam.setTranslateX(0);
 			cam.setTranslateY(0);
 			cam.setTranslateZ(0);
 			cam.setRotate(0);
-			gameScene.enableCam(false);
+			gameScene.enableCamera(false);
 			scene.setCamera(null);
 		});
 	}

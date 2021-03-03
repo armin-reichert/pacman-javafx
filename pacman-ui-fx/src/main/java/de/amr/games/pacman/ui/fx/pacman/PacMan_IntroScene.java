@@ -26,12 +26,17 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public class PacMan_IntroScene extends GameScene {
+public class PacMan_IntroScene implements GameScene {
 
+	protected final PacManGameController controller;
+	protected final FXRendering rendering;
+	protected final SoundManager sounds;
 	private PacMan_IntroScene_Controller animation;
 
 	public PacMan_IntroScene(PacManGameController controller, FXRendering rendering, SoundManager sounds) {
-		super(controller, rendering, sounds);
+		this.controller = controller;
+		this.rendering = rendering;
+		this.sounds = sounds;
 	}
 
 	@Override
@@ -39,6 +44,10 @@ public class PacMan_IntroScene extends GameScene {
 		animation = new PacMan_IntroScene_Controller(controller, rendering);
 		animation.start();
 		log("%s: PacMan intro scene started at clock tick %d", this, God.clock.ticksTotal);
+	}
+
+	@Override
+	public void end() {
 	}
 
 	@Override

@@ -19,18 +19,27 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public class MsPacMan_IntroScene extends GameScene {
+public class MsPacMan_IntroScene implements GameScene {
 
+	protected final PacManGameController controller;
+	protected final FXRendering rendering;
+	protected final SoundManager sounds;
 	private MsPacMan_IntroScene_Controller animation;
 
 	public MsPacMan_IntroScene(PacManGameController controller, FXRendering rendering, SoundManager sounds) {
-		super(controller, rendering, sounds);
+		this.controller = controller;
+		this.rendering = rendering;
+		this.sounds = sounds;
 	}
 
 	@Override
 	public void start() {
 		animation = new MsPacMan_IntroScene_Controller(controller, rendering, sounds);
 		animation.start();
+	}
+
+	@Override
+	public void end() {
 	}
 
 	@Override
