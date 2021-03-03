@@ -19,7 +19,7 @@ public class ControllablePerspectiveCamera extends PerspectiveCamera {
 
 	public ControllablePerspectiveCamera() {
 		setRotationAxis(Rotate.X_AXIS);
-		// TODO is this the right way?
+		// TODO is this the right way to do this?
 		translateXProperty().addListener((source, oldValue, newValue) -> infoProperty.set(getInfo()));
 		translateYProperty().addListener((source, oldValue, newValue) -> infoProperty.set(getInfo()));
 		translateZProperty().addListener((source, oldValue, newValue) -> infoProperty.set(getInfo()));

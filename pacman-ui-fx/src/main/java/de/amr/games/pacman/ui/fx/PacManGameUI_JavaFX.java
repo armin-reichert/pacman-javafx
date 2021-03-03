@@ -77,12 +77,12 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		this.stage = stage;
 		this.controller = controller;
 		createGameScenes();
-		buildStage(height);
+		buildStage(Playground.ASPECT_RATIO * height, height);
 		onGameChangedFX(controller.getGame());
 		log("JavaFX UI created at clock tick %d", clock.ticksTotal);
 	}
 
-	private void buildStage(double height) {
+	private void buildStage(double initialWidth, double initialHeight) {
 		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
 		stage.getIcons().add(new Image("/pacman/graphics/pacman.png"));
 		stage.setOnCloseRequest(e -> {
@@ -97,15 +97,24 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		camInfoView.setTextAlignment(TextAlignment.CENTER);
 		StackPane.setAlignment(camInfoView, Pos.TOP_LEFT);
 
-		playground = new Playground(height);
+		playground = new Playground(initialWidth, initialHeight);
 
 		mainScene = new Scene(new StackPane(playground.getScene(), flashMessageView, camInfoView), Color.DARKSLATEBLUE);
 		stage.setScene(mainScene);
 
+		mainScene.widthProperty().addListener((s, o, n) -> {
+			double newWidth = n.doubleValue();
+			double newHeight = newWidth / Playground.ASPECT_RATIO;
+			if (newHeight < mainScene.getHeight()) {
+				playground.resize(newWidth, newHeight);
+				log("New main scene height: %f", newHeight);
+			}
+		});
 		mainScene.heightProperty().addListener((s, o, n) -> {
+			double newWidth = mainScene.getWidth();
 			double newHeight = n.doubleValue();
+			playground.resize(Math.max(newWidth, initialWidth), newHeight);
 			log("New main scene height: %f", newHeight);
-			playground.resize(newHeight);
 		});
 
 		// assign camera to play scenes only

@@ -27,24 +27,27 @@ public class Playground {
 	private final Canvas canvas;
 	private Scale scale;
 
-	public Playground(double height) {
-		double width = ASPECT_RATIO * height;
+	public Playground(double width, double height) {
+		double canvasWidth = ASPECT_RATIO * height;
+		double canvasHeight = height;
 		root = new StackPane();
-		canvas = new Canvas(width, height);
+		canvas = new Canvas(canvasWidth, canvasHeight);
 		root.getChildren().add(canvas);
 		scene = new SubScene(root, width, height);
-		scale = new Scale(width / WIDTH_UNSCALED, height / HEIGHT_UNSCALED);
-		log("Playground intial size, w=%f h=%f", width, height);
+		scale = new Scale(canvasHeight / WIDTH_UNSCALED, canvasHeight / HEIGHT_UNSCALED);
+		log("Playground got initial size: w=%f h=%f, canvas w=%f h=%f", width, height, canvas.getWidth(),
+				canvas.getHeight());
 	}
 
-	public void resize(double height) {
-		double width = ASPECT_RATIO * height;
-		canvas.setWidth(width);
-		canvas.setHeight(height);
+	public void resize(double width, double height) {
+		double canvasWidth = ASPECT_RATIO * height;
+		double canvasHeight = height;
+		canvas.setWidth(canvasWidth);
+		canvas.setHeight(canvasHeight);
 		scene.setWidth(width);
 		scene.setHeight(height);
-		scale = new Scale(width / WIDTH_UNSCALED, height / HEIGHT_UNSCALED);
-		log("Playground resized, w=%f h=%f", width, height);
+		scale = new Scale(canvasWidth / WIDTH_UNSCALED, canvasHeight / HEIGHT_UNSCALED);
+		log("Playground got new size: w=%f h=%f, canvas w=%f h=%f", width, height, canvas.getWidth(), canvas.getHeight());
 	}
 
 	public SubScene getScene() {
