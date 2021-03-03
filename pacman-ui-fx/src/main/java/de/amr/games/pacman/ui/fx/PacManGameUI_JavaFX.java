@@ -251,7 +251,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private void renderFX() {
 		try {
 			playground.draw(currentGameScene);
-			if (currentGameScene.getCam().isPresent()) {
+			if (currentGameScene.getCam().isPresent() && currentGameScene.isCamEnabled()) {
 				camInfoView.setVisible(true);
 				camInfoView.setText(currentGameScene.getCam().get().getInfo());
 			} else {
