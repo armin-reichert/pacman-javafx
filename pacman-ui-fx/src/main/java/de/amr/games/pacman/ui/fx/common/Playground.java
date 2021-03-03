@@ -42,12 +42,14 @@ public class Playground {
 	public void resize(double width, double height) {
 		double canvasWidth = ASPECT_RATIO * height;
 		double canvasHeight = height;
-		canvas.setWidth(canvasWidth);
-		canvas.setHeight(canvasHeight);
-		scene.setWidth(width);
-		scene.setHeight(height);
-		scale = new Scale(canvasWidth / WIDTH_UNSCALED, canvasHeight / HEIGHT_UNSCALED);
-		log("Playground got new size: w=%f h=%f, canvas w=%f h=%f", width, height, canvas.getWidth(), canvas.getHeight());
+		if (canvasWidth <= width && canvasHeight <= height) {
+			canvas.setWidth(canvasWidth);
+			canvas.setHeight(canvasHeight);
+			scene.setWidth(width);
+			scene.setHeight(height);
+			scale = new Scale(canvasWidth / WIDTH_UNSCALED, canvasHeight / HEIGHT_UNSCALED);
+			log("Playground got new size: w=%f h=%f, canvas w=%f h=%f", width, height, canvas.getWidth(), canvas.getHeight());
+		}
 	}
 
 	public SubScene getScene() {

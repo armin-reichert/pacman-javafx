@@ -64,6 +64,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private final PacManGameController controller;
 	private final Keyboard keyboard = new Keyboard();
 
+	private final Text sceneInfoView = new Text();
 	private final Text camInfoView = new Text();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 
@@ -97,9 +98,15 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		camInfoView.setTextAlignment(TextAlignment.CENTER);
 		StackPane.setAlignment(camInfoView, Pos.TOP_LEFT);
 
+		sceneInfoView.setFill(Color.WHITE);
+		sceneInfoView.setFont(Font.font("Sans", 12));
+		sceneInfoView.setTextAlignment(TextAlignment.CENTER);
+		StackPane.setAlignment(sceneInfoView, Pos.TOP_RIGHT);
+
 		playground = new Playground(initialWidth, initialHeight);
 
-		mainScene = new Scene(new StackPane(playground.getScene(), flashMessageView, camInfoView), Color.DARKSLATEBLUE);
+		mainScene = new Scene(new StackPane(playground.getScene(), flashMessageView, camInfoView, sceneInfoView));
+		mainScene.setFill(Color.DARKSLATEBLUE);
 		stage.setScene(mainScene);
 
 		mainScene.widthProperty().addListener((s, o, n) -> {
@@ -242,8 +249,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		currentGameScene = newGameScene;
 		currentGameScene.start();
 		playground.cameraOff(currentGameScene);
-		camInfoView.setText(null);
-		camInfoView.setVisible(false);
 		currentGameScene.getCam().ifPresent(cam -> {
 			camInfoView.textProperty().bind(cam.infoProperty);
 			camInfoView.visibleProperty().bind(currentGameScene.camEnabledProperty);
@@ -267,6 +272,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private void renderFX() {
 		try {
 			playground.draw(currentGameScene);
+			sceneInfoView.setText(String.format("Main scene w=%.2f h=%.2f, Playground w=%.2f, h=%.2f", mainScene.getWidth(),
+					mainScene.getHeight(), playground.getScene().getWidth(), playground.getScene().getHeight()));
 		} catch (Exception x) {
 			log("Exception occurred when rendering scene %s", currentGameScene);
 			x.printStackTrace();
