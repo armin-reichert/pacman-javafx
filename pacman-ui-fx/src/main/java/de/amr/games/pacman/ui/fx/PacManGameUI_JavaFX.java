@@ -106,6 +106,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			log("New main scene height: %f", newHeight);
 			playground.resize(newHeight);
 		});
+
+		// assign camera to play scenes only
+		gameScenes.get(MS_PACMAN).get(4).createCamera();
+		gameScenes.get(PACMAN).get(4).createCamera();
 	}
 
 	@Override
@@ -260,12 +264,14 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private void toggleCamera() {
-		if (playground.getScene().getCamera() == null) {
-			playground.cameraOn(currentGameScene);
-			showFlashMessage("Camera ON", clock.sec(1));
-		} else {
+		if (currentGameScene.isCamEnabled()) {
+			stage.removeEventHandler(KeyEvent.KEY_PRESSED, currentGameScene.getCam().get()::onKeyPressed);
 			playground.cameraOff(currentGameScene);
 			showFlashMessage("Camera OFF", clock.sec(1));
+		} else if (currentGameScene.getCam().isPresent()) {
+			playground.cameraOn(currentGameScene);
+			stage.addEventHandler(KeyEvent.KEY_PRESSED, currentGameScene.getCam().get()::onKeyPressed);
+			showFlashMessage("Camera ON", clock.sec(1));
 		}
 	}
 }

@@ -22,6 +22,7 @@ public abstract class GameScene {
 	protected final SoundManager sounds;
 
 	protected ControllablePerspectiveCamera cam;
+	private boolean camEnabled;
 
 	public GameScene(PacManGameController controller, FXRendering rendering, SoundManager sounds) {
 		this.controller = controller;
@@ -40,8 +41,20 @@ public abstract class GameScene {
 	public void end() {
 	}
 
+	public void createCamera() {
+		cam = new ControllablePerspectiveCamera();
+	}
+
 	public Optional<ControllablePerspectiveCamera> getCam() {
 		return Optional.ofNullable(cam);
+	}
+
+	public boolean isCamEnabled() {
+		return camEnabled;
+	}
+
+	public void enableCam(boolean state) {
+		camEnabled = state;
 	}
 
 	public void updateCamera(V2d sceneSize, Scale scale) {

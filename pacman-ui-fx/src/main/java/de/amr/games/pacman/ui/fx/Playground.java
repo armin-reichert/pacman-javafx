@@ -8,7 +8,6 @@ import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
@@ -82,7 +81,7 @@ public class Playground {
 		gameScene.getCam().ifPresent(cam -> {
 			cam.setTranslateZ(-240);
 			scene.setCamera(cam);
-			root.addEventHandler(KeyEvent.KEY_PRESSED, cam::onKeyPressed);
+			gameScene.enableCam(true);
 		});
 	}
 
@@ -92,8 +91,8 @@ public class Playground {
 			cam.setTranslateY(0);
 			cam.setTranslateZ(0);
 			cam.setRotate(0);
+			gameScene.enableCam(false);
 			scene.setCamera(null);
-			root.removeEventHandler(KeyEvent.KEY_PRESSED, cam::onKeyPressed);
 		});
 	}
 }
