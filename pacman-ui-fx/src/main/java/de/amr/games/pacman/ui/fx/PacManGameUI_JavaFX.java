@@ -232,6 +232,12 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		currentGameScene = newGameScene;
 		currentGameScene.start();
 		playground.cameraOff(currentGameScene);
+		camInfoView.setText(null);
+		camInfoView.setVisible(false);
+		currentGameScene.getCam().ifPresent(cam -> {
+			camInfoView.textProperty().bind(cam.infoProperty);
+			camInfoView.visibleProperty().bind(currentGameScene.camEnabledProperty);
+		});
 	}
 
 	private void updateFX() {
@@ -251,12 +257,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private void renderFX() {
 		try {
 			playground.draw(currentGameScene);
-			if (currentGameScene.getCam().isPresent() && currentGameScene.isCamEnabled()) {
-				camInfoView.setVisible(true);
-				camInfoView.setText(currentGameScene.getCam().get().getInfo());
-			} else {
-				camInfoView.setVisible(false);
-			}
 		} catch (Exception x) {
 			log("Exception occurred when rendering scene %s", currentGameScene);
 			x.printStackTrace();

@@ -7,6 +7,8 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Scale;
 
@@ -22,7 +24,7 @@ public abstract class GameScene {
 	protected final SoundManager sounds;
 
 	protected ControllablePerspectiveCamera cam;
-	private boolean camEnabled;
+	public final BooleanProperty camEnabledProperty = new SimpleBooleanProperty();
 
 	public GameScene(PacManGameController controller, FXRendering rendering, SoundManager sounds) {
 		this.controller = controller;
@@ -50,11 +52,11 @@ public abstract class GameScene {
 	}
 
 	public boolean isCamEnabled() {
-		return camEnabled;
+		return camEnabledProperty.get();
 	}
 
 	public void enableCam(boolean state) {
-		camEnabled = state;
+		camEnabledProperty.set(state);
 	}
 
 	public void updateCamera(V2d sceneSize, Scale scale) {
