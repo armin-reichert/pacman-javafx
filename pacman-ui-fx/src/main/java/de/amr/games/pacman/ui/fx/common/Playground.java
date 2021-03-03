@@ -1,10 +1,9 @@
-package de.amr.games.pacman.ui.fx;
+package de.amr.games.pacman.ui.fx.common;
 
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.world.PacManGameWorld.TS;
 
 import de.amr.games.pacman.lib.V2d;
-import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -50,14 +49,6 @@ public class Playground {
 
 	public SubScene getScene() {
 		return scene;
-	}
-
-	public Scale getScale() {
-		return scale;
-	}
-
-	public Canvas getCanvas() {
-		return canvas;
 	}
 
 	public void draw(GameScene gameScene) {
