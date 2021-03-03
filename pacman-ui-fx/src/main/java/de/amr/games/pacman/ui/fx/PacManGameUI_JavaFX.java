@@ -267,11 +267,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		if (currentGameScene.isCamEnabled()) {
 			stage.removeEventHandler(KeyEvent.KEY_PRESSED, currentGameScene.getCam().get()::onKeyPressed);
 			playground.cameraOff(currentGameScene);
-			showFlashMessage("Camera OFF", clock.sec(1));
+			showFlashMessage("Camera OFF", clock.sec(0.5));
 		} else if (currentGameScene.getCam().isPresent()) {
 			playground.cameraOn(currentGameScene);
 			stage.addEventHandler(KeyEvent.KEY_PRESSED, currentGameScene.getCam().get()::onKeyPressed);
-			showFlashMessage("Camera ON", clock.sec(1));
+			showFlashMessage("Camera ON", clock.sec(0.5));
 		}
 	}
 }
