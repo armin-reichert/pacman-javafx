@@ -26,6 +26,11 @@ public class ControllableCamera extends PerspectiveCamera {
 		rotateProperty().addListener((source, oldValue, newValue) -> infoProperty.set(getInfo()));
 	}
 
+	public String getInfo() {
+		return String.format("Camera: x=%.0f y=%.0f z=%.0f rot=%.0f", getTranslateX(), getTranslateY(), getTranslateZ(),
+				getRotate());
+	}
+
 	public void onKeyPressed(KeyEvent e) {
 		if (e.isControlDown()) {
 			switch (e.getCode()) {
@@ -77,10 +82,5 @@ public class ControllableCamera extends PerspectiveCamera {
 				break;
 			}
 		}
-	}
-
-	public String getInfo() {
-		return String.format("Camera: x=%3.0f y=%3.0f z=%3.0f rot=%3.0f", getTranslateX(), getTranslateY(), getTranslateZ(),
-				getRotate());
 	}
 }
