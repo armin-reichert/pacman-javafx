@@ -71,7 +71,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private Stage stage;
 	private Scene mainScene;
-	private SubScene2D playground;
+	private SubScene2D stageContent2D;
 
 	private boolean muted;
 
@@ -84,7 +84,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		log("JavaFX UI created at clock tick %d", clock.ticksTotal);
 	}
 
-	private void buildStage(double initialWidth, double initialHeight) {
+	private void buildStage(double stageContentWidth, double stageContentHeight) {
 		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
 		stage.getIcons().add(new Image("/pacman/graphics/pacman.png"));
 		stage.setOnCloseRequest(e -> {
@@ -105,26 +105,146 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		StackPane.setAlignment(sceneInfoView, Pos.TOP_RIGHT);
 		sceneInfoView.setVisible(false);
 
-		playground = new SubScene2D(initialWidth, initialHeight);
+		// assuming intial game scene is 2D
+		stageContent2D = new SubScene2D(stageContentWidth, stageContentHeight);
 
-		mainScene = new Scene(new StackPane(playground.getScene(), flashMessageView, camInfoView, sceneInfoView));
+		mainScene = new Scene(new StackPane(stageContent2D.getScene(), flashMessageView, camInfoView, sceneInfoView));
 		mainScene.setFill(Color.DARKSLATEBLUE);
-		stage.setScene(mainScene);
-
 		mainScene.widthProperty().addListener((s, o, n) -> {
 			double newWidth = n.doubleValue();
 			double newHeight = newWidth / SubScene2D.ASPECT_RATIO;
 			if (newHeight < mainScene.getHeight()) {
-				playground.resize(newWidth, newHeight);
+				stageContent2D.resize(newWidth, newHeight);
 				log("New main scene height: %f", newHeight);
 			}
 		});
 		mainScene.heightProperty().addListener((s, o, n) -> {
 			double newWidth = mainScene.getWidth();
 			double newHeight = n.doubleValue();
-			playground.resize(Math.max(newWidth, initialWidth), newHeight);
+			stageContent2D.resize(Math.max(newWidth, stageContentWidth), newHeight);
 			log("New main scene height: %f", newHeight);
 		});
+
+		stage.setScene(mainScene);
+	}
+
+	private void createGameScenes() {
+		renderings.put(MS_PACMAN, new MsPacMan_StandardRendering());
+		sounds.put(MS_PACMAN, new PacManGameSoundManager(PacManGameSounds::msPacManSoundURL));
+		gameScenes.put(MS_PACMAN, Arrays.asList(//
+				new MsPacMan_IntroScene(controller, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
+				new MsPacMan_IntermissionScene1(controller, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
+				new MsPacMan_IntermissionScene2(controller, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
+				new MsPacMan_IntermissionScene3(controller, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
+				new PlayScene(controller, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN))//
+		));
+	
+		renderings.put(PACMAN, new PacMan_StandardRendering());
+		sounds.put(PACMAN, new PacManGameSoundManager(PacManGameSounds::mrPacManSoundURL));
+		gameScenes.put(PACMAN, Arrays.asList(//
+				new PacMan_IntroScene(controller, renderings.get(PACMAN), sounds.get(PACMAN)), //
+				new PacMan_IntermissionScene1(controller, renderings.get(PACMAN), sounds.get(PACMAN)), //
+				new PacMan_IntermissionScene2(controller, renderings.get(PACMAN), sounds.get(PACMAN)), //
+				new PacMan_IntermissionScene3(controller, renderings.get(PACMAN), sounds.get(PACMAN)), //
+				new PlayScene(controller, renderings.get(PACMAN), sounds.get(PACMAN))//
+		));
+	}
+
+	private GameScene currentGameScene() {
+		GameType currentGame = currentGame();
+		switch (game.state) {
+		case INTRO:
+			return gameScenes.get(currentGame).get(0);
+		case INTERMISSION:
+			return gameScenes.get(currentGame).get(game.intermissionNumber);
+		default:
+			return gameScenes.get(currentGame).get(4);
+		}
+	}
+
+	private void setGameScene(GameScene newGameScene) {
+		if (newGameScene.getCamera().isPresent()) {
+			ControllableCamera camera = newGameScene.getCamera().get();
+			camInfoView.textProperty().bind(camera.infoProperty);
+			if (newGameScene.isCameraEnabled()) {
+				stageContent2D.cameraOn(camera);
+			} else {
+				stageContent2D.cameraOff(camera);
+			}
+		} else if (currentGameScene != null && currentGameScene.getCamera().isPresent()) {
+			stageContent2D.cameraOff(currentGameScene.getCamera().get());
+		}
+		newGameScene.start();
+		currentGameScene = newGameScene;
+	}
+
+	private void onGameChangedFX(GameModel newGame) {
+		game = Objects.requireNonNull(newGame);
+		setGameScene(currentGameScene());
+	}
+
+	private void updateFX() {
+		handleGlobalKeys();
+		GameScene sceneToDisplay = currentGameScene();
+		if (currentGameScene != sceneToDisplay) {
+			log("%s: Scene changes from %s to %s", this, currentGameScene, sceneToDisplay);
+			if (currentGameScene != null) {
+				currentGameScene.end();
+			}
+			setGameScene(sceneToDisplay);
+		}
+		currentGameScene.update();
+		flashMessageView.update();
+		renderFX();
+	}
+
+	private void renderFX() {
+		camInfoView.setVisible(currentGameScene.isCameraEnabled());
+		sceneInfoView.setText(String.format("Main scene: w=%.2f h=%.2f, Playground: w=%.2f, h=%.2f", mainScene.getWidth(),
+				mainScene.getHeight(), stageContent2D.getScene().getWidth(), stageContent2D.getScene().getHeight()));
+		try {
+			stageContent2D.drawSceneContent(currentGameScene);
+		} catch (Exception x) {
+			log("Exception occurred when rendering scene %s", currentGameScene);
+			x.printStackTrace();
+		}
+	}
+
+	private void handleGlobalKeys() {
+		if (keyboard.keyPressed("F11")) {
+			stage.setFullScreen(true);
+		}
+		if (keyboard.keyPressed("C")) {
+			toggleCamera();
+		}
+		if (keyboard.keyPressed("S")) {
+			clock.targetFreq = clock.targetFreq != 30 ? 30 : 60;
+			String text = clock.targetFreq == 60 ? "Normal speed" : "Slow speed";
+			showFlashMessage(text, clock.sec(1.5));
+		}
+		if (keyboard.keyPressed("F")) {
+			clock.targetFreq = clock.targetFreq != 120 ? 120 : 60;
+			String text = clock.targetFreq == 60 ? "Normal speed" : "Fast speed";
+			showFlashMessage(text, clock.sec(1.5));
+		}
+	}
+
+	private GameType currentGame() {
+		return Stream.of(GameType.values()).filter(controller::isPlaying).findFirst().get();
+	}
+
+	private void toggleCamera() {
+		if (currentGameScene.isCameraEnabled()) {
+			currentGameScene.enableCamera(false);
+			stage.removeEventHandler(KeyEvent.KEY_PRESSED, currentGameScene.getCamera().get()::onKeyPressed);
+			stageContent2D.cameraOff(currentGameScene.getCamera().get());
+			showFlashMessage("Camera OFF", clock.sec(0.5));
+		} else if (currentGameScene.getCamera().isPresent()) {
+			currentGameScene.enableCamera(true);
+			stageContent2D.cameraOn(currentGameScene.getCamera().get());
+			stage.addEventHandler(KeyEvent.KEY_PRESSED, currentGameScene.getCamera().get()::onKeyPressed);
+			showFlashMessage("Camera ON", clock.sec(0.5));
+		}
 	}
 
 	@Override
@@ -147,10 +267,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void update() {
-		Platform.runLater(() -> {
-			updateFX();
-			renderFX();
-		});
+		Platform.runLater(this::updateFX);
 	}
 
 	@Override
@@ -179,123 +296,5 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	@Override
 	public Optional<PacManGameAnimations> animation() {
 		return Optional.of(renderings.get(currentGame()));
-	}
-
-	private void createGameScenes() {
-		renderings.put(MS_PACMAN, new MsPacMan_StandardRendering());
-		sounds.put(MS_PACMAN, new PacManGameSoundManager(PacManGameSounds::msPacManSoundURL));
-		gameScenes.put(MS_PACMAN, Arrays.asList(//
-				new MsPacMan_IntroScene(controller, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
-				new MsPacMan_IntermissionScene1(controller, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
-				new MsPacMan_IntermissionScene2(controller, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
-				new MsPacMan_IntermissionScene3(controller, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
-				new PlayScene(controller, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN))//
-		));
-
-		renderings.put(PACMAN, new PacMan_StandardRendering());
-		sounds.put(PACMAN, new PacManGameSoundManager(PacManGameSounds::mrPacManSoundURL));
-		gameScenes.put(PACMAN, Arrays.asList(//
-				new PacMan_IntroScene(controller, renderings.get(PACMAN), sounds.get(PACMAN)), //
-				new PacMan_IntermissionScene1(controller, renderings.get(PACMAN), sounds.get(PACMAN)), //
-				new PacMan_IntermissionScene2(controller, renderings.get(PACMAN), sounds.get(PACMAN)), //
-				new PacMan_IntermissionScene3(controller, renderings.get(PACMAN), sounds.get(PACMAN)), //
-				new PlayScene(controller, renderings.get(PACMAN), sounds.get(PACMAN))//
-		));
-	}
-
-	private void handleGlobalKeys() {
-		if (keyboard.keyPressed("F11")) {
-			stage.setFullScreen(true);
-		}
-		if (keyboard.keyPressed("C")) {
-			toggleCamera();
-		}
-		if (keyboard.keyPressed("S")) {
-			clock.targetFreq = clock.targetFreq != 30 ? 30 : 60;
-			String text = clock.targetFreq == 60 ? "Normal speed" : "Slow speed";
-			showFlashMessage(text, clock.sec(1.5));
-		}
-		if (keyboard.keyPressed("F")) {
-			clock.targetFreq = clock.targetFreq != 120 ? 120 : 60;
-			String text = clock.targetFreq == 60 ? "Normal speed" : "Fast speed";
-			showFlashMessage(text, clock.sec(1.5));
-		}
-	}
-
-	private GameType currentGame() {
-		return Stream.of(GameType.values()).filter(controller::isPlaying).findFirst().get();
-	}
-
-	private GameScene currentGameScene() {
-		GameType currentGame = currentGame();
-		switch (game.state) {
-		case INTRO:
-			return gameScenes.get(currentGame).get(0);
-		case INTERMISSION:
-			return gameScenes.get(currentGame).get(game.intermissionNumber);
-		default:
-			return gameScenes.get(currentGame).get(4);
-		}
-	}
-
-	private void onGameChangedFX(GameModel newGame) {
-		game = Objects.requireNonNull(newGame);
-		setGameScene(currentGameScene());
-	}
-
-	private void setGameScene(GameScene newGameScene) {
-		if (newGameScene.getCamera().isPresent()) {
-			ControllableCamera camera = newGameScene.getCamera().get();
-			camInfoView.textProperty().bind(camera.infoProperty);
-			if (newGameScene.isCameraEnabled()) {
-				playground.cameraOn(camera);
-			} else {
-				playground.cameraOff(camera);
-			}
-		} else if (currentGameScene != null && currentGameScene.getCamera().isPresent()) {
-			playground.cameraOff(currentGameScene.getCamera().get());
-		}
-		newGameScene.start();
-		currentGameScene = newGameScene;
-	}
-
-	private void updateFX() {
-		handleGlobalKeys();
-		GameScene sceneToDisplay = currentGameScene();
-		if (currentGameScene != sceneToDisplay) {
-			log("%s: Scene changes from %s to %s", this, currentGameScene, sceneToDisplay);
-			if (currentGameScene != null) {
-				currentGameScene.end();
-			}
-			setGameScene(sceneToDisplay);
-		}
-		currentGameScene.update();
-		flashMessageView.update();
-	}
-
-	private void renderFX() {
-		camInfoView.setVisible(currentGameScene.isCameraEnabled());
-		sceneInfoView.setText(String.format("Main scene: w=%.2f h=%.2f, Playground: w=%.2f, h=%.2f", mainScene.getWidth(),
-				mainScene.getHeight(), playground.getScene().getWidth(), playground.getScene().getHeight()));
-		try {
-			playground.drawSceneContent(currentGameScene);
-		} catch (Exception x) {
-			log("Exception occurred when rendering scene %s", currentGameScene);
-			x.printStackTrace();
-		}
-	}
-
-	private void toggleCamera() {
-		if (currentGameScene.isCameraEnabled()) {
-			currentGameScene.enableCamera(false);
-			stage.removeEventHandler(KeyEvent.KEY_PRESSED, currentGameScene.getCamera().get()::onKeyPressed);
-			playground.cameraOff(currentGameScene.getCamera().get());
-			showFlashMessage("Camera OFF", clock.sec(0.5));
-		} else if (currentGameScene.getCamera().isPresent()) {
-			currentGameScene.enableCamera(true);
-			playground.cameraOn(currentGameScene.getCamera().get());
-			stage.addEventHandler(KeyEvent.KEY_PRESSED, currentGameScene.getCamera().get()::onKeyPressed);
-			showFlashMessage("Camera ON", clock.sec(0.5));
-		}
 	}
 }
