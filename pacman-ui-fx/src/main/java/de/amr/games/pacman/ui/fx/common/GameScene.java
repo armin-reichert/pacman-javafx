@@ -9,11 +9,11 @@ import java.util.Optional;
  */
 public interface GameScene {
 
-	public void start();
+	void start();
 
-	public void update();
+	void update();
 
-	public void end();
+	void end();
 
 	default void updateCamera() {
 	}

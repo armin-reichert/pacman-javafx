@@ -15,7 +15,7 @@ import javafx.scene.transform.Scale;
  * 
  * @author Armin Reichert
  */
-public class SubScene2D {
+public class ContainerScene2D {
 
 	public static final int WIDTH_UNSCALED = 28 * TS;
 	public static final int HEIGHT_UNSCALED = 36 * TS;
@@ -25,7 +25,7 @@ public class SubScene2D {
 	private final Canvas canvas;
 	private Scale scale;
 
-	public SubScene2D(double sceneWidth, double sceneHeight) {
+	public ContainerScene2D(double sceneWidth, double sceneHeight) {
 		double canvasWidth = ASPECT_RATIO * sceneHeight;
 		double canvasHeight = sceneHeight;
 		scale = new Scale(canvasHeight / WIDTH_UNSCALED, canvasHeight / HEIGHT_UNSCALED);
@@ -60,7 +60,7 @@ public class SubScene2D {
 		}
 	}
 
-	public SubScene getScene() {
+	public SubScene getSubScene() {
 		return scene;
 	}
 
