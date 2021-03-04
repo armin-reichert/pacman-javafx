@@ -103,6 +103,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		sceneInfoView.setFont(Font.font("Sans", 12));
 		sceneInfoView.setTextAlignment(TextAlignment.CENTER);
 		StackPane.setAlignment(sceneInfoView, Pos.TOP_RIGHT);
+		sceneInfoView.setVisible(false);
 
 		playground = new Playground(initialWidth, initialHeight);
 
