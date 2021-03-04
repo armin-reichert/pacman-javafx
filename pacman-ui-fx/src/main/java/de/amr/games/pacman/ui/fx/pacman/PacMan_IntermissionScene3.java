@@ -4,7 +4,7 @@ import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.common.GameScene;
+import de.amr.games.pacman.ui.fx.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene3_Controller;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene3_Controller.Phase;
@@ -16,7 +16,7 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class PacMan_IntermissionScene3 implements GameScene {
+public class PacMan_IntermissionScene3 implements GameScene2D {
 
 	protected final PacManGameController controller;
 	protected final FXRendering rendering;

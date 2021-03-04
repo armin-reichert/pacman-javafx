@@ -6,7 +6,7 @@ import static de.amr.games.pacman.world.PacManGameWorld.t;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.common.GameScene;
+import de.amr.games.pacman.ui.fx.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import de.amr.games.pacman.ui.mspacman.MsPacMan_IntroScene_Controller;
 import de.amr.games.pacman.ui.mspacman.MsPacMan_IntroScene_Controller.Phase;
@@ -19,7 +19,7 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public class MsPacMan_IntroScene implements GameScene {
+public class MsPacMan_IntroScene implements GameScene2D {
 
 	protected final PacManGameController controller;
 	protected final FXRendering rendering;

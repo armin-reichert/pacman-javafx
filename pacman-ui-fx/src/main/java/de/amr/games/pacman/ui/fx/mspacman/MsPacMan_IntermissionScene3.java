@@ -2,7 +2,7 @@ package de.amr.games.pacman.ui.fx.mspacman;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.common.GameScene;
+import de.amr.games.pacman.ui.fx.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import de.amr.games.pacman.ui.mspacman.MsPacMan_IntermissionScene3_Controller;
 import javafx.scene.canvas.GraphicsContext;
@@ -17,7 +17,7 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class MsPacMan_IntermissionScene3 implements GameScene {
+public class MsPacMan_IntermissionScene3 implements GameScene2D {
 
 	protected final PacManGameController controller;
 	protected final FXRendering rendering;

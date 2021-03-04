@@ -23,7 +23,8 @@ import de.amr.games.pacman.ui.animation.PacManGameAnimations;
 import de.amr.games.pacman.ui.fx.common.ControllableCamera;
 import de.amr.games.pacman.ui.fx.common.FlashMessageView;
 import de.amr.games.pacman.ui.fx.common.GameScene;
-import de.amr.games.pacman.ui.fx.common.PlayScene;
+import de.amr.games.pacman.ui.fx.common.GameScene2D;
+import de.amr.games.pacman.ui.fx.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx.common.SubScene2D;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene1;
@@ -136,9 +137,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				new MsPacMan_IntermissionScene1(controller, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
 				new MsPacMan_IntermissionScene2(controller, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
 				new MsPacMan_IntermissionScene3(controller, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN)), //
-				new PlayScene(controller, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN))//
+				new PlayScene2D(controller, renderings.get(MS_PACMAN), sounds.get(MS_PACMAN))//
 		));
-	
+
 		renderings.put(PACMAN, new PacMan_StandardRendering());
 		sounds.put(PACMAN, new PacManGameSoundManager(PacManGameSounds::mrPacManSoundURL));
 		gameScenes.put(PACMAN, Arrays.asList(//
@@ -146,7 +147,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				new PacMan_IntermissionScene1(controller, renderings.get(PACMAN), sounds.get(PACMAN)), //
 				new PacMan_IntermissionScene2(controller, renderings.get(PACMAN), sounds.get(PACMAN)), //
 				new PacMan_IntermissionScene3(controller, renderings.get(PACMAN), sounds.get(PACMAN)), //
-				new PlayScene(controller, renderings.get(PACMAN), sounds.get(PACMAN))//
+				new PlayScene2D(controller, renderings.get(PACMAN), sounds.get(PACMAN))//
 		));
 	}
 
@@ -202,11 +203,13 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		camInfoView.setVisible(currentGameScene.isCameraEnabled());
 		sceneInfoView.setText(String.format("Main scene: w=%.2f h=%.2f, Playground: w=%.2f, h=%.2f", mainScene.getWidth(),
 				mainScene.getHeight(), stageContent2D.getScene().getWidth(), stageContent2D.getScene().getHeight()));
-		try {
-			stageContent2D.drawSceneContent(currentGameScene);
-		} catch (Exception x) {
-			log("Exception occurred when rendering scene %s", currentGameScene);
-			x.printStackTrace();
+		if (currentGameScene instanceof GameScene2D) {
+			try {
+				stageContent2D.drawSceneContent((GameScene2D) currentGameScene);
+			} catch (Exception x) {
+				log("Exception occurred when rendering scene %s", currentGameScene);
+				x.printStackTrace();
+			}
 		}
 	}
 

@@ -18,7 +18,7 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class PlayScene implements GameScene {
+public class PlayScene2D implements GameScene2D {
 
 	public final BooleanProperty cameraEnabledProperty = new SimpleBooleanProperty();
 
@@ -27,7 +27,7 @@ public class PlayScene implements GameScene {
 	protected final SoundManager sounds;
 	protected final ControllableCamera camera;
 
-	public PlayScene(PacManGameController controller, FXRendering rendering, SoundManager sounds) {
+	public PlayScene2D(PacManGameController controller, FXRendering rendering, SoundManager sounds) {
 		this.controller = controller;
 		this.rendering = rendering;
 		this.sounds = sounds;

@@ -51,7 +51,7 @@ public class SubScene2D {
 		return scene;
 	}
 
-	public void drawSceneContent(GameScene gameScene) {
+	public void drawSceneContent(GameScene2D gameScene) {
 		GraphicsContext g = canvas.getGraphicsContext2D();
 		g.setFill(Color.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
