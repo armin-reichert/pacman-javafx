@@ -59,7 +59,7 @@ import javafx.stage.Stage;
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
 
-	private boolean test3D = true;
+	private boolean use3D = false;
 
 	private final EnumMap<GameType, FXRendering> renderings = new EnumMap<>(GameType.class);
 	private final EnumMap<GameType, SoundManager> sounds = new EnumMap<>(GameType.class);
@@ -150,6 +150,13 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			// TODO
 			stage.removeEventHandler(KeyEvent.KEY_PRESSED, newGameScene.getCamera().get()::onKeyPressed);
 			stage.addEventHandler(KeyEvent.KEY_PRESSED, newGameScene.getCamera().get()::onKeyPressed);
+			ControllableCamera camera = scene3D.getCamera().get();
+			camera.setTranslateY(400);
+			camera.setTranslateZ(-600);
+			camera.setRotate(30);
+			scene3D.enableCamera(true);
+			camInfoView.textProperty().bind(camera.infoProperty);
+
 		} else {
 			mainScene = new Scene(new StackPane(container2D.getSubScene(), flashMessageView, camInfoView), Color.BLACK);
 			stage.setScene(mainScene);
@@ -202,7 +209,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		case INTERMISSION:
 			return gameScenes.get(currentGame).get(game.intermissionNumber);
 		default:
-			return gameScenes.get(currentGame).get(test3D ? 5 : 4);
+			return gameScenes.get(currentGame).get(use3D ? 5 : 4);
 		}
 	}
 
@@ -241,7 +248,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			stage.setFullScreen(true);
 		}
 		if (keyboard.keyPressed("F3")) {
-			test3D = !test3D;
+			use3D = !use3D;
 		}
 		if (keyboard.keyPressed("C")) {
 			toggleCamera();

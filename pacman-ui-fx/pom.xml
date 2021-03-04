@@ -11,12 +11,6 @@
     </properties>
     <dependencies>
         <dependency>
-        	<groupId>org.openjfx</groupId>
-        	<artifactId>javafx-maven-plugin</artifactId>
-        	<version>0.0.5</version>
-        	<type>maven-plugin</type>
-        </dependency>
-        <dependency>
         	<groupId>de.amr.games.pacman</groupId>
         	<artifactId>pacman-basic</artifactId>
         	<version>1.0</version>
