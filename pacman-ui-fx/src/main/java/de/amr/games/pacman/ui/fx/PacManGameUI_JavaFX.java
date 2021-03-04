@@ -66,13 +66,12 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private final PacManGameController controller;
 	private final Keyboard keyboard = new Keyboard();
 
-	private final Text sceneInfoView = new Text();
 	private final Text camInfoView = new Text();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 
 	private Stage stage;
 	private Scene mainScene;
-	private SubScene2D stageContent2D;
+	private SubScene2D content2D;
 
 	private boolean muted;
 
@@ -100,29 +99,23 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		camInfoView.setTextAlignment(TextAlignment.CENTER);
 		StackPane.setAlignment(camInfoView, Pos.TOP_LEFT);
 
-		sceneInfoView.setFill(Color.WHITE);
-		sceneInfoView.setFont(Font.font("Sans", 12));
-		sceneInfoView.setTextAlignment(TextAlignment.CENTER);
-		StackPane.setAlignment(sceneInfoView, Pos.TOP_RIGHT);
-		sceneInfoView.setVisible(false);
-
 		// assuming intial game scene is 2D
-		stageContent2D = new SubScene2D(stageContentWidth, stageContentHeight);
+		content2D = new SubScene2D(stageContentWidth, stageContentHeight);
 
-		mainScene = new Scene(new StackPane(stageContent2D.getScene(), flashMessageView, camInfoView, sceneInfoView));
+		mainScene = new Scene(new StackPane(content2D.getScene(), flashMessageView, camInfoView));
 		mainScene.setFill(Color.DARKSLATEBLUE);
 		mainScene.widthProperty().addListener((s, o, n) -> {
 			double newWidth = n.doubleValue();
 			double newHeight = newWidth / SubScene2D.ASPECT_RATIO;
 			if (newHeight < mainScene.getHeight()) {
-				stageContent2D.resize(newWidth, newHeight);
+				content2D.resize(newWidth, newHeight);
 				log("New main scene height: %f", newHeight);
 			}
 		});
 		mainScene.heightProperty().addListener((s, o, n) -> {
 			double newWidth = mainScene.getWidth();
 			double newHeight = n.doubleValue();
-			stageContent2D.resize(Math.max(newWidth, stageContentWidth), newHeight);
+			content2D.resize(Math.max(newWidth, stageContentWidth), newHeight);
 			log("New main scene height: %f", newHeight);
 		});
 
@@ -168,12 +161,12 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			ControllableCamera camera = newGameScene.getCamera().get();
 			camInfoView.textProperty().bind(camera.infoProperty);
 			if (newGameScene.isCameraEnabled()) {
-				stageContent2D.cameraOn(camera);
+				content2D.cameraOn(camera);
 			} else {
-				stageContent2D.cameraOff(camera);
+				content2D.cameraOff(camera);
 			}
 		} else if (currentGameScene != null && currentGameScene.getCamera().isPresent()) {
-			stageContent2D.cameraOff(currentGameScene.getCamera().get());
+			content2D.cameraOff(currentGameScene.getCamera().get());
 		}
 		newGameScene.start();
 		currentGameScene = newGameScene;
@@ -184,7 +177,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		setGameScene(currentGameScene());
 	}
 
-	private void updateFX() {
+	private void updateAndRenderFX() {
 		handleGlobalKeys();
 		GameScene sceneToDisplay = currentGameScene();
 		if (currentGameScene != sceneToDisplay) {
@@ -196,16 +189,12 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 		currentGameScene.update();
 		flashMessageView.update();
-		renderFX();
-	}
-
-	private void renderFX() {
 		camInfoView.setVisible(currentGameScene.isCameraEnabled());
-		sceneInfoView.setText(String.format("Main scene: w=%.2f h=%.2f, Playground: w=%.2f, h=%.2f", mainScene.getWidth(),
-				mainScene.getHeight(), stageContent2D.getScene().getWidth(), stageContent2D.getScene().getHeight()));
+
+		// 2D content is drawn explicitly:
 		if (currentGameScene instanceof GameScene2D) {
 			try {
-				stageContent2D.drawSceneContent((GameScene2D) currentGameScene);
+				content2D.draw((GameScene2D) currentGameScene);
 			} catch (Exception x) {
 				log("Exception occurred when rendering scene %s", currentGameScene);
 				x.printStackTrace();
@@ -240,11 +229,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		if (currentGameScene.isCameraEnabled()) {
 			currentGameScene.enableCamera(false);
 			stage.removeEventHandler(KeyEvent.KEY_PRESSED, currentGameScene.getCamera().get()::onKeyPressed);
-			stageContent2D.cameraOff(currentGameScene.getCamera().get());
+			content2D.cameraOff(currentGameScene.getCamera().get());
 			showFlashMessage("Camera OFF", clock.sec(0.5));
 		} else if (currentGameScene.getCamera().isPresent()) {
 			currentGameScene.enableCamera(true);
-			stageContent2D.cameraOn(currentGameScene.getCamera().get());
+			content2D.cameraOn(currentGameScene.getCamera().get());
 			stage.addEventHandler(KeyEvent.KEY_PRESSED, currentGameScene.getCamera().get()::onKeyPressed);
 			showFlashMessage("Camera ON", clock.sec(0.5));
 		}
@@ -270,7 +259,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void update() {
-		Platform.runLater(this::updateFX);
+		Platform.runLater(this::updateAndRenderFX);
 	}
 
 	@Override

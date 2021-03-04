@@ -34,6 +34,19 @@ public class SubScene2D {
 		log("SubScene2D size: w=%f h=%f, canvas size: w=%f h=%f", sceneWidth, sceneHeight, canvasWidth, canvasHeight);
 	}
 
+	public void draw(GameScene2D gameScene) {
+		GraphicsContext g = canvas.getGraphicsContext2D();
+		g.setFill(Color.BLACK);
+		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		gameScene.getCamera().ifPresent(cam -> {
+			gameScene.updateCamera();
+		});
+		g.save();
+		g.scale(scale.getX(), scale.getY());
+		gameScene.draw(g);
+		g.restore();
+	}
+
 	public void resize(double width, double height) {
 		double canvasWidth = ASPECT_RATIO * height;
 		double canvasHeight = height;
@@ -49,19 +62,6 @@ public class SubScene2D {
 
 	public SubScene getScene() {
 		return scene;
-	}
-
-	public void drawSceneContent(GameScene2D gameScene) {
-		GraphicsContext g = canvas.getGraphicsContext2D();
-		g.setFill(Color.BLACK);
-		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		gameScene.getCamera().ifPresent(cam -> {
-			gameScene.updateCamera();
-		});
-		g.save();
-		g.scale(scale.getX(), scale.getY());
-		gameScene.draw(g);
-		g.restore();
 	}
 
 	public boolean isCameraOn() {
