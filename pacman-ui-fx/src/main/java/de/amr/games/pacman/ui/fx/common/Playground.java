@@ -73,22 +73,11 @@ public class Playground {
 		return scene.getCamera() != null;
 	}
 
-	public void cameraOn(GameScene gameScene) {
-		gameScene.getCamera().ifPresent(cam -> {
-			cam.setTranslateZ(-240);
-			scene.setCamera(cam);
-			gameScene.enableCamera(true);
-		});
+	public void cameraOn(ControllableCamera cam) {
+		scene.setCamera(cam);
 	}
 
-	public void cameraOff(GameScene gameScene) {
-		gameScene.getCamera().ifPresent(cam -> {
-			cam.setTranslateX(0);
-			cam.setTranslateY(0);
-			cam.setTranslateZ(0);
-			cam.setRotate(0);
-			gameScene.enableCamera(false);
-			scene.setCamera(null);
-		});
+	public void cameraOff(ControllableCamera cam) {
+		scene.setCamera(null);
 	}
 }

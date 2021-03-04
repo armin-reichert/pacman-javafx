@@ -20,6 +20,7 @@ import de.amr.games.pacman.sound.PacManGameSounds;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations;
+import de.amr.games.pacman.ui.fx.common.ControllableCamera;
 import de.amr.games.pacman.ui.fx.common.FlashMessageView;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import de.amr.games.pacman.ui.fx.common.PlayScene;
@@ -242,12 +243,19 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private void setGameScene(GameScene newGameScene) {
+		if (newGameScene.getCamera().isPresent()) {
+			ControllableCamera camera = newGameScene.getCamera().get();
+			camInfoView.textProperty().bind(camera.infoProperty);
+			if (newGameScene.isCameraEnabled()) {
+				playground.cameraOn(camera);
+			} else {
+				playground.cameraOff(camera);
+			}
+		} else if (currentGameScene != null && currentGameScene.getCamera().isPresent()) {
+			playground.cameraOff(currentGameScene.getCamera().get());
+		}
+		newGameScene.start();
 		currentGameScene = newGameScene;
-		currentGameScene.start();
-		playground.cameraOff(currentGameScene);
-		currentGameScene.getCamera().ifPresent(cam -> {
-			camInfoView.textProperty().bind(cam.infoProperty);
-		});
 	}
 
 	private void updateFX() {
@@ -278,11 +286,13 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private void toggleCamera() {
 		if (currentGameScene.isCameraEnabled()) {
+			currentGameScene.enableCamera(false);
 			stage.removeEventHandler(KeyEvent.KEY_PRESSED, currentGameScene.getCamera().get()::onKeyPressed);
-			playground.cameraOff(currentGameScene);
+			playground.cameraOff(currentGameScene.getCamera().get());
 			showFlashMessage("Camera OFF", clock.sec(0.5));
 		} else if (currentGameScene.getCamera().isPresent()) {
-			playground.cameraOn(currentGameScene);
+			currentGameScene.enableCamera(true);
+			playground.cameraOn(currentGameScene.getCamera().get());
 			stage.addEventHandler(KeyEvent.KEY_PRESSED, currentGameScene.getCamera().get()::onKeyPressed);
 			showFlashMessage("Camera ON", clock.sec(0.5));
 		}

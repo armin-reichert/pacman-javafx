@@ -32,6 +32,7 @@ public class PlayScene implements GameScene {
 		this.rendering = rendering;
 		this.sounds = sounds;
 		camera = new ControllableCamera();
+		camera.setTranslateZ(-240);
 	}
 
 	@Override
