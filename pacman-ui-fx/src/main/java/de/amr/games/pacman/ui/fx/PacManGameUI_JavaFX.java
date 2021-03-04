@@ -333,6 +333,12 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public Optional<PacManGameAnimations> animation() {
-		return Optional.of(renderings.get(currentGame()));
+		if (currentGameScene instanceof GameScene2D) {
+			return Optional.of(renderings.get(currentGame()));
+		}
+		if (currentGameScene instanceof PlayScene3D) {
+			return Optional.of((PlayScene3D) currentGameScene);
+		}
+		return Optional.empty();
 	}
 }

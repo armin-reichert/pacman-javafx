@@ -5,15 +5,24 @@ import static de.amr.games.pacman.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.world.PacManGameWorld.TS;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.Animation;
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Ghost;
+import de.amr.games.pacman.model.common.Pac;
+import de.amr.games.pacman.ui.animation.GhostAnimations;
+import de.amr.games.pacman.ui.animation.MazeAnimations;
+import de.amr.games.pacman.ui.animation.PacManGameAnimations;
+import de.amr.games.pacman.ui.animation.PlayerAnimations;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Group;
@@ -22,11 +31,13 @@ import javafx.scene.SubScene;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 
-public class PlayScene3D implements GameScene3D {
+public class PlayScene3D
+		implements GameScene3D, PacManGameAnimations, GhostAnimations, MazeAnimations, PlayerAnimations {
 
 	public final BooleanProperty cameraEnabledProperty = new SimpleBooleanProperty();
 
@@ -36,13 +47,11 @@ public class PlayScene3D implements GameScene3D {
 	private final ControllableCamera camera;
 	private Scale scale;
 
-	private Sphere playerShape;
-	private List<Sphere> ghostShapes = new ArrayList<>();
+	private Shape3D playerShape;
+	private List<Shape3D> ghostShapes = new ArrayList<>();
 	private List<Box> maze = new ArrayList<>();
-	private List<Sphere> energizers = new ArrayList<>();
-	private List<Sphere> pellets = new ArrayList<>();
-
-	private Animation<Boolean> pulse = Animation.pulse().frameDuration(15).run();
+	private List<Shape3D> energizers = new ArrayList<>();
+	private List<Shape3D> pellets = new ArrayList<>();
 
 	public PlayScene3D(PacManGameController controller, double height) {
 		this.controller = controller;
@@ -89,7 +98,7 @@ public class PlayScene3D implements GameScene3D {
 		maze.clear();
 		game.level.world.tiles().forEach(tile -> {
 			if (game.level.world.isWall(tile)) {
-				Box wall = new Box(TS, TS, TS);
+				Box wall = new Box(TS, TS, 4);
 				wall.setMaterial(new PhongMaterial(Color.BLUE));
 //				wall.setDrawMode(DrawMode.LINE);
 				wall.setTranslateX(tile.x * TS);
@@ -110,17 +119,18 @@ public class PlayScene3D implements GameScene3D {
 		});
 
 		pellets.clear();
-		game.level.world.tiles().filter(game.level.world::isFoodTile).forEach(tile -> {
-			Sphere ball = new Sphere(1);
-			ball.setMaterial(new PhongMaterial(Color.YELLOW));
-			ball.setUserData(tile);
-			ball.setTranslateX(tile.x * TS);
-			ball.setTranslateY(tile.y * TS + 2);
-			ball.setTranslateZ(TS - 2);
-			pellets.add(ball);
-		});
+		game.level.world.tiles().filter(game.level.world::isFoodTile)
+				.filter(tile -> !game.level.world.isEnergizerTile(tile)).forEach(tile -> {
+					Sphere ball = new Sphere(1.5);
+					ball.setMaterial(new PhongMaterial(Color.YELLOW));
+					ball.setUserData(tile);
+					ball.setTranslateX(tile.x * TS);
+					ball.setTranslateY(tile.y * TS);
+					ball.setTranslateZ(-2);
+					pellets.add(ball);
+				});
 
-		playerShape = new Sphere(HTS);
+		playerShape = new Box(TS, TS, TS);
 		playerShape.setMaterial(new PhongMaterial(Color.YELLOW));
 		playerShape.setUserData(game.pac);
 
@@ -149,7 +159,7 @@ public class PlayScene3D implements GameScene3D {
 		GameModel game = controller.getGame();
 		energizers.forEach(energizer -> {
 			V2i tile = (V2i) energizer.getUserData();
-			energizer.setVisible(!game.level.isFoodRemoved(tile) && pulse.frame());
+			energizer.setVisible(!game.level.isFoodRemoved(tile) && energizerBlinking.frame());
 		});
 		pellets.forEach(pellet -> {
 			V2i tile = (V2i) pellet.getUserData();
@@ -158,24 +168,28 @@ public class PlayScene3D implements GameScene3D {
 
 		playerShape.setTranslateX(game.pac.position.x);
 		playerShape.setTranslateY(game.pac.position.y);
+
+		root.getChildren().removeAll(ghostShapes);
 		for (Ghost ghost : game.ghosts) {
-			Sphere ghostShape = ghostShapes.get(ghost.id);
-			ghostShape.setTranslateX(ghost.position.x);
-			ghostShape.setTranslateY(ghost.position.y);
-			PhongMaterial material = (PhongMaterial) ghostShape.getMaterial();
 			switch (ghost.state) {
 			case DEAD:
-				material.setDiffuseColor(Color.rgb(200, 200, 200, 0.25));
+				ghostShapes.set(ghost.id, (Shape3D) ghostReturningHome(ghost, ghost.dir).frame());
 				break;
 			case FRIGHTENED:
-				material.setDiffuseColor(Color.BLUE);
+				ghostShapes.set(ghost.id, (Shape3D) ghostFrightened(ghost, ghost.dir).frame());
 				break;
 			default:
-				material.setDiffuseColor(ghostColor(ghost.id));
+				ghostShapes.set(ghost.id, (Shape3D) ghostKicking(ghost, ghost.dir).frame());
 			}
 		}
+		for (Ghost ghost : game.ghosts) {
+			Shape3D ghostShape = ghostShapes.get(ghost.id);
+			ghostShape.setTranslateX(ghost.position.x);
+			ghostShape.setTranslateY(ghost.position.y);
+		}
+		root.getChildren().addAll(ghostShapes);
+
 		computeViewOrder();
-		pulse.animate();
 	}
 
 	private void computeViewOrder() {
@@ -186,17 +200,17 @@ public class PlayScene3D implements GameScene3D {
 		});
 		energizers.forEach(energizer -> {
 			V2i tile = (V2i) energizer.getUserData();
-			energizer.setViewOrder(-tile.y - 0.5);
+			energizer.setViewOrder(-tile.y - 0.2);
 		});
 		pellets.forEach(energizer -> {
 			V2i tile = (V2i) energizer.getUserData();
-			energizer.setViewOrder(-tile.y - 0.5);
+			energizer.setViewOrder(-tile.y - 0.2);
 		});
-		playerShape.setViewOrder(-game.pac.tile().y - 0.5);
 		for (Ghost ghost : game.ghosts) {
 			Node ghostShape = ghostShapes.get(ghost.id);
-			ghostShape.setViewOrder(-ghost.tile().y - 0.5);
+			ghostShape.setViewOrder(-ghost.tile().y - 0.3);
 		}
+		playerShape.setViewOrder(-game.pac.tile().y - 0.4);
 	}
 
 	@Override
@@ -217,4 +231,113 @@ public class PlayScene3D implements GameScene3D {
 	public Optional<ControllableCamera> getCamera() {
 		return Optional.of(camera);
 	}
+
+	// Animations
+
+	private final Animation<?> NO_ANIMATION = Animation.of(new Object());
+
+	@Override
+	public Animation<?> flapFlapping() {
+		return NO_ANIMATION;
+	}
+
+	@Override
+	public Animation<?> storkFlying() {
+		return NO_ANIMATION;
+	}
+
+	@Override
+	public GhostAnimations ghostAnimations() {
+		return this;
+	}
+
+	@Override
+	public MazeAnimations mazeAnimations() {
+		return this;
+	}
+
+	@Override
+	public PlayerAnimations playerAnimations() {
+		return this;
+	}
+
+	private Animation<Boolean> energizerBlinking = Animation.pulse().frameDuration(15).run();
+
+	@Override
+	public Animation<Boolean> energizerBlinking() {
+		return energizerBlinking;
+	}
+
+	@Override
+	public Animation<?> ghostFlashing() {
+		// TODO implement this method
+		return NO_ANIMATION;
+	}
+
+	private Map<Ghost, Animation<?>> ghostFrightenedAnimation = new HashMap<>();
+
+	@Override
+	public Animation<?> ghostFrightened(Ghost ghost, Direction dir) {
+		if (!ghostFrightenedAnimation.containsKey(ghost)) {
+			Sphere s = new Sphere(HTS);
+			s.setMaterial(new PhongMaterial(Color.BLUE));
+			ghostFrightenedAnimation.put(ghost, Animation.of(s));
+		}
+		return ghostFrightenedAnimation.get(ghost);
+	}
+
+	private Map<Ghost, Animation<?>> ghostKickingAnimation = new HashMap<>();
+
+	@Override
+	public Animation<?> ghostKicking(Ghost ghost, Direction dir) {
+		if (!ghostKickingAnimation.containsKey(ghost)) {
+			Sphere s = new Sphere(HTS);
+			s.setMaterial(new PhongMaterial(ghostColor(ghost.id)));
+			ghostKickingAnimation.put(ghost, Animation.of(s));
+		}
+		return ghostKickingAnimation.get(ghost);
+	}
+
+	private Map<Ghost, Animation<?>> ghostReturningHomeAnimation = new HashMap<>();
+
+	@Override
+	public Animation<?> ghostReturningHome(Ghost ghost, Direction dir) {
+		if (!ghostReturningHomeAnimation.containsKey(ghost)) {
+			Sphere s = new Sphere(2);
+			s.setMaterial(new PhongMaterial(Color.GRAY));
+			ghostReturningHomeAnimation.put(ghost, Animation.of(s));
+		}
+		return ghostReturningHomeAnimation.get(ghost);
+	}
+
+	@Override
+	public Animation<?> mazeFlashing(int mazeNumber) {
+		// TODO implement this method
+		return NO_ANIMATION;
+	}
+
+	@Override
+	public Stream<Animation<?>> mazeFlashings() {
+		// TODO implement this method
+		return Stream.empty();
+	}
+
+	@Override
+	public Animation<?> playerDying() {
+		// TODO implement this method
+		return NO_ANIMATION;
+	}
+
+	@Override
+	public Animation<?> playerMunching(Pac player, Direction dir) {
+		// TODO implement this method
+		return NO_ANIMATION;
+	}
+
+	@Override
+	public Animation<?> spouseMunching(Pac spouse, Direction dir) {
+		// TODO implement this method
+		return null;
+	}
+
 }
