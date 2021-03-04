@@ -11,32 +11,27 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 
 /**
- * Subscene for the playground.
+ * Subscene containing resizable canvas for displaying 2D scenes.
  * 
  * @author Armin Reichert
  */
-public class Playground {
+public class SubScene2D {
 
 	public static final int WIDTH_UNSCALED = 28 * TS;
 	public static final int HEIGHT_UNSCALED = 36 * TS;
 	public static final double ASPECT_RATIO = (double) WIDTH_UNSCALED / HEIGHT_UNSCALED;
 
 	private final SubScene scene;
-	private final StackPane root;
 	private final Canvas canvas;
 	private Scale scale;
 
-	public Playground(double width, double height) {
-		double canvasWidth = ASPECT_RATIO * height;
-		double canvasHeight = height;
-		root = new StackPane();
-		canvas = new Canvas(canvasWidth, canvasHeight);
-		root.getChildren().add(canvas);
-		scene = new SubScene(root, width, height);
+	public SubScene2D(double sceneWidth, double sceneHeight) {
+		double canvasWidth = ASPECT_RATIO * sceneHeight;
+		double canvasHeight = sceneHeight;
 		scale = new Scale(canvasHeight / WIDTH_UNSCALED, canvasHeight / HEIGHT_UNSCALED);
-
-		log("Playground got initial size: w=%f h=%f, canvas w=%f h=%f", width, height, canvas.getWidth(),
-				canvas.getHeight());
+		canvas = new Canvas(canvasWidth, canvasHeight);
+		scene = new SubScene(new StackPane(canvas), sceneWidth, sceneHeight);
+		log("SubScene2D size: w=%f h=%f, canvas size: w=%f h=%f", sceneWidth, sceneHeight, canvasWidth, canvasHeight);
 	}
 
 	public void resize(double width, double height) {
@@ -56,7 +51,7 @@ public class Playground {
 		return scene;
 	}
 
-	public void draw(GameScene gameScene) {
+	public void drawSceneContent(GameScene gameScene) {
 		GraphicsContext g = canvas.getGraphicsContext2D();
 		g.setFill(Color.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());

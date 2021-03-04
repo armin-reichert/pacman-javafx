@@ -24,7 +24,7 @@ import de.amr.games.pacman.ui.fx.common.ControllableCamera;
 import de.amr.games.pacman.ui.fx.common.FlashMessageView;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import de.amr.games.pacman.ui.fx.common.PlayScene;
-import de.amr.games.pacman.ui.fx.common.Playground;
+import de.amr.games.pacman.ui.fx.common.SubScene2D;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene1;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene2;
@@ -71,7 +71,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private Stage stage;
 	private Scene mainScene;
-	private Playground playground;
+	private SubScene2D playground;
 
 	private boolean muted;
 
@@ -79,7 +79,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		this.stage = stage;
 		this.controller = controller;
 		createGameScenes();
-		buildStage(Playground.ASPECT_RATIO * height, height);
+		buildStage(SubScene2D.ASPECT_RATIO * height, height);
 		onGameChangedFX(controller.getGame());
 		log("JavaFX UI created at clock tick %d", clock.ticksTotal);
 	}
@@ -105,7 +105,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		StackPane.setAlignment(sceneInfoView, Pos.TOP_RIGHT);
 		sceneInfoView.setVisible(false);
 
-		playground = new Playground(initialWidth, initialHeight);
+		playground = new SubScene2D(initialWidth, initialHeight);
 
 		mainScene = new Scene(new StackPane(playground.getScene(), flashMessageView, camInfoView, sceneInfoView));
 		mainScene.setFill(Color.DARKSLATEBLUE);
@@ -113,7 +113,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		mainScene.widthProperty().addListener((s, o, n) -> {
 			double newWidth = n.doubleValue();
-			double newHeight = newWidth / Playground.ASPECT_RATIO;
+			double newHeight = newWidth / SubScene2D.ASPECT_RATIO;
 			if (newHeight < mainScene.getHeight()) {
 				playground.resize(newWidth, newHeight);
 				log("New main scene height: %f", newHeight);
@@ -278,7 +278,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		sceneInfoView.setText(String.format("Main scene: w=%.2f h=%.2f, Playground: w=%.2f, h=%.2f", mainScene.getWidth(),
 				mainScene.getHeight(), playground.getScene().getWidth(), playground.getScene().getHeight()));
 		try {
-			playground.draw(currentGameScene);
+			playground.drawSceneContent(currentGameScene);
 		} catch (Exception x) {
 			log("Exception occurred when rendering scene %s", currentGameScene);
 			x.printStackTrace();
