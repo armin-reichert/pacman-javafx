@@ -225,6 +225,14 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	@Override
+	public void onEnterLevel(int levelNumber) {
+		if (currentGameScene instanceof PlayScene3D) {
+			currentGameScene.start();
+			showFlashMessage("Enter level " + game.levelNumber, clock.sec(1));
+		}
+	}
+
+	@Override
 	public void update() {
 		try {
 			handleGlobalKeys();
