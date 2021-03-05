@@ -5,6 +5,7 @@ import java.io.IOException;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameType;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -29,7 +30,13 @@ public class PacManGameAppFX extends Application {
 			controller.play(options.pacman ? GameType.PACMAN : GameType.MS_PACMAN);
 			controller.addView(new PacManGameUI_JavaFX(stage, controller, options.height));
 			controller.showViews();
-			controller.startGameLoop();
+			new AnimationTimer() {
+
+				@Override
+				public void handle(long now) {
+					controller.step();
+				}
+			}.start();
 		} catch (Exception x) {
 			x.printStackTrace();
 		}

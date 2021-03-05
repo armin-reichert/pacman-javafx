@@ -67,6 +67,7 @@ public class PlayScene3D
 		camera.setTranslateZ(-240);
 		camera.setRotationAxis(Rotate.X_AXIS);
 		camera.setRotate(30);
+		enableCamera(true);
 
 		subScene = new SubScene(root, width, height);
 		subScene.setFill(Color.BLACK);

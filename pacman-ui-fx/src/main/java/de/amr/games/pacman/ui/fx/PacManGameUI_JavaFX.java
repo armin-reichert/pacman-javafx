@@ -58,7 +58,7 @@ import javafx.stage.Stage;
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
 
-	private boolean use3D = false;
+	private boolean scenes3D_enabled = false;
 
 	private final EnumMap<GameType, FXRendering> renderings = new EnumMap<>(GameType.class);
 	private final EnumMap<GameType, SoundManager> sounds = new EnumMap<>(GameType.class);
@@ -83,7 +83,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		this.controller = controller;
 		createGameScenes(height);
 		initStage(GameScene.ASPECT_RATIO * height, height);
-		onGameChangedFX(controller.getGame());
+		onGameChanged(controller.getGame());
 		addResizeHandler(currentGameScene);
 		log("JavaFX UI created at clock tick %d", clock.ticksTotal);
 	}
@@ -98,10 +98,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private void initStage(double sceneWidth, double sceneHeight) {
 		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
 		stage.getIcons().add(new Image("/pacman/graphics/pacman.png"));
-		stage.setOnCloseRequest(e -> {
-			controller.endGameLoop();
-			Platform.exit();
-		});
+		stage.setOnCloseRequest(e -> Platform.exit());
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
 		stage.addEventHandler(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
 
@@ -111,6 +108,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		// assuming intial game scene is 2D
 		subScene2D = new SubScene2D(sceneWidth, sceneHeight);
+		mainScene = new Scene(new StackPane(subScene2D.getSubScene(), flashMessageView, infoView), sceneWidth, sceneHeight,
+				Color.BLACK);
+		stage.setScene(mainScene);
 	}
 
 	private void addResizeHandler(GameScene scene) {
@@ -149,18 +149,16 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private void setGameScene(GameScene newGameScene) {
 		if (newGameScene instanceof GameScene3D) {
 			GameScene3D scene3D = (GameScene3D) newGameScene;
-			mainScene = new Scene(new StackPane(scene3D.getSubScene(), flashMessageView, infoView), mainScene.getWidth(),
-					mainScene.getHeight(), Color.BLACK);
-			stage.setScene(mainScene);
 			scene3D.resize(mainScene.getWidth(), mainScene.getHeight());
+			mainScene.setRoot(new StackPane(scene3D.getSubScene(), flashMessageView, infoView));
 			ControllableCamera camera = scene3D.getCamera().get();
-			camera.setTranslateY(scene3D.getSubScene().getHeight());
+			camera.setTranslateY(scene3D.getSubScene().getHeight() / 2);
 			camera.setTranslateZ(-scene3D.getSubScene().getHeight());
 			camera.setRotate(30);
 			scene3D.enableCamera(true);
 		} else {
-			mainScene = new Scene(new StackPane(subScene2D.getSubScene(), flashMessageView, infoView), Color.BLACK);
-			stage.setScene(mainScene);
+			subScene2D.resize(mainScene.getWidth(), mainScene.getHeight());
+			mainScene.setRoot(new StackPane(subScene2D.getSubScene(), flashMessageView, infoView));
 			if (newGameScene.getCamera().isPresent()) {
 				ControllableCamera camera = newGameScene.getCamera().get();
 				if (newGameScene.isCameraEnabled()) {
@@ -216,38 +214,41 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		case INTERMISSION:
 			return gameScenes.get(currentGame).get(game.intermissionNumber);
 		default:
-			return gameScenes.get(currentGame).get(use3D ? 5 : 4);
+			return gameScenes.get(currentGame).get(scenes3D_enabled ? 5 : 4);
 		}
 	}
 
-	private void onGameChangedFX(GameModel newGame) {
+	@Override
+	public void onGameChanged(GameModel newGame) {
 		game = Objects.requireNonNull(newGame);
 		setGameScene(currentGameScene());
 	}
 
-	private void updateAndRenderFX() {
-		handleGlobalKeys();
-		GameScene sceneToDisplay = currentGameScene();
-		if (currentGameScene != sceneToDisplay) {
-			log("%s: Scene changes from %s to %s", this, currentGameScene, sceneToDisplay);
-			if (currentGameScene != null) {
-				currentGameScene.end();
+	@Override
+	public void update() {
+		try {
+			handleGlobalKeys();
+			GameScene sceneToDisplay = currentGameScene();
+			if (currentGameScene != sceneToDisplay) {
+				log("%s: Scene changes from %s to %s", this, currentGameScene, sceneToDisplay);
 			}
-			setGameScene(sceneToDisplay);
-		}
+			if (currentGameScene != sceneToDisplay) {
+				if (currentGameScene != null) {
+					currentGameScene.end();
+				}
+				setGameScene(sceneToDisplay);
+			}
+			currentGameScene.update();
+			flashMessageView.update();
+			updateInfoView();
 
-		currentGameScene.update();
-		flashMessageView.update();
-		updateInfoView();
-
-		// 2D content is drawn explicitly:
-		if (currentGameScene instanceof GameScene2D) {
-			try {
+			// 2D content is drawn explicitly:
+			if (currentGameScene instanceof GameScene2D) {
 				subScene2D.draw((GameScene2D) currentGameScene);
-			} catch (Exception x) {
-				log("Exception occurred when rendering scene %s", currentGameScene);
-				x.printStackTrace();
 			}
+		} catch (Exception x) {
+			log("Exception on updating/rendering scene %s", currentGameScene);
+			x.printStackTrace();
 		}
 	}
 
@@ -274,7 +275,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			stage.setFullScreen(true);
 		}
 		if (keyboard.keyPressed("F3")) {
-			use3D = !use3D;
+			scenes3D_enabled = !scenes3D_enabled;
+			showFlashMessage(String.format("3D scenes are %s", scenes3D_enabled ? "ENABLED" : "DISABLED"), clock.sec(1));
 		}
 		if (keyboard.keyPressed("C")) {
 			toggleCamera();
@@ -310,19 +312,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	@Override
-	public void onGameChanged(GameModel newGame) {
-		Platform.runLater(() -> onGameChangedFX(newGame));
-	}
-
-	@Override
 	public void reset() {
 		currentGameScene.end();
 		onGameChanged(game);
-	}
-
-	@Override
-	public void update() {
-		Platform.runLater(this::updateAndRenderFX);
 	}
 
 	@Override
