@@ -89,6 +89,13 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		log("JavaFX UI created at clock tick %d", clock.ticksTotal);
 	}
 
+	@Override
+	public void show() {
+//		stage.sizeToScene();
+		stage.centerOnScreen();
+		stage.show();
+	}
+
 	private void initStage(double sceneWidth, double sceneHeight) {
 		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
 		stage.getIcons().add(new Image("/pacman/graphics/pacman.png"));
@@ -111,7 +118,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private void addResizeHandler(GameScene scene) {
 		if (scene instanceof GameScene2D) {
 			mainScene.widthProperty().addListener((s, o, n) -> {
-				double newWidth = n.doubleValue();
+				double newWidth = (int) n.doubleValue();
 				double newHeight = newWidth / ContainerScene2D.ASPECT_RATIO;
 				if (newHeight < mainScene.getHeight()) {
 					container2D.resize(newWidth, newHeight);
@@ -119,7 +126,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				}
 			});
 			mainScene.heightProperty().addListener((s, o, n) -> {
-				double newWidth = mainScene.getWidth();
+				double newWidth = (int) mainScene.getWidth();
 				double newHeight = n.doubleValue();
 				container2D.resize(Math.max(newWidth, mainScene.getWidth()), newHeight);
 				log("New scene height: %f", newHeight);
@@ -127,13 +134,13 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		} else if (scene instanceof GameScene3D) {
 			GameScene3D scene3D = (GameScene3D) scene;
 			mainScene.widthProperty().addListener((s, o, n) -> {
-				double newWidth = n.doubleValue();
+				double newWidth = (int) n.doubleValue();
 				double newHeight = newWidth / ContainerScene2D.ASPECT_RATIO;
 				scene3D.resize(newWidth, newHeight);
 				log("New scene height: %f", newHeight);
 			});
 			mainScene.heightProperty().addListener((s, o, n) -> {
-				double newWidth = mainScene.getWidth();
+				double newWidth = (int) mainScene.getWidth();
 				double newHeight = n.doubleValue();
 				scene3D.resize(newWidth, newHeight);
 				log("New scene height: %f", newHeight);
@@ -151,8 +158,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			stage.removeEventHandler(KeyEvent.KEY_PRESSED, newGameScene.getCamera().get()::onKeyPressed);
 			stage.addEventHandler(KeyEvent.KEY_PRESSED, newGameScene.getCamera().get()::onKeyPressed);
 			ControllableCamera camera = scene3D.getCamera().get();
-			camera.setTranslateY(400);
-			camera.setTranslateZ(-600);
+			camera.setTranslateY(200);
+			camera.setTranslateZ(-550);
 			camera.setRotate(30);
 			scene3D.enableCamera(true);
 			camInfoView.textProperty().bind(camera.infoProperty);
@@ -283,13 +290,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				showFlashMessage("Camera ON", clock.sec(0.5));
 			}
 		}
-	}
-
-	@Override
-	public void show() {
-		stage.sizeToScene();
-		stage.centerOnScreen();
-		stage.show();
 	}
 
 	@Override

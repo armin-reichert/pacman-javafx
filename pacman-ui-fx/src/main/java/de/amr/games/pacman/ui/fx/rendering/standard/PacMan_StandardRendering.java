@@ -1,6 +1,5 @@
 package de.amr.games.pacman.ui.fx.rendering.standard;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -82,18 +81,6 @@ public class PacMan_StandardRendering extends StandardRendering {
 				cells(4, 1, 2, 2), //
 				cells(6, 1, 2, 2)).frameDuration(4).endless().run();
 
-		ghostsKickingAnim = new ArrayList<>(4);
-		for (int id = 0; id < 4; ++id) {
-			EnumMap<Direction, Animation<Rectangle2D>> walkingTo = new EnumMap<>(Direction.class);
-			for (Direction dir : Direction.values()) {
-				Animation<Rectangle2D> animation = Animation.of(sprite(2 * index(dir), 4 + id),
-						sprite(2 * index(dir) + 1, 4 + id));
-				animation.frameDuration(10).endless();
-				walkingTo.put(dir, animation);
-			}
-			ghostsKickingAnim.add(walkingTo);
-		}
-
 		ghostEyesAnim = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			ghostEyesAnim.put(dir, Animation.of(sprite(8 + index(dir), 5)));
@@ -129,6 +116,18 @@ public class PacMan_StandardRendering extends StandardRendering {
 	@Override
 	public Animation<?> spouseMunching(Pac spouse, Direction dir) {
 		return null;
+	}
+
+	@Override
+	protected Map<Direction, Animation<Rectangle2D>> newGhostKickingAnimation(int ghostType) {
+		EnumMap<Direction, Animation<Rectangle2D>> walkingTo = new EnumMap<>(Direction.class);
+		for (Direction dir : Direction.values()) {
+			Animation<Rectangle2D> animation = Animation.of(sprite(2 * index(dir), 4 + ghostType),
+					sprite(2 * index(dir) + 1, 4 + ghostType));
+			animation.frameDuration(4).endless();
+			walkingTo.put(dir, animation);
+		}
+		return walkingTo;
 	}
 
 	@Override

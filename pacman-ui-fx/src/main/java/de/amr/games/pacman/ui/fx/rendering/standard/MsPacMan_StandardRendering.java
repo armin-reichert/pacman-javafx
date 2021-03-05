@@ -91,18 +91,6 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 			pacManMunchingAnim.put(dir, Animation.of(s(0, 9 + d), s(1, 9 + d), s(2, 9)).frameDuration(2).endless());
 		}
 
-		ghostsKickingAnim = new ArrayList<>(4);
-		for (int ghostType = 0; ghostType < 4; ++ghostType) {
-			EnumMap<Direction, Animation<Rectangle2D>> kickingTo = new EnumMap<>(Direction.class);
-			for (Direction dir : Direction.values()) {
-				int d = index(dir);
-				Animation<Rectangle2D> kicking = Animation.of(s(2 * d, 4 + ghostType), s(2 * d + 1, 4 + ghostType));
-				kicking.frameDuration(4).endless();
-				kickingTo.put(dir, kicking);
-			}
-			ghostsKickingAnim.add(kickingTo);
-		}
-
 		ghostEyesAnim = new EnumMap<>(Direction.class);
 		Direction.stream().forEach(dir -> ghostEyesAnim.put(dir, Animation.of(s(8 + index(dir), 5))));
 
@@ -162,6 +150,18 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 		default:
 			return Color.WHITE;
 		}
+	}
+
+	@Override
+	protected Map<Direction, Animation<Rectangle2D>> newGhostKickingAnimation(int ghostType) {
+		EnumMap<Direction, Animation<Rectangle2D>> kickingTo = new EnumMap<>(Direction.class);
+		for (Direction dir : Direction.values()) {
+			int d = index(dir);
+			Animation<Rectangle2D> kicking = Animation.of(s(2 * d, 4 + ghostType), s(2 * d + 1, 4 + ghostType));
+			kicking.frameDuration(4).endless();
+			kickingTo.put(dir, kicking);
+		}
+		return kickingTo;
 	}
 
 	@Override

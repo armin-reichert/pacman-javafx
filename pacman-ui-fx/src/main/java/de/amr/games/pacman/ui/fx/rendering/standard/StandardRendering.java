@@ -11,6 +11,7 @@ import static de.amr.games.pacman.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -60,7 +61,7 @@ public abstract class StandardRendering implements FXRendering, MazeAnimations, 
 	protected Map<Direction, Animation<Rectangle2D>> pacManMunchingAnim;
 	protected Animation<Rectangle2D> playerDyingAnim;
 
-	protected List<Map<Direction, Animation<Rectangle2D>>> ghostsKickingAnim;
+	protected Map<Ghost, Map<Direction, Animation<Rectangle2D>>> ghostsKickingAnim = new HashMap<>();
 	protected Map<Direction, Animation<Rectangle2D>> ghostEyesAnim;
 	protected Animation<Rectangle2D> ghostFrightenedAnim;
 	protected Animation<Rectangle2D> ghostFlashingAnim;
@@ -181,7 +182,8 @@ public abstract class StandardRendering implements FXRendering, MazeAnimations, 
 			return ghostReturningHome(ghost, ghost.dir).animate();
 		}
 		if (ghost.is(FRIGHTENED)) {
-			return ghostFlashing().isRunning() ? ghostFlashing().frame() : ghostFrightened(ghost, ghost.dir).animate();
+			return ghostFlashing(ghost).isRunning() ? ghostFlashing(ghost).frame()
+					: ghostFrightened(ghost, ghost.dir).animate();
 		}
 		if (ghost.is(LOCKED) && frightened) {
 			return ghostFrightened(ghost, ghost.dir).animate();
@@ -347,8 +349,14 @@ public abstract class StandardRendering implements FXRendering, MazeAnimations, 
 
 	@Override
 	public Animation<Rectangle2D> ghostKicking(Ghost ghost, Direction dir) {
-		return ghostsKickingAnim.get(ghost.id).get(ensureDirection(dir));
+		if (!ghostsKickingAnim.containsKey(ghost)) {
+			Map<Direction, Animation<Rectangle2D>> kickingByDirection = newGhostKickingAnimation(ghost.id);
+			ghostsKickingAnim.put(ghost, kickingByDirection);
+		}
+		return ghostsKickingAnim.get(ghost).get(ensureDirection(dir));
 	}
+
+	protected abstract Map<Direction, Animation<Rectangle2D>> newGhostKickingAnimation(int id);
 
 	@Override
 	public Animation<Rectangle2D> ghostFrightened(Ghost ghost, Direction dir) {
@@ -356,7 +364,7 @@ public abstract class StandardRendering implements FXRendering, MazeAnimations, 
 	}
 
 	@Override
-	public Animation<Rectangle2D> ghostFlashing() {
+	public Animation<Rectangle2D> ghostFlashing(Ghost ghost) {
 		return ghostFlashingAnim;
 	}
 

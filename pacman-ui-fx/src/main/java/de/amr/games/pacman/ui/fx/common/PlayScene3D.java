@@ -18,6 +18,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Ghost;
+import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.animation.GhostAnimations;
 import de.amr.games.pacman.ui.animation.MazeAnimations;
@@ -49,7 +50,7 @@ public class PlayScene3D
 
 	private Shape3D playerShape;
 	private List<Shape3D> ghostShapes = new ArrayList<>();
-	private List<Box> maze = new ArrayList<>();
+	private List<Box> walls = new ArrayList<>();
 	private List<Shape3D> energizers = new ArrayList<>();
 	private List<Shape3D> pellets = new ArrayList<>();
 
@@ -90,21 +91,18 @@ public class PlayScene3D
 	@Override
 	public void start() {
 		log("Start PlayScene3D");
-		root.getChildren().removeIf(node -> {
-			return node == playerShape || ghostShapes.contains(node);
-		});
 		GameModel game = controller.getGame();
 
-		maze.clear();
+		walls.clear();
 		game.level.world.tiles().forEach(tile -> {
 			if (game.level.world.isWall(tile)) {
-				Box wall = new Box(TS, TS, 4);
+				Box wall = new Box(TS - 1, TS - 1, TS - 1);
 				wall.setMaterial(new PhongMaterial(Color.BLUE));
 //				wall.setDrawMode(DrawMode.LINE);
 				wall.setTranslateX(tile.x * TS);
 				wall.setTranslateY(tile.y * TS);
 				wall.setUserData(tile);
-				maze.add(wall);
+				walls.add(wall);
 			}
 		});
 
@@ -130,24 +128,19 @@ public class PlayScene3D
 					pellets.add(ball);
 				});
 
-		playerShape = new Box(TS, TS, TS);
-		playerShape.setMaterial(new PhongMaterial(Color.YELLOW));
-		playerShape.setUserData(game.pac);
+		playerShape = (Shape3D) playerMunching(game.pac, game.pac.dir).frame();
 
 		ghostShapes.clear();
 		for (Ghost ghost : game.ghosts) {
-			Sphere ghostShape = new Sphere(HTS);
-			ghostShape.setUserData(ghost);
-			ghostShape.setMaterial(new PhongMaterial(ghostColor(ghost.id)));
-			ghostShapes.add(ghostShape);
+			ghostShapes.add(ghostShape(ghost, game.pac.powerTicksLeft > 0));
 		}
 
 		root.getChildren().clear();
+		root.getChildren().addAll(walls.stream().filter(Objects::nonNull).toArray(Node[]::new));
 		root.getChildren().addAll(playerShape);
 		root.getChildren().addAll(ghostShapes);
 		root.getChildren().addAll(energizers);
 		root.getChildren().addAll(pellets);
-		root.getChildren().addAll(maze.stream().filter(Objects::nonNull).toArray(Node[]::new));
 	}
 
 	private Color ghostColor(int i) {
@@ -157,35 +150,31 @@ public class PlayScene3D
 	@Override
 	public void update() {
 		GameModel game = controller.getGame();
+
 		energizers.forEach(energizer -> {
 			V2i tile = (V2i) energizer.getUserData();
 			energizer.setVisible(!game.level.isFoodRemoved(tile) && energizerBlinking.frame());
 		});
+
 		pellets.forEach(pellet -> {
 			V2i tile = (V2i) pellet.getUserData();
 			pellet.setVisible(!game.level.isFoodRemoved(tile));
 		});
 
+		playerShape = (Shape3D) playerMunching(game.pac, game.pac.dir).frame();
 		playerShape.setTranslateX(game.pac.position.x);
 		playerShape.setTranslateY(game.pac.position.y);
+		playerShape.setTranslateZ(-HTS);
+		playerShape.setVisible(game.pac.visible);
 
 		root.getChildren().removeAll(ghostShapes);
 		for (Ghost ghost : game.ghosts) {
-			switch (ghost.state) {
-			case DEAD:
-				ghostShapes.set(ghost.id, (Shape3D) ghostReturningHome(ghost, ghost.dir).frame());
-				break;
-			case FRIGHTENED:
-				ghostShapes.set(ghost.id, (Shape3D) ghostFrightened(ghost, ghost.dir).frame());
-				break;
-			default:
-				ghostShapes.set(ghost.id, (Shape3D) ghostKicking(ghost, ghost.dir).frame());
-			}
-		}
-		for (Ghost ghost : game.ghosts) {
-			Shape3D ghostShape = ghostShapes.get(ghost.id);
-			ghostShape.setTranslateX(ghost.position.x);
-			ghostShape.setTranslateY(ghost.position.y);
+			Shape3D shape = ghostShape(ghost, game.pac.powerTicksLeft > 0);
+			ghostShapes.set(ghost.id, shape);
+			shape.setTranslateX(ghost.position.x);
+			shape.setTranslateY(ghost.position.y);
+			shape.setTranslateZ(-HTS);
+			shape.setVisible(ghost.visible);
 		}
 		root.getChildren().addAll(ghostShapes);
 
@@ -194,7 +183,7 @@ public class PlayScene3D
 
 	private void computeViewOrder() {
 		GameModel game = controller.getGame();
-		maze.stream().filter(Objects::nonNull).forEach(wall -> {
+		walls.stream().filter(Objects::nonNull).forEach(wall -> {
 			V2i tile = (V2i) wall.getUserData();
 			wall.setViewOrder(-tile.y);
 		});
@@ -268,10 +257,35 @@ public class PlayScene3D
 		return energizerBlinking;
 	}
 
+	private Shape3D ghostShape(Ghost ghost, boolean frightened) {
+//		if (ghost.bounty > 0) {
+//			return assets.numberSprites.get(ghost.bounty);
+//		}
+		if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
+			return (Shape3D) ghostReturningHome(ghost, ghost.dir).animate();
+		}
+		if (ghost.is(GhostState.FRIGHTENED)) {
+			return (Shape3D) (ghostFlashing(ghost).isRunning() ? ghostFlashing(ghost).frame()
+					: ghostFrightened(ghost, ghost.dir).animate());
+		}
+		if (ghost.is(GhostState.LOCKED) && frightened) {
+			return (Shape3D) ghostFrightened(ghost, ghost.dir).animate();
+		}
+		return (Shape3D) ghostKicking(ghost, ghost.wishDir).animate(); // Looks towards wish dir!
+	}
+
+	private Map<Ghost, Animation<?>> ghostFlashingAnimation = new HashMap<>();
+
 	@Override
-	public Animation<?> ghostFlashing() {
-		// TODO implement this method
-		return NO_ANIMATION;
+	public Animation<?> ghostFlashing(Ghost ghost) {
+		if (!ghostFlashingAnimation.containsKey(ghost)) {
+			Sphere s1 = new Sphere(HTS);
+			s1.setMaterial(new PhongMaterial(Color.BLUE));
+			Sphere s2 = new Sphere(HTS);
+			s2.setMaterial(new PhongMaterial(Color.WHITE));
+			ghostFlashingAnimation.put(ghost, Animation.of(s1, s2).frameDuration(5).endless());
+		}
+		return ghostFlashingAnimation.get(ghost);
 	}
 
 	private Map<Ghost, Animation<?>> ghostFrightenedAnimation = new HashMap<>();
@@ -281,6 +295,7 @@ public class PlayScene3D
 		if (!ghostFrightenedAnimation.containsKey(ghost)) {
 			Sphere s = new Sphere(HTS);
 			s.setMaterial(new PhongMaterial(Color.BLUE));
+			s.setUserData(ghost);
 			ghostFrightenedAnimation.put(ghost, Animation.of(s));
 		}
 		return ghostFrightenedAnimation.get(ghost);
@@ -293,6 +308,7 @@ public class PlayScene3D
 		if (!ghostKickingAnimation.containsKey(ghost)) {
 			Sphere s = new Sphere(HTS);
 			s.setMaterial(new PhongMaterial(ghostColor(ghost.id)));
+			s.setUserData(ghost);
 			ghostKickingAnimation.put(ghost, Animation.of(s));
 		}
 		return ghostKickingAnimation.get(ghost);
@@ -303,8 +319,9 @@ public class PlayScene3D
 	@Override
 	public Animation<?> ghostReturningHome(Ghost ghost, Direction dir) {
 		if (!ghostReturningHomeAnimation.containsKey(ghost)) {
-			Sphere s = new Sphere(2);
+			Sphere s = new Sphere(HTS / 2);
 			s.setMaterial(new PhongMaterial(Color.GRAY));
+			s.setUserData(ghost);
 			ghostReturningHomeAnimation.put(ghost, Animation.of(s));
 		}
 		return ghostReturningHomeAnimation.get(ghost);
@@ -328,10 +345,17 @@ public class PlayScene3D
 		return NO_ANIMATION;
 	}
 
+	private Animation<?> playerMunching;
+
 	@Override
 	public Animation<?> playerMunching(Pac player, Direction dir) {
-		// TODO implement this method
-		return NO_ANIMATION;
+		if (playerMunching == null) {
+			Box box = new Box(TS, TS, TS);
+			box.setMaterial(new PhongMaterial(Color.YELLOW));
+			box.setUserData(player);
+			playerMunching = Animation.of(box);
+		}
+		return playerMunching;
 	}
 
 	@Override
