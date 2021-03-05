@@ -1,7 +1,6 @@
 package de.amr.games.pacman.ui.fx.common;
 
 import static de.amr.games.pacman.lib.Logging.log;
-import static de.amr.games.pacman.world.PacManGameWorld.TS;
 
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
@@ -15,20 +14,16 @@ import javafx.scene.transform.Scale;
  * 
  * @author Armin Reichert
  */
-public class ContainerScene2D {
-
-	public static final int WIDTH_UNSCALED = 28 * TS;
-	public static final int HEIGHT_UNSCALED = 36 * TS;
-	public static final double ASPECT_RATIO = (double) WIDTH_UNSCALED / HEIGHT_UNSCALED;
+public class SubScene2D {
 
 	private final SubScene scene;
 	private final Canvas canvas;
 	private Scale scale;
 
-	public ContainerScene2D(double sceneWidth, double sceneHeight) {
-		double canvasWidth = ASPECT_RATIO * sceneHeight;
+	public SubScene2D(double sceneWidth, double sceneHeight) {
+		double canvasWidth = GameScene.ASPECT_RATIO * sceneHeight;
 		double canvasHeight = sceneHeight;
-		scale = new Scale(canvasHeight / WIDTH_UNSCALED, canvasHeight / HEIGHT_UNSCALED);
+		scale = new Scale(canvasHeight / GameScene.WIDTH_UNSCALED, canvasHeight / GameScene.HEIGHT_UNSCALED);
 		canvas = new Canvas(canvasWidth, canvasHeight);
 		scene = new SubScene(new StackPane(canvas), sceneWidth, sceneHeight);
 		log("SubScene2D size: w=%f h=%f, canvas size: w=%f h=%f", sceneWidth, sceneHeight, canvasWidth, canvasHeight);
@@ -48,14 +43,14 @@ public class ContainerScene2D {
 	}
 
 	public void resize(double width, double height) {
-		double canvasWidth = ASPECT_RATIO * height;
+		double canvasWidth = GameScene.ASPECT_RATIO * height;
 		double canvasHeight = height;
 		if (canvasWidth <= width && canvasHeight <= height) {
 			canvas.setWidth(canvasWidth);
 			canvas.setHeight(canvasHeight);
 			scene.setWidth(width);
 			scene.setHeight(height);
-			scale = new Scale(canvasWidth / WIDTH_UNSCALED, canvasHeight / HEIGHT_UNSCALED);
+			scale = new Scale(canvasWidth / GameScene.WIDTH_UNSCALED, canvasHeight / GameScene.HEIGHT_UNSCALED);
 			log("Playground got new size: w=%f h=%f, canvas w=%f h=%f", width, height, canvas.getWidth(), canvas.getHeight());
 		}
 	}

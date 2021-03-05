@@ -56,8 +56,8 @@ public class PlayScene3D
 
 	public PlayScene3D(PacManGameController controller, double height) {
 		this.controller = controller;
-		double width = ContainerScene2D.ASPECT_RATIO * height;
-		double s = width / ContainerScene2D.WIDTH_UNSCALED;
+		double width = GameScene.ASPECT_RATIO * height;
+		double s = width / GameScene.WIDTH_UNSCALED;
 		scale = new Scale(s, s, s);
 
 		root = new Group();
@@ -75,7 +75,7 @@ public class PlayScene3D
 
 	@Override
 	public void resize(double width, double height) {
-		double s = width / ContainerScene2D.WIDTH_UNSCALED;
+		double s = width / GameScene.WIDTH_UNSCALED;
 		scale = new Scale(s, s, s);
 		root.getTransforms().clear();
 		root.getTransforms().add(scale);

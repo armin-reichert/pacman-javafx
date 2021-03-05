@@ -20,7 +20,6 @@ import de.amr.games.pacman.sound.PacManGameSounds;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations;
-import de.amr.games.pacman.ui.fx.common.ContainerScene2D;
 import de.amr.games.pacman.ui.fx.common.ControllableCamera;
 import de.amr.games.pacman.ui.fx.common.FlashMessageView;
 import de.amr.games.pacman.ui.fx.common.GameScene;
@@ -28,6 +27,7 @@ import de.amr.games.pacman.ui.fx.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.common.GameScene3D;
 import de.amr.games.pacman.ui.fx.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx.common.PlayScene3D;
+import de.amr.games.pacman.ui.fx.common.SubScene2D;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene1;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene2;
@@ -74,7 +74,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private Stage stage;
 	private Scene mainScene;
-	private ContainerScene2D container2D;
+	private SubScene2D subScene2D;
 
 	private boolean muted;
 
@@ -82,7 +82,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		this.stage = stage;
 		this.controller = controller;
 		createGameScenes(height);
-		initStage(ContainerScene2D.ASPECT_RATIO * height, height);
+		initStage(GameScene.ASPECT_RATIO * height, height);
 		onGameChangedFX(controller.getGame());
 		addResizeHandler(currentGameScene);
 		log("JavaFX UI created at clock tick %d", clock.ticksTotal);
@@ -110,30 +110,30 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		StackPane.setAlignment(infoView, Pos.TOP_LEFT);
 
 		// assuming intial game scene is 2D
-		container2D = new ContainerScene2D(sceneWidth, sceneHeight);
+		subScene2D = new SubScene2D(sceneWidth, sceneHeight);
 	}
 
 	private void addResizeHandler(GameScene scene) {
 		if (scene instanceof GameScene2D) {
 			mainScene.widthProperty().addListener((s, o, n) -> {
 				double newWidth = (int) n.doubleValue();
-				double newHeight = newWidth / ContainerScene2D.ASPECT_RATIO;
+				double newHeight = newWidth / GameScene.ASPECT_RATIO;
 				if (newHeight < mainScene.getHeight()) {
-					container2D.resize(newWidth, newHeight);
+					subScene2D.resize(newWidth, newHeight);
 					log("New scene height: %f", newHeight);
 				}
 			});
 			mainScene.heightProperty().addListener((s, o, n) -> {
 				double newWidth = (int) mainScene.getWidth();
 				double newHeight = n.doubleValue();
-				container2D.resize(Math.max(newWidth, mainScene.getWidth()), newHeight);
+				subScene2D.resize(Math.max(newWidth, mainScene.getWidth()), newHeight);
 				log("New scene height: %f", newHeight);
 			});
 		} else if (scene instanceof GameScene3D) {
 			GameScene3D scene3D = (GameScene3D) scene;
 			mainScene.widthProperty().addListener((s, o, n) -> {
 				double newWidth = (int) n.doubleValue();
-				double newHeight = newWidth / ContainerScene2D.ASPECT_RATIO;
+				double newHeight = newWidth / GameScene.ASPECT_RATIO;
 				scene3D.resize(newWidth, newHeight);
 				log("New scene height: %f", newHeight);
 			});
@@ -159,17 +159,17 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			camera.setRotate(30);
 			scene3D.enableCamera(true);
 		} else {
-			mainScene = new Scene(new StackPane(container2D.getSubScene(), flashMessageView, infoView), Color.BLACK);
+			mainScene = new Scene(new StackPane(subScene2D.getSubScene(), flashMessageView, infoView), Color.BLACK);
 			stage.setScene(mainScene);
 			if (newGameScene.getCamera().isPresent()) {
 				ControllableCamera camera = newGameScene.getCamera().get();
 				if (newGameScene.isCameraEnabled()) {
-					container2D.cameraOn(camera);
+					subScene2D.cameraOn(camera);
 				} else {
-					container2D.cameraOff(camera);
+					subScene2D.cameraOff(camera);
 				}
 			} else if (currentGameScene != null && currentGameScene.getCamera().isPresent()) {
-				container2D.cameraOff(currentGameScene.getCamera().get());
+				subScene2D.cameraOff(currentGameScene.getCamera().get());
 			}
 		}
 		addResizeHandler(newGameScene);
@@ -243,7 +243,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		// 2D content is drawn explicitly:
 		if (currentGameScene instanceof GameScene2D) {
 			try {
-				container2D.draw((GameScene2D) currentGameScene);
+				subScene2D.draw((GameScene2D) currentGameScene);
 			} catch (Exception x) {
 				log("Exception occurred when rendering scene %s", currentGameScene);
 				x.printStackTrace();
@@ -259,8 +259,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 		text += String.format("Main scene: w=%.2f h=%.2f", mainScene.getWidth(), mainScene.getHeight());
 		if (currentGameScene instanceof GameScene2D) {
-			text += String.format("\n2D scene: w=%.2f h=%.2f", container2D.getSubScene().getWidth(),
-					container2D.getSubScene().getHeight());
+			text += String.format("\n2D scene: w=%.2f h=%.2f", subScene2D.getSubScene().getWidth(),
+					subScene2D.getSubScene().getHeight());
 		} else {
 			GameScene3D scene3D = (GameScene3D) currentGameScene;
 			text += String.format("\n3D scene: w=%.2f h=%.2f", scene3D.getSubScene().getWidth(),
@@ -299,11 +299,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		if (currentGameScene instanceof GameScene2D) {
 			if (currentGameScene.isCameraEnabled()) {
 				currentGameScene.enableCamera(false);
-				container2D.cameraOff(currentGameScene.getCamera().get());
+				subScene2D.cameraOff(currentGameScene.getCamera().get());
 				showFlashMessage("Camera OFF", clock.sec(0.5));
 			} else if (currentGameScene.getCamera().isPresent()) {
 				currentGameScene.enableCamera(true);
-				container2D.cameraOn(currentGameScene.getCamera().get());
+				subScene2D.cameraOn(currentGameScene.getCamera().get());
 				showFlashMessage("Camera ON", clock.sec(0.5));
 			}
 		}
