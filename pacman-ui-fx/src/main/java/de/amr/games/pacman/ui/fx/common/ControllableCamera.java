@@ -63,10 +63,10 @@ public class ControllableCamera extends PerspectiveCamera {
 		if (e.isShiftDown()) {
 			switch (e.getCode()) {
 			case DOWN:
-				setRotate(getRotate() - 1);
+				setRotate((360 + getRotate() - 1) % 360);
 				break;
 			case UP:
-				setRotate(getRotate() + 1);
+				setRotate((getRotate() + 1) % 360);
 				break;
 			default:
 				break;

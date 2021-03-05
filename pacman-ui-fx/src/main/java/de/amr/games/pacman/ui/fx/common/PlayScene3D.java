@@ -108,11 +108,12 @@ public class PlayScene3D
 
 		energizers.clear();
 		game.level.world.tiles().filter(game.level.world::isEnergizerTile).forEach(tile -> {
-			Sphere ball = new Sphere(HTS);
+			Sphere ball = new Sphere(HTS - 1);
 			ball.setMaterial(new PhongMaterial(Color.YELLOW));
 			ball.setUserData(tile);
 			ball.setTranslateX(tile.x * TS);
 			ball.setTranslateY(tile.y * TS);
+			ball.setTranslateZ(-HTS);
 			energizers.add(ball);
 		});
 
@@ -124,7 +125,7 @@ public class PlayScene3D
 					ball.setUserData(tile);
 					ball.setTranslateX(tile.x * TS);
 					ball.setTranslateY(tile.y * TS);
-					ball.setTranslateZ(-2);
+					ball.setTranslateZ(-HTS);
 					pellets.add(ball);
 				});
 
