@@ -16,12 +16,11 @@ public class ControllableCamera extends PerspectiveCamera {
 	public StringProperty infoProperty = new SimpleStringProperty();
 
 	public ControllableCamera() {
-		setRotationAxis(Rotate.X_AXIS);
 		// TODO is this the right way to do this?
-		translateXProperty().addListener((source, oldValue, newValue) -> infoProperty.set(getInfo()));
-		translateYProperty().addListener((source, oldValue, newValue) -> infoProperty.set(getInfo()));
-		translateZProperty().addListener((source, oldValue, newValue) -> infoProperty.set(getInfo()));
-		rotateProperty().addListener((source, oldValue, newValue) -> infoProperty.set(getInfo()));
+		translateXProperty().addListener((s, o, n) -> infoProperty.set(getInfo()));
+		translateYProperty().addListener((s, o, n) -> infoProperty.set(getInfo()));
+		translateZProperty().addListener((s, o, n) -> infoProperty.set(getInfo()));
+		rotateProperty().addListener((s, o, n) -> infoProperty.set(getInfo()));
 	}
 
 	public String getInfo() {
@@ -29,7 +28,7 @@ public class ControllableCamera extends PerspectiveCamera {
 				getRotate());
 	}
 
-	public void onKeyPressed(KeyEvent e) {
+	public void handleKeyEvent(KeyEvent e) {
 		if (e.isControlDown()) {
 			switch (e.getCode()) {
 			case DIGIT0:
@@ -63,10 +62,20 @@ public class ControllableCamera extends PerspectiveCamera {
 		if (e.isShiftDown()) {
 			switch (e.getCode()) {
 			case DOWN:
+				setRotationAxis(Rotate.X_AXIS);
 				setRotate((360 + getRotate() - 1) % 360);
 				break;
 			case UP:
+				setRotationAxis(Rotate.X_AXIS);
 				setRotate((getRotate() + 1) % 360);
+				break;
+			case LEFT:
+				setRotationAxis(Rotate.Y_AXIS);
+				setRotate((360 + getRotate() - 1) % 360);
+				break;
+			case RIGHT:
+				setRotationAxis(Rotate.Y_AXIS);
+				setRotate((360 + getRotate() + 1) % 360);
 				break;
 			default:
 				break;

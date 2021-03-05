@@ -153,9 +153,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 					mainScene.getHeight(), Color.BLACK);
 			stage.setScene(mainScene);
 			scene3D.resize(mainScene.getWidth(), mainScene.getHeight());
-			// TODO is this necessary to avoid double entries?
-			stage.removeEventHandler(KeyEvent.KEY_PRESSED, newGameScene.getCamera().get()::onKeyPressed);
-			stage.addEventHandler(KeyEvent.KEY_PRESSED, newGameScene.getCamera().get()::onKeyPressed);
 			ControllableCamera camera = scene3D.getCamera().get();
 			camera.setTranslateY(scene3D.getSubScene().getHeight());
 			camera.setTranslateZ(-scene3D.getSubScene().getHeight());
@@ -176,6 +173,13 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			}
 		}
 		addResizeHandler(newGameScene);
+
+		if (currentGameScene != null) {
+			currentGameScene.getCamera()
+					.ifPresent(camera -> stage.removeEventHandler(KeyEvent.KEY_PRESSED, camera::handleKeyEvent));
+		}
+		newGameScene.getCamera().ifPresent(camera -> stage.addEventHandler(KeyEvent.KEY_PRESSED, camera::handleKeyEvent));
+
 		newGameScene.start();
 		currentGameScene = newGameScene;
 	}
@@ -295,14 +299,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		if (currentGameScene instanceof GameScene2D) {
 			if (currentGameScene.isCameraEnabled()) {
 				currentGameScene.enableCamera(false);
-				stage.removeEventHandler(KeyEvent.KEY_PRESSED, currentGameScene.getCamera().get()::onKeyPressed);
 				container2D.cameraOff(currentGameScene.getCamera().get());
 				showFlashMessage("Camera OFF", clock.sec(0.5));
 			} else if (currentGameScene.getCamera().isPresent()) {
 				currentGameScene.enableCamera(true);
 				container2D.cameraOn(currentGameScene.getCamera().get());
-				stage.removeEventHandler(KeyEvent.KEY_PRESSED, currentGameScene.getCamera().get()::onKeyPressed);
-				stage.addEventHandler(KeyEvent.KEY_PRESSED, currentGameScene.getCamera().get()::onKeyPressed);
 				showFlashMessage("Camera ON", clock.sec(0.5));
 			}
 		}
