@@ -155,9 +155,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				}
 			});
 			mainScene.heightProperty().addListener((s, o, n) -> {
-				double newWidth = (int) mainScene.getWidth();
 				double newHeight = n.doubleValue();
-				subScene2DContainer.resize(Math.max(newWidth, mainScene.getWidth()), newHeight);
+				double newWidth = newHeight * GameScene.ASPECT_RATIO;
+				subScene2DContainer.resize(newWidth, newHeight);
 				log("New scene height: %f", newHeight);
 			});
 		} else if (scene instanceof GameScene3D) {
@@ -169,8 +169,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				log("New scene height: %f", newHeight);
 			});
 			mainScene.heightProperty().addListener((s, o, n) -> {
-				double newWidth = (int) mainScene.getWidth();
 				double newHeight = n.doubleValue();
+				double newWidth = newHeight * GameScene.ASPECT_RATIO;
 				scene3D.resize(newWidth, newHeight);
 				log("New scene height: %f", newHeight);
 			});
