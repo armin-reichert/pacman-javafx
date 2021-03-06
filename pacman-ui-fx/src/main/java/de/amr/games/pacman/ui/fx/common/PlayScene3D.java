@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.PacManGameController;
@@ -24,6 +23,7 @@ import de.amr.games.pacman.ui.animation.MazeAnimations;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations;
 import de.amr.games.pacman.ui.animation.PlayerAnimations;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_Constants;
+import de.amr.games.pacman.world.PacManGameWorld;
 import javafx.scene.Camera;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -49,7 +49,7 @@ public class PlayScene3D
 
 	private Shape3D playerShape;
 	private List<Shape3D> ghostShapes = new ArrayList<>();
-	private List<Box> walls = new ArrayList<>();
+	private Map<V2i, Box> walls = new HashMap<>();
 	private List<Shape3D> energizers = new ArrayList<>();
 	private List<Shape3D> pellets = new ArrayList<>();
 
@@ -90,32 +90,16 @@ public class PlayScene3D
 	@Override
 	public void start() {
 		GameModel game = controller.getGame();
-
-		walls.clear();
-		game.level.world.tiles().forEach(tile -> {
-			if (game.level.world.isWall(tile)) {
-				Box wall = new Box(TS - 1, TS - 1, TS - 1);
-				if (controller.isPlaying(GameType.PACMAN)) {
-					wall.setMaterial(new PhongMaterial(Color.BLUE));
-				} else {
-					wall.setMaterial(new PhongMaterial(MsPacMan_Constants.getMazeWallColor(game.level.mazeNumber - 1)));
-				}
-//				wall.setDrawMode(DrawMode.LINE);
-				wall.setTranslateX(tile.x * TS);
-				wall.setTranslateY(tile.y * TS);
-				wall.setUserData(tile);
-				walls.add(wall);
-			}
-		});
+		buildWalls(game);
 
 		energizers.clear();
 		game.level.world.tiles().filter(game.level.world::isEnergizerTile).forEach(tile -> {
-			Sphere ball = new Sphere(HTS - 1);
+			Sphere ball = new Sphere(HTS - 2);
 			ball.setMaterial(new PhongMaterial(Color.YELLOW));
 			ball.setUserData(tile);
 			ball.setTranslateX(tile.x * TS);
 			ball.setTranslateY(tile.y * TS);
-			ball.setTranslateZ(-HTS);
+			ball.setTranslateZ(-1);
 			energizers.add(ball);
 		});
 
@@ -127,7 +111,7 @@ public class PlayScene3D
 					ball.setUserData(tile);
 					ball.setTranslateX(tile.x * TS);
 					ball.setTranslateY(tile.y * TS);
-					ball.setTranslateZ(-HTS);
+					ball.setTranslateZ(-1.5);
 					pellets.add(ball);
 				});
 
@@ -139,11 +123,31 @@ public class PlayScene3D
 		}
 
 		root.getChildren().clear();
-		root.getChildren().addAll(walls.stream().filter(Objects::nonNull).toArray(Node[]::new));
+		root.getChildren().addAll(walls.values());
 		root.getChildren().addAll(playerShape);
 		root.getChildren().addAll(ghostShapes);
 		root.getChildren().addAll(energizers);
 		root.getChildren().addAll(pellets);
+	}
+
+	private void buildWalls(GameModel game) {
+		PacManGameWorld world = game.level.world;
+		walls.clear();
+		world.tiles().forEach(tile -> {
+			if (world.isWall(tile)) {
+				Box wall = new Box(TS - 2, TS - 2, TS - 2);
+				if (controller.isPlaying(GameType.PACMAN)) {
+					wall.setMaterial(new PhongMaterial(Color.BLUE));
+				} else {
+					wall.setMaterial(new PhongMaterial(MsPacMan_Constants.getMazeWallColor(game.level.mazeNumber - 1)));
+				}
+//				wall.setDrawMode(DrawMode.LINE);
+				wall.setTranslateX(tile.x * TS);
+				wall.setTranslateY(tile.y * TS);
+				wall.setUserData(tile);
+				walls.put(tile, wall);
+			}
+		});
 	}
 
 	private Color ghostColor(int i) {
@@ -186,23 +190,23 @@ public class PlayScene3D
 
 	private void computeViewOrder() {
 		GameModel game = controller.getGame();
-		walls.stream().filter(Objects::nonNull).forEach(wall -> {
+		walls.values().forEach(wall -> {
 			V2i tile = (V2i) wall.getUserData();
-			wall.setViewOrder(-tile.y);
+			wall.setViewOrder(-tile.y * TS);
 		});
 		energizers.forEach(energizer -> {
 			V2i tile = (V2i) energizer.getUserData();
-			energizer.setViewOrder(-tile.y - 0.2);
+			energizer.setViewOrder(-tile.y * TS - 0.1);
 		});
 		pellets.forEach(energizer -> {
 			V2i tile = (V2i) energizer.getUserData();
-			energizer.setViewOrder(-tile.y - 0.2);
+			energizer.setViewOrder(-tile.y * TS - 0.1);
 		});
 		for (Ghost ghost : game.ghosts) {
 			Node ghostShape = ghostShapes.get(ghost.id);
-			ghostShape.setViewOrder(-ghost.tile().y - 0.3);
+			ghostShape.setViewOrder(-ghost.position.y - 0.5);
 		}
-		playerShape.setViewOrder(-game.pac.tile().y - 0.4);
+		playerShape.setViewOrder(-game.pac.position.y - 0.5);
 	}
 
 	@Override
@@ -362,5 +366,4 @@ public class PlayScene3D
 		// TODO implement this method
 		return null;
 	}
-
 }
