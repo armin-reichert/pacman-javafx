@@ -69,14 +69,6 @@ public class ControllableCamera extends PerspectiveCamera {
 				setRotationAxis(Rotate.X_AXIS);
 				setRotate((getRotate() + 1) % 360);
 				break;
-			case LEFT:
-				setRotationAxis(Rotate.Y_AXIS);
-				setRotate((360 + getRotate() - 1) % 360);
-				break;
-			case RIGHT:
-				setRotationAxis(Rotate.Y_AXIS);
-				setRotate((360 + getRotate() + 1) % 360);
-				break;
 			default:
 				break;
 			}

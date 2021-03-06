@@ -17,6 +17,7 @@ import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.GameType;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.model.common.Pac;
@@ -24,6 +25,7 @@ import de.amr.games.pacman.ui.animation.GhostAnimations;
 import de.amr.games.pacman.ui.animation.MazeAnimations;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations;
 import de.amr.games.pacman.ui.animation.PlayerAnimations;
+import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_Constants;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Group;
@@ -32,6 +34,7 @@ import javafx.scene.SubScene;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
@@ -98,7 +101,11 @@ public class PlayScene3D
 		game.level.world.tiles().forEach(tile -> {
 			if (game.level.world.isWall(tile)) {
 				Box wall = new Box(TS - 1, TS - 1, TS - 1);
-				wall.setMaterial(new PhongMaterial(Color.BLUE));
+				if (controller.isPlaying(GameType.PACMAN)) {
+					wall.setMaterial(new PhongMaterial(Color.BLUE));
+				} else {
+					wall.setMaterial(new PhongMaterial(MsPacMan_Constants.getMazeWallColor(game.level.mazeNumber - 1)));
+				}
 //				wall.setDrawMode(DrawMode.LINE);
 				wall.setTranslateX(tile.x * TS);
 				wall.setTranslateY(tile.y * TS);
@@ -264,7 +271,13 @@ public class PlayScene3D
 //			return assets.numberSprites.get(ghost.bounty);
 //		}
 		if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
-			return (Shape3D) ghostReturningHome(ghost, ghost.dir).animate();
+			Shape3D shape = (Shape3D) ghostReturningHome(ghost, ghost.dir).animate();
+			if (ghost.dir == Direction.DOWN || ghost.dir == Direction.UP) {
+				shape.setRotate(0);
+			} else {
+				shape.setRotate(90);
+			}
+			return shape;
 		}
 		if (ghost.is(GhostState.FRIGHTENED)) {
 			return (Shape3D) (ghostFlashing(ghost).isRunning() ? ghostFlashing(ghost).frame()
@@ -321,8 +334,8 @@ public class PlayScene3D
 	@Override
 	public Animation<?> ghostReturningHome(Ghost ghost, Direction dir) {
 		if (!ghostReturningHomeAnimation.containsKey(ghost)) {
-			Sphere s = new Sphere(HTS / 2);
-			s.setMaterial(new PhongMaterial(Color.GRAY));
+			Cylinder s = new Cylinder(2, TS);
+			s.setMaterial(new PhongMaterial(ghostColor(ghost.id)));
 			s.setUserData(ghost);
 			ghostReturningHomeAnimation.put(ghost, Animation.of(s));
 		}
