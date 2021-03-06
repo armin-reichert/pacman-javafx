@@ -93,7 +93,7 @@ public class PlayScene3D
 
 		energizers.clear();
 		game.level.world.tiles().filter(game.level.world::isEnergizerTile).forEach(tile -> {
-			Sphere ball = new Sphere(HTS - 2);
+			Sphere ball = new Sphere(HTS);
 			ball.setMaterial(new PhongMaterial(Color.YELLOW));
 			ball.setUserData(tile);
 			ball.setTranslateX(tile.x * TS);
