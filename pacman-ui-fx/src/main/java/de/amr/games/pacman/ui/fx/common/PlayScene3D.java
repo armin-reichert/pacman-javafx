@@ -48,7 +48,7 @@ public class PlayScene3D
 
 	private Node playerShape;
 	private List<Node> ghostShapes = new ArrayList<>();
-	private Map<V2i, Box> walls = new HashMap<>();
+	private Map<V2i, Node> walls = new HashMap<>();
 	private List<Node> energizers = new ArrayList<>();
 	private List<Node> pellets = new ArrayList<>();
 
@@ -89,48 +89,8 @@ public class PlayScene3D
 	@Override
 	public void start() {
 		GameModel game = controller.getGame();
-		buildWalls(game);
-
-		energizers.clear();
-		game.level.world.tiles().filter(game.level.world::isEnergizerTile).forEach(tile -> {
-			Sphere ball = new Sphere(HTS);
-			ball.setMaterial(new PhongMaterial(Color.YELLOW));
-			ball.setUserData(tile);
-			ball.setTranslateX(tile.x * TS);
-			ball.setTranslateY(tile.y * TS);
-			ball.setTranslateZ(-1);
-			energizers.add(ball);
-		});
-
-		pellets.clear();
-		game.level.world.tiles().filter(game.level.world::isFoodTile)
-				.filter(tile -> !game.level.world.isEnergizerTile(tile)).forEach(tile -> {
-					Sphere ball = new Sphere(1.5);
-					ball.setMaterial(new PhongMaterial(Color.YELLOW));
-					ball.setUserData(tile);
-					ball.setTranslateX(tile.x * TS);
-					ball.setTranslateY(tile.y * TS);
-					ball.setTranslateZ(-1.5);
-					pellets.add(ball);
-				});
-
-		playerShape = (Node) playerMunching(game.pac, game.pac.dir).frame();
-
-		ghostShapes.clear();
-		for (Ghost ghost : game.ghosts) {
-			ghostShapes.add(ghostShape(ghost, game.pac.powerTicksLeft > 0));
-		}
-
-		root.getChildren().clear();
-		root.getChildren().addAll(walls.values());
-		root.getChildren().addAll(playerShape);
-		root.getChildren().addAll(ghostShapes);
-		root.getChildren().addAll(energizers);
-		root.getChildren().addAll(pellets);
-	}
-
-	private void buildWalls(GameModel game) {
 		PacManGameWorld world = game.level.world;
+
 		walls.clear();
 		world.tiles().forEach(tile -> {
 			if (world.isWall(tile)) {
@@ -147,6 +107,42 @@ public class PlayScene3D
 				walls.put(tile, wall);
 			}
 		});
+
+		energizers.clear();
+		world.tiles().filter(world::isEnergizerTile).forEach(tile -> {
+			Sphere ball = new Sphere(HTS);
+			ball.setMaterial(new PhongMaterial(Color.YELLOW));
+			ball.setUserData(tile);
+			ball.setTranslateX(tile.x * TS);
+			ball.setTranslateY(tile.y * TS);
+			ball.setTranslateZ(-1);
+			energizers.add(ball);
+		});
+
+		pellets.clear();
+		world.tiles().filter(world::isFoodTile).filter(tile -> !world.isEnergizerTile(tile)).forEach(tile -> {
+			Sphere ball = new Sphere(1.5);
+			ball.setMaterial(new PhongMaterial(Color.YELLOW));
+			ball.setUserData(tile);
+			ball.setTranslateX(tile.x * TS);
+			ball.setTranslateY(tile.y * TS);
+			ball.setTranslateZ(-1.5);
+			pellets.add(ball);
+		});
+
+		playerShape = (Node) playerMunching(game.pac, game.pac.dir).frame();
+
+		ghostShapes.clear();
+		for (Ghost ghost : game.ghosts) {
+			ghostShapes.add(ghostShape(ghost, game.pac.powerTicksLeft > 0));
+		}
+
+		root.getChildren().clear();
+		root.getChildren().addAll(walls.values());
+		root.getChildren().addAll(playerShape);
+		root.getChildren().addAll(ghostShapes);
+		root.getChildren().addAll(energizers);
+		root.getChildren().addAll(pellets);
 	}
 
 	private Color ghostColor(int i) {
@@ -197,9 +193,9 @@ public class PlayScene3D
 			V2i tile = (V2i) energizer.getUserData();
 			energizer.setViewOrder(-tile.y * TS - 0.1);
 		});
-		pellets.forEach(energizer -> {
-			V2i tile = (V2i) energizer.getUserData();
-			energizer.setViewOrder(-tile.y * TS - 0.1);
+		pellets.forEach(pellet -> {
+			V2i tile = (V2i) pellet.getUserData();
+			pellet.setViewOrder(-tile.y * TS - 0.1);
 		});
 		for (Ghost ghost : game.ghosts) {
 			Node ghostShape = ghostShapes.get(ghost.id);
@@ -285,7 +281,7 @@ public class PlayScene3D
 			s1.setMaterial(new PhongMaterial(Color.BLUE));
 			Sphere s2 = new Sphere(HTS);
 			s2.setMaterial(new PhongMaterial(Color.WHITE));
-			ghostFlashingAnimation.put(ghost, Animation.of(s1, s2).frameDuration(5).endless());
+			ghostFlashingAnimation.put(ghost, Animation.of(s1, s2).frameDuration(10).endless());
 		}
 		return ghostFlashingAnimation.get(ghost);
 	}
