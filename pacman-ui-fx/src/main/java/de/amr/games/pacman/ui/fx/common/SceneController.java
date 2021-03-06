@@ -8,6 +8,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameModel;
@@ -44,25 +45,19 @@ public class SceneController {
 		renderings.put(PACMAN, new PacMan_StandardRendering());
 		sounds.put(PACMAN, new PacManGameSoundManager(PacManGameSounds::mrPacManSoundURL));
 
-		pacManSceneClasses.put(PacManGameState.CHANGING_LEVEL, Arrays.asList(PlayScene2D.class, PlayScene3D.class));
-		pacManSceneClasses.put(PacManGameState.GAME_OVER, Arrays.asList(PlayScene2D.class, PlayScene3D.class));
-		pacManSceneClasses.put(PacManGameState.GHOST_DYING, Arrays.asList(PlayScene2D.class, PlayScene3D.class));
-		pacManSceneClasses.put(PacManGameState.HUNTING, Arrays.asList(PlayScene2D.class, PlayScene3D.class));
 		pacManSceneClasses.put(PacManGameState.INTERMISSION, Arrays.asList(PacMan_IntermissionScene1.class,
 				PacMan_IntermissionScene2.class, PacMan_IntermissionScene3.class));
 		pacManSceneClasses.put(PacManGameState.INTRO, Arrays.asList(PacMan_IntroScene.class));
-		pacManSceneClasses.put(PacManGameState.PACMAN_DYING, Arrays.asList(PlayScene2D.class, PlayScene3D.class));
-		pacManSceneClasses.put(PacManGameState.READY, Arrays.asList(PlayScene2D.class, PlayScene3D.class));
+		Stream.of(PacManGameState.values())
+				.filter(state -> state != PacManGameState.INTRO && state != PacManGameState.INTERMISSION)
+				.forEach(state -> pacManSceneClasses.put(state, Arrays.asList(PlayScene2D.class, PlayScene3D.class)));
 
-		msPacManSceneClasses.put(PacManGameState.CHANGING_LEVEL, Arrays.asList(PlayScene2D.class, PlayScene3D.class));
-		msPacManSceneClasses.put(PacManGameState.GAME_OVER, Arrays.asList(PlayScene2D.class, PlayScene3D.class));
-		msPacManSceneClasses.put(PacManGameState.GHOST_DYING, Arrays.asList(PlayScene2D.class, PlayScene3D.class));
-		msPacManSceneClasses.put(PacManGameState.HUNTING, Arrays.asList(PlayScene2D.class, PlayScene3D.class));
 		msPacManSceneClasses.put(PacManGameState.INTERMISSION, Arrays.asList(MsPacMan_IntermissionScene1.class,
 				MsPacMan_IntermissionScene2.class, MsPacMan_IntermissionScene3.class));
 		msPacManSceneClasses.put(PacManGameState.INTRO, Arrays.asList(MsPacMan_IntroScene.class));
-		msPacManSceneClasses.put(PacManGameState.PACMAN_DYING, Arrays.asList(PlayScene2D.class, PlayScene3D.class));
-		msPacManSceneClasses.put(PacManGameState.READY, Arrays.asList(PlayScene2D.class, PlayScene3D.class));
+		Stream.of(PacManGameState.values())
+				.filter(state -> state != PacManGameState.INTRO && state != PacManGameState.INTERMISSION)
+				.forEach(state -> msPacManSceneClasses.put(state, Arrays.asList(PlayScene2D.class, PlayScene3D.class)));
 	}
 
 	public boolean isSuitableScene(PacManGameController controller, GameScene scene) {
