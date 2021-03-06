@@ -33,7 +33,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
-import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
@@ -47,11 +46,11 @@ public class PlayScene3D
 	private final PerspectiveCamera camera;
 	private Scale scale;
 
-	private Shape3D playerShape;
-	private List<Shape3D> ghostShapes = new ArrayList<>();
+	private Node playerShape;
+	private List<Node> ghostShapes = new ArrayList<>();
 	private Map<V2i, Box> walls = new HashMap<>();
-	private List<Shape3D> energizers = new ArrayList<>();
-	private List<Shape3D> pellets = new ArrayList<>();
+	private List<Node> energizers = new ArrayList<>();
+	private List<Node> pellets = new ArrayList<>();
 
 	public PlayScene3D(PacManGameController controller, double height) {
 		this.controller = controller;
@@ -115,7 +114,7 @@ public class PlayScene3D
 					pellets.add(ball);
 				});
 
-		playerShape = (Shape3D) playerMunching(game.pac, game.pac.dir).frame();
+		playerShape = (Node) playerMunching(game.pac, game.pac.dir).frame();
 
 		ghostShapes.clear();
 		for (Ghost ghost : game.ghosts) {
@@ -168,7 +167,7 @@ public class PlayScene3D
 			pellet.setVisible(!game.level.isFoodRemoved(tile));
 		});
 
-		playerShape = (Shape3D) playerMunching(game.pac, game.pac.dir).frame();
+		playerShape = (Node) playerMunching(game.pac, game.pac.dir).frame();
 		playerShape.setTranslateX(game.pac.position.x);
 		playerShape.setTranslateY(game.pac.position.y);
 		playerShape.setTranslateZ(-HTS);
@@ -176,7 +175,7 @@ public class PlayScene3D
 
 		root.getChildren().removeAll(ghostShapes);
 		for (Ghost ghost : game.ghosts) {
-			Shape3D shape = ghostShape(ghost, game.pac.powerTicksLeft > 0);
+			Node shape = ghostShape(ghost, game.pac.powerTicksLeft > 0);
 			ghostShapes.set(ghost.id, shape);
 			shape.setTranslateX(ghost.position.x);
 			shape.setTranslateY(ghost.position.y);
@@ -254,12 +253,12 @@ public class PlayScene3D
 		return energizerBlinking;
 	}
 
-	private Shape3D ghostShape(Ghost ghost, boolean frightened) {
+	private Node ghostShape(Ghost ghost, boolean frightened) {
 //		if (ghost.bounty > 0) {
 //			return assets.numberSprites.get(ghost.bounty);
 //		}
 		if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
-			Shape3D shape = (Shape3D) ghostReturningHome(ghost, ghost.dir).animate();
+			Node shape = (Node) ghostReturningHome(ghost, ghost.dir).animate();
 			if (ghost.dir == Direction.DOWN || ghost.dir == Direction.UP) {
 				shape.setRotate(0);
 			} else {
@@ -268,13 +267,13 @@ public class PlayScene3D
 			return shape;
 		}
 		if (ghost.is(GhostState.FRIGHTENED)) {
-			return (Shape3D) (ghostFlashing(ghost).isRunning() ? ghostFlashing(ghost).frame()
+			return (Node) (ghostFlashing(ghost).isRunning() ? ghostFlashing(ghost).frame()
 					: ghostFrightened(ghost, ghost.dir).animate());
 		}
 		if (ghost.is(GhostState.LOCKED) && frightened) {
-			return (Shape3D) ghostFrightened(ghost, ghost.dir).animate();
+			return (Node) ghostFrightened(ghost, ghost.dir).animate();
 		}
-		return (Shape3D) ghostKicking(ghost, ghost.wishDir).animate(); // Looks towards wish dir!
+		return (Node) ghostKicking(ghost, ghost.wishDir).animate(); // Looks towards wish dir!
 	}
 
 	private Map<Ghost, Animation<?>> ghostFlashingAnimation = new HashMap<>();
