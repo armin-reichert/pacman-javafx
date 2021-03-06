@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameType;
+import de.amr.games.pacman.model.common.PacManGameState;
 import de.amr.games.pacman.sound.PacManGameSoundManager;
 import de.amr.games.pacman.sound.PacManGameSounds;
 import de.amr.games.pacman.sound.SoundManager;
@@ -300,8 +301,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	@Override
-	public void onEnterLevel(int levelNumber) {
-		if (currentGameScene instanceof PlayScene3D) {
+	public void onGameStateChanged(PacManGameState from, PacManGameState to) {
+		if (from == PacManGameState.CHANGING_LEVEL) {
 			currentGameScene.start();
 			showFlashMessage("Enter level " + game.levelNumber, clock.sec(1));
 		}
