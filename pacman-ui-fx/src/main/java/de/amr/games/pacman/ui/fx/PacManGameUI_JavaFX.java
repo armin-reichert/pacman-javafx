@@ -6,6 +6,8 @@ import static de.amr.games.pacman.model.common.GameType.MS_PACMAN;
 import static de.amr.games.pacman.model.common.GameType.PACMAN;
 
 import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -63,6 +65,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private final EnumMap<GameType, FXRendering> renderings = new EnumMap<>(GameType.class);
 	private final EnumMap<GameType, SoundManager> sounds = new EnumMap<>(GameType.class);
+	private final Map<GameScene, PacManGameState> sceneIsUsableInGameState = new HashMap<>();
 
 	private GameModel game;
 	private GameScene currentGameScene;
@@ -78,20 +81,26 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private final SceneContainer2D subScene2DContainer;
 
 	private BooleanProperty scenes3DProperty = new SimpleBooleanProperty(true);
-	private BooleanProperty infoVisibleProperty = new SimpleBooleanProperty(false);
+	private BooleanProperty infoVisibleProperty = new SimpleBooleanProperty(true);
 	private boolean muted;
+
+	private boolean sceneMustChange;
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController controller, double height) {
 		this.controller = controller;
 		double width = GameScene.ASPECT_RATIO * height;
 		game = controller.getGame();
+
 		renderings.put(MS_PACMAN, new MsPacMan_StandardRendering());
 		renderings.put(PACMAN, new PacMan_StandardRendering());
 		sounds.put(MS_PACMAN, new PacManGameSoundManager(PacManGameSounds::msPacManSoundURL));
 		sounds.put(PACMAN, new PacManGameSoundManager(PacManGameSounds::mrPacManSoundURL));
+
 		subScene2DContainer = new SceneContainer2D(width, height);
 		mainSceneRoot.getChildren().addAll(flashMessageView, infoView);
 		mainScene = new Scene(mainSceneRoot, width, height, Color.BLACK);
+		sceneMustChange = true;
+
 		stage.setScene(mainScene);
 		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
 		stage.getIcons().add(new Image("/pacman/graphics/pacman.png"));
@@ -111,6 +120,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 					scenes3DProperty.set(!scenes3DProperty.get());
 					String message = String.format("3D scenes %s", scenes3DProperty.get() ? "ON" : "OFF");
 					showFlashMessage(message, clock.sec(1));
+					sceneMustChange = true;
 				}
 				break;
 			case C:
@@ -129,14 +139,13 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		});
 
 		infoView.setFill(Color.WHITE);
-		infoView.setFont(Font.font("Sans", 12));
+		infoView.setFont(Font.font("Monospace", 14));
 		infoView.setText("");
 		infoView.visibleProperty().bind(infoVisibleProperty);
 		StackPane.setAlignment(infoView, Pos.TOP_LEFT);
 
 		stage.centerOnScreen();
 		stage.show();
-
 	}
 
 	@Override
@@ -146,33 +155,22 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private void addResizeHandler(GameScene scene) {
 		if (scene instanceof GameScene2D) {
+			// 2D scene must keep aspect ratio
 			mainScene.widthProperty().addListener((s, o, n) -> {
-				double newWidth = (int) n.doubleValue();
-				double newHeight = newWidth / GameScene.ASPECT_RATIO;
-				if (newHeight < mainScene.getHeight()) {
-					subScene2DContainer.resize(newWidth, newHeight);
-					log("New scene height: %f", newHeight);
-				}
+				double newHeight = mainScene.getWidth() / GameScene.ASPECT_RATIO;
+				subScene2DContainer.resize(mainScene.getWidth(), Math.min(newHeight, mainScene.getHeight()));
 			});
 			mainScene.heightProperty().addListener((s, o, n) -> {
-				double newHeight = n.doubleValue();
-				double newWidth = newHeight * GameScene.ASPECT_RATIO;
-				subScene2DContainer.resize(newWidth, newHeight);
-				log("New scene height: %f", newHeight);
+				double newWidth = mainScene.getHeight() * GameScene.ASPECT_RATIO;
+				subScene2DContainer.resize(Math.min(newWidth, mainScene.getWidth()), mainScene.getHeight());
 			});
 		} else if (scene instanceof GameScene3D) {
 			GameScene3D scene3D = (GameScene3D) scene;
 			mainScene.widthProperty().addListener((s, o, n) -> {
-				double newWidth = (int) n.doubleValue();
-				double newHeight = newWidth / GameScene.ASPECT_RATIO;
-				scene3D.resize(newWidth, newHeight);
-				log("New scene height: %f", newHeight);
+				scene3D.resize(mainScene.getWidth(), mainScene.getHeight());
 			});
 			mainScene.heightProperty().addListener((s, o, n) -> {
-				double newHeight = n.doubleValue();
-				double newWidth = newHeight * GameScene.ASPECT_RATIO;
-				scene3D.resize(newWidth, newHeight);
-				log("New scene height: %f", newHeight);
+				scene3D.resize(mainScene.getWidth(), mainScene.getHeight());
 			});
 		}
 	}
@@ -201,7 +199,12 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		addResizeHandler(newGameScene);
 		newGameScene.start();
 		currentGameScene = newGameScene;
-		log("New game scene %s started", newGameScene);
+		log("New game scene '%s' started", newGameScene);
+	}
+
+	private GameScene registerScene(PacManGameState state, GameScene scene) {
+		sceneIsUsableInGameState.put(scene, state);
+		return scene;
 	}
 
 	private GameScene createGameScene(Camera camera, double height) {
@@ -211,21 +214,24 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			SoundManager pacManSounds = sounds.get(PACMAN);
 			switch (game.state) {
 			case INTRO:
-				return new PacMan_IntroScene(camera, controller, pacManRendering, pacManSounds);
+				return registerScene(game.state, new PacMan_IntroScene(camera, controller, pacManRendering, pacManSounds));
 			case INTERMISSION:
 				if (game.intermissionNumber == 1) {
-					return new PacMan_IntermissionScene1(camera, controller, pacManRendering, pacManSounds);
+					return registerScene(game.state,
+							new PacMan_IntermissionScene1(camera, controller, pacManRendering, pacManSounds));
 				}
 				if (game.intermissionNumber == 2) {
-					return new PacMan_IntermissionScene2(camera, controller, pacManRendering, pacManSounds);
+					return registerScene(game.state,
+							new PacMan_IntermissionScene2(camera, controller, pacManRendering, pacManSounds));
 				}
 				if (game.intermissionNumber == 3) {
-					return new PacMan_IntermissionScene3(camera, controller, pacManRendering, pacManSounds);
+					return registerScene(game.state,
+							new PacMan_IntermissionScene3(camera, controller, pacManRendering, pacManSounds));
 				}
 				throw new IllegalStateException();
 			default:
-				return scenes3DProperty.get() ? new PlayScene3D(controller, height)
-						: new PlayScene2D(camera, controller, pacManRendering, pacManSounds);
+				return registerScene(game.state, scenes3DProperty.get() ? new PlayScene3D(controller, height)
+						: new PlayScene2D(camera, controller, pacManRendering, pacManSounds));
 			}
 		}
 
@@ -234,62 +240,25 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			SoundManager msPacManSounds = sounds.get(MS_PACMAN);
 			switch (game.state) {
 			case INTRO:
-				return new MsPacMan_IntroScene(camera, controller, msPacManRendering, msPacManSounds);
+				return registerScene(game.state,
+						new MsPacMan_IntroScene(camera, controller, msPacManRendering, msPacManSounds));
 			case INTERMISSION:
 				if (game.intermissionNumber == 1) {
-					return new MsPacMan_IntermissionScene1(camera, controller, msPacManRendering, msPacManSounds);
+					return registerScene(game.state,
+							new MsPacMan_IntermissionScene1(camera, controller, msPacManRendering, msPacManSounds));
 				}
 				if (game.intermissionNumber == 2) {
-					return new MsPacMan_IntermissionScene2(camera, controller, msPacManRendering, msPacManSounds);
+					return registerScene(game.state,
+							new MsPacMan_IntermissionScene2(camera, controller, msPacManRendering, msPacManSounds));
 				}
 				if (game.intermissionNumber == 3) {
-					return new MsPacMan_IntermissionScene3(camera, controller, msPacManRendering, msPacManSounds);
+					return registerScene(game.state,
+							new MsPacMan_IntermissionScene3(camera, controller, msPacManRendering, msPacManSounds));
 				}
 				throw new IllegalStateException();
 			default:
-				return scenes3DProperty.get() ? new PlayScene3D(controller, height)
-						: new PlayScene2D(camera, controller, msPacManRendering, msPacManSounds);
-			}
-		}
-		throw new IllegalStateException();
-	}
-
-	private Class<? extends GameScene> getSceneClassForCurrentGame() {
-		if (currentGame() == PACMAN) {
-			switch (game.state) {
-			case INTRO:
-				return PacMan_IntroScene.class;
-			case INTERMISSION:
-				if (game.intermissionNumber == 1) {
-					return PacMan_IntermissionScene1.class;
-				}
-				if (game.intermissionNumber == 2) {
-					return PacMan_IntermissionScene2.class;
-				}
-				if (game.intermissionNumber == 3) {
-					return PacMan_IntermissionScene3.class;
-				}
-				break;
-			default:
-				return scenes3DProperty.get() ? PlayScene3D.class : PlayScene2D.class;
-			}
-		} else {
-			switch (game.state) {
-			case INTRO:
-				return MsPacMan_IntroScene.class;
-			case INTERMISSION:
-				if (game.intermissionNumber == 1) {
-					return MsPacMan_IntermissionScene1.class;
-				}
-				if (game.intermissionNumber == 2) {
-					return MsPacMan_IntermissionScene2.class;
-				}
-				if (game.intermissionNumber == 3) {
-					return MsPacMan_IntermissionScene3.class;
-				}
-				break;
-			default:
-				return scenes3DProperty.get() ? PlayScene3D.class : PlayScene2D.class;
+				return registerScene(game.state, scenes3DProperty.get() ? new PlayScene3D(controller, height)
+						: new PlayScene2D(camera, controller, msPacManRendering, msPacManSounds));
 			}
 		}
 		throw new IllegalStateException();
@@ -298,6 +267,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	@Override
 	public void onGameChanged(GameModel newGame) {
 		game = Objects.requireNonNull(newGame);
+		controller.setAutopilot(true);
 	}
 
 	@Override
@@ -310,44 +280,42 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void update() {
-		Class<? extends GameScene> sceneToDisplay = getSceneClassForCurrentGame();
-		if (currentGameScene == null || currentGameScene.getClass() != sceneToDisplay) {
-			log("%s: Scene changes from %s to %s", this, currentGameScene, sceneToDisplay);
+
+		// must scene be changed?
+		sceneMustChange = sceneMustChange || game.state != sceneIsUsableInGameState.get(currentGameScene);
+		if (sceneMustChange) {
 			if (currentGameScene != null) {
 				currentGameScene.end();
 			}
-			if (GameScene2D.class.isAssignableFrom(sceneToDisplay)) {
-				GameScene scene2D = createGameScene(subScene2DContainer.getSubScene().getCamera(), mainScene.getHeight());
-				setGameScene(scene2D);
-			} else if (GameScene3D.class.isAssignableFrom(sceneToDisplay)) {
-				GameScene scene3D = createGameScene(null, mainScene.getHeight());
-				setGameScene(scene3D);
-			}
+			GameScene newGameScene = scenes3DProperty.get() ? createGameScene(null, mainScene.getHeight())
+					: createGameScene(subScene2DContainer.getSubScene().getCamera(), mainScene.getHeight());
+			log("Scene changes from '%s' to '%s'", currentGameScene, newGameScene);
+			setGameScene(newGameScene);
+			sceneMustChange = false;
 		}
+
 		currentGameScene.update();
 		flashMessageView.update();
 		updateInfoView();
 
-		// 2D content mus be drawn explicitly:
+		// 2D content must be drawn explicitly into canvas:
 		if (currentGameScene instanceof GameScene2D) {
 			subScene2DContainer.draw();
 		}
 	}
 
 	private void updateInfoView() {
-		String text = "";
+		String text = String.format("Main scene: w=%.0f h=%.0f\n", mainScene.getWidth(), mainScene.getHeight());
 		if (currentGameScene instanceof GameScene2D) {
-			text += String.format("\n2D scene: w=%.2f h=%.2f", subScene2DContainer.getSubScene().getWidth(),
+			text += String.format("2D scene:   w=%.0f h=%.0f\n", subScene2DContainer.getSubScene().getWidth(),
 					subScene2DContainer.getSubScene().getHeight());
 		} else {
 			GameScene3D scene3D = (GameScene3D) currentGameScene;
-			text += String.format("\n3D scene: w=%.2f h=%.2f", scene3D.getSubScene().getWidth(),
+			text += String.format("3D scene:   w=%.0f h=%.0f\n", scene3D.getSubScene().getWidth(),
 					scene3D.getSubScene().getHeight());
-			if (camControl != null) {
-				text += camControl.getCameraInfo();
-				text += "\n";
-			}
-			text += String.format("Main scene: w=%.2f h=%.2f", mainScene.getWidth(), mainScene.getHeight());
+		}
+		if (camControl != null) {
+			text += camControl.getCameraInfo();
 		}
 		infoView.setText(text);
 	}

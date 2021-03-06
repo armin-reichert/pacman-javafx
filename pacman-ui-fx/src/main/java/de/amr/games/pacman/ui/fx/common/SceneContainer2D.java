@@ -61,7 +61,7 @@ public class SceneContainer2D {
 			scene.setWidth(width);
 			scene.setHeight(height);
 			scale = new Scale(canvasWidth / GameScene.WIDTH_UNSCALED, canvasHeight / GameScene.HEIGHT_UNSCALED);
-			log("Playground got new size: w=%f h=%f, canvas w=%f h=%f", width, height, canvas.getWidth(), canvas.getHeight());
+			log("SubScene2D resized: w=%f h=%f, canvas w=%f h=%f", width, height, canvas.getWidth(), canvas.getHeight());
 		}
 	}
 
