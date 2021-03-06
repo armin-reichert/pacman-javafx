@@ -15,14 +15,15 @@ import javafx.scene.transform.Scale;
  * 
  * @author Armin Reichert
  */
-public class SubScene2D {
+public class SceneContainer2D {
 
 	private final SubScene scene;
 	private final Canvas canvas;
 	private final PerspectiveCamera perspectiveCamera;
 	private Scale scale;
+	private GameScene2D gameScene;
 
-	public SubScene2D(double sceneWidth, double sceneHeight) {
+	public SceneContainer2D(double sceneWidth, double sceneHeight) {
 		double canvasWidth = GameScene.ASPECT_RATIO * sceneHeight;
 		double canvasHeight = sceneHeight;
 		scale = new Scale(canvasHeight / GameScene.WIDTH_UNSCALED, canvasHeight / GameScene.HEIGHT_UNSCALED);
@@ -33,7 +34,14 @@ public class SubScene2D {
 		log("SubScene2D size: w=%f h=%f, canvas size: w=%f h=%f", sceneWidth, sceneHeight, canvasWidth, canvasHeight);
 	}
 
-	public void draw(GameScene2D gameScene) {
+	public void setGameScene(GameScene2D gameScene) {
+		this.gameScene = gameScene;
+	}
+
+	public void draw() {
+		if (gameScene == null) {
+			return;
+		}
 		GraphicsContext g = canvas.getGraphicsContext2D();
 		g.setFill(Color.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
