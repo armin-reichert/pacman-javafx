@@ -26,25 +26,17 @@ public class PacManGameAppFX extends Application {
 
 	@Override
 	public void start(Stage stage) throws IOException {
-		Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
-			throwable.printStackTrace();
-		});
-		try {
-			PacManGameController controller = new PacManGameController();
-			controller.play(options.pacman ? GameType.PACMAN : GameType.MS_PACMAN);
-			controller.addView(new PacManGameUI_JavaFX(stage, controller, options.height));
-			controller.showViews();
-			new AnimationTimer() {
+		PacManGameController controller = new PacManGameController();
+		controller.play(options.pacman ? GameType.PACMAN : GameType.MS_PACMAN);
+		PacManGameUI_JavaFX ui = new PacManGameUI_JavaFX(stage, controller, options.height);
+		controller.addView(ui);
+		new AnimationTimer() {
 
-				@Override
-				public void handle(long now) {
-					controller.step();
-					// TODO find clean solution
-					God.clock.ticksTotal++;
-				}
-			}.start();
-		} catch (Exception x) {
-			x.printStackTrace();
-		}
+			@Override
+			public void handle(long now) {
+				controller.step();
+				God.clock.ticksTotal++; // TODO get rid of this
+			}
+		}.start();
 	}
 }
