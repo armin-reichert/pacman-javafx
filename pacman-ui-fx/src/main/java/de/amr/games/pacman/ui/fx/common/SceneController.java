@@ -118,4 +118,14 @@ public class SceneController {
 		}
 		throw new IllegalStateException();
 	}
+
+	// TODO this will not work if intermission scenes have both 2 and 3D versions, but it's ok for now
+	public boolean are2DAnd3DVersionsAvailable(GameType gameType, PacManGameState state) {
+		List<Class<? extends GameScene>> sceneClasses = gameType.equals(PACMAN) ? pacManSceneClasses.get(state)
+				: msPacManSceneClasses.get(state);
+		//@formatter:off
+		return sceneClasses.stream().anyMatch(sceneClass -> GameScene2D.class.isAssignableFrom(sceneClass))
+				&& sceneClasses.stream().anyMatch(sceneClass -> GameScene3D.class.isAssignableFrom(sceneClass));
+		//@formatter:on
+	}
 }

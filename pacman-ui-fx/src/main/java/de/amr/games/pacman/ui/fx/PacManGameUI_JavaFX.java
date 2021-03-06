@@ -59,7 +59,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private final SceneContainer2D _2DScenesContainer;
 	private final SceneController sceneController = new SceneController();
 
-	private BooleanProperty scenes3DProperty = new SimpleBooleanProperty(true);
+	private boolean use3DScenes;
 	private BooleanProperty infoVisibleProperty = new SimpleBooleanProperty(true);
 	private boolean muted;
 
@@ -91,10 +91,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				break;
 			case DIGIT3:
 				if (e.isControlDown()) {
-					scenes3DProperty.set(!scenes3DProperty.get());
-					String message = String.format("3D scenes %s", scenes3DProperty.get() ? "ON" : "OFF");
-					showFlashMessage(message, clock.sec(1));
-					sceneMustChange = true;
+					toggleUse3DScenes();
 				}
 				break;
 			case C:
@@ -120,6 +117,17 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		stage.centerOnScreen();
 		stage.show();
+	}
+
+	private void toggleUse3DScenes() {
+		use3DScenes = !use3DScenes;
+		String message = String.format("3D scenes %s", use3DScenes ? "ON" : "OFF");
+		showFlashMessage(message, clock.sec(1));
+		boolean differentVersionsAvailable = sceneController.are2DAnd3DVersionsAvailable(currentGameType(), game.state);
+		if (differentVersionsAvailable) {
+			sceneMustChange = true;
+			log("Scene must change because 2D and 3D versions are available");
+		}
 	}
 
 	@Override
@@ -198,10 +206,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			if (currentGameScene != null) {
 				currentGameScene.end();
 			}
-			Camera camera = scenes3DProperty.get() ? null // each 3D-scene brings its own camera
+			Camera camera = use3DScenes ? null // each 3D-scene brings its own camera
 					: _2DScenesContainer.getSubScene().getCamera();
-			GameScene newGameScene = sceneController.createGameScene(controller, camera, mainScene.getHeight(),
-					scenes3DProperty.get());
+			GameScene newGameScene = sceneController.createGameScene(controller, camera, mainScene.getHeight(), use3DScenes);
 			log("Scene changes from '%s' to '%s'", currentGameScene, newGameScene);
 			setGameScene(newGameScene);
 			sceneMustChange = false;
@@ -233,7 +240,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		infoView.setText(text);
 	}
 
-	private GameType currentGame() {
+	private GameType currentGameType() {
 		return Stream.of(GameType.values()).filter(controller::isPlaying).findFirst().get();
 	}
 
@@ -282,7 +289,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		if (muted) {
 			return Optional.empty(); // TODO
 		}
-		return Optional.of(sceneController.sounds.get(currentGame()));
+		return Optional.of(sceneController.sounds.get(currentGameType()));
 	}
 
 	@Override
@@ -293,7 +300,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	@Override
 	public Optional<PacManGameAnimations> animation() {
 		if (currentGameScene instanceof GameScene2D) {
-			return Optional.of(sceneController.renderings.get(currentGame()));
+			return Optional.of(sceneController.renderings.get(currentGameType()));
 		}
 		if (currentGameScene instanceof PlayScene3D) {
 			return Optional.of((PlayScene3D) currentGameScene);
