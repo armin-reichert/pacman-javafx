@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.PacManGameController;
@@ -26,10 +25,10 @@ import de.amr.games.pacman.ui.animation.MazeAnimations;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations;
 import de.amr.games.pacman.ui.animation.PlayerAnimations;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_Constants;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.Camera;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -43,12 +42,10 @@ import javafx.scene.transform.Scale;
 public class PlayScene3D
 		implements GameScene3D, PacManGameAnimations, GhostAnimations, MazeAnimations, PlayerAnimations {
 
-	public final BooleanProperty cameraEnabledProperty = new SimpleBooleanProperty();
-
 	private final PacManGameController controller;
 	private final Group root;
 	private final SubScene subScene;
-	private final ControllableCamera camera;
+	private final PerspectiveCamera camera;
 	private Scale scale;
 
 	private Shape3D playerShape;
@@ -66,11 +63,10 @@ public class PlayScene3D
 		root = new Group();
 		root.getTransforms().add(scale);
 
-		camera = new ControllableCamera();
+		camera = new PerspectiveCamera();
 		camera.setTranslateZ(-240);
 		camera.setRotationAxis(Rotate.X_AXIS);
 		camera.setRotate(30);
-		enableCamera(true);
 
 		subScene = new SubScene(root, width, height);
 		subScene.setFill(Color.BLACK);
@@ -216,18 +212,8 @@ public class PlayScene3D
 	}
 
 	@Override
-	public void enableCamera(boolean state) {
-		cameraEnabledProperty.set(state);
-	}
-
-	@Override
-	public boolean isCameraEnabled() {
-		return cameraEnabledProperty.get();
-	}
-
-	@Override
-	public Optional<ControllableCamera> getCamera() {
-		return Optional.of(camera);
+	public Camera getCamera() {
+		return camera;
 	}
 
 	// Animations

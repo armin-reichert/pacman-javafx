@@ -2,6 +2,7 @@ package de.amr.games.pacman.ui.fx.common;
 
 import static de.amr.games.pacman.lib.Logging.log;
 
+import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -18,6 +19,7 @@ public class SubScene2D {
 
 	private final SubScene scene;
 	private final Canvas canvas;
+	private final PerspectiveCamera perspectiveCamera;
 	private Scale scale;
 
 	public SubScene2D(double sceneWidth, double sceneHeight) {
@@ -26,6 +28,8 @@ public class SubScene2D {
 		scale = new Scale(canvasHeight / GameScene.WIDTH_UNSCALED, canvasHeight / GameScene.HEIGHT_UNSCALED);
 		canvas = new Canvas(canvasWidth, canvasHeight);
 		scene = new SubScene(new StackPane(canvas), sceneWidth, sceneHeight);
+		perspectiveCamera = new PerspectiveCamera();
+		perspectiveCamera.setTranslateZ(-200);
 		log("SubScene2D size: w=%f h=%f, canvas size: w=%f h=%f", sceneWidth, sceneHeight, canvasWidth, canvasHeight);
 	}
 
@@ -33,9 +37,7 @@ public class SubScene2D {
 		GraphicsContext g = canvas.getGraphicsContext2D();
 		g.setFill(Color.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		gameScene.getCamera().ifPresent(cam -> {
-			gameScene.updateCamera();
-		});
+		gameScene.updateCamera();
 		g.save();
 		g.scale(scale.getX(), scale.getY());
 		gameScene.draw(g);
@@ -59,15 +61,19 @@ public class SubScene2D {
 		return scene;
 	}
 
-	public boolean isCameraOn() {
+	public PerspectiveCamera getPerspectiveCamera() {
+		return perspectiveCamera;
+	}
+
+	public boolean isPerspectiveCameraOn() {
 		return scene.getCamera() != null;
 	}
 
-	public void cameraOn(ControllableCamera cam) {
-		scene.setCamera(cam);
+	public void perspectiveViewOn() {
+		scene.setCamera(perspectiveCamera);
 	}
 
-	public void cameraOff(ControllableCamera cam) {
-		scene.setCamera(null);
+	public void perspectiveViewOff() {
+		scene.setCamera(null); // use parallel camera
 	}
 }

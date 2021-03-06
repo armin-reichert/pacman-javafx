@@ -2,7 +2,7 @@ package de.amr.games.pacman.ui.fx.common;
 
 import static de.amr.games.pacman.world.PacManGameWorld.TS;
 
-import java.util.Optional;
+import javafx.scene.Camera;
 
 /**
  * A game scene that gets drawn into a canvas.
@@ -21,17 +21,8 @@ public interface GameScene {
 
 	void end();
 
+	Camera getCamera();
+
 	default void updateCamera() {
-	}
-
-	default Optional<ControllableCamera> getCamera() {
-		return Optional.empty();
-	}
-
-	default boolean isCameraEnabled() {
-		return false;
-	}
-
-	default void enableCamera(boolean state) {
 	}
 }

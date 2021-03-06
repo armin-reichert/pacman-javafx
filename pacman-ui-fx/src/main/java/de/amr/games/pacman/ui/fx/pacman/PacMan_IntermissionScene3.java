@@ -4,10 +4,11 @@ import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.common.GameScene2D;
+import de.amr.games.pacman.ui.fx.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene3_Controller;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene3_Controller.Phase;
+import javafx.scene.Camera;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -16,17 +17,13 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class PacMan_IntermissionScene3 implements GameScene2D {
+public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 
-	protected final PacManGameController controller;
-	protected final FXRendering rendering;
-	protected final SoundManager sounds;
 	private PacMan_IntermissionScene3_Controller animation;
 
-	public PacMan_IntermissionScene3(PacManGameController controller, FXRendering rendering, SoundManager sounds) {
-		this.controller = controller;
-		this.rendering = rendering;
-		this.sounds = sounds;
+	public PacMan_IntermissionScene3(Camera camera, PacManGameController controller, FXRendering rendering,
+			SoundManager sounds) {
+		super(camera, controller, rendering, sounds);
 	}
 
 	@Override

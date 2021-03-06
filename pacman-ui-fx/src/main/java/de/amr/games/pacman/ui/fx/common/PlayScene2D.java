@@ -2,15 +2,12 @@ package de.amr.games.pacman.ui.fx.common;
 
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
-import java.util.Optional;
-
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.PacManGameState;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.Camera;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -18,21 +15,10 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class PlayScene2D implements GameScene2D {
+public class PlayScene2D extends AbstractGameScene2D {
 
-	public final BooleanProperty cameraEnabledProperty = new SimpleBooleanProperty();
-
-	protected final PacManGameController controller;
-	protected final FXRendering rendering;
-	protected final SoundManager sounds;
-	protected final ControllableCamera camera;
-
-	public PlayScene2D(PacManGameController controller, FXRendering rendering, SoundManager sounds) {
-		this.controller = controller;
-		this.rendering = rendering;
-		this.sounds = sounds;
-		camera = new ControllableCamera();
-		camera.setTranslateZ(-240);
+	public PlayScene2D(Camera camera, PacManGameController controller, FXRendering rendering, SoundManager sounds) {
+		super(camera, controller, rendering, sounds);
 	}
 
 	@Override
@@ -57,18 +43,8 @@ public class PlayScene2D implements GameScene2D {
 	}
 
 	@Override
-	public void enableCamera(boolean state) {
-		cameraEnabledProperty.set(state);
-	}
-
-	@Override
-	public boolean isCameraEnabled() {
-		return cameraEnabledProperty.get();
-	}
-
-	@Override
-	public Optional<ControllableCamera> getCamera() {
-		return Optional.of(camera);
+	public Camera getCamera() {
+		return camera;
 	}
 
 	@Override

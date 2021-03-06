@@ -9,11 +9,12 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.heaven.God;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.common.GameScene2D;
+import de.amr.games.pacman.ui.fx.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import de.amr.games.pacman.ui.pacman.PacMan_IntroScene_Controller;
 import de.amr.games.pacman.ui.pacman.PacMan_IntroScene_Controller.GhostPortrait;
 import de.amr.games.pacman.ui.pacman.PacMan_IntroScene_Controller.Phase;
+import javafx.scene.Camera;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -26,17 +27,12 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public class PacMan_IntroScene implements GameScene2D {
+public class PacMan_IntroScene extends AbstractGameScene2D {
 
-	protected final PacManGameController controller;
-	protected final FXRendering rendering;
-	protected final SoundManager sounds;
 	private PacMan_IntroScene_Controller animation;
 
-	public PacMan_IntroScene(PacManGameController controller, FXRendering rendering, SoundManager sounds) {
-		this.controller = controller;
-		this.rendering = rendering;
-		this.sounds = sounds;
+	public PacMan_IntroScene(Camera camera, PacManGameController controller, FXRendering rendering, SoundManager sounds) {
+		super(camera, controller, rendering, sounds);
 	}
 
 	@Override
