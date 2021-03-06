@@ -77,8 +77,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private final Scene mainScene;
 	private final SceneContainer2D subScene2DContainer;
 
-	private BooleanProperty scenes3DProperty = new SimpleBooleanProperty();
-	private BooleanProperty infoVisibleProperty = new SimpleBooleanProperty();
+	private BooleanProperty scenes3DProperty = new SimpleBooleanProperty(true);
+	private BooleanProperty infoVisibleProperty = new SimpleBooleanProperty(false);
 	private boolean muted;
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController controller, double height) {
