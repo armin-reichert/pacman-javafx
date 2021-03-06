@@ -1,6 +1,5 @@
 package de.amr.games.pacman.ui.fx.common;
 
-import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.world.PacManGameWorld.TS;
 
@@ -90,7 +89,6 @@ public class PlayScene3D
 
 	@Override
 	public void start() {
-		log("Start PlayScene3D");
 		GameModel game = controller.getGame();
 
 		walls.clear();

@@ -71,50 +71,50 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private final Text infoView = new Text();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
-
-	private Stage stage;
-	private Scene mainScene;
-	private SubScene2D subScene2D;
+	private final Scene mainScene;
+	private final SubScene2D subScene2D;
 
 	private boolean muted;
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController controller, double height) {
-		this.stage = stage;
 		this.controller = controller;
+		double width = GameScene.ASPECT_RATIO * height;
+		game = controller.getGame();
 		renderings.put(MS_PACMAN, new MsPacMan_StandardRendering());
 		renderings.put(PACMAN, new PacMan_StandardRendering());
 		sounds.put(MS_PACMAN, new PacManGameSoundManager(PacManGameSounds::msPacManSoundURL));
 		sounds.put(PACMAN, new PacManGameSoundManager(PacManGameSounds::mrPacManSoundURL));
-		initStage(GameScene.ASPECT_RATIO * height, height);
-		onGameChanged(controller.getGame());
-		addResizeHandler(currentGameScene);
-		log("JavaFX UI created at clock tick %d", clock.ticksTotal);
-	}
-
-	@Override
-	public void show() {
-//		stage.sizeToScene();
-		stage.centerOnScreen();
-		stage.show();
-	}
-
-	private void initStage(double sceneWidth, double sceneHeight) {
+		subScene2D = new SubScene2D(width, height);
+		mainScene = new Scene(new StackPane(subScene2D.getSubScene(), flashMessageView, infoView), width, height,
+				Color.BLACK);
+		stage.setScene(mainScene);
 		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
 		stage.getIcons().add(new Image("/pacman/graphics/pacman.png"));
 		stage.setOnCloseRequest(e -> Platform.exit());
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
 		stage.addEventHandler(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
+		stage.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+			switch (e.getCode()) {
+			case F11:
+				stage.setFullScreen(true);
+				break;
+			default:
+				break;
+			}
+		});
 
 		infoView.setFill(Color.WHITE);
 		infoView.setFont(Font.font("Sans", 12));
 		infoView.setText("");
 		StackPane.setAlignment(infoView, Pos.TOP_LEFT);
 
-		// assuming intial game scene is 2D
-		subScene2D = new SubScene2D(sceneWidth, sceneHeight);
-		mainScene = new Scene(new StackPane(subScene2D.getSubScene(), flashMessageView, infoView), sceneWidth, sceneHeight,
-				Color.BLACK);
-		stage.setScene(mainScene);
+		stage.centerOnScreen();
+		stage.show();
+	}
+
+	@Override
+	public void show() {
+		// done in start()
 	}
 
 	private void addResizeHandler(GameScene scene) {
@@ -168,53 +168,54 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		addResizeHandler(newGameScene);
 		newGameScene.start();
 		currentGameScene = newGameScene;
+		log("New game scene %s started", newGameScene);
 	}
 
 	private GameScene createGameScene(Camera camera, double height) {
 		GameType currentGame = currentGame();
 		if (currentGame == PACMAN) {
-			FXRendering rendering = renderings.get(PACMAN);
-			SoundManager soundManager = sounds.get(PACMAN);
+			FXRendering pacManRendering = renderings.get(PACMAN);
+			SoundManager pacManSounds = sounds.get(PACMAN);
 			switch (game.state) {
 			case INTRO:
-				return new PacMan_IntroScene(camera, controller, rendering, soundManager);
+				return new PacMan_IntroScene(camera, controller, pacManRendering, pacManSounds);
 			case INTERMISSION:
 				if (game.intermissionNumber == 1) {
-					return new PacMan_IntermissionScene1(camera, controller, rendering, soundManager);
+					return new PacMan_IntermissionScene1(camera, controller, pacManRendering, pacManSounds);
 				}
 				if (game.intermissionNumber == 2) {
-					return new PacMan_IntermissionScene2(camera, controller, rendering, soundManager);
+					return new PacMan_IntermissionScene2(camera, controller, pacManRendering, pacManSounds);
 				}
 				if (game.intermissionNumber == 3) {
-					return new PacMan_IntermissionScene3(camera, controller, rendering, soundManager);
+					return new PacMan_IntermissionScene3(camera, controller, pacManRendering, pacManSounds);
 				}
 				throw new IllegalStateException();
 			default:
 				return scenes3D_enabled ? new PlayScene3D(controller, height)
-						: new PlayScene2D(camera, controller, renderings.get(PACMAN), sounds.get(PACMAN));
+						: new PlayScene2D(camera, controller, pacManRendering, pacManSounds);
 			}
 		}
 
 		else if (currentGame == MS_PACMAN) {
-			FXRendering rendering = renderings.get(MS_PACMAN);
-			SoundManager soundManager = sounds.get(MS_PACMAN);
+			FXRendering msPacManRendering = renderings.get(MS_PACMAN);
+			SoundManager msPacManSounds = sounds.get(MS_PACMAN);
 			switch (game.state) {
 			case INTRO:
-				return new MsPacMan_IntroScene(camera, controller, rendering, soundManager);
+				return new MsPacMan_IntroScene(camera, controller, msPacManRendering, msPacManSounds);
 			case INTERMISSION:
 				if (game.intermissionNumber == 1) {
-					return new MsPacMan_IntermissionScene1(camera, controller, rendering, soundManager);
+					return new MsPacMan_IntermissionScene1(camera, controller, msPacManRendering, msPacManSounds);
 				}
 				if (game.intermissionNumber == 2) {
-					return new MsPacMan_IntermissionScene2(camera, controller, rendering, soundManager);
+					return new MsPacMan_IntermissionScene2(camera, controller, msPacManRendering, msPacManSounds);
 				}
 				if (game.intermissionNumber == 3) {
-					return new MsPacMan_IntermissionScene3(camera, controller, rendering, soundManager);
+					return new MsPacMan_IntermissionScene3(camera, controller, msPacManRendering, msPacManSounds);
 				}
 				throw new IllegalStateException();
 			default:
 				return scenes3D_enabled ? new PlayScene3D(controller, height)
-						: new PlayScene2D(camera, controller, rendering, soundManager);
+						: new PlayScene2D(camera, controller, msPacManRendering, msPacManSounds);
 			}
 		}
 		throw new IllegalStateException();
@@ -320,9 +321,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private void handleGlobalKeys() {
-		if (keyboard.keyPressed("F11")) {
-			stage.setFullScreen(true);
-		}
 		if (keyboard.keyPressed("F3")) {
 			scenes3D_enabled = !scenes3D_enabled;
 			showFlashMessage(String.format("3D scenes are %s", scenes3D_enabled ? "ENABLED" : "DISABLED"), clock.sec(1));
@@ -360,14 +358,14 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private void camControlOff() {
 		if (camControl != null) {
-			stage.removeEventHandler(KeyEvent.KEY_PRESSED, camControl::handleKeyEvent);
+			mainScene.removeEventHandler(KeyEvent.KEY_PRESSED, camControl::handleKeyEvent);
 		}
 		camControl = null;
 	}
 
 	private void camControlOn(Camera camera) {
 		camControl = new CameraController(camera);
-		stage.addEventHandler(KeyEvent.KEY_PRESSED, camControl::handleKeyEvent);
+		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, camControl::handleKeyEvent);
 	}
 
 	@Override
