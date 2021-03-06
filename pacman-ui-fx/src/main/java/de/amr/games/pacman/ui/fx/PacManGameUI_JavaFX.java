@@ -56,7 +56,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final StackPane mainSceneRoot = new StackPane();
 	private final Scene mainScene;
-	private final SceneContainer2D _2DScenesContainer;
+	private final SceneContainer2D two2DScenesContainer;
 	private final SceneController sceneController = new SceneController();
 
 	private boolean use3DScenes;
@@ -70,7 +70,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		double width = GameScene.ASPECT_RATIO * height;
 		game = controller.getGame();
 
-		_2DScenesContainer = new SceneContainer2D(width, height);
+		two2DScenesContainer = new SceneContainer2D(width, height);
 		mainSceneRoot.getChildren().addAll(flashMessageView, infoView);
 		mainScene = new Scene(mainSceneRoot, width, height, Color.BLACK);
 		sceneMustChange = true;
@@ -140,11 +140,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			// 2D scene must keep aspect ratio
 			mainScene.widthProperty().addListener((s, o, n) -> {
 				double newHeight = mainScene.getWidth() / GameScene.ASPECT_RATIO;
-				_2DScenesContainer.resize(mainScene.getWidth(), Math.min(newHeight, mainScene.getHeight()));
+				two2DScenesContainer.resize(mainScene.getWidth(), Math.min(newHeight, mainScene.getHeight()));
 			});
 			mainScene.heightProperty().addListener((s, o, n) -> {
 				double newWidth = mainScene.getHeight() * GameScene.ASPECT_RATIO;
-				_2DScenesContainer.resize(Math.min(newWidth, mainScene.getWidth()), mainScene.getHeight());
+				two2DScenesContainer.resize(Math.min(newWidth, mainScene.getWidth()), mainScene.getHeight());
 			});
 		} else if (scene instanceof GameScene3D) {
 			GameScene3D scene3D = (GameScene3D) scene;
@@ -168,10 +168,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			gameScene3D.getCamera().setRotate(30);
 			camControlOn(gameScene3D.getCamera());
 		} else if (newGameScene instanceof GameScene2D) {
-			newSubScene = _2DScenesContainer.getSubScene();
-			_2DScenesContainer.setGameScene((GameScene2D) newGameScene);
-			_2DScenesContainer.resize(mainScene.getWidth(), mainScene.getHeight());
-			_2DScenesContainer.perspectiveViewOff();
+			newSubScene = two2DScenesContainer.getSubScene();
+			two2DScenesContainer.setGameScene((GameScene2D) newGameScene);
+			two2DScenesContainer.resize(mainScene.getWidth(), mainScene.getHeight());
+			two2DScenesContainer.perspectiveViewOff();
 			camControlOff();
 		} else {
 			throw new IllegalStateException();
@@ -207,7 +207,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				currentGameScene.end();
 			}
 			Camera camera = use3DScenes ? null // each 3D-scene brings its own camera
-					: _2DScenesContainer.getSubScene().getCamera();
+					: two2DScenesContainer.getSubScene().getCamera();
 			GameScene newGameScene = sceneController.createGameScene(controller, camera, mainScene.getHeight(), use3DScenes);
 			log("Scene changes from '%s' to '%s'", currentGameScene, newGameScene);
 			setGameScene(newGameScene);
@@ -220,15 +220,15 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		// 2D content must be drawn explicitly into canvas:
 		if (currentGameScene instanceof GameScene2D) {
-			_2DScenesContainer.draw();
+			two2DScenesContainer.draw();
 		}
 	}
 
 	private void updateInfoView() {
 		String text = String.format("Main scene: w=%.0f h=%.0f\n", mainScene.getWidth(), mainScene.getHeight());
 		if (currentGameScene instanceof GameScene2D) {
-			text += String.format("2D scene:   w=%.0f h=%.0f\n", _2DScenesContainer.getSubScene().getWidth(),
-					_2DScenesContainer.getSubScene().getHeight());
+			text += String.format("2D scene:   w=%.0f h=%.0f\n", two2DScenesContainer.getSubScene().getWidth(),
+					two2DScenesContainer.getSubScene().getHeight());
 		} else {
 			GameScene3D scene3D = (GameScene3D) currentGameScene;
 			text += String.format("3D scene:   w=%.0f h=%.0f\n", scene3D.getSubScene().getWidth(),
@@ -247,11 +247,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private void toggleCameraControlFor2DScene() {
 		if (camControl != null) {
 			camControlOff();
-			_2DScenesContainer.perspectiveViewOff();
+			two2DScenesContainer.perspectiveViewOff();
 			showFlashMessage("Perspective View OFF", clock.sec(0.5));
 		} else {
-			camControlOn(_2DScenesContainer.getPerspectiveCamera());
-			_2DScenesContainer.perspectiveViewOn();
+			camControlOn(two2DScenesContainer.getPerspectiveCamera());
+			two2DScenesContainer.perspectiveViewOn();
 			showFlashMessage("Perspective View ON", clock.sec(0.5));
 		}
 	}
