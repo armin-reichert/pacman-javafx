@@ -26,6 +26,7 @@ public class CameraController {
 		camera.translateYProperty().addListener((s, o, n) -> cameraInfoProperty.set(computeCameraInfo()));
 		camera.translateZProperty().addListener((s, o, n) -> cameraInfoProperty.set(computeCameraInfo()));
 		camera.rotateProperty().addListener((s, o, n) -> cameraInfoProperty.set(computeCameraInfo()));
+		cameraInfoProperty.set(computeCameraInfo());
 	}
 
 	public String getCameraInfo() {

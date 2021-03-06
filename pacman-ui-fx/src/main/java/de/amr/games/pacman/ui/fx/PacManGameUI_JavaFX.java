@@ -155,15 +155,14 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			GameScene3D scene3D = (GameScene3D) newGameScene;
 			scene3D.resize(mainScene.getWidth(), mainScene.getHeight());
 			mainScene.setRoot(new StackPane(scene3D.getSubScene(), flashMessageView, infoView));
-			Camera camera = scene3D.getCamera();
-			camera.setTranslateY(scene3D.getSubScene().getHeight() / 2);
-			camera.setTranslateZ(-scene3D.getSubScene().getHeight());
-			camera.setRotate(30);
-			camControl = new CameraController(camera);
+			scene3D.getCamera().setTranslateY(scene3D.getSubScene().getHeight() / 2);
+			scene3D.getCamera().setTranslateZ(-scene3D.getSubScene().getHeight());
+			scene3D.getCamera().setRotate(30);
+			camControlOn(scene3D.getCamera());
 		} else {
 			subScene2D.resize(mainScene.getWidth(), mainScene.getHeight());
 			subScene2D.perspectiveViewOff();
-			camControl = null;
+			camControlOff();
 			mainScene.setRoot(new StackPane(subScene2D.getSubScene(), flashMessageView, infoView));
 		}
 		addResizeHandler(newGameScene);
@@ -349,16 +348,26 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private void toggleCameraControlFor2DScene() {
 		if (camControl != null) {
-			stage.removeEventHandler(KeyEvent.KEY_PRESSED, camControl::handleKeyEvent);
-			camControl = null;
+			camControlOff();
 			subScene2D.perspectiveViewOff();
 			showFlashMessage("Perspective View OFF", clock.sec(0.5));
 		} else {
-			camControl = new CameraController(subScene2D.getPerspectiveCamera());
-			stage.addEventHandler(KeyEvent.KEY_PRESSED, camControl::handleKeyEvent);
+			camControlOn(subScene2D.getPerspectiveCamera());
 			subScene2D.perspectiveViewOn();
 			showFlashMessage("Perspective View ON", clock.sec(0.5));
 		}
+	}
+
+	private void camControlOff() {
+		if (camControl != null) {
+			stage.removeEventHandler(KeyEvent.KEY_PRESSED, camControl::handleKeyEvent);
+		}
+		camControl = null;
+	}
+
+	private void camControlOn(Camera camera) {
+		camControl = new CameraController(camera);
+		stage.addEventHandler(KeyEvent.KEY_PRESSED, camControl::handleKeyEvent);
 	}
 
 	@Override
