@@ -77,6 +77,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private final SceneContainer2D subScene2DContainer;
 
 	private BooleanProperty scenes3DProperty = new SimpleBooleanProperty();
+	private BooleanProperty infoVisibleProperty = new SimpleBooleanProperty();
 	private boolean muted;
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController controller, double height) {
@@ -104,13 +105,22 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			case F11:
 				stage.setFullScreen(true);
 				break;
-			case F3:
-				scenes3DProperty.set(!scenes3DProperty.get());
-				String message = String.format("3D scenes %s", scenes3DProperty.get() ? "ON" : "OFF");
-				showFlashMessage(message, clock.sec(1));
+			case DIGIT3:
+				if (e.isControlDown()) {
+					scenes3DProperty.set(!scenes3DProperty.get());
+					String message = String.format("3D scenes %s", scenes3DProperty.get() ? "ON" : "OFF");
+					showFlashMessage(message, clock.sec(1));
+				}
 				break;
 			case C:
-				toggleCameraControlFor2DScene();
+				if (e.isControlDown()) {
+					toggleCameraControlFor2DScene();
+				}
+				break;
+			case I:
+				if (e.isControlDown()) {
+					infoVisibleProperty.set(!infoVisibleProperty.get());
+				}
 				break;
 			default:
 				break;
@@ -120,7 +130,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		infoView.setFill(Color.WHITE);
 		infoView.setFont(Font.font("Sans", 12));
 		infoView.setText("");
-		infoView.visibleProperty().bind(scenes3DProperty);
+		infoView.visibleProperty().bind(infoVisibleProperty);
 		StackPane.setAlignment(infoView, Pos.TOP_LEFT);
 
 		stage.centerOnScreen();
@@ -325,11 +335,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private void updateInfoView() {
 		String text = "";
-		if (camControl != null) {
-			text += camControl.getCameraInfo();
-			text += "\n";
-		}
-		text += String.format("Main scene: w=%.2f h=%.2f", mainScene.getWidth(), mainScene.getHeight());
 		if (currentGameScene instanceof GameScene2D) {
 			text += String.format("\n2D scene: w=%.2f h=%.2f", subScene2DContainer.getSubScene().getWidth(),
 					subScene2DContainer.getSubScene().getHeight());
@@ -337,6 +342,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			GameScene3D scene3D = (GameScene3D) currentGameScene;
 			text += String.format("\n3D scene: w=%.2f h=%.2f", scene3D.getSubScene().getWidth(),
 					scene3D.getSubScene().getHeight());
+			if (camControl != null) {
+				text += camControl.getCameraInfo();
+				text += "\n";
+			}
+			text += String.format("Main scene: w=%.2f h=%.2f", mainScene.getWidth(), mainScene.getHeight());
 		}
 		infoView.setText(text);
 	}
