@@ -98,6 +98,12 @@ public class PlayScene3D
 
 	@Override
 	public void start() {
+
+		camera.setTranslateX(0);
+		camera.setTranslateY(2.5 * subScene.getHeight());
+		camera.setTranslateZ(-3.5 * subScene.getHeight());
+		camera.setRotate(30);
+
 		GameModel game = controller.getGame();
 		PacManGameWorld world = game.level.world;
 
