@@ -55,12 +55,18 @@ public class PlayScene3D
 	private Map<V2i, Node> walls = new HashMap<>();
 	private List<Node> energizers = new ArrayList<>();
 	private List<Node> pellets = new ArrayList<>();
+	private Text scoreDisplay = new Text();
+	private Text hiscoreDisplay = new Text();
+
+	private Font scoreFont;
 
 	public PlayScene3D(PacManGameController controller, double height) {
 		this.controller = controller;
 		double width = GameScene.ASPECT_RATIO * height;
 		double s = width / GameScene.WIDTH_UNSCALED;
 		scale = new Scale(s, s, s);
+
+		scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), TS);
 
 		root = new Group();
 		root.getTransforms().add(scale);
@@ -119,7 +125,7 @@ public class PlayScene3D
 			ball.setUserData(tile);
 			ball.setTranslateX(tile.x * TS);
 			ball.setTranslateY(tile.y * TS);
-			ball.setTranslateZ(-1);
+			ball.setTranslateZ(-HTS / 2);
 			energizers.add(ball);
 		});
 
@@ -143,10 +149,11 @@ public class PlayScene3D
 
 		root.getChildren().clear();
 		root.getChildren().addAll(walls.values());
-		root.getChildren().addAll(playerShape);
 		root.getChildren().addAll(ghostShapes);
 		root.getChildren().addAll(energizers);
 		root.getChildren().addAll(pellets);
+		root.getChildren().add(playerShape);
+		root.getChildren().addAll(scoreDisplay, hiscoreDisplay);
 	}
 
 	private Color ghostColor(int i) {
@@ -177,12 +184,27 @@ public class PlayScene3D
 		for (Ghost ghost : game.ghosts) {
 			Node shape = ghostShape(ghost, game.pac.powerTicksLeft > 0);
 			ghostShapes.set(ghost.id, shape);
-			shape.setTranslateX(ghost.position.x);
-			shape.setTranslateY(ghost.position.y);
-			shape.setTranslateZ(-HTS);
 			shape.setVisible(ghost.visible);
 		}
 		root.getChildren().addAll(ghostShapes);
+
+		scoreDisplay.setFill(Color.WHITE);
+		scoreDisplay.setFont(scoreFont);
+		scoreDisplay.setText(String.format("SCORE\n%08d", game.score));
+		scoreDisplay.setTranslateX(TS);
+		scoreDisplay.setTranslateY(-3 * TS);
+		scoreDisplay.setTranslateZ(-3 * TS);
+		scoreDisplay.setRotationAxis(Rotate.X_AXIS);
+		scoreDisplay.setRotate(camera.getRotate());
+
+		hiscoreDisplay.setFill(Color.WHITE);
+		hiscoreDisplay.setFont(scoreFont);
+		hiscoreDisplay.setText(String.format("HI SCORE\n%08d", game.highscorePoints));
+		hiscoreDisplay.setTranslateX(18 * TS);
+		hiscoreDisplay.setTranslateY(-3 * TS);
+		hiscoreDisplay.setTranslateZ(-3 * TS);
+		hiscoreDisplay.setRotationAxis(Rotate.X_AXIS);
+		hiscoreDisplay.setRotate(camera.getRotate());
 
 		computeViewOrder();
 	}
@@ -206,6 +228,9 @@ public class PlayScene3D
 			ghostShape.setViewOrder(-ghost.position.y - 0.5);
 		}
 		playerShape.setViewOrder(-game.pac.position.y - 0.5);
+
+		scoreDisplay.setViewOrder(-1000);
+		hiscoreDisplay.setViewOrder(-1000);
 	}
 
 	@Override
@@ -256,31 +281,48 @@ public class PlayScene3D
 	private Node ghostShape(Ghost ghost, boolean frightened) {
 		if (ghost.bounty > 0) {
 			DropShadow shadow = new DropShadow(0.3, Color.color(0.4, 0.4, 0.4));
-			Text ghostBountyText = new Text();
-			ghostBountyText.setEffect(shadow);
-			ghostBountyText.setCache(true);
-			ghostBountyText.setText(String.valueOf(ghost.bounty));
-			ghostBountyText.setFont(Font.font("Sans", FontWeight.BOLD, TS));
-			ghostBountyText.setFill(Color.YELLOW);
-			return ghostBountyText;
+			Text bountyText = new Text();
+			bountyText.setEffect(shadow);
+			bountyText.setCache(true);
+			bountyText.setText(String.valueOf(ghost.bounty));
+			bountyText.setFont(Font.font("Sans", FontWeight.BOLD, TS));
+			bountyText.setFill(Color.YELLOW);
+			bountyText.setTranslateX(ghost.position.x);
+			bountyText.setTranslateY(ghost.position.y);
+			bountyText.setTranslateZ(-1.5 * TS);
+			bountyText.setRotationAxis(Rotate.X_AXIS);
+			bountyText.setRotate(camera.getRotate());
+			return bountyText;
 		}
+
+		Node shape;
 		if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
-			Node shape = (Node) ghostReturningHome(ghost, ghost.dir).animate();
+			shape = (Node) ghostReturningHome(ghost, ghost.dir).animate();
 			if (ghost.dir == Direction.DOWN || ghost.dir == Direction.UP) {
 				shape.setRotate(0);
 			} else {
 				shape.setRotate(90);
 			}
-			return shape;
 		}
-		if (ghost.is(GhostState.FRIGHTENED)) {
-			return (Node) (ghostFlashing(ghost).isRunning() ? ghostFlashing(ghost).frame()
+
+		else if (ghost.is(GhostState.FRIGHTENED)) {
+			shape = (Node) (ghostFlashing(ghost).isRunning() ? ghostFlashing(ghost).frame()
 					: ghostFrightened(ghost, ghost.dir).animate());
 		}
-		if (ghost.is(GhostState.LOCKED) && frightened) {
-			return (Node) ghostFrightened(ghost, ghost.dir).animate();
+
+		else if (ghost.is(GhostState.LOCKED) && frightened) {
+			shape = (Node) ghostFrightened(ghost, ghost.dir).animate();
 		}
-		return (Node) ghostKicking(ghost, ghost.wishDir).animate(); // Looks towards wish dir!
+
+		else {
+			// default: show ghost in color, alive and kicking
+			shape = (Node) ghostKicking(ghost, ghost.wishDir).animate(); // Looks towards wish dir!
+		}
+
+		shape.setTranslateX(ghost.position.x);
+		shape.setTranslateY(ghost.position.y);
+		shape.setTranslateZ(-HTS);
+		return shape;
 	}
 
 	private Map<Ghost, Animation<?>> ghostFlashingAnimation = new HashMap<>();
