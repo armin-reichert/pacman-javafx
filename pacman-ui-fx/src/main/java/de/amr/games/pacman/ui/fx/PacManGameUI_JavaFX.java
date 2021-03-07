@@ -181,6 +181,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		mainSceneRoot.getChildren().addAll(newSubScene, flashMessageView, infoView);
 		addResizeHandler(newGameScene);
 		newGameScene.start();
+		newGameScene.initCamera();
 		currentGameScene = newGameScene;
 		log("New game scene '%s' started", newGameScene);
 	}

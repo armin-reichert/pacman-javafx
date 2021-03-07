@@ -23,6 +23,9 @@ public interface GameScene {
 
 	Camera getCamera();
 
+	default void initCamera() {
+	}
+
 	default void updateCamera() {
 	}
 }

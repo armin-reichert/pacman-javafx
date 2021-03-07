@@ -1,5 +1,6 @@
 package de.amr.games.pacman.ui.fx.common;
 
+import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.world.PacManGameWorld.TS;
 
@@ -99,11 +100,6 @@ public class PlayScene3D
 	@Override
 	public void start() {
 
-		camera.setTranslateX(0);
-		camera.setTranslateY(2.5 * subScene.getHeight());
-		camera.setTranslateZ(-3.5 * subScene.getHeight());
-		camera.setRotate(30);
-
 		GameModel game = controller.getGame();
 		PacManGameWorld world = game.level.world;
 
@@ -198,8 +194,8 @@ public class PlayScene3D
 		scoreDisplay.setFont(scoreFont);
 		scoreDisplay.setText(String.format("SCORE\n%08d", game.score));
 		scoreDisplay.setTranslateX(TS);
-		scoreDisplay.setTranslateY(-3 * TS);
-		scoreDisplay.setTranslateZ(-3 * TS);
+		scoreDisplay.setTranslateY(-2 * TS);
+		scoreDisplay.setTranslateZ(-2 * TS);
 		scoreDisplay.setRotationAxis(Rotate.X_AXIS);
 		scoreDisplay.setRotate(camera.getRotate());
 
@@ -207,8 +203,8 @@ public class PlayScene3D
 		hiscoreDisplay.setFont(scoreFont);
 		hiscoreDisplay.setText(String.format("HI SCORE\n%08d", game.highscorePoints));
 		hiscoreDisplay.setTranslateX(18 * TS);
-		hiscoreDisplay.setTranslateY(-3 * TS);
-		hiscoreDisplay.setTranslateZ(-3 * TS);
+		hiscoreDisplay.setTranslateY(-2 * TS);
+		hiscoreDisplay.setTranslateZ(-2 * TS);
 		hiscoreDisplay.setRotationAxis(Rotate.X_AXIS);
 		hiscoreDisplay.setRotate(camera.getRotate());
 
@@ -249,6 +245,16 @@ public class PlayScene3D
 	}
 
 	// Animations
+
+	@Override
+	public void initCamera() {
+		log("Init camera for PlayScene3D");
+		camera.setTranslateX(0);
+		// TODO how to do that right?
+		camera.setTranslateY(subScene.getHeight() * 1.5);
+		camera.setTranslateZ(-subScene.getHeight() * 1.5);
+		camera.setRotate(36);
+	}
 
 	private final Animation<?> NO_ANIMATION = Animation.of(new Object());
 
