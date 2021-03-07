@@ -2,6 +2,9 @@ package de.amr.games.pacman.ui.fx;
 
 import static de.amr.games.pacman.heaven.God.clock;
 import static de.amr.games.pacman.lib.Logging.log;
+import static de.amr.games.pacman.ui.fx.common.SceneController.createGameScene;
+import static de.amr.games.pacman.ui.fx.common.SceneController.is2DAnd3DVersionAvailable;
+import static de.amr.games.pacman.ui.fx.common.SceneController.isSuitableScene;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -57,7 +60,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private final StackPane mainSceneRoot = new StackPane();
 	private final Scene mainScene;
 	private final SceneContainer2D two2DScenesContainer;
-	private final SceneController sceneController = new SceneController();
 
 	private boolean use3DScenes;
 	private BooleanProperty infoVisibleProperty = new SimpleBooleanProperty(true);
@@ -123,8 +125,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		use3DScenes = !use3DScenes;
 		String message = String.format("3D scenes %s", use3DScenes ? "ON" : "OFF");
 		showFlashMessage(message, clock.sec(1));
-		boolean differentVersionsAvailable = sceneController.are2DAnd3DVersionsAvailable(currentGameType(), game.state);
-		if (differentVersionsAvailable) {
+		if (is2DAnd3DVersionAvailable(currentGameType(), game)) {
 			sceneMustChange = true;
 			log("Scene must change because 2D and 3D versions are available");
 		}
@@ -202,13 +203,13 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	public void update() {
 
 		// must scene be changed?
-		if (sceneMustChange || !sceneController.isSuitableScene(controller, currentGameScene)) {
+		if (sceneMustChange || !isSuitableScene(currentGameType(), game, currentGameScene)) {
 			if (currentGameScene != null) {
 				currentGameScene.end();
 			}
 			Camera camera = use3DScenes ? null // each 3D-scene brings its own camera
 					: two2DScenesContainer.getSubScene().getCamera();
-			GameScene newGameScene = sceneController.createGameScene(controller, camera, mainScene.getHeight(), use3DScenes);
+			GameScene newGameScene = createGameScene(controller, camera, mainScene.getHeight(), use3DScenes);
 			log("Scene changes from '%s' to '%s'", currentGameScene, newGameScene);
 			setGameScene(newGameScene);
 			sceneMustChange = false;
@@ -289,7 +290,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		if (muted) {
 			return Optional.empty(); // TODO
 		}
-		return Optional.of(sceneController.sounds.get(currentGameType()));
+		return Optional.of(SceneController.SOUND.get(currentGameType()));
 	}
 
 	@Override
@@ -300,7 +301,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	@Override
 	public Optional<PacManGameAnimations> animation() {
 		if (currentGameScene instanceof GameScene2D) {
-			return Optional.of(sceneController.renderings.get(currentGameType()));
+			return Optional.of(SceneController.RENDERING_2D.get(currentGameType()));
 		}
 		if (currentGameScene instanceof PlayScene3D) {
 			return Optional.of((PlayScene3D) currentGameScene);
