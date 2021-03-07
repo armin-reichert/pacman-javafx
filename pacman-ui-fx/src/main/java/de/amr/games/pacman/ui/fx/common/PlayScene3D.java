@@ -29,11 +29,15 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.Sphere;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 
@@ -250,9 +254,16 @@ public class PlayScene3D
 	}
 
 	private Node ghostShape(Ghost ghost, boolean frightened) {
-//		if (ghost.bounty > 0) {
-//			return assets.numberSprites.get(ghost.bounty);
-//		}
+		if (ghost.bounty > 0) {
+			DropShadow shadow = new DropShadow(0.3, Color.color(0.4, 0.4, 0.4));
+			Text ghostBountyText = new Text();
+			ghostBountyText.setEffect(shadow);
+			ghostBountyText.setCache(true);
+			ghostBountyText.setText(String.valueOf(ghost.bounty));
+			ghostBountyText.setFont(Font.font("Sans", FontWeight.BOLD, TS));
+			ghostBountyText.setFill(Color.YELLOW);
+			return ghostBountyText;
+		}
 		if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
 			Node shape = (Node) ghostReturningHome(ghost, ghost.dir).animate();
 			if (ghost.dir == Direction.DOWN || ghost.dir == Direction.UP) {
