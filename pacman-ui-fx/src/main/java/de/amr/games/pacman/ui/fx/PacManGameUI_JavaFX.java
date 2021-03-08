@@ -6,7 +6,6 @@ import static de.amr.games.pacman.ui.fx.common.SceneController.createGameScene;
 import static de.amr.games.pacman.ui.fx.common.SceneController.is2DAnd3DVersionAvailable;
 import static de.amr.games.pacman.ui.fx.common.SceneController.isSuitableScene;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -25,6 +24,7 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -42,7 +42,6 @@ import javafx.stage.Stage;
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
 
-	private GameModel game;
 	private GameScene currentGameScene;
 
 	private final PacManGameController controller;
@@ -51,8 +50,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private final Text infoView = new Text();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
-	private final StackPane mainSceneRoot = new StackPane();
 	private final Scene mainScene;
+	private final StackPane mainSceneRoot;
 
 	private boolean use3DScenes;
 	private BooleanProperty infoVisibleProperty = new SimpleBooleanProperty(true);
@@ -62,12 +61,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController controller, double height) {
 		this.controller = controller;
-		double width = GameScene.ASPECT_RATIO * height;
-		game = controller.getGame();
 
-		mainSceneRoot.getChildren().addAll(flashMessageView, infoView);
-		mainScene = new Scene(mainSceneRoot, width, height, Color.BLACK);
-		sceneChangeRequired = true;
+		mainSceneRoot = new StackPane();
+		mainScene = new Scene(mainSceneRoot, GameScene.ASPECT_RATIO * height, height, Color.BLACK);
 
 		stage.setScene(mainScene);
 		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
@@ -98,11 +94,17 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			}
 		});
 
-		infoView.setFill(Color.WHITE);
+		infoView.setFill(Color.LIGHTGREEN);
 		infoView.setFont(Font.font("Monospace", 14));
 		infoView.setText("");
 		infoView.visibleProperty().bind(infoVisibleProperty);
 		StackPane.setAlignment(infoView, Pos.TOP_LEFT);
+
+		GameScene newGameScene = createGameScene(controller, mainScene.getHeight(), use3DScenes);
+		log("New game scene '%s' created", newGameScene);
+
+		addResizeHandler(newGameScene);
+		setGameScene(newGameScene);
 
 		stage.centerOnScreen();
 		stage.show();
@@ -112,7 +114,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		use3DScenes = !use3DScenes;
 		String message = String.format("3D scenes %s", use3DScenes ? "ON" : "OFF");
 		showFlashMessage(message, clock.sec(1));
-		if (is2DAnd3DVersionAvailable(currentGameType(), game)) {
+		if (is2DAnd3DVersionAvailable(currentGameType(), controller.getGame())) {
 			sceneChangeRequired = true;
 			log("Scene must change because 2D and 3D versions are available");
 		}
@@ -125,22 +127,22 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private void addResizeHandler(GameScene scene) {
 		if (scene.aspectRatio().isPresent()) {
-			// scene must keep aspect ratio
+			// keep aspect ratio when resizing
+			double aspectRatio = scene.aspectRatio().getAsDouble();
 			mainScene.widthProperty().addListener((s, o, n) -> {
-				double newHeight = mainScene.getWidth() / scene.aspectRatio().getAsDouble();
-				scene.resize(mainScene.getWidth(), Math.min(newHeight, mainScene.getHeight()));
+				double newHeight = Math.min(mainScene.getWidth() / aspectRatio, mainScene.getHeight());
+				scene.resize(mainScene.getWidth(), newHeight);
 			});
 			mainScene.heightProperty().addListener((s, o, n) -> {
-				double newWidth = mainScene.getHeight() * scene.aspectRatio().getAsDouble();
-				scene.resize(Math.min(newWidth, mainScene.getWidth()), mainScene.getHeight());
+				double newWidth = Math.min(mainScene.getHeight() * aspectRatio, mainScene.getWidth());
+				scene.resize(newWidth, mainScene.getHeight());
 			});
 		} else {
-			mainScene.widthProperty().addListener((s, o, n) -> {
+			ChangeListener<? super Number> resizeToMainSceneSize = (s, o, n) -> {
 				scene.resize(mainScene.getWidth(), mainScene.getHeight());
-			});
-			mainScene.heightProperty().addListener((s, o, n) -> {
-				scene.resize(mainScene.getWidth(), mainScene.getHeight());
-			});
+			};
+			mainScene.widthProperty().addListener(resizeToMainSceneSize);
+			mainScene.heightProperty().addListener(resizeToMainSceneSize);
 		}
 	}
 
@@ -155,27 +157,26 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 		mainSceneRoot.getChildren().clear();
 		mainSceneRoot.getChildren().addAll(gameScene.getSubScene(), flashMessageView, infoView);
-		gameScene.start();
 		currentGameScene = gameScene;
+		gameScene.start();
 		log("New game scene '%s' started", gameScene);
 	}
 
 	@Override
 	public void onGameChanged(GameModel newGame) {
-		game = Objects.requireNonNull(newGame);
 	}
 
 	@Override
 	public void onGameStateChanged(PacManGameState from, PacManGameState to) {
 		if (from == PacManGameState.CHANGING_LEVEL) {
 			currentGameScene.start();
-			showFlashMessage("Enter level " + game.levelNumber, clock.sec(1));
+			showFlashMessage("Enter level " + controller.getGame().levelNumber, clock.sec(1));
 		}
 	}
 
 	@Override
 	public void update() {
-		if (sceneChangeRequired || !isSuitableScene(currentGameScene, currentGameType(), game)) {
+		if (sceneChangeRequired || !isSuitableScene(currentGameScene, currentGameType(), controller.getGame())) {
 			if (currentGameScene != null) {
 				currentGameScene.end();
 			}
@@ -208,7 +209,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	@Override
 	public void reset() {
 		currentGameScene.end();
-		onGameChanged(game);
 	}
 
 	@Override
