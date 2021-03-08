@@ -319,7 +319,7 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 			bountyText.setCache(true);
 			bountyText.setText(String.valueOf(ghost.bounty));
 			bountyText.setFont(Font.font("Sans", FontWeight.BOLD, TS));
-			bountyText.setFill(Color.YELLOW);
+			bountyText.setFill(Color.CYAN);
 			bountyText.setTranslateX(ghost.position.x);
 			bountyText.setTranslateY(ghost.position.y);
 			bountyText.setTranslateZ(-1.5 * TS);

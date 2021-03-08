@@ -58,7 +58,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private BooleanProperty infoVisibleProperty = new SimpleBooleanProperty(true);
 	private boolean muted;
 
-	private boolean sceneMustChange;
+	private boolean sceneChangeRequired;
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController controller, double height) {
 		this.controller = controller;
@@ -67,7 +67,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		mainSceneRoot.getChildren().addAll(flashMessageView, infoView);
 		mainScene = new Scene(mainSceneRoot, width, height, Color.BLACK);
-		sceneMustChange = true;
+		sceneChangeRequired = true;
 
 		stage.setScene(mainScene);
 		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
@@ -113,7 +113,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		String message = String.format("3D scenes %s", use3DScenes ? "ON" : "OFF");
 		showFlashMessage(message, clock.sec(1));
 		if (is2DAnd3DVersionAvailable(currentGameType(), game)) {
-			sceneMustChange = true;
+			sceneChangeRequired = true;
 			log("Scene must change because 2D and 3D versions are available");
 		}
 	}
@@ -144,24 +144,25 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 	}
 
-	private void setGameScene(GameScene newGameScene) {
-		newGameScene.resize(mainScene.getWidth(), mainScene.getHeight());
-		addResizeHandler(newGameScene);
-		camControl.setCamera(newGameScene.getCamera());
-		if (newGameScene.getCamera() != null) {
-			newGameScene.initCamera();
+	private void setGameScene(GameScene gameScene) {
+		if (currentGameScene != null) {
+			currentGameScene.end();
+		}
+		gameScene.resize(mainScene.getWidth(), mainScene.getHeight());
+		camControl.setCamera(gameScene.getCamera());
+		if (gameScene.getCamera() != null) {
+			gameScene.initCamera();
 		}
 		mainSceneRoot.getChildren().clear();
-		mainSceneRoot.getChildren().addAll(newGameScene.getSubScene(), flashMessageView, infoView);
-		newGameScene.start();
-		currentGameScene = newGameScene;
-		log("New game scene '%s' started", newGameScene);
+		mainSceneRoot.getChildren().addAll(gameScene.getSubScene(), flashMessageView, infoView);
+		gameScene.start();
+		currentGameScene = gameScene;
+		log("New game scene '%s' started", gameScene);
 	}
 
 	@Override
 	public void onGameChanged(GameModel newGame) {
 		game = Objects.requireNonNull(newGame);
-		controller.setAutopilot(true);
 	}
 
 	@Override
@@ -174,16 +175,15 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void update() {
-
-		// must scene be changed?
-		if (sceneMustChange || !isSuitableScene(currentGameType(), game, currentGameScene)) {
+		if (sceneChangeRequired || !isSuitableScene(currentGameScene, currentGameType(), game)) {
 			if (currentGameScene != null) {
 				currentGameScene.end();
 			}
 			GameScene newGameScene = createGameScene(controller, mainScene.getHeight(), use3DScenes);
-			log("Scene changes from '%s' to '%s'", currentGameScene, newGameScene);
+			addResizeHandler(newGameScene);
+			log("New game scene '%s' created", newGameScene);
 			setGameScene(newGameScene);
-			sceneMustChange = false;
+			sceneChangeRequired = false;
 		}
 		currentGameScene.update();
 		flashMessageView.update();

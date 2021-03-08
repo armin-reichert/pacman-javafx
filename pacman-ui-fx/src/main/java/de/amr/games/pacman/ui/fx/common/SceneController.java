@@ -72,48 +72,44 @@ public class SceneController {
 		return SCENES[gameType.ordinal()][sceneIndex(game)].length > 1;
 	}
 
-	public static boolean isSuitableScene(GameType gameType, GameModel game, GameScene scene) {
+	public static boolean isSuitableScene(GameScene gameScene, GameType gameType, GameModel game) {
 		Class<?> sceneClasses[] = SCENES[gameType.ordinal()][sceneIndex(game)];
-		return Arrays.asList(sceneClasses).contains(scene.getClass());
+		return Arrays.asList(sceneClasses).contains(gameScene.getClass());
 	}
 
-	public static GameScene createGameScene(PacManGameController controller, double height, boolean in3D) {
+	public static GameScene createGameScene(PacManGameController controller, double height, boolean version3D) {
 		GameType gameType = controller.isPlaying(PACMAN) ? PACMAN : MS_PACMAN;
 		GameModel game = controller.getGame();
 		switch (gameType) {
-
 		case MS_PACMAN: {
-			FXRendering r = RENDERING_2D.get(MS_PACMAN);
-			SoundManager s = SOUND.get(MS_PACMAN);
 			int sceneIndex = sceneIndex(game);
 			if (sceneIndex == 0) {
-				return new MsPacMan_IntroScene(controller, r, s);
+				return new MsPacMan_IntroScene(controller, RENDERING_2D.get(MS_PACMAN), SOUND.get(MS_PACMAN));
 			} else if (sceneIndex == 1) {
-				return new MsPacMan_IntermissionScene1(controller, r, s);
+				return new MsPacMan_IntermissionScene1(controller, RENDERING_2D.get(MS_PACMAN), SOUND.get(MS_PACMAN));
 			} else if (sceneIndex == 2) {
-				return new MsPacMan_IntermissionScene2(controller, r, s);
+				return new MsPacMan_IntermissionScene2(controller, RENDERING_2D.get(MS_PACMAN), SOUND.get(MS_PACMAN));
 			} else if (sceneIndex == 3) {
-				return new MsPacMan_IntermissionScene3(controller, r, s);
+				return new MsPacMan_IntermissionScene3(controller, RENDERING_2D.get(MS_PACMAN), SOUND.get(MS_PACMAN));
 			} else if (sceneIndex == 4) {
-				return in3D ? new PlayScene3D(controller, height) : new PlayScene2D(controller, r, s);
+				return version3D ? new PlayScene3D(controller, height)
+						: new PlayScene2D(controller, RENDERING_2D.get(MS_PACMAN), SOUND.get(MS_PACMAN));
 			}
 			break;
 		}
-
 		case PACMAN: {
-			FXRendering r = RENDERING_2D.get(PACMAN);
-			SoundManager s = SOUND.get(PACMAN);
 			int sceneIndex = sceneIndex(game);
 			if (sceneIndex == 0) {
-				return new PacMan_IntroScene(controller, r, s);
+				return new PacMan_IntroScene(controller, RENDERING_2D.get(PACMAN), SOUND.get(PACMAN));
 			} else if (sceneIndex == 1) {
-				return new PacMan_IntermissionScene1(controller, r, s);
+				return new PacMan_IntermissionScene1(controller, RENDERING_2D.get(PACMAN), SOUND.get(PACMAN));
 			} else if (sceneIndex == 2) {
-				return new PacMan_IntermissionScene2(controller, r, s);
+				return new PacMan_IntermissionScene2(controller, RENDERING_2D.get(PACMAN), SOUND.get(PACMAN));
 			} else if (sceneIndex == 3) {
-				return new PacMan_IntermissionScene3(controller, r, s);
+				return new PacMan_IntermissionScene3(controller, RENDERING_2D.get(PACMAN), SOUND.get(PACMAN));
 			} else if (sceneIndex == 4) {
-				return in3D ? new PlayScene3D(controller, height) : new PlayScene2D(controller, r, s);
+				return version3D ? new PlayScene3D(controller, height)
+						: new PlayScene2D(controller, RENDERING_2D.get(PACMAN), SOUND.get(PACMAN));
 			}
 			break;
 		}
