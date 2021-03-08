@@ -45,11 +45,17 @@ import javafx.scene.transform.Scale;
 public class PlayScene3D
 		implements GameScene3D, PacManGameAnimations, GhostAnimations, MazeAnimations, PlayerAnimations {
 
+	private static Color ghostColor(int i) {
+		return i == 0 ? Color.RED : i == 1 ? Color.PINK : i == 2 ? Color.CYAN : Color.ORANGE;
+	}
+
 	private final PacManGameController controller;
 	private final Group root;
 	private final SubScene subScene;
 	private final PerspectiveCamera camera;
-	private Scale scale;
+	private final Animation<?> defaultAnimation;
+
+	private double scaling;
 
 	private Node playerShape;
 	private List<Node> ghostShapes = new ArrayList<>();
@@ -64,13 +70,12 @@ public class PlayScene3D
 	public PlayScene3D(PacManGameController controller, double height) {
 		this.controller = controller;
 		double width = GameScene.ASPECT_RATIO * height;
-		double s = width / GameScene.WIDTH_UNSCALED;
-		scale = new Scale(s, s, s);
+		scaling = width / GameScene.WIDTH_UNSCALED;
 
 		scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), TS);
 
 		root = new Group();
-		root.getTransforms().add(scale);
+		root.getTransforms().add(new Scale(scaling, scaling, scaling));
 
 		camera = new PerspectiveCamera();
 		camera.setTranslateZ(-240);
@@ -80,14 +85,22 @@ public class PlayScene3D
 		subScene = new SubScene(root, width, height);
 		subScene.setFill(Color.BLACK);
 		subScene.setCamera(camera);
+
+		// default for not yet implemented animations
+		Text text = new Text();
+		text.setText("MISSING ANIMATION");
+		text.setFill(Color.RED);
+		text.setFont(Font.font("Sans", FontWeight.BOLD, 6));
+		text.setRotationAxis(Rotate.X_AXIS);
+		text.setRotate(camera.getRotate());
+		defaultAnimation = Animation.of(text);
 	}
 
 	@Override
 	public void resize(double width, double height) {
-		double s = width / GameScene.WIDTH_UNSCALED;
-		scale = new Scale(s, s, s);
+		scaling = width / GameScene.WIDTH_UNSCALED;
 		root.getTransforms().clear();
-		root.getTransforms().add(scale);
+		root.getTransforms().add(new Scale(scaling, scaling, scaling));
 		subScene.setWidth(width);
 		subScene.setHeight(height);
 	}
@@ -158,10 +171,6 @@ public class PlayScene3D
 		root.getChildren().addAll(scoreDisplay, hiscoreDisplay);
 	}
 
-	private Color ghostColor(int i) {
-		return i == 0 ? Color.RED : i == 1 ? Color.PINK : i == 2 ? Color.CYAN : Color.ORANGE;
-	}
-
 	@Override
 	public void update() {
 		GameModel game = controller.getGame();
@@ -176,17 +185,14 @@ public class PlayScene3D
 			pellet.setVisible(!game.level.isFoodRemoved(tile));
 		});
 
-		playerShape = (Node) playerMunching(game.pac, game.pac.dir).frame();
-		playerShape.setTranslateX(game.pac.position.x);
-		playerShape.setTranslateY(game.pac.position.y);
-		playerShape.setTranslateZ(-HTS);
-		playerShape.setVisible(game.pac.visible);
+		root.getChildren().remove(playerShape);
+		playerShape = playerShape(game.pac);
+		root.getChildren().add(playerShape);
 
 		root.getChildren().removeAll(ghostShapes);
 		for (Ghost ghost : game.ghosts) {
 			Node shape = ghostShape(ghost, game.pac.powerTicksLeft > 0);
 			ghostShapes.set(ghost.id, shape);
-			shape.setVisible(ghost.visible);
 		}
 		root.getChildren().addAll(ghostShapes);
 
@@ -211,6 +217,7 @@ public class PlayScene3D
 		computeViewOrder();
 	}
 
+	// TODO not sure if that's the way to go
 	private void computeViewOrder() {
 		GameModel game = controller.getGame();
 		walls.values().forEach(wall -> {
@@ -248,7 +255,7 @@ public class PlayScene3D
 
 	@Override
 	public void initCamera() {
-		log("Init camera for PlayScene3D");
+		log("Initialize camera for PlayScene3D");
 		camera.setTranslateX(0);
 		// TODO how to do that right?
 		camera.setTranslateY(subScene.getHeight() * 1.5);
@@ -256,16 +263,14 @@ public class PlayScene3D
 		camera.setRotate(36);
 	}
 
-	private final Animation<?> NO_ANIMATION = Animation.of(new Object());
-
 	@Override
 	public Animation<?> flapFlapping() {
-		return NO_ANIMATION;
+		return defaultAnimation;
 	}
 
 	@Override
 	public Animation<?> storkFlying() {
-		return NO_ANIMATION;
+		return defaultAnimation;
 	}
 
 	@Override
@@ -291,7 +296,7 @@ public class PlayScene3D
 	}
 
 	private Node ghostShape(Ghost ghost, boolean frightened) {
-		if (ghost.bounty > 0) {
+		if (ghost.visible && ghost.bounty > 0) {
 			DropShadow shadow = new DropShadow(0.3, Color.color(0.4, 0.4, 0.4));
 			Text bountyText = new Text();
 			bountyText.setEffect(shadow);
@@ -331,69 +336,70 @@ public class PlayScene3D
 			shape = (Node) ghostKicking(ghost, ghost.wishDir).animate(); // Looks towards wish dir!
 		}
 
+		shape.setVisible(ghost.visible);
 		shape.setTranslateX(ghost.position.x);
 		shape.setTranslateY(ghost.position.y);
 		shape.setTranslateZ(-HTS);
 		return shape;
 	}
 
-	private Map<Ghost, Animation<?>> ghostFlashingAnimation = new HashMap<>();
+	private Map<Ghost, Animation<?>> ghostFlashingAnimationByGhost = new HashMap<>();
 
 	@Override
 	public Animation<?> ghostFlashing(Ghost ghost) {
-		if (!ghostFlashingAnimation.containsKey(ghost)) {
+		if (!ghostFlashingAnimationByGhost.containsKey(ghost)) {
 			Sphere s1 = new Sphere(HTS);
 			s1.setMaterial(new PhongMaterial(Color.BLUE));
 			Sphere s2 = new Sphere(HTS);
 			s2.setMaterial(new PhongMaterial(Color.WHITE));
-			ghostFlashingAnimation.put(ghost, Animation.of(s1, s2).frameDuration(10).endless());
+			ghostFlashingAnimationByGhost.put(ghost, Animation.of(s1, s2).frameDuration(10).endless());
 		}
-		return ghostFlashingAnimation.get(ghost);
+		return ghostFlashingAnimationByGhost.get(ghost);
 	}
 
-	private Map<Ghost, Animation<?>> ghostFrightenedAnimation = new HashMap<>();
+	private Map<Ghost, Animation<?>> ghostFrightenedAnimationByGhost = new HashMap<>();
 
 	@Override
 	public Animation<?> ghostFrightened(Ghost ghost, Direction dir) {
-		if (!ghostFrightenedAnimation.containsKey(ghost)) {
+		if (!ghostFrightenedAnimationByGhost.containsKey(ghost)) {
 			Sphere s = new Sphere(HTS);
 			s.setMaterial(new PhongMaterial(Color.BLUE));
 			s.setUserData(ghost);
-			ghostFrightenedAnimation.put(ghost, Animation.of(s));
+			ghostFrightenedAnimationByGhost.put(ghost, Animation.of(s));
 		}
-		return ghostFrightenedAnimation.get(ghost);
+		return ghostFrightenedAnimationByGhost.get(ghost);
 	}
 
-	private Map<Ghost, Animation<?>> ghostKickingAnimation = new HashMap<>();
+	private Map<Ghost, Animation<?>> ghostKickingAnimationByGhost = new HashMap<>();
 
 	@Override
 	public Animation<?> ghostKicking(Ghost ghost, Direction dir) {
-		if (!ghostKickingAnimation.containsKey(ghost)) {
+		if (!ghostKickingAnimationByGhost.containsKey(ghost)) {
 			Sphere s = new Sphere(HTS);
 			s.setMaterial(new PhongMaterial(ghostColor(ghost.id)));
 			s.setUserData(ghost);
-			ghostKickingAnimation.put(ghost, Animation.of(s));
+			ghostKickingAnimationByGhost.put(ghost, Animation.of(s));
 		}
-		return ghostKickingAnimation.get(ghost);
+		return ghostKickingAnimationByGhost.get(ghost);
 	}
 
-	private Map<Ghost, Animation<?>> ghostReturningHomeAnimation = new HashMap<>();
+	private Map<Ghost, Animation<?>> ghostReturningHomeAnimationByGhost = new HashMap<>();
 
 	@Override
 	public Animation<?> ghostReturningHome(Ghost ghost, Direction dir) {
-		if (!ghostReturningHomeAnimation.containsKey(ghost)) {
+		if (!ghostReturningHomeAnimationByGhost.containsKey(ghost)) {
 			Cylinder s = new Cylinder(2, TS);
 			s.setMaterial(new PhongMaterial(ghostColor(ghost.id)));
 			s.setUserData(ghost);
-			ghostReturningHomeAnimation.put(ghost, Animation.of(s));
+			ghostReturningHomeAnimationByGhost.put(ghost, Animation.of(s));
 		}
-		return ghostReturningHomeAnimation.get(ghost);
+		return ghostReturningHomeAnimationByGhost.get(ghost);
 	}
 
 	@Override
 	public Animation<?> mazeFlashing(int mazeNumber) {
 		// TODO implement this method
-		return NO_ANIMATION;
+		return defaultAnimation;
 	}
 
 	@Override
@@ -402,28 +408,42 @@ public class PlayScene3D
 		return Stream.empty();
 	}
 
+	private Node playerShape(Pac player) {
+		Node shape = null;
+		if (player.dead) {
+			shape = (Node) playerDying().frame();
+		} else {
+			shape = (Node) playerMunching(player, player.dir).frame();
+		}
+		shape.setVisible(player.visible);
+		shape.setTranslateX(player.position.x);
+		shape.setTranslateY(player.position.y);
+		shape.setTranslateZ(-HTS);
+		return shape;
+	}
+
 	@Override
 	public Animation<?> playerDying() {
 		// TODO implement this method
-		return NO_ANIMATION;
+		return defaultAnimation;
 	}
 
-	private Animation<?> playerMunching;
+	private Animation<?> playerMunchingAnimation;
 
 	@Override
 	public Animation<?> playerMunching(Pac player, Direction dir) {
-		if (playerMunching == null) {
+		if (playerMunchingAnimation == null) {
 			Box box = new Box(TS, TS, TS);
 			box.setMaterial(new PhongMaterial(Color.YELLOW));
 			box.setUserData(player);
-			playerMunching = Animation.of(box);
+			playerMunchingAnimation = Animation.of(box);
 		}
-		return playerMunching;
+		return playerMunchingAnimation;
 	}
 
 	@Override
 	public Animation<?> spouseMunching(Pac spouse, Direction dir) {
-		// TODO implement this method
-		return null;
+		// used in intermission scenes where both, Pac-Man and Ms. Pac-Man, appear
+		return defaultAnimation;
 	}
 }
