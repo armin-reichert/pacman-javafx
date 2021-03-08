@@ -7,11 +7,9 @@ import static de.amr.games.pacman.ui.fx.common.SceneController.is2DAnd3DVersionA
 import static de.amr.games.pacman.ui.fx.common.SceneController.isSuitableScene;
 
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.GameType;
 import de.amr.games.pacman.model.common.PacManGameState;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.PacManGameUI;
@@ -114,7 +112,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		use3DScenes = !use3DScenes;
 		String message = String.format("3D scenes %s", use3DScenes ? "ON" : "OFF");
 		showFlashMessage(message, clock.sec(1));
-		if (is2DAnd3DVersionAvailable(currentGameType(), controller.getGame())) {
+		if (is2DAnd3DVersionAvailable(controller.currentlyPlaying(), controller.getGame())) {
 			sceneChangeRequired = true;
 			log("Scene must change because 2D and 3D versions are available");
 		}
@@ -176,7 +174,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void update() {
-		if (sceneChangeRequired || !isSuitableScene(currentGameScene, currentGameType(), controller.getGame())) {
+		if (sceneChangeRequired
+				|| !isSuitableScene(currentGameScene, controller.currentlyPlaying(), controller.getGame())) {
 			if (currentGameScene != null) {
 				currentGameScene.end();
 			}
@@ -188,22 +187,14 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 		currentGameScene.update();
 		flashMessageView.update();
-		updateInfoView();
-	}
 
-	private void updateInfoView() {
+		// update info view
 		String text = "";
-		text += String.format("Main scene:    w=%.0f h=%.0f\n", mainScene.getWidth(), mainScene.getHeight());
+		text += String.format("Main scene: w=%.0f h=%.0f\n", mainScene.getWidth(), mainScene.getHeight());
 		text += String.format("%s: w=%.0f h=%.0f\n", currentGameScene.getClass().getSimpleName(),
 				currentGameScene.getSubScene().getWidth(), currentGameScene.getSubScene().getHeight());
-		if (camControl != null) {
-			text += camControl.getCameraInfo();
-		}
+		text += camControl.getCameraInfo();
 		infoView.setText(text);
-	}
-
-	private GameType currentGameType() {
-		return Stream.of(GameType.values()).filter(controller::isPlaying).findFirst().get();
 	}
 
 	@Override
@@ -226,7 +217,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		if (muted) {
 			return Optional.empty(); // TODO
 		}
-		return Optional.of(SceneController.SOUND.get(currentGameType()));
+		return Optional.of(SceneController.SOUND.get(controller.currentlyPlaying()));
 	}
 
 	@Override
