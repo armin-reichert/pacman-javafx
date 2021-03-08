@@ -42,6 +42,11 @@ import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 
+/**
+ * 3D scene displaying the maze and the game play for both, Pac-Man and Ms. Pac-Man games.
+ * 
+ * @author Armin Reichert
+ */
 public class PlayScene3D
 		implements GameScene3D, PacManGameAnimations, GhostAnimations, MazeAnimations, PlayerAnimations {
 
