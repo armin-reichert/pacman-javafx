@@ -2,12 +2,14 @@ package de.amr.games.pacman.ui.fx.common;
 
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
+import java.util.Optional;
+
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.PacManGameState;
 import de.amr.games.pacman.sound.SoundManager;
+import de.amr.games.pacman.ui.animation.PacManGameAnimations;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
-import javafx.scene.Camera;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -17,12 +19,27 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class PlayScene2D extends AbstractGameScene2D {
 
-	public PlayScene2D(Camera camera, PacManGameController controller, FXRendering rendering, SoundManager sounds) {
-		super(camera, controller, rendering, sounds);
+	public PlayScene2D(PacManGameController controller, FXRendering rendering, SoundManager sounds) {
+		super(controller, rendering, sounds);
 	}
 
 	@Override
-	public void draw(GraphicsContext g) {
+	public Optional<PacManGameAnimations> animations() {
+		return Optional.of(rendering);
+	}
+
+	@Override
+	public void start() {
+	}
+
+	@Override
+	public void end() {
+	}
+
+	@Override
+	public void update() {
+		clearCanvas();
+		GraphicsContext g = canvas.getGraphicsContext2D();
 		GameModel game = controller.getGame();
 		boolean flashing = rendering.mazeAnimations().mazeFlashing(game.level.mazeNumber).hasStarted();
 		rendering.drawMaze(g, game.level.mazeNumber, 0, t(3), flashing);
@@ -40,35 +57,5 @@ public class PlayScene2D extends AbstractGameScene2D {
 			rendering.drawLivesCounter(g, game, t(2), t(34));
 		}
 		rendering.drawLevelCounter(g, game, t(25), t(34));
-	}
-
-	@Override
-	public Camera getCamera() {
-		return camera;
-	}
-
-	@Override
-	public void updateCamera() {
-		// TODO how to position the camera such that the player gets centered on the *rotated* scene?
-//		double speed = 1.0 / clock.sec(1);
-//		V2d camPosition = new V2d(cam.getTranslateX(), cam.getTranslateY());
-//		V2d playerPosition = controller.getGame().pac.position.scaled(scale.getX());
-//		V2d target = playerPosition.plus(sceneSize.scaled(-0.5)).plus(sceneSize.x / 2, 0);
-//		V2d velocity = target.minus(camPosition).scaled(speed);
-//		V2d newCamPosition = camPosition.plus(velocity);
-//		cam.setTranslateX(newCamPosition.x);
-//		cam.setTranslateY(newCamPosition.y);
-	}
-
-	@Override
-	public void start() {
-	}
-
-	@Override
-	public void update() {
-	}
-
-	@Override
-	public void end() {
 	}
 }

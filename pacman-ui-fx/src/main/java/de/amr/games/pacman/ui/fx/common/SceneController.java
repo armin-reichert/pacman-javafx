@@ -24,7 +24,6 @@ import de.amr.games.pacman.ui.fx.pacman.PacMan_IntroScene;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import de.amr.games.pacman.ui.fx.rendering.standard.MsPacMan_StandardRendering;
 import de.amr.games.pacman.ui.fx.rendering.standard.PacMan_StandardRendering;
-import javafx.scene.Camera;
 
 /**
  * Controls scene selection and serves as scene factory.
@@ -78,7 +77,7 @@ public class SceneController {
 		return Arrays.asList(sceneClasses).contains(scene.getClass());
 	}
 
-	public static GameScene createGameScene(PacManGameController controller, Camera camera, double height, boolean in3D) {
+	public static GameScene createGameScene(PacManGameController controller, double height, boolean in3D) {
 		GameType gameType = controller.isPlaying(PACMAN) ? PACMAN : MS_PACMAN;
 		GameModel game = controller.getGame();
 		switch (gameType) {
@@ -88,15 +87,15 @@ public class SceneController {
 			SoundManager s = SOUND.get(MS_PACMAN);
 			int sceneIndex = sceneIndex(game);
 			if (sceneIndex == 0) {
-				return new MsPacMan_IntroScene(camera, controller, r, s);
+				return new MsPacMan_IntroScene(controller, r, s);
 			} else if (sceneIndex == 1) {
-				return new MsPacMan_IntermissionScene1(camera, controller, r, s);
+				return new MsPacMan_IntermissionScene1(controller, r, s);
 			} else if (sceneIndex == 2) {
-				return new MsPacMan_IntermissionScene2(camera, controller, r, s);
+				return new MsPacMan_IntermissionScene2(controller, r, s);
 			} else if (sceneIndex == 3) {
-				return new MsPacMan_IntermissionScene3(camera, controller, r, s);
+				return new MsPacMan_IntermissionScene3(controller, r, s);
 			} else if (sceneIndex == 4) {
-				return in3D ? new PlayScene3D(controller, height) : new PlayScene2D(camera, controller, r, s);
+				return in3D ? new PlayScene3D(controller, height) : new PlayScene2D(controller, r, s);
 			}
 			break;
 		}
@@ -106,15 +105,15 @@ public class SceneController {
 			SoundManager s = SOUND.get(PACMAN);
 			int sceneIndex = sceneIndex(game);
 			if (sceneIndex == 0) {
-				return new PacMan_IntroScene(camera, controller, r, s);
+				return new PacMan_IntroScene(controller, r, s);
 			} else if (sceneIndex == 1) {
-				return new PacMan_IntermissionScene1(camera, controller, r, s);
+				return new PacMan_IntermissionScene1(controller, r, s);
 			} else if (sceneIndex == 2) {
-				return new PacMan_IntermissionScene2(camera, controller, r, s);
+				return new PacMan_IntermissionScene2(controller, r, s);
 			} else if (sceneIndex == 3) {
-				return new PacMan_IntermissionScene3(camera, controller, r, s);
+				return new PacMan_IntermissionScene3(controller, r, s);
 			} else if (sceneIndex == 4) {
-				return in3D ? new PlayScene3D(controller, height) : new PlayScene2D(camera, controller, r, s);
+				return in3D ? new PlayScene3D(controller, height) : new PlayScene2D(controller, r, s);
 			}
 			break;
 		}

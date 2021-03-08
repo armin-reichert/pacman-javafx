@@ -10,7 +10,6 @@ import de.amr.games.pacman.ui.fx.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import de.amr.games.pacman.ui.mspacman.MsPacMan_IntroScene_Controller;
 import de.amr.games.pacman.ui.mspacman.MsPacMan_IntroScene_Controller.Phase;
-import javafx.scene.Camera;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -24,9 +23,8 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 
 	private MsPacMan_IntroScene_Controller animation;
 
-	public MsPacMan_IntroScene(Camera camera, PacManGameController controller, FXRendering rendering,
-			SoundManager sounds) {
-		super(camera, controller, rendering, sounds);
+	public MsPacMan_IntroScene(PacManGameController controller, FXRendering rendering, SoundManager sounds) {
+		super(controller, rendering, sounds);
 	}
 
 	@Override
@@ -42,10 +40,8 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 	@Override
 	public void update() {
 		animation.update();
-	}
-
-	@Override
-	public void draw(GraphicsContext g) {
+		clearCanvas();
+		GraphicsContext g = canvas.getGraphicsContext2D();
 		g.setFont(rendering.getScoreFont());
 		g.setFill(Color.ORANGE);
 		g.fillText("\"MS PAC-MAN\"", t(8), t(5));

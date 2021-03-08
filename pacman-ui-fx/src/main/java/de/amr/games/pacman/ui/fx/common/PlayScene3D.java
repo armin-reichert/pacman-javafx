@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.PacManGameController;
@@ -47,8 +49,7 @@ import javafx.scene.transform.Scale;
  * 
  * @author Armin Reichert
  */
-public class PlayScene3D
-		implements GameScene3D, PacManGameAnimations, GhostAnimations, MazeAnimations, PlayerAnimations {
+public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimations, MazeAnimations, PlayerAnimations {
 
 	private static Color ghostColor(int i) {
 		return i == 0 ? Color.RED : i == 1 ? Color.PINK : i == 2 ? Color.CYAN : Color.ORANGE;
@@ -102,12 +103,22 @@ public class PlayScene3D
 	}
 
 	@Override
+	public Optional<PacManGameAnimations> animations() {
+		return Optional.of(this);
+	}
+
+	@Override
 	public void resize(double width, double height) {
 		scaling = width / GameScene.WIDTH_UNSCALED;
 		root.getTransforms().clear();
 		root.getTransforms().add(new Scale(scaling, scaling, scaling));
 		subScene.setWidth(width);
 		subScene.setHeight(height);
+	}
+
+	@Override
+	public OptionalDouble aspectRatio() {
+		return OptionalDouble.empty();
 	}
 
 	@Override

@@ -8,7 +8,6 @@ import de.amr.games.pacman.ui.fx.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene1_Controller;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene1_Controller.Phase;
-import javafx.scene.Camera;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -20,9 +19,8 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 
 	private PacMan_IntermissionScene1_Controller animation;
 
-	public PacMan_IntermissionScene1(Camera camera, PacManGameController controller, FXRendering rendering,
-			SoundManager sounds) {
-		super(camera, controller, rendering, sounds);
+	public PacMan_IntermissionScene1(PacManGameController controller, FXRendering rendering, SoundManager sounds) {
+		super(controller, rendering, sounds);
 	}
 
 	@Override
@@ -38,10 +36,8 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 	@Override
 	public void update() {
 		animation.update();
-	}
-
-	@Override
-	public void draw(GraphicsContext g) {
+		clearCanvas();
+		GraphicsContext g = canvas.getGraphicsContext2D();
 		rendering.drawGhost(g, animation.blinky, false);
 		if (animation.phase == Phase.BLINKY_CHASING_PACMAN) {
 			rendering.drawPlayer(g, animation.pac);

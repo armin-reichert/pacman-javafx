@@ -7,7 +7,6 @@ import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene2_Controller;
-import javafx.scene.Camera;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -19,9 +18,8 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 	private PacMan_IntermissionScene2_Controller animation;
 
-	public PacMan_IntermissionScene2(Camera camera, PacManGameController controller, FXRendering rendering,
-			SoundManager sounds) {
-		super(camera, controller, rendering, sounds);
+	public PacMan_IntermissionScene2(PacManGameController controller, FXRendering rendering, SoundManager sounds) {
+		super(controller, rendering, sounds);
 	}
 
 	@Override
@@ -37,10 +35,8 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 	@Override
 	public void update() {
 		animation.update();
-	}
-
-	@Override
-	public void draw(GraphicsContext g) {
+		clearCanvas();
+		GraphicsContext g = canvas.getGraphicsContext2D();
 		rendering.drawLevelCounter(g, controller.getGame(), t(25), t(34));
 		rendering.drawNail(g, animation.nail);
 		rendering.drawPlayer(g, animation.pac);
