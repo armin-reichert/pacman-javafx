@@ -37,6 +37,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
+import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Sphere;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -141,7 +142,6 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 				} else {
 					wall.setMaterial(new PhongMaterial(MsPacMan_Constants.getMazeWallColor(game.level.mazeNumber - 1)));
 				}
-//				wall.setDrawMode(DrawMode.LINE);
 				wall.setTranslateX(tile.x * TS);
 				wall.setTranslateY(tile.y * TS);
 				wall.setUserData(tile);
@@ -190,6 +190,9 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 	@Override
 	public void update() {
 		GameModel game = controller.getGame();
+
+		walls.values().stream().map(wall -> (Box) wall)
+				.forEach(wall -> wall.setDrawMode(GlobalSettings.drawWallsAsLines ? DrawMode.LINE : DrawMode.FILL));
 
 		energizers.forEach(energizer -> {
 			V2i tile = (V2i) energizer.getUserData();

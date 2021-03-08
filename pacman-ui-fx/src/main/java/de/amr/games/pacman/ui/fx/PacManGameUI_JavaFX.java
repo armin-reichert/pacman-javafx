@@ -17,11 +17,10 @@ import de.amr.games.pacman.ui.animation.PacManGameAnimations;
 import de.amr.games.pacman.ui.fx.common.CameraController;
 import de.amr.games.pacman.ui.fx.common.FlashMessageView;
 import de.amr.games.pacman.ui.fx.common.GameScene;
+import de.amr.games.pacman.ui.fx.common.GlobalSettings;
 import de.amr.games.pacman.ui.fx.common.SceneController;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -52,10 +51,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private final StackPane mainSceneRoot;
 
 	private boolean use3DScenes;
-	private BooleanProperty infoVisibleProperty = new SimpleBooleanProperty(true);
 	private boolean muted;
-
-	private boolean sceneChangeRequired;
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController controller, double height) {
 		this.controller = controller;
@@ -84,9 +80,13 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				break;
 			case I:
 				if (e.isControlDown()) {
-					infoVisibleProperty.set(!infoVisibleProperty.get());
+					GlobalSettings.infoViewVisible = !GlobalSettings.infoViewVisible;
 				}
 				break;
+			case L:
+				if (e.isControlDown()) {
+					GlobalSettings.drawWallsAsLines = !GlobalSettings.drawWallsAsLines;
+				}
 			default:
 				break;
 			}
@@ -95,7 +95,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		infoView.setFill(Color.LIGHTGREEN);
 		infoView.setFont(Font.font("Monospace", 14));
 		infoView.setText("");
-		infoView.visibleProperty().bind(infoVisibleProperty);
 		StackPane.setAlignment(infoView, Pos.TOP_LEFT);
 
 		GameScene newGameScene = createGameScene(controller, mainScene.getHeight(), use3DScenes);
@@ -113,7 +112,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		String message = String.format("3D scenes %s", use3DScenes ? "ON" : "OFF");
 		showFlashMessage(message, clock.sec(1));
 		if (is2DAnd3DVersionAvailable(controller.currentlyPlaying(), controller.getGame())) {
-			sceneChangeRequired = true;
+			currentGameScene = null; // trigger scene change
 			log("Scene must change because 2D and 3D versions are available");
 		}
 	}
@@ -167,14 +166,16 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	@Override
 	public void onGameStateChanged(PacManGameState from, PacManGameState to) {
 		if (from == PacManGameState.CHANGING_LEVEL) {
-			currentGameScene.start();
+			if (currentGameScene != null) {
+				currentGameScene.start();
+			}
 			showFlashMessage("Enter level " + controller.getGame().levelNumber, clock.sec(1));
 		}
 	}
 
 	@Override
 	public void update() {
-		if (sceneChangeRequired
+		if (currentGameScene == null
 				|| !isSuitableScene(currentGameScene, controller.currentlyPlaying(), controller.getGame())) {
 			if (currentGameScene != null) {
 				currentGameScene.end();
@@ -183,8 +184,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			addResizeHandler(newGameScene);
 			log("New game scene '%s' created", newGameScene);
 			setGameScene(newGameScene);
-			sceneChangeRequired = false;
 		}
+
 		currentGameScene.update();
 		flashMessageView.update();
 
@@ -195,11 +196,14 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				currentGameScene.getSubScene().getWidth(), currentGameScene.getSubScene().getHeight());
 		text += camControl.getCameraInfo();
 		infoView.setText(text);
+		infoView.setVisible(GlobalSettings.infoViewVisible);
 	}
 
 	@Override
 	public void reset() {
-		currentGameScene.end();
+		if (currentGameScene != null) {
+			currentGameScene.end();
+		}
 	}
 
 	@Override
@@ -227,6 +231,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public Optional<PacManGameAnimations> animation() {
-		return currentGameScene.animations();
+		return currentGameScene != null ? currentGameScene.animations() : Optional.empty();
 	}
 }
