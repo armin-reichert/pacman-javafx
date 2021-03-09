@@ -56,10 +56,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController controller, double height) {
 		this.controller = controller;
 
-		mainSceneRoot = new StackPane();
-		mainScene = new Scene(mainSceneRoot, GameScene.ASPECT_RATIO * height, height, Color.BLACK);
-
-		stage.setScene(mainScene);
 		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
 		stage.getIcons().add(new Image("/pacman/graphics/pacman.png"));
 		stage.setOnCloseRequest(e -> Platform.exit());
@@ -97,12 +93,14 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		infoView.setText("");
 		StackPane.setAlignment(infoView, Pos.TOP_LEFT);
 
-		GameScene newGameScene = createGameScene(controller, mainScene.getHeight(), use3DScenes);
-		log("New game scene '%s' created", newGameScene);
+		mainSceneRoot = new StackPane();
+		mainScene = new Scene(mainSceneRoot, GameScene.ASPECT_RATIO * height, height, Color.BLACK);
 
+		GameScene newGameScene = createGameScene(controller, height, use3DScenes);
+		changeGameScene(newGameScene);
 		addResizeHandler(newGameScene);
-		setGameScene(newGameScene);
 
+		stage.setScene(mainScene);
 		stage.centerOnScreen();
 		stage.show();
 	}
@@ -127,36 +125,42 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			// keep aspect ratio when resizing
 			double aspectRatio = scene.aspectRatio().getAsDouble();
 			mainScene.widthProperty().addListener((s, o, n) -> {
-				double newHeight = Math.min(mainScene.getWidth() / aspectRatio, mainScene.getHeight());
-				scene.resize(mainScene.getWidth(), newHeight);
+				double newHeight = Math.min(n.doubleValue() / aspectRatio, mainScene.getHeight());
+				double newWidth = newHeight * aspectRatio;
+				scene.resize(newWidth, newHeight);
 			});
 			mainScene.heightProperty().addListener((s, o, n) -> {
+				double newHeight = n.doubleValue();
 				double newWidth = Math.min(mainScene.getHeight() * aspectRatio, mainScene.getWidth());
-				scene.resize(newWidth, mainScene.getHeight());
+				scene.resize(newWidth, newHeight);
 			});
 		} else {
-			ChangeListener<? super Number> resizeToMainSceneSize = (s, o, n) -> {
+			ChangeListener<? super Number> adaptGameSceneToMainScene = (s, o, n) -> {
 				scene.resize(mainScene.getWidth(), mainScene.getHeight());
 			};
-			mainScene.widthProperty().addListener(resizeToMainSceneSize);
-			mainScene.heightProperty().addListener(resizeToMainSceneSize);
+			mainScene.widthProperty().addListener(adaptGameSceneToMainScene);
+			mainScene.heightProperty().addListener(adaptGameSceneToMainScene);
 		}
 	}
 
-	private void setGameScene(GameScene gameScene) {
+	private void changeGameScene(GameScene newGameScene) {
+		// TODO what if new and current scene are equal?
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
-		gameScene.resize(mainScene.getWidth(), mainScene.getHeight());
-		camControl.setCamera(gameScene.getCamera());
-		if (gameScene.getCamera() != null) {
-			gameScene.initCamera();
+		currentGameScene = newGameScene;
+		double width = newGameScene.aspectRatio().isPresent()
+				? newGameScene.aspectRatio().getAsDouble() * mainScene.getHeight()
+				: mainScene.getWidth();
+		newGameScene.resize(width, mainScene.getHeight());
+		camControl.setCamera(newGameScene.getCamera());
+		if (newGameScene.getCamera() != null) {
+			newGameScene.initCamera();
 		}
 		mainSceneRoot.getChildren().clear();
-		mainSceneRoot.getChildren().addAll(gameScene.getSubScene(), flashMessageView, infoView);
-		currentGameScene = gameScene;
-		gameScene.start();
-		log("New game scene '%s' started", gameScene);
+		mainSceneRoot.getChildren().addAll(newGameScene.getSubScene(), flashMessageView, infoView);
+		newGameScene.start();
+		log("New game scene '%s' started", newGameScene);
 	}
 
 	@Override
@@ -183,7 +187,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			GameScene newGameScene = createGameScene(controller, mainScene.getHeight(), use3DScenes);
 			addResizeHandler(newGameScene);
 			log("New game scene '%s' created", newGameScene);
-			setGameScene(newGameScene);
+			changeGameScene(newGameScene);
 		}
 
 		currentGameScene.update();
