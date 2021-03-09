@@ -164,7 +164,7 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 		Color foodColor = controller.isPlaying(GameType.PACMAN) ? Color.rgb(250, 185, 176)
 				: MsPacMan_Constants.getMazeFoodColor(game.level.mazeNumber);
 		energizers.clear();
-		world.tiles().filter(world::isEnergizerTile).forEach(tile -> {
+		world.energizerTiles().forEach(tile -> {
 			Sphere energizer = new Sphere(HTS);
 			energizer.setMaterial(new PhongMaterial(foodColor));
 			energizer.setUserData(tile);
