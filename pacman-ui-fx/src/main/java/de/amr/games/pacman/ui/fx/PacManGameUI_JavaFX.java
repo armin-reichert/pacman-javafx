@@ -65,22 +65,23 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, camControl::handleKeyEvent);
 
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+			boolean control = e.isControlDown();
 			switch (e.getCode()) {
 			case F11:
 				stage.setFullScreen(true);
 				break;
 			case DIGIT3:
-				if (e.isControlDown()) {
+				if (control) {
 					toggleUse3DScenes();
 				}
 				break;
 			case I:
-				if (e.isControlDown()) {
+				if (control) {
 					GlobalSettings.infoViewVisible = !GlobalSettings.infoViewVisible;
 				}
 				break;
 			case L:
-				if (e.isControlDown()) {
+				if (control) {
 					GlobalSettings.drawWallsAsLines = !GlobalSettings.drawWallsAsLines;
 				}
 			default:
@@ -160,7 +161,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		mainSceneRoot.getChildren().clear();
 		mainSceneRoot.getChildren().addAll(newGameScene.getSubScene(), flashMessageView, infoView);
 		newGameScene.start();
-		log("New game scene '%s' started", newGameScene);
+		log("Game scene '%s' started at clock tick %d", newGameScene, clock.ticksTotal);
 	}
 
 	@Override
