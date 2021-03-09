@@ -222,7 +222,7 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 			if (game.state.timer.running() == clock.sec(2)) {
 				levelChangeAnimation = new ScaleTransition(Duration.seconds(3), maze);
 				levelChangeAnimation.setFromZ(1);
-				levelChangeAnimation.setToZ(0.1);
+				levelChangeAnimation.setToZ(0);
 				levelChangeAnimation.play();
 			}
 		}
