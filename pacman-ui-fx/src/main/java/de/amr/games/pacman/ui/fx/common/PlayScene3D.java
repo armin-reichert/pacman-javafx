@@ -197,7 +197,7 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 
 		ghostShapes.clear();
 		for (Ghost ghost : game.ghosts) {
-			Node ghostShape = ghostShape(ghost, game.pac.powerTicksLeft > 0);
+			Node ghostShape = ghostShape(ghost, game.pac.powerTimer.running());
 			ghostShapes.add(ghostShape);
 			ghostShape.setViewOrder(-ghost.position.y);
 			maze.getChildren().add(ghostShape);
@@ -216,10 +216,10 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 		GameModel game = controller.getGame();
 
 		if (game.state == PacManGameState.CHANGING_LEVEL) {
-			if (game.state.timer.running() == clock.sec(1)) {
+			if (game.state.timer.ticksRunning() == clock.sec(1)) {
 				food.setVisible(false);
 			}
-			if (game.state.timer.running() == clock.sec(2)) {
+			if (game.state.timer.ticksRunning() == clock.sec(2)) {
 				levelChangeAnimation = new ScaleTransition(Duration.seconds(3), maze);
 				levelChangeAnimation.setFromZ(1);
 				levelChangeAnimation.setToZ(0);
@@ -246,7 +246,7 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 
 		maze.getChildren().removeAll(ghostShapes);
 		for (Ghost ghost : game.ghosts) {
-			Node ghostShape = ghostShape(ghost, game.pac.powerTicksLeft > 0);
+			Node ghostShape = ghostShape(ghost, game.pac.powerTimer.running());
 			ghostShape.setViewOrder(-ghost.position.y);
 			ghostShapes.set(ghost.id, ghostShape);
 			maze.getChildren().add(ghostShape);

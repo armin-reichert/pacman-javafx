@@ -69,7 +69,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 
 	private void drawGuys(GraphicsContext g) {
 		for (Ghost ghost : animation.ghosts) {
-			rendering.drawGhost(g, ghost, animation.pac.powerTicksLeft > 0);
+			rendering.drawGhost(g, ghost, !animation.pac.powerTimer.expired());
 		}
 		rendering.drawPlayer(g, animation.pac);
 	}
