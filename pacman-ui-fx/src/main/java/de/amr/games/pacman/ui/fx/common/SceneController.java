@@ -18,7 +18,7 @@ import de.amr.games.pacman.ui.fx.pacman.PacMan_IntermissionScene1;
 import de.amr.games.pacman.ui.fx.pacman.PacMan_IntermissionScene2;
 import de.amr.games.pacman.ui.fx.pacman.PacMan_IntermissionScene3;
 import de.amr.games.pacman.ui.fx.pacman.PacMan_IntroScene;
-import de.amr.games.pacman.ui.fx.rendering.FXRendering;
+import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.fx.rendering.standard.MsPacMan_StandardRendering;
 import de.amr.games.pacman.ui.fx.rendering.standard.PacMan_StandardRendering;
 import de.amr.games.pacman.ui.sound.SoundManager;
@@ -30,7 +30,7 @@ import de.amr.games.pacman.ui.sound.SoundManager;
  */
 public class SceneController {
 
-	public static final EnumMap<GameType, FXRendering> RENDERING_2D = new EnumMap<>(GameType.class);
+	public static final EnumMap<GameType, PacManGameRendering2D> RENDERING_2D = new EnumMap<>(GameType.class);
 	static {
 		RENDERING_2D.put(MS_PACMAN, new MsPacMan_StandardRendering());
 		RENDERING_2D.put(PACMAN, new PacMan_StandardRendering());

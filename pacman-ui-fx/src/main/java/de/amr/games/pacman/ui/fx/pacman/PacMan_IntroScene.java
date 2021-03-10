@@ -9,7 +9,7 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.God;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx.common.AbstractGameScene2D;
-import de.amr.games.pacman.ui.fx.rendering.FXRendering;
+import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.pacman.PacMan_IntroScene_Controller;
 import de.amr.games.pacman.ui.pacman.PacMan_IntroScene_Controller.GhostPortrait;
 import de.amr.games.pacman.ui.pacman.PacMan_IntroScene_Controller.Phase;
@@ -30,7 +30,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 
 	private PacMan_IntroScene_Controller animation;
 
-	public PacMan_IntroScene(PacManGameController controller, FXRendering rendering, SoundManager sounds) {
+	public PacMan_IntroScene(PacManGameController controller, PacManGameRendering2D rendering, SoundManager sounds) {
 		super(controller, rendering, sounds);
 	}
 

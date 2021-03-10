@@ -4,7 +4,7 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.ui.fx.common.AbstractGameScene2D;
-import de.amr.games.pacman.ui.fx.rendering.FXRendering;
+import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene3_Controller;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene3_Controller.Phase;
 import de.amr.games.pacman.ui.sound.SoundManager;
@@ -18,16 +18,16 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 
-	private PacMan_IntermissionScene3_Controller animation;
+	private PacMan_IntermissionScene3_Controller sceneController;
 
-	public PacMan_IntermissionScene3(PacManGameController controller, FXRendering rendering, SoundManager sounds) {
+	public PacMan_IntermissionScene3(PacManGameController controller, PacManGameRendering2D rendering, SoundManager sounds) {
 		super(controller, rendering, sounds);
 	}
 
 	@Override
 	public void start() {
-		animation = new PacMan_IntermissionScene3_Controller(controller, rendering, sounds);
-		animation.start();
+		sceneController = new PacMan_IntermissionScene3_Controller(controller, rendering, sounds);
+		sceneController.start();
 	}
 
 	@Override
@@ -39,11 +39,11 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 		GraphicsContext g = canvas.getGraphicsContext2D();
 		clearCanvas();
 		rendering.drawLevelCounter(g, controller.getGame(), t(25), t(34));
-		rendering.drawPlayer(g, animation.pac);
-		if (animation.phase == Phase.CHASING_PACMAN) {
-			rendering.drawBlinkyPatched(g, animation.blinky);
+		rendering.drawPlayer(g, sceneController.pac);
+		if (sceneController.phase == Phase.CHASING_PACMAN) {
+			rendering.drawBlinkyPatched(g, sceneController.blinky);
 		} else {
-			rendering.drawBlinkyNaked(g, animation.blinky);
+			rendering.drawBlinkyNaked(g, sceneController.blinky);
 		}
 	}
 }

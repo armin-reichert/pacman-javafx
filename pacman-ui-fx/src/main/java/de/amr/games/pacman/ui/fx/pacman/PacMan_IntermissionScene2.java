@@ -4,7 +4,7 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.ui.fx.common.AbstractGameScene2D;
-import de.amr.games.pacman.ui.fx.rendering.FXRendering;
+import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene2_Controller;
 import de.amr.games.pacman.ui.sound.SoundManager;
 import javafx.scene.canvas.GraphicsContext;
@@ -16,16 +16,16 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 
-	private PacMan_IntermissionScene2_Controller animation;
+	private PacMan_IntermissionScene2_Controller sceneController;
 
-	public PacMan_IntermissionScene2(PacManGameController controller, FXRendering rendering, SoundManager sounds) {
+	public PacMan_IntermissionScene2(PacManGameController controller, PacManGameRendering2D rendering, SoundManager sounds) {
 		super(controller, rendering, sounds);
 	}
 
 	@Override
 	public void start() {
-		animation = new PacMan_IntermissionScene2_Controller(controller, rendering, sounds);
-		animation.start();
+		sceneController = new PacMan_IntermissionScene2_Controller(controller, rendering, sounds);
+		sceneController.start();
 	}
 
 	@Override
@@ -34,16 +34,16 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 	@Override
 	public void update() {
-		animation.update();
+		sceneController.update();
 		clearCanvas();
 		GraphicsContext g = canvas.getGraphicsContext2D();
 		rendering.drawLevelCounter(g, controller.getGame(), t(25), t(34));
-		rendering.drawNail(g, animation.nail);
-		rendering.drawPlayer(g, animation.pac);
-		if (animation.nailDistance() < 0) {
-			rendering.drawGhost(g, animation.blinky, false);
+		rendering.drawNail(g, sceneController.nail);
+		rendering.drawPlayer(g, sceneController.pac);
+		if (sceneController.nailDistance() < 0) {
+			rendering.drawGhost(g, sceneController.blinky, false);
 		} else {
-			rendering.drawBlinkyStretched(g, animation.blinky, animation.nail.position, animation.nailDistance() / 4);
+			rendering.drawBlinkyStretched(g, sceneController.blinky, sceneController.nail.position, sceneController.nailDistance() / 4);
 		}
 	}
 }

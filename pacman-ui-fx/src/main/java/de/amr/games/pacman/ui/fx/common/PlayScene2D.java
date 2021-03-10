@@ -8,7 +8,7 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.PacManGameState;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations;
-import de.amr.games.pacman.ui.fx.rendering.FXRendering;
+import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.sound.SoundManager;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -19,7 +19,7 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class PlayScene2D extends AbstractGameScene2D {
 
-	public PlayScene2D(PacManGameController controller, FXRendering rendering, SoundManager sounds) {
+	public PlayScene2D(PacManGameController controller, PacManGameRendering2D rendering, SoundManager sounds) {
 		super(controller, rendering, sounds);
 	}
 

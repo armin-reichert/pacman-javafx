@@ -5,7 +5,7 @@ import java.util.OptionalDouble;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations;
-import de.amr.games.pacman.ui.fx.rendering.FXRendering;
+import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.sound.SoundManager;
 import javafx.scene.Camera;
 import javafx.scene.Group;
@@ -21,10 +21,10 @@ public abstract class AbstractGameScene2D implements GameScene {
 	protected final SubScene scene;
 	protected final Canvas canvas;
 	protected final PacManGameController controller;
-	protected final FXRendering rendering;
+	protected final PacManGameRendering2D rendering;
 	protected final SoundManager sounds;
 
-	public AbstractGameScene2D(PacManGameController controller, FXRendering rendering, SoundManager sounds) {
+	public AbstractGameScene2D(PacManGameController controller, PacManGameRendering2D rendering, SoundManager sounds) {
 		this.controller = controller;
 		this.rendering = rendering;
 		this.sounds = sounds;

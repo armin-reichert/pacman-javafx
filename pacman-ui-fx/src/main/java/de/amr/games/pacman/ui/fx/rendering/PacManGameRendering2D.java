@@ -13,5 +13,5 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public interface FXRendering extends Rendering<GraphicsContext, Color, Font, Rectangle2D>, PacManGameAnimations {
+public interface PacManGameRendering2D extends Rendering<GraphicsContext, Color, Font, Rectangle2D>, PacManGameAnimations {
 }

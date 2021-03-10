@@ -2,7 +2,7 @@ package de.amr.games.pacman.ui.fx.mspacman;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.ui.fx.common.AbstractGameScene2D;
-import de.amr.games.pacman.ui.fx.rendering.FXRendering;
+import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.mspacman.MsPacMan_IntermissionScene2_Controller;
 import de.amr.games.pacman.ui.sound.SoundManager;
 import javafx.scene.canvas.GraphicsContext;
@@ -17,16 +17,16 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 
-	private MsPacMan_IntermissionScene2_Controller animation;
+	private MsPacMan_IntermissionScene2_Controller sceneController;
 
-	public MsPacMan_IntermissionScene2(PacManGameController controller, FXRendering rendering, SoundManager sounds) {
+	public MsPacMan_IntermissionScene2(PacManGameController controller, PacManGameRendering2D rendering, SoundManager sounds) {
 		super(controller, rendering, sounds);
 	}
 
 	@Override
 	public void start() {
-		animation = new MsPacMan_IntermissionScene2_Controller(controller, rendering, sounds);
-		animation.start();
+		sceneController = new MsPacMan_IntermissionScene2_Controller(controller, rendering, sounds);
+		sceneController.start();
 	}
 
 	@Override
@@ -35,11 +35,11 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 	@Override
 	public void update() {
-		animation.update();
+		sceneController.update();
 		clearCanvas();
 		GraphicsContext g = canvas.getGraphicsContext2D();
-		rendering.drawFlap(g, animation.flap);
-		rendering.drawPlayer(g, animation.msPacMan);
-		rendering.drawSpouse(g, animation.pacMan);
+		rendering.drawFlap(g, sceneController.flap);
+		rendering.drawPlayer(g, sceneController.msPacMan);
+		rendering.drawSpouse(g, sceneController.pacMan);
 	}
 }
