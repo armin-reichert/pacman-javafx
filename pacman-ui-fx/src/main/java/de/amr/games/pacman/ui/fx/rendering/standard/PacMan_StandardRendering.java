@@ -27,8 +27,8 @@ import javafx.scene.paint.Color;
  */
 public class PacMan_StandardRendering extends StandardRendering {
 
-	private final Image mazeFull = new Image("/pacman/graphics/maze_full.png", false);
-	private final Image mazeEmpty = new Image("/pacman/graphics/maze_empty.png", false);
+	private final Image mazeFull = new Image(getClass().getResource("/pacman/graphics/maze_full.png").toExternalForm());
+	private final Image mazeEmpty = new Image(getClass().getResource("/pacman/graphics/maze_empty.png").toExternalForm());
 
 	private Animation<Rectangle2D> bigPacMan;
 	private Animation<Rectangle2D> blinkyStretched;

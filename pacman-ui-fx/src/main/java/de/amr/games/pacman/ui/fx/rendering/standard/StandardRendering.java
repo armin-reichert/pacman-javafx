@@ -66,8 +66,8 @@ public abstract class StandardRendering implements FXRendering, MazeAnimations, 
 	protected Animation<Rectangle2D> ghostFrightenedAnim;
 	protected Animation<Rectangle2D> ghostFlashingAnim;
 
-	public StandardRendering(String spritesheetURL) {
-		spritesheet = new Image(spritesheetURL);
+	public StandardRendering(String spritesheetPath) {
+		spritesheet = new Image(getClass().getResource(spritesheetPath).toExternalForm());
 		scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), 8);
 		energizerBlinking = Animation.pulse().frameDuration(15);
 	}
