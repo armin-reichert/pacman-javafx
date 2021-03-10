@@ -1,6 +1,6 @@
 package de.amr.games.pacman.ui.fx.common;
 
-import static de.amr.games.pacman.world.PacManGameWorld.TS;
+import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
 import java.util.Optional;
 import java.util.OptionalDouble;

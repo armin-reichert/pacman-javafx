@@ -4,9 +4,9 @@ import java.util.Optional;
 import java.util.OptionalDouble;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
+import de.amr.games.pacman.ui.sound.SoundManager;
 import javafx.scene.Camera;
 import javafx.scene.Group;
 import javafx.scene.SubScene;

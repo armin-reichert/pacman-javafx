@@ -1,10 +1,10 @@
 package de.amr.games.pacman.ui.fx.mspacman;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import de.amr.games.pacman.ui.mspacman.MsPacMan_IntermissionScene1_Controller;
+import de.amr.games.pacman.ui.sound.SoundManager;
 import javafx.scene.canvas.GraphicsContext;
 
 /**

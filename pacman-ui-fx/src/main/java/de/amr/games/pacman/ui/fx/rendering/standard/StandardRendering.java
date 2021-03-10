@@ -7,9 +7,9 @@ import static de.amr.games.pacman.model.common.GhostState.DEAD;
 import static de.amr.games.pacman.model.common.GhostState.ENTERING_HOUSE;
 import static de.amr.games.pacman.model.common.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.common.GhostState.LOCKED;
-import static de.amr.games.pacman.world.PacManGameWorld.HTS;
-import static de.amr.games.pacman.world.PacManGameWorld.TS;
-import static de.amr.games.pacman.world.PacManGameWorld.t;
+import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
+import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
+import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
 import java.util.HashMap;
 import java.util.List;

@@ -10,7 +10,6 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameType;
 import de.amr.games.pacman.model.common.PacManGameState;
-import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene1;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene2;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene3;
@@ -22,6 +21,7 @@ import de.amr.games.pacman.ui.fx.pacman.PacMan_IntroScene;
 import de.amr.games.pacman.ui.fx.rendering.FXRendering;
 import de.amr.games.pacman.ui.fx.rendering.standard.MsPacMan_StandardRendering;
 import de.amr.games.pacman.ui.fx.rendering.standard.PacMan_StandardRendering;
+import de.amr.games.pacman.ui.sound.SoundManager;
 
 /**
  * Controls scene selection and serves as scene factory.
