@@ -84,6 +84,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				if (control) {
 					GlobalSettings.drawWallsAsLines = !GlobalSettings.drawWallsAsLines;
 				}
+				break;
+			case V:
+				controller.toggleGameType();
+				break;
 			default:
 				break;
 			}
@@ -193,13 +197,18 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		currentGameScene.update();
 		flashMessageView.update();
+		updateInfoView();
+	}
 
-		// update info view
+	public void updateInfoView() {
 		String text = "";
 		text += String.format("Main scene: w=%.0f h=%.0f\n", mainScene.getWidth(), mainScene.getHeight());
 		text += String.format("%s: w=%.0f h=%.0f\n", currentGameScene.getClass().getSimpleName(),
 				currentGameScene.getSubScene().getWidth(), currentGameScene.getSubScene().getHeight());
-		text += camControl.getCameraInfo();
+		text += camControl.getCameraInfo() + "\n";
+		text += "Autopilot " + (controller.autopilot.enabled ? "ON" : "OFF") + " (Key 'A')\n";
+		text += "Player is " + (controller.getGame().pac.immune ? "IMMUNE" : "VULNERABLE") + " (Key 'I')\n";
+		text += "3D scenes " + (use3DScenes ? "ON" : "OFF") + " (Key CTRL+'3')\n";
 		infoView.setText(text);
 		infoView.setVisible(GlobalSettings.infoViewVisible);
 	}
