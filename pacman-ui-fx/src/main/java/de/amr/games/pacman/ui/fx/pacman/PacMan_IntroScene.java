@@ -6,7 +6,7 @@ import static de.amr.games.pacman.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.heaven.God;
+import de.amr.games.pacman.lib.God;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.common.AbstractGameScene2D;

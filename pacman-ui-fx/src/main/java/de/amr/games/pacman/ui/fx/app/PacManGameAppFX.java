@@ -3,7 +3,7 @@ package de.amr.games.pacman.ui.fx.app;
 import java.io.IOException;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.heaven.God;
+import de.amr.games.pacman.lib.God;
 import de.amr.games.pacman.model.common.GameType;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import javafx.animation.AnimationTimer;

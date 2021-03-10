@@ -1,6 +1,6 @@
 package de.amr.games.pacman.ui.fx.common;
 
-import static de.amr.games.pacman.heaven.God.clock;
+import static de.amr.games.pacman.lib.God.clock;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.ui.fx.mspacman.MsPacMan_Constants.getMazeWallColor;
 import static de.amr.games.pacman.world.PacManGameWorld.HTS;
@@ -57,6 +57,8 @@ import javafx.util.Duration;
  * @author Armin Reichert
  */
 public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimations, MazeAnimations, PlayerAnimations {
+
+	private static final int wallHeight = TS - 2;
 
 	private static Color ghostColor(int i) {
 		return i == 0 ? Color.RED : i == 1 ? Color.PINK : i == 2 ? Color.CYAN : Color.ORANGE;
@@ -147,10 +149,9 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 		walls.clear();
 		world.tiles().forEach(tile -> {
 			if (world.isWall(tile)) {
-				Box wall = new Box(TS - 2, TS - 2, TS);
+				Box wall = new Box(TS - 2, TS - 2, wallHeight);
 				wall.setTranslateX(tile.x * TS);
 				wall.setTranslateY(tile.y * TS);
-				wall.setTranslateZ(-wall.getHeight());
 				PhongMaterial material = new PhongMaterial(
 						controller.isPlaying(GameType.PACMAN) ? Color.BLUE : getMazeWallColor(game.level.mazeNumber));
 				wall.setMaterial(material);
@@ -170,7 +171,6 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 			energizer.setUserData(tile);
 			energizer.setTranslateX(tile.x * TS);
 			energizer.setTranslateY(tile.y * TS);
-			energizer.setTranslateZ(-energizer.getRadius());
 			energizer.setViewOrder(-tile.y * TS);
 			energizers.add(energizer);
 			food.getChildren().add(energizer);
@@ -183,7 +183,7 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 			pellet.setUserData(tile);
 			pellet.setTranslateX(tile.x * TS);
 			pellet.setTranslateY(tile.y * TS);
-			pellet.setTranslateZ(-pellet.getRadius());
+			pellet.setTranslateZ(-HTS);
 			pellet.setViewOrder(-tile.y * TS);
 			pellets.add(pellet);
 			food.getChildren().add(pellet);
@@ -252,19 +252,19 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 			maze.getChildren().add(ghostShape);
 		}
 
-		scoreDisplay.setFill(Color.WHITE);
+		scoreDisplay.setFill(Color.YELLOW);
 		scoreDisplay.setFont(scoreFont);
-		scoreDisplay.setText(String.format("SCORE\n%08d", game.score));
+		scoreDisplay.setText(String.format("SCORE\n%08dL%03d", game.score, game.levelNumber));
 		scoreDisplay.setTranslateX(TS);
 		scoreDisplay.setTranslateY(-2 * TS);
 		scoreDisplay.setTranslateZ(-2 * TS);
 		scoreDisplay.setRotationAxis(Rotate.X_AXIS);
 		scoreDisplay.setRotate(camera.getRotate());
 
-		hiscoreDisplay.setFill(Color.WHITE);
+		hiscoreDisplay.setFill(Color.YELLOW);
 		hiscoreDisplay.setFont(scoreFont);
-		hiscoreDisplay.setText(String.format("HI SCORE\n%08d", game.highscorePoints));
-		hiscoreDisplay.setTranslateX(18 * TS);
+		hiscoreDisplay.setText(String.format("HI SCORE\n%08dL%03d", game.highscorePoints, game.highscoreLevel));
+		hiscoreDisplay.setTranslateX(14 * TS);
 		hiscoreDisplay.setTranslateY(-2 * TS);
 		hiscoreDisplay.setTranslateZ(-2 * TS);
 		hiscoreDisplay.setRotationAxis(Rotate.X_AXIS);
@@ -368,7 +368,6 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 		shape.setVisible(ghost.visible);
 		shape.setTranslateX(ghost.position.x);
 		shape.setTranslateY(ghost.position.y);
-		shape.setTranslateZ(-HTS);
 		return shape;
 	}
 
@@ -447,7 +446,6 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 		shape.setVisible(player.visible);
 		shape.setTranslateX(player.position.x);
 		shape.setTranslateY(player.position.y);
-		shape.setTranslateZ(-HTS);
 		return shape;
 	}
 
