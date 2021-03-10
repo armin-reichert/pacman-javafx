@@ -15,7 +15,6 @@ import java.util.OptionalDouble;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.lib.Animation;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
@@ -25,6 +24,7 @@ import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.model.common.PacManGameState;
 import de.amr.games.pacman.model.world.PacManGameWorld;
+import de.amr.games.pacman.ui.animation.Animation;
 import de.amr.games.pacman.ui.animation.GhostAnimations;
 import de.amr.games.pacman.ui.animation.MazeAnimations;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations;
