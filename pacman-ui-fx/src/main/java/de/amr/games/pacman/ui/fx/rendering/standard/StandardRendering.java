@@ -221,8 +221,7 @@ public abstract class StandardRendering
 	@Override
 	public void drawLivesCounter(GraphicsContext g, GameModel game, int x, int y) {
 		int maxLivesDisplayed = 5;
-		int livesDisplayed = game.started ? game.lives - 1 : game.lives;
-		for (int i = 0; i < Math.min(livesDisplayed, maxLivesDisplayed); ++i) {
+		for (int i = 0; i < Math.min(game.lives, maxLivesDisplayed); ++i) {
 			drawLifeCounterSymbol(g, x + t(2 * i), y);
 		}
 		if (game.lives > maxLivesDisplayed) {
@@ -262,7 +261,7 @@ public abstract class StandardRendering
 
 	@Override
 	public void drawGameState(GraphicsContext g, GameModel game, PacManGameState gameState) {
-		if (gameState == PacManGameState.GAME_OVER || game.attractMode) {
+		if (gameState == PacManGameState.GAME_OVER) {
 			g.setFont(scoreFont);
 			g.setFill(Color.RED);
 			g.fillText("GAME", t(9), t(21));
