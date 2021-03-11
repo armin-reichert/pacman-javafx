@@ -1,6 +1,5 @@
 package de.amr.games.pacman.ui.fx.common;
 
-import static de.amr.games.pacman.lib.God.clock;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
@@ -216,10 +215,10 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 		GameModel game = controller.game;
 
 		if (controller.fsm.state == PacManGameState.CHANGING_LEVEL) {
-			if (controller.fsm.state.timer.ticked() == clock.sec(1)) {
+			if (controller.fsm.state.timer.hasJustStarted()) {
 				food.setVisible(false);
 			}
-			if (controller.fsm.state.timer.ticked() == clock.sec(2)) {
+			if (controller.fsm.state.timer.isRunningSeconds(2)) {
 				levelChangeAnimation = new ScaleTransition(Duration.seconds(3), maze);
 				levelChangeAnimation.setFromZ(1);
 				levelChangeAnimation.setToZ(0);
