@@ -120,11 +120,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 	}
 
-	@Override
-	public void show() {
-		// done in start()
-	}
-
 	private void addResizeHandler(GameScene scene) {
 		if (scene.aspectRatio().isPresent()) {
 			// keep aspect ratio when resizing
