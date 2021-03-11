@@ -50,8 +50,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 		}
 		rendering.drawGameState(g, game);
 		rendering.drawBonus(g, game.bonus);
-		rendering.drawPlayer(g, game.pac);
-		game.ghosts().forEach(ghost -> rendering.drawGhost(g, ghost, game.pac.powerTimer.running()));
+		rendering.drawPlayer(g, game.player);
+		game.ghosts().forEach(ghost -> rendering.drawGhost(g, ghost, game.player.powerTimer.isRunning()));
 		rendering.drawScore(g, game, game.state == PacManGameState.INTRO || game.attractMode);
 		if (!game.attractMode) {
 			rendering.drawLivesCounter(g, game, t(2), t(34));

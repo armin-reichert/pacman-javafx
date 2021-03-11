@@ -38,17 +38,17 @@ public class FlashMessageView extends HBox {
 		} else {
 			setVisible(true);
 			FlashMessage message = messagesQ.peek();
-			if (message.timer.expired()) {
+			if (message.timer.hasExpired()) {
 				messagesQ.remove();
 				return;
 			}
-			double alpha = Math.cos((message.timer.ticksRunning() * Math.PI / 2.0) / message.timer.getDuration());
+			double alpha = Math.cos((message.timer.ticked() * Math.PI / 2.0) / message.timer.duration());
 			BackgroundFill bgFill = new BackgroundFill(Color.rgb(0, 0, 0, 0.2 + 0.5 * alpha), CornerRadii.EMPTY,
 					Insets.EMPTY);
 			setBackground(new Background(bgFill));
 			display.setFill(displayColor.deriveColor(0, 1, 1, alpha));
 			display.setText(message.text);
-			if (!message.timer.running()) {
+			if (!message.timer.isRunning()) {
 				message.timer.start();
 			}
 			message.timer.tick();

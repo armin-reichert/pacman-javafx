@@ -191,13 +191,13 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 
 		maze.getChildren().addAll(food);
 
-		playerShape = (Node) playerMunching(game.pac, game.pac.dir).frame();
-		playerShape.setViewOrder(-game.pac.position.y);
+		playerShape = (Node) playerMunching(game.player, game.player.dir).frame();
+		playerShape.setViewOrder(-game.player.position.y);
 		maze.getChildren().add(playerShape);
 
 		ghostShapes.clear();
 		for (Ghost ghost : game.ghosts) {
-			Node ghostShape = ghostShape(ghost, game.pac.powerTimer.running());
+			Node ghostShape = ghostShape(ghost, game.player.powerTimer.isRunning());
 			ghostShapes.add(ghostShape);
 			ghostShape.setViewOrder(-ghost.position.y);
 			maze.getChildren().add(ghostShape);
@@ -216,10 +216,10 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 		GameModel game = controller.getGame();
 
 		if (game.state == PacManGameState.CHANGING_LEVEL) {
-			if (game.state.timer.ticksRunning() == clock.sec(1)) {
+			if (game.state.timer.ticked() == clock.sec(1)) {
 				food.setVisible(false);
 			}
-			if (game.state.timer.ticksRunning() == clock.sec(2)) {
+			if (game.state.timer.ticked() == clock.sec(2)) {
 				levelChangeAnimation = new ScaleTransition(Duration.seconds(3), maze);
 				levelChangeAnimation.setFromZ(1);
 				levelChangeAnimation.setToZ(0);
@@ -240,13 +240,13 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 		});
 
 		maze.getChildren().remove(playerShape);
-		playerShape = playerShape(game.pac);
-		playerShape.setViewOrder(-game.pac.position.y);
+		playerShape = playerShape(game.player);
+		playerShape.setViewOrder(-game.player.position.y);
 		maze.getChildren().add(playerShape);
 
 		maze.getChildren().removeAll(ghostShapes);
 		for (Ghost ghost : game.ghosts) {
-			Node ghostShape = ghostShape(ghost, game.pac.powerTimer.running());
+			Node ghostShape = ghostShape(ghost, game.player.powerTimer.isRunning());
 			ghostShape.setViewOrder(-ghost.position.y);
 			ghostShapes.set(ghost.id, ghostShape);
 			maze.getChildren().add(ghostShape);
