@@ -7,9 +7,8 @@ import java.util.Arrays;
 import java.util.EnumMap;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.model.common.GameType;
-import de.amr.games.pacman.model.common.PacManGameState;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene1;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene2;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene3;
@@ -61,26 +60,25 @@ public class SceneController {
 		//@formatter:on
 	};
 
-	private static int sceneIndex(GameModel game) {
-		return game.state == PacManGameState.INTRO ? 0
-				: game.state == PacManGameState.INTERMISSION ? game.intermissionNumber : 4;
+	private static int sceneIndex(PacManGameController controller) {
+		return controller.fsm.state == PacManGameState.INTRO ? 0
+				: controller.fsm.state == PacManGameState.INTERMISSION ? controller.getGame().intermissionNumber : 4;
 	}
 
-	public static boolean is2DAnd3DVersionAvailable(GameType gameType, GameModel game) {
-		return SCENES[gameType.ordinal()][sceneIndex(game)].length > 1;
+	public static boolean is2DAnd3DVersionAvailable(PacManGameController controller) {
+		return SCENES[controller.currentlyPlaying().ordinal()][sceneIndex(controller)].length > 1;
 	}
 
-	public static boolean isSuitableScene(GameScene gameScene, GameType gameType, GameModel game) {
-		Class<?> sceneClasses[] = SCENES[gameType.ordinal()][sceneIndex(game)];
+	public static boolean isSuitableScene(GameScene gameScene, PacManGameController controller) {
+		Class<?> sceneClasses[] = SCENES[controller.currentlyPlaying().ordinal()][sceneIndex(controller)];
 		return Arrays.asList(sceneClasses).contains(gameScene.getClass());
 	}
 
 	public static GameScene createGameScene(PacManGameController controller, double height, boolean version3D) {
-		GameType gameType = controller.isPlaying(PACMAN) ? PACMAN : MS_PACMAN;
-		GameModel game = controller.getGame();
-		switch (gameType) {
+		switch (controller.currentlyPlaying()) {
+
 		case MS_PACMAN: {
-			int sceneIndex = sceneIndex(game);
+			int sceneIndex = sceneIndex(controller);
 			if (sceneIndex == 0) {
 				return new MsPacMan_IntroScene(controller, RENDERING_2D.get(MS_PACMAN), SOUND.get(MS_PACMAN));
 			} else if (sceneIndex == 1) {
@@ -95,8 +93,9 @@ public class SceneController {
 			}
 			break;
 		}
+
 		case PACMAN: {
-			int sceneIndex = sceneIndex(game);
+			int sceneIndex = sceneIndex(controller);
 			if (sceneIndex == 0) {
 				return new PacMan_IntroScene(controller, RENDERING_2D.get(PACMAN), SOUND.get(PACMAN));
 			} else if (sceneIndex == 1) {

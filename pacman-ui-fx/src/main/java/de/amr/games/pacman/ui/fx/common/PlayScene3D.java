@@ -15,6 +15,7 @@ import java.util.OptionalDouble;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.PacManGameController;
+import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
@@ -22,7 +23,6 @@ import de.amr.games.pacman.model.common.GameType;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.model.common.Pac;
-import de.amr.games.pacman.model.common.PacManGameState;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.animation.Animation;
 import de.amr.games.pacman.ui.animation.GhostAnimations;
@@ -215,11 +215,11 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 	public void update() {
 		GameModel game = controller.getGame();
 
-		if (game.state == PacManGameState.CHANGING_LEVEL) {
-			if (game.state.timer.ticked() == clock.sec(1)) {
+		if (controller.fsm.state == PacManGameState.CHANGING_LEVEL) {
+			if (controller.fsm.state.timer.ticked() == clock.sec(1)) {
 				food.setVisible(false);
 			}
-			if (game.state.timer.ticked() == clock.sec(2)) {
+			if (controller.fsm.state.timer.ticked() == clock.sec(2)) {
 				levelChangeAnimation = new ScaleTransition(Duration.seconds(3), maze);
 				levelChangeAnimation.setFromZ(1);
 				levelChangeAnimation.setToZ(0);

@@ -17,13 +17,13 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameEntity;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.Pac;
-import de.amr.games.pacman.model.common.PacManGameState;
 import de.amr.games.pacman.model.pacman.PacManBonus;
 import de.amr.games.pacman.ui.animation.Animation;
 import de.amr.games.pacman.ui.animation.GhostAnimations;
@@ -43,7 +43,8 @@ import javafx.scene.text.FontWeight;
  * 
  * @author Armin Reichert
  */
-public abstract class StandardRendering implements PacManGameRendering2D, MazeAnimations, PlayerAnimations, GhostAnimations {
+public abstract class StandardRendering
+		implements PacManGameRendering2D, MazeAnimations, PlayerAnimations, GhostAnimations {
 
 	/** Spritesheet grid cell size */
 	public static final int GRID_CELLSIZE = 16;
@@ -260,13 +261,13 @@ public abstract class StandardRendering implements PacManGameRendering2D, MazeAn
 	}
 
 	@Override
-	public void drawGameState(GraphicsContext g, GameModel game) {
-		if (game.state == PacManGameState.GAME_OVER || game.attractMode) {
+	public void drawGameState(GraphicsContext g, GameModel game, PacManGameState gameState) {
+		if (gameState == PacManGameState.GAME_OVER || game.attractMode) {
 			g.setFont(scoreFont);
 			g.setFill(Color.RED);
 			g.fillText("GAME", t(9), t(21));
 			g.fillText("OVER", t(15), t(21));
-		} else if (game.state == PacManGameState.READY) {
+		} else if (gameState == PacManGameState.READY) {
 			g.setFont(scoreFont);
 			g.setFill(Color.YELLOW);
 			g.fillText("READY", t(11), t(21));
