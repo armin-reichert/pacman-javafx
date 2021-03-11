@@ -7,6 +7,7 @@ import java.util.Optional;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.ui.animation.Animation;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations;
 import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.sound.SoundManager;
@@ -19,8 +20,30 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class PlayScene2D extends AbstractGameScene2D {
 
+	private Animation<?> mazeFlashing;
+
 	public PlayScene2D(PacManGameController controller, PacManGameRendering2D rendering, SoundManager sounds) {
 		super(controller, rendering, sounds);
+		controller.fsm.addStateEntryListener(PacManGameState.CHANGING_LEVEL, this::onChangingGameLevel);
+	}
+
+	private void onChangingGameLevel(PacManGameState state) {
+		GameModel game = controller.game;
+		mazeFlashing = rendering.mazeAnimations().mazeFlashing(game.level.mazeNumber);
+	}
+
+	private void runChangingGameLevel(PacManGameState state) {
+		GameModel game = controller.game;
+		if (state.timer.isRunningSeconds(2)) {
+			game.ghosts().forEach(ghost -> ghost.visible = false);
+		}
+		if (state.timer.isRunningSeconds(3)) {
+			mazeFlashing.restart();
+		}
+		mazeFlashing.animate();
+		if (mazeFlashing.isComplete()) {
+			controller.letCurrentGameStateExpire();
+		}
 	}
 
 	@Override
@@ -30,6 +53,9 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void start() {
+		GameModel game = controller.game;
+		mazeFlashing = rendering.mazeAnimations().mazeFlashing(game.level.mazeNumber).repetitions(game.level.numFlashes);
+		mazeFlashing.reset();
 	}
 
 	@Override
@@ -38,12 +64,18 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void update() {
+		if (controller.fsm.state == PacManGameState.CHANGING_LEVEL) {
+			runChangingGameLevel(controller.fsm.state);
+		}
+		render();
+	}
+
+	public void render() {
 		clearCanvas();
 		GraphicsContext g = canvas.getGraphicsContext2D();
 		GameModel game = controller.game;
-		boolean flashing = rendering.mazeAnimations().mazeFlashing(game.level.mazeNumber).hasStarted();
-		rendering.drawMaze(g, game.level.mazeNumber, 0, t(3), flashing);
-		if (!flashing) {
+		rendering.drawMaze(g, game.level.mazeNumber, 0, t(3), mazeFlashing.isRunning());
+		if (!mazeFlashing.isRunning()) {
 			rendering.drawFoodTiles(g, game.level.world.tiles().filter(game.level.world::isFoodTile),
 					game.level::containsEatenFood);
 			rendering.drawEnergizerTiles(g, game.level.world.energizerTiles());
