@@ -76,7 +76,7 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 	private Group maze;
 	private Group food;
 	private ScaleTransition levelChangeAnimation;
-	private Node playerShape;
+	private Group playerShape;
 	private List<Node> ghostShapes = new ArrayList<>();
 	private Map<V2i, Node> walls = new HashMap<>();
 	private List<Node> energizers = new ArrayList<>();
@@ -195,8 +195,7 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 
 		maze.getChildren().addAll(food);
 
-		playerShape = (Node) playerMunching(game.player, game.player.dir).frame();
-		playerShape.setViewOrder(-game.player.position.y);
+		playerShape = new Group((Node) playerMunching(game.player, game.player.dir).frame());
 		maze.getChildren().add(playerShape);
 
 		Text dummy = new Text();
@@ -261,15 +260,12 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 
 	private void updatePlayerShape(Pac player) {
 		Node shape = player.dead ? (Node) playerDying().frame() : (Node) playerMunching(player, player.dir).frame();
-		if (shape != playerShape) {
-			maze.getChildren().remove(playerShape);
-			playerShape = shape;
-			playerShape.setViewOrder(-player.position.y);
-			maze.getChildren().add(playerShape);
-		}
+		playerShape.getChildren().clear();
+		playerShape.getChildren().add(shape);
 		playerShape.setVisible(player.visible);
 		playerShape.setTranslateX(player.position.x);
 		playerShape.setTranslateY(player.position.y);
+		playerShape.setViewOrder(-player.position.y);
 	}
 
 	private void updateGhostShape(Ghost ghost, boolean frightened) {
