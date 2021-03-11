@@ -77,7 +77,7 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 	private Group food;
 	private ScaleTransition levelChangeAnimation;
 	private Group playerShape;
-	private List<Node> ghostShapes = new ArrayList<>();
+	private Group[] ghostShapes = new Group[4];
 	private Map<V2i, Node> walls = new HashMap<>();
 	private List<Node> energizers = new ArrayList<>();
 	private List<Node> pellets = new ArrayList<>();
@@ -198,11 +198,11 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 		playerShape = new Group((Node) playerMunching(game.player, game.player.dir).frame());
 		maze.getChildren().add(playerShape);
 
-		Text dummy = new Text();
-		ghostShapes = new ArrayList<>(Arrays.asList(dummy, dummy, dummy, dummy));
-		for (Ghost ghost : game.ghosts) {
-			updateGhostShape(ghost, game.player.powerTimer.isRunning());
+		for (int id = 0; id < 4; ++id) {
+			ghostShapes[id] = new Group();
+			updateGhostShape(id);
 		}
+		maze.getChildren().addAll(ghostShapes);
 
 		scoreDisplay.setViewOrder(-1000);
 		hiscoreDisplay.setViewOrder(-1000);
@@ -232,7 +232,7 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 		updatePlayerShape(game.player);
 
 		for (Ghost ghost : game.ghosts) {
-			updateGhostShape(ghost, game.player.powerTimer.isRunning());
+			updateGhostShape(ghost.id);
 		}
 
 		scoreDisplay.setFill(Color.YELLOW);
@@ -268,7 +268,8 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 		playerShape.setViewOrder(-player.position.y);
 	}
 
-	private void updateGhostShape(Ghost ghost, boolean frightened) {
+	private void updateGhostShape(int id) {
+		Ghost ghost = controller.game.ghosts[id];
 		Node shape;
 
 		if (ghost.visible && ghost.bounty > 0) {
@@ -279,8 +280,6 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 			bountyText.setText(String.valueOf(ghost.bounty));
 			bountyText.setFont(Font.font("Sans", FontWeight.BOLD, TS));
 			bountyText.setFill(Color.CYAN);
-			bountyText.setTranslateX(ghost.position.x);
-			bountyText.setTranslateY(ghost.position.y);
 			bountyText.setTranslateZ(-1.5 * TS);
 			bountyText.setRotationAxis(Rotate.X_AXIS);
 			bountyText.setRotate(camera.getRotate());
@@ -301,7 +300,7 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 					: ghostFrightened(ghost, ghost.dir).animate());
 		}
 
-		else if (ghost.is(GhostState.LOCKED) && frightened) {
+		else if (ghost.is(GhostState.LOCKED) && controller.game.player.powerTimer.isRunning()) {
 			shape = (Node) ghostFrightened(ghost, ghost.dir).animate();
 		}
 
@@ -310,17 +309,12 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 			shape = (Node) ghostKicking(ghost, ghost.wishDir).animate(); // Looks towards wish dir!
 		}
 
-		shape.setVisible(ghost.visible);
-		shape.setTranslateX(ghost.position.x);
-		shape.setTranslateY(ghost.position.y);
-		shape.setViewOrder(-ghost.position.y);
-
-		Node oldGhostShape = ghostShapes.get(ghost.id);
-		if (oldGhostShape != shape) {
-			maze.getChildren().remove(oldGhostShape);
-			ghostShapes.set(ghost.id, shape);
-			maze.getChildren().add(shape);
-		}
+		ghostShapes[id].setVisible(ghost.visible);
+		ghostShapes[id].setTranslateX(ghost.position.x);
+		ghostShapes[id].setTranslateY(ghost.position.y);
+		ghostShapes[id].setViewOrder(-ghost.position.y);
+		ghostShapes[id].getChildren().clear();
+		ghostShapes[id].getChildren().add(shape);
 	}
 
 	@Override
@@ -337,7 +331,7 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 	private void onLeavingLevel(PacManGameState state) {
 		food.setVisible(false);
 		playerShape.setVisible(false);
-		ghostShapes.forEach(ghostShape -> ghostShape.setVisible(false));
+		Arrays.asList(ghostShapes).forEach(ghostShape -> ghostShape.setVisible(false));
 		levelChangeAnimation = new ScaleTransition(Duration.seconds(3), maze);
 		levelChangeAnimation.setFromZ(1);
 		levelChangeAnimation.setToZ(0);
@@ -348,7 +342,7 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 	private void onEnteringLevel(PacManGameState state) {
 		// TODO these should become visible after the animation
 		playerShape.setVisible(true);
-		ghostShapes.forEach(ghostShape -> ghostShape.setVisible(true));
+		Arrays.asList(ghostShapes).forEach(ghostShape -> ghostShape.setVisible(true));
 		food.setVisible(true);
 		levelChangeAnimation = new ScaleTransition(Duration.seconds(3), maze);
 		levelChangeAnimation.setFromZ(0);
