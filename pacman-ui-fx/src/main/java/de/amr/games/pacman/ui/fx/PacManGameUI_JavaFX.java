@@ -9,7 +9,6 @@ import static de.amr.games.pacman.ui.fx.common.SceneController.isSuitableScene;
 import java.util.Optional;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations;
@@ -113,7 +112,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private void toggleUse3DScenes() {
 		use3DScenes = !use3DScenes;
 		String message = String.format("3D scenes %s", use3DScenes ? "ON" : "OFF");
-		showFlashMessage(message, clock.sec(1));
+		showFlashMessage(message);
 		if (is2DAnd3DVersionAvailable(controller)) {
 			currentGameScene = null; // trigger scene change
 			log("Scene must change because 2D and 3D versions are available");
@@ -165,16 +164,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void onGameChanged(GameModel newGame) {
-	}
-
-	@Override
-	public void onGameStateChanged(PacManGameState from, PacManGameState to) {
-		if (from == PacManGameState.CHANGING_LEVEL) {
-			if (currentGameScene != null) {
-				currentGameScene.start();
-			}
-			showFlashMessage("Enter level " + controller.game.levelNumber, clock.sec(1));
-		}
 	}
 
 	@Override

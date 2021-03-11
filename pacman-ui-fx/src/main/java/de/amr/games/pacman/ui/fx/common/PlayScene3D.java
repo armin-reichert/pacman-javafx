@@ -111,6 +111,9 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 		text.setRotationAxis(Rotate.X_AXIS);
 		text.setRotate(camera.getRotate());
 		defaultAnimation = Animation.of(text);
+
+		controller.fsm.addStateEntryListener(PacManGameState.CHANGING_LEVEL, this::onLeavingLevel);
+		controller.fsm.addStateExitListener(PacManGameState.CHANGING_LEVEL, this::onEnteringLevel);
 	}
 
 	@Override
@@ -214,17 +217,6 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 	public void update() {
 		GameModel game = controller.game;
 
-		if (controller.fsm.state == PacManGameState.CHANGING_LEVEL) {
-			if (controller.fsm.state.timer.hasJustStarted()) {
-				food.setVisible(false);
-			}
-			if (controller.fsm.state.timer.isRunningSeconds(2)) {
-				levelChangeAnimation = new ScaleTransition(Duration.seconds(3), maze);
-				levelChangeAnimation.setFromZ(1);
-				levelChangeAnimation.setToZ(0);
-				levelChangeAnimation.play();
-			}
-		}
 		walls.values().stream().map(wall -> (Shape3D) wall)
 				.forEach(wall -> wall.setDrawMode(GlobalSettings.drawWallsAsLines ? DrawMode.LINE : DrawMode.FILL));
 
@@ -277,6 +269,25 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 	@Override
 	public Camera getCamera() {
 		return camera;
+	}
+
+	// State change handling
+
+	private void onLeavingLevel(PacManGameState state) {
+		food.setVisible(false);
+		levelChangeAnimation = new ScaleTransition(Duration.seconds(3), maze);
+		levelChangeAnimation.setFromZ(1);
+		levelChangeAnimation.setToZ(0);
+		levelChangeAnimation.setDelay(Duration.seconds(2));
+		levelChangeAnimation.play();
+	}
+
+	private void onEnteringLevel(PacManGameState state) {
+		food.setVisible(true);
+		levelChangeAnimation = new ScaleTransition(Duration.seconds(3), maze);
+		levelChangeAnimation.setFromZ(0);
+		levelChangeAnimation.setToZ(1);
+		levelChangeAnimation.play();
 	}
 
 	// Animations
