@@ -6,6 +6,7 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.ui.fx.mspacman.MsPacMan_Constants.getMazeWallColor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,7 @@ import de.amr.games.pacman.ui.animation.MazeAnimations;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations;
 import de.amr.games.pacman.ui.animation.PlayerAnimations;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_Constants;
+import javafx.animation.Animation.Status;
 import javafx.animation.ScaleTransition;
 import javafx.scene.Camera;
 import javafx.scene.Group;
@@ -197,12 +199,10 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 		playerShape.setViewOrder(-game.player.position.y);
 		maze.getChildren().add(playerShape);
 
-		ghostShapes.clear();
+		Text dummy = new Text();
+		ghostShapes = new ArrayList<>(Arrays.asList(dummy, dummy, dummy, dummy));
 		for (Ghost ghost : game.ghosts) {
-			Node ghostShape = ghostShape(ghost, game.player.powerTimer.isRunning());
-			ghostShapes.add(ghostShape);
-			ghostShape.setViewOrder(-ghost.position.y);
-			maze.getChildren().add(ghostShape);
+			updateGhostShape(ghost, game.player.powerTimer.isRunning());
 		}
 
 		scoreDisplay.setViewOrder(-1000);
@@ -230,17 +230,10 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 			pellet.setVisible(!game.level.isFoodRemoved(tile));
 		});
 
-		maze.getChildren().remove(playerShape);
-		playerShape = playerShape(game.player);
-		playerShape.setViewOrder(-game.player.position.y);
-		maze.getChildren().add(playerShape);
+		updatePlayerShape(game.player);
 
-		maze.getChildren().removeAll(ghostShapes);
 		for (Ghost ghost : game.ghosts) {
-			Node ghostShape = ghostShape(ghost, game.player.powerTimer.isRunning());
-			ghostShape.setViewOrder(-ghost.position.y);
-			ghostShapes.set(ghost.id, ghostShape);
-			maze.getChildren().add(ghostShape);
+			updateGhostShape(ghost, game.player.powerTimer.isRunning());
 		}
 
 		scoreDisplay.setFill(Color.YELLOW);
@@ -260,6 +253,78 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 		hiscoreDisplay.setTranslateZ(-2 * TS);
 		hiscoreDisplay.setRotationAxis(Rotate.X_AXIS);
 		hiscoreDisplay.setRotate(camera.getRotate());
+
+		if (controller.fsm.state == PacManGameState.CHANGING_LEVEL && levelChangeAnimation.getStatus() == Status.STOPPED) {
+			controller.letCurrentGameStateExpire();
+		}
+	}
+
+	private void updatePlayerShape(Pac player) {
+		Node shape = player.dead ? (Node) playerDying().frame() : (Node) playerMunching(player, player.dir).frame();
+		if (shape != playerShape) {
+			maze.getChildren().remove(playerShape);
+			playerShape = shape;
+			playerShape.setViewOrder(-player.position.y);
+			maze.getChildren().add(playerShape);
+		}
+		playerShape.setVisible(player.visible);
+		playerShape.setTranslateX(player.position.x);
+		playerShape.setTranslateY(player.position.y);
+	}
+
+	private void updateGhostShape(Ghost ghost, boolean frightened) {
+		Node shape;
+
+		if (ghost.visible && ghost.bounty > 0) {
+			DropShadow shadow = new DropShadow(0.3, Color.color(0.4, 0.4, 0.4));
+			Text bountyText = new Text();
+			bountyText.setEffect(shadow);
+			bountyText.setCache(true);
+			bountyText.setText(String.valueOf(ghost.bounty));
+			bountyText.setFont(Font.font("Sans", FontWeight.BOLD, TS));
+			bountyText.setFill(Color.CYAN);
+			bountyText.setTranslateX(ghost.position.x);
+			bountyText.setTranslateY(ghost.position.y);
+			bountyText.setTranslateZ(-1.5 * TS);
+			bountyText.setRotationAxis(Rotate.X_AXIS);
+			bountyText.setRotate(camera.getRotate());
+			shape = bountyText;
+		}
+
+		else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
+			shape = (Node) ghostReturningHome(ghost, ghost.dir).animate();
+			if (ghost.dir == Direction.DOWN || ghost.dir == Direction.UP) {
+				shape.setRotate(0);
+			} else {
+				shape.setRotate(90);
+			}
+		}
+
+		else if (ghost.is(GhostState.FRIGHTENED)) {
+			shape = (Node) (ghostFlashing(ghost).isRunning() ? ghostFlashing(ghost).frame()
+					: ghostFrightened(ghost, ghost.dir).animate());
+		}
+
+		else if (ghost.is(GhostState.LOCKED) && frightened) {
+			shape = (Node) ghostFrightened(ghost, ghost.dir).animate();
+		}
+
+		else {
+			// default: show ghost in color, alive and kicking
+			shape = (Node) ghostKicking(ghost, ghost.wishDir).animate(); // Looks towards wish dir!
+		}
+
+		shape.setVisible(ghost.visible);
+		shape.setTranslateX(ghost.position.x);
+		shape.setTranslateY(ghost.position.y);
+		shape.setViewOrder(-ghost.position.y);
+
+		Node oldGhostShape = ghostShapes.get(ghost.id);
+		if (oldGhostShape != shape) {
+			maze.getChildren().remove(oldGhostShape);
+			ghostShapes.set(ghost.id, shape);
+			maze.getChildren().add(shape);
+		}
 	}
 
 	@Override
@@ -275,6 +340,8 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 
 	private void onLeavingLevel(PacManGameState state) {
 		food.setVisible(false);
+		playerShape.setVisible(false);
+		ghostShapes.forEach(ghostShape -> ghostShape.setVisible(false));
 		levelChangeAnimation = new ScaleTransition(Duration.seconds(3), maze);
 		levelChangeAnimation.setFromZ(1);
 		levelChangeAnimation.setToZ(0);
@@ -283,6 +350,9 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 	}
 
 	private void onEnteringLevel(PacManGameState state) {
+		// TODO these should become visible after the animation
+		playerShape.setVisible(true);
+		ghostShapes.forEach(ghostShape -> ghostShape.setVisible(true));
 		food.setVisible(true);
 		levelChangeAnimation = new ScaleTransition(Duration.seconds(3), maze);
 		levelChangeAnimation.setFromZ(0);
@@ -332,53 +402,6 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 	@Override
 	public Animation<Boolean> energizerBlinking() {
 		return energizerBlinking;
-	}
-
-	private Node ghostShape(Ghost ghost, boolean frightened) {
-		if (ghost.visible && ghost.bounty > 0) {
-			DropShadow shadow = new DropShadow(0.3, Color.color(0.4, 0.4, 0.4));
-			Text bountyText = new Text();
-			bountyText.setEffect(shadow);
-			bountyText.setCache(true);
-			bountyText.setText(String.valueOf(ghost.bounty));
-			bountyText.setFont(Font.font("Sans", FontWeight.BOLD, TS));
-			bountyText.setFill(Color.CYAN);
-			bountyText.setTranslateX(ghost.position.x);
-			bountyText.setTranslateY(ghost.position.y);
-			bountyText.setTranslateZ(-1.5 * TS);
-			bountyText.setRotationAxis(Rotate.X_AXIS);
-			bountyText.setRotate(camera.getRotate());
-			return bountyText;
-		}
-
-		Node shape;
-		if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
-			shape = (Node) ghostReturningHome(ghost, ghost.dir).animate();
-			if (ghost.dir == Direction.DOWN || ghost.dir == Direction.UP) {
-				shape.setRotate(0);
-			} else {
-				shape.setRotate(90);
-			}
-		}
-
-		else if (ghost.is(GhostState.FRIGHTENED)) {
-			shape = (Node) (ghostFlashing(ghost).isRunning() ? ghostFlashing(ghost).frame()
-					: ghostFrightened(ghost, ghost.dir).animate());
-		}
-
-		else if (ghost.is(GhostState.LOCKED) && frightened) {
-			shape = (Node) ghostFrightened(ghost, ghost.dir).animate();
-		}
-
-		else {
-			// default: show ghost in color, alive and kicking
-			shape = (Node) ghostKicking(ghost, ghost.wishDir).animate(); // Looks towards wish dir!
-		}
-
-		shape.setVisible(ghost.visible);
-		shape.setTranslateX(ghost.position.x);
-		shape.setTranslateY(ghost.position.y);
-		return shape;
 	}
 
 	private Map<Ghost, Animation<?>> ghostFlashingAnimationByGhost = new HashMap<>();
@@ -444,19 +467,6 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 	public Stream<Animation<?>> mazeFlashings() {
 		// TODO implement this method
 		return Stream.empty();
-	}
-
-	private Node playerShape(Pac player) {
-		Node shape = null;
-		if (player.dead) {
-			shape = (Node) playerDying().frame();
-		} else {
-			shape = (Node) playerMunching(player, player.dir).frame();
-		}
-		shape.setVisible(player.visible);
-		shape.setTranslateX(player.position.x);
-		shape.setTranslateY(player.position.y);
-		return shape;
 	}
 
 	@Override
