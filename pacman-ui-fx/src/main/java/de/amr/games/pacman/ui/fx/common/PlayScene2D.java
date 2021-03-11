@@ -40,7 +40,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 	public void update() {
 		clearCanvas();
 		GraphicsContext g = canvas.getGraphicsContext2D();
-		GameModel game = controller.getGame();
+		GameModel game = controller.game;
 		boolean flashing = rendering.mazeAnimations().mazeFlashing(game.level.mazeNumber).hasStarted();
 		rendering.drawMaze(g, game.level.mazeNumber, 0, t(3), flashing);
 		if (!flashing) {

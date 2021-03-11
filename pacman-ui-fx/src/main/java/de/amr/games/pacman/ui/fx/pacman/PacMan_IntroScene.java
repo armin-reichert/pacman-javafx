@@ -50,7 +50,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		animation.update();
 		clearCanvas();
 		GraphicsContext g = canvas.getGraphicsContext2D();
-		rendering.drawScore(g, controller.getGame(), true);
+		rendering.drawScore(g, controller.game, true);
 		drawGallery(g);
 		if (animation.phase == Phase.CHASING_PAC) {
 			if (animation.blinking.animate()) {

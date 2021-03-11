@@ -20,7 +20,8 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 
 	private PacMan_IntermissionScene3_Controller sceneController;
 
-	public PacMan_IntermissionScene3(PacManGameController controller, PacManGameRendering2D rendering, SoundManager sounds) {
+	public PacMan_IntermissionScene3(PacManGameController controller, PacManGameRendering2D rendering,
+			SoundManager sounds) {
 		super(controller, rendering, sounds);
 	}
 
@@ -38,7 +39,7 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 	public void update() {
 		GraphicsContext g = canvas.getGraphicsContext2D();
 		clearCanvas();
-		rendering.drawLevelCounter(g, controller.getGame(), t(25), t(34));
+		rendering.drawLevelCounter(g, controller.game, t(25), t(34));
 		rendering.drawPlayer(g, sceneController.pac);
 		if (sceneController.phase == Phase.CHASING_PACMAN) {
 			rendering.drawBlinkyPatched(g, sceneController.blinky);

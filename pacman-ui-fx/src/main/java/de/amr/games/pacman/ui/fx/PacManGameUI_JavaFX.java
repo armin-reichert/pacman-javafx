@@ -178,7 +178,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			if (currentGameScene != null) {
 				currentGameScene.start();
 			}
-			showFlashMessage("Enter level " + controller.getGame().levelNumber, clock.sec(1));
+			showFlashMessage("Enter level " + controller.game.levelNumber, clock.sec(1));
 		}
 	}
 
@@ -206,7 +206,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				currentGameScene.getSubScene().getWidth(), currentGameScene.getSubScene().getHeight());
 		text += camControl.getCameraInfo() + "\n";
 		text += "Autopilot " + (controller.autopilot.enabled ? "ON" : "OFF") + " (Key 'A')\n";
-		text += "Player is " + (controller.getGame().player.immune ? "IMMUNE" : "VULNERABLE") + " (Key 'I')\n";
+		text += "Player is " + (controller.game.player.immune ? "IMMUNE" : "VULNERABLE") + " (Key 'I')\n";
 		text += "3D scenes " + (use3DScenes ? "ON" : "OFF") + " (Key CTRL+'3')\n";
 		infoView.setText(text);
 		infoView.setVisible(GlobalSettings.infoViewVisible);

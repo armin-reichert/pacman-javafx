@@ -18,7 +18,8 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 	private PacMan_IntermissionScene2_Controller sceneController;
 
-	public PacMan_IntermissionScene2(PacManGameController controller, PacManGameRendering2D rendering, SoundManager sounds) {
+	public PacMan_IntermissionScene2(PacManGameController controller, PacManGameRendering2D rendering,
+			SoundManager sounds) {
 		super(controller, rendering, sounds);
 	}
 
@@ -37,13 +38,14 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 		sceneController.update();
 		clearCanvas();
 		GraphicsContext g = canvas.getGraphicsContext2D();
-		rendering.drawLevelCounter(g, controller.getGame(), t(25), t(34));
+		rendering.drawLevelCounter(g, controller.game, t(25), t(34));
 		rendering.drawNail(g, sceneController.nail);
 		rendering.drawPlayer(g, sceneController.pac);
 		if (sceneController.nailDistance() < 0) {
 			rendering.drawGhost(g, sceneController.blinky, false);
 		} else {
-			rendering.drawBlinkyStretched(g, sceneController.blinky, sceneController.nail.position, sceneController.nailDistance() / 4);
+			rendering.drawBlinkyStretched(g, sceneController.blinky, sceneController.nail.position,
+					sceneController.nailDistance() / 4);
 		}
 	}
 }

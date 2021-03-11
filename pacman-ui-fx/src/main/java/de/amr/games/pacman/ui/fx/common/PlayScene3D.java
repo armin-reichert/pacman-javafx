@@ -141,7 +141,7 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 	@Override
 	public void start() {
 
-		GameModel game = controller.getGame();
+		GameModel game = controller.game;
 		PacManGameWorld world = game.level.world;
 		root.getChildren().clear();
 
@@ -213,7 +213,7 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 
 	@Override
 	public void update() {
-		GameModel game = controller.getGame();
+		GameModel game = controller.game;
 
 		if (controller.fsm.state == PacManGameState.CHANGING_LEVEL) {
 			if (controller.fsm.state.timer.ticked() == clock.sec(1)) {
