@@ -1,12 +1,10 @@
 package de.amr.games.pacman.ui.fx.pacman;
 
-import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 import static de.amr.games.pacman.ui.pacman.PacMan_IntroScene_Controller.TOP_Y;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.lib.God;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
@@ -38,7 +36,6 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	public void start() {
 		animation = new PacMan_IntroScene_Controller(controller, rendering);
 		animation.start();
-		log("%s: PacMan intro scene started at clock tick %d", this, God.clock.ticksTotal);
 	}
 
 	@Override

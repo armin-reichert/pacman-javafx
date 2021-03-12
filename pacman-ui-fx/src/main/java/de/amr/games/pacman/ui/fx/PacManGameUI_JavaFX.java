@@ -1,6 +1,5 @@
 package de.amr.games.pacman.ui.fx;
 
-import static de.amr.games.pacman.lib.God.clock;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.ui.fx.common.SceneController.createGameScene;
 import static de.amr.games.pacman.ui.fx.common.SceneController.is2DAnd3DVersionAvailable;
@@ -159,7 +158,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		mainSceneRoot.getChildren().clear();
 		mainSceneRoot.getChildren().addAll(newGameScene.getSubScene(), flashMessageView, infoView);
 		newGameScene.start();
-		log("Game scene '%s' started at clock tick %d", newGameScene, clock.ticksTotal);
 	}
 
 	@Override

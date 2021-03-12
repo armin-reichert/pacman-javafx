@@ -5,7 +5,6 @@ import static de.amr.games.pacman.lib.Logging.log;
 import java.io.IOException;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.lib.God;
 import de.amr.games.pacman.model.common.GameType;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import javafx.animation.AnimationTimer;
@@ -40,7 +39,6 @@ public class PacManGameAppFX extends Application {
 			lastTickTime = now;
 			log("UI update");
 			controller.userInterface.update();
-			God.clock.ticksTotal++; // TODO get rid of this
 		}
 	}
 
