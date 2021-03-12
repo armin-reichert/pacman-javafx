@@ -65,7 +65,7 @@ public abstract class StandardRendering
 	protected Map<Ghost, Map<Direction, Animation<Rectangle2D>>> ghostsKickingAnim = new HashMap<>();
 	protected Map<Direction, Animation<Rectangle2D>> ghostEyesAnim;
 	protected Animation<Rectangle2D> ghostFrightenedAnim;
-	protected Animation<Rectangle2D> ghostFlashingAnim;
+	protected Map<Ghost, Animation<Rectangle2D>> ghostFlashingAnim = new HashMap<>();
 
 	public StandardRendering(String spritesheetPath) {
 		spritesheet = new Image(getClass().getResource(spritesheetPath).toExternalForm());
@@ -183,8 +183,11 @@ public abstract class StandardRendering
 			return ghostReturningHome(ghost, ghost.dir).animate();
 		}
 		if (ghost.is(FRIGHTENED)) {
-			return ghostFlashing(ghost).isRunning() ? ghostFlashing(ghost).frame()
-					: ghostFrightened(ghost, ghost.dir).animate();
+			if (ghostFlashing(ghost).isRunning()) {
+				return ghostFlashing(ghost).animate();
+			} else {
+				return ghostFrightened(ghost, ghost.dir).animate();
+			}
 		}
 		if (ghost.is(LOCKED) && frightened) {
 			return ghostFrightened(ghost, ghost.dir).animate();
@@ -365,8 +368,13 @@ public abstract class StandardRendering
 
 	@Override
 	public Animation<Rectangle2D> ghostFlashing(Ghost ghost) {
-		return ghostFlashingAnim;
+		if (!ghostFlashingAnim.containsKey(ghost)) {
+			ghostFlashingAnim.put(ghost, newGhostFlashingAnimation());
+		}
+		return ghostFlashingAnim.get(ghost);
 	}
+
+	protected abstract Animation<Rectangle2D> newGhostFlashingAnimation();
 
 	@Override
 	public Animation<Rectangle2D> ghostReturningHome(Ghost ghost, Direction dir) {

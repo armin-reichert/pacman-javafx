@@ -89,9 +89,6 @@ public class PacMan_StandardRendering extends StandardRendering {
 		ghostFrightenedAnim = Animation.of(sprite(8, 4), sprite(9, 4));
 		ghostFrightenedAnim.frameDuration(20).endless();
 
-		ghostFlashingAnim = Animation.of(sprite(8, 4), sprite(9, 4), sprite(10, 4), sprite(11, 4));
-		ghostFlashingAnim.frameDuration(5).endless();
-
 		blinkyPatched = Animation.of(sprite(10, 7), sprite(11, 7)).restart().frameDuration(4).endless();
 		blinkyDamaged = Animation.of(sprite(8, 7), sprite(9, 7));
 		blinkyStretched = Animation.of(sprite(9, 6), sprite(10, 6), sprite(11, 6), sprite(12, 6));
@@ -128,6 +125,11 @@ public class PacMan_StandardRendering extends StandardRendering {
 			walkingTo.put(dir, animation);
 		}
 		return walkingTo;
+	}
+
+	@Override
+	protected Animation<Rectangle2D> newGhostFlashingAnimation() {
+		return Animation.of(sprite(8, 4), sprite(9, 4), sprite(10, 4), sprite(11, 4)).frameDuration(6);
 	}
 
 	@Override

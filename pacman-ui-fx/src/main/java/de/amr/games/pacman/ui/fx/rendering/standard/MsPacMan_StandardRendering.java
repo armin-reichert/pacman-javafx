@@ -95,7 +95,6 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 		Direction.stream().forEach(dir -> ghostEyesAnim.put(dir, Animation.of(s(8 + index(dir), 5))));
 
 		ghostFrightenedAnim = Animation.of(s(8, 4), s(9, 4)).frameDuration(20).endless().run();
-		ghostFlashingAnim = Animation.of(s(8, 4), s(9, 4), s(10, 4), s(11, 4)).frameDuration(5).endless();
 
 		bonusJumpingAnim = Animation.of(0, 2, 0, -2).frameDuration(20).endless().run();
 	}
@@ -162,6 +161,11 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 			kickingTo.put(dir, kicking);
 		}
 		return kickingTo;
+	}
+
+	@Override
+	protected Animation<Rectangle2D> newGhostFlashingAnimation() {
+		return Animation.of(s(8, 4), s(9, 4), s(10, 4), s(11, 4)).frameDuration(4);
 	}
 
 	@Override
