@@ -20,6 +20,8 @@ import de.amr.games.pacman.ui.fx.pacman.PacMan_IntroScene;
 import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.fx.rendering.standard.MsPacMan_StandardRendering;
 import de.amr.games.pacman.ui.fx.rendering.standard.PacMan_StandardRendering;
+import de.amr.games.pacman.ui.fx.sound.PacManGameSoundManager;
+import de.amr.games.pacman.ui.fx.sound.PacManGameSounds;
 import de.amr.games.pacman.ui.sound.SoundManager;
 
 /**

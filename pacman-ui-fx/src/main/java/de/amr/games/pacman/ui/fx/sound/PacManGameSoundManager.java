@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.common;
+package de.amr.games.pacman.ui.fx.sound;
 
 import java.io.BufferedInputStream;
 import java.net.URL;

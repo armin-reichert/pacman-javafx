@@ -164,7 +164,7 @@ public abstract class StandardRendering
 		if (player.speed == 0) {
 			return (Rectangle2D) playerMunching(player, player.dir).frame(0);
 		}
-		if (!player.couldMove) {
+		if (player.stuck) {
 			return (Rectangle2D) playerMunching(player, player.dir).frame(1);
 		}
 		return (Rectangle2D) playerMunching(player, player.dir).animate();

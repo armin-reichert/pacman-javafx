@@ -260,9 +260,10 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 
 	private void updatePlayerShape(Pac player) {
 		Node shape = player.dead ? (Node) playerDying().frame() : (Node) playerMunching(player, player.dir).frame();
+		boolean insidePortal = controller.game.level.world.isPortal(player.tile());
 		playerShape.getChildren().clear();
 		playerShape.getChildren().add(shape);
-		playerShape.setVisible(player.visible);
+		playerShape.setVisible(player.visible && !insidePortal);
 		playerShape.setTranslateX(player.position.x);
 		playerShape.setTranslateY(player.position.y);
 		playerShape.setViewOrder(-player.position.y);

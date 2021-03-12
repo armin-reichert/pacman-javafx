@@ -15,9 +15,14 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 
+/**
+ * Base class of all 2D scenes that use a canvas for being rendered.
+ * 
+ * @author Armin Reichert
+ */
 public abstract class AbstractGameScene2D implements GameScene {
 
-	protected Double aspectRatio;
+	protected final double aspectRatio;
 	protected final SubScene scene;
 	protected final Canvas canvas;
 	protected final GraphicsContext gc;
@@ -34,13 +39,13 @@ public abstract class AbstractGameScene2D implements GameScene {
 		gc = canvas.getGraphicsContext2D();
 		Group group = new Group(canvas);
 		scene = new SubScene(group, WIDTH_UNSCALED, HEIGHT_UNSCALED);
+		scene.widthProperty().bind(canvas.widthProperty());
+		scene.heightProperty().bind(canvas.heightProperty());
 	}
 
 	@Override
 	public void resize(double width, double height) {
 		width = aspectRatio * height;
-		scene.setWidth(width);
-		scene.setHeight(height);
 		canvas.setWidth(width);
 		canvas.setHeight(height);
 		double scaling = height / HEIGHT_UNSCALED;
@@ -52,6 +57,10 @@ public abstract class AbstractGameScene2D implements GameScene {
 		GraphicsContext g = canvas.getGraphicsContext2D();
 		g.setFill(Color.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+	}
+
+	public Canvas getCanvas() {
+		return canvas;
 	}
 
 	@Override

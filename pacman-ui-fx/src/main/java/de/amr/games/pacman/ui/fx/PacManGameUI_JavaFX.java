@@ -96,7 +96,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		StackPane.setAlignment(infoView, Pos.TOP_LEFT);
 
 		mainSceneRoot = new StackPane();
-		mainScene = new Scene(mainSceneRoot, GameScene.ASPECT_RATIO * height, height, Color.BLACK);
+		mainScene = new Scene(mainSceneRoot, GameScene.ASPECT_RATIO * height, height, Color.rgb(20, 20, 60));
 
 		GameScene newGameScene = createGameScene(controller, height, use3DScenes);
 		changeGameScene(newGameScene);
@@ -182,9 +182,16 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	public void updateInfoView() {
 		String text = "";
+		text += String.format("Window w=%.0f h=%.0f\n", mainScene.getWindow().getWidth(),
+				mainScene.getWindow().getHeight());
 		text += String.format("Main scene: w=%.0f h=%.0f\n", mainScene.getWidth(), mainScene.getHeight());
 		text += String.format("%s: w=%.0f h=%.0f\n", currentGameScene.getClass().getSimpleName(),
 				currentGameScene.getSubScene().getWidth(), currentGameScene.getSubScene().getHeight());
+		if (currentGameScene instanceof AbstractGameScene2D) {
+			AbstractGameScene2D scene2D = (AbstractGameScene2D) currentGameScene;
+			text += String.format("Canvas2D: w=%.0f h=%.0f\n", scene2D.getCanvas().getWidth(),
+					scene2D.getCanvas().getHeight());
+		}
 		text += camControl.getCameraInfo() + "\n";
 		text += "Autopilot " + (controller.autopilot.enabled ? "ON" : "OFF") + " (Key 'A')\n";
 		text += "Player is " + (controller.game.player.immune ? "IMMUNE" : "VULNERABLE") + " (Key 'I')\n";
