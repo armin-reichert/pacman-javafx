@@ -23,22 +23,27 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	public PlayScene2D(PacManGameController controller, PacManGameRendering2D rendering, SoundManager sounds) {
 		super(controller, rendering, sounds);
-		controller.fsm.addStateEntryListener(PacManGameState.HUNTING, this::onHuntingStarted);
-		controller.fsm.addStateEntryListener(PacManGameState.CHANGING_LEVEL, this::onChangingGameLevel);
-		controller.fsm.addStateEntryListener(PacManGameState.PACMAN_DYING, this::onPacManDying);
+		controller.fsm.addStateEntryListener(PacManGameState.HUNTING, this::onHuntingStateEntry);
+		controller.fsm.addStateExitListener(PacManGameState.HUNTING, this::onHuntingStateExit);
+		controller.fsm.addStateEntryListener(PacManGameState.CHANGING_LEVEL, this::onChangingLevelEntry);
+		controller.fsm.addStateEntryListener(PacManGameState.PACMAN_DYING, this::onPacManDyingEntry);
 	}
 
-	private void onHuntingStarted(PacManGameState state) {
+	private void onHuntingStateEntry(PacManGameState state) {
 		rendering.mazeAnimations().energizerBlinking().restart();
 		rendering.playerAnimations().playerMunching(controller.game.player).forEach(Animation::restart);
 		controller.game.ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(Animation::restart);
 	}
 
-	private void onPacManDying(PacManGameState state) {
+	private void onHuntingStateExit(PacManGameState state) {
+		rendering.mazeAnimations().energizerBlinking().reset();
+	}
+
+	private void onPacManDyingEntry(PacManGameState state) {
 		controller.game.ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(Animation::reset);
 	}
 
-	private void onChangingGameLevel(PacManGameState state) {
+	private void onChangingLevelEntry(PacManGameState state) {
 		GameModel game = controller.game;
 		mazeFlashing = rendering.mazeAnimations().mazeFlashing(game.level.mazeNumber);
 	}
