@@ -257,7 +257,7 @@ public abstract class StandardRendering
 
 	@Override
 	public void drawEnergizerTiles(GraphicsContext g, Stream<V2i> energizerTiles) {
-		if (!energizerBlinking.frame()) {
+		if (!energizerBlinking.animate()) {
 			energizerTiles.forEach(tile -> drawTileCovered(g, tile));
 		}
 	}
