@@ -24,7 +24,12 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	public PlayScene2D(PacManGameController controller, PacManGameRendering2D rendering, SoundManager sounds) {
 		super(controller, rendering, sounds);
+		controller.fsm.addStateEntryListener(PacManGameState.HUNTING, this::onHuntingStarted);
 		controller.fsm.addStateEntryListener(PacManGameState.CHANGING_LEVEL, this::onChangingGameLevel);
+	}
+
+	private void onHuntingStarted(PacManGameState state) {
+		controller.game.ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(Animation::restart);
 	}
 
 	private void onChangingGameLevel(PacManGameState state) {
