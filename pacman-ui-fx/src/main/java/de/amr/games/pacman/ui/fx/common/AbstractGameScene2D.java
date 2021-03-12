@@ -20,6 +20,7 @@ public abstract class AbstractGameScene2D implements GameScene {
 	protected Double aspectRatio;
 	protected final SubScene scene;
 	protected final Canvas canvas;
+	protected final GraphicsContext gc;
 	protected final PacManGameController controller;
 	protected final PacManGameRendering2D rendering;
 	protected final SoundManager sounds;
@@ -30,6 +31,7 @@ public abstract class AbstractGameScene2D implements GameScene {
 		this.sounds = sounds;
 		aspectRatio = (double) WIDTH_UNSCALED / HEIGHT_UNSCALED;
 		canvas = new Canvas(WIDTH_UNSCALED, HEIGHT_UNSCALED);
+		gc = canvas.getGraphicsContext2D();
 		Group group = new Group(canvas);
 		scene = new SubScene(group, WIDTH_UNSCALED, HEIGHT_UNSCALED);
 	}
@@ -46,7 +48,7 @@ public abstract class AbstractGameScene2D implements GameScene {
 		canvas.getTransforms().add(new Scale(scaling, scaling));
 	}
 
-	protected void clearCanvas() {
+	public void clearCanvas() {
 		GraphicsContext g = canvas.getGraphicsContext2D();
 		g.setFill(Color.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());

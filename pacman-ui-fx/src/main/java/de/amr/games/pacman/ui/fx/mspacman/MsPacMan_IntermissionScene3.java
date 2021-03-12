@@ -5,7 +5,6 @@ import de.amr.games.pacman.ui.fx.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.mspacman.MsPacMan_IntermissionScene3_Controller;
 import de.amr.games.pacman.ui.sound.SoundManager;
-import javafx.scene.canvas.GraphicsContext;
 
 /**
  * Intermission scene 3: "Junior".
@@ -21,7 +20,8 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 
 	private MsPacMan_IntermissionScene3_Controller sceneController;
 
-	public MsPacMan_IntermissionScene3(PacManGameController controller, PacManGameRendering2D rendering, SoundManager sounds) {
+	public MsPacMan_IntermissionScene3(PacManGameController controller, PacManGameRendering2D rendering,
+			SoundManager sounds) {
 		super(controller, rendering, sounds);
 	}
 
@@ -38,12 +38,10 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 	@Override
 	public void update() {
 		sceneController.update();
-		clearCanvas();
-		GraphicsContext g = canvas.getGraphicsContext2D();
-		rendering.drawFlap(g, sceneController.flap);
-		rendering.drawStork(g, sceneController.stork);
-		rendering.drawPlayer(g, sceneController.msPacMan);
-		rendering.drawSpouse(g, sceneController.pacMan);
-		rendering.drawJuniorBag(g, sceneController.bag);
+		rendering.drawFlap(gc, sceneController.flap);
+		rendering.drawStork(gc, sceneController.stork);
+		rendering.drawPlayer(gc, sceneController.msPacMan);
+		rendering.drawSpouse(gc, sceneController.pacMan);
+		rendering.drawJuniorBag(gc, sceneController.bag);
 	}
 }

@@ -8,7 +8,6 @@ import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene1_Controller;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene1_Controller.Phase;
 import de.amr.games.pacman.ui.sound.SoundManager;
-import javafx.scene.canvas.GraphicsContext;
 
 /**
  * First intermission scene: Blinky chases Pac-Man and is then chased by a huge Pac-Man.
@@ -37,16 +36,15 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 	@Override
 	public void update() {
 		sceneController.update();
-		clearCanvas();
-		GraphicsContext g = canvas.getGraphicsContext2D();
-		rendering.drawGhost(g, sceneController.blinky, false);
+		rendering.drawGhost(gc, sceneController.blinky, false);
 		if (sceneController.phase == Phase.BLINKY_CHASING_PACMAN) {
-			rendering.drawPlayer(g, sceneController.pac);
+			rendering.drawPlayer(gc, sceneController.pac);
 		} else {
-			g.translate(0, -10);
-			rendering.drawBigPacMan(g, sceneController.pac);
-			g.translate(0, 10);
+			gc.save();
+			gc.translate(0, -10);
+			rendering.drawBigPacMan(gc, sceneController.pac);
+			gc.restore();
 		}
-		rendering.drawLevelCounter(g, controller.game, t(25), t(34));
+		rendering.drawLevelCounter(gc, controller.game, t(25), t(34));
 	}
 }

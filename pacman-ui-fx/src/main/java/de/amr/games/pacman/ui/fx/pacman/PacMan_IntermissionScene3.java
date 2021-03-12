@@ -8,7 +8,6 @@ import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene3_Controller;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene3_Controller.Phase;
 import de.amr.games.pacman.ui.sound.SoundManager;
-import javafx.scene.canvas.GraphicsContext;
 
 /**
  * Third intermission scene: Blinky in shred dress chases Pac-Man, comes back half-naked drawing
@@ -37,14 +36,12 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 
 	@Override
 	public void update() {
-		GraphicsContext g = canvas.getGraphicsContext2D();
-		clearCanvas();
-		rendering.drawLevelCounter(g, controller.game, t(25), t(34));
-		rendering.drawPlayer(g, sceneController.pac);
+		rendering.drawLevelCounter(gc, controller.game, t(25), t(34));
+		rendering.drawPlayer(gc, sceneController.pac);
 		if (sceneController.phase == Phase.CHASING_PACMAN) {
-			rendering.drawBlinkyPatched(g, sceneController.blinky);
+			rendering.drawBlinkyPatched(gc, sceneController.blinky);
 		} else {
-			rendering.drawBlinkyNaked(g, sceneController.blinky);
+			rendering.drawBlinkyNaked(gc, sceneController.blinky);
 		}
 	}
 }

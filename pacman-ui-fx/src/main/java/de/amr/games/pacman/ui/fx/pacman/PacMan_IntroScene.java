@@ -12,7 +12,6 @@ import de.amr.games.pacman.ui.pacman.PacMan_IntroScene_Controller;
 import de.amr.games.pacman.ui.pacman.PacMan_IntroScene_Controller.GhostPortrait;
 import de.amr.games.pacman.ui.pacman.PacMan_IntroScene_Controller.Phase;
 import de.amr.games.pacman.ui.sound.SoundManager;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -45,50 +44,48 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	@Override
 	public void update() {
 		animation.update();
-		clearCanvas();
-		GraphicsContext g = canvas.getGraphicsContext2D();
-		rendering.drawScore(g, controller.game, true);
-		drawGallery(g);
+		rendering.drawScore(gc, controller.game, true);
+		drawGallery();
 		if (animation.phase == Phase.CHASING_PAC) {
 			if (animation.blinking.animate()) {
-				g.setFill(Color.PINK);
-				g.fillOval(t(2), animation.pac.position.y, TS, TS);
+				gc.setFill(Color.PINK);
+				gc.fillOval(t(2), animation.pac.position.y, TS, TS);
 			}
 		}
-		drawGuys(g);
+		drawGuys();
 		if (animation.phase.ordinal() >= Phase.CHASING_GHOSTS.ordinal()) {
-			drawPointsAnimation(g, 11, 26);
+			drawPointsAnimation(11, 26);
 		}
 		if (animation.phase == Phase.READY_TO_PLAY) {
-			drawPressKeyToStart(g, 32);
+			drawPressKeyToStart(32);
 		}
 	}
 
-	private void drawGuys(GraphicsContext g) {
+	private void drawGuys() {
 		for (Ghost ghost : animation.ghosts) {
-			rendering.drawGhost(g, ghost, !animation.pac.powerTimer.hasExpired());
+			rendering.drawGhost(gc, ghost, !animation.pac.powerTimer.hasExpired());
 		}
-		rendering.drawPlayer(g, animation.pac);
+		rendering.drawPlayer(gc, animation.pac);
 	}
 
-	private void drawGallery(GraphicsContext g) {
-		g.setFill(Color.WHITE);
-		g.setFont(rendering.getScoreFont());
-		g.fillText("CHARACTER", t(6), TOP_Y);
-		g.fillText("/", t(16), TOP_Y);
-		g.fillText("NICKNAME", t(18), TOP_Y);
+	private void drawGallery() {
+		gc.setFill(Color.WHITE);
+		gc.setFont(rendering.getScoreFont());
+		gc.fillText("CHARACTER", t(6), TOP_Y);
+		gc.fillText("/", t(16), TOP_Y);
+		gc.fillText("NICKNAME", t(18), TOP_Y);
 		for (int i = 0; i < 4; ++i) {
 			GhostPortrait portrait = animation.gallery[i];
 			if (portrait.ghost.visible) {
 				int y = TOP_Y + t(2 + 3 * i);
-				rendering.drawGhost(g, animation.gallery[i].ghost, false);
-				g.setFill(getGhostColor(i));
-				g.setFont(rendering.getScoreFont());
+				rendering.drawGhost(gc, animation.gallery[i].ghost, false);
+				gc.setFill(getGhostColor(i));
+				gc.setFont(rendering.getScoreFont());
 				if (portrait.characterVisible) {
-					g.fillText("-" + portrait.character, t(6), y + 8);
+					gc.fillText("-" + portrait.character, t(6), y + 8);
 				}
 				if (portrait.nicknameVisible) {
-					g.fillText("\"" + portrait.ghost.name + "\"", t(18), y + 8);
+					gc.fillText("\"" + portrait.ghost.name + "\"", t(18), y + 8);
 				}
 			}
 		}
@@ -98,27 +95,27 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		return i == 0 ? Color.RED : i == 1 ? Color.PINK : i == 2 ? Color.CYAN : Color.ORANGE;
 	}
 
-	private void drawPressKeyToStart(GraphicsContext g, int yTile) {
+	private void drawPressKeyToStart(int yTile) {
 		if (animation.blinking.frame()) {
 			String text = "PRESS SPACE TO PLAY";
-			g.setFill(Color.ORANGE);
-			g.setFont(rendering.getScoreFont());
-			g.fillText(text, t(14 - text.length() / 2), t(yTile));
+			gc.setFill(Color.ORANGE);
+			gc.setFont(rendering.getScoreFont());
+			gc.fillText(text, t(14 - text.length() / 2), t(yTile));
 		}
 	}
 
-	private void drawPointsAnimation(GraphicsContext g, int tileX, int tileY) {
+	private void drawPointsAnimation(int tileX, int tileY) {
 		if (animation.blinking.frame()) {
-			g.setFill(Color.PINK);
-			g.fillRect(t(tileX) + 6, t(tileY - 1) + 2, 2, 2);
-			g.fillOval(t(tileX), t(tileY + 1) - 2, 10, 10);
+			gc.setFill(Color.PINK);
+			gc.fillRect(t(tileX) + 6, t(tileY - 1) + 2, 2, 2);
+			gc.fillOval(t(tileX), t(tileY + 1) - 2, 10, 10);
 		}
-		g.setFill(Color.WHITE);
-		g.setFont(rendering.getScoreFont());
-		g.fillText("10", t(tileX + 2), t(tileY));
-		g.fillText("50", t(tileX + 2), t(tileY + 2));
-		g.setFont(Font.font(rendering.getScoreFont().getName(), 6));
-		g.fillText("PTS", t(tileX + 5), t(tileY));
-		g.fillText("PTS", t(tileX + 5), t(tileY + 2));
+		gc.setFill(Color.WHITE);
+		gc.setFont(rendering.getScoreFont());
+		gc.fillText("10", t(tileX + 2), t(tileY));
+		gc.fillText("50", t(tileX + 2), t(tileY + 2));
+		gc.setFont(Font.font(rendering.getScoreFont().getName(), 6));
+		gc.fillText("PTS", t(tileX + 5), t(tileY));
+		gc.fillText("PTS", t(tileX + 5), t(tileY + 2));
 	}
 }

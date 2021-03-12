@@ -3,7 +3,6 @@ package de.amr.games.pacman.ui.fx;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.ui.fx.common.SceneController.createGameScene;
 import static de.amr.games.pacman.ui.fx.common.SceneController.is2DAnd3DVersionAvailable;
-import static de.amr.games.pacman.ui.fx.common.SceneController.isSuitableScene;
 
 import java.util.Optional;
 
@@ -11,6 +10,7 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations;
+import de.amr.games.pacman.ui.fx.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.common.CameraController;
 import de.amr.games.pacman.ui.fx.common.FlashMessageView;
 import de.amr.games.pacman.ui.fx.common.GameScene;
@@ -166,7 +166,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void update() {
-		if (currentGameScene == null || !isSuitableScene(currentGameScene, controller)) {
+		if (currentGameScene == null || !SceneController.isSuitableScene(currentGameScene, controller)) {
 			if (currentGameScene != null) {
 				currentGameScene.end();
 			}
@@ -176,6 +176,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			changeGameScene(newGameScene);
 		}
 
+		if (currentGameScene instanceof AbstractGameScene2D) {
+			AbstractGameScene2D scene2D = (AbstractGameScene2D) currentGameScene;
+			scene2D.clearCanvas();
+		}
 		currentGameScene.update();
 		flashMessageView.update();
 		updateInfoView();
