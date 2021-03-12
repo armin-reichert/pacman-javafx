@@ -2,12 +2,12 @@ package de.amr.games.pacman.ui.fx.app;
 
 import static de.amr.games.pacman.lib.Logging.log;
 
-public class CommandLineArgs {
+public class Options {
 
 	double height = 576;
 	boolean pacman = false;
 
-	public CommandLineArgs(String[] args) {
+	public Options(String[] args) {
 		int i = -1;
 		while (++i < args.length) {
 			if ("-pacman".equals(args[i])) {
