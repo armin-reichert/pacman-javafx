@@ -7,7 +7,6 @@ import static de.amr.games.pacman.ui.fx.common.SceneController.is2DAnd3DVersionA
 import java.util.Optional;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations;
 import de.amr.games.pacman.ui.fx.common.AbstractGameScene2D;
@@ -158,10 +157,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		mainSceneRoot.getChildren().clear();
 		mainSceneRoot.getChildren().addAll(newGameScene.getSubScene(), flashMessageView, infoView);
 		newGameScene.start();
-	}
-
-	@Override
-	public void onGameChanged(GameModel newGame) {
 	}
 
 	@Override
