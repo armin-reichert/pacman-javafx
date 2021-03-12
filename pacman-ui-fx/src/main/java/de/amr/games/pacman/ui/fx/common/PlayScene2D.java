@@ -29,6 +29,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 	}
 
 	private void onHuntingStarted(PacManGameState state) {
+		rendering.mazeAnimations().energizerBlinking().restart();
+		rendering.playerAnimations().playerMunching(controller.game.player).forEach(Animation::restart);
 		controller.game.ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(Animation::restart);
 	}
 
