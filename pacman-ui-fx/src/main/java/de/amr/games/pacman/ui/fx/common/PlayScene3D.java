@@ -30,7 +30,6 @@ import de.amr.games.pacman.ui.animation.MazeAnimations;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations;
 import de.amr.games.pacman.ui.animation.PlayerAnimations;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_Constants;
-import javafx.animation.Animation.Status;
 import javafx.animation.ScaleTransition;
 import javafx.scene.Camera;
 import javafx.scene.Group;
@@ -75,7 +74,7 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 
 	private Group maze;
 	private Group food;
-	private ScaleTransition levelChangeAnimation;
+	private ScaleTransition levelCompleteAnimation, levelStartAnimation;
 	private Group playerShape;
 	private Group[] ghostShapes = new Group[4];
 	private Map<V2i, Node> walls = new HashMap<>();
@@ -114,8 +113,9 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 		text.setRotate(camera.getRotate());
 		defaultAnimation = Animation.of(text);
 
-		controller.fsm.addStateEntryListener(PacManGameState.CHANGING_LEVEL, this::onLeavingLevel);
-		controller.fsm.addStateExitListener(PacManGameState.CHANGING_LEVEL, this::onEnteringLevel);
+		controller.fsm.addStateEntryListener(PacManGameState.LEVEL_COMPLETE, state -> playLevelCompleteAnimation());
+		controller.fsm.addStateEntryListener(PacManGameState.LEVEL_STARTING, state -> playLevelStartingAnimation());
+
 	}
 
 	@Override
@@ -253,9 +253,6 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 		hiscoreDisplay.setRotationAxis(Rotate.X_AXIS);
 		hiscoreDisplay.setRotate(camera.getRotate());
 
-		if (controller.fsm.state == PacManGameState.CHANGING_LEVEL && levelChangeAnimation.getStatus() == Status.STOPPED) {
-			controller.letCurrentGameStateExpire();
-		}
 	}
 
 	private void updatePlayerShape(Pac player) {
@@ -329,26 +326,28 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 
 	// State change handling
 
-	private void onLeavingLevel(PacManGameState state) {
+	private void playLevelCompleteAnimation() {
 		food.setVisible(false);
 		playerShape.setVisible(false);
 		Arrays.asList(ghostShapes).forEach(ghostShape -> ghostShape.setVisible(false));
-		levelChangeAnimation = new ScaleTransition(Duration.seconds(3), maze);
-		levelChangeAnimation.setFromZ(1);
-		levelChangeAnimation.setToZ(0);
-		levelChangeAnimation.setDelay(Duration.seconds(2));
-		levelChangeAnimation.play();
+		levelCompleteAnimation = new ScaleTransition(Duration.seconds(3), maze);
+		levelCompleteAnimation.setFromZ(1);
+		levelCompleteAnimation.setToZ(0);
+		levelCompleteAnimation.setDelay(Duration.seconds(2));
+		controller.fsm.state.timer.resetSeconds(2 + levelCompleteAnimation.getDuration().toSeconds());
+		levelCompleteAnimation.play();
 	}
 
-	private void onEnteringLevel(PacManGameState state) {
+	private void playLevelStartingAnimation() {
 		// TODO these should become visible after the animation
 		playerShape.setVisible(true);
 		Arrays.asList(ghostShapes).forEach(ghostShape -> ghostShape.setVisible(true));
 		food.setVisible(true);
-		levelChangeAnimation = new ScaleTransition(Duration.seconds(3), maze);
-		levelChangeAnimation.setFromZ(0);
-		levelChangeAnimation.setToZ(1);
-		levelChangeAnimation.play();
+		levelStartAnimation = new ScaleTransition(Duration.seconds(3), maze);
+		levelStartAnimation.setFromZ(0);
+		levelStartAnimation.setToZ(1);
+		controller.fsm.state.timer.resetSeconds(levelStartAnimation.getDuration().toSeconds());
+		levelStartAnimation.play();
 	}
 
 	// Animations

@@ -26,7 +26,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		controller.fsm.addStateEntryListener(PacManGameState.READY, this::onReadyStateEntry);
 		controller.fsm.addStateEntryListener(PacManGameState.HUNTING, this::onHuntingStateEntry);
 		controller.fsm.addStateExitListener(PacManGameState.HUNTING, this::onHuntingStateExit);
-		controller.fsm.addStateEntryListener(PacManGameState.CHANGING_LEVEL, this::onChangingLevelStateEntry);
+		controller.fsm.addStateEntryListener(PacManGameState.LEVEL_COMPLETE, this::onLevelCompleteStateEntry);
 		controller.fsm.addStateEntryListener(PacManGameState.PACMAN_DYING, this::onPacManDyingStateEntry);
 		controller.fsm.addStateEntryListener(PacManGameState.GHOST_DYING, this::onGhostDyingStateEntry);
 		controller.fsm.addStateEntryListener(PacManGameState.GAME_OVER, this::onGameOverStateEntry);
@@ -54,12 +54,11 @@ public class PlayScene2D extends AbstractGameScene2D {
 		rendering.mazeAnimations().energizerBlinking().restart();
 	}
 
-	private void onChangingLevelStateEntry(PacManGameState state) {
-		GameModel game = controller.game;
-		mazeFlashing = rendering.mazeAnimations().mazeFlashing(game.level.mazeNumber);
+	private void onLevelCompleteStateEntry(PacManGameState state) {
+		mazeFlashing = rendering.mazeAnimations().mazeFlashing(controller.game.level.mazeNumber);
 	}
 
-	private void runChangingGameLevel(PacManGameState state) {
+	private void runLevelCompleteState(PacManGameState state) {
 		GameModel game = controller.game;
 		if (state.timer.isRunningSeconds(2)) {
 			game.ghosts().forEach(ghost -> ghost.visible = false);
@@ -95,8 +94,10 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void update() {
-		if (controller.fsm.state == PacManGameState.CHANGING_LEVEL) {
-			runChangingGameLevel(controller.fsm.state);
+		if (controller.fsm.state == PacManGameState.LEVEL_COMPLETE) {
+			runLevelCompleteState(controller.fsm.state);
+		} else if (controller.fsm.state == PacManGameState.LEVEL_STARTING) {
+			controller.letCurrentGameStateExpire();
 		}
 		render();
 	}
