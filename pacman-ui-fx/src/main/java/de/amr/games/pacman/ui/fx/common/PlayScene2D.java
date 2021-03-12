@@ -25,9 +25,10 @@ public class PlayScene2D extends AbstractGameScene2D {
 		super(controller, rendering, sounds);
 		controller.fsm.addStateEntryListener(PacManGameState.HUNTING, this::onHuntingStateEntry);
 		controller.fsm.addStateExitListener(PacManGameState.HUNTING, this::onHuntingStateExit);
-		controller.fsm.addStateEntryListener(PacManGameState.CHANGING_LEVEL, this::onChangingLevelEntry);
-		controller.fsm.addStateEntryListener(PacManGameState.PACMAN_DYING, this::onPacManDyingEntry);
-		controller.fsm.addStateEntryListener(PacManGameState.GHOST_DYING, this::onGhostDyingEntry);
+		controller.fsm.addStateEntryListener(PacManGameState.CHANGING_LEVEL, this::onChangingLevelStateEntry);
+		controller.fsm.addStateEntryListener(PacManGameState.PACMAN_DYING, this::onPacManDyingStateEntry);
+		controller.fsm.addStateEntryListener(PacManGameState.GHOST_DYING, this::onGhostDyingStateEntry);
+		controller.fsm.addStateEntryListener(PacManGameState.GAME_OVER, this::onGameOverStateEntry);
 	}
 
 	private void onHuntingStateEntry(PacManGameState state) {
@@ -40,15 +41,15 @@ public class PlayScene2D extends AbstractGameScene2D {
 		rendering.mazeAnimations().energizerBlinking().reset();
 	}
 
-	private void onPacManDyingEntry(PacManGameState state) {
+	private void onPacManDyingStateEntry(PacManGameState state) {
 		controller.game.ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(Animation::reset);
 	}
 
-	private void onGhostDyingEntry(PacManGameState state) {
+	private void onGhostDyingStateEntry(PacManGameState state) {
 		rendering.mazeAnimations().energizerBlinking().restart();
 	}
 
-	private void onChangingLevelEntry(PacManGameState state) {
+	private void onChangingLevelStateEntry(PacManGameState state) {
 		GameModel game = controller.game;
 		mazeFlashing = rendering.mazeAnimations().mazeFlashing(game.level.mazeNumber);
 	}
@@ -65,6 +66,10 @@ public class PlayScene2D extends AbstractGameScene2D {
 		if (mazeFlashing.isComplete()) {
 			controller.letCurrentGameStateExpire();
 		}
+	}
+
+	private void onGameOverStateEntry(PacManGameState state) {
+		controller.game.ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(Animation::reset);
 	}
 
 	@Override
