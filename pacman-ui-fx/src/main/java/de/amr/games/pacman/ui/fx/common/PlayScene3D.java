@@ -1,6 +1,5 @@
 package de.amr.games.pacman.ui.fx.common;
 
-import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.ui.fx.mspacman.MsPacMan_Constants.getMazeWallColor;
@@ -66,7 +65,7 @@ public class PlayScene3D implements GameScene {
 
 	private final TimedSequence<Boolean> energizerBlinking = TimedSequence.pulse().frameDuration(15);
 	private TimedSequence<?> playerMunchingAnimation;
-	private TimedSequence<?> playerDyingAnimation;
+	private TimedSequence<?> playerDyingAnimation = TimedSequence.of(new Text("Missing Animation")); // TODO
 	private final Map<Ghost, TimedSequence<?>> ghostReturningHomeAnimationByGhost = new HashMap<>();
 	private final Map<Ghost, TimedSequence<?>> ghostFlashingAnimationByGhost = new HashMap<>();
 	private final Map<Ghost, TimedSequence<?>> ghostFrightenedAnimationByGhost = new HashMap<>();
@@ -89,10 +88,14 @@ public class PlayScene3D implements GameScene {
 		double width = GameScene.ASPECT_RATIO * height;
 		scaling = width / GameScene.WIDTH_UNSCALED;
 
-		camera = new PerspectiveCamera();
-		camera.setTranslateZ(-240);
+		camera = new PerspectiveCamera(true);
+		camera.setTranslateX(660);
+		camera.setTranslateY(2930);
+		camera.setTranslateZ(-2000);
+		camera.setNearClip(0.1);
+		camera.setFarClip(10000.0);
 		camera.setRotationAxis(Rotate.X_AXIS);
-		camera.setRotate(30);
+		camera.setRotate(45);
 
 		root.getTransforms().add(new Scale(scaling, scaling, scaling));
 		subScene = new SubScene(root, width, height);
@@ -335,12 +338,6 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void initCamera() {
-		log("Initialize camera for PlayScene3D");
-		camera.setTranslateX(0);
-		// TODO how to do that right?
-		camera.setTranslateY(subScene.getHeight() * 1.5);
-		camera.setTranslateZ(-subScene.getHeight() * 1.5);
-		camera.setRotate(36);
 	}
 
 	public TimedSequence<?> ghostFlashing(Ghost ghost) {
