@@ -6,4 +6,5 @@ public class GlobalSettings {
 	public static boolean paused = false;
 	public static boolean infoViewVisible = false;
 	public static boolean drawWallsAsLines = false;
+	public static boolean use3DScenes;
 }

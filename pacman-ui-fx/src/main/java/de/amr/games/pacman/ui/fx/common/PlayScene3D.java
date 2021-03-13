@@ -149,9 +149,9 @@ public class PlayScene3D implements GameScene {
 				PhongMaterial material = new PhongMaterial();
 				if (controller.isPlaying(GameType.PACMAN)) {
 					material.setDiffuseColor(Color.BLUE);
-					material.setSpecularColor(Color.WHITE);
+					material.setSpecularColor(Color.LIGHTBLUE);
 				} else {
-					material.setDiffuseColor(MsPacMan_Constants.getMazeWallBorderColor(game.level.mazeNumber));
+					material.setDiffuseColor(MsPacMan_Constants.getMazeWallColor(game.level.mazeNumber));
 					material.setSpecularColor(MsPacMan_Constants.getMazeWallColor(game.level.mazeNumber));
 				}
 				wallShape.setMaterial(material);
@@ -162,6 +162,7 @@ public class PlayScene3D implements GameScene {
 
 		Color foodColor = controller.isPlaying(GameType.PACMAN) ? Color.rgb(250, 185, 176)
 				: MsPacMan_Constants.getMazeFoodColor(game.level.mazeNumber);
+
 		energizerNodes.clear();
 		world.energizerTiles().forEach(tile -> {
 			Sphere energizer = new Sphere(HTS);
@@ -171,8 +172,8 @@ public class PlayScene3D implements GameScene {
 			energizer.setTranslateY(tile.y * TS);
 			energizer.setViewOrder(-tile.y * TS);
 			energizerNodes.add(energizer);
-			tgFood.getChildren().add(energizer);
 		});
+		tgFood.getChildren().addAll(energizerNodes);
 
 		pelletNodes.clear();
 		world.tiles().filter(world::isFoodTile).filter(tile -> !world.isEnergizerTile(tile)).forEach(tile -> {
@@ -183,13 +184,14 @@ public class PlayScene3D implements GameScene {
 			pellet.setTranslateY(tile.y * TS);
 			pellet.setViewOrder(-tile.y * TS);
 			pelletNodes.add(pellet);
-			tgFood.getChildren().add(pellet);
 		});
+		tgFood.getChildren().addAll(pelletNodes);
 
 		for (int id = 0; id < 4; ++id) {
 			tgGhosts[id] = new Group();
 		}
 
+		tgMaze.getChildren().clear();
 		tgMaze.getChildren().addAll(wallNodes.values());
 		tgMaze.getChildren().add(tgFood);
 		tgMaze.getChildren().add(tgPlayer);

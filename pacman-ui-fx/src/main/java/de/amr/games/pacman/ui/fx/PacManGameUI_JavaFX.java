@@ -47,9 +47,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private final Scene mainScene;
 	private final StackPane mainSceneRoot;
 
-	private boolean use3DScenes;
-	private boolean muted;
-
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController controller, double height) {
 		this.controller = controller;
 
@@ -106,7 +103,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		mainSceneRoot = new StackPane();
 		mainScene = new Scene(mainSceneRoot, GameScene.ASPECT_RATIO * height, height, Color.rgb(20, 20, 60));
 
-		GameScene newGameScene = createGameScene(controller, height, use3DScenes);
+		GameScene newGameScene = createGameScene(controller, height, GlobalSettings.use3DScenes);
 		changeGameScene(newGameScene);
 		addResizeHandler(newGameScene);
 
@@ -116,8 +113,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private void toggleUse3DScenes() {
-		use3DScenes = !use3DScenes;
-		String message = String.format("3D scenes %s", use3DScenes ? "ON" : "OFF");
+		GlobalSettings.use3DScenes = !GlobalSettings.use3DScenes;
+		String message = String.format("3D scenes %s", GlobalSettings.use3DScenes ? "ON" : "OFF");
 		showFlashMessage(message);
 		if (is2DAnd3DVersionAvailable(controller)) {
 			currentGameScene = null; // trigger scene change
@@ -173,7 +170,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			if (currentGameScene != null) {
 				currentGameScene.end();
 			}
-			GameScene newGameScene = createGameScene(controller, mainScene.getHeight(), use3DScenes);
+			GameScene newGameScene = createGameScene(controller, mainScene.getHeight(), GlobalSettings.use3DScenes);
 			addResizeHandler(newGameScene);
 			log("New game scene '%s' created", newGameScene);
 			changeGameScene(newGameScene);
@@ -203,7 +200,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		text += camControl.getCameraInfo() + "\n";
 		text += "Autopilot " + (controller.autopilot.enabled ? "ON" : "OFF") + " (Key 'A')\n";
 		text += "Player is " + (controller.game.player.immune ? "IMMUNE" : "VULNERABLE") + " (Key 'I')\n";
-		text += "3D scenes " + (use3DScenes ? "ON" : "OFF") + " (Key CTRL+'3')\n";
+		text += "3D scenes " + (GlobalSettings.use3DScenes ? "ON" : "OFF") + " (Key CTRL+'3')\n";
 		infoView.setText(text);
 		infoView.setVisible(GlobalSettings.infoViewVisible);
 	}
@@ -227,15 +224,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public Optional<SoundManager> sound() {
-		if (muted) {
-			return Optional.empty(); // TODO
-		}
 		return Optional.of(SceneController.SOUND.get(controller.currentlyPlaying()));
-	}
-
-	@Override
-	public void mute(boolean state) {
-		muted = state;
 	}
 
 	@Override
