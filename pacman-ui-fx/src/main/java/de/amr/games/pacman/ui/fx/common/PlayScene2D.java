@@ -1,12 +1,12 @@
 package de.amr.games.pacman.ui.fx.common;
 
-import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
-import de.amr.games.pacman.lib.TickTimer.TimerEvent;
+import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.animation.TimedSequence;
 import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.sound.SoundManager;
@@ -80,11 +80,13 @@ public class PlayScene2D extends AbstractGameScene2D {
 		GameModel game = controller.game;
 		mazeFlashing = rendering.mazeAnimations().mazeFlashing(game.level.mazeNumber).repetitions(game.level.numFlashes);
 		mazeFlashing.reset();
-		controller.game.player.powerTimer.addEventListener(e -> {
-			if (e == TimerEvent.STARTED) {
-				log("PlayScene2D got informed that player got power");
-			} else if (e == TimerEvent.EXPIRED) {
-				log("PlayScene2D got informed that player lost power");
+		game.player.powerTimer.addEventListener(e -> {
+			if (e.type == TickTimerEvent.Type.HALF_EXPIRED) {
+				game.ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
+					TimedSequence<?> flashing = rendering.ghostAnimations().ghostFlashing(ghost);
+					long frameTime = e.ticks / (game.level.numFlashes * flashing.numFrames());
+					flashing.frameDuration(frameTime).repetitions(game.level.numFlashes).restart();
+				});
 			}
 		});
 	}
