@@ -64,58 +64,55 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 		return i == 0 ? Color.RED : i == 1 ? Color.PINK : i == 2 ? Color.CYAN : Color.ORANGE;
 	}
 
-	private final PacManGameController controller;
-	private final Group root;
-	private final SubScene subScene;
-	private final PerspectiveCamera camera;
-	private final Animation<?> defaultAnimation;
-
 	private double scaling;
 
-	private Group maze;
-	private Group food;
-	private ScaleTransition levelCompleteAnimation, levelStartAnimation;
-	private Group playerShape;
-	private Group[] ghostShapes = new Group[4];
-	private Map<V2i, Node> walls = new HashMap<>();
-	private List<Node> energizers = new ArrayList<>();
-	private List<Node> pellets = new ArrayList<>();
-	private Text scoreDisplay = new Text();
-	private Text hiscoreDisplay = new Text();
+	private final PacManGameController controller;
+	private final SubScene subScene;
+	private final PerspectiveCamera camera;
 
-	private Font scoreFont;
+	private final Animation<?> defaultAnimation;
+	private final Animation<Boolean> energizerBlinking = Animation.pulse().frameDuration(15);
+
+	private final Group root = new Group();
+	private final Group tgMaze = new Group();
+	private final Group tgFood = new Group();
+	private final Group tgPlayer = new Group();
+	private final Group[] tgGhosts = new Group[4];
+	private final Map<V2i, Node> wallNodes = new HashMap<>();
+	private final List<Node> energizerNodes = new ArrayList<>();
+	private final List<Node> pelletNodes = new ArrayList<>();
+	private final Text txtScore = new Text();
+	private final Text txtHiscore = new Text();
+	private final Font scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), TS);
 
 	public PlayScene3D(PacManGameController controller, double height) {
 		this.controller = controller;
 		double width = GameScene.ASPECT_RATIO * height;
 		scaling = width / GameScene.WIDTH_UNSCALED;
 
-		scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), TS);
-
-		root = new Group();
-		root.getTransforms().add(new Scale(scaling, scaling, scaling));
-
 		camera = new PerspectiveCamera();
 		camera.setTranslateZ(-240);
 		camera.setRotationAxis(Rotate.X_AXIS);
 		camera.setRotate(30);
 
+		root.getTransforms().add(new Scale(scaling, scaling, scaling));
 		subScene = new SubScene(root, width, height);
 		subScene.setFill(Color.BLACK);
 		subScene.setCamera(camera);
 
 		// default for not yet implemented animations
 		Text text = new Text();
-		text.setText("MISSING ANIMATION");
+		text.setText("!ANIMATION!");
 		text.setFill(Color.RED);
 		text.setFont(Font.font("Sans", FontWeight.BOLD, 6));
 		text.setRotationAxis(Rotate.X_AXIS);
 		text.setRotate(camera.getRotate());
 		defaultAnimation = Animation.of(text);
 
+		controller.fsm.addStateEntryListener(PacManGameState.HUNTING, this::onHuntingStateEntry);
+		controller.fsm.addStateExitListener(PacManGameState.HUNTING, this::onHuntingStateExit);
 		controller.fsm.addStateEntryListener(PacManGameState.LEVEL_COMPLETE, state -> playLevelCompleteAnimation());
 		controller.fsm.addStateEntryListener(PacManGameState.LEVEL_STARTING, state -> playLevelStartingAnimation());
-
 	}
 
 	@Override
@@ -147,28 +144,24 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 
 		GameModel game = controller.game;
 		PacManGameWorld world = game.level.world;
-		root.getChildren().clear();
 
-		maze = new Group();
-		walls.clear();
+		wallNodes.clear();
 		world.tiles().forEach(tile -> {
 			if (world.isWall(tile)) {
-				Box wall = new Box(TS - 2, TS - 2, wallHeight);
-				wall.setTranslateX(tile.x * TS);
-				wall.setTranslateY(tile.y * TS);
+				Box wallShape = new Box(TS - 2, TS - 2, wallHeight);
+				wallShape.setTranslateX(tile.x * TS);
+				wallShape.setTranslateY(tile.y * TS);
 				PhongMaterial material = new PhongMaterial(
 						controller.isPlaying(GameType.PACMAN) ? Color.BLUE : getMazeWallColor(game.level.mazeNumber));
-				wall.setMaterial(material);
-				wall.setViewOrder(-tile.y * TS);
-				walls.put(tile, wall);
-				maze.getChildren().add(wall);
+				wallShape.setMaterial(material);
+				wallShape.setViewOrder(-tile.y * TS);
+				wallNodes.put(tile, wallShape);
 			}
 		});
 
-		food = new Group();
 		Color foodColor = controller.isPlaying(GameType.PACMAN) ? Color.rgb(250, 185, 176)
 				: MsPacMan_Constants.getMazeFoodColor(game.level.mazeNumber);
-		energizers.clear();
+		energizerNodes.clear();
 		world.energizerTiles().forEach(tile -> {
 			Sphere energizer = new Sphere(HTS);
 			energizer.setMaterial(new PhongMaterial(foodColor));
@@ -176,55 +169,49 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 			energizer.setTranslateX(tile.x * TS);
 			energizer.setTranslateY(tile.y * TS);
 			energizer.setViewOrder(-tile.y * TS);
-			energizers.add(energizer);
-			food.getChildren().add(energizer);
+			energizerNodes.add(energizer);
+			tgFood.getChildren().add(energizer);
 		});
 
-		pellets.clear();
+		pelletNodes.clear();
 		world.tiles().filter(world::isFoodTile).filter(tile -> !world.isEnergizerTile(tile)).forEach(tile -> {
 			Sphere pellet = new Sphere(1.5);
 			pellet.setMaterial(new PhongMaterial(foodColor));
 			pellet.setUserData(tile);
 			pellet.setTranslateX(tile.x * TS);
 			pellet.setTranslateY(tile.y * TS);
-			pellet.setTranslateZ(-HTS);
 			pellet.setViewOrder(-tile.y * TS);
-			pellets.add(pellet);
-			food.getChildren().add(pellet);
+			pelletNodes.add(pellet);
+			tgFood.getChildren().add(pellet);
 		});
 
-		maze.getChildren().addAll(food);
-
-		playerShape = new Group((Node) playerMunching(game.player, game.player.dir).frame());
-		maze.getChildren().add(playerShape);
-
 		for (int id = 0; id < 4; ++id) {
-			ghostShapes[id] = new Group();
-			updateGhostShape(id);
+			tgGhosts[id] = new Group();
 		}
-		maze.getChildren().addAll(ghostShapes);
 
-		scoreDisplay.setViewOrder(-1000);
-		hiscoreDisplay.setViewOrder(-1000);
+		tgMaze.getChildren().addAll(wallNodes.values());
+		tgMaze.getChildren().add(tgFood);
+		tgMaze.getChildren().add(tgPlayer);
+		tgMaze.getChildren().addAll(tgGhosts);
 
 		root.getChildren().clear();
-		root.getChildren().add(maze);
-		root.getChildren().addAll(scoreDisplay, hiscoreDisplay);
+		root.getChildren().addAll(tgMaze, txtScore, txtHiscore);
 	}
 
 	@Override
 	public void update() {
 		GameModel game = controller.game;
 
-		walls.values().stream().map(wall -> (Shape3D) wall)
+		wallNodes.values().stream().map(wall -> (Shape3D) wall)
 				.forEach(wall -> wall.setDrawMode(GlobalSettings.drawWallsAsLines ? DrawMode.LINE : DrawMode.FILL));
 
-		energizers.forEach(energizer -> {
+		energizerBlinking.animate();
+		energizerNodes.forEach(energizer -> {
 			V2i tile = (V2i) energizer.getUserData();
 			energizer.setVisible(!game.level.isFoodRemoved(tile) && energizerBlinking.frame());
 		});
 
-		pellets.forEach(pellet -> {
+		pelletNodes.forEach(pellet -> {
 			V2i tile = (V2i) pellet.getUserData();
 			pellet.setVisible(!game.level.isFoodRemoved(tile));
 		});
@@ -235,35 +222,44 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 			updateGhostShape(ghost.id);
 		}
 
-		scoreDisplay.setFill(Color.YELLOW);
-		scoreDisplay.setFont(scoreFont);
-		scoreDisplay.setText(String.format("SCORE\n%08dL%03d", game.score, game.levelNumber));
-		scoreDisplay.setTranslateX(TS);
-		scoreDisplay.setTranslateY(-2 * TS);
-		scoreDisplay.setTranslateZ(-2 * TS);
-		scoreDisplay.setRotationAxis(Rotate.X_AXIS);
-		scoreDisplay.setRotate(camera.getRotate());
+		txtScore.setFill(Color.YELLOW);
+		txtScore.setFont(scoreFont);
+		txtScore.setText(String.format("SCORE\n%08dL%03d", game.score, game.levelNumber));
+		txtScore.setTranslateX(TS);
+		txtScore.setTranslateY(-2 * TS);
+		txtScore.setTranslateZ(-2 * TS);
+		txtScore.setRotationAxis(Rotate.X_AXIS);
+		txtScore.setRotate(camera.getRotate());
+		txtScore.setViewOrder(-1000);
 
-		hiscoreDisplay.setFill(Color.YELLOW);
-		hiscoreDisplay.setFont(scoreFont);
-		hiscoreDisplay.setText(String.format("HI SCORE\n%08dL%03d", game.highscorePoints, game.highscoreLevel));
-		hiscoreDisplay.setTranslateX(14 * TS);
-		hiscoreDisplay.setTranslateY(-2 * TS);
-		hiscoreDisplay.setTranslateZ(-2 * TS);
-		hiscoreDisplay.setRotationAxis(Rotate.X_AXIS);
-		hiscoreDisplay.setRotate(camera.getRotate());
+		txtHiscore.setFill(Color.YELLOW);
+		txtHiscore.setFont(scoreFont);
+		txtHiscore.setText(String.format("HI SCORE\n%08dL%03d", game.highscorePoints, game.highscoreLevel));
+		txtHiscore.setTranslateX(14 * TS);
+		txtHiscore.setTranslateY(-2 * TS);
+		txtHiscore.setTranslateZ(-2 * TS);
+		txtHiscore.setRotationAxis(Rotate.X_AXIS);
+		txtHiscore.setRotate(camera.getRotate());
+		txtHiscore.setViewOrder(-1000);
+	}
 
+	private void onHuntingStateEntry(PacManGameState state) {
+		energizerBlinking().restart();
+	}
+
+	private void onHuntingStateExit(PacManGameState state) {
+		energizerBlinking().reset();
 	}
 
 	private void updatePlayerShape(Pac player) {
 		Node shape = player.dead ? (Node) playerDying().frame() : (Node) playerMunching(player, player.dir).frame();
 		boolean insidePortal = controller.game.level.world.isPortal(player.tile());
-		playerShape.getChildren().clear();
-		playerShape.getChildren().add(shape);
-		playerShape.setVisible(player.visible && !insidePortal);
-		playerShape.setTranslateX(player.position.x);
-		playerShape.setTranslateY(player.position.y);
-		playerShape.setViewOrder(-player.position.y);
+		tgPlayer.getChildren().clear();
+		tgPlayer.getChildren().add(shape);
+		tgPlayer.setVisible(player.visible && !insidePortal);
+		tgPlayer.setTranslateX(player.position.x);
+		tgPlayer.setTranslateY(player.position.y);
+		tgPlayer.setViewOrder(-player.position.y);
 	}
 
 	private void updateGhostShape(int id) {
@@ -307,12 +303,12 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 			shape = (Node) ghostKicking(ghost, ghost.wishDir).animate(); // Looks towards wish dir!
 		}
 
-		ghostShapes[id].setVisible(ghost.visible);
-		ghostShapes[id].setTranslateX(ghost.position.x);
-		ghostShapes[id].setTranslateY(ghost.position.y);
-		ghostShapes[id].setViewOrder(-ghost.position.y);
-		ghostShapes[id].getChildren().clear();
-		ghostShapes[id].getChildren().add(shape);
+		tgGhosts[id].setVisible(ghost.visible);
+		tgGhosts[id].setTranslateX(ghost.position.x);
+		tgGhosts[id].setTranslateY(ghost.position.y);
+		tgGhosts[id].setViewOrder(-ghost.position.y);
+		tgGhosts[id].getChildren().clear();
+		tgGhosts[id].getChildren().add(shape);
 	}
 
 	@Override
@@ -327,10 +323,10 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 	// State change handling
 
 	private void playLevelCompleteAnimation() {
-		food.setVisible(false);
-		playerShape.setVisible(false);
-		Arrays.asList(ghostShapes).forEach(ghostShape -> ghostShape.setVisible(false));
-		levelCompleteAnimation = new ScaleTransition(Duration.seconds(3), maze);
+		tgFood.setVisible(false);
+		tgPlayer.setVisible(false);
+		Arrays.asList(tgGhosts).forEach(ghostShape -> ghostShape.setVisible(false));
+		ScaleTransition levelCompleteAnimation = new ScaleTransition(Duration.seconds(5), tgMaze);
 		levelCompleteAnimation.setFromZ(1);
 		levelCompleteAnimation.setToZ(0);
 		levelCompleteAnimation.setDelay(Duration.seconds(2));
@@ -340,10 +336,10 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 
 	private void playLevelStartingAnimation() {
 		// TODO these should become visible after the animation
-		playerShape.setVisible(true);
-		Arrays.asList(ghostShapes).forEach(ghostShape -> ghostShape.setVisible(true));
-		food.setVisible(true);
-		levelStartAnimation = new ScaleTransition(Duration.seconds(3), maze);
+		tgPlayer.setVisible(true);
+		Arrays.asList(tgGhosts).forEach(ghostShape -> ghostShape.setVisible(true));
+		tgFood.setVisible(true);
+		ScaleTransition levelStartAnimation = new ScaleTransition(Duration.seconds(5), tgMaze);
 		levelStartAnimation.setFromZ(0);
 		levelStartAnimation.setToZ(1);
 		controller.fsm.state.timer.resetSeconds(levelStartAnimation.getDuration().toSeconds());
@@ -386,8 +382,6 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 	public PlayerAnimations playerAnimations() {
 		return this;
 	}
-
-	private Animation<Boolean> energizerBlinking = Animation.pulse().frameDuration(15).run();
 
 	@Override
 	public Animation<Boolean> energizerBlinking() {
