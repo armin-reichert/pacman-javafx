@@ -83,6 +83,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				if (control) {
 					GlobalSettings.paused = !GlobalSettings.paused;
 				}
+				break;
 			case V:
 				controller.toggleGameType();
 				break;
@@ -90,6 +91,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				if (control) {
 					GlobalSettings.measureTime = !GlobalSettings.measureTime;
 				}
+				break;
 			default:
 				break;
 			}
@@ -182,11 +184,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 		currentGameScene.update();
 		flashMessageView.update();
-		updateInfoView();
 	}
 
 	public void updateInfoView() {
 		String text = "";
+		text += GlobalSettings.paused ? "PAUSED\n" : "RUNNING\n";
 		text += String.format("Window w=%.0f h=%.0f\n", mainScene.getWindow().getWidth(),
 				mainScene.getWindow().getHeight());
 		text += String.format("Main scene: w=%.0f h=%.0f\n", mainScene.getWidth(), mainScene.getHeight());

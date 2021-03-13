@@ -3,15 +3,18 @@ package de.amr.games.pacman.ui.fx.app;
 import static de.amr.games.pacman.lib.Logging.log;
 
 import de.amr.games.pacman.controller.PacManGameController;
+import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.common.GlobalSettings;
 import javafx.animation.AnimationTimer;
 
 class GameLoop extends AnimationTimer {
 
 	public final PacManGameController controller;
+	public final PacManGameUI_JavaFX userInterface;
 
-	public GameLoop(PacManGameController controller) {
+	public GameLoop(PacManGameController controller, PacManGameUI_JavaFX userInterface) {
 		this.controller = controller;
+		this.userInterface = userInterface;
 	}
 
 	@Override
@@ -19,11 +22,14 @@ class GameLoop extends AnimationTimer {
 		if (!GlobalSettings.paused) {
 			if (GlobalSettings.measureTime) {
 				measureTime(controller::step, "Controller step");
-				measureTime(controller.userInterface::update, "User interface update");
+				measureTime(userInterface::update, "User interface update");
 			} else {
 				controller.step();
-				controller.userInterface.update();
+				userInterface.update();
+				userInterface.updateInfoView();
 			}
+		} else {
+			userInterface.updateInfoView();
 		}
 	}
 

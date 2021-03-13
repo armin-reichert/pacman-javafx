@@ -25,7 +25,8 @@ public class PacManGameAppFX extends Application {
 	@Override
 	public void start(Stage stage) throws IOException {
 		PacManGameController controller = new PacManGameController(options.pacman ? GameType.PACMAN : GameType.MS_PACMAN);
-		controller.userInterface = new PacManGameUI_JavaFX(stage, controller, options.height);
-		new GameLoop(controller).start();
+		PacManGameUI_JavaFX userInterface = new PacManGameUI_JavaFX(stage, controller, options.height);
+		controller.userInterface = userInterface;
+		new GameLoop(controller, userInterface).start();
 	}
 }
