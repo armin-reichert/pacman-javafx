@@ -60,13 +60,16 @@ public class PlayScene3D implements GameScene {
 
 	private final PacManGameController controller;
 	private final SubScene subScene;
-	private final PerspectiveCamera camera;
+	private final PerspectiveCamera camera = new PerspectiveCamera(true);
 
 	private final TimedSequence<Node> missingAnimation;
 	{
 		Text text = new Text("Animation?");
 		text.setFill(Color.RED);
 		text.setFont(Font.font("Sans", FontWeight.BOLD, 12));
+		text.setTranslateZ(-40);
+		text.setRotationAxis(Rotate.X_AXIS);
+		text.setRotate(90);
 		missingAnimation = TimedSequence.of(text);
 	}
 
@@ -95,7 +98,6 @@ public class PlayScene3D implements GameScene {
 		double width = GameScene.ASPECT_RATIO * height;
 		scaling = width / GameScene.WIDTH_UNSCALED;
 
-		camera = new PerspectiveCamera(true);
 		camera.setTranslateX(660);
 		camera.setTranslateY(2930);
 		camera.setTranslateZ(-2000);
@@ -267,22 +269,26 @@ public class PlayScene3D implements GameScene {
 		tgPlayer.setViewOrder(-player.position.y);
 	}
 
+	private Node createGhostBountyText(Ghost ghost) {
+		DropShadow shadow = new DropShadow(0.3, Color.color(0.4, 0.4, 0.4));
+		Text bountyText = new Text();
+		bountyText.setEffect(shadow);
+		bountyText.setCache(true);
+		bountyText.setText(String.valueOf(ghost.bounty));
+		bountyText.setFont(Font.font("Sans", FontWeight.BOLD, TS));
+		bountyText.setFill(Color.CYAN);
+		bountyText.setTranslateZ(-1.5 * TS);
+		bountyText.setRotationAxis(Rotate.X_AXIS);
+		bountyText.setRotate(camera.getRotate());
+		return bountyText;
+	}
+
 	private void updateGhostShape(int id) {
 		Ghost ghost = controller.game.ghosts[id];
 		Node shape;
 
-		if (ghost.visible && ghost.bounty > 0) {
-			DropShadow shadow = new DropShadow(0.3, Color.color(0.4, 0.4, 0.4));
-			Text bountyText = new Text();
-			bountyText.setEffect(shadow);
-			bountyText.setCache(true);
-			bountyText.setText(String.valueOf(ghost.bounty));
-			bountyText.setFont(Font.font("Sans", FontWeight.BOLD, TS));
-			bountyText.setFill(Color.CYAN);
-			bountyText.setTranslateZ(-1.5 * TS);
-			bountyText.setRotationAxis(Rotate.X_AXIS);
-			bountyText.setRotate(camera.getRotate());
-			shape = bountyText;
+		if (ghost.bounty > 0) {
+			shape = createGhostBountyText(ghost);
 		}
 
 		else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
