@@ -2,10 +2,8 @@ package de.amr.games.pacman.ui.fx.common;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
-import java.util.Optional;
 import java.util.OptionalDouble;
 
-import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
 import javafx.scene.Camera;
 import javafx.scene.SubScene;
 
@@ -24,8 +22,6 @@ public interface GameScene {
 	 * @return aspect ratio width / height
 	 */
 	OptionalDouble aspectRatio();
-
-	Optional<PacManGameAnimations2D> animations();
 
 	void start();
 

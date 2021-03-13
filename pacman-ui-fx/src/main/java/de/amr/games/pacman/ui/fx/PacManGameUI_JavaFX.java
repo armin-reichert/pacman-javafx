@@ -232,6 +232,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public Optional<PacManGameAnimations2D> animation() {
-		return currentGameScene != null ? currentGameScene.animations() : Optional.empty();
+		if (currentGameScene instanceof AbstractGameScene2D) {
+			AbstractGameScene2D scene2D = (AbstractGameScene2D) currentGameScene;
+			return Optional.of(scene2D.getRendering());
+		}
+		return Optional.empty();
 	}
 }

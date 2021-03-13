@@ -10,9 +10,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.OptionalDouble;
-import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
@@ -25,10 +23,6 @@ import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.animation.TimedSequence;
-import de.amr.games.pacman.ui.animation.GhostAnimations2D;
-import de.amr.games.pacman.ui.animation.MazeAnimations2D;
-import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
-import de.amr.games.pacman.ui.animation.PlayerAnimations2D;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_Constants;
 import javafx.animation.ScaleTransition;
 import javafx.scene.Camera;
@@ -56,7 +50,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class PlayScene3D implements GameScene, PacManGameAnimations2D, GhostAnimations2D, MazeAnimations2D, PlayerAnimations2D {
+public class PlayScene3D implements GameScene {
 
 	private static final int wallHeight = TS - 2;
 
@@ -70,8 +64,13 @@ public class PlayScene3D implements GameScene, PacManGameAnimations2D, GhostAnim
 	private final SubScene subScene;
 	private final PerspectiveCamera camera;
 
-	private final TimedSequence<?> defaultAnimation;
 	private final TimedSequence<Boolean> energizerBlinking = TimedSequence.pulse().frameDuration(15);
+	private TimedSequence<?> playerMunchingAnimation;
+	private TimedSequence<?> playerDyingAnimation;
+	private final Map<Ghost, TimedSequence<?>> ghostReturningHomeAnimationByGhost = new HashMap<>();
+	private final Map<Ghost, TimedSequence<?>> ghostFlashingAnimationByGhost = new HashMap<>();
+	private final Map<Ghost, TimedSequence<?>> ghostFrightenedAnimationByGhost = new HashMap<>();
+	private final Map<Ghost, TimedSequence<?>> ghostKickingAnimationByGhost = new HashMap<>();
 
 	private final Group root = new Group();
 	private final Group tgMaze = new Group();
@@ -100,24 +99,10 @@ public class PlayScene3D implements GameScene, PacManGameAnimations2D, GhostAnim
 		subScene.setFill(Color.BLACK);
 		subScene.setCamera(camera);
 
-		// default for not yet implemented animations
-		Text text = new Text();
-		text.setText("!ANIMATION!");
-		text.setFill(Color.RED);
-		text.setFont(Font.font("Sans", FontWeight.BOLD, 6));
-		text.setRotationAxis(Rotate.X_AXIS);
-		text.setRotate(camera.getRotate());
-		defaultAnimation = TimedSequence.of(text);
-
 		controller.fsm.addStateEntryListener(PacManGameState.HUNTING, this::onHuntingStateEntry);
 		controller.fsm.addStateExitListener(PacManGameState.HUNTING, this::onHuntingStateExit);
 		controller.fsm.addStateEntryListener(PacManGameState.LEVEL_COMPLETE, state -> playLevelCompleteAnimation());
 		controller.fsm.addStateEntryListener(PacManGameState.LEVEL_STARTING, state -> playLevelStartingAnimation());
-	}
-
-	@Override
-	public Optional<PacManGameAnimations2D> animations() {
-		return Optional.of(this);
 	}
 
 	@Override
@@ -244,15 +229,15 @@ public class PlayScene3D implements GameScene, PacManGameAnimations2D, GhostAnim
 	}
 
 	private void onHuntingStateEntry(PacManGameState state) {
-		energizerBlinking().restart();
+		energizerBlinking.restart();
 	}
 
 	private void onHuntingStateExit(PacManGameState state) {
-		energizerBlinking().reset();
+		energizerBlinking.reset();
 	}
 
 	private void updatePlayerShape(Pac player) {
-		Node shape = player.dead ? (Node) playerDying().frame() : (Node) playerMunching(player, player.dir).frame();
+		Node shape = player.dead ? (Node) playerDyingAnimation.frame() : (Node) playerMunching(player, player.dir).frame();
 		boolean insidePortal = controller.game.level.world.isPortal(player.tile());
 		tgPlayer.getChildren().clear();
 		tgPlayer.getChildren().add(shape);
@@ -358,39 +343,6 @@ public class PlayScene3D implements GameScene, PacManGameAnimations2D, GhostAnim
 		camera.setRotate(36);
 	}
 
-	@Override
-	public TimedSequence<?> flapFlapping() {
-		return defaultAnimation;
-	}
-
-	@Override
-	public TimedSequence<?> storkFlying() {
-		return defaultAnimation;
-	}
-
-	@Override
-	public GhostAnimations2D ghostAnimations() {
-		return this;
-	}
-
-	@Override
-	public MazeAnimations2D mazeAnimations() {
-		return this;
-	}
-
-	@Override
-	public PlayerAnimations2D playerAnimations() {
-		return this;
-	}
-
-	@Override
-	public TimedSequence<Boolean> energizerBlinking() {
-		return energizerBlinking;
-	}
-
-	private Map<Ghost, TimedSequence<?>> ghostFlashingAnimationByGhost = new HashMap<>();
-
-	@Override
 	public TimedSequence<?> ghostFlashing(Ghost ghost) {
 		if (!ghostFlashingAnimationByGhost.containsKey(ghost)) {
 			Sphere s1 = new Sphere(HTS);
@@ -402,9 +354,6 @@ public class PlayScene3D implements GameScene, PacManGameAnimations2D, GhostAnim
 		return ghostFlashingAnimationByGhost.get(ghost);
 	}
 
-	private Map<Ghost, TimedSequence<?>> ghostFrightenedAnimationByGhost = new HashMap<>();
-
-	@Override
 	public TimedSequence<?> ghostFrightened(Ghost ghost, Direction dir) {
 		if (!ghostFrightenedAnimationByGhost.containsKey(ghost)) {
 			Sphere s = new Sphere(HTS);
@@ -415,9 +364,6 @@ public class PlayScene3D implements GameScene, PacManGameAnimations2D, GhostAnim
 		return ghostFrightenedAnimationByGhost.get(ghost);
 	}
 
-	private Map<Ghost, TimedSequence<?>> ghostKickingAnimationByGhost = new HashMap<>();
-
-	@Override
 	public TimedSequence<?> ghostKicking(Ghost ghost, Direction dir) {
 		if (!ghostKickingAnimationByGhost.containsKey(ghost)) {
 			Sphere s = new Sphere(HTS);
@@ -428,9 +374,6 @@ public class PlayScene3D implements GameScene, PacManGameAnimations2D, GhostAnim
 		return ghostKickingAnimationByGhost.get(ghost);
 	}
 
-	private Map<Ghost, TimedSequence<?>> ghostReturningHomeAnimationByGhost = new HashMap<>();
-
-	@Override
 	public TimedSequence<?> ghostReturningHome(Ghost ghost, Direction dir) {
 		if (!ghostReturningHomeAnimationByGhost.containsKey(ghost)) {
 			Cylinder s = new Cylinder(2, TS);
@@ -441,27 +384,6 @@ public class PlayScene3D implements GameScene, PacManGameAnimations2D, GhostAnim
 		return ghostReturningHomeAnimationByGhost.get(ghost);
 	}
 
-	@Override
-	public TimedSequence<?> mazeFlashing(int mazeNumber) {
-		// TODO implement this method
-		return defaultAnimation;
-	}
-
-	@Override
-	public Stream<TimedSequence<?>> mazeFlashings() {
-		// TODO implement this method
-		return Stream.empty();
-	}
-
-	@Override
-	public TimedSequence<?> playerDying() {
-		// TODO implement this method
-		return defaultAnimation;
-	}
-
-	private TimedSequence<?> playerMunchingAnimation;
-
-	@Override
 	public TimedSequence<?> playerMunching(Pac player, Direction dir) {
 		if (playerMunchingAnimation == null) {
 			Box box = new Box(TS, TS, TS);
@@ -470,11 +392,5 @@ public class PlayScene3D implements GameScene, PacManGameAnimations2D, GhostAnim
 			playerMunchingAnimation = TimedSequence.of(box);
 		}
 		return playerMunchingAnimation;
-	}
-
-	@Override
-	public TimedSequence<?> spouseMunching(Pac spouse, Direction dir) {
-		// used in intermission scenes where both, Pac-Man and Ms. Pac-Man, appear
-		return defaultAnimation;
 	}
 }

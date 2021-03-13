@@ -2,13 +2,10 @@ package de.amr.games.pacman.ui.fx.common;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
-import java.util.Optional;
-
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.animation.TimedSequence;
-import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
 import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.sound.SoundManager;
 
@@ -74,11 +71,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	private void onGameOverStateEntry(PacManGameState state) {
 		controller.game.ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(TimedSequence::reset);
-	}
-
-	@Override
-	public Optional<PacManGameAnimations2D> animations() {
-		return Optional.of(rendering);
 	}
 
 	@Override

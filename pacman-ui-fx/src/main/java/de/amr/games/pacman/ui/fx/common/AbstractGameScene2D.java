@@ -1,10 +1,8 @@
 package de.amr.games.pacman.ui.fx.common;
 
-import java.util.Optional;
 import java.util.OptionalDouble;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
 import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.sound.SoundManager;
 import javafx.scene.Camera;
@@ -43,6 +41,10 @@ public abstract class AbstractGameScene2D implements GameScene {
 		scene.heightProperty().bind(canvas.heightProperty());
 	}
 
+	public PacManGameRendering2D getRendering() {
+		return rendering;
+	}
+
 	@Override
 	public void resize(double width, double height) {
 		width = aspectRatio * height;
@@ -61,11 +63,6 @@ public abstract class AbstractGameScene2D implements GameScene {
 
 	public Canvas getCanvas() {
 		return canvas;
-	}
-
-	@Override
-	public Optional<PacManGameAnimations2D> animations() {
-		return Optional.of(rendering);
 	}
 
 	@Override
