@@ -14,7 +14,7 @@ import de.amr.games.pacman.model.common.JuniorBag;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.model.common.Stork;
 import de.amr.games.pacman.model.pacman.PacManBonus;
-import de.amr.games.pacman.ui.animation.Animation;
+import de.amr.games.pacman.ui.animation.TimedSequence;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -30,11 +30,11 @@ public class PacMan_StandardRendering extends StandardRendering {
 	private final Image mazeFull = new Image(getClass().getResource("/pacman/graphics/maze_full.png").toExternalForm());
 	private final Image mazeEmpty = new Image(getClass().getResource("/pacman/graphics/maze_empty.png").toExternalForm());
 
-	private Animation<Rectangle2D> bigPacMan;
-	private Animation<Rectangle2D> blinkyStretched;
-	private Animation<Rectangle2D> blinkyDamaged;
-	private Animation<Rectangle2D> blinkyPatched;
-	private Animation<Rectangle2D> blinkyHalfNaked;
+	private TimedSequence<Rectangle2D> bigPacMan;
+	private TimedSequence<Rectangle2D> blinkyStretched;
+	private TimedSequence<Rectangle2D> blinkyDamaged;
+	private TimedSequence<Rectangle2D> blinkyPatched;
+	private TimedSequence<Rectangle2D> blinkyHalfNaked;
 
 	public PacMan_StandardRendering() {
 		super("/pacman/graphics/sprites.png");
@@ -63,36 +63,36 @@ public class PacMan_StandardRendering extends StandardRendering {
 		// Animations
 
 		Image mazeEmptyBright = exchangeColors(mazeEmpty, Map.of(getMazeWallBorderColor(0), Color.WHITE));
-		mazeFlashingAnim = Arrays.asList(Animation.of(mazeEmptyBright, mazeEmpty).frameDuration(15));
+		mazeFlashingAnim = Arrays.asList(TimedSequence.of(mazeEmptyBright, mazeEmpty).frameDuration(15));
 
 		pacManMunchingAnim = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
-			Animation<Rectangle2D> animation = Animation.of(sprite(2, 0), sprite(1, index(dir)), sprite(0, index(dir)),
+			TimedSequence<Rectangle2D> animation = TimedSequence.of(sprite(2, 0), sprite(1, index(dir)), sprite(0, index(dir)),
 					sprite(1, index(dir)));
 			animation.frameDuration(2).endless().run();
 			pacManMunchingAnim.put(dir, animation);
 		}
 
-		playerDyingAnim = Animation.of(sprite(3, 0), sprite(4, 0), sprite(5, 0), sprite(6, 0), sprite(7, 0), sprite(8, 0),
+		playerDyingAnim = TimedSequence.of(sprite(3, 0), sprite(4, 0), sprite(5, 0), sprite(6, 0), sprite(7, 0), sprite(8, 0),
 				sprite(9, 0), sprite(10, 0), sprite(11, 0), sprite(12, 0), sprite(13, 0)).frameDuration(8);
 
-		bigPacMan = Animation.of(//
+		bigPacMan = TimedSequence.of(//
 				cells(2, 1, 2, 2), //
 				cells(4, 1, 2, 2), //
 				cells(6, 1, 2, 2)).frameDuration(4).endless().run();
 
 		ghostEyesAnim = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
-			ghostEyesAnim.put(dir, Animation.of(sprite(8 + index(dir), 5)));
+			ghostEyesAnim.put(dir, TimedSequence.of(sprite(8 + index(dir), 5)));
 		}
 
-		ghostFrightenedAnim = Animation.of(sprite(8, 4), sprite(9, 4));
+		ghostFrightenedAnim = TimedSequence.of(sprite(8, 4), sprite(9, 4));
 		ghostFrightenedAnim.frameDuration(20).endless();
 
-		blinkyPatched = Animation.of(sprite(10, 7), sprite(11, 7)).restart().frameDuration(4).endless();
-		blinkyDamaged = Animation.of(sprite(8, 7), sprite(9, 7));
-		blinkyStretched = Animation.of(sprite(9, 6), sprite(10, 6), sprite(11, 6), sprite(12, 6));
-		blinkyHalfNaked = Animation.of(cells(8, 8, 2, 1), cells(10, 8, 2, 1)).endless().frameDuration(4).restart();
+		blinkyPatched = TimedSequence.of(sprite(10, 7), sprite(11, 7)).restart().frameDuration(4).endless();
+		blinkyDamaged = TimedSequence.of(sprite(8, 7), sprite(9, 7));
+		blinkyStretched = TimedSequence.of(sprite(9, 6), sprite(10, 6), sprite(11, 6), sprite(12, 6));
+		blinkyHalfNaked = TimedSequence.of(cells(8, 8, 2, 1), cells(10, 8, 2, 1)).endless().frameDuration(4).restart();
 	}
 
 	@Override
@@ -106,20 +106,20 @@ public class PacMan_StandardRendering extends StandardRendering {
 	}
 
 	@Override
-	public Animation<Rectangle2D> playerMunching(Pac pac, Direction dir) {
+	public TimedSequence<Rectangle2D> playerMunching(Pac pac, Direction dir) {
 		return pacManMunchingAnim.get(ensureDirection(dir));
 	}
 
 	@Override
-	public Animation<?> spouseMunching(Pac spouse, Direction dir) {
+	public TimedSequence<?> spouseMunching(Pac spouse, Direction dir) {
 		return null;
 	}
 
 	@Override
-	protected Map<Direction, Animation<Rectangle2D>> newGhostKickingAnimation(int ghostType) {
-		EnumMap<Direction, Animation<Rectangle2D>> walkingTo = new EnumMap<>(Direction.class);
+	protected Map<Direction, TimedSequence<Rectangle2D>> newGhostKickingAnimation(int ghostType) {
+		EnumMap<Direction, TimedSequence<Rectangle2D>> walkingTo = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
-			Animation<Rectangle2D> animation = Animation.of(sprite(2 * index(dir), 4 + ghostType),
+			TimedSequence<Rectangle2D> animation = TimedSequence.of(sprite(2 * index(dir), 4 + ghostType),
 					sprite(2 * index(dir) + 1, 4 + ghostType));
 			animation.frameDuration(4).endless();
 			walkingTo.put(dir, animation);
@@ -128,8 +128,8 @@ public class PacMan_StandardRendering extends StandardRendering {
 	}
 
 	@Override
-	protected Animation<Rectangle2D> newGhostFlashingAnimation() {
-		return Animation.of(sprite(8, 4), sprite(9, 4), sprite(10, 4), sprite(11, 4)).frameDuration(6);
+	protected TimedSequence<Rectangle2D> newGhostFlashingAnimation() {
+		return TimedSequence.of(sprite(8, 4), sprite(9, 4), sprite(10, 4), sprite(11, 4)).frameDuration(6);
 	}
 
 	@Override
@@ -206,12 +206,12 @@ public class PacMan_StandardRendering extends StandardRendering {
 	}
 
 	@Override
-	public Animation<?> flapFlapping() {
+	public TimedSequence<?> flapFlapping() {
 		return null;
 	}
 
 	@Override
-	public Animation<?> storkFlying() {
+	public TimedSequence<?> storkFlying() {
 		return null;
 	}
 }

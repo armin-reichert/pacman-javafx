@@ -25,10 +25,10 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.model.pacman.PacManBonus;
-import de.amr.games.pacman.ui.animation.Animation;
-import de.amr.games.pacman.ui.animation.GhostAnimations;
-import de.amr.games.pacman.ui.animation.MazeAnimations;
-import de.amr.games.pacman.ui.animation.PlayerAnimations;
+import de.amr.games.pacman.ui.animation.TimedSequence;
+import de.amr.games.pacman.ui.animation.GhostAnimations2D;
+import de.amr.games.pacman.ui.animation.MazeAnimations2D;
+import de.amr.games.pacman.ui.animation.PlayerAnimations2D;
 import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -44,7 +44,7 @@ import javafx.scene.text.FontWeight;
  * @author Armin Reichert
  */
 public abstract class StandardRendering
-		implements PacManGameRendering2D, MazeAnimations, PlayerAnimations, GhostAnimations {
+		implements PacManGameRendering2D, MazeAnimations2D, PlayerAnimations2D, GhostAnimations2D {
 
 	/** Spritesheet grid cell size */
 	public static final int GRID_CELLSIZE = 16;
@@ -56,21 +56,21 @@ public abstract class StandardRendering
 	protected Map<Integer, Rectangle2D> bonusValueSprites;
 	protected Map<Integer, Rectangle2D> bountyValueSprites;
 
-	protected Animation<Boolean> energizerBlinking;
-	protected List<Animation<Image>> mazeFlashingAnim;
+	protected TimedSequence<Boolean> energizerBlinking;
+	protected List<TimedSequence<Image>> mazeFlashingAnim;
 
-	protected Map<Direction, Animation<Rectangle2D>> pacManMunchingAnim;
-	protected Animation<Rectangle2D> playerDyingAnim;
+	protected Map<Direction, TimedSequence<Rectangle2D>> pacManMunchingAnim;
+	protected TimedSequence<Rectangle2D> playerDyingAnim;
 
-	protected Map<Ghost, Map<Direction, Animation<Rectangle2D>>> ghostsKickingAnim = new HashMap<>();
-	protected Map<Direction, Animation<Rectangle2D>> ghostEyesAnim;
-	protected Animation<Rectangle2D> ghostFrightenedAnim;
-	protected Map<Ghost, Animation<Rectangle2D>> ghostFlashingAnim = new HashMap<>();
+	protected Map<Ghost, Map<Direction, TimedSequence<Rectangle2D>>> ghostsKickingAnim = new HashMap<>();
+	protected Map<Direction, TimedSequence<Rectangle2D>> ghostEyesAnim;
+	protected TimedSequence<Rectangle2D> ghostFrightenedAnim;
+	protected Map<Ghost, TimedSequence<Rectangle2D>> ghostFlashingAnim = new HashMap<>();
 
 	public StandardRendering(String spritesheetPath) {
 		spritesheet = new Image(getClass().getResource(spritesheetPath).toExternalForm());
 		scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), 8);
-		energizerBlinking = Animation.pulse().frameDuration(15);
+		energizerBlinking = TimedSequence.pulse().frameDuration(15);
 	}
 
 	/**
@@ -316,68 +316,68 @@ public abstract class StandardRendering
 	// Animations
 
 	@Override
-	public MazeAnimations mazeAnimations() {
+	public MazeAnimations2D mazeAnimations() {
 		return this;
 	}
 
 	@Override
-	public PlayerAnimations playerAnimations() {
+	public PlayerAnimations2D playerAnimations() {
 		return this;
 	}
 
 	@Override
-	public GhostAnimations ghostAnimations() {
+	public GhostAnimations2D ghostAnimations() {
 		return this;
 	}
 
 	@Override
-	public Animation<?> mazeFlashing(int mazeNumber) {
+	public TimedSequence<?> mazeFlashing(int mazeNumber) {
 		return mazeFlashingAnim.get(mazeNumber - 1);
 	}
 
 	@Override
-	public Stream<Animation<?>> mazeFlashings() {
-		return mazeFlashingAnim.stream().map(Animation.class::cast);
+	public Stream<TimedSequence<?>> mazeFlashings() {
+		return mazeFlashingAnim.stream().map(TimedSequence.class::cast);
 	}
 
 	@Override
-	public Animation<Boolean> energizerBlinking() {
+	public TimedSequence<Boolean> energizerBlinking() {
 		return energizerBlinking;
 	}
 
 	@Override
-	public Animation<Rectangle2D> playerDying() {
+	public TimedSequence<Rectangle2D> playerDying() {
 		return playerDyingAnim;
 	}
 
 	@Override
-	public Animation<Rectangle2D> ghostKicking(Ghost ghost, Direction dir) {
+	public TimedSequence<Rectangle2D> ghostKicking(Ghost ghost, Direction dir) {
 		if (!ghostsKickingAnim.containsKey(ghost)) {
-			Map<Direction, Animation<Rectangle2D>> kickingByDirection = newGhostKickingAnimation(ghost.id);
+			Map<Direction, TimedSequence<Rectangle2D>> kickingByDirection = newGhostKickingAnimation(ghost.id);
 			ghostsKickingAnim.put(ghost, kickingByDirection);
 		}
 		return ghostsKickingAnim.get(ghost).get(ensureDirection(dir));
 	}
 
-	protected abstract Map<Direction, Animation<Rectangle2D>> newGhostKickingAnimation(int id);
+	protected abstract Map<Direction, TimedSequence<Rectangle2D>> newGhostKickingAnimation(int id);
 
 	@Override
-	public Animation<Rectangle2D> ghostFrightened(Ghost ghost, Direction dir) {
+	public TimedSequence<Rectangle2D> ghostFrightened(Ghost ghost, Direction dir) {
 		return ghostFrightenedAnim;
 	}
 
 	@Override
-	public Animation<Rectangle2D> ghostFlashing(Ghost ghost) {
+	public TimedSequence<Rectangle2D> ghostFlashing(Ghost ghost) {
 		if (!ghostFlashingAnim.containsKey(ghost)) {
 			ghostFlashingAnim.put(ghost, newGhostFlashingAnimation());
 		}
 		return ghostFlashingAnim.get(ghost);
 	}
 
-	protected abstract Animation<Rectangle2D> newGhostFlashingAnimation();
+	protected abstract TimedSequence<Rectangle2D> newGhostFlashingAnimation();
 
 	@Override
-	public Animation<Rectangle2D> ghostReturningHome(Ghost ghost, Direction dir) {
+	public TimedSequence<Rectangle2D> ghostReturningHome(Ghost ghost, Direction dir) {
 		return ghostEyesAnim.get(ensureDirection(dir));
 	}
 }

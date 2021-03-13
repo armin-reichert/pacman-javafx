@@ -4,7 +4,7 @@ import java.util.Optional;
 import java.util.OptionalDouble;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.ui.animation.PacManGameAnimations;
+import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
 import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.sound.SoundManager;
 import javafx.scene.Camera;
@@ -64,7 +64,7 @@ public abstract class AbstractGameScene2D implements GameScene {
 	}
 
 	@Override
-	public Optional<PacManGameAnimations> animations() {
+	public Optional<PacManGameAnimations2D> animations() {
 		return Optional.of(rendering);
 	}
 

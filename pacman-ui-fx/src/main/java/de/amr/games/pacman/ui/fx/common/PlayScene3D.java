@@ -24,11 +24,11 @@ import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.model.world.PacManGameWorld;
-import de.amr.games.pacman.ui.animation.Animation;
-import de.amr.games.pacman.ui.animation.GhostAnimations;
-import de.amr.games.pacman.ui.animation.MazeAnimations;
-import de.amr.games.pacman.ui.animation.PacManGameAnimations;
-import de.amr.games.pacman.ui.animation.PlayerAnimations;
+import de.amr.games.pacman.ui.animation.TimedSequence;
+import de.amr.games.pacman.ui.animation.GhostAnimations2D;
+import de.amr.games.pacman.ui.animation.MazeAnimations2D;
+import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
+import de.amr.games.pacman.ui.animation.PlayerAnimations2D;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_Constants;
 import javafx.animation.ScaleTransition;
 import javafx.scene.Camera;
@@ -56,7 +56,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimations, MazeAnimations, PlayerAnimations {
+public class PlayScene3D implements GameScene, PacManGameAnimations2D, GhostAnimations2D, MazeAnimations2D, PlayerAnimations2D {
 
 	private static final int wallHeight = TS - 2;
 
@@ -70,8 +70,8 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 	private final SubScene subScene;
 	private final PerspectiveCamera camera;
 
-	private final Animation<?> defaultAnimation;
-	private final Animation<Boolean> energizerBlinking = Animation.pulse().frameDuration(15);
+	private final TimedSequence<?> defaultAnimation;
+	private final TimedSequence<Boolean> energizerBlinking = TimedSequence.pulse().frameDuration(15);
 
 	private final Group root = new Group();
 	private final Group tgMaze = new Group();
@@ -107,7 +107,7 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 		text.setFont(Font.font("Sans", FontWeight.BOLD, 6));
 		text.setRotationAxis(Rotate.X_AXIS);
 		text.setRotate(camera.getRotate());
-		defaultAnimation = Animation.of(text);
+		defaultAnimation = TimedSequence.of(text);
 
 		controller.fsm.addStateEntryListener(PacManGameState.HUNTING, this::onHuntingStateEntry);
 		controller.fsm.addStateExitListener(PacManGameState.HUNTING, this::onHuntingStateExit);
@@ -116,7 +116,7 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 	}
 
 	@Override
-	public Optional<PacManGameAnimations> animations() {
+	public Optional<PacManGameAnimations2D> animations() {
 		return Optional.of(this);
 	}
 
@@ -359,121 +359,121 @@ public class PlayScene3D implements GameScene, PacManGameAnimations, GhostAnimat
 	}
 
 	@Override
-	public Animation<?> flapFlapping() {
+	public TimedSequence<?> flapFlapping() {
 		return defaultAnimation;
 	}
 
 	@Override
-	public Animation<?> storkFlying() {
+	public TimedSequence<?> storkFlying() {
 		return defaultAnimation;
 	}
 
 	@Override
-	public GhostAnimations ghostAnimations() {
+	public GhostAnimations2D ghostAnimations() {
 		return this;
 	}
 
 	@Override
-	public MazeAnimations mazeAnimations() {
+	public MazeAnimations2D mazeAnimations() {
 		return this;
 	}
 
 	@Override
-	public PlayerAnimations playerAnimations() {
+	public PlayerAnimations2D playerAnimations() {
 		return this;
 	}
 
 	@Override
-	public Animation<Boolean> energizerBlinking() {
+	public TimedSequence<Boolean> energizerBlinking() {
 		return energizerBlinking;
 	}
 
-	private Map<Ghost, Animation<?>> ghostFlashingAnimationByGhost = new HashMap<>();
+	private Map<Ghost, TimedSequence<?>> ghostFlashingAnimationByGhost = new HashMap<>();
 
 	@Override
-	public Animation<?> ghostFlashing(Ghost ghost) {
+	public TimedSequence<?> ghostFlashing(Ghost ghost) {
 		if (!ghostFlashingAnimationByGhost.containsKey(ghost)) {
 			Sphere s1 = new Sphere(HTS);
 			s1.setMaterial(new PhongMaterial(Color.BLUE));
 			Sphere s2 = new Sphere(HTS);
 			s2.setMaterial(new PhongMaterial(Color.WHITE));
-			ghostFlashingAnimationByGhost.put(ghost, Animation.of(s1, s2).frameDuration(10).endless());
+			ghostFlashingAnimationByGhost.put(ghost, TimedSequence.of(s1, s2).frameDuration(10).endless());
 		}
 		return ghostFlashingAnimationByGhost.get(ghost);
 	}
 
-	private Map<Ghost, Animation<?>> ghostFrightenedAnimationByGhost = new HashMap<>();
+	private Map<Ghost, TimedSequence<?>> ghostFrightenedAnimationByGhost = new HashMap<>();
 
 	@Override
-	public Animation<?> ghostFrightened(Ghost ghost, Direction dir) {
+	public TimedSequence<?> ghostFrightened(Ghost ghost, Direction dir) {
 		if (!ghostFrightenedAnimationByGhost.containsKey(ghost)) {
 			Sphere s = new Sphere(HTS);
 			s.setMaterial(new PhongMaterial(Color.BLUE));
 			s.setUserData(ghost);
-			ghostFrightenedAnimationByGhost.put(ghost, Animation.of(s));
+			ghostFrightenedAnimationByGhost.put(ghost, TimedSequence.of(s));
 		}
 		return ghostFrightenedAnimationByGhost.get(ghost);
 	}
 
-	private Map<Ghost, Animation<?>> ghostKickingAnimationByGhost = new HashMap<>();
+	private Map<Ghost, TimedSequence<?>> ghostKickingAnimationByGhost = new HashMap<>();
 
 	@Override
-	public Animation<?> ghostKicking(Ghost ghost, Direction dir) {
+	public TimedSequence<?> ghostKicking(Ghost ghost, Direction dir) {
 		if (!ghostKickingAnimationByGhost.containsKey(ghost)) {
 			Sphere s = new Sphere(HTS);
 			s.setMaterial(new PhongMaterial(ghostColor(ghost.id)));
 			s.setUserData(ghost);
-			ghostKickingAnimationByGhost.put(ghost, Animation.of(s));
+			ghostKickingAnimationByGhost.put(ghost, TimedSequence.of(s));
 		}
 		return ghostKickingAnimationByGhost.get(ghost);
 	}
 
-	private Map<Ghost, Animation<?>> ghostReturningHomeAnimationByGhost = new HashMap<>();
+	private Map<Ghost, TimedSequence<?>> ghostReturningHomeAnimationByGhost = new HashMap<>();
 
 	@Override
-	public Animation<?> ghostReturningHome(Ghost ghost, Direction dir) {
+	public TimedSequence<?> ghostReturningHome(Ghost ghost, Direction dir) {
 		if (!ghostReturningHomeAnimationByGhost.containsKey(ghost)) {
 			Cylinder s = new Cylinder(2, TS);
 			s.setMaterial(new PhongMaterial(ghostColor(ghost.id)));
 			s.setUserData(ghost);
-			ghostReturningHomeAnimationByGhost.put(ghost, Animation.of(s));
+			ghostReturningHomeAnimationByGhost.put(ghost, TimedSequence.of(s));
 		}
 		return ghostReturningHomeAnimationByGhost.get(ghost);
 	}
 
 	@Override
-	public Animation<?> mazeFlashing(int mazeNumber) {
+	public TimedSequence<?> mazeFlashing(int mazeNumber) {
 		// TODO implement this method
 		return defaultAnimation;
 	}
 
 	@Override
-	public Stream<Animation<?>> mazeFlashings() {
+	public Stream<TimedSequence<?>> mazeFlashings() {
 		// TODO implement this method
 		return Stream.empty();
 	}
 
 	@Override
-	public Animation<?> playerDying() {
+	public TimedSequence<?> playerDying() {
 		// TODO implement this method
 		return defaultAnimation;
 	}
 
-	private Animation<?> playerMunchingAnimation;
+	private TimedSequence<?> playerMunchingAnimation;
 
 	@Override
-	public Animation<?> playerMunching(Pac player, Direction dir) {
+	public TimedSequence<?> playerMunching(Pac player, Direction dir) {
 		if (playerMunchingAnimation == null) {
 			Box box = new Box(TS, TS, TS);
 			box.setMaterial(new PhongMaterial(Color.YELLOW));
 			box.setUserData(player);
-			playerMunchingAnimation = Animation.of(box);
+			playerMunchingAnimation = TimedSequence.of(box);
 		}
 		return playerMunchingAnimation;
 	}
 
 	@Override
-	public Animation<?> spouseMunching(Pac spouse, Direction dir) {
+	public TimedSequence<?> spouseMunching(Pac spouse, Direction dir) {
 		// used in intermission scenes where both, Pac-Man and Ms. Pac-Man, appear
 		return defaultAnimation;
 	}

@@ -7,8 +7,8 @@ import java.util.Optional;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.ui.animation.Animation;
-import de.amr.games.pacman.ui.animation.PacManGameAnimations;
+import de.amr.games.pacman.ui.animation.TimedSequence;
+import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
 import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.sound.SoundManager;
 
@@ -19,7 +19,7 @@ import de.amr.games.pacman.ui.sound.SoundManager;
  */
 public class PlayScene2D extends AbstractGameScene2D {
 
-	private Animation<?> mazeFlashing;
+	private TimedSequence<?> mazeFlashing;
 
 	public PlayScene2D(PacManGameController controller, PacManGameRendering2D rendering, SoundManager sounds) {
 		super(controller, rendering, sounds);
@@ -38,8 +38,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	private void onHuntingStateEntry(PacManGameState state) {
 		rendering.mazeAnimations().energizerBlinking().restart();
-		rendering.playerAnimations().playerMunching(controller.game.player).forEach(Animation::restart);
-		controller.game.ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(Animation::restart);
+		rendering.playerAnimations().playerMunching(controller.game.player).forEach(TimedSequence::restart);
+		controller.game.ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(TimedSequence::restart);
 	}
 
 	private void onHuntingStateExit(PacManGameState state) {
@@ -47,7 +47,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 	}
 
 	private void onPacManDyingStateEntry(PacManGameState state) {
-		controller.game.ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(Animation::reset);
+		controller.game.ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(TimedSequence::reset);
 	}
 
 	private void onGhostDyingStateEntry(PacManGameState state) {
@@ -73,11 +73,11 @@ public class PlayScene2D extends AbstractGameScene2D {
 	}
 
 	private void onGameOverStateEntry(PacManGameState state) {
-		controller.game.ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(Animation::reset);
+		controller.game.ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(TimedSequence::reset);
 	}
 
 	@Override
-	public Optional<PacManGameAnimations> animations() {
+	public Optional<PacManGameAnimations2D> animations() {
 		return Optional.of(rendering);
 	}
 

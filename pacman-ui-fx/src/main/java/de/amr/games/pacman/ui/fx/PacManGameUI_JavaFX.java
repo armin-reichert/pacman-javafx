@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.ui.PacManGameUI;
-import de.amr.games.pacman.ui.animation.PacManGameAnimations;
+import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
 import de.amr.games.pacman.ui.fx.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.common.CameraController;
 import de.amr.games.pacman.ui.fx.common.FlashMessageView;
@@ -231,7 +231,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	@Override
-	public Optional<PacManGameAnimations> animation() {
+	public Optional<PacManGameAnimations2D> animation() {
 		return currentGameScene != null ? currentGameScene.animations() : Optional.empty();
 	}
 }

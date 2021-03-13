@@ -1,7 +1,7 @@
 package de.amr.games.pacman.ui.fx.rendering;
 
 import de.amr.games.pacman.ui.Rendering;
-import de.amr.games.pacman.ui.animation.PacManGameAnimations;
+import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -13,5 +13,5 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public interface PacManGameRendering2D extends Rendering<GraphicsContext, Color, Font, Rectangle2D>, PacManGameAnimations {
+public interface PacManGameRendering2D extends Rendering<GraphicsContext, Color, Font, Rectangle2D>, PacManGameAnimations2D {
 }

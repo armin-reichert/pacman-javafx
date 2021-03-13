@@ -15,7 +15,7 @@ import de.amr.games.pacman.model.common.JuniorBag;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.model.common.Stork;
 import de.amr.games.pacman.model.pacman.PacManBonus;
-import de.amr.games.pacman.ui.animation.Animation;
+import de.amr.games.pacman.ui.animation.TimedSequence;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -31,8 +31,8 @@ import javafx.scene.text.FontWeight;
  */
 public class MsPacMan_StandardRendering extends StandardRendering {
 
-	private final Map<Direction, Animation<Rectangle2D>> msPacManMunchingAnim;
-	private final Animation<Integer> bonusJumpingAnim;
+	private final Map<Direction, TimedSequence<Rectangle2D>> msPacManMunchingAnim;
+	private final TimedSequence<Integer> bonusJumpingAnim;
 
 	/* Tiles in right half of spritesheet */
 	public Rectangle2D s(int tileX, int tileY) {
@@ -71,32 +71,32 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 			WritableImage mazeEmpty = new WritableImage(226, 248);
 			mazeEmpty.getPixelWriter().setPixels(0, 0, 226, 248, spritesheet.getPixelReader(), 226, 248 * mazeIndex);
 			Image mazeEmptyBright = exchangeColors(mazeEmpty, exchanges);
-			mazeFlashingAnim.add(Animation.of(mazeEmptyBright, mazeEmpty).frameDuration(15));
+			mazeFlashingAnim.add(TimedSequence.of(mazeEmptyBright, mazeEmpty).frameDuration(15));
 		}
 
 		msPacManMunchingAnim = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = index(dir);
-			Animation<Rectangle2D> munching = Animation.of(s(1, d), s(1, d), s(2, d), s(0, d));
+			TimedSequence<Rectangle2D> munching = TimedSequence.of(s(1, d), s(1, d), s(2, d), s(0, d));
 			munching.frameDuration(2).endless();
 			msPacManMunchingAnim.put(dir, munching);
 		}
 
-		playerDyingAnim = Animation.of(s(0, 3), s(0, 0), s(0, 1), s(0, 2));
+		playerDyingAnim = TimedSequence.of(s(0, 3), s(0, 0), s(0, 1), s(0, 2));
 		playerDyingAnim.frameDuration(10).repetitions(2);
 
 		pacManMunchingAnim = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = index(dir);
-			pacManMunchingAnim.put(dir, Animation.of(s(0, 9 + d), s(1, 9 + d), s(2, 9)).frameDuration(2).endless());
+			pacManMunchingAnim.put(dir, TimedSequence.of(s(0, 9 + d), s(1, 9 + d), s(2, 9)).frameDuration(2).endless());
 		}
 
 		ghostEyesAnim = new EnumMap<>(Direction.class);
-		Direction.stream().forEach(dir -> ghostEyesAnim.put(dir, Animation.of(s(8 + index(dir), 5))));
+		Direction.stream().forEach(dir -> ghostEyesAnim.put(dir, TimedSequence.of(s(8 + index(dir), 5))));
 
-		ghostFrightenedAnim = Animation.of(s(8, 4), s(9, 4)).frameDuration(20).endless().run();
+		ghostFrightenedAnim = TimedSequence.of(s(8, 4), s(9, 4)).frameDuration(20).endless().run();
 
-		bonusJumpingAnim = Animation.of(0, 2, 0, -2).frameDuration(20).endless().run();
+		bonusJumpingAnim = TimedSequence.of(0, 2, 0, -2).frameDuration(20).endless().run();
 	}
 
 	/**
@@ -152,11 +152,11 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 	}
 
 	@Override
-	protected Map<Direction, Animation<Rectangle2D>> newGhostKickingAnimation(int ghostType) {
-		EnumMap<Direction, Animation<Rectangle2D>> kickingTo = new EnumMap<>(Direction.class);
+	protected Map<Direction, TimedSequence<Rectangle2D>> newGhostKickingAnimation(int ghostType) {
+		EnumMap<Direction, TimedSequence<Rectangle2D>> kickingTo = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = index(dir);
-			Animation<Rectangle2D> kicking = Animation.of(s(2 * d, 4 + ghostType), s(2 * d + 1, 4 + ghostType));
+			TimedSequence<Rectangle2D> kicking = TimedSequence.of(s(2 * d, 4 + ghostType), s(2 * d + 1, 4 + ghostType));
 			kicking.frameDuration(4).endless();
 			kickingTo.put(dir, kicking);
 		}
@@ -164,17 +164,17 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 	}
 
 	@Override
-	protected Animation<Rectangle2D> newGhostFlashingAnimation() {
-		return Animation.of(s(8, 4), s(9, 4), s(10, 4), s(11, 4)).frameDuration(4);
+	protected TimedSequence<Rectangle2D> newGhostFlashingAnimation() {
+		return TimedSequence.of(s(8, 4), s(9, 4), s(10, 4), s(11, 4)).frameDuration(4);
 	}
 
 	@Override
-	public Animation<Rectangle2D> playerMunching(Pac pac, Direction dir) {
+	public TimedSequence<Rectangle2D> playerMunching(Pac pac, Direction dir) {
 		return msPacManMunchingAnim.get(ensureDirection(dir));
 	}
 
 	@Override
-	public Animation<Rectangle2D> spouseMunching(Pac spouse, Direction dir) {
+	public TimedSequence<Rectangle2D> spouseMunching(Pac spouse, Direction dir) {
 		return pacManMunchingAnim.get(dir);
 	}
 
@@ -234,7 +234,7 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 	@Override
 	public void drawSpouse(GraphicsContext g, Pac pacMan) {
 		if (pacMan.visible) {
-			Animation<Rectangle2D> munching = spouseMunching(pacMan, pacMan.dir);
+			TimedSequence<Rectangle2D> munching = spouseMunching(pacMan, pacMan.dir);
 			drawSprite(g, pacMan.speed > 0 ? munching.animate() : munching.frame(1), pacMan.position.x - 4,
 					pacMan.position.y - 4);
 		}
@@ -253,8 +253,8 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 	}
 
 	@Override
-	public Animation<?> flapFlapping() {
-		return Animation.of( //
+	public TimedSequence<?> flapFlapping() {
+		return TimedSequence.of( //
 				new Rectangle2D(456, 208, 32, 32), //
 				new Rectangle2D(488, 208, 32, 32), //
 				new Rectangle2D(520, 208, 32, 32), //
@@ -271,8 +271,8 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 	}
 
 	@Override
-	public Animation<?> storkFlying() {
-		return Animation.of(//
+	public TimedSequence<?> storkFlying() {
+		return TimedSequence.of(//
 				new Rectangle2D(489, 176, 32, 16), //
 				new Rectangle2D(521, 176, 32, 16)//
 		).endless().frameDuration(10);
