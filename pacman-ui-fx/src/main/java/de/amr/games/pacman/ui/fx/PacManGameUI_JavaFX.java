@@ -82,9 +82,17 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 					GlobalSettings.drawWallsAsLines = !GlobalSettings.drawWallsAsLines;
 				}
 				break;
+			case P:
+				if (control) {
+					GlobalSettings.paused = !GlobalSettings.paused;
+				}
 			case V:
 				controller.toggleGameType();
 				break;
+			case T:
+				if (control) {
+					GlobalSettings.measureTime = !GlobalSettings.measureTime;
+				}
 			default:
 				break;
 			}

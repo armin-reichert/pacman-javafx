@@ -184,6 +184,8 @@ public class PlayScene3D implements GameScene {
 
 		root.getChildren().clear();
 		root.getChildren().addAll(tgMaze, txtScore, txtHiscore);
+		root.setTranslateX(-28 * 4);
+		root.setTranslateY(-36 * 4);
 	}
 
 	@Override
