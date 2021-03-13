@@ -78,7 +78,7 @@ public class PlayScene3D implements GameScene {
 	private final Map<Ghost, TimedSequence<?>> ghostFrightenedAnimationByGhost = new HashMap<>();
 	private final Map<Ghost, TimedSequence<?>> ghostKickingAnimationByGhost = new HashMap<>();
 
-	private final Group root = new Group();
+	private final Group sceneRoot = new Group();
 	private final Group tgMaze = new Group();
 	private final Group tgFood = new Group();
 	private final Group tgPlayer = new Group();
@@ -104,8 +104,8 @@ public class PlayScene3D implements GameScene {
 		camera.setRotationAxis(Rotate.X_AXIS);
 		camera.setRotate(45);
 
-		root.getTransforms().add(new Scale(scaling, scaling, scaling));
-		subScene = new SubScene(root, width, height);
+		sceneRoot.getTransforms().add(new Scale(scaling, scaling, scaling));
+		subScene = new SubScene(sceneRoot, width, height);
 		subScene.setFill(Color.BLACK);
 		subScene.setCamera(camera);
 
@@ -118,8 +118,8 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void resize(double width, double height) {
 		scaling = width / GameScene.WIDTH_UNSCALED;
-		root.getTransforms().clear();
-		root.getTransforms().add(new Scale(scaling, scaling, scaling));
+		sceneRoot.getTransforms().clear();
+		sceneRoot.getTransforms().add(new Scale(scaling, scaling, scaling));
 		subScene.setWidth(width);
 		subScene.setHeight(height);
 	}
@@ -195,10 +195,10 @@ public class PlayScene3D implements GameScene {
 		tgMaze.getChildren().add(tgPlayer);
 		tgMaze.getChildren().addAll(tgGhosts);
 
-		root.getChildren().clear();
-		root.getChildren().addAll(tgMaze, txtScore, txtHiscore);
-		root.setTranslateX(-28 * 4);
-		root.setTranslateY(-36 * 4);
+		sceneRoot.getChildren().clear();
+		sceneRoot.getChildren().addAll(tgMaze, txtScore, txtHiscore);
+		sceneRoot.setTranslateX(-28 * 4);
+		sceneRoot.setTranslateY(-36 * 4);
 	}
 
 	@Override
