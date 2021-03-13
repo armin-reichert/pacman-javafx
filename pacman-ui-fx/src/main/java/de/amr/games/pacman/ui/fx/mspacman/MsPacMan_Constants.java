@@ -41,4 +41,24 @@ public class MsPacMan_Constants {
 			return Color.WHITE;
 		}
 	}
+
+	public static Color getMazeWallBorderColor(int mazeIndex) {
+		switch (mazeIndex) {
+		case 0:
+			return Color.rgb(255, 0, 0);
+		case 1:
+			return Color.rgb(222, 222, 255);
+		case 2:
+			return Color.rgb(222, 222, 255);
+		case 3:
+			return Color.rgb(255, 183, 81);
+		case 4:
+			return Color.rgb(255, 255, 0);
+		case 5:
+			return Color.rgb(255, 0, 0);
+		default:
+			return Color.WHITE;
+		}
+	}
+
 }

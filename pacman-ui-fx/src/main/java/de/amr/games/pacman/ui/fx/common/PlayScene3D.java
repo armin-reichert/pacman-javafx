@@ -2,7 +2,6 @@ package de.amr.games.pacman.ui.fx.common;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
-import static de.amr.games.pacman.ui.fx.mspacman.MsPacMan_Constants.getMazeWallColor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,9 +62,17 @@ public class PlayScene3D implements GameScene {
 	private final SubScene subScene;
 	private final PerspectiveCamera camera;
 
+	private final TimedSequence<Node> missingAnimation;
+	{
+		Text text = new Text("Animation?");
+		text.setFill(Color.RED);
+		text.setFont(Font.font("Sans", FontWeight.BOLD, 12));
+		missingAnimation = TimedSequence.of(text);
+	}
+
 	private final TimedSequence<Boolean> energizerBlinking = TimedSequence.pulse().frameDuration(15);
 	private TimedSequence<?> playerMunchingAnimation;
-	private TimedSequence<?> playerDyingAnimation = TimedSequence.of(new Text("Missing Animation")); // TODO
+	private TimedSequence<?> playerDyingAnimation = missingAnimation;
 	private final Map<Ghost, TimedSequence<?>> ghostReturningHomeAnimationByGhost = new HashMap<>();
 	private final Map<Ghost, TimedSequence<?>> ghostFlashingAnimationByGhost = new HashMap<>();
 	private final Map<Ghost, TimedSequence<?>> ghostFrightenedAnimationByGhost = new HashMap<>();
@@ -139,8 +146,14 @@ public class PlayScene3D implements GameScene {
 				Box wallShape = new Box(TS - 2, TS - 2, wallHeight);
 				wallShape.setTranslateX(tile.x * TS);
 				wallShape.setTranslateY(tile.y * TS);
-				PhongMaterial material = new PhongMaterial(
-						controller.isPlaying(GameType.PACMAN) ? Color.BLUE : getMazeWallColor(game.level.mazeNumber));
+				PhongMaterial material = new PhongMaterial();
+				if (controller.isPlaying(GameType.PACMAN)) {
+					material.setDiffuseColor(Color.BLUE);
+					material.setSpecularColor(Color.WHITE);
+				} else {
+					material.setDiffuseColor(MsPacMan_Constants.getMazeWallBorderColor(game.level.mazeNumber));
+					material.setSpecularColor(MsPacMan_Constants.getMazeWallColor(game.level.mazeNumber));
+				}
 				wallShape.setMaterial(material);
 				wallShape.setViewOrder(-tile.y * TS);
 				wallNodes.put(tile, wallShape);
