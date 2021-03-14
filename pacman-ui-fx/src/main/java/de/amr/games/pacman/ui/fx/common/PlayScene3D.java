@@ -133,10 +133,6 @@ public class PlayScene3D implements GameScene {
 		subScene = new SubScene(sceneRoot, width, height);
 		subScene.setFill(Color.BLACK);
 		subScene.setCamera(camera);
-		controller.addStateEntryListener(PacManGameState.HUNTING, this::onHuntingStateEntry);
-		controller.addStateExitListener(PacManGameState.HUNTING, this::onHuntingStateExit);
-		controller.addStateEntryListener(PacManGameState.LEVEL_COMPLETE, state -> playLevelCompleteAnimation());
-		controller.addStateEntryListener(PacManGameState.LEVEL_STARTING, state -> playLevelStartingAnimation());
 	}
 
 	@Override
@@ -163,6 +159,26 @@ public class PlayScene3D implements GameScene {
 		GameModel game = controller.selectedGame();
 		PacManGameWorld world = game.level.world;
 		initScene(game, world);
+		addListeners();
+	}
+
+	@Override
+	public void end() {
+		removeListeners();
+	}
+
+	private void addListeners() {
+		controller.addStateEntryListener(PacManGameState.HUNTING, this::onHuntingStateEntry);
+		controller.addStateExitListener(PacManGameState.HUNTING, this::onHuntingStateExit);
+		controller.addStateEntryListener(PacManGameState.LEVEL_COMPLETE, this::playLevelCompleteAnimation);
+		controller.addStateEntryListener(PacManGameState.LEVEL_STARTING, this::playLevelStartingAnimation);
+	}
+
+	private void removeListeners() {
+		controller.removeStateEntryListener(this::onHuntingStateEntry);
+		controller.removeStateExitListener(this::onHuntingStateExit);
+		controller.removeStateEntryListener(this::playLevelCompleteAnimation);
+		controller.removeStateEntryListener(this::playLevelStartingAnimation);
 	}
 
 	public void initScene(GameModel game, PacManGameWorld world) {
@@ -379,17 +395,13 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public void end() {
-	}
-
-	@Override
 	public Camera getCamera() {
 		return camera;
 	}
 
 	// State change handling
 
-	private void playLevelCompleteAnimation() {
+	private void playLevelCompleteAnimation(PacManGameState state) {
 		tgPlayer.setVisible(false);
 		Arrays.asList(tgGhosts).forEach(ghostShape -> ghostShape.setVisible(false));
 		ScaleTransition levelCompleteAnimation = new ScaleTransition(Duration.seconds(5), tgMaze);
@@ -400,7 +412,7 @@ public class PlayScene3D implements GameScene {
 		levelCompleteAnimation.play();
 	}
 
-	private void playLevelStartingAnimation() {
+	private void playLevelStartingAnimation(PacManGameState state) {
 		tgPlayer.setVisible(true);
 		Arrays.asList(tgGhosts).forEach(ghostShape -> ghostShape.setVisible(true));
 		ScaleTransition levelStartAnimation = new ScaleTransition(Duration.seconds(5), tgMaze);
