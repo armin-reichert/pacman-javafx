@@ -63,8 +63,8 @@ public class SceneController {
 	};
 
 	private static int sceneIndex(PacManGameController controller) {
-		return controller.fsm.state == PacManGameState.INTRO ? 0
-				: controller.fsm.state == PacManGameState.INTERMISSION ? controller.selectedGame().intermissionNumber : 4;
+		return controller.state == PacManGameState.INTRO ? 0
+				: controller.state == PacManGameState.INTERMISSION ? controller.selectedGame().intermissionNumber : 4;
 	}
 
 	public static boolean is2DAnd3DVersionAvailable(PacManGameController controller) {

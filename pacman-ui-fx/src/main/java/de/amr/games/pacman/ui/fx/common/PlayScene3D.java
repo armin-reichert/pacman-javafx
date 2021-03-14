@@ -111,10 +111,10 @@ public class PlayScene3D implements GameScene {
 		subScene.setFill(Color.BLACK);
 		subScene.setCamera(camera);
 
-		controller.fsm.addStateEntryListener(PacManGameState.HUNTING, this::onHuntingStateEntry);
-		controller.fsm.addStateExitListener(PacManGameState.HUNTING, this::onHuntingStateExit);
-		controller.fsm.addStateEntryListener(PacManGameState.LEVEL_COMPLETE, state -> playLevelCompleteAnimation());
-		controller.fsm.addStateEntryListener(PacManGameState.LEVEL_STARTING, state -> playLevelStartingAnimation());
+		controller.addStateEntryListener(PacManGameState.HUNTING, this::onHuntingStateEntry);
+		controller.addStateExitListener(PacManGameState.HUNTING, this::onHuntingStateExit);
+		controller.addStateEntryListener(PacManGameState.LEVEL_COMPLETE, state -> playLevelCompleteAnimation());
+		controller.addStateEntryListener(PacManGameState.LEVEL_STARTING, state -> playLevelStartingAnimation());
 	}
 
 	@Override
@@ -341,7 +341,7 @@ public class PlayScene3D implements GameScene {
 		levelCompleteAnimation.setFromZ(1);
 		levelCompleteAnimation.setToZ(0);
 		levelCompleteAnimation.setDelay(Duration.seconds(2));
-		controller.fsm.state.timer.resetSeconds(2 + levelCompleteAnimation.getDuration().toSeconds());
+		controller.state.timer.resetSeconds(2 + levelCompleteAnimation.getDuration().toSeconds());
 		levelCompleteAnimation.play();
 	}
 
@@ -353,7 +353,7 @@ public class PlayScene3D implements GameScene {
 		ScaleTransition levelStartAnimation = new ScaleTransition(Duration.seconds(5), tgMaze);
 		levelStartAnimation.setFromZ(0);
 		levelStartAnimation.setToZ(1);
-		controller.fsm.state.timer.resetSeconds(levelStartAnimation.getDuration().toSeconds());
+		controller.state.timer.resetSeconds(levelStartAnimation.getDuration().toSeconds());
 		levelStartAnimation.play();
 	}
 
