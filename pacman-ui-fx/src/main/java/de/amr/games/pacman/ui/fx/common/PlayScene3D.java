@@ -32,6 +32,7 @@ import javafx.scene.PointLight;
 import javafx.scene.SubScene;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -425,7 +426,7 @@ public class PlayScene3D implements GameScene {
 	public TimedSequence<?> ghostFlashing(Ghost ghost) {
 		if (!ghostFlashingAnimationByGhost.containsKey(ghost)) {
 			Sphere s1 = new Sphere(HTS);
-			s1.setMaterial(new PhongMaterial(Color.BLUE));
+			s1.setMaterial(new PhongMaterial(Color.CORNFLOWERBLUE));
 			Sphere s2 = new Sphere(HTS);
 			s2.setMaterial(new PhongMaterial(Color.WHITE));
 			ghostFlashingAnimationByGhost.put(ghost, TimedSequence.of(s1, s2).frameDuration(10).endless());
@@ -436,7 +437,7 @@ public class PlayScene3D implements GameScene {
 	public TimedSequence<?> ghostFrightened(Ghost ghost, Direction dir) {
 		if (!ghostFrightenedAnimationByGhost.containsKey(ghost)) {
 			Sphere s = new Sphere(HTS);
-			s.setMaterial(new PhongMaterial(Color.BLUE));
+			s.setMaterial(new PhongMaterial(Color.CORNFLOWERBLUE));
 			s.setUserData(ghost);
 			ghostFrightenedAnimationByGhost.put(ghost, TimedSequence.of(s));
 		}
@@ -472,10 +473,21 @@ public class PlayScene3D implements GameScene {
 	public TimedSequence<?> playerMunching(Pac player, Direction dir) {
 		if (playerMunchingAnimation == null) {
 			Box box = new Box(TS, TS, TS);
-			box.setMaterial(new PhongMaterial(Color.YELLOW));
+			PhongMaterial m = new PhongMaterial(Color.WHITE);
+			Image playerImage = playerImage(player);
+			m.setBumpMap(playerImage);
+			m.setDiffuseMap(playerImage);
+			box.setMaterial(m);
 			box.setUserData(player);
 			playerMunchingAnimation = TimedSequence.of(box);
 		}
 		return playerMunchingAnimation;
+	}
+
+	private Image playerImage(Pac player) {
+		Image spritesheet = new Image(getClass().getResource("/mspacman/graphics/sprites.png").toExternalForm());
+		WritableImage img = new WritableImage(16, 16);
+		img.getPixelWriter().setPixels(0, 0, 16, 16, spritesheet.getPixelReader(), 472, 0);
+		return img;
 	}
 }
