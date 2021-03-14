@@ -139,7 +139,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void start() {
 
-		GameModel game = controller.game;
+		GameModel game = controller.selectedGame();
 		PacManGameWorld world = game.level.world;
 
 		wallNodes.clear();
@@ -207,7 +207,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void update() {
-		GameModel game = controller.game;
+		GameModel game = controller.selectedGame();
 
 		wallNodes.values().stream().map(wall -> (Shape3D) wall)
 				.forEach(wall -> wall.setDrawMode(GlobalSettings.drawWallsAsLines ? DrawMode.LINE : DrawMode.FILL));
@@ -260,7 +260,7 @@ public class PlayScene3D implements GameScene {
 
 	private void updatePlayerShape(Pac player) {
 		Node shape = player.dead ? (Node) playerDyingAnimation.frame() : (Node) playerMunching(player, player.dir).frame();
-		boolean insidePortal = controller.game.level.world.isPortal(player.tile());
+		boolean insidePortal = controller.selectedGame().level.world.isPortal(player.tile());
 		tgPlayer.getChildren().clear();
 		tgPlayer.getChildren().add(shape);
 		tgPlayer.setVisible(player.visible && !insidePortal);
@@ -284,7 +284,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void updateGhostShape(int id) {
-		Ghost ghost = controller.game.ghosts[id];
+		Ghost ghost = controller.selectedGame().ghosts[id];
 		Node shape;
 
 		if (ghost.bounty > 0) {
@@ -305,7 +305,7 @@ public class PlayScene3D implements GameScene {
 					: ghostFrightened(ghost, ghost.dir).animate());
 		}
 
-		else if (ghost.is(GhostState.LOCKED) && controller.game.player.powerTimer.isRunning()) {
+		else if (ghost.is(GhostState.LOCKED) && controller.selectedGame().player.powerTimer.isRunning()) {
 			shape = (Node) ghostFrightened(ghost, ghost.dir).animate();
 		}
 

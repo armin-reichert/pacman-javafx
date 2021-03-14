@@ -64,20 +64,20 @@ public class SceneController {
 
 	private static int sceneIndex(PacManGameController controller) {
 		return controller.fsm.state == PacManGameState.INTRO ? 0
-				: controller.fsm.state == PacManGameState.INTERMISSION ? controller.game.intermissionNumber : 4;
+				: controller.fsm.state == PacManGameState.INTERMISSION ? controller.selectedGame().intermissionNumber : 4;
 	}
 
 	public static boolean is2DAnd3DVersionAvailable(PacManGameController controller) {
-		return SCENES[controller.currentlyPlaying().ordinal()][sceneIndex(controller)].length > 1;
+		return SCENES[controller.selectedGameType().ordinal()][sceneIndex(controller)].length > 1;
 	}
 
 	public static boolean isSuitableScene(GameScene gameScene, PacManGameController controller) {
-		Class<?> sceneClasses[] = SCENES[controller.currentlyPlaying().ordinal()][sceneIndex(controller)];
+		Class<?> sceneClasses[] = SCENES[controller.selectedGameType().ordinal()][sceneIndex(controller)];
 		return Arrays.asList(sceneClasses).contains(gameScene.getClass());
 	}
 
 	public static GameScene createGameScene(PacManGameController controller, double height, boolean version3D) {
-		switch (controller.currentlyPlaying()) {
+		switch (controller.selectedGameType()) {
 
 		case MS_PACMAN: {
 			int sceneIndex = sceneIndex(controller);

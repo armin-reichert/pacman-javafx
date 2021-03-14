@@ -201,7 +201,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 		text += camControl.getCameraInfo() + "\n";
 		text += "Autopilot " + (controller.autopilot.enabled ? "ON" : "OFF") + " (Key 'A')\n";
-		text += "Player is " + (controller.game.player.immune ? "IMMUNE" : "VULNERABLE") + " (Key 'I')\n";
+		text += "Player is " + (controller.selectedGame().player.immune ? "IMMUNE" : "VULNERABLE") + " (Key 'I')\n";
 		text += "3D scenes " + (GlobalSettings.use3DScenes ? "ON" : "OFF") + " (Key CTRL+'3')\n";
 		infoView.setText(text);
 		infoView.setVisible(GlobalSettings.infoViewVisible);
@@ -226,7 +226,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public Optional<SoundManager> sound() {
-		return Optional.of(SceneController.SOUND.get(controller.currentlyPlaying()));
+		return Optional.of(SceneController.SOUND.get(controller.selectedGameType()));
 	}
 
 	@Override
