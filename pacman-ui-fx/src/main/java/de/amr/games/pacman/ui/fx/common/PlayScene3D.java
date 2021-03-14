@@ -35,6 +35,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
@@ -52,7 +53,7 @@ import javafx.util.Duration;
  */
 public class PlayScene3D implements GameScene {
 
-	private static final int wallHeight = TS - 2;
+	private static final int WALL_HEIGHT = TS - 2;
 
 	private static Color ghostColor(int i) {
 		return i == 0 ? Color.RED : i == 1 ? Color.PINK : i == 2 ? Color.CYAN : Color.ORANGE;
@@ -62,7 +63,27 @@ public class PlayScene3D implements GameScene {
 
 	private final PacManGameController controller;
 	private final SubScene subScene;
+	private final Group sceneRoot = new Group();
+
 	private final PerspectiveCamera camera = new PerspectiveCamera(true);
+
+	private Group createAxis(String label, Color color, double length) {
+		Cylinder axis = new Cylinder(1, length);
+		axis.setMaterial(new PhongMaterial(color));
+		return new Group(axis);
+	}
+
+	private final Group tgAxes = new Group();
+	{
+		Group xAxis = createAxis("X", Color.RED, 300);
+		Group yAxis = createAxis("Y", Color.GREEN, 300);
+		Group zAxis = createAxis("Z", Color.BLUE, 300);
+		xAxis.setRotationAxis(Rotate.Z_AXIS);
+		xAxis.setRotate(90);
+		zAxis.setRotationAxis(Rotate.X_AXIS);
+		zAxis.setRotate(-90);
+		tgAxes.getChildren().addAll(xAxis, yAxis, zAxis);
+	}
 
 	private final TimedSequence<Node> missingAnimation;
 	{
@@ -83,13 +104,10 @@ public class PlayScene3D implements GameScene {
 	private final Map<Ghost, TimedSequence<?>> ghostFrightenedAnimationByGhost = new HashMap<>();
 	private final Map<Ghost, TimedSequence<?>> ghostKickingAnimationByGhost = new HashMap<>();
 
-	private final Group sceneRoot = new Group();
-
 	private final PointLight spotLight = new PointLight();
 	private final AmbientLight ambientLight = new AmbientLight();
 
 	private final Group tgMaze = new Group();
-	private final Group tgFood = new Group();
 	private final Group tgPlayer = new Group();
 	private final Group[] tgGhosts = new Group[4];
 	private final Map<V2i, Node> wallNodes = new HashMap<>();
@@ -110,22 +128,10 @@ public class PlayScene3D implements GameScene {
 		this.controller = controller;
 		double width = GameScene.ASPECT_RATIO * height;
 		scaling = width / GameScene.WIDTH_UNSCALED;
-
-		camera.setTranslateX(660);
-		camera.setTranslateY(2930);
-		camera.setTranslateZ(-2000);
-		camera.setNearClip(0.1);
-		camera.setFarClip(10000.0);
-		camera.setRotationAxis(Rotate.X_AXIS);
-		camera.setRotate(45);
-
-		configureLighting();
 		sceneRoot.getTransforms().add(new Scale(scaling, scaling, scaling));
-
 		subScene = new SubScene(sceneRoot, width, height);
 		subScene.setFill(Color.BLACK);
 		subScene.setCamera(camera);
-
 		controller.addStateEntryListener(PacManGameState.HUNTING, this::onHuntingStateEntry);
 		controller.addStateExitListener(PacManGameState.HUNTING, this::onHuntingStateExit);
 		controller.addStateEntryListener(PacManGameState.LEVEL_COMPLETE, state -> playLevelCompleteAnimation());
@@ -153,14 +159,17 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void start() {
-
 		GameModel game = controller.selectedGame();
 		PacManGameWorld world = game.level.world;
+		initScene(game, world);
+	}
+
+	public void initScene(GameModel game, PacManGameWorld world) {
 
 		wallNodes.clear();
 		world.tiles().forEach(tile -> {
 			if (world.isWall(tile)) {
-				Box wallShape = new Box(TS - 2, TS - 2, wallHeight);
+				Box wallShape = new Box(TS - 1, TS - 1, WALL_HEIGHT);
 				wallShape.setTranslateX(tile.x * TS);
 				wallShape.setTranslateY(tile.y * TS);
 				if (controller.isPlaying(GameType.PACMAN)) {
@@ -187,11 +196,9 @@ public class PlayScene3D implements GameScene {
 			energizer.setUserData(tile);
 			energizer.setTranslateX(tile.x * TS);
 			energizer.setTranslateY(tile.y * TS);
-			energizer.setTranslateZ(-4);
 			energizer.setViewOrder(-tile.y * TS - 0.5);
 			energizerNodes.add(energizer);
 		});
-		tgFood.getChildren().addAll(energizerNodes);
 
 		PhongMaterial foodMaterial = new PhongMaterial(foodColor);
 		pelletNodes.clear();
@@ -201,11 +208,9 @@ public class PlayScene3D implements GameScene {
 			pellet.setUserData(tile);
 			pellet.setTranslateX(tile.x * TS);
 			pellet.setTranslateY(tile.y * TS);
-			pellet.setTranslateZ(-4);
 			pellet.setViewOrder(-tile.y * TS - 0.5);
 			pelletNodes.add(pellet);
 		});
-		tgFood.getChildren().addAll(pelletNodes);
 
 		for (int id = 0; id < 4; ++id) {
 			tgGhosts[id] = new Group();
@@ -213,14 +218,20 @@ public class PlayScene3D implements GameScene {
 
 		tgMaze.getChildren().clear();
 		tgMaze.getChildren().addAll(wallNodes.values());
-		tgMaze.getChildren().add(tgFood);
-		tgMaze.getChildren().add(tgPlayer);
+		tgMaze.getChildren().addAll(energizerNodes);
+		tgMaze.getChildren().addAll(pelletNodes);
 		tgMaze.getChildren().addAll(tgGhosts);
+		tgMaze.getChildren().addAll(tgPlayer, txtScore, txtHiscore);
+		tgMaze.setTranslateX(-14 * TS);
+		tgMaze.setTranslateY(-18 * TS);
 
 		sceneRoot.getChildren().clear();
-		sceneRoot.getChildren().addAll(tgMaze, txtScore, txtHiscore);
-		sceneRoot.getChildren().add(ambientLight);
-		sceneRoot.getChildren().add(spotLight);
+		sceneRoot.getChildren().addAll(ambientLight, spotLight, tgMaze);
+		if (GlobalSettings.showCoordinateAxes) {
+			sceneRoot.getChildren().add(tgAxes);
+		}
+		configureLighting();
+		initCamera();
 	}
 
 	@Override
@@ -268,6 +279,11 @@ public class PlayScene3D implements GameScene {
 		txtHiscore.setViewOrder(-1000);
 
 		configureLighting();
+
+		sceneRoot.getChildren().remove(tgAxes);
+		if (GlobalSettings.showCoordinateAxes) {
+			sceneRoot.getChildren().add(tgAxes);
+		}
 	}
 
 	private void configureLighting() {
@@ -373,7 +389,6 @@ public class PlayScene3D implements GameScene {
 	// State change handling
 
 	private void playLevelCompleteAnimation() {
-		tgFood.setVisible(false);
 		tgPlayer.setVisible(false);
 		Arrays.asList(tgGhosts).forEach(ghostShape -> ghostShape.setVisible(false));
 		ScaleTransition levelCompleteAnimation = new ScaleTransition(Duration.seconds(5), tgMaze);
@@ -385,10 +400,8 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void playLevelStartingAnimation() {
-		// TODO these should become visible after the animation
 		tgPlayer.setVisible(true);
 		Arrays.asList(tgGhosts).forEach(ghostShape -> ghostShape.setVisible(true));
-		tgFood.setVisible(true);
 		ScaleTransition levelStartAnimation = new ScaleTransition(Duration.seconds(5), tgMaze);
 		levelStartAnimation.setFromZ(0);
 		levelStartAnimation.setToZ(1);
@@ -400,6 +413,13 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void initCamera() {
+		camera.setTranslateX(0);
+		camera.setTranslateY(2110);
+		camera.setTranslateZ(-2000);
+		camera.setNearClip(0.1);
+		camera.setFarClip(10000.0);
+		camera.setRotationAxis(Rotate.X_AXIS);
+		camera.setRotate(45);
 	}
 
 	public TimedSequence<?> ghostFlashing(Ghost ghost) {

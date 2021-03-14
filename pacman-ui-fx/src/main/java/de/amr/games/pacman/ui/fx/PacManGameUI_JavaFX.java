@@ -92,6 +92,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 					GlobalSettings.measureTime = !GlobalSettings.measureTime;
 				}
 				break;
+			case X:
+				if (control)
+					GlobalSettings.showCoordinateAxes = !GlobalSettings.showCoordinateAxes;
+				break;
 			default:
 				break;
 			}

@@ -7,4 +7,5 @@ public class GlobalSettings {
 	public static boolean infoViewVisible = true;
 	public static boolean drawWallsAsLines = false;
 	public static boolean use3DScenes = true;
+	public static boolean showCoordinateAxes = false;
 }

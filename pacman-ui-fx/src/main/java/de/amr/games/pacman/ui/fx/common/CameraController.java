@@ -52,7 +52,12 @@ public class CameraController {
 			case DIGIT0:
 				camera.setTranslateX(0);
 				camera.setTranslateY(0);
-				camera.setTranslateZ(0);
+				camera.setTranslateZ(-5000);
+				camera.setRotationAxis(Rotate.X_AXIS);
+				camera.setRotate(0);
+				camera.setRotationAxis(Rotate.Y_AXIS);
+				camera.setRotate(0);
+				camera.setRotationAxis(Rotate.Z_AXIS);
 				camera.setRotate(0);
 				break;
 			case LEFT:
@@ -86,6 +91,14 @@ public class CameraController {
 			case UP:
 				camera.setRotationAxis(Rotate.X_AXIS);
 				camera.setRotate((camera.getRotate() + 1) % 360);
+				break;
+			case LEFT:
+				camera.setRotationAxis(Rotate.Z_AXIS);
+				camera.setRotate((360 + camera.getRotate() - 1) % 360);
+				break;
+			case RIGHT:
+				camera.setRotationAxis(Rotate.Z_AXIS);
+				camera.setRotate((360 + camera.getRotate() + 1) % 360);
 				break;
 			default:
 				break;
