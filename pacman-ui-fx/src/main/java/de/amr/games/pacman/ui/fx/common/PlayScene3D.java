@@ -23,12 +23,15 @@ import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.animation.TimedSequence;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_Constants;
 import javafx.animation.ScaleTransition;
+import javafx.scene.AmbientLight;
 import javafx.scene.Camera;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
+import javafx.scene.PointLight;
 import javafx.scene.SubScene;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -82,6 +85,10 @@ public class PlayScene3D implements GameScene {
 	private final Map<Ghost, TimedSequence<?>> ghostKickingAnimationByGhost = new HashMap<>();
 
 	private final Group sceneRoot = new Group();
+
+	private final PointLight spotLight = new PointLight();
+	private final AmbientLight ambientLight = new AmbientLight();
+
 	private final Group tgMaze = new Group();
 	private final Group tgFood = new Group();
 	private final Group tgPlayer = new Group();
@@ -94,6 +101,12 @@ public class PlayScene3D implements GameScene {
 	private final Font scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), TS);
 
 	private final PhongMaterial wallMaterial = new PhongMaterial();
+	{
+		Image wallImage = new Image(getClass().getResource("/common/stonewall.png").toExternalForm());
+		wallMaterial.setBumpMap(wallImage);
+		wallMaterial.setDiffuseMap(wallImage);
+		wallMaterial.setSpecularColor(Color.GREEN);
+	}
 
 	public PlayScene3D(PacManGameController controller, double height) {
 		this.controller = controller;
@@ -108,7 +121,9 @@ public class PlayScene3D implements GameScene {
 		camera.setRotationAxis(Rotate.X_AXIS);
 		camera.setRotate(45);
 
+		configureLighting();
 		sceneRoot.getTransforms().add(new Scale(scaling, scaling, scaling));
+
 		subScene = new SubScene(sceneRoot, width, height);
 		subScene.setFill(Color.BLACK);
 		subScene.setCamera(camera);
@@ -151,11 +166,11 @@ public class PlayScene3D implements GameScene {
 				wallShape.setTranslateX(tile.x * TS);
 				wallShape.setTranslateY(tile.y * TS);
 				if (controller.isPlaying(GameType.PACMAN)) {
-					wallMaterial.setDiffuseColor(Color.BLUE);
-					wallMaterial.setSpecularColor(Color.LIGHTBLUE);
+//					wallMaterial.setDiffuseColor(Color.BLUE);
+//					wallMaterial.setSpecularColor(Color.LIGHTBLUE);
 				} else {
-					wallMaterial.setDiffuseColor(MsPacMan_Constants.getMazeWallColor(game.level.mazeNumber));
-					wallMaterial.setSpecularColor(MsPacMan_Constants.getMazeWallColor(game.level.mazeNumber));
+//					wallMaterial.setDiffuseColor(MsPacMan_Constants.getMazeWallColor(game.level.mazeNumber));
+//					wallMaterial.setSpecularColor(MsPacMan_Constants.getMazeWallColor(game.level.mazeNumber));
 				}
 				wallShape.setMaterial(wallMaterial);
 				wallShape.setViewOrder(-tile.y * TS);
@@ -173,6 +188,7 @@ public class PlayScene3D implements GameScene {
 			energizer.setUserData(tile);
 			energizer.setTranslateX(tile.x * TS);
 			energizer.setTranslateY(tile.y * TS);
+			energizer.setTranslateZ(-4);
 			energizer.setViewOrder(-tile.y * TS);
 			energizerNodes.add(energizer);
 		});
@@ -185,6 +201,7 @@ public class PlayScene3D implements GameScene {
 			pellet.setUserData(tile);
 			pellet.setTranslateX(tile.x * TS);
 			pellet.setTranslateY(tile.y * TS);
+			pellet.setTranslateZ(-4);
 			pellet.setViewOrder(-tile.y * TS);
 			pelletNodes.add(pellet);
 		});
@@ -202,6 +219,10 @@ public class PlayScene3D implements GameScene {
 
 		sceneRoot.getChildren().clear();
 		sceneRoot.getChildren().addAll(tgMaze, txtScore, txtHiscore);
+		sceneRoot.getChildren().add(ambientLight);
+		sceneRoot.getChildren().add(spotLight);
+
+		// TODO correct? want scene centered over origin
 		sceneRoot.setTranslateX(-28 * 4);
 		sceneRoot.setTranslateY(-36 * 4);
 	}
@@ -249,6 +270,27 @@ public class PlayScene3D implements GameScene {
 		txtHiscore.setRotationAxis(Rotate.X_AXIS);
 		txtHiscore.setRotate(camera.getRotate());
 		txtHiscore.setViewOrder(-1000);
+
+		configureLighting();
+	}
+
+	private void configureLighting() {
+		ambientLight.setTranslateZ(-500);
+		ambientLight.setColor(mazeColor());
+
+		spotLight.translateXProperty().bind(tgPlayer.translateXProperty());
+		spotLight.translateYProperty().bind(tgPlayer.translateYProperty());
+		spotLight.setTranslateZ(-50);
+		spotLight.setRotationAxis(Rotate.X_AXIS);
+		spotLight.setRotate(180);
+		spotLight.setColor(Color.YELLOW);
+	}
+
+	private Color mazeColor() {
+		if (controller.isPlaying(GameType.PACMAN)) {
+			return Color.BLUE;
+		}
+		return MsPacMan_Constants.getMazeWallColor(controller.selectedGame().level.mazeNumber);
 	}
 
 	private void onHuntingStateEntry(PacManGameState state) {
