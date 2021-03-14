@@ -93,6 +93,8 @@ public class PlayScene3D implements GameScene {
 	private final Text txtHiscore = new Text();
 	private final Font scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), TS);
 
+	private final PhongMaterial wallMaterial = new PhongMaterial();
+
 	public PlayScene3D(PacManGameController controller, double height) {
 		this.controller = controller;
 		double width = GameScene.ASPECT_RATIO * height;
@@ -148,15 +150,14 @@ public class PlayScene3D implements GameScene {
 				Box wallShape = new Box(TS - 2, TS - 2, wallHeight);
 				wallShape.setTranslateX(tile.x * TS);
 				wallShape.setTranslateY(tile.y * TS);
-				PhongMaterial material = new PhongMaterial();
 				if (controller.isPlaying(GameType.PACMAN)) {
-					material.setDiffuseColor(Color.BLUE);
-					material.setSpecularColor(Color.LIGHTBLUE);
+					wallMaterial.setDiffuseColor(Color.BLUE);
+					wallMaterial.setSpecularColor(Color.LIGHTBLUE);
 				} else {
-					material.setDiffuseColor(MsPacMan_Constants.getMazeWallColor(game.level.mazeNumber));
-					material.setSpecularColor(MsPacMan_Constants.getMazeWallColor(game.level.mazeNumber));
+					wallMaterial.setDiffuseColor(MsPacMan_Constants.getMazeWallColor(game.level.mazeNumber));
+					wallMaterial.setSpecularColor(MsPacMan_Constants.getMazeWallColor(game.level.mazeNumber));
 				}
-				wallShape.setMaterial(material);
+				wallShape.setMaterial(wallMaterial);
 				wallShape.setViewOrder(-tile.y * TS);
 				wallNodes.put(tile, wallShape);
 			}
