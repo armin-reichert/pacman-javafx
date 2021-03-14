@@ -35,7 +35,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
@@ -105,7 +104,6 @@ public class PlayScene3D implements GameScene {
 		Image wallImage = new Image(getClass().getResource("/common/stonewall.png").toExternalForm());
 		wallMaterial.setBumpMap(wallImage);
 		wallMaterial.setDiffuseMap(wallImage);
-		wallMaterial.setSpecularColor(Color.GREEN);
 	}
 
 	public PlayScene3D(PacManGameController controller, double height) {
@@ -181,28 +179,30 @@ public class PlayScene3D implements GameScene {
 		Color foodColor = controller.isPlaying(GameType.PACMAN) ? Color.rgb(250, 185, 176)
 				: MsPacMan_Constants.getMazeFoodColor(game.level.mazeNumber);
 
+		PhongMaterial energizerMaterial = new PhongMaterial(foodColor);
 		energizerNodes.clear();
 		world.energizerTiles().forEach(tile -> {
 			Sphere energizer = new Sphere(HTS);
-			energizer.setMaterial(new PhongMaterial(foodColor));
+			energizer.setMaterial(energizerMaterial);
 			energizer.setUserData(tile);
 			energizer.setTranslateX(tile.x * TS);
 			energizer.setTranslateY(tile.y * TS);
 			energizer.setTranslateZ(-4);
-			energizer.setViewOrder(-tile.y * TS);
+			energizer.setViewOrder(-tile.y * TS - 0.5);
 			energizerNodes.add(energizer);
 		});
 		tgFood.getChildren().addAll(energizerNodes);
 
+		PhongMaterial foodMaterial = new PhongMaterial(foodColor);
 		pelletNodes.clear();
 		world.tiles().filter(world::isFoodTile).filter(tile -> !world.isEnergizerTile(tile)).forEach(tile -> {
 			Sphere pellet = new Sphere(1.5);
-			pellet.setMaterial(new PhongMaterial(foodColor));
+			pellet.setMaterial(foodMaterial);
 			pellet.setUserData(tile);
 			pellet.setTranslateX(tile.x * TS);
 			pellet.setTranslateY(tile.y * TS);
 			pellet.setTranslateZ(-4);
-			pellet.setViewOrder(-tile.y * TS);
+			pellet.setViewOrder(-tile.y * TS - 0.5);
 			pelletNodes.add(pellet);
 		});
 		tgFood.getChildren().addAll(pelletNodes);
@@ -221,10 +221,6 @@ public class PlayScene3D implements GameScene {
 		sceneRoot.getChildren().addAll(tgMaze, txtScore, txtHiscore);
 		sceneRoot.getChildren().add(ambientLight);
 		sceneRoot.getChildren().add(spotLight);
-
-		// TODO correct? want scene centered over origin
-		sceneRoot.setTranslateX(-28 * 4);
-		sceneRoot.setTranslateY(-36 * 4);
 	}
 
 	@Override
@@ -309,7 +305,7 @@ public class PlayScene3D implements GameScene {
 		tgPlayer.setVisible(player.visible && !insidePortal);
 		tgPlayer.setTranslateX(player.position.x);
 		tgPlayer.setTranslateY(player.position.y);
-		tgPlayer.setViewOrder(-player.position.y);
+		tgPlayer.setViewOrder(-player.position.y - 0.2);
 	}
 
 	private Node createGhostBountyText(Ghost ghost) {
@@ -360,7 +356,7 @@ public class PlayScene3D implements GameScene {
 		tgGhosts[id].setVisible(ghost.visible);
 		tgGhosts[id].setTranslateX(ghost.position.x);
 		tgGhosts[id].setTranslateY(ghost.position.y);
-		tgGhosts[id].setViewOrder(-ghost.position.y);
+		tgGhosts[id].setViewOrder(-ghost.position.y - 0.2);
 		tgGhosts[id].getChildren().clear();
 		tgGhosts[id].getChildren().add(shape);
 	}
@@ -439,10 +435,16 @@ public class PlayScene3D implements GameScene {
 
 	public TimedSequence<?> ghostReturningHome(Ghost ghost, Direction dir) {
 		if (!ghostReturningHomeAnimationByGhost.containsKey(ghost)) {
-			Cylinder s = new Cylinder(2, TS);
-			s.setMaterial(new PhongMaterial(ghostColor(ghost.id)));
-			s.setUserData(ghost);
-			ghostReturningHomeAnimationByGhost.put(ghost, TimedSequence.of(s));
+			PhongMaterial material = new PhongMaterial(ghostColor(ghost.id));
+			Sphere[] parts = new Sphere[4];
+			for (int i = 0; i < parts.length; ++i) {
+				parts[i] = new Sphere(1);
+				parts[i].setMaterial(material);
+				parts[i].setTranslateY(i * 3);
+			}
+			Group g = new Group(parts);
+			g.setUserData(ghost);
+			ghostReturningHomeAnimationByGhost.put(ghost, TimedSequence.of(g));
 		}
 		return ghostReturningHomeAnimationByGhost.get(ghost);
 	}
