@@ -33,6 +33,7 @@ import javafx.scene.SubScene;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -114,6 +115,8 @@ public class PlayScene3D implements GameScene {
 	private final Map<V2i, Node> wallNodes = new HashMap<>();
 	private final List<Node> energizerNodes = new ArrayList<>();
 	private final List<Node> pelletNodes = new ArrayList<>();
+
+	private final GridPane scoreLayout = new GridPane();
 	private final Text txtScore = new Text();
 	private final Text txtHiscore = new Text();
 	private final Font scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), TS);
@@ -233,12 +236,36 @@ public class PlayScene3D implements GameScene {
 			tgGhosts[id] = new Group();
 		}
 
+		Text txtScoreTitle = new Text("SCORE");
+		txtScoreTitle.setFill(Color.WHITE);
+		txtScoreTitle.setFont(scoreFont);
+
+		txtScore.setFill(Color.YELLOW);
+		txtScore.setFont(scoreFont);
+
+		Text txtHiscoreTitle = new Text("HI SCORE");
+		txtHiscoreTitle.setFill(Color.WHITE);
+		txtHiscoreTitle.setFont(scoreFont);
+
+		txtHiscore.setFill(Color.YELLOW);
+		txtHiscore.setFont(scoreFont);
+
+		scoreLayout.setHgap(4 * TS);
+		scoreLayout.setTranslateY(-2 * TS);
+		scoreLayout.setTranslateZ(-2 * TS);
+		scoreLayout.getChildren().clear();
+		scoreLayout.add(txtScoreTitle, 0, 0);
+		scoreLayout.add(txtScore, 0, 1);
+		scoreLayout.add(txtHiscoreTitle, 1, 0);
+		scoreLayout.add(txtHiscore, 1, 1);
+
 		tgMaze.getChildren().clear();
 		tgMaze.getChildren().addAll(wallNodes.values());
 		tgMaze.getChildren().addAll(energizerNodes);
 		tgMaze.getChildren().addAll(pelletNodes);
 		tgMaze.getChildren().addAll(tgGhosts);
-		tgMaze.getChildren().addAll(tgPlayer, txtScore, txtHiscore);
+		tgMaze.getChildren().addAll(tgPlayer);
+		tgMaze.getChildren().add(scoreLayout);
 		tgMaze.setTranslateX(-14 * TS);
 		tgMaze.setTranslateY(-18 * TS);
 
@@ -275,25 +302,10 @@ public class PlayScene3D implements GameScene {
 			updateGhostShape(ghost.id);
 		}
 
-		txtScore.setFill(Color.YELLOW);
-		txtScore.setFont(scoreFont);
-		txtScore.setText(String.format("SCORE\n%08dL%03d", game.score, game.levelNumber));
-		txtScore.setTranslateX(TS);
-		txtScore.setTranslateY(-2 * TS);
-		txtScore.setTranslateZ(-2 * TS);
-		txtScore.setRotationAxis(Rotate.X_AXIS);
-		txtScore.setRotate(camera.getRotate());
-		txtScore.setViewOrder(-1000);
-
-		txtHiscore.setFill(Color.YELLOW);
-		txtHiscore.setFont(scoreFont);
-		txtHiscore.setText(String.format("HI SCORE\n%08dL%03d", game.highscorePoints, game.highscoreLevel));
-		txtHiscore.setTranslateX(14 * TS);
-		txtHiscore.setTranslateY(-2 * TS);
-		txtHiscore.setTranslateZ(-2 * TS);
-		txtHiscore.setRotationAxis(Rotate.X_AXIS);
-		txtHiscore.setRotate(camera.getRotate());
-		txtHiscore.setViewOrder(-1000);
+		txtScore.setText(String.format("%07d L%d", game.score, game.levelNumber));
+		txtHiscore.setText(String.format("%07d L%d", game.highscorePoints, game.highscoreLevel));
+		scoreLayout.setRotationAxis(Rotate.X_AXIS);
+		scoreLayout.setRotate(camera.getRotate());
 
 		configureLighting();
 
