@@ -55,42 +55,20 @@ public class PlayScene3D implements GameScene {
 
 	private static final int WALL_HEIGHT = TS - 2;
 
-	private static Color ghostColor(int i) {
-		return i == 0 ? Color.RED : i == 1 ? Color.PINK : i == 2 ? Color.CYAN : Color.ORANGE;
+	private static Color ghostColor(int id) {
+		return id == 0 ? Color.RED : id == 1 ? Color.PINK : id == 2 ? Color.CYAN : Color.ORANGE;
 	}
-
-	private double scaling;
 
 	private final PacManGameController controller;
 	private final SubScene subScene;
 	private final Group sceneRoot = new Group();
-
 	private final PerspectiveCamera camera = new PerspectiveCamera(true);
-
-	private final Group tgAxes = createAxes();
-
-	private final TimedSequence<Node> missingAnimation;
-	{
-		Text text = new Text("Animation?");
-		text.setFill(Color.RED);
-		text.setFont(Font.font("Sans", FontWeight.BOLD, 12));
-		text.setTranslateZ(-40);
-		text.setRotationAxis(Rotate.X_AXIS);
-		text.setRotate(90);
-		missingAnimation = TimedSequence.of(text);
-	}
-
-	private final TimedSequence<Boolean> energizerBlinking = TimedSequence.pulse().frameDuration(15);
-	private TimedSequence<?> playerMunchingAnimation;
-	private TimedSequence<?> playerDyingAnimation = missingAnimation;
-	private final Map<Ghost, TimedSequence<?>> ghostReturningHomeAnimationByGhost = new HashMap<>();
-	private final Map<Ghost, TimedSequence<?>> ghostFlashingAnimationByGhost = new HashMap<>();
-	private final Map<Ghost, TimedSequence<?>> ghostFrightenedAnimationByGhost = new HashMap<>();
-	private final Map<Ghost, TimedSequence<?>> ghostKickingAnimationByGhost = new HashMap<>();
+	private double scaling;
 
 	private final PointLight spotLight = new PointLight();
 	private final AmbientLight ambientLight = new AmbientLight();
 
+	private final Group tgAxes = createAxes();
 	private final Group tgMaze = new Group();
 	private final Group tgPlayer = new Group();
 	private final Group[] tgGhosts = new Group[4];
@@ -102,13 +80,16 @@ public class PlayScene3D implements GameScene {
 	private final Text txtScore = new Text();
 	private final Text txtHiscore = new Text();
 	private final Font scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), TS);
+	private final PhongMaterial wallMaterial = createWallMaterial();
 
-	private final PhongMaterial wallMaterial = new PhongMaterial();
-	{
-		Image wallImage = new Image(getClass().getResource("/common/stonewall.png").toExternalForm());
-		wallMaterial.setBumpMap(wallImage);
-		wallMaterial.setDiffuseMap(wallImage);
-	}
+	private final TimedSequence<Node> missingAnimation = createDefaultAnimation();
+	private final TimedSequence<Boolean> energizerBlinking = TimedSequence.pulse().frameDuration(15);
+	private TimedSequence<?> playerMunchingAnimation;
+	private TimedSequence<?> playerDyingAnimation = missingAnimation;
+	private final Map<Ghost, TimedSequence<?>> ghostReturningHomeAnimationByGhost = new HashMap<>();
+	private final Map<Ghost, TimedSequence<?>> ghostFlashingAnimationByGhost = new HashMap<>();
+	private final Map<Ghost, TimedSequence<?>> ghostFrightenedAnimationByGhost = new HashMap<>();
+	private final Map<Ghost, TimedSequence<?>> ghostKickingAnimationByGhost = new HashMap<>();
 
 	public PlayScene3D(PacManGameController controller, double height) {
 		this.controller = controller;
@@ -161,30 +142,30 @@ public class PlayScene3D implements GameScene {
 	public void start() {
 		GameModel game = controller.selectedGame();
 		PacManGameWorld world = game.level.world;
-		initScene(game, world);
-		addListeners();
+		buildScene(game, world);
+		addStateListeners();
 	}
 
 	@Override
 	public void end() {
-		removeListeners();
+		removeStateListeners();
 	}
 
-	private void addListeners() {
+	private void addStateListeners() {
 		controller.addStateEntryListener(PacManGameState.HUNTING, this::onHuntingStateEntry);
 		controller.addStateExitListener(PacManGameState.HUNTING, this::onHuntingStateExit);
 		controller.addStateEntryListener(PacManGameState.LEVEL_COMPLETE, this::playLevelCompleteAnimation);
 		controller.addStateEntryListener(PacManGameState.LEVEL_STARTING, this::playLevelStartingAnimation);
 	}
 
-	private void removeListeners() {
+	private void removeStateListeners() {
 		controller.removeStateEntryListener(this::onHuntingStateEntry);
 		controller.removeStateExitListener(this::onHuntingStateExit);
 		controller.removeStateEntryListener(this::playLevelCompleteAnimation);
 		controller.removeStateEntryListener(this::playLevelStartingAnimation);
 	}
 
-	public void initScene(GameModel game, PacManGameWorld world) {
+	public void buildScene(GameModel game, PacManGameWorld world) {
 
 		wallNodes.clear();
 		world.tiles().forEach(tile -> {
@@ -287,6 +268,14 @@ public class PlayScene3D implements GameScene {
 		spotLight.setRotationAxis(Rotate.X_AXIS);
 		spotLight.setRotate(180);
 		spotLight.setColor(Color.YELLOW);
+	}
+
+	private PhongMaterial createWallMaterial() {
+		PhongMaterial m = new PhongMaterial();
+		Image wallImage = new Image(getClass().getResource("/common/stonewall.png").toExternalForm());
+		m.setBumpMap(wallImage);
+		m.setDiffuseMap(wallImage);
+		return m;
 	}
 
 	private Group createAxes() {
@@ -439,6 +428,16 @@ public class PlayScene3D implements GameScene {
 		levelStartAnimation.setToZ(1);
 		controller.state.timer.resetSeconds(levelStartAnimation.getDuration().toSeconds());
 		levelStartAnimation.play();
+	}
+
+	private TimedSequence<Node> createDefaultAnimation() {
+		Text text = new Text("Animation?");
+		text.setFill(Color.RED);
+		text.setFont(Font.font("Sans", FontWeight.BOLD, 12));
+		text.setTranslateZ(-40);
+		text.setRotationAxis(Rotate.X_AXIS);
+		text.setRotate(90);
+		return TimedSequence.of(text);
 	}
 
 	public TimedSequence<?> ghostFlashing(Ghost ghost) {
