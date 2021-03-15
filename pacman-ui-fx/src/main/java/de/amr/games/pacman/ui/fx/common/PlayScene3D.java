@@ -163,9 +163,7 @@ public class PlayScene3D implements GameScene {
 		wallNodes = world.tiles().filter(world::isWall)
 				.collect(Collectors.toMap(Function.identity(), this::createWallShape));
 
-		Color foodColor = controller.isPlaying(GameType.PACMAN) ? Color.rgb(250, 185, 176)
-				: MsPacMan_Constants.getFoodColor(controller.selectedGame().level.mazeNumber);
-		PhongMaterial foodMaterial = new PhongMaterial(foodColor);
+		PhongMaterial foodMaterial = new PhongMaterial(foodColor());
 
 		energizerNodes = world.energizerTiles().map(tile -> createEnergizerShape(tile, foodMaterial))
 				.collect(Collectors.toList());
@@ -366,10 +364,13 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private Color mazeColor() {
-		if (controller.isPlaying(GameType.PACMAN)) {
-			return Color.BLUE;
-		}
-		return MsPacMan_Constants.getMazeWallColor(controller.selectedGame().level.mazeNumber);
+		return controller.isPlaying(GameType.PACMAN) ? Color.BLUE
+				: MsPacMan_Constants.getMazeWallColor(controller.selectedGame().level.mazeNumber);
+	}
+
+	private Color foodColor() {
+		return controller.isPlaying(GameType.PACMAN) ? Color.rgb(250, 185, 176)
+				: MsPacMan_Constants.getFoodColor(controller.selectedGame().level.mazeNumber);
 	}
 
 	private void onHuntingStateEntry(PacManGameState state) {
