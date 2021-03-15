@@ -43,7 +43,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Scale;
 import javafx.util.Duration;
 
 /**
@@ -63,7 +62,6 @@ public class PlayScene3D implements GameScene {
 	private final SubScene subScene;
 	private final Group sceneRoot = new Group();
 	private final PerspectiveCamera camera = new PerspectiveCamera(true);
-	private double scaling;
 
 	private final PointLight spotLight = new PointLight();
 	private final AmbientLight ambientLight = new AmbientLight();
@@ -94,8 +92,6 @@ public class PlayScene3D implements GameScene {
 	public PlayScene3D(PacManGameController controller, double height) {
 		this.controller = controller;
 		double width = GameScene.ASPECT_RATIO * height;
-		scaling = width / GameScene.WIDTH_UNSCALED;
-		sceneRoot.getTransforms().add(new Scale(scaling, scaling, scaling));
 		subScene = new SubScene(sceneRoot, width, height);
 		subScene.setFill(Color.BLACK);
 		subScene.setCamera(camera);
@@ -103,9 +99,6 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void resize(double width, double height) {
-		scaling = width / GameScene.WIDTH_UNSCALED;
-		sceneRoot.getTransforms().clear();
-		sceneRoot.getTransforms().add(new Scale(scaling, scaling, scaling));
 		subScene.setWidth(width);
 		subScene.setHeight(height);
 	}
@@ -130,8 +123,8 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void initCamera() {
 		camera.setTranslateX(0);
-		camera.setTranslateY(2110);
-		camera.setTranslateZ(-2000);
+		camera.setTranslateY(300);
+		camera.setTranslateZ(-300);
 		camera.setNearClip(0.1);
 		camera.setFarClip(10000.0);
 		camera.setRotationAxis(Rotate.X_AXIS);
