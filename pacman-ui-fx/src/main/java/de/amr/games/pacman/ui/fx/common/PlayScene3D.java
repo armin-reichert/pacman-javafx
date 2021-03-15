@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.OptionalDouble;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
@@ -71,10 +73,10 @@ public class PlayScene3D implements GameScene {
 	private final Group tgAxes = createAxes();
 	private final Group tgMaze = new Group();
 	private final Group tgPlayer = new Group();
-	private final Group[] tgGhosts = new Group[4];
-	private final Map<V2i, Node> wallNodes = new HashMap<>();
-	private final List<Node> energizerNodes = new ArrayList<>();
-	private final List<Node> pelletNodes = new ArrayList<>();
+	private List<Group> tgGhosts = new ArrayList<>();
+	private Map<V2i, Node> wallNodes = new HashMap<>();
+	private List<Node> energizerNodes = new ArrayList<>();
+	private List<Node> pelletNodes = new ArrayList<>();
 
 	private final GridPane scoreLayout = new GridPane();
 	private final Text txtScore = new Text();
@@ -140,9 +142,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void start() {
-		GameModel game = controller.selectedGame();
-		PacManGameWorld world = game.level.world;
-		buildScene(game, world);
+		buildScene();
 		addStateListeners();
 	}
 
@@ -165,58 +165,24 @@ public class PlayScene3D implements GameScene {
 		controller.removeStateEntryListener(this::playLevelStartingAnimation);
 	}
 
-	public void buildScene(GameModel game, PacManGameWorld world) {
+	public void buildScene() {
+		GameModel game = controller.selectedGame();
+		PacManGameWorld world = game.level.world;
 
-		wallNodes.clear();
-		world.tiles().forEach(tile -> {
-			if (world.isWall(tile)) {
-				Box wallShape = new Box(TS - 1, TS - 1, WALL_HEIGHT);
-				wallShape.setTranslateX(tile.x * TS);
-				wallShape.setTranslateY(tile.y * TS);
-				if (controller.isPlaying(GameType.PACMAN)) {
-//					wallMaterial.setDiffuseColor(Color.BLUE);
-//					wallMaterial.setSpecularColor(Color.LIGHTBLUE);
-				} else {
-//					wallMaterial.setDiffuseColor(MsPacMan_Constants.getMazeWallColor(game.level.mazeNumber));
-//					wallMaterial.setSpecularColor(MsPacMan_Constants.getMazeWallColor(game.level.mazeNumber));
-				}
-				wallShape.setMaterial(wallMaterial);
-				wallShape.drawModeProperty().bind(Env.$drawMode);
-				wallShape.setViewOrder(-tile.y * TS);
-				wallNodes.put(tile, wallShape);
-			}
-		});
+		wallNodes = world.tiles().filter(world::isWall)
+				.collect(Collectors.toMap(Function.identity(), this::createWallShape));
 
 		Color foodColor = controller.isPlaying(GameType.PACMAN) ? Color.rgb(250, 185, 176)
-				: MsPacMan_Constants.getMazeFoodColor(game.level.mazeNumber);
-
-		PhongMaterial energizerMaterial = new PhongMaterial(foodColor);
-		energizerNodes.clear();
-		world.energizerTiles().forEach(tile -> {
-			Sphere energizer = new Sphere(HTS);
-			energizer.setMaterial(energizerMaterial);
-			energizer.setUserData(tile);
-			energizer.setTranslateX(tile.x * TS);
-			energizer.setTranslateY(tile.y * TS);
-			energizer.setViewOrder(-tile.y * TS - 0.5);
-			energizerNodes.add(energizer);
-		});
-
+				: MsPacMan_Constants.getFoodColor(controller.selectedGame().level.mazeNumber);
 		PhongMaterial foodMaterial = new PhongMaterial(foodColor);
-		pelletNodes.clear();
-		world.tiles().filter(world::isFoodTile).filter(tile -> !world.isEnergizerTile(tile)).forEach(tile -> {
-			Sphere pellet = new Sphere(1.5);
-			pellet.setMaterial(foodMaterial);
-			pellet.setUserData(tile);
-			pellet.setTranslateX(tile.x * TS);
-			pellet.setTranslateY(tile.y * TS);
-			pellet.setViewOrder(-tile.y * TS - 0.5);
-			pelletNodes.add(pellet);
-		});
 
-		for (int id = 0; id < 4; ++id) {
-			tgGhosts[id] = new Group();
-		}
+		energizerNodes = world.energizerTiles().map(tile -> createEnergizerShape(tile, foodMaterial))
+				.collect(Collectors.toList());
+
+		pelletNodes = world.tiles().filter(world::isFoodTile).filter(tile -> !world.isEnergizerTile(tile))
+				.map(tile -> createPelletShape(tile, foodMaterial)).collect(Collectors.toList());
+
+		tgGhosts.addAll(Arrays.asList(new Group(), new Group(), new Group(), new Group()));
 
 		Text txtScoreTitle = new Text("SCORE");
 		txtScoreTitle.setFill(Color.WHITE);
@@ -270,6 +236,36 @@ public class PlayScene3D implements GameScene {
 		spotLight.setColor(Color.YELLOW);
 	}
 
+	private Node createWallShape(V2i tile) {
+		Box wallShape = new Box(TS - 1, TS - 1, WALL_HEIGHT);
+		wallShape.setTranslateX(tile.x * TS);
+		wallShape.setTranslateY(tile.y * TS);
+		wallShape.setMaterial(wallMaterial);
+		wallShape.drawModeProperty().bind(Env.$drawMode);
+		wallShape.setViewOrder(-tile.y * TS);
+		return wallShape;
+	}
+
+	private Node createEnergizerShape(V2i tile, PhongMaterial material) {
+		Sphere energizer = new Sphere(HTS);
+		energizer.setMaterial(material);
+		energizer.setUserData(tile);
+		energizer.setTranslateX(tile.x * TS);
+		energizer.setTranslateY(tile.y * TS);
+		energizer.setViewOrder(-tile.y * TS - 0.5);
+		return energizer;
+	}
+
+	private Node createPelletShape(V2i tile, PhongMaterial material) {
+		Sphere pellet = new Sphere(1.5);
+		pellet.setMaterial(material);
+		pellet.setUserData(tile);
+		pellet.setTranslateX(tile.x * TS);
+		pellet.setTranslateY(tile.y * TS);
+		pellet.setViewOrder(-tile.y * TS - 0.5);
+		return pellet;
+	}
+
 	private PhongMaterial createWallMaterial() {
 		PhongMaterial m = new PhongMaterial();
 		Image wallImage = new Image(getClass().getResource("/common/stonewall.png").toExternalForm());
@@ -315,7 +311,7 @@ public class PlayScene3D implements GameScene {
 		updatePlayerShape(game.player);
 
 		for (Ghost ghost : game.ghosts) {
-			updateGhostShape(ghost.id);
+			updateGhostShape(ghost);
 		}
 
 		updateScores(game);
@@ -339,8 +335,7 @@ public class PlayScene3D implements GameScene {
 		tgPlayer.setViewOrder(-player.position.y - 0.2);
 	}
 
-	private void updateGhostShape(int id) {
-		Ghost ghost = controller.selectedGame().ghosts[id];
+	private void updateGhostShape(Ghost ghost) {
 		Node shape;
 
 		if (ghost.bounty > 0) {
@@ -370,12 +365,12 @@ public class PlayScene3D implements GameScene {
 			shape = (Node) ghostKicking(ghost, ghost.wishDir).animate(); // Looks towards wish dir!
 		}
 
-		tgGhosts[id].setVisible(ghost.visible);
-		tgGhosts[id].setTranslateX(ghost.position.x);
-		tgGhosts[id].setTranslateY(ghost.position.y);
-		tgGhosts[id].setViewOrder(-ghost.position.y - 0.2);
-		tgGhosts[id].getChildren().clear();
-		tgGhosts[id].getChildren().add(shape);
+		tgGhosts.get(ghost.id).setVisible(ghost.visible);
+		tgGhosts.get(ghost.id).setTranslateX(ghost.position.x);
+		tgGhosts.get(ghost.id).setTranslateY(ghost.position.y);
+		tgGhosts.get(ghost.id).setViewOrder(-ghost.position.y - 0.2);
+		tgGhosts.get(ghost.id).getChildren().clear();
+		tgGhosts.get(ghost.id).getChildren().add(shape);
 	}
 
 	private Color mazeColor() {
@@ -411,7 +406,7 @@ public class PlayScene3D implements GameScene {
 
 	private void playLevelCompleteAnimation(PacManGameState state) {
 		tgPlayer.setVisible(false);
-		Arrays.asList(tgGhosts).forEach(ghostShape -> ghostShape.setVisible(false));
+		tgGhosts.forEach(ghostShape -> ghostShape.setVisible(false));
 		ScaleTransition levelCompleteAnimation = new ScaleTransition(Duration.seconds(5), tgMaze);
 		levelCompleteAnimation.setFromZ(1);
 		levelCompleteAnimation.setToZ(0);
@@ -422,7 +417,7 @@ public class PlayScene3D implements GameScene {
 
 	private void playLevelStartingAnimation(PacManGameState state) {
 		tgPlayer.setVisible(true);
-		Arrays.asList(tgGhosts).forEach(ghostShape -> ghostShape.setVisible(true));
+		tgGhosts.forEach(ghostShape -> ghostShape.setVisible(true));
 		ScaleTransition levelStartAnimation = new ScaleTransition(Duration.seconds(5), tgMaze);
 		levelStartAnimation.setFromZ(0);
 		levelStartAnimation.setToZ(1);

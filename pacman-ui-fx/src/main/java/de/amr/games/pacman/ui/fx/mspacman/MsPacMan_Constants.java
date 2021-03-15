@@ -4,7 +4,7 @@ import javafx.scene.paint.Color;
 
 public class MsPacMan_Constants {
 
-	public static Color getMazeFoodColor(int mazeNumber) {
+	public static Color getFoodColor(int mazeNumber) {
 		switch (mazeNumber) {
 		case 1:
 			return Color.rgb(222, 222, 255);
