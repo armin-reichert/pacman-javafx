@@ -53,6 +53,8 @@ import javafx.util.Duration;
 public class PlayScene3D implements GameScene {
 
 	private static final int WALL_HEIGHT = TS - 2;
+	private static final Font scoreFont = Font.loadFont(PlayScene3D.class.getResource("/emulogic.ttf").toExternalForm(),
+			TS);
 
 	private static Color ghostColor(int id) {
 		return id == 0 ? Color.RED : id == 1 ? Color.PINK : id == 2 ? Color.CYAN : Color.ORANGE;
@@ -66,7 +68,7 @@ public class PlayScene3D implements GameScene {
 	private final PointLight spotLight = new PointLight();
 	private final AmbientLight ambientLight = new AmbientLight();
 
-	private final Group tgAxes = createAxes();
+	private Group tgAxes;
 	private final Group tgMaze = new Group();
 	private final Group tgPlayer = new Group();
 	private Map<Ghost, Group> tgGhostNodes;
@@ -74,10 +76,10 @@ public class PlayScene3D implements GameScene {
 	private List<Node> energizerNodes;
 	private List<Node> pelletNodes;
 
-	private final GridPane scoreLayout = new GridPane();
-	private final Text txtScore = new Text();
-	private final Text txtHiscore = new Text();
-	private final Font scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), TS);
+	private Group tgScore;
+	private Text txtScore;
+	private Text txtHiscore;
+
 	private final PhongMaterial wallMaterial = createWallMaterial();
 
 	private final TimedSequence<Node> missingAnimation = createDefaultAnimation();
@@ -118,8 +120,6 @@ public class PlayScene3D implements GameScene {
 		return camera;
 	}
 
-	// Animations
-
 	@Override
 	public void initCamera() {
 		camera.setNearClip(0.1);
@@ -157,8 +157,11 @@ public class PlayScene3D implements GameScene {
 	}
 
 	public void buildScene() {
-		GameModel game = controller.selectedGame();
-		PacManGameWorld world = game.level.world;
+		final GameModel game = controller.selectedGame();
+		final PacManGameWorld world = game.level.world;
+
+		createAxes();
+		createScore();
 
 		wallNodes = world.tiles().filter(world::isWall)
 				.collect(Collectors.toMap(Function.identity(), this::createWallShape));
@@ -173,36 +176,13 @@ public class PlayScene3D implements GameScene {
 
 		tgGhostNodes = game.ghosts().collect(Collectors.toMap(Function.identity(), ghost -> new Group()));
 
-		Text txtScoreTitle = new Text("SCORE");
-		txtScoreTitle.setFill(Color.WHITE);
-		txtScoreTitle.setFont(scoreFont);
-
-		txtScore.setFill(Color.YELLOW);
-		txtScore.setFont(scoreFont);
-
-		Text txtHiscoreTitle = new Text("HI SCORE");
-		txtHiscoreTitle.setFill(Color.WHITE);
-		txtHiscoreTitle.setFont(scoreFont);
-
-		txtHiscore.setFill(Color.YELLOW);
-		txtHiscore.setFont(scoreFont);
-
-		scoreLayout.setHgap(4 * TS);
-		scoreLayout.setTranslateY(-2 * TS);
-		scoreLayout.setTranslateZ(-2 * TS);
-		scoreLayout.getChildren().clear();
-		scoreLayout.add(txtScoreTitle, 0, 0);
-		scoreLayout.add(txtScore, 0, 1);
-		scoreLayout.add(txtHiscoreTitle, 1, 0);
-		scoreLayout.add(txtHiscore, 1, 1);
-
 		tgMaze.getChildren().clear();
 		tgMaze.getChildren().addAll(wallNodes.values());
 		tgMaze.getChildren().addAll(energizerNodes);
 		tgMaze.getChildren().addAll(pelletNodes);
 		tgMaze.getChildren().addAll(tgGhostNodes.values());
 		tgMaze.getChildren().addAll(tgPlayer);
-		tgMaze.getChildren().add(scoreLayout);
+		tgMaze.getChildren().add(tgScore);
 		tgMaze.setTranslateX(-14 * TS);
 		tgMaze.setTranslateY(-18 * TS);
 
@@ -213,16 +193,34 @@ public class PlayScene3D implements GameScene {
 		initCamera();
 	}
 
-	private void initLight() {
-		ambientLight.setTranslateZ(-500);
-		ambientLight.setColor(mazeColor());
+	public void createScore() {
+		Text txtScoreTitle = new Text("SCORE");
+		txtScoreTitle.setFill(Color.WHITE);
+		txtScoreTitle.setFont(scoreFont);
 
-		spotLight.translateXProperty().bind(tgPlayer.translateXProperty());
-		spotLight.translateYProperty().bind(tgPlayer.translateYProperty());
-		spotLight.setTranslateZ(-2 * TS);
-		spotLight.setRotationAxis(Rotate.X_AXIS);
-		spotLight.setRotate(180);
-		spotLight.setColor(Color.YELLOW);
+		txtScore = new Text();
+		txtScore.setFill(Color.YELLOW);
+		txtScore.setFont(scoreFont);
+
+		Text txtHiscoreTitle = new Text("HI SCORE");
+		txtHiscoreTitle.setFill(Color.WHITE);
+		txtHiscoreTitle.setFont(scoreFont);
+
+		txtHiscore = new Text();
+		txtHiscore.setFill(Color.YELLOW);
+		txtHiscore.setFont(scoreFont);
+
+		GridPane grid = new GridPane();
+		grid.setHgap(4 * TS);
+		grid.setTranslateY(-2 * TS);
+		grid.setTranslateZ(-2 * TS);
+		grid.getChildren().clear();
+		grid.add(txtScoreTitle, 0, 0);
+		grid.add(txtScore, 0, 1);
+		grid.add(txtHiscoreTitle, 1, 0);
+		grid.add(txtHiscore, 1, 1);
+
+		tgScore = new Group(grid);
 	}
 
 	private Node createWallShape(V2i tile) {
@@ -263,7 +261,7 @@ public class PlayScene3D implements GameScene {
 		return m;
 	}
 
-	private Group createAxes() {
+	private void createAxes() {
 		Cylinder xAxis = createAxis("X", Color.RED, 300);
 		Cylinder yAxis = createAxis("Y", Color.GREEN, 300);
 		Cylinder zAxis = createAxis("Z", Color.BLUE, 300);
@@ -271,15 +269,26 @@ public class PlayScene3D implements GameScene {
 		xAxis.setRotate(90);
 		zAxis.setRotationAxis(Rotate.X_AXIS);
 		zAxis.setRotate(-90);
-		Group g = new Group(xAxis, yAxis, zAxis);
-		g.visibleProperty().bind(Env.$showAxes);
-		return g;
+		tgAxes = new Group(xAxis, yAxis, zAxis);
+		tgAxes.visibleProperty().bind(Env.$showAxes);
 	}
 
 	private Cylinder createAxis(String label, Color color, double length) {
 		Cylinder axis = new Cylinder(0.5, length);
 		axis.setMaterial(new PhongMaterial(color));
 		return axis;
+	}
+
+	private void initLight() {
+		ambientLight.setTranslateZ(-500);
+		ambientLight.setColor(mazeColor());
+
+		spotLight.translateXProperty().bind(tgPlayer.translateXProperty());
+		spotLight.translateYProperty().bind(tgPlayer.translateYProperty());
+		spotLight.setTranslateZ(-2 * TS);
+		spotLight.setRotationAxis(Rotate.X_AXIS);
+		spotLight.setRotate(180);
+		spotLight.setColor(Color.YELLOW);
 	}
 
 	@Override
@@ -309,8 +318,8 @@ public class PlayScene3D implements GameScene {
 	public void updateScores(GameModel game) {
 		txtScore.setText(String.format("%07d L%d", game.score, game.levelNumber));
 		txtHiscore.setText(String.format("%07d L%d", game.highscorePoints, game.highscoreLevel));
-		scoreLayout.setRotationAxis(Rotate.X_AXIS);
-		scoreLayout.setRotate(camera.getRotate());
+		tgScore.setRotationAxis(Rotate.X_AXIS);
+		tgScore.setRotate(camera.getRotate());
 	}
 
 	private void updatePlayerShape(Pac player) {
