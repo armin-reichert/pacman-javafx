@@ -3,8 +3,6 @@ package de.amr.games.pacman.ui.fx.common;
 import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,10 +71,10 @@ public class PlayScene3D implements GameScene {
 	private final Group tgAxes = createAxes();
 	private final Group tgMaze = new Group();
 	private final Group tgPlayer = new Group();
-	private List<Group> tgGhosts = new ArrayList<>();
-	private Map<V2i, Node> wallNodes = new HashMap<>();
-	private List<Node> energizerNodes = new ArrayList<>();
-	private List<Node> pelletNodes = new ArrayList<>();
+	private Map<Ghost, Group> tgGhostNodes;
+	private Map<V2i, Node> wallNodes;
+	private List<Node> energizerNodes;
+	private List<Node> pelletNodes;
 
 	private final GridPane scoreLayout = new GridPane();
 	private final Text txtScore = new Text();
@@ -182,7 +180,7 @@ public class PlayScene3D implements GameScene {
 		pelletNodes = world.tiles().filter(world::isFoodTile).filter(tile -> !world.isEnergizerTile(tile))
 				.map(tile -> createPelletShape(tile, foodMaterial)).collect(Collectors.toList());
 
-		tgGhosts.addAll(Arrays.asList(new Group(), new Group(), new Group(), new Group()));
+		tgGhostNodes = game.ghosts().collect(Collectors.toMap(Function.identity(), ghost -> new Group()));
 
 		Text txtScoreTitle = new Text("SCORE");
 		txtScoreTitle.setFill(Color.WHITE);
@@ -211,7 +209,7 @@ public class PlayScene3D implements GameScene {
 		tgMaze.getChildren().addAll(wallNodes.values());
 		tgMaze.getChildren().addAll(energizerNodes);
 		tgMaze.getChildren().addAll(pelletNodes);
-		tgMaze.getChildren().addAll(tgGhosts);
+		tgMaze.getChildren().addAll(tgGhostNodes.values());
 		tgMaze.getChildren().addAll(tgPlayer);
 		tgMaze.getChildren().add(scoreLayout);
 		tgMaze.setTranslateX(-14 * TS);
@@ -365,12 +363,13 @@ public class PlayScene3D implements GameScene {
 			shape = (Node) ghostKicking(ghost, ghost.wishDir).animate(); // Looks towards wish dir!
 		}
 
-		tgGhosts.get(ghost.id).setVisible(ghost.visible);
-		tgGhosts.get(ghost.id).setTranslateX(ghost.position.x);
-		tgGhosts.get(ghost.id).setTranslateY(ghost.position.y);
-		tgGhosts.get(ghost.id).setViewOrder(-ghost.position.y - 0.2);
-		tgGhosts.get(ghost.id).getChildren().clear();
-		tgGhosts.get(ghost.id).getChildren().add(shape);
+		Group ghostNode = tgGhostNodes.get(ghost);
+		ghostNode.setVisible(ghost.visible);
+		ghostNode.setTranslateX(ghost.position.x);
+		ghostNode.setTranslateY(ghost.position.y);
+		ghostNode.setViewOrder(-ghost.position.y - 0.2);
+		ghostNode.getChildren().clear();
+		ghostNode.getChildren().add(shape);
 	}
 
 	private Color mazeColor() {
@@ -406,7 +405,7 @@ public class PlayScene3D implements GameScene {
 
 	private void playLevelCompleteAnimation(PacManGameState state) {
 		tgPlayer.setVisible(false);
-		tgGhosts.forEach(ghostShape -> ghostShape.setVisible(false));
+		tgGhostNodes.values().forEach(ghostShape -> ghostShape.setVisible(false));
 		ScaleTransition levelCompleteAnimation = new ScaleTransition(Duration.seconds(5), tgMaze);
 		levelCompleteAnimation.setFromZ(1);
 		levelCompleteAnimation.setToZ(0);
@@ -417,7 +416,7 @@ public class PlayScene3D implements GameScene {
 
 	private void playLevelStartingAnimation(PacManGameState state) {
 		tgPlayer.setVisible(true);
-		tgGhosts.forEach(ghostShape -> ghostShape.setVisible(true));
+		tgGhostNodes.values().forEach(ghostShape -> ghostShape.setVisible(true));
 		ScaleTransition levelStartAnimation = new ScaleTransition(Duration.seconds(5), tgMaze);
 		levelStartAnimation.setFromZ(0);
 		levelStartAnimation.setToZ(1);
