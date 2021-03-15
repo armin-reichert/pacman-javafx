@@ -62,15 +62,12 @@ public class PlayScene3D implements GameScene {
 
 	private final PacManGameController controller;
 	private final SubScene subScene;
-	private final Group sceneRoot = new Group();
-	private final PerspectiveCamera camera = new PerspectiveCamera(true);
-
-	private final PointLight spotLight = new PointLight();
-	private final AmbientLight ambientLight = new AmbientLight();
+	private final Group sceneRoot;
+	private final PerspectiveCamera camera;
 
 	private Group tgAxes;
-	private final Group tgMaze = new Group();
-	private final Group tgPlayer = new Group();
+	private Group tgMaze;
+	private Group tgPlayer;
 	private Map<Ghost, Group> tgGhostNodes;
 	private Map<V2i, Node> wallNodes;
 	private List<Node> energizerNodes;
@@ -94,6 +91,8 @@ public class PlayScene3D implements GameScene {
 	public PlayScene3D(PacManGameController controller, double height) {
 		this.controller = controller;
 		double width = GameScene.ASPECT_RATIO * height;
+		camera = new PerspectiveCamera(true);
+		sceneRoot = new Group();
 		subScene = new SubScene(sceneRoot, width, height);
 		subScene.setFill(Color.BLACK);
 		subScene.setCamera(camera);
@@ -174,22 +173,25 @@ public class PlayScene3D implements GameScene {
 		pelletNodes = world.tiles().filter(world::isFoodTile).filter(tile -> !world.isEnergizerTile(tile))
 				.map(tile -> createPelletShape(tile, foodMaterial)).collect(Collectors.toList());
 
+		tgPlayer = new Group();
 		tgGhostNodes = game.ghosts().collect(Collectors.toMap(Function.identity(), ghost -> new Group()));
 
-		tgMaze.getChildren().clear();
+		tgMaze = new Group();
+		tgMaze.getChildren().add(tgScore);
 		tgMaze.getChildren().addAll(wallNodes.values());
 		tgMaze.getChildren().addAll(energizerNodes);
 		tgMaze.getChildren().addAll(pelletNodes);
 		tgMaze.getChildren().addAll(tgGhostNodes.values());
 		tgMaze.getChildren().addAll(tgPlayer);
-		tgMaze.getChildren().add(tgScore);
-		tgMaze.setTranslateX(-14 * TS);
-		tgMaze.setTranslateY(-18 * TS);
+		addLights(tgMaze);
+
+		// center over origin
+		tgMaze.setTranslateX(-GameScene.WIDTH_UNSCALED / 2);
+		tgMaze.setTranslateY(-GameScene.HEIGHT_UNSCALED / 2);
 
 		sceneRoot.getChildren().clear();
-		sceneRoot.getChildren().addAll(ambientLight, spotLight, tgMaze, tgAxes);
+		sceneRoot.getChildren().addAll(tgMaze, tgAxes);
 
-		initLight();
 		initCamera();
 	}
 
@@ -279,16 +281,14 @@ public class PlayScene3D implements GameScene {
 		return axis;
 	}
 
-	private void initLight() {
-		ambientLight.setTranslateZ(-500);
-		ambientLight.setColor(mazeColor());
-
-		spotLight.translateXProperty().bind(tgPlayer.translateXProperty());
-		spotLight.translateYProperty().bind(tgPlayer.translateYProperty());
-		spotLight.setTranslateZ(-2 * TS);
-		spotLight.setRotationAxis(Rotate.X_AXIS);
-		spotLight.setRotate(180);
-		spotLight.setColor(Color.YELLOW);
+	private void addLights(Group parent) {
+		AmbientLight ambientLight = new AmbientLight(mazeColor());
+		ambientLight.setTranslateZ(-300);
+		PointLight spot = new PointLight(Color.GHOSTWHITE);
+//		spot.translateXProperty().bind(tgPlayer.translateXProperty());
+//		spot.translateYProperty().bind(tgPlayer.translateYProperty());
+		spot.setTranslateZ(-100);
+		parent.getChildren().addAll(spot, ambientLight);
 	}
 
 	@Override
