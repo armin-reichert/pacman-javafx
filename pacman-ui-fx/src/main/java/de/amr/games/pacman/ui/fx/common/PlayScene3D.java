@@ -122,13 +122,13 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void initCamera() {
-		camera.setTranslateX(0);
-		camera.setTranslateY(300);
-		camera.setTranslateZ(-300);
 		camera.setNearClip(0.1);
 		camera.setFarClip(10000.0);
+		camera.setTranslateX(0);
+		camera.setTranslateY(270);
+		camera.setTranslateZ(-460);
 		camera.setRotationAxis(Rotate.X_AXIS);
-		camera.setRotate(45);
+		camera.setRotate(30);
 	}
 
 	@Override

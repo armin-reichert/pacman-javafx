@@ -52,7 +52,7 @@ public class CameraController {
 			case DIGIT0:
 				camera.setTranslateX(0);
 				camera.setTranslateY(0);
-				camera.setTranslateZ(-5000);
+				camera.setTranslateZ(-300);
 				camera.setRotationAxis(Rotate.X_AXIS);
 				camera.setRotate(0);
 				camera.setRotationAxis(Rotate.Y_AXIS);
