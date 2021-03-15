@@ -11,9 +11,9 @@ import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
 import de.amr.games.pacman.ui.fx.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.common.CameraController;
+import de.amr.games.pacman.ui.fx.common.Env;
 import de.amr.games.pacman.ui.fx.common.FlashMessageView;
 import de.amr.games.pacman.ui.fx.common.GameScene;
-import de.amr.games.pacman.ui.fx.common.GlobalSettings;
 import de.amr.games.pacman.ui.fx.common.SceneController;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.sound.SoundManager;
@@ -25,6 +25,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -71,17 +72,17 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				break;
 			case I:
 				if (control) {
-					GlobalSettings.infoViewVisible = !GlobalSettings.infoViewVisible;
+					Env.$infoViewVisible.set(!Env.$infoViewVisible.get());
 				}
 				break;
 			case L:
 				if (control) {
-					GlobalSettings.drawWallsAsLines = !GlobalSettings.drawWallsAsLines;
+					Env.$drawMode.set(Env.$drawMode.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 				}
 				break;
 			case P:
 				if (control) {
-					GlobalSettings.paused = !GlobalSettings.paused;
+					Env.$paused.set(!Env.$paused.get());
 				}
 				break;
 			case V:
@@ -89,18 +90,19 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				break;
 			case T:
 				if (control) {
-					GlobalSettings.measureTime = !GlobalSettings.measureTime;
+					Env.$measureTime.set(!Env.$measureTime.get());
 				}
 				break;
 			case X:
 				if (control)
-					GlobalSettings.showCoordinateAxes = !GlobalSettings.showCoordinateAxes;
+					Env.$showAxes.set(!Env.$showAxes.get());
 				break;
 			default:
 				break;
 			}
 		});
 
+		infoView.visibleProperty().bind(Env.$infoViewVisible);
 		infoView.setFill(Color.LIGHTGREEN);
 		infoView.setFont(Font.font("Monospace", 14));
 		infoView.setText("");
@@ -109,7 +111,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		mainSceneRoot = new StackPane();
 		mainScene = new Scene(mainSceneRoot, GameScene.ASPECT_RATIO * height, height, Color.rgb(20, 20, 60));
 
-		GameScene newGameScene = createGameScene(controller, height, GlobalSettings.use3DScenes);
+		GameScene newGameScene = createGameScene(controller, height, Env.$use3DScenes.get());
 		changeGameScene(newGameScene);
 		addResizeHandler(newGameScene);
 
@@ -119,8 +121,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private void toggleUse3DScenes() {
-		GlobalSettings.use3DScenes = !GlobalSettings.use3DScenes;
-		String message = String.format("3D scenes %s", GlobalSettings.use3DScenes ? "ON" : "OFF");
+		Env.$use3DScenes.set(!Env.$use3DScenes.get());
+		String message = String.format("3D scenes %s", Env.$use3DScenes.get() ? "ON" : "OFF");
 		showFlashMessage(message);
 		if (is2DAnd3DVersionAvailable(controller)) {
 			currentGameScene = null; // trigger scene change
@@ -176,7 +178,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			if (currentGameScene != null) {
 				currentGameScene.end();
 			}
-			GameScene newGameScene = createGameScene(controller, mainScene.getHeight(), GlobalSettings.use3DScenes);
+			GameScene newGameScene = createGameScene(controller, mainScene.getHeight(), Env.$use3DScenes.get());
 			addResizeHandler(newGameScene);
 			log("New game scene '%s' created", newGameScene);
 			changeGameScene(newGameScene);
@@ -192,7 +194,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	public void updateInfoView() {
 		String text = "";
-		text += GlobalSettings.paused ? "PAUSED\n" : "RUNNING\n";
+		text += Env.$paused.get() ? "PAUSED\n" : "RUNNING\n";
 		text += String.format("Window w=%.0f h=%.0f\n", mainScene.getWindow().getWidth(),
 				mainScene.getWindow().getHeight());
 		text += String.format("Main scene: w=%.0f h=%.0f\n", mainScene.getWidth(), mainScene.getHeight());
@@ -206,9 +208,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		text += camControl.getCameraInfo() + "\n";
 		text += "Autopilot " + (controller.autopilot.enabled ? "ON" : "OFF") + " (Key 'A')\n";
 		text += "Player is " + (controller.selectedGame().player.immune ? "IMMUNE" : "VULNERABLE") + " (Key 'I')\n";
-		text += "3D scenes " + (GlobalSettings.use3DScenes ? "ON" : "OFF") + " (Key CTRL+'3')\n";
+		text += "3D scenes " + (Env.$use3DScenes.get() ? "ON" : "OFF") + " (Key CTRL+'3')\n";
 		infoView.setText(text);
-		infoView.setVisible(GlobalSettings.infoViewVisible);
 	}
 
 	@Override

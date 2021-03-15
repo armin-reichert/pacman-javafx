@@ -4,7 +4,7 @@ import static de.amr.games.pacman.lib.Logging.log;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
-import de.amr.games.pacman.ui.fx.common.GlobalSettings;
+import de.amr.games.pacman.ui.fx.common.Env;
 import javafx.animation.AnimationTimer;
 
 class GameLoop extends AnimationTimer {
@@ -19,8 +19,8 @@ class GameLoop extends AnimationTimer {
 
 	@Override
 	public void handle(long now) {
-		if (!GlobalSettings.paused) {
-			if (GlobalSettings.measureTime) {
+		if (!Env.$paused.get()) {
+			if (Env.$measureTime.get()) {
 				measureTime(controller::step, "Controller step");
 				measureTime(userInterface::update, "User interface update");
 			} else {

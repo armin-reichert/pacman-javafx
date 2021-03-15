@@ -38,8 +38,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
-import javafx.scene.shape.DrawMode;
-import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -69,23 +67,7 @@ public class PlayScene3D implements GameScene {
 
 	private final PerspectiveCamera camera = new PerspectiveCamera(true);
 
-	private Group createAxis(String label, Color color, double length) {
-		Cylinder axis = new Cylinder(1, length);
-		axis.setMaterial(new PhongMaterial(color));
-		return new Group(axis);
-	}
-
-	private final Group tgAxes = new Group();
-	{
-		Group xAxis = createAxis("X", Color.RED, 300);
-		Group yAxis = createAxis("Y", Color.GREEN, 300);
-		Group zAxis = createAxis("Z", Color.BLUE, 300);
-		xAxis.setRotationAxis(Rotate.Z_AXIS);
-		xAxis.setRotate(90);
-		zAxis.setRotationAxis(Rotate.X_AXIS);
-		zAxis.setRotate(-90);
-		tgAxes.getChildren().addAll(xAxis, yAxis, zAxis);
-	}
+	private final Group tgAxes = createAxes();
 
 	private final TimedSequence<Node> missingAnimation;
 	{
@@ -158,6 +140,24 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
+	public Camera getCamera() {
+		return camera;
+	}
+
+	// Animations
+
+	@Override
+	public void initCamera() {
+		camera.setTranslateX(0);
+		camera.setTranslateY(2110);
+		camera.setTranslateZ(-2000);
+		camera.setNearClip(0.1);
+		camera.setFarClip(10000.0);
+		camera.setRotationAxis(Rotate.X_AXIS);
+		camera.setRotate(45);
+	}
+
+	@Override
 	public void start() {
 		GameModel game = controller.selectedGame();
 		PacManGameWorld world = game.level.world;
@@ -200,6 +200,7 @@ public class PlayScene3D implements GameScene {
 //					wallMaterial.setSpecularColor(MsPacMan_Constants.getMazeWallColor(game.level.mazeNumber));
 				}
 				wallShape.setMaterial(wallMaterial);
+				wallShape.drawModeProperty().bind(Env.$drawMode);
 				wallShape.setViewOrder(-tile.y * TS);
 				wallNodes.put(tile, wallShape);
 			}
@@ -270,20 +271,46 @@ public class PlayScene3D implements GameScene {
 		tgMaze.setTranslateY(-18 * TS);
 
 		sceneRoot.getChildren().clear();
-		sceneRoot.getChildren().addAll(ambientLight, spotLight, tgMaze);
-		if (GlobalSettings.showCoordinateAxes) {
-			sceneRoot.getChildren().add(tgAxes);
-		}
-		configureLighting();
+		sceneRoot.getChildren().addAll(ambientLight, spotLight, tgMaze, tgAxes);
+
+		initLight();
 		initCamera();
+	}
+
+	private void initLight() {
+		ambientLight.setTranslateZ(-500);
+		ambientLight.setColor(mazeColor());
+
+		spotLight.translateXProperty().bind(tgPlayer.translateXProperty());
+		spotLight.translateYProperty().bind(tgPlayer.translateYProperty());
+		spotLight.setTranslateZ(-2 * TS);
+		spotLight.setRotationAxis(Rotate.X_AXIS);
+		spotLight.setRotate(180);
+		spotLight.setColor(Color.YELLOW);
+	}
+
+	private Group createAxes() {
+		Cylinder xAxis = createAxis("X", Color.RED, 300);
+		Cylinder yAxis = createAxis("Y", Color.GREEN, 300);
+		Cylinder zAxis = createAxis("Z", Color.BLUE, 300);
+		xAxis.setRotationAxis(Rotate.Z_AXIS);
+		xAxis.setRotate(90);
+		zAxis.setRotationAxis(Rotate.X_AXIS);
+		zAxis.setRotate(-90);
+		Group g = new Group(xAxis, yAxis, zAxis);
+		g.visibleProperty().bind(Env.$showAxes);
+		return g;
+	}
+
+	private Cylinder createAxis(String label, Color color, double length) {
+		Cylinder axis = new Cylinder(0.5, length);
+		axis.setMaterial(new PhongMaterial(color));
+		return axis;
 	}
 
 	@Override
 	public void update() {
 		GameModel game = controller.selectedGame();
-
-		wallNodes.values().stream().map(wall -> (Shape3D) wall)
-				.forEach(wall -> wall.setDrawMode(GlobalSettings.drawWallsAsLines ? DrawMode.LINE : DrawMode.FILL));
 
 		energizerBlinking.animate();
 		energizerNodes.forEach(energizer -> {
@@ -302,44 +329,14 @@ public class PlayScene3D implements GameScene {
 			updateGhostShape(ghost.id);
 		}
 
+		updateScores(game);
+	}
+
+	public void updateScores(GameModel game) {
 		txtScore.setText(String.format("%07d L%d", game.score, game.levelNumber));
 		txtHiscore.setText(String.format("%07d L%d", game.highscorePoints, game.highscoreLevel));
 		scoreLayout.setRotationAxis(Rotate.X_AXIS);
 		scoreLayout.setRotate(camera.getRotate());
-
-		configureLighting();
-
-		sceneRoot.getChildren().remove(tgAxes);
-		if (GlobalSettings.showCoordinateAxes) {
-			sceneRoot.getChildren().add(tgAxes);
-		}
-	}
-
-	private void configureLighting() {
-		ambientLight.setTranslateZ(-500);
-		ambientLight.setColor(mazeColor());
-
-		spotLight.translateXProperty().bind(tgPlayer.translateXProperty());
-		spotLight.translateYProperty().bind(tgPlayer.translateYProperty());
-		spotLight.setTranslateZ(-50);
-		spotLight.setRotationAxis(Rotate.X_AXIS);
-		spotLight.setRotate(180);
-		spotLight.setColor(Color.YELLOW);
-	}
-
-	private Color mazeColor() {
-		if (controller.isPlaying(GameType.PACMAN)) {
-			return Color.BLUE;
-		}
-		return MsPacMan_Constants.getMazeWallColor(controller.selectedGame().level.mazeNumber);
-	}
-
-	private void onHuntingStateEntry(PacManGameState state) {
-		energizerBlinking.restart();
-	}
-
-	private void onHuntingStateExit(PacManGameState state) {
-		energizerBlinking.reset();
 	}
 
 	private void updatePlayerShape(Pac player) {
@@ -351,20 +348,6 @@ public class PlayScene3D implements GameScene {
 		tgPlayer.setTranslateX(player.position.x);
 		tgPlayer.setTranslateY(player.position.y);
 		tgPlayer.setViewOrder(-player.position.y - 0.2);
-	}
-
-	private Node createGhostBountyText(Ghost ghost) {
-		DropShadow shadow = new DropShadow(0.3, Color.color(0.4, 0.4, 0.4));
-		Text bountyText = new Text();
-		bountyText.setEffect(shadow);
-		bountyText.setCache(true);
-		bountyText.setText(String.valueOf(ghost.bounty));
-		bountyText.setFont(Font.font("Sans", FontWeight.BOLD, TS));
-		bountyText.setFill(Color.CYAN);
-		bountyText.setTranslateZ(-1.5 * TS);
-		bountyText.setRotationAxis(Rotate.X_AXIS);
-		bountyText.setRotate(camera.getRotate());
-		return bountyText;
 	}
 
 	private void updateGhostShape(int id) {
@@ -406,9 +389,33 @@ public class PlayScene3D implements GameScene {
 		tgGhosts[id].getChildren().add(shape);
 	}
 
-	@Override
-	public Camera getCamera() {
-		return camera;
+	private Color mazeColor() {
+		if (controller.isPlaying(GameType.PACMAN)) {
+			return Color.BLUE;
+		}
+		return MsPacMan_Constants.getMazeWallColor(controller.selectedGame().level.mazeNumber);
+	}
+
+	private void onHuntingStateEntry(PacManGameState state) {
+		energizerBlinking.restart();
+	}
+
+	private void onHuntingStateExit(PacManGameState state) {
+		energizerBlinking.reset();
+	}
+
+	private Node createGhostBountyText(Ghost ghost) {
+		DropShadow shadow = new DropShadow(0.3, Color.color(0.4, 0.4, 0.4));
+		Text bountyText = new Text();
+		bountyText.setEffect(shadow);
+		bountyText.setCache(true);
+		bountyText.setText(String.valueOf(ghost.bounty));
+		bountyText.setFont(Font.font("Sans", FontWeight.BOLD, TS));
+		bountyText.setFill(Color.CYAN);
+		bountyText.setTranslateZ(-1.5 * TS);
+		bountyText.setRotationAxis(Rotate.X_AXIS);
+		bountyText.setRotate(camera.getRotate());
+		return bountyText;
 	}
 
 	// State change handling
@@ -432,19 +439,6 @@ public class PlayScene3D implements GameScene {
 		levelStartAnimation.setToZ(1);
 		controller.state.timer.resetSeconds(levelStartAnimation.getDuration().toSeconds());
 		levelStartAnimation.play();
-	}
-
-	// Animations
-
-	@Override
-	public void initCamera() {
-		camera.setTranslateX(0);
-		camera.setTranslateY(2110);
-		camera.setTranslateZ(-2000);
-		camera.setNearClip(0.1);
-		camera.setFarClip(10000.0);
-		camera.setRotationAxis(Rotate.X_AXIS);
-		camera.setRotate(45);
 	}
 
 	public TimedSequence<?> ghostFlashing(Ghost ghost) {
