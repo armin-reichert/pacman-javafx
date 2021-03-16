@@ -20,6 +20,7 @@ import de.amr.games.pacman.ui.sound.SoundManager;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
+import javafx.scene.Camera;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
@@ -209,9 +210,16 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 					scene2D.getCanvas().getHeight());
 		}
 		if (Env.$useStaticCamera.get()) {
-			text += camControl.getCameraInfo() + "\n";
+			Camera cam = gameScene.getStaticCamera();
+			if (cam != null) {
+				text += "Static Camera: " + camControl.getCameraInfo() + "\n";
+			}
 		} else {
-			text += "Dynamic Camera\n";
+			Camera cam = gameScene.getMovingCamera();
+			if (cam != null) {
+				text += String.format("Dynamic Camera: x=%.0f y=%.0f z=%.0f rot=%.0f\n", cam.getTranslateX(),
+						cam.getTranslateY(), cam.getTranslateZ(), cam.getRotate());
+			}
 		}
 		text += "Autopilot " + (controller.autopilot.enabled ? "ON" : "OFF") + " (Key 'A')\n";
 		text += "Player is " + (controller.selectedGame().player.immune ? "IMMUNE" : "VULNERABLE") + " (Key 'I')\n";

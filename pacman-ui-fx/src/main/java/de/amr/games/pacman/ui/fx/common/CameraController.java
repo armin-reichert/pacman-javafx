@@ -39,7 +39,7 @@ public class CameraController {
 
 	private String computeCameraInfo() {
 		return camera == null ? "No camera"
-				: String.format("Camera: x=%.0f y=%.0f z=%.0f rot=%.0f", camera.getTranslateX(), camera.getTranslateY(),
+				: String.format("x=%.0f y=%.0f z=%.0f rot=%.0f", camera.getTranslateX(), camera.getTranslateY(),
 						camera.getTranslateZ(), camera.getRotate());
 	}
 

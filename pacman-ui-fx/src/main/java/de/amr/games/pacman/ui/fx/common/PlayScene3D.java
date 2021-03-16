@@ -130,6 +130,11 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
+	public Camera getMovingCamera() {
+		return movingCamera;
+	}
+
+	@Override
 	public void start() {
 		controller.setPlayerImmune(true);
 		buildScene();
@@ -241,10 +246,14 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void updateMovingCamera() {
-		double x = movingCamera.getTranslateX() + (tgPlayer.getTranslateX() - movingCamera.getTranslateX()) * 0.1;
-		double y = movingCamera.getTranslateY() + (tgPlayer.getTranslateY() - movingCamera.getTranslateY()) * 0.1;
+		double x = Math.min(10.0, lerp(movingCamera.getTranslateX(), tgPlayer.getTranslateX()));
+		double y = Math.max(120, lerp(movingCamera.getTranslateY(), tgPlayer.getTranslateY()));
 		movingCamera.setTranslateX(x);
 		movingCamera.setTranslateY(y);
+	}
+
+	private double lerp(double current, double target) {
+		return current + (target - current) * 0.02;
 	}
 
 	private void createScore() {

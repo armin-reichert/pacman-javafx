@@ -34,4 +34,9 @@ public interface GameScene {
 	SubScene getSubScene();
 
 	Camera getStaticCamera();
+
+	default Camera getMovingCamera() {
+		return null;
+	}
+
 }
