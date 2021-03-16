@@ -37,16 +37,16 @@ import javafx.stage.Stage;
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
 
-	private GameScene currentGameScene;
-
 	private final PacManGameController controller;
 	private final Keyboard keyboard = new Keyboard();
 	private final CameraController camControl = new CameraController();
 
-	private final Text infoView = new Text();
-	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final Scene mainScene;
 	private final StackPane mainSceneRoot;
+	private final Text infoView;
+	private final FlashMessageView flashMessageView = new FlashMessageView();
+
+	private GameScene gameScene;
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController controller, double height) {
 		this.controller = controller;
@@ -107,10 +107,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			}
 		});
 
-		infoView.visibleProperty().bind(Env.$infoViewVisible);
+		infoView = new Text();
 		infoView.setFill(Color.LIGHTGREEN);
 		infoView.setFont(Font.font("Monospace", 14));
 		infoView.setText("");
+		infoView.visibleProperty().bind(Env.$infoViewVisible);
 		StackPane.setAlignment(infoView, Pos.TOP_LEFT);
 
 		mainSceneRoot = new StackPane();
@@ -130,7 +131,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		String message = String.format("3D scenes %s", Env.$use3DScenes.get() ? "ON" : "OFF");
 		showFlashMessage(message);
 		if (is2DAnd3DVersionAvailable(controller)) {
-			currentGameScene = null; // trigger scene change
+			gameScene = null; // trigger scene change
 			log("Scene must change because 2D and 3D versions are available");
 		}
 	}
@@ -160,10 +161,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private void changeGameScene(GameScene newGameScene) {
 		// TODO what if new and current scene are equal?
-		if (currentGameScene != null) {
-			currentGameScene.end();
+		if (gameScene != null) {
+			gameScene.end();
 		}
-		currentGameScene = newGameScene;
+		gameScene = newGameScene;
 		double width = newGameScene.aspectRatio().isPresent()
 				? newGameScene.aspectRatio().getAsDouble() * mainScene.getHeight()
 				: mainScene.getWidth();
@@ -176,9 +177,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void update() {
-		if (currentGameScene == null || !SceneController.isSuitableScene(currentGameScene, controller)) {
-			if (currentGameScene != null) {
-				currentGameScene.end();
+		if (gameScene == null || !SceneController.isSuitableScene(gameScene, controller)) {
+			if (gameScene != null) {
+				gameScene.end();
 			}
 			GameScene newGameScene = createGameScene(controller, mainScene.getHeight(), Env.$use3DScenes.get());
 			addResizeHandler(newGameScene);
@@ -186,11 +187,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			changeGameScene(newGameScene);
 		}
 
-		if (currentGameScene instanceof AbstractGameScene2D) {
-			AbstractGameScene2D scene2D = (AbstractGameScene2D) currentGameScene;
+		if (gameScene instanceof AbstractGameScene2D) {
+			AbstractGameScene2D scene2D = (AbstractGameScene2D) gameScene;
 			scene2D.clearCanvas();
 		}
-		currentGameScene.update();
+		gameScene.update();
 		flashMessageView.update();
 	}
 
@@ -200,10 +201,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		text += String.format("Window w=%.0f h=%.0f\n", mainScene.getWindow().getWidth(),
 				mainScene.getWindow().getHeight());
 		text += String.format("Main scene: w=%.0f h=%.0f\n", mainScene.getWidth(), mainScene.getHeight());
-		text += String.format("%s: w=%.0f h=%.0f\n", currentGameScene.getClass().getSimpleName(),
-				currentGameScene.getSubScene().getWidth(), currentGameScene.getSubScene().getHeight());
-		if (currentGameScene instanceof AbstractGameScene2D) {
-			AbstractGameScene2D scene2D = (AbstractGameScene2D) currentGameScene;
+		text += String.format("%s: w=%.0f h=%.0f\n", gameScene.getClass().getSimpleName(),
+				gameScene.getSubScene().getWidth(), gameScene.getSubScene().getHeight());
+		if (gameScene instanceof AbstractGameScene2D) {
+			AbstractGameScene2D scene2D = (AbstractGameScene2D) gameScene;
 			text += String.format("Canvas2D: w=%.0f h=%.0f\n", scene2D.getCanvas().getWidth(),
 					scene2D.getCanvas().getHeight());
 		}
@@ -220,8 +221,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void reset() {
-		if (currentGameScene != null) {
-			currentGameScene.end();
+		if (gameScene != null) {
+			gameScene.end();
 		}
 	}
 
@@ -242,8 +243,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public Optional<PacManGameAnimations2D> animation() {
-		if (currentGameScene instanceof AbstractGameScene2D) {
-			AbstractGameScene2D scene2D = (AbstractGameScene2D) currentGameScene;
+		if (gameScene instanceof AbstractGameScene2D) {
+			AbstractGameScene2D scene2D = (AbstractGameScene2D) gameScene;
 			return Optional.of(scene2D.getRendering());
 		}
 		return Optional.empty();

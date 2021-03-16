@@ -157,6 +157,7 @@ public class PlayScene3D implements GameScene {
 			subScene.setCamera(staticCamera);
 		} else {
 			subScene.setCamera(movingCamera);
+			updateMovingCamera();
 		}
 	}
 
@@ -234,11 +235,16 @@ public class PlayScene3D implements GameScene {
 
 		movingCamera.setNearClip(0.1);
 		movingCamera.setFarClip(10000.0);
-		movingCamera.translateXProperty().bind(tgPlayer.translateXProperty().subtract(14 * TS));
-		movingCamera.translateYProperty().bind(tgPlayer.translateYProperty().add(2 * TS));
 		movingCamera.setTranslateZ(-300);
 		movingCamera.setRotationAxis(Rotate.X_AXIS);
 		movingCamera.setRotate(30);
+	}
+
+	private void updateMovingCamera() {
+		double x = movingCamera.getTranslateX() + (tgPlayer.getTranslateX() - movingCamera.getTranslateX()) * 0.1;
+		double y = movingCamera.getTranslateY() + (tgPlayer.getTranslateY() - movingCamera.getTranslateY()) * 0.1;
+		movingCamera.setTranslateX(x);
+		movingCamera.setTranslateY(y);
 	}
 
 	private void createScore() {
