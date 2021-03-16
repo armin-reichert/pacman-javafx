@@ -10,6 +10,9 @@ import java.util.OptionalDouble;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.interactivemesh.jfx.importer.ImportException;
+import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
+
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.lib.Direction;
@@ -38,6 +41,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
+import javafx.scene.shape.Mesh;
+import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -65,10 +70,12 @@ public class PlayScene3D implements GameScene {
 	private final Group sceneRoot;
 	private final PerspectiveCamera camera;
 
+	private Mesh ghostMeshPrototype;
+
 	private Group tgAxes;
 	private Group tgMaze;
 	private Group tgPlayer;
-	private Map<Ghost, Group> tgGhostNodes;
+	private Map<Ghost, MeshView> ghostMeshViews;
 	private Map<V2i, Node> wallNodes;
 	private List<Node> energizerNodes;
 	private List<Node> pelletNodes;
@@ -77,16 +84,11 @@ public class PlayScene3D implements GameScene {
 	private Text txtScore;
 	private Text txtHiscore;
 
-	private final PhongMaterial wallMaterial = createWallMaterial();
-
 	private final TimedSequence<Node> missingAnimation = createDefaultAnimation();
 	private final TimedSequence<Boolean> energizerBlinking = TimedSequence.pulse().frameDuration(15);
 	private TimedSequence<?> playerMunchingAnimation;
 	private TimedSequence<?> playerDyingAnimation = missingAnimation;
 	private final Map<Ghost, TimedSequence<?>> ghostReturningHomeAnimationByGhost = new HashMap<>();
-	private final Map<Ghost, TimedSequence<?>> ghostFlashingAnimationByGhost = new HashMap<>();
-	private final Map<Ghost, TimedSequence<?>> ghostFrightenedAnimationByGhost = new HashMap<>();
-	private final Map<Ghost, TimedSequence<?>> ghostKickingAnimationByGhost = new HashMap<>();
 
 	public PlayScene3D(PacManGameController controller, double height) {
 		this.controller = controller;
@@ -96,6 +98,13 @@ public class PlayScene3D implements GameScene {
 		subScene = new SubScene(sceneRoot, width, height);
 		subScene.setFill(Color.BLACK);
 		subScene.setCamera(camera);
+		ObjModelImporter objImporter = new ObjModelImporter();
+		try {
+			objImporter.read(getClass().getResource("/common/ghost.obj"));
+			ghostMeshPrototype = objImporter.getNamedMeshViews().get("Ghost_Sphere.001").getMesh();
+		} catch (ImportException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -162,32 +171,30 @@ public class PlayScene3D implements GameScene {
 		createAxes();
 		createScore();
 
+		PhongMaterial wallMaterial = createWallMaterial();
 		wallNodes = world.tiles().filter(world::isWall)
-				.collect(Collectors.toMap(Function.identity(), this::createWallShape));
+				.collect(Collectors.toMap(Function.identity(), tile -> createWallShape(tile, wallMaterial)));
 
 		PhongMaterial foodMaterial = new PhongMaterial(foodColor());
-
 		energizerNodes = world.energizerTiles().map(tile -> createEnergizerShape(tile, foodMaterial))
 				.collect(Collectors.toList());
-
 		pelletNodes = world.tiles().filter(world::isFoodTile).filter(tile -> !world.isEnergizerTile(tile))
 				.map(tile -> createPelletShape(tile, foodMaterial)).collect(Collectors.toList());
 
 		tgPlayer = new Group();
-		tgGhostNodes = game.ghosts().collect(Collectors.toMap(Function.identity(), ghost -> new Group()));
+		ghostMeshViews = game.ghosts().collect(Collectors.toMap(Function.identity(), ghost -> createGhostMeshView(ghost)));
 
 		tgMaze = new Group();
+		// center over origin
+		tgMaze.setTranslateX(-GameScene.WIDTH_UNSCALED / 2);
+		tgMaze.setTranslateY(-GameScene.HEIGHT_UNSCALED / 2);
 		tgMaze.getChildren().add(tgScore);
 		tgMaze.getChildren().addAll(wallNodes.values());
 		tgMaze.getChildren().addAll(energizerNodes);
 		tgMaze.getChildren().addAll(pelletNodes);
-		tgMaze.getChildren().addAll(tgGhostNodes.values());
 		tgMaze.getChildren().addAll(tgPlayer);
+		tgMaze.getChildren().addAll(ghostMeshViews.values());
 		addLights(tgMaze);
-
-		// center over origin
-		tgMaze.setTranslateX(-GameScene.WIDTH_UNSCALED / 2);
-		tgMaze.setTranslateY(-GameScene.HEIGHT_UNSCALED / 2);
 
 		sceneRoot.getChildren().clear();
 		sceneRoot.getChildren().addAll(tgMaze, tgAxes);
@@ -225,24 +232,24 @@ public class PlayScene3D implements GameScene {
 		tgScore = new Group(grid);
 	}
 
-	private Node createWallShape(V2i tile) {
-		Box wallShape = new Box(TS - 1, TS - 1, WALL_HEIGHT);
-		wallShape.setTranslateX(tile.x * TS);
-		wallShape.setTranslateY(tile.y * TS);
-		wallShape.setMaterial(wallMaterial);
-		wallShape.drawModeProperty().bind(Env.$drawMode);
-		wallShape.setViewOrder(-tile.y * TS);
-		return wallShape;
+	private Node createWallShape(V2i tile, PhongMaterial material) {
+		Box b = new Box(TS - 1, TS - 1, WALL_HEIGHT);
+		b.setMaterial(material);
+		b.setTranslateX(tile.x * TS);
+		b.setTranslateY(tile.y * TS);
+		b.setViewOrder(-tile.y * TS);
+		b.drawModeProperty().bind(Env.$drawMode);
+		return b;
 	}
 
 	private Node createEnergizerShape(V2i tile, PhongMaterial material) {
-		Sphere energizer = new Sphere(HTS);
-		energizer.setMaterial(material);
-		energizer.setUserData(tile);
-		energizer.setTranslateX(tile.x * TS);
-		energizer.setTranslateY(tile.y * TS);
-		energizer.setViewOrder(-tile.y * TS - 0.5);
-		return energizer;
+		Sphere s = new Sphere(HTS);
+		s.setMaterial(material);
+		s.setTranslateX(tile.x * TS);
+		s.setTranslateY(tile.y * TS);
+		s.setUserData(tile);
+		s.setViewOrder(-tile.y * TS - 0.5);
+		return s;
 	}
 
 	private Node createPelletShape(V2i tile, PhongMaterial material) {
@@ -294,82 +301,89 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void update() {
 		GameModel game = controller.selectedGame();
-
+		updateScores();
 		energizerBlinking.animate();
 		energizerNodes.forEach(energizer -> {
 			V2i tile = (V2i) energizer.getUserData();
 			energizer.setVisible(!game.level.isFoodRemoved(tile) && energizerBlinking.frame());
 		});
-
 		pelletNodes.forEach(pellet -> {
 			V2i tile = (V2i) pellet.getUserData();
 			pellet.setVisible(!game.level.isFoodRemoved(tile));
 		});
-
 		updatePlayerShape(game.player);
-
 		for (Ghost ghost : game.ghosts) {
 			updateGhostShape(ghost);
 		}
-
-		updateScores(game);
 	}
 
-	public void updateScores(GameModel game) {
+	private void updateScores() {
+		GameModel game = controller.selectedGame();
 		txtScore.setText(String.format("%07d L%d", game.score, game.levelNumber));
 		txtHiscore.setText(String.format("%07d L%d", game.highscorePoints, game.highscoreLevel));
+		// TODO is this the right way?
 		tgScore.setRotationAxis(Rotate.X_AXIS);
 		tgScore.setRotate(camera.getRotate());
 	}
 
 	private void updatePlayerShape(Pac player) {
 		Node shape = player.dead ? (Node) playerDyingAnimation.frame() : (Node) playerMunching(player, player.dir).frame();
-		boolean insidePortal = controller.selectedGame().level.world.isPortal(player.tile());
 		tgPlayer.getChildren().clear();
 		tgPlayer.getChildren().add(shape);
-		tgPlayer.setVisible(player.visible && !insidePortal);
+		tgPlayer.setVisible(player.visible);
 		tgPlayer.setTranslateX(player.position.x);
 		tgPlayer.setTranslateY(player.position.y);
 		tgPlayer.setViewOrder(-player.position.y - 0.2);
 	}
 
+	private MeshView createGhostMeshView(Ghost ghost) {
+		MeshView meshView = new MeshView(ghostMeshPrototype);
+		meshView.setMaterial(new PhongMaterial(ghostColor(ghost.id)));
+		meshView.setScaleX(4);
+		meshView.setScaleY(4);
+		meshView.setScaleZ(4);
+		meshView.setUserData(ghost);
+		return meshView;
+	}
+
+	private Text createGhostBountyText(Ghost ghost) {
+		Text text = new Text();
+		text.setEffect(new DropShadow(0.3, Color.color(0.4, 0.4, 0.4)));
+		text.setCache(true);
+		text.setText(String.valueOf(ghost.bounty));
+		text.setFont(Font.font("Sans", FontWeight.BOLD, TS));
+		text.setFill(Color.CYAN);
+		return text;
+	}
+
 	private void updateGhostShape(Ghost ghost) {
-		Node shape;
-
+		tgMaze.getChildren().removeIf(node -> node.getUserData() == ghost);
 		if (ghost.bounty > 0) {
-			shape = createGhostBountyText(ghost);
-		}
-
-		else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
-			shape = (Node) ghostReturningHome(ghost, ghost.dir).animate();
-			if (ghost.dir == Direction.DOWN || ghost.dir == Direction.UP) {
-				shape.setRotate(0);
+			Text shape = createGhostBountyText(ghost);
+			shape.setRotationAxis(Rotate.X_AXIS);
+			shape.setRotate(90);
+			shape.setVisible(ghost.visible);
+			shape.setTranslateX(ghost.position.x);
+			shape.setTranslateY(ghost.position.y);
+			shape.setTranslateZ(-1.5 * TS);
+			shape.setViewOrder(-ghost.position.y - 0.2);
+			shape.setUserData(ghost);
+			tgMaze.getChildren().add(shape);
+		} else {
+			MeshView meshView = ghostMeshViews.get(ghost);
+			if (ghost.is(GhostState.FRIGHTENED)) {
+				meshView.setMaterial(new PhongMaterial(Color.BLUE));
 			} else {
-				shape.setRotate(90);
+				meshView.setMaterial(new PhongMaterial(ghostColor(ghost.id)));
 			}
+			meshView.setRotationAxis(Rotate.X_AXIS);
+			meshView.setRotate(90);
+			meshView.setVisible(ghost.visible);
+			meshView.setTranslateX(ghost.position.x);
+			meshView.setTranslateY(ghost.position.y);
+			meshView.setViewOrder(-ghost.position.y - 0.2);
+			tgMaze.getChildren().add(meshView);
 		}
-
-		else if (ghost.is(GhostState.FRIGHTENED)) {
-			shape = (Node) (ghostFlashing(ghost).isRunning() ? ghostFlashing(ghost).frame()
-					: ghostFrightened(ghost, ghost.dir).animate());
-		}
-
-		else if (ghost.is(GhostState.LOCKED) && controller.selectedGame().player.powerTimer.isRunning()) {
-			shape = (Node) ghostFrightened(ghost, ghost.dir).animate();
-		}
-
-		else {
-			// default: show ghost in color, alive and kicking
-			shape = (Node) ghostKicking(ghost, ghost.wishDir).animate(); // Looks towards wish dir!
-		}
-
-		Group ghostNode = tgGhostNodes.get(ghost);
-		ghostNode.setVisible(ghost.visible);
-		ghostNode.setTranslateX(ghost.position.x);
-		ghostNode.setTranslateY(ghost.position.y);
-		ghostNode.setViewOrder(-ghost.position.y - 0.2);
-		ghostNode.getChildren().clear();
-		ghostNode.getChildren().add(shape);
 	}
 
 	private Color mazeColor() {
@@ -390,25 +404,10 @@ public class PlayScene3D implements GameScene {
 		energizerBlinking.reset();
 	}
 
-	private Node createGhostBountyText(Ghost ghost) {
-		DropShadow shadow = new DropShadow(0.3, Color.color(0.4, 0.4, 0.4));
-		Text bountyText = new Text();
-		bountyText.setEffect(shadow);
-		bountyText.setCache(true);
-		bountyText.setText(String.valueOf(ghost.bounty));
-		bountyText.setFont(Font.font("Sans", FontWeight.BOLD, TS));
-		bountyText.setFill(Color.CYAN);
-		bountyText.setTranslateZ(-1.5 * TS);
-		bountyText.setRotationAxis(Rotate.X_AXIS);
-		bountyText.setRotate(camera.getRotate());
-		return bountyText;
-	}
-
 	// State change handling
 
 	private void playLevelCompleteAnimation(PacManGameState state) {
 		tgPlayer.setVisible(false);
-		tgGhostNodes.values().forEach(ghostShape -> ghostShape.setVisible(false));
 		ScaleTransition levelCompleteAnimation = new ScaleTransition(Duration.seconds(5), tgMaze);
 		levelCompleteAnimation.setFromZ(1);
 		levelCompleteAnimation.setToZ(0);
@@ -419,7 +418,6 @@ public class PlayScene3D implements GameScene {
 
 	private void playLevelStartingAnimation(PacManGameState state) {
 		tgPlayer.setVisible(true);
-		tgGhostNodes.values().forEach(ghostShape -> ghostShape.setVisible(true));
 		ScaleTransition levelStartAnimation = new ScaleTransition(Duration.seconds(5), tgMaze);
 		levelStartAnimation.setFromZ(0);
 		levelStartAnimation.setToZ(1);
@@ -435,37 +433,6 @@ public class PlayScene3D implements GameScene {
 		text.setRotationAxis(Rotate.X_AXIS);
 		text.setRotate(90);
 		return TimedSequence.of(text);
-	}
-
-	public TimedSequence<?> ghostFlashing(Ghost ghost) {
-		if (!ghostFlashingAnimationByGhost.containsKey(ghost)) {
-			Sphere s1 = new Sphere(HTS);
-			s1.setMaterial(new PhongMaterial(Color.CORNFLOWERBLUE));
-			Sphere s2 = new Sphere(HTS);
-			s2.setMaterial(new PhongMaterial(Color.WHITE));
-			ghostFlashingAnimationByGhost.put(ghost, TimedSequence.of(s1, s2).frameDuration(10).endless());
-		}
-		return ghostFlashingAnimationByGhost.get(ghost);
-	}
-
-	public TimedSequence<?> ghostFrightened(Ghost ghost, Direction dir) {
-		if (!ghostFrightenedAnimationByGhost.containsKey(ghost)) {
-			Sphere s = new Sphere(HTS);
-			s.setMaterial(new PhongMaterial(Color.CORNFLOWERBLUE));
-			s.setUserData(ghost);
-			ghostFrightenedAnimationByGhost.put(ghost, TimedSequence.of(s));
-		}
-		return ghostFrightenedAnimationByGhost.get(ghost);
-	}
-
-	public TimedSequence<?> ghostKicking(Ghost ghost, Direction dir) {
-		if (!ghostKickingAnimationByGhost.containsKey(ghost)) {
-			Sphere s = new Sphere(HTS);
-			s.setMaterial(new PhongMaterial(ghostColor(ghost.id)));
-			s.setUserData(ghost);
-			ghostKickingAnimationByGhost.put(ghost, TimedSequence.of(s));
-		}
-		return ghostKickingAnimationByGhost.get(ghost);
 	}
 
 	public TimedSequence<?> ghostReturningHome(Ghost ghost, Direction dir) {

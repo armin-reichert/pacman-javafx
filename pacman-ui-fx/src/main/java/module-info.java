@@ -7,6 +7,7 @@ module de.amr.games.pacman.ui.fx {
 	requires transitive javafx.graphics;
 
 	requires de.amr.games.pacman;
+	requires jimModelImporterJFX;
 
 	exports de.amr.games.pacman.ui.fx.app to javafx.graphics;
 }
