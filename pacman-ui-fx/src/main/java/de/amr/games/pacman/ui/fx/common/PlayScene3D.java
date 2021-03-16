@@ -33,7 +33,6 @@ import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
 import javafx.scene.SubScene;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
@@ -160,7 +159,7 @@ public class PlayScene3D implements GameScene {
 		});
 		updatePlayerShape(game.player);
 		for (Ghost ghost : game.ghosts) {
-			updateGhostShape(ghost);
+			updateGhostNode(ghost);
 		}
 	}
 
@@ -267,7 +266,7 @@ public class PlayScene3D implements GameScene {
 		s.setTranslateX(tile.x * TS);
 		s.setTranslateY(tile.y * TS);
 		s.setUserData(tile);
-		s.setViewOrder(-tile.y * TS - 0.1);
+		s.setViewOrder(-tile.y * TS - 1);
 		return s;
 	}
 
@@ -277,7 +276,7 @@ public class PlayScene3D implements GameScene {
 		pellet.setUserData(tile);
 		pellet.setTranslateX(tile.x * TS);
 		pellet.setTranslateY(tile.y * TS);
-		pellet.setViewOrder(-tile.y * TS - 0.1);
+		pellet.setViewOrder(-tile.y * TS - 1);
 		return pellet;
 	}
 
@@ -319,10 +318,10 @@ public class PlayScene3D implements GameScene {
 
 	private Text createGhostBountyText(Ghost ghost) {
 		Text text = new Text();
-		text.setEffect(new DropShadow(0.3, Color.color(0.4, 0.4, 0.4)));
+//		text.setEffect(new DropShadow(0.3, Color.color(0.4, 0.4, 0.4)));
 //		text.setCache(true);
 		text.setText(String.valueOf(ghost.bounty));
-		text.setFont(Font.font("Sans", FontWeight.BOLD, TS));
+		text.setFont(Font.font("Sans", FontWeight.MEDIUM, TS));
 		text.setFill(Color.CYAN);
 		return text;
 	}
@@ -353,29 +352,22 @@ public class PlayScene3D implements GameScene {
 		tgPlayer.setVisible(player.visible);
 		tgPlayer.setTranslateX(player.position.x);
 		tgPlayer.setTranslateY(player.position.y);
-		tgPlayer.setViewOrder(-player.position.y - TS);
+		tgPlayer.setViewOrder(-player.position.y - 2);
 	}
 
-	private void updateGhostShape(Ghost ghost) {
-		tgMaze.getChildren().removeIf(node -> node.getUserData() == ghost);
+	private void updateGhostNode(Ghost ghost) {
+		Node ghostNode;
 		if (ghost.bounty > 0) {
-			Text shape = createGhostBountyText(ghost);
-			shape.setRotationAxis(Rotate.X_AXIS);
-			shape.setRotate(camera.getRotate());
-			shape.setTranslateX(ghost.position.x);
-			shape.setTranslateY(ghost.position.y);
-			shape.setTranslateZ(-1.5 * TS);
-			shape.setViewOrder(-ghost.position.y - 0.2);
-			shape.setUserData(ghost);
-			tgMaze.getChildren().add(shape);
+			Text text = createGhostBountyText(ghost);
+			text.setRotationAxis(Rotate.X_AXIS);
+			text.setRotate(camera.getRotate());
+			text.setTranslateZ(-1.5 * TS);
+			ghostNode = text;
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
 			Group shape = ghostReturningHome(ghost, ghost.dir);
-			shape.setTranslateX(ghost.position.x);
-			shape.setTranslateY(ghost.position.y);
 			shape.setRotationAxis(Rotate.Z_AXIS);
 			shape.setRotate(ghost.dir == Direction.UP || ghost.dir == Direction.DOWN ? 0 : 90);
-			shape.setViewOrder(-ghost.position.y - 0.2);
-			tgMaze.getChildren().add(shape);
+			ghostNode = shape;
 		} else {
 			MeshView shape = ghostMeshViews.get(ghost);
 			Color color = ghost.is(GhostState.FRIGHTENED) ? Color.BLUE : ghostColor(ghost.id);
@@ -384,12 +376,15 @@ public class PlayScene3D implements GameScene {
 			material.setSpecularColor(color);
 			shape.setRotationAxis(Rotate.X_AXIS);
 			shape.setRotate(90);
-			shape.setVisible(ghost.visible);
-			shape.setTranslateX(ghost.position.x);
-			shape.setTranslateY(ghost.position.y);
-			shape.setViewOrder(-ghost.position.y - 0.2);
-			tgMaze.getChildren().add(shape);
+			ghostNode = shape;
 		}
+		ghostNode.setVisible(ghost.visible);
+		ghostNode.setTranslateX(ghost.position.x);
+		ghostNode.setTranslateY(ghost.position.y);
+		ghostNode.setViewOrder(-ghost.position.y - 5);
+		ghostNode.setUserData(ghost);
+		tgMaze.getChildren().removeIf(node -> node.getUserData() == ghost);
+		tgMaze.getChildren().add(ghostNode);
 	}
 
 	private Color mazeColor() {
