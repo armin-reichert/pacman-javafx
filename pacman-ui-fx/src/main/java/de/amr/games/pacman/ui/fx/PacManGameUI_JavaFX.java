@@ -88,6 +88,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			case V:
 				controller.toggleGameType();
 				break;
+			case S:
+				if (control) {
+					Env.$useStaticCamera.set(!Env.$useStaticCamera.get());
+				}
+				break;
 			case T:
 				if (control) {
 					Env.$measureTime.set(!Env.$measureTime.get());
@@ -163,10 +168,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				? newGameScene.aspectRatio().getAsDouble() * mainScene.getHeight()
 				: mainScene.getWidth();
 		newGameScene.resize(width, mainScene.getHeight());
-		camControl.setCamera(newGameScene.getCamera());
-		if (newGameScene.getCamera() != null) {
-			newGameScene.initCamera();
-		}
+		camControl.setCamera(newGameScene.getStaticCamera());
 		mainSceneRoot.getChildren().clear();
 		mainSceneRoot.getChildren().addAll(newGameScene.getSubScene(), flashMessageView, infoView);
 		newGameScene.start();
@@ -205,7 +207,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			text += String.format("Canvas2D: w=%.0f h=%.0f\n", scene2D.getCanvas().getWidth(),
 					scene2D.getCanvas().getHeight());
 		}
-		text += camControl.getCameraInfo() + "\n";
+		if (Env.$useStaticCamera.get()) {
+			text += camControl.getCameraInfo() + "\n";
+		} else {
+			text += "Dynamic Camera";
+		}
 		text += "Autopilot " + (controller.autopilot.enabled ? "ON" : "OFF") + " (Key 'A')\n";
 		text += "Player is " + (controller.selectedGame().player.immune ? "IMMUNE" : "VULNERABLE") + " (Key 'I')\n";
 		text += "3D scenes " + (Env.$use3DScenes.get() ? "ON" : "OFF") + " (Key CTRL+'3')\n";

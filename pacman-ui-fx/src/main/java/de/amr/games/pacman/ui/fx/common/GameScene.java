@@ -33,11 +33,5 @@ public interface GameScene {
 
 	SubScene getSubScene();
 
-	Camera getCamera();
-
-	default void initCamera() {
-	}
-
-	default void updateCamera() {
-	}
+	Camera getStaticCamera();
 }

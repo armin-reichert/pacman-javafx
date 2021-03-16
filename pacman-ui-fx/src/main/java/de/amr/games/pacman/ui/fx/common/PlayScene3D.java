@@ -67,7 +67,8 @@ public class PlayScene3D implements GameScene {
 	private final PacManGameController controller;
 	private final SubScene subScene;
 	private final Group sceneRoot;
-	private final PerspectiveCamera camera;
+	private final PerspectiveCamera staticCamera;
+	private final PerspectiveCamera movingCamera;
 
 	private Mesh ghostMeshPrototype;
 
@@ -92,11 +93,12 @@ public class PlayScene3D implements GameScene {
 	public PlayScene3D(PacManGameController controller, double height) {
 		this.controller = controller;
 		double width = GameScene.ASPECT_RATIO * height;
-		camera = new PerspectiveCamera(true);
+		staticCamera = new PerspectiveCamera(true);
+		movingCamera = new PerspectiveCamera(true);
 		sceneRoot = new Group();
 		subScene = new SubScene(sceneRoot, width, height);
 		subScene.setFill(Color.BLACK);
-		subScene.setCamera(camera);
+		subScene.setCamera(staticCamera);
 		ObjModelImporter objImporter = new ObjModelImporter();
 		try {
 			objImporter.read(getClass().getResource("/common/ghost.obj"));
@@ -123,19 +125,8 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public Camera getCamera() {
-		return camera;
-	}
-
-	@Override
-	public void initCamera() {
-		camera.setNearClip(0.1);
-		camera.setFarClip(10000.0);
-		camera.setTranslateX(0);
-		camera.setTranslateY(270);
-		camera.setTranslateZ(-460);
-		camera.setRotationAxis(Rotate.X_AXIS);
-		camera.setRotate(30);
+	public Camera getStaticCamera() {
+		return staticCamera;
 	}
 
 	@Override
@@ -161,6 +152,11 @@ public class PlayScene3D implements GameScene {
 		updatePlayerShape(game.player);
 		for (Ghost ghost : game.ghosts) {
 			updateGhostNode(ghost);
+		}
+		if (Env.$useStaticCamera.get()) {
+			subScene.setCamera(staticCamera);
+		} else {
+			subScene.setCamera(movingCamera);
 		}
 	}
 
@@ -228,7 +224,21 @@ public class PlayScene3D implements GameScene {
 		sceneRoot.getChildren().clear();
 		sceneRoot.getChildren().addAll(tgMaze, tgAxes);
 
-		initCamera();
+		staticCamera.setNearClip(0.1);
+		staticCamera.setFarClip(10000.0);
+		staticCamera.setTranslateX(0);
+		staticCamera.setTranslateY(270);
+		staticCamera.setTranslateZ(-460);
+		staticCamera.setRotationAxis(Rotate.X_AXIS);
+		staticCamera.setRotate(30);
+
+		movingCamera.setNearClip(0.1);
+		movingCamera.setFarClip(10000.0);
+		movingCamera.translateXProperty().bind(tgPlayer.translateXProperty().subtract(14 * TS));
+		movingCamera.translateYProperty().bind(tgPlayer.translateYProperty().add(2 * TS));
+		movingCamera.setTranslateZ(-300);
+		movingCamera.setRotationAxis(Rotate.X_AXIS);
+		movingCamera.setRotate(30);
 	}
 
 	private void createScore() {
@@ -340,7 +350,7 @@ public class PlayScene3D implements GameScene {
 		txtHiscore.setText(String.format("%07d L%d", game.highscorePoints, game.highscoreLevel));
 		// TODO is this the right way?
 		tgScore.setRotationAxis(Rotate.X_AXIS);
-		tgScore.setRotate(camera.getRotate());
+		tgScore.setRotate(staticCamera.getRotate());
 	}
 
 	private void updatePlayerShape(Pac player) {
@@ -358,7 +368,7 @@ public class PlayScene3D implements GameScene {
 		if (ghost.bounty > 0) {
 			Text text = createGhostBountyText(ghost);
 			text.setRotationAxis(Rotate.X_AXIS);
-			text.setRotate(camera.getRotate());
+			text.setRotate(staticCamera.getRotate());
 			text.setTranslateZ(-1.5 * TS);
 			ghostNode = text;
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
@@ -368,7 +378,7 @@ public class PlayScene3D implements GameScene {
 			ghostNode = shape;
 		} else {
 			MeshView shape = ghostMeshViews.get(ghost);
-			Color color = ghost.is(GhostState.FRIGHTENED) ? Color.BLUE : ghostColor(ghost.id);
+			Color color = ghost.is(GhostState.FRIGHTENED) ? Color.CORNFLOWERBLUE : ghostColor(ghost.id);
 			PhongMaterial material = (PhongMaterial) shape.getMaterial();
 			material.setDiffuseColor(color);
 			material.setSpecularColor(color);
