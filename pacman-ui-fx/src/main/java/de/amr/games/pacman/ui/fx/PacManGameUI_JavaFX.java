@@ -210,7 +210,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		if (Env.$useStaticCamera.get()) {
 			text += camControl.getCameraInfo() + "\n";
 		} else {
-			text += "Dynamic Camera";
+			text += "Dynamic Camera\n";
 		}
 		text += "Autopilot " + (controller.autopilot.enabled ? "ON" : "OFF") + " (Key 'A')\n";
 		text += "Player is " + (controller.selectedGame().player.immune ? "IMMUNE" : "VULNERABLE") + " (Key 'I')\n";
