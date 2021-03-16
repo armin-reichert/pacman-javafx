@@ -46,6 +46,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Scale;
 import javafx.util.Duration;
 
 /**
@@ -139,6 +140,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void start() {
+		controller.setPlayerImmune(true);
 		buildScene();
 		addStateListeners();
 	}
@@ -165,6 +167,16 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void end() {
 		removeStateListeners();
+	}
+
+	private void addLights() {
+		AmbientLight ambientLight = new AmbientLight(mazeColor());
+		ambientLight.setTranslateZ(-100);
+		tgMaze.getChildren().add(ambientLight);
+
+		PointLight spot = new PointLight(Color.YELLOW);
+		spot.setTranslateZ(-500);
+		tgMaze.getChildren().add(spot);
 	}
 
 	private void addStateListeners() {
@@ -211,7 +223,7 @@ public class PlayScene3D implements GameScene {
 		tgMaze.getChildren().addAll(pelletNodes);
 		tgMaze.getChildren().addAll(tgPlayer);
 		tgMaze.getChildren().addAll(ghostMeshViews.values());
-		addLights(tgMaze);
+		addLights();
 
 		sceneRoot.getChildren().clear();
 		sceneRoot.getChildren().addAll(tgMaze, tgAxes);
@@ -308,9 +320,6 @@ public class PlayScene3D implements GameScene {
 	private MeshView createGhostMeshView(Ghost ghost) {
 		MeshView meshView = new MeshView(ghostMeshPrototype);
 		meshView.setMaterial(new PhongMaterial(ghostColor(ghost.id)));
-		meshView.setScaleX(4);
-		meshView.setScaleY(4);
-		meshView.setScaleZ(4);
 		meshView.setUserData(ghost);
 		return meshView;
 	}
@@ -323,17 +332,6 @@ public class PlayScene3D implements GameScene {
 		text.setFont(Font.font("Sans", FontWeight.MEDIUM, 12.0));
 		text.setFill(Color.CYAN);
 		return text;
-	}
-
-	private void addLights(Group parent) {
-		AmbientLight ambientLight = new AmbientLight(mazeColor());
-		ambientLight.setTranslateZ(-3000);
-		parent.getChildren().add(ambientLight);
-		PointLight spot = new PointLight(Color.WHITE);
-		spot.translateXProperty().bind(tgPlayer.translateXProperty());
-		spot.translateYProperty().bind(tgPlayer.translateYProperty());
-		spot.setTranslateZ(-1000);
-		parent.getChildren().add(spot);
 	}
 
 	private void updateScores() {
@@ -374,8 +372,13 @@ public class PlayScene3D implements GameScene {
 			PhongMaterial material = (PhongMaterial) shape.getMaterial();
 			material.setDiffuseColor(color);
 			material.setSpecularColor(color);
-			shape.setRotationAxis(Rotate.X_AXIS);
-			shape.setRotate(90);
+//			shape.setDrawMode(DrawMode.LINE);
+			shape.getTransforms().clear();
+			shape.getTransforms().add(new Scale(4, 4, 4));
+			shape.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
+			double angle = ghost.dir == Direction.RIGHT ? 0
+					: ghost.dir == Direction.DOWN ? 90 : ghost.dir == Direction.LEFT ? 180 : 270;
+			shape.getTransforms().add(new Rotate(angle, Rotate.Y_AXIS));
 			ghostNode = shape;
 		}
 		ghostNode.setVisible(ghost.visible);
