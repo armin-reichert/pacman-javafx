@@ -1,6 +1,5 @@
 package de.amr.games.pacman.ui.fx.common;
 
-import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
 import java.util.HashMap;
@@ -261,7 +260,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private Node createEnergizerShape(V2i tile, PhongMaterial material) {
-		Sphere s = new Sphere(HTS);
+		Sphere s = new Sphere(2);
 		s.setMaterial(material);
 		s.setTranslateX(tile.x * TS);
 		s.setTranslateY(tile.y * TS);
@@ -271,7 +270,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private Node createPelletShape(V2i tile, PhongMaterial material) {
-		Sphere pellet = new Sphere(1.5);
+		Sphere pellet = new Sphere(1);
 		pellet.setMaterial(material);
 		pellet.setUserData(tile);
 		pellet.setTranslateX(tile.x * TS);
@@ -321,19 +320,20 @@ public class PlayScene3D implements GameScene {
 //		text.setEffect(new DropShadow(0.3, Color.color(0.4, 0.4, 0.4)));
 //		text.setCache(true);
 		text.setText(String.valueOf(ghost.bounty));
-		text.setFont(Font.font("Sans", FontWeight.MEDIUM, TS));
+		text.setFont(Font.font("Sans", FontWeight.MEDIUM, 12.0));
 		text.setFill(Color.CYAN);
 		return text;
 	}
 
 	private void addLights(Group parent) {
 		AmbientLight ambientLight = new AmbientLight(mazeColor());
-		ambientLight.setTranslateZ(-300);
-		PointLight spot = new PointLight(Color.GHOSTWHITE);
-//		spot.translateXProperty().bind(tgPlayer.translateXProperty());
-//		spot.translateYProperty().bind(tgPlayer.translateYProperty());
-		spot.setTranslateZ(-100);
-		parent.getChildren().addAll(spot, ambientLight);
+		ambientLight.setTranslateZ(-3000);
+		parent.getChildren().add(ambientLight);
+		PointLight spot = new PointLight(Color.WHITE);
+		spot.translateXProperty().bind(tgPlayer.translateXProperty());
+		spot.translateYProperty().bind(tgPlayer.translateYProperty());
+		spot.setTranslateZ(-1000);
+		parent.getChildren().add(spot);
 	}
 
 	private void updateScores() {
