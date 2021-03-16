@@ -88,7 +88,7 @@ public class PlayScene3D implements GameScene {
 	private final TimedSequence<Boolean> energizerBlinking = TimedSequence.pulse().frameDuration(15);
 	private TimedSequence<?> playerMunchingAnimation;
 	private TimedSequence<?> playerDyingAnimation = missingAnimation;
-	private final Map<Ghost, TimedSequence<?>> ghostReturningHomeAnimationByGhost = new HashMap<>();
+	private final Map<Ghost, Group> ghostReturningHome = new HashMap<>();
 
 	public PlayScene3D(PacManGameController controller, double height) {
 		this.controller = controller;
@@ -146,6 +146,25 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
+	public void update() {
+		GameModel game = controller.selectedGame();
+		updateScores();
+		energizerBlinking.animate();
+		energizerNodes.forEach(energizer -> {
+			V2i tile = (V2i) energizer.getUserData();
+			energizer.setVisible(!game.level.isFoodRemoved(tile) && energizerBlinking.frame());
+		});
+		pelletNodes.forEach(pellet -> {
+			V2i tile = (V2i) pellet.getUserData();
+			pellet.setVisible(!game.level.isFoodRemoved(tile));
+		});
+		updatePlayerShape(game.player);
+		for (Ghost ghost : game.ghosts) {
+			updateGhostShape(ghost);
+		}
+	}
+
+	@Override
 	public void end() {
 		removeStateListeners();
 	}
@@ -164,7 +183,7 @@ public class PlayScene3D implements GameScene {
 		controller.removeStateEntryListener(this::playLevelStartingAnimation);
 	}
 
-	public void buildScene() {
+	private void buildScene() {
 		final GameModel game = controller.selectedGame();
 		final PacManGameWorld world = game.level.world;
 
@@ -202,7 +221,7 @@ public class PlayScene3D implements GameScene {
 		initCamera();
 	}
 
-	public void createScore() {
+	private void createScore() {
 		Text txtScoreTitle = new Text("SCORE");
 		txtScoreTitle.setFill(Color.WHITE);
 		txtScoreTitle.setFont(scoreFont);
@@ -248,7 +267,7 @@ public class PlayScene3D implements GameScene {
 		s.setTranslateX(tile.x * TS);
 		s.setTranslateY(tile.y * TS);
 		s.setUserData(tile);
-		s.setViewOrder(-tile.y * TS - 0.5);
+		s.setViewOrder(-tile.y * TS - 0.1);
 		return s;
 	}
 
@@ -258,7 +277,7 @@ public class PlayScene3D implements GameScene {
 		pellet.setUserData(tile);
 		pellet.setTranslateX(tile.x * TS);
 		pellet.setTranslateY(tile.y * TS);
-		pellet.setViewOrder(-tile.y * TS - 0.5);
+		pellet.setViewOrder(-tile.y * TS - 0.1);
 		return pellet;
 	}
 
@@ -288,6 +307,26 @@ public class PlayScene3D implements GameScene {
 		return axis;
 	}
 
+	private MeshView createGhostMeshView(Ghost ghost) {
+		MeshView meshView = new MeshView(ghostMeshPrototype);
+		meshView.setMaterial(new PhongMaterial(ghostColor(ghost.id)));
+		meshView.setScaleX(4);
+		meshView.setScaleY(4);
+		meshView.setScaleZ(4);
+		meshView.setUserData(ghost);
+		return meshView;
+	}
+
+	private Text createGhostBountyText(Ghost ghost) {
+		Text text = new Text();
+		text.setEffect(new DropShadow(0.3, Color.color(0.4, 0.4, 0.4)));
+//		text.setCache(true);
+		text.setText(String.valueOf(ghost.bounty));
+		text.setFont(Font.font("Sans", FontWeight.BOLD, TS));
+		text.setFill(Color.CYAN);
+		return text;
+	}
+
 	private void addLights(Group parent) {
 		AmbientLight ambientLight = new AmbientLight(mazeColor());
 		ambientLight.setTranslateZ(-300);
@@ -296,25 +335,6 @@ public class PlayScene3D implements GameScene {
 //		spot.translateYProperty().bind(tgPlayer.translateYProperty());
 		spot.setTranslateZ(-100);
 		parent.getChildren().addAll(spot, ambientLight);
-	}
-
-	@Override
-	public void update() {
-		GameModel game = controller.selectedGame();
-		updateScores();
-		energizerBlinking.animate();
-		energizerNodes.forEach(energizer -> {
-			V2i tile = (V2i) energizer.getUserData();
-			energizer.setVisible(!game.level.isFoodRemoved(tile) && energizerBlinking.frame());
-		});
-		pelletNodes.forEach(pellet -> {
-			V2i tile = (V2i) pellet.getUserData();
-			pellet.setVisible(!game.level.isFoodRemoved(tile));
-		});
-		updatePlayerShape(game.player);
-		for (Ghost ghost : game.ghosts) {
-			updateGhostShape(ghost);
-		}
 	}
 
 	private void updateScores() {
@@ -333,27 +353,7 @@ public class PlayScene3D implements GameScene {
 		tgPlayer.setVisible(player.visible);
 		tgPlayer.setTranslateX(player.position.x);
 		tgPlayer.setTranslateY(player.position.y);
-		tgPlayer.setViewOrder(-player.position.y - 0.2);
-	}
-
-	private MeshView createGhostMeshView(Ghost ghost) {
-		MeshView meshView = new MeshView(ghostMeshPrototype);
-		meshView.setMaterial(new PhongMaterial(ghostColor(ghost.id)));
-		meshView.setScaleX(4);
-		meshView.setScaleY(4);
-		meshView.setScaleZ(4);
-		meshView.setUserData(ghost);
-		return meshView;
-	}
-
-	private Text createGhostBountyText(Ghost ghost) {
-		Text text = new Text();
-		text.setEffect(new DropShadow(0.3, Color.color(0.4, 0.4, 0.4)));
-		text.setCache(true);
-		text.setText(String.valueOf(ghost.bounty));
-		text.setFont(Font.font("Sans", FontWeight.BOLD, TS));
-		text.setFill(Color.CYAN);
-		return text;
+		tgPlayer.setViewOrder(-player.position.y - TS);
 	}
 
 	private void updateGhostShape(Ghost ghost) {
@@ -361,28 +361,34 @@ public class PlayScene3D implements GameScene {
 		if (ghost.bounty > 0) {
 			Text shape = createGhostBountyText(ghost);
 			shape.setRotationAxis(Rotate.X_AXIS);
-			shape.setRotate(90);
-			shape.setVisible(ghost.visible);
+			shape.setRotate(camera.getRotate());
 			shape.setTranslateX(ghost.position.x);
 			shape.setTranslateY(ghost.position.y);
 			shape.setTranslateZ(-1.5 * TS);
 			shape.setViewOrder(-ghost.position.y - 0.2);
 			shape.setUserData(ghost);
 			tgMaze.getChildren().add(shape);
+		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
+			Group shape = ghostReturningHome(ghost, ghost.dir);
+			shape.setTranslateX(ghost.position.x);
+			shape.setTranslateY(ghost.position.y);
+			shape.setRotationAxis(Rotate.Z_AXIS);
+			shape.setRotate(ghost.dir == Direction.UP || ghost.dir == Direction.DOWN ? 0 : 90);
+			shape.setViewOrder(-ghost.position.y - 0.2);
+			tgMaze.getChildren().add(shape);
 		} else {
-			MeshView meshView = ghostMeshViews.get(ghost);
-			if (ghost.is(GhostState.FRIGHTENED)) {
-				meshView.setMaterial(new PhongMaterial(Color.BLUE));
-			} else {
-				meshView.setMaterial(new PhongMaterial(ghostColor(ghost.id)));
-			}
-			meshView.setRotationAxis(Rotate.X_AXIS);
-			meshView.setRotate(90);
-			meshView.setVisible(ghost.visible);
-			meshView.setTranslateX(ghost.position.x);
-			meshView.setTranslateY(ghost.position.y);
-			meshView.setViewOrder(-ghost.position.y - 0.2);
-			tgMaze.getChildren().add(meshView);
+			MeshView shape = ghostMeshViews.get(ghost);
+			Color color = ghost.is(GhostState.FRIGHTENED) ? Color.BLUE : ghostColor(ghost.id);
+			PhongMaterial material = (PhongMaterial) shape.getMaterial();
+			material.setDiffuseColor(color);
+			material.setSpecularColor(color);
+			shape.setRotationAxis(Rotate.X_AXIS);
+			shape.setRotate(90);
+			shape.setVisible(ghost.visible);
+			shape.setTranslateX(ghost.position.x);
+			shape.setTranslateY(ghost.position.y);
+			shape.setViewOrder(-ghost.position.y - 0.2);
+			tgMaze.getChildren().add(shape);
 		}
 	}
 
@@ -435,10 +441,10 @@ public class PlayScene3D implements GameScene {
 		return TimedSequence.of(text);
 	}
 
-	public TimedSequence<?> ghostReturningHome(Ghost ghost, Direction dir) {
-		if (!ghostReturningHomeAnimationByGhost.containsKey(ghost)) {
+	private Group ghostReturningHome(Ghost ghost, Direction dir) {
+		if (!ghostReturningHome.containsKey(ghost)) {
 			PhongMaterial material = new PhongMaterial(ghostColor(ghost.id));
-			Sphere[] parts = new Sphere[4];
+			Sphere[] parts = new Sphere[3];
 			for (int i = 0; i < parts.length; ++i) {
 				parts[i] = new Sphere(1);
 				parts[i].setMaterial(material);
@@ -446,12 +452,12 @@ public class PlayScene3D implements GameScene {
 			}
 			Group g = new Group(parts);
 			g.setUserData(ghost);
-			ghostReturningHomeAnimationByGhost.put(ghost, TimedSequence.of(g));
+			ghostReturningHome.put(ghost, g);
 		}
-		return ghostReturningHomeAnimationByGhost.get(ghost);
+		return ghostReturningHome.get(ghost);
 	}
 
-	public TimedSequence<?> playerMunching(Pac player, Direction dir) {
+	private TimedSequence<?> playerMunching(Pac player, Direction dir) {
 		if (playerMunchingAnimation == null) {
 			Box box = new Box(TS, TS, TS);
 			PhongMaterial m = new PhongMaterial(Color.WHITE);
