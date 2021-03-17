@@ -88,6 +88,11 @@ public class PlayScene3D implements GameScene {
 	private Text txtScore;
 	private Text txtHiscore;
 
+	private Group tgLivesCounter;
+
+	private PhongMaterial livesCounterOn = new PhongMaterial(Color.YELLOW);
+	private PhongMaterial livesCounterOff = new PhongMaterial(Color.GRAY);
+
 	private final TimedSequence<Boolean> energizerBlinking = TimedSequence.pulse().frameDuration(15);
 
 	public PlayScene3D(PacManGameController controller, double height) {
@@ -153,6 +158,7 @@ public class PlayScene3D implements GameScene {
 	public void update() {
 		GameModel game = controller.selectedGame();
 		updateScores();
+		updateLivesCounter();
 		energizerBlinking.animate();
 		energizerNodes.forEach(energizer -> {
 			V2i tile = (V2i) energizer.getUserData();
@@ -208,8 +214,6 @@ public class PlayScene3D implements GameScene {
 		final PacManGameWorld world = game.level.world;
 
 		createAxes();
-		createScore();
-
 		PhongMaterial wallMaterial = createWallMaterial();
 		wallNodes = world.tiles().filter(world::isWall)
 				.collect(Collectors.toMap(Function.identity(), tile -> createWallShape(tile, wallMaterial)));
@@ -224,11 +228,16 @@ public class PlayScene3D implements GameScene {
 
 		tgGhosts = game.ghosts().collect(Collectors.toMap(Function.identity(), this::createGhostGroup));
 
+		createScore();
+		createLivesCounter();
+
 		tgMaze = new Group();
+
 		// center over origin
 		tgMaze.setTranslateX(-GameScene.WIDTH_UNSCALED / 2);
 		tgMaze.setTranslateY(-GameScene.HEIGHT_UNSCALED / 2);
-		tgMaze.getChildren().add(tgScore);
+
+		tgMaze.getChildren().addAll(tgScore, tgLivesCounter);
 		tgMaze.getChildren().addAll(wallNodes.values());
 		tgMaze.getChildren().addAll(energizerNodes);
 		tgMaze.getChildren().addAll(pelletNodes);
@@ -293,6 +302,21 @@ public class PlayScene3D implements GameScene {
 		grid.add(txtHiscore, 1, 1);
 
 		tgScore = new Group(grid);
+	}
+
+	private void createLivesCounter() {
+		tgLivesCounter = new Group();
+		int counterTileX = 1, counterTileY = 1;
+		tgLivesCounter.setViewOrder(-counterTileY * TS);
+		for (int i = 0; i < 5; ++i) {
+			V2i ballTile = new V2i(counterTileX + 2 * i, counterTileY);
+			Sphere ball = new Sphere(3);
+			ball.setTranslateX(ballTile.x * TS);
+			ball.setTranslateY(ballTile.y * TS);
+			ball.setTranslateZ(0); // ???
+			tgLivesCounter.getChildren().add(ball);
+			wallNodes.remove(ballTile);
+		}
 	}
 
 	private Node createWallShape(V2i tile, PhongMaterial material) {
@@ -360,6 +384,15 @@ public class PlayScene3D implements GameScene {
 		tgScore.setRotate(staticCamera.getRotate());
 	}
 
+	private void updateLivesCounter() {
+		GameModel game = controller.selectedGame();
+		ObservableList<Node> children = tgLivesCounter.getChildren();
+		for (int i = 0; i < children.size(); ++i) {
+			Sphere ball = (Sphere) children.get(i);
+			ball.setMaterial(i < game.lives ? livesCounterOn : livesCounterOff);
+		}
+	}
+
 	private Group playerNode(Pac player) {
 		MeshView body = meshViews.get("Sphere_Sphere.002_Material.001");
 		body.setMaterial(new PhongMaterial(Color.YELLOW.brighter()));
@@ -397,6 +430,18 @@ public class PlayScene3D implements GameScene {
 		tgPlayer.setTranslateX(player.position.x);
 		tgPlayer.setTranslateY(player.position.y);
 		tgPlayer.setViewOrder(-player.position.y - 2);
+		tgPlayer.setRotationAxis(Rotate.Z_AXIS);
+
+		// WTF?
+//		if (player.dir == Direction.UP) {
+//			tgPlayer.setRotate(180);
+//		} else if (player.dir == Direction.RIGHT) {
+//			tgPlayer.setRotate(-90);
+//		} else if (player.dir == Direction.DOWN) {
+//			tgPlayer.setRotate(0);
+//		} else if (player.dir == Direction.LEFT) {
+//			tgPlayer.setRotate(90);
+//		}
 	}
 
 	private Group createGhostGroup(Ghost ghost) {
