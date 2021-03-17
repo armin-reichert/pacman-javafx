@@ -384,6 +384,11 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void updateLivesCounter() {
+		if (controller.isAttractMode()) {
+			tgLivesCounter.setVisible(false);
+			return;
+		}
+		tgLivesCounter.setVisible(true);
 		GameModel game = controller.selectedGame();
 		ObservableList<Node> children = tgLivesCounter.getChildren();
 		for (int i = 0; i < children.size(); ++i) {
@@ -556,15 +561,10 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void playLevelStartingAnimation(PacManGameState state) {
-		GameModel game = controller.selectedGame();
 		useStaticCamera();
 		ScaleTransition animation = new ScaleTransition(Duration.seconds(5), tgMaze);
 		animation.setFromZ(0);
 		animation.setToZ(1);
-		animation.setOnFinished(e -> {
-			game.player.visible = true;
-			game.ghosts().forEach(ghost -> ghost.visible = true);
-		});
 		animation.play();
 		controller.state.timer.resetSeconds(5);
 	}

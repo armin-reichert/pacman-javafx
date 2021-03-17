@@ -127,7 +127,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		render();
 	}
 
-	public void render() {
+	private void render() {
 		GameModel game = controller.selectedGame();
 		rendering.drawMaze(gc, game.level.mazeNumber, 0, t(3), mazeFlashing.isRunning());
 		if (!mazeFlashing.isRunning()) {

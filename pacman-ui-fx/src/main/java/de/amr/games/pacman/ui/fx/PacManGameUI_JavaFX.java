@@ -179,6 +179,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 		// now using new game scene
 		gameScene = newGameScene;
+		mainSceneRoot.getChildren().clear();
+		mainSceneRoot.getChildren().addAll(gameScene.getSubScene(), flashMessageView, infoView);
 		gameScene.resize(mainScene.getWidth(), mainScene.getHeight());
 		if (Env.$useStaticCamera.get()) {
 			gameScene.useStaticCamera();
@@ -188,8 +190,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			camControl.setCamera(null);
 		}
 		gameScene.start();
-		mainSceneRoot.getChildren().clear();
-		mainSceneRoot.getChildren().addAll(gameScene.getSubScene(), flashMessageView, infoView);
 	}
 
 	@Override
