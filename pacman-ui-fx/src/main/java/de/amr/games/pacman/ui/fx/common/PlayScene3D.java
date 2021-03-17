@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.OptionalDouble;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
@@ -25,6 +26,7 @@ import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.animation.TimedSequence;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_Constants;
 import javafx.animation.ScaleTransition;
+import javafx.collections.ObservableList;
 import javafx.scene.AmbientLight;
 import javafx.scene.Camera;
 import javafx.scene.Group;
@@ -75,7 +77,7 @@ public class PlayScene3D implements GameScene {
 	private Group tgAxes;
 	private Group tgMaze;
 	private Group tgPlayer;
-	private Map<Ghost, MeshView> ghostMeshViews;
+	private Map<Ghost, Group> tgGhosts;
 	private Map<V2i, Node> wallNodes;
 	private List<Node> energizerNodes;
 	private List<Node> pelletNodes;
@@ -217,7 +219,8 @@ public class PlayScene3D implements GameScene {
 				.map(tile -> createPelletShape(tile, foodMaterial)).collect(Collectors.toList());
 
 		tgPlayer = new Group();
-		ghostMeshViews = game.ghosts().collect(Collectors.toMap(Function.identity(), ghost -> createGhostMeshView(ghost)));
+
+		tgGhosts = game.ghosts().collect(Collectors.toMap(Function.identity(), this::createGhostGroup));
 
 		tgMaze = new Group();
 		// center over origin
@@ -228,7 +231,7 @@ public class PlayScene3D implements GameScene {
 		tgMaze.getChildren().addAll(energizerNodes);
 		tgMaze.getChildren().addAll(pelletNodes);
 		tgMaze.getChildren().addAll(tgPlayer);
-		tgMaze.getChildren().addAll(ghostMeshViews.values());
+		tgMaze.getChildren().addAll(tgGhosts.values());
 		addLights();
 
 		sceneRoot.getChildren().clear();
@@ -380,38 +383,52 @@ public class PlayScene3D implements GameScene {
 		return shape;
 	}
 
-	private MeshView createGhostMeshView(Ghost ghost) {
-		MeshView meshView = new MeshView(ghostMeshPrototype);
-		meshView.setMaterial(new PhongMaterial(ghostColor(ghost.id)));
-		meshView.setUserData(ghost);
-		return meshView;
+	private Group createGhostGroup(Ghost ghost) {
+		MeshView colored = ghostColored(ghost);
+		Text bounty = ghostBounty(ghost);
+		Group returningHome = ghostReturningHome(ghost);
+		colored.setVisible(true);
+		bounty.setVisible(false);
+		returningHome.setVisible(false);
+		return new Group(colored, bounty, returningHome);
 	}
 
 	private void updateGhostNode(Ghost ghost) {
-		Node ghostNode;
+		ObservableList<Node> children = tgGhosts.get(ghost).getChildren();
+		int oldSelection = IntStream.range(0, 3).filter(i -> children.get(i).isVisible()).findFirst().getAsInt();
+		int newSelection = -1;
 		if (ghost.bounty > 0) {
-			ghostNode = ghostBounty(ghost);
+			newSelection = 1;
+			Text bounty = (Text) children.get(newSelection);
+			bounty.setText(ghost.bounty + "");
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
-			ghostNode = ghostReturningHome(ghost);
+			newSelection = 2;
+			Group ghostReturningHome = (Group) children.get(newSelection);
+			ghostReturningHome.setRotationAxis(Rotate.Z_AXIS);
+			ghostReturningHome.setRotate(ghost.dir == Direction.UP || ghost.dir == Direction.DOWN ? 90 : 0);
 		} else {
-			ghostNode = ghostColored(ghost);
+			newSelection = 0;
+			MeshView meshView = (MeshView) children.get(newSelection);
+			Color color = ghost.is(GhostState.FRIGHTENED) ? Color.CORNFLOWERBLUE : ghostColor(ghost.id);
+			PhongMaterial material = (PhongMaterial) meshView.getMaterial();
+			material.setDiffuseColor(color);
+			material.setSpecularColor(color);
 		}
-		// TODO store one group per ghost in scene graph and exchange its child node?
-		ghostNode.setVisible(ghost.visible);
-		ghostNode.setTranslateX(ghost.position.x);
-		ghostNode.setTranslateY(ghost.position.y);
-		ghostNode.setViewOrder(-(ghost.position.y + 5));
-		ghostNode.setUserData(ghost);
-		tgMaze.getChildren().removeIf(node -> node.getUserData() == ghost);
-		tgMaze.getChildren().add(ghostNode);
+		if (newSelection != oldSelection) {
+			children.get(oldSelection).setVisible(false);
+			children.get(newSelection).setVisible(true);
+		}
+		tgGhosts.get(ghost).setVisible(ghost.visible);
+		tgGhosts.get(ghost).setTranslateX(ghost.position.x);
+		tgGhosts.get(ghost).setTranslateY(ghost.position.y);
+		tgGhosts.get(ghost).setViewOrder(-(ghost.position.y + 5));
+		tgGhosts.get(ghost).setUserData(ghost);
 	}
 
-	private Node ghostColored(Ghost ghost) {
-		MeshView shape = ghostMeshViews.get(ghost);
-		Color color = ghost.is(GhostState.FRIGHTENED) ? Color.CORNFLOWERBLUE : ghostColor(ghost.id);
-		PhongMaterial material = (PhongMaterial) shape.getMaterial();
-		material.setDiffuseColor(color);
-		material.setSpecularColor(color);
+	private MeshView ghostColored(Ghost ghost) {
+		PhongMaterial material = new PhongMaterial(ghostColor(ghost.id));
+		MeshView shape = new MeshView(ghostMeshPrototype);
+		shape.setMaterial(material);
 //		shape.setDrawMode(DrawMode.LINE);
 		shape.getTransforms().clear();
 		shape.getTransforms().add(new Scale(4, 4, 4));
@@ -442,11 +459,7 @@ public class PlayScene3D implements GameScene {
 			parts[i].setMaterial(material);
 			parts[i].setTranslateX(i * 3);
 		}
-		Group g = new Group(parts);
-		g.setUserData(ghost);
-		g.setRotationAxis(Rotate.Z_AXIS);
-		g.setRotate(ghost.dir == Direction.UP || ghost.dir == Direction.DOWN ? 90 : 0);
-		return g;
+		return new Group(parts);
 	}
 
 	private Color mazeColor() {
