@@ -33,10 +33,17 @@ public interface GameScene {
 
 	SubScene getSubScene();
 
+	default void useStaticCamera() {
+		getSubScene().setCamera(getStaticCamera());
+	}
+
 	Camera getStaticCamera();
 
 	default Camera getMovingCamera() {
 		return null;
+	}
+
+	default void useMovingCamera() {
 	}
 
 }

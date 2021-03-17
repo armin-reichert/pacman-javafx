@@ -38,6 +38,7 @@ import javafx.stage.Stage;
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
 
+	private final Stage stage;
 	private final PacManGameController controller;
 	private final Keyboard keyboard = new Keyboard();
 	private final CameraController camControl = new CameraController();
@@ -50,6 +51,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private GameScene gameScene;
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController controller, double height) {
+		this.stage = stage;
 		this.controller = controller;
 
 		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
@@ -59,54 +61,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
 		stage.addEventHandler(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, camControl::handleKeyEvent);
-
-		stage.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-			boolean control = e.isControlDown();
-			switch (e.getCode()) {
-			case F11:
-				stage.setFullScreen(true);
-				break;
-			case DIGIT3:
-				if (control) {
-					toggleUse3DScenes();
-				}
-				break;
-			case I:
-				if (control) {
-					Env.$infoViewVisible.set(!Env.$infoViewVisible.get());
-				}
-				break;
-			case L:
-				if (control) {
-					Env.$drawMode.set(Env.$drawMode.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
-				}
-				break;
-			case P:
-				if (control) {
-					Env.$paused.set(!Env.$paused.get());
-				}
-				break;
-			case V:
-				controller.toggleGameType();
-				break;
-			case S:
-				if (control) {
-					Env.$useStaticCamera.set(!Env.$useStaticCamera.get());
-				}
-				break;
-			case T:
-				if (control) {
-					Env.$measureTime.set(!Env.$measureTime.get());
-				}
-				break;
-			case X:
-				if (control)
-					Env.$showAxes.set(!Env.$showAxes.get());
-				break;
-			default:
-				break;
-			}
-		});
+		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeys);
 
 		infoView = new Text();
 		infoView.setFill(Color.LIGHTGREEN);
@@ -125,6 +80,59 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		stage.setScene(mainScene);
 		stage.centerOnScreen();
 		stage.show();
+	}
+
+	private void handleKeys(KeyEvent e) {
+		boolean control = e.isControlDown();
+		switch (e.getCode()) {
+		case F11:
+			stage.setFullScreen(true);
+			break;
+		case DIGIT3:
+			if (control) {
+				toggleUse3DScenes();
+			}
+			break;
+		case I:
+			if (control) {
+				Env.$infoViewVisible.set(!Env.$infoViewVisible.get());
+			}
+			break;
+		case L:
+			if (control) {
+				Env.$drawMode.set(Env.$drawMode.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+			}
+			break;
+		case P:
+			if (control) {
+				Env.$paused.set(!Env.$paused.get());
+			}
+			break;
+		case V:
+			controller.toggleGameType();
+			break;
+		case S:
+			if (control) {
+				Env.$useStaticCamera.set(!Env.$useStaticCamera.get());
+				if (Env.$useStaticCamera.get()) {
+					gameScene.useStaticCamera();
+				} else {
+					gameScene.useMovingCamera();
+				}
+			}
+			break;
+		case T:
+			if (control) {
+				Env.$measureTime.set(!Env.$measureTime.get());
+			}
+			break;
+		case X:
+			if (control)
+				Env.$showAxes.set(!Env.$showAxes.get());
+			break;
+		default:
+			break;
+		}
 	}
 
 	private void toggleUse3DScenes() {
@@ -161,16 +169,27 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private void changeGameScene(GameScene newGameScene) {
-		// TODO what if new and current scene are equal?
+		if (gameScene == newGameScene) {
+			return;
+		}
 		if (gameScene != null) {
 			gameScene.end();
 		}
 		gameScene = newGameScene;
+
+		// TODO integrate into resize() method of scene
 		double width = newGameScene.aspectRatio().isPresent()
 				? newGameScene.aspectRatio().getAsDouble() * mainScene.getHeight()
 				: mainScene.getWidth();
 		newGameScene.resize(width, mainScene.getHeight());
-		camControl.setCamera(newGameScene.getStaticCamera());
+
+		if (Env.$useStaticCamera.get()) {
+			newGameScene.useStaticCamera();
+			camControl.setCamera(newGameScene.getStaticCamera());
+		} else {
+			newGameScene.useMovingCamera();
+			camControl.setCamera(null);
+		}
 		mainSceneRoot.getChildren().clear();
 		mainSceneRoot.getChildren().addAll(newGameScene.getSubScene(), flashMessageView, infoView);
 		newGameScene.start();

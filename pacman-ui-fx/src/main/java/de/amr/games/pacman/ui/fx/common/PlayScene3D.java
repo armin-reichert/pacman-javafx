@@ -103,7 +103,7 @@ public class PlayScene3D implements GameScene {
 		sceneRoot = new Group();
 		subScene = new SubScene(sceneRoot, width, height);
 		subScene.setFill(Color.BLACK);
-		subScene.setCamera(staticCamera);
+		useStaticCamera();
 	}
 
 	private void loadMeshes() {
@@ -172,10 +172,7 @@ public class PlayScene3D implements GameScene {
 		for (Ghost ghost : game.ghosts) {
 			updateGhostNode(ghost);
 		}
-		if (Env.$useStaticCamera.get()) {
-			subScene.setCamera(staticCamera);
-		} else {
-			subScene.setCamera(movingCamera);
+		if (subScene.getCamera() == movingCamera) {
 			updateMovingCamera();
 		}
 	}
@@ -247,7 +244,10 @@ public class PlayScene3D implements GameScene {
 
 		sceneRoot.getChildren().clear();
 		sceneRoot.getChildren().addAll(tgMaze, tgAxes);
+	}
 
+	@Override
+	public void useStaticCamera() {
 		staticCamera.setNearClip(0.1);
 		staticCamera.setFarClip(10000.0);
 		staticCamera.setTranslateX(0);
@@ -255,12 +255,17 @@ public class PlayScene3D implements GameScene {
 		staticCamera.setTranslateZ(-460);
 		staticCamera.setRotationAxis(Rotate.X_AXIS);
 		staticCamera.setRotate(30);
+		subScene.setCamera(staticCamera);
+	}
 
+	@Override
+	public void useMovingCamera() {
 		movingCamera.setNearClip(0.1);
 		movingCamera.setFarClip(10000.0);
 		movingCamera.setTranslateZ(-300);
 		movingCamera.setRotationAxis(Rotate.X_AXIS);
 		movingCamera.setRotate(30);
+		subScene.setCamera(movingCamera);
 	}
 
 	private void updateMovingCamera() {
@@ -544,6 +549,10 @@ public class PlayScene3D implements GameScene {
 	// State change handling
 
 	private void playLevelCompleteAnimation(PacManGameState state) {
+		GameModel game = controller.selectedGame();
+		game.player.visible = false;
+		game.ghosts().forEach(ghost -> ghost.visible = false);
+		useStaticCamera();
 		ScaleTransition animation = new ScaleTransition(Duration.seconds(5), tgMaze);
 		animation.setDelay(Duration.seconds(2));
 		animation.setFromZ(1);
@@ -553,6 +562,10 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void playLevelStartingAnimation(PacManGameState state) {
+		GameModel game = controller.selectedGame();
+		game.player.visible = true;
+		game.ghosts().forEach(ghost -> ghost.visible = true);
+		useStaticCamera();
 		ScaleTransition animation = new ScaleTransition(Duration.seconds(5), tgMaze);
 		animation.setFromZ(0);
 		animation.setToZ(1);
