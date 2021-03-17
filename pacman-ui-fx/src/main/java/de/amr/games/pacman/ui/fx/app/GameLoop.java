@@ -15,6 +15,7 @@ class GameLoop extends AnimationTimer {
 	public GameLoop(PacManGameController controller, PacManGameUI_JavaFX userInterface) {
 		this.controller = controller;
 		this.userInterface = userInterface;
+
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package de.amr.games.pacman.ui.fx.common;
 
+import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
 import java.util.HashMap;
@@ -33,7 +34,6 @@ import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -61,7 +61,7 @@ public class PlayScene3D implements GameScene {
 			TS);
 
 	private static Color ghostColor(int id) {
-		return id == 0 ? Color.RED : id == 1 ? Color.PINK : id == 2 ? Color.CYAN : Color.ORANGE;
+		return id == 0 ? Color.TOMATO : id == 1 ? Color.PINK : id == 2 ? Color.CYAN : Color.ORANGE;
 	}
 
 	private final PacManGameController controller;
@@ -71,6 +71,7 @@ public class PlayScene3D implements GameScene {
 	private final PerspectiveCamera movingCamera;
 
 	private Mesh ghostMeshPrototype;
+	private Map<String, MeshView> meshViews;
 
 	private Group tgAxes;
 	private Group tgMaze;
@@ -84,10 +85,7 @@ public class PlayScene3D implements GameScene {
 	private Text txtScore;
 	private Text txtHiscore;
 
-	private final TimedSequence<Node> missingAnimation = createDefaultAnimation();
 	private final TimedSequence<Boolean> energizerBlinking = TimedSequence.pulse().frameDuration(15);
-	private TimedSequence<?> playerMunchingAnimation;
-	private TimedSequence<?> playerDyingAnimation = missingAnimation;
 	private final Map<Ghost, Group> ghostReturningHome = new HashMap<>();
 
 	public PlayScene3D(PacManGameController controller, double height) {
@@ -99,10 +97,17 @@ public class PlayScene3D implements GameScene {
 		subScene = new SubScene(sceneRoot, width, height);
 		subScene.setFill(Color.BLACK);
 		subScene.setCamera(staticCamera);
+	}
+
+	private void loadMeshes() {
 		ObjModelImporter objImporter = new ObjModelImporter();
 		try {
 			objImporter.read(getClass().getResource("/common/ghost.obj"));
 			ghostMeshPrototype = objImporter.getNamedMeshViews().get("Ghost_Sphere.001").getMesh();
+			objImporter.read(getClass().getResource("/common/pacman1.obj"));
+			meshViews = objImporter.getNamedMeshViews();
+			meshViews.forEach((name, view) -> log("Mesh '%s': %s", name, view));
+			log("Mesh views loaded successfully!");
 		} catch (ImportException e) {
 			e.printStackTrace();
 		}
@@ -137,6 +142,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void start() {
 		controller.setPlayerImmune(true);
+		loadMeshes();
 		buildScene();
 		addStateListeners();
 	}
@@ -176,7 +182,7 @@ public class PlayScene3D implements GameScene {
 		ambientLight.setTranslateZ(-100);
 		tgMaze.getChildren().add(ambientLight);
 
-		PointLight spot = new PointLight(Color.YELLOW);
+		PointLight spot = new PointLight(Color.LIGHTBLUE);
 		spot.setTranslateZ(-500);
 		tgMaze.getChildren().add(spot);
 	}
@@ -351,10 +357,8 @@ public class PlayScene3D implements GameScene {
 
 	private Text createGhostBountyText(Ghost ghost) {
 		Text text = new Text();
-//		text.setEffect(new DropShadow(0.3, Color.color(0.4, 0.4, 0.4)));
-//		text.setCache(true);
 		text.setText(String.valueOf(ghost.bounty));
-		text.setFont(Font.font("Sans", FontWeight.MEDIUM, 12.0));
+		text.setFont(Font.font("Sans", FontWeight.MEDIUM, 8));
 		text.setFill(Color.CYAN);
 		return text;
 	}
@@ -369,7 +373,18 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void updatePlayerShape(Pac player) {
-		Node shape = player.dead ? (Node) playerDyingAnimation.frame() : (Node) playerMunching(player, player.dir).frame();
+		MeshView body = meshViews.get("Sphere_Sphere.002_Material.001");
+//		body.setMaterial(new PhongMaterial(Color.YELLOW));
+//		body.setDrawMode(DrawMode.LINE);
+		MeshView glasses = meshViews.get("Sphere_Sphere.002_Material.002");
+		glasses.setMaterial(new PhongMaterial(Color.rgb(50, 50, 50)));
+//		glasses.setDrawMode(DrawMode.LINE);
+		Group shape = new Group(body, glasses);
+		shape.setScaleX(8 / 3.0);
+		shape.setScaleY(8 / 3.0);
+		shape.setScaleZ(8 / 3.0);
+		shape.setRotationAxis(Rotate.X_AXIS);
+		shape.setRotate(90);
 		tgPlayer.getChildren().clear();
 		tgPlayer.getChildren().add(shape);
 		tgPlayer.setVisible(player.visible);
@@ -454,16 +469,6 @@ public class PlayScene3D implements GameScene {
 		levelStartAnimation.play();
 	}
 
-	private TimedSequence<Node> createDefaultAnimation() {
-		Text text = new Text("Animation?");
-		text.setFill(Color.RED);
-		text.setFont(Font.font("Sans", FontWeight.BOLD, 12));
-		text.setTranslateZ(-40);
-		text.setRotationAxis(Rotate.X_AXIS);
-		text.setRotate(90);
-		return TimedSequence.of(text);
-	}
-
 	private Group ghostReturningHome(Ghost ghost, Direction dir) {
 		if (!ghostReturningHome.containsKey(ghost)) {
 			PhongMaterial material = new PhongMaterial(ghostColor(ghost.id));
@@ -480,24 +485,4 @@ public class PlayScene3D implements GameScene {
 		return ghostReturningHome.get(ghost);
 	}
 
-	private TimedSequence<?> playerMunching(Pac player, Direction dir) {
-		if (playerMunchingAnimation == null) {
-			Box box = new Box(TS, TS, TS);
-			PhongMaterial m = new PhongMaterial(Color.WHITE);
-			Image playerImage = playerImage(player);
-			m.setBumpMap(playerImage);
-			m.setDiffuseMap(playerImage);
-			box.setMaterial(m);
-			box.setUserData(player);
-			playerMunchingAnimation = TimedSequence.of(box);
-		}
-		return playerMunchingAnimation;
-	}
-
-	private Image playerImage(Pac player) {
-		Image spritesheet = new Image(getClass().getResource("/mspacman/graphics/sprites.png").toExternalForm());
-		WritableImage img = new WritableImage(16, 16);
-		img.getPixelWriter().setPixels(0, 0, 16, 16, spritesheet.getPixelReader(), 472, 0);
-		return img;
-	}
 }
