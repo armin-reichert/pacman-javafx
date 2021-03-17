@@ -364,12 +364,12 @@ public class PlayScene3D implements GameScene {
 		MeshView body = meshViews.get("Sphere_Sphere.002_Material.001");
 		body.setMaterial(new PhongMaterial(Color.YELLOW.brighter()));
 		body.setDrawMode(Env.$drawMode.get());
-		centerOverOrigin(body);
+		Translate shift = centerOverOrigin(body);
 
 		MeshView glasses = meshViews.get("Sphere_Sphere.002_Material.002");
 		glasses.setMaterial(new PhongMaterial(Color.rgb(50, 50, 50)));
 		glasses.setDrawMode(Env.$drawMode.get());
-		centerOverOrigin(glasses);
+		glasses.getTransforms().add(shift);
 
 		Group shape = new Group(body, glasses);
 		shape.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
@@ -377,9 +377,11 @@ public class PlayScene3D implements GameScene {
 		return shape;
 	}
 
-	private void centerOverOrigin(Node node) {
+	private Translate centerOverOrigin(Node node) {
 		Bounds bounds = node.getBoundsInLocal();
-		node.getTransforms().add(new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ()));
+		Translate shift = new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
+		node.getTransforms().add(shift);
+		return shift;
 	}
 
 	private void scale(Node node, double size) {
@@ -512,5 +514,4 @@ public class PlayScene3D implements GameScene {
 		animation.play();
 		controller.state.timer.resetSeconds(5);
 	}
-
 }
