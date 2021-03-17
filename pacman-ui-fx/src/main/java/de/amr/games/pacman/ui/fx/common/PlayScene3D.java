@@ -557,12 +557,14 @@ public class PlayScene3D implements GameScene {
 
 	private void playLevelStartingAnimation(PacManGameState state) {
 		GameModel game = controller.selectedGame();
-		game.player.visible = true;
-		game.ghosts().forEach(ghost -> ghost.visible = true);
 		useStaticCamera();
 		ScaleTransition animation = new ScaleTransition(Duration.seconds(5), tgMaze);
 		animation.setFromZ(0);
 		animation.setToZ(1);
+		animation.setOnFinished(e -> {
+			game.player.visible = true;
+			game.ghosts().forEach(ghost -> ghost.visible = true);
+		});
 		animation.play();
 		controller.state.timer.resetSeconds(5);
 	}
