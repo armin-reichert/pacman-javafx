@@ -5,6 +5,7 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -35,6 +36,7 @@ import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -89,6 +91,8 @@ public class PlayScene3D implements GameScene {
 
 	private Group tgLivesCounter;
 
+	private Image wallTexture = new Image(getClass().getResource("/common/stone-texture.png").toExternalForm());
+	private PhongMaterial wallMaterials[];
 	private PhongMaterial livesCounterOn = new PhongMaterial(Color.YELLOW);
 	private PhongMaterial livesCounterOff = new PhongMaterial(Color.GRAY);
 
@@ -205,9 +209,9 @@ public class PlayScene3D implements GameScene {
 		final PacManGameWorld world = game.level.world;
 
 		createAxes();
-		PhongMaterial wallMaterial = createWallMaterial();
-		wallNodes = world.tiles().filter(world::isWall)
-				.collect(Collectors.toMap(Function.identity(), tile -> createWallShape(tile, wallMaterial)));
+		createWallMaterials(10);
+		wallNodes = world.tiles().filter(world::isWall).collect(Collectors.toMap(Function.identity(),
+				tile -> createWallShape(tile, wallMaterials[new Random().nextInt(wallMaterials.length)])));
 
 		PhongMaterial foodMaterial = new PhongMaterial(foodColor());
 		energizerNodes = world.energizerTiles().map(tile -> createEnergizerShape(tile, foodMaterial))
@@ -348,12 +352,23 @@ public class PlayScene3D implements GameScene {
 		return pellet;
 	}
 
-	private PhongMaterial createWallMaterial() {
-		PhongMaterial m = new PhongMaterial();
-		Image wallImage = new Image(getClass().getResource("/common/stonewall.png").toExternalForm());
-		m.setBumpMap(wallImage);
-		m.setDiffuseMap(wallImage);
-		return m;
+	private void createWallMaterials(int n) {
+		wallMaterials = new PhongMaterial[n];
+		for (int i = 0; i < wallMaterials.length; ++i) {
+			PhongMaterial m = new PhongMaterial();
+			Image texture = randomSubimage(wallTexture, 128, 128);
+			m.setBumpMap(texture);
+			m.setDiffuseMap(texture);
+			wallMaterials[i] = m;
+		}
+	}
+
+	private Image randomSubimage(Image src, int w, int h) {
+		WritableImage result = new WritableImage(w, h);
+		int x = new Random().nextInt((int) src.getWidth() - w);
+		int y = new Random().nextInt((int) src.getHeight() - h);
+		result.getPixelWriter().setPixels(0, 0, w, h, src.getPixelReader(), x, y);
+		return result;
 	}
 
 	private void createAxes() {
