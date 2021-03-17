@@ -27,6 +27,7 @@ import de.amr.games.pacman.ui.animation.TimedSequence;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_Constants;
 import javafx.animation.ScaleTransition;
 import javafx.collections.ObservableList;
+import javafx.geometry.Bounds;
 import javafx.scene.AmbientLight;
 import javafx.scene.Camera;
 import javafx.scene.Group;
@@ -48,6 +49,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
+import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 /**
@@ -218,7 +220,7 @@ public class PlayScene3D implements GameScene {
 		pelletNodes = world.tiles().filter(world::isFoodTile).filter(tile -> !world.isEnergizerTile(tile))
 				.map(tile -> createPelletShape(tile, foodMaterial)).collect(Collectors.toList());
 
-		tgPlayer = new Group();
+		tgPlayer = playerNode(game.player);
 
 		tgGhosts = game.ghosts().collect(Collectors.toMap(Function.identity(), this::createGhostGroup));
 
@@ -358,29 +360,41 @@ public class PlayScene3D implements GameScene {
 		tgScore.setRotate(staticCamera.getRotate());
 	}
 
+	private Group playerNode(Pac player) {
+		MeshView body = meshViews.get("Sphere_Sphere.002_Material.001");
+		body.setMaterial(new PhongMaterial(Color.YELLOW.brighter()));
+		body.setDrawMode(Env.$drawMode.get());
+		centerOverOrigin(body);
+
+		MeshView glasses = meshViews.get("Sphere_Sphere.002_Material.002");
+		glasses.setMaterial(new PhongMaterial(Color.rgb(50, 50, 50)));
+		glasses.setDrawMode(Env.$drawMode.get());
+		centerOverOrigin(glasses);
+
+		Group shape = new Group(body, glasses);
+		shape.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
+		scale(shape, TS);
+		return shape;
+	}
+
+	private void centerOverOrigin(Node node) {
+		Bounds bounds = node.getBoundsInLocal();
+		node.getTransforms().add(new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ()));
+	}
+
+	private void scale(Node node, double size) {
+		Bounds bounds = node.getBoundsInLocal();
+		double s1 = size / bounds.getWidth();
+		double s2 = size / bounds.getHeight();
+		double s3 = size / bounds.getDepth();
+		node.getTransforms().add(new Scale(s1, s2, s3));
+	}
+
 	private void updatePlayerShape(Pac player) {
-		tgPlayer.getChildren().clear();
-		tgPlayer.getChildren().add(playerNode(player));
 		tgPlayer.setVisible(player.visible);
 		tgPlayer.setTranslateX(player.position.x);
 		tgPlayer.setTranslateY(player.position.y);
 		tgPlayer.setViewOrder(-player.position.y - 2);
-	}
-
-	private Node playerNode(Pac player) {
-		MeshView body = meshViews.get("Sphere_Sphere.002_Material.001");
-//	body.setMaterial(new PhongMaterial(Color.YELLOW));
-//	body.setDrawMode(DrawMode.LINE);
-		MeshView glasses = meshViews.get("Sphere_Sphere.002_Material.002");
-		glasses.setMaterial(new PhongMaterial(Color.rgb(50, 50, 50)));
-//	glasses.setDrawMode(DrawMode.LINE);
-		Group shape = new Group(body, glasses);
-		shape.setScaleX(8 / 3.0);
-		shape.setScaleY(8 / 3.0);
-		shape.setScaleZ(8 / 3.0);
-		shape.setRotationAxis(Rotate.X_AXIS);
-		shape.setRotate(90);
-		return shape;
 	}
 
 	private Group createGhostGroup(Ghost ghost) {
