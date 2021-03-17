@@ -3,7 +3,6 @@ package de.amr.games.pacman.ui.fx.common;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.OptionalDouble;
@@ -86,7 +85,6 @@ public class PlayScene3D implements GameScene {
 	private Text txtHiscore;
 
 	private final TimedSequence<Boolean> energizerBlinking = TimedSequence.pulse().frameDuration(15);
-	private final Map<Ghost, Group> ghostReturningHome = new HashMap<>();
 
 	public PlayScene3D(PacManGameController controller, double height) {
 		this.controller = controller;
@@ -348,6 +346,40 @@ public class PlayScene3D implements GameScene {
 		return axis;
 	}
 
+	private void updateScores() {
+		GameModel game = controller.selectedGame();
+		txtScore.setText(String.format("%07d L%d", game.score, game.levelNumber));
+		txtHiscore.setText(String.format("%07d L%d", game.highscorePoints, game.highscoreLevel));
+		// TODO is this the right way or should the score be kept outside the subscene?
+		tgScore.setRotationAxis(Rotate.X_AXIS);
+		tgScore.setRotate(staticCamera.getRotate());
+	}
+
+	private void updatePlayerShape(Pac player) {
+		tgPlayer.getChildren().clear();
+		tgPlayer.getChildren().add(playerNode(player));
+		tgPlayer.setVisible(player.visible);
+		tgPlayer.setTranslateX(player.position.x);
+		tgPlayer.setTranslateY(player.position.y);
+		tgPlayer.setViewOrder(-player.position.y - 2);
+	}
+
+	private Node playerNode(Pac player) {
+		MeshView body = meshViews.get("Sphere_Sphere.002_Material.001");
+//	body.setMaterial(new PhongMaterial(Color.YELLOW));
+//	body.setDrawMode(DrawMode.LINE);
+		MeshView glasses = meshViews.get("Sphere_Sphere.002_Material.002");
+		glasses.setMaterial(new PhongMaterial(Color.rgb(50, 50, 50)));
+//	glasses.setDrawMode(DrawMode.LINE);
+		Group shape = new Group(body, glasses);
+		shape.setScaleX(8 / 3.0);
+		shape.setScaleY(8 / 3.0);
+		shape.setScaleZ(8 / 3.0);
+		shape.setRotationAxis(Rotate.X_AXIS);
+		shape.setRotate(90);
+		return shape;
+	}
+
 	private MeshView createGhostMeshView(Ghost ghost) {
 		MeshView meshView = new MeshView(ghostMeshPrototype);
 		meshView.setMaterial(new PhongMaterial(ghostColor(ghost.id)));
@@ -355,79 +387,66 @@ public class PlayScene3D implements GameScene {
 		return meshView;
 	}
 
-	private Text createGhostBountyText(Ghost ghost) {
-		Text text = new Text();
-		text.setText(String.valueOf(ghost.bounty));
-		text.setFont(Font.font("Sans", FontWeight.MEDIUM, 8));
-		text.setFill(Color.CYAN);
-		return text;
-	}
-
-	private void updateScores() {
-		GameModel game = controller.selectedGame();
-		txtScore.setText(String.format("%07d L%d", game.score, game.levelNumber));
-		txtHiscore.setText(String.format("%07d L%d", game.highscorePoints, game.highscoreLevel));
-		// TODO is this the right way?
-		tgScore.setRotationAxis(Rotate.X_AXIS);
-		tgScore.setRotate(staticCamera.getRotate());
-	}
-
-	private void updatePlayerShape(Pac player) {
-		MeshView body = meshViews.get("Sphere_Sphere.002_Material.001");
-//		body.setMaterial(new PhongMaterial(Color.YELLOW));
-//		body.setDrawMode(DrawMode.LINE);
-		MeshView glasses = meshViews.get("Sphere_Sphere.002_Material.002");
-		glasses.setMaterial(new PhongMaterial(Color.rgb(50, 50, 50)));
-//		glasses.setDrawMode(DrawMode.LINE);
-		Group shape = new Group(body, glasses);
-		shape.setScaleX(8 / 3.0);
-		shape.setScaleY(8 / 3.0);
-		shape.setScaleZ(8 / 3.0);
-		shape.setRotationAxis(Rotate.X_AXIS);
-		shape.setRotate(90);
-		tgPlayer.getChildren().clear();
-		tgPlayer.getChildren().add(shape);
-		tgPlayer.setVisible(player.visible);
-		tgPlayer.setTranslateX(player.position.x);
-		tgPlayer.setTranslateY(player.position.y);
-		tgPlayer.setViewOrder(-player.position.y - 2);
-	}
-
 	private void updateGhostNode(Ghost ghost) {
 		Node ghostNode;
 		if (ghost.bounty > 0) {
-			Text text = createGhostBountyText(ghost);
-			text.setRotationAxis(Rotate.X_AXIS);
-			text.setRotate(staticCamera.getRotate());
-			text.setTranslateZ(-1.5 * TS);
-			ghostNode = text;
+			ghostNode = ghostBounty(ghost);
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
-			Group shape = ghostReturningHome(ghost, ghost.dir);
-			shape.setRotationAxis(Rotate.Z_AXIS);
-			shape.setRotate(ghost.dir == Direction.UP || ghost.dir == Direction.DOWN ? 0 : 90);
-			ghostNode = shape;
+			ghostNode = ghostReturningHome(ghost);
 		} else {
-			MeshView shape = ghostMeshViews.get(ghost);
-			Color color = ghost.is(GhostState.FRIGHTENED) ? Color.CORNFLOWERBLUE : ghostColor(ghost.id);
-			PhongMaterial material = (PhongMaterial) shape.getMaterial();
-			material.setDiffuseColor(color);
-			material.setSpecularColor(color);
-//			shape.setDrawMode(DrawMode.LINE);
-			shape.getTransforms().clear();
-			shape.getTransforms().add(new Scale(4, 4, 4));
-			shape.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-			double angle = ghost.dir == Direction.RIGHT ? 0
-					: ghost.dir == Direction.DOWN ? 90 : ghost.dir == Direction.LEFT ? 180 : 270;
-			shape.getTransforms().add(new Rotate(angle, Rotate.Y_AXIS));
-			ghostNode = shape;
+			ghostNode = ghostColored(ghost);
 		}
+		// TODO store one group per ghost in scene graph and exchange its child node?
 		ghostNode.setVisible(ghost.visible);
 		ghostNode.setTranslateX(ghost.position.x);
 		ghostNode.setTranslateY(ghost.position.y);
-		ghostNode.setViewOrder(-ghost.position.y - 5);
+		ghostNode.setViewOrder(-(ghost.position.y + 5));
 		ghostNode.setUserData(ghost);
 		tgMaze.getChildren().removeIf(node -> node.getUserData() == ghost);
 		tgMaze.getChildren().add(ghostNode);
+	}
+
+	private Node ghostColored(Ghost ghost) {
+		MeshView shape = ghostMeshViews.get(ghost);
+		Color color = ghost.is(GhostState.FRIGHTENED) ? Color.CORNFLOWERBLUE : ghostColor(ghost.id);
+		PhongMaterial material = (PhongMaterial) shape.getMaterial();
+		material.setDiffuseColor(color);
+		material.setSpecularColor(color);
+//		shape.setDrawMode(DrawMode.LINE);
+		shape.getTransforms().clear();
+		shape.getTransforms().add(new Scale(4, 4, 4));
+		shape.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
+		double angle = ghost.dir == Direction.RIGHT ? 0
+				: ghost.dir == Direction.DOWN ? 90 : ghost.dir == Direction.LEFT ? 180 : 270;
+		shape.getTransforms().add(new Rotate(angle, Rotate.Y_AXIS));
+		return shape;
+	}
+
+	private Text ghostBounty(Ghost ghost) {
+		// TODO why is this text so blurred?
+		Text bounty = new Text();
+		bounty.setText(String.valueOf(ghost.bounty));
+		bounty.setFont(Font.font("Sans", FontWeight.MEDIUM, 8));
+		bounty.setFill(Color.CYAN);
+		bounty.setRotationAxis(Rotate.X_AXIS);
+		bounty.setRotate(staticCamera.getRotate());
+		bounty.setTranslateZ(-1.5 * TS);
+		return bounty;
+	}
+
+	private Group ghostReturningHome(Ghost ghost) {
+		PhongMaterial material = new PhongMaterial(ghostColor(ghost.id));
+		Sphere[] parts = new Sphere[3];
+		for (int i = 0; i < parts.length; ++i) {
+			parts[i] = new Sphere(1);
+			parts[i].setMaterial(material);
+			parts[i].setTranslateX(i * 3);
+		}
+		Group g = new Group(parts);
+		g.setUserData(ghost);
+		g.setRotationAxis(Rotate.Z_AXIS);
+		g.setRotate(ghost.dir == Direction.UP || ghost.dir == Direction.DOWN ? 90 : 0);
+		return g;
 	}
 
 	private Color mazeColor() {
@@ -451,38 +470,20 @@ public class PlayScene3D implements GameScene {
 	// State change handling
 
 	private void playLevelCompleteAnimation(PacManGameState state) {
-		tgPlayer.setVisible(false);
-		ScaleTransition levelCompleteAnimation = new ScaleTransition(Duration.seconds(5), tgMaze);
-		levelCompleteAnimation.setFromZ(1);
-		levelCompleteAnimation.setToZ(0);
-		levelCompleteAnimation.setDelay(Duration.seconds(2));
-		controller.state.timer.resetSeconds(2 + levelCompleteAnimation.getDuration().toSeconds());
-		levelCompleteAnimation.play();
+		ScaleTransition animation = new ScaleTransition(Duration.seconds(5), tgMaze);
+		animation.setDelay(Duration.seconds(2));
+		animation.setFromZ(1);
+		animation.setToZ(0);
+		animation.play();
+		controller.state.timer.resetSeconds(7);
 	}
 
 	private void playLevelStartingAnimation(PacManGameState state) {
-		tgPlayer.setVisible(true);
-		ScaleTransition levelStartAnimation = new ScaleTransition(Duration.seconds(5), tgMaze);
-		levelStartAnimation.setFromZ(0);
-		levelStartAnimation.setToZ(1);
-		controller.state.timer.resetSeconds(levelStartAnimation.getDuration().toSeconds());
-		levelStartAnimation.play();
-	}
-
-	private Group ghostReturningHome(Ghost ghost, Direction dir) {
-		if (!ghostReturningHome.containsKey(ghost)) {
-			PhongMaterial material = new PhongMaterial(ghostColor(ghost.id));
-			Sphere[] parts = new Sphere[3];
-			for (int i = 0; i < parts.length; ++i) {
-				parts[i] = new Sphere(1);
-				parts[i].setMaterial(material);
-				parts[i].setTranslateY(i * 3);
-			}
-			Group g = new Group(parts);
-			g.setUserData(ghost);
-			ghostReturningHome.put(ghost, g);
-		}
-		return ghostReturningHome.get(ghost);
+		ScaleTransition animation = new ScaleTransition(Duration.seconds(5), tgMaze);
+		animation.setFromZ(0);
+		animation.setToZ(1);
+		animation.play();
+		controller.state.timer.resetSeconds(5);
 	}
 
 }
