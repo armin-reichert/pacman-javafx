@@ -25,7 +25,9 @@ import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.animation.TimedSequence;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_Constants;
+import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
+import javafx.animation.SequentialTransition;
 import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
 import javafx.scene.AmbientLight;
@@ -74,7 +76,7 @@ public class PlayScene3D implements GameScene {
 	private final SubScene subScene;
 	private final Group sceneRoot;
 	private final PerspectiveCamera staticCamera;
-	private final PerspectiveCamera movingCamera;
+	private final PerspectiveCamera moveableCamera;
 	private final CameraController cameraController = new CameraController();
 
 	private Mesh ghostMeshPrototype;
@@ -105,7 +107,7 @@ public class PlayScene3D implements GameScene {
 		this.controller = controller;
 		double width = GameScene.ASPECT_RATIO * height;
 		staticCamera = new PerspectiveCamera(true);
-		movingCamera = new PerspectiveCamera(true);
+		moveableCamera = new PerspectiveCamera(true);
 		sceneRoot = new Group();
 		subScene = new SubScene(sceneRoot, width, height);
 		subScene.setFill(Color.BLACK);
@@ -171,7 +173,7 @@ public class PlayScene3D implements GameScene {
 		for (Ghost ghost : game.ghosts) {
 			updateGhostNode(ghost);
 		}
-		if (subScene.getCamera() == movingCamera) {
+		if (subScene.getCamera() == moveableCamera) {
 			updateMovingCamera();
 		}
 	}
@@ -266,19 +268,19 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void useMoveableCamera() {
-		movingCamera.setNearClip(0.1);
-		movingCamera.setFarClip(10000.0);
-		movingCamera.setTranslateZ(-300);
-		movingCamera.setRotationAxis(Rotate.X_AXIS);
-		movingCamera.setRotate(30);
-		subScene.setCamera(movingCamera);
+		moveableCamera.setNearClip(0.1);
+		moveableCamera.setFarClip(10000.0);
+		moveableCamera.setTranslateZ(-300);
+		moveableCamera.setRotationAxis(Rotate.X_AXIS);
+		moveableCamera.setRotate(30);
+		subScene.setCamera(moveableCamera);
 	}
 
 	private void updateMovingCamera() {
-		double x = Math.min(10.0, lerp(movingCamera.getTranslateX(), tgPlayer.getTranslateX()));
-		double y = Math.max(120, lerp(movingCamera.getTranslateY(), tgPlayer.getTranslateY()));
-		movingCamera.setTranslateX(x);
-		movingCamera.setTranslateY(y);
+		double x = Math.min(10.0, lerp(moveableCamera.getTranslateX(), tgPlayer.getTranslateX()));
+		double y = Math.max(120, lerp(moveableCamera.getTranslateY(), tgPlayer.getTranslateY()));
+		moveableCamera.setTranslateX(x);
+		moveableCamera.setTranslateY(y);
 	}
 
 	private double lerp(double current, double target) {
@@ -572,23 +574,40 @@ public class PlayScene3D implements GameScene {
 
 	private void playLevelCompleteAnimation(PacManGameState state) {
 		GameModel game = controller.selectedGame();
-		game.player.visible = false;
-		game.ghosts().forEach(ghost -> ghost.visible = false);
-		useStaticCamera();
+
+		PauseTransition pause = new PauseTransition(Duration.seconds(1));
+		pause.setOnFinished(e -> {
+			game.player.visible = false;
+			game.ghosts().forEach(ghost -> ghost.visible = false);
+			useStaticCamera();
+		});
+
 		ScaleTransition animation = new ScaleTransition(Duration.seconds(5), tgMaze);
-		animation.setDelay(Duration.seconds(2));
 		animation.setFromZ(1);
 		animation.setToZ(0);
-		animation.play();
-		controller.state.timer.resetSeconds(7);
+
+		SequentialTransition seq = new SequentialTransition(pause, animation);
+		seq.play();
+		controller.state.timer.resetSeconds(seq.getTotalDuration().toSeconds());
 	}
 
 	private void playLevelStartingAnimation(PacManGameState state) {
-		useStaticCamera();
+		boolean resetMoveableCamera = getActiveCamera() == moveableCamera;
+
+		PauseTransition pause = new PauseTransition(Duration.seconds(1));
+
 		ScaleTransition animation = new ScaleTransition(Duration.seconds(5), tgMaze);
+		animation.setDelay(Duration.seconds(2));
+		animation.setOnFinished(e -> {
+			if (resetMoveableCamera) {
+				useMoveableCamera();
+			}
+		});
 		animation.setFromZ(0);
 		animation.setToZ(1);
-		animation.play();
-		controller.state.timer.resetSeconds(5);
+
+		SequentialTransition seq = new SequentialTransition(pause, animation);
+		seq.play();
+		controller.state.timer.resetSeconds(seq.getTotalDuration().toSeconds());
 	}
 }
