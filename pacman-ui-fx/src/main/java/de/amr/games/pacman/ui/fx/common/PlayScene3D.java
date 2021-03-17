@@ -5,7 +5,6 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
 import java.util.List;
 import java.util.Map;
-import java.util.OptionalDouble;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -124,11 +123,6 @@ public class PlayScene3D implements GameScene {
 	public void resize(double width, double height) {
 		subScene.setWidth(width);
 		subScene.setHeight(height);
-	}
-
-	@Override
-	public OptionalDouble aspectRatio() {
-		return OptionalDouble.empty();
 	}
 
 	@Override

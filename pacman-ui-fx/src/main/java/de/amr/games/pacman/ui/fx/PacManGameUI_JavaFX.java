@@ -116,8 +116,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				Env.$useStaticCamera.set(!Env.$useStaticCamera.get());
 				if (Env.$useStaticCamera.get()) {
 					gameScene.useStaticCamera();
+					showFlashMessage("Static Camera");
 				} else {
 					gameScene.useMovingCamera();
+					showFlashMessage("Moving Camera");
 				}
 			}
 			break;
@@ -146,9 +148,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private void addResizeHandler(GameScene scene) {
-		if (scene.aspectRatio().isPresent()) {
-			// keep aspect ratio when resizing
-			double aspectRatio = scene.aspectRatio().getAsDouble();
+		if (scene instanceof AbstractGameScene2D) {
+			AbstractGameScene2D scene2D = (AbstractGameScene2D) scene;
+			double aspectRatio = scene2D.getAspectRatio();
 			mainScene.widthProperty().addListener((s, o, n) -> {
 				double newHeight = Math.min(n.doubleValue() / aspectRatio, mainScene.getHeight());
 				double newWidth = newHeight * aspectRatio;
@@ -175,24 +177,19 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		if (gameScene != null) {
 			gameScene.end();
 		}
+		// now using new game scene
 		gameScene = newGameScene;
-
-		// TODO integrate into resize() method of scene
-		double width = newGameScene.aspectRatio().isPresent()
-				? newGameScene.aspectRatio().getAsDouble() * mainScene.getHeight()
-				: mainScene.getWidth();
-		newGameScene.resize(width, mainScene.getHeight());
-
+		gameScene.resize(mainScene.getWidth(), mainScene.getHeight());
 		if (Env.$useStaticCamera.get()) {
-			newGameScene.useStaticCamera();
-			camControl.setCamera(newGameScene.getStaticCamera());
+			gameScene.useStaticCamera();
+			camControl.setCamera(gameScene.getStaticCamera());
 		} else {
-			newGameScene.useMovingCamera();
+			gameScene.useMovingCamera();
 			camControl.setCamera(null);
 		}
+		gameScene.start();
 		mainSceneRoot.getChildren().clear();
-		mainSceneRoot.getChildren().addAll(newGameScene.getSubScene(), flashMessageView, infoView);
-		newGameScene.start();
+		mainSceneRoot.getChildren().addAll(gameScene.getSubScene(), flashMessageView, infoView);
 	}
 
 	@Override

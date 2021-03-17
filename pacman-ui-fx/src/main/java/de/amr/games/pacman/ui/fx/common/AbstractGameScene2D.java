@@ -1,7 +1,5 @@
 package de.amr.games.pacman.ui.fx.common;
 
-import java.util.OptionalDouble;
-
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.sound.SoundManager;
@@ -55,6 +53,10 @@ public abstract class AbstractGameScene2D implements GameScene {
 		canvas.getTransforms().add(new Scale(scaling, scaling));
 	}
 
+	public double getAspectRatio() {
+		return aspectRatio;
+	}
+
 	public void clearCanvas() {
 		GraphicsContext g = canvas.getGraphicsContext2D();
 		g.setFill(Color.BLACK);
@@ -73,10 +75,5 @@ public abstract class AbstractGameScene2D implements GameScene {
 	@Override
 	public SubScene getSubScene() {
 		return scene;
-	}
-
-	@Override
-	public OptionalDouble aspectRatio() {
-		return OptionalDouble.of(aspectRatio);
 	}
 }
