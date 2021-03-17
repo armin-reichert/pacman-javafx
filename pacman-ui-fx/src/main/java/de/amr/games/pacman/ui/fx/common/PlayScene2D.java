@@ -11,6 +11,7 @@ import de.amr.games.pacman.ui.animation.TimedSequence;
 import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.sound.PacManGameSound;
 import de.amr.games.pacman.ui.sound.SoundManager;
+import javafx.scene.Camera;
 
 /**
  * This is where the action is.
@@ -23,6 +24,15 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	public PlayScene2D(PacManGameController controller, PacManGameRendering2D rendering, SoundManager sounds) {
 		super(controller, rendering, sounds);
+	}
+
+	@Override
+	public Camera getActiveCamera() {
+		return null;
+	}
+
+	@Override
+	public void useMoveableCamera(boolean use) {
 	}
 
 	private void onReadyStateEntry(PacManGameState state) {

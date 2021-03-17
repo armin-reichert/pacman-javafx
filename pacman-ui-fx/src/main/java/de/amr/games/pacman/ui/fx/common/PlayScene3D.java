@@ -37,6 +37,7 @@ import javafx.scene.PointLight;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -51,6 +52,7 @@ import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
@@ -73,6 +75,7 @@ public class PlayScene3D implements GameScene {
 	private final Group sceneRoot;
 	private final PerspectiveCamera staticCamera;
 	private final PerspectiveCamera movingCamera;
+	private final CameraController cameraController = new CameraController();
 
 	private Mesh ghostMeshPrototype;
 	private Map<String, MeshView> meshViews;
@@ -98,7 +101,7 @@ public class PlayScene3D implements GameScene {
 
 	private final TimedSequence<Boolean> energizerBlinking = TimedSequence.pulse().frameDuration(15);
 
-	public PlayScene3D(PacManGameController controller, double height) {
+	public PlayScene3D(Stage stage, PacManGameController controller, double height) {
 		this.controller = controller;
 		double width = GameScene.ASPECT_RATIO * height;
 		staticCamera = new PerspectiveCamera(true);
@@ -107,6 +110,9 @@ public class PlayScene3D implements GameScene {
 		subScene = new SubScene(sceneRoot, width, height);
 		subScene.setFill(Color.BLACK);
 		useStaticCamera();
+		cameraController.setCamera(staticCamera);
+		// TODO why doesn't subscene get key events?
+		stage.addEventHandler(KeyEvent.KEY_PRESSED, cameraController::handleKeyEvent);
 	}
 
 	private void loadMeshes() {
@@ -135,13 +141,8 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public Camera getStaticCamera() {
-		return staticCamera;
-	}
-
-	@Override
-	public Camera getMovingCamera() {
-		return movingCamera;
+	public Camera getActiveCamera() {
+		return subScene.getCamera();
 	}
 
 	@Override
@@ -245,7 +246,15 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public void useStaticCamera() {
+	public void useMoveableCamera(boolean moveable) {
+		if (moveable) {
+			useMoveableCamera();
+		} else {
+			useStaticCamera();
+		}
+	}
+
+	private void useStaticCamera() {
 		staticCamera.setNearClip(0.1);
 		staticCamera.setFarClip(10000.0);
 		staticCamera.setTranslateX(0);
@@ -256,8 +265,7 @@ public class PlayScene3D implements GameScene {
 		subScene.setCamera(staticCamera);
 	}
 
-	@Override
-	public void useMovingCamera() {
+	private void useMoveableCamera() {
 		movingCamera.setNearClip(0.1);
 		movingCamera.setFarClip(10000.0);
 		movingCamera.setTranslateZ(-300);

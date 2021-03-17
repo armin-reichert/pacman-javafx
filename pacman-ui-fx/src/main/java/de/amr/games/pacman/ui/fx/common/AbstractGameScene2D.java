@@ -68,8 +68,12 @@ public abstract class AbstractGameScene2D implements GameScene {
 	}
 
 	@Override
-	public Camera getStaticCamera() {
+	public Camera getActiveCamera() {
 		return scene.getCamera();
+	}
+
+	@Override
+	public void useMoveableCamera(boolean use) {
 	}
 
 	@Override

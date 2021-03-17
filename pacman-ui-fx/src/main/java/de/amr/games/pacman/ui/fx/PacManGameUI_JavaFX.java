@@ -10,7 +10,6 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
 import de.amr.games.pacman.ui.fx.common.AbstractGameScene2D;
-import de.amr.games.pacman.ui.fx.common.CameraController;
 import de.amr.games.pacman.ui.fx.common.Env;
 import de.amr.games.pacman.ui.fx.common.FlashMessageView;
 import de.amr.games.pacman.ui.fx.common.GameScene;
@@ -20,7 +19,6 @@ import de.amr.games.pacman.ui.sound.SoundManager;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
-import javafx.scene.Camera;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
@@ -41,7 +39,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private final Stage stage;
 	private final PacManGameController controller;
 	private final Keyboard keyboard = new Keyboard();
-	private final CameraController camControl = new CameraController();
 
 	private final Scene mainScene;
 	private final StackPane mainSceneRoot;
@@ -60,7 +57,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
 		stage.addEventHandler(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
-		stage.addEventHandler(KeyEvent.KEY_PRESSED, camControl::handleKeyEvent);
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeys);
 
 		infoView = new Text();
@@ -73,7 +69,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		mainSceneRoot = new StackPane();
 		mainScene = new Scene(mainSceneRoot, GameScene.ASPECT_RATIO * height, height, Color.rgb(20, 20, 60));
 
-		GameScene newGameScene = createGameScene(controller, height, Env.$use3DScenes.get());
+		GameScene newGameScene = createGameScene(stage, controller, height, Env.$use3DScenes.get());
 		changeGameScene(newGameScene);
 		addResizeHandler(newGameScene);
 
@@ -115,11 +111,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			if (control) {
 				Env.$useStaticCamera.set(!Env.$useStaticCamera.get());
 				if (Env.$useStaticCamera.get()) {
-					gameScene.useStaticCamera();
+					gameScene.useMoveableCamera(false);
 					showFlashMessage("Static Camera");
 				} else {
-					gameScene.useMovingCamera();
-					showFlashMessage("Moving Camera");
+					gameScene.useMoveableCamera(true);
+					showFlashMessage("Moveable Camera");
 				}
 			}
 			break;
@@ -183,11 +179,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		mainSceneRoot.getChildren().addAll(gameScene.getSubScene(), flashMessageView, infoView);
 		gameScene.resize(mainScene.getWidth(), mainScene.getHeight());
 		if (Env.$useStaticCamera.get()) {
-			gameScene.useStaticCamera();
-			camControl.setCamera(gameScene.getStaticCamera());
+			gameScene.useMoveableCamera(false);
 		} else {
-			gameScene.useMovingCamera();
-			camControl.setCamera(null);
+			gameScene.useMoveableCamera(true);
 		}
 		gameScene.start();
 	}
@@ -198,7 +192,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			if (gameScene != null) {
 				gameScene.end();
 			}
-			GameScene newGameScene = createGameScene(controller, mainScene.getHeight(), Env.$use3DScenes.get());
+			GameScene newGameScene = createGameScene(stage, controller, mainScene.getHeight(), Env.$use3DScenes.get());
 			addResizeHandler(newGameScene);
 			log("New game scene '%s' created", newGameScene);
 			changeGameScene(newGameScene);
@@ -225,18 +219,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			text += String.format("Canvas2D: w=%.0f h=%.0f\n", scene2D.getCanvas().getWidth(),
 					scene2D.getCanvas().getHeight());
 		}
-		if (Env.$useStaticCamera.get()) {
-			Camera cam = gameScene.getStaticCamera();
-			if (cam != null) {
-				text += "Static Camera: " + camControl.getCameraInfo() + "\n";
-			}
-		} else {
-			Camera cam = gameScene.getMovingCamera();
-			if (cam != null) {
-				text += String.format("Dynamic Camera: x=%.0f y=%.0f z=%.0f rot=%.0f\n", cam.getTranslateX(),
-						cam.getTranslateY(), cam.getTranslateZ(), cam.getRotate());
-			}
-		}
+		text += gameScene.getActiveCamera();
 		text += "Autopilot " + (controller.autopilot.enabled ? "ON" : "OFF") + " (Key 'A')\n";
 		text += "Player is " + (controller.selectedGame().player.immune ? "IMMUNE" : "VULNERABLE") + " (Key 'I')\n";
 		text += "3D scenes " + (Env.$use3DScenes.get() ? "ON" : "OFF") + " (Key CTRL+'3')\n";

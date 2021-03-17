@@ -23,6 +23,7 @@ import de.amr.games.pacman.ui.fx.rendering.standard.PacMan_StandardRendering;
 import de.amr.games.pacman.ui.fx.sound.PacManGameSoundManager;
 import de.amr.games.pacman.ui.fx.sound.PacManGameSounds;
 import de.amr.games.pacman.ui.sound.SoundManager;
+import javafx.stage.Stage;
 
 /**
  * Controls scene selection and serves as scene factory.
@@ -76,7 +77,8 @@ public class SceneController {
 		return Arrays.asList(sceneClasses).contains(gameScene.getClass());
 	}
 
-	public static GameScene createGameScene(PacManGameController controller, double height, boolean version3D) {
+	public static GameScene createGameScene(Stage stage, PacManGameController controller, double height,
+			boolean version3D) {
 		switch (controller.selectedGameType()) {
 
 		case MS_PACMAN: {
@@ -90,7 +92,7 @@ public class SceneController {
 			} else if (sceneIndex == 3) {
 				return new MsPacMan_IntermissionScene3(controller, RENDERING_2D.get(MS_PACMAN), SOUND.get(MS_PACMAN));
 			} else if (sceneIndex == 4) {
-				return version3D ? new PlayScene3D(controller, height)
+				return version3D ? new PlayScene3D(stage, controller, height)
 						: new PlayScene2D(controller, RENDERING_2D.get(MS_PACMAN), SOUND.get(MS_PACMAN));
 			}
 			break;
@@ -107,7 +109,7 @@ public class SceneController {
 			} else if (sceneIndex == 3) {
 				return new PacMan_IntermissionScene3(controller, RENDERING_2D.get(PACMAN), SOUND.get(PACMAN));
 			} else if (sceneIndex == 4) {
-				return version3D ? new PlayScene3D(controller, height)
+				return version3D ? new PlayScene3D(stage, controller, height)
 						: new PlayScene2D(controller, RENDERING_2D.get(PACMAN), SOUND.get(PACMAN));
 			}
 			break;
