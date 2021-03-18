@@ -37,14 +37,53 @@ import javafx.stage.Stage;
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
 
+	private class InfoPane extends Text {
+
+		private String text;
+
+		public InfoPane() {
+			setFill(Color.LIGHTGREEN);
+			setFont(Font.font("Monospace", 14));
+			visibleProperty().bind(Env.$infoViewVisible);
+		}
+
+		private void line(String line, Object... args) {
+			text += String.format(line, args) + "\n";
+		}
+
+		public void update() {
+			text = "";
+			line(Env.$paused.get() ? "PAUSED" : "RUNNING");
+			line("Window:          w=%.0f h=%.0f", mainScene.getWindow().getWidth(), mainScene.getWindow().getHeight());
+			line("Main scene:      w=%.0f h=%.0f", mainScene.getWidth(), mainScene.getHeight());
+			line("Game scene:      w=%.0f h=%.0f (%s)", gameScene.getSubScene().getWidth(),
+					gameScene.getSubScene().getHeight(), gameScene.getClass().getSimpleName());
+			if (gameScene instanceof AbstractGameScene2D) {
+				AbstractGameScene2D scene2D = (AbstractGameScene2D) gameScene;
+				line("Canvas2D:        w=%.0f h=%.0f", scene2D.getCanvas().getWidth(), scene2D.getCanvas().getHeight());
+			}
+			line("Camera:          " + cameraInfo(gameScene.getActiveCamera()));
+			line("Autopilot:       " + (controller.autopilot.enabled ? "ON" : "OFF") + " (Key: 'A')");
+			line("Player Immunity: " + (controller.selectedGame().player.immune ? "ON" : "OFF") + " (Key: 'I')");
+			line("3D scenes:       " + (Env.$use3DScenes.get() ? "ON" : "OFF") + " (Key: CTRL+'3')");
+			setText(text);
+		}
+
+		private String cameraInfo(Camera camera) {
+			return camera == null ? "No camera"
+					: String.format("x=%.0f y=%.0f z=%.0f rot=%.0f", camera.getTranslateX(), camera.getTranslateY(),
+							camera.getTranslateZ(), camera.getRotate());
+		}
+	}
+
 	private final Stage stage;
 	private final PacManGameController controller;
 	private final Keyboard keyboard = new Keyboard();
 
 	private final Scene mainScene;
 	private final StackPane mainSceneRoot;
-	private final Text infoView;
-	private final FlashMessageView flashMessageView = new FlashMessageView();
+	private final InfoPane infoPane;
+	private final FlashMessageView flashMessageView;
 
 	private GameScene gameScene;
 
@@ -60,12 +99,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		stage.addEventHandler(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeys);
 
-		infoView = new Text();
-		infoView.setFill(Color.LIGHTGREEN);
-		infoView.setFont(Font.font("Monospace", 14));
-		infoView.setText("");
-		infoView.visibleProperty().bind(Env.$infoViewVisible);
-		StackPane.setAlignment(infoView, Pos.TOP_LEFT);
+		flashMessageView = new FlashMessageView();
+
+		infoPane = new InfoPane();
+		StackPane.setAlignment(infoPane, Pos.TOP_LEFT);
 
 		double width = GameScene.ASPECT_RATIO * height;
 		mainSceneRoot = new StackPane();
@@ -178,7 +215,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		// now using new game scene
 		gameScene = newGameScene;
 		mainSceneRoot.getChildren().clear();
-		mainSceneRoot.getChildren().addAll(gameScene.getSubScene(), flashMessageView, infoView);
+		mainSceneRoot.getChildren().addAll(gameScene.getSubScene(), flashMessageView, infoPane);
 		gameScene.resize(mainScene.getWidth(), mainScene.getHeight());
 		if (Env.$useStaticCamera.get()) {
 			gameScene.useMoveableCamera(false);
@@ -186,6 +223,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			gameScene.useMoveableCamera(true);
 		}
 		gameScene.start();
+	}
+
+	public void updateInfoPane() {
+		infoPane.update();
 	}
 
 	@Override
@@ -200,39 +241,13 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			log("New game scene '%s' created", newGameScene);
 			changeGameScene(newGameScene);
 		}
-
 		if (gameScene instanceof AbstractGameScene2D) {
 			AbstractGameScene2D scene2D = (AbstractGameScene2D) gameScene;
 			scene2D.clearCanvas();
 		}
 		gameScene.update();
 		flashMessageView.update();
-	}
-
-	public void updateInfoView() {
-		String text = "";
-		text += Env.$paused.get() ? "PAUSED\n" : "RUNNING\n";
-		text += String.format("Window w=%.0f h=%.0f\n", mainScene.getWindow().getWidth(),
-				mainScene.getWindow().getHeight());
-		text += String.format("Main scene: w=%.0f h=%.0f\n", mainScene.getWidth(), mainScene.getHeight());
-		text += String.format("%s: w=%.0f h=%.0f\n", gameScene.getClass().getSimpleName(),
-				gameScene.getSubScene().getWidth(), gameScene.getSubScene().getHeight());
-		if (gameScene instanceof AbstractGameScene2D) {
-			AbstractGameScene2D scene2D = (AbstractGameScene2D) gameScene;
-			text += String.format("Canvas2D: w=%.0f h=%.0f\n", scene2D.getCanvas().getWidth(),
-					scene2D.getCanvas().getHeight());
-		}
-		text += cameraInfo(gameScene.getActiveCamera());
-		text += "Autopilot " + (controller.autopilot.enabled ? "ON" : "OFF") + " (Key 'A')\n";
-		text += "Player is " + (controller.selectedGame().player.immune ? "IMMUNE" : "VULNERABLE") + " (Key 'I')\n";
-		text += "3D scenes " + (Env.$use3DScenes.get() ? "ON" : "OFF") + " (Key CTRL+'3')\n";
-		infoView.setText(text);
-	}
-
-	private String cameraInfo(Camera camera) {
-		return camera == null ? "No camera"
-				: String.format("x=%.0f y=%.0f z=%.0f rot=%.0f", camera.getTranslateX(), camera.getTranslateY(),
-						camera.getTranslateZ(), camera.getRotate());
+		infoPane.update();
 	}
 
 	@Override
