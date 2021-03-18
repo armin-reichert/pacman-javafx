@@ -64,9 +64,7 @@ import javafx.util.Duration;
  */
 public class PlayScene3D implements GameScene {
 
-	private static final int WALL_HEIGHT = TS - 2;
-	private static final Font scoreFont = Font.loadFont(PlayScene3D.class.getResource("/emulogic.ttf").toExternalForm(),
-			TS);
+	private static final Font ARCADE_FONT = Font.loadFont(PlayScene3D.class.getResourceAsStream("/emulogic.ttf"), TS);
 
 	private static Color ghostColor(int id) {
 		return id == 0 ? Color.TOMATO : id == 1 ? Color.PINK : id == 2 ? Color.CYAN : Color.ORANGE;
@@ -103,9 +101,8 @@ public class PlayScene3D implements GameScene {
 
 	private final TimedSequence<Boolean> energizerBlinking = TimedSequence.pulse().frameDuration(15);
 
-	public PlayScene3D(Stage stage, PacManGameController controller, double height) {
+	public PlayScene3D(Stage stage, PacManGameController controller, double width, double height) {
 		this.controller = controller;
-		double width = GameScene.ASPECT_RATIO * height;
 		staticCamera = new PerspectiveCamera(true);
 		moveableCamera = new PerspectiveCamera(true);
 		sceneRoot = new Group();
@@ -174,7 +171,7 @@ public class PlayScene3D implements GameScene {
 			updateGhostNode(ghost);
 		}
 		if (subScene.getCamera() == moveableCamera) {
-			updateMovingCamera();
+			updateMoveableCamera();
 		}
 	}
 
@@ -183,35 +180,12 @@ public class PlayScene3D implements GameScene {
 		removeStateListeners();
 	}
 
-	private void addLights() {
-		AmbientLight ambientLight = new AmbientLight(mazeColor());
-		ambientLight.setTranslateZ(-100);
-		tgMaze.getChildren().add(ambientLight);
-
-		PointLight spot = new PointLight(Color.LIGHTBLUE);
-		spot.setTranslateZ(-500);
-		tgMaze.getChildren().add(spot);
-	}
-
-	private void addStateListeners() {
-		controller.addStateEntryListener(PacManGameState.HUNTING, this::onHuntingStateEntry);
-		controller.addStateExitListener(PacManGameState.HUNTING, this::onHuntingStateExit);
-		controller.addStateEntryListener(PacManGameState.LEVEL_COMPLETE, this::playLevelCompleteAnimation);
-		controller.addStateEntryListener(PacManGameState.LEVEL_STARTING, this::playLevelStartingAnimation);
-	}
-
-	private void removeStateListeners() {
-		controller.removeStateEntryListener(this::onHuntingStateEntry);
-		controller.removeStateExitListener(this::onHuntingStateExit);
-		controller.removeStateEntryListener(this::playLevelCompleteAnimation);
-		controller.removeStateEntryListener(this::playLevelStartingAnimation);
-	}
-
 	private void buildScene() {
 		final GameModel game = controller.selectedGame();
 		final PacManGameWorld world = game.level.world;
 
 		createAxes();
+
 		createWallMaterials(10);
 		wallNodes = world.tiles().filter(world::isWall).collect(Collectors.toMap(Function.identity(),
 				tile -> createWallShape(tile, wallMaterials[new Random().nextInt(wallMaterials.length)])));
@@ -241,10 +215,35 @@ public class PlayScene3D implements GameScene {
 		tgMaze.getChildren().addAll(pelletNodes);
 		tgMaze.getChildren().addAll(tgPlayer);
 		tgMaze.getChildren().addAll(tgGhosts.values());
+
 		addLights();
 
 		sceneRoot.getChildren().clear();
 		sceneRoot.getChildren().addAll(tgMaze, tgAxes);
+	}
+
+	private void addLights() {
+		AmbientLight ambientLight = new AmbientLight(mazeColor());
+		ambientLight.setTranslateZ(-100);
+		tgMaze.getChildren().add(ambientLight);
+
+		PointLight spot = new PointLight(Color.LIGHTBLUE);
+		spot.setTranslateZ(-500);
+		tgMaze.getChildren().add(spot);
+	}
+
+	private void addStateListeners() {
+		controller.addStateEntryListener(PacManGameState.HUNTING, this::onHuntingStateEntry);
+		controller.addStateExitListener(PacManGameState.HUNTING, this::onHuntingStateExit);
+		controller.addStateEntryListener(PacManGameState.LEVEL_COMPLETE, this::playLevelCompleteAnimation);
+		controller.addStateEntryListener(PacManGameState.LEVEL_STARTING, this::playLevelStartingAnimation);
+	}
+
+	private void removeStateListeners() {
+		controller.removeStateEntryListener(this::onHuntingStateEntry);
+		controller.removeStateExitListener(this::onHuntingStateExit);
+		controller.removeStateEntryListener(this::playLevelCompleteAnimation);
+		controller.removeStateEntryListener(this::playLevelStartingAnimation);
 	}
 
 	@Override
@@ -270,13 +269,13 @@ public class PlayScene3D implements GameScene {
 	private void useMoveableCamera() {
 		moveableCamera.setNearClip(0.1);
 		moveableCamera.setFarClip(10000.0);
-		moveableCamera.setTranslateZ(-300);
+		moveableCamera.setTranslateZ(-250);
 		moveableCamera.setRotationAxis(Rotate.X_AXIS);
 		moveableCamera.setRotate(30);
 		subScene.setCamera(moveableCamera);
 	}
 
-	private void updateMovingCamera() {
+	private void updateMoveableCamera() {
 		double x = Math.min(10.0, lerp(moveableCamera.getTranslateX(), tgPlayer.getTranslateX()));
 		double y = Math.max(120, lerp(moveableCamera.getTranslateY(), tgPlayer.getTranslateY()));
 		moveableCamera.setTranslateX(x);
@@ -290,19 +289,19 @@ public class PlayScene3D implements GameScene {
 	private void createScore() {
 		Text txtScoreTitle = new Text("SCORE");
 		txtScoreTitle.setFill(Color.WHITE);
-		txtScoreTitle.setFont(scoreFont);
+		txtScoreTitle.setFont(ARCADE_FONT);
 
 		txtScore = new Text();
 		txtScore.setFill(Color.YELLOW);
-		txtScore.setFont(scoreFont);
+		txtScore.setFont(ARCADE_FONT);
 
 		Text txtHiscoreTitle = new Text("HI SCORE");
 		txtHiscoreTitle.setFill(Color.WHITE);
-		txtHiscoreTitle.setFont(scoreFont);
+		txtHiscoreTitle.setFont(ARCADE_FONT);
 
 		txtHiscore = new Text();
 		txtHiscore.setFill(Color.YELLOW);
-		txtHiscore.setFont(scoreFont);
+		txtHiscore.setFont(ARCADE_FONT);
 
 		GridPane grid = new GridPane();
 		grid.setHgap(4 * TS);
@@ -322,24 +321,24 @@ public class PlayScene3D implements GameScene {
 		int counterTileX = 1, counterTileY = 1;
 		tgLivesCounter.setViewOrder(-counterTileY * TS);
 		for (int i = 0; i < 5; ++i) {
-			V2i ballTile = new V2i(counterTileX + 2 * i, counterTileY);
-			Sphere ball = new Sphere(3);
-			ball.setTranslateX(ballTile.x * TS);
-			ball.setTranslateY(ballTile.y * TS);
-			ball.setTranslateZ(0); // ???
-			tgLivesCounter.getChildren().add(ball);
-			wallNodes.remove(ballTile);
+			V2i lampTile = new V2i(counterTileX + 2 * i, counterTileY);
+			Sphere lamp = new Sphere(3);
+			lamp.setTranslateX(lampTile.x * TS);
+			lamp.setTranslateY(lampTile.y * TS);
+			lamp.setTranslateZ(0); // ???
+			tgLivesCounter.getChildren().add(lamp);
+			wallNodes.remove(lampTile);
 		}
 	}
 
 	private Node createWallShape(V2i tile, PhongMaterial material) {
-		Box b = new Box(TS - 1, TS - 1, WALL_HEIGHT);
-		b.setMaterial(material);
-		b.setTranslateX(tile.x * TS);
-		b.setTranslateY(tile.y * TS);
-		b.setViewOrder(-tile.y * TS);
-		b.drawModeProperty().bind(Env.$drawMode);
-		return b;
+		Box block = new Box(TS - 1, TS - 1, TS - 2);
+		block.setMaterial(material);
+		block.setTranslateX(tile.x * TS);
+		block.setTranslateY(tile.y * TS);
+		block.setViewOrder(-tile.y * TS);
+		block.drawModeProperty().bind(Env.$drawMode);
+		return block;
 	}
 
 	private Node createEnergizerShape(V2i tile, PhongMaterial material) {
@@ -573,13 +572,11 @@ public class PlayScene3D implements GameScene {
 	// State change handling
 
 	private void playLevelCompleteAnimation(PacManGameState state) {
-		GameModel game = controller.selectedGame();
-
-		PauseTransition pause = new PauseTransition(Duration.seconds(1));
+		PauseTransition pause = new PauseTransition(Duration.seconds(2));
 		pause.setOnFinished(e -> {
+			GameModel game = controller.selectedGame();
 			game.player.visible = false;
 			game.ghosts().forEach(ghost -> ghost.visible = false);
-			useStaticCamera();
 		});
 
 		ScaleTransition animation = new ScaleTransition(Duration.seconds(5), tgMaze);
@@ -587,27 +584,30 @@ public class PlayScene3D implements GameScene {
 		animation.setToZ(0);
 
 		SequentialTransition seq = new SequentialTransition(pause, animation);
+		seq.setOnFinished(e -> {
+			controller.letCurrentGameStateExpire();
+		});
 		seq.play();
-		controller.state.timer.resetSeconds(seq.getTotalDuration().toSeconds());
+
+		// wait until UI signals state expiration
+		controller.state.timer.reset();
 	}
 
 	private void playLevelStartingAnimation(PacManGameState state) {
-		boolean resetMoveableCamera = getActiveCamera() == moveableCamera;
-
-		PauseTransition pause = new PauseTransition(Duration.seconds(1));
+		PauseTransition pause = new PauseTransition(Duration.seconds(2));
 
 		ScaleTransition animation = new ScaleTransition(Duration.seconds(5), tgMaze);
 		animation.setDelay(Duration.seconds(2));
-		animation.setOnFinished(e -> {
-			if (resetMoveableCamera) {
-				useMoveableCamera();
-			}
-		});
 		animation.setFromZ(0);
 		animation.setToZ(1);
 
 		SequentialTransition seq = new SequentialTransition(pause, animation);
+		seq.setOnFinished(e -> {
+			controller.letCurrentGameStateExpire();
+		});
 		seq.play();
-		controller.state.timer.resetSeconds(seq.getTotalDuration().toSeconds());
+
+		// wait until UI signals state expiration
+		controller.state.timer.reset();
 	}
 }

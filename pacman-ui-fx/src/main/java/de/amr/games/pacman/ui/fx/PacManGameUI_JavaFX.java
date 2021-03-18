@@ -66,12 +66,13 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		infoView.visibleProperty().bind(Env.$infoViewVisible);
 		StackPane.setAlignment(infoView, Pos.TOP_LEFT);
 
+		double width = GameScene.ASPECT_RATIO * height;
 		mainSceneRoot = new StackPane();
-		mainScene = new Scene(mainSceneRoot, GameScene.ASPECT_RATIO * height, height, Color.rgb(20, 20, 60));
+		mainScene = new Scene(mainSceneRoot, width, height, Color.rgb(20, 20, 60));
 
-		GameScene newGameScene = createGameScene(stage, controller, height, Env.$use3DScenes.get());
-		changeGameScene(newGameScene);
-		addResizeHandler(newGameScene);
+		GameScene initialGameScene = createGameScene(stage, controller, width, height, Env.$use3DScenes.get());
+		addResizeHandler(initialGameScene);
+		changeGameScene(initialGameScene);
 
 		stage.setScene(mainScene);
 		stage.centerOnScreen();
@@ -192,7 +193,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			if (gameScene != null) {
 				gameScene.end();
 			}
-			GameScene newGameScene = createGameScene(stage, controller, mainScene.getHeight(), Env.$use3DScenes.get());
+			GameScene newGameScene = createGameScene(stage, controller, mainScene.getWidth(), mainScene.getHeight(),
+					Env.$use3DScenes.get());
 			addResizeHandler(newGameScene);
 			log("New game scene '%s' created", newGameScene);
 			changeGameScene(newGameScene);

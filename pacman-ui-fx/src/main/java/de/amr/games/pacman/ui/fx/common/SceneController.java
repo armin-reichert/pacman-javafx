@@ -77,7 +77,7 @@ public class SceneController {
 		return Arrays.asList(sceneClasses).contains(gameScene.getClass());
 	}
 
-	public static GameScene createGameScene(Stage stage, PacManGameController controller, double height,
+	public static GameScene createGameScene(Stage stage, PacManGameController controller, double width, double height,
 			boolean version3D) {
 		switch (controller.selectedGameType()) {
 
@@ -92,7 +92,7 @@ public class SceneController {
 			} else if (sceneIndex == 3) {
 				return new MsPacMan_IntermissionScene3(controller, RENDERING_2D.get(MS_PACMAN), SOUND.get(MS_PACMAN));
 			} else if (sceneIndex == 4) {
-				return version3D ? new PlayScene3D(stage, controller, height)
+				return version3D ? new PlayScene3D(stage, controller, width, height)
 						: new PlayScene2D(controller, RENDERING_2D.get(MS_PACMAN), SOUND.get(MS_PACMAN));
 			}
 			break;
@@ -109,7 +109,7 @@ public class SceneController {
 			} else if (sceneIndex == 3) {
 				return new PacMan_IntermissionScene3(controller, RENDERING_2D.get(PACMAN), SOUND.get(PACMAN));
 			} else if (sceneIndex == 4) {
-				return version3D ? new PlayScene3D(stage, controller, height)
+				return version3D ? new PlayScene3D(stage, controller, width, height)
 						: new PlayScene2D(controller, RENDERING_2D.get(PACMAN), SOUND.get(PACMAN));
 			}
 			break;
