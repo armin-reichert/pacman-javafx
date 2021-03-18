@@ -128,13 +128,12 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public void resize(double width, double height) {
-		subScene.setWidth(width);
-		subScene.setHeight(height);
+	public void setAvailableSize(double width, double height) {
+		// data binding does the job
 	}
 
 	@Override
-	public SubScene getSubScene() {
+	public SubScene getFXSubScene() {
 		return subScene;
 	}
 
@@ -205,8 +204,8 @@ public class PlayScene3D implements GameScene {
 		tgMaze = new Group();
 
 		// center over origin
-		tgMaze.setTranslateX(-GameScene.WIDTH_UNSCALED / 2);
-		tgMaze.setTranslateY(-GameScene.HEIGHT_UNSCALED / 2);
+		tgMaze.setTranslateX(-GameScene.UNSCALED_SCENE_WIDTH / 2);
+		tgMaze.setTranslateY(-GameScene.UNSCALED_SCENE_HEIGHT / 2);
 
 		tgMaze.getChildren().addAll(tgScore, tgLivesCounter);
 		tgMaze.getChildren().addAll(wallNodes.values());

@@ -30,11 +30,11 @@ public abstract class AbstractGameScene2D implements GameScene {
 		this.controller = controller;
 		this.rendering = rendering;
 		this.sounds = sounds;
-		aspectRatio = (double) WIDTH_UNSCALED / HEIGHT_UNSCALED;
-		canvas = new Canvas(WIDTH_UNSCALED, HEIGHT_UNSCALED);
+		aspectRatio = UNSCALED_SCENE_WIDTH / UNSCALED_SCENE_HEIGHT;
+		canvas = new Canvas(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT);
 		gc = canvas.getGraphicsContext2D();
 		Group group = new Group(canvas);
-		scene = new SubScene(group, WIDTH_UNSCALED, HEIGHT_UNSCALED);
+		scene = new SubScene(group, UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT);
 		scene.widthProperty().bind(canvas.widthProperty());
 		scene.heightProperty().bind(canvas.heightProperty());
 	}
@@ -44,11 +44,11 @@ public abstract class AbstractGameScene2D implements GameScene {
 	}
 
 	@Override
-	public void resize(double width, double height) {
+	public void setAvailableSize(double width, double height) {
 		width = aspectRatio * height;
 		canvas.setWidth(width);
 		canvas.setHeight(height);
-		double scaling = height / HEIGHT_UNSCALED;
+		double scaling = height / UNSCALED_SCENE_HEIGHT;
 		canvas.getTransforms().clear();
 		canvas.getTransforms().add(new Scale(scaling, scaling));
 	}
@@ -77,7 +77,7 @@ public abstract class AbstractGameScene2D implements GameScene {
 	}
 
 	@Override
-	public SubScene getSubScene() {
+	public SubScene getFXSubScene() {
 		return scene;
 	}
 }
