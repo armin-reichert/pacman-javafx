@@ -3,7 +3,7 @@ package de.amr.games.pacman.ui.fx.pacman;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.ui.fx.common.AbstractGameScene2D;
+import de.amr.games.pacman.ui.fx.common.scene2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene1_Controller;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene1_Controller.Phase;

@@ -1,16 +1,11 @@
-package de.amr.games.pacman.ui.fx.common;
+package de.amr.games.pacman.ui.fx.common.scene3d;
 
-import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import com.interactivemesh.jfx.importer.ImportException;
-import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
@@ -23,12 +18,13 @@ import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.animation.TimedSequence;
-import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_Constants;
+import de.amr.games.pacman.ui.fx.common.CameraController;
+import de.amr.games.pacman.ui.fx.common.Env;
+import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.collections.ObservableList;
-import javafx.geometry.Bounds;
 import javafx.scene.AmbientLight;
 import javafx.scene.Camera;
 import javafx.scene.Group;
@@ -36,23 +32,18 @@ import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
 import javafx.scene.SubScene;
-import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
-import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Scale;
-import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -63,21 +54,13 @@ import javafx.util.Duration;
  */
 public class PlayScene3D implements GameScene {
 
-	private static final Font ARCADE_FONT = Font.loadFont(PlayScene3D.class.getResourceAsStream("/emulogic.ttf"), TS);
-
-	private static Color ghostColor(int id) {
-		return id == 0 ? Color.TOMATO : id == 1 ? Color.PINK : id == 2 ? Color.CYAN : Color.ORANGE;
-	}
-
 	private final PacManGameController controller;
 	private final SubScene subScene;
 	private final Group sceneRoot;
+
 	private final PerspectiveCamera staticCamera;
 	private final PerspectiveCamera moveableCamera;
 	private final CameraController cameraController;
-
-	private Mesh ghostMeshPrototype;
-	private Map<String, MeshView> meshViews;
 
 	private Group tgAxes;
 	private Group tgMaze;
@@ -93,11 +76,6 @@ public class PlayScene3D implements GameScene {
 
 	private Group tgLivesCounter;
 
-	private Image wallTexture = new Image(getClass().getResource("/common/stone-texture.png").toExternalForm());
-	private PhongMaterial wallMaterials[];
-	private PhongMaterial livesCounterOn = new PhongMaterial(Color.YELLOW);
-	private PhongMaterial livesCounterOff = new PhongMaterial(Color.GRAY);
-
 	private final TimedSequence<Boolean> energizerBlinking = TimedSequence.pulse().frameDuration(15);
 
 	public PlayScene3D(Stage stage, PacManGameController controller, double width, double height) {
@@ -111,20 +89,6 @@ public class PlayScene3D implements GameScene {
 		cameraController = new CameraController(staticCamera);
 		// TODO why doesn't subscene get key events?
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, cameraController::handleKeyEvent);
-	}
-
-	private void loadMeshes() {
-		ObjModelImporter objImporter = new ObjModelImporter();
-		try {
-			objImporter.read(getClass().getResource("/common/ghost.obj"));
-			ghostMeshPrototype = objImporter.getNamedMeshViews().get("Ghost_Sphere.001").getMesh();
-			objImporter.read(getClass().getResource("/common/pacman1.obj"));
-			meshViews = objImporter.getNamedMeshViews();
-			meshViews.keySet().stream().sorted().forEach(key -> log("Mesh '%s': %s", key, meshViews.get(key)));
-			log("Mesh views loaded successfully!");
-		} catch (ImportException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override
@@ -145,8 +109,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void start() {
 		controller.setPlayerImmune(true);
-		loadMeshes();
-		buildScene();
+		buildSceneGraph();
 		addStateListeners();
 	}
 
@@ -178,27 +141,28 @@ public class PlayScene3D implements GameScene {
 		removeStateListeners();
 	}
 
-	private void buildScene() {
+	private void buildSceneGraph() {
 		final GameModel game = controller.selectedGame();
+		final GameType gameType = controller.selectedGameType();
+		final int mazeNumber = game.level.mazeNumber;
 		final PacManGameWorld world = game.level.world;
 
 		createAxes();
 
-		createWallMaterials(10);
-		wallNodes = world.tiles().filter(world::isWall).collect(Collectors.toMap(Function.identity(),
-				tile -> createWallShape(tile, wallMaterials[new Random().nextInt(wallMaterials.length)])));
+		wallNodes = world.tiles().filter(world::isWall)
+				.collect(Collectors.toMap(Function.identity(), tile -> createWallShape(tile, Assets.randomWallMaterial())));
 
-		PhongMaterial foodMaterial = new PhongMaterial(foodColor());
-		energizerNodes = world.energizerTiles().map(tile -> createEnergizerShape(tile, foodMaterial))
+		energizerNodes = world.energizerTiles()
+				.map(tile -> createEnergizerShape(tile, Assets.foodMaterial(gameType, mazeNumber)))
 				.collect(Collectors.toList());
 		pelletNodes = world.tiles().filter(world::isFoodTile).filter(tile -> !world.isEnergizerTile(tile))
-				.map(tile -> createPelletShape(tile, foodMaterial)).collect(Collectors.toList());
+				.map(tile -> createPelletShape(tile, Assets.foodMaterial(gameType, mazeNumber))).collect(Collectors.toList());
 
-		tgPlayer = playerShape(game.player);
+		tgPlayer = Assets.playerShape();
 
 		tgGhosts = game.ghosts().collect(Collectors.toMap(Function.identity(), this::createGhostGroup));
 
-		createScore();
+		createScore(Assets.ARCADE_FONT);
 		createLivesCounter();
 
 		tgMaze = new Group();
@@ -214,20 +178,16 @@ public class PlayScene3D implements GameScene {
 		tgMaze.getChildren().addAll(tgPlayer);
 		tgMaze.getChildren().addAll(tgGhosts.values());
 
-		addLights();
-
-		sceneRoot.getChildren().clear();
-		sceneRoot.getChildren().addAll(tgMaze, tgAxes);
-	}
-
-	private void addLights() {
-		AmbientLight ambientLight = new AmbientLight(mazeColor());
+		AmbientLight ambientLight = Assets.ambientLight(gameType, mazeNumber);
 		ambientLight.setTranslateZ(-100);
 		tgMaze.getChildren().add(ambientLight);
 
-		PointLight spot = new PointLight(Color.LIGHTBLUE);
+		PointLight spot = new PointLight(Color.AZURE);
 		spot.setTranslateZ(-500);
 		tgMaze.getChildren().add(spot);
+
+		sceneRoot.getChildren().clear();
+		sceneRoot.getChildren().addAll(tgMaze, tgAxes);
 	}
 
 	private void addStateListeners() {
@@ -284,22 +244,22 @@ public class PlayScene3D implements GameScene {
 		return current + (target - current) * 0.02;
 	}
 
-	private void createScore() {
+	private void createScore(Font font) {
 		Text txtScoreTitle = new Text("SCORE");
 		txtScoreTitle.setFill(Color.WHITE);
-		txtScoreTitle.setFont(ARCADE_FONT);
+		txtScoreTitle.setFont(font);
 
 		txtScore = new Text();
 		txtScore.setFill(Color.YELLOW);
-		txtScore.setFont(ARCADE_FONT);
+		txtScore.setFont(font);
 
 		Text txtHiscoreTitle = new Text("HI SCORE");
 		txtHiscoreTitle.setFill(Color.WHITE);
-		txtHiscoreTitle.setFont(ARCADE_FONT);
+		txtHiscoreTitle.setFont(font);
 
 		txtHiscore = new Text();
 		txtHiscore.setFill(Color.YELLOW);
-		txtHiscore.setFont(ARCADE_FONT);
+		txtHiscore.setFont(font);
 
 		GridPane grid = new GridPane();
 		grid.setHgap(4 * TS);
@@ -359,25 +319,6 @@ public class PlayScene3D implements GameScene {
 		return pellet;
 	}
 
-	private void createWallMaterials(int n) {
-		wallMaterials = new PhongMaterial[n];
-		for (int i = 0; i < wallMaterials.length; ++i) {
-			PhongMaterial m = new PhongMaterial();
-			Image texture = randomSubimage(wallTexture, 128, 128);
-			m.setBumpMap(texture);
-			m.setDiffuseMap(texture);
-			wallMaterials[i] = m;
-		}
-	}
-
-	private Image randomSubimage(Image src, int w, int h) {
-		WritableImage result = new WritableImage(w, h);
-		int x = new Random().nextInt((int) src.getWidth() - w);
-		int y = new Random().nextInt((int) src.getHeight() - h);
-		result.getPixelWriter().setPixels(0, 0, w, h, src.getPixelReader(), x, y);
-		return result;
-	}
-
 	private void createAxes() {
 		Cylinder xAxis = createAxis("X", Color.RED, 300);
 		Cylinder yAxis = createAxis("Y", Color.GREEN, 300);
@@ -415,43 +356,8 @@ public class PlayScene3D implements GameScene {
 		ObservableList<Node> children = tgLivesCounter.getChildren();
 		for (int i = 0; i < children.size(); ++i) {
 			Sphere ball = (Sphere) children.get(i);
-			ball.setMaterial(i < game.lives ? livesCounterOn : livesCounterOff);
+			ball.setMaterial(i < game.lives ? Assets.livesCounterOn : Assets.livesCounterOff);
 		}
-	}
-
-	private Group playerShape(Pac player) {
-		MeshView body = meshViews.get("Sphere_Sphere.002_Material.001");
-		PhongMaterial bodyMaterial = new PhongMaterial(Color.YELLOW);
-		bodyMaterial.setDiffuseColor(Color.YELLOW.brighter());
-		bodyMaterial.setSpecularPower(100);
-		body.setMaterial(bodyMaterial);
-		body.setDrawMode(Env.$drawMode.get());
-		Translate shift = centerOverOrigin(body);
-
-		MeshView glasses = meshViews.get("Sphere_Sphere.002_Material.002");
-		glasses.setMaterial(new PhongMaterial(Color.rgb(50, 50, 50)));
-		glasses.setDrawMode(Env.$drawMode.get());
-		glasses.getTransforms().add(shift);
-
-		Group shape = new Group(body, glasses);
-		shape.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-		scale(shape, TS);
-		return shape;
-	}
-
-	private Translate centerOverOrigin(Node node) {
-		Bounds bounds = node.getBoundsInLocal();
-		Translate shift = new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
-		node.getTransforms().add(shift);
-		return shift;
-	}
-
-	private void scale(Node node, double size) {
-		Bounds bounds = node.getBoundsInLocal();
-		double s1 = size / bounds.getWidth();
-		double s2 = size / bounds.getHeight();
-		double s3 = size / bounds.getDepth();
-		node.getTransforms().add(new Scale(s1, s2, s3));
 	}
 
 	private void updatePlayerShape(Pac player) {
@@ -483,21 +389,22 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void updateGhostNode(Ghost ghost) {
-		Node oldSelection = (Node) tgGhosts.get(ghost).getUserData();
+		Group oldSelection = (Group) tgGhosts.get(ghost).getUserData();
 		ObservableList<Node> children = tgGhosts.get(ghost).getChildren();
-		Node newSelection;
+		Group newSelection;
 		if (ghost.bounty > 0) {
-			newSelection = children.get(1);
-			((Text) newSelection).setText(ghost.bounty + "");
+			newSelection = (Group) children.get(1);
+			Text text = (Text) newSelection.getChildren().get(0);
+			text.setText(ghost.bounty + "");
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
-			newSelection = children.get(2);
+			newSelection = (Group) children.get(2);
 			newSelection.setRotationAxis(Rotate.Z_AXIS);
 			newSelection.setRotate(ghost.dir == Direction.UP || ghost.dir == Direction.DOWN ? 90 : 0);
 		} else {
-			newSelection = children.get(0);
-			MeshView meshView = (MeshView) newSelection;
+			newSelection = (Group) children.get(0);
+			MeshView meshView = (MeshView) newSelection.getChildren().get(0);
 			PhongMaterial material = (PhongMaterial) meshView.getMaterial();
-			Color color = ghost.is(GhostState.FRIGHTENED) ? Color.CORNFLOWERBLUE : ghostColor(ghost.id);
+			Color color = ghost.is(GhostState.FRIGHTENED) ? Color.CORNFLOWERBLUE : Assets.ghostColor(ghost.id);
 			material.setDiffuseColor(color);
 			material.setSpecularColor(color);
 		}
@@ -512,21 +419,17 @@ public class PlayScene3D implements GameScene {
 		tgGhosts.get(ghost).setViewOrder(-(ghost.position.y + 5));
 	}
 
-	private MeshView ghostColored(Ghost ghost) {
-		PhongMaterial material = new PhongMaterial(ghostColor(ghost.id));
-		MeshView shape = new MeshView(ghostMeshPrototype);
-		shape.setMaterial(material);
-//		shape.setDrawMode(DrawMode.LINE);
-		shape.getTransforms().clear();
-		shape.getTransforms().add(new Scale(4, 4, 4));
+	private Group ghostColored(Ghost ghost) {
+		MeshView meshView = Assets.ghostShape(ghost.id);
+		Group shape = new Group(meshView);
 		shape.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-		double angle = ghost.dir == Direction.RIGHT ? 0
-				: ghost.dir == Direction.DOWN ? 90 : ghost.dir == Direction.LEFT ? 180 : 270;
-		shape.getTransforms().add(new Rotate(angle, Rotate.Y_AXIS));
+//		double angle = ghost.dir == Direction.RIGHT ? 0
+//				: ghost.dir == Direction.DOWN ? 90 : ghost.dir == Direction.LEFT ? 180 : 270;
+//		shape.getTransforms().add(new Rotate(angle, Rotate.Y_AXIS));
 		return shape;
 	}
 
-	private Text ghostBounty(Ghost ghost) {
+	private Group ghostBounty(Ghost ghost) {
 		// TODO why is this text so blurred?
 		Text bounty = new Text();
 		bounty.setText(String.valueOf(ghost.bounty));
@@ -535,28 +438,18 @@ public class PlayScene3D implements GameScene {
 		bounty.setRotationAxis(Rotate.X_AXIS);
 		bounty.setRotate(staticCamera.getRotate());
 		bounty.setTranslateZ(-1.5 * TS);
-		return bounty;
+		return new Group(bounty);
 	}
 
 	private Group ghostReturningHome(Ghost ghost) {
-		PhongMaterial material = new PhongMaterial(ghostColor(ghost.id));
+		PhongMaterial skin = Assets.ghostSkin(ghost.id);
 		Sphere[] parts = new Sphere[3];
 		for (int i = 0; i < parts.length; ++i) {
 			parts[i] = new Sphere(1);
-			parts[i].setMaterial(material);
+			parts[i].setMaterial(skin);
 			parts[i].setTranslateX(i * 3);
 		}
 		return new Group(parts);
-	}
-
-	private Color mazeColor() {
-		return controller.isPlaying(GameType.PACMAN) ? Color.BLUE
-				: MsPacMan_Constants.getMazeWallColor(controller.selectedGame().level.mazeNumber);
-	}
-
-	private Color foodColor() {
-		return controller.isPlaying(GameType.PACMAN) ? Color.rgb(250, 185, 176)
-				: MsPacMan_Constants.getFoodColor(controller.selectedGame().level.mazeNumber);
 	}
 
 	private void onHuntingStateEntry(PacManGameState state) {

@@ -1,7 +1,7 @@
 package de.amr.games.pacman.ui.fx.mspacman;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.ui.fx.common.AbstractGameScene2D;
+import de.amr.games.pacman.ui.fx.common.scene2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.mspacman.MsPacMan_IntermissionScene3_Controller;
 import de.amr.games.pacman.ui.sound.SoundManager;

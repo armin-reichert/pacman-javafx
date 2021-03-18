@@ -9,6 +9,8 @@ import java.util.EnumMap;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.model.common.GameType;
+import de.amr.games.pacman.ui.fx.common.scene2d.PlayScene2D;
+import de.amr.games.pacman.ui.fx.common.scene3d.PlayScene3D;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene1;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene2;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene3;

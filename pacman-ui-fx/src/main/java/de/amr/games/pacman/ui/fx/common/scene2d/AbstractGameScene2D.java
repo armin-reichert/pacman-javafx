@@ -1,6 +1,7 @@
-package de.amr.games.pacman.ui.fx.common;
+package de.amr.games.pacman.ui.fx.common.scene2d;
 
 import de.amr.games.pacman.controller.PacManGameController;
+import de.amr.games.pacman.ui.fx.common.GameScene;
 import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.sound.SoundManager;
 import javafx.scene.Camera;

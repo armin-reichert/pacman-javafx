@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.common;
+package de.amr.games.pacman.ui.fx.common.scene2d;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
