@@ -19,6 +19,7 @@ import de.amr.games.pacman.ui.sound.SoundManager;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
+import javafx.scene.Camera;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
@@ -221,11 +222,17 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			text += String.format("Canvas2D: w=%.0f h=%.0f\n", scene2D.getCanvas().getWidth(),
 					scene2D.getCanvas().getHeight());
 		}
-		text += gameScene.getActiveCamera();
+		text += cameraInfo(gameScene.getActiveCamera());
 		text += "Autopilot " + (controller.autopilot.enabled ? "ON" : "OFF") + " (Key 'A')\n";
 		text += "Player is " + (controller.selectedGame().player.immune ? "IMMUNE" : "VULNERABLE") + " (Key 'I')\n";
 		text += "3D scenes " + (Env.$use3DScenes.get() ? "ON" : "OFF") + " (Key CTRL+'3')\n";
 		infoView.setText(text);
+	}
+
+	private String cameraInfo(Camera camera) {
+		return camera == null ? "No camera"
+				: String.format("x=%.0f y=%.0f z=%.0f rot=%.0f", camera.getTranslateX(), camera.getTranslateY(),
+						camera.getTranslateZ(), camera.getRotate());
 	}
 
 	@Override

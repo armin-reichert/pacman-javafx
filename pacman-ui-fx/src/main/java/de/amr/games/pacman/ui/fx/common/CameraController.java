@@ -1,7 +1,5 @@
 package de.amr.games.pacman.ui.fx.common;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.scene.Camera;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
@@ -13,34 +11,14 @@ import javafx.scene.transform.Rotate;
  */
 public class CameraController {
 
-	public StringProperty cameraInfoProperty = new SimpleStringProperty();
-
 	private Camera camera;
 
-	public CameraController() {
-		cameraInfoProperty.set(computeCameraInfo());
+	public CameraController(Camera camera) {
+		this.camera = camera;
 	}
 
 	public void setCamera(Camera camera) {
 		this.camera = camera;
-		if (camera != null) {
-			// TODO is this the right way to do this?
-			camera.translateXProperty().addListener((s, o, n) -> cameraInfoProperty.set(computeCameraInfo()));
-			camera.translateYProperty().addListener((s, o, n) -> cameraInfoProperty.set(computeCameraInfo()));
-			camera.translateZProperty().addListener((s, o, n) -> cameraInfoProperty.set(computeCameraInfo()));
-			camera.rotateProperty().addListener((s, o, n) -> cameraInfoProperty.set(computeCameraInfo()));
-		}
-		cameraInfoProperty.set(computeCameraInfo());
-	}
-
-	public String getCameraInfo() {
-		return cameraInfoProperty.get();
-	}
-
-	private String computeCameraInfo() {
-		return camera == null ? "No camera"
-				: String.format("x=%.0f y=%.0f z=%.0f rot=%.0f", camera.getTranslateX(), camera.getTranslateY(),
-						camera.getTranslateZ(), camera.getRotate());
 	}
 
 	public void handleKeyEvent(KeyEvent e) {

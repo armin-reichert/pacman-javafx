@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
@@ -75,7 +74,7 @@ public class PlayScene3D implements GameScene {
 	private final Group sceneRoot;
 	private final PerspectiveCamera staticCamera;
 	private final PerspectiveCamera moveableCamera;
-	private final CameraController cameraController = new CameraController();
+	private final CameraController cameraController;
 
 	private Mesh ghostMeshPrototype;
 	private Map<String, MeshView> meshViews;
@@ -109,7 +108,7 @@ public class PlayScene3D implements GameScene {
 		subScene = new SubScene(sceneRoot, width, height);
 		subScene.setFill(Color.BLACK);
 		useStaticCamera();
-		cameraController.setCamera(staticCamera);
+		cameraController = new CameraController(staticCamera);
 		// TODO why doesn't subscene get key events?
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, cameraController::handleKeyEvent);
 	}
@@ -121,7 +120,7 @@ public class PlayScene3D implements GameScene {
 			ghostMeshPrototype = objImporter.getNamedMeshViews().get("Ghost_Sphere.001").getMesh();
 			objImporter.read(getClass().getResource("/common/pacman1.obj"));
 			meshViews = objImporter.getNamedMeshViews();
-			meshViews.forEach((name, view) -> log("Mesh '%s': %s", name, view));
+			meshViews.keySet().stream().sorted().forEach(key -> log("Mesh '%s': %s", key, meshViews.get(key)));
 			log("Mesh views loaded successfully!");
 		} catch (ImportException e) {
 			e.printStackTrace();
@@ -196,7 +195,7 @@ public class PlayScene3D implements GameScene {
 		pelletNodes = world.tiles().filter(world::isFoodTile).filter(tile -> !world.isEnergizerTile(tile))
 				.map(tile -> createPelletShape(tile, foodMaterial)).collect(Collectors.toList());
 
-		tgPlayer = playerNode(game.player);
+		tgPlayer = playerShape(game.player);
 
 		tgGhosts = game.ghosts().collect(Collectors.toMap(Function.identity(), this::createGhostGroup));
 
@@ -421,9 +420,12 @@ public class PlayScene3D implements GameScene {
 		}
 	}
 
-	private Group playerNode(Pac player) {
+	private Group playerShape(Pac player) {
 		MeshView body = meshViews.get("Sphere_Sphere.002_Material.001");
-		body.setMaterial(new PhongMaterial(Color.YELLOW.brighter()));
+		PhongMaterial bodyMaterial = new PhongMaterial(Color.YELLOW);
+		bodyMaterial.setDiffuseColor(Color.YELLOW.brighter());
+		bodyMaterial.setSpecularPower(100);
+		body.setMaterial(bodyMaterial);
 		body.setDrawMode(Env.$drawMode.get());
 		Translate shift = centerOverOrigin(body);
 
@@ -473,45 +475,42 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private Group createGhostGroup(Ghost ghost) {
-		MeshView colored = ghostColored(ghost);
-		Text bounty = ghostBounty(ghost);
-		Group returningHome = ghostReturningHome(ghost);
-		colored.setVisible(true);
-		bounty.setVisible(false);
-		returningHome.setVisible(false);
-		return new Group(colored, bounty, returningHome);
+		// children: colored ghost, bounty text, ghost returning home
+		Group group = new Group(ghostColored(ghost), ghostBounty(ghost), ghostReturningHome(ghost));
+		Node selection = group.getChildren().get(0);
+		group.setUserData(selection);
+		group.getChildren().forEach(child -> child.setVisible(child == selection));
+		return group;
 	}
 
 	private void updateGhostNode(Ghost ghost) {
+		Node oldSelection = (Node) tgGhosts.get(ghost).getUserData();
 		ObservableList<Node> children = tgGhosts.get(ghost).getChildren();
-		int oldSelection = IntStream.range(0, 3).filter(i -> children.get(i).isVisible()).findFirst().getAsInt();
-		int newSelection = -1;
+		Node newSelection;
 		if (ghost.bounty > 0) {
-			newSelection = 1;
-			Text bounty = (Text) children.get(newSelection);
-			bounty.setText(ghost.bounty + "");
+			newSelection = children.get(1);
+			((Text) newSelection).setText(ghost.bounty + "");
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
-			newSelection = 2;
-			Group ghostReturningHome = (Group) children.get(newSelection);
-			ghostReturningHome.setRotationAxis(Rotate.Z_AXIS);
-			ghostReturningHome.setRotate(ghost.dir == Direction.UP || ghost.dir == Direction.DOWN ? 90 : 0);
+			newSelection = children.get(2);
+			newSelection.setRotationAxis(Rotate.Z_AXIS);
+			newSelection.setRotate(ghost.dir == Direction.UP || ghost.dir == Direction.DOWN ? 90 : 0);
 		} else {
-			newSelection = 0;
-			MeshView meshView = (MeshView) children.get(newSelection);
-			Color color = ghost.is(GhostState.FRIGHTENED) ? Color.CORNFLOWERBLUE : ghostColor(ghost.id);
+			newSelection = children.get(0);
+			MeshView meshView = (MeshView) newSelection;
 			PhongMaterial material = (PhongMaterial) meshView.getMaterial();
+			Color color = ghost.is(GhostState.FRIGHTENED) ? Color.CORNFLOWERBLUE : ghostColor(ghost.id);
 			material.setDiffuseColor(color);
 			material.setSpecularColor(color);
 		}
 		if (newSelection != oldSelection) {
-			children.get(oldSelection).setVisible(false);
-			children.get(newSelection).setVisible(true);
+			tgGhosts.get(ghost).setUserData(newSelection);
+			oldSelection.setVisible(false);
+			newSelection.setVisible(true);
 		}
 		tgGhosts.get(ghost).setVisible(ghost.visible);
 		tgGhosts.get(ghost).setTranslateX(ghost.position.x);
 		tgGhosts.get(ghost).setTranslateY(ghost.position.y);
 		tgGhosts.get(ghost).setViewOrder(-(ghost.position.y + 5));
-		tgGhosts.get(ghost).setUserData(ghost);
 	}
 
 	private MeshView ghostColored(Ghost ghost) {
