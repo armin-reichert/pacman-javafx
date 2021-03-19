@@ -17,6 +17,7 @@ import de.amr.games.pacman.ui.fx.common.FlashMessageView;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import de.amr.games.pacman.ui.fx.common.SceneFactory;
 import de.amr.games.pacman.ui.fx.common.scene2d.AbstractGameScene2D;
+import de.amr.games.pacman.ui.fx.common.scene2d.Assets2D;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.sound.SoundManager;
 import javafx.application.Platform;
@@ -39,7 +40,7 @@ import javafx.stage.Stage;
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
 
-	private class InfoPane extends Text {
+	public class InfoPane extends Text {
 
 		private String text;
 
@@ -58,13 +59,13 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			line(Env.$paused.get() ? "PAUSED" : "RUNNING");
 			line("Window:          w=%.0f h=%.0f", mainScene.getWindow().getWidth(), mainScene.getWindow().getHeight());
 			line("Main scene:      w=%.0f h=%.0f", mainScene.getWidth(), mainScene.getHeight());
-			line("Game scene:      w=%.0f h=%.0f (%s)", gameScene.getFXSubScene().getWidth(),
-					gameScene.getFXSubScene().getHeight(), gameScene.getClass().getSimpleName());
-			if (gameScene instanceof AbstractGameScene2D) {
-				AbstractGameScene2D scene2D = (AbstractGameScene2D) gameScene;
+			line("Game scene:      w=%.0f h=%.0f (%s)", currentGameScene.getFXSubScene().getWidth(),
+					currentGameScene.getFXSubScene().getHeight(), currentGameScene.getClass().getSimpleName());
+			if (currentGameScene instanceof AbstractGameScene2D) {
+				AbstractGameScene2D scene2D = (AbstractGameScene2D) currentGameScene;
 				line("Canvas2D:        w=%.0f h=%.0f", scene2D.getCanvas().getWidth(), scene2D.getCanvas().getHeight());
 			}
-			line("Camera:          " + cameraInfo(gameScene.getActiveCamera()));
+			line("Camera:          " + cameraInfo(currentGameScene.getActiveCamera()));
 			line("Autopilot:       " + (controller.autopilot.enabled ? "ON" : "OFF") + " (Key: 'A')");
 			line("Player Immunity: " + (controller.selectedGame().player.immune ? "ON" : "OFF") + " (Key: 'I')");
 			line("3D scenes:       " + (Env.$use3DScenes.get() ? "ON" : "OFF") + " (Key: CTRL+'3')");
@@ -84,11 +85,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private final Scene mainScene;
 	private final StackPane mainSceneRoot;
-	private final InfoPane infoPane;
+	public final InfoPane infoPane;
 	private final FlashMessageView flashMessageView;
 
 	private final Set<GameScene> scenesCreated = new HashSet<>();
-	private GameScene gameScene;
+	private GameScene currentGameScene;
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController controller, double height) {
 		this.stage = stage;
@@ -125,17 +126,17 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private void handleGameStateChange(PacManGameState oldState, PacManGameState newState) {
 		log("Handle game state change %s to %s", oldState, newState);
-		if (!SceneFactory.isSuitableScene(gameScene, controller, Env.$use3DScenes.get())) {
+		if (!SceneFactory.isSuitableScene(currentGameScene, controller, Env.$use3DScenes.get())) {
 			changeScene();
 		}
-		gameScene.onGameStateChange(oldState, newState);
+		currentGameScene.onGameStateChange(oldState, newState);
 	}
 
-	public void changeScene() {
+	private void changeScene() {
 		GameScene nextScene = scenesCreated.stream()
 				.filter(scene -> SceneFactory.isSuitableScene(scene, controller, Env.$use3DScenes.get())).findFirst()
 				.orElseGet(this::createSuitableScene);
-		changeGameScene(gameScene, nextScene);
+		changeGameScene(currentGameScene, nextScene);
 	}
 
 	private GameScene createSuitableScene() {
@@ -157,16 +158,16 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			oldGameScene.end();
 		}
 		// now using new game scene
-		gameScene = newGameScene;
+		currentGameScene = newGameScene;
 		mainSceneRoot.getChildren().clear();
-		mainSceneRoot.getChildren().addAll(gameScene.getFXSubScene(), flashMessageView, infoPane);
-		gameScene.setAvailableSize(mainScene.getWidth(), mainScene.getHeight());
+		mainSceneRoot.getChildren().addAll(currentGameScene.getFXSubScene(), flashMessageView, infoPane);
+		currentGameScene.setAvailableSize(mainScene.getWidth(), mainScene.getHeight());
 		if (Env.$useStaticCamera.get()) {
-			gameScene.useMoveableCamera(false);
+			currentGameScene.useMoveableCamera(false);
 		} else {
-			gameScene.useMoveableCamera(true);
+			currentGameScene.useMoveableCamera(true);
 		}
-		gameScene.start();
+		currentGameScene.start();
 	}
 
 	private void handleKeys(KeyEvent e) {
@@ -202,10 +203,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			if (control) {
 				Env.$useStaticCamera.set(!Env.$useStaticCamera.get());
 				if (Env.$useStaticCamera.get()) {
-					gameScene.useMoveableCamera(false);
+					currentGameScene.useMoveableCamera(false);
 					showFlashMessage("Static Camera");
 				} else {
-					gameScene.useMoveableCamera(true);
+					currentGameScene.useMoveableCamera(true);
 					showFlashMessage("Moveable Camera");
 				}
 			}
@@ -253,29 +254,25 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 	}
 
-	public void updateInfoPane() {
-		infoPane.update();
-	}
-
 	@Override
 	public void update() {
-		if (gameScene == null) {
+		if (currentGameScene == null) {
 			log("Cannot update scene, scene is NULL");
 			return;
 		}
-		if (gameScene instanceof AbstractGameScene2D) {
-			AbstractGameScene2D scene2D = (AbstractGameScene2D) gameScene;
+		if (currentGameScene instanceof AbstractGameScene2D) {
+			AbstractGameScene2D scene2D = (AbstractGameScene2D) currentGameScene;
 			scene2D.clearCanvas();
 		}
-		gameScene.update();
+		currentGameScene.update();
 		flashMessageView.update();
 		infoPane.update();
 	}
 
 	@Override
 	public void reset() {
-		if (gameScene != null) {
-			gameScene.end();
+		if (currentGameScene != null) {
+			currentGameScene.end();
 		}
 	}
 
@@ -291,13 +288,13 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public Optional<SoundManager> sound() {
-		return Optional.of(SceneFactory.SOUND.get(controller.selectedGameType()));
+		return Optional.of(Assets2D.SOUND.get(controller.selectedGameType()));
 	}
 
 	@Override
 	public Optional<PacManGameAnimations2D> animation() {
-		if (gameScene instanceof AbstractGameScene2D) {
-			AbstractGameScene2D scene2D = (AbstractGameScene2D) gameScene;
+		if (currentGameScene instanceof AbstractGameScene2D) {
+			AbstractGameScene2D scene2D = (AbstractGameScene2D) currentGameScene;
 			return Optional.of(scene2D.getRendering());
 		}
 		return Optional.empty();

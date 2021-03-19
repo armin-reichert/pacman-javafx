@@ -21,7 +21,7 @@ class GameLoop extends AnimationTimer {
 	@Override
 	public void handle(long now) {
 		if (Env.$paused.get()) {
-			userInterface.updateInfoPane();
+			userInterface.infoPane.update();
 		} else {
 			if (Env.$measureTime.get()) {
 				measureTime(controller::step, "Controller step");

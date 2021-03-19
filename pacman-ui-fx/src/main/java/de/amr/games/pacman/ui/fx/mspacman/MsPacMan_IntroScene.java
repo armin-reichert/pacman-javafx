@@ -4,12 +4,12 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.TickTimer;
+import de.amr.games.pacman.model.common.GameType;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx.common.scene2d.AbstractGameScene2D;
-import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
+import de.amr.games.pacman.ui.fx.common.scene2d.Assets2D;
 import de.amr.games.pacman.ui.mspacman.MsPacMan_IntroScene_Controller;
 import de.amr.games.pacman.ui.mspacman.MsPacMan_IntroScene_Controller.Phase;
-import de.amr.games.pacman.ui.sound.SoundManager;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -23,8 +23,8 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 	private MsPacMan_IntroScene_Controller sceneController;
 	private TickTimer boardAnimationTimer = new TickTimer();
 
-	public MsPacMan_IntroScene(PacManGameController controller, PacManGameRendering2D rendering, SoundManager sounds) {
-		super(controller, rendering, sounds);
+	public MsPacMan_IntroScene(PacManGameController controller) {
+		super(controller, Assets2D.RENDERING_2D.get(GameType.MS_PACMAN), Assets2D.SOUND.get(GameType.MS_PACMAN));
 	}
 
 	@Override
