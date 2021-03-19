@@ -33,44 +33,44 @@ import javafx.scene.transform.Translate;
  */
 class Assets {
 
+	static String url(String path) {
+		return Assets.class.getResource(path).toExternalForm();
+	}
+
 	static final Font ARCADE_FONT;
 	static final PhongMaterial wallMaterials[];
 	static final PhongMaterial livesCounterOn = new PhongMaterial(Color.YELLOW);
 	static final PhongMaterial livesCounterOff = new PhongMaterial(Color.GRAY);
 
-	static MeshView ghostMeshView;
-	static Map<String, MeshView> meshViews;
+	static MeshView ghostMeshTemplate;
+	static Map<String, MeshView> guyMeshTemplates;
 
 	static {
-		ARCADE_FONT = Font.loadFont(Assets.class.getResource("/emulogic.ttf").toExternalForm(), TS);
+		ARCADE_FONT = Font.loadFont(url("/emulogic.ttf"), TS);
 
 		ObjModelImporter objImporter = new ObjModelImporter();
 		try {
-			objImporter.read(Assets.class.getResource("/common/ghost.obj"));
-			ghostMeshView = objImporter.getNamedMeshViews().get("Ghost_Sphere.001");
+			objImporter.read(url("/common/ghost.obj"));
+			ghostMeshTemplate = objImporter.getNamedMeshViews().get("Ghost_Sphere.001");
 
-			objImporter.read(Assets.class.getResource("/common/pacman1.obj"));
-			meshViews = objImporter.getNamedMeshViews();
+			objImporter.read(url("/common/pacman1.obj"));
+			guyMeshTemplates = objImporter.getNamedMeshViews();
 
-			meshViews.keySet().stream().sorted().forEach(key -> log("Mesh '%s': %s", key, meshViews.get(key)));
+			guyMeshTemplates.keySet().stream().sorted().forEach(key -> log("Mesh '%s': %s", key, guyMeshTemplates.get(key)));
 			log("Mesh views loaded successfully!");
 		} catch (ImportException e) {
 			e.printStackTrace();
 		}
 
-		Image wallTexture = new Image(Assets.class.getResource("/common/stone-texture.png").toExternalForm());
+		Image wallTexture = new Image(url("/common/stone-texture.png"));
 		wallMaterials = new PhongMaterial[10];
 		for (int i = 0; i < wallMaterials.length; ++i) {
 			PhongMaterial m = new PhongMaterial();
-			Image texture = randomSubimage(wallTexture, 128, 128);
+			Image texture = randomArea(wallTexture, 128, 128);
 			m.setBumpMap(texture);
 			m.setDiffuseMap(texture);
 			wallMaterials[i] = m;
 		}
-	}
-
-	static Color ghostColor(int id) {
-		return id == 0 ? Color.TOMATO : id == 1 ? Color.PINK : id == 2 ? Color.CYAN : Color.ORANGE;
 	}
 
 	static Color mazeColor(GameType gameType, int mazeNumber) {
@@ -79,6 +79,10 @@ class Assets {
 
 	static Color foodColor(GameType gameType, int mazeNumber) {
 		return gameType == GameType.PACMAN ? Color.rgb(250, 185, 176) : MsPacMan_Constants.getFoodColor(mazeNumber);
+	}
+
+	static Color ghostColor(int id) {
+		return id == 0 ? Color.TOMATO : id == 1 ? Color.PINK : id == 2 ? Color.CYAN : Color.ORANGE;
 	}
 
 	static PhongMaterial ghostSkin(int ghostID) {
@@ -97,41 +101,31 @@ class Assets {
 		return new AmbientLight(mazeColor(gameType, mazeNumber));
 	}
 
-	static Group playerShape() {
-		MeshView body = meshViews.get("Sphere_Sphere.002_Material.001");
-		PhongMaterial bodyMaterial = new PhongMaterial(Color.YELLOW);
-		bodyMaterial.setDiffuseColor(Color.YELLOW.brighter());
-		bodyMaterial.setSpecularPower(100);
-		body.setMaterial(bodyMaterial);
-		body.setDrawMode(Env.$drawMode.get());
-		Translate shift = centerOverOrigin(body);
+	static Group createPlayerShape() {
+		MeshView body = new MeshView(guyMeshTemplates.get("Sphere_Sphere.002_Material.001").getMesh());
+		MeshView glasses = new MeshView(guyMeshTemplates.get("Sphere_Sphere.002_Material.002").getMesh());
 
-		MeshView glasses = meshViews.get("Sphere_Sphere.002_Material.002");
+		body.setMaterial(new PhongMaterial(Color.YELLOW));
+		body.setDrawMode(Env.$drawMode.get());
+
 		glasses.setMaterial(new PhongMaterial(Color.rgb(50, 50, 50)));
 		glasses.setDrawMode(Env.$drawMode.get());
-		glasses.getTransforms().add(shift);
+
+		Translate centering = centerOverOrigin(body);
+		glasses.getTransforms().add(centering);
 
 		Group shape = new Group(body, glasses);
 		shape.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 		scale(shape, TS);
-		return shape;
-	}
 
-	static MeshView ghostShape(int ghostID) {
-		PhongMaterial material = new PhongMaterial(Assets.ghostColor(ghostID));
-		MeshView shape = new MeshView(ghostMeshView.getMesh());
-		shape.setMaterial(material);
-//		shape.setDrawMode(DrawMode.LINE);
-		shape.getTransforms().clear();
-		shape.getTransforms().add(new Scale(4, 4, 4));
 		return shape;
 	}
 
 	private static Translate centerOverOrigin(Node node) {
 		Bounds bounds = node.getBoundsInLocal();
-		Translate shift = new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
-		node.getTransforms().add(shift);
-		return shift;
+		Translate centering = new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
+		node.getTransforms().add(centering);
+		return centering;
 	}
 
 	private static void scale(Node node, double size) {
@@ -142,10 +136,20 @@ class Assets {
 		node.getTransforms().add(new Scale(s1, s2, s3));
 	}
 
-	private static Image randomSubimage(Image src, int w, int h) {
-		WritableImage result = new WritableImage(w, h);
+	static MeshView createGhostMeshView(int ghostID) {
+		MeshView shape = new MeshView(ghostMeshTemplate.getMesh());
+		PhongMaterial material = new PhongMaterial(ghostColor(ghostID));
+		shape.setMaterial(material);
+		centerOverOrigin(shape);
+		scale(shape, 8);
+		shape.drawModeProperty().bind(Env.$drawMode);
+		return shape;
+	}
+
+	private static Image randomArea(Image src, int w, int h) {
 		int x = new Random().nextInt((int) src.getWidth() - w);
 		int y = new Random().nextInt((int) src.getHeight() - h);
+		WritableImage result = new WritableImage(w, h);
 		result.getPixelWriter().setPixels(0, 0, w, h, src.getPixelReader(), x, y);
 		return result;
 	}

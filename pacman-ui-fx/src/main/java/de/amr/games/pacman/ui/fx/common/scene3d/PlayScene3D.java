@@ -16,7 +16,6 @@ import de.amr.games.pacman.model.common.GameType;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.model.common.Pac;
-import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.animation.TimedSequence;
 import de.amr.games.pacman.ui.fx.common.CameraController;
 import de.amr.games.pacman.ui.fx.common.Env;
@@ -44,6 +43,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -55,8 +55,8 @@ import javafx.util.Duration;
 public class PlayScene3D implements GameScene {
 
 	private final PacManGameController controller;
-	private final SubScene subScene;
-	private final Group sceneRoot;
+
+	private final SubScene fxScene;
 
 	private final PerspectiveCamera staticCamera;
 	private final PerspectiveCamera moveableCamera;
@@ -69,11 +69,9 @@ public class PlayScene3D implements GameScene {
 	private Map<V2i, Node> wallNodes;
 	private List<Node> energizerNodes;
 	private List<Node> pelletNodes;
-
 	private Group tgScore;
 	private Text txtScore;
 	private Text txtHiscore;
-
 	private Group tgLivesCounter;
 
 	private final TimedSequence<Boolean> energizerBlinking = TimedSequence.pulse().frameDuration(15);
@@ -82,13 +80,61 @@ public class PlayScene3D implements GameScene {
 		this.controller = controller;
 		staticCamera = new PerspectiveCamera(true);
 		moveableCamera = new PerspectiveCamera(true);
-		sceneRoot = new Group();
-		subScene = new SubScene(sceneRoot, width, height);
-		subScene.setFill(Color.BLACK);
+		fxScene = new SubScene(new Group(), width, height);
+		fxScene.setFill(Color.BLACK);
 		useStaticCamera();
 		cameraController = new CameraController(staticCamera);
 		// TODO why doesn't subscene get key events?
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, cameraController::handleKeyEvent);
+	}
+
+	private void buildSceneGraph() {
+		final GameType gameType = controller.selectedGameType();
+		final GameModel game = controller.selectedGame();
+
+		wallNodes = game.level.world.tiles().filter(game.level.world::isWall)
+				.collect(Collectors.toMap(Function.identity(), tile -> createWallShape(tile, Assets.randomWallMaterial())));
+
+		energizerNodes = game.level.world.energizerTiles()
+				.map(tile -> createEnergizerShape(tile, Assets.foodMaterial(gameType, game.level.mazeNumber)))
+				.collect(Collectors.toList());
+
+		pelletNodes = game.level.world.tiles().filter(game.level.world::isFoodTile)
+				.filter(tile -> !game.level.world.isEnergizerTile(tile))
+				.map(tile -> createPelletShape(tile, Assets.foodMaterial(gameType, game.level.mazeNumber)))
+				.collect(Collectors.toList());
+
+		tgPlayer = Assets.createPlayerShape();
+
+		tgGhosts = game.ghosts().collect(Collectors.toMap(Function.identity(), this::createGhostShape));
+
+		createScore();
+		createLivesCounter();
+
+		tgMaze = new Group();
+
+		// center over origin
+		tgMaze.getTransforms()
+				.add(new Translate(-GameScene.UNSCALED_SCENE_WIDTH / 2, -GameScene.UNSCALED_SCENE_HEIGHT / 2));
+
+		tgMaze.getChildren().addAll(tgScore, tgLivesCounter);
+		tgMaze.getChildren().addAll(wallNodes.values());
+		tgMaze.getChildren().addAll(energizerNodes);
+		tgMaze.getChildren().addAll(pelletNodes);
+		tgMaze.getChildren().addAll(tgPlayer);
+		tgMaze.getChildren().addAll(tgGhosts.values());
+
+		AmbientLight ambientLight = Assets.ambientLight(gameType, game.level.mazeNumber);
+		ambientLight.setTranslateZ(-100);
+		tgMaze.getChildren().add(ambientLight);
+
+		PointLight spot = new PointLight(Color.AZURE);
+		spot.setTranslateZ(-500);
+		tgMaze.getChildren().add(spot);
+
+		createAxes();
+
+		fxScene.setRoot(new Group(tgAxes, tgMaze));
 	}
 
 	@Override
@@ -98,96 +144,25 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public SubScene getFXSubScene() {
-		return subScene;
+		return fxScene;
 	}
 
 	@Override
 	public Camera getActiveCamera() {
-		return subScene.getCamera();
+		return fxScene.getCamera();
 	}
 
 	@Override
 	public void start() {
+		// TODO remove
 		controller.setPlayerImmune(true);
 		buildSceneGraph();
 		addStateListeners();
 	}
 
 	@Override
-	public void update() {
-		GameModel game = controller.selectedGame();
-		updateScores();
-		updateLivesCounter();
-		energizerBlinking.animate();
-		energizerNodes.forEach(energizer -> {
-			V2i tile = (V2i) energizer.getUserData();
-			energizer.setVisible(!game.level.isFoodRemoved(tile) && energizerBlinking.frame());
-		});
-		pelletNodes.forEach(pellet -> {
-			V2i tile = (V2i) pellet.getUserData();
-			pellet.setVisible(!game.level.isFoodRemoved(tile));
-		});
-		updatePlayerShape(game.player);
-		for (Ghost ghost : game.ghosts) {
-			updateGhostNode(ghost);
-		}
-		if (subScene.getCamera() == moveableCamera) {
-			updateMoveableCamera();
-		}
-	}
-
-	@Override
 	public void end() {
 		removeStateListeners();
-	}
-
-	private void buildSceneGraph() {
-		final GameModel game = controller.selectedGame();
-		final GameType gameType = controller.selectedGameType();
-		final int mazeNumber = game.level.mazeNumber;
-		final PacManGameWorld world = game.level.world;
-
-		createAxes();
-
-		wallNodes = world.tiles().filter(world::isWall)
-				.collect(Collectors.toMap(Function.identity(), tile -> createWallShape(tile, Assets.randomWallMaterial())));
-
-		energizerNodes = world.energizerTiles()
-				.map(tile -> createEnergizerShape(tile, Assets.foodMaterial(gameType, mazeNumber)))
-				.collect(Collectors.toList());
-		pelletNodes = world.tiles().filter(world::isFoodTile).filter(tile -> !world.isEnergizerTile(tile))
-				.map(tile -> createPelletShape(tile, Assets.foodMaterial(gameType, mazeNumber))).collect(Collectors.toList());
-
-		tgPlayer = Assets.playerShape();
-
-		tgGhosts = game.ghosts().collect(Collectors.toMap(Function.identity(), this::createGhostGroup));
-
-		createScore(Assets.ARCADE_FONT);
-		createLivesCounter();
-
-		tgMaze = new Group();
-
-		// center over origin
-		tgMaze.setTranslateX(-GameScene.UNSCALED_SCENE_WIDTH / 2);
-		tgMaze.setTranslateY(-GameScene.UNSCALED_SCENE_HEIGHT / 2);
-
-		tgMaze.getChildren().addAll(tgScore, tgLivesCounter);
-		tgMaze.getChildren().addAll(wallNodes.values());
-		tgMaze.getChildren().addAll(energizerNodes);
-		tgMaze.getChildren().addAll(pelletNodes);
-		tgMaze.getChildren().addAll(tgPlayer);
-		tgMaze.getChildren().addAll(tgGhosts.values());
-
-		AmbientLight ambientLight = Assets.ambientLight(gameType, mazeNumber);
-		ambientLight.setTranslateZ(-100);
-		tgMaze.getChildren().add(ambientLight);
-
-		PointLight spot = new PointLight(Color.AZURE);
-		spot.setTranslateZ(-500);
-		tgMaze.getChildren().add(spot);
-
-		sceneRoot.getChildren().clear();
-		sceneRoot.getChildren().addAll(tgMaze, tgAxes);
 	}
 
 	private void addStateListeners() {
@@ -205,8 +180,8 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public void useMoveableCamera(boolean moveable) {
-		if (moveable) {
+	public void useMoveableCamera(boolean on) {
+		if (on) {
 			useMoveableCamera();
 		} else {
 			useStaticCamera();
@@ -221,7 +196,7 @@ public class PlayScene3D implements GameScene {
 		staticCamera.setTranslateZ(-460);
 		staticCamera.setRotationAxis(Rotate.X_AXIS);
 		staticCamera.setRotate(30);
-		subScene.setCamera(staticCamera);
+		fxScene.setCamera(staticCamera);
 	}
 
 	private void useMoveableCamera() {
@@ -230,7 +205,7 @@ public class PlayScene3D implements GameScene {
 		moveableCamera.setTranslateZ(-250);
 		moveableCamera.setRotationAxis(Rotate.X_AXIS);
 		moveableCamera.setRotate(30);
-		subScene.setCamera(moveableCamera);
+		fxScene.setCamera(moveableCamera);
 	}
 
 	private void updateMoveableCamera() {
@@ -244,7 +219,37 @@ public class PlayScene3D implements GameScene {
 		return current + (target - current) * 0.02;
 	}
 
-	private void createScore(Font font) {
+	private void createAxes() {
+		int len = 100;
+		Sphere origin = new Sphere(2);
+		origin.setMaterial(new PhongMaterial(Color.BISQUE));
+		tgAxes = new Group(origin);
+		tgAxes.visibleProperty().bind(Env.$showAxes);
+
+		Cylinder posX = createYAxis(Color.RED.brighter(), len);
+		posX.getTransforms().add(new Translate(len / 2, 0, 0));
+		posX.getTransforms().add(new Rotate(90, Rotate.Z_AXIS));
+		tgAxes.getChildren().add(posX);
+
+		Cylinder posY = createYAxis(Color.GREEN.brighter(), len);
+		posY.getTransforms().add(new Translate(0, len / 2, 0));
+		tgAxes.getChildren().add(posY);
+
+		Cylinder negZ = createYAxis(Color.BLUE.brighter(), len);
+		posY.getTransforms().add(new Translate(0, -len / 2, 0));
+		negZ.getTransforms().add(new Rotate(-90, Rotate.X_AXIS));
+		tgAxes.getChildren().add(negZ);
+	}
+
+	private Cylinder createYAxis(Color color, double height) {
+		Cylinder axis = new Cylinder(1, height);
+		axis.setMaterial(new PhongMaterial(color));
+		return axis;
+	}
+
+	private void createScore() {
+		Font font = Assets.ARCADE_FONT;
+
 		Text txtScoreTitle = new Text("SCORE");
 		txtScoreTitle.setFill(Color.WHITE);
 		txtScoreTitle.setFont(font);
@@ -319,22 +324,28 @@ public class PlayScene3D implements GameScene {
 		return pellet;
 	}
 
-	private void createAxes() {
-		Cylinder xAxis = createAxis("X", Color.RED, 300);
-		Cylinder yAxis = createAxis("Y", Color.GREEN, 300);
-		Cylinder zAxis = createAxis("Z", Color.BLUE, 300);
-		xAxis.setRotationAxis(Rotate.Z_AXIS);
-		xAxis.setRotate(90);
-		zAxis.setRotationAxis(Rotate.X_AXIS);
-		zAxis.setRotate(-90);
-		tgAxes = new Group(xAxis, yAxis, zAxis);
-		tgAxes.visibleProperty().bind(Env.$showAxes);
-	}
-
-	private Cylinder createAxis(String label, Color color, double length) {
-		Cylinder axis = new Cylinder(0.5, length);
-		axis.setMaterial(new PhongMaterial(color));
-		return axis;
+	@Override
+	public void update() {
+		GameModel game = controller.selectedGame();
+		updateScores();
+		updateLivesCounter();
+		energizerBlinking.animate();
+		energizerNodes.forEach(energizer -> {
+			V2i tile = (V2i) energizer.getUserData();
+			energizer.setVisible(!game.level.isFoodRemoved(tile) && energizerBlinking.frame());
+		});
+		// TODO this is inefficient
+		pelletNodes.forEach(pellet -> {
+			V2i tile = (V2i) pellet.getUserData();
+			pellet.setVisible(!game.level.isFoodRemoved(tile));
+		});
+		updatePlayerShape(game.player);
+		for (Ghost ghost : game.ghosts) {
+			updateGhostShape(ghost);
+		}
+		if (getActiveCamera() == moveableCamera) {
+			updateMoveableCamera();
+		}
 	}
 
 	private void updateScores() {
@@ -365,30 +376,19 @@ public class PlayScene3D implements GameScene {
 		tgPlayer.setTranslateX(player.position.x);
 		tgPlayer.setTranslateY(player.position.y);
 		tgPlayer.setViewOrder(-player.position.y - 2);
-		tgPlayer.setRotationAxis(Rotate.Z_AXIS);
-
-		// WTF?
-//		if (player.dir == Direction.UP) {
-//			tgPlayer.setRotate(180);
-//		} else if (player.dir == Direction.RIGHT) {
-//			tgPlayer.setRotate(-90);
-//		} else if (player.dir == Direction.DOWN) {
-//			tgPlayer.setRotate(0);
-//		} else if (player.dir == Direction.LEFT) {
-//			tgPlayer.setRotate(90);
-//		}
 	}
 
-	private Group createGhostGroup(Ghost ghost) {
-		// children: colored ghost, bounty text, ghost returning home
-		Group group = new Group(ghostColored(ghost), ghostBounty(ghost), ghostReturningHome(ghost));
+	private Group createGhostShape(Ghost ghost) {
+		Group ghostColoredShape = new Group(Assets.createGhostMeshView(ghost.id));
+		ghostColoredShape.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
+		Group group = new Group(ghostColoredShape, createGhostBountyShape(ghost), createGhostReturningHomeShape(ghost));
 		Node selection = group.getChildren().get(0);
 		group.setUserData(selection);
 		group.getChildren().forEach(child -> child.setVisible(child == selection));
 		return group;
 	}
 
-	private void updateGhostNode(Ghost ghost) {
+	private void updateGhostShape(Ghost ghost) {
 		Group oldSelection = (Group) tgGhosts.get(ghost).getUserData();
 		ObservableList<Node> children = tgGhosts.get(ghost).getChildren();
 		Group newSelection;
@@ -419,17 +419,7 @@ public class PlayScene3D implements GameScene {
 		tgGhosts.get(ghost).setViewOrder(-(ghost.position.y + 5));
 	}
 
-	private Group ghostColored(Ghost ghost) {
-		MeshView meshView = Assets.ghostShape(ghost.id);
-		Group shape = new Group(meshView);
-		shape.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-//		double angle = ghost.dir == Direction.RIGHT ? 0
-//				: ghost.dir == Direction.DOWN ? 90 : ghost.dir == Direction.LEFT ? 180 : 270;
-//		shape.getTransforms().add(new Rotate(angle, Rotate.Y_AXIS));
-		return shape;
-	}
-
-	private Group ghostBounty(Ghost ghost) {
+	private Group createGhostBountyShape(Ghost ghost) {
 		// TODO why is this text so blurred?
 		Text bounty = new Text();
 		bounty.setText(String.valueOf(ghost.bounty));
@@ -441,7 +431,7 @@ public class PlayScene3D implements GameScene {
 		return new Group(bounty);
 	}
 
-	private Group ghostReturningHome(Ghost ghost) {
+	private Group createGhostReturningHomeShape(Ghost ghost) {
 		PhongMaterial skin = Assets.ghostSkin(ghost.id);
 		Sphere[] parts = new Sphere[3];
 		for (int i = 0; i < parts.length; ++i) {
@@ -452,6 +442,8 @@ public class PlayScene3D implements GameScene {
 		return new Group(parts);
 	}
 
+	// State change handlers
+
 	private void onHuntingStateEntry(PacManGameState state) {
 		energizerBlinking.restart();
 	}
@@ -459,8 +451,6 @@ public class PlayScene3D implements GameScene {
 	private void onHuntingStateExit(PacManGameState state) {
 		energizerBlinking.reset();
 	}
-
-	// State change handling
 
 	private void playLevelCompleteAnimation(PacManGameState state) {
 		PauseTransition pause = new PauseTransition(Duration.seconds(2));
