@@ -5,6 +5,7 @@ import static de.amr.games.pacman.model.common.GameType.PACMAN;
 
 import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.Objects;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
@@ -68,8 +69,7 @@ public class SceneFactory {
 		//@formatter:on
 	}
 
-	public static GameScene createGameScene(Stage stage, PacManGameController controller, double width, double height,
-			boolean version3D) {
+	public static GameScene createGameScene(Stage stage, PacManGameController controller, boolean version3D) {
 		int sceneIndex = sceneIndex(controller);
 		switch (controller.selectedGameType()) {
 		case MS_PACMAN:
@@ -83,7 +83,7 @@ public class SceneFactory {
 			case 3:
 				return new MsPacMan_IntermissionScene3(controller, RENDERING_2D.get(MS_PACMAN), SOUND.get(MS_PACMAN));
 			case 4:
-				return version3D ? new PlayScene3D(stage, controller, width, height)
+				return version3D ? new PlayScene3D(stage, controller)
 						: new PlayScene2D(controller, RENDERING_2D.get(MS_PACMAN), SOUND.get(MS_PACMAN));
 			default:
 				break;
@@ -99,7 +99,7 @@ public class SceneFactory {
 			case 3:
 				return new PacMan_IntermissionScene3(controller, RENDERING_2D.get(PACMAN), SOUND.get(PACMAN));
 			case 4:
-				return version3D ? new PlayScene3D(stage, controller, width, height)
+				return version3D ? new PlayScene3D(stage, controller)
 						: new PlayScene2D(controller, RENDERING_2D.get(PACMAN), SOUND.get(PACMAN));
 			default:
 				break;
@@ -111,14 +111,18 @@ public class SceneFactory {
 		throw new IllegalStateException();
 	}
 
-	public static boolean isSuitableScene(GameScene gameScene, PacManGameController controller) {
+	public static boolean isSuitableScene(GameScene gameSceneOrNull, PacManGameController controller, boolean use3D) {
+		if (gameSceneOrNull == null) {
+			return false;
+		}
 		int gameIndex = controller.selectedGameType().ordinal();
-		return Arrays.asList(SCENE_CLASSES[gameIndex][sceneIndex(controller)]).contains(gameScene.getClass());
+		Class<?> sceneClass = SCENE_CLASSES[gameIndex][sceneIndex(controller)][use3D ? 1 : 0];
+		return gameSceneOrNull.getClass().equals(sceneClass);
 	}
 
 	public static boolean is2DAnd3DVersionAvailable(PacManGameController controller) {
 		int gameIndex = controller.selectedGameType().ordinal();
-		return SCENE_CLASSES[gameIndex][sceneIndex(controller)].length > 1;
+		return Arrays.stream(SCENE_CLASSES[gameIndex][sceneIndex(controller)]).filter(Objects::nonNull).count() > 1;
 	}
 
 	private static int sceneIndex(PacManGameController controller) {

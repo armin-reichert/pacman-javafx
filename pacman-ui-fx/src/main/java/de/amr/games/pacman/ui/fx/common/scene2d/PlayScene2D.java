@@ -28,26 +28,12 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public Camera getActiveCamera() {
-		return null;
+		return scene.getCamera();
 	}
 
 	@Override
 	public void useMoveableCamera(boolean use) {
-	}
-
-	private void onReadyStateEntry(PacManGameState state) {
-		rendering.resetAllAnimations(controller.selectedGame());
-	}
-
-	private void onHuntingStateEntry(PacManGameState state) {
-		rendering.mazeAnimations().energizerBlinking().restart();
-		rendering.playerAnimations().playerMunching(controller.selectedGame().player).forEach(TimedSequence::restart);
-		controller.selectedGame().ghosts().flatMap(rendering.ghostAnimations()::ghostKicking)
-				.forEach(TimedSequence::restart);
-	}
-
-	private void onHuntingStateExit(PacManGameState state) {
-		rendering.mazeAnimations().energizerBlinking().reset();
+		// 2D scene has only static camera
 	}
 
 	private void startPlayerDyingAnimation(PacManGameState state) {
@@ -58,14 +44,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		sounds.play(PacManGameSound.PACMAN_DEATH);
 	}
 
-	private void onGhostDyingStateEntry(PacManGameState state) {
-		rendering.mazeAnimations().energizerBlinking().restart();
-	}
-
-	private void onLevelCompleteStateEntry(PacManGameState state) {
-		mazeFlashing = rendering.mazeAnimations().mazeFlashing(controller.selectedGame().level.mazeNumber);
-	}
-
+	// TODO use FX animation
 	private void runLevelCompleteState(PacManGameState state) {
 		GameModel game = controller.selectedGame();
 		if (state.timer.isRunningSeconds(2)) {
@@ -80,34 +59,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 		}
 	}
 
-	private void onGameOverStateEntry(PacManGameState state) {
-		controller.selectedGame().ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(TimedSequence::reset);
-	}
-
-	private void addListeners() {
-		controller.addStateEntryListener(PacManGameState.READY, this::onReadyStateEntry);
-		controller.addStateEntryListener(PacManGameState.HUNTING, this::onHuntingStateEntry);
-		controller.addStateExitListener(PacManGameState.HUNTING, this::onHuntingStateExit);
-		controller.addStateEntryListener(PacManGameState.LEVEL_COMPLETE, this::onLevelCompleteStateEntry);
-		controller.addStateTimeListener(PacManGameState.PACMAN_DYING, this::startPlayerDyingAnimation, 1.0);
-		controller.addStateEntryListener(PacManGameState.GHOST_DYING, this::onGhostDyingStateEntry);
-		controller.addStateEntryListener(PacManGameState.GAME_OVER, this::onGameOverStateEntry);
-	}
-
-	private void removeListeners() {
-		controller.removeStateEntryListener(this::onReadyStateEntry);
-		controller.removeStateEntryListener(this::onHuntingStateEntry);
-		controller.removeStateEntryListener(this::onHuntingStateExit);
-		controller.removeStateEntryListener(this::onLevelCompleteStateEntry);
-		controller.removeStateTimeListener(this::startPlayerDyingAnimation);
-		controller.removeStateEntryListener(this::onGhostDyingStateEntry);
-		controller.removeStateEntryListener(this::onGameOverStateEntry);
-	}
-
 	@Override
 	public void start() {
-		addListeners();
-
 		GameModel game = controller.selectedGame();
 		mazeFlashing = rendering.mazeAnimations().mazeFlashing(game.level.mazeNumber).repetitions(game.level.numFlashes);
 		mazeFlashing.reset();
@@ -123,8 +76,49 @@ public class PlayScene2D extends AbstractGameScene2D {
 	}
 
 	@Override
+	public void onGameStateChange(PacManGameState oldState, PacManGameState newState) {
+		// enter READY state
+		if (newState == PacManGameState.READY) {
+			rendering.resetAllAnimations(controller.selectedGame());
+		}
+
+		// enter HUNTING state
+		if (newState == PacManGameState.HUNTING) {
+			rendering.mazeAnimations().energizerBlinking().restart();
+			rendering.playerAnimations().playerMunching(controller.selectedGame().player).forEach(TimedSequence::restart);
+			controller.selectedGame().ghosts().flatMap(rendering.ghostAnimations()::ghostKicking)
+					.forEach(TimedSequence::restart);
+		}
+
+		// exit HUNTING state
+		if (oldState == PacManGameState.HUNTING) {
+			rendering.mazeAnimations().energizerBlinking().reset();
+		}
+
+		// enter PAC_MANDYING state
+		if (newState == PacManGameState.PACMAN_DYING) {
+			startPlayerDyingAnimation(newState);
+		}
+
+		// enter GHOST_DYING state
+		if (newState == PacManGameState.GHOST_DYING) {
+			rendering.mazeAnimations().energizerBlinking().restart();
+		}
+
+		// enter LEVEL_COMPLETE state
+		if (newState == PacManGameState.LEVEL_COMPLETE) {
+			mazeFlashing = rendering.mazeAnimations().mazeFlashing(controller.selectedGame().level.mazeNumber);
+		}
+
+		// enter GAME_OVER state
+		if (newState == PacManGameState.GAME_OVER) {
+			controller.selectedGame().ghosts().flatMap(rendering.ghostAnimations()::ghostKicking)
+					.forEach(TimedSequence::reset);
+		}
+	}
+
+	@Override
 	public void end() {
-		removeListeners();
 	}
 
 	@Override

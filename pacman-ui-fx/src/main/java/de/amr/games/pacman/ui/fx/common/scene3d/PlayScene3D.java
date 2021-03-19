@@ -79,11 +79,11 @@ public class PlayScene3D implements GameScene {
 
 	private final TimedSequence<Boolean> energizerBlinking = TimedSequence.pulse().frameDuration(15);
 
-	public PlayScene3D(Stage stage, PacManGameController controller, double width, double height) {
+	public PlayScene3D(Stage stage, PacManGameController controller) {
 		this.controller = controller;
 		staticCamera = new PerspectiveCamera(true);
 		moveableCamera = new PerspectiveCamera(true);
-		fxScene = new SubScene(new Group(), width, height);
+		fxScene = new SubScene(new Group(), stage.getScene().getWidth(), stage.getScene().getHeight());
 		fxScene.setFill(Color.BLACK);
 		useStaticCamera();
 		cameraController = new CameraController(staticCamera);
@@ -168,28 +168,11 @@ public class PlayScene3D implements GameScene {
 		// TODO remove
 		controller.setPlayerImmune(true);
 		buildSceneGraph();
-		removeStateListeners();
-		addStateListeners();
 	}
 
 	@Override
 	public void end() {
 		log("Play scene %s: end", this);
-		removeStateListeners();
-	}
-
-	private void addStateListeners() {
-		controller.addStateEntryListener(PacManGameState.HUNTING, this::onHuntingStateEntry);
-		controller.addStateExitListener(PacManGameState.HUNTING, this::onHuntingStateExit);
-		controller.addStateEntryListener(PacManGameState.LEVEL_COMPLETE, this::playLevelCompleteAnimation);
-		controller.addStateEntryListener(PacManGameState.LEVEL_STARTING, this::playLevelStartingAnimation);
-	}
-
-	private void removeStateListeners() {
-		controller.removeStateEntryListener(this::onHuntingStateEntry);
-		controller.removeStateExitListener(this::onHuntingStateExit);
-		controller.removeStateEntryListener(this::playLevelCompleteAnimation);
-		controller.removeStateEntryListener(this::playLevelStartingAnimation);
 	}
 
 	@Override
@@ -458,12 +441,20 @@ public class PlayScene3D implements GameScene {
 
 	// State change handlers
 
-	private void onHuntingStateEntry(PacManGameState state) {
-		energizerBlinking.restart();
-	}
-
-	private void onHuntingStateExit(PacManGameState state) {
-		energizerBlinking.reset();
+	@Override
+	public void onGameStateChange(PacManGameState oldState, PacManGameState newState) {
+		if (oldState == PacManGameState.HUNTING) {
+			energizerBlinking.reset();
+		}
+		if (newState == PacManGameState.HUNTING) {
+			energizerBlinking.restart();
+		}
+		if (newState == PacManGameState.LEVEL_COMPLETE) {
+			playLevelCompleteAnimation(oldState);
+		}
+		if (newState == PacManGameState.LEVEL_STARTING) {
+			playLevelStartingAnimation(newState);
+		}
 	}
 
 	private void playLevelCompleteAnimation(PacManGameState state) {

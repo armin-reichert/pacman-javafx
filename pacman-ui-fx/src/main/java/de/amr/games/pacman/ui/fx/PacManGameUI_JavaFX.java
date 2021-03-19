@@ -4,9 +4,12 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.ui.fx.common.SceneFactory.createGameScene;
 import static de.amr.games.pacman.ui.fx.common.SceneFactory.is2DAnd3DVersionAvailable;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import de.amr.games.pacman.controller.PacManGameController;
+import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
 import de.amr.games.pacman.ui.fx.common.Env;
@@ -84,11 +87,14 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private final InfoPane infoPane;
 	private final FlashMessageView flashMessageView;
 
+	private final Set<GameScene> scenesCreated = new HashSet<>();
 	private GameScene gameScene;
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController controller, double height) {
 		this.stage = stage;
 		this.controller = controller;
+
+		controller.addStateChangeListener(this::handleGameStateChange);
 
 		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
 		stage.getIcons().add(new Image(getClass().getResource("/pacman/graphics/pacman.png").toExternalForm()));
@@ -107,13 +113,60 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		mainSceneRoot = new StackPane();
 		mainScene = new Scene(mainSceneRoot, width, height, Color.rgb(20, 20, 60));
 
-		GameScene initialGameScene = createGameScene(stage, controller, width, height, Env.$use3DScenes.get());
+		GameScene initialGameScene = createGameScene(stage, controller, Env.$use3DScenes.get());
+		initialGameScene.setAvailableSize(width, height);
 		addResizeHandler(initialGameScene);
 		changeGameScene(null, initialGameScene);
 
 		stage.setScene(mainScene);
 		stage.centerOnScreen();
 		stage.show();
+	}
+
+	private void handleGameStateChange(PacManGameState oldState, PacManGameState newState) {
+		log("Handle game state change %s to %s", oldState, newState);
+		if (!SceneFactory.isSuitableScene(gameScene, controller, Env.$use3DScenes.get())) {
+			changeScene();
+		}
+		gameScene.onGameStateChange(oldState, newState);
+	}
+
+	public void changeScene() {
+		GameScene nextScene = scenesCreated.stream()
+				.filter(scene -> SceneFactory.isSuitableScene(scene, controller, Env.$use3DScenes.get())).findFirst()
+				.orElseGet(this::createSuitableScene);
+		changeGameScene(gameScene, nextScene);
+	}
+
+	private GameScene createSuitableScene() {
+		GameScene scene = SceneFactory.createGameScene(stage, controller, Env.$use3DScenes.get());
+		scenesCreated.add(scene);
+		scene.setAvailableSize(mainScene.getWidth(), mainScene.getHeight());
+		addResizeHandler(scene);
+		log("New game scene '%s' created", scene);
+		return scene;
+	}
+
+	private void changeGameScene(GameScene oldGameScene, GameScene newGameScene) {
+		if (oldGameScene == newGameScene) {
+			log("Scene change not needed for %s", oldGameScene);
+			return;
+		}
+		log("Scene change: %s to %s", oldGameScene, newGameScene);
+		if (oldGameScene != null) {
+			oldGameScene.end();
+		}
+		// now using new game scene
+		gameScene = newGameScene;
+		mainSceneRoot.getChildren().clear();
+		mainSceneRoot.getChildren().addAll(gameScene.getFXSubScene(), flashMessageView, infoPane);
+		gameScene.setAvailableSize(mainScene.getWidth(), mainScene.getHeight());
+		if (Env.$useStaticCamera.get()) {
+			gameScene.useMoveableCamera(false);
+		} else {
+			gameScene.useMoveableCamera(true);
+		}
+		gameScene.start();
 	}
 
 	private void handleKeys(KeyEvent e) {
@@ -176,8 +229,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		String message = String.format("3D scenes %s", Env.$use3DScenes.get() ? "ON" : "OFF");
 		showFlashMessage(message);
 		if (is2DAnd3DVersionAvailable(controller)) {
-			gameScene = null; // trigger scene change
 			log("Scene must change because 2D and 3D versions are available");
+			changeScene();
 		}
 	}
 
@@ -200,39 +253,15 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 	}
 
-	private void changeGameScene(GameScene oldGameScene, GameScene newGameScene) {
-		if (oldGameScene == newGameScene) {
-			return;
-		}
-		log("Scene change: %s to %s", oldGameScene, newGameScene);
-		if (oldGameScene != null) {
-			oldGameScene.end();
-		}
-		// now using new game scene
-		gameScene = newGameScene;
-		mainSceneRoot.getChildren().clear();
-		mainSceneRoot.getChildren().addAll(gameScene.getFXSubScene(), flashMessageView, infoPane);
-		gameScene.setAvailableSize(mainScene.getWidth(), mainScene.getHeight());
-		if (Env.$useStaticCamera.get()) {
-			gameScene.useMoveableCamera(false);
-		} else {
-			gameScene.useMoveableCamera(true);
-		}
-		gameScene.start();
-	}
-
 	public void updateInfoPane() {
 		infoPane.update();
 	}
 
 	@Override
 	public void update() {
-		if (gameScene == null || !SceneFactory.isSuitableScene(gameScene, controller)) {
-			GameScene newGameScene = SceneFactory.createGameScene(stage, controller, mainScene.getWidth(),
-					mainScene.getHeight(), Env.$use3DScenes.get());
-			addResizeHandler(newGameScene);
-			log("New game scene '%s' created", newGameScene);
-			changeGameScene(gameScene, newGameScene);
+		if (gameScene == null) {
+			log("Cannot update scene, scene is NULL");
+			return;
 		}
 		if (gameScene instanceof AbstractGameScene2D) {
 			AbstractGameScene2D scene2D = (AbstractGameScene2D) gameScene;
