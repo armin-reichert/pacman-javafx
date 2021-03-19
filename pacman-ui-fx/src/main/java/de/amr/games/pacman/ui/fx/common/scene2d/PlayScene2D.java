@@ -2,6 +2,8 @@ package de.amr.games.pacman.ui.fx.common.scene2d;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
+import java.util.OptionalDouble;
+
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.lib.TickTimerEvent;
@@ -24,6 +26,11 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	public PlayScene2D(PacManGameController controller, PacManGameRendering2D rendering, SoundManager sounds) {
 		super(controller, rendering, sounds);
+	}
+
+	@Override
+	public OptionalDouble aspectRatio() {
+		return OptionalDouble.of(aspectRatio);
 	}
 
 	@Override

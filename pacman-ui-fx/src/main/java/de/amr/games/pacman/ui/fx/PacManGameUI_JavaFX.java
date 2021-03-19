@@ -4,6 +4,7 @@ import static de.amr.games.pacman.lib.Logging.log;
 
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.Set;
 
 import de.amr.games.pacman.controller.PacManGameController;
@@ -20,15 +21,12 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.sound.SoundManager;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
-import javafx.scene.Camera;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
@@ -38,88 +36,44 @@ import javafx.stage.Stage;
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
 
-	public class InfoPane extends Text {
+	public final HUD hud;
+	final Stage stage;
+	final PacManGameController controller;
+	final Keyboard keyboard;
+	final SceneFactory sceneFactory;
+	final Scene mainScene;
+	final StackPane mainSceneRoot;
+	final FlashMessageView flashMessageView;
+	final Set<GameScene> scenesCreated = new HashSet<>();
 
-		private String text;
-
-		public InfoPane() {
-			setFill(Color.LIGHTGREEN);
-			setFont(Font.font("Monospace", 14));
-			visibleProperty().bind(Env.$infoViewVisible);
-		}
-
-		private void line(String line, Object... args) {
-			text += String.format(line, args) + "\n";
-		}
-
-		public void update() {
-			text = "";
-			line(Env.$paused.get() ? "PAUSED" : "RUNNING");
-			line("Window:          w=%.0f h=%.0f", mainScene.getWindow().getWidth(), mainScene.getWindow().getHeight());
-			line("Main scene:      w=%.0f h=%.0f", mainScene.getWidth(), mainScene.getHeight());
-			line("Game scene:      w=%.0f h=%.0f (%s)", currentGameScene.getFXSubScene().getWidth(),
-					currentGameScene.getFXSubScene().getHeight(), currentGameScene.getClass().getSimpleName());
-			if (currentGameScene instanceof AbstractGameScene2D) {
-				AbstractGameScene2D scene2D = (AbstractGameScene2D) currentGameScene;
-				line("Canvas2D:        w=%.0f h=%.0f", scene2D.getCanvas().getWidth(), scene2D.getCanvas().getHeight());
-			}
-			line("Camera:          " + cameraInfo(currentGameScene.getActiveCamera()));
-			line("Autopilot:       " + (controller.autopilot.enabled ? "ON" : "OFF") + " (Key: 'A')");
-			line("Player Immunity: " + (controller.selectedGame().player.immune ? "ON" : "OFF") + " (Key: 'I')");
-			line("3D scenes:       " + (Env.$use3DScenes.get() ? "ON" : "OFF") + " (Key: CTRL+'3')");
-			setText(text);
-		}
-
-		private String cameraInfo(Camera camera) {
-			return camera == null ? "No camera"
-					: String.format("x=%.0f y=%.0f z=%.0f rot=%.0f", camera.getTranslateX(), camera.getTranslateY(),
-							camera.getTranslateZ(), camera.getRotate());
-		}
-	}
-
-	private final Stage stage;
-	private final PacManGameController controller;
-	private final Keyboard keyboard = new Keyboard();
-
-	private final SceneFactory sceneFactory;
-	private final Scene mainScene;
-	private final StackPane mainSceneRoot;
-	public final InfoPane infoPane;
-	private final FlashMessageView flashMessageView;
-
-	private final Set<GameScene> scenesCreated = new HashSet<>();
-	private GameScene currentGameScene;
+	GameScene currentGameScene;
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController controller, double height) {
 		this.stage = stage;
 		this.controller = controller;
-		this.sceneFactory = new SceneFactory(controller);
+		sceneFactory = new SceneFactory(controller);
+		keyboard = new Keyboard();
+		flashMessageView = new FlashMessageView();
+		mainSceneRoot = new StackPane();
+		mainScene = new Scene(mainSceneRoot, GameScene.ASPECT_RATIO * height, height, Color.rgb(20, 20, 60));
+
+		hud = new HUD(this, Pos.TOP_LEFT);
 
 		controller.addStateChangeListener(this::handleGameStateChange);
-
-		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
-		stage.getIcons().add(new Image(getClass().getResource("/pacman/graphics/pacman.png").toExternalForm()));
-		stage.setOnCloseRequest(e -> Platform.exit());
 
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
 		stage.addEventHandler(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeys);
 
-		flashMessageView = new FlashMessageView();
-
-		infoPane = new InfoPane();
-		StackPane.setAlignment(infoPane, Pos.TOP_LEFT);
-
-		double width = GameScene.ASPECT_RATIO * height;
-		mainSceneRoot = new StackPane();
-		mainScene = new Scene(mainSceneRoot, width, height, Color.rgb(20, 20, 60));
+		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
+		stage.getIcons().add(new Image(getClass().getResource("/pacman/graphics/pacman.png").toExternalForm()));
+		stage.setOnCloseRequest(e -> Platform.exit());
+		stage.setScene(mainScene);
 
 		GameScene initialGameScene = sceneFactory.createGameScene(stage, Env.$use3DScenes.get());
-		initialGameScene.setAvailableSize(width, height);
-		addResizeHandler(initialGameScene);
+		keepMaximizedInParent(initialGameScene, mainScene, initialGameScene.aspectRatio());
 		changeGameScene(null, initialGameScene);
 
-		stage.setScene(mainScene);
 		stage.centerOnScreen();
 		stage.show();
 	}
@@ -143,7 +97,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		GameScene scene = sceneFactory.createGameScene(stage, Env.$use3DScenes.get());
 		scenesCreated.add(scene);
 		scene.setAvailableSize(mainScene.getWidth(), mainScene.getHeight());
-		addResizeHandler(scene);
+		keepMaximizedInParent(scene, mainScene, scene.aspectRatio());
 		log("New game scene '%s' created", scene);
 		return scene;
 	}
@@ -160,7 +114,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		// now using new game scene
 		currentGameScene = newGameScene;
 		mainSceneRoot.getChildren().clear();
-		mainSceneRoot.getChildren().addAll(currentGameScene.getFXSubScene(), flashMessageView, infoPane);
+		mainSceneRoot.getChildren().addAll(currentGameScene.getFXSubScene(), flashMessageView, hud);
 		currentGameScene.setAvailableSize(mainScene.getWidth(), mainScene.getHeight());
 		if (Env.$useStaticCamera.get()) {
 			currentGameScene.useMoveableCamera(false);
@@ -234,22 +188,22 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 	}
 
-	private void addResizeHandler(GameScene scene) {
-		if (scene instanceof AbstractGameScene2D) {
-			AbstractGameScene2D scene2D = (AbstractGameScene2D) scene;
-			mainScene.widthProperty().addListener((s, o, n) -> {
-				double newHeight = Math.min(n.doubleValue() / scene2D.getAspectRatio(), mainScene.getHeight());
-				double newWidth = newHeight * scene2D.getAspectRatio();
+	private void keepMaximizedInParent(GameScene scene, Scene parentScene, OptionalDouble optionalAspectRatio) {
+		if (optionalAspectRatio.isPresent()) {
+			double aspectRatio = optionalAspectRatio.getAsDouble();
+			parentScene.widthProperty().addListener((s, o, n) -> {
+				double newHeight = Math.min(n.doubleValue() / aspectRatio, parentScene.getHeight());
+				double newWidth = newHeight * aspectRatio;
 				scene.setAvailableSize(newWidth, newHeight);
 			});
-			mainScene.heightProperty().addListener((s, o, n) -> {
+			parentScene.heightProperty().addListener((s, o, n) -> {
 				double newHeight = n.doubleValue();
-				double newWidth = Math.min(mainScene.getHeight() * scene2D.getAspectRatio(), mainScene.getWidth());
+				double newWidth = Math.min(parentScene.getHeight() * aspectRatio, parentScene.getWidth());
 				scene.setAvailableSize(newWidth, newHeight);
 			});
 		} else {
-			scene.getFXSubScene().widthProperty().bind(mainScene.widthProperty());
-			scene.getFXSubScene().heightProperty().bind(mainScene.heightProperty());
+			scene.getFXSubScene().widthProperty().bind(parentScene.widthProperty());
+			scene.getFXSubScene().heightProperty().bind(parentScene.heightProperty());
 		}
 	}
 
@@ -265,7 +219,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 		currentGameScene.update();
 		flashMessageView.update();
-		infoPane.update();
+		hud.update();
 	}
 
 	@Override

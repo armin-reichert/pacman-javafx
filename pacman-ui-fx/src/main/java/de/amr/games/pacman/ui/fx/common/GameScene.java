@@ -1,5 +1,7 @@
 package de.amr.games.pacman.ui.fx.common;
 
+import java.util.OptionalDouble;
+
 import de.amr.games.pacman.controller.PacManGameState;
 import javafx.scene.Camera;
 import javafx.scene.SubScene;
@@ -24,6 +26,10 @@ public interface GameScene {
 	void end();
 
 	default void onGameStateChange(PacManGameState oldState, PacManGameState newState) {
+	}
+
+	default OptionalDouble aspectRatio() {
+		return OptionalDouble.of(UNSCALED_SCENE_WIDTH / UNSCALED_SCENE_HEIGHT);
 	}
 
 	void setAvailableSize(double width, double height);

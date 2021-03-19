@@ -6,6 +6,7 @@ import static java.util.function.Predicate.not;
 
 import java.util.List;
 import java.util.Map;
+import java.util.OptionalDouble;
 import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -89,6 +90,11 @@ public class PlayScene3D implements GameScene {
 		cameraController = new CameraController(staticCamera);
 		// TODO why doesn't subscene get key events?
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, cameraController::handleKeyEvent);
+	}
+
+	@Override
+	public OptionalDouble aspectRatio() {
+		return OptionalDouble.empty();
 	}
 
 	@Override
@@ -364,7 +370,6 @@ public class PlayScene3D implements GameScene {
 		ObservableList<Node> children = tgLivesCounter.getChildren();
 		for (int i = 0; i < children.size(); ++i) {
 			Group liveIndicator = (Group) children.get(i);
-			liveIndicator.setVisible(i < game.lives);
 			V2i tile = (V2i) liveIndicator.getUserData();
 			V2i tileBelowIndicator = tile.plus(0, 1);
 			if (i < game.lives) {
