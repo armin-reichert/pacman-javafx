@@ -1,9 +1,12 @@
 package de.amr.games.pacman.ui.fx.common.scene3d;
 
+import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
+import static java.util.function.Predicate.not;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -66,7 +69,7 @@ public class PlayScene3D implements GameScene {
 	private Group tgMaze;
 	private Group tgPlayer;
 	private Map<Ghost, Group> tgGhosts;
-	private Map<V2i, Node> wallNodes;
+	private List<Node> wallNodes;
 	private List<Node> energizerNodes;
 	private List<Node> pelletNodes;
 	private Group tgScore;
@@ -88,19 +91,27 @@ public class PlayScene3D implements GameScene {
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, cameraController::handleKeyEvent);
 	}
 
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + "@" + hashCode();
+	}
+
 	private void buildSceneGraph() {
 		final GameType gameType = controller.selectedGameType();
 		final GameModel game = controller.selectedGame();
 
-		wallNodes = game.level.world.tiles().filter(game.level.world::isWall)
-				.collect(Collectors.toMap(Function.identity(), tile -> createWallShape(tile, Assets.randomWallMaterial())));
+		wallNodes = game.level.world.tiles()//
+				.filter(game.level.world::isWall)//
+				.map(tile -> createWallShape(tile, Assets.randomWallMaterial()))//
+				.collect(Collectors.toList());
 
 		energizerNodes = game.level.world.energizerTiles()
 				.map(tile -> createEnergizerShape(tile, Assets.foodMaterial(gameType, game.level.mazeNumber)))
 				.collect(Collectors.toList());
 
-		pelletNodes = game.level.world.tiles().filter(game.level.world::isFoodTile)
-				.filter(tile -> !game.level.world.isEnergizerTile(tile))
+		pelletNodes = game.level.world.tiles()//
+				.filter(game.level.world::isFoodTile)//
+				.filter(not(game.level.world::isEnergizerTile))
 				.map(tile -> createPelletShape(tile, Assets.foodMaterial(gameType, game.level.mazeNumber)))
 				.collect(Collectors.toList());
 
@@ -112,25 +123,23 @@ public class PlayScene3D implements GameScene {
 		createLivesCounter();
 
 		tgMaze = new Group();
-
 		// center over origin
 		tgMaze.getTransforms()
 				.add(new Translate(-GameScene.UNSCALED_SCENE_WIDTH / 2, -GameScene.UNSCALED_SCENE_HEIGHT / 2));
 
 		tgMaze.getChildren().addAll(tgScore, tgLivesCounter);
-		tgMaze.getChildren().addAll(wallNodes.values());
+		tgMaze.getChildren().addAll(wallNodes);
 		tgMaze.getChildren().addAll(energizerNodes);
 		tgMaze.getChildren().addAll(pelletNodes);
 		tgMaze.getChildren().addAll(tgPlayer);
 		tgMaze.getChildren().addAll(tgGhosts.values());
 
 		AmbientLight ambientLight = Assets.ambientLight(gameType, game.level.mazeNumber);
-		ambientLight.setTranslateZ(-100);
 		tgMaze.getChildren().add(ambientLight);
 
-		PointLight spot = new PointLight(Color.AZURE);
-		spot.setTranslateZ(-500);
-		tgMaze.getChildren().add(spot);
+		PointLight pointLight = new PointLight(Color.AZURE);
+		pointLight.setTranslateZ(-500);
+		tgMaze.getChildren().add(pointLight);
 
 		createAxes();
 
@@ -154,14 +163,18 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void start() {
+		log("Play scene %s: start", this);
+
 		// TODO remove
 		controller.setPlayerImmune(true);
 		buildSceneGraph();
+		removeStateListeners();
 		addStateListeners();
 	}
 
 	@Override
 	public void end() {
+		log("Play scene %s: end", this);
 		removeStateListeners();
 	}
 
@@ -290,7 +303,7 @@ public class PlayScene3D implements GameScene {
 			lamp.setTranslateY(lampTile.y * TS);
 			lamp.setTranslateZ(0); // ???
 			tgLivesCounter.getChildren().add(lamp);
-			wallNodes.remove(lampTile);
+			wallNodes.removeIf(wall -> lampTile.equals(wall.getUserData()));
 		}
 	}
 
@@ -300,6 +313,7 @@ public class PlayScene3D implements GameScene {
 		block.setTranslateX(tile.x * TS);
 		block.setTranslateY(tile.y * TS);
 		block.setViewOrder(-tile.y * TS);
+		block.setUserData(tile);
 		block.drawModeProperty().bind(Env.$drawMode);
 		return block;
 	}
@@ -453,6 +467,12 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void playLevelCompleteAnimation(PacManGameState state) {
+		log("%s: play level complete animation", this);
+		controller.state.timer.reset();
+		String[] congrats = { "Well done", "Congrats", "You did it", "You're the man*in", "WTF", "Man, man, man" };
+		String randomCongrats = congrats[new Random().nextInt(congrats.length)];
+		controller.userInterface.showFlashMessage(
+				String.format("%s!\n\nLevel %d complete.", randomCongrats, controller.selectedGame().levelNumber), 3);
 		PauseTransition pause = new PauseTransition(Duration.seconds(2));
 		pause.setOnFinished(e -> {
 			GameModel game = controller.selectedGame();
@@ -460,7 +480,7 @@ public class PlayScene3D implements GameScene {
 			game.ghosts().forEach(ghost -> ghost.visible = false);
 		});
 
-		ScaleTransition animation = new ScaleTransition(Duration.seconds(5), tgMaze);
+		ScaleTransition animation = new ScaleTransition(Duration.seconds(3), tgMaze);
 		animation.setFromZ(1);
 		animation.setToZ(0);
 
@@ -469,26 +489,19 @@ public class PlayScene3D implements GameScene {
 			controller.letCurrentGameStateExpire();
 		});
 		seq.play();
-
-		// wait until UI signals state expiration
-		controller.state.timer.reset();
 	}
 
 	private void playLevelStartingAnimation(PacManGameState state) {
-		PauseTransition pause = new PauseTransition(Duration.seconds(2));
-
-		ScaleTransition animation = new ScaleTransition(Duration.seconds(5), tgMaze);
+		log("%s: play level starting animation", this);
+		controller.state.timer.reset();
+		controller.userInterface.showFlashMessage("Entering Level " + controller.selectedGame().levelNumber);
+		ScaleTransition animation = new ScaleTransition(Duration.seconds(3), tgMaze);
 		animation.setDelay(Duration.seconds(2));
 		animation.setFromZ(0);
 		animation.setToZ(1);
-
-		SequentialTransition seq = new SequentialTransition(pause, animation);
-		seq.setOnFinished(e -> {
+		animation.setOnFinished(e -> {
 			controller.letCurrentGameStateExpire();
 		});
-		seq.play();
-
-		// wait until UI signals state expiration
-		controller.state.timer.reset();
+		animation.play();
 	}
 }

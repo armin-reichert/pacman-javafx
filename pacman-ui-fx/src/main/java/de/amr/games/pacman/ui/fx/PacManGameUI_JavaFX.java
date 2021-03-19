@@ -204,6 +204,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		if (oldGameScene == newGameScene) {
 			return;
 		}
+		log("Scene change: %s to %s", oldGameScene, newGameScene);
 		if (oldGameScene != null) {
 			oldGameScene.end();
 		}

@@ -40,6 +40,11 @@ public abstract class AbstractGameScene2D implements GameScene {
 		scene.heightProperty().bind(canvas.heightProperty());
 	}
 
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + "@" + hashCode();
+	}
+
 	public PacManGameRendering2D getRendering() {
 		return rendering;
 	}

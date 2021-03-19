@@ -14,6 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 public class FlashMessageView extends HBox {
 
@@ -24,6 +25,7 @@ public class FlashMessageView extends HBox {
 	public FlashMessageView() {
 		displayColor = Color.WHEAT;
 		display.setFont(Font.font("Sans", FontWeight.BOLD, 30));
+		display.setTextAlignment(TextAlignment.CENTER);
 		setAlignment(Pos.CENTER);
 		getChildren().add(display);
 	}
