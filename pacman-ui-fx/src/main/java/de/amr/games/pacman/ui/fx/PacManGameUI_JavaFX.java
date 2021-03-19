@@ -1,8 +1,6 @@
 package de.amr.games.pacman.ui.fx;
 
 import static de.amr.games.pacman.lib.Logging.log;
-import static de.amr.games.pacman.ui.fx.common.SceneFactory.createGameScene;
-import static de.amr.games.pacman.ui.fx.common.SceneFactory.is2DAnd3DVersionAvailable;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -83,6 +81,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private final PacManGameController controller;
 	private final Keyboard keyboard = new Keyboard();
 
+	private final SceneFactory sceneFactory;
 	private final Scene mainScene;
 	private final StackPane mainSceneRoot;
 	public final InfoPane infoPane;
@@ -94,6 +93,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController controller, double height) {
 		this.stage = stage;
 		this.controller = controller;
+		this.sceneFactory = new SceneFactory(controller);
 
 		controller.addStateChangeListener(this::handleGameStateChange);
 
@@ -114,7 +114,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		mainSceneRoot = new StackPane();
 		mainScene = new Scene(mainSceneRoot, width, height, Color.rgb(20, 20, 60));
 
-		GameScene initialGameScene = createGameScene(stage, controller, Env.$use3DScenes.get());
+		GameScene initialGameScene = sceneFactory.createGameScene(stage, Env.$use3DScenes.get());
 		initialGameScene.setAvailableSize(width, height);
 		addResizeHandler(initialGameScene);
 		changeGameScene(null, initialGameScene);
@@ -126,7 +126,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private void handleGameStateChange(PacManGameState oldState, PacManGameState newState) {
 		log("Handle game state change %s to %s", oldState, newState);
-		if (!SceneFactory.isSuitableScene(currentGameScene, controller, Env.$use3DScenes.get())) {
+		if (!sceneFactory.isSuitableScene(currentGameScene, Env.$use3DScenes.get())) {
 			changeScene();
 		}
 		currentGameScene.onGameStateChange(oldState, newState);
@@ -134,13 +134,13 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private void changeScene() {
 		GameScene nextScene = scenesCreated.stream()
-				.filter(scene -> SceneFactory.isSuitableScene(scene, controller, Env.$use3DScenes.get())).findFirst()
+				.filter(scene -> sceneFactory.isSuitableScene(scene, Env.$use3DScenes.get())).findFirst()
 				.orElseGet(this::createSuitableScene);
 		changeGameScene(currentGameScene, nextScene);
 	}
 
 	private GameScene createSuitableScene() {
-		GameScene scene = SceneFactory.createGameScene(stage, controller, Env.$use3DScenes.get());
+		GameScene scene = sceneFactory.createGameScene(stage, Env.$use3DScenes.get());
 		scenesCreated.add(scene);
 		scene.setAvailableSize(mainScene.getWidth(), mainScene.getHeight());
 		addResizeHandler(scene);
@@ -229,8 +229,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		Env.$use3DScenes.set(!Env.$use3DScenes.get());
 		String message = String.format("3D scenes %s", Env.$use3DScenes.get() ? "ON" : "OFF");
 		showFlashMessage(message);
-		if (is2DAnd3DVersionAvailable(controller)) {
-			log("Scene must change because 2D and 3D versions are available");
+		if (sceneFactory.has2DAnd3DSceneForCurrentState()) {
 			changeScene();
 		}
 	}

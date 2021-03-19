@@ -28,6 +28,8 @@ import javafx.stage.Stage;
  */
 public class SceneFactory {
 
+	private final PacManGameController controller;
+
 	private static final Class<?> SCENE_CLASSES[][][] = new Class<?>[2][5][2];
 
 	static {
@@ -48,11 +50,14 @@ public class SceneFactory {
 		//@formatter:on
 	}
 
-	public static GameScene createGameScene(Stage stage, PacManGameController controller, boolean use3D) {
-		int sceneIndex = sceneIndex(controller);
+	public SceneFactory(PacManGameController controller) {
+		this.controller = controller;
+	}
+
+	public GameScene createGameScene(Stage stage, boolean use3D) {
 		switch (controller.selectedGameType()) {
 		case MS_PACMAN:
-			switch (sceneIndex) {
+			switch (sceneIndex()) {
 			case 0:
 				return new MsPacMan_IntroScene(controller);
 			case 1:
@@ -68,7 +73,7 @@ public class SceneFactory {
 				break;
 			}
 		case PACMAN:
-			switch (sceneIndex) {
+			switch (sceneIndex()) {
 			case 0:
 				return new PacMan_IntroScene(controller);
 			case 1:
@@ -90,21 +95,21 @@ public class SceneFactory {
 		throw new IllegalStateException();
 	}
 
-	public static boolean isSuitableScene(GameScene gameSceneOrNull, PacManGameController controller, boolean use3D) {
+	public boolean isSuitableScene(GameScene gameSceneOrNull, boolean use3D) {
 		if (gameSceneOrNull == null) {
 			return false;
 		}
-		int gameIndex = controller.selectedGameType().ordinal();
-		Class<?> sceneClass = SCENE_CLASSES[gameIndex][sceneIndex(controller)][use3D ? 1 : 0];
+		int gameType = controller.selectedGameType().ordinal();
+		Class<?> sceneClass = SCENE_CLASSES[gameType][sceneIndex()][use3D ? 1 : 0];
 		return gameSceneOrNull.getClass().equals(sceneClass);
 	}
 
-	public static boolean is2DAnd3DVersionAvailable(PacManGameController controller) {
-		int gameIndex = controller.selectedGameType().ordinal();
-		return Arrays.stream(SCENE_CLASSES[gameIndex][sceneIndex(controller)]).filter(Objects::nonNull).count() > 1;
+	public boolean has2DAnd3DSceneForCurrentState() {
+		int gameType = controller.selectedGameType().ordinal();
+		return Arrays.stream(SCENE_CLASSES[gameType][sceneIndex()]).filter(Objects::nonNull).count() > 1;
 	}
 
-	private static int sceneIndex(PacManGameController controller) {
+	private int sceneIndex() {
 		return controller.state == PacManGameState.INTRO ? 0
 				: controller.state == PacManGameState.INTERMISSION ? controller.selectedGame().intermissionNumber : 4;
 	}
