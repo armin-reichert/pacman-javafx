@@ -280,13 +280,13 @@ public class PlayScene3D implements GameScene {
 		int counterTileX = 1, counterTileY = 1;
 		tgLivesCounter.setViewOrder(-counterTileY * TS);
 		for (int i = 0; i < 5; ++i) {
-			V2i lampTile = new V2i(counterTileX + 2 * i, counterTileY);
-			Sphere lamp = new Sphere(3);
-			lamp.setTranslateX(lampTile.x * TS);
-			lamp.setTranslateY(lampTile.y * TS);
-			lamp.setTranslateZ(0); // ???
-			tgLivesCounter.getChildren().add(lamp);
-			wallNodes.removeIf(wall -> lampTile.equals(wall.getUserData()));
+			V2i tile = new V2i(counterTileX + 2 * i, counterTileY);
+			Group liveIndicator = Assets.createPlayerShape();
+			liveIndicator.setTranslateX(tile.x * TS);
+			liveIndicator.setTranslateY(tile.y * TS);
+			liveIndicator.setTranslateZ(4); // ???
+			liveIndicator.setUserData(tile);
+			tgLivesCounter.getChildren().add(liveIndicator);
 		}
 	}
 
@@ -363,9 +363,24 @@ public class PlayScene3D implements GameScene {
 		GameModel game = controller.selectedGame();
 		ObservableList<Node> children = tgLivesCounter.getChildren();
 		for (int i = 0; i < children.size(); ++i) {
-			Sphere ball = (Sphere) children.get(i);
-			ball.setMaterial(i < game.lives ? Assets.livesCounterOn : Assets.livesCounterOff);
+			Group liveIndicator = (Group) children.get(i);
+			liveIndicator.setVisible(i < game.lives);
+			V2i tile = (V2i) liveIndicator.getUserData();
+			V2i tileBelowIndicator = tile.plus(0, 1);
+			if (i < game.lives) {
+				liveIndicator.setVisible(true);
+				wallAt(tile).setVisible(false);
+				wallAt(tileBelowIndicator).setVisible(false);
+			} else {
+				liveIndicator.setVisible(false);
+				wallAt(tile).setVisible(true);
+				wallAt(tileBelowIndicator).setVisible(true);
+			}
 		}
+	}
+
+	private Node wallAt(V2i tile) {
+		return wallNodes.stream().filter(wall -> tile.equals(wall.getUserData())).findFirst().get();
 	}
 
 	private void updatePlayerShape(Pac player) {
