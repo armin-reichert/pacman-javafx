@@ -7,6 +7,11 @@ import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
 
+/**
+ * Normal pellet.
+ * 
+ * @author Armin Reichert
+ */
 public class Pellet {
 
 	private final int radius = 1;

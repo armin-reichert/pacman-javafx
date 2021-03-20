@@ -6,6 +6,7 @@ import static java.util.function.Predicate.not;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.Random;
 import java.util.function.Function;
@@ -38,7 +39,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
@@ -72,7 +72,7 @@ public class PlayScene3D implements GameScene {
 	private Group tgMaze;
 	private Group tgPlayer;
 	private Map<Ghost, Group> tgGhosts;
-	private List<Node> wallNodes;
+	private List<Brick> bricks;
 	private List<Energizer> energizers;
 	private List<Pellet> pellets;
 	private Group tgScore;
@@ -110,9 +110,9 @@ public class PlayScene3D implements GameScene {
 		final GameType gameType = controller.selectedGameType();
 		final GameModel game = controller.selectedGame();
 
-		wallNodes = game.level.world.tiles()//
+		bricks = game.level.world.tiles()//
 				.filter(game.level.world::isWall)//
-				.map(tile -> createWallShape(tile, Assets.randomWallMaterial()))//
+				.map(tile -> new Brick(tile, Assets.randomWallMaterial()))//
 				.collect(Collectors.toList());
 
 		energizers = game.level.world.energizerTiles()
@@ -138,7 +138,7 @@ public class PlayScene3D implements GameScene {
 				.add(new Translate(-GameScene.UNSCALED_SCENE_WIDTH / 2, -GameScene.UNSCALED_SCENE_HEIGHT / 2));
 
 		tgMaze.getChildren().addAll(tgScore, tgLivesCounter);
-		tgMaze.getChildren().addAll(wallNodes);
+		tgMaze.getChildren().addAll(bricks.stream().map(Brick::getNode).collect(Collectors.toList()));
 		tgMaze.getChildren().addAll(energizers.stream().map(Energizer::getNode).collect(Collectors.toList()));
 		tgMaze.getChildren().addAll(pellets.stream().map(Pellet::getNode).collect(Collectors.toList()));
 		tgMaze.getChildren().addAll(tgPlayer);
@@ -299,17 +299,6 @@ public class PlayScene3D implements GameScene {
 		}
 	}
 
-	private Node createWallShape(V2i tile, PhongMaterial material) {
-		Box block = new Box(TS - 1, TS - 1, TS - 2);
-		block.setMaterial(material);
-		block.setTranslateX(tile.x * TS);
-		block.setTranslateY(tile.y * TS);
-		block.setViewOrder(-tile.y * TS);
-		block.setUserData(tile);
-		block.drawModeProperty().bind(Env.$drawMode);
-		return block;
-	}
-
 	@Override
 	public void update() {
 		GameModel game = controller.selectedGame();
@@ -353,18 +342,18 @@ public class PlayScene3D implements GameScene {
 			V2i tileBelowIndicator = tile.plus(0, 1);
 			if (i < game.lives) {
 				liveIndicator.setVisible(true);
-				wallAt(tile).setVisible(false);
-				wallAt(tileBelowIndicator).setVisible(false);
+				brickAt(tile).ifPresent(brick -> brick.getNode().setVisible(false));
+				brickAt(tileBelowIndicator).ifPresent(brick -> brick.getNode().setVisible(false));
 			} else {
 				liveIndicator.setVisible(false);
-				wallAt(tile).setVisible(true);
-				wallAt(tileBelowIndicator).setVisible(true);
+				brickAt(tile).ifPresent(brick -> brick.getNode().setVisible(true));
+				brickAt(tileBelowIndicator).ifPresent(brick -> brick.getNode().setVisible(true));
 			}
 		}
 	}
 
-	private Node wallAt(V2i tile) {
-		return wallNodes.stream().filter(wall -> tile.equals(wall.getUserData())).findFirst().get();
+	private Optional<Brick> brickAt(V2i tile) {
+		return bricks.stream().filter(brick -> tile.equals(brick.getTile())).findFirst();
 	}
 
 	private void updatePlayerShape(Pac player) {
