@@ -12,13 +12,13 @@ import javafx.scene.shape.Sphere;
  * 
  * @author Armin Reichert
  */
-public class Pellet {
+public class Pellet3D {
 
 	private final int radius = 1;
 	private V2i tile;
 	private Sphere sphere;
 
-	public Pellet(V2i tile, PhongMaterial material) {
+	public Pellet3D(V2i tile, PhongMaterial material) {
 		this.tile = tile;
 		sphere = new Sphere(radius);
 		sphere.setMaterial(material);

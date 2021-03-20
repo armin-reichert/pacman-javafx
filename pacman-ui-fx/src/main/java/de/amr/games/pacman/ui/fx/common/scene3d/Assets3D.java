@@ -29,7 +29,7 @@ import javafx.scene.transform.Translate;
  * 
  * @author Armin Reichert
  */
-class Assets {
+class Assets3D {
 
 	static Translate centerOverOrigin(Node node) {
 		Bounds bounds = node.getBoundsInLocal();
@@ -47,7 +47,7 @@ class Assets {
 	}
 
 	static String url(String path) {
-		return Assets.class.getResource(path).toExternalForm();
+		return Assets3D.class.getResource(path).toExternalForm();
 	}
 
 	static final Font ARCADE_FONT;
@@ -116,8 +116,6 @@ class Assets {
 
 	static MeshView createGhostMeshView(int ghostID) {
 		MeshView shape = new MeshView(ghostMeshTemplate.getMesh());
-		PhongMaterial material = new PhongMaterial(ghostColor(ghostID));
-		shape.setMaterial(material);
 		centerOverOrigin(shape);
 		scale(shape, 8);
 		shape.drawModeProperty().bind(Env.$drawMode);

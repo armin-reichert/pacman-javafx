@@ -13,12 +13,12 @@ import javafx.scene.shape.Box;
  * 
  * @author Armin Reichert
  */
-public class Brick {
+public class Brick3D {
 
 	private final V2i tile;
 	private final Box block;
 
-	public Brick(V2i tile, PhongMaterial material) {
+	public Brick3D(V2i tile, PhongMaterial material) {
 		this.tile = tile;
 		block = new Box(TS - 1, TS - 1, TS - 2);
 		block.setMaterial(material);

@@ -15,14 +15,14 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class Energizer {
+public class Energizer3D {
 
 	private final int radius = 3;
 	private V2i tile;
 	private Sphere sphere;
 	private ScaleTransition pumping;
 
-	public Energizer(V2i tile, PhongMaterial material) {
+	public Energizer3D(V2i tile, PhongMaterial material) {
 		this.tile = tile;
 		sphere = new Sphere(radius);
 		sphere.setMaterial(material);

@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
-import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameType;
@@ -37,11 +36,7 @@ import javafx.scene.SubScene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.MeshView;
-import javafx.scene.shape.Sphere;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
@@ -68,11 +63,11 @@ public class PlayScene3D implements GameScene {
 
 	private CoordinateSystem coordSystem;
 	private Group tgMaze;
-	private Player player;
-	private Map<Ghost, Group> tgGhosts;
-	private List<Brick> bricks;
-	private List<Energizer> energizers;
-	private List<Pellet> pellets;
+	private Player3D player;
+	private Map<Ghost, Ghost3D> ghosts;
+	private List<Brick3D> bricks;
+	private List<Energizer3D> energizers;
+	private List<Pellet3D> pellets;
 	private Group tgScore;
 	private Text txtScore;
 	private Text txtHiscore;
@@ -110,22 +105,21 @@ public class PlayScene3D implements GameScene {
 
 		bricks = game.level.world.tiles()//
 				.filter(game.level.world::isWall)//
-				.map(tile -> new Brick(tile, Assets.randomWallMaterial()))//
+				.map(tile -> new Brick3D(tile, Assets3D.randomWallMaterial()))//
 				.collect(Collectors.toList());
 
 		energizers = game.level.world.energizerTiles()
-				.map(tile -> new Energizer(tile, Assets.foodMaterial(gameType, game.level.mazeNumber)))
+				.map(tile -> new Energizer3D(tile, Assets3D.foodMaterial(gameType, game.level.mazeNumber)))
 				.collect(Collectors.toList());
 
 		pellets = game.level.world.tiles()//
 				.filter(game.level.world::isFoodTile)//
 				.filter(not(game.level.world::isEnergizerTile))
-				.map(tile -> new Pellet(tile, Assets.foodMaterial(gameType, game.level.mazeNumber)))
+				.map(tile -> new Pellet3D(tile, Assets3D.foodMaterial(gameType, game.level.mazeNumber)))
 				.collect(Collectors.toList());
 
-		player = new Player();
-
-		tgGhosts = game.ghosts().collect(Collectors.toMap(Function.identity(), this::createGhostShape));
+		player = new Player3D();
+		ghosts = game.ghosts().collect(Collectors.toMap(Function.identity(), Ghost3D::new));
 
 		createScore();
 		createLivesCounter();
@@ -136,13 +130,13 @@ public class PlayScene3D implements GameScene {
 				.add(new Translate(-GameScene.UNSCALED_SCENE_WIDTH / 2, -GameScene.UNSCALED_SCENE_HEIGHT / 2));
 
 		tgMaze.getChildren().addAll(tgScore, tgLivesCounter);
-		tgMaze.getChildren().addAll(bricks.stream().map(Brick::getNode).collect(Collectors.toList()));
-		tgMaze.getChildren().addAll(energizers.stream().map(Energizer::getNode).collect(Collectors.toList()));
-		tgMaze.getChildren().addAll(pellets.stream().map(Pellet::getNode).collect(Collectors.toList()));
+		tgMaze.getChildren().addAll(bricks.stream().map(Brick3D::getNode).collect(Collectors.toList()));
+		tgMaze.getChildren().addAll(energizers.stream().map(Energizer3D::getNode).collect(Collectors.toList()));
+		tgMaze.getChildren().addAll(pellets.stream().map(Pellet3D::getNode).collect(Collectors.toList()));
 		tgMaze.getChildren().addAll(player.getNode());
-		tgMaze.getChildren().addAll(tgGhosts.values());
+		tgMaze.getChildren().addAll(ghosts.values().stream().map(Ghost3D::getNode).collect(Collectors.toList()));
 
-		AmbientLight ambientLight = Assets.ambientLight(gameType, game.level.mazeNumber);
+		AmbientLight ambientLight = Assets3D.ambientLight(gameType, game.level.mazeNumber);
 		tgMaze.getChildren().add(ambientLight);
 
 		PointLight pointLight = new PointLight(Color.AZURE);
@@ -223,7 +217,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void createScore() {
-		Font font = Assets.ARCADE_FONT;
+		Font font = Assets3D.ARCADE_FONT;
 
 		Text txtScoreTitle = new Text("SCORE");
 		txtScoreTitle.setFill(Color.WHITE);
@@ -260,7 +254,7 @@ public class PlayScene3D implements GameScene {
 		tgLivesCounter.setViewOrder(-counterTileY * TS);
 		for (int i = 0; i < 5; ++i) {
 			V2i tile = new V2i(counterTileX + 2 * i, counterTileY);
-			Player liveIndicator = new Player();
+			Player3D liveIndicator = new Player3D();
 			liveIndicator.getNode().setTranslateX(tile.x * TS);
 			liveIndicator.getNode().setTranslateY(tile.y * TS);
 			liveIndicator.getNode().setTranslateZ(4); // ???
@@ -322,7 +316,7 @@ public class PlayScene3D implements GameScene {
 		}
 	}
 
-	private Optional<Brick> brickAt(V2i tile) {
+	private Optional<Brick3D> brickAt(V2i tile) {
 		return bricks.stream().filter(brick -> tile.equals(brick.getTile())).findFirst();
 	}
 
@@ -333,68 +327,17 @@ public class PlayScene3D implements GameScene {
 		player.getNode().setViewOrder(-pac.position.y - 2);
 	}
 
-	private Group createGhostShape(Ghost ghost) {
-		Group ghostColoredShape = new Group(Assets.createGhostMeshView(ghost.id));
-		ghostColoredShape.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-		Group group = new Group(ghostColoredShape, createGhostBountyShape(ghost), createGhostReturningHomeShape(ghost));
-		Node selection = group.getChildren().get(0);
-		group.setUserData(selection);
-		group.getChildren().forEach(child -> child.setVisible(child == selection));
-		return group;
-	}
-
 	private void updateGhostShape(Ghost ghost) {
-		Group oldSelection = (Group) tgGhosts.get(ghost).getUserData();
-		ObservableList<Node> children = tgGhosts.get(ghost).getChildren();
-		Group newSelection;
+		Ghost3D ghost3D = ghosts.get(ghost);
 		if (ghost.bounty > 0) {
-			newSelection = (Group) children.get(1);
-			Text text = (Text) newSelection.getChildren().get(0);
-			text.setText(ghost.bounty + "");
+			ghost3D.displayAsBounty();
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
-			newSelection = (Group) children.get(2);
-			newSelection.setRotationAxis(Rotate.Z_AXIS);
-			newSelection.setRotate(ghost.dir == Direction.UP || ghost.dir == Direction.DOWN ? 90 : 0);
+			ghost3D.displayReturningHome();
+		} else if (ghost.is(GhostState.FRIGHTENED)) {
+			ghost3D.displayFrightened();
 		} else {
-			newSelection = (Group) children.get(0);
-			MeshView meshView = (MeshView) newSelection.getChildren().get(0);
-			PhongMaterial material = (PhongMaterial) meshView.getMaterial();
-			Color color = ghost.is(GhostState.FRIGHTENED) ? Color.CORNFLOWERBLUE : Assets.ghostColor(ghost.id);
-			material.setDiffuseColor(color);
-			material.setSpecularColor(color);
+			ghost3D.displayColored();
 		}
-		if (newSelection != oldSelection) {
-			tgGhosts.get(ghost).setUserData(newSelection);
-			oldSelection.setVisible(false);
-			newSelection.setVisible(true);
-		}
-		tgGhosts.get(ghost).setVisible(ghost.visible);
-		tgGhosts.get(ghost).setTranslateX(ghost.position.x);
-		tgGhosts.get(ghost).setTranslateY(ghost.position.y);
-		tgGhosts.get(ghost).setViewOrder(-(ghost.position.y + 5));
-	}
-
-	private Group createGhostBountyShape(Ghost ghost) {
-		// TODO why is this text so blurred?
-		Text bounty = new Text();
-		bounty.setText(String.valueOf(ghost.bounty));
-		bounty.setFont(Font.font("Sans", FontWeight.MEDIUM, 8));
-		bounty.setFill(Color.CYAN);
-		bounty.setRotationAxis(Rotate.X_AXIS);
-		bounty.setRotate(staticCamera.getRotate());
-		bounty.setTranslateZ(-1.5 * TS);
-		return new Group(bounty);
-	}
-
-	private Group createGhostReturningHomeShape(Ghost ghost) {
-		PhongMaterial skin = Assets.ghostSkin(ghost.id);
-		Sphere[] parts = new Sphere[3];
-		for (int i = 0; i < parts.length; ++i) {
-			parts[i] = new Sphere(1);
-			parts[i].setMaterial(skin);
-			parts[i].setTranslateX(i * 3);
-		}
-		return new Group(parts);
 	}
 
 	// State change handlers
@@ -402,10 +345,10 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void onGameStateChange(PacManGameState oldState, PacManGameState newState) {
 		if (oldState == PacManGameState.HUNTING) {
-			energizers.forEach(Energizer::stopPumping);
+			energizers.forEach(Energizer3D::stopPumping);
 		}
 		if (newState == PacManGameState.HUNTING) {
-			energizers.forEach(Energizer::startPumping);
+			energizers.forEach(Energizer3D::startPumping);
 		}
 		if (newState == PacManGameState.LEVEL_COMPLETE) {
 			playLevelCompleteAnimation(oldState);

@@ -16,25 +16,25 @@ import javafx.scene.transform.Translate;
  * 
  * @author Armin Reichert
  */
-public class Player {
+public class Player3D {
 
 	private Node root;
 
-	public Player() {
-		MeshView body = new MeshView(Assets.guyMeshTemplates.get("Sphere_Sphere.002_Material.001").getMesh());
+	public Player3D() {
+		MeshView body = new MeshView(Assets3D.guyMeshTemplates.get("Sphere_Sphere.002_Material.001").getMesh());
 		body.setMaterial(new PhongMaterial(Color.YELLOW));
 		body.setDrawMode(Env.$drawMode.get());
 
-		MeshView glasses = new MeshView(Assets.guyMeshTemplates.get("Sphere_Sphere.002_Material.002").getMesh());
+		MeshView glasses = new MeshView(Assets3D.guyMeshTemplates.get("Sphere_Sphere.002_Material.002").getMesh());
 		glasses.setMaterial(new PhongMaterial(Color.rgb(50, 50, 50)));
 		glasses.setDrawMode(Env.$drawMode.get());
 
-		Translate centering = Assets.centerOverOrigin(body);
+		Translate centering = Assets3D.centerOverOrigin(body);
 		glasses.getTransforms().add(centering);
 
 		root = new Group(body, glasses);
 		root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-		Assets.scale(root, TS);
+		Assets3D.scale(root, TS);
 	}
 
 	public Node getNode() {
