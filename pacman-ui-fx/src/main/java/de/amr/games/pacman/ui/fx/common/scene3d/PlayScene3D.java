@@ -4,7 +4,6 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static java.util.function.Predicate.not;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.OptionalDouble;
@@ -27,7 +26,6 @@ import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
-import javafx.animation.Transition;
 import javafx.collections.ObservableList;
 import javafx.scene.AmbientLight;
 import javafx.scene.Camera;
@@ -75,14 +73,12 @@ public class PlayScene3D implements GameScene {
 	private Group tgPlayer;
 	private Map<Ghost, Group> tgGhosts;
 	private List<Node> wallNodes;
-	private List<Node> energizerNodes;
+	private List<Energizer> energizers;
 	private List<Node> pelletNodes;
 	private Group tgScore;
 	private Text txtScore;
 	private Text txtHiscore;
 	private Group tgLivesCounter;
-
-	private Map<Node, ScaleTransition> energizerAnimations;
 
 	public PlayScene3D(Stage stage) {
 		staticCamera = new PerspectiveCamera(true);
@@ -119,8 +115,8 @@ public class PlayScene3D implements GameScene {
 				.map(tile -> createWallShape(tile, Assets.randomWallMaterial()))//
 				.collect(Collectors.toList());
 
-		energizerNodes = game.level.world.energizerTiles()
-				.map(tile -> createEnergizerShape(tile, Assets.foodMaterial(gameType, game.level.mazeNumber)))
+		energizers = game.level.world.energizerTiles()
+				.map(tile -> new Energizer(tile, Assets.foodMaterial(gameType, game.level.mazeNumber)))
 				.collect(Collectors.toList());
 
 		pelletNodes = game.level.world.tiles()//
@@ -143,7 +139,7 @@ public class PlayScene3D implements GameScene {
 
 		tgMaze.getChildren().addAll(tgScore, tgLivesCounter);
 		tgMaze.getChildren().addAll(wallNodes);
-		tgMaze.getChildren().addAll(energizerNodes);
+		tgMaze.getChildren().addAll(energizers.stream().map(Energizer::getNode).collect(Collectors.toList()));
 		tgMaze.getChildren().addAll(pelletNodes);
 		tgMaze.getChildren().addAll(tgPlayer);
 		tgMaze.getChildren().addAll(tgGhosts.values());
@@ -178,8 +174,8 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void start() {
 		log("Game scene %s: start", this);
-		// TODO remove
-		controller.setPlayerImmune(true);
+		// TODO remove again
+		controller.selectedGame().player.immune = true;
 		buildSceneGraph();
 	}
 
@@ -314,16 +310,6 @@ public class PlayScene3D implements GameScene {
 		return block;
 	}
 
-	private Node createEnergizerShape(V2i tile, PhongMaterial material) {
-		Sphere s = new Sphere(2);
-		s.setMaterial(material);
-		s.setTranslateX(tile.x * TS);
-		s.setTranslateY(tile.y * TS);
-		s.setUserData(tile);
-		s.setViewOrder(-tile.y * TS - 1);
-		return s;
-	}
-
 	private Node createPelletShape(V2i tile, PhongMaterial material) {
 		Sphere pellet = new Sphere(1);
 		pellet.setMaterial(material);
@@ -339,9 +325,8 @@ public class PlayScene3D implements GameScene {
 		GameModel game = controller.selectedGame();
 		updateScores();
 		updateLivesCounter();
-		energizerNodes.forEach(energizer -> {
-			V2i tile = (V2i) energizer.getUserData();
-			energizer.setVisible(!game.level.isFoodRemoved(tile));
+		energizers.forEach(energizer -> {
+			energizer.getNode().setVisible(!game.level.isFoodRemoved(energizer.getTile()));
 		});
 		// TODO this is inefficient
 		pelletNodes.forEach(pellet -> {
@@ -470,13 +455,10 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void onGameStateChange(PacManGameState oldState, PacManGameState newState) {
 		if (oldState == PacManGameState.HUNTING) {
-			energizerAnimations.values().forEach(Transition::stop);
+			energizers.forEach(Energizer::stopPumping);
 		}
 		if (newState == PacManGameState.HUNTING) {
-			energizerAnimations = new HashMap<>();
-			energizerNodes.forEach(energizerNode -> {
-				createEnergizerAnimation(energizerNode).playFromStart();
-			});
+			energizers.forEach(Energizer::startPumping);
 		}
 		if (newState == PacManGameState.LEVEL_COMPLETE) {
 			playLevelCompleteAnimation(oldState);
@@ -484,20 +466,6 @@ public class PlayScene3D implements GameScene {
 		if (newState == PacManGameState.LEVEL_STARTING) {
 			playLevelStartingAnimation(newState);
 		}
-	}
-
-	private ScaleTransition createEnergizerAnimation(Node energizerNode) {
-		ScaleTransition animation = new ScaleTransition(Duration.seconds(0.25), energizerNode);
-		animation.setAutoReverse(true);
-		animation.setCycleCount(Transition.INDEFINITE);
-		animation.setFromX(0);
-		animation.setFromY(0);
-		animation.setFromZ(0);
-		animation.setToX(2);
-		animation.setToY(2);
-		animation.setToZ(2);
-		energizerAnimations.put(energizerNode, animation);
-		return animation;
 	}
 
 	private void playLevelCompleteAnimation(PacManGameState state) {
