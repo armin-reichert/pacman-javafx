@@ -14,7 +14,6 @@ import de.amr.games.pacman.ui.fx.common.Env;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_Constants;
 import javafx.geometry.Bounds;
 import javafx.scene.AmbientLight;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
@@ -22,7 +21,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 import javafx.scene.text.Font;
-import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 
@@ -32,6 +30,21 @@ import javafx.scene.transform.Translate;
  * @author Armin Reichert
  */
 class Assets {
+
+	static Translate centerOverOrigin(Node node) {
+		Bounds bounds = node.getBoundsInLocal();
+		Translate centering = new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
+		node.getTransforms().add(centering);
+		return centering;
+	}
+
+	static void scale(Node node, double size) {
+		Bounds bounds = node.getBoundsInLocal();
+		double s1 = size / bounds.getWidth();
+		double s2 = size / bounds.getHeight();
+		double s3 = size / bounds.getDepth();
+		node.getTransforms().add(new Scale(s1, s2, s3));
+	}
 
 	static String url(String path) {
 		return Assets.class.getResource(path).toExternalForm();
@@ -99,41 +112,6 @@ class Assets {
 
 	static AmbientLight ambientLight(GameType gameType, int mazeNumber) {
 		return new AmbientLight(mazeColor(gameType, mazeNumber));
-	}
-
-	static Group createPlayerShape() {
-		MeshView body = new MeshView(guyMeshTemplates.get("Sphere_Sphere.002_Material.001").getMesh());
-		MeshView glasses = new MeshView(guyMeshTemplates.get("Sphere_Sphere.002_Material.002").getMesh());
-
-		body.setMaterial(new PhongMaterial(Color.YELLOW));
-		body.setDrawMode(Env.$drawMode.get());
-
-		glasses.setMaterial(new PhongMaterial(Color.rgb(50, 50, 50)));
-		glasses.setDrawMode(Env.$drawMode.get());
-
-		Translate centering = centerOverOrigin(body);
-		glasses.getTransforms().add(centering);
-
-		Group shape = new Group(body, glasses);
-		shape.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-		scale(shape, TS);
-
-		return shape;
-	}
-
-	private static Translate centerOverOrigin(Node node) {
-		Bounds bounds = node.getBoundsInLocal();
-		Translate centering = new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
-		node.getTransforms().add(centering);
-		return centering;
-	}
-
-	private static void scale(Node node, double size) {
-		Bounds bounds = node.getBoundsInLocal();
-		double s1 = size / bounds.getWidth();
-		double s2 = size / bounds.getHeight();
-		double s3 = size / bounds.getDepth();
-		node.getTransforms().add(new Scale(s1, s2, s3));
 	}
 
 	static MeshView createGhostMeshView(int ghostID) {

@@ -64,11 +64,11 @@ public class PlayScene3D implements GameScene {
 	private final PerspectiveCamera moveableCamera;
 	private final CameraController cameraController;
 
-	private PacManGameController controller;
+	private PacManGameController gameController;
 
-	private CoordinateSystem coord;
+	private CoordinateSystem coordSystem;
 	private Group tgMaze;
-	private Group tgPlayer;
+	private Player player;
 	private Map<Ghost, Group> tgGhosts;
 	private List<Brick> bricks;
 	private List<Energizer> energizers;
@@ -91,7 +91,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void setController(PacManGameController controller) {
-		this.controller = controller;
+		this.gameController = controller;
 	}
 
 	@Override
@@ -105,8 +105,8 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void buildSceneGraph() {
-		final GameType gameType = controller.selectedGameType();
-		final GameModel game = controller.selectedGame();
+		final GameType gameType = gameController.selectedGameType();
+		final GameModel game = gameController.selectedGame();
 
 		bricks = game.level.world.tiles()//
 				.filter(game.level.world::isWall)//
@@ -123,7 +123,7 @@ public class PlayScene3D implements GameScene {
 				.map(tile -> new Pellet(tile, Assets.foodMaterial(gameType, game.level.mazeNumber)))
 				.collect(Collectors.toList());
 
-		tgPlayer = Assets.createPlayerShape();
+		player = new Player();
 
 		tgGhosts = game.ghosts().collect(Collectors.toMap(Function.identity(), this::createGhostShape));
 
@@ -139,7 +139,7 @@ public class PlayScene3D implements GameScene {
 		tgMaze.getChildren().addAll(bricks.stream().map(Brick::getNode).collect(Collectors.toList()));
 		tgMaze.getChildren().addAll(energizers.stream().map(Energizer::getNode).collect(Collectors.toList()));
 		tgMaze.getChildren().addAll(pellets.stream().map(Pellet::getNode).collect(Collectors.toList()));
-		tgMaze.getChildren().addAll(tgPlayer);
+		tgMaze.getChildren().addAll(player.getNode());
 		tgMaze.getChildren().addAll(tgGhosts.values());
 
 		AmbientLight ambientLight = Assets.ambientLight(gameType, game.level.mazeNumber);
@@ -149,9 +149,9 @@ public class PlayScene3D implements GameScene {
 		pointLight.setTranslateZ(-500);
 		tgMaze.getChildren().add(pointLight);
 
-		coord = new CoordinateSystem(150);
+		coordSystem = new CoordinateSystem(150);
 
-		fxScene.setRoot(new Group(coord.getNode(), tgMaze));
+		fxScene.setRoot(new Group(coordSystem.getNode(), tgMaze));
 	}
 
 	@Override
@@ -173,7 +173,7 @@ public class PlayScene3D implements GameScene {
 	public void start() {
 		log("Game scene %s: start", this);
 		// TODO remove again
-		controller.selectedGame().player.immune = true;
+		gameController.selectedGame().player.immune = true;
 		buildSceneGraph();
 	}
 
@@ -212,8 +212,8 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void updateMoveableCamera() {
-		double x = Math.min(10, lerp(moveableCamera.getTranslateX(), tgPlayer.getTranslateX()));
-		double y = Math.max(50, lerp(moveableCamera.getTranslateY(), tgPlayer.getTranslateY()));
+		double x = Math.min(10, lerp(moveableCamera.getTranslateX(), player.getNode().getTranslateX()));
+		double y = Math.max(50, lerp(moveableCamera.getTranslateY(), player.getNode().getTranslateY()));
 		moveableCamera.setTranslateX(x);
 		moveableCamera.setTranslateY(y);
 	}
@@ -260,18 +260,18 @@ public class PlayScene3D implements GameScene {
 		tgLivesCounter.setViewOrder(-counterTileY * TS);
 		for (int i = 0; i < 5; ++i) {
 			V2i tile = new V2i(counterTileX + 2 * i, counterTileY);
-			Group liveIndicator = Assets.createPlayerShape();
-			liveIndicator.setTranslateX(tile.x * TS);
-			liveIndicator.setTranslateY(tile.y * TS);
-			liveIndicator.setTranslateZ(4); // ???
-			liveIndicator.setUserData(tile);
-			tgLivesCounter.getChildren().add(liveIndicator);
+			Player liveIndicator = new Player();
+			liveIndicator.getNode().setTranslateX(tile.x * TS);
+			liveIndicator.getNode().setTranslateY(tile.y * TS);
+			liveIndicator.getNode().setTranslateZ(4); // ???
+			liveIndicator.getNode().setUserData(tile);
+			tgLivesCounter.getChildren().add(liveIndicator.getNode());
 		}
 	}
 
 	@Override
 	public void update() {
-		GameModel game = controller.selectedGame();
+		GameModel game = gameController.selectedGame();
 		updateScores();
 		updateLivesCounter();
 		energizers.forEach(energizer -> {
@@ -290,7 +290,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void updateScores() {
-		GameModel game = controller.selectedGame();
+		GameModel game = gameController.selectedGame();
 		txtScore.setText(String.format("%07d L%d", game.score, game.levelNumber));
 		txtHiscore.setText(String.format("%07d L%d", game.highscorePoints, game.highscoreLevel));
 		// TODO is this the right way or should the score be kept outside the subscene?
@@ -299,12 +299,12 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void updateLivesCounter() {
-		if (controller.isAttractMode()) {
+		if (gameController.isAttractMode()) {
 			tgLivesCounter.setVisible(false);
 			return;
 		}
 		tgLivesCounter.setVisible(true);
-		GameModel game = controller.selectedGame();
+		GameModel game = gameController.selectedGame();
 		ObservableList<Node> children = tgLivesCounter.getChildren();
 		for (int i = 0; i < children.size(); ++i) {
 			Group liveIndicator = (Group) children.get(i);
@@ -326,11 +326,11 @@ public class PlayScene3D implements GameScene {
 		return bricks.stream().filter(brick -> tile.equals(brick.getTile())).findFirst();
 	}
 
-	private void updatePlayerShape(Pac player) {
-		tgPlayer.setVisible(player.visible);
-		tgPlayer.setTranslateX(player.position.x);
-		tgPlayer.setTranslateY(player.position.y);
-		tgPlayer.setViewOrder(-player.position.y - 2);
+	private void updatePlayerShape(Pac pac) {
+		player.getNode().setVisible(pac.visible);
+		player.getNode().setTranslateX(pac.position.x);
+		player.getNode().setTranslateY(pac.position.y);
+		player.getNode().setViewOrder(-pac.position.y - 2);
 	}
 
 	private Group createGhostShape(Ghost ghost) {
@@ -416,17 +416,17 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void playLevelCompleteAnimation(PacManGameState state) {
-		controller.state.timer.reset();
+		gameController.state.timer.reset();
 
 		String randomCongrats = CONGRATS[new Random().nextInt(CONGRATS.length)];
 
 		PauseTransition pause = new PauseTransition(Duration.seconds(2));
 		pause.setOnFinished(e -> {
-			GameModel game = controller.selectedGame();
+			GameModel game = gameController.selectedGame();
 			game.player.visible = false;
 			game.ghosts().forEach(ghost -> ghost.visible = false);
-			controller.userInterface.showFlashMessage(
-					String.format("%s!\n\nLevel %d complete.", randomCongrats, controller.selectedGame().levelNumber), 3);
+			gameController.userInterface.showFlashMessage(
+					String.format("%s!\n\nLevel %d complete.", randomCongrats, gameController.selectedGame().levelNumber), 3);
 		});
 
 		ScaleTransition animation = new ScaleTransition(Duration.seconds(3), tgMaze);
@@ -435,21 +435,21 @@ public class PlayScene3D implements GameScene {
 
 		SequentialTransition seq = new SequentialTransition(pause, animation);
 		seq.setOnFinished(e -> {
-			controller.letCurrentGameStateExpire();
+			gameController.letCurrentGameStateExpire();
 		});
 		seq.play();
 	}
 
 	private void playLevelStartingAnimation(PacManGameState state) {
 		log("%s: play level starting animation", this);
-		controller.state.timer.reset();
-		controller.userInterface.showFlashMessage("Entering Level " + controller.selectedGame().levelNumber);
+		gameController.state.timer.reset();
+		gameController.userInterface.showFlashMessage("Entering Level " + gameController.selectedGame().levelNumber);
 		ScaleTransition animation = new ScaleTransition(Duration.seconds(3), tgMaze);
 		animation.setDelay(Duration.seconds(2));
 		animation.setFromZ(0);
 		animation.setToZ(1);
 		animation.setOnFinished(e -> {
-			controller.letCurrentGameStateExpire();
+			gameController.letCurrentGameStateExpire();
 		});
 		animation.play();
 	}
