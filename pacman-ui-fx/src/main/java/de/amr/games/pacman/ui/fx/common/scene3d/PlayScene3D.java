@@ -18,8 +18,6 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameType;
 import de.amr.games.pacman.model.common.Ghost;
-import de.amr.games.pacman.model.common.GhostState;
-import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.fx.common.CameraController;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.animation.PauseTransition;
@@ -64,7 +62,7 @@ public class PlayScene3D implements GameScene {
 	private CoordinateSystem coordSystem;
 	private Group tgMaze;
 	private Player3D player;
-	private Map<Ghost, Ghost3D> ghosts;
+	private Map<Ghost, Ghost3D> ghosts3D;
 	private List<Brick3D> bricks;
 	private List<Energizer3D> energizers;
 	private List<Pellet3D> pellets;
@@ -118,8 +116,8 @@ public class PlayScene3D implements GameScene {
 				.map(tile -> new Pellet3D(tile, Assets3D.foodMaterial(gameType, game.level.mazeNumber)))
 				.collect(Collectors.toList());
 
-		player = new Player3D();
-		ghosts = game.ghosts().collect(Collectors.toMap(Function.identity(), Ghost3D::new));
+		player = new Player3D(game.player);
+		ghosts3D = game.ghosts().collect(Collectors.toMap(Function.identity(), Ghost3D::new));
 
 		createScore();
 		createLivesCounter();
@@ -134,7 +132,7 @@ public class PlayScene3D implements GameScene {
 		tgMaze.getChildren().addAll(energizers.stream().map(Energizer3D::getNode).collect(Collectors.toList()));
 		tgMaze.getChildren().addAll(pellets.stream().map(Pellet3D::getNode).collect(Collectors.toList()));
 		tgMaze.getChildren().addAll(player.getNode());
-		tgMaze.getChildren().addAll(ghosts.values().stream().map(Ghost3D::getNode).collect(Collectors.toList()));
+		tgMaze.getChildren().addAll(ghosts3D.values().stream().map(Ghost3D::getNode).collect(Collectors.toList()));
 
 		AmbientLight ambientLight = Assets3D.ambientLight(gameType, game.level.mazeNumber);
 		tgMaze.getChildren().add(ambientLight);
@@ -205,11 +203,13 @@ public class PlayScene3D implements GameScene {
 		fxScene.setCamera(moveableCamera);
 	}
 
-	private void updateMoveableCamera() {
-		double x = Math.min(10, lerp(moveableCamera.getTranslateX(), player.getNode().getTranslateX()));
-		double y = Math.max(50, lerp(moveableCamera.getTranslateY(), player.getNode().getTranslateY()));
-		moveableCamera.setTranslateX(x);
-		moveableCamera.setTranslateY(y);
+	private void updateCamera() {
+		if (getActiveCamera() == moveableCamera) {
+			double x = Math.min(10, lerp(moveableCamera.getTranslateX(), player.getNode().getTranslateX()));
+			double y = Math.max(50, lerp(moveableCamera.getTranslateY(), player.getNode().getTranslateY()));
+			moveableCamera.setTranslateX(x);
+			moveableCamera.setTranslateY(y);
+		}
 	}
 
 	private double lerp(double current, double target) {
@@ -254,7 +254,7 @@ public class PlayScene3D implements GameScene {
 		tgLivesCounter.setViewOrder(-counterTileY * TS);
 		for (int i = 0; i < 5; ++i) {
 			V2i tile = new V2i(counterTileX + 2 * i, counterTileY);
-			Player3D liveIndicator = new Player3D();
+			Player3D liveIndicator = new Player3D(gameController.selectedGame().player);
 			liveIndicator.getNode().setTranslateX(tile.x * TS);
 			liveIndicator.getNode().setTranslateY(tile.y * TS);
 			liveIndicator.getNode().setTranslateZ(4); // ???
@@ -274,13 +274,9 @@ public class PlayScene3D implements GameScene {
 		pellets.forEach(pellet -> {
 			pellet.getNode().setVisible(!game.level.isFoodRemoved(pellet.getTile()));
 		});
-		updatePlayerShape(game.player);
-		for (Ghost ghost : game.ghosts) {
-			updateGhostShape(ghost);
-		}
-		if (getActiveCamera() == moveableCamera) {
-			updateMoveableCamera();
-		}
+		player.update();
+		game.ghosts().map(ghosts3D::get).forEach(Ghost3D::update);
+		updateCamera();
 	}
 
 	private void updateScores() {
@@ -318,26 +314,6 @@ public class PlayScene3D implements GameScene {
 
 	private Optional<Brick3D> brickAt(V2i tile) {
 		return bricks.stream().filter(brick -> tile.equals(brick.getTile())).findFirst();
-	}
-
-	private void updatePlayerShape(Pac pac) {
-		player.getNode().setVisible(pac.visible);
-		player.getNode().setTranslateX(pac.position.x);
-		player.getNode().setTranslateY(pac.position.y);
-		player.getNode().setViewOrder(-pac.position.y - 2);
-	}
-
-	private void updateGhostShape(Ghost ghost) {
-		Ghost3D ghost3D = ghosts.get(ghost);
-		if (ghost.bounty > 0) {
-			ghost3D.displayAsBounty();
-		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
-			ghost3D.displayReturningHome();
-		} else if (ghost.is(GhostState.FRIGHTENED)) {
-			ghost3D.displayFrightened();
-		} else {
-			ghost3D.displayColored();
-		}
 	}
 
 	// State change handlers

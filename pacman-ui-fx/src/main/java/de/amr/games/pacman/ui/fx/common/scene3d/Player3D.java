@@ -2,6 +2,7 @@ package de.amr.games.pacman.ui.fx.common.scene3d;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
+import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.fx.common.Env;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -18,9 +19,12 @@ import javafx.scene.transform.Translate;
  */
 public class Player3D {
 
-	private Node root;
+	private final Pac pac;
+	private final Node root;
 
-	public Player3D() {
+	public Player3D(Pac pac) {
+		this.pac = pac;
+
 		MeshView body = new MeshView(Assets3D.guyMeshTemplates.get("Sphere_Sphere.002_Material.001").getMesh());
 		body.setMaterial(new PhongMaterial(Color.YELLOW));
 		body.setDrawMode(Env.$drawMode.get());
@@ -39,5 +43,12 @@ public class Player3D {
 
 	public Node getNode() {
 		return root;
+	}
+
+	public void update() {
+		root.setVisible(pac.visible);
+		root.setTranslateX(pac.position.x);
+		root.setTranslateY(pac.position.y);
+		root.setViewOrder(-pac.position.y - 2);
 	}
 }

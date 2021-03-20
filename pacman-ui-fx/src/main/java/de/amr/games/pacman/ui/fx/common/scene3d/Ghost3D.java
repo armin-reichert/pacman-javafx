@@ -4,6 +4,7 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Ghost;
+import de.amr.games.pacman.model.common.GhostState;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
@@ -36,6 +37,18 @@ public class Ghost3D {
 		createPearlChain();
 		root = new Group(meshView, bountyText, pearlChain);
 		displayColored();
+	}
+
+	public void update() {
+		if (ghost.bounty > 0) {
+			displayAsBounty();
+		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
+			displayReturningHome();
+		} else if (ghost.is(GhostState.FRIGHTENED)) {
+			displayFrightened();
+		} else {
+			displayColored();
+		}
 	}
 
 	private void createMeshView() {
