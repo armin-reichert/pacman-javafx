@@ -58,13 +58,13 @@ import javafx.util.Duration;
  */
 public class PlayScene3D implements GameScene {
 
-	private final PacManGameController controller;
-
 	private final SubScene fxScene;
 
 	private final PerspectiveCamera staticCamera;
 	private final PerspectiveCamera moveableCamera;
 	private final CameraController cameraController;
+
+	private PacManGameController controller;
 
 	private Group tgAxes;
 	private Group tgMaze;
@@ -80,8 +80,7 @@ public class PlayScene3D implements GameScene {
 
 	private final TimedSequence<Boolean> energizerBlinking = TimedSequence.pulse().frameDuration(15);
 
-	public PlayScene3D(Stage stage, PacManGameController controller) {
-		this.controller = controller;
+	public PlayScene3D(Stage stage) {
 		staticCamera = new PerspectiveCamera(true);
 		moveableCamera = new PerspectiveCamera(true);
 		fxScene = new SubScene(new Group(), stage.getScene().getWidth(), stage.getScene().getHeight());
@@ -90,6 +89,11 @@ public class PlayScene3D implements GameScene {
 		cameraController = new CameraController(staticCamera);
 		// TODO why doesn't subscene get key events?
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, cameraController::handleKeyEvent);
+	}
+
+	@Override
+	public void setController(PacManGameController controller) {
+		this.controller = controller;
 	}
 
 	@Override
@@ -169,8 +173,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void start() {
-		log("Play scene %s: start", this);
-
+		log("Game scene %s: start", this);
 		// TODO remove
 		controller.setPlayerImmune(true);
 		buildSceneGraph();
@@ -211,8 +214,8 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void updateMoveableCamera() {
-		double x = Math.min(10.0, lerp(moveableCamera.getTranslateX(), tgPlayer.getTranslateX()));
-		double y = Math.max(120, lerp(moveableCamera.getTranslateY(), tgPlayer.getTranslateY()));
+		double x = Math.min(10, lerp(moveableCamera.getTranslateX(), tgPlayer.getTranslateX()));
+		double y = Math.max(50, lerp(moveableCamera.getTranslateY(), tgPlayer.getTranslateY()));
 		moveableCamera.setTranslateX(x);
 		moveableCamera.setTranslateY(y);
 	}

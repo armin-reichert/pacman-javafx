@@ -2,7 +2,6 @@ package de.amr.games.pacman.ui.fx.mspacman;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
-import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.common.GameType;
 import de.amr.games.pacman.model.common.Ghost;
@@ -23,8 +22,8 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 	private MsPacMan_IntroScene_Controller sceneController;
 	private TickTimer boardAnimationTimer = new TickTimer();
 
-	public MsPacMan_IntroScene(PacManGameController controller) {
-		super(controller, Assets2D.RENDERING_2D.get(GameType.MS_PACMAN), Assets2D.SOUND.get(GameType.MS_PACMAN));
+	public MsPacMan_IntroScene() {
+		super(Assets2D.RENDERING_2D.get(GameType.MS_PACMAN), Assets2D.SOUND.get(GameType.MS_PACMAN));
 	}
 
 	@Override

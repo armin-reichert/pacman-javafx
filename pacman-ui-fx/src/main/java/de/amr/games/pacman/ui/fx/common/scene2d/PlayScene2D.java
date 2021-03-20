@@ -1,10 +1,10 @@
 package de.amr.games.pacman.ui.fx.common.scene2d;
 
+import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
 import java.util.OptionalDouble;
 
-import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.model.common.GameModel;
@@ -24,8 +24,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	private TimedSequence<?> mazeFlashing;
 
-	public PlayScene2D(PacManGameController controller, PacManGameRendering2D rendering, SoundManager sounds) {
-		super(controller, rendering, sounds);
+	public PlayScene2D(PacManGameRendering2D rendering, SoundManager sounds) {
+		super(rendering, sounds);
 	}
 
 	@Override
@@ -68,6 +68,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void start() {
+		log("Game scene %s: start", this);
 		GameModel game = controller.selectedGame();
 		mazeFlashing = rendering.mazeAnimations().mazeFlashing(game.level.mazeNumber).repetitions(game.level.numFlashes);
 		mazeFlashing.reset();

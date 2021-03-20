@@ -2,6 +2,7 @@ package de.amr.games.pacman.ui.fx.common;
 
 import java.util.OptionalDouble;
 
+import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import javafx.scene.Camera;
 import javafx.scene.SubScene;
@@ -24,6 +25,8 @@ public interface GameScene {
 	void update();
 
 	void end();
+
+	void setController(PacManGameController controller);
 
 	default void onGameStateChange(PacManGameState oldState, PacManGameState newState) {
 	}

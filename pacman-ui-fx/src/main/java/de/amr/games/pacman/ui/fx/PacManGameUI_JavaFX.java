@@ -9,6 +9,8 @@ import java.util.Set;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
+import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.GameType;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
 import de.amr.games.pacman.ui.fx.common.Env;
@@ -37,10 +39,10 @@ import javafx.stage.Stage;
 public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	public final HUD hud;
+
 	final Stage stage;
 	final PacManGameController controller;
 	final Keyboard keyboard;
-	final SceneFactory sceneFactory;
 	final Scene mainScene;
 	final StackPane mainSceneRoot;
 	final FlashMessageView flashMessageView;
@@ -51,7 +53,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController controller, double height) {
 		this.stage = stage;
 		this.controller = controller;
-		sceneFactory = new SceneFactory(controller);
 		keyboard = new Keyboard();
 		flashMessageView = new FlashMessageView();
 		mainSceneRoot = new StackPane();
@@ -70,51 +71,57 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		stage.setOnCloseRequest(e -> Platform.exit());
 		stage.setScene(mainScene);
 
-		GameScene initialGameScene = sceneFactory.createGameScene(stage, Env.$use3DScenes.get());
-		keepMaximizedInParent(initialGameScene, mainScene, initialGameScene.aspectRatio());
-		changeGameScene(null, initialGameScene);
+		GameScene startScene = createGameScene(controller.selectedGameType(), controller.state, controller.selectedGame(),
+				Env.$use3DScenes.get());
+		changeGameScene(null, startScene);
 
 		stage.centerOnScreen();
 		stage.show();
 	}
 
 	private void handleGameStateChange(PacManGameState oldState, PacManGameState newState) {
+		GameType gameType = controller.selectedGameType();
+		GameModel game = controller.selectedGame();
+		boolean _3D = Env.$use3DScenes.get();
 		log("Handle game state change %s to %s", oldState, newState);
-		if (!sceneFactory.isSuitableScene(currentGameScene, Env.$use3DScenes.get())) {
-			changeScene();
+		if (!SceneFactory.isSuitableScene(currentGameScene, gameType, newState, game, _3D)) {
+			selectScene(gameType, newState, game, _3D);
 		}
 		currentGameScene.onGameStateChange(oldState, newState);
 	}
 
-	private void changeScene() {
-		GameScene nextScene = scenesCreated.stream()
-				.filter(scene -> sceneFactory.isSuitableScene(scene, Env.$use3DScenes.get())).findFirst()
-				.orElseGet(this::createSuitableScene);
-		changeGameScene(currentGameScene, nextScene);
+	private void selectScene(GameType gameType, PacManGameState gameState, GameModel game, boolean _3D) {
+		Optional<GameScene> nextScene = scenesCreated.stream()
+				.filter(scene -> SceneFactory.isSuitableScene(scene, gameType, gameState, game, _3D)).findFirst();
+		if (nextScene.isPresent()) {
+			log("Use existing scene %s for game state %s", nextScene.get(), gameState);
+			changeGameScene(currentGameScene, nextScene.get());
+		} else {
+			GameScene newScene = createGameScene(gameType, gameState, game, _3D);
+			changeGameScene(currentGameScene, newScene);
+			log("Created new scene %s for game state %s", newScene, gameState);
+		}
 	}
 
-	private GameScene createSuitableScene() {
-		GameScene scene = sceneFactory.createGameScene(stage, Env.$use3DScenes.get());
-		scenesCreated.add(scene);
+	private GameScene createGameScene(GameType gameType, PacManGameState gameState, GameModel game, boolean _3D) {
+		GameScene scene = SceneFactory.createGameScene(stage, gameType, gameState, game, _3D);
+		scene.setController(controller);
 		scene.setAvailableSize(mainScene.getWidth(), mainScene.getHeight());
-		keepMaximizedInParent(scene, mainScene, scene.aspectRatio());
-		log("New game scene '%s' created", scene);
+		keepGameSceneMaximized(scene, mainScene, scene.aspectRatio());
+		scenesCreated.add(scene);
 		return scene;
 	}
 
 	private void changeGameScene(GameScene oldGameScene, GameScene newGameScene) {
+		log("Change game scene %s to %s", oldGameScene, newGameScene);
 		if (oldGameScene == newGameScene) {
-			log("Scene change not needed for %s", oldGameScene);
+			log("Ignored");
 			return;
 		}
-		log("Scene change: %s to %s", oldGameScene, newGameScene);
 		if (oldGameScene != null) {
 			oldGameScene.end();
 		}
-		// now using new game scene
 		currentGameScene = newGameScene;
-		mainSceneRoot.getChildren().clear();
-		mainSceneRoot.getChildren().addAll(currentGameScene.getFXSubScene(), flashMessageView, hud);
 		currentGameScene.setAvailableSize(mainScene.getWidth(), mainScene.getHeight());
 		if (Env.$useStaticCamera.get()) {
 			currentGameScene.useMoveableCamera(false);
@@ -122,6 +129,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			currentGameScene.useMoveableCamera(true);
 		}
 		currentGameScene.start();
+		mainSceneRoot.getChildren().clear();
+		mainSceneRoot.getChildren().addAll(currentGameScene.getFXSubScene(), flashMessageView, hud);
 	}
 
 	private void handleKeys(KeyEvent e) {
@@ -181,36 +190,38 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private void toggleUse3DScenes() {
 		Env.$use3DScenes.set(!Env.$use3DScenes.get());
+		GameType gameType = controller.selectedGameType();
+		GameModel game = controller.selectedGame();
+		if (SceneFactory.has2DAnd3DSceneForGameState(gameType, controller.state, game)) {
+			selectScene(gameType, controller.state, game, Env.$use3DScenes.get());
+		}
 		String message = String.format("3D scenes %s", Env.$use3DScenes.get() ? "ON" : "OFF");
 		showFlashMessage(message);
-		if (sceneFactory.has2DAnd3DSceneForCurrentState()) {
-			changeScene();
-		}
 	}
 
-	private void keepMaximizedInParent(GameScene scene, Scene parentScene, OptionalDouble optionalAspectRatio) {
+	private void keepGameSceneMaximized(GameScene gameScene, Scene parentScene, OptionalDouble optionalAspectRatio) {
 		if (optionalAspectRatio.isPresent()) {
 			double aspectRatio = optionalAspectRatio.getAsDouble();
 			parentScene.widthProperty().addListener((s, o, n) -> {
 				double newHeight = Math.min(n.doubleValue() / aspectRatio, parentScene.getHeight());
 				double newWidth = newHeight * aspectRatio;
-				scene.setAvailableSize(newWidth, newHeight);
+				gameScene.setAvailableSize(newWidth, newHeight);
 			});
 			parentScene.heightProperty().addListener((s, o, n) -> {
 				double newHeight = n.doubleValue();
 				double newWidth = Math.min(parentScene.getHeight() * aspectRatio, parentScene.getWidth());
-				scene.setAvailableSize(newWidth, newHeight);
+				gameScene.setAvailableSize(newWidth, newHeight);
 			});
 		} else {
-			scene.getFXSubScene().widthProperty().bind(parentScene.widthProperty());
-			scene.getFXSubScene().heightProperty().bind(parentScene.heightProperty());
+			gameScene.getFXSubScene().widthProperty().bind(parentScene.widthProperty());
+			gameScene.getFXSubScene().heightProperty().bind(parentScene.heightProperty());
 		}
 	}
 
 	@Override
 	public void update() {
 		if (currentGameScene == null) {
-			log("Cannot update scene, scene is NULL");
+			log("Cannot update: no game scene");
 			return;
 		}
 		if (currentGameScene instanceof AbstractGameScene2D) {

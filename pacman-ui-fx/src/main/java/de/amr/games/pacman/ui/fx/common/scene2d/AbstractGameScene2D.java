@@ -23,12 +23,12 @@ public abstract class AbstractGameScene2D implements GameScene {
 	protected final SubScene scene;
 	protected final Canvas canvas;
 	protected final GraphicsContext gc;
-	protected final PacManGameController controller;
 	protected final PacManGameRendering2D rendering;
 	protected final SoundManager sounds;
 
-	public AbstractGameScene2D(PacManGameController controller, PacManGameRendering2D rendering, SoundManager sounds) {
-		this.controller = controller;
+	protected PacManGameController controller;
+
+	public AbstractGameScene2D(PacManGameRendering2D rendering, SoundManager sounds) {
 		this.rendering = rendering;
 		this.sounds = sounds;
 		aspectRatio = UNSCALED_SCENE_WIDTH / UNSCALED_SCENE_HEIGHT;
@@ -38,6 +38,11 @@ public abstract class AbstractGameScene2D implements GameScene {
 		scene = new SubScene(group, UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT);
 		scene.widthProperty().bind(canvas.widthProperty());
 		scene.heightProperty().bind(canvas.heightProperty());
+	}
+
+	@Override
+	public void setController(PacManGameController controller) {
+		this.controller = controller;
 	}
 
 	@Override
