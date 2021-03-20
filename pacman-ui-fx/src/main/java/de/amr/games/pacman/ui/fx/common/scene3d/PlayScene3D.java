@@ -32,10 +32,7 @@ import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
 import javafx.scene.SubScene;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
@@ -66,9 +63,7 @@ public class PlayScene3D implements GameScene {
 	private List<Brick3D> bricks;
 	private List<Energizer3D> energizers;
 	private List<Pellet3D> pellets;
-	private Group tgScore;
-	private Text txtScore;
-	private Text txtHiscore;
+	private ScoreNotReally3D score3D;
 	private Group tgLivesCounter;
 
 	public PlayScene3D(Stage stage) {
@@ -107,19 +102,19 @@ public class PlayScene3D implements GameScene {
 				.collect(Collectors.toList());
 
 		energizers = game.level.world.energizerTiles()
-				.map(tile -> new Energizer3D(tile, Assets3D.foodMaterial(gameType, game.level.mazeNumber), game.level))
+				.map(tile -> new Energizer3D(tile, Assets3D.foodMaterial(gameType, game.level.mazeNumber)))
 				.collect(Collectors.toList());
 
 		pellets = game.level.world.tiles()//
 				.filter(game.level.world::isFoodTile)//
 				.filter(not(game.level.world::isEnergizerTile))
-				.map(tile -> new Pellet3D(tile, Assets3D.foodMaterial(gameType, game.level.mazeNumber), game.level))
+				.map(tile -> new Pellet3D(tile, Assets3D.foodMaterial(gameType, game.level.mazeNumber)))
 				.collect(Collectors.toList());
 
 		player = new Player3D(game.player);
 		ghosts3D = game.ghosts().collect(Collectors.toMap(Function.identity(), Ghost3D::new));
 
-		createScore();
+		score3D = new ScoreNotReally3D();
 		createLivesCounter();
 
 		tgMaze = new Group();
@@ -127,7 +122,7 @@ public class PlayScene3D implements GameScene {
 		tgMaze.getTransforms()
 				.add(new Translate(-GameScene.UNSCALED_SCENE_WIDTH / 2, -GameScene.UNSCALED_SCENE_HEIGHT / 2));
 
-		tgMaze.getChildren().addAll(tgScore, tgLivesCounter);
+		tgMaze.getChildren().addAll(score3D.getNode(), tgLivesCounter);
 		tgMaze.getChildren().addAll(bricks.stream().map(Brick3D::getNode).collect(Collectors.toList()));
 		tgMaze.getChildren().addAll(energizers.stream().map(Energizer3D::getNode).collect(Collectors.toList()));
 		tgMaze.getChildren().addAll(pellets.stream().map(Pellet3D::getNode).collect(Collectors.toList()));
@@ -216,38 +211,6 @@ public class PlayScene3D implements GameScene {
 		return current + (target - current) * 0.02;
 	}
 
-	private void createScore() {
-		Font font = Assets3D.ARCADE_FONT;
-
-		Text txtScoreTitle = new Text("SCORE");
-		txtScoreTitle.setFill(Color.WHITE);
-		txtScoreTitle.setFont(font);
-
-		txtScore = new Text();
-		txtScore.setFill(Color.YELLOW);
-		txtScore.setFont(font);
-
-		Text txtHiscoreTitle = new Text("HI SCORE");
-		txtHiscoreTitle.setFill(Color.WHITE);
-		txtHiscoreTitle.setFont(font);
-
-		txtHiscore = new Text();
-		txtHiscore.setFill(Color.YELLOW);
-		txtHiscore.setFont(font);
-
-		GridPane grid = new GridPane();
-		grid.setHgap(4 * TS);
-		grid.setTranslateY(-2 * TS);
-		grid.setTranslateZ(-2 * TS);
-		grid.getChildren().clear();
-		grid.add(txtScoreTitle, 0, 0);
-		grid.add(txtScore, 0, 1);
-		grid.add(txtHiscoreTitle, 1, 0);
-		grid.add(txtHiscore, 1, 1);
-
-		tgScore = new Group(grid);
-	}
-
 	private void createLivesCounter() {
 		tgLivesCounter = new Group();
 		int counterTileX = 1, counterTileY = 1;
@@ -266,22 +229,15 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void update() {
 		GameModel game = gameController.selectedGame();
-		updateScores();
-		updateLivesCounter();
-		energizers.forEach(Energizer3D::update);
-		pellets.forEach(Pellet3D::update);
+		score3D.update(game);
+		score3D.getNode().setRotationAxis(Rotate.X_AXIS);
+		score3D.getNode().setRotate(getActiveCamera().getRotate());
+		updateLivesCounter(); // TODO
+		energizers.forEach(energizer3D -> energizer3D.update(game));
+		pellets.forEach(pellet3D -> pellet3D.update(game));
 		player.update();
 		game.ghosts().map(ghosts3D::get).forEach(Ghost3D::update);
 		updateCamera();
-	}
-
-	private void updateScores() {
-		GameModel game = gameController.selectedGame();
-		txtScore.setText(String.format("%07d L%d", game.score, game.levelNumber));
-		txtHiscore.setText(String.format("%07d L%d", game.highscorePoints, game.highscoreLevel));
-		// TODO is this the right way or should the score be kept outside the subscene?
-		tgScore.setRotationAxis(Rotate.X_AXIS);
-		tgScore.setRotate(staticCamera.getRotate());
 	}
 
 	private void updateLivesCounter() {

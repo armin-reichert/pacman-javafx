@@ -3,7 +3,7 @@ package de.amr.games.pacman.ui.fx.common.scene3d;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameLevel;
+import de.amr.games.pacman.model.common.GameModel;
 import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
@@ -18,11 +18,9 @@ public class Pellet3D {
 	private final int radius = 1;
 	private final V2i tile;
 	private final Sphere sphere;
-	private final GameLevel gameLevel;
 
-	public Pellet3D(V2i tile, PhongMaterial material, GameLevel gameLevel) {
+	public Pellet3D(V2i tile, PhongMaterial material) {
 		this.tile = tile;
-		this.gameLevel = gameLevel;
 		sphere = new Sphere(radius);
 		sphere.setMaterial(material);
 		sphere.setTranslateX(tile.x * TS);
@@ -30,8 +28,8 @@ public class Pellet3D {
 		sphere.setViewOrder(-tile.y * TS - 1);
 	}
 
-	public void update() {
-		sphere.setVisible(!gameLevel.isFoodRemoved(tile));
+	public void update(GameModel game) {
+		sphere.setVisible(!game.level.isFoodRemoved(tile));
 	}
 
 	public Node getNode() {
@@ -41,5 +39,4 @@ public class Pellet3D {
 	public V2i getTile() {
 		return tile;
 	}
-
 }
