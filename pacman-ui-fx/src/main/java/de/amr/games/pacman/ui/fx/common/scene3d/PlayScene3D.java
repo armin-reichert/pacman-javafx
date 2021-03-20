@@ -59,6 +59,9 @@ import javafx.util.Duration;
  */
 public class PlayScene3D implements GameScene {
 
+	private static final String[] CONGRATS = { "Well done", "Congrats", "Awesome", "You did it", "You're the man*in",
+			"WTF", "You old cheating bastard" };
+
 	private final SubScene fxScene;
 
 	private final PerspectiveCamera staticCamera;
@@ -498,17 +501,17 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void playLevelCompleteAnimation(PacManGameState state) {
-		log("%s: play level complete animation", this);
 		controller.state.timer.reset();
-		String[] congrats = { "Well done", "Congrats", "You did it", "You're the man*in", "WTF", "Man, man, man" };
-		String randomCongrats = congrats[new Random().nextInt(congrats.length)];
-		controller.userInterface.showFlashMessage(
-				String.format("%s!\n\nLevel %d complete.", randomCongrats, controller.selectedGame().levelNumber), 3);
+
+		String randomCongrats = CONGRATS[new Random().nextInt(CONGRATS.length)];
+
 		PauseTransition pause = new PauseTransition(Duration.seconds(2));
 		pause.setOnFinished(e -> {
 			GameModel game = controller.selectedGame();
 			game.player.visible = false;
 			game.ghosts().forEach(ghost -> ghost.visible = false);
+			controller.userInterface.showFlashMessage(
+					String.format("%s!\n\nLevel %d complete.", randomCongrats, controller.selectedGame().levelNumber), 3);
 		});
 
 		ScaleTransition animation = new ScaleTransition(Duration.seconds(3), tgMaze);
