@@ -107,13 +107,13 @@ public class PlayScene3D implements GameScene {
 				.collect(Collectors.toList());
 
 		energizers = game.level.world.energizerTiles()
-				.map(tile -> new Energizer3D(tile, Assets3D.foodMaterial(gameType, game.level.mazeNumber)))
+				.map(tile -> new Energizer3D(tile, Assets3D.foodMaterial(gameType, game.level.mazeNumber), game.level))
 				.collect(Collectors.toList());
 
 		pellets = game.level.world.tiles()//
 				.filter(game.level.world::isFoodTile)//
 				.filter(not(game.level.world::isEnergizerTile))
-				.map(tile -> new Pellet3D(tile, Assets3D.foodMaterial(gameType, game.level.mazeNumber)))
+				.map(tile -> new Pellet3D(tile, Assets3D.foodMaterial(gameType, game.level.mazeNumber), game.level))
 				.collect(Collectors.toList());
 
 		player = new Player3D(game.player);
@@ -268,12 +268,8 @@ public class PlayScene3D implements GameScene {
 		GameModel game = gameController.selectedGame();
 		updateScores();
 		updateLivesCounter();
-		energizers.forEach(energizer -> {
-			energizer.getNode().setVisible(!game.level.isFoodRemoved(energizer.getTile()));
-		});
-		pellets.forEach(pellet -> {
-			pellet.getNode().setVisible(!game.level.isFoodRemoved(pellet.getTile()));
-		});
+		energizers.forEach(Energizer3D::update);
+		pellets.forEach(Pellet3D::update);
 		player.update();
 		game.ghosts().map(ghosts3D::get).forEach(Ghost3D::update);
 		updateCamera();
