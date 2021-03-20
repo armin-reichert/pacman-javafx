@@ -28,7 +28,6 @@ public class Energizer {
 		sphere.setMaterial(material);
 		sphere.setTranslateX(tile.x * TS);
 		sphere.setTranslateY(tile.y * TS);
-		sphere.setUserData(tile);
 		sphere.setViewOrder(-tile.y * TS - 1);
 		createAnimation();
 	}

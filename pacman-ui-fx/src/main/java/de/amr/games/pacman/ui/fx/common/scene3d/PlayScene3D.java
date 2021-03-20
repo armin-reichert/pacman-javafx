@@ -74,7 +74,7 @@ public class PlayScene3D implements GameScene {
 	private Map<Ghost, Group> tgGhosts;
 	private List<Node> wallNodes;
 	private List<Energizer> energizers;
-	private List<Node> pelletNodes;
+	private List<Pellet> pellets;
 	private Group tgScore;
 	private Text txtScore;
 	private Text txtHiscore;
@@ -119,10 +119,10 @@ public class PlayScene3D implements GameScene {
 				.map(tile -> new Energizer(tile, Assets.foodMaterial(gameType, game.level.mazeNumber)))
 				.collect(Collectors.toList());
 
-		pelletNodes = game.level.world.tiles()//
+		pellets = game.level.world.tiles()//
 				.filter(game.level.world::isFoodTile)//
 				.filter(not(game.level.world::isEnergizerTile))
-				.map(tile -> createPelletShape(tile, Assets.foodMaterial(gameType, game.level.mazeNumber)))
+				.map(tile -> new Pellet(tile, Assets.foodMaterial(gameType, game.level.mazeNumber)))
 				.collect(Collectors.toList());
 
 		tgPlayer = Assets.createPlayerShape();
@@ -140,7 +140,7 @@ public class PlayScene3D implements GameScene {
 		tgMaze.getChildren().addAll(tgScore, tgLivesCounter);
 		tgMaze.getChildren().addAll(wallNodes);
 		tgMaze.getChildren().addAll(energizers.stream().map(Energizer::getNode).collect(Collectors.toList()));
-		tgMaze.getChildren().addAll(pelletNodes);
+		tgMaze.getChildren().addAll(pellets.stream().map(Pellet::getNode).collect(Collectors.toList()));
 		tgMaze.getChildren().addAll(tgPlayer);
 		tgMaze.getChildren().addAll(tgGhosts.values());
 
@@ -310,16 +310,6 @@ public class PlayScene3D implements GameScene {
 		return block;
 	}
 
-	private Node createPelletShape(V2i tile, PhongMaterial material) {
-		Sphere pellet = new Sphere(1);
-		pellet.setMaterial(material);
-		pellet.setUserData(tile);
-		pellet.setTranslateX(tile.x * TS);
-		pellet.setTranslateY(tile.y * TS);
-		pellet.setViewOrder(-tile.y * TS - 1);
-		return pellet;
-	}
-
 	@Override
 	public void update() {
 		GameModel game = controller.selectedGame();
@@ -328,10 +318,8 @@ public class PlayScene3D implements GameScene {
 		energizers.forEach(energizer -> {
 			energizer.getNode().setVisible(!game.level.isFoodRemoved(energizer.getTile()));
 		});
-		// TODO this is inefficient
-		pelletNodes.forEach(pellet -> {
-			V2i tile = (V2i) pellet.getUserData();
-			pellet.setVisible(!game.level.isFoodRemoved(tile));
+		pellets.forEach(pellet -> {
+			pellet.getNode().setVisible(!game.level.isFoodRemoved(pellet.getTile()));
 		});
 		updatePlayerShape(game.player);
 		for (Ghost ghost : game.ghosts) {
