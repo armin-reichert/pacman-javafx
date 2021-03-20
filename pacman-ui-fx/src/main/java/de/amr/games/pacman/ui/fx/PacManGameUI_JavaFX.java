@@ -192,7 +192,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		Env.$use3DScenes.set(!Env.$use3DScenes.get());
 		GameType gameType = controller.selectedGameType();
 		GameModel game = controller.selectedGame();
-		if (SceneFactory.has2DAnd3DSceneForGameState(gameType, controller.state, game)) {
+		if (SceneFactory.hasDifferentSceneFor3D(gameType, controller.state, game)) {
 			selectScene(gameType, controller.state, game, Env.$use3DScenes.get());
 		}
 		String message = String.format("3D scenes %s", Env.$use3DScenes.get() ? "ON" : "OFF");

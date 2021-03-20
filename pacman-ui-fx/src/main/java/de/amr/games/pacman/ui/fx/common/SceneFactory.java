@@ -6,17 +6,18 @@ import static de.amr.games.pacman.model.common.GameType.PACMAN;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameType;
-import de.amr.games.pacman.ui.fx.common.scene2d.Assets2D;
 import de.amr.games.pacman.ui.fx.common.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.common.scene3d.PlayScene3D;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene1;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene2;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene3;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntroScene;
+import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_PlayScene;
 import de.amr.games.pacman.ui.fx.pacman.PacMan_IntermissionScene1;
 import de.amr.games.pacman.ui.fx.pacman.PacMan_IntermissionScene2;
 import de.amr.games.pacman.ui.fx.pacman.PacMan_IntermissionScene3;
 import de.amr.games.pacman.ui.fx.pacman.PacMan_IntroScene;
+import de.amr.games.pacman.ui.fx.pacman.PacMan_PlayScene;
 import javafx.stage.Stage;
 
 /**
@@ -55,7 +56,7 @@ public class SceneFactory {
 	}
 
 	public static GameScene createGameScene(Stage stage, GameType gameType, PacManGameState gameState, GameModel game,
-			boolean use3D) {
+			boolean _3D) {
 		switch (gameType) {
 		case MS_PACMAN:
 			switch (sceneIndex(gameState, game)) {
@@ -68,8 +69,7 @@ public class SceneFactory {
 			case 3:
 				return new MsPacMan_IntermissionScene3();
 			case 4:
-				return use3D ? new PlayScene3D(stage)
-						: new PlayScene2D(Assets2D.RENDERING_2D.get(MS_PACMAN), Assets2D.SOUND.get(MS_PACMAN));
+				return _3D ? new PlayScene3D(stage) : new MsPacMan_PlayScene();
 			default:
 				break;
 			}
@@ -84,8 +84,7 @@ public class SceneFactory {
 			case 3:
 				return new PacMan_IntermissionScene3();
 			case 4:
-				return use3D ? new PlayScene3D(stage)
-						: new PlayScene2D(Assets2D.RENDERING_2D.get(PACMAN), Assets2D.SOUND.get(PACMAN));
+				return _3D ? new PlayScene3D(stage) : new PacMan_PlayScene();
 			default:
 				break;
 			}
@@ -96,18 +95,17 @@ public class SceneFactory {
 		throw new IllegalStateException();
 	}
 
-	public static boolean isSuitableScene(GameScene gameSceneOrNull, GameType gameType, PacManGameState gameState,
-			GameModel game, boolean use3D) {
-		if (gameSceneOrNull == null) {
-			return false;
-		}
-		Class<?> sceneClass = SCENE_CLASSES[gameType.ordinal()][sceneIndex(gameState, game)][use3D ? 1 : 0];
-		return gameSceneOrNull.getClass().equals(sceneClass);
+	public static boolean isSuitableScene(GameScene gameScene, GameType gameType, PacManGameState gameState,
+			GameModel game, boolean _3D) {
+		return gameScene != null && gameScene.getClass().equals(sceneClass(gameType, gameState, game, _3D));
 	}
 
-	public static boolean has2DAnd3DSceneForGameState(GameType gameType, PacManGameState gameState, GameModel game) {
-		return SCENE_CLASSES[gameType.ordinal()][sceneIndex(gameState,
-				game)][0] != SCENE_CLASSES[gameType.ordinal()][sceneIndex(gameState, game)][1];
+	public static boolean hasDifferentSceneFor3D(GameType gameType, PacManGameState gameState, GameModel game) {
+		return sceneClass(gameType, gameState, game, false) != sceneClass(gameType, gameState, game, true);
+	}
+
+	private static Class<?> sceneClass(GameType gameType, PacManGameState gameState, GameModel game, boolean _3D) {
+		return SCENE_CLASSES[gameType.ordinal()][sceneIndex(gameState, game)][_3D ? 1 : 0];
 	}
 
 	private static int sceneIndex(PacManGameState gameState, GameModel game) {
