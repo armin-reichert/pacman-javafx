@@ -3,9 +3,6 @@ package de.amr.games.pacman.ui.fx.common;
 import static de.amr.games.pacman.model.common.GameType.MS_PACMAN;
 import static de.amr.games.pacman.model.common.GameType.PACMAN;
 
-import java.util.Arrays;
-import java.util.Objects;
-
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameType;
@@ -33,24 +30,24 @@ public class SceneFactory {
 
 	static {
 		//@formatter:off
-		SCENE_CLASSES[MS_PACMAN.ordinal()][0][0] = 
+		SCENE_CLASSES[MS_PACMAN.ordinal()][0][0] = MsPacMan_IntroScene.class;
 		SCENE_CLASSES[MS_PACMAN.ordinal()][0][1] = MsPacMan_IntroScene.class;
-		SCENE_CLASSES[MS_PACMAN.ordinal()][1][0] = 
+		SCENE_CLASSES[MS_PACMAN.ordinal()][1][0] = MsPacMan_IntermissionScene1.class;
 		SCENE_CLASSES[MS_PACMAN.ordinal()][1][1] = MsPacMan_IntermissionScene1.class;
-		SCENE_CLASSES[MS_PACMAN.ordinal()][2][0] = 
+		SCENE_CLASSES[MS_PACMAN.ordinal()][2][0] = MsPacMan_IntermissionScene2.class;
 		SCENE_CLASSES[MS_PACMAN.ordinal()][2][1] = MsPacMan_IntermissionScene2.class;
-		SCENE_CLASSES[MS_PACMAN.ordinal()][3][0] = 
+		SCENE_CLASSES[MS_PACMAN.ordinal()][3][0] = MsPacMan_IntermissionScene3.class;
 		SCENE_CLASSES[MS_PACMAN.ordinal()][3][1] = MsPacMan_IntermissionScene3.class;
 		SCENE_CLASSES[MS_PACMAN.ordinal()][4][0] = PlayScene2D.class;
 		SCENE_CLASSES[MS_PACMAN.ordinal()][4][1] = PlayScene3D.class;
 
-		SCENE_CLASSES[PACMAN.ordinal()]   [0][0] = 
+		SCENE_CLASSES[PACMAN.ordinal()]   [0][0] = PacMan_IntroScene.class;
 		SCENE_CLASSES[PACMAN.ordinal()]   [0][1] = PacMan_IntroScene.class;
-		SCENE_CLASSES[PACMAN.ordinal()]   [1][0] = 
+		SCENE_CLASSES[PACMAN.ordinal()]   [1][0] = PacMan_IntermissionScene1.class;
 		SCENE_CLASSES[PACMAN.ordinal()]   [1][1] = PacMan_IntermissionScene1.class;
-		SCENE_CLASSES[PACMAN.ordinal()]   [2][0] = 
+		SCENE_CLASSES[PACMAN.ordinal()]   [2][0] = PacMan_IntermissionScene2.class;
 		SCENE_CLASSES[PACMAN.ordinal()]   [2][1] = PacMan_IntermissionScene2.class;
-		SCENE_CLASSES[PACMAN.ordinal()]   [3][0] = 
+		SCENE_CLASSES[PACMAN.ordinal()]   [3][0] = PacMan_IntermissionScene3.class;
 		SCENE_CLASSES[PACMAN.ordinal()]   [3][1] = PacMan_IntermissionScene3.class;
 		SCENE_CLASSES[PACMAN.ordinal()]   [4][0] = PlayScene2D.class;
 		SCENE_CLASSES[PACMAN.ordinal()]   [4][1] = PlayScene3D.class;
@@ -109,8 +106,8 @@ public class SceneFactory {
 	}
 
 	public static boolean has2DAnd3DSceneForGameState(GameType gameType, PacManGameState gameState, GameModel game) {
-		return Arrays.stream(SCENE_CLASSES[gameType.ordinal()][sceneIndex(gameState, game)]).filter(Objects::nonNull)
-				.count() > 1;
+		return SCENE_CLASSES[gameType.ordinal()][sceneIndex(gameState,
+				game)][0] != SCENE_CLASSES[gameType.ordinal()][sceneIndex(gameState, game)][1];
 	}
 
 	private static int sceneIndex(PacManGameState gameState, GameModel game) {
