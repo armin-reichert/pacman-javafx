@@ -4,6 +4,7 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static java.util.function.Predicate.not;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.OptionalDouble;
@@ -20,13 +21,13 @@ import de.amr.games.pacman.model.common.GameType;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.model.common.Pac;
-import de.amr.games.pacman.ui.animation.TimedSequence;
 import de.amr.games.pacman.ui.fx.common.CameraController;
 import de.amr.games.pacman.ui.fx.common.Env;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
+import javafx.animation.Transition;
 import javafx.collections.ObservableList;
 import javafx.scene.AmbientLight;
 import javafx.scene.Camera;
@@ -78,7 +79,7 @@ public class PlayScene3D implements GameScene {
 	private Text txtHiscore;
 	private Group tgLivesCounter;
 
-	private final TimedSequence<Boolean> energizerBlinking = TimedSequence.pulse().frameDuration(15);
+	private Map<Node, ScaleTransition> energizerAnimations;
 
 	public PlayScene3D(Stage stage) {
 		staticCamera = new PerspectiveCamera(true);
@@ -335,10 +336,9 @@ public class PlayScene3D implements GameScene {
 		GameModel game = controller.selectedGame();
 		updateScores();
 		updateLivesCounter();
-		energizerBlinking.animate();
 		energizerNodes.forEach(energizer -> {
 			V2i tile = (V2i) energizer.getUserData();
-			energizer.setVisible(!game.level.isFoodRemoved(tile) && energizerBlinking.frame());
+			energizer.setVisible(!game.level.isFoodRemoved(tile));
 		});
 		// TODO this is inefficient
 		pelletNodes.forEach(pellet -> {
@@ -467,10 +467,13 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void onGameStateChange(PacManGameState oldState, PacManGameState newState) {
 		if (oldState == PacManGameState.HUNTING) {
-			energizerBlinking.reset();
+			energizerAnimations.values().forEach(Transition::stop);
 		}
 		if (newState == PacManGameState.HUNTING) {
-			energizerBlinking.restart();
+			energizerAnimations = new HashMap<>();
+			energizerNodes.forEach(energizerNode -> {
+				createEnergizerAnimation(energizerNode).playFromStart();
+			});
 		}
 		if (newState == PacManGameState.LEVEL_COMPLETE) {
 			playLevelCompleteAnimation(oldState);
@@ -478,6 +481,20 @@ public class PlayScene3D implements GameScene {
 		if (newState == PacManGameState.LEVEL_STARTING) {
 			playLevelStartingAnimation(newState);
 		}
+	}
+
+	private ScaleTransition createEnergizerAnimation(Node energizerNode) {
+		ScaleTransition animation = new ScaleTransition(Duration.seconds(0.25), energizerNode);
+		animation.setAutoReverse(true);
+		animation.setCycleCount(Transition.INDEFINITE);
+		animation.setFromX(0);
+		animation.setFromY(0);
+		animation.setFromZ(0);
+		animation.setToX(2);
+		animation.setToY(2);
+		animation.setToZ(2);
+		energizerAnimations.put(energizerNode, animation);
+		return animation;
 	}
 
 	private void playLevelCompleteAnimation(PacManGameState state) {
