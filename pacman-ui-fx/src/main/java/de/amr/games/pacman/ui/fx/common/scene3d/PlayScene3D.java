@@ -22,7 +22,6 @@ import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.fx.common.CameraController;
-import de.amr.games.pacman.ui.fx.common.Env;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
@@ -39,7 +38,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
 import javafx.scene.text.Font;
@@ -68,7 +66,7 @@ public class PlayScene3D implements GameScene {
 
 	private PacManGameController controller;
 
-	private Group tgAxes;
+	private CoordinateSystem coord;
 	private Group tgMaze;
 	private Group tgPlayer;
 	private Map<Ghost, Group> tgGhosts;
@@ -151,9 +149,9 @@ public class PlayScene3D implements GameScene {
 		pointLight.setTranslateZ(-500);
 		tgMaze.getChildren().add(pointLight);
 
-		createAxes();
+		coord = new CoordinateSystem(150);
 
-		fxScene.setRoot(new Group(tgAxes, tgMaze));
+		fxScene.setRoot(new Group(coord.getNode(), tgMaze));
 	}
 
 	@Override
@@ -222,34 +220,6 @@ public class PlayScene3D implements GameScene {
 
 	private double lerp(double current, double target) {
 		return current + (target - current) * 0.02;
-	}
-
-	private void createAxes() {
-		int len = 100;
-		Sphere origin = new Sphere(2);
-		origin.setMaterial(new PhongMaterial(Color.BISQUE));
-		tgAxes = new Group(origin);
-		tgAxes.visibleProperty().bind(Env.$showAxes);
-
-		Cylinder posX = createYAxis(Color.RED.brighter(), len);
-		posX.getTransforms().add(new Translate(len / 2, 0, 0));
-		posX.getTransforms().add(new Rotate(90, Rotate.Z_AXIS));
-		tgAxes.getChildren().add(posX);
-
-		Cylinder posY = createYAxis(Color.GREEN.brighter(), len);
-		posY.getTransforms().add(new Translate(0, len / 2, 0));
-		tgAxes.getChildren().add(posY);
-
-		Cylinder negZ = createYAxis(Color.BLUE.brighter(), len);
-		posY.getTransforms().add(new Translate(0, -len / 2, 0));
-		negZ.getTransforms().add(new Rotate(-90, Rotate.X_AXIS));
-		tgAxes.getChildren().add(negZ);
-	}
-
-	private Cylinder createYAxis(Color color, double height) {
-		Cylinder axis = new Cylinder(1, height);
-		axis.setMaterial(new PhongMaterial(color));
-		return axis;
 	}
 
 	private void createScore() {
