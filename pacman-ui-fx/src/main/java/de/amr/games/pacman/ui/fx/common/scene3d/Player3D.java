@@ -27,11 +27,11 @@ public class Player3D {
 
 		MeshView body = new MeshView(Assets3D.guyMeshTemplates.get("Sphere_Sphere.002_Material.001").getMesh());
 		body.setMaterial(new PhongMaterial(Color.YELLOW));
-		body.setDrawMode(Env.$drawMode.get());
+		body.drawModeProperty().bind(Env.$drawMode);
 
 		MeshView glasses = new MeshView(Assets3D.guyMeshTemplates.get("Sphere_Sphere.002_Material.002").getMesh());
-		glasses.setMaterial(new PhongMaterial(Color.rgb(50, 50, 50)));
-		glasses.setDrawMode(Env.$drawMode.get());
+		glasses.setMaterial(new PhongMaterial(Color.rgb(40, 40, 60)));
+		glasses.drawModeProperty().bind(Env.$drawMode);
 
 		Translate centering = Assets3D.centerOverOrigin(body);
 		glasses.getTransforms().add(centering);

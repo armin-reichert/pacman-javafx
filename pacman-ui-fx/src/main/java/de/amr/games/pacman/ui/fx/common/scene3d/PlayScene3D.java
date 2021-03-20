@@ -1,12 +1,10 @@
 package de.amr.games.pacman.ui.fx.common.scene3d;
 
 import static de.amr.games.pacman.lib.Logging.log;
-import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static java.util.function.Predicate.not;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.Random;
 import java.util.function.Function;
@@ -23,11 +21,9 @@ import de.amr.games.pacman.ui.fx.common.GameScene;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
-import javafx.collections.ObservableList;
 import javafx.scene.AmbientLight;
 import javafx.scene.Camera;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
 import javafx.scene.SubScene;
@@ -64,7 +60,7 @@ public class PlayScene3D implements GameScene {
 	private List<Energizer3D> energizers;
 	private List<Pellet3D> pellets;
 	private ScoreNotReally3D score3D;
-	private Group tgLivesCounter;
+	private LivesCounter3D livesCounter3D;
 
 	public PlayScene3D(Stage stage) {
 		staticCamera = new PerspectiveCamera(true);
@@ -115,14 +111,14 @@ public class PlayScene3D implements GameScene {
 		ghosts3D = game.ghosts().collect(Collectors.toMap(Function.identity(), Ghost3D::new));
 
 		score3D = new ScoreNotReally3D();
-		createLivesCounter();
+		livesCounter3D = new LivesCounter3D(game.player, bricks, new V2i(1, 1));
 
 		tgMaze = new Group();
 		// center over origin
 		tgMaze.getTransforms()
 				.add(new Translate(-GameScene.UNSCALED_SCENE_WIDTH / 2, -GameScene.UNSCALED_SCENE_HEIGHT / 2));
 
-		tgMaze.getChildren().addAll(score3D.getNode(), tgLivesCounter);
+		tgMaze.getChildren().addAll(score3D.getNode(), livesCounter3D.getNode());
 		tgMaze.getChildren().addAll(bricks.stream().map(Brick3D::getNode).collect(Collectors.toList()));
 		tgMaze.getChildren().addAll(energizers.stream().map(Energizer3D::getNode).collect(Collectors.toList()));
 		tgMaze.getChildren().addAll(pellets.stream().map(Pellet3D::getNode).collect(Collectors.toList()));
@@ -211,63 +207,20 @@ public class PlayScene3D implements GameScene {
 		return current + (target - current) * 0.02;
 	}
 
-	private void createLivesCounter() {
-		tgLivesCounter = new Group();
-		int counterTileX = 1, counterTileY = 1;
-		tgLivesCounter.setViewOrder(-counterTileY * TS);
-		for (int i = 0; i < 5; ++i) {
-			V2i tile = new V2i(counterTileX + 2 * i, counterTileY);
-			Player3D liveIndicator = new Player3D(gameController.selectedGame().player);
-			liveIndicator.getNode().setTranslateX(tile.x * TS);
-			liveIndicator.getNode().setTranslateY(tile.y * TS);
-			liveIndicator.getNode().setTranslateZ(4); // ???
-			liveIndicator.getNode().setUserData(tile);
-			tgLivesCounter.getChildren().add(liveIndicator.getNode());
-		}
-	}
-
 	@Override
 	public void update() {
 		GameModel game = gameController.selectedGame();
 		score3D.update(game);
 		score3D.getNode().setRotationAxis(Rotate.X_AXIS);
 		score3D.getNode().setRotate(getActiveCamera().getRotate());
-		updateLivesCounter(); // TODO
+		livesCounter3D.getNode().setVisible(!gameController.isAttractMode());
+		livesCounter3D.update(game);
 		energizers.forEach(energizer3D -> energizer3D.update(game));
 		pellets.forEach(pellet3D -> pellet3D.update(game));
 		player.update();
 		game.ghosts().map(ghosts3D::get).forEach(Ghost3D::update);
 		updateCamera();
 	}
-
-	private void updateLivesCounter() {
-		if (gameController.isAttractMode()) {
-			tgLivesCounter.setVisible(false);
-			return;
-		}
-		tgLivesCounter.setVisible(true);
-		GameModel game = gameController.selectedGame();
-		ObservableList<Node> children = tgLivesCounter.getChildren();
-		for (int i = 0; i < children.size(); ++i) {
-			Group liveIndicator = (Group) children.get(i);
-			V2i tile = (V2i) liveIndicator.getUserData();
-			V2i tileBelowIndicator = tile.plus(0, 1);
-			if (i < game.lives) {
-				liveIndicator.setVisible(true);
-				brickAt(tile).ifPresent(brick -> brick.getNode().setVisible(false));
-				brickAt(tileBelowIndicator).ifPresent(brick -> brick.getNode().setVisible(false));
-			} else {
-				liveIndicator.setVisible(false);
-				brickAt(tile).ifPresent(brick -> brick.getNode().setVisible(true));
-				brickAt(tileBelowIndicator).ifPresent(brick -> brick.getNode().setVisible(true));
-			}
-		}
-	}
-
-	private Optional<Brick3D> brickAt(V2i tile) {
-		return bricks.stream().filter(brick -> tile.equals(brick.getTile())).findFirst();
-	}
-
 	// State change handlers
 
 	@Override
