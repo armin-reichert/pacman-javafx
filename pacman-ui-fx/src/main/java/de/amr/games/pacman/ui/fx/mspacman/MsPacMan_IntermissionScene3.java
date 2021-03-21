@@ -1,6 +1,6 @@
 package de.amr.games.pacman.ui.fx.mspacman;
 
-import de.amr.games.pacman.model.common.GameType;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.common.scene2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.common.scene2d.Assets2D;
 import de.amr.games.pacman.ui.mspacman.MsPacMan_IntermissionScene3_Controller;
@@ -20,7 +20,7 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 	private MsPacMan_IntermissionScene3_Controller sceneController;
 
 	public MsPacMan_IntermissionScene3() {
-		super(Assets2D.RENDERING_2D.get(GameType.MS_PACMAN), Assets2D.SOUND.get(GameType.MS_PACMAN));
+		super(Assets2D.RENDERING_2D.get(GameVariant.MS_PACMAN), Assets2D.SOUND.get(GameVariant.MS_PACMAN));
 	}
 
 	@Override

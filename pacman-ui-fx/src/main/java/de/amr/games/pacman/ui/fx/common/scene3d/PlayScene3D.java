@@ -14,7 +14,7 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.GameType;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx.common.CameraController;
 import de.amr.games.pacman.ui.fx.common.GameScene;
@@ -92,7 +92,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void buildSceneGraph() {
-		final GameType gameType = gameController.selectedGameType();
+		final GameVariant gameType = gameController.gameVariant();
 		final GameModel game = gameController.selectedGame();
 
 		bricks = game.level.world.tiles()//
@@ -241,7 +241,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void setSceneColor() {
-		if (gameController.selectedGameType() == GameType.PACMAN) {
+		if (gameController.gameVariant() == GameVariant.PACMAN) {
 			Color color = Color.rgb(20, 20, 60);
 			fxScene.setFill(color);
 			ambientLight.setColor(Color.AZURE);
@@ -253,7 +253,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void playLevelCompleteAnimation(PacManGameState state) {
-		gameController.state.timer.reset();
+		gameController.timer().reset();
 
 		String randomCongrats = CONGRATS[new Random().nextInt(CONGRATS.length)];
 
@@ -279,7 +279,7 @@ public class PlayScene3D implements GameScene {
 
 	private void playLevelStartingAnimation(PacManGameState state) {
 		log("%s: play level starting animation", this);
-		gameController.state.timer.reset();
+		gameController.timer().reset();
 		gameController.userInterface.showFlashMessage("Entering Level " + gameController.selectedGame().levelNumber);
 		ScaleTransition animation = new ScaleTransition(Duration.seconds(3), tgMaze);
 		animation.setDelay(Duration.seconds(2));

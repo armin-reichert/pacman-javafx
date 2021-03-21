@@ -1,11 +1,11 @@
 package de.amr.games.pacman.ui.fx.common;
 
-import static de.amr.games.pacman.model.common.GameType.MS_PACMAN;
-import static de.amr.games.pacman.model.common.GameType.PACMAN;
+import static de.amr.games.pacman.model.common.GameVariant.MS_PACMAN;
+import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
 
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.GameType;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.common.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.common.scene3d.PlayScene3D;
 import de.amr.games.pacman.ui.fx.mspacman.MsPacMan_IntermissionScene1;
@@ -55,7 +55,7 @@ public class SceneFactory {
 		//@formatter:on
 	}
 
-	public static GameScene createGameScene(Stage stage, GameType gameType, PacManGameState gameState, GameModel game,
+	public static GameScene createGameScene(Stage stage, GameVariant gameType, PacManGameState gameState, GameModel game,
 			boolean _3D) {
 		switch (gameType) {
 		case MS_PACMAN:
@@ -95,16 +95,16 @@ public class SceneFactory {
 		throw new IllegalStateException();
 	}
 
-	public static boolean isSuitableScene(GameScene gameScene, GameType gameType, PacManGameState gameState,
+	public static boolean isSuitableScene(GameScene gameScene, GameVariant gameType, PacManGameState gameState,
 			GameModel game, boolean _3D) {
 		return gameScene != null && gameScene.getClass().equals(sceneClass(gameType, gameState, game, _3D));
 	}
 
-	public static boolean hasDifferentSceneFor3D(GameType gameType, PacManGameState gameState, GameModel game) {
+	public static boolean hasDifferentSceneFor3D(GameVariant gameType, PacManGameState gameState, GameModel game) {
 		return sceneClass(gameType, gameState, game, false) != sceneClass(gameType, gameState, game, true);
 	}
 
-	private static Class<?> sceneClass(GameType gameType, PacManGameState gameState, GameModel game, boolean _3D) {
+	private static Class<?> sceneClass(GameVariant gameType, PacManGameState gameState, GameModel game, boolean _3D) {
 		return SCENE_CLASSES[gameType.ordinal()][sceneIndex(gameState, game)][_3D ? 1 : 0];
 	}
 

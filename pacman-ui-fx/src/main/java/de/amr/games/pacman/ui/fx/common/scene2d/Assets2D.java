@@ -1,11 +1,11 @@
 package de.amr.games.pacman.ui.fx.common.scene2d;
 
-import static de.amr.games.pacman.model.common.GameType.MS_PACMAN;
-import static de.amr.games.pacman.model.common.GameType.PACMAN;
+import static de.amr.games.pacman.model.common.GameVariant.MS_PACMAN;
+import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
 
 import java.util.EnumMap;
 
-import de.amr.games.pacman.model.common.GameType;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.fx.rendering.standard.MsPacMan_StandardRendering;
 import de.amr.games.pacman.ui.fx.rendering.standard.PacMan_StandardRendering;
@@ -16,14 +16,14 @@ import javafx.scene.paint.Color;
 
 public class Assets2D {
 
-	public static final EnumMap<GameType, PacManGameRendering2D> RENDERING_2D = new EnumMap<>(GameType.class);
+	public static final EnumMap<GameVariant, PacManGameRendering2D> RENDERING_2D = new EnumMap<>(GameVariant.class);
 
 	static {
 		RENDERING_2D.put(MS_PACMAN, new MsPacMan_StandardRendering());
 		RENDERING_2D.put(PACMAN, new PacMan_StandardRendering());
 	}
 
-	public static final EnumMap<GameType, SoundManager> SOUND = new EnumMap<>(GameType.class);
+	public static final EnumMap<GameVariant, SoundManager> SOUND = new EnumMap<>(GameVariant.class);
 
 	static {
 		SOUND.put(MS_PACMAN, new PacManGameSoundManager(PacManGameSounds::msPacManSoundURL));

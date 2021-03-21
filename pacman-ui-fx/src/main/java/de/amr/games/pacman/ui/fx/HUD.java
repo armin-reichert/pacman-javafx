@@ -39,7 +39,7 @@ public class HUD extends HBox {
 
 	public void update() {
 		text = "";
-		line("Game Type", "%s", userInterface.controller.selectedGameType());
+		line("Game Type", "%s", userInterface.controller.gameVariant());
 		line("Game State", "%s", userInterface.controller.state);
 		line("Level", "%d", userInterface.controller.selectedGame().levelNumber);
 		line("Paused", "%s (Key CTRL+P)", Env.$paused.get() ? "YES" : "NO");

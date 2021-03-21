@@ -54,10 +54,10 @@ public class PlayScene2D extends AbstractGameScene2D {
 	// TODO use FX animation
 	private void runLevelCompleteState(PacManGameState state) {
 		GameModel game = controller.selectedGame();
-		if (state.timer.isRunningSeconds(2)) {
+		if (controller.timer().isRunningSeconds(2)) {
 			game.ghosts().forEach(ghost -> ghost.visible = false);
 		}
-		if (state.timer.isRunningSeconds(3)) {
+		if (controller.timer().isRunningSeconds(3)) {
 			mazeFlashing.restart();
 		}
 		mazeFlashing.animate();

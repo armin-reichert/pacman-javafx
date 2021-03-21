@@ -9,7 +9,7 @@ import java.util.Random;
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
-import de.amr.games.pacman.model.common.GameType;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.common.Env;
 import de.amr.games.pacman.ui.fx.common.scene2d.Assets2D;
 import javafx.geometry.Bounds;
@@ -86,12 +86,12 @@ class Assets3D {
 		}
 	}
 
-	static Color mazeColor(GameType gameType, int mazeNumber) {
-		return gameType == GameType.PACMAN ? Color.BLUE : Assets2D.getMazeWallColor(mazeNumber);
+	static Color mazeColor(GameVariant gameType, int mazeNumber) {
+		return gameType == GameVariant.PACMAN ? Color.BLUE : Assets2D.getMazeWallColor(mazeNumber);
 	}
 
-	static Color foodColor(GameType gameType, int mazeNumber) {
-		return gameType == GameType.PACMAN ? Color.rgb(250, 185, 176) : Assets2D.getFoodColor(mazeNumber);
+	static Color foodColor(GameVariant gameType, int mazeNumber) {
+		return gameType == GameVariant.PACMAN ? Color.rgb(250, 185, 176) : Assets2D.getFoodColor(mazeNumber);
 	}
 
 	static Color ghostColor(int id) {
@@ -102,7 +102,7 @@ class Assets3D {
 		return new PhongMaterial(ghostColor(ghostID));
 	}
 
-	static PhongMaterial foodMaterial(GameType gameType, int mazeNumber) {
+	static PhongMaterial foodMaterial(GameVariant gameType, int mazeNumber) {
 		return new PhongMaterial(foodColor(gameType, mazeNumber));
 	}
 
@@ -110,7 +110,7 @@ class Assets3D {
 		return wallMaterials[new Random().nextInt(wallMaterials.length)];
 	}
 
-	static AmbientLight ambientLight(GameType gameType, int mazeNumber) {
+	static AmbientLight ambientLight(GameVariant gameType, int mazeNumber) {
 		return new AmbientLight(mazeColor(gameType, mazeNumber));
 	}
 

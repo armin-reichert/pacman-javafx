@@ -1,6 +1,6 @@
 package de.amr.games.pacman.ui.fx.mspacman;
 
-import static de.amr.games.pacman.model.common.GameType.MS_PACMAN;
+import static de.amr.games.pacman.model.common.GameVariant.MS_PACMAN;
 
 import de.amr.games.pacman.ui.fx.common.scene2d.Assets2D;
 import de.amr.games.pacman.ui.fx.common.scene2d.PlayScene2D;

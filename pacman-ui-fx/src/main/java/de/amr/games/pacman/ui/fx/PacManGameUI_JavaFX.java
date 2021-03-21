@@ -10,7 +10,7 @@ import java.util.Set;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.GameType;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
 import de.amr.games.pacman.ui.fx.common.Env;
@@ -71,7 +71,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		stage.setOnCloseRequest(e -> Platform.exit());
 		stage.setScene(mainScene);
 
-		GameScene startScene = createGameScene(controller.selectedGameType(), controller.state, controller.selectedGame(),
+		GameScene startScene = createGameScene(controller.gameVariant(), controller.state, controller.selectedGame(),
 				Env.$use3DScenes.get());
 		changeGameScene(null, startScene);
 
@@ -80,7 +80,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private void handleGameStateChange(PacManGameState oldState, PacManGameState newState) {
-		GameType gameType = controller.selectedGameType();
+		GameVariant gameType = controller.gameVariant();
 		GameModel game = controller.selectedGame();
 		boolean _3D = Env.$use3DScenes.get();
 		log("Handle game state change %s to %s", oldState, newState);
@@ -90,7 +90,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		currentGameScene.onGameStateChange(oldState, newState);
 	}
 
-	private void selectScene(GameType gameType, PacManGameState gameState, GameModel game, boolean _3D) {
+	private void selectScene(GameVariant gameType, PacManGameState gameState, GameModel game, boolean _3D) {
 		Optional<GameScene> nextScene = scenesCreated.stream()
 				.filter(scene -> SceneFactory.isSuitableScene(scene, gameType, gameState, game, _3D)).findFirst();
 		if (nextScene.isPresent()) {
@@ -103,7 +103,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 	}
 
-	private GameScene createGameScene(GameType gameType, PacManGameState gameState, GameModel game, boolean _3D) {
+	private GameScene createGameScene(GameVariant gameType, PacManGameState gameState, GameModel game, boolean _3D) {
 		GameScene scene = SceneFactory.createGameScene(stage, gameType, gameState, game, _3D);
 		scene.setController(controller);
 		scene.setAvailableSize(mainScene.getWidth(), mainScene.getHeight());
@@ -160,7 +160,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			}
 			break;
 		case V:
-			controller.toggleGameType();
+			controller.toggleGameVariant();
 			break;
 		case S:
 			if (control) {
@@ -190,7 +190,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private void toggleUse3DScenes() {
 		Env.$use3DScenes.set(!Env.$use3DScenes.get());
-		GameType gameType = controller.selectedGameType();
+		GameVariant gameType = controller.gameVariant();
 		GameModel game = controller.selectedGame();
 		if (SceneFactory.hasDifferentSceneFor3D(gameType, controller.state, game)) {
 			selectScene(gameType, controller.state, game, Env.$use3DScenes.get());
@@ -252,7 +252,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public Optional<SoundManager> sound() {
-		return Optional.of(Assets2D.SOUND.get(controller.selectedGameType()));
+		return Optional.of(Assets2D.SOUND.get(controller.gameVariant()));
 	}
 
 	@Override
