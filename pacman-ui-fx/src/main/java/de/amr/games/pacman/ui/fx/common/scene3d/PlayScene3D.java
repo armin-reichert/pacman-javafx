@@ -22,7 +22,6 @@ import de.amr.games.pacman.ui.fx.common.GameScene;
 import de.amr.games.pacman.ui.fx.common.scene2d.Assets2D;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
-import javafx.animation.SequentialTransition;
 import javafx.scene.AmbientLight;
 import javafx.scene.Camera;
 import javafx.scene.Group;
@@ -236,10 +235,10 @@ public class PlayScene3D implements GameScene {
 			energizers.forEach(Energizer3D::startPumping);
 		}
 		if (newState == PacManGameState.LEVEL_COMPLETE) {
-			playLevelCompleteAnimation(oldState);
+			playLevelCompleteAnimation();
 		}
 		if (newState == PacManGameState.LEVEL_STARTING) {
-			playLevelStartingAnimation(newState);
+			playLevelStartingAnimation();
 		}
 	}
 
@@ -255,29 +254,21 @@ public class PlayScene3D implements GameScene {
 		}
 	}
 
-	private void playLevelCompleteAnimation(PacManGameState state) {
+	private void playLevelCompleteAnimation() {
 		GameModel game = gameController.selectedGame();
+		game.player.visible = false;
+		game.ghosts().forEach(ghost -> ghost.visible = false);
+		gameController.userInterface.showFlashMessage(
+				String.format("%s!\n\nLevel %d complete.", CONGRATS[new Random().nextInt(CONGRATS.length)], game.levelNumber),
+				2);
+
 		gameController.timer().reset();
-
-		PauseTransition pause = new PauseTransition(Duration.seconds(2));
-		pause.setOnFinished(e -> {
-			game.player.visible = false;
-			game.ghosts().forEach(ghost -> ghost.visible = false);
-			gameController.userInterface.showFlashMessage(
-					String.format("%s!\n\nLevel %d complete.", CONGRATS[new Random().nextInt(CONGRATS.length)], game.levelNumber),
-					3);
-		});
-
-		ScaleTransition animation = new ScaleTransition(Duration.seconds(3), tgMaze);
-		animation.setFromZ(1);
-		animation.setToZ(0);
-
-		SequentialTransition seq = new SequentialTransition(pause, animation);
-		seq.setOnFinished(e -> gameController.letCurrentGameStateExpire());
-		seq.play();
+		PauseTransition pause = new PauseTransition(Duration.seconds(3));
+		pause.setOnFinished(e -> gameController.letCurrentGameStateExpire());
+		pause.play();
 	}
 
-	private void playLevelStartingAnimation(PacManGameState state) {
+	private void playLevelStartingAnimation() {
 		gameController.timer().reset();
 		gameController.userInterface.showFlashMessage("Entering Level " + gameController.selectedGame().levelNumber);
 
