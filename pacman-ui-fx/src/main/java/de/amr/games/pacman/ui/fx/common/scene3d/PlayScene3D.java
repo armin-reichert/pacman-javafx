@@ -30,7 +30,6 @@ import javafx.scene.SubScene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -116,9 +115,8 @@ public class PlayScene3D implements GameScene {
 		livesCounter3D = new LivesCounter3D(game.player, 1, 1);
 
 		tgMaze = new Group();
-		// center over origin
-		tgMaze.getTransforms()
-				.add(new Translate(-GameScene.UNSCALED_SCENE_WIDTH / 2, -GameScene.UNSCALED_SCENE_HEIGHT / 2));
+		tgMaze.setTranslateX(-GameScene.UNSCALED_SCENE_WIDTH / 2);
+		tgMaze.setTranslateY(-GameScene.UNSCALED_SCENE_HEIGHT / 2);
 
 		tgMaze.getChildren().addAll(score3D.getNode(), livesCounter3D.getNode());
 		tgMaze.getChildren().addAll(bricks.stream().map(Brick3D::getNode).collect(Collectors.toList()));
