@@ -2,13 +2,15 @@ package de.amr.games.pacman.ui.fx.common.scene3d;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
+import java.util.function.Supplier;
+
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Pac;
 import javafx.scene.Group;
 import javafx.scene.Node;
 
-public class LivesCounter3D {
+public class LivesCounter3D implements Supplier<Node> {
 
 	private final int numPositions = 5;
 	private final Group root;
@@ -19,10 +21,10 @@ public class LivesCounter3D {
 		for (int i = 0; i < numPositions; ++i) {
 			V2i brickTile = new V2i(x + 2 * i, y);
 			Player3D liveIndicator = new Player3D(pac);
-			liveIndicator.getNode().setTranslateX(brickTile.x * TS);
-			liveIndicator.getNode().setTranslateY(brickTile.y * TS);
-			liveIndicator.getNode().setTranslateZ(-TS); // ???
-			root.getChildren().add(liveIndicator.getNode());
+			liveIndicator.get().setTranslateX(brickTile.x * TS);
+			liveIndicator.get().setTranslateY(brickTile.y * TS);
+			liveIndicator.get().setTranslateZ(-TS); // ???
+			root.getChildren().add(liveIndicator.get());
 		}
 	}
 
@@ -32,7 +34,8 @@ public class LivesCounter3D {
 		}
 	}
 
-	public Node getNode() {
+	@Override
+	public Node get() {
 		return root;
 	}
 }

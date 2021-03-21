@@ -2,6 +2,8 @@ package de.amr.games.pacman.ui.fx.common.scene3d;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
+import java.util.function.Supplier;
+
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import javafx.animation.ScaleTransition;
@@ -16,7 +18,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class Energizer3D {
+public class Energizer3D implements Supplier<Node> {
 
 	private final int radius = 3;
 	private final V2i tile;
@@ -45,7 +47,8 @@ public class Energizer3D {
 		sphere.setVisible(!game.level.isFoodRemoved(tile));
 	}
 
-	public Node getNode() {
+	@Override
+	public Node get() {
 		return sphere;
 	}
 

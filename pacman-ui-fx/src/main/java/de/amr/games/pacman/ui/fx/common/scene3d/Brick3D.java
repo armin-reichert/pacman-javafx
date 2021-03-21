@@ -2,6 +2,8 @@ package de.amr.games.pacman.ui.fx.common.scene3d;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
+import java.util.function.Supplier;
+
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.fx.common.Env;
 import javafx.scene.Node;
@@ -13,7 +15,7 @@ import javafx.scene.shape.Box;
  * 
  * @author Armin Reichert
  */
-public class Brick3D {
+public class Brick3D implements Supplier<Node> {
 
 	private final V2i tile;
 	private final Box block;
@@ -28,7 +30,8 @@ public class Brick3D {
 		block.drawModeProperty().bind(Env.$drawMode);
 	}
 
-	public Node getNode() {
+	@Override
+	public Node get() {
 		return block;
 	}
 

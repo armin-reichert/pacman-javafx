@@ -3,11 +3,13 @@ package de.amr.games.pacman.ui.fx.common.scene3d;
 import static de.amr.games.pacman.lib.Logging.log;
 import static java.util.function.Predicate.not;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.OptionalDouble;
 import java.util.Random;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import de.amr.games.pacman.controller.PacManGameController;
@@ -24,6 +26,7 @@ import javafx.animation.SequentialTransition;
 import javafx.scene.AmbientLight;
 import javafx.scene.Camera;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
 import javafx.scene.SubScene;
@@ -118,18 +121,20 @@ public class PlayScene3D implements GameScene {
 		tgMaze.setTranslateX(-GameScene.UNSCALED_SCENE_WIDTH / 2);
 		tgMaze.setTranslateY(-GameScene.UNSCALED_SCENE_HEIGHT / 2);
 
-		tgMaze.getChildren().addAll(score3D.getNode(), livesCounter3D.getNode());
-		tgMaze.getChildren().addAll(bricks.stream().map(Brick3D::getNode).collect(Collectors.toList()));
-		tgMaze.getChildren().addAll(energizers.stream().map(Energizer3D::getNode).collect(Collectors.toList()));
-		tgMaze.getChildren().addAll(pellets.stream().map(Pellet3D::getNode).collect(Collectors.toList()));
-		tgMaze.getChildren().addAll(player.getNode());
-		tgMaze.getChildren().addAll(ghosts3D.values().stream().map(Ghost3D::getNode).collect(Collectors.toList()));
-
-		tgMaze.getChildren().add(ambientLight);
-		tgMaze.getChildren().add(pointLight);
+		tgMaze.getChildren().addAll(score3D.get(), livesCounter3D.get());
+		tgMaze.getChildren().addAll(collect(bricks));
+		tgMaze.getChildren().addAll(collect(energizers));
+		tgMaze.getChildren().addAll(collect(pellets));
+		tgMaze.getChildren().addAll(player.get());
+		tgMaze.getChildren().addAll(collect(ghosts3D.values()));
+		tgMaze.getChildren().addAll(ambientLight, pointLight);
 
 		coordSystem = new CoordinateSystem(150);
 		fxScene.setRoot(new Group(coordSystem.getNode(), tgMaze));
+	}
+
+	private Collection<Node> collect(Collection<? extends Supplier<Node>> items) {
+		return items.stream().map(Supplier::get).collect(Collectors.toList());
 	}
 
 	@Override
@@ -191,8 +196,8 @@ public class PlayScene3D implements GameScene {
 
 	private void updateCamera() {
 		if (getActiveCamera() == moveableCamera) {
-			double x = Math.min(10, lerp(moveableCamera.getTranslateX(), player.getNode().getTranslateX()));
-			double y = Math.max(50, lerp(moveableCamera.getTranslateY(), player.getNode().getTranslateY()));
+			double x = Math.min(10, lerp(moveableCamera.getTranslateX(), player.get().getTranslateX()));
+			double y = Math.max(50, lerp(moveableCamera.getTranslateY(), player.get().getTranslateY()));
 			moveableCamera.setTranslateX(x);
 			moveableCamera.setTranslateY(y);
 		}
@@ -206,9 +211,9 @@ public class PlayScene3D implements GameScene {
 	public void update() {
 		GameModel game = gameController.selectedGame();
 		score3D.update(game);
-		score3D.getNode().setRotationAxis(Rotate.X_AXIS);
-		score3D.getNode().setRotate(getActiveCamera().getRotate());
-		livesCounter3D.getNode().setVisible(!gameController.isAttractMode());
+		score3D.get().setRotationAxis(Rotate.X_AXIS);
+		score3D.get().setRotate(getActiveCamera().getRotate());
+		livesCounter3D.get().setVisible(!gameController.isAttractMode());
 		livesCounter3D.update(game);
 		energizers.forEach(energizer3D -> energizer3D.update(game));
 		pellets.forEach(pellet3D -> pellet3D.update(game));

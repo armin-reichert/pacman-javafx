@@ -2,6 +2,8 @@ package de.amr.games.pacman.ui.fx.common.scene3d;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
+import java.util.function.Supplier;
+
 import de.amr.games.pacman.model.common.GameModel;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -10,7 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class ScoreNotReally3D {
+public class ScoreNotReally3D implements Supplier<Node> {
 
 	private final Group root;
 	private final Text txtScore;
@@ -48,7 +50,8 @@ public class ScoreNotReally3D {
 		root = new Group(grid);
 	}
 
-	public Node getNode() {
+	@Override
+	public Node get() {
 		return root;
 	}
 

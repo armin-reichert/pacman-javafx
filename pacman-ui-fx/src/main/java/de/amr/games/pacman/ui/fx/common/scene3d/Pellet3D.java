@@ -2,6 +2,8 @@ package de.amr.games.pacman.ui.fx.common.scene3d;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
+import java.util.function.Supplier;
+
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import javafx.scene.Node;
@@ -13,7 +15,7 @@ import javafx.scene.shape.Sphere;
  * 
  * @author Armin Reichert
  */
-public class Pellet3D {
+public class Pellet3D implements Supplier<Node> {
 
 	private final int radius = 1;
 	private final V2i tile;
@@ -32,7 +34,8 @@ public class Pellet3D {
 		sphere.setVisible(!game.level.isFoodRemoved(tile));
 	}
 
-	public Node getNode() {
+	@Override
+	public Node get() {
 		return sphere;
 	}
 

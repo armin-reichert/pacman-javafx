@@ -2,6 +2,8 @@ package de.amr.games.pacman.ui.fx.common.scene3d;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
+import java.util.function.Supplier;
+
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.fx.common.Env;
 import javafx.scene.Group;
@@ -17,7 +19,7 @@ import javafx.scene.transform.Translate;
  * 
  * @author Armin Reichert
  */
-public class Player3D {
+public class Player3D implements Supplier<Node> {
 
 	private final Pac pac;
 	private final Node root;
@@ -41,7 +43,8 @@ public class Player3D {
 		Assets3D.scale(root, TS);
 	}
 
-	public Node getNode() {
+	@Override
+	public Node get() {
 		return root;
 	}
 

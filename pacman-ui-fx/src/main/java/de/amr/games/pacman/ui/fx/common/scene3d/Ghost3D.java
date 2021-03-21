@@ -2,6 +2,8 @@ package de.amr.games.pacman.ui.fx.common.scene3d;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
+import java.util.function.Supplier;
+
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
@@ -22,7 +24,7 @@ import javafx.scene.transform.Translate;
  * 
  * @author Armin Reichert
  */
-public class Ghost3D {
+public class Ghost3D implements Supplier<Node> {
 
 	private final Ghost ghost;
 	private Group root;
@@ -76,7 +78,8 @@ public class Ghost3D {
 		pearlChain.getTransforms().add(new Translate(-3, 0, 0));
 	}
 
-	public Node getNode() {
+	@Override
+	public Node get() {
 		return root;
 	}
 
