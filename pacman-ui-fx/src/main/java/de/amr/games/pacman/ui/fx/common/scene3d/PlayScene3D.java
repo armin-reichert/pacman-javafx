@@ -94,7 +94,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void buildSceneGraph() {
-		final GameVariant gameType = gameController.gameVariant();
+		final GameVariant gameVariant = gameController.gameVariant();
 		final GameModel game = gameController.selectedGame();
 
 		bricks = game.level.world.tiles()//
@@ -102,15 +102,16 @@ public class PlayScene3D implements GameScene {
 				.map(tile -> new Brick3D(tile, Assets3D.randomWallMaterial()))//
 				.collect(Collectors.toList());
 
-		PhongMaterial foodMaterial = Assets3D.foodMaterial(gameType, game.level.mazeNumber);
+		PhongMaterial foodMaterial = Assets3D.foodMaterial(gameVariant, game.level.mazeNumber);
 
-		energizers = game.level.world.energizerTiles().map(tile -> new Energizer3D(tile, foodMaterial))
+		energizers = game.level.world.energizerTiles()//
+				.map(tile -> new Energizer3D(tile, foodMaterial))//
 				.collect(Collectors.toList());
 
 		pellets = game.level.world.tiles()//
 				.filter(game.level.world::isFoodTile)//
-				.filter(not(game.level.world::isEnergizerTile)).map(tile -> new Pellet3D(tile, foodMaterial))
-				.collect(Collectors.toList());
+				.filter(not(game.level.world::isEnergizerTile))//
+				.map(tile -> new Pellet3D(tile, foodMaterial)).collect(Collectors.toList());
 
 		player = new Player3D(game.player);
 		ghosts3D = game.ghosts().collect(Collectors.toMap(Function.identity(), Ghost3D::new));
@@ -204,7 +205,7 @@ public class PlayScene3D implements GameScene {
 		}
 	}
 
-	private double lerp(double current, double target) {
+	private static double lerp(double current, double target) {
 		return current + (target - current) * 0.02;
 	}
 
@@ -255,17 +256,16 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void playLevelCompleteAnimation(PacManGameState state) {
+		GameModel game = gameController.selectedGame();
 		gameController.timer().reset();
-
-		String randomCongrats = CONGRATS[new Random().nextInt(CONGRATS.length)];
 
 		PauseTransition pause = new PauseTransition(Duration.seconds(2));
 		pause.setOnFinished(e -> {
-			GameModel game = gameController.selectedGame();
 			game.player.visible = false;
 			game.ghosts().forEach(ghost -> ghost.visible = false);
 			gameController.userInterface.showFlashMessage(
-					String.format("%s!\n\nLevel %d complete.", randomCongrats, gameController.selectedGame().levelNumber), 3);
+					String.format("%s!\n\nLevel %d complete.", CONGRATS[new Random().nextInt(CONGRATS.length)], game.levelNumber),
+					3);
 		});
 
 		ScaleTransition animation = new ScaleTransition(Duration.seconds(3), tgMaze);
@@ -273,23 +273,19 @@ public class PlayScene3D implements GameScene {
 		animation.setToZ(0);
 
 		SequentialTransition seq = new SequentialTransition(pause, animation);
-		seq.setOnFinished(e -> {
-			gameController.letCurrentGameStateExpire();
-		});
+		seq.setOnFinished(e -> gameController.letCurrentGameStateExpire());
 		seq.play();
 	}
 
 	private void playLevelStartingAnimation(PacManGameState state) {
-		log("%s: play level starting animation", this);
 		gameController.timer().reset();
 		gameController.userInterface.showFlashMessage("Entering Level " + gameController.selectedGame().levelNumber);
+
 		ScaleTransition animation = new ScaleTransition(Duration.seconds(3), tgMaze);
 		animation.setDelay(Duration.seconds(2));
 		animation.setFromZ(0);
 		animation.setToZ(1);
-		animation.setOnFinished(e -> {
-			gameController.letCurrentGameStateExpire();
-		});
+		animation.setOnFinished(e -> gameController.letCurrentGameStateExpire());
 		animation.play();
 	}
 }
