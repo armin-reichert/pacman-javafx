@@ -18,6 +18,7 @@ import de.amr.games.pacman.model.common.GameType;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx.common.CameraController;
 import de.amr.games.pacman.ui.fx.common.GameScene;
+import de.amr.games.pacman.ui.fx.common.scene2d.Assets2D;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
@@ -52,6 +53,8 @@ public class PlayScene3D implements GameScene {
 
 	private PacManGameController gameController;
 
+	private AmbientLight ambientLight = new AmbientLight(Color.AZURE);
+	private PointLight pointLight = new PointLight(Color.AZURE);
 	private CoordinateSystem coordSystem;
 	private Group tgMaze;
 	private Player3D player;
@@ -66,7 +69,7 @@ public class PlayScene3D implements GameScene {
 		staticCamera = new PerspectiveCamera(true);
 		moveableCamera = new PerspectiveCamera(true);
 		fxScene = new SubScene(new Group(), stage.getScene().getWidth(), stage.getScene().getHeight());
-		fxScene.setFill(Color.BLACK);
+		fxScene.setFill(Color.rgb(20, 20, 60));
 		useStaticCamera();
 		cameraController = new CameraController(staticCamera);
 		// TODO why doesn't subscene get key events?
@@ -125,15 +128,10 @@ public class PlayScene3D implements GameScene {
 		tgMaze.getChildren().addAll(player.getNode());
 		tgMaze.getChildren().addAll(ghosts3D.values().stream().map(Ghost3D::getNode).collect(Collectors.toList()));
 
-		AmbientLight ambientLight = Assets3D.ambientLight(gameType, game.level.mazeNumber);
 		tgMaze.getChildren().add(ambientLight);
-
-		PointLight pointLight = new PointLight(Color.AZURE);
-		pointLight.setTranslateZ(-500);
 		tgMaze.getChildren().add(pointLight);
 
 		coordSystem = new CoordinateSystem(150);
-
 		fxScene.setRoot(new Group(coordSystem.getNode(), tgMaze));
 	}
 
@@ -225,6 +223,9 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onGameStateChange(PacManGameState oldState, PacManGameState newState) {
+		if (newState == PacManGameState.READY || oldState == PacManGameState.LEVEL_COMPLETE) {
+			setSceneColor();
+		}
 		if (oldState == PacManGameState.HUNTING) {
 			energizers.forEach(Energizer3D::stopPumping);
 		}
@@ -236,6 +237,18 @@ public class PlayScene3D implements GameScene {
 		}
 		if (newState == PacManGameState.LEVEL_STARTING) {
 			playLevelStartingAnimation(newState);
+		}
+	}
+
+	private void setSceneColor() {
+		if (gameController.selectedGameType() == GameType.PACMAN) {
+			Color color = Color.rgb(20, 20, 60);
+			fxScene.setFill(color);
+			ambientLight.setColor(Color.AZURE);
+		} else {
+			Color mazeColor = Assets2D.getMazeWallColor(gameController.selectedGame().level.mazeNumber);
+//			fxScene.setFill(mazeColor);
+			ambientLight.setColor(mazeColor);
 		}
 	}
 
