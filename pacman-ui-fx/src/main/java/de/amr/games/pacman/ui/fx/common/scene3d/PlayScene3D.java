@@ -32,6 +32,7 @@ import javafx.scene.PointLight;
 import javafx.scene.SubScene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -101,14 +102,14 @@ public class PlayScene3D implements GameScene {
 				.map(tile -> new Brick3D(tile, Assets3D.randomWallMaterial()))//
 				.collect(Collectors.toList());
 
-		energizers = game.level.world.energizerTiles()
-				.map(tile -> new Energizer3D(tile, Assets3D.foodMaterial(gameType, game.level.mazeNumber)))
+		PhongMaterial foodMaterial = Assets3D.foodMaterial(gameType, game.level.mazeNumber);
+
+		energizers = game.level.world.energizerTiles().map(tile -> new Energizer3D(tile, foodMaterial))
 				.collect(Collectors.toList());
 
 		pellets = game.level.world.tiles()//
 				.filter(game.level.world::isFoodTile)//
-				.filter(not(game.level.world::isEnergizerTile))
-				.map(tile -> new Pellet3D(tile, Assets3D.foodMaterial(gameType, game.level.mazeNumber)))
+				.filter(not(game.level.world::isEnergizerTile)).map(tile -> new Pellet3D(tile, foodMaterial))
 				.collect(Collectors.toList());
 
 		player = new Player3D(game.player);
@@ -221,7 +222,6 @@ public class PlayScene3D implements GameScene {
 		game.ghosts().map(ghosts3D::get).forEach(Ghost3D::update);
 		updateCamera();
 	}
-	// State change handlers
 
 	@Override
 	public void onGameStateChange(PacManGameState oldState, PacManGameState newState) {
