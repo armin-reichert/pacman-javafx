@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
@@ -114,7 +113,7 @@ public class PlayScene3D implements GameScene {
 		ghosts3D = game.ghosts().collect(Collectors.toMap(Function.identity(), Ghost3D::new));
 
 		score3D = new ScoreNotReally3D();
-		livesCounter3D = new LivesCounter3D(game.player, bricks, new V2i(1, 1));
+		livesCounter3D = new LivesCounter3D(game.player, 1, 1);
 
 		tgMaze = new Group();
 		// center over origin
