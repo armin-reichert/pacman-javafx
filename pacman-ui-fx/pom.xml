@@ -42,7 +42,7 @@
 				<artifactId>javafx-maven-plugin</artifactId>
 				<version>0.0.5</version>
 				<configuration>
-					<mainClass>de.amr.games.pacman.ui.fx.PacManGameAppFX</mainClass>
+					<mainClass>de.amr.games.pacman.ui.fx.app.PacManGameAppFX</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>
