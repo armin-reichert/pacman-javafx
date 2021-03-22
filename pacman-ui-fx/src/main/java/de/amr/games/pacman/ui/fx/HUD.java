@@ -3,6 +3,7 @@ package de.amr.games.pacman.ui.fx;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.ui.fx.scenes.common.Env;
 import de.amr.games.pacman.ui.fx.scenes.common.scene2d.AbstractGameScene2D;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Camera;
 import javafx.scene.layout.HBox;
@@ -25,11 +26,16 @@ public class HUD extends HBox {
 		getChildren().add(textView);
 		visibleProperty().bind(Env.$infoViewVisible);
 		StackPane.setAlignment(this, dockingPosition);
+		StackPane.setMargin(this, new Insets(10));
 	}
 
 	private void line(String column1, String fmtColumn2, Object... args) {
 		String column2 = String.format(fmtColumn2, args) + "\n";
-		text += String.format("%-12s: %s", column1, column2);
+		text += String.format("%-20s: %s", column1, column2);
+	}
+
+	private void line() {
+		text += "\n";
 	}
 
 	private String cameraInfo(Camera camera) {
@@ -40,27 +46,34 @@ public class HUD extends HBox {
 
 	public void update() {
 		text = "";
+		line("Paused (CTRL+P)", "%s", Env.$paused.get() ? "YES" : "NO");
+		line();
 		line("Game Variant", "%s", ui.controller.gameVariant());
+		line("Playing", "%s", ui.controller.isPlaying() ? "YES" : "NO");
+		line("Game Level", "%d", ui.controller.game().levelNumber);
 		line("Game State", "%s", ui.controller.state);
 		TickTimer stateTimer = ui.controller.timer();
 		line("", "Running:   %s", stateTimer.ticked());
 		line("", "Remaining: %s",
 				stateTimer.ticksRemaining() == Long.MAX_VALUE ? "indefinite" : stateTimer.ticksRemaining());
-		line("Level", "%d", ui.controller.game().levelNumber);
-		line("Paused", "%s (Key CTRL+P)", Env.$paused.get() ? "YES" : "NO");
-		line("Window", "w=%.0f h=%.0f", ui.mainScene.getWindow().getWidth(), ui.mainScene.getWindow().getHeight());
-		line("Main scene", "w=%.0f h=%.0f", ui.mainScene.getWidth(), ui.mainScene.getHeight());
-		line("Game scene:", "%s", ui.currentGameScene.getClass().getSimpleName());
-		line("", "w=%.0f h=%.0f", ui.currentGameScene.getFXSubScene().getWidth(),
+		line();
+		line("Autopilot (A)", "%s", ui.controller.autopilot.enabled ? "ON" : "OFF");
+		line("Immunity (I)", "%s", ui.controller.game().player.immune ? "ON" : "OFF");
+		line();
+		line("Window Size", "w=%.0f h=%.0f", ui.mainScene.getWindow().getWidth(), ui.mainScene.getWindow().getHeight());
+		line("Main Scene Size", "w=%.0f h=%.0f", ui.mainScene.getWidth(), ui.mainScene.getHeight());
+		line("3D Scenes (CTRL+3)", "%s", Env.$use3DScenes.get() ? "ON" : "OFF");
+		line();
+		line("Game Scene", "%s", ui.currentGameScene.getClass().getSimpleName());
+		line("Game Scene Size", "w=%.0f h=%.0f", ui.currentGameScene.getFXSubScene().getWidth(),
 				ui.currentGameScene.getFXSubScene().getHeight());
 		if (ui.currentGameScene instanceof AbstractGameScene2D) {
 			AbstractGameScene2D scene2D = (AbstractGameScene2D) ui.currentGameScene;
 			line("Canvas2D", "w=%.0f h=%.0f", scene2D.getCanvas().getWidth(), scene2D.getCanvas().getHeight());
+		} else {
+			line("3D Camera (CTRL+S)", "%s", cameraInfo(ui.currentGameScene.getActiveCamera()));
+			line("3D Draw Mode (CTRL+L)", "%s", Env.$drawMode.get());
 		}
-		line("Camera", "%s (CTRL+S)", cameraInfo(ui.currentGameScene.getActiveCamera()));
-		line("Autopilot", "%s (Key A)", ui.controller.autopilot.enabled ? "ON" : "OFF");
-		line("Immunity", "%s (Key I)", ui.controller.game().player.immune ? "ON" : "OFF");
-		line("3D scenes", "%s (Key CTRL+3)", Env.$use3DScenes.get() ? "ON" : "OFF");
 		textView.setText(text);
 	}
 }
