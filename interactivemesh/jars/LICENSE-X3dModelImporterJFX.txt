@@ -1,0 +1,26 @@
+   
+X3dModelImporterJFX - jimX3dModelImporterJFX.jar 
+
+Copyright (c) 2013 August Lammersdorf, InteractiveMesh e.K.. All rights reserved.
+
+InteractiveMesh e.K.
+August Lammersdorf
+Hauptstraﬂe 28d
+85737 Ismaning
+Germany / Munich Area
+www.InteractiveMesh.com/org
+                                   
+License Agreement
+
+By installing, copying, or otherwise using the Software, you agree to be bound by the terms of this Agreement. If you do not agree to the terms of this Agreement, do not install or use the Software.
+
+The copyright holder grants to you a non-exclusive, perpetual, irrevocable, and worldwide right to use the Software. It is provided to you free of charge for academic, commercial, and personal use.
+
+You may not remove any copyright, license, or other proprietary notice from the Software.
+
+No parts of the Software may be reproduced in part or in whole. You may not reverse engineer, decompile, or disassemble the Software or prepare derivative works of it.
+
+THIS PROGRAM IS PROVIDED "AS IS", WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EIHTER EXPRESS OR IMPLIED, INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OR CONDITIONS OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE. YOU ARE SOLELY RESPONSIBLE FOR DETERMINING THE APPROPRIATENESS OF USING THE PROGRAM AND ASSUME ANY RISKS ASSOCIATED WITH YOUR EXERCISE OF PERMISSIONS UNDER THIS LICENSE.
+
+IN NO EVENT AND UNDER NO LEGAL THEORY, WHETHER IN TORT, CONTRACT, OR OTHERWISE, UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING, SHALL THE COPYRIGHT HOLDER BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES OF ANY CHARACTER ARISING AS A RESULT OF THIS LICENSE OR OUT THE USE OR INABILITY TO USE THE PROGRAM, EVEN IF THE COPYRIGHT HOLDER HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+

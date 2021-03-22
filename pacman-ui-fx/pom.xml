@@ -23,8 +23,8 @@
 		</dependency>
 		<dependency>
 			<groupId>com.interactivemesh</groupId>
-			<artifactId>jimModelImporterJFX</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<artifactId>jimObjModelImporterJFX</artifactId>
+			<version>1.0</version>
 		</dependency>
 	</dependencies>
 	<build>

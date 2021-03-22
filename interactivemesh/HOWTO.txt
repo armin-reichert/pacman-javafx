@@ -1,0 +1,7 @@
+See:
+https://www.eviltester.com/2017/10/maven-local-dependencies.html#install-jar-locally-to-your-m2-repository)
+https://stackoverflow.com/questions/4955635/how-to-add-local-jar-files-to-a-maven-project
+
+To create a Maven artifact for the OBJ importer, run:
+
+mvn install:install-file -Dfile=jars/jimObjModelImporterJFX.jar -DpomFile=pom.xml
