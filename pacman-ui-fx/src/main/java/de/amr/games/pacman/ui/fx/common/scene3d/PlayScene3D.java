@@ -163,11 +163,6 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public void end() {
-		log("Play scene %s: end", this);
-	}
-
-	@Override
 	public void useMoveableCamera(boolean on) {
 		if (on) {
 			useMoveableCamera();

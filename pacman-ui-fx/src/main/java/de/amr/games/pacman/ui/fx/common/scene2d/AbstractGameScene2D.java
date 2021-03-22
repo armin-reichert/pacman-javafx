@@ -19,7 +19,6 @@ import javafx.scene.transform.Scale;
  */
 public abstract class AbstractGameScene2D implements GameScene {
 
-	protected final double aspectRatio;
 	protected final SubScene scene;
 	protected final Canvas canvas;
 	protected final GraphicsContext gc;
@@ -31,7 +30,6 @@ public abstract class AbstractGameScene2D implements GameScene {
 	public AbstractGameScene2D(PacManGameRendering2D rendering, SoundManager sounds) {
 		this.rendering = rendering;
 		this.sounds = sounds;
-		aspectRatio = UNSCALED_SCENE_WIDTH / UNSCALED_SCENE_HEIGHT;
 		canvas = new Canvas(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT);
 		gc = canvas.getGraphicsContext2D();
 		Group group = new Group(canvas);
@@ -56,16 +54,12 @@ public abstract class AbstractGameScene2D implements GameScene {
 
 	@Override
 	public void setAvailableSize(double width, double height) {
-		width = aspectRatio * height;
+		width = aspectRatio().getAsDouble() * height;
 		canvas.setWidth(width);
 		canvas.setHeight(height);
 		double scaling = height / UNSCALED_SCENE_HEIGHT;
 		canvas.getTransforms().clear();
 		canvas.getTransforms().add(new Scale(scaling, scaling));
-	}
-
-	public double getAspectRatio() {
-		return aspectRatio;
 	}
 
 	public void clearCanvas() {

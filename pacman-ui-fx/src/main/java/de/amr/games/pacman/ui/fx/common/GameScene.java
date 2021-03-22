@@ -24,7 +24,8 @@ public interface GameScene {
 
 	void update();
 
-	void end();
+	default void end() {
+	}
 
 	void setController(PacManGameController controller);
 
