@@ -22,7 +22,7 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 	@Override
 	public void start() {
-		sceneController = new PacMan_IntermissionScene2_Controller(controller, rendering, sounds);
+		sceneController = new PacMan_IntermissionScene2_Controller(gameController, rendering, sounds);
 		sceneController.start();
 	}
 
@@ -33,7 +33,7 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 	@Override
 	public void update() {
 		sceneController.update();
-		rendering.drawLevelCounter(gc, controller.game(), t(25), t(34));
+		rendering.drawLevelCounter(gc, gameController.game(), t(25), t(34));
 		rendering.drawNail(gc, sceneController.nail);
 		rendering.drawPlayer(gc, sceneController.pac);
 		if (sceneController.nailDistance() < 0) {

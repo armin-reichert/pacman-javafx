@@ -20,6 +20,7 @@ import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx.common.CameraController;
 import de.amr.games.pacman.ui.fx.common.GameScene;
 import de.amr.games.pacman.ui.fx.common.scene2d.Assets2D;
+import de.amr.games.pacman.ui.sound.PacManGameSound;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.scene.AmbientLight;
@@ -214,7 +215,7 @@ public class PlayScene3D implements GameScene {
 		score3D.update(game);
 		score3D.get().setRotationAxis(Rotate.X_AXIS);
 		score3D.get().setRotate(getActiveCamera().getRotate());
-		livesCounter3D.get().setVisible(!gameController.isAttractMode());
+		livesCounter3D.get().setVisible(gameController.isPlaying());
 		livesCounter3D.update(game);
 		energizers.forEach(energizer3D -> energizer3D.update(game));
 		pellets.forEach(pellet3D -> pellet3D.update(game));
@@ -225,8 +226,15 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onGameStateChange(PacManGameState oldState, PacManGameState newState) {
-		if (newState == PacManGameState.READY || oldState == PacManGameState.LEVEL_COMPLETE) {
+		if (newState == PacManGameState.READY) {
 			setSceneColor();
+			if (gameController.isPlayingRequested()) {
+				gameController.timer().resetSeconds(4.5);
+				// TODO use FX sound
+				Assets2D.SOUND.get(gameController.gameVariant()).play(PacManGameSound.GAME_READY);
+			} else {
+				gameController.timer().resetSeconds(2);
+			}
 		}
 		if (oldState == PacManGameState.HUNTING) {
 			energizers.forEach(Energizer3D::stopPumping);

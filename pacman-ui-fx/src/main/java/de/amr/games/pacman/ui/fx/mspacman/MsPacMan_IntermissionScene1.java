@@ -25,7 +25,7 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 
 	@Override
 	public void start() {
-		sceneController = new MsPacMan_IntermissionScene1_Controller(controller, rendering, sounds);
+		sceneController = new MsPacMan_IntermissionScene1_Controller(gameController, rendering, sounds);
 		sceneController.start();
 	}
 

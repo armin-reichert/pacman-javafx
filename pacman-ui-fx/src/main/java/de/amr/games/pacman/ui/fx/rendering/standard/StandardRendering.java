@@ -277,27 +277,27 @@ public abstract class StandardRendering
 	}
 
 	@Override
-	public void drawScore(GraphicsContext g, GameModel game, boolean titleOnly) {
+	public void drawScore(GraphicsContext g, GameModel game, boolean hiscoreOnly) {
 		g.setFont(getScoreFont());
 		g.translate(0, 2);
 		g.setFill(Color.WHITE);
 		g.fillText("SCORE", t(1), t(1));
 		g.fillText("HIGH SCORE", t(15), t(1));
 		g.translate(0, 1);
-		if (!titleOnly) {
-			Color pointsColor = getMazeWallColor(game.level.mazeNumber - 1);
-			if (pointsColor == Color.BLACK) {
-				pointsColor = Color.YELLOW;
-			}
+		Color pointsColor = getMazeWallColor(game.level.mazeNumber - 1);
+		if (pointsColor == Color.BLACK) {
+			pointsColor = Color.YELLOW;
+		}
+		if (!hiscoreOnly) {
 			g.setFill(pointsColor);
 			g.fillText(String.format("%08d", game.score), t(1), t(2));
 			g.setFill(Color.LIGHTGRAY);
 			g.fillText(String.format("L%02d", game.levelNumber), t(9), t(2));
-			g.setFill(pointsColor);
-			g.fillText(String.format("%08d", game.highscorePoints), t(15), t(2));
-			g.setFill(Color.LIGHTGRAY);
-			g.fillText(String.format("L%02d", game.highscoreLevel), t(23), t(2));
 		}
+		g.setFill(pointsColor);
+		g.fillText(String.format("%08d", game.highscorePoints), t(15), t(2));
+		g.setFill(Color.LIGHTGRAY);
+		g.fillText(String.format("L%02d", game.highscoreLevel), t(23), t(2));
 		g.translate(0, -3);
 	}
 

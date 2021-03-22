@@ -44,7 +44,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 	}
 
 	private void startPlayerDyingAnimation(PacManGameState state) {
-		GameModel game = controller.game();
+		GameModel game = gameController.game();
 		game.ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(TimedSequence::reset);
 		game.ghosts().forEach(ghost -> ghost.visible = false);
 		rendering.playerAnimations().playerDying().restart();
@@ -53,23 +53,23 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	// TODO use FX animation
 	private void runLevelCompleteState(PacManGameState state) {
-		GameModel game = controller.game();
-		if (controller.timer().isRunningSeconds(2)) {
+		GameModel game = gameController.game();
+		if (gameController.timer().isRunningSeconds(2)) {
 			game.ghosts().forEach(ghost -> ghost.visible = false);
 		}
-		if (controller.timer().isRunningSeconds(3)) {
+		if (gameController.timer().isRunningSeconds(3)) {
 			mazeFlashing.restart();
 		}
 		mazeFlashing.animate();
 		if (mazeFlashing.isComplete()) {
-			controller.letCurrentGameStateExpire();
+			gameController.letCurrentGameStateExpire();
 		}
 	}
 
 	@Override
 	public void start() {
 		log("Game scene %s: start", this);
-		GameModel game = controller.game();
+		GameModel game = gameController.game();
 		mazeFlashing = rendering.mazeAnimations().mazeFlashing(game.level.mazeNumber).repetitions(game.level.numFlashes);
 		mazeFlashing.reset();
 		game.player.powerTimer.addEventListener(e -> {
@@ -87,15 +87,20 @@ public class PlayScene2D extends AbstractGameScene2D {
 	public void onGameStateChange(PacManGameState oldState, PacManGameState newState) {
 		// enter READY state
 		if (newState == PacManGameState.READY) {
-			rendering.resetAllAnimations(controller.game());
+			rendering.resetAllAnimations(gameController.game());
+			if (gameController.isPlayingRequested()) {
+				gameController.timer().resetSeconds(4.5);
+				Assets2D.SOUND.get(gameController.gameVariant()).play(PacManGameSound.GAME_READY);
+			} else {
+				gameController.timer().resetSeconds(2);
+			}
 		}
 
 		// enter HUNTING state
 		if (newState == PacManGameState.HUNTING) {
 			rendering.mazeAnimations().energizerBlinking().restart();
-			rendering.playerAnimations().playerMunching(controller.game().player).forEach(TimedSequence::restart);
-			controller.game().ghosts().flatMap(rendering.ghostAnimations()::ghostKicking)
-					.forEach(TimedSequence::restart);
+			rendering.playerAnimations().playerMunching(gameController.game().player).forEach(TimedSequence::restart);
+			gameController.game().ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(TimedSequence::restart);
 		}
 
 		// exit HUNTING state
@@ -115,13 +120,12 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// enter LEVEL_COMPLETE state
 		if (newState == PacManGameState.LEVEL_COMPLETE) {
-			mazeFlashing = rendering.mazeAnimations().mazeFlashing(controller.game().level.mazeNumber);
+			mazeFlashing = rendering.mazeAnimations().mazeFlashing(gameController.game().level.mazeNumber);
 		}
 
 		// enter GAME_OVER state
 		if (newState == PacManGameState.GAME_OVER) {
-			controller.game().ghosts().flatMap(rendering.ghostAnimations()::ghostKicking)
-					.forEach(TimedSequence::reset);
+			gameController.game().ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(TimedSequence::reset);
 		}
 	}
 
@@ -131,32 +135,28 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void update() {
-		if (controller.state == PacManGameState.LEVEL_COMPLETE) {
-			runLevelCompleteState(controller.state);
-		} else if (controller.state == PacManGameState.LEVEL_STARTING) {
-			controller.letCurrentGameStateExpire();
+		if (gameController.state == PacManGameState.LEVEL_COMPLETE) {
+			runLevelCompleteState(gameController.state);
+		} else if (gameController.state == PacManGameState.LEVEL_STARTING) {
+			gameController.letCurrentGameStateExpire();
 		}
 		render();
 	}
 
 	private void render() {
-		GameModel game = controller.game();
+		GameModel game = gameController.game();
 		rendering.drawMaze(gc, game.level.mazeNumber, 0, t(3), mazeFlashing.isRunning());
 		if (!mazeFlashing.isRunning()) {
 			rendering.drawFoodTiles(gc, game.level.world.tiles().filter(game.level.world::isFoodTile),
 					game.level::containsEatenFood);
 			rendering.drawEnergizerTiles(gc, game.level.world.energizerTiles());
 		}
-		if (controller.isAttractMode()) {
-			rendering.drawGameState(gc, game, PacManGameState.GAME_OVER);
-		} else {
-			rendering.drawGameState(gc, game, controller.state);
-		}
+		rendering.drawGameState(gc, game, gameController.isPlaying() ? gameController.state : PacManGameState.GAME_OVER);
 		rendering.drawBonus(gc, game.bonus);
 		rendering.drawPlayer(gc, game.player);
 		game.ghosts().forEach(ghost -> rendering.drawGhost(gc, ghost, game.player.powerTimer.isRunning()));
-		rendering.drawScore(gc, game, controller.state == PacManGameState.INTRO || controller.isAttractMode());
-		if (!controller.isAttractMode()) {
+		rendering.drawScore(gc, game, !gameController.isPlaying());
+		if (gameController.isPlaying() || gameController.isPlayingRequested()) {
 			rendering.drawLivesCounter(gc, game, t(2), t(34));
 		}
 		rendering.drawLevelCounter(gc, game, t(25), t(34));

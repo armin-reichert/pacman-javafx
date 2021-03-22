@@ -26,7 +26,7 @@ public abstract class AbstractGameScene2D implements GameScene {
 	protected final PacManGameRendering2D rendering;
 	protected final SoundManager sounds;
 
-	protected PacManGameController controller;
+	protected PacManGameController gameController;
 
 	public AbstractGameScene2D(PacManGameRendering2D rendering, SoundManager sounds) {
 		this.rendering = rendering;
@@ -42,7 +42,7 @@ public abstract class AbstractGameScene2D implements GameScene {
 
 	@Override
 	public void setController(PacManGameController controller) {
-		this.controller = controller;
+		this.gameController = controller;
 	}
 
 	@Override
