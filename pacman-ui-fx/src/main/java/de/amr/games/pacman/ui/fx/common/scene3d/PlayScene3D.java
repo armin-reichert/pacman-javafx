@@ -94,7 +94,7 @@ public class PlayScene3D implements GameScene {
 
 	private void buildSceneGraph() {
 		final GameVariant gameVariant = gameController.gameVariant();
-		final GameModel game = gameController.selectedGame();
+		final GameModel game = gameController.game();
 
 		bricks = game.level.world.tiles()//
 				.filter(game.level.world::isWall)//
@@ -157,7 +157,7 @@ public class PlayScene3D implements GameScene {
 	public void start() {
 		log("Game scene %s: start", this);
 		// TODO remove again
-		gameController.selectedGame().player.immune = true;
+		gameController.game().player.immune = true;
 		buildSceneGraph();
 	}
 
@@ -210,7 +210,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void update() {
-		GameModel game = gameController.selectedGame();
+		GameModel game = gameController.game();
 		score3D.update(game);
 		score3D.get().setRotationAxis(Rotate.X_AXIS);
 		score3D.get().setRotate(getActiveCamera().getRotate());
@@ -248,14 +248,14 @@ public class PlayScene3D implements GameScene {
 			fxScene.setFill(color);
 			ambientLight.setColor(Color.AZURE);
 		} else {
-			Color mazeColor = Assets2D.getMazeWallColor(gameController.selectedGame().level.mazeNumber);
+			Color mazeColor = Assets2D.getMazeWallColor(gameController.game().level.mazeNumber);
 //			fxScene.setFill(mazeColor);
 			ambientLight.setColor(mazeColor);
 		}
 	}
 
 	private void playLevelCompleteAnimation() {
-		GameModel game = gameController.selectedGame();
+		GameModel game = gameController.game();
 		game.player.visible = false;
 		game.ghosts().forEach(ghost -> ghost.visible = false);
 		gameController.userInterface.showFlashMessage(
@@ -270,7 +270,7 @@ public class PlayScene3D implements GameScene {
 
 	private void playLevelStartingAnimation() {
 		gameController.timer().reset();
-		gameController.userInterface.showFlashMessage("Entering Level " + gameController.selectedGame().levelNumber);
+		gameController.userInterface.showFlashMessage("Entering Level " + gameController.game().levelNumber);
 
 		ScaleTransition animation = new ScaleTransition(Duration.seconds(3), tgMaze);
 		animation.setDelay(Duration.seconds(2));

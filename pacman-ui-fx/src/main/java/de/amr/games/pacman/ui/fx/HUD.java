@@ -41,7 +41,7 @@ public class HUD extends HBox {
 		text = "";
 		line("Game Type", "%s", userInterface.controller.gameVariant());
 		line("Game State", "%s", userInterface.controller.state);
-		line("Level", "%d", userInterface.controller.selectedGame().levelNumber);
+		line("Level", "%d", userInterface.controller.game().levelNumber);
 		line("Paused", "%s (Key CTRL+P)", Env.$paused.get() ? "YES" : "NO");
 		line("Window", "w=%.0f h=%.0f", userInterface.mainScene.getWindow().getWidth(),
 				userInterface.mainScene.getWindow().getHeight());
@@ -55,7 +55,7 @@ public class HUD extends HBox {
 		}
 		line("Camera", "%s (CTRL+S)", cameraInfo(userInterface.currentGameScene.getActiveCamera()));
 		line("Autopilot", "%s (Key A)", userInterface.controller.autopilot.enabled ? "ON" : "OFF");
-		line("Immunity", "%s (Key I)", userInterface.controller.selectedGame().player.immune ? "ON" : "OFF");
+		line("Immunity", "%s (Key I)", userInterface.controller.game().player.immune ? "ON" : "OFF");
 		line("3D scenes", "%s (Key CTRL+3)", Env.$use3DScenes.get() ? "ON" : "OFF");
 		textView.setText(text);
 	}

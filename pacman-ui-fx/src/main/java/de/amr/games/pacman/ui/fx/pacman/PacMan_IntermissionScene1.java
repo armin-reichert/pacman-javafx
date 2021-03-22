@@ -43,6 +43,6 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 			rendering.drawBigPacMan(gc, sceneController.pac);
 			gc.restore();
 		}
-		rendering.drawLevelCounter(gc, controller.selectedGame(), t(25), t(34));
+		rendering.drawLevelCounter(gc, controller.game(), t(25), t(34));
 	}
 }

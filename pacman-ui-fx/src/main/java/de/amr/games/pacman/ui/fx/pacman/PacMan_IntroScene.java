@@ -43,7 +43,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	@Override
 	public void update() {
 		animation.update();
-		rendering.drawScore(gc, controller.selectedGame(), true);
+		rendering.drawScore(gc, controller.game(), true);
 		drawGallery();
 		if (animation.phase == Phase.CHASING_PAC) {
 			if (animation.blinking.animate()) {
