@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.common.scene2d;
+package de.amr.games.pacman.ui.fx.rendering;
 
 import static de.amr.games.pacman.model.common.GameVariant.MS_PACMAN;
 import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
@@ -6,7 +6,6 @@ import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
 import java.util.EnumMap;
 
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.fx.rendering.standard.MsPacMan_StandardRendering;
 import de.amr.games.pacman.ui.fx.rendering.standard.PacMan_StandardRendering;
 import de.amr.games.pacman.ui.fx.sound.PacManGameSoundManager;

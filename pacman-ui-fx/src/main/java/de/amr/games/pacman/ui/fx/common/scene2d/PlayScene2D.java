@@ -9,9 +9,17 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.animation.TimedSequence;
+import de.amr.games.pacman.ui.fx.rendering.Assets2D;
 import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.sound.PacManGameSound;
 import de.amr.games.pacman.ui.sound.SoundManager;
+import javafx.animation.Animation.Status;
+import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.Timeline;
+import javafx.scene.image.Image;
+import javafx.util.Duration;
 
 /**
  * This is where the action is.
@@ -20,33 +28,70 @@ import de.amr.games.pacman.ui.sound.SoundManager;
  */
 public class PlayScene2D extends AbstractGameScene2D {
 
-	private TimedSequence<?> mazeFlashing;
+	private class LevelCompleteAnimation {
+
+		private final SequentialTransition sequence;
+		private final Timeline flashing;
+		private TimedSequence<?> mazeFlashing; // TODO get rid og this
+		private int imageIndex;
+
+		public LevelCompleteAnimation(int numFlashes) {
+			// get the maze images which are displayed alternating to create the flashing effect
+			GameVariant variant = gameController.gameVariant();
+			GameModel game = gameController.game();
+			mazeFlashing = Assets2D.RENDERING_2D.get(variant).mazeAnimations().mazeFlashing(game.level.mazeNumber);
+			imageIndex = 1;
+
+			flashing = new Timeline(new KeyFrame(Duration.millis(150), e -> {
+				imageIndex = (imageIndex + 1) % 2;
+			}));
+			flashing.setCycleCount(2 * numFlashes);
+
+			PauseTransition start = new PauseTransition(Duration.seconds(2));
+			start.setOnFinished(e -> game.player.visible = false);
+			PauseTransition end = new PauseTransition(Duration.seconds(1));
+			sequence = new SequentialTransition(start, flashing, end);
+			sequence.setOnFinished(e -> gameController.letCurrentGameStateExpire());
+		}
+
+		public Image getCurrentMazeImage() {
+			return (Image) mazeFlashing.frame(imageIndex);
+		}
+
+		public void play() {
+			sequence.playFromStart();
+		}
+
+		public boolean isRunning() {
+			return sequence.getStatus() == Status.RUNNING;
+		}
+
+		public Duration getTotalDuration() {
+			return sequence.getTotalDuration();
+		}
+	}
+
+	private LevelCompleteAnimation levelCompleteAnimation;
 
 	public PlayScene2D(PacManGameRendering2D rendering, SoundManager sounds) {
 		super(rendering, sounds);
 	}
 
-	// TODO use FX animation
-	private void runLevelCompleteState(PacManGameState state) {
+	private void playAnimationPlayerDying() {
 		GameModel game = gameController.game();
-		if (gameController.timer().isRunningSeconds(2)) {
+		game.ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(TimedSequence::reset);
+		rendering.playerAnimations().playerDying().delay(120).onStart(() -> {
 			game.ghosts().forEach(ghost -> ghost.visible = false);
-		}
-		if (gameController.timer().isRunningSeconds(3)) {
-			mazeFlashing.restart();
-		}
-		mazeFlashing.animate();
-		if (mazeFlashing.isComplete()) {
-			gameController.letCurrentGameStateExpire();
-		}
+			if (gameController.isPlaying()) {
+				sounds.play(PacManGameSound.PACMAN_DEATH);
+			}
+		}).restart();
 	}
 
 	@Override
 	public void start() {
 		log("Game scene %s: start", this);
 		GameModel game = gameController.game();
-		mazeFlashing = rendering.mazeAnimations().mazeFlashing(game.level.mazeNumber).repetitions(game.level.numFlashes);
-		mazeFlashing.reset();
 		game.player.powerTimer.addEventListener(e -> {
 			if (e.type == TickTimerEvent.Type.HALF_EXPIRED) {
 				game.ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
@@ -85,9 +130,9 @@ public class PlayScene2D extends AbstractGameScene2D {
 			rendering.mazeAnimations().energizerBlinking().reset();
 		}
 
-		// enter PAC_MANDYING state
+		// enter PACMAN_DYING state
 		if (newState == PacManGameState.PACMAN_DYING) {
-			playPlayerDyingAnimation(game);
+			playAnimationPlayerDying();
 		}
 
 		// enter GHOST_DYING state
@@ -97,7 +142,17 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// enter LEVEL_COMPLETE state
 		if (newState == PacManGameState.LEVEL_COMPLETE) {
-			mazeFlashing = rendering.mazeAnimations().mazeFlashing(game.level.mazeNumber);
+			game.ghosts().forEach(ghost -> ghost.visible = false);
+			levelCompleteAnimation = new LevelCompleteAnimation(game.level.numFlashes);
+			double totalDuration = levelCompleteAnimation.getTotalDuration().toSeconds();
+			log("Total LEVEL_COMPLETE animation duration: %f", totalDuration);
+			gameController.timer().resetSeconds(totalDuration);
+			levelCompleteAnimation.play();
+		}
+
+		// enter LEVEL_STARTING state
+		if (newState == PacManGameState.LEVEL_STARTING) {
+			gameController.letCurrentGameStateExpire();
 		}
 
 		// enter GAME_OVER state
@@ -108,22 +163,17 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void update() {
-		if (gameController.state == PacManGameState.LEVEL_COMPLETE) {
-			runLevelCompleteState(gameController.state);
-		} else if (gameController.state == PacManGameState.LEVEL_STARTING) {
-			gameController.letCurrentGameStateExpire();
-		}
 		render(gameController.game());
 	}
 
 	private void render(GameModel game) {
-		if (mazeFlashing.isRunning()) {
-			rendering.drawMaze(gc, game.level.mazeNumber, 0, t(3), true);
-		} else {
+		if (levelCompleteAnimation == null || !levelCompleteAnimation.isRunning()) {
 			rendering.drawMaze(gc, game.level.mazeNumber, 0, t(3), false);
 			rendering.drawFoodTiles(gc, game.level.world.tiles().filter(game.level.world::isFoodTile),
 					game.level::containsEatenFood);
 			rendering.drawEnergizerTiles(gc, game.level.world.energizerTiles());
+		} else {
+			gc.drawImage(levelCompleteAnimation.getCurrentMazeImage(), 0, t(3));
 		}
 		if (gameController.isPlayingRequested() || gameController.isPlaying()) {
 			rendering.drawLivesCounter(gc, game, t(2), t(34));
@@ -137,14 +187,5 @@ public class PlayScene2D extends AbstractGameScene2D {
 		rendering.drawPlayer(gc, game.player);
 		game.ghosts().forEach(ghost -> rendering.drawGhost(gc, ghost, game.player.powerTimer.isRunning()));
 		rendering.drawLevelCounter(gc, game, t(25), t(34));
-	}
-
-	private void playPlayerDyingAnimation(GameModel game) {
-		game.ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(TimedSequence::reset);
-		game.ghosts().forEach(ghost -> ghost.visible = false);
-		rendering.playerAnimations().playerDying().restart();
-		if (gameController.isPlaying()) {
-			sounds.play(PacManGameSound.PACMAN_DEATH);
-		}
 	}
 }

@@ -2,7 +2,7 @@ package de.amr.games.pacman.ui.fx.mspacman;
 
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.common.scene2d.AbstractGameScene2D;
-import de.amr.games.pacman.ui.fx.common.scene2d.Assets2D;
+import de.amr.games.pacman.ui.fx.rendering.Assets2D;
 import de.amr.games.pacman.ui.mspacman.MsPacMan_IntermissionScene2_Controller;
 
 /**
