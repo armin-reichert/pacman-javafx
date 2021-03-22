@@ -4,7 +4,7 @@ import static de.amr.games.pacman.lib.Logging.log;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
-import de.amr.games.pacman.ui.fx.common.Env;
+import de.amr.games.pacman.ui.fx.scenes.common.Env;
 import javafx.animation.AnimationTimer;
 
 class GameLoop extends AnimationTimer {
