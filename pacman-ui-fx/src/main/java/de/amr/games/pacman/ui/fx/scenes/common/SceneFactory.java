@@ -55,31 +55,28 @@ public class SceneFactory {
 		//@formatter:on
 	}
 
-	public static GameScene createGameScene(GameVariant gameType, PacManGameState gameState, GameModel game,
+	private static Class<?> sceneClass(GameVariant gameVariant, PacManGameState gameState, GameModel game, boolean _3D) {
+		return SCENE_CLASSES[gameVariant.ordinal()][gameState == PacManGameState.INTRO ? 0
+				: gameState == PacManGameState.INTERMISSION ? game.intermissionNumber : 4][_3D ? 1 : 0];
+	}
+
+	public static GameScene createGameScene(GameVariant gameVariant, PacManGameState gameState, GameModel game,
 			boolean _3D) {
 		try {
-			return (GameScene) sceneClass(gameType, gameState, game, _3D).getDeclaredConstructor().newInstance();
+			return (GameScene) sceneClass(gameVariant, gameState, game, _3D).getDeclaredConstructor().newInstance();
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException x) {
 			throw new RuntimeException(x);
 		}
 	}
 
-	public static boolean isSuitableScene(GameScene gameScene, GameVariant gameType, PacManGameState gameState,
+	public static boolean isSuitableScene(GameScene gameScene, GameVariant gameVariant, PacManGameState gameState,
 			GameModel game, boolean _3D) {
-		return gameScene != null && gameScene.getClass().equals(sceneClass(gameType, gameState, game, _3D));
+		return gameScene != null && gameScene.getClass() == sceneClass(gameVariant, gameState, game, _3D);
 	}
 
-	public static boolean hasDifferentSceneFor3D(GameVariant gameType, PacManGameState gameState, GameModel game) {
-		return sceneClass(gameType, gameState, game, false) != sceneClass(gameType, gameState, game, true);
+	public static boolean hasDifferentSceneFor3D(GameVariant gameVariant, PacManGameState gameState, GameModel game) {
+		return sceneClass(gameVariant, gameState, game, false) != sceneClass(gameVariant, gameState, game, true);
 	}
 
-	private static Class<?> sceneClass(GameVariant gameType, PacManGameState gameState, GameModel game, boolean _3D) {
-		return SCENE_CLASSES[gameType.ordinal()][sceneIndex(gameState, game)][_3D ? 1 : 0];
-	}
-
-	private static int sceneIndex(PacManGameState gameState, GameModel game) {
-		return gameState == PacManGameState.INTRO ? 0
-				: gameState == PacManGameState.INTERMISSION ? game.intermissionNumber : 4;
-	}
 }
