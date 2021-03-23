@@ -167,6 +167,39 @@ public class PlayScene3D implements GameScene {
 			this.tile = tile;
 			this.i = i;
 		}
+
+		public V2i up() {
+			return new V2i(0, i < 3 ? -1 : 0);
+		}
+
+		public V2i right() {
+			return new V2i(i == 2 || i == 5 || i == 8 ? 1 : 0, 0);
+		}
+
+		public V2i down() {
+			return new V2i(0, i > 5 ? 1 : 0);
+		}
+
+		public V2i left() {
+			return new V2i(i == 0 || i == 3 || i == 6 ? -1 : 0, 0);
+		}
+
+		public V2i up_right() {
+			return up().plus(right());
+		}
+
+		public V2i up_left() {
+			return up().plus(left());
+		}
+
+		public V2i down_right() {
+			return down().plus(right());
+		}
+
+		public V2i down_left() {
+			return down().plus(left());
+		}
+
 	}
 
 	private void buildWalls(Color wallColor) {
@@ -191,18 +224,28 @@ public class PlayScene3D implements GameScene {
 			smallBricks.addAll(small);
 		});
 
-		List<Tile9th> inside = new ArrayList<>();
-		for (Tile9th b : smallBricks) {
-			V2i north = b.tile.plus(0, b.i < 3 ? -1 : 0);
-			V2i east = b.tile.plus(b.i == 2 || b.i == 5 || b.i == 8 ? 1 : 0, 0);
-			V2i south = b.tile.plus(0, b.i > 5 ? 1 : 0);
-			V2i west = b.tile.plus(b.i == 0 || b.i == 3 || b.i == 6 ? -1 : 0, 0);
-			if (game.level.world.isWall(north) && game.level.world.isWall(east) && game.level.world.isWall(south)
-					&& game.level.world.isWall(west)) {
-				inside.add(b);
+		List<Tile9th> removals = new ArrayList<>();
+		for (Tile9th t : smallBricks) {
+			V2i northOf = t.tile.plus(t.up()), eastOf = t.tile.plus(t.right()), southOf = t.tile.plus(t.down()),
+					westOf = t.tile.plus(t.left());
+			if (game.level.world.isWall(northOf) && game.level.world.isWall(eastOf) && game.level.world.isWall(southOf)
+					&& game.level.world.isWall(westOf)) {
+				V2i seOf = t.tile.plus(t.down_right()), swOf = t.tile.plus(t.down_left()), neOf = t.tile.plus(t.up_right()),
+						nwOf = t.tile.plus(t.up_left());
+				if (game.level.world.isWall(seOf) && !game.level.world.isWall(nwOf)) {
+					// keep corner
+				} else if (!game.level.world.isWall(seOf) && game.level.world.isWall(nwOf)) {
+					// keep corner
+				} else if (game.level.world.isWall(swOf) && !game.level.world.isWall(neOf)) {
+					// keep corner
+				} else if (!game.level.world.isWall(swOf) && game.level.world.isWall(neOf)) {
+					// keep corner
+				} else {
+					removals.add(t);
+				}
 			}
 		}
-		smallBricks.removeAll(inside);
+		smallBricks.removeAll(removals);
 
 		PhongMaterial wallMaterial = new PhongMaterial(wallColor);
 		Image texture = Assets3D.randomArea(Assets3D.WALL_TEXTURE, 64, 64);
