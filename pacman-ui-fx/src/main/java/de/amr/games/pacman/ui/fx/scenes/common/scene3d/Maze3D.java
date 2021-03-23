@@ -1,24 +1,17 @@
 package de.amr.games.pacman.ui.fx.scenes.common.scene3d;
 
-import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Deque;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import javafx.scene.Node;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
 
 public class Maze3D {
 
@@ -136,54 +129,8 @@ public class Maze3D {
 			}
 		}
 		brickPositions.removeAll(positionsToRemove);
-
-		PhongMaterial wallMaterial = new PhongMaterial(wallColor);
-		Image texture = Assets3D.randomArea(Assets3D.WALL_TEXTURE, 64, 64);
-		wallMaterial.setBumpMap(texture);
-		wallMaterial.setDiffuseMap(texture);
-
-		bricks = new ArrayList<>();
-		IntStream.range(0, 36 * 3).forEach(yy -> {
-			List<MicroTile> row = brickPositions.stream().filter(t -> yy == 3 * t.tile.y + (t.i / 3))
-					.sorted(Comparator.comparing(t -> t.tile.x)).collect(Collectors.toList());
-			log("Process row of length %d at yy=%d", row.size(), yy);
-			buildRow(row, yy, wallMaterial);
-		});
-	}
-
-	private void buildRow(List<MicroTile> row, int yy, PhongMaterial wallMaterial) {
-		if (row.size() == 0) {
-			return;
-		}
-		Deque<MicroTile> started = new ArrayDeque<>();
-		Deque<MicroTile> completed = new ArrayDeque<>();
-		for (int i = 0; i < row.size(); i++) {
-			MicroTile next = row.get(i);
-			if (started.isEmpty()) {
-				started.add(next);
-			} else {
-				MicroTile last = started.getLast();
-				if (next.tile.x == last.tile.x || next.tile.x == last.tile.x + 1) {
-					started.add(next);
-				} else {
-					completed = new ArrayDeque<>(started);
-					started.clear();
-					started.add(next);
-				}
-			}
-			if (completed.size() > 0) {
-				log("Horizontal wall of size %d at yy=%d", completed.size(), yy);
-				for (MicroTile w : completed) {
-					bricks.add(new Brick3D(w.x, w.y, 2, 2, 8, wallMaterial, w.tile));
-				}
-				completed.clear();
-			}
-			if (i == row.size() - 1 && started.size() > 0) {
-				for (MicroTile w : started) {
-					bricks.add(new Brick3D(w.x, w.y, 2, 2, 8, wallMaterial, w.tile));
-				}
-			}
-		}
+		bricks = brickPositions.stream().map(mt -> new Brick3D(mt.x, mt.y, 2, 2, 8, Assets3D.randomWallMaterial(), mt.tile))
+				.collect(Collectors.toList());
 	}
 
 	public List<Node> getWalls() {
