@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.world.PacManGameWorld;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 
@@ -51,46 +52,46 @@ public class Maze3D {
 			this.i = i;
 		}
 
-		public V2i up() {
+		public V2i northOf() {
+			return tile.plus(toNorth());
+		}
+
+		public V2i westOf() {
+			return tile.plus(toLeft());
+		}
+
+		public V2i eastOf() {
+			return tile.plus(toEast());
+		}
+
+		public V2i southOf() {
+			return tile.plus(toSouth());
+		}
+
+		public V2i toNorth() {
 			return new V2i(0, i < 3 ? -1 : 0);
 		}
 
-		public V2i right() {
+		public V2i toEast() {
 			return new V2i(i == 2 || i == 5 || i == 8 ? 1 : 0, 0);
 		}
 
-		public V2i down() {
+		public V2i toSouth() {
 			return new V2i(0, i > 5 ? 1 : 0);
 		}
 
-		public V2i left() {
+		public V2i toLeft() {
 			return new V2i(i == 0 || i == 3 || i == 6 ? -1 : 0, 0);
 		}
-
-		public V2i up_right() {
-			return up().plus(right());
-		}
-
-		public V2i up_left() {
-			return up().plus(left());
-		}
-
-		public V2i down_right() {
-			return down().plus(right());
-		}
-
-		public V2i down_left() {
-			return down().plus(left());
-		}
-
 	}
 
 	private List<Node> bricks;
 
 	public Maze3D(GameModel game, Color wallColor) {
+		PacManGameWorld world = game.level.world;
 		List<MicroTile> brickPositions = new ArrayList<>();
-		game.level.world.tiles().filter(game.level.world::isWall).forEach(tile -> {
-			double w = 8.0 / 3, h = 8.0 / 3;
+		world.tiles().filter(game.level.world::isWall).forEach(tile -> {
+			double w = TS / 3.0, h = TS / 3.0;
 			double bx = tile.x * TS - w, by = tile.y * TS - h;
 			List<MicroTile> small = new ArrayList<>();
 			//@formatter:off
@@ -109,19 +110,14 @@ public class Maze3D {
 
 		List<MicroTile> positionsToRemove = new ArrayList<>();
 		for (MicroTile t : brickPositions) {
-			V2i northOf = t.tile.plus(t.up()), eastOf = t.tile.plus(t.right()), southOf = t.tile.plus(t.down()),
-					westOf = t.tile.plus(t.left());
-			if (game.level.world.isWall(northOf) && game.level.world.isWall(eastOf) && game.level.world.isWall(southOf)
-					&& game.level.world.isWall(westOf)) {
-				V2i seOf = t.tile.plus(t.down_right()), swOf = t.tile.plus(t.down_left()), neOf = t.tile.plus(t.up_right()),
-						nwOf = t.tile.plus(t.up_left());
-				if (game.level.world.isWall(seOf) && !game.level.world.isWall(nwOf)) {
-					// keep corner
-				} else if (!game.level.world.isWall(seOf) && game.level.world.isWall(nwOf)) {
-					// keep corner
-				} else if (game.level.world.isWall(swOf) && !game.level.world.isWall(neOf)) {
-					// keep corner
-				} else if (!game.level.world.isWall(swOf) && game.level.world.isWall(neOf)) {
+			if (world.isWall(t.northOf()) && world.isWall(t.eastOf()) && world.isWall(t.southOf())
+					&& world.isWall(t.westOf())) {
+				V2i seOf = t.southOf().plus(t.toEast());
+				V2i swOf = t.westOf().plus(t.toEast());
+				V2i neOf = t.northOf().plus(t.toEast());
+				V2i nwOf = t.northOf().plus(t.toLeft());
+				if (world.isWall(seOf) && !world.isWall(nwOf) || !world.isWall(seOf) && world.isWall(nwOf)
+						|| world.isWall(swOf) && !world.isWall(neOf) || !world.isWall(swOf) && world.isWall(neOf)) {
 					// keep corner
 				} else {
 					positionsToRemove.add(t);
@@ -129,7 +125,7 @@ public class Maze3D {
 			}
 		}
 		brickPositions.removeAll(positionsToRemove);
-		bricks = brickPositions.stream().map(mt -> new Brick3D(mt.x, mt.y, 2, 2, 8, Assets3D.randomWallMaterial(), mt.tile))
+		bricks = brickPositions.stream().map(mt -> new Brick3D(mt.x, mt.y, 2, 2, 6, Assets3D.randomWallMaterial(), mt.tile))
 				.collect(Collectors.toList());
 	}
 
