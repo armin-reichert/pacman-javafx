@@ -34,7 +34,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.transform.Rotate;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
@@ -49,9 +48,9 @@ public class PlayScene3D implements GameScene {
 
 	private final SubScene fxScene;
 
-	private final PerspectiveCamera staticCamera;
-	private final PerspectiveCamera moveableCamera;
-	private final CameraController cameraController;
+	private final PerspectiveCamera staticCamera = new PerspectiveCamera(true);
+	private final PerspectiveCamera moveableCamera = new PerspectiveCamera(true);
+	private final CameraController cameraController = new CameraController(staticCamera);
 
 	private PacManGameController gameController;
 
@@ -67,14 +66,11 @@ public class PlayScene3D implements GameScene {
 	private ScoreNotReally3D score3D;
 	private LivesCounter3D livesCounter3D;
 
-	public PlayScene3D(Stage stage) {
-		staticCamera = new PerspectiveCamera(true);
-		moveableCamera = new PerspectiveCamera(true);
-		fxScene = new SubScene(new Group(), stage.getScene().getWidth(), stage.getScene().getHeight());
+	public PlayScene3D() {
+		fxScene = new SubScene(new Group(), 800, 600);
+		// TODO make this work
+		fxScene.addEventHandler(KeyEvent.KEY_PRESSED, cameraController::handleKeyEvent);
 		useStaticCamera();
-		cameraController = new CameraController(staticCamera);
-		// TODO why doesn't subscene get key events?
-		stage.addEventHandler(KeyEvent.KEY_PRESSED, cameraController::handleKeyEvent);
 	}
 
 	@Override

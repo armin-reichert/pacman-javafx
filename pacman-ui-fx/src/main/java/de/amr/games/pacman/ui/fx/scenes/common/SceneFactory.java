@@ -3,10 +3,11 @@ package de.amr.games.pacman.ui.fx.scenes.common;
 import static de.amr.games.pacman.model.common.GameVariant.MS_PACMAN;
 import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
 
+import java.lang.reflect.InvocationTargetException;
+
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.ui.fx.scenes.common.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.scenes.common.scene3d.PlayScene3D;
 import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacMan_IntermissionScene1;
 import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacMan_IntermissionScene2;
@@ -18,7 +19,6 @@ import de.amr.games.pacman.ui.fx.scenes.pacman.PacMan_IntermissionScene2;
 import de.amr.games.pacman.ui.fx.scenes.pacman.PacMan_IntermissionScene3;
 import de.amr.games.pacman.ui.fx.scenes.pacman.PacMan_IntroScene;
 import de.amr.games.pacman.ui.fx.scenes.pacman.PacMan_PlayScene;
-import javafx.stage.Stage;
 
 /**
  * Controls scene selection and serves as scene factory.
@@ -39,7 +39,7 @@ public class SceneFactory {
 		SCENE_CLASSES[MS_PACMAN.ordinal()][2][1] = MsPacMan_IntermissionScene2.class;
 		SCENE_CLASSES[MS_PACMAN.ordinal()][3][0] = MsPacMan_IntermissionScene3.class;
 		SCENE_CLASSES[MS_PACMAN.ordinal()][3][1] = MsPacMan_IntermissionScene3.class;
-		SCENE_CLASSES[MS_PACMAN.ordinal()][4][0] = PlayScene2D.class;
+		SCENE_CLASSES[MS_PACMAN.ordinal()][4][0] = MsPacMan_PlayScene.class;
 		SCENE_CLASSES[MS_PACMAN.ordinal()][4][1] = PlayScene3D.class;
 
 		SCENE_CLASSES[PACMAN.ordinal()]   [0][0] = PacMan_IntroScene.class;
@@ -50,49 +50,19 @@ public class SceneFactory {
 		SCENE_CLASSES[PACMAN.ordinal()]   [2][1] = PacMan_IntermissionScene2.class;
 		SCENE_CLASSES[PACMAN.ordinal()]   [3][0] = PacMan_IntermissionScene3.class;
 		SCENE_CLASSES[PACMAN.ordinal()]   [3][1] = PacMan_IntermissionScene3.class;
-		SCENE_CLASSES[PACMAN.ordinal()]   [4][0] = PlayScene2D.class;
+		SCENE_CLASSES[PACMAN.ordinal()]   [4][0] = PacMan_PlayScene.class;
 		SCENE_CLASSES[PACMAN.ordinal()]   [4][1] = PlayScene3D.class;
 		//@formatter:on
 	}
 
-	public static GameScene createGameScene(Stage stage, GameVariant gameType, PacManGameState gameState, GameModel game,
+	public static GameScene createGameScene(GameVariant gameType, PacManGameState gameState, GameModel game,
 			boolean _3D) {
-		switch (gameType) {
-		case MS_PACMAN:
-			switch (sceneIndex(gameState, game)) {
-			case 0:
-				return new MsPacMan_IntroScene();
-			case 1:
-				return new MsPacMan_IntermissionScene1();
-			case 2:
-				return new MsPacMan_IntermissionScene2();
-			case 3:
-				return new MsPacMan_IntermissionScene3();
-			case 4:
-				return _3D ? new PlayScene3D(stage) : new MsPacMan_PlayScene();
-			default:
-				break;
-			}
-		case PACMAN:
-			switch (sceneIndex(gameState, game)) {
-			case 0:
-				return new PacMan_IntroScene();
-			case 1:
-				return new PacMan_IntermissionScene1();
-			case 2:
-				return new PacMan_IntermissionScene2();
-			case 3:
-				return new PacMan_IntermissionScene3();
-			case 4:
-				return _3D ? new PlayScene3D(stage) : new PacMan_PlayScene();
-			default:
-				break;
-			}
-		default:
-			break;
+		try {
+			return (GameScene) sceneClass(gameType, gameState, game, _3D).getDeclaredConstructor().newInstance();
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException x) {
+			throw new RuntimeException(x);
 		}
-		// all hope is lost
-		throw new IllegalStateException();
 	}
 
 	public static boolean isSuitableScene(GameScene gameScene, GameVariant gameType, PacManGameState gameState,

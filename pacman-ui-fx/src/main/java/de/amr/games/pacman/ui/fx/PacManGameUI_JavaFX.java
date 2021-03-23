@@ -103,7 +103,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private GameScene createGameScene(GameVariant gameType, PacManGameState gameState, GameModel game, boolean _3D) {
-		GameScene scene = SceneFactory.createGameScene(stage, gameType, gameState, game, _3D);
+		GameScene scene = SceneFactory.createGameScene(gameType, gameState, game, _3D);
 		scene.setController(controller);
 		scene.setAvailableSize(mainScene.getWidth(), mainScene.getHeight());
 		keepGameSceneMaximized(scene, mainScene, scene.aspectRatio());
