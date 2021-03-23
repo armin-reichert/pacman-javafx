@@ -15,27 +15,24 @@ import javafx.scene.shape.Box;
  * 
  * @author Armin Reichert
  */
-public class Brick3D implements Supplier<Node> {
+public class Brick3D extends Box implements Supplier<Node> {
 
-	private final V2i tile;
-	private final Box block;
+	public Brick3D(V2i tile, double w, double h, double d, PhongMaterial material) {
+		this(tile.x * TS, tile.y * TS, w, h, d, material, tile);
+	}
 
-	public Brick3D(V2i tile, PhongMaterial material) {
-		this.tile = tile;
-		block = new Box(TS - 1, TS - 1, TS - 2);
-		block.setMaterial(material);
-		block.setTranslateX(tile.x * TS);
-		block.setTranslateY(tile.y * TS);
-		block.setViewOrder(-tile.y * TS);
-		block.drawModeProperty().bind(Env.$drawMode);
+	public Brick3D(double x, double y, double w, double h, double d, PhongMaterial material, Object userData) {
+		super(w, h, d);
+		setMaterial(material);
+		setTranslateX(x);
+		setTranslateY(y);
+		setViewOrder(-y);
+		setUserData(userData);
+		drawModeProperty().bind(Env.$drawMode);
 	}
 
 	@Override
 	public Node get() {
-		return block;
-	}
-
-	public V2i getTile() {
-		return tile;
+		return this;
 	}
 }

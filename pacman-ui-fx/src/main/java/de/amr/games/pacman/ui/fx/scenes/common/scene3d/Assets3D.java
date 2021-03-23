@@ -51,6 +51,7 @@ class Assets3D {
 	}
 
 	static final Font ARCADE_FONT;
+	static final Image WALL_TEXTURE;
 	static final PhongMaterial wallMaterials[];
 	static final PhongMaterial livesCounterOn = new PhongMaterial(Color.YELLOW);
 	static final PhongMaterial livesCounterOff = new PhongMaterial(Color.GRAY);
@@ -75,18 +76,18 @@ class Assets3D {
 			e.printStackTrace();
 		}
 
-		Image wallTexture = new Image(url("/common/stone-texture.png"));
+		WALL_TEXTURE = new Image(url("/common/stone-texture.png"));
 		wallMaterials = new PhongMaterial[10];
 		for (int i = 0; i < wallMaterials.length; ++i) {
 			PhongMaterial m = new PhongMaterial();
-			Image texture = randomArea(wallTexture, 128, 128);
+			Image texture = randomArea(WALL_TEXTURE, 128, 128);
 			m.setBumpMap(texture);
 			m.setDiffuseMap(texture);
 			wallMaterials[i] = m;
 		}
 	}
 
-	static Color mazeColor(GameVariant gameType, int mazeNumber) {
+	static Color mazeWallColor(GameVariant gameType, int mazeNumber) {
 		return gameType == GameVariant.PACMAN ? Color.BLUE : Assets2D.getMazeWallColor(mazeNumber);
 	}
 
@@ -111,7 +112,7 @@ class Assets3D {
 	}
 
 	static AmbientLight ambientLight(GameVariant gameType, int mazeNumber) {
-		return new AmbientLight(mazeColor(gameType, mazeNumber));
+		return new AmbientLight(mazeWallColor(gameType, mazeNumber));
 	}
 
 	static MeshView createGhostMeshView(int ghostID) {
@@ -122,7 +123,7 @@ class Assets3D {
 		return shape;
 	}
 
-	private static Image randomArea(Image src, int w, int h) {
+	static Image randomArea(Image src, int w, int h) {
 		int x = new Random().nextInt((int) src.getWidth() - w);
 		int y = new Random().nextInt((int) src.getHeight() - h);
 		WritableImage result = new WritableImage(w, h);
