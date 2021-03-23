@@ -57,7 +57,7 @@ public class Maze3D {
 		}
 
 		public V2i westOf() {
-			return tile.plus(toLeft());
+			return tile.plus(toWest());
 		}
 
 		public V2i eastOf() {
@@ -80,7 +80,7 @@ public class Maze3D {
 			return new V2i(0, i > 5 ? 1 : 0);
 		}
 
-		public V2i toLeft() {
+		public V2i toWest() {
 			return new V2i(i == 0 || i == 3 || i == 6 ? -1 : 0, 0);
 		}
 	}
@@ -113,9 +113,9 @@ public class Maze3D {
 			if (world.isWall(t.northOf()) && world.isWall(t.eastOf()) && world.isWall(t.southOf())
 					&& world.isWall(t.westOf())) {
 				V2i seOf = t.southOf().plus(t.toEast());
-				V2i swOf = t.westOf().plus(t.toEast());
+				V2i swOf = t.southOf().plus(t.toWest());
 				V2i neOf = t.northOf().plus(t.toEast());
-				V2i nwOf = t.northOf().plus(t.toLeft());
+				V2i nwOf = t.northOf().plus(t.toWest());
 				if (world.isWall(seOf) && !world.isWall(nwOf) || !world.isWall(seOf) && world.isWall(nwOf)
 						|| world.isWall(swOf) && !world.isWall(neOf) || !world.isWall(swOf) && world.isWall(neOf)) {
 					// keep corner
