@@ -1,14 +1,11 @@
 package de.amr.games.pacman.ui.fx.scenes.common.scene3d;
 
 import static de.amr.games.pacman.lib.Logging.log;
-import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static java.util.function.Predicate.not;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.OptionalDouble;
 import java.util.Random;
 import java.util.function.Function;
@@ -17,7 +14,6 @@ import java.util.stream.Collectors;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
@@ -34,7 +30,6 @@ import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
 import javafx.scene.SubScene;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -66,7 +61,7 @@ public class PlayScene3D implements GameScene {
 	private Group tgMaze;
 	private Player3D player;
 	private Map<Ghost, Ghost3D> ghosts3D;
-	private List<Brick3D> bricks;
+	private Maze3D maze;
 	private List<Energizer3D> energizers;
 	private List<Pellet3D> pellets;
 	private ScoreNotReally3D score3D;
@@ -102,8 +97,8 @@ public class PlayScene3D implements GameScene {
 		final GameModel game = gameController.game();
 
 		fxScene.setFill(Color.rgb(20, 20, 60));
-		buildWalls(Assets2D.getMazeWallBorderColor(game.level.mazeNumber));
 
+		maze = new Maze3D(game, Assets2D.getMazeWallColor(game.level.mazeNumber));
 		PhongMaterial foodMaterial = Assets3D.foodMaterial(gameVariant, game.level.mazeNumber);
 
 		energizers = game.level.world.energizerTiles()//
@@ -126,7 +121,7 @@ public class PlayScene3D implements GameScene {
 		tgMaze.setTranslateY(-GameScene.UNSCALED_SCENE_HEIGHT / 2);
 
 		tgMaze.getChildren().addAll(score3D.get(), livesCounter3D.get());
-		tgMaze.getChildren().addAll(collect(bricks));
+		tgMaze.getChildren().addAll(maze.getWalls());
 		tgMaze.getChildren().addAll(collect(energizers));
 		tgMaze.getChildren().addAll(collect(pellets));
 		tgMaze.getChildren().addAll(player.get());
@@ -135,124 +130,6 @@ public class PlayScene3D implements GameScene {
 
 		coordSystem = new CoordinateSystem(150);
 		fxScene.setRoot(new Group(coordSystem.getNode(), tgMaze));
-	}
-
-	private static class Tile9th {
-
-		@Override
-		public int hashCode() {
-			return Objects.hash(i, tile);
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			Tile9th other = (Tile9th) obj;
-			return i == other.i && Objects.equals(tile, other.tile);
-		}
-
-		private final double x;
-		private final double y;
-		private final V2i tile;
-		private final int i;
-
-		public Tile9th(double x, double y, V2i tile, int i) {
-			this.x = x;
-			this.y = y;
-			this.tile = tile;
-			this.i = i;
-		}
-
-		public V2i up() {
-			return new V2i(0, i < 3 ? -1 : 0);
-		}
-
-		public V2i right() {
-			return new V2i(i == 2 || i == 5 || i == 8 ? 1 : 0, 0);
-		}
-
-		public V2i down() {
-			return new V2i(0, i > 5 ? 1 : 0);
-		}
-
-		public V2i left() {
-			return new V2i(i == 0 || i == 3 || i == 6 ? -1 : 0, 0);
-		}
-
-		public V2i up_right() {
-			return up().plus(right());
-		}
-
-		public V2i up_left() {
-			return up().plus(left());
-		}
-
-		public V2i down_right() {
-			return down().plus(right());
-		}
-
-		public V2i down_left() {
-			return down().plus(left());
-		}
-
-	}
-
-	private void buildWalls(Color wallColor) {
-		GameModel game = gameController.game();
-
-		List<Tile9th> smallBricks = new ArrayList<>();
-		game.level.world.tiles().filter(game.level.world::isWall).forEach(tile -> {
-			double w = 8.0 / 3, h = 8.0 / 3, d = TS / 2;
-			double bx = tile.x * TS - w, by = tile.y * TS - h;
-			List<Tile9th> small = new ArrayList<>();
-			//@formatter:off
-			small.add(new Tile9th(bx,     by,     tile, 0));
-			small.add(new Tile9th(bx+w,   by,     tile, 1));
-			small.add(new Tile9th(bx+2*w, by,     tile, 2));
-			small.add(new Tile9th(bx,     by+h,   tile, 3));
-			small.add(new Tile9th(bx+w,   by+h,   tile, 4));
-			small.add(new Tile9th(bx+2*w, by+h,   tile, 5));
-			small.add(new Tile9th(bx,     by+2*h, tile, 6));
-			small.add(new Tile9th(bx+w,   by+2*h, tile, 7));
-			small.add(new Tile9th(bx+2*w, by+2*h, tile, 8));
-			//@formatter:on
-			smallBricks.addAll(small);
-		});
-
-		List<Tile9th> removals = new ArrayList<>();
-		for (Tile9th t : smallBricks) {
-			V2i northOf = t.tile.plus(t.up()), eastOf = t.tile.plus(t.right()), southOf = t.tile.plus(t.down()),
-					westOf = t.tile.plus(t.left());
-			if (game.level.world.isWall(northOf) && game.level.world.isWall(eastOf) && game.level.world.isWall(southOf)
-					&& game.level.world.isWall(westOf)) {
-				V2i seOf = t.tile.plus(t.down_right()), swOf = t.tile.plus(t.down_left()), neOf = t.tile.plus(t.up_right()),
-						nwOf = t.tile.plus(t.up_left());
-				if (game.level.world.isWall(seOf) && !game.level.world.isWall(nwOf)) {
-					// keep corner
-				} else if (!game.level.world.isWall(seOf) && game.level.world.isWall(nwOf)) {
-					// keep corner
-				} else if (game.level.world.isWall(swOf) && !game.level.world.isWall(neOf)) {
-					// keep corner
-				} else if (!game.level.world.isWall(swOf) && game.level.world.isWall(neOf)) {
-					// keep corner
-				} else {
-					removals.add(t);
-				}
-			}
-		}
-		smallBricks.removeAll(removals);
-
-		PhongMaterial wallMaterial = new PhongMaterial(wallColor);
-		Image texture = Assets3D.randomArea(Assets3D.WALL_TEXTURE, 64, 64);
-		wallMaterial.setBumpMap(texture);
-		wallMaterial.setDiffuseMap(texture);
-		bricks = smallBricks.stream().map(t -> new Brick3D(t.x, t.y, 2.5, 2.5, 2, wallMaterial, t.tile))
-				.collect(Collectors.toList());
 	}
 
 	private Collection<Node> collect(Collection<? extends Supplier<Node>> items) {
