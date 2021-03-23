@@ -1,11 +1,11 @@
 package de.amr.games.pacman.ui.fx;
 
 import static de.amr.games.pacman.lib.Logging.log;
+import static de.amr.games.pacman.model.common.GameVariant.MS_PACMAN;
+import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
 
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.OptionalDouble;
-import java.util.Set;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
@@ -17,8 +17,18 @@ import de.amr.games.pacman.ui.fx.rendering.standard.Assets2D;
 import de.amr.games.pacman.ui.fx.scenes.common.Env;
 import de.amr.games.pacman.ui.fx.scenes.common.FlashMessageView;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
-import de.amr.games.pacman.ui.fx.scenes.common.SceneFactory;
 import de.amr.games.pacman.ui.fx.scenes.common.scene2d.AbstractGameScene2D;
+import de.amr.games.pacman.ui.fx.scenes.common.scene3d.PlayScene3D;
+import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacMan_IntermissionScene1;
+import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacMan_IntermissionScene2;
+import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacMan_IntermissionScene3;
+import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacMan_IntroScene;
+import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacMan_PlayScene;
+import de.amr.games.pacman.ui.fx.scenes.pacman.PacMan_IntermissionScene1;
+import de.amr.games.pacman.ui.fx.scenes.pacman.PacMan_IntermissionScene2;
+import de.amr.games.pacman.ui.fx.scenes.pacman.PacMan_IntermissionScene3;
+import de.amr.games.pacman.ui.fx.scenes.pacman.PacMan_IntroScene;
+import de.amr.games.pacman.ui.fx.scenes.pacman.PacMan_PlayScene;
 import de.amr.games.pacman.ui.sound.SoundManager;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -37,6 +47,39 @@ import javafx.stage.Stage;
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
 
+	private static final GameScene SCENES[][][] = new GameScene[2][5][2];
+
+	static {
+		//@formatter:off
+		SCENES[MS_PACMAN.ordinal()][0][0] = 
+		SCENES[MS_PACMAN.ordinal()][0][1] = new MsPacMan_IntroScene();
+		SCENES[MS_PACMAN.ordinal()][1][0] = 
+		SCENES[MS_PACMAN.ordinal()][1][1] = new MsPacMan_IntermissionScene1();
+		SCENES[MS_PACMAN.ordinal()][2][0] = 
+		SCENES[MS_PACMAN.ordinal()][2][1] = new MsPacMan_IntermissionScene2();
+		SCENES[MS_PACMAN.ordinal()][3][0] = 
+		SCENES[MS_PACMAN.ordinal()][3][1] = new MsPacMan_IntermissionScene3();
+		SCENES[MS_PACMAN.ordinal()][4][0] = new MsPacMan_PlayScene();
+		SCENES[MS_PACMAN.ordinal()][4][1] = new PlayScene3D();
+
+		SCENES[PACMAN.ordinal()]   [0][0] = 
+		SCENES[PACMAN.ordinal()]   [0][1] = new PacMan_IntroScene();
+		SCENES[PACMAN.ordinal()]   [1][0] = 
+		SCENES[PACMAN.ordinal()]   [1][1] = new PacMan_IntermissionScene1();
+		SCENES[PACMAN.ordinal()]   [2][0] = 
+		SCENES[PACMAN.ordinal()]   [2][1] = new PacMan_IntermissionScene2();
+		SCENES[PACMAN.ordinal()]   [3][0] = 
+		SCENES[PACMAN.ordinal()]   [3][1] = new PacMan_IntermissionScene3();
+		SCENES[PACMAN.ordinal()]   [4][0] = new PacMan_PlayScene();
+		SCENES[PACMAN.ordinal()]   [4][1] = new PlayScene3D();
+		//@formatter:on
+	}
+
+	static GameScene scene(GameVariant gameVariant, PacManGameState gameState, GameModel game, boolean _3D) {
+		return SCENES[gameVariant.ordinal()][gameState == PacManGameState.INTRO ? 0
+				: gameState == PacManGameState.INTERMISSION ? game.intermissionNumber : 4][_3D ? 1 : 0];
+	}
+
 	public final HUD hud;
 
 	final Stage stage;
@@ -45,8 +88,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	final Scene mainScene;
 	final StackPane mainSceneRoot;
 	final FlashMessageView flashMessageView;
-	final Set<GameScene> scenesCreated = new HashSet<>();
-
 	GameScene currentGameScene;
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController controller, double height) {
@@ -70,8 +111,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		stage.setOnCloseRequest(e -> Platform.exit());
 		stage.setScene(mainScene);
 
-		GameScene startScene = createGameScene(controller.gameVariant(), controller.state, controller.game(),
-				Env.$use3DScenes.get());
+		GameScene startScene = scene(controller.gameVariant(), controller.state, controller.game(), Env.$use3DScenes.get());
 		changeGameScene(null, startScene);
 
 		stage.centerOnScreen();
@@ -79,36 +119,22 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private void handleGameStateChange(PacManGameState oldState, PacManGameState newState) {
-		GameVariant gameType = controller.gameVariant();
+		GameVariant gameVariant = controller.gameVariant();
 		GameModel game = controller.game();
 		boolean _3D = Env.$use3DScenes.get();
 		log("Handle game state change %s to %s", oldState, newState);
-		if (!SceneFactory.isSuitableScene(currentGameScene, gameType, newState, game, _3D)) {
-			selectScene(gameType, newState, game, _3D);
+		if (currentGameScene != scene(gameVariant, newState, game, _3D)) {
+			selectScene(gameVariant, newState, game, _3D);
 		}
 		currentGameScene.onGameStateChange(oldState, newState);
 	}
 
-	private void selectScene(GameVariant gameType, PacManGameState gameState, GameModel game, boolean _3D) {
-		Optional<GameScene> nextScene = scenesCreated.stream()
-				.filter(scene -> SceneFactory.isSuitableScene(scene, gameType, gameState, game, _3D)).findFirst();
-		if (nextScene.isPresent()) {
-			log("Use existing scene %s for game state %s", nextScene.get(), gameState);
-			changeGameScene(currentGameScene, nextScene.get());
-		} else {
-			GameScene newScene = createGameScene(gameType, gameState, game, _3D);
-			changeGameScene(currentGameScene, newScene);
-			log("Created new scene %s for game state %s", newScene, gameState);
-		}
-	}
-
-	private GameScene createGameScene(GameVariant gameType, PacManGameState gameState, GameModel game, boolean _3D) {
-		GameScene scene = SceneFactory.createGameScene(gameType, gameState, game, _3D);
-		scene.setController(controller);
-		scene.setAvailableSize(mainScene.getWidth(), mainScene.getHeight());
-		keepGameSceneMaximized(scene, mainScene, scene.aspectRatio());
-		scenesCreated.add(scene);
-		return scene;
+	private void selectScene(GameVariant gameVariant, PacManGameState gameState, GameModel game, boolean _3D) {
+		GameScene newGameScene = scene(gameVariant, gameState, game, _3D);
+		newGameScene.setController(controller);
+		newGameScene.setAvailableSize(mainScene.getWidth(), mainScene.getHeight());
+		keepGameSceneMaximized(newGameScene, mainScene, newGameScene.aspectRatio());
+		changeGameScene(currentGameScene, newGameScene);
 	}
 
 	private void changeGameScene(GameScene oldGameScene, GameScene newGameScene) {
@@ -189,10 +215,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private void toggleUse3DScenes() {
 		Env.$use3DScenes.set(!Env.$use3DScenes.get());
-		GameVariant gameType = controller.gameVariant();
+		GameVariant gameVariant = controller.gameVariant();
 		GameModel game = controller.game();
-		if (SceneFactory.hasDifferentSceneFor3D(gameType, controller.state, game)) {
-			selectScene(gameType, controller.state, game, Env.$use3DScenes.get());
+		if (scene(gameVariant, controller.state, game, false) != scene(gameVariant, controller.state, game, true)) {
+			selectScene(gameVariant, controller.state, game, Env.$use3DScenes.get());
 		}
 		String message = String.format("3D scenes %s", Env.$use3DScenes.get() ? "ON" : "OFF");
 		showFlashMessage(message);
