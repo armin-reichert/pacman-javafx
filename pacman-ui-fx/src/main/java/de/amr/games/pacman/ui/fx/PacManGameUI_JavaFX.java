@@ -111,51 +111,47 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		stage.setOnCloseRequest(e -> Platform.exit());
 		stage.setScene(mainScene);
 
-		GameScene startScene = scene(controller.gameVariant(), controller.state, controller.game(), Env.$use3DScenes.get());
-		changeGameScene(null, startScene);
+		selectScene(controller.gameVariant(), controller.state, controller.game(), Env.$use3DScenes.get());
 
 		stage.centerOnScreen();
 		stage.show();
 	}
 
 	private void handleGameStateChange(PacManGameState oldState, PacManGameState newState) {
+		log("Handle game state change from %s to %s", oldState, newState);
 		GameVariant gameVariant = controller.gameVariant();
 		GameModel game = controller.game();
 		boolean _3D = Env.$use3DScenes.get();
-		log("Handle game state change %s to %s", oldState, newState);
 		if (currentGameScene != scene(gameVariant, newState, game, _3D)) {
 			selectScene(gameVariant, newState, game, _3D);
 		}
 		currentGameScene.onGameStateChange(oldState, newState);
 	}
 
-	private void selectScene(GameVariant gameVariant, PacManGameState gameState, GameModel game, boolean _3D) {
-		GameScene newGameScene = scene(gameVariant, gameState, game, _3D);
-		newGameScene.setController(controller);
-		newGameScene.setAvailableSize(mainScene.getWidth(), mainScene.getHeight());
-		keepGameSceneMaximized(newGameScene, mainScene, newGameScene.aspectRatio());
-		changeGameScene(currentGameScene, newGameScene);
+	private void initScene(GameScene gameScene) {
+		gameScene.setController(controller);
+		gameScene.setAvailableSize(mainScene.getWidth(), mainScene.getHeight());
+		keepGameSceneMaximized(gameScene, mainScene, gameScene.aspectRatio());
 	}
 
-	private void changeGameScene(GameScene oldGameScene, GameScene newGameScene) {
-		log("Change game scene %s to %s", oldGameScene, newGameScene);
-		if (oldGameScene == newGameScene) {
-			log("Ignored");
-			return;
+	private void selectScene(GameVariant gameVariant, PacManGameState gameState, GameModel game, boolean _3D) {
+		GameScene newGameScene = scene(gameVariant, gameState, game, _3D);
+		if (currentGameScene != newGameScene) {
+			log("Change game scene %s to %s", currentGameScene, newGameScene);
+			if (currentGameScene != null) {
+				currentGameScene.end();
+			}
+			currentGameScene = newGameScene;
+			initScene(newGameScene);
+			if (Env.$useStaticCamera.get()) {
+				currentGameScene.useMoveableCamera(false);
+			} else {
+				currentGameScene.useMoveableCamera(true);
+			}
+			currentGameScene.start();
+			mainSceneRoot.getChildren().clear();
+			mainSceneRoot.getChildren().addAll(currentGameScene.getFXSubScene(), flashMessageView, hud);
 		}
-		if (oldGameScene != null) {
-			oldGameScene.end();
-		}
-		currentGameScene = newGameScene;
-		currentGameScene.setAvailableSize(mainScene.getWidth(), mainScene.getHeight());
-		if (Env.$useStaticCamera.get()) {
-			currentGameScene.useMoveableCamera(false);
-		} else {
-			currentGameScene.useMoveableCamera(true);
-		}
-		currentGameScene.start();
-		mainSceneRoot.getChildren().clear();
-		mainSceneRoot.getChildren().addAll(currentGameScene.getFXSubScene(), flashMessageView, hud);
 	}
 
 	private void handleKeys(KeyEvent e) {
