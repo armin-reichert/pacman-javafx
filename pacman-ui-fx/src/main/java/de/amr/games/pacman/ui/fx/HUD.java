@@ -52,7 +52,7 @@ public class HUD extends HBox {
 		line("Playing", "%s", ui.controller.isPlaying() ? "YES" : "NO");
 		line("Game Level", "%d", ui.controller.game().levelNumber);
 		line("Game State", "%s", ui.controller.state);
-		TickTimer stateTimer = ui.controller.timer();
+		TickTimer stateTimer = ui.controller.stateTimer();
 		line("", "Running:   %s", stateTimer.ticked());
 		line("", "Remaining: %s",
 				stateTimer.ticksRemaining() == Long.MAX_VALUE ? "indefinite" : stateTimer.ticksRemaining());

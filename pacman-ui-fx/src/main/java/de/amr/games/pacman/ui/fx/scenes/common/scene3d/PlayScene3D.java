@@ -234,11 +234,11 @@ public class PlayScene3D implements GameScene {
 		if (newState == PacManGameState.READY) {
 			setSceneColor();
 			if (gameController.isPlayingRequested()) {
-				gameController.timer().resetSeconds(4.5);
+				gameController.stateTimer().resetSeconds(4.5);
 				// TODO use FX sound
 				Assets2D.SOUND.get(gameController.gameVariant()).play(PacManGameSound.GAME_READY);
 			} else {
-				gameController.timer().resetSeconds(2);
+				gameController.stateTimer().resetSeconds(2);
 			}
 		}
 		if (oldState == PacManGameState.HUNTING) {
@@ -275,21 +275,21 @@ public class PlayScene3D implements GameScene {
 				String.format("%s!\n\nLevel %d complete.", CONGRATS[new Random().nextInt(CONGRATS.length)], game.levelNumber),
 				2);
 
-		gameController.timer().reset();
+		gameController.stateTimer().reset();
 		PauseTransition pause = new PauseTransition(Duration.seconds(3));
-		pause.setOnFinished(e -> gameController.timer().forceExpiration());
+		pause.setOnFinished(e -> gameController.stateTimer().forceExpiration());
 		pause.play();
 	}
 
 	private void playLevelStartingAnimation() {
-		gameController.timer().reset();
+		gameController.stateTimer().reset();
 		gameController.userInterface.showFlashMessage("Entering Level " + gameController.game().levelNumber);
 
 		ScaleTransition animation = new ScaleTransition(Duration.seconds(3), tgMaze);
 		animation.setDelay(Duration.seconds(2));
 		animation.setFromZ(0);
 		animation.setToZ(1);
-		animation.setOnFinished(e -> gameController.timer().forceExpiration());
+		animation.setOnFinished(e -> gameController.stateTimer().forceExpiration());
 		animation.play();
 	}
 }

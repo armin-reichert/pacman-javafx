@@ -51,7 +51,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 			start.setOnFinished(e -> game.player.visible = false);
 			PauseTransition end = new PauseTransition(Duration.seconds(1));
 			sequence = new SequentialTransition(start, flashing, end);
-			sequence.setOnFinished(e -> gameController.timer().forceExpiration());
+			sequence.setOnFinished(e -> gameController.stateTimer().forceExpiration());
 		}
 
 		public Image getCurrentMazeImage() {
@@ -116,10 +116,10 @@ public class PlayScene2D extends AbstractGameScene2D {
 		if (newState == PacManGameState.READY) {
 			rendering.resetAllAnimations(game);
 			if (gameController.isPlayingRequested()) {
-				gameController.timer().resetSeconds(4.5);
+				gameController.stateTimer().resetSeconds(4.5);
 				Assets2D.SOUND.get(variant).play(PacManGameSound.GAME_READY);
 			} else {
-				gameController.timer().resetSeconds(2);
+				gameController.stateTimer().resetSeconds(2);
 			}
 		}
 
@@ -151,13 +151,13 @@ public class PlayScene2D extends AbstractGameScene2D {
 			levelCompleteAnimation = new LevelCompleteAnimation(game.level.numFlashes);
 			double totalDuration = levelCompleteAnimation.getTotalDuration().toSeconds();
 			log("Total LEVEL_COMPLETE animation duration: %f", totalDuration);
-			gameController.timer().resetSeconds(totalDuration);
+			gameController.stateTimer().resetSeconds(totalDuration);
 			levelCompleteAnimation.play();
 		}
 
 		// enter LEVEL_STARTING state
 		if (newState == PacManGameState.LEVEL_STARTING) {
-			gameController.timer().forceExpiration();
+			gameController.stateTimer().forceExpiration();
 		}
 
 		// enter GAME_OVER state
