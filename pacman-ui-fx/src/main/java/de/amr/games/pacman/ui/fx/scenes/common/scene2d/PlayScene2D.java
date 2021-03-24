@@ -7,6 +7,7 @@ import de.amr.games.pacman.controller.BonusEatenEvent;
 import de.amr.games.pacman.controller.DeadGhostCountChangeEvent;
 import de.amr.games.pacman.controller.ExtraLifeEvent;
 import de.amr.games.pacman.controller.PacManFoundFoodEvent;
+import de.amr.games.pacman.controller.PacManGainsPowerEvent;
 import de.amr.games.pacman.controller.PacManGameEvent;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.PacManLostPowerEvent;
@@ -20,13 +21,6 @@ import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.fx.rendering.standard.Assets2D;
 import de.amr.games.pacman.ui.sound.PacManGameSound;
 import de.amr.games.pacman.ui.sound.SoundManager;
-import javafx.animation.Animation.Status;
-import javafx.animation.KeyFrame;
-import javafx.animation.PauseTransition;
-import javafx.animation.SequentialTransition;
-import javafx.animation.Timeline;
-import javafx.scene.image.Image;
-import javafx.util.Duration;
 
 /**
  * This is where the action is.
@@ -34,49 +28,6 @@ import javafx.util.Duration;
  * @author Armin Reichert
  */
 public class PlayScene2D extends AbstractGameScene2D {
-
-	private class LevelCompleteAnimation {
-
-		private final SequentialTransition sequence;
-		private final Timeline flashing;
-		private TimedSequence<?> mazeFlashing; // TODO get rid og this
-		private int imageIndex;
-
-		public LevelCompleteAnimation(int numFlashes) {
-			// get the maze images which are displayed alternating to create the flashing effect
-			GameVariant variant = gameController.gameVariant();
-			GameModel game = gameController.game();
-			mazeFlashing = Assets2D.RENDERING_2D.get(variant).mazeAnimations().mazeFlashing(game.level.mazeNumber);
-			imageIndex = 1;
-
-			flashing = new Timeline(new KeyFrame(Duration.millis(150), e -> {
-				imageIndex = (imageIndex + 1) % 2;
-			}));
-			flashing.setCycleCount(2 * numFlashes);
-
-			PauseTransition start = new PauseTransition(Duration.seconds(2));
-			start.setOnFinished(e -> game.player.visible = false);
-			PauseTransition end = new PauseTransition(Duration.seconds(1));
-			sequence = new SequentialTransition(start, flashing, end);
-			sequence.setOnFinished(e -> gameController.stateTimer().forceExpiration());
-		}
-
-		public Image getCurrentMazeImage() {
-			return (Image) mazeFlashing.frame(imageIndex);
-		}
-
-		public void play() {
-			sequence.playFromStart();
-		}
-
-		public boolean isRunning() {
-			return sequence.getStatus() == Status.RUNNING;
-		}
-
-		public Duration getTotalDuration() {
-			return sequence.getTotalDuration();
-		}
-	}
 
 	private LevelCompleteAnimation levelCompleteAnimation;
 
@@ -162,7 +113,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		if (newState == PacManGameState.LEVEL_COMPLETE) {
 			sounds.stopAll();
 			game.ghosts().forEach(ghost -> ghost.visible = false);
-			levelCompleteAnimation = new LevelCompleteAnimation(game.level.numFlashes);
+			levelCompleteAnimation = new LevelCompleteAnimation(gameController, game.level.numFlashes);
 			double totalDuration = levelCompleteAnimation.getTotalDuration().toSeconds();
 			log("Total LEVEL_COMPLETE animation duration: %f", totalDuration);
 			gameController.stateTimer().resetSeconds(totalDuration);
@@ -196,6 +147,10 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		else if (gameEvent instanceof PacManFoundFoodEvent) {
 			sounds.play(PacManGameSound.PACMAN_MUNCH);
+		}
+
+		else if (gameEvent instanceof PacManGainsPowerEvent) {
+			sounds.loopForever(PacManGameSound.PACMAN_POWER);
 		}
 
 		else if (gameEvent instanceof BonusEatenEvent) {
