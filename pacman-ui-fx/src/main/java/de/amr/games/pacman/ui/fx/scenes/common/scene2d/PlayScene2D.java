@@ -122,7 +122,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// enter LEVEL_STARTING
 		if (newState == PacManGameState.LEVEL_STARTING) {
-			gameController.stateTimer().forceExpiration();
+			gameController.stateTimer().reset(1);
+			gameController.stateTimer().start();
 		}
 
 		// enter GAME_OVER
