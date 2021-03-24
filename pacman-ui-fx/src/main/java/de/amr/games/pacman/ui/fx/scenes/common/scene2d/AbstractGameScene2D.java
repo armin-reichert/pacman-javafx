@@ -6,8 +6,8 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import java.util.OptionalDouble;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.controller.PacManGameEvent;
 import de.amr.games.pacman.controller.PacManGameState;
+import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.sound.SoundManager;

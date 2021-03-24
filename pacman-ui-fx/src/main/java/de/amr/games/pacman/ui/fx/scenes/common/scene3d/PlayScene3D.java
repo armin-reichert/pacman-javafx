@@ -14,8 +14,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.controller.PacManGameEvent;
 import de.amr.games.pacman.controller.PacManGameState;
+import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
