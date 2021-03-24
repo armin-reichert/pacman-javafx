@@ -75,6 +75,11 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
+	public PacManGameController getController() {
+		return gameController;
+	}
+
+	@Override
 	public void setController(PacManGameController controller) {
 		this.gameController = controller;
 	}

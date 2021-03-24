@@ -20,6 +20,8 @@ public interface GameScene {
 
 	void end();
 
+	PacManGameController getController();
+
 	void setController(PacManGameController controller);
 
 	void onGameStateChange(PacManGameState oldState, PacManGameState newState);

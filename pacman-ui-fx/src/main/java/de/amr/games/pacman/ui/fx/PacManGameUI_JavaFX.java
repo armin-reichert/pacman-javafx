@@ -5,7 +5,6 @@ import static de.amr.games.pacman.model.common.GameVariant.MS_PACMAN;
 import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
 
 import java.util.Optional;
-import java.util.OptionalDouble;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
@@ -108,8 +107,14 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		stage.setOnCloseRequest(e -> Platform.exit());
 
 		mainSceneRoot = new StackPane();
-		mainScene = new Scene(mainSceneRoot, AbstractGameScene2D.ASPECT_RATIO * height, height, Color.rgb(20, 20, 60));
-
+		GameScene initialGameScene = scene(controller.gameVariant(), controller.state, controller.game(),
+				Env.$use3DScenes.get());
+		if (initialGameScene.aspectRatio().isPresent()) {
+			mainScene = new Scene(mainSceneRoot, initialGameScene.aspectRatio().getAsDouble() * height, height,
+					Color.rgb(20, 20, 60));
+		} else {
+			mainScene = new Scene(mainSceneRoot, 1.33 * height, height, Color.rgb(20, 20, 60));
+		}
 		selectGameScene(controller.gameVariant(), controller.state, controller.game(), Env.$use3DScenes.get());
 
 		stage.setScene(mainScene);
@@ -131,12 +136,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		currentGameScene.onGameStateChange(oldState, newState);
 	}
 
-	private void initScene(GameScene gameScene) {
-		gameScene.setController(controller);
-		gameScene.setAvailableSize(mainScene.getWidth(), mainScene.getHeight());
-		keepGameSceneMaximized(gameScene, mainScene, gameScene.aspectRatio());
-	}
-
 	private void selectGameScene(GameVariant gameVariant, PacManGameState gameState, GameModel game, boolean _3D) {
 		GameScene newGameScene = scene(gameVariant, gameState, game, _3D);
 		if (currentGameScene != newGameScene) {
@@ -144,8 +143,12 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			if (currentGameScene != null) {
 				currentGameScene.end();
 			}
+			if (newGameScene.getController() == null) {
+				newGameScene.setController(controller);
+				newGameScene.setAvailableSize(mainScene.getWidth(), mainScene.getHeight());
+				keepGameSceneMaximized(newGameScene, mainScene);
+			}
 			currentGameScene = newGameScene;
-			initScene(newGameScene);
 			if (Env.$useStaticCamera.get()) {
 				currentGameScene.useMoveableCamera(false);
 			} else {
@@ -223,18 +226,18 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 	}
 
-	private void keepGameSceneMaximized(GameScene gameScene, Scene parentScene, OptionalDouble optionalAspectRatio) {
-		if (optionalAspectRatio.isPresent()) {
-			double aspectRatio = optionalAspectRatio.getAsDouble();
-			parentScene.widthProperty().addListener((s, o, n) -> {
-				double newHeight = Math.min(n.doubleValue() / aspectRatio, parentScene.getHeight());
-				double newWidth = newHeight * aspectRatio;
-				gameScene.setAvailableSize(newWidth, newHeight);
+	private void keepGameSceneMaximized(GameScene gameScene, Scene parentScene) {
+		if (gameScene.aspectRatio().isPresent()) {
+			double aspectRatio = gameScene.aspectRatio().getAsDouble();
+			parentScene.widthProperty().addListener((s, o, newParentWidth) -> {
+				double maxHeight = Math.min(newParentWidth.doubleValue() / aspectRatio, parentScene.getHeight());
+				double maxWidth = maxHeight * aspectRatio;
+				gameScene.setAvailableSize(maxWidth, maxHeight);
 			});
-			parentScene.heightProperty().addListener((s, o, n) -> {
-				double newHeight = n.doubleValue();
-				double newWidth = Math.min(parentScene.getHeight() * aspectRatio, parentScene.getWidth());
-				gameScene.setAvailableSize(newWidth, newHeight);
+			parentScene.heightProperty().addListener((s, o, newParentHeight) -> {
+				double maxHeight = newParentHeight.doubleValue();
+				double maxWidth = Math.min(parentScene.getHeight() * aspectRatio, parentScene.getWidth());
+				gameScene.setAvailableSize(maxWidth, maxHeight);
 			});
 		} else {
 			gameScene.getFXSubScene().widthProperty().bind(parentScene.widthProperty());
