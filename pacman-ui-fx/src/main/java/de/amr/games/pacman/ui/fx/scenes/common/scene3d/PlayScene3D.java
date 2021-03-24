@@ -273,9 +273,9 @@ public class PlayScene3D implements GameScene {
 		if (gameEvent instanceof ScatterPhaseStartedEvent) {
 			ScatterPhaseStartedEvent e = (ScatterPhaseStartedEvent) gameEvent;
 			if (e.scatterPhase > 0) {
-				sounds.stop(PacManGameSound.SIRENS.get((e.scatterPhase - 1) / 2));
+				sounds.stop(PacManGameSound.SIRENS.get(e.scatterPhase - 1));
 			}
-			sounds.loopForever(PacManGameSound.SIRENS.get(e.scatterPhase / 2));
+			sounds.loopForever(PacManGameSound.SIRENS.get(e.scatterPhase));
 		}
 
 		else if (gameEvent instanceof PacManLostPowerEvent) {
