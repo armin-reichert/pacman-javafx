@@ -181,7 +181,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 		} else {
 			gc.drawImage(levelCompleteAnimation.getCurrentMazeImage(), 0, t(3));
 		}
-		if (gameController.isGameRunning()) {
+		if (gameController.isGameRunning()
+				|| gameController.state == PacManGameState.READY && !gameController.isAttractMode()) {
 			rendering.drawLivesCounter(gc, game, t(2), t(34));
 			rendering.drawGameState(gc, game, gameController.state);
 			rendering.drawScore(gc, game, false);
