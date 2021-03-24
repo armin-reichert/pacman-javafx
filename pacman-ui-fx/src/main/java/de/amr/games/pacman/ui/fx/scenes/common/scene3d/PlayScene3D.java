@@ -14,6 +14,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import de.amr.games.pacman.controller.PacManGameController;
+import de.amr.games.pacman.controller.PacManGameEvent;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
@@ -162,6 +163,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void start() {
 		log("Game scene %s: start", this);
+		gameController.addGameEventListener(this::onGameEvent);
 		// TODO remove again
 		gameController.game().player.immune = true;
 		buildSceneGraph();
@@ -170,6 +172,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void end() {
 		log("Game scene %s: end", this);
+		gameController.removeGameEventListener(this::onGameEvent);
 	}
 
 	@Override
@@ -253,6 +256,25 @@ public class PlayScene3D implements GameScene {
 		if (newState == PacManGameState.LEVEL_STARTING) {
 			playLevelStartingAnimation();
 		}
+	}
+
+	private void onGameEvent(PacManGameEvent gameEvent) {
+		// TODO FX sound
+//		if (gameEvent instanceof ScatterPhaseStartedEvent) {
+//			ScatterPhaseStartedEvent e = (ScatterPhaseStartedEvent) gameEvent;
+//			if (e.scatterPhase > 0) {
+//				sounds.stop(PacManGameSound.SIRENS.get((e.scatterPhase - 1) / 2));
+//			}
+//			sounds.loopForever(PacManGameSound.SIRENS.get(e.scatterPhase / 2));
+//		}
+//
+//		else if (gameEvent instanceof PacManLostPowerEvent) {
+//			sounds.stop(PacManGameSound.PACMAN_POWER);
+//		}
+//
+//		else if (gameEvent instanceof BonusEatenEvent) {
+//			sounds.play(PacManGameSound.BONUS_EATEN);
+//		}		
 	}
 
 	private void setSceneColor() {

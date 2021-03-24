@@ -3,7 +3,11 @@ package de.amr.games.pacman.ui.fx.scenes.common.scene2d;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
+import de.amr.games.pacman.controller.BonusEatenEvent;
+import de.amr.games.pacman.controller.PacManGameEvent;
 import de.amr.games.pacman.controller.PacManGameState;
+import de.amr.games.pacman.controller.PacManLostPowerEvent;
+import de.amr.games.pacman.controller.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
@@ -90,7 +94,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void start() {
-		log("Game scene %s: start", this);
+		super.start();
 		GameModel game = gameController.game();
 		game.player.powerTimer.addEventListener(e -> {
 			if (e.type == TickTimerEvent.Type.HALF_EXPIRED) {
@@ -104,14 +108,10 @@ public class PlayScene2D extends AbstractGameScene2D {
 	}
 
 	@Override
-	public void end() {
-		log("Game scene %s: end", this);
-	}
-
-	@Override
 	public void onGameStateChange(PacManGameState oldState, PacManGameState newState) {
 		GameVariant variant = gameController.gameVariant();
 		GameModel game = gameController.game();
+
 		// enter READY state
 		if (newState == PacManGameState.READY) {
 			rendering.resetAllAnimations(game);
@@ -137,6 +137,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// enter PACMAN_DYING state
 		if (newState == PacManGameState.PACMAN_DYING) {
+			sounds.stopAll();
 			playAnimationPlayerDying();
 		}
 
@@ -163,6 +164,25 @@ public class PlayScene2D extends AbstractGameScene2D {
 		// enter GAME_OVER state
 		if (newState == PacManGameState.GAME_OVER) {
 			game.ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(TimedSequence::reset);
+		}
+	}
+
+	@Override
+	protected void onGameEvent(PacManGameEvent gameEvent) {
+		if (gameEvent instanceof ScatterPhaseStartedEvent) {
+			ScatterPhaseStartedEvent e = (ScatterPhaseStartedEvent) gameEvent;
+			if (e.scatterPhase > 0) {
+				sounds.stop(PacManGameSound.SIRENS.get((e.scatterPhase - 1) / 2));
+			}
+			sounds.loopForever(PacManGameSound.SIRENS.get(e.scatterPhase / 2));
+		}
+
+		else if (gameEvent instanceof PacManLostPowerEvent) {
+			sounds.stop(PacManGameSound.PACMAN_POWER);
+		}
+
+		else if (gameEvent instanceof BonusEatenEvent) {
+			sounds.play(PacManGameSound.BONUS_EATEN);
 		}
 	}
 

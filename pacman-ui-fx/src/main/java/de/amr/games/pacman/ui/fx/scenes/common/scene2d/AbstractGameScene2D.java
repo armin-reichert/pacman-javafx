@@ -1,10 +1,12 @@
 package de.amr.games.pacman.ui.fx.scenes.common.scene2d;
 
+import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
 import java.util.OptionalDouble;
 
 import de.amr.games.pacman.controller.PacManGameController;
+import de.amr.games.pacman.controller.PacManGameEvent;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
@@ -82,6 +84,21 @@ public abstract class AbstractGameScene2D implements GameScene {
 	}
 
 	@Override
+	public void start() {
+		log("Game scene %s: start", this);
+		gameController.addGameEventListener(this::onGameEvent);
+	}
+
+	@Override
+	public void end() {
+		log("Game scene %s: end", this);
+		gameController.removeGameEventListener(this::onGameEvent);
+	}
+
+	protected void onGameEvent(PacManGameEvent gameEvent) {
+	}
+
+	@Override
 	public void onGameStateChange(PacManGameState oldState, PacManGameState newState) {
 	}
 
@@ -114,4 +131,5 @@ public abstract class AbstractGameScene2D implements GameScene {
 	public void stopAllSounds() {
 		sounds.stopAll();
 	}
+
 }
