@@ -49,7 +49,7 @@ public class HUD extends HBox {
 		line("Paused (CTRL+P)", "%s", Env.$paused.get() ? "YES" : "NO");
 		line();
 		line("Game Variant", "%s", ui.controller.gameVariant());
-		line("Playing", "%s", ui.controller.isPlaying() ? "YES" : "NO");
+		line("Playing", "%s", ui.controller.isGameRunning() ? "YES" : "NO");
 		line("Game Level", "%d", ui.controller.game().levelNumber);
 		line("Game State", "%s", ui.controller.state);
 		TickTimer stateTimer = ui.controller.stateTimer();

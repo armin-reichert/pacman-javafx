@@ -82,7 +82,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		game.ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(TimedSequence::reset);
 		rendering.playerAnimations().playerDying().delay(120).onStart(() -> {
 			game.ghosts().forEach(ghost -> ghost.visible = false);
-			if (gameController.isPlaying()) {
+			if (gameController.isGameRunning()) {
 				sounds.play(PacManGameSound.PACMAN_DEATH);
 			}
 		}).restart();
@@ -115,7 +115,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		// enter READY state
 		if (newState == PacManGameState.READY) {
 			rendering.resetAllAnimations(game);
-			if (gameController.isPlayingRequested()) {
+			if (!gameController.isGameRunning() && !gameController.isAttractMode()) {
 				gameController.stateTimer().resetSeconds(4.5);
 				Assets2D.SOUND.get(variant).play(PacManGameSound.GAME_READY);
 			} else {
@@ -181,7 +181,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		} else {
 			gc.drawImage(levelCompleteAnimation.getCurrentMazeImage(), 0, t(3));
 		}
-		if (gameController.isPlayingRequested() || gameController.isPlaying()) {
+		if (gameController.isGameRunning()) {
 			rendering.drawLivesCounter(gc, game, t(2), t(34));
 			rendering.drawGameState(gc, game, gameController.state);
 			rendering.drawScore(gc, game, false);
