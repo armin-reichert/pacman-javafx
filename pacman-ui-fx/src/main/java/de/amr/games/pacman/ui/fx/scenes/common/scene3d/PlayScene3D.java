@@ -13,13 +13,9 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import de.amr.games.pacman.controller.BonusEatenEvent;
-import de.amr.games.pacman.controller.DeadGhostCountChangeEvent;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameEvent;
 import de.amr.games.pacman.controller.PacManGameState;
-import de.amr.games.pacman.controller.PacManLostPowerEvent;
-import de.amr.games.pacman.controller.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
@@ -27,7 +23,6 @@ import de.amr.games.pacman.ui.fx.rendering.standard.Assets2D;
 import de.amr.games.pacman.ui.fx.scenes.common.CameraController;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.sound.PacManGameSound;
-import de.amr.games.pacman.ui.sound.SoundManager;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.scene.AmbientLight;
@@ -264,37 +259,11 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void onGameEvent(PacManGameEvent gameEvent) {
-//		updateSound(gameEvent);
+		updateSound(gameEvent);
 	}
 
 	private void updateSound(PacManGameEvent gameEvent) {
-		// TODO FX sound
-		SoundManager sounds = null;
-		if (gameEvent instanceof ScatterPhaseStartedEvent) {
-			ScatterPhaseStartedEvent e = (ScatterPhaseStartedEvent) gameEvent;
-			if (e.scatterPhase > 0) {
-				sounds.stop(PacManGameSound.SIRENS.get(e.scatterPhase - 1));
-			}
-			sounds.loopForever(PacManGameSound.SIRENS.get(e.scatterPhase));
-		}
-
-		else if (gameEvent instanceof PacManLostPowerEvent) {
-			sounds.stop(PacManGameSound.PACMAN_POWER);
-		}
-
-		else if (gameEvent instanceof BonusEatenEvent) {
-			sounds.play(PacManGameSound.BONUS_EATEN);
-		}
-
-		else if (gameEvent instanceof DeadGhostCountChangeEvent) {
-			DeadGhostCountChangeEvent e = (DeadGhostCountChangeEvent) gameEvent;
-			if (e.oldCount == 0 && e.newCount > 0) {
-				sounds.play(PacManGameSound.GHOST_RETURNING_HOME);
-			} else if (e.oldCount > 0 && e.newCount == 0) {
-				sounds.stop(PacManGameSound.GHOST_RETURNING_HOME);
-			}
-		}
-
+		// TODO
 	}
 
 	private void setSceneColor() {

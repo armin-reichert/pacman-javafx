@@ -5,6 +5,8 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.controller.BonusEatenEvent;
 import de.amr.games.pacman.controller.DeadGhostCountChangeEvent;
+import de.amr.games.pacman.controller.ExtraLifeEvent;
+import de.amr.games.pacman.controller.PacManFoundFoodEvent;
 import de.amr.games.pacman.controller.PacManGameEvent;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.PacManLostPowerEvent;
@@ -158,6 +160,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// enter LEVEL_COMPLETE
 		if (newState == PacManGameState.LEVEL_COMPLETE) {
+			sounds.stopAll();
 			game.ghosts().forEach(ghost -> ghost.visible = false);
 			levelCompleteAnimation = new LevelCompleteAnimation(game.level.numFlashes);
 			double totalDuration = levelCompleteAnimation.getTotalDuration().toSeconds();
@@ -191,8 +194,17 @@ public class PlayScene2D extends AbstractGameScene2D {
 			sounds.stop(PacManGameSound.PACMAN_POWER);
 		}
 
+		else if (gameEvent instanceof PacManFoundFoodEvent) {
+			sounds.play(PacManGameSound.PACMAN_MUNCH);
+		}
+
 		else if (gameEvent instanceof BonusEatenEvent) {
 			sounds.play(PacManGameSound.BONUS_EATEN);
+		}
+
+		else if (gameEvent instanceof ExtraLifeEvent) {
+			sounds.play(PacManGameSound.EXTRA_LIFE);
+			gameController.userInterface.showFlashMessage("Extra life!");
 		}
 
 		else if (gameEvent instanceof DeadGhostCountChangeEvent) {
