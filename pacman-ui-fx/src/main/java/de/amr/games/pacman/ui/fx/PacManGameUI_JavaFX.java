@@ -163,6 +163,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		case DIGIT3:
 			if (control) {
 				toggleUse3DScenes();
+				String message = String.format("3D scenes %s", Env.$use3DScenes.get() ? "ON" : "OFF");
+				showFlashMessage(message);
 			}
 			break;
 		case I:
@@ -216,8 +218,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		if (scene(gameVariant, controller.state, game, false) != scene(gameVariant, controller.state, game, true)) {
 			selectScene(gameVariant, controller.state, game, Env.$use3DScenes.get());
 		}
-		String message = String.format("3D scenes %s", Env.$use3DScenes.get() ? "ON" : "OFF");
-		showFlashMessage(message);
 	}
 
 	private void keepGameSceneMaximized(GameScene gameScene, Scene parentScene, OptionalDouble optionalAspectRatio) {
@@ -241,14 +241,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void update() {
-		if (currentGameScene == null) {
-			log("Cannot update: no game scene");
-			return;
-		}
-		if (currentGameScene instanceof AbstractGameScene2D) {
-			AbstractGameScene2D scene2D = (AbstractGameScene2D) currentGameScene;
-			scene2D.clearCanvas();
-		}
 		currentGameScene.update();
 		flashMessageView.update();
 		hud.update();

@@ -35,6 +35,7 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 
 	@Override
 	public void update() {
+		super.update();
 		sceneController.update();
 		rendering.drawFlap(gc, sceneController.flap);
 		rendering.drawStork(gc, sceneController.stork);

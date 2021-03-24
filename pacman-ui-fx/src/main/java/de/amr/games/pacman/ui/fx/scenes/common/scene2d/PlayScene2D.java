@@ -163,6 +163,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void update() {
+		super.update();
 		render(gameController.game());
 	}
 

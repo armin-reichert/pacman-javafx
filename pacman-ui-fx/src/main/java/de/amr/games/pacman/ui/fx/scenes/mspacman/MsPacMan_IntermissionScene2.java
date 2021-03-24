@@ -33,6 +33,7 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 	@Override
 	public void update() {
+		super.update();
 		sceneController.update();
 		rendering.drawFlap(gc, sceneController.flap);
 		rendering.drawPlayer(gc, sceneController.msPacMan);

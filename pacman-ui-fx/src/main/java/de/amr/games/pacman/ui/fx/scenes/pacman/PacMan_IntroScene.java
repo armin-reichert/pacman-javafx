@@ -42,6 +42,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 
 	@Override
 	public void update() {
+		super.update();
 		animation.update();
 		rendering.drawScore(gc, gameController.game(), true);
 		drawGallery();

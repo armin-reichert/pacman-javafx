@@ -62,7 +62,8 @@ public abstract class AbstractGameScene2D implements GameScene {
 		canvas.getTransforms().add(new Scale(scaling, scaling));
 	}
 
-	public void clearCanvas() {
+	@Override
+	public void update() {
 		GraphicsContext g = canvas.getGraphicsContext2D();
 		g.setFill(Color.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());

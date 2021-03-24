@@ -33,6 +33,7 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 
 	@Override
 	public void update() {
+		super.update();
 		sceneController.update();
 		rendering.drawGhost(gc, sceneController.blinky, false);
 		if (sceneController.phase == Phase.BLINKY_CHASING_PACMAN) {
