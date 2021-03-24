@@ -43,4 +43,6 @@ public interface GameScene {
 	void useMoveableCamera(boolean use);
 
 	Camera getActiveCamera();
+
+	void stopAllSounds();
 }

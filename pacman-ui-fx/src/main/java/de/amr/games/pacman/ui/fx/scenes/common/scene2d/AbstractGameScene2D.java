@@ -86,4 +86,9 @@ public abstract class AbstractGameScene2D implements GameScene {
 	public SubScene getFXSubScene() {
 		return scene;
 	}
+
+	@Override
+	public void stopAllSounds() {
+		sounds.stopAll();
+	}
 }

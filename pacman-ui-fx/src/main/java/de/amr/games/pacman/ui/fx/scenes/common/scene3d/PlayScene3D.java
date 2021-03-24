@@ -88,6 +88,11 @@ public class PlayScene3D implements GameScene {
 		return getClass().getSimpleName() + "@" + hashCode();
 	}
 
+	@Override
+	public void stopAllSounds() {
+		// TODO
+	}
+
 	private void buildSceneGraph() {
 		final GameVariant gameVariant = gameController.gameVariant();
 		final GameModel game = gameController.game();

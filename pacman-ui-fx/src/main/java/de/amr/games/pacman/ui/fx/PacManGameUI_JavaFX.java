@@ -125,6 +125,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		if (currentGameScene != scene(gameVariant, newState, game, _3D)) {
 			selectScene(gameVariant, newState, game, _3D);
 		}
+		if (newState == PacManGameState.INTRO) {
+			currentGameScene.stopAllSounds();
+		}
 		currentGameScene.onGameStateChange(oldState, newState);
 	}
 
