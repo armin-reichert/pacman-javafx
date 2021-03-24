@@ -104,6 +104,11 @@ public class PlayScene2D extends AbstractGameScene2D {
 	}
 
 	@Override
+	public void end() {
+		log("Game scene %s: end", this);
+	}
+
+	@Override
 	public void onGameStateChange(PacManGameState oldState, PacManGameState newState) {
 		GameVariant variant = gameController.gameVariant();
 		GameModel game = gameController.game();

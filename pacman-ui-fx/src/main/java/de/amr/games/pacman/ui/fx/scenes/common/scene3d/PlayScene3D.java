@@ -1,6 +1,7 @@
 package de.amr.games.pacman.ui.fx.scenes.common.scene3d;
 
 import static de.amr.games.pacman.lib.Logging.log;
+import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static java.util.function.Predicate.not;
 
 import java.util.Collection;
@@ -118,8 +119,9 @@ public class PlayScene3D implements GameScene {
 		livesCounter3D = new LivesCounter3D(game.player, 1, 1);
 
 		tgMaze = new Group();
-		tgMaze.setTranslateX(-GameScene.UNSCALED_SCENE_WIDTH / 2);
-		tgMaze.setTranslateY(-GameScene.UNSCALED_SCENE_HEIGHT / 2);
+
+		tgMaze.setTranslateX(-0.5 * game.level.world.numCols() * TS);
+		tgMaze.setTranslateY(-0.5 * game.level.world.numRows() * TS);
 
 		tgMaze.getChildren().addAll(score3D.get(), livesCounter3D.get());
 		tgMaze.getChildren().addAll(maze.getWalls());
@@ -158,6 +160,11 @@ public class PlayScene3D implements GameScene {
 		// TODO remove again
 		gameController.game().player.immune = true;
 		buildSceneGraph();
+	}
+
+	@Override
+	public void end() {
+		log("Game scene %s: end", this);
 	}
 
 	@Override

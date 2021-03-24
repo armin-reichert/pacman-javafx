@@ -75,7 +75,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		//@formatter:on
 	}
 
-	static GameScene scene(GameVariant gameVariant, PacManGameState gameState, GameModel game, boolean _3D) {
+	private static GameScene scene(GameVariant gameVariant, PacManGameState gameState, GameModel game, boolean _3D) {
 		return SCENES[gameVariant.ordinal()][gameState == PacManGameState.INTRO ? 0
 				: gameState == PacManGameState.INTERMISSION ? game.intermissionNumber : 4][_3D ? 1 : 0];
 	}
@@ -95,9 +95,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		this.controller = controller;
 		keyboard = new Keyboard();
 		flashMessageView = new FlashMessageView();
-		mainSceneRoot = new StackPane();
-		mainScene = new Scene(mainSceneRoot, GameScene.ASPECT_RATIO * height, height, Color.rgb(20, 20, 60));
-
 		hud = new HUD(this, Pos.TOP_LEFT);
 
 		controller.addStateChangeListener(this::handleGameStateChange);
@@ -109,10 +106,13 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
 		stage.getIcons().add(new Image(getClass().getResource("/pacman/graphics/pacman.png").toExternalForm()));
 		stage.setOnCloseRequest(e -> Platform.exit());
+
+		mainSceneRoot = new StackPane();
+		mainScene = new Scene(mainSceneRoot, AbstractGameScene2D.ASPECT_RATIO * height, height, Color.rgb(20, 20, 60));
+
+		selectGameScene(controller.gameVariant(), controller.state, controller.game(), Env.$use3DScenes.get());
+
 		stage.setScene(mainScene);
-
-		selectScene(controller.gameVariant(), controller.state, controller.game(), Env.$use3DScenes.get());
-
 		stage.centerOnScreen();
 		stage.show();
 	}
@@ -123,7 +123,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		GameModel game = controller.game();
 		boolean _3D = Env.$use3DScenes.get();
 		if (currentGameScene != scene(gameVariant, newState, game, _3D)) {
-			selectScene(gameVariant, newState, game, _3D);
+			selectGameScene(gameVariant, newState, game, _3D);
 		}
 		if (newState == PacManGameState.INTRO) {
 			currentGameScene.stopAllSounds();
@@ -137,7 +137,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		keepGameSceneMaximized(gameScene, mainScene, gameScene.aspectRatio());
 	}
 
-	private void selectScene(GameVariant gameVariant, PacManGameState gameState, GameModel game, boolean _3D) {
+	private void selectGameScene(GameVariant gameVariant, PacManGameState gameState, GameModel game, boolean _3D) {
 		GameScene newGameScene = scene(gameVariant, gameState, game, _3D);
 		if (currentGameScene != newGameScene) {
 			log("Change game scene %s to %s", currentGameScene, newGameScene);
@@ -219,7 +219,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		GameVariant gameVariant = controller.gameVariant();
 		GameModel game = controller.game();
 		if (scene(gameVariant, controller.state, game, false) != scene(gameVariant, controller.state, game, true)) {
-			selectScene(gameVariant, controller.state, game, Env.$use3DScenes.get());
+			selectGameScene(gameVariant, controller.state, game, Env.$use3DScenes.get());
 		}
 	}
 

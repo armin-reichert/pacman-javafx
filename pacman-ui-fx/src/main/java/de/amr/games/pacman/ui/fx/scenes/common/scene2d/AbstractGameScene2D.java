@@ -1,6 +1,11 @@
 package de.amr.games.pacman.ui.fx.scenes.common.scene2d;
 
+import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
+
+import java.util.OptionalDouble;
+
 import de.amr.games.pacman.controller.PacManGameController;
+import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.sound.SoundManager;
@@ -19,6 +24,10 @@ import javafx.scene.transform.Scale;
  */
 public abstract class AbstractGameScene2D implements GameScene {
 
+	public static final double UNSCALED_SCENE_WIDTH = 28 * TS;
+	public static final double UNSCALED_SCENE_HEIGHT = 36 * TS;
+	public static final double ASPECT_RATIO = UNSCALED_SCENE_WIDTH / UNSCALED_SCENE_HEIGHT;
+
 	protected final SubScene scene;
 	protected final Canvas canvas;
 	protected final GraphicsContext gc;
@@ -36,6 +45,11 @@ public abstract class AbstractGameScene2D implements GameScene {
 		scene = new SubScene(group, UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT);
 		scene.widthProperty().bind(canvas.widthProperty());
 		scene.heightProperty().bind(canvas.heightProperty());
+	}
+
+	@Override
+	public OptionalDouble aspectRatio() {
+		return OptionalDouble.of(UNSCALED_SCENE_WIDTH / UNSCALED_SCENE_HEIGHT);
 	}
 
 	@Override
@@ -60,6 +74,10 @@ public abstract class AbstractGameScene2D implements GameScene {
 		double scaling = height / UNSCALED_SCENE_HEIGHT;
 		canvas.getTransforms().clear();
 		canvas.getTransforms().add(new Scale(scaling, scaling));
+	}
+
+	@Override
+	public void onGameStateChange(PacManGameState oldState, PacManGameState newState) {
 	}
 
 	@Override
