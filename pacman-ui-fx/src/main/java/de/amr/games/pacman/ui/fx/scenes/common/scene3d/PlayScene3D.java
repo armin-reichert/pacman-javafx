@@ -277,7 +277,7 @@ public class PlayScene3D implements GameScene {
 
 		gameController.timer().reset();
 		PauseTransition pause = new PauseTransition(Duration.seconds(3));
-		pause.setOnFinished(e -> gameController.letCurrentGameStateExpire());
+		pause.setOnFinished(e -> gameController.timer().forceExpiration());
 		pause.play();
 	}
 
@@ -289,7 +289,7 @@ public class PlayScene3D implements GameScene {
 		animation.setDelay(Duration.seconds(2));
 		animation.setFromZ(0);
 		animation.setToZ(1);
-		animation.setOnFinished(e -> gameController.letCurrentGameStateExpire());
+		animation.setOnFinished(e -> gameController.timer().forceExpiration());
 		animation.play();
 	}
 }

@@ -51,7 +51,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 			start.setOnFinished(e -> game.player.visible = false);
 			PauseTransition end = new PauseTransition(Duration.seconds(1));
 			sequence = new SequentialTransition(start, flashing, end);
-			sequence.setOnFinished(e -> gameController.letCurrentGameStateExpire());
+			sequence.setOnFinished(e -> gameController.timer().forceExpiration());
 		}
 
 		public Image getCurrentMazeImage() {
@@ -157,7 +157,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// enter LEVEL_STARTING state
 		if (newState == PacManGameState.LEVEL_STARTING) {
-			gameController.letCurrentGameStateExpire();
+			gameController.timer().forceExpiration();
 		}
 
 		// enter GAME_OVER state
