@@ -4,6 +4,7 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.controller.BonusEatenEvent;
+import de.amr.games.pacman.controller.DeadGhostCountChangeEvent;
 import de.amr.games.pacman.controller.PacManGameEvent;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.PacManLostPowerEvent;
@@ -183,6 +184,15 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		else if (gameEvent instanceof BonusEatenEvent) {
 			sounds.play(PacManGameSound.BONUS_EATEN);
+		}
+
+		else if (gameEvent instanceof DeadGhostCountChangeEvent) {
+			DeadGhostCountChangeEvent e = (DeadGhostCountChangeEvent) gameEvent;
+			if (e.oldCount == 0 && e.newCount > 0) {
+				sounds.play(PacManGameSound.GHOST_RETURNING_HOME);
+			} else if (e.oldCount > 0 && e.newCount == 0) {
+				sounds.stop(PacManGameSound.GHOST_RETURNING_HOME);
+			}
 		}
 	}
 

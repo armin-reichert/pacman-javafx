@@ -35,7 +35,7 @@ public class PacManGameSounds {
 		pacManSounds.put(PacManGameSound.PACMAN_DEATH,       url("/pacman/sound/death_1.wav"));
 		pacManSounds.put(PacManGameSound.PACMAN_POWER,       url("/pacman/sound/power_pellet.wav"));
 		pacManSounds.put(PacManGameSound.GHOST_EATEN,        url("/pacman/sound/eat_ghost.wav"));
-		pacManSounds.put(PacManGameSound.GHOST_EYES,         url("/pacman/sound/retreating.wav"));
+		pacManSounds.put(PacManGameSound.GHOST_RETURNING_HOME,         url("/pacman/sound/retreating.wav"));
 		pacManSounds.put(PacManGameSound.GHOST_SIREN_1,      url("/pacman/sound/siren_1.wav"));
 		pacManSounds.put(PacManGameSound.GHOST_SIREN_2,      url("/pacman/sound/siren_2.wav"));
 		pacManSounds.put(PacManGameSound.GHOST_SIREN_3,      url("/pacman/sound/siren_3.wav"));
@@ -53,7 +53,7 @@ public class PacManGameSounds {
 		msPacManSounds.put(PacManGameSound.PACMAN_DEATH,     url("/mspacman/sound/Died.wav"));
 		msPacManSounds.put(PacManGameSound.PACMAN_POWER,     url("/mspacman/sound/Scared Ghost.wav"));
 		msPacManSounds.put(PacManGameSound.GHOST_EATEN,      url("/mspacman/sound/Ghost.wav"));
-		msPacManSounds.put(PacManGameSound.GHOST_EYES,       url("/mspacman/sound/Ghost Eyes.wav"));
+		msPacManSounds.put(PacManGameSound.GHOST_RETURNING_HOME,       url("/mspacman/sound/Ghost Eyes.wav"));
 		msPacManSounds.put(PacManGameSound.GHOST_SIREN_1,    url("/mspacman/sound/Ghost Noise.wav"));
 		msPacManSounds.put(PacManGameSound.GHOST_SIREN_2,    url("/mspacman/sound/Ghost Noise 1.wav"));
 		msPacManSounds.put(PacManGameSound.GHOST_SIREN_3,    url("/mspacman/sound/Ghost Noise 2.wav"));
