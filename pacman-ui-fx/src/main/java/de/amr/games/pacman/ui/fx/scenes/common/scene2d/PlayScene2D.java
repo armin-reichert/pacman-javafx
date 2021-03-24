@@ -113,10 +113,10 @@ public class PlayScene2D extends AbstractGameScene2D {
 		GameVariant variant = gameController.gameVariant();
 		GameModel game = gameController.game();
 
-		// enter READY state
+		// enter READY
 		if (newState == PacManGameState.READY) {
 			rendering.resetAllAnimations(game);
-			if (!gameController.isGameRunning() && !gameController.isAttractMode()) {
+			if (!gameController.isAttractMode() && !gameController.isGameRunning()) {
 				gameController.stateTimer().resetSeconds(4.5);
 				Assets2D.SOUND.get(variant).play(PacManGameSound.GAME_READY);
 			} else {
@@ -124,30 +124,39 @@ public class PlayScene2D extends AbstractGameScene2D {
 			}
 		}
 
-		// enter HUNTING state
+		// enter HUNTING
 		if (newState == PacManGameState.HUNTING) {
 			rendering.mazeAnimations().energizerBlinking().restart();
 			rendering.playerAnimations().playerMunching(game.player).forEach(TimedSequence::restart);
 			gameController.game().ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(TimedSequence::restart);
 		}
 
-		// exit HUNTING state
+		// exit HUNTING
 		if (oldState == PacManGameState.HUNTING) {
 			rendering.mazeAnimations().energizerBlinking().reset();
 		}
 
-		// enter PACMAN_DYING state
+		// enter PACMAN_DYING
 		if (newState == PacManGameState.PACMAN_DYING) {
 			sounds.stopAll();
 			playAnimationPlayerDying();
 		}
 
-		// enter GHOST_DYING state
+		// enter GHOST_DYING
 		if (newState == PacManGameState.GHOST_DYING) {
+			sounds.play(PacManGameSound.GHOST_EATEN);
 			rendering.mazeAnimations().energizerBlinking().restart();
 		}
 
-		// enter LEVEL_COMPLETE state
+		// exit GHOST_DYING
+		if (oldState == PacManGameState.GHOST_DYING) {
+			// the dead(s) ghost will return home now
+			if (game.ghosts(GhostState.DEAD).count() > 0) {
+				sounds.loopForever(PacManGameSound.GHOST_RETURNING_HOME);
+			}
+		}
+
+		// enter LEVEL_COMPLETE
 		if (newState == PacManGameState.LEVEL_COMPLETE) {
 			game.ghosts().forEach(ghost -> ghost.visible = false);
 			levelCompleteAnimation = new LevelCompleteAnimation(game.level.numFlashes);
@@ -157,12 +166,12 @@ public class PlayScene2D extends AbstractGameScene2D {
 			levelCompleteAnimation.play();
 		}
 
-		// enter LEVEL_STARTING state
+		// enter LEVEL_STARTING
 		if (newState == PacManGameState.LEVEL_STARTING) {
 			gameController.stateTimer().forceExpiration();
 		}
 
-		// enter GAME_OVER state
+		// enter GAME_OVER
 		if (newState == PacManGameState.GAME_OVER) {
 			game.ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(TimedSequence::reset);
 		}
