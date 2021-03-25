@@ -53,21 +53,21 @@ public class HUD extends HBox {
 	}
 
 	public void update() {
-		TickTimer stateTimer = ui.controller.stateTimer();
+		TickTimer stateTimer = ui.gameController.stateTimer();
 		text = "";
 		line("Paused (CTRL+P)", "%s", yesNo(Env.$paused.get()));
 		line();
-		line("Game Variant", "%s", ui.controller.gameVariant());
-		line("Playing", "%s", yesNo(ui.controller.isGameRunning()));
-		line("Attract Mode", "%s", yesNo(ui.controller.isAttractMode()));
-		line("Game Level", "%d", ui.controller.game().levelNumber);
-		line("Game State", "%s", ui.controller.state);
+		line("Game Variant", "%s", ui.gameController.gameVariant());
+		line("Playing", "%s", yesNo(ui.gameController.isGameRunning()));
+		line("Attract Mode", "%s", yesNo(ui.gameController.isAttractMode()));
+		line("Game Level", "%d", ui.gameController.game().levelNumber);
+		line("Game State", "%s", ui.gameController.state);
 		line("", "Running:   %s", stateTimer.ticked());
 		line("", "Remaining: %s",
 				stateTimer.ticksRemaining() == Long.MAX_VALUE ? "indefinite" : stateTimer.ticksRemaining());
 		line();
-		line("Autopilot (A)", "%s", onOff(ui.controller.autopilot.enabled));
-		line("Immunity (I)", "%s", onOff(ui.controller.isPlayerImmune()));
+		line("Autopilot (A)", "%s", onOff(ui.gameController.autopilot.enabled));
+		line("Immunity (I)", "%s", onOff(ui.gameController.isPlayerImmune()));
 		line();
 		line("Window Size", "w=%.0f h=%.0f", ui.mainScene.getWindow().getWidth(), ui.mainScene.getWindow().getHeight());
 		line("Main Scene Size", "w=%.0f h=%.0f", ui.mainScene.getWidth(), ui.mainScene.getHeight());

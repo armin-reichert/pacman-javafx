@@ -81,7 +81,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	public final HUD hud;
 
 	final Stage stage;
-	final PacManGameController controller;
+	final PacManGameController gameController;
 	final Keyboard keyboard;
 	final Scene mainScene;
 	final StackPane mainSceneRoot;
@@ -90,7 +90,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController controller, double height) {
 		this.stage = stage;
-		this.controller = controller;
+		this.gameController = controller;
 		keyboard = new Keyboard();
 		flashMessageView = new FlashMessageView();
 		hud = new HUD(this, Pos.TOP_LEFT);
@@ -123,8 +123,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private void handleGameStateChange(PacManGameState oldState, PacManGameState newState) {
 		log("Handle game state change from %s to %s", oldState, newState);
-		GameVariant gameVariant = controller.gameVariant();
-		GameModel game = controller.game();
+		GameVariant gameVariant = gameController.gameVariant();
+		GameModel game = gameController.game();
 		boolean _3D = Env.$use3DScenes.get();
 		if (currentGameScene != scene(gameVariant, newState, game, _3D)) {
 			selectGameScene(gameVariant, newState, game, _3D);
@@ -143,7 +143,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				currentGameScene.end();
 			}
 			if (newGameScene.getController() == null) {
-				newGameScene.setController(controller);
+				newGameScene.setController(gameController);
 				newGameScene.setAvailableSize(mainScene.getWidth(), mainScene.getHeight());
 				keepGameSceneMaximized(newGameScene, mainScene);
 			}
@@ -188,7 +188,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			}
 			break;
 		case V:
-			controller.toggleGameVariant();
+			gameController.toggleGameVariant();
 			break;
 		case S:
 			if (control) {
@@ -218,10 +218,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private void toggleUse3DScenes() {
 		Env.$use3DScenes.set(!Env.$use3DScenes.get());
-		GameVariant gameVariant = controller.gameVariant();
-		GameModel game = controller.game();
-		if (scene(gameVariant, controller.state, game, false) != scene(gameVariant, controller.state, game, true)) {
-			selectGameScene(gameVariant, controller.state, game, Env.$use3DScenes.get());
+		GameVariant gameVariant = gameController.gameVariant();
+		GameModel game = gameController.game();
+		if (scene(gameVariant, gameController.state, game, false) != scene(gameVariant, gameController.state, game, true)) {
+			selectGameScene(gameVariant, gameController.state, game, Env.$use3DScenes.get());
 		}
 	}
 
@@ -253,9 +253,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void reset() {
-		if (currentGameScene != null) {
-			currentGameScene.end();
-		}
+		SoundAssets.get(gameController.gameVariant()).stopAll();
+		currentGameScene.end();
 	}
 
 	@Override
