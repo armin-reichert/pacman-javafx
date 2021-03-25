@@ -95,7 +95,8 @@ public abstract class AbstractGameScene2D implements GameScene {
 		gameController.removeGameEventListener(this::onGameEvent);
 	}
 
-	protected void onGameEvent(PacManGameEvent gameEvent) {
+	@Override
+	public void onGameEvent(PacManGameEvent gameEvent) {
 	}
 
 	@Override

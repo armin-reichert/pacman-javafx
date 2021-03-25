@@ -3,11 +3,9 @@ package de.amr.games.pacman.ui.fx;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.ui.fx.scenes.common.Env;
 import de.amr.games.pacman.ui.fx.scenes.common.scene2d.AbstractGameScene2D;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Camera;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -18,15 +16,13 @@ public class HUD extends HBox {
 	private final Text textView;
 	private String text;
 
-	public HUD(PacManGameUI_JavaFX ui, Pos dockingPosition) {
+	public HUD(PacManGameUI_JavaFX ui) {
 		this.ui = ui;
 		textView = new Text();
 		textView.setFill(Color.LIGHTGREEN);
 		textView.setFont(Font.font("Monospace", 14));
 		getChildren().add(textView);
 		visibleProperty().bind(Env.$infoViewVisible);
-		StackPane.setAlignment(this, dockingPosition);
-		StackPane.setMargin(this, new Insets(10));
 	}
 
 	private void line(String column1, String fmtColumn2, Object... args) {

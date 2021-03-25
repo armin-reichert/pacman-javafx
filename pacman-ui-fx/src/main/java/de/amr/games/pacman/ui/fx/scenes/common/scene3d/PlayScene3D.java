@@ -308,7 +308,8 @@ public class PlayScene3D implements GameScene {
 		sounds.play(PacManGameSound.PACMAN_DEATH);
 	}
 
-	private void onGameEvent(PacManGameEvent gameEvent) {
+	@Override
+	public void onGameEvent(PacManGameEvent gameEvent) {
 		if (gameEvent instanceof ScatterPhaseStartedEvent) {
 			ScatterPhaseStartedEvent e = (ScatterPhaseStartedEvent) gameEvent;
 			if (e.scatterPhase > 0) {

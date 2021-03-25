@@ -132,7 +132,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 	}
 
 	@Override
-	protected void onGameEvent(PacManGameEvent gameEvent) {
+	public void onGameEvent(PacManGameEvent gameEvent) {
 		if (gameEvent instanceof ScatterPhaseStartedEvent) {
 			ScatterPhaseStartedEvent e = (ScatterPhaseStartedEvent) gameEvent;
 			if (e.scatterPhase > 0) {

@@ -33,6 +33,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
@@ -92,8 +93,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		this.stage = stage;
 		this.gameController = controller;
 		keyboard = new Keyboard();
-		flashMessageView = new FlashMessageView();
-		hud = new HUD(this, Pos.TOP_LEFT);
 
 		controller.addStateChangeListener(this::handleGameStateChange);
 
@@ -106,6 +105,12 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		stage.setOnCloseRequest(e -> Platform.exit());
 
 		mainSceneRoot = new StackPane();
+
+		hud = new HUD(this);
+		StackPane.setAlignment(hud, Pos.TOP_LEFT);
+
+		flashMessageView = new FlashMessageView();
+
 		GameScene initialGameScene = scene(controller.gameVariant(), controller.state, controller.game(),
 				Env.$use3DScenes.get());
 		if (initialGameScene.aspectRatio().isPresent()) {
