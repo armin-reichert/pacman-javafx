@@ -7,9 +7,6 @@ import java.util.EnumMap;
 
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
-import de.amr.games.pacman.ui.fx.sound.PacManGameSoundManager;
-import de.amr.games.pacman.ui.fx.sound.PacManGameSounds;
-import de.amr.games.pacman.ui.sound.SoundManager;
 import javafx.scene.paint.Color;
 
 public class Assets2D {
@@ -19,13 +16,6 @@ public class Assets2D {
 	static {
 		RENDERING_2D.put(MS_PACMAN, new MsPacMan_StandardRendering());
 		RENDERING_2D.put(PACMAN, new PacMan_StandardRendering());
-	}
-
-	public static final EnumMap<GameVariant, SoundManager> SOUND = new EnumMap<>(GameVariant.class);
-
-	static {
-		SOUND.put(MS_PACMAN, new PacManGameSoundManager(PacManGameSounds::msPacManSoundURL));
-		SOUND.put(PACMAN, new PacManGameSoundManager(PacManGameSounds::mrPacManSoundURL));
 	}
 
 	public static Color getFoodColor(int mazeNumber) {

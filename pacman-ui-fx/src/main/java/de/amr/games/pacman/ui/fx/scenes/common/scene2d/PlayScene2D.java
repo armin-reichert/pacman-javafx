@@ -14,11 +14,9 @@ import de.amr.games.pacman.controller.event.PacManLostPowerEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.animation.TimedSequence;
 import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
-import de.amr.games.pacman.ui.fx.rendering.standard.Assets2D;
 import de.amr.games.pacman.ui.sound.PacManGameSound;
 import de.amr.games.pacman.ui.sound.SoundManager;
 
@@ -63,7 +61,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void onGameStateChange(PacManGameState oldState, PacManGameState newState) {
-		GameVariant gameVariant = gameController.gameVariant();
 		GameModel gameModel = gameController.game();
 
 		// enter READY
@@ -72,7 +69,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 			rendering.resetAllAnimations(gameModel);
 			if (!gameController.isAttractMode() && !gameController.isGameRunning()) {
 				gameController.stateTimer().resetSeconds(4.5);
-				Assets2D.SOUND.get(gameVariant).play(PacManGameSound.GAME_READY);
+				sounds.play(PacManGameSound.GAME_READY);
 			} else {
 				gameController.stateTimer().resetSeconds(2);
 			}

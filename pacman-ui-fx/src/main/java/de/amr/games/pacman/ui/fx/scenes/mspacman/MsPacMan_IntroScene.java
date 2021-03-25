@@ -7,6 +7,7 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx.rendering.standard.Assets2D;
 import de.amr.games.pacman.ui.fx.scenes.common.scene2d.AbstractGameScene2D;
+import de.amr.games.pacman.ui.fx.sound.SoundAssets;
 import de.amr.games.pacman.ui.mspacman.MsPacMan_IntroScene_Controller;
 import de.amr.games.pacman.ui.mspacman.MsPacMan_IntroScene_Controller.Phase;
 import javafx.scene.paint.Color;
@@ -23,7 +24,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 	private TickTimer boardAnimationTimer = new TickTimer();
 
 	public MsPacMan_IntroScene() {
-		super(Assets2D.RENDERING_2D.get(GameVariant.MS_PACMAN), Assets2D.SOUND.get(GameVariant.MS_PACMAN));
+		super(Assets2D.RENDERING_2D.get(GameVariant.MS_PACMAN), SoundAssets.get(GameVariant.MS_PACMAN));
 	}
 
 	@Override

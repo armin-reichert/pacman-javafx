@@ -8,6 +8,7 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx.rendering.standard.Assets2D;
 import de.amr.games.pacman.ui.fx.scenes.common.scene2d.AbstractGameScene2D;
+import de.amr.games.pacman.ui.fx.sound.SoundAssets;
 import de.amr.games.pacman.ui.pacman.PacMan_IntroScene_Controller;
 import de.amr.games.pacman.ui.pacman.PacMan_IntroScene_Controller.GhostPortrait;
 import de.amr.games.pacman.ui.pacman.PacMan_IntroScene_Controller.Phase;
@@ -27,7 +28,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	private PacMan_IntroScene_Controller animation;
 
 	public PacMan_IntroScene() {
-		super(Assets2D.RENDERING_2D.get(GameVariant.PACMAN), Assets2D.SOUND.get(GameVariant.PACMAN));
+		super(Assets2D.RENDERING_2D.get(GameVariant.PACMAN), SoundAssets.get(GameVariant.PACMAN));
 	}
 
 	@Override

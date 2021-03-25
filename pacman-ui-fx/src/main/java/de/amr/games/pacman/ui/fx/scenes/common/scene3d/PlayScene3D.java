@@ -251,8 +251,7 @@ public class PlayScene3D implements GameScene {
 			setSceneColor();
 			if (!gameController.isGameRunning() && !gameController.isAttractMode()) {
 				gameController.stateTimer().resetSeconds(4.5);
-				// TODO use FX sound
-				Assets2D.SOUND.get(gameController.gameVariant()).play(PacManGameSound.GAME_READY);
+				sounds.play(PacManGameSound.GAME_READY);
 			} else {
 				gameController.stateTimer().resetSeconds(2);
 			}
