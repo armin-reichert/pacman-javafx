@@ -156,6 +156,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			currentGameScene.start();
 			mainSceneRoot.getChildren().clear();
 			mainSceneRoot.getChildren().addAll(currentGameScene.getFXSubScene(), flashMessageView, hud);
+			currentGameScene.getFXSubScene().requestFocus();
 		}
 	}
 
