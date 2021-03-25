@@ -124,28 +124,22 @@ public class Ghost3D implements Supplier<Node> {
 		root.setTranslateX(ghost.position.x);
 		root.setTranslateY(ghost.position.y);
 		root.setViewOrder(-(ghost.position.y + 5));
+		root.setRotationAxis(Rotate.Y_AXIS);
+		root.setRotate(0);
 		switch (ghost.dir) {
 		case LEFT:
-			root.setRotationAxis(Rotate.Y_AXIS);
-			root.setRotate(0);
 			root.setRotationAxis(Rotate.Z_AXIS);
 			root.setRotate(180);
 			break;
 		case RIGHT:
-			root.setRotationAxis(Rotate.Y_AXIS);
-			root.setRotate(0);
 			root.setRotationAxis(Rotate.Z_AXIS);
 			root.setRotate(0);
 			break;
 		case UP:
-			root.setRotationAxis(Rotate.Y_AXIS);
-			root.setRotate(0);
 			root.setRotationAxis(Rotate.Z_AXIS);
 			root.setRotate(-90);
 			break;
 		case DOWN:
-			root.setRotationAxis(Rotate.Y_AXIS);
-			root.setRotate(0);
 			root.setRotationAxis(Rotate.Z_AXIS);
 			root.setRotate(90);
 			break;
