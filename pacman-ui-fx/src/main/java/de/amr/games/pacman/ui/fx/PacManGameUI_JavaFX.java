@@ -17,17 +17,16 @@ import de.amr.games.pacman.ui.fx.scenes.common.Env;
 import de.amr.games.pacman.ui.fx.scenes.common.FlashMessageView;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.common.scene2d.AbstractGameScene2D;
+import de.amr.games.pacman.ui.fx.scenes.common.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.scenes.common.scene3d.PlayScene3D;
 import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacMan_IntermissionScene1;
 import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacMan_IntermissionScene2;
 import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacMan_IntermissionScene3;
 import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacMan_IntroScene;
-import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacMan_PlayScene;
 import de.amr.games.pacman.ui.fx.scenes.pacman.PacMan_IntermissionScene1;
 import de.amr.games.pacman.ui.fx.scenes.pacman.PacMan_IntermissionScene2;
 import de.amr.games.pacman.ui.fx.scenes.pacman.PacMan_IntermissionScene3;
 import de.amr.games.pacman.ui.fx.scenes.pacman.PacMan_IntroScene;
-import de.amr.games.pacman.ui.fx.scenes.pacman.PacMan_PlayScene;
 import de.amr.games.pacman.ui.sound.SoundManager;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -58,8 +57,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		SCENES[MS_PACMAN.ordinal()][2][1] = new MsPacMan_IntermissionScene2();
 		SCENES[MS_PACMAN.ordinal()][3][0] = 
 		SCENES[MS_PACMAN.ordinal()][3][1] = new MsPacMan_IntermissionScene3();
-		SCENES[MS_PACMAN.ordinal()][4][0] = new MsPacMan_PlayScene();
-		SCENES[MS_PACMAN.ordinal()][4][1] = new PlayScene3D();
+		SCENES[MS_PACMAN.ordinal()][4][0] = new PlayScene2D(Assets2D.RENDERING_2D.get(MS_PACMAN), Assets2D.SOUND.get(MS_PACMAN));
+		SCENES[MS_PACMAN.ordinal()][4][1] = new PlayScene3D(Assets2D.SOUND.get(MS_PACMAN));
 
 		SCENES[PACMAN.ordinal()]   [0][0] = 
 		SCENES[PACMAN.ordinal()]   [0][1] = new PacMan_IntroScene();
@@ -69,8 +68,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		SCENES[PACMAN.ordinal()]   [2][1] = new PacMan_IntermissionScene2();
 		SCENES[PACMAN.ordinal()]   [3][0] = 
 		SCENES[PACMAN.ordinal()]   [3][1] = new PacMan_IntermissionScene3();
-		SCENES[PACMAN.ordinal()]   [4][0] = new PacMan_PlayScene();
-		SCENES[PACMAN.ordinal()]   [4][1] = new PlayScene3D();
+		SCENES[PACMAN.ordinal()]   [4][0] = new PlayScene2D(Assets2D.RENDERING_2D.get(PACMAN), Assets2D.SOUND.get(PACMAN));
+		SCENES[PACMAN.ordinal()]   [4][1] = new PlayScene3D(Assets2D.SOUND.get(PACMAN));
 		//@formatter:on
 	}
 

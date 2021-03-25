@@ -23,7 +23,7 @@ import de.amr.games.pacman.ui.sound.PacManGameSound;
 import de.amr.games.pacman.ui.sound.SoundManager;
 
 /**
- * This is where the action is.
+ * 2D scene displaying the maze and the game play for both, Pac-Man and Ms. Pac-Man games.
  * 
  * @author Armin Reichert
  */
@@ -63,16 +63,16 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void onGameStateChange(PacManGameState oldState, PacManGameState newState) {
-		GameVariant variant = gameController.gameVariant();
-		GameModel game = gameController.game();
+		GameVariant gameVariant = gameController.gameVariant();
+		GameModel gameModel = gameController.game();
 
 		// enter READY
 		if (newState == PacManGameState.READY) {
 			sounds.stopAll();
-			rendering.resetAllAnimations(game);
+			rendering.resetAllAnimations(gameModel);
 			if (!gameController.isAttractMode() && !gameController.isGameRunning()) {
 				gameController.stateTimer().resetSeconds(4.5);
-				Assets2D.SOUND.get(variant).play(PacManGameSound.GAME_READY);
+				Assets2D.SOUND.get(gameVariant).play(PacManGameSound.GAME_READY);
 			} else {
 				gameController.stateTimer().resetSeconds(2);
 			}
@@ -81,7 +81,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		// enter HUNTING
 		if (newState == PacManGameState.HUNTING) {
 			rendering.mazeAnimations().energizerBlinking().restart();
-			rendering.playerAnimations().playerMunching(game.player).forEach(TimedSequence::restart);
+			rendering.playerAnimations().playerMunching(gameModel.player).forEach(TimedSequence::restart);
 			gameController.game().ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(TimedSequence::restart);
 		}
 
@@ -105,7 +105,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		// exit GHOST_DYING
 		if (oldState == PacManGameState.GHOST_DYING) {
 			// the dead(s) ghost will return home now
-			if (game.ghosts(GhostState.DEAD).count() > 0) {
+			if (gameModel.ghosts(GhostState.DEAD).count() > 0) {
 				sounds.loopForever(PacManGameSound.GHOST_RETURNING_HOME);
 			}
 		}
@@ -113,8 +113,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 		// enter LEVEL_COMPLETE
 		if (newState == PacManGameState.LEVEL_COMPLETE) {
 			sounds.stopAll();
-			game.ghosts().forEach(ghost -> ghost.visible = false);
-			levelCompleteAnimation = new LevelCompleteAnimation(gameController, game.level.numFlashes);
+			gameModel.ghosts().forEach(ghost -> ghost.visible = false);
+			levelCompleteAnimation = new LevelCompleteAnimation(gameController, gameModel.level.numFlashes);
 			double totalDuration = levelCompleteAnimation.getTotalDuration().toSeconds();
 			log("Total LEVEL_COMPLETE animation duration: %f", totalDuration);
 			gameController.stateTimer().resetSeconds(totalDuration);
@@ -129,7 +129,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// enter GAME_OVER
 		if (newState == PacManGameState.GAME_OVER) {
-			game.ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(TimedSequence::reset);
+			sounds.stopAll();
+			gameModel.ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(TimedSequence::reset);
 		}
 	}
 

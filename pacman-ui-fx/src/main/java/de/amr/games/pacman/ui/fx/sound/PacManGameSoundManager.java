@@ -1,15 +1,13 @@
 package de.amr.games.pacman.ui.fx.sound;
 
 import java.net.URL;
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 import de.amr.games.pacman.ui.sound.PacManGameSound;
 import de.amr.games.pacman.ui.sound.SoundManager;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.util.Duration;
+import javafx.scene.media.AudioClip;
 
 /**
  * Sound manager for Pac-Man game variants.
@@ -18,27 +16,16 @@ import javafx.util.Duration;
  */
 public class PacManGameSoundManager implements SoundManager {
 
-	private final Map<PacManGameSound, Double> playbackRate = Map.of(//
-			PacManGameSound.GHOST_SIREN_1, 1.25//
-	);
-
 	private final Function<PacManGameSound, URL> fnSoundURL;
-	private final Map<PacManGameSound, MediaPlayer> clipCache = new EnumMap<>(PacManGameSound.class);
+	private final List<AudioClip> clipsRequested = new ArrayList<>();
 
 	public PacManGameSoundManager(Function<PacManGameSound, URL> fnSoundURL) {
 		this.fnSoundURL = fnSoundURL;
 	}
 
-	private MediaPlayer getClip(PacManGameSound sound) {
-		MediaPlayer clip = null;
-		if (clipCache.containsKey(sound)) {
-			clip = clipCache.get(sound);
-		} else {
-			clip = new MediaPlayer(new Media(fnSoundURL.apply(sound).toExternalForm()));
-			clipCache.put(sound, clip);
-		}
-		clip.seek(Duration.ZERO);
-		clip.setRate(playbackRate.getOrDefault(sound, 1.0));
+	private AudioClip getClip(PacManGameSound sound) {
+		AudioClip clip = new AudioClip(fnSoundURL.apply(sound).toExternalForm());
+		clipsRequested.add(clip);
 		return clip;
 	}
 
@@ -49,21 +36,22 @@ public class PacManGameSoundManager implements SoundManager {
 
 	@Override
 	public void loop(PacManGameSound sound, int repetitions) {
-		MediaPlayer player = getClip(sound);
-		player.setCycleCount(repetitions);
-		player.play();
+		AudioClip clip = getClip(sound);
+		clip.setCycleCount(repetitions);
+		clip.play();
 	}
 
 	@Override
 	public void stop(PacManGameSound sound) {
-		MediaPlayer player = getClip(sound);
-		player.stop();
+		AudioClip clip = getClip(sound);
+		clip.stop();
 	}
 
 	@Override
 	public void stopAll() {
-		for (MediaPlayer clip : clipCache.values()) {
+		for (AudioClip clip : clipsRequested) {
 			clip.stop();
 		}
+		clipsRequested.clear();
 	}
 }
