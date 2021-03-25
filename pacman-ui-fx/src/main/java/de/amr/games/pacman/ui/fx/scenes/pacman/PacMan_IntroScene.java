@@ -33,12 +33,9 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 
 	@Override
 	public void start() {
+		super.start();
 		animation = new PacMan_IntroScene_Controller(gameController, rendering);
 		animation.start();
-	}
-
-	@Override
-	public void end() {
 	}
 
 	@Override

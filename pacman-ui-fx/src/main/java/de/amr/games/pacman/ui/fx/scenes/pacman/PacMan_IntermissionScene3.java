@@ -25,12 +25,9 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 
 	@Override
 	public void start() {
+		super.start();
 		sceneController = new PacMan_IntermissionScene3_Controller(gameController, rendering, sounds);
 		sceneController.start();
-	}
-
-	@Override
-	public void end() {
 	}
 
 	@Override
