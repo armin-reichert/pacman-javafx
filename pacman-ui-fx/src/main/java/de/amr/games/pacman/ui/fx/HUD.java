@@ -44,25 +44,34 @@ public class HUD extends HBox {
 						camera.getTranslateZ(), camera.getRotate());
 	}
 
+	private String yesNo(boolean b) {
+		return b ? "YES" : "NO";
+	}
+
+	private String onOff(boolean b) {
+		return b ? "ON" : "OFF";
+	}
+
 	public void update() {
+		TickTimer stateTimer = ui.controller.stateTimer();
 		text = "";
-		line("Paused (CTRL+P)", "%s", Env.$paused.get() ? "YES" : "NO");
+		line("Paused (CTRL+P)", "%s", yesNo(Env.$paused.get()));
 		line();
 		line("Game Variant", "%s", ui.controller.gameVariant());
-		line("Playing", "%s", ui.controller.isGameRunning() ? "YES" : "NO");
+		line("Playing", "%s", yesNo(ui.controller.isGameRunning()));
+		line("Attract Mode", "%s", yesNo(ui.controller.isAttractMode()));
 		line("Game Level", "%d", ui.controller.game().levelNumber);
 		line("Game State", "%s", ui.controller.state);
-		TickTimer stateTimer = ui.controller.stateTimer();
 		line("", "Running:   %s", stateTimer.ticked());
 		line("", "Remaining: %s",
 				stateTimer.ticksRemaining() == Long.MAX_VALUE ? "indefinite" : stateTimer.ticksRemaining());
 		line();
-		line("Autopilot (A)", "%s", ui.controller.autopilot.enabled ? "ON" : "OFF");
-		line("Immunity (I)", "%s", ui.controller.isPlayerImmune() ? "ON" : "OFF");
+		line("Autopilot (A)", "%s", onOff(ui.controller.autopilot.enabled));
+		line("Immunity (I)", "%s", onOff(ui.controller.isPlayerImmune()));
 		line();
 		line("Window Size", "w=%.0f h=%.0f", ui.mainScene.getWindow().getWidth(), ui.mainScene.getWindow().getHeight());
 		line("Main Scene Size", "w=%.0f h=%.0f", ui.mainScene.getWidth(), ui.mainScene.getHeight());
-		line("3D Scenes (CTRL+3)", "%s", Env.$use3DScenes.get() ? "ON" : "OFF");
+		line("3D Scenes (CTRL+3)", "%s", onOff(Env.$use3DScenes.get()));
 		line();
 		line("Game Scene", "%s", ui.currentGameScene.getClass().getSimpleName());
 		line("Game Scene Size", "w=%.0f h=%.0f", ui.currentGameScene.getFXSubScene().getWidth(),

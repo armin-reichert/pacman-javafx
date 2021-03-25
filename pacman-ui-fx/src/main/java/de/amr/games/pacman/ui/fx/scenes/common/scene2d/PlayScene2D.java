@@ -68,6 +68,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// enter READY
 		if (newState == PacManGameState.READY) {
+			sounds.stopAll();
 			rendering.resetAllAnimations(game);
 			if (!gameController.isAttractMode() && !gameController.isGameRunning()) {
 				gameController.stateTimer().resetSeconds(4.5);
