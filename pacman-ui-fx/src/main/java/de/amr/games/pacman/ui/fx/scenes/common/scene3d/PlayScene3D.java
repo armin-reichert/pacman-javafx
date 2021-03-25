@@ -164,8 +164,6 @@ public class PlayScene3D implements GameScene {
 	public void start() {
 		log("Game scene %s: start", this);
 		gameController.addGameEventListener(this::onGameEvent);
-		// TODO remove again
-		gameController.game().player.immune = true;
 		buildSceneGraph();
 	}
 

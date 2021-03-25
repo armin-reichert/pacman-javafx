@@ -58,7 +58,7 @@ public class HUD extends HBox {
 				stateTimer.ticksRemaining() == Long.MAX_VALUE ? "indefinite" : stateTimer.ticksRemaining());
 		line();
 		line("Autopilot (A)", "%s", ui.controller.autopilot.enabled ? "ON" : "OFF");
-		line("Immunity (I)", "%s", ui.controller.game().player.immune ? "ON" : "OFF");
+		line("Immunity (I)", "%s", ui.controller.isPlayerImmune() ? "ON" : "OFF");
 		line();
 		line("Window Size", "w=%.0f h=%.0f", ui.mainScene.getWindow().getWidth(), ui.mainScene.getWindow().getHeight());
 		line("Main Scene Size", "w=%.0f h=%.0f", ui.mainScene.getWidth(), ui.mainScene.getHeight());
