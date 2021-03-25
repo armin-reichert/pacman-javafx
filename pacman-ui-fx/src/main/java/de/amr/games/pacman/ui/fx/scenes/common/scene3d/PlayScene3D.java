@@ -81,7 +81,6 @@ public class PlayScene3D implements GameScene {
 	public PlayScene3D(SoundManager sounds) {
 		this.sounds = sounds;
 		fxScene = new SubScene(new Group(), 800, 600);
-		// TODO make this work
 		fxScene.addEventHandler(KeyEvent.KEY_PRESSED, cameraController::handleKeyEvent);
 		useStaticCamera();
 	}
@@ -108,7 +107,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void stopAllSounds() {
-		// TODO
+		sounds.stopAll();
 	}
 
 	private void buildSceneGraph() {
@@ -291,12 +290,12 @@ public class PlayScene3D implements GameScene {
 		if (newState == PacManGameState.LEVEL_COMPLETE) {
 			sounds.stopAll();
 			gameModel.ghosts().forEach(ghost -> ghost.visible = false);
-			playLevelCompleteAnimation();
+			playAnimationLevelComplete();
 		}
 
 		// enter LEVEL_STARTING
 		if (newState == PacManGameState.LEVEL_STARTING) {
-			playLevelStartingAnimation();
+			playAnimationLevelStarting();
 		}
 
 		// enter GAME_OVER
@@ -306,8 +305,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void playAnimationPlayerDying() {
-		// TODO Auto-generated method stub
-
+		sounds.play(PacManGameSound.PACMAN_DEATH);
 	}
 
 	private void onGameEvent(PacManGameEvent gameEvent) {
@@ -362,7 +360,7 @@ public class PlayScene3D implements GameScene {
 		}
 	}
 
-	private void playLevelCompleteAnimation() {
+	private void playAnimationLevelComplete() {
 		GameModel game = gameController.game();
 		game.player.visible = false;
 		game.ghosts().forEach(ghost -> ghost.visible = false);
@@ -376,7 +374,7 @@ public class PlayScene3D implements GameScene {
 		pause.play();
 	}
 
-	private void playLevelStartingAnimation() {
+	private void playAnimationLevelStarting() {
 		gameController.stateTimer().reset();
 		gameController.userInterface.showFlashMessage("Entering Level " + gameController.game().levelNumber);
 

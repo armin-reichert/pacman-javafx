@@ -125,7 +125,7 @@ public class Maze3D {
 			}
 		}
 		brickPositions.removeAll(positionsToRemove);
-		bricks = brickPositions.stream().map(mt -> new Brick3D(mt.x, mt.y, 2, 2, 6, Assets3D.randomWallMaterial(), mt.tile))
+		bricks = brickPositions.stream().map(mt -> new Brick3D(mt.x, mt.y, 2, 2, 3, Assets3D.randomWallMaterial(), mt.tile))
 				.collect(Collectors.toList());
 	}
 
