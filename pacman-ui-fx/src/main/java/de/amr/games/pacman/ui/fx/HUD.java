@@ -3,7 +3,6 @@ package de.amr.games.pacman.ui.fx;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.ui.fx.scenes.common.Env;
 import de.amr.games.pacman.ui.fx.scenes.common.scene2d.AbstractGameScene2D;
-import javafx.geometry.Pos;
 import javafx.scene.Camera;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
