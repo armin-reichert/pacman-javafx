@@ -170,11 +170,31 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		case F11:
 			stage.setFullScreen(true);
 			break;
+		case DIGIT1:
+			if (gameController.state == PacManGameState.INTRO) {
+				showFlashMessage("Test Intermission #1");
+				gameController.game().intermissionNumber = 1;
+				gameController.changeState(PacManGameState.INTERMISSION);
+			}
+			break;
+		case DIGIT2:
+			if (gameController.state == PacManGameState.INTRO) {
+				showFlashMessage("Test Intermission #2");
+				gameController.game().intermissionNumber = 2;
+				gameController.changeState(PacManGameState.INTERMISSION);
+			}
+			break;
 		case DIGIT3:
 			if (control) {
 				toggleUse3DScenes();
 				String message = String.format("3D scenes %s", Env.$use3DScenes.get() ? "ON" : "OFF");
 				showFlashMessage(message);
+			} else {
+				if (gameController.state == PacManGameState.INTRO) {
+					showFlashMessage("Test Intermission #3");
+					gameController.game().intermissionNumber = 3;
+					gameController.changeState(PacManGameState.INTERMISSION);
+				}
 			}
 			break;
 		case I:
