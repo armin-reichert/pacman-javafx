@@ -30,8 +30,8 @@ import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.fx.rendering.standard.Assets2D;
 import de.amr.games.pacman.ui.fx.scenes.common.CameraController;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
+import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.sound.PacManGameSound;
-import de.amr.games.pacman.ui.sound.SoundManager;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.scene.AmbientLight;
@@ -282,7 +282,7 @@ public class PlayScene3D implements GameScene {
 		if (oldState == PacManGameState.GHOST_DYING) {
 			// the dead(s) ghost will return home now
 			if (gameModel.ghosts(GhostState.DEAD).count() > 0) {
-				sounds.loopForever(PacManGameSound.GHOST_RETURNING_HOME);
+				sounds.loop(PacManGameSound.GHOST_RETURNING_HOME, Integer.MAX_VALUE);
 			}
 		}
 
@@ -315,7 +315,7 @@ public class PlayScene3D implements GameScene {
 			if (e.scatterPhase > 0) {
 				sounds.stop(PacManGameSound.SIRENS.get(e.scatterPhase - 1));
 			}
-			sounds.loopForever(PacManGameSound.SIRENS.get(e.scatterPhase));
+			sounds.loop(PacManGameSound.SIRENS.get(e.scatterPhase), Integer.MAX_VALUE);
 		}
 
 		else if (gameEvent instanceof PacManLostPowerEvent) {
@@ -327,7 +327,7 @@ public class PlayScene3D implements GameScene {
 		}
 
 		else if (gameEvent instanceof PacManGainsPowerEvent) {
-			sounds.loopForever(PacManGameSound.PACMAN_POWER);
+			sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
 		}
 
 		else if (gameEvent instanceof BonusEatenEvent) {

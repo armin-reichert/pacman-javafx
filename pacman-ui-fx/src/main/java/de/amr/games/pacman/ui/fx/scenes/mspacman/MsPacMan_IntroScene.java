@@ -32,7 +32,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 		super.start();
 		boardAnimationTimer.reset();
 		boardAnimationTimer.start();
-		sceneController = new MsPacMan_IntroScene_Controller(gameController, rendering, sounds);
+		sceneController = new MsPacMan_IntroScene_Controller(gameController, rendering);
 		sceneController.start();
 	}
 

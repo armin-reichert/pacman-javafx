@@ -17,8 +17,8 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.animation.TimedSequence;
 import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
+import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.sound.PacManGameSound;
-import de.amr.games.pacman.ui.sound.SoundManager;
 
 /**
  * 2D scene displaying the maze and the game play for both, Pac-Man and Ms. Pac-Man games.
@@ -103,7 +103,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		if (oldState == PacManGameState.GHOST_DYING) {
 			// the dead(s) ghost will return home now
 			if (gameModel.ghosts(GhostState.DEAD).count() > 0) {
-				sounds.loopForever(PacManGameSound.GHOST_RETURNING_HOME);
+				sounds.loop(PacManGameSound.GHOST_RETURNING_HOME, Integer.MAX_VALUE);
 			}
 		}
 
@@ -138,7 +138,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 			if (e.scatterPhase > 0) {
 				sounds.stop(PacManGameSound.SIRENS.get(e.scatterPhase - 1));
 			}
-			sounds.loopForever(PacManGameSound.SIRENS.get(e.scatterPhase));
+			sounds.loop(PacManGameSound.SIRENS.get(e.scatterPhase), Integer.MAX_VALUE);
 		}
 
 		else if (gameEvent instanceof PacManLostPowerEvent) {
@@ -150,7 +150,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		}
 
 		else if (gameEvent instanceof PacManGainsPowerEvent) {
-			sounds.loopForever(PacManGameSound.PACMAN_POWER);
+			sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
 			gameEvent.gameModel.ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
 				rendering.ghostAnimations().ghostFlashing(ghost).reset();
 				rendering.ghostAnimations().ghostFrightened(ghost).forEach(TimedSequence::restart);

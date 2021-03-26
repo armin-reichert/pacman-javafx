@@ -1,10 +1,13 @@
 package de.amr.games.pacman.ui.fx.scenes.mspacman;
 
+import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
 import de.amr.games.pacman.ui.fx.rendering.standard.Assets2D;
 import de.amr.games.pacman.ui.fx.scenes.common.scene2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.sound.SoundAssets;
 import de.amr.games.pacman.ui.mspacman.MsPacMan_IntermissionScene1_Controller;
+import de.amr.games.pacman.ui.sound.PacManGameSound;
 
 /**
  * Intermission scene 1: "They meet".
@@ -18,7 +21,19 @@ import de.amr.games.pacman.ui.mspacman.MsPacMan_IntermissionScene1_Controller;
  */
 public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 
-	private MsPacMan_IntermissionScene1_Controller sceneController;
+	private class SceneController extends MsPacMan_IntermissionScene1_Controller {
+
+		public SceneController(PacManGameController gameController, PacManGameAnimations2D animations) {
+			super(gameController, animations);
+		}
+
+		@Override
+		public void playIntermissionSound() {
+			sounds.loop(PacManGameSound.INTERMISSION_1, 1);
+		}
+	}
+
+	private SceneController sceneController;
 
 	public MsPacMan_IntermissionScene1() {
 		super(Assets2D.RENDERING_2D.get(GameVariant.MS_PACMAN), SoundAssets.get(GameVariant.MS_PACMAN));
@@ -27,7 +42,7 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 	@Override
 	public void start() {
 		super.start();
-		sceneController = new MsPacMan_IntermissionScene1_Controller(gameController, rendering, sounds);
+		sceneController = new SceneController(gameController, rendering);
 		sceneController.start();
 	}
 

@@ -2,11 +2,14 @@ package de.amr.games.pacman.ui.fx.scenes.pacman;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
+import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
 import de.amr.games.pacman.ui.fx.rendering.standard.Assets2D;
 import de.amr.games.pacman.ui.fx.scenes.common.scene2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.sound.SoundAssets;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene2_Controller;
+import de.amr.games.pacman.ui.sound.PacManGameSound;
 
 /**
  * Second intermission scene: Blinky pursues Pac but kicks a nail that tears his dress apart.
@@ -15,7 +18,19 @@ import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene2_Controller;
  */
 public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 
-	private PacMan_IntermissionScene2_Controller sceneController;
+	class SceneController extends PacMan_IntermissionScene2_Controller {
+
+		public SceneController(PacManGameController gameController, PacManGameAnimations2D animations) {
+			super(gameController, animations);
+		}
+
+		@Override
+		public void playIntermissionSound() {
+			sounds.play(PacManGameSound.INTERMISSION_2);
+		}
+	}
+
+	private SceneController sceneController;
 
 	public PacMan_IntermissionScene2() {
 		super(Assets2D.RENDERING_2D.get(GameVariant.PACMAN), SoundAssets.get(GameVariant.PACMAN));
@@ -24,7 +39,7 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 	@Override
 	public void start() {
 		super.start();
-		sceneController = new PacMan_IntermissionScene2_Controller(gameController, rendering, sounds);
+		sceneController = new SceneController(gameController, rendering);
 		sceneController.start();
 	}
 

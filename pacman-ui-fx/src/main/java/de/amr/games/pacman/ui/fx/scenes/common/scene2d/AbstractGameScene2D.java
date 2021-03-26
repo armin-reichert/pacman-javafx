@@ -10,7 +10,7 @@ import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
-import de.amr.games.pacman.ui.sound.SoundManager;
+import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.Camera;
 import javafx.scene.Group;
 import javafx.scene.SubScene;
