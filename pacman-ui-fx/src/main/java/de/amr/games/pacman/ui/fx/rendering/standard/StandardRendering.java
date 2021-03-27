@@ -292,7 +292,7 @@ public abstract class StandardRendering
 			g.setFill(pointsColor);
 			g.fillText(String.format("%08d", game.score), t(1), t(2));
 			g.setFill(Color.LIGHTGRAY);
-			g.fillText(String.format("L%02d", game.levelNumber), t(9), t(2));
+			g.fillText(String.format("L%02d", game.currentLevelNumber), t(9), t(2));
 		}
 		g.setFill(pointsColor);
 		g.fillText(String.format("%08d", game.highscorePoints), t(15), t(2));
@@ -304,8 +304,8 @@ public abstract class StandardRendering
 	@Override
 	public void drawLevelCounter(GraphicsContext g, GameModel game, int rightX, int y) {
 		int x = rightX;
-		int firstLevel = Math.max(1, game.levelNumber - 6);
-		for (int level = firstLevel; level <= game.levelNumber; ++level) {
+		int firstLevel = Math.max(1, game.currentLevelNumber - 6);
+		for (int level = firstLevel; level <= game.currentLevelNumber; ++level) {
 			Rectangle2D region = symbolSprites.get(game.levelSymbols.get(level - 1));
 			g.drawImage(spritesheet, region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(), x, y,
 					region.getWidth(), region.getHeight());

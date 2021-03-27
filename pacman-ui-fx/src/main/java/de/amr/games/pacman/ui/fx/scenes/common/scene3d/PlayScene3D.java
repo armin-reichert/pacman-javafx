@@ -366,7 +366,7 @@ public class PlayScene3D implements GameScene {
 		game.player.visible = false;
 		game.ghosts().forEach(ghost -> ghost.visible = false);
 		gameController.userInterface.showFlashMessage(
-				String.format("%s!\n\nLevel %d complete.", CONGRATS[new Random().nextInt(CONGRATS.length)], game.levelNumber),
+				String.format("%s!\n\nLevel %d complete.", CONGRATS[new Random().nextInt(CONGRATS.length)], game.currentLevelNumber),
 				2);
 
 		gameController.stateTimer().reset();
@@ -377,7 +377,7 @@ public class PlayScene3D implements GameScene {
 
 	private void playAnimationLevelStarting() {
 		gameController.stateTimer().reset();
-		gameController.userInterface.showFlashMessage("Entering Level " + gameController.game().levelNumber);
+		gameController.userInterface.showFlashMessage("Entering Level " + gameController.game().currentLevelNumber);
 
 		ScaleTransition animation = new ScaleTransition(Duration.seconds(3), tgMaze);
 		animation.setDelay(Duration.seconds(2));

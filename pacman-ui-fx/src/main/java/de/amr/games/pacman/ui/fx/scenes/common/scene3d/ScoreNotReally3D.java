@@ -56,7 +56,7 @@ public class ScoreNotReally3D implements Supplier<Node> {
 	}
 
 	public void update(GameModel game) {
-		txtScore.setText(String.format("%07d L%d", game.score, game.levelNumber));
+		txtScore.setText(String.format("%07d L%d", game.score, game.currentLevelNumber));
 		txtHiscore.setText(String.format("%07d L%d", game.highscorePoints, game.highscoreLevel));
 	}
 }

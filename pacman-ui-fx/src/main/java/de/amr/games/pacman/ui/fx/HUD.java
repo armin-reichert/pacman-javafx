@@ -55,7 +55,7 @@ public class HUD extends HBox {
 		line("Game Variant", "%s", ui.gameController.gameVariant());
 		line("Playing", "%s", yesNo(ui.gameController.isGameRunning()));
 		line("Attract Mode", "%s", yesNo(ui.gameController.isAttractMode()));
-		line("Game Level", "%d", ui.gameController.game().levelNumber);
+		line("Game Level", "%d", ui.gameController.game().currentLevelNumber);
 		line("Game State", "%s", ui.gameController.state);
 		line("", "Running:   %s", stateTimer.ticked());
 		line("", "Remaining: %s",
