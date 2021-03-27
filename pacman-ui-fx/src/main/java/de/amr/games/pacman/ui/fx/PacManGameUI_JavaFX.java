@@ -32,6 +32,7 @@ import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -97,7 +98,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
 		stage.addEventHandler(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
-		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeys);
+		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKey);
 
 		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
 		stage.getIcons().add(new Image(getClass().getResource("/pacman/graphics/pacman.png").toExternalForm()));
@@ -164,12 +165,50 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 	}
 
-	private void handleKeys(KeyEvent e) {
-		boolean control = e.isControlDown();
+	private void handleKey(KeyEvent e) {
+		if (e.isControlDown()) {
+			handleControlKey(e.getCode());
+			return;
+		}
+
 		switch (e.getCode()) {
-		case F11:
-			stage.setFullScreen(true);
+		case A:
+			gameController.autopilot.enabled = !gameController.autopilot.enabled;
+			showFlashMessage(gameController.autopilot.enabled ? "Autopilot ON" : "Autopilot OFF");
 			break;
+
+		case E:
+			gameController.eatAllPellets();
+			break;
+
+		case I:
+			gameController.setPlayerImmune(!gameController.isPlayerImmune());
+			showFlashMessage(gameController.isPlayerImmune() ? "Player IMMUNE" : "Player VULNERABLE");
+			break;
+
+		case L:
+			gameController.game().lives++;
+			break;
+
+		case N:
+			if (gameController.isGameRunning()) {
+				gameController.changeState(PacManGameState.LEVEL_COMPLETE);
+			}
+			break;
+
+		case Q:
+			reset();
+			gameController.changeState(PacManGameState.INTRO);
+			break;
+
+		case V:
+			gameController.toggleGameVariant();
+			break;
+
+		case X:
+			gameController.killGhosts();
+			break;
+
 		case DIGIT1:
 			if (gameController.state == PacManGameState.INTRO) {
 				showFlashMessage("Test Intermission #1");
@@ -177,6 +216,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				gameController.changeState(PacManGameState.INTERMISSION);
 			}
 			break;
+
 		case DIGIT2:
 			if (gameController.state == PacManGameState.INTRO) {
 				showFlashMessage("Test Intermission #2");
@@ -184,58 +224,64 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				gameController.changeState(PacManGameState.INTERMISSION);
 			}
 			break;
+
 		case DIGIT3:
-			if (control) {
-				toggleUse3DScenes();
-				String message = String.format("3D scenes %s", Env.$use3DScenes.get() ? "ON" : "OFF");
-				showFlashMessage(message);
-			} else {
-				if (gameController.state == PacManGameState.INTRO) {
-					showFlashMessage("Test Intermission #3");
-					gameController.game().intermissionNumber = 3;
-					gameController.changeState(PacManGameState.INTERMISSION);
-				}
+			if (gameController.state == PacManGameState.INTRO) {
+				showFlashMessage("Test Intermission #3");
+				gameController.game().intermissionNumber = 3;
+				gameController.changeState(PacManGameState.INTERMISSION);
 			}
 			break;
+
+		case F11:
+			stage.setFullScreen(true);
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	private void handleControlKey(KeyCode key) {
+		switch (key) {
+
 		case I:
-			if (control) {
-				Env.$infoViewVisible.set(!Env.$infoViewVisible.get());
-			}
+			Env.$infoViewVisible.set(!Env.$infoViewVisible.get());
 			break;
+
 		case L:
-			if (control) {
-				Env.$drawMode.set(Env.$drawMode.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
-			}
+			Env.$drawMode.set(Env.$drawMode.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 			break;
+
 		case P:
-			if (control) {
-				Env.$paused.set(!Env.$paused.get());
-			}
+			Env.$paused.set(!Env.$paused.get());
 			break;
-		case V:
-			gameController.toggleGameVariant();
-			break;
+
 		case S:
-			if (control) {
-				Env.$useStaticCamera.set(!Env.$useStaticCamera.get());
-				if (Env.$useStaticCamera.get()) {
-					currentGameScene.useMoveableCamera(false);
-					showFlashMessage("Static Camera");
-				} else {
-					currentGameScene.useMoveableCamera(true);
-					showFlashMessage("Moveable Camera");
-				}
+			Env.$useStaticCamera.set(!Env.$useStaticCamera.get());
+			if (Env.$useStaticCamera.get()) {
+				currentGameScene.useMoveableCamera(false);
+				showFlashMessage("Static Camera");
+			} else {
+				currentGameScene.useMoveableCamera(true);
+				showFlashMessage("Moveable Camera");
 			}
 			break;
+
 		case T:
-			if (control) {
-				Env.$measureTime.set(!Env.$measureTime.get());
-			}
+			Env.$measureTime.set(!Env.$measureTime.get());
 			break;
+
 		case X:
-			if (control)
-				Env.$showAxes.set(!Env.$showAxes.get());
+			Env.$showAxes.set(!Env.$showAxes.get());
 			break;
+
+		case DIGIT3:
+			toggleUse3DScenes();
+			String message = String.format("3D scenes %s", Env.$use3DScenes.get() ? "ON" : "OFF");
+			showFlashMessage(message);
+			break;
+
 		default:
 			break;
 		}
