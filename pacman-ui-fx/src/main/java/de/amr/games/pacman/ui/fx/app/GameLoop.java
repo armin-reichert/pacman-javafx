@@ -9,13 +9,12 @@ import javafx.animation.AnimationTimer;
 
 class GameLoop extends AnimationTimer {
 
-	public final PacManGameController controller;
-	public final PacManGameUI_JavaFX userInterface;
+	final PacManGameController controller;
+	final PacManGameUI_JavaFX userInterface;
 
 	public GameLoop(PacManGameController controller, PacManGameUI_JavaFX userInterface) {
 		this.controller = controller;
 		this.userInterface = userInterface;
-
 	}
 
 	@Override

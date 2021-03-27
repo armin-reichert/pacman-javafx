@@ -38,19 +38,7 @@ public class Ghost3D implements Supplier<Node> {
 		createBountyText();
 		createPearlChain();
 		root = new Group(meshView, bountyText, pearlChain);
-		displayColored();
-	}
-
-	public void update() {
-		if (ghost.bounty > 0) {
-			displayAsBounty();
-		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
-			displayReturningHome();
-		} else if (ghost.is(GhostState.FRIGHTENED)) {
-			displayFrightened();
-		} else {
-			displayColored();
-		}
+		displayColored(Assets3D.ghostColor(ghost.id));
 	}
 
 	private void createMeshView() {
@@ -83,40 +71,46 @@ public class Ghost3D implements Supplier<Node> {
 		return root;
 	}
 
-	public void displayColored() {
-		setColor(Assets3D.ghostColor(ghost.id));
-		selectChild(0);
-		updateTransforms();
-	}
-
-	public void displayFrightened() {
-		setColor(Color.CORNFLOWERBLUE);
-		selectChild(0);
-		updateTransforms();
-	}
-
-	public void displayAsBounty() {
-		selectChild(1);
-		bountyText.setText("" + ghost.bounty);
-		updateTransforms();
-	}
-
-	public void displayReturningHome() {
-		selectChild(2);
-		pearlChain.setRotationAxis(Rotate.Z_AXIS);
-		pearlChain.setRotate(ghost.dir == Direction.UP || ghost.dir == Direction.DOWN ? 90 : 0);
-		updateTransforms();
-	}
-
 	private void selectChild(int index) {
 		for (int i = 0; i < 3; ++i) {
 			root.getChildren().get(i).setVisible(i == index);
 		}
 	}
 
-	private void setColor(Color color) {
+	private void setMeshColor(Color color) {
 		PhongMaterial material = new PhongMaterial(color);
 		meshView.setMaterial(material);
+	}
+
+	public void update() {
+		if (ghost.bounty > 0) {
+			displayAsBounty();
+		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
+			displayReturningHome();
+			updateTransforms();
+		} else if (ghost.is(GhostState.FRIGHTENED)) {
+			displayColored(Color.CORNFLOWERBLUE);
+			updateTransforms();
+		} else {
+			displayColored(Assets3D.ghostColor(ghost.id));
+			updateTransforms();
+		}
+	}
+
+	public void displayColored(Color color) {
+		setMeshColor(color);
+		selectChild(0);
+	}
+
+	public void displayAsBounty() {
+		bountyText.setText("" + ghost.bounty);
+		selectChild(1);
+	}
+
+	public void displayReturningHome() {
+		pearlChain.setRotationAxis(Rotate.Z_AXIS);
+		pearlChain.setRotate(ghost.dir == Direction.UP || ghost.dir == Direction.DOWN ? 90 : 0);
+		selectChild(2);
 	}
 
 	private void updateTransforms() {

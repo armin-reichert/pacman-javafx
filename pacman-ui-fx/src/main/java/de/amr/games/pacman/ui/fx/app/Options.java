@@ -2,20 +2,22 @@ package de.amr.games.pacman.ui.fx.app;
 
 import static de.amr.games.pacman.lib.Logging.log;
 
-public class Options {
+import de.amr.games.pacman.model.common.GameVariant;
+
+class Options {
 
 	double height = 576;
-	boolean pacman = false;
+	GameVariant gameVariant = GameVariant.PACMAN;
 
 	public Options(String[] args) {
 		int i = -1;
 		while (++i < args.length) {
 			if ("-pacman".equals(args[i])) {
-				pacman = true;
+				gameVariant = GameVariant.PACMAN;
 				continue;
 			}
 			if ("-mspacman".equals(args[i])) {
-				pacman = false;
+				gameVariant = GameVariant.MS_PACMAN;
 				continue;
 			}
 			if ("-height".equals(args[i])) {
