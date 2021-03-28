@@ -15,23 +15,16 @@ import java.util.stream.Collectors;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
-import de.amr.games.pacman.controller.event.BonusEatenEvent;
-import de.amr.games.pacman.controller.event.DeadGhostCountChangeEvent;
 import de.amr.games.pacman.controller.event.ExtraLifeEvent;
-import de.amr.games.pacman.controller.event.PacManFoundFoodEvent;
-import de.amr.games.pacman.controller.event.PacManGainsPowerEvent;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
-import de.amr.games.pacman.controller.event.PacManLostPowerEvent;
-import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
-import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.fx.rendering.standard.Assets2D;
 import de.amr.games.pacman.ui.fx.scenes.common.CameraController;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
+import de.amr.games.pacman.ui.fx.scenes.common.PlaySceneSoundManager;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
-import de.amr.games.pacman.ui.sound.PacManGameSound;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.scene.AmbientLight;
@@ -64,6 +57,7 @@ public class PlayScene3D implements GameScene {
 	private final CameraController cameraController = new CameraController(staticCamera);
 
 	private final SoundManager sounds;
+	private PlaySceneSoundManager playSceneSounds;
 	private PacManGameController gameController;
 
 	private AmbientLight ambientLight = new AmbientLight(Color.AZURE);
@@ -91,8 +85,9 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public void setController(PacManGameController controller) {
-		this.gameController = controller;
+	public void setController(PacManGameController gameController) {
+		this.gameController = gameController;
+		playSceneSounds = new PlaySceneSoundManager(gameController, sounds);
 	}
 
 	@Override
@@ -171,19 +166,6 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public void start() {
-		log("Game scene %s: start", this);
-		gameController.addGameEventListener(this::onGameEvent);
-		buildSceneGraph();
-	}
-
-	@Override
-	public void end() {
-		log("Game scene %s: end", this);
-		gameController.removeGameEventListener(this::onGameEvent);
-	}
-
-	@Override
 	public void useMoveableCamera(boolean on) {
 		if (on) {
 			useMoveableCamera();
@@ -226,6 +208,19 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
+	public void start() {
+		log("Game scene %s: start", this);
+		gameController.addGameEventListener(this::onGameEvent);
+		buildSceneGraph();
+	}
+
+	@Override
+	public void end() {
+		log("Game scene %s: end", this);
+		gameController.removeGameEventListener(this::onGameEvent);
+	}
+
+	@Override
 	public void update() {
 		AbstractGameModel game = gameController.game();
 		score3D.update(game);
@@ -238,22 +233,18 @@ public class PlayScene3D implements GameScene {
 		player.update();
 		game.ghosts().map(ghosts3D::get).forEach(Ghost3D::update);
 		updateCamera();
+		playSceneSounds.onUpdate();
 	}
 
 	@Override
 	public void onGameStateChange(PacManGameState oldState, PacManGameState newState) {
 		AbstractGameModel gameModel = gameController.game();
 
+		playSceneSounds.onGameStateChange(oldState, newState);
+
 		// enter READY
 		if (newState == PacManGameState.READY) {
-			sounds.stopAll();
 			setSceneColor();
-			if (!gameController.isGameRunning() && !gameController.isAttractMode()) {
-				gameController.stateTimer().resetSeconds(4.5);
-				sounds.play(PacManGameSound.GAME_READY);
-			} else {
-				gameController.stateTimer().resetSeconds(2);
-			}
 		}
 
 		// enter HUNTING
@@ -268,27 +259,16 @@ public class PlayScene3D implements GameScene {
 
 		// enter PACMAN_DYING
 		if (newState == PacManGameState.PACMAN_DYING) {
-			sounds.stopAll();
 			playAnimationPlayerDying();
 		}
 
 		// enter GHOST_DYING
 		if (newState == PacManGameState.GHOST_DYING) {
-			sounds.play(PacManGameSound.GHOST_EATEN);
 			energizers.forEach(Energizer3D::startPumping);
-		}
-
-		// exit GHOST_DYING
-		if (oldState == PacManGameState.GHOST_DYING) {
-			// the dead(s) ghost will return home now
-			if (gameModel.ghosts(GhostState.DEAD).count() > 0) {
-				sounds.loop(PacManGameSound.GHOST_RETURNING_HOME, Integer.MAX_VALUE);
-			}
 		}
 
 		// enter LEVEL_COMPLETE
 		if (newState == PacManGameState.LEVEL_COMPLETE) {
-			sounds.stopAll();
 			gameModel.ghosts().forEach(ghost -> ghost.visible = false);
 			playAnimationLevelComplete();
 		}
@@ -297,55 +277,14 @@ public class PlayScene3D implements GameScene {
 		if (newState == PacManGameState.LEVEL_STARTING) {
 			playAnimationLevelStarting();
 		}
-
-		// enter GAME_OVER
-		if (newState == PacManGameState.GAME_OVER) {
-			sounds.stopAll();
-		}
-	}
-
-	private void playAnimationPlayerDying() {
-		sounds.play(PacManGameSound.PACMAN_DEATH);
 	}
 
 	@Override
 	public void onGameEvent(PacManGameEvent gameEvent) {
-		if (gameEvent instanceof ScatterPhaseStartedEvent) {
-			ScatterPhaseStartedEvent e = (ScatterPhaseStartedEvent) gameEvent;
-			if (e.scatterPhase > 0) {
-				sounds.stop(PacManGameSound.SIRENS.get(e.scatterPhase - 1));
-			}
-			sounds.loop(PacManGameSound.SIRENS.get(e.scatterPhase), Integer.MAX_VALUE);
-		}
+		playSceneSounds.onGameEvent(gameEvent);
 
-		else if (gameEvent instanceof PacManLostPowerEvent) {
-			sounds.stop(PacManGameSound.PACMAN_POWER);
-		}
-
-		else if (gameEvent instanceof PacManFoundFoodEvent) {
-			sounds.play(PacManGameSound.PACMAN_MUNCH);
-		}
-
-		else if (gameEvent instanceof PacManGainsPowerEvent) {
-			sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
-		}
-
-		else if (gameEvent instanceof BonusEatenEvent) {
-			sounds.play(PacManGameSound.BONUS_EATEN);
-		}
-
-		else if (gameEvent instanceof ExtraLifeEvent) {
-			sounds.play(PacManGameSound.EXTRA_LIFE);
+		if (gameEvent instanceof ExtraLifeEvent) {
 			gameController.userInterface.showFlashMessage("Extra life!");
-		}
-
-		else if (gameEvent instanceof DeadGhostCountChangeEvent) {
-			DeadGhostCountChangeEvent e = (DeadGhostCountChangeEvent) gameEvent;
-			if (e.oldCount == 0 && e.newCount > 0) {
-				sounds.play(PacManGameSound.GHOST_RETURNING_HOME);
-			} else if (e.oldCount > 0 && e.newCount == 0) {
-				sounds.stop(PacManGameSound.GHOST_RETURNING_HOME);
-			}
 		}
 	}
 
@@ -361,13 +300,17 @@ public class PlayScene3D implements GameScene {
 		}
 	}
 
+	private void playAnimationPlayerDying() {
+		// TODO implement this
+
+	}
+
 	private void playAnimationLevelComplete() {
 		AbstractGameModel game = gameController.game();
 		game.player.visible = false;
 		game.ghosts().forEach(ghost -> ghost.visible = false);
-		gameController.userInterface.showFlashMessage(
-				String.format("%s!\n\nLevel %d complete.", CONGRATS[new Random().nextInt(CONGRATS.length)], game.currentLevelNumber),
-				2);
+		gameController.userInterface.showFlashMessage(String.format("%s!\n\nLevel %d complete.",
+				CONGRATS[new Random().nextInt(CONGRATS.length)], game.currentLevelNumber), 2);
 
 		gameController.stateTimer().reset();
 		PauseTransition pause = new PauseTransition(Duration.seconds(3));
