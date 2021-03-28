@@ -35,6 +35,11 @@ public class PlaySceneSoundManager {
 	}
 
 	public void onUpdate() {
+		if (gameController.isAttractMode()) {
+			return;
+		}
+		sounds.setMuted(false);
+
 		AbstractGameModel gameModel = gameController.game();
 		if (gameController.state == PacManGameState.HUNTING) {
 			AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
@@ -91,7 +96,10 @@ public class PlaySceneSoundManager {
 	}
 
 	public void onGameEvent(PacManGameEvent gameEvent) {
-		sounds.setMuted(gameController.isAttractMode());
+		if (gameController.isAttractMode()) {
+			return;
+		}
+		sounds.setMuted(false);
 
 		if (gameEvent instanceof ScatterPhaseStartedEvent) {
 			ScatterPhaseStartedEvent e = (ScatterPhaseStartedEvent) gameEvent;
@@ -114,9 +122,7 @@ public class PlaySceneSoundManager {
 		else if (gameEvent instanceof PacManFoundFoodEvent) {
 			AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
 			if (!munching.isPlaying()) {
-				munching.setCycleCount(Integer.MAX_VALUE);
-				munching.play();
-//				sounds.loop(PacManGameSound.PACMAN_MUNCH, Integer.MAX_VALUE);
+				sounds.loop(PacManGameSound.PACMAN_MUNCH, Integer.MAX_VALUE);
 				Logging.log("Munching sound clip %s started", munching);
 			}
 		} else if (gameEvent instanceof BonusEatenEvent) {

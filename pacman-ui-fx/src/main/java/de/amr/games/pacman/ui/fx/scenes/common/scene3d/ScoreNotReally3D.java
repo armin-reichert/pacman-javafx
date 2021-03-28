@@ -15,13 +15,17 @@ import javafx.scene.text.Text;
 public class ScoreNotReally3D implements Supplier<Node> {
 
 	private final Group root;
+	private final Text txtScoreTitle;
 	private final Text txtScore;
+	private final Text txtHiscoreTitle;
 	private final Text txtHiscore;
+	private boolean hiscoreOnly;
 
 	public ScoreNotReally3D() {
+		hiscoreOnly = false;
 		Font font = Assets3D.ARCADE_FONT;
 
-		Text txtScoreTitle = new Text("SCORE");
+		txtScoreTitle = new Text("SCORE");
 		txtScoreTitle.setFill(Color.WHITE);
 		txtScoreTitle.setFont(font);
 
@@ -29,7 +33,7 @@ public class ScoreNotReally3D implements Supplier<Node> {
 		txtScore.setFill(Color.YELLOW);
 		txtScore.setFont(font);
 
-		Text txtHiscoreTitle = new Text("HI SCORE");
+		txtHiscoreTitle = new Text("HI SCORE");
 		txtHiscoreTitle.setFill(Color.WHITE);
 		txtHiscoreTitle.setFont(font);
 
@@ -50,6 +54,10 @@ public class ScoreNotReally3D implements Supplier<Node> {
 		root = new Group(grid);
 	}
 
+	public void setHiscoreOnly(boolean hiscoreOnly) {
+		this.hiscoreOnly = hiscoreOnly;
+	}
+
 	@Override
 	public Node get() {
 		return root;
@@ -58,5 +66,10 @@ public class ScoreNotReally3D implements Supplier<Node> {
 	public void update(AbstractGameModel game) {
 		txtScore.setText(String.format("%07d L%d", game.score, game.currentLevelNumber));
 		txtHiscore.setText(String.format("%07d L%d", game.highscorePoints, game.highscoreLevel));
+		if (hiscoreOnly) {
+			txtScore.setVisible(false);
+		} else {
+			txtScore.setVisible(true);
+		}
 	}
 }

@@ -77,12 +77,12 @@ class Assets3D {
 		}
 
 		WALL_TEXTURE = new Image(url("/common/stone-texture.png"));
-		wallMaterials = new PhongMaterial[10];
+		wallMaterials = new PhongMaterial[1];
 		for (int i = 0; i < wallMaterials.length; ++i) {
-			PhongMaterial m = new PhongMaterial();
-			Image texture = randomArea(WALL_TEXTURE, 128, 128);
-			m.setBumpMap(texture);
-			m.setDiffuseMap(texture);
+			PhongMaterial m = new PhongMaterial(Color.CORNFLOWERBLUE);
+//			Image texture = randomArea(WALL_TEXTURE, 128, 128);
+//			m.setBumpMap(texture);
+//			m.setDiffuseMap(texture);
 			wallMaterials[i] = m;
 		}
 	}

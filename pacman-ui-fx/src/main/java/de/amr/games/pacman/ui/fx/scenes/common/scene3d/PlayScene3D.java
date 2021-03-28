@@ -223,6 +223,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void update() {
 		AbstractGameModel game = gameController.game();
+		score3D.setHiscoreOnly(gameController.isAttractMode());
 		score3D.update(game);
 		score3D.get().setRotationAxis(Rotate.X_AXIS);
 		score3D.get().setRotate(getActiveCamera().getRotate());
