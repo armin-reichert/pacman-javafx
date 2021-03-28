@@ -33,21 +33,11 @@ public class PlayScene2D extends AbstractGameScene2D {
 		super(rendering, sounds);
 	}
 
-	private void playAnimationPlayerDying() {
-		AbstractGameModel game = gameController.game();
-		game.ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(TimedSequence::reset);
-		rendering.playerAnimations().playerDying().delay(120).onStart(() -> {
-			game.ghosts().forEach(ghost -> ghost.visible = false);
-			if (gameController.isGameRunning()) {
-				sounds.play(PacManGameSound.PACMAN_DEATH);
-			}
-		}).restart();
-	}
-
 	@Override
 	public void start() {
 		super.start();
 		AbstractGameModel game = gameController.game();
+		// TODO find simpler solution
 		game.player.powerTimer.addEventListener(e -> {
 			if (e.type == TickTimerEvent.Type.HALF_EXPIRED) {
 				game.ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
@@ -62,6 +52,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 	@Override
 	public void onGameStateChange(PacManGameState oldState, PacManGameState newState) {
 		AbstractGameModel gameModel = gameController.game();
+		sounds.setMuted(gameController.isAttractMode());
 
 		// enter READY
 		if (newState == PacManGameState.READY) {
@@ -133,6 +124,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void onGameEvent(PacManGameEvent gameEvent) {
+		sounds.setMuted(gameController.isAttractMode());
+
 		if (gameEvent instanceof ScatterPhaseStartedEvent) {
 			ScatterPhaseStartedEvent e = (ScatterPhaseStartedEvent) gameEvent;
 			if (e.scatterPhase > 0) {
@@ -208,4 +201,16 @@ public class PlayScene2D extends AbstractGameScene2D {
 		game.ghosts().forEach(ghost -> rendering.drawGhost(gc, ghost, game.player.powerTimer.isRunning()));
 		rendering.drawLevelCounter(gc, game, t(25), t(34));
 	}
+
+	private void playAnimationPlayerDying() {
+		AbstractGameModel game = gameController.game();
+		game.ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(TimedSequence::reset);
+		rendering.playerAnimations().playerDying().delay(120).onStart(() -> {
+			game.ghosts().forEach(ghost -> ghost.visible = false);
+			if (gameController.isGameRunning()) {
+				sounds.play(PacManGameSound.PACMAN_DEATH);
+			}
+		}).restart();
+	}
+
 }
