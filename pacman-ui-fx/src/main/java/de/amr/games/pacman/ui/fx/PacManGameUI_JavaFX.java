@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
-import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
@@ -74,7 +74,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		//@formatter:on
 	}
 
-	private static GameScene scene(GameVariant gameVariant, PacManGameState gameState, GameModel game, boolean _3D) {
+	private static GameScene scene(GameVariant gameVariant, PacManGameState gameState, AbstractGameModel game, boolean _3D) {
 		return SCENES[gameVariant.ordinal()][gameState == PacManGameState.INTRO ? 0
 				: gameState == PacManGameState.INTERMISSION ? game.intermissionNumber : 4][_3D ? 1 : 0];
 	}
@@ -129,7 +129,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private void handleGameStateChange(PacManGameState oldState, PacManGameState newState) {
 		log("Handle game state change from %s to %s", oldState, newState);
 		GameVariant gameVariant = gameController.gameVariant();
-		GameModel game = gameController.game();
+		AbstractGameModel game = gameController.game();
 		boolean _3D = Env.$use3DScenes.get();
 		if (currentGameScene != scene(gameVariant, newState, game, _3D)) {
 			selectGameScene(gameVariant, newState, game, _3D);
@@ -140,7 +140,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		currentGameScene.onGameStateChange(oldState, newState);
 	}
 
-	private void selectGameScene(GameVariant gameVariant, PacManGameState gameState, GameModel game, boolean _3D) {
+	private void selectGameScene(GameVariant gameVariant, PacManGameState gameState, AbstractGameModel game, boolean _3D) {
 		GameScene newGameScene = scene(gameVariant, gameState, game, _3D);
 		if (currentGameScene != newGameScene) {
 			log("Change game scene %s to %s", currentGameScene, newGameScene);
@@ -290,7 +290,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private void toggleUse3DScenes() {
 		Env.$use3DScenes.set(!Env.$use3DScenes.get());
 		GameVariant gameVariant = gameController.gameVariant();
-		GameModel game = gameController.game();
+		AbstractGameModel game = gameController.game();
 		if (scene(gameVariant, gameController.state, game, false) != scene(gameVariant, gameController.state, game, true)) {
 			selectGameScene(gameVariant, gameController.state, game, Env.$use3DScenes.get());
 		}

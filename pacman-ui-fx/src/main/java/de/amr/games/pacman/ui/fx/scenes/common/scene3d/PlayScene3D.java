@@ -23,7 +23,7 @@ import de.amr.games.pacman.controller.event.PacManGainsPowerEvent;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManLostPowerEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
-import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
@@ -112,20 +112,20 @@ public class PlayScene3D implements GameScene {
 
 	private void buildSceneGraph() {
 		final GameVariant gameVariant = gameController.gameVariant();
-		final GameModel game = gameController.game();
+		final AbstractGameModel game = gameController.game();
 
 		fxScene.setFill(Color.rgb(20, 20, 60));
 
-		maze = new Maze3D(game, Assets2D.getMazeWallColor(game.level.mazeNumber));
-		PhongMaterial foodMaterial = Assets3D.foodMaterial(gameVariant, game.level.mazeNumber);
+		maze = new Maze3D(game, Assets2D.getMazeWallColor(game.currentLevel.mazeNumber));
+		PhongMaterial foodMaterial = Assets3D.foodMaterial(gameVariant, game.currentLevel.mazeNumber);
 
-		energizers = game.level.world.energizerTiles()//
+		energizers = game.currentLevel.world.energizerTiles()//
 				.map(tile -> new Energizer3D(tile, foodMaterial))//
 				.collect(Collectors.toList());
 
-		pellets = game.level.world.tiles()//
-				.filter(game.level.world::isFoodTile)//
-				.filter(not(game.level.world::isEnergizerTile))//
+		pellets = game.currentLevel.world.tiles()//
+				.filter(game.currentLevel.world::isFoodTile)//
+				.filter(not(game.currentLevel.world::isEnergizerTile))//
 				.map(tile -> new Pellet3D(tile, foodMaterial)).collect(Collectors.toList());
 
 		player = new Player3D(game.player);
@@ -136,8 +136,8 @@ public class PlayScene3D implements GameScene {
 
 		tgMaze = new Group();
 
-		tgMaze.setTranslateX(-0.5 * game.level.world.numCols() * TS);
-		tgMaze.setTranslateY(-0.5 * game.level.world.numRows() * TS);
+		tgMaze.setTranslateX(-0.5 * game.currentLevel.world.numCols() * TS);
+		tgMaze.setTranslateY(-0.5 * game.currentLevel.world.numRows() * TS);
 
 		tgMaze.getChildren().addAll(score3D.get(), livesCounter3D.get());
 		tgMaze.getChildren().addAll(maze.getWalls());
@@ -227,7 +227,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void update() {
-		GameModel game = gameController.game();
+		AbstractGameModel game = gameController.game();
 		score3D.update(game);
 		score3D.get().setRotationAxis(Rotate.X_AXIS);
 		score3D.get().setRotate(getActiveCamera().getRotate());
@@ -242,7 +242,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onGameStateChange(PacManGameState oldState, PacManGameState newState) {
-		GameModel gameModel = gameController.game();
+		AbstractGameModel gameModel = gameController.game();
 
 		// enter READY
 		if (newState == PacManGameState.READY) {
@@ -355,14 +355,14 @@ public class PlayScene3D implements GameScene {
 			fxScene.setFill(color);
 			ambientLight.setColor(Color.AZURE);
 		} else {
-			Color mazeColor = Assets2D.getMazeWallColor(gameController.game().level.mazeNumber);
+			Color mazeColor = Assets2D.getMazeWallColor(gameController.game().currentLevel.mazeNumber);
 //			fxScene.setFill(mazeColor);
 			ambientLight.setColor(mazeColor);
 		}
 	}
 
 	private void playAnimationLevelComplete() {
-		GameModel game = gameController.game();
+		AbstractGameModel game = gameController.game();
 		game.player.visible = false;
 		game.ghosts().forEach(ghost -> ghost.visible = false);
 		gameController.userInterface.showFlashMessage(

@@ -21,7 +21,7 @@ import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameEntity;
-import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.model.pacman.PacManBonus;
@@ -222,7 +222,7 @@ public abstract class StandardRendering
 	}
 
 	@Override
-	public void drawLivesCounter(GraphicsContext g, GameModel game, int x, int y) {
+	public void drawLivesCounter(GraphicsContext g, AbstractGameModel game, int x, int y) {
 		int maxLivesDisplayed = 5;
 		for (int i = 0; i < Math.min(game.lives, maxLivesDisplayed); ++i) {
 			drawLifeCounterSymbol(g, x + t(2 * i), y);
@@ -263,7 +263,7 @@ public abstract class StandardRendering
 	}
 
 	@Override
-	public void drawGameState(GraphicsContext g, GameModel game, PacManGameState gameState) {
+	public void drawGameState(GraphicsContext g, AbstractGameModel game, PacManGameState gameState) {
 		if (gameState == PacManGameState.GAME_OVER) {
 			g.setFont(scoreFont);
 			g.setFill(Color.RED);
@@ -277,14 +277,14 @@ public abstract class StandardRendering
 	}
 
 	@Override
-	public void drawScore(GraphicsContext g, GameModel game, boolean hiscoreOnly) {
+	public void drawScore(GraphicsContext g, AbstractGameModel game, boolean hiscoreOnly) {
 		g.setFont(getScoreFont());
 		g.translate(0, 2);
 		g.setFill(Color.WHITE);
 		g.fillText("SCORE", t(1), t(1));
 		g.fillText("HIGH SCORE", t(15), t(1));
 		g.translate(0, 1);
-		Color pointsColor = getMazeWallColor(game.level.mazeNumber - 1);
+		Color pointsColor = getMazeWallColor(game.currentLevel.mazeNumber - 1);
 		if (pointsColor == Color.BLACK) {
 			pointsColor = Color.YELLOW;
 		}
@@ -302,7 +302,7 @@ public abstract class StandardRendering
 	}
 
 	@Override
-	public void drawLevelCounter(GraphicsContext g, GameModel game, int rightX, int y) {
+	public void drawLevelCounter(GraphicsContext g, AbstractGameModel game, int rightX, int y) {
 		int x = rightX;
 		int firstLevel = Math.max(1, game.currentLevelNumber - 6);
 		for (int level = firstLevel; level <= game.currentLevelNumber; ++level) {

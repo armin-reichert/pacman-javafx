@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
@@ -87,10 +87,10 @@ public class Maze3D {
 
 	private List<Node> bricks;
 
-	public Maze3D(GameModel game, Color wallColor) {
-		PacManGameWorld world = game.level.world;
+	public Maze3D(AbstractGameModel game, Color wallColor) {
+		PacManGameWorld world = game.currentLevel.world;
 		List<MicroTile> brickPositions = new ArrayList<>();
-		world.tiles().filter(game.level.world::isWall).forEach(tile -> {
+		world.tiles().filter(game.currentLevel.world::isWall).forEach(tile -> {
 			double w = TS / 3.0, h = TS / 3.0;
 			double bx = tile.x * TS - w, by = tile.y * TS - h;
 			List<MicroTile> small = new ArrayList<>();

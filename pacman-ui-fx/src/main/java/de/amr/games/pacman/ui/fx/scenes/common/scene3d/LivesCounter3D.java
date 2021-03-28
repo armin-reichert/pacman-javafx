@@ -5,7 +5,7 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import java.util.function.Supplier;
 
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.common.Pac;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -28,7 +28,7 @@ public class LivesCounter3D implements Supplier<Node> {
 		}
 	}
 
-	public void update(GameModel game) {
+	public void update(AbstractGameModel game) {
 		for (int i = 0; i < numPositions; ++i) {
 			root.getChildren().get(i).setVisible(i < game.lives);
 		}

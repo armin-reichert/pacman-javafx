@@ -5,7 +5,7 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import java.util.function.Supplier;
 
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.AbstractGameModel;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Transition;
 import javafx.scene.Node;
@@ -43,8 +43,8 @@ public class Energizer3D implements Supplier<Node> {
 		pumping.setToZ(1.25);
 	}
 
-	public void update(GameModel game) {
-		sphere.setVisible(!game.level.isFoodRemoved(tile));
+	public void update(AbstractGameModel game) {
+		sphere.setVisible(!game.currentLevel.isFoodRemoved(tile));
 	}
 
 	@Override

@@ -13,7 +13,7 @@ import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManLostPowerEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.TickTimerEvent;
-import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.animation.TimedSequence;
 import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
@@ -34,7 +34,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 	}
 
 	private void playAnimationPlayerDying() {
-		GameModel game = gameController.game();
+		AbstractGameModel game = gameController.game();
 		game.ghosts().flatMap(rendering.ghostAnimations()::ghostKicking).forEach(TimedSequence::reset);
 		rendering.playerAnimations().playerDying().delay(120).onStart(() -> {
 			game.ghosts().forEach(ghost -> ghost.visible = false);
@@ -47,13 +47,13 @@ public class PlayScene2D extends AbstractGameScene2D {
 	@Override
 	public void start() {
 		super.start();
-		GameModel game = gameController.game();
+		AbstractGameModel game = gameController.game();
 		game.player.powerTimer.addEventListener(e -> {
 			if (e.type == TickTimerEvent.Type.HALF_EXPIRED) {
 				game.ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
 					TimedSequence<?> flashing = rendering.ghostAnimations().ghostFlashing(ghost);
-					long frameTime = e.ticks / (game.level.numFlashes * flashing.numFrames());
-					flashing.frameDuration(frameTime).repetitions(game.level.numFlashes).restart();
+					long frameTime = e.ticks / (game.currentLevel.numFlashes * flashing.numFrames());
+					flashing.frameDuration(frameTime).repetitions(game.currentLevel.numFlashes).restart();
 				});
 			}
 		});
@@ -61,7 +61,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void onGameStateChange(PacManGameState oldState, PacManGameState newState) {
-		GameModel gameModel = gameController.game();
+		AbstractGameModel gameModel = gameController.game();
 
 		// enter READY
 		if (newState == PacManGameState.READY) {
@@ -111,7 +111,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		if (newState == PacManGameState.LEVEL_COMPLETE) {
 			sounds.stopAll();
 			gameModel.ghosts().forEach(ghost -> ghost.visible = false);
-			levelCompleteAnimation = new LevelCompleteAnimation(gameController, gameModel.level.numFlashes);
+			levelCompleteAnimation = new LevelCompleteAnimation(gameController, gameModel.currentLevel.numFlashes);
 			double totalDuration = levelCompleteAnimation.getTotalDuration().toSeconds();
 			log("Total LEVEL_COMPLETE animation duration: %f", totalDuration);
 			gameController.stateTimer().resetSeconds(totalDuration);
@@ -185,12 +185,12 @@ public class PlayScene2D extends AbstractGameScene2D {
 		render(gameController.game());
 	}
 
-	private void render(GameModel game) {
+	private void render(AbstractGameModel game) {
 		if (levelCompleteAnimation == null || !levelCompleteAnimation.isRunning()) {
-			rendering.drawMaze(gc, game.level.mazeNumber, 0, t(3), false);
-			rendering.drawFoodTiles(gc, game.level.world.tiles().filter(game.level.world::isFoodTile),
-					game.level::containsEatenFood);
-			rendering.drawEnergizerTiles(gc, game.level.world.energizerTiles());
+			rendering.drawMaze(gc, game.currentLevel.mazeNumber, 0, t(3), false);
+			rendering.drawFoodTiles(gc, game.currentLevel.world.tiles().filter(game.currentLevel.world::isFoodTile),
+					game.currentLevel::containsEatenFood);
+			rendering.drawEnergizerTiles(gc, game.currentLevel.world.energizerTiles());
 		} else {
 			gc.drawImage(levelCompleteAnimation.getCurrentMazeImage(), 0, t(3));
 		}

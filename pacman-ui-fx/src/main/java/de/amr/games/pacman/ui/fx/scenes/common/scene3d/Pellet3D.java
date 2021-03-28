@@ -5,7 +5,7 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import java.util.function.Supplier;
 
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.AbstractGameModel;
 import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
@@ -30,8 +30,8 @@ public class Pellet3D implements Supplier<Node> {
 		sphere.setViewOrder(-tile.y * TS - 1);
 	}
 
-	public void update(GameModel game) {
-		sphere.setVisible(!game.level.isFoodRemoved(tile));
+	public void update(AbstractGameModel game) {
+		sphere.setVisible(!game.currentLevel.isFoodRemoved(tile));
 	}
 
 	@Override

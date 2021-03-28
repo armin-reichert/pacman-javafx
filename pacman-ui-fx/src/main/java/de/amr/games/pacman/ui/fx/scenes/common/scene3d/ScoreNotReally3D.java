@@ -4,7 +4,7 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
 import java.util.function.Supplier;
 
-import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.AbstractGameModel;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
@@ -55,7 +55,7 @@ public class ScoreNotReally3D implements Supplier<Node> {
 		return root;
 	}
 
-	public void update(GameModel game) {
+	public void update(AbstractGameModel game) {
 		txtScore.setText(String.format("%07d L%d", game.score, game.currentLevelNumber));
 		txtHiscore.setText(String.format("%07d L%d", game.highscorePoints, game.highscoreLevel));
 	}
