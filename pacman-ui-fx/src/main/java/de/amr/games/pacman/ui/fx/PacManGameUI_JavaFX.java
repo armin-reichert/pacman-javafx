@@ -74,25 +74,26 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		//@formatter:on
 	}
 
-	private static GameScene scene(GameVariant gameVariant, PacManGameState gameState, AbstractGameModel game, boolean _3D) {
+	private static GameScene scene(GameVariant gameVariant, PacManGameState gameState, AbstractGameModel game,
+			boolean _3D) {
 		return SCENES[gameVariant.ordinal()][gameState == PacManGameState.INTRO ? 0
 				: gameState == PacManGameState.INTERMISSION ? game.intermissionNumber : 4][_3D ? 1 : 0];
 	}
 
 	public final HUD hud;
 
-	final Stage stage;
-	final PacManGameController gameController;
-	final Keyboard keyboard;
-	final Scene mainScene;
-	final StackPane mainSceneRoot;
-	final FlashMessageView flashMessageView;
-	GameScene currentGameScene;
+	private final Stage stage;
+	private final PacManGameController gameController;
+	private final Keyboard keyboard = new Keyboard();
+	private final Scene mainScene;
+	private final StackPane mainSceneRoot;
+	private final FlashMessageView flashMessageView;
+
+	private GameScene currentGameScene;
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController controller, double height) {
 		this.stage = stage;
 		this.gameController = controller;
-		keyboard = new Keyboard();
 
 		controller.addStateChangeListener(this::handleGameStateChange);
 
@@ -126,6 +127,18 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		stage.show();
 	}
 
+	public PacManGameController getGameController() {
+		return gameController;
+	}
+
+	public Scene getMainScene() {
+		return mainScene;
+	}
+
+	public GameScene getCurrentGameScene() {
+		return currentGameScene;
+	}
+
 	private void handleGameStateChange(PacManGameState oldState, PacManGameState newState) {
 		log("Handle game state change from %s to %s", oldState, newState);
 		GameVariant gameVariant = gameController.gameVariant();
@@ -140,7 +153,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		currentGameScene.onGameStateChange(oldState, newState);
 	}
 
-	private void selectGameScene(GameVariant gameVariant, PacManGameState gameState, AbstractGameModel game, boolean _3D) {
+	private void selectGameScene(GameVariant gameVariant, PacManGameState gameState, AbstractGameModel game,
+			boolean _3D) {
 		GameScene newGameScene = scene(gameVariant, gameState, game, _3D);
 		if (currentGameScene != newGameScene) {
 			log("Change game scene %s to %s", currentGameScene, newGameScene);
