@@ -6,6 +6,7 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
 import de.amr.games.pacman.ui.fx.rendering.Assets2D;
+import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering;
 import de.amr.games.pacman.ui.fx.scenes.common.scene2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.sound.SoundAssets;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene1_Controller;
@@ -48,15 +49,16 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 	public void update() {
 		super.update();
 		sceneController.update();
-		rendering.drawGhost(gc, sceneController.blinky, false);
+		PacManGameRendering r = (PacManGameRendering) rendering;
+		r.drawGhost(gc, sceneController.blinky, false);
 		if (sceneController.phase == Phase.BLINKY_CHASING_PACMAN) {
-			rendering.drawPlayer(gc, sceneController.pac);
+			r.drawPlayer(gc, sceneController.pac);
 		} else {
 			gc.save();
 			gc.translate(0, -10);
-			rendering.drawBigPacMan(gc, sceneController.pac);
+			r.drawBigPacMan(gc, sceneController.pac);
 			gc.restore();
 		}
-		rendering.drawLevelCounter(gc, gameController.game(), t(25), t(34));
+		r.drawLevelCounter(gc, gameController.game(), t(25), t(34));
 	}
 }

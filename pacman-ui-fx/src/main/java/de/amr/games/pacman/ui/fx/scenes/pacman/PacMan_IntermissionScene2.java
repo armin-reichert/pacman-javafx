@@ -6,6 +6,7 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
 import de.amr.games.pacman.ui.fx.rendering.Assets2D;
+import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering;
 import de.amr.games.pacman.ui.fx.scenes.common.scene2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.sound.SoundAssets;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene2_Controller;
@@ -47,13 +48,14 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 	public void update() {
 		super.update();
 		sceneController.update();
-		rendering.drawLevelCounter(gc, gameController.game(), t(25), t(34));
-		rendering.drawNail(gc, sceneController.nail);
-		rendering.drawPlayer(gc, sceneController.pac);
+		PacManGameRendering r = (PacManGameRendering) rendering;
+		r.drawLevelCounter(gc, gameController.game(), t(25), t(34));
+		r.drawNail(gc, sceneController.nail);
+		r.drawPlayer(gc, sceneController.pac);
 		if (sceneController.nailDistance() < 0) {
-			rendering.drawGhost(gc, sceneController.blinky, false);
+			r.drawGhost(gc, sceneController.blinky, false);
 		} else {
-			rendering.drawBlinkyStretched(gc, sceneController.blinky, sceneController.nail.position,
+			r.drawBlinkyStretched(gc, sceneController.blinky, sceneController.nail.position,
 					sceneController.nailDistance() / 4);
 		}
 	}

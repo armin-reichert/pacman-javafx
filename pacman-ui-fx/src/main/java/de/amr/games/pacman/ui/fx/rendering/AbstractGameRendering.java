@@ -25,7 +25,7 @@ import de.amr.games.pacman.model.common.GameEntity;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.model.pacman.PacManBonus;
-import de.amr.games.pacman.ui.PacManRendering2D;
+import de.amr.games.pacman.ui.CommonPacManRendering2D;
 import de.amr.games.pacman.ui.animation.GhostAnimations2D;
 import de.amr.games.pacman.ui.animation.MazeAnimations2D;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
@@ -44,8 +44,9 @@ import javafx.scene.text.FontWeight;
  * 
  * @author Armin Reichert
  */
-public abstract class AbstractGameRendering implements PacManRendering2D<GraphicsContext, Color, Font, Rectangle2D>,
-		PacManGameAnimations2D, MazeAnimations2D, PlayerAnimations2D, GhostAnimations2D {
+public abstract class AbstractGameRendering
+		implements CommonPacManRendering2D<GraphicsContext, Color, Font, Rectangle2D>, PacManGameAnimations2D,
+		MazeAnimations2D, PlayerAnimations2D, GhostAnimations2D {
 
 	/** Spritesheet grid cell size */
 	public static final int GRID_CELLSIZE = 16;

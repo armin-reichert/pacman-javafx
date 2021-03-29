@@ -10,22 +10,22 @@ import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.GameEntity;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.Pac;
-import de.amr.games.pacman.model.mspacman.Flap;
-import de.amr.games.pacman.model.mspacman.JuniorBag;
-import de.amr.games.pacman.model.mspacman.Stork;
 import de.amr.games.pacman.model.pacman.PacManBonus;
+import de.amr.games.pacman.ui.PacManRendering2D;
 import de.amr.games.pacman.ui.animation.TimedSequence;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 /**
  * Default rendering for the scenes of the Pac-Man game.
  * 
  * @author Armin Reichert
  */
-public class PacManGameRendering extends AbstractGameRendering {
+public class PacManGameRendering extends AbstractGameRendering
+		implements PacManRendering2D<GraphicsContext, Color, Font, Rectangle2D> {
 
 	private final Image mazeFull = new Image(getClass().getResource("/pacman/graphics/maze_full.png").toExternalForm());
 	private final Image mazeEmpty = new Image(getClass().getResource("/pacman/graphics/maze_empty.png").toExternalForm());
@@ -67,14 +67,14 @@ public class PacManGameRendering extends AbstractGameRendering {
 
 		pacManMunchingAnim = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
-			TimedSequence<Rectangle2D> animation = TimedSequence.of(sprite(2, 0), sprite(1, index(dir)), sprite(0, index(dir)),
-					sprite(1, index(dir)));
+			TimedSequence<Rectangle2D> animation = TimedSequence.of(sprite(2, 0), sprite(1, index(dir)),
+					sprite(0, index(dir)), sprite(1, index(dir)));
 			animation.frameDuration(2).endless().run();
 			pacManMunchingAnim.put(dir, animation);
 		}
 
-		playerDyingAnim = TimedSequence.of(sprite(3, 0), sprite(4, 0), sprite(5, 0), sprite(6, 0), sprite(7, 0), sprite(8, 0),
-				sprite(9, 0), sprite(10, 0), sprite(11, 0), sprite(12, 0), sprite(13, 0)).frameDuration(8);
+		playerDyingAnim = TimedSequence.of(sprite(3, 0), sprite(4, 0), sprite(5, 0), sprite(6, 0), sprite(7, 0),
+				sprite(8, 0), sprite(9, 0), sprite(10, 0), sprite(11, 0), sprite(12, 0), sprite(13, 0)).frameDuration(8);
 
 		bigPacMan = TimedSequence.of(//
 				cells(2, 1, 2, 2), //
@@ -181,37 +181,5 @@ public class PacManGameRendering extends AbstractGameRendering {
 	@Override
 	public void drawBlinkyNaked(GraphicsContext g, Ghost blinky) {
 		drawEntity(g, blinky, blinkyHalfNaked.animate());
-	}
-
-	// Ms. Pac-Man only:
-
-	@Override
-	public void drawSpouse(GraphicsContext g, Pac pac) {
-	}
-
-	@Override
-	public void drawFlap(GraphicsContext g, Flap flap) {
-	}
-
-	@Override
-	public void drawHeart(GraphicsContext g, GameEntity heart) {
-	}
-
-	@Override
-	public void drawStork(GraphicsContext g, Stork stork) {
-	}
-
-	@Override
-	public void drawJuniorBag(GraphicsContext g, JuniorBag bag) {
-	}
-
-	@Override
-	public TimedSequence<?> flapFlapping() {
-		return null;
-	}
-
-	@Override
-	public TimedSequence<?> storkFlying() {
-		return null;
 	}
 }

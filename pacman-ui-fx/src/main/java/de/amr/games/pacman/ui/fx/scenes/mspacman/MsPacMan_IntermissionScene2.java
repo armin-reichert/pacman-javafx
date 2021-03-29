@@ -4,6 +4,7 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
 import de.amr.games.pacman.ui.fx.rendering.Assets2D;
+import de.amr.games.pacman.ui.fx.rendering.MsPacManGameRendering;
 import de.amr.games.pacman.ui.fx.scenes.common.scene2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.sound.SoundAssets;
 import de.amr.games.pacman.ui.mspacman.MsPacMan_IntermissionScene2_Controller;
@@ -49,8 +50,9 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 	public void update() {
 		super.update();
 		sceneController.update();
-		rendering.drawFlap(gc, sceneController.flap);
-		rendering.drawPlayer(gc, sceneController.msPacMan);
-		rendering.drawSpouse(gc, sceneController.pacMan);
+		MsPacManGameRendering r = (MsPacManGameRendering) rendering;
+		r.drawFlap(gc, sceneController.flap);
+		r.drawPlayer(gc, sceneController.msPacMan);
+		r.drawSpouse(gc, sceneController.pacMan);
 	}
 }

@@ -7,14 +7,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.GameEntity;
-import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.model.mspacman.Flap;
 import de.amr.games.pacman.model.mspacman.JuniorBag;
 import de.amr.games.pacman.model.mspacman.Stork;
 import de.amr.games.pacman.model.pacman.PacManBonus;
+import de.amr.games.pacman.ui.MsPacManRendering2D;
 import de.amr.games.pacman.ui.animation.TimedSequence;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -29,7 +28,8 @@ import javafx.scene.text.FontWeight;
  * 
  * @author Armin Reichert
  */
-public class MsPacManGameRendering extends AbstractGameRendering {
+public class MsPacManGameRendering extends AbstractGameRendering
+		implements MsPacManRendering2D<GraphicsContext, Color, Font, Rectangle2D> {
 
 	private final Map<Direction, TimedSequence<Rectangle2D>> msPacManMunchingAnim;
 	private final TimedSequence<Integer> bonusJumpingAnim;
@@ -206,30 +206,6 @@ public class MsPacManGameRendering extends AbstractGameRendering {
 			drawEntity(g, bonus, bonusSprite(bonus));
 		}
 	}
-
-	// Pac-Man game only:
-
-	@Override
-	public void drawBigPacMan(GraphicsContext g, Pac bigPacMan) {
-	}
-
-	@Override
-	public void drawNail(GraphicsContext g, GameEntity nail) {
-	}
-
-	@Override
-	public void drawBlinkyStretched(GraphicsContext g, Ghost blinky, V2d nailPosition, int stretching) {
-	}
-
-	@Override
-	public void drawBlinkyPatched(GraphicsContext g, Ghost blinky) {
-	}
-
-	@Override
-	public void drawBlinkyNaked(GraphicsContext g, Ghost blinky) {
-	}
-
-	// Ms. Pac-Man game only:
 
 	@Override
 	public void drawSpouse(GraphicsContext g, Pac pacMan) {

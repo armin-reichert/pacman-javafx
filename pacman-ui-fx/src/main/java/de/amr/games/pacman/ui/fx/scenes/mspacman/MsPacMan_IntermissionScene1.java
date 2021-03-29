@@ -4,6 +4,7 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
 import de.amr.games.pacman.ui.fx.rendering.Assets2D;
+import de.amr.games.pacman.ui.fx.rendering.MsPacManGameRendering;
 import de.amr.games.pacman.ui.fx.scenes.common.scene2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.sound.SoundAssets;
 import de.amr.games.pacman.ui.mspacman.MsPacMan_IntermissionScene1_Controller;
@@ -49,12 +50,13 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 	@Override
 	public void update() {
 		super.update();
+		MsPacManGameRendering r = (MsPacManGameRendering) rendering;
 		sceneController.update();
-		rendering.drawFlap(gc, sceneController.flap);
-		rendering.drawPlayer(gc, sceneController.msPac);
-		rendering.drawSpouse(gc, sceneController.pacMan);
-		rendering.drawGhost(gc, sceneController.inky, false);
-		rendering.drawGhost(gc, sceneController.pinky, false);
-		rendering.drawHeart(gc, sceneController.heart);
+		r.drawFlap(gc, sceneController.flap);
+		r.drawPlayer(gc, sceneController.msPac);
+		r.drawSpouse(gc, sceneController.pacMan);
+		r.drawGhost(gc, sceneController.inky, false);
+		r.drawGhost(gc, sceneController.pinky, false);
+		r.drawHeart(gc, sceneController.heart);
 	}
 }
