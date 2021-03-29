@@ -23,11 +23,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 /**
- * Default rendering for the the Ms. Pac-Man game.
+ * 2D rendering for the the Ms. Pac-Man game.
  * 
  * @author Armin Reichert
  */
-public class MsPacManGameRendering extends AbstractGameRendering {
+public class GameRendering2D_MsPacMan extends GameRendering2D {
 
 	private final Map<Direction, TimedSequence<Rectangle2D>> msPacManMunchingAnim;
 	private final TimedSequence<Integer> bonusJumpingAnim;
@@ -37,7 +37,7 @@ public class MsPacManGameRendering extends AbstractGameRendering {
 		return cellsStartingAt(456, 0, tileX, tileY, 1, 1);
 	}
 
-	public MsPacManGameRendering() {
+	public GameRendering2D_MsPacMan() {
 
 		super("/mspacman/graphics/sprites.png");
 

@@ -8,7 +8,7 @@ import java.util.OptionalDouble;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
-import de.amr.games.pacman.ui.fx.rendering.AbstractGameRendering;
+import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.Camera;
@@ -33,12 +33,12 @@ public abstract class AbstractGameScene2D implements GameScene {
 	protected final SubScene scene;
 	protected final Canvas canvas;
 	protected final GraphicsContext gc;
-	protected final AbstractGameRendering rendering;
+	protected final GameRendering2D rendering;
 	protected final SoundManager sounds;
 
 	protected PacManGameController gameController;
 
-	public AbstractGameScene2D(AbstractGameRendering rendering, SoundManager sounds) {
+	public AbstractGameScene2D(GameRendering2D rendering, SoundManager sounds) {
 		this.rendering = rendering;
 		this.sounds = sounds;
 		canvas = new Canvas(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT);
@@ -69,7 +69,7 @@ public abstract class AbstractGameScene2D implements GameScene {
 		return getClass().getSimpleName() + "@" + hashCode();
 	}
 
-	public AbstractGameRendering getRendering() {
+	public GameRendering2D getRendering() {
 		return rendering;
 	}
 

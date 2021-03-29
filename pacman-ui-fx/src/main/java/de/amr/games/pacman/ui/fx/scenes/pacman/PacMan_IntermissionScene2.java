@@ -5,8 +5,8 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
-import de.amr.games.pacman.ui.fx.rendering.Assets2D;
-import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering;
+import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
+import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_PacMan;
 import de.amr.games.pacman.ui.fx.scenes.common.scene2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.sound.SoundAssets;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene2_Controller;
@@ -34,7 +34,7 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 	private SceneController sceneController;
 
 	public PacMan_IntermissionScene2() {
-		super(Assets2D.RENDERING_2D.get(GameVariant.PACMAN), SoundAssets.get(GameVariant.PACMAN));
+		super(GameRendering2D.RENDERING_PACMAN, SoundAssets.get(GameVariant.PACMAN));
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 	public void update() {
 		super.update();
 		sceneController.update();
-		PacManGameRendering r = (PacManGameRendering) rendering;
+		GameRendering2D_PacMan r = (GameRendering2D_PacMan) rendering;
 		r.drawLevelCounter(gc, gameController.game(), t(25), t(34));
 		r.drawNail(gc, sceneController.nail);
 		r.drawPlayer(gc, sceneController.pac);

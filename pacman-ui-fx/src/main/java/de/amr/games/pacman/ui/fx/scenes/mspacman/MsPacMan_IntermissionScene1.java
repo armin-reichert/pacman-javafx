@@ -3,8 +3,8 @@ package de.amr.games.pacman.ui.fx.scenes.mspacman;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
-import de.amr.games.pacman.ui.fx.rendering.Assets2D;
-import de.amr.games.pacman.ui.fx.rendering.MsPacManGameRendering;
+import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
+import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx.scenes.common.scene2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.sound.SoundAssets;
 import de.amr.games.pacman.ui.mspacman.MsPacMan_IntermissionScene1_Controller;
@@ -37,7 +37,7 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 	private SceneController sceneController;
 
 	public MsPacMan_IntermissionScene1() {
-		super(Assets2D.RENDERING_2D.get(GameVariant.MS_PACMAN), SoundAssets.get(GameVariant.MS_PACMAN));
+		super(GameRendering2D.RENDERING_MS_PACMAN, SoundAssets.get(GameVariant.MS_PACMAN));
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 	@Override
 	public void update() {
 		super.update();
-		MsPacManGameRendering r = (MsPacManGameRendering) rendering;
+		GameRendering2D_MsPacMan r = (GameRendering2D_MsPacMan) rendering;
 		sceneController.update();
 		r.drawFlap(gc, sceneController.flap);
 		r.drawPlayer(gc, sceneController.msPac);

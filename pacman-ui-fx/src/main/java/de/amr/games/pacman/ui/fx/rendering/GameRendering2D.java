@@ -43,8 +43,11 @@ import javafx.scene.text.FontWeight;
  * 
  * @author Armin Reichert
  */
-public abstract class AbstractGameRendering
+public abstract class GameRendering2D
 		implements PacManGameAnimations2D, MazeAnimations2D, PlayerAnimations2D, GhostAnimations2D {
+
+	public static final GameRendering2D_MsPacMan RENDERING_MS_PACMAN = new GameRendering2D_MsPacMan();
+	public static final GameRendering2D_PacMan RENDERING_PACMAN = new GameRendering2D_PacMan();
 
 	/** Spritesheet grid cell size */
 	public static final int GRID_CELLSIZE = 16;
@@ -67,7 +70,7 @@ public abstract class AbstractGameRendering
 	protected TimedSequence<Rectangle2D> ghostFrightenedAnim;
 	protected Map<Ghost, TimedSequence<Rectangle2D>> ghostFlashingAnim = new HashMap<>();
 
-	public AbstractGameRendering(String spritesheetPath) {
+	public GameRendering2D(String spritesheetPath) {
 		spritesheet = new Image(getClass().getResource(spritesheetPath).toExternalForm());
 		scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), 8);
 		energizerBlinking = TimedSequence.pulse().frameDuration(15);

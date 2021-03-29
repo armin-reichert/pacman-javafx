@@ -10,7 +10,7 @@ import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.ui.fx.rendering.Assets2D;
+import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_Assets;
 import de.amr.games.pacman.ui.fx.scenes.common.Env;
 import javafx.geometry.Bounds;
 import javafx.scene.AmbientLight;
@@ -88,11 +88,11 @@ class Assets3D {
 	}
 
 	static Color mazeWallColor(GameVariant gameType, int mazeNumber) {
-		return gameType == GameVariant.PACMAN ? Color.BLUE : Assets2D.getMazeWallColor(mazeNumber);
+		return gameType == GameVariant.PACMAN ? Color.BLUE : GameRendering2D_Assets.getMazeWallColor(mazeNumber);
 	}
 
 	static Color foodColor(GameVariant gameType, int mazeNumber) {
-		return gameType == GameVariant.PACMAN ? Color.rgb(250, 185, 176) : Assets2D.getFoodColor(mazeNumber);
+		return gameType == GameVariant.PACMAN ? Color.rgb(250, 185, 176) : GameRendering2D_Assets.getFoodColor(mazeNumber);
 	}
 
 	static Color ghostColor(int id) {

@@ -4,7 +4,7 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.animation.TimedSequence;
-import de.amr.games.pacman.ui.fx.rendering.Assets2D;
+import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
@@ -21,10 +21,12 @@ class LevelCompleteAnimation {
 	private int imageIndex;
 
 	public LevelCompleteAnimation(PacManGameController gameController, int numFlashes) {
-		// get the maze images which are displayed alternating to create the flashing effect
 		GameVariant variant = gameController.gameVariant();
 		AbstractGameModel game = gameController.game();
-		mazeFlashing = Assets2D.RENDERING_2D.get(variant).mazeAnimations().mazeFlashing(game.currentLevel.mazeNumber);
+		GameRendering2D rendering = variant == GameVariant.MS_PACMAN ? GameRendering2D.RENDERING_MS_PACMAN
+				: GameRendering2D.RENDERING_PACMAN;
+
+		mazeFlashing = rendering.mazeAnimations().mazeFlashing(game.currentLevel.mazeNumber);
 		imageIndex = 1;
 
 		flashing = new Timeline(new KeyFrame(Duration.millis(150), e -> {

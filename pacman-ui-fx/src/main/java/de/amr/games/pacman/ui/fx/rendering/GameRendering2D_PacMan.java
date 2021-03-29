@@ -18,11 +18,11 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 /**
- * Default rendering for the scenes of the Pac-Man game.
+ * 2D rendering for the scenes of the Pac-Man game.
  * 
  * @author Armin Reichert
  */
-public class PacManGameRendering extends AbstractGameRendering {
+public class GameRendering2D_PacMan extends GameRendering2D {
 
 	private final Image mazeFull = new Image(getClass().getResource("/pacman/graphics/maze_full.png").toExternalForm());
 	private final Image mazeEmpty = new Image(getClass().getResource("/pacman/graphics/maze_empty.png").toExternalForm());
@@ -33,7 +33,7 @@ public class PacManGameRendering extends AbstractGameRendering {
 	private TimedSequence<Rectangle2D> blinkyPatched;
 	private TimedSequence<Rectangle2D> blinkyHalfNaked;
 
-	public PacManGameRendering() {
+	public GameRendering2D_PacMan() {
 		super("/pacman/graphics/sprites.png");
 
 		symbolSprites = Arrays.asList(sprite(2, 3), sprite(3, 3), sprite(4, 3), sprite(5, 3), sprite(6, 3), sprite(7, 3),

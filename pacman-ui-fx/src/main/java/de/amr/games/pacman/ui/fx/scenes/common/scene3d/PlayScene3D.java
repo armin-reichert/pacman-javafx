@@ -20,7 +20,7 @@ import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
-import de.amr.games.pacman.ui.fx.rendering.Assets2D;
+import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_Assets;
 import de.amr.games.pacman.ui.fx.scenes.common.CameraController;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.common.PlaySceneSoundManager;
@@ -111,7 +111,7 @@ public class PlayScene3D implements GameScene {
 
 		fxScene.setFill(Color.rgb(20, 20, 60));
 
-		maze = new Maze3D(game, Assets2D.getMazeWallColor(game.currentLevel.mazeNumber));
+		maze = new Maze3D(game, GameRendering2D_Assets.getMazeWallColor(game.currentLevel.mazeNumber));
 		PhongMaterial foodMaterial = Assets3D.foodMaterial(gameVariant, game.currentLevel.mazeNumber);
 
 		energizers = game.currentLevel.world.energizerTiles()//
@@ -295,7 +295,7 @@ public class PlayScene3D implements GameScene {
 			fxScene.setFill(color);
 			ambientLight.setColor(Color.AZURE);
 		} else {
-			Color mazeColor = Assets2D.getMazeWallColor(gameController.game().currentLevel.mazeNumber);
+			Color mazeColor = GameRendering2D_Assets.getMazeWallColor(gameController.game().currentLevel.mazeNumber);
 //			fxScene.setFill(mazeColor);
 			ambientLight.setColor(mazeColor);
 		}
