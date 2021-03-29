@@ -11,21 +11,18 @@ import de.amr.games.pacman.model.common.GameEntity;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.model.pacman.PacManBonus;
-import de.amr.games.pacman.ui.PacManRendering2D;
 import de.amr.games.pacman.ui.animation.TimedSequence;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 /**
  * Default rendering for the scenes of the Pac-Man game.
  * 
  * @author Armin Reichert
  */
-public class PacManGameRendering extends AbstractGameRendering
-		implements PacManRendering2D<GraphicsContext, Color, Font, Rectangle2D> {
+public class PacManGameRendering extends AbstractGameRendering {
 
 	private final Image mazeFull = new Image(getClass().getResource("/pacman/graphics/maze_full.png").toExternalForm());
 	private final Image mazeEmpty = new Image(getClass().getResource("/pacman/graphics/maze_empty.png").toExternalForm());
@@ -95,7 +92,6 @@ public class PacManGameRendering extends AbstractGameRendering
 		blinkyHalfNaked = TimedSequence.of(cells(8, 8, 2, 1), cells(10, 8, 2, 1)).endless().frameDuration(4).restart();
 	}
 
-	@Override
 	public Color getMazeWallBorderColor(int mazeIndex) {
 		return Color.rgb(33, 33, 255);
 	}
@@ -151,19 +147,14 @@ public class PacManGameRendering extends AbstractGameRendering
 		drawEntity(g, bonus, bonusSprite(bonus));
 	}
 
-	// Pac-Man only:
-
-	@Override
 	public void drawBigPacMan(GraphicsContext g, Pac bigPac) {
 		drawEntity(g, bigPac, bigPacMan.animate());
 	}
 
-	@Override
 	public void drawNail(GraphicsContext g, GameEntity nail) {
 		drawEntity(g, nail, sprite(8, 6));
 	}
 
-	@Override
 	public void drawBlinkyStretched(GraphicsContext g, Ghost blinky, V2d nailPosition, int stretching) {
 		drawSprite(g, blinkyStretched.frame(stretching), nailPosition.x - 4, nailPosition.y - 4);
 		if (stretching < 3) {
@@ -173,12 +164,10 @@ public class PacManGameRendering extends AbstractGameRendering
 		}
 	}
 
-	@Override
 	public void drawBlinkyPatched(GraphicsContext g, Ghost blinky) {
 		drawEntity(g, blinky, blinkyPatched.animate());
 	}
 
-	@Override
 	public void drawBlinkyNaked(GraphicsContext g, Ghost blinky) {
 		drawEntity(g, blinky, blinkyHalfNaked.animate());
 	}

@@ -13,7 +13,6 @@ import de.amr.games.pacman.model.mspacman.Flap;
 import de.amr.games.pacman.model.mspacman.JuniorBag;
 import de.amr.games.pacman.model.mspacman.Stork;
 import de.amr.games.pacman.model.pacman.PacManBonus;
-import de.amr.games.pacman.ui.MsPacManRendering2D;
 import de.amr.games.pacman.ui.animation.TimedSequence;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -28,8 +27,7 @@ import javafx.scene.text.FontWeight;
  * 
  * @author Armin Reichert
  */
-public class MsPacManGameRendering extends AbstractGameRendering
-		implements MsPacManRendering2D<GraphicsContext, Color, Font, Rectangle2D> {
+public class MsPacManGameRendering extends AbstractGameRendering {
 
 	private final Map<Direction, TimedSequence<Rectangle2D>> msPacManMunchingAnim;
 	private final TimedSequence<Integer> bonusJumpingAnim;
@@ -131,7 +129,6 @@ public class MsPacManGameRendering extends AbstractGameRendering
 	 * @param mazeIndex
 	 * @return
 	 */
-	@Override
 	public Color getMazeWallBorderColor(int mazeIndex) {
 		switch (mazeIndex) {
 		case 0:
@@ -207,7 +204,6 @@ public class MsPacManGameRendering extends AbstractGameRendering
 		}
 	}
 
-	@Override
 	public void drawSpouse(GraphicsContext g, Pac pacMan) {
 		if (pacMan.visible) {
 			TimedSequence<Rectangle2D> munching = spouseMunching(pacMan, pacMan.dir);
@@ -216,7 +212,16 @@ public class MsPacManGameRendering extends AbstractGameRendering
 		}
 	}
 
-	@Override
+	public void drawJuniorBag(GraphicsContext g, JuniorBag bag) {
+		if (bag.visible) {
+			if (bag.open) {
+				drawEntity(g, bag, new Rectangle2D(509, 200, 8, 8));
+			} else {
+				drawEntity(g, bag, new Rectangle2D(488, 199, 8, 8));
+			}
+		}
+	}
+
 	public void drawFlap(GraphicsContext g, Flap flap) {
 		if (flap.visible) {
 			drawSprite(g, (Rectangle2D) flap.flapping.frame(), flap.position.x, flap.position.y);
@@ -228,8 +233,18 @@ public class MsPacManGameRendering extends AbstractGameRendering
 		}
 	}
 
+	public void drawHeart(GraphicsContext g, GameEntity heart) {
+		drawEntity(g, heart, s(2, 10));
+	}
+
+	public void drawStork(GraphicsContext g, Stork stork) {
+		if (stork.visible) {
+			drawEntity(g, stork, (Rectangle2D) stork.flying.frame());
+		}
+	}
+
 	@Override
-	public TimedSequence<?> flapFlapping() {
+	public TimedSequence<?> flapFlappingAnimation() {
 		return TimedSequence.of( //
 				new Rectangle2D(456, 208, 32, 32), //
 				new Rectangle2D(488, 208, 32, 32), //
@@ -240,33 +255,10 @@ public class MsPacManGameRendering extends AbstractGameRendering
 	}
 
 	@Override
-	public void drawStork(GraphicsContext g, Stork stork) {
-		if (stork.visible) {
-			drawEntity(g, stork, (Rectangle2D) stork.flying.frame());
-		}
-	}
-
-	@Override
-	public TimedSequence<?> storkFlying() {
+	public TimedSequence<?> storkFlyingAnimation() {
 		return TimedSequence.of(//
 				new Rectangle2D(489, 176, 32, 16), //
 				new Rectangle2D(521, 176, 32, 16)//
 		).endless().frameDuration(10);
-	}
-
-	@Override
-	public void drawJuniorBag(GraphicsContext g, JuniorBag bag) {
-		if (bag.visible) {
-			if (bag.open) {
-				drawEntity(g, bag, new Rectangle2D(509, 200, 8, 8));
-			} else {
-				drawEntity(g, bag, new Rectangle2D(488, 199, 8, 8));
-			}
-		}
-	}
-
-	@Override
-	public void drawHeart(GraphicsContext g, GameEntity heart) {
-		drawEntity(g, heart, s(2, 10));
 	}
 }

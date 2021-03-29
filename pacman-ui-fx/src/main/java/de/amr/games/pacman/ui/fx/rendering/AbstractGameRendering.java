@@ -25,7 +25,6 @@ import de.amr.games.pacman.model.common.GameEntity;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.model.pacman.PacManBonus;
-import de.amr.games.pacman.ui.CommonPacManRendering2D;
 import de.amr.games.pacman.ui.animation.GhostAnimations2D;
 import de.amr.games.pacman.ui.animation.MazeAnimations2D;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
@@ -45,8 +44,7 @@ import javafx.scene.text.FontWeight;
  * @author Armin Reichert
  */
 public abstract class AbstractGameRendering
-		implements CommonPacManRendering2D<GraphicsContext, Color, Font, Rectangle2D>, PacManGameAnimations2D,
-		MazeAnimations2D, PlayerAnimations2D, GhostAnimations2D {
+		implements PacManGameAnimations2D, MazeAnimations2D, PlayerAnimations2D, GhostAnimations2D {
 
 	/** Spritesheet grid cell size */
 	public static final int GRID_CELLSIZE = 16;
@@ -198,7 +196,6 @@ public abstract class AbstractGameRendering
 		return ghostKicking(ghost, ghost.wishDir).animate();
 	}
 
-	@Override
 	public Font getScoreFont() {
 		return scoreFont;
 	}
@@ -223,7 +220,8 @@ public abstract class AbstractGameRendering
 				sprite.getWidth(), sprite.getHeight());
 	}
 
-	@Override
+	public abstract void drawMaze(GraphicsContext gc, int mazeNumber, int i, int t, boolean b);
+
 	public void drawLivesCounter(GraphicsContext g, AbstractGameModel game, int x, int y) {
 		int maxLivesDisplayed = 5;
 		for (int i = 0; i < Math.min(game.lives, maxLivesDisplayed); ++i) {
@@ -236,35 +234,33 @@ public abstract class AbstractGameRendering
 		}
 	}
 
-	@Override
+	public abstract void drawLifeCounterSymbol(GraphicsContext g, int i, int y);
+
 	public void drawPlayer(GraphicsContext g, Pac player) {
 		drawEntity(g, player, playerSprite(player));
 	}
 
-	@Override
 	public void drawGhost(GraphicsContext g, Ghost ghost, boolean frightened) {
 		drawEntity(g, ghost, ghostSprite(ghost, frightened));
 	}
 
-	@Override
+	public abstract void drawBonus(GraphicsContext gc, PacManBonus bonus);
+
 	public void drawTileCovered(GraphicsContext g, V2i tile) {
 		g.setFill(Color.BLACK);
 		g.fillRect(tile.x * TS, tile.y * TS, TS, TS);
 	}
 
-	@Override
 	public void drawFoodTiles(GraphicsContext g, Stream<V2i> tiles, Predicate<V2i> eaten) {
 		tiles.filter(eaten).forEach(tile -> drawTileCovered(g, tile));
 	}
 
-	@Override
 	public void drawEnergizerTiles(GraphicsContext g, Stream<V2i> energizerTiles) {
 		if (!energizerBlinking.animate()) {
 			energizerTiles.forEach(tile -> drawTileCovered(g, tile));
 		}
 	}
 
-	@Override
 	public void drawGameState(GraphicsContext g, AbstractGameModel game, PacManGameState gameState) {
 		if (gameState == PacManGameState.GAME_OVER) {
 			g.setFont(scoreFont);
@@ -278,7 +274,6 @@ public abstract class AbstractGameRendering
 		}
 	}
 
-	@Override
 	public void drawScore(GraphicsContext g, AbstractGameModel game, boolean hiscoreOnly) {
 		g.setFont(getScoreFont());
 		g.translate(0, 2);
@@ -303,7 +298,8 @@ public abstract class AbstractGameRendering
 		g.translate(0, -3);
 	}
 
-	@Override
+	public abstract Color getMazeWallColor(int i);
+
 	public void drawLevelCounter(GraphicsContext g, AbstractGameModel game, int rightX, int y) {
 		int x = rightX;
 		int firstLevel = Math.max(1, game.currentLevelNumber - 6);
