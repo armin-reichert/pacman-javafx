@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.rendering.standard;
+package de.amr.games.pacman.ui.fx.rendering;
 
 import static de.amr.games.pacman.lib.Direction.LEFT;
 import static de.amr.games.pacman.lib.Direction.RIGHT;
@@ -20,16 +20,17 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameEntity;
 import de.amr.games.pacman.model.common.AbstractGameModel;
+import de.amr.games.pacman.model.common.GameEntity;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.model.pacman.PacManBonus;
+import de.amr.games.pacman.ui.PacManRendering2D;
 import de.amr.games.pacman.ui.animation.GhostAnimations2D;
 import de.amr.games.pacman.ui.animation.MazeAnimations2D;
+import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
 import de.amr.games.pacman.ui.animation.PlayerAnimations2D;
 import de.amr.games.pacman.ui.animation.TimedSequence;
-import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -43,8 +44,8 @@ import javafx.scene.text.FontWeight;
  * 
  * @author Armin Reichert
  */
-public abstract class StandardRendering
-		implements PacManGameRendering2D, MazeAnimations2D, PlayerAnimations2D, GhostAnimations2D {
+public abstract class AbstractGameRendering implements PacManRendering2D<GraphicsContext, Color, Font, Rectangle2D>,
+		PacManGameAnimations2D, MazeAnimations2D, PlayerAnimations2D, GhostAnimations2D {
 
 	/** Spritesheet grid cell size */
 	public static final int GRID_CELLSIZE = 16;
@@ -67,7 +68,7 @@ public abstract class StandardRendering
 	protected TimedSequence<Rectangle2D> ghostFrightenedAnim;
 	protected Map<Ghost, TimedSequence<Rectangle2D>> ghostFlashingAnim = new HashMap<>();
 
-	public StandardRendering(String spritesheetPath) {
+	public AbstractGameRendering(String spritesheetPath) {
 		spritesheet = new Image(getClass().getResource(spritesheetPath).toExternalForm());
 		scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), 8);
 		energizerBlinking = TimedSequence.pulse().frameDuration(15);

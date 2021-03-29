@@ -12,7 +12,7 @@ import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.animation.TimedSequence;
-import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
+import de.amr.games.pacman.ui.fx.rendering.AbstractGameRendering;
 import de.amr.games.pacman.ui.fx.scenes.common.PlaySceneSoundManager;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 
@@ -26,7 +26,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 	private PlaySceneSoundManager playSceneSounds;
 	private LevelCompleteAnimation levelCompleteAnimation;
 
-	public PlayScene2D(PacManGameRendering2D rendering, SoundManager sounds) {
+	public PlayScene2D(AbstractGameRendering rendering, SoundManager sounds) {
 		super(rendering, sounds);
 	}
 

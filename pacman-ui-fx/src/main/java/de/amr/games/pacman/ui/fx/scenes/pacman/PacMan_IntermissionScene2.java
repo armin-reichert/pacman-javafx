@@ -5,7 +5,7 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
-import de.amr.games.pacman.ui.fx.rendering.standard.Assets2D;
+import de.amr.games.pacman.ui.fx.rendering.Assets2D;
 import de.amr.games.pacman.ui.fx.scenes.common.scene2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.sound.SoundAssets;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene2_Controller;

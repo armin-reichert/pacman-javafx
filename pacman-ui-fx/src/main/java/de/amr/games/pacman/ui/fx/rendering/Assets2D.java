@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.rendering.standard;
+package de.amr.games.pacman.ui.fx.rendering;
 
 import static de.amr.games.pacman.model.common.GameVariant.MS_PACMAN;
 import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
@@ -6,16 +6,15 @@ import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
 import java.util.EnumMap;
 
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.ui.fx.rendering.PacManGameRendering2D;
 import javafx.scene.paint.Color;
 
 public class Assets2D {
 
-	public static final EnumMap<GameVariant, PacManGameRendering2D> RENDERING_2D = new EnumMap<>(GameVariant.class);
+	public static final EnumMap<GameVariant, AbstractGameRendering> RENDERING_2D = new EnumMap<>(GameVariant.class);
 
 	static {
-		RENDERING_2D.put(MS_PACMAN, new MsPacMan_StandardRendering());
-		RENDERING_2D.put(PACMAN, new PacMan_StandardRendering());
+		RENDERING_2D.put(MS_PACMAN, new MsPacManGameRendering());
+		RENDERING_2D.put(PACMAN, new PacManGameRendering());
 	}
 
 	public static Color getFoodColor(int mazeNumber) {

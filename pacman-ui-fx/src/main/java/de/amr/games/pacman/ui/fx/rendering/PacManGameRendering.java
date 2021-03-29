@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.rendering.standard;
+package de.amr.games.pacman.ui.fx.rendering;
 
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -7,12 +7,12 @@ import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2d;
-import de.amr.games.pacman.model.common.Flap;
 import de.amr.games.pacman.model.common.GameEntity;
 import de.amr.games.pacman.model.common.Ghost;
-import de.amr.games.pacman.model.common.JuniorBag;
 import de.amr.games.pacman.model.common.Pac;
-import de.amr.games.pacman.model.common.Stork;
+import de.amr.games.pacman.model.mspacman.Flap;
+import de.amr.games.pacman.model.mspacman.JuniorBag;
+import de.amr.games.pacman.model.mspacman.Stork;
 import de.amr.games.pacman.model.pacman.PacManBonus;
 import de.amr.games.pacman.ui.animation.TimedSequence;
 import javafx.geometry.Rectangle2D;
@@ -25,7 +25,7 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class PacMan_StandardRendering extends StandardRendering {
+public class PacManGameRendering extends AbstractGameRendering {
 
 	private final Image mazeFull = new Image(getClass().getResource("/pacman/graphics/maze_full.png").toExternalForm());
 	private final Image mazeEmpty = new Image(getClass().getResource("/pacman/graphics/maze_empty.png").toExternalForm());
@@ -36,7 +36,7 @@ public class PacMan_StandardRendering extends StandardRendering {
 	private TimedSequence<Rectangle2D> blinkyPatched;
 	private TimedSequence<Rectangle2D> blinkyHalfNaked;
 
-	public PacMan_StandardRendering() {
+	public PacManGameRendering() {
 		super("/pacman/graphics/sprites.png");
 
 		symbolSprites = Arrays.asList(sprite(2, 3), sprite(3, 3), sprite(4, 3), sprite(5, 3), sprite(6, 3), sprite(7, 3),

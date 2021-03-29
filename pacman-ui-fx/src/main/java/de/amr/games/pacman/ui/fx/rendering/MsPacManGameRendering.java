@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.rendering.standard;
+package de.amr.games.pacman.ui.fx.rendering;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,12 +8,12 @@ import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2d;
-import de.amr.games.pacman.model.common.Flap;
 import de.amr.games.pacman.model.common.GameEntity;
 import de.amr.games.pacman.model.common.Ghost;
-import de.amr.games.pacman.model.common.JuniorBag;
 import de.amr.games.pacman.model.common.Pac;
-import de.amr.games.pacman.model.common.Stork;
+import de.amr.games.pacman.model.mspacman.Flap;
+import de.amr.games.pacman.model.mspacman.JuniorBag;
+import de.amr.games.pacman.model.mspacman.Stork;
 import de.amr.games.pacman.model.pacman.PacManBonus;
 import de.amr.games.pacman.ui.animation.TimedSequence;
 import javafx.geometry.Rectangle2D;
@@ -29,7 +29,7 @@ import javafx.scene.text.FontWeight;
  * 
  * @author Armin Reichert
  */
-public class MsPacMan_StandardRendering extends StandardRendering {
+public class MsPacManGameRendering extends AbstractGameRendering {
 
 	private final Map<Direction, TimedSequence<Rectangle2D>> msPacManMunchingAnim;
 	private final TimedSequence<Integer> bonusJumpingAnim;
@@ -39,7 +39,7 @@ public class MsPacMan_StandardRendering extends StandardRendering {
 		return cellsStartingAt(456, 0, tileX, tileY, 1, 1);
 	}
 
-	public MsPacMan_StandardRendering() {
+	public MsPacManGameRendering() {
 
 		super("/mspacman/graphics/sprites.png");
 

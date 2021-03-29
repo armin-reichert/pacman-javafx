@@ -12,7 +12,7 @@ import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
-import de.amr.games.pacman.ui.fx.rendering.standard.Assets2D;
+import de.amr.games.pacman.ui.fx.rendering.Assets2D;
 import de.amr.games.pacman.ui.fx.scenes.common.Env;
 import de.amr.games.pacman.ui.fx.scenes.common.FlashMessageView;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;

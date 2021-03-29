@@ -5,7 +5,7 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
-import de.amr.games.pacman.ui.fx.rendering.standard.Assets2D;
+import de.amr.games.pacman.ui.fx.rendering.Assets2D;
 import de.amr.games.pacman.ui.fx.scenes.common.scene2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.sound.SoundAssets;
 import de.amr.games.pacman.ui.mspacman.MsPacMan_IntroScene_Controller;

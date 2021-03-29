@@ -4,7 +4,7 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.animation.TimedSequence;
-import de.amr.games.pacman.ui.fx.rendering.standard.Assets2D;
+import de.amr.games.pacman.ui.fx.rendering.Assets2D;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;

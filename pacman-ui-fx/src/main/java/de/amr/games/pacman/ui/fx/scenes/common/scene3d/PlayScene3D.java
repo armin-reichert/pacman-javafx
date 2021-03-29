@@ -20,7 +20,7 @@ import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
-import de.amr.games.pacman.ui.fx.rendering.standard.Assets2D;
+import de.amr.games.pacman.ui.fx.rendering.Assets2D;
 import de.amr.games.pacman.ui.fx.scenes.common.CameraController;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.common.PlaySceneSoundManager;

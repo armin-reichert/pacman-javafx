@@ -10,7 +10,7 @@ import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.ui.fx.rendering.standard.Assets2D;
+import de.amr.games.pacman.ui.fx.rendering.Assets2D;
 import de.amr.games.pacman.ui.fx.scenes.common.Env;
 import javafx.geometry.Bounds;
 import javafx.scene.AmbientLight;
