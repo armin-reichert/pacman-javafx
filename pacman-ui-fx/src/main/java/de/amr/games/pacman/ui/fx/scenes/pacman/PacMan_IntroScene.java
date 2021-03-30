@@ -68,6 +68,10 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	public void update() {
 		super.update();
 		sceneController.update();
+		render();
+	}
+
+	public void render() {
 		rendering.drawScore(gc, gameController.game(), true);
 		drawGallery();
 		if (sceneController.phase == Phase.CHASING_PAC) {
@@ -76,18 +80,14 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 				gc.fillOval(t(2), sceneController.pac.position.y, TS, TS);
 			}
 		}
-		drawGuys();
+		ghosts2D.forEach(ghost2D -> ghost2D.render(gc));
+		pacMan2D.render(gc);
 		if (sceneController.phase.ordinal() >= Phase.CHASING_GHOSTS.ordinal()) {
 			drawPointsAnimation(11, 26);
 		}
 		if (sceneController.phase == Phase.READY_TO_PLAY) {
 			drawPressKeyToStart(32);
 		}
-	}
-
-	private void drawGuys() {
-		ghosts2D.forEach(ghost2D -> ghost2D.render(gc));
-		pacMan2D.render(gc);
 	}
 
 	private void drawGallery() {
