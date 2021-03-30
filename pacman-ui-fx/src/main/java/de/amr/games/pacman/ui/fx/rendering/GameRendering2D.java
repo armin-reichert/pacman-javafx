@@ -3,15 +3,10 @@ package de.amr.games.pacman.ui.fx.rendering;
 import static de.amr.games.pacman.lib.Direction.LEFT;
 import static de.amr.games.pacman.lib.Direction.RIGHT;
 import static de.amr.games.pacman.lib.Direction.UP;
-import static de.amr.games.pacman.model.common.GhostState.DEAD;
-import static de.amr.games.pacman.model.common.GhostState.ENTERING_HOUSE;
-import static de.amr.games.pacman.model.common.GhostState.FRIGHTENED;
-import static de.amr.games.pacman.model.common.GhostState.LOCKED;
 import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -22,13 +17,9 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.common.GameEntity;
-import de.amr.games.pacman.model.common.Ghost;
-import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.model.pacman.PacManBonus;
-import de.amr.games.pacman.ui.animation.GhostAnimations2D;
 import de.amr.games.pacman.ui.animation.MazeAnimations2D;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
-import de.amr.games.pacman.ui.animation.PlayerAnimations2D;
 import de.amr.games.pacman.ui.animation.TimedSequence;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -43,8 +34,7 @@ import javafx.scene.text.FontWeight;
  * 
  * @author Armin Reichert
  */
-public abstract class GameRendering2D
-		implements PacManGameAnimations2D, MazeAnimations2D, PlayerAnimations2D, GhostAnimations2D {
+public abstract class GameRendering2D implements PacManGameAnimations2D, MazeAnimations2D {
 
 	public static final GameRendering2D_MsPacMan RENDERING_MS_PACMAN = new GameRendering2D_MsPacMan();
 	public static final GameRendering2D_PacMan RENDERING_PACMAN = new GameRendering2D_PacMan();
@@ -52,28 +42,17 @@ public abstract class GameRendering2D
 	/** Spritesheet grid cell size */
 	public static final int GRID_CELLSIZE = 16;
 
-	protected final Image spritesheet;
+	public final Image spritesheet;
 	protected final Font scoreFont;
 
 	protected List<Rectangle2D> symbolSprites;
 	protected Map<Integer, Rectangle2D> bonusValueSprites;
-	protected Map<Integer, Rectangle2D> bountyValueSprites;
-
-	protected TimedSequence<Boolean> energizerBlinking;
+	protected Map<Integer, Rectangle2D> bountyNumberSprites;
 	protected List<TimedSequence<Image>> mazeFlashingAnim;
-
-	protected Map<Direction, TimedSequence<Rectangle2D>> pacManMunchingAnim;
-	protected TimedSequence<Rectangle2D> playerDyingAnim;
-
-	protected Map<Ghost, Map<Direction, TimedSequence<Rectangle2D>>> ghostsKickingAnim = new HashMap<>();
-	protected Map<Direction, TimedSequence<Rectangle2D>> ghostEyesAnim;
-	protected TimedSequence<Rectangle2D> ghostFrightenedAnim;
-	protected Map<Ghost, TimedSequence<Rectangle2D>> ghostFlashingAnim = new HashMap<>();
 
 	public GameRendering2D(String spritesheetPath) {
 		spritesheet = new Image(getClass().getResource(spritesheetPath).toExternalForm());
 		scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), 8);
-		energizerBlinking = TimedSequence.pulse().frameDuration(15);
 	}
 
 	/**
@@ -155,50 +134,6 @@ public abstract class GameRendering2D
 		return null; // should not happen
 	}
 
-	/**
-	 * @param player player (Pac-Man or Ms. Pac-Man)
-	 * @return sprite for player depending on its state
-	 */
-	public Rectangle2D playerSprite(Pac player) {
-		if (player.dead) {
-			return playerDying().hasStarted() ? playerDying().animate()
-					: (Rectangle2D) playerMunching(player, player.dir).frame();
-		}
-		if (player.speed == 0) {
-			return (Rectangle2D) playerMunching(player, player.dir).frame(0);
-		}
-		if (player.stuck) {
-			return (Rectangle2D) playerMunching(player, player.dir).frame(1);
-		}
-		return (Rectangle2D) playerMunching(player, player.dir).animate();
-	}
-
-	/**
-	 * @param ghost      ghost
-	 * @param frightened if ghost is frightened
-	 * @return sprite for ghost depending on its state
-	 */
-	public Rectangle2D ghostSprite(Ghost ghost, boolean frightened) {
-		if (ghost.bounty > 0) {
-			return bountyValueSprites.get(ghost.bounty);
-		}
-		if (ghost.is(DEAD) || ghost.is(ENTERING_HOUSE)) {
-			return ghostReturningHome(ghost, ghost.dir).animate();
-		}
-		if (ghost.is(FRIGHTENED)) {
-			if (ghostFlashing(ghost).isRunning()) {
-				return ghostFlashing(ghost).animate();
-			} else {
-				return ghostFrightened(ghost, ghost.dir).animate();
-			}
-		}
-		if (ghost.is(LOCKED) && frightened) {
-			return ghostFrightened(ghost, ghost.dir).animate();
-		}
-		// Sprite looking towards *wish* dir!
-		return ghostKicking(ghost, ghost.wishDir).animate();
-	}
-
 	public Font getScoreFont() {
 		return scoreFont;
 	}
@@ -225,6 +160,15 @@ public abstract class GameRendering2D
 
 	public abstract void drawMaze(GraphicsContext gc, int mazeNumber, int i, int t, boolean b);
 
+	public void drawFoodTiles(GraphicsContext g, Stream<V2i> tiles, Predicate<V2i> eaten) {
+		tiles.filter(eaten).forEach(tile -> drawTileCovered(g, tile));
+	}
+
+	public void drawTileCovered(GraphicsContext g, V2i tile) {
+		g.setFill(Color.BLACK);
+		g.fillRect(tile.x * TS, tile.y * TS, TS, TS);
+	}
+
 	public void drawLivesCounter(GraphicsContext g, AbstractGameModel game, int x, int y) {
 		int maxLivesDisplayed = 5;
 		for (int i = 0; i < Math.min(game.lives, maxLivesDisplayed); ++i) {
@@ -238,31 +182,6 @@ public abstract class GameRendering2D
 	}
 
 	public abstract void drawLifeCounterSymbol(GraphicsContext g, int i, int y);
-
-	public void drawPlayer(GraphicsContext g, Pac player) {
-		drawEntity(g, player, playerSprite(player));
-	}
-
-	public void drawGhost(GraphicsContext g, Ghost ghost, boolean frightened) {
-		drawEntity(g, ghost, ghostSprite(ghost, frightened));
-	}
-
-	public abstract void drawBonus(GraphicsContext gc, PacManBonus bonus);
-
-	public void drawTileCovered(GraphicsContext g, V2i tile) {
-		g.setFill(Color.BLACK);
-		g.fillRect(tile.x * TS, tile.y * TS, TS, TS);
-	}
-
-	public void drawFoodTiles(GraphicsContext g, Stream<V2i> tiles, Predicate<V2i> eaten) {
-		tiles.filter(eaten).forEach(tile -> drawTileCovered(g, tile));
-	}
-
-	public void drawEnergizerTiles(GraphicsContext g, Stream<V2i> energizerTiles) {
-		if (!energizerBlinking.animate()) {
-			energizerTiles.forEach(tile -> drawTileCovered(g, tile));
-		}
-	}
 
 	public void drawGameState(GraphicsContext g, AbstractGameModel game, PacManGameState gameState) {
 		if (gameState == PacManGameState.GAME_OVER) {
@@ -322,16 +241,6 @@ public abstract class GameRendering2D
 	}
 
 	@Override
-	public PlayerAnimations2D playerAnimations() {
-		return this;
-	}
-
-	@Override
-	public GhostAnimations2D ghostAnimations() {
-		return this;
-	}
-
-	@Override
 	public TimedSequence<?> mazeFlashing(int mazeNumber) {
 		return mazeFlashingAnim.get(mazeNumber - 1);
 	}
@@ -341,44 +250,62 @@ public abstract class GameRendering2D
 		return mazeFlashingAnim.stream().map(TimedSequence.class::cast);
 	}
 
-	@Override
-	public TimedSequence<Boolean> energizerBlinking() {
-		return energizerBlinking;
+	public abstract Map<Direction, TimedSequence<Rectangle2D>> createPlayerMunchingAnimations();
+
+	public abstract TimedSequence<Rectangle2D> createPlayerDyingAnimation();
+
+	public abstract Map<Direction, TimedSequence<Rectangle2D>> createSpouseMunchingAnimations();
+
+	public abstract Map<Direction, TimedSequence<Rectangle2D>> createGhostKickingAnimations(int ghostID);
+
+	public abstract TimedSequence<Rectangle2D> createGhostFrightenedAnimation();
+
+	public abstract TimedSequence<Rectangle2D> createGhostFlashingAnimation();
+
+	public abstract Map<Direction, TimedSequence<Rectangle2D>> createGhostReturningHomeAnimations();
+
+	public Map<Integer, Rectangle2D> getBountyNumberSpritesMap() {
+		return bountyNumberSprites;
 	}
 
-	@Override
-	public TimedSequence<Rectangle2D> playerDying() {
-		return playerDyingAnim;
+	public Map<Integer, Rectangle2D> getBonusNumbersSpritesMap() {
+		return bonusValueSprites;
 	}
 
-	@Override
-	public TimedSequence<Rectangle2D> ghostKicking(Ghost ghost, Direction dir) {
-		if (!ghostsKickingAnim.containsKey(ghost)) {
-			Map<Direction, TimedSequence<Rectangle2D>> kickingByDirection = newGhostKickingAnimation(ghost.id);
-			ghostsKickingAnim.put(ghost, kickingByDirection);
-		}
-		return ghostsKickingAnim.get(ghost).get(ensureDirection(dir));
+	public List<Rectangle2D> getSymbolSprites() {
+		return symbolSprites;
 	}
 
-	protected abstract Map<Direction, TimedSequence<Rectangle2D>> newGhostKickingAnimation(int id);
-
-	@Override
-	public TimedSequence<Rectangle2D> ghostFrightened(Ghost ghost, Direction dir) {
-		return ghostFrightenedAnim;
+	public TimedSequence<Integer> createBonusAnimation() {
+		return null;
 	}
 
-	@Override
-	public TimedSequence<Rectangle2D> ghostFlashing(Ghost ghost) {
-		if (!ghostFlashingAnim.containsKey(ghost)) {
-			ghostFlashingAnim.put(ghost, newGhostFlashingAnimation());
-		}
-		return ghostFlashingAnim.get(ghost);
+	public TimedSequence<Rectangle2D> createFlapAnimation() {
+		return null;
 	}
 
-	protected abstract TimedSequence<Rectangle2D> newGhostFlashingAnimation();
-
-	@Override
-	public TimedSequence<Rectangle2D> ghostReturningHome(Ghost ghost, Direction dir) {
-		return ghostEyesAnim.get(ensureDirection(dir));
+	public TimedSequence<Rectangle2D> createStorkFlyingAnimation() {
+		return null;
 	}
+
+	public Rectangle2D getHeart() {
+		return null;
+	}
+
+	public Rectangle2D getJunior() {
+		return null;
+	}
+
+	public Rectangle2D getBlueBag() {
+		return null;
+	}
+
+	public TimedSequence<Rectangle2D> createBlinkyStretchedAnimation() {
+		return null;
+	}
+
+	public TimedSequence<Rectangle2D> createBlinkyDamagedAnimation() {
+		return null;
+	}
+
 }

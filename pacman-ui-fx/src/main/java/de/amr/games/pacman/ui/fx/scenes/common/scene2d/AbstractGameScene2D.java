@@ -8,6 +8,7 @@ import java.util.OptionalDouble;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
+import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -71,6 +72,10 @@ public abstract class AbstractGameScene2D implements GameScene {
 
 	public GameRendering2D getRendering() {
 		return rendering;
+	}
+
+	public AbstractGameModel game() {
+		return gameController.game();
 	}
 
 	@Override

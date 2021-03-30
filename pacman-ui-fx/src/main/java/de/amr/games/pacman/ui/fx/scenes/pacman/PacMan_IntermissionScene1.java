@@ -5,8 +5,11 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
+import de.amr.games.pacman.ui.animation.TimedSequence;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_PacMan;
+import de.amr.games.pacman.ui.fx.rendering.Ghost2D;
+import de.amr.games.pacman.ui.fx.rendering.Player2D;
 import de.amr.games.pacman.ui.fx.scenes.common.scene2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.sound.SoundAssets;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene1_Controller;
@@ -33,6 +36,8 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 	}
 
 	private SceneController sceneController;
+	private Player2D pacMan2D;
+	private Ghost2D blinky2D;
 
 	public PacMan_IntermissionScene1() {
 		super(GameRendering2D.RENDERING_PACMAN, SoundAssets.get(GameVariant.PACMAN));
@@ -43,16 +48,27 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 		super.start();
 		sceneController = new SceneController(gameController, rendering);
 		sceneController.start();
+		pacMan2D = new Player2D(sceneController.pac);
+		pacMan2D.setRendering(rendering);
+		pacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
+		blinky2D = new Ghost2D(sceneController.blinky);
+		blinky2D.setRendering(rendering);
+		blinky2D.getKickingAnimations().values().forEach(TimedSequence::restart);
+		blinky2D.getFrightenedAnimation().restart();
 	}
 
 	@Override
 	public void update() {
 		super.update();
 		sceneController.update();
+		render();
+	}
+
+	public void render() {
 		GameRendering2D_PacMan r = (GameRendering2D_PacMan) rendering;
-		r.drawGhost(gc, sceneController.blinky, false);
+		blinky2D.render(gc);
 		if (sceneController.phase == Phase.BLINKY_CHASING_PACMAN) {
-			r.drawPlayer(gc, sceneController.pac);
+			pacMan2D.render(gc);
 		} else {
 			gc.save();
 			gc.translate(0, -10);

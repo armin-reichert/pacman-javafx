@@ -6,11 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.GameEntity;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.Pac;
-import de.amr.games.pacman.model.pacman.PacManBonus;
 import de.amr.games.pacman.ui.animation.TimedSequence;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -28,8 +26,6 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 	private final Image mazeEmpty = new Image(getClass().getResource("/pacman/graphics/maze_empty.png").toExternalForm());
 
 	private TimedSequence<Rectangle2D> bigPacMan;
-	private TimedSequence<Rectangle2D> blinkyStretched;
-	private TimedSequence<Rectangle2D> blinkyDamaged;
 	private TimedSequence<Rectangle2D> blinkyPatched;
 	private TimedSequence<Rectangle2D> blinkyHalfNaked;
 
@@ -50,11 +46,11 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 		bonusValueSprites.put(3000, cells(3, 11, 3, 1));
 		bonusValueSprites.put(5000, cells(3, 12, 3, 1));
 
-		bountyValueSprites = new HashMap<>();
-		bountyValueSprites.put(200,  cells(0, 8, 1, 1));
-		bountyValueSprites.put(400,  cells(1, 8, 1, 1));
-		bountyValueSprites.put(800,  cells(2, 8, 1, 1));
-		bountyValueSprites.put(1600, cells(3, 8, 1, 1));
+		bountyNumberSprites = new HashMap<>();
+		bountyNumberSprites.put(200,  cells(0, 8, 1, 1));
+		bountyNumberSprites.put(400,  cells(1, 8, 1, 1));
+		bountyNumberSprites.put(800,  cells(2, 8, 1, 1));
+		bountyNumberSprites.put(1600, cells(3, 8, 1, 1));
 		//@formatter:on
 
 		// Animations
@@ -62,33 +58,12 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 		Image mazeEmptyBright = exchangeColors(mazeEmpty, Map.of(getMazeWallBorderColor(0), Color.WHITE));
 		mazeFlashingAnim = Arrays.asList(TimedSequence.of(mazeEmptyBright, mazeEmpty).frameDuration(15));
 
-		pacManMunchingAnim = new EnumMap<>(Direction.class);
-		for (Direction dir : Direction.values()) {
-			TimedSequence<Rectangle2D> animation = TimedSequence.of(sprite(2, 0), sprite(1, index(dir)),
-					sprite(0, index(dir)), sprite(1, index(dir)));
-			animation.frameDuration(2).endless().run();
-			pacManMunchingAnim.put(dir, animation);
-		}
-
-		playerDyingAnim = TimedSequence.of(sprite(3, 0), sprite(4, 0), sprite(5, 0), sprite(6, 0), sprite(7, 0),
-				sprite(8, 0), sprite(9, 0), sprite(10, 0), sprite(11, 0), sprite(12, 0), sprite(13, 0)).frameDuration(8);
-
 		bigPacMan = TimedSequence.of(//
 				cells(2, 1, 2, 2), //
 				cells(4, 1, 2, 2), //
 				cells(6, 1, 2, 2)).frameDuration(4).endless().run();
 
-		ghostEyesAnim = new EnumMap<>(Direction.class);
-		for (Direction dir : Direction.values()) {
-			ghostEyesAnim.put(dir, TimedSequence.of(sprite(8 + index(dir), 5)));
-		}
-
-		ghostFrightenedAnim = TimedSequence.of(sprite(8, 4), sprite(9, 4));
-		ghostFrightenedAnim.frameDuration(20).endless();
-
 		blinkyPatched = TimedSequence.of(sprite(10, 7), sprite(11, 7)).restart().frameDuration(4).endless();
-		blinkyDamaged = TimedSequence.of(sprite(8, 7), sprite(9, 7));
-		blinkyStretched = TimedSequence.of(sprite(9, 6), sprite(10, 6), sprite(11, 6), sprite(12, 6));
 		blinkyHalfNaked = TimedSequence.of(cells(8, 8, 2, 1), cells(10, 8, 2, 1)).endless().frameDuration(4).restart();
 	}
 
@@ -99,33 +74,6 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 	@Override
 	public Color getMazeWallColor(int mazeIndex) {
 		return Color.BLACK;
-	}
-
-	@Override
-	public TimedSequence<Rectangle2D> playerMunching(Pac pac, Direction dir) {
-		return pacManMunchingAnim.get(ensureDirection(dir));
-	}
-
-	@Override
-	public TimedSequence<?> spouseMunching(Pac spouse, Direction dir) {
-		return null;
-	}
-
-	@Override
-	protected Map<Direction, TimedSequence<Rectangle2D>> newGhostKickingAnimation(int ghostType) {
-		EnumMap<Direction, TimedSequence<Rectangle2D>> walkingTo = new EnumMap<>(Direction.class);
-		for (Direction dir : Direction.values()) {
-			TimedSequence<Rectangle2D> animation = TimedSequence.of(sprite(2 * index(dir), 4 + ghostType),
-					sprite(2 * index(dir) + 1, 4 + ghostType));
-			animation.frameDuration(4).endless();
-			walkingTo.put(dir, animation);
-		}
-		return walkingTo;
-	}
-
-	@Override
-	protected TimedSequence<Rectangle2D> newGhostFlashingAnimation() {
-		return TimedSequence.of(sprite(8, 4), sprite(9, 4), sprite(10, 4), sprite(11, 4)).frameDuration(6);
 	}
 
 	@Override
@@ -142,11 +90,6 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 		drawSprite(g, sprite(8, 1), x, y);
 	}
 
-	@Override
-	public void drawBonus(GraphicsContext g, PacManBonus bonus) {
-		drawEntity(g, bonus, bonusSprite(bonus));
-	}
-
 	public void drawBigPacMan(GraphicsContext g, Pac bigPac) {
 		drawEntity(g, bigPac, bigPacMan.animate());
 	}
@@ -155,20 +98,75 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 		drawEntity(g, nail, sprite(8, 6));
 	}
 
-	public void drawBlinkyStretched(GraphicsContext g, Ghost blinky, V2d nailPosition, int stretching) {
-		drawSprite(g, blinkyStretched.frame(stretching), nailPosition.x - 4, nailPosition.y - 4);
-		if (stretching < 3) {
-			drawGhost(g, blinky, false);
-		} else {
-			drawEntity(g, blinky, blinkyDamaged.frame(blinky.dir == Direction.UP ? 0 : 1));
-		}
-	}
-
 	public void drawBlinkyPatched(GraphicsContext g, Ghost blinky) {
 		drawEntity(g, blinky, blinkyPatched.animate());
 	}
 
 	public void drawBlinkyNaked(GraphicsContext g, Ghost blinky) {
 		drawEntity(g, blinky, blinkyHalfNaked.animate());
+	}
+
+	@Override
+	public Map<Direction, TimedSequence<Rectangle2D>> createPlayerMunchingAnimations() {
+		Map<Direction, TimedSequence<Rectangle2D>> pacManMunchingAnim = new EnumMap<>(Direction.class);
+		for (Direction dir : Direction.values()) {
+			TimedSequence<Rectangle2D> animation = TimedSequence.of(sprite(2, 0), sprite(1, index(dir)),
+					sprite(0, index(dir)), sprite(1, index(dir)));
+			animation.frameDuration(2).endless();
+			pacManMunchingAnim.put(dir, animation);
+		}
+		return pacManMunchingAnim;
+	}
+
+	@Override
+	public TimedSequence<Rectangle2D> createPlayerDyingAnimation() {
+		return TimedSequence.of(sprite(3, 0), sprite(4, 0), sprite(5, 0), sprite(6, 0), sprite(7, 0), sprite(8, 0),
+				sprite(9, 0), sprite(10, 0), sprite(11, 0), sprite(12, 0), sprite(13, 0)).frameDuration(8);
+	}
+
+	@Override
+	public TimedSequence<Rectangle2D> createBlinkyStretchedAnimation() {
+		return TimedSequence.of(sprite(9, 6), sprite(10, 6), sprite(11, 6), sprite(12, 6));
+	}
+
+	@Override
+	public TimedSequence<Rectangle2D> createBlinkyDamagedAnimation() {
+		return TimedSequence.of(sprite(8, 7), sprite(9, 7));
+	}
+
+	@Override
+	public Map<Direction, TimedSequence<Rectangle2D>> createSpouseMunchingAnimations() {
+		return null;
+	}
+
+	@Override
+	public Map<Direction, TimedSequence<Rectangle2D>> createGhostKickingAnimations(int ghostID) {
+		EnumMap<Direction, TimedSequence<Rectangle2D>> walkingTo = new EnumMap<>(Direction.class);
+		for (Direction dir : Direction.values()) {
+			TimedSequence<Rectangle2D> animation = TimedSequence.of(sprite(2 * index(dir), 4 + ghostID),
+					sprite(2 * index(dir) + 1, 4 + ghostID));
+			animation.frameDuration(4).endless();
+			walkingTo.put(dir, animation);
+		}
+		return walkingTo;
+	}
+
+	@Override
+	public TimedSequence<Rectangle2D> createGhostFrightenedAnimation() {
+		return TimedSequence.of(sprite(8, 4), sprite(9, 4)).frameDuration(20).endless();
+	}
+
+	@Override
+	public TimedSequence<Rectangle2D> createGhostFlashingAnimation() {
+		return TimedSequence.of(sprite(8, 4), sprite(9, 4), sprite(10, 4), sprite(11, 4)).frameDuration(6);
+	}
+
+	@Override
+	public Map<Direction, TimedSequence<Rectangle2D>> createGhostReturningHomeAnimations() {
+		Map<Direction, TimedSequence<Rectangle2D>> ghostEyesAnim = new EnumMap<>(Direction.class);
+		for (Direction dir : Direction.values()) {
+			ghostEyesAnim.put(dir, TimedSequence.of(sprite(8 + index(dir), 5)));
+		}
+		return ghostEyesAnim;
 	}
 }
