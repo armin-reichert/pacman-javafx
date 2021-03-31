@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.rendering.entities;
+package de.amr.games.pacman.ui.fx.entities._2d;
 
 import de.amr.games.pacman.model.common.GameEntity;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;

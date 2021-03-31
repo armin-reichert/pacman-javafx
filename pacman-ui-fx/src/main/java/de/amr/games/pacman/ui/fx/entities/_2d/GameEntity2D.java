@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.rendering.entities;
+package de.amr.games.pacman.ui.fx.entities._2d;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 

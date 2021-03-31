@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.scenes.common._3d;
+package de.amr.games.pacman.ui.fx.rendering;
 
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
@@ -11,7 +11,6 @@ import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.Env;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_Assets;
 import javafx.geometry.Bounds;
 import javafx.scene.AmbientLight;
 import javafx.scene.Node;
@@ -29,16 +28,16 @@ import javafx.scene.transform.Translate;
  * 
  * @author Armin Reichert
  */
-class Assets3D {
+public class GameRendering3D_Assets {
 
-	static Translate centerOverOrigin(Node node) {
+	public static Translate centerOverOrigin(Node node) {
 		Bounds bounds = node.getBoundsInLocal();
 		Translate centering = new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
 		node.getTransforms().add(centering);
 		return centering;
 	}
 
-	static void scale(Node node, double size) {
+	public static void scale(Node node, double size) {
 		Bounds bounds = node.getBoundsInLocal();
 		double s1 = size / bounds.getWidth();
 		double s2 = size / bounds.getHeight();
@@ -46,18 +45,18 @@ class Assets3D {
 		node.getTransforms().add(new Scale(s1, s2, s3));
 	}
 
-	static String url(String path) {
-		return Assets3D.class.getResource(path).toExternalForm();
+	public static String url(String path) {
+		return GameRendering3D_Assets.class.getResource(path).toExternalForm();
 	}
 
-	static final Font ARCADE_FONT;
-	static final Image WALL_TEXTURE;
-	static final PhongMaterial wallMaterials[];
-	static final PhongMaterial livesCounterOn = new PhongMaterial(Color.YELLOW);
-	static final PhongMaterial livesCounterOff = new PhongMaterial(Color.GRAY);
+	public static final Font ARCADE_FONT;
+	public static final Image WALL_TEXTURE;
+	public static final PhongMaterial wallMaterials[];
+	public static final PhongMaterial livesCounterOn = new PhongMaterial(Color.YELLOW);
+	public static final PhongMaterial livesCounterOff = new PhongMaterial(Color.GRAY);
 
-	static MeshView ghostMeshTemplate;
-	static Map<String, MeshView> guyMeshTemplates;
+	public static MeshView ghostMeshTemplate;
+	public static Map<String, MeshView> guyMeshTemplates;
 
 	static {
 		ARCADE_FONT = Font.loadFont(url("/emulogic.ttf"), TS);
@@ -87,35 +86,35 @@ class Assets3D {
 		}
 	}
 
-	static Color mazeWallColor(GameVariant gameType, int mazeNumber) {
+	public static Color mazeWallColor(GameVariant gameType, int mazeNumber) {
 		return gameType == GameVariant.PACMAN ? Color.BLUE : GameRendering2D_Assets.getMazeWallColor(mazeNumber);
 	}
 
-	static Color foodColor(GameVariant gameType, int mazeNumber) {
+	public static Color foodColor(GameVariant gameType, int mazeNumber) {
 		return gameType == GameVariant.PACMAN ? Color.rgb(250, 185, 176) : GameRendering2D_Assets.getFoodColor(mazeNumber);
 	}
 
-	static Color ghostColor(int id) {
+	public static Color ghostColor(int id) {
 		return id == 0 ? Color.TOMATO : id == 1 ? Color.PINK : id == 2 ? Color.CYAN : Color.ORANGE;
 	}
 
-	static PhongMaterial ghostSkin(int ghostID) {
+	public static PhongMaterial ghostSkin(int ghostID) {
 		return new PhongMaterial(ghostColor(ghostID));
 	}
 
-	static PhongMaterial foodMaterial(GameVariant gameType, int mazeNumber) {
+	public static PhongMaterial foodMaterial(GameVariant gameType, int mazeNumber) {
 		return new PhongMaterial(foodColor(gameType, mazeNumber));
 	}
 
-	static PhongMaterial randomWallMaterial() {
+	public static PhongMaterial randomWallMaterial() {
 		return wallMaterials[new Random().nextInt(wallMaterials.length)];
 	}
 
-	static AmbientLight ambientLight(GameVariant gameType, int mazeNumber) {
+	public static AmbientLight ambientLight(GameVariant gameType, int mazeNumber) {
 		return new AmbientLight(mazeWallColor(gameType, mazeNumber));
 	}
 
-	static MeshView createGhostMeshView(int ghostID) {
+	public static MeshView createGhostMeshView(int ghostID) {
 		MeshView shape = new MeshView(ghostMeshTemplate.getMesh());
 		centerOverOrigin(shape);
 		scale(shape, 8);
@@ -123,7 +122,7 @@ class Assets3D {
 		return shape;
 	}
 
-	static Image randomArea(Image src, int w, int h) {
+	public static Image randomArea(Image src, int w, int h) {
 		int x = new Random().nextInt((int) src.getWidth() - w);
 		int y = new Random().nextInt((int) src.getHeight() - h);
 		WritableImage result = new WritableImage(w, h);

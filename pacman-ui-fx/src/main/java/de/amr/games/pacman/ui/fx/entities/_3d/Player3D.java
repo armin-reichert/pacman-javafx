@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.scenes.common._3d;
+package de.amr.games.pacman.ui.fx.entities._3d;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.fx.Env;
+import de.amr.games.pacman.ui.fx.rendering.GameRendering3D_Assets;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
@@ -27,20 +28,20 @@ public class Player3D implements Supplier<Node> {
 	public Player3D(Pac pac) {
 		this.pac = pac;
 
-		MeshView body = new MeshView(Assets3D.guyMeshTemplates.get("Sphere_Sphere.002_Material.001").getMesh());
+		MeshView body = new MeshView(GameRendering3D_Assets.guyMeshTemplates.get("Sphere_Sphere.002_Material.001").getMesh());
 		body.setMaterial(new PhongMaterial(Color.YELLOW));
 		body.drawModeProperty().bind(Env.$drawMode);
 
-		MeshView glasses = new MeshView(Assets3D.guyMeshTemplates.get("Sphere_Sphere.002_Material.002").getMesh());
+		MeshView glasses = new MeshView(GameRendering3D_Assets.guyMeshTemplates.get("Sphere_Sphere.002_Material.002").getMesh());
 		glasses.setMaterial(new PhongMaterial(Color.rgb(40, 40, 60)));
 		glasses.drawModeProperty().bind(Env.$drawMode);
 
-		Translate centering = Assets3D.centerOverOrigin(body);
+		Translate centering = GameRendering3D_Assets.centerOverOrigin(body);
 		glasses.getTransforms().add(centering);
 
 		root = new Group(body, glasses);
 		root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-		Assets3D.scale(root, TS);
+		GameRendering3D_Assets.scale(root, TS);
 	}
 
 	@Override

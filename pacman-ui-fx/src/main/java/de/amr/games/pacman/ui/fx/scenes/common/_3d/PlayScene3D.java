@@ -20,6 +20,14 @@ import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
+import de.amr.games.pacman.ui.fx.entities._3d.Energizer3D;
+import de.amr.games.pacman.ui.fx.entities._3d.Ghost3D;
+import de.amr.games.pacman.ui.fx.entities._3d.LivesCounter3D;
+import de.amr.games.pacman.ui.fx.entities._3d.Maze3D;
+import de.amr.games.pacman.ui.fx.entities._3d.Pellet3D;
+import de.amr.games.pacman.ui.fx.entities._3d.Player3D;
+import de.amr.games.pacman.ui.fx.entities._3d.ScoreNotReally3D;
+import de.amr.games.pacman.ui.fx.rendering.GameRendering3D_Assets;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_Assets;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.common.PlaySceneSoundManager;
@@ -111,7 +119,7 @@ public class PlayScene3D implements GameScene {
 		fxScene.setFill(Color.rgb(20, 20, 60));
 
 		maze = new Maze3D(game, GameRendering2D_Assets.getMazeWallColor(game.currentLevel.mazeNumber));
-		PhongMaterial foodMaterial = Assets3D.foodMaterial(gameVariant, game.currentLevel.mazeNumber);
+		PhongMaterial foodMaterial = GameRendering3D_Assets.foodMaterial(gameVariant, game.currentLevel.mazeNumber);
 
 		energizers = game.currentLevel.world.energizerTiles()//
 				.map(tile -> new Energizer3D(tile, foodMaterial))//

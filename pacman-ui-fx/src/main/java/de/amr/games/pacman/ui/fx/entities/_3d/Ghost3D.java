@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.scenes.common._3d;
+package de.amr.games.pacman.ui.fx.entities._3d;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
+import de.amr.games.pacman.ui.fx.rendering.GameRendering3D_Assets;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
@@ -38,11 +39,11 @@ public class Ghost3D implements Supplier<Node> {
 		createBountyText();
 		createPearlChain();
 		root = new Group(meshView, bountyText, pearlChain);
-		displayColored(Assets3D.ghostColor(ghost.id));
+		displayColored(GameRendering3D_Assets.ghostColor(ghost.id));
 	}
 
 	private void createMeshView() {
-		meshView = Assets3D.createGhostMeshView(ghost.id);
+		meshView = GameRendering3D_Assets.createGhostMeshView(ghost.id);
 		meshView.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 	}
 
@@ -55,7 +56,7 @@ public class Ghost3D implements Supplier<Node> {
 	}
 
 	private void createPearlChain() {
-		PhongMaterial skin = Assets3D.ghostSkin(ghost.id);
+		PhongMaterial skin = GameRendering3D_Assets.ghostSkin(ghost.id);
 		Sphere[] pearls = new Sphere[3];
 		for (int i = 0; i < pearls.length; ++i) {
 			pearls[i] = new Sphere(1);
@@ -92,7 +93,7 @@ public class Ghost3D implements Supplier<Node> {
 			displayColored(Color.CORNFLOWERBLUE);
 			updateTransforms();
 		} else {
-			displayColored(Assets3D.ghostColor(ghost.id));
+			displayColored(GameRendering3D_Assets.ghostColor(ghost.id));
 			updateTransforms();
 		}
 	}

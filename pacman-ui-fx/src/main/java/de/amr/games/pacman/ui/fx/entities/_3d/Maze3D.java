@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.scenes.common._3d;
+package de.amr.games.pacman.ui.fx.entities._3d;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.world.PacManGameWorld;
+import de.amr.games.pacman.ui.fx.rendering.GameRendering3D_Assets;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 
@@ -125,7 +126,7 @@ public class Maze3D {
 			}
 		}
 		brickPositions.removeAll(positionsToRemove);
-		bricks = brickPositions.stream().map(mt -> new Brick3D(mt.x, mt.y, 2, 2, 3, Assets3D.randomWallMaterial(), mt.tile))
+		bricks = brickPositions.stream().map(mt -> new Brick3D(mt.x, mt.y, 2, 2, 3, GameRendering3D_Assets.randomWallMaterial(), mt.tile))
 				.collect(Collectors.toList());
 	}
 

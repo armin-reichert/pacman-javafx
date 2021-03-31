@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.rendering.entities;
+package de.amr.games.pacman.ui.fx.entities._2d;
 
 import java.util.List;
 import java.util.Map;
