@@ -1,7 +1,8 @@
-package de.amr.games.pacman.ui.fx.rendering;
+package de.amr.games.pacman.ui.fx.rendering.entities;
 
 import de.amr.games.pacman.model.mspacman.Flap;
 import de.amr.games.pacman.ui.animation.TimedSequence;
+import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;

@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.rendering;
+package de.amr.games.pacman.ui.fx.rendering.entities;
 
 import static de.amr.games.pacman.model.common.GhostState.DEAD;
 import static de.amr.games.pacman.model.common.GhostState.ENTERING_HOUSE;
@@ -11,6 +11,7 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.animation.TimedSequence;
+import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -19,6 +20,7 @@ public class Ghost2D extends GameEntity2D {
 	public final Ghost ghost;
 
 	private boolean displayFrightened;
+
 	private Map<Direction, TimedSequence<Rectangle2D>> kickingAnimations = new EnumMap<>(Direction.class);
 	private TimedSequence<Rectangle2D> flashingAnimation;
 	private TimedSequence<Rectangle2D> frightenedAnimation;

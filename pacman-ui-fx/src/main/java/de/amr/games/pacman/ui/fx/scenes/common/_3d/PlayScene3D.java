@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.scenes.common.scene3d;
+package de.amr.games.pacman.ui.fx.scenes.common._3d;
 
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
@@ -21,7 +21,6 @@ import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_Assets;
-import de.amr.games.pacman.ui.fx.scenes.common.CameraController;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.common.PlaySceneSoundManager;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;

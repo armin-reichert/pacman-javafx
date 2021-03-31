@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.scenes.common.scene2d;
+package de.amr.games.pacman.ui.fx.scenes.common._2d;
 
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;

@@ -1,11 +1,11 @@
-package de.amr.games.pacman.ui.fx.scenes.common.scene3d;
+package de.amr.games.pacman.ui.fx.scenes.common._3d;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
 import java.util.function.Supplier;
 
 import de.amr.games.pacman.model.common.Pac;
-import de.amr.games.pacman.ui.fx.scenes.common.Env;
+import de.amr.games.pacman.ui.fx.Env;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;

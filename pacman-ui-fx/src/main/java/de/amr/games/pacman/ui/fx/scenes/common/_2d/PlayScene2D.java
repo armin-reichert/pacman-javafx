@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.scenes.common.scene2d;
+package de.amr.games.pacman.ui.fx.scenes.common._2d;
 
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
@@ -15,11 +15,11 @@ import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.animation.TimedSequence;
-import de.amr.games.pacman.ui.fx.rendering.Bonus2D;
-import de.amr.games.pacman.ui.fx.rendering.Energizer2D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
-import de.amr.games.pacman.ui.fx.rendering.Ghost2D;
-import de.amr.games.pacman.ui.fx.rendering.Player2D;
+import de.amr.games.pacman.ui.fx.rendering.entities.Bonus2D;
+import de.amr.games.pacman.ui.fx.rendering.entities.Energizer2D;
+import de.amr.games.pacman.ui.fx.rendering.entities.Ghost2D;
+import de.amr.games.pacman.ui.fx.rendering.entities.Player2D;
 import de.amr.games.pacman.ui.fx.scenes.common.PlaySceneSoundManager;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.sound.PacManGameSound;

@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.scenes.common;
+package de.amr.games.pacman.ui.fx;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;

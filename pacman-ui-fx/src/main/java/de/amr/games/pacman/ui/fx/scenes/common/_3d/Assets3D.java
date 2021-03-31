@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.scenes.common.scene3d;
+package de.amr.games.pacman.ui.fx.scenes.common._3d;
 
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
@@ -10,8 +10,8 @@ import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
 import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_Assets;
-import de.amr.games.pacman.ui.fx.scenes.common.Env;
 import javafx.geometry.Bounds;
 import javafx.scene.AmbientLight;
 import javafx.scene.Node;

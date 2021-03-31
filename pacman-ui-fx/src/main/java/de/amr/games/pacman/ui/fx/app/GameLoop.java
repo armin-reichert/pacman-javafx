@@ -3,8 +3,8 @@ package de.amr.games.pacman.ui.fx.app;
 import static de.amr.games.pacman.lib.Logging.log;
 
 import de.amr.games.pacman.controller.PacManGameController;
+import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
-import de.amr.games.pacman.ui.fx.scenes.common.Env;
 import javafx.animation.AnimationTimer;
 
 class GameLoop extends AnimationTimer {

@@ -4,12 +4,12 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.ui.fx.rendering.Flap2D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
-import de.amr.games.pacman.ui.fx.rendering.JuniorBag2D;
-import de.amr.games.pacman.ui.fx.rendering.Player2D;
-import de.amr.games.pacman.ui.fx.rendering.Stork2D;
-import de.amr.games.pacman.ui.fx.scenes.common.scene2d.AbstractGameScene2D;
+import de.amr.games.pacman.ui.fx.rendering.entities.Flap2D;
+import de.amr.games.pacman.ui.fx.rendering.entities.JuniorBag2D;
+import de.amr.games.pacman.ui.fx.rendering.entities.Player2D;
+import de.amr.games.pacman.ui.fx.rendering.entities.Stork2D;
+import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.sound.SoundAssets;
 import de.amr.games.pacman.ui.mspacman.MsPacMan_IntermissionScene3_Controller;
 import de.amr.games.pacman.ui.sound.PacManGameSound;

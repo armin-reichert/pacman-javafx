@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.scenes.common.scene2d;
+package de.amr.games.pacman.ui.fx.scenes.common._2d;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.AbstractGameModel;
