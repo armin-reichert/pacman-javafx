@@ -42,7 +42,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 		boardAnimationTimer.reset();
 		boardAnimationTimer.start();
 		sceneController = new MsPacMan_IntroScene_Controller(gameController);
-		sceneController.start();
+		sceneController.init();
 		msPacMan2D = new Player2D(sceneController.msPacMan);
 		msPacMan2D.setRendering(rendering);
 		msPacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);

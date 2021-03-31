@@ -45,7 +45,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	public void start() {
 		super.start();
 		sceneController = new PacMan_IntroScene_Controller(gameController);
-		sceneController.start();
+		sceneController.init();
 		pacMan2D = new Player2D(sceneController.pac);
 		pacMan2D.setRendering(rendering);
 		pacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);

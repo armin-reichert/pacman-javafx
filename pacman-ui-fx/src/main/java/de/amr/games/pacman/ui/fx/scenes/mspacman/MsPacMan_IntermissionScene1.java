@@ -1,5 +1,7 @@
 package de.amr.games.pacman.ui.fx.scenes.mspacman;
 
+import java.util.stream.Stream;
+
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.animation.TimedSequence;
@@ -58,24 +60,31 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 	public void start() {
 		super.start();
 		sceneController = new SceneController(gameController);
-		sceneController.start();
+		sceneController.init();
+
 		flap2D = new Flap2D(sceneController.flap);
-		flap2D.setRendering(rendering);
 		msPacMan2D = new Player2D(sceneController.msPac);
-		msPacMan2D.setRendering(rendering);
-		msPacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
 		pacMan2D = new Player2D(sceneController.pacMan);
-		pacMan2D.setRendering(rendering);
-		pacMan2D.setMunchingAnimations(rendering.createSpouseMunchingAnimations());
-		pacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
 		inky2D = new Ghost2D(sceneController.inky);
-		inky2D.setRendering(rendering);
-		inky2D.getKickingAnimations().values().forEach(TimedSequence::restart);
 		pinky2D = new Ghost2D(sceneController.pinky);
-		pinky2D.setRendering(rendering);
-		pinky2D.getKickingAnimations().values().forEach(TimedSequence::restart);
 		heart2D = new Heart2D(sceneController.heart);
+
+		Stream.of(flap2D, msPacMan2D, pacMan2D, inky2D, pinky2D, heart2D).forEach(entity -> entity.setRendering(rendering));
+
+		flap2D.setRendering(rendering);
 		heart2D.setRendering(rendering);
+		msPacMan2D.setRendering(rendering);
+		pacMan2D.setRendering(rendering);
+		inky2D.setRendering(rendering);
+		pinky2D.setRendering(rendering);
+
+		// overwrite by Pac-Man instead of Ms. Pac-Man sprites:
+		pacMan2D.setMunchingAnimations(rendering.createSpouseMunchingAnimations());
+
+		msPacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
+		pacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
+		inky2D.getKickingAnimations().values().forEach(TimedSequence::restart);
+		pinky2D.getKickingAnimations().values().forEach(TimedSequence::restart);
 	}
 
 	@Override

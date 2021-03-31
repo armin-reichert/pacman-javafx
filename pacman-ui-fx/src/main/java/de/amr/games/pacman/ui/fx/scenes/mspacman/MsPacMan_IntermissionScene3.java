@@ -56,7 +56,7 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 	public void start() {
 		super.start();
 		sceneController = new SceneController(gameController);
-		sceneController.start();
+		sceneController.init();
 		flap2D = new Flap2D(sceneController.flap);
 		flap2D.setRendering(rendering);
 		msPacMan2D = new Player2D(sceneController.msPacMan);
