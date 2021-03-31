@@ -3,13 +3,12 @@ package de.amr.games.pacman.ui.fx;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.GameVariant.MS_PACMAN;
 import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
+import static de.amr.games.pacman.ui.fx.rendering.GameRendering2D.RENDERING_MS_PACMAN;
+import static de.amr.games.pacman.ui.fx.rendering.GameRendering2D.RENDERING_PACMAN;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
-import de.amr.games.pacman.model.common.AbstractGameModel;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.PacManGameUI;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import de.amr.games.pacman.ui.fx.scenes.common.FlashMessageView;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.PlayScene2D;
@@ -53,7 +52,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		SCENES[MS_PACMAN.ordinal()][2][1] = new MsPacMan_IntermissionScene2();
 		SCENES[MS_PACMAN.ordinal()][3][0] = 
 		SCENES[MS_PACMAN.ordinal()][3][1] = new MsPacMan_IntermissionScene3();
-		SCENES[MS_PACMAN.ordinal()][4][0] = new PlayScene2D(GameRendering2D.RENDERING_MS_PACMAN, SoundAssets.get(MS_PACMAN));
+		SCENES[MS_PACMAN.ordinal()][4][0] = new PlayScene2D(RENDERING_MS_PACMAN, SoundAssets.get(MS_PACMAN));
 		SCENES[MS_PACMAN.ordinal()][4][1] = new PlayScene3D(SoundAssets.get(MS_PACMAN));
 
 		SCENES[PACMAN.ordinal()]   [0][0] = 
@@ -64,95 +63,50 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		SCENES[PACMAN.ordinal()]   [2][1] = new PacMan_IntermissionScene2();
 		SCENES[PACMAN.ordinal()]   [3][0] = 
 		SCENES[PACMAN.ordinal()]   [3][1] = new PacMan_IntermissionScene3();
-		SCENES[PACMAN.ordinal()]   [4][0] = new PlayScene2D(GameRendering2D.RENDERING_PACMAN, SoundAssets.get(PACMAN));
+		SCENES[PACMAN.ordinal()]   [4][0] = new PlayScene2D(RENDERING_PACMAN, SoundAssets.get(PACMAN));
 		SCENES[PACMAN.ordinal()]   [4][1] = new PlayScene3D(SoundAssets.get(PACMAN));
 		//@formatter:on
 	}
 
-	private static GameScene scene(GameVariant gameVariant, PacManGameState gameState, AbstractGameModel game,
-			boolean _3D) {
-		return SCENES[gameVariant.ordinal()][gameState == PacManGameState.INTRO ? 0
-				: gameState == PacManGameState.INTERMISSION ? game.intermissionNumber : 4][_3D ? 1 : 0];
-	}
+	public final Stage stage;
+	public final PacManGameController gameController;
+	public final HUD hud = new HUD(this);
+	public final Scene mainScene;
+	public GameScene currentGameScene;
 
-	public final HUD hud;
-
-	private final Stage stage;
-	private final PacManGameController gameController;
 	private final Keyboard keyboard = new Keyboard();
-	private final Scene mainScene;
-	private final StackPane mainSceneRoot;
-	private final FlashMessageView flashMessageView;
+	private final FlashMessageView flashMessageView = new FlashMessageView();;
 
-	private GameScene currentGameScene;
-
-	public PacManGameUI_JavaFX(Stage stage, PacManGameController controller, double height) {
+	public PacManGameUI_JavaFX(Stage stage, PacManGameController gameController, double height) {
 		this.stage = stage;
-		this.gameController = controller;
+		this.gameController = gameController;
+		gameController.addStateChangeListener(this::onGameStateChange);
 
-		controller.addStateChangeListener(this::handleGameStateChange);
+		GameScene initialGameScene = sceneForCurrentGameState(Env.$use3DScenes.get());
+		double aspectRatio = initialGameScene.aspectRatio().orElse(4.0 / 3.0);
+		mainScene = new Scene(new StackPane(), aspectRatio * height, height, Color.rgb(20, 20, 60));
+		setGameScene(initialGameScene);
 
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
 		stage.addEventHandler(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
-		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKey);
-
+		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
 		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
 		stage.getIcons().add(new Image(getClass().getResource("/pacman/graphics/pacman.png").toExternalForm()));
 		stage.setOnCloseRequest(e -> Platform.exit());
-
-		mainSceneRoot = new StackPane();
-
-		hud = new HUD(this);
-		StackPane.setAlignment(hud, Pos.TOP_LEFT);
-
-		flashMessageView = new FlashMessageView();
-
-		GameScene initialGameScene = scene(controller.gameVariant(), controller.state, controller.game(),
-				Env.$use3DScenes.get());
-		if (initialGameScene.aspectRatio().isPresent()) {
-			mainScene = new Scene(mainSceneRoot, initialGameScene.aspectRatio().getAsDouble() * height, height,
-					Color.rgb(20, 20, 60));
-		} else {
-			mainScene = new Scene(mainSceneRoot, 1.33 * height, height, Color.rgb(20, 20, 60));
-		}
-		selectGameScene(controller.gameVariant(), controller.state, controller.game(), Env.$use3DScenes.get());
-
 		stage.setScene(mainScene);
 		stage.centerOnScreen();
 		stage.show();
 	}
 
-	public PacManGameController getGameController() {
-		return gameController;
+	private GameScene sceneForCurrentGameState(boolean use3D) {
+		int sceneIndex = gameController.state == PacManGameState.INTRO ? 0
+				: gameController.state == PacManGameState.INTERMISSION ? gameController.game().intermissionNumber : 4;
+		return SCENES[gameController.gameVariant().ordinal()][sceneIndex][use3D ? 1 : 0];
 	}
 
-	public Scene getMainScene() {
-		return mainScene;
-	}
-
-	public GameScene getCurrentGameScene() {
-		return currentGameScene;
-	}
-
-	private void handleGameStateChange(PacManGameState oldState, PacManGameState newState) {
-		log("Handle game state change from %s to %s", oldState, newState);
-		GameVariant gameVariant = gameController.gameVariant();
-		AbstractGameModel game = gameController.game();
-		boolean _3D = Env.$use3DScenes.get();
-		if (currentGameScene != scene(gameVariant, newState, game, _3D)) {
-			selectGameScene(gameVariant, newState, game, _3D);
-		}
-		if (newState == PacManGameState.INTRO) {
-			currentGameScene.stopAllSounds();
-		}
-		currentGameScene.onGameStateChange(oldState, newState);
-	}
-
-	private void selectGameScene(GameVariant gameVariant, PacManGameState gameState, AbstractGameModel game,
-			boolean _3D) {
-		GameScene newGameScene = scene(gameVariant, gameState, game, _3D);
+	private void setGameScene(GameScene newGameScene) {
 		if (currentGameScene != newGameScene) {
-			log("Change game scene %s to %s", currentGameScene, newGameScene);
+			log("Change game scene from %s to %s", currentGameScene, newGameScene);
 			if (currentGameScene != null) {
 				currentGameScene.end();
 			}
@@ -168,15 +122,32 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				currentGameScene.useMoveableCamera(true);
 			}
 			currentGameScene.start();
-			mainSceneRoot.getChildren().clear();
-			mainSceneRoot.getChildren().addAll(currentGameScene.getFXSubScene(), flashMessageView, hud);
+
+			// TODO is there a more elegant way?
+			StackPane root = (StackPane) mainScene.getRoot();
+			StackPane.setAlignment(hud, Pos.TOP_LEFT);
+			root.getChildren().clear();
+			root.getChildren().addAll(currentGameScene.getFXSubScene(), flashMessageView, hud);
+
+			// must be done after update of scene
 			currentGameScene.getFXSubScene().requestFocus();
 		}
 	}
 
-	private void handleKey(KeyEvent e) {
+	private void onGameStateChange(PacManGameState oldGameState, PacManGameState newGameState) {
+		GameScene newGameScene = sceneForCurrentGameState(Env.$use3DScenes.get());
+		if (currentGameScene != newGameScene) {
+			setGameScene(newGameScene);
+		}
+		if (newGameState == PacManGameState.INTRO) {
+			reset(); // TODO check this
+		}
+		currentGameScene.onGameStateChange(oldGameState, newGameState);
+	}
+
+	private void onKeyPressed(KeyEvent e) {
 		if (e.isControlDown()) {
-			handleControlKey(e.getCode());
+			onControlKeyPressed(e.getCode());
 			return;
 		}
 
@@ -251,7 +222,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 	}
 
-	private void handleControlKey(KeyCode key) {
+	private void onControlKeyPressed(KeyCode key) {
 		switch (key) {
 
 		case I:
@@ -298,10 +269,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private void toggleUse3DScenes() {
 		Env.$use3DScenes.set(!Env.$use3DScenes.get());
-		GameVariant gameVariant = gameController.gameVariant();
-		AbstractGameModel game = gameController.game();
-		if (scene(gameVariant, gameController.state, game, false) != scene(gameVariant, gameController.state, game, true)) {
-			selectGameScene(gameVariant, gameController.state, game, Env.$use3DScenes.get());
+		if (sceneForCurrentGameState(false) != sceneForCurrentGameState(true)) {
+			setGameScene(sceneForCurrentGameState(Env.$use3DScenes.get()));
 		}
 	}
 
