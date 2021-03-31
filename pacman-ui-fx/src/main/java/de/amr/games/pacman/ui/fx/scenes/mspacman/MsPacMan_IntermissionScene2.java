@@ -1,5 +1,7 @@
 package de.amr.games.pacman.ui.fx.scenes.mspacman;
 
+import java.util.stream.Stream;
+
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.animation.TimedSequence;
@@ -54,12 +56,10 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 		sceneController = new SceneController(gameController);
 		sceneController.init();
 		flap2D = new Flap2D(sceneController.flap);
-		flap2D.setRendering(rendering);
 		msPacMan2D = new Player2D(sceneController.msPacMan);
-		msPacMan2D.setRendering(rendering);
-		msPacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
 		pacMan2D = new Player2D(sceneController.pacMan);
-		pacMan2D.setRendering(rendering);
+		Stream.of(flap2D, msPacMan2D, pacMan2D).forEach(entity -> entity.setRendering(rendering));
+		msPacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
 		pacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
 	}
 

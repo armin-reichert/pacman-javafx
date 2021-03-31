@@ -71,13 +71,6 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 
 		Stream.of(flap2D, msPacMan2D, pacMan2D, inky2D, pinky2D, heart2D).forEach(entity -> entity.setRendering(rendering));
 
-		flap2D.setRendering(rendering);
-		heart2D.setRendering(rendering);
-		msPacMan2D.setRendering(rendering);
-		pacMan2D.setRendering(rendering);
-		inky2D.setRendering(rendering);
-		pinky2D.setRendering(rendering);
-
 		// overwrite by Pac-Man instead of Ms. Pac-Man sprites:
 		pacMan2D.setMunchingAnimations(rendering.createSpouseMunchingAnimations());
 
