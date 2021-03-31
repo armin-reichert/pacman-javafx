@@ -4,7 +4,7 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
+import de.amr.games.pacman.ui.animation.MazeAnimations2D;
 import de.amr.games.pacman.ui.animation.TimedSequence;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_PacMan;
@@ -25,7 +25,7 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 
 	private class SceneController extends PacMan_IntermissionScene1_Controller {
 
-		public SceneController(PacManGameController gameController, PacManGameAnimations2D animations) {
+		public SceneController(PacManGameController gameController, MazeAnimations2D animations) {
 			super(gameController, animations);
 		}
 

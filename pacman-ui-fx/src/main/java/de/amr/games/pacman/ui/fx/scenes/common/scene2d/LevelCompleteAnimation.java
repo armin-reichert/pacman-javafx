@@ -26,7 +26,7 @@ class LevelCompleteAnimation {
 		GameRendering2D rendering = variant == GameVariant.MS_PACMAN ? GameRendering2D.RENDERING_MS_PACMAN
 				: GameRendering2D.RENDERING_PACMAN;
 
-		mazeFlashing = rendering.mazeAnimations().mazeFlashing(game.currentLevel.mazeNumber);
+		mazeFlashing = rendering.mazeFlashing(game.currentLevel.mazeNumber);
 		imageIndex = 1;
 
 		flashing = new Timeline(new KeyFrame(Duration.millis(150), e -> {

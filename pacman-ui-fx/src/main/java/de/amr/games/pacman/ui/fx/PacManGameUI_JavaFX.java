@@ -4,19 +4,15 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.GameVariant.MS_PACMAN;
 import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
 
-import java.util.Optional;
-
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.PacManGameUI;
-import de.amr.games.pacman.ui.animation.PacManGameAnimations2D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import de.amr.games.pacman.ui.fx.scenes.common.Env;
 import de.amr.games.pacman.ui.fx.scenes.common.FlashMessageView;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
-import de.amr.games.pacman.ui.fx.scenes.common.scene2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.scenes.common.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.scenes.common.scene3d.PlayScene3D;
 import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacMan_IntermissionScene1;
@@ -350,14 +346,5 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	@Override
 	public boolean keyPressed(String keySpec) {
 		return keyboard.keyPressed(keySpec);
-	}
-
-	@Override
-	public Optional<PacManGameAnimations2D> animation() {
-		if (currentGameScene instanceof AbstractGameScene2D) {
-			AbstractGameScene2D scene2D = (AbstractGameScene2D) currentGameScene;
-			return Optional.of(scene2D.getRendering());
-		}
-		return Optional.empty();
 	}
 }

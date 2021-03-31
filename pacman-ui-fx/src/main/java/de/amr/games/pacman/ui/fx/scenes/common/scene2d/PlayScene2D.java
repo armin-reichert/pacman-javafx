@@ -86,7 +86,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// enter READY
 		if (newState == PacManGameState.READY) {
-			rendering.resetAllAnimations(game());
+			rendering.mazeFlashings().forEach(TimedSequence::reset);
 		}
 
 		// enter HUNTING
