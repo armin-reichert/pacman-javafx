@@ -9,8 +9,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.animation.TimedSequence;
+import de.amr.games.pacman.ui.fx.entities._2d.GameScore2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Ghost2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Player2D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
@@ -33,6 +35,9 @@ import javafx.scene.text.Font;
 public class PacMan_IntroScene extends AbstractGameScene2D {
 
 	private PacMan_IntroScene_Controller sceneController;
+
+	private GameScore2D score2D;
+	private GameScore2D hiscore2D;
 	private Player2D pacMan2D;
 	private List<Ghost2D> ghosts2D;
 	private List<Ghost2D> ghostsInGallery2D;
@@ -46,9 +51,20 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		super.start();
 		sceneController = new PacMan_IntroScene_Controller(gameController);
 		sceneController.init();
+
+		score2D = new GameScore2D(() -> game().score, () -> game().currentLevelNumber);
+		score2D.setTilePosition(new V2i(1, 1));
+		score2D.setFont(rendering.getScoreFont());
+
+		hiscore2D = new GameScore2D(() -> game().highscorePoints, () -> game().highscoreLevel);
+		hiscore2D.setTitle("HI SCORE");
+		hiscore2D.setTilePosition(new V2i(16, 1));
+		hiscore2D.setFont(rendering.getScoreFont());
+
 		pacMan2D = new Player2D(sceneController.pac);
 		pacMan2D.setRendering(rendering);
 		pacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
+
 		ghosts2D = Stream.of(sceneController.ghosts).map(Ghost2D::new).collect(Collectors.toList());
 		ghosts2D.forEach(ghost2D -> {
 			ghost2D.setRendering(rendering);
@@ -56,6 +72,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 			ghost2D.getFrightenedAnimation().restart();
 			ghost2D.getFlashingAnimation().restart();
 		});
+
 		ghostsInGallery2D = new ArrayList<>();
 		for (int i = 0; i < 4; ++i) {
 			Ghost2D ghost2D = new Ghost2D(sceneController.gallery[i].ghost);
@@ -72,7 +89,9 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	}
 
 	public void render() {
-		rendering.drawScore(gc, gameController.game(), true);
+		score2D.setShowPoints(false);
+		score2D.render(gc);
+		hiscore2D.render(gc);
 		drawGallery();
 		if (sceneController.phase == Phase.CHASING_PAC) {
 			if (sceneController.blinking.animate()) {
