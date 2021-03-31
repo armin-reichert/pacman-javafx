@@ -44,7 +44,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	@Override
 	public void start() {
 		super.start();
-		sceneController = new PacMan_IntroScene_Controller(gameController, rendering);
+		sceneController = new PacMan_IntroScene_Controller(gameController);
 		sceneController.start();
 		pacMan2D = new Player2D(sceneController.pac);
 		pacMan2D.setRendering(rendering);

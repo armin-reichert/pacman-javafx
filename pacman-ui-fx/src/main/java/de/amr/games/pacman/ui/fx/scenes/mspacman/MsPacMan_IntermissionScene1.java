@@ -2,7 +2,6 @@ package de.amr.games.pacman.ui.fx.scenes.mspacman;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.ui.animation.MazeAnimations2D;
 import de.amr.games.pacman.ui.animation.TimedSequence;
 import de.amr.games.pacman.ui.fx.rendering.Flap2D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
@@ -28,8 +27,8 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 
 	private class SceneController extends MsPacMan_IntermissionScene1_Controller {
 
-		public SceneController(PacManGameController gameController, MazeAnimations2D animations) {
-			super(gameController, animations);
+		public SceneController(PacManGameController gameController) {
+			super(gameController);
 		}
 
 		@Override
@@ -58,7 +57,7 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 	@Override
 	public void start() {
 		super.start();
-		sceneController = new SceneController(gameController, rendering);
+		sceneController = new SceneController(gameController);
 		sceneController.start();
 		flap2D = new Flap2D(sceneController.flap);
 		flap2D.setRendering(rendering);
@@ -67,6 +66,7 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 		msPacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
 		pacMan2D = new Player2D(sceneController.pacMan);
 		pacMan2D.setRendering(rendering);
+		pacMan2D.setMunchingAnimations(rendering.createSpouseMunchingAnimations());
 		pacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
 		inky2D = new Ghost2D(sceneController.inky);
 		inky2D.setRendering(rendering);
@@ -75,13 +75,17 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 		pinky2D.setRendering(rendering);
 		pinky2D.getKickingAnimations().values().forEach(TimedSequence::restart);
 		heart2D = new Heart2D(sceneController.heart);
-		heart2D.setImage(rendering.getHeart());
+		heart2D.setRendering(rendering);
 	}
 
 	@Override
 	public void update() {
 		super.update();
 		sceneController.update();
+		render();
+	}
+
+	public void render() {
 		flap2D.render(gc);
 		msPacMan2D.render(gc);
 		pacMan2D.render(gc);

@@ -13,6 +13,12 @@ public class Heart2D extends GameEntity2D {
 		this.heart = heart;
 	}
 
+	@Override
+	public void setRendering(GameRendering2D rendering) {
+		super.setRendering(rendering);
+		setImage(rendering.getHeart());
+	}
+
 	public void setImage(Rectangle2D image) {
 		this.image = image;
 	}

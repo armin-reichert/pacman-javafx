@@ -6,7 +6,6 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.ui.animation.MazeAnimations2D;
 import de.amr.games.pacman.ui.animation.TimedSequence;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_PacMan;
@@ -27,8 +26,8 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 	class SceneController extends PacMan_IntermissionScene2_Controller {
 
-		public SceneController(PacManGameController gameController, MazeAnimations2D animations) {
-			super(gameController, animations);
+		public SceneController(PacManGameController gameController) {
+			super(gameController);
 		}
 
 		@Override
@@ -50,7 +49,7 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 	@Override
 	public void start() {
 		super.start();
-		sceneController = new SceneController(gameController, rendering);
+		sceneController = new SceneController(gameController);
 		sceneController.start();
 		pacMan2D = new Player2D(sceneController.pac);
 		pacMan2D.setRendering(rendering);

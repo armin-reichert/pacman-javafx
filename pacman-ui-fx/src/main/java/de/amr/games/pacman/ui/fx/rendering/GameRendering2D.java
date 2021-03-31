@@ -18,7 +18,6 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.common.GameEntity;
 import de.amr.games.pacman.model.pacman.PacManBonus;
-import de.amr.games.pacman.ui.animation.MazeAnimations2D;
 import de.amr.games.pacman.ui.animation.TimedSequence;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -33,7 +32,7 @@ import javafx.scene.text.FontWeight;
  * 
  * @author Armin Reichert
  */
-public abstract class GameRendering2D implements MazeAnimations2D {
+public abstract class GameRendering2D {
 
 	public static final GameRendering2D_MsPacMan RENDERING_MS_PACMAN = new GameRendering2D_MsPacMan();
 	public static final GameRendering2D_PacMan RENDERING_PACMAN = new GameRendering2D_PacMan();
@@ -234,14 +233,8 @@ public abstract class GameRendering2D implements MazeAnimations2D {
 
 	// Animations
 
-	@Override
 	public TimedSequence<?> mazeFlashing(int mazeNumber) {
 		return mazeFlashingAnim.get(mazeNumber - 1);
-	}
-
-	@Override
-	public Stream<TimedSequence<?>> mazeFlashings() {
-		return mazeFlashingAnim.stream().map(TimedSequence.class::cast);
 	}
 
 	public abstract Map<Direction, TimedSequence<Rectangle2D>> createPlayerMunchingAnimations();
