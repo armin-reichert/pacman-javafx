@@ -142,7 +142,7 @@ public class PlayScene3D implements GameScene {
 		tgMaze.setTranslateY(-0.5 * game.currentLevel.world.numRows() * TS);
 
 		tgMaze.getChildren().addAll(score3D.get(), livesCounter3D.get());
-		tgMaze.getChildren().addAll(maze.getWalls());
+		tgMaze.getChildren().addAll(maze.getBricks());
 		tgMaze.getChildren().addAll(collect(energizers));
 		tgMaze.getChildren().addAll(collect(pellets));
 		tgMaze.getChildren().addAll(player.get());

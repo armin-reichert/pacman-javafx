@@ -15,6 +15,11 @@ import de.amr.games.pacman.ui.fx.rendering.GameRendering3D_Assets;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 
+/**
+ * 3D-model for a maze that is created from the simple textual map description.
+ * 
+ * @author Armin Reichert
+ */
 public class Maze3D {
 
 	private static class MicroTile {
@@ -90,47 +95,47 @@ public class Maze3D {
 
 	public Maze3D(AbstractGameModel game, Color wallColor) {
 		PacManGameWorld world = game.currentLevel.world;
-		List<MicroTile> brickPositions = new ArrayList<>();
-		world.tiles().filter(game.currentLevel.world::isWall).forEach(tile -> {
-			double w = TS / 3.0, h = TS / 3.0;
+		List<MicroTile> microTiles = new ArrayList<>();
+		double w = TS / 3.0, h = TS / 3.0;
+		world.tiles().filter(world::isWall).forEach(tile -> {
 			double bx = tile.x * TS - w, by = tile.y * TS - h;
-			List<MicroTile> small = new ArrayList<>();
 			//@formatter:off
-			small.add(new MicroTile(bx,     by,     tile, 0));
-			small.add(new MicroTile(bx+w,   by,     tile, 1));
-			small.add(new MicroTile(bx+2*w, by,     tile, 2));
-			small.add(new MicroTile(bx,     by+h,   tile, 3));
-			small.add(new MicroTile(bx+w,   by+h,   tile, 4));
-			small.add(new MicroTile(bx+2*w, by+h,   tile, 5));
-			small.add(new MicroTile(bx,     by+2*h, tile, 6));
-			small.add(new MicroTile(bx+w,   by+2*h, tile, 7));
-			small.add(new MicroTile(bx+2*w, by+2*h, tile, 8));
+			microTiles.add(new MicroTile(bx,     by,     tile, 0));
+			microTiles.add(new MicroTile(bx+w,   by,     tile, 1));
+			microTiles.add(new MicroTile(bx+2*w, by,     tile, 2));
+			microTiles.add(new MicroTile(bx,     by+h,   tile, 3));
+			microTiles.add(new MicroTile(bx+w,   by+h,   tile, 4));
+			microTiles.add(new MicroTile(bx+2*w, by+h,   tile, 5));
+			microTiles.add(new MicroTile(bx,     by+2*h, tile, 6));
+			microTiles.add(new MicroTile(bx+w,   by+2*h, tile, 7));
+			microTiles.add(new MicroTile(bx+2*w, by+2*h, tile, 8));
 			//@formatter:on
-			brickPositions.addAll(small);
 		});
 
-		List<MicroTile> positionsToRemove = new ArrayList<>();
-		for (MicroTile t : brickPositions) {
-			if (world.isWall(t.northOf()) && world.isWall(t.eastOf()) && world.isWall(t.southOf())
-					&& world.isWall(t.westOf())) {
-				V2i seOf = t.southOf().plus(t.toEast());
-				V2i swOf = t.southOf().plus(t.toWest());
-				V2i neOf = t.northOf().plus(t.toEast());
-				V2i nwOf = t.northOf().plus(t.toWest());
+		List<MicroTile> microTilesToRemove = new ArrayList<>();
+		for (MicroTile mt : microTiles) {
+			if (world.isWall(mt.northOf()) && world.isWall(mt.eastOf()) && world.isWall(mt.southOf())
+					&& world.isWall(mt.westOf())) {
+				V2i seOf = mt.southOf().plus(mt.toEast());
+				V2i swOf = mt.southOf().plus(mt.toWest());
+				V2i neOf = mt.northOf().plus(mt.toEast());
+				V2i nwOf = mt.northOf().plus(mt.toWest());
 				if (world.isWall(seOf) && !world.isWall(nwOf) || !world.isWall(seOf) && world.isWall(nwOf)
 						|| world.isWall(swOf) && !world.isWall(neOf) || !world.isWall(swOf) && world.isWall(neOf)) {
 					// keep corner
 				} else {
-					positionsToRemove.add(t);
+					microTilesToRemove.add(mt);
 				}
 			}
 		}
-		brickPositions.removeAll(positionsToRemove);
-		bricks = brickPositions.stream().map(mt -> new Brick3D(mt.x, mt.y, 2, 2, 3, GameRendering3D_Assets.randomWallMaterial(), mt.tile))
-				.collect(Collectors.toList());
+		microTiles.removeAll(microTilesToRemove);
+
+		double brickSizeX = 2, brickSizeY = 2, brickSizeZ = 3;
+		bricks = microTiles.stream().map(mt -> new Brick3D(mt.x, mt.y, brickSizeX, brickSizeY, brickSizeZ,
+				GameRendering3D_Assets.randomWallMaterial(), mt.tile)).collect(Collectors.toList());
 	}
 
-	public List<Node> getWalls() {
+	public List<Node> getBricks() {
 		return Collections.unmodifiableList(bricks);
 	}
 }
