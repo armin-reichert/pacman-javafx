@@ -1,7 +1,5 @@
 package de.amr.games.pacman.ui.fx.scenes.pacman;
 
-import static de.amr.games.pacman.model.world.PacManGameWorld.t;
-
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.animation.TimedSequence;
@@ -73,6 +71,5 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 			r.drawBigPacMan(gc, sceneController.pac);
 			gc.restore();
 		}
-		r.drawLevelCounter(gc, gameController.game(), t(25), t(34));
 	}
 }

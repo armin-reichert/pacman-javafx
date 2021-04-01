@@ -5,7 +5,6 @@ import static de.amr.games.pacman.lib.Direction.RIGHT;
 import static de.amr.games.pacman.lib.Direction.UP;
 import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
-import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +13,6 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.common.GameEntity;
 import de.amr.games.pacman.model.pacman.PacManBonus;
 import de.amr.games.pacman.ui.animation.TimedSequence;
@@ -166,17 +164,6 @@ public abstract class GameRendering2D {
 	}
 
 	public abstract Color getMazeWallColor(int i);
-
-	public void drawLevelCounter(GraphicsContext g, AbstractGameModel game, int rightX, int y) {
-		int x = rightX;
-		int firstLevel = Math.max(1, game.currentLevelNumber - 6);
-		for (int level = firstLevel; level <= game.currentLevelNumber; ++level) {
-			Rectangle2D region = symbolSprites.get(game.levelSymbols.get(level - 1));
-			g.drawImage(spritesheet, region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(), x, y,
-					region.getWidth(), region.getHeight());
-			x -= t(2);
-		}
-	}
 
 	// Animations
 

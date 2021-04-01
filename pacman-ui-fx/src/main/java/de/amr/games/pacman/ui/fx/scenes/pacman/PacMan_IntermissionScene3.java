@@ -1,7 +1,5 @@
 package de.amr.games.pacman.ui.fx.scenes.pacman;
 
-import static de.amr.games.pacman.model.world.PacManGameWorld.t;
-
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.animation.TimedSequence;
@@ -60,7 +58,6 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 	public void render() {
 		// TODO cleanup
 		GameRendering2D_PacMan r = (GameRendering2D_PacMan) rendering;
-		r.drawLevelCounter(gc, gameController.game(), t(25), t(34));
 		pacMan2D.render(gc);
 		if (sceneController.phase == Phase.CHASING_PACMAN) {
 			r.drawBlinkyPatched(gc, sceneController.blinky);
