@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.AbstractGameModel;
@@ -164,19 +163,6 @@ public abstract class GameRendering2D {
 	public void drawTileCovered(GraphicsContext g, V2i tile) {
 		g.setFill(Color.BLACK);
 		g.fillRect(tile.x * TS, tile.y * TS, TS, TS);
-	}
-
-	public void drawGameState(GraphicsContext g, AbstractGameModel game, PacManGameState gameState) {
-		if (gameState == PacManGameState.GAME_OVER) {
-			g.setFont(scoreFont);
-			g.setFill(Color.RED);
-			g.fillText("GAME", t(9), t(21));
-			g.fillText("OVER", t(15), t(21));
-		} else if (gameState == PacManGameState.READY) {
-			g.setFont(scoreFont);
-			g.setFill(Color.YELLOW);
-			g.fillText("READY", t(11), t(21));
-		}
 	}
 
 	public abstract Color getMazeWallColor(int i);

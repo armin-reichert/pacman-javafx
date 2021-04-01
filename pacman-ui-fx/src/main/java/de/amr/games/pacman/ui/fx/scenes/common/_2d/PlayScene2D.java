@@ -19,6 +19,7 @@ import de.amr.games.pacman.ui.animation.TimedSequence;
 import de.amr.games.pacman.ui.fx.entities._2d.Bonus2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Energizer2D;
 import de.amr.games.pacman.ui.fx.entities._2d.GameScore2D;
+import de.amr.games.pacman.ui.fx.entities._2d.GameStateDisplay2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Ghost2D;
 import de.amr.games.pacman.ui.fx.entities._2d.LivesCounter2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Player2D;
@@ -37,6 +38,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 	private GameScore2D score2D;
 	private GameScore2D hiscore2D;
 	private LivesCounter2D livesCounter2D;
+	private GameStateDisplay2D gameStateDisplay2D;
 	private Player2D player2D;
 	private List<Ghost2D> ghosts2D;
 	private List<Energizer2D> energizers2D;
@@ -71,6 +73,10 @@ public class PlayScene2D extends AbstractGameScene2D {
 		hiscore2D.setTitle("HI SCORE");
 		hiscore2D.setTile(new V2i(16, 1));
 		hiscore2D.setFont(rendering.getScoreFont());
+
+		gameStateDisplay2D = new GameStateDisplay2D();
+		gameStateDisplay2D.setFont(rendering.getScoreFont());
+		gameStateDisplay2D.setState(gameController.state);
 
 		player2D = new Player2D(game().player);
 		player2D.setRendering(rendering);
@@ -220,11 +226,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 		} else {
 			gc.drawImage(levelCompleteAnimation.getCurrentMazeImage(), 0, t(3));
 		}
-		if (gameController.isAttractMode()) {
-			rendering.drawGameState(gc, game(), PacManGameState.GAME_OVER);
-		} else {
-			rendering.drawGameState(gc, game(), gameController.state);
-		}
+		gameStateDisplay2D.setState(gameController.isAttractMode() ? PacManGameState.GAME_OVER : gameController.state);
+		gameStateDisplay2D.render(gc);
 		bonus2D.render(gc);
 		player2D.render(gc);
 		ghosts2D.forEach(ghost2D -> {
