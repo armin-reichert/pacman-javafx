@@ -55,12 +55,11 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 
 	@Override
 	public void update() {
-		super.update();
 		sceneController.update();
 		boardAnimationTimer.tick();
-		render();
 	}
 
+	@Override
 	public void render() {
 		gc.setFont(rendering.getScoreFont());
 		gc.setFill(Color.ORANGE);

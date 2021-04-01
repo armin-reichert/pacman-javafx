@@ -58,11 +58,10 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 
 	@Override
 	public void update() {
-		super.update();
 		sceneController.update();
-		render();
 	}
 
+	@Override
 	public void render() {
 		GameRendering2D_PacMan r = (GameRendering2D_PacMan) rendering;
 		blinky2D.render(gc);

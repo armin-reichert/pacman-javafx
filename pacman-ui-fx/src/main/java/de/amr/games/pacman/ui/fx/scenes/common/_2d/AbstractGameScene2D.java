@@ -17,7 +17,6 @@ import javafx.scene.Group;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 
 /**
@@ -110,10 +109,9 @@ public abstract class AbstractGameScene2D implements GameScene {
 
 	@Override
 	public void update() {
-		GraphicsContext g = canvas.getGraphicsContext2D();
-		g.setFill(Color.BLACK);
-		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	}
+
+	public abstract void render();
 
 	public Canvas getCanvas() {
 		return canvas;

@@ -65,11 +65,10 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 	@Override
 	public void update() {
-		super.update();
 		sceneController.update();
-		render();
 	}
 
+	@Override
 	public void render() {
 		flap2D.render(gc);
 		msPacMan2D.render(gc);

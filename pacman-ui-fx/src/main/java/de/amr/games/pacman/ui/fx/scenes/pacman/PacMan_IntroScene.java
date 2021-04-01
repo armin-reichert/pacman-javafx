@@ -83,11 +83,10 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 
 	@Override
 	public void update() {
-		super.update();
 		sceneController.update();
-		render();
 	}
 
+	@Override
 	public void render() {
 		score2D.setShowPoints(false);
 		score2D.render(gc);

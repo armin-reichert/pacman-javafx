@@ -63,11 +63,10 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 	@Override
 	public void update() {
-		super.update();
 		sceneController.update();
-		render();
 	}
 
+	@Override
 	public void render() {
 		GameRendering2D_PacMan r = (GameRendering2D_PacMan) rendering;
 		r.drawLevelCounter(gc, gameController.game(), t(25), t(34));

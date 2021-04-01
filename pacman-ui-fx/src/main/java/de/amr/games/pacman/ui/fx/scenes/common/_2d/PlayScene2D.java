@@ -88,8 +88,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void update() {
-		super.update();
-		render();
 		playSceneSounds.onUpdate();
 	}
 
@@ -194,7 +192,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 		}).restart();
 	}
 
-	private void render() {
+	@Override
+	public void render() {
 		rendering.drawLevelCounter(gc, game(), t(25), t(34));
 		if (gameController.isGameRunning() || gameController.state == PacManGameState.GAME_OVER) {
 			score2D.setShowPoints(true);

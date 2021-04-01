@@ -9,8 +9,8 @@ import static de.amr.games.pacman.ui.fx.rendering.GameRendering2D.RENDERING_PACM
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.ui.PacManGameUI;
-import de.amr.games.pacman.ui.fx.scenes.common.FlashMessageView;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
+import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScene3D;
 import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacMan_IntermissionScene1;
@@ -135,12 +135,13 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private void onGameStateChange(PacManGameState oldGameState, PacManGameState newGameState) {
+		if (newGameState == PacManGameState.INTRO) {
+			// TODO check this
+			SoundAssets.get(gameController.gameVariant()).stopAll();
+		}
 		GameScene newGameScene = sceneForCurrentGameState(Env.$use3DScenes.get());
 		if (currentGameScene != newGameScene) {
 			setGameScene(newGameScene);
-		}
-		if (newGameState == PacManGameState.INTRO) {
-			reset(); // TODO check this
 		}
 		currentGameScene.onGameStateChange(oldGameState, newGameState);
 	}
@@ -298,6 +299,13 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		currentGameScene.update();
 		flashMessageView.update();
 		hud.update();
+		if (currentGameScene instanceof AbstractGameScene2D) {
+			AbstractGameScene2D scene2D = (AbstractGameScene2D) currentGameScene;
+			scene2D.getCanvas().getGraphicsContext2D().setFill(Color.BLACK);
+			scene2D.getCanvas().getGraphicsContext2D().fillRect(0, 0, scene2D.getCanvas().getWidth(),
+					scene2D.getCanvas().getHeight());
+			scene2D.render();
+		}
 	}
 
 	@Override

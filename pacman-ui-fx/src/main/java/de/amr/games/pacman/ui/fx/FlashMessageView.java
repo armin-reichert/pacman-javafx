@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.scenes.common;
+package de.amr.games.pacman.ui.fx;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
