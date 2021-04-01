@@ -271,6 +271,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private void toggleUse3DScenes() {
 		Env.$use3DScenes.set(!Env.$use3DScenes.get());
 		if (sceneForCurrentGameState(false) != sceneForCurrentGameState(true)) {
+			SoundAssets.get(gameController.gameVariant()).stopAll();
 			setGameScene(sceneForCurrentGameState(Env.$use3DScenes.get()));
 		}
 	}
