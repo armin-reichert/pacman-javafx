@@ -79,10 +79,15 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 	@Override
 	public void drawMaze(GraphicsContext g, int mazeNumber, int x, int y, boolean flashing) {
 		if (flashing) {
-			g.drawImage((Image) mazeFlashing(mazeNumber).animate(), x, y);
+			g.drawImage(getMazeFlashingAnimation(mazeNumber).animate(), x, y);
 		} else {
 			g.drawImage(mazeFull, x, y);
 		}
+	}
+
+	@Override
+	public Object getMazeSprite(int mazeNumber) {
+		return mazeFull;
 	}
 
 	@Override

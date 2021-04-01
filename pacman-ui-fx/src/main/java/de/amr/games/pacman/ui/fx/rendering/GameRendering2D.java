@@ -163,11 +163,13 @@ public abstract class GameRendering2D {
 		g.fillRect(tile.x * TS, tile.y * TS, TS, TS);
 	}
 
+	public abstract Object getMazeSprite(int mazeNumber);
+
 	public abstract Color getMazeWallColor(int i);
 
 	// Animations
 
-	public TimedSequence<?> mazeFlashing(int mazeNumber) {
+	public TimedSequence<Image> getMazeFlashingAnimation(int mazeNumber) {
 		return mazeFlashingAnimations.get(mazeNumber - 1);
 	}
 

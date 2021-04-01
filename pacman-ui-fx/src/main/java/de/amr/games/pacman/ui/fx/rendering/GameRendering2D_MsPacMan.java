@@ -110,13 +110,17 @@ public class GameRendering2D_MsPacMan extends GameRendering2D {
 	@Override
 	public void drawMaze(GraphicsContext g, int mazeNumber, int x, int y, boolean flashing) {
 		if (flashing) {
-			g.drawImage((Image) mazeFlashing(mazeNumber).animate(), x, y);
+			g.drawImage(getMazeFlashingAnimation(mazeNumber).animate(), x, y);
 		} else {
-			int index = mazeNumber - 1;
-			Rectangle2D fullMazeRegion = new Rectangle2D(0, 248 * index, 226, 248);
-			g.drawImage(spritesheet, fullMazeRegion.getMinX(), fullMazeRegion.getMinY(), fullMazeRegion.getWidth(),
-					fullMazeRegion.getHeight(), x, y, fullMazeRegion.getWidth(), fullMazeRegion.getHeight());
+			Rectangle2D image = getMazeSprite(mazeNumber);
+			g.drawImage(spritesheet, image.getMinX(), image.getMinY(), image.getWidth(), image.getHeight(), x, y,
+					image.getWidth(), image.getHeight());
 		}
+	}
+
+	@Override
+	public Rectangle2D getMazeSprite(int mazeNumber) {
+		return new Rectangle2D(0, 248 * (mazeNumber - 1), 226, 248);
 	}
 
 	/*
