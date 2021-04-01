@@ -3,14 +3,13 @@ package de.amr.games.pacman.ui.fx.rendering;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.ui.animation.TimedSequence;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
 /**
@@ -19,6 +18,10 @@ import javafx.scene.paint.Color;
  * @author Armin Reichert
  */
 public class GameRendering2D_MsPacMan extends GameRendering2D {
+
+	protected List<Image> mazeFullImages;
+	protected List<Image> mazeEmptyImages;
+	protected List<Image> mazeFlashImages;
 
 	public GameRendering2D_MsPacMan() {
 		super("/mspacman/graphics/sprites.png");
@@ -44,15 +47,19 @@ public class GameRendering2D_MsPacMan extends GameRendering2D {
 		);
 		//@formatter:on
 
-		mazeFlashingAnimations = new ArrayList<>(6);
+		mazeFullImages = new ArrayList<>(6);
+		mazeEmptyImages = new ArrayList<>(6);
+		mazeFlashImages = new ArrayList<>(6);
 		for (int mazeIndex = 0; mazeIndex < 6; ++mazeIndex) {
-			Map<Color, Color> exchanges = Map.of(//
-					getMazeWallBorderColor(mazeIndex), Color.WHITE, //
-					getMazeWallColor(mazeIndex), Color.BLACK);
-			WritableImage mazeEmpty = new WritableImage(226, 248);
-			mazeEmpty.getPixelWriter().setPixels(0, 0, 226, 248, spritesheet.getPixelReader(), 226, 248 * mazeIndex);
-			Image mazeEmptyBright = exchangeColors(mazeEmpty, exchanges);
-			mazeFlashingAnimations.add(TimedSequence.of(mazeEmptyBright, mazeEmpty).frameDuration(15));
+			Image mazeFullImage = subImage(0, 248 * mazeIndex, 226, 248);
+			Image mazeEmptyImage = subImage(226, 248 * mazeIndex, 226, 248);
+			Image mazeFlashImage = colorsExchanged(mazeEmptyImage, //
+					Map.of(//
+							getMazeWallBorderColor(mazeIndex), Color.WHITE, //
+							getMazeWallColor(mazeIndex), Color.BLACK));
+			mazeFullImages.add(mazeFullImage);
+			mazeEmptyImages.add(mazeEmptyImage);
+			mazeFlashImages.add(mazeFlashImage);
 		}
 	}
 
@@ -108,19 +115,18 @@ public class GameRendering2D_MsPacMan extends GameRendering2D {
 	}
 
 	@Override
-	public void drawMaze(GraphicsContext g, int mazeNumber, int x, int y, boolean flashing) {
-		if (flashing) {
-			g.drawImage(getMazeFlashingAnimation(mazeNumber).animate(), x, y);
-		} else {
-			Rectangle2D image = getMazeSprite(mazeNumber);
-			g.drawImage(spritesheet, image.getMinX(), image.getMinY(), image.getWidth(), image.getHeight(), x, y,
-					image.getWidth(), image.getHeight());
-		}
+	public Image getMazeFullImage(int mazeNumber) {
+		return mazeFullImages.get(mazeNumber - 1);
 	}
 
 	@Override
-	public Rectangle2D getMazeSprite(int mazeNumber) {
-		return new Rectangle2D(0, 248 * (mazeNumber - 1), 226, 248);
+	public Image getMazeEmptyImage(int mazeNumber) {
+		return mazeEmptyImages.get(mazeNumber - 1);
+	}
+
+	@Override
+	public Image getMazeFlashImage(int mazeNumber) {
+		return mazeFlashImages.get(mazeNumber - 1);
 	}
 
 	/*

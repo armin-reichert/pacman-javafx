@@ -1,46 +1,37 @@
 package de.amr.games.pacman.ui.fx.entities._2d;
 
+import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 
 public class Maze2D {
 
 	private V2i tile;
-	private int mazeNumber;
-	private boolean flashing;
-	private GameRendering2D rendering;
+	private Image image;
 
 	public void render(GraphicsContext g) {
-		Object sprite = flashing ? rendering.getMazeFlashingAnimation(mazeNumber).animate()
-				: rendering.getMazeSprite(mazeNumber);
-		if (sprite instanceof Rectangle2D) {
-			Rectangle2D r = (Rectangle2D) sprite;
-			g.drawImage(rendering.spritesheet, r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), t(tile.x), t(tile.y),
-					r.getWidth(), r.getHeight());
-
-		} else if (sprite instanceof Image) {
-			g.drawImage((Image) sprite, t(tile.x), t(tile.y));
-		}
+		g.drawImage(image, t(tile.x), t(tile.y));
 	}
 
 	public void setTile(V2i tile) {
 		this.tile = tile;
 	}
 
-	public void setMazeNumber(int mazeNumber) {
-		this.mazeNumber = mazeNumber;
+	public void setImage(Image image) {
+		this.image = image;
 	}
 
-	public void setFlashing(boolean flashing) {
-		this.flashing = flashing;
-	}
-
-	public void setRendering(GameRendering2D rendering) {
-		this.rendering = rendering;
+	public void hideEatenFoodTiles(GraphicsContext g, Stream<V2i> foodTiles, Predicate<V2i> eaten) {
+		g.setFill(Color.BLACK);
+		foodTiles.filter(eaten).forEach(foodTile -> {
+			g.fillRect(tile.x * TS, tile.y * TS, TS, TS);
+		});
 	}
 }

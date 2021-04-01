@@ -24,6 +24,7 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 
 	private final Image mazeFull = new Image(getClass().getResource("/pacman/graphics/maze_full.png").toExternalForm());
 	private final Image mazeEmpty = new Image(getClass().getResource("/pacman/graphics/maze_empty.png").toExternalForm());
+	private Image mazeEmptyBright;
 
 	private TimedSequence<Rectangle2D> bigPacMan;
 	private TimedSequence<Rectangle2D> blinkyPatched;
@@ -55,8 +56,7 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 
 		// Animations
 
-		Image mazeEmptyBright = exchangeColors(mazeEmpty, Map.of(getMazeWallBorderColor(0), Color.WHITE));
-		mazeFlashingAnimations = Arrays.asList(TimedSequence.of(mazeEmptyBright, mazeEmpty).frameDuration(15));
+		mazeEmptyBright = colorsExchanged(mazeEmpty, Map.of(getMazeWallBorderColor(0), Color.WHITE));
 
 		bigPacMan = TimedSequence.of(//
 				cells(2, 1, 2, 2), //
@@ -77,17 +77,18 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 	}
 
 	@Override
-	public void drawMaze(GraphicsContext g, int mazeNumber, int x, int y, boolean flashing) {
-		if (flashing) {
-			g.drawImage(getMazeFlashingAnimation(mazeNumber).animate(), x, y);
-		} else {
-			g.drawImage(mazeFull, x, y);
-		}
+	public Image getMazeFullImage(int mazeNumber) {
+		return mazeFull;
 	}
 
 	@Override
-	public Object getMazeSprite(int mazeNumber) {
-		return mazeFull;
+	public Image getMazeEmptyImage(int mazeNumber) {
+		return mazeEmpty;
+	}
+
+	@Override
+	public Image getMazeFlashImage(int mazeNumber) {
+		return mazeEmptyBright;
 	}
 
 	@Override
