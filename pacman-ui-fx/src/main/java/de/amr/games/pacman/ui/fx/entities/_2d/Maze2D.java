@@ -31,7 +31,7 @@ public class Maze2D {
 	public void hideEatenFoodTiles(GraphicsContext g, Stream<V2i> foodTiles, Predicate<V2i> eaten) {
 		g.setFill(Color.BLACK);
 		foodTiles.filter(eaten).forEach(foodTile -> {
-			g.fillRect(tile.x * TS, tile.y * TS, TS, TS);
+			g.fillRect(foodTile.x * TS, foodTile.y * TS, TS, TS);
 		});
 	}
 }
