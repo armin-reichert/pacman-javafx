@@ -20,6 +20,7 @@ import de.amr.games.pacman.ui.fx.entities._2d.Bonus2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Energizer2D;
 import de.amr.games.pacman.ui.fx.entities._2d.GameScore2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Ghost2D;
+import de.amr.games.pacman.ui.fx.entities._2d.LivesCounter2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Player2D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import de.amr.games.pacman.ui.fx.scenes.common.PlaySceneSoundManager;
@@ -35,6 +36,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	private GameScore2D score2D;
 	private GameScore2D hiscore2D;
+	private LivesCounter2D livesCounter2D;
 	private Player2D player2D;
 	private List<Ghost2D> ghosts2D;
 	private List<Energizer2D> energizers2D;
@@ -57,13 +59,17 @@ public class PlayScene2D extends AbstractGameScene2D {
 	public void start() {
 		super.start();
 
+		livesCounter2D = new LivesCounter2D(() -> game().lives);
+		livesCounter2D.setTile(new V2i(2, 34));
+		livesCounter2D.setRendering(rendering);
+
 		score2D = new GameScore2D(() -> game().score, () -> game().currentLevelNumber);
-		score2D.setTilePosition(new V2i(1, 1));
+		score2D.setTile(new V2i(1, 1));
 		score2D.setFont(rendering.getScoreFont());
 
 		hiscore2D = new GameScore2D(() -> game().highscorePoints, () -> game().highscoreLevel);
 		hiscore2D.setTitle("HI SCORE");
-		hiscore2D.setTilePosition(new V2i(16, 1));
+		hiscore2D.setTile(new V2i(16, 1));
 		hiscore2D.setFont(rendering.getScoreFont());
 
 		player2D = new Player2D(game().player);
@@ -195,11 +201,12 @@ public class PlayScene2D extends AbstractGameScene2D {
 	@Override
 	public void render() {
 		rendering.drawLevelCounter(gc, game(), t(25), t(34));
-		if (gameController.isGameRunning() || gameController.state == PacManGameState.GAME_OVER) {
+		if (gameController.isGameRunning() || gameController.state == PacManGameState.READY
+				|| gameController.state == PacManGameState.GAME_OVER) {
+			livesCounter2D.render(gc);
 			score2D.setShowPoints(true);
 			score2D.render(gc);
 			hiscore2D.render(gc);
-			rendering.drawLivesCounter(gc, game(), t(2), t(34));
 		} else {
 			score2D.setShowPoints(false);
 			score2D.render(gc);

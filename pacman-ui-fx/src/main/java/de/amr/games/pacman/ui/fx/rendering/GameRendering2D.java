@@ -25,7 +25,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
 /**
  * Standard implementation of scene rendering using sprites.
@@ -46,7 +45,7 @@ public abstract class GameRendering2D {
 	protected List<Rectangle2D> symbolSprites;
 	protected Map<Integer, Rectangle2D> bonusValueSprites;
 	protected Map<Integer, Rectangle2D> bountyNumberSprites;
-	protected List<TimedSequence<Image>> mazeFlashingAnim;
+	protected List<TimedSequence<Image>> mazeFlashingAnimations;
 
 	public GameRendering2D(String spritesheetPath) {
 		spritesheet = new Image(getClass().getResource(spritesheetPath).toExternalForm());
@@ -167,20 +166,6 @@ public abstract class GameRendering2D {
 		g.fillRect(tile.x * TS, tile.y * TS, TS, TS);
 	}
 
-	public void drawLivesCounter(GraphicsContext g, AbstractGameModel game, int x, int y) {
-		int maxLivesDisplayed = 5;
-		for (int i = 0; i < Math.min(game.lives, maxLivesDisplayed); ++i) {
-			drawLifeCounterSymbol(g, x + t(2 * i), y);
-		}
-		if (game.lives > maxLivesDisplayed) {
-			g.setFill(Color.YELLOW);
-			g.setFont(Font.font("Sans Serif", FontWeight.BOLD, 6));
-			g.fillText("+" + (game.lives - maxLivesDisplayed), x + t(10), y + t(1) - 2);
-		}
-	}
-
-	public abstract void drawLifeCounterSymbol(GraphicsContext g, int i, int y);
-
 	public void drawGameState(GraphicsContext g, AbstractGameModel game, PacManGameState gameState) {
 		if (gameState == PacManGameState.GAME_OVER) {
 			g.setFont(scoreFont);
@@ -210,7 +195,7 @@ public abstract class GameRendering2D {
 	// Animations
 
 	public TimedSequence<?> mazeFlashing(int mazeNumber) {
-		return mazeFlashingAnim.get(mazeNumber - 1);
+		return mazeFlashingAnimations.get(mazeNumber - 1);
 	}
 
 	public abstract Map<Direction, TimedSequence<Rectangle2D>> createPlayerMunchingAnimations();
@@ -226,6 +211,10 @@ public abstract class GameRendering2D {
 	public abstract TimedSequence<Rectangle2D> createGhostFlashingAnimation();
 
 	public abstract Map<Direction, TimedSequence<Rectangle2D>> createGhostReturningHomeAnimations();
+
+	// sprites, images
+
+	public abstract Rectangle2D getLifeImage();
 
 	public Map<Integer, Rectangle2D> getBountyNumberSpritesMap() {
 		return bountyNumberSprites;
@@ -270,5 +259,4 @@ public abstract class GameRendering2D {
 	public TimedSequence<Rectangle2D> createBlinkyDamagedAnimation() {
 		return null;
 	}
-
 }

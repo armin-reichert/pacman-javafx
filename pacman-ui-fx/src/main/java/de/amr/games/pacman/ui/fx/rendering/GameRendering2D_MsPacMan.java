@@ -3,7 +3,6 @@ package de.amr.games.pacman.ui.fx.rendering;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
@@ -21,44 +20,39 @@ import javafx.scene.paint.Color;
  */
 public class GameRendering2D_MsPacMan extends GameRendering2D {
 
-	/* Tiles in right half of spritesheet */
-	public Rectangle2D s(int tileX, int tileY) {
-		return cellsStartingAt(456, 0, tileX, tileY, 1, 1);
-	}
-
 	public GameRendering2D_MsPacMan() {
-
 		super("/mspacman/graphics/sprites.png");
 
 		symbolSprites = Arrays.asList(s(3, 0), s(4, 0), s(5, 0), s(6, 0), s(7, 0), s(8, 0), s(9, 0));
 
 		//@formatter:off
-		bonusValueSprites = new HashMap<>();
-		bonusValueSprites.put(100,  s(3, 1));
-		bonusValueSprites.put(200,  s(4, 1));
-		bonusValueSprites.put(500,  s(5, 1));
-		bonusValueSprites.put(700,  s(6, 1));
-		bonusValueSprites.put(1000, s(7, 1));
-		bonusValueSprites.put(2000, s(8, 1));
-		bonusValueSprites.put(5000, s(9, 1));
+		bonusValueSprites = Map.of(
+			100,  s(3, 1),
+			200,  s(4, 1),
+			500,  s(5, 1),
+			700,  s(6, 1),
+			1000, s(7, 1),
+			2000, s(8, 1),
+			5000, s(9, 1)
+		);
 		
-		bountyNumberSprites = new HashMap<>();
-		bountyNumberSprites.put(200,  s(0, 8));
-		bountyNumberSprites.put(400,  s(1, 8));
-		bountyNumberSprites.put(800,  s(2, 8));
-		bountyNumberSprites.put(1600, s(3, 8));
+		bountyNumberSprites = Map.of(
+			200,  s(0, 8),
+			400,  s(1, 8),
+			800,  s(2, 8),
+			1600, s(3, 8)
+		);
 		//@formatter:on
 
-		// Animations
-
-		mazeFlashingAnim = new ArrayList<>(6);
+		mazeFlashingAnimations = new ArrayList<>(6);
 		for (int mazeIndex = 0; mazeIndex < 6; ++mazeIndex) {
-			Map<Color, Color> exchanges = Map.of(getMazeWallBorderColor(mazeIndex), Color.WHITE, getMazeWallColor(mazeIndex),
-					Color.BLACK);
+			Map<Color, Color> exchanges = Map.of(//
+					getMazeWallBorderColor(mazeIndex), Color.WHITE, //
+					getMazeWallColor(mazeIndex), Color.BLACK);
 			WritableImage mazeEmpty = new WritableImage(226, 248);
 			mazeEmpty.getPixelWriter().setPixels(0, 0, 226, 248, spritesheet.getPixelReader(), 226, 248 * mazeIndex);
 			Image mazeEmptyBright = exchangeColors(mazeEmpty, exchanges);
-			mazeFlashingAnim.add(TimedSequence.of(mazeEmptyBright, mazeEmpty).frameDuration(15));
+			mazeFlashingAnimations.add(TimedSequence.of(mazeEmptyBright, mazeEmpty).frameDuration(15));
 		}
 	}
 
@@ -125,18 +119,9 @@ public class GameRendering2D_MsPacMan extends GameRendering2D {
 		}
 	}
 
-	@Override
-	public void drawLifeCounterSymbol(GraphicsContext g, int x, int y) {
-		g.drawImage(spritesheet, 456 + GRID_CELLSIZE, 0, GRID_CELLSIZE, GRID_CELLSIZE, x, y, GRID_CELLSIZE, GRID_CELLSIZE);
-	}
-
-//	public void drawSpouse(GraphicsContext g, Pac pacMan) {
-//		if (pacMan.visible) {
-//			TimedSequence<Rectangle2D> munching = spouseMunching(pacMan, pacMan.dir);
-//			drawSprite(g, pacMan.speed > 0 ? munching.animate() : munching.frame(1), pacMan.position.x - 4,
-//					pacMan.position.y - 4);
-//		}
-//	}
+	/*
+	 * Animations.
+	 */
 
 	@Override
 	public Map<Direction, TimedSequence<Rectangle2D>> createPlayerMunchingAnimations() {
@@ -218,6 +203,15 @@ public class GameRendering2D_MsPacMan extends GameRendering2D {
 		return TimedSequence.of(0, 2, 0, -2).frameDuration(20).endless();
 	}
 
+	/*
+	 * Sprites.
+	 */
+
+	@Override
+	public Rectangle2D getLifeImage() {
+		return s(0, 0);
+	}
+
 	@Override
 	public Rectangle2D getHeart() {
 		return s(2, 10);
@@ -231,5 +225,10 @@ public class GameRendering2D_MsPacMan extends GameRendering2D {
 	@Override
 	public Rectangle2D getBlueBag() {
 		return new Rectangle2D(488, 199, 8, 8);
+	}
+
+	/* Tiles in right half of spritesheet */
+	public Rectangle2D s(int tileX, int tileY) {
+		return cellsStartingAt(456, 0, tileX, tileY, 1, 1);
 	}
 }

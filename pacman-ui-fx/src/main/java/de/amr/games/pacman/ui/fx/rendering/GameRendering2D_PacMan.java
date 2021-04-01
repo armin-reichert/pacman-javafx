@@ -56,7 +56,7 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 		// Animations
 
 		Image mazeEmptyBright = exchangeColors(mazeEmpty, Map.of(getMazeWallBorderColor(0), Color.WHITE));
-		mazeFlashingAnim = Arrays.asList(TimedSequence.of(mazeEmptyBright, mazeEmpty).frameDuration(15));
+		mazeFlashingAnimations = Arrays.asList(TimedSequence.of(mazeEmptyBright, mazeEmpty).frameDuration(15));
 
 		bigPacMan = TimedSequence.of(//
 				cells(2, 1, 2, 2), //
@@ -86,8 +86,8 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 	}
 
 	@Override
-	public void drawLifeCounterSymbol(GraphicsContext g, int x, int y) {
-		drawSprite(g, sprite(8, 1), x, y);
+	public Rectangle2D getLifeImage() {
+		return sprite(8, 1);
 	}
 
 	public void drawBigPacMan(GraphicsContext g, Pac bigPac) {

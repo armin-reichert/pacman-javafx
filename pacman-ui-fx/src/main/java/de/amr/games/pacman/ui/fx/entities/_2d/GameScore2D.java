@@ -15,7 +15,7 @@ public class GameScore2D extends GameEntity2D {
 	private final IntSupplier pointsSupplier;
 	private final IntSupplier levelSupplier;
 
-	private V2i tilePosition = V2i.NULL;
+	private V2i tile = V2i.NULL;
 	private Font font = Font.font("Arial");
 	private Color titleColor = Color.WHITE;
 	private Color pointsColor = Color.YELLOW;
@@ -29,7 +29,7 @@ public class GameScore2D extends GameEntity2D {
 
 	public void render(GraphicsContext gc) {
 		gc.save();
-		gc.translate(tilePosition.x * TS, tilePosition.y * TS);
+		gc.translate(tile.x * TS, tile.y * TS);
 		gc.setFont(font);
 		gc.translate(0, 2);
 		gc.setFill(titleColor);
@@ -45,12 +45,12 @@ public class GameScore2D extends GameEntity2D {
 		gc.restore();
 	}
 
-	public V2i getTilePosition() {
-		return tilePosition;
+	public V2i getTile() {
+		return tile;
 	}
 
-	public void setTilePosition(V2i tilePosition) {
-		this.tilePosition = tilePosition;
+	public void setTile(V2i tile) {
+		this.tile = tile;
 	}
 
 	public Font getFont() {
