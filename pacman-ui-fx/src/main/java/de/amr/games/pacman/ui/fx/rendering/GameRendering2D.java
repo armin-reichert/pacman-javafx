@@ -193,11 +193,6 @@ public abstract class GameRendering2D {
 		return symbolSprites;
 	}
 
-	
-	public TimedSequence<Rectangle2D> createBigPacManMunchingAnimation() {
-		return null;
-	}
-	
 	public TimedSequence<Integer> createBonusAnimation() {
 		return null;
 	}
@@ -222,6 +217,10 @@ public abstract class GameRendering2D {
 		return null;
 	}
 
+	public TimedSequence<Rectangle2D> createBigPacManMunchingAnimation() {
+		return null;
+	}
+
 	public TimedSequence<Rectangle2D> createBlinkyStretchedAnimation() {
 		return null;
 	}
@@ -229,4 +228,13 @@ public abstract class GameRendering2D {
 	public TimedSequence<Rectangle2D> createBlinkyDamagedAnimation() {
 		return null;
 	}
+
+	public TimedSequence<Rectangle2D> createBlinkyPatchedAnimation() {
+		return null;
+	}
+
+	public TimedSequence<Rectangle2D> createBlinkyNakedAnimation() {
+		return null;
+	}
+
 }

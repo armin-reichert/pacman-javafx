@@ -7,7 +7,6 @@ import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.GameEntity;
-import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.animation.TimedSequence;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -22,17 +21,15 @@ import javafx.scene.paint.Color;
 public class GameRendering2D_PacMan extends GameRendering2D {
 
 	private final Image mazeFull = new Image(getClass().getResource("/pacman/graphics/maze_full.png").toExternalForm());
-	private final Image mazeEmpty = new Image(getClass().getResource("/pacman/graphics/maze_empty.png").toExternalForm());
+	private final Image mazeEmpty = new Image(
+			getClass().getResource("/pacman/graphics/maze_empty.png").toExternalForm());
 	private Image mazeEmptyBright;
-
-	private TimedSequence<Rectangle2D> blinkyPatched;
-	private TimedSequence<Rectangle2D> blinkyHalfNaked;
 
 	public GameRendering2D_PacMan() {
 		super("/pacman/graphics/sprites.png");
 
-		symbolSprites = Arrays.asList(sprite(2, 3), sprite(3, 3), sprite(4, 3), sprite(5, 3), sprite(6, 3), sprite(7, 3),
-				sprite(8, 3), sprite(9, 3));
+		symbolSprites = Arrays.asList(sprite(2, 3), sprite(3, 3), sprite(4, 3), sprite(5, 3), sprite(6, 3),
+				sprite(7, 3), sprite(8, 3), sprite(9, 3));
 
 		//@formatter:off
 		bonusValueSprites = new HashMap<>();
@@ -55,9 +52,6 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 		// Animations
 
 		mazeEmptyBright = colorsExchanged(mazeEmpty, Map.of(getMazeWallBorderColor(0), Color.WHITE));
-
-		blinkyPatched = TimedSequence.of(sprite(10, 7), sprite(11, 7)).restart().frameDuration(4).endless();
-		blinkyHalfNaked = TimedSequence.of(cells(8, 8, 2, 1), cells(10, 8, 2, 1)).endless().frameDuration(4).restart();
 	}
 
 	public Color getMazeWallBorderColor(int mazeIndex) {
@@ -93,14 +87,6 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 		drawEntity(g, nail, sprite(8, 6));
 	}
 
-	public void drawBlinkyPatched(GraphicsContext g, Ghost blinky) {
-		drawEntity(g, blinky, blinkyPatched.animate());
-	}
-
-	public void drawBlinkyNaked(GraphicsContext g, Ghost blinky) {
-		drawEntity(g, blinky, blinkyHalfNaked.animate());
-	}
-
 	@Override
 	public Map<Direction, TimedSequence<Rectangle2D>> createPlayerMunchingAnimations() {
 		Map<Direction, TimedSequence<Rectangle2D>> pacManMunchingAnim = new EnumMap<>(Direction.class);
@@ -127,6 +113,16 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 	@Override
 	public TimedSequence<Rectangle2D> createBlinkyDamagedAnimation() {
 		return TimedSequence.of(sprite(8, 7), sprite(9, 7));
+	}
+
+	@Override
+	public TimedSequence<Rectangle2D> createBlinkyPatchedAnimation() {
+		return TimedSequence.of(sprite(10, 7), sprite(11, 7)).restart().frameDuration(4).endless();
+	}
+
+	@Override
+	public TimedSequence<Rectangle2D> createBlinkyNakedAnimation() {
+		return TimedSequence.of(cells(8, 8, 2, 1), cells(10, 8, 2, 1)).endless().frameDuration(4).restart();
 	}
 
 	@Override
@@ -164,7 +160,7 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 		}
 		return ghostEyesAnim;
 	}
-	
+
 	public TimedSequence<Rectangle2D> createBigPacManMunchingAnimation() {
 		return TimedSequence.of(//
 				cells(2, 1, 2, 2), //
