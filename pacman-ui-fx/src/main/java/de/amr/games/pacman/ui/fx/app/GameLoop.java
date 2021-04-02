@@ -17,6 +17,8 @@ class GameLoop extends AnimationTimer {
 		this.userInterface = userInterface;
 	}
 
+	private long lastUpdate;
+
 	@Override
 	public void handle(long now) {
 		if (Env.$paused.get()) {
@@ -28,6 +30,12 @@ class GameLoop extends AnimationTimer {
 			} else {
 				controller.step();
 				userInterface.update();
+				double deltaTime = (now - lastUpdate) / 1e6;
+//				log("delta time: %.2f milliseconds", deltaTime);
+				if (deltaTime > 30) {
+					controller.step();
+				}
+				lastUpdate = now;
 			}
 		}
 	}

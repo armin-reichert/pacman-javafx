@@ -16,8 +16,9 @@ import de.amr.games.pacman.ui.sound.PacManGameSound;
 /**
  * Intermission scene 2: "The chase".
  * <p>
- * Pac-Man and Ms. Pac-Man chase each other across the screen over and over. After three turns, they
- * both rapidly run from left to right and right to left. (Played after round 5)
+ * Pac-Man and Ms. Pac-Man chase each other across the screen over and over.
+ * After three turns, they both rapidly run from left to right and right to
+ * left. (Played after round 5)
  * 
  * @author Armin Reichert
  */
@@ -59,6 +60,7 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 		msPacMan2D = new Player2D(sceneController.msPacMan);
 		pacMan2D = new Player2D(sceneController.pacMan);
 		Stream.of(flap2D, msPacMan2D, pacMan2D).forEach(entity -> entity.setRendering(rendering));
+		pacMan2D.setMunchingAnimations(rendering.createSpouseMunchingAnimations());
 		msPacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
 		pacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
 	}

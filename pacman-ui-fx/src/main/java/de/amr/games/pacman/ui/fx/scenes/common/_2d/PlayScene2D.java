@@ -29,7 +29,8 @@ import javafx.animation.SequentialTransition;
 import javafx.util.Duration;
 
 /**
- * 2D scene displaying the maze and the game play for both, Pac-Man and Ms. Pac-Man games.
+ * 2D scene displaying the maze and the game play for both, Pac-Man and Ms.
+ * Pac-Man games.
  * 
  * @author Armin Reichert
  */
@@ -153,6 +154,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// enter LEVEL_STARTING
 		if (newState == PacManGameState.LEVEL_STARTING) {
+			maze2D = new Maze2D(game().currentLevel, rendering);
+			maze2D.setTile(new V2i(0, 3));
 			gameController.stateTimer().reset(1);
 			gameController.stateTimer().start();
 		}
