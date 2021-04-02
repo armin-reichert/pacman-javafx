@@ -1,7 +1,5 @@
 package de.amr.games.pacman.ui.fx.scenes.common._2d;
 
-import static de.amr.games.pacman.lib.Logging.log;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,35 +53,25 @@ public class PlayScene2D extends AbstractGameScene2D {
 	private List<Energizer2D> energizers2D;
 	private Bonus2D bonus2D;
 
-	class LevelCompleteAnimation {
+	private class LevelCompleteAnimation {
 
 		private final SequentialTransition animation;
-		private final Timeline flashing;
-		private int numFlashes;
-		private boolean flashImageSelected;
+		private final int mazeNumber;
+		private boolean flashImage;
 
-		public LevelCompleteAnimation() {
-			numFlashes = 5;
-			flashImageSelected = false;
-			KeyFrame changeMazeImage = new KeyFrame(Duration.millis(150), e -> flashImageSelected = !flashImageSelected);
-			flashing = new Timeline(changeMazeImage);
-			flashing.setCycleCount(2 * numFlashes);
-			PauseTransition start = new PauseTransition(Duration.seconds(2));
-			start.setOnFinished(e -> gameController.game().player.visible = false);
-			PauseTransition end = new PauseTransition(Duration.seconds(2));
-			animation = new SequentialTransition(start, flashing, end);
+		public LevelCompleteAnimation(int mazeNumber, int numFlashes) {
+			this.mazeNumber = mazeNumber;
+			KeyFrame changeMazeImage = new KeyFrame(Duration.millis(150), e -> flashImage = !flashImage);
+			Timeline flashingAnimation = new Timeline(changeMazeImage);
+			flashingAnimation.setDelay(Duration.seconds(2));
+			animation = new SequentialTransition(flashingAnimation, new PauseTransition(Duration.seconds(1)));
 			animation.setOnFinished(e -> gameController.stateTimer().forceExpiration());
-		}
-
-		public void setNumFlashes(int numFlashes) {
-			this.numFlashes = numFlashes;
-			flashImageSelected = false;
-			flashing.setCycleCount(2 * numFlashes);
+			flashImage = false;
+			flashingAnimation.setCycleCount(2 * numFlashes);
 		}
 
 		public Image getCurrentMazeImage() {
-			int mazeNumber = gameController.game().currentLevel.mazeNumber;
-			return flashImageSelected ? rendering.getMazeFlashImage(mazeNumber) : rendering.getMazeEmptyImage(mazeNumber);
+			return flashImage ? rendering.getMazeFlashImage(mazeNumber) : rendering.getMazeEmptyImage(mazeNumber);
 		}
 
 		public void play() {
@@ -92,10 +80,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		public boolean isRunning() {
 			return animation.getStatus() == Status.RUNNING;
-		}
-
-		public Duration getTotalDuration() {
-			return animation.getTotalDuration();
 		}
 	}
 
@@ -153,6 +137,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 		bonus2D = new Bonus2D();
 		bonus2D.setRendering(rendering);
 
+		levelCompleteAnimation = new LevelCompleteAnimation(game().currentLevel.mazeNumber, game().currentLevel.numFlashes);
+
 		game().player.powerTimer.addEventListener(this::handleGhostsFlashing);
 	}
 
@@ -198,7 +184,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 		// enter LEVEL_COMPLETE
 		if (newState == PacManGameState.LEVEL_COMPLETE) {
 			game().ghosts().forEach(ghost -> ghost.visible = false);
-			playAnimationLevelComplete();
+			gameController.stateTimer().reset();
+			levelCompleteAnimation.play();
 		}
 
 		// enter LEVEL_STARTING
@@ -259,15 +246,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 		}).restart();
 	}
 
-	private void playAnimationLevelComplete() {
-		levelCompleteAnimation = new LevelCompleteAnimation();
-		levelCompleteAnimation.setNumFlashes(game().currentLevel.numFlashes);
-		double totalDuration = levelCompleteAnimation.getTotalDuration().toSeconds();
-		log("Total LEVEL_COMPLETE animation duration: %f", totalDuration);
-		gameController.stateTimer().resetSeconds(totalDuration);
-		levelCompleteAnimation.play();
-	}
-
 	@Override
 	public void render() {
 		levelCounter2D.render(gc);
@@ -282,7 +260,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 			score2D.render(gc);
 			hiscore2D.render(gc);
 		}
-		if (levelCompleteAnimation != null && levelCompleteAnimation.isRunning()) {
+		if (levelCompleteAnimation.isRunning()) {
 			maze2D.setImage(levelCompleteAnimation.getCurrentMazeImage());
 			maze2D.render(gc);
 		} else {
@@ -295,8 +273,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 		gameStateDisplay2D.render(gc);
 		bonus2D.render(gc);
 		player2D.render(gc);
-		ghosts2D.forEach(ghost2D -> {
-			ghost2D.render(gc);
-		});
+		ghosts2D.forEach(ghost2D -> ghost2D.render(gc));
 	}
 }
