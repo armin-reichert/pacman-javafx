@@ -14,7 +14,6 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.animation.TimedSequence;
 import de.amr.games.pacman.ui.fx.entities._2d.Bonus2D;
-import de.amr.games.pacman.ui.fx.entities._2d.Energizer2D;
 import de.amr.games.pacman.ui.fx.entities._2d.GameScore2D;
 import de.amr.games.pacman.ui.fx.entities._2d.GameStateDisplay2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Ghost2D;
@@ -45,7 +44,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 	private GameStateDisplay2D gameStateDisplay2D;
 	private Player2D player2D;
 	private List<Ghost2D> ghosts2D;
-	private List<Energizer2D> energizers2D;
 	private Bonus2D bonus2D;
 
 	private PlaySceneSoundManager playSceneSounds;
@@ -97,8 +95,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 				.collect(Collectors.toList());
 		ghosts2D.forEach(ghost2D -> ghost2D.setRendering(rendering));
 
-		energizers2D = game().currentLevel.world.energizerTiles().map(Energizer2D::new).collect(Collectors.toList());
-
 		bonus2D = new Bonus2D();
 		bonus2D.setRendering(rendering);
 
@@ -127,7 +123,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// enter HUNTING
 		if (newState == PacManGameState.HUNTING) {
-			energizers2D.forEach(energizer2D -> energizer2D.getBlinkingAnimation().restart());
+			maze2D.startEnergizerAnimation();
 			player2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
 			ghosts2D.forEach(ghost2D -> {
 				ghost2D.getKickingAnimations().values().forEach(TimedSequence::restart);
@@ -136,7 +132,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// exit HUNTING
 		if (oldState == PacManGameState.HUNTING) {
-			energizers2D.forEach(energizer2D -> energizer2D.getBlinkingAnimation().reset());
+			maze2D.stopEnergizerAnimation();
 		}
 
 		// enter PACMAN_DYING
@@ -146,7 +142,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// enter GHOST_DYING
 		if (newState == PacManGameState.GHOST_DYING) {
-			energizers2D.forEach(energizer2D -> energizer2D.getBlinkingAnimation().restart());
+			maze2D.startEnergizerAnimation();
 		}
 
 		// enter LEVEL_COMPLETE
@@ -229,10 +225,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 			hiscore2D.render(gc);
 		}
 		maze2D.render(gc);
-		// TODO
-		if (!maze2D.isFlashing()) {
-			energizers2D.forEach(energizer2D -> energizer2D.render(gc));
-		}
 		gameStateDisplay2D.render(gc);
 		bonus2D.render(gc);
 		player2D.render(gc);

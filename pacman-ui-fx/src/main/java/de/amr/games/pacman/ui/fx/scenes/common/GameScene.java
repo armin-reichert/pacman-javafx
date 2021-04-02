@@ -4,7 +4,7 @@ import java.util.OptionalDouble;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
-import de.amr.games.pacman.controller.event.PacManGameEvent;
+import de.amr.games.pacman.controller.event.PacManGameEventListener;
 import javafx.scene.Camera;
 import javafx.scene.SubScene;
 
@@ -13,7 +13,7 @@ import javafx.scene.SubScene;
  * 
  * @author Armin Reichert
  */
-public interface GameScene {
+public interface GameScene extends PacManGameEventListener {
 
 	void start();
 
@@ -26,8 +26,6 @@ public interface GameScene {
 	void setController(PacManGameController controller);
 
 	void onGameStateChange(PacManGameState oldState, PacManGameState newState);
-
-	void onGameEvent(PacManGameEvent gameEvent);
 
 	OptionalDouble aspectRatio();
 

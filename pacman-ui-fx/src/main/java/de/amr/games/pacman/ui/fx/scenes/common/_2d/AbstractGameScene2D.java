@@ -89,13 +89,13 @@ public abstract class AbstractGameScene2D implements GameScene {
 	@Override
 	public void start() {
 		log("Game scene %s: start", this);
-		gameController.addGameEventListener(this::onGameEvent);
+		gameController.addGameEventListener(this);
 	}
 
 	@Override
 	public void end() {
 		log("Game scene %s: end", this);
-		gameController.removeGameEventListener(this::onGameEvent);
+		gameController.removeGameEventListener(this);
 	}
 
 	@Override

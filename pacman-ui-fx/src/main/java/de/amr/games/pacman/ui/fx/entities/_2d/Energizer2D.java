@@ -12,9 +12,9 @@ public class Energizer2D extends GameEntity2D {
 	private final V2i tile;
 	private final TimedSequence<Boolean> blinkingAnimation;
 
-	public Energizer2D(V2i tile) {
+	public Energizer2D(V2i tile, TimedSequence<Boolean> blinkingAnimation) {
 		this.tile = tile;
-		blinkingAnimation = TimedSequence.pulse().frameDuration(15);
+		this.blinkingAnimation = blinkingAnimation;
 	}
 
 	public TimedSequence<Boolean> getBlinkingAnimation() {
@@ -22,7 +22,7 @@ public class Energizer2D extends GameEntity2D {
 	}
 
 	public void render(GraphicsContext g) {
-		if (!blinkingAnimation.animate()) {
+		if (!blinkingAnimation.frame()) {
 			g.setFill(Color.BLACK); // TODO could be other color
 			g.fillRect(tile.x * TS, tile.y * TS, TS, TS);
 		}
