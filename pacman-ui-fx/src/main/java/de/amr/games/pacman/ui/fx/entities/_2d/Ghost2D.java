@@ -7,6 +7,7 @@ import static de.amr.games.pacman.model.common.GhostState.LOCKED;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Ghost;
@@ -18,8 +19,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class Ghost2D extends GameEntity2D {
 
 	public final Ghost ghost;
-
-	private boolean displayFrightened;
+	private final BooleanSupplier lookFrightenedSupplier;
 
 	private Map<Direction, TimedSequence<Rectangle2D>> kickingAnimations = new EnumMap<>(Direction.class);
 	private TimedSequence<Rectangle2D> flashingAnimation;
@@ -28,7 +28,12 @@ public class Ghost2D extends GameEntity2D {
 	private Map<Integer, Rectangle2D> numberSprites;
 
 	public Ghost2D(Ghost ghost) {
+		this(ghost, () -> false);
+	}
+
+	public Ghost2D(Ghost ghost, BooleanSupplier lookFrightenedSupplier) {
 		this.ghost = ghost;
+		this.lookFrightenedSupplier = lookFrightenedSupplier;
 	}
 
 	@Override
@@ -39,10 +44,6 @@ public class Ghost2D extends GameEntity2D {
 		setKickingAnimations(rendering.createGhostKickingAnimations(ghost.id));
 		setReturningHomeAnimations(rendering.createGhostReturningHomeAnimations());
 		setNumberSpriteMap(rendering.getBountyNumberSpritesMap());
-	}
-
-	public void setDisplayFrightened(boolean displayFrightened) {
-		this.displayFrightened = displayFrightened;
 	}
 
 	public Map<Direction, TimedSequence<Rectangle2D>> getKickingAnimations() {
@@ -100,7 +101,7 @@ public class Ghost2D extends GameEntity2D {
 		if (ghost.is(FRIGHTENED)) {
 			return flashingAnimation.isRunning() ? flashingAnimation.animate() : frightenedAnimation.animate();
 		}
-		if (ghost.is(LOCKED) && displayFrightened) {
+		if (ghost.is(LOCKED) && lookFrightenedSupplier.getAsBoolean()) {
 			return frightenedAnimation.animate();
 		}
 		if (ghost.speed == 0) {

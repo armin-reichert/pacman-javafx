@@ -2,6 +2,8 @@ package de.amr.games.pacman.ui.fx.entities._2d;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
+import java.util.function.Supplier;
+
 import de.amr.games.pacman.controller.PacManGameState;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -9,10 +11,15 @@ import javafx.scene.text.Font;
 
 public class GameStateDisplay2D {
 
+	private final Supplier<PacManGameState> stateSupplier;
 	private Font font;
-	private PacManGameState state;
+
+	public GameStateDisplay2D(Supplier<PacManGameState> stateSupplier) {
+		this.stateSupplier = stateSupplier;
+	}
 
 	public void render(GraphicsContext g) {
+		PacManGameState state = stateSupplier.get();
 		if (state == PacManGameState.GAME_OVER) {
 			g.setFont(font);
 			g.setFill(Color.RED);
@@ -31,13 +38,5 @@ public class GameStateDisplay2D {
 
 	public void setFont(Font font) {
 		this.font = font;
-	}
-
-	public PacManGameState getState() {
-		return state;
-	}
-
-	public void setState(PacManGameState state) {
-		this.state = state;
 	}
 }

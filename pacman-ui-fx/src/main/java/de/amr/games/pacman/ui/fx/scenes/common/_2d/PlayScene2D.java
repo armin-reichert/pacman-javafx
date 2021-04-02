@@ -137,14 +137,15 @@ public class PlayScene2D extends AbstractGameScene2D {
 		hiscore2D.setTile(new V2i(16, 1));
 		hiscore2D.setFont(rendering.getScoreFont());
 
-		gameStateDisplay2D = new GameStateDisplay2D();
+		gameStateDisplay2D = new GameStateDisplay2D(
+				() -> gameController.isAttractMode() ? PacManGameState.GAME_OVER : gameController.state);
 		gameStateDisplay2D.setFont(rendering.getScoreFont());
-		gameStateDisplay2D.setState(gameController.state);
 
 		player2D = new Player2D(game().player);
 		player2D.setRendering(rendering);
 
-		ghosts2D = game().ghosts().map(Ghost2D::new).collect(Collectors.toList());
+		ghosts2D = game().ghosts().map(ghost -> new Ghost2D(ghost, () -> game().player.powerTimer.isRunning()))
+				.collect(Collectors.toList());
 		ghosts2D.forEach(ghost2D -> ghost2D.setRendering(rendering));
 
 		energizers2D = game().currentLevel.world.energizerTiles().map(Energizer2D::new).collect(Collectors.toList());
@@ -291,12 +292,10 @@ public class PlayScene2D extends AbstractGameScene2D {
 			maze2D.hideEatenFoodTiles(gc, gameLevel.world.tiles(), gameLevel::containsEatenFood);
 			energizers2D.forEach(energizer2D -> energizer2D.render(gc));
 		}
-		gameStateDisplay2D.setState(gameController.isAttractMode() ? PacManGameState.GAME_OVER : gameController.state);
 		gameStateDisplay2D.render(gc);
 		bonus2D.render(gc);
 		player2D.render(gc);
 		ghosts2D.forEach(ghost2D -> {
-			ghost2D.setDisplayFrightened(game().player.powerTimer.isRunning());
 			ghost2D.render(gc);
 		});
 	}
