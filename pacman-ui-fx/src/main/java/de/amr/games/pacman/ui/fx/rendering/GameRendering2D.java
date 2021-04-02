@@ -193,6 +193,11 @@ public abstract class GameRendering2D {
 		return symbolSprites;
 	}
 
+	
+	public TimedSequence<Rectangle2D> createBigPacManMunchingAnimation() {
+		return null;
+	}
+	
 	public TimedSequence<Integer> createBonusAnimation() {
 		return null;
 	}

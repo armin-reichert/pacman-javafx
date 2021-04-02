@@ -8,7 +8,6 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.GameEntity;
 import de.amr.games.pacman.model.common.Ghost;
-import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.animation.TimedSequence;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -26,7 +25,6 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 	private final Image mazeEmpty = new Image(getClass().getResource("/pacman/graphics/maze_empty.png").toExternalForm());
 	private Image mazeEmptyBright;
 
-	private TimedSequence<Rectangle2D> bigPacMan;
 	private TimedSequence<Rectangle2D> blinkyPatched;
 	private TimedSequence<Rectangle2D> blinkyHalfNaked;
 
@@ -57,11 +55,6 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 		// Animations
 
 		mazeEmptyBright = colorsExchanged(mazeEmpty, Map.of(getMazeWallBorderColor(0), Color.WHITE));
-
-		bigPacMan = TimedSequence.of(//
-				cells(2, 1, 2, 2), //
-				cells(4, 1, 2, 2), //
-				cells(6, 1, 2, 2)).frameDuration(4).endless().run();
 
 		blinkyPatched = TimedSequence.of(sprite(10, 7), sprite(11, 7)).restart().frameDuration(4).endless();
 		blinkyHalfNaked = TimedSequence.of(cells(8, 8, 2, 1), cells(10, 8, 2, 1)).endless().frameDuration(4).restart();
@@ -94,10 +87,6 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 	@Override
 	public Rectangle2D getLifeImage() {
 		return sprite(8, 1);
-	}
-
-	public void drawBigPacMan(GraphicsContext g, Pac bigPac) {
-		drawEntity(g, bigPac, bigPacMan.animate());
 	}
 
 	public void drawNail(GraphicsContext g, GameEntity nail) {
@@ -174,5 +163,12 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 			ghostEyesAnim.put(dir, TimedSequence.of(sprite(8 + index(dir), 5)));
 		}
 		return ghostEyesAnim;
+	}
+	
+	public TimedSequence<Rectangle2D> createBigPacManMunchingAnimation() {
+		return TimedSequence.of(//
+				cells(2, 1, 2, 2), //
+				cells(4, 1, 2, 2), //
+				cells(6, 1, 2, 2)).frameDuration(4).endless();
 	}
 }

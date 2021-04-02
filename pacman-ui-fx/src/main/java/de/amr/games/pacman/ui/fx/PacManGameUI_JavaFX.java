@@ -3,12 +3,11 @@ package de.amr.games.pacman.ui.fx;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.GameVariant.MS_PACMAN;
 import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
-import static de.amr.games.pacman.ui.fx.rendering.GameRendering2D.RENDERING_MS_PACMAN;
-import static de.amr.games.pacman.ui.fx.rendering.GameRendering2D.RENDERING_PACMAN;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.ui.PacManGameUI;
+import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.PlayScene2D;
@@ -52,7 +51,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		SCENES[MS_PACMAN.ordinal()][2][1] = new MsPacMan_IntermissionScene2();
 		SCENES[MS_PACMAN.ordinal()][3][0] = 
 		SCENES[MS_PACMAN.ordinal()][3][1] = new MsPacMan_IntermissionScene3();
-		SCENES[MS_PACMAN.ordinal()][4][0] = new PlayScene2D(RENDERING_MS_PACMAN, SoundAssets.get(MS_PACMAN));
+		SCENES[MS_PACMAN.ordinal()][4][0] = new PlayScene2D(GameRendering2D.RENDERING_MS_PACMAN, SoundAssets.get(MS_PACMAN));
 		SCENES[MS_PACMAN.ordinal()][4][1] = new PlayScene3D(SoundAssets.get(MS_PACMAN));
 
 		SCENES[PACMAN.ordinal()]   [0][0] = 
@@ -63,7 +62,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		SCENES[PACMAN.ordinal()]   [2][1] = new PacMan_IntermissionScene2();
 		SCENES[PACMAN.ordinal()]   [3][0] = 
 		SCENES[PACMAN.ordinal()]   [3][1] = new PacMan_IntermissionScene3();
-		SCENES[PACMAN.ordinal()]   [4][0] = new PlayScene2D(RENDERING_PACMAN, SoundAssets.get(PACMAN));
+		SCENES[PACMAN.ordinal()]   [4][0] = new PlayScene2D(GameRendering2D.RENDERING_PACMAN, SoundAssets.get(PACMAN));
 		SCENES[PACMAN.ordinal()]   [4][1] = new PlayScene3D(SoundAssets.get(PACMAN));
 		//@formatter:on
 	}

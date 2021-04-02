@@ -3,10 +3,10 @@ package de.amr.games.pacman.ui.fx.scenes.pacman;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.animation.TimedSequence;
+import de.amr.games.pacman.ui.fx.entities._2d.BigPacMan2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Ghost2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Player2D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_PacMan;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.sound.SoundAssets;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene1_Controller;
@@ -14,7 +14,8 @@ import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene1_Controller.Phase;
 import de.amr.games.pacman.ui.sound.PacManGameSound;
 
 /**
- * First intermission scene: Blinky chases Pac-Man and is then chased by a huge Pac-Man.
+ * First intermission scene: Blinky chases Pac-Man and is then chased by a huge
+ * Pac-Man.
  * 
  * @author Armin Reichert
  */
@@ -35,6 +36,7 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 	private SceneController sceneController;
 	private Player2D pacMan2D;
 	private Ghost2D blinky2D;
+	private BigPacMan2D bigPacMan2D;
 
 	public PacMan_IntermissionScene1() {
 		super(GameRendering2D.RENDERING_PACMAN, SoundAssets.get(GameVariant.PACMAN));
@@ -52,6 +54,9 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 		blinky2D.setRendering(rendering);
 		blinky2D.getKickingAnimations().values().forEach(TimedSequence::restart);
 		blinky2D.getFrightenedAnimation().restart();
+		bigPacMan2D = new BigPacMan2D(sceneController.pac);
+		bigPacMan2D.setRendering(rendering);
+		bigPacMan2D.getMunchingAnimation().restart();
 	}
 
 	@Override
@@ -61,15 +66,11 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 
 	@Override
 	public void render() {
-		GameRendering2D_PacMan r = (GameRendering2D_PacMan) rendering;
 		blinky2D.render(gc);
 		if (sceneController.phase == Phase.BLINKY_CHASING_PACMAN) {
 			pacMan2D.render(gc);
 		} else {
-			gc.save();
-			gc.translate(0, -10);
-			r.drawBigPacMan(gc, sceneController.pac);
-			gc.restore();
+			bigPacMan2D.render(gc);
 		}
 	}
 }
