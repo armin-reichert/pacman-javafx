@@ -123,9 +123,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 		livesCounter2D.setTile(new V2i(2, 34));
 		livesCounter2D.setRendering(rendering);
 
-		levelCounter2D = new LevelCounter2D();
+		levelCounter2D = new LevelCounter2D(() -> game().currentLevelNumber);
 		levelCounter2D.setTileRight(new V2i(25, 34));
-		levelCounter2D.setCurrentLevelNumber(game().currentLevelNumber);
 		levelCounter2D.setLevelSymbols(game().levelSymbols);
 		levelCounter2D.setRendering(rendering);
 
@@ -270,7 +269,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void render() {
-		levelCounter2D.setCurrentLevelNumber(game().currentLevelNumber);
 		levelCounter2D.render(gc);
 		if (gameController.isGameRunning() || gameController.state == PacManGameState.READY
 				|| gameController.state == PacManGameState.GAME_OVER) {
