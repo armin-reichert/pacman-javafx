@@ -11,7 +11,6 @@ import de.amr.games.pacman.controller.event.PacManGainsPowerEvent;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.animation.TimedSequence;
 import de.amr.games.pacman.ui.fx.entities._2d.Bonus2D;
@@ -27,12 +26,8 @@ import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import de.amr.games.pacman.ui.fx.scenes.common.PlaySceneSoundManager;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.sound.PacManGameSound;
-import javafx.animation.Animation.Status;
-import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
-import javafx.animation.Timeline;
-import javafx.scene.image.Image;
 import javafx.util.Duration;
 
 /**
@@ -53,38 +48,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 	private List<Energizer2D> energizers2D;
 	private Bonus2D bonus2D;
 
-	private class LevelCompleteAnimation {
-
-		private final SequentialTransition animation;
-		private final int mazeNumber;
-		private boolean flashImage;
-
-		public LevelCompleteAnimation(int mazeNumber, int numFlashes) {
-			this.mazeNumber = mazeNumber;
-			KeyFrame changeMazeImage = new KeyFrame(Duration.millis(150), e -> flashImage = !flashImage);
-			Timeline flashingAnimation = new Timeline(changeMazeImage);
-			flashingAnimation.setDelay(Duration.seconds(2));
-			animation = new SequentialTransition(flashingAnimation, new PauseTransition(Duration.seconds(1)));
-			animation.setOnFinished(e -> gameController.stateTimer().forceExpiration());
-			flashImage = false;
-			flashingAnimation.setCycleCount(2 * numFlashes);
-		}
-
-		public Image getCurrentMazeImage() {
-			return flashImage ? rendering.getMazeFlashImage(mazeNumber) : rendering.getMazeEmptyImage(mazeNumber);
-		}
-
-		public void play() {
-			animation.playFromStart();
-		}
-
-		public boolean isRunning() {
-			return animation.getStatus() == Status.RUNNING;
-		}
-	}
-
 	private PlaySceneSoundManager playSceneSounds;
-	private LevelCompleteAnimation levelCompleteAnimation;
+	private SequentialTransition levelCompleteAnimation;
 
 	public PlayScene2D(GameRendering2D rendering, SoundManager sounds) {
 		super(rendering, sounds);
@@ -100,7 +65,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 	public void start() {
 		super.start();
 
-		maze2D = new Maze2D();
+		maze2D = new Maze2D(game().currentLevel, rendering);
 		maze2D.setTile(new V2i(0, 3));
 
 		livesCounter2D = new LivesCounter2D(() -> game().lives);
@@ -137,7 +102,10 @@ public class PlayScene2D extends AbstractGameScene2D {
 		bonus2D = new Bonus2D();
 		bonus2D.setRendering(rendering);
 
-		levelCompleteAnimation = new LevelCompleteAnimation(game().currentLevel.mazeNumber, game().currentLevel.numFlashes);
+		levelCompleteAnimation = new SequentialTransition(maze2D.getFlashingAnimation(),
+				new PauseTransition(Duration.seconds(1)));
+		levelCompleteAnimation.setDelay(Duration.seconds(2));
+		levelCompleteAnimation.setOnFinished(e -> gameController.stateTimer().forceExpiration());
 
 		game().player.powerTimer.addEventListener(this::handleGhostsFlashing);
 	}
@@ -260,14 +228,9 @@ public class PlayScene2D extends AbstractGameScene2D {
 			score2D.render(gc);
 			hiscore2D.render(gc);
 		}
-		if (levelCompleteAnimation.isRunning()) {
-			maze2D.setImage(levelCompleteAnimation.getCurrentMazeImage());
-			maze2D.render(gc);
-		} else {
-			GameLevel gameLevel = game().currentLevel;
-			maze2D.setImage(rendering.getMazeFullImage(gameLevel.mazeNumber));
-			maze2D.render(gc);
-			maze2D.hideEatenFoodTiles(gc, gameLevel.world.tiles(), gameLevel::containsEatenFood);
+		maze2D.render(gc);
+		// TODO
+		if (!maze2D.isFlashing()) {
 			energizers2D.forEach(energizer2D -> energizer2D.render(gc));
 		}
 		gameStateDisplay2D.render(gc);
