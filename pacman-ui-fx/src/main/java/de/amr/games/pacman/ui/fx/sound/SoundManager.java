@@ -1,5 +1,7 @@
 package de.amr.games.pacman.ui.fx.sound;
 
+import static de.amr.games.pacman.lib.Logging.log;
+
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,12 +39,14 @@ public class SoundManager {
 
 	public void play(PacManGameSound sound) {
 		if (!muted) {
+			log("Play sound %s", sound);
 			getClip(sound).play();
 		}
 	}
 
 	public void loop(PacManGameSound sound, int repetitions) {
 		if (!muted) {
+			log("Loop sound %s repetition=%d", sound, repetitions);
 			AudioClip clip = getClip(sound);
 			clip.setCycleCount(repetitions);
 			clip.play();
@@ -50,6 +54,7 @@ public class SoundManager {
 	}
 
 	public void stop(PacManGameSound sound) {
+		log("Stop sound %s", sound);
 		getClip(sound).stop();
 	}
 

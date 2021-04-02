@@ -24,7 +24,6 @@ import de.amr.games.pacman.ui.fx.entities._2d.Player2D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import de.amr.games.pacman.ui.fx.scenes.common.PlaySceneSoundManager;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
-import de.amr.games.pacman.ui.sound.PacManGameSound;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
 import javafx.util.Duration;
@@ -204,9 +203,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 		});
 		player2D.getDyingAnimation().delay(120).onStart(() -> {
 			game().ghosts().forEach(ghost -> ghost.visible = false);
-			if (gameController.isGameRunning()) {
-				sounds.play(PacManGameSound.PACMAN_DEATH);
-			}
 		}).restart();
 	}
 

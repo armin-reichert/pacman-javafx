@@ -1,5 +1,7 @@
 package de.amr.games.pacman.ui.fx.scenes.common;
 
+import static de.amr.games.pacman.lib.Logging.log;
+
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.BonusEatenEvent;
@@ -46,7 +48,7 @@ public class PlaySceneSoundManager {
 			if (munching.isPlaying()) {
 				if (gameModel.player.starvingTicks > 10) {
 					sounds.stop(PacManGameSound.PACMAN_MUNCH);
-					Logging.log("Munching sound clip %s stopped", munching);
+					log("Munching sound clip %s stopped", munching);
 				}
 			}
 			if (gameModel.ghosts(GhostState.DEAD).count() > 0
