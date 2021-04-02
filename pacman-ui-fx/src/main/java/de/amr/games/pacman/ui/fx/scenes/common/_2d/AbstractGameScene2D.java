@@ -43,15 +43,14 @@ public abstract class AbstractGameScene2D implements GameScene {
 		this.sounds = sounds;
 		canvas = new Canvas(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT);
 		gc = canvas.getGraphicsContext2D();
-		Group group = new Group(canvas);
-		scene = new SubScene(group, UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT);
+		scene = new SubScene(new Group(canvas), UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT);
 		scene.widthProperty().bind(canvas.widthProperty());
 		scene.heightProperty().bind(canvas.heightProperty());
 	}
 
 	@Override
 	public OptionalDouble aspectRatio() {
-		return OptionalDouble.of(UNSCALED_SCENE_WIDTH / UNSCALED_SCENE_HEIGHT);
+		return OptionalDouble.of(ASPECT_RATIO);
 	}
 
 	@Override
@@ -135,5 +134,4 @@ public abstract class AbstractGameScene2D implements GameScene {
 	public void stopAllSounds() {
 		sounds.stopAll();
 	}
-
 }
