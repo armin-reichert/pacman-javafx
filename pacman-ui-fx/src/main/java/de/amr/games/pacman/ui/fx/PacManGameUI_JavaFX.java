@@ -262,6 +262,14 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			showFlashMessage(message);
 			break;
 
+		case MINUS:
+			Env.$slowdown.set(Math.max(1, Env.$slowdown.get() - 1));
+			break;
+
+		case PLUS:
+			Env.$slowdown.set(Math.min(10, Env.$slowdown.get() + 1));
+			break;
+
 		default:
 			break;
 		}

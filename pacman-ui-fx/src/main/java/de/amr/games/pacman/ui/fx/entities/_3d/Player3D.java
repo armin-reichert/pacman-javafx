@@ -28,12 +28,14 @@ public class Player3D implements Supplier<Node> {
 	public Player3D(Pac pac) {
 		this.pac = pac;
 
-		MeshView body = new MeshView(GameRendering3D_Assets.guyMeshTemplates.get("Sphere_Sphere.002_Material.001").getMesh());
+		MeshView body = new MeshView(
+				GameRendering3D_Assets.guyMeshTemplates.get("Sphere_Sphere.002_Material.001").getMesh());
 		body.setMaterial(new PhongMaterial(Color.YELLOW));
 		body.drawModeProperty().bind(Env.$drawMode);
 
-		MeshView glasses = new MeshView(GameRendering3D_Assets.guyMeshTemplates.get("Sphere_Sphere.002_Material.002").getMesh());
-		glasses.setMaterial(new PhongMaterial(Color.rgb(40, 40, 60)));
+		MeshView glasses = new MeshView(
+				GameRendering3D_Assets.guyMeshTemplates.get("Sphere_Sphere.002_Material.002").getMesh());
+		glasses.setMaterial(new PhongMaterial(Color.rgb(60, 60, 60)));
 		glasses.drawModeProperty().bind(Env.$drawMode);
 
 		Translate centering = GameRendering3D_Assets.centerOverOrigin(body);
