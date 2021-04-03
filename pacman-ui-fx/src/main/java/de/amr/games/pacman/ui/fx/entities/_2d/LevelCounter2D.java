@@ -12,7 +12,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-public class LevelCounter2D {
+public class LevelCounter2D extends Renderable2D {
 
 	private final IntSupplier levelNumberSupplier;
 	private V2i tileRight;
@@ -24,6 +24,7 @@ public class LevelCounter2D {
 		this.levelNumberSupplier = levelNumberSupplier;
 	}
 
+	@Override
 	public void render(GraphicsContext g) {
 		int x = tileRight.x * TS, y = tileRight.y * TS;
 		int firstLevel = Math.max(1, levelNumberSupplier.getAsInt() - 6);
@@ -51,6 +52,7 @@ public class LevelCounter2D {
 		this.levelSymbols = levelSymbols;
 	}
 
+	@Override
 	public void setRendering(GameRendering2D rendering) {
 		setSpritesheet(rendering.spritesheet);
 		setSymbolSprites(rendering.getSymbolSprites());

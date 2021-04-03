@@ -2,11 +2,11 @@ package de.amr.games.pacman.ui.fx.scenes.common._2d;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.BonusEatenEvent;
-import de.amr.games.pacman.controller.event.ExtraLifeEvent;
 import de.amr.games.pacman.controller.event.PacManGainsPowerEvent;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.lib.TickTimerEvent;
@@ -125,15 +125,15 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// enter HUNTING
 		if (newState == PacManGameState.HUNTING) {
-			maze2D.startEnergizerAnimation();
+			maze2D.getEnergizerBlinking().restart();
 			player2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
-			ghosts2D.forEach(ghost2D -> ghost2D.getKickingAnimations().values().forEach(TimedSequence::restart));
+			letGhostsKick(true);
 		}
 
 		// enter PACMAN_DYING
 		if (newState == PacManGameState.PACMAN_DYING) {
-			maze2D.stopEnergizerAnimation();
-			ghosts2D.forEach(ghost2D -> ghost2D.getKickingAnimations().values().forEach(TimedSequence::reset));
+			maze2D.getEnergizerBlinking().reset();
+			letGhostsKick(false);
 			player2D.getDyingAnimation().restart();
 		}
 
@@ -154,8 +154,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// enter GAME_OVER
 		if (newState == PacManGameState.GAME_OVER) {
-			maze2D.stopEnergizerAnimation();
-			ghosts2D.forEach(ghost2D -> ghost2D.getKickingAnimations().values().forEach(TimedSequence::reset));
+			maze2D.getEnergizerBlinking().reset();
+			letGhostsKick(false);
 		}
 	}
 
@@ -175,10 +175,11 @@ public class PlayScene2D extends AbstractGameScene2D {
 				bonus2D.getJumpAnimation().reset();
 			}
 		}
+	}
 
-		else if (gameEvent instanceof ExtraLifeEvent) {
-			gameController.userInterface.showFlashMessage("Extra life!");
-		}
+	private void letGhostsKick(boolean on) {
+		ghosts2D.forEach(
+				ghost2D -> ghost2D.getKickingAnimations().values().forEach(on ? TimedSequence::restart : TimedSequence::reset));
 	}
 
 	private void handleGhostsFlashing(TickTimerEvent e) {
@@ -199,13 +200,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		} else {
 			score2D.setShowPoints(false);
 		}
-		score2D.render(gc);
-		hiscore2D.render(gc);
-		levelCounter2D.render(gc);
-		maze2D.render(gc);
-		gameStateDisplay2D.render(gc);
-		bonus2D.render(gc);
-		player2D.render(gc);
-		ghosts2D.forEach(ghost2D -> ghost2D.render(gc));
+		Stream.concat(Stream.of(score2D, hiscore2D, levelCounter2D, maze2D, gameStateDisplay2D, bonus2D, player2D),
+				ghosts2D.stream()).forEach(r -> r.render(gc));
 	}
 }

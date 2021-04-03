@@ -1,18 +1,18 @@
 package de.amr.games.pacman.ui.fx.entities._2d;
 
 import de.amr.games.pacman.lib.TimedSequence;
-import de.amr.games.pacman.model.common.GameEntity;
+import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
-public class BigPacMan2D extends GameEntity2D {
+public class BigPacMan2D extends Renderable2D {
 
-	private final GameEntity entity;
+	private final Pac pacMan;
 	private TimedSequence<Rectangle2D> munchingAnimation;
 
-	public BigPacMan2D(GameEntity entity) {
-		this.entity = entity;
+	public BigPacMan2D(Pac pacMan) {
+		this.pacMan = pacMan;
 	}
 
 	public TimedSequence<Rectangle2D> getMunchingAnimation() {
@@ -25,11 +25,12 @@ public class BigPacMan2D extends GameEntity2D {
 		munchingAnimation = rendering.createBigPacManMunchingAnimation();
 	}
 
+	@Override
 	public void render(GraphicsContext g) {
 		Rectangle2D sprite = munchingAnimation.animate();
 		g.save();
 		g.translate(0, -sprite.getHeight() / 2 + 8);
-		render(g, entity, sprite);
+		renderEntity(g, pacMan, sprite);
 		g.restore();
 	}
 }

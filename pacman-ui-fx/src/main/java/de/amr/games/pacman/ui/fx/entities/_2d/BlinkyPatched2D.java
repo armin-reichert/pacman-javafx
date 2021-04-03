@@ -6,7 +6,7 @@ import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
-public class BlinkyPatched2D extends GameEntity2D {
+public class BlinkyPatched2D extends Renderable2D {
 
 	private final Ghost blinky;
 	private TimedSequence<Rectangle2D> animation;
@@ -21,7 +21,8 @@ public class BlinkyPatched2D extends GameEntity2D {
 		animation = rendering.createBlinkyPatchedAnimation();
 	}
 
+	@Override
 	public void render(GraphicsContext g) {
-		render(g, blinky, animation.animate());
+		renderEntity(g, blinky, animation.animate());
 	}
 }

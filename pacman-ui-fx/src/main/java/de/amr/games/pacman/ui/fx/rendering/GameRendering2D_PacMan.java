@@ -21,15 +21,14 @@ import javafx.scene.paint.Color;
 public class GameRendering2D_PacMan extends GameRendering2D {
 
 	private final Image mazeFull = new Image(getClass().getResource("/pacman/graphics/maze_full.png").toExternalForm());
-	private final Image mazeEmpty = new Image(
-			getClass().getResource("/pacman/graphics/maze_empty.png").toExternalForm());
+	private final Image mazeEmpty = new Image(getClass().getResource("/pacman/graphics/maze_empty.png").toExternalForm());
 	private Image mazeEmptyBright;
 
 	public GameRendering2D_PacMan() {
 		super("/pacman/graphics/sprites.png");
 
-		symbolSprites = Arrays.asList(sprite(2, 3), sprite(3, 3), sprite(4, 3), sprite(5, 3), sprite(6, 3),
-				sprite(7, 3), sprite(8, 3), sprite(9, 3));
+		symbolSprites = Arrays.asList(sprite(2, 3), sprite(3, 3), sprite(4, 3), sprite(5, 3), sprite(6, 3), sprite(7, 3),
+				sprite(8, 3), sprite(9, 3));
 
 		//@formatter:off
 		bonusValueSprites = new HashMap<>();
@@ -161,6 +160,7 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 		return ghostEyesAnim;
 	}
 
+	@Override
 	public TimedSequence<Rectangle2D> createBigPacManMunchingAnimation() {
 		return TimedSequence.of(//
 				cells(2, 1, 2, 2), //

@@ -7,7 +7,7 @@ import de.amr.games.pacman.lib.V2i;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public class Energizer2D extends GameEntity2D {
+public class Energizer2D extends Renderable2D {
 
 	private final V2i tile;
 	private final TimedSequence<Boolean> blinkingAnimation;
@@ -21,6 +21,7 @@ public class Energizer2D extends GameEntity2D {
 		return blinkingAnimation;
 	}
 
+	@Override
 	public void render(GraphicsContext g) {
 		if (!blinkingAnimation.frame()) {
 			g.setFill(Color.BLACK); // TODO could be other color

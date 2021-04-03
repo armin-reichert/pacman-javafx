@@ -16,7 +16,7 @@ import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
-public class Ghost2D extends GameEntity2D {
+public class Ghost2D extends Renderable2D {
 
 	public final Ghost ghost;
 	private final BooleanSupplier lookFrightenedSupplier;
@@ -86,8 +86,9 @@ public class Ghost2D extends GameEntity2D {
 		this.numberSprites = numberSprites;
 	}
 
+	@Override
 	public void render(GraphicsContext g) {
-		render(g, ghost, currentSprite());
+		renderEntity(g, ghost, currentSprite());
 	}
 
 	private Rectangle2D currentSprite() {

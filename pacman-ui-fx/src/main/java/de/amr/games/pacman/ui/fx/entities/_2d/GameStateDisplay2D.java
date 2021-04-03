@@ -9,7 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public class GameStateDisplay2D {
+public class GameStateDisplay2D extends Renderable2D {
 
 	private final Supplier<PacManGameState> stateSupplier;
 	private Font font;
@@ -18,6 +18,7 @@ public class GameStateDisplay2D {
 		this.stateSupplier = stateSupplier;
 	}
 
+	@Override
 	public void render(GraphicsContext g) {
 		PacManGameState state = stateSupplier.get();
 		if (state == PacManGameState.GAME_OVER) {

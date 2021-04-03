@@ -24,7 +24,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class Maze2D {
+public class Maze2D extends Renderable2D {
 
 	private final GameLevel gameLevel;
 	private final GameRendering2D rendering;
@@ -32,7 +32,7 @@ public class Maze2D {
 	private Timeline flashingAnimation;
 	private boolean flashImage;
 	private List<Energizer2D> energizers2D;
-	private TimedSequence<Boolean> blinking = TimedSequence.pulse().frameDuration(10);
+	private TimedSequence<Boolean> energizerBlinking = TimedSequence.pulse().frameDuration(10);
 
 	public Maze2D(GameLevel gameLevel, GameRendering2D rendering) {
 		this.gameLevel = gameLevel;
@@ -41,8 +41,8 @@ public class Maze2D {
 		flashingAnimation = new Timeline(changeMazeImage);
 		flashImage = false;
 		flashingAnimation.setCycleCount(2 * gameLevel.numFlashes);
-		energizers2D = gameLevel.world.energizerTiles().map(energizerTile -> new Energizer2D(energizerTile, blinking))
-				.collect(Collectors.toList());
+		energizers2D = gameLevel.world.energizerTiles()
+				.map(energizerTile -> new Energizer2D(energizerTile, energizerBlinking)).collect(Collectors.toList());
 	}
 
 	public void setLeftUpperCorner(V2i tile) {
@@ -57,6 +57,11 @@ public class Maze2D {
 		return flashingAnimation;
 	}
 
+	public TimedSequence<Boolean> getEnergizerBlinking() {
+		return energizerBlinking;
+	}
+
+	@Override
 	public void render(GraphicsContext g) {
 		if (flashingAnimation.getStatus() == Status.RUNNING) {
 			Image image = flashImage ? rendering.getMazeFlashImage(gameLevel.mazeNumber)
@@ -66,19 +71,11 @@ public class Maze2D {
 			Image image = rendering.getMazeFullImage(gameLevel.mazeNumber);
 			g.drawImage(image, t(tile.x), t(tile.y));
 			energizers2D.forEach(energizer2D -> energizer2D.render(g));
-			blinking.animate();
+			energizerBlinking.animate();
 			g.setFill(Color.BLACK);
 			gameLevel.world.tiles().filter(gameLevel::isFoodRemoved).forEach(foodTile -> {
 				g.fillRect(foodTile.x * TS, foodTile.y * TS, TS, TS);
 			});
 		}
-	}
-
-	public void startEnergizerAnimation() {
-		energizers2D.forEach(energizer2D -> energizer2D.getBlinkingAnimation().restart());
-	}
-
-	public void stopEnergizerAnimation() {
-		energizers2D.forEach(energizer2D -> energizer2D.getBlinkingAnimation().reset());
 	}
 }

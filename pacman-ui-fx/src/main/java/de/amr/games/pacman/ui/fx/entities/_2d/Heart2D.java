@@ -5,7 +5,7 @@ import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
-public class Heart2D extends GameEntity2D {
+public class Heart2D extends Renderable2D {
 
 	private final GameEntity heart;
 	private Rectangle2D image;
@@ -24,7 +24,8 @@ public class Heart2D extends GameEntity2D {
 		this.image = image;
 	}
 
+	@Override
 	public void render(GraphicsContext gc) {
-		render(gc, heart, image);
+		renderEntity(gc, heart, image);
 	}
 }

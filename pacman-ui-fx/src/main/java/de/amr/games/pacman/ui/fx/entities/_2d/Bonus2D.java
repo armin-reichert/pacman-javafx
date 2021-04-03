@@ -9,22 +9,19 @@ import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
-public class Bonus2D extends GameEntity2D {
+public class Bonus2D extends Renderable2D {
 
 	private PacManBonus bonus;
 	private List<Rectangle2D> symbolSprites;
 	private Map<Integer, Rectangle2D> numberSprites;
 	private TimedSequence<Integer> jumpAnimation;
 
-	public Bonus2D() {
-	}
-
 	@Override
 	public void setRendering(GameRendering2D rendering) {
 		super.setRendering(rendering);
-		setJumpAnimation(rendering.createBonusAnimation());
-		setNumberSprites(rendering.getBonusNumbersSpritesMap());
 		setSymbolSprites(rendering.getSymbolSprites());
+		setNumberSprites(rendering.getBonusNumbersSpritesMap());
+		setJumpAnimation(rendering.createBonusAnimation());
 	}
 
 	public TimedSequence<Integer> getJumpAnimation() {
@@ -47,6 +44,7 @@ public class Bonus2D extends GameEntity2D {
 		this.numberSprites = numberSprites;
 	}
 
+	@Override
 	public void render(GraphicsContext g) {
 		Rectangle2D sprite = currentSprite();
 		if (sprite == null || !bonus.visible) {
@@ -55,7 +53,7 @@ public class Bonus2D extends GameEntity2D {
 		// Ms. Pac.Man bonus is jumping up and down while wandering the maze
 		int jump = jumpAnimation != null ? jumpAnimation.animate() : 0;
 		g.translate(0, jump);
-		render(g, bonus, sprite);
+		renderEntity(g, bonus, sprite);
 		g.translate(0, -jump);
 	}
 

@@ -9,7 +9,7 @@ import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
-public class Player2D extends GameEntity2D {
+public class Player2D extends Renderable2D {
 
 	private final Pac player;
 	private Map<Direction, TimedSequence<Rectangle2D>> munchingAnimations;
@@ -42,10 +42,11 @@ public class Player2D extends GameEntity2D {
 		return munchingAnimations;
 	}
 
+	@Override
 	public void render(GraphicsContext g) {
 		Rectangle2D sprite = currentSprite();
 		if (player.visible) {
-			render(g, player, sprite);
+			renderEntity(g, player, sprite);
 		}
 	}
 

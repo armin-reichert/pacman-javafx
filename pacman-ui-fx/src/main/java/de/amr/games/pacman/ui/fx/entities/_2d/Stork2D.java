@@ -6,7 +6,7 @@ import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
-public class Stork2D extends GameEntity2D {
+public class Stork2D extends Renderable2D {
 
 	private final Stork stork;
 	private TimedSequence<Rectangle2D> animation;
@@ -29,8 +29,9 @@ public class Stork2D extends GameEntity2D {
 		this.animation = animation;
 	}
 
+	@Override
 	public void render(GraphicsContext gc) {
 		Rectangle2D sprite = animation.animate();
-		render(gc, stork, sprite);
+		renderEntity(gc, stork, sprite);
 	}
 }

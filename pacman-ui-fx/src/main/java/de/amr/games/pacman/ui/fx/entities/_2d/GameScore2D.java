@@ -10,7 +10,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public class GameScore2D extends GameEntity2D {
+public class GameScore2D extends Renderable2D {
 
 	private final IntSupplier pointsSupplier;
 	private final IntSupplier levelSupplier;
@@ -27,6 +27,7 @@ public class GameScore2D extends GameEntity2D {
 		this.levelSupplier = levelSupplier;
 	}
 
+	@Override
 	public void render(GraphicsContext gc) {
 		gc.save();
 		gc.translate(tile.x * TS, tile.y * TS);

@@ -14,7 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-public class LivesCounter2D {
+public class LivesCounter2D extends Renderable2D {
 
 	private final IntSupplier lifeCountSupplier;
 	private V2i tile;
@@ -25,11 +25,13 @@ public class LivesCounter2D {
 		this.lifeCountSupplier = lifeCountSupplier;
 	}
 
+	@Override
 	public void setRendering(GameRendering2D rendering) {
 		setSpritesheet(rendering.spritesheet);
 		setLifeImage(rendering.getLifeImage());
 	}
 
+	@Override
 	public void render(GraphicsContext g) {
 		int numLives = lifeCountSupplier.getAsInt();
 		int maxLivesDisplayed = 5;

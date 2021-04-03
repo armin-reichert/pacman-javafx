@@ -8,7 +8,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public class Flap2D extends GameEntity2D {
+public class Flap2D extends Renderable2D {
 
 	private final Flap flap;
 	private TimedSequence<Rectangle2D> animation;
@@ -41,10 +41,11 @@ public class Flap2D extends GameEntity2D {
 		return flap;
 	}
 
+	@Override
 	public void render(GraphicsContext g) {
 		if (flap.visible) {
 			Rectangle2D sprite = animation.animate();
-			render(g, flap, sprite);
+			renderEntity(g, flap, sprite);
 			g.setFont(font);
 			g.setFill(Color.rgb(222, 222, 225));
 			g.fillText(flap.sceneNumber + "", (int) flap.position.x + sprite.getWidth() - 25, (int) flap.position.y + 18);

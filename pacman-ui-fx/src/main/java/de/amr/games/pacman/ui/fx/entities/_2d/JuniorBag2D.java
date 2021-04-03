@@ -5,7 +5,7 @@ import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
-public class JuniorBag2D extends GameEntity2D {
+public class JuniorBag2D extends Renderable2D {
 
 	private final JuniorBag bag;
 	private Rectangle2D blueBagSprite;
@@ -22,12 +22,13 @@ public class JuniorBag2D extends GameEntity2D {
 		juniorSprite = rendering.getJunior();
 	}
 
+	@Override
 	public void render(GraphicsContext gc) {
 		if (bag.visible) {
 			if (bag.open) {
-				render(gc, bag, juniorSprite);
+				renderEntity(gc, bag, juniorSprite);
 			} else {
-				render(gc, bag, blueBagSprite);
+				renderEntity(gc, bag, blueBagSprite);
 			}
 		}
 	}
