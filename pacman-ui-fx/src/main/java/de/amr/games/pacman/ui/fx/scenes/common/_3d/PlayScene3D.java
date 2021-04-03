@@ -30,7 +30,7 @@ import de.amr.games.pacman.ui.fx.entities._3d.ScoreNotReally3D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_Assets;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering3D_Assets;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
-import de.amr.games.pacman.ui.fx.scenes.common.PlaySceneSoundManager;
+import de.amr.games.pacman.ui.fx.scenes.common.PlaySceneSoundHandler;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
@@ -64,7 +64,7 @@ public class PlayScene3D implements GameScene {
 	private final CameraController cameraController = new CameraController(staticCamera);
 
 	private final SoundManager sounds;
-	private PlaySceneSoundManager playSceneSounds;
+	private PlaySceneSoundHandler playSceneSoundHandler;
 	private PacManGameController gameController;
 
 	private AmbientLight ambientLight = new AmbientLight(Color.AZURE);
@@ -94,7 +94,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void setGameController(PacManGameController gameController) {
 		this.gameController = gameController;
-		playSceneSounds = new PlaySceneSoundManager(gameController, sounds);
+		playSceneSoundHandler = new PlaySceneSoundHandler(gameController, sounds);
 	}
 
 	@Override
@@ -241,14 +241,14 @@ public class PlayScene3D implements GameScene {
 		player.update();
 		game.ghosts().map(ghosts3D::get).forEach(Ghost3D::update);
 		updateCamera();
-		playSceneSounds.onUpdate();
+		playSceneSoundHandler.onUpdate();
 	}
 
 	@Override
 	public void onGameStateChange(PacManGameState oldState, PacManGameState newState) {
 		AbstractGameModel gameModel = gameController.game();
 
-		playSceneSounds.onGameStateChange(oldState, newState);
+		playSceneSoundHandler.onGameStateChange(oldState, newState);
 
 		// enter READY
 		if (newState == PacManGameState.READY) {
@@ -289,7 +289,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onGameEvent(PacManGameEvent gameEvent) {
-		playSceneSounds.onGameEvent(gameEvent);
+		playSceneSoundHandler.onGameEvent(gameEvent);
 
 		if (gameEvent instanceof ExtraLifeEvent) {
 			gameController.userInterface.showFlashMessage("Extra life!");

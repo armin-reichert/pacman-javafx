@@ -22,18 +22,22 @@ import javafx.scene.media.AudioClip;
 import javafx.util.Duration;
 
 /**
- * Controls sound for 2D and 3D play scenes.
+ * Controls sound for 2D and 3D play scenes in reaction to game events.
  * 
  * @author Armin Reichert
  */
-public class PlaySceneSoundManager {
+public class PlaySceneSoundHandler {
 
 	private final PacManGameController gameController;
 	private final SoundManager sounds;
 
-	public PlaySceneSoundManager(PacManGameController gameController, SoundManager sounds) {
+	public PlaySceneSoundHandler(PacManGameController gameController, SoundManager sounds) {
 		this.gameController = gameController;
 		this.sounds = sounds;
+	}
+
+	private AbstractGameModel game() {
+		return gameController.game();
 	}
 
 	public void onUpdate() {
@@ -42,16 +46,15 @@ public class PlaySceneSoundManager {
 		}
 		sounds.setMuted(false);
 
-		AbstractGameModel gameModel = gameController.game();
 		if (gameController.state == PacManGameState.HUNTING) {
 			AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
 			if (munching.isPlaying()) {
-				if (gameModel.player.starvingTicks > 10) {
+				if (game().player.starvingTicks > 10) {
 					sounds.stop(PacManGameSound.PACMAN_MUNCH);
 					log("Munching sound clip %s stopped", munching);
 				}
 			}
-			if (gameModel.ghosts(GhostState.DEAD).count() > 0
+			if (game().ghosts(GhostState.DEAD).count() > 0
 					&& !sounds.getClip(PacManGameSound.GHOST_RETURNING_HOME).isPlaying()) {
 				sounds.loop(PacManGameSound.GHOST_RETURNING_HOME, Integer.MAX_VALUE);
 			}
@@ -127,13 +130,14 @@ public class PlaySceneSoundManager {
 				sounds.loop(PacManGameSound.PACMAN_MUNCH, Integer.MAX_VALUE);
 				Logging.log("Munching sound clip %s started", munching);
 			}
-		} else if (gameEvent instanceof BonusEatenEvent) {
+		}
+
+		else if (gameEvent instanceof BonusEatenEvent) {
 			sounds.play(PacManGameSound.BONUS_EATEN);
 		}
 
 		else if (gameEvent instanceof ExtraLifeEvent) {
 			sounds.play(PacManGameSound.EXTRA_LIFE);
-			gameController.userInterface.showFlashMessage("Extra life!");
 		}
 
 		else if (gameEvent instanceof DeadGhostCountChangeEvent) {

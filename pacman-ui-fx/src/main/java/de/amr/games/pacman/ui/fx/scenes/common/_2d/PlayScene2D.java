@@ -22,7 +22,7 @@ import de.amr.games.pacman.ui.fx.entities._2d.LivesCounter2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Maze2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Player2D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
-import de.amr.games.pacman.ui.fx.scenes.common.PlaySceneSoundManager;
+import de.amr.games.pacman.ui.fx.scenes.common.PlaySceneSoundHandler;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
@@ -45,7 +45,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 	private List<Ghost2D> ghosts2D;
 	private Bonus2D bonus2D;
 
-	private PlaySceneSoundManager playSceneSounds;
+	private PlaySceneSoundHandler playSceneSoundHandler;
 	private SequentialTransition levelCompleteAnimation;
 
 	public PlayScene2D(GameRendering2D rendering, SoundManager sounds) {
@@ -55,7 +55,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 	@Override
 	public void setGameController(PacManGameController gameController) {
 		super.setGameController(gameController);
-		playSceneSounds = new PlaySceneSoundManager(gameController, sounds);
+		playSceneSoundHandler = new PlaySceneSoundHandler(gameController, sounds);
 	}
 
 	@Override
@@ -116,12 +116,12 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void update() {
-		playSceneSounds.onUpdate();
+		playSceneSoundHandler.onUpdate();
 	}
 
 	@Override
 	public void onGameStateChange(PacManGameState oldState, PacManGameState newState) {
-		playSceneSounds.onGameStateChange(oldState, newState);
+		playSceneSoundHandler.onGameStateChange(oldState, newState);
 
 		// enter HUNTING
 		if (newState == PacManGameState.HUNTING) {
@@ -169,7 +169,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void onGameEvent(PacManGameEvent gameEvent) {
-		playSceneSounds.onGameEvent(gameEvent);
+		playSceneSoundHandler.onGameEvent(gameEvent);
 
 		if (gameEvent instanceof PacManGainsPowerEvent) {
 			ghosts2D.stream().filter(ghost2D -> ghost2D.ghost.is(GhostState.FRIGHTENED)).forEach(ghost2D -> {
