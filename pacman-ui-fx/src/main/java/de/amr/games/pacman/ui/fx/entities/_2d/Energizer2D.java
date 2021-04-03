@@ -2,8 +2,8 @@ package de.amr.games.pacman.ui.fx.entities._2d;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
+import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.ui.animation.TimedSequence;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 

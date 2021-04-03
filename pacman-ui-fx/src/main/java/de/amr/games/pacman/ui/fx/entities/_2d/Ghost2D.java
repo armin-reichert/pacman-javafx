@@ -10,8 +10,8 @@ import java.util.Map;
 import java.util.function.BooleanSupplier;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.Ghost;
-import de.amr.games.pacman.ui.animation.TimedSequence;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;

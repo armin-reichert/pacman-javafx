@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import de.amr.games.pacman.ui.sound.PacManGameSound;
+import de.amr.games.pacman.ui.PacManGameSound;
 import javafx.scene.media.AudioClip;
 
 /**

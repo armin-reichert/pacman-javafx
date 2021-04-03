@@ -6,9 +6,9 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.ui.animation.TimedSequence;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;

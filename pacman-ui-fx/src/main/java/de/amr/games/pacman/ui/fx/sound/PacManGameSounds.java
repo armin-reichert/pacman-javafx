@@ -4,7 +4,7 @@ import java.net.URL;
 import java.util.EnumMap;
 import java.util.Map;
 
-import de.amr.games.pacman.ui.sound.PacManGameSound;
+import de.amr.games.pacman.ui.PacManGameSound;
 
 public class PacManGameSounds {
 
