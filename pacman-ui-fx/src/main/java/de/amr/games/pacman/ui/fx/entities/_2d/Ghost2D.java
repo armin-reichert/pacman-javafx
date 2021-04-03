@@ -87,8 +87,7 @@ public class Ghost2D extends GameEntity2D {
 	}
 
 	public void render(GraphicsContext g) {
-		Rectangle2D sprite = currentSprite();
-		render(g, ghost, sprite);
+		render(g, ghost, currentSprite());
 	}
 
 	private Rectangle2D currentSprite() {

@@ -29,8 +29,7 @@ import javafx.animation.SequentialTransition;
 import javafx.util.Duration;
 
 /**
- * 2D scene displaying the maze and the game play for both, Pac-Man and Ms.
- * Pac-Man games.
+ * 2D scene displaying the maze and the game play for both, Pac-Man and Ms. Pac-Man games.
  * 
  * @author Armin Reichert
  */
@@ -90,6 +89,9 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		player2D = new Player2D(game().player);
 		player2D.setRendering(rendering);
+		player2D.getDyingAnimation().delay(120).onStart(() -> {
+			game().ghosts().forEach(ghost -> ghost.visible = false);
+		});
 
 		ghosts2D = game().ghosts().map(ghost -> new Ghost2D(ghost, () -> game().player.powerTimer.isRunning()))
 				.collect(Collectors.toList());
@@ -125,9 +127,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		if (newState == PacManGameState.HUNTING) {
 			maze2D.startEnergizerAnimation();
 			player2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
-			ghosts2D.forEach(ghost2D -> {
-				ghost2D.getKickingAnimations().values().forEach(TimedSequence::restart);
-			});
+			ghosts2D.forEach(ghost2D -> ghost2D.getKickingAnimations().values().forEach(TimedSequence::restart));
 		}
 
 		// exit HUNTING
@@ -137,7 +137,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// enter PACMAN_DYING
 		if (newState == PacManGameState.PACMAN_DYING) {
-			playAnimationPlayerDying();
+			ghosts2D.forEach(ghost2D -> ghost2D.getKickingAnimations().values().forEach(TimedSequence::reset));
+			player2D.getDyingAnimation().restart();
 		}
 
 		// enter GHOST_DYING
@@ -162,9 +163,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// enter GAME_OVER
 		if (newState == PacManGameState.GAME_OVER) {
-			ghosts2D.forEach(ghost2D -> {
-				ghost2D.getKickingAnimations().values().forEach(TimedSequence::reset);
-			});
+			ghosts2D.forEach(ghost2D -> ghost2D.getKickingAnimations().values().forEach(TimedSequence::reset));
 		}
 	}
 
@@ -200,29 +199,17 @@ public class PlayScene2D extends AbstractGameScene2D {
 		}
 	}
 
-	private void playAnimationPlayerDying() {
-		ghosts2D.forEach(ghost2D -> {
-			ghost2D.getKickingAnimations().values().forEach(TimedSequence::reset);
-		});
-		player2D.getDyingAnimation().delay(120).onStart(() -> {
-			game().ghosts().forEach(ghost -> ghost.visible = false);
-		}).restart();
-	}
-
 	@Override
 	public void render() {
-		levelCounter2D.render(gc);
-		if (gameController.isGameRunning() || gameController.state == PacManGameState.READY
-				|| gameController.state == PacManGameState.GAME_OVER) {
+		if (!gameController.isAttractMode()) {
 			livesCounter2D.render(gc);
 			score2D.setShowPoints(true);
-			score2D.render(gc);
-			hiscore2D.render(gc);
 		} else {
 			score2D.setShowPoints(false);
-			score2D.render(gc);
-			hiscore2D.render(gc);
 		}
+		score2D.render(gc);
+		hiscore2D.render(gc);
+		levelCounter2D.render(gc);
 		maze2D.render(gc);
 		gameStateDisplay2D.render(gc);
 		bonus2D.render(gc);
