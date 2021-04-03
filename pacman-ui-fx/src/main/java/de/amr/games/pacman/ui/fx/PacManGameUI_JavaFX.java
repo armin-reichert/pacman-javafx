@@ -110,7 +110,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				currentGameScene.end();
 			}
 			if (newGameScene.getController() == null) {
-				newGameScene.setController(gameController);
+				newGameScene.setGameController(gameController);
 				newGameScene.setAvailableSize(mainScene.getWidth(), mainScene.getHeight());
 				keepGameSceneMaximized(newGameScene, mainScene);
 			}

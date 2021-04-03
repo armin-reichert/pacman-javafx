@@ -59,7 +59,7 @@ public abstract class AbstractGameScene2D implements GameScene {
 	}
 
 	@Override
-	public void setController(PacManGameController controller) {
+	public void setGameController(PacManGameController controller) {
 		this.gameController = controller;
 	}
 

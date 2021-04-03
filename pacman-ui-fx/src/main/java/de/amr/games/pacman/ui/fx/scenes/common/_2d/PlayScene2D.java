@@ -53,8 +53,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 	}
 
 	@Override
-	public void setController(PacManGameController gameController) {
-		super.setController(gameController);
+	public void setGameController(PacManGameController gameController) {
+		super.setGameController(gameController);
 		playSceneSounds = new PlaySceneSoundManager(gameController, sounds);
 	}
 

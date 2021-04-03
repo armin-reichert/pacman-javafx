@@ -23,7 +23,7 @@ public interface GameScene extends PacManGameEventListener {
 
 	PacManGameController getController();
 
-	void setController(PacManGameController controller);
+	void setGameController(PacManGameController controller);
 
 	void onGameStateChange(PacManGameState oldState, PacManGameState newState);
 
