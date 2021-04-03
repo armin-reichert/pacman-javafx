@@ -63,24 +63,24 @@ public class PlayScene2D extends AbstractGameScene2D {
 		super.start();
 
 		maze2D = new Maze2D(game().currentLevel, rendering);
-		maze2D.setTile(new V2i(0, 3));
+		maze2D.setLeftUpperCorner(new V2i(0, 3));
 
 		livesCounter2D = new LivesCounter2D(() -> game().lives);
-		livesCounter2D.setTile(new V2i(2, 34));
+		livesCounter2D.setLeftUpperCorner(new V2i(2, 34));
 		livesCounter2D.setRendering(rendering);
 
 		levelCounter2D = new LevelCounter2D(() -> game().currentLevelNumber);
-		levelCounter2D.setTileRight(new V2i(25, 34));
+		levelCounter2D.setRightUpperCorner(new V2i(25, 34));
 		levelCounter2D.setLevelSymbols(game().levelSymbols);
 		levelCounter2D.setRendering(rendering);
 
 		score2D = new GameScore2D(() -> game().score, () -> game().currentLevelNumber);
-		score2D.setTile(new V2i(1, 1));
+		score2D.setLeftUpperCorner(new V2i(1, 1));
 		score2D.setFont(rendering.getScoreFont());
 
 		hiscore2D = new GameScore2D(() -> game().highscorePoints, () -> game().highscoreLevel);
 		hiscore2D.setTitle("HI SCORE");
-		hiscore2D.setTile(new V2i(16, 1));
+		hiscore2D.setLeftUpperCorner(new V2i(16, 1));
 		hiscore2D.setFont(rendering.getScoreFont());
 
 		gameStateDisplay2D = new GameStateDisplay2D(
@@ -130,20 +130,11 @@ public class PlayScene2D extends AbstractGameScene2D {
 			ghosts2D.forEach(ghost2D -> ghost2D.getKickingAnimations().values().forEach(TimedSequence::restart));
 		}
 
-		// exit HUNTING
-		if (oldState == PacManGameState.HUNTING) {
-			maze2D.stopEnergizerAnimation();
-		}
-
 		// enter PACMAN_DYING
 		if (newState == PacManGameState.PACMAN_DYING) {
+			maze2D.stopEnergizerAnimation();
 			ghosts2D.forEach(ghost2D -> ghost2D.getKickingAnimations().values().forEach(TimedSequence::reset));
 			player2D.getDyingAnimation().restart();
-		}
-
-		// enter GHOST_DYING
-		if (newState == PacManGameState.GHOST_DYING) {
-			maze2D.startEnergizerAnimation();
 		}
 
 		// enter LEVEL_COMPLETE
@@ -156,13 +147,14 @@ public class PlayScene2D extends AbstractGameScene2D {
 		// enter LEVEL_STARTING
 		if (newState == PacManGameState.LEVEL_STARTING) {
 			maze2D = new Maze2D(game().currentLevel, rendering);
-			maze2D.setTile(new V2i(0, 3));
+			maze2D.setLeftUpperCorner(new V2i(0, 3));
 			gameController.stateTimer().reset(1);
 			gameController.stateTimer().start();
 		}
 
 		// enter GAME_OVER
 		if (newState == PacManGameState.GAME_OVER) {
+			maze2D.stopEnergizerAnimation();
 			ghosts2D.forEach(ghost2D -> ghost2D.getKickingAnimations().values().forEach(TimedSequence::reset));
 		}
 	}

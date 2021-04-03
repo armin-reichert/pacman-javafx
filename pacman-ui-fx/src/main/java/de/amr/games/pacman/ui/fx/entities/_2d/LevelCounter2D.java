@@ -35,7 +35,7 @@ public class LevelCounter2D {
 		}
 	}
 
-	public void setTileRight(V2i tileRight) {
+	public void setRightUpperCorner(V2i tileRight) {
 		this.tileRight = tileRight;
 	}
 

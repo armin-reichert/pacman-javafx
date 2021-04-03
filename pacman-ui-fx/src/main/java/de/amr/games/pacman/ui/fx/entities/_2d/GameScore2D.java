@@ -49,7 +49,7 @@ public class GameScore2D extends GameEntity2D {
 		return tile;
 	}
 
-	public void setTile(V2i tile) {
+	public void setLeftUpperCorner(V2i tile) {
 		this.tile = tile;
 	}
 

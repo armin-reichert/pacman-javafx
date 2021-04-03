@@ -45,7 +45,7 @@ public class Maze2D {
 				.collect(Collectors.toList());
 	}
 
-	public void setTile(V2i tile) {
+	public void setLeftUpperCorner(V2i tile) {
 		this.tile = tile;
 	}
 
