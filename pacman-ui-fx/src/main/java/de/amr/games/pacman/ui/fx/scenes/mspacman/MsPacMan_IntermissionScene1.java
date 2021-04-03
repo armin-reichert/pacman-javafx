@@ -1,7 +1,5 @@
 package de.amr.games.pacman.ui.fx.scenes.mspacman;
 
-import java.util.stream.Stream;
-
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.GameVariant;
@@ -62,14 +60,12 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 		sceneController = new SceneController(gameController);
 		sceneController.init();
 
-		flap2D = new Flap2D(sceneController.flap);
-		msPacMan2D = new Player2D(sceneController.msPac);
-		pacMan2D = new Player2D(sceneController.pacMan);
-		inky2D = new Ghost2D(sceneController.inky);
-		pinky2D = new Ghost2D(sceneController.pinky);
-		heart2D = new Heart2D(sceneController.heart);
-
-		Stream.of(flap2D, msPacMan2D, pacMan2D, inky2D, pinky2D, heart2D).forEach(entity -> entity.setRendering(rendering));
+		flap2D = new Flap2D(sceneController.flap, rendering);
+		msPacMan2D = new Player2D(sceneController.msPac, rendering);
+		pacMan2D = new Player2D(sceneController.pacMan, rendering);
+		inky2D = new Ghost2D(sceneController.inky, rendering);
+		pinky2D = new Ghost2D(sceneController.pinky, rendering);
+		heart2D = new Heart2D(sceneController.heart, rendering);
 
 		// overwrite by Pac-Man instead of Ms. Pac-Man sprites:
 		pacMan2D.setMunchingAnimations(rendering.createSpouseMunchingAnimations());

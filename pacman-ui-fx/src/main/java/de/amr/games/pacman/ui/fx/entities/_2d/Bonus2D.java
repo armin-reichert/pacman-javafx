@@ -16,12 +16,15 @@ public class Bonus2D extends Renderable2D {
 	private Map<Integer, Rectangle2D> numberSprites;
 	private TimedSequence<Integer> jumpAnimation;
 
-	@Override
-	public void setRendering(GameRendering2D rendering) {
-		super.setRendering(rendering);
+	public Bonus2D(GameRendering2D rendering) {
+		super(rendering);
 		setSymbolSprites(rendering.getSymbolSprites());
 		setNumberSprites(rendering.getBonusNumbersSpritesMap());
 		setJumpAnimation(rendering.createBonusAnimation());
+	}
+
+	public void setBonus(PacManBonus bonus) {
+		this.bonus = bonus;
 	}
 
 	public TimedSequence<Integer> getJumpAnimation() {
@@ -30,10 +33,6 @@ public class Bonus2D extends Renderable2D {
 
 	public void setJumpAnimation(TimedSequence<Integer> jumpAnimation) {
 		this.jumpAnimation = jumpAnimation;
-	}
-
-	public void setBonus(PacManBonus bonus) {
-		this.bonus = bonus;
 	}
 
 	public void setSymbolSprites(List<Rectangle2D> symbolSprites) {

@@ -11,13 +11,9 @@ public class JuniorBag2D extends Renderable2D {
 	private Rectangle2D blueBagSprite;
 	private Rectangle2D juniorSprite;
 
-	public JuniorBag2D(JuniorBag bag) {
+	public JuniorBag2D(JuniorBag bag, GameRendering2D rendering) {
+		super(rendering);
 		this.bag = bag;
-	}
-
-	@Override
-	public void setRendering(GameRendering2D rendering) {
-		super.setRendering(rendering);
 		blueBagSprite = rendering.getBlueBag();
 		juniorSprite = rendering.getJunior();
 	}

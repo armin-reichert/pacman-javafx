@@ -52,31 +52,32 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		sceneController = new PacMan_IntroScene_Controller(gameController);
 		sceneController.init();
 
-		score2D = new GameScore2D(() -> game().score, () -> game().currentLevelNumber);
+		score2D = new GameScore2D(rendering);
+		score2D.setTitle("SCORE");
 		score2D.setLeftUpperCorner(new V2i(1, 1));
-		score2D.setFont(rendering.getScoreFont());
+		score2D.setLevelSupplier(() -> game().currentLevelNumber);
+		score2D.setPointsSupplier(() -> game().score);
 
-		hiscore2D = new GameScore2D(() -> game().highscorePoints, () -> game().highscoreLevel);
+		hiscore2D = new GameScore2D(rendering);
 		hiscore2D.setTitle("HI SCORE");
 		hiscore2D.setLeftUpperCorner(new V2i(16, 1));
-		hiscore2D.setFont(rendering.getScoreFont());
+		hiscore2D.setLevelSupplier(() -> game().highscoreLevel);
+		hiscore2D.setPointsSupplier(() -> game().highscorePoints);
 
-		pacMan2D = new Player2D(sceneController.pac);
-		pacMan2D.setRendering(rendering);
+		pacMan2D = new Player2D(sceneController.pac, rendering);
 		pacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
 
-		ghosts2D = Stream.of(sceneController.ghosts).map(Ghost2D::new).collect(Collectors.toList());
-		ghosts2D.forEach(ghost2D -> {
-			ghost2D.setRendering(rendering);
+		ghosts2D = Stream.of(sceneController.ghosts).map(ghost -> {
+			Ghost2D ghost2D = new Ghost2D(ghost, rendering);
 			ghost2D.getKickingAnimations().values().forEach(TimedSequence::restart);
 			ghost2D.getFrightenedAnimation().restart();
 			ghost2D.getFlashingAnimation().restart();
-		});
+			return ghost2D;
+		}).collect(Collectors.toList());
 
 		ghostsInGallery2D = new ArrayList<>();
 		for (int i = 0; i < 4; ++i) {
-			Ghost2D ghost2D = new Ghost2D(sceneController.gallery[i].ghost);
-			ghost2D.setRendering(rendering);
+			Ghost2D ghost2D = new Ghost2D(sceneController.gallery[i].ghost, rendering);
 			ghostsInGallery2D.add(ghost2D);
 		}
 	}

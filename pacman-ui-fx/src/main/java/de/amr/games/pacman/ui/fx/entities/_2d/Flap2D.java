@@ -14,19 +14,11 @@ public class Flap2D extends Renderable2D {
 	private TimedSequence<Rectangle2D> animation;
 	private Font font;
 
-	public Flap2D(Flap flap) {
+	public Flap2D(Flap flap, GameRendering2D rendering) {
+		super(rendering);
 		this.flap = flap;
-	}
-
-	@Override
-	public void setRendering(GameRendering2D rendering) {
-		super.setRendering(rendering);
-		setAnimation(rendering.createFlapAnimation());
+		animation = rendering.createFlapAnimation();
 		setFont(rendering.getScoreFont());
-	}
-
-	public void setAnimation(TimedSequence<Rectangle2D> animation) {
-		this.animation = animation;
 	}
 
 	public TimedSequence<Rectangle2D> getAnimation() {

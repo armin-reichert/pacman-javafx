@@ -11,22 +11,14 @@ public class Stork2D extends Renderable2D {
 	private final Stork stork;
 	private TimedSequence<Rectangle2D> animation;
 
-	public Stork2D(Stork stork) {
+	public Stork2D(Stork stork, GameRendering2D rendering) {
+		super(rendering);
 		this.stork = stork;
-	}
-
-	@Override
-	public void setRendering(GameRendering2D rendering) {
-		super.setRendering(rendering);
-		setAnimation(rendering.createStorkFlyingAnimation());
+		animation = rendering.createStorkFlyingAnimation();
 	}
 
 	public TimedSequence<Rectangle2D> getAnimation() {
 		return animation;
-	}
-
-	public void setAnimation(TimedSequence<Rectangle2D> animation) {
-		this.animation = animation;
 	}
 
 	@Override

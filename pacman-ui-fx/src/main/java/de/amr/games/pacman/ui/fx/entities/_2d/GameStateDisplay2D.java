@@ -5,16 +5,22 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 import java.util.function.Supplier;
 
 import de.amr.games.pacman.controller.PacManGameState;
+import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 public class GameStateDisplay2D extends Renderable2D {
 
-	private final Supplier<PacManGameState> stateSupplier;
+	private Supplier<PacManGameState> stateSupplier;
 	private Font font;
 
-	public GameStateDisplay2D(Supplier<PacManGameState> stateSupplier) {
+	public GameStateDisplay2D(GameRendering2D rendering) {
+		super(rendering);
+		font = rendering.getScoreFont();
+	}
+
+	public void setStateSupplier(Supplier<PacManGameState> stateSupplier) {
 		this.stateSupplier = stateSupplier;
 	}
 
@@ -31,13 +37,5 @@ public class GameStateDisplay2D extends Renderable2D {
 			g.setFill(Color.YELLOW);
 			g.fillText("READY", t(11), t(21));
 		}
-	}
-
-	public Font getFont() {
-		return font;
-	}
-
-	public void setFont(Font font) {
-		this.font = font;
 	}
 }

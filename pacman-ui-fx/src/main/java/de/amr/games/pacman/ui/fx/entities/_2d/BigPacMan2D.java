@@ -11,18 +11,14 @@ public class BigPacMan2D extends Renderable2D {
 	private final Pac pacMan;
 	private TimedSequence<Rectangle2D> munchingAnimation;
 
-	public BigPacMan2D(Pac pacMan) {
+	public BigPacMan2D(Pac pacMan, GameRendering2D rendering) {
+		super(rendering);
 		this.pacMan = pacMan;
+		munchingAnimation = rendering.createBigPacManMunchingAnimation();
 	}
 
 	public TimedSequence<Rectangle2D> getMunchingAnimation() {
 		return munchingAnimation;
-	}
-
-	@Override
-	public void setRendering(GameRendering2D rendering) {
-		super.setRendering(rendering);
-		munchingAnimation = rendering.createBigPacManMunchingAnimation();
 	}
 
 	@Override

@@ -9,24 +9,24 @@ import javafx.scene.canvas.GraphicsContext;
 
 public abstract class Renderable2D {
 
-	protected GameRendering2D rendering;
+	protected final GameRendering2D rendering;
+
+	public Renderable2D(GameRendering2D rendering) {
+		this.rendering = rendering;
+	}
 
 	public abstract void render(GraphicsContext g);
 
 	protected void renderEntity(GraphicsContext g, GameEntity entity, Rectangle2D sprite) {
 		if (entity.visible && rendering != null && rendering.spritesheet != null && sprite != null) {
-			renderSprite(g, entity.position.x, entity.position.y, sprite);
+			renderSpriteCentered(g, entity.position.x, entity.position.y, sprite);
 		}
 	}
 
-	protected void renderSprite(GraphicsContext g, double x, double y, Rectangle2D sprite) {
+	protected void renderSpriteCentered(GraphicsContext g, double x, double y, Rectangle2D sprite) {
 		if (rendering != null && rendering.spritesheet != null && sprite != null) {
 			g.drawImage(rendering.spritesheet, sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(),
 					x - sprite.getWidth() / 2 + HTS, y - sprite.getHeight() / 2 + HTS, sprite.getWidth(), sprite.getHeight());
 		}
-	}
-
-	public void setRendering(GameRendering2D rendering) {
-		this.rendering = rendering;
 	}
 }

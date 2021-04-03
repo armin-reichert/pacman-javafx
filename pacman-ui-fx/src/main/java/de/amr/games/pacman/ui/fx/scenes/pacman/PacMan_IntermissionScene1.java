@@ -14,8 +14,7 @@ import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene1_Controller;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene1_Controller.Phase;
 
 /**
- * First intermission scene: Blinky chases Pac-Man and is then chased by a huge
- * Pac-Man.
+ * First intermission scene: Blinky chases Pac-Man and is then chased by a huge Pac-Man.
  * 
  * @author Armin Reichert
  */
@@ -47,15 +46,12 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 		super.start();
 		sceneController = new SceneController(gameController);
 		sceneController.init();
-		pacMan2D = new Player2D(sceneController.pac);
-		pacMan2D.setRendering(rendering);
+		pacMan2D = new Player2D(sceneController.pac, rendering);
+		blinky2D = new Ghost2D(sceneController.blinky, rendering);
+		bigPacMan2D = new BigPacMan2D(sceneController.pac, rendering);
 		pacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
-		blinky2D = new Ghost2D(sceneController.blinky);
-		blinky2D.setRendering(rendering);
 		blinky2D.getKickingAnimations().values().forEach(TimedSequence::restart);
 		blinky2D.getFrightenedAnimation().restart();
-		bigPacMan2D = new BigPacMan2D(sceneController.pac);
-		bigPacMan2D.setRendering(rendering);
 		bigPacMan2D.getMunchingAnimation().restart();
 	}
 

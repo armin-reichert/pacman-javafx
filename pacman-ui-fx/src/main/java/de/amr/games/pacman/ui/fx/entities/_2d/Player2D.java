@@ -15,23 +15,15 @@ public class Player2D extends Renderable2D {
 	private Map<Direction, TimedSequence<Rectangle2D>> munchingAnimations;
 	private TimedSequence<Rectangle2D> dyingAnimation;
 
-	public Player2D(Pac pac) {
+	public Player2D(Pac pac, GameRendering2D rendering) {
+		super(rendering);
 		this.player = pac;
-	}
-
-	@Override
-	public void setRendering(GameRendering2D rendering) {
-		super.setRendering(rendering);
-		setDyingAnimation(rendering.createPlayerDyingAnimation());
+		dyingAnimation = rendering.createPlayerDyingAnimation();
 		setMunchingAnimations(rendering.createPlayerMunchingAnimations());
 	}
 
 	public TimedSequence<Rectangle2D> getDyingAnimation() {
 		return dyingAnimation;
-	}
-
-	public void setDyingAnimation(TimedSequence<Rectangle2D> dyingAnimation) {
-		this.dyingAnimation = dyingAnimation;
 	}
 
 	public void setMunchingAnimations(Map<Direction, TimedSequence<Rectangle2D>> munchingAnimations) {

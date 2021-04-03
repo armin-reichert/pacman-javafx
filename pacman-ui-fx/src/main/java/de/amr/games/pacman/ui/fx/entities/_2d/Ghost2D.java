@@ -7,7 +7,6 @@ import static de.amr.games.pacman.model.common.GhostState.LOCKED;
 
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.function.BooleanSupplier;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSequence;
@@ -18,32 +17,26 @@ import javafx.scene.canvas.GraphicsContext;
 
 public class Ghost2D extends Renderable2D {
 
-	public final Ghost ghost;
-	private final BooleanSupplier lookFrightenedSupplier;
-
+	private final Ghost ghost;
 	private Map<Direction, TimedSequence<Rectangle2D>> kickingAnimations = new EnumMap<>(Direction.class);
 	private TimedSequence<Rectangle2D> flashingAnimation;
 	private TimedSequence<Rectangle2D> frightenedAnimation;
 	private Map<Direction, TimedSequence<Rectangle2D>> returningHomeAnimations = new EnumMap<>(Direction.class);
 	private Map<Integer, Rectangle2D> numberSprites;
+	private boolean looksFrightened;
 
-	public Ghost2D(Ghost ghost) {
-		this(ghost, () -> false);
-	}
-
-	public Ghost2D(Ghost ghost, BooleanSupplier lookFrightenedSupplier) {
+	public Ghost2D(Ghost ghost, GameRendering2D rendering) {
+		super(rendering);
 		this.ghost = ghost;
-		this.lookFrightenedSupplier = lookFrightenedSupplier;
-	}
-
-	@Override
-	public void setRendering(GameRendering2D rendering) {
-		super.setRendering(rendering);
 		setFlashingAnimation(rendering.createGhostFlashingAnimation());
 		setFrightenedAnimation(rendering.createGhostFrightenedAnimation());
 		setKickingAnimations(rendering.createGhostKickingAnimations(ghost.id));
 		setReturningHomeAnimations(rendering.createGhostReturningHomeAnimations());
 		setNumberSpriteMap(rendering.getBountyNumberSpritesMap());
+	}
+
+	public void setLooksFrightened(boolean looksFrightened) {
+		this.looksFrightened = looksFrightened;
 	}
 
 	public Map<Direction, TimedSequence<Rectangle2D>> getKickingAnimations() {
@@ -101,7 +94,7 @@ public class Ghost2D extends Renderable2D {
 		if (ghost.is(FRIGHTENED)) {
 			return flashingAnimation.isRunning() ? flashingAnimation.animate() : frightenedAnimation.animate();
 		}
-		if (ghost.is(LOCKED) && lookFrightenedSupplier.getAsBoolean()) {
+		if (ghost.is(LOCKED) && looksFrightened) {
 			return frightenedAnimation.animate();
 		}
 		if (ghost.speed == 0) {

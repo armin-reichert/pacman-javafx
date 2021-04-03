@@ -1,7 +1,5 @@
 package de.amr.games.pacman.ui.fx.scenes.mspacman;
 
-import java.util.stream.Stream;
-
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.PacManGameSound;
@@ -60,15 +58,12 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 		sceneController = new SceneController(gameController);
 		sceneController.init();
 
-		flap2D = new Flap2D(sceneController.flap);
-		msPacMan2D = new Player2D(sceneController.msPacMan);
-		pacMan2D = new Player2D(sceneController.pacMan);
-		stork2D = new Stork2D(sceneController.stork);
-		bag2D = new JuniorBag2D(sceneController.bag);
-
-		Stream.of(flap2D, msPacMan2D, pacMan2D, stork2D, bag2D).forEach(entity -> entity.setRendering(rendering));
+		flap2D = new Flap2D(sceneController.flap, rendering);
+		msPacMan2D = new Player2D(sceneController.msPacMan, rendering);
+		pacMan2D = new Player2D(sceneController.pacMan, rendering);
+		stork2D = new Stork2D(sceneController.stork, rendering);
+		bag2D = new JuniorBag2D(sceneController.bag, rendering);
 		pacMan2D.setMunchingAnimations(rendering.createSpouseMunchingAnimations());
-
 		stork2D.getAnimation().restart();
 	}
 

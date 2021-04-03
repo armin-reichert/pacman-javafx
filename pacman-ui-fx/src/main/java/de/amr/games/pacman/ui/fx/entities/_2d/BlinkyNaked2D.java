@@ -11,13 +11,9 @@ public class BlinkyNaked2D extends Renderable2D {
 	private final Ghost blinky;
 	private TimedSequence<Rectangle2D> animation;
 
-	public BlinkyNaked2D(Ghost blinky) {
+	public BlinkyNaked2D(Ghost blinky, GameRendering2D rendering) {
+		super(rendering);
 		this.blinky = blinky;
-	}
-
-	@Override
-	public void setRendering(GameRendering2D rendering) {
-		super.setRendering(rendering);
 		animation = rendering.createBlinkyNakedAnimation();
 	}
 

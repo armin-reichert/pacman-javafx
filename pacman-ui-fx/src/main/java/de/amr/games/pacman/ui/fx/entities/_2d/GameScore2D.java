@@ -6,24 +6,30 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 import java.util.function.IntSupplier;
 
 import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 public class GameScore2D extends Renderable2D {
 
-	private final IntSupplier pointsSupplier;
-	private final IntSupplier levelSupplier;
+	private IntSupplier pointsSupplier;
+	private IntSupplier levelSupplier;
 
 	private V2i tile = V2i.NULL;
-	private Font font = Font.font("Arial");
 	private Color titleColor = Color.WHITE;
 	private Color pointsColor = Color.YELLOW;
 	private String title = "SCORE";
 	private boolean showPoints = true;
 
-	public GameScore2D(IntSupplier pointsSupplier, IntSupplier levelSupplier) {
+	public GameScore2D(GameRendering2D rendering) {
+		super(rendering);
+	}
+
+	public void setPointsSupplier(IntSupplier pointsSupplier) {
 		this.pointsSupplier = pointsSupplier;
+	}
+
+	public void setLevelSupplier(IntSupplier levelSupplier) {
 		this.levelSupplier = levelSupplier;
 	}
 
@@ -31,7 +37,7 @@ public class GameScore2D extends Renderable2D {
 	public void render(GraphicsContext gc) {
 		gc.save();
 		gc.translate(tile.x * TS, tile.y * TS);
-		gc.setFont(font);
+		gc.setFont(rendering.getScoreFont());
 		gc.translate(0, 2);
 		gc.setFill(titleColor);
 		gc.fillText(title, 0, 0);
@@ -46,32 +52,12 @@ public class GameScore2D extends Renderable2D {
 		gc.restore();
 	}
 
-	public V2i getTile() {
-		return tile;
-	}
-
 	public void setLeftUpperCorner(V2i tile) {
 		this.tile = tile;
 	}
 
-	public Font getFont() {
-		return font;
-	}
-
-	public void setFont(Font font) {
-		this.font = font;
-	}
-
-	public Color getTitleColor() {
-		return titleColor;
-	}
-
 	public void setTitleColor(Color titleColor) {
 		this.titleColor = titleColor;
-	}
-
-	public Color getPointsColor() {
-		return pointsColor;
 	}
 
 	public void setPointsColor(Color pointsColor) {
@@ -80,10 +66,6 @@ public class GameScore2D extends Renderable2D {
 
 	public void setShowPoints(boolean showPoints) {
 		this.showPoints = showPoints;
-	}
-
-	public String getTitle() {
-		return title;
 	}
 
 	public void setTitle(String title) {

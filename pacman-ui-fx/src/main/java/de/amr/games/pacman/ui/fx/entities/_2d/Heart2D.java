@@ -10,18 +10,10 @@ public class Heart2D extends Renderable2D {
 	private final GameEntity heart;
 	private Rectangle2D image;
 
-	public Heart2D(GameEntity heart) {
+	public Heart2D(GameEntity heart, GameRendering2D rendering) {
+		super(rendering);
 		this.heart = heart;
-	}
-
-	@Override
-	public void setRendering(GameRendering2D rendering) {
-		super.setRendering(rendering);
-		setImage(rendering.getHeart());
-	}
-
-	public void setImage(Rectangle2D image) {
-		this.image = image;
+		image = rendering.getHeart();
 	}
 
 	@Override

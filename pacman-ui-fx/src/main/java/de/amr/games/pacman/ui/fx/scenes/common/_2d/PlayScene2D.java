@@ -65,40 +65,39 @@ public class PlayScene2D extends AbstractGameScene2D {
 		maze2D = new Maze2D(game().currentLevel, rendering);
 		maze2D.setLeftUpperCorner(new V2i(0, 3));
 
-		livesCounter2D = new LivesCounter2D(() -> game().lives);
+		livesCounter2D = new LivesCounter2D(rendering);
 		livesCounter2D.setLeftUpperCorner(new V2i(2, 34));
-		livesCounter2D.setRendering(rendering);
+		livesCounter2D.setLifeCountSupplier(() -> game().lives);
 
-		levelCounter2D = new LevelCounter2D(() -> game().currentLevelNumber);
+		levelCounter2D = new LevelCounter2D(rendering);
 		levelCounter2D.setRightUpperCorner(new V2i(25, 34));
 		levelCounter2D.setLevelSymbols(game().levelSymbols);
-		levelCounter2D.setRendering(rendering);
+		levelCounter2D.setLevelNumberSupplier(() -> game().currentLevelNumber);
 
-		score2D = new GameScore2D(() -> game().score, () -> game().currentLevelNumber);
+		score2D = new GameScore2D(rendering);
+		score2D.setTitle("SCORE");
 		score2D.setLeftUpperCorner(new V2i(1, 1));
-		score2D.setFont(rendering.getScoreFont());
+		score2D.setLevelSupplier(() -> game().currentLevelNumber);
+		score2D.setPointsSupplier(() -> game().score);
 
-		hiscore2D = new GameScore2D(() -> game().highscorePoints, () -> game().highscoreLevel);
+		hiscore2D = new GameScore2D(rendering);
 		hiscore2D.setTitle("HI SCORE");
 		hiscore2D.setLeftUpperCorner(new V2i(16, 1));
-		hiscore2D.setFont(rendering.getScoreFont());
+		hiscore2D.setPointsSupplier(() -> game().highscorePoints);
+		hiscore2D.setLevelSupplier(() -> game().highscoreLevel);
 
-		gameStateDisplay2D = new GameStateDisplay2D(
-				() -> gameController.isAttractMode() ? PacManGameState.GAME_OVER : gameController.state);
-		gameStateDisplay2D.setFont(rendering.getScoreFont());
+		gameStateDisplay2D = new GameStateDisplay2D(rendering);
+		gameStateDisplay2D
+				.setStateSupplier(() -> gameController.isAttractMode() ? PacManGameState.GAME_OVER : gameController.state);
 
-		player2D = new Player2D(game().player);
-		player2D.setRendering(rendering);
+		player2D = new Player2D(game().player, rendering);
 		player2D.getDyingAnimation().delay(120).onStart(() -> {
 			game().ghosts().forEach(ghost -> ghost.visible = false);
 		});
 
-		ghosts2D = game().ghosts().map(ghost -> new Ghost2D(ghost, () -> game().player.powerTimer.isRunning()))
-				.collect(Collectors.toList());
-		ghosts2D.forEach(ghost2D -> ghost2D.setRendering(rendering));
+		ghosts2D = game().ghosts().map(ghost -> new Ghost2D(ghost, rendering)).collect(Collectors.toList());
 
-		bonus2D = new Bonus2D();
-		bonus2D.setRendering(rendering);
+		bonus2D = new Bonus2D(rendering);
 
 		levelCompleteAnimation = new SequentialTransition(maze2D.getFlashingAnimation(),
 				new PauseTransition(Duration.seconds(1)));
@@ -164,7 +163,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 		playSceneSoundHandler.onGameEvent(gameEvent);
 
 		if (gameEvent instanceof PacManGainsPowerEvent) {
-			ghosts2D.stream().filter(ghost2D -> ghost2D.ghost.is(GhostState.FRIGHTENED)).forEach(ghost2D -> {
+			game().ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
+				Ghost2D ghost2D = ghosts2D.get(ghost.id);
 				ghost2D.getFlashingAnimation().reset();
 				ghost2D.getFrightenedAnimation().restart();
 			});
@@ -182,9 +182,11 @@ public class PlayScene2D extends AbstractGameScene2D {
 				ghost2D -> ghost2D.getKickingAnimations().values().forEach(on ? TimedSequence::restart : TimedSequence::reset));
 	}
 
+	// TODO simplify
 	private void handleGhostsFlashing(TickTimerEvent e) {
 		if (e.type == TickTimerEvent.Type.HALF_EXPIRED) {
-			ghosts2D.stream().filter(ghost2D -> ghost2D.ghost.is(GhostState.FRIGHTENED)).forEach(ghost2D -> {
+			game().ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
+				Ghost2D ghost2D = ghosts2D.get(ghost.id);
 				TimedSequence<?> flashing = ghost2D.getFlashingAnimation();
 				long frameTime = e.ticks / (game().currentLevel.numFlashes * flashing.numFrames());
 				flashing.frameDuration(frameTime).repetitions(game().currentLevel.numFlashes).restart();
@@ -200,6 +202,9 @@ public class PlayScene2D extends AbstractGameScene2D {
 		} else {
 			score2D.setShowPoints(false);
 		}
+		game().ghosts(GhostState.LOCKED)
+				.forEach(ghost -> ghosts2D.get(ghost.id).setLooksFrightened(game().player.powerTimer.isRunning()));
+
 		Stream.concat(Stream.of(score2D, hiscore2D, levelCounter2D, maze2D, gameStateDisplay2D, bonus2D, player2D),
 				ghosts2D.stream()).forEach(r -> r.render(gc));
 	}

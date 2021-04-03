@@ -10,42 +10,23 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 
 public class LevelCounter2D extends Renderable2D {
 
-	private final IntSupplier levelNumberSupplier;
 	private V2i tileRight;
-	private Image spritesheet;
-	private List<Rectangle2D> symbolSprites;
+	private IntSupplier levelNumberSupplier;
 	private List<Byte> levelSymbols;
 
-	public LevelCounter2D(IntSupplier levelNumberSupplier) {
-		this.levelNumberSupplier = levelNumberSupplier;
-	}
-
-	@Override
-	public void render(GraphicsContext g) {
-		int x = tileRight.x * TS, y = tileRight.y * TS;
-		int firstLevel = Math.max(1, levelNumberSupplier.getAsInt() - 6);
-		for (int level = firstLevel; level <= levelNumberSupplier.getAsInt(); ++level) {
-			Rectangle2D sprite = symbolSprites.get(levelSymbols.get(level - 1));
-			g.drawImage(spritesheet, sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(), x, y,
-					sprite.getWidth(), sprite.getHeight());
-			x -= t(2);
-		}
+	public LevelCounter2D(GameRendering2D rendering) {
+		super(rendering);
 	}
 
 	public void setRightUpperCorner(V2i tileRight) {
 		this.tileRight = tileRight;
 	}
 
-	public void setSpritesheet(Image spritesheet) {
-		this.spritesheet = spritesheet;
-	}
-
-	public void setSymbolSprites(List<Rectangle2D> symbolSprites) {
-		this.symbolSprites = symbolSprites;
+	public void setLevelNumberSupplier(IntSupplier levelNumberSupplier) {
+		this.levelNumberSupplier = levelNumberSupplier;
 	}
 
 	public void setLevelSymbols(List<Byte> levelSymbols) {
@@ -53,8 +34,13 @@ public class LevelCounter2D extends Renderable2D {
 	}
 
 	@Override
-	public void setRendering(GameRendering2D rendering) {
-		setSpritesheet(rendering.spritesheet);
-		setSymbolSprites(rendering.getSymbolSprites());
+	public void render(GraphicsContext g) {
+		int x = tileRight.x * TS, y = tileRight.y * TS;
+		int firstLevel = Math.max(1, levelNumberSupplier.getAsInt() - 6);
+		for (int level = firstLevel; level <= levelNumberSupplier.getAsInt(); ++level) {
+			Rectangle2D sprite = rendering.getSymbolSprites().get(levelSymbols.get(level - 1));
+			rendering.drawSprite(g, sprite, x, y);
+			x -= t(2);
+		}
 	}
 }

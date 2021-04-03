@@ -1,7 +1,5 @@
 package de.amr.games.pacman.ui.fx.scenes.mspacman;
 
-import java.util.stream.Stream;
-
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.GameVariant;
@@ -16,9 +14,8 @@ import de.amr.games.pacman.ui.mspacman.MsPacMan_IntermissionScene2_Controller;
 /**
  * Intermission scene 2: "The chase".
  * <p>
- * Pac-Man and Ms. Pac-Man chase each other across the screen over and over.
- * After three turns, they both rapidly run from left to right and right to
- * left. (Played after round 5)
+ * Pac-Man and Ms. Pac-Man chase each other across the screen over and over. After three turns, they
+ * both rapidly run from left to right and right to left. (Played after round 5)
  * 
  * @author Armin Reichert
  */
@@ -56,10 +53,9 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 		super.start();
 		sceneController = new SceneController(gameController);
 		sceneController.init();
-		flap2D = new Flap2D(sceneController.flap);
-		msPacMan2D = new Player2D(sceneController.msPacMan);
-		pacMan2D = new Player2D(sceneController.pacMan);
-		Stream.of(flap2D, msPacMan2D, pacMan2D).forEach(entity -> entity.setRendering(rendering));
+		flap2D = new Flap2D(sceneController.flap, rendering);
+		msPacMan2D = new Player2D(sceneController.msPacMan, rendering);
+		pacMan2D = new Player2D(sceneController.pacMan, rendering);
 		pacMan2D.setMunchingAnimations(rendering.createSpouseMunchingAnimations());
 		msPacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
 		pacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);

@@ -26,8 +26,7 @@ import javafx.util.Duration;
  */
 public class Maze2D extends Renderable2D {
 
-	private final GameLevel gameLevel;
-	private final GameRendering2D rendering;
+	private GameLevel gameLevel;
 	private V2i tile;
 	private Timeline flashingAnimation;
 	private boolean flashImage;
@@ -35,14 +34,18 @@ public class Maze2D extends Renderable2D {
 	private TimedSequence<Boolean> energizerBlinking = TimedSequence.pulse().frameDuration(10);
 
 	public Maze2D(GameLevel gameLevel, GameRendering2D rendering) {
+		super(rendering);
 		this.gameLevel = gameLevel;
-		this.rendering = rendering;
 		KeyFrame changeMazeImage = new KeyFrame(Duration.millis(150), e -> flashImage = !flashImage);
 		flashingAnimation = new Timeline(changeMazeImage);
 		flashImage = false;
 		flashingAnimation.setCycleCount(2 * gameLevel.numFlashes);
-		energizers2D = gameLevel.world.energizerTiles()
-				.map(energizerTile -> new Energizer2D(energizerTile, energizerBlinking)).collect(Collectors.toList());
+		energizers2D = gameLevel.world.energizerTiles().map(energizerTile -> {
+			Energizer2D energizer2D = new Energizer2D(rendering);
+			energizer2D.setTile(energizerTile);
+			energizer2D.setBlinkingAnimation(energizerBlinking);
+			return energizer2D;
+		}).collect(Collectors.toList());
 	}
 
 	public void setLeftUpperCorner(V2i tile) {
