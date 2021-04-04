@@ -9,6 +9,7 @@ import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.BonusEatenEvent;
 import de.amr.games.pacman.controller.event.PacManGainsPowerEvent;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
+import de.amr.games.pacman.controller.event.PacManGameStateChangedEvent;
 import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.lib.V2i;
@@ -29,7 +30,8 @@ import javafx.animation.SequentialTransition;
 import javafx.util.Duration;
 
 /**
- * 2D scene displaying the maze and the game play for both, Pac-Man and Ms. Pac-Man games.
+ * 2D scene displaying the maze and the game play for both, Pac-Man and Ms.
+ * Pac-Man games.
  * 
  * @author Armin Reichert
  */
@@ -87,8 +89,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 		hiscore2D.setLevelSupplier(() -> game().highscoreLevel);
 
 		gameStateDisplay2D = new GameStateDisplay2D(rendering);
-		gameStateDisplay2D
-				.setStateSupplier(() -> gameController.isAttractMode() ? PacManGameState.GAME_OVER : gameController.state);
+		gameStateDisplay2D.setStateSupplier(
+				() -> gameController.isAttractMode() ? PacManGameState.GAME_OVER : gameController.state);
 
 		player2D = new Player2D(game().player, rendering);
 		player2D.getDyingAnimation().delay(120).onStart(() -> {
@@ -118,33 +120,32 @@ public class PlayScene2D extends AbstractGameScene2D {
 		playSceneSoundHandler.onUpdate();
 	}
 
-	@Override
-	public void onGameStateChange(PacManGameState oldState, PacManGameState newState) {
-		playSceneSoundHandler.onGameStateChange(oldState, newState);
+	private void onGameStateChange(PacManGameStateChangedEvent event) {
+		playSceneSoundHandler.onGameStateChange(event.oldGameState, event.newGameState);
 
 		// enter HUNTING
-		if (newState == PacManGameState.HUNTING) {
+		if (event.newGameState == PacManGameState.HUNTING) {
 			maze2D.getEnergizerBlinking().restart();
 			player2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
 			letGhostsKick(true);
 		}
 
 		// enter PACMAN_DYING
-		if (newState == PacManGameState.PACMAN_DYING) {
+		if (event.newGameState == PacManGameState.PACMAN_DYING) {
 			maze2D.getEnergizerBlinking().reset();
 			letGhostsKick(false);
 			player2D.getDyingAnimation().restart();
 		}
 
 		// enter LEVEL_COMPLETE
-		if (newState == PacManGameState.LEVEL_COMPLETE) {
+		if (event.newGameState == PacManGameState.LEVEL_COMPLETE) {
 			game().ghosts().forEach(ghost -> ghost.visible = false);
 			gameController.stateTimer().reset();
 			levelCompleteAnimation.play();
 		}
 
 		// enter LEVEL_STARTING
-		if (newState == PacManGameState.LEVEL_STARTING) {
+		if (event.newGameState == PacManGameState.LEVEL_STARTING) {
 			maze2D = new Maze2D(game().currentLevel, rendering);
 			maze2D.setLeftUpperCorner(new V2i(0, 3));
 			gameController.stateTimer().reset(1);
@@ -152,7 +153,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		}
 
 		// enter GAME_OVER
-		if (newState == PacManGameState.GAME_OVER) {
+		if (event.newGameState == PacManGameState.GAME_OVER) {
 			maze2D.getEnergizerBlinking().reset();
 			letGhostsKick(false);
 		}
@@ -161,6 +162,10 @@ public class PlayScene2D extends AbstractGameScene2D {
 	@Override
 	public void onGameEvent(PacManGameEvent gameEvent) {
 		playSceneSoundHandler.onGameEvent(gameEvent);
+
+		if (gameEvent instanceof PacManGameStateChangedEvent) {
+			onGameStateChange((PacManGameStateChangedEvent) gameEvent);
+		}
 
 		if (gameEvent instanceof PacManGainsPowerEvent) {
 			game().ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
@@ -178,8 +183,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 	}
 
 	private void letGhostsKick(boolean on) {
-		ghosts2D.forEach(
-				ghost2D -> ghost2D.getKickingAnimations().values().forEach(on ? TimedSequence::restart : TimedSequence::reset));
+		ghosts2D.forEach(ghost2D -> ghost2D.getKickingAnimations().values()
+				.forEach(on ? TimedSequence::restart : TimedSequence::reset));
 	}
 
 	// TODO simplify

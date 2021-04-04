@@ -6,6 +6,8 @@ import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
+import de.amr.games.pacman.controller.event.PacManGameEvent;
+import de.amr.games.pacman.controller.event.PacManGameStateChangedEvent;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
@@ -79,7 +81,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController gameController, double height) {
 		this.stage = stage;
 		this.gameController = gameController;
-		gameController.addStateChangeListener(this::onGameStateChange);
+
+		gameController.addGameEventListener(this);
 
 		GameScene initialGameScene = sceneForCurrentGameState(Env.$use3DScenes.get());
 		double aspectRatio = initialGameScene.aspectRatio().orElse(4.0 / 3.0);
@@ -133,16 +136,21 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 	}
 
-	private void onGameStateChange(PacManGameState oldGameState, PacManGameState newGameState) {
+	@Override
+	public void onGameEvent(PacManGameEvent event) {
+		if (event instanceof PacManGameStateChangedEvent) {
+			PacManGameStateChangedEvent stateChange = (PacManGameStateChangedEvent) event;
+			handleGameStateChange(stateChange.oldGameState, stateChange.newGameState);
+		}
+		currentGameScene.onGameEvent(event);
+	}
+
+	private void handleGameStateChange(PacManGameState oldGameState, PacManGameState newGameState) {
 		if (newGameState == PacManGameState.INTRO) {
 			// TODO check this
 			SoundAssets.get(gameController.gameVariant()).stopAll();
 		}
-		GameScene newGameScene = sceneForCurrentGameState(Env.$use3DScenes.get());
-		if (currentGameScene != newGameScene) {
-			setGameScene(newGameScene);
-		}
-		currentGameScene.onGameStateChange(oldGameState, newGameState);
+		setGameScene(sceneForCurrentGameState(Env.$use3DScenes.get()));
 	}
 
 	private void onKeyPressed(KeyEvent e) {

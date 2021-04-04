@@ -17,6 +17,7 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.ExtraLifeEvent;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
+import de.amr.games.pacman.controller.event.PacManGameStateChangedEvent;
 import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
@@ -48,7 +49,8 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 /**
- * 3D scene displaying the maze and the game play for both, Pac-Man and Ms. Pac-Man games.
+ * 3D scene displaying the maze and the game play for both, Pac-Man and Ms.
+ * Pac-Man games.
  * 
  * @author Armin Reichert
  */
@@ -217,14 +219,12 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void start() {
 		log("Game scene %s: start", this);
-		gameController.addGameEventListener(this);
 		buildSceneGraph();
 	}
 
 	@Override
 	public void end() {
 		log("Game scene %s: end", this);
-		gameController.removeGameEventListener(this);
 	}
 
 	@Override
@@ -244,45 +244,44 @@ public class PlayScene3D implements GameScene {
 		playSceneSoundHandler.onUpdate();
 	}
 
-	@Override
-	public void onGameStateChange(PacManGameState oldState, PacManGameState newState) {
+	private void onGameStateChange(PacManGameStateChangedEvent event) {
 		AbstractGameModel gameModel = gameController.game();
 
-		playSceneSoundHandler.onGameStateChange(oldState, newState);
+		playSceneSoundHandler.onGameStateChange(event.oldGameState, event.newGameState);
 
 		// enter READY
-		if (newState == PacManGameState.READY) {
+		if (event.newGameState == PacManGameState.READY) {
 			setSceneColor();
 		}
 
 		// enter HUNTING
-		if (newState == PacManGameState.HUNTING) {
+		if (event.newGameState == PacManGameState.HUNTING) {
 			energizers.forEach(Energizer3D::startPumping);
 		}
 
 		// exit HUNTING
-		if (oldState == PacManGameState.HUNTING) {
+		if (event.oldGameState == PacManGameState.HUNTING) {
 			energizers.forEach(Energizer3D::stopPumping);
 		}
 
 		// enter PACMAN_DYING
-		if (newState == PacManGameState.PACMAN_DYING) {
+		if (event.newGameState == PacManGameState.PACMAN_DYING) {
 			playAnimationPlayerDying();
 		}
 
 		// enter GHOST_DYING
-		if (newState == PacManGameState.GHOST_DYING) {
+		if (event.newGameState == PacManGameState.GHOST_DYING) {
 			energizers.forEach(Energizer3D::startPumping);
 		}
 
 		// enter LEVEL_COMPLETE
-		if (newState == PacManGameState.LEVEL_COMPLETE) {
+		if (event.newGameState == PacManGameState.LEVEL_COMPLETE) {
 			gameModel.ghosts().forEach(ghost -> ghost.visible = false);
 			playAnimationLevelComplete();
 		}
 
 		// enter LEVEL_STARTING
-		if (newState == PacManGameState.LEVEL_STARTING) {
+		if (event.newGameState == PacManGameState.LEVEL_STARTING) {
 			playAnimationLevelStarting();
 		}
 	}
@@ -291,7 +290,11 @@ public class PlayScene3D implements GameScene {
 	public void onGameEvent(PacManGameEvent gameEvent) {
 		playSceneSoundHandler.onGameEvent(gameEvent);
 
-		if (gameEvent instanceof ExtraLifeEvent) {
+		if (gameEvent instanceof PacManGameStateChangedEvent) {
+			onGameStateChange((PacManGameStateChangedEvent) gameEvent);
+		}
+
+		else if (gameEvent instanceof ExtraLifeEvent) {
 			gameController.userInterface.showFlashMessage("Extra life!");
 		}
 	}

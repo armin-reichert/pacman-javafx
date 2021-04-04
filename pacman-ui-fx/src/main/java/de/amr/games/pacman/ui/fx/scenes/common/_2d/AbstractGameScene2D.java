@@ -6,7 +6,6 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import java.util.OptionalDouble;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
@@ -89,21 +88,15 @@ public abstract class AbstractGameScene2D implements GameScene {
 	@Override
 	public void start() {
 		log("Game scene %s: start", this);
-		gameController.addGameEventListener(this);
 	}
 
 	@Override
 	public void end() {
 		log("Game scene %s: end", this);
-		gameController.removeGameEventListener(this);
 	}
 
 	@Override
 	public void onGameEvent(PacManGameEvent gameEvent) {
-	}
-
-	@Override
-	public void onGameStateChange(PacManGameState oldState, PacManGameState newState) {
 	}
 
 	@Override

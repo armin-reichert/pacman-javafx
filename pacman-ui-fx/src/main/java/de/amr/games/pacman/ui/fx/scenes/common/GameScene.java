@@ -3,7 +3,6 @@ package de.amr.games.pacman.ui.fx.scenes.common;
 import java.util.OptionalDouble;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.PacManGameEventListener;
 import javafx.scene.Camera;
 import javafx.scene.SubScene;
@@ -24,8 +23,6 @@ public interface GameScene extends PacManGameEventListener {
 	PacManGameController getController();
 
 	void setGameController(PacManGameController controller);
-
-	void onGameStateChange(PacManGameState oldState, PacManGameState newState);
 
 	OptionalDouble aspectRatio();
 
