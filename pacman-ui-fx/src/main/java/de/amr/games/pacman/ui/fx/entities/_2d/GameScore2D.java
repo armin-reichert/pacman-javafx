@@ -10,6 +10,11 @@ import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+/**
+ * 2D representation of the score or the high score.
+ * 
+ * @author Armin Reichert
+ */
 public class GameScore2D extends Renderable2D {
 
 	private IntSupplier pointsSupplier;
@@ -34,22 +39,22 @@ public class GameScore2D extends Renderable2D {
 	}
 
 	@Override
-	public void render(GraphicsContext gc) {
-		gc.save();
-		gc.translate(tile.x * TS, tile.y * TS);
-		gc.setFont(rendering.getScoreFont());
-		gc.translate(0, 2);
-		gc.setFill(titleColor);
-		gc.fillText(title, 0, 0);
-		gc.translate(0, 1);
+	public void render(GraphicsContext g) {
+		g.save();
+		g.translate(tile.x * TS, tile.y * TS);
+		g.setFont(rendering.getScoreFont());
+		g.translate(0, 2);
+		g.setFill(titleColor);
+		g.fillText(title, 0, 0);
+		g.translate(0, 1);
 		if (showPoints) {
-			gc.setFill(pointsColor);
-			gc.translate(0, t(1));
-			gc.fillText(String.format("%08d", pointsSupplier.getAsInt()), 0, 0);
-			gc.setFill(Color.LIGHTGRAY);
-			gc.fillText(String.format("L%02d", levelSupplier.getAsInt()), t(8), 0);
+			g.setFill(pointsColor);
+			g.translate(0, t(1));
+			g.fillText(String.format("%08d", pointsSupplier.getAsInt()), 0, 0);
+			g.setFill(Color.LIGHTGRAY);
+			g.fillText(String.format("L%02d", levelSupplier.getAsInt()), t(8), 0);
 		}
-		gc.restore();
+		g.restore();
 	}
 
 	public void setLeftUpperCorner(V2i tile) {

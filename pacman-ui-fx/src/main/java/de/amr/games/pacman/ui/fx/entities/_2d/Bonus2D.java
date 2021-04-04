@@ -9,6 +9,11 @@ import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
+/**
+ * 2D representation of the bonus in Pac-Man and Ms. Pac-Man.
+ * 
+ * @author Armin Reichert
+ */
 public class Bonus2D extends Renderable2D {
 
 	private PacManBonus bonus;
@@ -18,8 +23,8 @@ public class Bonus2D extends Renderable2D {
 
 	public Bonus2D(GameRendering2D rendering) {
 		super(rendering);
-		setSymbolSprites(rendering.getSymbolSprites());
-		setNumberSprites(rendering.getBonusNumbersSpritesMap());
+		symbolSprites = rendering.getSymbolSprites();
+		numberSprites = rendering.getBonusNumbersSpritesMap();
 		setJumpAnimation(rendering.createBonusAnimation());
 	}
 
@@ -35,14 +40,6 @@ public class Bonus2D extends Renderable2D {
 		this.jumpAnimation = jumpAnimation;
 	}
 
-	public void setSymbolSprites(List<Rectangle2D> symbolSprites) {
-		this.symbolSprites = symbolSprites;
-	}
-
-	public void setNumberSprites(Map<Integer, Rectangle2D> numberSprites) {
-		this.numberSprites = numberSprites;
-	}
-
 	@Override
 	public void render(GraphicsContext g) {
 		Rectangle2D sprite = currentSprite();
@@ -51,9 +48,10 @@ public class Bonus2D extends Renderable2D {
 		}
 		// Ms. Pac.Man bonus is jumping up and down while wandering the maze
 		int jump = jumpAnimation != null ? jumpAnimation.animate() : 0;
+		g.save();
 		g.translate(0, jump);
 		renderEntity(g, bonus, sprite);
-		g.translate(0, -jump);
+		g.restore();
 	}
 
 	private Rectangle2D currentSprite() {

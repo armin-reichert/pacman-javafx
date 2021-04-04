@@ -11,6 +11,11 @@ import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
+/**
+ * 2D level counter.
+ * 
+ * @author Armin Reichert
+ */
 public class LevelCounter2D extends Renderable2D {
 
 	private V2i tileRight;

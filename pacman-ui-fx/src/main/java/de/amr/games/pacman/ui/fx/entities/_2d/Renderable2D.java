@@ -7,6 +7,11 @@ import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
+/**
+ * Base class of 2D representations.
+ * 
+ * @author Armin Reichert
+ */
 public abstract class Renderable2D {
 
 	protected final GameRendering2D rendering;

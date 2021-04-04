@@ -2,30 +2,25 @@ package de.amr.games.pacman.ui.fx.entities._2d;
 
 import de.amr.games.pacman.model.mspacman.JuniorBag;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
+/**
+ * The bag containing junior Pac-Man that is dropped by the stork in Ms. Pac-Man intermission scene
+ * 3.
+ * 
+ * @author Armin Reichert
+ */
 public class JuniorBag2D extends Renderable2D {
 
 	private final JuniorBag bag;
-	private Rectangle2D blueBagSprite;
-	private Rectangle2D juniorSprite;
 
 	public JuniorBag2D(JuniorBag bag, GameRendering2D rendering) {
 		super(rendering);
 		this.bag = bag;
-		blueBagSprite = rendering.getBlueBag();
-		juniorSprite = rendering.getJunior();
 	}
 
 	@Override
 	public void render(GraphicsContext gc) {
-		if (bag.visible) {
-			if (bag.open) {
-				renderEntity(gc, bag, juniorSprite);
-			} else {
-				renderEntity(gc, bag, blueBagSprite);
-			}
-		}
+		renderEntity(gc, bag, bag.open ? rendering.getJunior() : rendering.getBlueBag());
 	}
 }

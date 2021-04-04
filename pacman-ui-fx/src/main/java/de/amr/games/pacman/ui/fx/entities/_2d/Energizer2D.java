@@ -8,6 +8,11 @@ import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+/**
+ * 2D representation of a blinking energizer.
+ * 
+ * @author Armin Reichert
+ */
 public class Energizer2D extends Renderable2D {
 
 	private V2i tile;

@@ -6,6 +6,11 @@ import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
+/**
+ * The naked Blinky from the third intermission scene in Pac-Man.
+ * 
+ * @author Armin Reichert
+ */
 public class BlinkyNaked2D extends Renderable2D {
 
 	private final Ghost blinky;
@@ -15,6 +20,10 @@ public class BlinkyNaked2D extends Renderable2D {
 		super(rendering);
 		this.blinky = blinky;
 		animation = rendering.createBlinkyNakedAnimation();
+	}
+
+	public TimedSequence<Rectangle2D> getAnimation() {
+		return animation;
 	}
 
 	@Override

@@ -116,12 +116,12 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 
 	@Override
 	public TimedSequence<Rectangle2D> createBlinkyPatchedAnimation() {
-		return TimedSequence.of(sprite(10, 7), sprite(11, 7)).restart().frameDuration(4).endless();
+		return TimedSequence.of(sprite(10, 7), sprite(11, 7)).frameDuration(4).endless();
 	}
 
 	@Override
 	public TimedSequence<Rectangle2D> createBlinkyNakedAnimation() {
-		return TimedSequence.of(cells(8, 8, 2, 1), cells(10, 8, 2, 1)).endless().frameDuration(4).restart();
+		return TimedSequence.of(cells(8, 8, 2, 1), cells(10, 8, 2, 1)).frameDuration(4).endless();
 	}
 
 	@Override

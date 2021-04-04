@@ -236,5 +236,4 @@ public abstract class GameRendering2D {
 	public TimedSequence<Rectangle2D> createBlinkyNakedAnimation() {
 		return null;
 	}
-
 }

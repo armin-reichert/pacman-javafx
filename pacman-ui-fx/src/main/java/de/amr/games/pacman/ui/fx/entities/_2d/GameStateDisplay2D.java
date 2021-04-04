@@ -10,6 +10,11 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+/**
+ * Draws the game state as text inside the maze. In attract mode, displays GAME_OVER.
+ * 
+ * @author Armin Reichert
+ */
 public class GameStateDisplay2D extends Renderable2D {
 
 	private Supplier<PacManGameState> stateSupplier;

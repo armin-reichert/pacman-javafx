@@ -51,6 +51,8 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 		blinkyPatched2D = new BlinkyPatched2D(sceneController.blinky, rendering);
 		blinkyNaked2D = new BlinkyNaked2D(sceneController.blinky, rendering);
 		pacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
+		blinkyPatched2D.getAnimation().restart();
+		blinkyNaked2D.getAnimation().restart();
 	}
 
 	@Override

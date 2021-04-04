@@ -13,6 +13,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+/**
+ * 2D lives counter.
+ * 
+ * @author Armin Reichert
+ */
 public class LivesCounter2D extends Renderable2D {
 
 	private V2i tile;

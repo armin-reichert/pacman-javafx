@@ -8,6 +8,11 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+/**
+ * The film flap used at the beginning of the Ms. Pac-Man intermission scenes.
+ * 
+ * @author Armin Reichert
+ */
 public class Flap2D extends Renderable2D {
 
 	private final Flap flap;
@@ -18,7 +23,7 @@ public class Flap2D extends Renderable2D {
 		super(rendering);
 		this.flap = flap;
 		animation = rendering.createFlapAnimation();
-		setFont(rendering.getScoreFont());
+		setFont(rendering.getScoreFont()); // TODO
 	}
 
 	public TimedSequence<Rectangle2D> getAnimation() {
@@ -29,10 +34,6 @@ public class Flap2D extends Renderable2D {
 		this.font = font;
 	}
 
-	public Flap getFlap() {
-		return flap;
-	}
-
 	@Override
 	public void render(GraphicsContext g) {
 		if (flap.visible) {
@@ -40,8 +41,8 @@ public class Flap2D extends Renderable2D {
 			renderEntity(g, flap, sprite);
 			g.setFont(font);
 			g.setFill(Color.rgb(222, 222, 225));
-			g.fillText(flap.sceneNumber + "", (int) flap.position.x + sprite.getWidth() - 25, (int) flap.position.y + 18);
-			g.fillText(flap.sceneTitle, (int) flap.position.x + sprite.getWidth(), (int) flap.position.y);
+			g.fillText(String.valueOf(flap.sceneNumber), flap.position.x + sprite.getWidth() - 25, flap.position.y + 18);
+			g.fillText(flap.sceneTitle, flap.position.x + sprite.getWidth(), flap.position.y);
 		}
 	}
 }

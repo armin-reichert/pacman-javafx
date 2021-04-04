@@ -6,6 +6,11 @@ import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
+/**
+ * The big Pac-Man from the first intermission scene in Pac-Man.
+ * 
+ * @author Armin Reichert
+ */
 public class BigPacMan2D extends Renderable2D {
 
 	private final Pac pacMan;
@@ -24,6 +29,7 @@ public class BigPacMan2D extends Renderable2D {
 	@Override
 	public void render(GraphicsContext g) {
 		Rectangle2D sprite = munchingAnimation.animate();
+		// lift it up such that it sits on the ground instead of being vertically centered to the ground
 		g.save();
 		g.translate(0, -sprite.getHeight() / 2 + 8);
 		renderEntity(g, pacMan, sprite);
