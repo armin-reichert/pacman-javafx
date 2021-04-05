@@ -16,6 +16,7 @@ import javafx.scene.Group;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 
 /**
@@ -53,7 +54,7 @@ public abstract class AbstractGameScene2D implements GameScene {
 	}
 
 	@Override
-	public PacManGameController getController() {
+	public PacManGameController getGameController() {
 		return gameController;
 	}
 
@@ -101,6 +102,11 @@ public abstract class AbstractGameScene2D implements GameScene {
 
 	@Override
 	public void update() {
+	}
+
+	public void clearCanvas(Color color) {
+		gc.setFill(Color.BLACK);
+		gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	}
 
 	public abstract void render();

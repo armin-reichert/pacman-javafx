@@ -130,6 +130,16 @@ public class PlayScene2D extends AbstractGameScene2D {
 			letGhostsKick(true);
 		}
 
+		// enter GHOST_DYING
+		if (event.newGameState == PacManGameState.GHOST_DYING) {
+			game().player.visible = false;
+		}
+
+		// exit GHOST_DYING
+		if (event.oldGameState == PacManGameState.GHOST_DYING) {
+			game().player.visible = true;
+		}
+
 		// enter PACMAN_DYING
 		if (event.newGameState == PacManGameState.PACMAN_DYING) {
 			maze2D.getEnergizerBlinking().reset();

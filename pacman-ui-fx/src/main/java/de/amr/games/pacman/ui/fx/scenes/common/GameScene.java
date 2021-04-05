@@ -20,9 +20,9 @@ public interface GameScene extends PacManGameEventListener {
 
 	void end();
 
-	PacManGameController getController();
+	PacManGameController getGameController();
 
-	void setGameController(PacManGameController controller);
+	void setGameController(PacManGameController gameController);
 
 	OptionalDouble aspectRatio();
 

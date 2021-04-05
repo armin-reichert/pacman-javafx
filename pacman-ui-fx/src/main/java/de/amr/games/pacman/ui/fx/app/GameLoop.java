@@ -12,9 +12,9 @@ class GameLoop extends AnimationTimer {
 	final PacManGameController controller;
 	final PacManGameUI_JavaFX userInterface;
 
-	private long totalTicks;
-	private long lastUpdate;
-	private double deltaTime;
+	long totalTicks;
+	long lastUpdate;
+	double deltaTime;
 
 	public GameLoop(PacManGameController controller, PacManGameUI_JavaFX userInterface) {
 		this.controller = controller;
@@ -34,7 +34,7 @@ class GameLoop extends AnimationTimer {
 					controller.step();
 					userInterface.update();
 					deltaTime = (now - lastUpdate) / 1e6;
-					log("delta time: %.2f milliseconds", deltaTime);
+//					log("delta time: %.2f milliseconds", deltaTime);
 //					if (deltaTime > 30) {
 //						controller.step();
 //					}

@@ -27,7 +27,6 @@ import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -112,7 +111,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			if (currentGameScene != null) {
 				currentGameScene.end();
 			}
-			if (newGameScene.getController() == null) {
+			if (newGameScene.getGameController() == null) {
 				newGameScene.setGameController(gameController);
 				newGameScene.setAvailableSize(mainScene.getWidth(), mainScene.getHeight());
 				keepGameSceneMaximized(newGameScene, mainScene);
@@ -138,24 +137,21 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void onGameEvent(PacManGameEvent event) {
+		log("%s received game event %s", getClass().getSimpleName(), event.getClass().getSimpleName());
 		if (event instanceof PacManGameStateChangedEvent) {
 			PacManGameStateChangedEvent stateChange = (PacManGameStateChangedEvent) event;
-			handleGameStateChange(stateChange.oldGameState, stateChange.newGameState);
+			if (stateChange.newGameState == PacManGameState.INTRO) {
+				// TODO check this
+				SoundAssets.get(gameController.gameVariant()).stopAll();
+			}
+			setGameScene(sceneForCurrentGameState(Env.$use3DScenes.get()));
 		}
 		currentGameScene.onGameEvent(event);
 	}
 
-	private void handleGameStateChange(PacManGameState oldGameState, PacManGameState newGameState) {
-		if (newGameState == PacManGameState.INTRO) {
-			// TODO check this
-			SoundAssets.get(gameController.gameVariant()).stopAll();
-		}
-		setGameScene(sceneForCurrentGameState(Env.$use3DScenes.get()));
-	}
-
 	private void onKeyPressed(KeyEvent e) {
 		if (e.isControlDown()) {
-			onControlKeyPressed(e.getCode());
+			onControlKeyPressed(e);
 			return;
 		}
 
@@ -230,8 +226,19 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 	}
 
-	private void onControlKeyPressed(KeyCode key) {
-		switch (key) {
+	private void onControlKeyPressed(KeyEvent e) {
+		switch (e.getCode()) {
+
+		case C:
+			Env.$useStaticCamera.set(!Env.$useStaticCamera.get());
+			if (Env.$useStaticCamera.get()) {
+				currentGameScene.useMoveableCamera(false);
+				showFlashMessage("Static Camera");
+			} else {
+				currentGameScene.useMoveableCamera(true);
+				showFlashMessage("Moveable Camera");
+			}
+			break;
 
 		case I:
 			Env.$infoViewVisible.set(!Env.$infoViewVisible.get());
@@ -246,13 +253,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			break;
 
 		case S:
-			Env.$useStaticCamera.set(!Env.$useStaticCamera.get());
-			if (Env.$useStaticCamera.get()) {
-				currentGameScene.useMoveableCamera(false);
-				showFlashMessage("Static Camera");
+			if (!e.isShiftDown()) {
+				Env.$slowdown.set(Math.max(1, Env.$slowdown.get() - 1));
 			} else {
-				currentGameScene.useMoveableCamera(true);
-				showFlashMessage("Moveable Camera");
+				Env.$slowdown.set(Math.min(10, Env.$slowdown.get() + 1));
 			}
 			break;
 
@@ -268,14 +272,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			toggleUse3DScenes();
 			String message = String.format("3D scenes %s", Env.$use3DScenes.get() ? "ON" : "OFF");
 			showFlashMessage(message);
-			break;
-
-		case MINUS:
-			Env.$slowdown.set(Math.max(1, Env.$slowdown.get() - 1));
-			break;
-
-		case PLUS:
-			Env.$slowdown.set(Math.min(10, Env.$slowdown.get() + 1));
 			break;
 
 		default:
@@ -317,9 +313,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		hud.update();
 		if (currentGameScene instanceof AbstractGameScene2D) {
 			AbstractGameScene2D scene2D = (AbstractGameScene2D) currentGameScene;
-			scene2D.getCanvas().getGraphicsContext2D().setFill(Color.BLACK);
-			scene2D.getCanvas().getGraphicsContext2D().fillRect(0, 0, scene2D.getCanvas().getWidth(),
-					scene2D.getCanvas().getHeight());
+			scene2D.clearCanvas(Color.BLACK);
 			scene2D.render();
 		}
 	}

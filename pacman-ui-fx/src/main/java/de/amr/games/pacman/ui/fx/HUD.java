@@ -80,8 +80,8 @@ public class HUD extends HBox {
 			AbstractGameScene2D scene2D = (AbstractGameScene2D) ui.currentGameScene;
 			line("Canvas2D", "w=%.0f h=%.0f", scene2D.getCanvas().getWidth(), scene2D.getCanvas().getHeight());
 		} else {
-			line("3D Camera (CTRL+S)", "%s", cameraInfo(ui.currentGameScene.getActiveCamera()));
-			line("3D Draw Mode (CTRL+L)", "%s", Env.$drawMode.get());
+			line("3D Camera", "%s", cameraInfo(ui.currentGameScene.getActiveCamera()));
+			line("3D Draw Mode", "%s", Env.$drawMode.get());
 		}
 		textView.setText(text);
 	}

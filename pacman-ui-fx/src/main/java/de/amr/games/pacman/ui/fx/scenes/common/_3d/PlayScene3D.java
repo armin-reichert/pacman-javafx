@@ -41,6 +41,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
+import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
@@ -83,13 +84,13 @@ public class PlayScene3D implements GameScene {
 
 	public PlayScene3D(SoundManager sounds) {
 		this.sounds = sounds;
-		fxScene = new SubScene(new Group(), 800, 600);
+		fxScene = new SubScene(new Group(), 800, 600, true, SceneAntialiasing.BALANCED);
 		fxScene.addEventHandler(KeyEvent.KEY_PRESSED, cameraController::handleKeyEvent);
 		useStaticCamera();
 	}
 
 	@Override
-	public PacManGameController getController() {
+	public PacManGameController getGameController() {
 		return gameController;
 	}
 
@@ -244,6 +245,19 @@ public class PlayScene3D implements GameScene {
 		playSceneSoundHandler.onUpdate();
 	}
 
+	@Override
+	public void onGameEvent(PacManGameEvent gameEvent) {
+		playSceneSoundHandler.onGameEvent(gameEvent);
+	
+		if (gameEvent instanceof PacManGameStateChangedEvent) {
+			onGameStateChange((PacManGameStateChangedEvent) gameEvent);
+		}
+	
+		else if (gameEvent instanceof ExtraLifeEvent) {
+			gameController.userInterface.showFlashMessage("Extra life!");
+		}
+	}
+
 	private void onGameStateChange(PacManGameStateChangedEvent event) {
 		AbstractGameModel gameModel = gameController.game();
 
@@ -260,18 +274,13 @@ public class PlayScene3D implements GameScene {
 		}
 
 		// exit HUNTING
-		if (event.oldGameState == PacManGameState.HUNTING) {
+		if (event.oldGameState == PacManGameState.HUNTING && event.newGameState != PacManGameState.GHOST_DYING) {
 			energizers.forEach(Energizer3D::stopPumping);
 		}
 
 		// enter PACMAN_DYING
 		if (event.newGameState == PacManGameState.PACMAN_DYING) {
 			playAnimationPlayerDying();
-		}
-
-		// enter GHOST_DYING
-		if (event.newGameState == PacManGameState.GHOST_DYING) {
-			energizers.forEach(Energizer3D::startPumping);
 		}
 
 		// enter LEVEL_COMPLETE
@@ -283,19 +292,6 @@ public class PlayScene3D implements GameScene {
 		// enter LEVEL_STARTING
 		if (event.newGameState == PacManGameState.LEVEL_STARTING) {
 			playAnimationLevelStarting();
-		}
-	}
-
-	@Override
-	public void onGameEvent(PacManGameEvent gameEvent) {
-		playSceneSoundHandler.onGameEvent(gameEvent);
-
-		if (gameEvent instanceof PacManGameStateChangedEvent) {
-			onGameStateChange((PacManGameStateChangedEvent) gameEvent);
-		}
-
-		else if (gameEvent instanceof ExtraLifeEvent) {
-			gameController.userInterface.showFlashMessage("Extra life!");
 		}
 	}
 
