@@ -4,6 +4,7 @@ import java.util.OptionalDouble;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.event.PacManGameEventListener;
+import de.amr.games.pacman.model.common.AbstractGameModel;
 import javafx.scene.Camera;
 import javafx.scene.SubScene;
 
@@ -23,6 +24,10 @@ public interface GameScene extends PacManGameEventListener {
 	PacManGameController getGameController();
 
 	void setGameController(PacManGameController gameController);
+
+	default AbstractGameModel game() {
+		return getGameController() != null ? getGameController().game() : null;
+	}
 
 	OptionalDouble aspectRatio();
 

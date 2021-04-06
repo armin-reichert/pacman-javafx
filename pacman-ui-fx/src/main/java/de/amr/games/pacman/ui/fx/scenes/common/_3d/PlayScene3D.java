@@ -15,12 +15,16 @@ import java.util.stream.Collectors;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
+import de.amr.games.pacman.controller.event.BonusActivatedEvent;
+import de.amr.games.pacman.controller.event.BonusEatenEvent;
+import de.amr.games.pacman.controller.event.BonusExpiredEvent;
 import de.amr.games.pacman.controller.event.ExtraLifeEvent;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangedEvent;
 import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
+import de.amr.games.pacman.ui.fx.entities._3d.Bonus3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Energizer3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Ghost3D;
 import de.amr.games.pacman.ui.fx.entities._3d.LivesCounter3D;
@@ -28,7 +32,10 @@ import de.amr.games.pacman.ui.fx.entities._3d.Maze3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Pellet3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Player3D;
 import de.amr.games.pacman.ui.fx.entities._3d.ScoreNotReally3D;
+import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_Assets;
+import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_MsPacMan;
+import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_PacMan;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering3D_Assets;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.common.PlaySceneSoundHandler;
@@ -79,8 +86,13 @@ public class PlayScene3D implements GameScene {
 	private Maze3D maze;
 	private List<Energizer3D> energizers;
 	private List<Pellet3D> pellets;
+	private Bonus3D bonus3D;
 	private ScoreNotReally3D score3D;
 	private LivesCounter3D livesCounter3D;
+
+	// TODO this is only a temporary solution
+	private GameRendering2D rendering2D_MsPacMan = new GameRendering2D_MsPacMan();
+	private GameRendering2D rendering2D_PacMan = new GameRendering2D_PacMan();
 
 	public PlayScene3D(SoundManager sounds) {
 		this.sounds = sounds;
@@ -136,6 +148,9 @@ public class PlayScene3D implements GameScene {
 		player = new Player3D(game.player);
 		ghosts3D = game.ghosts().collect(Collectors.toMap(Function.identity(), Ghost3D::new));
 
+		bonus3D = new Bonus3D(gameVariant,
+				gameVariant == GameVariant.MS_PACMAN ? rendering2D_MsPacMan : rendering2D_PacMan);
+
 		score3D = new ScoreNotReally3D();
 		livesCounter3D = new LivesCounter3D(game.player, 1, 1);
 
@@ -150,6 +165,7 @@ public class PlayScene3D implements GameScene {
 		tgMaze.getChildren().addAll(collect(pellets));
 		tgMaze.getChildren().addAll(player.get());
 		tgMaze.getChildren().addAll(collect(ghosts3D.values()));
+		tgMaze.getChildren().add(bonus3D.get());
 		tgMaze.getChildren().addAll(ambientLight, pointLight);
 
 		coordSystem = new CoordinateSystem(150);
@@ -241,6 +257,7 @@ public class PlayScene3D implements GameScene {
 		pellets.forEach(pellet3D -> pellet3D.update(game));
 		player.update();
 		game.ghosts().map(ghosts3D::get).forEach(Ghost3D::update);
+		bonus3D.update(game.bonus);
 		updateCamera();
 		playSceneSoundHandler.onUpdate();
 	}
@@ -248,13 +265,25 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void onGameEvent(PacManGameEvent gameEvent) {
 		playSceneSoundHandler.onGameEvent(gameEvent);
-	
+
 		if (gameEvent instanceof PacManGameStateChangedEvent) {
 			onGameStateChange((PacManGameStateChangedEvent) gameEvent);
 		}
-	
+
 		else if (gameEvent instanceof ExtraLifeEvent) {
 			gameController.userInterface.showFlashMessage("Extra life!");
+		}
+
+		else if (gameEvent instanceof BonusActivatedEvent) {
+			bonus3D.showSymbol(game().bonus);
+		}
+
+		else if (gameEvent instanceof BonusExpiredEvent) {
+			bonus3D.hide();
+		}
+
+		else if (gameEvent instanceof BonusEatenEvent) {
+			bonus3D.showPoints(game().bonus);
 		}
 	}
 
@@ -276,6 +305,7 @@ public class PlayScene3D implements GameScene {
 		// exit HUNTING
 		if (event.oldGameState == PacManGameState.HUNTING && event.newGameState != PacManGameState.GHOST_DYING) {
 			energizers.forEach(Energizer3D::stopPumping);
+			bonus3D.hide();
 		}
 
 		// enter PACMAN_DYING

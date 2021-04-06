@@ -2,7 +2,10 @@ package de.amr.games.pacman.ui.fx.rendering;
 
 import javafx.scene.paint.Color;
 
-public class GameRendering2D_Assets {
+public final class GameRendering2D_Assets {
+
+	private GameRendering2D_Assets() {
+	}
 
 	public static Color getFoodColor(int mazeNumber) {
 		switch (mazeNumber) {

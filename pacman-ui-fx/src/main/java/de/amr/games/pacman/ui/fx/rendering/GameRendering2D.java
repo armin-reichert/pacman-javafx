@@ -59,6 +59,11 @@ public abstract class GameRendering2D {
 		scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), 8);
 	}
 
+	public Image subImage(Rectangle2D region) {
+		return subImage((int) region.getMinX(), (int) region.getMinY(), (int) region.getWidth(),
+				(int) region.getHeight());
+	}
+
 	public Image subImage(int x, int y, int width, int height) {
 		WritableImage subImage = new WritableImage(width, height);
 		subImage.getPixelWriter().setPixels(0, 0, width, height, spritesheet.getPixelReader(), x, y);
