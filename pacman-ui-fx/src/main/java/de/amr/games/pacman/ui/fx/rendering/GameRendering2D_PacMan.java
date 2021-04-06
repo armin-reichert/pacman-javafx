@@ -20,15 +20,16 @@ import javafx.scene.paint.Color;
  */
 public class GameRendering2D_PacMan extends GameRendering2D {
 
-	private final Image mazeFull = new Image(getClass().getResource("/pacman/graphics/maze_full.png").toExternalForm());
-	private final Image mazeEmpty = new Image(getClass().getResource("/pacman/graphics/maze_empty.png").toExternalForm());
+	private final Image mazeFull = image("/pacman/graphics/maze_full.png");
+	private final Image mazeEmpty = image("/pacman/graphics/maze_empty.png");
 	private Image mazeEmptyBright;
+	private Map<Integer, Rectangle2D> bonusValueSprites;
 
 	public GameRendering2D_PacMan() {
 		super("/pacman/graphics/sprites.png");
 
-		symbolSprites = Arrays.asList(sprite(2, 3), sprite(3, 3), sprite(4, 3), sprite(5, 3), sprite(6, 3), sprite(7, 3),
-				sprite(8, 3), sprite(9, 3));
+		symbolSprites = Arrays.asList(sprite(2, 3), sprite(3, 3), sprite(4, 3), sprite(5, 3), sprite(6, 3),
+				sprite(7, 3), sprite(8, 3), sprite(9, 3));
 
 		//@formatter:off
 		bonusValueSprites = new HashMap<>();
@@ -80,6 +81,11 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 	@Override
 	public Rectangle2D getLifeImage() {
 		return sprite(8, 1);
+	}
+
+	@Override
+	public Map<Integer, Rectangle2D> getBonusValuesSpritesMap() {
+		return bonusValueSprites;
 	}
 
 	public void drawNail(GraphicsContext g, GameEntity nail) {

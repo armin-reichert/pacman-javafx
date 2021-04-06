@@ -24,7 +24,7 @@ public class Bonus2D extends Renderable2D {
 	public Bonus2D(GameRendering2D rendering) {
 		super(rendering);
 		symbolSprites = rendering.getSymbolSprites();
-		numberSprites = rendering.getBonusNumbersSpritesMap();
+		numberSprites = rendering.getBonusValuesSpritesMap();
 		setJumpAnimation(rendering.createBonusAnimation());
 	}
 

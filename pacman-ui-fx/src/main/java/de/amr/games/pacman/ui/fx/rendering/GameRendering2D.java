@@ -51,17 +51,19 @@ public abstract class GameRendering2D {
 	protected final Font scoreFont;
 
 	protected List<Rectangle2D> symbolSprites;
-	protected Map<Integer, Rectangle2D> bonusValueSprites;
 	protected Map<Integer, Rectangle2D> bountyNumberSprites;
 
 	public GameRendering2D(String spritesheetPath) {
-		spritesheet = new Image(getClass().getResource(spritesheetPath).toExternalForm());
+		spritesheet = image(spritesheetPath);
 		scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), 8);
 	}
 
-	public Image subImage(Rectangle2D region) {
-		return subImage((int) region.getMinX(), (int) region.getMinY(), (int) region.getWidth(),
-				(int) region.getHeight());
+	public Image image(String path) {
+		return new Image(getClass().getResource(null).toExternalForm());
+	}
+
+	public Image subImage(Rectangle2D r) {
+		return subImage((int) r.getMinX(), (int) r.getMinY(), (int) r.getWidth(), (int) r.getHeight());
 	}
 
 	public Image subImage(int x, int y, int width, int height) {
@@ -129,7 +131,7 @@ public abstract class GameRendering2D {
 			return symbolSprites.get(bonus.symbol);
 		}
 		if (bonus.eatenTicksLeft > 0) {
-			return bonusValueSprites.get(bonus.points);
+			return getBonusValuesSpritesMap().get(bonus.points);
 		}
 		return null; // should not happen
 	}
@@ -190,9 +192,7 @@ public abstract class GameRendering2D {
 		return bountyNumberSprites;
 	}
 
-	public Map<Integer, Rectangle2D> getBonusNumbersSpritesMap() {
-		return bonusValueSprites;
-	}
+	public abstract Map<Integer, Rectangle2D> getBonusValuesSpritesMap();
 
 	public List<Rectangle2D> getSymbolSprites() {
 		return symbolSprites;

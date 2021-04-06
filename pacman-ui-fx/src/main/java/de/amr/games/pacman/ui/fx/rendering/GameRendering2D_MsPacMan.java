@@ -19,33 +19,20 @@ import javafx.scene.paint.Color;
  */
 public class GameRendering2D_MsPacMan extends GameRendering2D {
 
-	protected List<Image> mazeFullImages;
-	protected List<Image> mazeEmptyImages;
-	protected List<Image> mazeFlashImages;
+	private List<Image> mazeFullImages;
+	private List<Image> mazeEmptyImages;
+	private List<Image> mazeFlashImages;
+	private Map<Integer, Rectangle2D> bonusValueSprites;
 
 	public GameRendering2D_MsPacMan() {
 		super("/mspacman/graphics/sprites.png");
 
 		symbolSprites = Arrays.asList(s(3, 0), s(4, 0), s(5, 0), s(6, 0), s(7, 0), s(8, 0), s(9, 0));
 
-		//@formatter:off
-		bonusValueSprites = Map.of(
-			100,  s(3, 1),
-			200,  s(4, 1),
-			500,  s(5, 1),
-			700,  s(6, 1),
-			1000, s(7, 1),
-			2000, s(8, 1),
-			5000, s(9, 1)
-		);
-		
-		bountyNumberSprites = Map.of(
-			200,  s(0, 8),
-			400,  s(1, 8),
-			800,  s(2, 8),
-			1600, s(3, 8)
-		);
-		//@formatter:on
+		bonusValueSprites = Map.of(100, s(3, 1), 200, s(4, 1), 500, s(5, 1), 700, s(6, 1), 1000, s(7, 1), 2000, s(8, 1),
+				5000, s(9, 1));
+
+		bountyNumberSprites = Map.of(200, s(0, 8), 400, s(1, 8), 800, s(2, 8), 1600, s(3, 8));
 
 		mazeFullImages = new ArrayList<>(6);
 		mazeEmptyImages = new ArrayList<>(6);
@@ -127,6 +114,11 @@ public class GameRendering2D_MsPacMan extends GameRendering2D {
 	@Override
 	public Image getMazeFlashImage(int mazeNumber) {
 		return mazeFlashImages.get(mazeNumber - 1);
+	}
+
+	@Override
+	public Map<Integer, Rectangle2D> getBonusValuesSpritesMap() {
+		return bonusValueSprites;
 	}
 
 	/*

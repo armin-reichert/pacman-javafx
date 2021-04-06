@@ -43,7 +43,7 @@ public class Bonus3D implements Supplier<Node> {
 	}
 
 	private Map<Integer, Image> getPointsSprites(GameVariant gameVariant) {
-		Map<Integer, Rectangle2D> spritesMap = rendering2D.getBonusNumbersSpritesMap();
+		Map<Integer, Rectangle2D> spritesMap = rendering2D.getBonusValuesSpritesMap();
 		Map<Integer, Image> result = new HashMap<>();
 		spritesMap.forEach((points, sprite) -> result.put(points, rendering2D.subImage(sprite)));
 		return result;
