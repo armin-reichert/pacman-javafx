@@ -26,6 +26,12 @@ import javafx.scene.text.Font;
  */
 public abstract class GameRendering2D {
 
+	/** Spritesheet grid cell size */
+	public static final int GRID_CELLSIZE = 16;
+
+	public static final GameRendering2D_MsPacMan RENDERING_MS_PACMAN = new GameRendering2D_MsPacMan();
+	public static final GameRendering2D_PacMan RENDERING_PACMAN = new GameRendering2D_PacMan();
+
 	public static Image colorsExchanged(Image source, Map<Color, Color> exchanges) {
 		WritableImage newImage = new WritableImage((int) source.getWidth(), (int) source.getHeight());
 		for (int x = 0; x < source.getWidth(); ++x) {
@@ -41,15 +47,8 @@ public abstract class GameRendering2D {
 		return newImage;
 	}
 
-	public static final GameRendering2D_MsPacMan RENDERING_MS_PACMAN = new GameRendering2D_MsPacMan();
-	public static final GameRendering2D_PacMan RENDERING_PACMAN = new GameRendering2D_PacMan();
-
-	/** Spritesheet grid cell size */
-	public static final int GRID_CELLSIZE = 16;
-
 	public final Image spritesheet;
-	protected final Font scoreFont;
-
+	public final Font scoreFont;
 	protected List<Rectangle2D> symbolSprites;
 	protected Map<Integer, Rectangle2D> bountyNumberSprites;
 
@@ -59,7 +58,7 @@ public abstract class GameRendering2D {
 	}
 
 	public Image image(String path) {
-		return new Image(getClass().getResource(null).toExternalForm());
+		return new Image(getClass().getResource(path).toExternalForm());
 	}
 
 	public Image subImage(Rectangle2D r) {
@@ -219,6 +218,10 @@ public abstract class GameRendering2D {
 	}
 
 	public Rectangle2D getBlueBag() {
+		return null;
+	}
+
+	public Rectangle2D getNail() {
 		return null;
 	}
 

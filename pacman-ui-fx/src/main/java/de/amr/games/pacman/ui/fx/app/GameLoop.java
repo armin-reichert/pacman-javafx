@@ -47,8 +47,12 @@ class GameLoop extends AnimationTimer {
 
 	private void measureTime(Runnable runnable, String description) {
 		double start = System.nanoTime();
-		runnable.run();
-		double duration = (System.nanoTime() - start) / 1e6;
-		log("%s took %f millis", description, duration);
+		try {
+			runnable.run();
+			double duration = (System.nanoTime() - start) / 1e6;
+			log("%s took %f millis", description, duration);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

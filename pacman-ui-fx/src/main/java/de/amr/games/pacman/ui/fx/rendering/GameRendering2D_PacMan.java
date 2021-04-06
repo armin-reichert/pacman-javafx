@@ -7,9 +7,7 @@ import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSequence;
-import de.amr.games.pacman.model.common.GameEntity;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
@@ -88,8 +86,9 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 		return bonusValueSprites;
 	}
 
-	public void drawNail(GraphicsContext g, GameEntity nail) {
-		drawEntity(g, nail, sprite(8, 6));
+	@Override
+	public Rectangle2D getNail() {
+		return sprite(8, 6);
 	}
 
 	@Override
