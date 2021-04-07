@@ -13,12 +13,12 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class Energizer2D extends Renderable2D {
+public class Energizer2D<RENDERING extends GameRendering2D> extends Renderable2D<RENDERING> {
 
 	private V2i tile;
 	private TimedSequence<Boolean> blinkingAnimation;
 
-	public Energizer2D(GameRendering2D rendering) {
+	public Energizer2D(RENDERING rendering) {
 		super(rendering);
 	}
 

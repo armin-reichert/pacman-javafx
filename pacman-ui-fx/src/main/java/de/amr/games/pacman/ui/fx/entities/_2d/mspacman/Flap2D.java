@@ -1,8 +1,9 @@
-package de.amr.games.pacman.ui.fx.entities._2d;
+package de.amr.games.pacman.ui.fx.entities._2d.mspacman;
 
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.mspacman.Flap;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
+import de.amr.games.pacman.ui.fx.entities._2d.Renderable2D;
+import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_MsPacMan;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -13,13 +14,13 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public class Flap2D extends Renderable2D {
+public class Flap2D extends Renderable2D<GameRendering2D_MsPacMan> {
 
 	private final Flap flap;
 	private TimedSequence<Rectangle2D> animation;
 	private Font font;
 
-	public Flap2D(Flap flap, GameRendering2D rendering) {
+	public Flap2D(Flap flap, GameRendering2D_MsPacMan rendering) {
 		super(rendering);
 		this.flap = flap;
 		animation = rendering.createFlapAnimation();

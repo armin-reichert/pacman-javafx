@@ -4,11 +4,12 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.PacManGameSound;
-import de.amr.games.pacman.ui.fx.entities._2d.Flap2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Ghost2D;
-import de.amr.games.pacman.ui.fx.entities._2d.Heart2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Player2D;
+import de.amr.games.pacman.ui.fx.entities._2d.mspacman.Flap2D;
+import de.amr.games.pacman.ui.fx.entities._2d.mspacman.Heart2D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
+import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.sound.SoundAssets;
 import de.amr.games.pacman.ui.mspacman.MsPacMan_IntermissionScene1_Controller;
@@ -16,14 +17,15 @@ import de.amr.games.pacman.ui.mspacman.MsPacMan_IntermissionScene1_Controller;
 /**
  * Intermission scene 1: "They meet".
  * <p>
- * Pac-Man leads Inky and Ms. Pac-Man leads Pinky. Soon, the two Pac-Men are about to collide, they
- * quickly move upwards, causing Inky and Pinky to collide and vanish. Finally, Pac-Man and Ms.
- * Pac-Man face each other at the top of the screen and a big pink heart appears above them. (Played
- * after round 2)
+ * Pac-Man leads Inky and Ms. Pac-Man leads Pinky. Soon, the two Pac-Men are
+ * about to collide, they quickly move upwards, causing Inky and Pinky to
+ * collide and vanish. Finally, Pac-Man and Ms. Pac-Man face each other at the
+ * top of the screen and a big pink heart appears above them. (Played after
+ * round 2)
  * 
  * @author Armin Reichert
  */
-public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
+public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D<GameRendering2D_MsPacMan> {
 
 	private class SceneController extends MsPacMan_IntermissionScene1_Controller {
 
@@ -43,10 +45,10 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 	}
 
 	private SceneController sceneController;
-	private Player2D msPacMan2D;
-	private Player2D pacMan2D;
-	private Ghost2D inky2D;
-	private Ghost2D pinky2D;
+	private Player2D<GameRendering2D_MsPacMan> msPacMan2D;
+	private Player2D<GameRendering2D_MsPacMan> pacMan2D;
+	private Ghost2D<GameRendering2D_MsPacMan> inky2D;
+	private Ghost2D<GameRendering2D_MsPacMan> pinky2D;
 	private Flap2D flap2D;
 	private Heart2D heart2D;
 
@@ -60,15 +62,15 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 		sceneController = new SceneController(gameController);
 		sceneController.init();
 
-		flap2D = new Flap2D(sceneController.flap, rendering);
-		msPacMan2D = new Player2D(sceneController.msPac, rendering);
-		pacMan2D = new Player2D(sceneController.pacMan, rendering);
-		inky2D = new Ghost2D(sceneController.inky, rendering);
-		pinky2D = new Ghost2D(sceneController.pinky, rendering);
+		flap2D = new Flap2D(sceneController.flap, GameRendering2D.RENDERING_MS_PACMAN);
+		msPacMan2D = new Player2D<>(sceneController.msPac, rendering);
+		pacMan2D = new Player2D<>(sceneController.pacMan, rendering);
+		inky2D = new Ghost2D<>(sceneController.inky, rendering);
+		pinky2D = new Ghost2D<>(sceneController.pinky, rendering);
 		heart2D = new Heart2D(sceneController.heart, rendering);
 
 		// overwrite by Pac-Man instead of Ms. Pac-Man sprites:
-		pacMan2D.setMunchingAnimations(rendering.createSpouseMunchingAnimations());
+		pacMan2D.setMunchingAnimations(GameRendering2D.RENDERING_MS_PACMAN.createSpouseMunchingAnimations());
 
 		msPacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
 		pacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);

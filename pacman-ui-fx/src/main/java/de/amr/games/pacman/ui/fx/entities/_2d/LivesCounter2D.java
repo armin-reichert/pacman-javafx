@@ -18,12 +18,12 @@ import javafx.scene.text.FontWeight;
  * 
  * @author Armin Reichert
  */
-public class LivesCounter2D extends Renderable2D {
+public class LivesCounter2D<RENDERING extends GameRendering2D> extends Renderable2D<RENDERING> {
 
 	private V2i tile;
 	private IntSupplier lifeCountSupplier;
 
-	public LivesCounter2D(GameRendering2D rendering) {
+	public LivesCounter2D(RENDERING rendering) {
 		super(rendering);
 	}
 

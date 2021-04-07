@@ -16,6 +16,7 @@ import de.amr.games.pacman.ui.fx.entities._2d.GameScore2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Ghost2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Player2D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
+import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_PacMan;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.sound.SoundAssets;
 import de.amr.games.pacman.ui.pacman.PacMan_IntroScene_Controller;
@@ -27,20 +28,20 @@ import javafx.scene.text.Font;
 /**
  * Intro scene of the PacMan game.
  * <p>
- * The ghost are presented one after another, then Pac-Man is chased by the ghosts, turns the card
- * and hunts the ghost himself.
+ * The ghost are presented one after another, then Pac-Man is chased by the
+ * ghosts, turns the card and hunts the ghost himself.
  * 
  * @author Armin Reichert
  */
-public class PacMan_IntroScene extends AbstractGameScene2D {
+public class PacMan_IntroScene extends AbstractGameScene2D<GameRendering2D_PacMan> {
 
 	private PacMan_IntroScene_Controller sceneController;
 
-	private GameScore2D score2D;
-	private GameScore2D hiscore2D;
-	private Player2D pacMan2D;
-	private List<Ghost2D> ghosts2D;
-	private List<Ghost2D> ghostsInGallery2D;
+	private GameScore2D<GameRendering2D_PacMan> score2D;
+	private GameScore2D<GameRendering2D_PacMan> hiscore2D;
+	private Player2D<GameRendering2D_PacMan> pacMan2D;
+	private List<Ghost2D<GameRendering2D_PacMan>> ghosts2D;
+	private List<Ghost2D<GameRendering2D_PacMan>> ghostsInGallery2D;
 
 	public PacMan_IntroScene() {
 		super(GameRendering2D.RENDERING_PACMAN, SoundAssets.get(GameVariant.PACMAN));
@@ -52,23 +53,23 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		sceneController = new PacMan_IntroScene_Controller(gameController);
 		sceneController.init();
 
-		score2D = new GameScore2D(rendering);
+		score2D = new GameScore2D<>(rendering);
 		score2D.setTitle("SCORE");
 		score2D.setLeftUpperCorner(new V2i(1, 1));
 		score2D.setLevelSupplier(() -> game().currentLevelNumber);
 		score2D.setPointsSupplier(() -> game().score);
 
-		hiscore2D = new GameScore2D(rendering);
+		hiscore2D = new GameScore2D<>(rendering);
 		hiscore2D.setTitle("HI SCORE");
 		hiscore2D.setLeftUpperCorner(new V2i(16, 1));
 		hiscore2D.setLevelSupplier(() -> game().highscoreLevel);
 		hiscore2D.setPointsSupplier(() -> game().highscorePoints);
 
-		pacMan2D = new Player2D(sceneController.pac, rendering);
+		pacMan2D = new Player2D<>(sceneController.pac, rendering);
 		pacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
 
 		ghosts2D = Stream.of(sceneController.ghosts).map(ghost -> {
-			Ghost2D ghost2D = new Ghost2D(ghost, rendering);
+			Ghost2D<GameRendering2D_PacMan> ghost2D = new Ghost2D<>(ghost, rendering);
 			ghost2D.getKickingAnimations().values().forEach(TimedSequence::restart);
 			ghost2D.getFrightenedAnimation().restart();
 			ghost2D.getFlashingAnimation().restart();
@@ -77,7 +78,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 
 		ghostsInGallery2D = new ArrayList<>();
 		for (int i = 0; i < 4; ++i) {
-			Ghost2D ghost2D = new Ghost2D(sceneController.gallery[i].ghost, rendering);
+			Ghost2D<GameRendering2D_PacMan> ghost2D = new Ghost2D<>(sceneController.gallery[i].ghost, rendering);
 			ghostsInGallery2D.add(ghost2D);
 		}
 	}

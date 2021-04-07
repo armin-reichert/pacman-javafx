@@ -23,11 +23,11 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 	private Image mazeEmptyBright;
 	private Map<Integer, Rectangle2D> bonusValueSprites;
 
-	public GameRendering2D_PacMan() {
+	GameRendering2D_PacMan() {
 		super("/pacman/graphics/sprites.png");
 
-		symbolSprites = Arrays.asList(sprite(2, 3), sprite(3, 3), sprite(4, 3), sprite(5, 3), sprite(6, 3),
-				sprite(7, 3), sprite(8, 3), sprite(9, 3));
+		symbolSprites = Arrays.asList(sprite(2, 3), sprite(3, 3), sprite(4, 3), sprite(5, 3), sprite(6, 3), sprite(7, 3),
+				sprite(8, 3), sprite(9, 3));
 
 		//@formatter:off
 		bonusValueSprites = new HashMap<>();
@@ -39,7 +39,7 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 		bonusValueSprites.put(2000, cells(3, 10, 3, 1));
 		bonusValueSprites.put(3000, cells(3, 11, 3, 1));
 		bonusValueSprites.put(5000, cells(3, 12, 3, 1));
-
+		
 		bountyNumberSprites = new HashMap<>();
 		bountyNumberSprites.put(200,  cells(0, 8, 1, 1));
 		bountyNumberSprites.put(400,  cells(1, 8, 1, 1));
@@ -86,9 +86,31 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 		return bonusValueSprites;
 	}
 
-	@Override
 	public Rectangle2D getNail() {
 		return sprite(8, 6);
+	}
+
+	public TimedSequence<Rectangle2D> createBigPacManMunchingAnimation() {
+		return TimedSequence.of(//
+				cells(2, 1, 2, 2), //
+				cells(4, 1, 2, 2), //
+				cells(6, 1, 2, 2)).frameDuration(4).endless();
+	}
+
+	public TimedSequence<Rectangle2D> createBlinkyStretchedAnimation() {
+		return TimedSequence.of(sprite(9, 6), sprite(10, 6), sprite(11, 6), sprite(12, 6));
+	}
+
+	public TimedSequence<Rectangle2D> createBlinkyDamagedAnimation() {
+		return TimedSequence.of(sprite(8, 7), sprite(9, 7));
+	}
+
+	public TimedSequence<Rectangle2D> createBlinkyPatchedAnimation() {
+		return TimedSequence.of(sprite(10, 7), sprite(11, 7)).frameDuration(4).endless();
+	}
+
+	public TimedSequence<Rectangle2D> createBlinkyNakedAnimation() {
+		return TimedSequence.of(cells(8, 8, 2, 1), cells(10, 8, 2, 1)).frameDuration(4).endless();
 	}
 
 	@Override
@@ -107,31 +129,6 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 	public TimedSequence<Rectangle2D> createPlayerDyingAnimation() {
 		return TimedSequence.of(sprite(3, 0), sprite(4, 0), sprite(5, 0), sprite(6, 0), sprite(7, 0), sprite(8, 0),
 				sprite(9, 0), sprite(10, 0), sprite(11, 0), sprite(12, 0), sprite(13, 0)).frameDuration(8);
-	}
-
-	@Override
-	public TimedSequence<Rectangle2D> createBlinkyStretchedAnimation() {
-		return TimedSequence.of(sprite(9, 6), sprite(10, 6), sprite(11, 6), sprite(12, 6));
-	}
-
-	@Override
-	public TimedSequence<Rectangle2D> createBlinkyDamagedAnimation() {
-		return TimedSequence.of(sprite(8, 7), sprite(9, 7));
-	}
-
-	@Override
-	public TimedSequence<Rectangle2D> createBlinkyPatchedAnimation() {
-		return TimedSequence.of(sprite(10, 7), sprite(11, 7)).frameDuration(4).endless();
-	}
-
-	@Override
-	public TimedSequence<Rectangle2D> createBlinkyNakedAnimation() {
-		return TimedSequence.of(cells(8, 8, 2, 1), cells(10, 8, 2, 1)).frameDuration(4).endless();
-	}
-
-	@Override
-	public Map<Direction, TimedSequence<Rectangle2D>> createSpouseMunchingAnimations() {
-		return null;
 	}
 
 	@Override
@@ -163,13 +160,5 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 			ghostEyesAnim.put(dir, TimedSequence.of(sprite(8 + index(dir), 5)));
 		}
 		return ghostEyesAnim;
-	}
-
-	@Override
-	public TimedSequence<Rectangle2D> createBigPacManMunchingAnimation() {
-		return TimedSequence.of(//
-				cells(2, 1, 2, 2), //
-				cells(4, 1, 2, 2), //
-				cells(6, 1, 2, 2)).frameDuration(4).endless();
 	}
 }

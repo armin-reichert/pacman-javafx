@@ -11,16 +11,17 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
- * Draws the game state as text inside the maze. In attract mode, displays GAME_OVER.
+ * Draws the game state as text inside the maze. In attract mode, displays
+ * GAME_OVER.
  * 
  * @author Armin Reichert
  */
-public class GameStateDisplay2D extends Renderable2D {
+public class GameStateDisplay2D<RENDERING extends GameRendering2D> extends Renderable2D<RENDERING> {
 
 	private Supplier<PacManGameState> stateSupplier;
 	private Font font;
 
-	public GameStateDisplay2D(GameRendering2D rendering) {
+	public GameStateDisplay2D(RENDERING rendering) {
 		super(rendering);
 		font = rendering.getScoreFont();
 	}

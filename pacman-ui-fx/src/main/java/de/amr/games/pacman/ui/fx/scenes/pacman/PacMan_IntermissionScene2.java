@@ -8,9 +8,10 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.entities._2d.Ghost2D;
-import de.amr.games.pacman.ui.fx.entities._2d.Nail2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Player2D;
+import de.amr.games.pacman.ui.fx.entities._2d.pacman.Nail2D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
+import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_PacMan;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.sound.SoundAssets;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene2_Controller;
@@ -22,7 +23,7 @@ import javafx.geometry.Rectangle2D;
  * 
  * @author Armin Reichert
  */
-public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
+public class PacMan_IntermissionScene2 extends AbstractGameScene2D<GameRendering2D_PacMan> {
 
 	class SceneController extends PacMan_IntermissionScene2_Controller {
 
@@ -37,8 +38,8 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 	}
 
 	private SceneController sceneController;
-	private Player2D pacMan2D;
-	private Ghost2D blinky2D;
+	private Player2D<GameRendering2D_PacMan> pacMan2D;
+	private Ghost2D<GameRendering2D_PacMan> blinky2D;
 	private Nail2D nail2D;
 	private TimedSequence<Rectangle2D> blinkyStretchedAnimation;
 	private TimedSequence<Rectangle2D> blinkyDamagedAnimation;
@@ -52,13 +53,13 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 		super.start();
 		sceneController = new SceneController(gameController);
 		sceneController.init();
-		pacMan2D = new Player2D(sceneController.pac, rendering);
-		blinky2D = new Ghost2D(sceneController.blinky, rendering);
+		pacMan2D = new Player2D<>(sceneController.pac, rendering);
+		blinky2D = new Ghost2D<>(sceneController.blinky, rendering);
 		nail2D = new Nail2D(sceneController.nail, rendering);
 		pacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
 		blinky2D.getKickingAnimations().values().forEach(TimedSequence::restart);
-		blinkyStretchedAnimation = rendering.createBlinkyStretchedAnimation();
-		blinkyDamagedAnimation = rendering.createBlinkyDamagedAnimation();
+		blinkyStretchedAnimation = GameRendering2D.RENDERING_PACMAN.createBlinkyStretchedAnimation();
+		blinkyDamagedAnimation = GameRendering2D.RENDERING_PACMAN.createBlinkyDamagedAnimation();
 	}
 
 	@Override
@@ -73,8 +74,7 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 		if (sceneController.nailDistance() < 0) {
 			blinky2D.render(gc);
 		} else {
-			drawBlinkyStretched(sceneController.blinky, sceneController.nail.position,
-					sceneController.nailDistance() / 4);
+			drawBlinkyStretched(sceneController.blinky, sceneController.nail.position, sceneController.nailDistance() / 4);
 		}
 	}
 

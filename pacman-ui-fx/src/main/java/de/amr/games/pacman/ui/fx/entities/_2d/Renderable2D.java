@@ -12,11 +12,11 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public abstract class Renderable2D {
+public abstract class Renderable2D<RENDERING extends GameRendering2D> {
 
-	protected final GameRendering2D rendering;
+	protected final RENDERING rendering;
 
-	public Renderable2D(GameRendering2D rendering) {
+	public Renderable2D(RENDERING rendering) {
 		this.rendering = rendering;
 	}
 

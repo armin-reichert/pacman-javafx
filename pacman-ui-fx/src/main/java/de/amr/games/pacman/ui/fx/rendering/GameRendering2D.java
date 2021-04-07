@@ -11,6 +11,7 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.GameEntity;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.pacman.PacManBonus;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -31,6 +32,16 @@ public abstract class GameRendering2D {
 
 	public static final GameRendering2D_MsPacMan RENDERING_MS_PACMAN = new GameRendering2D_MsPacMan();
 	public static final GameRendering2D_PacMan RENDERING_PACMAN = new GameRendering2D_PacMan();
+
+	public static GameRendering2D rendering(GameVariant gameVariant) {
+		if (gameVariant == GameVariant.MS_PACMAN) {
+			return RENDERING_MS_PACMAN;
+		}
+		if (gameVariant == GameVariant.PACMAN) {
+			return RENDERING_PACMAN;
+		}
+		throw new IllegalArgumentException("Unknown game variant: " + gameVariant);
+	}
 
 	public static Image colorsExchanged(Image source, Map<Color, Color> exchanges) {
 		WritableImage newImage = new WritableImage((int) source.getWidth(), (int) source.getHeight());
@@ -173,8 +184,6 @@ public abstract class GameRendering2D {
 
 	public abstract TimedSequence<Rectangle2D> createPlayerDyingAnimation();
 
-	public abstract Map<Direction, TimedSequence<Rectangle2D>> createSpouseMunchingAnimations();
-
 	public abstract Map<Direction, TimedSequence<Rectangle2D>> createGhostKickingAnimations(int ghostID);
 
 	public abstract TimedSequence<Rectangle2D> createGhostFrightenedAnimation();
@@ -182,8 +191,6 @@ public abstract class GameRendering2D {
 	public abstract TimedSequence<Rectangle2D> createGhostFlashingAnimation();
 
 	public abstract Map<Direction, TimedSequence<Rectangle2D>> createGhostReturningHomeAnimations();
-
-	// sprites, images
 
 	public abstract Rectangle2D getLifeImage();
 
@@ -197,51 +204,4 @@ public abstract class GameRendering2D {
 		return symbolSprites;
 	}
 
-	public TimedSequence<Integer> createBonusAnimation() {
-		return null;
-	}
-
-	public TimedSequence<Rectangle2D> createFlapAnimation() {
-		return null;
-	}
-
-	public TimedSequence<Rectangle2D> createStorkFlyingAnimation() {
-		return null;
-	}
-
-	public Rectangle2D getHeart() {
-		return null;
-	}
-
-	public Rectangle2D getJunior() {
-		return null;
-	}
-
-	public Rectangle2D getBlueBag() {
-		return null;
-	}
-
-	public Rectangle2D getNail() {
-		return null;
-	}
-
-	public TimedSequence<Rectangle2D> createBigPacManMunchingAnimation() {
-		return null;
-	}
-
-	public TimedSequence<Rectangle2D> createBlinkyStretchedAnimation() {
-		return null;
-	}
-
-	public TimedSequence<Rectangle2D> createBlinkyDamagedAnimation() {
-		return null;
-	}
-
-	public TimedSequence<Rectangle2D> createBlinkyPatchedAnimation() {
-		return null;
-	}
-
-	public TimedSequence<Rectangle2D> createBlinkyNakedAnimation() {
-		return null;
-	}
 }

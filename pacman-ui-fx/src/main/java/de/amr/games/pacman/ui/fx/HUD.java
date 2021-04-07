@@ -77,7 +77,7 @@ public class HUD extends HBox {
 		line("Game Scene Size", "w=%.0f h=%.0f", ui.currentGameScene.getFXSubScene().getWidth(),
 				ui.currentGameScene.getFXSubScene().getHeight());
 		if (ui.currentGameScene instanceof AbstractGameScene2D) {
-			AbstractGameScene2D scene2D = (AbstractGameScene2D) ui.currentGameScene;
+			AbstractGameScene2D<?> scene2D = (AbstractGameScene2D<?>) ui.currentGameScene;
 			line("Canvas2D", "w=%.0f h=%.0f", scene2D.getCanvas().getWidth(), scene2D.getCanvas().getHeight());
 		} else {
 			line("3D Camera", "%s", cameraInfo(ui.currentGameScene.getActiveCamera()));

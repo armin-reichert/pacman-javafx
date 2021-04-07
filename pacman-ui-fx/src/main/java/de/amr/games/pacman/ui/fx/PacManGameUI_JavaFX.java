@@ -52,7 +52,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		SCENES[MS_PACMAN.ordinal()][2][1] = new MsPacMan_IntermissionScene2();
 		SCENES[MS_PACMAN.ordinal()][3][0] = 
 		SCENES[MS_PACMAN.ordinal()][3][1] = new MsPacMan_IntermissionScene3();
-		SCENES[MS_PACMAN.ordinal()][4][0] = new PlayScene2D(GameRendering2D.RENDERING_MS_PACMAN, SoundAssets.get(MS_PACMAN));
+		SCENES[MS_PACMAN.ordinal()][4][0] = new PlayScene2D<>(GameRendering2D.RENDERING_MS_PACMAN, SoundAssets.get(MS_PACMAN));
 		SCENES[MS_PACMAN.ordinal()][4][1] = new PlayScene3D(SoundAssets.get(MS_PACMAN));
 
 		SCENES[PACMAN.ordinal()]   [0][0] = 
@@ -63,7 +63,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		SCENES[PACMAN.ordinal()]   [2][1] = new PacMan_IntermissionScene2();
 		SCENES[PACMAN.ordinal()]   [3][0] = 
 		SCENES[PACMAN.ordinal()]   [3][1] = new PacMan_IntermissionScene3();
-		SCENES[PACMAN.ordinal()]   [4][0] = new PlayScene2D(GameRendering2D.RENDERING_PACMAN, SoundAssets.get(PACMAN));
+		SCENES[PACMAN.ordinal()]   [4][0] = new PlayScene2D<>(GameRendering2D.RENDERING_PACMAN, SoundAssets.get(PACMAN));
 		SCENES[PACMAN.ordinal()]   [4][1] = new PlayScene3D(SoundAssets.get(PACMAN));
 		//@formatter:on
 	}
@@ -312,7 +312,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		flashMessageView.update();
 		hud.update();
 		if (currentGameScene instanceof AbstractGameScene2D) {
-			AbstractGameScene2D scene2D = (AbstractGameScene2D) currentGameScene;
+			AbstractGameScene2D<?> scene2D = (AbstractGameScene2D<?>) currentGameScene;
 			scene2D.clearCanvas(Color.BLACK);
 			scene2D.render();
 		}

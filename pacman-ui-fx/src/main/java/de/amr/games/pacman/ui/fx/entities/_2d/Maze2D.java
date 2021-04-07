@@ -19,21 +19,21 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 /**
- * 2D representation of the maze for a given game level. Implements the flashing animation played
- * when the game level is complete.
+ * 2D representation of the maze for a given game level. Implements the flashing
+ * animation played when the game level is complete.
  * 
  * @author Armin Reichert
  */
-public class Maze2D extends Renderable2D {
+public class Maze2D<RENDERING extends GameRendering2D> extends Renderable2D<RENDERING> {
 
 	private GameLevel gameLevel;
 	private V2i tile;
 	private Timeline flashingAnimation;
 	private boolean flashImage;
-	private List<Energizer2D> energizers2D;
+	private List<Energizer2D<RENDERING>> energizers2D;
 	private TimedSequence<Boolean> energizerBlinking = TimedSequence.pulse().frameDuration(10);
 
-	public Maze2D(GameLevel gameLevel, GameRendering2D rendering) {
+	public Maze2D(GameLevel gameLevel, RENDERING rendering) {
 		super(rendering);
 		this.gameLevel = gameLevel;
 		KeyFrame changeMazeImage = new KeyFrame(Duration.millis(150), e -> flashImage = !flashImage);
@@ -41,7 +41,7 @@ public class Maze2D extends Renderable2D {
 		flashImage = false;
 		flashingAnimation.setCycleCount(2 * gameLevel.numFlashes);
 		energizers2D = gameLevel.world.energizerTiles().map(energizerTile -> {
-			Energizer2D energizer2D = new Energizer2D(rendering);
+			Energizer2D<RENDERING> energizer2D = new Energizer2D<RENDERING>(rendering);
 			energizer2D.setTile(energizerTile);
 			energizer2D.setBlinkingAnimation(energizerBlinking);
 			return energizer2D;

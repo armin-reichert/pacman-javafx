@@ -19,7 +19,7 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class Ghost2D extends Renderable2D {
+public class Ghost2D<RENDERING extends GameRendering2D> extends Renderable2D<RENDERING> {
 
 	private final Ghost ghost;
 	private Map<Direction, TimedSequence<Rectangle2D>> kickingAnimations;
@@ -29,7 +29,7 @@ public class Ghost2D extends Renderable2D {
 	private Map<Integer, Rectangle2D> numberSpritesMap;
 	private boolean looksFrightened;
 
-	public Ghost2D(Ghost ghost, GameRendering2D rendering) {
+	public Ghost2D(Ghost ghost, RENDERING rendering) {
 		super(rendering);
 		this.ghost = ghost;
 		flashingAnimation = rendering.createGhostFlashingAnimation();

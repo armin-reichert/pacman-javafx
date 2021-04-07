@@ -23,7 +23,7 @@ import javafx.scene.transform.Scale;
  * 
  * @author Armin Reichert
  */
-public abstract class AbstractGameScene2D implements GameScene {
+public abstract class AbstractGameScene2D<RENDERING extends GameRendering2D> implements GameScene {
 
 	public static final double UNSCALED_SCENE_WIDTH = 28 * TS;
 	public static final double UNSCALED_SCENE_HEIGHT = 36 * TS;
@@ -32,12 +32,12 @@ public abstract class AbstractGameScene2D implements GameScene {
 	protected final SubScene scene;
 	protected final Canvas canvas;
 	protected final GraphicsContext gc;
-	protected final GameRendering2D rendering;
+	protected final RENDERING rendering;
 	protected final SoundManager sounds;
 
 	protected PacManGameController gameController;
 
-	public AbstractGameScene2D(GameRendering2D rendering, SoundManager sounds) {
+	public AbstractGameScene2D(RENDERING rendering, SoundManager sounds) {
 		this.rendering = rendering;
 		this.sounds = sounds;
 		canvas = new Canvas(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT);

@@ -22,70 +22,70 @@ import javafx.util.Duration;
 
 public class Bonus3D implements Supplier<Node> {
 
-    private final Box box;
-    private final List<Image> symbolSprites;
-    private final Map<Integer, Image> pointsSprites;
-    private final GameRendering2D rendering2D;
-    private final RotateTransition rotation;
-    private final PhongMaterial skin;
+	private final Box box;
+	private final List<Image> symbolSprites;
+	private final Map<Integer, Image> pointsSprites;
+	private final GameRendering2D rendering2D;
+	private final RotateTransition rotation;
+	private final PhongMaterial skin;
 
-    public Bonus3D(GameVariant gameVariant, GameRendering2D rendering2D) {
-	this.rendering2D = rendering2D;
-	symbolSprites = rendering2D.getSymbolSprites().stream().map(rendering2D::subImage).collect(Collectors.toList());
-	pointsSprites = getPointsSprites(gameVariant);
-	box = new Box(8, 8, 8);
-	skin = new PhongMaterial(Color.WHITE);
-	rotation = new RotateTransition(Duration.seconds(2), box);
-	rotation.setAxis(Rotate.X_AXIS);
-	rotation.setByAngle(360);
-	rotation.setOnFinished(e -> hide());
-	hide();
-    }
-
-    private Map<Integer, Image> getPointsSprites(GameVariant gameVariant) {
-	Map<Integer, Rectangle2D> spritesMap = rendering2D.getBonusValuesSpritesMap();
-	Map<Integer, Image> result = new HashMap<>();
-	spritesMap.forEach((points, sprite) -> result.put(points, rendering2D.subImage(sprite)));
-	return result;
-    }
-
-    public void update(PacManBonus bonus) {
-	if (bonus != null) {
-	    box.setTranslateX(bonus.position.x);
-	    box.setTranslateY(bonus.position.y);
+	public Bonus3D(GameVariant gameVariant, GameRendering2D rendering2D) {
+		this.rendering2D = rendering2D;
+		symbolSprites = rendering2D.getSymbolSprites().stream().map(rendering2D::subImage).collect(Collectors.toList());
+		pointsSprites = getPointsSprites(gameVariant);
+		box = new Box(8, 8, 8);
+		skin = new PhongMaterial(Color.WHITE);
+		rotation = new RotateTransition(Duration.seconds(2), box);
+		rotation.setAxis(Rotate.X_AXIS);
+		rotation.setByAngle(360);
+		rotation.setOnFinished(e -> hide());
+		hide();
 	}
-    }
 
-    public void hide() {
-	rotation.stop();
-	box.setVisible(false);
-    }
+	private Map<Integer, Image> getPointsSprites(GameVariant gameVariant) {
+		Map<Integer, Rectangle2D> spritesMap = rendering2D.getBonusValuesSpritesMap();
+		Map<Integer, Image> result = new HashMap<>();
+		spritesMap.forEach((points, sprite) -> result.put(points, rendering2D.subImage(sprite)));
+		return result;
+	}
 
-    public void showSymbol(PacManBonus bonus) {
-	skin.setBumpMap(symbolSprites.get(bonus.symbol));
-	skin.setDiffuseMap(symbolSprites.get(bonus.symbol));
-	box.setMaterial(skin);
-	box.setTranslateX(bonus.position.x);
-	box.setTranslateY(bonus.position.y);
-	box.setVisible(true);
-	rotation.setCycleCount(Transition.INDEFINITE);
-	rotation.play();
-    }
+	public void update(PacManBonus bonus) {
+		if (bonus != null) {
+			box.setTranslateX(bonus.position.x);
+			box.setTranslateY(bonus.position.y);
+		}
+	}
 
-    public void showPoints(PacManBonus bonus) {
-	skin.setBumpMap(pointsSprites.get(bonus.points));
-	skin.setDiffuseMap(pointsSprites.get(bonus.points));
-	box.setMaterial(skin);
-	box.setTranslateX(bonus.position.x);
-	box.setTranslateY(bonus.position.y);
-	box.setVisible(true);
-	rotation.stop();
-	rotation.setCycleCount(1);
-	rotation.play();
-    }
+	public void hide() {
+		rotation.stop();
+		box.setVisible(false);
+	}
 
-    @Override
-    public Node get() {
-	return box;
-    }
+	public void showSymbol(PacManBonus bonus) {
+		skin.setBumpMap(symbolSprites.get(bonus.symbol));
+		skin.setDiffuseMap(symbolSprites.get(bonus.symbol));
+		box.setMaterial(skin);
+		box.setTranslateX(bonus.position.x);
+		box.setTranslateY(bonus.position.y);
+		box.setVisible(true);
+		rotation.setCycleCount(Transition.INDEFINITE);
+		rotation.play();
+	}
+
+	public void showPoints(PacManBonus bonus) {
+		skin.setBumpMap(pointsSprites.get(bonus.points));
+		skin.setDiffuseMap(pointsSprites.get(bonus.points));
+		box.setMaterial(skin);
+		box.setTranslateX(bonus.position.x);
+		box.setTranslateY(bonus.position.y);
+		box.setVisible(true);
+		rotation.stop();
+		rotation.setCycleCount(1);
+		rotation.play();
+	}
+
+	@Override
+	public Node get() {
+		return box;
+	}
 }

@@ -35,22 +35,22 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class PlayScene2D extends AbstractGameScene2D {
+public class PlayScene2D<RENDERING extends GameRendering2D> extends AbstractGameScene2D<RENDERING> {
 
-	private Maze2D maze2D;
-	private GameScore2D score2D;
-	private GameScore2D hiscore2D;
-	private LivesCounter2D livesCounter2D;
-	private LevelCounter2D levelCounter2D;
-	private GameStateDisplay2D gameStateDisplay2D;
-	private Player2D player2D;
-	private List<Ghost2D> ghosts2D;
-	private Bonus2D bonus2D;
+	private Maze2D<RENDERING> maze2D;
+	private GameScore2D<RENDERING> score2D;
+	private GameScore2D<RENDERING> hiscore2D;
+	private LivesCounter2D<RENDERING> livesCounter2D;
+	private LevelCounter2D<RENDERING> levelCounter2D;
+	private GameStateDisplay2D<RENDERING> gameStateDisplay2D;
+	private Player2D<RENDERING> player2D;
+	private List<Ghost2D<RENDERING>> ghosts2D;
+	private Bonus2D<RENDERING> bonus2D;
 
 	private PlaySceneSoundHandler playSceneSoundHandler;
 	private SequentialTransition levelCompleteAnimation;
 
-	public PlayScene2D(GameRendering2D rendering, SoundManager sounds) {
+	public PlayScene2D(RENDERING rendering, SoundManager sounds) {
 		super(rendering, sounds);
 	}
 
@@ -64,42 +64,42 @@ public class PlayScene2D extends AbstractGameScene2D {
 	public void start() {
 		super.start();
 
-		maze2D = new Maze2D(game().currentLevel, rendering);
+		maze2D = new Maze2D<>(game().currentLevel, rendering);
 		maze2D.setLeftUpperCorner(new V2i(0, 3));
 
-		livesCounter2D = new LivesCounter2D(rendering);
+		livesCounter2D = new LivesCounter2D<>(rendering);
 		livesCounter2D.setLeftUpperCorner(new V2i(2, 34));
 		livesCounter2D.setLifeCountSupplier(() -> game().lives);
 
-		levelCounter2D = new LevelCounter2D(rendering);
+		levelCounter2D = new LevelCounter2D<>(rendering);
 		levelCounter2D.setRightUpperCorner(new V2i(25, 34));
 		levelCounter2D.setLevelSymbols(game().levelSymbols);
 		levelCounter2D.setLevelNumberSupplier(() -> game().currentLevelNumber);
 
-		score2D = new GameScore2D(rendering);
+		score2D = new GameScore2D<>(rendering);
 		score2D.setTitle("SCORE");
 		score2D.setLeftUpperCorner(new V2i(1, 1));
 		score2D.setLevelSupplier(() -> game().currentLevelNumber);
 		score2D.setPointsSupplier(() -> game().score);
 
-		hiscore2D = new GameScore2D(rendering);
+		hiscore2D = new GameScore2D<>(rendering);
 		hiscore2D.setTitle("HI SCORE");
 		hiscore2D.setLeftUpperCorner(new V2i(16, 1));
 		hiscore2D.setPointsSupplier(() -> game().highscorePoints);
 		hiscore2D.setLevelSupplier(() -> game().highscoreLevel);
 
-		gameStateDisplay2D = new GameStateDisplay2D(rendering);
-		gameStateDisplay2D.setStateSupplier(
-				() -> gameController.isAttractMode() ? PacManGameState.GAME_OVER : gameController.state);
+		gameStateDisplay2D = new GameStateDisplay2D<>(rendering);
+		gameStateDisplay2D
+				.setStateSupplier(() -> gameController.isAttractMode() ? PacManGameState.GAME_OVER : gameController.state);
 
-		player2D = new Player2D(game().player, rendering);
+		player2D = new Player2D<>(game().player, rendering);
 		player2D.getDyingAnimation().delay(120).onStart(() -> {
 			game().ghosts().forEach(ghost -> ghost.visible = false);
 		});
 
-		ghosts2D = game().ghosts().map(ghost -> new Ghost2D(ghost, rendering)).collect(Collectors.toList());
+		ghosts2D = game().ghosts().map(ghost -> new Ghost2D<>(ghost, rendering)).collect(Collectors.toList());
 
-		bonus2D = new Bonus2D(rendering);
+		bonus2D = new Bonus2D<>(gameController.gameVariant(), rendering);
 
 		levelCompleteAnimation = new SequentialTransition(maze2D.getFlashingAnimation(),
 				new PauseTransition(Duration.seconds(1)));
@@ -156,7 +156,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// enter LEVEL_STARTING
 		if (event.newGameState == PacManGameState.LEVEL_STARTING) {
-			maze2D = new Maze2D(game().currentLevel, rendering);
+			maze2D = new Maze2D<>(game().currentLevel, rendering);
 			maze2D.setLeftUpperCorner(new V2i(0, 3));
 			gameController.stateTimer().reset(1);
 			gameController.stateTimer().start();
@@ -179,7 +179,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		if (gameEvent instanceof PacManGainsPowerEvent) {
 			game().ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
-				Ghost2D ghost2D = ghosts2D.get(ghost.id);
+				Ghost2D<RENDERING> ghost2D = ghosts2D.get(ghost.id);
 				ghost2D.getFlashingAnimation().reset();
 				ghost2D.getFrightenedAnimation().restart();
 			});
@@ -193,15 +193,15 @@ public class PlayScene2D extends AbstractGameScene2D {
 	}
 
 	private void letGhostsKick(boolean on) {
-		ghosts2D.forEach(ghost2D -> ghost2D.getKickingAnimations().values()
-				.forEach(on ? TimedSequence::restart : TimedSequence::reset));
+		ghosts2D.forEach(
+				ghost2D -> ghost2D.getKickingAnimations().values().forEach(on ? TimedSequence::restart : TimedSequence::reset));
 	}
 
 	// TODO simplify
 	private void handleGhostsFlashing(TickTimerEvent e) {
 		if (e.type == TickTimerEvent.Type.HALF_EXPIRED) {
 			game().ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
-				Ghost2D ghost2D = ghosts2D.get(ghost.id);
+				Ghost2D<RENDERING> ghost2D = ghosts2D.get(ghost.id);
 				TimedSequence<?> flashing = ghost2D.getFlashingAnimation();
 				long frameTime = e.ticks / (game().currentLevel.numFlashes * flashing.numFrames());
 				flashing.frameDuration(frameTime).repetitions(game().currentLevel.numFlashes).restart();

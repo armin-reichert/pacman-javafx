@@ -1,7 +1,8 @@
-package de.amr.games.pacman.ui.fx.entities._2d;
+package de.amr.games.pacman.ui.fx.entities._2d.mspacman;
 
 import de.amr.games.pacman.model.common.GameEntity;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
+import de.amr.games.pacman.ui.fx.entities._2d.Renderable2D;
+import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_MsPacMan;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -9,11 +10,11 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class Heart2D extends Renderable2D {
+public class Heart2D extends Renderable2D<GameRendering2D_MsPacMan> {
 
 	private final GameEntity heart;
 
-	public Heart2D(GameEntity heart, GameRendering2D rendering) {
+	public Heart2D(GameEntity heart, GameRendering2D_MsPacMan rendering) {
 		super(rendering);
 		this.heart = heart;
 	}

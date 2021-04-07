@@ -16,13 +16,13 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class LevelCounter2D extends Renderable2D {
+public class LevelCounter2D<RENDERING extends GameRendering2D> extends Renderable2D<RENDERING> {
 
 	private V2i tileRight;
 	private IntSupplier levelNumberSupplier;
 	private List<Byte> levelSymbols;
 
-	public LevelCounter2D(GameRendering2D rendering) {
+	public LevelCounter2D(RENDERING rendering) {
 		super(rendering);
 	}
 
