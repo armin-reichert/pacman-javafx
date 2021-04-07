@@ -99,7 +99,7 @@ public class PlayScene2D<RENDERING extends GameRendering2D> extends AbstractGame
 
 		ghosts2D = game().ghosts().map(ghost -> new Ghost2D<>(ghost, rendering)).collect(Collectors.toList());
 
-		bonus2D = new Bonus2D<>(gameController.gameVariant(), rendering);
+		bonus2D = new Bonus2D<>(rendering);
 
 		levelCompleteAnimation = new SequentialTransition(maze2D.getFlashingAnimation(),
 				new PauseTransition(Duration.seconds(1)));
