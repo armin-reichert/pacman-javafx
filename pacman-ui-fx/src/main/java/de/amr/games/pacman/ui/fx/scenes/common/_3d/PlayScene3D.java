@@ -23,6 +23,7 @@ import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangedEvent;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
+import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.entities._3d.Bonus3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Energizer3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Ghost3D;
@@ -38,6 +39,7 @@ import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.common.PlaySceneSoundHandler;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.PauseTransition;
+import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.scene.AmbientLight;
 import javafx.scene.Camera;
@@ -326,8 +328,32 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void playAnimationPlayerDying() {
-		// TODO implement this
+		PauseTransition phase1 = new PauseTransition(Duration.seconds(1));
+		phase1.setOnFinished(e -> {
+			game().ghosts().forEach(ghost -> ghost.visible = false);
+			sounds.play(PacManGameSound.PACMAN_DEATH);
+		});
 
+		ScaleTransition expand = new ScaleTransition(Duration.seconds(1), player.get());
+		expand.setToX(2);
+		expand.setToY(2);
+		expand.setToZ(2);
+
+		ScaleTransition shrink = new ScaleTransition(Duration.seconds(1.5), player.get());
+		shrink.setToX(0);
+		shrink.setToY(0);
+		shrink.setToZ(0);
+
+		SequentialTransition animation = new SequentialTransition(phase1, expand, shrink);
+		animation.setOnFinished(e -> {
+			player.get().setScaleX(1);
+			player.get().setScaleY(1);
+			player.get().setScaleZ(1);
+			game().player.visible = false;
+			gameController.stateTimer().forceExpiration();
+		});
+
+		animation.play();
 	}
 
 	private void playAnimationLevelComplete() {

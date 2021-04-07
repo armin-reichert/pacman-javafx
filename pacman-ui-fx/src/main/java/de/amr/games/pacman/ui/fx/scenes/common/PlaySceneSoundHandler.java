@@ -17,9 +17,7 @@ import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
-import javafx.animation.PauseTransition;
 import javafx.scene.media.AudioClip;
-import javafx.util.Duration;
 
 /**
  * Controls sound for 2D and 3D play scenes in reaction to game events.
@@ -78,10 +76,6 @@ public class PlaySceneSoundHandler {
 		// enter PACMAN_DYING
 		if (newState == PacManGameState.PACMAN_DYING) {
 			sounds.stopAll();
-			// start sound after 2 seconds
-			PauseTransition delay = new PauseTransition(Duration.seconds(2));
-			delay.setOnFinished(e -> sounds.play(PacManGameSound.PACMAN_DEATH));
-			delay.play();
 		}
 
 		// enter GHOST_DYING

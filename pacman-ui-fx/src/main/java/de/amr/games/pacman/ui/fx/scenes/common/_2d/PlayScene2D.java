@@ -14,6 +14,7 @@ import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GhostState;
+import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.entities._2d.Bonus2D;
 import de.amr.games.pacman.ui.fx.entities._2d.GameScore2D;
 import de.amr.games.pacman.ui.fx.entities._2d.GameStateDisplay2D;
@@ -144,6 +145,7 @@ public class PlayScene2D<RENDERING extends GameRendering2D> extends AbstractGame
 			maze2D.getEnergizerBlinking().reset();
 			letGhostsKick(false);
 			player2D.getDyingAnimation().restart();
+			sounds.play(PacManGameSound.PACMAN_DEATH);
 		}
 
 		// enter LEVEL_COMPLETE
