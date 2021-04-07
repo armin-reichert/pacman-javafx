@@ -6,8 +6,8 @@ import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_MsPacMan;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
- * The bag containing junior Pac-Man that is dropped by the stork in Ms. Pac-Man
- * intermission scene 3.
+ * The bag containing junior Pac-Man that is dropped by the stork in Ms. Pac-Man intermission scene
+ * 3.
  * 
  * @author Armin Reichert
  */

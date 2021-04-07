@@ -30,8 +30,7 @@ import javafx.animation.SequentialTransition;
 import javafx.util.Duration;
 
 /**
- * 2D scene displaying the maze and the game play for both, Pac-Man and Ms.
- * Pac-Man games.
+ * 2D scene displaying the maze and the game play for both, Pac-Man and Ms. Pac-Man games.
  * 
  * @author Armin Reichert
  */

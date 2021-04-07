@@ -11,8 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
- * Draws the game state as text inside the maze. In attract mode, displays
- * GAME_OVER.
+ * Draws the game state as text inside the maze. In attract mode, displays GAME_OVER.
  * 
  * @author Armin Reichert
  */

@@ -17,11 +17,10 @@ import de.amr.games.pacman.ui.mspacman.MsPacMan_IntermissionScene1_Controller;
 /**
  * Intermission scene 1: "They meet".
  * <p>
- * Pac-Man leads Inky and Ms. Pac-Man leads Pinky. Soon, the two Pac-Men are
- * about to collide, they quickly move upwards, causing Inky and Pinky to
- * collide and vanish. Finally, Pac-Man and Ms. Pac-Man face each other at the
- * top of the screen and a big pink heart appears above them. (Played after
- * round 2)
+ * Pac-Man leads Inky and Ms. Pac-Man leads Pinky. Soon, the two Pac-Men are about to collide, they
+ * quickly move upwards, causing Inky and Pinky to collide and vanish. Finally, Pac-Man and Ms.
+ * Pac-Man face each other at the top of the screen and a big pink heart appears above them. (Played
+ * after round 2)
  * 
  * @author Armin Reichert
  */

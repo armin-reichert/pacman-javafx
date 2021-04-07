@@ -8,8 +8,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
- * 2D representation of the stork flying through intermission scene 3 of Ms.
- * Pac-Man.
+ * 2D representation of the stork flying through intermission scene 3 of Ms. Pac-Man.
  * 
  * @author Armin Reichert
  */

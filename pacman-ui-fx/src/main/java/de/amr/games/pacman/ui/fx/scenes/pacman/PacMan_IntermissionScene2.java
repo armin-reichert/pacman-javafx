@@ -18,8 +18,7 @@ import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene2_Controller;
 import javafx.geometry.Rectangle2D;
 
 /**
- * Second intermission scene: Blinky pursues Pac but kicks a nail that tears his
- * dress apart.
+ * Second intermission scene: Blinky pursues Pac but kicks a nail that tears his dress apart.
  * 
  * @author Armin Reichert
  */
