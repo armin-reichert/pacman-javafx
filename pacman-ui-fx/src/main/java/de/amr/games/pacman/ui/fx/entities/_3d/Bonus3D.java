@@ -69,6 +69,7 @@ public class Bonus3D implements Supplier<Node> {
 		box.setTranslateY(bonus.position.y);
 		box.setVisible(true);
 		rotation.setCycleCount(Transition.INDEFINITE);
+		rotation.setRate(1);
 		rotation.play();
 	}
 
@@ -80,7 +81,8 @@ public class Bonus3D implements Supplier<Node> {
 		box.setTranslateY(bonus.position.y);
 		box.setVisible(true);
 		rotation.stop();
-		rotation.setCycleCount(1);
+		rotation.setRate(2);
+		rotation.setCycleCount(2);
 		rotation.play();
 	}
 

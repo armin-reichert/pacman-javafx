@@ -21,7 +21,6 @@ import de.amr.games.pacman.controller.event.BonusExpiredEvent;
 import de.amr.games.pacman.controller.event.ExtraLifeEvent;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangedEvent;
-import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx.entities._3d.Bonus3D;
@@ -39,7 +38,7 @@ import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.common.PlaySceneSoundHandler;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.PauseTransition;
-import javafx.animation.ScaleTransition;
+import javafx.animation.SequentialTransition;
 import javafx.scene.AmbientLight;
 import javafx.scene.Camera;
 import javafx.scene.Group;
@@ -279,7 +278,6 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void onGameStateChange(PacManGameStateChangedEvent event) {
-		AbstractGameModel gameModel = gameController.game();
 
 		playSceneSoundHandler.onGameStateChange(event.oldGameState, event.newGameState);
 
@@ -306,7 +304,6 @@ public class PlayScene3D implements GameScene {
 
 		// enter LEVEL_COMPLETE
 		if (event.newGameState == PacManGameState.LEVEL_COMPLETE) {
-			gameModel.ghosts().forEach(ghost -> ghost.visible = false);
 			playAnimationLevelComplete();
 		}
 
@@ -334,26 +331,40 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void playAnimationLevelComplete() {
-		AbstractGameModel game = gameController.game();
-		game.player.visible = false;
-		game.ghosts().forEach(ghost -> ghost.visible = false);
-		gameController.userInterface.showFlashMessage(String.format("%s!\n\nLevel %d complete.",
-				CONGRATS[new Random().nextInt(CONGRATS.length)], game.currentLevelNumber), 2);
-
 		gameController.stateTimer().reset();
-		PauseTransition pause = new PauseTransition(Duration.seconds(3));
-		pause.setOnFinished(e -> gameController.stateTimer().forceExpiration());
-		pause.play();
+
+		String congrats = CONGRATS[new Random().nextInt(CONGRATS.length)];
+		String message = String.format("%s!\n\nLevel %d complete.", congrats, game().currentLevelNumber);
+		gameController.userInterface.showFlashMessage(message, 2);
+
+		PauseTransition phase1 = new PauseTransition(Duration.seconds(2));
+		phase1.setOnFinished(e -> {
+			game().player.visible = false;
+			game().ghosts().forEach(ghost -> ghost.visible = false);
+		});
+
+		PauseTransition phase2 = new PauseTransition(Duration.seconds(2));
+
+		SequentialTransition animation = new SequentialTransition(phase1, phase2);
+		animation.setOnFinished(e -> {
+			gameController.stateTimer().forceExpiration();
+		});
+		animation.play();
 	}
 
 	private void playAnimationLevelStarting() {
 		gameController.stateTimer().reset();
 		gameController.userInterface.showFlashMessage("Entering Level " + gameController.game().currentLevelNumber);
 
-		ScaleTransition animation = new ScaleTransition(Duration.seconds(3), tgMaze);
-		animation.setDelay(Duration.seconds(2));
-		animation.setFromZ(0);
-		animation.setToZ(1);
+		PauseTransition phase1 = new PauseTransition(Duration.seconds(2));
+		phase1.setOnFinished(e -> {
+			game().player.visible = true;
+			game().ghosts().forEach(ghost -> ghost.visible = true);
+		});
+
+		PauseTransition phase2 = new PauseTransition(Duration.seconds(2));
+
+		SequentialTransition animation = new SequentialTransition(phase1, phase2);
 		animation.setOnFinished(e -> gameController.stateTimer().forceExpiration());
 		animation.play();
 	}
