@@ -14,6 +14,7 @@ public class Nail2D extends Renderable2D<GameRendering2D_PacMan> {
 		this.nail = nail;
 	}
 
+	@Override
 	public void render(GraphicsContext g) {
 		renderEntity(g, nail, rendering.getNail());
 	}
