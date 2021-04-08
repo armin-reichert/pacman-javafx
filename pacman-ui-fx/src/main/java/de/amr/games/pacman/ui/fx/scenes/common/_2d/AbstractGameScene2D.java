@@ -72,7 +72,7 @@ public abstract class AbstractGameScene2D<RENDERING extends GameRendering2D> imp
 	}
 
 	@Override
-	public void setAvailableSize(double width, double height) {
+	public void stretchTo(double width, double height) {
 		width = aspectRatio().getAsDouble() * height;
 		canvas.setWidth(width);
 		canvas.setHeight(height);

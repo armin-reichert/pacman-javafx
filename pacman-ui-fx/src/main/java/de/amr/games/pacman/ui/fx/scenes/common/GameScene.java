@@ -31,7 +31,7 @@ public interface GameScene extends PacManGameEventListener {
 
 	OptionalDouble aspectRatio();
 
-	void setAvailableSize(double width, double height);
+	void stretchTo(double width, double height);
 
 	SubScene getFXSubScene();
 

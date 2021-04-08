@@ -113,7 +113,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			}
 			if (newGameScene.getGameController() == null) {
 				newGameScene.setGameController(gameController);
-				newGameScene.setAvailableSize(mainScene.getWidth(), mainScene.getHeight());
+				newGameScene.stretchTo(mainScene.getWidth(), mainScene.getHeight());
 				keepGameSceneMaximized(newGameScene, mainScene);
 			}
 			currentGameScene = newGameScene;
@@ -293,12 +293,12 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			parentScene.widthProperty().addListener((s, o, newParentWidth) -> {
 				double maxHeight = Math.min(newParentWidth.doubleValue() / aspectRatio, parentScene.getHeight());
 				double maxWidth = maxHeight * aspectRatio;
-				gameScene.setAvailableSize(maxWidth, maxHeight);
+				gameScene.stretchTo(maxWidth, maxHeight);
 			});
 			parentScene.heightProperty().addListener((s, o, newParentHeight) -> {
 				double maxHeight = newParentHeight.doubleValue();
 				double maxWidth = Math.min(parentScene.getHeight() * aspectRatio, parentScene.getWidth());
-				gameScene.setAvailableSize(maxWidth, maxHeight);
+				gameScene.stretchTo(maxWidth, maxHeight);
 			});
 		} else {
 			gameScene.getFXSubScene().widthProperty().bind(parentScene.widthProperty());
