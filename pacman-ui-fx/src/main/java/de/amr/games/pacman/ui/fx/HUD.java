@@ -38,7 +38,7 @@ public class HUD extends HBox {
 
 	private void line(String column1, String fmtColumn2, Object... args) {
 		String column2 = String.format(fmtColumn2, args) + "\n";
-		text += String.format("%-20s: %s", column1, column2);
+		text += String.format("%-30s: %s", column1, column2);
 	}
 
 	private void line() {
@@ -81,8 +81,9 @@ public class HUD extends HBox {
 			AbstractGameScene2D<?> scene2D = (AbstractGameScene2D<?>) ui.currentGameScene;
 			line("Canvas2D", "w=%.0f h=%.0f", scene2D.getCanvas().getWidth(), scene2D.getCanvas().getHeight());
 		} else {
-			line("3D Camera", "%s", cameraInfo(ui.currentGameScene.getActiveCamera()));
-			line("3D Draw Mode", "%s", Env.$drawMode.get());
+			line("3D Movable Camera (CTRL+C)", "%s", cameraInfo(ui.currentGameScene.getActiveCamera()));
+			line("3D Draw Mode (CTRL+L)", "%s", Env.$drawMode.get());
+			line("3D Axes (CTRL+X)", "%s", onOff(Env.$showAxes.get()));
 		}
 		textView.setText(text);
 	}

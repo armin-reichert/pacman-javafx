@@ -135,7 +135,7 @@ public class PlayScene3D implements GameScene {
 		tgMaze.getChildren().add(bonus3D.get());
 		tgMaze.getChildren().addAll(ambientLight, pointLight);
 
-		coordSystem = new CoordinateSystem(150);
+		coordSystem = new CoordinateSystem(game().currentLevel.world.numRows() * TS);
 		fxScene.setRoot(new Group(coordSystem.getNode(), tgMaze));
 	}
 
