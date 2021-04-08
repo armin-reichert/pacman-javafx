@@ -24,6 +24,8 @@ import de.amr.games.pacman.ui.fx.scenes.pacman.PacMan_IntermissionScene3;
 import de.amr.games.pacman.ui.fx.scenes.pacman.PacMan_IntroScene;
 import de.amr.games.pacman.ui.fx.sound.SoundAssets;
 import javafx.application.Platform;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -70,6 +72,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		//@formatter:on
 	}
 
+	public final IntegerProperty $fps = new SimpleIntegerProperty();
 	public final Stage stage;
 	public final PacManGameController gameController;
 	public final HUD hud = new HUD(this);

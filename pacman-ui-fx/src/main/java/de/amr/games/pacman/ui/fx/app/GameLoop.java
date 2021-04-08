@@ -6,6 +6,8 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import javafx.animation.AnimationTimer;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 
 /**
  * Game loop.
@@ -16,11 +18,12 @@ import javafx.animation.AnimationTimer;
  */
 class GameLoop extends AnimationTimer {
 
+	public IntegerProperty $fps = new SimpleIntegerProperty();
+
 	private final PacManGameController controller;
 	private final PacManGameUI_JavaFX userInterface;
 
 	private long totalTicks;
-	private int fps;
 	private long fpsCountStartTime;
 	private int frames;
 
@@ -30,7 +33,7 @@ class GameLoop extends AnimationTimer {
 	}
 
 	public int getFPS() {
-		return fps;
+		return $fps.get();
 	}
 
 	@Override
@@ -48,7 +51,7 @@ class GameLoop extends AnimationTimer {
 				}
 				++frames;
 				if (now - fpsCountStartTime > 1e9) {
-					fps = frames;
+					$fps.set(frames);
 					frames = 0;
 					fpsCountStartTime = now;
 					userInterface.setTitle(String.format("Pac-Man / Ms. Pac-Man (%d fps, JavaFX)", getFPS()));

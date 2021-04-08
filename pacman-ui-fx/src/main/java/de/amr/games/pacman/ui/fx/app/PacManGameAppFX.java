@@ -36,6 +36,7 @@ public class PacManGameAppFX extends Application {
 		PacManGameUI_JavaFX userInterface = new PacManGameUI_JavaFX(stage, gameController, options.height);
 		gameController.userInterface = userInterface;
 		gameLoop = new GameLoop(gameController, userInterface);
+		userInterface.$fps.bind(gameLoop.$fps);
 		gameLoop.start();
 	}
 }
