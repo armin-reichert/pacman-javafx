@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.scenes.common;
+package de.amr.games.pacman.ui.fx.sound;
 
 import static de.amr.games.pacman.lib.Logging.log;
 
@@ -16,11 +16,12 @@ import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.PacManGameSound;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.media.AudioClip;
 
 /**
  * Controls sound for 2D and 3D play scenes in reaction to game events.
+ * 
+ * TODO not sure if sound should be handled separately from the visual animations
  * 
  * @author Armin Reichert
  */
