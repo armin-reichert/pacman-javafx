@@ -27,11 +27,12 @@ public abstract class AbstractGameScene2D<RENDERING extends GameRendering2D> imp
 
 	public static final double UNSCALED_SCENE_WIDTH = 28 * TS;
 	public static final double UNSCALED_SCENE_HEIGHT = 36 * TS;
-	public static final double ASPECT_RATIO = UNSCALED_SCENE_WIDTH / UNSCALED_SCENE_HEIGHT;
+	public static final double DEFAULT_ASPECT_RATIO = UNSCALED_SCENE_WIDTH / UNSCALED_SCENE_HEIGHT;
 
 	protected final SubScene scene;
 	protected final Canvas canvas;
 	protected final GraphicsContext gc;
+	protected double aspectRatio = DEFAULT_ASPECT_RATIO;
 	protected final RENDERING rendering;
 	protected final SoundManager sounds;
 
@@ -47,9 +48,13 @@ public abstract class AbstractGameScene2D<RENDERING extends GameRendering2D> imp
 		scene.heightProperty().bind(canvas.heightProperty());
 	}
 
+	public void setAspectRatio(double aspectRatio) {
+		this.aspectRatio = aspectRatio;
+	}
+
 	@Override
-	public OptionalDouble aspectRatio() {
-		return OptionalDouble.of(ASPECT_RATIO);
+	public final OptionalDouble aspectRatio() {
+		return OptionalDouble.of(aspectRatio);
 	}
 
 	@Override
@@ -122,10 +127,5 @@ public abstract class AbstractGameScene2D<RENDERING extends GameRendering2D> imp
 	@Override
 	public SubScene getFXSubScene() {
 		return scene;
-	}
-
-	@Override
-	public void stopAllSounds() {
-		sounds.stopAll();
 	}
 }

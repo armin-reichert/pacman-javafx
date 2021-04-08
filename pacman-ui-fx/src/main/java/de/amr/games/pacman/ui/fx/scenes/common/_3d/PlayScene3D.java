@@ -95,32 +95,6 @@ public class PlayScene3D implements GameScene {
 		useStaticCamera();
 	}
 
-	@Override
-	public PacManGameController getGameController() {
-		return gameController;
-	}
-
-	@Override
-	public void setGameController(PacManGameController gameController) {
-		this.gameController = gameController;
-		playSceneSoundHandler = new PlaySceneSoundHandler(gameController, sounds);
-	}
-
-	@Override
-	public OptionalDouble aspectRatio() {
-		return OptionalDouble.empty();
-	}
-
-	@Override
-	public String toString() {
-		return getClass().getSimpleName() + "@" + hashCode();
-	}
-
-	@Override
-	public void stopAllSounds() {
-		sounds.stopAll();
-	}
-
 	private void buildSceneGraph() {
 		final GameVariant gameVariant = gameController.gameVariant();
 
@@ -163,6 +137,27 @@ public class PlayScene3D implements GameScene {
 
 		coordSystem = new CoordinateSystem(150);
 		fxScene.setRoot(new Group(coordSystem.getNode(), tgMaze));
+	}
+
+	@Override
+	public PacManGameController getGameController() {
+		return gameController;
+	}
+
+	@Override
+	public void setGameController(PacManGameController gameController) {
+		this.gameController = gameController;
+		playSceneSoundHandler = new PlaySceneSoundHandler(gameController, sounds);
+	}
+
+	@Override
+	public OptionalDouble aspectRatio() {
+		return OptionalDouble.empty();
+	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + "@" + hashCode();
 	}
 
 	private Collection<Node> collect(Collection<? extends Supplier<Node>> items) {

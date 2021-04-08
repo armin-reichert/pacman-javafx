@@ -38,6 +38,4 @@ public interface GameScene extends PacManGameEventListener {
 	void useMoveableCamera(boolean use);
 
 	Camera getActiveCamera();
-
-	void stopAllSounds();
 }

@@ -25,12 +25,14 @@ import de.amr.games.pacman.ui.fx.scenes.pacman.PacMan_IntroScene;
 import de.amr.games.pacman.ui.fx.sound.SoundAssets;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 /**
@@ -84,7 +86,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		gameController.addGameEventListener(this);
 
 		GameScene initialGameScene = sceneForCurrentGameState(Env.$use3DScenes.get());
-		double aspectRatio = initialGameScene.aspectRatio().orElse(4.0 / 3.0);
+		double aspectRatio = initialGameScene.aspectRatio().orElse(getScreenAspectRatio());
 		mainScene = new Scene(new StackPane(), aspectRatio * height, height, Color.rgb(20, 20, 60));
 		setGameScene(initialGameScene);
 
@@ -97,6 +99,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		stage.setScene(mainScene);
 		stage.centerOnScreen();
 		stage.show();
+	}
+
+	private double getScreenAspectRatio() {
+		Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+		return bounds.getWidth() / bounds.getHeight();
 	}
 
 	private GameScene sceneForCurrentGameState(boolean use3D) {
