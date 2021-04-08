@@ -340,4 +340,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	public boolean keyPressed(String keySpec) {
 		return keyboard.keyPressed(keySpec);
 	}
+
+	public void setTitle(String title) {
+		stage.setTitle(title);
+	}
 }

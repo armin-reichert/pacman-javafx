@@ -7,18 +7,30 @@ import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import javafx.animation.AnimationTimer;
 
+/**
+ * Game loop.
+ * <p>
+ * Note that the animation timer frequency is determined from the monitor refresh rate!
+ * 
+ * @author Armin Reichert
+ */
 class GameLoop extends AnimationTimer {
 
-	final PacManGameController controller;
-	final PacManGameUI_JavaFX userInterface;
+	private final PacManGameController controller;
+	private final PacManGameUI_JavaFX userInterface;
 
-	long totalTicks;
-	long lastUpdate;
-	double deltaTime;
+	private long totalTicks;
+	private int fps;
+	private long fpsCountStartTime;
+	private int frames;
 
 	public GameLoop(PacManGameController controller, PacManGameUI_JavaFX userInterface) {
 		this.controller = controller;
 		this.userInterface = userInterface;
+	}
+
+	public int getFPS() {
+		return fps;
 	}
 
 	@Override
@@ -33,12 +45,13 @@ class GameLoop extends AnimationTimer {
 				} else {
 					controller.step();
 					userInterface.update();
-					deltaTime = (now - lastUpdate) / 1e6;
-//					log("delta time: %.2f milliseconds", deltaTime);
-//					if (deltaTime > 30) {
-//						controller.step();
-//					}
-					lastUpdate = now;
+				}
+				++frames;
+				if (now - fpsCountStartTime > 1e9) {
+					fps = frames;
+					frames = 0;
+					fpsCountStartTime = now;
+					userInterface.setTitle(String.format("Pac-Man / Ms. Pac-Man (%d fps, JavaFX)", getFPS()));
 				}
 			}
 			++totalTicks;
