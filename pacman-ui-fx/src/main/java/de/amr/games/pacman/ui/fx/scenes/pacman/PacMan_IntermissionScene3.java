@@ -2,8 +2,10 @@ package de.amr.games.pacman.ui.fx.scenes.pacman;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.PacManGameSound;
+import de.amr.games.pacman.ui.fx.entities._2d.LevelCounter2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Player2D;
 import de.amr.games.pacman.ui.fx.entities._2d.pacman.BlinkyNaked2D;
 import de.amr.games.pacman.ui.fx.entities._2d.pacman.BlinkyPatched2D;
@@ -35,6 +37,7 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D<GameRendering
 	}
 
 	private SceneController sceneController;
+	private LevelCounter2D<GameRendering2D_PacMan> levelCounter2D;
 	private Player2D<GameRendering2D_PacMan> pacMan2D;
 	private BlinkyPatched2D blinkyPatched2D;
 	private BlinkyNaked2D blinkyNaked2D;
@@ -48,6 +51,10 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D<GameRendering
 		super.start();
 		sceneController = new SceneController(gameController);
 		sceneController.init();
+		levelCounter2D = new LevelCounter2D<>(rendering);
+		levelCounter2D.setRightUpperCorner(new V2i(25, 34));
+		levelCounter2D.setLevelSymbols(game().levelSymbols);
+		levelCounter2D.setLevelNumberSupplier(() -> game().currentLevelNumber);
 		pacMan2D = new Player2D<>(sceneController.pac, rendering);
 		blinkyPatched2D = new BlinkyPatched2D(sceneController.blinky, GameRendering2D.RENDERING_PACMAN);
 		blinkyNaked2D = new BlinkyNaked2D(sceneController.blinky, GameRendering2D.RENDERING_PACMAN);
@@ -63,6 +70,7 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D<GameRendering
 
 	@Override
 	public void render() {
+		levelCounter2D.render(gc);
 		pacMan2D.render(gc);
 		if (sceneController.phase == Phase.CHASING_PACMAN) {
 			blinkyPatched2D.render(gc);
