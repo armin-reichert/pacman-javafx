@@ -52,7 +52,9 @@ import javafx.scene.SubScene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 /**
@@ -75,9 +77,10 @@ public class PlayScene3D implements GameScene {
 	private PlaySceneSoundHandler playSceneSoundHandler;
 	private PacManGameController gameController;
 
-	private AmbientLight ambientLight = new AmbientLight(Color.AZURE);
-	private PointLight pointLight = new PointLight(Color.AZURE);
+	private AmbientLight ambientLight;
+	private PointLight pointLight;
 	private CoordinateSystem coordSystem;
+	private Box ground;
 	private Group tgMaze;
 	private Player3D player;
 	private Map<Ghost, Ghost3D> ghosts3D;
@@ -122,10 +125,7 @@ public class PlayScene3D implements GameScene {
 		livesCounter3D = new LivesCounter3D(game().player, 1, 1);
 
 		tgMaze = new Group();
-
-		tgMaze.setTranslateX(-0.5 * game().currentLevel.world.numCols() * TS);
-		tgMaze.setTranslateY(-0.5 * game().currentLevel.world.numRows() * TS);
-
+		tgMaze.getTransforms().add(new Translate(-14 * 8, -18 * 8));
 		tgMaze.getChildren().addAll(score3D.get(), livesCounter3D.get());
 		tgMaze.getChildren().addAll(maze.getBricks());
 		tgMaze.getChildren().addAll(collect(energizers));
@@ -133,10 +133,27 @@ public class PlayScene3D implements GameScene {
 		tgMaze.getChildren().addAll(player.get());
 		tgMaze.getChildren().addAll(collect(ghosts3D.values()));
 		tgMaze.getChildren().add(bonus3D.get());
+
+		ambientLight = new AmbientLight(Color.rgb(10, 10, 10));
+
+		pointLight = new PointLight(Color.ANTIQUEWHITE);
+		pointLight.translateXProperty().bind(player.get().translateXProperty());
+		pointLight.translateYProperty().bind(player.get().translateYProperty());
+		// TODO bind lightOn to player visibility
+//		pointLight.setTranslateX(14 * 8);
+//		pointLight.setTranslateY(18 * 8);
+		pointLight.setTranslateZ(-4);
+
 		tgMaze.getChildren().addAll(ambientLight, pointLight);
 
+		ground = new Box(28 * 8, 36 * 8, 0.1);
+		ground.setMaterial(new PhongMaterial(GameRendering3D_Assets.mazeGroundColor(gameVariant, 1)));
+		ground.setTranslateX(-4);
+		ground.setTranslateY(-4);
+		ground.setTranslateZ(2);
+
 		coordSystem = new CoordinateSystem(game().currentLevel.world.numRows() * TS);
-		fxScene.setRoot(new Group(coordSystem.getNode(), tgMaze));
+		fxScene.setRoot(new Group(coordSystem.getNode(), ground, tgMaze));
 	}
 
 	@Override

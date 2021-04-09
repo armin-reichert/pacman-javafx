@@ -86,8 +86,12 @@ public class GameRendering3D_Assets {
 		}
 	}
 
+	public static Color mazeGroundColor(GameVariant gameType, int mazeNumber) {
+		return gameType == GameVariant.PACMAN ? Color.BLACK : GameRendering2D_Assets.getMazeWallColor(mazeNumber);
+	}
+
 	public static Color mazeWallColor(GameVariant gameType, int mazeNumber) {
-		return gameType == GameVariant.PACMAN ? Color.BLUE : GameRendering2D_Assets.getMazeWallColor(mazeNumber);
+		return gameType == GameVariant.PACMAN ? Color.BLUE : GameRendering2D_Assets.getMazeWallBorderColor(mazeNumber);
 	}
 
 	public static Color foodColor(GameVariant gameType, int mazeNumber) {
