@@ -17,7 +17,6 @@ public class LivesCounter3D implements Supplier<Node> {
 
 	public LivesCounter3D(Pac pac, int x, int y) {
 		root = new Group();
-		root.setViewOrder(-y * TS - TS);
 		for (int i = 0; i < numPositions; ++i) {
 			V2i brickTile = new V2i(x + 2 * i, y);
 			Player3D liveIndicator = new Player3D(pac);

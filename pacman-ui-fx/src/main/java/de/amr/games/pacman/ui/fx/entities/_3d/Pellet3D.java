@@ -27,7 +27,6 @@ public class Pellet3D implements Supplier<Node> {
 		sphere.setMaterial(material);
 		sphere.setTranslateX(tile.x * TS);
 		sphere.setTranslateY(tile.y * TS);
-		sphere.setViewOrder(-tile.y * TS - 1);
 	}
 
 	public void update(AbstractGameModel game) {

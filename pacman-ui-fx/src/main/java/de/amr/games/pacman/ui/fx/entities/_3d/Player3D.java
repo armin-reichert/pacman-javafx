@@ -55,7 +55,6 @@ public class Player3D implements Supplier<Node> {
 		root.setVisible(pac.visible);
 		root.setTranslateX(pac.position.x);
 		root.setTranslateY(pac.position.y);
-		root.setViewOrder(-pac.position.y - 2);
 		root.setRotationAxis(Rotate.Y_AXIS);
 		root.setRotate(90);
 		switch (pac.dir) {

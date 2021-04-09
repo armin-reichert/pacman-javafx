@@ -31,7 +31,6 @@ public class Energizer3D implements Supplier<Node> {
 		sphere.setMaterial(material);
 		sphere.setTranslateX(tile.x * TS);
 		sphere.setTranslateY(tile.y * TS);
-		sphere.setViewOrder(-tile.y * TS - 1);
 		pumping = new ScaleTransition(Duration.seconds(0.25), sphere);
 		pumping.setAutoReverse(true);
 		pumping.setCycleCount(Transition.INDEFINITE);

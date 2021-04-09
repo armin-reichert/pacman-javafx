@@ -77,7 +77,6 @@ public class Ghost3D implements Supplier<Node> {
 		root.setVisible(ghost.visible);
 		root.setTranslateX(ghost.position.x);
 		root.setTranslateY(ghost.position.y);
-		root.setViewOrder(-(ghost.position.y + 5)); // TODO
 		if (ghost.bounty > 0) {
 			Image bountySprite = rendering2D.subImage(rendering2D.getBountyNumberSpritesMap().get(ghost.bounty));
 			bountySkin.setBumpMap(bountySprite);

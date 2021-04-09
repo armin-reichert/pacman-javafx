@@ -26,7 +26,6 @@ public class Brick3D extends Box implements Supplier<Node> {
 		setMaterial(material);
 		setTranslateX(x);
 		setTranslateY(y);
-		setViewOrder(-y);
 		setUserData(userData);
 		drawModeProperty().bind(Env.$drawMode);
 	}
