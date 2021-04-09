@@ -7,6 +7,8 @@ import java.util.function.Supplier;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering3D_Assets;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
@@ -21,6 +23,23 @@ import javafx.scene.transform.Translate;
  * @author Armin Reichert
  */
 public class Player3D implements Supplier<Node> {
+
+	public final ReadOnlyBooleanProperty $visible = new ReadOnlyBooleanPropertyBase() {
+		@Override
+		public boolean get() {
+			return pac.visible;
+		}
+
+		@Override
+		public Object getBean() {
+			return pac;
+		}
+
+		@Override
+		public String getName() {
+			return "visible";
+		}
+	};
 
 	private final Pac pac;
 	private final Node root;

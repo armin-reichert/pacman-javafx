@@ -134,14 +134,12 @@ public class PlayScene3D implements GameScene {
 		tgMaze.getChildren().addAll(collect(ghosts3D.values()));
 		tgMaze.getChildren().add(bonus3D.get());
 
-		ambientLight = new AmbientLight(Color.rgb(10, 10, 10));
+		ambientLight = new AmbientLight(Color.rgb(1, 1, 1));
 
 		pointLight = new PointLight(Color.ANTIQUEWHITE);
 		pointLight.translateXProperty().bind(player.get().translateXProperty());
 		pointLight.translateYProperty().bind(player.get().translateYProperty());
-		// TODO bind lightOn to player visibility
-//		pointLight.setTranslateX(14 * 8);
-//		pointLight.setTranslateY(18 * 8);
+		pointLight.lightOnProperty().bind(player.$visible);
 		pointLight.setTranslateZ(-4);
 
 		tgMaze.getChildren().addAll(ambientLight, pointLight);
@@ -150,7 +148,7 @@ public class PlayScene3D implements GameScene {
 		ground.setMaterial(new PhongMaterial(GameRendering3D_Assets.mazeGroundColor(gameVariant, 1)));
 		ground.setTranslateX(-4);
 		ground.setTranslateY(-4);
-		ground.setTranslateZ(2);
+		ground.setTranslateZ(4);
 
 		coordSystem = new CoordinateSystem(game().currentLevel.world.numRows() * TS);
 		fxScene.setRoot(new Group(coordSystem.getNode(), ground, tgMaze));
