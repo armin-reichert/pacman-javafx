@@ -11,9 +11,9 @@ import java.util.stream.Collectors;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.world.PacManGameWorld;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering3D_Assets;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 
 /**
  * 3D-model for a maze that is created from the simple textual map description.
@@ -131,8 +131,10 @@ public class Maze3D {
 		microTiles.removeAll(microTilesToRemove);
 
 		double brickSizeX = 2, brickSizeY = 2, brickSizeZ = 3;
-		bricks = microTiles.stream().map(mt -> new Brick3D(mt.x, mt.y, brickSizeX, brickSizeY, brickSizeZ,
-				GameRendering3D_Assets.randomWallMaterial(), mt.tile)).collect(Collectors.toList());
+		PhongMaterial wallMaterial = new PhongMaterial(wallColor);
+		bricks = microTiles.stream()
+				.map(mt -> new Brick3D(mt.x, mt.y, brickSizeX, brickSizeY, brickSizeZ, wallMaterial, mt.tile))
+				.collect(Collectors.toList());
 	}
 
 	public List<Node> getBricks() {

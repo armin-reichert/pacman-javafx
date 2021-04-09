@@ -33,7 +33,6 @@ import de.amr.games.pacman.ui.fx.entities._3d.Pellet3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Player3D;
 import de.amr.games.pacman.ui.fx.entities._3d.ScoreNotReally3D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_Assets;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering3D_Assets;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.sound.PlaySceneSoundHandler;
@@ -100,11 +99,12 @@ public class PlayScene3D implements GameScene {
 
 	private void buildSceneGraph() {
 		final GameVariant gameVariant = gameController.gameVariant();
+		final int mazeNumber = game().currentLevel.mazeNumber;
 
 		fxScene.setFill(Color.rgb(20, 20, 60));
 
-		maze = new Maze3D(game(), GameRendering2D_Assets.getMazeWallColor(game().currentLevel.mazeNumber));
-		PhongMaterial foodMaterial = GameRendering3D_Assets.foodMaterial(gameVariant, game().currentLevel.mazeNumber);
+		maze = new Maze3D(game(), GameRendering3D_Assets.getMazeWallColor(gameVariant, mazeNumber));
+		PhongMaterial foodMaterial = GameRendering3D_Assets.foodMaterial(gameVariant, mazeNumber);
 
 		energizers = game().currentLevel.world.energizerTiles()//
 				.map(tile -> new Energizer3D(tile, foodMaterial))//
@@ -134,9 +134,9 @@ public class PlayScene3D implements GameScene {
 		tgMaze.getChildren().addAll(collect(ghosts3D.values()));
 		tgMaze.getChildren().add(bonus3D.get());
 
-		ambientLight = new AmbientLight(Color.rgb(1, 1, 1));
+		ambientLight = new AmbientLight();
 
-		pointLight = new PointLight(Color.ANTIQUEWHITE);
+		pointLight = new PointLight();
 		pointLight.translateXProperty().bind(player.get().translateXProperty());
 		pointLight.translateYProperty().bind(player.get().translateYProperty());
 		pointLight.lightOnProperty().bind(player.$visible);
@@ -145,13 +145,19 @@ public class PlayScene3D implements GameScene {
 		tgMaze.getChildren().addAll(ambientLight, pointLight);
 
 		ground = new Box(28 * 8, 36 * 8, 0.1);
-		ground.setMaterial(new PhongMaterial(GameRendering3D_Assets.mazeGroundColor(gameVariant, 1)));
 		ground.setTranslateX(-4);
 		ground.setTranslateY(-4);
 		ground.setTranslateZ(4);
 
+		setColorsAndLights();
+
 		coordSystem = new CoordinateSystem(game().currentLevel.world.numRows() * TS);
 		fxScene.setRoot(new Group(coordSystem.getNode(), ground, tgMaze));
+	}
+
+	private void setColorsAndLights() {
+		ground.setMaterial(new PhongMaterial(Color.rgb(20, 20, 20)));
+		fxScene.setFill(Color.rgb(40, 40, 100));
 	}
 
 	@Override
@@ -295,7 +301,7 @@ public class PlayScene3D implements GameScene {
 
 		// enter READY
 		if (event.newGameState == PacManGameState.READY) {
-			setSceneColor();
+			setColorsAndLights();
 		}
 
 		// enter HUNTING
@@ -322,18 +328,6 @@ public class PlayScene3D implements GameScene {
 		// enter LEVEL_STARTING
 		if (event.newGameState == PacManGameState.LEVEL_STARTING) {
 			playAnimationLevelStarting();
-		}
-	}
-
-	private void setSceneColor() {
-		if (gameController.gameVariant() == GameVariant.PACMAN) {
-			Color color = Color.rgb(20, 20, 60);
-			fxScene.setFill(color);
-			ambientLight.setColor(Color.AZURE);
-		} else {
-			Color mazeColor = GameRendering2D_Assets.getMazeWallColor(gameController.game().currentLevel.mazeNumber);
-//			fxScene.setFill(mazeColor);
-			ambientLight.setColor(mazeColor);
 		}
 	}
 

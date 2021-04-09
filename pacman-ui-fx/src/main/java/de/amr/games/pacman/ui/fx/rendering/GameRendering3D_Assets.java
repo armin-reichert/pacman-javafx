@@ -50,8 +50,6 @@ public class GameRendering3D_Assets {
 	}
 
 	public static final Font ARCADE_FONT;
-	public static final Image WALL_TEXTURE;
-	public static final PhongMaterial wallMaterials[];
 	public static final PhongMaterial livesCounterOn = new PhongMaterial(Color.YELLOW);
 	public static final PhongMaterial livesCounterOff = new PhongMaterial(Color.GRAY);
 
@@ -74,48 +72,32 @@ public class GameRendering3D_Assets {
 		} catch (ImportException e) {
 			e.printStackTrace();
 		}
-
-		WALL_TEXTURE = new Image(url("/common/stone-texture.png"));
-		wallMaterials = new PhongMaterial[1];
-		for (int i = 0; i < wallMaterials.length; ++i) {
-			PhongMaterial m = new PhongMaterial(Color.CORNFLOWERBLUE);
-//			Image texture = randomArea(WALL_TEXTURE, 128, 128);
-//			m.setBumpMap(texture);
-//			m.setDiffuseMap(texture);
-			wallMaterials[i] = m;
-		}
 	}
 
-	public static Color mazeGroundColor(GameVariant gameType, int mazeNumber) {
-		return gameType == GameVariant.PACMAN ? Color.BLACK : GameRendering2D_Assets.getMazeWallColor(mazeNumber);
+	public static Color getMazeWallColor(GameVariant gameVariant, int mazeNumber) {
+		return gameVariant == GameVariant.PACMAN ? Color.rgb(33, 33, 255)
+				: GameRendering2D_Assets.getMazeWallColor(mazeNumber);
 	}
 
-	public static Color mazeWallColor(GameVariant gameType, int mazeNumber) {
-		return gameType == GameVariant.PACMAN ? Color.BLUE : GameRendering2D_Assets.getMazeWallBorderColor(mazeNumber);
+	public static Color getFoodColor(GameVariant gameVariant, int mazeNumber) {
+		return gameVariant == GameVariant.PACMAN ? Color.rgb(250, 185, 176)
+				: GameRendering2D_Assets.getFoodColor(mazeNumber);
 	}
 
-	public static Color foodColor(GameVariant gameType, int mazeNumber) {
-		return gameType == GameVariant.PACMAN ? Color.rgb(250, 185, 176) : GameRendering2D_Assets.getFoodColor(mazeNumber);
-	}
-
-	public static Color ghostColor(int id) {
-		return id == 0 ? Color.TOMATO : id == 1 ? Color.PINK : id == 2 ? Color.CYAN : Color.ORANGE;
+	public static Color getGhostColor(int ghostID) {
+		return ghostID == 0 ? Color.TOMATO : ghostID == 1 ? Color.PINK : ghostID == 2 ? Color.CYAN : Color.ORANGE;
 	}
 
 	public static PhongMaterial ghostSkin(int ghostID) {
-		return new PhongMaterial(ghostColor(ghostID));
+		return new PhongMaterial(getGhostColor(ghostID));
 	}
 
 	public static PhongMaterial foodMaterial(GameVariant gameType, int mazeNumber) {
-		return new PhongMaterial(foodColor(gameType, mazeNumber));
-	}
-
-	public static PhongMaterial randomWallMaterial() {
-		return wallMaterials[new Random().nextInt(wallMaterials.length)];
+		return new PhongMaterial(getFoodColor(gameType, mazeNumber));
 	}
 
 	public static AmbientLight ambientLight(GameVariant gameType, int mazeNumber) {
-		return new AmbientLight(mazeWallColor(gameType, mazeNumber));
+		return new AmbientLight(getMazeWallColor(gameType, mazeNumber));
 	}
 
 	public static MeshView createGhostMeshView(int ghostID) {

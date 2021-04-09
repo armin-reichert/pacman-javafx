@@ -41,26 +41,26 @@ public final class GameRendering2D_Assets {
 		case 6:
 			return Color.rgb(255, 183, 174);
 		default:
-			return Color.WHITE;
+			throw new IllegalArgumentException();
 		}
 	}
 
-	public static Color getMazeWallBorderColor(int mazeIndex) {
-		switch (mazeIndex) {
-		case 0:
-			return Color.rgb(255, 0, 0);
+	public static Color getMazeWallBorderColor(int mazeNumber) {
+		switch (mazeNumber) {
 		case 1:
-			return Color.rgb(222, 222, 255);
+			return Color.rgb(255, 0, 0);
 		case 2:
 			return Color.rgb(222, 222, 255);
 		case 3:
-			return Color.rgb(255, 183, 81);
+			return Color.rgb(222, 222, 255);
 		case 4:
-			return Color.rgb(255, 255, 0);
+			return Color.rgb(255, 183, 81);
 		case 5:
+			return Color.rgb(255, 255, 0);
+		case 6:
 			return Color.rgb(255, 0, 0);
 		default:
-			return Color.WHITE;
+			throw new IllegalArgumentException();
 		}
 	}
 }
