@@ -279,7 +279,7 @@ public class PlayScene3D implements GameScene {
 		}
 
 		else if (gameEvent instanceof ExtraLifeEvent) {
-			gameController.userInterface.showFlashMessage("Extra life!");
+			gameController.getUI().showFlashMessage("Extra life!");
 		}
 
 		else if (gameEvent instanceof BonusActivatedEvent) {
@@ -365,7 +365,7 @@ public class PlayScene3D implements GameScene {
 
 		String congrats = CONGRATS[new Random().nextInt(CONGRATS.length)];
 		String message = String.format("%s!\n\nLevel %d complete.", congrats, game().currentLevelNumber);
-		gameController.userInterface.showFlashMessage(message, 2);
+		gameController.getUI().showFlashMessage(message, 2);
 
 		PauseTransition phase1 = new PauseTransition(Duration.seconds(2));
 		phase1.setOnFinished(e -> {
@@ -384,7 +384,7 @@ public class PlayScene3D implements GameScene {
 
 	private void playAnimationLevelStarting() {
 		gameController.stateTimer().reset();
-		gameController.userInterface.showFlashMessage("Entering Level " + gameController.game().currentLevelNumber);
+		gameController.getUI().showFlashMessage("Entering Level " + gameController.game().currentLevelNumber);
 
 		PauseTransition phase1 = new PauseTransition(Duration.seconds(2));
 		phase1.setOnFinished(e -> {

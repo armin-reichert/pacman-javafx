@@ -86,8 +86,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		this.stage = stage;
 		this.gameController = gameController;
 
-		gameController.addGameEventListener(this);
-
 		GameScene initialGameScene = sceneForCurrentGameState(Env.$use3DScenes.get());
 		double aspectRatio = initialGameScene.aspectRatio().orElse(getScreenAspectRatio());
 		mainScene = new Scene(new StackPane(), aspectRatio * height, height, Color.rgb(20, 20, 60));

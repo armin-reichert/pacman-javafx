@@ -33,10 +33,10 @@ public class PacManGameAppFX extends Application {
 
 	@Override
 	public void start(Stage stage) throws IOException {
-		PacManGameUI_JavaFX userInterface = new PacManGameUI_JavaFX(stage, gameController, options.height);
-		gameController.userInterface = userInterface;
-		gameLoop = new GameLoop(gameController, userInterface);
-		userInterface.$fps.bind(gameLoop.$fps);
+		PacManGameUI_JavaFX fxUI = new PacManGameUI_JavaFX(stage, gameController, options.height);
+		gameController.setUI(fxUI);
+		gameLoop = new GameLoop(gameController, fxUI);
 		gameLoop.start();
+		fxUI.$fps.bind(gameLoop.$fps);
 	}
 }
