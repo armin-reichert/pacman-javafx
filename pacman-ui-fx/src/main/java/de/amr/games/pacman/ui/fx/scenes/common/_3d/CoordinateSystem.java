@@ -18,13 +18,13 @@ public class CoordinateSystem {
 
 	private final Group root;
 
-	public CoordinateSystem(int len) {
+	public CoordinateSystem(double axisLength) {
 		Sphere origin = new Sphere(1);
 		origin.setMaterial(new PhongMaterial(Color.CHOCOLATE));
 
-		Cylinder xAxis = createAxis(Color.RED.brighter(), len);
-		Cylinder yAxis = createAxis(Color.GREEN.brighter(), len);
-		Cylinder zAxis = createAxis(Color.BLUE.brighter(), len / 2);
+		Cylinder xAxis = createAxis(Color.RED.brighter(), axisLength);
+		Cylinder yAxis = createAxis(Color.GREEN.brighter(), axisLength);
+		Cylinder zAxis = createAxis(Color.BLUE.brighter(), axisLength / 2);
 
 		xAxis.getTransforms().add(new Rotate(90, Rotate.Z_AXIS));
 		zAxis.getTransforms().add(new Rotate(90, Rotate.X_AXIS));

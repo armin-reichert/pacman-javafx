@@ -22,7 +22,7 @@ public final class GameRendering2D_Assets {
 		case 6:
 			return Color.rgb(222, 222, 255);
 		default:
-			return Color.WHITE;
+			throw new IllegalArgumentException();
 		}
 	}
 

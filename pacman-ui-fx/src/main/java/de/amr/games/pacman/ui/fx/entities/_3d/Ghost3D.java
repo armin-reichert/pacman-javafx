@@ -45,7 +45,7 @@ public class Ghost3D implements Supplier<Node> {
 		normalSkin = GameRendering3D_Assets.ghostSkin(ghost.id);
 		blueSkin = new PhongMaterial(Color.CORNFLOWERBLUE);
 
-		meshView = GameRendering3D_Assets.createGhostMeshView(ghost.id);
+		meshView = GameRendering3D_Assets.createGhostMeshView(ghost.id, 8);
 		meshView.setMaterial(normalSkin);
 		meshView.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 		Group coloredGhost = new Group(meshView);

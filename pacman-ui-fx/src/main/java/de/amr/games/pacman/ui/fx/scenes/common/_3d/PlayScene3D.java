@@ -1,7 +1,6 @@
 package de.amr.games.pacman.ui.fx.scenes.common._3d;
 
 import static de.amr.games.pacman.lib.Logging.log;
-import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static java.util.function.Predicate.not;
 
 import java.util.Collection;
@@ -101,10 +100,9 @@ public class PlayScene3D implements GameScene {
 		final GameVariant gameVariant = gameController.gameVariant();
 		final int mazeNumber = game().currentLevel.mazeNumber;
 
-		fxScene.setFill(Color.rgb(20, 20, 60));
-
 		maze = new Maze3D(game(), GameRendering3D_Assets.getMazeWallColor(gameVariant, mazeNumber));
-		PhongMaterial foodMaterial = GameRendering3D_Assets.foodMaterial(gameVariant, mazeNumber);
+
+		PhongMaterial foodMaterial = new PhongMaterial(GameRendering3D_Assets.getFoodColor(gameVariant, mazeNumber));
 
 		energizers = game().currentLevel.world.energizerTiles()//
 				.map(tile -> new Energizer3D(tile, foodMaterial))//
@@ -144,20 +142,16 @@ public class PlayScene3D implements GameScene {
 
 		tgMaze.getChildren().addAll(ambientLight, pointLight);
 
-		ground = new Box(28 * 8, 36 * 8, 0.1);
+		ground = new Box(UNSCALED_SCENE_WIDTH * 8, UNSCALED_SCENE_HEIGHT * 8, 0.1);
+		ground.setMaterial(new PhongMaterial(Color.rgb(20, 20, 20)));
 		ground.setTranslateX(-4);
 		ground.setTranslateY(-4);
 		ground.setTranslateZ(4);
 
-		setColorsAndLights();
+		coordSystem = new CoordinateSystem(fxScene.getWidth());
 
-		coordSystem = new CoordinateSystem(game().currentLevel.world.numRows() * TS);
 		fxScene.setRoot(new Group(coordSystem.getNode(), ground, tgMaze));
-	}
-
-	private void setColorsAndLights() {
-		ground.setMaterial(new PhongMaterial(Color.rgb(20, 20, 20)));
-		fxScene.setFill(Color.rgb(40, 40, 100));
+		fxScene.setFill(Color.rgb(20, 20, 60));
 	}
 
 	@Override
@@ -301,7 +295,6 @@ public class PlayScene3D implements GameScene {
 
 		// enter READY
 		if (event.newGameState == PacManGameState.READY) {
-			setColorsAndLights();
 		}
 
 		// enter HUNTING

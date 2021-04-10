@@ -4,7 +4,6 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
 import java.util.Map;
-import java.util.Random;
 
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
@@ -12,10 +11,7 @@ import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.Env;
 import javafx.geometry.Bounds;
-import javafx.scene.AmbientLight;
 import javafx.scene.Node;
-import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
@@ -92,27 +88,11 @@ public class GameRendering3D_Assets {
 		return new PhongMaterial(getGhostColor(ghostID));
 	}
 
-	public static PhongMaterial foodMaterial(GameVariant gameType, int mazeNumber) {
-		return new PhongMaterial(getFoodColor(gameType, mazeNumber));
-	}
-
-	public static AmbientLight ambientLight(GameVariant gameType, int mazeNumber) {
-		return new AmbientLight(getMazeWallColor(gameType, mazeNumber));
-	}
-
-	public static MeshView createGhostMeshView(int ghostID) {
-		MeshView shape = new MeshView(ghostMeshTemplate.getMesh());
-		centerOverOrigin(shape);
-		scale(shape, 8);
-		shape.drawModeProperty().bind(Env.$drawMode);
-		return shape;
-	}
-
-	public static Image randomArea(Image src, int w, int h) {
-		int x = new Random().nextInt((int) src.getWidth() - w);
-		int y = new Random().nextInt((int) src.getHeight() - h);
-		WritableImage result = new WritableImage(w, h);
-		result.getPixelWriter().setPixels(0, 0, w, h, src.getPixelReader(), x, y);
-		return result;
+	public static MeshView createGhostMeshView(int ghostID, int size) {
+		MeshView meshView = new MeshView(ghostMeshTemplate.getMesh());
+		centerOverOrigin(meshView);
+		scale(meshView, size);
+		meshView.drawModeProperty().bind(Env.$drawMode);
+		return meshView;
 	}
 }
