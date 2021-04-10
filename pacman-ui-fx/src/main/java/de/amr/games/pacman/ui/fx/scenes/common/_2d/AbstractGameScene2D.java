@@ -9,7 +9,6 @@ import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
-import javafx.scene.Camera;
 import javafx.scene.Group;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
@@ -108,15 +107,6 @@ public abstract class AbstractGameScene2D<RENDERING extends GameRendering2D> imp
 
 	public Canvas getCanvas() {
 		return canvas;
-	}
-
-	@Override
-	public Camera getActiveCamera() {
-		return scene.getCamera();
-	}
-
-	@Override
-	public void useMoveableCamera(boolean use) {
 	}
 
 	@Override

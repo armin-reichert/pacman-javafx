@@ -2,6 +2,7 @@ package de.amr.games.pacman.ui.fx.scenes.common;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
+import java.util.Optional;
 import java.util.OptionalDouble;
 
 import de.amr.games.pacman.controller.PacManGameController;
@@ -40,7 +41,10 @@ public interface GameScene extends PacManGameEventListener {
 
 	SubScene getFXSubScene();
 
-	void useMoveableCamera(boolean use);
+	default void selectCamera(CameraType cameraType) {
+	}
 
-	Camera getActiveCamera();
+	default Optional<Camera> selectedCamera() {
+		return Optional.empty();
+	}
 }

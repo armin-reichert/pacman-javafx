@@ -6,6 +6,7 @@ import static java.util.function.Predicate.not;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.Random;
 import java.util.function.Function;
@@ -33,6 +34,7 @@ import de.amr.games.pacman.ui.fx.entities._3d.Player3D;
 import de.amr.games.pacman.ui.fx.entities._3d.ScoreNotReally3D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering3D_Assets;
+import de.amr.games.pacman.ui.fx.scenes.common.CameraType;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.sound.PlaySceneSoundHandler;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -190,16 +192,21 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public Camera getActiveCamera() {
-		return fxScene.getCamera();
+	public Optional<Camera> selectedCamera() {
+		return Optional.ofNullable(fxScene.getCamera());
 	}
 
 	@Override
-	public void useMoveableCamera(boolean on) {
-		if (on) {
+	public void selectCamera(CameraType cameraType) {
+		switch (cameraType) {
+		case MOVEABLE:
 			useMoveableCamera();
-		} else {
+			break;
+		case STATIC:
 			useStaticCamera();
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -224,12 +231,14 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void updateCamera() {
-		if (getActiveCamera() == moveableCamera) {
-			double x = Math.min(10, lerp(moveableCamera.getTranslateX(), player.get().getTranslateX()));
-			double y = Math.max(50, lerp(moveableCamera.getTranslateY(), player.get().getTranslateY()));
-			moveableCamera.setTranslateX(x);
-			moveableCamera.setTranslateY(y);
-		}
+		selectedCamera().ifPresent(camera -> {
+			if (camera == moveableCamera) {
+				double x = Math.min(10, lerp(moveableCamera.getTranslateX(), player.get().getTranslateX()));
+				double y = Math.max(50, lerp(moveableCamera.getTranslateY(), player.get().getTranslateY()));
+				moveableCamera.setTranslateX(x);
+				moveableCamera.setTranslateY(y);
+			}
+		});
 	}
 
 	private static double lerp(double current, double target) {
@@ -251,8 +260,10 @@ public class PlayScene3D implements GameScene {
 	public void update() {
 		score3D.setHiscoreOnly(gameController.isAttractMode());
 		score3D.update(game());
-		score3D.get().setRotationAxis(Rotate.X_AXIS);
-		score3D.get().setRotate(getActiveCamera().getRotate());
+		selectedCamera().ifPresent(camera -> {
+			score3D.get().setRotationAxis(Rotate.X_AXIS);
+			score3D.get().setRotate(camera.getRotate());
+		});
 		livesCounter3D.get().setVisible(!gameController.isAttractMode());
 		livesCounter3D.update(game());
 		energizers.forEach(energizer3D -> energizer3D.update(game()));

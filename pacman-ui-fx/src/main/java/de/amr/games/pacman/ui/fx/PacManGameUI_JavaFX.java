@@ -10,6 +10,7 @@ import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangedEvent;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
+import de.amr.games.pacman.ui.fx.scenes.common.CameraType;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.PlayScene2D;
@@ -129,11 +130,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				keepGameSceneMaximized(newGameScene, mainScene);
 			}
 			currentGameScene = newGameScene;
-			if (Env.$useStaticCamera.get()) {
-				currentGameScene.useMoveableCamera(false);
-			} else {
-				currentGameScene.useMoveableCamera(true);
-			}
 			currentGameScene.start();
 
 			// TODO is there a more elegant way?
@@ -243,10 +239,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		case C:
 			Env.$useStaticCamera.set(!Env.$useStaticCamera.get());
 			if (Env.$useStaticCamera.get()) {
-				currentGameScene.useMoveableCamera(false);
+				currentGameScene.selectCamera(CameraType.STATIC);
 				showFlashMessage("Static Camera");
 			} else {
-				currentGameScene.useMoveableCamera(true);
+				currentGameScene.selectCamera(CameraType.MOVEABLE);
 				showFlashMessage("Moveable Camera");
 			}
 			break;
