@@ -22,7 +22,8 @@ import de.amr.games.pacman.ui.fx.scenes.pacman.PacMan_IntermissionScene1;
 import de.amr.games.pacman.ui.fx.scenes.pacman.PacMan_IntermissionScene2;
 import de.amr.games.pacman.ui.fx.scenes.pacman.PacMan_IntermissionScene3;
 import de.amr.games.pacman.ui.fx.scenes.pacman.PacMan_IntroScene;
-import de.amr.games.pacman.ui.fx.sound.SoundAssets;
+import de.amr.games.pacman.ui.fx.sound.PacManGameSounds;
+import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -44,6 +45,9 @@ import javafx.stage.Stage;
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
 
+	public static final SoundManager SOUNDS_MS_PACMAN = new SoundManager(PacManGameSounds::msPacManSoundURL);
+	public static final SoundManager SOUNDS_PACMAN = new SoundManager(PacManGameSounds::mrPacManSoundURL);
+
 	private static final GameScene SCENES[][][] = new GameScene[2][5][2];
 
 	static {
@@ -56,8 +60,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		SCENES[MS_PACMAN.ordinal()][2][1] = new MsPacMan_IntermissionScene2();
 		SCENES[MS_PACMAN.ordinal()][3][0] = 
 		SCENES[MS_PACMAN.ordinal()][3][1] = new MsPacMan_IntermissionScene3();
-		SCENES[MS_PACMAN.ordinal()][4][0] = new PlayScene2D<>(GameRendering2D.RENDERING_MS_PACMAN, SoundAssets.get(MS_PACMAN));
-		SCENES[MS_PACMAN.ordinal()][4][1] = new PlayScene3D(SoundAssets.get(MS_PACMAN));
+		SCENES[MS_PACMAN.ordinal()][4][0] = new PlayScene2D<>(GameRendering2D.RENDERING_MS_PACMAN, SOUNDS_MS_PACMAN);
+		SCENES[MS_PACMAN.ordinal()][4][1] = new PlayScene3D(SOUNDS_MS_PACMAN);
 
 		SCENES[PACMAN.ordinal()]   [0][0] = 
 		SCENES[PACMAN.ordinal()]   [0][1] = new PacMan_IntroScene();
@@ -67,8 +71,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		SCENES[PACMAN.ordinal()]   [2][1] = new PacMan_IntermissionScene2();
 		SCENES[PACMAN.ordinal()]   [3][0] = 
 		SCENES[PACMAN.ordinal()]   [3][1] = new PacMan_IntermissionScene3();
-		SCENES[PACMAN.ordinal()]   [4][0] = new PlayScene2D<>(GameRendering2D.RENDERING_PACMAN, SoundAssets.get(PACMAN));
-		SCENES[PACMAN.ordinal()]   [4][1] = new PlayScene3D(SoundAssets.get(PACMAN));
+		SCENES[PACMAN.ordinal()]   [4][0] = new PlayScene2D<>(GameRendering2D.RENDERING_PACMAN, SOUNDS_PACMAN);
+		SCENES[PACMAN.ordinal()]   [4][1] = new PlayScene3D(SOUNDS_PACMAN);
 		//@formatter:on
 	}
 
@@ -149,8 +153,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		if (event instanceof PacManGameStateChangedEvent) {
 			PacManGameStateChangedEvent stateChange = (PacManGameStateChangedEvent) event;
 			if (stateChange.newGameState == PacManGameState.INTRO) {
-				// TODO check this
-				SoundAssets.get(gameController.gameVariant()).stopAll();
+				stopAllSounds();
 			}
 			setGameScene(sceneForCurrentGameState(Env.$use3DScenes.get()));
 		}
@@ -287,10 +290,15 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 	}
 
+	private void stopAllSounds() {
+		SOUNDS_MS_PACMAN.stopAll();
+		SOUNDS_PACMAN.stopAll();
+	}
+
 	private void toggleUse3DScenes() {
 		Env.$use3DScenes.set(!Env.$use3DScenes.get());
 		if (sceneForCurrentGameState(false) != sceneForCurrentGameState(true)) {
-			SoundAssets.get(gameController.gameVariant()).stopAll();
+			stopAllSounds();
 			setGameScene(sceneForCurrentGameState(Env.$use3DScenes.get()));
 		}
 	}
@@ -328,7 +336,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void reset() {
-		SoundAssets.get(gameController.gameVariant()).stopAll();
+		stopAllSounds();
 		currentGameScene.end();
 	}
 

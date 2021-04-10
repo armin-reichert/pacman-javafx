@@ -1,5 +1,7 @@
 package de.amr.games.pacman.ui.fx.scenes.common;
 
+import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
+
 import java.util.OptionalDouble;
 
 import de.amr.games.pacman.controller.PacManGameController;
@@ -14,6 +16,9 @@ import javafx.scene.SubScene;
  * @author Armin Reichert
  */
 public interface GameScene extends PacManGameEventListener {
+
+	public static final int UNSCALED_SCENE_WIDTH = 28 * TS;
+	public static final int UNSCALED_SCENE_HEIGHT = 36 * TS;
 
 	void start();
 

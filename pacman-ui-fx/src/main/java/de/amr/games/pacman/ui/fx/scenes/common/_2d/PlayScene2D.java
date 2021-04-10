@@ -51,7 +51,7 @@ public class PlayScene2D<RENDERING extends GameRendering2D> extends AbstractGame
 	private SequentialTransition levelCompleteAnimation;
 
 	public PlayScene2D(RENDERING rendering, SoundManager sounds) {
-		super(rendering, sounds);
+		super(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, rendering, sounds);
 	}
 
 	@Override

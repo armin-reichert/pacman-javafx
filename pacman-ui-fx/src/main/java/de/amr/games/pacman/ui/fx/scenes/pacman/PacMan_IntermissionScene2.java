@@ -5,9 +5,9 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.PacManGameSound;
+import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.entities._2d.Ghost2D;
 import de.amr.games.pacman.ui.fx.entities._2d.LevelCounter2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Player2D;
@@ -15,7 +15,6 @@ import de.amr.games.pacman.ui.fx.entities._2d.pacman.Nail2D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_PacMan;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
-import de.amr.games.pacman.ui.fx.sound.SoundAssets;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene2_Controller;
 import javafx.geometry.Rectangle2D;
 
@@ -47,7 +46,8 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D<GameRendering
 	private TimedSequence<Rectangle2D> blinkyDamagedAnimation;
 
 	public PacMan_IntermissionScene2() {
-		super(GameRendering2D.RENDERING_PACMAN, SoundAssets.get(GameVariant.PACMAN));
+		super(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, GameRendering2D.RENDERING_PACMAN,
+				PacManGameUI_JavaFX.SOUNDS_PACMAN);
 	}
 
 	@Override

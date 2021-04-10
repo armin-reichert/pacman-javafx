@@ -3,8 +3,8 @@ package de.amr.games.pacman.ui.fx.scenes.pacman;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.PacManGameSound;
+import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.entities._2d.LevelCounter2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Player2D;
 import de.amr.games.pacman.ui.fx.entities._2d.pacman.BlinkyNaked2D;
@@ -12,7 +12,6 @@ import de.amr.games.pacman.ui.fx.entities._2d.pacman.BlinkyPatched2D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_PacMan;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
-import de.amr.games.pacman.ui.fx.sound.SoundAssets;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene3_Controller;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene3_Controller.Phase;
 
@@ -43,7 +42,8 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D<GameRendering
 	private BlinkyNaked2D blinkyNaked2D;
 
 	public PacMan_IntermissionScene3() {
-		super(GameRendering2D.RENDERING_PACMAN, SoundAssets.get(GameVariant.PACMAN));
+		super(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, GameRendering2D.RENDERING_PACMAN,
+				PacManGameUI_JavaFX.SOUNDS_PACMAN);
 	}
 
 	@Override

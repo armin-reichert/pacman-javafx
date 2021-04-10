@@ -3,8 +3,8 @@ package de.amr.games.pacman.ui.fx.scenes.mspacman;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.PacManGameSound;
+import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.entities._2d.Ghost2D;
 import de.amr.games.pacman.ui.fx.entities._2d.LevelCounter2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Player2D;
@@ -13,7 +13,6 @@ import de.amr.games.pacman.ui.fx.entities._2d.mspacman.Heart2D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
-import de.amr.games.pacman.ui.fx.sound.SoundAssets;
 import de.amr.games.pacman.ui.mspacman.MsPacMan_IntermissionScene1_Controller;
 
 /**
@@ -55,7 +54,8 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D<GameRenderi
 	private Heart2D heart2D;
 
 	public MsPacMan_IntermissionScene1() {
-		super(GameRendering2D.RENDERING_MS_PACMAN, SoundAssets.get(GameVariant.MS_PACMAN));
+		super(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, GameRendering2D.RENDERING_MS_PACMAN,
+				PacManGameUI_JavaFX.SOUNDS_MS_PACMAN);
 	}
 
 	@Override
