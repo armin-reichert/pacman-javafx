@@ -25,6 +25,7 @@ import javafx.scene.transform.Translate;
 public class Player3D implements Supplier<Node> {
 
 	public final ReadOnlyBooleanProperty $visible = new ReadOnlyBooleanPropertyBase() {
+
 		@Override
 		public boolean get() {
 			return pac.visible;
@@ -41,7 +42,7 @@ public class Player3D implements Supplier<Node> {
 		}
 	};
 
-	private final Pac pac;
+	public final Pac pac;
 	private final Node root;
 
 	public Player3D(Pac pac) {

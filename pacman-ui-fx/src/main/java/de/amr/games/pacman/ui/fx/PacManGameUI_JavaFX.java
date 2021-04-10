@@ -237,14 +237,13 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		switch (e.getCode()) {
 
 		case C:
-			Env.$useStaticCamera.set(!Env.$useStaticCamera.get());
-			if (Env.$useStaticCamera.get()) {
-				currentGameScene.selectCamera(CameraType.STATIC);
-				showFlashMessage("Static Camera");
-			} else {
-				currentGameScene.selectCamera(CameraType.MOVEABLE);
-				showFlashMessage("Moveable Camera");
+			int next = Env.$cameraType.get().ordinal() + 1;
+			if (next == CameraType.values().length) {
+				next = 0;
 			}
+			Env.$cameraType.set(CameraType.values()[next]);
+			currentGameScene.selectCamera(Env.$cameraType.get());
+			showFlashMessage(String.format("Use %s camera", Env.$cameraType.get()));
 			break;
 
 		case I:

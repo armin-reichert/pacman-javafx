@@ -21,6 +21,7 @@ import de.amr.games.pacman.controller.event.BonusExpiredEvent;
 import de.amr.games.pacman.controller.event.ExtraLifeEvent;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangedEvent;
+import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.PacManGameSound;
@@ -70,8 +71,9 @@ public class PlayScene3D implements GameScene {
 	private final SubScene fxScene;
 
 	private final PerspectiveCamera staticCamera = new PerspectiveCamera(true);
+	private final CameraController staticCameraController = new CameraController(staticCamera);
 	private final PerspectiveCamera moveableCamera = new PerspectiveCamera(true);
-	private final CameraController cameraController = new CameraController(staticCamera);
+	private final PerspectiveCamera firstPersonCamera = new PerspectiveCamera(false);
 
 	private final SoundManager sounds;
 	private PlaySceneSoundHandler playSceneSoundHandler;
@@ -94,7 +96,7 @@ public class PlayScene3D implements GameScene {
 	public PlayScene3D(SoundManager sounds) {
 		this.sounds = sounds;
 		fxScene = new SubScene(new Group(), 800, 600, true, SceneAntialiasing.BALANCED);
-		fxScene.addEventHandler(KeyEvent.KEY_PRESSED, cameraController::handleKeyEvent);
+		fxScene.addEventHandler(KeyEvent.KEY_PRESSED, staticCameraController::handleKeyEvent);
 		useStaticCamera();
 	}
 
@@ -205,6 +207,9 @@ public class PlayScene3D implements GameScene {
 		case STATIC:
 			useStaticCamera();
 			break;
+		case FIRST_PERSON:
+			useFirstPersonCamera();
+			break;
 		default:
 			break;
 		}
@@ -228,6 +233,16 @@ public class PlayScene3D implements GameScene {
 		moveableCamera.setRotationAxis(Rotate.X_AXIS);
 		moveableCamera.setRotate(30);
 		fxScene.setCamera(moveableCamera);
+	}
+
+	private void useFirstPersonCamera() {
+//		firstPersonCamera.setNearClip(0.1);
+//		firstPersonCamera.setFarClip(10000.0);
+		V2i dirVec = player.pac.dir.vec;
+		firstPersonCamera.translateXProperty().bind(player.get().translateXProperty().subtract(dirVec.x * 8));
+		firstPersonCamera.translateYProperty().bind(player.get().translateYProperty().subtract(dirVec.y * 8));
+		firstPersonCamera.setTranslateZ(-8);
+		fxScene.setCamera(firstPersonCamera);
 	}
 
 	private void updateCamera() {
