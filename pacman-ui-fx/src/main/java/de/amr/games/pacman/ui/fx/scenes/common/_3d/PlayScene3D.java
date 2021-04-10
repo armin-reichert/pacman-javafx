@@ -21,7 +21,6 @@ import de.amr.games.pacman.controller.event.BonusExpiredEvent;
 import de.amr.games.pacman.controller.event.ExtraLifeEvent;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangedEvent;
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.PacManGameSound;
@@ -73,7 +72,7 @@ public class PlayScene3D implements GameScene {
 	private final PerspectiveCamera staticCamera = new PerspectiveCamera(true);
 	private final CameraController staticCameraController = new CameraController(staticCamera);
 	private final PerspectiveCamera moveableCamera = new PerspectiveCamera(true);
-	private final PerspectiveCamera firstPersonCamera = new PerspectiveCamera(false);
+	private final PerspectiveCamera firstPersonCamera = new PerspectiveCamera(true);
 
 	private final SoundManager sounds;
 	private PlaySceneSoundHandler playSceneSoundHandler;
@@ -236,12 +235,11 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void useFirstPersonCamera() {
-//		firstPersonCamera.setNearClip(0.1);
-//		firstPersonCamera.setFarClip(10000.0);
-		V2i dirVec = player.pac.dir.vec;
-		firstPersonCamera.translateXProperty().bind(player.get().translateXProperty().subtract(dirVec.x * 8));
-		firstPersonCamera.translateYProperty().bind(player.get().translateYProperty().subtract(dirVec.y * 8));
-		firstPersonCamera.setTranslateZ(-8);
+		firstPersonCamera.setNearClip(0.1);
+		firstPersonCamera.setFarClip(10000.0);
+		// TODO why is this not working?
+//		firstPersonCamera.translateXProperty().bind(player.$translateX);
+//		firstPersonCamera.translateYProperty().bind(player.$translateY);
 		fxScene.setCamera(firstPersonCamera);
 	}
 
@@ -252,6 +250,14 @@ public class PlayScene3D implements GameScene {
 				double y = Math.max(50, lerp(moveableCamera.getTranslateY(), player.get().getTranslateY()));
 				moveableCamera.setTranslateX(x);
 				moveableCamera.setTranslateY(y);
+			} else if (camera == firstPersonCamera) {
+				firstPersonCamera.setRotationAxis(Rotate.X_AXIS);
+				firstPersonCamera.setRotate(60);
+				firstPersonCamera.setTranslateZ(-60);
+				double x = lerp(firstPersonCamera.getTranslateX(), -12 * 8 + player.pac.position.x);
+				double y = lerp(firstPersonCamera.getTranslateY(), player.pac.position.y);
+				firstPersonCamera.setTranslateX(x);
+				firstPersonCamera.setTranslateY(y);
 			}
 		});
 	}
