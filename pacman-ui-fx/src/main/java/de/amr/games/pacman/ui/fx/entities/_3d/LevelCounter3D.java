@@ -31,32 +31,35 @@ public class LevelCounter3D implements Supplier<Node> {
 
 	public void update(AbstractGameModel game) {
 		int x = t(tileRight.x), y = t(tileRight.y);
-		int firstLevel = Math.max(1, game.currentLevelNumber - 6);
-		int numberOfEntries = game.currentLevelNumber - firstLevel + 1;
-		if (numberOfEntries == root.getChildren().size()) {
-			return;
-		}
+		// all *Number variables are starting with 1!
+		final int maxItems = 7;
+		int firstLevelNumber = Math.max(1, game.currentLevelNumber - maxItems + 1);
 		root.getChildren().clear();
-		for (int level = firstLevel; level <= game.currentLevelNumber; ++level) {
-			Box box = new Box(8, 8, 8);
-			PhongMaterial material = new PhongMaterial();
-			Image sprite = symbolSprites.get(level);
-			material.setDiffuseMap(sprite);
-			material.setBumpMap(sprite);
-			box.setMaterial(material);
-			box.setTranslateX(x);
-			box.setTranslateY(y);
-			root.getChildren().add(box);
-			RotateTransition spinning = new RotateTransition(Duration.seconds(6), box);
-			spinning.setAxis(Rotate.X_AXIS);
-			spinning.setCycleCount(Transition.INDEFINITE);
-			spinning.setFromAngle(0);
-			spinning.setToAngle(360);
-			spinning.setByAngle(1);
-			spinning.setRate(level % 2 == 0 ? 1 : -1);
-			spinning.play();
+		for (int levelNumber = firstLevelNumber; levelNumber <= game.currentLevelNumber; ++levelNumber) {
+			Image sprite = symbolSprites.get(game.levelSymbols.get(levelNumber - 1));
+			Box indicator = createLevelIndicator(levelNumber, sprite, x, y);
+			root.getChildren().add(indicator);
 			x -= t(2);
 		}
+	}
+
+	private Box createLevelIndicator(int levelNumber, Image sprite, int x, int y) {
+		Box box = new Box(8, 8, 8);
+		box.setTranslateX(x);
+		box.setTranslateY(y);
+		PhongMaterial material = new PhongMaterial();
+		material.setDiffuseMap(sprite);
+		material.setBumpMap(sprite);
+		box.setMaterial(material);
+		RotateTransition spinning = new RotateTransition(Duration.seconds(6), box);
+		spinning.setAxis(Rotate.X_AXIS);
+		spinning.setCycleCount(Transition.INDEFINITE);
+		spinning.setFromAngle(0);
+		spinning.setToAngle(360);
+		spinning.setByAngle(1);
+		spinning.setRate(levelNumber % 2 == 0 ? 1 : -1);
+		spinning.play();
+		return box;
 	}
 
 	@Override

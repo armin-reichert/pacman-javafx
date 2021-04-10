@@ -292,7 +292,6 @@ public class PlayScene3D implements GameScene {
 		});
 		livesCounter3D.get().setVisible(!gameController.isAttractMode());
 		livesCounter3D.update(game());
-		levelCounter3D.update(game());
 		energizers.forEach(energizer3D -> energizer3D.update(game()));
 		pellets.forEach(pellet3D -> pellet3D.update(game()));
 		player.update();
@@ -358,6 +357,7 @@ public class PlayScene3D implements GameScene {
 
 		// enter LEVEL_STARTING
 		if (event.newGameState == PacManGameState.LEVEL_STARTING) {
+			levelCounter3D.update(event.gameModel);
 			playAnimationLevelStarting();
 		}
 	}
