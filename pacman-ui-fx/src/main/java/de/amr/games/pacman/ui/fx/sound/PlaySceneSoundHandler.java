@@ -39,7 +39,7 @@ public class PlaySceneSoundHandler {
 		return gameController.game();
 	}
 
-	public void onUpdate() {
+	public void update() {
 		if (gameController.isAttractMode()) {
 			return;
 		}

@@ -21,12 +21,14 @@ import de.amr.games.pacman.controller.event.BonusExpiredEvent;
 import de.amr.games.pacman.controller.event.ExtraLifeEvent;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangedEvent;
+import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.entities._3d.Bonus3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Energizer3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Ghost3D;
+import de.amr.games.pacman.ui.fx.entities._3d.LevelCounter3D;
 import de.amr.games.pacman.ui.fx.entities._3d.LivesCounter3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Maze3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Pellet3D;
@@ -91,6 +93,7 @@ public class PlayScene3D implements GameScene {
 	private Bonus3D bonus3D;
 	private ScoreNotReally3D score3D;
 	private LivesCounter3D livesCounter3D;
+	private LevelCounter3D levelCounter3D;
 
 	public PlayScene3D(SoundManager sounds) {
 		this.sounds = sounds;
@@ -123,11 +126,16 @@ public class PlayScene3D implements GameScene {
 		bonus3D = new Bonus3D(gameVariant, GameRendering2D.rendering(gameVariant));
 
 		score3D = new ScoreNotReally3D();
-		livesCounter3D = new LivesCounter3D(game().player, 1, 1);
+
+		livesCounter3D = new LivesCounter3D(game().player, 2, 1);
+
+		levelCounter3D = new LevelCounter3D(GameRendering2D.rendering(gameVariant));
+		levelCounter3D.tileRight = new V2i(25, 1);
+		levelCounter3D.update(game());
 
 		tgMaze = new Group();
 		tgMaze.getTransforms().add(new Translate(-14 * 8, -18 * 8));
-		tgMaze.getChildren().addAll(score3D.get(), livesCounter3D.get());
+		tgMaze.getChildren().addAll(score3D.get(), livesCounter3D.get(), levelCounter3D.get());
 		tgMaze.getChildren().addAll(maze.getBricks());
 		tgMaze.getChildren().addAll(collect(energizers));
 		tgMaze.getChildren().addAll(collect(pellets));
@@ -237,9 +245,9 @@ public class PlayScene3D implements GameScene {
 	private void useFirstPersonCamera() {
 		firstPersonCamera.setNearClip(0.1);
 		firstPersonCamera.setFarClip(10000.0);
-		// TODO why is this not working?
-//		firstPersonCamera.translateXProperty().bind(player.$translateX);
-//		firstPersonCamera.translateYProperty().bind(player.$translateY);
+		firstPersonCamera.setRotationAxis(Rotate.X_AXIS);
+		firstPersonCamera.setRotate(60);
+		firstPersonCamera.setTranslateZ(-60);
 		fxScene.setCamera(firstPersonCamera);
 	}
 
@@ -251,10 +259,7 @@ public class PlayScene3D implements GameScene {
 				moveableCamera.setTranslateX(x);
 				moveableCamera.setTranslateY(y);
 			} else if (camera == firstPersonCamera) {
-				firstPersonCamera.setRotationAxis(Rotate.X_AXIS);
-				firstPersonCamera.setRotate(60);
-				firstPersonCamera.setTranslateZ(-60);
-				double x = lerp(firstPersonCamera.getTranslateX(), -12 * 8 + player.pac.position.x);
+				double x = lerp(firstPersonCamera.getTranslateX(), player.pac.position.x - 100); // TODO why?
 				double y = lerp(firstPersonCamera.getTranslateY(), player.pac.position.y);
 				firstPersonCamera.setTranslateX(x);
 				firstPersonCamera.setTranslateY(y);
@@ -287,13 +292,14 @@ public class PlayScene3D implements GameScene {
 		});
 		livesCounter3D.get().setVisible(!gameController.isAttractMode());
 		livesCounter3D.update(game());
+		levelCounter3D.update(game());
 		energizers.forEach(energizer3D -> energizer3D.update(game()));
 		pellets.forEach(pellet3D -> pellet3D.update(game()));
 		player.update();
 		game().ghosts().map(ghosts3D::get).forEach(Ghost3D::update);
 		bonus3D.update(game().bonus);
 		updateCamera();
-		playSceneSoundHandler.onUpdate();
+		playSceneSoundHandler.update();
 	}
 
 	@Override
@@ -364,14 +370,14 @@ public class PlayScene3D implements GameScene {
 		});
 
 		ScaleTransition expand = new ScaleTransition(Duration.seconds(1), player.get());
-		expand.setToX(2);
-		expand.setToY(2);
-		expand.setToZ(2);
+		expand.setToX(1.5);
+		expand.setToY(1.5);
+		expand.setToZ(1.5);
 
 		ScaleTransition shrink = new ScaleTransition(Duration.seconds(1.5), player.get());
-		shrink.setToX(0);
-		shrink.setToY(0);
-		shrink.setToZ(0);
+		shrink.setToX(0.1);
+		shrink.setToY(0.1);
+		shrink.setToZ(0.1);
 
 		SequentialTransition animation = new SequentialTransition(phase1, expand, shrink);
 		animation.setOnFinished(e -> {

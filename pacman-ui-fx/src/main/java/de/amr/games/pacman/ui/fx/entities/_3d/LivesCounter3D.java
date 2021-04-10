@@ -18,11 +18,11 @@ public class LivesCounter3D implements Supplier<Node> {
 	public LivesCounter3D(Pac pac, int x, int y) {
 		root = new Group();
 		for (int i = 0; i < numPositions; ++i) {
-			V2i brickTile = new V2i(x + 2 * i, y);
+			V2i tile = new V2i(x + 2 * i, y);
 			Player3D liveIndicator = new Player3D(pac);
-			liveIndicator.get().setTranslateX(brickTile.x * TS);
-			liveIndicator.get().setTranslateY(brickTile.y * TS);
-			liveIndicator.get().setTranslateZ(-TS); // ???
+			liveIndicator.get().setTranslateX(tile.x * TS);
+			liveIndicator.get().setTranslateY(tile.y * TS);
+			liveIndicator.get().setTranslateZ(0);
 			root.getChildren().add(liveIndicator.get());
 		}
 	}

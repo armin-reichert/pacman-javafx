@@ -117,7 +117,7 @@ public class PlayScene2D<RENDERING extends GameRendering2D> extends AbstractGame
 
 	@Override
 	public void update() {
-		playSceneSoundHandler.onUpdate();
+		playSceneSoundHandler.update();
 	}
 
 	private void onGameStateChange(PacManGameStateChangedEvent event) {

@@ -38,7 +38,7 @@ public class HUD extends HBox {
 
 	private void line(String column1, String fmtColumn2, Object... args) {
 		String column2 = String.format(fmtColumn2, args) + "\n";
-		text += String.format("%-30s: %s", column1, column2);
+		text += String.format("%-20s: %s", column1, column2);
 	}
 
 	private void line() {
