@@ -33,8 +33,9 @@ public class PacManGameAppFX extends Application {
 	public void start(Stage stage) throws IOException {
 		PacManGameUI_JavaFX ui = new PacManGameUI_JavaFX(stage, gameController, options.height);
 		gameController.setUI(ui);
-		gameLoop = new GameLoop(gameController::step, ui);
+		gameLoop = new GameLoop(gameController::step, ui::update);
 		gameLoop.start();
+		ui.$totalTicks.bind(gameLoop.$totalTicks);
 		ui.$fps.bind(gameLoop.$fps);
 	}
 }

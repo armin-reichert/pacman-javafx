@@ -3,7 +3,6 @@ package de.amr.games.pacman.ui.fx.app;
 import static de.amr.games.pacman.lib.Logging.log;
 
 import de.amr.games.pacman.ui.fx.Env;
-import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -18,46 +17,39 @@ import javafx.beans.property.SimpleIntegerProperty;
 class GameLoop extends AnimationTimer {
 
 	public IntegerProperty $fps = new SimpleIntegerProperty();
+	public IntegerProperty $totalTicks = new SimpleIntegerProperty();
 
 	private final Runnable step;
-	private final PacManGameUI_JavaFX userInterface;
+	private final Runnable uiUpdate;
 
-	private long totalTicks;
 	private long fpsCountStartTime;
 	private int frames;
 
-	public GameLoop(Runnable step, PacManGameUI_JavaFX userInterface) {
+	public GameLoop(Runnable step, Runnable uiUpdate) {
 		this.step = step;
-		this.userInterface = userInterface;
-	}
-
-	public int getFPS() {
-		return $fps.get();
+		this.uiUpdate = uiUpdate;
 	}
 
 	@Override
 	public void handle(long now) {
-		if (Env.$paused.get()) {
-			userInterface.hud.update();
-		} else {
-			if (totalTicks % Env.$slowdown.get() == 0) {
+		if ($totalTicks.get() % Env.$slowdown.get() == 0) {
+			if (!Env.$paused.get()) {
 				if (Env.$measureTime.get()) {
-					measureTime(step::run, "Controller step");
-					measureTime(userInterface::update, "User interface update");
+					measureTime(step::run, "Controller update");
+					measureTime(uiUpdate::run, "User interface update");
 				} else {
 					step.run();
-					userInterface.update();
-				}
-				++frames;
-				if (now - fpsCountStartTime > 1e9) {
-					$fps.set(frames);
-					frames = 0;
-					fpsCountStartTime = now;
-					userInterface.stage.setTitle(String.format("Pac-Man / Ms. Pac-Man (%d fps, JavaFX)", getFPS()));
+					uiUpdate.run();
 				}
 			}
-			++totalTicks;
+			++frames;
+			if (now - fpsCountStartTime > 1e9) {
+				$fps.set(frames);
+				frames = 0;
+				fpsCountStartTime = now;
+			}
 		}
+		$totalTicks.set($totalTicks.get() + 1);
 	}
 
 	private void measureTime(Runnable runnable, String description) {

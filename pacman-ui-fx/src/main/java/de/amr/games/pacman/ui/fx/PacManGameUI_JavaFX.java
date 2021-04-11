@@ -36,6 +36,7 @@ import javafx.stage.Stage;
 public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	public final IntegerProperty $fps = new SimpleIntegerProperty();
+	public final IntegerProperty $totalTicks = new SimpleIntegerProperty();
 	public final Stage stage;
 	public final PacManGameController gameController;
 	public final HUD hud = new HUD(this);
@@ -63,6 +64,12 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
 		stage.addEventHandler(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
+		$fps.addListener((source, oldValue, newValue) -> {
+			stage.setTitle(String.format("Pac-Man / Ms. Pac-Man (%d fps, JavaFX)", newValue));
+		});
+		$totalTicks.addListener((source, oldValue, newValue) -> {
+			hud.update();
+		});
 		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
 		stage.getIcons().add(new Image(getClass().getResource("/pacman/graphics/pacman.png").toExternalForm()));
 		stage.setScene(mainScene);
