@@ -9,6 +9,7 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.event.PacManGameEventListener;
 import de.amr.games.pacman.model.common.AbstractGameModel;
 import javafx.scene.Camera;
+import javafx.scene.Scene;
 import javafx.scene.SubScene;
 
 /**
@@ -38,6 +39,25 @@ public interface GameScene extends PacManGameEventListener {
 	OptionalDouble aspectRatio();
 
 	void stretchTo(double width, double height);
+
+	default void keepStretched(Scene parentScene) {
+		if (aspectRatio().isPresent()) {
+			double aspectRatio = aspectRatio().getAsDouble();
+			parentScene.widthProperty().addListener((s, o, newParentWidth) -> {
+				double maxHeight = Math.min(newParentWidth.doubleValue() / aspectRatio, parentScene.getHeight());
+				double maxWidth = maxHeight * aspectRatio;
+				stretchTo(maxWidth, maxHeight);
+			});
+			parentScene.heightProperty().addListener((s, o, newParentHeight) -> {
+				double maxHeight = newParentHeight.doubleValue();
+				double maxWidth = Math.min(parentScene.getHeight() * aspectRatio, parentScene.getWidth());
+				stretchTo(maxWidth, maxHeight);
+			});
+		} else {
+			getFXSubScene().widthProperty().bind(parentScene.widthProperty());
+			getFXSubScene().heightProperty().bind(parentScene.heightProperty());
+		}
+	}
 
 	SubScene getFXSubScene();
 

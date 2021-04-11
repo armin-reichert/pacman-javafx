@@ -132,7 +132,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			if (newGameScene.getGameController() == null) {
 				newGameScene.setGameController(gameController);
 				newGameScene.stretchTo(mainScene.getWidth(), mainScene.getHeight());
-				keepGameSceneMaximized(newGameScene, mainScene);
+				newGameScene.keepStretched(mainScene);
 			}
 			currentGameScene = newGameScene;
 			currentGameScene.start();
@@ -300,25 +300,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		if (sceneForCurrentGameState(false) != sceneForCurrentGameState(true)) {
 			stopAllSounds();
 			setGameScene(sceneForCurrentGameState(Env.$use3DScenes.get()));
-		}
-	}
-
-	private void keepGameSceneMaximized(GameScene gameScene, Scene parentScene) {
-		if (gameScene.aspectRatio().isPresent()) {
-			double aspectRatio = gameScene.aspectRatio().getAsDouble();
-			parentScene.widthProperty().addListener((s, o, newParentWidth) -> {
-				double maxHeight = Math.min(newParentWidth.doubleValue() / aspectRatio, parentScene.getHeight());
-				double maxWidth = maxHeight * aspectRatio;
-				gameScene.stretchTo(maxWidth, maxHeight);
-			});
-			parentScene.heightProperty().addListener((s, o, newParentHeight) -> {
-				double maxHeight = newParentHeight.doubleValue();
-				double maxWidth = Math.min(parentScene.getHeight() * aspectRatio, parentScene.getWidth());
-				gameScene.stretchTo(maxWidth, maxHeight);
-			});
-		} else {
-			gameScene.getFXSubScene().widthProperty().bind(parentScene.widthProperty());
-			gameScene.getFXSubScene().heightProperty().bind(parentScene.heightProperty());
 		}
 	}
 
