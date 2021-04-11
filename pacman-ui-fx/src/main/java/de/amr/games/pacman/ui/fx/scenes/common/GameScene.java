@@ -60,10 +60,18 @@ public interface GameScene extends PacManGameEventListener, Supplier<SubScene> {
 		}
 	}
 
-	default void selectCamera(CameraType cameraType) {
+	default int numCams() {
+		return 0;
 	}
 
-	default Optional<Camera> selectedCamera() {
+	default void selectCam(int cameraIndex) {
+	}
+
+	default int selectedCamIndex() {
+		return 0;
+	}
+
+	default Optional<Camera> selectedCam() {
 		return Optional.empty();
 	}
 }

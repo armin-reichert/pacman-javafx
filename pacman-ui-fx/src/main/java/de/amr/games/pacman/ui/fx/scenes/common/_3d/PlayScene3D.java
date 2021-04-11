@@ -3,6 +3,7 @@ package de.amr.games.pacman.ui.fx.scenes.common._3d;
 import static de.amr.games.pacman.lib.Logging.log;
 import static java.util.function.Predicate.not;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,6 @@ import de.amr.games.pacman.ui.fx.entities._3d.Player3D;
 import de.amr.games.pacman.ui.fx.entities._3d.ScoreNotReally3D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering3D_Assets;
-import de.amr.games.pacman.ui.fx.scenes.common.CameraType;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.sound.PlaySceneSoundHandler;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -71,10 +71,8 @@ public class PlayScene3D implements GameScene {
 
 	private final SubScene fxScene;
 
-	private final PerspectiveCamera staticCamera = new PerspectiveCamera(true);
-	private final CameraController staticCameraController = new CameraController(staticCamera);
-	private final PerspectiveCamera moveableCamera = new PerspectiveCamera(true);
-	private final PerspectiveCamera firstPersonCamera = new PerspectiveCamera(true);
+	private final List<PerspectiveCamera> cameras = new ArrayList<>();
+	private int selectedCamIndex;
 
 	private final SoundManager sounds;
 	private PlaySceneSoundHandler playSceneSoundHandler;
@@ -98,8 +96,13 @@ public class PlayScene3D implements GameScene {
 	public PlayScene3D(SoundManager sounds) {
 		this.sounds = sounds;
 		fxScene = new SubScene(new Group(), 800, 600, true, SceneAntialiasing.BALANCED);
-		fxScene.addEventHandler(KeyEvent.KEY_PRESSED, staticCameraController::handleKeyEvent);
-		useStaticCamera();
+		for (int i = 0; i < 3; ++i) {
+			cameras.add(new PerspectiveCamera(true));
+		}
+		// camera #0 is controllable using the keyboard
+		CameraController cameraController = new CameraController(cameras.get(0));
+		fxScene.addEventHandler(KeyEvent.KEY_PRESSED, cameraController::handleKeyEvent);
+		selectCam(0);
 	}
 
 	private void buildSceneGraph() {
@@ -201,70 +204,70 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public Optional<Camera> selectedCamera() {
-		return Optional.ofNullable(fxScene.getCamera());
+	public int numCams() {
+		return cameras.size();
 	}
 
 	@Override
-	public void selectCamera(CameraType cameraType) {
-		switch (cameraType) {
-		case MOVEABLE:
-			useMoveableCamera();
+	public int selectedCamIndex() {
+		return selectedCamIndex;
+	}
+
+	@Override
+	public Optional<Camera> selectedCam() {
+		return Optional.of(cameras.get(selectedCamIndex));
+	}
+
+	@Override
+	public void selectCam(int cameraIndex) {
+		selectedCamIndex = cameraIndex;
+		PerspectiveCamera cam = cameras.get(selectedCamIndex);
+		fxScene.setCamera(cam);
+		switch (selectedCamIndex) {
+		case 0:
+			cam.setNearClip(0.1);
+			cam.setFarClip(10000.0);
+			cam.setRotationAxis(Rotate.X_AXIS);
+			cam.setRotate(30);
+			cam.setTranslateZ(-250);
 			break;
-		case STATIC:
-			useStaticCamera();
+		case 1:
+			cam.setNearClip(0.1);
+			cam.setFarClip(10000.0);
+			cam.setRotationAxis(Rotate.X_AXIS);
+			cam.setRotate(30);
+			cam.setTranslateX(0);
+			cam.setTranslateY(270);
+			cam.setTranslateZ(-460);
 			break;
-		case FIRST_PERSON:
-			useFirstPersonCamera();
+		case 2:
+			cam.setNearClip(0.1);
+			cam.setFarClip(10000.0);
+			cam.setRotationAxis(Rotate.X_AXIS);
+			cam.setRotate(60);
+			cam.setTranslateZ(-60);
 			break;
 		default:
-			break;
+			throw new IllegalArgumentException();
 		}
 	}
 
-	private void useStaticCamera() {
-		staticCamera.setNearClip(0.1);
-		staticCamera.setFarClip(10000.0);
-		staticCamera.setTranslateX(0);
-		staticCamera.setTranslateY(270);
-		staticCamera.setTranslateZ(-460);
-		staticCamera.setRotationAxis(Rotate.X_AXIS);
-		staticCamera.setRotate(30);
-		fxScene.setCamera(staticCamera);
-	}
-
-	private void useMoveableCamera() {
-		moveableCamera.setNearClip(0.1);
-		moveableCamera.setFarClip(10000.0);
-		moveableCamera.setTranslateZ(-250);
-		moveableCamera.setRotationAxis(Rotate.X_AXIS);
-		moveableCamera.setRotate(30);
-		fxScene.setCamera(moveableCamera);
-	}
-
-	private void useFirstPersonCamera() {
-		firstPersonCamera.setNearClip(0.1);
-		firstPersonCamera.setFarClip(10000.0);
-		firstPersonCamera.setRotationAxis(Rotate.X_AXIS);
-		firstPersonCamera.setRotate(60);
-		firstPersonCamera.setTranslateZ(-60);
-		fxScene.setCamera(firstPersonCamera);
-	}
-
 	private void updateCamera() {
-		selectedCamera().ifPresent(camera -> {
-			if (camera == moveableCamera) {
-				double x = Math.min(10, lerp(moveableCamera.getTranslateX(), player.get().getTranslateX()));
-				double y = Math.max(50, lerp(moveableCamera.getTranslateY(), player.get().getTranslateY()));
-				moveableCamera.setTranslateX(x);
-				moveableCamera.setTranslateY(y);
-			} else if (camera == firstPersonCamera) {
-				double x = lerp(firstPersonCamera.getTranslateX(), player.pac.position.x - 100); // TODO why?
-				double y = lerp(firstPersonCamera.getTranslateY(), player.pac.position.y);
-				firstPersonCamera.setTranslateX(x);
-				firstPersonCamera.setTranslateY(y);
-			}
-		});
+		PerspectiveCamera cam = cameras.get(selectedCamIndex);
+		switch (selectedCamIndex) {
+		case 0:
+			cam.setTranslateX(Math.min(10, lerp(cam.getTranslateX(), player.get().getTranslateX())));
+			cam.setTranslateY(Math.max(50, lerp(cam.getTranslateY(), player.get().getTranslateY())));
+			break;
+		case 1:
+			break;
+		case 2:
+			cam.setTranslateX(lerp(cam.getTranslateX(), player.pac.position.x - 100));
+			cam.setTranslateY(lerp(cam.getTranslateY(), player.pac.position.y));
+			break;
+		default:
+			throw new IllegalArgumentException();
+		}
 	}
 
 	private static double lerp(double current, double target) {
@@ -286,7 +289,7 @@ public class PlayScene3D implements GameScene {
 	public void update() {
 		score3D.setHiscoreOnly(gameController.isAttractMode());
 		score3D.update(game());
-		selectedCamera().ifPresent(camera -> {
+		selectedCam().ifPresent(camera -> {
 			score3D.get().setRotationAxis(Rotate.X_AXIS);
 			score3D.get().setRotate(camera.getRotate());
 		});

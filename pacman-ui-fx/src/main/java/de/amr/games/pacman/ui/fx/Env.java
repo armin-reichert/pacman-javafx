@@ -1,6 +1,5 @@
 package de.amr.games.pacman.ui.fx;
 
-import de.amr.games.pacman.ui.fx.scenes.common.CameraType;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -15,6 +14,4 @@ public class Env {
 	public static SimpleObjectProperty<DrawMode> $drawMode = new SimpleObjectProperty<DrawMode>(DrawMode.FILL);
 	public static SimpleBooleanProperty $use3DScenes = new SimpleBooleanProperty(true);
 	public static SimpleBooleanProperty $showAxes = new SimpleBooleanProperty(false);
-	public static SimpleObjectProperty<CameraType> $cameraType = new SimpleObjectProperty<CameraType>(
-			CameraType.MOVEABLE);
 }

@@ -81,7 +81,7 @@ public class HUD extends HBox {
 			AbstractGameScene2D<?> scene2D = (AbstractGameScene2D<?>) ui.currentGameScene;
 			line("Canvas2D", "w=%.0f h=%.0f", scene2D.getCanvas().getWidth(), scene2D.getCanvas().getHeight());
 		} else {
-			ui.currentGameScene.selectedCamera().ifPresent(camera -> {
+			ui.currentGameScene.selectedCam().ifPresent(camera -> {
 				line("Camera (CTRL+C)", "%s", cameraInfo(camera));
 			});
 			line("Draw Mode (CTRL+L)", "%s", Env.$drawMode.get());

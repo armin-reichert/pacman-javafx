@@ -9,7 +9,6 @@ import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangedEvent;
 import de.amr.games.pacman.ui.PacManGameUI;
-import de.amr.games.pacman.ui.fx.scenes.common.CameraType;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacManScenes;
@@ -249,13 +248,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		switch (e.getCode()) {
 
 		case C:
-			int next = Env.$cameraType.get().ordinal() + 1;
-			if (next == CameraType.values().length) {
-				next = 0;
+			if (currentGameScene.numCams() > 0) {
+				int next = (currentGameScene.selectedCamIndex() + 1) % currentGameScene.numCams();
+				currentGameScene.selectCam(next);
+				showFlashMessage(String.format("Using camera #%d", next));
 			}
-			Env.$cameraType.set(CameraType.values()[next]);
-			currentGameScene.selectCamera(Env.$cameraType.get());
-			showFlashMessage(String.format("Use %s camera", Env.$cameraType.get()));
 			break;
 
 		case I:
