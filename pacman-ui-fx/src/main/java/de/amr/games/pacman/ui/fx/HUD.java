@@ -66,26 +66,26 @@ public class HUD extends HBox {
 		line("", "Running:   %s", stateTimer.ticked());
 		line("", "Remaining: %s",
 				stateTimer.ticksRemaining() == Long.MAX_VALUE ? "indefinite" : stateTimer.ticksRemaining());
+		line("Game Scene", "%s", ui.currentGameScene.getClass().getSimpleName());
+		line("Game Scene Size", "w=%.0f h=%.0f", ui.currentGameScene.get().getWidth(),
+				ui.currentGameScene.get().getHeight());
 		line();
 		line("Autopilot (A)", "%s", onOff(ui.gameController.autopilot.enabled));
 		line("Immunity (I)", "%s", onOff(ui.gameController.isPlayerImmune()));
 		line();
 		line("Window Size", "w=%.0f h=%.0f", ui.mainScene.getWindow().getWidth(), ui.mainScene.getWindow().getHeight());
 		line("Main Scene Size", "w=%.0f h=%.0f", ui.mainScene.getWidth(), ui.mainScene.getHeight());
-		line("3D Scenes (CTRL+3)", "%s", onOff(Env.$use3DScenes.get()));
 		line();
-		line("Game Scene", "%s", ui.currentGameScene.getClass().getSimpleName());
-		line("Game Scene Size", "w=%.0f h=%.0f", ui.currentGameScene.get().getWidth(),
-				ui.currentGameScene.get().getHeight());
+		line("3D Scenes (CTRL+3)", "%s", onOff(Env.$use3DScenes.get()));
 		if (ui.currentGameScene instanceof AbstractGameScene2D) {
 			AbstractGameScene2D<?> scene2D = (AbstractGameScene2D<?>) ui.currentGameScene;
 			line("Canvas2D", "w=%.0f h=%.0f", scene2D.getCanvas().getWidth(), scene2D.getCanvas().getHeight());
 		} else {
 			ui.currentGameScene.selectedCamera().ifPresent(camera -> {
-				line("3D Camera (CTRL+C)", "%s", cameraInfo(camera));
+				line("Camera (CTRL+C)", "%s", cameraInfo(camera));
 			});
-			line("3D Draw Mode (CTRL+L)", "%s", Env.$drawMode.get());
-			line("3D Axes (CTRL+X)", "%s", onOff(Env.$showAxes.get()));
+			line("Draw Mode (CTRL+L)", "%s", Env.$drawMode.get());
+			line("Axes (CTRL+X)", "%s", onOff(Env.$showAxes.get()));
 		}
 		textView.setText(text);
 	}
