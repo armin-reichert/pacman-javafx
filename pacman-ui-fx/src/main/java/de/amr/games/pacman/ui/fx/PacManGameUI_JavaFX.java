@@ -30,6 +30,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
@@ -83,18 +84,24 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	public final PacManGameController gameController;
 	public final HUD hud = new HUD(this);
 	public final Scene mainScene;
+
 	public GameScene currentGameScene;
 
 	private final Keyboard keyboard = new Keyboard();
-	private final FlashMessageView flashMessageView = new FlashMessageView();;
+	private final FlashMessageView flashMessageView = new FlashMessageView();
+	private final Group gameSceneParent = new Group();
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController gameController, double height) {
 		this.stage = stage;
 		this.gameController = gameController;
 
+		StackPane root = new StackPane();
+		root.getChildren().addAll(gameSceneParent, flashMessageView, hud);
+		StackPane.setAlignment(hud, Pos.TOP_LEFT);
+
 		GameScene gameScene = sceneForCurrentGameState(Env.$use3DScenes.get());
 		double aspectRatio = gameScene.aspectRatio().orElse(getScreenAspectRatio());
-		mainScene = new Scene(new StackPane(), aspectRatio * height, height, Color.rgb(20, 20, 60));
+		mainScene = new Scene(root, aspectRatio * height, height, Color.rgb(20, 20, 60));
 		setGameScene(gameScene);
 
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
@@ -136,14 +143,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			}
 			currentGameScene = newGameScene;
 			currentGameScene.start();
-
-			// TODO is there a more elegant way?
-			StackPane root = (StackPane) mainScene.getRoot();
-			StackPane.setAlignment(hud, Pos.TOP_LEFT);
-			root.getChildren().clear();
-			root.getChildren().addAll(currentGameScene.getFXSubScene(), flashMessageView, hud);
-
-			// must be done after update of scene
+			// put game scene into scene graph
+			gameSceneParent.getChildren().clear();
+			gameSceneParent.getChildren().add(currentGameScene.getFXSubScene());
+			// Note: this must be done after adding to the scene graph
 			currentGameScene.getFXSubScene().requestFocus();
 		}
 	}
