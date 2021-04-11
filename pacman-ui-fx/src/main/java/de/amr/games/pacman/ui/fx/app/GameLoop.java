@@ -10,7 +10,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 /**
  * Game loop.
  * <p>
- * Note that the animation timer frequency is determined from the monitor refresh rate!
+ * Note that the animation timer frequency is taken from the monitor refresh rate!
  * 
  * @author Armin Reichert
  */
