@@ -3,7 +3,6 @@ package de.amr.games.pacman.ui.fx.scenes.mspacman;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.PacManGameSound;
-import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.entities._2d.LevelCounter2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Player2D;
 import de.amr.games.pacman.ui.fx.entities._2d.mspacman.Flap2D;
@@ -52,8 +51,7 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D<GameRenderi
 	private JuniorBag2D bag2D;
 
 	public MsPacMan_IntermissionScene3() {
-		super(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, GameRendering2D.RENDERING_MS_PACMAN,
-				PacManGameUI_JavaFX.SOUNDS_MS_PACMAN);
+		super(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, GameRendering2D.RENDERING_MS_PACMAN, MsPacManScenes.SOUNDS);
 	}
 
 	@Override

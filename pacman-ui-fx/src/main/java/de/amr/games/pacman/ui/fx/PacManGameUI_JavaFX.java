@@ -3,8 +3,6 @@ package de.amr.games.pacman.ui.fx;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.GameVariant.MS_PACMAN;
 import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
-import static de.amr.games.pacman.ui.fx.rendering.GameRendering2D.RENDERING_MS_PACMAN;
-import static de.amr.games.pacman.ui.fx.rendering.GameRendering2D.RENDERING_PACMAN;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
@@ -14,18 +12,8 @@ import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.scenes.common.CameraType;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
-import de.amr.games.pacman.ui.fx.scenes.common._2d.PlayScene2D;
-import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScene3D;
-import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacMan_IntermissionScene1;
-import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacMan_IntermissionScene2;
-import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacMan_IntermissionScene3;
-import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacMan_IntroScene;
-import de.amr.games.pacman.ui.fx.scenes.pacman.PacMan_IntermissionScene1;
-import de.amr.games.pacman.ui.fx.scenes.pacman.PacMan_IntermissionScene2;
-import de.amr.games.pacman.ui.fx.scenes.pacman.PacMan_IntermissionScene3;
-import de.amr.games.pacman.ui.fx.scenes.pacman.PacMan_IntroScene;
-import de.amr.games.pacman.ui.fx.sound.PacManGameSounds;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
+import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacManScenes;
+import de.amr.games.pacman.ui.fx.scenes.pacman.PacManScenes;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Pos;
@@ -46,38 +34,6 @@ import javafx.stage.Stage;
  * @author Armin Reichert
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
-
-	public static final SoundManager SOUNDS_MS_PACMAN = new SoundManager(PacManGameSounds::msPacManSoundURL);
-	public static final SoundManager SOUNDS_PACMAN = new SoundManager(PacManGameSounds::mrPacManSoundURL);
-
-	private static final GameScene SCENES_MS_PACMAN[][] = new GameScene[5][2];
-	private static final GameScene SCENES_PACMAN[][] = new GameScene[5][2];
-
-	static {
-		//@formatter:off
-		SCENES_MS_PACMAN[0][0] = 
-		SCENES_MS_PACMAN[0][1] = new MsPacMan_IntroScene();
-		SCENES_MS_PACMAN[1][0] = 
-		SCENES_MS_PACMAN[1][1] = new MsPacMan_IntermissionScene1();
-		SCENES_MS_PACMAN[2][0] = 
-		SCENES_MS_PACMAN[2][1] = new MsPacMan_IntermissionScene2();
-		SCENES_MS_PACMAN[3][0] = 
-		SCENES_MS_PACMAN[3][1] = new MsPacMan_IntermissionScene3();
-		SCENES_MS_PACMAN[4][0] = new PlayScene2D<>(RENDERING_MS_PACMAN, SOUNDS_MS_PACMAN);
-		SCENES_MS_PACMAN[4][1] = new PlayScene3D(SOUNDS_MS_PACMAN);
-
-		SCENES_PACMAN   [0][0] = 
-		SCENES_PACMAN   [0][1] = new PacMan_IntroScene();
-		SCENES_PACMAN   [1][0] = 
-		SCENES_PACMAN   [1][1] = new PacMan_IntermissionScene1();
-		SCENES_PACMAN   [2][0] = 
-		SCENES_PACMAN   [2][1] = new PacMan_IntermissionScene2();
-		SCENES_PACMAN   [3][0] = 
-		SCENES_PACMAN   [3][1] = new PacMan_IntermissionScene3();
-		SCENES_PACMAN   [4][0] = new PlayScene2D<>(RENDERING_PACMAN, SOUNDS_PACMAN);
-		SCENES_PACMAN   [4][1] = new PlayScene3D(SOUNDS_PACMAN);
-		//@formatter:on
-	}
 
 	public final IntegerProperty $fps = new SimpleIntegerProperty();
 	public final Stage stage;
@@ -114,6 +70,51 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		stage.show();
 	}
 
+	public void setTitle(String title) {
+		stage.setTitle(title);
+	}
+
+	@Override
+	public void reset() {
+		stopAllSounds();
+		currentGameScene.end();
+	}
+
+	@Override
+	public void update() {
+		currentGameScene.update();
+		flashMessageView.update();
+		hud.update();
+		if (currentGameScene instanceof AbstractGameScene2D) {
+			AbstractGameScene2D<?> scene2D = (AbstractGameScene2D<?>) currentGameScene;
+			scene2D.clearCanvas(Color.BLACK);
+			scene2D.render();
+		}
+	}
+
+	@Override
+	public void showFlashMessage(String message, double seconds) {
+		flashMessageView.showMessage(message, (long) (60 * seconds));
+	}
+
+	@Override
+	public boolean keyPressed(String keySpec) {
+		return keyboard.keyPressed(keySpec);
+	}
+
+	private void stopAllSounds() {
+		MsPacManScenes.SOUNDS.stopAll();
+		PacManScenes.SOUNDS.stopAll();
+	}
+
+	private void toggleUse3DScenes() {
+		Env.$use3DScenes.set(!Env.$use3DScenes.get());
+		if (sceneForCurrentGameState(false) != sceneForCurrentGameState(true)) {
+			stopAllSounds();
+			setGameScene(sceneForCurrentGameState(Env.$use3DScenes.get()));
+		}
+	}
+
 	private double getScreenAspectRatio() {
 		Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
 		return bounds.getWidth() / bounds.getHeight();
@@ -123,9 +124,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		int sceneIndex = gameController.state == PacManGameState.INTRO ? 0
 				: gameController.state == PacManGameState.INTERMISSION ? gameController.game().intermissionNumber : 4;
 		if (gameController.gameVariant() == MS_PACMAN) {
-			return SCENES_MS_PACMAN[sceneIndex][use3D ? 1 : 0];
+			return MsPacManScenes.SCENES[sceneIndex][use3D ? 1 : 0];
 		} else if (gameController.gameVariant() == PACMAN) {
-			return SCENES_PACMAN[sceneIndex][use3D ? 1 : 0];
+			return PacManScenes.SCENES[sceneIndex][use3D ? 1 : 0];
 		}
 		throw new IllegalStateException();
 	}
@@ -291,50 +292,5 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		default:
 			break;
 		}
-	}
-
-	private void stopAllSounds() {
-		SOUNDS_MS_PACMAN.stopAll();
-		SOUNDS_PACMAN.stopAll();
-	}
-
-	private void toggleUse3DScenes() {
-		Env.$use3DScenes.set(!Env.$use3DScenes.get());
-		if (sceneForCurrentGameState(false) != sceneForCurrentGameState(true)) {
-			stopAllSounds();
-			setGameScene(sceneForCurrentGameState(Env.$use3DScenes.get()));
-		}
-	}
-
-	@Override
-	public void update() {
-		currentGameScene.update();
-		flashMessageView.update();
-		hud.update();
-		if (currentGameScene instanceof AbstractGameScene2D) {
-			AbstractGameScene2D<?> scene2D = (AbstractGameScene2D<?>) currentGameScene;
-			scene2D.clearCanvas(Color.BLACK);
-			scene2D.render();
-		}
-	}
-
-	@Override
-	public void reset() {
-		stopAllSounds();
-		currentGameScene.end();
-	}
-
-	@Override
-	public void showFlashMessage(String message, double seconds) {
-		flashMessageView.showMessage(message, (long) (60 * seconds));
-	}
-
-	@Override
-	public boolean keyPressed(String keySpec) {
-		return keyboard.keyPressed(keySpec);
-	}
-
-	public void setTitle(String title) {
-		stage.setTitle(title);
 	}
 }

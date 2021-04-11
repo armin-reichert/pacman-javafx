@@ -9,7 +9,6 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.Ghost;
-import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.entities._2d.Ghost2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Player2D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
@@ -33,8 +32,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D<GameRendering2D_MsP
 	private List<Ghost2D<GameRendering2D_MsPacMan>> ghosts2D;
 
 	public MsPacMan_IntroScene() {
-		super(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, GameRendering2D.RENDERING_MS_PACMAN,
-				PacManGameUI_JavaFX.SOUNDS_MS_PACMAN);
+		super(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, GameRendering2D.RENDERING_MS_PACMAN, MsPacManScenes.SOUNDS);
 	}
 
 	@Override
