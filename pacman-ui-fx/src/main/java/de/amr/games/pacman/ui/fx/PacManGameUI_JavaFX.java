@@ -253,7 +253,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			break;
 
 		case I:
-			Env.$infoViewVisible.set(!Env.$infoViewVisible.get());
+			Env.$hudVisible.set(!Env.$hudVisible.get());
 			break;
 
 		case L:

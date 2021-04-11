@@ -3,7 +3,6 @@ package de.amr.games.pacman.ui.fx.app;
 import java.io.IOException;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -21,7 +20,6 @@ public class PacManGameAppFX extends Application {
 
 	public static void main(String[] args) {
 		options = new Options(args);
-		Env.$measureTime.set(false);
 		launch(args);
 	}
 
@@ -33,10 +31,10 @@ public class PacManGameAppFX extends Application {
 
 	@Override
 	public void start(Stage stage) throws IOException {
-		PacManGameUI_JavaFX fxUI = new PacManGameUI_JavaFX(stage, gameController, options.height);
-		gameController.setUI(fxUI);
-		gameLoop = new GameLoop(gameController, fxUI);
+		PacManGameUI_JavaFX ui = new PacManGameUI_JavaFX(stage, gameController, options.height);
+		gameController.setUI(ui);
+		gameLoop = new GameLoop(gameController, ui);
 		gameLoop.start();
-		fxUI.$fps.bind(gameLoop.$fps);
+		ui.$fps.bind(gameLoop.$fps);
 	}
 }

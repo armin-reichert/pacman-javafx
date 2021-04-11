@@ -33,7 +33,7 @@ public class HUD extends HBox {
 		textView.setFill(Color.LIGHTGREEN);
 		textView.setFont(Font.font("Monospace", 14));
 		getChildren().add(textView);
-		visibleProperty().bind(Env.$infoViewVisible);
+		visibleProperty().bind(Env.$hudVisible);
 	}
 
 	private void line(String column1, String fmtColumn2, Object... args) {
