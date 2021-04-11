@@ -3,6 +3,8 @@ package de.amr.games.pacman.ui.fx;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.GameVariant.MS_PACMAN;
 import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
+import static de.amr.games.pacman.ui.fx.rendering.GameRendering2D.RENDERING_MS_PACMAN;
+import static de.amr.games.pacman.ui.fx.rendering.GameRendering2D.RENDERING_PACMAN;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
@@ -49,31 +51,32 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	public static final SoundManager SOUNDS_MS_PACMAN = new SoundManager(PacManGameSounds::msPacManSoundURL);
 	public static final SoundManager SOUNDS_PACMAN = new SoundManager(PacManGameSounds::mrPacManSoundURL);
 
-	private static final GameScene SCENES[][][] = new GameScene[2][5][2];
+	private static final GameScene SCENES_MS_PACMAN[][] = new GameScene[5][2];
+	private static final GameScene SCENES_PACMAN[][] = new GameScene[5][2];
 
 	static {
 		//@formatter:off
-		SCENES[MS_PACMAN.ordinal()][0][0] = 
-		SCENES[MS_PACMAN.ordinal()][0][1] = new MsPacMan_IntroScene();
-		SCENES[MS_PACMAN.ordinal()][1][0] = 
-		SCENES[MS_PACMAN.ordinal()][1][1] = new MsPacMan_IntermissionScene1();
-		SCENES[MS_PACMAN.ordinal()][2][0] = 
-		SCENES[MS_PACMAN.ordinal()][2][1] = new MsPacMan_IntermissionScene2();
-		SCENES[MS_PACMAN.ordinal()][3][0] = 
-		SCENES[MS_PACMAN.ordinal()][3][1] = new MsPacMan_IntermissionScene3();
-		SCENES[MS_PACMAN.ordinal()][4][0] = new PlayScene2D<>(GameRendering2D.RENDERING_MS_PACMAN, SOUNDS_MS_PACMAN);
-		SCENES[MS_PACMAN.ordinal()][4][1] = new PlayScene3D(SOUNDS_MS_PACMAN);
+		SCENES_MS_PACMAN[0][0] = 
+		SCENES_MS_PACMAN[0][1] = new MsPacMan_IntroScene();
+		SCENES_MS_PACMAN[1][0] = 
+		SCENES_MS_PACMAN[1][1] = new MsPacMan_IntermissionScene1();
+		SCENES_MS_PACMAN[2][0] = 
+		SCENES_MS_PACMAN[2][1] = new MsPacMan_IntermissionScene2();
+		SCENES_MS_PACMAN[3][0] = 
+		SCENES_MS_PACMAN[3][1] = new MsPacMan_IntermissionScene3();
+		SCENES_MS_PACMAN[4][0] = new PlayScene2D<>(RENDERING_MS_PACMAN, SOUNDS_MS_PACMAN);
+		SCENES_MS_PACMAN[4][1] = new PlayScene3D(SOUNDS_MS_PACMAN);
 
-		SCENES[PACMAN.ordinal()]   [0][0] = 
-		SCENES[PACMAN.ordinal()]   [0][1] = new PacMan_IntroScene();
-		SCENES[PACMAN.ordinal()]   [1][0] = 
-		SCENES[PACMAN.ordinal()]   [1][1] = new PacMan_IntermissionScene1();
-		SCENES[PACMAN.ordinal()]   [2][0] = 
-		SCENES[PACMAN.ordinal()]   [2][1] = new PacMan_IntermissionScene2();
-		SCENES[PACMAN.ordinal()]   [3][0] = 
-		SCENES[PACMAN.ordinal()]   [3][1] = new PacMan_IntermissionScene3();
-		SCENES[PACMAN.ordinal()]   [4][0] = new PlayScene2D<>(GameRendering2D.RENDERING_PACMAN, SOUNDS_PACMAN);
-		SCENES[PACMAN.ordinal()]   [4][1] = new PlayScene3D(SOUNDS_PACMAN);
+		SCENES_PACMAN   [0][0] = 
+		SCENES_PACMAN   [0][1] = new PacMan_IntroScene();
+		SCENES_PACMAN   [1][0] = 
+		SCENES_PACMAN   [1][1] = new PacMan_IntermissionScene1();
+		SCENES_PACMAN   [2][0] = 
+		SCENES_PACMAN   [2][1] = new PacMan_IntermissionScene2();
+		SCENES_PACMAN   [3][0] = 
+		SCENES_PACMAN   [3][1] = new PacMan_IntermissionScene3();
+		SCENES_PACMAN   [4][0] = new PlayScene2D<>(RENDERING_PACMAN, SOUNDS_PACMAN);
+		SCENES_PACMAN   [4][1] = new PlayScene3D(SOUNDS_PACMAN);
 		//@formatter:on
 	}
 
@@ -91,17 +94,16 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		this.stage = stage;
 		this.gameController = gameController;
 
-		GameScene initialGameScene = sceneForCurrentGameState(Env.$use3DScenes.get());
-		double aspectRatio = initialGameScene.aspectRatio().orElse(getScreenAspectRatio());
+		GameScene gameScene = sceneForCurrentGameState(Env.$use3DScenes.get());
+		double aspectRatio = gameScene.aspectRatio().orElse(getScreenAspectRatio());
 		mainScene = new Scene(new StackPane(), aspectRatio * height, height, Color.rgb(20, 20, 60));
-		setGameScene(initialGameScene);
+		setGameScene(gameScene);
 
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
 		stage.addEventHandler(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
 		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
 		stage.getIcons().add(new Image(getClass().getResource("/pacman/graphics/pacman.png").toExternalForm()));
-		stage.setOnCloseRequest(e -> Platform.exit());
 		stage.setScene(mainScene);
 		stage.centerOnScreen();
 		stage.show();
@@ -115,7 +117,12 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private GameScene sceneForCurrentGameState(boolean use3D) {
 		int sceneIndex = gameController.state == PacManGameState.INTRO ? 0
 				: gameController.state == PacManGameState.INTERMISSION ? gameController.game().intermissionNumber : 4;
-		return SCENES[gameController.gameVariant().ordinal()][sceneIndex][use3D ? 1 : 0];
+		if (gameController.gameVariant() == MS_PACMAN) {
+			return SCENES_MS_PACMAN[sceneIndex][use3D ? 1 : 0];
+		} else if (gameController.gameVariant() == PACMAN) {
+			return SCENES_PACMAN[sceneIndex][use3D ? 1 : 0];
+		}
+		throw new IllegalStateException();
 	}
 
 	private void setGameScene(GameScene newGameScene) {
