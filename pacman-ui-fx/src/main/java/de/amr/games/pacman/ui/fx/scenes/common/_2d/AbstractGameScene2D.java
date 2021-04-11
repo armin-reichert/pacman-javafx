@@ -110,7 +110,7 @@ public abstract class AbstractGameScene2D<RENDERING extends GameRendering2D> imp
 	}
 
 	@Override
-	public SubScene getFXSubScene() {
+	public SubScene get() {
 		return scene;
 	}
 }
