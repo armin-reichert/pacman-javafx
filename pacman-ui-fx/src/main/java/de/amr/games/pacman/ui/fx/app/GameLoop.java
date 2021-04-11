@@ -2,7 +2,6 @@ package de.amr.games.pacman.ui.fx.app;
 
 import static de.amr.games.pacman.lib.Logging.log;
 
-import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.PacManGameUI_JavaFX;
 import javafx.animation.AnimationTimer;
@@ -20,15 +19,15 @@ class GameLoop extends AnimationTimer {
 
 	public IntegerProperty $fps = new SimpleIntegerProperty();
 
-	private final PacManGameController controller;
+	private final Runnable step;
 	private final PacManGameUI_JavaFX userInterface;
 
 	private long totalTicks;
 	private long fpsCountStartTime;
 	private int frames;
 
-	public GameLoop(PacManGameController controller, PacManGameUI_JavaFX userInterface) {
-		this.controller = controller;
+	public GameLoop(Runnable step, PacManGameUI_JavaFX userInterface) {
+		this.step = step;
 		this.userInterface = userInterface;
 	}
 
@@ -43,10 +42,10 @@ class GameLoop extends AnimationTimer {
 		} else {
 			if (totalTicks % Env.$slowdown.get() == 0) {
 				if (Env.$measureTime.get()) {
-					measureTime(controller::step, "Controller step");
+					measureTime(step::run, "Controller step");
 					measureTime(userInterface::update, "User interface update");
 				} else {
-					controller.step();
+					step.run();
 					userInterface.update();
 				}
 				++frames;
