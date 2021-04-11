@@ -190,10 +190,12 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		case L:
 			gameController.game().lives++;
+			showFlashMessage(String.format("Player has %d lives now", gameController.game().lives));
 			break;
 
 		case N:
 			if (gameController.isGameRunning()) {
+				showFlashMessage("You old cheating bastard");
 				gameController.changeState(PacManGameState.LEVEL_COMPLETE);
 			}
 			break;
@@ -213,7 +215,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		case DIGIT1:
 			if (gameController.state == PacManGameState.INTRO) {
-				showFlashMessage("Test Intermission #1");
 				gameController.game().intermissionNumber = 1;
 				gameController.changeState(PacManGameState.INTERMISSION);
 			}
@@ -221,7 +222,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		case DIGIT2:
 			if (gameController.state == PacManGameState.INTRO) {
-				showFlashMessage("Test Intermission #2");
 				gameController.game().intermissionNumber = 2;
 				gameController.changeState(PacManGameState.INTERMISSION);
 			}
@@ -229,7 +229,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		case DIGIT3:
 			if (gameController.state == PacManGameState.INTRO) {
-				showFlashMessage("Test Intermission #3");
 				gameController.game().intermissionNumber = 3;
 				gameController.changeState(PacManGameState.INTERMISSION);
 			}

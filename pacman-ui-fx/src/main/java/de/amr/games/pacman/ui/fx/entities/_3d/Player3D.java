@@ -5,6 +5,7 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import java.util.function.Supplier;
 
 import de.amr.games.pacman.model.common.Pac;
+import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering3D_Assets;
 import javafx.beans.property.ReadOnlyBooleanProperty;
@@ -71,8 +72,9 @@ public class Player3D implements Supplier<Node> {
 		return root;
 	}
 
-	public void update() {
-		root.setVisible(pac.visible);
+	public void update(PacManGameWorld world) {
+		boolean inPortal = world.isPortal(pac.tile());
+		root.setVisible(pac.visible && !inPortal);
 		root.setTranslateX(pac.position.x);
 		root.setTranslateY(pac.position.y);
 		root.setRotationAxis(Rotate.Y_AXIS);

@@ -67,7 +67,7 @@ import javafx.util.Duration;
 public class PlayScene3D implements GameScene {
 
 	private static final String[] CONGRATS = { "Well done", "Congrats", "Awesome", "You did it", "You're the man*in",
-			"WTF", "You old cheating bastard" };
+			"WTF" };
 
 	private final SubScene fxScene;
 
@@ -298,7 +298,7 @@ public class PlayScene3D implements GameScene {
 		livesCounter3D.update(game());
 		energizers.forEach(energizer3D -> energizer3D.update(game()));
 		pellets.forEach(pellet3D -> pellet3D.update(game()));
-		player.update();
+		player.update(game().currentLevel.world);
 		game().ghosts().map(ghosts3D::get).forEach(Ghost3D::update);
 		bonus3D.update(game().bonus);
 		updateCamera();
