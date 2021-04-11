@@ -70,10 +70,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		stage.show();
 	}
 
-	public void setTitle(String title) {
-		stage.setTitle(title);
-	}
-
 	@Override
 	public void reset() {
 		stopAllSounds();

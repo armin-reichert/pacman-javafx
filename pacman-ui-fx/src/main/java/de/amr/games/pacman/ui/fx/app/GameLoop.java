@@ -54,7 +54,7 @@ class GameLoop extends AnimationTimer {
 					$fps.set(frames);
 					frames = 0;
 					fpsCountStartTime = now;
-					userInterface.setTitle(String.format("Pac-Man / Ms. Pac-Man (%d fps, JavaFX)", getFPS()));
+					userInterface.stage.setTitle(String.format("Pac-Man / Ms. Pac-Man (%d fps, JavaFX)", getFPS()));
 				}
 			}
 			++totalTicks;
