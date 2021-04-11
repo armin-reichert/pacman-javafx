@@ -70,7 +70,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		$totalTicks.addListener((source, oldValue, newValue) -> {
 			hud.update();
 		});
-		stage.setTitle("Pac-Man / Ms. Pac-Man (JavaFX)");
 		stage.getIcons().add(new Image(getClass().getResource("/pacman/graphics/pacman.png").toExternalForm()));
 		stage.setScene(mainScene);
 		stage.centerOnScreen();
