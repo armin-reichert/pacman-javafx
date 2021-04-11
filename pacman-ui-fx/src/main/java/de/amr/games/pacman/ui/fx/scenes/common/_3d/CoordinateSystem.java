@@ -30,7 +30,7 @@ public class CoordinateSystem {
 		zAxis.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 
 		root = new Group(origin, xAxis, yAxis, zAxis);
-		root.visibleProperty().bind(Env.$showAxes);
+		root.visibleProperty().bind(Env.$axesVisible);
 	}
 
 	// Cylinder height points to y-direction

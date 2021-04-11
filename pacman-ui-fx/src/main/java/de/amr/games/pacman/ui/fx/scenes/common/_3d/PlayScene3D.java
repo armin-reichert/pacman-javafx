@@ -289,6 +289,7 @@ public class PlayScene3D implements GameScene {
 	public void update() {
 		score3D.setHiscoreOnly(gameController.isAttractMode());
 		score3D.update(game());
+		// TODO use overlay subscene for score etc.?
 		selectedCam().ifPresent(camera -> {
 			score3D.get().setRotationAxis(Rotate.X_AXIS);
 			score3D.get().setRotate(camera.getRotate());

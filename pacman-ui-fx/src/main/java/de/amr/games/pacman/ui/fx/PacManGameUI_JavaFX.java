@@ -269,18 +269,18 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		case S:
 			if (!e.isShiftDown()) {
-				Env.$slowdown.set(Math.max(1, Env.$slowdown.get() - 1));
+				Env.$slowDown.set(Math.max(1, Env.$slowDown.get() - 1));
 			} else {
-				Env.$slowdown.set(Math.min(10, Env.$slowdown.get() + 1));
+				Env.$slowDown.set(Math.min(10, Env.$slowDown.get() + 1));
 			}
 			break;
 
 		case T:
-			Env.$measureTime.set(!Env.$measureTime.get());
+			Env.$timeMeasured.set(!Env.$timeMeasured.get());
 			break;
 
 		case X:
-			Env.$showAxes.set(!Env.$showAxes.get());
+			Env.$axesVisible.set(!Env.$axesVisible.get());
 			break;
 
 		case DIGIT3:

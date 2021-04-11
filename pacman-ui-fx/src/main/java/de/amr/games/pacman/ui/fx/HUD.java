@@ -55,7 +55,7 @@ public class HUD extends HBox {
 		TickTimer stateTimer = ui.gameController.stateTimer();
 		text = "";
 		line("Frame rate", "%d Hz", ui.$fps.get());
-		line("Slowdown", "%d", Env.$slowdown.get());
+		line("Slowdown", "%d", Env.$slowDown.get());
 		line("Paused (CTRL+P)", "%s", yesNo(Env.$paused.get()));
 		line();
 		line("Game Variant", "%s", ui.gameController.gameVariant());
@@ -85,7 +85,7 @@ public class HUD extends HBox {
 				line("Camera (CTRL+C)", "%s", cameraInfo(camera));
 			});
 			line("Draw Mode (CTRL+L)", "%s", Env.$drawMode.get());
-			line("Axes (CTRL+X)", "%s", onOff(Env.$showAxes.get()));
+			line("Axes (CTRL+X)", "%s", onOff(Env.$axesVisible.get()));
 		}
 		textView.setText(text);
 	}

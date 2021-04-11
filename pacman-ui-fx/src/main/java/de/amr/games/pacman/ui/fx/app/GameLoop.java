@@ -32,9 +32,9 @@ class GameLoop extends AnimationTimer {
 
 	@Override
 	public void handle(long now) {
-		if ($totalTicks.get() % Env.$slowdown.get() == 0) {
+		if ($totalTicks.get() % Env.$slowDown.get() == 0) {
 			if (!Env.$paused.get()) {
-				if (Env.$measureTime.get()) {
+				if (Env.$timeMeasured.get()) {
 					measureTime(step::run, "Controller update");
 					measureTime(uiUpdate::run, "User interface update");
 				} else {
