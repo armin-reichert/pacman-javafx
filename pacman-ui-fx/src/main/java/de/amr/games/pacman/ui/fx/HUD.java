@@ -55,7 +55,7 @@ public class HUD extends HBox {
 		TickTimer stateTimer = ui.gameController.stateTimer();
 		text = "";
 		line("Frame rate", "%d Hz", ui.$fps.get());
-		line("Slowdown", "%d", Env.$slowDown.get());
+		line("Speed (CTRL/SHIFT+S)", "%.0f%%", 100.0 / Env.$slowDown.get());
 		line("Paused (CTRL+P)", "%s", yesNo(Env.$paused.get()));
 		line();
 		line("Game Variant", "%s", ui.gameController.gameVariant());
