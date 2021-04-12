@@ -49,6 +49,7 @@ public class Player3D implements Supplier<Node> {
 	}
 
 	private void turnToMoveDirection() {
+		// now. Pac-Man looks to the LEFT
 		root.setRotationAxis(Rotate.Z_AXIS);
 		switch (pac.dir) {
 		case LEFT:
@@ -61,7 +62,7 @@ public class Player3D implements Supplier<Node> {
 			root.setRotate(90);
 			break;
 		case DOWN:
-			root.setRotate(-90);
+			root.setRotate(270);
 			break;
 		default:
 			break;
@@ -69,10 +70,10 @@ public class Player3D implements Supplier<Node> {
 	}
 
 	public void update(PacManGameWorld world) {
-		turnToMoveDirection();
 		boolean inPortal = world.isPortal(pac.tile());
 		root.setVisible(pac.visible && !inPortal);
 		root.setTranslateX(pac.position.x);
 		root.setTranslateY(pac.position.y);
+		turnToMoveDirection();
 	}
 }
