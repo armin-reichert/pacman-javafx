@@ -28,7 +28,6 @@ public class Ghost3D implements Supplier<Node> {
 		coloredGhost = new ColoredGhost3D(ghost);
 		bountyShape = new BountyShape3D(rendering2D);
 		deadGhost = new DeadGhost3D(ghost);
-		select(coloredGhost);
 	}
 
 	@Override
