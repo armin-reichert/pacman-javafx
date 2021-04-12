@@ -48,18 +48,41 @@ public class GianmarcosModel3D {
 	}
 
 	public Group createPacMan() {
-		MeshView head = new MeshView(meshViewsByName.get("Sphere_yellow_packman").getMesh());
-		head.setMaterial(materialsByName.get("yellow_packman"));
-		head.drawModeProperty().bind(Env.$drawMode);
-		Translate centering = GameRendering3D_Assets.centerNodeOverOrigin(head);
+		MeshView body = new MeshView(meshViewsByName.get("Sphere_yellow_packman").getMesh());
+		body.setMaterial(materialsByName.get("yellow_packman"));
+		body.drawModeProperty().bind(Env.$drawMode);
+		Translate centering = GameRendering3D_Assets.centerNodeOverOrigin(body);
 
 		MeshView eyes = new MeshView(meshViewsByName.get("Sphere.008_Sphere.010").getMesh());
-//		eyes.setMaterial(materialsByName.get("yellow_emission"));
 		eyes.setMaterial(new PhongMaterial(Color.rgb(20, 20, 20)));
 		eyes.drawModeProperty().bind(Env.$drawMode);
 		eyes.getTransforms().add(centering);
 
-		Group group = new Group(eyes, head);
+		Group group = new Group(eyes, body);
+		group.setTranslateX(0);
+		group.setTranslateY(0);
+		group.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
+		GameRendering3D_Assets.scaleNode(group, 8);
+		return group;
+	}
+
+	public Group createGhost() {
+		MeshView body = new MeshView(meshViewsByName.get("Sphere.004_Sphere.034").getMesh());
+		body.setMaterial(materialsByName.get("blue_ghost"));
+		body.drawModeProperty().bind(Env.$drawMode);
+		Translate centering = GameRendering3D_Assets.centerNodeOverOrigin(body);
+
+		MeshView eyesOuter = new MeshView(meshViewsByName.get("Sphere.009_Sphere.036").getMesh());
+		eyesOuter.setMaterial(new PhongMaterial(Color.WHITE));
+		eyesOuter.drawModeProperty().bind(Env.$drawMode);
+		eyesOuter.getTransforms().add(centering);
+
+		MeshView eyesInner = new MeshView(meshViewsByName.get("Sphere.010_Sphere.039").getMesh());
+		eyesInner.setMaterial(new PhongMaterial(Color.BLACK));
+		eyesInner.drawModeProperty().bind(Env.$drawMode);
+		eyesInner.getTransforms().add(centering);
+
+		Group group = new Group(body, eyesOuter, eyesInner);
 		group.setTranslateX(0);
 		group.setTranslateY(0);
 		group.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
