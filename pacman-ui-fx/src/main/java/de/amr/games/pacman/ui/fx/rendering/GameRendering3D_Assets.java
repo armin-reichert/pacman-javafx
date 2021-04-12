@@ -1,20 +1,12 @@
 package de.amr.games.pacman.ui.fx.rendering;
 
-import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
-import java.util.Map;
-
-import com.interactivemesh.jfx.importer.ImportException;
-import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
-
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.ui.fx.Env;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.MeshView;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
@@ -49,25 +41,8 @@ public class GameRendering3D_Assets {
 	public static final PhongMaterial livesCounterOn = new PhongMaterial(Color.YELLOW);
 	public static final PhongMaterial livesCounterOff = new PhongMaterial(Color.GRAY);
 
-	public static MeshView ghostMeshTemplate;
-	public static Map<String, MeshView> guyMeshTemplates;
-
 	static {
 		ARCADE_FONT = Font.loadFont(url("/emulogic.ttf"), TS);
-
-		ObjModelImporter objImporter = new ObjModelImporter();
-		try {
-			objImporter.read(url("/common/ghost.obj"));
-			ghostMeshTemplate = objImporter.getNamedMeshViews().get("Ghost_Sphere.001");
-
-			objImporter.read(url("/common/pacman1.obj"));
-			guyMeshTemplates = objImporter.getNamedMeshViews();
-
-			guyMeshTemplates.keySet().stream().sorted().forEach(key -> log("Mesh '%s': %s", key, guyMeshTemplates.get(key)));
-			log("Mesh views loaded successfully!");
-		} catch (ImportException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public static Color getMazeWallColor(GameVariant gameVariant, int mazeNumber) {
@@ -84,11 +59,4 @@ public class GameRendering3D_Assets {
 		return ghostID == 0 ? Color.TOMATO : ghostID == 1 ? Color.PINK : ghostID == 2 ? Color.CYAN : Color.ORANGE;
 	}
 
-	public static MeshView createGhostMeshView(int ghostID, int size) {
-		MeshView meshView = new MeshView(ghostMeshTemplate.getMesh());
-		centerOverOrigin(meshView);
-		scale(meshView, size);
-		meshView.drawModeProperty().bind(Env.$drawMode);
-		return meshView;
-	}
 }

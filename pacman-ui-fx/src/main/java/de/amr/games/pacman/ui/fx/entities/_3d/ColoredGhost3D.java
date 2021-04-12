@@ -1,11 +1,11 @@
 package de.amr.games.pacman.ui.fx.entities._3d;
 
-import static de.amr.games.pacman.ui.fx.rendering.GameRendering3D_Assets.createGhostMeshView;
 import static de.amr.games.pacman.ui.fx.rendering.GameRendering3D_Assets.getGhostColor;
 
 import java.util.function.Supplier;
 
 import de.amr.games.pacman.model.common.Ghost;
+import de.amr.games.pacman.ui.fx.model3D.JustAnotherModel3D;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -26,7 +26,7 @@ public class ColoredGhost3D implements Supplier<Node> {
 	public ColoredGhost3D(Ghost ghost) {
 		normalSkin = new PhongMaterial(getGhostColor(ghost.id));
 		blueSkin = new PhongMaterial(Color.CORNFLOWERBLUE);
-		root = createGhostMeshView(ghost.id, 8);
+		root = JustAnotherModel3D.IT.createGhostMesh();
 		root.setMaterial(normalSkin);
 		root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 	}
