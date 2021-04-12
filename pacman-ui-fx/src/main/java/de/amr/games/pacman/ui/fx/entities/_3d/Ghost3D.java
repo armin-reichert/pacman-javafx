@@ -23,6 +23,8 @@ public class Ghost3D implements Supplier<Node> {
 
 	private final Ghost ghost;
 	private final Group root;
+	private final Group coloredGhost;
+	private final DeadGhost3D deadGhost;
 	private final BountyShape3D bountyShape;
 	private final PhongMaterial normalSkin;
 	private final PhongMaterial blueSkin;
@@ -35,27 +37,20 @@ public class Ghost3D implements Supplier<Node> {
 
 	public Ghost3D(Ghost ghost, GameRendering2D rendering2D) {
 		this.ghost = ghost;
-
-		normalSkin = GameRendering3D_Assets.ghostSkin(ghost.id);
+		normalSkin = new PhongMaterial(GameRendering3D_Assets.getGhostColor(ghost.id));
 		blueSkin = new PhongMaterial(Color.CORNFLOWERBLUE);
-
 		meshView = GameRendering3D_Assets.createGhostMeshView(ghost.id, 8);
 		meshView.setMaterial(normalSkin);
 		meshView.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-		Group coloredGhost = new Group(meshView);
-
+		coloredGhost = new Group(meshView);
 		bountyShape = new BountyShape3D(rendering2D);
-
-		DeadGhost3D deadGhost = new DeadGhost3D(ghost);
-
-		root = new Group(coloredGhost, bountyShape.get(), deadGhost.get());
-		selectChild(0);
+		deadGhost = new DeadGhost3D(ghost);
+		root = new Group(coloredGhost);
 	}
 
-	private void selectChild(int index) {
-		for (int i = 0; i < 3; ++i) {
-			root.getChildren().get(i).setVisible(i == index);
-		}
+	private void setCurrentNode(Node node) {
+		root.getChildren().clear();
+		root.getChildren().add(node);
 	}
 
 	public void update() {
@@ -65,15 +60,15 @@ public class Ghost3D implements Supplier<Node> {
 		if (ghost.bounty > 0) {
 			bountyShape.setBounty(ghost.bounty);
 			root.setRotate(0);
-			selectChild(1);
+			setCurrentNode(bountyShape.get());
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
 			root.setRotationAxis(Rotate.Z_AXIS);
 			root.setRotate(ghost.dir == Direction.UP || ghost.dir == Direction.DOWN ? 90 : 0);
-			selectChild(2);
+			setCurrentNode(deadGhost.get());
 		} else {
 			meshView.setMaterial(ghost.is(GhostState.FRIGHTENED) ? blueSkin : normalSkin);
 			turnTowardsMoveDirection();
-			selectChild(0);
+			setCurrentNode(meshView);
 		}
 	}
 

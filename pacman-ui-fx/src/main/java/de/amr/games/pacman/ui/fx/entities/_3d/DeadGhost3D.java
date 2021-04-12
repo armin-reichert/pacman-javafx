@@ -20,7 +20,7 @@ public class DeadGhost3D implements Supplier<Node> {
 	private final Sphere[] pearls = new Sphere[3];
 
 	public DeadGhost3D(Ghost ghost) {
-		PhongMaterial skin = GameRendering3D_Assets.ghostSkin(ghost.id);
+		PhongMaterial skin = new PhongMaterial(GameRendering3D_Assets.getGhostColor(ghost.id));
 		for (int i = 0; i < pearls.length; ++i) {
 			pearls[i] = new Sphere(1);
 			pearls[i].setMaterial(skin);
