@@ -132,6 +132,9 @@ public class Maze3D {
 
 		double brickSizeX = 2, brickSizeY = 2, brickSizeZ = 3;
 		PhongMaterial wallMaterial = new PhongMaterial(wallColor);
+//		Image texture = new Image(getClass().getResource("/common/texture1.png").toExternalForm());
+//		wallMaterial.setBumpMap(texture);
+//		wallMaterial.setDiffuseMap(texture);
 		bricks = microTiles.stream()
 				.map(mt -> new Brick3D(mt.x, mt.y, brickSizeX, brickSizeY, brickSizeZ, wallMaterial, mt.tile))
 				.collect(Collectors.toList());
