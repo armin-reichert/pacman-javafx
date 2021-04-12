@@ -8,6 +8,11 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 
+/**
+ * 3D shape for dead ghost displayed as bounty value.
+ * 
+ * @author Armin Reichert
+ */
 public class BountyShape3D implements Supplier<Node> {
 
 	private final Box root;

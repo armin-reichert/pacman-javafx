@@ -70,12 +70,8 @@ public class Ghost3D implements Supplier<Node> {
 			root.setRotationAxis(Rotate.Z_AXIS);
 			root.setRotate(ghost.dir == Direction.UP || ghost.dir == Direction.DOWN ? 90 : 0);
 			selectChild(2);
-		} else if (ghost.is(GhostState.FRIGHTENED)) {
-			meshView.setMaterial(blueSkin);
-			turnTowardsMoveDirection();
-			selectChild(0);
 		} else {
-			meshView.setMaterial(normalSkin);
+			meshView.setMaterial(ghost.is(GhostState.FRIGHTENED) ? blueSkin : normalSkin);
 			turnTowardsMoveDirection();
 			selectChild(0);
 		}
@@ -84,25 +80,8 @@ public class Ghost3D implements Supplier<Node> {
 	private void turnTowardsMoveDirection() {
 		root.setRotationAxis(Rotate.Y_AXIS);
 		root.setRotate(0);
-		switch (ghost.dir) {
-		case LEFT:
-			root.setRotationAxis(Rotate.Z_AXIS);
-			root.setRotate(180);
-			break;
-		case RIGHT:
-			root.setRotationAxis(Rotate.Z_AXIS);
-			root.setRotate(0);
-			break;
-		case UP:
-			root.setRotationAxis(Rotate.Z_AXIS);
-			root.setRotate(-90);
-			break;
-		case DOWN:
-			root.setRotationAxis(Rotate.Z_AXIS);
-			root.setRotate(90);
-			break;
-		default:
-			break;
-		}
+		root.setRotationAxis(Rotate.Z_AXIS);
+		root.setRotate(
+				ghost.dir == Direction.LEFT ? 180 : ghost.dir == Direction.RIGHT ? 0 : ghost.dir == Direction.UP ? -90 : 90);
 	}
 }
