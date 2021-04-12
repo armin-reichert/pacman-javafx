@@ -9,10 +9,8 @@ import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering3D_Assets;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 
@@ -24,10 +22,8 @@ import javafx.scene.transform.Rotate;
 public class Ghost3D implements Supplier<Node> {
 
 	private final Ghost ghost;
-	private final GameRendering2D rendering2D;
 	private final Group root;
-	private final Box bountyShape;
-	private final PhongMaterial bountySkin;
+	private final BountyShape3D bountyShape;
 	private final PhongMaterial normalSkin;
 	private final PhongMaterial blueSkin;
 	private final MeshView meshView;
@@ -38,7 +34,6 @@ public class Ghost3D implements Supplier<Node> {
 	}
 
 	public Ghost3D(Ghost ghost, GameRendering2D rendering2D) {
-		this.rendering2D = rendering2D;
 		this.ghost = ghost;
 
 		normalSkin = GameRendering3D_Assets.ghostSkin(ghost.id);
@@ -49,14 +44,11 @@ public class Ghost3D implements Supplier<Node> {
 		meshView.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 		Group coloredGhost = new Group(meshView);
 
-		bountyShape = new Box(8, 8, 8);
-		bountySkin = new PhongMaterial(Color.WHITE);
-		bountyShape.setMaterial(bountySkin);
-		Group bountyGhost = new Group(bountyShape);
+		bountyShape = new BountyShape3D(rendering2D);
 
 		DeadGhost3D deadGhost = new DeadGhost3D(ghost);
 
-		root = new Group(coloredGhost, bountyGhost, deadGhost.get());
+		root = new Group(coloredGhost, bountyShape.get(), deadGhost.get());
 		selectChild(0);
 	}
 
@@ -71,9 +63,7 @@ public class Ghost3D implements Supplier<Node> {
 		root.setTranslateX(ghost.position.x);
 		root.setTranslateY(ghost.position.y);
 		if (ghost.bounty > 0) {
-			Image bountySprite = rendering2D.subImage(rendering2D.getBountyNumberSpritesMap().get(ghost.bounty));
-			bountySkin.setBumpMap(bountySprite);
-			bountySkin.setDiffuseMap(bountySprite);
+			bountyShape.setBounty(ghost.bounty);
 			root.setRotate(0);
 			selectChild(1);
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
