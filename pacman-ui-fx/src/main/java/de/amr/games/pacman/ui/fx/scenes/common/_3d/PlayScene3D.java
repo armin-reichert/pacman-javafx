@@ -99,8 +99,8 @@ public class PlayScene3D implements GameScene {
 		for (int i = 0; i < 3; ++i) {
 			cameras.add(new PerspectiveCamera(true));
 		}
-		// camera #0 is controllable using the keyboard
-		CameraController cameraController = new CameraController(cameras.get(0));
+		// camera #1 is controllable using the keyboard
+		CameraController cameraController = new CameraController(cameras.get(1));
 		fxScene.addEventHandler(KeyEvent.KEY_PRESSED, cameraController::handleKeyEvent);
 		selectCam(0);
 	}
@@ -224,14 +224,14 @@ public class PlayScene3D implements GameScene {
 		PerspectiveCamera cam = cameras.get(selectedCamIndex);
 		fxScene.setCamera(cam);
 		switch (selectedCamIndex) {
-		case 0:
+		case 0: // dynamic camera showing most of the board
 			cam.setNearClip(0.1);
 			cam.setFarClip(10000.0);
 			cam.setRotationAxis(Rotate.X_AXIS);
 			cam.setRotate(30);
 			cam.setTranslateZ(-250);
 			break;
-		case 1:
+		case 1: // static camera, controllable using keyboard
 			cam.setNearClip(0.1);
 			cam.setFarClip(10000.0);
 			cam.setRotationAxis(Rotate.X_AXIS);
@@ -240,7 +240,7 @@ public class PlayScene3D implements GameScene {
 			cam.setTranslateY(270);
 			cam.setTranslateZ(-460);
 			break;
-		case 2:
+		case 2: // dynamic camera near to the player
 			cam.setNearClip(0.1);
 			cam.setFarClip(10000.0);
 			cam.setRotationAxis(Rotate.X_AXIS);
