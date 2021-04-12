@@ -40,7 +40,6 @@ public class Player3D implements Supplier<Node> {
 
 	public Player3D(Pac pac) {
 		this.pac = pac;
-//		root = JustAnotherModel3D.IT.createPacManMesh();
 		root = GianmarcosModel3D.IT.createPacMan();
 	}
 
@@ -50,32 +49,19 @@ public class Player3D implements Supplier<Node> {
 	}
 
 	private void turnToMoveDirection() {
-		root.setRotationAxis(Rotate.Y_AXIS);
-		root.setRotate(90);
+		root.setRotationAxis(Rotate.Z_AXIS);
 		switch (pac.dir) {
 		case LEFT:
-			root.setRotationAxis(Rotate.Y_AXIS);
-			root.setRotate(90);
-			root.setRotationAxis(Rotate.Z_AXIS);
-			root.setRotate(90);
+			root.setRotate(0);
 			break;
 		case RIGHT:
-			root.setRotationAxis(Rotate.Y_AXIS);
-			root.setRotate(-90);
-			root.setRotationAxis(Rotate.Z_AXIS);
-			root.setRotate(-90);
-			break;
-		case UP:
-			root.setRotationAxis(Rotate.Y_AXIS);
-			root.setRotate(0);
-			root.setRotationAxis(Rotate.Z_AXIS);
 			root.setRotate(180);
 			break;
+		case UP:
+			root.setRotate(90);
+			break;
 		case DOWN:
-			root.setRotationAxis(Rotate.Y_AXIS);
-			root.setRotate(0);
-			root.setRotationAxis(Rotate.Z_AXIS);
-			root.setRotate(0);
+			root.setRotate(-90);
 			break;
 		default:
 			break;
