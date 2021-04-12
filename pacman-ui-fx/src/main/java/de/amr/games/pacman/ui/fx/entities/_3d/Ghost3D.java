@@ -14,7 +14,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.MeshView;
-import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 
 /**
@@ -55,15 +54,9 @@ public class Ghost3D implements Supplier<Node> {
 		bountyShape.setMaterial(bountySkin);
 		Group bountyGhost = new Group(bountyShape);
 
-		Sphere[] pearls = new Sphere[3];
-		for (int i = 0; i < pearls.length; ++i) {
-			pearls[i] = new Sphere(1);
-			pearls[i].setMaterial(normalSkin);
-			pearls[i].setTranslateX(i * 3);
-		}
-		Group deadGhost = new Group(pearls);
+		DeadGhost3D deadGhost = new DeadGhost3D(ghost);
 
-		root = new Group(coloredGhost, bountyGhost, deadGhost);
+		root = new Group(coloredGhost, bountyGhost, deadGhost.get());
 		selectChild(0);
 	}
 
