@@ -53,8 +53,8 @@ public class JustAnotherModel3D {
 
 	public MeshView createGhostMesh() {
 		MeshView meshView = new MeshView(ghostMeshViewsByName.get("Ghost_Sphere.001").getMesh());
-		GameRendering3D_Assets.centerOverOrigin(meshView);
-		GameRendering3D_Assets.scale(meshView, 8);
+		GameRendering3D_Assets.centerNodeOverOrigin(meshView);
+		GameRendering3D_Assets.scaleNode(meshView, 8);
 		meshView.drawModeProperty().bind(Env.$drawMode);
 		return meshView;
 	}
@@ -68,12 +68,12 @@ public class JustAnotherModel3D {
 		glasses.setMaterial(new PhongMaterial(Color.rgb(60, 60, 60)));
 		glasses.drawModeProperty().bind(Env.$drawMode);
 
-		Translate centering = GameRendering3D_Assets.centerOverOrigin(body);
+		Translate centering = GameRendering3D_Assets.centerNodeOverOrigin(body);
 		glasses.getTransforms().add(centering);
 
 		Group root = new Group(body, glasses);
 		root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-		GameRendering3D_Assets.scale(root, 8);
+		GameRendering3D_Assets.scaleNode(root, 8);
 		return root;
 	}
 }

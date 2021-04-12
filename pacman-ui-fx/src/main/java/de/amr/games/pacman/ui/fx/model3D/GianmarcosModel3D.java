@@ -11,8 +11,8 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 
 /**
- * This 3D model has been provided by Gianmarco Cavallaccio (https://www.artstation.com/gianmart)
- * from Rome, Italy. Thanks Gianmarco!
+ * This 3D model has been generously provided by Gianmarco Cavallaccio
+ * (https://www.artstation.com/gianmart). Thanks Gianmarco!
  * 
  * @author Armin Reichert
  */

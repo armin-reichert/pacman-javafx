@@ -7,7 +7,15 @@ public final class GameRendering2D_Assets {
 	private GameRendering2D_Assets() {
 	}
 
-	public static Color getFoodColor(int mazeNumber) {
+	public static Color getPacManMazeWallColor(int mazeNumber) {
+		return Color.rgb(33, 33, 255);
+	}
+
+	public static Color getPacManFoodColor(int mazeNumber) {
+		return Color.rgb(250, 185, 176);
+	}
+
+	public static Color getMsPacManFoodColor(int mazeNumber) {
 		switch (mazeNumber) {
 		case 1:
 			return Color.rgb(222, 222, 255);
@@ -26,7 +34,7 @@ public final class GameRendering2D_Assets {
 		}
 	}
 
-	public static Color getMazeWallColor(int mazeNumber) {
+	public static Color getMsPacManMazeWallColor(int mazeNumber) {
 		switch (mazeNumber) {
 		case 1:
 			return Color.rgb(255, 183, 174);
@@ -45,7 +53,7 @@ public final class GameRendering2D_Assets {
 		}
 	}
 
-	public static Color getMazeWallBorderColor(int mazeNumber) {
+	public static Color getMsPacManMazeWallBorderColor(int mazeNumber) {
 		switch (mazeNumber) {
 		case 1:
 			return Color.rgb(255, 0, 0);
