@@ -26,7 +26,7 @@ public class ColoredGhost3D implements Supplier<Node> {
 	public ColoredGhost3D(Ghost ghost) {
 		normalSkin = new PhongMaterial(getGhostColor(ghost.id));
 		blueSkin = new PhongMaterial(Color.CORNFLOWERBLUE);
-		root = JustAnotherModel3D.IT.createGhostMesh();
+		root = JustAnotherModel3D.IT.createGhost();
 		root.setMaterial(normalSkin);
 		root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 	}

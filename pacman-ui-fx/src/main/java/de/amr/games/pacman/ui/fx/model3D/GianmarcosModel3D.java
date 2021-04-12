@@ -7,6 +7,9 @@ import java.util.Map;
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
+import de.amr.games.pacman.ui.fx.rendering.GameRendering3D_Assets;
+import javafx.scene.Group;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 
@@ -41,16 +44,14 @@ public class GianmarcosModel3D {
 		objImporter.close();
 	}
 
-	public MeshView getPacManMesh() {
+	public Group createPacMan() {
 		MeshView mesh = new MeshView(meshViewsByName.get("Sphere_yellow_packman").getMesh());
-//		GameRendering3D_Assets.centerOverOrigin(mesh);
-//		GameRendering3D_Assets.scale(mesh, 8);
-
-		mesh.setMaterial(materialsByName.get("yellow_packman"));
-//		mesh.setMaterial(new PhongMaterial(Color.YELLOW));
-		mesh.setVisible(true);
+		GameRendering3D_Assets.centerNodeOverOrigin(mesh);
+		GameRendering3D_Assets.scaleNode(mesh, 8);
+//		mesh.setMaterial(materialsByName.get("yellow_packman"));
+		mesh.setMaterial(new PhongMaterial(Color.YELLOW));
 //		mesh.setDrawMode(DrawMode.LINE);
-		return mesh;
+		return new Group(mesh);
 	}
 
 	public static void main(String[] args) {

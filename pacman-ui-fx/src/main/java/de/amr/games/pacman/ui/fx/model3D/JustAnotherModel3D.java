@@ -51,7 +51,7 @@ public class JustAnotherModel3D {
 		return playerMaterialsByName.get(name);
 	}
 
-	public MeshView createGhostMesh() {
+	public MeshView createGhost() {
 		MeshView meshView = new MeshView(ghostMeshViewsByName.get("Ghost_Sphere.001").getMesh());
 		GameRendering3D_Assets.centerNodeOverOrigin(meshView);
 		GameRendering3D_Assets.scaleNode(meshView, 8);
@@ -59,7 +59,7 @@ public class JustAnotherModel3D {
 		return meshView;
 	}
 
-	public Group createPlayerMesh() {
+	public Group createPacMan() {
 		MeshView body = new MeshView(playerMeshViewsByName.get("Sphere_Sphere.002_Material.001").getMesh());
 		body.setMaterial(new PhongMaterial(Color.YELLOW));
 		body.drawModeProperty().bind(Env.$drawMode);
