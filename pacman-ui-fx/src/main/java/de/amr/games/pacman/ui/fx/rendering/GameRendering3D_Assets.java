@@ -84,10 +84,6 @@ public class GameRendering3D_Assets {
 		return ghostID == 0 ? Color.TOMATO : ghostID == 1 ? Color.PINK : ghostID == 2 ? Color.CYAN : Color.ORANGE;
 	}
 
-	public static PhongMaterial ghostSkin(int ghostID) {
-		return new PhongMaterial(getGhostColor(ghostID));
-	}
-
 	public static MeshView createGhostMeshView(int ghostID, int size) {
 		MeshView meshView = new MeshView(ghostMeshTemplate.getMesh());
 		centerOverOrigin(meshView);
