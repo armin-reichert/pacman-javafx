@@ -1,14 +1,18 @@
 package de.amr.games.pacman.ui.fx.scenes.common._2d;
 
 import static de.amr.games.pacman.lib.Logging.log;
+import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
+import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
 import java.util.OptionalDouble;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
+import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
@@ -113,4 +117,16 @@ public abstract class AbstractGameScene2D<RENDERING extends Rendering2D> impleme
 	public SubScene get() {
 		return scene;
 	}
+
+	protected void renderLevelCounter(V2i tileRight) {
+		int levelNumber = game().currentLevelNumber;
+		int x = tileRight.x * TS, y = tileRight.y * TS;
+		int firstLevel = Math.max(1, levelNumber - 6);
+		for (int level = firstLevel; level <= levelNumber; ++level) {
+			Rectangle2D sprite = rendering.getSymbolSprites().get(game().levelSymbols.get(level - 1));
+			rendering.renderSprite(gc, sprite, x, y);
+			x -= t(2);
+		}
+	}
+
 }

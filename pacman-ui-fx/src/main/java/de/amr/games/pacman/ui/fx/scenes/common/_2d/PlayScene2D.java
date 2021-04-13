@@ -20,7 +20,6 @@ import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.entities._2d.Bonus2D;
 import de.amr.games.pacman.ui.fx.entities._2d.GameScore2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Ghost2D;
-import de.amr.games.pacman.ui.fx.entities._2d.LevelCounter2D;
 import de.amr.games.pacman.ui.fx.entities._2d.LivesCounter2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Maze2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Player2D;
@@ -43,7 +42,6 @@ public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScen
 	private GameScore2D<RENDERING> score2D;
 	private GameScore2D<RENDERING> hiscore2D;
 	private LivesCounter2D<RENDERING> livesCounter2D;
-	private LevelCounter2D<RENDERING> levelCounter2D;
 	private Player2D<RENDERING> player2D;
 	private List<Ghost2D<RENDERING>> ghosts2D;
 	private Bonus2D<RENDERING> bonus2D;
@@ -71,11 +69,6 @@ public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScen
 		livesCounter2D = new LivesCounter2D<>(rendering);
 		livesCounter2D.setLeftUpperCorner(new V2i(2, 34));
 		livesCounter2D.setLifeCountSupplier(() -> game().lives);
-
-		levelCounter2D = new LevelCounter2D<>(rendering);
-		levelCounter2D.setRightUpperCorner(new V2i(25, 34));
-		levelCounter2D.setLevelSymbols(game().levelSymbols);
-		levelCounter2D.setLevelNumberSupplier(() -> game().currentLevelNumber);
 
 		score2D = new GameScore2D<>(rendering);
 		score2D.setTitle("SCORE");
@@ -218,9 +211,10 @@ public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScen
 		game().ghosts(GhostState.LOCKED)
 				.forEach(ghost -> ghosts2D.get(ghost.id).setLooksFrightened(game().player.powerTimer.isRunning()));
 
-		Stream.concat(Stream.of(score2D, hiscore2D, levelCounter2D, maze2D, bonus2D, player2D), ghosts2D.stream())
+		Stream.concat(Stream.of(score2D, hiscore2D, maze2D, bonus2D, player2D), ghosts2D.stream())
 				.forEach(r -> r.render(gc));
 		renderGameState();
+		renderLevelCounter(new V2i(25, 34));
 	}
 
 	private void renderGameState() {
