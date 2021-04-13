@@ -27,12 +27,15 @@ import javafx.scene.media.AudioClip;
  */
 public class PlaySceneSoundHandler {
 
-	private final PacManGameController gameController;
-	private final SoundManager sounds;
+	public final SoundManager sounds;
+	private PacManGameController gameController;
 
-	public PlaySceneSoundHandler(PacManGameController gameController, SoundManager sounds) {
-		this.gameController = gameController;
+	public PlaySceneSoundHandler(SoundManager sounds) {
 		this.sounds = sounds;
+	}
+
+	public void setGameController(PacManGameController gameController) {
+		this.gameController = gameController;
 	}
 
 	private AbstractGameModel game() {
