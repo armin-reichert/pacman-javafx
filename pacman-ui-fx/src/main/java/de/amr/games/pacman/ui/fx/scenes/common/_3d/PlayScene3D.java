@@ -277,6 +277,13 @@ public class PlayScene3D implements GameScene {
 	public void start() {
 		log("Game scene %s: start", this);
 		buildSceneGraph(gameController.gameVariant(), game().currentLevel);
+		if (gameController.isAttractMode()) {
+			score3D.setHiscoreOnly(true);
+			livesCounter3D.get().setVisible(false);
+		} else {
+			score3D.setHiscoreOnly(false);
+			livesCounter3D.get().setVisible(true);
+		}
 	}
 
 	@Override
@@ -286,14 +293,12 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void update() {
-		score3D.setHiscoreOnly(gameController.isAttractMode());
 		score3D.update(game());
 		// TODO use overlay subscene for score etc.?
 		selectedCam().ifPresent(camera -> {
 			score3D.get().setRotationAxis(Rotate.X_AXIS);
 			score3D.get().setRotate(camera.getRotate());
 		});
-		livesCounter3D.get().setVisible(!gameController.isAttractMode());
 		livesCounter3D.update(game());
 		energizers.forEach(energizer3D -> energizer3D.update(game()));
 		pellets.forEach(pellet3D -> pellet3D.update(game()));
