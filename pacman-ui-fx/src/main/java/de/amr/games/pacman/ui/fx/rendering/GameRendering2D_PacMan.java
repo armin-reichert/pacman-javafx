@@ -117,8 +117,8 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 	public Map<Direction, TimedSequence<Rectangle2D>> createPlayerMunchingAnimations() {
 		Map<Direction, TimedSequence<Rectangle2D>> pacManMunchingAnim = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
-			TimedSequence<Rectangle2D> animation = TimedSequence.of(sprite(2, 0), sprite(1, index(dir)),
-					sprite(0, index(dir)), sprite(1, index(dir)));
+			TimedSequence<Rectangle2D> animation = TimedSequence.of(sprite(2, 0), sprite(1, dirIndex(dir)),
+					sprite(0, dirIndex(dir)), sprite(1, dirIndex(dir)));
 			animation.frameDuration(2).endless();
 			pacManMunchingAnim.put(dir, animation);
 		}
@@ -135,8 +135,8 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 	public Map<Direction, TimedSequence<Rectangle2D>> createGhostKickingAnimations(int ghostID) {
 		EnumMap<Direction, TimedSequence<Rectangle2D>> walkingTo = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
-			TimedSequence<Rectangle2D> animation = TimedSequence.of(sprite(2 * index(dir), 4 + ghostID),
-					sprite(2 * index(dir) + 1, 4 + ghostID));
+			TimedSequence<Rectangle2D> animation = TimedSequence.of(sprite(2 * dirIndex(dir), 4 + ghostID),
+					sprite(2 * dirIndex(dir) + 1, 4 + ghostID));
 			animation.frameDuration(4).endless();
 			walkingTo.put(dir, animation);
 		}
@@ -157,7 +157,7 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 	public Map<Direction, TimedSequence<Rectangle2D>> createGhostReturningHomeAnimations() {
 		Map<Direction, TimedSequence<Rectangle2D>> ghostEyesAnim = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
-			ghostEyesAnim.put(dir, TimedSequence.of(sprite(8 + index(dir), 5)));
+			ghostEyesAnim.put(dir, TimedSequence.of(sprite(8 + dirIndex(dir), 5)));
 		}
 		return ghostEyesAnim;
 	}

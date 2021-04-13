@@ -102,23 +102,15 @@ public abstract class GameRendering2D {
 
 	/**
 	 * @param dir direction
-	 * @return index used for this direction in spritesheet
+	 * @return index used for this direction in the spritesheet
 	 */
-	protected int index(Direction dir) {
+	protected int dirIndex(Direction dir) {
 		return dir == RIGHT ? 0 : dir == LEFT ? 1 : dir == UP ? 2 : 3;
 	}
 
 	/**
-	 * @param dir direction or null
-	 * @return direction or default value if null
-	 */
-	protected Direction ensureDirection(Direction dir) {
-		return dir != null ? dir : Direction.RIGHT;
-	}
-
-	/**
 	 * @param bonus game bonus
-	 * @return sprite for bonus depending on its state
+	 * @return sprite bounds for bonus depending on its state
 	 */
 	public Rectangle2D bonusSprite(PacManBonus bonus) {
 		if (bonus.edibleTicksLeft > 0) {
@@ -135,23 +127,23 @@ public abstract class GameRendering2D {
 	}
 
 	/**
-	 * Draws a game entity centered over its collision box (of size one tile)
+	 * Draws a game entity centered over its collision box (one square tile)
 	 * 
-	 * @param g      the graphics context
-	 * @param entity the guy
-	 * @param sprite sprite (region) in spritsheet
+	 * @param g            the graphics context
+	 * @param entity       the guy
+	 * @param spriteBounds sprite (region) in spritsheet
 	 */
-	public void renderEntity(GraphicsContext g, GameEntity entity, Rectangle2D sprite) {
-		if (entity.visible && sprite != null) {
-			g.drawImage(spritesheet, sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(),
-					entity.position.x - sprite.getWidth() / 2 + HTS, entity.position.y - sprite.getHeight() / 2 + HTS,
-					sprite.getWidth(), sprite.getHeight());
+	public void renderEntity(GraphicsContext g, GameEntity entity, Rectangle2D spriteBounds) {
+		if (entity.visible && spriteBounds != null) {
+			g.drawImage(spritesheet, spriteBounds.getMinX(), spriteBounds.getMinY(), spriteBounds.getWidth(),
+					spriteBounds.getHeight(), entity.position.x - spriteBounds.getWidth() / 2 + HTS,
+					entity.position.y - spriteBounds.getHeight() / 2 + HTS, spriteBounds.getWidth(), spriteBounds.getHeight());
 		}
 	}
 
-	public void renderSprite(GraphicsContext g, Rectangle2D sprite, double x, double y) {
-		g.drawImage(spritesheet, sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(), x, y,
-				sprite.getWidth(), sprite.getHeight());
+	public void renderSprite(GraphicsContext g, Rectangle2D spriteBounds, double x, double y) {
+		g.drawImage(spritesheet, spriteBounds.getMinX(), spriteBounds.getMinY(), spriteBounds.getWidth(),
+				spriteBounds.getHeight(), x, y, spriteBounds.getWidth(), spriteBounds.getHeight());
 	}
 
 	public abstract Image getMazeFullImage(int mazeNumber);

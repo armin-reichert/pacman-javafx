@@ -129,7 +129,7 @@ public class GameRendering2D_MsPacMan extends GameRendering2D {
 	public Map<Direction, TimedSequence<Rectangle2D>> createPlayerMunchingAnimations() {
 		Map<Direction, TimedSequence<Rectangle2D>> msPacManMunchingAnim = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
-			int d = index(dir);
+			int d = dirIndex(dir);
 			TimedSequence<Rectangle2D> munching = TimedSequence.of(s(1, d), s(1, d), s(2, d), s(0, d));
 			munching.frameDuration(2).endless();
 			msPacManMunchingAnim.put(dir, munching);
@@ -146,7 +146,7 @@ public class GameRendering2D_MsPacMan extends GameRendering2D {
 	public Map<Direction, TimedSequence<Rectangle2D>> createGhostKickingAnimations(int ghostID) {
 		EnumMap<Direction, TimedSequence<Rectangle2D>> kickingTo = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
-			int d = index(dir);
+			int d = dirIndex(dir);
 			TimedSequence<Rectangle2D> kicking = TimedSequence.of(s(2 * d, 4 + ghostID), s(2 * d + 1, 4 + ghostID));
 			kicking.frameDuration(4).endless();
 			kickingTo.put(dir, kicking);
@@ -167,14 +167,14 @@ public class GameRendering2D_MsPacMan extends GameRendering2D {
 	@Override
 	public Map<Direction, TimedSequence<Rectangle2D>> createGhostReturningHomeAnimations() {
 		Map<Direction, TimedSequence<Rectangle2D>> ghostEyesAnim = new EnumMap<>(Direction.class);
-		Direction.stream().forEach(dir -> ghostEyesAnim.put(dir, TimedSequence.of(s(8 + index(dir), 5))));
+		Direction.stream().forEach(dir -> ghostEyesAnim.put(dir, TimedSequence.of(s(8 + dirIndex(dir), 5))));
 		return ghostEyesAnim;
 	}
 
 	public Map<Direction, TimedSequence<Rectangle2D>> createSpouseMunchingAnimations() {
 		Map<Direction, TimedSequence<Rectangle2D>> pacManMunchingAnim = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
-			int d = index(dir);
+			int d = dirIndex(dir);
 			pacManMunchingAnim.put(dir, TimedSequence.of(s(0, 9 + d), s(1, 9 + d), s(2, 9)).frameDuration(2).endless());
 		}
 		return pacManMunchingAnim;
