@@ -34,9 +34,9 @@ public class GianmarcosModel3D {
 		try {
 			objImporter.read(getClass().getResource("/common/gianmarco/pacman.obj"));
 			meshViewsByName = objImporter.getNamedMeshViews();
+			materialsByName = objImporter.getNamedMaterials();
 			log("MeshViews:");
 			meshViewsByName.keySet().stream().sorted().forEach(key -> log("%s", key));
-			materialsByName = objImporter.getNamedMaterials();
 			log("");
 			log("Materials:");
 			materialsByName.keySet().stream().sorted().forEach(key -> log("%s", key));
@@ -59,8 +59,6 @@ public class GianmarcosModel3D {
 		eyes.getTransforms().add(centering);
 
 		Group group = new Group(eyes, body);
-		group.setTranslateX(0);
-		group.setTranslateY(0);
 		group.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 		GameRendering3D_Assets.scaleNode(group, 8);
 		return group;
@@ -83,8 +81,6 @@ public class GianmarcosModel3D {
 		eyesInner.getTransforms().add(centering);
 
 		Group group = new Group(body, eyesOuter, eyesInner);
-		group.setTranslateX(0);
-		group.setTranslateY(0);
 		group.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 		GameRendering3D_Assets.scaleNode(group, 8);
 		return group;
