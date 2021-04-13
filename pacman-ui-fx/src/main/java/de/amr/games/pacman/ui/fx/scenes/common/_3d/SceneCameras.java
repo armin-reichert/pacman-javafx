@@ -2,6 +2,7 @@ package de.amr.games.pacman.ui.fx.scenes.common._3d;
 
 import java.util.EnumMap;
 
+import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
 import javafx.scene.input.KeyEvent;
@@ -11,6 +12,10 @@ public class SceneCameras {
 
 	enum CameraType {
 		STATIC, DYNAMIC, DYNAMIC_NEAR_PLAYER
+	}
+
+	private static double lerp(double current, double target) {
+		return current + (target - current) * 0.02;
 	}
 
 	private final SubScene scene;
@@ -54,6 +59,22 @@ public class SceneCameras {
 			cams.get(CameraType.STATIC).setTranslateX(0);
 			cams.get(CameraType.STATIC).setTranslateY(270);
 			cams.get(CameraType.STATIC).setTranslateZ(-460);
+			break;
+		default:
+			break;
+		}
+	}
+
+	public void updateSelectedCamera(Node target) {
+		PerspectiveCamera cam = selectedCamera();
+		switch (selection) {
+		case DYNAMIC:
+			cam.setTranslateX(Math.min(10, lerp(cam.getTranslateX(), target.getTranslateX())));
+			cam.setTranslateY(Math.max(50, lerp(cam.getTranslateY(), target.getTranslateY())));
+			break;
+		case DYNAMIC_NEAR_PLAYER:
+			cam.setTranslateX(lerp(cam.getTranslateX(), target.getTranslateX() - 100));
+			cam.setTranslateY(lerp(cam.getTranslateY(), target.getTranslateY()));
 			break;
 		default:
 			break;

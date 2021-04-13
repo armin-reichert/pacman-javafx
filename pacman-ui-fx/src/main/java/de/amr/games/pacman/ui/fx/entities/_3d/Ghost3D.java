@@ -57,8 +57,8 @@ public class Ghost3D implements Supplier<Node> {
 			root.setRotationAxis(Rotate.Y_AXIS);
 			root.setRotate(0);
 			root.setRotationAxis(Rotate.Z_AXIS);
-			root.setRotate(ghost.wishDir == Direction.LEFT ? 0
-					: ghost.wishDir == Direction.RIGHT ? 180 : ghost.wishDir == Direction.UP ? 90 : -90);
+			Direction dir = ghost.is(GhostState.FRIGHTENED) ? ghost.dir : ghost.wishDir;
+			root.setRotate(dir == Direction.LEFT ? 0 : dir == Direction.RIGHT ? 180 : dir == Direction.UP ? 90 : -90);
 			coloredGhost.setBlue(ghost.is(GhostState.FRIGHTENED));
 			select(coloredGhost);
 		}

@@ -11,9 +11,12 @@ import java.util.stream.Collectors;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.world.PacManGameWorld;
+import de.amr.games.pacman.ui.fx.Env;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
+import javafx.scene.shape.Sphere;
 
 /**
  * 3D-model for a maze that is created from the simple textual map description.
@@ -130,14 +133,27 @@ public class Maze3D {
 		}
 		microTiles.removeAll(microTilesToRemove);
 
-		double brickSizeX = 2, brickSizeY = 2, brickSizeZ = 3;
-		PhongMaterial wallMaterial = new PhongMaterial(wallColor);
-//		Image texture = new Image(getClass().getResource("/common/texture1.png").toExternalForm());
-//		wallMaterial.setBumpMap(texture);
-//		wallMaterial.setDiffuseMap(texture);
-		bricks = microTiles.stream()
-				.map(mt -> new Brick3D(mt.x, mt.y, brickSizeX, brickSizeY, brickSizeZ, wallMaterial, mt.tile))
-				.collect(Collectors.toList());
+		PhongMaterial brickMaterial = new PhongMaterial(wallColor);
+		bricks = microTiles.stream().map(mt -> createBrick(mt.x, mt.y, brickMaterial)).collect(Collectors.toList());
+	}
+
+	public Node createPellet(V2i tile, PhongMaterial material) {
+		Sphere s = new Sphere(1);
+		s.setMaterial(material);
+		s.setTranslateX(tile.x * TS);
+		s.setTranslateY(tile.y * TS);
+		s.setUserData(tile);
+		return s;
+	}
+
+	private Box createBrick(double x, double y, PhongMaterial material) {
+		Box brick = new Box(2, 2, 3);
+		brick.setMaterial(material);
+		brick.setTranslateX(x);
+		brick.setTranslateY(y);
+		brick.setTranslateZ(1.5);
+		brick.drawModeProperty().bind(Env.$drawMode);
+		return brick;
 	}
 
 	public List<Node> getBricks() {

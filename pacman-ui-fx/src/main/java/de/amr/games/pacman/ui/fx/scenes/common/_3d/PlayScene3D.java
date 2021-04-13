@@ -32,7 +32,6 @@ import de.amr.games.pacman.ui.fx.entities._3d.Ghost3D;
 import de.amr.games.pacman.ui.fx.entities._3d.LevelCounter3D;
 import de.amr.games.pacman.ui.fx.entities._3d.LivesCounter3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Maze3D;
-import de.amr.games.pacman.ui.fx.entities._3d.Pellet3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Player3D;
 import de.amr.games.pacman.ui.fx.entities._3d.ScoreNotReally3D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets;
@@ -47,7 +46,6 @@ import javafx.animation.SequentialTransition;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
@@ -83,7 +81,7 @@ public class PlayScene3D implements GameScene {
 	private Map<Ghost, Ghost3D> ghosts3D;
 	private Maze3D maze;
 	private List<Energizer3D> energizers;
-	private List<Pellet3D> pellets;
+	private List<Node> pellets;
 	private Bonus3D bonus3D;
 	private ScoreNotReally3D score3D;
 	private LivesCounter3D livesCounter3D;
@@ -109,7 +107,7 @@ public class PlayScene3D implements GameScene {
 		pellets = gameLevel.world.tiles()//
 				.filter(gameLevel.world::isFoodTile)//
 				.filter(not(gameLevel.world::isEnergizerTile))//
-				.map(tile -> new Pellet3D(tile, foodMaterial)).collect(Collectors.toList());
+				.map(tile -> maze.createPellet(tile, foodMaterial)).collect(Collectors.toList());
 
 		player = new Player3D(game().player);
 		ghosts3D = game().ghosts()
@@ -130,7 +128,7 @@ public class PlayScene3D implements GameScene {
 		tgMaze.getChildren().addAll(score3D.get(), livesCounter3D.get(), levelCounter3D.get());
 		tgMaze.getChildren().addAll(maze.getBricks());
 		tgMaze.getChildren().addAll(collect(energizers));
-		tgMaze.getChildren().addAll(collect(pellets));
+		tgMaze.getChildren().addAll(pellets);
 		tgMaze.getChildren().addAll(player.get());
 		tgMaze.getChildren().addAll(collect(ghosts3D.values()));
 		tgMaze.getChildren().add(bonus3D.get());
@@ -197,26 +195,6 @@ public class PlayScene3D implements GameScene {
 		return Optional.of(cams);
 	}
 
-	private void updateCamera() {
-		PerspectiveCamera cam = cams.selectedCamera();
-		switch (cams.selection()) {
-		case DYNAMIC:
-			cam.setTranslateX(Math.min(10, lerp(cam.getTranslateX(), player.get().getTranslateX())));
-			cam.setTranslateY(Math.max(50, lerp(cam.getTranslateY(), player.get().getTranslateY())));
-			break;
-		case DYNAMIC_NEAR_PLAYER:
-			cam.setTranslateX(lerp(cam.getTranslateX(), player.pac.position.x - 100));
-			cam.setTranslateY(lerp(cam.getTranslateY(), player.pac.position.y));
-			break;
-		default:
-			break;
-		}
-	}
-
-	private static double lerp(double current, double target) {
-		return current + (target - current) * 0.02;
-	}
-
 	@Override
 	public void start() {
 		log("Game scene %s: start", this);
@@ -243,11 +221,14 @@ public class PlayScene3D implements GameScene {
 		score3D.get().setRotate(cams.selectedCamera().getRotate());
 		livesCounter3D.update(game());
 		energizers.forEach(energizer3D -> energizer3D.update(game()));
-		pellets.forEach(pellet3D -> pellet3D.update(game()));
+		pellets.forEach(pellet -> {
+			V2i tile = (V2i) pellet.getUserData();
+			pellet.setVisible(!game().currentLevel.isFoodRemoved(tile));
+		});
 		player.update(game());
-		game().ghosts().map(ghosts3D::get).forEach(Ghost3D::update);
+		ghosts3D.values().forEach(Ghost3D::update);
 		bonus3D.update(game().bonus);
-		updateCamera();
+		cams.updateSelectedCamera(player.get());
 		soundHandler.update();
 	}
 
