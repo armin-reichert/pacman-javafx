@@ -8,7 +8,6 @@ import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
 import de.amr.games.pacman.ui.fx.Env;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering3D_Assets;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -51,7 +50,7 @@ public class GianmarcosModel3D {
 		MeshView body = new MeshView(meshViewsByName.get("Sphere_yellow_packman").getMesh());
 		body.setMaterial(materialsByName.get("yellow_packman"));
 		body.drawModeProperty().bind(Env.$drawMode);
-		Translate centering = GameRendering3D_Assets.centerNodeOverOrigin(body);
+		Translate centering = Model3DHelper.centerNodeOverOrigin(body);
 
 		MeshView eyes = new MeshView(meshViewsByName.get("Sphere.008_Sphere.010").getMesh());
 		eyes.setMaterial(new PhongMaterial(Color.rgb(20, 20, 20)));
@@ -60,7 +59,7 @@ public class GianmarcosModel3D {
 
 		Group group = new Group(eyes, body);
 		group.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-		GameRendering3D_Assets.scaleNode(group, 8);
+		Model3DHelper.scaleNode(group, 8);
 		return group;
 	}
 
@@ -68,7 +67,7 @@ public class GianmarcosModel3D {
 		MeshView body = new MeshView(meshViewsByName.get("Sphere.004_Sphere.034").getMesh());
 		body.setMaterial(materialsByName.get("blue_ghost"));
 		body.drawModeProperty().bind(Env.$drawMode);
-		Translate centering = GameRendering3D_Assets.centerNodeOverOrigin(body);
+		Translate centering = Model3DHelper.centerNodeOverOrigin(body);
 
 		MeshView eyesOuter = new MeshView(meshViewsByName.get("Sphere.009_Sphere.036").getMesh());
 		eyesOuter.setMaterial(new PhongMaterial(Color.WHITE));
@@ -82,7 +81,7 @@ public class GianmarcosModel3D {
 
 		Group group = new Group(body, eyesOuter, eyesInner);
 		group.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-		GameRendering3D_Assets.scaleNode(group, 8);
+		Model3DHelper.scaleNode(group, 8);
 		return group;
 	}
 

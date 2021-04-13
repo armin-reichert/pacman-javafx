@@ -6,7 +6,6 @@ import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
 import de.amr.games.pacman.ui.fx.Env;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering3D_Assets;
 import javafx.scene.shape.MeshView;
 
 /**
@@ -32,8 +31,8 @@ public class JustAnotherModel3D {
 
 	public MeshView createGhost() {
 		MeshView meshView = new MeshView(ghostMeshViewsByName.get("Ghost_Sphere.001").getMesh());
-		GameRendering3D_Assets.centerNodeOverOrigin(meshView);
-		GameRendering3D_Assets.scaleNode(meshView, 8);
+		Model3DHelper.centerNodeOverOrigin(meshView);
+		Model3DHelper.scaleNode(meshView, 8);
 		meshView.drawModeProperty().bind(Env.$drawMode);
 		return meshView;
 	}
