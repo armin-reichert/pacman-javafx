@@ -37,7 +37,7 @@ import de.amr.games.pacman.ui.fx.entities._3d.ScoreNotReally3D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Impl;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
-import de.amr.games.pacman.ui.fx.scenes.common._3d.SceneCameras.CameraType;
+import de.amr.games.pacman.ui.fx.scenes.common._3d.PlaySceneCameras.CameraType;
 import de.amr.games.pacman.ui.fx.sound.PlaySceneSoundHandler;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.PauseTransition;
@@ -67,7 +67,7 @@ public class PlayScene3D implements GameScene {
 			"WTF" };
 
 	private final SubScene fxScene;
-	private final SceneCameras cams;
+	private final PlaySceneCameras cams;
 
 	private PlaySceneSoundHandler soundHandler;
 	private PacManGameController gameController;
@@ -90,7 +90,7 @@ public class PlayScene3D implements GameScene {
 	public PlayScene3D(SoundManager sounds) {
 		soundHandler = new PlaySceneSoundHandler(sounds);
 		fxScene = new SubScene(new Group(), 800, 600, true, SceneAntialiasing.BALANCED);
-		cams = new SceneCameras(fxScene);
+		cams = new PlaySceneCameras(fxScene);
 		cams.select(CameraType.DYNAMIC);
 	}
 
@@ -191,7 +191,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public Optional<SceneCameras> cams() {
+	public Optional<PlaySceneCameras> cams() {
 		return Optional.of(cams);
 	}
 

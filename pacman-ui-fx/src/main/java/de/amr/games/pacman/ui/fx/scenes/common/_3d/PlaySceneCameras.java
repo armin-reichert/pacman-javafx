@@ -8,7 +8,12 @@ import javafx.scene.SubScene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
 
-public class SceneCameras {
+/**
+ * The play scene cameras.
+ * 
+ * @author Armin Reichert
+ */
+public class PlaySceneCameras {
 
 	enum CameraType {
 		STATIC, DYNAMIC, DYNAMIC_NEAR_PLAYER
@@ -18,12 +23,12 @@ public class SceneCameras {
 		return current + (target - current) * 0.02;
 	}
 
-	private final SubScene scene;
+	private final SubScene playScene;
 	private EnumMap<CameraType, PerspectiveCamera> cams = new EnumMap<>(CameraType.class);
 	private CameraType selection;
 
-	public SceneCameras(SubScene scene) {
-		this.scene = scene;
+	public PlaySceneCameras(SubScene playScene) {
+		this.playScene = playScene;
 		for (CameraType cameraType : CameraType.values()) {
 			cams.put(cameraType, new PerspectiveCamera(true));
 			resetCam(cameraType);
@@ -84,7 +89,7 @@ public class SceneCameras {
 	public void select(CameraType cameraType) {
 		selection = cameraType;
 		resetCam(selection);
-		scene.setCamera(selectedCamera());
+		playScene.setCamera(selectedCamera());
 	}
 
 	public void selectNext() {
@@ -106,6 +111,6 @@ public class SceneCameras {
 
 	private void addCamController(CameraType cameraType) {
 		CameraController cameraController = new CameraController(cams.get(cameraType));
-		scene.addEventHandler(KeyEvent.KEY_PRESSED, cameraController::handleKeyEvent);
+		playScene.addEventHandler(KeyEvent.KEY_PRESSED, cameraController::handleKeyEvent);
 	}
 }
