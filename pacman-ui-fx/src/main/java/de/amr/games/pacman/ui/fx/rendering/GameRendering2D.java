@@ -28,9 +28,6 @@ import javafx.scene.text.Font;
  */
 public abstract class GameRendering2D {
 
-	/** Spritesheet grid cell size */
-	public static final int GRID_CELLSIZE = 16;
-
 	public static final GameRendering2D_MsPacMan RENDERING_MS_PACMAN = new GameRendering2D_MsPacMan();
 	public static final GameRendering2D_PacMan RENDERING_PACMAN = new GameRendering2D_PacMan();
 
@@ -44,12 +41,14 @@ public abstract class GameRendering2D {
 		throw new IllegalArgumentException("Unknown game variant: " + gameVariant);
 	}
 
-	protected Image spritesheet;
+	protected final Image spritesheet;
+	protected final int cellSize;
 	protected List<Rectangle2D> symbolSprites;
 	protected Map<Integer, Rectangle2D> bountyNumberSprites;
 
-	public GameRendering2D(String spritesheetPath) {
+	public GameRendering2D(String spritesheetPath, int cellSize) {
 		spritesheet = GameRendering2D_Assets.image(spritesheetPath);
+		this.cellSize = cellSize;
 	}
 
 	public Image getSpritesheet() {
@@ -96,8 +95,7 @@ public abstract class GameRendering2D {
 	 * @return grid cell region at given coordinates of given size
 	 */
 	protected Rectangle2D cellsStartingAt(int startX, int startY, int col, int row, int numCols, int numRows) {
-		return new Rectangle2D(startX + col * GRID_CELLSIZE, startY + row * GRID_CELLSIZE, numCols * GRID_CELLSIZE,
-				numRows * GRID_CELLSIZE);
+		return new Rectangle2D(startX + col * cellSize, startY + row * cellSize, numCols * cellSize, numRows * cellSize);
 	}
 
 	/**

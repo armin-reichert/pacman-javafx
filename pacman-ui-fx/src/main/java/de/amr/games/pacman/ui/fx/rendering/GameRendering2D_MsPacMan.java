@@ -25,7 +25,7 @@ public class GameRendering2D_MsPacMan extends GameRendering2D {
 	private Map<Integer, Rectangle2D> bonusValueSprites;
 
 	GameRendering2D_MsPacMan() {
-		super("/mspacman/graphics/sprites.png");
+		super("/mspacman/graphics/sprites.png", 16);
 
 		symbolSprites = Arrays.asList(s(3, 0), s(4, 0), s(5, 0), s(6, 0), s(7, 0), s(8, 0), s(9, 0));
 
