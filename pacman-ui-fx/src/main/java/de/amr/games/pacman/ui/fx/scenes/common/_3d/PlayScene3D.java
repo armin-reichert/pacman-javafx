@@ -297,7 +297,7 @@ public class PlayScene3D implements GameScene {
 		livesCounter3D.update(game());
 		energizers.forEach(energizer3D -> energizer3D.update(game()));
 		pellets.forEach(pellet3D -> pellet3D.update(game()));
-		player.update(game().currentLevel.world);
+		player.update(game());
 		game().ghosts().map(ghosts3D::get).forEach(Ghost3D::update);
 		bonus3D.update(game().bonus);
 		updateCamera();

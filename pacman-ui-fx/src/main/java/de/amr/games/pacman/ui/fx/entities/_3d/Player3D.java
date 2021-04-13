@@ -2,8 +2,8 @@ package de.amr.games.pacman.ui.fx.entities._3d;
 
 import java.util.function.Supplier;
 
+import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.common.Pac;
-import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.fx.model3D.GianmarcosModel3D;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
@@ -69,8 +69,8 @@ public class Player3D implements Supplier<Node> {
 		}
 	}
 
-	public void update(PacManGameWorld world) {
-		boolean inPortal = world.isPortal(pac.tile());
+	public void update(AbstractGameModel game) {
+		boolean inPortal = game.currentLevel.world.isPortal(pac.tile());
 		root.setVisible(pac.visible && !inPortal);
 		root.setTranslateX(pac.position.x);
 		root.setTranslateY(pac.position.y);
