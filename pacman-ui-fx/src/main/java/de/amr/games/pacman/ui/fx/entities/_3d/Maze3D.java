@@ -9,17 +9,15 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.fx.Env;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.Sphere;
 
 /**
- * 3D-model for a maze that is created from the simple textual map description.
+ * 3D-model for a maze.
  * 
  * @author Armin Reichert
  */
@@ -96,22 +94,21 @@ public class Maze3D {
 
 	private List<Node> bricks;
 
-	public Maze3D(AbstractGameModel game, Color wallColor) {
-		PacManGameWorld world = game.currentLevel.world;
+	public Maze3D(PacManGameWorld world, Color wallColor) {
 		List<MicroTile> microTiles = new ArrayList<>();
 		double w = TS / 3.0, h = TS / 3.0;
 		world.tiles().filter(world::isWall).forEach(tile -> {
-			double bx = tile.x * TS - w, by = tile.y * TS - h;
+			double x = tile.x * TS - w, y = tile.y * TS - h;
 			//@formatter:off
-			microTiles.add(new MicroTile(bx,     by,     tile, 0));
-			microTiles.add(new MicroTile(bx+w,   by,     tile, 1));
-			microTiles.add(new MicroTile(bx+2*w, by,     tile, 2));
-			microTiles.add(new MicroTile(bx,     by+h,   tile, 3));
-			microTiles.add(new MicroTile(bx+w,   by+h,   tile, 4));
-			microTiles.add(new MicroTile(bx+2*w, by+h,   tile, 5));
-			microTiles.add(new MicroTile(bx,     by+2*h, tile, 6));
-			microTiles.add(new MicroTile(bx+w,   by+2*h, tile, 7));
-			microTiles.add(new MicroTile(bx+2*w, by+2*h, tile, 8));
+			microTiles.add(new MicroTile(x,     y,     tile, 0));
+			microTiles.add(new MicroTile(x+w,   y,     tile, 1));
+			microTiles.add(new MicroTile(x+2*w, y,     tile, 2));
+			microTiles.add(new MicroTile(x,     y+h,   tile, 3));
+			microTiles.add(new MicroTile(x+w,   y+h,   tile, 4));
+			microTiles.add(new MicroTile(x+2*w, y+h,   tile, 5));
+			microTiles.add(new MicroTile(x,     y+2*h, tile, 6));
+			microTiles.add(new MicroTile(x+w,   y+2*h, tile, 7));
+			microTiles.add(new MicroTile(x+2*w, y+2*h, tile, 8));
 			//@formatter:on
 		});
 
@@ -137,15 +134,8 @@ public class Maze3D {
 		bricks = microTiles.stream().map(mt -> createBrick(mt.x, mt.y, brickMaterial)).collect(Collectors.toList());
 	}
 
-	public Node createPellet(V2i tile, PhongMaterial material) {
-		double r = 1;
-		Sphere s = new Sphere(r);
-		s.setMaterial(material);
-		s.setTranslateX(tile.x * TS);
-		s.setTranslateY(tile.y * TS);
-		s.setTranslateZ(1);
-		s.setUserData(tile);
-		return s;
+	public List<Node> getBricks() {
+		return Collections.unmodifiableList(bricks);
 	}
 
 	private Box createBrick(double x, double y, PhongMaterial material) {
@@ -156,9 +146,5 @@ public class Maze3D {
 		brick.setTranslateZ(1.5);
 		brick.drawModeProperty().bind(Env.$drawMode);
 		return brick;
-	}
-
-	public List<Node> getBricks() {
-		return Collections.unmodifiableList(bricks);
 	}
 }

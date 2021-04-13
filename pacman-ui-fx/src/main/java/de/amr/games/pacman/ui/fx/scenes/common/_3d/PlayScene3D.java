@@ -1,6 +1,7 @@
 package de.amr.games.pacman.ui.fx.scenes.common._3d;
 
 import static de.amr.games.pacman.lib.Logging.log;
+import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static java.util.function.Predicate.not;
 
 import java.util.Collection;
@@ -52,6 +53,7 @@ import javafx.scene.SubScene;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
@@ -72,8 +74,6 @@ public class PlayScene3D implements GameScene {
 	private PlaySceneSoundHandler soundHandler;
 	private PacManGameController gameController;
 
-	private AmbientLight ambientLight;
-	private PointLight pointLight;
 	private CoordinateSystem coordSystem;
 	private Box ground;
 	private Group tgMaze;
@@ -96,7 +96,7 @@ public class PlayScene3D implements GameScene {
 
 	private void buildSceneGraph(GameVariant gameVariant, GameLevel gameLevel) {
 
-		maze = new Maze3D(game(), Rendering2D_Assets.getMazeWallColor(gameVariant, gameLevel.mazeNumber));
+		maze = new Maze3D(gameLevel.world, Rendering2D_Assets.getMazeWallColor(gameVariant, gameLevel.mazeNumber));
 
 		PhongMaterial foodMaterial = new PhongMaterial(Rendering2D_Assets.getFoodColor(gameVariant, gameLevel.mazeNumber));
 
@@ -107,9 +107,10 @@ public class PlayScene3D implements GameScene {
 		pellets = gameLevel.world.tiles()//
 				.filter(gameLevel.world::isFoodTile)//
 				.filter(not(gameLevel.world::isEnergizerTile))//
-				.map(tile -> maze.createPellet(tile, foodMaterial)).collect(Collectors.toList());
+				.map(tile -> createPellet(tile, foodMaterial)).collect(Collectors.toList());
 
 		player = new Player3D(game().player);
+
 		ghosts3D = game().ghosts()
 				.collect(Collectors.toMap(Function.identity(), ghost -> new Ghost3D(ghost, Rendering2D_Impl.get(gameVariant))));
 
@@ -133,15 +134,15 @@ public class PlayScene3D implements GameScene {
 		tgMaze.getChildren().addAll(collect(ghosts3D.values()));
 		tgMaze.getChildren().add(bonus3D.get());
 
-		ambientLight = new AmbientLight();
+		AmbientLight ambientLight = new AmbientLight();
 
-		pointLight = new PointLight();
-		pointLight.translateXProperty().bind(player.get().translateXProperty());
-		pointLight.translateYProperty().bind(player.get().translateYProperty());
-		pointLight.lightOnProperty().bind(player.$visible);
-		pointLight.setTranslateZ(-4);
+		PointLight playerLight = new PointLight();
+		playerLight.translateXProperty().bind(player.get().translateXProperty());
+		playerLight.translateYProperty().bind(player.get().translateYProperty());
+		playerLight.lightOnProperty().bind(player.$visible);
+		playerLight.setTranslateZ(-4);
 
-		tgMaze.getChildren().addAll(ambientLight, pointLight);
+		tgMaze.getChildren().addAll(ambientLight, playerLight);
 
 		ground = new Box(UNSCALED_SCENE_WIDTH * 8, UNSCALED_SCENE_HEIGHT * 8, 0.1);
 		PhongMaterial groundMaterial = new PhongMaterial(Color.rgb(20, 20, 20));
@@ -154,6 +155,17 @@ public class PlayScene3D implements GameScene {
 
 		fxScene.setRoot(new Group(coordSystem.getNode(), ground, tgMaze));
 		fxScene.setFill(Color.rgb(20, 20, 60));
+	}
+
+	private Node createPellet(V2i tile, PhongMaterial material) {
+		double r = 1;
+		Sphere s = new Sphere(r);
+		s.setMaterial(material);
+		s.setTranslateX(tile.x * TS);
+		s.setTranslateY(tile.y * TS);
+		s.setTranslateZ(1);
+		s.setUserData(tile);
+		return s;
 	}
 
 	@Override

@@ -37,9 +37,9 @@ public class Energizer3D implements Supplier<Node> {
 		pumping.setFromX(0);
 		pumping.setFromY(0);
 		pumping.setFromZ(0);
-		pumping.setToX(1.25);
-		pumping.setToY(1.25);
-		pumping.setToZ(1.25);
+		pumping.setToX(1.1);
+		pumping.setToY(1.1);
+		pumping.setToZ(1.1);
 	}
 
 	public void update(AbstractGameModel game) {
