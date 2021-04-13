@@ -1,5 +1,7 @@
 package de.amr.games.pacman.ui.fx.scenes.common._2d;
 
+import static de.amr.games.pacman.model.world.PacManGameWorld.t;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -17,7 +19,6 @@ import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.entities._2d.Bonus2D;
 import de.amr.games.pacman.ui.fx.entities._2d.GameScore2D;
-import de.amr.games.pacman.ui.fx.entities._2d.GameStateDisplay2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Ghost2D;
 import de.amr.games.pacman.ui.fx.entities._2d.LevelCounter2D;
 import de.amr.games.pacman.ui.fx.entities._2d.LivesCounter2D;
@@ -28,6 +29,7 @@ import de.amr.games.pacman.ui.fx.sound.PlaySceneSoundHandler;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 /**
@@ -42,7 +44,6 @@ public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScen
 	private GameScore2D<RENDERING> hiscore2D;
 	private LivesCounter2D<RENDERING> livesCounter2D;
 	private LevelCounter2D<RENDERING> levelCounter2D;
-	private GameStateDisplay2D<RENDERING> gameStateDisplay2D;
 	private Player2D<RENDERING> player2D;
 	private List<Ghost2D<RENDERING>> ghosts2D;
 	private Bonus2D<RENDERING> bonus2D;
@@ -87,10 +88,6 @@ public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScen
 		hiscore2D.setLeftUpperCorner(new V2i(16, 1));
 		hiscore2D.setPointsSupplier(() -> game().highscorePoints);
 		hiscore2D.setLevelSupplier(() -> game().highscoreLevel);
-
-		gameStateDisplay2D = new GameStateDisplay2D<>(rendering);
-		gameStateDisplay2D
-				.setStateSupplier(() -> gameController.isAttractMode() ? PacManGameState.GAME_OVER : gameController.state);
 
 		player2D = new Player2D<>(game().player, rendering);
 		player2D.getDyingAnimation().delay(120).onStart(() -> {
@@ -221,7 +218,22 @@ public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScen
 		game().ghosts(GhostState.LOCKED)
 				.forEach(ghost -> ghosts2D.get(ghost.id).setLooksFrightened(game().player.powerTimer.isRunning()));
 
-		Stream.concat(Stream.of(score2D, hiscore2D, levelCounter2D, maze2D, gameStateDisplay2D, bonus2D, player2D),
-				ghosts2D.stream()).forEach(r -> r.render(gc));
+		Stream.concat(Stream.of(score2D, hiscore2D, levelCounter2D, maze2D, bonus2D, player2D), ghosts2D.stream())
+				.forEach(r -> r.render(gc));
+		renderGameState();
+	}
+
+	private void renderGameState() {
+		PacManGameState state = gameController.isAttractMode() ? PacManGameState.GAME_OVER : gameController.state;
+		if (state == PacManGameState.GAME_OVER) {
+			gc.setFont(rendering.getScoreFont());
+			gc.setFill(Color.RED);
+			gc.fillText("GAME", t(9), t(21));
+			gc.fillText("OVER", t(15), t(21));
+		} else if (state == PacManGameState.READY) {
+			gc.setFont(rendering.getScoreFont());
+			gc.setFill(Color.YELLOW);
+			gc.fillText("READY", t(11), t(21));
+		}
 	}
 }
