@@ -43,7 +43,7 @@ public class LivesCounter2D<RENDERING extends GameRendering2D> implements Render
 		int maxLivesDisplayed = 5;
 		double x = tile.x * TS, y = tile.y * TS;
 		for (int i = 0; i < Math.min(numLives, maxLivesDisplayed); ++i) {
-			rendering.drawSprite(g, sprite, x + t(2 * i), y);
+			rendering.renderSprite(g, sprite, x + t(2 * i), y);
 		}
 		if (numLives > maxLivesDisplayed) {
 			g.setFill(Color.YELLOW);

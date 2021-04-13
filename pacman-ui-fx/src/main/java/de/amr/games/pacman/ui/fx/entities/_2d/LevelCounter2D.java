@@ -45,7 +45,7 @@ public class LevelCounter2D<RENDERING extends GameRendering2D> implements Render
 		int firstLevel = Math.max(1, levelNumberSupplier.getAsInt() - 6);
 		for (int level = firstLevel; level <= levelNumberSupplier.getAsInt(); ++level) {
 			Rectangle2D sprite = rendering.getSymbolSprites().get(levelSymbols.get(level - 1));
-			rendering.drawSprite(g, sprite, x, y);
+			rendering.renderSprite(g, sprite, x, y);
 			x -= t(2);
 		}
 	}

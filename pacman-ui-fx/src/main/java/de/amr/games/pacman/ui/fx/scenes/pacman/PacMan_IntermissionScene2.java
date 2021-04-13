@@ -85,12 +85,12 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D<GameRendering
 
 	private void drawBlinkyStretched(Ghost blinky, V2d nailPosition, int stretching) {
 		Rectangle2D stretchedDress = blinkyStretchedAnimation.frame(stretching);
-		rendering.drawSprite(gc, stretchedDress, (int) (nailPosition.x - 4), (int) (nailPosition.y - 4));
+		rendering.renderSprite(gc, stretchedDress, (int) (nailPosition.x - 4), (int) (nailPosition.y - 4));
 		if (stretching < 3) {
 			blinky2D.render(gc);
 		} else {
 			Rectangle2D damagedDress = blinkyDamagedAnimation.frame(blinky.dir == Direction.UP ? 0 : 1);
-			rendering.drawSprite(gc, damagedDress, (int) (blinky.position.x - 4), (int) (blinky.position.y - 4));
+			rendering.renderSprite(gc, damagedDress, (int) (blinky.position.x - 4), (int) (blinky.position.y - 4));
 		}
 	}
 }

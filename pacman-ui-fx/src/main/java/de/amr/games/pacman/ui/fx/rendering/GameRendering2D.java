@@ -149,7 +149,7 @@ public abstract class GameRendering2D {
 		}
 	}
 
-	public void drawSprite(GraphicsContext g, Rectangle2D sprite, double x, double y) {
+	public void renderSprite(GraphicsContext g, Rectangle2D sprite, double x, double y) {
 		g.drawImage(spritesheet, sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(), x, y,
 				sprite.getWidth(), sprite.getHeight());
 	}
