@@ -6,7 +6,7 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 import java.util.function.IntSupplier;
 
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -18,7 +18,7 @@ import javafx.scene.text.FontWeight;
  * 
  * @author Armin Reichert
  */
-public class LivesCounter2D<RENDERING extends GameRendering2D> implements Renderable2D<RENDERING> {
+public class LivesCounter2D<RENDERING extends Rendering2D> implements Renderable2D<RENDERING> {
 
 	private final RENDERING rendering;
 	private V2i tile;

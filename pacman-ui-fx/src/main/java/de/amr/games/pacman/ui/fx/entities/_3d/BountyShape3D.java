@@ -2,7 +2,7 @@ package de.amr.games.pacman.ui.fx.entities._3d;
 
 import java.util.function.Supplier;
 
-import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
@@ -16,10 +16,10 @@ import javafx.scene.shape.Box;
 public class BountyShape3D implements Supplier<Node> {
 
 	private final Box root;
-	private final GameRendering2D rendering2D;
+	private final Rendering2D rendering2D;
 	private final PhongMaterial skin;
 
-	public BountyShape3D(GameRendering2D rendering2D) {
+	public BountyShape3D(Rendering2D rendering2D) {
 		this.rendering2D = rendering2D;
 		root = new Box(8, 8, 8);
 		skin = new PhongMaterial();

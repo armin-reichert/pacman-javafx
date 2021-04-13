@@ -4,7 +4,7 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class Energizer2D<RENDERING extends GameRendering2D> implements Renderable2D<RENDERING> {
+public class Energizer2D<RENDERING extends Rendering2D> implements Renderable2D<RENDERING> {
 
 	private V2i tile;
 	private TimedSequence<Boolean> blinkingAnimation;

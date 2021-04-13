@@ -23,7 +23,7 @@ import de.amr.games.pacman.ui.fx.entities._2d.LevelCounter2D;
 import de.amr.games.pacman.ui.fx.entities._2d.LivesCounter2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Maze2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Player2D;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx.sound.PlaySceneSoundHandler;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.PauseTransition;
@@ -35,7 +35,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class PlayScene2D<RENDERING extends GameRendering2D> extends AbstractGameScene2D<RENDERING> {
+public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScene2D<RENDERING> {
 
 	private Maze2D<RENDERING> maze2D;
 	private GameScore2D<RENDERING> score2D;

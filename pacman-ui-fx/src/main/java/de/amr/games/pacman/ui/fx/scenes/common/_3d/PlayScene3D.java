@@ -35,8 +35,8 @@ import de.amr.games.pacman.ui.fx.entities._3d.Maze3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Pellet3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Player3D;
 import de.amr.games.pacman.ui.fx.entities._3d.ScoreNotReally3D;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_Assets;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Impl;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.sound.PlaySceneSoundHandler;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -109,9 +109,9 @@ public class PlayScene3D implements GameScene {
 		final GameVariant gameVariant = gameController.gameVariant();
 		final int mazeNumber = game().currentLevel.mazeNumber;
 
-		maze = new Maze3D(game(), GameRendering2D_Assets.getMazeWallColor(gameVariant, mazeNumber));
+		maze = new Maze3D(game(), Rendering2D_Assets.getMazeWallColor(gameVariant, mazeNumber));
 
-		PhongMaterial foodMaterial = new PhongMaterial(GameRendering2D_Assets.getFoodColor(gameVariant, mazeNumber));
+		PhongMaterial foodMaterial = new PhongMaterial(Rendering2D_Assets.getFoodColor(gameVariant, mazeNumber));
 
 		energizers = game().currentLevel.world.energizerTiles()//
 				.map(tile -> new Energizer3D(tile, foodMaterial))//
@@ -123,16 +123,16 @@ public class PlayScene3D implements GameScene {
 				.map(tile -> new Pellet3D(tile, foodMaterial)).collect(Collectors.toList());
 
 		player = new Player3D(game().player);
-		ghosts3D = game().ghosts().collect(
-				Collectors.toMap(Function.identity(), ghost -> new Ghost3D(ghost, GameRendering2D.rendering(gameVariant))));
+		ghosts3D = game().ghosts()
+				.collect(Collectors.toMap(Function.identity(), ghost -> new Ghost3D(ghost, Rendering2D_Impl.get(gameVariant))));
 
-		bonus3D = new Bonus3D(gameVariant, GameRendering2D.rendering(gameVariant));
+		bonus3D = new Bonus3D(gameVariant, Rendering2D_Impl.get(gameVariant));
 
 		score3D = new ScoreNotReally3D();
 
 		livesCounter3D = new LivesCounter3D(game().player, 2, 1);
 
-		levelCounter3D = new LevelCounter3D(GameRendering2D.rendering(gameVariant));
+		levelCounter3D = new LevelCounter3D(Rendering2D_Impl.get(gameVariant));
 		levelCounter3D.tileRight = new V2i(25, 1);
 		levelCounter3D.update(game());
 

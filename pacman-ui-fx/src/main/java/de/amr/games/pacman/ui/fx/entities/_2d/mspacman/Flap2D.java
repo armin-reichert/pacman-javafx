@@ -3,7 +3,7 @@ package de.amr.games.pacman.ui.fx.entities._2d.mspacman;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.mspacman.Flap;
 import de.amr.games.pacman.ui.fx.entities._2d.Renderable2D;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_MsPacMan;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D_MsPacMan;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -13,13 +13,13 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class Flap2D implements Renderable2D<GameRendering2D_MsPacMan> {
+public class Flap2D implements Renderable2D<Rendering2D_MsPacMan> {
 
-	private GameRendering2D_MsPacMan rendering;
+	private Rendering2D_MsPacMan rendering;
 	private final Flap flap;
 	private TimedSequence<Rectangle2D> animation;
 
-	public Flap2D(Flap flap, GameRendering2D_MsPacMan rendering) {
+	public Flap2D(Flap flap, Rendering2D_MsPacMan rendering) {
 		this.rendering = rendering;
 		this.flap = flap;
 		animation = rendering.createFlapAnimation();

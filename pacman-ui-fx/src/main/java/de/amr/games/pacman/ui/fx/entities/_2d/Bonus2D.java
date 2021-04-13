@@ -5,8 +5,8 @@ import java.util.Map;
 
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.pacman.PacManBonus;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_MsPacMan;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D_MsPacMan;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -15,7 +15,7 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class Bonus2D<RENDERING extends GameRendering2D> implements Renderable2D<RENDERING> {
+public class Bonus2D<RENDERING extends Rendering2D> implements Renderable2D<RENDERING> {
 
 	private RENDERING rendering;
 	private PacManBonus bonus;
@@ -27,8 +27,8 @@ public class Bonus2D<RENDERING extends GameRendering2D> implements Renderable2D<
 		this.rendering = rendering;
 		symbolSprites = rendering.getSymbolSprites();
 		numberSprites = rendering.getBonusValuesSpritesMap();
-		if (rendering instanceof GameRendering2D_MsPacMan) {
-			GameRendering2D_MsPacMan msPacManRendering = (GameRendering2D_MsPacMan) rendering;
+		if (rendering instanceof Rendering2D_MsPacMan) {
+			Rendering2D_MsPacMan msPacManRendering = (Rendering2D_MsPacMan) rendering;
 			setJumpAnimation(msPacManRendering.createBonusAnimation());
 		}
 	}

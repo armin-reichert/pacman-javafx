@@ -17,7 +17,7 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class GameRendering2D_MsPacMan extends GameRendering2D {
+public class Rendering2D_MsPacMan extends Rendering2D {
 
 	private List<Image> mazeFullImages;
 	private List<Image> mazeEmptyImages;
@@ -26,7 +26,7 @@ public class GameRendering2D_MsPacMan extends GameRendering2D {
 	private List<Rectangle2D> symbolSprites;
 	private Map<Integer, Rectangle2D> bountyNumberSprites;
 
-	GameRendering2D_MsPacMan() {
+	Rendering2D_MsPacMan() {
 		super("/mspacman/graphics/sprites.png", 16);
 
 		symbolSprites = Arrays.asList(s(3, 0), s(4, 0), s(5, 0), s(6, 0), s(7, 0), s(8, 0), s(9, 0));
@@ -42,7 +42,7 @@ public class GameRendering2D_MsPacMan extends GameRendering2D {
 		for (int mazeIndex = 0; mazeIndex < 6; ++mazeIndex) {
 			Image mazeFullImage = subImage(0, 248 * mazeIndex, 226, 248);
 			Image mazeEmptyImage = subImage(226, 248 * mazeIndex, 226, 248);
-			Image mazeFlashImage = GameRendering2D_Assets.colorsExchanged(mazeEmptyImage, //
+			Image mazeFlashImage = Rendering2D_Assets.colorsExchanged(mazeEmptyImage, //
 					Map.of(//
 							getMazeWallBorderColor(mazeIndex), Color.WHITE, //
 							getMazeWallColor(mazeIndex), Color.BLACK));

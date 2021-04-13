@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.AbstractGameModel;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
 import javafx.animation.RotateTransition;
 import javafx.animation.Transition;
 import javafx.scene.Group;
@@ -25,7 +25,7 @@ public class LevelCounter3D implements Supplier<Node> {
 	private final List<Image> symbolSprites;
 	private final Group root = new Group();
 
-	public LevelCounter3D(GameRendering2D rendering2D) {
+	public LevelCounter3D(Rendering2D rendering2D) {
 		symbolSprites = rendering2D.getSymbolSprites().stream().map(rendering2D::subImage).collect(Collectors.toList());
 	}
 

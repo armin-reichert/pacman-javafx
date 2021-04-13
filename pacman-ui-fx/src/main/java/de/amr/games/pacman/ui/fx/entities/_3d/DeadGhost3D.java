@@ -3,7 +3,7 @@ package de.amr.games.pacman.ui.fx.entities._3d;
 import java.util.function.Supplier;
 
 import de.amr.games.pacman.model.common.Ghost;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_Assets;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
@@ -20,7 +20,7 @@ public class DeadGhost3D implements Supplier<Node> {
 	private final Sphere[] pearls = new Sphere[3];
 
 	public DeadGhost3D(Ghost ghost) {
-		PhongMaterial skin = new PhongMaterial(GameRendering2D_Assets.getGhostColor(ghost.id));
+		PhongMaterial skin = new PhongMaterial(Rendering2D_Assets.getGhostColor(ghost.id));
 		for (int i = 0; i < pearls.length; ++i) {
 			pearls[i] = new Sphere(1);
 			pearls[i].setMaterial(skin);

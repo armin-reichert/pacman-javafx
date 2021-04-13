@@ -1,7 +1,6 @@
 package de.amr.games.pacman.ui.fx.scenes.pacman;
 
-import static de.amr.games.pacman.ui.fx.rendering.GameRendering2D.RENDERING_PACMAN;
-
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Impl;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScene3D;
@@ -23,7 +22,7 @@ public class PacManScenes {
 		SCENES[2][1] = new PacMan_IntermissionScene2();
 		SCENES[3][0] = 
 		SCENES[3][1] = new PacMan_IntermissionScene3();
-		SCENES[4][0] = new PlayScene2D<>(RENDERING_PACMAN, SOUNDS);
+		SCENES[4][0] = new PlayScene2D<>(Rendering2D_Impl.RENDERING_PACMAN, SOUNDS);
 		SCENES[4][1] = new PlayScene3D(SOUNDS);
 		//@formatter:on
 	}

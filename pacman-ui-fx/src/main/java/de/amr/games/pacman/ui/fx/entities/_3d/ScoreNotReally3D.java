@@ -5,7 +5,7 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import java.util.function.Supplier;
 
 import de.amr.games.pacman.model.common.AbstractGameModel;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_Assets;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
@@ -24,7 +24,7 @@ public class ScoreNotReally3D implements Supplier<Node> {
 
 	public ScoreNotReally3D() {
 		hiscoreOnly = false;
-		Font font = GameRendering2D_Assets.ARCADE_FONT;
+		Font font = Rendering2D_Assets.ARCADE_FONT;
 
 		txtScoreTitle = new Text("SCORE");
 		txtScoreTitle.setFill(Color.WHITE);

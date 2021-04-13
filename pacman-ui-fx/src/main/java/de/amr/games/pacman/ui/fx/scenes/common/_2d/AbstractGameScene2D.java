@@ -6,7 +6,7 @@ import java.util.OptionalDouble;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.Group;
@@ -21,7 +21,7 @@ import javafx.scene.transform.Scale;
  * 
  * @author Armin Reichert
  */
-public abstract class AbstractGameScene2D<RENDERING extends GameRendering2D> implements GameScene {
+public abstract class AbstractGameScene2D<RENDERING extends Rendering2D> implements GameScene {
 
 	protected final SubScene scene;
 	protected final Canvas canvas;
@@ -66,7 +66,7 @@ public abstract class AbstractGameScene2D<RENDERING extends GameRendering2D> imp
 		return getClass().getSimpleName() + "@" + hashCode();
 	}
 
-	public GameRendering2D getRendering() {
+	public Rendering2D getRendering() {
 		return rendering;
 	}
 

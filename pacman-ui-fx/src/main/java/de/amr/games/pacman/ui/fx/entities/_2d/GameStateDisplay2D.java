@@ -5,7 +5,7 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 import java.util.function.Supplier;
 
 import de.amr.games.pacman.controller.PacManGameState;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -15,7 +15,7 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public class GameStateDisplay2D<RENDERING extends GameRendering2D> implements Renderable2D<RENDERING> {
+public class GameStateDisplay2D<RENDERING extends Rendering2D> implements Renderable2D<RENDERING> {
 
 	private Supplier<PacManGameState> stateSupplier;
 	private Font font;

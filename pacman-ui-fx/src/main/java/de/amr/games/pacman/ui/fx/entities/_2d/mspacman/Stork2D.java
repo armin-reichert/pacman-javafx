@@ -3,7 +3,7 @@ package de.amr.games.pacman.ui.fx.entities._2d.mspacman;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.mspacman.Stork;
 import de.amr.games.pacman.ui.fx.entities._2d.Renderable2D;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_MsPacMan;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D_MsPacMan;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -12,13 +12,13 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class Stork2D implements Renderable2D<GameRendering2D_MsPacMan> {
+public class Stork2D implements Renderable2D<Rendering2D_MsPacMan> {
 
-	private final GameRendering2D_MsPacMan rendering;
+	private final Rendering2D_MsPacMan rendering;
 	private final Stork stork;
 	private TimedSequence<Rectangle2D> animation;
 
-	public Stork2D(Stork stork, GameRendering2D_MsPacMan rendering) {
+	public Stork2D(Stork stork, Rendering2D_MsPacMan rendering) {
 		this.rendering = rendering;
 		this.stork = stork;
 		animation = rendering.createStorkFlyingAnimation();

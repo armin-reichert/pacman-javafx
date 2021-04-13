@@ -10,7 +10,7 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.Ghost;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -19,7 +19,7 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class Ghost2D<RENDERING extends GameRendering2D> implements Renderable2D<RENDERING> {
+public class Ghost2D<RENDERING extends Rendering2D> implements Renderable2D<RENDERING> {
 
 	private final RENDERING rendering;
 	private final Ghost ghost;

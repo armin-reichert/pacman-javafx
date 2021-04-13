@@ -8,26 +8,26 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public final class GameRendering2D_Assets {
+public final class Rendering2D_Assets {
 
-	private GameRendering2D_Assets() {
+	private Rendering2D_Assets() {
 	}
 
-	public static final Font ARCADE_FONT = Font
-			.loadFont(GameRendering2D_Assets.class.getResourceAsStream("/emulogic.ttf"), 8);
+	public static final Font ARCADE_FONT = Font.loadFont(Rendering2D_Assets.class.getResourceAsStream("/emulogic.ttf"),
+			8);
 
 	public static Image image(String path) {
-		return new Image(GameRendering2D_Assets.class.getResource(path).toExternalForm());
+		return new Image(Rendering2D_Assets.class.getResource(path).toExternalForm());
 	}
 
 	public static Color getMazeWallColor(GameVariant gameVariant, int mazeNumber) {
-		return gameVariant == GameVariant.PACMAN ? GameRendering2D_Assets.getPacManMazeWallColor(mazeNumber)
-				: GameRendering2D_Assets.getMsPacManMazeWallColor(mazeNumber);
+		return gameVariant == GameVariant.PACMAN ? Rendering2D_Assets.getPacManMazeWallColor(mazeNumber)
+				: Rendering2D_Assets.getMsPacManMazeWallColor(mazeNumber);
 	}
 
 	public static Color getFoodColor(GameVariant gameVariant, int mazeNumber) {
-		return gameVariant == GameVariant.PACMAN ? GameRendering2D_Assets.getPacManFoodColor(mazeNumber)
-				: GameRendering2D_Assets.getMsPacManFoodColor(mazeNumber);
+		return gameVariant == GameVariant.PACMAN ? Rendering2D_Assets.getPacManFoodColor(mazeNumber)
+				: Rendering2D_Assets.getMsPacManFoodColor(mazeNumber);
 	}
 
 	public static Color getGhostColor(int ghostID) {

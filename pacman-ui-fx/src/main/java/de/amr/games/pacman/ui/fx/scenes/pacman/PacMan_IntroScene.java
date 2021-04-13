@@ -14,8 +14,8 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.fx.entities._2d.GameScore2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Ghost2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Player2D;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_PacMan;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Impl;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.pacman.PacMan_IntroScene_Controller;
 import de.amr.games.pacman.ui.pacman.PacMan_IntroScene_Controller.GhostPortrait;
@@ -31,18 +31,18 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public class PacMan_IntroScene extends AbstractGameScene2D<GameRendering2D_PacMan> {
+public class PacMan_IntroScene extends AbstractGameScene2D<Rendering2D_PacMan> {
 
 	private PacMan_IntroScene_Controller sceneController;
 
-	private GameScore2D<GameRendering2D_PacMan> score2D;
-	private GameScore2D<GameRendering2D_PacMan> hiscore2D;
-	private Player2D<GameRendering2D_PacMan> pacMan2D;
-	private List<Ghost2D<GameRendering2D_PacMan>> ghosts2D;
-	private List<Ghost2D<GameRendering2D_PacMan>> ghostsInGallery2D;
+	private GameScore2D<Rendering2D_PacMan> score2D;
+	private GameScore2D<Rendering2D_PacMan> hiscore2D;
+	private Player2D<Rendering2D_PacMan> pacMan2D;
+	private List<Ghost2D<Rendering2D_PacMan>> ghosts2D;
+	private List<Ghost2D<Rendering2D_PacMan>> ghostsInGallery2D;
 
 	public PacMan_IntroScene() {
-		super(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, GameRendering2D.RENDERING_PACMAN, PacManScenes.SOUNDS);
+		super(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, Rendering2D_Impl.RENDERING_PACMAN, PacManScenes.SOUNDS);
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D<GameRendering2D_PacMa
 		pacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
 
 		ghosts2D = Stream.of(sceneController.ghosts).map(ghost -> {
-			Ghost2D<GameRendering2D_PacMan> ghost2D = new Ghost2D<>(ghost, rendering);
+			Ghost2D<Rendering2D_PacMan> ghost2D = new Ghost2D<>(ghost, rendering);
 			ghost2D.getKickingAnimations().values().forEach(TimedSequence::restart);
 			ghost2D.getFrightenedAnimation().restart();
 			ghost2D.getFlashingAnimation().restart();
@@ -76,7 +76,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D<GameRendering2D_PacMa
 
 		ghostsInGallery2D = new ArrayList<>();
 		for (int i = 0; i < 4; ++i) {
-			Ghost2D<GameRendering2D_PacMan> ghost2D = new Ghost2D<>(sceneController.gallery[i].ghost, rendering);
+			Ghost2D<Rendering2D_PacMan> ghost2D = new Ghost2D<>(sceneController.gallery[i].ghost, rendering);
 			ghostsInGallery2D.add(ghost2D);
 		}
 	}

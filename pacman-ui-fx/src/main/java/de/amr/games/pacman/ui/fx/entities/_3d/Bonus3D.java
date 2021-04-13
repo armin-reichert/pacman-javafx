@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.pacman.PacManBonus;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
 import javafx.animation.RotateTransition;
 import javafx.animation.Transition;
 import javafx.geometry.Rectangle2D;
@@ -25,11 +25,11 @@ public class Bonus3D implements Supplier<Node> {
 	private final Box box;
 	private final List<Image> symbolSprites;
 	private final Map<Integer, Image> pointsSprites;
-	private final GameRendering2D rendering2D;
+	private final Rendering2D rendering2D;
 	private final RotateTransition rotation;
 	private final PhongMaterial skin;
 
-	public Bonus3D(GameVariant gameVariant, GameRendering2D rendering2D) {
+	public Bonus3D(GameVariant gameVariant, Rendering2D rendering2D) {
 		this.rendering2D = rendering2D;
 		symbolSprites = rendering2D.getSymbolSprites().stream().map(rendering2D::subImage).collect(Collectors.toList());
 		pointsSprites = getPointsSprites(gameVariant);

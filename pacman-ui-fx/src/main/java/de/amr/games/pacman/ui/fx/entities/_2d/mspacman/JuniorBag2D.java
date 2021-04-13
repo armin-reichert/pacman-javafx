@@ -2,7 +2,7 @@ package de.amr.games.pacman.ui.fx.entities._2d.mspacman;
 
 import de.amr.games.pacman.model.mspacman.JuniorBag;
 import de.amr.games.pacman.ui.fx.entities._2d.Renderable2D;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_MsPacMan;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D_MsPacMan;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -11,12 +11,12 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class JuniorBag2D implements Renderable2D<GameRendering2D_MsPacMan> {
+public class JuniorBag2D implements Renderable2D<Rendering2D_MsPacMan> {
 
-	private final GameRendering2D_MsPacMan rendering;
+	private final Rendering2D_MsPacMan rendering;
 	private final JuniorBag bag;
 
-	public JuniorBag2D(JuniorBag bag, GameRendering2D_MsPacMan rendering) {
+	public JuniorBag2D(JuniorBag bag, Rendering2D_MsPacMan rendering) {
 		this.rendering = rendering;
 		this.bag = bag;
 	}

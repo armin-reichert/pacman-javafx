@@ -11,7 +11,6 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.GameEntity;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.pacman.PacManBonus;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -25,26 +24,13 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public abstract class GameRendering2D {
-
-	public static final GameRendering2D_MsPacMan RENDERING_MS_PACMAN = new GameRendering2D_MsPacMan();
-	public static final GameRendering2D_PacMan RENDERING_PACMAN = new GameRendering2D_PacMan();
-
-	public static GameRendering2D rendering(GameVariant gameVariant) {
-		if (gameVariant == GameVariant.MS_PACMAN) {
-			return RENDERING_MS_PACMAN;
-		}
-		if (gameVariant == GameVariant.PACMAN) {
-			return RENDERING_PACMAN;
-		}
-		throw new IllegalArgumentException("Unknown game variant: " + gameVariant);
-	}
+public abstract class Rendering2D {
 
 	protected final Image spritesheet;
 	protected final int cellSize;
 
-	public GameRendering2D(String spritesheetPath, int cellSize) {
-		spritesheet = GameRendering2D_Assets.image(spritesheetPath);
+	public Rendering2D(String spritesheetPath, int cellSize) {
+		spritesheet = Rendering2D_Assets.image(spritesheetPath);
 		this.cellSize = cellSize;
 	}
 
@@ -118,7 +104,7 @@ public abstract class GameRendering2D {
 	}
 
 	public Font getScoreFont() {
-		return GameRendering2D_Assets.ARCADE_FONT;
+		return Rendering2D_Assets.ARCADE_FONT;
 	}
 
 	/**

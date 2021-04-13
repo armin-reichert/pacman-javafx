@@ -17,16 +17,16 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class GameRendering2D_PacMan extends GameRendering2D {
+public class Rendering2D_PacMan extends Rendering2D {
 
-	private final Image mazeFull = GameRendering2D_Assets.image("/pacman/graphics/maze_full.png");
-	private final Image mazeEmpty = GameRendering2D_Assets.image("/pacman/graphics/maze_empty.png");
+	private final Image mazeFull = Rendering2D_Assets.image("/pacman/graphics/maze_full.png");
+	private final Image mazeEmpty = Rendering2D_Assets.image("/pacman/graphics/maze_empty.png");
 	private Image mazeEmptyBright;
 	private Map<Integer, Rectangle2D> bonusValueSprites;
 	private List<Rectangle2D> symbolSprites;
 	private Map<Integer, Rectangle2D> bountyNumberSprites;
 
-	public GameRendering2D_PacMan() {
+	public Rendering2D_PacMan() {
 		super("/pacman/graphics/sprites.png", 16);
 
 		symbolSprites = Arrays.asList(sprite(2, 3), sprite(3, 3), sprite(4, 3), sprite(5, 3), sprite(6, 3), sprite(7, 3),
@@ -52,7 +52,7 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 
 		// Animations
 
-		mazeEmptyBright = GameRendering2D_Assets.colorsExchanged(mazeEmpty, Map.of(getMazeWallBorderColor(0), Color.WHITE));
+		mazeEmptyBright = Rendering2D_Assets.colorsExchanged(mazeEmpty, Map.of(getMazeWallBorderColor(0), Color.WHITE));
 	}
 
 	public Color getMazeWallBorderColor(int mazeIndex) {

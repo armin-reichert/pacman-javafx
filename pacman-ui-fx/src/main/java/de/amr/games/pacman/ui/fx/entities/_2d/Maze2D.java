@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -24,7 +24,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class Maze2D<RENDERING extends GameRendering2D> implements Renderable2D<RENDERING> {
+public class Maze2D<RENDERING extends Rendering2D> implements Renderable2D<RENDERING> {
 
 	private RENDERING rendering;
 	private GameLevel gameLevel;
