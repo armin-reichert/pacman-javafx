@@ -144,7 +144,8 @@ public class PlayScene3D implements GameScene {
 		tgMaze.getChildren().addAll(ambientLight, pointLight);
 
 		ground = new Box(UNSCALED_SCENE_WIDTH * 8, UNSCALED_SCENE_HEIGHT * 8, 0.1);
-		ground.setMaterial(new PhongMaterial(Color.rgb(20, 20, 20)));
+		PhongMaterial groundMaterial = new PhongMaterial(Color.rgb(20, 20, 20));
+		ground.setMaterial(groundMaterial);
 		ground.setTranslateX(-4);
 		ground.setTranslateY(-4);
 		ground.setTranslateZ(4);

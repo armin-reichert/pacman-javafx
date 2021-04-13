@@ -138,10 +138,12 @@ public class Maze3D {
 	}
 
 	public Node createPellet(V2i tile, PhongMaterial material) {
-		Sphere s = new Sphere(1);
+		double r = 1;
+		Sphere s = new Sphere(r);
 		s.setMaterial(material);
 		s.setTranslateX(tile.x * TS);
 		s.setTranslateY(tile.y * TS);
+		s.setTranslateZ(1);
 		s.setUserData(tile);
 		return s;
 	}
