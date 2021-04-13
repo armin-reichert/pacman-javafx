@@ -36,7 +36,7 @@ import de.amr.games.pacman.ui.fx.entities._3d.Pellet3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Player3D;
 import de.amr.games.pacman.ui.fx.entities._3d.ScoreNotReally3D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D;
-import de.amr.games.pacman.ui.fx.rendering.GameRendering3D_Assets;
+import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_Assets;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.sound.PlaySceneSoundHandler;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -109,9 +109,9 @@ public class PlayScene3D implements GameScene {
 		final GameVariant gameVariant = gameController.gameVariant();
 		final int mazeNumber = game().currentLevel.mazeNumber;
 
-		maze = new Maze3D(game(), GameRendering3D_Assets.getMazeWallColor(gameVariant, mazeNumber));
+		maze = new Maze3D(game(), GameRendering2D_Assets.getMazeWallColor(gameVariant, mazeNumber));
 
-		PhongMaterial foodMaterial = new PhongMaterial(GameRendering3D_Assets.getFoodColor(gameVariant, mazeNumber));
+		PhongMaterial foodMaterial = new PhongMaterial(GameRendering2D_Assets.getFoodColor(gameVariant, mazeNumber));
 
 		energizers = game().currentLevel.world.energizerTiles()//
 				.map(tile -> new Energizer3D(tile, foodMaterial))//

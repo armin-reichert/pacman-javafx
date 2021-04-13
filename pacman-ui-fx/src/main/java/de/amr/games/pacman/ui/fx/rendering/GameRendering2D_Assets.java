@@ -1,10 +1,29 @@
 package de.amr.games.pacman.ui.fx.rendering;
 
+import de.amr.games.pacman.model.common.GameVariant;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 public final class GameRendering2D_Assets {
 
 	private GameRendering2D_Assets() {
+	}
+
+	public static final Font ARCADE_FONT = Font
+			.loadFont(GameRendering2D_Assets.class.getResourceAsStream("/emulogic.ttf"), 8);
+
+	public static Color getMazeWallColor(GameVariant gameVariant, int mazeNumber) {
+		return gameVariant == GameVariant.PACMAN ? GameRendering2D_Assets.getPacManMazeWallColor(mazeNumber)
+				: GameRendering2D_Assets.getMsPacManMazeWallColor(mazeNumber);
+	}
+
+	public static Color getFoodColor(GameVariant gameVariant, int mazeNumber) {
+		return gameVariant == GameVariant.PACMAN ? GameRendering2D_Assets.getPacManFoodColor(mazeNumber)
+				: GameRendering2D_Assets.getMsPacManFoodColor(mazeNumber);
+	}
+
+	public static Color getGhostColor(int ghostID) {
+		return ghostID == 0 ? Color.TOMATO : ghostID == 1 ? Color.PINK : ghostID == 2 ? Color.CYAN : Color.ORANGE;
 	}
 
 	public static Color getPacManMazeWallColor(int mazeNumber) {
