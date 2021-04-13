@@ -3,6 +3,7 @@ package de.amr.games.pacman.ui.fx.rendering;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
@@ -22,8 +23,10 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 	private final Image mazeEmpty = GameRendering2D_Assets.image("/pacman/graphics/maze_empty.png");
 	private Image mazeEmptyBright;
 	private Map<Integer, Rectangle2D> bonusValueSprites;
+	private List<Rectangle2D> symbolSprites;
+	private Map<Integer, Rectangle2D> bountyNumberSprites;
 
-	GameRendering2D_PacMan() {
+	public GameRendering2D_PacMan() {
 		super("/pacman/graphics/sprites.png", 16);
 
 		symbolSprites = Arrays.asList(sprite(2, 3), sprite(3, 3), sprite(4, 3), sprite(5, 3), sprite(6, 3), sprite(7, 3),
@@ -84,6 +87,16 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 	@Override
 	public Map<Integer, Rectangle2D> getBonusValuesSpritesMap() {
 		return bonusValueSprites;
+	}
+
+	@Override
+	public Map<Integer, Rectangle2D> getBountyNumberSpritesMap() {
+		return bountyNumberSprites;
+	}
+
+	@Override
+	public List<Rectangle2D> getSymbolSprites() {
+		return symbolSprites;
 	}
 
 	public Rectangle2D getNail() {

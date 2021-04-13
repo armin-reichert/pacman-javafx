@@ -23,6 +23,8 @@ public class GameRendering2D_MsPacMan extends GameRendering2D {
 	private List<Image> mazeEmptyImages;
 	private List<Image> mazeFlashImages;
 	private Map<Integer, Rectangle2D> bonusValueSprites;
+	private List<Rectangle2D> symbolSprites;
+	private Map<Integer, Rectangle2D> bountyNumberSprites;
 
 	GameRendering2D_MsPacMan() {
 		super("/mspacman/graphics/sprites.png", 16);
@@ -119,6 +121,16 @@ public class GameRendering2D_MsPacMan extends GameRendering2D {
 	@Override
 	public Map<Integer, Rectangle2D> getBonusValuesSpritesMap() {
 		return bonusValueSprites;
+	}
+
+	@Override
+	public Map<Integer, Rectangle2D> getBountyNumberSpritesMap() {
+		return bountyNumberSprites;
+	}
+
+	@Override
+	public List<Rectangle2D> getSymbolSprites() {
+		return symbolSprites;
 	}
 
 	/*

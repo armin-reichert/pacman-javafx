@@ -5,7 +5,6 @@ import static de.amr.games.pacman.lib.Direction.RIGHT;
 import static de.amr.games.pacman.lib.Direction.UP;
 import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -43,8 +42,6 @@ public abstract class GameRendering2D {
 
 	protected final Image spritesheet;
 	protected final int cellSize;
-	protected List<Rectangle2D> symbolSprites;
-	protected Map<Integer, Rectangle2D> bountyNumberSprites;
 
 	public GameRendering2D(String spritesheetPath, int cellSize) {
 		spritesheet = GameRendering2D_Assets.image(spritesheetPath);
@@ -112,7 +109,7 @@ public abstract class GameRendering2D {
 	 */
 	public Rectangle2D bonusSprite(PacManBonus bonus) {
 		if (bonus.edibleTicksLeft > 0) {
-			return symbolSprites.get(bonus.symbol);
+			return getSymbolSprites().get(bonus.symbol);
 		}
 		if (bonus.eatenTicksLeft > 0) {
 			return getBonusValuesSpritesMap().get(bonus.points);
@@ -168,13 +165,9 @@ public abstract class GameRendering2D {
 
 	public abstract Rectangle2D getLifeImage();
 
-	public Map<Integer, Rectangle2D> getBountyNumberSpritesMap() {
-		return Collections.unmodifiableMap(bountyNumberSprites);
-	}
+	public abstract Map<Integer, Rectangle2D> getBountyNumberSpritesMap();
 
 	public abstract Map<Integer, Rectangle2D> getBonusValuesSpritesMap();
 
-	public List<Rectangle2D> getSymbolSprites() {
-		return Collections.unmodifiableList(symbolSprites);
-	}
+	public abstract List<Rectangle2D> getSymbolSprites();
 }
