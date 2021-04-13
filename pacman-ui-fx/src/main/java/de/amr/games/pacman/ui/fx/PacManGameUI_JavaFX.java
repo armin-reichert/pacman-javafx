@@ -247,11 +247,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		switch (e.getCode()) {
 
 		case C:
-			if (currentGameScene.numCams() > 0) {
-				int next = (currentGameScene.selectedCamIndex() + 1) % currentGameScene.numCams();
-				currentGameScene.selectCam(next);
-				showFlashMessage(String.format("Using camera #%d", next));
-			}
+			currentGameScene.cams().ifPresent(sceneCams -> {
+				sceneCams.selectNext();
+				showFlashMessage(String.format("Using camera %s", sceneCams.selection()));
+			});
 			break;
 
 		case I:

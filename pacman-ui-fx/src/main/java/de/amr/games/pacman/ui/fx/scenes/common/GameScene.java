@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.event.PacManGameEventListener;
 import de.amr.games.pacman.model.common.AbstractGameModel;
-import javafx.scene.Camera;
+import de.amr.games.pacman.ui.fx.scenes.common._3d.SceneCameras;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 
@@ -60,18 +60,7 @@ public interface GameScene extends PacManGameEventListener, Supplier<SubScene> {
 		}
 	}
 
-	default int numCams() {
-		return 0;
-	}
-
-	default void selectCam(int cameraIndex) {
-	}
-
-	default int selectedCamIndex() {
-		return 0;
-	}
-
-	default Optional<Camera> selectedCam() {
+	default Optional<SceneCameras> cams() {
 		return Optional.empty();
 	}
 }

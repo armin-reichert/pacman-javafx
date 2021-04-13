@@ -3,7 +3,6 @@ package de.amr.games.pacman.ui.fx.scenes.common._3d;
 import static de.amr.games.pacman.lib.Logging.log;
 import static java.util.function.Predicate.not;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -39,20 +38,19 @@ import de.amr.games.pacman.ui.fx.entities._3d.ScoreNotReally3D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Impl;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
+import de.amr.games.pacman.ui.fx.scenes.common._3d.SceneCameras.CameraType;
 import de.amr.games.pacman.ui.fx.sound.PlaySceneSoundHandler;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.scene.AmbientLight;
-import javafx.scene.Camera;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -71,9 +69,7 @@ public class PlayScene3D implements GameScene {
 			"WTF" };
 
 	private final SubScene fxScene;
-
-	private final List<PerspectiveCamera> cameras = new ArrayList<>();
-	private int selectedCamIndex;
+	private final SceneCameras cams;
 
 	private PlaySceneSoundHandler soundHandler;
 	private PacManGameController gameController;
@@ -96,13 +92,8 @@ public class PlayScene3D implements GameScene {
 	public PlayScene3D(SoundManager sounds) {
 		soundHandler = new PlaySceneSoundHandler(sounds);
 		fxScene = new SubScene(new Group(), 800, 600, true, SceneAntialiasing.BALANCED);
-		for (int i = 0; i < 3; ++i) {
-			cameras.add(new PerspectiveCamera(true));
-		}
-		// camera #1 is controllable using the keyboard
-		CameraController cameraController = new CameraController(cameras.get(1));
-		fxScene.addEventHandler(KeyEvent.KEY_PRESSED, cameraController::handleKeyEvent);
-		selectCam(0);
+		cams = new SceneCameras(fxScene);
+		cams.select(CameraType.DYNAMIC);
 	}
 
 	private void buildSceneGraph(GameVariant gameVariant, GameLevel gameLevel) {
@@ -202,69 +193,23 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public int numCams() {
-		return cameras.size();
-	}
-
-	@Override
-	public int selectedCamIndex() {
-		return selectedCamIndex;
-	}
-
-	@Override
-	public Optional<Camera> selectedCam() {
-		return Optional.of(cameras.get(selectedCamIndex));
-	}
-
-	@Override
-	public void selectCam(int cameraIndex) {
-		selectedCamIndex = cameraIndex;
-		PerspectiveCamera cam = cameras.get(selectedCamIndex);
-		fxScene.setCamera(cam);
-		switch (selectedCamIndex) {
-		case 0: // dynamic camera showing most of the board
-			cam.setNearClip(0.1);
-			cam.setFarClip(10000.0);
-			cam.setRotationAxis(Rotate.X_AXIS);
-			cam.setRotate(30);
-			cam.setTranslateZ(-250);
-			break;
-		case 1: // static camera, controllable using keyboard
-			cam.setNearClip(0.1);
-			cam.setFarClip(10000.0);
-			cam.setRotationAxis(Rotate.X_AXIS);
-			cam.setRotate(30);
-			cam.setTranslateX(0);
-			cam.setTranslateY(270);
-			cam.setTranslateZ(-460);
-			break;
-		case 2: // dynamic camera near to the player
-			cam.setNearClip(0.1);
-			cam.setFarClip(10000.0);
-			cam.setRotationAxis(Rotate.X_AXIS);
-			cam.setRotate(60);
-			cam.setTranslateZ(-60);
-			break;
-		default:
-			throw new IllegalArgumentException();
-		}
+	public Optional<SceneCameras> cams() {
+		return Optional.of(cams);
 	}
 
 	private void updateCamera() {
-		PerspectiveCamera cam = cameras.get(selectedCamIndex);
-		switch (selectedCamIndex) {
-		case 0:
+		PerspectiveCamera cam = cams.selectedCamera();
+		switch (cams.selection()) {
+		case DYNAMIC:
 			cam.setTranslateX(Math.min(10, lerp(cam.getTranslateX(), player.get().getTranslateX())));
 			cam.setTranslateY(Math.max(50, lerp(cam.getTranslateY(), player.get().getTranslateY())));
 			break;
-		case 1:
-			break;
-		case 2:
+		case DYNAMIC_NEAR_PLAYER:
 			cam.setTranslateX(lerp(cam.getTranslateX(), player.pac.position.x - 100));
 			cam.setTranslateY(lerp(cam.getTranslateY(), player.pac.position.y));
 			break;
 		default:
-			throw new IllegalArgumentException();
+			break;
 		}
 	}
 
@@ -293,11 +238,9 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void update() {
 		score3D.update(game());
-		// TODO use overlay subscene for score etc.?
-		selectedCam().ifPresent(camera -> {
-			score3D.get().setRotationAxis(Rotate.X_AXIS);
-			score3D.get().setRotate(camera.getRotate());
-		});
+		// Keep score text in plain sight. TODO is this the right way to do this?
+		score3D.get().setRotationAxis(Rotate.X_AXIS);
+		score3D.get().setRotate(cams.selectedCamera().getRotate());
 		livesCounter3D.update(game());
 		energizers.forEach(energizer3D -> energizer3D.update(game()));
 		pellets.forEach(pellet3D -> pellet3D.update(game()));
