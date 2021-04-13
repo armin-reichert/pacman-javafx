@@ -40,7 +40,7 @@ public class GameRendering2D_MsPacMan extends GameRendering2D {
 		for (int mazeIndex = 0; mazeIndex < 6; ++mazeIndex) {
 			Image mazeFullImage = subImage(0, 248 * mazeIndex, 226, 248);
 			Image mazeEmptyImage = subImage(226, 248 * mazeIndex, 226, 248);
-			Image mazeFlashImage = colorsExchanged(mazeEmptyImage, //
+			Image mazeFlashImage = GameRendering2D_Assets.colorsExchanged(mazeEmptyImage, //
 					Map.of(//
 							getMazeWallBorderColor(mazeIndex), Color.WHITE, //
 							getMazeWallColor(mazeIndex), Color.BLACK));

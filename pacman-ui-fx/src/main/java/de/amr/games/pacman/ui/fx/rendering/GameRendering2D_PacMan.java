@@ -18,8 +18,8 @@ import javafx.scene.paint.Color;
  */
 public class GameRendering2D_PacMan extends GameRendering2D {
 
-	private final Image mazeFull = image("/pacman/graphics/maze_full.png");
-	private final Image mazeEmpty = image("/pacman/graphics/maze_empty.png");
+	private final Image mazeFull = GameRendering2D_Assets.image("/pacman/graphics/maze_full.png");
+	private final Image mazeEmpty = GameRendering2D_Assets.image("/pacman/graphics/maze_empty.png");
 	private Image mazeEmptyBright;
 	private Map<Integer, Rectangle2D> bonusValueSprites;
 
@@ -49,7 +49,7 @@ public class GameRendering2D_PacMan extends GameRendering2D {
 
 		// Animations
 
-		mazeEmptyBright = colorsExchanged(mazeEmpty, Map.of(getMazeWallBorderColor(0), Color.WHITE));
+		mazeEmptyBright = GameRendering2D_Assets.colorsExchanged(mazeEmpty, Map.of(getMazeWallBorderColor(0), Color.WHITE));
 	}
 
 	public Color getMazeWallBorderColor(int mazeIndex) {

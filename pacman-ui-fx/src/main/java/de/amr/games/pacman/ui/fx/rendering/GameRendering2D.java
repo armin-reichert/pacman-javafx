@@ -43,33 +43,12 @@ public abstract class GameRendering2D {
 		throw new IllegalArgumentException("Unknown game variant: " + gameVariant);
 	}
 
-	public static Image colorsExchanged(Image source, Map<Color, Color> exchanges) {
-		WritableImage newImage = new WritableImage((int) source.getWidth(), (int) source.getHeight());
-		for (int x = 0; x < source.getWidth(); ++x) {
-			for (int y = 0; y < source.getHeight(); ++y) {
-				Color oldColor = source.getPixelReader().getColor(x, y);
-				for (Map.Entry<Color, Color> entry : exchanges.entrySet()) {
-					if (oldColor.equals(entry.getKey())) {
-						newImage.getPixelWriter().setColor(x, y, entry.getValue());
-					}
-				}
-			}
-		}
-		return newImage;
-	}
-
 	public final Image spritesheet;
-	public final Font scoreFont;
 	protected List<Rectangle2D> symbolSprites;
 	protected Map<Integer, Rectangle2D> bountyNumberSprites;
 
 	public GameRendering2D(String spritesheetPath) {
-		spritesheet = image(spritesheetPath);
-		scoreFont = Font.loadFont(getClass().getResource("/emulogic.ttf").toExternalForm(), 8);
-	}
-
-	public Image image(String path) {
-		return new Image(getClass().getResource(path).toExternalForm());
+		spritesheet = GameRendering2D_Assets.image(spritesheetPath);
 	}
 
 	public Image subImage(Rectangle2D r) {
@@ -147,7 +126,7 @@ public abstract class GameRendering2D {
 	}
 
 	public Font getScoreFont() {
-		return scoreFont;
+		return GameRendering2D_Assets.ARCADE_FONT;
 	}
 
 	/**

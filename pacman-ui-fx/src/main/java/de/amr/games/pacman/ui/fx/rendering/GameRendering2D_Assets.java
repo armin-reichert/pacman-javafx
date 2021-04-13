@@ -1,6 +1,10 @@
 package de.amr.games.pacman.ui.fx.rendering;
 
+import java.util.Map;
+
 import de.amr.games.pacman.model.common.GameVariant;
+import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -11,6 +15,10 @@ public final class GameRendering2D_Assets {
 
 	public static final Font ARCADE_FONT = Font
 			.loadFont(GameRendering2D_Assets.class.getResourceAsStream("/emulogic.ttf"), 8);
+
+	public static Image image(String path) {
+		return new Image(GameRendering2D_Assets.class.getResource(path).toExternalForm());
+	}
 
 	public static Color getMazeWallColor(GameVariant gameVariant, int mazeNumber) {
 		return gameVariant == GameVariant.PACMAN ? GameRendering2D_Assets.getPacManMazeWallColor(mazeNumber)
@@ -89,5 +97,20 @@ public final class GameRendering2D_Assets {
 		default:
 			throw new IllegalArgumentException();
 		}
+	}
+
+	public static Image colorsExchanged(Image source, Map<Color, Color> exchanges) {
+		WritableImage newImage = new WritableImage((int) source.getWidth(), (int) source.getHeight());
+		for (int x = 0; x < source.getWidth(); ++x) {
+			for (int y = 0; y < source.getHeight(); ++y) {
+				Color oldColor = source.getPixelReader().getColor(x, y);
+				for (Map.Entry<Color, Color> entry : exchanges.entrySet()) {
+					if (oldColor.equals(entry.getKey())) {
+						newImage.getPixelWriter().setColor(x, y, entry.getValue());
+					}
+				}
+			}
+		}
+		return newImage;
 	}
 }
