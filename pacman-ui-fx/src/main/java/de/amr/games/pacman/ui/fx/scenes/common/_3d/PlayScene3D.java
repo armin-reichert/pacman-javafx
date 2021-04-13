@@ -23,6 +23,7 @@ import de.amr.games.pacman.controller.event.ExtraLifeEvent;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangedEvent;
 import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.PacManGameSound;
@@ -105,21 +106,19 @@ public class PlayScene3D implements GameScene {
 		selectCam(0);
 	}
 
-	private void buildSceneGraph() {
-		final GameVariant gameVariant = gameController.gameVariant();
-		final int mazeNumber = game().currentLevel.mazeNumber;
+	private void buildSceneGraph(GameVariant gameVariant, GameLevel gameLevel) {
 
-		maze = new Maze3D(game(), Rendering2D_Assets.getMazeWallColor(gameVariant, mazeNumber));
+		maze = new Maze3D(game(), Rendering2D_Assets.getMazeWallColor(gameVariant, gameLevel.mazeNumber));
 
-		PhongMaterial foodMaterial = new PhongMaterial(Rendering2D_Assets.getFoodColor(gameVariant, mazeNumber));
+		PhongMaterial foodMaterial = new PhongMaterial(Rendering2D_Assets.getFoodColor(gameVariant, gameLevel.mazeNumber));
 
-		energizers = game().currentLevel.world.energizerTiles()//
+		energizers = gameLevel.world.energizerTiles()//
 				.map(tile -> new Energizer3D(tile, foodMaterial))//
 				.collect(Collectors.toList());
 
-		pellets = game().currentLevel.world.tiles()//
-				.filter(game().currentLevel.world::isFoodTile)//
-				.filter(not(game().currentLevel.world::isEnergizerTile))//
+		pellets = gameLevel.world.tiles()//
+				.filter(gameLevel.world::isFoodTile)//
+				.filter(not(gameLevel.world::isEnergizerTile))//
 				.map(tile -> new Pellet3D(tile, foodMaterial)).collect(Collectors.toList());
 
 		player = new Player3D(game().player);
@@ -277,7 +276,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void start() {
 		log("Game scene %s: start", this);
-		buildSceneGraph();
+		buildSceneGraph(gameController.gameVariant(), game().currentLevel);
 	}
 
 	@Override
