@@ -5,17 +5,18 @@ import de.amr.games.pacman.ui.fx.entities._2d.Renderable2D;
 import de.amr.games.pacman.ui.fx.rendering.GameRendering2D_PacMan;
 import javafx.scene.canvas.GraphicsContext;
 
-public class Nail2D extends Renderable2D<GameRendering2D_PacMan> {
+public class Nail2D implements Renderable2D<GameRendering2D_PacMan> {
 
+	private final GameRendering2D_PacMan rendering;
 	private final GameEntity nail;
 
 	public Nail2D(GameEntity nail, GameRendering2D_PacMan rendering) {
-		super(rendering);
+		this.rendering = rendering;
 		this.nail = nail;
 	}
 
 	@Override
 	public void render(GraphicsContext g) {
-		renderEntity(g, nail, rendering.getNail());
+		rendering.renderEntity(g, nail, rendering.getNail());
 	}
 }

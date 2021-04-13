@@ -13,13 +13,14 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class Flap2D extends Renderable2D<GameRendering2D_MsPacMan> {
+public class Flap2D implements Renderable2D<GameRendering2D_MsPacMan> {
 
+	private GameRendering2D_MsPacMan rendering;
 	private final Flap flap;
 	private TimedSequence<Rectangle2D> animation;
 
 	public Flap2D(Flap flap, GameRendering2D_MsPacMan rendering) {
-		super(rendering);
+		this.rendering = rendering;
 		this.flap = flap;
 		animation = rendering.createFlapAnimation();
 	}
@@ -32,7 +33,7 @@ public class Flap2D extends Renderable2D<GameRendering2D_MsPacMan> {
 	public void render(GraphicsContext g) {
 		if (flap.visible) {
 			Rectangle2D sprite = animation.animate();
-			renderEntity(g, flap, sprite);
+			rendering.renderEntity(g, flap, sprite);
 			g.setFont(rendering.getScoreFont());
 			g.setFill(Color.rgb(222, 222, 225));
 			g.fillText(String.valueOf(flap.sceneNumber), flap.position.x + sprite.getWidth() - 25, flap.position.y + 18);

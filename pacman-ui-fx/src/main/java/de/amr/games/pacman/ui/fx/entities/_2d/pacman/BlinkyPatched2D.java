@@ -12,13 +12,14 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class BlinkyPatched2D extends Renderable2D<GameRendering2D_PacMan> {
+public class BlinkyPatched2D implements Renderable2D<GameRendering2D_PacMan> {
 
+	private final GameRendering2D_PacMan rendering;
 	private final Ghost blinky;
 	private TimedSequence<Rectangle2D> animation;
 
 	public BlinkyPatched2D(Ghost blinky, GameRendering2D_PacMan rendering) {
-		super(rendering);
+		this.rendering = rendering;
 		this.blinky = blinky;
 		animation = rendering.createBlinkyPatchedAnimation();
 	}
@@ -29,6 +30,6 @@ public class BlinkyPatched2D extends Renderable2D<GameRendering2D_PacMan> {
 
 	@Override
 	public void render(GraphicsContext g) {
-		renderEntity(g, blinky, animation.animate());
+		rendering.renderEntity(g, blinky, animation.animate());
 	}
 }

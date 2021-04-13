@@ -12,13 +12,14 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class Stork2D extends Renderable2D<GameRendering2D_MsPacMan> {
+public class Stork2D implements Renderable2D<GameRendering2D_MsPacMan> {
 
+	private final GameRendering2D_MsPacMan rendering;
 	private final Stork stork;
 	private TimedSequence<Rectangle2D> animation;
 
 	public Stork2D(Stork stork, GameRendering2D_MsPacMan rendering) {
-		super(rendering);
+		this.rendering = rendering;
 		this.stork = stork;
 		animation = rendering.createStorkFlyingAnimation();
 	}
@@ -29,6 +30,6 @@ public class Stork2D extends Renderable2D<GameRendering2D_MsPacMan> {
 
 	@Override
 	public void render(GraphicsContext g) {
-		renderEntity(g, stork, animation.animate());
+		rendering.renderEntity(g, stork, animation.animate());
 	}
 }

@@ -15,15 +15,16 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class Bonus2D<RENDERING extends GameRendering2D> extends Renderable2D<RENDERING> {
+public class Bonus2D<RENDERING extends GameRendering2D> implements Renderable2D<RENDERING> {
 
+	private RENDERING rendering;
 	private PacManBonus bonus;
 	private List<Rectangle2D> symbolSprites;
 	private Map<Integer, Rectangle2D> numberSprites;
 	private TimedSequence<Integer> jumpAnimation;
 
 	public Bonus2D(RENDERING rendering) {
-		super(rendering);
+		this.rendering = rendering;
 		symbolSprites = rendering.getSymbolSprites();
 		numberSprites = rendering.getBonusValuesSpritesMap();
 		if (rendering instanceof GameRendering2D_MsPacMan) {
@@ -54,7 +55,7 @@ public class Bonus2D<RENDERING extends GameRendering2D> extends Renderable2D<REN
 		int jump = jumpAnimation != null ? jumpAnimation.animate() : 0;
 		g.save();
 		g.translate(0, jump);
-		renderEntity(g, bonus, sprite);
+		rendering.renderEntity(g, bonus, sprite);
 		g.restore();
 	}
 

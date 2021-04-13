@@ -16,14 +16,15 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class LevelCounter2D<RENDERING extends GameRendering2D> extends Renderable2D<RENDERING> {
+public class LevelCounter2D<RENDERING extends GameRendering2D> implements Renderable2D<RENDERING> {
 
+	private final RENDERING rendering;
 	private V2i tileRight;
 	private IntSupplier levelNumberSupplier;
 	private List<Byte> levelSymbols;
 
 	public LevelCounter2D(RENDERING rendering) {
-		super(rendering);
+		this.rendering = rendering;
 	}
 
 	public void setRightUpperCorner(V2i tileRight) {

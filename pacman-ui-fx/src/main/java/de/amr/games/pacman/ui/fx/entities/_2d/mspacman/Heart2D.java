@@ -10,17 +10,18 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class Heart2D extends Renderable2D<GameRendering2D_MsPacMan> {
+public class Heart2D implements Renderable2D<GameRendering2D_MsPacMan> {
 
+	private final GameRendering2D_MsPacMan rendering;
 	private final GameEntity heart;
 
 	public Heart2D(GameEntity heart, GameRendering2D_MsPacMan rendering) {
-		super(rendering);
+		this.rendering = rendering;
 		this.heart = heart;
 	}
 
 	@Override
 	public void render(GraphicsContext gc) {
-		renderEntity(gc, heart, rendering.getHeart());
+		rendering.renderEntity(gc, heart, rendering.getHeart());
 	}
 }

@@ -24,8 +24,9 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class Maze2D<RENDERING extends GameRendering2D> extends Renderable2D<RENDERING> {
+public class Maze2D<RENDERING extends GameRendering2D> implements Renderable2D<RENDERING> {
 
+	private RENDERING rendering;
 	private GameLevel gameLevel;
 	private V2i tile;
 	private Timeline flashingAnimation;
@@ -34,7 +35,7 @@ public class Maze2D<RENDERING extends GameRendering2D> extends Renderable2D<REND
 	private TimedSequence<Boolean> energizerBlinking = TimedSequence.pulse().frameDuration(10);
 
 	public Maze2D(GameLevel gameLevel, RENDERING rendering) {
-		super(rendering);
+		this.rendering = rendering;
 		this.gameLevel = gameLevel;
 		KeyFrame changeMazeImage = new KeyFrame(Duration.millis(150), e -> flashImage = !flashImage);
 		flashingAnimation = new Timeline(changeMazeImage);

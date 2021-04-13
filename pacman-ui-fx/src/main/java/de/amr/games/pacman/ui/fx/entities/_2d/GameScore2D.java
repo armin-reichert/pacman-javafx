@@ -15,8 +15,9 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class GameScore2D<RENDERING extends GameRendering2D> extends Renderable2D<RENDERING> {
+public class GameScore2D<RENDERING extends GameRendering2D> implements Renderable2D<RENDERING> {
 
+	private final RENDERING rendering;
 	private IntSupplier pointsSupplier;
 	private IntSupplier levelSupplier;
 
@@ -27,7 +28,7 @@ public class GameScore2D<RENDERING extends GameRendering2D> extends Renderable2D
 	private boolean showPoints = true;
 
 	public GameScore2D(RENDERING rendering) {
-		super(rendering);
+		this.rendering = rendering;
 	}
 
 	public void setPointsSupplier(IntSupplier pointsSupplier) {

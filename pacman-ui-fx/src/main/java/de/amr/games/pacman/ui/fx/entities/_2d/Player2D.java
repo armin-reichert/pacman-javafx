@@ -17,14 +17,15 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class Player2D<RENDERING extends GameRendering2D> extends Renderable2D<RENDERING> {
+public class Player2D<RENDERING extends GameRendering2D> implements Renderable2D<RENDERING> {
 
+	private final RENDERING rendering;
 	private final Pac player;
 	private Map<Direction, TimedSequence<Rectangle2D>> munchingAnimations;
 	private TimedSequence<Rectangle2D> dyingAnimation;
 
 	public Player2D(Pac pac, RENDERING rendering) {
-		super(rendering);
+		this.rendering = rendering;
 		this.player = pac;
 		dyingAnimation = rendering.createPlayerDyingAnimation();
 		setMunchingAnimations(rendering.createPlayerMunchingAnimations());
@@ -46,7 +47,7 @@ public class Player2D<RENDERING extends GameRendering2D> extends Renderable2D<RE
 	public void render(GraphicsContext g) {
 		Rectangle2D sprite = currentSprite();
 		if (player.visible) {
-			renderEntity(g, player, sprite);
+			rendering.renderEntity(g, player, sprite);
 		}
 	}
 

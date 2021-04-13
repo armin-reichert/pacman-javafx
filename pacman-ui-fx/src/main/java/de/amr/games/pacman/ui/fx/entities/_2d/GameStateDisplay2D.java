@@ -15,13 +15,12 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public class GameStateDisplay2D<RENDERING extends GameRendering2D> extends Renderable2D<RENDERING> {
+public class GameStateDisplay2D<RENDERING extends GameRendering2D> implements Renderable2D<RENDERING> {
 
 	private Supplier<PacManGameState> stateSupplier;
 	private Font font;
 
 	public GameStateDisplay2D(RENDERING rendering) {
-		super(rendering);
 		font = rendering.getScoreFont();
 	}
 

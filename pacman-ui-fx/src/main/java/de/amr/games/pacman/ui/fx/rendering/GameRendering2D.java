@@ -5,6 +5,7 @@ import static de.amr.games.pacman.lib.Direction.RIGHT;
 import static de.amr.games.pacman.lib.Direction.UP;
 import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -43,12 +44,16 @@ public abstract class GameRendering2D {
 		throw new IllegalArgumentException("Unknown game variant: " + gameVariant);
 	}
 
-	public final Image spritesheet;
+	protected Image spritesheet;
 	protected List<Rectangle2D> symbolSprites;
 	protected Map<Integer, Rectangle2D> bountyNumberSprites;
 
 	public GameRendering2D(String spritesheetPath) {
 		spritesheet = GameRendering2D_Assets.image(spritesheetPath);
+	}
+
+	public Image getSpritesheet() {
+		return spritesheet;
 	}
 
 	public Image subImage(Rectangle2D r) {
@@ -136,7 +141,7 @@ public abstract class GameRendering2D {
 	 * @param entity the guy
 	 * @param sprite sprite (region) in spritsheet
 	 */
-	protected void drawEntity(GraphicsContext g, GameEntity entity, Rectangle2D sprite) {
+	public void renderEntity(GraphicsContext g, GameEntity entity, Rectangle2D sprite) {
 		if (entity.visible && sprite != null) {
 			g.drawImage(spritesheet, sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(),
 					entity.position.x - sprite.getWidth() / 2 + HTS, entity.position.y - sprite.getHeight() / 2 + HTS,
@@ -174,13 +179,12 @@ public abstract class GameRendering2D {
 	public abstract Rectangle2D getLifeImage();
 
 	public Map<Integer, Rectangle2D> getBountyNumberSpritesMap() {
-		return bountyNumberSprites;
+		return Collections.unmodifiableMap(bountyNumberSprites);
 	}
 
 	public abstract Map<Integer, Rectangle2D> getBonusValuesSpritesMap();
 
 	public List<Rectangle2D> getSymbolSprites() {
-		return symbolSprites;
+		return Collections.unmodifiableList(symbolSprites);
 	}
-
 }

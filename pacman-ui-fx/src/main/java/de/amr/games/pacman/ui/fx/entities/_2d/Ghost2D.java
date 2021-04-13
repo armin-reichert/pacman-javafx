@@ -19,8 +19,9 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class Ghost2D<RENDERING extends GameRendering2D> extends Renderable2D<RENDERING> {
+public class Ghost2D<RENDERING extends GameRendering2D> implements Renderable2D<RENDERING> {
 
+	private final RENDERING rendering;
 	private final Ghost ghost;
 	private Map<Direction, TimedSequence<Rectangle2D>> kickingAnimations;
 	private Map<Direction, TimedSequence<Rectangle2D>> returningHomeAnimations;
@@ -30,7 +31,7 @@ public class Ghost2D<RENDERING extends GameRendering2D> extends Renderable2D<REN
 	private boolean looksFrightened;
 
 	public Ghost2D(Ghost ghost, RENDERING rendering) {
-		super(rendering);
+		this.rendering = rendering;
 		this.ghost = ghost;
 		flashingAnimation = rendering.createGhostFlashingAnimation();
 		frightenedAnimation = rendering.createGhostFrightenedAnimation();
@@ -61,7 +62,7 @@ public class Ghost2D<RENDERING extends GameRendering2D> extends Renderable2D<REN
 
 	@Override
 	public void render(GraphicsContext g) {
-		renderEntity(g, ghost, currentSprite());
+		rendering.renderEntity(g, ghost, currentSprite());
 	}
 
 	private Rectangle2D currentSprite() {

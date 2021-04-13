@@ -12,13 +12,14 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class BigPacMan2D extends Renderable2D<GameRendering2D_PacMan> {
+public class BigPacMan2D implements Renderable2D<GameRendering2D_PacMan> {
 
+	private final GameRendering2D_PacMan rendering;
 	private final Pac pacMan;
 	private TimedSequence<Rectangle2D> munchingAnimation;
 
 	public BigPacMan2D(Pac pacMan, GameRendering2D_PacMan rendering) {
-		super(rendering);
+		this.rendering = rendering;
 		this.pacMan = pacMan;
 		munchingAnimation = rendering.createBigPacManMunchingAnimation();
 	}
@@ -34,7 +35,7 @@ public class BigPacMan2D extends Renderable2D<GameRendering2D_PacMan> {
 		// centered to the ground
 		g.save();
 		g.translate(0, -sprite.getHeight() / 2 + 8);
-		renderEntity(g, pacMan, sprite);
+		rendering.renderEntity(g, pacMan, sprite);
 		g.restore();
 	}
 }
