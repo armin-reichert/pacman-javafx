@@ -53,14 +53,14 @@ public class Player2D<RENDERING extends Rendering2D> implements Renderable2D<REN
 
 	private Rectangle2D currentSprite() {
 		if (player.dead) {
-			return dyingAnimation.hasStarted() ? dyingAnimation.animate() : munchingAnimations.get(player.dir).frame();
+			return dyingAnimation.hasStarted() ? dyingAnimation.animate() : munchingAnimations.get(player.dir()).frame();
 		}
 		if (player.speed == 0) {
-			return munchingAnimations.get(player.dir).frame(0);
+			return munchingAnimations.get(player.dir()).frame(0);
 		}
 		if (player.stuck) {
-			return munchingAnimations.get(player.dir).frame(1);
+			return munchingAnimations.get(player.dir()).frame(1);
 		}
-		return munchingAnimations.get(player.dir).animate();
+		return munchingAnimations.get(player.dir()).animate();
 	}
 }

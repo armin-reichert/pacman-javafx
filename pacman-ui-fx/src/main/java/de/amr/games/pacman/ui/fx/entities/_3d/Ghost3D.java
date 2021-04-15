@@ -51,13 +51,13 @@ public class Ghost3D implements Supplier<Node> {
 			select(bountyShape);
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
 			root.setRotationAxis(Rotate.Z_AXIS);
-			root.setRotate(ghost.dir == Direction.UP || ghost.dir == Direction.DOWN ? 90 : 0);
+			root.setRotate(ghost.dir() == Direction.UP || ghost.dir() == Direction.DOWN ? 90 : 0);
 			select(deadGhost);
 		} else {
 			root.setRotationAxis(Rotate.Y_AXIS);
 			root.setRotate(0);
 			root.setRotationAxis(Rotate.Z_AXIS);
-			Direction dir = ghost.is(GhostState.FRIGHTENED) ? ghost.dir : ghost.wishDir;
+			Direction dir = ghost.is(GhostState.FRIGHTENED) ? ghost.dir() : ghost.wishDir;
 			root.setRotate(dir == Direction.LEFT ? 0 : dir == Direction.RIGHT ? 180 : dir == Direction.UP ? 90 : -90);
 			coloredGhost.setBlue(ghost.is(GhostState.FRIGHTENED));
 			select(coloredGhost);
