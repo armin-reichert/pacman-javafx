@@ -145,7 +145,7 @@ public class PlayScene3D implements GameScene {
 		tgMaze.getChildren().addAll(ambientLight, playerLight);
 
 		ground = new Box(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, 0.1);
-		PhongMaterial groundMaterial = new PhongMaterial(Color.rgb(13, 0, 77));
+		PhongMaterial groundMaterial = new PhongMaterial(Color.rgb(0, 0, 51));
 		ground.setMaterial(groundMaterial);
 		ground.setTranslateX(-4);
 		ground.setTranslateY(-4);
@@ -154,7 +154,7 @@ public class PlayScene3D implements GameScene {
 		coordSystem = new CoordinateSystem(fxScene.getWidth());
 
 		fxScene.setRoot(new Group(coordSystem.getNode(), ground, tgMaze));
-		fxScene.setFill(Color.rgb(20, 20, 60));
+		fxScene.setFill(Color.rgb(0, 0, 0));
 	}
 
 	private Node createPellet(V2i tile, PhongMaterial material) {

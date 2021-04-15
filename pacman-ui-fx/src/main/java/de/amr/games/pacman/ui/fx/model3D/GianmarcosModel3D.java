@@ -85,6 +85,13 @@ public class GianmarcosModel3D {
 		return group;
 	}
 
+	public Group createGhostEyes() {
+		Group eyes = createGhost();
+		eyes.getChildren().remove(0);
+		Model3DHelper.centerNodeOverOrigin(eyes);
+		return eyes;
+	}
+
 	public static void main(String[] args) {
 		new GianmarcosModel3D();
 	}

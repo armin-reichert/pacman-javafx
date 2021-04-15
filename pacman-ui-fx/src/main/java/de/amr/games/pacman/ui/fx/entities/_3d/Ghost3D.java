@@ -20,14 +20,14 @@ public class Ghost3D implements Supplier<Node> {
 	private final Ghost ghost;
 	private final Group root = new Group();
 	private final ColoredGhost3D coloredGhost;
-	private final DeadGhost3D deadGhost;
+	private final GhostEyes3D deadGhost;
 	private final BountyShape3D bountyShape;
 
 	public Ghost3D(Ghost ghost, Rendering2D rendering2D) {
 		this.ghost = ghost;
 		coloredGhost = new ColoredGhost3D(ghost);
 		bountyShape = new BountyShape3D(rendering2D);
-		deadGhost = new DeadGhost3D(ghost);
+		deadGhost = new GhostEyes3D();
 	}
 
 	@Override
@@ -51,7 +51,8 @@ public class Ghost3D implements Supplier<Node> {
 			select(bountyShape);
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
 			root.setRotationAxis(Rotate.Z_AXIS);
-			root.setRotate(ghost.dir() == Direction.UP || ghost.dir() == Direction.DOWN ? 90 : 0);
+			Direction dir = ghost.dir();
+			root.setRotate(dir == Direction.LEFT ? 0 : dir == Direction.RIGHT ? 180 : dir == Direction.UP ? 90 : -90);
 			select(deadGhost);
 		} else {
 			root.setRotationAxis(Rotate.Y_AXIS);
