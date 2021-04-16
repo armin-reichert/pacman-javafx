@@ -251,10 +251,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void update() {
-		score3D.update(game());
-		// Keep score text in plain sight. TODO is this the right way to do this?
-		score3D.setRotationAxis(Rotate.X_AXIS);
-		score3D.setRotate(cams.selectedCamera().getRotate());
+		score3D.update(game(), cams.selectedCamera());
 		for (int i = 0; i < 5; ++i) {
 			livesCounter3D.getChildren().get(i).setVisible(i < game().lives);
 		}
