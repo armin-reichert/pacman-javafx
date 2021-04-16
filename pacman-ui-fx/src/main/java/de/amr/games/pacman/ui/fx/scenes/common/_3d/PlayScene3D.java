@@ -34,6 +34,7 @@ import de.amr.games.pacman.ui.fx.entities._3d.LevelCounter3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Maze3D;
 import de.amr.games.pacman.ui.fx.entities._3d.ScoreNotReally3D;
 import de.amr.games.pacman.ui.fx.model3D.GianmarcosModel3D;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Impl;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
@@ -76,7 +77,7 @@ public class PlayScene3D implements GameScene {
 
 	private CoordinateSystem coordSystem;
 	private Box ground;
-	private Group tgMaze;
+	private Group tgBoard;
 	private Group player;
 	private Map<Ghost, Ghost3D> ghosts3D;
 	private Maze3D maze;
@@ -97,6 +98,8 @@ public class PlayScene3D implements GameScene {
 
 	private void buildSceneGraph(GameVariant gameVariant, GameLevel gameLevel) {
 
+		final Rendering2D r2D = Rendering2D_Impl.get(gameVariant);
+
 		maze = new Maze3D(gameLevel.world, Rendering2D_Assets.getMazeWallColor(gameVariant, gameLevel.mazeNumber));
 
 		PhongMaterial foodMaterial = new PhongMaterial(
@@ -113,28 +116,27 @@ public class PlayScene3D implements GameScene {
 
 		player = createPlayer3D();
 
-		ghosts3D = game().ghosts().collect(
-				Collectors.toMap(Function.identity(), ghost -> new Ghost3D(ghost, Rendering2D_Impl.get(gameVariant))));
+		ghosts3D = game().ghosts().collect(Collectors.toMap(Function.identity(), ghost -> new Ghost3D(ghost, r2D)));
 
-		bonus3D = new Bonus3D(gameVariant, Rendering2D_Impl.get(gameVariant));
+		bonus3D = new Bonus3D(gameVariant, r2D);
 
 		score3D = new ScoreNotReally3D();
 
 		livesCounter3D = createLivesCounter3D(new V2i(2, 1));
 
-		levelCounter3D = new LevelCounter3D(Rendering2D_Impl.get(gameVariant));
+		levelCounter3D = new LevelCounter3D(r2D);
 		levelCounter3D.tileRight = new V2i(25, 1);
 		levelCounter3D.update(game());
 
-		tgMaze = new Group();
-		tgMaze.getTransforms().add(new Translate(-14 * 8, -18 * 8));
-		tgMaze.getChildren().addAll(score3D, livesCounter3D, levelCounter3D);
-		tgMaze.getChildren().addAll(maze.getBricks());
-		tgMaze.getChildren().addAll(energizers);
-		tgMaze.getChildren().addAll(pellets);
-		tgMaze.getChildren().addAll(player);
-		tgMaze.getChildren().addAll(ghosts3D.values());
-		tgMaze.getChildren().add(bonus3D.get());
+		tgBoard = new Group();
+		tgBoard.getTransforms().add(new Translate(-UNSCALED_SCENE_WIDTH / 2, -UNSCALED_SCENE_HEIGHT / 2));
+		tgBoard.getChildren().addAll(score3D, livesCounter3D, levelCounter3D);
+		tgBoard.getChildren().addAll(maze.getBricks());
+		tgBoard.getChildren().addAll(energizers);
+		tgBoard.getChildren().addAll(pellets);
+		tgBoard.getChildren().addAll(player);
+		tgBoard.getChildren().addAll(ghosts3D.values());
+		tgBoard.getChildren().add(bonus3D.get());
 
 		AmbientLight ambientLight = new AmbientLight();
 
@@ -144,7 +146,7 @@ public class PlayScene3D implements GameScene {
 		playerLight.lightOnProperty().bind(player.visibleProperty());
 		playerLight.setTranslateZ(-4);
 
-		tgMaze.getChildren().addAll(ambientLight, playerLight);
+		tgBoard.getChildren().addAll(ambientLight, playerLight);
 
 		ground = new Box(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, 0.1);
 		PhongMaterial groundMaterial = new PhongMaterial(Color.rgb(0, 0, 51));
@@ -155,7 +157,7 @@ public class PlayScene3D implements GameScene {
 
 		coordSystem = new CoordinateSystem(fxScene.getWidth());
 
-		fxScene.setRoot(new Group(coordSystem.getNode(), ground, tgMaze));
+		fxScene.setRoot(new Group(coordSystem.getNode(), ground, tgBoard));
 		fxScene.setFill(Color.rgb(0, 0, 0));
 	}
 
