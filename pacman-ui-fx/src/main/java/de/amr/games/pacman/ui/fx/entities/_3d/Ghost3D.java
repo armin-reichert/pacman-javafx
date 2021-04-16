@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
+import de.amr.games.pacman.ui.fx.model3D.GianmarcosModel3D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -20,14 +21,14 @@ public class Ghost3D implements Supplier<Node> {
 	private final Ghost ghost;
 	private final Group root = new Group();
 	private final ColoredGhost3D coloredGhost;
-	private final GhostEyes3D deadGhost;
+	private final Group deadGhost;
 	private final BountyShape3D bountyShape;
 
 	public Ghost3D(Ghost ghost, Rendering2D rendering2D) {
 		this.ghost = ghost;
 		coloredGhost = new ColoredGhost3D(ghost);
 		bountyShape = new BountyShape3D(rendering2D);
-		deadGhost = new GhostEyes3D();
+		deadGhost = GianmarcosModel3D.IT.createGhostEyes();
 	}
 
 	@Override
@@ -35,9 +36,9 @@ public class Ghost3D implements Supplier<Node> {
 		return root;
 	}
 
-	private void select(Supplier<Node> node) {
+	private void select(Node node) {
 		root.getChildren().clear();
-		root.getChildren().add(node.get());
+		root.getChildren().add(node);
 	}
 
 	public void update() {
