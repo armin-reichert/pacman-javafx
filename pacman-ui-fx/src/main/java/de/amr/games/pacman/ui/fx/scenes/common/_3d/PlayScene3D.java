@@ -77,7 +77,6 @@ public class PlayScene3D implements GameScene {
 
 	private CoordinateSystem coordSystem;
 	private Box ground;
-	private Group tgBoard;
 	private Group player;
 	private Map<Ghost, Ghost3D> ghosts3D;
 	private Maze3D maze;
@@ -128,36 +127,35 @@ public class PlayScene3D implements GameScene {
 		levelCounter3D.tileRight = new V2i(25, 1);
 		levelCounter3D.update(game());
 
-		tgBoard = new Group();
-		tgBoard.getTransforms().add(new Translate(-UNSCALED_SCENE_WIDTH / 2, -UNSCALED_SCENE_HEIGHT / 2));
-		tgBoard.getChildren().addAll(score3D, livesCounter3D, levelCounter3D);
+		ground = new Box(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, 0.1);
+		PhongMaterial groundMaterial = new PhongMaterial(Color.rgb(0, 0, 51));
+		ground.setMaterial(groundMaterial);
+		ground.setTranslateX(UNSCALED_SCENE_WIDTH/2);
+		ground.setTranslateY(UNSCALED_SCENE_HEIGHT/2);
+		ground.setTranslateZ(3);
+		
+		Group tgBoard = new Group();
+		tgBoard.getChildren().addAll(ground, score3D, livesCounter3D, levelCounter3D);
 		tgBoard.getChildren().addAll(maze.getBricks());
 		tgBoard.getChildren().addAll(energizers);
 		tgBoard.getChildren().addAll(pellets);
 		tgBoard.getChildren().addAll(player);
 		tgBoard.getChildren().addAll(ghosts3D.values());
 		tgBoard.getChildren().add(bonus3D.get());
+		tgBoard.getTransforms().add(new Translate(-UNSCALED_SCENE_WIDTH / 2, -UNSCALED_SCENE_HEIGHT / 2));
 
+		// Lights
 		AmbientLight ambientLight = new AmbientLight();
-
 		PointLight playerLight = new PointLight();
 		playerLight.translateXProperty().bind(player.translateXProperty());
 		playerLight.translateYProperty().bind(player.translateYProperty());
 		playerLight.lightOnProperty().bind(player.visibleProperty());
 		playerLight.setTranslateZ(-4);
-
 		tgBoard.getChildren().addAll(ambientLight, playerLight);
-
-		ground = new Box(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, 0.1);
-		PhongMaterial groundMaterial = new PhongMaterial(Color.rgb(0, 0, 51));
-		ground.setMaterial(groundMaterial);
-		ground.setTranslateX(-4);
-		ground.setTranslateY(-4);
-		ground.setTranslateZ(4);
 
 		coordSystem = new CoordinateSystem(fxScene.getWidth());
 
-		fxScene.setRoot(new Group(coordSystem.getNode(), ground, tgBoard));
+		fxScene.setRoot(new Group(coordSystem.getNode(), tgBoard));
 		fxScene.setFill(Color.rgb(0, 0, 0));
 	}
 
