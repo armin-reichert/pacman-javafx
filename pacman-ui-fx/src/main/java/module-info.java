@@ -6,4 +6,5 @@ module de.amr.games.pacman.ui.fx {
 	requires javafx.media;
 	requires jimObjModelImporterJFX;
 	requires de.amr.games.pacman;
+	requires javafx.graphics;
 }

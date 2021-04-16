@@ -7,8 +7,12 @@ import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.fx.model3D.GianmarcosModel3D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 
 /**
@@ -19,20 +23,30 @@ import javafx.scene.transform.Rotate;
 public class Ghost3D extends Group implements Supplier<Node> {
 
 	private final Ghost ghost;
-	private final ColoredGhost3D coloredGhost;
+	private final Group coloredGhost;
+	private PhongMaterial normalSkin;
+	private PhongMaterial blueSkin;
 	private final Group deadGhost;
 	private final BountyShape3D bountyShape;
 
 	public Ghost3D(Ghost ghost, Rendering2D rendering2D) {
 		this.ghost = ghost;
-		coloredGhost = new ColoredGhost3D(ghost);
+		normalSkin = new PhongMaterial(Rendering2D_Assets.getGhostColor(ghost.id));
+		blueSkin = new PhongMaterial(Color.CORNFLOWERBLUE);
+		coloredGhost = GianmarcosModel3D.IT.createGhost();
 		bountyShape = new BountyShape3D(rendering2D);
 		deadGhost = GianmarcosModel3D.IT.createGhostEyes();
+		setBlueSkin(false);
 	}
 
 	@Override
 	public Node get() {
 		return this;
+	}
+
+	private void setBlueSkin(boolean blue) {
+		MeshView meshView = (MeshView) coloredGhost.getChildren().get(0);
+		meshView.setMaterial(blue ? blueSkin : normalSkin);
 	}
 
 	private void setSingleChild(Node node) {
@@ -60,7 +74,7 @@ public class Ghost3D extends Group implements Supplier<Node> {
 			setRotationAxis(Rotate.Z_AXIS);
 			Direction dir = ghost.is(GhostState.FRIGHTENED) ? ghost.dir : ghost.wishDir;
 			setRotate(dir == Direction.LEFT ? 0 : dir == Direction.RIGHT ? 180 : dir == Direction.UP ? 90 : -90);
-			coloredGhost.setBlue(ghost.is(GhostState.FRIGHTENED));
+			setBlueSkin(ghost.is(GhostState.FRIGHTENED));
 			setSingleChild(coloredGhost);
 		}
 	}
