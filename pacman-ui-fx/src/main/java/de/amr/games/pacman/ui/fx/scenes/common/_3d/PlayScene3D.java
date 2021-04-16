@@ -130,7 +130,7 @@ public class PlayScene3D implements GameScene {
 
 		tgMaze = new Group();
 		tgMaze.getTransforms().add(new Translate(-14 * 8, -18 * 8));
-		tgMaze.getChildren().addAll(score3D, livesCounter3D.get(), levelCounter3D);
+		tgMaze.getChildren().addAll(score3D, livesCounter3D, levelCounter3D);
 		tgMaze.getChildren().addAll(maze.getBricks());
 		tgMaze.getChildren().addAll(energizers);
 		tgMaze.getChildren().addAll(pellets);
@@ -225,10 +225,10 @@ public class PlayScene3D implements GameScene {
 		buildSceneGraph(gameController.gameVariant(), game().currentLevel);
 		if (gameController.isAttractMode()) {
 			score3D.setHiscoreOnly(true);
-			livesCounter3D.get().setVisible(false);
+			livesCounter3D.setVisible(false);
 		} else {
 			score3D.setHiscoreOnly(false);
-			livesCounter3D.get().setVisible(true);
+			livesCounter3D.setVisible(true);
 		}
 	}
 
