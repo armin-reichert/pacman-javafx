@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.common.Pac;
+import de.amr.games.pacman.ui.fx.model3D.GianmarcosModel3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 
@@ -19,11 +20,11 @@ public class LivesCounter3D implements Supplier<Node> {
 		root = new Group();
 		for (int i = 0; i < numPositions; ++i) {
 			V2i tile = new V2i(x + 2 * i, y);
-			Player3D liveIndicator = new Player3D(pac);
-			liveIndicator.get().setTranslateX(tile.x * TS);
-			liveIndicator.get().setTranslateY(tile.y * TS);
-			liveIndicator.get().setTranslateZ(0);
-			root.getChildren().add(liveIndicator.get());
+			Group liveIndicator = GianmarcosModel3D.IT.createPacMan();
+			liveIndicator.setTranslateX(tile.x * TS);
+			liveIndicator.setTranslateY(tile.y * TS);
+			liveIndicator.setTranslateZ(0);
+			root.getChildren().add(liveIndicator);
 		}
 	}
 

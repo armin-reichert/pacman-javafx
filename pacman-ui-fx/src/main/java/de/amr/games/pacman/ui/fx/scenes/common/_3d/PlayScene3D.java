@@ -5,14 +5,12 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static java.util.function.Predicate.not;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.Random;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import de.amr.games.pacman.controller.PacManGameController;
@@ -23,18 +21,20 @@ import de.amr.games.pacman.controller.event.BonusExpiredEvent;
 import de.amr.games.pacman.controller.event.ExtraLifeEvent;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangedEvent;
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
+import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.entities._3d.Bonus3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Ghost3D;
 import de.amr.games.pacman.ui.fx.entities._3d.LevelCounter3D;
 import de.amr.games.pacman.ui.fx.entities._3d.LivesCounter3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Maze3D;
-import de.amr.games.pacman.ui.fx.entities._3d.Player3D;
 import de.amr.games.pacman.ui.fx.entities._3d.ScoreNotReally3D;
+import de.amr.games.pacman.ui.fx.model3D.GianmarcosModel3D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Impl;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
@@ -79,7 +79,7 @@ public class PlayScene3D implements GameScene {
 	private CoordinateSystem coordSystem;
 	private Box ground;
 	private Group tgMaze;
-	private Player3D player;
+	private Group player;
 	private Map<Ghost, Ghost3D> ghosts3D;
 	private Maze3D maze;
 	private List<Node> energizers;
@@ -113,7 +113,7 @@ public class PlayScene3D implements GameScene {
 				.filter(not(gameLevel.world::isEnergizerTile))//
 				.map(tile -> createPellet(tile, foodMaterial)).collect(Collectors.toList());
 
-		player = new Player3D(game().player);
+		player = createPlayer3D();
 
 		ghosts3D = game().ghosts().collect(
 				Collectors.toMap(Function.identity(), ghost -> new Ghost3D(ghost, Rendering2D_Impl.get(gameVariant))));
@@ -134,16 +134,16 @@ public class PlayScene3D implements GameScene {
 		tgMaze.getChildren().addAll(maze.getBricks());
 		tgMaze.getChildren().addAll(energizers);
 		tgMaze.getChildren().addAll(pellets);
-		tgMaze.getChildren().addAll(player.get());
-		tgMaze.getChildren().addAll(collect(ghosts3D.values()));
+		tgMaze.getChildren().addAll(player);
+		tgMaze.getChildren().addAll(ghosts3D.values());
 		tgMaze.getChildren().add(bonus3D.get());
 
 		AmbientLight ambientLight = new AmbientLight();
 
 		PointLight playerLight = new PointLight();
-		playerLight.translateXProperty().bind(player.get().translateXProperty());
-		playerLight.translateYProperty().bind(player.get().translateYProperty());
-		playerLight.lightOnProperty().bind(player.$visible);
+		playerLight.translateXProperty().bind(player.translateXProperty());
+		playerLight.translateYProperty().bind(player.translateYProperty());
+		playerLight.lightOnProperty().bind(player.visibleProperty());
 		playerLight.setTranslateZ(-4);
 
 		tgMaze.getChildren().addAll(ambientLight, playerLight);
@@ -178,6 +178,11 @@ public class PlayScene3D implements GameScene {
 		return s;
 	}
 
+	private Group createPlayer3D() {
+		Group player = GianmarcosModel3D.IT.createPacMan();
+		return player;
+	}
+
 	@Override
 	public PacManGameController getGameController() {
 		return gameController;
@@ -197,10 +202,6 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public String toString() {
 		return getClass().getSimpleName() + "@" + hashCode();
-	}
-
-	private Collection<Node> collect(Collection<? extends Supplier<Node>> items) {
-		return items.stream().map(Supplier::get).collect(Collectors.toList());
 	}
 
 	@Override
@@ -251,11 +252,21 @@ public class PlayScene3D implements GameScene {
 			V2i tile = (V2i) pellet.getUserData();
 			pellet.setVisible(!game().currentLevel.isFoodRemoved(tile));
 		});
-		player.update(game());
+		updatePlayer();
 		ghosts3D.values().forEach(Ghost3D::update);
 		bonus3D.update(game().bonus);
-		cams.updateSelectedCamera(player.get());
+		cams.updateSelectedCamera(player);
 		soundHandler.update();
+	}
+
+	private void updatePlayer() {
+		Pac pac = game().player;
+		player.setVisible(pac.visible);
+		player.setTranslateX(pac.position.x);
+		player.setTranslateY(pac.position.y);
+		player.setRotationAxis(Rotate.Z_AXIS);
+		player.setRotate(
+				pac.dir == Direction.LEFT ? 0 : pac.dir == Direction.UP ? 90 : pac.dir == Direction.RIGHT ? 180 : 270);
 	}
 
 	@Override
@@ -353,21 +364,21 @@ public class PlayScene3D implements GameScene {
 			soundHandler.sounds.play(PacManGameSound.PACMAN_DEATH);
 		});
 
-		ScaleTransition expand = new ScaleTransition(Duration.seconds(1), player.get());
+		ScaleTransition expand = new ScaleTransition(Duration.seconds(1), player);
 		expand.setToX(1.5);
 		expand.setToY(1.5);
 		expand.setToZ(1.5);
 
-		ScaleTransition shrink = new ScaleTransition(Duration.seconds(1.5), player.get());
+		ScaleTransition shrink = new ScaleTransition(Duration.seconds(1.5), player);
 		shrink.setToX(0.1);
 		shrink.setToY(0.1);
 		shrink.setToZ(0.1);
 
 		SequentialTransition animation = new SequentialTransition(phase1, expand, shrink);
 		animation.setOnFinished(e -> {
-			player.get().setScaleX(1);
-			player.get().setScaleY(1);
-			player.get().setScaleZ(1);
+			player.setScaleX(1);
+			player.setScaleY(1);
+			player.setScaleZ(1);
 			game().player.visible = false;
 			gameController.stateTimer().forceExpiration();
 		});
