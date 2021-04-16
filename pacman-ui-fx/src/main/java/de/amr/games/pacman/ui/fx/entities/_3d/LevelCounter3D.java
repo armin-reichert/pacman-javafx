@@ -3,7 +3,6 @@ package de.amr.games.pacman.ui.fx.entities._3d;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
 import java.util.List;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import de.amr.games.pacman.lib.V2i;
@@ -12,18 +11,16 @@ import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
 import javafx.animation.RotateTransition;
 import javafx.animation.Transition;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-public class LevelCounter3D implements Supplier<Node> {
+public class LevelCounter3D extends Group {
 
 	public V2i tileRight = V2i.NULL;
 	private final List<Image> symbolSprites;
-	private final Group root = new Group();
 
 	public LevelCounter3D(Rendering2D rendering2D) {
 		symbolSprites = rendering2D.getSymbolSprites().stream().map(rendering2D::subImage).collect(Collectors.toList());
@@ -34,11 +31,11 @@ public class LevelCounter3D implements Supplier<Node> {
 		// all *Number variables are starting with 1!
 		final int maxItems = 7;
 		int firstLevelNumber = Math.max(1, game.currentLevelNumber - maxItems + 1);
-		root.getChildren().clear();
+		getChildren().clear();
 		for (int levelNumber = firstLevelNumber; levelNumber <= game.currentLevelNumber; ++levelNumber) {
 			Image sprite = symbolSprites.get(game.levelSymbols.get(levelNumber - 1));
 			Box indicator = createLevelIndicator(levelNumber, sprite, x, y);
-			root.getChildren().add(indicator);
+			getChildren().add(indicator);
 			x -= t(2);
 		}
 	}
@@ -60,10 +57,5 @@ public class LevelCounter3D implements Supplier<Node> {
 		spinning.setRate(levelNumber % 2 == 0 ? 1 : -1);
 		spinning.play();
 		return box;
-	}
-
-	@Override
-	public Node get() {
-		return root;
 	}
 }

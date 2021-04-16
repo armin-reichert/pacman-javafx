@@ -130,7 +130,7 @@ public class PlayScene3D implements GameScene {
 
 		tgMaze = new Group();
 		tgMaze.getTransforms().add(new Translate(-14 * 8, -18 * 8));
-		tgMaze.getChildren().addAll(score3D, livesCounter3D.get(), levelCounter3D.get());
+		tgMaze.getChildren().addAll(score3D, livesCounter3D.get(), levelCounter3D);
 		tgMaze.getChildren().addAll(maze.getBricks());
 		tgMaze.getChildren().addAll(energizers);
 		tgMaze.getChildren().addAll(pellets);
