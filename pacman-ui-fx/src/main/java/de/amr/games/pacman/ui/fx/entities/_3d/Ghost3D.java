@@ -16,10 +16,9 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class Ghost3D implements Supplier<Node> {
+public class Ghost3D extends Group implements Supplier<Node> {
 
 	private final Ghost ghost;
-	private final Group root = new Group();
 	private final ColoredGhost3D coloredGhost;
 	private final Group deadGhost;
 	private final BountyShape3D bountyShape;
@@ -33,36 +32,36 @@ public class Ghost3D implements Supplier<Node> {
 
 	@Override
 	public Node get() {
-		return root;
+		return this;
 	}
 
-	private void select(Node node) {
-		root.getChildren().clear();
-		root.getChildren().add(node);
+	private void setSingleChild(Node node) {
+		getChildren().clear();
+		getChildren().add(node);
 	}
 
 	public void update() {
-		root.setVisible(ghost.visible);
-		root.setTranslateX(ghost.position.x);
-		root.setTranslateY(ghost.position.y);
+		setVisible(ghost.visible);
+		setTranslateX(ghost.position.x);
+		setTranslateY(ghost.position.y);
 		if (ghost.bounty > 0) {
-			root.setRotationAxis(Rotate.X_AXIS);
-			root.setRotate(0);
+			setRotationAxis(Rotate.X_AXIS);
+			setRotate(0);
 			bountyShape.setBounty(ghost.bounty);
-			select(bountyShape);
+			setSingleChild(bountyShape);
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
-			root.setRotationAxis(Rotate.Z_AXIS);
+			setRotationAxis(Rotate.Z_AXIS);
 			Direction dir = ghost.dir;
-			root.setRotate(dir == Direction.LEFT ? 0 : dir == Direction.RIGHT ? 180 : dir == Direction.UP ? 90 : -90);
-			select(deadGhost);
+			setRotate(dir == Direction.LEFT ? 0 : dir == Direction.RIGHT ? 180 : dir == Direction.UP ? 90 : -90);
+			setSingleChild(deadGhost);
 		} else {
-			root.setRotationAxis(Rotate.Y_AXIS);
-			root.setRotate(0);
-			root.setRotationAxis(Rotate.Z_AXIS);
+			setRotationAxis(Rotate.Y_AXIS);
+			setRotate(0);
+			setRotationAxis(Rotate.Z_AXIS);
 			Direction dir = ghost.is(GhostState.FRIGHTENED) ? ghost.dir : ghost.wishDir;
-			root.setRotate(dir == Direction.LEFT ? 0 : dir == Direction.RIGHT ? 180 : dir == Direction.UP ? 90 : -90);
+			setRotate(dir == Direction.LEFT ? 0 : dir == Direction.RIGHT ? 180 : dir == Direction.UP ? 90 : -90);
 			coloredGhost.setBlue(ghost.is(GhostState.FRIGHTENED));
-			select(coloredGhost);
+			setSingleChild(coloredGhost);
 		}
 	}
 }
