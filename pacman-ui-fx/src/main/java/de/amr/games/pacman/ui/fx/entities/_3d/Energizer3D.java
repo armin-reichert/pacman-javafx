@@ -18,20 +18,18 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class Energizer3D implements Supplier<Node> {
+public class Energizer3D extends Sphere implements Supplier<Node> {
 
-	private final int radius = 3;
 	private final V2i tile;
-	private final Sphere sphere;
 	private final ScaleTransition pumping;
 
 	public Energizer3D(V2i tile, PhongMaterial material) {
+		super(3);
 		this.tile = tile;
-		sphere = new Sphere(radius);
-		sphere.setMaterial(material);
-		sphere.setTranslateX(tile.x * TS);
-		sphere.setTranslateY(tile.y * TS);
-		pumping = new ScaleTransition(Duration.seconds(0.25), sphere);
+		setMaterial(material);
+		setTranslateX(tile.x * TS);
+		setTranslateY(tile.y * TS);
+		pumping = new ScaleTransition(Duration.seconds(0.25), this);
 		pumping.setAutoReverse(true);
 		pumping.setCycleCount(Transition.INDEFINITE);
 		pumping.setFromX(0);
@@ -42,13 +40,13 @@ public class Energizer3D implements Supplier<Node> {
 		pumping.setToZ(1.1);
 	}
 
-	public void update(AbstractGameModel game) {
-		sphere.setVisible(!game.currentLevel.isFoodRemoved(tile));
-	}
-
 	@Override
 	public Node get() {
-		return sphere;
+		return this;
+	}
+
+	public void update(AbstractGameModel game) {
+		setVisible(!game.currentLevel.isFoodRemoved(tile));
 	}
 
 	public V2i getTile() {
@@ -61,8 +59,8 @@ public class Energizer3D implements Supplier<Node> {
 
 	public void stopPumping() {
 		pumping.stop();
-		sphere.setScaleX(1);
-		sphere.setScaleY(1);
-		sphere.setScaleZ(1);
+		setScaleX(1);
+		setScaleY(1);
+		setScaleZ(1);
 	}
 }
