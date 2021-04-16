@@ -55,12 +55,10 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 /**
- * 3D scene displaying the maze and the game play for both, Pac-Man and Ms.
- * Pac-Man games.
+ * 3D scene displaying the maze and the game play for both, Pac-Man and Ms. Pac-Man games.
  * 
  * @author Armin Reichert
  */
@@ -98,11 +96,11 @@ public class PlayScene3D implements GameScene {
 	private void buildSceneGraph(GameVariant gameVariant, GameLevel gameLevel) {
 
 		final Rendering2D r2D = Rendering2D_Impl.get(gameVariant);
+		Group tgArena = new Group();
 
 		maze = new Maze3D(gameLevel.world, Rendering2D_Assets.getMazeWallColor(gameVariant, gameLevel.mazeNumber));
 
-		PhongMaterial foodMaterial = new PhongMaterial(
-				Rendering2D_Assets.getFoodColor(gameVariant, gameLevel.mazeNumber));
+		PhongMaterial foodMaterial = new PhongMaterial(Rendering2D_Assets.getFoodColor(gameVariant, gameLevel.mazeNumber));
 
 		energizers = gameLevel.world.energizerTiles()//
 				.map(tile -> createEnergizer(tile, foodMaterial))//
@@ -130,19 +128,16 @@ public class PlayScene3D implements GameScene {
 		ground = new Box(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, 0.1);
 		PhongMaterial groundMaterial = new PhongMaterial(Color.rgb(0, 0, 51));
 		ground.setMaterial(groundMaterial);
-		ground.setTranslateX(UNSCALED_SCENE_WIDTH/2);
-		ground.setTranslateY(UNSCALED_SCENE_HEIGHT/2);
 		ground.setTranslateZ(3);
-		
-		Group tgBoard = new Group();
-		tgBoard.getChildren().addAll(ground, score3D, livesCounter3D, levelCounter3D);
-		tgBoard.getChildren().addAll(maze.getBricks());
-		tgBoard.getChildren().addAll(energizers);
-		tgBoard.getChildren().addAll(pellets);
-		tgBoard.getChildren().addAll(player);
-		tgBoard.getChildren().addAll(ghosts3D.values());
-		tgBoard.getChildren().add(bonus3D.get());
-		tgBoard.getTransforms().add(new Translate(-UNSCALED_SCENE_WIDTH / 2, -UNSCALED_SCENE_HEIGHT / 2));
+
+		tgArena.getChildren().addAll(ground, score3D, livesCounter3D, levelCounter3D, bonus3D);
+		tgArena.getChildren().addAll(maze.getBricks());
+		tgArena.getChildren().addAll(energizers);
+		tgArena.getChildren().addAll(pellets);
+		tgArena.getChildren().addAll(player);
+		tgArena.getChildren().addAll(ghosts3D.values());
+		tgArena.setTranslateX(-UNSCALED_SCENE_WIDTH / 2);
+		tgArena.setTranslateY(-UNSCALED_SCENE_HEIGHT / 2);
 
 		// Lights
 		AmbientLight ambientLight = new AmbientLight();
@@ -151,11 +146,11 @@ public class PlayScene3D implements GameScene {
 		playerLight.translateYProperty().bind(player.translateYProperty());
 		playerLight.lightOnProperty().bind(player.visibleProperty());
 		playerLight.setTranslateZ(-4);
-		tgBoard.getChildren().addAll(ambientLight, playerLight);
+		tgArena.getChildren().addAll(ambientLight, playerLight);
 
 		coordSystem = new CoordinateSystem(fxScene.getWidth());
 
-		fxScene.setRoot(new Group(coordSystem.getNode(), tgBoard));
+		fxScene.setRoot(new Group(coordSystem.getNode(), tgArena));
 		fxScene.setFill(Color.rgb(0, 0, 0));
 	}
 
