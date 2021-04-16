@@ -24,7 +24,7 @@ import de.amr.games.pacman.ui.fx.entities._2d.LivesCounter2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Maze2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Player2D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
-import de.amr.games.pacman.ui.fx.sound.PlaySceneSoundHandler;
+import de.amr.games.pacman.ui.fx.sound.PlaySceneSoundController;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
@@ -46,12 +46,12 @@ public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScen
 	private List<Ghost2D<RENDERING>> ghosts2D;
 	private Bonus2D<RENDERING> bonus2D;
 
-	private PlaySceneSoundHandler soundHandler;
+	private PlaySceneSoundController soundHandler;
 	private SequentialTransition levelCompleteAnimation;
 
 	public PlayScene2D(RENDERING rendering, SoundManager sounds) {
 		super(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, rendering, sounds);
-		soundHandler = new PlaySceneSoundHandler(sounds);
+		soundHandler = new PlaySceneSoundController(sounds);
 	}
 
 	@Override
