@@ -44,7 +44,6 @@ public class ScoreNotReally3D extends Group {
 		grid.setHgap(4 * TS);
 		grid.setTranslateY(-2 * TS);
 		grid.setTranslateZ(-2 * TS);
-		grid.getChildren().clear();
 		grid.add(txtScoreTitle, 0, 0);
 		grid.add(txtScore, 0, 1);
 		grid.add(txtHiscoreTitle, 1, 0);

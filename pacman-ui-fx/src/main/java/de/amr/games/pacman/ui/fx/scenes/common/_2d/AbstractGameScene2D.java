@@ -80,8 +80,7 @@ public abstract class AbstractGameScene2D<RENDERING extends Rendering2D> impleme
 		canvas.setWidth(width);
 		canvas.setHeight(height);
 		double scaling = height / unscaledHeight;
-		canvas.getTransforms().clear();
-		canvas.getTransforms().add(new Scale(scaling, scaling));
+		canvas.getTransforms().setAll(new Scale(scaling, scaling));
 	}
 
 	@Override

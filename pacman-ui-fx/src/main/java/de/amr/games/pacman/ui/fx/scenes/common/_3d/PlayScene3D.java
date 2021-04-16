@@ -44,6 +44,7 @@ import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
+import javafx.animation.TranslateTransition;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -74,7 +75,7 @@ public class PlayScene3D implements GameScene {
 	private PacManGameController gameController;
 
 	private CoordinateSystem coordSystem;
-	private Box ground;
+	private Box floor;
 	private Group player;
 	private Map<Ghost, Ghost3D> ghosts3D;
 	private Maze3D maze;
@@ -91,6 +92,81 @@ public class PlayScene3D implements GameScene {
 		fxScene = new SubScene(new Group(), 800, 600, true, SceneAntialiasing.BALANCED);
 		cams = new PlaySceneCameras(fxScene);
 		cams.select(CameraType.DYNAMIC);
+	}
+
+	@Override
+	public PacManGameController getGameController() {
+		return gameController;
+	}
+
+	@Override
+	public void setGameController(PacManGameController gameController) {
+		this.gameController = gameController;
+		soundController.setGameController(gameController);
+	}
+
+	@Override
+	public OptionalDouble aspectRatio() {
+		return OptionalDouble.empty();
+	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + "@" + hashCode();
+	}
+
+	@Override
+	public SubScene get() {
+		return fxScene;
+	}
+
+	@Override
+	public void stretchTo(double width, double height) {
+		// data binding does the job
+	}
+
+	@Override
+	public Optional<PlaySceneCameras> cams() {
+		return Optional.of(cams);
+	}
+
+	@Override
+	public void start() {
+		log("Game scene %s: start", this);
+		buildSceneGraph(gameController.gameVariant(), game().currentLevel);
+		if (gameController.isAttractMode()) {
+			score3D.setHiscoreOnly(true);
+			livesCounter3D.setVisible(false);
+		} else {
+			score3D.setHiscoreOnly(false);
+			livesCounter3D.setVisible(true);
+		}
+	}
+
+	@Override
+	public void end() {
+		log("Game scene %s: end", this);
+	}
+
+	@Override
+	public void update() {
+		score3D.update(game(), cams.selectedCamera());
+		for (int i = 0; i < 5; ++i) {
+			livesCounter3D.getChildren().get(i).setVisible(i < game().lives);
+		}
+		energizers.forEach(energizer -> {
+			V2i tile = (V2i) energizer.getUserData();
+			energizer.setVisible(!game().currentLevel.isFoodRemoved(tile));
+		});
+		pellets.forEach(pellet -> {
+			V2i tile = (V2i) pellet.getUserData();
+			pellet.setVisible(!game().currentLevel.isFoodRemoved(tile));
+		});
+		updatePlayer();
+		ghosts3D.values().forEach(Ghost3D::update);
+		bonus3D.update(game().bonus);
+		cams.updateSelectedCamera(player);
+		soundController.update();
 	}
 
 	private void buildSceneGraph(GameVariant gameVariant, GameLevel gameLevel) {
@@ -125,12 +201,14 @@ public class PlayScene3D implements GameScene {
 		levelCounter3D.tileRight = new V2i(25, 1);
 		levelCounter3D.update(game());
 
-		ground = new Box(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, 0.1);
-		PhongMaterial groundMaterial = new PhongMaterial(Color.rgb(0, 0, 51));
-		ground.setMaterial(groundMaterial);
-		ground.setTranslateZ(3);
+		floor = new Box(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, 0.1);
+		PhongMaterial floorMaterial = new PhongMaterial(Color.rgb(0, 0, 80));
+		floor.setMaterial(floorMaterial);
+		floor.setTranslateX(UNSCALED_SCENE_WIDTH / 2 - 4);
+		floor.setTranslateY(UNSCALED_SCENE_HEIGHT / 2 - 4);
+		floor.setTranslateZ(3);
 
-		tgArena.getChildren().addAll(ground, score3D, livesCounter3D, levelCounter3D, bonus3D);
+		tgArena.getChildren().addAll(floor, score3D, livesCounter3D, levelCounter3D, bonus3D);
 		tgArena.getChildren().addAll(maze.getBricks());
 		tgArena.getChildren().addAll(energizers);
 		tgArena.getChildren().addAll(pellets);
@@ -187,81 +265,6 @@ public class PlayScene3D implements GameScene {
 			livesCounter.getChildren().add(liveIndicator);
 		}
 		return livesCounter;
-	}
-
-	@Override
-	public PacManGameController getGameController() {
-		return gameController;
-	}
-
-	@Override
-	public void setGameController(PacManGameController gameController) {
-		this.gameController = gameController;
-		soundController.setGameController(gameController);
-	}
-
-	@Override
-	public OptionalDouble aspectRatio() {
-		return OptionalDouble.empty();
-	}
-
-	@Override
-	public String toString() {
-		return getClass().getSimpleName() + "@" + hashCode();
-	}
-
-	@Override
-	public void stretchTo(double width, double height) {
-		// data binding does the job
-	}
-
-	@Override
-	public SubScene get() {
-		return fxScene;
-	}
-
-	@Override
-	public Optional<PlaySceneCameras> cams() {
-		return Optional.of(cams);
-	}
-
-	@Override
-	public void start() {
-		log("Game scene %s: start", this);
-		buildSceneGraph(gameController.gameVariant(), game().currentLevel);
-		if (gameController.isAttractMode()) {
-			score3D.setHiscoreOnly(true);
-			livesCounter3D.setVisible(false);
-		} else {
-			score3D.setHiscoreOnly(false);
-			livesCounter3D.setVisible(true);
-		}
-	}
-
-	@Override
-	public void end() {
-		log("Game scene %s: end", this);
-	}
-
-	@Override
-	public void update() {
-		score3D.update(game(), cams.selectedCamera());
-		for (int i = 0; i < 5; ++i) {
-			livesCounter3D.getChildren().get(i).setVisible(i < game().lives);
-		}
-		energizers.forEach(energizer -> {
-			V2i tile = (V2i) energizer.getUserData();
-			energizer.setVisible(!game().currentLevel.isFoodRemoved(tile));
-		});
-		pellets.forEach(pellet -> {
-			V2i tile = (V2i) pellet.getUserData();
-			pellet.setVisible(!game().currentLevel.isFoodRemoved(tile));
-		});
-		updatePlayer();
-		ghosts3D.values().forEach(Ghost3D::update);
-		bonus3D.update(game().bonus);
-		cams.updateSelectedCamera(player);
-		soundController.update();
 	}
 
 	private void updatePlayer() {
@@ -341,12 +344,12 @@ public class PlayScene3D implements GameScene {
 			ScaleTransition pumping = new ScaleTransition(Duration.seconds(0.25), energizer);
 			pumping.setAutoReverse(true);
 			pumping.setCycleCount(Transition.INDEFINITE);
-			pumping.setFromX(0);
-			pumping.setFromY(0);
-			pumping.setFromZ(0);
-			pumping.setToX(1.1);
-			pumping.setToY(1.1);
-			pumping.setToZ(1.1);
+			pumping.setFromX(0.2);
+			pumping.setFromY(0.2);
+			pumping.setFromZ(0.2);
+			pumping.setToX(1);
+			pumping.setToY(1);
+			pumping.setToZ(1);
 			pumping.play();
 			energizerAnimations.add(pumping);
 		});
@@ -363,27 +366,41 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void playAnimationPlayerDying() {
+
+		double savedTranslateX = player.getTranslateX();
+		double savedTranslateY = player.getTranslateY();
+		double savedTranslateZ = player.getTranslateZ();
+
 		PauseTransition phase1 = new PauseTransition(Duration.seconds(1));
 		phase1.setOnFinished(e -> {
 			game().ghosts().forEach(ghost -> ghost.visible = false);
+			game().player.turnBothTo(Direction.DOWN);
 			soundController.sounds.play(PacManGameSound.PACMAN_DEATH);
 		});
 
-		ScaleTransition expand = new ScaleTransition(Duration.seconds(1), player);
-		expand.setToX(1.5);
-		expand.setToY(1.5);
-		expand.setToZ(1.5);
+		TranslateTransition raise = new TranslateTransition(Duration.seconds(0.5), player);
+		raise.setFromZ(0);
+		raise.setToZ(-10);
+		raise.setByZ(1);
 
-		ScaleTransition shrink = new ScaleTransition(Duration.seconds(1.5), player);
-		shrink.setToX(0.1);
-		shrink.setToY(0.1);
-		shrink.setToZ(0.1);
+		ScaleTransition expand = new ScaleTransition(Duration.seconds(0.5), player);
+		expand.setToX(2);
+		expand.setToY(2);
+		expand.setToZ(2);
 
-		SequentialTransition animation = new SequentialTransition(phase1, expand, shrink);
+		ScaleTransition shrink = new ScaleTransition(Duration.seconds(1), player);
+		shrink.setToX(0);
+		shrink.setToY(0);
+		shrink.setToZ(0);
+
+		SequentialTransition animation = new SequentialTransition(phase1, raise, expand, shrink);
 		animation.setOnFinished(e -> {
 			player.setScaleX(1);
 			player.setScaleY(1);
 			player.setScaleZ(1);
+			player.setTranslateX(savedTranslateX);
+			player.setTranslateY(savedTranslateY);
+			player.setTranslateZ(savedTranslateZ);
 			game().player.visible = false;
 			gameController.stateTimer().forceExpiration();
 		});
@@ -393,39 +410,29 @@ public class PlayScene3D implements GameScene {
 
 	private void playAnimationLevelComplete() {
 		gameController.stateTimer().reset();
-
-		String congrats = CONGRATS[new Random().nextInt(CONGRATS.length)];
-		String message = String.format("%s!\n\nLevel %d complete.", congrats, game().currentLevelNumber);
-		gameController.getUI().showFlashMessage(message, 2);
-
 		PauseTransition phase1 = new PauseTransition(Duration.seconds(2));
+		phase1.setDelay(Duration.seconds(1));
 		phase1.setOnFinished(e -> {
 			game().player.visible = false;
 			game().ghosts().forEach(ghost -> ghost.visible = false);
+			String congrats = CONGRATS[new Random().nextInt(CONGRATS.length)];
+			String message = String.format("%s!\n\nLevel %d complete.", congrats, game().currentLevelNumber);
+			gameController.getUI().showFlashMessage(message, 2);
 		});
-
-		PauseTransition phase2 = new PauseTransition(Duration.seconds(2));
-
-		SequentialTransition animation = new SequentialTransition(phase1, phase2);
-		animation.setOnFinished(e -> {
-			gameController.stateTimer().forceExpiration();
-		});
+		SequentialTransition animation = new SequentialTransition(phase1, new PauseTransition(Duration.seconds(2)));
+		animation.setOnFinished(e -> gameController.stateTimer().forceExpiration());
 		animation.play();
 	}
 
 	private void playAnimationLevelStarting() {
 		gameController.stateTimer().reset();
 		gameController.getUI().showFlashMessage("Entering Level " + gameController.game().currentLevelNumber);
-
 		PauseTransition phase1 = new PauseTransition(Duration.seconds(2));
 		phase1.setOnFinished(e -> {
 			game().player.visible = true;
 			game().ghosts().forEach(ghost -> ghost.visible = true);
 		});
-
-		PauseTransition phase2 = new PauseTransition(Duration.seconds(2));
-
-		SequentialTransition animation = new SequentialTransition(phase1, phase2);
+		SequentialTransition animation = new SequentialTransition(phase1, new PauseTransition(Duration.seconds(2)));
 		animation.setOnFinished(e -> gameController.stateTimer().forceExpiration());
 		animation.play();
 	}

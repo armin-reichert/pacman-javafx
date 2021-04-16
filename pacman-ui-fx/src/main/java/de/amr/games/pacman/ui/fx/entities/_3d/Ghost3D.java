@@ -65,17 +65,16 @@ public class Ghost3D extends Group implements Supplier<Node> {
 		setVisible(ghost.visible);
 		setTranslateX(ghost.position.x);
 		setTranslateY(ghost.position.y);
-		getChildren().clear();
 		if (ghost.bounty > 0) {
-			getChildren().add(bountyShape);
+			getChildren().setAll(bountyShape);
 			setRotationAxis(Rotate.X_AXIS);
 			setRotate(0);
 			setBounty(ghost.bounty);
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
-			getChildren().add(deadGhost);
+			getChildren().setAll(deadGhost);
 			rotateZ(ghost.dir, 0, 180, 90, -90);
 		} else {
-			getChildren().add(coloredGhost);
+			getChildren().setAll(coloredGhost);
 			setRotationAxis(Rotate.Y_AXIS);
 			setRotate(0);
 			rotateZ(ghost.is(GhostState.FRIGHTENED) ? ghost.dir : ghost.wishDir, 0, 180, 90, -90);
