@@ -73,17 +73,19 @@ public class Ghost3D extends Group implements Supplier<Node> {
 			getChildren().add(bountyShape);
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
 			setRotationAxis(Rotate.Z_AXIS);
-			Direction dir = ghost.dir;
-			setRotate(dir == Direction.LEFT ? 0 : dir == Direction.RIGHT ? 180 : dir == Direction.UP ? 90 : -90);
+			rotate(ghost.dir, 0, 180, 90, -90);
 			getChildren().add(deadGhost);
 		} else {
 			setRotationAxis(Rotate.Y_AXIS);
 			setRotate(0);
 			setRotationAxis(Rotate.Z_AXIS);
-			Direction dir = ghost.is(GhostState.FRIGHTENED) ? ghost.dir : ghost.wishDir;
-			setRotate(dir == Direction.LEFT ? 0 : dir == Direction.RIGHT ? 180 : dir == Direction.UP ? 90 : -90);
+			rotate(ghost.is(GhostState.FRIGHTENED) ? ghost.dir : ghost.wishDir, 0, 180, 90, -90);
 			setBlueSkin(ghost.is(GhostState.FRIGHTENED));
 			getChildren().add(coloredGhost);
 		}
+	}
+
+	private void rotate(Direction dir, int left, int right, int up, int down) {
+		setRotate(dir == Direction.LEFT ? left : dir == Direction.RIGHT ? right : dir == Direction.UP ? up : down);
 	}
 }
