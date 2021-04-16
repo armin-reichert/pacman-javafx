@@ -130,7 +130,7 @@ public class PlayScene3D implements GameScene {
 
 		tgMaze = new Group();
 		tgMaze.getTransforms().add(new Translate(-14 * 8, -18 * 8));
-		tgMaze.getChildren().addAll(score3D.get(), livesCounter3D.get(), levelCounter3D.get());
+		tgMaze.getChildren().addAll(score3D, livesCounter3D.get(), levelCounter3D.get());
 		tgMaze.getChildren().addAll(maze.getBricks());
 		tgMaze.getChildren().addAll(energizers);
 		tgMaze.getChildren().addAll(pellets);
@@ -241,8 +241,8 @@ public class PlayScene3D implements GameScene {
 	public void update() {
 		score3D.update(game());
 		// Keep score text in plain sight. TODO is this the right way to do this?
-		score3D.get().setRotationAxis(Rotate.X_AXIS);
-		score3D.get().setRotate(cams.selectedCamera().getRotate());
+		score3D.setRotationAxis(Rotate.X_AXIS);
+		score3D.setRotate(cams.selectedCamera().getRotate());
 		livesCounter3D.update(game());
 		energizers.forEach(energizer -> {
 			V2i tile = (V2i) energizer.getUserData();

@@ -2,20 +2,16 @@ package de.amr.games.pacman.ui.fx.entities._3d;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
-import java.util.function.Supplier;
-
 import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class ScoreNotReally3D implements Supplier<Node> {
+public class ScoreNotReally3D extends Group {
 
-	private final Group root;
 	private final Text txtScoreTitle;
 	private final Text txtScore;
 	private final Text txtHiscoreTitle;
@@ -52,16 +48,11 @@ public class ScoreNotReally3D implements Supplier<Node> {
 		grid.add(txtHiscoreTitle, 1, 0);
 		grid.add(txtHiscore, 1, 1);
 
-		root = new Group(grid);
+		getChildren().add(grid);
 	}
 
 	public void setHiscoreOnly(boolean hiscoreOnly) {
 		this.hiscoreOnly = hiscoreOnly;
-	}
-
-	@Override
-	public Node get() {
-		return root;
 	}
 
 	public void update(AbstractGameModel game) {
