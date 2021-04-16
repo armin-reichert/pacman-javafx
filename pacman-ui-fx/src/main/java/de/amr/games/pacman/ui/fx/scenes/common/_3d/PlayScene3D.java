@@ -39,7 +39,6 @@ import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Impl;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.common._3d.PlaySceneCameras.CameraType;
 import de.amr.games.pacman.ui.fx.sound.PlaySceneSoundHandler;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
@@ -89,8 +88,8 @@ public class PlayScene3D implements GameScene {
 	private Group livesCounter3D;
 	private LevelCounter3D levelCounter3D;
 
-	public PlayScene3D(SoundManager sounds) {
-		soundHandler = new PlaySceneSoundHandler(sounds);
+	public PlayScene3D(PlaySceneSoundHandler soundHandler) {
+		this.soundHandler = soundHandler;
 		fxScene = new SubScene(new Group(), 800, 600, true, SceneAntialiasing.BALANCED);
 		cams = new PlaySceneCameras(fxScene);
 		cams.select(CameraType.DYNAMIC);
