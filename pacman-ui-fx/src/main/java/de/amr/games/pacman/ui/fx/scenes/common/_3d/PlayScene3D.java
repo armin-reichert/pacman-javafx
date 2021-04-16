@@ -4,6 +4,7 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static java.util.function.Predicate.not;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,6 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.entities._3d.Bonus3D;
-import de.amr.games.pacman.ui.fx.entities._3d.Energizer3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Ghost3D;
 import de.amr.games.pacman.ui.fx.entities._3d.LevelCounter3D;
 import de.amr.games.pacman.ui.fx.entities._3d.LivesCounter3D;
@@ -44,6 +44,7 @@ import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
+import javafx.animation.Transition;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -59,7 +60,8 @@ import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 /**
- * 3D scene displaying the maze and the game play for both, Pac-Man and Ms. Pac-Man games.
+ * 3D scene displaying the maze and the game play for both, Pac-Man and Ms.
+ * Pac-Man games.
  * 
  * @author Armin Reichert
  */
@@ -80,7 +82,8 @@ public class PlayScene3D implements GameScene {
 	private Player3D player;
 	private Map<Ghost, Ghost3D> ghosts3D;
 	private Maze3D maze;
-	private List<Energizer3D> energizers;
+	private List<Node> energizers;
+	private List<Transition> energizerAnimations;
 	private List<Node> pellets;
 	private Bonus3D bonus3D;
 	private ScoreNotReally3D score3D;
@@ -98,10 +101,11 @@ public class PlayScene3D implements GameScene {
 
 		maze = new Maze3D(gameLevel.world, Rendering2D_Assets.getMazeWallColor(gameVariant, gameLevel.mazeNumber));
 
-		PhongMaterial foodMaterial = new PhongMaterial(Rendering2D_Assets.getFoodColor(gameVariant, gameLevel.mazeNumber));
+		PhongMaterial foodMaterial = new PhongMaterial(
+				Rendering2D_Assets.getFoodColor(gameVariant, gameLevel.mazeNumber));
 
 		energizers = gameLevel.world.energizerTiles()//
-				.map(tile -> new Energizer3D(tile, foodMaterial))//
+				.map(tile -> createEnergizer(tile, foodMaterial))//
 				.collect(Collectors.toList());
 
 		pellets = gameLevel.world.tiles()//
@@ -111,8 +115,8 @@ public class PlayScene3D implements GameScene {
 
 		player = new Player3D(game().player);
 
-		ghosts3D = game().ghosts()
-				.collect(Collectors.toMap(Function.identity(), ghost -> new Ghost3D(ghost, Rendering2D_Impl.get(gameVariant))));
+		ghosts3D = game().ghosts().collect(
+				Collectors.toMap(Function.identity(), ghost -> new Ghost3D(ghost, Rendering2D_Impl.get(gameVariant))));
 
 		bonus3D = new Bonus3D(gameVariant, Rendering2D_Impl.get(gameVariant));
 
@@ -128,7 +132,7 @@ public class PlayScene3D implements GameScene {
 		tgMaze.getTransforms().add(new Translate(-14 * 8, -18 * 8));
 		tgMaze.getChildren().addAll(score3D.get(), livesCounter3D.get(), levelCounter3D.get());
 		tgMaze.getChildren().addAll(maze.getBricks());
-		tgMaze.getChildren().addAll(collect(energizers));
+		tgMaze.getChildren().addAll(energizers);
 		tgMaze.getChildren().addAll(pellets);
 		tgMaze.getChildren().addAll(player.get());
 		tgMaze.getChildren().addAll(collect(ghosts3D.values()));
@@ -157,7 +161,7 @@ public class PlayScene3D implements GameScene {
 		fxScene.setFill(Color.rgb(0, 0, 0));
 	}
 
-	private Node createPellet(V2i tile, PhongMaterial material) {
+	private Sphere createPellet(V2i tile, PhongMaterial material) {
 		double r = 1;
 		Sphere s = new Sphere(r);
 		s.setMaterial(material);
@@ -165,6 +169,12 @@ public class PlayScene3D implements GameScene {
 		s.setTranslateY(tile.y * TS);
 		s.setTranslateZ(1);
 		s.setUserData(tile);
+		return s;
+	}
+
+	private Node createEnergizer(V2i tile, PhongMaterial material) {
+		Sphere s = createPellet(tile, material);
+		s.setRadius(3);
 		return s;
 	}
 
@@ -233,7 +243,10 @@ public class PlayScene3D implements GameScene {
 		score3D.get().setRotationAxis(Rotate.X_AXIS);
 		score3D.get().setRotate(cams.selectedCamera().getRotate());
 		livesCounter3D.update(game());
-		energizers.forEach(energizer3D -> energizer3D.update(game()));
+		energizers.forEach(energizer -> {
+			V2i tile = (V2i) energizer.getUserData();
+			energizer.setVisible(!game().currentLevel.isFoodRemoved(tile));
+		});
 		pellets.forEach(pellet -> {
 			V2i tile = (V2i) pellet.getUserData();
 			pellet.setVisible(!game().currentLevel.isFoodRemoved(tile));
@@ -280,12 +293,12 @@ public class PlayScene3D implements GameScene {
 
 		// enter HUNTING
 		if (event.newGameState == PacManGameState.HUNTING) {
-			energizers.forEach(Energizer3D::startPumping);
+			startEnergizerAnimations();
 		}
 
 		// exit HUNTING
 		if (event.oldGameState == PacManGameState.HUNTING && event.newGameState != PacManGameState.GHOST_DYING) {
-			energizers.forEach(Energizer3D::stopPumping);
+			stopEnergizerAnimations();
 			bonus3D.hide();
 		}
 
@@ -304,6 +317,33 @@ public class PlayScene3D implements GameScene {
 			levelCounter3D.update(event.gameModel);
 			playAnimationLevelStarting();
 		}
+	}
+
+	private void startEnergizerAnimations() {
+		energizerAnimations = new ArrayList<>();
+		energizers.forEach(energizer -> {
+			ScaleTransition pumping = new ScaleTransition(Duration.seconds(0.25), energizer);
+			pumping.setAutoReverse(true);
+			pumping.setCycleCount(Transition.INDEFINITE);
+			pumping.setFromX(0);
+			pumping.setFromY(0);
+			pumping.setFromZ(0);
+			pumping.setToX(1.1);
+			pumping.setToY(1.1);
+			pumping.setToZ(1.1);
+			pumping.play();
+			energizerAnimations.add(pumping);
+		});
+	}
+
+	private void stopEnergizerAnimations() {
+		energizers.forEach(energizer -> {
+			energizer.setScaleX(1);
+			energizer.setScaleY(1);
+			energizer.setScaleZ(1);
+		});
+		energizerAnimations.forEach(Transition::stop);
+		energizerAnimations.clear();
 	}
 
 	private void playAnimationPlayerDying() {
