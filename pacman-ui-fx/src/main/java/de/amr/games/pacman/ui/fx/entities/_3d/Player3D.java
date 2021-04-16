@@ -54,7 +54,7 @@ public class Player3D implements Supplier<Node> {
 		root.setVisible(pac.visible && !inPortal);
 		root.setTranslateX(pac.position.x);
 		root.setTranslateY(pac.position.y);
-		changeMoveDirection(rot(pac.prevDir()), rot(pac.dir()));
+		changeMoveDirection(rot(pac.prevDir), rot(pac.dir));
 	}
 
 	private int rot(Direction dir) {
