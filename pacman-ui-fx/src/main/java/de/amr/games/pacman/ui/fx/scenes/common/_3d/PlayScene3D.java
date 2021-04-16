@@ -31,7 +31,6 @@ import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.entities._3d.Bonus3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Ghost3D;
 import de.amr.games.pacman.ui.fx.entities._3d.LevelCounter3D;
-import de.amr.games.pacman.ui.fx.entities._3d.LivesCounter3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Maze3D;
 import de.amr.games.pacman.ui.fx.entities._3d.ScoreNotReally3D;
 import de.amr.games.pacman.ui.fx.model3D.GianmarcosModel3D;
@@ -87,7 +86,7 @@ public class PlayScene3D implements GameScene {
 	private List<Node> pellets;
 	private Bonus3D bonus3D;
 	private ScoreNotReally3D score3D;
-	private LivesCounter3D livesCounter3D;
+	private Group livesCounter3D;
 	private LevelCounter3D levelCounter3D;
 
 	public PlayScene3D(SoundManager sounds) {
@@ -122,7 +121,7 @@ public class PlayScene3D implements GameScene {
 
 		score3D = new ScoreNotReally3D();
 
-		livesCounter3D = new LivesCounter3D(game().player, 2, 1);
+		livesCounter3D = createLivesCounter3D(new V2i(2, 1));
 
 		levelCounter3D = new LevelCounter3D(Rendering2D_Impl.get(gameVariant));
 		levelCounter3D.tileRight = new V2i(25, 1);
@@ -181,6 +180,19 @@ public class PlayScene3D implements GameScene {
 	private Group createPlayer3D() {
 		Group player = GianmarcosModel3D.IT.createPacMan();
 		return player;
+	}
+
+	private Group createLivesCounter3D(V2i tilePosition) {
+		Group livesCounter = new Group();
+		for (int i = 0; i < 5; ++i) {
+			V2i tile = tilePosition.plus(2 * i, 0);
+			Group liveIndicator = GianmarcosModel3D.IT.createPacMan();
+			liveIndicator.setTranslateX(tile.x * TS);
+			liveIndicator.setTranslateY(tile.y * TS);
+			liveIndicator.setTranslateZ(0);
+			livesCounter.getChildren().add(liveIndicator);
+		}
+		return livesCounter;
 	}
 
 	@Override
@@ -243,7 +255,9 @@ public class PlayScene3D implements GameScene {
 		// Keep score text in plain sight. TODO is this the right way to do this?
 		score3D.setRotationAxis(Rotate.X_AXIS);
 		score3D.setRotate(cams.selectedCamera().getRotate());
-		livesCounter3D.update(game());
+		for (int i = 0; i < 5; ++i) {
+			livesCounter3D.getChildren().get(i).setVisible(i < game().lives);
+		}
 		energizers.forEach(energizer -> {
 			V2i tile = (V2i) energizer.getUserData();
 			energizer.setVisible(!game().currentLevel.isFoodRemoved(tile));
