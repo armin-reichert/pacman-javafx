@@ -12,8 +12,8 @@ import javafx.scene.canvas.GraphicsContext;
 /**
  * 2D representation of the player (Pac-Man or Ms. Pac-Man).
  * <p>
- * The animations can be changed so that both, Ms. Pac-Man and Pac-Man can be rendered using this
- * class.
+ * The animations can be changed so that both, Ms. Pac-Man and Pac-Man can be
+ * rendered using this class.
  * 
  * @author Armin Reichert
  */

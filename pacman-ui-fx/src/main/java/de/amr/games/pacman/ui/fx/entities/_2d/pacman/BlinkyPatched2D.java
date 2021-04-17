@@ -8,7 +8,8 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
- * Blinky with his dress patched. Used in the third intermission scene in Pac-Man.
+ * Blinky with his dress patched. Used in the third intermission scene in
+ * Pac-Man.
  * 
  * @author Armin Reichert
  */

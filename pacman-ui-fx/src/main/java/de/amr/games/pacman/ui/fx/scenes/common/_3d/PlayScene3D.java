@@ -59,7 +59,8 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 /**
- * 3D scene displaying the maze and the game play for both, Pac-Man and Ms. Pac-Man games.
+ * 3D scene displaying the maze and the game play for both, Pac-Man and Ms.
+ * Pac-Man games.
  * 
  * @author Armin Reichert
  */

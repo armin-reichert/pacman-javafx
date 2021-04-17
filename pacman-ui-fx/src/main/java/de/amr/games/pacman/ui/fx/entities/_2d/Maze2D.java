@@ -19,8 +19,8 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 /**
- * 2D representation of the maze for a given game level. Implements the flashing animation played
- * when the game level is complete.
+ * 2D representation of the maze for a given game level. Implements the flashing
+ * animation played when the game level is complete.
  * 
  * @author Armin Reichert
  */

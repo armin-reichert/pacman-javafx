@@ -20,7 +20,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
- * Intro scene of the Ms. Pac-Man game. The ghosts and Ms. Pac-Man are introduced one after another.
+ * Intro scene of the Ms. Pac-Man game. The ghosts and Ms. Pac-Man are
+ * introduced one after another.
  * 
  * @author Armin Reichert
  */
