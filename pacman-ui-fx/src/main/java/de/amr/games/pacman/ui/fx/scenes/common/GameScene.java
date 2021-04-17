@@ -24,7 +24,7 @@ public interface GameScene extends PacManGameEventListener {
 
 	SubScene getSubScene();
 
-	void start();
+	void init();
 
 	void update();
 

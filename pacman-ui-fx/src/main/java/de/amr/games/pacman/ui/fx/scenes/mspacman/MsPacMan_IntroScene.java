@@ -37,8 +37,8 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D<Rendering2D_MsPacMa
 	}
 
 	@Override
-	public void start() {
-		super.start();
+	public void init() {
+		super.init();
 		boardAnimationTimer.reset();
 		boardAnimationTimer.start();
 		sceneController = new MsPacMan_IntroScene_Controller(gameController);

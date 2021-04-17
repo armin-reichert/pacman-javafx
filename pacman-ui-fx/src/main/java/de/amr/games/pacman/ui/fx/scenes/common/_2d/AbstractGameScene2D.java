@@ -79,7 +79,7 @@ public abstract class AbstractGameScene2D<RENDERING extends Rendering2D> impleme
 	}
 
 	@Override
-	public void start() {
+	public void init() {
 		log("Game scene %s: start", this);
 	}
 

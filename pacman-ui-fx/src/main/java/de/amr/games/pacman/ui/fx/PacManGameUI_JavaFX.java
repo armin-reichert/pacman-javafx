@@ -142,7 +142,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				newGameScene.keepStretched(mainScene);
 			}
 			currentGameScene = newGameScene;
-			currentGameScene.start();
+			currentGameScene.init();
 			// put game scene into scene graph
 			gameSceneParent.getChildren().setAll(currentGameScene.getSubScene());
 			// Note: this must be done after adding to the scene graph

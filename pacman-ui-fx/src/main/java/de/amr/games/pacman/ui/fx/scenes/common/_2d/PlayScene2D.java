@@ -54,8 +54,8 @@ public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScen
 	}
 
 	@Override
-	public void start() {
-		super.start();
+	public void init() {
+		super.init();
 
 		maze2D = new Maze2D<>(new V2i(0, 3), rendering);
 		maze2D.setGameLevel(game().currentLevel);

@@ -126,7 +126,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public void start() {
+	public void init() {
 		log("Game scene %s: start", this);
 		buildSceneGraph(gameController.gameVariant(), game().currentLevel);
 		if (gameController.isAttractMode()) {

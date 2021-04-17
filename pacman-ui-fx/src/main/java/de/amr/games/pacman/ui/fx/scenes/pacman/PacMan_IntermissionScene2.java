@@ -48,8 +48,8 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D<Rendering2D_P
 	}
 
 	@Override
-	public void start() {
-		super.start();
+	public void init() {
+		super.init();
 		sceneController = new SceneController(gameController);
 		sceneController.init();
 		pacMan2D = new Player2D<>(sceneController.pac, rendering);
