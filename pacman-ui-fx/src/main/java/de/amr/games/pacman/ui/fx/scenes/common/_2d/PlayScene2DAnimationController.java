@@ -16,7 +16,6 @@ import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.lib.TimedSequence;
-import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.entities._2d.Ghost2D;
@@ -47,10 +46,10 @@ public class PlayScene2DAnimationController {
 		this.gameController = gameController;
 	}
 
-	private AbstractGameModel game() {
-		return gameController.game();
-	}
-
+//	private AbstractGameModel game() {
+//		return gameController.game();
+//	}
+//
 	public void init() {
 		levelCompleteAnimation = new SequentialTransition(playScene.maze2D.getFlashingAnimation(),
 				new PauseTransition(Duration.seconds(1)));
@@ -67,7 +66,7 @@ public class PlayScene2DAnimationController {
 		if (gameController.state == PacManGameState.HUNTING) {
 			AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
 			if (munching.isPlaying()) {
-				if (game().player.starvingTicks > 10) {
+				if (gameController.game().player.starvingTicks > 10) {
 					sounds.stop(PacManGameSound.PACMAN_MUNCH);
 					log("Munching sound clip %s stopped", munching);
 				}
@@ -101,7 +100,7 @@ public class PlayScene2DAnimationController {
 		}
 
 		else if (gameEvent instanceof PacManGainsPowerEvent) {
-			game().ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
+			gameEvent.gameModel.ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
 				Ghost2D<?> ghost2D = playScene.ghosts2D.get(ghost.id);
 				ghost2D.getFlashingAnimation().reset();
 				ghost2D.getFrightenedAnimation().restart();
@@ -167,13 +166,13 @@ public class PlayScene2DAnimationController {
 
 		// enter GHOST_DYING
 		else if (e.newGameState == PacManGameState.GHOST_DYING) {
-			game().player.visible = false;
+			e.gameModel.player.visible = false;
 			sounds.play(PacManGameSound.GHOST_EATEN);
 		}
 
 		// enter LEVEL_COMPLETE
 		else if (e.newGameState == PacManGameState.LEVEL_COMPLETE) {
-			game().ghosts().forEach(ghost -> ghost.visible = false);
+			e.gameModel.ghosts().forEach(ghost -> ghost.visible = false);
 			gameController.stateTimer().reset();
 			levelCompleteAnimation.play();
 			sounds.stopAll();
@@ -188,18 +187,18 @@ public class PlayScene2DAnimationController {
 
 		// exit GHOST_DYING
 		if (e.oldGameState == PacManGameState.GHOST_DYING) {
-			game().player.visible = true;
+			e.gameModel.player.visible = true;
 		}
 	}
 
 	// TODO simplify
 	public void handleGhostsFlashing(TickTimerEvent e) {
 		if (e.type == TickTimerEvent.Type.HALF_EXPIRED) {
-			game().ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
+			gameController.game().ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
 				Ghost2D<?> ghost2D = playScene.ghosts2D.get(ghost.id);
 				TimedSequence<?> flashing = ghost2D.getFlashingAnimation();
-				long frameTime = e.ticks / (game().currentLevel.numFlashes * flashing.numFrames());
-				flashing.frameDuration(frameTime).repetitions(game().currentLevel.numFlashes).restart();
+				long frameTime = e.ticks / (gameController.game().currentLevel.numFlashes * flashing.numFrames());
+				flashing.frameDuration(frameTime).repetitions(gameController.game().currentLevel.numFlashes).restart();
 			});
 		}
 	}
