@@ -29,6 +29,7 @@ public class HUD extends HBox {
 
 	public HUD(PacManGameUI_JavaFX ui) {
 		this.ui = ui;
+		PacManGameUI_JavaFX.$TOTAL_TICKS.addListener((source, oldValue, newValue) -> update());
 		textView = new Text();
 		textView.setFill(Color.LIGHTGREEN);
 		textView.setFont(Font.font("Monospace", 14));

@@ -36,7 +36,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	public static final IntegerProperty $FPS = new SimpleIntegerProperty();
 	public static final IntegerProperty $TOTAL_TICKS = new SimpleIntegerProperty();
-	
+
 	public final Stage stage;
 	public final PacManGameController gameController;
 	public final HUD hud = new HUD(this);
@@ -64,13 +64,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
 		stage.addEventHandler(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
-		$FPS.addListener((source, oldValue, newValue) -> {
-			stage.setTitle(String.format("Pac-Man / Ms. Pac-Man (%d fps, JavaFX)", newValue));
+		$FPS.addListener((source, oldValue, fps) -> {
+			stage.setTitle(String.format("Pac-Man / Ms. Pac-Man (%d fps, JavaFX)", fps));
 		});
-		$TOTAL_TICKS.addListener((source, oldValue, newValue) -> {
-			hud.update();
-		});
-		stage.getIcons().add(new Image(getClass().getResource("/pacman/graphics/pacman.png").toExternalForm()));
+		stage.getIcons().add(new Image(getClass().getResourceAsStream("/pacman/graphics/pacman.png")));
 		stage.setScene(mainScene);
 		stage.centerOnScreen();
 		stage.show();
