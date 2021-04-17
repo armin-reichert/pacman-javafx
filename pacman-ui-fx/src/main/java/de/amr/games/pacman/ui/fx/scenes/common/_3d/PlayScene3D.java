@@ -116,7 +116,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public SubScene get() {
+	public SubScene getSubScene() {
 		return fxScene;
 	}
 

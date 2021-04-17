@@ -4,7 +4,6 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
 import java.util.Optional;
 import java.util.OptionalDouble;
-import java.util.function.Supplier;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.event.PacManGameEventListener;
@@ -18,10 +17,12 @@ import javafx.scene.SubScene;
  * 
  * @author Armin Reichert
  */
-public interface GameScene extends PacManGameEventListener, Supplier<SubScene> {
+public interface GameScene extends PacManGameEventListener {
 
 	public static final int UNSCALED_SCENE_WIDTH = 28 * TS;
 	public static final int UNSCALED_SCENE_HEIGHT = 36 * TS;
+
+	SubScene getSubScene();
 
 	void start();
 
@@ -55,8 +56,8 @@ public interface GameScene extends PacManGameEventListener, Supplier<SubScene> {
 				stretchTo(maxWidth, maxHeight);
 			});
 		} else {
-			get().widthProperty().bind(parentScene.widthProperty());
-			get().heightProperty().bind(parentScene.heightProperty());
+			getSubScene().widthProperty().bind(parentScene.widthProperty());
+			getSubScene().heightProperty().bind(parentScene.heightProperty());
 		}
 	}
 

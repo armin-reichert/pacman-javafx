@@ -113,7 +113,7 @@ public abstract class AbstractGameScene2D<RENDERING extends Rendering2D> impleme
 	}
 
 	@Override
-	public SubScene get() {
+	public SubScene getSubScene() {
 		return scene;
 	}
 
