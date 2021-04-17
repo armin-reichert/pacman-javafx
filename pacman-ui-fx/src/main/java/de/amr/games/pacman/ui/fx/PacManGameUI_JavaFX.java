@@ -38,14 +38,13 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	public static final IntegerProperty $TOTAL_TICKS = new SimpleIntegerProperty();
 
 	public final Stage stage;
-	public final PacManGameController gameController;
-	public final HUD hud = new HUD(this);
 	public final Scene mainScene;
-
+	public final PacManGameController gameController;
 	public GameScene currentGameScene;
 
 	private final Keyboard keyboard = new Keyboard();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
+	private final HUD hud = new HUD(this);
 	private final Group gameSceneParent = new Group();
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController gameController, double height) {
