@@ -26,6 +26,8 @@ import javafx.scene.paint.Color;
  * 2D scene displaying the maze and the game play for both, Pac-Man and Ms.
  * Pac-Man games.
  * 
+ * @param <RENDERING> Type of rendering, Pac-Man or Ms. Pac-Man rendering.
+ * 
  * @author Armin Reichert
  */
 public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScene2D<RENDERING> {
@@ -38,7 +40,7 @@ public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScen
 	public List<Ghost2D<RENDERING>> ghosts2D;
 	public Bonus2D<RENDERING> bonus2D;
 
-	private PlayScene2DAnimationController animationController;
+	private final PlayScene2DAnimationController animationController;
 
 	public PlayScene2D(RENDERING rendering, SoundManager sounds) {
 		super(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, rendering, sounds);
@@ -60,7 +62,7 @@ public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScen
 
 		livesCounter2D = new LivesCounter2D<>(rendering);
 		livesCounter2D.setLeftUpperCorner(new V2i(2, 34));
-		livesCounter2D.setLifeCountSupplier(() -> game().lives);
+		livesCounter2D.setLives(game().lives);
 
 		score2D = new GameScore2D<>(rendering);
 		score2D.setTitle("SCORE");
@@ -95,6 +97,7 @@ public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScen
 
 	@Override
 	public void update() {
+		livesCounter2D.setLives(game().lives);
 		animationController.update();
 	}
 
