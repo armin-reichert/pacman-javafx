@@ -10,11 +10,39 @@ import javafx.scene.text.Font;
 
 public final class Rendering2D_Assets {
 
-	private Rendering2D_Assets() {
-	}
+	private static final Color PACMAN_FOOD_COLOR = Color.rgb(250, 185, 176);
+
+	private static final Color PACMAN_MAZE_WALL_COLOR = Color.rgb(33, 33, 255);
 
 	public static final Font ARCADE_FONT = Font.loadFont(Rendering2D_Assets.class.getResourceAsStream("/emulogic.ttf"),
 			8);
+
+	private static final Color MS_PACMAN_FOOD_COLOR[] = { //
+			Color.rgb(222, 222, 255), //
+			Color.rgb(255, 255, 0), //
+			Color.rgb(255, 0, 0), //
+			Color.rgb(222, 222, 255), //
+			Color.rgb(0, 255, 255), //
+			Color.rgb(222, 222, 255),//
+	};
+
+	private static final Color MS_PACMAN_MAZE_WALL_COLOR[] = { //
+			Color.rgb(255, 183, 174), //
+			Color.rgb(71, 183, 255), //
+			Color.rgb(222, 151, 81), //
+			Color.rgb(33, 33, 255), //
+			Color.rgb(255, 183, 255), //
+			Color.rgb(255, 183, 174),//
+	};
+
+	private static final Color MS_PACMAN_MAZE_WALL_BORDER_COLOR[] = { //
+			Color.rgb(255, 0, 0), //
+			Color.rgb(222, 222, 255), //
+			Color.rgb(222, 222, 255), //
+			Color.rgb(255, 183, 81), //
+			Color.rgb(255, 255, 0), //
+			Color.rgb(255, 0, 0),//
+	};
 
 	public static Image image(String path) {
 		return new Image(Rendering2D_Assets.class.getResource(path).toExternalForm());
@@ -35,68 +63,23 @@ public final class Rendering2D_Assets {
 	}
 
 	public static Color getPacManMazeWallColor(int mazeNumber) {
-		return Color.rgb(33, 33, 255);
+		return PACMAN_MAZE_WALL_COLOR;
 	}
 
 	public static Color getPacManFoodColor(int mazeNumber) {
-		return Color.rgb(250, 185, 176);
+		return PACMAN_FOOD_COLOR;
 	}
 
-	public static Color getMsPacManFoodColor(int mazeNumber) {
-		switch (mazeNumber) {
-		case 1:
-			return Color.rgb(222, 222, 255);
-		case 2:
-			return Color.rgb(255, 255, 0);
-		case 3:
-			return Color.rgb(255, 0, 0);
-		case 4:
-			return Color.rgb(222, 222, 255);
-		case 5:
-			return Color.rgb(0, 255, 255);
-		case 6:
-			return Color.rgb(222, 222, 255);
-		default:
-			throw new IllegalArgumentException();
-		}
+	private static Color getMsPacManFoodColor(int mazeNumber) {
+		return MS_PACMAN_FOOD_COLOR[mazeNumber - 1];
 	}
 
 	public static Color getMsPacManMazeWallColor(int mazeNumber) {
-		switch (mazeNumber) {
-		case 1:
-			return Color.rgb(255, 183, 174);
-		case 2:
-			return Color.rgb(71, 183, 255);
-		case 3:
-			return Color.rgb(222, 151, 81);
-		case 4:
-			return Color.rgb(33, 33, 255);
-		case 5:
-			return Color.rgb(255, 183, 255);
-		case 6:
-			return Color.rgb(255, 183, 174);
-		default:
-			throw new IllegalArgumentException();
-		}
+		return MS_PACMAN_MAZE_WALL_COLOR[mazeNumber - 1];
 	}
 
 	public static Color getMsPacManMazeWallBorderColor(int mazeNumber) {
-		switch (mazeNumber) {
-		case 1:
-			return Color.rgb(255, 0, 0);
-		case 2:
-			return Color.rgb(222, 222, 255);
-		case 3:
-			return Color.rgb(222, 222, 255);
-		case 4:
-			return Color.rgb(255, 183, 81);
-		case 5:
-			return Color.rgb(255, 255, 0);
-		case 6:
-			return Color.rgb(255, 0, 0);
-		default:
-			throw new IllegalArgumentException();
-		}
+		return MS_PACMAN_MAZE_WALL_BORDER_COLOR[mazeNumber - 1];
 	}
 
 	public static Image colorsExchanged(Image source, Map<Color, Color> exchanges) {

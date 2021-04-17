@@ -165,9 +165,8 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void buildSceneGraph(GameVariant gameVariant, GameLevel gameLevel) {
-
 		final Rendering2D r2D = Rendering2D_Impl.get(gameVariant);
-		Group tgArena = new Group();
+		final Group tgArena = new Group();
 
 		maze = new Maze3D(gameLevel.world, Rendering2D_Assets.getMazeWallColor(gameVariant, gameLevel.mazeNumber));
 
