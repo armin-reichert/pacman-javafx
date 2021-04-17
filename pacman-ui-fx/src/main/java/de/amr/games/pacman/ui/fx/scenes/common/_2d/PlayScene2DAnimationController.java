@@ -10,12 +10,16 @@ import de.amr.games.pacman.controller.event.GhostReturningHomeEvent;
 import de.amr.games.pacman.controller.event.PacManFoundFoodEvent;
 import de.amr.games.pacman.controller.event.PacManGainsPowerEvent;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
+import de.amr.games.pacman.controller.event.PacManGameStateChangedEvent;
 import de.amr.games.pacman.controller.event.PacManLostPowerEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.Logging;
+import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.AbstractGameModel;
+import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.PacManGameSound;
+import de.amr.games.pacman.ui.fx.entities._2d.Ghost2D;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
@@ -23,7 +27,7 @@ import javafx.scene.media.AudioClip;
 import javafx.util.Duration;
 
 /**
- * Controls sound and animation for 2D play scenes in reaction to game events.
+ * Controls sound and animation for the 2D play scenes.
  * 
  * @author Armin Reichert
  */
@@ -46,7 +50,7 @@ public class PlayScene2DAnimationController {
 	private AbstractGameModel game() {
 		return gameController.game();
 	}
-	
+
 	public void init() {
 		levelCompleteAnimation = new SequentialTransition(playScene.maze2D.getFlashingAnimation(),
 				new PauseTransition(Duration.seconds(1)));
@@ -71,70 +75,18 @@ public class PlayScene2DAnimationController {
 		}
 	}
 
-	public void onGameStateChange(PacManGameState oldState, PacManGameState newState) {
-		sounds.setMuted(gameController.isAttractMode());
-
-		// enter READY
-		if (newState == PacManGameState.READY) {
-			sounds.stopAll();
-			if (!gameController.isAttractMode() && !gameController.isGameRunning()) {
-				gameController.stateTimer().resetSeconds(4.5);
-				sounds.play(PacManGameSound.GAME_READY);
-			} else {
-				gameController.stateTimer().resetSeconds(2);
-			}
-		}
-
-		// enter HUNTING
-		if (newState == PacManGameState.HUNTING) {
-			playScene.maze2D.getEnergizerBlinking().restart();
-			playScene.player2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
-			playScene.ghosts2D.forEach(ghost2D -> ghost2D.getKickingAnimations().values().forEach(TimedSequence::restart));
-		}
-
-		// enter PACMAN_DYING
-		if (newState == PacManGameState.PACMAN_DYING) {
-			playScene.maze2D.getEnergizerBlinking().reset();
-			playScene.ghosts2D.forEach(ghost2D -> ghost2D.getKickingAnimations().values().forEach(TimedSequence::reset));
-			playScene.player2D.getDyingAnimation().restart();
-			sounds.stopAll();
-			sounds.play(PacManGameSound.PACMAN_DEATH);
-		}
-
-		// enter GHOST_DYING
-		if (newState == PacManGameState.GHOST_DYING) {
-			game().player.visible = false;
-			sounds.play(PacManGameSound.GHOST_EATEN);
-		}
-
-		// exit GHOST_DYING
-		if (oldState == PacManGameState.GHOST_DYING) {
-			game().player.visible = true;
-		}
-
-		// enter LEVEL_COMPLETE
-		if (newState == PacManGameState.LEVEL_COMPLETE) {
-			game().ghosts().forEach(ghost -> ghost.visible = false);
-			gameController.stateTimer().reset();
-			levelCompleteAnimation.play();
-			sounds.stopAll();
-		}
-
-		// enter GAME_OVER
-		if (newState == PacManGameState.GAME_OVER) {
-			playScene.maze2D.getEnergizerBlinking().reset();
-			playScene.ghosts2D.forEach(ghost2D -> ghost2D.getKickingAnimations().values().forEach(TimedSequence::restart));
-			sounds.stopAll();
-		}
-	}
-
 	public void onGameEvent(PacManGameEvent gameEvent) {
 		if (gameController.isAttractMode()) {
 			return;
 		}
 		sounds.setMuted(false);
 
-		if (gameEvent instanceof ScatterPhaseStartedEvent) {
+		if (gameEvent instanceof PacManGameStateChangedEvent) {
+			PacManGameStateChangedEvent e = (PacManGameStateChangedEvent) gameEvent;
+			onGameStateChange(e);
+		}
+
+		else if (gameEvent instanceof ScatterPhaseStartedEvent) {
 			ScatterPhaseStartedEvent e = (ScatterPhaseStartedEvent) gameEvent;
 			if (e.scatterPhase > 0) {
 				sounds.stop(PacManGameSound.SIRENS.get(e.scatterPhase - 1));
@@ -149,6 +101,11 @@ public class PlayScene2DAnimationController {
 		}
 
 		else if (gameEvent instanceof PacManGainsPowerEvent) {
+			game().ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
+				Ghost2D<?> ghost2D = playScene.ghosts2D.get(ghost.id);
+				ghost2D.getFlashingAnimation().reset();
+				ghost2D.getFrightenedAnimation().restart();
+			});
 			sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
 		}
 
@@ -161,6 +118,9 @@ public class PlayScene2DAnimationController {
 		}
 
 		else if (gameEvent instanceof BonusEatenEvent) {
+			if (playScene.bonus2D.getJumpAnimation() != null) {
+				playScene.bonus2D.getJumpAnimation().reset();
+			}
 			sounds.play(PacManGameSound.BONUS_EATEN);
 		}
 
@@ -170,6 +130,77 @@ public class PlayScene2DAnimationController {
 
 		else if (gameEvent instanceof GhostReturningHomeEvent) {
 			sounds.play(PacManGameSound.GHOST_RETURNING_HOME);
+		}
+	}
+
+	private void onGameStateChange(PacManGameStateChangedEvent e) {
+		sounds.setMuted(gameController.isAttractMode());
+
+		// enter READY
+		if (e.newGameState == PacManGameState.READY) {
+			sounds.stopAll();
+			if (!gameController.isAttractMode() && !gameController.isGameRunning()) {
+				gameController.stateTimer().resetSeconds(4.5);
+				sounds.play(PacManGameSound.GAME_READY);
+			} else {
+				gameController.stateTimer().resetSeconds(2);
+			}
+		}
+
+		// enter HUNTING
+		else if (e.newGameState == PacManGameState.HUNTING) {
+			playScene.maze2D.getEnergizerBlinking().restart();
+			playScene.player2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
+			playScene.ghosts2D.forEach(ghost2D -> ghost2D.getKickingAnimations().values().forEach(TimedSequence::restart));
+		}
+
+		// enter PACMAN_DYING
+		else if (e.newGameState == PacManGameState.PACMAN_DYING) {
+			playScene.maze2D.getEnergizerBlinking().reset();
+			playScene.ghosts2D.forEach(ghost2D -> ghost2D.getKickingAnimations().values().forEach(TimedSequence::reset));
+			playScene.player2D.getDyingAnimation().restart();
+			sounds.stopAll();
+			PauseTransition deathSound = new PauseTransition(Duration.seconds(2));
+			deathSound.setOnFinished(actionEvent -> sounds.play(PacManGameSound.PACMAN_DEATH));
+			deathSound.play();
+		}
+
+		// enter GHOST_DYING
+		else if (e.newGameState == PacManGameState.GHOST_DYING) {
+			game().player.visible = false;
+			sounds.play(PacManGameSound.GHOST_EATEN);
+		}
+
+		// enter LEVEL_COMPLETE
+		else if (e.newGameState == PacManGameState.LEVEL_COMPLETE) {
+			game().ghosts().forEach(ghost -> ghost.visible = false);
+			gameController.stateTimer().reset();
+			levelCompleteAnimation.play();
+			sounds.stopAll();
+		}
+
+		// enter GAME_OVER
+		else if (e.newGameState == PacManGameState.GAME_OVER) {
+			playScene.maze2D.getEnergizerBlinking().reset();
+			playScene.ghosts2D.forEach(ghost2D -> ghost2D.getKickingAnimations().values().forEach(TimedSequence::restart));
+			sounds.stopAll();
+		}
+
+		// exit GHOST_DYING
+		if (e.oldGameState == PacManGameState.GHOST_DYING) {
+			game().player.visible = true;
+		}
+	}
+
+	// TODO simplify
+	public void handleGhostsFlashing(TickTimerEvent e) {
+		if (e.type == TickTimerEvent.Type.HALF_EXPIRED) {
+			game().ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
+				Ghost2D<?> ghost2D = playScene.ghosts2D.get(ghost.id);
+				TimedSequence<?> flashing = ghost2D.getFlashingAnimation();
+				long frameTime = e.ticks / (game().currentLevel.numFlashes * flashing.numFrames());
+				flashing.frameDuration(frameTime).repetitions(game().currentLevel.numFlashes).restart();
+			});
 		}
 	}
 }

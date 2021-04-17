@@ -8,12 +8,8 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
-import de.amr.games.pacman.controller.event.BonusEatenEvent;
-import de.amr.games.pacman.controller.event.PacManGainsPowerEvent;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangedEvent;
-import de.amr.games.pacman.lib.TickTimerEvent;
-import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.fx.entities._2d.Bonus2D;
@@ -87,13 +83,13 @@ public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScen
 
 		bonus2D = new Bonus2D<>(rendering);
 
-		game().player.powerTimer.addEventListener(this::handleGhostsFlashing);
+		game().player.powerTimer.addEventListener(animationController::handleGhostsFlashing);
 		animationController.init();
 	}
 
 	@Override
 	public void end() {
-		game().player.powerTimer.removeEventListener(this::handleGhostsFlashing);
+		game().player.powerTimer.removeEventListener(animationController::handleGhostsFlashing);
 		super.end();
 	}
 
@@ -103,11 +99,8 @@ public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScen
 	}
 
 	private void onGameStateChange(PacManGameStateChangedEvent event) {
-		animationController.onGameStateChange(event.oldGameState, event.newGameState);
-
-		// enter LEVEL_STARTING
 		if (event.newGameState == PacManGameState.LEVEL_STARTING) {
-			maze2D = new Maze2D<>(game().currentLevel, rendering);
+			maze2D = new Maze2D<>(event.gameModel.currentLevel, rendering);
 			maze2D.setLeftUpperCorner(new V2i(0, 3));
 			gameController.stateTimer().reset(1);
 			gameController.stateTimer().start();
@@ -117,37 +110,10 @@ public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScen
 
 	@Override
 	public void onGameEvent(PacManGameEvent gameEvent) {
-		animationController.onGameEvent(gameEvent);
-
 		if (gameEvent instanceof PacManGameStateChangedEvent) {
 			onGameStateChange((PacManGameStateChangedEvent) gameEvent);
 		}
-
-		if (gameEvent instanceof PacManGainsPowerEvent) {
-			game().ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
-				Ghost2D<RENDERING> ghost2D = ghosts2D.get(ghost.id);
-				ghost2D.getFlashingAnimation().reset();
-				ghost2D.getFrightenedAnimation().restart();
-			});
-		}
-
-		else if (gameEvent instanceof BonusEatenEvent) {
-			if (bonus2D.getJumpAnimation() != null) {
-				bonus2D.getJumpAnimation().reset();
-			}
-		}
-	}
-
-	// TODO simplify
-	private void handleGhostsFlashing(TickTimerEvent e) {
-		if (e.type == TickTimerEvent.Type.HALF_EXPIRED) {
-			game().ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
-				Ghost2D<RENDERING> ghost2D = ghosts2D.get(ghost.id);
-				TimedSequence<?> flashing = ghost2D.getFlashingAnimation();
-				long frameTime = e.ticks / (game().currentLevel.numFlashes * flashing.numFrames());
-				flashing.frameDuration(frameTime).repetitions(game().currentLevel.numFlashes).restart();
-			});
-		}
+		animationController.onGameEvent(gameEvent);
 	}
 
 	@Override
