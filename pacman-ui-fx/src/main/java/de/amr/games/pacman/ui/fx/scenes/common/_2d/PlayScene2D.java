@@ -46,18 +46,18 @@ public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScen
 	private List<Ghost2D<RENDERING>> ghosts2D;
 	private Bonus2D<RENDERING> bonus2D;
 
-	private PlaySceneSoundController soundHandler;
+	private PlaySceneSoundController soundController;
 	private SequentialTransition levelCompleteAnimation;
 
 	public PlayScene2D(RENDERING rendering, SoundManager sounds) {
 		super(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, rendering, sounds);
-		soundHandler = new PlaySceneSoundController(sounds);
+		soundController = new PlaySceneSoundController(sounds);
 	}
 
 	@Override
 	public void setGameController(PacManGameController gameController) {
 		super.setGameController(gameController);
-		soundHandler.setGameController(gameController);
+		soundController.setGameController(gameController);
 	}
 
 	@Override
@@ -108,11 +108,11 @@ public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScen
 
 	@Override
 	public void update() {
-		soundHandler.update();
+		soundController.update();
 	}
 
 	private void onGameStateChange(PacManGameStateChangedEvent event) {
-		soundHandler.onGameStateChange(event.oldGameState, event.newGameState);
+		soundController.onGameStateChange(event.oldGameState, event.newGameState);
 
 		// enter HUNTING
 		if (event.newGameState == PacManGameState.HUNTING) {
@@ -163,7 +163,7 @@ public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScen
 
 	@Override
 	public void onGameEvent(PacManGameEvent gameEvent) {
-		soundHandler.onGameEvent(gameEvent);
+		soundController.onGameEvent(gameEvent);
 
 		if (gameEvent instanceof PacManGameStateChangedEvent) {
 			onGameStateChange((PacManGameStateChangedEvent) gameEvent);
@@ -224,11 +224,11 @@ public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScen
 			gc.setFont(rendering.getScoreFont());
 			gc.setFill(Color.RED);
 			gc.fillText("GAME", t(9), t(21));
-			gc.fillText("OVER", t(15), t(21));
+			gc.fillText("OVER!", t(15), t(21));
 		} else if (state == PacManGameState.READY) {
 			gc.setFont(rendering.getScoreFont());
 			gc.setFill(Color.YELLOW);
-			gc.fillText("READY", t(11), t(21));
+			gc.fillText("READY!", t(11), t(21));
 		}
 	}
 }

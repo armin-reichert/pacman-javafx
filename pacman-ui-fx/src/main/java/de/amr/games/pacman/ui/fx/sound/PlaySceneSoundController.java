@@ -5,8 +5,8 @@ import static de.amr.games.pacman.lib.Logging.log;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.BonusEatenEvent;
-import de.amr.games.pacman.controller.event.DeadGhostCountChangeEvent;
 import de.amr.games.pacman.controller.event.ExtraLifeEvent;
+import de.amr.games.pacman.controller.event.GhostReturningHomeEvent;
 import de.amr.games.pacman.controller.event.PacManFoundFoodEvent;
 import de.amr.games.pacman.controller.event.PacManGainsPowerEvent;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
@@ -14,14 +14,14 @@ import de.amr.games.pacman.controller.event.PacManLostPowerEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.model.common.AbstractGameModel;
-import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.PacManGameSound;
 import javafx.scene.media.AudioClip;
 
 /**
  * Controls sound for 2D and 3D play scenes in reaction to game events.
  * 
- * TODO not sure if sound should be handled separately from the visual animations
+ * TODO not sure if sound should be handled separately from the visual
+ * animations
  * 
  * @author Armin Reichert
  */
@@ -55,10 +55,6 @@ public class PlaySceneSoundController {
 					sounds.stop(PacManGameSound.PACMAN_MUNCH);
 					log("Munching sound clip %s stopped", munching);
 				}
-			}
-			if (game().ghosts(GhostState.DEAD).count() > 0
-					&& !sounds.getClip(PacManGameSound.GHOST_RETURNING_HOME).isPlaying()) {
-				sounds.loop(PacManGameSound.GHOST_RETURNING_HOME, Integer.MAX_VALUE);
 			}
 		}
 	}
@@ -138,13 +134,8 @@ public class PlaySceneSoundController {
 			sounds.play(PacManGameSound.EXTRA_LIFE);
 		}
 
-		else if (gameEvent instanceof DeadGhostCountChangeEvent) {
-			DeadGhostCountChangeEvent e = (DeadGhostCountChangeEvent) gameEvent;
-			if (e.oldCount == 0 && e.newCount > 0) {
-				sounds.play(PacManGameSound.GHOST_RETURNING_HOME);
-			} else if (e.oldCount > 0 && e.newCount == 0) {
-				sounds.stop(PacManGameSound.GHOST_RETURNING_HOME);
-			}
+		else if (gameEvent instanceof GhostReturningHomeEvent) {
+			sounds.play(PacManGameSound.GHOST_RETURNING_HOME);
 		}
 	}
 }
