@@ -65,11 +65,6 @@ public abstract class AbstractGameScene2D<RENDERING extends Rendering2D> impleme
 		this.gameController = controller;
 	}
 
-	@Override
-	public String toString() {
-		return getClass().getSimpleName() + "@" + hashCode();
-	}
-
 	public Rendering2D getRendering() {
 		return rendering;
 	}

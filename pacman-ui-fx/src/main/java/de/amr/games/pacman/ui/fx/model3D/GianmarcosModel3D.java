@@ -28,18 +28,22 @@ public class GianmarcosModel3D {
 	private Map<String, MeshView> meshViewsByName;
 	private Map<String, PhongMaterial> materialsByName;
 
+	public static void main(String[] args) {
+		GianmarcosModel3D model = new GianmarcosModel3D();
+		log("MeshViews:");
+		model.meshViewsByName.keySet().stream().sorted().forEach(key -> log("%s", key));
+		log("");
+		log("Materials:");
+		model.materialsByName.keySet().stream().sorted().forEach(key -> log("%s", key));
+		log("Pac-Man 3D model loaded successfully!");
+	}
+
 	private GianmarcosModel3D() {
 		ObjModelImporter objImporter = new ObjModelImporter();
 		try {
 			objImporter.read(getClass().getResource("/common/gianmarco/pacman.obj"));
 			meshViewsByName = objImporter.getNamedMeshViews();
 			materialsByName = objImporter.getNamedMaterials();
-			log("MeshViews:");
-			meshViewsByName.keySet().stream().sorted().forEach(key -> log("%s", key));
-			log("");
-			log("Materials:");
-			materialsByName.keySet().stream().sorted().forEach(key -> log("%s", key));
-			log("Pac-Man 3D model loaded successfully!");
 		} catch (ImportException e) {
 			e.printStackTrace();
 		}
@@ -90,9 +94,5 @@ public class GianmarcosModel3D {
 		eyes.getChildren().remove(0);
 		Model3DHelper.centerNodeOverOrigin(eyes);
 		return eyes;
-	}
-
-	public static void main(String[] args) {
-		new GianmarcosModel3D();
 	}
 }
