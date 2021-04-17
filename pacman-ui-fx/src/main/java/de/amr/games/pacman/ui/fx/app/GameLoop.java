@@ -2,6 +2,9 @@ package de.amr.games.pacman.ui.fx.app;
 
 import static de.amr.games.pacman.lib.Logging.log;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import de.amr.games.pacman.ui.fx.Env;
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.IntegerProperty;
@@ -10,7 +13,8 @@ import javafx.beans.property.SimpleIntegerProperty;
 /**
  * Game loop.
  * <p>
- * Note that the animation timer frequency is taken from the monitor refresh rate!
+ * Note that the animation timer frequency is taken from the monitor refresh
+ * rate!
  * 
  * @author Armin Reichert
  */
@@ -19,15 +23,13 @@ class GameLoop extends AnimationTimer {
 	public IntegerProperty $fps = new SimpleIntegerProperty();
 	public IntegerProperty $totalTicks = new SimpleIntegerProperty();
 
-	private final Runnable step;
-	private final Runnable uiUpdate;
+	private final Map<String, Runnable> tasks = new LinkedHashMap<>();
 
 	private long fpsCountStartTime;
 	private int frames;
 
-	public GameLoop(Runnable step, Runnable uiUpdate) {
-		this.step = step;
-		this.uiUpdate = uiUpdate;
+	public void addTask(String name, Runnable task) {
+		tasks.put(name, task);
 	}
 
 	@Override
@@ -35,11 +37,13 @@ class GameLoop extends AnimationTimer {
 		if ($totalTicks.get() % Env.$slowDown.get() == 0) {
 			if (!Env.$paused.get()) {
 				if (Env.$timeMeasured.get()) {
-					measureTime(step::run, "Controller update");
-					measureTime(uiUpdate::run, "User interface update");
+					for (String name : tasks.keySet()) {
+						measureTaskTime(tasks.get(name), name);
+					}
 				} else {
-					step.run();
-					uiUpdate.run();
+					for (String name : tasks.keySet()) {
+						tasks.get(name).run();
+					}
 				}
 			}
 			++frames;
@@ -52,10 +56,10 @@ class GameLoop extends AnimationTimer {
 		$totalTicks.set($totalTicks.get() + 1);
 	}
 
-	private void measureTime(Runnable runnable, String description) {
+	private void measureTaskTime(Runnable task, String description) {
 		double start = System.nanoTime();
 		try {
-			runnable.run();
+			task.run();
 			double duration = (System.nanoTime() - start) / 1e6;
 			log("%s took %f millis", description, duration);
 		} catch (Exception e) {

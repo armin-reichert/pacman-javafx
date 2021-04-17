@@ -40,7 +40,7 @@ public class PacManGameAppFX extends Application {
 
 	private static Options options;
 	private PacManGameController gameController;
-	private GameLoop gameLoop;
+	private final GameLoop gameLoop = new GameLoop();
 
 	public static void main(String[] args) {
 		options = new Options(args);
@@ -56,10 +56,11 @@ public class PacManGameAppFX extends Application {
 	@Override
 	public void start(Stage stage) throws IOException {
 		PacManGameUI_JavaFX ui = new PacManGameUI_JavaFX(stage, gameController, options.height);
+		PacManGameUI_JavaFX.$TOTAL_TICKS.bind(gameLoop.$totalTicks);
+		PacManGameUI_JavaFX.$FPS.bind(gameLoop.$fps);
 		gameController.setUI(ui);
-		gameLoop = new GameLoop(gameController::step, ui::update);
+		gameLoop.addTask("Controller Step", gameController::step);
+		gameLoop.addTask("UI Update", ui::update);
 		gameLoop.start();
-		PacManGameUI_JavaFX.$totalTicks.bind(gameLoop.$totalTicks);
-		PacManGameUI_JavaFX.$fps.bind(gameLoop.$fps);
 	}
 }

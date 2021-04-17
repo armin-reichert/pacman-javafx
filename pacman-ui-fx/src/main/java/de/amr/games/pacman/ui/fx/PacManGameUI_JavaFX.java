@@ -34,8 +34,8 @@ import javafx.stage.Stage;
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
 
-	public static final IntegerProperty $fps = new SimpleIntegerProperty();
-	public static final IntegerProperty $totalTicks = new SimpleIntegerProperty();
+	public static final IntegerProperty $FPS = new SimpleIntegerProperty();
+	public static final IntegerProperty $TOTAL_TICKS = new SimpleIntegerProperty();
 	
 	public final Stage stage;
 	public final PacManGameController gameController;
@@ -64,10 +64,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
 		stage.addEventHandler(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
-		$fps.addListener((source, oldValue, newValue) -> {
+		$FPS.addListener((source, oldValue, newValue) -> {
 			stage.setTitle(String.format("Pac-Man / Ms. Pac-Man (%d fps, JavaFX)", newValue));
 		});
-		$totalTicks.addListener((source, oldValue, newValue) -> {
+		$TOTAL_TICKS.addListener((source, oldValue, newValue) -> {
 			hud.update();
 		});
 		stage.getIcons().add(new Image(getClass().getResource("/pacman/graphics/pacman.png").toExternalForm()));
@@ -283,7 +283,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		case DIGIT3:
 			toggleUse3DScenes();
-			String message = String.format("3D scenes %s", Env.$use3DScenes.get() ? "ON" : "OFF");
+			String message = String.format("3D scenes are %s", Env.$use3DScenes.get() ? "ON" : "OFF");
 			showFlashMessage(message);
 			break;
 

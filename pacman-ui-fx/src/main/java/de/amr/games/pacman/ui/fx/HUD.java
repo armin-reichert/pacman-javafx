@@ -54,8 +54,9 @@ public class HUD extends HBox {
 	public void update() {
 		TickTimer stateTimer = ui.gameController.stateTimer();
 		text = "";
-		line("Frame rate", "%d Hz", PacManGameUI_JavaFX.$fps.get());
+		line("Frame rate", "%d Hz", PacManGameUI_JavaFX.$FPS.get());
 		line("Speed (CTRL/SHIFT+S)", "%.0f%%", 100.0 / Env.$slowDown.get());
+		line("Total Ticks", "%d", PacManGameUI_JavaFX.$TOTAL_TICKS.get());
 		line("Paused (CTRL+P)", "%s", yesNo(Env.$paused.get()));
 		line();
 		line("Game Variant", "%s", ui.gameController.gameVariant());
