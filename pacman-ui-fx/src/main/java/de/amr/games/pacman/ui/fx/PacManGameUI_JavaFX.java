@@ -34,8 +34,9 @@ import javafx.stage.Stage;
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
 
-	public final IntegerProperty $fps = new SimpleIntegerProperty();
-	public final IntegerProperty $totalTicks = new SimpleIntegerProperty();
+	public static final IntegerProperty $fps = new SimpleIntegerProperty();
+	public static final IntegerProperty $totalTicks = new SimpleIntegerProperty();
+	
 	public final Stage stage;
 	public final PacManGameController gameController;
 	public final HUD hud = new HUD(this);

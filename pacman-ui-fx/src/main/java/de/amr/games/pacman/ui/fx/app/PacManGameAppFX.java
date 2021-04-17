@@ -59,7 +59,7 @@ public class PacManGameAppFX extends Application {
 		gameController.setUI(ui);
 		gameLoop = new GameLoop(gameController::step, ui::update);
 		gameLoop.start();
-		ui.$totalTicks.bind(gameLoop.$totalTicks);
-		ui.$fps.bind(gameLoop.$fps);
+		PacManGameUI_JavaFX.$totalTicks.bind(gameLoop.$totalTicks);
+		PacManGameUI_JavaFX.$fps.bind(gameLoop.$fps);
 	}
 }
