@@ -26,31 +26,32 @@ import javafx.util.Duration;
  */
 public class Maze2D<RENDERING extends Rendering2D> implements Renderable2D<RENDERING> {
 
-	private RENDERING rendering;
+	private final V2i leftUpperCorner;
+	private final RENDERING rendering;
 	private GameLevel gameLevel;
-	private V2i tile;
 	private Timeline flashingAnimation;
 	private boolean flashImage;
 	private List<Energizer2D<RENDERING>> energizers2D;
 	private TimedSequence<Boolean> energizerBlinking = TimedSequence.pulse().frameDuration(10);
 
-	public Maze2D(GameLevel gameLevel, RENDERING rendering) {
+	public Maze2D(V2i leftUpperCorner, RENDERING rendering) {
+		this.leftUpperCorner = leftUpperCorner;
 		this.rendering = rendering;
-		this.gameLevel = gameLevel;
-		KeyFrame changeMazeImage = new KeyFrame(Duration.millis(150), e -> flashImage = !flashImage);
-		flashingAnimation = new Timeline(changeMazeImage);
+		KeyFrame switchImage = new KeyFrame(Duration.millis(150), e -> flashImage = !flashImage);
+		flashingAnimation = new Timeline(switchImage);
 		flashImage = false;
-		flashingAnimation.setCycleCount(2 * gameLevel.numFlashes);
+	}
+
+	public void setGameLevel(GameLevel gameLevel) {
+		this.gameLevel = gameLevel;
 		energizers2D = gameLevel.world.energizerTiles().map(energizerTile -> {
 			Energizer2D<RENDERING> energizer2D = new Energizer2D<RENDERING>(rendering);
 			energizer2D.setTile(energizerTile);
 			energizer2D.setBlinkingAnimation(energizerBlinking);
 			return energizer2D;
 		}).collect(Collectors.toList());
-	}
-
-	public void setLeftUpperCorner(V2i tile) {
-		this.tile = tile;
+		flashingAnimation.stop(); // just in case
+		flashingAnimation.setCycleCount(2 * gameLevel.numFlashes);
 	}
 
 	public boolean isFlashing() {
@@ -70,10 +71,10 @@ public class Maze2D<RENDERING extends Rendering2D> implements Renderable2D<RENDE
 		if (flashingAnimation.getStatus() == Status.RUNNING) {
 			Image image = flashImage ? rendering.getMazeFlashImage(gameLevel.mazeNumber)
 					: rendering.getMazeEmptyImage(gameLevel.mazeNumber);
-			g.drawImage(image, t(tile.x), t(tile.y));
+			g.drawImage(image, t(leftUpperCorner.x), t(leftUpperCorner.y));
 		} else {
 			Image image = rendering.getMazeFullImage(gameLevel.mazeNumber);
-			g.drawImage(image, t(tile.x), t(tile.y));
+			g.drawImage(image, t(leftUpperCorner.x), t(leftUpperCorner.y));
 			energizers2D.forEach(energizer2D -> energizer2D.render(g));
 			energizerBlinking.animate();
 			g.setFill(Color.BLACK);

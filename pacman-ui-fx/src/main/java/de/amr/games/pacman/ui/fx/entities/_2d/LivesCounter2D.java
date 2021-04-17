@@ -18,27 +18,20 @@ import javafx.scene.text.FontWeight;
  */
 public class LivesCounter2D<RENDERING extends Rendering2D> implements Renderable2D<RENDERING> {
 
-	private final RENDERING rendering;
-	private V2i tile;
-	private int lives;
+	public final RENDERING rendering;
+	public final V2i leftUpperTile;
+	public int lives;
 
-	public LivesCounter2D(RENDERING rendering) {
+	public LivesCounter2D(V2i leftUpperTile, RENDERING rendering) {
+		this.leftUpperTile = leftUpperTile;
 		this.rendering = rendering;
-	}
-
-	public void setLeftUpperCorner(V2i tile) {
-		this.tile = tile;
-	}
-
-	public void setLives(int lives) {
-		this.lives = lives;
 	}
 
 	@Override
 	public void render(GraphicsContext g) {
 		Rectangle2D sprite = rendering.getLifeImage();
 		int maxLivesDisplayed = 5;
-		double x = tile.x * TS, y = tile.y * TS;
+		double x = leftUpperTile.x * TS, y = leftUpperTile.y * TS;
 		for (int i = 0; i < Math.min(lives, maxLivesDisplayed); ++i) {
 			rendering.renderSprite(g, sprite, x + t(2 * i), y);
 		}

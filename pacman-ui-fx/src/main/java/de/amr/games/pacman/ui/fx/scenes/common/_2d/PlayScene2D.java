@@ -57,12 +57,11 @@ public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScen
 	public void start() {
 		super.start();
 
-		maze2D = new Maze2D<>(game().currentLevel, rendering);
-		maze2D.setLeftUpperCorner(new V2i(0, 3));
+		maze2D = new Maze2D<>(new V2i(0, 3), rendering);
+		maze2D.setGameLevel(game().currentLevel);
 
-		livesCounter2D = new LivesCounter2D<>(rendering);
-		livesCounter2D.setLeftUpperCorner(new V2i(2, 34));
-		livesCounter2D.setLives(game().lives);
+		livesCounter2D = new LivesCounter2D<>(new V2i(2, 34), rendering);
+		livesCounter2D.lives = game().lives;
 
 		score2D = new GameScore2D<>(rendering);
 		score2D.setTitle("SCORE");
@@ -97,15 +96,15 @@ public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScen
 
 	@Override
 	public void update() {
-		livesCounter2D.setLives(game().lives);
+		livesCounter2D.lives = game().lives;
 		animationController.update();
 	}
 
 	private void onGameStateChange(PacManGameStateChangedEvent event) {
 		if (event.newGameState == PacManGameState.LEVEL_STARTING) {
-			maze2D = new Maze2D<>(event.gameModel.currentLevel, rendering);
-			maze2D.setLeftUpperCorner(new V2i(0, 3));
-			gameController.stateTimer().reset(1);
+			maze2D.setGameLevel(event.gameModel.currentLevel);
+			// wait 1 second
+			gameController.stateTimer().reset(60);
 			gameController.stateTimer().start();
 			animationController.init();
 		}
