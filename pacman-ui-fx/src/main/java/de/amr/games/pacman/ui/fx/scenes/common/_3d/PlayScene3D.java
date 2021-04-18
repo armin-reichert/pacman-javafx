@@ -4,23 +4,15 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static java.util.function.Predicate.not;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalDouble;
-import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.controller.PacManGameState;
-import de.amr.games.pacman.controller.event.BonusActivatedEvent;
-import de.amr.games.pacman.controller.event.BonusEatenEvent;
-import de.amr.games.pacman.controller.event.BonusExpiredEvent;
-import de.amr.games.pacman.controller.event.ExtraLifeEvent;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
-import de.amr.games.pacman.controller.event.PacManGameStateChangedEvent;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameLevel;
@@ -28,7 +20,6 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.model.world.PacManGameWorld;
-import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.entities._3d.Bonus3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Ghost3D;
 import de.amr.games.pacman.ui.fx.entities._3d.LevelCounter3D;
@@ -40,11 +31,7 @@ import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Impl;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.common._3d.PlaySceneCameras.CameraType;
-import javafx.animation.PauseTransition;
-import javafx.animation.ScaleTransition;
-import javafx.animation.SequentialTransition;
-import javafx.animation.Transition;
-import javafx.animation.TranslateTransition;
+import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -56,7 +43,6 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
-import javafx.util.Duration;
 
 /**
  * 3D scene displaying the maze and the game play for both, Pac-Man and Ms.
@@ -66,8 +52,6 @@ import javafx.util.Duration;
  */
 public class PlayScene3D implements GameScene {
 
-	private static final String[] CONGRATS = { "Well done", "Congrats", "Awesome", "You did it", "You're the man*in",
-			"WTF" };
 	private static final int MAX_LIVES_DISPLAYED = 5;
 
 	private final SubScene fxScene;
@@ -78,19 +62,18 @@ public class PlayScene3D implements GameScene {
 
 	private CoordinateSystem coordSystem;
 	private Box floor;
-	private Group player;
+	Group player;
 	private Map<Ghost, Ghost3D> ghosts3D;
 	private Maze3D maze;
-	private List<Node> energizers;
-	private List<Transition> energizerAnimations;
+	List<Node> energizers;
 	private List<Node> pellets;
-	private Bonus3D bonus3D;
+	Bonus3D bonus3D;
 	private ScoreNotReally3D score3D;
 	private Group livesCounter3D;
-	private LevelCounter3D levelCounter3D;
+	LevelCounter3D levelCounter3D;
 
-	public PlayScene3D(PlayScene3DAnimationController animationController) {
-		this.animationController = animationController;
+	public PlayScene3D(SoundManager sounds) {
+		this.animationController = new PlayScene3DAnimationController(this, sounds);
 		fxScene = new SubScene(new Group(), 800, 600, true, SceneAntialiasing.BALANCED);
 		cams = new PlaySceneCameras(fxScene);
 		cams.select(CameraType.DYNAMIC);
@@ -256,155 +239,6 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void onGameEvent(PacManGameEvent gameEvent) {
 		animationController.onGameEvent(gameEvent);
-
-		if (gameEvent instanceof PacManGameStateChangedEvent) {
-			onGameStateChange((PacManGameStateChangedEvent) gameEvent);
-		}
-
-		else if (gameEvent instanceof ExtraLifeEvent) {
-			gameController.getUI().showFlashMessage("Extra life!");
-		}
-
-		else if (gameEvent instanceof BonusActivatedEvent) {
-			bonus3D.showSymbol(game().bonus);
-		}
-
-		else if (gameEvent instanceof BonusExpiredEvent) {
-			bonus3D.hide();
-		}
-
-		else if (gameEvent instanceof BonusEatenEvent) {
-			bonus3D.showPoints(game().bonus);
-		}
 	}
 
-	private void onGameStateChange(PacManGameStateChangedEvent event) {
-
-		// enter HUNTING
-		if (event.newGameState == PacManGameState.HUNTING) {
-			startEnergizerAnimations();
-		}
-
-		// exit HUNTING
-		if (event.oldGameState == PacManGameState.HUNTING && event.newGameState != PacManGameState.GHOST_DYING) {
-			stopEnergizerAnimations();
-			bonus3D.hide();
-		}
-
-		// enter PACMAN_DYING
-		if (event.newGameState == PacManGameState.PACMAN_DYING) {
-			playAnimationPlayerDying();
-		}
-
-		// enter LEVEL_COMPLETE
-		if (event.newGameState == PacManGameState.LEVEL_COMPLETE) {
-			playAnimationLevelComplete();
-		}
-
-		// enter LEVEL_STARTING
-		if (event.newGameState == PacManGameState.LEVEL_STARTING) {
-			levelCounter3D.update(event.gameModel);
-			playAnimationLevelStarting();
-		}
-	}
-
-	private void startEnergizerAnimations() {
-		if (energizerAnimations == null) {
-			energizerAnimations = new ArrayList<>();
-			energizers.forEach(energizer -> {
-				ScaleTransition pumping = new ScaleTransition(Duration.seconds(0.25), energizer);
-				pumping.setAutoReverse(true);
-				pumping.setCycleCount(Transition.INDEFINITE);
-				pumping.setFromX(0.2);
-				pumping.setFromY(0.2);
-				pumping.setFromZ(0.2);
-				pumping.setToX(1);
-				pumping.setToY(1);
-				pumping.setToZ(1);
-				energizerAnimations.add(pumping);
-			});
-		}
-		energizerAnimations.forEach(Transition::play);
-	}
-
-	private void stopEnergizerAnimations() {
-		energizerAnimations.forEach(Transition::stop);
-		energizers.forEach(energizer -> {
-			energizer.setScaleX(1);
-			energizer.setScaleY(1);
-			energizer.setScaleZ(1);
-		});
-	}
-
-	private void playAnimationPlayerDying() {
-
-		double savedTranslateX = player.getTranslateX();
-		double savedTranslateY = player.getTranslateY();
-		double savedTranslateZ = player.getTranslateZ();
-
-		PauseTransition phase1 = new PauseTransition(Duration.seconds(1));
-		phase1.setOnFinished(e -> {
-			game().ghosts().forEach(ghost -> ghost.visible = false);
-			game().player.turnBothTo(Direction.DOWN);
-			animationController.sounds.play(PacManGameSound.PACMAN_DEATH);
-		});
-
-		TranslateTransition raise = new TranslateTransition(Duration.seconds(0.5), player);
-		raise.setFromZ(0);
-		raise.setToZ(-10);
-		raise.setByZ(1);
-
-		ScaleTransition expand = new ScaleTransition(Duration.seconds(0.5), player);
-		expand.setToX(2);
-		expand.setToY(2);
-		expand.setToZ(2);
-
-		ScaleTransition shrink = new ScaleTransition(Duration.seconds(1), player);
-		shrink.setToX(0);
-		shrink.setToY(0);
-		shrink.setToZ(0);
-
-		SequentialTransition animation = new SequentialTransition(phase1, raise, expand, shrink);
-		animation.setOnFinished(e -> {
-			player.setScaleX(1);
-			player.setScaleY(1);
-			player.setScaleZ(1);
-			player.setTranslateX(savedTranslateX);
-			player.setTranslateY(savedTranslateY);
-			player.setTranslateZ(savedTranslateZ);
-			game().player.visible = false;
-			gameController.stateTimer().forceExpiration();
-		});
-
-		animation.play();
-	}
-
-	private void playAnimationLevelComplete() {
-		gameController.stateTimer().reset();
-		PauseTransition phase1 = new PauseTransition(Duration.seconds(2));
-		phase1.setDelay(Duration.seconds(1));
-		phase1.setOnFinished(e -> {
-			game().player.visible = false;
-			game().ghosts().forEach(ghost -> ghost.visible = false);
-			String congrats = CONGRATS[new Random().nextInt(CONGRATS.length)];
-			String message = String.format("%s!\n\nLevel %d complete.", congrats, game().currentLevelNumber);
-			gameController.getUI().showFlashMessage(message, 2);
-		});
-		SequentialTransition animation = new SequentialTransition(phase1, new PauseTransition(Duration.seconds(2)));
-		animation.setOnFinished(e -> gameController.stateTimer().forceExpiration());
-		animation.play();
-	}
-
-	private void playAnimationLevelStarting() {
-		gameController.stateTimer().reset();
-		gameController.getUI().showFlashMessage("Entering Level " + gameController.game().currentLevelNumber);
-		PauseTransition phase1 = new PauseTransition(Duration.seconds(2));
-		phase1.setOnFinished(e -> {
-			game().player.visible = true;
-			game().ghosts().forEach(ghost -> ghost.visible = true);
-		});
-		SequentialTransition animation = new SequentialTransition(phase1, new PauseTransition(Duration.seconds(2)));
-		animation.setOnFinished(e -> gameController.stateTimer().forceExpiration());
-		animation.play();
-	}
 }
