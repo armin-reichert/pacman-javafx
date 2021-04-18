@@ -40,7 +40,6 @@ import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Impl;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.common._3d.PlaySceneCameras.CameraType;
-import de.amr.games.pacman.ui.fx.sound.PlaySceneSoundController;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
@@ -74,7 +73,7 @@ public class PlayScene3D implements GameScene {
 	private final SubScene fxScene;
 	private final PlaySceneCameras cams;
 
-	private PlaySceneSoundController soundController;
+	private PlayScene3DAnimationController animationController;
 	private PacManGameController gameController;
 
 	private CoordinateSystem coordSystem;
@@ -90,8 +89,8 @@ public class PlayScene3D implements GameScene {
 	private Group livesCounter3D;
 	private LevelCounter3D levelCounter3D;
 
-	public PlayScene3D(PlaySceneSoundController soundController) {
-		this.soundController = soundController;
+	public PlayScene3D(PlayScene3DAnimationController animationController) {
+		this.animationController = animationController;
 		fxScene = new SubScene(new Group(), 800, 600, true, SceneAntialiasing.BALANCED);
 		cams = new PlaySceneCameras(fxScene);
 		cams.select(CameraType.DYNAMIC);
@@ -105,7 +104,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void setGameController(PacManGameController gameController) {
 		this.gameController = gameController;
-		soundController.setGameController(gameController);
+		animationController.setGameController(gameController);
 	}
 
 	@Override
@@ -213,7 +212,7 @@ public class PlayScene3D implements GameScene {
 		ghosts3D.values().forEach(Ghost3D::update);
 		bonus3D.update(game().bonus);
 		cams.updateSelectedCamera(player);
-		soundController.update();
+		animationController.update();
 	}
 
 	@Override
@@ -256,7 +255,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onGameEvent(PacManGameEvent gameEvent) {
-		soundController.onGameEvent(gameEvent);
+		animationController.onGameEvent(gameEvent);
 
 		if (gameEvent instanceof PacManGameStateChangedEvent) {
 			onGameStateChange((PacManGameStateChangedEvent) gameEvent);
@@ -280,12 +279,6 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void onGameStateChange(PacManGameStateChangedEvent event) {
-
-		soundController.onGameStateChange(event.oldGameState, event.newGameState);
-
-		// enter READY
-		if (event.newGameState == PacManGameState.READY) {
-		}
 
 		// enter HUNTING
 		if (event.newGameState == PacManGameState.HUNTING) {
@@ -353,7 +346,7 @@ public class PlayScene3D implements GameScene {
 		phase1.setOnFinished(e -> {
 			game().ghosts().forEach(ghost -> ghost.visible = false);
 			game().player.turnBothTo(Direction.DOWN);
-			soundController.sounds.play(PacManGameSound.PACMAN_DEATH);
+			animationController.sounds.play(PacManGameSound.PACMAN_DEATH);
 		});
 
 		TranslateTransition raise = new TranslateTransition(Duration.seconds(0.5), player);

@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.sound;
+package de.amr.games.pacman.ui.fx.scenes.common._3d;
 
 import static de.amr.games.pacman.lib.Logging.log;
 
@@ -10,27 +10,26 @@ import de.amr.games.pacman.controller.event.GhostReturningHomeEvent;
 import de.amr.games.pacman.controller.event.PacManFoundFoodEvent;
 import de.amr.games.pacman.controller.event.PacManGainsPowerEvent;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
+import de.amr.games.pacman.controller.event.PacManGameStateChangedEvent;
 import de.amr.games.pacman.controller.event.PacManLostPowerEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.model.common.AbstractGameModel;
 import de.amr.games.pacman.ui.PacManGameSound;
+import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.media.AudioClip;
 
 /**
- * Controls sound for 2D and 3D play scenes in reaction to game events.
- * 
- * TODO not sure if sound should be handled separately from the visual
- * animations
+ * Controls sound and animations for the 3D play scenes.
  * 
  * @author Armin Reichert
  */
-public class PlaySceneSoundController {
+public class PlayScene3DAnimationController {
 
 	public final SoundManager sounds;
 	private PacManGameController gameController;
 
-	public PlaySceneSoundController(SoundManager sounds) {
+	public PlayScene3DAnimationController(SoundManager sounds) {
 		this.sounds = sounds;
 	}
 
@@ -59,11 +58,11 @@ public class PlaySceneSoundController {
 		}
 	}
 
-	public void onGameStateChange(PacManGameState oldState, PacManGameState newState) {
+	private void onGameStateChange(PacManGameStateChangedEvent e) {
 		sounds.setMuted(gameController.isAttractMode());
 
 		// enter READY
-		if (newState == PacManGameState.READY) {
+		if (e.newGameState == PacManGameState.READY) {
 			sounds.stopAll();
 			if (!gameController.isAttractMode() && !gameController.isGameRunning()) {
 				gameController.stateTimer().resetSeconds(4.5);
@@ -74,22 +73,22 @@ public class PlaySceneSoundController {
 		}
 
 		// enter PACMAN_DYING
-		if (newState == PacManGameState.PACMAN_DYING) {
+		else if (e.newGameState == PacManGameState.PACMAN_DYING) {
 			sounds.stopAll();
 		}
 
 		// enter GHOST_DYING
-		if (newState == PacManGameState.GHOST_DYING) {
+		else if (e.newGameState == PacManGameState.GHOST_DYING) {
 			sounds.play(PacManGameSound.GHOST_EATEN);
 		}
 
 		// enter LEVEL_COMPLETE
-		if (newState == PacManGameState.LEVEL_COMPLETE) {
+		else if (e.newGameState == PacManGameState.LEVEL_COMPLETE) {
 			sounds.stopAll();
 		}
 
 		// enter GAME_OVER
-		if (newState == PacManGameState.GAME_OVER) {
+		else if (e.newGameState == PacManGameState.GAME_OVER) {
 			sounds.stopAll();
 		}
 	}
@@ -99,6 +98,10 @@ public class PlaySceneSoundController {
 			return;
 		}
 		sounds.setMuted(false);
+		
+		if (gameEvent instanceof PacManGameStateChangedEvent) {
+			onGameStateChange((PacManGameStateChangedEvent) gameEvent);
+		}
 
 		if (gameEvent instanceof ScatterPhaseStartedEvent) {
 			ScatterPhaseStartedEvent e = (ScatterPhaseStartedEvent) gameEvent;
