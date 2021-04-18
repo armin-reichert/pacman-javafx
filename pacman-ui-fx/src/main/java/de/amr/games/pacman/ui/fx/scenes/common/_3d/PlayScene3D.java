@@ -120,12 +120,14 @@ public class PlayScene3D implements GameScene {
 		final Rendering2D r2D = Rendering2D_Impl.get(variant);
 		final Group root = new Group();
 
-		maze = new Maze3D(world, Rendering2D_Assets.getMazeWallColor(variant, level.mazeNumber));
+		Color wallColor = Rendering2D_Assets.getMazeWallColor(variant, level.mazeNumber);
+		maze = new Maze3D(world, wallColor);
 
 		floor = new Box(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, 0.1);
-		PhongMaterial floorMaterial = new PhongMaterial(Color.rgb(0, 0, 60));
+		PhongMaterial floorMaterial = new PhongMaterial(Color.rgb(20, 20, 100));
 		Image tileTexture = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
-		floorMaterial.setBumpMap(tileTexture);
+//		floorMaterial.setBumpMap(tileTexture);
+		floorMaterial.setDiffuseMap(tileTexture);
 		floor.setMaterial(floorMaterial);
 		floor.setTranslateX(UNSCALED_SCENE_WIDTH / 2 - 4);
 		floor.setTranslateY(UNSCALED_SCENE_HEIGHT / 2 - 4);

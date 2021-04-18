@@ -132,7 +132,6 @@ public class Maze3D {
 
 		PhongMaterial brickMaterial = new PhongMaterial(wallColor);
 		bricks = microTiles.stream().map(mt -> createBrick(mt.x, mt.y, brickMaterial)).collect(Collectors.toList());
-
 	}
 
 	public List<Node> getBricks() {
