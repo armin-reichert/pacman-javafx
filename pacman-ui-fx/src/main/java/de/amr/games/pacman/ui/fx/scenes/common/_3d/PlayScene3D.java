@@ -38,6 +38,7 @@ import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -122,7 +123,9 @@ public class PlayScene3D implements GameScene {
 		maze = new Maze3D(world, Rendering2D_Assets.getMazeWallColor(variant, level.mazeNumber));
 
 		floor = new Box(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, 0.1);
-		PhongMaterial floorMaterial = new PhongMaterial(Color.rgb(0, 0, 80));
+		PhongMaterial floorMaterial = new PhongMaterial(Color.rgb(0, 0, 60));
+		Image tileTexture = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
+		floorMaterial.setBumpMap(tileTexture);
 		floor.setMaterial(floorMaterial);
 		floor.setTranslateX(UNSCALED_SCENE_WIDTH / 2 - 4);
 		floor.setTranslateY(UNSCALED_SCENE_HEIGHT / 2 - 4);
