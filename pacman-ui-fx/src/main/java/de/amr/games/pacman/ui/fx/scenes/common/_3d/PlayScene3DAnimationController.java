@@ -42,10 +42,9 @@ public class PlayScene3DAnimationController {
 	private static final String[] CONGRATS = { "Well done", "Congrats", "Awesome", "You did it", "You're the man*in",
 			"WTF" };
 
-	public final SoundManager sounds;
 	private final PlayScene3D playScene;
+	private final SoundManager sounds;
 	private PacManGameController gameController;
-
 	private List<Transition> energizerAnimations;
 
 	public PlayScene3DAnimationController(PlayScene3D playScene, SoundManager sounds) {
