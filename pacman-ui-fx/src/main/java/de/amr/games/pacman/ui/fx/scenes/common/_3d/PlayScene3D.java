@@ -45,8 +45,7 @@ import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 
 /**
- * 3D scene displaying the maze and the game play for both, Pac-Man and Ms.
- * Pac-Man games.
+ * 3D scene displaying the maze and the game play for both, Pac-Man and Ms. Pac-Man games.
  * 
  * @author Armin Reichert
  */
@@ -175,6 +174,8 @@ public class PlayScene3D implements GameScene {
 
 		fxScene.setRoot(new Group(coordSystem.getNode(), root));
 		fxScene.setFill(Color.rgb(0, 0, 0));
+
+		animationController.init();
 	}
 
 	@Override

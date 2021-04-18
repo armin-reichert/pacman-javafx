@@ -61,6 +61,10 @@ public class PlayScene3DAnimationController {
 		return gameController.game();
 	}
 
+	public void init() {
+		createEnergizerAnimations();
+	}
+
 	public void update() {
 		if (gameController.isAttractMode()) {
 			return;
@@ -149,6 +153,7 @@ public class PlayScene3DAnimationController {
 			} else {
 				gameController.stateTimer().resetSeconds(2);
 			}
+			gameController.stateTimer().start();
 		}
 
 		// enter HUNTING
@@ -191,22 +196,23 @@ public class PlayScene3DAnimationController {
 		}
 	}
 
+	private void createEnergizerAnimations() {
+		energizerAnimations = new ArrayList<>();
+		playScene.energizers.forEach(energizer -> {
+			ScaleTransition pumping = new ScaleTransition(Duration.seconds(0.25), energizer);
+			pumping.setAutoReverse(true);
+			pumping.setCycleCount(Transition.INDEFINITE);
+			pumping.setFromX(0.2);
+			pumping.setFromY(0.2);
+			pumping.setFromZ(0.2);
+			pumping.setToX(1);
+			pumping.setToY(1);
+			pumping.setToZ(1);
+			energizerAnimations.add(pumping);
+		});
+	}
+
 	private void startEnergizerAnimations() {
-		if (energizerAnimations == null) {
-			energizerAnimations = new ArrayList<>();
-			playScene.energizers.forEach(energizer -> {
-				ScaleTransition pumping = new ScaleTransition(Duration.seconds(0.25), energizer);
-				pumping.setAutoReverse(true);
-				pumping.setCycleCount(Transition.INDEFINITE);
-				pumping.setFromX(0.2);
-				pumping.setFromY(0.2);
-				pumping.setFromZ(0.2);
-				pumping.setToX(1);
-				pumping.setToY(1);
-				pumping.setToZ(1);
-				energizerAnimations.add(pumping);
-			});
-		}
 		energizerAnimations.forEach(Transition::play);
 	}
 

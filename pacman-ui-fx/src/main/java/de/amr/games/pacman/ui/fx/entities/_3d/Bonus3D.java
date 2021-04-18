@@ -76,6 +76,9 @@ public class Bonus3D extends Box {
 	}
 
 	public void showPoints(PacManBonus bonus) {
+		if (bonus.points >= 1000) {
+			setWidth(10);
+		}
 		skin.setBumpMap(pointsSprites.get(bonus.points));
 		skin.setDiffuseMap(pointsSprites.get(bonus.points));
 		setMaterial(skin);
