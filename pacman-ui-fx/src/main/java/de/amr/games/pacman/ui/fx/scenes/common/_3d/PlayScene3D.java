@@ -178,6 +178,11 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
+	public void onGameEvent(PacManGameEvent gameEvent) {
+		animationController.onGameEvent(gameEvent);
+	}
+
+	@Override
 	public void update() {
 		score3D.update(game(), cams.selectedCamera());
 		for (int i = 0; i < MAX_LIVES_DISPLAYED; ++i) {
@@ -232,13 +237,20 @@ public class PlayScene3D implements GameScene {
 		player.setTranslateX(pac.position.x);
 		player.setTranslateY(pac.position.y);
 		player.setRotationAxis(Rotate.Z_AXIS);
-		player.setRotate(
-				pac.dir == Direction.LEFT ? 0 : pac.dir == Direction.UP ? 90 : pac.dir == Direction.RIGHT ? 180 : 270);
+		player.setRotate(lerp(player.getRotate(), targetAngle(pac.dir, player.getRotate()), 0.2));
 	}
 
-	@Override
-	public void onGameEvent(PacManGameEvent gameEvent) {
-		animationController.onGameEvent(gameEvent);
+	private double lerp(double is, double target, double factor) {
+		return is + factor * (target - is);
 	}
 
+	private double targetAngle(Direction dir, double currentAngle) {
+		double targetAngle = dir == Direction.LEFT ? 0 : dir == Direction.UP ? 90 : dir == Direction.RIGHT ? 180 : 270;
+		if (currentAngle > targetAngle + 180) {
+			targetAngle += 360;
+		} else if (currentAngle < targetAngle - 180) {
+			targetAngle -= 360;
+		}
+		return targetAngle;
+	}
 }
