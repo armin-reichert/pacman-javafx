@@ -27,6 +27,7 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.Pac;
+import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.entities._3d.Bonus3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Ghost3D;
@@ -59,7 +60,8 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 /**
- * 3D scene displaying the maze and the game play for both, Pac-Man and Ms. Pac-Man games.
+ * 3D scene displaying the maze and the game play for both, Pac-Man and Ms.
+ * Pac-Man games.
  * 
  * @author Armin Reichert
  */
@@ -67,6 +69,7 @@ public class PlayScene3D implements GameScene {
 
 	private static final String[] CONGRATS = { "Well done", "Congrats", "Awesome", "You did it", "You're the man*in",
 			"WTF" };
+	private static final int MAX_LIVES_DISPLAYED = 5;
 
 	private final SubScene fxScene;
 	private final PlaySceneCameras cams;
@@ -87,8 +90,8 @@ public class PlayScene3D implements GameScene {
 	private Group livesCounter3D;
 	private LevelCounter3D levelCounter3D;
 
-	public PlayScene3D(PlaySceneSoundController soundHandler) {
-		this.soundController = soundHandler;
+	public PlayScene3D(PlaySceneSoundController soundController) {
+		this.soundController = soundController;
 		fxScene = new SubScene(new Group(), 800, 600, true, SceneAntialiasing.BALANCED);
 		cams = new PlaySceneCameras(fxScene);
 		cams.select(CameraType.DYNAMIC);
@@ -127,8 +130,34 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void init() {
-		log("Game scene %s: start", this);
-		buildSceneGraph(gameController.gameVariant(), game().currentLevel);
+		log("Game scene %s: init", this);
+
+		final GameVariant variant = gameController.gameVariant();
+		final GameLevel level = game().currentLevel;
+		final PacManGameWorld world = level.world;
+		final Rendering2D r2D = Rendering2D_Impl.get(variant);
+		final Group root = new Group();
+
+		maze = new Maze3D(world, Rendering2D_Assets.getMazeWallColor(variant, level.mazeNumber));
+
+		floor = new Box(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, 0.1);
+		PhongMaterial floorMaterial = new PhongMaterial(Color.rgb(0, 0, 80));
+		floor.setMaterial(floorMaterial);
+		floor.setTranslateX(UNSCALED_SCENE_WIDTH / 2 - 4);
+		floor.setTranslateY(UNSCALED_SCENE_HEIGHT / 2 - 4);
+		floor.setTranslateZ(3);
+
+		PhongMaterial foodMaterial = new PhongMaterial(Rendering2D_Assets.getFoodColor(variant, level.mazeNumber));
+		energizers = world.energizerTiles().map(tile -> createPellet(3, tile, foodMaterial)).collect(Collectors.toList());
+		pellets = world.tiles().filter(world::isFoodTile).filter(not(world::isEnergizerTile))//
+				.map(tile -> createPellet(1, tile, foodMaterial)).collect(Collectors.toList());
+
+		player = GianmarcosModel3D.IT.createPacMan();
+		ghosts3D = game().ghosts().collect(Collectors.toMap(Function.identity(), ghost -> new Ghost3D(ghost, r2D)));
+		bonus3D = new Bonus3D(variant, r2D);
+
+		score3D = new ScoreNotReally3D();
+		livesCounter3D = createLivesCounter3D(new V2i(2, 1));
 		if (gameController.isAttractMode()) {
 			score3D.setHiscoreOnly(true);
 			livesCounter3D.setVisible(false);
@@ -136,17 +165,40 @@ public class PlayScene3D implements GameScene {
 			score3D.setHiscoreOnly(false);
 			livesCounter3D.setVisible(true);
 		}
-	}
 
-	@Override
-	public void end() {
-		log("Game scene %s: end", this);
+		levelCounter3D = new LevelCounter3D(r2D);
+		levelCounter3D.tileRight = new V2i(25, 1);
+		levelCounter3D.update(game());
+
+		AmbientLight ambientLight = new AmbientLight();
+		PointLight playerLight = new PointLight();
+		playerLight.translateXProperty().bind(player.translateXProperty());
+		playerLight.translateYProperty().bind(player.translateYProperty());
+		playerLight.lightOnProperty().bind(player.visibleProperty());
+		playerLight.setTranslateZ(-4);
+
+		root.getChildren().addAll(maze.getBricks());
+		root.getChildren().addAll(floor, score3D, livesCounter3D, levelCounter3D);
+		root.getChildren().addAll(energizers);
+		root.getChildren().addAll(pellets);
+		root.getChildren().addAll(player);
+		root.getChildren().addAll(ghosts3D.values());
+		root.getChildren().addAll(bonus3D);
+		root.getChildren().addAll(ambientLight, playerLight);
+
+		root.setTranslateX(-UNSCALED_SCENE_WIDTH / 2);
+		root.setTranslateY(-UNSCALED_SCENE_HEIGHT / 2);
+
+		coordSystem = new CoordinateSystem(fxScene.getWidth());
+
+		fxScene.setRoot(new Group(coordSystem.getNode(), root));
+		fxScene.setFill(Color.rgb(0, 0, 0));
 	}
 
 	@Override
 	public void update() {
 		score3D.update(game(), cams.selectedCamera());
-		for (int i = 0; i < 5; ++i) {
+		for (int i = 0; i < MAX_LIVES_DISPLAYED; ++i) {
 			livesCounter3D.getChildren().get(i).setVisible(i < game().lives);
 		}
 		energizers.forEach(energizer -> {
@@ -164,70 +216,12 @@ public class PlayScene3D implements GameScene {
 		soundController.update();
 	}
 
-	private void buildSceneGraph(GameVariant gameVariant, GameLevel gameLevel) {
-		final Rendering2D r2D = Rendering2D_Impl.get(gameVariant);
-		final Group tgArena = new Group();
-
-		maze = new Maze3D(gameLevel.world, Rendering2D_Assets.getMazeWallColor(gameVariant, gameLevel.mazeNumber));
-
-		PhongMaterial foodMaterial = new PhongMaterial(Rendering2D_Assets.getFoodColor(gameVariant, gameLevel.mazeNumber));
-
-		energizers = gameLevel.world.energizerTiles()//
-				.map(tile -> createEnergizer(tile, foodMaterial))//
-				.collect(Collectors.toList());
-
-		pellets = gameLevel.world.tiles()//
-				.filter(gameLevel.world::isFoodTile)//
-				.filter(not(gameLevel.world::isEnergizerTile))//
-				.map(tile -> createPellet(tile, foodMaterial)).collect(Collectors.toList());
-
-		player = createPlayer3D();
-
-		ghosts3D = game().ghosts().collect(Collectors.toMap(Function.identity(), ghost -> new Ghost3D(ghost, r2D)));
-
-		bonus3D = new Bonus3D(gameVariant, r2D);
-
-		score3D = new ScoreNotReally3D();
-
-		livesCounter3D = createLivesCounter3D(new V2i(2, 1));
-
-		levelCounter3D = new LevelCounter3D(r2D);
-		levelCounter3D.tileRight = new V2i(25, 1);
-		levelCounter3D.update(game());
-
-		floor = new Box(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, 0.1);
-		PhongMaterial floorMaterial = new PhongMaterial(Color.rgb(0, 0, 80));
-		floor.setMaterial(floorMaterial);
-		floor.setTranslateX(UNSCALED_SCENE_WIDTH / 2 - 4);
-		floor.setTranslateY(UNSCALED_SCENE_HEIGHT / 2 - 4);
-		floor.setTranslateZ(3);
-
-		tgArena.getChildren().addAll(floor, score3D, livesCounter3D, levelCounter3D, bonus3D);
-		tgArena.getChildren().addAll(maze.getBricks());
-		tgArena.getChildren().addAll(energizers);
-		tgArena.getChildren().addAll(pellets);
-		tgArena.getChildren().addAll(player);
-		tgArena.getChildren().addAll(ghosts3D.values());
-		tgArena.setTranslateX(-UNSCALED_SCENE_WIDTH / 2);
-		tgArena.setTranslateY(-UNSCALED_SCENE_HEIGHT / 2);
-
-		// Lights
-		AmbientLight ambientLight = new AmbientLight();
-		PointLight playerLight = new PointLight();
-		playerLight.translateXProperty().bind(player.translateXProperty());
-		playerLight.translateYProperty().bind(player.translateYProperty());
-		playerLight.lightOnProperty().bind(player.visibleProperty());
-		playerLight.setTranslateZ(-4);
-		tgArena.getChildren().addAll(ambientLight, playerLight);
-
-		coordSystem = new CoordinateSystem(fxScene.getWidth());
-
-		fxScene.setRoot(new Group(coordSystem.getNode(), tgArena));
-		fxScene.setFill(Color.rgb(0, 0, 0));
+	@Override
+	public void end() {
+		log("Game scene %s: end", this);
 	}
 
-	private Sphere createPellet(V2i tile, PhongMaterial material) {
-		double r = 1;
+	private Sphere createPellet(double r, V2i tile, PhongMaterial material) {
 		Sphere s = new Sphere(r);
 		s.setMaterial(material);
 		s.setTranslateX(tile.x * TS);
@@ -237,20 +231,9 @@ public class PlayScene3D implements GameScene {
 		return s;
 	}
 
-	private Node createEnergizer(V2i tile, PhongMaterial material) {
-		Sphere s = createPellet(tile, material);
-		s.setRadius(3);
-		return s;
-	}
-
-	private Group createPlayer3D() {
-		Group player = GianmarcosModel3D.IT.createPacMan();
-		return player;
-	}
-
 	private Group createLivesCounter3D(V2i tilePosition) {
 		Group livesCounter = new Group();
-		for (int i = 0; i < 5; ++i) {
+		for (int i = 0; i < MAX_LIVES_DISPLAYED; ++i) {
 			V2i tile = tilePosition.plus(2 * i, 0);
 			Group liveIndicator = GianmarcosModel3D.IT.createPacMan();
 			liveIndicator.setTranslateX(tile.x * TS);
@@ -333,30 +316,31 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void startEnergizerAnimations() {
-		energizerAnimations = new ArrayList<>();
-		energizers.forEach(energizer -> {
-			ScaleTransition pumping = new ScaleTransition(Duration.seconds(0.25), energizer);
-			pumping.setAutoReverse(true);
-			pumping.setCycleCount(Transition.INDEFINITE);
-			pumping.setFromX(0.2);
-			pumping.setFromY(0.2);
-			pumping.setFromZ(0.2);
-			pumping.setToX(1);
-			pumping.setToY(1);
-			pumping.setToZ(1);
-			pumping.play();
-			energizerAnimations.add(pumping);
-		});
+		if (energizerAnimations == null) {
+			energizerAnimations = new ArrayList<>();
+			energizers.forEach(energizer -> {
+				ScaleTransition pumping = new ScaleTransition(Duration.seconds(0.25), energizer);
+				pumping.setAutoReverse(true);
+				pumping.setCycleCount(Transition.INDEFINITE);
+				pumping.setFromX(0.2);
+				pumping.setFromY(0.2);
+				pumping.setFromZ(0.2);
+				pumping.setToX(1);
+				pumping.setToY(1);
+				pumping.setToZ(1);
+				energizerAnimations.add(pumping);
+			});
+		}
+		energizerAnimations.forEach(Transition::play);
 	}
 
 	private void stopEnergizerAnimations() {
+		energizerAnimations.forEach(Transition::stop);
 		energizers.forEach(energizer -> {
 			energizer.setScaleX(1);
 			energizer.setScaleY(1);
 			energizer.setScaleZ(1);
 		});
-		energizerAnimations.forEach(Transition::stop);
-		energizerAnimations.clear();
 	}
 
 	private void playAnimationPlayerDying() {
