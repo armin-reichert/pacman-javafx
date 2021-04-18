@@ -7,6 +7,10 @@ import javafx.scene.transform.Translate;
 
 public class Model3DHelper {
 
+	public static double lerp(double left, double right, double t) {
+		return left * (1 - t) + right * t;
+	}
+
 	public static Translate centerNodeOverOrigin(Node node) {
 		Bounds bounds = node.getBoundsInLocal();
 		Translate centering = new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());

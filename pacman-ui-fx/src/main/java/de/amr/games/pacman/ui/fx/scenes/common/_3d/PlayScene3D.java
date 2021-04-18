@@ -2,6 +2,7 @@ package de.amr.games.pacman.ui.fx.scenes.common._3d;
 
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
+import static de.amr.games.pacman.ui.fx.model3D.Model3DHelper.lerp;
 import static java.util.function.Predicate.not;
 
 import java.util.List;
@@ -259,9 +260,5 @@ public class PlayScene3D implements GameScene {
 
 	private double rotateZ(Direction dir) {
 		return dir == Direction.LEFT ? 0 : dir == Direction.UP ? 90 : dir == Direction.RIGHT ? 180 : 270;
-	}
-
-	private double lerp(double min, double max, double factor) {
-		return min + factor * (max - min);
 	}
 }
