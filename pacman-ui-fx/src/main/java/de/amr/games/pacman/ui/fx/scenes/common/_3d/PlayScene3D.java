@@ -236,21 +236,26 @@ public class PlayScene3D implements GameScene {
 		player.setVisible(pac.visible);
 		player.setTranslateX(pac.position.x);
 		player.setTranslateY(pac.position.y);
+
+		// TODO we need the exact moment of the direction change
 		player.setRotationAxis(Rotate.Z_AXIS);
-		player.setRotate(lerp(player.getRotate(), targetAngle(pac.dir, player.getRotate()), 0.2));
-	}
-
-	private double lerp(double is, double target, double factor) {
-		return is + factor * (target - is);
-	}
-
-	private double targetAngle(Direction dir, double currentAngle) {
-		double targetAngle = dir == Direction.LEFT ? 0 : dir == Direction.UP ? 90 : dir == Direction.RIGHT ? 180 : 270;
-		if (currentAngle > targetAngle + 180) {
-			targetAngle += 360;
-		} else if (currentAngle < targetAngle - 180) {
-			targetAngle -= 360;
+		double target = rotateZ(pac.dir);
+		if (player.getRotate() != target) {
+			double next = lerp(player.getRotate(), target, 0.1);
+			if (player.getRotate() - 180 > target) {
+				next = lerp(player.getRotate(), target + 360, 0.1);
+			} else if (player.getRotate() + 180 < target) {
+				next = lerp(player.getRotate(), target - 360, 0.1);
+			}
+			player.setRotate(next);
 		}
-		return targetAngle;
+	}
+
+	private double rotateZ(Direction dir) {
+		return dir == Direction.LEFT ? 0 : dir == Direction.UP ? 90 : dir == Direction.RIGHT ? 180 : 270;
+	}
+
+	private double lerp(double min, double max, double factor) {
+		return min + factor * (max - min);
 	}
 }
