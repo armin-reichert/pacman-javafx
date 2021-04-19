@@ -17,12 +17,18 @@ import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
+/**
+ * 3D level counter.
+ * 
+ * @author Armin Reichert
+ */
 public class LevelCounter3D extends Group {
 
-	public V2i tileRight = V2i.NULL;
+	private V2i tileRight;
 	private final List<Image> symbolSprites;
 
-	public LevelCounter3D(Rendering2D rendering2D) {
+	public LevelCounter3D(V2i tileRight, Rendering2D rendering2D) {
+		this.tileRight = tileRight;
 		symbolSprites = rendering2D.getSymbolSprites().stream().map(rendering2D::subImage).collect(Collectors.toList());
 	}
 
@@ -46,7 +52,6 @@ public class LevelCounter3D extends Group {
 		box.setTranslateY(y);
 		PhongMaterial material = new PhongMaterial();
 		material.setDiffuseMap(sprite);
-		material.setBumpMap(sprite);
 		box.setMaterial(material);
 		RotateTransition spinning = new RotateTransition(Duration.seconds(6), box);
 		spinning.setAxis(Rotate.X_AXIS);

@@ -63,19 +63,20 @@ public class PlayScene3D implements GameScene {
 	private PacManGameController gameController;
 
 	private CoordinateSystem coordSystem;
-	private Box floor;
-	Group player;
-	private Map<Ghost, Ghost3D> ghosts3D;
-	private Maze3D maze;
+
+	Maze3D maze;
+	Box floor;
 	List<Node> foodNodes;
+	Group player;
+	Map<Ghost, Ghost3D> ghosts3D;
 	Bonus3D bonus3D;
-	private ScoreNotReally3D score3D;
-	private Group livesCounter3D;
+	ScoreNotReally3D score3D;
+	Group livesCounter3D;
 	LevelCounter3D levelCounter3D;
 
 	public PlayScene3D(SoundManager sounds) {
-		this.animationController = new PlayScene3DAnimationController(this, sounds);
-		fxScene = new SubScene(new Group(), 800, 600, true, SceneAntialiasing.BALANCED);
+		animationController = new PlayScene3DAnimationController(this, sounds);
+		fxScene = new SubScene(new Group(), 400, 300, true, SceneAntialiasing.BALANCED);
 		cams = new PlaySceneCameras(fxScene);
 		cams.select(CameraType.DYNAMIC);
 	}
@@ -113,12 +114,12 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void init() {
-		log("Game scene %s: init", this);
+		log("%s: init", this);
 
 		final GameVariant variant = gameController.gameVariant();
+		final Rendering2D r2D = Rendering2D_Impl.get(variant);
 		final GameLevel level = game().currentLevel;
 		final PacManGameWorld world = level.world;
-		final Rendering2D r2D = Rendering2D_Impl.get(variant);
 		final Group root = new Group();
 
 		Color wallColor = getMazeWallColor(variant, level.mazeNumber);
@@ -135,7 +136,7 @@ public class PlayScene3D implements GameScene {
 
 		PhongMaterial foodMaterial = new PhongMaterial(getFoodColor(variant, level.mazeNumber));
 		foodNodes = world.tiles().filter(world::isFoodTile)//
-				.map(tile -> createPellet(world.isEnergizerTile(tile) ? 3 : 1, tile, foodMaterial))
+				.map(tile -> createPellet(world.isEnergizerTile(tile) ? 2.5 : 1, tile, foodMaterial))
 				.collect(Collectors.toList());
 
 		player = GianmarcosModel3D.IT.createPacMan();
@@ -152,8 +153,7 @@ public class PlayScene3D implements GameScene {
 			livesCounter3D.setVisible(true);
 		}
 
-		levelCounter3D = new LevelCounter3D(r2D);
-		levelCounter3D.tileRight = new V2i(25, 1);
+		levelCounter3D = new LevelCounter3D(new V2i(25, 1),r2D);
 		levelCounter3D.update(game());
 
 		AmbientLight ambientLight = new AmbientLight();
