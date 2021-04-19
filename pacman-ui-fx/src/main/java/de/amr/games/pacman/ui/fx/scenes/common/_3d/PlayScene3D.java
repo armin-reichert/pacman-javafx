@@ -126,9 +126,8 @@ public class PlayScene3D implements GameScene {
 
 		floor = new Box(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, 0.1);
 		PhongMaterial floorMaterial = new PhongMaterial(Color.rgb(20, 20, 100));
-		Image tileTexture = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
-//		floorMaterial.setBumpMap(tileTexture);
-		floorMaterial.setDiffuseMap(tileTexture);
+		Image floorTexture = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
+		floorMaterial.setDiffuseMap(floorTexture);
 		floor.setMaterial(floorMaterial);
 		floor.setTranslateX(UNSCALED_SCENE_WIDTH / 2 - 4);
 		floor.setTranslateY(UNSCALED_SCENE_HEIGHT / 2 - 4);
