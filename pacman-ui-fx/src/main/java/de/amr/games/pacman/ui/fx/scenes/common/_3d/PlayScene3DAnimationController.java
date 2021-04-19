@@ -16,7 +16,7 @@ import de.amr.games.pacman.controller.event.GhostReturningHomeEvent;
 import de.amr.games.pacman.controller.event.PacManFoundFoodEvent;
 import de.amr.games.pacman.controller.event.PacManGainsPowerEvent;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
-import de.amr.games.pacman.controller.event.PacManGameStateChangedEvent;
+import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.controller.event.PacManLostPowerEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.Direction;
@@ -113,8 +113,8 @@ public class PlayScene3DAnimationController {
 		}
 		sounds.setMuted(false);
 
-		if (gameEvent instanceof PacManGameStateChangedEvent) {
-			onGameStateChange((PacManGameStateChangedEvent) gameEvent);
+		if (gameEvent instanceof PacManGameStateChangeEvent) {
+			onGameStateChange((PacManGameStateChangeEvent) gameEvent);
 		}
 
 		if (gameEvent instanceof ScatterPhaseStartedEvent) {
@@ -166,7 +166,7 @@ public class PlayScene3DAnimationController {
 		}
 	}
 
-	private void onGameStateChange(PacManGameStateChangedEvent e) {
+	private void onGameStateChange(PacManGameStateChangeEvent e) {
 		sounds.setMuted(gameController.isAttractMode());
 
 		// enter READY

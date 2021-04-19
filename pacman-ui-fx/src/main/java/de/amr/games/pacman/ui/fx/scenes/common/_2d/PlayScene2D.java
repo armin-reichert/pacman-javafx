@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
-import de.amr.games.pacman.controller.event.PacManGameStateChangedEvent;
+import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.fx.entities._2d.Bonus2D;
@@ -100,7 +100,7 @@ public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScen
 		animationController.update();
 	}
 
-	private void onGameStateChange(PacManGameStateChangedEvent event) {
+	private void onGameStateChange(PacManGameStateChangeEvent event) {
 		if (event.newGameState == PacManGameState.LEVEL_STARTING) {
 			maze2D.setGameLevel(event.gameModel.currentLevel);
 			// wait 1 second
@@ -112,8 +112,8 @@ public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScen
 
 	@Override
 	public void onGameEvent(PacManGameEvent gameEvent) {
-		if (gameEvent instanceof PacManGameStateChangedEvent) {
-			onGameStateChange((PacManGameStateChangedEvent) gameEvent);
+		if (gameEvent instanceof PacManGameStateChangeEvent) {
+			onGameStateChange((PacManGameStateChangeEvent) gameEvent);
 		}
 		animationController.onGameEvent(gameEvent);
 	}

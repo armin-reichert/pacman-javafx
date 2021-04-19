@@ -7,7 +7,7 @@ import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
-import de.amr.games.pacman.controller.event.PacManGameStateChangedEvent;
+import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
@@ -152,9 +152,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void onGameEvent(PacManGameEvent event) {
-		log("%s received game event %s", getClass().getSimpleName(), event.getClass().getSimpleName());
-		if (event instanceof PacManGameStateChangedEvent) {
-			PacManGameStateChangedEvent stateChange = (PacManGameStateChangedEvent) event;
+		log("%s received game event %s", getClass().getSimpleName(), event);
+		if (event instanceof PacManGameStateChangeEvent) {
+			PacManGameStateChangeEvent stateChange = (PacManGameStateChangeEvent) event;
 			if (stateChange.newGameState == PacManGameState.INTRO) {
 				stopAllSounds();
 			}
