@@ -8,6 +8,7 @@ import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.fx.model3D.GianmarcosModel3D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets;
+import javafx.animation.Transition;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -16,6 +17,7 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
 
 /**
  * 3D ghost shape.
@@ -24,6 +26,20 @@ import javafx.scene.transform.Rotate;
  */
 public class Ghost3D extends Group implements Supplier<Node> {
 
+	private class FlashingAnimation extends Transition {
+
+		public FlashingAnimation() {
+			setCycleCount(INDEFINITE);
+			setCycleDuration(Duration.seconds(0.1));
+			setAutoReverse(true);
+		}
+
+		@Override
+		protected void interpolate(double frac) {
+			blueSkin.setDiffuseColor(Color.rgb((int) (frac * 120), (int) (frac * 180), 255));
+		}
+	};
+
 	private final Ghost ghost;
 	private final Rendering2D rendering2D;
 	private final Group coloredGhost;
@@ -31,6 +47,7 @@ public class Ghost3D extends Group implements Supplier<Node> {
 	private PhongMaterial blueSkin;
 	private final Group deadGhost;
 	private final Box bountyShape;
+	private final Transition flashingAnimation;
 
 	public Ghost3D(Ghost ghost, Rendering2D rendering2D) {
 		this.ghost = ghost;
@@ -41,6 +58,7 @@ public class Ghost3D extends Group implements Supplier<Node> {
 		bountyShape = new Box(8, 8, 8);
 		bountyShape.setMaterial(new PhongMaterial());
 		deadGhost = GianmarcosModel3D.IT.createGhostEyes();
+		flashingAnimation = new FlashingAnimation();
 		setBlueSkin(false);
 	}
 
@@ -59,6 +77,16 @@ public class Ghost3D extends Group implements Supplier<Node> {
 		PhongMaterial material = (PhongMaterial) bountyShape.getMaterial();
 		material.setBumpMap(sprite);
 		material.setDiffuseMap(sprite);
+	}
+
+	public void setFlashing(boolean flashing) {
+		if (flashing) {
+			flashingAnimation.playFromStart();
+
+		} else {
+			flashingAnimation.stop();
+			blueSkin.setDiffuseColor(Color.CORNFLOWERBLUE);
+		}
 	}
 
 	public void update() {

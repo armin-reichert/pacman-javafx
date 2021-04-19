@@ -17,6 +17,7 @@ import de.amr.games.pacman.controller.event.PacManFoundFoodEvent;
 import de.amr.games.pacman.controller.event.PacManGainsPowerEvent;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
+import de.amr.games.pacman.controller.event.PacManLosingPowerEvent;
 import de.amr.games.pacman.controller.event.PacManLostPowerEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.Direction;
@@ -127,12 +128,21 @@ public class PlayScene3DAnimationController {
 				sounds.loop(siren, Integer.MAX_VALUE);
 		}
 
-		else if (gameEvent instanceof PacManLostPowerEvent) {
-			sounds.stop(PacManGameSound.PACMAN_POWER);
-		}
-
 		else if (gameEvent instanceof PacManGainsPowerEvent) {
 			sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
+		}
+
+		else if (gameEvent instanceof PacManLosingPowerEvent) {
+			playScene.ghosts3D.values().forEach(ghost3D -> {
+				ghost3D.setFlashing(true);
+			});
+		}
+
+		else if (gameEvent instanceof PacManLostPowerEvent) {
+			playScene.ghosts3D.values().forEach(ghost3D -> {
+				ghost3D.setFlashing(false);
+			});
+			sounds.stop(PacManGameSound.PACMAN_POWER);
 		}
 
 		else if (gameEvent instanceof PacManFoundFoodEvent) {
