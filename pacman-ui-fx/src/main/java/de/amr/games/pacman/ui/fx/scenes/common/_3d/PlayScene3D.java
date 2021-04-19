@@ -58,10 +58,8 @@ public class PlayScene3D implements GameScene {
 
 	private final SubScene fxScene;
 	private final PlaySceneCameras cams;
-
-	private PlayScene3DAnimationController animationController;
+	private final PlayScene3DAnimationController animationController;
 	private PacManGameController gameController;
-
 	private CoordinateSystem coordSystem;
 
 	Maze3D maze;
@@ -75,10 +73,10 @@ public class PlayScene3D implements GameScene {
 	LevelCounter3D levelCounter3D;
 
 	public PlayScene3D(SoundManager sounds) {
-		animationController = new PlayScene3DAnimationController(this, sounds);
 		fxScene = new SubScene(new Group(), 400, 300, true, SceneAntialiasing.BALANCED);
 		cams = new PlaySceneCameras(fxScene);
 		cams.select(CameraType.DYNAMIC);
+		animationController = new PlayScene3DAnimationController(this, sounds);
 	}
 
 	@Override
@@ -122,11 +120,10 @@ public class PlayScene3D implements GameScene {
 		final PacManGameWorld world = level.world;
 		final Group root = new Group();
 
-		Color wallColor = getMazeWallColor(variant, level.mazeNumber);
-		maze = new Maze3D(world, wallColor);
+		maze = new Maze3D(world, getMazeWallColor(variant, level.mazeNumber));
 
-		PhongMaterial floorMaterial = new PhongMaterial(Color.rgb(20, 20, 100));
-		Image floorTexture = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
+		var floorMaterial = new PhongMaterial(Color.rgb(20, 20, 100));
+		var floorTexture = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
 		floorMaterial.setDiffuseMap(floorTexture);
 		floor = new Box(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, 0.1);
 		floor.setMaterial(floorMaterial);
@@ -134,7 +131,7 @@ public class PlayScene3D implements GameScene {
 		floor.setTranslateY(UNSCALED_SCENE_HEIGHT / 2 - 4);
 		floor.setTranslateZ(3);
 
-		PhongMaterial foodMaterial = new PhongMaterial(getFoodColor(variant, level.mazeNumber));
+		var foodMaterial = new PhongMaterial(getFoodColor(variant, level.mazeNumber));
 		foodNodes = world.tiles().filter(world::isFoodTile)//
 				.map(tile -> createPellet(world.isEnergizerTile(tile) ? 2.5 : 1, tile, foodMaterial))
 				.collect(Collectors.toList());
@@ -156,8 +153,8 @@ public class PlayScene3D implements GameScene {
 		levelCounter3D = new LevelCounter3D(new V2i(25, 1),r2D);
 		levelCounter3D.update(game());
 
-		AmbientLight ambientLight = new AmbientLight();
-		PointLight playerLight = new PointLight();
+		var ambientLight = new AmbientLight();
+		var playerLight = new PointLight();
 		playerLight.translateXProperty().bind(player.translateXProperty());
 		playerLight.translateYProperty().bind(player.translateYProperty());
 		playerLight.lightOnProperty().bind(player.visibleProperty());
@@ -206,7 +203,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void end() {
-		log("Game scene %s: end", this);
+		log("%s: end", this);
 	}
 
 	private Sphere createPellet(double r, V2i tile, PhongMaterial material) {
