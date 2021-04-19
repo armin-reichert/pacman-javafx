@@ -67,9 +67,10 @@ public class Ghost3D extends Group implements Supplier<Node> {
 		return this;
 	}
 
-	private void setBlueSkin(boolean blue) {
+	public void setBlueSkin(boolean blue) {
 		MeshView meshView = (MeshView) coloredGhost.getChildren().get(0);
 		meshView.setMaterial(blue ? blueSkin : normalSkin);
+		blueSkin.setDiffuseColor(Color.CORNFLOWERBLUE);
 	}
 
 	private void setBounty(int value) {
@@ -82,7 +83,6 @@ public class Ghost3D extends Group implements Supplier<Node> {
 	public void setFlashing(boolean flashing) {
 		if (flashing) {
 			flashingAnimation.playFromStart();
-
 		} else {
 			flashingAnimation.stop();
 			blueSkin.setDiffuseColor(Color.CORNFLOWERBLUE);
@@ -106,7 +106,6 @@ public class Ghost3D extends Group implements Supplier<Node> {
 			setRotationAxis(Rotate.Y_AXIS);
 			setRotate(0);
 			rotateZ(ghost.is(GhostState.FRIGHTENED) ? ghost.dir : ghost.wishDir, 0, 180, 90, -90);
-			setBlueSkin(ghost.is(GhostState.FRIGHTENED));
 		}
 	}
 

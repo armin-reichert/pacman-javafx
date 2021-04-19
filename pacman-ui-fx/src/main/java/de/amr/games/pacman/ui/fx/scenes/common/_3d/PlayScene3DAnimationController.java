@@ -130,6 +130,9 @@ public class PlayScene3DAnimationController {
 
 		else if (gameEvent instanceof PacManGainsPowerEvent) {
 			sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
+			playScene.ghosts3D.values().forEach(ghost3D -> {
+				ghost3D.setBlueSkin(true); // TODO
+			});
 		}
 
 		else if (gameEvent instanceof PacManLosingPowerEvent) {
@@ -141,6 +144,7 @@ public class PlayScene3DAnimationController {
 		else if (gameEvent instanceof PacManLostPowerEvent) {
 			playScene.ghosts3D.values().forEach(ghost3D -> {
 				ghost3D.setFlashing(false);
+				ghost3D.setBlueSkin(false);
 			});
 			sounds.stop(PacManGameSound.PACMAN_POWER);
 		}
