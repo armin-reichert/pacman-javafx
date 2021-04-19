@@ -2,9 +2,9 @@ package de.amr.games.pacman.ui.fx.scenes.common._3d;
 
 import static de.amr.games.pacman.lib.Logging.log;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
@@ -21,14 +21,18 @@ import de.amr.games.pacman.controller.event.PacManLostPowerEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Logging;
+import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.AbstractGameModel;
+import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
+import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
+import javafx.scene.Node;
 import javafx.scene.media.AudioClip;
 import javafx.util.Duration;
 
@@ -45,7 +49,7 @@ public class PlayScene3DAnimationController {
 	private final PlayScene3D playScene;
 	private final SoundManager sounds;
 	private PacManGameController gameController;
-	private List<Transition> energizerAnimations;
+	private List<ScaleTransition> energizerAnimations;
 
 	public PlayScene3DAnimationController(PlayScene3D playScene, SoundManager sounds) {
 		this.playScene = playScene;
@@ -61,7 +65,29 @@ public class PlayScene3DAnimationController {
 	}
 
 	public void init() {
-		createEnergizerAnimations();
+		PacManGameWorld world = game().currentLevel.world;
+		energizerAnimations = playScene.foodNodes.stream()//
+				.filter(foodNode -> isEnergizerNode(foodNode, world))//
+				.map(this::createEnergizerAnimation)//
+				.collect(Collectors.toList());
+	}
+
+	private boolean isEnergizerNode(Node node, PacManGameWorld world) {
+		V2i tile = (V2i) node.getUserData();
+		return world.isEnergizerTile(tile);
+	}
+
+	private ScaleTransition createEnergizerAnimation(Node energizer) {
+		ScaleTransition animation = new ScaleTransition(Duration.seconds(0.25), energizer);
+		animation.setAutoReverse(true);
+		animation.setCycleCount(Transition.INDEFINITE);
+		animation.setFromX(0.2);
+		animation.setFromY(0.2);
+		animation.setFromZ(0.2);
+		animation.setToX(1);
+		animation.setToY(1);
+		animation.setToZ(1);
+		return animation;
 	}
 
 	public void update() {
@@ -195,29 +221,14 @@ public class PlayScene3DAnimationController {
 		}
 	}
 
-	private void createEnergizerAnimations() {
-		energizerAnimations = new ArrayList<>();
-		playScene.energizers.forEach(energizer -> {
-			ScaleTransition pumping = new ScaleTransition(Duration.seconds(0.25), energizer);
-			pumping.setAutoReverse(true);
-			pumping.setCycleCount(Transition.INDEFINITE);
-			pumping.setFromX(0.2);
-			pumping.setFromY(0.2);
-			pumping.setFromZ(0.2);
-			pumping.setToX(1);
-			pumping.setToY(1);
-			pumping.setToZ(1);
-			energizerAnimations.add(pumping);
-		});
-	}
-
 	private void startEnergizerAnimations() {
-		energizerAnimations.forEach(Transition::play);
+		energizerAnimations.forEach(Animation::play);
 	}
 
 	private void stopEnergizerAnimations() {
-		energizerAnimations.forEach(Transition::stop);
-		playScene.energizers.forEach(energizer -> {
+		energizerAnimations.forEach(animation -> {
+			animation.stop();
+			Node energizer = animation.getNode();
 			energizer.setScaleX(1);
 			energizer.setScaleY(1);
 			energizer.setScaleZ(1);

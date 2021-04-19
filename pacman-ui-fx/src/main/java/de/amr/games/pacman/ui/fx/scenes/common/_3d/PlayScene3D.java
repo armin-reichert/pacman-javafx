@@ -3,7 +3,8 @@ package de.amr.games.pacman.ui.fx.scenes.common._3d;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.ui.fx.model3D.Model3DHelper.lerp;
-import static java.util.function.Predicate.not;
+import static de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets.getFoodColor;
+import static de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets.getMazeWallColor;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,6 @@ import de.amr.games.pacman.ui.fx.entities._3d.Maze3D;
 import de.amr.games.pacman.ui.fx.entities._3d.ScoreNotReally3D;
 import de.amr.games.pacman.ui.fx.model3D.GianmarcosModel3D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
-import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Impl;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.common._3d.PlaySceneCameras.CameraType;
@@ -47,7 +47,8 @@ import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 
 /**
- * 3D scene displaying the maze and the game play for both, Pac-Man and Ms. Pac-Man games.
+ * 3D scene displaying the maze and the game play for both, Pac-Man and Ms.
+ * Pac-Man games.
  * 
  * @author Armin Reichert
  */
@@ -66,8 +67,7 @@ public class PlayScene3D implements GameScene {
 	Group player;
 	private Map<Ghost, Ghost3D> ghosts3D;
 	private Maze3D maze;
-	List<Node> energizers;
-	private List<Node> pellets;
+	List<Node> foodNodes;
 	Bonus3D bonus3D;
 	private ScoreNotReally3D score3D;
 	private Group livesCounter3D;
@@ -121,22 +121,22 @@ public class PlayScene3D implements GameScene {
 		final Rendering2D r2D = Rendering2D_Impl.get(variant);
 		final Group root = new Group();
 
-		Color wallColor = Rendering2D_Assets.getMazeWallColor(variant, level.mazeNumber);
+		Color wallColor = getMazeWallColor(variant, level.mazeNumber);
 		maze = new Maze3D(world, wallColor);
 
-		floor = new Box(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, 0.1);
 		PhongMaterial floorMaterial = new PhongMaterial(Color.rgb(20, 20, 100));
 		Image floorTexture = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
 		floorMaterial.setDiffuseMap(floorTexture);
+		floor = new Box(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, 0.1);
 		floor.setMaterial(floorMaterial);
 		floor.setTranslateX(UNSCALED_SCENE_WIDTH / 2 - 4);
 		floor.setTranslateY(UNSCALED_SCENE_HEIGHT / 2 - 4);
 		floor.setTranslateZ(3);
 
-		PhongMaterial foodMaterial = new PhongMaterial(Rendering2D_Assets.getFoodColor(variant, level.mazeNumber));
-		energizers = world.energizerTiles().map(tile -> createPellet(3, tile, foodMaterial)).collect(Collectors.toList());
-		pellets = world.tiles().filter(world::isFoodTile).filter(not(world::isEnergizerTile))//
-				.map(tile -> createPellet(1, tile, foodMaterial)).collect(Collectors.toList());
+		PhongMaterial foodMaterial = new PhongMaterial(getFoodColor(variant, level.mazeNumber));
+		foodNodes = world.tiles().filter(world::isFoodTile)//
+				.map(tile -> createPellet(world.isEnergizerTile(tile) ? 3 : 1, tile, foodMaterial))
+				.collect(Collectors.toList());
 
 		player = GianmarcosModel3D.IT.createPacMan();
 		ghosts3D = game().ghosts().collect(Collectors.toMap(Function.identity(), ghost -> new Ghost3D(ghost, r2D)));
@@ -165,8 +165,7 @@ public class PlayScene3D implements GameScene {
 
 		root.getChildren().addAll(maze.getBricks());
 		root.getChildren().addAll(floor, score3D, livesCounter3D, levelCounter3D);
-		root.getChildren().addAll(energizers);
-		root.getChildren().addAll(pellets);
+		root.getChildren().addAll(foodNodes);
 		root.getChildren().addAll(player);
 		root.getChildren().addAll(ghosts3D.values());
 		root.getChildren().addAll(bonus3D);
@@ -194,13 +193,9 @@ public class PlayScene3D implements GameScene {
 		for (int i = 0; i < MAX_LIVES_DISPLAYED; ++i) {
 			livesCounter3D.getChildren().get(i).setVisible(i < game().lives);
 		}
-		energizers.forEach(energizer -> {
-			V2i tile = (V2i) energizer.getUserData();
-			energizer.setVisible(!game().currentLevel.isFoodRemoved(tile));
-		});
-		pellets.forEach(pellet -> {
-			V2i tile = (V2i) pellet.getUserData();
-			pellet.setVisible(!game().currentLevel.isFoodRemoved(tile));
+		foodNodes.forEach(foodNode -> {
+			V2i tile = (V2i) foodNode.getUserData();
+			foodNode.setVisible(!game().currentLevel.isFoodRemoved(tile));
 		});
 		updatePlayer();
 		ghosts3D.values().forEach(Ghost3D::update);
