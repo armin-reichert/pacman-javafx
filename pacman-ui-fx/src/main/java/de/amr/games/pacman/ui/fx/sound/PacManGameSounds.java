@@ -29,7 +29,7 @@ public class PacManGameSounds {
 		pacManSounds.put(PacManGameSound.EXTRA_LIFE,         url("/pacman/sound/extend.mp3"));
 		pacManSounds.put(PacManGameSound.GAME_READY,         url("/pacman/sound/game_start.mp3"));
 		pacManSounds.put(PacManGameSound.BONUS_EATEN,        url("/pacman/sound/eat_fruit.mp3"));
-		pacManSounds.put(PacManGameSound.PACMAN_MUNCH,       url("/pacman/sound/munch_1.mp3"));
+		pacManSounds.put(PacManGameSound.PACMAN_MUNCH,       url("/pacman/sound/munch_1.wav"));
 		pacManSounds.put(PacManGameSound.PACMAN_DEATH,       url("/pacman/sound/death_1.mp3"));
 		pacManSounds.put(PacManGameSound.PACMAN_POWER,       url("/pacman/sound/power_pellet.mp3"));
 		pacManSounds.put(PacManGameSound.GHOST_EATEN,        url("/pacman/sound/eat_ghost.mp3"));
