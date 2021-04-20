@@ -27,34 +27,20 @@ public class Maze3D {
 
 		static final double SIZE = TS / 3.0;
 
-		@Override
-		public int hashCode() {
-			return Objects.hash(i, tile);
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			MicroTile other = (MicroTile) obj;
-			return i == other.i && Objects.equals(tile, other.tile);
-		}
-
-		@Override
-		public String toString() {
-			return String.format("tile:%s i:%d x:%.2f y:%.2f", tile, i, x(), y());
-		}
-
 		private final V2i tile;
 		private final int i;
 
 		public MicroTile(V2i tile, int i) {
 			this.tile = tile;
 			this.i = i;
+		}
+
+		public double x() {
+			return tile.x * TS - SIZE + (i % 3) * SIZE;
+		}
+
+		public double y() {
+			return tile.y * TS - SIZE + (i / 3) * SIZE;
 		}
 
 		public V2i northOf() {
@@ -89,13 +75,28 @@ public class Maze3D {
 			return new V2i(i == 0 || i == 3 || i == 6 ? -1 : 0, 0);
 		}
 
-		public double x() {
-			return tile.x * TS - SIZE + (i % 3) * SIZE;
+		@Override
+		public int hashCode() {
+			return Objects.hash(i, tile);
 		}
 
-		public double y() {
-			return tile.y * TS - SIZE + (i / 3) * SIZE;
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			MicroTile other = (MicroTile) obj;
+			return i == other.i && Objects.equals(tile, other.tile);
 		}
+
+		@Override
+		public String toString() {
+			return String.format("tile:%s i:%d x:%.2f y:%.2f", tile, i, x(), y());
+		}
+
 	}
 
 	private List<Node> bricks;
