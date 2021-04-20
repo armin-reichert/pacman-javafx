@@ -204,6 +204,10 @@ public class PlayScene3DAnimationController {
 		else if (e.newGameState == PacManGameState.PACMAN_DYING) {
 			sounds.stopAll();
 			playAnimationPlayerDying();
+			playScene.ghosts3D.values().forEach(ghost3D -> {
+				ghost3D.setFlashing(false);
+				ghost3D.setBlueSkin(false);
+			});
 		}
 
 		// enter GHOST_DYING
@@ -268,14 +272,14 @@ public class PlayScene3DAnimationController {
 		raise.setByZ(1);
 
 		ScaleTransition expand = new ScaleTransition(Duration.seconds(0.5), playScene.player);
-		expand.setToX(2);
-		expand.setToY(2);
-		expand.setToZ(2);
+		expand.setToX(3);
+		expand.setToY(3);
+		expand.setToZ(3);
 
 		ScaleTransition shrink = new ScaleTransition(Duration.seconds(1), playScene.player);
-		shrink.setToX(0);
-		shrink.setToY(0);
-		shrink.setToZ(0);
+		shrink.setToX(0.1);
+		shrink.setToY(0.1);
+		shrink.setToZ(0.1);
 
 		SequentialTransition animation = new SequentialTransition(phase1, raise, expand, shrink);
 		animation.setOnFinished(e -> {
