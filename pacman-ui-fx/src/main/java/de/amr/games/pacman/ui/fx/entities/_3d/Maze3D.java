@@ -23,9 +23,10 @@ import javafx.scene.shape.Box;
  */
 public class Maze3D {
 
-	private static class MicroTile {
+	static class MicroTile {
 
-		static final double SIZE = TS / 3.0;
+		static final int N = 3;
+		static final double SIZE = 8.0 / N;;
 
 		private final V2i tile;
 		private final int i;
@@ -36,11 +37,11 @@ public class Maze3D {
 		}
 
 		public double x() {
-			return tile.x * TS - SIZE + (i % 3) * SIZE;
+			return tile.x * TS - SIZE + (i % N) * SIZE;
 		}
 
 		public double y() {
-			return tile.y * TS - SIZE + (i / 3) * SIZE;
+			return tile.y * TS - SIZE + (i / N) * SIZE;
 		}
 
 		public V2i northOf() {
@@ -60,19 +61,23 @@ public class Maze3D {
 		}
 
 		public V2i toNorth() {
-			return new V2i(0, i < 3 ? -1 : 0);
+			int dy = i / N == 0 ? -1 : 0;
+			return new V2i(0, dy);
 		}
 
 		public V2i toEast() {
-			return new V2i(i == 2 || i == 5 || i == 8 ? 1 : 0, 0);
+			int dx = i % N == N - 1 ? 1 : 0;
+			return new V2i(dx, 0);
 		}
 
 		public V2i toSouth() {
-			return new V2i(0, i > 5 ? 1 : 0);
+			int dy = i / N == N - 1 ? 1 : 0;
+			return new V2i(0, dy);
 		}
 
 		public V2i toWest() {
-			return new V2i(i == 0 || i == 3 || i == 6 ? -1 : 0, 0);
+			int dx = i % N == 0 ? -1 : 0;
+			return new V2i(dx, 0);
 		}
 
 		@Override
