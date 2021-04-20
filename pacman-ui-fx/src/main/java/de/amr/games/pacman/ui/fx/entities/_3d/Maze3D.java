@@ -23,10 +23,10 @@ import javafx.scene.shape.Box;
  */
 public class Maze3D {
 
-	static class MicroTile {
+	static final int N = 3;
+	static final double SIZE = 8.0 / N;;
 
-		static final int N = 3;
-		static final double SIZE = 8.0 / N;;
+	static class MicroTile {
 
 		private final V2i tile;
 		private final int i;
@@ -109,17 +109,8 @@ public class Maze3D {
 	public Maze3D(PacManGameWorld world, Color wallColor) {
 		List<MicroTile> microTiles = new ArrayList<>();
 		world.tiles().filter(world::isWall).forEach(tile -> {
-			//@formatter:off
-			microTiles.add(new MicroTile(tile, 0));
-			microTiles.add(new MicroTile(tile, 1));
-			microTiles.add(new MicroTile(tile, 2));
-			microTiles.add(new MicroTile(tile, 3));
-			microTiles.add(new MicroTile(tile, 4));
-			microTiles.add(new MicroTile(tile, 5));
-			microTiles.add(new MicroTile(tile, 6));
-			microTiles.add(new MicroTile(tile, 7));
-			microTiles.add(new MicroTile(tile, 8));
-			//@formatter:on
+			for (int i = 0; i < N * N; ++i)
+				microTiles.add(new MicroTile(tile, i));
 		});
 
 		List<MicroTile> microTilesToRemove = new ArrayList<>();
