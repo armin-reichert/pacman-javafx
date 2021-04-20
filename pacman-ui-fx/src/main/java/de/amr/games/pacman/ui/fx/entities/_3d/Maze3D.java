@@ -1,5 +1,6 @@
 package de.amr.games.pacman.ui.fx.entities._3d;
 
+import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import javafx.scene.shape.Box;
  */
 public class Maze3D {
 
-	static final int N = 3;
+	static final int N = 4;
 	static final double SIZE = 8.0 / N;;
 
 	static class MicroTile {
@@ -37,11 +38,11 @@ public class Maze3D {
 		}
 
 		public double x() {
-			return tile.x * TS - SIZE + (i % N) * SIZE;
+			return tile.x * TS - 1.5 * SIZE + (i % N) * SIZE;
 		}
 
 		public double y() {
-			return tile.y * TS - SIZE + (i / N) * SIZE;
+			return tile.y * TS - 1.5 * SIZE + (i / N) * SIZE;
 		}
 
 		public V2i northOf() {
@@ -112,6 +113,7 @@ public class Maze3D {
 			for (int i = 0; i < N * N; ++i)
 				microTiles.add(new MicroTile(tile, i));
 		});
+		log("%d micro tiles created", microTiles.size());
 
 		List<MicroTile> microTilesToRemove = new ArrayList<>();
 		for (MicroTile mt : microTiles) {
@@ -133,6 +135,7 @@ public class Maze3D {
 
 		PhongMaterial brickMaterial = new PhongMaterial(wallColor);
 		bricks = microTiles.stream().map(mt -> createBrick(mt.x(), mt.y(), brickMaterial)).collect(Collectors.toList());
+		log("%d bricks created", bricks.size());
 	}
 
 	public List<Node> getBricks() {
