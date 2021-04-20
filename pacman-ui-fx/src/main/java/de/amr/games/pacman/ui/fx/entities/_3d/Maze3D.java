@@ -25,6 +25,8 @@ public class Maze3D {
 
 	private static class MicroTile {
 
+		static final double SIZE = TS / 3.0;
+
 		@Override
 		public int hashCode() {
 			return Objects.hash(i, tile);
@@ -44,17 +46,13 @@ public class Maze3D {
 
 		@Override
 		public String toString() {
-			return String.format("tile:%s i:%d x:%.2f y:%.2f", tile, i, x, y);
+			return String.format("tile:%s i:%d x:%.2f y:%.2f", tile, i, x(), y());
 		}
 
-		private final double x;
-		private final double y;
 		private final V2i tile;
 		private final int i;
 
-		public MicroTile(double x, double y, V2i tile, int i) {
-			this.x = x;
-			this.y = y;
+		public MicroTile(V2i tile, int i) {
 			this.tile = tile;
 			this.i = i;
 		}
@@ -90,25 +88,31 @@ public class Maze3D {
 		public V2i toWest() {
 			return new V2i(i == 0 || i == 3 || i == 6 ? -1 : 0, 0);
 		}
+
+		public double x() {
+			return tile.x * TS - SIZE + (i % 3) * SIZE;
+		}
+
+		public double y() {
+			return tile.y * TS - SIZE + (i / 3) * SIZE;
+		}
 	}
 
 	private List<Node> bricks;
 
 	public Maze3D(PacManGameWorld world, Color wallColor) {
 		List<MicroTile> microTiles = new ArrayList<>();
-		double w = TS / 3.0, h = TS / 3.0;
 		world.tiles().filter(world::isWall).forEach(tile -> {
-			double x = tile.x * TS - w, y = tile.y * TS - h;
 			//@formatter:off
-			microTiles.add(new MicroTile(x,     y,     tile, 0));
-			microTiles.add(new MicroTile(x+w,   y,     tile, 1));
-			microTiles.add(new MicroTile(x+2*w, y,     tile, 2));
-			microTiles.add(new MicroTile(x,     y+h,   tile, 3));
-			microTiles.add(new MicroTile(x+w,   y+h,   tile, 4));
-			microTiles.add(new MicroTile(x+2*w, y+h,   tile, 5));
-			microTiles.add(new MicroTile(x,     y+2*h, tile, 6));
-			microTiles.add(new MicroTile(x+w,   y+2*h, tile, 7));
-			microTiles.add(new MicroTile(x+2*w, y+2*h, tile, 8));
+			microTiles.add(new MicroTile(tile, 0));
+			microTiles.add(new MicroTile(tile, 1));
+			microTiles.add(new MicroTile(tile, 2));
+			microTiles.add(new MicroTile(tile, 3));
+			microTiles.add(new MicroTile(tile, 4));
+			microTiles.add(new MicroTile(tile, 5));
+			microTiles.add(new MicroTile(tile, 6));
+			microTiles.add(new MicroTile(tile, 7));
+			microTiles.add(new MicroTile(tile, 8));
 			//@formatter:on
 		});
 
@@ -131,7 +135,7 @@ public class Maze3D {
 		microTiles.removeAll(microTilesToRemove);
 
 		PhongMaterial brickMaterial = new PhongMaterial(wallColor);
-		bricks = microTiles.stream().map(mt -> createBrick(mt.x, mt.y, brickMaterial)).collect(Collectors.toList());
+		bricks = microTiles.stream().map(mt -> createBrick(mt.x(), mt.y(), brickMaterial)).collect(Collectors.toList());
 	}
 
 	public List<Node> getBricks() {
