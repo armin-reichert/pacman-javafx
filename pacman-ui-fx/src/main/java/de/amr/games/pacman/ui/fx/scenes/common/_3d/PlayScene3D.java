@@ -47,8 +47,7 @@ import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 
 /**
- * 3D scene displaying the maze and the game play for both, Pac-Man and Ms.
- * Pac-Man games.
+ * 3D scene displaying the maze and the game play for both, Pac-Man and Ms. Pac-Man games.
  * 
  * @author Armin Reichert
  */
@@ -150,7 +149,7 @@ public class PlayScene3D implements GameScene {
 			livesCounter3D.setVisible(true);
 		}
 
-		levelCounter3D = new LevelCounter3D(new V2i(25, 1),r2D);
+		levelCounter3D = new LevelCounter3D(new V2i(25, 1), r2D);
 		levelCounter3D.update(game());
 
 		var ambientLight = new AmbientLight();
@@ -234,22 +233,24 @@ public class PlayScene3D implements GameScene {
 		player.setVisible(pac.visible);
 		player.setTranslateX(pac.position.x);
 		player.setTranslateY(pac.position.y);
+		double target = rotationForDir(pac.dir, 0, 180, 90, -90);
+		rotateTowardsTargetZ(player, target);
+	}
 
-		// TODO we need the exact moment of the direction change
-		player.setRotationAxis(Rotate.Z_AXIS);
-		double target = rotateZ(pac.dir);
-		if (player.getRotate() != target) {
-			double next = lerp(player.getRotate(), target, 0.1);
-			if (player.getRotate() - 180 > target) {
-				next = lerp(player.getRotate(), target + 360, 0.1);
-			} else if (player.getRotate() + 180 < target) {
-				next = lerp(player.getRotate(), target - 360, 0.1);
+	private void rotateTowardsTargetZ(Node node, double target) {
+		node.setRotationAxis(Rotate.Z_AXIS);
+		if (node.getRotate() != target) {
+			double next = lerp(node.getRotate(), target, 0.1);
+			if (node.getRotate() - 180 > target) {
+				next = lerp(node.getRotate(), target + 360, 0.1);
+			} else if (node.getRotate() + 180 < target) {
+				next = lerp(node.getRotate(), target - 360, 0.1);
 			}
-			player.setRotate(next);
+			node.setRotate(next);
 		}
 	}
 
-	private double rotateZ(Direction dir) {
+	private double rotationForDir(Direction dir, int left, int right, int up, int down) {
 		return dir == Direction.LEFT ? 0 : dir == Direction.UP ? 90 : dir == Direction.RIGHT ? 180 : 270;
 	}
 }

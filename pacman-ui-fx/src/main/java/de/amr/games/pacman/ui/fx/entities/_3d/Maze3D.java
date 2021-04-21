@@ -143,7 +143,7 @@ public class Maze3D {
 	}
 
 	private Box createBrick(double x, double y, PhongMaterial material) {
-		Box brick = new Box(2, 2, 3);
+		Box brick = new Box(SIZE, SIZE, SIZE);
 		brick.setMaterial(material);
 		brick.setTranslateX(x);
 		brick.setTranslateY(y);

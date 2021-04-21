@@ -1,5 +1,7 @@
 package de.amr.games.pacman.ui.fx.entities._3d;
 
+import static de.amr.games.pacman.ui.fx.model3D.Model3DHelper.lerp;
+
 import java.util.function.Supplier;
 
 import de.amr.games.pacman.lib.Direction;
@@ -100,17 +102,30 @@ public class Ghost3D extends Group implements Supplier<Node> {
 			setBounty(ghost.bounty);
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
 			getChildren().setAll(deadGhost);
-			rotateZ(ghost.dir, 0, 180, 90, -90);
+			rotateTowardsTargetZ(this, rotationForDir(ghost.dir, 0, 180, 90, -90));
 		} else {
 			getChildren().setAll(coloredGhost);
 			setRotationAxis(Rotate.Y_AXIS);
 			setRotate(0);
-			rotateZ(ghost.is(GhostState.FRIGHTENED) ? ghost.dir : ghost.wishDir, 0, 180, 90, -90);
+			Direction targetDir = ghost.is(GhostState.FRIGHTENED) ? ghost.dir : ghost.wishDir;
+			rotateTowardsTargetZ(coloredGhost, rotationForDir(targetDir, 0, 180, 90, -90));
 		}
 	}
 
-	private void rotateZ(Direction dir, int left, int right, int up, int down) {
-		setRotationAxis(Rotate.Z_AXIS);
-		setRotate(dir == Direction.LEFT ? left : dir == Direction.RIGHT ? right : dir == Direction.UP ? up : down);
+	private void rotateTowardsTargetZ(Node node, double target) {
+		node.setRotationAxis(Rotate.Z_AXIS);
+		if (node.getRotate() != target) {
+			double next = lerp(node.getRotate(), target, 0.1);
+			if (node.getRotate() - 180 > target) {
+				next = lerp(node.getRotate(), target + 360, 0.1);
+			} else if (node.getRotate() + 180 < target) {
+				next = lerp(node.getRotate(), target - 360, 0.1);
+			}
+			node.setRotate(next);
+		}
+	}
+
+	private double rotationForDir(Direction dir, int left, int right, int up, int down) {
+		return dir == Direction.LEFT ? left : dir == Direction.RIGHT ? right : dir == Direction.UP ? up : down;
 	}
 }
