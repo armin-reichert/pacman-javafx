@@ -1,7 +1,5 @@
 package de.amr.games.pacman.ui.fx.entities._3d;
 
-import java.util.function.Supplier;
-
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
@@ -11,7 +9,6 @@ import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets;
 import javafx.animation.RotateTransition;
 import javafx.animation.Transition;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -25,7 +22,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class Ghost3D extends Group implements Supplier<Node> {
+public class Ghost3D extends Group {
 
 	//@formatter:off
 	private static final int[][][] ROTATION_INTERVALS = {
@@ -100,11 +97,6 @@ public class Ghost3D extends Group implements Supplier<Node> {
 		deadGhostRotateTransition.setAxis(Rotate.Z_AXIS);
 		deadGhost.setRotationAxis(Rotate.Z_AXIS);
 		deadGhost.setRotate(rotation[0]);
-	}
-
-	@Override
-	public Node get() {
-		return this;
 	}
 
 	public void setBlueSkin(boolean blue) {
