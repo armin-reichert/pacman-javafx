@@ -267,7 +267,7 @@ public class PlayScene3DAnimationController {
 		PauseTransition phase1 = new PauseTransition(Duration.seconds(1));
 		phase1.setOnFinished(e -> {
 			game().ghosts().forEach(ghost -> ghost.visible = false);
-			game().player.turnBothTo(Direction.DOWN);
+			game().player.setDir(Direction.DOWN);
 			sounds.play(PacManGameSound.PACMAN_DEATH);
 		});
 

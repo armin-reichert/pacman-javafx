@@ -102,12 +102,12 @@ public class Ghost3D extends Group implements Supplier<Node> {
 			setBounty(ghost.bounty);
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
 			getChildren().setAll(deadGhost);
-			rotateTowardsTargetZ(this, rotationForDir(ghost.dir, 0, 180, 90, -90));
+			rotateTowardsTargetZ(this, rotationForDir(ghost.dir(), 0, 180, 90, -90));
 		} else {
 			getChildren().setAll(coloredGhost);
 			setRotationAxis(Rotate.Y_AXIS);
 			setRotate(0);
-			Direction targetDir = ghost.is(GhostState.FRIGHTENED) ? ghost.dir : ghost.wishDir;
+			Direction targetDir = ghost.is(GhostState.FRIGHTENED) ? ghost.dir() : ghost.wishDir();
 			rotateTowardsTargetZ(coloredGhost, rotationForDir(targetDir, 0, 180, 90, -90));
 		}
 	}

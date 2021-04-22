@@ -254,7 +254,7 @@ public class PlayScene3D implements GameScene {
 		player.setVisible(pac.visible);
 		player.setTranslateX(pac.position.x);
 		player.setTranslateY(pac.position.y);
-		double target = rotationForDir(pac.dir, 0, 180, 90, -90);
+		double target = rotationForDir(pac.dir(), 0, 180, 90, -90);
 		rotateTowardsTargetZ(player, target);
 	}
 

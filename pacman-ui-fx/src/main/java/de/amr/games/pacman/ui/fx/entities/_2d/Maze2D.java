@@ -81,6 +81,10 @@ public class Maze2D<RENDERING extends Rendering2D> implements Renderable2D<RENDE
 			gameLevel.world.tiles().filter(gameLevel::isFoodRemoved).forEach(foodTile -> {
 				g.fillRect(foodTile.x * TS, foodTile.y * TS, TS, TS);
 			});
+//			gameLevel.world.tiles().filter(gameLevel.world::isIntersection).forEach(t -> {
+//				g.setStroke(Color.YELLOW);
+//				g.strokeRect(t.x*TS, t.y*TS, TS, TS);
+//			});
 		}
 	}
 }
