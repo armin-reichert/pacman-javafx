@@ -153,14 +153,17 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	@Override
 	public void onGameEvent(PacManGameEvent event) {
 		log("%s received game event %s", getClass().getSimpleName(), event);
-		if (event instanceof PacManGameStateChangeEvent) {
-			PacManGameStateChangeEvent stateChange = (PacManGameStateChangeEvent) event;
-			if (stateChange.newGameState == PacManGameState.INTRO) {
-				stopAllSounds();
-			}
-			setGameScene(sceneForCurrentGameState(Env.$use3DScenes.get()));
-		}
+		PacManGameUI.super.onGameEvent(event);
+		// delegate to current scene
 		currentGameScene.onGameEvent(event);
+	}
+	
+	@Override
+	public void onPacManGameStateChange(PacManGameStateChangeEvent e) {
+		if (e.newGameState == PacManGameState.INTRO) {
+			stopAllSounds();
+		}
+		setGameScene(sceneForCurrentGameState(Env.$use3DScenes.get()));
 	}
 
 	private void onKeyPressed(KeyEvent e) {
