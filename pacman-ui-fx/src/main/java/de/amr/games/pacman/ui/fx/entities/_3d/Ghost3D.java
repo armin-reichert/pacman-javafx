@@ -1,7 +1,5 @@
 package de.amr.games.pacman.ui.fx.entities._3d;
 
-import static de.amr.games.pacman.ui.fx.model3D.Model3DHelper.lerp;
-
 import java.util.function.Supplier;
 
 import de.amr.games.pacman.lib.Direction;
@@ -10,6 +8,7 @@ import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.fx.model3D.GianmarcosModel3D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets;
+import javafx.animation.RotateTransition;
 import javafx.animation.Transition;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -28,6 +27,24 @@ import javafx.util.Duration;
  */
 public class Ghost3D extends Group implements Supplier<Node> {
 
+	//@formatter:off
+	private static final int[][][] ROTATIONS = {
+			{ {0,0},   {0, 180},   {0,90},   {0,-90} },
+			{ {180,0}, {180, 180}, {180,90}, {180,270} },
+			{ {90,0},  {90, 180},  {90,90},  {90,270} },
+			{ {-90,0}, {270, 180}, {-90,90},  {-90,-90} },
+	};
+	//@formatter:on
+
+	private static int indexOfDir(Direction dir) {
+		return dir == Direction.LEFT ? 0 : dir == Direction.RIGHT ? 1 : dir == Direction.UP ? 2 : 3;
+	}
+
+	private static int[] rotation(Direction from, Direction to) {
+		int row = indexOfDir(from), col = indexOfDir(to);
+		return ROTATIONS[row][col];
+	}
+
 	private class FlashingAnimation extends Transition {
 
 		public FlashingAnimation() {
@@ -43,25 +60,45 @@ public class Ghost3D extends Group implements Supplier<Node> {
 	};
 
 	private final Ghost ghost;
+
 	private final Rendering2D rendering2D;
-	private final Group coloredGhost;
 	private PhongMaterial normalSkin;
 	private PhongMaterial blueSkin;
-	private final Group deadGhost;
-	private final Box bountyShape;
+	private final Group coloredGhost;
+	private final RotateTransition coloredGhostRotateTransition;
 	private final Transition flashingAnimation;
+
+	private final Group deadGhost;
+	private final RotateTransition deadGhostRotateTransition;
+
+	private final Box bountyShape;
+
+	private Direction targetDir;
 
 	public Ghost3D(Ghost ghost, Rendering2D rendering2D) {
 		this.ghost = ghost;
+		targetDir = ghost.dir();
+		int[] rotation = rotation(ghost.dir(), ghost.dir());
+
 		this.rendering2D = rendering2D;
 		normalSkin = new PhongMaterial(Rendering2D_Assets.getGhostColor(ghost.id));
 		blueSkin = new PhongMaterial(Color.CORNFLOWERBLUE);
 		coloredGhost = GianmarcosModel3D.IT.createGhost();
+		flashingAnimation = new FlashingAnimation();
+		coloredGhostRotateTransition = new RotateTransition(Duration.seconds(0.25), coloredGhost);
+		coloredGhostRotateTransition.setAxis(Rotate.Z_AXIS);
+		coloredGhost.setRotationAxis(Rotate.Z_AXIS);
+		coloredGhost.setRotate(rotation[0]);
+		setBlueSkin(false);
+
 		bountyShape = new Box(8, 8, 8);
 		bountyShape.setMaterial(new PhongMaterial());
+
 		deadGhost = GianmarcosModel3D.IT.createGhostEyes();
-		flashingAnimation = new FlashingAnimation();
-		setBlueSkin(false);
+		deadGhostRotateTransition = new RotateTransition(Duration.seconds(0.25), coloredGhost);
+		deadGhostRotateTransition.setAxis(Rotate.Z_AXIS);
+		deadGhost.setRotationAxis(Rotate.Z_AXIS);
+		deadGhost.setRotate(rotation[0]);
 	}
 
 	@Override
@@ -102,30 +139,27 @@ public class Ghost3D extends Group implements Supplier<Node> {
 			setBounty(ghost.bounty);
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
 			getChildren().setAll(deadGhost);
-			rotateTowardsTargetZ(this, rotationForDir(ghost.dir(), 0, 180, 90, -90));
+			rotateTowardsTargetZ();
 		} else {
 			getChildren().setAll(coloredGhost);
 			setRotationAxis(Rotate.Y_AXIS);
 			setRotate(0);
-			Direction targetDir = ghost.is(GhostState.FRIGHTENED) ? ghost.dir() : ghost.wishDir();
-			rotateTowardsTargetZ(coloredGhost, rotationForDir(targetDir, 0, 180, 90, -90));
+			rotateTowardsTargetZ();
 		}
 	}
 
-	private void rotateTowardsTargetZ(Node node, double target) {
-		node.setRotationAxis(Rotate.Z_AXIS);
-		if (node.getRotate() != target) {
-			double next = lerp(node.getRotate(), target, 0.1);
-			if (node.getRotate() - 180 > target) {
-				next = lerp(node.getRotate(), target + 360, 0.1);
-			} else if (node.getRotate() + 180 < target) {
-				next = lerp(node.getRotate(), target - 360, 0.1);
-			}
-			node.setRotate(next);
+	private void rotateTowardsTargetZ() {
+		if (targetDir != ghost.dir()) {
+			int[] rotation = rotation(targetDir, ghost.dir());
+			coloredGhostRotateTransition.stop();
+			coloredGhostRotateTransition.setFromAngle(rotation[0]);
+			coloredGhostRotateTransition.setToAngle(rotation[1]);
+			coloredGhostRotateTransition.play();
+			deadGhostRotateTransition.stop();
+			deadGhostRotateTransition.setFromAngle(rotation[0]);
+			deadGhostRotateTransition.setToAngle(rotation[1]);
+			deadGhostRotateTransition.play();
+			targetDir = ghost.dir();
 		}
-	}
-
-	private double rotationForDir(Direction dir, int left, int right, int up, int down) {
-		return dir == Direction.LEFT ? left : dir == Direction.RIGHT ? right : dir == Direction.UP ? up : down;
 	}
 }
