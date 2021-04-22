@@ -2,7 +2,6 @@ package de.amr.games.pacman.ui.fx.scenes.common._3d;
 
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
-import static de.amr.games.pacman.ui.fx.model3D.Model3DHelper.lerp;
 import static de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets.getFoodColor;
 import static de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets.getMazeWallColor;
 
@@ -15,17 +14,16 @@ import java.util.stream.Collectors;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
-import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
-import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.fx.entities._3d.Bonus3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Ghost3D;
 import de.amr.games.pacman.ui.fx.entities._3d.LevelCounter3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Maze3D;
+import de.amr.games.pacman.ui.fx.entities._3d.Player3D;
 import de.amr.games.pacman.ui.fx.entities._3d.ScoreNotReally3D;
 import de.amr.games.pacman.ui.fx.model3D.GianmarcosModel3D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
@@ -47,7 +45,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Sphere;
-import javafx.scene.transform.Rotate;
 
 /**
  * 3D scene displaying the maze and the game play for both, Pac-Man and Ms. Pac-Man games.
@@ -67,7 +64,7 @@ public class PlayScene3D implements GameScene {
 	Maze3D maze;
 	Box floor;
 	List<Node> foodNodes;
-	Group player;
+	Player3D player3D;
 	Map<Ghost, Ghost3D> ghosts3D;
 	Bonus3D bonus3D;
 	ScoreNotReally3D score3D;
@@ -142,7 +139,7 @@ public class PlayScene3D implements GameScene {
 				.map(tile -> createPellet(world.isEnergizerTile(tile) ? 2.5 : 1, tile, foodMaterial))
 				.collect(Collectors.toList());
 
-		player = GianmarcosModel3D.IT.createPacMan();
+		player3D = new Player3D(game().player);
 		ghosts3D = game().ghosts().collect(Collectors.toMap(Function.identity(), ghost -> new Ghost3D(ghost, r2D)));
 		bonus3D = new Bonus3D(variant, r2D);
 
@@ -161,15 +158,15 @@ public class PlayScene3D implements GameScene {
 
 		var ambientLight = new AmbientLight();
 		var playerLight = new PointLight();
-		playerLight.translateXProperty().bind(player.translateXProperty());
-		playerLight.translateYProperty().bind(player.translateYProperty());
-		playerLight.lightOnProperty().bind(player.visibleProperty());
+		playerLight.translateXProperty().bind(player3D.translateXProperty());
+		playerLight.translateYProperty().bind(player3D.translateYProperty());
+		playerLight.lightOnProperty().bind(player3D.visibleProperty());
 		playerLight.setTranslateZ(-4);
 
 		root.getChildren().addAll(maze.getBricks());
 		root.getChildren().addAll(floor, score3D, livesCounter3D, levelCounter3D);
 		root.getChildren().addAll(foodNodes);
-		root.getChildren().addAll(player);
+		root.getChildren().addAll(player3D);
 		root.getChildren().addAll(ghosts3D.values());
 		root.getChildren().addAll(bonus3D);
 		root.getChildren().addAll(ambientLight, playerLight);
@@ -210,11 +207,11 @@ public class PlayScene3D implements GameScene {
 			V2i tile = (V2i) foodNode.getUserData();
 			foodNode.setVisible(!game().currentLevel.isFoodRemoved(tile));
 		});
-		updatePlayer();
+		player3D.update();
 		ghosts3D.values().forEach(Ghost3D::update);
 		bonus3D.update(game().bonus);
 
-		cams.updateSelectedCamera(player);
+		cams.updateSelectedCamera(player3D);
 		animationController.update();
 
 		playScene2D.clearCanvas(Color.BLACK);
@@ -249,29 +246,4 @@ public class PlayScene3D implements GameScene {
 		return livesCounter;
 	}
 
-	private void updatePlayer() {
-		Pac pac = game().player;
-		player.setVisible(pac.visible);
-		player.setTranslateX(pac.position.x);
-		player.setTranslateY(pac.position.y);
-		double target = rotationForDir(pac.dir(), 0, 180, 90, -90);
-		rotateTowardsTargetZ(player, target);
-	}
-
-	private void rotateTowardsTargetZ(Node node, double target) {
-		node.setRotationAxis(Rotate.Z_AXIS);
-		if (node.getRotate() != target) {
-			double next = lerp(node.getRotate(), target, 0.1);
-			if (node.getRotate() - 180 > target) {
-				next = lerp(node.getRotate(), target + 360, 0.1);
-			} else if (node.getRotate() + 180 < target) {
-				next = lerp(node.getRotate(), target - 360, 0.1);
-			}
-			node.setRotate(next);
-		}
-	}
-
-	private double rotationForDir(Direction dir, int left, int right, int up, int down) {
-		return dir == Direction.LEFT ? 0 : dir == Direction.UP ? 90 : dir == Direction.RIGHT ? 180 : 270;
-	}
 }

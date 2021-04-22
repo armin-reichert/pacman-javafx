@@ -269,9 +269,9 @@ public class PlayScene3DAnimationController implements PacManGameEventFacade {
 
 	private void playAnimationPlayerDying() {
 
-		double savedTranslateX = playScene.player.getTranslateX();
-		double savedTranslateY = playScene.player.getTranslateY();
-		double savedTranslateZ = playScene.player.getTranslateZ();
+		double savedTranslateX = playScene.player3D.getTranslateX();
+		double savedTranslateY = playScene.player3D.getTranslateY();
+		double savedTranslateZ = playScene.player3D.getTranslateZ();
 
 		PauseTransition phase1 = new PauseTransition(Duration.seconds(1));
 		phase1.setOnFinished(e -> {
@@ -280,29 +280,29 @@ public class PlayScene3DAnimationController implements PacManGameEventFacade {
 			sounds.play(PacManGameSound.PACMAN_DEATH);
 		});
 
-		TranslateTransition raise = new TranslateTransition(Duration.seconds(0.5), playScene.player);
+		TranslateTransition raise = new TranslateTransition(Duration.seconds(0.5), playScene.player3D);
 		raise.setFromZ(0);
 		raise.setToZ(-10);
 		raise.setByZ(1);
 
-		ScaleTransition expand = new ScaleTransition(Duration.seconds(0.5), playScene.player);
+		ScaleTransition expand = new ScaleTransition(Duration.seconds(0.5), playScene.player3D);
 		expand.setToX(3);
 		expand.setToY(3);
 		expand.setToZ(3);
 
-		ScaleTransition shrink = new ScaleTransition(Duration.seconds(1), playScene.player);
+		ScaleTransition shrink = new ScaleTransition(Duration.seconds(1), playScene.player3D);
 		shrink.setToX(0.1);
 		shrink.setToY(0.1);
 		shrink.setToZ(0.1);
 
 		SequentialTransition animation = new SequentialTransition(phase1, raise, expand, shrink);
 		animation.setOnFinished(e -> {
-			playScene.player.setScaleX(1);
-			playScene.player.setScaleY(1);
-			playScene.player.setScaleZ(1);
-			playScene.player.setTranslateX(savedTranslateX);
-			playScene.player.setTranslateY(savedTranslateY);
-			playScene.player.setTranslateZ(savedTranslateZ);
+			playScene.player3D.setScaleX(1);
+			playScene.player3D.setScaleY(1);
+			playScene.player3D.setScaleZ(1);
+			playScene.player3D.setTranslateX(savedTranslateX);
+			playScene.player3D.setTranslateY(savedTranslateY);
+			playScene.player3D.setTranslateZ(savedTranslateZ);
 			game().player.visible = false;
 			gameController.stateTimer().forceExpiration();
 		});
