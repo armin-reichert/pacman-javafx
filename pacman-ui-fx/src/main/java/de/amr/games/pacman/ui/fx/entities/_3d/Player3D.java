@@ -11,7 +11,7 @@ import javafx.util.Duration;
 public class Player3D extends Group {
 
 	//@formatter:off
-	private static final int[][][] ROTATIONS = {
+	private static final int[][][] ROTATION_INTERVALS = {
 			{ {0,0},   {0, 180},   {0,90},   {0,-90} },
 			{ {180,0}, {180, 180}, {180,90}, {180,270} },
 			{ {90,0},  {90, 180},  {90,90},  {90,270} },
@@ -23,9 +23,9 @@ public class Player3D extends Group {
 		return dir == Direction.LEFT ? 0 : dir == Direction.RIGHT ? 1 : dir == Direction.UP ? 2 : 3;
 	}
 
-	private static int[] rotation(Direction from, Direction to) {
+	private static int[] rotationInterval(Direction from, Direction to) {
 		int row = indexOfDir(from), col = indexOfDir(to);
-		return ROTATIONS[row][col];
+		return ROTATION_INTERVALS[row][col];
 	}
 
 	private final Pac pac;
@@ -38,9 +38,9 @@ public class Player3D extends Group {
 		targetDir = pac.dir();
 		rotateTransition = new RotateTransition(Duration.seconds(0.25), this);
 		rotateTransition.setAxis(Rotate.Z_AXIS);
-		int[] rotation = rotation(pac.dir(), pac.dir());
+		int[] rotationInterval = rotationInterval(pac.dir(), pac.dir());
 		setRotationAxis(Rotate.Z_AXIS);
-		setRotate(rotation[0]);
+		setRotate(rotationInterval[0]);
 	}
 
 	public void update() {
@@ -48,10 +48,10 @@ public class Player3D extends Group {
 		setTranslateX(pac.position.x);
 		setTranslateY(pac.position.y);
 		if (targetDir != pac.dir()) {
+			int[] rotationInterval = rotationInterval(targetDir, pac.dir());
 			rotateTransition.stop();
-			int[] rotation = rotation(targetDir, pac.dir());
-			rotateTransition.setFromAngle(rotation[0]);
-			rotateTransition.setToAngle(rotation[1]);
+			rotateTransition.setFromAngle(rotationInterval[0]);
+			rotateTransition.setToAngle(rotationInterval[1]);
 			rotateTransition.play();
 			targetDir = pac.dir();
 		}

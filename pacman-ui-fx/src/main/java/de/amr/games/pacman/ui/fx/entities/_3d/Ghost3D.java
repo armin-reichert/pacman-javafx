@@ -28,7 +28,7 @@ import javafx.util.Duration;
 public class Ghost3D extends Group implements Supplier<Node> {
 
 	//@formatter:off
-	private static final int[][][] ROTATIONS = {
+	private static final int[][][] ROTATION_INTERVALS = {
 			{ {0,0},   {0, 180},   {0,90},   {0,-90} },
 			{ {180,0}, {180, 180}, {180,90}, {180,270} },
 			{ {90,0},  {90, 180},  {90,90},  {90,270} },
@@ -40,9 +40,9 @@ public class Ghost3D extends Group implements Supplier<Node> {
 		return dir == Direction.LEFT ? 0 : dir == Direction.RIGHT ? 1 : dir == Direction.UP ? 2 : 3;
 	}
 
-	private static int[] rotation(Direction from, Direction to) {
+	private static int[] rotationInterval(Direction from, Direction to) {
 		int row = indexOfDir(from), col = indexOfDir(to);
-		return ROTATIONS[row][col];
+		return ROTATION_INTERVALS[row][col];
 	}
 
 	private class FlashingAnimation extends Transition {
@@ -78,15 +78,16 @@ public class Ghost3D extends Group implements Supplier<Node> {
 	public Ghost3D(Ghost ghost, Rendering2D rendering2D) {
 		this.ghost = ghost;
 		targetDir = ghost.dir();
-		int[] rotation = rotation(ghost.dir(), ghost.dir());
+		int[] rotation = rotationInterval(ghost.dir(), ghost.dir());
 
 		this.rendering2D = rendering2D;
 		normalSkin = new PhongMaterial(Rendering2D_Assets.getGhostColor(ghost.id));
 		blueSkin = new PhongMaterial(Color.CORNFLOWERBLUE);
 		coloredGhost = GianmarcosModel3D.IT.createGhost();
 		flashingAnimation = new FlashingAnimation();
-		coloredGhostRotateTransition = new RotateTransition(Duration.seconds(0.25), coloredGhost);
+		coloredGhostRotateTransition = new RotateTransition(Duration.seconds(0.5), coloredGhost);
 		coloredGhostRotateTransition.setAxis(Rotate.Z_AXIS);
+
 		coloredGhost.setRotationAxis(Rotate.Z_AXIS);
 		coloredGhost.setRotate(rotation[0]);
 		setBlueSkin(false);
@@ -95,7 +96,7 @@ public class Ghost3D extends Group implements Supplier<Node> {
 		bountyShape.setMaterial(new PhongMaterial());
 
 		deadGhost = GianmarcosModel3D.IT.createGhostEyes();
-		deadGhostRotateTransition = new RotateTransition(Duration.seconds(0.25), coloredGhost);
+		deadGhostRotateTransition = new RotateTransition(Duration.seconds(0.5), deadGhost);
 		deadGhostRotateTransition.setAxis(Rotate.Z_AXIS);
 		deadGhost.setRotationAxis(Rotate.Z_AXIS);
 		deadGhost.setRotate(rotation[0]);
@@ -139,25 +140,23 @@ public class Ghost3D extends Group implements Supplier<Node> {
 			setBounty(ghost.bounty);
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
 			getChildren().setAll(deadGhost);
-			rotateTowardsTargetZ();
+			rotateTowardsMoveDir();
 		} else {
 			getChildren().setAll(coloredGhost);
-			setRotationAxis(Rotate.Y_AXIS);
-			setRotate(0);
-			rotateTowardsTargetZ();
+			rotateTowardsMoveDir();
 		}
 	}
 
-	private void rotateTowardsTargetZ() {
+	private void rotateTowardsMoveDir() {
 		if (targetDir != ghost.dir()) {
-			int[] rotation = rotation(targetDir, ghost.dir());
+			int[] rotationInterval = rotationInterval(targetDir, ghost.dir());
 			coloredGhostRotateTransition.stop();
-			coloredGhostRotateTransition.setFromAngle(rotation[0]);
-			coloredGhostRotateTransition.setToAngle(rotation[1]);
+			coloredGhostRotateTransition.setFromAngle(rotationInterval[0]);
+			coloredGhostRotateTransition.setToAngle(rotationInterval[1]);
 			coloredGhostRotateTransition.play();
 			deadGhostRotateTransition.stop();
-			deadGhostRotateTransition.setFromAngle(rotation[0]);
-			deadGhostRotateTransition.setToAngle(rotation[1]);
+			deadGhostRotateTransition.setFromAngle(rotationInterval[0]);
+			deadGhostRotateTransition.setToAngle(rotationInterval[1]);
 			deadGhostRotateTransition.play();
 			targetDir = ghost.dir();
 		}
