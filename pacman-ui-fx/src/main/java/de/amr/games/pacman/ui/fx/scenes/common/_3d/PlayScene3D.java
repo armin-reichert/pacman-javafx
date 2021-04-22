@@ -163,7 +163,7 @@ public class PlayScene3D implements GameScene {
 		playerLight.lightOnProperty().bind(player3D.visibleProperty());
 		playerLight.setTranslateZ(-4);
 
-		root.getChildren().addAll(maze.getBricks());
+		root.getChildren().addAll(maze);
 		root.getChildren().addAll(floor, score3D, livesCounter3D, levelCounter3D);
 		root.getChildren().addAll(foodNodes);
 		root.getChildren().addAll(player3D);

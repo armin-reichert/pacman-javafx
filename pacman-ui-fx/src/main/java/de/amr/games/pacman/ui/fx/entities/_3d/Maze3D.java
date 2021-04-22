@@ -4,7 +4,6 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -12,7 +11,7 @@ import java.util.stream.Collectors;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.fx.Env;
-import javafx.scene.Node;
+import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -22,7 +21,7 @@ import javafx.scene.shape.Box;
  * 
  * @author Armin Reichert
  */
-public class Maze3D {
+public class Maze3D extends Group {
 
 	static final int N = 4;
 	static final double SIZE = 8.0 / N;;
@@ -105,8 +104,6 @@ public class Maze3D {
 
 	}
 
-	private List<Node> bricks;
-
 	public Maze3D(PacManGameWorld world, Color wallColor) {
 		List<MicroTile> microTiles = new ArrayList<>();
 		world.tiles().filter(world::isWall).forEach(tile -> {
@@ -134,12 +131,10 @@ public class Maze3D {
 		microTiles.removeAll(microTilesToRemove);
 
 		PhongMaterial brickMaterial = new PhongMaterial(wallColor);
-		bricks = microTiles.stream().map(mt -> createBrick(mt.x(), mt.y(), brickMaterial)).collect(Collectors.toList());
+		List<Box> bricks = microTiles.stream().map(mt -> createBrick(mt.x(), mt.y(), brickMaterial)).collect(Collectors.toList());
 		log("%d bricks created", bricks.size());
-	}
-
-	public List<Node> getBricks() {
-		return Collections.unmodifiableList(bricks);
+		
+		getChildren().addAll(bricks);
 	}
 
 	private Box createBrick(double x, double y, PhongMaterial material) {
