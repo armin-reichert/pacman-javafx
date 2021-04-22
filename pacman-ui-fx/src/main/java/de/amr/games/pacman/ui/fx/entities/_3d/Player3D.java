@@ -33,7 +33,7 @@ public class Player3D extends Group {
 	private Direction targetDir;
 
 	public Player3D(Pac pac) {
-		getChildren().add(GianmarcosModel3D.IT.createPacMan());
+		getChildren().add(GianmarcosModel3D.createPacMan());
 		this.pac = pac;
 		targetDir = pac.dir();
 		rotateTransition = new RotateTransition(Duration.seconds(0.25), this);

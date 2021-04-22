@@ -23,18 +23,17 @@ import javafx.scene.transform.Translate;
  */
 public class GianmarcosModel3D {
 
-	public static final GianmarcosModel3D IT = new GianmarcosModel3D();
+	private static final GianmarcosModel3D MODEL = new GianmarcosModel3D();
 
 	private Map<String, MeshView> meshViewsByName;
 	private Map<String, PhongMaterial> materialsByName;
 
 	public static void main(String[] args) {
-		GianmarcosModel3D model = new GianmarcosModel3D();
 		log("MeshViews:");
-		model.meshViewsByName.keySet().stream().sorted().forEach(key -> log("%s", key));
+		MODEL.meshViewsByName.keySet().stream().sorted().forEach(key -> log("%s", key));
 		log("");
 		log("Materials:");
-		model.materialsByName.keySet().stream().sorted().forEach(key -> log("%s", key));
+		MODEL.materialsByName.keySet().stream().sorted().forEach(key -> log("%s", key));
 		log("Pac-Man 3D model loaded successfully!");
 	}
 
@@ -50,13 +49,13 @@ public class GianmarcosModel3D {
 		objImporter.close();
 	}
 
-	public Group createPacMan() {
-		MeshView body = new MeshView(meshViewsByName.get("Sphere_yellow_packman").getMesh());
-		body.setMaterial(materialsByName.get("yellow_packman"));
+	public static Group createPacMan() {
+		MeshView body = new MeshView(MODEL.meshViewsByName.get("Sphere_yellow_packman").getMesh());
+		body.setMaterial(MODEL.materialsByName.get("yellow_packman"));
 		body.drawModeProperty().bind(Env.$drawMode);
 		Translate centering = Model3DHelper.centerNodeOverOrigin(body);
 
-		MeshView eyes = new MeshView(meshViewsByName.get("Sphere.008_Sphere.010").getMesh());
+		MeshView eyes = new MeshView(MODEL.meshViewsByName.get("Sphere.008_Sphere.010").getMesh());
 		eyes.setMaterial(new PhongMaterial(Color.rgb(20, 20, 20)));
 		eyes.drawModeProperty().bind(Env.$drawMode);
 		eyes.getTransforms().add(centering);
@@ -67,18 +66,18 @@ public class GianmarcosModel3D {
 		return group;
 	}
 
-	public Group createGhost() {
-		MeshView body = new MeshView(meshViewsByName.get("Sphere.004_Sphere.034").getMesh());
-		body.setMaterial(materialsByName.get("blue_ghost"));
+	public static Group createGhost() {
+		MeshView body = new MeshView(MODEL.meshViewsByName.get("Sphere.004_Sphere.034").getMesh());
+		body.setMaterial(MODEL.materialsByName.get("blue_ghost"));
 		body.drawModeProperty().bind(Env.$drawMode);
 		Translate centering = Model3DHelper.centerNodeOverOrigin(body);
 
-		MeshView eyesOuter = new MeshView(meshViewsByName.get("Sphere.009_Sphere.036").getMesh());
+		MeshView eyesOuter = new MeshView(MODEL.meshViewsByName.get("Sphere.009_Sphere.036").getMesh());
 		eyesOuter.setMaterial(new PhongMaterial(Color.WHITE));
 		eyesOuter.drawModeProperty().bind(Env.$drawMode);
 		eyesOuter.getTransforms().add(centering);
 
-		MeshView eyesInner = new MeshView(meshViewsByName.get("Sphere.010_Sphere.039").getMesh());
+		MeshView eyesInner = new MeshView(MODEL.meshViewsByName.get("Sphere.010_Sphere.039").getMesh());
 		eyesInner.setMaterial(new PhongMaterial(Color.BLACK));
 		eyesInner.drawModeProperty().bind(Env.$drawMode);
 		eyesInner.getTransforms().add(centering);
@@ -89,7 +88,7 @@ public class GianmarcosModel3D {
 		return group;
 	}
 
-	public Group createGhostEyes() {
+	public static Group createGhostEyes() {
 		Group eyes = createGhost();
 		eyes.getChildren().remove(0);
 		Model3DHelper.centerNodeOverOrigin(eyes);

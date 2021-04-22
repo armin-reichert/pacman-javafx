@@ -237,7 +237,7 @@ public class PlayScene3D implements GameScene {
 		Group livesCounter = new Group();
 		for (int i = 0; i < MAX_LIVES_DISPLAYED; ++i) {
 			V2i tile = tilePosition.plus(2 * i, 0);
-			Group liveIndicator = GianmarcosModel3D.IT.createPacMan();
+			Group liveIndicator = GianmarcosModel3D.createPacMan();
 			liveIndicator.setTranslateX(tile.x * TS);
 			liveIndicator.setTranslateY(tile.y * TS);
 			liveIndicator.setTranslateZ(0);

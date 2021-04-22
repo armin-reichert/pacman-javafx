@@ -83,7 +83,7 @@ public class Ghost3D extends Group implements Supplier<Node> {
 		this.rendering2D = rendering2D;
 		normalSkin = new PhongMaterial(Rendering2D_Assets.getGhostColor(ghost.id));
 		blueSkin = new PhongMaterial(Color.CORNFLOWERBLUE);
-		coloredGhost = GianmarcosModel3D.IT.createGhost();
+		coloredGhost = GianmarcosModel3D.createGhost();
 		flashingAnimation = new FlashingAnimation();
 		coloredGhostRotateTransition = new RotateTransition(Duration.seconds(0.5), coloredGhost);
 		coloredGhostRotateTransition.setAxis(Rotate.Z_AXIS);
@@ -95,7 +95,7 @@ public class Ghost3D extends Group implements Supplier<Node> {
 		bountyShape = new Box(8, 8, 8);
 		bountyShape.setMaterial(new PhongMaterial());
 
-		deadGhost = GianmarcosModel3D.IT.createGhostEyes();
+		deadGhost = GianmarcosModel3D.createGhostEyes();
 		deadGhostRotateTransition = new RotateTransition(Duration.seconds(0.5), deadGhost);
 		deadGhostRotateTransition.setAxis(Rotate.Z_AXIS);
 		deadGhost.setRotationAxis(Rotate.Z_AXIS);
