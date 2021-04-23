@@ -6,7 +6,6 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.world.PacManGameWorld;
@@ -18,6 +17,8 @@ import javafx.scene.shape.Box;
 
 /**
  * 3D-model for a maze.
+ * 
+ * TODO merge bricks into blocks
  * 
  * @author Armin Reichert
  */
@@ -104,44 +105,75 @@ public class Maze3D extends Group {
 
 	}
 
-	public Maze3D(PacManGameWorld world, Color wallColor) {
-		List<MicroTile> microTiles = new ArrayList<>();
-		world.tiles().filter(world::isWall).forEach(tile -> {
-			for (int i = 0; i < N * N; ++i)
-				microTiles.add(new MicroTile(tile, i));
-		});
-		log("%d micro tiles created", microTiles.size());
+	private PacManGameWorld world;
+	private MicroTile[][][] microTiles;
 
-		List<MicroTile> microTilesToRemove = new ArrayList<>();
-		for (MicroTile mt : microTiles) {
-			if (world.isWall(mt.northOf()) && world.isWall(mt.eastOf()) && world.isWall(mt.southOf())
-					&& world.isWall(mt.westOf())) {
-				V2i seOf = mt.southOf().plus(mt.toEast());
-				V2i swOf = mt.southOf().plus(mt.toWest());
-				V2i neOf = mt.northOf().plus(mt.toEast());
-				V2i nwOf = mt.northOf().plus(mt.toWest());
-				if (world.isWall(seOf) && !world.isWall(nwOf) || !world.isWall(seOf) && world.isWall(nwOf)
-						|| world.isWall(swOf) && !world.isWall(neOf) || !world.isWall(swOf) && world.isWall(neOf)) {
-					// keep corner
-				} else {
-					microTilesToRemove.add(mt);
+	public Maze3D(PacManGameWorld world, Color wallColor) {
+		this.world = world;
+		microTiles = new MicroTile[world.numRows()][world.numCols()][N * N];
+		int count = 0;
+		for (int row = 0; row < world.numRows(); ++row) {
+			for (int col = 0; col < world.numCols(); ++col) {
+				V2i tile = new V2i(col, row);
+				if (world.isWall(tile)) {
+					for (int i = 0; i < N * N; ++i) {
+						microTiles[row][col][i] = new MicroTile(tile, i);
+						++count;
+					}
 				}
 			}
 		}
-		microTiles.removeAll(microTilesToRemove);
+		log("%d micro tiles created", count);
 
-		PhongMaterial brickMaterial = new PhongMaterial(wallColor);
-		List<Box> bricks = microTiles.stream().map(mt -> createBrick(mt.x(), mt.y(), brickMaterial)).collect(Collectors.toList());
-		log("%d bricks created", bricks.size());
-		
+		for (int row = 0; row < world.numRows(); ++row) {
+			for (int col = 0; col < world.numCols(); ++col) {
+				for (int i = 0; i < N * N; ++i) {
+					MicroTile mt = microTiles[row][col][i];
+					if (mt == null) {
+						continue;
+					}
+					if (world.isWall(mt.northOf()) && world.isWall(mt.eastOf()) && world.isWall(mt.southOf())
+							&& world.isWall(mt.westOf())) {
+						V2i seOf = mt.southOf().plus(mt.toEast());
+						V2i swOf = mt.southOf().plus(mt.toWest());
+						V2i neOf = mt.northOf().plus(mt.toEast());
+						V2i nwOf = mt.northOf().plus(mt.toWest());
+						if (world.isWall(seOf) && !world.isWall(nwOf) || !world.isWall(seOf) && world.isWall(nwOf)
+								|| world.isWall(swOf) && !world.isWall(neOf) || !world.isWall(swOf) && world.isWall(neOf)) {
+							// keep corner
+						} else {
+							microTiles[row][col][i] = null;
+						}
+					}
+				}
+			}
+		}
+		List<Box> bricks = createBricks(wallColor);
 		getChildren().addAll(bricks);
 	}
 
-	private Box createBrick(double x, double y, PhongMaterial material) {
+	private List<Box> createBricks(Color wallColor) {
+		PhongMaterial brickMaterial = new PhongMaterial(wallColor);
+		List<Box> bricks = new ArrayList<>();
+		for (int row = 0; row < world.numRows(); ++row) {
+			for (int col = 0; col < world.numCols(); ++col) {
+				for (int i = 0; i < N * N; ++i) {
+					MicroTile mt = microTiles[row][col][i];
+					if (mt != null) {
+						bricks.add(createBrick(mt, brickMaterial));
+					}
+				}
+			}
+		}
+		log("%d bricks created", bricks.size());
+		return bricks;
+	}
+
+	private Box createBrick(MicroTile microTile, PhongMaterial material) {
 		Box brick = new Box(SIZE, SIZE, SIZE);
 		brick.setMaterial(material);
-		brick.setTranslateX(x);
-		brick.setTranslateY(y);
+		brick.setTranslateX(microTile.x());
+		brick.setTranslateY(microTile.y());
 		brick.setTranslateZ(1.5);
 		brick.drawModeProperty().bind(Env.$drawMode);
 		return brick;
