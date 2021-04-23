@@ -31,6 +31,9 @@ public class FlashMessageView extends HBox {
 	}
 
 	public void showMessage(String message, long ticks) {
+		if (messagesQ.peek() != null && messagesQ.peek().text.equals(message)) {
+			messagesQ.poll();
+		}
 		messagesQ.add(new FlashMessage(message, ticks));
 	}
 
