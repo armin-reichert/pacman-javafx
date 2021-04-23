@@ -219,7 +219,7 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 
 	@Override
 	public Rectangle2D getLifeImage() {
-		return s(0, 0);
+		return s(1, 0);
 	}
 
 	public Rectangle2D getHeart() {
