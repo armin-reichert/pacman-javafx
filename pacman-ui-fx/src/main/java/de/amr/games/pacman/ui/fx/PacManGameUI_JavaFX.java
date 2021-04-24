@@ -4,10 +4,13 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.GameVariant.MS_PACMAN;
 import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
 
+import java.util.Optional;
+
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
@@ -100,6 +103,23 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		return keyboard.keyPressed(keySpec);
 	}
 
+	@Override
+	public Optional<Direction> playerDirectionChange() {
+		if (keyPressed("Up")) {
+			return Optional.of(Direction.UP);
+		}
+		if (keyPressed("Down")) {
+			return Optional.of(Direction.DOWN);
+		}
+		if (keyPressed("Left")) {
+			return Optional.of(Direction.LEFT);
+		}
+		if (keyPressed("Right")) {
+			return Optional.of(Direction.RIGHT);
+		}
+		return Optional.empty();
+	}
+
 	private void stopAllSounds() {
 		MsPacManScenes.SOUNDS.stopAll();
 		PacManScenes.SOUNDS.stopAll();
@@ -157,7 +177,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		// delegate to current scene
 		currentGameScene.onGameEvent(event);
 	}
-	
+
 	@Override
 	public void onPacManGameStateChange(PacManGameStateChangeEvent e) {
 		if (e.newGameState == PacManGameState.INTRO) {
