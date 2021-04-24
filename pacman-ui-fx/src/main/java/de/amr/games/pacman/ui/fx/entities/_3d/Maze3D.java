@@ -154,6 +154,7 @@ public class Maze3D extends Group {
 
 	private List<Box> createBricks(Color wallColor) {
 		PhongMaterial brickMaterial = new PhongMaterial(wallColor);
+		brickMaterial.setSpecularColor(wallColor.brighter());
 		List<Box> bricks = new ArrayList<>();
 		for (int row = 0; row < world.numRows(); ++row) {
 			for (int col = 0; col < world.numCols(); ++col) {

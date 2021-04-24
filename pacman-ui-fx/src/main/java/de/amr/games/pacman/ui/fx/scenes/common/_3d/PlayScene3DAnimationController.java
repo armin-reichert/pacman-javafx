@@ -79,19 +79,6 @@ public class PlayScene3DAnimationController implements PacManGameEventFacade {
 		return world.isEnergizerTile(tile);
 	}
 
-	private ScaleTransition createEnergizerAnimation(Node energizer) {
-		ScaleTransition animation = new ScaleTransition(Duration.seconds(0.25), energizer);
-		animation.setAutoReverse(true);
-		animation.setCycleCount(Transition.INDEFINITE);
-		animation.setFromX(0.2);
-		animation.setFromY(0.2);
-		animation.setFromZ(0.2);
-		animation.setToX(1);
-		animation.setToY(1);
-		animation.setToZ(1);
-		return animation;
-	}
-
 	public void update() {
 		if (gameController.isAttractMode()) {
 			return;
@@ -251,6 +238,19 @@ public class PlayScene3DAnimationController implements PacManGameEventFacade {
 			stopEnergizerAnimations();
 			playScene.bonus3D.hide();
 		}
+	}
+
+	private ScaleTransition createEnergizerAnimation(Node energizer) {
+		ScaleTransition animation = new ScaleTransition(Duration.seconds(0.25), energizer);
+		animation.setAutoReverse(true);
+		animation.setCycleCount(Transition.INDEFINITE);
+		animation.setFromX(0.2);
+		animation.setFromY(0.2);
+		animation.setFromZ(0.2);
+		animation.setToX(1);
+		animation.setToY(1);
+		animation.setToZ(1);
+		return animation;
 	}
 
 	private void startEnergizerAnimations() {

@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.model.pacman.PacManBonus;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
 import javafx.animation.RotateTransition;
 import javafx.animation.Transition;

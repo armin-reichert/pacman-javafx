@@ -80,6 +80,7 @@ public class Ghost3D extends Group {
 		this.rendering2D = rendering2D;
 		normalSkin = new PhongMaterial(Rendering2D_Assets.getGhostColor(ghost.id));
 		blueSkin = new PhongMaterial(Color.CORNFLOWERBLUE);
+		blueSkin.setSpecularColor(Color.CORNFLOWERBLUE.brighter());
 		coloredGhost = GianmarcosModel3D.createGhost();
 		flashingAnimation = new FlashingAnimation();
 		coloredGhostRotateTransition = new RotateTransition(Duration.seconds(0.5), coloredGhost);
