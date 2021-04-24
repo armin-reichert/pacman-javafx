@@ -4,10 +4,13 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.GameVariant.MS_PACMAN;
 import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
 
+import java.util.Optional;
+
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
@@ -96,8 +99,25 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	@Override
-	public boolean keyPressed(String keySpec) {
-		return keyboard.keyPressed(keySpec);
+	public Optional<Direction> playerDirectionChangeRequested() {
+		if (keyboard.keyPressed("Up")) {
+			return Optional.of(Direction.UP);
+		}
+		if (keyboard.keyPressed("Down")) {
+			return Optional.of(Direction.DOWN);
+		}
+		if (keyboard.keyPressed("Left")) {
+			return Optional.of(Direction.LEFT);
+		}
+		if (keyboard.keyPressed("Right")) {
+			return Optional.of(Direction.RIGHT);
+		}
+		return Optional.empty();
+	}
+
+	@Override
+	public boolean gameStartRequested() {
+		return keyboard.keyPressed("Space");
 	}
 
 	private void stopAllSounds() {
@@ -157,7 +177,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		// delegate to current scene
 		currentGameScene.onGameEvent(event);
 	}
-	
+
 	@Override
 	public void onPacManGameStateChange(PacManGameStateChangeEvent e) {
 		if (e.newGameState == PacManGameState.INTRO) {
@@ -174,8 +194,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		switch (e.getCode()) {
 		case A:
-			gameController.autopilot.enabled = !gameController.autopilot.enabled;
-			showFlashMessage(gameController.autopilot.enabled ? "Autopilot ON" : "Autopilot OFF");
+			gameController.autopilotOn = !gameController.autopilotOn;
+			showFlashMessage(gameController.autopilotOn ? "Autopilot ON" : "Autopilot OFF");
 			break;
 
 		case E:

@@ -72,7 +72,7 @@ public class HUD extends HBox {
 		line("Game Scene Size", "w=%.0f h=%.0f", ui.currentGameScene.getSubScene().getWidth(),
 				ui.currentGameScene.getSubScene().getHeight());
 		line();
-		line("Autopilot (A)", "%s", onOff(ui.gameController.autopilot.enabled));
+		line("Autopilot (A)", "%s", onOff(ui.gameController.autopilotOn));
 		line("Immunity (I)", "%s", onOff(ui.gameController.isPlayerImmune()));
 		line();
 		line("Window Size", "w=%.0f h=%.0f", ui.mainScene.getWindow().getWidth(), ui.mainScene.getWindow().getHeight());

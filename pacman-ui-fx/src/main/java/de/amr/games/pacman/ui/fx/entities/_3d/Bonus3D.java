@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.model.pacman.Bonus;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
 import javafx.animation.RotateTransition;
 import javafx.animation.Transition;
@@ -50,7 +51,7 @@ public class Bonus3D extends Box {
 		return result;
 	}
 
-	public void update(PacManBonus bonus) {
+	public void update(Bonus bonus) {
 		if (bonus != null) {
 			setTranslateX(bonus.position.x);
 			setTranslateY(bonus.position.y);
@@ -62,7 +63,7 @@ public class Bonus3D extends Box {
 		setVisible(false);
 	}
 
-	public void showSymbol(PacManBonus bonus) {
+	public void showSymbol(Bonus bonus) {
 		skin.setBumpMap(symbolSprites.get(bonus.symbol));
 		skin.setDiffuseMap(symbolSprites.get(bonus.symbol));
 		setMaterial(skin);
@@ -74,7 +75,7 @@ public class Bonus3D extends Box {
 		rotation.play();
 	}
 
-	public void showPoints(PacManBonus bonus) {
+	public void showPoints(Bonus bonus) {
 		if (bonus.points >= 1000) {
 			setWidth(10);
 		}
