@@ -11,7 +11,7 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.GameEntity;
-import de.amr.games.pacman.model.pacman.PacManBonus;
+import de.amr.games.pacman.model.pacman.Bonus;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -93,7 +93,7 @@ public abstract class Rendering2D {
 	 * @param bonus game bonus
 	 * @return sprite bounds for bonus depending on its state
 	 */
-	public Rectangle2D bonusSprite(PacManBonus bonus) {
+	public Rectangle2D bonusSprite(Bonus bonus) {
 		if (bonus.edibleTicksLeft > 0) {
 			return getSymbolSprites().get(bonus.symbol);
 		}

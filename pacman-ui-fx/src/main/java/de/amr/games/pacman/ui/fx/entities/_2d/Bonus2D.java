@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.TimedSequence;
-import de.amr.games.pacman.model.pacman.PacManBonus;
+import de.amr.games.pacman.model.pacman.Bonus;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_MsPacMan;
 import javafx.geometry.Rectangle2D;
@@ -18,7 +18,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class Bonus2D<RENDERING extends Rendering2D> implements Renderable2D<RENDERING> {
 
 	private RENDERING rendering;
-	private PacManBonus bonus;
+	private Bonus bonus;
 	private List<Rectangle2D> symbolSprites;
 	private Map<Integer, Rectangle2D> numberSprites;
 	private TimedSequence<Integer> jumpAnimation;
@@ -33,7 +33,7 @@ public class Bonus2D<RENDERING extends Rendering2D> implements Renderable2D<REND
 		}
 	}
 
-	public void setBonus(PacManBonus bonus) {
+	public void setBonus(Bonus bonus) {
 		this.bonus = bonus;
 	}
 
