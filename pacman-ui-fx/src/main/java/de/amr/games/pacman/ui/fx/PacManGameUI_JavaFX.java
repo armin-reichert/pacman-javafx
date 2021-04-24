@@ -194,8 +194,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		switch (e.getCode()) {
 		case A:
-			gameController.autopilot.enabled = !gameController.autopilot.enabled;
-			showFlashMessage(gameController.autopilot.enabled ? "Autopilot ON" : "Autopilot OFF");
+			gameController.autopilotOn = !gameController.autopilotOn;
+			showFlashMessage(gameController.autopilotOn ? "Autopilot ON" : "Autopilot OFF");
 			break;
 
 		case E:
