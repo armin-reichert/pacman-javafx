@@ -99,25 +99,25 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	@Override
-	public boolean keyPressed(String keySpec) {
-		return keyboard.keyPressed(keySpec);
-	}
-
-	@Override
-	public Optional<Direction> playerDirectionChange() {
-		if (keyPressed("Up")) {
+	public Optional<Direction> triggerPlayerDirectionChange() {
+		if (keyboard.keyPressed("Up")) {
 			return Optional.of(Direction.UP);
 		}
-		if (keyPressed("Down")) {
+		if (keyboard.keyPressed("Down")) {
 			return Optional.of(Direction.DOWN);
 		}
-		if (keyPressed("Left")) {
+		if (keyboard.keyPressed("Left")) {
 			return Optional.of(Direction.LEFT);
 		}
-		if (keyPressed("Right")) {
+		if (keyboard.keyPressed("Right")) {
 			return Optional.of(Direction.RIGHT);
 		}
 		return Optional.empty();
+	}
+
+	@Override
+	public boolean triggerGameStart() {
+		return keyboard.keyPressed("Space");
 	}
 
 	private void stopAllSounds() {
