@@ -160,7 +160,7 @@ public class PlayScene3D implements GameScene {
 		var playerLight = new PointLight();
 		playerLight.translateXProperty().bind(player3D.translateXProperty());
 		playerLight.translateYProperty().bind(player3D.translateYProperty());
-		playerLight.lightOnProperty().bind(player3D.visibleProperty());
+//		playerLight.lightOnProperty().bind(player3D.visibleProperty());
 		playerLight.setTranslateZ(-4);
 
 		root.getChildren().addAll(maze, floor, score3D, livesCounter3D, levelCounter3D);

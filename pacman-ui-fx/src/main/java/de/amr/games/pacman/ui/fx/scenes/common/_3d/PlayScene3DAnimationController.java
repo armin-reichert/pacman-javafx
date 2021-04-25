@@ -11,13 +11,13 @@ import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.BonusActivatedEvent;
 import de.amr.games.pacman.controller.event.BonusEatenEvent;
 import de.amr.games.pacman.controller.event.BonusExpiredEvent;
+import de.amr.games.pacman.controller.event.DefaultPacManGameEventHandler;
 import de.amr.games.pacman.controller.event.ExtraLifeEvent;
 import de.amr.games.pacman.controller.event.GhostEntersHouseEvent;
 import de.amr.games.pacman.controller.event.GhostReturningHomeEvent;
 import de.amr.games.pacman.controller.event.PacManFoundFoodEvent;
 import de.amr.games.pacman.controller.event.PacManGainsPowerEvent;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
-import de.amr.games.pacman.controller.event.DefaultPacManGameEventHandler;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.controller.event.PacManLosingPowerEvent;
 import de.amr.games.pacman.controller.event.PacManLostPowerEvent;
@@ -121,23 +121,22 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 	public void onPacManGainsPower(PacManGainsPowerEvent e) {
 		sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
 		playScene.ghosts3D.values().forEach(ghost3D -> {
-			ghost3D.setBlueSkin(true);
-			ghost3D.setFlashing(false);
+			ghost3D.stopFlashing();
+			ghost3D.startBlueMode();
 		});
 	}
 
 	@Override
 	public void onPacManLosingPower(PacManLosingPowerEvent e) {
 		playScene.ghosts3D.values().forEach(ghost3D -> {
-			ghost3D.setFlashing(true);
+			ghost3D.startFlashing();
 		});
 	}
 
 	@Override
 	public void onPacManLostPower(PacManLostPowerEvent e) {
 		playScene.ghosts3D.values().forEach(ghost3D -> {
-			ghost3D.setFlashing(false);
-			ghost3D.setBlueSkin(false);
+			ghost3D.stopFlashing();
 		});
 		sounds.stop(PacManGameSound.PACMAN_POWER);
 	}
@@ -211,8 +210,7 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 			sounds.stopAll();
 			playAnimationPlayerDying();
 			playScene.ghosts3D.values().forEach(ghost3D -> {
-				ghost3D.setFlashing(false);
-				ghost3D.setBlueSkin(false);
+				ghost3D.stopFlashing();
 			});
 		}
 
@@ -232,8 +230,7 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 			sounds.stopAll();
 			playAnimationLevelComplete();
 			playScene.ghosts3D.values().forEach(ghost3D -> {
-				ghost3D.setFlashing(false);
-				ghost3D.setBlueSkin(false);
+				ghost3D.stopFlashing();
 			});
 		}
 

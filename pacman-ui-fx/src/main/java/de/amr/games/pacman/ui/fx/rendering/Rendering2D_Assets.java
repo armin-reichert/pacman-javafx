@@ -59,7 +59,11 @@ public final class Rendering2D_Assets {
 	}
 
 	public static Color getGhostColor(int ghostID) {
-		return ghostID == 0 ? Color.TOMATO : ghostID == 1 ? Color.PINK : ghostID == 2 ? Color.CYAN : Color.ORANGE;
+		return ghostID == 0 ? Color.RED : ghostID == 1 ? Color.PINK : ghostID == 2 ? Color.CYAN : Color.ORANGE;
+	}
+	
+	public static Color getGhostBlueColor() {
+		return Color.CORNFLOWERBLUE;
 	}
 
 	public static Color getPacManMazeWallColor(int mazeNumber) {

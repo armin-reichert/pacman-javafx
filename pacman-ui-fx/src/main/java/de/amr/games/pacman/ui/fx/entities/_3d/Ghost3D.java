@@ -1,5 +1,7 @@
 package de.amr.games.pacman.ui.fx.entities._3d;
 
+import static de.amr.games.pacman.lib.Logging.log;
+
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
@@ -26,10 +28,10 @@ public class Ghost3D extends Group {
 
 	//@formatter:off
 	private static final int[][][] ROTATION_INTERVALS = {
-			{ {0,0},   {0, 180},   {0,90},   {0,-90} },
-			{ {180,0}, {180, 180}, {180,90}, {180,270} },
-			{ {90,0},  {90, 180},  {90,90},  {90,270} },
-			{ {-90,0}, {270, 180}, {-90,90},  {-90,-90} },
+		{ {  0, 0}, {  0, 180}, {  0, 90}, {  0, -90} },
+		{ {180, 0}, {180, 180}, {180, 90}, {180, 270} },
+		{ { 90, 0}, { 90, 180}, { 90, 90}, { 90, 270} },
+		{ {-90, 0}, {270, 180}, {-90, 90}, {-90, -90} },
 	};
 	//@formatter:on
 
@@ -52,18 +54,19 @@ public class Ghost3D extends Group {
 
 		@Override
 		protected void interpolate(double frac) {
-			blueSkin.setDiffuseColor(Color.rgb((int) (frac * 120), (int) (frac * 180), 255));
+			flashingSkin.setDiffuseColor(Color.rgb((int) (frac * 120), (int) (frac * 180), 255));
 		}
 	};
 
 	private final Ghost ghost;
 
 	private final Rendering2D rendering2D;
-	private PhongMaterial normalSkin;
-	private PhongMaterial blueSkin;
+	private final PhongMaterial normalSkin;
+	private final PhongMaterial blueSkin;
+	private final PhongMaterial flashingSkin;
 	private final Group coloredGhost;
 	private final RotateTransition coloredGhostRotateTransition;
-	private final Transition flashingAnimation;
+	private final Transition flashingAnimation = new FlashingAnimation();
 
 	private final Group deadGhost;
 	private final RotateTransition deadGhostRotateTransition;
@@ -78,17 +81,24 @@ public class Ghost3D extends Group {
 		int[] rotation = rotationInterval(ghost.dir(), ghost.dir());
 
 		this.rendering2D = rendering2D;
-		normalSkin = new PhongMaterial(Rendering2D_Assets.getGhostColor(ghost.id));
-		blueSkin = new PhongMaterial(Color.CORNFLOWERBLUE);
-		blueSkin.setSpecularColor(Color.CORNFLOWERBLUE.brighter());
+		Color ghostColor = Rendering2D_Assets.getGhostColor(ghost.id);
+
+		normalSkin = new PhongMaterial(ghostColor);
+		normalSkin.setSpecularColor(ghostColor.brighter());
+
+		blueSkin = new PhongMaterial(Rendering2D_Assets.getGhostBlueColor());
+		blueSkin.setSpecularColor(Rendering2D_Assets.getGhostBlueColor().brighter());
+
+		flashingSkin = new PhongMaterial();
+
 		coloredGhost = GianmarcosModel3D.createGhost();
-		flashingAnimation = new FlashingAnimation();
+		coloredGhost.setRotationAxis(Rotate.Z_AXIS);
+		coloredGhost.setRotate(rotation[0]);
+
 		coloredGhostRotateTransition = new RotateTransition(Duration.seconds(0.5), coloredGhost);
 		coloredGhostRotateTransition.setAxis(Rotate.Z_AXIS);
 
-		coloredGhost.setRotationAxis(Rotate.Z_AXIS);
-		coloredGhost.setRotate(rotation[0]);
-		setBlueSkin(false);
+		stopBlueMode();
 
 		bountyShape = new Box(8, 8, 8);
 		bountyShape.setMaterial(new PhongMaterial());
@@ -99,11 +109,33 @@ public class Ghost3D extends Group {
 		deadGhost.setRotationAxis(Rotate.Z_AXIS);
 		deadGhost.setRotate(rotation[0]);
 	}
+	
+	private MeshView getColoredGhostBody() {
+		return (MeshView) coloredGhost.getChildren().get(0);
+	}
 
-	public void setBlueSkin(boolean blue) {
-		MeshView meshView = (MeshView) coloredGhost.getChildren().get(0);
-		meshView.setMaterial(blue ? blueSkin : normalSkin);
-		blueSkin.setDiffuseColor(Color.CORNFLOWERBLUE);
+	public void startBlueMode() {
+		MeshView body = getColoredGhostBody();
+		body.setMaterial(blueSkin);
+		log("Start blue mode for %s", ghost.name);
+	}
+
+	public void stopBlueMode() {
+		MeshView body = getColoredGhostBody();
+		body.setMaterial(normalSkin);
+		log("Stop blue mode for %s", ghost.name);
+	}
+
+	public void startFlashing() {
+		MeshView body = getColoredGhostBody();
+		body.setMaterial(flashingSkin);
+		flashingAnimation.playFromStart();
+	}
+
+	public void stopFlashing() {
+		flashingAnimation.stop();
+		MeshView body = getColoredGhostBody();
+		body.setMaterial(normalSkin);
 	}
 
 	private void setBounty(int value) {
@@ -111,15 +143,6 @@ public class Ghost3D extends Group {
 		PhongMaterial material = (PhongMaterial) bountyShape.getMaterial();
 		material.setBumpMap(sprite);
 		material.setDiffuseMap(sprite);
-	}
-
-	public void setFlashing(boolean flashing) {
-		if (flashing) {
-			flashingAnimation.playFromStart();
-		} else {
-			flashingAnimation.stop();
-			blueSkin.setDiffuseColor(Color.CORNFLOWERBLUE);
-		}
 	}
 
 	public void update() {
