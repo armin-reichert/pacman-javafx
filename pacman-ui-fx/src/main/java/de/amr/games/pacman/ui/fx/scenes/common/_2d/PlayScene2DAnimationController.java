@@ -10,6 +10,7 @@ import de.amr.games.pacman.controller.event.GhostReturningHomeEvent;
 import de.amr.games.pacman.controller.event.PacManFoundFoodEvent;
 import de.amr.games.pacman.controller.event.PacManGainsPowerEvent;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
+import de.amr.games.pacman.controller.event.DefaultPacManGameEventHandler;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.controller.event.PacManLostPowerEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
@@ -30,7 +31,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class PlayScene2DAnimationController {
+public class PlayScene2DAnimationController implements DefaultPacManGameEventHandler {
 
 	public final SoundManager sounds;
 	private final PlayScene2D<?> playScene;
@@ -46,10 +47,6 @@ public class PlayScene2DAnimationController {
 		this.gameController = gameController;
 	}
 
-//	private AbstractGameModel game() {
-//		return gameController.game();
-//	}
-//
 	public void init() {
 		levelCompleteAnimation = new SequentialTransition(playScene.maze2D.getFlashingAnimation(),
 				new PauseTransition(Duration.seconds(1)));
@@ -74,65 +71,70 @@ public class PlayScene2DAnimationController {
 		}
 	}
 
+	@Override
 	public void onGameEvent(PacManGameEvent gameEvent) {
 		if (gameController.isAttractMode()) {
 			return;
 		}
 		sounds.setMuted(false);
+		DefaultPacManGameEventHandler.super.onGameEvent(gameEvent);
+	}
 
-		if (gameEvent instanceof PacManGameStateChangeEvent) {
-			PacManGameStateChangeEvent e = (PacManGameStateChangeEvent) gameEvent;
-			onGameStateChange(e);
+	@Override
+	public void onScatterPhaseStarted(ScatterPhaseStartedEvent e) {
+		if (e.scatterPhase > 0) {
+			sounds.stop(PacManGameSound.SIRENS.get(e.scatterPhase - 1));
 		}
-
-		else if (gameEvent instanceof ScatterPhaseStartedEvent) {
-			ScatterPhaseStartedEvent e = (ScatterPhaseStartedEvent) gameEvent;
-			if (e.scatterPhase > 0) {
-				sounds.stop(PacManGameSound.SIRENS.get(e.scatterPhase - 1));
-			}
-			PacManGameSound siren = PacManGameSound.SIRENS.get(e.scatterPhase);
-			if (!sounds.getClip(siren).isPlaying())
-				sounds.loop(siren, Integer.MAX_VALUE);
-		}
-
-		else if (gameEvent instanceof PacManLostPowerEvent) {
-			sounds.stop(PacManGameSound.PACMAN_POWER);
-		}
-
-		else if (gameEvent instanceof PacManGainsPowerEvent) {
-			gameEvent.gameModel.ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
-				Ghost2D<?> ghost2D = playScene.ghosts2D.get(ghost.id);
-				ghost2D.getFlashingAnimation().reset();
-				ghost2D.getFrightenedAnimation().restart();
-			});
-			sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
-		}
-
-		else if (gameEvent instanceof PacManFoundFoodEvent) {
-			AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
-			if (!munching.isPlaying()) {
-				sounds.loop(PacManGameSound.PACMAN_MUNCH, Integer.MAX_VALUE);
-				Logging.log("Munching sound clip %s started", munching);
-			}
-		}
-
-		else if (gameEvent instanceof BonusEatenEvent) {
-			if (playScene.bonus2D.getJumpAnimation() != null) {
-				playScene.bonus2D.getJumpAnimation().reset();
-			}
-			sounds.play(PacManGameSound.BONUS_EATEN);
-		}
-
-		else if (gameEvent instanceof ExtraLifeEvent) {
-			sounds.play(PacManGameSound.EXTRA_LIFE);
-		}
-
-		else if (gameEvent instanceof GhostReturningHomeEvent) {
-			sounds.play(PacManGameSound.GHOST_RETURNING_HOME);
+		PacManGameSound siren = PacManGameSound.SIRENS.get(e.scatterPhase);
+		if (!sounds.getClip(siren).isPlaying()) {
+			sounds.loop(siren, Integer.MAX_VALUE);
 		}
 	}
 
-	private void onGameStateChange(PacManGameStateChangeEvent e) {
+	@Override
+	public void onPacManLostPower(PacManLostPowerEvent e) {
+		sounds.stop(PacManGameSound.PACMAN_POWER);
+	}
+
+	@Override
+	public void onPacManGainsPower(PacManGainsPowerEvent e) {
+		e.gameModel.ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
+			Ghost2D<?> ghost2D = playScene.ghosts2D.get(ghost.id);
+			ghost2D.getFlashingAnimation().reset();
+			ghost2D.getFrightenedAnimation().restart();
+		});
+		sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
+	}
+
+	@Override
+	public void onPacManFoundFood(PacManFoundFoodEvent e) {
+		AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
+		if (!munching.isPlaying()) {
+			sounds.loop(PacManGameSound.PACMAN_MUNCH, Integer.MAX_VALUE);
+			Logging.log("Munching sound clip %s started", munching);
+		}
+	}
+
+	@Override
+	public void onBonusEaten(BonusEatenEvent e) {
+		if (playScene.bonus2D.getJumpAnimation() != null) {
+			playScene.bonus2D.getJumpAnimation().reset();
+		}
+		sounds.play(PacManGameSound.BONUS_EATEN);
+	}
+
+	@Override
+	public void onExtraLife(ExtraLifeEvent e) {
+		sounds.play(PacManGameSound.EXTRA_LIFE);
+	}
+
+	@Override
+	public void onGhostReturningHome(GhostReturningHomeEvent e) {
+		sounds.play(PacManGameSound.GHOST_RETURNING_HOME);
+	}
+
+	@Override
+	public void onPacManGameStateChange(PacManGameStateChangeEvent e) {
 		sounds.setMuted(gameController.isAttractMode());
 
 		// enter READY

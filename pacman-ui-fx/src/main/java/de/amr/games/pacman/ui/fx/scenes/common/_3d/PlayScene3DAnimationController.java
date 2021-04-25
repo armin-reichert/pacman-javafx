@@ -16,7 +16,7 @@ import de.amr.games.pacman.controller.event.GhostReturningHomeEvent;
 import de.amr.games.pacman.controller.event.PacManFoundFoodEvent;
 import de.amr.games.pacman.controller.event.PacManGainsPowerEvent;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
-import de.amr.games.pacman.controller.event.PacManGameEventFacade;
+import de.amr.games.pacman.controller.event.DefaultPacManGameEventHandler;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.controller.event.PacManLosingPowerEvent;
 import de.amr.games.pacman.controller.event.PacManLostPowerEvent;
@@ -43,7 +43,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class PlayScene3DAnimationController implements PacManGameEventFacade {
+public class PlayScene3DAnimationController implements DefaultPacManGameEventHandler {
 
 	private static final String[] CONGRATS = { "Well done", "Congrats", "Awesome", "You did it", "You're the man*in",
 			"WTF" };
@@ -101,7 +101,7 @@ public class PlayScene3DAnimationController implements PacManGameEventFacade {
 		boolean attractMode = gameController.isAttractMode();
 		sounds.setMuted(attractMode);
 		if (!attractMode) {
-			PacManGameEventFacade.super.onGameEvent(gameEvent);
+			DefaultPacManGameEventHandler.super.onGameEvent(gameEvent);
 		}
 	}
 
