@@ -5,12 +5,13 @@ import static de.amr.games.pacman.lib.Logging.log;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.BonusEatenEvent;
+import de.amr.games.pacman.controller.event.DefaultPacManGameEventHandler;
 import de.amr.games.pacman.controller.event.ExtraLifeEvent;
+import de.amr.games.pacman.controller.event.GhostEntersHouseEvent;
 import de.amr.games.pacman.controller.event.GhostReturningHomeEvent;
 import de.amr.games.pacman.controller.event.PacManFoundFoodEvent;
 import de.amr.games.pacman.controller.event.PacManGainsPowerEvent;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
-import de.amr.games.pacman.controller.event.DefaultPacManGameEventHandler;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.controller.event.PacManLostPowerEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
@@ -131,6 +132,13 @@ public class PlayScene2DAnimationController implements DefaultPacManGameEventHan
 	@Override
 	public void onGhostReturningHome(GhostReturningHomeEvent e) {
 		sounds.play(PacManGameSound.GHOST_RETURNING_HOME);
+	}
+
+	@Override
+	public void onGhostEntersHouse(GhostEntersHouseEvent e) {
+		if (gameController.game().ghosts(GhostState.DEAD).count() == 0) {
+			sounds.stop(PacManGameSound.GHOST_RETURNING_HOME);
+		}
 	}
 
 	@Override
