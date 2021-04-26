@@ -164,7 +164,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			}
 			currentGameScene = newGameScene;
 			currentGameScene.init();
-			// put game scene into scene graph
+			// replace game scene in scene graph
 			gameSceneParent.getChildren().setAll(currentGameScene.getSubScene());
 			// Note: this must be done after adding to the scene graph
 			currentGameScene.getSubScene().requestFocus();
@@ -173,9 +173,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void onGameEvent(PacManGameEvent event) {
-		log("%s received game event %s", getClass().getSimpleName(), event);
+		log("UI received game event %s", event);
 		PacManGameUI.super.onGameEvent(event);
-		// delegate to current scene
+		// pass event to current scene
 		currentGameScene.onGameEvent(event);
 	}
 
