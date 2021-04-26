@@ -13,24 +13,19 @@ import javafx.beans.property.SimpleIntegerProperty;
 /**
  * Game loop.
  * <p>
- * Note that the animation timer frequency is taken from the monitor refresh
- * rate!
+ * Note that the animation timer frequency is influenced from the monitor refresh rate!
  * 
  * @author Armin Reichert
  */
 class GameLoop extends AnimationTimer {
 
-	public IntegerProperty $fps = new SimpleIntegerProperty();
-	public IntegerProperty $totalTicks = new SimpleIntegerProperty();
+	public final IntegerProperty $fps = new SimpleIntegerProperty();
+	public final IntegerProperty $totalTicks = new SimpleIntegerProperty();
 
 	private final Map<String, Runnable> tasks = new LinkedHashMap<>();
 
 	private long fpsCountStartTime;
 	private int frames;
-
-	public void addTask(String name, Runnable task) {
-		tasks.put(name, task);
-	}
 
 	@Override
 	public void handle(long now) {
@@ -41,9 +36,7 @@ class GameLoop extends AnimationTimer {
 						measureTaskTime(tasks.get(name), name);
 					}
 				} else {
-					for (String name : tasks.keySet()) {
-						tasks.get(name).run();
-					}
+					tasks.values().forEach(Runnable::run);
 				}
 			}
 			++frames;
@@ -56,13 +49,18 @@ class GameLoop extends AnimationTimer {
 		$totalTicks.set($totalTicks.get() + 1);
 	}
 
+	public void addTask(String name, Runnable task) {
+		tasks.put(name, task);
+	}
+
 	private void measureTaskTime(Runnable task, String description) {
 		double start = System.nanoTime();
 		try {
 			task.run();
-			double duration = (System.nanoTime() - start) / 1e6;
-			log("%s took %f millis", description, duration);
+			double duration = System.nanoTime() - start;
+			log("%s took %f millis", description, duration / 1e6);
 		} catch (Exception e) {
+			log("%s execution not successful");
 			e.printStackTrace();
 		}
 	}
