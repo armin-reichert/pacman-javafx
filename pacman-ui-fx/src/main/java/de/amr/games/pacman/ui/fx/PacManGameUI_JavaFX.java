@@ -67,7 +67,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		stage.addEventHandler(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
 		$FPS.addListener((source, oldValue, fps) -> {
-			stage.setTitle(String.format("Pac-Man / Ms. Pac-Man (%d fps, JavaFX)", fps));
+			String gameName = gameController.isPlaying(PACMAN) ? "Pac-Man" : "Ms. Pac-Man";
+			stage.setTitle(String.format("%s (%d fps, JavaFX)", gameName, fps));
 		});
 		stage.getIcons().add(new Image(getClass().getResourceAsStream("/pacman/graphics/pacman.png")));
 		stage.setScene(mainScene);
