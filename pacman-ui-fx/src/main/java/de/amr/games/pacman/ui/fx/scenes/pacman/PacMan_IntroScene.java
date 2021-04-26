@@ -87,7 +87,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D<Rendering2D_PacMan> {
 	}
 
 	@Override
-	public void render() {
+	public void doRender() {
 		score2D.setShowPoints(false);
 		score2D.render(gc);
 		hiscore2D.render(gc);

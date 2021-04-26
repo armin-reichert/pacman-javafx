@@ -89,7 +89,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		hud.update();
 		if (currentGameScene instanceof AbstractGameScene2D) {
 			AbstractGameScene2D<?> scene2D = (AbstractGameScene2D<?>) currentGameScene;
-			scene2D.clearCanvas(Color.BLACK);
 			scene2D.render();
 		}
 	}

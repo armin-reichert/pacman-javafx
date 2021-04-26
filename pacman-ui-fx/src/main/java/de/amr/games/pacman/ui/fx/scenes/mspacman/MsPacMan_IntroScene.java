@@ -59,7 +59,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D<Rendering2D_MsPacMa
 	}
 
 	@Override
-	public void render() {
+	public void doRender() {
 		gc.setFont(rendering.getScoreFont());
 		gc.setFill(Color.ORANGE);
 		gc.fillText("\"MS PAC-MAN\"", t(8), t(5));

@@ -96,12 +96,13 @@ public abstract class AbstractGameScene2D<RENDERING extends Rendering2D> impleme
 	public void update() {
 	}
 
-	public void clearCanvas(Color color) {
+	public final void render() {
 		gc.setFill(Color.BLACK);
 		gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		doRender();
 	}
 
-	public abstract void render();
+	protected abstract void doRender();
 
 	public Canvas getCanvas() {
 		return canvas;

@@ -119,7 +119,7 @@ public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScen
 	}
 
 	@Override
-	public void render() {
+	public void doRender() {
 		if (!gameController.isAttractMode()) {
 			livesCounter2D.render(gc);
 			score2D.setShowPoints(true);

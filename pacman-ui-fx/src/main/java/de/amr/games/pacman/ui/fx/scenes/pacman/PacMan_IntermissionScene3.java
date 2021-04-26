@@ -61,7 +61,7 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D<Rendering2D_P
 	}
 
 	@Override
-	public void render() {
+	public void doRender() {
 		renderLevelCounter(new V2i(25, 34));
 		pacMan2D.render(gc);
 		if (sceneController.phase == Phase.CHASING_PACMAN) {

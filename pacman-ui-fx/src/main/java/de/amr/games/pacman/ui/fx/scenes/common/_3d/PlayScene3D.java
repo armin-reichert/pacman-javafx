@@ -29,14 +29,11 @@ import de.amr.games.pacman.ui.fx.model3D.GianmarcosModel3D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Impl;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
-import de.amr.games.pacman.ui.fx.scenes.common._2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.scenes.common._3d.PlaySceneCameras.CameraType;
-import de.amr.games.pacman.ui.fx.scenes.pacman.PacManScenes;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.ParallelCamera;
 import javafx.scene.PointLight;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
@@ -70,9 +67,6 @@ public class PlayScene3D implements GameScene {
 	ScoreNotReally3D score3D;
 	Group livesCounter3D;
 	LevelCounter3D levelCounter3D;
-
-	SubScene embeddedPlayScene;
-	PlayScene2D<?> playScene2D;
 
 	public PlayScene3D(SoundManager sounds) {
 		Group root = new Group();
@@ -175,16 +169,6 @@ public class PlayScene3D implements GameScene {
 
 		coordSystem = new CoordinateSystem(fxScene.getWidth());
 
-		embeddedPlayScene = new SubScene(new Group(), 28 * 2, 36 * 2);
-		ParallelCamera cam = new ParallelCamera();
-		embeddedPlayScene.setCamera(cam);
-		playScene2D = new PlayScene2D<>(r2D, PacManScenes.SOUNDS);
-		playScene2D.setGameController(gameController);
-		playScene2D.init();
-		embeddedPlayScene.setRoot(new Group(playScene2D.getSubScene()));
-		embeddedPlayScene.setTranslateX(0);
-		embeddedPlayScene.setTranslateY(0);
-
 		fxScene.setRoot(new Group(coordSystem.getNode(), root));
 		fxScene.setFill(Color.rgb(0, 0, 0));
 
@@ -212,9 +196,6 @@ public class PlayScene3D implements GameScene {
 
 		cams.updateSelectedCamera(player3D);
 		animationController.update();
-
-		playScene2D.clearCanvas(Color.BLACK);
-		playScene2D.render();
 	}
 
 	@Override
