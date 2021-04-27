@@ -57,7 +57,7 @@ public class ScoreNotReally3D extends Group {
 	}
 
 	public void update(AbstractGameModel game, PerspectiveCamera cam) {
-		txtScore.setText(String.format("%07d L%d", game.score, game.currentLevelNumber));
+		txtScore.setText(String.format("%07d L%d", game.score, game.currentLevel.number));
 		txtHiscore.setText(String.format("%07d L%d", game.highscorePoints, game.highscoreLevel));
 		if (hiscoreOnly) {
 			txtScore.setVisible(false);

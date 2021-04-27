@@ -324,7 +324,7 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 			game().player.visible = false;
 			game().ghosts().forEach(ghost -> ghost.visible = false);
 			String congrats = CONGRATS[new Random().nextInt(CONGRATS.length)];
-			String message = String.format("%s!\n\nLevel %d complete.", congrats, game().currentLevelNumber);
+			String message = String.format("%s!\n\nLevel %d complete.", congrats, game().currentLevel.number);
 			gameController.getUI().showFlashMessage(message, 2);
 		});
 		SequentialTransition animation = new SequentialTransition(phase1, new PauseTransition(Duration.seconds(2)));
@@ -334,7 +334,7 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 
 	private void playAnimationLevelStarting() {
 		gameController.stateTimer().reset();
-		gameController.getUI().showFlashMessage("Entering Level " + gameController.game().currentLevelNumber);
+		gameController.getUI().showFlashMessage("Entering Level " + gameController.game().currentLevel.number);
 		PauseTransition phase1 = new PauseTransition(Duration.seconds(2));
 		phase1.setOnFinished(e -> {
 			game().player.visible = true;

@@ -114,7 +114,7 @@ public abstract class AbstractGameScene2D<RENDERING extends Rendering2D> impleme
 	}
 
 	protected void renderLevelCounter(V2i tileRight) {
-		int levelNumber = game().currentLevelNumber;
+		int levelNumber = game().currentLevel.number;
 		int x = tileRight.x * TS, y = tileRight.y * TS;
 		int firstLevel = Math.max(1, levelNumber - 6);
 		for (int level = firstLevel; level <= levelNumber; ++level) {

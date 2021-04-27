@@ -36,9 +36,9 @@ public class LevelCounter3D extends Group {
 		int x = t(tileRight.x), y = t(tileRight.y);
 		// all *Number variables are starting with 1!
 		final int maxItems = 7;
-		int firstLevelNumber = Math.max(1, game.currentLevelNumber - maxItems + 1);
+		int firstLevelNumber = Math.max(1, game.currentLevel.number - maxItems + 1);
 		getChildren().clear();
-		for (int levelNumber = firstLevelNumber; levelNumber <= game.currentLevelNumber; ++levelNumber) {
+		for (int levelNumber = firstLevelNumber; levelNumber <= game.currentLevel.number; ++levelNumber) {
 			Image sprite = symbolSprites.get(game.levelSymbols.get(levelNumber - 1));
 			Box indicator = createLevelIndicator(levelNumber, sprite, x, y);
 			getChildren().add(indicator);
