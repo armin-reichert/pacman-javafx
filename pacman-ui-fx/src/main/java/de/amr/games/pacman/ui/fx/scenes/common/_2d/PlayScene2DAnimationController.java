@@ -64,7 +64,7 @@ public class PlayScene2DAnimationController implements DefaultPacManGameEventHan
 		if (gameController.state == PacManGameState.HUNTING) {
 			AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
 			if (munching.isPlaying()) {
-				if (gameController.game().player.starvingTicks > 10) {
+				if (gameController.game().player().starvingTicks > 10) {
 					sounds.stop(PacManGameSound.PACMAN_MUNCH);
 					log("Munching sound clip %s stopped", munching);
 				}
@@ -176,7 +176,7 @@ public class PlayScene2DAnimationController implements DefaultPacManGameEventHan
 
 		// enter GHOST_DYING
 		else if (e.newGameState == PacManGameState.GHOST_DYING) {
-			e.gameModel.player.visible = false;
+			e.gameModel.player().visible = false;
 			sounds.play(PacManGameSound.GHOST_EATEN);
 		}
 
@@ -197,7 +197,7 @@ public class PlayScene2DAnimationController implements DefaultPacManGameEventHan
 
 		// exit GHOST_DYING
 		if (e.oldGameState == PacManGameState.GHOST_DYING) {
-			e.gameModel.player.visible = true;
+			e.gameModel.player().visible = true;
 		}
 	}
 
@@ -207,8 +207,8 @@ public class PlayScene2DAnimationController implements DefaultPacManGameEventHan
 			gameController.game().ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
 				Ghost2D<?> ghost2D = playScene.ghosts2D.get(ghost.id);
 				TimedSequence<?> flashing = ghost2D.getFlashingAnimation();
-				long frameTime = e.ticks / (gameController.game().currentLevel.numFlashes * flashing.numFrames());
-				flashing.frameDuration(frameTime).repetitions(gameController.game().currentLevel.numFlashes).restart();
+				long frameTime = e.ticks / (gameController.game().currentLevel().numFlashes * flashing.numFrames());
+				flashing.frameDuration(frameTime).repetitions(gameController.game().currentLevel().numFlashes).restart();
 			});
 		}
 	}

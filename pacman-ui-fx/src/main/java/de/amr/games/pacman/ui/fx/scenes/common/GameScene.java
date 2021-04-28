@@ -7,7 +7,7 @@ import java.util.OptionalDouble;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.event.DefaultPacManGameEventHandler;
-import de.amr.games.pacman.model.common.AbstractGameModel;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.scenes.common._3d.PlaySceneCameras;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
@@ -34,7 +34,7 @@ public interface GameScene extends DefaultPacManGameEventHandler {
 
 	void setGameController(PacManGameController gameController);
 
-	default AbstractGameModel game() {
+	default GameModel game() {
 		return getGameController() != null ? getGameController().game() : null;
 	}
 

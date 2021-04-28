@@ -23,8 +23,7 @@ import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.paint.Color;
 
 /**
- * 2D scene displaying the maze and the game play for both, Pac-Man and Ms.
- * Pac-Man games.
+ * 2D scene displaying the maze and the game play for both, Pac-Man and Ms. Pac-Man games.
  * 
  * @param <RENDERING> Type of rendering, Pac-Man or Ms. Pac-Man rendering.
  * 
@@ -58,24 +57,24 @@ public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScen
 		super.init();
 
 		maze2D = new Maze2D<>(new V2i(0, 3), rendering);
-		maze2D.setGameLevel(game().currentLevel);
+		maze2D.setGameLevel(game().currentLevel());
 
 		livesCounter2D = new LivesCounter2D<>(new V2i(2, 34), rendering);
-		livesCounter2D.lives = game().lives;
+		livesCounter2D.lives = game().lives();
 
 		score2D = new GameScore2D<>(rendering);
 		score2D.setTitle("SCORE");
 		score2D.setLeftUpperCorner(new V2i(1, 1));
-		score2D.setLevelSupplier(() -> game().currentLevel.number);
-		score2D.setPointsSupplier(() -> game().score);
+		score2D.setLevelSupplier(() -> game().currentLevel().number);
+		score2D.setPointsSupplier(() -> game().score());
 
 		hiscore2D = new GameScore2D<>(rendering);
 		hiscore2D.setTitle("HI SCORE");
 		hiscore2D.setLeftUpperCorner(new V2i(16, 1));
-		hiscore2D.setPointsSupplier(() -> game().highscorePoints);
-		hiscore2D.setLevelSupplier(() -> game().highscoreLevel);
+		hiscore2D.setPointsSupplier(() -> game().hiscorePoints());
+		hiscore2D.setLevelSupplier(() -> game().hiscoreLevel());
 
-		player2D = new Player2D<>(game().player, rendering);
+		player2D = new Player2D<>(game().player(), rendering);
 		player2D.getDyingAnimation().delay(120).onStart(() -> {
 			game().ghosts().forEach(ghost -> ghost.visible = false);
 		});
@@ -84,25 +83,25 @@ public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScen
 
 		bonus2D = new Bonus2D<>(rendering);
 
-		game().player.powerTimer.addEventListener(animationController::handleGhostsFlashing);
+		game().player().powerTimer.addEventListener(animationController::handleGhostsFlashing);
 		animationController.init();
 	}
 
 	@Override
 	public void end() {
-		game().player.powerTimer.removeEventListener(animationController::handleGhostsFlashing);
+		game().player().powerTimer.removeEventListener(animationController::handleGhostsFlashing);
 		super.end();
 	}
 
 	@Override
 	public void update() {
-		livesCounter2D.lives = game().lives;
+		livesCounter2D.lives = game().lives();
 		animationController.update();
 	}
 
 	private void onGameStateChange(PacManGameStateChangeEvent event) {
 		if (event.newGameState == PacManGameState.LEVEL_STARTING) {
-			maze2D.setGameLevel(event.gameModel.currentLevel);
+			maze2D.setGameLevel(event.gameModel.currentLevel());
 			// wait 1 second
 			gameController.stateTimer().reset(60);
 			gameController.stateTimer().start();
@@ -127,7 +126,7 @@ public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScen
 			score2D.setShowPoints(false);
 		}
 		game().ghosts(GhostState.LOCKED)
-				.forEach(ghost -> ghosts2D.get(ghost.id).setLooksFrightened(game().player.powerTimer.isRunning()));
+				.forEach(ghost -> ghosts2D.get(ghost.id).setLooksFrightened(game().player().powerTimer.isRunning()));
 
 		Stream.concat(Stream.of(score2D, hiscore2D, maze2D, bonus2D, player2D), ghosts2D.stream())
 				.forEach(r -> r.render(gc));

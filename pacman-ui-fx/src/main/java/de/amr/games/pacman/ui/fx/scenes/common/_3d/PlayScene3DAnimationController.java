@@ -25,7 +25,7 @@ import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.AbstractGameModel;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.PacManGameSound;
@@ -64,12 +64,12 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 		this.gameController = gameController;
 	}
 
-	private AbstractGameModel game() {
+	private GameModel game() {
 		return gameController.game();
 	}
 
 	public void init() {
-		PacManGameWorld world = game().currentLevel.world;
+		PacManGameWorld world = game().currentLevel().world;
 		energizerAnimations = playScene.foodNodes.stream()//
 				.filter(foodNode -> isEnergizerNode(foodNode, world))//
 				.map(this::createEnergizerAnimation)//
@@ -90,7 +90,7 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 		if (gameController.state == PacManGameState.HUNTING) {
 			AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
 			if (munching.isPlaying()) {
-				if (game().player.starvingTicks > 10) {
+				if (game().player().starvingTicks > 10) {
 					sounds.stop(PacManGameSound.PACMAN_MUNCH);
 					log("Munching sound clip %s stopped", munching);
 				}
@@ -152,12 +152,12 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 
 	@Override
 	public void onBonusActivated(BonusActivatedEvent e) {
-		playScene.bonus3D.showSymbol(game().bonus);
+		playScene.bonus3D.showSymbol(game().bonus());
 	}
 
 	@Override
 	public void onBonusEaten(BonusEatenEvent e) {
-		playScene.bonus3D.showPoints(game().bonus);
+		playScene.bonus3D.showPoints(game().bonus());
 		sounds.play(PacManGameSound.BONUS_EATEN);
 	}
 
@@ -282,7 +282,7 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 		PauseTransition phase1 = new PauseTransition(Duration.seconds(1));
 		phase1.setOnFinished(e -> {
 			game().ghosts().forEach(ghost -> ghost.visible = false);
-			game().player.setDir(Direction.DOWN);
+			game().player().setDir(Direction.DOWN);
 			sounds.play(PacManGameSound.PACMAN_DEATH);
 		});
 
@@ -309,7 +309,7 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 			playScene.player3D.setTranslateX(savedTranslateX);
 			playScene.player3D.setTranslateY(savedTranslateY);
 			playScene.player3D.setTranslateZ(savedTranslateZ);
-			game().player.visible = false;
+			game().player().visible = false;
 			gameController.stateTimer().forceExpiration();
 		});
 
@@ -321,10 +321,10 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 		PauseTransition phase1 = new PauseTransition(Duration.seconds(2));
 		phase1.setDelay(Duration.seconds(1));
 		phase1.setOnFinished(e -> {
-			game().player.visible = false;
+			game().player().visible = false;
 			game().ghosts().forEach(ghost -> ghost.visible = false);
 			String congrats = CONGRATS[new Random().nextInt(CONGRATS.length)];
-			String message = String.format("%s!\n\nLevel %d complete.", congrats, game().currentLevel.number);
+			String message = String.format("%s!\n\nLevel %d complete.", congrats, game().currentLevel().number);
 			gameController.getUI().showFlashMessage(message, 2);
 		});
 		SequentialTransition animation = new SequentialTransition(phase1, new PauseTransition(Duration.seconds(2)));
@@ -334,10 +334,10 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 
 	private void playAnimationLevelStarting() {
 		gameController.stateTimer().reset();
-		gameController.getUI().showFlashMessage("Entering Level " + gameController.game().currentLevel.number);
+		gameController.getUI().showFlashMessage("Entering Level " + gameController.game().currentLevel().number);
 		PauseTransition phase1 = new PauseTransition(Duration.seconds(2));
 		phase1.setOnFinished(e -> {
-			game().player.visible = true;
+			game().player().visible = true;
 			game().ghosts().forEach(ghost -> ghost.visible = true);
 		});
 		SequentialTransition animation = new SequentialTransition(phase1, new PauseTransition(Duration.seconds(2)));

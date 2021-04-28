@@ -26,8 +26,8 @@ import javafx.scene.text.Font;
 /**
  * Intro scene of the PacMan game.
  * <p>
- * The ghost are presented one after another, then Pac-Man is chased by the
- * ghosts, turns the card and hunts the ghost himself.
+ * The ghost are presented one after another, then Pac-Man is chased by the ghosts, turns the card
+ * and hunts the ghost himself.
  * 
  * @author Armin Reichert
  */
@@ -54,14 +54,14 @@ public class PacMan_IntroScene extends AbstractGameScene2D<Rendering2D_PacMan> {
 		score2D = new GameScore2D<>(rendering);
 		score2D.setTitle("SCORE");
 		score2D.setLeftUpperCorner(new V2i(1, 1));
-		score2D.setLevelSupplier(() -> game().currentLevel.number);
-		score2D.setPointsSupplier(() -> game().score);
+		score2D.setLevelSupplier(() -> game().currentLevel().number);
+		score2D.setPointsSupplier(() -> game().score());
 
 		hiscore2D = new GameScore2D<>(rendering);
 		hiscore2D.setTitle("HI SCORE");
 		hiscore2D.setLeftUpperCorner(new V2i(16, 1));
-		hiscore2D.setLevelSupplier(() -> game().highscoreLevel);
-		hiscore2D.setPointsSupplier(() -> game().highscorePoints);
+		hiscore2D.setLevelSupplier(() -> game().hiscoreLevel());
+		hiscore2D.setPointsSupplier(() -> game().hiscorePoints());
 
 		pacMan2D = new Player2D<>(sceneController.pac, rendering);
 		pacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);

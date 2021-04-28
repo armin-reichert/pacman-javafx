@@ -113,7 +113,7 @@ public class PlayScene3D implements GameScene {
 
 		final GameVariant variant = gameController.gameVariant();
 		final Rendering2D r2D = Rendering2D_Impl.get(variant);
-		final GameLevel level = game().currentLevel;
+		final GameLevel level = game().currentLevel();
 		final PacManGameWorld world = level.world;
 		final Group root = new Group();
 
@@ -133,7 +133,7 @@ public class PlayScene3D implements GameScene {
 				.map(tile -> createPellet(world.isEnergizerTile(tile) ? 2.5 : 1, tile, foodMaterial))
 				.collect(Collectors.toList());
 
-		player3D = new Player3D(game().player);
+		player3D = new Player3D(game().player());
 		ghosts3D = game().ghosts().collect(Collectors.toMap(Function.identity(), ghost -> new Ghost3D(ghost, r2D)));
 		bonus3D = new Bonus3D(variant, r2D);
 
@@ -184,15 +184,15 @@ public class PlayScene3D implements GameScene {
 	public void update() {
 		score3D.update(game(), cams.selectedCamera());
 		for (int i = 0; i < MAX_LIVES_DISPLAYED; ++i) {
-			livesCounter3D.getChildren().get(i).setVisible(i < game().lives);
+			livesCounter3D.getChildren().get(i).setVisible(i < game().lives());
 		}
 		foodNodes.forEach(foodNode -> {
 			V2i tile = (V2i) foodNode.getUserData();
-			foodNode.setVisible(!game().currentLevel.isFoodRemoved(tile));
+			foodNode.setVisible(!game().currentLevel().isFoodRemoved(tile));
 		});
 		player3D.update();
 		ghosts3D.values().forEach(Ghost3D::update);
-		bonus3D.update(game().bonus);
+		bonus3D.update(game().bonus());
 
 		cams.updateSelectedCamera(player3D);
 		animationController.update();

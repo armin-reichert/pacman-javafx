@@ -140,7 +140,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private GameScene sceneForCurrentGameState(boolean use3D) {
 		int sceneIndex = gameController.state == PacManGameState.INTRO ? 0
-				: gameController.state == PacManGameState.INTERMISSION ? gameController.game().intermissionNumber : 4;
+				: gameController.state == PacManGameState.INTERMISSION ? gameController.game().intermissionNumber() : 4;
 		int sceneVariant = use3D ? 1 : 0;
 		if (gameController.gameVariant() == MS_PACMAN) {
 			return MsPacManScenes.SCENES[sceneIndex][sceneVariant];
@@ -208,7 +208,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			break;
 
 		case L:
-			gameController.game().lives++;
+			gameController.game().addLife();
 			showFlashMessage(String.format("Player lives increased"));
 			break;
 
@@ -230,27 +230,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		case X:
 			gameController.killGhosts();
-			break;
-
-		case DIGIT1:
-			if (gameController.state == PacManGameState.INTRO) {
-				gameController.game().intermissionNumber = 1;
-				gameController.changeState(PacManGameState.INTERMISSION);
-			}
-			break;
-
-		case DIGIT2:
-			if (gameController.state == PacManGameState.INTRO) {
-				gameController.game().intermissionNumber = 2;
-				gameController.changeState(PacManGameState.INTERMISSION);
-			}
-			break;
-
-		case DIGIT3:
-			if (gameController.state == PacManGameState.INTRO) {
-				gameController.game().intermissionNumber = 3;
-				gameController.changeState(PacManGameState.INTERMISSION);
-			}
 			break;
 
 		case F11:
