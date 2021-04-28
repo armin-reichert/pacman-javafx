@@ -5,7 +5,6 @@ import static de.amr.games.pacman.lib.Direction.RIGHT;
 import static de.amr.games.pacman.lib.Direction.UP;
 import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 
-import java.util.List;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
@@ -155,5 +154,5 @@ public abstract class Rendering2D {
 
 	public abstract Map<Integer, Rectangle2D> getBonusValuesSpritesMap();
 
-	public abstract List<Rectangle2D> getSymbolSprites();
+	public abstract Map<String, Rectangle2D> getSymbolSprites();
 }

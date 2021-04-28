@@ -1,9 +1,6 @@
 package de.amr.games.pacman.ui.fx.rendering;
 
-import java.util.Arrays;
 import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
@@ -23,34 +20,42 @@ public class Rendering2D_PacMan extends Rendering2D {
 	private final Image mazeEmpty = Rendering2D_Assets.image("/pacman/graphics/maze_empty.png");
 	private Image mazeEmptyBright;
 	private Map<Integer, Rectangle2D> bonusValueSprites;
-	private List<Rectangle2D> symbolSprites;
+	private Map<String, Rectangle2D> symbolSprites;
 	private Map<Integer, Rectangle2D> bountyNumberSprites;
 
 	public Rendering2D_PacMan() {
 		super("/pacman/graphics/sprites.png", 16);
-
-		symbolSprites = Arrays.asList(sprite(2, 3), sprite(3, 3), sprite(4, 3), sprite(5, 3), sprite(6, 3), sprite(7, 3),
-				sprite(8, 3), sprite(9, 3));
-
 		//@formatter:off
-		bonusValueSprites = new HashMap<>();
-		bonusValueSprites.put(100,  cells(0, 9, 1, 1));
-		bonusValueSprites.put(300,  cells(1, 9, 1, 1));
-		bonusValueSprites.put(500,  cells(2, 9, 1, 1));
-		bonusValueSprites.put(700,  cells(3, 9, 1, 1));
-		bonusValueSprites.put(1000, cells(4, 9, 2, 1)); // left-aligned 
-		bonusValueSprites.put(2000, cells(3, 10, 3, 1));
-		bonusValueSprites.put(3000, cells(3, 11, 3, 1));
-		bonusValueSprites.put(5000, cells(3, 12, 3, 1));
-		
-		bountyNumberSprites = new HashMap<>();
-		bountyNumberSprites.put(200,  cells(0, 8, 1, 1));
-		bountyNumberSprites.put(400,  cells(1, 8, 1, 1));
-		bountyNumberSprites.put(800,  cells(2, 8, 1, 1));
-		bountyNumberSprites.put(1600, cells(3, 8, 1, 1));
-		//@formatter:on
+		symbolSprites = Map.of(
+				"CHERRIES", 	sprite(2, 3),
+				"STRAWBERRY", sprite(3, 3),
+				"PEACH",			sprite(4, 3),
+				"APPLE",			sprite(5, 3),
+				"GRAPES",			sprite(6, 3),
+				"GALAXIAN",		sprite(7, 3),
+				"BELL",				sprite(8, 3),
+				"KEY",				sprite(9, 3)
+				
+		);
 
-		// Animations
+		bonusValueSprites = Map.of(
+			100,  cells(0, 9, 1, 1),
+			300,  cells(1, 9, 1, 1),
+			500,  cells(2, 9, 1, 1),
+			700,  cells(3, 9, 1, 1),
+			1000, cells(4, 9, 2, 1), // left-aligned 
+			2000, cells(3, 10, 3, 1),
+			3000, cells(3, 11, 3, 1),
+			5000, cells(3, 12, 3, 1)
+		);
+		
+		bountyNumberSprites = Map.of(
+			200,  cells(0, 8, 1, 1),
+			400,  cells(1, 8, 1, 1),
+			800,  cells(2, 8, 1, 1),
+			1600, cells(3, 8, 1, 1)
+		);
+		//@formatter:on
 
 		mazeEmptyBright = Rendering2D_Assets.colorsExchanged(mazeEmpty, Map.of(getMazeWallBorderColor(0), Color.WHITE));
 	}
@@ -95,7 +100,7 @@ public class Rendering2D_PacMan extends Rendering2D {
 	}
 
 	@Override
-	public List<Rectangle2D> getSymbolSprites() {
+	public Map<String, Rectangle2D> getSymbolSprites() {
 		return symbolSprites;
 	}
 

@@ -1,6 +1,5 @@
 package de.amr.games.pacman.ui.fx.entities._2d;
 
-import java.util.List;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.TimedSequence;
@@ -19,7 +18,7 @@ public class Bonus2D<RENDERING extends Rendering2D> implements Renderable2D<REND
 
 	private RENDERING rendering;
 	private Bonus bonus;
-	private List<Rectangle2D> symbolSprites;
+	private Map<String, Rectangle2D> symbolSprites;
 	private Map<Integer, Rectangle2D> numberSprites;
 	private TimedSequence<Integer> jumpAnimation;
 

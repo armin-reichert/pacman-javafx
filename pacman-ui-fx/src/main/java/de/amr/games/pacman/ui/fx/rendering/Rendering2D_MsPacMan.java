@@ -1,7 +1,6 @@
 package de.amr.games.pacman.ui.fx.rendering;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -23,18 +22,40 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	private List<Image> mazeEmptyImages;
 	private List<Image> mazeFlashImages;
 	private Map<Integer, Rectangle2D> bonusValueSprites;
-	private List<Rectangle2D> symbolSprites;
+	private Map<String, Rectangle2D> symbolSprites;
 	private Map<Integer, Rectangle2D> bountyNumberSprites;
 
 	Rendering2D_MsPacMan() {
 		super("/mspacman/graphics/sprites.png", 16);
 
-		symbolSprites = Arrays.asList(s(3, 0), s(4, 0), s(5, 0), s(6, 0), s(7, 0), s(8, 0), s(9, 0));
+		//@formatter:off
+		symbolSprites = Map.of(
+			"CHERRIES", 	s(3,0),
+			"STRAWBERRY", s(4,0),
+			"PEACH",			s(5,0),
+			"PRETZEL",		s(6,0),
+			"APPLE",			s(7,0),
+			"PEAR",				s(8,0),
+			"BANANA",			s(9,0)
+		);
 
-		bonusValueSprites = Map.of(100, s(3, 1), 200, s(4, 1), 500, s(5, 1), 700, s(6, 1), 1000, s(7, 1), 2000, s(8, 1),
-				5000, s(9, 1));
+		bonusValueSprites = Map.of(
+			 100, s(3, 1), 
+			 200, s(4, 1), 
+			 500, s(5, 1), 
+			 700, s(6, 1), 
+			1000, s(7, 1), 
+			2000, s(8, 1),
+			5000, s(9, 1)
+		);
 
-		bountyNumberSprites = Map.of(200, s(0, 8), 400, s(1, 8), 800, s(2, 8), 1600, s(3, 8));
+		bountyNumberSprites = Map.of(
+			 200, s(0, 8), 
+			 400, s(1, 8), 
+			 800, s(2, 8), 
+			1600, s(3, 8)
+		);
+		//@formatter:on
 
 		mazeFullImages = new ArrayList<>(6);
 		mazeEmptyImages = new ArrayList<>(6);
@@ -129,7 +150,7 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	}
 
 	@Override
-	public List<Rectangle2D> getSymbolSprites() {
+	public Map<String, Rectangle2D> getSymbolSprites() {
 		return symbolSprites;
 	}
 

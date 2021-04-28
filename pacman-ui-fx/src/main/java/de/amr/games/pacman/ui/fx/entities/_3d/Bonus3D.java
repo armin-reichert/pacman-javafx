@@ -1,9 +1,7 @@
 package de.amr.games.pacman.ui.fx.entities._3d;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.pacman.Bonus;
@@ -25,7 +23,6 @@ import javafx.util.Duration;
  */
 public class Bonus3D extends Box {
 
-	private final List<Image> symbolSprites;
 	private final Map<Integer, Image> pointsSprites;
 	private final Rendering2D rendering2D;
 	private final RotateTransition rotation;
@@ -34,7 +31,6 @@ public class Bonus3D extends Box {
 	public Bonus3D(GameVariant gameVariant, Rendering2D rendering2D) {
 		super(8, 8, 8);
 		this.rendering2D = rendering2D;
-		symbolSprites = rendering2D.getSymbolSprites().stream().map(rendering2D::subImage).collect(Collectors.toList());
 		pointsSprites = getPointsSprites(gameVariant);
 		skin = new PhongMaterial(Color.WHITE);
 		rotation = new RotateTransition(Duration.seconds(2), this);
@@ -42,6 +38,10 @@ public class Bonus3D extends Box {
 		rotation.setByAngle(360);
 		rotation.setOnFinished(e -> hide());
 		hide();
+	}
+
+	private Image symbolImage(String symbol) {
+		return rendering2D.subImage(rendering2D.getSymbolSprites().get(symbol));
 	}
 
 	private Map<Integer, Image> getPointsSprites(GameVariant gameVariant) {
@@ -64,8 +64,8 @@ public class Bonus3D extends Box {
 	}
 
 	public void showSymbol(Bonus bonus) {
-		skin.setBumpMap(symbolSprites.get(bonus.symbol));
-		skin.setDiffuseMap(symbolSprites.get(bonus.symbol));
+		skin.setBumpMap(symbolImage(bonus.symbol));
+		skin.setDiffuseMap(symbolImage(bonus.symbol));
 		setMaterial(skin);
 		setTranslateX(bonus.position.x);
 		setTranslateY(bonus.position.y);

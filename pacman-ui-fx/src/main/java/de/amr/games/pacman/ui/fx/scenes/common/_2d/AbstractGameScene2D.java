@@ -123,5 +123,4 @@ public abstract class AbstractGameScene2D<RENDERING extends Rendering2D> impleme
 			x -= t(2);
 		}
 	}
-
 }
