@@ -17,9 +17,18 @@ YouTube video
 On the intro screen, you can switch between the game versions by pressing <kbd>v</kbd>. You can swich between window and fullscreen mode using the standard keys <kbd>F11</kbd> and <kbd>Esc</kbd>.
 
 On the 3D play screen, the following functionality is available:
-- <kbd>CTRL+I</kbd>:       Toggle information about current scene (HUD)
-- <kbd>CTRL+P</kbd>:       Toggle pause game play
-- <kbd>CTRL+S</kbd>:       Increase speed
+- <kbd>CTRL+C</kbd>: Switch camera (3 cameras currently implemented)
+- <kbd>CTRL+I</kbd>: Toggle information about current scene (HUD)
+- <kbd>CTRL+L</kbd>: Toggle draw mode (line vs. shaded)
+- <kbd>CTRL+P</kbd>: Toggle pause game play
+- <kbd>CTRL+S</kbd>: Increase speed
 - <kbd>CTRL+SHIFT+S</kbd>: Decrease speed
-- <kbd>A</kbd>:            Toggle autopilot mode
-- <kbd>I</kbd>:            Toggle immunity of player againts ghost attacks
+- <kbd>CTRL+3<(kbd>: Toggle using 2D or 2D play scene
+- <kbd>A</kbd>: Toggle autopilot mode
+- <kbd>I</kbd>: Toggle immunity of player againts ghost attacks
+- <kbd>Q</kbd>: Quit play scene
+- Cheats:
+  - <kbd>E</kbd>: Eat all pills
+  - <kbd>L</kbd>: Add one life
+  - <kbd>N</kbd>: Enter next level
+  - <kbd>X</kbd>: Kill ghosts 
