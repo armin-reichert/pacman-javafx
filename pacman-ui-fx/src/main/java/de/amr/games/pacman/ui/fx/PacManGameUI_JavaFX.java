@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
+import de.amr.games.pacman.controller.event.PacManFoundFoodEvent;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.lib.Direction;
@@ -172,9 +173,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void onGameEvent(PacManGameEvent event) {
-		log("UI received game event %s", event);
+		if (!(event instanceof PacManFoundFoodEvent)) {
+			log("UI received game event %s", event);
+		}
 		PacManGameUI.super.onGameEvent(event);
-		// pass event to current scene
 		currentGameScene.onGameEvent(event);
 	}
 

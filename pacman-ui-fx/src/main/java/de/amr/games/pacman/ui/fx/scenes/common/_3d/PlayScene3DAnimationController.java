@@ -14,6 +14,7 @@ import de.amr.games.pacman.controller.event.BonusExpiredEvent;
 import de.amr.games.pacman.controller.event.DefaultPacManGameEventHandler;
 import de.amr.games.pacman.controller.event.ExtraLifeEvent;
 import de.amr.games.pacman.controller.event.GhostEntersHouseEvent;
+import de.amr.games.pacman.controller.event.GhostLeavesHouseEvent;
 import de.amr.games.pacman.controller.event.GhostReturningHomeEvent;
 import de.amr.games.pacman.controller.event.PacManFoundFoodEvent;
 import de.amr.games.pacman.controller.event.PacManGainsPowerEvent;
@@ -129,13 +130,16 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 	@Override
 	public void onPacManLosingPower(PacManLosingPowerEvent e) {
 		playScene.ghosts3D.values().forEach(ghost3D -> {
-			ghost3D.startFlashing();
+			if (ghost3D.ghost.is(GhostState.FRIGHTENED)) {
+				ghost3D.startFlashing();
+			}
 		});
 	}
 
 	@Override
 	public void onPacManLostPower(PacManLostPowerEvent e) {
 		playScene.ghosts3D.values().forEach(ghost3D -> {
+			ghost3D.stopBlueMode();
 			ghost3D.stopFlashing();
 		});
 		sounds.stop(PacManGameSound.PACMAN_POWER);
@@ -176,12 +180,17 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 	public void onGhostReturningHome(GhostReturningHomeEvent e) {
 		sounds.play(PacManGameSound.GHOST_RETURNING_HOME);
 	}
-	
+
 	@Override
 	public void onGhostEntersHouse(GhostEntersHouseEvent e) {
 		if (game().ghosts(GhostState.DEAD).count() == 0) {
 			sounds.stop(PacManGameSound.GHOST_RETURNING_HOME);
 		}
+	}
+
+	@Override
+	public void onGhostLeavesHouse(GhostLeavesHouseEvent e) {
+		playScene.ghosts3D.get(e.ghost).stopBlueMode();
 	}
 
 	@Override
