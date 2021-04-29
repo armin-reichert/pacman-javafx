@@ -13,7 +13,8 @@ import javafx.beans.property.SimpleIntegerProperty;
 /**
  * Game loop.
  * <p>
- * Note that the animation timer frequency is influenced from the monitor refresh rate!
+ * Note that the animation timer frequency depends on the monitor refresh rate! If your refresh rate is
+ * not 60 Hz, the game does not run with intended speed.
  * 
  * @author Armin Reichert
  */
