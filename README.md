@@ -25,7 +25,7 @@ On the 3D play screen, the following functionality is available:
 - <kbd>CTRL+P</kbd> Toggle pause game play
 - <kbd>CTRL+S</kbd> Increase speed
 - <kbd>CTRL+SHIFT+S</kbd> Decrease speed
-- <kbd>CTRL+3</kbd> Toggle using 2D or 2D play scene
+- <kbd>CTRL+3</kbd> Toggle using 2D/3D play scene
 - <kbd>A</kbd> Toggle autopilot mode
 - <kbd>I</kbd> Toggle immunity of player against ghost attacks
 - <kbd>Q</kbd> Quit play scene
