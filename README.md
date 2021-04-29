@@ -14,7 +14,7 @@ YouTube video
 
 ### Keys:
 
-On the intro screen, you can switch between the game versions by pressing <kbd>v</kbd>. You can swich between window and fullscreen mode using the standard keys <kbd>F11</kbd> and <kbd>Esc</kbd>.
+On the intro screen, you can switch between the game versions by pressing <kbd>v</kbd>. You can switch between window and fullscreen mode using the standard keys <kbd>F11</kbd> and <kbd>Esc</kbd>.
 
 On the 3D play screen, the following functionality is available:
 - <kbd>CTRL+C</kbd> Switch camera (3 cameras currently implemented)
