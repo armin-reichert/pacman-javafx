@@ -10,6 +10,7 @@
 		<maven.compiler.source>15</maven.compiler.source>
 		<maven.compiler.target>15</maven.compiler.target>
 	</properties>
+	<packaging>jlink</packaging>
 	<dependencies>
 		<dependency>
 			<groupId>org.openjfx</groupId>
@@ -31,6 +32,12 @@
 			<artifactId>pacman-core</artifactId>
 			<version>1.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.tentackle</groupId>
+			<artifactId>tentackle-jlink-maven-plugin</artifactId>
+			<version>11.7.1.0</version>
+			<type>maven-plugin</type>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -50,9 +57,17 @@
 					<mainClass>de.amr.games.pacman.ui.fx.app.PacManGameAppFX</mainClass>
 				</configuration>
 			</plugin>
+			<plugin>
+				<artifactId>maven-jlink-plugin</artifactId>
+				<version>3.1.0</version>
+				<extensions>true</extensions>
+				<configuration>
+				<!-- TODO -->
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<organization>
-		<name>armin.reichert@web.d</name>
+		<name>armin.reichert@web.de</name>
 	</organization>
 </project>
