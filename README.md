@@ -6,7 +6,7 @@ A JavaFX user interface for my Pac-Man/Ms. Pac-Man game implementation, see [pac
 
 The 3D model (unfortunately I have no animated model yet) has been generously provided to me by Gianmarco Cavallaccio (https://www.artstation.com/gianmart). Cudos to Gianmarco! 
 
-Currently, the game can only be started with the supplied batch file (because I am still too dumb to create a JavaFX executable jar file in Eclipse using Maven). Adapt the batch file to your local environment and run it as `pacman.bat`or as `pacman -mspacman`to start in Ms. Pac-Man mode. Switching between the game versions is possible from the intro scenes by pressing <kbd>V</kbd>.
+In the current [release](https://github.com/armin-reichert/pacman-javafx/releases) you find an attached zip file containing the complete JavaFX runtime needed to run the game. To start the game, unzip the archive and execute the `run.cmd` file in the `bin` folder.
 
 ![Play Scene](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/playscene3D.png)
 
