@@ -6,7 +6,7 @@ A JavaFX user interface for my Pac-Man/Ms. Pac-Man game implementation, see [pac
 
 The 3D model (unfortunately I have no animated model yet) has been generously provided to me by Gianmarco Cavallaccio (https://www.artstation.com/gianmart). Cudos to Gianmarco! 
 
-In the release a zip file is attached containing the complete JavaFX runtime needed to run the game. To start the game, unzip the archive and execute the `run.cmd` file in the `bin` folder.
+In the [releases](https://github.com/armin-reichert/pacman-javafx/releases) section a zip file is attached containing the complete JavaFX runtime needed to run the game. To start the game, unzip the archive and execute the `run.cmd` file in the `bin` folder.
 
 ![Play Scene](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/playscene3D.png)
 
