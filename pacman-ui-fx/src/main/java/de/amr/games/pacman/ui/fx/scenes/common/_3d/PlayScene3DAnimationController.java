@@ -8,18 +8,9 @@ import java.util.stream.Collectors;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
-import de.amr.games.pacman.controller.event.BonusStateChangeEvent;
 import de.amr.games.pacman.controller.event.DefaultPacManGameEventHandler;
-import de.amr.games.pacman.controller.event.ExtraLifeEvent;
-import de.amr.games.pacman.controller.event.GhostEntersHouseEvent;
-import de.amr.games.pacman.controller.event.GhostLeavesHouseEvent;
-import de.amr.games.pacman.controller.event.GhostReturningHomeEvent;
-import de.amr.games.pacman.controller.event.PacManFoundFoodEvent;
-import de.amr.games.pacman.controller.event.PacManGainsPowerEvent;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
-import de.amr.games.pacman.controller.event.PacManLosingPowerEvent;
-import de.amr.games.pacman.controller.event.PacManLostPowerEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Logging;
@@ -117,7 +108,7 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 	}
 
 	@Override
-	public void onPacManGainsPower(PacManGainsPowerEvent e) {
+	public void onPlayerGainsPower(PacManGameEvent e) {
 		sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
 		playScene.ghosts3D.values().forEach(ghost3D -> {
 			ghost3D.stopFlashing();
@@ -126,7 +117,7 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 	}
 
 	@Override
-	public void onPacManLosingPower(PacManLosingPowerEvent e) {
+	public void onPlayerLosingPower(PacManGameEvent e) {
 		playScene.ghosts3D.values().forEach(ghost3D -> {
 			if (ghost3D.ghost.is(GhostState.FRIGHTENED)) {
 				ghost3D.startFlashing();
@@ -135,7 +126,7 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 	}
 
 	@Override
-	public void onPacManLostPower(PacManLostPowerEvent e) {
+	public void onPlayerLostPower(PacManGameEvent e) {
 		playScene.ghosts3D.values().forEach(ghost3D -> {
 			ghost3D.stopBlueMode();
 			ghost3D.stopFlashing();
@@ -144,7 +135,7 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 	}
 
 	@Override
-	public void onPacManFoundFood(PacManFoundFoodEvent e) {
+	public void onPlayerFoundFood(PacManGameEvent e) {
 		AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
 		if (!munching.isPlaying()) {
 			sounds.loop(PacManGameSound.PACMAN_MUNCH, Integer.MAX_VALUE);
@@ -153,41 +144,41 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 	}
 
 	@Override
-	public void onBonusActivated(BonusStateChangeEvent e) {
+	public void onBonusActivated(PacManGameEvent e) {
 		playScene.bonus3D.showSymbol(game().bonus());
 	}
 
 	@Override
-	public void onBonusEaten(BonusStateChangeEvent e) {
+	public void onBonusEaten(PacManGameEvent e) {
 		playScene.bonus3D.showPoints(game().bonus());
 		sounds.play(PacManGameSound.BONUS_EATEN);
 	}
 
 	@Override
-	public void onBonusExpired(BonusStateChangeEvent e) {
+	public void onBonusExpired(PacManGameEvent e) {
 		playScene.bonus3D.hide();
 	}
 
 	@Override
-	public void onExtraLife(ExtraLifeEvent e) {
+	public void onExtraLife(PacManGameEvent e) {
 		gameController.getUI().showFlashMessage("Extra life!");
 		sounds.play(PacManGameSound.EXTRA_LIFE);
 	}
 
 	@Override
-	public void onGhostReturningHome(GhostReturningHomeEvent e) {
+	public void onGhostReturnsHome(PacManGameEvent e) {
 		sounds.play(PacManGameSound.GHOST_RETURNING_HOME);
 	}
 
 	@Override
-	public void onGhostEntersHouse(GhostEntersHouseEvent e) {
+	public void onGhostEntersHouse(PacManGameEvent e) {
 		if (game().ghosts(GhostState.DEAD).count() == 0) {
 			sounds.stop(PacManGameSound.GHOST_RETURNING_HOME);
 		}
 	}
 
 	@Override
-	public void onGhostLeavesHouse(GhostLeavesHouseEvent e) {
+	public void onGhostLeavesHouse(PacManGameEvent e) {
 		playScene.ghosts3D.get(e.ghost).stopBlueMode();
 	}
 
