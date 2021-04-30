@@ -1,6 +1,6 @@
 # pacman-javafx
 
-(WTF! I got 20 stars today! What has happened?)
+(WTF! I got >20 stars today! How comes?)
 
 A JavaFX user interface for my Pac-Man/Ms. Pac-Man game implementation, see [pacman-basic](https://github.com/armin-reichert/pacman-basic). Both games can be played in 2D and 3D (work in progress).
 
