@@ -1,5 +1,7 @@
 # pacman-javafx
 
+(WTF! I got 20 stars today! What has happened?)
+
 A JavaFX user interface for my Pac-Man/Ms. Pac-Man game implementation, see [pacman-basic](https://github.com/armin-reichert/pacman-basic). Both games can be played in 2D and 3D (work in progress).
 
 The 3D model (unfortunately I have no animated model yet) has been generously provided to me by Gianmarco Cavallaccio (https://www.artstation.com/gianmart). Cudos to Gianmarco! 
@@ -23,7 +25,7 @@ On the 3D play screen, the following functionality is available:
 - <kbd>CTRL+P</kbd> Toggle pause game play
 - <kbd>CTRL+S</kbd> Increase speed
 - <kbd>CTRL+SHIFT+S</kbd> Decrease speed
-- <kbd>CTRL+3</kbd> Toggle using 2D or 2D play scene
+- <kbd>CTRL+3</kbd> Toggle using 2D/3D play scene
 - <kbd>A</kbd> Toggle autopilot mode
 - <kbd>I</kbd> Toggle immunity of player against ghost attacks
 - <kbd>Q</kbd> Quit play scene
