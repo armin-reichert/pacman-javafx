@@ -26,14 +26,6 @@
 	<build>
 		<plugins>
 			<plugin>
-				<artifactId>maven-jlink-plugin</artifactId>
-				<version>3.1.0</version>
-				<extensions>true</extensions>
-				<configuration>
-					<!-- TODO -->
-				</configuration>
-			</plugin>
-			<plugin>
 				<groupId>org.tentackle</groupId>
 				<artifactId>tentackle-jlink-maven-plugin</artifactId>
 				<version>11.7.1.0</version>
