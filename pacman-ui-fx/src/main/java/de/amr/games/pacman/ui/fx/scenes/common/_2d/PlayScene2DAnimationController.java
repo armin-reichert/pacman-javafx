@@ -4,7 +4,7 @@ import static de.amr.games.pacman.lib.Logging.log;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
-import de.amr.games.pacman.controller.event.BonusEatenEvent;
+import de.amr.games.pacman.controller.event.BonusStateChangeEvent;
 import de.amr.games.pacman.controller.event.DefaultPacManGameEventHandler;
 import de.amr.games.pacman.controller.event.ExtraLifeEvent;
 import de.amr.games.pacman.controller.event.GhostEntersHouseEvent;
@@ -117,7 +117,7 @@ public class PlayScene2DAnimationController implements DefaultPacManGameEventHan
 	}
 
 	@Override
-	public void onBonusEaten(BonusEatenEvent e) {
+	public void onBonusEaten(BonusStateChangeEvent e) {
 		if (playScene.bonus2D.getJumpAnimation() != null) {
 			playScene.bonus2D.getJumpAnimation().reset();
 		}

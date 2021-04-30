@@ -8,9 +8,7 @@ import java.util.stream.Collectors;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
-import de.amr.games.pacman.controller.event.BonusActivatedEvent;
-import de.amr.games.pacman.controller.event.BonusEatenEvent;
-import de.amr.games.pacman.controller.event.BonusExpiredEvent;
+import de.amr.games.pacman.controller.event.BonusStateChangeEvent;
 import de.amr.games.pacman.controller.event.DefaultPacManGameEventHandler;
 import de.amr.games.pacman.controller.event.ExtraLifeEvent;
 import de.amr.games.pacman.controller.event.GhostEntersHouseEvent;
@@ -155,18 +153,18 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 	}
 
 	@Override
-	public void onBonusActivated(BonusActivatedEvent e) {
+	public void onBonusActivated(BonusStateChangeEvent e) {
 		playScene.bonus3D.showSymbol(game().bonus());
 	}
 
 	@Override
-	public void onBonusEaten(BonusEatenEvent e) {
+	public void onBonusEaten(BonusStateChangeEvent e) {
 		playScene.bonus3D.showPoints(game().bonus());
 		sounds.play(PacManGameSound.BONUS_EATEN);
 	}
 
 	@Override
-	public void onBonusExpired(BonusExpiredEvent e) {
+	public void onBonusExpired(BonusStateChangeEvent e) {
 		playScene.bonus3D.hide();
 	}
 
