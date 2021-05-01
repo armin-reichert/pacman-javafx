@@ -119,9 +119,11 @@ public class Maze3D extends Group {
 	private final Group foodRoot = new Group();
 
 	public Maze3D(double unscaledWidth, double unscaledHeight) {
-		var floorMaterial = new PhongMaterial(Color.rgb(20, 20, 100));
+		var floorMaterial = new PhongMaterial();
 		var floorTexture = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
 		floorMaterial.setDiffuseMap(floorTexture);
+		floorMaterial.setDiffuseColor(Color.rgb(30, 30, 120));
+		floorMaterial.setSpecularColor(Color.rgb(60, 60, 240));
 		floor = new Box(unscaledWidth, unscaledHeight, 0.1);
 		floor.setMaterial(floorMaterial);
 		floor.setTranslateX(unscaledWidth / 2 - 4);
