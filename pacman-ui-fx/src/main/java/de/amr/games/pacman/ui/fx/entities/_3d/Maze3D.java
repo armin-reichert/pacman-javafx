@@ -52,40 +52,40 @@ public class Maze3D extends Group {
 			return y * TS - 1.5 * SIZE + (i / N) * SIZE;
 		}
 
-		public V2i northOf() {
-			return plus(toNorth());
+		public V2i north() {
+			return northOf(this);
 		}
 
-		public V2i westOf() {
-			return plus(toWest());
+		public V2i west() {
+			return westOf(this);
 		}
 
-		public V2i eastOf() {
-			return plus(toEast());
+		public V2i east() {
+			return eastOf(this);
 		}
 
-		public V2i southOf() {
-			return plus(toSouth());
+		public V2i south() {
+			return southOf(this);
 		}
 
-		public V2i toNorth() {
+		public V2i northOf(V2i v) {
 			int dy = i / N == 0 ? -1 : 0;
-			return new V2i(0, dy);
+			return v.plus(0, dy);
 		}
 
-		public V2i toEast() {
-			int dx = i % N == N - 1 ? 1 : 0;
-			return new V2i(dx, 0);
-		}
-
-		public V2i toSouth() {
-			int dy = i / N == N - 1 ? 1 : 0;
-			return new V2i(0, dy);
-		}
-
-		public V2i toWest() {
+		public V2i westOf(V2i v) {
 			int dx = i % N == 0 ? -1 : 0;
-			return new V2i(dx, 0);
+			return v.plus(dx, 0);
+		}
+
+		public V2i eastOf(V2i v) {
+			int dx = i % N == N - 1 ? 1 : 0;
+			return v.plus(dx, 0);
+		}
+
+		public V2i southOf(V2i v) {
+			int dy = i / N == N - 1 ? 1 : 0;
+			return v.plus(0, dy);
 		}
 
 		@Override
@@ -153,12 +153,12 @@ public class Maze3D extends Group {
 					if (mt == null) {
 						continue;
 					}
-					if (world.isWall(mt.northOf()) && world.isWall(mt.eastOf()) && world.isWall(mt.southOf())
-							&& world.isWall(mt.westOf())) {
-						V2i seOf = mt.southOf().plus(mt.toEast());
-						V2i swOf = mt.southOf().plus(mt.toWest());
-						V2i neOf = mt.northOf().plus(mt.toEast());
-						V2i nwOf = mt.northOf().plus(mt.toWest());
+					if (world.isWall(mt.north()) && world.isWall(mt.east()) && world.isWall(mt.south())
+							&& world.isWall(mt.west())) {
+						V2i seOf = mt.southOf(mt.east());
+						V2i swOf = mt.southOf(mt.west());
+						V2i neOf = mt.northOf(mt.east());
+						V2i nwOf = mt.northOf(mt.west());
 						if (world.isWall(seOf) && !world.isWall(nwOf) || !world.isWall(seOf) && world.isWall(nwOf)
 								|| world.isWall(swOf) && !world.isWall(neOf) || !world.isWall(swOf) && world.isWall(neOf)) {
 							// keep corner
