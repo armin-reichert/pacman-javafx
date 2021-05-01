@@ -12,7 +12,7 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class BlinkyNaked2D implements Renderable2D<Rendering2D_PacMan> {
+public class BlinkyNaked2D implements Renderable2D {
 
 	private final Rendering2D_PacMan rendering;
 	private final Ghost blinky;

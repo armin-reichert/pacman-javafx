@@ -5,7 +5,7 @@ import de.amr.games.pacman.ui.fx.entities._2d.Renderable2D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_PacMan;
 import javafx.scene.canvas.GraphicsContext;
 
-public class Nail2D implements Renderable2D<Rendering2D_PacMan> {
+public class Nail2D implements Renderable2D {
 
 	private final Rendering2D_PacMan rendering;
 	private final GameEntity nail;

@@ -10,7 +10,7 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class Heart2D implements Renderable2D<Rendering2D_MsPacMan> {
+public class Heart2D implements Renderable2D {
 
 	private final Rendering2D_MsPacMan rendering;
 	private final GameEntity heart;

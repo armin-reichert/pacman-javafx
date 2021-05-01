@@ -14,15 +14,15 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class Bonus2D<RENDERING extends Rendering2D> implements Renderable2D<RENDERING> {
+public class Bonus2D implements Renderable2D {
 
-	private RENDERING rendering;
+	private Rendering2D rendering;
 	private Bonus bonus;
 	private Map<String, Rectangle2D> symbolSprites;
 	private Map<Integer, Rectangle2D> numberSprites;
 	private TimedSequence<Integer> jumpAnimation;
 
-	public Bonus2D(RENDERING rendering) {
+	public Bonus2D(Rendering2D rendering) {
 		this.rendering = rendering;
 		symbolSprites = rendering.getSymbolSprites();
 		numberSprites = rendering.getBonusValuesSpritesMap();

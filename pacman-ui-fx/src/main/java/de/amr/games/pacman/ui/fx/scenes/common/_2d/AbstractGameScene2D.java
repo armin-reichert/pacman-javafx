@@ -25,7 +25,7 @@ import javafx.scene.transform.Scale;
  * 
  * @author Armin Reichert
  */
-public abstract class AbstractGameScene2D<R extends Rendering2D> implements GameScene {
+public abstract class AbstractGameScene2D implements GameScene {
 
 	protected final SubScene scene;
 	protected final Canvas canvas;
@@ -33,11 +33,11 @@ public abstract class AbstractGameScene2D<R extends Rendering2D> implements Game
 	protected final double unscaledWidth;
 	protected final double unscaledHeight;
 	protected final double aspectRatio;
-	protected final R rendering;
+	protected final Rendering2D rendering;
 	protected final SoundManager sounds;
 	protected PacManGameController gameController;
 
-	public AbstractGameScene2D(double unscaledWidth, double unscaledHeight, R rendering, SoundManager sounds) {
+	public AbstractGameScene2D(double unscaledWidth, double unscaledHeight, Rendering2D rendering, SoundManager sounds) {
 		this.rendering = rendering;
 		this.sounds = sounds;
 		this.unscaledWidth = unscaledWidth;

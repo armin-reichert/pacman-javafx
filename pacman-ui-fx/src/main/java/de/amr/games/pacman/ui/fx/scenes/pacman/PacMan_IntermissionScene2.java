@@ -17,12 +17,11 @@ import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene2_Controller;
 import javafx.geometry.Rectangle2D;
 
 /**
- * Second intermission scene: Blinky pursues Pac but kicks a nail that tears his
- * dress apart.
+ * Second intermission scene: Blinky pursues Pac but kicks a nail that tears his dress apart.
  * 
  * @author Armin Reichert
  */
-public class PacMan_IntermissionScene2 extends AbstractGameScene2D<Rendering2D_PacMan> {
+public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 	class SceneController extends PacMan_IntermissionScene2_Controller {
 
@@ -37,8 +36,8 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D<Rendering2D_P
 	}
 
 	private SceneController sceneController;
-	private Player2D<Rendering2D_PacMan> pacMan2D;
-	private Ghost2D<Rendering2D_PacMan> blinky2D;
+	private Player2D pacMan2D;
+	private Ghost2D blinky2D;
 	private Nail2D nail2D;
 	private TimedSequence<Rectangle2D> blinkyStretchedAnimation;
 	private TimedSequence<Rectangle2D> blinkyDamagedAnimation;
@@ -52,9 +51,9 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D<Rendering2D_P
 		super.init();
 		sceneController = new SceneController(gameController);
 		sceneController.init();
-		pacMan2D = new Player2D<>(sceneController.pac, rendering);
-		blinky2D = new Ghost2D<>(sceneController.blinky, rendering);
-		nail2D = new Nail2D(sceneController.nail, rendering);
+		pacMan2D = new Player2D(sceneController.pac, rendering);
+		blinky2D = new Ghost2D(sceneController.blinky, rendering);
+		nail2D = new Nail2D(sceneController.nail, (Rendering2D_PacMan) rendering);
 		pacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
 		blinky2D.getKickingAnimations().values().forEach(TimedSequence::restart);
 		blinkyStretchedAnimation = Rendering2D_Impl.RENDERING_PACMAN.createBlinkyStretchedAnimation();

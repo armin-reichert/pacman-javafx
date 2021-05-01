@@ -12,7 +12,6 @@ import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx.entities._2d.Ghost2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Player2D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Impl;
-import de.amr.games.pacman.ui.fx.rendering.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.mspacman.MsPacMan_IntroScene_Controller;
 import de.amr.games.pacman.ui.mspacman.MsPacMan_IntroScene_Controller.Phase;
@@ -20,17 +19,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
- * Intro scene of the Ms. Pac-Man game. The ghosts and Ms. Pac-Man are
- * introduced one after another.
+ * Intro scene of the Ms. Pac-Man game. The ghosts and Ms. Pac-Man are introduced one after another.
  * 
  * @author Armin Reichert
  */
-public class MsPacMan_IntroScene extends AbstractGameScene2D<Rendering2D_MsPacMan> {
+public class MsPacMan_IntroScene extends AbstractGameScene2D {
 
 	private MsPacMan_IntroScene_Controller sceneController;
 	private TickTimer boardAnimationTimer = new TickTimer();
-	private Player2D<Rendering2D_MsPacMan> msPacMan2D;
-	private List<Ghost2D<Rendering2D_MsPacMan>> ghosts2D;
+	private Player2D msPacMan2D;
+	private List<Ghost2D> ghosts2D;
 
 	public MsPacMan_IntroScene() {
 		super(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, Rendering2D_Impl.RENDERING_MS_PACMAN, MsPacManScenes.SOUNDS);
@@ -43,10 +41,10 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D<Rendering2D_MsPacMa
 		boardAnimationTimer.start();
 		sceneController = new MsPacMan_IntroScene_Controller(gameController);
 		sceneController.init();
-		msPacMan2D = new Player2D<>(sceneController.msPacMan, rendering);
+		msPacMan2D = new Player2D(sceneController.msPacMan, rendering);
 		msPacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
 		ghosts2D = Stream.of(sceneController.ghosts).map(ghost -> {
-			Ghost2D<Rendering2D_MsPacMan> ghost2D = new Ghost2D<>(ghost, rendering);
+			Ghost2D ghost2D = new Ghost2D(ghost, rendering);
 			ghost2D.getKickingAnimations().values().forEach(TimedSequence::restart);
 			return ghost2D;
 		}).collect(Collectors.toList());

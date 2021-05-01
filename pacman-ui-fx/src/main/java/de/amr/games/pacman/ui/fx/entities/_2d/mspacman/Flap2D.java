@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class Flap2D implements Renderable2D<Rendering2D_MsPacMan> {
+public class Flap2D implements Renderable2D {
 
 	private Rendering2D_MsPacMan rendering;
 	private final Flap flap;

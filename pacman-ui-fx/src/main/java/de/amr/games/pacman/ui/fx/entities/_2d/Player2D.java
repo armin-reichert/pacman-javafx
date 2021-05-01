@@ -12,19 +12,19 @@ import javafx.scene.canvas.GraphicsContext;
 /**
  * 2D representation of the player (Pac-Man or Ms. Pac-Man).
  * <p>
- * The animations can be changed so that both, Ms. Pac-Man and Pac-Man can be
- * rendered using this class.
+ * The animations can be changed so that both, Ms. Pac-Man and Pac-Man can be rendered using this
+ * class.
  * 
  * @author Armin Reichert
  */
-public class Player2D<RENDERING extends Rendering2D> implements Renderable2D<RENDERING> {
+public class Player2D implements Renderable2D {
 
-	private final RENDERING rendering;
+	private final Rendering2D rendering;
 	private final Pac player;
 	private Map<Direction, TimedSequence<Rectangle2D>> munchingAnimations;
 	private TimedSequence<Rectangle2D> dyingAnimation;
 
-	public Player2D(Pac pac, RENDERING rendering) {
+	public Player2D(Pac pac, Rendering2D rendering) {
 		this.rendering = rendering;
 		this.player = pac;
 		dyingAnimation = rendering.createPlayerDyingAnimation();

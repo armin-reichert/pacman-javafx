@@ -29,19 +29,19 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class PlayScene2D<R extends Rendering2D> extends AbstractGameScene2D<R> {
+public class PlayScene2D extends AbstractGameScene2D {
 
-	public Maze2D<R> maze2D;
-	public GameScore2D<R> score2D;
-	public GameScore2D<R> hiscore2D;
-	public LivesCounter2D<R> livesCounter2D;
-	public Player2D<R> player2D;
-	public List<Ghost2D<R>> ghosts2D;
-	public Bonus2D<R> bonus2D;
+	public Maze2D maze2D;
+	public GameScore2D score2D;
+	public GameScore2D hiscore2D;
+	public LivesCounter2D livesCounter2D;
+	public Player2D player2D;
+	public List<Ghost2D> ghosts2D;
+	public Bonus2D bonus2D;
 
 	private final PlayScene2DAnimationController animationController;
 
-	public PlayScene2D(R rendering, SoundManager sounds) {
+	public PlayScene2D(Rendering2D rendering, SoundManager sounds) {
 		super(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, rendering, sounds);
 		animationController = new PlayScene2DAnimationController(this, sounds);
 	}
@@ -56,32 +56,32 @@ public class PlayScene2D<R extends Rendering2D> extends AbstractGameScene2D<R> {
 	public void init() {
 		super.init();
 
-		maze2D = new Maze2D<>(new V2i(0, 3), rendering);
+		maze2D = new Maze2D(new V2i(0, 3), rendering);
 		maze2D.setGameLevel(game().currentLevel());
 
-		livesCounter2D = new LivesCounter2D<>(new V2i(2, 34), rendering);
+		livesCounter2D = new LivesCounter2D(new V2i(2, 34), rendering);
 		livesCounter2D.setLivesSupplier(() -> game().lives());
 
-		score2D = new GameScore2D<>(rendering);
+		score2D = new GameScore2D(rendering);
 		score2D.setTitle("SCORE");
 		score2D.setLeftUpperCorner(new V2i(1, 1));
 		score2D.setLevelSupplier(() -> game().currentLevel().number);
 		score2D.setPointsSupplier(() -> game().score());
 
-		hiscore2D = new GameScore2D<>(rendering);
+		hiscore2D = new GameScore2D(rendering);
 		hiscore2D.setTitle("HI SCORE");
 		hiscore2D.setLeftUpperCorner(new V2i(16, 1));
 		hiscore2D.setPointsSupplier(() -> game().hiscorePoints());
 		hiscore2D.setLevelSupplier(() -> game().hiscoreLevel());
 
-		player2D = new Player2D<>(game().player(), rendering);
+		player2D = new Player2D(game().player(), rendering);
 		player2D.getDyingAnimation().delay(120).onStart(() -> {
 			game().ghosts().forEach(ghost -> ghost.visible = false);
 		});
 
-		ghosts2D = game().ghosts().map(ghost -> new Ghost2D<>(ghost, rendering)).collect(Collectors.toList());
+		ghosts2D = game().ghosts().map(ghost -> new Ghost2D(ghost, rendering)).collect(Collectors.toList());
 
-		bonus2D = new Bonus2D<>(rendering);
+		bonus2D = new Bonus2D(rendering);
 
 		game().player().powerTimer.addEventListener(animationController::handleGhostsFlashing);
 		animationController.init();

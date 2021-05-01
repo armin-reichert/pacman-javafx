@@ -28,11 +28,11 @@ import javafx.util.Duration;
 public class PlayScene2DAnimationController implements DefaultPacManGameEventHandler {
 
 	public final SoundManager sounds;
-	private final PlayScene2D<?> playScene;
+	private final PlayScene2D playScene;
 	private PacManGameController gameController;
 	private SequentialTransition levelCompleteAnimation;
 
-	public PlayScene2DAnimationController(PlayScene2D<?> playScene, SoundManager sounds) {
+	public PlayScene2DAnimationController(PlayScene2D playScene, SoundManager sounds) {
 		this.playScene = playScene;
 		this.sounds = sounds;
 	}
@@ -93,7 +93,7 @@ public class PlayScene2DAnimationController implements DefaultPacManGameEventHan
 	@Override
 	public void onPlayerGainsPower(PacManGameEvent e) {
 		e.gameModel.ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
-			Ghost2D<?> ghost2D = playScene.ghosts2D.get(ghost.id);
+			Ghost2D ghost2D = playScene.ghosts2D.get(ghost.id);
 			ghost2D.getFlashingAnimation().reset();
 			ghost2D.getFrightenedAnimation().restart();
 		});
@@ -198,7 +198,7 @@ public class PlayScene2DAnimationController implements DefaultPacManGameEventHan
 	public void handleGhostsFlashing(TickTimerEvent e) {
 		if (e.type == TickTimerEvent.Type.HALF_EXPIRED) {
 			gameController.game().ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
-				Ghost2D<?> ghost2D = playScene.ghosts2D.get(ghost.id);
+				Ghost2D ghost2D = playScene.ghosts2D.get(ghost.id);
 				TimedSequence<?> flashing = ghost2D.getFlashingAnimation();
 				long frameTime = e.ticks / (gameController.game().currentLevel().numFlashes * flashing.numFrames());
 				flashing.frameDuration(frameTime).repetitions(gameController.game().currentLevel().numFlashes).restart();

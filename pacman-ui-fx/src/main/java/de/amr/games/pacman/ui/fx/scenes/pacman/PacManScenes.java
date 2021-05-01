@@ -22,7 +22,7 @@ public class PacManScenes {
 		SCENES[2][1] = new PacMan_IntermissionScene2();
 		SCENES[3][0] = 
 		SCENES[3][1] = new PacMan_IntermissionScene3();
-		SCENES[4][0] = new PlayScene2D<>(Rendering2D_Impl.RENDERING_PACMAN, SOUNDS);
+		SCENES[4][0] = new PlayScene2D(Rendering2D_Impl.RENDERING_PACMAN, SOUNDS);
 		SCENES[4][1] = new PlayScene3D(SOUNDS);
 		//@formatter:on
 	}

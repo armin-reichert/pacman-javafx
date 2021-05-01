@@ -6,12 +6,12 @@ import de.amr.games.pacman.ui.fx.rendering.Rendering2D_MsPacMan;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
- * The bag containing junior Pac-Man that is dropped by the stork in Ms. Pac-Man
- * intermission scene 3.
+ * The bag containing junior Pac-Man that is dropped by the stork in Ms. Pac-Man intermission scene
+ * 3.
  * 
  * @author Armin Reichert
  */
-public class JuniorBag2D implements Renderable2D<Rendering2D_MsPacMan> {
+public class JuniorBag2D implements Renderable2D {
 
 	private final Rendering2D_MsPacMan rendering;
 	private final JuniorBag bag;

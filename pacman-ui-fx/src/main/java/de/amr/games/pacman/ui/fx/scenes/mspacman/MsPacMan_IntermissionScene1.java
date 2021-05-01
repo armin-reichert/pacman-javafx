@@ -24,7 +24,7 @@ import de.amr.games.pacman.ui.mspacman.MsPacMan_IntermissionScene1_Controller;
  * 
  * @author Armin Reichert
  */
-public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D<Rendering2D_MsPacMan> {
+public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 
 	private class SceneController extends MsPacMan_IntermissionScene1_Controller {
 
@@ -44,10 +44,10 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D<Rendering2D
 	}
 
 	private SceneController sceneController;
-	private Player2D<Rendering2D_MsPacMan> msPacMan2D;
-	private Player2D<Rendering2D_MsPacMan> pacMan2D;
-	private Ghost2D<Rendering2D_MsPacMan> inky2D;
-	private Ghost2D<Rendering2D_MsPacMan> pinky2D;
+	private Player2D msPacMan2D;
+	private Player2D pacMan2D;
+	private Ghost2D inky2D;
+	private Ghost2D pinky2D;
 	private Flap2D flap2D;
 	private Heart2D heart2D;
 
@@ -61,11 +61,11 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D<Rendering2D
 		sceneController = new SceneController(gameController);
 		sceneController.init();
 		flap2D = new Flap2D(sceneController.flap, Rendering2D_Impl.RENDERING_MS_PACMAN);
-		msPacMan2D = new Player2D<>(sceneController.msPac, rendering);
-		pacMan2D = new Player2D<>(sceneController.pacMan, rendering);
-		inky2D = new Ghost2D<>(sceneController.inky, rendering);
-		pinky2D = new Ghost2D<>(sceneController.pinky, rendering);
-		heart2D = new Heart2D(sceneController.heart, rendering);
+		msPacMan2D = new Player2D(sceneController.msPac, rendering);
+		pacMan2D = new Player2D(sceneController.pacMan, rendering);
+		inky2D = new Ghost2D(sceneController.inky, rendering);
+		pinky2D = new Ghost2D(sceneController.pinky, rendering);
+		heart2D = new Heart2D(sceneController.heart, (Rendering2D_MsPacMan) rendering);
 		// overwrite by Pac-Man instead of Ms. Pac-Man sprites:
 		pacMan2D.setMunchingAnimations(Rendering2D_Impl.RENDERING_MS_PACMAN.createSpouseMunchingAnimations());
 		msPacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);

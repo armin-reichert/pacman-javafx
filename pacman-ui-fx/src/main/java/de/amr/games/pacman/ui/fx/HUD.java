@@ -80,7 +80,7 @@ public class HUD extends HBox {
 		line();
 		line("3D Scenes (CTRL+3)", "%s", onOff(Env.$use3DScenes.get()));
 		if (ui.currentGameScene instanceof AbstractGameScene2D) {
-			AbstractGameScene2D<?> scene2D = (AbstractGameScene2D<?>) ui.currentGameScene;
+			AbstractGameScene2D scene2D = (AbstractGameScene2D) ui.currentGameScene;
 			line("Canvas2D", "w=%.0f h=%.0f", scene2D.getCanvas().getWidth(), scene2D.getCanvas().getHeight());
 		} else {
 			ui.currentGameScene.cams().ifPresent(sceneCams -> {

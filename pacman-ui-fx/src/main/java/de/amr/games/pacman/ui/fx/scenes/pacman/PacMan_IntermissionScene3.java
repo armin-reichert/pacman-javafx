@@ -8,18 +8,17 @@ import de.amr.games.pacman.ui.fx.entities._2d.Player2D;
 import de.amr.games.pacman.ui.fx.entities._2d.pacman.BlinkyNaked2D;
 import de.amr.games.pacman.ui.fx.entities._2d.pacman.BlinkyPatched2D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Impl;
-import de.amr.games.pacman.ui.fx.rendering.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene3_Controller;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene3_Controller.Phase;
 
 /**
- * Third intermission scene: Blinky in shred dress chases Pac-Man, comes back
- * half-naked drawing dress over the floor.
+ * Third intermission scene: Blinky in shred dress chases Pac-Man, comes back half-naked drawing
+ * dress over the floor.
  * 
  * @author Armin Reichert
  */
-public class PacMan_IntermissionScene3 extends AbstractGameScene2D<Rendering2D_PacMan> {
+public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 
 	private class SceneController extends PacMan_IntermissionScene3_Controller {
 
@@ -34,7 +33,7 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D<Rendering2D_P
 	}
 
 	private SceneController sceneController;
-	private Player2D<Rendering2D_PacMan> pacMan2D;
+	private Player2D pacMan2D;
 	private BlinkyPatched2D blinkyPatched2D;
 	private BlinkyNaked2D blinkyNaked2D;
 
@@ -47,7 +46,7 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D<Rendering2D_P
 		super.init();
 		sceneController = new SceneController(gameController);
 		sceneController.init();
-		pacMan2D = new Player2D<>(sceneController.pac, rendering);
+		pacMan2D = new Player2D(sceneController.pac, rendering);
 		blinkyPatched2D = new BlinkyPatched2D(sceneController.blinky, Rendering2D_Impl.RENDERING_PACMAN);
 		blinkyNaked2D = new BlinkyNaked2D(sceneController.blinky, Rendering2D_Impl.RENDERING_PACMAN);
 		pacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);

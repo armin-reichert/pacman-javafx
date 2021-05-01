@@ -8,18 +8,16 @@ import de.amr.games.pacman.ui.fx.entities._2d.Ghost2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Player2D;
 import de.amr.games.pacman.ui.fx.entities._2d.pacman.BigPacMan2D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Impl;
-import de.amr.games.pacman.ui.fx.rendering.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene1_Controller;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene1_Controller.Phase;
 
 /**
- * First intermission scene: Blinky chases Pac-Man and is then chased by a huge
- * Pac-Man.
+ * First intermission scene: Blinky chases Pac-Man and is then chased by a huge Pac-Man.
  * 
  * @author Armin Reichert
  */
-public class PacMan_IntermissionScene1 extends AbstractGameScene2D<Rendering2D_PacMan> {
+public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 
 	private class SceneController extends PacMan_IntermissionScene1_Controller {
 
@@ -34,8 +32,8 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D<Rendering2D_P
 	}
 
 	private SceneController sceneController;
-	private Player2D<Rendering2D_PacMan> pacMan2D;
-	private Ghost2D<Rendering2D_PacMan> blinky2D;
+	private Player2D pacMan2D;
+	private Ghost2D blinky2D;
 	private BigPacMan2D bigPacMan2D;
 
 	public PacMan_IntermissionScene1() {
@@ -47,8 +45,8 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D<Rendering2D_P
 		super.init();
 		sceneController = new SceneController(gameController);
 		sceneController.init();
-		pacMan2D = new Player2D<>(sceneController.pac, rendering);
-		blinky2D = new Ghost2D<>(sceneController.blinky, rendering);
+		pacMan2D = new Player2D(sceneController.pac, rendering);
+		blinky2D = new Ghost2D(sceneController.blinky, rendering);
 		bigPacMan2D = new BigPacMan2D(sceneController.pac, Rendering2D_Impl.RENDERING_PACMAN);
 		pacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
 		blinky2D.getKickingAnimations().values().forEach(TimedSequence::restart);
