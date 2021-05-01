@@ -168,7 +168,10 @@ public class Maze3D extends Group {
 				}
 			}
 		}
-		List<Box> bricks = createBricks(world, wallColor, voxels);
+		PhongMaterial material = new PhongMaterial();
+		material.setDiffuseColor(wallColor);
+		material.setSpecularColor(wallColor.brighter());
+		List<Box> bricks = createWalls(world, material, voxels);
 		brickRoot.getChildren().setAll(bricks);
 	}
 
@@ -196,28 +199,50 @@ public class Maze3D extends Group {
 		return s;
 	}
 
-	private List<Box> createBricks(PacManGameWorld world, Color wallColor, Voxel[][][] voxels) {
-		PhongMaterial brickMaterial = new PhongMaterial(wallColor);
-		brickMaterial.setSpecularColor(wallColor.brighter());
-		List<Box> bricks = new ArrayList<>();
-		for (int row = 0; row < world.numRows(); ++row) {
-			for (int col = 0; col < world.numCols(); ++col) {
-				for (int i = 0; i < Voxel.N * Voxel.N; ++i) {
-					Voxel voxel = voxels[row][col][i];
-					if (voxel != null) {
-						bricks.add(createBrick(voxel, brickMaterial));
+	private List<Box> createWalls(PacManGameWorld world, PhongMaterial material, Voxel[][][] voxels) {
+		List<Box> walls = new ArrayList<>();
+		for (int y = 0; y < Voxel.N * world.numRows(); ++y) {
+			Voxel wallStart = null;
+			int wallWidth = 1;
+			for (int x = 0; x < Voxel.N * world.numCols(); ++x) {
+				int row = y / Voxel.N, col = x / Voxel.N;
+				int i = (y % Voxel.N) * Voxel.N + (x % Voxel.N);
+				Voxel voxel = voxels[row][col][i];
+				if (voxel != null) {
+					if (wallStart == null) {
+						wallStart = voxel;
+						wallWidth = 1;
+					} else {
+						wallWidth++;
+					}
+				} else {
+					if (wallStart != null) {
+						walls.add(createWall(wallStart, material, wallWidth));
+						wallStart = null;
+						wallWidth = 1;
 					}
 				}
+				if (x == Voxel.N * world.numCols() - 1 && wallStart != null) {
+					walls.add(createWall(wallStart, material, wallWidth));
+					wallStart = null;
+					wallWidth = 1;
+				}
+			}
+			if (y == Voxel.N * world.numRows() - 1 && wallStart != null) {
+				walls.add(createWall(wallStart, material, wallWidth));
+				wallStart = null;
+				wallWidth = 1;
 			}
 		}
-		log("%d bricks created", bricks.size());
-		return bricks;
+		log("%d walls created", walls.size());
+		return walls;
 	}
 
-	private Box createBrick(Voxel voxel, PhongMaterial material) {
-		Box brick = new Box(Voxel.SIZE, Voxel.SIZE, Voxel.SIZE);
+	private Box createWall(Voxel voxel, PhongMaterial material, int n) {
+//		log("Create wall of width %d at x=%.0f", n, voxel.x());
+		Box brick = new Box(n * Voxel.SIZE, Voxel.SIZE, Voxel.SIZE);
 		brick.setMaterial(material);
-		brick.setTranslateX(voxel.x());
+		brick.setTranslateX(voxel.x() + (n-1) * Voxel.SIZE * 0.5);
 		brick.setTranslateY(voxel.y());
 		brick.setTranslateZ(1.5);
 		brick.drawModeProperty().bind(Env.$drawMode);
