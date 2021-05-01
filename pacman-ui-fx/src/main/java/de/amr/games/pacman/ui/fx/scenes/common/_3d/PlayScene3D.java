@@ -2,10 +2,8 @@ package de.amr.games.pacman.ui.fx.scenes.common._3d;
 
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
-import static de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets.getFoodColor;
 import static de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets.getMazeWallColor;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalDouble;
@@ -34,7 +32,6 @@ import de.amr.games.pacman.ui.fx.scenes.pacman.PacManScenes;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
@@ -42,7 +39,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.Sphere;
 
 /**
  * 3D scene displaying the maze and the game play for both, Pac-Man and Ms. Pac-Man games.
@@ -61,7 +57,6 @@ public class PlayScene3D implements GameScene {
 
 	Maze3D maze;
 	Box floor;
-	List<Node> foodNodes;
 	Player3D player3D;
 	Map<Ghost, Ghost3D> ghosts3D;
 	Bonus3D bonus3D;
@@ -118,7 +113,9 @@ public class PlayScene3D implements GameScene {
 		final PacManGameWorld world = level.world;
 		final Group root = new Group();
 
-		maze = new Maze3D(world, getMazeWallColor(variant, level.mazeNumber));
+		maze = new Maze3D();
+		maze.createWalls(world, getMazeWallColor(variant, level.mazeNumber));
+		maze.resetFood(variant, game());
 
 		var floorMaterial = new PhongMaterial(Color.rgb(20, 20, 100));
 		var floorTexture = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
@@ -128,11 +125,6 @@ public class PlayScene3D implements GameScene {
 		floor.setTranslateX(UNSCALED_SCENE_WIDTH / 2 - 4);
 		floor.setTranslateY(UNSCALED_SCENE_HEIGHT / 2 - 4);
 		floor.setTranslateZ(3);
-
-		var foodMaterial = new PhongMaterial(getFoodColor(variant, level.mazeNumber));
-		foodNodes = world.tiles().filter(world::isFoodTile)//
-				.map(tile -> createPellet(world.isEnergizerTile(tile) ? 2.5 : 1, tile, foodMaterial))
-				.collect(Collectors.toList());
 
 		player3D = new Player3D(game().player());
 		ghosts3D = game().ghosts().collect(Collectors.toMap(Function.identity(), ghost -> new Ghost3D(ghost, r2D)));
@@ -159,7 +151,6 @@ public class PlayScene3D implements GameScene {
 		playerLight.setTranslateZ(-4);
 
 		root.getChildren().addAll(maze, floor, score3D, livesCounter3D, levelCounter3D);
-		root.getChildren().addAll(foodNodes);
 		root.getChildren().addAll(player3D);
 		root.getChildren().addAll(ghosts3D.values());
 		root.getChildren().addAll(bonus3D);
@@ -187,10 +178,6 @@ public class PlayScene3D implements GameScene {
 		for (int i = 0; i < MAX_LIVES_DISPLAYED; ++i) {
 			livesCounter3D.getChildren().get(i).setVisible(i < game().lives());
 		}
-		foodNodes.forEach(foodNode -> {
-			V2i tile = (V2i) foodNode.getUserData();
-			foodNode.setVisible(!game().currentLevel().isFoodRemoved(tile));
-		});
 		player3D.update();
 		ghosts3D.values().forEach(Ghost3D::update);
 		bonus3D.update(game().bonus());
@@ -202,16 +189,6 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void end() {
 		log("%s: end", this);
-	}
-
-	private Sphere createPellet(double r, V2i tile, PhongMaterial material) {
-		Sphere s = new Sphere(r);
-		s.setMaterial(material);
-		s.setTranslateX(tile.x * TS);
-		s.setTranslateY(tile.y * TS);
-		s.setTranslateZ(1);
-		s.setUserData(tile);
-		return s;
 	}
 
 	private Group createLivesCounter3D(V2i tilePosition) {
@@ -226,5 +203,4 @@ public class PlayScene3D implements GameScene {
 		}
 		return livesCounter;
 	}
-
 }

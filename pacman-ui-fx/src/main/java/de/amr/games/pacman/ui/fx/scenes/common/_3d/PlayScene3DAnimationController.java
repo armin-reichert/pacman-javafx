@@ -1,9 +1,11 @@
 package de.amr.games.pacman.ui.fx.scenes.common._3d;
 
 import static de.amr.games.pacman.lib.Logging.log;
+import static java.util.function.Predicate.not;
 
 import java.util.List;
 import java.util.Random;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import de.amr.games.pacman.controller.PacManGameController;
@@ -60,7 +62,11 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 
 	public void init() {
 		PacManGameWorld world = game().currentLevel().world;
-		energizerAnimations = playScene.foodNodes.stream()//
+		createEnergizerAnimations(world);
+	}
+
+	private void createEnergizerAnimations(PacManGameWorld world) {
+		energizerAnimations = playScene.maze.foodNodes()//
 				.filter(foodNode -> isEnergizerNode(foodNode, world))//
 				.map(this::createEnergizerAnimation)//
 				.collect(Collectors.toList());
@@ -136,6 +142,19 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 
 	@Override
 	public void onPlayerFoundFood(PacManGameEvent e) {
+		if (e.tile == null) {
+			// this is triggered by the "eat all pellets except energizers" cheat
+			Predicate<Node> isEnergizer = node -> {
+				V2i tile = (V2i) node.getUserData();
+				return game().currentLevel().world.isEnergizerTile(tile);
+			};
+			playScene.maze.foodNodes().filter(not(isEnergizer)).forEach(foodNode -> foodNode.setVisible(false));
+			return;
+		}
+		playScene.maze.foodNodes().filter(node -> {
+			V2i tile = (V2i) node.getUserData();
+			return tile.equals(e.tile);
+		}).findFirst().ifPresent(foodNode -> foodNode.setVisible(false));
 		AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
 		if (!munching.isPlaying()) {
 			sounds.loop(PacManGameSound.PACMAN_MUNCH, Integer.MAX_VALUE);
@@ -219,6 +238,8 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 
 		// enter LEVEL_STARTING
 		else if (e.newGameState == PacManGameState.LEVEL_STARTING) {
+			playScene.maze.resetFood(gameController.gameVariant(), game());
+			createEnergizerAnimations(game().currentLevel().world);
 			playScene.levelCounter3D.update(e.gameModel);
 			playAnimationLevelStarting();
 		}
