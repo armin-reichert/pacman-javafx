@@ -7,7 +7,6 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 import java.util.OptionalDouble;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
@@ -21,30 +20,35 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 
 /**
- * Base class of all 2D scenes that use a canvas for being rendered.
+ * Base class of all 2D scenes that get rendered inside a canvas.
  * 
  * @author Armin Reichert
  */
 public abstract class AbstractGameScene2D implements GameScene {
 
-	protected final SubScene scene;
-	protected final Canvas canvas;
-	protected final GraphicsContext gc;
 	protected final double unscaledWidth;
 	protected final double unscaledHeight;
 	protected final double aspectRatio;
+
 	protected final Rendering2D rendering;
 	protected final SoundManager sounds;
+
 	protected PacManGameController gameController;
+	protected SubScene scene;
+	protected GraphicsContext gc;
 
 	public AbstractGameScene2D(double unscaledWidth, double unscaledHeight, Rendering2D rendering, SoundManager sounds) {
-		this.rendering = rendering;
-		this.sounds = sounds;
 		this.unscaledWidth = unscaledWidth;
 		this.unscaledHeight = unscaledHeight;
-		aspectRatio = unscaledWidth / unscaledHeight;
-		canvas = new Canvas(unscaledWidth, unscaledHeight);
+		this.aspectRatio = unscaledWidth / unscaledHeight;
+		this.rendering = rendering;
+		this.sounds = sounds;
+	}
+
+	public void setCanvas(Canvas canvas) {
 		gc = canvas.getGraphicsContext2D();
+		canvas.setWidth(unscaledWidth);
+		canvas.setHeight(unscaledHeight);
 		scene = new SubScene(new Group(canvas), unscaledWidth, unscaledHeight);
 		scene.widthProperty().bind(canvas.widthProperty());
 		scene.heightProperty().bind(canvas.heightProperty());
@@ -65,14 +69,11 @@ public abstract class AbstractGameScene2D implements GameScene {
 		this.gameController = controller;
 	}
 
-	public Rendering2D getRendering() {
-		return rendering;
-	}
-
 	@Override
 	public void stretchTo(double width, double height) {
-		width = aspectRatio().getAsDouble() * height;
-		canvas.setWidth(width);
+		// resize canvas to take given height and respect aspect ratio
+		Canvas canvas = gc.getCanvas();
+		canvas.setWidth(aspectRatio().getAsDouble() * height);
 		canvas.setHeight(height);
 		double scaling = height / unscaledHeight;
 		canvas.getTransforms().setAll(new Scale(scaling, scaling));
@@ -80,32 +81,12 @@ public abstract class AbstractGameScene2D implements GameScene {
 
 	@Override
 	public void init() {
-		log("Game scene %s: start", this);
+		log("Game scene 2D %s: start", this);
 	}
 
 	@Override
 	public void end() {
-		log("Game scene %s: end", this);
-	}
-
-	@Override
-	public void onGameEvent(PacManGameEvent gameEvent) {
-	}
-
-	@Override
-	public void update() {
-	}
-
-	public final void render() {
-		gc.setFill(Color.BLACK);
-		gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		doRender();
-	}
-
-	protected abstract void doRender();
-
-	public Canvas getCanvas() {
-		return canvas;
+		log("Game scene 2D %s: end", this);
 	}
 
 	@Override
@@ -113,6 +94,21 @@ public abstract class AbstractGameScene2D implements GameScene {
 		return scene;
 	}
 
+	/**
+	 * Clears the background and renders the scene content.
+	 */
+	public final void render() {
+		gc.setFill(Color.BLACK);
+		gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+		doRender();
+	}
+
+	/**
+	 * Renders the scene content. Subclasses override this method.
+	 */
+	protected abstract void doRender();
+
+	// this is used in play scene and intermission scenes, so define it here
 	protected void renderLevelCounter(V2i tileRight) {
 		int levelNumber = game().currentLevel().number;
 		int x = tileRight.x * TS, y = tileRight.y * TS;

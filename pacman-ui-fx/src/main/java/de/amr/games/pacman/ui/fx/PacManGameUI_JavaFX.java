@@ -23,6 +23,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
@@ -44,6 +45,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	public final Stage stage;
 	public final Scene mainScene;
 	public final PacManGameController gameController;
+	public final Canvas canvas2D = new Canvas();
 	public GameScene currentGameScene;
 
 	private final Keyboard keyboard = new Keyboard();
@@ -157,11 +159,14 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			if (currentGameScene != null) {
 				currentGameScene.end();
 			}
+			if (newGameScene instanceof AbstractGameScene2D) {
+				((AbstractGameScene2D) newGameScene).setCanvas(canvas2D);
+			}
 			if (newGameScene.getGameController() == null) {
 				newGameScene.setGameController(gameController);
-				newGameScene.stretchTo(mainScene.getWidth(), mainScene.getHeight());
-				newGameScene.keepStretched(mainScene);
 			}
+			newGameScene.stretchTo(mainScene.getWidth(), mainScene.getHeight());
+			newGameScene.keepStretched(mainScene);
 			currentGameScene = newGameScene;
 			currentGameScene.init();
 			// replace game scene in scene graph

@@ -80,8 +80,7 @@ public class HUD extends HBox {
 		line();
 		line("3D Scenes (CTRL+3)", "%s", onOff(Env.$use3DScenes.get()));
 		if (ui.currentGameScene instanceof AbstractGameScene2D) {
-			AbstractGameScene2D scene2D = (AbstractGameScene2D) ui.currentGameScene;
-			line("Canvas2D", "w=%.0f h=%.0f", scene2D.getCanvas().getWidth(), scene2D.getCanvas().getHeight());
+			line("Canvas2D", "w=%.0f h=%.0f", ui.canvas2D.getWidth(), ui.canvas2D.getHeight());
 		} else {
 			ui.currentGameScene.cams().ifPresent(sceneCams -> {
 				line("Camera (CTRL+C)", "%s %s", sceneCams.selection(), cameraInfo(sceneCams.selectedCamera()));
