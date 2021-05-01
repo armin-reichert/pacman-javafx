@@ -25,23 +25,23 @@ import javafx.scene.paint.Color;
 /**
  * 2D scene displaying the maze and the game play for both, Pac-Man and Ms. Pac-Man games.
  * 
- * @param <RENDERING> Type of rendering, Pac-Man or Ms. Pac-Man rendering.
+ * @param <R> Type of rendering, Pac-Man or Ms. Pac-Man rendering.
  * 
  * @author Armin Reichert
  */
-public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScene2D<RENDERING> {
+public class PlayScene2D<R extends Rendering2D> extends AbstractGameScene2D<R> {
 
-	public Maze2D<RENDERING> maze2D;
-	public GameScore2D<RENDERING> score2D;
-	public GameScore2D<RENDERING> hiscore2D;
-	public LivesCounter2D<RENDERING> livesCounter2D;
-	public Player2D<RENDERING> player2D;
-	public List<Ghost2D<RENDERING>> ghosts2D;
-	public Bonus2D<RENDERING> bonus2D;
+	public Maze2D<R> maze2D;
+	public GameScore2D<R> score2D;
+	public GameScore2D<R> hiscore2D;
+	public LivesCounter2D<R> livesCounter2D;
+	public Player2D<R> player2D;
+	public List<Ghost2D<R>> ghosts2D;
+	public Bonus2D<R> bonus2D;
 
 	private final PlayScene2DAnimationController animationController;
 
-	public PlayScene2D(RENDERING rendering, SoundManager sounds) {
+	public PlayScene2D(R rendering, SoundManager sounds) {
 		super(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, rendering, sounds);
 		animationController = new PlayScene2DAnimationController(this, sounds);
 	}
@@ -60,7 +60,7 @@ public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScen
 		maze2D.setGameLevel(game().currentLevel());
 
 		livesCounter2D = new LivesCounter2D<>(new V2i(2, 34), rendering);
-		livesCounter2D.lives = game().lives();
+		livesCounter2D.setLivesSupplier(() -> game().lives());
 
 		score2D = new GameScore2D<>(rendering);
 		score2D.setTitle("SCORE");
@@ -95,7 +95,6 @@ public class PlayScene2D<RENDERING extends Rendering2D> extends AbstractGameScen
 
 	@Override
 	public void update() {
-		livesCounter2D.lives = game().lives();
 		animationController.update();
 	}
 
