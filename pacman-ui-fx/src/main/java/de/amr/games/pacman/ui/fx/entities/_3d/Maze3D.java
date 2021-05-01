@@ -4,7 +4,6 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets.getFoodColor;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -118,7 +117,7 @@ public class Maze3D extends Group {
 	}
 
 	private final Box floor;
-	private final Group brickRoot = new Group();
+	private final Group wallRoot = new Group();
 	private final Group foodRoot = new Group();
 
 	public Maze3D(double unscaledWidth, double unscaledHeight) {
@@ -132,12 +131,21 @@ public class Maze3D extends Group {
 		floor.setTranslateX(unscaledWidth / 2 - 4);
 		floor.setTranslateY(unscaledHeight / 2 - 4);
 		floor.setTranslateZ(3);
-		getChildren().addAll(floor, brickRoot, foodRoot);
+		getChildren().addAll(floor, wallRoot, foodRoot);
+	}
+
+	private int wallCount;
+	
+	private void addWall(Box wallOrNull) {
+		if (wallOrNull != null) {
+			wallRoot.getChildren().add(wallOrNull);
+			++wallCount;
+		}
 	}
 
 	public void createWalls(PacManGameWorld world, Color wallColor) {
 		Voxel[][][] voxels = new Voxel[world.numRows()][world.numCols()][Voxel.N * Voxel.N];
-		
+
 		// create N*N voxels for each wall tile
 		int voxelCount = 0;
 		for (int row = 0; row < world.numRows(); ++row) {
@@ -152,7 +160,7 @@ public class Maze3D extends Group {
 			}
 		}
 		log("%d voxels", voxelCount);
-		
+
 		// remove voxels inside the wall boundaries
 		for (int row = 0; row < world.numRows(); ++row) {
 			for (int col = 0; col < world.numCols(); ++col) {
@@ -177,17 +185,20 @@ public class Maze3D extends Group {
 				}
 			}
 		}
-		
+
 		// create walls from voxels
 		PhongMaterial material = new PhongMaterial();
 		material.setDiffuseColor(wallColor);
 		material.setSpecularColor(wallColor.brighter());
-		List<Box> bricks = createWalls(world, material, voxels);
-		brickRoot.getChildren().setAll(bricks);
+
+		wallRoot.getChildren().clear();
+		createHorizontalWalls(world, material, voxels);
+		createVerticalWalls(world, material, voxels);
+		
+		log("Walls: %d", wallCount);
 	}
 
-	private List<Box> createWalls(PacManGameWorld world, PhongMaterial material, Voxel[][][] voxels) {
-		List<Box> walls = new ArrayList<>();
+	private void createHorizontalWalls(PacManGameWorld world, PhongMaterial material, Voxel[][][] voxels) {
 		for (int y = 0; y < Voxel.N * world.numRows(); ++y) {
 			Voxel wallStart = null;
 			int wallWidth = 1;
@@ -204,35 +215,85 @@ public class Maze3D extends Group {
 					}
 				} else {
 					if (wallStart != null) {
-						walls.add(createHorizontalWall(wallStart, material, wallWidth));
+						addWall(createHorizontalWall(wallStart, material, wallWidth));
 						wallStart = null;
 						wallWidth = 1;
 					}
 				}
 				if (x == Voxel.N * world.numCols() - 1 && wallStart != null) {
-					walls.add(createHorizontalWall(wallStart, material, wallWidth));
+					addWall(createHorizontalWall(wallStart, material, wallWidth));
 					wallStart = null;
 					wallWidth = 1;
 				}
 			}
 			if (y == Voxel.N * world.numRows() - 1 && wallStart != null) {
-				walls.add(createHorizontalWall(wallStart, material, wallWidth));
+				addWall(createHorizontalWall(wallStart, material, wallWidth));
 				wallStart = null;
 				wallWidth = 1;
 			}
 		}
-		log("%d walls created", walls.size());
-		return walls;
 	}
 
-	private Box createHorizontalWall(Voxel voxel, PhongMaterial material, int n) {
-		Box brick = new Box(n * Voxel.SIZE, Voxel.SIZE, Voxel.SIZE);
-		brick.setMaterial(material);
-		brick.setTranslateX(voxel.x() + (n - 1) * Voxel.SIZE * 0.5);
-		brick.setTranslateY(voxel.y());
-		brick.setTranslateZ(1.5);
-		brick.drawModeProperty().bind(Env.$drawMode);
-		return brick;
+	private Box createHorizontalWall(Voxel voxel, PhongMaterial material, int width) {
+		if (width > 1) {
+			Box wall = new Box(width * Voxel.SIZE, Voxel.SIZE, Voxel.SIZE);
+			wall.setMaterial(material);
+			wall.setTranslateX(voxel.x() + (width - 1) * Voxel.SIZE * 0.5);
+			wall.setTranslateY(voxel.y());
+			wall.setTranslateZ(1.5);
+			wall.drawModeProperty().bind(Env.$drawMode);
+			return wall;
+		}
+		return null;
+	}
+
+	private void createVerticalWalls(PacManGameWorld world, PhongMaterial material, Voxel[][][] voxels) {
+		for (int x = 0; x < Voxel.N * world.numCols(); ++x) {
+			Voxel wallStart = null;
+			int wallHeight = 1;
+			for (int y = 0; y < Voxel.N * world.numRows(); ++y) {
+				int row = y / Voxel.N, col = x / Voxel.N;
+				int i = (y % Voxel.N) * Voxel.N + (x % Voxel.N);
+				Voxel voxel = voxels[row][col][i];
+				if (voxel != null) {
+					if (wallStart == null) {
+						wallStart = voxel;
+						wallHeight = 1;
+					} else {
+						wallHeight++;
+					}
+				} else {
+					if (wallStart != null) {
+						addWall(createVerticalWall(wallStart, material, wallHeight));
+						wallStart = null;
+						wallHeight = 1;
+					}
+				}
+				if (y == Voxel.N * world.numRows() - 1 && wallStart != null) {
+					addWall(createVerticalWall(wallStart, material, wallHeight));
+					wallStart = null;
+					wallHeight = 1;
+				}
+			}
+			if (x == Voxel.N * world.numCols() - 1 && wallStart != null) {
+				addWall(createVerticalWall(wallStart, material, wallHeight));
+				wallStart = null;
+				wallHeight = 1;
+			}
+		}
+	}
+
+	private Box createVerticalWall(Voxel voxel, PhongMaterial material, int height) {
+		if (height > 1) {
+			Box wall = new Box(Voxel.SIZE, height * Voxel.SIZE, Voxel.SIZE);
+			wall.setMaterial(material);
+			wall.setTranslateX(voxel.x());
+			wall.setTranslateY(voxel.y() + (height - 1) * Voxel.SIZE * 0.5);
+			wall.setTranslateZ(1.5);
+			wall.drawModeProperty().bind(Env.$drawMode);
+			return wall;
+		}
+		return null;
 	}
 
 	public Stream<Node> foodNodes() {
