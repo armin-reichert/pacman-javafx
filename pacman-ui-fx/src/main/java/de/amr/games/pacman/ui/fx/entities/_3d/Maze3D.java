@@ -24,9 +24,10 @@ import javafx.scene.shape.Box;
 import javafx.scene.shape.Sphere;
 
 /**
- * 3D-model for a maze. Creates cubes representing the maze walls from the map data.
+ * 3D-model for a maze. Creates boxes representing walls from the world map.
+ * 
  * <p>
- * TODO merge cubes into quads
+ * TODO: merge also vertical sequences of cubes into quads
  * 
  * @author Armin Reichert
  */
@@ -37,11 +38,16 @@ public class Maze3D extends Group {
 		static final int N = 4;
 		static final double SIZE = 8.0 / N;;
 
-		private final short i; // 0,...,N*N-1
+		private final byte i; // 0,...,N*N-1
 
 		public Voxel(int tileX, int tileY, int i) {
 			super(tileX, tileY);
-			this.i = (short) i;
+			this.i = (byte) i;
+		}
+
+		@Override
+		public String toString() {
+			return String.format("(x=%d, y=%d, i=%d)", x, y, i);
 		}
 
 		public double x() {
@@ -129,22 +135,25 @@ public class Maze3D extends Group {
 		getChildren().addAll(floor, brickRoot, foodRoot);
 	}
 
-	// TODO this is most probably total newbie code, but for now it does the job
 	public void createWalls(PacManGameWorld world, Color wallColor) {
 		Voxel[][][] voxels = new Voxel[world.numRows()][world.numCols()][Voxel.N * Voxel.N];
-		int count = 0;
+		
+		// create N*N voxels for each wall tile
+		int voxelCount = 0;
 		for (int row = 0; row < world.numRows(); ++row) {
 			for (int col = 0; col < world.numCols(); ++col) {
 				V2i tile = new V2i(col, row);
 				if (world.isWall(tile)) {
 					for (int i = 0; i < Voxel.N * Voxel.N; ++i) {
 						voxels[row][col][i] = new Voxel(col, row, i);
-						++count;
+						++voxelCount;
 					}
 				}
 			}
 		}
-		log("%d voxels", count);
+		log("%d voxels", voxelCount);
+		
+		// remove voxels inside the wall boundaries
 		for (int row = 0; row < world.numRows(); ++row) {
 			for (int col = 0; col < world.numCols(); ++col) {
 				for (int i = 0; i < Voxel.N * Voxel.N; ++i) {
@@ -168,35 +177,13 @@ public class Maze3D extends Group {
 				}
 			}
 		}
+		
+		// create walls from voxels
 		PhongMaterial material = new PhongMaterial();
 		material.setDiffuseColor(wallColor);
 		material.setSpecularColor(wallColor.brighter());
 		List<Box> bricks = createWalls(world, material, voxels);
 		brickRoot.getChildren().setAll(bricks);
-	}
-
-	public void resetFood(GameVariant variant, GameModel game) {
-		GameLevel level = game.currentLevel();
-		PacManGameWorld world = level.world;
-		var foodMaterial = new PhongMaterial(getFoodColor(variant, level.mazeNumber));
-		List<Node> foodNodes = world.tiles().filter(world::isFoodTile)//
-				.map(tile -> createPellet(world.isEnergizerTile(tile) ? 2.5 : 1, tile, foodMaterial))
-				.collect(Collectors.toList());
-		foodRoot.getChildren().setAll(foodNodes);
-	}
-
-	public Stream<Node> foodNodes() {
-		return foodRoot.getChildren().stream();
-	}
-
-	private Sphere createPellet(double r, V2i tile, PhongMaterial material) {
-		Sphere s = new Sphere(r);
-		s.setMaterial(material);
-		s.setTranslateX(tile.x * TS);
-		s.setTranslateY(tile.y * TS);
-		s.setTranslateZ(1);
-		s.setUserData(tile);
-		return s;
 	}
 
 	private List<Box> createWalls(PacManGameWorld world, PhongMaterial material, Voxel[][][] voxels) {
@@ -241,10 +228,34 @@ public class Maze3D extends Group {
 	private Box createHorizontalWall(Voxel voxel, PhongMaterial material, int n) {
 		Box brick = new Box(n * Voxel.SIZE, Voxel.SIZE, Voxel.SIZE);
 		brick.setMaterial(material);
-		brick.setTranslateX(voxel.x() + (n-1) * Voxel.SIZE * 0.5);
+		brick.setTranslateX(voxel.x() + (n - 1) * Voxel.SIZE * 0.5);
 		brick.setTranslateY(voxel.y());
 		brick.setTranslateZ(1.5);
 		brick.drawModeProperty().bind(Env.$drawMode);
 		return brick;
+	}
+
+	public Stream<Node> foodNodes() {
+		return foodRoot.getChildren().stream();
+	}
+
+	public void resetFood(GameVariant variant, GameModel game) {
+		GameLevel level = game.currentLevel();
+		PacManGameWorld world = level.world;
+		var foodMaterial = new PhongMaterial(getFoodColor(variant, level.mazeNumber));
+		List<Node> foodNodes = world.tiles().filter(world::isFoodTile)//
+				.map(tile -> createPellet(world.isEnergizerTile(tile) ? 2.5 : 1, tile, foodMaterial))
+				.collect(Collectors.toList());
+		foodRoot.getChildren().setAll(foodNodes);
+	}
+
+	private Sphere createPellet(double r, V2i tile, PhongMaterial material) {
+		Sphere s = new Sphere(r);
+		s.setMaterial(material);
+		s.setTranslateX(tile.x * TS);
+		s.setTranslateY(tile.y * TS);
+		s.setTranslateZ(1);
+		s.setUserData(tile);
+		return s;
 	}
 }
