@@ -35,7 +35,6 @@ import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
-import javafx.scene.paint.Color;
 
 /**
  * 3D scene displaying the maze and the game play for both, Pac-Man and Ms. Pac-Man games.
@@ -61,8 +60,8 @@ public class PlayScene3D implements GameScene {
 	LevelCounter3D levelCounter3D;
 
 	public PlayScene3D(SoundManager sounds) {
-		Group root = new Group();
-		fxScene = new SubScene(root, 400, 300, true, SceneAntialiasing.BALANCED);
+		Group subSceneRoot = new Group();
+		fxScene = new SubScene(subSceneRoot, 400, 300, true, SceneAntialiasing.BALANCED);
 		cams = new PlaySceneCameras(fxScene);
 		cams.select(CameraType.DYNAMIC);
 		animationController = new PlayScene3DAnimationController(this, sounds);
@@ -107,7 +106,6 @@ public class PlayScene3D implements GameScene {
 		final Rendering2D r2D = variant == GameVariant.MS_PACMAN ? MsPacManScenes.RENDERING : PacManScenes.RENDERING;
 		final GameLevel level = game().currentLevel();
 		final PacManGameWorld world = level.world;
-		final Group root = new Group();
 
 		maze = new Maze3D(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT);
 		maze.createWalls(world, getMazeWallColor(variant, level.mazeNumber));
@@ -134,22 +132,23 @@ public class PlayScene3D implements GameScene {
 		var playerLight = new PointLight();
 		playerLight.translateXProperty().bind(player3D.translateXProperty());
 		playerLight.translateYProperty().bind(player3D.translateYProperty());
-//		playerLight.lightOnProperty().bind(player3D.visibleProperty());
 		playerLight.setTranslateZ(-4);
 
-		root.getChildren().addAll(maze, score3D, livesCounter3D, levelCounter3D);
-		root.getChildren().addAll(player3D);
-		root.getChildren().addAll(ghosts3D.values());
-		root.getChildren().addAll(bonus3D);
-		root.getChildren().addAll(ambientLight, playerLight);
+		final Group content = new Group();
+		content.getChildren().addAll(maze, score3D, livesCounter3D, levelCounter3D);
+		content.getChildren().addAll(player3D);
+		content.getChildren().addAll(ghosts3D.values());
+		content.getChildren().addAll(bonus3D);
+		content.getChildren().addAll(ambientLight, playerLight);
 
-		root.setTranslateX(-UNSCALED_SCENE_WIDTH / 2);
-		root.setTranslateY(-UNSCALED_SCENE_HEIGHT / 2);
+		content.setTranslateX(-UNSCALED_SCENE_WIDTH / 2);
+		content.setTranslateY(-UNSCALED_SCENE_HEIGHT / 2);
 
 		coordSystem = new CoordinateSystem(fxScene.getWidth());
 
-		fxScene.setRoot(new Group(coordSystem.getNode(), root));
-		fxScene.setFill(Color.rgb(0, 0, 0));
+		Group sceneRoot = new Group(content, coordSystem.getNode());
+		fxScene.setRoot(sceneRoot);
+		fxScene.setFill(null);
 
 		animationController.init();
 	}
