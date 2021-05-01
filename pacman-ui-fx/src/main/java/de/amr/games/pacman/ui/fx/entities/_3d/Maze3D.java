@@ -145,22 +145,21 @@ public class Maze3D extends Group {
 			}
 		}
 		log("%d voxels", count);
-
 		for (int row = 0; row < world.numRows(); ++row) {
 			for (int col = 0; col < world.numCols(); ++col) {
 				for (int i = 0; i < Voxel.N * Voxel.N; ++i) {
-					Voxel mt = voxels[row][col][i];
-					if (mt == null) {
+					Voxel voxel = voxels[row][col][i];
+					if (voxel == null) {
 						continue;
 					}
-					if (world.isWall(mt.north()) && world.isWall(mt.east()) && world.isWall(mt.south())
-							&& world.isWall(mt.west())) {
-						V2i seOf = mt.southOf(mt.east());
-						V2i swOf = mt.southOf(mt.west());
-						V2i neOf = mt.northOf(mt.east());
-						V2i nwOf = mt.northOf(mt.west());
-						if (world.isWall(seOf) && !world.isWall(nwOf) || !world.isWall(seOf) && world.isWall(nwOf)
-								|| world.isWall(swOf) && !world.isWall(neOf) || !world.isWall(swOf) && world.isWall(neOf)) {
+					if (world.isWall(voxel.north()) && world.isWall(voxel.east()) && world.isWall(voxel.south())
+							&& world.isWall(voxel.west())) {
+						V2i se = voxel.southOf(voxel.east());
+						V2i sw = voxel.southOf(voxel.west());
+						V2i ne = voxel.northOf(voxel.east());
+						V2i nw = voxel.northOf(voxel.west());
+						if (world.isWall(se) && !world.isWall(nw) || !world.isWall(se) && world.isWall(nw)
+								|| world.isWall(sw) && !world.isWall(ne) || !world.isWall(sw) && world.isWall(ne)) {
 							// keep corner
 						} else {
 							voxels[row][col][i] = null;
