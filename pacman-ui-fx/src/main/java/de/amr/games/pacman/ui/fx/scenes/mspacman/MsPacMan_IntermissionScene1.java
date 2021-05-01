@@ -8,7 +8,6 @@ import de.amr.games.pacman.ui.fx.entities._2d.Ghost2D;
 import de.amr.games.pacman.ui.fx.entities._2d.Player2D;
 import de.amr.games.pacman.ui.fx.entities._2d.mspacman.Flap2D;
 import de.amr.games.pacman.ui.fx.entities._2d.mspacman.Heart2D;
-import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Impl;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.mspacman.MsPacMan_IntermissionScene1_Controller;
@@ -16,11 +15,10 @@ import de.amr.games.pacman.ui.mspacman.MsPacMan_IntermissionScene1_Controller;
 /**
  * Intermission scene 1: "They meet".
  * <p>
- * Pac-Man leads Inky and Ms. Pac-Man leads Pinky. Soon, the two Pac-Men are
- * about to collide, they quickly move upwards, causing Inky and Pinky to
- * collide and vanish. Finally, Pac-Man and Ms. Pac-Man face each other at the
- * top of the screen and a big pink heart appears above them. (Played after
- * round 2)
+ * Pac-Man leads Inky and Ms. Pac-Man leads Pinky. Soon, the two Pac-Men are about to collide, they
+ * quickly move upwards, causing Inky and Pinky to collide and vanish. Finally, Pac-Man and Ms.
+ * Pac-Man face each other at the top of the screen and a big pink heart appears above them. (Played
+ * after round 2)
  * 
  * @author Armin Reichert
  */
@@ -52,7 +50,7 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 	private Heart2D heart2D;
 
 	public MsPacMan_IntermissionScene1() {
-		super(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, Rendering2D_Impl.RENDERING_MS_PACMAN, MsPacManScenes.SOUNDS);
+		super(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, MsPacManScenes.RENDERING, MsPacManScenes.SOUNDS);
 	}
 
 	@Override
@@ -60,14 +58,14 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 		super.init();
 		sceneController = new SceneController(gameController);
 		sceneController.init();
-		flap2D = new Flap2D(sceneController.flap, Rendering2D_Impl.RENDERING_MS_PACMAN);
+		flap2D = new Flap2D(sceneController.flap, MsPacManScenes.RENDERING);
 		msPacMan2D = new Player2D(sceneController.msPac, rendering);
 		pacMan2D = new Player2D(sceneController.pacMan, rendering);
 		inky2D = new Ghost2D(sceneController.inky, rendering);
 		pinky2D = new Ghost2D(sceneController.pinky, rendering);
 		heart2D = new Heart2D(sceneController.heart, (Rendering2D_MsPacMan) rendering);
 		// overwrite by Pac-Man instead of Ms. Pac-Man sprites:
-		pacMan2D.setMunchingAnimations(Rendering2D_Impl.RENDERING_MS_PACMAN.createSpouseMunchingAnimations());
+		pacMan2D.setMunchingAnimations(MsPacManScenes.RENDERING.createSpouseMunchingAnimations());
 		msPacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
 		pacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
 		inky2D.getKickingAnimations().values().forEach(TimedSequence::restart);

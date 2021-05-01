@@ -25,7 +25,7 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	private Map<String, Rectangle2D> symbolSprites;
 	private Map<Integer, Rectangle2D> bountyNumberSprites;
 
-	Rendering2D_MsPacMan() {
+	public Rendering2D_MsPacMan() {
 		super("/mspacman/graphics/sprites.png", 16);
 
 		//@formatter:off

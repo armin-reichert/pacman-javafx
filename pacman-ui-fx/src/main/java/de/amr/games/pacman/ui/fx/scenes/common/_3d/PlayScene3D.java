@@ -27,9 +27,10 @@ import de.amr.games.pacman.ui.fx.entities._3d.Player3D;
 import de.amr.games.pacman.ui.fx.entities._3d.ScoreNotReally3D;
 import de.amr.games.pacman.ui.fx.model3D.GianmarcosModel3D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
-import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Impl;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.common._3d.PlaySceneCameras.CameraType;
+import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacManScenes;
+import de.amr.games.pacman.ui.fx.scenes.pacman.PacManScenes;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
@@ -112,7 +113,7 @@ public class PlayScene3D implements GameScene {
 		log("%s: init", this);
 
 		final GameVariant variant = gameController.gameVariant();
-		final Rendering2D r2D = Rendering2D_Impl.get(variant);
+		final Rendering2D r2D = variant == GameVariant.MS_PACMAN ? MsPacManScenes.RENDERING : PacManScenes.RENDERING;
 		final GameLevel level = game().currentLevel();
 		final PacManGameWorld world = level.world;
 		final Group root = new Group();
