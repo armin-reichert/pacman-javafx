@@ -217,19 +217,19 @@ public class Maze3D extends Group {
 					}
 				} else {
 					if (wallStart != null) {
-						walls.add(createWall(wallStart, material, wallWidth));
+						walls.add(createHorizontalWall(wallStart, material, wallWidth));
 						wallStart = null;
 						wallWidth = 1;
 					}
 				}
 				if (x == Voxel.N * world.numCols() - 1 && wallStart != null) {
-					walls.add(createWall(wallStart, material, wallWidth));
+					walls.add(createHorizontalWall(wallStart, material, wallWidth));
 					wallStart = null;
 					wallWidth = 1;
 				}
 			}
 			if (y == Voxel.N * world.numRows() - 1 && wallStart != null) {
-				walls.add(createWall(wallStart, material, wallWidth));
+				walls.add(createHorizontalWall(wallStart, material, wallWidth));
 				wallStart = null;
 				wallWidth = 1;
 			}
@@ -238,8 +238,7 @@ public class Maze3D extends Group {
 		return walls;
 	}
 
-	private Box createWall(Voxel voxel, PhongMaterial material, int n) {
-//		log("Create wall of width %d at x=%.0f", n, voxel.x());
+	private Box createHorizontalWall(Voxel voxel, PhongMaterial material, int n) {
 		Box brick = new Box(n * Voxel.SIZE, Voxel.SIZE, Voxel.SIZE);
 		brick.setMaterial(material);
 		brick.setTranslateX(voxel.x() + (n-1) * Voxel.SIZE * 0.5);
