@@ -25,33 +25,33 @@ import javafx.scene.shape.Box;
 import javafx.scene.shape.Sphere;
 
 /**
- * 3D-model for a maze.
- * 
- * TODO merge bricks into blocks
+ * 3D-model for a maze. Creates cubes representing the maze walls from the map data.
+ * <p>
+ * TODO merge cubes into quads
  * 
  * @author Armin Reichert
  */
 public class Maze3D extends Group {
 
 	static final int N = 4;
-	static final double SIZE = 8.0 / N;;
+	static final double VOXEL_SIZE = 8.0 / N;;
 
-	private static class MicroTile {
+	private static class Voxel {
 
 		private final V2i tile;
 		private final int i;
 
-		public MicroTile(V2i tile, int i) {
+		public Voxel(V2i tile, int i) {
 			this.tile = tile;
 			this.i = i;
 		}
 
 		public double x() {
-			return tile.x * TS - 1.5 * SIZE + (i % N) * SIZE;
+			return tile.x * TS - 1.5 * VOXEL_SIZE + (i % N) * VOXEL_SIZE;
 		}
 
 		public double y() {
-			return tile.y * TS - 1.5 * SIZE + (i / N) * SIZE;
+			return tile.y * TS - 1.5 * VOXEL_SIZE + (i / N) * VOXEL_SIZE;
 		}
 
 		public V2i northOf() {
@@ -103,7 +103,7 @@ public class Maze3D extends Group {
 				return false;
 			if (getClass() != obj.getClass())
 				return false;
-			MicroTile other = (MicroTile) obj;
+			Voxel other = (Voxel) obj;
 			return i == other.i && Objects.equals(tile, other.tile);
 		}
 
@@ -114,6 +114,7 @@ public class Maze3D extends Group {
 
 	}
 
+	private final Box floor;
 	private final Group brickRoot = new Group();
 	private final Group foodRoot = new Group();
 
@@ -121,7 +122,7 @@ public class Maze3D extends Group {
 		var floorMaterial = new PhongMaterial(Color.rgb(20, 20, 100));
 		var floorTexture = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
 		floorMaterial.setDiffuseMap(floorTexture);
-		Box floor = new Box(unscaledWidth, unscaledHeight, 0.1);
+		floor = new Box(unscaledWidth, unscaledHeight, 0.1);
 		floor.setMaterial(floorMaterial);
 		floor.setTranslateX(unscaledWidth / 2 - 4);
 		floor.setTranslateY(unscaledHeight / 2 - 4);
@@ -129,15 +130,16 @@ public class Maze3D extends Group {
 		getChildren().addAll(floor, brickRoot, foodRoot);
 	}
 
+	// TODO this is most probably absoulte newbie code but for now it does the job
 	public void createWalls(PacManGameWorld world, Color wallColor) {
-		MicroTile[][][] microTiles = new MicroTile[world.numRows()][world.numCols()][N * N];
+		Voxel[][][] voxels = new Voxel[world.numRows()][world.numCols()][N * N];
 		int count = 0;
 		for (int row = 0; row < world.numRows(); ++row) {
 			for (int col = 0; col < world.numCols(); ++col) {
 				V2i tile = new V2i(col, row);
 				if (world.isWall(tile)) {
 					for (int i = 0; i < N * N; ++i) {
-						microTiles[row][col][i] = new MicroTile(tile, i);
+						voxels[row][col][i] = new Voxel(tile, i);
 						++count;
 					}
 				}
@@ -148,7 +150,7 @@ public class Maze3D extends Group {
 		for (int row = 0; row < world.numRows(); ++row) {
 			for (int col = 0; col < world.numCols(); ++col) {
 				for (int i = 0; i < N * N; ++i) {
-					MicroTile mt = microTiles[row][col][i];
+					Voxel mt = voxels[row][col][i];
 					if (mt == null) {
 						continue;
 					}
@@ -162,13 +164,13 @@ public class Maze3D extends Group {
 								|| world.isWall(swOf) && !world.isWall(neOf) || !world.isWall(swOf) && world.isWall(neOf)) {
 							// keep corner
 						} else {
-							microTiles[row][col][i] = null;
+							voxels[row][col][i] = null;
 						}
 					}
 				}
 			}
 		}
-		List<Box> bricks = createBricks(world, wallColor, microTiles);
+		List<Box> bricks = createBricks(world, wallColor, voxels);
 		brickRoot.getChildren().setAll(bricks);
 	}
 
@@ -196,16 +198,16 @@ public class Maze3D extends Group {
 		return s;
 	}
 
-	private List<Box> createBricks(PacManGameWorld world, Color wallColor, MicroTile[][][] microTiles) {
+	private List<Box> createBricks(PacManGameWorld world, Color wallColor, Voxel[][][] voxels) {
 		PhongMaterial brickMaterial = new PhongMaterial(wallColor);
 		brickMaterial.setSpecularColor(wallColor.brighter());
 		List<Box> bricks = new ArrayList<>();
 		for (int row = 0; row < world.numRows(); ++row) {
 			for (int col = 0; col < world.numCols(); ++col) {
 				for (int i = 0; i < N * N; ++i) {
-					MicroTile mt = microTiles[row][col][i];
-					if (mt != null) {
-						bricks.add(createBrick(mt, brickMaterial));
+					Voxel voxel = voxels[row][col][i];
+					if (voxel != null) {
+						bricks.add(createBrick(voxel, brickMaterial));
 					}
 				}
 			}
@@ -214,11 +216,11 @@ public class Maze3D extends Group {
 		return bricks;
 	}
 
-	private Box createBrick(MicroTile microTile, PhongMaterial material) {
-		Box brick = new Box(SIZE, SIZE, SIZE);
+	private Box createBrick(Voxel voxel, PhongMaterial material) {
+		Box brick = new Box(VOXEL_SIZE, VOXEL_SIZE, VOXEL_SIZE);
 		brick.setMaterial(material);
-		brick.setTranslateX(microTile.x());
-		brick.setTranslateY(microTile.y());
+		brick.setTranslateX(voxel.x());
+		brick.setTranslateY(voxel.y());
 		brick.setTranslateZ(1.5);
 		brick.drawModeProperty().bind(Env.$drawMode);
 		return brick;
