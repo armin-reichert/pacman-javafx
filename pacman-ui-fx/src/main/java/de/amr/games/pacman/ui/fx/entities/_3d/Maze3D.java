@@ -6,7 +6,6 @@ import static de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets.getFoodColo
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -33,41 +32,40 @@ import javafx.scene.shape.Sphere;
  */
 public class Maze3D extends Group {
 
-	static final int N = 4;
-	static final double VOXEL_SIZE = 8.0 / N;;
+	private static class Voxel extends V2i {
 
-	private static class Voxel {
+		static final int N = 4;
+		static final double SIZE = 8.0 / N;;
 
-		private final V2i tile;
-		private final int i;
+		private final short i; // 0,...,N*N-1
 
-		public Voxel(V2i tile, int i) {
-			this.tile = tile;
-			this.i = i;
+		public Voxel(int tileX, int tileY, int i) {
+			super(tileX, tileY);
+			this.i = (short) i;
 		}
 
 		public double x() {
-			return tile.x * TS - 1.5 * VOXEL_SIZE + (i % N) * VOXEL_SIZE;
+			return x * TS - 1.5 * SIZE + (i % N) * SIZE;
 		}
 
 		public double y() {
-			return tile.y * TS - 1.5 * VOXEL_SIZE + (i / N) * VOXEL_SIZE;
+			return y * TS - 1.5 * SIZE + (i / N) * SIZE;
 		}
 
 		public V2i northOf() {
-			return tile.plus(toNorth());
+			return plus(toNorth());
 		}
 
 		public V2i westOf() {
-			return tile.plus(toWest());
+			return plus(toWest());
 		}
 
 		public V2i eastOf() {
-			return tile.plus(toEast());
+			return plus(toEast());
 		}
 
 		public V2i southOf() {
-			return tile.plus(toSouth());
+			return plus(toSouth());
 		}
 
 		public V2i toNorth() {
@@ -92,26 +90,25 @@ public class Maze3D extends Group {
 
 		@Override
 		public int hashCode() {
-			return Objects.hash(i, tile);
+			final int prime = 31;
+			int result = super.hashCode();
+			result = prime * result + i;
+			return result;
 		}
 
 		@Override
 		public boolean equals(Object obj) {
 			if (this == obj)
 				return true;
-			if (obj == null)
+			if (!super.equals(obj))
 				return false;
 			if (getClass() != obj.getClass())
 				return false;
 			Voxel other = (Voxel) obj;
-			return i == other.i && Objects.equals(tile, other.tile);
+			if (i != other.i)
+				return false;
+			return true;
 		}
-
-		@Override
-		public String toString() {
-			return String.format("tile:%s i:%d x:%.2f y:%.2f", tile, i, x(), y());
-		}
-
 	}
 
 	private final Box floor;
@@ -132,26 +129,26 @@ public class Maze3D extends Group {
 		getChildren().addAll(floor, brickRoot, foodRoot);
 	}
 
-	// TODO this is most probably absoulte newbie code but for now it does the job
+	// TODO this is most probably total newbie code, but for now it does the job
 	public void createWalls(PacManGameWorld world, Color wallColor) {
-		Voxel[][][] voxels = new Voxel[world.numRows()][world.numCols()][N * N];
+		Voxel[][][] voxels = new Voxel[world.numRows()][world.numCols()][Voxel.N * Voxel.N];
 		int count = 0;
 		for (int row = 0; row < world.numRows(); ++row) {
 			for (int col = 0; col < world.numCols(); ++col) {
 				V2i tile = new V2i(col, row);
 				if (world.isWall(tile)) {
-					for (int i = 0; i < N * N; ++i) {
-						voxels[row][col][i] = new Voxel(tile, i);
+					for (int i = 0; i < Voxel.N * Voxel.N; ++i) {
+						voxels[row][col][i] = new Voxel(col, row, i);
 						++count;
 					}
 				}
 			}
 		}
-		log("%d micro tiles created", count);
+		log("%d voxels", count);
 
 		for (int row = 0; row < world.numRows(); ++row) {
 			for (int col = 0; col < world.numCols(); ++col) {
-				for (int i = 0; i < N * N; ++i) {
+				for (int i = 0; i < Voxel.N * Voxel.N; ++i) {
 					Voxel mt = voxels[row][col][i];
 					if (mt == null) {
 						continue;
@@ -206,7 +203,7 @@ public class Maze3D extends Group {
 		List<Box> bricks = new ArrayList<>();
 		for (int row = 0; row < world.numRows(); ++row) {
 			for (int col = 0; col < world.numCols(); ++col) {
-				for (int i = 0; i < N * N; ++i) {
+				for (int i = 0; i < Voxel.N * Voxel.N; ++i) {
 					Voxel voxel = voxels[row][col][i];
 					if (voxel != null) {
 						bricks.add(createBrick(voxel, brickMaterial));
@@ -219,7 +216,7 @@ public class Maze3D extends Group {
 	}
 
 	private Box createBrick(Voxel voxel, PhongMaterial material) {
-		Box brick = new Box(VOXEL_SIZE, VOXEL_SIZE, VOXEL_SIZE);
+		Box brick = new Box(Voxel.SIZE, Voxel.SIZE, Voxel.SIZE);
 		brick.setMaterial(material);
 		brick.setTranslateX(voxel.x());
 		brick.setTranslateY(voxel.y());
