@@ -25,8 +25,6 @@ import javafx.scene.paint.Color;
 /**
  * 2D scene displaying the maze and the game play for both, Pac-Man and Ms. Pac-Man games.
  * 
- * @param <R> Type of rendering, Pac-Man or Ms. Pac-Man rendering.
- * 
  * @author Armin Reichert
  */
 public class PlayScene2D extends AbstractGameScene2D {
