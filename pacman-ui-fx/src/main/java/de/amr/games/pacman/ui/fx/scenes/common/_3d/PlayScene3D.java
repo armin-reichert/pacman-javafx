@@ -35,10 +35,7 @@ import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
 
 /**
  * 3D scene displaying the maze and the game play for both, Pac-Man and Ms. Pac-Man games.
@@ -56,7 +53,6 @@ public class PlayScene3D implements GameScene {
 	private CoordinateSystem coordSystem;
 
 	Maze3D maze;
-	Box floor;
 	Player3D player3D;
 	Map<Ghost, Ghost3D> ghosts3D;
 	Bonus3D bonus3D;
@@ -113,18 +109,9 @@ public class PlayScene3D implements GameScene {
 		final PacManGameWorld world = level.world;
 		final Group root = new Group();
 
-		maze = new Maze3D();
+		maze = new Maze3D(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT);
 		maze.createWalls(world, getMazeWallColor(variant, level.mazeNumber));
 		maze.resetFood(variant, game());
-
-		var floorMaterial = new PhongMaterial(Color.rgb(20, 20, 100));
-		var floorTexture = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
-		floorMaterial.setDiffuseMap(floorTexture);
-		floor = new Box(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, 0.1);
-		floor.setMaterial(floorMaterial);
-		floor.setTranslateX(UNSCALED_SCENE_WIDTH / 2 - 4);
-		floor.setTranslateY(UNSCALED_SCENE_HEIGHT / 2 - 4);
-		floor.setTranslateZ(3);
 
 		player3D = new Player3D(game().player());
 		ghosts3D = game().ghosts().collect(Collectors.toMap(Function.identity(), ghost -> new Ghost3D(ghost, r2D)));
@@ -150,7 +137,7 @@ public class PlayScene3D implements GameScene {
 //		playerLight.lightOnProperty().bind(player3D.visibleProperty());
 		playerLight.setTranslateZ(-4);
 
-		root.getChildren().addAll(maze, floor, score3D, livesCounter3D, levelCounter3D);
+		root.getChildren().addAll(maze, score3D, livesCounter3D, levelCounter3D);
 		root.getChildren().addAll(player3D);
 		root.getChildren().addAll(ghosts3D.values());
 		root.getChildren().addAll(bonus3D);

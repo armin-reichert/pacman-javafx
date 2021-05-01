@@ -18,6 +18,7 @@ import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.fx.Env;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -116,8 +117,16 @@ public class Maze3D extends Group {
 	private final Group brickRoot = new Group();
 	private final Group foodRoot = new Group();
 
-	public Maze3D() {
-		getChildren().addAll(brickRoot, foodRoot);
+	public Maze3D(double unscaledWidth, double unscaledHeight) {
+		var floorMaterial = new PhongMaterial(Color.rgb(20, 20, 100));
+		var floorTexture = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
+		floorMaterial.setDiffuseMap(floorTexture);
+		Box floor = new Box(unscaledWidth, unscaledHeight, 0.1);
+		floor.setMaterial(floorMaterial);
+		floor.setTranslateX(unscaledWidth / 2 - 4);
+		floor.setTranslateY(unscaledHeight / 2 - 4);
+		floor.setTranslateZ(3);
+		getChildren().addAll(floor, brickRoot, foodRoot);
 	}
 
 	public void createWalls(PacManGameWorld world, Color wallColor) {
