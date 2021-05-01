@@ -49,7 +49,6 @@ public class PlayScene3D implements GameScene {
 	private final PlaySceneCameras cams;
 	private final PlayScene3DAnimationController animationController;
 	private PacManGameController gameController;
-	private CoordinateSystem coordSystem;
 
 	Maze3D maze;
 	Player3D player3D;
@@ -144,9 +143,7 @@ public class PlayScene3D implements GameScene {
 		content.setTranslateX(-UNSCALED_SCENE_WIDTH / 2);
 		content.setTranslateY(-UNSCALED_SCENE_HEIGHT / 2);
 
-		coordSystem = new CoordinateSystem(fxScene.getWidth());
-
-		Group sceneRoot = new Group(content, coordSystem.getNode());
+		Group sceneRoot = new Group(content, new CoordinateSystem(fxScene.getWidth()).getNode());
 		fxScene.setRoot(sceneRoot);
 		fxScene.setFill(null);
 
