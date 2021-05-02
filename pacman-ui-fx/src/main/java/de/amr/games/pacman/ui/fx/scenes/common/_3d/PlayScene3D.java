@@ -106,8 +106,7 @@ public class PlayScene3D implements GameScene {
 		final GameLevel level = game().currentLevel();
 		final PacManGameWorld world = level.world;
 
-		maze = new Maze3D(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT);
-		maze.createWalls(world, getMazeWallColor(variant, level.mazeNumber));
+		maze = new Maze3D(world, getMazeWallColor(variant, level.mazeNumber), UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT);
 		maze.resetFood(variant, game());
 
 		player3D = new Player3D(game().player());
