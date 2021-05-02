@@ -25,9 +25,6 @@ import javafx.scene.shape.Sphere;
 /**
  * 3D-model for a maze. Creates boxes representing walls from the world map.
  * 
- * <p>
- * TODO: merge also vertical sequences of cubes into quads
- * 
  * @author Armin Reichert
  */
 public class Maze3D extends Group {
@@ -135,7 +132,7 @@ public class Maze3D extends Group {
 	}
 
 	private int wallCount;
-	
+
 	private void addWall(Box wallOrNull) {
 		if (wallOrNull != null) {
 			wallRoot.getChildren().add(wallOrNull);
@@ -194,7 +191,7 @@ public class Maze3D extends Group {
 		wallRoot.getChildren().clear();
 		createHorizontalWalls(world, material, voxels);
 		createVerticalWalls(world, material, voxels);
-		
+
 		log("Walls: %d", wallCount);
 	}
 
