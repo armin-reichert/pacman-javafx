@@ -1,5 +1,6 @@
 package de.amr.games.pacman.ui.fx.entities._3d;
 
+import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
 import java.util.ArrayList;
@@ -66,9 +67,22 @@ public class MazeBuilder {
 	}
 
 	public void build(PacManGameWorld world) {
+		long start, end;
+		double millis;
 		walls = new ArrayList<>();
+		
+		start = System.nanoTime();
 		scan(world);
-		createWalls(world);
+		end = System.nanoTime();
+		millis = (end - start) * 10e-6;
+		log("Maze scanning took %.0f millseconds", millis);
+		
+		start = System.nanoTime();
+		createHorizontalWalls(world);
+		createVerticalWalls(world);
+		end = System.nanoTime();
+		millis = (end - start) * 10e-6;
+		log("Maze wall buiding took %.0f millseconds", millis);
 	}
 
 	private void scan(PacManGameWorld world) {
@@ -116,14 +130,6 @@ public class MazeBuilder {
 		if (wall != null) {
 			walls.add(wall);
 		}
-	}
-
-	private void createWalls(PacManGameWorld world) {
-		MazeBuilder scanner = new MazeBuilder();
-		scanner.scan(world);
-		walls.clear();
-		createHorizontalWalls(world);
-		createVerticalWalls(world);
 	}
 
 	private Box createWall(int leftX, int topY, PhongMaterial material, int blocksX, int blocksY) {
