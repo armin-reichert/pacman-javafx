@@ -32,94 +32,76 @@ public class Maze3D extends Group {
 	private static final int N = 4;
 	private static final double VSIZE = (double) TS / N;
 
-	/**
-	 * Each tile (8x8) is divided into N*N voxels. These are numbered row-wise from 0 to N*N - 1.
-	 */
-	private static class Voxel extends V2i {
+	private static class WallScanner {
 
-		private final byte i; // 0, ..., N*N - 1
+		private int xSize;
+		private int ySize;
+		private byte[][] cells;
 
-		public Voxel(int tileX, int tileY, int i) {
-			super(tileX, tileY);
-			this.i = (byte) i;
-		}
-
-		@Override
-		public String toString() {
-			return String.format("(x=%d, y=%d, i=%d)", x, y, i);
-		}
-
-		public double x() {
-			return x * TS + (i % N) * VSIZE - 1.5 * VSIZE;
-		}
-
-		public double y() {
-			return y * TS + (i / N) * VSIZE - 1.5 * VSIZE;
-		}
-
-		public V2i north() {
-			return northOf(this);
-		}
-
-		public V2i west() {
-			return westOf(this);
-		}
-
-		public V2i east() {
-			return eastOf(this);
-		}
-
-		public V2i south() {
-			return southOf(this);
-		}
-
-		public V2i northOf(V2i v) {
+		public static V2i northOf(int tileX, int tileY, int i) {
 			int dy = i / N == 0 ? -1 : 0;
-			return dy != 0 ? v.plus(0, dy) : this;
+			return new V2i(tileX, tileY + dy);
 		}
 
-		public V2i westOf(V2i v) {
+		public V2i westOf(int tileX, int tileY, int i) {
 			int dx = i % N == 0 ? -1 : 0;
-			return dx != 0 ? v.plus(dx, 0) : this;
+			return new V2i(tileX + dx, tileY);
 		}
 
-		public V2i eastOf(V2i v) {
+		public V2i eastOf(int tileX, int tileY, int i) {
 			int dx = i % N == N - 1 ? 1 : 0;
-			return dx != 0 ? v.plus(dx, 0) : this;
+			return new V2i(tileX + dx, tileY);
 		}
 
-		public V2i southOf(V2i v) {
+		public V2i southOf(int tileX, int tileY, int i) {
 			int dy = i / N == N - 1 ? 1 : 0;
-			return dy != 0 ? v.plus(0, dy) : this;
+			return new V2i(tileX, tileY + dy);
 		}
 
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = super.hashCode();
-			result = prime * result + i;
-			return result;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (!super.equals(obj))
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			Voxel other = (Voxel) obj;
-			if (i != other.i)
-				return false;
-			return true;
+		public void scan(PacManGameWorld world) {
+			xSize = N * world.numCols();
+			ySize = N * world.numRows();
+			cells = new byte[ySize][xSize];
+			// mark cells inside walls
+			for (int y = 0; y < ySize; ++y) {
+				for (int x = 0; x < xSize; ++x) {
+					V2i tile = new V2i(x / N, y / N);
+					if (world.isWall(tile)) {
+						int i = (y % N) * N + (x % N);
+						cells[y][x] = (byte) i;
+					} else {
+						cells[y][x] = (byte) -1;
+					}
+				}
+			}
+			// clear cells inside wall areas
+			for (int y = 0; y < ySize; ++y) {
+				int tileY = y / N;
+				for (int x = 0; x < xSize; ++x) {
+					int tileX = x / N;
+					int i = (y % N) * N + (x % N);
+					V2i n = northOf(tileX, tileY, i), e = eastOf(tileX, tileY, i), s = southOf(tileX, tileY, i),
+							w = westOf(tileX, tileY, i);
+					if (world.isWall(n) && world.isWall(e) && world.isWall(s) && world.isWall(w)) {
+						V2i se = southOf(e.x, e.y, i);
+						V2i sw = southOf(w.x, w.y, i);
+						V2i ne = northOf(e.x, e.y, i);
+						V2i nw = northOf(w.x, w.y, i);
+						if (world.isWall(se) && !world.isWall(nw) || !world.isWall(se) && world.isWall(nw)
+								|| world.isWall(sw) && !world.isWall(ne) || !world.isWall(sw) && world.isWall(ne)) {
+							// keep corner
+						} else {
+							cells[y][x] = -1;
+						}
+					}
+				}
+			}
 		}
 	}
 
 	private Box floor;
 	private Group wallRoot = new Group();
 	private Group foodRoot = new Group();
-	private int wallCount;
 
 	public Maze3D(double unscaledWidth, double unscaledHeight) {
 		createFloor(unscaledWidth, unscaledHeight);
@@ -142,161 +124,96 @@ public class Maze3D extends Group {
 	private void addWall(Box wall) {
 		if (wall != null) {
 			wallRoot.getChildren().add(wall);
-			++wallCount;
+			log("Wall added");
 		}
 	}
 
 	public void createWalls(PacManGameWorld world, Color wallColor) {
-		Voxel[][][] voxels = new Voxel[world.numRows()][world.numCols()][N * N];
-
-		// create N*N voxels for each wall tile
-		int voxelCount = 0;
-		for (int row = 0; row < world.numRows(); ++row) {
-			for (int col = 0; col < world.numCols(); ++col) {
-				V2i tile = new V2i(col, row);
-				if (world.isWall(tile)) {
-					for (int i = 0; i < N * N; ++i) {
-						voxels[row][col][i] = new Voxel(col, row, i);
-						++voxelCount;
-					}
-				}
-			}
-		}
-		log("%d voxels", voxelCount);
-
-		// remove voxels inside the wall boundaries
-		for (int row = 0; row < world.numRows(); ++row) {
-			for (int col = 0; col < world.numCols(); ++col) {
-				for (int i = 0; i < N * N; ++i) {
-					Voxel voxel = voxels[row][col][i];
-					if (voxel == null) {
-						continue;
-					}
-					if (world.isWall(voxel.north()) && world.isWall(voxel.east()) && world.isWall(voxel.south())
-							&& world.isWall(voxel.west())) {
-						V2i se = voxel.southOf(voxel.east());
-						V2i sw = voxel.southOf(voxel.west());
-						V2i ne = voxel.northOf(voxel.east());
-						V2i nw = voxel.northOf(voxel.west());
-						if (world.isWall(se) && !world.isWall(nw) || !world.isWall(se) && world.isWall(nw)
-								|| world.isWall(sw) && !world.isWall(ne) || !world.isWall(sw) && world.isWall(ne)) {
-							// keep corner
-						} else {
-							voxels[row][col][i] = null;
-						}
-					}
-				}
-			}
-		}
-
-		// create walls from voxels
 		PhongMaterial material = new PhongMaterial();
 		material.setDiffuseColor(wallColor);
 		material.setSpecularColor(wallColor.brighter());
-
+		WallScanner scanner = new WallScanner();
+		scanner.scan(world);
 		wallRoot.getChildren().clear();
-		createHorizontalWalls(world, material, voxels);
-		createVerticalWalls(world, material, voxels);
-
-		log("Walls: %d", wallCount);
+		createHorizontalWalls(world, material, scanner.cells);
+		createVerticalWalls(world, material, scanner.cells);
 	}
 
-	private void createHorizontalWalls(PacManGameWorld world, PhongMaterial material, Voxel[][][] voxels) {
-		for (int y = 0; y < N * world.numRows(); ++y) {
-			Voxel wallStart = null;
-			int wallWidth = 1;
-			for (int x = 0; x < N * world.numCols(); ++x) {
-				int row = y / N, col = x / N;
-				int i = (y % N) * N + (x % N);
-				Voxel voxel = voxels[row][col][i];
-				if (voxel != null) {
-					if (wallStart == null) {
-						wallStart = voxel;
+	private Box createWall(int leftX, int topY, PhongMaterial material, int width, int height) {
+		if (width <= 1 && height <= 1) {
+			return null; // TODO
+		}
+		Box wall = new Box(width * VSIZE, height * VSIZE, VSIZE);
+		wall.setMaterial(material);
+		wall.setTranslateX(leftX * VSIZE + (width - 4) * 0.5 * VSIZE);
+		wall.setTranslateY(topY * VSIZE + (height - 4) * 0.5 * VSIZE);
+		wall.setTranslateZ(1.5);
+		wall.drawModeProperty().bind(Env.$drawMode);
+		return wall;
+	}
+
+	private void createHorizontalWalls(PacManGameWorld world, PhongMaterial material, byte[][] cells) {
+		int xSize = cells[0].length, ySize = cells.length;
+		for (int y = 0; y < ySize; ++y) {
+			int wallStartX = -1;
+			int wallWidth = 0;
+			for (int x = 0; x < xSize; ++x) {
+				byte cell = cells[y][x];
+				if (cell != -1) {
+					if (wallStartX == -1) {
+						wallStartX = x;
 						wallWidth = 1;
 					} else {
 						wallWidth++;
 					}
 				} else {
-					if (wallStart != null) {
-						addWall(createHorizontalWall(wallStart, material, wallWidth));
-						wallStart = null;
-						wallWidth = 1;
+					if (wallStartX != -1) {
+						addWall(createWall(wallStartX, y, material, wallWidth, 1));
+						wallStartX = -1;
 					}
 				}
-				if (x == N * world.numCols() - 1 && wallStart != null) {
-					addWall(createHorizontalWall(wallStart, material, wallWidth));
-					wallStart = null;
-					wallWidth = 1;
+				if (x == xSize - 1 && wallStartX != -1) {
+					addWall(createWall(wallStartX, y, material, wallWidth, 1));
+					wallStartX = -1;
 				}
 			}
-			if (y == N * world.numRows() - 1 && wallStart != null) {
-				addWall(createHorizontalWall(wallStart, material, wallWidth));
-				wallStart = null;
-				wallWidth = 1;
+			if (y == ySize - 1 && wallStartX != -1) {
+				addWall(createWall(wallStartX, y, material, wallWidth, 1));
+				wallStartX = -1;
 			}
 		}
 	}
 
-	private Box createHorizontalWall(Voxel voxel, PhongMaterial material, int width) {
-		if (width > 1) {
-			Box wall = new Box(width * VSIZE, VSIZE, VSIZE);
-			wall.setMaterial(material);
-			wall.setTranslateX(voxel.x() + (width - 1) * VSIZE * 0.5);
-			wall.setTranslateY(voxel.y());
-			wall.setTranslateZ(1.5);
-			wall.drawModeProperty().bind(Env.$drawMode);
-			return wall;
-		}
-		return null;
-	}
-
-	private void createVerticalWalls(PacManGameWorld world, PhongMaterial material, Voxel[][][] voxels) {
-		for (int x = 0; x < N * world.numCols(); ++x) {
-			Voxel wallStart = null;
-			int wallHeight = 1;
-			for (int y = 0; y < N * world.numRows(); ++y) {
-				int row = y / N, col = x / N;
-				int i = (y % N) * N + (x % N);
-				Voxel voxel = voxels[row][col][i];
-				if (voxel != null) {
-					if (wallStart == null) {
-						wallStart = voxel;
+	private void createVerticalWalls(PacManGameWorld world, PhongMaterial material, byte[][] cells) {
+		int xSize = cells[0].length, ySize = cells.length;
+		for (int x = 0; x < xSize; ++x) {
+			int wallStartY = -1;
+			int wallHeight = 0;
+			for (int y = 0; y < ySize; ++y) {
+				byte cell = cells[y][x];
+				if (cell != -1) {
+					if (wallStartY == -1) {
+						wallStartY = y;
 						wallHeight = 1;
 					} else {
 						wallHeight++;
 					}
 				} else {
-					if (wallStart != null) {
-						addWall(createVerticalWall(wallStart, material, wallHeight));
-						wallStart = null;
-						wallHeight = 1;
+					if (wallStartY != -1) {
+						addWall(createWall(x, wallStartY, material, 1, wallHeight));
+						wallStartY = -1;
 					}
 				}
-				if (y == N * world.numRows() - 1 && wallStart != null) {
-					addWall(createVerticalWall(wallStart, material, wallHeight));
-					wallStart = null;
-					wallHeight = 1;
+				if (y == ySize - 1 && wallStartY != -1) {
+					addWall(createWall(x, wallStartY, material, 1, wallHeight));
+					wallStartY = -1;
 				}
 			}
-			if (x == N * world.numCols() - 1 && wallStart != null) {
-				addWall(createVerticalWall(wallStart, material, wallHeight));
-				wallStart = null;
-				wallHeight = 1;
+			if (x == xSize - 1 && wallStartY != -1) {
+				addWall(createWall(x, wallStartY, material, 1, wallHeight));
+				wallStartY = -1;
 			}
 		}
-	}
-
-	private Box createVerticalWall(Voxel voxel, PhongMaterial material, int height) {
-		if (height > 1) {
-			Box wall = new Box(VSIZE, height * VSIZE, VSIZE);
-			wall.setMaterial(material);
-			wall.setTranslateX(voxel.x());
-			wall.setTranslateY(voxel.y() + (height - 1) * VSIZE * 0.5);
-			wall.setTranslateZ(1.5);
-			wall.drawModeProperty().bind(Env.$drawMode);
-			return wall;
-		}
-		return null;
 	}
 
 	public Stream<Node> foodNodes() {
