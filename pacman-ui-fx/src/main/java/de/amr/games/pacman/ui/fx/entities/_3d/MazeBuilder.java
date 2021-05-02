@@ -28,6 +28,11 @@ public class MazeBuilder {
 		return new V2i(tileX, tileY + dy);
 	}
 
+	public static V2i southOf(int tileX, int tileY, int i) {
+		int dy = i / N == N - 1 ? 1 : 0;
+		return new V2i(tileX, tileY + dy);
+	}
+
 	public static V2i westOf(int tileX, int tileY, int i) {
 		int dx = i % N == 0 ? -1 : 0;
 		return new V2i(tileX + dx, tileY);
@@ -38,14 +43,9 @@ public class MazeBuilder {
 		return new V2i(tileX + dx, tileY);
 	}
 
-	public static V2i southOf(int tileX, int tileY, int i) {
-		int dy = i / N == N - 1 ? 1 : 0;
-		return new V2i(tileX, tileY + dy);
-	}
-
 	private int xSize;
 	private int ySize;
-	private byte[][] cells;
+	private byte[][] blocks;
 	private PhongMaterial material;
 	private List<Box> walls;
 	private double wallSizeZ = BLOCKSIZE;
@@ -70,38 +70,38 @@ public class MazeBuilder {
 		long start, end;
 		double millis;
 		walls = new ArrayList<>();
-		
+
 		start = System.nanoTime();
 		scan(world);
 		end = System.nanoTime();
 		millis = (end - start) * 10e-6;
-		log("Maze scanning took %.0f millseconds", millis);
-		
+		log("Maze scanning took %.0f milliseconds", millis);
+
 		start = System.nanoTime();
 		createHorizontalWalls(world);
 		createVerticalWalls(world);
 		end = System.nanoTime();
 		millis = (end - start) * 10e-6;
-		log("Maze wall buiding took %.0f millseconds", millis);
+		log("Maze wall building took %.0f milliseconds", millis);
 	}
 
 	private void scan(PacManGameWorld world) {
 		xSize = N * world.numCols();
 		ySize = N * world.numRows();
-		cells = new byte[ySize][xSize];
-		// mark cells inside walls
+		blocks = new byte[ySize][xSize];
+		// find blocks inside walls
 		for (int y = 0; y < ySize; ++y) {
 			for (int x = 0; x < xSize; ++x) {
 				V2i tile = new V2i(x / N, y / N);
 				if (world.isWall(tile)) {
 					int i = (y % N) * N + (x % N);
-					cells[y][x] = (byte) i;
+					blocks[y][x] = (byte) i;
 				} else {
-					cells[y][x] = (byte) -1;
+					blocks[y][x] = (byte) -1;
 				}
 			}
 		}
-		// clear cells inside wall areas
+		// clear blocks inside wall regions
 		for (int y = 0; y < ySize; ++y) {
 			int tileY = y / N;
 			for (int x = 0; x < xSize; ++x) {
@@ -116,42 +116,40 @@ public class MazeBuilder {
 					V2i nw = northOf(w.x, w.y, i);
 					if (world.isWall(se) && !world.isWall(nw) || !world.isWall(se) && world.isWall(nw)
 							|| world.isWall(sw) && !world.isWall(ne) || !world.isWall(sw) && world.isWall(ne)) {
-						// keep corner
+						// keep corner of wall region
 					} else {
-						cells[y][x] = -1;
+						blocks[y][x] = -1;
 					}
 				}
 			}
 		}
 	}
 
-	private void addWall(int leftX, int topY, int wallSizeX, int wallSizeY) {
-		Box wall = createWall(leftX, topY, material, wallSizeX, wallSizeY);
-		if (wall != null) {
-			walls.add(wall);
+	private void addWall(int leftX, int topY, int numBlocksX, int numBlocksY) {
+		if (numBlocksX == 1 && numBlocksY == 1) {
+			return; // ignore 1x1 walls because they could be part of a larger wall in other orientation
 		}
-	}
+		Box wall = createWall(leftX, topY, material, numBlocksX, numBlocksY);
+		walls.add(wall);
+ 	}
 
-	private Box createWall(int leftX, int topY, PhongMaterial material, int blocksX, int blocksY) {
-		if (blocksX <= 1 && blocksY <= 1) {
-			return null; // ignore 1x1 walls for now
-		}
-		Box wall = new Box(blocksX * BLOCKSIZE, blocksY * BLOCKSIZE, wallSizeZ);
+	private Box createWall(int leftX, int topY, PhongMaterial material, int numBlocksX, int numBlocksY) {
+		Box wall = new Box(numBlocksX * BLOCKSIZE, numBlocksY * BLOCKSIZE, wallSizeZ);
 		wall.setMaterial(material);
-		wall.setTranslateX(leftX * BLOCKSIZE + (blocksX - 4) * 0.5 * BLOCKSIZE);
-		wall.setTranslateY(topY * BLOCKSIZE + (blocksY - 4) * 0.5 * BLOCKSIZE);
+		wall.setTranslateX(leftX * BLOCKSIZE + (numBlocksX - 4) * 0.5 * BLOCKSIZE);
+		wall.setTranslateY(topY * BLOCKSIZE + (numBlocksY - 4) * 0.5 * BLOCKSIZE);
 		wall.setTranslateZ(1.5);
 		wall.drawModeProperty().bind(Env.$drawMode);
 		return wall;
 	}
 
 	private void createHorizontalWalls(PacManGameWorld world) {
-		int xSize = cells[0].length, ySize = cells.length;
+		int xSize = blocks[0].length, ySize = blocks.length;
 		for (int y = 0; y < ySize; ++y) {
 			int leftX = -1;
 			int sizeX = 0;
 			for (int x = 0; x < xSize; ++x) {
-				byte cell = cells[y][x];
+				byte cell = blocks[y][x];
 				if (cell != -1) {
 					if (leftX == -1) {
 						leftX = x;
@@ -178,12 +176,12 @@ public class MazeBuilder {
 	}
 
 	private void createVerticalWalls(PacManGameWorld world) {
-		int xSize = cells[0].length, ySize = cells.length;
+		int xSize = blocks[0].length, ySize = blocks.length;
 		for (int x = 0; x < xSize; ++x) {
 			int topY = -1;
 			int sizeY = 0;
 			for (int y = 0; y < ySize; ++y) {
-				byte cell = cells[y][x];
+				byte cell = blocks[y][x];
 				if (cell != -1) {
 					if (topY == -1) {
 						topY = y;
