@@ -47,6 +47,7 @@ public class MazeBuilder {
 	private byte[][] cells;
 	private PhongMaterial material;
 	private List<Box> walls;
+	private double wallSizeZ = BLOCKSIZE;
 
 	public MazeBuilder() {
 		material = new PhongMaterial();
@@ -54,6 +55,10 @@ public class MazeBuilder {
 
 	public List<Box> getWalls() {
 		return Collections.unmodifiableList(walls);
+	}
+
+	public void setWallSizeZ(double wallSizeZ) {
+		this.wallSizeZ = wallSizeZ;
 	}
 
 	public void setWallMaterial(PhongMaterial material) {
@@ -106,8 +111,8 @@ public class MazeBuilder {
 		}
 	}
 
-	private void addWall(int leftX, int topY, int wallWidth, int wallHeight) {
-		Box wall = createWall(leftX, topY, material, wallWidth, wallHeight);
+	private void addWall(int leftX, int topY, int wallSizeX, int wallSizeY) {
+		Box wall = createWall(leftX, topY, material, wallSizeX, wallSizeY);
 		if (wall != null) {
 			walls.add(wall);
 		}
@@ -121,14 +126,14 @@ public class MazeBuilder {
 		createVerticalWalls(world);
 	}
 
-	private Box createWall(int leftX, int topY, PhongMaterial material, int width, int height) {
-		if (width <= 1 && height <= 1) {
+	private Box createWall(int leftX, int topY, PhongMaterial material, int blocksX, int blocksY) {
+		if (blocksX <= 1 && blocksY <= 1) {
 			return null; // ignore 1x1 walls for now
 		}
-		Box wall = new Box(width * BLOCKSIZE, height * BLOCKSIZE, BLOCKSIZE);
+		Box wall = new Box(blocksX * BLOCKSIZE, blocksY * BLOCKSIZE, wallSizeZ);
 		wall.setMaterial(material);
-		wall.setTranslateX(leftX * BLOCKSIZE + (width - 4) * 0.5 * BLOCKSIZE);
-		wall.setTranslateY(topY * BLOCKSIZE + (height - 4) * 0.5 * BLOCKSIZE);
+		wall.setTranslateX(leftX * BLOCKSIZE + (blocksX - 4) * 0.5 * BLOCKSIZE);
+		wall.setTranslateY(topY * BLOCKSIZE + (blocksY - 4) * 0.5 * BLOCKSIZE);
 		wall.setTranslateZ(1.5);
 		wall.drawModeProperty().bind(Env.$drawMode);
 		return wall;
@@ -137,31 +142,31 @@ public class MazeBuilder {
 	private void createHorizontalWalls(PacManGameWorld world) {
 		int xSize = cells[0].length, ySize = cells.length;
 		for (int y = 0; y < ySize; ++y) {
-			int wallStartX = -1;
-			int wallWidth = 0;
+			int leftX = -1;
+			int sizeX = 0;
 			for (int x = 0; x < xSize; ++x) {
 				byte cell = cells[y][x];
 				if (cell != -1) {
-					if (wallStartX == -1) {
-						wallStartX = x;
-						wallWidth = 1;
+					if (leftX == -1) {
+						leftX = x;
+						sizeX = 1;
 					} else {
-						wallWidth++;
+						sizeX++;
 					}
 				} else {
-					if (wallStartX != -1) {
-						addWall(wallStartX, y, wallWidth, 1);
-						wallStartX = -1;
+					if (leftX != -1) {
+						addWall(leftX, y, sizeX, 1);
+						leftX = -1;
 					}
 				}
-				if (x == xSize - 1 && wallStartX != -1) {
-					addWall(wallStartX, y, wallWidth, 1);
-					wallStartX = -1;
+				if (x == xSize - 1 && leftX != -1) {
+					addWall(leftX, y, sizeX, 1);
+					leftX = -1;
 				}
 			}
-			if (y == ySize - 1 && wallStartX != -1) {
-				addWall(wallStartX, y, wallWidth, 1);
-				wallStartX = -1;
+			if (y == ySize - 1 && leftX != -1) {
+				addWall(leftX, y, sizeX, 1);
+				leftX = -1;
 			}
 		}
 	}
@@ -169,31 +174,31 @@ public class MazeBuilder {
 	private void createVerticalWalls(PacManGameWorld world) {
 		int xSize = cells[0].length, ySize = cells.length;
 		for (int x = 0; x < xSize; ++x) {
-			int wallStartY = -1;
-			int wallHeight = 0;
+			int topY = -1;
+			int sizeY = 0;
 			for (int y = 0; y < ySize; ++y) {
 				byte cell = cells[y][x];
 				if (cell != -1) {
-					if (wallStartY == -1) {
-						wallStartY = y;
-						wallHeight = 1;
+					if (topY == -1) {
+						topY = y;
+						sizeY = 1;
 					} else {
-						wallHeight++;
+						sizeY++;
 					}
 				} else {
-					if (wallStartY != -1) {
-						addWall(x, wallStartY, 1, wallHeight);
-						wallStartY = -1;
+					if (topY != -1) {
+						addWall(x, topY, 1, sizeY);
+						topY = -1;
 					}
 				}
-				if (y == ySize - 1 && wallStartY != -1) {
-					addWall(x, wallStartY, 1, wallHeight);
-					wallStartY = -1;
+				if (y == ySize - 1 && topY != -1) {
+					addWall(x, topY, 1, sizeY);
+					topY = -1;
 				}
 			}
-			if (x == xSize - 1 && wallStartY != -1) {
-				addWall(x, wallStartY, 1, wallHeight);
-				wallStartY = -1;
+			if (x == xSize - 1 && topY != -1) {
+				addWall(x, topY, 1, sizeY);
+				topY = -1;
 			}
 		}
 	}

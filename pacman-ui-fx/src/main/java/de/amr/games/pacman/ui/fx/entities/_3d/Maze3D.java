@@ -39,6 +39,7 @@ public class Maze3D extends Group {
 		material.setDiffuseColor(wallColor);
 		material.setSpecularColor(wallColor.brighter());
 		mazeBuilder.setWallMaterial(material);
+		mazeBuilder.setWallSizeZ(3.0);
 		mazeBuilder.build(world);
 		wallRoot.getChildren().setAll(mazeBuilder.getWalls());
 	}
