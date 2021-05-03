@@ -40,7 +40,10 @@ public class Maze3D extends Group {
 		var wallBuilder = new WallBuilder();
 		wallBuilder.setWallMaterial(wallMaterial);
 		wallBuilder.setWallHeight(2.5);
-		wallRoot.getChildren().setAll(wallBuilder.build(world));
+
+		int resolution = 4;
+		world.getWallMap(resolution);
+		wallRoot.getChildren().setAll(wallBuilder.build(world, resolution));
 
 		getChildren().addAll(floor, wallRoot, foodRoot);
 	}
