@@ -4,7 +4,6 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static java.util.function.Predicate.not;
 
 import java.util.List;
-import java.util.Random;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -21,6 +20,7 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.PacManGameSound;
+import de.amr.games.pacman.ui.fx.TrashTalk;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
@@ -38,13 +38,6 @@ import javafx.util.Duration;
  * @author Armin Reichert
  */
 public class PlayScene3DAnimationController implements DefaultPacManGameEventHandler {
-
-	private static final String[] LEVEL_COMPLETE_TEXTS = { //
-			"Well done!", "Congrats!", "Awesome!", "You did it!", "You're the man*in!", "WTF!" };
-
-	private static String randomLevelCompleteText() {
-		return LEVEL_COMPLETE_TEXTS[new Random().nextInt(LEVEL_COMPLETE_TEXTS.length)];
-	}
 
 	private final PlayScene3D playScene;
 	private final SoundManager sounds;
@@ -346,8 +339,8 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 		phase1.setOnFinished(e -> {
 			game().player().visible = false;
 			game().ghosts().forEach(ghost -> ghost.visible = false);
-			String spell = randomLevelCompleteText();
-			String levelCompleteMessage = String.format("%s\n\nLevel %d complete.", spell, game().currentLevel().number);
+			String levelCompleteMessage = String.format("%s\n\nLevel %d complete.", TrashTalk.randomLevelCompleteSpell(),
+					game().currentLevel().number);
 			gameController.getUI().showFlashMessage(levelCompleteMessage, 2);
 		});
 		SequentialTransition animation = new SequentialTransition(phase1, new PauseTransition(Duration.seconds(2)));
