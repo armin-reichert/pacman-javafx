@@ -39,8 +39,12 @@ import javafx.util.Duration;
  */
 public class PlayScene3DAnimationController implements DefaultPacManGameEventHandler {
 
-	private static final String[] CONGRATS = { "Well done", "Congrats", "Awesome", "You did it", "You're the man*in",
-			"WTF" };
+	private static final String[] LEVEL_COMPLETE_TEXTS = { //
+			"Well done!", "Congrats!", "Awesome!", "You did it!", "You're the man*in!", "WTF!" };
+
+	private static String randomLevelCompleteText() {
+		return LEVEL_COMPLETE_TEXTS[new Random().nextInt(LEVEL_COMPLETE_TEXTS.length)];
+	}
 
 	private final PlayScene3D playScene;
 	private final SoundManager sounds;
@@ -342,9 +346,9 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 		phase1.setOnFinished(e -> {
 			game().player().visible = false;
 			game().ghosts().forEach(ghost -> ghost.visible = false);
-			String congrats = CONGRATS[new Random().nextInt(CONGRATS.length)];
-			String message = String.format("%s!\n\nLevel %d complete.", congrats, game().currentLevel().number);
-			gameController.getUI().showFlashMessage(message, 2);
+			String spell = randomLevelCompleteText();
+			String levelCompleteMessage = String.format("%s!\n\nLevel %d complete.", spell, game().currentLevel().number);
+			gameController.getUI().showFlashMessage(levelCompleteMessage, 2);
 		});
 		SequentialTransition animation = new SequentialTransition(phase1, new PauseTransition(Duration.seconds(2)));
 		animation.setOnFinished(e -> gameController.stateTimer().forceExpiration());

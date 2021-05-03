@@ -5,6 +5,7 @@ import static de.amr.games.pacman.model.common.GameVariant.MS_PACMAN;
 import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
 
 import java.util.Optional;
+import java.util.Random;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
@@ -207,7 +208,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		case E:
 			gameController.eatAllPellets();
-			//TODO must fire event to notify play scene
+			// TODO must fire event to notify play scene
 			break;
 
 		case I:
@@ -222,7 +223,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		case N:
 			if (gameController.isGameRunning()) {
-				showFlashMessage("You old cheating bastard");
+				showFlashMessage(randomCheatText());
 				gameController.changeState(PacManGameState.LEVEL_COMPLETE);
 			}
 			break;
@@ -296,5 +297,17 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		default:
 			break;
 		}
+	}
+
+	private static final String[] CHEAT_TEXTS = { //
+			"You old cheating bastard!", //
+			"I told you, I will erase your hard disk", //
+			"Cheaters are the worst human beings!", //
+			"Do yout think I will not notice this?", //
+			"Oh, Mr. Clever again"
+	};
+
+	private String randomCheatText() {
+		return CHEAT_TEXTS[new Random().nextInt(CHEAT_TEXTS.length)];
 	}
 }
