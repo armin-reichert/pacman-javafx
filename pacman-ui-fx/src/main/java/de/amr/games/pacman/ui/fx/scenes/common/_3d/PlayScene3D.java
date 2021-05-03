@@ -112,7 +112,7 @@ public class PlayScene3D implements GameScene {
 		var wallMaterial = new PhongMaterial(wallColor);
 		wallMaterial.setSpecularColor(wallColor.brighter());
 		var floorTexture = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
-		maze = new Maze3D(world, wallMaterial, floorTexture, UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT);
+		maze = new Maze3D(world, wallMaterial, 2.5, floorTexture, UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT);
 		maze.resetFood(variant, level);
 
 		player3D = new Player3D(game().player());

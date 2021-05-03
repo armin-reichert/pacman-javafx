@@ -24,10 +24,9 @@ import javafx.scene.transform.Translate;
  */
 public class Maze3D extends Group {
 
-	private Group wallRoot = new Group();
-	private Group foodRoot = new Group();
+	private Group foodGroup = new Group();
 
-	public Maze3D(PacManGameWorld world, PhongMaterial wallMaterial, Image floorTexture, double sizeX, double sizeY) {
+	public Maze3D(PacManGameWorld world, PhongMaterial wallMaterial, double wallHeight, Image floorTexture, double sizeX, double sizeY) {
 		Box floor = new Box(sizeX, sizeY, 0.1);
 		floor.getTransforms().add(new Translate(sizeX / 2 - TS / 2, sizeY / 2 - TS / 2, 3));
 		var material = new PhongMaterial();
@@ -38,22 +37,23 @@ public class Maze3D extends Group {
 
 		var wallBuilder = new WallBuilder();
 		wallBuilder.setWallMaterial(wallMaterial);
-		wallBuilder.setWallHeight(2.5);
+		wallBuilder.setWallHeight(wallHeight);
 
 		int resolution = 4;
 		world.getWallMap(resolution);
+		Group wallRoot = new Group();
 		wallRoot.getChildren().setAll(wallBuilder.build(world, resolution));
 
-		getChildren().addAll(floor, wallRoot, foodRoot);
+		getChildren().addAll(floor, wallRoot, foodGroup);
 	}
 
 	public Stream<Node> foodNodes() {
-		return foodRoot.getChildren().stream();
+		return foodGroup.getChildren().stream();
 	}
 
 	public void resetFood(GameVariant variant, GameLevel gameLevel) {
 		var foodMaterial = new PhongMaterial(getFoodColor(variant, gameLevel.mazeNumber));
-		foodRoot.getChildren().clear();
+		foodGroup.getChildren().clear();
 		gameLevel.world.tiles().filter(gameLevel.world::isFoodTile).forEach(foodTile -> {
 			double size = gameLevel.world.isEnergizerTile(foodTile) ? 2.5 : 1;
 			var pellet = new Sphere(size);
@@ -62,7 +62,7 @@ public class Maze3D extends Group {
 			pellet.setTranslateY(foodTile.y * TS);
 			pellet.setTranslateZ(1);
 			pellet.setUserData(foodTile);
-			foodRoot.getChildren().add(pellet);
+			foodGroup.getChildren().add(pellet);
 		});
 	}
 }
