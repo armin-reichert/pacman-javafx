@@ -37,7 +37,7 @@ public class Maze3D extends Group {
 		material.setSpecularColor(wallColor.brighter());
 		var wallBuilder = new WallBuilder();
 		wallBuilder.setWallMaterial(material);
-		wallBuilder.setWallSizeZ(2.5);
+		wallBuilder.setWallHeight(2.5);
 		wallRoot.getChildren().setAll(wallBuilder.build(world));
 		getChildren().addAll(floor, wallRoot, foodRoot);
 	}
