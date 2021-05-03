@@ -26,13 +26,14 @@ public class Maze3D extends Group {
 
 	private Group foodGroup = new Group();
 
-	public Maze3D(PacManGameWorld world, PhongMaterial wallMaterial, double wallHeight, Image floorTexture, double sizeX, double sizeY) {
+	public Maze3D(PacManGameWorld world, PhongMaterial wallMaterial, double wallHeight, Image floorTexture, double sizeX,
+			double sizeY) {
 		Box floor = new Box(sizeX, sizeY, 0.1);
 		floor.getTransforms().add(new Translate(sizeX / 2 - TS / 2, sizeY / 2 - TS / 2, 3));
 		var material = new PhongMaterial();
 		material.setDiffuseMap(floorTexture);
-		material.setDiffuseColor(Color.rgb(30, 30, 120));
-		material.setSpecularColor(Color.rgb(60, 60, 240));
+		material.setDiffuseColor(Color.rgb(20, 20, 120));
+		material.setSpecularColor(Color.rgb(20, 20, 120).brighter());
 		floor.setMaterial(material);
 
 		var wallBuilder = new WallBuilder();

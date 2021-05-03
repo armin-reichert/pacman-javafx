@@ -39,6 +39,8 @@ import javafx.stage.Stage;
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
 
+	private static final Color SCENE_BACKGROUND_COLOR = Color.rgb(20, 20, 60);
+
 	public static final IntegerProperty $FPS = new SimpleIntegerProperty();
 	public static final IntegerProperty $TOTAL_TICKS = new SimpleIntegerProperty();
 
@@ -63,7 +65,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		GameScene gameScene = sceneForCurrentGameState(Env.$use3DScenes.get());
 		double aspectRatio = gameScene.aspectRatio().orElse(getScreenAspectRatio());
-		mainScene = new Scene(root, aspectRatio * height, height, Color.rgb(20, 20, 60));
+		mainScene = new Scene(root, aspectRatio * height, height, SCENE_BACKGROUND_COLOR);
 		setGameScene(gameScene);
 
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
