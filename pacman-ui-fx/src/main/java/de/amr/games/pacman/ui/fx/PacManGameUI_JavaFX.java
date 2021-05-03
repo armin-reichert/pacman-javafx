@@ -301,10 +301,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private static final String[] CHEAT_TEXTS = { //
 			"You old cheating bastard!", //
-			"I told you, I will erase your hard disk", //
+			"I told you, I will erase your hard disk!", //
 			"Cheaters are the worst human beings!", //
-			"Do yout think I will not notice this?", //
-			"Oh, Mr. Clever again"
+			"Do you think I will not notice this?", //
+			"Oh, Mr. Super-Clever again"
 	};
 
 	private String randomCheatText() {
