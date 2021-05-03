@@ -74,14 +74,14 @@ public class WallBuilder {
 		start = System.nanoTime();
 		scan(world);
 		end = System.nanoTime();
-		millis = (end - start) * 10e-6;
+		millis = (end - start) * 1e-6;
 		log("WallBuilder: scanning world took %.0f milliseconds", millis);
 
 		start = System.nanoTime();
 		createHorizontalWalls(world);
 		createVerticalWalls(world);
 		end = System.nanoTime();
-		millis = (end - start) * 10e-6;
+		millis = (end - start) * 1e-6;
 		log("WallBuilder: building walls took %.0f milliseconds", millis);
 
 		return getWalls();
