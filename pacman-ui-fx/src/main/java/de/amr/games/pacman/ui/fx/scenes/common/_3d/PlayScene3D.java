@@ -139,14 +139,12 @@ public class PlayScene3D implements GameScene {
 		playerLight.setTranslateZ(-4);
 
 		final Group content = new Group();
-		content.getChildren().addAll(maze, score3D, livesCounter3D, levelCounter3D);
-		content.getChildren().addAll(player3D);
+		content.getChildren().addAll(maze, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
 		content.getChildren().addAll(ghosts3D.values());
-		content.getChildren().addAll(bonus3D);
 		content.getChildren().addAll(ambientLight, playerLight);
 
-		content.setTranslateX(-UNSCALED_SCENE_WIDTH / 2);
-		content.setTranslateY(-UNSCALED_SCENE_HEIGHT / 2);
+		content.setTranslateX(-0.5 * UNSCALED_SCENE_WIDTH);
+		content.setTranslateY(-0.5 * UNSCALED_SCENE_HEIGHT);
 
 		Group sceneRoot = new Group(content, new CoordinateSystem(fxScene.getWidth()).getNode());
 		fxScene.setRoot(sceneRoot);
