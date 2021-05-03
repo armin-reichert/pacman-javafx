@@ -51,7 +51,7 @@ public class WallBuilder {
 		double millis;
 		walls = new ArrayList<>();
 
-		Optional<WallMap> wallMap = world.wallMap(resolution);
+		Optional<WallMap> wallMap = world.getWallMap(resolution);
 		if (wallMap.isPresent()) {
 			wallInfo = wallMap.get().wallInfo();
 		} else {
