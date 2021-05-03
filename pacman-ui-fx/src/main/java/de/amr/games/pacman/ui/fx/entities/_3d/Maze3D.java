@@ -19,6 +19,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Sphere;
+import javafx.scene.transform.Translate;
 
 /**
  * 3D-model for a maze. Creates boxes representing walls from the world map.
@@ -27,32 +28,27 @@ import javafx.scene.shape.Sphere;
  */
 public class Maze3D extends Group {
 
-	private Box floor;
 	private Group wallRoot = new Group();
 	private Group foodRoot = new Group();
 
-	public Maze3D(PacManGameWorld world, Color wallColor, double unscaledWidth, double unscaledHeight) {
-		createFloor(unscaledWidth, unscaledHeight);
-		var material = new PhongMaterial(wallColor);
-		material.setSpecularColor(wallColor.brighter());
+	public Maze3D(PacManGameWorld world, PhongMaterial wallMaterial, Image floorTexture, double sizeX, double sizeY) {
+		createFloor(sizeX, sizeY, floorTexture);
 		var wallBuilder = new WallBuilder();
-		wallBuilder.setWallMaterial(material);
+		wallBuilder.setWallMaterial(wallMaterial);
 		wallBuilder.setWallHeight(2.5);
 		wallRoot.getChildren().setAll(wallBuilder.build(world));
-		getChildren().addAll(floor, wallRoot, foodRoot);
+		getChildren().addAll(wallRoot, foodRoot);
 	}
 
-	private void createFloor(double unscaledWidth, double unscaledHeight) {
-		floor = new Box(unscaledWidth, unscaledHeight, 0.1);
+	private void createFloor(double sizeX, double sizeY, Image floorTexture) {
+		Box floor = new Box(sizeX, sizeY, 0.1);
+		floor.getTransforms().add(new Translate(sizeX / 2 - TS / 2, sizeY / 2 - TS / 2, 3));
 		var material = new PhongMaterial();
-		var texture = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
-		material.setDiffuseMap(texture);
+		material.setDiffuseMap(floorTexture);
 		material.setDiffuseColor(Color.rgb(30, 30, 120));
 		material.setSpecularColor(Color.rgb(60, 60, 240));
 		floor.setMaterial(material);
-		floor.setTranslateX(unscaledWidth / 2 - TS / 2);
-		floor.setTranslateY(unscaledHeight / 2 - TS / 2);
-		floor.setTranslateZ(3);
+		getChildren().add(floor);
 	}
 
 	public Stream<Node> foodNodes() {

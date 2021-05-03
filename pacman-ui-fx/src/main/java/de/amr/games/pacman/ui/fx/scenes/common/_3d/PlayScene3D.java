@@ -35,9 +35,11 @@ import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
+import javafx.scene.image.Image;
+import javafx.scene.paint.PhongMaterial;
 
 /**
- * 3D scene displaying the maze and the game play for both, Pac-Man and Ms. Pac-Man games.
+ * 3D-scene displaying the maze and the game play. Uses in both game variants.
  * 
  * @author Armin Reichert
  */
@@ -50,6 +52,7 @@ public class PlayScene3D implements GameScene {
 	private final PlayScene3DAnimationController animationController;
 	private PacManGameController gameController;
 
+	// package visible to give access to animation controller
 	Maze3D maze;
 	Player3D player3D;
 	Map<Ghost, Ghost3D> ghosts3D;
@@ -59,8 +62,7 @@ public class PlayScene3D implements GameScene {
 	LevelCounter3D levelCounter3D;
 
 	public PlayScene3D(SoundManager sounds) {
-		Group subSceneRoot = new Group();
-		fxScene = new SubScene(subSceneRoot, 400, 300, true, SceneAntialiasing.BALANCED);
+		fxScene = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
 		cams = new PlaySceneCameras(fxScene);
 		cams.select(CameraType.DYNAMIC);
 		animationController = new PlayScene3DAnimationController(this, sounds);
@@ -106,7 +108,11 @@ public class PlayScene3D implements GameScene {
 		final GameLevel level = game().currentLevel();
 		final PacManGameWorld world = level.world;
 
-		maze = new Maze3D(world, getMazeWallColor(variant, level.mazeNumber), UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT);
+		var wallColor = getMazeWallColor(variant, level.mazeNumber);
+		var wallMaterial = new PhongMaterial(wallColor);
+		wallMaterial.setSpecularColor(wallColor.brighter());
+		var floorTexture = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
+		maze = new Maze3D(world, wallMaterial, floorTexture, UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT);
 		maze.resetFood(variant, game());
 
 		player3D = new Player3D(game().player());
