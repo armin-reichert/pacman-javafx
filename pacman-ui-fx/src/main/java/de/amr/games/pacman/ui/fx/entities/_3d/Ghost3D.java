@@ -30,22 +30,25 @@ public class Ghost3D extends Group {
 	//@formatter:off
 	private static final int[][][] ROTATION_INTERVALS = {
 		{ {  0, 0}, {  0, 180}, {  0, 90}, {  0, -90} },
-		{ {180, 0}, {180, 180}, {180, 90}, {180, 270} },
+		{ {180, 0}, {180, 180}, {180, 90}, {180, 270} }, 
 		{ { 90, 0}, { 90, 180}, { 90, 90}, { 90, 270} },
 		{ {-90, 0}, {270, 180}, {-90, 90}, {-90, -90} },
 	};
 	//@formatter:on
 
-	private static int indexOfDir(Direction dir) {
+	private static int rotationIntervalsIndex(Direction dir) {
 		return dir == Direction.LEFT ? 0 : dir == Direction.RIGHT ? 1 : dir == Direction.UP ? 2 : 3;
 	}
 
 	private static int[] rotationInterval(Direction from, Direction to) {
-		int row = indexOfDir(from), col = indexOfDir(to);
-		return ROTATION_INTERVALS[row][col];
+		return ROTATION_INTERVALS[rotationIntervalsIndex(from)][rotationIntervalsIndex(to)];
 	}
 
+	private static Duration TURNING_DURATION = Duration.seconds(0.25);
+
 	private class FlashingAnimation extends Transition {
+
+		private final PhongMaterial flashingSkinMaterial = new PhongMaterial();
 
 		public FlashingAnimation() {
 			setCycleCount(INDEFINITE);
@@ -62,10 +65,10 @@ public class Ghost3D extends Group {
 	public final Ghost ghost;
 	private final Rendering2D rendering2D;
 	private final Group ghostShape;
+	private final MeshView body;
 	private final RotateTransition ghostShapeRot;
 	private final FlashingAnimation flashingAnimation = new FlashingAnimation();
 	private final Group eyesShape;
-	private final PhongMaterial flashingSkinMaterial = new PhongMaterial();
 	private final RotateTransition eyesShapeRot;
 	private final Box bountyShape;
 	private PhongMaterial skinMaterial;
@@ -73,23 +76,25 @@ public class Ghost3D extends Group {
 
 	public Ghost3D(Ghost ghost, Rendering2D rendering2D) {
 		this.ghost = ghost;
+		this.targetDir = ghost.dir();
 		this.rendering2D = rendering2D;
 
-		targetDir = ghost.dir();
 		int[] rotationInterval = rotationInterval(ghost.dir(), targetDir);
 
 		ghostShape = GianmarcosModel3D.createGhost();
 		ghostShape.setRotationAxis(Rotate.Z_AXIS);
 		ghostShape.setRotate(rotationInterval[0]);
 
-		ghostShapeRot = new RotateTransition(Duration.seconds(0.25), ghostShape);
+		body = (MeshView) ghostShape.getChildren().get(0);
+
+		ghostShapeRot = new RotateTransition(TURNING_DURATION, ghostShape);
 		ghostShapeRot.setAxis(Rotate.Z_AXIS);
 
 		eyesShape = GianmarcosModel3D.createGhostEyes();
 		eyesShape.setRotationAxis(Rotate.Z_AXIS);
 		eyesShape.setRotate(rotationInterval[0]);
 
-		eyesShapeRot = new RotateTransition(Duration.seconds(0.25), eyesShape);
+		eyesShapeRot = new RotateTransition(TURNING_DURATION, eyesShape);
 		eyesShapeRot.setAxis(Rotate.Z_AXIS);
 
 		bountyShape = new Box(8, 8, 8);
@@ -133,26 +138,21 @@ public class Ghost3D extends Group {
 	}
 
 	public void startFlashing() {
-		getBodyMeshView().setMaterial(flashingSkinMaterial);
+		body.setMaterial(flashingAnimation.flashingSkinMaterial);
 		flashingAnimation.playFromStart();
-		log("Start flashing mode for %s", ghost);
+		log("Start flashing animation for %s", ghost);
 	}
 
 	public void stopFlashing() {
 		flashingAnimation.stop();
 		setNormalSkinColor();
-		getBodyMeshView().setMaterial(skinMaterial);
-		log("Stop flashing mode for %s", ghost);
+		log("Stop flashing animation for %s", ghost);
 	}
 
 	private void setSkinColor(Color skinColor) {
 		skinMaterial = new PhongMaterial(skinColor);
 		skinMaterial.setSpecularColor(skinColor.brighter());
-		getBodyMeshView().setMaterial(skinMaterial);
-	}
-
-	private MeshView getBodyMeshView() {
-		return (MeshView) ghostShape.getChildren().get(0);
+		body.setMaterial(skinMaterial);
 	}
 
 	private void rotateTowardsMoveDir() {
