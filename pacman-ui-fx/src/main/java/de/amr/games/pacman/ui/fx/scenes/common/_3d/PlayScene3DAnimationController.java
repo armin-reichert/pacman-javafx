@@ -114,8 +114,7 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 	public void onPlayerGainsPower(PacManGameEvent e) {
 		sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
 		playScene.ghosts3D.values().forEach(ghost3D -> {
-			ghost3D.stopFlashing();
-			ghost3D.startBlueMode();
+			ghost3D.setBlueSkinColor();
 		});
 	}
 
@@ -131,7 +130,6 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 	@Override
 	public void onPlayerLostPower(PacManGameEvent e) {
 		playScene.ghosts3D.values().forEach(ghost3D -> {
-			ghost3D.stopBlueMode();
 			ghost3D.stopFlashing();
 		});
 		sounds.stop(PacManGameSound.PACMAN_POWER);
@@ -195,7 +193,7 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 
 	@Override
 	public void onGhostLeavesHouse(PacManGameEvent e) {
-		playScene.ghosts3D.get(e.ghost).stopBlueMode();
+		playScene.ghosts3D.get(e.ghost).setNormalSkinColor();
 	}
 
 	@Override
