@@ -6,9 +6,11 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.world.PacManGameWorld;
+import de.amr.games.pacman.model.world.WallMap;
+import de.amr.games.pacman.model.world.WallScanner;
 import de.amr.games.pacman.ui.fx.Env;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -20,33 +22,11 @@ import javafx.scene.shape.Box;
  */
 public class WallBuilder {
 
-	private static final int N = 4;
-	private static final double BLOCKSIZE = (double) TS / N;
+	private int resolution = 4;
+	private double blockSize = (double) TS / resolution;
 
-	public static V2i northOf(int tileX, int tileY, int i) {
-		int dy = i / N == 0 ? -1 : 0;
-		return new V2i(tileX, tileY + dy);
-	}
-
-	public static V2i southOf(int tileX, int tileY, int i) {
-		int dy = i / N == N - 1 ? 1 : 0;
-		return new V2i(tileX, tileY + dy);
-	}
-
-	public static V2i westOf(int tileX, int tileY, int i) {
-		int dx = i % N == 0 ? -1 : 0;
-		return new V2i(tileX + dx, tileY);
-	}
-
-	public static V2i eastOf(int tileX, int tileY, int i) {
-		int dx = i % N == N - 1 ? 1 : 0;
-		return new V2i(tileX + dx, tileY);
-	}
-
-	private int numBlocksX;
-	private int numBlocksY;
-	private double blockSizeZ = BLOCKSIZE;
-	private boolean[][] buildWall;
+	private double blockSizeZ = blockSize;
+	private boolean[][] wallInfo;
 	private List<Box> walls;
 	private PhongMaterial material;
 
@@ -71,11 +51,17 @@ public class WallBuilder {
 		double millis;
 		walls = new ArrayList<>();
 
-		start = System.nanoTime();
-		scan(world);
-		end = System.nanoTime();
-		millis = (end - start) * 1e-6;
-		log("WallBuilder: scanning world took %.0f milliseconds", millis);
+		Optional<WallMap> wallMap = world.wallMap(resolution);
+		if (wallMap.isPresent()) {
+			wallInfo = wallMap.get().wallInfo();
+		} else {
+			WallScanner scanner = new WallScanner(resolution);
+			start = System.nanoTime();
+			wallInfo = scanner.scan(world);
+			end = System.nanoTime();
+			millis = (end - start) * 1e-6;
+			log("WallBuilder: scanning world took %.0f milliseconds", millis);
+		}
 
 		start = System.nanoTime();
 		createHorizontalWalls(world);
@@ -87,41 +73,6 @@ public class WallBuilder {
 		return getWalls();
 	}
 
-	private void scan(PacManGameWorld world) {
-		numBlocksX = N * world.numCols();
-		numBlocksY = N * world.numRows();
-		buildWall = new boolean[numBlocksY][numBlocksX];
-		// scan for blocks belonging to walls
-		for (int y = 0; y < numBlocksY; ++y) {
-			for (int x = 0; x < numBlocksX; ++x) {
-				V2i tile = new V2i(x / N, y / N);
-				buildWall[y][x] = world.isWall(tile);
-			}
-		}
-		// clear blocks inside wall regions
-		for (int y = 0; y < numBlocksY; ++y) {
-			int tileY = y / N;
-			for (int x = 0; x < numBlocksX; ++x) {
-				int tileX = x / N;
-				int i = (y % N) * N + (x % N);
-				V2i n = northOf(tileX, tileY, i), e = eastOf(tileX, tileY, i), s = southOf(tileX, tileY, i),
-						w = westOf(tileX, tileY, i);
-				if (world.isWall(n) && world.isWall(e) && world.isWall(s) && world.isWall(w)) {
-					V2i se = southOf(e.x, e.y, i);
-					V2i sw = southOf(w.x, w.y, i);
-					V2i ne = northOf(e.x, e.y, i);
-					V2i nw = northOf(w.x, w.y, i);
-					if (world.isWall(se) && !world.isWall(nw) || !world.isWall(se) && world.isWall(nw)
-							|| world.isWall(sw) && !world.isWall(ne) || !world.isWall(sw) && world.isWall(ne)) {
-						// keep corner of wall region
-					} else {
-						buildWall[y][x] = false;
-					}
-				}
-			}
-		}
-	}
-
 	private void addWall(int leftX, int topY, int numBlocksX, int numBlocksY) {
 		if (numBlocksX == 1 && numBlocksY == 1) {
 			return; // ignore 1x1 walls because they could be part of a larger wall in other orientation
@@ -131,22 +82,22 @@ public class WallBuilder {
 	}
 
 	private Box createWall(int leftX, int topY, PhongMaterial material, int numBlocksX, int numBlocksY) {
-		Box wall = new Box(numBlocksX * BLOCKSIZE, numBlocksY * BLOCKSIZE, blockSizeZ);
+		Box wall = new Box(numBlocksX * blockSize, numBlocksY * blockSize, blockSizeZ);
 		wall.setMaterial(material);
-		wall.setTranslateX(leftX * BLOCKSIZE + (numBlocksX - 4) * 0.5 * BLOCKSIZE);
-		wall.setTranslateY(topY * BLOCKSIZE + (numBlocksY - 4) * 0.5 * BLOCKSIZE);
+		wall.setTranslateX(leftX * blockSize + (numBlocksX - 4) * 0.5 * blockSize);
+		wall.setTranslateY(topY * blockSize + (numBlocksY - 4) * 0.5 * blockSize);
 		wall.setTranslateZ(1.5);
 		wall.drawModeProperty().bind(Env.$drawMode);
 		return wall;
 	}
 
 	private void createHorizontalWalls(PacManGameWorld world) {
-		int xSize = buildWall[0].length, ySize = buildWall.length;
+		int xSize = wallInfo[0].length, ySize = wallInfo.length;
 		for (int y = 0; y < ySize; ++y) {
 			int leftX = -1;
 			int sizeX = 0;
 			for (int x = 0; x < xSize; ++x) {
-				if (buildWall[y][x]) {
+				if (wallInfo[y][x]) {
 					if (leftX == -1) {
 						leftX = x;
 						sizeX = 1;
@@ -172,12 +123,12 @@ public class WallBuilder {
 	}
 
 	private void createVerticalWalls(PacManGameWorld world) {
-		int xSize = buildWall[0].length, ySize = buildWall.length;
+		int xSize = wallInfo[0].length, ySize = wallInfo.length;
 		for (int x = 0; x < xSize; ++x) {
 			int topY = -1;
 			int sizeY = 0;
 			for (int y = 0; y < ySize; ++y) {
-				if (buildWall[y][x]) {
+				if (wallInfo[y][x]) {
 					if (topY == -1) {
 						topY = y;
 						sizeY = 1;
