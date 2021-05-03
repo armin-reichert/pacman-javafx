@@ -113,7 +113,7 @@ public class PlayScene3D implements GameScene {
 		wallMaterial.setSpecularColor(wallColor.brighter());
 		var floorTexture = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
 		maze = new Maze3D(world, wallMaterial, floorTexture, UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT);
-		maze.resetFood(variant, game());
+		maze.resetFood(variant, level);
 
 		player3D = new Player3D(game().player());
 		ghosts3D = game().ghosts().collect(Collectors.toMap(Function.identity(), ghost -> new Ghost3D(ghost, r2D)));

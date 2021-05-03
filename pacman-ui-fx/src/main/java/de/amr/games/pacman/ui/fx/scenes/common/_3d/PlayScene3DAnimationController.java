@@ -238,7 +238,7 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 
 		// enter LEVEL_STARTING
 		else if (e.newGameState == PacManGameState.LEVEL_STARTING) {
-			playScene.maze.resetFood(gameController.gameVariant(), game());
+			playScene.maze.resetFood(gameController.gameVariant(), game().currentLevel());
 			createEnergizerAnimations(game().currentLevel().world);
 			playScene.levelCounter3D.update(e.gameModel);
 			playAnimationLevelStarting();

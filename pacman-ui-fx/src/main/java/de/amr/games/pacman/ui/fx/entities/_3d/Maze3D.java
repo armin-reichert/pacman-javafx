@@ -6,7 +6,6 @@ import static de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets.getFoodColo
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import javafx.scene.Group;
@@ -52,12 +51,11 @@ public class Maze3D extends Group {
 		return foodRoot.getChildren().stream();
 	}
 
-	public void resetFood(GameVariant variant, GameModel game) {
-		final GameLevel level = game.currentLevel();
-		var foodMaterial = new PhongMaterial(getFoodColor(variant, level.mazeNumber));
+	public void resetFood(GameVariant variant, GameLevel gameLevel) {
+		var foodMaterial = new PhongMaterial(getFoodColor(variant, gameLevel.mazeNumber));
 		foodRoot.getChildren().clear();
-		level.world.tiles().filter(level.world::isFoodTile).forEach(foodTile -> {
-			double size = level.world.isEnergizerTile(foodTile) ? 2.5 : 1;
+		gameLevel.world.tiles().filter(gameLevel.world::isFoodTile).forEach(foodTile -> {
+			double size = gameLevel.world.isEnergizerTile(foodTile) ? 2.5 : 1;
 			var pellet = new Sphere(size);
 			pellet.setMaterial(foodMaterial);
 			pellet.setTranslateX(foodTile.x * TS);
