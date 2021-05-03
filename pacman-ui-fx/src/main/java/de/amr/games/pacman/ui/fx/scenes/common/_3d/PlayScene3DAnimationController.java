@@ -347,7 +347,7 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 			game().player().visible = false;
 			game().ghosts().forEach(ghost -> ghost.visible = false);
 			String spell = randomLevelCompleteText();
-			String levelCompleteMessage = String.format("%s!\n\nLevel %d complete.", spell, game().currentLevel().number);
+			String levelCompleteMessage = String.format("%s\n\nLevel %d complete.", spell, game().currentLevel().number);
 			gameController.getUI().showFlashMessage(levelCompleteMessage, 2);
 		});
 		SequentialTransition animation = new SequentialTransition(phase1, new PauseTransition(Duration.seconds(2)));
