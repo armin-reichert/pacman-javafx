@@ -33,15 +33,13 @@ public class Maze3D extends Group {
 
 	public Maze3D(PacManGameWorld world, Color wallColor, double unscaledWidth, double unscaledHeight) {
 		createFloor(unscaledWidth, unscaledHeight);
-		getChildren().addAll(floor, wallRoot, foodRoot);
-		MazeBuilder mazeBuilder = new MazeBuilder();
-		PhongMaterial material = new PhongMaterial();
-		material.setDiffuseColor(wallColor);
+		var material = new PhongMaterial(wallColor);
 		material.setSpecularColor(wallColor.brighter());
-		mazeBuilder.setWallMaterial(material);
-		mazeBuilder.setWallSizeZ(3.0);
-		mazeBuilder.build(world);
-		wallRoot.getChildren().setAll(mazeBuilder.getWalls());
+		var wallBuilder = new WallBuilder();
+		wallBuilder.setWallMaterial(material);
+		wallBuilder.setWallSizeZ(2.5);
+		wallRoot.getChildren().setAll(wallBuilder.build(world));
+		getChildren().addAll(floor, wallRoot, foodRoot);
 	}
 
 	private void createFloor(double unscaledWidth, double unscaledHeight) {
@@ -72,7 +70,7 @@ public class Maze3D extends Group {
 	}
 
 	private Sphere createPellet(double r, V2i tile, PhongMaterial material) {
-		Sphere s = new Sphere(r);
+		var s = new Sphere(r);
 		s.setMaterial(material);
 		s.setTranslateX(tile.x * TS);
 		s.setTranslateY(tile.y * TS);
