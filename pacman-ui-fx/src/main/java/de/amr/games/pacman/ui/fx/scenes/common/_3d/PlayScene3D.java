@@ -4,7 +4,6 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets.getMazeWallColor;
 
-import java.util.EnumMap;
 import java.util.Map;
 import java.util.OptionalDouble;
 import java.util.function.Function;
@@ -45,9 +44,9 @@ import javafx.scene.paint.PhongMaterial;
  */
 public class PlayScene3D implements GameScene {
 
-	enum Perspective {
-		TOTAL, FOLLOWING_PLAYER, NEAR_PLAYER
-	}
+	static final int CAMERA_TOTAL = 0;
+	static final int CAMERA_FOLLOWING_PLAYER = 1;
+	static final int CAMERA_NEAR_PLAYER = 2;
 
 	private static final int MAX_LIVES_DISPLAYED = 5;
 
@@ -55,8 +54,8 @@ public class PlayScene3D implements GameScene {
 	private final PlayScene3DAnimationController animationController;
 	private PacManGameController gameController;
 
-	private EnumMap<Perspective, PlaySceneCamera> cameras = new EnumMap<>(Perspective.class);
-	private Perspective selectedPerspective;
+	private PlaySceneCamera[] cameras = new PlaySceneCamera[3];
+	private int selectedCameraIndex;
 
 	// package visible to give access to animation controller
 	Maze3D maze;
@@ -71,29 +70,29 @@ public class PlayScene3D implements GameScene {
 		animationController = new PlayScene3DAnimationController(this, sounds);
 		fxScene = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
 		CameraTotal cameraTotal = new CameraTotal();
-		cameras.put(Perspective.TOTAL, cameraTotal);
+		cameras[CAMERA_TOTAL] = cameraTotal;
 		fxScene.addEventHandler(KeyEvent.KEY_PRESSED, cameraTotal);
-		cameras.put(Perspective.FOLLOWING_PLAYER, new CameraFollowingPlayer());
-		cameras.put(Perspective.NEAR_PLAYER, new CameraNearPlayer());
-		selectPerspective(Perspective.FOLLOWING_PLAYER);
+		cameras[CAMERA_FOLLOWING_PLAYER] = new CameraFollowingPlayer();
+		cameras[CAMERA_NEAR_PLAYER] = new CameraNearPlayer();
+		selectCamera(CAMERA_FOLLOWING_PLAYER);
 	}
 
-	public void selectPerspective(Perspective perspective) {
-		selectedPerspective = perspective;
-		cameras.get(selectedPerspective).reset();
-		fxScene.setCamera(cameras.get(selectedPerspective));
+	public void selectCamera(int index) {
+		cameras[index].reset();
+		fxScene.setCamera(cameras[index]);
+		selectedCameraIndex = index;
 	}
 
 	public void nextPerspective() {
-		int next = selectedPerspective.ordinal() + 1;
-		if (next == Perspective.values().length) {
+		int next = selectedCameraIndex + 1;
+		if (next == cameras.length) {
 			next = 0;
 		}
-		selectPerspective(Perspective.values()[next]);
+		selectCamera(next);
 	}
 
 	public PlaySceneCamera selectedCamera() {
-		return cameras.get(selectedPerspective);
+		return cameras[selectedCameraIndex];
 	}
 
 	@Override
