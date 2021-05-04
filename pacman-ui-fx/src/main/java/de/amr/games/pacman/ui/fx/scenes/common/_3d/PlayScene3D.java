@@ -38,7 +38,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.PhongMaterial;
 
 /**
- * 3D-scene displaying the maze and the game play. Uses in both game variants.
+ * 3D-scene displaying the maze and the game play. Used in both game variants.
  * 
  * @author Armin Reichert
  */
