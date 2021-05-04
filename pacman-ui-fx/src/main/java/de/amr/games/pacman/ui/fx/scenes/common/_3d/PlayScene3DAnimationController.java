@@ -95,9 +95,7 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 	public void onGameEvent(PacManGameEvent gameEvent) {
 		boolean attractMode = gameController.isAttractMode();
 		sounds.setMuted(attractMode);
-		if (!attractMode) {
-			DefaultPacManGameEventHandler.super.onGameEvent(gameEvent);
-		}
+		DefaultPacManGameEventHandler.super.onGameEvent(gameEvent);
 	}
 
 	@Override
