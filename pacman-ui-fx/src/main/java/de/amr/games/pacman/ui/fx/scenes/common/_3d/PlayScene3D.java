@@ -35,6 +35,7 @@ import javafx.scene.PointLight;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.PhongMaterial;
 
 /**
@@ -69,9 +70,11 @@ public class PlayScene3D implements GameScene {
 	public PlayScene3D(SoundManager sounds) {
 		animationController = new PlayScene3DAnimationController(this, sounds);
 		fxScene = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
-		cameras.put(Perspective.TOTAL, new CameraTotal());
-		cameras.put(Perspective.FOLLOWING_PLAYER, new CameraFollowingPlayer(fxScene));
-		cameras.put(Perspective.NEAR_PLAYER, new CameraNearPlayer(fxScene));
+		CameraTotal cameraTotal = new CameraTotal();
+		cameras.put(Perspective.TOTAL, cameraTotal);
+		fxScene.addEventHandler(KeyEvent.KEY_PRESSED, cameraTotal);
+		cameras.put(Perspective.FOLLOWING_PLAYER, new CameraFollowingPlayer());
+		cameras.put(Perspective.NEAR_PLAYER, new CameraNearPlayer());
 		selectPerspective(Perspective.FOLLOWING_PLAYER);
 	}
 
