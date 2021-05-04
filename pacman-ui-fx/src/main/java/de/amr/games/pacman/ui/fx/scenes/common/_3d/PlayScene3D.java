@@ -83,7 +83,7 @@ public class PlayScene3D implements GameScene {
 		selectedCameraIndex = index;
 	}
 
-	public void nextPerspective() {
+	public void nextCamera() {
 		int next = selectedCameraIndex + 1;
 		if (next == cameras.length) {
 			next = 0;
