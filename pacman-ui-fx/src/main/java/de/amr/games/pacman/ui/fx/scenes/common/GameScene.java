@@ -2,13 +2,11 @@ package de.amr.games.pacman.ui.fx.scenes.common;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
-import java.util.Optional;
 import java.util.OptionalDouble;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.event.DefaultPacManGameEventHandler;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.ui.fx.scenes.common._3d.PlaySceneCameras;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 
@@ -59,9 +57,5 @@ public interface GameScene extends DefaultPacManGameEventHandler {
 			getSubScene().widthProperty().bind(parentScene.widthProperty());
 			getSubScene().heightProperty().bind(parentScene.heightProperty());
 		}
-	}
-
-	default Optional<PlaySceneCameras> cams() {
-		return Optional.empty();
 	}
 }

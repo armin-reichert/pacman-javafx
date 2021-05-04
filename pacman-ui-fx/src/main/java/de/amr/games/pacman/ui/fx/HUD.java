@@ -2,6 +2,7 @@ package de.amr.games.pacman.ui.fx;
 
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
+import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScene3D;
 import javafx.scene.Camera;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -82,9 +83,11 @@ public class HUD extends HBox {
 		if (ui.currentGameScene instanceof AbstractGameScene2D) {
 			line("Canvas2D", "w=%.0f h=%.0f", ui.canvas2D.getWidth(), ui.canvas2D.getHeight());
 		} else {
-			ui.currentGameScene.cams().ifPresent(sceneCams -> {
-				line("Camera (CTRL+C)", "%s %s", sceneCams.selection(), cameraInfo(sceneCams.selectedCamera()));
-			});
+			if (ui.currentGameScene instanceof PlayScene3D) {
+				PlayScene3D playScene = (PlayScene3D) ui.currentGameScene;
+				line("Camera (CTRL+C)", "%s %s", playScene.selectedCamera(),
+						cameraInfo(playScene.selectedCamera()));
+			}
 			line("Draw Mode (CTRL+L)", "%s", Env.$drawMode.get());
 			line("Axes (CTRL+X)", "%s", onOff(Env.$axesVisible.get()));
 		}

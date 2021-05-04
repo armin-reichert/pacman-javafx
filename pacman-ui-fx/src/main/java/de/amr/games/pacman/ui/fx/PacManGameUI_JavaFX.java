@@ -15,6 +15,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
+import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScene3D;
 import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacManScenes;
 import de.amr.games.pacman.ui.fx.scenes.pacman.PacManScenes;
 import javafx.beans.property.IntegerProperty;
@@ -255,10 +256,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		switch (e.getCode()) {
 
 		case C:
-			currentGameScene.cams().ifPresent(sceneCams -> {
-				sceneCams.selectNext();
-				showFlashMessage(String.format("Using camera %s", sceneCams.selection()));
-			});
+			if (currentGameScene instanceof PlayScene3D) {
+				PlayScene3D playScene = (PlayScene3D) currentGameScene;
+				playScene.nextPerspective();
+				showFlashMessage(String.format("Camera: %s", playScene.selectedCamera()));
+			}
 			break;
 
 		case I:
