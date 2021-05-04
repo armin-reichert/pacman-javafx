@@ -137,7 +137,7 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 
 	@Override
 	public void onPlayerFoundFood(PacManGameEvent e) {
-		if (e.tile == null) {
+		if (e.tile.isEmpty()) {
 			// this is triggered by the "eat all pellets except energizers" cheat
 			Predicate<Node> isEnergizer = node -> {
 				V2i tile = (V2i) node.getUserData();
@@ -148,7 +148,7 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 		}
 		playScene.maze.foodNodes().filter(node -> {
 			V2i tile = (V2i) node.getUserData();
-			return tile.equals(e.tile);
+			return tile.equals(e.tile.get());
 		}).findFirst().ifPresent(foodNode -> foodNode.setVisible(false));
 		AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
 		if (!munching.isPlaying()) {
@@ -193,7 +193,7 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 
 	@Override
 	public void onGhostLeavesHouse(PacManGameEvent e) {
-		playScene.ghosts3D.get(e.ghost).setNormalSkinColor();
+		playScene.ghosts3D.get(e.ghost.get()).setNormalSkinColor();
 	}
 
 	@Override
