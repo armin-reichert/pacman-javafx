@@ -121,7 +121,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public void stretchTo(double width, double height) {
+	public void resize(double width, double height) {
 		// data binding does the job
 	}
 

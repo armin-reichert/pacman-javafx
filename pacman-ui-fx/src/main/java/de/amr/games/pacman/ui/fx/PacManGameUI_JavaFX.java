@@ -163,8 +163,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			if (newGameScene.getGameController() == null) {
 				newGameScene.setGameController(gameController);
 			}
-			newGameScene.stretchTo(mainScene.getWidth(), mainScene.getHeight());
-			newGameScene.keepStretched(mainScene);
+			newGameScene.resize(mainScene.getWidth(), mainScene.getHeight());
+			newGameScene.keepSizeOf(mainScene);
 			currentGameScene = newGameScene;
 			currentGameScene.init();
 			// replace game scene in scene graph

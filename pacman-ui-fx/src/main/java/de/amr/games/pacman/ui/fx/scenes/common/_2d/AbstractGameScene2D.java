@@ -71,7 +71,7 @@ public abstract class AbstractGameScene2D implements GameScene {
 	}
 
 	@Override
-	public void stretchTo(double width, double height) {
+	public void resize(double width, double height) {
 		// resize canvas to take given height and respect aspect ratio
 		Canvas canvas = gc.getCanvas();
 		canvas.setWidth(aspectRatio().getAsDouble() * height);
