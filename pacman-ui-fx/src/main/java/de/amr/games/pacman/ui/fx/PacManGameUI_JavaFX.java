@@ -207,7 +207,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		case E:
 			gameController.eatAllPellets();
-			// TODO must fire event to notify play scene
 			break;
 
 		case I:
