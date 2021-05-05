@@ -1,6 +1,7 @@
 package de.amr.games.pacman.ui.fx.scenes.common._3d;
 
 import javafx.scene.Node;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
 
 public class CameraFollowingPlayer extends PlaySceneCamera {
@@ -18,6 +19,10 @@ public class CameraFollowingPlayer extends PlaySceneCamera {
 	public void follow(Node target) {
 		setTranslateX(Math.min(10, lerp(getTranslateX(), target.getTranslateX())));
 		setTranslateY(Math.max(50, lerp(getTranslateY(), target.getTranslateY())));
+	}
+
+	@Override
+	public void handle(KeyEvent event) {
 	}
 
 	@Override

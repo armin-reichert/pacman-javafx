@@ -1,11 +1,10 @@
 package de.amr.games.pacman.ui.fx.scenes.common._3d;
 
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
 
-public class CameraTotal extends PlaySceneCamera implements EventHandler<KeyEvent> {
+public class CameraTotal extends PlaySceneCamera {
 
 	public final CameraController cameraController;
 
