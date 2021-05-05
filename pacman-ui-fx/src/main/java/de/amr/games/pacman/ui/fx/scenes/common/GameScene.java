@@ -15,7 +15,7 @@ import javafx.scene.SubScene;
  */
 public interface GameScene extends DefaultPacManGameEventHandler {
 
-	SubScene getSubScene();
+	SubScene getSubSceneFX();
 
 	void init();
 
@@ -49,8 +49,8 @@ public interface GameScene extends DefaultPacManGameEventHandler {
 				stretchTo(maxWidth, maxHeight);
 			});
 		} else {
-			getSubScene().widthProperty().bind(parentScene.widthProperty());
-			getSubScene().heightProperty().bind(parentScene.heightProperty());
+			getSubSceneFX().widthProperty().bind(parentScene.widthProperty());
+			getSubSceneFX().heightProperty().bind(parentScene.heightProperty());
 		}
 	}
 }

@@ -168,9 +168,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			currentGameScene = newGameScene;
 			currentGameScene.init();
 			// replace game scene in scene graph
-			gameSceneParent.getChildren().setAll(currentGameScene.getSubScene());
+			gameSceneParent.getChildren().setAll(currentGameScene.getSubSceneFX());
 			// Note: this must be done after adding to the scene graph
-			currentGameScene.getSubScene().requestFocus();
+			currentGameScene.getSubSceneFX().requestFocus();
 		}
 	}
 

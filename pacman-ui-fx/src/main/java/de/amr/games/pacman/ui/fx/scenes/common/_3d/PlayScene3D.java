@@ -51,7 +51,7 @@ public class PlayScene3D implements GameScene {
 
 	static final int LIVES_COUNTER_MAX = 5;
 
-	private final SubScene fxScene;
+	private final SubScene subSceneFX;
 	private final PlayScene3DAnimationController animationController;
 	private final PlaySceneCamera[] cameras = { new CameraTotal(), new CameraFollowingPlayer(), new CameraNearPlayer() };
 
@@ -69,7 +69,7 @@ public class PlayScene3D implements GameScene {
 
 	public PlayScene3D(SoundManager sounds) {
 		animationController = new PlayScene3DAnimationController(this, sounds);
-		fxScene = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
+		subSceneFX = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
 		selectedCameraIndex = -1;
 		selectCamera(CAMERA_FOLLOWING_PLAYER);
 	}
@@ -82,11 +82,11 @@ public class PlayScene3D implements GameScene {
 	}
 
 	public void selectCamera(int index) {
-		selectedCamera().ifPresent(camera -> fxScene.removeEventHandler(KeyEvent.KEY_PRESSED, camera));
+		selectedCamera().ifPresent(camera -> subSceneFX.removeEventHandler(KeyEvent.KEY_PRESSED, camera));
 		selectedCameraIndex = index;
 		selectedCamera().ifPresent(camera -> {
-			fxScene.setCamera(camera);
-			fxScene.addEventHandler(KeyEvent.KEY_PRESSED, camera);
+			subSceneFX.setCamera(camera);
+			subSceneFX.addEventHandler(KeyEvent.KEY_PRESSED, camera);
 			camera.reset();
 		});
 	}
@@ -116,8 +116,8 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public SubScene getSubScene() {
-		return fxScene;
+	public SubScene getSubSceneFX() {
+		return subSceneFX;
 	}
 
 	@Override
@@ -173,8 +173,8 @@ public class PlayScene3D implements GameScene {
 		content.setTranslateX(-0.5 * PacManGameWorld.DEFAULT_WIDTH * TS);
 		content.setTranslateY(-0.5 * PacManGameWorld.DEFAULT_HEIGHT * TS);
 
-		final var sceneRoot = new Group(content, new CoordinateSystem(fxScene.getWidth()).getNode());
-		fxScene.setRoot(sceneRoot);
+		final var sceneRoot = new Group(content, new CoordinateSystem(subSceneFX.getWidth()).getNode());
+		subSceneFX.setRoot(sceneRoot);
 
 		animationController.init();
 	}

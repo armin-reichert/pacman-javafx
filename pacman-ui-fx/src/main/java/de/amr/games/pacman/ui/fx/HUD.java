@@ -70,8 +70,8 @@ public class HUD extends HBox {
 		line("", "Remaining: %s",
 				stateTimer.ticksRemaining() == Long.MAX_VALUE ? "indefinite" : stateTimer.ticksRemaining());
 		line("Game Scene", "%s", ui.currentGameScene.getClass().getSimpleName());
-		line("Game Scene Size", "w=%.0f h=%.0f", ui.currentGameScene.getSubScene().getWidth(),
-				ui.currentGameScene.getSubScene().getHeight());
+		line("Game Scene Size", "w=%.0f h=%.0f", ui.currentGameScene.getSubSceneFX().getWidth(),
+				ui.currentGameScene.getSubSceneFX().getHeight());
 		line();
 		line("Autopilot (A)", "%s", onOff(ui.gameController.autopilotOn));
 		line("Immunity (I)", "%s", onOff(ui.gameController.isPlayerImmune()));

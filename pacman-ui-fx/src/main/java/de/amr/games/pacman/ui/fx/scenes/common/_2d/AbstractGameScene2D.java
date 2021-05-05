@@ -35,7 +35,7 @@ public abstract class AbstractGameScene2D implements GameScene {
 	protected final SoundManager sounds;
 
 	protected PacManGameController gameController;
-	protected SubScene scene;
+	protected SubScene subSceneFX;
 	protected GraphicsContext gc;
 
 	public AbstractGameScene2D(Rendering2D rendering, SoundManager sounds) {
@@ -50,9 +50,9 @@ public abstract class AbstractGameScene2D implements GameScene {
 		gc = canvas.getGraphicsContext2D();
 		canvas.setWidth(unscaledWidth);
 		canvas.setHeight(unscaledHeight);
-		scene = new SubScene(new Group(canvas), unscaledWidth, unscaledHeight);
-		scene.widthProperty().bind(canvas.widthProperty());
-		scene.heightProperty().bind(canvas.heightProperty());
+		subSceneFX = new SubScene(new Group(canvas), unscaledWidth, unscaledHeight);
+		subSceneFX.widthProperty().bind(canvas.widthProperty());
+		subSceneFX.heightProperty().bind(canvas.heightProperty());
 	}
 
 	@Override
@@ -91,8 +91,8 @@ public abstract class AbstractGameScene2D implements GameScene {
 	}
 
 	@Override
-	public SubScene getSubScene() {
-		return scene;
+	public SubScene getSubSceneFX() {
+		return subSceneFX;
 	}
 
 	@Override
