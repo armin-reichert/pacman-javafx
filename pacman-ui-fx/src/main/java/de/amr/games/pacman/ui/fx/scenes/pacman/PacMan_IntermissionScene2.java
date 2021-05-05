@@ -42,7 +42,7 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 	private TimedSequence<Rectangle2D> blinkyDamagedAnimation;
 
 	public PacMan_IntermissionScene2() {
-		super(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, PacManScenes.RENDERING, PacManScenes.SOUNDS);
+		super(PacManScenes.RENDERING, PacManScenes.SOUNDS);
 	}
 
 	@Override

@@ -48,7 +48,7 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 	private JuniorBag2D bag2D;
 
 	public MsPacMan_IntermissionScene3() {
-		super(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, MsPacManScenes.RENDERING, MsPacManScenes.SOUNDS);
+		super(MsPacManScenes.RENDERING, MsPacManScenes.SOUNDS);
 	}
 
 	@Override

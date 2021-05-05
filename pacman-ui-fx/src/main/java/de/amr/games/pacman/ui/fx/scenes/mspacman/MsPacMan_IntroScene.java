@@ -30,7 +30,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 	private List<Ghost2D> ghosts2D;
 
 	public MsPacMan_IntroScene() {
-		super(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, MsPacManScenes.RENDERING, MsPacManScenes.SOUNDS);
+		super(MsPacManScenes.RENDERING, MsPacManScenes.SOUNDS);
 	}
 
 	@Override

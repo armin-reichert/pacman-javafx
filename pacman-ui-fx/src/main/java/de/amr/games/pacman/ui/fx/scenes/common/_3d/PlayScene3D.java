@@ -16,6 +16,7 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
+import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.fx.entities._3d.Bonus3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Ghost3D;
 import de.amr.games.pacman.ui.fx.entities._3d.LevelCounter3D;
@@ -137,7 +138,8 @@ public class PlayScene3D implements GameScene {
 		final var wallMaterial = new PhongMaterial(wallColor);
 		wallMaterial.setSpecularColor(wallColor.brighter());
 		final var floorTexture = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
-		maze = new Maze3D(world, wallMaterial, 2.5, floorTexture, UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT);
+		maze = new Maze3D(world, wallMaterial, 2.5, floorTexture, PacManGameWorld.DEFAULT_WIDTH * TS,
+				PacManGameWorld.DEFAULT_HEIGHT * TS);
 		maze.resetFood(variant, level);
 
 		player3D = new Player3D(game().player());
@@ -168,8 +170,8 @@ public class PlayScene3D implements GameScene {
 		content.getChildren().addAll(ghosts3D.values());
 		content.getChildren().addAll(ambientLight, playerLight);
 
-		content.setTranslateX(-0.5 * UNSCALED_SCENE_WIDTH);
-		content.setTranslateY(-0.5 * UNSCALED_SCENE_HEIGHT);
+		content.setTranslateX(-0.5 * PacManGameWorld.DEFAULT_WIDTH * TS);
+		content.setTranslateY(-0.5 * PacManGameWorld.DEFAULT_HEIGHT * TS);
 
 		final var sceneRoot = new Group(content, new CoordinateSystem(fxScene.getWidth()).getNode());
 		fxScene.setRoot(sceneRoot);

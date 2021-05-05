@@ -40,7 +40,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 	private final PlayScene2DAnimationController animationController;
 
 	public PlayScene2D(Rendering2D rendering, SoundManager sounds) {
-		super(UNSCALED_SCENE_WIDTH, UNSCALED_SCENE_HEIGHT, rendering, sounds);
+		super(rendering, sounds);
 		animationController = new PlayScene2DAnimationController(this, sounds);
 	}
 
