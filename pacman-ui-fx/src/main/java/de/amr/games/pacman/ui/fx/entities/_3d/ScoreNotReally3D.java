@@ -5,12 +5,10 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets;
 import javafx.scene.Group;
-import javafx.scene.PerspectiveCamera;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.transform.Rotate;
 
 public class ScoreNotReally3D extends Group {
 
@@ -56,7 +54,7 @@ public class ScoreNotReally3D extends Group {
 		this.hiscoreOnly = hiscoreOnly;
 	}
 
-	public void update(GameModel game, PerspectiveCamera cam) {
+	public void update(GameModel game) {
 		txtScore.setText(String.format("%07d L%d", game.score(), game.currentLevel().number));
 		txtHiscore.setText(String.format("%07d L%d", game.hiscorePoints(), game.hiscoreLevel()));
 		if (hiscoreOnly) {
@@ -64,8 +62,5 @@ public class ScoreNotReally3D extends Group {
 		} else {
 			txtScore.setVisible(true);
 		}
-		// Keep score text in plain sight. TODO is this the right way to do this?
-		setRotationAxis(Rotate.X_AXIS);
-		setRotate(cam.getRotate());
 	}
 }

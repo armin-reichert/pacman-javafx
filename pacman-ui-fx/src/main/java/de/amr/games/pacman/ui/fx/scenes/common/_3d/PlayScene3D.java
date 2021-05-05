@@ -5,6 +5,7 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets.getMazeWallColor;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx.entities._3d.Bonus3D;
@@ -33,6 +35,7 @@ import javafx.scene.SubScene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.transform.Rotate;
 
 /**
  * 3D-scene displaying the maze and the game play. Used in both game variants.
@@ -45,7 +48,7 @@ public class PlayScene3D implements GameScene {
 	static final int CAMERA_FOLLOWING_PLAYER = 1;
 	static final int CAMERA_NEAR_PLAYER = 2;
 
-	static final int MAX_LIVES_DISPLAYED = 5;
+	static final int LIVES_COUNTER_MAX = 5;
 
 	private final SubScene fxScene;
 	private final PlayScene3DAnimationController animationController;
@@ -66,16 +69,25 @@ public class PlayScene3D implements GameScene {
 	public PlayScene3D(SoundManager sounds) {
 		animationController = new PlayScene3DAnimationController(this, sounds);
 		fxScene = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
-		for (PlaySceneCamera camera : cameras) {
-			fxScene.addEventHandler(KeyEvent.KEY_PRESSED, camera);
-		}
+		selectedCameraIndex = -1;
 		selectCamera(CAMERA_FOLLOWING_PLAYER);
 	}
 
+	public Optional<PlaySceneCamera> selectedCamera() {
+		if (selectedCameraIndex >= 0 && selectedCameraIndex < cameras.length) {
+			return Optional.of(cameras[selectedCameraIndex]);
+		}
+		return Optional.empty();
+	}
+
 	public void selectCamera(int index) {
-		cameras[index].reset();
-		fxScene.setCamera(cameras[index]);
+		selectedCamera().ifPresent(camera -> fxScene.removeEventHandler(KeyEvent.KEY_PRESSED, camera));
 		selectedCameraIndex = index;
+		selectedCamera().ifPresent(camera -> {
+			fxScene.setCamera(camera);
+			fxScene.addEventHandler(KeyEvent.KEY_PRESSED, camera);
+			camera.reset();
+		});
 	}
 
 	public void nextCamera() {
@@ -84,10 +96,6 @@ public class PlayScene3D implements GameScene {
 			next = 0;
 		}
 		selectCamera(next);
-	}
-
-	public PlaySceneCamera selectedCamera() {
-		return cameras[selectedCameraIndex];
 	}
 
 	@Override
@@ -176,15 +184,18 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void update() {
-		score3D.update(game(), selectedCamera());
-		for (int i = 0; i < MAX_LIVES_DISPLAYED; ++i) {
-			livesCounter3D.getChildren().get(i).setVisible(i < game().lives());
-		}
+		score3D.update(game());
+		updateLivesCounter3D(game());
 		player3D.update();
 		ghosts3D.values().forEach(Ghost3D::update);
 		bonus3D.update(game().bonus());
-
-		selectedCamera().follow(player3D);
+		selectedCamera().ifPresent(camera -> {
+			// Keep score text in plain sight to viewer.
+			// TODO: is this the recommended way to do this?
+			score3D.setRotationAxis(Rotate.X_AXIS);
+			score3D.setRotate(camera.getRotate());
+			camera.follow(player3D);
+		});
 		animationController.update();
 	}
 
@@ -195,7 +206,7 @@ public class PlayScene3D implements GameScene {
 
 	private Group createLivesCounter3D(V2i tilePosition) {
 		Group livesCounter = new Group();
-		for (int i = 0; i < MAX_LIVES_DISPLAYED; ++i) {
+		for (int i = 0; i < LIVES_COUNTER_MAX; ++i) {
 			V2i tile = tilePosition.plus(2 * i, 0);
 			Group liveIndicator = GianmarcosModel3D.createPacMan();
 			liveIndicator.setTranslateX(tile.x * TS);
@@ -204,5 +215,11 @@ public class PlayScene3D implements GameScene {
 			livesCounter.getChildren().add(liveIndicator);
 		}
 		return livesCounter;
+	}
+
+	private void updateLivesCounter3D(GameModel game) {
+		for (int i = 0; i < LIVES_COUNTER_MAX; ++i) {
+			livesCounter3D.getChildren().get(i).setVisible(i < game.lives());
+		}
 	}
 }
