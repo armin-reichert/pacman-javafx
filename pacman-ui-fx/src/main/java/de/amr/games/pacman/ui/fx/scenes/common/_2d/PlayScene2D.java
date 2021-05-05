@@ -92,7 +92,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 	}
 
 	@Override
-	public void update() {
+	public void doUpdate() {
 		animationController.update();
 	}
 

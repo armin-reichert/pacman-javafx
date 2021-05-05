@@ -95,14 +95,18 @@ public abstract class AbstractGameScene2D implements GameScene {
 		return scene;
 	}
 
-	/**
-	 * Clears the background and renders the scene content.
-	 */
-	public final void render() {
+	@Override
+	public final void update() {
+		doUpdate();
 		gc.setFill(Color.BLACK);
 		gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
 		doRender();
 	}
+
+	/**
+	 * Updates the scene. Subclasses override this method.
+	 */
+	protected abstract void doUpdate();
 
 	/**
 	 * Renders the scene content. Subclasses override this method.
