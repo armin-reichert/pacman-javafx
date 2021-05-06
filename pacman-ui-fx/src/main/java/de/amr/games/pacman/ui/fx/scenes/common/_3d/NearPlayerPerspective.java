@@ -5,6 +5,11 @@ import javafx.scene.Node;
 import javafx.scene.SubScene;
 import javafx.scene.transform.Rotate;
 
+/**
+ * Follows the player closely, board only partially visible.
+ * 
+ * @author Armin Reichert
+ */
 public class NearPlayerPerspective implements PlayScenePerspective {
 
 	private final SubScene subScene;

@@ -5,6 +5,11 @@ import javafx.scene.Node;
 import javafx.scene.SubScene;
 import javafx.scene.transform.Rotate;
 
+/**
+ * Follows the player but still shows a larger portion of the maze.
+ * 
+ * @author Armin Reichert
+ */
 public class FollowingPlayerPerspective implements PlayScenePerspective {
 
 	private final SubScene subScene;
@@ -12,8 +17,6 @@ public class FollowingPlayerPerspective implements PlayScenePerspective {
 	public FollowingPlayerPerspective(SubScene subScene) {
 		this.subScene = subScene;
 	}
-	
-	
 
 	@Override
 	public void reset() {

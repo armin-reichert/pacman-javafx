@@ -10,7 +10,7 @@ import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 
 /**
- * TODO: fixme
+ * Shows coordinates axes (x-axis=red, y-axis=green, z-axis=blue).
  * 
  * @author Armin Reichert
  */

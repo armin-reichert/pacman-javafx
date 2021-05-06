@@ -6,6 +6,11 @@ import javafx.scene.SubScene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
 
+/**
+ * Shows a total of the complete game. Using the keyboard, can zoom in and out and change angle.
+ * 
+ * @author Armin Reichert
+ */
 public class TotalPerspective implements PlayScenePerspective {
 
 	private final SubScene subScene;
