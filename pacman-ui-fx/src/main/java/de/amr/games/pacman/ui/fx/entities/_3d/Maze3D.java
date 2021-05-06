@@ -29,10 +29,8 @@ public class Maze3D extends Group {
 	private final PhongMaterial wallMaterial = new PhongMaterial();
 	private final Group wallGroup = new Group();
 	private final Group foodGroup = new Group();
-	private final double wallHeight;
 
-	public Maze3D(double wallHeight, double sizeX, double sizeY) {
-		this.wallHeight = wallHeight;
+	public Maze3D(double sizeX, double sizeY) {
 		var floorMaterial = new PhongMaterial();
 		var floorColor = Color.rgb(20, 20, 120);
 		floorMaterial.setDiffuseColor(floorColor);
@@ -43,13 +41,13 @@ public class Maze3D extends Group {
 		getChildren().addAll(floor, wallGroup, foodGroup);
 	}
 
-	public void init(GameVariant variant, GameLevel gameLevel) {
-		buildWalls(gameLevel.world);
+	public void init(GameVariant variant, GameLevel gameLevel, double wallHeight) {
+		buildWalls(gameLevel.world, wallHeight);
 		final var foodColor = Rendering2D_Assets.getFoodColor(variant, gameLevel.mazeNumber);
 		createFood(gameLevel.world, foodColor);
 	}
 
-	private void buildWalls(PacManGameWorld world) {
+	private void buildWalls(PacManGameWorld world, double wallHeight) {
 		var wallBuilder = new WallBuilder();
 		wallBuilder.setWallMaterial(wallMaterial);
 		wallBuilder.setWallHeight(wallHeight);
@@ -83,5 +81,4 @@ public class Maze3D extends Group {
 	public Stream<Node> foodNodes() {
 		return foodGroup.getChildren().stream();
 	}
-
 }

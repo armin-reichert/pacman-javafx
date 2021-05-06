@@ -48,6 +48,7 @@ public class PlayScene3D implements GameScene {
 	static final int PERSPECTIVE_NEAR_PLAYER = 2;
 
 	static final int LIVES_COUNTER_MAX = 5;
+	static final int WALL_HEIGHT = 4;
 
 	private final SubScene subSceneFX;
 	private final PlayScene3DAnimationController animationController;
@@ -121,7 +122,7 @@ public class PlayScene3D implements GameScene {
 		final var r2D = variant == GameVariant.MS_PACMAN ? MsPacManScenes.RENDERING : PacManScenes.RENDERING;
 		final var level = game().currentLevel();
 
-		maze = new Maze3D(2.5, PacManGameWorld.DEFAULT_WIDTH * TS, PacManGameWorld.DEFAULT_HEIGHT * TS);
+		maze = new Maze3D(PacManGameWorld.DEFAULT_WIDTH * TS, PacManGameWorld.DEFAULT_HEIGHT * TS);
 		maze.setFloorTexture(new Image(getClass().getResourceAsStream("/common/escher-texture.jpg")));
 		maze.setWallColor(getMazeWallColor(variant, level.mazeNumber));
 
@@ -189,7 +190,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	public void resetMaze() {
-		maze.init(gameController.gameVariant(), game().currentLevel());
+		maze.init(gameController.gameVariant(), game().currentLevel(), WALL_HEIGHT);
 	}
 
 	private Group createLivesCounter3D(V2i tilePosition) {
