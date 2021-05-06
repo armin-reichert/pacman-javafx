@@ -1,6 +1,7 @@
-package de.amr.games.pacman.ui.fx;
+package de.amr.games.pacman.ui.fx.shell;
 
 import de.amr.games.pacman.lib.TickTimer;
+import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScene3D;
 import javafx.scene.Camera;
