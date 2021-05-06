@@ -12,6 +12,7 @@ import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.model.world.WallMap;
 import de.amr.games.pacman.model.world.WallScanner;
 import de.amr.games.pacman.ui.fx.Env;
+import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 
@@ -23,7 +24,7 @@ import javafx.scene.shape.Box;
 public class WallBuilder {
 
 	private boolean[][] wallInfo;
-	private List<Box> walls;
+	private List<Node> walls;
 	private PhongMaterial material;
 	private double wallHeight = PacManGameWorld.HTS;
 
@@ -31,7 +32,7 @@ public class WallBuilder {
 		material = new PhongMaterial();
 	}
 
-	public List<Box> getWalls() {
+	public List<Node> getWalls() {
 		return Collections.unmodifiableList(walls);
 	}
 
@@ -43,7 +44,7 @@ public class WallBuilder {
 		this.material = material;
 	}
 
-	public List<Box> build(PacManGameWorld world, int resolution) {
+	public List<Node> build(PacManGameWorld world, int resolution) {
 		long start, end;
 		double millis;
 		walls = new ArrayList<>();

@@ -2,6 +2,7 @@ package de.amr.games.pacman.ui.fx.entities._3d;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.model.world.PacManGameWorld;
@@ -22,29 +23,25 @@ import javafx.scene.transform.Translate;
 public class Maze3D extends Group {
 
 	private final Box floor;
-	private final PhongMaterial wallMaterial;
+	private final PhongMaterial wallMaterial = new PhongMaterial();
 	private final Group foodGroup = new Group();
 
 	public Maze3D(PacManGameWorld world, double wallHeight, double sizeX, double sizeY) {
+
+		var floorMaterial = new PhongMaterial();
+		var floorColor = Color.rgb(20, 20, 120);
+		floorMaterial.setDiffuseColor(floorColor);
+		floorMaterial.setSpecularColor(floorColor.brighter());
+
 		floor = new Box(sizeX, sizeY, 0.1);
 		floor.getTransforms().add(new Translate(sizeX / 2 - TS / 2, sizeY / 2 - TS / 2, 3));
-		var material = new PhongMaterial();
-		material.setDiffuseColor(Color.rgb(20, 20, 120));
-		material.setSpecularColor(Color.rgb(20, 20, 120).brighter());
-		floor.setMaterial(material);
-
-		wallMaterial = new PhongMaterial();
+		floor.setMaterial(floorMaterial);
 
 		var wallBuilder = new WallBuilder();
 		wallBuilder.setWallMaterial(wallMaterial);
 		wallBuilder.setWallHeight(wallHeight);
-
-		int resolution = 4;
-		world.getWallMap(resolution);
-		Group wallRoot = new Group();
-		wallRoot.getChildren().setAll(wallBuilder.build(world, resolution));
-
-		getChildren().addAll(floor, wallRoot, foodGroup);
+		List<Node> walls = wallBuilder.build(world, 4);
+		getChildren().addAll(floor, new Group(walls), foodGroup);
 	}
 
 	public void setWallColor(Color color) {
