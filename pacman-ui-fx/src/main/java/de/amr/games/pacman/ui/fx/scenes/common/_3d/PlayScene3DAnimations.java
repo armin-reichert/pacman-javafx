@@ -37,17 +37,17 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class PlayScene3DAnimationController implements DefaultPacManGameEventHandler {
+class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 
 	private final PlayScene3D playScene;
 	private final SoundManager sounds;
 	private List<ScaleTransition> energizerAnimations;
 
-	public PlayScene3DAnimationController(PlayScene3D playScene, SoundManager sounds) {
+	public PlayScene3DAnimations(PlayScene3D playScene, SoundManager sounds) {
 		this.playScene = playScene;
 		this.sounds = sounds;
 	}
-	
+
 	private PacManGameController gameController() {
 		return playScene.getGameController();
 	}

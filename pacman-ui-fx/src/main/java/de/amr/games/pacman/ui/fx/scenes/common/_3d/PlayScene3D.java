@@ -51,13 +51,12 @@ public class PlayScene3D implements GameScene {
 	static final int WALL_HEIGHT = 4;
 
 	private final SubScene subSceneFX;
-	private final PlayScene3DAnimationController animationController;
+	private final PlayScene3DAnimations animations;
 	private final PlayScenePerspective[] perspectives;
 
 	private PacManGameController gameController;
 	private int selectedPerspective;
 
-	// these are exposed to animation controller:
 	Maze3D maze;
 	Player3D player3D;
 	Map<Ghost, Ghost3D> ghosts3D;
@@ -67,50 +66,14 @@ public class PlayScene3D implements GameScene {
 	LevelCounter3D levelCounter3D;
 
 	public PlayScene3D(SoundManager sounds) {
-		animationController = new PlayScene3DAnimationController(this, sounds);
+		animations = new PlayScene3DAnimations(this, sounds);
 		subSceneFX = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
 		subSceneFX.setCamera(new PerspectiveCamera(true));
-		perspectives = new PlayScenePerspective[] { new TotalPerspective(subSceneFX),
-				new FollowingPlayerPerspective(subSceneFX), new NearPlayerPerspective(subSceneFX) };
+		perspectives = new PlayScenePerspective[] { //
+				new TotalPerspective(subSceneFX), //
+				new FollowingPlayerPerspective(subSceneFX), //
+				new NearPlayerPerspective(subSceneFX) };
 		selectPerspective(PERSPECTIVE_FOLLOWING_PLAYER);
-	}
-
-	public PlayScenePerspective selectedPerspective() {
-		return perspectives[selectedPerspective];
-	}
-
-	public void selectPerspective(int index) {
-		selectedPerspective = index;
-		selectedPerspective().reset();
-	}
-
-	public void nextPerspective() {
-		selectPerspective((selectedPerspective + 1) % perspectives.length);
-	}
-
-	@Override
-	public PacManGameController getGameController() {
-		return gameController;
-	}
-
-	@Override
-	public void setGameController(PacManGameController gameController) {
-		this.gameController = gameController;
-	}
-
-	@Override
-	public OptionalDouble aspectRatio() {
-		return OptionalDouble.empty();
-	}
-
-	@Override
-	public SubScene getSubSceneFX() {
-		return subSceneFX;
-	}
-
-	@Override
-	public void resize(double width, double height) {
-		// data binding does the job
 	}
 
 	@Override
@@ -158,12 +121,7 @@ public class PlayScene3D implements GameScene {
 
 		subSceneFX.setRoot(new Group(contentRoot, new CoordinateSystem(subSceneFX.getWidth())));
 
-		animationController.init();
-	}
-
-	@Override
-	public void onGameEvent(PacManGameEvent gameEvent) {
-		animationController.onGameEvent(gameEvent);
+		animations.init();
 	}
 
 	@Override
@@ -177,12 +135,55 @@ public class PlayScene3D implements GameScene {
 		score3D.setRotationAxis(Rotate.X_AXIS);
 		score3D.setRotate(subSceneFX.getCamera().getRotate());
 		selectedPerspective().follow(player3D);
-		animationController.update();
+		animations.update();
+	}
+
+	@Override
+	public void onGameEvent(PacManGameEvent gameEvent) {
+		animations.onGameEvent(gameEvent);
 	}
 
 	@Override
 	public void end() {
 		log("%s: end", this);
+	}
+
+	public PlayScenePerspective selectedPerspective() {
+		return perspectives[selectedPerspective];
+	}
+
+	public void selectPerspective(int index) {
+		selectedPerspective = index;
+		selectedPerspective().reset();
+	}
+
+	public void nextPerspective() {
+		selectPerspective((selectedPerspective + 1) % perspectives.length);
+	}
+
+	@Override
+	public PacManGameController getGameController() {
+		return gameController;
+	}
+
+	@Override
+	public void setGameController(PacManGameController gameController) {
+		this.gameController = gameController;
+	}
+
+	@Override
+	public OptionalDouble aspectRatio() {
+		return OptionalDouble.empty();
+	}
+
+	@Override
+	public SubScene getSubSceneFX() {
+		return subSceneFX;
+	}
+
+	@Override
+	public void resize(double width, double height) {
+		// data binding does the job
 	}
 
 	public void resetMaze() {
