@@ -119,11 +119,10 @@ public class PlayScene3D implements GameScene {
 		log("%s: init", this);
 
 		final var r2D = game().variant() == GameVariant.MS_PACMAN ? MsPacManScenes.RENDERING : PacManScenes.RENDERING;
-		final var level = game().currentLevel();
 
 		maze = new Maze3D(PacManGameWorld.DEFAULT_WIDTH * TS, PacManGameWorld.DEFAULT_HEIGHT * TS);
 		maze.setFloorTexture(new Image(getClass().getResourceAsStream("/common/escher-texture.jpg")));
-		maze.setWallColor(getMazeWallColor(game().variant(), level.mazeNumber));
+		maze.setWallColor(getMazeWallColor(game().variant(), game().currentLevel().mazeNumber));
 
 		resetMaze();
 
@@ -158,7 +157,7 @@ public class PlayScene3D implements GameScene {
 		content.setTranslateX(-0.5 * PacManGameWorld.DEFAULT_WIDTH * TS);
 		content.setTranslateY(-0.5 * PacManGameWorld.DEFAULT_HEIGHT * TS);
 
-		final var sceneRoot = new Group(content, new CoordinateSystem(subSceneFX.getWidth()).getNode());
+		final var sceneRoot = new Group(content, new CoordinateSystem(subSceneFX.getWidth()));
 		subSceneFX.setRoot(sceneRoot);
 
 		animationController.init();

@@ -2,7 +2,6 @@ package de.amr.games.pacman.ui.fx.scenes.common._3d;
 
 import de.amr.games.pacman.ui.fx.Env;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
@@ -14,9 +13,7 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class CoordinateSystem {
-
-	private final Group root;
+public class CoordinateSystem extends Group {
 
 	public CoordinateSystem(double axisLength) {
 		Sphere origin = new Sphere(1);
@@ -29,8 +26,8 @@ public class CoordinateSystem {
 		xAxis.getTransforms().add(new Rotate(90, Rotate.Z_AXIS));
 		zAxis.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 
-		root = new Group(origin, xAxis, yAxis, zAxis);
-		root.visibleProperty().bind(Env.$axesVisible);
+		getChildren().addAll(origin, xAxis, yAxis, zAxis);
+		visibleProperty().bind(Env.$axesVisible);
 	}
 
 	// Cylinder height points to y-direction
@@ -38,9 +35,5 @@ public class CoordinateSystem {
 		Cylinder axis = new Cylinder(0.25, height);
 		axis.setMaterial(new PhongMaterial(color));
 		return axis;
-	}
-
-	public Node getNode() {
-		return root;
 	}
 }
