@@ -2,6 +2,11 @@ package de.amr.games.pacman.ui.fx;
 
 import java.util.Random;
 
+/**
+ * Generates random, repetition-free trash talk sentences.
+ * 
+ * @author Armin Reichert
+ */
 public class TrashTalk {
 
 	public static class RandomSpellGenerator {
@@ -15,8 +20,12 @@ public class TrashTalk {
 
 		public String nextSpell() {
 			int last = spell;
-			while (spell == last) {
-				spell = new Random().nextInt(texts.length);
+			if (texts.length > 1) {
+				while (spell == last) {
+					spell = new Random().nextInt(texts.length);
+				}
+			} else {
+				spell = 0;
 			}
 			return texts[spell];
 		}
@@ -40,7 +49,8 @@ public class TrashTalk {
 			"WTF!"//
 	);
 
-	public static final RandomSpellGenerator GAME_OVER_SPELLS = new RandomSpellGenerator("You are a stone cold loser!", //
+	public static final RandomSpellGenerator GAME_OVER_SPELLS = new RandomSpellGenerator(//
+			"You stone cold loser!", //
 			"I would say you fucked up!", //
 			"This game is OVER!", //
 			"Go ahead any cry!", //
