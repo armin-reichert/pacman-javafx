@@ -249,6 +249,7 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 		// enter GAME_OVER
 		else if (e.newGameState == PacManGameState.GAME_OVER) {
 			sounds.stopAll();
+			gameController.getUI().showFlashMessage(TrashTalk.GAME_OVER_SPELLS.nextSpell(), 3);
 		}
 
 		// exit HUNTING but not GAME_OVER

@@ -39,4 +39,12 @@ public class TrashTalk {
 			"You're the man*in!", //
 			"WTF!"//
 	);
+
+	public static final RandomSpellGenerator GAME_OVER_SPELLS = new RandomSpellGenerator("You are a stone cold loser!", //
+			"I would say you fucked up!", //
+			"This game is OVER!", //
+			"Go ahead any cry!", //
+			"That's all you've got?"//
+	);
+
 }
