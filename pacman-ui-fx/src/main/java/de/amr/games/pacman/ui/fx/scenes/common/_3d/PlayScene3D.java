@@ -118,19 +118,18 @@ public class PlayScene3D implements GameScene {
 	public void init() {
 		log("%s: init", this);
 
-		final var variant = gameController.gameVariant();
-		final var r2D = variant == GameVariant.MS_PACMAN ? MsPacManScenes.RENDERING : PacManScenes.RENDERING;
+		final var r2D = game().variant() == GameVariant.MS_PACMAN ? MsPacManScenes.RENDERING : PacManScenes.RENDERING;
 		final var level = game().currentLevel();
 
 		maze = new Maze3D(PacManGameWorld.DEFAULT_WIDTH * TS, PacManGameWorld.DEFAULT_HEIGHT * TS);
 		maze.setFloorTexture(new Image(getClass().getResourceAsStream("/common/escher-texture.jpg")));
-		maze.setWallColor(getMazeWallColor(variant, level.mazeNumber));
+		maze.setWallColor(getMazeWallColor(game().variant(), level.mazeNumber));
 
 		resetMaze();
 
 		player3D = new Player3D(game().player());
 		ghosts3D = game().ghosts().collect(Collectors.toMap(Function.identity(), ghost -> new Ghost3D(ghost, r2D)));
-		bonus3D = new Bonus3D(variant, r2D);
+		bonus3D = new Bonus3D(game().variant(), r2D);
 
 		score3D = new ScoreNotReally3D();
 		livesCounter3D = createLivesCounter3D(new V2i(2, 1));
@@ -190,7 +189,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	public void resetMaze() {
-		maze.init(gameController.gameVariant(), game().currentLevel(), WALL_HEIGHT);
+		maze.init(gameController.game(), WALL_HEIGHT);
 	}
 
 	private Group createLivesCounter3D(V2i tilePosition) {

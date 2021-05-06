@@ -145,9 +145,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		int sceneIndex = gameController.state == PacManGameState.INTRO ? 0
 				: gameController.state == PacManGameState.INTERMISSION ? gameController.game().intermissionNumber() : 4;
 		int sceneVariant = use3D ? 1 : 0;
-		if (gameController.gameVariant() == MS_PACMAN) {
+		if (gameController.game().variant() == MS_PACMAN) {
 			return MsPacManScenes.SCENES[sceneIndex][sceneVariant];
-		} else if (gameController.gameVariant() == PACMAN) {
+		} else if (gameController.game().variant() == PACMAN) {
 			return PacManScenes.SCENES[sceneIndex][sceneVariant];
 		}
 		throw new IllegalStateException();

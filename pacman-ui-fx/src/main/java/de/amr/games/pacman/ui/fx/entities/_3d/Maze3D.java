@@ -5,8 +5,7 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import java.util.List;
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets;
 import javafx.scene.Group;
@@ -41,10 +40,10 @@ public class Maze3D extends Group {
 		getChildren().addAll(floor, wallGroup, foodGroup);
 	}
 
-	public void init(GameVariant variant, GameLevel gameLevel, double wallHeight) {
-		buildWalls(gameLevel.world, wallHeight);
-		final var foodColor = Rendering2D_Assets.getFoodColor(variant, gameLevel.mazeNumber);
-		createFood(gameLevel.world, foodColor);
+	public void init(GameModel game, double wallHeight) {
+		buildWalls(game.currentLevel().world, wallHeight);
+		final var foodColor = Rendering2D_Assets.getFoodColor(game.variant(), game.currentLevel().mazeNumber);
+		createFood(game.currentLevel().world, foodColor);
 	}
 
 	private void buildWalls(PacManGameWorld world, double wallHeight) {

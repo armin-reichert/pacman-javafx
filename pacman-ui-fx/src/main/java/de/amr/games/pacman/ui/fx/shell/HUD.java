@@ -62,7 +62,7 @@ public class HUD extends HBox {
 		line("Total Ticks", "%d", PacManGameUI_JavaFX.$TOTAL_TICKS.get());
 		line("Paused (CTRL+P)", "%s", yesNo(Env.$paused.get()));
 		line();
-		line("Game Variant", "%s", ui.gameController.gameVariant());
+		line("Game Variant", "%s", ui.gameController.game().variant());
 		line("Playing", "%s", yesNo(ui.gameController.isGameRunning()));
 		line("Attract Mode", "%s", yesNo(ui.gameController.isAttractMode()));
 		line("Game Level", "%d", ui.gameController.game().currentLevel().number);
