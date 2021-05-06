@@ -29,12 +29,13 @@ import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacManScenes;
 import de.amr.games.pacman.ui.fx.scenes.pacman.PacManScenes;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.AmbientLight;
+import javafx.scene.Camera;
 import javafx.scene.Group;
+import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.transform.Rotate;
 
@@ -45,18 +46,18 @@ import javafx.scene.transform.Rotate;
  */
 public class PlayScene3D implements GameScene {
 
-	static final int CAMERA_TOTAL = 0;
-	static final int CAMERA_FOLLOWING_PLAYER = 1;
-	static final int CAMERA_NEAR_PLAYER = 2;
+	static final int PERSPECTIVE_TOTAL = 0;
+	static final int PERSPECTIVE_FOLLOWING_PLAYER = 1;
+	static final int PERSPECTIVE_NEAR_PLAYER = 2;
 
 	static final int LIVES_COUNTER_MAX = 5;
 
 	private final SubScene subSceneFX;
 	private final PlayScene3DAnimationController animationController;
-	private final PlaySceneCamera[] cameras = { new CameraTotal(), new CameraFollowingPlayer(), new CameraNearPlayer() };
+	private final PlayScenePerspective[] perspectives;
 
 	private PacManGameController gameController;
-	private int selectedCameraIndex;
+	private int selectedPerspective;
 
 	// these are exposed to animation controller:
 	Maze3D maze;
@@ -70,33 +71,32 @@ public class PlayScene3D implements GameScene {
 	public PlayScene3D(SoundManager sounds) {
 		animationController = new PlayScene3DAnimationController(this, sounds);
 		subSceneFX = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
-		selectedCameraIndex = -1;
-		selectCamera(CAMERA_FOLLOWING_PLAYER);
+		Camera camera = new PerspectiveCamera(true);
+		subSceneFX.setCamera(camera);
+		perspectives = new PlayScenePerspective[] { new TotalPerspective(subSceneFX),
+				new FollowingPlayerPerspective(camera), new NearPlayerPerspective(camera) };
+		selectedPerspective = -1;
+		selectPerspective(PERSPECTIVE_FOLLOWING_PLAYER);
 	}
 
-	public Optional<PlaySceneCamera> selectedCamera() {
-		if (selectedCameraIndex >= 0 && selectedCameraIndex < cameras.length) {
-			return Optional.of(cameras[selectedCameraIndex]);
+	public Optional<PlayScenePerspective> selectedPerspective() {
+		if (selectedPerspective >= 0 && selectedPerspective < perspectives.length) {
+			return Optional.of(perspectives[selectedPerspective]);
 		}
 		return Optional.empty();
 	}
 
-	public void selectCamera(int index) {
-		selectedCamera().ifPresent(camera -> subSceneFX.removeEventHandler(KeyEvent.KEY_PRESSED, camera));
-		selectedCameraIndex = index;
-		selectedCamera().ifPresent(camera -> {
-			subSceneFX.setCamera(camera);
-			subSceneFX.addEventHandler(KeyEvent.KEY_PRESSED, camera);
-			camera.reset();
-		});
+	public void selectPerspective(int index) {
+		selectedPerspective = index;
+		selectedPerspective().ifPresent(PlayScenePerspective::reset);
 	}
 
-	public void nextCamera() {
-		int next = selectedCameraIndex + 1;
-		if (next == cameras.length) {
+	public void nextPerspective() {
+		int next = selectedPerspective + 1;
+		if (next == perspectives.length) {
 			next = 0;
 		}
-		selectCamera(next);
+		selectPerspective(next);
 	}
 
 	@Override
@@ -191,11 +191,11 @@ public class PlayScene3D implements GameScene {
 		player3D.update();
 		ghosts3D.values().forEach(Ghost3D::update);
 		bonus3D.update(game().bonus());
-		selectedCamera().ifPresent(camera -> {
+		selectedPerspective().ifPresent(camera -> {
 			// Keep score text in plain sight to viewer.
 			// TODO: is this the recommended way to do this?
 			score3D.setRotationAxis(Rotate.X_AXIS);
-			score3D.setRotate(camera.getRotate());
+			score3D.setRotate(camera.camera().getRotate());
 			camera.follow(player3D);
 		});
 		animationController.update();

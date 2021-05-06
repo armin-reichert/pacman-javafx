@@ -5,26 +5,19 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
 
 /**
- * Controls a perspective camera using keys.
+ * Controls a camera using keyboard events.
  * 
  * @author Armin Reichert
  */
-public class CameraController {
+public class ManualCameraController {
 
-	private Camera camera;
+	private final Camera camera;
 
-	public CameraController(Camera camera) {
-		this.camera = camera;
-	}
-
-	public void setCamera(Camera camera) {
+	public ManualCameraController(Camera camera) {
 		this.camera = camera;
 	}
 
 	public void handleKeyEvent(KeyEvent e) {
-		if (camera == null) {
-			return;
-		}
 		if (e.isControlDown()) {
 			switch (e.getCode()) {
 			case DIGIT0:
