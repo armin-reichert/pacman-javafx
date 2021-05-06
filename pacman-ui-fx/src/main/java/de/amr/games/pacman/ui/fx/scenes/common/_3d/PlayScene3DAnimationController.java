@@ -41,20 +41,19 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 
 	private final PlayScene3D playScene;
 	private final SoundManager sounds;
-	private PacManGameController gameController;
 	private List<ScaleTransition> energizerAnimations;
 
 	public PlayScene3DAnimationController(PlayScene3D playScene, SoundManager sounds) {
 		this.playScene = playScene;
 		this.sounds = sounds;
 	}
-
-	public void setGameController(PacManGameController gameController) {
-		this.gameController = gameController;
+	
+	private PacManGameController gameController() {
+		return playScene.getGameController();
 	}
 
 	private GameModel game() {
-		return gameController.game();
+		return gameController().game();
 	}
 
 	public void init() {
@@ -75,12 +74,12 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 	}
 
 	public void update() {
-		if (gameController.isAttractMode()) {
+		if (gameController().isAttractMode()) {
 			return;
 		}
 		sounds.setMuted(false);
 
-		if (gameController.state == PacManGameState.HUNTING) {
+		if (gameController().state == PacManGameState.HUNTING) {
 			AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
 			if (munching.isPlaying()) {
 				if (game().player().starvingTicks > 10) {
@@ -93,7 +92,7 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 
 	@Override
 	public void onGameEvent(PacManGameEvent gameEvent) {
-		boolean attractMode = gameController.isAttractMode();
+		boolean attractMode = gameController().isAttractMode();
 		sounds.setMuted(attractMode);
 		DefaultPacManGameEventHandler.super.onGameEvent(gameEvent);
 	}
@@ -173,7 +172,7 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 
 	@Override
 	public void onExtraLife(PacManGameEvent e) {
-		gameController.getUI().showFlashMessage("Extra life!");
+		gameController().getUI().showFlashMessage("Extra life!");
 		sounds.play(PacManGameSound.EXTRA_LIFE);
 	}
 
@@ -196,18 +195,18 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 
 	@Override
 	public void onPacManGameStateChange(PacManGameStateChangeEvent e) {
-		sounds.setMuted(gameController.isAttractMode());
+		sounds.setMuted(gameController().isAttractMode());
 
 		// enter READY
 		if (e.newGameState == PacManGameState.READY) {
 			sounds.stopAll();
-			if (!gameController.isAttractMode() && !gameController.isGameRunning()) {
-				gameController.stateTimer().resetSeconds(4.5);
+			if (!gameController().isAttractMode() && !gameController().isGameRunning()) {
+				gameController().stateTimer().resetSeconds(4.5);
 				sounds.play(PacManGameSound.GAME_READY);
 			} else {
-				gameController.stateTimer().resetSeconds(2);
+				gameController().stateTimer().resetSeconds(2);
 			}
-			gameController.stateTimer().start();
+			gameController().stateTimer().start();
 		}
 
 		// enter HUNTING
@@ -249,7 +248,7 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 		// enter GAME_OVER
 		else if (e.newGameState == PacManGameState.GAME_OVER) {
 			sounds.stopAll();
-			gameController.getUI().showFlashMessage(TrashTalk.GAME_OVER_SPELLS.nextSpell(), 3);
+			gameController().getUI().showFlashMessage(TrashTalk.GAME_OVER_SPELLS.nextSpell(), 3);
 		}
 
 		// exit HUNTING but not GAME_OVER
@@ -323,14 +322,14 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 			playScene.player3D.setTranslateY(savedTranslateY);
 			playScene.player3D.setTranslateZ(savedTranslateZ);
 			game().player().visible = false;
-			gameController.stateTimer().forceExpiration();
+			gameController().stateTimer().forceExpiration();
 		});
 
 		animation.play();
 	}
 
 	private void playAnimationLevelComplete() {
-		gameController.stateTimer().reset();
+		gameController().stateTimer().reset();
 		PauseTransition phase1 = new PauseTransition(Duration.seconds(2));
 		phase1.setDelay(Duration.seconds(1));
 		phase1.setOnFinished(e -> {
@@ -338,23 +337,23 @@ public class PlayScene3DAnimationController implements DefaultPacManGameEventHan
 			game().ghosts().forEach(ghost -> ghost.visible = false);
 			String levelCompleteMessage = String.format("%s\n\nLevel %d complete.",
 					TrashTalk.LEVEL_COMPLETE_SPELLS.nextSpell(), game().currentLevel().number);
-			gameController.getUI().showFlashMessage(levelCompleteMessage, 2);
+			gameController().getUI().showFlashMessage(levelCompleteMessage, 2);
 		});
 		SequentialTransition animation = new SequentialTransition(phase1, new PauseTransition(Duration.seconds(2)));
-		animation.setOnFinished(e -> gameController.stateTimer().forceExpiration());
+		animation.setOnFinished(e -> gameController().stateTimer().forceExpiration());
 		animation.play();
 	}
 
 	private void playAnimationLevelStarting() {
-		gameController.stateTimer().reset();
-		gameController.getUI().showFlashMessage("Entering Level " + gameController.game().currentLevel().number);
+		gameController().stateTimer().reset();
+		gameController().getUI().showFlashMessage("Entering Level " + game().currentLevel().number);
 		PauseTransition phase1 = new PauseTransition(Duration.seconds(2));
 		phase1.setOnFinished(e -> {
 			game().player().visible = true;
 			game().ghosts().forEach(ghost -> ghost.visible = true);
 		});
 		SequentialTransition animation = new SequentialTransition(phase1, new PauseTransition(Duration.seconds(2)));
-		animation.setOnFinished(e -> gameController.stateTimer().forceExpiration());
+		animation.setOnFinished(e -> gameController().stateTimer().forceExpiration());
 		animation.play();
 	}
 }
