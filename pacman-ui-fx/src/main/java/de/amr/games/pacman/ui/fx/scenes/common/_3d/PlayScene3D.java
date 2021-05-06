@@ -2,6 +2,7 @@ package de.amr.games.pacman.ui.fx.scenes.common._3d;
 
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
+import static de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets.getFoodColor;
 import static de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets.getMazeWallColor;
 
 import java.util.Map;
@@ -34,7 +35,6 @@ import javafx.scene.PointLight;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.transform.Rotate;
 
 /**
@@ -124,12 +124,10 @@ public class PlayScene3D implements GameScene {
 		final var world = level.world;
 
 		final var wallColor = getMazeWallColor(variant, level.mazeNumber);
-		final var wallMaterial = new PhongMaterial(wallColor);
-		wallMaterial.setSpecularColor(wallColor.brighter());
-		final var floorTexture = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
-		maze = new Maze3D(world, wallMaterial, 2.5, floorTexture, PacManGameWorld.DEFAULT_WIDTH * TS,
-				PacManGameWorld.DEFAULT_HEIGHT * TS);
-		maze.resetFood(variant, level);
+
+		maze = new Maze3D(world, wallColor, 2.5, PacManGameWorld.DEFAULT_WIDTH * TS, PacManGameWorld.DEFAULT_HEIGHT * TS);
+		maze.setFloorTexture(new Image(getClass().getResourceAsStream("/common/escher-texture.jpg")));
+		resetFood();
 
 		player3D = new Player3D(game().player());
 		ghosts3D = game().ghosts().collect(Collectors.toMap(Function.identity(), ghost -> new Ghost3D(ghost, r2D)));
@@ -190,6 +188,12 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void end() {
 		log("%s: end", this);
+	}
+
+	void resetFood() {
+		var variant = gameController.gameVariant();
+		var level = game().currentLevel();
+		maze.resetFood(level.world, getFoodColor(variant, level.mazeNumber));
 	}
 
 	private Group createLivesCounter3D(V2i tilePosition) {
