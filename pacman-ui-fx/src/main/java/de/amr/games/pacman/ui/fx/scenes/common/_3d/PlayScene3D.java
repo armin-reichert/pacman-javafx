@@ -91,11 +91,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	public void nextPerspective() {
-		int next = selectedPerspective + 1;
-		if (next == perspectives.length) {
-			next = 0;
-		}
-		selectPerspective(next);
+		selectPerspective((selectedPerspective + 1) % perspectives.length);
 	}
 
 	@Override
