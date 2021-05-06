@@ -75,7 +75,6 @@ public class PlayScene3D implements GameScene {
 		subSceneFX.setCamera(camera);
 		perspectives = new PlayScenePerspective[] { new TotalPerspective(subSceneFX),
 				new FollowingPlayerPerspective(camera), new NearPlayerPerspective(camera) };
-		selectedPerspective = -1;
 		selectPerspective(PERSPECTIVE_FOLLOWING_PLAYER);
 	}
 
