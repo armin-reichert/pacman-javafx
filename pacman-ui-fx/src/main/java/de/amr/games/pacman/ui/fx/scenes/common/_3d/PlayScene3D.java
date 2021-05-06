@@ -123,10 +123,9 @@ public class PlayScene3D implements GameScene {
 		final var level = game().currentLevel();
 		final var world = level.world;
 
-		final var wallColor = getMazeWallColor(variant, level.mazeNumber);
-
-		maze = new Maze3D(world, wallColor, 2.5, PacManGameWorld.DEFAULT_WIDTH * TS, PacManGameWorld.DEFAULT_HEIGHT * TS);
+		maze = new Maze3D(world, 2.5, PacManGameWorld.DEFAULT_WIDTH * TS, PacManGameWorld.DEFAULT_HEIGHT * TS);
 		maze.setFloorTexture(new Image(getClass().getResourceAsStream("/common/escher-texture.jpg")));
+		maze.setWallColor(getMazeWallColor(variant, level.mazeNumber));
 		resetFood();
 
 		player3D = new Player3D(game().player());

@@ -22,9 +22,10 @@ import javafx.scene.transform.Translate;
 public class Maze3D extends Group {
 
 	private final Box floor;
+	private final PhongMaterial wallMaterial;
 	private final Group foodGroup = new Group();
 
-	public Maze3D(PacManGameWorld world, Color wallColor, double wallHeight, double sizeX, double sizeY) {
+	public Maze3D(PacManGameWorld world, double wallHeight, double sizeX, double sizeY) {
 		floor = new Box(sizeX, sizeY, 0.1);
 		floor.getTransforms().add(new Translate(sizeX / 2 - TS / 2, sizeY / 2 - TS / 2, 3));
 		var material = new PhongMaterial();
@@ -32,8 +33,8 @@ public class Maze3D extends Group {
 		material.setSpecularColor(Color.rgb(20, 20, 120).brighter());
 		floor.setMaterial(material);
 
-		final var wallMaterial = new PhongMaterial(wallColor);
-		wallMaterial.setSpecularColor(wallColor.brighter());
+		wallMaterial = new PhongMaterial();
+
 		var wallBuilder = new WallBuilder();
 		wallBuilder.setWallMaterial(wallMaterial);
 		wallBuilder.setWallHeight(wallHeight);
@@ -44,6 +45,11 @@ public class Maze3D extends Group {
 		wallRoot.getChildren().setAll(wallBuilder.build(world, resolution));
 
 		getChildren().addAll(floor, wallRoot, foodGroup);
+	}
+
+	public void setWallColor(Color color) {
+		wallMaterial.setDiffuseColor(color);
+		wallMaterial.setSpecularColor(color.brighter());
 	}
 
 	public void setFloorTexture(Image floorTexture) {
