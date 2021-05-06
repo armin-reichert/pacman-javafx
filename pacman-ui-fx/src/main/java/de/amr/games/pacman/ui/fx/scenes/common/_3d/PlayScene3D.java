@@ -5,7 +5,6 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets.getMazeWallColor;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -78,16 +77,13 @@ public class PlayScene3D implements GameScene {
 		selectPerspective(PERSPECTIVE_FOLLOWING_PLAYER);
 	}
 
-	public Optional<PlayScenePerspective> selectedPerspective() {
-		if (selectedPerspective >= 0 && selectedPerspective < perspectives.length) {
-			return Optional.of(perspectives[selectedPerspective]);
-		}
-		return Optional.empty();
+	public PlayScenePerspective selectedPerspective() {
+		return perspectives[selectedPerspective];
 	}
 
 	public void selectPerspective(int index) {
 		selectedPerspective = index;
-		selectedPerspective().ifPresent(PlayScenePerspective::reset);
+		selectedPerspective().reset();
 	}
 
 	public void nextPerspective() {
@@ -186,13 +182,11 @@ public class PlayScene3D implements GameScene {
 		player3D.update();
 		ghosts3D.values().forEach(Ghost3D::update);
 		bonus3D.update(game().bonus());
-		selectedPerspective().ifPresent(camera -> {
-			// Keep score text in plain sight to viewer.
-			// TODO: is this the recommended way to do this?
-			score3D.setRotationAxis(Rotate.X_AXIS);
-			score3D.setRotate(camera.camera().getRotate());
-			camera.follow(player3D);
-		});
+		// Keep score text in plain sight
+		// TODO: is this the recommended way to do this?
+		score3D.setRotationAxis(Rotate.X_AXIS);
+		score3D.setRotate(selectedPerspective().camera().getRotate());
+		selectedPerspective().follow(player3D);
 		animationController.update();
 	}
 
