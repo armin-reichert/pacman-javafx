@@ -119,11 +119,12 @@ public class PlayScene3D implements GameScene {
 		log("%s: init", this);
 
 		final var r2D = game().variant() == GameVariant.MS_PACMAN ? MsPacManScenes.RENDERING : PacManScenes.RENDERING;
+		final var width = PacManGameWorld.DEFAULT_WIDTH * TS;
+		final var height = PacManGameWorld.DEFAULT_HEIGHT * TS;
 
-		maze = new Maze3D(PacManGameWorld.DEFAULT_WIDTH * TS, PacManGameWorld.DEFAULT_HEIGHT * TS);
+		maze = new Maze3D(width, height);
 		maze.setFloorTexture(new Image(getClass().getResourceAsStream("/common/escher-texture.jpg")));
 		maze.setWallColor(getMazeWallColor(game().variant(), game().currentLevel().mazeNumber));
-
 		resetMaze();
 
 		player3D = new Player3D(game().player());
@@ -149,16 +150,14 @@ public class PlayScene3D implements GameScene {
 		playerLight.translateYProperty().bind(player3D.translateYProperty());
 		playerLight.setTranslateZ(-4);
 
-		final var content = new Group();
-		content.getChildren().addAll(maze, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
-		content.getChildren().addAll(ghosts3D.values());
-		content.getChildren().addAll(ambientLight, playerLight);
+		final var contentRoot = new Group();
+		contentRoot.setTranslateX(-0.5 * width);
+		contentRoot.setTranslateY(-0.5 * height);
+		contentRoot.getChildren().addAll(maze, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
+		contentRoot.getChildren().addAll(ghosts3D.values());
+		contentRoot.getChildren().addAll(ambientLight, playerLight);
 
-		content.setTranslateX(-0.5 * PacManGameWorld.DEFAULT_WIDTH * TS);
-		content.setTranslateY(-0.5 * PacManGameWorld.DEFAULT_HEIGHT * TS);
-
-		final var sceneRoot = new Group(content, new CoordinateSystem(subSceneFX.getWidth()));
-		subSceneFX.setRoot(sceneRoot);
+		subSceneFX.setRoot(new Group(contentRoot, new CoordinateSystem(subSceneFX.getWidth())));
 
 		animationController.init();
 	}
