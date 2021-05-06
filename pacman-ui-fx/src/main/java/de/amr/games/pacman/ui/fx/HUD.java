@@ -85,8 +85,8 @@ public class HUD extends HBox {
 		} else {
 			if (ui.currentGameScene instanceof PlayScene3D) {
 				PlayScene3D playScene = (PlayScene3D) ui.currentGameScene;
-				line("Camera (CTRL+C)", "%s %s", playScene.selectedPerspective(),
-						cameraInfo(playScene.selectedPerspective().camera()));
+				line("Perspective (CTRL+C)", "%s %s", playScene.selectedPerspective(),
+						cameraInfo(playScene.getSubSceneFX().getCamera()));
 			}
 			line("Draw Mode (CTRL+L)", "%s", Env.$drawMode.get());
 			line("Axes (CTRL+X)", "%s", onOff(Env.$axesVisible.get()));

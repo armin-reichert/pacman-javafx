@@ -73,7 +73,7 @@ public class PlayScene3D implements GameScene {
 		Camera camera = new PerspectiveCamera(true);
 		subSceneFX.setCamera(camera);
 		perspectives = new PlayScenePerspective[] { new TotalPerspective(subSceneFX),
-				new FollowingPlayerPerspective(camera), new NearPlayerPerspective(camera) };
+				new FollowingPlayerPerspective(subSceneFX), new NearPlayerPerspective(subSceneFX) };
 		selectPerspective(PERSPECTIVE_FOLLOWING_PLAYER);
 	}
 
@@ -182,10 +182,9 @@ public class PlayScene3D implements GameScene {
 		player3D.update();
 		ghosts3D.values().forEach(Ghost3D::update);
 		bonus3D.update(game().bonus());
-		// Keep score text in plain sight
-		// TODO: is this the recommended way to do this?
+		// Keep score text in plain sight. TODO: is this the recommended way to do this?
 		score3D.setRotationAxis(Rotate.X_AXIS);
-		score3D.setRotate(selectedPerspective().camera().getRotate());
+		score3D.setRotate(subSceneFX.getCamera().getRotate());
 		selectedPerspective().follow(player3D);
 		animationController.update();
 	}

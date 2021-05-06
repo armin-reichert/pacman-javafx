@@ -1,11 +1,8 @@
 package de.amr.games.pacman.ui.fx.scenes.common._3d;
 
-import javafx.scene.Camera;
 import javafx.scene.Node;
 
 public interface PlayScenePerspective {
-
-	Camera camera();
 
 	void reset();
 

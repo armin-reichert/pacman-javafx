@@ -17,7 +17,7 @@ import javafx.scene.SubScene;
 public interface GameScene extends DefaultPacManGameEventHandler {
 
 	SubScene getSubSceneFX();
-
+	
 	void init();
 
 	void update();
