@@ -5,7 +5,10 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import java.util.List;
 import java.util.stream.Stream;
 
+import de.amr.games.pacman.model.common.GameLevel;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.world.PacManGameWorld;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -24,24 +27,48 @@ public class Maze3D extends Group {
 
 	private final Box floor;
 	private final PhongMaterial wallMaterial = new PhongMaterial();
+	private final Group wallGroup = new Group();
 	private final Group foodGroup = new Group();
+	private final double wallHeight;
 
-	public Maze3D(PacManGameWorld world, double wallHeight, double sizeX, double sizeY) {
-
+	public Maze3D(double wallHeight, double sizeX, double sizeY) {
+		this.wallHeight = wallHeight;
 		var floorMaterial = new PhongMaterial();
 		var floorColor = Color.rgb(20, 20, 120);
 		floorMaterial.setDiffuseColor(floorColor);
 		floorMaterial.setSpecularColor(floorColor.brighter());
-
 		floor = new Box(sizeX, sizeY, 0.1);
 		floor.getTransforms().add(new Translate(sizeX / 2 - TS / 2, sizeY / 2 - TS / 2, 3));
 		floor.setMaterial(floorMaterial);
+		getChildren().addAll(floor, wallGroup, foodGroup);
+	}
 
+	public void init(GameVariant variant, GameLevel gameLevel) {
+		buildWalls(gameLevel.world);
+		final var foodColor = Rendering2D_Assets.getFoodColor(variant, gameLevel.mazeNumber);
+		createFood(gameLevel.world, foodColor);
+	}
+
+	private void buildWalls(PacManGameWorld world) {
 		var wallBuilder = new WallBuilder();
 		wallBuilder.setWallMaterial(wallMaterial);
 		wallBuilder.setWallHeight(wallHeight);
 		List<Node> walls = wallBuilder.build(world, 4);
-		getChildren().addAll(floor, new Group(walls), foodGroup);
+		wallGroup.getChildren().setAll(walls);
+	}
+
+	private void createFood(PacManGameWorld world, Color foodColor) {
+		foodGroup.getChildren().clear();
+		final var foodMaterial = new PhongMaterial(foodColor);
+		world.tiles().filter(world::isFoodTile).forEach(foodTile -> {
+			final var pellet = new Sphere(world.isEnergizerTile(foodTile) ? 2.5 : 1);
+			pellet.setMaterial(foodMaterial);
+			pellet.setTranslateX(foodTile.x * TS);
+			pellet.setTranslateY(foodTile.y * TS);
+			pellet.setTranslateZ(1);
+			pellet.setUserData(foodTile);
+			foodGroup.getChildren().add(pellet);
+		});
 	}
 
 	public void setWallColor(Color color) {
@@ -57,17 +84,4 @@ public class Maze3D extends Group {
 		return foodGroup.getChildren().stream();
 	}
 
-	public void resetFood(PacManGameWorld world, Color foodColor) {
-		foodGroup.getChildren().clear();
-		final var foodMaterial = new PhongMaterial(foodColor);
-		world.tiles().filter(world::isFoodTile).forEach(foodTile -> {
-			final var pellet = new Sphere(world.isEnergizerTile(foodTile) ? 2.5 : 1);
-			pellet.setMaterial(foodMaterial);
-			pellet.setTranslateX(foodTile.x * TS);
-			pellet.setTranslateY(foodTile.y * TS);
-			pellet.setTranslateZ(1);
-			pellet.setUserData(foodTile);
-			foodGroup.getChildren().add(pellet);
-		});
-	}
 }
