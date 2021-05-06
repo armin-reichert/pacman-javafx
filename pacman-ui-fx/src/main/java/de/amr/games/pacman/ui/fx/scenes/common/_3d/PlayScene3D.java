@@ -28,7 +28,6 @@ import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacManScenes;
 import de.amr.games.pacman.ui.fx.scenes.pacman.PacManScenes;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.AmbientLight;
-import javafx.scene.Camera;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
@@ -70,8 +69,7 @@ public class PlayScene3D implements GameScene {
 	public PlayScene3D(SoundManager sounds) {
 		animationController = new PlayScene3DAnimationController(this, sounds);
 		subSceneFX = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
-		Camera camera = new PerspectiveCamera(true);
-		subSceneFX.setCamera(camera);
+		subSceneFX.setCamera(new PerspectiveCamera(true));
 		perspectives = new PlayScenePerspective[] { new TotalPerspective(subSceneFX),
 				new FollowingPlayerPerspective(subSceneFX), new NearPlayerPerspective(subSceneFX) };
 		selectPerspective(PERSPECTIVE_FOLLOWING_PLAYER);
