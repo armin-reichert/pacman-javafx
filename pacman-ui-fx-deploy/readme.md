@@ -1,3 +1,5 @@
+### How to create the deployable archive
+
 To create a zip file containing the Java/JavaFX runtime modules and the application, run:
 
 ```mvn clean install```
