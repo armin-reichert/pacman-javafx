@@ -11,7 +11,9 @@ import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GhostState;
+import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.entities._2d.Ghost2D;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -54,10 +56,22 @@ public class PlayScene2DAnimationController implements DefaultPacManGameEventHan
 		}
 		sounds.setMuted(false);
 
+		final GameModel game = gameController.game();
+		final Pac player = game.player();
+
 		if (gameController.state == PacManGameState.HUNTING) {
+
+			// when switching between 2D and 3D play scenes, animations might not be up-to-date, so:
+			if (!playScene.player2D.getMunchingAnimations().get(player.dir()).isRunning()) {
+				playScene.player2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
+			}
+			if (!playScene.maze2D.getEnergizerBlinking().isRunning()) {
+				playScene.maze2D.getEnergizerBlinking().restart();
+			}
+
 			AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
 			if (munching.isPlaying()) {
-				if (gameController.game().player().starvingTicks > 10) {
+				if (player.starvingTicks > 10) {
 					sounds.stop(PacManGameSound.PACMAN_MUNCH);
 					log("Munching sound clip %s stopped", munching);
 				}

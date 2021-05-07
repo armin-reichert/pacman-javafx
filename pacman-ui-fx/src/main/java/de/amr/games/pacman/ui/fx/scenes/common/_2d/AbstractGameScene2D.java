@@ -82,12 +82,12 @@ public abstract class AbstractGameScene2D implements GameScene {
 
 	@Override
 	public void init() {
-		log("Game scene 2D %s: start", this);
+		log("s: init", this);
 	}
 
 	@Override
 	public void end() {
-		log("Game scene 2D %s: end", this);
+		log("%s: end", this);
 	}
 
 	@Override

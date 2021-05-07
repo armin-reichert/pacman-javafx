@@ -133,12 +133,6 @@ public class PlayScene3D implements GameScene {
 		score3D.setRotationAxis(Rotate.X_AXIS);
 		score3D.setRotate(subSceneFX.getCamera().getRotate());
 		
-		// when switching between 2D and 3D, food visibility is not up-to-date, so:
-		maze3D.foodNodes().forEach(foodNode -> {
-			V2i tile = (V2i) foodNode.getUserData();
-			foodNode.setVisible(!game().currentLevel().isFoodRemoved(tile));
-		});
-		
 		selectedPerspective().follow(player3D);
 		animations.update();
 	}

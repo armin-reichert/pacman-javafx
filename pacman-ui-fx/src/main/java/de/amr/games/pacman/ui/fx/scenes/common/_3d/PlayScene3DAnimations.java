@@ -23,6 +23,7 @@ import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.TrashTalk;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.Animation;
+import javafx.animation.Animation.Status;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
@@ -76,6 +77,15 @@ class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 		sounds.setMuted(false);
 
 		if (gameController().state == PacManGameState.HUNTING) {
+			// when switching between 2D and 3D, food visibility and animations might not be up-to-date, so:
+			playScene.maze3D.foodNodes().forEach(foodNode -> {
+				V2i tile = (V2i) foodNode.getUserData();
+				foodNode.setVisible(!game().currentLevel().isFoodRemoved(tile));
+			});
+			if (energizerAnimations.stream().anyMatch(animation -> animation.getStatus() != Status.RUNNING)) {
+				energizerAnimations.forEach(Transition::play);
+			}
+
 			AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
 			if (munching.isPlaying()) {
 				if (game().player().starvingTicks > 10) {
@@ -84,6 +94,7 @@ class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 				}
 			}
 		}
+
 	}
 
 	@Override
