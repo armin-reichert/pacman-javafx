@@ -12,7 +12,7 @@ In the current [release](https://github.com/armin-reichert/pacman-javafx/release
 
 YouTube:
 
-[![YouTube](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/thumbnail.jpg)](https://www.youtube.com/watch?v=6ztHwLJuPNw&t=298s)
+[![YouTube](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/thumbnail.jpg)](https://youtu.be/t529vDUtCT0)
 
 ### Keys:
 
