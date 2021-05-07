@@ -61,9 +61,9 @@ class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 	}
 
 	public void buildMaze() {
-		playScene.maze.init(game(), PlayScene3D.WALL_HEIGHT);
+		playScene.maze3D.init(game(), PlayScene3D.WALL_HEIGHT);
 		PacManGameWorld world = game().currentLevel().world;
-		energizerAnimations = playScene.maze.foodNodes()//
+		energizerAnimations = playScene.maze3D.foodNodes()//
 				.filter(foodNode -> world.isEnergizerTile(tile(foodNode)))//
 				.map(this::createEnergizerAnimation)//
 				.collect(Collectors.toList());
@@ -136,10 +136,10 @@ class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 				V2i tile = (V2i) node.getUserData();
 				return game().currentLevel().world.isEnergizerTile(tile);
 			};
-			playScene.maze.foodNodes().filter(not(isEnergizer)).forEach(foodNode -> foodNode.setVisible(false));
+			playScene.maze3D.foodNodes().filter(not(isEnergizer)).forEach(foodNode -> foodNode.setVisible(false));
 			return;
 		}
-		playScene.maze.foodNodes().filter(node -> {
+		playScene.maze3D.foodNodes().filter(node -> {
 			V2i tile = (V2i) node.getUserData();
 			return tile.equals(e.tile.get());
 		}).findFirst().ifPresent(foodNode -> foodNode.setVisible(false));

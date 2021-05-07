@@ -56,7 +56,7 @@ public class PlayScene3D implements GameScene {
 	private PacManGameController gameController;
 	private int selectedPerspective;
 
-	Maze3D maze;
+	Maze3D maze3D;
 	Player3D player3D;
 	Map<Ghost, Ghost3D> ghosts3D;
 	Bonus3D bonus3D;
@@ -83,9 +83,9 @@ public class PlayScene3D implements GameScene {
 		final var width = PacManGameWorld.DEFAULT_WIDTH * TS;
 		final var height = PacManGameWorld.DEFAULT_HEIGHT * TS;
 
-		maze = new Maze3D(width, height);
-		maze.setFloorTexture(new Image(getClass().getResourceAsStream("/common/escher-texture.jpg")));
-		maze.setWallColor(getMazeWallColor(game().variant(), game().currentLevel().mazeNumber));
+		maze3D = new Maze3D(width, height);
+		maze3D.setFloorTexture(new Image(getClass().getResourceAsStream("/common/escher-texture.jpg")));
+		maze3D.setWallColor(getMazeWallColor(game().variant(), game().currentLevel().mazeNumber));
 		animations.buildMaze();
 
 		player3D = new Player3D(game().player());
@@ -115,7 +115,7 @@ public class PlayScene3D implements GameScene {
 		final var contentRoot = new Group();
 		contentRoot.setTranslateX(-0.5 * width);
 		contentRoot.setTranslateY(-0.5 * height);
-		contentRoot.getChildren().addAll(maze, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
+		contentRoot.getChildren().addAll(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
 		contentRoot.getChildren().addAll(ghosts3D.values());
 		contentRoot.getChildren().addAll(ambientLight, playerLight);
 
@@ -132,6 +132,13 @@ public class PlayScene3D implements GameScene {
 		// Keep score text in plain sight. TODO: is this the recommended way to do this?
 		score3D.setRotationAxis(Rotate.X_AXIS);
 		score3D.setRotate(subSceneFX.getCamera().getRotate());
+		
+		// when switching between 2D and 3D, food visibility is not up-to-date, so:
+		maze3D.foodNodes().forEach(foodNode -> {
+			V2i tile = (V2i) foodNode.getUserData();
+			foodNode.setVisible(!game().currentLevel().isFoodRemoved(tile));
+		});
+		
 		selectedPerspective().follow(player3D);
 		animations.update();
 	}
