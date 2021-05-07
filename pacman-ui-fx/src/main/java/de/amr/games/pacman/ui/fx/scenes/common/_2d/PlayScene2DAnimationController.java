@@ -183,13 +183,13 @@ public class PlayScene2DAnimationController implements DefaultPacManGameEventHan
 
 		// enter GHOST_DYING
 		else if (e.newGameState == PacManGameState.GHOST_DYING) {
-			e.gameModel.player().visible = false;
+			e.gameModel.player().setVisible(false);
 			sounds.play(PacManGameSound.GHOST_EATEN);
 		}
 
 		// enter LEVEL_COMPLETE
 		else if (e.newGameState == PacManGameState.LEVEL_COMPLETE) {
-			e.gameModel.ghosts().forEach(ghost -> ghost.visible = false);
+			e.gameModel.ghosts().forEach(ghost -> ghost.setVisible(false));
 			gameController.stateTimer().reset();
 			levelCompleteAnimation.play();
 			sounds.stopAll();
@@ -204,7 +204,7 @@ public class PlayScene2DAnimationController implements DefaultPacManGameEventHan
 
 		// exit GHOST_DYING
 		if (e.oldGameState == PacManGameState.GHOST_DYING) {
-			e.gameModel.player().visible = true;
+			e.gameModel.player().setVisible(true);
 		}
 	}
 

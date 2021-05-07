@@ -44,7 +44,7 @@ public class Player3D extends Group {
 	}
 
 	public void update() {
-		setVisible(pac.visible);
+		setVisible(pac.isVisible());
 		setTranslateX(pac.position.x);
 		setTranslateY(pac.position.y);
 		if (targetDir != pac.dir()) {

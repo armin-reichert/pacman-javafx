@@ -46,7 +46,7 @@ public class Player2D implements Renderable2D {
 	@Override
 	public void render(GraphicsContext g) {
 		Rectangle2D sprite = currentSprite();
-		if (player.visible) {
+		if (player.isVisible()) {
 			rendering.renderEntity(g, player, sprite);
 		}
 	}

@@ -74,7 +74,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		player2D = new Player2D(game().player(), rendering);
 		player2D.getDyingAnimation().delay(120).onStart(() -> {
-			game().ghosts().forEach(ghost -> ghost.visible = false);
+			game().ghosts().forEach(ghost -> ghost.setVisible(false));
 		});
 
 		ghosts2D = game().ghosts().map(ghost -> new Ghost2D(ghost, rendering)).collect(Collectors.toList());

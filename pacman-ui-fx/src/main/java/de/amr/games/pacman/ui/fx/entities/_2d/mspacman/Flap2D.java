@@ -31,7 +31,7 @@ public class Flap2D implements Renderable2D {
 
 	@Override
 	public void render(GraphicsContext g) {
-		if (flap.visible) {
+		if (flap.isVisible()) {
 			Rectangle2D sprite = animation.animate();
 			rendering.renderEntity(g, flap, sprite);
 			g.setFont(rendering.getScoreFont());

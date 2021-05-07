@@ -299,7 +299,7 @@ class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 
 		PauseTransition phase1 = new PauseTransition(Duration.seconds(1));
 		phase1.setOnFinished(e -> {
-			game().ghosts().forEach(ghost -> ghost.visible = false);
+			game().ghosts().forEach(ghost -> ghost.setVisible(false));
 			game().player().setDir(Direction.DOWN);
 			sounds.play(PacManGameSound.PACMAN_DEATH);
 		});
@@ -327,7 +327,7 @@ class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 			playScene.player3D.setTranslateX(savedTranslateX);
 			playScene.player3D.setTranslateY(savedTranslateY);
 			playScene.player3D.setTranslateZ(savedTranslateZ);
-			game().player().visible = false;
+			game().player().setVisible(false);
 			gameController().stateTimer().forceExpiration();
 		});
 
@@ -339,8 +339,8 @@ class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 		PauseTransition phase1 = new PauseTransition(Duration.seconds(2));
 		phase1.setDelay(Duration.seconds(1));
 		phase1.setOnFinished(e -> {
-			game().player().visible = false;
-			game().ghosts().forEach(ghost -> ghost.visible = false);
+			game().player().setVisible(false);
+			game().ghosts().forEach(ghost -> ghost.setVisible(false));
 			String levelCompleteMessage = String.format("%s\n\nLevel %d complete.",
 					TrashTalk.LEVEL_COMPLETE_SPELLS.nextSpell(), game().currentLevel().number);
 			gameController().getUI().showFlashMessage(levelCompleteMessage, 2);
@@ -355,8 +355,8 @@ class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 		gameController().getUI().showFlashMessage("Entering Level " + game().currentLevel().number);
 		PauseTransition phase1 = new PauseTransition(Duration.seconds(2));
 		phase1.setOnFinished(e -> {
-			game().player().visible = true;
-			game().ghosts().forEach(ghost -> ghost.visible = true);
+			game().player().setVisible(true);
+			game().ghosts().forEach(ghost -> ghost.setVisible(true));
 		});
 		SequentialTransition animation = new SequentialTransition(phase1, new PauseTransition(Duration.seconds(2)));
 		animation.setOnFinished(e -> gameController().stateTimer().forceExpiration());

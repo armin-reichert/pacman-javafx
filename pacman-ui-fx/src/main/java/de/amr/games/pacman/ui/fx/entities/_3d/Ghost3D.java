@@ -104,7 +104,7 @@ public class Ghost3D extends Group {
 	}
 
 	public void update() {
-		setVisible(ghost.visible);
+		setVisible(ghost.isVisible());
 		setTranslateX(ghost.position.x);
 		setTranslateY(ghost.position.y);
 		if (ghost.bounty > 0) {

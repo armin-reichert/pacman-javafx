@@ -47,7 +47,7 @@ public class Bonus2D implements Renderable2D {
 	@Override
 	public void render(GraphicsContext g) {
 		Rectangle2D sprite = currentSprite();
-		if (sprite == null || !bonus.visible) {
+		if (sprite == null || !bonus.isVisible()) {
 			return;
 		}
 		// Ms. Pac.Man bonus is jumping up and down while wandering the maze

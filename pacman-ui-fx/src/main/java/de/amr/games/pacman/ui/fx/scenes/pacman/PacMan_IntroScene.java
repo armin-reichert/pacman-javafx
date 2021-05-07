@@ -114,7 +114,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		gc.fillText("NICKNAME", t(18), TOP_Y);
 		for (int i = 0; i < 4; ++i) {
 			GhostPortrait portrait = sceneController.gallery[i];
-			if (portrait.ghost.visible) {
+			if (portrait.ghost.isVisible()) {
 				int y = TOP_Y + t(2 + 3 * i);
 				ghostsInGallery2D.get(i).render(gc);
 				gc.setFill(getGhostColor(i));
