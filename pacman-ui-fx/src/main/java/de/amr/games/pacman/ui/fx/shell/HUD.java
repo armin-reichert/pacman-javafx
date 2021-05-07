@@ -11,7 +11,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 /**
- * Displays information about the current game UI.
+ * Heads-Up-Display with information about the UI.
  * 
  * @author Armin Reichert
  */
@@ -38,9 +38,9 @@ public class HUD extends HBox {
 	public void update(PacManGameUI_JavaFX ui) {
 		TickTimer stateTimer = ui.gameController.stateTimer();
 		text = "";
+		line("Total Ticks", "%d", PacManGameUI_JavaFX.$TOTAL_TICKS.get());
 		line("Frame rate", "%d Hz", PacManGameUI_JavaFX.$FPS.get());
 		line("Speed (CTRL/SHIFT+S)", "%.0f%%", 100.0 / Env.$slowDown.get());
-		line("Total Ticks", "%d", PacManGameUI_JavaFX.$TOTAL_TICKS.get());
 		line("Paused (CTRL+P)", "%s", yesNo(Env.$paused.get()));
 		skip();
 		line("Game Variant", "%s", ui.gameController.game().variant());
@@ -51,12 +51,10 @@ public class HUD extends HBox {
 		line("", "Running:   %s", stateTimer.ticked());
 		line("", "Remaining: %s",
 				stateTimer.ticksRemaining() == Long.MAX_VALUE ? "indefinite" : stateTimer.ticksRemaining());
-		line("Game Scene", "%s", ui.currentGameScene.getClass().getSimpleName());
-		line("Game Scene Size", "w=%.0f h=%.0f", ui.currentGameScene.getSubSceneFX().getWidth(),
-				ui.currentGameScene.getSubSceneFX().getHeight());
 		skip();
-		line("Autopilot (A)", "%s", onOff(ui.gameController.autopilotOn));
-		line("Immunity (I)", "%s", onOff(ui.gameController.isPlayerImmune()));
+		line("Game Scene", "%s", ui.currentGameScene.getClass().getSimpleName());
+		line("", "w=%.0f h=%.0f", ui.currentGameScene.getSubSceneFX().getWidth(),
+				ui.currentGameScene.getSubSceneFX().getHeight());
 		skip();
 		line("Window Size", "w=%.0f h=%.0f", ui.mainScene.getWindow().getWidth(), ui.mainScene.getWindow().getHeight());
 		line("Main Scene Size", "w=%.0f h=%.0f", ui.mainScene.getWidth(), ui.mainScene.getHeight());
@@ -67,12 +65,16 @@ public class HUD extends HBox {
 		} else {
 			if (ui.currentGameScene instanceof PlayScene3D) {
 				PlayScene3D playScene = (PlayScene3D) ui.currentGameScene;
-				line("Perspective (CTRL+C)", "%s %s", playScene.selectedPerspective(),
-						cameraInfo(playScene.getSubSceneFX().getCamera()));
+				line("Perspective (CTRL+C)", "%s", playScene.selectedPerspective());
+				line("Camera", "%s", cameraInfo(playScene.getSubSceneFX().getCamera()));
 			}
+			skip();
 			line("Draw Mode (CTRL+L)", "%s", Env.$drawMode.get());
 			line("Axes (CTRL+X)", "%s", onOff(Env.$axesVisible.get()));
 		}
+		skip();
+		line("Autopilot (A)", "%s", onOff(ui.gameController.autopilotOn));
+		line("Immunity (I)", "%s", onOff(ui.gameController.isPlayerImmune()));
 		textView.setText(text);
 	}
 
