@@ -82,7 +82,7 @@ public abstract class AbstractGameScene2D implements GameScene {
 
 	@Override
 	public void init() {
-		log("s: init", this);
+		log("%s: init", this);
 	}
 
 	@Override
