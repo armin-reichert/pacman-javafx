@@ -62,7 +62,7 @@ class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 	}
 
 	public void buildMaze() {
-		playScene.maze3D.init(game(), PlayScene3D.WALL_HEIGHT);
+		playScene.maze3D.init(game());
 		PacManGameWorld world = game().currentLevel().world;
 		energizerAnimations = playScene.maze3D.foodNodes()//
 				.filter(foodNode -> world.isEnergizerTile(tile(foodNode)))//

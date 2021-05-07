@@ -86,6 +86,8 @@ public class PlayScene3D implements GameScene {
 		final var height = PacManGameWorld.DEFAULT_HEIGHT * TS;
 
 		maze3D = new Maze3D(width, height);
+		maze3D.setResolution(8);
+		maze3D.setWallHeight(4);
 		maze3D.setFloorTexture(new Image(getClass().getResourceAsStream("/common/escher-texture.jpg")));
 		maze3D.setWallColor(getMazeWallColor(game().variant(), game().currentLevel().mazeNumber));
 		animations.buildMaze();

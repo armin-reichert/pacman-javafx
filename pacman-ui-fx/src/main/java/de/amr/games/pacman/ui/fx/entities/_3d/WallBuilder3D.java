@@ -77,8 +77,8 @@ public class WallBuilder3D {
 		}
 		Box wall = new Box(numBlocksX * blockSize, numBlocksY * blockSize, wallHeight);
 		wall.setMaterial(material);
-		wall.setTranslateX(leftX * blockSize + (numBlocksX - 4) * 0.5 * blockSize);
-		wall.setTranslateY(topY * blockSize + (numBlocksY - 4) * 0.5 * blockSize);
+		wall.setTranslateX(leftX * blockSize + numBlocksX * 0.5 * blockSize);
+		wall.setTranslateY(topY * blockSize + numBlocksY * 0.5 * blockSize);
 		wall.setTranslateZ(1.5);
 		wall.drawModeProperty().bind(Env.$drawMode);
 		walls.add(wall);

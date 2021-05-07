@@ -28,30 +28,44 @@ public class Maze3D extends Group {
 	private final PhongMaterial wallMaterial = new PhongMaterial();
 	private final Group wallGroup = new Group();
 	private final Group foodGroup = new Group();
+	private int resolution; // 8, 4, 2, 1
+	private double wallHeight;
 
 	public Maze3D(double sizeX, double sizeY) {
+		resolution = 8;
+		wallHeight = 4;
 		var floorMaterial = new PhongMaterial();
 		var floorColor = Color.rgb(20, 20, 120);
 		floorMaterial.setDiffuseColor(floorColor);
 		floorMaterial.setSpecularColor(floorColor.brighter());
-		floor = new Box(sizeX-1, sizeY-1, 0.1);
+		floor = new Box(sizeX - 1, sizeY - 1, 0.1);
 		floor.getTransforms().add(new Translate(sizeX / 2 - TS / 2, sizeY / 2 - TS / 2, 3));
 		floor.setMaterial(floorMaterial);
 		getChildren().addAll(floor, wallGroup, foodGroup);
 	}
 
-	public void init(GameModel game, double wallHeight) {
-		buildWalls(game.currentLevel().world, wallHeight);
+	public void setResolution(int resolution) {
+		this.resolution = resolution;
+	}
+	
+	public void setWallHeight(double wallHeight) {
+		this.wallHeight = wallHeight;
+	}
+
+	public void init(GameModel game) {
+		buildWalls(game.currentLevel().world);
 		final var foodColor = Rendering2D_Assets.getFoodColor(game.variant(), game.currentLevel().mazeNumber);
 		createFood(game.currentLevel().world, foodColor);
 	}
 
-	private void buildWalls(PacManGameWorld world, double wallHeight) {
+	private void buildWalls(PacManGameWorld world) {
 		var wallBuilder = new WallBuilder3D();
 		wallBuilder.setWallMaterial(wallMaterial);
 		wallBuilder.setWallHeight(wallHeight);
-		List<Node> walls = wallBuilder.build(world, 4);
+		List<Node> walls = wallBuilder.build(world, resolution);
 		wallGroup.getChildren().setAll(walls);
+		wallGroup.setTranslateX(-TS / 2);
+		wallGroup.setTranslateY(-TS / 2);
 	}
 
 	private void createFood(PacManGameWorld world, Color foodColor) {
