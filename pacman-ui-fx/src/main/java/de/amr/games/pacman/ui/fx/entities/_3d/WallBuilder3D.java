@@ -21,14 +21,14 @@ import javafx.scene.shape.Box;
  * 
  * @author Armin Reichert
  */
-public class WallBuilder {
+public class WallBuilder3D {
 
-	private boolean[][] wallInfo;
+	private byte[][] wallInfo;
 	private List<Node> walls;
 	private PhongMaterial material;
 	private double wallHeight = PacManGameWorld.HTS;
 
-	public WallBuilder() {
+	public WallBuilder3D() {
 		material = new PhongMaterial();
 	}
 
@@ -92,7 +92,7 @@ public class WallBuilder {
 			int leftX = -1;
 			int sizeX = 0;
 			for (int x = 0; x < xSize; ++x) {
-				if (wallInfo[y][x]) {
+				if (wallInfo[y][x] != WallMap.EMPTY) {
 					if (leftX == -1) {
 						leftX = x;
 						sizeX = 1;
@@ -121,7 +121,7 @@ public class WallBuilder {
 			int topY = -1;
 			int sizeY = 0;
 			for (int y = 0; y < ySize; ++y) {
-				if (wallInfo[y][x]) {
+				if (wallInfo[y][x] != WallMap.EMPTY) {
 					if (topY == -1) {
 						topY = y;
 						sizeY = 1;

@@ -47,7 +47,7 @@ public class Maze3D extends Group {
 	}
 
 	private void buildWalls(PacManGameWorld world, double wallHeight) {
-		var wallBuilder = new WallBuilder();
+		var wallBuilder = new WallBuilder3D();
 		wallBuilder.setWallMaterial(wallMaterial);
 		wallBuilder.setWallHeight(wallHeight);
 		List<Node> walls = wallBuilder.build(world, 4);
