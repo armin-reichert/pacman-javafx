@@ -14,11 +14,16 @@ import javafx.scene.transform.Rotate;
 public class TotalPerspective implements PlayScenePerspective {
 
 	private final SubScene subScene;
+	private ManualCameraController cameraController;
 
 	public TotalPerspective(SubScene subScene) {
 		this.subScene = subScene;
-		ManualCameraController cameraController = new ManualCameraController(subScene.getCamera());
-		subScene.addEventHandler(KeyEvent.KEY_PRESSED, cameraController::handleKeyEvent);
+		cameraController = new ManualCameraController(subScene.getCamera());
+	}
+	
+	@Override
+	public void handle(KeyEvent event) {
+		cameraController.handleKeyEvent(event);
 	}
 
 	@Override

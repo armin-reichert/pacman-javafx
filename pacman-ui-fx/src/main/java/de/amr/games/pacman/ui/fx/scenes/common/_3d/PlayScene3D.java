@@ -33,6 +33,7 @@ import javafx.scene.PointLight;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
 
 /**
@@ -73,6 +74,7 @@ public class PlayScene3D implements GameScene {
 				new FollowingPlayerPerspective(subSceneFX), //
 				new NearPlayerPerspective(subSceneFX) };
 		selectPerspective(PERSPECTIVE_FOLLOWING_PLAYER);
+		subSceneFX.addEventHandler(KeyEvent.KEY_PRESSED, event -> selectedPerspective().handle(event));
 	}
 
 	@Override
@@ -132,7 +134,7 @@ public class PlayScene3D implements GameScene {
 		// Keep score text in plain sight. TODO: is this the recommended way to do this?
 		score3D.setRotationAxis(Rotate.X_AXIS);
 		score3D.setRotate(subSceneFX.getCamera().getRotate());
-		
+
 		selectedPerspective().follow(player3D);
 		animations.update();
 	}
