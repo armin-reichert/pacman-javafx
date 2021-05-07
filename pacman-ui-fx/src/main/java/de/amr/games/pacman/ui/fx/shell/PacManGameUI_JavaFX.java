@@ -54,7 +54,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private final Keyboard keyboard = new Keyboard();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
-	private final HUD hud = new HUD(this);
+	private final HUD hud = new HUD();
 	private final Group gameSceneParent = new Group();
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController gameController, double height) {
@@ -69,6 +69,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		double aspectRatio = gameScene.aspectRatio().orElse(getScreenAspectRatio());
 		mainScene = new Scene(root, aspectRatio * height, height, SCENE_BACKGROUND_COLOR);
 		setGameScene(gameScene);
+
+		$TOTAL_TICKS.addListener((source, oldValue, newValue) -> hud.update(this));
 
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
 		stage.addEventHandler(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
@@ -93,7 +95,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	public void update() {
 		currentGameScene.update();
 		flashMessageView.update();
-		hud.update();
 	}
 
 	@Override

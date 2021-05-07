@@ -25,43 +25,24 @@ public class HUD extends HBox {
 		return b ? "ON" : "OFF";
 	}
 
-	private final PacManGameUI_JavaFX ui;
-	private final Text textView;
+	private final Text textView = new Text();
 	private String text;
 
-	public HUD(PacManGameUI_JavaFX ui) {
-		this.ui = ui;
-		PacManGameUI_JavaFX.$TOTAL_TICKS.addListener((source, oldValue, newValue) -> update());
-		textView = new Text();
+	public HUD() {
+		visibleProperty().bind(Env.$hudVisible);
 		textView.setFill(Color.LIGHTGREEN);
 		textView.setFont(Font.font("Monospace", 14));
 		getChildren().add(textView);
-		visibleProperty().bind(Env.$hudVisible);
 	}
 
-	private void line(String column1, String fmtColumn2, Object... args) {
-		String column2 = String.format(fmtColumn2, args) + "\n";
-		text += String.format("%-20s: %s", column1, column2);
-	}
-
-	private void line() {
-		text += "\n";
-	}
-
-	private String cameraInfo(Camera camera) {
-		return camera == null ? "No camera"
-				: String.format("x=%.0f y=%.0f z=%.0f rot=%.0f", camera.getTranslateX(), camera.getTranslateY(),
-						camera.getTranslateZ(), camera.getRotate());
-	}
-
-	public void update() {
+	public void update(PacManGameUI_JavaFX ui) {
 		TickTimer stateTimer = ui.gameController.stateTimer();
 		text = "";
 		line("Frame rate", "%d Hz", PacManGameUI_JavaFX.$FPS.get());
 		line("Speed (CTRL/SHIFT+S)", "%.0f%%", 100.0 / Env.$slowDown.get());
 		line("Total Ticks", "%d", PacManGameUI_JavaFX.$TOTAL_TICKS.get());
 		line("Paused (CTRL+P)", "%s", yesNo(Env.$paused.get()));
-		line();
+		skip();
 		line("Game Variant", "%s", ui.gameController.game().variant());
 		line("Playing", "%s", yesNo(ui.gameController.isGameRunning()));
 		line("Attract Mode", "%s", yesNo(ui.gameController.isAttractMode()));
@@ -73,13 +54,13 @@ public class HUD extends HBox {
 		line("Game Scene", "%s", ui.currentGameScene.getClass().getSimpleName());
 		line("Game Scene Size", "w=%.0f h=%.0f", ui.currentGameScene.getSubSceneFX().getWidth(),
 				ui.currentGameScene.getSubSceneFX().getHeight());
-		line();
+		skip();
 		line("Autopilot (A)", "%s", onOff(ui.gameController.autopilotOn));
 		line("Immunity (I)", "%s", onOff(ui.gameController.isPlayerImmune()));
-		line();
+		skip();
 		line("Window Size", "w=%.0f h=%.0f", ui.mainScene.getWindow().getWidth(), ui.mainScene.getWindow().getHeight());
 		line("Main Scene Size", "w=%.0f h=%.0f", ui.mainScene.getWidth(), ui.mainScene.getHeight());
-		line();
+		skip();
 		line("3D Scenes (CTRL+3)", "%s", onOff(Env.$use3DScenes.get()));
 		if (ui.currentGameScene instanceof AbstractGameScene2D) {
 			line("Canvas2D", "w=%.0f h=%.0f", ui.canvas2D.getWidth(), ui.canvas2D.getHeight());
@@ -93,5 +74,20 @@ public class HUD extends HBox {
 			line("Axes (CTRL+X)", "%s", onOff(Env.$axesVisible.get()));
 		}
 		textView.setText(text);
+	}
+
+	private void line(String column1, String fmtColumn2, Object... args) {
+		String column2 = String.format(fmtColumn2, args) + "\n";
+		text += String.format("%-20s: %s", column1, column2);
+	}
+
+	private void skip() {
+		text += "\n";
+	}
+
+	private String cameraInfo(Camera camera) {
+		return camera == null ? "No camera"
+				: String.format("x=%.0f y=%.0f z=%.0f rot=%.0f", camera.getTranslateX(), camera.getTranslateY(),
+						camera.getTranslateZ(), camera.getRotate());
 	}
 }
