@@ -12,17 +12,16 @@ import java.util.stream.Collectors;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.fx.entities._3d.Bonus3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Ghost3D;
 import de.amr.games.pacman.ui.fx.entities._3d.LevelCounter3D;
+import de.amr.games.pacman.ui.fx.entities._3d.LivesCounter3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Maze3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Player3D;
 import de.amr.games.pacman.ui.fx.entities._3d.ScoreNotReally3D;
-import de.amr.games.pacman.ui.fx.model3D.GianmarcosModel3D;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacManScenes;
 import de.amr.games.pacman.ui.fx.scenes.pacman.PacManScenes;
@@ -62,8 +61,8 @@ public class PlayScene3D implements GameScene {
 	Map<Ghost, Ghost3D> ghosts3D;
 	Bonus3D bonus3D;
 	ScoreNotReally3D score3D;
-	Group livesCounter3D;
 	LevelCounter3D levelCounter3D;
+	LivesCounter3D livesCounter3D;
 
 	public PlayScene3D(SoundManager sounds) {
 		animations = new PlayScene3DAnimations(this, sounds);
@@ -94,7 +93,8 @@ public class PlayScene3D implements GameScene {
 		bonus3D = new Bonus3D(game().variant(), r2D);
 
 		score3D = new ScoreNotReally3D();
-		livesCounter3D = createLivesCounter3D(new V2i(2, 1));
+		livesCounter3D = new LivesCounter3D(new V2i(2, 1));
+		livesCounter3D.setMaxEntries(LIVES_COUNTER_MAX);
 		if (gameController.isAttractMode()) {
 			score3D.setHiscoreOnly(true);
 			livesCounter3D.setVisible(false);
@@ -125,7 +125,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void update() {
 		score3D.update(game());
-		updateLivesCounter3D(game());
+		livesCounter3D.update(game());
 		player3D.update();
 		ghosts3D.values().forEach(Ghost3D::update);
 		bonus3D.update(game().bonus());
@@ -184,22 +184,4 @@ public class PlayScene3D implements GameScene {
 		// data binding does the job
 	}
 
-	private Group createLivesCounter3D(V2i tilePosition) {
-		Group livesCounter = new Group();
-		for (int i = 0; i < LIVES_COUNTER_MAX; ++i) {
-			V2i tile = tilePosition.plus(2 * i, 0);
-			Group liveIndicator = GianmarcosModel3D.createPacMan();
-			liveIndicator.setTranslateX(tile.x * TS);
-			liveIndicator.setTranslateY(tile.y * TS);
-			liveIndicator.setTranslateZ(0);
-			livesCounter.getChildren().add(liveIndicator);
-		}
-		return livesCounter;
-	}
-
-	private void updateLivesCounter3D(GameModel game) {
-		for (int i = 0; i < LIVES_COUNTER_MAX; ++i) {
-			livesCounter3D.getChildren().get(i).setVisible(i < game.lives());
-		}
-	}
 }
