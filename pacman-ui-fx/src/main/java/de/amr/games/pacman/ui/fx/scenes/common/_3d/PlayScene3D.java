@@ -87,7 +87,7 @@ public class PlayScene3D implements GameScene {
 		maze = new Maze3D(width, height);
 		maze.setFloorTexture(new Image(getClass().getResourceAsStream("/common/escher-texture.jpg")));
 		maze.setWallColor(getMazeWallColor(game().variant(), game().currentLevel().mazeNumber));
-		resetMaze();
+		animations.buildMaze();
 
 		player3D = new Player3D(game().player());
 		ghosts3D = game().ghosts().collect(Collectors.toMap(Function.identity(), ghost -> new Ghost3D(ghost, r2D)));
@@ -120,8 +120,6 @@ public class PlayScene3D implements GameScene {
 		contentRoot.getChildren().addAll(ambientLight, playerLight);
 
 		subSceneFX.setRoot(new Group(contentRoot, new CoordinateSystem(subSceneFX.getWidth())));
-
-		animations.init();
 	}
 
 	@Override
@@ -184,10 +182,6 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void resize(double width, double height) {
 		// data binding does the job
-	}
-
-	public void resetMaze() {
-		maze.init(gameController.game(), WALL_HEIGHT);
 	}
 
 	private Group createLivesCounter3D(V2i tilePosition) {

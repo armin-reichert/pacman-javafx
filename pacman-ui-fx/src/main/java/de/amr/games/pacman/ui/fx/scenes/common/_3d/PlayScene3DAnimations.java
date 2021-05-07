@@ -39,6 +39,10 @@ import javafx.util.Duration;
  */
 class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 
+	private static V2i tile(Node node) {
+		return (V2i) node.getUserData();
+	}
+
 	private final PlayScene3D playScene;
 	private final SoundManager sounds;
 	private List<ScaleTransition> energizerAnimations;
@@ -56,21 +60,13 @@ class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 		return gameController().game();
 	}
 
-	public void init() {
+	public void buildMaze() {
+		playScene.maze.init(game(), PlayScene3D.WALL_HEIGHT);
 		PacManGameWorld world = game().currentLevel().world;
-		createEnergizerAnimations(world);
-	}
-
-	private void createEnergizerAnimations(PacManGameWorld world) {
 		energizerAnimations = playScene.maze.foodNodes()//
-				.filter(foodNode -> isEnergizerNode(foodNode, world))//
+				.filter(foodNode -> world.isEnergizerTile(tile(foodNode)))//
 				.map(this::createEnergizerAnimation)//
 				.collect(Collectors.toList());
-	}
-
-	private boolean isEnergizerNode(Node node, PacManGameWorld world) {
-		V2i tile = (V2i) node.getUserData();
-		return world.isEnergizerTile(tile);
 	}
 
 	public void update() {
@@ -230,8 +226,7 @@ class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 
 		// enter LEVEL_STARTING
 		else if (e.newGameState == PacManGameState.LEVEL_STARTING) {
-			playScene.resetMaze();
-			createEnergizerAnimations(game().currentLevel().world);
+			buildMaze();
 			playScene.levelCounter3D.update(e.gameModel);
 			playAnimationLevelStarting();
 		}
