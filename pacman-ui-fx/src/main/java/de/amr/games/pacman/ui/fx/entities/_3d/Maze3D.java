@@ -34,7 +34,7 @@ public class Maze3D extends Group {
 		var floorColor = Color.rgb(20, 20, 120);
 		floorMaterial.setDiffuseColor(floorColor);
 		floorMaterial.setSpecularColor(floorColor.brighter());
-		floor = new Box(sizeX, sizeY, 0.1);
+		floor = new Box(sizeX-1, sizeY-1, 0.1);
 		floor.getTransforms().add(new Translate(sizeX / 2 - TS / 2, sizeY / 2 - TS / 2, 3));
 		floor.setMaterial(floorMaterial);
 		getChildren().addAll(floor, wallGroup, foodGroup);
