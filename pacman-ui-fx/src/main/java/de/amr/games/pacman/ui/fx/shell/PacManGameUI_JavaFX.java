@@ -41,7 +41,8 @@ import javafx.stage.Stage;
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
 
-	private static final Color SCENE_BACKGROUND_COLOR = Color.rgb(20, 20, 60);
+	private static final Color SCENE_BACKGROUND_COLOR = Color.CORNFLOWERBLUE;
+//	= Color.rgb(20, 20, 60);
 
 	public static final IntegerProperty $FPS = new SimpleIntegerProperty();
 	public static final IntegerProperty $TOTAL_TICKS = new SimpleIntegerProperty();
