@@ -48,7 +48,6 @@ public class PlayScene3D implements GameScene {
 	static final int PERSPECTIVE_NEAR_PLAYER = 2;
 
 	static final int LIVES_COUNTER_MAX = 5;
-	static final int WALL_HEIGHT = 4;
 
 	private final SubScene subSceneFX;
 	private final PlayScene3DAnimations animations;
@@ -87,7 +86,7 @@ public class PlayScene3D implements GameScene {
 
 		maze3D = new Maze3D(width, height);
 		maze3D.setResolution(8);
-		maze3D.setWallHeight(4);
+		maze3D.setWallHeight(3.5);
 		maze3D.setFloorTexture(new Image(getClass().getResourceAsStream("/common/escher-texture.jpg")));
 		maze3D.setWallColor(getMazeWallColor(game().variant(), game().currentLevel().mazeNumber));
 		animations.buildMaze();
