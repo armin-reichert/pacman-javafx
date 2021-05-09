@@ -13,7 +13,6 @@ import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GhostState;
-import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.entities._2d.Ghost2D;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -50,19 +49,17 @@ public class PlayScene2DAnimationController implements DefaultPacManGameEventHan
 		levelCompleteAnimation.setOnFinished(e -> gameController.stateTimer().forceExpiration());
 	}
 
-	public void update() {
-		if (gameController.isAttractMode()) {
-			return;
-		}
-		sounds.setMuted(false);
+	private GameModel game() {
+		return gameController.game();
+	}
 
-		final GameModel game = gameController.game();
-		final Pac player = game.player();
+	public void update() {
+		sounds.setMuted(gameController.isAttractMode());
 
 		if (gameController.state == PacManGameState.HUNTING) {
 
-			// when switching between 2D and 3D play scenes, animations might not be up-to-date, so:
-			if (!playScene.player2D.getMunchingAnimations().get(player.dir()).isRunning()) {
+			// when switching between 2D and 3D play scenes, animations might not be running:
+			if (!playScene.player2D.getMunchingAnimations().get(game().player().dir()).isRunning()) {
 				playScene.player2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
 			}
 			if (!playScene.maze2D.getEnergizerBlinking().isRunning()) {
@@ -71,21 +68,12 @@ public class PlayScene2DAnimationController implements DefaultPacManGameEventHan
 
 			AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
 			if (munching.isPlaying()) {
-				if (player.starvingTicks > 10) {
+				if (game().player().starvingTicks > 10) {
 					sounds.stop(PacManGameSound.PACMAN_MUNCH);
 					log("Munching sound clip %s stopped", munching);
 				}
 			}
 		}
-	}
-
-	@Override
-	public void onGameEvent(PacManGameEvent gameEvent) {
-		if (gameController.isAttractMode()) {
-			return;
-		}
-		sounds.setMuted(false);
-		DefaultPacManGameEventHandler.super.onGameEvent(gameEvent);
 	}
 
 	@Override
@@ -124,10 +112,13 @@ public class PlayScene2DAnimationController implements DefaultPacManGameEventHan
 	}
 
 	@Override
+	public void onBonusActivated(PacManGameEvent e) {
+		playScene.bonus2D.startAnimation();
+	}
+
+	@Override
 	public void onBonusEaten(PacManGameEvent e) {
-		if (playScene.bonus2D.getJumpAnimation() != null) {
-			playScene.bonus2D.getJumpAnimation().reset();
-		}
+		playScene.bonus2D.stopAnimation();
 		sounds.play(PacManGameSound.BONUS_EATEN);
 	}
 
@@ -150,8 +141,6 @@ public class PlayScene2DAnimationController implements DefaultPacManGameEventHan
 
 	@Override
 	public void onPacManGameStateChange(PacManGameStateChangeEvent e) {
-		sounds.setMuted(gameController.isAttractMode());
-
 		// enter READY
 		if (e.newGameState == PacManGameState.READY) {
 			sounds.stopAll();

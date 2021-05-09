@@ -52,7 +52,7 @@ public class Maze3D extends Group {
 		this.wallHeight = wallHeight;
 	}
 
-	public void init(GameModel game) {
+	public void build(GameModel game) {
 		buildWalls(game.currentLevel().world);
 		final var foodColor = Rendering2D_Assets.getFoodColor(game.variant(), game.currentLevel().mazeNumber);
 		createFood(game.currentLevel().world, foodColor);

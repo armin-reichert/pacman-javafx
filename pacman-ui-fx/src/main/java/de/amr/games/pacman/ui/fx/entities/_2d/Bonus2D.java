@@ -1,6 +1,7 @@
 package de.amr.games.pacman.ui.fx.entities._2d;
 
 import java.util.Map;
+import java.util.Objects;
 
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.pacman.Bonus;
@@ -10,38 +11,41 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
- * 2D representation of the bonus in Pac-Man and Ms. Pac-Man.
+ * 2D-representation of the bonus in Pac-Man and Ms. Pac-Man.
  * 
  * @author Armin Reichert
  */
 public class Bonus2D implements Renderable2D {
 
-	private Rendering2D rendering;
-	private Bonus bonus;
-	private Map<String, Rectangle2D> symbolSprites;
-	private Map<Integer, Rectangle2D> numberSprites;
-	private TimedSequence<Integer> jumpAnimation;
+	private final Rendering2D rendering;
+	private final Bonus bonus;
+	private final Map<String, Rectangle2D> symbolSprites;
+	private final Map<Integer, Rectangle2D> numberSprites;
+	private final TimedSequence<Integer> animation;
 
-	public Bonus2D(Rendering2D rendering) {
-		this.rendering = rendering;
+	public Bonus2D(Bonus bonus, Rendering2D rendering) {
+		this.bonus = Objects.requireNonNull(bonus);
+		this.rendering = Objects.requireNonNull(rendering);
 		symbolSprites = rendering.getSymbolSprites();
 		numberSprites = rendering.getBonusValuesSpritesMap();
 		if (rendering instanceof Rendering2D_MsPacMan) {
 			Rendering2D_MsPacMan msPacManRendering = (Rendering2D_MsPacMan) rendering;
-			setJumpAnimation(msPacManRendering.createBonusAnimation());
+			animation = msPacManRendering.createBonusAnimation();
+		} else {
+			animation = null;
 		}
 	}
 
-	public void setBonus(Bonus bonus) {
-		this.bonus = bonus;
+	public void startAnimation() {
+		if (animation != null) {
+			animation.restart();
+		}
 	}
 
-	public TimedSequence<Integer> getJumpAnimation() {
-		return jumpAnimation;
-	}
-
-	public void setJumpAnimation(TimedSequence<Integer> jumpAnimation) {
-		this.jumpAnimation = jumpAnimation;
+	public void stopAnimation() {
+		if (animation != null) {
+			animation.stop();
+		}
 	}
 
 	@Override
@@ -51,7 +55,7 @@ public class Bonus2D implements Renderable2D {
 			return;
 		}
 		// Ms. Pac.Man bonus is jumping up and down while wandering the maze
-		int jump = jumpAnimation != null ? jumpAnimation.animate() : 0;
+		int jump = animation != null ? animation.animate() : 0;
 		g.save();
 		g.translate(0, jump);
 		rendering.renderEntity(g, bonus, sprite);
@@ -59,9 +63,6 @@ public class Bonus2D implements Renderable2D {
 	}
 
 	private Rectangle2D currentSprite() {
-		if (bonus == null) {
-			return null;
-		}
 		if (bonus.edibleTicksLeft > 0) {
 			return symbolSprites.get(bonus.symbol);
 		}

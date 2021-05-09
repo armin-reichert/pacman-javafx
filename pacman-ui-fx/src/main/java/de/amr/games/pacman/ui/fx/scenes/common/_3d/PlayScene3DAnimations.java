@@ -18,9 +18,9 @@ import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GhostState;
-import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.TrashTalk;
+import de.amr.games.pacman.ui.fx.entities._3d.Ghost3D;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
@@ -62,30 +62,24 @@ class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 	}
 
 	public void buildMaze() {
-		playScene.maze3D.init(game());
-		PacManGameWorld world = game().currentLevel().world;
+		playScene.maze3D.build(game());
 		energizerAnimations = playScene.maze3D.foodNodes()//
-				.filter(foodNode -> world.isEnergizerTile(tile(foodNode)))//
+				.filter(node -> game().currentLevel().world.isEnergizerTile(tile(node)))//
 				.map(this::createEnergizerAnimation)//
 				.collect(Collectors.toList());
 	}
 
 	public void update() {
-		if (gameController().isAttractMode()) {
-			return;
-		}
-		sounds.setMuted(false);
+		sounds.setMuted(gameController().isAttractMode());
 
 		if (gameController().state == PacManGameState.HUNTING) {
 			// when switching between 2D and 3D, food visibility and animations might not be up-to-date, so:
 			playScene.maze3D.foodNodes().forEach(foodNode -> {
-				V2i tile = (V2i) foodNode.getUserData();
-				foodNode.setVisible(!game().currentLevel().isFoodRemoved(tile));
+				foodNode.setVisible(!game().currentLevel().isFoodRemoved(tile(foodNode)));
 			});
 			if (energizerAnimations.stream().anyMatch(animation -> animation.getStatus() != Status.RUNNING)) {
 				energizerAnimations.forEach(Transition::play);
 			}
-
 			AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
 			if (munching.isPlaying()) {
 				if (game().player().starvingTicks > 10) {
@@ -94,7 +88,6 @@ class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 				}
 			}
 		}
-
 	}
 
 	@Override
@@ -117,43 +110,37 @@ class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 	@Override
 	public void onPlayerGainsPower(PacManGameEvent e) {
 		sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
-		playScene.ghosts3D.values().forEach(ghost3D -> {
-			ghost3D.setBlueSkinColor();
-		});
+		playScene.ghosts3D.values().forEach(Ghost3D::setBlueSkinColor);
 	}
 
 	@Override
 	public void onPlayerLosingPower(PacManGameEvent e) {
-		playScene.ghosts3D.values().forEach(ghost3D -> {
-			if (ghost3D.ghost.is(GhostState.FRIGHTENED)) {
-				ghost3D.startFlashing();
-			}
-		});
+		playScene.ghosts3D.values().stream()//
+				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED))//
+				.forEach(Ghost3D::startFlashing);
 	}
 
 	@Override
 	public void onPlayerLostPower(PacManGameEvent e) {
-		playScene.ghosts3D.values().forEach(ghost3D -> {
-			ghost3D.stopFlashing();
-		});
+		playScene.ghosts3D.values().forEach(Ghost3D::stopFlashing);
 		sounds.stop(PacManGameSound.PACMAN_POWER);
 	}
 
 	@Override
 	public void onPlayerFoundFood(PacManGameEvent e) {
 		if (e.tile.isEmpty()) {
-			// this is triggered by the "eat all pellets except energizers" cheat
-			Predicate<Node> isEnergizer = node -> {
-				V2i tile = (V2i) node.getUserData();
-				return game().currentLevel().world.isEnergizerTile(tile);
-			};
-			playScene.maze3D.foodNodes().filter(not(isEnergizer)).forEach(foodNode -> foodNode.setVisible(false));
+			// this happens when the "eat all pellets except energizers" cheat was triggered
+			Predicate<Node> isEnergizer = node -> game().currentLevel().world.isEnergizerTile(tile(node));
+			playScene.maze3D.foodNodes()//
+					.filter(not(isEnergizer))//
+					.forEach(foodNode -> foodNode.setVisible(false));
 			return;
 		}
-		playScene.maze3D.foodNodes().filter(node -> {
-			V2i tile = (V2i) node.getUserData();
-			return tile.equals(e.tile.get());
-		}).findFirst().ifPresent(foodNode -> foodNode.setVisible(false));
+		playScene.maze3D.foodNodes()//
+				.filter(node -> tile(node).equals(e.tile.get()))//
+				.findFirst()//
+				.ifPresent(foodNode -> foodNode.setVisible(false));
+
 		AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
 		if (!munching.isPlaying()) {
 			sounds.loop(PacManGameSound.PACMAN_MUNCH, Integer.MAX_VALUE);

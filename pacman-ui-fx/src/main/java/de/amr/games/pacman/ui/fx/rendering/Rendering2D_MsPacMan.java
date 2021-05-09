@@ -231,7 +231,7 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	}
 
 	public TimedSequence<Integer> createBonusAnimation() {
-		return TimedSequence.of(0, 2, 0, -2).frameDuration(20).endless();
+		return TimedSequence.of(2, -2).frameDuration(20).endless();
 	}
 
 	/*

@@ -79,7 +79,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		ghosts2D = game().ghosts().map(ghost -> new Ghost2D(ghost, rendering)).collect(Collectors.toList());
 
-		bonus2D = new Bonus2D(rendering);
+		bonus2D = new Bonus2D(game().bonus(), rendering);
 
 		game().player().powerTimer.addEventListener(animationController::handleGhostsFlashing);
 		animationController.init();
