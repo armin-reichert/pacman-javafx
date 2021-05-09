@@ -16,6 +16,7 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.fx.entities._3d.Bonus3D;
+import de.amr.games.pacman.ui.fx.entities._3d.CoordinateSystem;
 import de.amr.games.pacman.ui.fx.entities._3d.Ghost3D;
 import de.amr.games.pacman.ui.fx.entities._3d.LevelCounter3D;
 import de.amr.games.pacman.ui.fx.entities._3d.LivesCounter3D;

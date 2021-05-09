@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.scenes.common._3d;
+package de.amr.games.pacman.ui.fx.entities._3d;
 
 import de.amr.games.pacman.ui.fx.Env;
 import javafx.scene.Group;
