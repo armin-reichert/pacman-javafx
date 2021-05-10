@@ -68,7 +68,6 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 			Ghost2D ghost2D = new Ghost2D(ghost, rendering);
 			ghost2D.getKickingAnimations().values().forEach(TimedSequence::restart);
 			ghost2D.getFrightenedAnimation().restart();
-			ghost2D.getFlashingAnimation().restart();
 			return ghost2D;
 		}).collect(Collectors.toList());
 

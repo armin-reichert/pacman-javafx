@@ -101,6 +101,7 @@ public class Ghost3D extends Group {
 		bountyShape.setMaterial(new PhongMaterial());
 
 		setNormalSkinColor();
+		getChildren().setAll(ghostShape);
 	}
 
 	public void update() {
