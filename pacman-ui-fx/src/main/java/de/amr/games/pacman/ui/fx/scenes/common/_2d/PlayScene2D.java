@@ -67,7 +67,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		score2D.setPointsSupplier(() -> game().score());
 
 		hiscore2D = new GameScore2D(rendering);
-		hiscore2D.setTitle("HI SCORE");
+		hiscore2D.setTitle("HIGH SCORE");
 		hiscore2D.setLeftUpperCorner(new V2i(16, 1));
 		hiscore2D.setPointsSupplier(() -> game().hiscorePoints());
 		hiscore2D.setLevelSupplier(() -> game().hiscoreLevel());

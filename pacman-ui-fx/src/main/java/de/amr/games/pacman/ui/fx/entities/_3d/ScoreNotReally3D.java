@@ -30,7 +30,7 @@ public class ScoreNotReally3D extends Group {
 		txtScore.setFill(Color.YELLOW);
 		txtScore.setFont(font);
 
-		txtHiscoreTitle = new Text("HI SCORE");
+		txtHiscoreTitle = new Text("HIGH SCORE");
 		txtHiscoreTitle.setFill(Color.WHITE);
 		txtHiscoreTitle.setFont(font);
 
