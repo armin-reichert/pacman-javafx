@@ -137,7 +137,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 			gc.setFont(rendering.getScoreFont());
 			gc.setFill(Color.RED);
 			gc.fillText("GAME", t(9), t(21));
-			gc.fillText("OVER!", t(15), t(21));
+			gc.fillText("OVER", t(15), t(21));
 		} else if (state == PacManGameState.READY) {
 			gc.setFont(rendering.getScoreFont());
 			gc.setFill(Color.YELLOW);
