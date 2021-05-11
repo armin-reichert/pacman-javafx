@@ -93,10 +93,10 @@ public abstract class Rendering2D {
 	 * @return sprite bounds for bonus depending on its state
 	 */
 	public Rectangle2D bonusSprite(Bonus bonus) {
-		if (bonus.edibleTicksLeft > 0) {
+		if (bonus.state == Bonus.EDIBLE) {
 			return getSymbolSprites().get(bonus.symbol);
 		}
-		if (bonus.eatenTicksLeft > 0) {
+		if (bonus.state == Bonus.EATEN) {
 			return getBonusValuesSpritesMap().get(bonus.points);
 		}
 		return null; // should not happen

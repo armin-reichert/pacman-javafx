@@ -63,10 +63,10 @@ public class Bonus2D implements Renderable2D {
 	}
 
 	private Rectangle2D currentSprite() {
-		if (bonus.edibleTicksLeft > 0) {
+		if (bonus.state == Bonus.EDIBLE) {
 			return symbolSprites.get(bonus.symbol);
 		}
-		if (bonus.eatenTicksLeft > 0) {
+		if (bonus.state == Bonus.EATEN) {
 			return numberSprites.get(bonus.points);
 		}
 		return null;
