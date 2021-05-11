@@ -1,7 +1,7 @@
 package de.amr.games.pacman.ui.fx.entities._2d.mspacman;
 
 import de.amr.games.pacman.lib.TimedSequence;
-import de.amr.games.pacman.model.mspacman.Stork;
+import de.amr.games.pacman.model.mspacman.entities.Stork;
 import de.amr.games.pacman.ui.fx.entities._2d.Renderable2D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_MsPacMan;
 import javafx.geometry.Rectangle2D;

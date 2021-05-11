@@ -1,6 +1,6 @@
 package de.amr.games.pacman.ui.fx.entities._2d.mspacman;
 
-import de.amr.games.pacman.model.mspacman.JuniorBag;
+import de.amr.games.pacman.model.mspacman.entities.JuniorBag;
 import de.amr.games.pacman.ui.fx.entities._2d.Renderable2D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_MsPacMan;
 import javafx.scene.canvas.GraphicsContext;
