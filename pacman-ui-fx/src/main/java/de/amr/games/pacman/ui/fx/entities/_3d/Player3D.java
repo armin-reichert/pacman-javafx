@@ -45,8 +45,8 @@ public class Player3D extends Group {
 
 	public void update() {
 		setVisible(pac.isVisible());
-		setTranslateX(pac.position.x);
-		setTranslateY(pac.position.y);
+		setTranslateX(pac.position().x);
+		setTranslateY(pac.position().y);
 		if (targetDir != pac.dir()) {
 			int[] rotationInterval = rotationInterval(targetDir, pac.dir());
 			rotateTransition.stop();

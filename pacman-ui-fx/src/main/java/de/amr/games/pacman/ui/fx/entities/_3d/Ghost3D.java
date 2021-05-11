@@ -106,8 +106,8 @@ public class Ghost3D extends Group {
 
 	public void update() {
 		setVisible(ghost.isVisible());
-		setTranslateX(ghost.position.x);
-		setTranslateY(ghost.position.y);
+		setTranslateX(ghost.position().x);
+		setTranslateY(ghost.position().y);
 		if (ghost.bounty > 0) {
 			if (getChildren().get(0) != bountyShape) {
 				Rectangle2D sprite = rendering2D.getBountyNumberSpritesMap().get(ghost.bounty);

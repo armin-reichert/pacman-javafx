@@ -72,7 +72,7 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 		if (sceneController.nailDistance() < 0) {
 			blinky2D.render(gc);
 		} else {
-			drawBlinkyStretched(sceneController.blinky, sceneController.nail.position, sceneController.nailDistance() / 4);
+			drawBlinkyStretched(sceneController.blinky, sceneController.nail.position(), sceneController.nailDistance() / 4);
 		}
 	}
 
@@ -83,7 +83,7 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 			blinky2D.render(gc);
 		} else {
 			Rectangle2D damagedDress = blinkyDamagedAnimation.frame(blinky.dir() == Direction.UP ? 0 : 1);
-			rendering.renderSprite(gc, damagedDress, (int) (blinky.position.x - 4), (int) (blinky.position.y - 4));
+			rendering.renderSprite(gc, damagedDress, (int) (blinky.position().x - 4), (int) (blinky.position().y - 4));
 		}
 	}
 }

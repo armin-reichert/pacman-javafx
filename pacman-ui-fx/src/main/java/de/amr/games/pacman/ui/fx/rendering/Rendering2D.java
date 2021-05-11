@@ -116,8 +116,8 @@ public abstract class Rendering2D {
 	public void renderEntity(GraphicsContext g, GameEntity entity, Rectangle2D spriteBounds) {
 		if (entity.isVisible() && spriteBounds != null) {
 			g.drawImage(spritesheet, spriteBounds.getMinX(), spriteBounds.getMinY(), spriteBounds.getWidth(),
-					spriteBounds.getHeight(), entity.position.x - spriteBounds.getWidth() / 2 + HTS,
-					entity.position.y - spriteBounds.getHeight() / 2 + HTS, spriteBounds.getWidth(), spriteBounds.getHeight());
+					spriteBounds.getHeight(), entity.position().x - spriteBounds.getWidth() / 2 + HTS,
+					entity.position().y - spriteBounds.getHeight() / 2 + HTS, spriteBounds.getWidth(), spriteBounds.getHeight());
 		}
 	}
 

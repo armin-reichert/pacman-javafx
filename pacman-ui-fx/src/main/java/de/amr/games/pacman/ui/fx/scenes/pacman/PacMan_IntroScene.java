@@ -92,7 +92,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		if (sceneController.phase == Phase.CHASING_PAC) {
 			if (sceneController.blinking.animate()) {
 				gc.setFill(Color.PINK);
-				gc.fillOval(t(2), sceneController.pac.position.y, TS, TS);
+				gc.fillOval(t(2), sceneController.pac.position().y, TS, TS);
 			}
 		}
 		ghosts2D.forEach(ghost2D -> ghost2D.render(gc));

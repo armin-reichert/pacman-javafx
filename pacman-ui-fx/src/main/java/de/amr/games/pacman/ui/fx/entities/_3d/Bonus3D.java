@@ -53,8 +53,8 @@ public class Bonus3D extends Box {
 
 	public void update(Bonus bonus) {
 		if (bonus != null) {
-			setTranslateX(bonus.position.x);
-			setTranslateY(bonus.position.y);
+			setTranslateX(bonus.position().x);
+			setTranslateY(bonus.position().y);
 		}
 	}
 
@@ -67,8 +67,8 @@ public class Bonus3D extends Box {
 		skin.setBumpMap(symbolImage(bonus.symbol));
 		skin.setDiffuseMap(symbolImage(bonus.symbol));
 		setMaterial(skin);
-		setTranslateX(bonus.position.x);
-		setTranslateY(bonus.position.y);
+		setTranslateX(bonus.position().x);
+		setTranslateY(bonus.position().y);
 		setVisible(true);
 		rotation.setCycleCount(Transition.INDEFINITE);
 		rotation.setRate(1);
@@ -82,8 +82,8 @@ public class Bonus3D extends Box {
 		skin.setBumpMap(pointsSprites.get(bonus.points));
 		skin.setDiffuseMap(pointsSprites.get(bonus.points));
 		setMaterial(skin);
-		setTranslateX(bonus.position.x);
-		setTranslateY(bonus.position.y);
+		setTranslateX(bonus.position().x);
+		setTranslateY(bonus.position().y);
 		setVisible(true);
 		rotation.stop();
 		rotation.setRate(2);
