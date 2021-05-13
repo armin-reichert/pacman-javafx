@@ -144,6 +144,7 @@ public class PlayScene2DAnimationController implements DefaultPacManGameEventHan
 		// enter READY
 		if (e.newGameState == PacManGameState.READY) {
 			sounds.stopAll();
+			playScene.maze2D.getEnergizerBlinking().reset();
 			if (!gameController.isAttractMode() && !gameController.isGameRunning()) {
 				gameController.stateTimer().resetSeconds(4.5);
 				sounds.play(PacManGameSound.GAME_READY);
@@ -161,7 +162,6 @@ public class PlayScene2DAnimationController implements DefaultPacManGameEventHan
 
 		// enter PACMAN_DYING
 		else if (e.newGameState == PacManGameState.PACMAN_DYING) {
-			playScene.maze2D.getEnergizerBlinking().reset();
 			playScene.ghosts2D.forEach(ghost2D -> ghost2D.getKickingAnimations().values().forEach(TimedSequence::reset));
 			playScene.player2D.getDyingAnimation().restart();
 			sounds.stopAll();
@@ -178,6 +178,7 @@ public class PlayScene2DAnimationController implements DefaultPacManGameEventHan
 
 		// enter LEVEL_COMPLETE
 		else if (e.newGameState == PacManGameState.LEVEL_COMPLETE) {
+			playScene.maze2D.getEnergizerBlinking().reset(); //  energizers may still exist when cheat is used
 			e.gameModel.ghosts().forEach(ghost -> ghost.setVisible(false));
 			gameController.stateTimer().reset();
 			levelCompleteAnimation.play();
