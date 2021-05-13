@@ -3,7 +3,7 @@ package de.amr.games.pacman.ui.fx.entities._3d;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.PacManGameModel;
 import de.amr.games.pacman.ui.fx.model3D.GianmarcosModel3D;
 import javafx.scene.Group;
 
@@ -32,7 +32,7 @@ public class LivesCounter3D extends Group {
 		}
 	}
 
-	public void update(GameModel game) {
+	public void update(PacManGameModel game) {
 		for (int i = 0; i < maxEntries; ++i) {
 			getChildren().get(i).setVisible(i < game.lives());
 		}

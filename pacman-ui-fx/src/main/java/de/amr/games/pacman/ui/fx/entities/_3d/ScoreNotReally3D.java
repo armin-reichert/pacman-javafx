@@ -2,7 +2,7 @@ package de.amr.games.pacman.ui.fx.entities._3d;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
-import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.PacManGameModel;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets;
 import javafx.scene.Group;
 import javafx.scene.layout.GridPane;
@@ -54,7 +54,7 @@ public class ScoreNotReally3D extends Group {
 		this.hiscoreOnly = hiscoreOnly;
 	}
 
-	public void update(GameModel game) {
+	public void update(PacManGameModel game) {
 		txtScore.setText(String.format("%07d L%d", game.score(), game.currentLevel().number));
 		txtHiscore.setText(String.format("%07d L%d", game.hiscorePoints(), game.hiscoreLevel()));
 		if (hiscoreOnly) {

@@ -3,7 +3,7 @@ package de.amr.games.pacman.ui.fx.entities._3d;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.PacManGameModel;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
 import javafx.animation.RotateTransition;
 import javafx.animation.Transition;
@@ -33,7 +33,7 @@ public class LevelCounter3D extends Group {
 		return rendering2D.subImage(rendering2D.getSymbolSprites().get(symbol));
 	}
 
-	public void update(GameModel game) {
+	public void update(PacManGameModel game) {
 		int x = t(tileRight.x), y = t(tileRight.y);
 		// all *Number variables are starting with 1!
 		final int maxItems = 7;

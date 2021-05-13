@@ -16,7 +16,7 @@ import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.PacManGameModel;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.TrashTalk;
@@ -57,7 +57,7 @@ class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 		return playScene.getGameController();
 	}
 
-	private GameModel game() {
+	private PacManGameModel game() {
 		return gameController().game();
 	}
 
