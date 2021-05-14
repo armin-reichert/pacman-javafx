@@ -50,7 +50,7 @@ public class PacManGameAppFX extends Application {
 	@Override
 	public void init() throws Exception {
 		gameController = new PacManGameController();
-		gameController.play(options.gameVariant);
+		gameController.selectGame(options.gameVariant);
 	}
 
 	@Override
