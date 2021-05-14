@@ -120,11 +120,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		return Optional.empty();
 	}
 
-	@Override
-	public boolean gameStartRequested() {
-		return keyboard.keyPressed("Space");
-	}
-
 	private void stopAllSounds() {
 		MsPacManScenes.SOUNDS.stopAll();
 		PacManScenes.SOUNDS.stopAll();
@@ -237,6 +232,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		case X:
 			gameController.killGhosts();
+			break;
+
+		case SPACE:
+			gameController.startGame();
 			break;
 
 		case F11:
