@@ -73,7 +73,7 @@ public class HUD extends HBox {
 			line("Axes (CTRL+X)", "%s", onOff(Env.$axesVisible.get()));
 		}
 		skip();
-		line("Autopilot (A)", "%s", onOff(ui.gameController.autopilotOn));
+		line("Autopilot (A)", "%s", onOff(ui.gameController.isAutoControlled()));
 		line("Immunity (I)", "%s", onOff(ui.gameController.isPlayerImmune()));
 		textView.setText(text);
 	}

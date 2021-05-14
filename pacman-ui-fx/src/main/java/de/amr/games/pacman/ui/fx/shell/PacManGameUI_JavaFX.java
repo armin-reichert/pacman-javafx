@@ -4,13 +4,12 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.GameVariant.MS_PACMAN;
 import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
 
-import java.util.Optional;
-
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.TrashTalk;
@@ -104,20 +103,19 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	@Override
-	public Optional<Direction> playerDirectionChangeRequested() {
+	public void steer(Pac player) {
 		if (keyboard.keyPressed("Up")) {
-			return Optional.of(Direction.UP);
+			player.setWishDir(Direction.UP);
 		}
 		if (keyboard.keyPressed("Down")) {
-			return Optional.of(Direction.DOWN);
+			player.setWishDir(Direction.DOWN);
 		}
 		if (keyboard.keyPressed("Left")) {
-			return Optional.of(Direction.LEFT);
+			player.setWishDir(Direction.LEFT);
 		}
 		if (keyboard.keyPressed("Right")) {
-			return Optional.of(Direction.RIGHT);
+			player.setWishDir(Direction.RIGHT);
 		}
-		return Optional.empty();
 	}
 
 	private void stopAllSounds() {
@@ -196,8 +194,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		switch (e.getCode()) {
 		case A:
-			gameController.autopilotOn = !gameController.autopilotOn;
-			showFlashMessage(gameController.autopilotOn ? "Autopilot ON" : "Autopilot OFF");
+			gameController.setAutoControlled(!gameController.isAutoControlled());
+			showFlashMessage(gameController.isAutoControlled() ? "Autopilot ON" : "Autopilot OFF");
 			break;
 
 		case E:
