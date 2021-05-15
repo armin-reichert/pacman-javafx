@@ -18,8 +18,6 @@ import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScene3D;
 import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacManScenes;
 import de.amr.games.pacman.ui.fx.scenes.pacman.PacManScenes;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
@@ -42,9 +40,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private static final Color SCENE_BACKGROUND_COLOR = Color.CORNFLOWERBLUE;
 //	= Color.rgb(20, 20, 60);
-
-	public static final IntegerProperty $FPS = new SimpleIntegerProperty();
-	public static final IntegerProperty $TOTAL_TICKS = new SimpleIntegerProperty();
 
 	public final Stage stage;
 	public final Scene mainScene;
@@ -70,12 +65,12 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		mainScene = new Scene(root, aspectRatio * height, height, SCENE_BACKGROUND_COLOR);
 		setGameScene(gameScene);
 
-		$TOTAL_TICKS.addListener((source, oldValue, newValue) -> hud.update(this));
+		Env.$totalTicks.addListener((source, oldValue, newValue) -> hud.update(this));
 
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
 		stage.addEventHandler(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
-		$FPS.addListener((source, oldValue, fps) -> {
+		Env.$fps.addListener((source, oldValue, fps) -> {
 			String gameName = gameController.game().variant() == PACMAN ? "Pac-Man" : "Ms. Pac-Man";
 			stage.setTitle(String.format("%s (%d fps, JavaFX)", gameName, fps));
 		});
@@ -257,11 +252,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			break;
 
 		case I:
-			Env.$hudVisible.set(!Env.$hudVisible.get());
+			Env.$isHUDVisible.set(!Env.$isHUDVisible.get());
 			break;
 
 		case L:
-			Env.$drawMode.set(Env.$drawMode.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+			Env.$drawMode3D.set(Env.$drawMode3D.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 			break;
 
 		case P:
@@ -277,7 +272,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			break;
 
 		case T:
-			Env.$timeMeasured.set(!Env.$timeMeasured.get());
+			Env.$isTimeMeasured.set(!Env.$isTimeMeasured.get());
 			break;
 
 		case X:

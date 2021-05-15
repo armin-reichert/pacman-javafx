@@ -27,6 +27,7 @@ package de.amr.games.pacman.ui.fx.app;
 import java.io.IOException;
 
 import de.amr.games.pacman.controller.PacManGameController;
+import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -56,8 +57,8 @@ public class PacManGameAppFX extends Application {
 	@Override
 	public void start(Stage stage) throws IOException {
 		PacManGameUI_JavaFX ui = new PacManGameUI_JavaFX(stage, gameController, options.height);
-		PacManGameUI_JavaFX.$TOTAL_TICKS.bind(gameLoop.$totalTicks);
-		PacManGameUI_JavaFX.$FPS.bind(gameLoop.$fps);
+		Env.$totalTicks.bind(gameLoop.$totalTicks);
+		Env.$fps.bind(gameLoop.$fps);
 		gameController.setUI(ui);
 		gameLoop.addTask("Controller Step", gameController::step);
 		gameLoop.addTask("UI Update", ui::update);

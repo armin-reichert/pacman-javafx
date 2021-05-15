@@ -32,7 +32,7 @@ class GameLoop extends AnimationTimer {
 	public void handle(long now) {
 		if ($totalTicks.get() % Env.$slowDown.get() == 0) {
 			if (!Env.$paused.get()) {
-				if (Env.$timeMeasured.get()) {
+				if (Env.$isTimeMeasured.get()) {
 					for (String name : tasks.keySet()) {
 						measureTaskTime(tasks.get(name), name);
 					}

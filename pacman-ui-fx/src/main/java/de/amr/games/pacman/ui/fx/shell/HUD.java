@@ -29,7 +29,7 @@ public class HUD extends HBox {
 	private String text;
 
 	public HUD() {
-		visibleProperty().bind(Env.$hudVisible);
+		visibleProperty().bind(Env.$isHUDVisible);
 		textView.setFill(Color.LIGHTGREEN);
 		textView.setFont(Font.font("Monospace", 14));
 		getChildren().add(textView);
@@ -38,8 +38,8 @@ public class HUD extends HBox {
 	public void update(PacManGameUI_JavaFX ui) {
 		TickTimer stateTimer = ui.gameController.stateTimer();
 		text = "";
-		line("Total Ticks", "%d", PacManGameUI_JavaFX.$TOTAL_TICKS.get());
-		line("Frame rate", "%d Hz", PacManGameUI_JavaFX.$FPS.get());
+		line("Total Ticks", "%d", Env.$totalTicks.get());
+		line("Frame rate", "%d Hz", Env.$fps.get());
 		line("Speed (CTRL/SHIFT+S)", "%.0f%%", 100.0 / Env.$slowDown.get());
 		line("Paused (CTRL+P)", "%s", yesNo(Env.$paused.get()));
 		skip();
@@ -69,7 +69,7 @@ public class HUD extends HBox {
 				line("Camera", "%s", cameraInfo(playScene.getSubSceneFX().getCamera()));
 			}
 			skip();
-			line("Draw Mode (CTRL+L)", "%s", Env.$drawMode.get());
+			line("Draw Mode (CTRL+L)", "%s", Env.$drawMode3D.get());
 			line("Axes (CTRL+X)", "%s", onOff(Env.$axesVisible.get()));
 		}
 		skip();

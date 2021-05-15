@@ -52,12 +52,12 @@ public class GianmarcosModel3D {
 	public static Group createPacMan() {
 		MeshView body = new MeshView(MODEL.meshViewsByName.get("Sphere_yellow_packman").getMesh());
 		body.setMaterial(MODEL.materialsByName.get("yellow_packman"));
-		body.drawModeProperty().bind(Env.$drawMode);
+		body.drawModeProperty().bind(Env.$drawMode3D);
 		Translate centering = Model3DHelper.centerNodeOverOrigin(body);
 
 		MeshView eyes = new MeshView(MODEL.meshViewsByName.get("Sphere.008_Sphere.010").getMesh());
 		eyes.setMaterial(new PhongMaterial(Color.rgb(20, 20, 20)));
-		eyes.drawModeProperty().bind(Env.$drawMode);
+		eyes.drawModeProperty().bind(Env.$drawMode3D);
 		eyes.getTransforms().add(centering);
 
 		Group group = new Group(eyes, body);
@@ -69,17 +69,17 @@ public class GianmarcosModel3D {
 	public static Group createGhost() {
 		MeshView body = new MeshView(MODEL.meshViewsByName.get("Sphere.004_Sphere.034").getMesh());
 		body.setMaterial(MODEL.materialsByName.get("blue_ghost"));
-		body.drawModeProperty().bind(Env.$drawMode);
+		body.drawModeProperty().bind(Env.$drawMode3D);
 		Translate centering = Model3DHelper.centerNodeOverOrigin(body);
 
 		MeshView eyesOuter = new MeshView(MODEL.meshViewsByName.get("Sphere.009_Sphere.036").getMesh());
 		eyesOuter.setMaterial(new PhongMaterial(Color.WHITE));
-		eyesOuter.drawModeProperty().bind(Env.$drawMode);
+		eyesOuter.drawModeProperty().bind(Env.$drawMode3D);
 		eyesOuter.getTransforms().add(centering);
 
 		MeshView eyesInner = new MeshView(MODEL.meshViewsByName.get("Sphere.010_Sphere.039").getMesh());
 		eyesInner.setMaterial(new PhongMaterial(Color.BLACK));
-		eyesInner.drawModeProperty().bind(Env.$drawMode);
+		eyesInner.drawModeProperty().bind(Env.$drawMode3D);
 		eyesInner.getTransforms().add(centering);
 
 		Group group = new Group(body, eyesOuter, eyesInner);
