@@ -25,11 +25,13 @@ public class WallBuilder3D {
 
 	private byte[][] wallInfo;
 	private List<Node> walls;
-	private PhongMaterial material;
+	private PhongMaterial wallMaterial;
+	private PhongMaterial topMaterial;
+
 	private double wallHeight = PacManGameWorld.HTS;
 
 	public WallBuilder3D() {
-		material = new PhongMaterial();
+		wallMaterial = new PhongMaterial();
 	}
 
 	public List<Node> getWalls() {
@@ -41,7 +43,11 @@ public class WallBuilder3D {
 	}
 
 	public void setWallMaterial(PhongMaterial material) {
-		this.material = material;
+		this.wallMaterial = material;
+	}
+
+	public void setTopMaterial(PhongMaterial material) {
+		this.topMaterial = material;
 	}
 
 	public List<Node> build(PacManGameWorld world, int resolution) {
@@ -76,12 +82,20 @@ public class WallBuilder3D {
 			return; // ignore 1x1 walls because they could be part of a larger wall in other orientation
 		}
 		Box wall = new Box(numBlocksX * blockSize, numBlocksY * blockSize, wallHeight);
-		wall.setMaterial(material);
+		wall.setMaterial(wallMaterial);
 		wall.setTranslateX(leftX * blockSize + numBlocksX * 0.5 * blockSize);
 		wall.setTranslateY(topY * blockSize + numBlocksY * 0.5 * blockSize);
 		wall.setTranslateZ(1.5);
 		wall.drawModeProperty().bind(Env.$drawMode3D);
 		walls.add(wall);
+
+		Box top = new Box(numBlocksX * blockSize, numBlocksY * blockSize, 0.2);
+		top.setMaterial(topMaterial);
+		top.setTranslateX(leftX * blockSize + numBlocksX * 0.5 * blockSize);
+		top.setTranslateY(topY * blockSize + numBlocksY * 0.5 * blockSize);
+		top.setTranslateZ(-0.5);
+		top.drawModeProperty().bind(Env.$drawMode3D);
+		walls.add(top);
 	}
 
 	private void createWalls(PacManGameWorld world, double blockSize) {

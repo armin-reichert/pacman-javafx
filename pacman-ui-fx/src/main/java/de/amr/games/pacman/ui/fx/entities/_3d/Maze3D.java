@@ -26,6 +26,7 @@ public class Maze3D extends Group {
 
 	private final Box floor;
 	private final PhongMaterial wallMaterial = new PhongMaterial();
+	private final PhongMaterial topMaterial = new PhongMaterial();
 	private final Group wallGroup = new Group();
 	private final Group foodGroup = new Group();
 	private int resolution; // 8, 4, 2, 1
@@ -60,8 +61,9 @@ public class Maze3D extends Group {
 
 	private void buildWalls(PacManGameWorld world) {
 		var wallBuilder = new WallBuilder3D();
-		wallBuilder.setWallMaterial(wallMaterial);
 		wallBuilder.setWallHeight(wallHeight);
+		wallBuilder.setWallMaterial(wallMaterial);
+		wallBuilder.setTopMaterial(topMaterial);
 		List<Node> walls = wallBuilder.build(world, resolution);
 		wallGroup.getChildren().setAll(walls);
 		wallGroup.setTranslateX(-TS / 2);
@@ -85,6 +87,10 @@ public class Maze3D extends Group {
 	public void setWallColor(Color color) {
 		wallMaterial.setDiffuseColor(color);
 		wallMaterial.setSpecularColor(color.brighter());
+	}
+	
+	public void setTopColor(Color color) {
+		topMaterial.setDiffuseColor(color);
 	}
 
 	public void setFloorTexture(Image floorTexture) {

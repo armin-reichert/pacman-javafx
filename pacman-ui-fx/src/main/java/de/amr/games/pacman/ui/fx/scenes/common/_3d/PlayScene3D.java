@@ -2,7 +2,6 @@ package de.amr.games.pacman.ui.fx.scenes.common._3d;
 
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
-import static de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets.getMazeWallColor;
 
 import java.util.Map;
 import java.util.OptionalDouble;
@@ -23,6 +22,7 @@ import de.amr.games.pacman.ui.fx.entities._3d.LivesCounter3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Maze3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Player3D;
 import de.amr.games.pacman.ui.fx.entities._3d.ScoreNotReally3D;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacManScenes;
 import de.amr.games.pacman.ui.fx.scenes.pacman.PacManScenes;
@@ -89,7 +89,8 @@ public class PlayScene3D implements GameScene {
 		maze3D.setResolution(8);
 		maze3D.setWallHeight(3.5);
 		maze3D.setFloorTexture(new Image(getClass().getResourceAsStream("/common/escher-texture.jpg")));
-		maze3D.setWallColor(getMazeWallColor(game().variant(), game().currentLevel().mazeNumber));
+		maze3D.setWallColor(Rendering2D_Assets.getMazeWallColor(game().variant(), game().currentLevel().mazeNumber));
+		maze3D.setTopColor(Rendering2D_Assets.getMazeWallTopColor(game().variant(), game().currentLevel().mazeNumber));
 		animations.buildMaze();
 
 		player3D = new Player3D(game().player());
