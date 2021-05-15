@@ -38,19 +38,18 @@ import javafx.stage.Stage;
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
 
-	private static final Color SCENE_BACKGROUND_COLOR = Color.CORNFLOWERBLUE;
-//	= Color.rgb(20, 20, 60);
+	static final Color BACKGROUND_COLOR = Color.CORNFLOWERBLUE;
 
 	public final Stage stage;
 	public final Scene mainScene;
 	public final PacManGameController gameController;
-	public final Canvas canvas2D = new Canvas();
-	public GameScene currentGameScene;
-
+	public final Canvas canvas = new Canvas();
 	private final Keyboard keyboard = new Keyboard();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final HUD hud = new HUD();
 	private final Group gameSceneParent = new Group();
+
+	public GameScene currentGameScene;
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController gameController, double height) {
 		this.stage = stage;
@@ -62,18 +61,19 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		GameScene gameScene = sceneForCurrentGameState(Env.$use3DScenes.get());
 		double aspectRatio = gameScene.aspectRatio().orElse(getScreenAspectRatio());
-		mainScene = new Scene(root, aspectRatio * height, height, SCENE_BACKGROUND_COLOR);
+		mainScene = new Scene(root, aspectRatio * height, height, BACKGROUND_COLOR);
 		setGameScene(gameScene);
 
-		Env.$totalTicks.addListener((source, oldValue, newValue) -> hud.update(this));
+		Env.$totalTicks.addListener(($1, $2, newValue) -> hud.update(this));
+		Env.$fps.addListener(($1, $2, fps) -> {
+			String gameName = gameController.game().variant() == PACMAN ? "Pac-Man" : "Ms. Pac-Man";
+			stage.setTitle(String.format("%s (%d FPS, JavaFX)", gameName, fps));
+		});
 
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
 		stage.addEventHandler(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
-		Env.$fps.addListener((source, oldValue, fps) -> {
-			String gameName = gameController.game().variant() == PACMAN ? "Pac-Man" : "Ms. Pac-Man";
-			stage.setTitle(String.format("%s (%d fps, JavaFX)", gameName, fps));
-		});
+
 		stage.getIcons().add(new Image(getClass().getResourceAsStream("/pacman/graphics/pacman.png")));
 		stage.setScene(mainScene);
 		stage.centerOnScreen();
@@ -150,7 +150,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				currentGameScene.end();
 			}
 			if (newGameScene instanceof AbstractGameScene2D) {
-				((AbstractGameScene2D) newGameScene).setCanvas(canvas2D);
+				((AbstractGameScene2D) newGameScene).setCanvas(canvas);
 			}
 			if (newGameScene.getGameController() == null) {
 				newGameScene.setGameController(gameController);
@@ -289,5 +289,4 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			break;
 		}
 	}
-
 }
