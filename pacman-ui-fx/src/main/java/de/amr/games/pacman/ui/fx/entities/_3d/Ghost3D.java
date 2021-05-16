@@ -48,8 +48,6 @@ public class Ghost3D extends Group {
 
 	private class FlashingAnimation extends Transition {
 
-		private final PhongMaterial flashingSkinMaterial = new PhongMaterial();
-
 		public FlashingAnimation() {
 			setCycleCount(INDEFINITE);
 			setCycleDuration(Duration.seconds(0.1));
@@ -58,7 +56,7 @@ public class Ghost3D extends Group {
 
 		@Override
 		protected void interpolate(double frac) {
-			flashingSkinMaterial.setDiffuseColor(Color.rgb((int) (frac * 120), (int) (frac * 180), 255));
+			skinMaterial.setDiffuseColor(Color.rgb((int) (frac * 120), (int) (frac * 180), 255));
 		}
 	};
 
@@ -150,15 +148,12 @@ public class Ghost3D extends Group {
 	}
 
 	public void startFlashing() {
-		body.setMaterial(flashingAnimation.flashingSkinMaterial);
 		flashingAnimation.playFromStart();
-		log("Start flashing animation for %s", ghost);
 	}
 
 	public void stopFlashing() {
 		flashingAnimation.stop();
 		setNormalSkinColor();
-		log("Stop flashing animation for %s", ghost);
 	}
 
 	private void rotateTowardsMoveDir() {
