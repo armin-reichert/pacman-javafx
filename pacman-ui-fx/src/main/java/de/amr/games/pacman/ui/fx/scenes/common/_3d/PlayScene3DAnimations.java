@@ -16,11 +16,12 @@ import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.PacManGameModel;
 import de.amr.games.pacman.model.common.GhostState;
+import de.amr.games.pacman.model.common.PacManGameModel;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.TrashTalk;
 import de.amr.games.pacman.ui.fx.entities._3d.Ghost3D;
+import de.amr.games.pacman.ui.fx.entities._3d.Player3D;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
@@ -71,7 +72,6 @@ class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 
 	public void update() {
 		sounds.setMuted(gameController().isAttractMode());
-
 		if (gameController().state == PacManGameState.HUNTING) {
 			// when switching between 2D and 3D, food visibility and animations might not be up-to-date, so:
 			playScene.maze3D.foodNodes().forEach(foodNode -> {
@@ -279,74 +279,78 @@ class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 	}
 
 	private void playAnimationPlayerDying() {
+		final Player3D player3D = playScene.player3D;
 
-		double savedTranslateX = playScene.player3D.getTranslateX();
-		double savedTranslateY = playScene.player3D.getTranslateY();
-		double savedTranslateZ = playScene.player3D.getTranslateZ();
+		double savedTranslateX = player3D.getTranslateX();
+		double savedTranslateY = player3D.getTranslateY();
+		double savedTranslateZ = player3D.getTranslateZ();
 
-		PauseTransition phase1 = new PauseTransition(Duration.seconds(1));
+		PauseTransition phase1 = new PauseTransition(Duration.seconds(3));
 		phase1.setOnFinished(e -> {
 			game().ghosts().forEach(ghost -> ghost.setVisible(false));
 			game().player().setDir(Direction.DOWN);
 			sounds.play(PacManGameSound.PACMAN_DEATH);
 		});
 
-		TranslateTransition raise = new TranslateTransition(Duration.seconds(0.5), playScene.player3D);
+		TranslateTransition raise = new TranslateTransition(Duration.seconds(0.5), player3D);
 		raise.setFromZ(0);
 		raise.setToZ(-10);
 		raise.setByZ(1);
 
-		ScaleTransition expand = new ScaleTransition(Duration.seconds(0.5), playScene.player3D);
+		ScaleTransition expand = new ScaleTransition(Duration.seconds(0.5), player3D);
 		expand.setToX(3);
 		expand.setToY(3);
 		expand.setToZ(3);
 
-		ScaleTransition shrink = new ScaleTransition(Duration.seconds(1), playScene.player3D);
+		ScaleTransition shrink = new ScaleTransition(Duration.seconds(1), player3D);
 		shrink.setToX(0.1);
 		shrink.setToY(0.1);
 		shrink.setToZ(0.1);
-
-		SequentialTransition animation = new SequentialTransition(phase1, raise, expand, shrink);
-		animation.setOnFinished(e -> {
-			playScene.player3D.setScaleX(1);
-			playScene.player3D.setScaleY(1);
-			playScene.player3D.setScaleZ(1);
-			playScene.player3D.setTranslateX(savedTranslateX);
-			playScene.player3D.setTranslateY(savedTranslateY);
-			playScene.player3D.setTranslateZ(savedTranslateZ);
-			game().player().setVisible(false);
-			gameController().stateTimer().forceExpiration();
+		shrink.setOnFinished(e -> {
+			player3D.setVisible(false);
+//			log("Player3D invisible");
 		});
 
-		animation.play();
+		PauseTransition end = new PauseTransition(Duration.seconds(1));
+		end.setOnFinished(e -> {
+			player3D.setVisible(true);
+//		log("Player3D visible");
+			player3D.setScaleX(1);
+			player3D.setScaleY(1);
+			player3D.setScaleZ(1);
+			player3D.setTranslateX(savedTranslateX);
+			player3D.setTranslateY(savedTranslateY);
+			player3D.setTranslateZ(savedTranslateZ);
+		});
+
+		new SequentialTransition(phase1, raise, expand, shrink, end).play();
 	}
 
 	private void playAnimationLevelComplete() {
 		gameController().stateTimer().reset();
-		PauseTransition phase1 = new PauseTransition(Duration.seconds(2));
-		phase1.setDelay(Duration.seconds(1));
+		PauseTransition phase1 = new PauseTransition(Duration.seconds(3));
 		phase1.setOnFinished(e -> {
 			game().player().setVisible(false);
 			game().ghosts().forEach(ghost -> ghost.setVisible(false));
-			String levelCompleteMessage = String.format("%s\n\nLevel %d complete.",
-					TrashTalk.LEVEL_COMPLETE_SPELLS.nextSpell(), game().currentLevel().number);
-			gameController().getUI().showFlashMessage(levelCompleteMessage, 2);
+			String message = String.format("%s\n\nLevel %d complete.", TrashTalk.LEVEL_COMPLETE_SPELLS.nextSpell(),
+					game().currentLevel().number);
+			gameController().getUI().showFlashMessage(message, 2);
 		});
-		SequentialTransition animation = new SequentialTransition(phase1, new PauseTransition(Duration.seconds(2)));
-		animation.setOnFinished(e -> gameController().stateTimer().forceExpiration());
-		animation.play();
+		PauseTransition phase2 = new PauseTransition(Duration.seconds(2));
+		phase2.setOnFinished(e -> gameController().stateTimer().forceExpiration());
+		new SequentialTransition(phase1, phase2).play();
 	}
 
 	private void playAnimationLevelStarting() {
 		gameController().stateTimer().reset();
 		gameController().getUI().showFlashMessage("Entering Level " + game().currentLevel().number);
-		PauseTransition phase1 = new PauseTransition(Duration.seconds(2));
+		PauseTransition phase1 = new PauseTransition(Duration.seconds(1));
 		phase1.setOnFinished(e -> {
 			game().player().setVisible(true);
 			game().ghosts().forEach(ghost -> ghost.setVisible(true));
 		});
-		SequentialTransition animation = new SequentialTransition(phase1, new PauseTransition(Duration.seconds(2)));
-		animation.setOnFinished(e -> gameController().stateTimer().forceExpiration());
-		animation.play();
+		PauseTransition phase2 = new PauseTransition(Duration.seconds(3));
+		phase2.setOnFinished(e -> gameController().stateTimer().forceExpiration());
+		new SequentialTransition(phase1, phase2).play();
 	}
 }
