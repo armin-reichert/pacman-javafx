@@ -1,5 +1,6 @@
 package de.amr.games.pacman.ui.fx.shell;
 
+import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
@@ -47,7 +48,9 @@ public class HUD extends HBox {
 		line("Playing", "%s", yesNo(ui.gameController.isGameRunning()));
 		line("Attract Mode", "%s", yesNo(ui.gameController.isAttractMode()));
 		line("Game Level", "%d", ui.gameController.game().currentLevel().number);
-		line("Game State", "%s", ui.gameController.state);
+		PacManGameState state = ui.gameController.state;
+		String huntingPhase = ui.gameController.huntingPhase % 2 == 0 ? "Scattering" : "Chasing";
+		line("Game State", "%s", state == PacManGameState.HUNTING ? state + ":" + huntingPhase : state);
 		line("", "Running:   %s", stateTimer.ticked());
 		line("", "Remaining: %s",
 				stateTimer.ticksRemaining() == Long.MAX_VALUE ? "indefinite" : stateTimer.ticksRemaining());
