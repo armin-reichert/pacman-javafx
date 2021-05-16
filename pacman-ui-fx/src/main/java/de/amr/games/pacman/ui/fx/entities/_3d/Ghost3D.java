@@ -46,7 +46,7 @@ public class Ghost3D extends Group {
 
 	private static Duration TURNING_DURATION = Duration.seconds(0.25);
 
-	private class FlashingAnimation extends Transition {
+	public class FlashingAnimation extends Transition {
 
 		public FlashingAnimation() {
 			setCycleCount(INDEFINITE);
@@ -58,15 +58,21 @@ public class Ghost3D extends Group {
 		protected void interpolate(double frac) {
 			skinMaterial.setDiffuseColor(Color.rgb((int) (frac * 120), (int) (frac * 180), 255));
 		}
+
+		@Override
+		public void stop() {
+			super.stop();
+			setNormalSkinColor();
+		}
 	};
 
 	public final Ghost ghost;
+	public final FlashingAnimation flashingAnimation = new FlashingAnimation();
 	private final Color normalColor;
 	private final Rendering2D rendering2D;
 	private final Group ghostShape;
 	private final MeshView body;
 	private final RotateTransition ghostShapeRot;
-	private final FlashingAnimation flashingAnimation = new FlashingAnimation();
 	private final Group eyesShape;
 	private final RotateTransition eyesShapeRot;
 	private final Box bountyShape;
@@ -136,7 +142,7 @@ public class Ghost3D extends Group {
 	}
 
 	public void setBlueSkinColor() {
-		stopFlashing(); // if necessary
+		flashingAnimation.stop(); // iny case it was playing
 		setSkinColor(Color.CORNFLOWERBLUE);
 		log("Set blue skin color for %s", ghost);
 	}
@@ -145,15 +151,6 @@ public class Ghost3D extends Group {
 		skinMaterial.setDiffuseColor(skinColor);
 		skinMaterial.setSpecularColor(skinColor.brighter());
 		body.setMaterial(skinMaterial);
-	}
-
-	public void startFlashing() {
-		flashingAnimation.playFromStart();
-	}
-
-	public void stopFlashing() {
-		flashingAnimation.stop();
-		setNormalSkinColor();
 	}
 
 	private void rotateTowardsMoveDir() {

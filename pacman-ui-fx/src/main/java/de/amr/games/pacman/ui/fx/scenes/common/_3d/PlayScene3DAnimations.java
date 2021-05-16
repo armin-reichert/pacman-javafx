@@ -121,12 +121,12 @@ class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 	public void onPlayerLosingPower(PacManGameEvent e) {
 		playScene.ghosts3D.values().stream()//
 				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED))//
-				.forEach(Ghost3D::startFlashing);
+				.forEach(ghost3D -> ghost3D.flashingAnimation.playFromStart());
 	}
 
 	@Override
 	public void onPlayerLostPower(PacManGameEvent e) {
-		playScene.ghosts3D.values().forEach(Ghost3D::stopFlashing);
+		playScene.ghosts3D.values().forEach(ghost3D -> ghost3D.flashingAnimation.stop());
 		sounds.stop(PacManGameSound.PACMAN_POWER);
 	}
 
@@ -218,9 +218,7 @@ class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 		else if (e.newGameState == PacManGameState.PACMAN_DYING) {
 			sounds.stopAll();
 			playAnimationPlayerDying();
-			playScene.ghosts3D.values().forEach(ghost3D -> {
-				ghost3D.stopFlashing();
-			});
+			playScene.ghosts3D.values().forEach(ghost3D -> ghost3D.flashingAnimation.stop());
 		}
 
 		// enter GHOST_DYING
@@ -239,9 +237,7 @@ class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 		else if (e.newGameState == PacManGameState.LEVEL_COMPLETE) {
 			sounds.stopAll();
 			playAnimationLevelComplete();
-			playScene.ghosts3D.values().forEach(ghost3D -> {
-				ghost3D.stopFlashing();
-			});
+			playScene.ghosts3D.values().forEach(ghost3D -> ghost3D.flashingAnimation.stop());
 		}
 
 		// enter GAME_OVER
