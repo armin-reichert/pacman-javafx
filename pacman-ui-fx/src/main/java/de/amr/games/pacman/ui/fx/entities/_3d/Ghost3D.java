@@ -63,6 +63,7 @@ public class Ghost3D extends Group {
 	};
 
 	public final Ghost ghost;
+	private final Color normalColor;
 	private final Rendering2D rendering2D;
 	private final Group ghostShape;
 	private final MeshView body;
@@ -71,13 +72,14 @@ public class Ghost3D extends Group {
 	private final Group eyesShape;
 	private final RotateTransition eyesShapeRot;
 	private final Box bountyShape;
-	private PhongMaterial skinMaterial;
+	private final PhongMaterial skinMaterial = new PhongMaterial();
 	private Direction targetDir;
 
 	public Ghost3D(Ghost ghost, Rendering2D rendering2D) {
 		this.ghost = ghost;
 		this.targetDir = ghost.dir();
 		this.rendering2D = rendering2D;
+		this.normalColor = Rendering2D_Assets.getGhostColor(ghost.id);
 
 		int[] rotationInterval = rotationInterval(ghost.dir(), targetDir);
 
@@ -86,6 +88,7 @@ public class Ghost3D extends Group {
 		ghostShape.setRotate(rotationInterval[0]);
 
 		body = (MeshView) ghostShape.getChildren().get(0);
+		body.setMaterial(skinMaterial);
 
 		ghostShapeRot = new RotateTransition(TURNING_DURATION, ghostShape);
 		ghostShapeRot.setAxis(Rotate.Z_AXIS);
@@ -130,12 +133,20 @@ public class Ghost3D extends Group {
 	}
 
 	public void setNormalSkinColor() {
-		setSkinColor(Rendering2D_Assets.getGhostColor(ghost.id));
+		setSkinColor(normalColor);
+		log("Set normal skin color for %s", ghost);
 	}
 
 	public void setBlueSkinColor() {
 		stopFlashing(); // if necessary
 		setSkinColor(Color.CORNFLOWERBLUE);
+		log("Set blue skin color for %s", ghost);
+	}
+
+	private void setSkinColor(Color skinColor) {
+		skinMaterial.setDiffuseColor(skinColor);
+		skinMaterial.setSpecularColor(skinColor.brighter());
+		body.setMaterial(skinMaterial);
 	}
 
 	public void startFlashing() {
@@ -148,12 +159,6 @@ public class Ghost3D extends Group {
 		flashingAnimation.stop();
 		setNormalSkinColor();
 		log("Stop flashing animation for %s", ghost);
-	}
-
-	private void setSkinColor(Color skinColor) {
-		skinMaterial = new PhongMaterial(skinColor);
-		skinMaterial.setSpecularColor(skinColor.brighter());
-		body.setMaterial(skinMaterial);
 	}
 
 	private void rotateTowardsMoveDir() {

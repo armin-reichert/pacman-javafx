@@ -6,6 +6,7 @@ import static java.util.function.Predicate.not;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
@@ -16,6 +17,7 @@ import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.model.common.PacManGameModel;
 import de.amr.games.pacman.ui.PacManGameSound;
@@ -64,10 +66,11 @@ class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 
 	public void buildMaze() {
 		playScene.maze3D.build(game());
-		energizerAnimations = playScene.maze3D.foodNodes()//
-				.filter(node -> game().currentLevel().world.isEnergizerTile(tile(node)))//
-				.map(this::createEnergizerAnimation)//
-				.collect(Collectors.toList());
+		energizerAnimations = energizerNodes().map(this::createEnergizerAnimation).collect(Collectors.toList());
+	}
+
+	private Stream<Node> energizerNodes() {
+		return playScene.maze3D.foodNodes().filter(node -> game().currentLevel().world.isEnergizerTile(tile(node)));
 	}
 
 	public void update() {
@@ -92,8 +95,7 @@ class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 
 	@Override
 	public void onGameEvent(PacManGameEvent gameEvent) {
-		boolean attractMode = gameController().isAttractMode();
-		sounds.setMuted(attractMode);
+		sounds.setMuted(gameController().isAttractMode());
 		DefaultPacManGameEventHandler.super.onGameEvent(gameEvent);
 	}
 
@@ -110,7 +112,9 @@ class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 	@Override
 	public void onPlayerGainsPower(PacManGameEvent e) {
 		sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
-		playScene.ghosts3D.values().forEach(Ghost3D::setBlueSkinColor);
+		playScene.ghosts3D.values().stream()
+				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
+				.forEach(Ghost3D::setBlueSkinColor);
 	}
 
 	@Override
@@ -183,8 +187,9 @@ class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 	}
 
 	@Override
-	public void onGhostLeavesHouse(PacManGameEvent e) {
-		playScene.ghosts3D.get(e.ghost.get()).setNormalSkinColor();
+	public void onGhostLeavingHouse(PacManGameEvent e) {
+		Ghost ghost = e.ghost.get();
+		playScene.ghosts3D.get(ghost).setNormalSkinColor();
 	}
 
 	@Override
@@ -194,6 +199,7 @@ class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 		// enter READY
 		if (e.newGameState == PacManGameState.READY) {
 			sounds.stopAll();
+			resetEnergizers();
 			if (!gameController().isAttractMode() && !gameController().isGameRunning()) {
 				gameController().stateTimer().resetSeconds(4.5);
 				sounds.play(PacManGameSound.GAME_READY);
@@ -205,7 +211,7 @@ class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 
 		// enter HUNTING
 		else if (e.newGameState == PacManGameState.HUNTING) {
-			startEnergizerAnimations();
+			playEnergizerAnimations();
 		}
 
 		// enter PACMAN_DYING
@@ -251,31 +257,33 @@ class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 		}
 	}
 
+	private void resetEnergizers() {
+		energizerNodes().forEach(node -> {
+			node.setScaleX(1.0);
+			node.setScaleY(1.0);
+			node.setScaleZ(1.0);
+		});
+	}
+
 	private ScaleTransition createEnergizerAnimation(Node energizer) {
 		ScaleTransition animation = new ScaleTransition(Duration.seconds(0.25), energizer);
 		animation.setAutoReverse(true);
 		animation.setCycleCount(Transition.INDEFINITE);
-		animation.setFromX(0.2);
-		animation.setFromY(0.2);
-		animation.setFromZ(0.2);
-		animation.setToX(1);
-		animation.setToY(1);
-		animation.setToZ(1);
+		animation.setFromX(1.0);
+		animation.setFromY(1.0);
+		animation.setFromZ(1.0);
+		animation.setToX(0.1);
+		animation.setToY(0.1);
+		animation.setToZ(0.1);
 		return animation;
 	}
 
-	private void startEnergizerAnimations() {
+	private void playEnergizerAnimations() {
 		energizerAnimations.forEach(Animation::play);
 	}
 
 	private void stopEnergizerAnimations() {
-		energizerAnimations.forEach(animation -> {
-			animation.stop();
-			Node energizer = animation.getNode();
-			energizer.setScaleX(1);
-			energizer.setScaleY(1);
-			energizer.setScaleZ(1);
-		});
+		energizerAnimations.forEach(Animation::stop);
 	}
 
 	private void playAnimationPlayerDying() {
@@ -308,13 +316,11 @@ class PlayScene3DAnimations implements DefaultPacManGameEventHandler {
 		shrink.setToZ(0.1);
 		shrink.setOnFinished(e -> {
 			player3D.setVisible(false);
-//			log("Player3D invisible");
 		});
 
 		PauseTransition end = new PauseTransition(Duration.seconds(1));
 		end.setOnFinished(e -> {
 			player3D.setVisible(true);
-//		log("Player3D visible");
 			player3D.setScaleX(1);
 			player3D.setScaleY(1);
 			player3D.setScaleZ(1);
