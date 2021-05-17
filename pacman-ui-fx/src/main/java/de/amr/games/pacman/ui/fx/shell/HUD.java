@@ -4,7 +4,7 @@ import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
-import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScene3D;
+import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScene3DBase;
 import javafx.scene.Camera;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -66,8 +66,8 @@ public class HUD extends HBox {
 		if (ui.currentGameScene instanceof AbstractGameScene2D) {
 			line("Canvas2D", "w=%.0f h=%.0f", ui.canvas.getWidth(), ui.canvas.getHeight());
 		} else {
-			if (ui.currentGameScene instanceof PlayScene3D) {
-				PlayScene3D playScene = (PlayScene3D) ui.currentGameScene;
+			if (ui.currentGameScene instanceof PlayScene3DBase) {
+				PlayScene3DBase playScene = (PlayScene3DBase) ui.currentGameScene;
 				line("Perspective (CTRL+C)", "%s", playScene.selectedPerspective());
 				line("Camera", "%s", cameraInfo(playScene.getSubSceneFX().getCamera()));
 			}

@@ -1,193 +1,347 @@
 package de.amr.games.pacman.ui.fx.scenes.common._3d;
 
 import static de.amr.games.pacman.lib.Logging.log;
-import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
+import static java.util.function.Predicate.not;
 
-import java.util.Map;
-import java.util.OptionalDouble;
-import java.util.function.Function;
+import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import de.amr.games.pacman.controller.PacManGameController;
+import de.amr.games.pacman.controller.PacManGameState;
+import de.amr.games.pacman.controller.event.DefaultPacManGameEventHandler;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
+import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
+import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
+import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
-import de.amr.games.pacman.model.world.PacManGameWorld;
-import de.amr.games.pacman.ui.fx.entities._3d.Bonus3D;
-import de.amr.games.pacman.ui.fx.entities._3d.CoordinateSystem;
+import de.amr.games.pacman.model.common.GhostState;
+import de.amr.games.pacman.ui.PacManGameSound;
+import de.amr.games.pacman.ui.fx.TrashTalk;
 import de.amr.games.pacman.ui.fx.entities._3d.Ghost3D;
-import de.amr.games.pacman.ui.fx.entities._3d.LevelCounter3D;
-import de.amr.games.pacman.ui.fx.entities._3d.LivesCounter3D;
-import de.amr.games.pacman.ui.fx.entities._3d.Maze3D;
-import de.amr.games.pacman.ui.fx.entities._3d.Player3D;
-import de.amr.games.pacman.ui.fx.entities._3d.ScoreNotReally3D;
-import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets;
-import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
-import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacManScenes;
-import de.amr.games.pacman.ui.fx.scenes.pacman.PacManScenes;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
-import javafx.scene.AmbientLight;
-import javafx.scene.Group;
-import javafx.scene.PerspectiveCamera;
-import javafx.scene.PointLight;
-import javafx.scene.SceneAntialiasing;
-import javafx.scene.SubScene;
-import javafx.scene.image.Image;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.transform.Rotate;
+import javafx.animation.Animation;
+import javafx.animation.Animation.Status;
+import javafx.animation.PauseTransition;
+import javafx.animation.ScaleTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.Transition;
+import javafx.animation.TranslateTransition;
+import javafx.scene.Node;
+import javafx.scene.media.AudioClip;
+import javafx.util.Duration;
 
 /**
- * 3D-scene displaying the maze and the game play. Used in both game variants.
+ * 3D play scene with sound and animations.
  * 
  * @author Armin Reichert
  */
-public class PlayScene3D implements GameScene {
+public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEventHandler {
 
-	static final int PERSPECTIVE_TOTAL = 0;
-	static final int PERSPECTIVE_FOLLOWING_PLAYER = 1;
-	static final int PERSPECTIVE_NEAR_PLAYER = 2;
+	private static V2i tile(Node node) {
+		return (V2i) node.getUserData();
+	}
 
-	static final int LIVES_COUNTER_MAX = 5;
-
-	private final SubScene subSceneFX;
-	private final PlayScene3DAnimations animations;
-	private final PlayScenePerspective[] perspectives;
-
-	private PacManGameController gameController;
-	private int selectedPerspective;
-
-	Maze3D maze3D;
-	Player3D player3D;
-	Map<Ghost, Ghost3D> ghosts3D;
-	Bonus3D bonus3D;
-	ScoreNotReally3D score3D;
-	LevelCounter3D levelCounter3D;
-	LivesCounter3D livesCounter3D;
+	private final SoundManager sounds;
+	private List<ScaleTransition> energizerAnimations;
 
 	public PlayScene3D(SoundManager sounds) {
-		animations = new PlayScene3DAnimations(this, sounds);
-		subSceneFX = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
-		subSceneFX.setCamera(new PerspectiveCamera(true));
-		perspectives = new PlayScenePerspective[] { //
-				new TotalPerspective(subSceneFX), //
-				new FollowingPlayerPerspective(subSceneFX), //
-				new NearPlayerPerspective(subSceneFX) };
-		selectPerspective(PERSPECTIVE_FOLLOWING_PLAYER);
-		subSceneFX.addEventHandler(KeyEvent.KEY_PRESSED, event -> selectedPerspective().handle(event));
+		this.sounds = sounds;
+	}
+
+	private Stream<Node> energizerNodes() {
+		return maze3D.foodNodes().filter(node -> game().currentLevel().world.isEnergizerTile(tile(node)));
 	}
 
 	@Override
-	public void init() {
-		log("%s: init", this);
-
-		final var r2D = game().variant() == GameVariant.MS_PACMAN ? MsPacManScenes.RENDERING : PacManScenes.RENDERING;
-		final var width = PacManGameWorld.DEFAULT_WIDTH * TS;
-		final var height = PacManGameWorld.DEFAULT_HEIGHT * TS;
-
-		maze3D = new Maze3D(width, height);
-		maze3D.setResolution(8);
-		maze3D.setWallHeight(3.5);
-		maze3D.setFloorTexture(new Image(getClass().getResourceAsStream("/common/escher-texture.jpg")));
-		maze3D.setWallColor(Rendering2D_Assets.getMazeWallColor(game().variant(), game().currentLevel().mazeNumber));
-		maze3D.setTopColor(Rendering2D_Assets.getMazeWallTopColor(game().variant(), game().currentLevel().mazeNumber));
-		animations.buildMaze();
-
-		player3D = new Player3D(game().player());
-		ghosts3D = game().ghosts().collect(Collectors.toMap(Function.identity(), ghost -> new Ghost3D(ghost, r2D)));
-		bonus3D = new Bonus3D(game().variant(), r2D);
-
-		score3D = new ScoreNotReally3D();
-		livesCounter3D = new LivesCounter3D(new V2i(2, 1));
-		livesCounter3D.setMaxEntries(LIVES_COUNTER_MAX);
-		if (gameController.isAttractMode()) {
-			score3D.setHiscoreOnly(true);
-			livesCounter3D.setVisible(false);
-		} else {
-			score3D.setHiscoreOnly(false);
-			livesCounter3D.setVisible(true);
-		}
-
-		levelCounter3D = new LevelCounter3D(new V2i(25, 1), r2D);
-		levelCounter3D.update(game());
-
-		final var ambientLight = new AmbientLight();
-		final var playerLight = new PointLight();
-		playerLight.translateXProperty().bind(player3D.translateXProperty());
-		playerLight.translateYProperty().bind(player3D.translateYProperty());
-		playerLight.setTranslateZ(-4);
-
-		final var contentRoot = new Group();
-		contentRoot.setTranslateX(-0.5 * width);
-		contentRoot.setTranslateY(-0.5 * height);
-		contentRoot.getChildren().addAll(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
-		contentRoot.getChildren().addAll(ghosts3D.values());
-		contentRoot.getChildren().addAll(ambientLight, playerLight);
-
-		subSceneFX.setRoot(new Group(contentRoot, new CoordinateSystem(subSceneFX.getWidth())));
+	protected void initMaze() {
+		super.initMaze();
+		energizerAnimations = energizerNodes().map(this::createEnergizerAnimation).collect(Collectors.toList());
 	}
 
 	@Override
 	public void update() {
-		score3D.update(game());
-		livesCounter3D.update(game());
-		player3D.update();
-		ghosts3D.values().forEach(Ghost3D::update);
-		bonus3D.update(game().bonus());
-		// Keep score text in plain sight. TODO: is this the recommended way to do this?
-		score3D.setRotationAxis(Rotate.X_AXIS);
-		score3D.setRotate(subSceneFX.getCamera().getRotate());
-
-		selectedPerspective().follow(player3D);
-		animations.update();
+		super.update();
+		sounds.setMuted(gameController.isAttractMode());
+		if (gameController.state == PacManGameState.HUNTING) {
+			// when switching between 2D and 3D, food visibility and animations might not be up-to-date, so:
+			maze3D.foodNodes().forEach(foodNode -> {
+				foodNode.setVisible(!game().currentLevel().isFoodRemoved(tile(foodNode)));
+			});
+			if (energizerAnimations.stream().anyMatch(animation -> animation.getStatus() != Status.RUNNING)) {
+				energizerAnimations.forEach(Transition::play);
+			}
+			AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
+			if (munching.isPlaying()) {
+				if (game().player().starvingTicks > 10) {
+					sounds.stop(PacManGameSound.PACMAN_MUNCH);
+					log("Munching sound clip %s stopped", munching);
+				}
+			}
+		}
 	}
 
 	@Override
 	public void onGameEvent(PacManGameEvent gameEvent) {
-		animations.onGameEvent(gameEvent);
+		sounds.setMuted(gameController.isAttractMode());
+		super.onGameEvent(gameEvent);
 	}
 
 	@Override
-	public void end() {
-		log("%s: end", this);
-	}
-
-	public PlayScenePerspective selectedPerspective() {
-		return perspectives[selectedPerspective];
-	}
-
-	public void selectPerspective(int index) {
-		selectedPerspective = index;
-		selectedPerspective().reset();
-	}
-
-	public void nextPerspective() {
-		selectPerspective((selectedPerspective + 1) % perspectives.length);
+	public void onScatterPhaseStarted(ScatterPhaseStartedEvent e) {
+		if (e.scatterPhase > 0) {
+			sounds.stop(PacManGameSound.SIRENS.get(e.scatterPhase - 1));
+		}
+		PacManGameSound siren = PacManGameSound.SIRENS.get(e.scatterPhase);
+		if (!sounds.getClip(siren).isPlaying())
+			sounds.loop(siren, Integer.MAX_VALUE);
 	}
 
 	@Override
-	public PacManGameController getGameController() {
-		return gameController;
+	public void onPlayerGainsPower(PacManGameEvent e) {
+		sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
+		ghosts3D.values().stream()
+				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
+				.forEach(Ghost3D::setBlueSkinColor);
 	}
 
 	@Override
-	public void setGameController(PacManGameController gameController) {
-		this.gameController = gameController;
+	public void onPlayerLosingPower(PacManGameEvent e) {
+		ghosts3D.values().stream()//
+				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED))//
+				.forEach(ghost3D -> ghost3D.flashingAnimation.playFromStart());
 	}
 
 	@Override
-	public OptionalDouble aspectRatio() {
-		return OptionalDouble.empty();
+	public void onPlayerLostPower(PacManGameEvent e) {
+		ghosts3D.values().forEach(ghost3D -> ghost3D.flashingAnimation.stop());
+		sounds.stop(PacManGameSound.PACMAN_POWER);
 	}
 
 	@Override
-	public SubScene getSubSceneFX() {
-		return subSceneFX;
+	public void onPlayerFoundFood(PacManGameEvent e) {
+		if (e.tile.isEmpty()) {
+			// this happens when the "eat all pellets except energizers" cheat was triggered
+			Predicate<Node> isEnergizer = node -> game().currentLevel().world.isEnergizerTile(tile(node));
+			maze3D.foodNodes()//
+					.filter(not(isEnergizer))//
+					.forEach(foodNode -> foodNode.setVisible(false));
+			return;
+		}
+		maze3D.foodNodes()//
+				.filter(node -> tile(node).equals(e.tile.get()))//
+				.findFirst()//
+				.ifPresent(foodNode -> foodNode.setVisible(false));
+
+		AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
+		if (!munching.isPlaying()) {
+			sounds.loop(PacManGameSound.PACMAN_MUNCH, Integer.MAX_VALUE);
+			Logging.log("Munching sound clip %s started", munching);
+		}
 	}
 
 	@Override
-	public void resize(double width, double height) {
-		// data binding does the job
+	public void onBonusActivated(PacManGameEvent e) {
+		bonus3D.showSymbol(game().bonus());
 	}
 
+	@Override
+	public void onBonusEaten(PacManGameEvent e) {
+		bonus3D.showPoints(game().bonus());
+		sounds.play(PacManGameSound.BONUS_EATEN);
+	}
+
+	@Override
+	public void onBonusExpired(PacManGameEvent e) {
+		bonus3D.hide();
+	}
+
+	@Override
+	public void onExtraLife(PacManGameEvent e) {
+		gameController.getUI().showFlashMessage("Extra life!");
+		sounds.play(PacManGameSound.EXTRA_LIFE);
+	}
+
+	@Override
+	public void onGhostReturnsHome(PacManGameEvent e) {
+		sounds.play(PacManGameSound.GHOST_RETURNING_HOME);
+	}
+
+	@Override
+	public void onGhostEntersHouse(PacManGameEvent e) {
+		if (game().ghosts(GhostState.DEAD).count() == 0) {
+			sounds.stop(PacManGameSound.GHOST_RETURNING_HOME);
+		}
+	}
+
+	@Override
+	public void onGhostLeavingHouse(PacManGameEvent e) {
+		Ghost ghost = e.ghost.get();
+		ghosts3D.get(ghost).setNormalSkinColor();
+	}
+
+	@Override
+	public void onPacManGameStateChange(PacManGameStateChangeEvent e) {
+		sounds.setMuted(gameController.isAttractMode());
+
+		// enter READY
+		if (e.newGameState == PacManGameState.READY) {
+			sounds.stopAll();
+			resetEnergizers();
+			if (!gameController.isAttractMode() && !gameController.isGameRunning()) {
+				gameController.stateTimer().resetSeconds(4.5);
+				sounds.play(PacManGameSound.GAME_READY);
+			} else {
+				gameController.stateTimer().resetSeconds(2);
+			}
+			gameController.stateTimer().start();
+		}
+
+		// enter HUNTING
+		else if (e.newGameState == PacManGameState.HUNTING) {
+			playEnergizerAnimations();
+		}
+
+		// enter PACMAN_DYING
+		else if (e.newGameState == PacManGameState.PACMAN_DYING) {
+			sounds.stopAll();
+			playAnimationPlayerDying();
+			ghosts3D.values().forEach(ghost3D -> ghost3D.flashingAnimation.stop());
+		}
+
+		// enter GHOST_DYING
+		else if (e.newGameState == PacManGameState.GHOST_DYING) {
+			sounds.play(PacManGameSound.GHOST_EATEN);
+		}
+
+		// enter LEVEL_STARTING
+		else if (e.newGameState == PacManGameState.LEVEL_STARTING) {
+			initMaze();
+			levelCounter3D.update(e.gameModel);
+			playAnimationLevelStarting();
+		}
+
+		// enter LEVEL_COMPLETE
+		else if (e.newGameState == PacManGameState.LEVEL_COMPLETE) {
+			sounds.stopAll();
+			playAnimationLevelComplete();
+			ghosts3D.values().forEach(ghost3D -> ghost3D.flashingAnimation.stop());
+		}
+
+		// enter GAME_OVER
+		else if (e.newGameState == PacManGameState.GAME_OVER) {
+			sounds.stopAll();
+			gameController.getUI().showFlashMessage(TrashTalk.GAME_OVER_SPELLS.nextSpell(), 3);
+		}
+
+		// exit HUNTING but not GAME_OVER
+		if (e.oldGameState == PacManGameState.HUNTING && e.newGameState != PacManGameState.GHOST_DYING) {
+			stopEnergizerAnimations();
+			bonus3D.hide();
+		}
+	}
+
+	private void resetEnergizers() {
+		energizerNodes().forEach(node -> {
+			node.setScaleX(1.0);
+			node.setScaleY(1.0);
+			node.setScaleZ(1.0);
+		});
+	}
+
+	private ScaleTransition createEnergizerAnimation(Node energizer) {
+		ScaleTransition animation = new ScaleTransition(Duration.seconds(0.25), energizer);
+		animation.setAutoReverse(true);
+		animation.setCycleCount(Transition.INDEFINITE);
+		animation.setFromX(1.0);
+		animation.setFromY(1.0);
+		animation.setFromZ(1.0);
+		animation.setToX(0.1);
+		animation.setToY(0.1);
+		animation.setToZ(0.1);
+		return animation;
+	}
+
+	private void playEnergizerAnimations() {
+		energizerAnimations.forEach(Animation::play);
+	}
+
+	private void stopEnergizerAnimations() {
+		energizerAnimations.forEach(Animation::stop);
+	}
+
+	private void playAnimationPlayerDying() {
+
+		double savedTranslateX = player3D.getTranslateX();
+		double savedTranslateY = player3D.getTranslateY();
+		double savedTranslateZ = player3D.getTranslateZ();
+
+		PauseTransition phase1 = new PauseTransition(Duration.seconds(3));
+		phase1.setOnFinished(e -> {
+			game().ghosts().forEach(ghost -> ghost.setVisible(false));
+			game().player().setDir(Direction.DOWN);
+			sounds.play(PacManGameSound.PACMAN_DEATH);
+		});
+
+		TranslateTransition raise = new TranslateTransition(Duration.seconds(0.5), player3D);
+		raise.setFromZ(0);
+		raise.setToZ(-10);
+		raise.setByZ(1);
+
+		ScaleTransition expand = new ScaleTransition(Duration.seconds(0.5), player3D);
+		expand.setToX(3);
+		expand.setToY(3);
+		expand.setToZ(3);
+
+		ScaleTransition shrink = new ScaleTransition(Duration.seconds(1), player3D);
+		shrink.setToX(0.1);
+		shrink.setToY(0.1);
+		shrink.setToZ(0.1);
+		shrink.setOnFinished(e -> {
+			player3D.setVisible(false);
+		});
+
+		PauseTransition end = new PauseTransition(Duration.seconds(1));
+		end.setOnFinished(e -> {
+			player3D.setVisible(true);
+			player3D.setScaleX(1);
+			player3D.setScaleY(1);
+			player3D.setScaleZ(1);
+			player3D.setTranslateX(savedTranslateX);
+			player3D.setTranslateY(savedTranslateY);
+			player3D.setTranslateZ(savedTranslateZ);
+		});
+
+		new SequentialTransition(phase1, raise, expand, shrink, end).play();
+	}
+
+	private void playAnimationLevelComplete() {
+		gameController.stateTimer().reset();
+		PauseTransition phase1 = new PauseTransition(Duration.seconds(3));
+		phase1.setOnFinished(e -> {
+			game().player().setVisible(false);
+			game().ghosts().forEach(ghost -> ghost.setVisible(false));
+			String message = String.format("%s\n\nLevel %d complete.", TrashTalk.LEVEL_COMPLETE_SPELLS.nextSpell(),
+					game().currentLevel().number);
+			gameController.getUI().showFlashMessage(message, 2);
+		});
+		PauseTransition phase2 = new PauseTransition(Duration.seconds(2));
+		phase2.setOnFinished(e -> gameController.stateTimer().forceExpiration());
+		new SequentialTransition(phase1, phase2).play();
+	}
+
+	private void playAnimationLevelStarting() {
+		gameController.stateTimer().reset();
+		gameController.getUI().showFlashMessage("Entering Level " + game().currentLevel().number);
+		PauseTransition phase1 = new PauseTransition(Duration.seconds(1));
+		phase1.setOnFinished(e -> {
+			game().player().setVisible(true);
+			game().ghosts().forEach(ghost -> ghost.setVisible(true));
+		});
+		PauseTransition phase2 = new PauseTransition(Duration.seconds(3));
+		phase2.setOnFinished(e -> gameController.stateTimer().forceExpiration());
+		new SequentialTransition(phase1, phase2).play();
+	}
 }
