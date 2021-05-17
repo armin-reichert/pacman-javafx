@@ -65,12 +65,12 @@ public class PlayScene3DBase implements GameScene {
 	public PlayScene3DBase() {
 		subSceneFX = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
 		subSceneFX.setCamera(new PerspectiveCamera(true));
+		subSceneFX.addEventHandler(KeyEvent.KEY_PRESSED, event -> selectedPerspective().handle(event));
 		perspectives = new PlayScenePerspective[] { //
 				new TotalPerspective(subSceneFX), //
 				new FollowingPlayerPerspective(subSceneFX), //
 				new NearPlayerPerspective(subSceneFX) };
 		selectPerspective(PERSPECTIVE_FOLLOWING_PLAYER);
-		subSceneFX.addEventHandler(KeyEvent.KEY_PRESSED, event -> selectedPerspective().handle(event));
 	}
 
 	@Override
