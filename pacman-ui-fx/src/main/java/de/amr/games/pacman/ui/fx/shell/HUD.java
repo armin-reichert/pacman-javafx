@@ -31,7 +31,7 @@ public class HUD extends HBox {
 
 	public HUD() {
 		visibleProperty().bind(Env.$isHUDVisible);
-		textView.setFill(Color.LIGHTGREEN);
+		textView.setFill(Color.WHITE);
 		textView.setFont(Font.font("Monospace", 14));
 		getChildren().add(textView);
 	}
