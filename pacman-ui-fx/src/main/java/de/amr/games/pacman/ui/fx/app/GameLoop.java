@@ -2,8 +2,8 @@ package de.amr.games.pacman.ui.fx.app;
 
 import static de.amr.games.pacman.lib.Logging.log;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.Collections;
+import java.util.List;
 
 import de.amr.games.pacman.ui.fx.Env;
 import javafx.animation.AnimationTimer;
@@ -20,10 +20,20 @@ import javafx.beans.property.SimpleIntegerProperty;
  */
 class GameLoop extends AnimationTimer {
 
+	static class GameLoopTask {
+		public final String description;
+		public final Runnable code;
+
+		public GameLoopTask(String description, Runnable code) {
+			this.description = description;
+			this.code = code;
+		}
+	}
+
 	public final IntegerProperty $fps = new SimpleIntegerProperty();
 	public final IntegerProperty $totalTicks = new SimpleIntegerProperty();
 
-	private final Map<String, Runnable> tasks = new LinkedHashMap<>();
+	public List<GameLoopTask> tasks = Collections.emptyList();
 
 	private long fpsCountStartTime;
 	private int frames;
@@ -33,11 +43,11 @@ class GameLoop extends AnimationTimer {
 		if ($totalTicks.get() % Env.$slowDown.get() == 0) {
 			if (!Env.$paused.get()) {
 				if (Env.$isTimeMeasured.get()) {
-					for (String name : tasks.keySet()) {
-						measureTaskTime(tasks.get(name), name);
+					for (GameLoopTask task : tasks) {
+						measureTaskTime(task);
 					}
 				} else {
-					tasks.values().forEach(Runnable::run);
+					tasks.forEach(task -> task.code.run());
 				}
 			}
 			++frames;
@@ -50,16 +60,12 @@ class GameLoop extends AnimationTimer {
 		$totalTicks.set($totalTicks.get() + 1);
 	}
 
-	public void addTask(String name, Runnable task) {
-		tasks.put(name, task);
-	}
-
-	private void measureTaskTime(Runnable task, String description) {
+	private void measureTaskTime(GameLoopTask task) {
 		double start = System.nanoTime();
 		try {
-			task.run();
+			task.code.run();
 			double duration = System.nanoTime() - start;
-			log("%s took %f millis", description, duration * 1e-6);
+			log("%s took %f millis", task.description, duration * 1e-6);
 		} catch (Exception e) {
 			log("%s execution not successful");
 			e.printStackTrace();
