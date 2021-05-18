@@ -2,7 +2,7 @@
 
 (WTF! I got >20 stars on a single day! How comes?)
 
-A JavaFX user interface for my Pac-Man / Ms. Pac-Man game implementations. The game logic is implemented UI-independent, see repository [pacman-basic](https://github.com/armin-reichert/pacman-basic). Both games can be played in 2D and 3D.
+A JavaFX user interface for my Pac-Man / Ms. Pac-Man game implementations. The game logic is implemented UI-independently, see repository [pacman-basic](https://github.com/armin-reichert/pacman-basic). Both games can be played in 2D and 3D.
 
 The 3D model (unfortunately I have no animated model yet) has been generously provided by Gianmarco Cavallaccio (https://www.artstation.com/gianmart). Cudos to Gianmarco! 
 
