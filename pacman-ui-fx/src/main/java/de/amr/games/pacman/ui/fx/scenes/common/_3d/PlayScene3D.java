@@ -51,10 +51,6 @@ public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEve
 		this.sounds = sounds;
 	}
 
-	private Stream<Node> energizerNodes() {
-		return maze3D.foodNodes().filter(node -> game().currentLevel().world.isEnergizerTile(tile(node)));
-	}
-
 	@Override
 	protected void initMaze() {
 		super.initMaze();
@@ -241,6 +237,10 @@ public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEve
 			stopEnergizerAnimations();
 			bonus3D.hide();
 		}
+	}
+
+	private Stream<Node> energizerNodes() {
+		return maze3D.foodNodes().filter(node -> game().currentLevel().world.isEnergizerTile(tile(node)));
 	}
 
 	private void resetEnergizers() {
