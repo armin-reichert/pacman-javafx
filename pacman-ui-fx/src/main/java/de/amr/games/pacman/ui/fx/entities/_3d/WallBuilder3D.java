@@ -1,6 +1,5 @@
 package de.amr.games.pacman.ui.fx.entities._3d;
 
-import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
 import java.util.ArrayList;
@@ -65,13 +64,13 @@ public class WallBuilder3D {
 	}
 
 	private void addBlock(int leftX, int topY, int numBlocksX, int numBlocksY, double blockSize) {
-		Box wall = new Box(numBlocksX * blockSize, numBlocksY * blockSize, wallHeight);
-		wall.setMaterial(wallMaterial);
-		wall.setTranslateX(leftX * blockSize + numBlocksX * 0.5 * blockSize);
-		wall.setTranslateY(topY * blockSize + numBlocksY * 0.5 * blockSize);
-		wall.setTranslateZ(1.5);
-		wall.drawModeProperty().bind(Env.$drawMode3D);
-		walls.add(wall);
+		Box base = new Box(numBlocksX * blockSize, numBlocksY * blockSize, wallHeight);
+		base.setMaterial(wallMaterial);
+		base.setTranslateX(leftX * blockSize + numBlocksX * 0.5 * blockSize);
+		base.setTranslateY(topY * blockSize + numBlocksY * 0.5 * blockSize);
+		base.setTranslateZ(1.5);
+		base.drawModeProperty().bind(Env.$drawMode3D);
+		walls.add(base);
 
 		Box top = new Box(numBlocksX * blockSize, numBlocksY * blockSize, 0.2);
 		top.setMaterial(topMaterial);
@@ -82,15 +81,15 @@ public class WallBuilder3D {
 		walls.add(top);
 	}
 
+	// TODO I need a half cylinder or a special corner shape for smooth corners
 	private void addCorner(int x, int y, double blockSize) {
-		// TODO use other shape for corners
-		Box wall = new Box(blockSize, blockSize, wallHeight);
-		wall.setMaterial(wallMaterial);
-		wall.setTranslateX(x * blockSize + 0.5 * blockSize);
-		wall.setTranslateY(y * blockSize + 0.5 * blockSize);
-		wall.setTranslateZ(1.5);
-		wall.drawModeProperty().bind(Env.$drawMode3D);
-		walls.add(wall);
+		Box base = new Box(blockSize, blockSize, wallHeight);
+		base.setMaterial(wallMaterial);
+		base.setTranslateX(x * blockSize + 0.5 * blockSize);
+		base.setTranslateY(y * blockSize + 0.5 * blockSize);
+		base.setTranslateZ(1.5);
+		base.drawModeProperty().bind(Env.$drawMode3D);
+		walls.add(base);
 
 		Box top = new Box(blockSize, blockSize, 0.2);
 		top.setMaterial(topMaterial);
