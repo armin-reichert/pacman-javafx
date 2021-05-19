@@ -22,7 +22,7 @@ import javafx.scene.shape.Box;
  */
 public class WallBuilder3D {
 
-	private byte[][] wallInfo;
+	private WallMap wallMap;
 	private List<Node> walls;
 	private PhongMaterial wallMaterial;
 	private PhongMaterial topMaterial;
@@ -53,10 +53,9 @@ public class WallBuilder3D {
 		walls = new ArrayList<>();
 		Optional<WallMap> map = world.getWallMap(resolution);
 		if (map.isPresent()) {
-			wallInfo = map.get().info();
+			wallMap = map.get();
 		} else {
-			WallScanner scanner = new WallScanner(resolution);
-			wallInfo = scanner.scan(world);
+			wallMap = new WallScanner(resolution).scan(world);
 		}
 		double blockSize = TS / resolution;
 		createWalls(world, blockSize);
@@ -101,14 +100,12 @@ public class WallBuilder3D {
 	}
 
 	private void createWalls(PacManGameWorld world, double blockSize) {
-		int xSize = wallInfo[0].length, ySize = wallInfo.length;
-
 		// horizontal
-		for (int y = 0; y < ySize; ++y) {
+		for (int y = 0; y < wallMap.sizeY(); ++y) {
 			int leftX = -1;
 			int sizeX = 0;
-			for (int x = 0; x < xSize; ++x) {
-				if (wallInfo[y][x] == WallMap.HORIZONTAL) {
+			for (int x = 0; x < wallMap.sizeX(); ++x) {
+				if (wallMap.get(x, y) == WallMap.HORIZONTAL) {
 					if (leftX == -1) {
 						leftX = x;
 						sizeX = 1;
@@ -121,23 +118,23 @@ public class WallBuilder3D {
 						leftX = -1;
 					}
 				}
-				if (x == xSize - 1 && leftX != -1) {
+				if (x == wallMap.sizeX() - 1 && leftX != -1) {
 					addBlock(leftX, y, sizeX, 1, blockSize);
 					leftX = -1;
 				}
 			}
-			if (y == ySize - 1 && leftX != -1) {
+			if (y == wallMap.sizeY() - 1 && leftX != -1) {
 				addBlock(leftX, y, sizeX, 1, blockSize);
 				leftX = -1;
 			}
 		}
 
 		// vertical
-		for (int x = 0; x < xSize; ++x) {
+		for (int x = 0; x < wallMap.sizeX(); ++x) {
 			int topY = -1;
 			int sizeY = 0;
-			for (int y = 0; y < ySize; ++y) {
-				if (wallInfo[y][x] == WallMap.VERTICAL) {
+			for (int y = 0; y < wallMap.sizeY(); ++y) {
+				if (wallMap.get(x, y) == WallMap.VERTICAL) {
 					if (topY == -1) {
 						topY = y;
 						sizeY = 1;
@@ -150,21 +147,21 @@ public class WallBuilder3D {
 						topY = -1;
 					}
 				}
-				if (y == ySize - 1 && topY != -1) {
+				if (y == wallMap.sizeY() - 1 && topY != -1) {
 					addBlock(x, topY, 1, sizeY, blockSize);
 					topY = -1;
 				}
 			}
-			if (x == xSize - 1 && topY != -1) {
+			if (x == wallMap.sizeX() - 1 && topY != -1) {
 				addBlock(x, topY, 1, sizeY, blockSize);
 				topY = -1;
 			}
 		}
 
 		// corners
-		for (int y = 0; y < ySize; ++y) {
-			for (int x = 0; x < xSize; ++x) {
-				if (wallInfo[y][x] == WallMap.CORNER) {
+		for (int y = 0; y < wallMap.sizeY(); ++y) {
+			for (int x = 0; x < wallMap.sizeX(); ++x) {
+				if (wallMap.get(x, y) == WallMap.CORNER) {
 					addCorner(x, y, blockSize);
 				}
 			}
