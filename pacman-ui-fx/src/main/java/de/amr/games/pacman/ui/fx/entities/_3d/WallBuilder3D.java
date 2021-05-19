@@ -51,29 +51,16 @@ public class WallBuilder3D {
 	}
 
 	public List<Node> build(PacManGameWorld world, int resolution) {
-		long start, end;
-		double millis;
 		walls = new ArrayList<>();
-
-		Optional<WallMap> wallMap = world.getWallMap(resolution);
-		if (wallMap.isPresent()) {
-			wallInfo = wallMap.get().wallInfo();
+		Optional<WallMap> map = world.getWallMap(resolution);
+		if (map.isPresent()) {
+			wallInfo = map.get().info();
 		} else {
 			WallScanner scanner = new WallScanner(resolution);
-			start = System.nanoTime();
 			wallInfo = scanner.scan(world);
-			end = System.nanoTime();
-			millis = (end - start) * 1e-6;
-			log("WallBuilder: scanning world took %.0f milliseconds", millis);
 		}
-
 		double blockSize = TS / resolution;
-		start = System.nanoTime();
 		createWalls(world, blockSize);
-		end = System.nanoTime();
-		millis = (end - start) * 1e-6;
-		log("WallBuilder: building walls took %.0f milliseconds", millis);
-
 		return getWalls();
 	}
 
