@@ -251,6 +251,18 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			}
 			break;
 
+		case H:
+			if (!e.isShiftDown()) {
+				if (Env.$mazeWallHeight.get() < 16) {
+					Env.$mazeWallHeight.set(Env.$mazeWallHeight.get() + 0.2);
+				}
+			} else {
+				if (Env.$mazeWallHeight.get() > 0.2) {
+					Env.$mazeWallHeight.set(Env.$mazeWallHeight.get() - 0.2);
+				}
+			}
+			break;
+
 		case I:
 			Env.$isHUDVisible.set(!Env.$isHUDVisible.get());
 			break;
@@ -261,6 +273,18 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		case P:
 			Env.$paused.set(!Env.$paused.get());
+			break;
+
+		case R:
+			if (!e.isShiftDown()) {
+				if (Env.$mazeResolution.get() < 8) {
+					Env.$mazeResolution.set(Env.$mazeResolution.get() * 2);
+				}
+			} else {
+				if (Env.$mazeResolution.get() > 1) {
+					Env.$mazeResolution.set(Env.$mazeResolution.get() / 2);
+				}
+			}
 			break;
 
 		case S:

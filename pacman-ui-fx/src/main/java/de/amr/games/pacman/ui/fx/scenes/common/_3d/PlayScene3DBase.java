@@ -13,6 +13,7 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.world.PacManGameWorld;
+import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.entities._3d.Bonus3D;
 import de.amr.games.pacman.ui.fx.entities._3d.CoordinateSystem;
 import de.amr.games.pacman.ui.fx.entities._3d.Ghost3D;
@@ -86,6 +87,14 @@ public class PlayScene3DBase implements GameScene {
 		maze3D.setWallBaseColor(Rendering2D_Assets.getMazeWallColor(game().variant(), game().currentLevel().mazeNumber));
 		maze3D.setWallTopColor(Rendering2D_Assets.getMazeWallTopColor(game().variant(), game().currentLevel().mazeNumber));
 		initMaze();
+		Env.$mazeResolution.addListener((bean, oldResolution, newResolution) -> {
+			log("Change maze resolution from %d to %d", oldResolution, newResolution);
+			maze3D.buildWalls(game().currentLevel().world, Env.$mazeResolution.get(), Env.$mazeWallHeight.get());
+		});
+		Env.$mazeWallHeight.addListener((bean, oldHeight, newHeight) -> {
+			log("Change maze wall height from %.1f to %.1f", oldHeight, newHeight);
+			maze3D.buildWalls(game().currentLevel().world, Env.$mazeResolution.get(), Env.$mazeWallHeight.get());
+		});
 
 		player3D = new Player3D(game().player());
 		ghosts3D = game().ghosts().collect(Collectors.toMap(Function.identity(), ghost -> new Ghost3D(ghost, r2D)));
@@ -123,7 +132,7 @@ public class PlayScene3DBase implements GameScene {
 
 	protected void initMaze() {
 		var foodColor = Rendering2D_Assets.getFoodColor(game().variant(), game().currentLevel().mazeNumber);
-		maze3D.build(game().currentLevel().world, 8, 3.5, foodColor);
+		maze3D.build(game().currentLevel().world, Env.$mazeResolution.get(), Env.$mazeWallHeight.get(), foodColor);
 	}
 
 	@Override

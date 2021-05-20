@@ -1,9 +1,11 @@
 package de.amr.games.pacman.ui.fx;
 
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.shape.DrawMode;
@@ -20,6 +22,8 @@ public class Env {
 	public static final IntegerProperty $fps = new SimpleIntegerProperty();
 	public static final BooleanProperty $isHUDVisible = new SimpleBooleanProperty(false);
 	public static final BooleanProperty $isTimeMeasured = new SimpleBooleanProperty(false);
+	public static final IntegerProperty $mazeResolution = new SimpleIntegerProperty(8);
+	public static final DoubleProperty $mazeWallHeight = new SimpleDoubleProperty(3.5);
 	public static final IntegerProperty $totalTicks = new SimpleIntegerProperty();
 	public static final IntegerProperty $slowDown = new SimpleIntegerProperty(1);
 	public static final BooleanProperty $paused = new SimpleBooleanProperty(false);
