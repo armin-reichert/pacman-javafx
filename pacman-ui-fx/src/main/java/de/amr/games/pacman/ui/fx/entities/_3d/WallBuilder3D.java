@@ -8,7 +8,6 @@ import java.util.List;
 
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.model.world.WallMap;
-import de.amr.games.pacman.model.world.WallScanner;
 import de.amr.games.pacman.ui.fx.Env;
 import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
@@ -40,7 +39,7 @@ public class WallBuilder3D {
 		wallHeight = height;
 	}
 
-	public void setWallMaterial(PhongMaterial material) {
+	public void setBaseMaterial(PhongMaterial material) {
 		this.wallMaterial = material;
 	}
 
@@ -49,8 +48,7 @@ public class WallBuilder3D {
 	}
 
 	public List<Node> build(PacManGameWorld world, int resolution) {
-		walls = new ArrayList<>();
-		wallMap = new WallScanner(resolution).scan(world);
+		wallMap = WallMap.build(resolution, world);
 		double blockSize = TS / resolution;
 		createWalls(world, blockSize);
 		return getWalls();
@@ -94,6 +92,7 @@ public class WallBuilder3D {
 	}
 
 	private void createWalls(PacManGameWorld world, double blockSize) {
+		walls = new ArrayList<>();
 		// horizontal
 		for (int y = 0; y < wallMap.sizeY(); ++y) {
 			int leftX = -1;

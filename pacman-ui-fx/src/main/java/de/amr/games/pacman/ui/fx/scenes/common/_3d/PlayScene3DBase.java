@@ -85,8 +85,8 @@ public class PlayScene3DBase implements GameScene {
 		maze3D.setResolution(8);
 		maze3D.setWallHeight(3.5);
 		maze3D.setFloorTexture(new Image(getClass().getResourceAsStream("/common/escher-texture.jpg")));
-		maze3D.setWallColor(Rendering2D_Assets.getMazeWallColor(game().variant(), game().currentLevel().mazeNumber));
-		maze3D.setTopColor(Rendering2D_Assets.getMazeWallTopColor(game().variant(), game().currentLevel().mazeNumber));
+		maze3D.setWallBaseColor(Rendering2D_Assets.getMazeWallColor(game().variant(), game().currentLevel().mazeNumber));
+		maze3D.setWallTopColor(Rendering2D_Assets.getMazeWallTopColor(game().variant(), game().currentLevel().mazeNumber));
 		initMaze();
 
 		player3D = new Player3D(game().player());
@@ -124,7 +124,8 @@ public class PlayScene3DBase implements GameScene {
 	}
 
 	protected void initMaze() {
-		maze3D.build(game());
+		var foodColor = Rendering2D_Assets.getFoodColor(game().variant(), game().currentLevel().mazeNumber);
+		maze3D.build(game().currentLevel().world, foodColor);
 	}
 
 	@Override
