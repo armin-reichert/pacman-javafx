@@ -63,32 +63,19 @@ public class WallBuilder3D {
 		base.drawModeProperty().bind(Env.$drawMode3D);
 		walls.add(base);
 
-		Box top = new Box(numBlocksX * blockSize, numBlocksY * blockSize, 0.2);
+		double topHeight = 0.1;
+		Box top = new Box(numBlocksX * blockSize, numBlocksY * blockSize, topHeight);
 		top.setMaterial(topMaterial);
 		top.setTranslateX(leftX * blockSize + numBlocksX * 0.5 * blockSize);
 		top.setTranslateY(topY * blockSize + numBlocksY * 0.5 * blockSize);
-		top.setTranslateZ(-0.5);
+		top.setTranslateZ(base.getTranslateZ() - 0.5 * wallHeight - topHeight - 0.1);
 		top.drawModeProperty().bind(Env.$drawMode3D);
 		walls.add(top);
 	}
 
 	// TODO I need a half cylinder or a special corner shape for smooth corners
 	private void addCorner(int x, int y, double blockSize) {
-		Box base = new Box(blockSize, blockSize, wallHeight);
-		base.setMaterial(wallMaterial);
-		base.setTranslateX(x * blockSize + 0.5 * blockSize);
-		base.setTranslateY(y * blockSize + 0.5 * blockSize);
-		base.setTranslateZ(1.5);
-		base.drawModeProperty().bind(Env.$drawMode3D);
-		walls.add(base);
-
-		Box top = new Box(blockSize, blockSize, 0.2);
-		top.setMaterial(topMaterial);
-		top.setTranslateX(x * blockSize + 0.5 * blockSize);
-		top.setTranslateY(y * blockSize + 0.5 * blockSize);
-		top.setTranslateZ(-0.5);
-		top.drawModeProperty().bind(Env.$drawMode3D);
-		walls.add(top);
+		addBlock(x, y, 1, 1, blockSize);
 	}
 
 	private void createWalls(PacManGameWorld world, double blockSize) {

@@ -26,15 +26,12 @@ public class Maze3D extends Group {
 	private final PhongMaterial wallTopMaterial = new PhongMaterial();
 	private final Group wallGroup = new Group();
 	private final Group foodGroup = new Group();
-	private int resolution; // 8, 4, 2, 1
-	private double wallHeight;
+	private int resolution = 4; // 8, 4, 2, 1
+	private double wallHeight = 2;
 
 	public Maze3D(double sizeX, double sizeY) {
-		resolution = 8;
-		wallHeight = 4;
-		var floorMaterial = new PhongMaterial();
 		var floorColor = Color.rgb(20, 20, 120);
-		floorMaterial.setDiffuseColor(floorColor);
+		var floorMaterial = new PhongMaterial(floorColor);
 		floorMaterial.setSpecularColor(floorColor.brighter());
 		floor = new Box(sizeX - 1, sizeY - 1, 0.1);
 		floor.getTransforms().add(new Translate(sizeX / 2 - TS / 2, sizeY / 2 - TS / 2, 3.5));
@@ -62,7 +59,7 @@ public class Maze3D extends Group {
 		wallGroup.setTranslateX(-TS / 2);
 		wallGroup.setTranslateY(-TS / 2);
 		wallGroup.getChildren().setAll(wallBuilder.build(world, resolution));
-		
+
 		foodGroup.getChildren().clear();
 		final var foodMaterial = new PhongMaterial(foodColor);
 		world.tiles().filter(world::isFoodTile).forEach(foodTile -> {
