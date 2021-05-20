@@ -5,6 +5,9 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.model.world.PacManGameWorld;
+import de.amr.games.pacman.ui.fx.Env;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -20,19 +23,23 @@ import javafx.scene.transform.Translate;
  * @author Armin Reichert
  */
 public class Maze3D extends Group {
+	
+	public DoubleProperty $wallHeight = new SimpleDoubleProperty(2.0);
 
 	private final Box floor;
+	private final double floorSizeZ = 0.1;
 	private final PhongMaterial wallBaseMaterial = new PhongMaterial();
 	private final PhongMaterial wallTopMaterial = new PhongMaterial();
 	private final Group wallGroup = new Group();
 	private final Group foodGroup = new Group();
 
-	public Maze3D(double sizeX, double sizeY) {
+	public Maze3D(double mazeSizeX, double mazeSizeY) {
+		floor = new Box(mazeSizeX - 1, mazeSizeY - 1, floorSizeZ);
+		floor.drawModeProperty().bind(Env.$drawMode3D);
+		floor.getTransforms().add(new Translate(mazeSizeX / 2 - TS / 2, mazeSizeY / 2 - TS / 2, -0.5 * floorSizeZ + 0.1));
 		var floorColor = Color.rgb(20, 20, 120);
 		var floorMaterial = new PhongMaterial(floorColor);
 		floorMaterial.setSpecularColor(floorColor.brighter());
-		floor = new Box(sizeX - 1, sizeY - 1, 0.1);
-		floor.getTransforms().add(new Translate(sizeX / 2 - TS / 2, sizeY / 2 - TS / 2, 3.5));
 		floor.setMaterial(floorMaterial);
 		getChildren().addAll(floor, wallGroup, foodGroup);
 	}
@@ -43,24 +50,25 @@ public class Maze3D extends Group {
 
 	public void buildWalls(PacManGameWorld world, int resolution, double wallHeight) {
 		var wallBuilder = new WallBuilder3D();
-		wallBuilder.setWallHeight(wallHeight);
+		wallBuilder.$wallHeight.bind($wallHeight);
 		wallBuilder.setBaseMaterial(wallBaseMaterial);
 		wallBuilder.setTopMaterial(wallTopMaterial);
 		wallGroup.setTranslateX(-TS / 2);
 		wallGroup.setTranslateY(-TS / 2);
 		wallGroup.getChildren().setAll(wallBuilder.build(world, resolution));
 	}
-	
+
 	public void build(PacManGameWorld world, int resolution, double wallHeight, Color foodColor) {
 		buildWalls(world, resolution, wallHeight);
 		foodGroup.getChildren().clear();
 		final var foodMaterial = new PhongMaterial(foodColor);
 		world.tiles().filter(world::isFoodTile).forEach(foodTile -> {
-			final var pellet = new Sphere(world.isEnergizerTile(foodTile) ? 2.5 : 1);
+			double radius = world.isEnergizerTile(foodTile) ? 2.5 : 1.0;
+			final var pellet = new Sphere(radius);
 			pellet.setMaterial(foodMaterial);
 			pellet.setTranslateX(foodTile.x * TS);
 			pellet.setTranslateY(foodTile.y * TS);
-			pellet.setTranslateZ(1);
+			pellet.setTranslateZ(-3);
 			pellet.setUserData(foodTile);
 			foodGroup.getChildren().add(pellet);
 		});

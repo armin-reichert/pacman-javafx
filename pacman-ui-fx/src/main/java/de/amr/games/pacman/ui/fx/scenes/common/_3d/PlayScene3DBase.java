@@ -86,23 +86,33 @@ public class PlayScene3DBase implements GameScene {
 		maze3D.setFloorTexture(new Image(getClass().getResourceAsStream("/common/escher-texture.jpg")));
 		maze3D.setWallBaseColor(Rendering2D_Assets.getMazeWallColor(game().variant(), game().currentLevel().mazeNumber));
 		maze3D.setWallTopColor(Rendering2D_Assets.getMazeWallTopColor(game().variant(), game().currentLevel().mazeNumber));
-		initMaze();
+		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		Env.$mazeResolution.addListener((bean, oldResolution, newResolution) -> {
 			log("Change maze resolution from %d to %d", oldResolution, newResolution);
 			maze3D.buildWalls(game().currentLevel().world, Env.$mazeResolution.get(), Env.$mazeWallHeight.get());
 		});
 		Env.$mazeWallHeight.addListener((bean, oldHeight, newHeight) -> {
 			log("Change maze wall height from %.1f to %.1f", oldHeight, newHeight);
-			maze3D.buildWalls(game().currentLevel().world, Env.$mazeResolution.get(), Env.$mazeWallHeight.get());
 		});
+		initMaze();
 
 		player3D = new Player3D(game().player());
-		ghosts3D = game().ghosts().collect(Collectors.toMap(Function.identity(), ghost -> new Ghost3D(ghost, r2D)));
+		player3D.setTranslateZ(-4); // TODO
+
+		ghosts3D = game().ghosts().collect(Collectors.toMap(Function.identity(), ghost -> {
+			Ghost3D ghost3D = new Ghost3D(ghost, r2D);
+			ghost3D.setTranslateZ(-4); // TODO
+			return ghost3D;
+		}));
 		bonus3D = new Bonus3D(game().variant(), r2D);
+		bonus3D.setTranslateZ(-4); // TODO
 
 		score3D = new ScoreNotReally3D();
+
 		livesCounter3D = new LivesCounter3D(new V2i(2, 1));
 		livesCounter3D.setMaxEntries(LIVES_COUNTER_MAX);
+		livesCounter3D.setTranslateZ(-4); // TODO
+
 		if (gameController.isAttractMode()) {
 			score3D.setHiscoreOnly(true);
 			livesCounter3D.setVisible(false);
@@ -112,6 +122,7 @@ public class PlayScene3DBase implements GameScene {
 		}
 
 		levelCounter3D = new LevelCounter3D(new V2i(25, 1), r2D);
+		levelCounter3D.setTranslateZ(-4); // TODO
 		levelCounter3D.update(game());
 
 		final var ambientLight = new AmbientLight();

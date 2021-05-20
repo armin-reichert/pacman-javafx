@@ -7,6 +7,11 @@ import de.amr.games.pacman.model.common.PacManGameModel;
 import de.amr.games.pacman.ui.fx.model3D.GianmarcosModel3D;
 import javafx.scene.Group;
 
+/**
+ * Displays a Pac-Man for each live remaining.
+ * 
+ * @author Armin Reichert
+ */
 public class LivesCounter3D extends Group {
 
 	private V2i tilePosition;
@@ -26,7 +31,6 @@ public class LivesCounter3D extends Group {
 				Group liveIndicator = GianmarcosModel3D.createPacMan();
 				liveIndicator.setTranslateX(tile.x * TS);
 				liveIndicator.setTranslateY(tile.y * TS);
-				liveIndicator.setTranslateZ(0);
 				getChildren().add(liveIndicator);
 			}
 		}

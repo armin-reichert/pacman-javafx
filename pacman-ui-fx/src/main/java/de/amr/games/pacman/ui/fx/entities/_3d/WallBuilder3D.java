@@ -9,6 +9,8 @@ import java.util.List;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.model.world.WallMap;
 import de.amr.games.pacman.ui.fx.Env;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -20,12 +22,12 @@ import javafx.scene.shape.Box;
  */
 public class WallBuilder3D {
 
+	public DoubleProperty $wallHeight = new SimpleDoubleProperty(2.0);
+
 	private WallMap wallMap;
 	private List<Node> walls;
 	private PhongMaterial wallMaterial;
 	private PhongMaterial topMaterial;
-
-	private double wallHeight = PacManGameWorld.HTS;
 
 	public WallBuilder3D() {
 		wallMaterial = new PhongMaterial();
@@ -33,10 +35,6 @@ public class WallBuilder3D {
 
 	public List<Node> getWalls() {
 		return Collections.unmodifiableList(walls);
-	}
-
-	public void setWallHeight(double height) {
-		wallHeight = height;
 	}
 
 	public void setBaseMaterial(PhongMaterial material) {
@@ -55,11 +53,13 @@ public class WallBuilder3D {
 	}
 
 	private void addBlock(int leftX, int topY, int numBlocksX, int numBlocksY, double blockSize) {
-		Box base = new Box(numBlocksX * blockSize, numBlocksY * blockSize, wallHeight);
+		Box base = new Box(numBlocksX * blockSize, numBlocksY * blockSize, $wallHeight.get());
+		base.depthProperty().bind($wallHeight);
 		base.setMaterial(wallMaterial);
 		base.setTranslateX(leftX * blockSize + numBlocksX * 0.5 * blockSize);
 		base.setTranslateY(topY * blockSize + numBlocksY * 0.5 * blockSize);
-		base.setTranslateZ(1.5);
+//		base.setTranslateZ(-0.5 * $wallHeight.get());
+		base.translateZProperty().bind($wallHeight.multiply(-0.5));
 		base.drawModeProperty().bind(Env.$drawMode3D);
 		walls.add(base);
 
@@ -68,7 +68,9 @@ public class WallBuilder3D {
 		top.setMaterial(topMaterial);
 		top.setTranslateX(leftX * blockSize + numBlocksX * 0.5 * blockSize);
 		top.setTranslateY(topY * blockSize + numBlocksY * 0.5 * blockSize);
-		top.setTranslateZ(base.getTranslateZ() - 0.5 * wallHeight - topHeight - 0.1);
+//		top.setTranslateZ(base.getTranslateZ() - 0.5 * ($wallHeight.get() + topHeight) - 0.2);
+		top.translateZProperty()
+				.bind(base.translateZProperty().subtract($wallHeight.add(topHeight-0.2).multiply(0.5)));
 		top.drawModeProperty().bind(Env.$drawMode3D);
 		walls.add(top);
 	}
