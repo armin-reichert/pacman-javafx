@@ -24,7 +24,7 @@ On the play screen, the following functionality is available:
 - <kbd>CTRL+I</kbd> Toggle information about current scene (HUD)
 - <kbd>CTRL+L</kbd> Toggle draw mode (line vs. shaded)
 - <kbd>CTRL+P</kbd> Toggle pausing game play
-- <kbd>CTRL+R</kbd> Increase maze resolution (<kbd>CTRL+SHIFT+R</kbd> = decrease)
+- <kbd>CTRL+R</kbd> Increase maze "resolution" (<kbd>CTRL+SHIFT+R</kbd> = decrease)
 - <kbd>CTRL+S</kbd> Increase speed
 - <kbd>CTRL+SHIFT+S</kbd> Decrease speed
 - <kbd>CTRL+3</kbd> Toggle using 2D/3D play scene
