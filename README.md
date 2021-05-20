@@ -4,7 +4,7 @@
 
 A JavaFX user interface for my Pac-Man / Ms. Pac-Man game implementations. The game logic is implemented UI-independently, see repository [pacman-basic](https://github.com/armin-reichert/pacman-basic). Both games can be played in 2D and 3D.
 
-The 3D model (unfortunately I have no animated model yet) has been generously provided by Gianmarco Cavallaccio (https://www.artstation.com/gianmart). Cudos to Gianmarco! 
+(Unfortunately, I have no animated model yet.) The 3D Pac-Man and ghost meshes have been generously provided by Gianmarco Cavallaccio (https://www.artstation.com/gianmart). Cudos to Gianmarco! 
 
 In the current [release](https://github.com/armin-reichert/pacman-javafx/releases) you find an attached zip file containing the complete Java runtime needed to run the game. To start the game, unzip the archive and execute `bin\run.cmd`.
 
