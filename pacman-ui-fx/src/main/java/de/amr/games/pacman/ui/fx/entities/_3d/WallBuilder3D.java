@@ -5,7 +5,6 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.model.world.WallMap;
@@ -51,12 +50,7 @@ public class WallBuilder3D {
 
 	public List<Node> build(PacManGameWorld world, int resolution) {
 		walls = new ArrayList<>();
-		Optional<WallMap> map = world.getWallMap(resolution);
-		if (map.isPresent()) {
-			wallMap = map.get();
-		} else {
-			wallMap = new WallScanner(resolution).scan(world);
-		}
+		wallMap = new WallScanner(resolution).scan(world);
 		double blockSize = TS / resolution;
 		createWalls(world, blockSize);
 		return getWalls();
