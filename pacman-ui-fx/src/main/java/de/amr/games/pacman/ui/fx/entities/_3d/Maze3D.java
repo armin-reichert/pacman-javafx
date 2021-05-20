@@ -50,6 +50,10 @@ public class Maze3D extends Group {
 		this.wallHeight = wallHeight;
 	}
 
+	public Stream<Node> foodNodes() {
+		return foodGroup.getChildren().stream();
+	}
+
 	public void build(PacManGameWorld world, Color foodColor) {
 		var wallBuilder = new WallBuilder3D();
 		wallBuilder.setWallHeight(wallHeight);
@@ -58,14 +62,7 @@ public class Maze3D extends Group {
 		wallGroup.setTranslateX(-TS / 2);
 		wallGroup.setTranslateY(-TS / 2);
 		wallGroup.getChildren().setAll(wallBuilder.build(world, resolution));
-		createFood(world, foodColor);
-	}
-
-	public Stream<Node> foodNodes() {
-		return foodGroup.getChildren().stream();
-	}
-
-	private void createFood(PacManGameWorld world, Color foodColor) {
+		
 		foodGroup.getChildren().clear();
 		final var foodMaterial = new PhongMaterial(foodColor);
 		world.tiles().filter(world::isFoodTile).forEach(foodTile -> {
