@@ -58,7 +58,6 @@ public class WallBuilder3D {
 		base.setMaterial(wallMaterial);
 		base.setTranslateX(leftX * blockSize + numBlocksX * 0.5 * blockSize);
 		base.setTranslateY(topY * blockSize + numBlocksY * 0.5 * blockSize);
-//		base.setTranslateZ(-0.5 * $wallHeight.get());
 		base.translateZProperty().bind($wallHeight.multiply(-0.5));
 		base.drawModeProperty().bind(Env.$drawMode3D);
 		walls.add(base);
@@ -68,9 +67,7 @@ public class WallBuilder3D {
 		top.setMaterial(topMaterial);
 		top.setTranslateX(leftX * blockSize + numBlocksX * 0.5 * blockSize);
 		top.setTranslateY(topY * blockSize + numBlocksY * 0.5 * blockSize);
-//		top.setTranslateZ(base.getTranslateZ() - 0.5 * ($wallHeight.get() + topHeight) - 0.2);
-		top.translateZProperty()
-				.bind(base.translateZProperty().subtract($wallHeight.add(topHeight-0.2).multiply(0.5)));
+		top.translateZProperty().bind(base.translateZProperty().subtract($wallHeight.add(topHeight - 0.1).multiply(0.5)));
 		top.drawModeProperty().bind(Env.$drawMode3D);
 		walls.add(top);
 	}
