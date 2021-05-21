@@ -194,7 +194,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			break;
 
 		case E:
-			gameController.eatAllPellets();
+			gameController.cheatEatAllPellets();
 			break;
 
 		case I:
@@ -224,7 +224,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			break;
 
 		case X:
-			gameController.killGhosts();
+			gameController.cheatKillGhosts();
 			break;
 
 		case SPACE:
