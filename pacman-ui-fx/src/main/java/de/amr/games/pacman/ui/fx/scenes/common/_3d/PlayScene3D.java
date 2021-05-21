@@ -286,7 +286,7 @@ public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEve
 		});
 
 		TranslateTransition raise = new TranslateTransition(Duration.seconds(0.5), player3D);
-		raise.setFromZ(0);
+		raise.setFromZ(savedTranslateZ);
 		raise.setToZ(-10);
 		raise.setByZ(1);
 
