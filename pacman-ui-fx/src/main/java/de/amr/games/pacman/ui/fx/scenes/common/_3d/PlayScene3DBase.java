@@ -97,7 +97,7 @@ public class PlayScene3DBase implements GameScene {
 		initMaze();
 
 		player3D = new Player3D(game().player());
-		player3D.setTranslateZ(-4); // TODO
+		player3D.setTranslateZ(-3); // TODO
 
 		ghosts3D = game().ghosts().collect(Collectors.toMap(Function.identity(), ghost -> {
 			Ghost3D ghost3D = new Ghost3D(ghost, r2D);
