@@ -18,6 +18,9 @@ import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScene3DBase;
 import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacManScenes;
 import de.amr.games.pacman.ui.fx.scenes.pacman.PacManScenes;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.ObjectBinding;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
@@ -25,6 +28,9 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
@@ -38,8 +44,6 @@ import javafx.stage.Stage;
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
 
-	static final Color BACKGROUND_COLOR = Color.CORNFLOWERBLUE;
-
 	public final Stage stage;
 	public final Scene mainScene;
 	public final PacManGameController gameController;
@@ -51,17 +55,23 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	public GameScene currentGameScene;
 
+	private ObjectBinding<Background> $background = Bindings.createObjectBinding(() -> {
+		Color color = Env.$drawMode3D.get() == DrawMode.FILL ? Color.CORNFLOWERBLUE : Color.BLACK;
+		return new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY));
+	}, Env.$drawMode3D);
+
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController gameController, double height) {
 		this.stage = stage;
 		this.gameController = gameController;
 
 		StackPane root = new StackPane();
+		root.backgroundProperty().bind($background);
 		root.getChildren().addAll(gameSceneParent, flashMessageView, hud);
 		StackPane.setAlignment(hud, Pos.TOP_LEFT);
 
 		GameScene gameScene = sceneForCurrentGameState(Env.$use3DScenes.get());
 		double aspectRatio = gameScene.aspectRatio().orElse(getScreenAspectRatio());
-		mainScene = new Scene(root, aspectRatio * height, height, BACKGROUND_COLOR);
+		mainScene = new Scene(root, aspectRatio * height, height);
 		setGameScene(gameScene);
 
 		Env.$totalTicks.addListener(($1, $2, newValue) -> hud.update(this));
