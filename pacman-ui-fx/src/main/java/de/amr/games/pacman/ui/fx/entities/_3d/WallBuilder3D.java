@@ -62,12 +62,12 @@ public class WallBuilder3D {
 		base.drawModeProperty().bind(Env.$drawMode3D);
 		walls.add(base);
 
-		double topHeight = 0.1;
+		double topHeight = 0.3;
 		Box top = new Box(numBlocksX * blockSize, numBlocksY * blockSize, topHeight);
 		top.setMaterial(topMaterial);
 		top.setTranslateX(leftX * blockSize + numBlocksX * 0.5 * blockSize);
 		top.setTranslateY(topY * blockSize + numBlocksY * 0.5 * blockSize);
-		top.translateZProperty().bind(base.translateZProperty().subtract($wallHeight.add(topHeight+0.1).multiply(0.5)));
+		top.translateZProperty().bind(base.translateZProperty().subtract($wallHeight.add(topHeight + 0.1).multiply(0.5)));
 		top.drawModeProperty().bind(Env.$drawMode3D);
 		walls.add(top);
 	}
