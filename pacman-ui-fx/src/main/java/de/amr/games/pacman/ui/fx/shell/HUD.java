@@ -17,11 +17,11 @@ import javafx.scene.text.Text;
  */
 public class HUD extends Text {
 
-	private static String yesNo(boolean b) {
+	private static String yes_no(boolean b) {
 		return b ? "YES" : "NO";
 	}
 
-	private static String onOff(boolean b) {
+	private static String on_off(boolean b) {
 		return b ? "ON" : "OFF";
 	}
 
@@ -39,11 +39,11 @@ public class HUD extends Text {
 		line("Total Ticks", "%d", Env.$totalTicks.get());
 		line("Frame rate", "%d Hz", Env.$fps.get());
 		line("Speed (CTRL/SHIFT+S)", "%.0f%%", 100.0 / Env.$slowDown.get());
-		line("Paused (CTRL+P)", "%s", yesNo(Env.$paused.get()));
+		line("Paused (CTRL+P)", "%s", yes_no(Env.$paused.get()));
 		newline();
 		line("Game Variant", "%s", ui.gameController.game().variant());
-		line("Playing", "%s", yesNo(ui.gameController.isGameRunning()));
-		line("Attract Mode", "%s", yesNo(ui.gameController.isAttractMode()));
+		line("Playing", "%s", yes_no(ui.gameController.isGameRunning()));
+		line("Attract Mode", "%s", yes_no(ui.gameController.isAttractMode()));
 		line("Game Level", "%d", ui.gameController.game().currentLevel().number);
 		PacManGameState state = ui.gameController.state;
 		String huntingPhase = ui.gameController.huntingPhase % 2 == 0 ? "Scattering" : "Chasing";
@@ -59,7 +59,7 @@ public class HUD extends Text {
 		line("Window Size", "w=%.0f h=%.0f", ui.mainScene.getWindow().getWidth(), ui.mainScene.getWindow().getHeight());
 		line("Main Scene Size", "w=%.0f h=%.0f", ui.mainScene.getWidth(), ui.mainScene.getHeight());
 		newline();
-		line("3D Scenes (CTRL+3)", "%s", onOff(Env.$use3DScenes.get()));
+		line("3D Scenes (CTRL+3)", "%s", on_off(Env.$use3DScenes.get()));
 		if (ui.currentGameScene instanceof AbstractGameScene2D) {
 			line("Canvas2D", "w=%.0f h=%.0f", ui.canvas.getWidth(), ui.canvas.getHeight());
 		} else {
@@ -70,11 +70,11 @@ public class HUD extends Text {
 			}
 			newline();
 			line("Draw Mode (CTRL+L)", "%s", Env.$drawMode3D.get());
-			line("Axes (CTRL+X)", "%s", onOff(Env.$axesVisible.get()));
+			line("Axes (CTRL+X)", "%s", on_off(Env.$axesVisible.get()));
 		}
 		newline();
-		line("Autopilot (A)", "%s", onOff(ui.gameController.isAutoControlled()));
-		line("Immunity (I)", "%s", onOff(ui.gameController.isPlayerImmune()));
+		line("Autopilot (A)", "%s", on_off(ui.gameController.isAutoControlled()));
+		line("Immunity (I)", "%s", on_off(ui.gameController.isPlayerImmune()));
 		setText(text.toString());
 	}
 
