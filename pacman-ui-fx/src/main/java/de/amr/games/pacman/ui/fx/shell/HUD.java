@@ -6,7 +6,6 @@ import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScene3DBase;
 import javafx.scene.Camera;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -16,7 +15,7 @@ import javafx.scene.text.Text;
  * 
  * @author Armin Reichert
  */
-public class HUD extends HBox {
+public class HUD extends Text {
 
 	private static String yesNo(boolean b) {
 		return b ? "YES" : "NO";
@@ -26,24 +25,22 @@ public class HUD extends HBox {
 		return b ? "ON" : "OFF";
 	}
 
-	private final Text textView = new Text();
-	private String text;
+	private final StringBuilder text = new StringBuilder();
 
 	public HUD() {
 		visibleProperty().bind(Env.$isHUDVisible);
-		textView.setFill(Color.WHITE);
-		textView.setFont(Font.font("Monospace", 14));
-		getChildren().add(textView);
+		setFill(Color.WHITE);
+		setFont(Font.font("Monospace", 14));
 	}
 
 	public void update(PacManGameUI_JavaFX ui) {
 		TickTimer stateTimer = ui.gameController.stateTimer();
-		text = "";
+		text.setLength(0);
 		line("Total Ticks", "%d", Env.$totalTicks.get());
 		line("Frame rate", "%d Hz", Env.$fps.get());
 		line("Speed (CTRL/SHIFT+S)", "%.0f%%", 100.0 / Env.$slowDown.get());
 		line("Paused (CTRL+P)", "%s", yesNo(Env.$paused.get()));
-		skip();
+		newline();
 		line("Game Variant", "%s", ui.gameController.game().variant());
 		line("Playing", "%s", yesNo(ui.gameController.isGameRunning()));
 		line("Attract Mode", "%s", yesNo(ui.gameController.isAttractMode()));
@@ -54,14 +51,14 @@ public class HUD extends HBox {
 		line("", "Running:   %s", stateTimer.ticked());
 		line("", "Remaining: %s",
 				stateTimer.ticksRemaining() == Long.MAX_VALUE ? "indefinite" : stateTimer.ticksRemaining());
-		skip();
+		newline();
 		line("Game Scene", "%s", ui.currentGameScene.getClass().getSimpleName());
 		line("", "w=%.0f h=%.0f", ui.currentGameScene.getSubSceneFX().getWidth(),
 				ui.currentGameScene.getSubSceneFX().getHeight());
-		skip();
+		newline();
 		line("Window Size", "w=%.0f h=%.0f", ui.mainScene.getWindow().getWidth(), ui.mainScene.getWindow().getHeight());
 		line("Main Scene Size", "w=%.0f h=%.0f", ui.mainScene.getWidth(), ui.mainScene.getHeight());
-		skip();
+		newline();
 		line("3D Scenes (CTRL+3)", "%s", onOff(Env.$use3DScenes.get()));
 		if (ui.currentGameScene instanceof AbstractGameScene2D) {
 			line("Canvas2D", "w=%.0f h=%.0f", ui.canvas.getWidth(), ui.canvas.getHeight());
@@ -71,23 +68,23 @@ public class HUD extends HBox {
 				line("Perspective (CTRL+C)", "%s", playScene.selectedPerspective());
 				line("Camera", "%s", cameraInfo(playScene.getSubSceneFX().getCamera()));
 			}
-			skip();
+			newline();
 			line("Draw Mode (CTRL+L)", "%s", Env.$drawMode3D.get());
 			line("Axes (CTRL+X)", "%s", onOff(Env.$axesVisible.get()));
 		}
-		skip();
+		newline();
 		line("Autopilot (A)", "%s", onOff(ui.gameController.isAutoControlled()));
 		line("Immunity (I)", "%s", onOff(ui.gameController.isPlayerImmune()));
-		textView.setText(text);
+		setText(text.toString());
 	}
 
 	private void line(String column1, String fmtColumn2, Object... args) {
 		String column2 = String.format(fmtColumn2, args) + "\n";
-		text += String.format("%-20s: %s", column1, column2);
+		text.append(String.format("%-20s: %s", column1, column2));
 	}
 
-	private void skip() {
-		text += "\n";
+	private void newline() {
+		text.append("\n");
 	}
 
 	private String cameraInfo(Camera camera) {
