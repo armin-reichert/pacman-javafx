@@ -156,7 +156,7 @@ public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEve
 
 	@Override
 	public void onExtraLife(PacManGameEvent e) {
-		gameController.getUI().showFlashMessage("Extra life!");
+		gameController.getUI().showFlashMessage(1, "Extra life!");
 		sounds.play(PacManGameSound.EXTRA_LIFE);
 	}
 
@@ -229,7 +229,7 @@ public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEve
 		// enter GAME_OVER
 		else if (e.newGameState == PacManGameState.GAME_OVER) {
 			sounds.stopAll();
-			gameController.getUI().showFlashMessage(TrashTalk.GAME_OVER_SPELLS.nextSpell(), 3);
+			gameController.getUI().showFlashMessage(3, TrashTalk.GAME_OVER_SPELLS.nextSpell());
 		}
 
 		// exit HUNTING but not GAME_OVER
@@ -323,9 +323,8 @@ public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEve
 		phase1.setOnFinished(e -> {
 			game().player().setVisible(false);
 			game().ghosts().forEach(ghost -> ghost.setVisible(false));
-			String message = String.format("%s\n\nLevel %d complete.", TrashTalk.LEVEL_COMPLETE_SPELLS.nextSpell(),
-					game().currentLevel().number);
-			gameController.getUI().showFlashMessage(message, 2);
+			gameController.getUI().showFlashMessage(2, "%s\n\nLevel %d complete.",
+					TrashTalk.LEVEL_COMPLETE_SPELLS.nextSpell(), game().currentLevel().number);
 		});
 		PauseTransition phase2 = new PauseTransition(Duration.seconds(2));
 		phase2.setOnFinished(e -> gameController.stateTimer().forceExpiration());
@@ -334,7 +333,7 @@ public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEve
 
 	private void playAnimationLevelStarting() {
 		gameController.stateTimer().reset();
-		gameController.getUI().showFlashMessage("Entering Level " + game().currentLevel().number);
+		gameController.getUI().showFlashMessage(1, "Entering Level %d", game().currentLevel().number);
 		PauseTransition phase1 = new PauseTransition(Duration.seconds(1));
 		phase1.setOnFinished(e -> {
 			game().player().setVisible(true);

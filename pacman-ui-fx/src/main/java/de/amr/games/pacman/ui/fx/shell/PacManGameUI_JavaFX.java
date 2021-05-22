@@ -103,8 +103,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	@Override
-	public void showFlashMessage(String message, double seconds) {
-		flashMessageView.showMessage(message, (long) (60 * seconds));
+	public void showFlashMessage(double seconds, String message, Object... args) {
+		flashMessageView.showMessage(String.format(message, args), (long) (60 * seconds));
 	}
 
 	@Override
@@ -200,7 +200,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		switch (e.getCode()) {
 		case A:
 			gameController.setAutoControlled(!gameController.isAutoControlled());
-			showFlashMessage(gameController.isAutoControlled() ? "Autopilot ON" : "Autopilot OFF");
+			showFlashMessage(1, "Autopilot %s", gameController.isAutoControlled() ? "on" : "off");
 			break;
 
 		case E:
@@ -209,17 +209,17 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		case I:
 			gameController.setPlayerImmune(!gameController.isPlayerImmune());
-			showFlashMessage(gameController.isPlayerImmune() ? "Player IMMUNE" : "Player VULNERABLE");
+			showFlashMessage(1, "Player is %s", gameController.isPlayerImmune() ? "immune" : "vulnerable");
 			break;
 
 		case L:
 			gameController.game().addLife();
-			showFlashMessage(String.format("Player lives increased"));
+			showFlashMessage(1, String.format("Player lives increased"));
 			break;
 
 		case N:
 			if (gameController.isGameRunning()) {
-				showFlashMessage(TrashTalk.CHEAT_SPELLS.nextSpell(), 2);
+				showFlashMessage(1, TrashTalk.CHEAT_SPELLS.nextSpell());
 				gameController.changeState(PacManGameState.LEVEL_COMPLETE);
 			}
 			break;
@@ -257,7 +257,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			if (currentGameScene instanceof PlayScene3DBase) {
 				PlayScene3DBase playScene = (PlayScene3DBase) currentGameScene;
 				playScene.nextPerspective();
-				showFlashMessage(String.format("Perspective: %s", playScene.selectedPerspective()));
+				showFlashMessage(1, "Perspective: %s", playScene.selectedPerspective());
 			}
 			break;
 
@@ -315,8 +315,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		case DIGIT3:
 			toggleUse3DScenes();
-			String message = String.format("3D scenes are %s", Env.$use3DScenes.get() ? "ON" : "OFF");
-			showFlashMessage(message);
+			showFlashMessage(1, "3D scenes are %s", Env.$use3DScenes.get() ? "on" : "off");
 			break;
 
 		default:
