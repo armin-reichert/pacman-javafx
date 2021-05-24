@@ -5,6 +5,8 @@ import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.fx.model3D.PacManModel3D;
 import javafx.animation.RotateTransition;
 import javafx.scene.Group;
+import javafx.scene.PointLight;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -19,21 +21,21 @@ public class Player3D extends Group {
 	};
 	//@formatter:on
 
-	private static int indexOfDir(Direction dir) {
-		return dir == Direction.LEFT ? 0 : dir == Direction.RIGHT ? 1 : dir == Direction.UP ? 2 : 3;
+	private static int index(Direction dir) {
+		return dir == Direction.LEFT ? 0
+				: dir == Direction.RIGHT ? 1 : dir == Direction.UP ? 2 : dir == Direction.DOWN ? 3 : -1;
 	}
 
 	private static int[] rotationInterval(Direction from, Direction to) {
-		int row = indexOfDir(from), col = indexOfDir(to);
-		return ROTATION_INTERVALS[row][col];
+		return ROTATION_INTERVALS[index(from)][index(to)];
 	}
 
 	public final Pac pac;
 	public final RotateTransition rotateTransition;
-	public Direction targetDir;
+	private final PointLight light;
+	private Direction targetDir;
 
 	public Player3D(Pac pac, PacManModel3D model3D) {
-		getChildren().add(model3D.createPacMan());
 		this.pac = pac;
 		targetDir = pac.dir();
 		rotateTransition = new RotateTransition(Duration.seconds(0.25), this);
@@ -41,6 +43,9 @@ public class Player3D extends Group {
 		int[] rotationInterval = rotationInterval(pac.dir(), pac.dir());
 		setRotationAxis(Rotate.Z_AXIS);
 		setRotate(rotationInterval[0]);
+		light = new PointLight(Color.WHITE);
+		light.setTranslateZ(-4);
+		getChildren().addAll(model3D.createPacMan(), light);
 	}
 
 	public void update() {

@@ -30,7 +30,6 @@ import de.amr.games.pacman.ui.fx.scenes.pacman.PacManScenes;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
-import javafx.scene.PointLight;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
@@ -133,17 +132,13 @@ public class PlayScene3DBase implements GameScene {
 		levelCounter3D.update(game());
 
 		final var ambientLight = new AmbientLight();
-		final var playerLight = new PointLight();
-		playerLight.translateXProperty().bind(player3D.translateXProperty());
-		playerLight.translateYProperty().bind(player3D.translateYProperty());
-		playerLight.setTranslateZ(-4);
 
 		final var contentRoot = new Group();
 		contentRoot.setTranslateX(-0.5 * width);
 		contentRoot.setTranslateY(-0.5 * height);
 		contentRoot.getChildren().addAll(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
 		contentRoot.getChildren().addAll(ghosts3D.values());
-		contentRoot.getChildren().addAll(ambientLight, playerLight);
+		contentRoot.getChildren().addAll(ambientLight);
 
 		subSceneFX.setRoot(new Group(contentRoot, new CoordinateSystem(subSceneFX.getWidth())));
 	}
