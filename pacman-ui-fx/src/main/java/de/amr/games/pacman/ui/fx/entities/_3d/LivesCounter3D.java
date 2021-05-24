@@ -5,6 +5,7 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.fx.model3D.PacManModel3D;
 import javafx.scene.Group;
+import javafx.scene.Node;
 
 /**
  * Displays a Pac-Man for each live remaining.
@@ -13,34 +14,22 @@ import javafx.scene.Group;
  */
 public class LivesCounter3D extends Group {
 
-	private final PacManModel3D model3D;
-	private V2i tilePosition;
-	private int maxEntries;
+	static final int max = 5;
+
 	private int livesCount;
 
 	public LivesCounter3D(PacManModel3D model3D) {
-		this.model3D = model3D;
-		setTilePosition(V2i.NULL);
-		setMaxEntries(5);
+		for (int i = 0; i < max; ++i) {
+			Node indicator = model3D.createPacMan();
+			indicator.setTranslateX(2 * i * TS);
+			getChildren().add(indicator);
+		}
 		setLivesCount(3);
 	}
 
 	public void setTilePosition(V2i tilePosition) {
-		this.tilePosition = tilePosition;
-	}
-
-	public void setMaxEntries(int maxEntries) {
-		if (this.maxEntries != maxEntries) {
-			this.maxEntries = maxEntries;
-			getChildren().clear();
-			for (int i = 0; i < maxEntries; ++i) {
-				V2i tile = tilePosition.plus(2 * i, 0);
-				Group liveIndicator = model3D.createPacMan();
-				liveIndicator.setTranslateX(tile.x * TS);
-				liveIndicator.setTranslateY(tile.y * TS);
-				getChildren().add(liveIndicator);
-			}
-		}
+		setTranslateX(tilePosition.x * TS);
+		setTranslateY(tilePosition.y * TS);
 	}
 
 	public int getLivesCount() {
@@ -49,7 +38,7 @@ public class LivesCounter3D extends Group {
 
 	public void setLivesCount(int livesCount) {
 		this.livesCount = livesCount;
-		for (int i = 0; i < maxEntries; ++i) {
+		for (int i = 0; i < max; ++i) {
 			getChildren().get(i).setVisible(i < livesCount);
 		}
 	}

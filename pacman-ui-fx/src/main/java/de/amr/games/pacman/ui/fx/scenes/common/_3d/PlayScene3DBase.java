@@ -48,8 +48,6 @@ public class PlayScene3DBase implements GameScene {
 	static final int PERSPECTIVE_FOLLOWING_PLAYER = 1;
 	static final int PERSPECTIVE_NEAR_PLAYER = 2;
 
-	static final int LIVES_COUNTER_MAX = 5;
-
 	private final SubScene subSceneFX;
 	private final PlayScenePerspective[] perspectives;
 	private int selectedPerspective;
@@ -118,8 +116,7 @@ public class PlayScene3DBase implements GameScene {
 		score3D = new ScoreNotReally3D();
 
 		livesCounter3D = new LivesCounter3D(model3D);
-		livesCounter3D.setTilePosition(new V2i(2, 1));
-		livesCounter3D.setMaxEntries(LIVES_COUNTER_MAX);
+		livesCounter3D.setTilePosition(new V2i(1, 1));
 		livesCounter3D.setTranslateZ(-4); // TODO
 
 		if (gameController.isAttractMode()) {
