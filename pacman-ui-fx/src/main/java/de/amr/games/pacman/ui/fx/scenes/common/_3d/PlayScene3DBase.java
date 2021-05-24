@@ -156,7 +156,7 @@ public class PlayScene3DBase implements GameScene {
 	@Override
 	public void update() {
 		score3D.update(game());
-		livesCounter3D.setLivesCount(game().lives());
+		livesCounter3D.setVisibleItems(game().lives());
 		player3D.update();
 		ghosts3D.values().forEach(Ghost3D::update);
 		bonus3D.update(game().bonus());

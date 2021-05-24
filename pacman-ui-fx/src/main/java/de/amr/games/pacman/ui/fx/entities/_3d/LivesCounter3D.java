@@ -15,25 +15,18 @@ public class LivesCounter3D extends Group {
 
 	static final int max = 5;
 
-	private int livesCount;
-
 	public LivesCounter3D(PacManModel3D model3D) {
 		for (int i = 0; i < max; ++i) {
 			Node indicator = model3D.createPacMan();
 			indicator.setTranslateX(2 * i * TS);
 			getChildren().add(indicator);
 		}
-		setLivesCount(3);
+		setVisibleItems(max);
 	}
 
-	public int getLivesCount() {
-		return livesCount;
-	}
-
-	public void setLivesCount(int livesCount) {
-		this.livesCount = livesCount;
+	public void setVisibleItems(int n) {
 		for (int i = 0; i < max; ++i) {
-			getChildren().get(i).setVisible(i < livesCount);
+			getChildren().get(i).setVisible(i < n);
 		}
 	}
 }
