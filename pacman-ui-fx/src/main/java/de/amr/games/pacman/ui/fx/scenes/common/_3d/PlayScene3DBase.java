@@ -22,6 +22,7 @@ import de.amr.games.pacman.ui.fx.entities._3d.LivesCounter3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Maze3D;
 import de.amr.games.pacman.ui.fx.entities._3d.Player3D;
 import de.amr.games.pacman.ui.fx.entities._3d.ScoreNotReally3D;
+import de.amr.games.pacman.ui.fx.model3D.PacManModel3D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacManScenes;
@@ -55,6 +56,7 @@ public class PlayScene3DBase implements GameScene {
 
 	protected PacManGameController gameController;
 
+	protected PacManModel3D model3D;
 	protected Maze3D maze3D;
 	protected Player3D player3D;
 	protected Map<Ghost, Ghost3D> ghosts3D;
@@ -74,6 +76,10 @@ public class PlayScene3DBase implements GameScene {
 //				new POVPerspective(this), //
 		};
 		selectPerspective(PERSPECTIVE_FOLLOWING_PLAYER);
+	}
+
+	public void setModel3D(PacManModel3D model3d) {
+		model3D = model3d;
 	}
 
 	@Override
@@ -98,11 +104,11 @@ public class PlayScene3DBase implements GameScene {
 		});
 		initMaze();
 
-		player3D = new Player3D(game().player());
+		player3D = new Player3D(game().player(), model3D);
 		player3D.setTranslateZ(-3); // TODO
 
 		ghosts3D = game().ghosts().collect(Collectors.toMap(Function.identity(), ghost -> {
-			Ghost3D ghost3D = new Ghost3D(ghost, r2D);
+			Ghost3D ghost3D = new Ghost3D(ghost, model3D, r2D);
 			ghost3D.setTranslateZ(-4); // TODO
 			return ghost3D;
 		}));
@@ -111,7 +117,8 @@ public class PlayScene3DBase implements GameScene {
 
 		score3D = new ScoreNotReally3D();
 
-		livesCounter3D = new LivesCounter3D(new V2i(2, 1));
+		livesCounter3D = new LivesCounter3D(model3D);
+		livesCounter3D.setTilePosition(new V2i(2, 1));
 		livesCounter3D.setMaxEntries(LIVES_COUNTER_MAX);
 		livesCounter3D.setTranslateZ(-4); // TODO
 
@@ -151,7 +158,7 @@ public class PlayScene3DBase implements GameScene {
 	@Override
 	public void update() {
 		score3D.update(game());
-		livesCounter3D.update(game());
+		livesCounter3D.setLivesCount(game().lives());
 		player3D.update();
 		ghosts3D.values().forEach(Ghost3D::update);
 		bonus3D.update(game().bonus());

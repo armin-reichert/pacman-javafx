@@ -20,6 +20,7 @@ import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.entities._3d.Ghost3D;
+import de.amr.games.pacman.ui.fx.model3D.PacManModel3D;
 import de.amr.games.pacman.ui.fx.scenes.common.TrashTalk;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.Animation;
@@ -47,7 +48,8 @@ public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEve
 	private final SoundManager sounds;
 	private List<ScaleTransition> energizerAnimations;
 
-	public PlayScene3D(SoundManager sounds) {
+	public PlayScene3D(PacManModel3D model3D, SoundManager sounds) {
+		setModel3D(model3D);
 		this.sounds = sounds;
 	}
 
@@ -323,8 +325,8 @@ public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEve
 		phase1.setOnFinished(e -> {
 			game().player().setVisible(false);
 			game().ghosts().forEach(ghost -> ghost.setVisible(false));
-			gameController.getUI().showFlashMessage(2, "%s\n\nLevel %d complete.",
-					TrashTalk.LEVEL_COMPLETE_SPELLS.next(), game().currentLevel().number);
+			gameController.getUI().showFlashMessage(2, "%s\n\nLevel %d complete.", TrashTalk.LEVEL_COMPLETE_SPELLS.next(),
+					game().currentLevel().number);
 		});
 		PauseTransition phase2 = new PauseTransition(Duration.seconds(2));
 		phase2.setOnFinished(e -> gameController.stateTimer().forceExpiration());

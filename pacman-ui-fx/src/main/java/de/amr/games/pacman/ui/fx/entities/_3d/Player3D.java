@@ -2,7 +2,7 @@ package de.amr.games.pacman.ui.fx.entities._3d;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Pac;
-import de.amr.games.pacman.ui.fx.model3D.GianmarcosModel3D;
+import de.amr.games.pacman.ui.fx.model3D.PacManModel3D;
 import javafx.animation.RotateTransition;
 import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
@@ -32,8 +32,8 @@ public class Player3D extends Group {
 	public final RotateTransition rotateTransition;
 	public Direction targetDir;
 
-	public Player3D(Pac pac) {
-		getChildren().add(GianmarcosModel3D.createPacMan());
+	public Player3D(Pac pac, PacManModel3D model3D) {
+		getChildren().add(model3D.createPacMan());
 		this.pac = pac;
 		targetDir = pac.dir();
 		rotateTransition = new RotateTransition(Duration.seconds(0.25), this);

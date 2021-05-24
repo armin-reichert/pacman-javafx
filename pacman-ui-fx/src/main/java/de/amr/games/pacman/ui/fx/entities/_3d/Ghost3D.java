@@ -5,7 +5,7 @@ import static de.amr.games.pacman.lib.Logging.log;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
-import de.amr.games.pacman.ui.fx.model3D.GianmarcosModel3D;
+import de.amr.games.pacman.ui.fx.model3D.PacManModel3D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets;
 import javafx.animation.RotateTransition;
@@ -79,7 +79,7 @@ public class Ghost3D extends Group {
 	private final PhongMaterial skinMaterial = new PhongMaterial();
 	private Direction targetDir;
 
-	public Ghost3D(Ghost ghost, Rendering2D rendering2D) {
+	public Ghost3D(Ghost ghost, PacManModel3D model3D, Rendering2D rendering2D) {
 		this.ghost = ghost;
 		this.targetDir = ghost.dir();
 		this.rendering2D = rendering2D;
@@ -87,7 +87,7 @@ public class Ghost3D extends Group {
 
 		int[] rotationInterval = rotationInterval(ghost.dir(), targetDir);
 
-		ghostShape = GianmarcosModel3D.createGhost();
+		ghostShape = model3D.createGhost();
 		ghostShape.setRotationAxis(Rotate.Z_AXIS);
 		ghostShape.setRotate(rotationInterval[0]);
 
@@ -97,7 +97,7 @@ public class Ghost3D extends Group {
 		ghostShapeRot = new RotateTransition(TURNING_DURATION, ghostShape);
 		ghostShapeRot.setAxis(Rotate.Z_AXIS);
 
-		eyesShape = GianmarcosModel3D.createGhostEyes();
+		eyesShape = model3D.createGhostEyes();
 		eyesShape.setRotationAxis(Rotate.Z_AXIS);
 		eyesShape.setRotate(rotationInterval[0]);
 
