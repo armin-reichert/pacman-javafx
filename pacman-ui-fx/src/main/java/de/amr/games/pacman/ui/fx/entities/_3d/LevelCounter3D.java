@@ -1,5 +1,6 @@
 package de.amr.games.pacman.ui.fx.entities._3d;
 
+import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.V2i;
@@ -40,27 +41,25 @@ public class LevelCounter3D extends Group {
 		int firstLevelNumber = Math.max(1, game.currentLevel().number - maxItems + 1);
 		getChildren().clear();
 		for (int levelNumber = firstLevelNumber; levelNumber <= game.currentLevel().number; ++levelNumber) {
-			Image sprite = symbolImage(game.levelSymbol(levelNumber));
-			Box indicator = createLevelIndicator(levelNumber, sprite, x, y);
-			getChildren().add(indicator);
+			Image symbol = symbolImage(game.levelSymbol(levelNumber));
+			Box cube = createSpinningCube(symbol, levelNumber % 2 == 0);
+			cube.setTranslateX(x);
+			cube.setTranslateY(y);
+			getChildren().add(cube);
 			x -= t(2);
 		}
 	}
 
-	private Box createLevelIndicator(int levelNumber, Image sprite, int x, int y) {
-		Box box = new Box(8, 8, 8);
-		box.setTranslateX(x);
-		box.setTranslateY(y);
+	private Box createSpinningCube(Image symbol, boolean forward) {
+		Box box = new Box(TS, TS, TS);
 		PhongMaterial material = new PhongMaterial();
-		material.setDiffuseMap(sprite);
+		material.setDiffuseMap(symbol);
 		box.setMaterial(material);
 		RotateTransition spinning = new RotateTransition(Duration.seconds(6), box);
 		spinning.setAxis(Rotate.X_AXIS);
 		spinning.setCycleCount(Transition.INDEFINITE);
-		spinning.setFromAngle(0);
-		spinning.setToAngle(360);
-		spinning.setByAngle(1);
-		spinning.setRate(levelNumber % 2 == 0 ? 1 : -1);
+		spinning.setByAngle(360);
+		spinning.setRate(forward ? 1 : -1);
 		spinning.play();
 		return box;
 	}
