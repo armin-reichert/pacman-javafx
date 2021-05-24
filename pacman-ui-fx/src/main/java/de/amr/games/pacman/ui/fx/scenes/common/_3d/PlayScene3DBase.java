@@ -116,7 +116,8 @@ public class PlayScene3DBase implements GameScene {
 		score3D = new ScoreNotReally3D();
 
 		livesCounter3D = new LivesCounter3D(model3D);
-		livesCounter3D.setTilePosition(new V2i(1, 1));
+		livesCounter3D.setTranslateX(TS);
+		livesCounter3D.setTranslateY(TS);
 		livesCounter3D.setTranslateZ(-4); // TODO
 
 		if (gameController.isAttractMode()) {

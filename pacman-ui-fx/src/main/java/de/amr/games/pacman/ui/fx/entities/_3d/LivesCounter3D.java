@@ -2,7 +2,6 @@ package de.amr.games.pacman.ui.fx.entities._3d;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.fx.model3D.PacManModel3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -25,11 +24,6 @@ public class LivesCounter3D extends Group {
 			getChildren().add(indicator);
 		}
 		setLivesCount(3);
-	}
-
-	public void setTilePosition(V2i tilePosition) {
-		setTranslateX(tilePosition.x * TS);
-		setTranslateY(tilePosition.y * TS);
 	}
 
 	public int getLivesCount() {
