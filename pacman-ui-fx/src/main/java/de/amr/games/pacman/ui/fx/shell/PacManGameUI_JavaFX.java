@@ -90,7 +90,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		stage.show();
 	}
 
-	@Override
 	public void reset() {
 		stopAllSounds();
 		currentGameScene.end();
