@@ -127,7 +127,7 @@ public class PlayScene3DBase implements GameScene {
 			livesCounter3D.setVisible(true);
 		}
 
-		levelCounter3D = new LevelCounter3D(new V2i(25, 1), r2D);
+		levelCounter3D = new LevelCounter3D(new V2i(26, 1), r2D);
 		levelCounter3D.setTranslateZ(-4); // TODO
 		levelCounter3D.update(game());
 
