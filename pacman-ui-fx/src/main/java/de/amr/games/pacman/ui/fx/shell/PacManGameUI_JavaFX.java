@@ -219,7 +219,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		case N:
 			if (gameController.isGameRunning()) {
-				showFlashMessage(1, TrashTalk.CHEAT_SPELLS.nextSpell());
+				showFlashMessage(1, TrashTalk.CHEAT_SPELLS.next());
 				gameController.changeState(PacManGameState.LEVEL_COMPLETE);
 			}
 			break;

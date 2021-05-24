@@ -5,7 +5,6 @@ import de.amr.games.pacman.model.common.Pac;
 import javafx.scene.Camera;
 import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
 
 /**
  * Point Of View perspective.

@@ -229,7 +229,7 @@ public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEve
 		// enter GAME_OVER
 		else if (e.newGameState == PacManGameState.GAME_OVER) {
 			sounds.stopAll();
-			gameController.getUI().showFlashMessage(3, TrashTalk.GAME_OVER_SPELLS.nextSpell());
+			gameController.getUI().showFlashMessage(3, TrashTalk.GAME_OVER_SPELLS.next());
 		}
 
 		// exit HUNTING but not GAME_OVER
@@ -324,7 +324,7 @@ public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEve
 			game().player().setVisible(false);
 			game().ghosts().forEach(ghost -> ghost.setVisible(false));
 			gameController.getUI().showFlashMessage(2, "%s\n\nLevel %d complete.",
-					TrashTalk.LEVEL_COMPLETE_SPELLS.nextSpell(), game().currentLevel().number);
+					TrashTalk.LEVEL_COMPLETE_SPELLS.next(), game().currentLevel().number);
 		});
 		PauseTransition phase2 = new PauseTransition(Duration.seconds(2));
 		phase2.setOnFinished(e -> gameController.stateTimer().forceExpiration());

@@ -2,7 +2,7 @@ package de.amr.games.pacman.ui.fx.scenes.common;
 
 public class TrashTalk {
 
-	public static final RandomSpellGenerator CHEAT_SPELLS = new RandomSpellGenerator(//
+	public static final RandomEntrySelector<String> CHEAT_SPELLS = new RandomEntrySelector<>(//
 			"You old cheating bastard!", //
 			"I told you, I will erase your hard disk!", //
 			"Cheaters are the worst human beings!", //
@@ -11,7 +11,7 @@ public class TrashTalk {
 			"STOP! CHEATING! NOW!" //
 	);
 
-	public static final RandomSpellGenerator LEVEL_COMPLETE_SPELLS = new RandomSpellGenerator(//
+	public static final RandomEntrySelector<String> LEVEL_COMPLETE_SPELLS = new RandomEntrySelector<>(//
 			"Well done!", //
 			"Congratulations!", //
 			"Awesome!", //
@@ -20,12 +20,11 @@ public class TrashTalk {
 			"WTF!"//
 	);
 
-	public static final RandomSpellGenerator GAME_OVER_SPELLS = new RandomSpellGenerator(//
+	public static final RandomEntrySelector<String> GAME_OVER_SPELLS = new RandomEntrySelector<>(//
 			"You stone cold loser!", //
 			"I would say you fucked up!", //
 			"This game is OVER!", //
 			"Go ahead any cry!", //
 			"That's all you've got?"//
 	);
-
 }
