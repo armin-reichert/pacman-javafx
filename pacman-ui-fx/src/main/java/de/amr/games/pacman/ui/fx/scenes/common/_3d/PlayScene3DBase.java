@@ -70,7 +70,9 @@ public class PlayScene3DBase implements GameScene {
 		perspectives = new PlayScenePerspective[] { //
 				new TotalPerspective(subSceneFX), //
 				new FollowingPlayerPerspective(subSceneFX), //
-				new NearPlayerPerspective(subSceneFX) };
+				new NearPlayerPerspective(subSceneFX), //
+//				new POVPerspective(this), //
+		};
 		selectPerspective(PERSPECTIVE_FOLLOWING_PLAYER);
 	}
 

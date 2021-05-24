@@ -28,9 +28,9 @@ public class Player3D extends Group {
 		return ROTATION_INTERVALS[row][col];
 	}
 
-	private final Pac pac;
-	private final RotateTransition rotateTransition;
-	private Direction targetDir;
+	public final Pac pac;
+	public final RotateTransition rotateTransition;
+	public Direction targetDir;
 
 	public Player3D(Pac pac) {
 		getChildren().add(GianmarcosModel3D.createPacMan());
