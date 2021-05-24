@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx;
+package de.amr.games.pacman.ui.fx.scenes.common;
 
 import java.util.Random;
 
