@@ -93,11 +93,7 @@ public class PlayScene3DBase implements GameScene {
 		maze3D.setWallTopColor(Rendering2D_Assets.getMazeWallTopColor(game().variant(), game().currentLevel().mazeNumber));
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		Env.$mazeResolution.addListener((bean, oldResolution, newResolution) -> {
-			log("Change maze resolution from %d to %d", oldResolution, newResolution);
 			maze3D.buildWalls(game().currentLevel().world, Env.$mazeResolution.get(), Env.$mazeWallHeight.get());
-		});
-		Env.$mazeWallHeight.addListener((bean, oldHeight, newHeight) -> {
-			log("Change maze wall height from %.1f to %.1f", oldHeight, newHeight);
 		});
 		initMaze();
 
@@ -131,16 +127,14 @@ public class PlayScene3DBase implements GameScene {
 		levelCounter3D.setTranslateZ(-4); // TODO
 		levelCounter3D.rebuild(game());
 
-		final var ambientLight = new AmbientLight();
+		var sceneContent = new Group();
+		sceneContent.setTranslateX(-0.5 * width);
+		sceneContent.setTranslateY(-0.5 * height);
+		sceneContent.getChildren().addAll(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
+		sceneContent.getChildren().addAll(ghosts3D.values());
 
-		final var contentRoot = new Group();
-		contentRoot.setTranslateX(-0.5 * width);
-		contentRoot.setTranslateY(-0.5 * height);
-		contentRoot.getChildren().addAll(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
-		contentRoot.getChildren().addAll(ghosts3D.values());
-		contentRoot.getChildren().addAll(ambientLight);
-
-		subSceneFX.setRoot(new Group(contentRoot, new CoordinateSystem(subSceneFX.getWidth())));
+		var ambientLight = new AmbientLight();
+		subSceneFX.setRoot(new Group(ambientLight, sceneContent, new CoordinateSystem(subSceneFX.getWidth())));
 	}
 
 	protected void initMaze() {
