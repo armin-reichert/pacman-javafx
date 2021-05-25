@@ -58,7 +58,7 @@ public class Maze3D extends Group {
 		wallGroup.getChildren().setAll(wallBuilder.build(world, resolution));
 	}
 
-	public void build(PacManGameWorld world, int resolution, double wallHeight, Color foodColor) {
+	public void buildWallsAndAddFood(PacManGameWorld world, int resolution, double wallHeight, Color foodColor) {
 		buildWalls(world, resolution, wallHeight);
 		foodGroup.getChildren().clear();
 		final var foodMaterial = new PhongMaterial(foodColor);

@@ -92,10 +92,10 @@ public class PlayScene3DBase implements GameScene {
 		maze3D.setWallBaseColor(Rendering2D_Assets.getMazeWallColor(game().variant(), game().currentLevel().mazeNumber));
 		maze3D.setWallTopColor(Rendering2D_Assets.getMazeWallTopColor(game().variant(), game().currentLevel().mazeNumber));
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
-		Env.$mazeResolution.addListener((bean, oldResolution, newResolution) -> {
-			maze3D.buildWalls(game().currentLevel().world, Env.$mazeResolution.get(), Env.$mazeWallHeight.get());
+		Env.$mazeResolution.addListener((bean, old, newResolution) -> {
+			maze3D.buildWalls(game().currentLevel().world, newResolution.intValue(), Env.$mazeWallHeight.get());
 		});
-		initMaze();
+		buildMaze();
 
 		player3D = new Player3D(game().player(), model3D);
 		player3D.setTranslateZ(-3); // TODO
@@ -105,23 +105,18 @@ public class PlayScene3DBase implements GameScene {
 			ghost3D.setTranslateZ(-4); // TODO
 			return ghost3D;
 		}));
+
 		bonus3D = new Bonus3D(game().variant(), r2D);
 		bonus3D.setTranslateZ(-4); // TODO
 
 		score3D = new ScoreNotReally3D();
+		score3D.setHiscoreOnly(gameController.isAttractMode());
 
 		livesCounter3D = new LivesCounter3D(model3D);
 		livesCounter3D.setTranslateX(TS);
 		livesCounter3D.setTranslateY(TS);
 		livesCounter3D.setTranslateZ(-4); // TODO
-
-		if (gameController.isAttractMode()) {
-			score3D.setHiscoreOnly(true);
-			livesCounter3D.setVisible(false);
-		} else {
-			score3D.setHiscoreOnly(false);
-			livesCounter3D.setVisible(true);
-		}
+		livesCounter3D.setVisible(!gameController.isAttractMode());
 
 		levelCounter3D = new LevelCounter3D(new V2i(26, 1), r2D);
 		levelCounter3D.setTranslateZ(-4); // TODO
@@ -133,26 +128,25 @@ public class PlayScene3DBase implements GameScene {
 		sceneContent.getChildren().addAll(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
 		sceneContent.getChildren().addAll(ghosts3D.values());
 
-		var ambientLight = new AmbientLight();
-		subSceneFX.setRoot(new Group(ambientLight, sceneContent, new CoordinateSystem(subSceneFX.getWidth())));
+		subSceneFX.setRoot(new Group(new AmbientLight(), sceneContent, new CoordinateSystem(subSceneFX.getWidth())));
 	}
 
-	protected void initMaze() {
+	protected void buildMaze() {
 		var foodColor = Rendering2D_Assets.getFoodColor(game().variant(), game().currentLevel().mazeNumber);
-		maze3D.build(game().currentLevel().world, Env.$mazeResolution.get(), Env.$mazeWallHeight.get(), foodColor);
+		maze3D.buildWallsAndAddFood(game().currentLevel().world, Env.$mazeResolution.get(), Env.$mazeWallHeight.get(),
+				foodColor);
 	}
 
 	@Override
 	public void update() {
-		score3D.update(game());
 		livesCounter3D.setVisibleItems(game().lives());
 		player3D.update();
 		ghosts3D.values().forEach(Ghost3D::update);
 		bonus3D.update(game().bonus());
-		// Keep score text in plain sight. TODO: is this the recommended way to do this?
+		// TODO: is this the recommended way to do keep the score in plain view?
+		score3D.update(game());
 		score3D.setRotationAxis(Rotate.X_AXIS);
 		score3D.setRotate(subSceneFX.getCamera().getRotate());
-
 		selectedPerspective().follow(player3D);
 	}
 
