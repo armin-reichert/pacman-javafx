@@ -189,12 +189,8 @@ public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEve
 			sounds.stopAll();
 			resetEnergizers();
 			if (!gameController.isAttractMode() && !gameController.isGameRunning()) {
-				gameController.stateTimer().resetSeconds(4.5);
 				sounds.play(PacManGameSound.GAME_READY);
-			} else {
-				gameController.stateTimer().resetSeconds(2);
 			}
-			gameController.stateTimer().start();
 		}
 
 		// enter HUNTING
