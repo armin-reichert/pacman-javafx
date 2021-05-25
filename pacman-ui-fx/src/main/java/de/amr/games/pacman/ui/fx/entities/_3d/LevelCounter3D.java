@@ -22,35 +22,9 @@ import javafx.util.Duration;
  */
 public class LevelCounter3D extends Group {
 
-	private final Rendering2D rendering2D;
-	private V2i tileRight;
+	static final int MAX_ENTRIES = 7;
 
-	public LevelCounter3D(V2i tileRight, Rendering2D rendering2D) {
-		this.tileRight = tileRight;
-		this.rendering2D = rendering2D;
-	}
-
-	private Image symbolImage(String symbol) {
-		return rendering2D.subImage(rendering2D.getSymbolSprites().get(symbol));
-	}
-
-	public void update(PacManGameModel game) {
-		int x = t(tileRight.x), y = t(tileRight.y);
-		// all *Number variables are starting with 1!
-		final int maxItems = 7;
-		int firstLevelNumber = Math.max(1, game.currentLevel().number - maxItems + 1);
-		getChildren().clear();
-		for (int levelNumber = firstLevelNumber; levelNumber <= game.currentLevel().number; ++levelNumber) {
-			Image symbol = symbolImage(game.levelSymbol(levelNumber));
-			Box cube = createSpinningCube(symbol, levelNumber % 2 == 0);
-			cube.setTranslateX(x);
-			cube.setTranslateY(y);
-			getChildren().add(cube);
-			x -= t(2);
-		}
-	}
-
-	private Box createSpinningCube(Image symbol, boolean forward) {
+	private static Box createSpinningCube(Image symbol, boolean forward) {
 		Box box = new Box(TS, TS, TS);
 		PhongMaterial material = new PhongMaterial();
 		material.setDiffuseMap(symbol);
@@ -62,5 +36,32 @@ public class LevelCounter3D extends Group {
 		spinning.setRate(forward ? 1 : -1);
 		spinning.play();
 		return box;
+	}
+
+	private final Rendering2D rendering2D;
+	private V2i tileRight;
+
+	public LevelCounter3D(V2i tileRight, Rendering2D rendering2D) {
+		this.tileRight = tileRight;
+		this.rendering2D = rendering2D;
+	}
+
+	public void rebuild(PacManGameModel game) {
+		// NOTE: all variables named ...Number are starting at 1
+		int firstLevelNumber = Math.max(1, game.currentLevel().number - MAX_ENTRIES + 1);
+		getChildren().clear();
+		int x = t(tileRight.x), y = t(tileRight.y);
+		for (int levelNumber = firstLevelNumber; levelNumber <= game.currentLevel().number; ++levelNumber) {
+			Image symbol = symbolImage(game.levelSymbol(levelNumber));
+			Box cube = createSpinningCube(symbol, levelNumber % 2 == 0);
+			cube.setTranslateX(x);
+			cube.setTranslateY(y);
+			getChildren().add(cube);
+			x -= t(2);
+		}
+	}
+
+	private Image symbolImage(String symbol) {
+		return rendering2D.subImage(rendering2D.getSymbolSprites().get(symbol));
 	}
 }

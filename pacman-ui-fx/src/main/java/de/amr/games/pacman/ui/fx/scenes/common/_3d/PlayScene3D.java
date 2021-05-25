@@ -217,7 +217,7 @@ public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEve
 		// enter LEVEL_STARTING
 		else if (e.newGameState == PacManGameState.LEVEL_STARTING) {
 			initMaze();
-			levelCounter3D.update(e.gameModel);
+			levelCounter3D.rebuild(e.gameModel);
 			playAnimationLevelStarting();
 		}
 

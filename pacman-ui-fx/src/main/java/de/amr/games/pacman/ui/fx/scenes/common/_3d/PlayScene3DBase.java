@@ -129,7 +129,7 @@ public class PlayScene3DBase implements GameScene {
 
 		levelCounter3D = new LevelCounter3D(new V2i(26, 1), r2D);
 		levelCounter3D.setTranslateZ(-4); // TODO
-		levelCounter3D.update(game());
+		levelCounter3D.rebuild(game());
 
 		final var ambientLight = new AmbientLight();
 
