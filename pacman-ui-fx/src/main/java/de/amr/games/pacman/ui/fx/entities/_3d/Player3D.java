@@ -10,14 +10,22 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
+/**
+ * 3D-representation of the player.
+ * 
+ * <p>
+ * TODO: need 3-D model for Ms. Pac-Man
+ * 
+ * @author Armin Reichert
+ */
 public class Player3D extends Group {
 
 	//@formatter:off
 	private static final int[][][] ROTATION_INTERVALS = {
-			{ {0,0},   {0, 180},   {0,90},   {0,-90} },
-			{ {180,0}, {180, 180}, {180,90}, {180,270} },
-			{ {90,0},  {90, 180},  {90,90},  {90,270} },
-			{ {-90,0}, {270, 180}, {-90,90},  {-90,-90} },
+		{ {  0,0}, {  0,180}, {  0,90}, {  0,-90} },
+		{ {180,0}, {180,180}, {180,90}, {180,270} },
+		{ { 90,0}, { 90,180}, { 90,90}, { 90,270} },
+		{ {-90,0}, {270,180}, {-90,90}, {-90,-90} },
 	};
 	//@formatter:on
 
@@ -30,17 +38,17 @@ public class Player3D extends Group {
 		return ROTATION_INTERVALS[index(from)][index(to)];
 	}
 
-	public final Pac pac;
-	public final RotateTransition rotateTransition;
+	public final Pac player;
+	private final RotateTransition rotateTransition;
 	private final PointLight light;
 	private Direction targetDir;
 
-	public Player3D(Pac pac, PacManModel3D model3D) {
-		this.pac = pac;
-		targetDir = pac.dir();
+	public Player3D(Pac player, PacManModel3D model3D) {
+		this.player = player;
+		targetDir = player.dir();
 		rotateTransition = new RotateTransition(Duration.seconds(0.25), this);
 		rotateTransition.setAxis(Rotate.Z_AXIS);
-		int[] rotationInterval = rotationInterval(pac.dir(), pac.dir());
+		int[] rotationInterval = rotationInterval(player.dir(), player.dir());
 		setRotationAxis(Rotate.Z_AXIS);
 		setRotate(rotationInterval[0]);
 		light = new PointLight(Color.WHITE);
@@ -49,16 +57,16 @@ public class Player3D extends Group {
 	}
 
 	public void update() {
-		setVisible(pac.isVisible());
-		setTranslateX(pac.position().x);
-		setTranslateY(pac.position().y);
-		if (targetDir != pac.dir()) {
-			int[] rotationInterval = rotationInterval(targetDir, pac.dir());
+		setVisible(player.isVisible());
+		setTranslateX(player.position().x);
+		setTranslateY(player.position().y);
+		if (targetDir != player.dir()) {
+			int[] rotationInterval = rotationInterval(targetDir, player.dir());
 			rotateTransition.stop();
 			rotateTransition.setFromAngle(rotationInterval[0]);
 			rotateTransition.setToAngle(rotationInterval[1]);
 			rotateTransition.play();
-			targetDir = pac.dir();
+			targetDir = player.dir();
 		}
 	}
 }

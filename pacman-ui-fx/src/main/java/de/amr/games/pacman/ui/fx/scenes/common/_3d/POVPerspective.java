@@ -30,7 +30,7 @@ public class POVPerspective implements PlayScenePerspective {
 	@Override
 	public void follow(Node target) {
 		Camera camera = playScene.getSubSceneFX().getCamera();
-		Pac pac = playScene.player3D.pac;
+		Pac pac = playScene.player3D.player;
 		V2d offset = new V2d(pac.dir().vec).scaled(8);
 		camera.setRotationAxis(Rotate.Z_AXIS);
 		camera.setRotate(playScene.player3D.getRotate());
