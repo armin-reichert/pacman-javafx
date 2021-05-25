@@ -21,7 +21,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 /**
- * 3D ghost shape.
+ * 3D-representation of a ghost.
  * 
  * @author Armin Reichert
  */
@@ -36,12 +36,12 @@ public class Ghost3D extends Group {
 	};
 	//@formatter:on
 
-	private static int rotationIntervalsIndex(Direction dir) {
+	private static int index(Direction dir) {
 		return dir == Direction.LEFT ? 0 : dir == Direction.RIGHT ? 1 : dir == Direction.UP ? 2 : 3;
 	}
 
 	private static int[] rotationInterval(Direction from, Direction to) {
-		return ROTATION_INTERVALS[rotationIntervalsIndex(from)][rotationIntervalsIndex(to)];
+		return ROTATION_INTERVALS[index(from)][index(to)];
 	}
 
 	private static Duration TURNING_DURATION = Duration.seconds(0.25);
