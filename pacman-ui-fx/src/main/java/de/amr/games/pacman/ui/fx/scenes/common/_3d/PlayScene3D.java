@@ -317,6 +317,7 @@ public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEve
 
 	private void playAnimationLevelComplete() {
 		gameController.stateTimer().reset();
+		gameController.stateTimer().start();
 		PauseTransition phase1 = new PauseTransition(Duration.seconds(3));
 		phase1.setOnFinished(e -> {
 			game().player().setVisible(false);
@@ -331,6 +332,7 @@ public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEve
 
 	private void playAnimationLevelStarting() {
 		gameController.stateTimer().reset();
+		gameController.stateTimer().start();
 		gameController.getUI().showFlashMessage(1, "Entering Level %d", game().currentLevel().number);
 		PauseTransition phase1 = new PauseTransition(Duration.seconds(1));
 		phase1.setOnFinished(e -> {
