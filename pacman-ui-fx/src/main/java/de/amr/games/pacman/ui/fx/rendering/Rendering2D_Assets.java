@@ -8,14 +8,23 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+/**
+ * Provides rendering data extracted from the sprite sheets.
+ * 
+ * @author Armin Reichert
+ */
 public final class Rendering2D_Assets {
 
+	public static final Font ARCADE_FONT = Font.loadFont(//
+			Rendering2D_Assets.class.getResourceAsStream("/emulogic.ttf"), 8);
+
+	public static Image image(String path) {
+		return new Image(Rendering2D_Assets.class.getResource(path).toExternalForm());
+	}
+	
 	private static final Color PACMAN_FOOD_COLOR = Color.rgb(250, 185, 176);
 
-	private static final Color PACMAN_MAZE_WALL_COLOR = Color.rgb(33, 33, 255);
-
-	public static final Font ARCADE_FONT = Font.loadFont(Rendering2D_Assets.class.getResourceAsStream("/emulogic.ttf"),
-			8);
+	private static final Color PACMAN_MAZE_WALL_SIDE_COLOR = Color.rgb(33, 33, 255);
 
 	private static final Color MS_PACMAN_FOOD_COLOR[] = { //
 			Color.rgb(222, 222, 255), //
@@ -26,7 +35,7 @@ public final class Rendering2D_Assets {
 			Color.rgb(222, 222, 255),//
 	};
 
-	private static final Color MS_PACMAN_MAZE_WALL_COLOR[] = { //
+	private static final Color MS_PACMAN_MAZE_WALL_TOP_COLOR[] = { //
 			Color.rgb(255, 183, 174), //
 			Color.rgb(71, 183, 255), //
 			Color.rgb(222, 151, 81), //
@@ -35,7 +44,7 @@ public final class Rendering2D_Assets {
 			Color.rgb(255, 183, 174),//
 	};
 
-	private static final Color MS_PACMAN_MAZE_WALL_BORDER_COLOR[] = { //
+	private static final Color MS_PACMAN_MAZE_WALL_SIDE_COLOR[] = { //
 			Color.rgb(255, 0, 0), //
 			Color.rgb(222, 222, 255), //
 			Color.rgb(222, 222, 255), //
@@ -44,18 +53,14 @@ public final class Rendering2D_Assets {
 			Color.rgb(255, 0, 0),//
 	};
 
-	public static Image image(String path) {
-		return new Image(Rendering2D_Assets.class.getResource(path).toExternalForm());
-	}
-
-	public static Color getMazeWallColor(GameVariant gameVariant, int mazeNumber) {
-		return gameVariant == GameVariant.PACMAN ? Rendering2D_Assets.getPacManMazeWallColor(mazeNumber)
-				: Rendering2D_Assets.getMsPacManMazeWallColor(mazeNumber);
-	}
-
 	public static Color getMazeWallTopColor(GameVariant gameVariant, int mazeNumber) {
+		return gameVariant == GameVariant.PACMAN ? Rendering2D_Assets.getPacManMazeWallColor(mazeNumber)
+				: Rendering2D_Assets.getMsPacManMazeWallTopColor(mazeNumber);
+	}
+
+	public static Color getMazeWallSideColor(GameVariant gameVariant, int mazeNumber) {
 		return gameVariant == GameVariant.PACMAN ? Color.WHITE
-				: Rendering2D_Assets.getMsPacManMazeWallBorderColor(mazeNumber);
+				: Rendering2D_Assets.getMsPacManMazeWallSideColor(mazeNumber);
 	}
 
 	public static Color getFoodColor(GameVariant gameVariant, int mazeNumber) {
@@ -72,7 +77,7 @@ public final class Rendering2D_Assets {
 	}
 
 	public static Color getPacManMazeWallColor(int mazeNumber) {
-		return PACMAN_MAZE_WALL_COLOR;
+		return PACMAN_MAZE_WALL_SIDE_COLOR;
 	}
 
 	public static Color getPacManFoodColor(int mazeNumber) {
@@ -83,12 +88,12 @@ public final class Rendering2D_Assets {
 		return MS_PACMAN_FOOD_COLOR[mazeNumber - 1];
 	}
 
-	public static Color getMsPacManMazeWallColor(int mazeNumber) {
-		return MS_PACMAN_MAZE_WALL_COLOR[mazeNumber - 1];
+	public static Color getMsPacManMazeWallTopColor(int mazeNumber) {
+		return MS_PACMAN_MAZE_WALL_TOP_COLOR[mazeNumber - 1];
 	}
 
-	public static Color getMsPacManMazeWallBorderColor(int mazeNumber) {
-		return MS_PACMAN_MAZE_WALL_BORDER_COLOR[mazeNumber - 1];
+	public static Color getMsPacManMazeWallSideColor(int mazeNumber) {
+		return MS_PACMAN_MAZE_WALL_SIDE_COLOR[mazeNumber - 1];
 	}
 
 	public static Image colorsExchanged(Image source, Map<Color, Color> exchanges) {

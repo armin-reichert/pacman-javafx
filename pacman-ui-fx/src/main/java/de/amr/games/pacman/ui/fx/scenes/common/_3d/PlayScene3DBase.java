@@ -89,7 +89,7 @@ public class PlayScene3DBase implements GameScene {
 
 		maze3D = new Maze3D(width, height);
 		maze3D.setFloorTexture(new Image(getClass().getResourceAsStream("/common/escher-texture.jpg")));
-		maze3D.setWallBaseColor(Rendering2D_Assets.getMazeWallColor(game().variant(), game().currentLevel().mazeNumber));
+		maze3D.setWallBaseColor(Rendering2D_Assets.getMazeWallSideColor(game().variant(), game().currentLevel().mazeNumber));
 		maze3D.setWallTopColor(Rendering2D_Assets.getMazeWallTopColor(game().variant(), game().currentLevel().mazeNumber));
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		Env.$mazeResolution.addListener((bean, old, newResolution) -> {
