@@ -46,8 +46,8 @@ public class HUD extends Text {
 		line("Attract Mode", "%s", yes_no(ui.gameController.isAttractMode()));
 		line("Game Level", "%d", ui.gameController.game().currentLevel().number);
 		PacManGameState state = ui.gameController.state;
-		String huntingPhase = ui.gameController.huntingPhase % 2 == 0 ? "Scattering" : "Chasing";
-		line("Game State", "%s", state == PacManGameState.HUNTING ? state + ":" + huntingPhase : state);
+		String huntingPhaseName = ui.gameController.inScatteringPhase() ? "Scattering" : "Chasing";
+		line("Game State", "%s", state == PacManGameState.HUNTING ? state + ":" + huntingPhaseName : state);
 		line("", "Running:   %s", stateTimer.ticked());
 		line("", "Remaining: %s",
 				stateTimer.ticksRemaining() == Long.MAX_VALUE ? "indefinite" : stateTimer.ticksRemaining());
