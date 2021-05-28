@@ -23,7 +23,7 @@ import javafx.scene.transform.Translate;
  * @author Armin Reichert
  */
 public class Maze3D extends Group {
-	
+
 	public DoubleProperty $wallHeight = new SimpleDoubleProperty(2.0);
 
 	private final Box floor;

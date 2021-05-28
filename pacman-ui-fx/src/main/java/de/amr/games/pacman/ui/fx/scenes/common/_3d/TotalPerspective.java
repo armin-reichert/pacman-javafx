@@ -20,7 +20,7 @@ public class TotalPerspective implements PlayScenePerspective {
 		this.subScene = subScene;
 		cameraController = new ManualCameraController(subScene.getCamera());
 	}
-	
+
 	@Override
 	public void handle(KeyEvent event) {
 		cameraController.handleKeyEvent(event);

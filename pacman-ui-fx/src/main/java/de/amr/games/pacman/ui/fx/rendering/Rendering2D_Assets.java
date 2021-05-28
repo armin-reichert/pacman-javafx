@@ -21,7 +21,7 @@ public final class Rendering2D_Assets {
 	public static Image image(String path) {
 		return new Image(Rendering2D_Assets.class.getResource(path).toExternalForm());
 	}
-	
+
 	private static final Color PACMAN_FOOD_COLOR = Color.rgb(250, 185, 176);
 
 	private static final Color PACMAN_MAZE_WALL_SIDE_COLOR = Color.rgb(33, 33, 255);

@@ -23,7 +23,7 @@ import javafx.scene.transform.Translate;
  * @author Armin Reichert
  */
 public class GianmarcosPacManModel3D implements PacManModel3D {
-	
+
 	static final String PATH_TO_OBJ_FILE = "/common/gianmarco/pacman.obj";
 
 	public Map<String, MeshView> meshViewsByName;
@@ -42,7 +42,7 @@ public class GianmarcosPacManModel3D implements PacManModel3D {
 		}
 	}
 
-@Override
+	@Override
 	public Group createPacMan() {
 		MeshView body = new MeshView(meshViewsByName.get("Sphere_yellow_packman").getMesh());
 		body.setMaterial(materialsByName.get("yellow_packman"));
