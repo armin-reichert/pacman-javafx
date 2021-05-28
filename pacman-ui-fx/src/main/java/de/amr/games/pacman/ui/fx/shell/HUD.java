@@ -50,7 +50,7 @@ public class HUD extends Text {
 		line("Game State", "%s", state == PacManGameState.HUNTING ? state + ":" + huntingPhaseName : state);
 		line("", "Running:   %s", stateTimer.ticked());
 		line("", "Remaining: %s",
-				stateTimer.ticksRemaining() == Long.MAX_VALUE ? "indefinite" : stateTimer.ticksRemaining());
+				stateTimer.ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer.ticksRemaining());
 		newline();
 		line("Game Scene", "%s", ui.currentGameScene.getClass().getSimpleName());
 		line("", "w=%.0f h=%.0f", ui.currentGameScene.getSubSceneFX().getWidth(),
