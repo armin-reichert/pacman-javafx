@@ -5,7 +5,7 @@ import static de.amr.games.pacman.lib.Logging.log;
 public class Model3DTest {
 
 	public static void main(String[] args) {
-		PacManModel3D model = new PacManModel3D();
+		GianmarcosPacManModel3D model = new GianmarcosPacManModel3D();
 		log("MeshViews:");
 		model.meshViewsByName.keySet().stream().sorted().forEach(key -> log("%s", key));
 		log("");

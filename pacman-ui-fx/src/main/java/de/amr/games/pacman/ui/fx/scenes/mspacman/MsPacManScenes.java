@@ -1,5 +1,6 @@
 package de.amr.games.pacman.ui.fx.scenes.mspacman;
 
+import de.amr.games.pacman.ui.fx.model3D.GianmarcosPacManModel3D;
 import de.amr.games.pacman.ui.fx.model3D.PacManModel3D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
@@ -15,7 +16,7 @@ import de.amr.games.pacman.ui.fx.sound.SoundManager;
  */
 public class MsPacManScenes {
 
-	public static final PacManModel3D MODEL_3D = new PacManModel3D();
+	public static final PacManModel3D MODEL_3D = new GianmarcosPacManModel3D();
 	public static final Rendering2D_MsPacMan RENDERING = new Rendering2D_MsPacMan();
 	public static final SoundManager SOUNDS = new SoundManager(PacManGameSounds::msPacManSoundURL);
 	public static final GameScene SCENES[][] = new GameScene[5][2];
