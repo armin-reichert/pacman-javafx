@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import de.amr.games.pacman.model.world.PacManGameWorld;
-import de.amr.games.pacman.model.world.WallMap;
+import de.amr.games.pacman.model.world.FloorPlan;
 import de.amr.games.pacman.ui.fx.Env;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -24,7 +24,7 @@ public class WallBuilder3D {
 
 	public DoubleProperty $wallHeight = new SimpleDoubleProperty(2.0);
 
-	private WallMap wallMap;
+	private FloorPlan wallMap;
 	private List<Node> walls;
 	private PhongMaterial wallMaterial;
 	private PhongMaterial topMaterial;
@@ -46,7 +46,7 @@ public class WallBuilder3D {
 	}
 
 	public List<Node> build(PacManGameWorld world, int resolution) {
-		wallMap = WallMap.build(resolution, world);
+		wallMap = FloorPlan.build(resolution, world);
 		double blockSize = TS / resolution;
 		createWalls(world, blockSize);
 		return getWalls();
@@ -84,7 +84,7 @@ public class WallBuilder3D {
 			int leftX = -1;
 			int sizeX = 0;
 			for (int x = 0; x < wallMap.sizeX(); ++x) {
-				if (wallMap.get(x, y) == WallMap.HORIZONTAL) {
+				if (wallMap.get(x, y) == FloorPlan.HWALL) {
 					if (leftX == -1) {
 						leftX = x;
 						sizeX = 1;
@@ -113,7 +113,7 @@ public class WallBuilder3D {
 			int topY = -1;
 			int sizeY = 0;
 			for (int y = 0; y < wallMap.sizeY(); ++y) {
-				if (wallMap.get(x, y) == WallMap.VERTICAL) {
+				if (wallMap.get(x, y) == FloorPlan.VWALL) {
 					if (topY == -1) {
 						topY = y;
 						sizeY = 1;
@@ -140,7 +140,7 @@ public class WallBuilder3D {
 		// corners
 		for (int y = 0; y < wallMap.sizeY(); ++y) {
 			for (int x = 0; x < wallMap.sizeX(); ++x) {
-				if (wallMap.get(x, y) == WallMap.CORNER) {
+				if (wallMap.get(x, y) == FloorPlan.CORNER) {
 					addCorner(x, y, blockSize);
 				}
 			}
