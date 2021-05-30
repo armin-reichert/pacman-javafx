@@ -55,7 +55,7 @@ public class ScoreNotReally3D extends Group {
 	}
 
 	public void update(PacManGameModel game) {
-		txtScore.setText(String.format("%07d L%d", game.score(), game.currentLevel().number));
+		txtScore.setText(String.format("%07d L%d", game.score(), game.level().number));
 		txtHiscore.setText(String.format("%07d L%d", game.hiscorePoints(), game.hiscoreLevel()));
 		if (hiscoreOnly) {
 			txtScore.setVisible(false);

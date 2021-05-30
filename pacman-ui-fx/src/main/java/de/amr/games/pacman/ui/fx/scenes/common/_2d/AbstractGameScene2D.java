@@ -115,7 +115,7 @@ public abstract class AbstractGameScene2D implements GameScene {
 
 	// this is used in play scene and intermission scenes, so define it here
 	protected void renderLevelCounter(V2i tileRight) {
-		int levelNumber = game().currentLevel().number;
+		int levelNumber = game().level().number;
 		int x = tileRight.x * TS, y = tileRight.y * TS;
 		int firstLevel = Math.max(1, levelNumber - 6);
 		for (int level = firstLevel; level <= levelNumber; ++level) {

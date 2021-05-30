@@ -201,8 +201,8 @@ public class PlayScene2DAnimationController implements DefaultPacManGameEventHan
 			gameController.game().ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
 				Ghost2D ghost2D = playScene.ghosts2D.get(ghost.id);
 				TimedSequence<?> flashing = ghost2D.getFlashingAnimation();
-				long frameTime = e.ticks / (gameController.game().currentLevel().numFlashes * flashing.numFrames());
-				flashing.frameDuration(frameTime).repetitions(gameController.game().currentLevel().numFlashes).restart();
+				long frameTime = e.ticks / (gameController.game().level().numFlashes * flashing.numFrames());
+				flashing.frameDuration(frameTime).repetitions(gameController.game().level().numFlashes).restart();
 			});
 		}
 	}

@@ -52,7 +52,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		score2D = new GameScore2D(rendering);
 		score2D.setTitle("SCORE");
 		score2D.setLeftUpperCorner(new V2i(1, 1));
-		score2D.setLevelSupplier(() -> game().currentLevel().number);
+		score2D.setLevelSupplier(() -> game().level().number);
 		score2D.setPointsSupplier(() -> game().score());
 
 		hiscore2D = new GameScore2D(rendering);

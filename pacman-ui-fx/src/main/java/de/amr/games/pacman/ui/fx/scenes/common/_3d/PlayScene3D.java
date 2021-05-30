@@ -66,7 +66,7 @@ public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEve
 		if (gameController.state == PacManGameState.HUNTING) {
 			// when switching between 2D and 3D, food visibility and animations might not be up-to-date, so:
 			maze3D.foodNodes().forEach(foodNode -> {
-				foodNode.setVisible(!game().currentLevel().isFoodRemoved(tile(foodNode)));
+				foodNode.setVisible(!game().level().isFoodRemoved(tile(foodNode)));
 			});
 			if (energizerAnimations.stream().anyMatch(animation -> animation.getStatus() != Status.RUNNING)) {
 				energizerAnimations.forEach(Transition::play);
@@ -122,7 +122,7 @@ public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEve
 	public void onPlayerFoundFood(PacManGameEvent e) {
 		if (e.tile.isEmpty()) {
 			// this happens when the "eat all pellets except energizers" cheat was triggered
-			Predicate<Node> isEnergizer = node -> game().currentLevel().world.isEnergizerTile(tile(node));
+			Predicate<Node> isEnergizer = node -> game().level().world.isEnergizerTile(tile(node));
 			maze3D.foodNodes()//
 					.filter(not(isEnergizer))//
 					.forEach(foodNode -> foodNode.setVisible(false));
@@ -238,7 +238,7 @@ public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEve
 	}
 
 	private Stream<Node> energizerNodes() {
-		return maze3D.foodNodes().filter(node -> game().currentLevel().world.isEnergizerTile(tile(node)));
+		return maze3D.foodNodes().filter(node -> game().level().world.isEnergizerTile(tile(node)));
 	}
 
 	private void resetEnergizers() {
@@ -323,7 +323,7 @@ public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEve
 			game().player().setVisible(false);
 			game().ghosts().forEach(ghost -> ghost.setVisible(false));
 			gameController.getUI().showFlashMessage(2, "%s\n\nLevel %d complete.", TrashTalk.LEVEL_COMPLETE_SPELLS.next(),
-					game().currentLevel().number);
+					game().level().number);
 		});
 		PauseTransition phase2 = new PauseTransition(Duration.seconds(2));
 		phase2.setOnFinished(e -> gameController.stateTimer().forceExpiration());
@@ -333,7 +333,7 @@ public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEve
 	private void playAnimationLevelStarting() {
 		gameController.stateTimer().reset();
 		gameController.stateTimer().start();
-		gameController.getUI().showFlashMessage(1, "Entering Level %d", game().currentLevel().number);
+		gameController.getUI().showFlashMessage(1, "Entering Level %d", game().level().number);
 		PauseTransition phase1 = new PauseTransition(Duration.seconds(1));
 		phase1.setOnFinished(e -> {
 			game().player().setVisible(true);

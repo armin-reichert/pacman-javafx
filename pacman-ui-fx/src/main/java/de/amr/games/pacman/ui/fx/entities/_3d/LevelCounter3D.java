@@ -48,10 +48,10 @@ public class LevelCounter3D extends Group {
 
 	public void rebuild(PacManGameModel game) {
 		// NOTE: all variables named ...Number are starting at 1
-		int firstLevelNumber = Math.max(1, game.currentLevel().number - MAX_ENTRIES + 1);
+		int firstLevelNumber = Math.max(1, game.level().number - MAX_ENTRIES + 1);
 		getChildren().clear();
 		int x = t(tileRight.x), y = t(tileRight.y);
-		for (int levelNumber = firstLevelNumber; levelNumber <= game.currentLevel().number; ++levelNumber) {
+		for (int levelNumber = firstLevelNumber; levelNumber <= game.level().number; ++levelNumber) {
 			Image symbol = symbolImage(game.levelSymbol(levelNumber));
 			Box cube = createSpinningCube(symbol, levelNumber % 2 == 0);
 			cube.setTranslateX(x);
