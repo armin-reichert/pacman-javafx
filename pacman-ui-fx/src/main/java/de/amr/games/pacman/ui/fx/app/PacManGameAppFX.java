@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import de.amr.games.pacman.controller.PacManGameController;
+import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop.GameLoopTask;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
@@ -43,7 +44,7 @@ public class PacManGameAppFX extends Application {
 
 	private static Options options;
 	private PacManGameController gameController;
-	private final GameLoop gameLoop = new GameLoop();
+	private GameLoop gameLoop;
 
 	public static void main(String[] args) {
 		options = new Options(args);
@@ -54,13 +55,14 @@ public class PacManGameAppFX extends Application {
 	public void init() throws Exception {
 		gameController = new PacManGameController();
 		gameController.selectGameVariant(options.gameVariant);
+		gameLoop = new GameLoop();
+		Env.$totalTicks.bind(gameLoop.$totalTicks);
+		Env.$fps.bind(gameLoop.$fps);
 	}
 
 	@Override
 	public void start(Stage stage) throws IOException {
-		PacManGameUI_JavaFX ui = new PacManGameUI_JavaFX(stage, gameController, options.height);
-		Env.$totalTicks.bind(gameLoop.$totalTicks);
-		Env.$fps.bind(gameLoop.$fps);
+		PacManGameUI ui = new PacManGameUI_JavaFX(stage, gameController, options.height);
 		gameController.setUI(ui);
 		gameLoop.tasks = Arrays.asList( //
 				new GameLoopTask("Controller Step", gameController::step), //
