@@ -1,14 +1,16 @@
 package de.amr.games.pacman.ui.fx.shell;
 
 import static de.amr.games.pacman.lib.Logging.log;
-import static de.amr.games.pacman.model.common.GameVariant.MS_PACMAN;
 import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
+
+import java.util.OptionalInt;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.Env;
@@ -141,12 +143,20 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private GameScene sceneForCurrentGameState(boolean use3D) {
-		int sceneIndex = gameController.state == PacManGameState.INTRO ? 0
-				: gameController.state == PacManGameState.INTERMISSION ? gameController.game().intermissionNumber() : 4;
+		var game = gameController.game();
+		int sceneIndex = 4; // play scene is the default
+		if (gameController.state == PacManGameState.INTRO) {
+			sceneIndex = 0;
+		} else {
+			OptionalInt intermission = game.intermissionAfterLevel(game.level().number);
+			if (intermission.isPresent()) {
+				sceneIndex = intermission.getAsInt();
+			}
+		}
 		int sceneVariant = use3D ? 1 : 0;
-		if (gameController.game().variant() == MS_PACMAN) {
+		if (game.variant() == GameVariant.MS_PACMAN) {
 			return MsPacManScenes.SCENES[sceneIndex][sceneVariant];
-		} else if (gameController.game().variant() == PACMAN) {
+		} else if (game.variant() == PACMAN) {
 			return PacManScenes.SCENES[sceneIndex][sceneVariant];
 		}
 		throw new IllegalStateException();
