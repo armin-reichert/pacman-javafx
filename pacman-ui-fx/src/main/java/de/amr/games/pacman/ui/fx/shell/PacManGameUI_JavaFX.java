@@ -222,7 +222,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			break;
 
 		case L:
-			gameController.game().addLife();
+			gameController.game().changeLivesBy(3);
 			showFlashMessage(1, String.format("Player lives increased"));
 			break;
 
