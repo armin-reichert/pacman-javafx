@@ -12,7 +12,6 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
-import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.entities._3d.Bonus3D;
 import de.amr.games.pacman.ui.fx.entities._3d.CoordinateSystem;
@@ -84,13 +83,12 @@ public class PlayScene3DBase implements GameScene {
 		log("%s: init", this);
 
 		final var r2D = game().variant() == GameVariant.MS_PACMAN ? MsPacManScenes.RENDERING : PacManScenes.RENDERING;
-		final var width = PacManGameWorld.DEFAULT_WIDTH * TS;
-		final var height = PacManGameWorld.DEFAULT_HEIGHT * TS;
+		final var width = game().level().world.numCols() * TS;
+		final var height = game().level().world.numRows() * TS;
 
 		maze3D = new Maze3D(width, height);
 		maze3D.setFloorTexture(new Image(getClass().getResourceAsStream("/common/escher-texture.jpg")));
-		maze3D
-				.setWallBaseColor(Rendering2D_Assets.getMazeWallSideColor(game().variant(), game().level().mazeNumber));
+		maze3D.setWallBaseColor(Rendering2D_Assets.getMazeWallSideColor(game().variant(), game().level().mazeNumber));
 		maze3D.setWallTopColor(Rendering2D_Assets.getMazeWallTopColor(game().variant(), game().level().mazeNumber));
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		Env.$mazeResolution.addListener((bean, old, newResolution) -> {
@@ -134,8 +132,7 @@ public class PlayScene3DBase implements GameScene {
 
 	protected void buildMaze() {
 		var foodColor = Rendering2D_Assets.getFoodColor(game().variant(), game().level().mazeNumber);
-		maze3D.buildWallsAndAddFood(game().level().world, Env.$mazeResolution.get(), Env.$mazeWallHeight.get(),
-				foodColor);
+		maze3D.buildWallsAndAddFood(game().level().world, Env.$mazeResolution.get(), Env.$mazeWallHeight.get(), foodColor);
 	}
 
 	@Override
