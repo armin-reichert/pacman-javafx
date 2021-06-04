@@ -138,13 +138,11 @@ public class Ghost3D extends Group {
 
 	public void setNormalSkinColor() {
 		setSkinColor(normalColor);
-		log("Set normal skin color for %s", ghost);
 	}
 
 	public void setBlueSkinColor() {
 		flashingAnimation.stop(); // iny case it was playing
 		setSkinColor(Color.CORNFLOWERBLUE);
-		log("Set blue skin color for %s", ghost);
 	}
 
 	private void setSkinColor(Color skinColor) {
