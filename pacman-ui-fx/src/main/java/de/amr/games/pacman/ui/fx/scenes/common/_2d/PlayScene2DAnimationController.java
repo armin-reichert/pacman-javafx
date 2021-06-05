@@ -46,7 +46,7 @@ public class PlayScene2DAnimationController implements DefaultPacManGameEventHan
 		levelCompleteAnimation = new SequentialTransition(playScene.maze2D.getFlashingAnimation(),
 				new PauseTransition(Duration.seconds(1)));
 		levelCompleteAnimation.setDelay(Duration.seconds(2));
-		levelCompleteAnimation.setOnFinished(e -> gameController.stateTimer().forceExpiration());
+		levelCompleteAnimation.setOnFinished(e -> gameController.stateTimer().expire());
 	}
 
 	private PacManGameModel game() {

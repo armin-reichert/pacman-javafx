@@ -326,7 +326,7 @@ public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEve
 					game().level().number);
 		});
 		PauseTransition phase2 = new PauseTransition(Duration.seconds(2));
-		phase2.setOnFinished(e -> gameController.stateTimer().forceExpiration());
+		phase2.setOnFinished(e -> gameController.stateTimer().expire());
 		new SequentialTransition(phase1, phase2).play();
 	}
 
@@ -340,7 +340,7 @@ public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEve
 			game().ghosts().forEach(ghost -> ghost.setVisible(true));
 		});
 		PauseTransition phase2 = new PauseTransition(Duration.seconds(3));
-		phase2.setOnFinished(e -> gameController.stateTimer().forceExpiration());
+		phase2.setOnFinished(e -> gameController.stateTimer().expire());
 		new SequentialTransition(phase1, phase2).play();
 	}
 }

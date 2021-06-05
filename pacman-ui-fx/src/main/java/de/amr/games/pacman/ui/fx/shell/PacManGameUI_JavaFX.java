@@ -3,14 +3,11 @@ package de.amr.games.pacman.ui.fx.shell;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
 
-import java.util.OptionalInt;
-
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.Env;
@@ -71,7 +68,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		root.getChildren().addAll(gameSceneParent, flashMessageView, hud);
 		StackPane.setAlignment(hud, Pos.TOP_LEFT);
 
-		GameScene gameScene = sceneForCurrentGameState(Env.$use3DScenes.get());
+		boolean _3D = Env.$use3DScenes.get();
+		GameScene gameScene = getSceneForCurrentGameState(_3D);
 		double aspectRatio = gameScene.aspectRatio().orElse(getScreenAspectRatio());
 		mainScene = new Scene(root, aspectRatio * height, height);
 		setGameScene(gameScene);
@@ -90,6 +88,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		stage.setScene(mainScene);
 		stage.centerOnScreen();
 		stage.show();
+	}
+
+	private double getScreenAspectRatio() {
+		Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+		return bounds.getWidth() / bounds.getHeight();
 	}
 
 	public void reset() {
@@ -131,35 +134,34 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private void toggleUse3DScenes() {
 		Env.$use3DScenes.set(!Env.$use3DScenes.get());
-		if (sceneForCurrentGameState(false) != sceneForCurrentGameState(true)) {
+		if (getSceneForCurrentGameState(false) != getSceneForCurrentGameState(true)) {
 			stopAllSounds();
-			setGameScene(sceneForCurrentGameState(Env.$use3DScenes.get()));
+			setGameScene(getSceneForCurrentGameState(Env.$use3DScenes.get()));
 		}
 	}
 
-	private double getScreenAspectRatio() {
-		Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-		return bounds.getWidth() / bounds.getHeight();
-	}
-
-	private GameScene sceneForCurrentGameState(boolean use3D) {
+	private GameScene getSceneForCurrentGameState(boolean _3D) {
 		var game = gameController.game();
-		int sceneIndex = 4; // play scene is the default
-		if (gameController.state == PacManGameState.INTRO) {
+		int sceneIndex = -1;
+		switch (gameController.state) {
+		case INTRO:
 			sceneIndex = 0;
-		} else {
-			OptionalInt intermission = game.intermissionAfterLevel(game.level().number);
-			if (intermission.isPresent()) {
-				sceneIndex = intermission.getAsInt();
-			}
+			break;
+		case INTERMISSION:
+			sceneIndex = game.intermissionAfterLevel(game.level().number).getAsInt();
+			break;
+		default:
+			sceneIndex = 4;
+			break;
 		}
-		int sceneVariant = use3D ? 1 : 0;
-		if (game.variant() == GameVariant.MS_PACMAN) {
-			return MsPacManScenes.SCENES[sceneIndex][sceneVariant];
-		} else if (game.variant() == PACMAN) {
-			return PacManScenes.SCENES[sceneIndex][sceneVariant];
+		switch (game.variant()) {
+		case MS_PACMAN:
+			return MsPacManScenes.SCENES[sceneIndex][_3D ? 1 : 0];
+		case PACMAN:
+			return PacManScenes.SCENES[sceneIndex][_3D ? 1 : 0];
+		default:
+			throw new IllegalStateException();
 		}
-		throw new IllegalStateException();
 	}
 
 	private void setGameScene(GameScene newGameScene) {
@@ -197,7 +199,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		if (e.newGameState == PacManGameState.INTRO) {
 			stopAllSounds();
 		}
-		setGameScene(sceneForCurrentGameState(Env.$use3DScenes.get()));
+		setGameScene(getSceneForCurrentGameState(Env.$use3DScenes.get()));
 	}
 
 	private void onKeyPressed(KeyEvent e) {
