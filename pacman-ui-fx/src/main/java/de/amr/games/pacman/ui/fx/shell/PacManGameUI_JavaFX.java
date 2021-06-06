@@ -241,7 +241,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			break;
 
 		case V:
-			gameController.toggleGameVariant();
+			if (gameController.state == PacManGameState.INTRO) {
+				gameController.selectGameVariant(gameController.game().variant().succ());
+			}
 			break;
 
 		case X:
