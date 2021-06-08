@@ -3,7 +3,7 @@ package de.amr.games.pacman.ui.fx.shell;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import de.amr.games.pacman.ui.FlashMessage;
+import de.amr.games.pacman.lib.TickTimer;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.Background;
@@ -17,6 +17,17 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 public class FlashMessageView extends HBox {
+	
+	static class FlashMessage {
+		
+		private final TickTimer timer = new TickTimer(this.toString());
+		public final String text;
+		
+		public FlashMessage(String text, long ticks) {
+			this.text = text;
+			timer.reset(ticks);
+		}
+	}
 
 	private final Deque<FlashMessage> messagesQ = new ArrayDeque<>();
 	private final Text display = new Text();
