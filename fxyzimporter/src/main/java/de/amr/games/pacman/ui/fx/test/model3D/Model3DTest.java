@@ -11,6 +11,14 @@ import org.fxyz3d.importers.Model3D;
 import de.amr.games.pacman.ui.fx.model3D.GianmarcosPacManModel3D;
 import javafx.scene.paint.Material;
 
+/**
+ * Note: To be able to access the private field "materials" of class {@link Model3D} the following
+ * VM arg is needed:
+ * 
+ * <pre>
+ --add-opens org.fxyz3d.importers/org.fxyz3d.importers=de.amr.games.pacman.ui.fx.fxyzimporter
+ * </pre>
+ */
 public class Model3DTest {
 
 	private static void log(String fmt, Object... args) {
@@ -35,7 +43,6 @@ public class Model3DTest {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	private static Stream<String> getMaterialNames(Model3D model3D) {
