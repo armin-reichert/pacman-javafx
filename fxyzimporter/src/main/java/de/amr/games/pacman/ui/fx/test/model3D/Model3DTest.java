@@ -27,18 +27,28 @@ public class Model3DTest {
 
 	public static void main(String[] args) {
 		loadUsingInteractiveMeshImporter();
-		log("----------------------------");
+		log("\n\n------------------------------------------------");
 		loadUsingFxyzImporter();
+	}
+
+	private static void loadUsingInteractiveMeshImporter() {
+		GianmarcosPacManModel3D model = new GianmarcosPacManModel3D();
+		log("InteractiveMesh OBJ importer:");
+		log("\nMeshViews:");
+		model.meshViewsByName.keySet().stream().sorted().forEach(key -> log("%s", key));
+		log("");
+		log("\nMaterials:");
+		model.materialsByName.keySet().stream().sorted().forEach(key -> log("%s", key));
 	}
 
 	private static void loadUsingFxyzImporter() {
 		try {
 			Model3D model3D = Importer3D.load(Model3DTest.class.getResource("/pacman.obj"));
 			log("FXyz OBJ importer:");
-			log("MeshViews:");
+			log("\nMeshViews:");
 			model3D.getMeshNames().stream().sorted().forEach(key -> log("%s", key));
 			log("");
-			log("Materials:");
+			log("\nMaterials:");
 			getMaterialNames(model3D).sorted().forEach(m -> log("%s", m));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -58,13 +68,4 @@ public class Model3DTest {
 		}
 	}
 
-	private static void loadUsingInteractiveMeshImporter() {
-		GianmarcosPacManModel3D model = new GianmarcosPacManModel3D();
-		log("InteractiveMesh OBJ importer:");
-		log("MeshViews:");
-		model.meshViewsByName.keySet().stream().sorted().forEach(key -> log("%s", key));
-		log("");
-		log("Materials:");
-		model.materialsByName.keySet().stream().sorted().forEach(key -> log("%s", key));
-	}
 }
