@@ -5,6 +5,7 @@ module de.amr.games.pacman.ui.fx {
 	
 	requires transitive javafx.controls;
 	requires transitive javafx.media;
+	
 	requires de.amr.games.pacman;
 	requires jimObjModelImporterJFX;
 }
