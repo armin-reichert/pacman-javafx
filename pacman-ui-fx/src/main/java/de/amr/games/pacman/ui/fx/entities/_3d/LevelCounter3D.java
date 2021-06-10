@@ -3,7 +3,7 @@ package de.amr.games.pacman.ui.fx.entities._3d;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
-import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.PacManGameModel;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
 import javafx.animation.RotateTransition;
@@ -39,18 +39,21 @@ public class LevelCounter3D extends Group {
 	}
 
 	private final Rendering2D rendering2D;
-	private V2i tileRight;
+	private V2d rightPosition;
 
-	public LevelCounter3D(V2i tileRight, Rendering2D rendering2D) {
-		this.tileRight = tileRight;
+	public LevelCounter3D(Rendering2D rendering2D) {
 		this.rendering2D = rendering2D;
+	}
+	
+	public void setRightPosition(double x, double y) {
+		rightPosition = new V2d(x,y);
 	}
 
 	public void rebuild(PacManGameModel game) {
 		// NOTE: all variables named ...Number are starting at 1
 		int firstLevelNumber = Math.max(1, game.level().number - MAX_ENTRIES + 1);
 		getChildren().clear();
-		int x = t(tileRight.x), y = t(tileRight.y);
+		double x = rightPosition.x, y = rightPosition.y;
 		for (int levelNumber = firstLevelNumber; levelNumber <= game.level().number; ++levelNumber) {
 			Image symbol = symbolImage(game.levelSymbol(levelNumber));
 			Box cube = createSpinningCube(symbol, levelNumber % 2 == 0);

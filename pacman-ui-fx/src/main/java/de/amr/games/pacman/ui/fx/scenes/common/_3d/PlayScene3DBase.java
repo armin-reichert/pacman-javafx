@@ -9,7 +9,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx.Env;
@@ -117,7 +116,8 @@ public class PlayScene3DBase implements GameScene {
 		livesCounter3D.setTranslateZ(-4); // TODO
 		livesCounter3D.setVisible(!gameController.isAttractMode());
 
-		levelCounter3D = new LevelCounter3D(new V2i(26, 1), r2D);
+		levelCounter3D = new LevelCounter3D(r2D);
+		levelCounter3D.setRightPosition(26 * TS, TS);
 		levelCounter3D.setTranslateZ(-4); // TODO
 		levelCounter3D.rebuild(game());
 
