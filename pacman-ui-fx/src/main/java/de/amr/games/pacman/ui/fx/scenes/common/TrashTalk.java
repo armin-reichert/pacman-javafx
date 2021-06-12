@@ -24,7 +24,7 @@ public class TrashTalk {
 			"You stone cold loser!", //
 			"I would say you fucked up!", //
 			"This game is OVER!", //
-			"Go ahead any cry!", //
+			"Go ahead and cry!", //
 			"That's all you've got?"//
 	);
 }
