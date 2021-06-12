@@ -109,6 +109,7 @@ public class Ghost3D extends Group {
 
 		setNormalSkinColor();
 		getChildren().setAll(ghostShape);
+		setTranslateZ(-4);
 	}
 
 	public void update() {

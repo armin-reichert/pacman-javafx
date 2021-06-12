@@ -73,8 +73,8 @@ public class PlayScene3DBase implements GameScene {
 		selectPerspective(PERSPECTIVE_FOLLOWING_PLAYER);
 	}
 
-	public void setModel3D(PacManModel3D model3d) {
-		this.model3D = model3d;
+	public void setModel3D(PacManModel3D model3D) {
+		this.model3D = model3D;
 	}
 
 	@Override
@@ -96,16 +96,11 @@ public class PlayScene3DBase implements GameScene {
 		buildMaze();
 
 		player3D = new Player3D(game().player(), model3D);
-		player3D.setTranslateZ(-3); // TODO
 
-		ghosts3D = game().ghosts().collect(Collectors.toMap(Function.identity(), ghost -> {
-			Ghost3D ghost3D = new Ghost3D(ghost, model3D, r2D);
-			ghost3D.setTranslateZ(-4); // TODO
-			return ghost3D;
-		}));
+		ghosts3D = game().ghosts()
+				.collect(Collectors.toMap(Function.identity(), ghost -> new Ghost3D(ghost, model3D, r2D)));
 
-		bonus3D = new Bonus3D(game().variant(), r2D);
-		bonus3D.setTranslateZ(-4); // TODO
+		bonus3D = new Bonus3D(r2D);
 
 		score3D = new ScoreNotReally3D();
 		score3D.setHiscoreOnly(gameController.isAttractMode());

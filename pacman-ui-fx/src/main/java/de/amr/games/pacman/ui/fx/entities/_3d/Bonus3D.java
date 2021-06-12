@@ -3,12 +3,10 @@ package de.amr.games.pacman.ui.fx.entities._3d;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.pacman.Bonus;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
 import javafx.animation.RotateTransition;
 import javafx.animation.Transition;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -23,32 +21,28 @@ import javafx.util.Duration;
  */
 public class Bonus3D extends Box {
 
-	private final Map<Integer, Image> pointsSprites;
+	private final Map<Integer, Image> spritesByValue;
 	private final Rendering2D rendering2D;
 	private final RotateTransition rotation;
 	private final PhongMaterial skin;
 
-	public Bonus3D(GameVariant gameVariant, Rendering2D rendering2D) {
+	public Bonus3D(Rendering2D rendering2D) {
 		super(8, 8, 8);
 		this.rendering2D = rendering2D;
-		pointsSprites = getPointsSprites(gameVariant);
+		spritesByValue = new HashMap<>();
+		rendering2D.getBonusValuesSpritesMap()
+				.forEach((points, spriteRegion) -> spritesByValue.put(points, rendering2D.subImage(spriteRegion)));
 		skin = new PhongMaterial(Color.WHITE);
 		rotation = new RotateTransition(Duration.seconds(2), this);
 		rotation.setAxis(Rotate.X_AXIS);
 		rotation.setByAngle(360);
 		rotation.setOnFinished(e -> hide());
+		setTranslateZ(-4);
 		hide();
 	}
 
 	private Image symbolImage(String symbol) {
 		return rendering2D.subImage(rendering2D.getSymbolSprites().get(symbol));
-	}
-
-	private Map<Integer, Image> getPointsSprites(GameVariant gameVariant) {
-		Map<Integer, Rectangle2D> spritesMap = rendering2D.getBonusValuesSpritesMap();
-		Map<Integer, Image> result = new HashMap<>();
-		spritesMap.forEach((points, sprite) -> result.put(points, rendering2D.subImage(sprite)));
-		return result;
 	}
 
 	public void update(Bonus bonus) {
@@ -79,8 +73,8 @@ public class Bonus3D extends Box {
 		if (bonus.points >= 1000) {
 			setWidth(10);
 		}
-		skin.setBumpMap(pointsSprites.get(bonus.points));
-		skin.setDiffuseMap(pointsSprites.get(bonus.points));
+		skin.setBumpMap(spritesByValue.get(bonus.points));
+		skin.setDiffuseMap(spritesByValue.get(bonus.points));
 		setMaterial(skin);
 		setTranslateX(bonus.position().x);
 		setTranslateY(bonus.position().y);

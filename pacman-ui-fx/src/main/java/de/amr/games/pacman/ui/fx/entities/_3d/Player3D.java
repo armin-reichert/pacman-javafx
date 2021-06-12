@@ -53,6 +53,7 @@ public class Player3D extends Group {
 		light = new PointLight(Color.WHITE);
 		light.setTranslateZ(-4);
 		getChildren().addAll(model3D.createPacMan(), light);
+		setTranslateZ(-3);
 	}
 
 	public void update() {
