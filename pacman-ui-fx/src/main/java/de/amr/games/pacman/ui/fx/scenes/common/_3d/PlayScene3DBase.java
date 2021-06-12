@@ -71,10 +71,15 @@ public class PlayScene3DBase implements GameScene {
 //				new POVPerspective(this), //
 		};
 		selectPerspective(PERSPECTIVE_FOLLOWING_PLAYER);
+		Env.$mazeResolution.addListener((resolution, oldValue, newValue) -> rebuildMazeWalls(newValue.intValue()));
 	}
 
 	public void setModel3D(PacManModel3D model3D) {
 		this.model3D = model3D;
+	}
+
+	private void rebuildMazeWalls(int resolution) {
+		maze3D.buildWalls(game().level().world, resolution, Env.$mazeWallHeight.get());
 	}
 
 	@Override
@@ -90,9 +95,6 @@ public class PlayScene3DBase implements GameScene {
 		maze3D.setWallBaseColor(Rendering2D_Assets.getMazeWallSideColor(game().variant(), game().level().mazeNumber));
 		maze3D.setWallTopColor(Rendering2D_Assets.getMazeWallTopColor(game().variant(), game().level().mazeNumber));
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
-		Env.$mazeResolution.addListener((bean, old, newResolution) -> {
-			maze3D.buildWalls(game().level().world, newResolution.intValue(), Env.$mazeWallHeight.get());
-		});
 		buildMaze();
 
 		player3D = new Player3D(game().player(), model3D);
