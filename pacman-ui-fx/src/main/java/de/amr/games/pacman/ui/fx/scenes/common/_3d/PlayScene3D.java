@@ -100,21 +100,20 @@ public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEve
 	@Override
 	public void onPlayerGainsPower(PacManGameEvent e) {
 		sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
-		ghosts3D.values().stream()
-				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
+		ghosts3D.stream().filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
 				.forEach(Ghost3D::setBlueSkinColor);
 	}
 
 	@Override
 	public void onPlayerLosingPower(PacManGameEvent e) {
-		ghosts3D.values().stream()//
+		ghosts3D.stream()//
 				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED))//
 				.forEach(ghost3D -> ghost3D.flashingAnimation.playFromStart());
 	}
 
 	@Override
 	public void onPlayerLostPower(PacManGameEvent e) {
-		ghosts3D.values().forEach(ghost3D -> ghost3D.flashingAnimation.stop());
+		ghosts3D.forEach(ghost3D -> ghost3D.flashingAnimation.stop());
 		sounds.stop(PacManGameSound.PACMAN_POWER);
 	}
 
@@ -177,7 +176,7 @@ public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEve
 	@Override
 	public void onGhostLeavingHouse(PacManGameEvent e) {
 		Ghost ghost = e.ghost.get();
-		ghosts3D.get(ghost).setNormalSkinColor();
+		ghosts3D.get(ghost.id).setNormalSkinColor();
 	}
 
 	@Override
@@ -202,7 +201,7 @@ public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEve
 		else if (e.newGameState == PacManGameState.PACMAN_DYING) {
 			sounds.stopAll();
 			playAnimationPlayerDying();
-			ghosts3D.values().forEach(ghost3D -> ghost3D.flashingAnimation.stop());
+			ghosts3D.forEach(ghost3D -> ghost3D.flashingAnimation.stop());
 		}
 
 		// enter GHOST_DYING
@@ -221,7 +220,7 @@ public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEve
 		else if (e.newGameState == PacManGameState.LEVEL_COMPLETE) {
 			sounds.stopAll();
 			playAnimationLevelComplete();
-			ghosts3D.values().forEach(ghost3D -> ghost3D.flashingAnimation.stop());
+			ghosts3D.forEach(ghost3D -> ghost3D.flashingAnimation.stop());
 		}
 
 		// enter GAME_OVER

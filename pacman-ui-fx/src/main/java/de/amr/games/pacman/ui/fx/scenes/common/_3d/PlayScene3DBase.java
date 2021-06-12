@@ -3,14 +3,12 @@ package de.amr.games.pacman.ui.fx.scenes.common._3d;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
-import java.util.Map;
+import java.util.List;
 import java.util.OptionalDouble;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.entities._3d.Bonus3D;
 import de.amr.games.pacman.ui.fx.entities._3d.CoordinateSystem;
@@ -54,7 +52,7 @@ public class PlayScene3DBase implements GameScene {
 	protected final PacManModel3D model3D;
 	protected Maze3D maze3D;
 	protected Player3D player3D;
-	protected Map<Ghost, Ghost3D> ghosts3D;
+	protected List<Ghost3D> ghosts3D;
 	protected Bonus3D bonus3D;
 	protected ScoreNotReally3D score3D;
 	protected LevelCounter3D levelCounter3D;
@@ -91,12 +89,8 @@ public class PlayScene3DBase implements GameScene {
 		buildMaze();
 
 		player3D = new Player3D(game().player(), model3D);
-
-		ghosts3D = game().ghosts()
-				.collect(Collectors.toMap(Function.identity(), ghost -> new Ghost3D(ghost, model3D, r2D)));
-
+		ghosts3D = game().ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D)).collect(Collectors.toList());
 		bonus3D = new Bonus3D(r2D);
-
 		score3D = new ScoreNotReally3D();
 
 		livesCounter3D = new LivesCounter3D(model3D);
@@ -114,7 +108,7 @@ public class PlayScene3DBase implements GameScene {
 		sceneContent.setTranslateX(-0.5 * width);
 		sceneContent.setTranslateY(-0.5 * height);
 		sceneContent.getChildren().addAll(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
-		sceneContent.getChildren().addAll(ghosts3D.values());
+		sceneContent.getChildren().addAll(ghosts3D);
 
 		subSceneFX.setRoot(new Group(new AmbientLight(), sceneContent, new CoordinateSystem(subSceneFX.getWidth())));
 	}
@@ -123,7 +117,7 @@ public class PlayScene3DBase implements GameScene {
 	public void update() {
 		livesCounter3D.setVisibleItems(game().lives());
 		player3D.update();
-		ghosts3D.values().forEach(Ghost3D::update);
+		ghosts3D.forEach(Ghost3D::update);
 		bonus3D.update(game().bonus());
 		score3D.update(game(), gameController.isAttractMode());
 		// TODO: is this the recommended way to do keep the score in plain view?
