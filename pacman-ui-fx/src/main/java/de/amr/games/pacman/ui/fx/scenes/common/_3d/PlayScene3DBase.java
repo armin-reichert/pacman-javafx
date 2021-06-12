@@ -71,15 +71,11 @@ public class PlayScene3DBase implements GameScene {
 //				new POVPerspective(this), //
 		};
 		selectPerspective(PERSPECTIVE_FOLLOWING_PLAYER);
-		Env.$mazeResolution.addListener((resolution, oldValue, newValue) -> rebuildMazeWalls(newValue.intValue()));
+		Env.$mazeResolution.addListener((resolution, oldValue, newValue) -> buildMazeWalls(newValue.intValue()));
 	}
 
 	public void setModel3D(PacManModel3D model3D) {
 		this.model3D = model3D;
-	}
-
-	private void rebuildMazeWalls(int resolution) {
-		maze3D.buildWalls(game().level().world, resolution, Env.$mazeWallHeight.get());
 	}
 
 	@Override
@@ -125,11 +121,6 @@ public class PlayScene3DBase implements GameScene {
 		sceneContent.getChildren().addAll(ghosts3D.values());
 
 		subSceneFX.setRoot(new Group(new AmbientLight(), sceneContent, new CoordinateSystem(subSceneFX.getWidth())));
-	}
-
-	protected void buildMaze() {
-		var foodColor = Rendering2D_Assets.getFoodColor(game().variant(), game().level().mazeNumber);
-		maze3D.buildWallsAndAddFood(game().level().world, Env.$mazeResolution.get(), Env.$mazeWallHeight.get(), foodColor);
 	}
 
 	@Override
@@ -186,5 +177,14 @@ public class PlayScene3DBase implements GameScene {
 	@Override
 	public void resize(double width, double height) {
 		// data binding does the job
+	}
+
+	protected void buildMaze() {
+		var foodColor = Rendering2D_Assets.getFoodColor(game().variant(), game().level().mazeNumber);
+		maze3D.buildWallsAndAddFood(game().level().world, Env.$mazeResolution.get(), Env.$mazeWallHeight.get(), foodColor);
+	}
+
+	protected void buildMazeWalls(int resolution) {
+		maze3D.buildWalls(game().level().world, resolution, Env.$mazeWallHeight.get());
 	}
 }
