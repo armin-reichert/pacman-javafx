@@ -51,7 +51,7 @@ public class PlayScene3DBase implements GameScene {
 
 	protected PacManGameController gameController;
 
-	protected PacManModel3D model3D;
+	protected final PacManModel3D model3D;
 	protected Maze3D maze3D;
 	protected Player3D player3D;
 	protected Map<Ghost, Ghost3D> ghosts3D;
@@ -60,7 +60,8 @@ public class PlayScene3DBase implements GameScene {
 	protected LevelCounter3D levelCounter3D;
 	protected LivesCounter3D livesCounter3D;
 
-	public PlayScene3DBase() {
+	public PlayScene3DBase(PacManModel3D model3D) {
+		this.model3D = model3D;
 		subSceneFX = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
 		subSceneFX.setCamera(new PerspectiveCamera(true));
 		subSceneFX.addEventHandler(KeyEvent.KEY_PRESSED, event -> selectedPerspective().handle(event));
@@ -72,10 +73,6 @@ public class PlayScene3DBase implements GameScene {
 		};
 		selectPerspective(PERSPECTIVE_FOLLOWING_PLAYER);
 		Env.$mazeResolution.addListener((resolution, oldValue, newValue) -> buildMazeWalls(newValue.intValue()));
-	}
-
-	public void setModel3D(PacManModel3D model3D) {
-		this.model3D = model3D;
 	}
 
 	@Override

@@ -49,7 +49,7 @@ public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEve
 	private List<ScaleTransition> energizerAnimations;
 
 	public PlayScene3D(PacManModel3D model3D, SoundManager sounds) {
-		setModel3D(model3D);
+		super(model3D);
 		this.sounds = sounds;
 	}
 
