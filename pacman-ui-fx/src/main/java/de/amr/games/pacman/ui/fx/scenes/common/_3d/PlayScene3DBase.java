@@ -98,7 +98,6 @@ public class PlayScene3DBase implements GameScene {
 		bonus3D = new Bonus3D(r2D);
 
 		score3D = new ScoreNotReally3D();
-		score3D.setHiscoreOnly(gameController.isAttractMode());
 
 		livesCounter3D = new LivesCounter3D(model3D);
 		livesCounter3D.setTranslateX(TS);
@@ -126,8 +125,8 @@ public class PlayScene3DBase implements GameScene {
 		player3D.update();
 		ghosts3D.values().forEach(Ghost3D::update);
 		bonus3D.update(game().bonus());
+		score3D.update(game(), gameController.isAttractMode());
 		// TODO: is this the recommended way to do keep the score in plain view?
-		score3D.update(game());
 		score3D.setRotationAxis(Rotate.X_AXIS);
 		score3D.setRotate(subSceneFX.getCamera().getRotate());
 		selectedPerspective().follow(player3D);

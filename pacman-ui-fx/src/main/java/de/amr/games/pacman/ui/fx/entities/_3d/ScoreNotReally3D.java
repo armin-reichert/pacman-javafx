@@ -16,10 +16,8 @@ public class ScoreNotReally3D extends Group {
 	private final Text txtScore;
 	private final Text txtHiscoreTitle;
 	private final Text txtHiscore;
-	private boolean hiscoreOnly;
 
 	public ScoreNotReally3D() {
-		hiscoreOnly = false;
 		Font font = Rendering2D_Assets.ARCADE_FONT;
 
 		txtScoreTitle = new Text("SCORE");
@@ -50,14 +48,10 @@ public class ScoreNotReally3D extends Group {
 		getChildren().add(grid);
 	}
 
-	public void setHiscoreOnly(boolean hiscoreOnly) {
-		this.hiscoreOnly = hiscoreOnly;
-	}
-
-	public void update(PacManGameModel game) {
+	public void update(PacManGameModel game, boolean showHighscoreOnly) {
 		txtScore.setText(String.format("%07d L%d", game.score(), game.level().number));
 		txtHiscore.setText(String.format("%07d L%d", game.hiscorePoints(), game.hiscoreLevel()));
-		if (hiscoreOnly) {
+		if (showHighscoreOnly) {
 			txtScore.setVisible(false);
 		} else {
 			txtScore.setVisible(true);
