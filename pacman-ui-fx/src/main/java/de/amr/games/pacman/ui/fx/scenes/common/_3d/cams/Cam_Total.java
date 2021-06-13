@@ -1,8 +1,8 @@
 package de.amr.games.pacman.ui.fx.scenes.common._3d.cams;
 
 import de.amr.games.pacman.ui.fx.entities._3d.Player3D;
-import de.amr.games.pacman.ui.fx.scenes.common._3d.ManualCameraController;
 import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScenePerspective;
+import de.amr.games.pacman.ui.fx.util.ManualCameraController;
 import javafx.scene.Camera;
 import javafx.scene.SubScene;
 import javafx.scene.input.KeyEvent;

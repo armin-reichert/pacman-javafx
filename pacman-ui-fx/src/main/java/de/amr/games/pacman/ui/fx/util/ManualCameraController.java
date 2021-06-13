@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.scenes.common._3d;
+package de.amr.games.pacman.ui.fx.util;
 
 import javafx.scene.Camera;
 import javafx.scene.input.KeyEvent;

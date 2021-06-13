@@ -1,5 +1,7 @@
 package de.amr.games.pacman.ui.fx.scenes.common;
 
+import de.amr.games.pacman.ui.fx.util.RandomEntrySelector;
+
 public class TrashTalk {
 
 	public static final RandomEntrySelector<String> CHEAT_SPELLS = new RandomEntrySelector<>(//
