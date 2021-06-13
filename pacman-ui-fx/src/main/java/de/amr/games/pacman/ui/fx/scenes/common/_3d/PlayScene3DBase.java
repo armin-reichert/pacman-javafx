@@ -39,9 +39,7 @@ import javafx.scene.transform.Rotate;
  */
 public class PlayScene3DBase implements GameScene {
 
-	static final int PERSPECTIVE_TOTAL = 0;
-	static final int PERSPECTIVE_FOLLOWING_PLAYER = 1;
-	static final int PERSPECTIVE_NEAR_PLAYER = 2;
+	static final int CAM_TOTAL = 0, CAM_FOLLOWING_PLAYER = 1, CAM_NEAR_PLAYER = 2;
 
 	private final SubScene subSceneFX;
 	private final PlayScenePerspective[] perspectives;
@@ -69,7 +67,7 @@ public class PlayScene3DBase implements GameScene {
 				new NearPlayerPerspective(subSceneFX), //
 //				new POVPerspective(this), //
 		};
-		selectPerspective(PERSPECTIVE_FOLLOWING_PLAYER);
+		selectPerspective(CAM_FOLLOWING_PLAYER);
 		Env.$mazeResolution.addListener((resolution, oldValue, newValue) -> buildMazeWalls(newValue.intValue()));
 	}
 
@@ -104,13 +102,14 @@ public class PlayScene3DBase implements GameScene {
 		levelCounter3D.setTranslateZ(-4); // TODO
 		levelCounter3D.rebuild(game());
 
-		var sceneContent = new Group();
-		sceneContent.setTranslateX(-0.5 * width);
-		sceneContent.setTranslateY(-0.5 * height);
-		sceneContent.getChildren().addAll(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
-		sceneContent.getChildren().addAll(ghosts3D);
+		var playground = new Group();
+		playground.setTranslateX(-0.5 * width);
+		playground.setTranslateY(-0.5 * height);
+		playground.getChildren().addAll(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
+		playground.getChildren().addAll(ghosts3D);
 
-		subSceneFX.setRoot(new Group(new AmbientLight(), sceneContent, new CoordinateSystem(subSceneFX.getWidth())));
+		var sceneContent = new Group(new AmbientLight(), playground, new CoordinateSystem(subSceneFX.getWidth()));
+		subSceneFX.setRoot(sceneContent);
 	}
 
 	@Override
