@@ -43,16 +43,15 @@ import javafx.stage.Stage;
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
 
-	public final Stage stage;
-	public final Scene mainScene;
-	public final PacManGameController gameController;
-	public final Canvas canvas = new Canvas();
+	private final PacManGameController gameController;
+	private final Stage stage;
+	private final Scene mainScene;
+	private final Canvas canvas = new Canvas();
 	private final Keyboard keyboard = new Keyboard();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final HUD hud = new HUD();
-	private final Group gameSceneParent = new Group();
-
-	public GameScene currentGameScene;
+	private final Group gameSceneContent = new Group();
+	private GameScene currentGameScene;
 
 	private ObjectBinding<Background> $background = Bindings.createObjectBinding(() -> {
 		Color color = Env.$drawMode3D.get() == DrawMode.FILL ? Color.CORNFLOWERBLUE : Color.BLACK;
@@ -63,15 +62,14 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		this.stage = stage;
 		this.gameController = gameController;
 
-		StackPane root = new StackPane();
-		root.backgroundProperty().bind($background);
-		root.getChildren().addAll(gameSceneParent, flashMessageView, hud);
+		StackPane rootPane = new StackPane(gameSceneContent, flashMessageView, hud);
+		rootPane.backgroundProperty().bind($background);
 		StackPane.setAlignment(hud, Pos.TOP_LEFT);
 
 		boolean _3D = Env.$use3DScenes.get();
 		GameScene gameScene = getSceneForCurrentGameState(_3D);
 		double aspectRatio = gameScene.aspectRatio().orElse(getScreenAspectRatio());
-		mainScene = new Scene(root, aspectRatio * height, height);
+		mainScene = new Scene(rootPane, aspectRatio * height, height);
 		setGameScene(gameScene);
 
 		Env.$totalTicks.addListener(($1, $2, newValue) -> hud.update(this));
@@ -88,6 +86,22 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		stage.setScene(mainScene);
 		stage.centerOnScreen();
 		stage.show();
+	}
+
+	public PacManGameController getGameController() {
+		return gameController;
+	}
+
+	public Scene getMainScene() {
+		return mainScene;
+	}
+
+	public GameScene getCurrentGameScene() {
+		return currentGameScene;
+	}
+
+	public Canvas getCanvas() {
+		return canvas;
 	}
 
 	private double getScreenAspectRatio() {
@@ -181,7 +195,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			currentGameScene = newGameScene;
 			currentGameScene.init();
 			// replace game scene in scene graph
-			gameSceneParent.getChildren().setAll(currentGameScene.getSubSceneFX());
+			gameSceneContent.getChildren().setAll(currentGameScene.getSubSceneFX());
 			// Note: this must be done after adding to the scene graph
 			currentGameScene.getSubSceneFX().requestFocus();
 		}
