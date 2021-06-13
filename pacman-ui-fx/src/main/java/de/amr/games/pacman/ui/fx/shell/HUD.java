@@ -25,15 +25,18 @@ public class HUD extends Text {
 		return b ? "ON" : "OFF";
 	}
 
+	private final PacManGameUI_JavaFX ui;
 	private final StringBuilder text = new StringBuilder();
 
-	public HUD() {
+	public HUD(PacManGameUI_JavaFX ui) {
+		this.ui = ui;
 		visibleProperty().bind(Env.$isHUDVisible);
 		setFill(Color.WHITE);
 		setFont(Font.font("Monospace", 14));
+		Env.$totalTicks.addListener((totalTicks, oldTicks, newTicks) -> update());
 	}
 
-	public void update(PacManGameUI_JavaFX ui) {
+	public void update() {
 		TickTimer stateTimer = ui.getGameController().stateTimer();
 		text.setLength(0);
 		line("Total Ticks", "%d", Env.$totalTicks.get());

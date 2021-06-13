@@ -49,7 +49,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private final Canvas canvas = new Canvas();
 	private final Keyboard keyboard = new Keyboard();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
-	private final HUD hud = new HUD();
+	private final HUD hud = new HUD(this);
 	private final Group gameSceneContent = new Group();
 	private GameScene currentGameScene;
 
@@ -72,7 +72,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		mainScene = new Scene(rootPane, aspectRatio * height, height);
 		setGameScene(gameScene);
 
-		Env.$totalTicks.addListener(($1, $2, newValue) -> hud.update(this));
 		Env.$fps.addListener(($1, $2, fps) -> {
 			String gameName = gameController.game().variant() == PACMAN ? "Pac-Man" : "Ms. Pac-Man";
 			stage.setTitle(String.format("%s (%d FPS, JavaFX)", gameName, fps));
