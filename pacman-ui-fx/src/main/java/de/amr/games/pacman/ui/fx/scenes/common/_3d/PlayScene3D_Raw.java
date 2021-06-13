@@ -45,7 +45,7 @@ public class PlayScene3D_Raw implements GameScene {
 	static final int CAM_TOTAL = 0, CAM_FOLLOWING_PLAYER = 1, CAM_NEAR_PLAYER = 2;
 
 	private final SubScene subSceneFX;
-	private final PlayScenePerspective[] perspectives;
+	private final PlayScene3DPerspective[] perspectives;
 	private int selectedPerspective;
 
 	protected PacManGameController gameController;
@@ -64,7 +64,7 @@ public class PlayScene3D_Raw implements GameScene {
 		subSceneFX = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
 		subSceneFX.setCamera(new PerspectiveCamera(true));
 		subSceneFX.addEventHandler(KeyEvent.KEY_PRESSED, event -> selectedPerspective().handle(event));
-		perspectives = new PlayScenePerspective[] { //
+		perspectives = new PlayScene3DPerspective[] { //
 				new Cam_Total(subSceneFX), //
 				new Cam_FollowingPlayer(subSceneFX), //
 				new Cam_NearPlayer(subSceneFX), //
@@ -132,7 +132,7 @@ public class PlayScene3D_Raw implements GameScene {
 		log("%s: end", this);
 	}
 
-	public PlayScenePerspective selectedPerspective() {
+	public PlayScene3DPerspective selectedPerspective() {
 		return perspectives[selectedPerspective];
 	}
 

@@ -1,7 +1,7 @@
 package de.amr.games.pacman.ui.fx.scenes.common._3d.cams;
 
 import de.amr.games.pacman.ui.fx.entities._3d.Player3D;
-import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScenePerspective;
+import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScene3DPerspective;
 import javafx.scene.Camera;
 import javafx.scene.SubScene;
 import javafx.scene.transform.Rotate;
@@ -11,7 +11,7 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class Cam_FollowingPlayer implements PlayScenePerspective {
+public class Cam_FollowingPlayer implements PlayScene3DPerspective {
 
 	private final SubScene subScene;
 
