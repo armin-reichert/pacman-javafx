@@ -14,7 +14,7 @@ import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.common.TrashTalk;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
-import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScene3DBase;
+import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScene3D_Raw;
 import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacManScenes;
 import de.amr.games.pacman.ui.fx.scenes.pacman.PacManScenes;
 import javafx.beans.binding.Bindings;
@@ -267,8 +267,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		switch (e.getCode()) {
 
 		case C:
-			if (currentGameScene instanceof PlayScene3DBase) {
-				PlayScene3DBase playScene = (PlayScene3DBase) currentGameScene;
+			if (currentGameScene instanceof PlayScene3D_Raw) {
+				PlayScene3D_Raw playScene = (PlayScene3D_Raw) currentGameScene;
 				playScene.nextPerspective();
 				showFlashMessage(1, "Perspective: %s", playScene.selectedPerspective());
 			}

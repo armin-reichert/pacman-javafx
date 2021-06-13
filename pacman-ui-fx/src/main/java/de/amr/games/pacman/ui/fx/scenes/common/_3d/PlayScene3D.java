@@ -39,7 +39,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class PlayScene3D extends PlayScene3DBase implements DefaultPacManGameEventHandler {
+public class PlayScene3D extends PlayScene3D_Raw implements DefaultPacManGameEventHandler {
 
 	private static V2i tile(Node node) {
 		return (V2i) node.getUserData();

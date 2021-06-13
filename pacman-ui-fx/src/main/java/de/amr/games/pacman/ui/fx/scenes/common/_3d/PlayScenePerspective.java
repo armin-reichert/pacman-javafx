@@ -1,7 +1,7 @@
 package de.amr.games.pacman.ui.fx.scenes.common._3d;
 
+import de.amr.games.pacman.ui.fx.entities._3d.Player3D;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;
 
 /**
@@ -17,7 +17,7 @@ public interface PlayScenePerspective extends EventHandler<KeyEvent> {
 
 	void reset();
 
-	void follow(Node target);
+	void follow(Player3D player3D);
 
 	default double approach(double current, double target) {
 		return current + (target - current) * 0.02;

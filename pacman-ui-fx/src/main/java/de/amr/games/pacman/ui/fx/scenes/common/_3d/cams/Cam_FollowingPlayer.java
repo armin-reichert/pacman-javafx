@@ -1,7 +1,8 @@
-package de.amr.games.pacman.ui.fx.scenes.common._3d;
+package de.amr.games.pacman.ui.fx.scenes.common._3d.cams;
 
+import de.amr.games.pacman.ui.fx.entities._3d.Player3D;
+import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScenePerspective;
 import javafx.scene.Camera;
-import javafx.scene.Node;
 import javafx.scene.SubScene;
 import javafx.scene.transform.Rotate;
 
@@ -10,11 +11,11 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class FollowingPlayerPerspective implements PlayScenePerspective {
+public class Cam_FollowingPlayer implements PlayScenePerspective {
 
 	private final SubScene subScene;
 
-	public FollowingPlayerPerspective(SubScene subScene) {
+	public Cam_FollowingPlayer(SubScene subScene) {
 		this.subScene = subScene;
 	}
 
@@ -29,10 +30,10 @@ public class FollowingPlayerPerspective implements PlayScenePerspective {
 	}
 
 	@Override
-	public void follow(Node target) {
+	public void follow(Player3D player3D) {
 		Camera camera = subScene.getCamera();
-		camera.setTranslateX(Math.min(10, approach(camera.getTranslateX(), target.getTranslateX())));
-		camera.setTranslateY(Math.max(50, approach(camera.getTranslateY(), target.getTranslateY())));
+		camera.setTranslateX(Math.min(10, approach(camera.getTranslateX(), player3D.getTranslateX())));
+		camera.setTranslateY(Math.max(50, approach(camera.getTranslateY(), player3D.getTranslateY())));
 	}
 
 	@Override

@@ -1,7 +1,9 @@
-package de.amr.games.pacman.ui.fx.scenes.common._3d;
+package de.amr.games.pacman.ui.fx.scenes.common._3d.cams;
 
+import de.amr.games.pacman.ui.fx.entities._3d.Player3D;
+import de.amr.games.pacman.ui.fx.scenes.common._3d.ManualCameraController;
+import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScenePerspective;
 import javafx.scene.Camera;
-import javafx.scene.Node;
 import javafx.scene.SubScene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
@@ -11,12 +13,12 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class TotalPerspective implements PlayScenePerspective {
+public class Cam_Total implements PlayScenePerspective {
 
 	private final SubScene subScene;
 	private ManualCameraController cameraController;
 
-	public TotalPerspective(SubScene subScene) {
+	public Cam_Total(SubScene subScene) {
 		this.subScene = subScene;
 		cameraController = new ManualCameraController(subScene.getCamera());
 	}
@@ -39,7 +41,7 @@ public class TotalPerspective implements PlayScenePerspective {
 	}
 
 	@Override
-	public void follow(Node target) {
+	public void follow(Player3D player3D) {
 	}
 
 	@Override

@@ -21,6 +21,9 @@ import de.amr.games.pacman.ui.fx.entities._3d.ScoreNotReally3D;
 import de.amr.games.pacman.ui.fx.model3D.PacManModel3D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
+import de.amr.games.pacman.ui.fx.scenes.common._3d.cams.Cam_FollowingPlayer;
+import de.amr.games.pacman.ui.fx.scenes.common._3d.cams.Cam_NearPlayer;
+import de.amr.games.pacman.ui.fx.scenes.common._3d.cams.Cam_Total;
 import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacManScenes;
 import de.amr.games.pacman.ui.fx.scenes.pacman.PacManScenes;
 import javafx.scene.AmbientLight;
@@ -37,7 +40,7 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class PlayScene3DBase implements GameScene {
+public class PlayScene3D_Raw implements GameScene {
 
 	static final int CAM_TOTAL = 0, CAM_FOLLOWING_PLAYER = 1, CAM_NEAR_PLAYER = 2;
 
@@ -56,15 +59,15 @@ public class PlayScene3DBase implements GameScene {
 	protected LevelCounter3D levelCounter3D;
 	protected LivesCounter3D livesCounter3D;
 
-	public PlayScene3DBase(PacManModel3D model3D) {
+	public PlayScene3D_Raw(PacManModel3D model3D) {
 		this.model3D = model3D;
 		subSceneFX = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
 		subSceneFX.setCamera(new PerspectiveCamera(true));
 		subSceneFX.addEventHandler(KeyEvent.KEY_PRESSED, event -> selectedPerspective().handle(event));
 		perspectives = new PlayScenePerspective[] { //
-				new TotalPerspective(subSceneFX), //
-				new FollowingPlayerPerspective(subSceneFX), //
-				new NearPlayerPerspective(subSceneFX), //
+				new Cam_Total(subSceneFX), //
+				new Cam_FollowingPlayer(subSceneFX), //
+				new Cam_NearPlayer(subSceneFX), //
 //				new POVPerspective(this), //
 		};
 		selectPerspective(CAM_FOLLOWING_PLAYER);
@@ -102,11 +105,10 @@ public class PlayScene3DBase implements GameScene {
 		levelCounter3D.setTranslateZ(-4); // TODO
 		levelCounter3D.rebuild(game());
 
-		var playground = new Group();
+		var playground = new Group(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
+		playground.getChildren().addAll(ghosts3D);
 		playground.setTranslateX(-0.5 * width);
 		playground.setTranslateY(-0.5 * height);
-		playground.getChildren().addAll(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
-		playground.getChildren().addAll(ghosts3D);
 
 		var sceneContent = new Group(new AmbientLight(), playground, new CoordinateSystem(subSceneFX.getWidth()));
 		subSceneFX.setRoot(sceneContent);
@@ -114,7 +116,6 @@ public class PlayScene3DBase implements GameScene {
 
 	@Override
 	public void update() {
-		livesCounter3D.setVisibleItems(game().lives());
 		player3D.update();
 		ghosts3D.forEach(Ghost3D::update);
 		bonus3D.update(game().bonus());
@@ -122,6 +123,7 @@ public class PlayScene3DBase implements GameScene {
 		// TODO: is this the recommended way to do keep the score in plain view?
 		score3D.setRotationAxis(Rotate.X_AXIS);
 		score3D.setRotate(subSceneFX.getCamera().getRotate());
+		livesCounter3D.setVisibleItems(game().lives());
 		selectedPerspective().follow(player3D);
 	}
 
