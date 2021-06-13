@@ -66,15 +66,15 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		rootPane.backgroundProperty().bind($background);
 		StackPane.setAlignment(hud, Pos.TOP_LEFT);
 
-		boolean _3D = Env.$use3DScenes.get();
-		GameScene gameScene = getSceneForCurrentGameState(_3D);
+		boolean use3DScene = Env.$use3DScenes.get();
+		GameScene gameScene = getSceneForCurrentGameState(use3DScene);
 		double aspectRatio = gameScene.aspectRatio().orElse(getScreenAspectRatio());
 		mainScene = new Scene(rootPane, aspectRatio * height, height);
 		setGameScene(gameScene);
 
-		Env.$fps.addListener(($1, $2, fps) -> {
+		Env.$fps.addListener((fps, prevFPS, currentFPS) -> {
 			String gameName = gameController.game().variant() == PACMAN ? "Pac-Man" : "Ms. Pac-Man";
-			stage.setTitle(String.format("%s (%d FPS, JavaFX)", gameName, fps));
+			stage.setTitle(String.format("%s (%d frames/sec, JavaFX)", gameName, currentFPS));
 		});
 
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
