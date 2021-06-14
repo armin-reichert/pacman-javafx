@@ -340,7 +340,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		case DIGIT3:
 			toggleUse3DScenes();
-			showFlashMessage(1, "3D scenes are %s", Env.$use3DScenes.get() ? "on" : "off");
+			if (Env.$use3DScenes.get()) {
+				showFlashMessage(2, "Using 3D play scene\nCTRL+C changes perspective");
+			} else {
+				showFlashMessage(1, "Using 2D play scene");
+			}
 			break;
 
 		default:
