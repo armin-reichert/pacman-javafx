@@ -11,7 +11,6 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.entities._3d.Bonus3D;
-import de.amr.games.pacman.ui.fx.entities._3d.CoordinateSystem;
 import de.amr.games.pacman.ui.fx.entities._3d.Ghost3D;
 import de.amr.games.pacman.ui.fx.entities._3d.LevelCounter3D;
 import de.amr.games.pacman.ui.fx.entities._3d.LivesCounter3D;
@@ -26,6 +25,7 @@ import de.amr.games.pacman.ui.fx.scenes.common._3d.cams.Cam_NearPlayer;
 import de.amr.games.pacman.ui.fx.scenes.common._3d.cams.Cam_Total;
 import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacManScenes;
 import de.amr.games.pacman.ui.fx.scenes.pacman.PacManScenes;
+import de.amr.games.pacman.ui.fx.util.CoordinateSystem;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
@@ -110,8 +110,10 @@ public class PlayScene3D_Raw implements GameScene {
 		playground.setTranslateX(-0.5 * width);
 		playground.setTranslateY(-0.5 * height);
 
-		var sceneContent = new Group(new AmbientLight(), playground, new CoordinateSystem(subSceneFX.getWidth()));
-		subSceneFX.setRoot(sceneContent);
+		var coordinateSystem = new CoordinateSystem(subSceneFX.getWidth());
+		coordinateSystem.visibleProperty().bind(Env.$axesVisible);
+
+		subSceneFX.setRoot(new Group(new AmbientLight(), playground, coordinateSystem));
 	}
 
 	@Override

@@ -1,6 +1,5 @@
-package de.amr.games.pacman.ui.fx.entities._3d;
+package de.amr.games.pacman.ui.fx.util;
 
-import de.amr.games.pacman.ui.fx.Env;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -27,7 +26,6 @@ public class CoordinateSystem extends Group {
 		zAxis.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 
 		getChildren().addAll(origin, xAxis, yAxis, zAxis);
-		visibleProperty().bind(Env.$axesVisible);
 	}
 
 	// Cylinder height points to y-direction
