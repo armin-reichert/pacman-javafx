@@ -9,7 +9,7 @@ import javafx.scene.input.KeyEvent;
  * 
  * @author Armin Reichert
  */
-public interface PlayScene3DPerspective extends EventHandler<KeyEvent> {
+public interface PlaySceneCam extends EventHandler<KeyEvent> {
 
 	@Override
 	default void handle(KeyEvent event) {

@@ -1,7 +1,7 @@
 package de.amr.games.pacman.ui.fx.scenes.common._3d.cams;
 
 import de.amr.games.pacman.ui.fx.entities._3d.Player3D;
-import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScene3DPerspective;
+import de.amr.games.pacman.ui.fx.scenes.common._3d.PlaySceneCam;
 import de.amr.games.pacman.ui.fx.util.ManualCameraController;
 import javafx.scene.Camera;
 import javafx.scene.input.KeyEvent;
@@ -12,7 +12,7 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class Cam_Total extends ManualCameraController implements PlayScene3DPerspective {
+public class Cam_Total extends ManualCameraController implements PlaySceneCam {
 
 	public Cam_Total(Camera cam) {
 		super(cam);

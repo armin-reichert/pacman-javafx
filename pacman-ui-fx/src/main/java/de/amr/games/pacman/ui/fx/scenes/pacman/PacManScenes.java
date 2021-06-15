@@ -5,7 +5,7 @@ import de.amr.games.pacman.ui.fx.model3D.PacManModel3D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.PlayScene2D;
-import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScene3D;
+import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScene3DWithAnimations;
 import de.amr.games.pacman.ui.fx.sound.PacManGameSounds;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 
@@ -32,7 +32,7 @@ public class PacManScenes {
 		SCENES[3][0] = 
 		SCENES[3][1] = new PacMan_IntermissionScene3();
 		SCENES[4][0] = new PlayScene2D(RENDERING, SOUNDS);
-		SCENES[4][1] = new PlayScene3D(MODEL_3D, SOUNDS);
+		SCENES[4][1] = new PlayScene3DWithAnimations(MODEL_3D, SOUNDS);
 		//@formatter:on
 	}
 }

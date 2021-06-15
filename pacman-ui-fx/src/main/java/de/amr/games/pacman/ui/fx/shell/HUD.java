@@ -4,7 +4,7 @@ import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
-import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScene3D_Raw;
+import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScene3D;
 import javafx.scene.Camera;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -67,9 +67,9 @@ public class HUD extends Text {
 		if (ui.getCurrentGameScene() instanceof AbstractGameScene2D) {
 			line("Canvas2D", "w=%.0f h=%.0f", ui.getCanvas().getWidth(), ui.getCanvas().getHeight());
 		} else {
-			if (ui.getCurrentGameScene() instanceof PlayScene3D_Raw) {
-				PlayScene3D_Raw playScene = (PlayScene3D_Raw) ui.getCurrentGameScene();
-				line("Perspective (CTRL+C)", "%s", playScene.selectedPerspective());
+			if (ui.getCurrentGameScene() instanceof PlayScene3D) {
+				PlayScene3D playScene = (PlayScene3D) ui.getCurrentGameScene();
+				line("Perspective (CTRL+C)", "%s", playScene.selectedCam());
 				line("Camera", "%s", cameraInfo(playScene.getSubSceneFX().getCamera()));
 			}
 			newline();
