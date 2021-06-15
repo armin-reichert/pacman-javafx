@@ -27,6 +27,7 @@ import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacManScenes;
 import de.amr.games.pacman.ui.fx.scenes.pacman.PacManScenes;
 import de.amr.games.pacman.ui.fx.util.CoordinateSystem;
 import javafx.scene.AmbientLight;
+import javafx.scene.Camera;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SceneAntialiasing;
@@ -62,12 +63,13 @@ public class PlayScene3D_Raw implements GameScene {
 	public PlayScene3D_Raw(PacManModel3D model3D) {
 		this.model3D = model3D;
 		subSceneFX = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
-		subSceneFX.setCamera(new PerspectiveCamera(true));
+		Camera cam = new PerspectiveCamera(true);
+		subSceneFX.setCamera(cam);
 		subSceneFX.addEventHandler(KeyEvent.KEY_PRESSED, event -> selectedPerspective().handle(event));
 		perspectives = new PlayScene3DPerspective[] { //
-				new Cam_Total(subSceneFX), //
-				new Cam_FollowingPlayer(subSceneFX), //
-				new Cam_NearPlayer(subSceneFX), //
+				new Cam_Total(cam), //
+				new Cam_FollowingPlayer(cam), //
+				new Cam_NearPlayer(cam), //
 //				new POVPerspective(this), //
 		};
 		selectPerspective(CAM_FOLLOWING_PLAYER);

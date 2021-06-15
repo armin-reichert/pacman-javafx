@@ -2,7 +2,6 @@ package de.amr.games.pacman.ui.fx.scenes.common._3d.cams;
 
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.ui.fx.entities._3d.Player3D;
-import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScene3D_Raw;
 import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScene3DPerspective;
 import javafx.scene.Camera;
 import javafx.scene.transform.Rotate;
@@ -14,28 +13,26 @@ import javafx.scene.transform.Rotate;
  */
 public class Cam_POV implements PlayScene3DPerspective {
 
-	private final PlayScene3D_Raw playScene;
+	private final Camera cam;
 
-	public Cam_POV(PlayScene3D_Raw playScene) {
-		this.playScene = playScene;
+	public Cam_POV(Camera cam) {
+		this.cam = cam;
 	}
 
 	@Override
 	public void reset() {
-		Camera camera = playScene.getSubSceneFX().getCamera();
-		camera.setNearClip(0.001);
-		camera.setFarClip(100);
-		camera.setTranslateZ(-40);
+		cam.setNearClip(0.001);
+		cam.setFarClip(100);
+		cam.setTranslateZ(-40);
 	}
 
 	@Override
 	public void follow(Player3D player3D) {
-		Camera camera = playScene.getSubSceneFX().getCamera();
 		V2d offset = new V2d(player3D.player.dir().vec).scaled(8);
-		camera.setRotationAxis(Rotate.Z_AXIS);
-		camera.setRotate(player3D.getRotate());
-		camera.setTranslateX(-14 * 8 + player3D.player.position().x + offset.x);
-		camera.setTranslateY(-18 * 8 + player3D.player.position().y + offset.y);
+		cam.setRotationAxis(Rotate.Z_AXIS);
+		cam.setRotate(player3D.getRotate());
+		cam.setTranslateX(-14 * 8 + player3D.player.position().x + offset.x);
+		cam.setTranslateY(-18 * 8 + player3D.player.position().y + offset.y);
 	}
 
 	@Override

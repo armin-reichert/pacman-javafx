@@ -4,7 +4,6 @@ import de.amr.games.pacman.ui.fx.entities._3d.Player3D;
 import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScene3DPerspective;
 import de.amr.games.pacman.ui.fx.util.ManualCameraController;
 import javafx.scene.Camera;
-import javafx.scene.SubScene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
 
@@ -13,31 +12,26 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class Cam_Total implements PlayScene3DPerspective {
+public class Cam_Total extends ManualCameraController implements PlayScene3DPerspective {
 
-	private final SubScene subScene;
-	private ManualCameraController cameraController;
-
-	public Cam_Total(SubScene subScene) {
-		this.subScene = subScene;
-		cameraController = new ManualCameraController(subScene.getCamera());
+	public Cam_Total(Camera cam) {
+		super(cam);
 	}
 
 	@Override
 	public void handle(KeyEvent event) {
-		cameraController.handleKeyEvent(event);
+		super.handleKeyEvent(event);
 	}
 
 	@Override
 	public void reset() {
-		Camera camera = subScene.getCamera();
-		camera.setNearClip(0.1);
-		camera.setFarClip(10000.0);
-		camera.setRotationAxis(Rotate.X_AXIS);
-		camera.setRotate(30);
-		camera.setTranslateX(0);
-		camera.setTranslateY(270);
-		camera.setTranslateZ(-460);
+		cam.setNearClip(0.1);
+		cam.setFarClip(10000.0);
+		cam.setRotationAxis(Rotate.X_AXIS);
+		cam.setRotate(30);
+		cam.setTranslateX(0);
+		cam.setTranslateY(270);
+		cam.setTranslateZ(-460);
 	}
 
 	@Override

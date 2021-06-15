@@ -11,43 +11,43 @@ import javafx.scene.transform.Rotate;
  */
 public class ManualCameraController {
 
-	private final Camera camera;
+	protected final Camera cam;
 
-	public ManualCameraController(Camera camera) {
-		this.camera = camera;
+	public ManualCameraController(Camera cam) {
+		this.cam = cam;
 	}
 
 	public void handleKeyEvent(KeyEvent e) {
 		if (e.isControlDown()) {
 			switch (e.getCode()) {
 			case DIGIT0:
-				camera.setTranslateX(0);
-				camera.setTranslateY(0);
-				camera.setTranslateZ(-300);
-				camera.setRotationAxis(Rotate.X_AXIS);
-				camera.setRotate(0);
-				camera.setRotationAxis(Rotate.Y_AXIS);
-				camera.setRotate(0);
-				camera.setRotationAxis(Rotate.Z_AXIS);
-				camera.setRotate(0);
+				cam.setTranslateX(0);
+				cam.setTranslateY(0);
+				cam.setTranslateZ(-300);
+				cam.setRotationAxis(Rotate.X_AXIS);
+				cam.setRotate(0);
+				cam.setRotationAxis(Rotate.Y_AXIS);
+				cam.setRotate(0);
+				cam.setRotationAxis(Rotate.Z_AXIS);
+				cam.setRotate(0);
 				break;
 			case LEFT:
-				camera.setTranslateX(camera.getTranslateX() + 10);
+				cam.setTranslateX(cam.getTranslateX() + 10);
 				break;
 			case RIGHT:
-				camera.setTranslateX(camera.getTranslateX() - 10);
+				cam.setTranslateX(cam.getTranslateX() - 10);
 				break;
 			case UP:
-				camera.setTranslateY(camera.getTranslateY() + 10);
+				cam.setTranslateY(cam.getTranslateY() + 10);
 				break;
 			case DOWN:
-				camera.setTranslateY(camera.getTranslateY() - 10);
+				cam.setTranslateY(cam.getTranslateY() - 10);
 				break;
 			case PLUS:
-				camera.setTranslateZ(camera.getTranslateZ() + 10);
+				cam.setTranslateZ(cam.getTranslateZ() + 10);
 				break;
 			case MINUS:
-				camera.setTranslateZ(camera.getTranslateZ() - 10);
+				cam.setTranslateZ(cam.getTranslateZ() - 10);
 				break;
 			default:
 				break;
@@ -56,20 +56,20 @@ public class ManualCameraController {
 		if (e.isShiftDown()) {
 			switch (e.getCode()) {
 			case DOWN:
-				camera.setRotationAxis(Rotate.X_AXIS);
-				camera.setRotate((360 + camera.getRotate() - 1) % 360);
+				cam.setRotationAxis(Rotate.X_AXIS);
+				cam.setRotate((360 + cam.getRotate() - 1) % 360);
 				break;
 			case UP:
-				camera.setRotationAxis(Rotate.X_AXIS);
-				camera.setRotate((camera.getRotate() + 1) % 360);
+				cam.setRotationAxis(Rotate.X_AXIS);
+				cam.setRotate((cam.getRotate() + 1) % 360);
 				break;
 			case LEFT:
-				camera.setRotationAxis(Rotate.Z_AXIS);
-				camera.setRotate((360 + camera.getRotate() - 1) % 360);
+				cam.setRotationAxis(Rotate.Z_AXIS);
+				cam.setRotate((360 + cam.getRotate() - 1) % 360);
 				break;
 			case RIGHT:
-				camera.setRotationAxis(Rotate.Z_AXIS);
-				camera.setRotate((360 + camera.getRotate() + 1) % 360);
+				cam.setRotationAxis(Rotate.Z_AXIS);
+				cam.setRotate((360 + cam.getRotate() + 1) % 360);
 				break;
 			default:
 				break;
