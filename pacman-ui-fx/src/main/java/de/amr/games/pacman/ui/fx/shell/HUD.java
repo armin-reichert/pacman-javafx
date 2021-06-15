@@ -69,8 +69,8 @@ public class HUD extends Text {
 		} else {
 			if (ui.getCurrentGameScene() instanceof PlayScene3D) {
 				PlayScene3D playScene = (PlayScene3D) ui.getCurrentGameScene();
-				line("Perspective (CTRL+C)", "%s", playScene.selectedCam());
-				line("Camera", "%s", cameraInfo(playScene.getSubSceneFX().getCamera()));
+				line("Camera (CTRL+C)", "%s", playScene.selectedCam());
+				line("", "%s", cameraInfo(playScene.getSubSceneFX().getCamera()));
 			}
 			newline();
 			line("Draw Mode (CTRL+L)", "%s", Env.$drawMode3D.get());
