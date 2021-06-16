@@ -24,9 +24,13 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.app;
 
+import static de.amr.games.pacman.lib.Logging.log;
+
 import java.io.IOException;
+import java.util.List;
 
 import de.amr.games.pacman.controller.PacManGameController;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop.GameLoopTask;
@@ -45,19 +49,47 @@ public class PacManGameAppFX extends Application {
 		launch(args);
 	}
 
-	private Options options;
+	private double height = 576;
+	private GameVariant gameVariant = GameVariant.PACMAN;
 	private PacManGameController gameController;
+
+	private void parseParameters(List<String> params) {
+		int i = -1;
+		while (++i < params.size()) {
+			if ("-pacman".equals(params.get(i))) {
+				gameVariant = GameVariant.PACMAN;
+				continue;
+			}
+			if ("-mspacman".equals(params.get(i))) {
+				gameVariant = GameVariant.MS_PACMAN;
+				continue;
+			}
+			if ("-height".equals(params.get(i))) {
+				if (++i == params.size()) {
+					log("Error parsing parameters: missing height value.");
+					break;
+				}
+				try {
+					height = Double.parseDouble(params.get(i));
+				} catch (NumberFormatException x) {
+					log("Error parsing parameters: '%s' is no legal height value.", params.get(i));
+				}
+				continue;
+			}
+			log("Error parsing parameters: Found garbage '%s'", params.get(i));
+		}
+	}
 
 	@Override
 	public void init() throws Exception {
-		options = new Options(getParameters().getRaw());
+		parseParameters(getParameters().getRaw());
 		gameController = new PacManGameController();
-		gameController.selectGameVariant(options.gameVariant);
+		gameController.selectGameVariant(gameVariant);
 	}
 
 	@Override
 	public void start(Stage stage) throws IOException {
-		PacManGameUI ui = new PacManGameUI_JavaFX(stage, gameController, options.height);
+		PacManGameUI ui = new PacManGameUI_JavaFX(stage, gameController, height);
 		gameController.setUI(ui);
 
 		GameLoop gameLoop = new GameLoop( //
