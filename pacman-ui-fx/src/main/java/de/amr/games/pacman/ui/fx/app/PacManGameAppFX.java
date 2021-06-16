@@ -42,31 +42,31 @@ import javafx.stage.Stage;
  */
 public class PacManGameAppFX extends Application {
 
-	private static Options options;
-	private PacManGameController gameController;
-	private GameLoop gameLoop;
-
 	public static void main(String[] args) {
-		options = new Options(args);
 		launch(args);
 	}
 
+	private Options options;
+	private PacManGameController gameController;
+
 	@Override
 	public void init() throws Exception {
+		options = new Options(getParameters().getRaw());
 		gameController = new PacManGameController();
 		gameController.selectGameVariant(options.gameVariant);
-		gameLoop = new GameLoop();
-		Env.$totalTicks.bind(gameLoop.$totalTicks);
-		Env.$fps.bind(gameLoop.$fps);
 	}
 
 	@Override
 	public void start(Stage stage) throws IOException {
 		PacManGameUI ui = new PacManGameUI_JavaFX(stage, gameController, options.height);
 		gameController.setUI(ui);
+
+		var gameLoop = new GameLoop();
 		gameLoop.tasks = Arrays.asList( //
 				new GameLoopTask("Controller Step", gameController::step), //
 				new GameLoopTask("UI Update", ui::update));
+		Env.$totalTicks.bind(gameLoop.$totalTicks);
+		Env.$fps.bind(gameLoop.$fps);
 		gameLoop.start();
 	}
 }
