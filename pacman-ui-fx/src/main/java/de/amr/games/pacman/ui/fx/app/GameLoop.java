@@ -48,9 +48,7 @@ class GameLoop extends AnimationTimer {
 		if ($totalTicks.get() % Env.$slowDown.get() == 0) {
 			if (!Env.$paused.get()) {
 				if (Env.$isTimeMeasured.get()) {
-					for (GameLoopTask task : taskList) {
-						measureTaskTime(task);
-					}
+					taskList.forEach(this::measureTaskTime);
 				} else {
 					taskList.forEach(task -> task.code.run());
 				}
