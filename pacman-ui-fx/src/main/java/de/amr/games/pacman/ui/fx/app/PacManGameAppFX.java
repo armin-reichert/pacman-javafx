@@ -25,7 +25,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.app;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.ui.PacManGameUI;
@@ -61,8 +60,7 @@ public class PacManGameAppFX extends Application {
 		PacManGameUI ui = new PacManGameUI_JavaFX(stage, gameController, options.height);
 		gameController.setUI(ui);
 
-		var gameLoop = new GameLoop();
-		gameLoop.tasks = Arrays.asList( //
+		GameLoop gameLoop = new GameLoop( //
 				new GameLoopTask("Controller Step", gameController::step), //
 				new GameLoopTask("UI Update", ui::update));
 		Env.$totalTicks.bind(gameLoop.$totalTicks);

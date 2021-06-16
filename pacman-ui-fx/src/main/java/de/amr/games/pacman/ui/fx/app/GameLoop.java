@@ -2,7 +2,8 @@ package de.amr.games.pacman.ui.fx.app;
 
 import static de.amr.games.pacman.lib.Logging.log;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.amr.games.pacman.ui.fx.Env;
@@ -33,21 +34,25 @@ class GameLoop extends AnimationTimer {
 	public final IntegerProperty $fps = new SimpleIntegerProperty();
 	public final IntegerProperty $totalTicks = new SimpleIntegerProperty();
 
-	public List<GameLoopTask> tasks = Collections.emptyList();
+	public List<GameLoopTask> taskList;
 
 	private long fpsCountStartTime;
 	private int frames;
+
+	public GameLoop(GameLoopTask... tasks) {
+		taskList = new ArrayList<>(Arrays.asList(tasks));
+	}
 
 	@Override
 	public void handle(long now) {
 		if ($totalTicks.get() % Env.$slowDown.get() == 0) {
 			if (!Env.$paused.get()) {
 				if (Env.$isTimeMeasured.get()) {
-					for (GameLoopTask task : tasks) {
+					for (GameLoopTask task : taskList) {
 						measureTaskTime(task);
 					}
 				} else {
-					tasks.forEach(task -> task.code.run());
+					taskList.forEach(task -> task.code.run());
 				}
 			}
 			++frames;
