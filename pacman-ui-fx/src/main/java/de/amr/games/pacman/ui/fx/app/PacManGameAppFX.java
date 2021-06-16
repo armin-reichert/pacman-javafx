@@ -35,7 +35,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 /**
- * The Pac-Man game app running in a JavaFX UI.
+ * The Pac-Man / Ms. Pac-Man game running in a JavaFX UI.
  * 
  * @author Armin Reichert
  */
