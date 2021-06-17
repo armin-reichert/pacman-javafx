@@ -35,7 +35,6 @@ public class Rendering2D_PacMan extends Rendering2D {
 				"GALAXIAN",		sprite(7, 3),
 				"BELL",				sprite(8, 3),
 				"KEY",				sprite(9, 3)
-				
 		);
 
 		bonusValueSprites = Map.of(

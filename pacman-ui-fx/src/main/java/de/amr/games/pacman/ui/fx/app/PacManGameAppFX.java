@@ -27,6 +27,7 @@ package de.amr.games.pacman.ui.fx.app;
 import static de.amr.games.pacman.lib.Logging.log;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import de.amr.games.pacman.controller.PacManGameController;
@@ -49,6 +50,8 @@ public class PacManGameAppFX extends Application {
 		launch(args);
 	}
 
+	private static final List<String> PARAMETER_NAMES = Arrays.asList("-height", "-mspacman", "-pacman");
+
 	private double height = 576;
 	private GameVariant gameVariant = GameVariant.PACMAN;
 	private PacManGameController gameController;
@@ -65,18 +68,19 @@ public class PacManGameAppFX extends Application {
 				continue;
 			}
 			if ("-height".equals(params.get(i))) {
-				if (++i == params.size()) {
-					log("Error parsing parameters: missing height value.");
+				++i;
+				if (i == params.size() || PARAMETER_NAMES.contains(params.get(i))) {
+					log("!!! Error parsing parameters: missing height value.");
 					break;
 				}
 				try {
 					height = Double.parseDouble(params.get(i));
 				} catch (NumberFormatException x) {
-					log("Error parsing parameters: '%s' is no legal height value.", params.get(i));
+					log("!!! Error parsing parameters: '%s' is no legal height value.", params.get(i));
 				}
 				continue;
 			}
-			log("Error parsing parameters: Found garbage '%s'", params.get(i));
+			log("!!! Error parsing parameters: Found garbage '%s'", params.get(i));
 		}
 	}
 
