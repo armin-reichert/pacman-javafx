@@ -34,8 +34,7 @@ class GameLoop extends AnimationTimer {
 	public final IntegerProperty $fps = new SimpleIntegerProperty();
 	public final IntegerProperty $totalTicks = new SimpleIntegerProperty();
 
-	public List<GameLoopTask> taskList;
-
+	private final List<GameLoopTask> taskList;
 	private long fpsCountStartTime;
 	private int frames;
 
@@ -48,7 +47,7 @@ class GameLoop extends AnimationTimer {
 		if ($totalTicks.get() % Env.$slowDown.get() == 0) {
 			if (!Env.$paused.get()) {
 				if (Env.$isTimeMeasured.get()) {
-					taskList.forEach(this::measureTaskTime);
+					taskList.forEach(this::runInstrumented);
 				} else {
 					taskList.forEach(task -> task.code.run());
 				}
@@ -63,14 +62,14 @@ class GameLoop extends AnimationTimer {
 		$totalTicks.set($totalTicks.get() + 1);
 	}
 
-	private void measureTaskTime(GameLoopTask task) {
-		double start = System.nanoTime();
+	private void runInstrumented(GameLoopTask task) {
 		try {
+			double start_ns = System.nanoTime();
 			task.code.run();
-			double duration = System.nanoTime() - start;
-			log("%s took %f millis", task.description, duration * 1e-6);
+			double duration_ns = System.nanoTime() - start_ns;
+			log("%s: %f milliseconds", task.description, duration_ns / 1e6);
 		} catch (Exception e) {
-			log("%s execution not successful");
+			log("%s: failed");
 			e.printStackTrace();
 		}
 	}
