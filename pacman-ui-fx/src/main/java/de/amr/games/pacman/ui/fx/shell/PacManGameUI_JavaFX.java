@@ -42,6 +42,8 @@ import javafx.stage.Stage;
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
 
+	private static final String APP_ICON = "/pacman/graphics/pacman.png";
+
 	private final PacManGameController gameController;
 	private final Stage stage;
 	private final Scene mainScene;
@@ -49,7 +51,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private final Keyboard keyboard = new Keyboard();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final HUD hud = new HUD(this);
-	private final Group gameSceneContent = new Group();
+	private final Group gameSceneRoot = new Group();
 	private GameScene currentGameScene;
 
 	private ObjectBinding<Background> $background = Bindings.createObjectBinding(() -> {
@@ -61,17 +63,17 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		this.stage = stage;
 		this.gameController = gameController;
 
-		StackPane rootPane = new StackPane(gameSceneContent, flashMessageView, hud);
-		rootPane.backgroundProperty().bind($background);
+		StackPane mainSceneRoot = new StackPane(gameSceneRoot, flashMessageView, hud);
+		mainSceneRoot.backgroundProperty().bind($background);
 		StackPane.setAlignment(hud, Pos.TOP_LEFT);
 
 		boolean use3DScene = Env.$use3DScenes.get();
 		GameScene gameScene = getSceneForCurrentGameState(use3DScene);
 		double aspectRatio = gameScene.aspectRatio().orElse(getScreenAspectRatio());
-		mainScene = new Scene(rootPane, aspectRatio * height, height);
+		mainScene = new Scene(mainSceneRoot, aspectRatio * height, height);
 		setGameScene(gameScene);
 
-		Env.$fps.addListener((fps, prevFPS, currentFPS) -> {
+		Env.$fps.addListener(($fps, prevFPS, currentFPS) -> {
 			String gameName = gameController.game().variant() == PACMAN ? "Pac-Man" : "Ms. Pac-Man";
 			stage.setTitle(String.format("%s (%d frames/sec, JavaFX)", gameName, currentFPS));
 		});
@@ -80,10 +82,21 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		stage.addEventHandler(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
 
-		stage.getIcons().add(new Image(getClass().getResourceAsStream("/pacman/graphics/pacman.png")));
+		stage.getIcons().add(new Image(getClass().getResourceAsStream(APP_ICON)));
 		stage.setScene(mainScene);
 		stage.centerOnScreen();
 		stage.show();
+	}
+
+	@Override
+	public void update() {
+		currentGameScene.update();
+		flashMessageView.update();
+	}
+
+	public void reset() {
+		stopAllSounds();
+		currentGameScene.end();
 	}
 
 	public PacManGameController getGameController() {
@@ -105,17 +118,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private double getScreenAspectRatio() {
 		Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
 		return bounds.getWidth() / bounds.getHeight();
-	}
-
-	public void reset() {
-		stopAllSounds();
-		currentGameScene.end();
-	}
-
-	@Override
-	public void update() {
-		currentGameScene.update();
-		flashMessageView.update();
 	}
 
 	@Override
@@ -171,7 +173,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			newGameScene.resize(mainScene.getWidth(), mainScene.getHeight());
 			newGameScene.keepSizeOf(mainScene);
 			newGameScene.init();
- 			gameSceneContent.getChildren().setAll(newGameScene.getSubSceneFX());
+			gameSceneRoot.getChildren().setAll(newGameScene.getSubSceneFX());
 			// Note: this must be done after new scene has been added to scene graph:
 			newGameScene.getSubSceneFX().requestFocus();
 			currentGameScene = newGameScene;
