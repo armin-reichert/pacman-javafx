@@ -57,30 +57,35 @@ public class PacManGameAppFX extends Application {
 	private PacManGameController gameController;
 
 	private void parseParameters(List<String> params) {
-		int i = -1;
-		while (++i < params.size()) {
-			if ("-pacman".equals(params.get(i))) {
-				gameVariant = GameVariant.PACMAN;
-				continue;
-			}
-			if ("-mspacman".equals(params.get(i))) {
-				gameVariant = GameVariant.MS_PACMAN;
-				continue;
-			}
+		int i = 0;
+		while (i < params.size()) {
+
 			if ("-height".equals(params.get(i))) {
 				++i;
 				if (i == params.size() || PARAMETER_NAMES.contains(params.get(i))) {
 					log("!!! Error parsing parameters: missing height value.");
-					break;
+				} else {
+					try {
+						height = Double.parseDouble(params.get(i));
+					} catch (NumberFormatException x) {
+						log("!!! Error parsing parameters: '%s' is no legal height value.", params.get(i));
+					}
 				}
-				try {
-					height = Double.parseDouble(params.get(i));
-				} catch (NumberFormatException x) {
-					log("!!! Error parsing parameters: '%s' is no legal height value.", params.get(i));
-				}
-				continue;
 			}
-			log("!!! Error parsing parameters: Found garbage '%s'", params.get(i));
+
+			else if ("-mspacman".equals(params.get(i))) {
+				gameVariant = GameVariant.MS_PACMAN;
+			}
+
+			else if ("-pacman".equals(params.get(i))) {
+				gameVariant = GameVariant.PACMAN;
+			}
+
+			else {
+				log("!!! Error parsing parameters: Found garbage '%s'", params.get(i));
+			}
+
+			++i;
 		}
 	}
 
