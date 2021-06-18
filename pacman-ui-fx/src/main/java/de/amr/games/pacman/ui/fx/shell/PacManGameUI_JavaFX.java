@@ -12,11 +12,10 @@ import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
+import de.amr.games.pacman.ui.fx.scenes.common.SceneSelector;
 import de.amr.games.pacman.ui.fx.scenes.common.TrashTalk;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScene3D;
-import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacManScenes;
-import de.amr.games.pacman.ui.fx.scenes.pacman.PacManScenes;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.geometry.Insets;
@@ -141,8 +140,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private void stopAllSounds() {
-		MsPacManScenes.SOUNDS.stopAll();
-		PacManScenes.SOUNDS.stopAll();
+		de.amr.games.pacman.ui.fx.scenes.mspacman.Scenes.SOUNDS.stopAll();
+		de.amr.games.pacman.ui.fx.scenes.pacman.Scenes.SOUNDS.stopAll();
 	}
 
 	private void toggleUse3DScenes() {
@@ -154,27 +153,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private GameScene getSceneForCurrentGameState(boolean _3D) {
-		var game = gameController.game();
-		int sceneIndex = -1;
-		switch (gameController.state) {
-		case INTRO:
-			sceneIndex = 0;
-			break;
-		case INTERMISSION:
-			sceneIndex = game.intermissionAfterLevel(game.level().number).getAsInt();
-			break;
-		default:
-			sceneIndex = 4;
-			break;
-		}
-		switch (game.variant()) {
-		case MS_PACMAN:
-			return MsPacManScenes.SCENES[sceneIndex][_3D ? 1 : 0];
-		case PACMAN:
-			return PacManScenes.SCENES[sceneIndex][_3D ? 1 : 0];
-		default:
-			throw new IllegalStateException();
-		}
+		return SceneSelector.getScene(gameController.game(), gameController.state, _3D);
 	}
 
 	private void setGameScene(GameScene newGameScene) {

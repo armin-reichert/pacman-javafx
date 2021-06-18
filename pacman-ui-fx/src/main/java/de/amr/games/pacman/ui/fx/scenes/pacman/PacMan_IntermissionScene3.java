@@ -37,7 +37,7 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 	private BlinkyNaked2D blinkyNaked2D;
 
 	public PacMan_IntermissionScene3() {
-		super(PacManScenes.RENDERING, PacManScenes.SOUNDS);
+		super(Scenes.RENDERING, Scenes.SOUNDS);
 	}
 
 	@Override
@@ -46,8 +46,8 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 		sceneController = new SceneController(gameController);
 		sceneController.init();
 		pacMan2D = new Player2D(sceneController.pac, rendering);
-		blinkyPatched2D = new BlinkyPatched2D(sceneController.blinky, PacManScenes.RENDERING);
-		blinkyNaked2D = new BlinkyNaked2D(sceneController.blinky, PacManScenes.RENDERING);
+		blinkyPatched2D = new BlinkyPatched2D(sceneController.blinky, Scenes.RENDERING);
+		blinkyNaked2D = new BlinkyNaked2D(sceneController.blinky, Scenes.RENDERING);
 		pacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
 		blinkyPatched2D.getAnimation().restart();
 		blinkyNaked2D.getAnimation().restart();

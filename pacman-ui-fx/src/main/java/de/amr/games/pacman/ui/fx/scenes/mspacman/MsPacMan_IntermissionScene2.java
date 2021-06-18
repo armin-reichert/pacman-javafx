@@ -43,7 +43,7 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 	private Flap2D flap2D;
 
 	public MsPacMan_IntermissionScene2() {
-		super(MsPacManScenes.RENDERING, MsPacManScenes.SOUNDS);
+		super(Scenes.RENDERING, Scenes.SOUNDS);
 	}
 
 	@Override
@@ -51,10 +51,10 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 		super.init();
 		sceneController = new SceneController(gameController);
 		sceneController.init();
-		flap2D = new Flap2D(sceneController.flap, MsPacManScenes.RENDERING);
+		flap2D = new Flap2D(sceneController.flap, Scenes.RENDERING);
 		msPacMan2D = new Player2D(sceneController.msPacMan, rendering);
 		pacMan2D = new Player2D(sceneController.pacMan, rendering);
-		pacMan2D.setMunchingAnimations(MsPacManScenes.RENDERING.createSpouseMunchingAnimations());
+		pacMan2D.setMunchingAnimations(Scenes.RENDERING.createSpouseMunchingAnimations());
 		msPacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
 		pacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
 	}

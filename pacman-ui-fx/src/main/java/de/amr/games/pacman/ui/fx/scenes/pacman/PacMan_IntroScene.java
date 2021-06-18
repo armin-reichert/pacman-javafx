@@ -40,7 +40,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	private List<Ghost2D> ghostsInGallery2D;
 
 	public PacMan_IntroScene() {
-		super(PacManScenes.RENDERING, PacManScenes.SOUNDS);
+		super(Scenes.RENDERING, Scenes.SOUNDS);
 	}
 
 	@Override

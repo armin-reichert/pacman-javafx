@@ -23,8 +23,6 @@ import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.common._3d.cams.Cam_FollowingPlayer;
 import de.amr.games.pacman.ui.fx.scenes.common._3d.cams.Cam_NearPlayer;
 import de.amr.games.pacman.ui.fx.scenes.common._3d.cams.Cam_Total;
-import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacManScenes;
-import de.amr.games.pacman.ui.fx.scenes.pacman.PacManScenes;
 import de.amr.games.pacman.ui.fx.util.CoordinateSystem;
 import javafx.scene.AmbientLight;
 import javafx.scene.Camera;
@@ -80,7 +78,9 @@ public class PlayScene3D implements GameScene {
 	public void init() {
 		log("%s: init", this);
 
-		final var r2D = game().variant() == GameVariant.MS_PACMAN ? MsPacManScenes.RENDERING : PacManScenes.RENDERING;
+		final var r2D = game().variant() == GameVariant.MS_PACMAN
+				? de.amr.games.pacman.ui.fx.scenes.mspacman.Scenes.RENDERING
+				: de.amr.games.pacman.ui.fx.scenes.pacman.Scenes.RENDERING;
 		final var width = game().level().world.numCols() * TS;
 		final var height = game().level().world.numRows() * TS;
 

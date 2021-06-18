@@ -42,7 +42,7 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 	private TimedSequence<Rectangle2D> blinkyDamagedAnimation;
 
 	public PacMan_IntermissionScene2() {
-		super(PacManScenes.RENDERING, PacManScenes.SOUNDS);
+		super(Scenes.RENDERING, Scenes.SOUNDS);
 	}
 
 	@Override
@@ -55,8 +55,8 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 		nail2D = new Nail2D(sceneController.nail, (Rendering2D_PacMan) rendering);
 		pacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
 		blinky2D.getKickingAnimations().values().forEach(TimedSequence::restart);
-		blinkyStretchedAnimation = PacManScenes.RENDERING.createBlinkyStretchedAnimation();
-		blinkyDamagedAnimation = PacManScenes.RENDERING.createBlinkyDamagedAnimation();
+		blinkyStretchedAnimation = Scenes.RENDERING.createBlinkyStretchedAnimation();
+		blinkyDamagedAnimation = Scenes.RENDERING.createBlinkyDamagedAnimation();
 	}
 
 	@Override
