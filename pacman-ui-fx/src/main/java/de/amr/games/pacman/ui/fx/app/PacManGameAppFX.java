@@ -50,9 +50,10 @@ public class PacManGameAppFX extends Application {
 		launch(args);
 	}
 
-	private static final List<String> PARAMETER_NAMES = Arrays.asList("-height", "-mspacman", "-pacman");
+	private static final List<String> PARAMETER_NAMES = Arrays.asList("-2D", "-3D", "-height", "-mspacman", "-pacman");
 
 	private double height = 576;
+	private boolean use3DScenes = true;
 	private GameVariant gameVariant = GameVariant.PACMAN;
 	private PacManGameController gameController;
 
@@ -81,6 +82,14 @@ public class PacManGameAppFX extends Application {
 				gameVariant = GameVariant.PACMAN;
 			}
 
+			else if ("-2D".equals(params.get(i))) {
+				use3DScenes = false;
+			}
+
+			else if ("-3D".equals(params.get(i))) {
+				use3DScenes = true;
+			}
+
 			else {
 				log("!!! Error parsing parameters: Found garbage '%s'", params.get(i));
 			}
@@ -94,6 +103,7 @@ public class PacManGameAppFX extends Application {
 		parseParameters(getParameters().getRaw());
 		gameController = new PacManGameController();
 		gameController.selectGameVariant(gameVariant);
+		Env.$use3DScenes.set(use3DScenes);
 	}
 
 	@Override
