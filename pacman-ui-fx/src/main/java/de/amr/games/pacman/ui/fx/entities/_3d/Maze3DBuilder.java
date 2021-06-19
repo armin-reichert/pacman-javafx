@@ -18,11 +18,11 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 
 /**
- * Creates walls around inaccessible world areas.
+ * Creates the maze structure.
  * 
  * @author Armin Reichert
  */
-public class WallBuilder3D {
+public class Maze3DBuilder {
 
 	public DoubleProperty $wallHeight = new SimpleDoubleProperty(2.0);
 
@@ -31,7 +31,7 @@ public class WallBuilder3D {
 	private PhongMaterial wallMaterial;
 	private PhongMaterial topMaterial;
 
-	public WallBuilder3D() {
+	public Maze3DBuilder() {
 		wallMaterial = new PhongMaterial();
 	}
 
@@ -85,13 +85,12 @@ public class WallBuilder3D {
 	private void createDoors(PacManGameWorld world, double blockSize) {
 		PhongMaterial doorMaterial = new PhongMaterial(Color.PINK);
 		world.ghostHouse().doorTiles().forEach(tile -> {
-			Box door = new Box(TS - 1, 1, $wallHeight.get());
+			Box door = new Box(TS - 1, 1, 1);
 			door.setMaterial(doorMaterial);
 			door.drawModeProperty().bind(Env.$drawMode3D);
-			door.depthProperty().bind($wallHeight);
 			door.setTranslateX(tile.x * TS + TS / 2);
 			door.setTranslateY(tile.y * TS + TS / 2);
-			door.translateZProperty().bind($wallHeight.multiply(-0.5));
+			door.setTranslateZ(-4);
 			parts.add(door);
 		});
 	}
