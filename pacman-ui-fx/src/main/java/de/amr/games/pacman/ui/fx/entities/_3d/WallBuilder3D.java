@@ -3,15 +3,17 @@ package de.amr.games.pacman.ui.fx.entities._3d;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.model.world.FloorPlan;
+import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.fx.Env;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Node;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 
@@ -25,7 +27,7 @@ public class WallBuilder3D {
 	public DoubleProperty $wallHeight = new SimpleDoubleProperty(2.0);
 
 	private FloorPlan wallMap;
-	private List<Node> walls;
+	private List<Node> parts;
 	private PhongMaterial wallMaterial;
 	private PhongMaterial topMaterial;
 
@@ -33,8 +35,8 @@ public class WallBuilder3D {
 		wallMaterial = new PhongMaterial();
 	}
 
-	public List<Node> getWalls() {
-		return Collections.unmodifiableList(walls);
+	public List<Node> getParts() {
+		return Collections.unmodifiableList(parts);
 	}
 
 	public void setBaseMaterial(PhongMaterial material) {
@@ -49,10 +51,11 @@ public class WallBuilder3D {
 		wallMap = FloorPlan.build(resolution, world);
 		double blockSize = TS / resolution;
 		createWalls(world, blockSize);
-		return getWalls();
+		createDoors(world, blockSize);
+		return getParts();
 	}
 
-	private void addBlock(int leftX, int topY, int numBlocksX, int numBlocksY, double blockSize) {
+	private List<Box> addBlock(int leftX, int topY, int numBlocksX, int numBlocksY, double blockSize) {
 		Box base = new Box(numBlocksX * blockSize, numBlocksY * blockSize, $wallHeight.get());
 		base.depthProperty().bind($wallHeight);
 		base.setMaterial(wallMaterial);
@@ -60,7 +63,7 @@ public class WallBuilder3D {
 		base.setTranslateY(topY * blockSize + numBlocksY * 0.5 * blockSize);
 		base.translateZProperty().bind($wallHeight.multiply(-0.5));
 		base.drawModeProperty().bind(Env.$drawMode3D);
-		walls.add(base);
+		parts.add(base);
 
 		double topHeight = 0.5;
 		Box top = new Box(numBlocksX * blockSize, numBlocksY * blockSize, topHeight);
@@ -69,7 +72,9 @@ public class WallBuilder3D {
 		top.setTranslateY(topY * blockSize + numBlocksY * 0.5 * blockSize);
 		top.translateZProperty().bind(base.translateZProperty().subtract($wallHeight.add(topHeight + 0.1).multiply(0.5)));
 		top.drawModeProperty().bind(Env.$drawMode3D);
-		walls.add(top);
+		parts.add(top);
+
+		return Arrays.asList(base, top);
 	}
 
 	// TODO I need a half cylinder or a special corner shape for smooth corners
@@ -77,8 +82,22 @@ public class WallBuilder3D {
 		addBlock(x, y, 1, 1, blockSize);
 	}
 
+	private void createDoors(PacManGameWorld world, double blockSize) {
+		PhongMaterial doorMaterial = new PhongMaterial(Color.PINK);
+		world.ghostHouse().doorTiles().forEach(tile -> {
+			Box door = new Box(TS - 1, 1, $wallHeight.get());
+			door.setMaterial(doorMaterial);
+			door.drawModeProperty().bind(Env.$drawMode3D);
+			door.depthProperty().bind($wallHeight);
+			door.setTranslateX(tile.x * TS + TS / 2);
+			door.setTranslateY(tile.y * TS + TS / 2);
+			door.translateZProperty().bind($wallHeight.multiply(-0.5));
+			parts.add(door);
+		});
+	}
+
 	private void createWalls(PacManGameWorld world, double blockSize) {
-		walls = new ArrayList<>();
+		parts = new ArrayList<>();
 		// horizontal
 		for (int y = 0; y < wallMap.sizeY(); ++y) {
 			int leftX = -1;
