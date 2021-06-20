@@ -11,8 +11,8 @@ import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.lib.TimedSequence;
-import de.amr.games.pacman.model.common.PacManGameModel;
 import de.amr.games.pacman.model.common.GhostState;
+import de.amr.games.pacman.model.common.PacManGameModel;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.entities._2d.Ghost2D;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -26,14 +26,14 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class PlayScene2DAnimationController implements DefaultPacManGameEventHandler {
+public class PlayScene2DWithAnimations implements DefaultPacManGameEventHandler {
 
 	public final SoundManager sounds;
 	private final PlayScene2D playScene;
 	private PacManGameController gameController;
 	private SequentialTransition levelCompleteAnimation;
 
-	public PlayScene2DAnimationController(PlayScene2D playScene, SoundManager sounds) {
+	public PlayScene2DWithAnimations(PlayScene2D playScene, SoundManager sounds) {
 		this.playScene = playScene;
 		this.sounds = sounds;
 	}
@@ -159,6 +159,8 @@ public class PlayScene2DAnimationController implements DefaultPacManGameEventHan
 
 		// enter PACMAN_DYING
 		else if (e.newGameState == PacManGameState.PACMAN_DYING) {
+			gameController.stateTimer().resetSeconds(5);
+			gameController.stateTimer().start();
 			playScene.ghosts2D.forEach(ghost2D -> ghost2D.getKickingAnimations().values().forEach(TimedSequence::reset));
 			playScene.player2D.getDyingAnimation().restart();
 			sounds.stopAll();

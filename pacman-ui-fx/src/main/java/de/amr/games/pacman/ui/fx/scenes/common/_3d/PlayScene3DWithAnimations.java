@@ -309,6 +309,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 			player3D.setTranslateX(savedTranslateX);
 			player3D.setTranslateY(savedTranslateY);
 			player3D.setTranslateZ(savedTranslateZ);
+			gameController.stateTimer().expire();
 		});
 
 		new SequentialTransition(phase1, raise, expand, shrink, end).play();

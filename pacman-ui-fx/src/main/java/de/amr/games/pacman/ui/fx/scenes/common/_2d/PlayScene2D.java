@@ -37,11 +37,11 @@ public class PlayScene2D extends AbstractGameScene2D {
 	public List<Ghost2D> ghosts2D;
 	public Bonus2D bonus2D;
 
-	private final PlayScene2DAnimationController animationController;
+	private final PlayScene2DWithAnimations animationController;
 
 	public PlayScene2D(Rendering2D rendering, SoundManager sounds) {
 		super(rendering, sounds);
-		animationController = new PlayScene2DAnimationController(this, sounds);
+		animationController = new PlayScene2DWithAnimations(this, sounds);
 	}
 
 	@Override
