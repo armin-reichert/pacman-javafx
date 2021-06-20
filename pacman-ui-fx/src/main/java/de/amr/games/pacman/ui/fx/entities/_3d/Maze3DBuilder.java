@@ -26,13 +26,14 @@ public class Maze3DBuilder {
 
 	public DoubleProperty $wallHeight = new SimpleDoubleProperty(2.0);
 
-	private FloorPlan wallMap;
+	private FloorPlan floorPlan;
 	private List<Node> parts;
-	private PhongMaterial wallMaterial;
-	private PhongMaterial topMaterial;
+	private PhongMaterial wallBaseMaterial;
+	private PhongMaterial wallTopMaterial;
 
 	public Maze3DBuilder() {
-		wallMaterial = new PhongMaterial();
+		wallBaseMaterial = new PhongMaterial();
+		wallTopMaterial = new PhongMaterial();
 	}
 
 	public List<Node> getParts() {
@@ -40,15 +41,15 @@ public class Maze3DBuilder {
 	}
 
 	public void setBaseMaterial(PhongMaterial material) {
-		this.wallMaterial = material;
+		this.wallBaseMaterial = material;
 	}
 
 	public void setTopMaterial(PhongMaterial material) {
-		this.topMaterial = material;
+		this.wallTopMaterial = material;
 	}
 
 	public List<Node> build(PacManGameWorld world, int resolution) {
-		wallMap = FloorPlan.build(resolution, world);
+		floorPlan = FloorPlan.build(resolution, world);
 		double blockSize = TS / resolution;
 		createWalls(world, blockSize);
 		createDoors(world, blockSize);
@@ -58,7 +59,7 @@ public class Maze3DBuilder {
 	private List<Box> addBlock(int leftX, int topY, int numBlocksX, int numBlocksY, double blockSize) {
 		Box base = new Box(numBlocksX * blockSize, numBlocksY * blockSize, $wallHeight.get());
 		base.depthProperty().bind($wallHeight);
-		base.setMaterial(wallMaterial);
+		base.setMaterial(wallBaseMaterial);
 		base.setTranslateX(leftX * blockSize + numBlocksX * 0.5 * blockSize);
 		base.setTranslateY(topY * blockSize + numBlocksY * 0.5 * blockSize);
 		base.translateZProperty().bind($wallHeight.multiply(-0.5));
@@ -67,7 +68,7 @@ public class Maze3DBuilder {
 
 		double topHeight = 0.5;
 		Box top = new Box(numBlocksX * blockSize, numBlocksY * blockSize, topHeight);
-		top.setMaterial(topMaterial);
+		top.setMaterial(wallTopMaterial);
 		top.setTranslateX(leftX * blockSize + numBlocksX * 0.5 * blockSize);
 		top.setTranslateY(topY * blockSize + numBlocksY * 0.5 * blockSize);
 		top.translateZProperty().bind(base.translateZProperty().subtract($wallHeight.add(topHeight + 0.1).multiply(0.5)));
@@ -98,11 +99,11 @@ public class Maze3DBuilder {
 	private void createWalls(PacManGameWorld world, double blockSize) {
 		parts = new ArrayList<>();
 		// horizontal
-		for (int y = 0; y < wallMap.sizeY(); ++y) {
+		for (int y = 0; y < floorPlan.sizeY(); ++y) {
 			int leftX = -1;
 			int sizeX = 0;
-			for (int x = 0; x < wallMap.sizeX(); ++x) {
-				if (wallMap.get(x, y) == FloorPlan.HWALL) {
+			for (int x = 0; x < floorPlan.sizeX(); ++x) {
+				if (floorPlan.get(x, y) == FloorPlan.HWALL) {
 					if (leftX == -1) {
 						leftX = x;
 						sizeX = 1;
@@ -115,23 +116,23 @@ public class Maze3DBuilder {
 						leftX = -1;
 					}
 				}
-				if (x == wallMap.sizeX() - 1 && leftX != -1) {
+				if (x == floorPlan.sizeX() - 1 && leftX != -1) {
 					addBlock(leftX, y, sizeX, 1, blockSize);
 					leftX = -1;
 				}
 			}
-			if (y == wallMap.sizeY() - 1 && leftX != -1) {
+			if (y == floorPlan.sizeY() - 1 && leftX != -1) {
 				addBlock(leftX, y, sizeX, 1, blockSize);
 				leftX = -1;
 			}
 		}
 
 		// vertical
-		for (int x = 0; x < wallMap.sizeX(); ++x) {
+		for (int x = 0; x < floorPlan.sizeX(); ++x) {
 			int topY = -1;
 			int sizeY = 0;
-			for (int y = 0; y < wallMap.sizeY(); ++y) {
-				if (wallMap.get(x, y) == FloorPlan.VWALL) {
+			for (int y = 0; y < floorPlan.sizeY(); ++y) {
+				if (floorPlan.get(x, y) == FloorPlan.VWALL) {
 					if (topY == -1) {
 						topY = y;
 						sizeY = 1;
@@ -144,21 +145,21 @@ public class Maze3DBuilder {
 						topY = -1;
 					}
 				}
-				if (y == wallMap.sizeY() - 1 && topY != -1) {
+				if (y == floorPlan.sizeY() - 1 && topY != -1) {
 					addBlock(x, topY, 1, sizeY, blockSize);
 					topY = -1;
 				}
 			}
-			if (x == wallMap.sizeX() - 1 && topY != -1) {
+			if (x == floorPlan.sizeX() - 1 && topY != -1) {
 				addBlock(x, topY, 1, sizeY, blockSize);
 				topY = -1;
 			}
 		}
 
 		// corners
-		for (int y = 0; y < wallMap.sizeY(); ++y) {
-			for (int x = 0; x < wallMap.sizeX(); ++x) {
-				if (wallMap.get(x, y) == FloorPlan.CORNER) {
+		for (int y = 0; y < floorPlan.sizeY(); ++y) {
+			for (int x = 0; x < floorPlan.sizeX(); ++x) {
+				if (floorPlan.get(x, y) == FloorPlan.CORNER) {
 					addCorner(x, y, blockSize);
 				}
 			}
