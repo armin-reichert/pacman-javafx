@@ -1,13 +1,9 @@
 package de.amr.games.pacman.ui.fx.entities._2d;
 
-import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
-
-import java.util.function.IntSupplier;
 
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -20,29 +16,21 @@ import javafx.scene.text.FontWeight;
  */
 public class LivesCounter2D implements Renderable2D {
 
-	public final Rendering2D rendering;
-	public final V2i leftUpperTile;
-	private IntSupplier livesSupplier = () -> 0;
+	private final int x;
+	private final int y;
+	private final Rendering2D rendering;
+	private final int maxLivesDisplayed = 5;
+	public int lives;
 
 	public LivesCounter2D(V2i leftUpperTile, Rendering2D rendering) {
-		this.leftUpperTile = leftUpperTile;
+		x = t(leftUpperTile.x);
+		y = t(leftUpperTile.y);
 		this.rendering = rendering;
-	}
-
-	public void setLivesSupplier(IntSupplier livesSupplier) {
-		this.livesSupplier = livesSupplier;
-	}
-
-	public int lives() {
-		return livesSupplier.getAsInt();
 	}
 
 	@Override
 	public void render(GraphicsContext g) {
-		final int lives = lives();
-		final Rectangle2D sprite = rendering.getLifeImage();
-		final int maxLivesDisplayed = 5;
-		final double x = leftUpperTile.x * TS, y = leftUpperTile.y * TS;
+		var sprite = rendering.getLifeImage();
 		for (int i = 0; i < Math.min(lives, maxLivesDisplayed); ++i) {
 			rendering.renderSprite(g, sprite, x + t(2 * i), y);
 		}

@@ -58,7 +58,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 		maze2D.setGameLevel(game().level());
 
 		livesCounter2D = new LivesCounter2D(new V2i(2, 34), rendering);
-		livesCounter2D.setLivesSupplier(() -> game().lives());
 
 		score2D = new GameScore2D(rendering);
 		score2D.setTitle("SCORE");
@@ -93,6 +92,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void doUpdate() {
+		livesCounter2D.lives = game().lives();
 		animationController.update();
 	}
 
