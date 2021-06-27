@@ -26,7 +26,8 @@ import javafx.util.Duration;
  */
 public class Maze2D implements Renderable2D {
 
-	private final V2i leftUpperCorner;
+	private final int x;
+	private final int y;
 	private final Rendering2D rendering;
 	private GameLevel gameLevel;
 	private Timeline flashingAnimation;
@@ -35,7 +36,8 @@ public class Maze2D implements Renderable2D {
 	private TimedSequence<Boolean> energizerBlinking = TimedSequence.pulse().frameDuration(10);
 
 	public Maze2D(V2i leftUpperCorner, Rendering2D rendering) {
-		this.leftUpperCorner = leftUpperCorner;
+		x = t(leftUpperCorner.x);
+		y = t(leftUpperCorner.y);
 		this.rendering = rendering;
 		KeyFrame switchImage = new KeyFrame(Duration.millis(150), e -> flashImage = !flashImage);
 		flashingAnimation = new Timeline(switchImage);
@@ -50,7 +52,6 @@ public class Maze2D implements Renderable2D {
 			energizer2D.setBlinkingAnimation(energizerBlinking);
 			return energizer2D;
 		}).collect(Collectors.toList());
-//		flashingAnimation.stop(); // just in case
 		flashingAnimation.setCycleCount(2 * gameLevel.numFlashes);
 	}
 
@@ -71,20 +72,16 @@ public class Maze2D implements Renderable2D {
 		if (flashingAnimation.getStatus() == Status.RUNNING) {
 			Image image = flashImage ? rendering.getMazeFlashImage(gameLevel.mazeNumber)
 					: rendering.getMazeEmptyImage(gameLevel.mazeNumber);
-			g.drawImage(image, t(leftUpperCorner.x), t(leftUpperCorner.y));
+			g.drawImage(image, x, y);
 		} else {
 			Image image = rendering.getMazeFullImage(gameLevel.mazeNumber);
-			g.drawImage(image, t(leftUpperCorner.x), t(leftUpperCorner.y));
+			g.drawImage(image, x, y);
 			energizers2D.forEach(energizer2D -> energizer2D.render(g));
 			energizerBlinking.animate();
 			g.setFill(Color.BLACK);
 			gameLevel.world.tiles().filter(gameLevel::isFoodRemoved).forEach(foodTile -> {
 				g.fillRect(foodTile.x * TS, foodTile.y * TS, TS, TS);
 			});
-//			gameLevel.world.tiles().filter(gameLevel.world::isIntersection).forEach(t -> {
-//				g.setStroke(Color.YELLOW);
-//				g.strokeRect(t.x*TS, t.y*TS, TS, TS);
-//			});
 		}
 	}
 }
