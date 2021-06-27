@@ -4,7 +4,6 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
 import java.util.function.IntSupplier;
 
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -19,13 +18,13 @@ public class GameScore2D implements Renderable2D {
 	private final Rendering2D rendering;
 	private IntSupplier pointsSupplier;
 	private IntSupplier levelSupplier;
-
-	private int x;
-	private int y;
 	private Color titleColor = Color.WHITE;
 	private Color pointsColor = Color.YELLOW;
 	private String title = "SCORE";
 	private boolean showPoints = true;
+
+	public int x;
+	public int y;
 
 	public GameScore2D(Rendering2D rendering) {
 		this.rendering = rendering;
@@ -56,11 +55,6 @@ public class GameScore2D implements Renderable2D {
 			g.fillText(String.format("L%02d", levelSupplier.getAsInt()), t(8), 0);
 		}
 		g.restore();
-	}
-
-	public void setLeftUpperCorner(V2i tile) {
-		x = t(tile.x);
-		y = t(tile.y);
 	}
 
 	public void setTitleColor(Color titleColor) {
