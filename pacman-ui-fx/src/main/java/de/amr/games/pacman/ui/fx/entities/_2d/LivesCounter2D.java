@@ -2,7 +2,6 @@ package de.amr.games.pacman.ui.fx.entities._2d;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -16,15 +15,14 @@ import javafx.scene.text.FontWeight;
  */
 public class LivesCounter2D implements Renderable2D {
 
-	private final int x;
-	private final int y;
 	private final Rendering2D rendering;
 	private final int maxLivesDisplayed = 5;
+
+	public int x;
+	public int y;
 	public int lives;
 
-	public LivesCounter2D(V2i leftUpperTile, Rendering2D rendering) {
-		x = t(leftUpperTile.x);
-		y = t(leftUpperTile.y);
+	public LivesCounter2D(Rendering2D rendering) {
 		this.rendering = rendering;
 	}
 

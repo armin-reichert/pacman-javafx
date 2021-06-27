@@ -57,7 +57,9 @@ public class PlayScene2D extends AbstractGameScene2D {
 		maze2D = new Maze2D(new V2i(0, 3), rendering);
 		maze2D.setGameLevel(game().level());
 
-		livesCounter2D = new LivesCounter2D(new V2i(2, 34), rendering);
+		livesCounter2D = new LivesCounter2D(rendering);
+		livesCounter2D.x = t(2);
+		livesCounter2D.y = t(34);
 
 		score2D = new GameScore2D(rendering);
 		score2D.setTitle("SCORE");
