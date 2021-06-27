@@ -31,7 +31,7 @@ public class Maze2D implements Renderable2D {
 	private final Rendering2D rendering;
 	private GameLevel gameLevel;
 	private Timeline flashingAnimation;
-	private boolean flashImage;
+	private boolean bright;
 	private List<Energizer2D> energizers2D;
 	private TimedSequence<Boolean> energizerBlinking = TimedSequence.pulse().frameDuration(10);
 
@@ -39,9 +39,9 @@ public class Maze2D implements Renderable2D {
 		x = t(leftUpperCorner.x);
 		y = t(leftUpperCorner.y);
 		this.rendering = rendering;
-		KeyFrame switchImage = new KeyFrame(Duration.millis(150), e -> flashImage = !flashImage);
+		KeyFrame switchImage = new KeyFrame(Duration.millis(150), e -> bright = !bright);
 		flashingAnimation = new Timeline(switchImage);
-		flashImage = false;
+		bright = false;
 	}
 
 	public void setGameLevel(GameLevel gameLevel) {
@@ -70,7 +70,7 @@ public class Maze2D implements Renderable2D {
 	@Override
 	public void render(GraphicsContext g) {
 		if (flashingAnimation.getStatus() == Status.RUNNING) {
-			Image image = flashImage ? rendering.getMazeFlashImage(gameLevel.mazeNumber)
+			Image image = bright ? rendering.getMazeFlashImage(gameLevel.mazeNumber)
 					: rendering.getMazeEmptyImage(gameLevel.mazeNumber);
 			g.drawImage(image, x, y);
 		} else {
@@ -79,8 +79,8 @@ public class Maze2D implements Renderable2D {
 			energizers2D.forEach(energizer2D -> energizer2D.render(g));
 			energizerBlinking.animate();
 			g.setFill(Color.BLACK);
-			gameLevel.world.tiles().filter(gameLevel::isFoodRemoved).forEach(foodTile -> {
-				g.fillRect(foodTile.x * TS, foodTile.y * TS, TS, TS);
+			gameLevel.world.tiles().filter(gameLevel::isFoodRemoved).forEach(emptyFoodTile -> {
+				g.fillRect(t(emptyFoodTile.x), t(emptyFoodTile.y), TS, TS);
 			});
 		}
 	}
