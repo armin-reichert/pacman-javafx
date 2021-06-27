@@ -1,6 +1,5 @@
 package de.amr.games.pacman.ui.fx.entities._2d;
 
-import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
 import java.util.function.IntSupplier;
@@ -21,7 +20,8 @@ public class GameScore2D implements Renderable2D {
 	private IntSupplier pointsSupplier;
 	private IntSupplier levelSupplier;
 
-	private V2i tile = V2i.NULL;
+	private int x;
+	private int y;
 	private Color titleColor = Color.WHITE;
 	private Color pointsColor = Color.YELLOW;
 	private String title = "SCORE";
@@ -42,7 +42,7 @@ public class GameScore2D implements Renderable2D {
 	@Override
 	public void render(GraphicsContext g) {
 		g.save();
-		g.translate(tile.x * TS, tile.y * TS);
+		g.translate(x, y);
 		g.setFont(rendering.getScoreFont());
 		g.translate(0, 2);
 		g.setFill(titleColor);
@@ -59,7 +59,8 @@ public class GameScore2D implements Renderable2D {
 	}
 
 	public void setLeftUpperCorner(V2i tile) {
-		this.tile = tile;
+		x = t(tile.x);
+		y = t(tile.y);
 	}
 
 	public void setTitleColor(Color titleColor) {
