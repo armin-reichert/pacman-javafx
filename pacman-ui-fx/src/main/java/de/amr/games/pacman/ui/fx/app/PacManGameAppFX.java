@@ -32,7 +32,6 @@ import java.util.List;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop.GameLoopTask;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
@@ -108,12 +107,10 @@ public class PacManGameAppFX extends Application {
 
 	@Override
 	public void start(Stage stage) throws IOException {
-		PacManGameUI ui = new PacManGameUI_JavaFX(stage, gameController, height);
-		gameController.setUI(ui);
-
-		GameLoop gameLoop = new GameLoop( //
+		gameController.setUI(new PacManGameUI_JavaFX(stage, gameController, height));
+		var gameLoop = new GameLoop( //
 				new GameLoopTask("Controller Step", gameController::step), //
-				new GameLoopTask("UI Update", ui::update));
+				new GameLoopTask("UI Update      ", gameController.getUI()::update));
 		Env.$totalTicks.bind(gameLoop.$totalTicks);
 		Env.$fps.bind(gameLoop.$fps);
 		gameLoop.start();
