@@ -2,7 +2,6 @@ package de.amr.games.pacman.ui.fx.app;
 
 import static de.amr.games.pacman.lib.Logging.log;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,7 +38,7 @@ class GameLoop extends AnimationTimer {
 	private int frames;
 
 	public GameLoop(GameLoopTask... tasks) {
-		taskList = new ArrayList<>(Arrays.asList(tasks));
+		taskList = Arrays.asList(tasks);
 	}
 
 	@Override
