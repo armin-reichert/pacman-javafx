@@ -62,7 +62,9 @@ public class Ghost2D implements Renderable2D {
 
 	@Override
 	public void render(GraphicsContext g) {
-		rendering.renderEntity(g, ghost, currentSprite());
+		if (ghost.isVisible()) {
+			rendering.renderEntity(g, ghost, currentSprite());
+		}
 	}
 
 	private Rectangle2D currentSprite() {
