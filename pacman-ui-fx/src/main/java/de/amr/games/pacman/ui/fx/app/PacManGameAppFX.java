@@ -49,24 +49,27 @@ public class PacManGameAppFX extends Application {
 		launch(args);
 	}
 
-	private static final List<String> PARAMETER_NAMES = Arrays.asList("-2D", "-3D", "-height", "-mspacman", "-pacman");
+	private static final String[] PARAMETER_NAMES = { "-2D", "-3D", "-height", "-mspacman", "-pacman" };
 
-	private double height = 576;
+	// these are configurable via the command-line
+	private double windowHeight = 576;
 	private boolean use3DScenes = true;
 	private GameVariant gameVariant = GameVariant.PACMAN;
+
 	private PacManGameController gameController;
 
 	private void parseParameters(List<String> params) {
+		List<String> parameterNamesList = Arrays.asList(PARAMETER_NAMES);
 		int i = 0;
 		while (i < params.size()) {
 
 			if ("-height".equals(params.get(i))) {
 				++i;
-				if (i == params.size() || PARAMETER_NAMES.contains(params.get(i))) {
+				if (i == params.size() || parameterNamesList.contains(params.get(i))) {
 					log("!!! Error parsing parameters: missing height value.");
 				} else {
 					try {
-						height = Double.parseDouble(params.get(i));
+						windowHeight = Double.parseDouble(params.get(i));
 					} catch (NumberFormatException x) {
 						log("!!! Error parsing parameters: '%s' is no legal height value.", params.get(i));
 					}
@@ -107,7 +110,7 @@ public class PacManGameAppFX extends Application {
 
 	@Override
 	public void start(Stage stage) throws IOException {
-		gameController.setUI(new PacManGameUI_JavaFX(stage, gameController, height));
+		gameController.setUI(new PacManGameUI_JavaFX(stage, gameController, windowHeight));
 		var gameLoop = new GameLoop( //
 				new GameLoopTask("Controller Step", gameController::step), //
 				new GameLoopTask("UI Update      ", gameController.getUI()::update));
