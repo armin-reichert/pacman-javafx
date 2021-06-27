@@ -1,6 +1,7 @@
 package de.amr.games.pacman.ui.fx.entities._2d;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
+import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.lib.V2i;
@@ -14,11 +15,13 @@ import javafx.scene.paint.Color;
  */
 public class Energizer2D implements Renderable2D {
 
-	private V2i tile;
+	private int x;
+	private int y;
 	private TimedSequence<Boolean> blinkingAnimation;
 
 	public void setTile(V2i tile) {
-		this.tile = tile;
+		x = t(tile.x);
+		y = t(tile.y);
 	}
 
 	public void setBlinkingAnimation(TimedSequence<Boolean> blinkingAnimation) {
@@ -32,8 +35,8 @@ public class Energizer2D implements Renderable2D {
 	@Override
 	public void render(GraphicsContext g) {
 		if (!blinkingAnimation.frame()) {
-			g.setFill(Color.BLACK); // TODO rendering should provide this color
-			g.fillRect(tile.x * TS, tile.y * TS, TS, TS);
+			g.setFill(Color.BLACK); // assuming black maze background
+			g.fillRect(x, y, TS, TS);
 		}
 	}
 }

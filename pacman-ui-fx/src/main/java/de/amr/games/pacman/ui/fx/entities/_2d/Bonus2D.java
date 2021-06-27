@@ -21,7 +21,7 @@ public class Bonus2D implements Renderable2D {
 	private final Bonus bonus;
 	private final Map<String, Rectangle2D> symbolSprites;
 	private final Map<Integer, Rectangle2D> numberSprites;
-	private final TimedSequence<Integer> animation;
+	private final TimedSequence<Integer> jumpingAnimation; // Ms. Pac-Man only
 
 	public Bonus2D(Bonus bonus, Rendering2D rendering) {
 		this.bonus = Objects.requireNonNull(bonus);
@@ -30,34 +30,34 @@ public class Bonus2D implements Renderable2D {
 		numberSprites = rendering.getBonusValuesSpritesMap();
 		if (rendering instanceof Rendering2D_MsPacMan) {
 			Rendering2D_MsPacMan msPacManRendering = (Rendering2D_MsPacMan) rendering;
-			animation = msPacManRendering.createBonusAnimation();
+			jumpingAnimation = msPacManRendering.createBonusAnimation();
 		} else {
-			animation = null;
+			jumpingAnimation = null;
 		}
 	}
 
 	public void startAnimation() {
-		if (animation != null) {
-			animation.restart();
+		if (jumpingAnimation != null) {
+			jumpingAnimation.restart();
 		}
 	}
 
 	public void stopAnimation() {
-		if (animation != null) {
-			animation.stop();
+		if (jumpingAnimation != null) {
+			jumpingAnimation.stop();
 		}
 	}
 
 	@Override
 	public void render(GraphicsContext g) {
-		Rectangle2D sprite = currentSprite();
-		if (sprite == null || !bonus.isVisible()) {
+		if (!bonus.isVisible()) {
 			return;
 		}
+		Rectangle2D sprite = currentSprite();
 		// Ms. Pac.Man bonus is jumping up and down while wandering the maze
-		int jump = animation != null ? animation.animate() : 0;
+		int dy = jumpingAnimation != null ? jumpingAnimation.animate() : 0;
 		g.save();
-		g.translate(0, jump);
+		g.translate(0, dy);
 		rendering.renderEntity(g, bonus, sprite);
 		g.restore();
 	}
