@@ -43,28 +43,26 @@ class GameLoop extends AnimationTimer {
 
 	@Override
 	public void handle(long now) {
-		if ($totalTicks.get() % Env.$slowDown.get() == 0) {
-			if (!Env.$paused.get()) {
-				if (Env.$isTimeMeasured.get()) {
-					taskList.forEach(this::runInstrumented);
-				} else {
-					taskList.forEach(task -> task.code.run());
-				}
-			}
-			++frames;
-			if (now - fpsCountStartTime > 1e9) {
-				$fps.set(frames);
-				frames = 0;
-				fpsCountStartTime = now;
-			}
+		if ($totalTicks.get() % Env.$slowDown.get() == 0 && !Env.$paused.get()) {
+			taskList.forEach(this::runTask);
+		}
+		++frames;
+		if (now - fpsCountStartTime > 1e9) {
+			$fps.set(frames);
+			frames = 0;
+			fpsCountStartTime = now;
 		}
 		$totalTicks.set($totalTicks.get() + 1);
 	}
 
-	private void runInstrumented(GameLoopTask task) {
-		double start_ns = System.nanoTime();
-		task.code.run();
-		double duration_ns = System.nanoTime() - start_ns;
-		log("%s: %f milliseconds", task.description, duration_ns / 1e6);
+	private void runTask(GameLoopTask task) {
+		if (Env.$isTimeMeasured.get()) {
+			double start_ns = System.nanoTime();
+			task.code.run();
+			double duration_ns = System.nanoTime() - start_ns;
+			log("%s: %f milliseconds", task.description, duration_ns / 1e6);
+		} else {
+			task.code.run();
+		}
 	}
 }
