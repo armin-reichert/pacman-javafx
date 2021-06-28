@@ -27,7 +27,7 @@ public abstract class Rendering2D {
 		spritesheet = new Spritesheet(spritesheetPath, cellSize);
 	}
 
-	public Spritesheet getSpritesheet() {
+	public Spritesheet sheet() {
 		return spritesheet;
 	}
 

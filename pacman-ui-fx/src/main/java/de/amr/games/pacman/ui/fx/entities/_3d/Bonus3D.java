@@ -31,7 +31,7 @@ public class Bonus3D extends Box {
 		this.rendering2D = rendering2D;
 		spritesByValue = new HashMap<>();
 		rendering2D.getBonusValuesSpritesMap().forEach(
-				(points, spriteRegion) -> spritesByValue.put(points, rendering2D.getSpritesheet().subImage(spriteRegion)));
+				(points, spriteRegion) -> spritesByValue.put(points, rendering2D.sheet().subImage(spriteRegion)));
 		skin = new PhongMaterial(Color.WHITE);
 		rotation = new RotateTransition(Duration.seconds(2), this);
 		rotation.setAxis(Rotate.X_AXIS);
@@ -42,7 +42,7 @@ public class Bonus3D extends Box {
 	}
 
 	private Image symbolImage(String symbol) {
-		return rendering2D.getSpritesheet().subImage(rendering2D.getSymbolSprites().get(symbol));
+		return rendering2D.sheet().subImage(rendering2D.getSymbolSprites().get(symbol));
 	}
 
 	public void update(Bonus bonus) {
