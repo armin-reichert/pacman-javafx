@@ -62,14 +62,9 @@ class GameLoop extends AnimationTimer {
 	}
 
 	private void runInstrumented(GameLoopTask task) {
-		try {
-			double start_ns = System.nanoTime();
-			task.code.run();
-			double duration_ns = System.nanoTime() - start_ns;
-			log("%s: %f milliseconds", task.description, duration_ns / 1e6);
-		} catch (Exception e) {
-			log("%s: failed");
-			e.printStackTrace();
-		}
+		double start_ns = System.nanoTime();
+		task.code.run();
+		double duration_ns = System.nanoTime() - start_ns;
+		log("%s: %f milliseconds", task.description, duration_ns / 1e6);
 	}
 }
