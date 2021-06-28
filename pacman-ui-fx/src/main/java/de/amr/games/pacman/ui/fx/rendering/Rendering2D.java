@@ -1,8 +1,5 @@
 package de.amr.games.pacman.ui.fx.rendering;
 
-import static de.amr.games.pacman.lib.Direction.LEFT;
-import static de.amr.games.pacman.lib.Direction.RIGHT;
-import static de.amr.games.pacman.lib.Direction.UP;
 import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 
 import java.util.Map;
@@ -14,78 +11,24 @@ import de.amr.games.pacman.model.pacman.Bonus;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
- * Standard implementation of scene rendering using sprites.
+ * Standard implementation of scene rendering, using a spritesheet.
  * 
  * @author Armin Reichert
  */
 public abstract class Rendering2D {
 
-	protected final Image spritesheet;
-	protected final int cellSize;
+	protected final Spritesheet spritesheet;
 
 	public Rendering2D(String spritesheetPath, int cellSize) {
-		spritesheet = Rendering2D_Assets.image(spritesheetPath);
-		this.cellSize = cellSize;
+		spritesheet = new Spritesheet(spritesheetPath, cellSize);
 	}
-
-	public Image getSpritesheet() {
+	
+	public Spritesheet getSpritesheet() {
 		return spritesheet;
-	}
-
-	public Image subImage(Rectangle2D r) {
-		return subImage((int) r.getMinX(), (int) r.getMinY(), (int) r.getWidth(), (int) r.getHeight());
-	}
-
-	public Image subImage(int x, int y, int width, int height) {
-		WritableImage subImage = new WritableImage(width, height);
-		subImage.getPixelWriter().setPixels(0, 0, width, height, spritesheet.getPixelReader(), x, y);
-		return subImage;
-	}
-
-	/**
-	 * @param col grid column (x)
-	 * @param row grid row (y)
-	 * @return grid cell at given coordinates
-	 */
-	protected Rectangle2D sprite(int col, int row) {
-		return cells(col, row, 1, 1);
-	}
-
-	/**
-	 * @param col     grid column (x)
-	 * @param row     grid row (y)
-	 * @param numCols number of grid columns
-	 * @param numRows number of grid rows
-	 * @return grid cell region at given coordinates of given size
-	 */
-	protected Rectangle2D cells(int col, int row, int numCols, int numRows) {
-		return cellsStartingAt(0, 0, col, row, numCols, numRows);
-	}
-
-	/**
-	 * @param startX  absolute x-coordinate of left-upper corner of region
-	 * @param startY  absolute y-coordinate of left-upper corner of region
-	 * @param col     grid column (x)
-	 * @param row     grid row (y)
-	 * @param numCols number of grid columns
-	 * @param numRows number of grid rows
-	 * @return grid cell region at given coordinates of given size
-	 */
-	protected Rectangle2D cellsStartingAt(int startX, int startY, int col, int row, int numCols, int numRows) {
-		return new Rectangle2D(startX + col * cellSize, startY + row * cellSize, numCols * cellSize, numRows * cellSize);
-	}
-
-	/**
-	 * @param dir direction
-	 * @return index used for this direction in the spritesheet
-	 */
-	protected int dirIndex(Direction dir) {
-		return dir == RIGHT ? 0 : dir == LEFT ? 1 : dir == UP ? 2 : 3;
 	}
 
 	/**
@@ -115,14 +58,14 @@ public abstract class Rendering2D {
 	 */
 	public void renderEntity(GraphicsContext g, GameEntity entity, Rectangle2D spriteBounds) {
 		if (entity.isVisible() && spriteBounds != null) {
-			g.drawImage(spritesheet, spriteBounds.getMinX(), spriteBounds.getMinY(), spriteBounds.getWidth(),
+			g.drawImage(spritesheet.getSource(), spriteBounds.getMinX(), spriteBounds.getMinY(), spriteBounds.getWidth(),
 					spriteBounds.getHeight(), entity.position().x - spriteBounds.getWidth() / 2 + HTS,
 					entity.position().y - spriteBounds.getHeight() / 2 + HTS, spriteBounds.getWidth(), spriteBounds.getHeight());
 		}
 	}
 
 	public void renderSprite(GraphicsContext g, Rectangle2D spriteBounds, double x, double y) {
-		g.drawImage(spritesheet, spriteBounds.getMinX(), spriteBounds.getMinY(), spriteBounds.getWidth(),
+		g.drawImage(spritesheet.getSource(), spriteBounds.getMinX(), spriteBounds.getMinY(), spriteBounds.getWidth(),
 				spriteBounds.getHeight(), x, y, spriteBounds.getWidth(), spriteBounds.getHeight());
 	}
 
