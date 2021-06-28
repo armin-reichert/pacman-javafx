@@ -10,21 +10,26 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 /**
- * 2D rendering for the scenes of the Pac-Man game.
+ * 2D-rendering for the Pac-Man game.
  * 
  * @author Armin Reichert
  */
 public class Rendering2D_PacMan extends Rendering2D {
 
-	private final Image mazeFull = Rendering2D_Assets.image("/pacman/graphics/maze_full.png");
-	private final Image mazeEmpty = Rendering2D_Assets.image("/pacman/graphics/maze_empty.png");
-	private Image mazeEmptyBright;
-	private Map<Integer, Rectangle2D> bonusValueSprites;
-	private Map<String, Rectangle2D> symbolSprites;
-	private Map<Integer, Rectangle2D> bountyNumberSprites;
+	private final Image mazeFull;
+	private final Image mazeEmpty;
+	private final Image mazeEmptyBright;
+	private final Map<Integer, Rectangle2D> bonusValueSprites;
+	private final Map<String, Rectangle2D> symbolSprites;
+	private final Map<Integer, Rectangle2D> bountyNumberSprites;
 
 	public Rendering2D_PacMan() {
 		super("/pacman/graphics/sprites.png", 16);
+
+		mazeFull = Rendering2D_Assets.image("/pacman/graphics/maze_full.png");
+		mazeEmpty = Rendering2D_Assets.image("/pacman/graphics/maze_empty.png");
+		mazeEmptyBright = Rendering2D_Assets.colorsExchanged(mazeEmpty, Map.of(getMazeWallBorderColor(0), Color.WHITE));
+
 		//@formatter:off
 		symbolSprites = Map.of(
 				"CHERRIES", 	getSpritesheet().sprite(2, 3),
@@ -55,8 +60,6 @@ public class Rendering2D_PacMan extends Rendering2D {
 			1600, getSpritesheet().cells(3, 8, 1, 1)
 		);
 		//@formatter:on
-
-		mazeEmptyBright = Rendering2D_Assets.colorsExchanged(mazeEmpty, Map.of(getMazeWallBorderColor(0), Color.WHITE));
 	}
 
 	public Color getMazeWallBorderColor(int mazeIndex) {
