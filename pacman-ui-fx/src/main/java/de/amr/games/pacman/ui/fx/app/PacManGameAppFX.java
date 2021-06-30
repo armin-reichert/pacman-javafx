@@ -105,7 +105,6 @@ public class PacManGameAppFX extends Application {
 		parseParameters(getParameters().getRaw());
 		gameController = new PacManGameController();
 		gameController.selectGameVariant(gameVariant);
-		Env.$use3DScenes.set(use3DScenes);
 	}
 
 	@Override
@@ -116,6 +115,7 @@ public class PacManGameAppFX extends Application {
 				new GameLoopTask("UI Update      ", gameController.getUI()::update));
 		Env.$totalTicks.bind(gameLoop.$totalTicks);
 		Env.$fps.bind(gameLoop.$fps);
+		Env.$use3DScenes.set(use3DScenes);
 		gameLoop.start();
 	}
 }
