@@ -64,10 +64,10 @@ public class PacManGameAppFX extends Application {
 		while (i < params.size()) {
 
 			if ("-height".equals(params.get(i))) {
-				++i;
-				if (i == params.size() || parameterNamesList.contains(params.get(i))) {
+				if (i + 1 == params.size() || parameterNamesList.contains(params.get(i + 1))) {
 					log("!!! Error parsing parameters: missing height value.");
 				} else {
+					++i;
 					try {
 						windowHeight = Double.parseDouble(params.get(i));
 					} catch (NumberFormatException x) {
@@ -103,6 +103,7 @@ public class PacManGameAppFX extends Application {
 	@Override
 	public void init() throws Exception {
 		parseParameters(getParameters().getRaw());
+		log("Game variant: %s, window height: %.0f, 3D: %s", gameVariant, windowHeight, use3DScenes);
 		gameController = new PacManGameController();
 		gameController.selectGameVariant(gameVariant);
 	}
