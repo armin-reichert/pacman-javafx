@@ -104,12 +104,12 @@ public class PacManGameAppFX extends Application {
 	public void init() throws Exception {
 		parseParameters(getParameters().getRaw());
 		log("Game variant: %s, window height: %.0f, 3D: %s", gameVariant, windowHeight, use3DScenes);
-		gameController = new PacManGameController();
-		gameController.selectGameVariant(gameVariant);
 	}
 
 	@Override
 	public void start(Stage stage) throws IOException {
+		gameController = new PacManGameController();
+		gameController.selectGameVariant(gameVariant);
 		gameController.setUI(new PacManGameUI_JavaFX(stage, gameController, windowHeight));
 		var gameLoop = new GameLoop( //
 				new GameLoopTask("Controller Step", gameController::step), //
