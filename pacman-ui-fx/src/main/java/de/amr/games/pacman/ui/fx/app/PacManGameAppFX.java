@@ -102,7 +102,7 @@ public class PacManGameAppFX extends Application {
 
 	@Override
 	public void start(Stage stage) throws IOException {
-		Options options = new Options(getParameters().getRaw());
+		Options options = new Options(getParameters().getUnnamed());
 		log("Game variant: %s, window height: %.0f, 3D: %s", options.gameVariant, options.windowHeight,
 				options.use3DScenes);
 		PacManGameController gameController = new PacManGameController();
