@@ -9,33 +9,72 @@ import javafx.scene.Scene;
 import javafx.scene.SubScene;
 
 /**
- * Common interface for all game scenes (2D and 3D). Wrapper for a JavaFX subscene of the main
- * scene.
+ * Common interface for all game scenes (2D and 3D).
+ * 
+ * <p>
+ * Each game scene has an associated JavaFX subscene.
  * 
  * @author Armin Reichert
  */
 public interface GameScene extends DefaultPacManGameEventHandler {
 
+	/**
+	 * @return the JavaFX subscene
+	 */
 	SubScene getSubSceneFX();
 
+	/**
+	 * Called before the scene is started.
+	 */
 	void init();
 
+	/**
+	 * Called on every tick.
+	 */
 	void update();
 
+	/**
+	 * Called before the scene is terminated.
+	 */
 	void end();
 
+	/**
+	 * @return the game controller
+	 */
 	PacManGameController getGameController();
 
+	/**
+	 * Sets the game controller
+	 * 
+	 * @param gameController the game controller
+	 */
 	void setGameController(PacManGameController gameController);
 
+	/**
+	 * @return the game model or {@code null}
+	 */
 	default PacManGameModel game() {
 		return getGameController() != null ? getGameController().game() : null;
 	}
 
+	/**
+	 * @return aspect ratio defined for this scene
+	 */
 	OptionalDouble aspectRatio();
 
+	/**
+	 * Resizes the scene to the given size
+	 * 
+	 * @param width  with in pixels
+	 * @param height height in pixels
+	 */
 	void resize(double width, double height);
 
+	/**
+	 * Keeps the scene size to the size of the parent scene
+	 * 
+	 * @param parentScene the parent scene (main scene)
+	 */
 	default void keepSizeOf(Scene parentScene) {
 		if (aspectRatio().isPresent()) {
 			double aspectRatio = aspectRatio().getAsDouble();

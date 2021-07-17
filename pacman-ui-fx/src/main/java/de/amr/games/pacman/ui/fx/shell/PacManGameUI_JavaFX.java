@@ -165,7 +165,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 				currentGameScene.end();
 			}
 			if (newGameScene instanceof AbstractGameScene2D) {
-				((AbstractGameScene2D) newGameScene).setCanvas(canvas);
+				((AbstractGameScene2D) newGameScene).setGraphicsContext(canvas.getGraphicsContext2D());
 			}
 			if (newGameScene.getGameController() == null) {
 				newGameScene.setGameController(gameController);
