@@ -33,13 +33,13 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 
 		//@formatter:off
 		symbolSprites = Map.of(
-			MsPacManGame.CHERRIES, 	rightSide(3,0),
+			MsPacManGame.CHERRIES,   rightSide(3,0),
 			MsPacManGame.STRAWBERRY, rightSide(4,0),
-			MsPacManGame.PEACH,			rightSide(5,0),
-			MsPacManGame.PRETZEL,		rightSide(6,0),
-			MsPacManGame.APPLE,			rightSide(7,0),
-			MsPacManGame.PEAR,				rightSide(8,0),
-			MsPacManGame.BANANA,			rightSide(9,0)
+			MsPacManGame.PEACH,      rightSide(5,0),
+			MsPacManGame.PRETZEL,    rightSide(6,0),
+			MsPacManGame.APPLE,      rightSide(7,0),
+			MsPacManGame.PEAR,       rightSide(8,0),
+			MsPacManGame.BANANA,     rightSide(9,0)
 		);
 
 		bonusValueSprites = Map.of(
