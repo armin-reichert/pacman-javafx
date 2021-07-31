@@ -7,6 +7,7 @@ import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -32,13 +33,13 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 
 		//@formatter:off
 		symbolSprites = Map.of(
-			"CHERRIES", 	rightSide(3,0),
-			"STRAWBERRY", rightSide(4,0),
-			"PEACH",			rightSide(5,0),
-			"PRETZEL",		rightSide(6,0),
-			"APPLE",			rightSide(7,0),
-			"PEAR",				rightSide(8,0),
-			"BANANA",			rightSide(9,0)
+			MsPacManGame.CHERRIES, 	rightSide(3,0),
+			MsPacManGame.STRAWBERRY, rightSide(4,0),
+			MsPacManGame.PEACH,			rightSide(5,0),
+			MsPacManGame.PRETZEL,		rightSide(6,0),
+			MsPacManGame.APPLE,			rightSide(7,0),
+			MsPacManGame.PEAR,				rightSide(8,0),
+			MsPacManGame.BANANA,			rightSide(9,0)
 		);
 
 		bonusValueSprites = Map.of(
