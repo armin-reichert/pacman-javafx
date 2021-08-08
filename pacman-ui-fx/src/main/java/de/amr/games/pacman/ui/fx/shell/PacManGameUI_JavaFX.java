@@ -3,6 +3,9 @@ package de.amr.games.pacman.ui.fx.shell;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
 
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
+
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
@@ -41,6 +44,12 @@ import javafx.stage.Stage;
  * @author Armin Reichert
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
+
+	private static final ResourceBundle MESSAGES = ResourceBundle.getBundle("/common/messages");
+
+	public static String message(String pattern, Object... args) {
+		return MessageFormat.format(MESSAGES.getString(pattern), args);
+	}
 
 	private static final String APP_ICON = "/pacman/graphics/pacman.png";
 
@@ -224,19 +233,23 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 
 		switch (e.getCode()) {
-		case A:
+		case A: {
 			gameController.setAutoControlled(!gameController.isAutoControlled());
-			showFlashMessage(1, "Autopilot %s", gameController.isAutoControlled() ? "on" : "off");
+			String message = message(gameController.isAutoControlled() ? "autopilot_on" : "autopilot_off");
+			showFlashMessage(1, message);
 			break;
+		}
 
 		case E:
 			gameController.cheatEatAllPellets();
 			break;
 
-		case I:
+		case I: {
 			gameController.setPlayerImmune(!gameController.isPlayerImmune());
-			showFlashMessage(1, "Player is %s", gameController.isPlayerImmune() ? "immune" : "vulnerable");
+			String message = message(gameController.isPlayerImmune() ? "player_immunity_on" : "player_immunity_off");
+			showFlashMessage(1, message);
 			break;
+		}
 
 		case L:
 			gameController.game().changeLivesBy(3);
@@ -285,7 +298,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			if (currentGameScene instanceof PlayScene3D) {
 				PlayScene3D playScene = (PlayScene3D) currentGameScene;
 				playScene.nextCam();
-				showFlashMessage(1, "Perspective: %s", playScene.selectedCam());
+				String camera = MESSAGES.getString(playScene.selectedCam().getClass().getSimpleName());
+				String message = message("camera_perspective", camera);
+				showFlashMessage(1, message);
 			}
 			break;
 

@@ -22,6 +22,7 @@ import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.entities._3d.Ghost3D;
 import de.amr.games.pacman.ui.fx.model3D.PacManModel3D;
 import de.amr.games.pacman.ui.fx.scenes.common.TrashTalk;
+import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
@@ -157,7 +158,8 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 
 	@Override
 	public void onExtraLife(PacManGameEvent e) {
-		gameController.getUI().showFlashMessage(1, "Extra life!");
+		String message = PacManGameUI_JavaFX.message("extra_life");
+		gameController.getUI().showFlashMessage(1, message);
 		sounds.play(PacManGameSound.EXTRA_LIFE);
 	}
 
@@ -322,8 +324,10 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 		phase1.setOnFinished(e -> {
 			game().player().setVisible(false);
 			game().ghosts().forEach(ghost -> ghost.setVisible(false));
-			gameController.getUI().showFlashMessage(2, "%s\n\nLevel %d complete.", TrashTalk.LEVEL_COMPLETE_TALK.next(),
-					game().level().number);
+			String message = TrashTalk.LEVEL_COMPLETE_TALK.next();
+			message += "\n\n";
+			message += PacManGameUI_JavaFX.message("level_complete", game().level().number);
+			gameController.getUI().showFlashMessage(2, message);
 		});
 		PauseTransition phase2 = new PauseTransition(Duration.seconds(2));
 		phase2.setOnFinished(e -> gameController.stateTimer().expire());
@@ -333,7 +337,8 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 	private void playAnimationLevelStarting() {
 		gameController.stateTimer().reset();
 		gameController.stateTimer().start();
-		gameController.getUI().showFlashMessage(1, "Entering Level %d", game().level().number);
+		String message = PacManGameUI_JavaFX.message("level_starting", game().level().number);
+		gameController.getUI().showFlashMessage(1, message);
 		PauseTransition phase1 = new PauseTransition(Duration.seconds(1));
 		phase1.setOnFinished(e -> {
 			game().player().setVisible(true);

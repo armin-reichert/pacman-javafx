@@ -16,7 +16,6 @@ public class Cam_NearPlayer implements PlaySceneCam {
 
 	public Cam_NearPlayer(Camera cam) {
 		this.cam = cam;
-		;
 	}
 
 	@Override
