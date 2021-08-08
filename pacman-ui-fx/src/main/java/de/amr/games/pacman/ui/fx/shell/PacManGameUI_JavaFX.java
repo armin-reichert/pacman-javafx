@@ -9,10 +9,10 @@ import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Pac;
+import de.amr.games.pacman.model.common.PacManGameModel;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
-import de.amr.games.pacman.ui.fx.scenes.common.SceneSelector;
 import de.amr.games.pacman.ui.fx.scenes.common.TrashTalk;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScene3D;
@@ -155,7 +155,29 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private GameScene getSceneForCurrentGameState(boolean _3D) {
-		return SceneSelector.getScene(gameController.game(), gameController.state, _3D);
+		final PacManGameModel game = gameController.game();
+
+		int sceneIndex;
+		switch (gameController.state) {
+		case INTRO:
+			sceneIndex = 0;
+			break;
+		case INTERMISSION:
+			sceneIndex = game.intermissionAfterLevel(game.level().number).getAsInt();
+			break;
+		default:
+			sceneIndex = 4;
+			break;
+		}
+
+		switch (game.variant()) {
+		case MS_PACMAN:
+			return de.amr.games.pacman.ui.fx.scenes.mspacman.Scenes.SCENES[sceneIndex][_3D ? 1 : 0];
+		case PACMAN:
+			return de.amr.games.pacman.ui.fx.scenes.pacman.Scenes.SCENES[sceneIndex][_3D ? 1 : 0];
+		default:
+			throw new IllegalStateException();
+		}
 	}
 
 	private void setGameScene(GameScene newGameScene) {
