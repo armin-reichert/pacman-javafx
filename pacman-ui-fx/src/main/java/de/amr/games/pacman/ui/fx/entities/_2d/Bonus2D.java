@@ -1,6 +1,5 @@
 package de.amr.games.pacman.ui.fx.entities._2d;
 
-import java.util.Map;
 import java.util.Objects;
 
 import de.amr.games.pacman.lib.TimedSequence;
@@ -19,15 +18,11 @@ public class Bonus2D implements Renderable2D {
 
 	private final Rendering2D rendering;
 	private final Bonus bonus;
-	private final Map<String, Rectangle2D> symbolSprites;
-	private final Map<Integer, Rectangle2D> numberSprites;
 	private final TimedSequence<Integer> jumpingAnimation; // Ms. Pac-Man only
 
 	public Bonus2D(Bonus bonus, Rendering2D rendering) {
 		this.bonus = Objects.requireNonNull(bonus);
 		this.rendering = Objects.requireNonNull(rendering);
-		symbolSprites = rendering.getSymbolSprites();
-		numberSprites = rendering.getBonusValuesSpritesMap();
 		if (rendering instanceof Rendering2D_MsPacMan) {
 			Rendering2D_MsPacMan msPacManRendering = (Rendering2D_MsPacMan) rendering;
 			jumpingAnimation = msPacManRendering.createBonusAnimation();
@@ -64,10 +59,10 @@ public class Bonus2D implements Renderable2D {
 
 	private Rectangle2D currentSprite() {
 		if (bonus.state == Bonus.EDIBLE) {
-			return symbolSprites.get(bonus.symbol);
+			return rendering.getSymbolSprites().get(bonus.symbol);
 		}
 		if (bonus.state == Bonus.EATEN) {
-			return numberSprites.get(bonus.points);
+			return rendering.getBonusValuesSpritesMap().get(bonus.points);
 		}
 		return null;
 	}
