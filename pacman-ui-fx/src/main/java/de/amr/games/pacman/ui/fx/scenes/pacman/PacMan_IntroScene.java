@@ -64,12 +64,12 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		hiscore2D.pointsSupplier = () -> game().hiscorePoints();
 
 		pacMan2D = new Player2D(sceneController.pac, rendering);
-		pacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
+		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 
 		ghosts2D = Stream.of(sceneController.ghosts).map(ghost -> {
 			Ghost2D ghost2D = new Ghost2D(ghost, rendering);
-			ghost2D.getKickingAnimations().values().forEach(TimedSequence::restart);
-			ghost2D.getFrightenedAnimation().restart();
+			ghost2D.kickingAnimations.values().forEach(TimedSequence::restart);
+			ghost2D.frightenedAnimation.restart();
 			return ghost2D;
 		}).collect(Collectors.toList());
 

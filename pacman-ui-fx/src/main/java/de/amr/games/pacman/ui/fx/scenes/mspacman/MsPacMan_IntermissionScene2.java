@@ -54,9 +54,9 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 		flap2D = new Flap2D(sceneController.flap, Scenes.RENDERING);
 		msPacMan2D = new Player2D(sceneController.msPacMan, rendering);
 		pacMan2D = new Player2D(sceneController.pacMan, rendering);
-		pacMan2D.setMunchingAnimations(Scenes.RENDERING.createSpouseMunchingAnimations());
-		msPacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
-		pacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
+		pacMan2D.munchingAnimations = Scenes.RENDERING.createSpouseMunchingAnimations();
+		msPacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
+		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 	}
 
 	@Override

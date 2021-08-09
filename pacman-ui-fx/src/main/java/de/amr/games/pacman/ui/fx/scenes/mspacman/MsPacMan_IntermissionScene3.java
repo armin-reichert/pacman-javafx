@@ -61,7 +61,7 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 		pacMan2D = new Player2D(sceneController.pacMan, rendering);
 		stork2D = new Stork2D(sceneController.stork, Scenes.RENDERING);
 		bag2D = new JuniorBag2D(sceneController.bag, (Rendering2D_MsPacMan) rendering);
-		pacMan2D.setMunchingAnimations(Scenes.RENDERING.createSpouseMunchingAnimations());
+		pacMan2D.munchingAnimations = Scenes.RENDERING.createSpouseMunchingAnimations();
 		stork2D.getAnimation().restart();
 	}
 

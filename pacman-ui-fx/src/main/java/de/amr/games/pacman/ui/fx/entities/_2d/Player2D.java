@@ -11,36 +11,22 @@ import javafx.scene.canvas.GraphicsContext;
 
 /**
  * 2D representation of the player (Pac-Man or Ms. Pac-Man).
- * <p>
- * The animations can be changed so that both, Ms. Pac-Man and Pac-Man can be rendered using this
- * class.
  * 
  * @author Armin Reichert
  */
 public class Player2D implements Renderable2D {
 
-	private final Rendering2D rendering;
 	private final Pac player;
-	private Map<Direction, TimedSequence<Rectangle2D>> munchingAnimations;
-	private TimedSequence<Rectangle2D> dyingAnimation;
+	private final Rendering2D rendering;
 
-	public Player2D(Pac pac, Rendering2D rendering) {
+	public Map<Direction, TimedSequence<Rectangle2D>> munchingAnimations;
+	public TimedSequence<Rectangle2D> dyingAnimation;
+
+	public Player2D(Pac player, Rendering2D rendering) {
+		this.player = player;
 		this.rendering = rendering;
-		this.player = pac;
+		munchingAnimations = rendering.createPlayerMunchingAnimations();
 		dyingAnimation = rendering.createPlayerDyingAnimation();
-		setMunchingAnimations(rendering.createPlayerMunchingAnimations());
-	}
-
-	public TimedSequence<Rectangle2D> getDyingAnimation() {
-		return dyingAnimation;
-	}
-
-	public void setMunchingAnimations(Map<Direction, TimedSequence<Rectangle2D>> munchingAnimations) {
-		this.munchingAnimations = munchingAnimations;
-	}
-
-	public Map<Direction, TimedSequence<Rectangle2D>> getMunchingAnimations() {
-		return munchingAnimations;
 	}
 
 	@Override
@@ -51,15 +37,16 @@ public class Player2D implements Renderable2D {
 	}
 
 	private Rectangle2D currentSprite() {
+		final Direction dir = player.dir();
 		if (player.dead) {
-			return dyingAnimation.hasStarted() ? dyingAnimation.animate() : munchingAnimations.get(player.dir()).frame();
+			return dyingAnimation.hasStarted() ? dyingAnimation.animate() : munchingAnimations.get(dir).frame();
 		}
 		if (player.speed() == 0) {
-			return munchingAnimations.get(player.dir()).frame(0);
+			return munchingAnimations.get(dir).frame(0);
 		}
 		if (player.stuck) {
-			return munchingAnimations.get(player.dir()).frame(1);
+			return munchingAnimations.get(dir).frame(1);
 		}
-		return munchingAnimations.get(player.dir()).animate();
+		return munchingAnimations.get(dir).animate();
 	}
 }

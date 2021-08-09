@@ -47,9 +47,9 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 		pacMan2D = new Player2D(sceneController.pac, rendering);
 		blinky2D = new Ghost2D(sceneController.blinky, rendering);
 		bigPacMan2D = new BigPacMan2D(sceneController.pac, Scenes.RENDERING);
-		pacMan2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
-		blinky2D.getKickingAnimations().values().forEach(TimedSequence::restart);
-		blinky2D.getFrightenedAnimation().restart();
+		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
+		blinky2D.kickingAnimations.values().forEach(TimedSequence::restart);
+		blinky2D.frightenedAnimation.restart();
 		bigPacMan2D.getMunchingAnimation().restart();
 	}
 

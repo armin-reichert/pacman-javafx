@@ -76,7 +76,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		hiscore2D.levelSupplier = () -> game().hiscoreLevel();
 
 		player2D = new Player2D(game().player(), rendering);
-		player2D.getDyingAnimation().delay(120).onStart(() -> {
+		player2D.dyingAnimation.delay(120).onStart(() -> {
 			game().ghosts().forEach(ghost -> ghost.setVisible(false));
 		});
 

@@ -21,43 +21,25 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class Ghost2D implements Renderable2D {
 
-	private final Rendering2D rendering;
 	private final Ghost ghost;
-	private Map<Direction, TimedSequence<Rectangle2D>> kickingAnimations;
-	private Map<Direction, TimedSequence<Rectangle2D>> returningHomeAnimations;
-	private TimedSequence<Rectangle2D> flashingAnimation;
-	private TimedSequence<Rectangle2D> frightenedAnimation;
-	private Map<Integer, Rectangle2D> numberSpritesMap;
+	private final Rendering2D rendering;
+	public Map<Direction, TimedSequence<Rectangle2D>> kickingAnimations;
+	public Map<Direction, TimedSequence<Rectangle2D>> returningHomeAnimations;
+	public TimedSequence<Rectangle2D> flashingAnimation;
+	public TimedSequence<Rectangle2D> frightenedAnimation;
 	private boolean looksFrightened;
 
 	public Ghost2D(Ghost ghost, Rendering2D rendering) {
-		this.rendering = rendering;
 		this.ghost = ghost;
+		this.rendering = rendering;
 		flashingAnimation = rendering.createGhostFlashingAnimation();
 		frightenedAnimation = rendering.createGhostFrightenedAnimation();
 		kickingAnimations = rendering.createGhostKickingAnimations(ghost.id);
 		returningHomeAnimations = rendering.createGhostReturningHomeAnimations();
-		numberSpritesMap = rendering.getBountyNumberSprites();
 	}
 
 	public void setLooksFrightened(boolean looksFrightened) {
 		this.looksFrightened = looksFrightened;
-	}
-
-	public Map<Direction, TimedSequence<Rectangle2D>> getKickingAnimations() {
-		return kickingAnimations;
-	}
-
-	public TimedSequence<Rectangle2D> getFlashingAnimation() {
-		return flashingAnimation;
-	}
-
-	public TimedSequence<Rectangle2D> getFrightenedAnimation() {
-		return frightenedAnimation;
-	}
-
-	public Map<Direction, TimedSequence<Rectangle2D>> getReturningHomeAnimations() {
-		return returningHomeAnimations;
 	}
 
 	@Override
@@ -69,7 +51,7 @@ public class Ghost2D implements Renderable2D {
 
 	private Rectangle2D currentSprite() {
 		if (ghost.bounty > 0) {
-			return numberSpritesMap.get(ghost.bounty);
+			return rendering.getBountyNumberSprites().get(ghost.bounty);
 		}
 		if (ghost.is(DEAD) || ghost.is(ENTERING_HOUSE)) {
 			return returningHomeAnimations.get(ghost.dir()).animate();

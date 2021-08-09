@@ -59,8 +59,8 @@ public class PlayScene2DWithAnimations implements DefaultPacManGameEventHandler 
 		if (gameController.state == PacManGameState.HUNTING) {
 
 			// when switching between 2D and 3D play scenes, animations might not be running:
-			if (!playScene.player2D.getMunchingAnimations().get(game().player().dir()).isRunning()) {
-				playScene.player2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
+			if (!playScene.player2D.munchingAnimations.get(game().player().dir()).isRunning()) {
+				playScene.player2D.munchingAnimations.values().forEach(TimedSequence::restart);
 			}
 			if (!playScene.maze2D.getEnergizerBlinking().isRunning()) {
 				playScene.maze2D.getEnergizerBlinking().restart();
@@ -96,8 +96,8 @@ public class PlayScene2DWithAnimations implements DefaultPacManGameEventHandler 
 	public void onPlayerGainsPower(PacManGameEvent e) {
 		e.gameModel.ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
 			Ghost2D ghost2D = playScene.ghosts2D.get(ghost.id);
-			ghost2D.getFlashingAnimation().reset();
-			ghost2D.getFrightenedAnimation().restart();
+			ghost2D.flashingAnimation.reset();
+			ghost2D.frightenedAnimation.restart();
 		});
 		sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
 	}
@@ -153,16 +153,16 @@ public class PlayScene2DWithAnimations implements DefaultPacManGameEventHandler 
 		// enter HUNTING
 		else if (e.newGameState == PacManGameState.HUNTING) {
 			playScene.maze2D.getEnergizerBlinking().restart();
-			playScene.player2D.getMunchingAnimations().values().forEach(TimedSequence::restart);
-			playScene.ghosts2D.forEach(ghost2D -> ghost2D.getKickingAnimations().values().forEach(TimedSequence::restart));
+			playScene.player2D.munchingAnimations.values().forEach(TimedSequence::restart);
+			playScene.ghosts2D.forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSequence::restart));
 		}
 
 		// enter PACMAN_DYING
 		else if (e.newGameState == PacManGameState.PACMAN_DYING) {
 			gameController.stateTimer().resetSeconds(5);
 			gameController.stateTimer().start();
-			playScene.ghosts2D.forEach(ghost2D -> ghost2D.getKickingAnimations().values().forEach(TimedSequence::reset));
-			playScene.player2D.getDyingAnimation().restart();
+			playScene.ghosts2D.forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSequence::reset));
+			playScene.player2D.dyingAnimation.restart();
 			sounds.stopAll();
 			PauseTransition deathSound = new PauseTransition(Duration.seconds(2));
 			deathSound.setOnFinished(actionEvent -> sounds.play(PacManGameSound.PACMAN_DEATH));
@@ -187,7 +187,7 @@ public class PlayScene2DWithAnimations implements DefaultPacManGameEventHandler 
 		// enter GAME_OVER
 		else if (e.newGameState == PacManGameState.GAME_OVER) {
 			playScene.maze2D.getEnergizerBlinking().reset();
-			playScene.ghosts2D.forEach(ghost2D -> ghost2D.getKickingAnimations().values().forEach(TimedSequence::restart));
+			playScene.ghosts2D.forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSequence::restart));
 			sounds.stopAll();
 		}
 
@@ -202,7 +202,7 @@ public class PlayScene2DWithAnimations implements DefaultPacManGameEventHandler 
 		if (e.type == TickTimerEvent.Type.HALF_EXPIRED) {
 			gameController.game().ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
 				Ghost2D ghost2D = playScene.ghosts2D.get(ghost.id);
-				TimedSequence<?> flashing = ghost2D.getFlashingAnimation();
+				TimedSequence<?> flashing = ghost2D.flashingAnimation;
 				long frameTime = e.ticks / (gameController.game().level().numFlashes * flashing.numFrames());
 				flashing.frameDuration(frameTime).repetitions(gameController.game().level().numFlashes).restart();
 			});
