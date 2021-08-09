@@ -48,8 +48,9 @@ public class Maze2D implements Renderable2D {
 		this.gameLevel = gameLevel;
 		energizers2D = gameLevel.world.energizerTiles().map(energizerTile -> {
 			Energizer2D energizer2D = new Energizer2D();
-			energizer2D.setTile(energizerTile);
-			energizer2D.setBlinkingAnimation(energizerBlinking);
+			energizer2D.x = t(energizerTile.x);
+			energizer2D.y = t(energizerTile.y);
+			energizer2D.blinkingAnimation = energizerBlinking;
 			return energizer2D;
 		}).collect(Collectors.toList());
 		flashingAnimation.setCycleCount(2 * gameLevel.numFlashes);
