@@ -17,15 +17,14 @@ YouTube:
 On the intro screen, you can switch between the two game variants by pressing <kbd>v</kbd>. You can switch between window and fullscreen mode using the standard keys <kbd>F11</kbd> and <kbd>Esc</kbd>.
 
 On the play screen, the following functionality is available:
+- <kbd>CTRL+3</kbd> Toggle using 2D/3D play scene
 - <kbd>CTRL+C</kbd> Change 3D camera (3 cameras currently implemented)
-- <kbd>CTRL+H</kbd> Increase maze wall height (<kbd>CTRL+SHIFT+H</kbd> = decrease)
 - <kbd>CTRL+I</kbd> Toggle information about current scene (HUD)
 - <kbd>CTRL+L</kbd> Toggle draw mode (line vs. shaded)
 - <kbd>CTRL+P</kbd> Toggle pausing game play
 - <kbd>CTRL+R</kbd> Increase maze "resolution" (<kbd>CTRL+SHIFT+R</kbd> = decrease)
-- <kbd>CTRL+S</kbd> Increase speed
-- <kbd>CTRL+SHIFT+S</kbd> Decrease speed
-- <kbd>CTRL+3</kbd> Toggle using 2D/3D play scene
+- <kbd>CTRL+H</kbd> Increase maze wall height (<kbd>CTRL+SHIFT+H</kbd> = decrease)
+- <kbd>CTRL+S</kbd> Increase speed (<kbd>CTRL+SHIFT+S</kbd> = decrease)
 - <kbd>A</kbd> Toggle autopilot mode
 - <kbd>I</kbd> Toggle immunity of player against ghost attacks
 - <kbd>Q</kbd> Quit play scene
