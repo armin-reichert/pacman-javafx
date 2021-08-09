@@ -62,18 +62,18 @@ public class PlayScene2D extends AbstractGameScene2D {
 		livesCounter2D.y = t(34);
 
 		score2D = new GameScore2D(rendering);
-		score2D.setTitle("SCORE");
+		score2D.title = "SCORE";
 		score2D.x = t(1);
 		score2D.y = t(1);
-		score2D.setLevelSupplier(() -> game().level().number);
-		score2D.setPointsSupplier(() -> game().score());
+		score2D.levelSupplier = () -> game().level().number;
+		score2D.pointsSupplier = () -> game().score();
 
 		hiscore2D = new GameScore2D(rendering);
-		hiscore2D.setTitle("HIGH SCORE");
+		hiscore2D.title = "HIGH SCORE";
 		hiscore2D.x = t(16);
 		hiscore2D.y = t(1);
-		hiscore2D.setPointsSupplier(() -> game().hiscorePoints());
-		hiscore2D.setLevelSupplier(() -> game().hiscoreLevel());
+		hiscore2D.pointsSupplier = () -> game().hiscorePoints();
+		hiscore2D.levelSupplier = () -> game().hiscoreLevel();
 
 		player2D = new Player2D(game().player(), rendering);
 		player2D.getDyingAnimation().delay(120).onStart(() -> {
@@ -122,9 +122,9 @@ public class PlayScene2D extends AbstractGameScene2D {
 	public void doRender() {
 		if (!gameController.isAttractMode()) {
 			livesCounter2D.render(gc);
-			score2D.setShowPoints(true);
+			score2D.showPoints = true;
 		} else {
-			score2D.setShowPoints(false);
+			score2D.showPoints = false;
 		}
 		game().ghosts(GhostState.LOCKED)
 				.forEach(ghost -> ghosts2D.get(ghost.id).setLooksFrightened(game().player().powerTimer.isRunning()));

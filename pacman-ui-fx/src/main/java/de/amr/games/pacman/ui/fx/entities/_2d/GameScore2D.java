@@ -16,26 +16,18 @@ import javafx.scene.paint.Color;
 public class GameScore2D implements Renderable2D {
 
 	private final Rendering2D rendering;
-	private IntSupplier pointsSupplier;
-	private IntSupplier levelSupplier;
-	private Color titleColor = Color.WHITE;
-	private Color pointsColor = Color.YELLOW;
-	private String title = "SCORE";
-	private boolean showPoints = true;
 
 	public int x;
 	public int y;
+	public IntSupplier pointsSupplier;
+	public IntSupplier levelSupplier;
+	public Color titleColor = Color.WHITE;
+	public Color pointsColor = Color.YELLOW;
+	public String title = "SCORE";
+	public boolean showPoints = true;
 
 	public GameScore2D(Rendering2D rendering) {
 		this.rendering = rendering;
-	}
-
-	public void setPointsSupplier(IntSupplier pointsSupplier) {
-		this.pointsSupplier = pointsSupplier;
-	}
-
-	public void setLevelSupplier(IntSupplier levelSupplier) {
-		this.levelSupplier = levelSupplier;
 	}
 
 	@Override
@@ -55,21 +47,5 @@ public class GameScore2D implements Renderable2D {
 			g.fillText(String.format("L%02d", levelSupplier.getAsInt()), t(8), 0);
 		}
 		g.restore();
-	}
-
-	public void setTitleColor(Color titleColor) {
-		this.titleColor = titleColor;
-	}
-
-	public void setPointsColor(Color pointsColor) {
-		this.pointsColor = pointsColor;
-	}
-
-	public void setShowPoints(boolean showPoints) {
-		this.showPoints = showPoints;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
 	}
 }
