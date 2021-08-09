@@ -37,7 +37,7 @@ public class Ghost2D implements Renderable2D {
 		frightenedAnimation = rendering.createGhostFrightenedAnimation();
 		kickingAnimations = rendering.createGhostKickingAnimations(ghost.id);
 		returningHomeAnimations = rendering.createGhostReturningHomeAnimations();
-		numberSpritesMap = rendering.getBountyNumberSpritesMap();
+		numberSpritesMap = rendering.getBountyNumberSprites();
 	}
 
 	public void setLooksFrightened(boolean looksFrightened) {

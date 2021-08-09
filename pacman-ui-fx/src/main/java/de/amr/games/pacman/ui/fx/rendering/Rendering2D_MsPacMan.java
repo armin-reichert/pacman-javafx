@@ -143,12 +143,12 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	}
 
 	@Override
-	public Map<Integer, Rectangle2D> getBonusValuesSpritesMap() {
+	public Map<Integer, Rectangle2D> getBonusValuesSprites() {
 		return bonusValueSprites;
 	}
 
 	@Override
-	public Map<Integer, Rectangle2D> getBountyNumberSpritesMap() {
+	public Map<Integer, Rectangle2D> getBountyNumberSprites() {
 		return bountyNumberSprites;
 	}
 

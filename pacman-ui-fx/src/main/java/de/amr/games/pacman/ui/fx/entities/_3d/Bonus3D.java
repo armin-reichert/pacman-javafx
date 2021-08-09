@@ -30,7 +30,7 @@ public class Bonus3D extends Box {
 		super(8, 8, 8);
 		this.rendering2D = rendering2D;
 		spritesByValue = new HashMap<>();
-		rendering2D.getBonusValuesSpritesMap().forEach(
+		rendering2D.getBonusValuesSprites().forEach(
 				(points, spriteRegion) -> spritesByValue.put(points, rendering2D.sheet().subImage(spriteRegion)));
 		skin = new PhongMaterial(Color.WHITE);
 		rotation = new RotateTransition(Duration.seconds(2), this);

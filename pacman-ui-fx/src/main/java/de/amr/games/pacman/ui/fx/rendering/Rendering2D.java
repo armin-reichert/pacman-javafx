@@ -40,7 +40,7 @@ public abstract class Rendering2D {
 			return getSymbolSprites().get(bonus.symbol);
 		}
 		if (bonus.state == Bonus.EATEN) {
-			return getBonusValuesSpritesMap().get(bonus.points);
+			return getBonusValuesSprites().get(bonus.points);
 		}
 		return null; // should not happen
 	}
@@ -108,9 +108,9 @@ public abstract class Rendering2D {
 
 	public abstract Rectangle2D getLifeImage();
 
-	public abstract Map<Integer, Rectangle2D> getBountyNumberSpritesMap();
+	public abstract Map<Integer, Rectangle2D> getBountyNumberSprites();
 
-	public abstract Map<Integer, Rectangle2D> getBonusValuesSpritesMap();
+	public abstract Map<Integer, Rectangle2D> getBonusValuesSprites();
 
 	public abstract Map<String, Rectangle2D> getSymbolSprites();
 }
