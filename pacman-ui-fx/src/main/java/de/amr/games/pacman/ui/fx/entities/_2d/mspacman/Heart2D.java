@@ -12,12 +12,12 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class Heart2D implements Renderable2D {
 
-	private final Rendering2D_MsPacMan rendering;
 	private final GameEntity heart;
+	private final Rendering2D_MsPacMan rendering;
 
 	public Heart2D(GameEntity heart, Rendering2D_MsPacMan rendering) {
-		this.rendering = rendering;
 		this.heart = heart;
+		this.rendering = rendering;
 	}
 
 	@Override

@@ -36,7 +36,7 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 
 		@Override
 		public void playFlapAnimation() {
-			flap2D.getAnimation().restart();
+			flap2D.animation.restart();
 		}
 	}
 
@@ -62,7 +62,7 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 		stork2D = new Stork2D(sceneController.stork, Scenes.RENDERING);
 		bag2D = new JuniorBag2D(sceneController.bag, (Rendering2D_MsPacMan) rendering);
 		pacMan2D.munchingAnimations = Scenes.RENDERING.createSpouseMunchingAnimations();
-		stork2D.getAnimation().restart();
+		stork2D.animation.restart();
 	}
 
 	@Override

@@ -32,7 +32,7 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 		@Override
 		public void playFlapAnimation() {
-			flap2D.getAnimation().restart();
+			flap2D.animation.restart();
 		}
 
 	}

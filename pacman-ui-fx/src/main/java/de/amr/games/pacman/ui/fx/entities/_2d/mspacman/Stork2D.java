@@ -14,18 +14,14 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class Stork2D implements Renderable2D {
 
-	private final Rendering2D_MsPacMan rendering;
 	private final Stork stork;
-	private TimedSequence<Rectangle2D> animation;
+	private final Rendering2D_MsPacMan rendering;
+	public final TimedSequence<Rectangle2D> animation;
 
 	public Stork2D(Stork stork, Rendering2D_MsPacMan rendering) {
-		this.rendering = rendering;
 		this.stork = stork;
+		this.rendering = rendering;
 		animation = rendering.createStorkFlyingAnimation();
-	}
-
-	public TimedSequence<Rectangle2D> getAnimation() {
-		return animation;
 	}
 
 	@Override

@@ -15,18 +15,14 @@ import javafx.scene.paint.Color;
  */
 public class Flap2D implements Renderable2D {
 
-	private Rendering2D_MsPacMan rendering;
 	private final Flap flap;
-	private TimedSequence<Rectangle2D> animation;
+	private Rendering2D_MsPacMan rendering;
+	public final TimedSequence<Rectangle2D> animation;
 
 	public Flap2D(Flap flap, Rendering2D_MsPacMan rendering) {
-		this.rendering = rendering;
 		this.flap = flap;
+		this.rendering = rendering;
 		animation = rendering.createFlapAnimation();
-	}
-
-	public TimedSequence<Rectangle2D> getAnimation() {
-		return animation;
 	}
 
 	@Override

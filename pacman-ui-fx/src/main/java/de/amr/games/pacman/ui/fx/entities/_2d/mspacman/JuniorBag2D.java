@@ -13,12 +13,12 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class JuniorBag2D implements Renderable2D {
 
-	private final Rendering2D_MsPacMan rendering;
 	private final JuniorBag bag;
+	private final Rendering2D_MsPacMan rendering;
 
 	public JuniorBag2D(JuniorBag bag, Rendering2D_MsPacMan rendering) {
-		this.rendering = rendering;
 		this.bag = bag;
+		this.rendering = rendering;
 	}
 
 	@Override
