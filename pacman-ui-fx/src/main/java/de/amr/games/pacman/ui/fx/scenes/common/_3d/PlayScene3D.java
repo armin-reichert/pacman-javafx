@@ -79,8 +79,8 @@ public class PlayScene3D implements GameScene {
 		log("%s: init", this);
 
 		final var r2D = game().variant() == GameVariant.MS_PACMAN
-				? de.amr.games.pacman.ui.fx.scenes.mspacman.Scenes.RENDERING
-				: de.amr.games.pacman.ui.fx.scenes.pacman.Scenes.RENDERING;
+				? de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacManScenes.RENDERING
+				: de.amr.games.pacman.ui.fx.scenes.pacman.PacManScenes.RENDERING;
 		final var width = game().level().world.numCols() * TS;
 		final var height = game().level().world.numRows() * TS;
 

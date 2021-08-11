@@ -50,7 +50,7 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 	private Heart2D heart2D;
 
 	public MsPacMan_IntermissionScene1() {
-		super(Scenes.RENDERING, Scenes.SOUNDS);
+		super(MsPacManScenes.RENDERING, MsPacManScenes.SOUNDS);
 	}
 
 	@Override
@@ -58,14 +58,14 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 		super.init();
 		sceneController = new SceneController(gameController);
 		sceneController.init();
-		flap2D = new Flap2D(sceneController.flap, Scenes.RENDERING);
+		flap2D = new Flap2D(sceneController.flap, MsPacManScenes.RENDERING);
 		msPacMan2D = new Player2D(sceneController.msPac, rendering);
 		pacMan2D = new Player2D(sceneController.pacMan, rendering);
 		inky2D = new Ghost2D(sceneController.inky, rendering);
 		pinky2D = new Ghost2D(sceneController.pinky, rendering);
 		heart2D = new Heart2D(sceneController.heart, (Rendering2D_MsPacMan) rendering);
 		// overwrite by Pac-Man instead of Ms. Pac-Man sprites:
-		pacMan2D.munchingAnimations = Scenes.RENDERING.createSpouseMunchingAnimations();
+		pacMan2D.munchingAnimations = MsPacManScenes.RENDERING.createSpouseMunchingAnimations();
 		msPacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 		inky2D.kickingAnimations.values().forEach(TimedSequence::restart);

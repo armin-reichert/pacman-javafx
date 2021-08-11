@@ -151,8 +151,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private void stopAllSounds() {
-		de.amr.games.pacman.ui.fx.scenes.mspacman.Scenes.SOUNDS.stopAll();
-		de.amr.games.pacman.ui.fx.scenes.pacman.Scenes.SOUNDS.stopAll();
+		de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacManScenes.SOUNDS.stopAll();
+		de.amr.games.pacman.ui.fx.scenes.pacman.PacManScenes.SOUNDS.stopAll();
 	}
 
 	private void toggleUse3DScenes() {
@@ -181,9 +181,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		switch (game.variant()) {
 		case MS_PACMAN:
-			return de.amr.games.pacman.ui.fx.scenes.mspacman.Scenes.SCENES[sceneIndex][_3D ? 1 : 0];
+			return de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacManScenes.SCENES[sceneIndex][_3D ? 1 : 0];
 		case PACMAN:
-			return de.amr.games.pacman.ui.fx.scenes.pacman.Scenes.SCENES[sceneIndex][_3D ? 1 : 0];
+			return de.amr.games.pacman.ui.fx.scenes.pacman.PacManScenes.SCENES[sceneIndex][_3D ? 1 : 0];
 		default:
 			throw new IllegalStateException();
 		}
