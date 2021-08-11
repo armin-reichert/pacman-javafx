@@ -16,16 +16,12 @@ public class BigPacMan2D implements Renderable2D {
 
 	private final Rendering2D_PacMan rendering;
 	private final Pac pacMan;
-	private TimedSequence<Rectangle2D> munchingAnimation;
+	public final TimedSequence<Rectangle2D> munchingAnimation;
 
 	public BigPacMan2D(Pac pacMan, Rendering2D_PacMan rendering) {
-		this.rendering = rendering;
 		this.pacMan = pacMan;
+		this.rendering = rendering;
 		munchingAnimation = rendering.createBigPacManMunchingAnimation();
-	}
-
-	public TimedSequence<Rectangle2D> getMunchingAnimation() {
-		return munchingAnimation;
 	}
 
 	@Override

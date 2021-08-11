@@ -50,7 +50,7 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 		blinky2D.kickingAnimations.values().forEach(TimedSequence::restart);
 		blinky2D.frightenedAnimation.restart();
-		bigPacMan2D.getMunchingAnimation().restart();
+		bigPacMan2D.munchingAnimation.restart();
 	}
 
 	@Override

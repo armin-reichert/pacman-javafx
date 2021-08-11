@@ -14,18 +14,14 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class BlinkyNaked2D implements Renderable2D {
 
-	private final Rendering2D_PacMan rendering;
 	private final Ghost blinky;
-	private TimedSequence<Rectangle2D> animation;
+	private final Rendering2D_PacMan rendering;
+	public final TimedSequence<Rectangle2D> animation;
 
 	public BlinkyNaked2D(Ghost blinky, Rendering2D_PacMan rendering) {
-		this.rendering = rendering;
 		this.blinky = blinky;
+		this.rendering = rendering;
 		animation = rendering.createBlinkyNakedAnimation();
-	}
-
-	public TimedSequence<Rectangle2D> getAnimation() {
-		return animation;
 	}
 
 	@Override

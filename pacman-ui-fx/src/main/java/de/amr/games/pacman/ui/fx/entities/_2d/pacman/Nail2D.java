@@ -7,12 +7,12 @@ import javafx.scene.canvas.GraphicsContext;
 
 public class Nail2D implements Renderable2D {
 
-	private final Rendering2D_PacMan rendering;
 	private final GameEntity nail;
+	private final Rendering2D_PacMan rendering;
 
 	public Nail2D(GameEntity nail, Rendering2D_PacMan rendering) {
-		this.rendering = rendering;
 		this.nail = nail;
+		this.rendering = rendering;
 	}
 
 	@Override
