@@ -24,6 +24,8 @@ import de.amr.games.pacman.ui.mspacman.MsPacMan_IntermissionScene1_Controller;
  */
 public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 
+	private static final V2i LEVEL_COUNTER_POS = new V2i(25, 34);
+
 	private class SceneController extends MsPacMan_IntermissionScene1_Controller {
 
 		public SceneController(PacManGameController gameController) {
@@ -79,7 +81,7 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 
 	@Override
 	public void doRender() {
-		renderLevelCounter(new V2i(25, 34));
+		renderLevelCounter(LEVEL_COUNTER_POS);
 		flap2D.render(gc);
 		msPacMan2D.render(gc);
 		pacMan2D.render(gc);

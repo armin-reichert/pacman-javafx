@@ -22,6 +22,8 @@ import javafx.geometry.Rectangle2D;
  */
 public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 
+	private static final V2i LEVEL_COUNTER_POS = new V2i(25, 34);
+
 	class SceneController extends PacMan_IntermissionScene2_Controller {
 
 		public SceneController(PacManGameController gameController) {
@@ -66,7 +68,7 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 	@Override
 	public void doRender() {
-		renderLevelCounter(new V2i(25, 34));
+		renderLevelCounter(LEVEL_COUNTER_POS);
 		pacMan2D.render(gc);
 		nail2D.render(gc);
 		if (sceneController.nailDistance() < 0) {

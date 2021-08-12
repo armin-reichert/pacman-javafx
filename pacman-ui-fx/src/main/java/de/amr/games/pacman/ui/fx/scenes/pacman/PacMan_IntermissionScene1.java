@@ -18,6 +18,8 @@ import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene1_Controller.Phase;
  */
 public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 
+	private static final V2i LEVEL_COUNTER_POS = new V2i(25, 34);
+
 	private class SceneController extends PacMan_IntermissionScene1_Controller {
 
 		public SceneController(PacManGameController gameController) {
@@ -60,7 +62,7 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 
 	@Override
 	public void doRender() {
-		renderLevelCounter(new V2i(25, 34));
+		renderLevelCounter(LEVEL_COUNTER_POS);
 		blinky2D.render(gc);
 		if (sceneController.phase == Phase.BLINKY_CHASING_PACMAN) {
 			pacMan2D.render(gc);
