@@ -37,7 +37,7 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 	private BlinkyNaked2D blinkyNaked2D;
 
 	public PacMan_IntermissionScene3() {
-		super(PacManScenes.RENDERING, PacManScenes.SOUNDS);
+		super(PacManScenes.RENDERING, PacManScenes.SOUNDS, 28, 36);
 	}
 
 	@Override

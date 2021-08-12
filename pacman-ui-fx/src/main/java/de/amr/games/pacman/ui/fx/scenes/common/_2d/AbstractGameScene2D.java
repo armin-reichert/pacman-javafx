@@ -37,9 +37,9 @@ public abstract class AbstractGameScene2D implements GameScene {
 	protected SubScene subSceneFX;
 	protected GraphicsContext gc;
 
-	public AbstractGameScene2D(Rendering2D rendering, SoundManager sounds) {
-		this.unscaledWidth = t(28);
-		this.unscaledHeight = t(36);
+	public AbstractGameScene2D(Rendering2D rendering, SoundManager sounds, int tilesX, int tilesY) {
+		this.unscaledWidth = t(tilesX);
+		this.unscaledHeight = t(tilesY);
 		this.aspectRatio = unscaledWidth / unscaledHeight;
 		this.rendering = rendering;
 		this.sounds = sounds;

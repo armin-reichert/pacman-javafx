@@ -43,7 +43,7 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 	private Flap2D flap2D;
 
 	public MsPacMan_IntermissionScene2() {
-		super(MsPacManScenes.RENDERING, MsPacManScenes.SOUNDS);
+		super(MsPacManScenes.RENDERING, MsPacManScenes.SOUNDS, 28, 36);
 	}
 
 	@Override
