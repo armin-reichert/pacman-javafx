@@ -65,6 +65,6 @@ public class LevelCounter3D extends Group {
 	}
 
 	private Image symbolImage(String symbol) {
-		return rendering2D.sheet().subImage(rendering2D.getSymbolSprites().get(symbol));
+		return rendering2D.spritesheet().subImage(rendering2D.getSymbolSprites().get(symbol));
 	}
 }

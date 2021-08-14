@@ -119,7 +119,7 @@ public class Ghost3D extends Group {
 		if (ghost.bounty > 0) {
 			if (getChildren().get(0) != bountyShape) {
 				Rectangle2D sprite = rendering2D.getBountyNumberSprites().get(ghost.bounty);
-				Image image = rendering2D.sheet().subImage(sprite);
+				Image image = rendering2D.spritesheet().subImage(sprite);
 				PhongMaterial material = (PhongMaterial) bountyShape.getMaterial();
 				material.setBumpMap(image);
 				material.setDiffuseMap(image);

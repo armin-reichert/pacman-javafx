@@ -21,15 +21,7 @@ import javafx.scene.text.Font;
  */
 public abstract class Rendering2D {
 
-	protected final Spritesheet spritesheet;
-
-	public Rendering2D(String spritesheetPath, int cellSize) {
-		spritesheet = new Spritesheet(spritesheetPath, cellSize);
-	}
-
-	public Spritesheet sheet() {
-		return spritesheet;
-	}
+	public abstract Spritesheet spritesheet();
 
 	/**
 	 * @param bonus game bonus
@@ -61,7 +53,7 @@ public abstract class Rendering2D {
 	 */
 	public void renderEntity(GraphicsContext g, GameEntity entity, Rectangle2D sb) {
 		if (entity.isVisible() && sb != null) {
-			g.drawImage(spritesheet.getSource(), sb.getMinX(), sb.getMinY(), sb.getWidth(), sb.getHeight(),
+			g.drawImage(spritesheet().getSource(), sb.getMinX(), sb.getMinY(), sb.getWidth(), sb.getHeight(),
 					entity.position().x - sb.getWidth() / 2 + HTS, entity.position().y - sb.getHeight() / 2 + HTS, sb.getWidth(),
 					sb.getHeight());
 		}
@@ -76,7 +68,7 @@ public abstract class Rendering2D {
 	 * @param y  render location y
 	 */
 	public void renderSprite(GraphicsContext g, Rectangle2D sb, double x, double y) {
-		g.drawImage(spritesheet.getSource(), sb.getMinX(), sb.getMinY(), sb.getWidth(), sb.getHeight(), x, y, sb.getWidth(),
+		g.drawImage(spritesheet().getSource(), sb.getMinX(), sb.getMinY(), sb.getWidth(), sb.getHeight(), x, y, sb.getWidth(),
 				sb.getHeight());
 	}
 
