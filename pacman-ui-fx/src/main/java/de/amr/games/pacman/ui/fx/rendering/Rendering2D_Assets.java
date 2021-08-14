@@ -54,18 +54,16 @@ public final class Rendering2D_Assets {
 	};
 
 	public static Color getMazeWallTopColor(GameVariant gameVariant, int mazeNumber) {
-		return gameVariant == GameVariant.PACMAN ? Rendering2D_Assets.getPacManMazeWallColor(mazeNumber)
-				: Rendering2D_Assets.getMsPacManMazeWallTopColor(mazeNumber);
+		return gameVariant == GameVariant.PACMAN ? getPacManMazeWallColor(mazeNumber)
+				: getMsPacManMazeWallTopColor(mazeNumber);
 	}
 
 	public static Color getMazeWallSideColor(GameVariant gameVariant, int mazeNumber) {
-		return gameVariant == GameVariant.PACMAN ? Color.WHITE
-				: Rendering2D_Assets.getMsPacManMazeWallSideColor(mazeNumber);
+		return gameVariant == GameVariant.PACMAN ? Color.WHITE : getMsPacManMazeWallSideColor(mazeNumber);
 	}
 
 	public static Color getFoodColor(GameVariant gameVariant, int mazeNumber) {
-		return gameVariant == GameVariant.PACMAN ? Rendering2D_Assets.getPacManFoodColor(mazeNumber)
-				: Rendering2D_Assets.getMsPacManFoodColor(mazeNumber);
+		return gameVariant == GameVariant.PACMAN ? getPacManFoodColor(mazeNumber) : getMsPacManFoodColor(mazeNumber);
 	}
 
 	public static Color getGhostColor(int ghostID) {
