@@ -79,7 +79,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		boolean use3DScene = Env.$use3DScenes.get();
 		GameScene gameScene = getSceneForCurrentGameState(use3DScene);
-		double aspectRatio = gameScene.aspectRatio().orElse(getScreenAspectRatio());
+		double aspectRatio = gameScene.aspectRatio().orElseGet(() -> {
+			Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+			return bounds.getWidth() / bounds.getHeight();
+		});
 		mainScene = new Scene(mainSceneRoot, aspectRatio * height, height);
 		setGameScene(gameScene);
 
@@ -123,11 +126,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	public Canvas getCanvas() {
 		return canvas;
-	}
-
-	private double getScreenAspectRatio() {
-		Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-		return bounds.getWidth() / bounds.getHeight();
 	}
 
 	@Override
