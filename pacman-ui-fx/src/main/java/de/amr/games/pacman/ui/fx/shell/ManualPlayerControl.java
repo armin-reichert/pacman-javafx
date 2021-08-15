@@ -2,6 +2,7 @@ package de.amr.games.pacman.ui.fx.shell;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Pac;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 /**
@@ -10,58 +11,50 @@ import javafx.scene.input.KeyEvent;
  * @author Armin Reichert
  */
 class ManualPlayerControl {
+
+	private final KeyCode upCode, downCode, leftCode, rightCode;
 	private boolean up, down, left, right;
+
+	public ManualPlayerControl(KeyCode upCode, KeyCode downCode, KeyCode leftCode, KeyCode rightCode) {
+		this.upCode = upCode;
+		this.downCode = downCode;
+		this.leftCode = leftCode;
+		this.rightCode = rightCode;
+	}
 
 	public void steer(Pac player) {
 		if (up) {
 			player.setWishDir(Direction.UP);
-		}
-		if (down) {
+		} else if (down) {
 			player.setWishDir(Direction.DOWN);
-		}
-		if (left) {
+		} else if (left) {
 			player.setWishDir(Direction.LEFT);
-		}
-		if (right) {
+		} else if (right) {
 			player.setWishDir(Direction.RIGHT);
 		}
 	}
 
 	public void onKeyPressed(KeyEvent e) {
-		switch (e.getCode()) {
-		case UP:
+		if (e.getCode() == upCode) {
 			up = true;
-			break;
-		case DOWN:
+		} else if (e.getCode() == downCode) {
 			down = true;
-			break;
-		case LEFT:
+		} else if (e.getCode() == leftCode) {
 			left = true;
-			break;
-		case RIGHT:
+		} else if (e.getCode() == rightCode) {
 			right = true;
-			break;
-		default:
-			break;
 		}
 	}
 
 	public void onKeyReleased(KeyEvent e) {
-		switch (e.getCode()) {
-		case UP:
+		if (e.getCode() == upCode) {
 			up = false;
-			break;
-		case DOWN:
+		} else if (e.getCode() == downCode) {
 			down = false;
-			break;
-		case LEFT:
+		} else if (e.getCode() == leftCode) {
 			left = false;
-			break;
-		case RIGHT:
+		} else if (e.getCode() == rightCode) {
 			right = false;
-			break;
-		default:
-			break;
 		}
 	}
 }

@@ -27,6 +27,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -56,7 +57,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private final Stage stage;
 	private final Scene mainScene;
 	private final Canvas canvas = new Canvas();
-	private final ManualPlayerControl playerControl = new ManualPlayerControl();
+	private final ManualPlayerControl playerControl = new ManualPlayerControl(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT,
+			KeyCode.RIGHT);
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final HUD hud = new HUD(this);
 	private final Group gameSceneRoot = new Group();
