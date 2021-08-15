@@ -58,7 +58,8 @@ public class PlayScene2DWithAnimations implements DefaultPacManGameEventHandler 
 
 		if (gameController.state == PacManGameState.HUNTING) {
 
-			// when switching between 2D and 3D play scenes, animations might not be running:
+			// when switching between 2D and 3D play scenes, animations might not be
+			// running:
 			if (!playScene.player2D.munchingAnimations.get(game().player().dir()).isRunning()) {
 				playScene.player2D.munchingAnimations.values().forEach(TimedSequence::restart);
 			}

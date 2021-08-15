@@ -12,6 +12,7 @@ public class TrashTalk {
 
 	private static RandomEntrySelector<String> load(String bundleName) {
 		ResourceBundle bundle = ResourceBundle.getBundle(bundleName);
-		return new RandomEntrySelector<>(bundle.keySet().stream().sorted().map(bundle::getString).toArray(String[]::new));
+		return new RandomEntrySelector<>(
+				bundle.keySet().stream().sorted().map(bundle::getString).toArray(String[]::new));
 	}
 }

@@ -17,12 +17,12 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 public class FlashMessageView extends HBox {
-	
+
 	static class FlashMessage {
-		
+
 		private final TickTimer timer = new TickTimer(this.toString());
 		public final String text;
-		
+
 		public FlashMessage(String text, long ticks) {
 			this.text = text;
 			timer.reset(ticks);

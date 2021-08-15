@@ -44,9 +44,9 @@ public class LevelCounter3D extends Group {
 	public LevelCounter3D(Rendering2D rendering2D) {
 		this.rendering2D = rendering2D;
 	}
-	
+
 	public void setRightPosition(double x, double y) {
-		rightPosition = new V2d(x,y);
+		rightPosition = new V2d(x, y);
 	}
 
 	public void rebuild(PacManGameModel game) {

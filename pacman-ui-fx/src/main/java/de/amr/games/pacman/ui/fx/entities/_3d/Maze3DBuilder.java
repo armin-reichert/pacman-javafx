@@ -71,7 +71,8 @@ public class Maze3DBuilder {
 		top.setMaterial(wallTopMaterial);
 		top.setTranslateX(leftX * blockSize + numBlocksX * 0.5 * blockSize);
 		top.setTranslateY(topY * blockSize + numBlocksY * 0.5 * blockSize);
-		top.translateZProperty().bind(base.translateZProperty().subtract($wallHeight.add(topHeight + 0.1).multiply(0.5)));
+		top.translateZProperty()
+				.bind(base.translateZProperty().subtract($wallHeight.add(topHeight + 0.1).multiply(0.5)));
 		top.drawModeProperty().bind(Env.$drawMode3D);
 		parts.add(top);
 

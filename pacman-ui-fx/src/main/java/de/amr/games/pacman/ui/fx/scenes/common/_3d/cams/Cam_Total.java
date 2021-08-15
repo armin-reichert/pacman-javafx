@@ -8,7 +8,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
 
 /**
- * Shows a total of the complete game. Using the keyboard, can zoom in and out and change angle.
+ * Shows a total of the complete game. Using the keyboard, can zoom in and out
+ * and change angle.
  * 
  * @author Armin Reichert
  */

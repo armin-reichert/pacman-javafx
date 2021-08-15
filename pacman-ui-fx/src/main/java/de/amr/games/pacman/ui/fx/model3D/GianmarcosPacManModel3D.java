@@ -18,7 +18,8 @@ import javafx.scene.transform.Translate;
  * (https://www.artstation.com/gianmart). Thanks Gianmarco!
  * 
  * <p>
- * Unfortunately, I have neither a model with animations nor a Ms. Pac-Man model yet.
+ * Unfortunately, I have neither a model with animations nor a Ms. Pac-Man model
+ * yet.
  * 
  * @author Armin Reichert
  */

@@ -12,7 +12,8 @@ import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene1_Controller;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene1_Controller.Phase;
 
 /**
- * First intermission scene: Blinky chases Pac-Man and is then chased by a huge Pac-Man.
+ * First intermission scene: Blinky chases Pac-Man and is then chased by a huge
+ * Pac-Man.
  * 
  * @author Armin Reichert
  */

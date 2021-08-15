@@ -210,8 +210,8 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	@Override
 	public Map<Direction, TimedSequence<Rectangle2D>> createGhostReturningHomeAnimations() {
 		Map<Direction, TimedSequence<Rectangle2D>> ghostEyesAnim = new EnumMap<>(Direction.class);
-		Direction.stream()
-				.forEach(dir -> ghostEyesAnim.put(dir, TimedSequence.of(rightSide(8 + spritesheet().dirIndex(dir), 5))));
+		Direction.stream().forEach(
+				dir -> ghostEyesAnim.put(dir, TimedSequence.of(rightSide(8 + spritesheet().dirIndex(dir), 5))));
 		return ghostEyesAnim;
 	}
 
@@ -219,8 +219,8 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 		Map<Direction, TimedSequence<Rectangle2D>> pacManMunchingAnim = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = spritesheet().dirIndex(dir);
-			pacManMunchingAnim.put(dir,
-					TimedSequence.of(rightSide(0, 9 + d), rightSide(1, 9 + d), rightSide(2, 9)).frameDuration(2).endless());
+			pacManMunchingAnim.put(dir, TimedSequence.of(rightSide(0, 9 + d), rightSide(1, 9 + d), rightSide(2, 9))
+					.frameDuration(2).endless());
 		}
 		return pacManMunchingAnim;
 	}

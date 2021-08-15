@@ -36,7 +36,8 @@ public class Maze3D extends Group {
 	public Maze3D(double mazeSizeX, double mazeSizeY) {
 		floor = new Box(mazeSizeX - 1, mazeSizeY - 1, floorSizeZ);
 		floor.drawModeProperty().bind(Env.$drawMode3D);
-		floor.getTransforms().add(new Translate(mazeSizeX / 2 - TS / 2, mazeSizeY / 2 - TS / 2, -0.5 * floorSizeZ + 0.1));
+		floor.getTransforms()
+				.add(new Translate(mazeSizeX / 2 - TS / 2, mazeSizeY / 2 - TS / 2, -0.5 * floorSizeZ + 0.1));
 		var floorColor = Color.rgb(20, 20, 120);
 		var floorMaterial = new PhongMaterial(floorColor);
 		floorMaterial.setSpecularColor(floorColor.brighter());

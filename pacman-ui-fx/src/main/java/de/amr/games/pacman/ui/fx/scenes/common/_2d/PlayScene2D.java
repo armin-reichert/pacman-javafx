@@ -23,7 +23,8 @@ import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.paint.Color;
 
 /**
- * 2D scene displaying the maze and the game play for both, Pac-Man and Ms. Pac-Man games.
+ * 2D scene displaying the maze and the game play for both, Pac-Man and Ms.
+ * Pac-Man games.
  * 
  * @author Armin Reichert
  */

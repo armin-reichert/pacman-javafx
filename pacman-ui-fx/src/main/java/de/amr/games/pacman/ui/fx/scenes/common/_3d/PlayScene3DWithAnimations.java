@@ -65,7 +65,8 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 		super.update();
 		sounds.setMuted(gameController.isAttractMode());
 		if (gameController.state == PacManGameState.HUNTING) {
-			// when switching between 2D and 3D, food visibility and animations might not be up-to-date, so:
+			// when switching between 2D and 3D, food visibility and animations might not be
+			// up-to-date, so:
 			maze3D.foodNodes().forEach(foodNode -> {
 				foodNode.setVisible(!game().level().isFoodRemoved(tile(foodNode)));
 			});
@@ -101,7 +102,8 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 	@Override
 	public void onPlayerGainsPower(PacManGameEvent e) {
 		sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
-		ghosts3D.stream().filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
+		ghosts3D.stream()
+				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
 				.forEach(Ghost3D::setBlueSkinColor);
 	}
 

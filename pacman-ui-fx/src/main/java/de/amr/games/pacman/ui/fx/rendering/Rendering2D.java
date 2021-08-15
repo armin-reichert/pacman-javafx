@@ -54,8 +54,8 @@ public abstract class Rendering2D {
 	public void renderEntity(GraphicsContext g, GameEntity entity, Rectangle2D sb) {
 		if (entity.isVisible() && sb != null) {
 			g.drawImage(spritesheet().getSource(), sb.getMinX(), sb.getMinY(), sb.getWidth(), sb.getHeight(),
-					entity.position().x - sb.getWidth() / 2 + HTS, entity.position().y - sb.getHeight() / 2 + HTS, sb.getWidth(),
-					sb.getHeight());
+					entity.position().x - sb.getWidth() / 2 + HTS, entity.position().y - sb.getHeight() / 2 + HTS,
+					sb.getWidth(), sb.getHeight());
 		}
 	}
 
@@ -68,8 +68,8 @@ public abstract class Rendering2D {
 	 * @param y  render location y
 	 */
 	public void renderSprite(GraphicsContext g, Rectangle2D sb, double x, double y) {
-		g.drawImage(spritesheet().getSource(), sb.getMinX(), sb.getMinY(), sb.getWidth(), sb.getHeight(), x, y, sb.getWidth(),
-				sb.getHeight());
+		g.drawImage(spritesheet().getSource(), sb.getMinX(), sb.getMinY(), sb.getWidth(), sb.getHeight(), x, y,
+				sb.getWidth(), sb.getHeight());
 	}
 
 	// Maze

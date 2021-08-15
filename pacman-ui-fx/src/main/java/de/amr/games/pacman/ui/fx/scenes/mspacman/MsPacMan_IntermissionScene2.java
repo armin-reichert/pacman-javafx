@@ -12,8 +12,9 @@ import de.amr.games.pacman.ui.mspacman.MsPacMan_IntermissionScene2_Controller;
 /**
  * Intermission scene 2: "The chase".
  * <p>
- * Pac-Man and Ms. Pac-Man chase each other across the screen over and over. After three turns, they
- * both rapidly run from left to right and right to left. (Played after round 5)
+ * Pac-Man and Ms. Pac-Man chase each other across the screen over and over.
+ * After three turns, they both rapidly run from left to right and right to
+ * left. (Played after round 5)
  * 
  * @author Armin Reichert
  */
