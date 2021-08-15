@@ -10,7 +10,6 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
-import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.model.common.PacManGameModel;
 import de.amr.games.pacman.ui.PacManGameUI;
@@ -57,7 +56,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private final Stage stage;
 	private final Scene mainScene;
 	private final Canvas canvas = new Canvas();
-	private final Keyboard keyboard = new Keyboard();
+	private final ManualPlayerControl playerControl = new ManualPlayerControl();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final HUD hud = new HUD(this);
 	private final Group gameSceneRoot = new Group();
@@ -87,8 +86,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			stage.setTitle(String.format("%s (%d frames/sec, JavaFX)", gameName, currentFPS));
 		});
 
-		stage.addEventHandler(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
-		stage.addEventHandler(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
+		stage.addEventHandler(KeyEvent.KEY_PRESSED, playerControl::onKeyPressed);
+		stage.addEventHandler(KeyEvent.KEY_RELEASED, playerControl::onKeyReleased);
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
 
 		stage.getIcons().add(new Image(getClass().getResourceAsStream(APP_ICON)));
@@ -136,18 +135,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void steer(Pac player) {
-		if (keyboard.keyPressed("Up")) {
-			player.setWishDir(Direction.UP);
-		}
-		if (keyboard.keyPressed("Down")) {
-			player.setWishDir(Direction.DOWN);
-		}
-		if (keyboard.keyPressed("Left")) {
-			player.setWishDir(Direction.LEFT);
-		}
-		if (keyboard.keyPressed("Right")) {
-			player.setWishDir(Direction.RIGHT);
-		}
+		playerControl.steer(player);
 	}
 
 	private void stopAllSounds() {
