@@ -18,8 +18,9 @@ import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.scenes.common.TrashTalk;
 import de.amr.games.pacman.ui.fx.scenes.common._2d.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.scenes.common._3d.PlayScene3D;
+import de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacManScenes;
+import de.amr.games.pacman.ui.fx.scenes.pacman.PacManScenes;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.ObjectBinding;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
@@ -64,17 +65,15 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private final Group gameSceneRoot = new Group();
 	private GameScene currentGameScene;
 
-	private ObjectBinding<Background> $background = Bindings.createObjectBinding(() -> {
-		Color color = Env.$drawMode3D.get() == DrawMode.FILL ? Color.CORNFLOWERBLUE : Color.BLACK;
-		return new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY));
-	}, Env.$drawMode3D);
-
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController gameController, double height) {
 		this.stage = stage;
 		this.gameController = gameController;
 
 		StackPane mainSceneRoot = new StackPane(gameSceneRoot, flashMessageView, hud);
-		mainSceneRoot.backgroundProperty().bind($background);
+		mainSceneRoot.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
+			Color color = Env.$drawMode3D.get() == DrawMode.FILL ? Color.CORNFLOWERBLUE : Color.BLACK;
+			return new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY));
+		}, Env.$drawMode3D));
 		StackPane.setAlignment(hud, Pos.TOP_LEFT);
 
 		GameScene gameScene = getSceneForCurrentGameState(Env.$use3DScenes.get());
@@ -138,8 +137,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private void stopAllSounds() {
-		de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacManScenes.SOUNDS.stopAll();
-		de.amr.games.pacman.ui.fx.scenes.pacman.PacManScenes.SOUNDS.stopAll();
+		MsPacManScenes.SOUNDS.stopAll();
+		PacManScenes.SOUNDS.stopAll();
 	}
 
 	private void toggleUse3DScenes() {
@@ -168,9 +167,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		switch (game.variant()) {
 		case MS_PACMAN:
-			return de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacManScenes.SCENES[sceneIndex][_3D ? 1 : 0];
+			return MsPacManScenes.SCENES[sceneIndex][_3D ? 1 : 0];
 		case PACMAN:
-			return de.amr.games.pacman.ui.fx.scenes.pacman.PacManScenes.SCENES[sceneIndex][_3D ? 1 : 0];
+			return PacManScenes.SCENES[sceneIndex][_3D ? 1 : 0];
 		default:
 			throw new IllegalStateException();
 		}
@@ -284,10 +283,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		case C:
 			if (currentGameScene instanceof PlayScene3D) {
-				PlayScene3D playScene = (PlayScene3D) currentGameScene;
-				playScene.nextCam();
-				String camera = MESSAGES.getString(playScene.selectedCam().getClass().getSimpleName());
-				String message = message("camera_perspective", camera);
+				PlayScene3D playScene3D = (PlayScene3D) currentGameScene;
+				playScene3D.nextCam();
+				String cameraType = MESSAGES.getString(playScene3D.selectedCam().getClass().getSimpleName());
+				String message = message("camera_perspective", cameraType);
 				showFlashMessage(1, message);
 			}
 			break;
