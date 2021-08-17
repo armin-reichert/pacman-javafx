@@ -52,7 +52,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		return MessageFormat.format(MESSAGES.getString(pattern), args);
 	}
 
-	private static final String APP_ICON = "/pacman/graphics/pacman.png";
+	private static final String APP_ICON_PATH = "/pacman/graphics/pacman.png";
 
 	private final PacManGameController gameController;
 	private final Stage stage;
@@ -82,18 +82,19 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			return bounds.getWidth() / bounds.getHeight();
 		});
 		mainScene = new Scene(mainSceneRoot, aspectRatio * height, height);
+		
+		// Must be done *after* main scene has been created:
 		setGameScene(gameScene);
-
-		stage.titleProperty().bind(Bindings.createStringBinding(() -> {
-			String gameName = gameController.game().variant() == PACMAN ? "Pac-Man" : "Ms. Pac-Man";
-			return String.format("%s (%d frames/sec, JavaFX)", gameName, Env.$fps.get());
-		}, Env.$fps));
 
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, playerControl::onKeyPressed);
 		stage.addEventHandler(KeyEvent.KEY_RELEASED, playerControl::onKeyReleased);
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
 
-		stage.getIcons().add(new Image(getClass().getResourceAsStream(APP_ICON)));
+		stage.titleProperty().bind(Bindings.createStringBinding(() -> {
+			String gameName = gameController.game().variant() == PACMAN ? "Pac-Man" : "Ms. Pac-Man";
+			return String.format("%s (%d frames/sec, JavaFX)", gameName, Env.$fps.get());
+		}, Env.$fps));
+		stage.getIcons().add(new Image(getClass().getResourceAsStream(APP_ICON_PATH)));
 		stage.setScene(mainScene);
 		stage.centerOnScreen();
 		stage.show();
