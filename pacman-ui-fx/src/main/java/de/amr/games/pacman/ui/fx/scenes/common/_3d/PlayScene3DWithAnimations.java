@@ -297,9 +297,9 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 		expand.setToZ(3);
 
 		ScaleTransition shrink = new ScaleTransition(Duration.seconds(1), player3D);
-		shrink.setToX(0.1);
-		shrink.setToY(0.1);
-		shrink.setToZ(0.1);
+		shrink.setToX(0);
+		shrink.setToY(0);
+		shrink.setToZ(0);
 		shrink.setOnFinished(e -> {
 			player3D.setVisible(false);
 		});
