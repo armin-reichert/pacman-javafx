@@ -56,7 +56,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private final PacManGameController gameController;
 	private final Stage stage;
-	private final Scene mainScene;
 	private final Canvas canvas = new Canvas();
 	private final ManualPlayerControl playerControl = new ManualPlayerControl(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT,
 			KeyCode.RIGHT);
@@ -81,8 +80,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
 			return bounds.getWidth() / bounds.getHeight();
 		});
-		mainScene = new Scene(mainSceneRoot, aspectRatio * height, height);
-		
+		Scene mainScene = new Scene(mainSceneRoot, aspectRatio * height, height);
+		stage.setScene(mainScene);
+
 		// Must be done *after* main scene has been created:
 		setGameScene(gameScene);
 
@@ -95,7 +95,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			return String.format("%s (%d frames/sec, JavaFX)", gameName, Env.$fps.get());
 		}, Env.$fps));
 		stage.getIcons().add(new Image(getClass().getResourceAsStream(APP_ICON_PATH)));
-		stage.setScene(mainScene);
 		stage.centerOnScreen();
 		stage.show();
 	}
@@ -115,8 +114,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		return gameController;
 	}
 
-	public Scene getMainScene() {
-		return mainScene;
+	public Stage getStage() {
+		return stage;
 	}
 
 	public GameScene getCurrentGameScene() {
@@ -188,9 +187,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			if (newGameScene.getGameController() == null) {
 				// new scene is displayed first time
 				newGameScene.setGameController(gameController);
-				newGameScene.keepSizeOf(mainScene);
+				newGameScene.keepSizeOf(stage.getScene());
 			}
-			newGameScene.resize(mainScene.getWidth(), mainScene.getHeight());
+			newGameScene.resize(stage.getScene().getWidth(), stage.getScene().getHeight());
 			newGameScene.init();
 			gameSceneRoot.getChildren().setAll(newGameScene.getSubSceneFX());
 			// Note: this must be done after new scene has been added to scene graph:

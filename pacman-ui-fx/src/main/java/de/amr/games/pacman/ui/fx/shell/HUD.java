@@ -59,9 +59,10 @@ public class HUD extends Text {
 		line("", "w=%.0f h=%.0f", ui.getCurrentGameScene().getSubSceneFX().getWidth(),
 				ui.getCurrentGameScene().getSubSceneFX().getHeight());
 		newline();
-		line("Window Size", "w=%.0f h=%.0f", ui.getMainScene().getWindow().getWidth(),
-				ui.getMainScene().getWindow().getHeight());
-		line("Main Scene Size", "w=%.0f h=%.0f", ui.getMainScene().getWidth(), ui.getMainScene().getHeight());
+		double w = ui.getStage().getScene().getWindow().getWidth(),
+				h = ui.getStage().getScene().getWindow().getHeight();
+		line("Window Size", "w=%.0f h=%.0f", w, h);
+		line("Scene Size", "w=%.0f h=%.0f", ui.getStage().getScene().getWidth(), ui.getStage().getScene().getHeight());
 		newline();
 		line("3D Scenes (CTRL+3)", "%s", on_off(Env.$use3DScenes.get()));
 		if (ui.getCurrentGameScene() instanceof AbstractGameScene2D) {
