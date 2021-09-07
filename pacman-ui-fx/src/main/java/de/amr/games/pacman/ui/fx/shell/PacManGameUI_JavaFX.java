@@ -68,20 +68,21 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		this.stage = stage;
 		this.gameController = gameController;
 
+		// Determine the initial game scene
+		GameScene gameScene = getSceneForCurrentGameState(Env.$use3DScenes.get());
+		double aspectRatio = gameScene.aspectRatio().orElseGet(() -> {
+			Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+			return bounds.getWidth() / bounds.getHeight();
+		});
+		
+		// Create the main scene containing all other sub-scenes
 		StackPane mainSceneRoot = new StackPane(gameSceneRoot, flashMessageView, hud);
 		mainSceneRoot.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
 			Color color = Env.$drawMode3D.get() == DrawMode.FILL ? Color.CORNFLOWERBLUE : Color.BLACK;
 			return new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY));
 		}, Env.$drawMode3D));
 		StackPane.setAlignment(hud, Pos.TOP_LEFT);
-
-		GameScene gameScene = getSceneForCurrentGameState(Env.$use3DScenes.get());
-		double aspectRatio = gameScene.aspectRatio().orElseGet(() -> {
-			Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-			return bounds.getWidth() / bounds.getHeight();
-		});
-		Scene mainScene = new Scene(mainSceneRoot, aspectRatio * height, height);
-		stage.setScene(mainScene);
+		stage.setScene(new Scene(mainSceneRoot, aspectRatio * height, height));
 
 		// Must be done *after* main scene has been created:
 		setGameScene(gameScene);
