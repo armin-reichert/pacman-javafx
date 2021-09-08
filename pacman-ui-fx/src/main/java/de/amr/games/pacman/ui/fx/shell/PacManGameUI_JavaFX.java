@@ -57,8 +57,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private final PacManGameController gameController;
 	private final Stage stage;
 	private final Canvas canvas = new Canvas();
-	private final ManualPlayerControl playerControl = new ManualPlayerControl(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT,
-			KeyCode.RIGHT);
+	private final ManualPlayerControl playerControl;
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final HUD hud = new HUD(this);
 	private final Group gameSceneRoot = new Group();
@@ -74,7 +73,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
 			return bounds.getWidth() / bounds.getHeight();
 		});
-		
+
 		// Create the main scene containing all other sub-scenes
 		StackPane mainSceneRoot = new StackPane(gameSceneRoot, flashMessageView, hud);
 		mainSceneRoot.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
@@ -87,6 +86,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		// Must be done *after* main scene has been created:
 		setGameScene(gameScene);
 
+		// Handle keyboard input
+		playerControl = new ManualPlayerControl(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, playerControl::onKeyPressed);
 		stage.addEventHandler(KeyEvent.KEY_RELEASED, playerControl::onKeyReleased);
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
