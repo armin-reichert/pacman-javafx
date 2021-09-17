@@ -70,10 +70,6 @@ public class Rendering2D_PacMan extends Rendering2D {
 		return spritesheet;
 	}
 
-	public Color getMazeWallBorderColor(int mazeIndex) {
-		return Color.rgb(33, 33, 255);
-	}
-
 	@Override
 	public void renderMazeFull(GraphicsContext g, int mazeNumber, double x, double y) {
 		g.drawImage(mazeFullImage, x, y);
