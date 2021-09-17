@@ -5,6 +5,7 @@ import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.pacman.PacManGame;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -30,7 +31,7 @@ public class Rendering2D_PacMan extends Rendering2D {
 		spritesheet = new Spritesheet("/pacman/graphics/sprites.png", 16);
 		mazeFullImage = new Image(resource("/pacman/graphics/maze_full.png"));
 		mazeEmptyImage = new Image(resource("/pacman/graphics/maze_empty.png"));
-		mazeFlashingImage = colorsExchanged(mazeEmptyImage, Map.of(getMazeWallBorderColor(0), Color.WHITE));
+		mazeFlashingImage = colorsExchanged(mazeEmptyImage, Map.of(getMazeSideColor(GameVariant.PACMAN, 1), Color.WHITE));
 
 		//@formatter:off
 		symbolSprites = Map.of(
