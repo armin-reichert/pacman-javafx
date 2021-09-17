@@ -7,7 +7,6 @@ import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.fx.model3D.PacManModel3D;
 import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
-import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets;
 import javafx.animation.RotateTransition;
 import javafx.animation.Transition;
 import javafx.geometry.Rectangle2D;
@@ -83,7 +82,7 @@ public class Ghost3D extends Group {
 		this.ghost = ghost;
 		this.targetDir = ghost.dir();
 		this.rendering2D = rendering2D;
-		this.normalColor = Rendering2D_Assets.getGhostColor(ghost.id);
+		this.normalColor = Rendering2D.getGhostColor(ghost.id);
 
 		int[] rotationInterval = rotationInterval(ghost.dir(), targetDir);
 

@@ -3,7 +3,7 @@ package de.amr.games.pacman.ui.fx.entities._3d;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
 import de.amr.games.pacman.model.common.PacManGameModel;
-import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Assets;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
 import javafx.scene.Group;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -18,7 +18,7 @@ public class ScoreNotReally3D extends Group {
 	private final Text txtHiscore;
 
 	public ScoreNotReally3D() {
-		Font font = Rendering2D_Assets.ARCADE_FONT;
+		Font font = Rendering2D.ARCADE_FONT;
 
 		txtScoreTitle = new Text("SCORE");
 		txtScoreTitle.setFill(Color.WHITE);

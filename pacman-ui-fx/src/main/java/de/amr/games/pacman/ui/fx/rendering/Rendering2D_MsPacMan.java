@@ -67,7 +67,7 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 			Rectangle2D mazeFullRegion = new Rectangle2D(0, 248 * mazeIndex, 226, 248);
 			Rectangle2D mazeEmptyRegion = new Rectangle2D(226, 248 * mazeIndex, 226, 248);
 			// TODO can we avoid copying image data?
-			Image mazeFlashImage = Rendering2D_Assets.colorsExchanged(spritesheet().subImage(mazeEmptyRegion), //
+			Image mazeFlashImage = colorsExchanged(spritesheet().subImage(mazeEmptyRegion), //
 					Map.of( //
 							getMazeWallBorderColor(mazeIndex), Color.WHITE, //
 							getMazeWallColor(mazeIndex), Color.BLACK));

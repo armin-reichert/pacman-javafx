@@ -29,9 +29,9 @@ public class Rendering2D_PacMan extends Rendering2D {
 	public Rendering2D_PacMan(String resourcePath) {
 		spritesheet = new Spritesheet(resourcePath + "sprites.png", 16);
 
-		mazeFullImage = Rendering2D_Assets.image(resourcePath + "maze_full.png");
-		mazeEmptyImage = Rendering2D_Assets.image(resourcePath + "maze_empty.png");
-		mazeFlashingImage = Rendering2D_Assets.colorsExchanged(mazeEmptyImage, Map.of(getMazeWallBorderColor(0), Color.WHITE));
+		mazeFullImage = image(resourcePath + "maze_full.png");
+		mazeEmptyImage = image(resourcePath + "maze_empty.png");
+		mazeFlashingImage = colorsExchanged(mazeEmptyImage, Map.of(getMazeWallBorderColor(0), Color.WHITE));
 
 		//@formatter:off
 		symbolSprites = Map.of(
