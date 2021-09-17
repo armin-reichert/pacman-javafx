@@ -2,6 +2,7 @@ package de.amr.games.pacman.ui.fx.rendering;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 
+import java.io.InputStream;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
@@ -23,12 +24,11 @@ import javafx.scene.text.Font;
  */
 public abstract class Rendering2D {
 
-	public static final Font ARCADE_FONT = Font.loadFont(//
-			Rendering2D.class.getResourceAsStream("/emulogic.ttf"), 8);
-
-	public static Image image(String path) {
-		return new Image(Rendering2D.class.getResource(path).toExternalForm());
+	public static InputStream resource(String path) {
+		return Rendering2D.class.getResourceAsStream(path);
 	}
+
+	public static final Font ARCADE_FONT = Font.loadFont(resource("/emulogic.ttf"), 8);
 
 	private static final Color PACMAN_FOOD_COLOR = Color.rgb(250, 185, 176);
 
@@ -117,11 +117,14 @@ public abstract class Rendering2D {
 		return newImage;
 	}
 
+	/**
+	 * @return the used spritesheet
+	 */
 	public abstract Spritesheet spritesheet();
 
 	/**
 	 * @param bonus game bonus
-	 * @return sprite bounds for bonus depending on its state
+	 * @return sprite (region) for bonus symbol depending on its state (edible/eaten)
 	 */
 	public Rectangle2D bonusSprite(Bonus bonus) {
 		if (bonus.state == Bonus.EDIBLE) {
@@ -130,7 +133,7 @@ public abstract class Rendering2D {
 		if (bonus.state == Bonus.EATEN) {
 			return getBonusValuesSprites().get(bonus.points);
 		}
-		return null; // should not happen
+		throw new IllegalStateException();
 	}
 
 	/**
@@ -145,13 +148,13 @@ public abstract class Rendering2D {
 	 * 
 	 * @param g      the graphics context
 	 * @param entity the entity getting rendered
-	 * @param sb     sprite bounds in spritsheet
+	 * @param region region of entity sprite in spritesheet
 	 */
-	public void renderEntity(GraphicsContext g, GameEntity entity, Rectangle2D sb) {
-		if (entity.isVisible() && sb != null) {
-			g.drawImage(spritesheet().getSource(), sb.getMinX(), sb.getMinY(), sb.getWidth(), sb.getHeight(),
-					entity.position().x - sb.getWidth() / 2 + HTS, entity.position().y - sb.getHeight() / 2 + HTS, sb.getWidth(),
-					sb.getHeight());
+	public void renderEntity(GraphicsContext g, GameEntity entity, Rectangle2D region) {
+		if (entity.isVisible()) {
+			g.drawImage(spritesheet().getSource(), region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(),
+					entity.position().x - region.getWidth() / 2 + HTS, entity.position().y - region.getHeight() / 2 + HTS,
+					region.getWidth(), region.getHeight());
 		}
 	}
 
