@@ -17,7 +17,7 @@ import de.amr.games.pacman.ui.fx.sound.SoundManager;
 public class PacManScenes {
 
 	public static final PacManModel3D MODEL_3D = new GianmarcosPacManModel3D();
-	public static final Rendering2D_PacMan RENDERING = new Rendering2D_PacMan("/pacman/graphics/");
+	public static final Rendering2D_PacMan RENDERING = new Rendering2D_PacMan();
 	public static final SoundManager SOUNDS = new SoundManager(PacManGameSounds::pacManSoundURL);
 	public static final GameScene SCENES[][] = new GameScene[5][2];
 

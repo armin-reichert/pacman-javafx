@@ -28,8 +28,8 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	private final Map<String, Rectangle2D> symbolSprites;
 	private final Map<Integer, Rectangle2D> bountyNumberSprites;
 
-	public Rendering2D_MsPacMan(String resourcePath) {
-		spritesheet = new Spritesheet(resourcePath + "sprites.png", 16);
+	public Rendering2D_MsPacMan() {
+		spritesheet = new Spritesheet("/mspacman/graphics/sprites.png", 16);
 
 		//@formatter:off
 		symbolSprites = Map.of(

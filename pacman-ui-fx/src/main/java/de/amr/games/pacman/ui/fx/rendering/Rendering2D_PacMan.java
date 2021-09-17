@@ -26,11 +26,10 @@ public class Rendering2D_PacMan extends Rendering2D {
 	private final Map<String, Rectangle2D> symbolSprites;
 	private final Map<Integer, Rectangle2D> bountyNumberSprites;
 
-	public Rendering2D_PacMan(String resourcePath) {
-		spritesheet = new Spritesheet(resourcePath + "sprites.png", 16);
-
-		mazeFullImage = new Image(resource(resourcePath + "maze_full.png"));
-		mazeEmptyImage = new Image(resource(resourcePath + "maze_empty.png"));
+	public Rendering2D_PacMan() {
+		spritesheet = new Spritesheet("/pacman/graphics/sprites.png", 16);
+		mazeFullImage = new Image(resource("/pacman/graphics/maze_full.png"));
+		mazeEmptyImage = new Image(resource("/pacman/graphics/maze_empty.png"));
 		mazeFlashingImage = colorsExchanged(mazeEmptyImage, Map.of(getMazeWallBorderColor(0), Color.WHITE));
 
 		//@formatter:off
