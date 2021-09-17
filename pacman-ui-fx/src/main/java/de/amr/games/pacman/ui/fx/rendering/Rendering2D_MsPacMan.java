@@ -7,6 +7,7 @@ import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -69,8 +70,8 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 			// TODO can we avoid copying image data?
 			Image mazeFlashImage = colorsExchanged(spritesheet().subImage(mazeEmptyRegion), //
 					Map.of( //
-							getMazeWallBorderColor(mazeIndex), Color.WHITE, //
-							getMazeWallColor(mazeIndex), Color.BLACK));
+							getMazeSideColor(GameVariant.MS_PACMAN, mazeIndex + 1), Color.WHITE, //
+							getMazeTopColor(GameVariant.MS_PACMAN, mazeIndex + 1), Color.BLACK));
 			mazeFullSprites.add(mazeFullRegion);
 			mazeEmptySprites.add(mazeEmptyRegion);
 			mazeFlashImages.add(mazeFlashImage);
@@ -80,57 +81,6 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	@Override
 	public Spritesheet spritesheet() {
 		return spritesheet;
-	}
-
-	/**
-	 * Note: maze numbers are 1-based, maze index as stored here is 0-based.
-	 * 
-	 * @param mazeIndex
-	 * @return
-	 */
-	@Override
-	public Color getMazeWallColor(int mazeIndex) {
-		switch (mazeIndex) {
-		case 0:
-			return Color.rgb(255, 183, 174);
-		case 1:
-			return Color.rgb(71, 183, 255);
-		case 2:
-			return Color.rgb(222, 151, 81);
-		case 3:
-			return Color.rgb(33, 33, 255);
-		case 4:
-			return Color.rgb(255, 183, 255);
-		case 5:
-			return Color.rgb(255, 183, 174);
-		default:
-			return Color.WHITE;
-		}
-	}
-
-	/**
-	 * Note: maze numbers are 1-based, maze index as stored here is 0-based.
-	 * 
-	 * @param mazeIndex
-	 * @return
-	 */
-	public Color getMazeWallBorderColor(int mazeIndex) {
-		switch (mazeIndex) {
-		case 0:
-			return Color.rgb(255, 0, 0);
-		case 1:
-			return Color.rgb(222, 222, 255);
-		case 2:
-			return Color.rgb(222, 222, 255);
-		case 3:
-			return Color.rgb(255, 183, 81);
-		case 4:
-			return Color.rgb(255, 255, 0);
-		case 5:
-			return Color.rgb(255, 0, 0);
-		default:
-			return Color.WHITE;
-		}
 	}
 
 	@Override

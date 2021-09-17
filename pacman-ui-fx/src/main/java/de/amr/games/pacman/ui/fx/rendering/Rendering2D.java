@@ -190,8 +190,6 @@ public abstract class Rendering2D {
 
 	public abstract void renderMazeFlashing(GraphicsContext g, int mazeNumber, double x, double y);
 
-	public abstract Color getMazeWallColor(int i);
-
 	// Animations
 
 	public abstract Map<Direction, TimedSequence<Rectangle2D>> createPlayerMunchingAnimations();
