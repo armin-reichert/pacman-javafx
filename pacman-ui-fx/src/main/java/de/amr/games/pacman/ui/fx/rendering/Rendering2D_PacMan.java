@@ -19,9 +19,9 @@ import javafx.scene.paint.Color;
 public class Rendering2D_PacMan extends Rendering2D {
 
 	private final Spritesheet spritesheet;
-	private final Image mazeFull;
-	private final Image mazeEmpty;
-	private final Image mazeFlashing;
+	private final Image mazeFullImage;
+	private final Image mazeEmptyImage;
+	private final Image mazeFlashingImage;
 	private final Map<Integer, Rectangle2D> bonusValueSprites;
 	private final Map<String, Rectangle2D> symbolSprites;
 	private final Map<Integer, Rectangle2D> bountyNumberSprites;
@@ -29,9 +29,9 @@ public class Rendering2D_PacMan extends Rendering2D {
 	public Rendering2D_PacMan(String resourcePath) {
 		spritesheet = new Spritesheet(resourcePath + "sprites.png", 16);
 
-		mazeFull = Rendering2D_Assets.image(resourcePath + "maze_full.png");
-		mazeEmpty = Rendering2D_Assets.image(resourcePath + "maze_empty.png");
-		mazeFlashing = Rendering2D_Assets.colorsExchanged(mazeEmpty, Map.of(getMazeWallBorderColor(0), Color.WHITE));
+		mazeFullImage = Rendering2D_Assets.image(resourcePath + "maze_full.png");
+		mazeEmptyImage = Rendering2D_Assets.image(resourcePath + "maze_empty.png");
+		mazeFlashingImage = Rendering2D_Assets.colorsExchanged(mazeEmptyImage, Map.of(getMazeWallBorderColor(0), Color.WHITE));
 
 		//@formatter:off
 		symbolSprites = Map.of(
@@ -81,17 +81,17 @@ public class Rendering2D_PacMan extends Rendering2D {
 
 	@Override
 	public void renderMazeFull(GraphicsContext g, int mazeNumber, double x, double y) {
-		g.drawImage(mazeFull, x, y);
+		g.drawImage(mazeFullImage, x, y);
 	}
 
 	@Override
 	public void renderMazeEmpty(GraphicsContext g, int mazeNumber, double x, double y) {
-		g.drawImage(mazeEmpty, x, y);
+		g.drawImage(mazeEmptyImage, x, y);
 	}
 
 	@Override
 	public void renderMazeFlashing(GraphicsContext g, int mazeNumber, double x, double y) {
-		g.drawImage(mazeFlashing, x, y);
+		g.drawImage(mazeFlashingImage, x, y);
 	}
 
 	@Override

@@ -21,8 +21,8 @@ import javafx.scene.paint.Color;
 public class Rendering2D_MsPacMan extends Rendering2D {
 
 	private final Spritesheet spritesheet;
-	private final List<Image> mazeFullImages;
-	private final List<Image> mazeEmptyImages;
+	private final List<Rectangle2D> mazeFullSprites;
+	private final List<Rectangle2D> mazeEmptySprites;
 	private final List<Image> mazeFlashImages;
 	private final Map<Integer, Rectangle2D> bonusValueSprites;
 	private final Map<String, Rectangle2D> symbolSprites;
@@ -60,18 +60,19 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 		);
 		//@formatter:on
 
-		mazeFullImages = new ArrayList<>(6);
-		mazeEmptyImages = new ArrayList<>(6);
+		mazeFullSprites = new ArrayList<>(6);
+		mazeEmptySprites = new ArrayList<>(6);
 		mazeFlashImages = new ArrayList<>(6);
 		for (int mazeIndex = 0; mazeIndex < 6; ++mazeIndex) {
-			Image mazeFullImage = spritesheet().subImage(0, 248 * mazeIndex, 226, 248);
-			Image mazeEmptyImage = spritesheet().subImage(226, 248 * mazeIndex, 226, 248);
-			Image mazeFlashImage = Rendering2D_Assets.colorsExchanged(mazeEmptyImage, //
-					Map.of(//
+			Rectangle2D mazeFullRegion = new Rectangle2D(0, 248 * mazeIndex, 226, 248);
+			Rectangle2D mazeEmptyRegion = new Rectangle2D(226, 248 * mazeIndex, 226, 248);
+			// TODO can we avoid copying image data?
+			Image mazeFlashImage = Rendering2D_Assets.colorsExchanged(spritesheet().subImage(mazeEmptyRegion), //
+					Map.of( //
 							getMazeWallBorderColor(mazeIndex), Color.WHITE, //
 							getMazeWallColor(mazeIndex), Color.BLACK));
-			mazeFullImages.add(mazeFullImage);
-			mazeEmptyImages.add(mazeEmptyImage);
+			mazeFullSprites.add(mazeFullRegion);
+			mazeEmptySprites.add(mazeEmptyRegion);
 			mazeFlashImages.add(mazeFlashImage);
 		}
 	}
@@ -134,12 +135,12 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 
 	@Override
 	public void renderMazeFull(GraphicsContext g, int mazeNumber, double x, double y) {
-		g.drawImage(mazeFullImages.get(mazeNumber - 1), x, y);
+		renderSprite(g, mazeFullSprites.get(mazeNumber - 1), x, y);
 	}
 
 	@Override
 	public void renderMazeEmpty(GraphicsContext g, int mazeNumber, double x, double y) {
-		g.drawImage(mazeEmptyImages.get(mazeNumber - 1), x, y);
+		renderSprite(g, mazeEmptySprites.get(mazeNumber - 1), x, y);
 	}
 
 	@Override
@@ -211,8 +212,8 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	@Override
 	public Map<Direction, TimedSequence<Rectangle2D>> createGhostReturningHomeAnimations() {
 		Map<Direction, TimedSequence<Rectangle2D>> ghostEyesAnim = new EnumMap<>(Direction.class);
-		Direction.stream().forEach(
-				dir -> ghostEyesAnim.put(dir, TimedSequence.of(rightSide(8 + spritesheet().dirIndex(dir), 5))));
+		Direction.stream()
+				.forEach(dir -> ghostEyesAnim.put(dir, TimedSequence.of(rightSide(8 + spritesheet().dirIndex(dir), 5))));
 		return ghostEyesAnim;
 	}
 
@@ -220,8 +221,8 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 		Map<Direction, TimedSequence<Rectangle2D>> pacManMunchingAnim = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = spritesheet().dirIndex(dir);
-			pacManMunchingAnim.put(dir, TimedSequence.of(rightSide(0, 9 + d), rightSide(1, 9 + d), rightSide(2, 9))
-					.frameDuration(2).endless());
+			pacManMunchingAnim.put(dir,
+					TimedSequence.of(rightSide(0, 9 + d), rightSide(1, 9 + d), rightSide(2, 9)).frameDuration(2).endless());
 		}
 		return pacManMunchingAnim;
 	}
