@@ -95,7 +95,7 @@ public class Rendering2D_PacMan extends Rendering2D {
 	}
 
 	@Override
-	public Rectangle2D getLifeImage() {
+	public Rectangle2D getLifeSprite() {
 		return spritesheet().sprite(8, 1);
 	}
 

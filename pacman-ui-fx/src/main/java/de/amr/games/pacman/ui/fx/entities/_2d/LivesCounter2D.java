@@ -28,7 +28,7 @@ public class LivesCounter2D implements Renderable2D {
 
 	@Override
 	public void render(GraphicsContext g) {
-		var sprite = rendering.getLifeImage();
+		var sprite = rendering.getLifeSprite();
 		for (int i = 0; i < Math.min(lives, maxLivesDisplayed); ++i) {
 			rendering.renderSprite(g, sprite, x + t(2 * i), y);
 		}

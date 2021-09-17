@@ -253,7 +253,7 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	 */
 
 	@Override
-	public Rectangle2D getLifeImage() {
+	public Rectangle2D getLifeSprite() {
 		return rightSide(1, 0);
 	}
 

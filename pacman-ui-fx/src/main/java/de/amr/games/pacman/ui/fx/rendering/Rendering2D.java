@@ -97,7 +97,7 @@ public abstract class Rendering2D {
 
 	// Sprites
 
-	public abstract Rectangle2D getLifeImage();
+	public abstract Rectangle2D getLifeSprite();
 
 	public abstract Map<Integer, Rectangle2D> getBountyNumberSprites();
 
