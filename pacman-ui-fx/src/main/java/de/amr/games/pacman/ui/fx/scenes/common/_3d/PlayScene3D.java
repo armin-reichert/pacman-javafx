@@ -86,8 +86,8 @@ public class PlayScene3D implements GameScene {
 
 		maze3D = new Maze3D(width, height);
 		maze3D.setFloorTexture(new Image(getClass().getResourceAsStream("/common/escher-texture.jpg")));
-		maze3D.setWallBaseColor(Rendering2D.getMazeWallSideColor(game().variant(), game().level().mazeNumber));
-		maze3D.setWallTopColor(Rendering2D.getMazeWallTopColor(game().variant(), game().level().mazeNumber));
+		maze3D.setWallBaseColor(Rendering2D.getMazeSideColor(game().variant(), game().level().mazeNumber));
+		maze3D.setWallTopColor(Rendering2D.getMazeTopColor(game().variant(), game().level().mazeNumber));
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		buildMaze();
 

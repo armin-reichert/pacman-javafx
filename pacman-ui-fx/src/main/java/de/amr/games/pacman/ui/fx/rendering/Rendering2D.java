@@ -18,7 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
- * Standard implementation of scene rendering, using a spritesheet.
+ * Base class for Pac-Man and Ms. Pac-Man spritesheet-based rendering.
  * 
  * @author Armin Reichert
  */
@@ -30,78 +30,89 @@ public abstract class Rendering2D {
 
 	public static final Font ARCADE_FONT = Font.loadFont(resource("/emulogic.ttf"), 8);
 
-	private static final Color PACMAN_FOOD_COLOR = Color.rgb(250, 185, 176);
+	// Maze color
 
-	private static final Color PACMAN_MAZE_WALL_SIDE_COLOR = Color.rgb(33, 33, 255);
+	private static final Color PACMAN_MAZE_TOP_COLOR = Color.rgb(255, 255, 255);
+	private static final Color PACMAN_MAZE_SIDE_COLOR = Color.rgb(33, 33, 255);
 
-	private static final Color MS_PACMAN_FOOD_COLOR[] = { //
-			Color.rgb(222, 222, 255), //
-			Color.rgb(255, 255, 0), //
-			Color.rgb(255, 0, 0), //
-			Color.rgb(222, 222, 255), //
-			Color.rgb(0, 255, 255), //
-			Color.rgb(222, 222, 255),//
-	};
-
-	private static final Color MS_PACMAN_MAZE_WALL_TOP_COLOR[] = { //
+	private static final Color[] MS_PACMAN_MAZE_TOP_COLOR = { //
 			Color.rgb(255, 183, 174), //
 			Color.rgb(71, 183, 255), //
 			Color.rgb(222, 151, 81), //
 			Color.rgb(33, 33, 255), //
 			Color.rgb(255, 183, 255), //
-			Color.rgb(255, 183, 174),//
+			Color.rgb(255, 183, 174), //
 	};
 
-	private static final Color MS_PACMAN_MAZE_WALL_SIDE_COLOR[] = { //
+	private static final Color[] MS_PACMAN_MAZE_SIDE_COLOR = { //
 			Color.rgb(255, 0, 0), //
 			Color.rgb(222, 222, 255), //
 			Color.rgb(222, 222, 255), //
 			Color.rgb(255, 183, 81), //
 			Color.rgb(255, 255, 0), //
-			Color.rgb(255, 0, 0),//
+			Color.rgb(255, 0, 0), //
 	};
 
-	public static Color getMazeWallTopColor(GameVariant gameVariant, int mazeNumber) {
-		return gameVariant == GameVariant.PACMAN ? getPacManMazeWallColor(mazeNumber)
-				: getMsPacManMazeWallTopColor(mazeNumber);
+	/**
+	 * @param gameVariant Pac-Man vs. Ms. Pac-Man
+	 * @param mazeNumber  the 1-based maze number
+	 * @return color of maze walls on top
+	 */
+	public static Color getMazeTopColor(GameVariant gameVariant, int mazeNumber) {
+		return gameVariant == GameVariant.PACMAN ? PACMAN_MAZE_TOP_COLOR : MS_PACMAN_MAZE_TOP_COLOR[mazeNumber - 1];
 	}
 
-	public static Color getMazeWallSideColor(GameVariant gameVariant, int mazeNumber) {
-		return gameVariant == GameVariant.PACMAN ? Color.WHITE : getMsPacManMazeWallSideColor(mazeNumber);
+	/**
+	 * @param gameVariant Pac-Man vs. Ms. Pac-Man
+	 * @param mazeNumber  the 1-based maze number
+	 * @return color of maze walls on side
+	 */
+	public static Color getMazeSideColor(GameVariant gameVariant, int mazeNumber) {
+		return gameVariant == GameVariant.PACMAN ? PACMAN_MAZE_SIDE_COLOR : MS_PACMAN_MAZE_SIDE_COLOR[mazeNumber - 1];
 	}
 
+	// Food color
+
+	private static final Color PACMAN_FOOD_COLOR = Color.rgb(250, 185, 176);
+
+	private static final Color[] MS_PACMAN_FOOD_COLOR = { //
+			Color.rgb(222, 222, 255), //
+			Color.rgb(255, 255, 0), //
+			Color.rgb(255, 0, 0), //
+			Color.rgb(222, 222, 255), //
+			Color.rgb(0, 255, 255), //
+			Color.rgb(222, 222, 255), //
+	};
+
+	/**
+	 * @param gameVariant Pac-Man vs. Ms. Pac-Man
+	 * @param mazeNumber  the 1-based maze number
+	 * @return color of pellets in this maze
+	 */
 	public static Color getFoodColor(GameVariant gameVariant, int mazeNumber) {
-		return gameVariant == GameVariant.PACMAN ? getPacManFoodColor(mazeNumber) : getMsPacManFoodColor(mazeNumber);
+		return gameVariant == GameVariant.PACMAN ? PACMAN_FOOD_COLOR : MS_PACMAN_FOOD_COLOR[mazeNumber - 1];
 	}
 
+	/**
+	 * @param ghostID 0=Blinky, 1=Pinky, 2=Inky, 3=Clyde/Sue
+	 * @return color of ghost
+	 */
 	public static Color getGhostColor(int ghostID) {
 		return ghostID == 0 ? Color.RED : ghostID == 1 ? Color.PINK : ghostID == 2 ? Color.CYAN : Color.ORANGE;
 	}
 
+	/**
+	 * @return color of blue (frightened) ghost
+	 */
 	public static Color getGhostBlueColor() {
 		return Color.CORNFLOWERBLUE;
 	}
 
-	public static Color getPacManMazeWallColor(int mazeNumber) {
-		return PACMAN_MAZE_WALL_SIDE_COLOR;
-	}
-
-	public static Color getPacManFoodColor(int mazeNumber) {
-		return PACMAN_FOOD_COLOR;
-	}
-
-	private static Color getMsPacManFoodColor(int mazeNumber) {
-		return MS_PACMAN_FOOD_COLOR[mazeNumber - 1];
-	}
-
-	public static Color getMsPacManMazeWallTopColor(int mazeNumber) {
-		return MS_PACMAN_MAZE_WALL_TOP_COLOR[mazeNumber - 1];
-	}
-
-	public static Color getMsPacManMazeWallSideColor(int mazeNumber) {
-		return MS_PACMAN_MAZE_WALL_SIDE_COLOR[mazeNumber - 1];
-	}
-
+	/**
+	 * @param source    source image
+	 * @param exchanges map of color exchanges
+	 * @return copy of source image with colors exchanged as given
+	 */
 	public static Image colorsExchanged(Image source, Map<Color, Color> exchanges) {
 		WritableImage newImage = new WritableImage((int) source.getWidth(), (int) source.getHeight());
 		for (int x = 0; x < source.getWidth(); ++x) {
