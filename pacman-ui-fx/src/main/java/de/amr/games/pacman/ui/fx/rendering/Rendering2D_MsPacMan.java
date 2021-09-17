@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
@@ -132,18 +133,18 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	}
 
 	@Override
-	public Image getMazeFullImage(int mazeNumber) {
-		return mazeFullImages.get(mazeNumber - 1);
+	public void renderMazeFull(GraphicsContext g, int mazeNumber, double x, double y) {
+		g.drawImage(mazeFullImages.get(mazeNumber - 1), x, y);
 	}
 
 	@Override
-	public Image getMazeEmptyImage(int mazeNumber) {
-		return mazeEmptyImages.get(mazeNumber - 1);
+	public void renderMazeEmpty(GraphicsContext g, int mazeNumber, double x, double y) {
+		g.drawImage(mazeEmptyImages.get(mazeNumber - 1), x, y);
 	}
 
 	@Override
-	public Image getMazeFlashImage(int mazeNumber) {
-		return mazeFlashImages.get(mazeNumber - 1);
+	public void renderMazeFlashing(GraphicsContext g, int mazeNumber, double x, double y) {
+		g.drawImage(mazeFlashImages.get(mazeNumber - 1), x, y);
 	}
 
 	@Override

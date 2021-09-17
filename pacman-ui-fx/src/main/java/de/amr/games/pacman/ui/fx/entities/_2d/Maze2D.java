@@ -14,13 +14,12 @@ import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 /**
- * 2D representation of the maze for a given game level. Implements the flashing
- * animation played when the game level is complete.
+ * 2D representation of the maze for a given game level. Implements the flashing animation played
+ * when the game level is complete.
  * 
  * @author Armin Reichert
  */
@@ -31,7 +30,7 @@ public class Maze2D implements Renderable2D {
 	private final Rendering2D rendering;
 	private GameLevel gameLevel;
 	private Timeline flashingAnimation;
-	private boolean bright;
+	private boolean flashing;
 	private List<Energizer2D> energizers2D;
 	private TimedSequence<Boolean> energizerBlinking = TimedSequence.pulse().frameDuration(10);
 
@@ -39,9 +38,9 @@ public class Maze2D implements Renderable2D {
 		x = t(leftUpperCorner.x);
 		y = t(leftUpperCorner.y);
 		this.rendering = rendering;
-		KeyFrame switchImage = new KeyFrame(Duration.millis(150), e -> bright = !bright);
+		KeyFrame switchImage = new KeyFrame(Duration.millis(150), e -> flashing = !flashing);
 		flashingAnimation = new Timeline(switchImage);
-		bright = false;
+		flashing = false;
 	}
 
 	public void setGameLevel(GameLevel gameLevel) {
@@ -71,12 +70,13 @@ public class Maze2D implements Renderable2D {
 	@Override
 	public void render(GraphicsContext g) {
 		if (flashingAnimation.getStatus() == Status.RUNNING) {
-			Image image = bright ? rendering.getMazeFlashImage(gameLevel.mazeNumber)
-					: rendering.getMazeEmptyImage(gameLevel.mazeNumber);
-			g.drawImage(image, x, y);
+			if (flashing) {
+				rendering.renderMazeFlashing(g, gameLevel.mazeNumber, x, y);
+			} else {
+				rendering.renderMazeEmpty(g, gameLevel.mazeNumber, x, y);
+			}
 		} else {
-			Image image = rendering.getMazeFullImage(gameLevel.mazeNumber);
-			g.drawImage(image, x, y);
+			rendering.renderMazeFull(g, gameLevel.mazeNumber, x, y);
 			energizers2D.forEach(energizer2D -> energizer2D.render(g));
 			energizerBlinking.animate();
 			g.setFill(Color.BLACK);

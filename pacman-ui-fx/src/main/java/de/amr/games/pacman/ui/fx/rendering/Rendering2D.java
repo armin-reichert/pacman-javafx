@@ -10,7 +10,6 @@ import de.amr.games.pacman.model.common.GameEntity;
 import de.amr.games.pacman.model.pacman.Bonus;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -54,8 +53,8 @@ public abstract class Rendering2D {
 	public void renderEntity(GraphicsContext g, GameEntity entity, Rectangle2D sb) {
 		if (entity.isVisible() && sb != null) {
 			g.drawImage(spritesheet().getSource(), sb.getMinX(), sb.getMinY(), sb.getWidth(), sb.getHeight(),
-					entity.position().x - sb.getWidth() / 2 + HTS, entity.position().y - sb.getHeight() / 2 + HTS,
-					sb.getWidth(), sb.getHeight());
+					entity.position().x - sb.getWidth() / 2 + HTS, entity.position().y - sb.getHeight() / 2 + HTS, sb.getWidth(),
+					sb.getHeight());
 		}
 	}
 
@@ -74,11 +73,11 @@ public abstract class Rendering2D {
 
 	// Maze
 
-	public abstract Image getMazeFullImage(int mazeNumber);
+	public abstract void renderMazeFull(GraphicsContext g, int mazeNumber, double x, double y);
 
-	public abstract Image getMazeEmptyImage(int mazeNumber);
+	public abstract void renderMazeEmpty(GraphicsContext g, int mazeNumber, double x, double y);
 
-	public abstract Image getMazeFlashImage(int mazeNumber);
+	public abstract void renderMazeFlashing(GraphicsContext g, int mazeNumber, double x, double y);
 
 	public abstract Color getMazeWallColor(int i);
 

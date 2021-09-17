@@ -7,6 +7,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.pacman.PacManGame;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
@@ -20,7 +21,7 @@ public class Rendering2D_PacMan extends Rendering2D {
 	private final Spritesheet spritesheet;
 	private final Image mazeFull;
 	private final Image mazeEmpty;
-	private final Image mazeEmptyBright;
+	private final Image mazeFlashing;
 	private final Map<Integer, Rectangle2D> bonusValueSprites;
 	private final Map<String, Rectangle2D> symbolSprites;
 	private final Map<Integer, Rectangle2D> bountyNumberSprites;
@@ -30,7 +31,7 @@ public class Rendering2D_PacMan extends Rendering2D {
 
 		mazeFull = Rendering2D_Assets.image(resourcePath + "maze_full.png");
 		mazeEmpty = Rendering2D_Assets.image(resourcePath + "maze_empty.png");
-		mazeEmptyBright = Rendering2D_Assets.colorsExchanged(mazeEmpty, Map.of(getMazeWallBorderColor(0), Color.WHITE));
+		mazeFlashing = Rendering2D_Assets.colorsExchanged(mazeEmpty, Map.of(getMazeWallBorderColor(0), Color.WHITE));
 
 		//@formatter:off
 		symbolSprites = Map.of(
@@ -79,18 +80,18 @@ public class Rendering2D_PacMan extends Rendering2D {
 	}
 
 	@Override
-	public Image getMazeFullImage(int mazeNumber) {
-		return mazeFull;
+	public void renderMazeFull(GraphicsContext g, int mazeNumber, double x, double y) {
+		g.drawImage(mazeFull, x, y);
 	}
 
 	@Override
-	public Image getMazeEmptyImage(int mazeNumber) {
-		return mazeEmpty;
+	public void renderMazeEmpty(GraphicsContext g, int mazeNumber, double x, double y) {
+		g.drawImage(mazeEmpty, x, y);
 	}
 
 	@Override
-	public Image getMazeFlashImage(int mazeNumber) {
-		return mazeEmptyBright;
+	public void renderMazeFlashing(GraphicsContext g, int mazeNumber, double x, double y) {
+		g.drawImage(mazeFlashing, x, y);
 	}
 
 	@Override
