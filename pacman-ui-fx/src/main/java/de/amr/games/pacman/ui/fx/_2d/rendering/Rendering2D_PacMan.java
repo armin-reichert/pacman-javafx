@@ -1,5 +1,6 @@
 package de.amr.games.pacman.ui.fx._2d.rendering;
 
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -18,10 +19,10 @@ import javafx.scene.paint.Color;
  */
 public class Rendering2D_PacMan extends Rendering2D_Common {
 
-	private static final Color PACMAN_MAZE_TOP_COLOR = Color.rgb(255, 255, 255);
-	private static final Color PACMAN_MAZE_SIDE_COLOR = Color.rgb(33, 33, 255);
+	private static final Color MAZE_TOP_COLOR = Color.rgb(255, 255, 255);
+	private static final Color MAZE_SIDE_COLOR = Color.rgb(33, 33, 255);
 
-	private static final Color PACMAN_FOOD_COLOR = Color.rgb(250, 185, 176);
+	private static final Color FOOD_COLOR = Color.rgb(250, 185, 176);
 
 	private final Image mazeFullImage;
 	private final Image mazeEmptyImage;
@@ -32,20 +33,21 @@ public class Rendering2D_PacMan extends Rendering2D_Common {
 
 	public Rendering2D_PacMan() {
 		super("/pacman/graphics/sprites.png", 16);
+
 		mazeFullImage = new Image(resource("/pacman/graphics/maze_full.png"));
 		mazeEmptyImage = new Image(resource("/pacman/graphics/maze_empty.png"));
-		mazeFlashingImage = colorsExchanged(mazeEmptyImage, Map.of(getMazeSideColor(1), Color.WHITE));
+		mazeFlashingImage = colorsExchanged(mazeEmptyImage, Collections.singletonMap(getMazeSideColor(1), Color.WHITE));
 
 		//@formatter:off
 		symbolSprites = Map.of(
-				PacManGame.CHERRIES,   region(2, 3),
-				PacManGame.STRAWBERRY, region(3, 3),
-				PacManGame.PEACH,      region(4, 3),
-				PacManGame.APPLE,      region(5, 3),
-				PacManGame.GRAPES,     region(6, 3),
-				PacManGame.GALAXIAN,   region(7, 3),
-				PacManGame.BELL,       region(8, 3),
-				PacManGame.KEY,        region(9, 3)
+			PacManGame.CHERRIES,   region(2, 3),
+			PacManGame.STRAWBERRY, region(3, 3),
+			PacManGame.PEACH,      region(4, 3),
+			PacManGame.APPLE,      region(5, 3),
+			PacManGame.GRAPES,     region(6, 3),
+			PacManGame.GALAXIAN,   region(7, 3),
+			PacManGame.BELL,       region(8, 3),
+			PacManGame.KEY,        region(9, 3)
 		);
 
 		bonusValueSprites = Map.of(
@@ -70,12 +72,12 @@ public class Rendering2D_PacMan extends Rendering2D_Common {
 
 	@Override
 	public Color getMazeTopColor(int mazeNumber) {
-		return PACMAN_MAZE_TOP_COLOR;
+		return MAZE_TOP_COLOR;
 	}
 
 	@Override
 	public Color getMazeSideColor(int mazeNumber) {
-		return PACMAN_MAZE_SIDE_COLOR;
+		return MAZE_SIDE_COLOR;
 	}
 
 	@Override
@@ -95,7 +97,7 @@ public class Rendering2D_PacMan extends Rendering2D_Common {
 
 	@Override
 	public Color getFoodColor(int mazeNumber) {
-		return PACMAN_FOOD_COLOR;
+		return FOOD_COLOR;
 	}
 
 	@Override
@@ -123,11 +125,7 @@ public class Rendering2D_PacMan extends Rendering2D_Common {
 	}
 
 	public TimedSequence<Rectangle2D> createBigPacManMunchingAnimation() {
-		return TimedSequence.of(//
-				region(2, 1, 2, 2), //
-				region(4, 1, 2, 2), //
-				region(6, 1, 2, 2))//
-				.frameDuration(4).endless();
+		return TimedSequence.of(region(2, 1, 2, 2), region(4, 1, 2, 2), region(6, 1, 2, 2)).frameDuration(4).endless();
 	}
 
 	public TimedSequence<Rectangle2D> createBlinkyStretchedAnimation() {
@@ -151,11 +149,8 @@ public class Rendering2D_PacMan extends Rendering2D_Common {
 		Map<Direction, TimedSequence<Rectangle2D>> munchingAnimation = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = dirIndex(dir);
-			TimedSequence<Rectangle2D> animation = TimedSequence.of(//
-					region(2, 0), //
-					region(1, d), //
-					region(0, d), //
-					region(1, d))//
+			TimedSequence<Rectangle2D> animation = TimedSequence
+					.of(region(2, 0), region(1, d), region(0, d), region(1, d))//
 					.frameDuration(2).endless();
 			munchingAnimation.put(dir, animation);
 		}
@@ -164,52 +159,39 @@ public class Rendering2D_PacMan extends Rendering2D_Common {
 
 	@Override
 	public TimedSequence<Rectangle2D> createPlayerDyingAnimation() {
-		return TimedSequence.of(//
-				region(3, 0), region(4, 0), //
-				region(5, 0), region(6, 0), //
-				region(7, 0), region(8, 0), //
-				region(9, 0), region(10, 0), //
-				region(11, 0), region(12, 0), //
-				region(13, 0))//
-				.frameDuration(8);
+		return TimedSequence.of(region(3, 0), region(4, 0), region(5, 0), region(6, 0), region(7, 0), region(8, 0),
+				region(9, 0), region(10, 0), region(11, 0), region(12, 0), region(13, 0)).frameDuration(8);
 	}
 
 	@Override
 	public Map<Direction, TimedSequence<Rectangle2D>> createGhostKickingAnimations(int ghostID) {
-		EnumMap<Direction, TimedSequence<Rectangle2D>> walkingTo = new EnumMap<>(Direction.class);
+		EnumMap<Direction, TimedSequence<Rectangle2D>> kickingAnimation = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = dirIndex(dir);
-			TimedSequence<Rectangle2D> animation = TimedSequence.of(//
-					region(2 * d, 4 + ghostID), //
-					region(2 * d + 1, 4 + ghostID))//
-					.frameDuration(4).endless();
-			walkingTo.put(dir, animation);
+			TimedSequence<Rectangle2D> animation = TimedSequence
+					.of(region(2 * d, 4 + ghostID), region(2 * d + 1, 4 + ghostID)).frameDuration(4).endless();
+			kickingAnimation.put(dir, animation);
 		}
-		return walkingTo;
+		return kickingAnimation;
 	}
 
 	@Override
 	public TimedSequence<Rectangle2D> createGhostFrightenedAnimation() {
-		return TimedSequence.of(//
-				region(8, 4), region(9, 4))//
-				.frameDuration(20).endless();
+		return TimedSequence.of(region(8, 4), region(9, 4)).frameDuration(20).endless();
 	}
 
 	@Override
 	public TimedSequence<Rectangle2D> createGhostFlashingAnimation() {
-		return TimedSequence.of(//
-				region(8, 4), region(9, 4), //
-				region(10, 4), region(11, 4))//
-				.frameDuration(6);
+		return TimedSequence.of(region(8, 4), region(9, 4), region(10, 4), region(11, 4)).frameDuration(6);
 	}
 
 	@Override
 	public Map<Direction, TimedSequence<Rectangle2D>> createGhostReturningHomeAnimations() {
-		Map<Direction, TimedSequence<Rectangle2D>> ghostEyesAnim = new EnumMap<>(Direction.class);
+		Map<Direction, TimedSequence<Rectangle2D>> eyesAnimation = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = dirIndex(dir);
-			ghostEyesAnim.put(dir, TimedSequence.of(region(8 + d, 5)));
+			eyesAnimation.put(dir, TimedSequence.of(region(8 + d, 5)));
 		}
-		return ghostEyesAnim;
+		return eyesAnimation;
 	}
 }
