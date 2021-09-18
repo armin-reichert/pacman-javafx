@@ -163,23 +163,23 @@ public abstract class Rendering2D {
 	 */
 	public void renderEntity(GraphicsContext g, GameEntity entity, Rectangle2D region) {
 		if (entity.isVisible()) {
-			g.drawImage(spritesheet().getSource(), region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(),
-					entity.position().x - region.getWidth() / 2 + HTS, entity.position().y - region.getHeight() / 2 + HTS,
-					region.getWidth(), region.getHeight());
+			// draw sprite centered over entity bounding box
+			renderSprite(g, region, entity.position().x - region.getWidth() / 2 + HTS,
+					entity.position().y - region.getHeight() / 2 + HTS);
 		}
 	}
 
 	/**
 	 * Renders a sprite at a given location.
 	 * 
-	 * @param g  the graphics context
-	 * @param sb sprite bounds in spritesheet
-	 * @param x  render location x
-	 * @param y  render location y
+	 * @param g      the graphics context
+	 * @param region sprite region in spritesheet
+	 * @param x      render location x
+	 * @param y      render location y
 	 */
-	public void renderSprite(GraphicsContext g, Rectangle2D sb, double x, double y) {
-		g.drawImage(spritesheet().getSource(), sb.getMinX(), sb.getMinY(), sb.getWidth(), sb.getHeight(), x, y,
-				sb.getWidth(), sb.getHeight());
+	public void renderSprite(GraphicsContext g, Rectangle2D region, double x, double y) {
+		g.drawImage(spritesheet().getSource(), region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(), x,
+				y, region.getWidth(), region.getHeight());
 	}
 
 	// Maze
