@@ -7,7 +7,6 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.GameEntity;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.pacman.Bonus;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -23,45 +22,16 @@ public abstract class Rendering2D_Common extends Spritesheet {
 
 	public static final Font ARCADE_FONT = Font.loadFont(resource("/emulogic.ttf"), 8);
 
-	// Food colors
-
-	private static final Color PACMAN_FOOD_COLOR = Color.rgb(250, 185, 176);
-
-	private static final Color[] MS_PACMAN_FOOD_COLOR = { //
-			Color.rgb(222, 222, 255), //
-			Color.rgb(255, 255, 0), //
-			Color.rgb(255, 0, 0), //
-			Color.rgb(222, 222, 255), //
-			Color.rgb(0, 255, 255), //
-			Color.rgb(222, 222, 255), //
-	};
-
-	/**
-	 * @param gameVariant Pac-Man vs. Ms. Pac-Man
-	 * @param mazeNumber  the 1-based maze number
-	 * @return color of pellets in this maze
-	 */
-	public static Color getFoodColor(GameVariant gameVariant, int mazeNumber) {
-		return gameVariant == GameVariant.PACMAN ? PACMAN_FOOD_COLOR : MS_PACMAN_FOOD_COLOR[mazeNumber - 1];
+	public Rendering2D_Common(String path, int rasterSize) {
+		super(path, rasterSize);
 	}
 
 	/**
 	 * @param ghostID 0=Blinky, 1=Pinky, 2=Inky, 3=Clyde/Sue
 	 * @return color of ghost
 	 */
-	public static Color getGhostColor(int ghostID) {
+	public Color getGhostColor(int ghostID) {
 		return ghostID == 0 ? Color.RED : ghostID == 1 ? Color.PINK : ghostID == 2 ? Color.CYAN : Color.ORANGE;
-	}
-
-	/**
-	 * @return color of blue (frightened) ghost
-	 */
-	public static Color getGhostBlueColor() {
-		return Color.CORNFLOWERBLUE;
-	}
-
-	public Rendering2D_Common(String path, int rasterSize) {
-		super(path, rasterSize);
 	}
 
 	/**
@@ -126,6 +96,13 @@ public abstract class Rendering2D_Common extends Spritesheet {
 	 * @return color of maze walls on side
 	 */
 	public abstract Color getMazeSideColor(int mazeNumber);
+
+	/**
+	 * @param gameVariant Pac-Man vs. Ms. Pac-Man
+	 * @param mazeNumber  the 1-based maze number
+	 * @return color of pellets in this maze
+	 */
+	public abstract Color getFoodColor(int mazeNumber);
 
 	public abstract void renderMazeFull(GraphicsContext g, int mazeNumber, double x, double y);
 

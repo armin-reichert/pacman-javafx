@@ -82,7 +82,7 @@ public class Ghost3D extends Group {
 		this.ghost = ghost;
 		this.targetDir = ghost.dir();
 		this.rendering2D = rendering2D;
-		this.normalColor = Rendering2D_Common.getGhostColor(ghost.id);
+		this.normalColor = rendering2D.getGhostColor(ghost.id);
 
 		int[] rotationInterval = rotationInterval(ghost.dir(), targetDir);
 

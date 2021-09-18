@@ -21,6 +21,8 @@ public class Rendering2D_PacMan extends Rendering2D_Common {
 	private static final Color PACMAN_MAZE_TOP_COLOR = Color.rgb(255, 255, 255);
 	private static final Color PACMAN_MAZE_SIDE_COLOR = Color.rgb(33, 33, 255);
 
+	private static final Color PACMAN_FOOD_COLOR = Color.rgb(250, 185, 176);
+
 	private final Image mazeFullImage;
 	private final Image mazeEmptyImage;
 	private final Image mazeFlashingImage;
@@ -89,6 +91,11 @@ public class Rendering2D_PacMan extends Rendering2D_Common {
 	@Override
 	public void renderMazeFlashing(GraphicsContext g, int mazeNumber, double x, double y) {
 		g.drawImage(mazeFlashingImage, x, y);
+	}
+
+	@Override
+	public Color getFoodColor(int mazeNumber) {
+		return PACMAN_FOOD_COLOR;
 	}
 
 	@Override

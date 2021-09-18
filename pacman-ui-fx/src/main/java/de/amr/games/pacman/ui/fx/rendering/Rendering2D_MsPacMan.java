@@ -38,6 +38,15 @@ public class Rendering2D_MsPacMan extends Rendering2D_Common {
 			Color.rgb(255, 0, 0), //
 	};
 
+	private static final Color[] MS_PACMAN_FOOD_COLOR = { //
+			Color.rgb(222, 222, 255), //
+			Color.rgb(255, 255, 0), //
+			Color.rgb(255, 0, 0), //
+			Color.rgb(222, 222, 255), //
+			Color.rgb(0, 255, 255), //
+			Color.rgb(222, 222, 255), //
+	};
+
 	private final List<Rectangle2D> mazeFullSprites;
 	private final List<Rectangle2D> mazeEmptySprites;
 	private final List<Image> mazeFlashImages;
@@ -117,6 +126,11 @@ public class Rendering2D_MsPacMan extends Rendering2D_Common {
 	@Override
 	public void renderMazeFlashing(GraphicsContext g, int mazeNumber, double x, double y) {
 		g.drawImage(mazeFlashImages.get(mazeNumber - 1), x, y);
+	}
+
+	@Override
+	public Color getFoodColor(int mazeNumber) {
+		return MS_PACMAN_FOOD_COLOR[mazeNumber - 1];
 	}
 
 	@Override
