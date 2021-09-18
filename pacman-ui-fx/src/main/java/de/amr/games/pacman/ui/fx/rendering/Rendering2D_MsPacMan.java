@@ -68,7 +68,7 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 			Rectangle2D mazeFullRegion = new Rectangle2D(0, 248 * mazeIndex, 226, 248);
 			Rectangle2D mazeEmptyRegion = new Rectangle2D(226, 248 * mazeIndex, 226, 248);
 			// TODO can we avoid copying image data?
-			Image mazeFlashImage = colorsExchanged(spritesheet().subImage(mazeEmptyRegion), //
+			Image mazeFlashImage = colorsExchanged(spritesheet.subImage(mazeEmptyRegion), //
 					Map.of( //
 							getMazeSideColor(GameVariant.MS_PACMAN, mazeIndex + 1), Color.WHITE, //
 							getMazeTopColor(GameVariant.MS_PACMAN, mazeIndex + 1), Color.BLACK));
@@ -121,7 +121,7 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	public Map<Direction, TimedSequence<Rectangle2D>> createPlayerMunchingAnimations() {
 		Map<Direction, TimedSequence<Rectangle2D>> msPacManMunchingAnim = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
-			int d = spritesheet().dirIndex(dir);
+			int d = spritesheet.dirIndex(dir);
 			TimedSequence<Rectangle2D> munching = TimedSequence.of(//
 					rightSide(0, d), rightSide(0, d), rightSide(1, d), rightSide(2, d))//
 					.frameDuration(2).endless();
@@ -140,7 +140,7 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	public Map<Direction, TimedSequence<Rectangle2D>> createGhostKickingAnimations(int ghostID) {
 		EnumMap<Direction, TimedSequence<Rectangle2D>> kickingTo = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
-			int d = spritesheet().dirIndex(dir);
+			int d = spritesheet.dirIndex(dir);
 			TimedSequence<Rectangle2D> kicking = TimedSequence.of(rightSide(2 * d, 4 + ghostID),
 					rightSide(2 * d + 1, 4 + ghostID));
 			kicking.frameDuration(4).endless();
@@ -163,14 +163,14 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	public Map<Direction, TimedSequence<Rectangle2D>> createGhostReturningHomeAnimations() {
 		Map<Direction, TimedSequence<Rectangle2D>> ghostEyesAnim = new EnumMap<>(Direction.class);
 		Direction.stream()
-				.forEach(dir -> ghostEyesAnim.put(dir, TimedSequence.of(rightSide(8 + spritesheet().dirIndex(dir), 5))));
+				.forEach(dir -> ghostEyesAnim.put(dir, TimedSequence.of(rightSide(8 + spritesheet.dirIndex(dir), 5))));
 		return ghostEyesAnim;
 	}
 
 	public Map<Direction, TimedSequence<Rectangle2D>> createSpouseMunchingAnimations() {
 		Map<Direction, TimedSequence<Rectangle2D>> pacManMunchingAnim = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
-			int d = spritesheet().dirIndex(dir);
+			int d = spritesheet.dirIndex(dir);
 			pacManMunchingAnim.put(dir,
 					TimedSequence.of(rightSide(0, 9 + d), rightSide(1, 9 + d), rightSide(2, 9)).frameDuration(2).endless());
 		}
@@ -221,6 +221,6 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 
 	/* Tiles in right half of spritesheet */
 	public Rectangle2D rightSide(int tileX, int tileY) {
-		return spritesheet().cellsStartingAt(456, 0, tileX, tileY, 1, 1);
+		return spritesheet.cellsStartingAt(456, 0, tileX, tileY, 1, 1);
 	}
 }
