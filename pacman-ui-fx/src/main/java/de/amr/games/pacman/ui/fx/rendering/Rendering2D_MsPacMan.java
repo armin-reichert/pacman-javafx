@@ -7,7 +7,6 @@ import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSequence;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -20,6 +19,24 @@ import javafx.scene.paint.Color;
  * @author Armin Reichert
  */
 public class Rendering2D_MsPacMan extends Rendering2D_Common {
+
+	private static final Color[] MS_PACMAN_MAZE_TOP_COLOR = { //
+			Color.rgb(255, 183, 174), //
+			Color.rgb(71, 183, 255), //
+			Color.rgb(222, 151, 81), //
+			Color.rgb(33, 33, 255), //
+			Color.rgb(255, 183, 255), //
+			Color.rgb(255, 183, 174), //
+	};
+
+	private static final Color[] MS_PACMAN_MAZE_SIDE_COLOR = { //
+			Color.rgb(255, 0, 0), //
+			Color.rgb(222, 222, 255), //
+			Color.rgb(222, 222, 255), //
+			Color.rgb(255, 183, 81), //
+			Color.rgb(255, 255, 0), //
+			Color.rgb(255, 0, 0), //
+	};
 
 	private final List<Rectangle2D> mazeFullSprites;
 	private final List<Rectangle2D> mazeEmptySprites;
@@ -69,12 +86,22 @@ public class Rendering2D_MsPacMan extends Rendering2D_Common {
 			// TODO can we avoid copying image data?
 			Image mazeFlashImage = colorsExchanged(createSubImage(mazeEmptyRegion), //
 					Map.of( //
-							getMazeSideColor(GameVariant.MS_PACMAN, mazeIndex + 1), Color.WHITE, //
-							getMazeTopColor(GameVariant.MS_PACMAN, mazeIndex + 1), Color.BLACK));
+							getMazeSideColor(mazeIndex + 1), Color.WHITE, //
+							getMazeTopColor(mazeIndex + 1), Color.BLACK));
 			mazeFullSprites.add(mazeFullRegion);
 			mazeEmptySprites.add(mazeEmptyRegion);
 			mazeFlashImages.add(mazeFlashImage);
 		}
+	}
+
+	@Override
+	public Color getMazeTopColor(int mazeNumber) {
+		return MS_PACMAN_MAZE_TOP_COLOR[mazeNumber - 1];
+	}
+
+	@Override
+	public Color getMazeSideColor(int mazeNumber) {
+		return MS_PACMAN_MAZE_SIDE_COLOR[mazeNumber - 1];
 	}
 
 	@Override

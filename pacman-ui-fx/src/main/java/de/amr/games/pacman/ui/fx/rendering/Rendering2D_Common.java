@@ -23,47 +23,6 @@ public abstract class Rendering2D_Common extends Spritesheet {
 
 	public static final Font ARCADE_FONT = Font.loadFont(resource("/emulogic.ttf"), 8);
 
-	// Maze colors
-
-	private static final Color PACMAN_MAZE_TOP_COLOR = Color.rgb(255, 255, 255);
-	private static final Color PACMAN_MAZE_SIDE_COLOR = Color.rgb(33, 33, 255);
-
-	private static final Color[] MS_PACMAN_MAZE_TOP_COLOR = { //
-			Color.rgb(255, 183, 174), //
-			Color.rgb(71, 183, 255), //
-			Color.rgb(222, 151, 81), //
-			Color.rgb(33, 33, 255), //
-			Color.rgb(255, 183, 255), //
-			Color.rgb(255, 183, 174), //
-	};
-
-	private static final Color[] MS_PACMAN_MAZE_SIDE_COLOR = { //
-			Color.rgb(255, 0, 0), //
-			Color.rgb(222, 222, 255), //
-			Color.rgb(222, 222, 255), //
-			Color.rgb(255, 183, 81), //
-			Color.rgb(255, 255, 0), //
-			Color.rgb(255, 0, 0), //
-	};
-
-	/**
-	 * @param gameVariant Pac-Man vs. Ms. Pac-Man
-	 * @param mazeNumber  the 1-based maze number
-	 * @return color of maze walls on top
-	 */
-	public static Color getMazeTopColor(GameVariant gameVariant, int mazeNumber) {
-		return gameVariant == GameVariant.PACMAN ? PACMAN_MAZE_TOP_COLOR : MS_PACMAN_MAZE_TOP_COLOR[mazeNumber - 1];
-	}
-
-	/**
-	 * @param gameVariant Pac-Man vs. Ms. Pac-Man
-	 * @param mazeNumber  the 1-based maze number
-	 * @return color of maze walls on side
-	 */
-	public static Color getMazeSideColor(GameVariant gameVariant, int mazeNumber) {
-		return gameVariant == GameVariant.PACMAN ? PACMAN_MAZE_SIDE_COLOR : MS_PACMAN_MAZE_SIDE_COLOR[mazeNumber - 1];
-	}
-
 	// Food colors
 
 	private static final Color PACMAN_FOOD_COLOR = Color.rgb(250, 185, 176);
@@ -155,6 +114,18 @@ public abstract class Rendering2D_Common extends Spritesheet {
 	}
 
 	// Maze
+
+	/**
+	 * @param mazeNumber the 1-based maze number
+	 * @return color of maze walls on top
+	 */
+	public abstract Color getMazeTopColor(int mazeNumber);
+
+	/**
+	 * @param mazeNumber the 1-based maze number
+	 * @return color of maze walls on side
+	 */
+	public abstract Color getMazeSideColor(int mazeNumber);
 
 	public abstract void renderMazeFull(GraphicsContext g, int mazeNumber, double x, double y);
 

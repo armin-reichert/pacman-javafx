@@ -5,7 +5,6 @@ import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSequence;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.pacman.PacManGame;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -19,6 +18,9 @@ import javafx.scene.paint.Color;
  */
 public class Rendering2D_PacMan extends Rendering2D_Common {
 
+	private static final Color PACMAN_MAZE_TOP_COLOR = Color.rgb(255, 255, 255);
+	private static final Color PACMAN_MAZE_SIDE_COLOR = Color.rgb(33, 33, 255);
+
 	private final Image mazeFullImage;
 	private final Image mazeEmptyImage;
 	private final Image mazeFlashingImage;
@@ -30,7 +32,7 @@ public class Rendering2D_PacMan extends Rendering2D_Common {
 		super("/pacman/graphics/sprites.png", 16);
 		mazeFullImage = new Image(resource("/pacman/graphics/maze_full.png"));
 		mazeEmptyImage = new Image(resource("/pacman/graphics/maze_empty.png"));
-		mazeFlashingImage = colorsExchanged(mazeEmptyImage, Map.of(getMazeSideColor(GameVariant.PACMAN, 1), Color.WHITE));
+		mazeFlashingImage = colorsExchanged(mazeEmptyImage, Map.of(getMazeSideColor(1), Color.WHITE));
 
 		//@formatter:off
 		symbolSprites = Map.of(
@@ -62,6 +64,16 @@ public class Rendering2D_PacMan extends Rendering2D_Common {
 			1600, region(3, 8, 1, 1)
 		);
 		//@formatter:on
+	}
+
+	@Override
+	public Color getMazeTopColor(int mazeNumber) {
+		return PACMAN_MAZE_TOP_COLOR;
+	}
+
+	@Override
+	public Color getMazeSideColor(int mazeNumber) {
+		return PACMAN_MAZE_SIDE_COLOR;
 	}
 
 	@Override

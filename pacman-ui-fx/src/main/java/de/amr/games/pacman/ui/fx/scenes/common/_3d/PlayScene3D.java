@@ -78,7 +78,7 @@ public class PlayScene3D implements GameScene {
 	public void init() {
 		log("%s: init", this);
 
-		final var r2D = game().variant() == GameVariant.MS_PACMAN
+		final var rendering2D = game().variant() == GameVariant.MS_PACMAN
 				? de.amr.games.pacman.ui.fx.scenes.mspacman.MsPacManScenes.RENDERING
 				: de.amr.games.pacman.ui.fx.scenes.pacman.PacManScenes.RENDERING;
 		final var width = game().level().world.numCols() * TS;
@@ -86,14 +86,14 @@ public class PlayScene3D implements GameScene {
 
 		maze3D = new Maze3D(width, height);
 		maze3D.setFloorTexture(new Image(getClass().getResourceAsStream("/common/escher-texture.jpg")));
-		maze3D.setWallBaseColor(Rendering2D_Common.getMazeSideColor(game().variant(), game().level().mazeNumber));
-		maze3D.setWallTopColor(Rendering2D_Common.getMazeTopColor(game().variant(), game().level().mazeNumber));
+		maze3D.setWallBaseColor(rendering2D.getMazeSideColor(game().level().mazeNumber));
+		maze3D.setWallTopColor(rendering2D.getMazeTopColor(game().level().mazeNumber));
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		buildMaze();
 
 		player3D = new Player3D(game().player(), model3D);
-		ghosts3D = game().ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D)).collect(Collectors.toList());
-		bonus3D = new Bonus3D(r2D);
+		ghosts3D = game().ghosts().map(ghost -> new Ghost3D(ghost, model3D, rendering2D)).collect(Collectors.toList());
+		bonus3D = new Bonus3D(rendering2D);
 		score3D = new ScoreNotReally3D();
 
 		livesCounter3D = new LivesCounter3D(model3D);
@@ -102,7 +102,7 @@ public class PlayScene3D implements GameScene {
 		livesCounter3D.setTranslateZ(-4); // TODO
 		livesCounter3D.setVisible(!gameController.isAttractMode());
 
-		levelCounter3D = new LevelCounter3D(r2D);
+		levelCounter3D = new LevelCounter3D(rendering2D);
 		levelCounter3D.setRightPosition(26 * TS, TS);
 		levelCounter3D.setTranslateZ(-4); // TODO
 		levelCounter3D.rebuild(game());
