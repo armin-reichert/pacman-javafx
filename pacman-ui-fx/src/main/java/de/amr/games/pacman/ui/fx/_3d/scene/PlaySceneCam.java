@@ -1,0 +1,25 @@
+package de.amr.games.pacman.ui.fx._3d.scene;
+
+import de.amr.games.pacman.ui.fx._3d.entity.Player3D;
+import javafx.event.EventHandler;
+import javafx.scene.input.KeyEvent;
+
+/**
+ * Common interface of perspectives (camera settings) of the play scene.
+ * 
+ * @author Armin Reichert
+ */
+public interface PlaySceneCam extends EventHandler<KeyEvent> {
+
+	@Override
+	default void handle(KeyEvent event) {
+	}
+
+	void reset();
+
+	void follow(Player3D player3D);
+
+	default double approach(double current, double target) {
+		return current + (target - current) * 0.02;
+	}
+}

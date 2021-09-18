@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 import org.fxyz3d.importers.Importer3D;
 import org.fxyz3d.importers.Model3D;
 
-import de.amr.games.pacman.ui.fx.model3D.GianmarcosPacManModel3D;
+import de.amr.games.pacman.ui.fx._3d.entity.GianmarcosPacManModel3D;
 import javafx.scene.paint.Material;
 
 /**

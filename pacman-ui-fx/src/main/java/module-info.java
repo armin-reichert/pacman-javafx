@@ -1,7 +1,7 @@
 module de.amr.games.pacman.ui.fx {
 
 	exports de.amr.games.pacman.ui.fx.app to javafx.graphics;
-	exports de.amr.games.pacman.ui.fx.model3D;
+	exports de.amr.games.pacman.ui.fx._3d.entity;
 
 	requires transitive javafx.controls;
 	requires transitive javafx.media;
