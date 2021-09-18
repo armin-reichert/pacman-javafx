@@ -4,7 +4,7 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
 import java.util.function.IntSupplier;
 
-import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Common;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
  */
 public class GameScore2D implements Renderable2D {
 
-	private final Rendering2D rendering;
+	private final Rendering2D_Common rendering;
 
 	public int x;
 	public int y;
@@ -26,7 +26,7 @@ public class GameScore2D implements Renderable2D {
 	public String title = "SCORE";
 	public boolean showPoints = true;
 
-	public GameScore2D(Rendering2D rendering) {
+	public GameScore2D(Rendering2D_Common rendering) {
 		this.rendering = rendering;
 	}
 

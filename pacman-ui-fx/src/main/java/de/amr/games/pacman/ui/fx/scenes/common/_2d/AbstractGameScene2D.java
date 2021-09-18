@@ -8,7 +8,7 @@ import java.util.OptionalDouble;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Common;
 import de.amr.games.pacman.ui.fx.scenes.common.GameScene;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.geometry.Rectangle2D;
@@ -30,14 +30,14 @@ public abstract class AbstractGameScene2D implements GameScene {
 	protected final double unscaledHeight;
 	protected final double aspectRatio;
 
-	protected final Rendering2D rendering;
+	protected final Rendering2D_Common rendering;
 	protected final SoundManager sounds;
 
 	protected PacManGameController gameController;
 	protected SubScene subSceneFX;
 	protected GraphicsContext gc;
 
-	public AbstractGameScene2D(Rendering2D rendering, SoundManager sounds, int tilesX, int tilesY) {
+	public AbstractGameScene2D(Rendering2D_Common rendering, SoundManager sounds, int tilesX, int tilesY) {
 		this.unscaledWidth = t(tilesX);
 		this.unscaledHeight = t(tilesY);
 		this.aspectRatio = unscaledWidth / unscaledHeight;

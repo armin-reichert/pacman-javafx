@@ -6,7 +6,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.fx.model3D.PacManModel3D;
-import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Common;
 import javafx.animation.RotateTransition;
 import javafx.animation.Transition;
 import javafx.geometry.Rectangle2D;
@@ -68,7 +68,7 @@ public class Ghost3D extends Group {
 	public final Ghost ghost;
 	public final FlashingAnimation flashingAnimation = new FlashingAnimation();
 	private final Color normalColor;
-	private final Rendering2D rendering2D;
+	private final Rendering2D_Common rendering2D;
 	private final Group ghostShape;
 	private final MeshView body;
 	private final RotateTransition ghostShapeRot;
@@ -78,11 +78,11 @@ public class Ghost3D extends Group {
 	private final PhongMaterial skinMaterial = new PhongMaterial();
 	private Direction targetDir;
 
-	public Ghost3D(Ghost ghost, PacManModel3D model3D, Rendering2D rendering2D) {
+	public Ghost3D(Ghost ghost, PacManModel3D model3D, Rendering2D_Common rendering2D) {
 		this.ghost = ghost;
 		this.targetDir = ghost.dir();
 		this.rendering2D = rendering2D;
-		this.normalColor = Rendering2D.getGhostColor(ghost.id);
+		this.normalColor = Rendering2D_Common.getGhostColor(ghost.id);
 
 		int[] rotationInterval = rotationInterval(ghost.dir(), targetDir);
 
@@ -118,7 +118,7 @@ public class Ghost3D extends Group {
 		if (ghost.bounty > 0) {
 			if (getChildren().get(0) != bountyShape) {
 				Rectangle2D sprite = rendering2D.getBountyNumberSprites().get(ghost.bounty);
-				Image image = rendering2D.spritesheet().subImage(sprite);
+				Image image = rendering2D.createSubImage(sprite);
 				PhongMaterial material = (PhongMaterial) bountyShape.getMaterial();
 				material.setBumpMap(image);
 				material.setDiffuseMap(image);

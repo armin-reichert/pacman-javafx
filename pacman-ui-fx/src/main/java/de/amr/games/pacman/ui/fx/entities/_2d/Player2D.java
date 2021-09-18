@@ -5,7 +5,7 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.Pac;
-import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Common;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -17,12 +17,12 @@ import javafx.scene.canvas.GraphicsContext;
 public class Player2D implements Renderable2D {
 
 	private final Pac player;
-	private final Rendering2D rendering;
+	private final Rendering2D_Common rendering;
 
 	public Map<Direction, TimedSequence<Rectangle2D>> munchingAnimations;
 	public TimedSequence<Rectangle2D> dyingAnimation;
 
-	public Player2D(Pac player, Rendering2D rendering) {
+	public Player2D(Pac player, Rendering2D_Common rendering) {
 		this.player = player;
 		this.rendering = rendering;
 		munchingAnimations = rendering.createPlayerMunchingAnimations();

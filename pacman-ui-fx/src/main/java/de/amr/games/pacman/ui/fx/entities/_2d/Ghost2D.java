@@ -10,7 +10,7 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.Ghost;
-import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Common;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -22,14 +22,14 @@ import javafx.scene.canvas.GraphicsContext;
 public class Ghost2D implements Renderable2D {
 
 	private final Ghost ghost;
-	private final Rendering2D rendering;
+	private final Rendering2D_Common rendering;
 	public Map<Direction, TimedSequence<Rectangle2D>> kickingAnimations;
 	public Map<Direction, TimedSequence<Rectangle2D>> returningHomeAnimations;
 	public TimedSequence<Rectangle2D> flashingAnimation;
 	public TimedSequence<Rectangle2D> frightenedAnimation;
 	private boolean looksFrightened;
 
-	public Ghost2D(Ghost ghost, Rendering2D rendering) {
+	public Ghost2D(Ghost ghost, Rendering2D_Common rendering) {
 		this.ghost = ghost;
 		this.rendering = rendering;
 		flashingAnimation = rendering.createGhostFlashingAnimation();

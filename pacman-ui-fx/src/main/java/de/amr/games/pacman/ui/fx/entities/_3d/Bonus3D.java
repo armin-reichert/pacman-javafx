@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.amr.games.pacman.model.pacman.Bonus;
-import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Common;
 import javafx.animation.RotateTransition;
 import javafx.animation.Transition;
 import javafx.scene.image.Image;
@@ -22,16 +22,16 @@ import javafx.util.Duration;
 public class Bonus3D extends Box {
 
 	private final Map<Integer, Image> spritesByValue;
-	private final Rendering2D rendering2D;
+	private final Rendering2D_Common rendering2D;
 	private final RotateTransition rotation;
 	private final PhongMaterial skin;
 
-	public Bonus3D(Rendering2D rendering2D) {
+	public Bonus3D(Rendering2D_Common rendering2D) {
 		super(8, 8, 8);
 		this.rendering2D = rendering2D;
 		spritesByValue = new HashMap<>();
-		rendering2D.getBonusValuesSprites().forEach(
-				(points, spriteRegion) -> spritesByValue.put(points, rendering2D.spritesheet().subImage(spriteRegion)));
+		rendering2D.getBonusValuesSprites()
+				.forEach((points, spriteRegion) -> spritesByValue.put(points, rendering2D.createSubImage(spriteRegion)));
 		skin = new PhongMaterial(Color.WHITE);
 		rotation = new RotateTransition(Duration.seconds(2), this);
 		rotation.setAxis(Rotate.X_AXIS);
@@ -42,7 +42,7 @@ public class Bonus3D extends Box {
 	}
 
 	private Image symbolImage(String symbol) {
-		return rendering2D.spritesheet().subImage(rendering2D.getSymbolSprites().get(symbol));
+		return rendering2D.createSubImage(rendering2D.getSymbolSprites().get(symbol));
 	}
 
 	public void update(Bonus bonus) {

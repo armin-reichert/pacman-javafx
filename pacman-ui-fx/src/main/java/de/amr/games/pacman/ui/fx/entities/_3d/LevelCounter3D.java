@@ -5,7 +5,7 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.PacManGameModel;
-import de.amr.games.pacman.ui.fx.rendering.Rendering2D;
+import de.amr.games.pacman.ui.fx.rendering.Rendering2D_Common;
 import javafx.animation.RotateTransition;
 import javafx.animation.Transition;
 import javafx.scene.Group;
@@ -38,10 +38,10 @@ public class LevelCounter3D extends Group {
 		return box;
 	}
 
-	private final Rendering2D rendering2D;
+	private final Rendering2D_Common rendering2D;
 	private V2d rightPosition;
 
-	public LevelCounter3D(Rendering2D rendering2D) {
+	public LevelCounter3D(Rendering2D_Common rendering2D) {
 		this.rendering2D = rendering2D;
 	}
 
@@ -65,6 +65,6 @@ public class LevelCounter3D extends Group {
 	}
 
 	private Image symbolImage(String symbol) {
-		return rendering2D.spritesheet().subImage(rendering2D.getSymbolSprites().get(symbol));
+		return rendering2D.createSubImage(rendering2D.getSymbolSprites().get(symbol));
 	}
 }

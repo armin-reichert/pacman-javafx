@@ -2,7 +2,6 @@ package de.amr.games.pacman.ui.fx.rendering;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 
-import java.io.InputStream;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
@@ -12,8 +11,6 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.pacman.Bonus;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -22,15 +19,11 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public abstract class Rendering2D {
-
-	public static InputStream resource(String path) {
-		return Rendering2D.class.getResourceAsStream(path);
-	}
+public abstract class Rendering2D_Common extends Spritesheet {
 
 	public static final Font ARCADE_FONT = Font.loadFont(resource("/emulogic.ttf"), 8);
 
-	// Maze color
+	// Maze colors
 
 	private static final Color PACMAN_MAZE_TOP_COLOR = Color.rgb(255, 255, 255);
 	private static final Color PACMAN_MAZE_SIDE_COLOR = Color.rgb(33, 33, 255);
@@ -71,7 +64,7 @@ public abstract class Rendering2D {
 		return gameVariant == GameVariant.PACMAN ? PACMAN_MAZE_SIDE_COLOR : MS_PACMAN_MAZE_SIDE_COLOR[mazeNumber - 1];
 	}
 
-	// Food color
+	// Food colors
 
 	private static final Color PACMAN_FOOD_COLOR = Color.rgb(250, 185, 176);
 
@@ -108,30 +101,9 @@ public abstract class Rendering2D {
 		return Color.CORNFLOWERBLUE;
 	}
 
-	/**
-	 * @param source    source image
-	 * @param exchanges map of color exchanges
-	 * @return copy of source image with colors exchanged as given
-	 */
-	public static Image colorsExchanged(Image source, Map<Color, Color> exchanges) {
-		WritableImage newImage = new WritableImage((int) source.getWidth(), (int) source.getHeight());
-		for (int x = 0; x < source.getWidth(); ++x) {
-			for (int y = 0; y < source.getHeight(); ++y) {
-				Color oldColor = source.getPixelReader().getColor(x, y);
-				for (Map.Entry<Color, Color> entry : exchanges.entrySet()) {
-					if (oldColor.equals(entry.getKey())) {
-						newImage.getPixelWriter().setColor(x, y, entry.getValue());
-					}
-				}
-			}
-		}
-		return newImage;
+	public Rendering2D_Common(String path, int rasterSize) {
+		super(path, rasterSize);
 	}
-
-	/**
-	 * @return the used spritesheet
-	 */
-	public abstract Spritesheet spritesheet();
 
 	/**
 	 * @param bonus game bonus
@@ -178,8 +150,8 @@ public abstract class Rendering2D {
 	 * @param y      render location y
 	 */
 	public void renderSprite(GraphicsContext g, Rectangle2D region, double x, double y) {
-		g.drawImage(spritesheet().getSource(), region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(), x,
-				y, region.getWidth(), region.getHeight());
+		g.drawImage(getImage(), region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(), x, y,
+				region.getWidth(), region.getHeight());
 	}
 
 	// Maze
