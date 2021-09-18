@@ -2,7 +2,7 @@ package de.amr.games.pacman.ui.fx._2d.entity.pacman;
 
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.Pac;
-import de.amr.games.pacman.ui.fx._2d.entity.Renderable2D;
+import de.amr.games.pacman.ui.fx._2d.entity.common.Renderable2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D_PacMan;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;

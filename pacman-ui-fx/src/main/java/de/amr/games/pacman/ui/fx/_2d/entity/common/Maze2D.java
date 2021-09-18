@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx._2d.entity;
+package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;

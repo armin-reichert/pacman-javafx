@@ -1,7 +1,7 @@
 package de.amr.games.pacman.ui.fx._2d.entity.mspacman;
 
 import de.amr.games.pacman.model.common.GameEntity;
-import de.amr.games.pacman.ui.fx._2d.entity.Renderable2D;
+import de.amr.games.pacman.ui.fx._2d.entity.common.Renderable2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D_MsPacMan;
 import javafx.scene.canvas.GraphicsContext;
 

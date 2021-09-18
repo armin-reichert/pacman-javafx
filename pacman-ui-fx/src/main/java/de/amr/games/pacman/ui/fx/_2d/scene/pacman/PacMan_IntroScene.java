@@ -10,9 +10,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.TimedSequence;
-import de.amr.games.pacman.ui.fx._2d.entity.GameScore2D;
-import de.amr.games.pacman.ui.fx._2d.entity.Ghost2D;
-import de.amr.games.pacman.ui.fx._2d.entity.Player2D;
+import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
+import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
+import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.pacman.PacMan_IntroScene_Controller;
 import de.amr.games.pacman.ui.pacman.PacMan_IntroScene_Controller.GhostPortrait;
