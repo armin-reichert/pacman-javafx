@@ -88,7 +88,7 @@ public class PlayScene3D implements GameScene {
 		player3D = new Player3D(game().player(), model3D);
 		ghosts3D = game().ghosts().map(ghost -> new Ghost3D(ghost, model3D, rendering2D())).collect(Collectors.toList());
 		bonus3D = new Bonus3D(rendering2D());
-		score3D = new ScoreNotReally3D();
+		score3D = new ScoreNotReally3D(rendering2D().getScoreFont());
 
 		livesCounter3D = new LivesCounter3D(model3D);
 		livesCounter3D.setTranslateX(TS);

@@ -29,39 +29,38 @@ import javafx.scene.text.Font;
  */
 public abstract class Rendering2D_Common {
 
-	public static final Font ARCADE_FONT = Font.loadFont(resource("/emulogic.ttf"), 8);
-
-	public static InputStream resource(String path) {
-		return Rendering2D_Common.class.getResourceAsStream(path);
-	}
-
 	/**
 	 * @param source    source image
 	 * @param exchanges map of color exchanges
-	 * @return copy of source image with colors exchanged as given
+	 * @return copy of source image with colors exchanged
 	 */
 	public static Image colorsExchanged(Image source, Map<Color, Color> exchanges) {
-		WritableImage newImage = new WritableImage((int) source.getWidth(), (int) source.getHeight());
+		WritableImage result = new WritableImage((int) source.getWidth(), (int) source.getHeight());
 		for (int x = 0; x < source.getWidth(); ++x) {
 			for (int y = 0; y < source.getHeight(); ++y) {
 				Color oldColor = source.getPixelReader().getColor(x, y);
 				for (Map.Entry<Color, Color> entry : exchanges.entrySet()) {
 					if (oldColor.equals(entry.getKey())) {
-						newImage.getPixelWriter().setColor(x, y, entry.getValue());
+						result.getPixelWriter().setColor(x, y, entry.getValue());
 					}
 				}
 			}
 		}
-		return newImage;
+		return result;
 	}
 
+	protected final Font arcadeFont = Font.loadFont(resource("/emulogic.ttf"), 8);
 	protected final Image spritesheet;
 	protected final int rasterSize;
 	protected List<Direction> directionOrder = Arrays.asList(RIGHT, LEFT, UP, DOWN);
 
 	public Rendering2D_Common(String spritesheetPath, int rasterSize) {
-		spritesheet = new Image(resource(spritesheetPath));
+		this.spritesheet = new Image(resource(spritesheetPath));
 		this.rasterSize = rasterSize;
+	}
+
+	public InputStream resource(String path) {
+		return getClass().getResourceAsStream(path);
 	}
 
 	public Image getSpritesheet() {
@@ -162,7 +161,7 @@ public abstract class Rendering2D_Common {
 	 * @return font used in score and game state display
 	 */
 	public Font getScoreFont() {
-		return ARCADE_FONT;
+		return arcadeFont;
 	}
 
 	/**
