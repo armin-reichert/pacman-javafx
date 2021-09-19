@@ -68,7 +68,7 @@ public class Spritesheet {
 	 * @param dir direction
 	 * @return index used for this direction in the spritesheet
 	 */
-	protected int dirIndex(Direction dir) {
+	public int dirIndex(Direction dir) {
 		return directionOrder.indexOf(dir);
 	}
 
@@ -88,7 +88,7 @@ public class Spritesheet {
 	 * @param row grid row (y)
 	 * @return region at given coordinates
 	 */
-	protected Rectangle2D region(int col, int row) {
+	public Rectangle2D region(int col, int row) {
 		return region(col, row, 1, 1);
 	}
 
@@ -97,23 +97,23 @@ public class Spritesheet {
 	 * @param row     grid row (y)
 	 * @param numCols number of grid columns
 	 * @param numRows number of grid rows
-	 * @return region at given coordinates from origin of given size
+	 * @return region at given grid coordinates
 	 */
-	protected Rectangle2D region(int col, int row, int numCols, int numRows) {
+	public Rectangle2D region(int col, int row, int numCols, int numRows) {
 		return region(0, 0, col, row, numCols, numRows);
 	}
 
 	/**
-	 * @param startX  pixel x-coordinate of left-upper corner of region
-	 * @param startY  pixel y-coordinate of left-upper corner of region
+	 * @param originX origin x-coordinate
+	 * @param originY origin y-coordinate
 	 * @param col     grid column (x)
 	 * @param row     grid row (y)
 	 * @param numCols number of grid columns
 	 * @param numRows number of grid rows
-	 * @return region at given coordinates from start position of given size
+	 * @return region at given grid coordinates relative to given origin
 	 */
-	protected Rectangle2D region(int startX, int startY, int col, int row, int numCols, int numRows) {
-		return new Rectangle2D(startX + col * rasterSize, startY + row * rasterSize, numCols * rasterSize,
+	public Rectangle2D region(int originX, int originY, int col, int row, int numCols, int numRows) {
+		return new Rectangle2D(originX + col * rasterSize, originY + row * rasterSize, numCols * rasterSize,
 				numRows * rasterSize);
 	}
 }

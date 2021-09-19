@@ -59,30 +59,30 @@ public class Rendering2D_MsPacMan extends Rendering2D_Common {
 
 		//@formatter:off
 		symbolSprites = Map.of(
-			MsPacManGame.CHERRIES,   rightSide(3,0),
-			MsPacManGame.STRAWBERRY, rightSide(4,0),
-			MsPacManGame.PEACH,      rightSide(5,0),
-			MsPacManGame.PRETZEL,    rightSide(6,0),
-			MsPacManGame.APPLE,      rightSide(7,0),
-			MsPacManGame.PEAR,       rightSide(8,0),
-			MsPacManGame.BANANA,     rightSide(9,0)
+			MsPacManGame.CHERRIES,   regionRight(3,0),
+			MsPacManGame.STRAWBERRY, regionRight(4,0),
+			MsPacManGame.PEACH,      regionRight(5,0),
+			MsPacManGame.PRETZEL,    regionRight(6,0),
+			MsPacManGame.APPLE,      regionRight(7,0),
+			MsPacManGame.PEAR,       regionRight(8,0),
+			MsPacManGame.BANANA,     regionRight(9,0)
 		);
 
 		bonusValueSprites = Map.of(
-			 100, rightSide(3, 1), 
-			 200, rightSide(4, 1), 
-			 500, rightSide(5, 1), 
-			 700, rightSide(6, 1), 
-			1000, rightSide(7, 1), 
-			2000, rightSide(8, 1),
-			5000, rightSide(9, 1)
+			 100, regionRight(3, 1), 
+			 200, regionRight(4, 1), 
+			 500, regionRight(5, 1), 
+			 700, regionRight(6, 1), 
+			1000, regionRight(7, 1), 
+			2000, regionRight(8, 1),
+			5000, regionRight(9, 1)
 		);
 
 		bountyNumberSprites = Map.of(
-			 200, rightSide(0, 8), 
-			 400, rightSide(1, 8), 
-			 800, rightSide(2, 8), 
-			1600, rightSide(3, 8)
+			 200, regionRight(0, 8), 
+			 400, regionRight(1, 8), 
+			 800, regionRight(2, 8), 
+			1600, regionRight(3, 8)
 		);
 		//@formatter:on
 
@@ -158,7 +158,7 @@ public class Rendering2D_MsPacMan extends Rendering2D_Common {
 		for (Direction dir : Direction.values()) {
 			int d = dirIndex(dir);
 			TimedSequence<Rectangle2D> munching = TimedSequence
-					.of(rightSide(0, d), rightSide(0, d), rightSide(1, d), rightSide(2, d)).frameDuration(2).endless();
+					.of(regionRight(0, d), regionRight(0, d), regionRight(1, d), regionRight(2, d)).frameDuration(2).endless();
 			munchingAnimations.put(dir, munching);
 		}
 		return munchingAnimations;
@@ -166,8 +166,8 @@ public class Rendering2D_MsPacMan extends Rendering2D_Common {
 
 	@Override
 	public TimedSequence<Rectangle2D> createPlayerDyingAnimation() {
-		return TimedSequence.of(rightSide(0, 3), rightSide(0, 0), rightSide(0, 1), rightSide(0, 2)).frameDuration(10)
-				.repetitions(2);
+		return TimedSequence.of(regionRight(0, 3), regionRight(0, 0), regionRight(0, 1), regionRight(0, 2))
+				.frameDuration(10).repetitions(2);
 	}
 
 	@Override
@@ -176,7 +176,7 @@ public class Rendering2D_MsPacMan extends Rendering2D_Common {
 		for (Direction dir : Direction.values()) {
 			int d = dirIndex(dir);
 			TimedSequence<Rectangle2D> kicking = TimedSequence
-					.of(rightSide(2 * d, 4 + ghostID), rightSide(2 * d + 1, 4 + ghostID)).frameDuration(4).endless();
+					.of(regionRight(2 * d, 4 + ghostID), regionRight(2 * d + 1, 4 + ghostID)).frameDuration(4).endless();
 			kickingAnimations.put(dir, kicking);
 		}
 		return kickingAnimations;
@@ -184,18 +184,19 @@ public class Rendering2D_MsPacMan extends Rendering2D_Common {
 
 	@Override
 	public TimedSequence<Rectangle2D> createGhostFrightenedAnimation() {
-		return TimedSequence.of(rightSide(8, 4), rightSide(9, 4)).frameDuration(20).endless();
+		return TimedSequence.of(regionRight(8, 4), regionRight(9, 4)).frameDuration(20).endless();
 	}
 
 	@Override
 	public TimedSequence<Rectangle2D> createGhostFlashingAnimation() {
-		return TimedSequence.of(rightSide(8, 4), rightSide(9, 4), rightSide(10, 4), rightSide(11, 4)).frameDuration(4);
+		return TimedSequence.of(regionRight(8, 4), regionRight(9, 4), regionRight(10, 4), regionRight(11, 4))
+				.frameDuration(4);
 	}
 
 	@Override
 	public Map<Direction, TimedSequence<Rectangle2D>> createGhostReturningHomeAnimations() {
 		Map<Direction, TimedSequence<Rectangle2D>> eyesAnimation = new EnumMap<>(Direction.class);
-		Direction.stream().forEach(dir -> eyesAnimation.put(dir, TimedSequence.of(rightSide(8 + dirIndex(dir), 5))));
+		Direction.stream().forEach(dir -> eyesAnimation.put(dir, TimedSequence.of(regionRight(8 + dirIndex(dir), 5))));
 		return eyesAnimation;
 	}
 
@@ -203,8 +204,8 @@ public class Rendering2D_MsPacMan extends Rendering2D_Common {
 		Map<Direction, TimedSequence<Rectangle2D>> pacManMunchingAnim = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = dirIndex(dir);
-			pacManMunchingAnim.put(dir, TimedSequence.of(rightSide(0, 9 + d), rightSide(1, 9 + d), rightSide(2, 9))
-					.frameDuration(2).endless());
+			pacManMunchingAnim.put(dir,
+					TimedSequence.of(regionRight(0, 9 + d), regionRight(1, 9 + d), regionRight(2, 9)).frameDuration(2).endless());
 		}
 		return pacManMunchingAnim;
 	}
@@ -230,11 +231,11 @@ public class Rendering2D_MsPacMan extends Rendering2D_Common {
 
 	@Override
 	public Rectangle2D getLifeSprite() {
-		return rightSide(1, 0);
+		return regionRight(1, 0);
 	}
 
 	public Rectangle2D getHeart() {
-		return rightSide(2, 10);
+		return regionRight(2, 10);
 	}
 
 	public Rectangle2D getJunior() {
@@ -245,8 +246,7 @@ public class Rendering2D_MsPacMan extends Rendering2D_Common {
 		return new Rectangle2D(488, 199, 8, 8);
 	}
 
-	/* Tiles in right half of spritesheet */
-	public Rectangle2D rightSide(int tileX, int tileY) {
-		return region(456, 0, tileX, tileY, 1, 1);
+	private Rectangle2D regionRight(int col, int row) {
+		return region(456, 0, col, row, 1, 1);
 	}
 }
