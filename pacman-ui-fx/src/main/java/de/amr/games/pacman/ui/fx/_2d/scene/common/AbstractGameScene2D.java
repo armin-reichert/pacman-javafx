@@ -45,13 +45,13 @@ public abstract class AbstractGameScene2D implements GameScene {
 		this.sounds = sounds;
 	}
 
-	public void setGraphicsContext(GraphicsContext gc) {
-		this.gc = gc;
-		gc.getCanvas().setWidth(unscaledWidth);
-		gc.getCanvas().setHeight(unscaledHeight);
-		subSceneFX = new SubScene(new Group(gc.getCanvas()), unscaledWidth, unscaledHeight);
-		subSceneFX.widthProperty().bind(gc.getCanvas().widthProperty());
-		subSceneFX.heightProperty().bind(gc.getCanvas().heightProperty());
+	public void setCanvas(Canvas canvas) {
+		gc = canvas.getGraphicsContext2D();
+		canvas.setWidth(unscaledWidth);
+		canvas.setHeight(unscaledHeight);
+		subSceneFX = new SubScene(new Group(canvas), unscaledWidth, unscaledHeight);
+		subSceneFX.widthProperty().bind(canvas.widthProperty());
+		subSceneFX.heightProperty().bind(canvas.heightProperty());
 	}
 
 	@Override
