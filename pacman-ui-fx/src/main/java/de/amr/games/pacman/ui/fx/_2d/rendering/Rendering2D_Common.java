@@ -80,11 +80,22 @@ public abstract class Rendering2D_Common {
 		return directionOrder.indexOf(dir);
 	}
 
+	/**
+	 * @param region spritesheet region
+	 * @return copy of subimage at spritesheet region
+	 */
 	public Image createSubImage(Rectangle2D region) {
 		return createSubImage((int) region.getMinX(), (int) region.getMinY(), (int) region.getWidth(),
 				(int) region.getHeight());
 	}
 
+	/**
+	 * @param x      region x-coordinate
+	 * @param y      region y-coordinate
+	 * @param width  region width
+	 * @param height region height
+	 * @return copy of subimage at spritesheet region
+	 */
 	public Image createSubImage(int x, int y, int width, int height) {
 		WritableImage subImage = new WritableImage(width, height);
 		subImage.getPixelWriter().setPixels(0, 0, width, height, spritesheet.getPixelReader(), x, y);
