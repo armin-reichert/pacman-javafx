@@ -68,7 +68,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		// Determine the initial game scene
 		GameScene gameScene = getSceneForCurrentGameState(Env.$use3DScenes.get());
 		double aspectRatio = gameScene.aspectRatio().orElseGet(() -> {
-			Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+			Rectangle2D bounds = Screen.getPrimary().getBounds();
 			return bounds.getWidth() / bounds.getHeight();
 		});
 
