@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.amr.games.pacman.model.pacman.Bonus;
-import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D_Common;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.animation.RotateTransition;
 import javafx.animation.Transition;
 import javafx.scene.image.Image;
@@ -22,11 +22,11 @@ import javafx.util.Duration;
 public class Bonus3D extends Box {
 
 	private final Map<Integer, Image> spritesByValue;
-	private final Rendering2D_Common rendering2D;
+	private final Rendering2D rendering2D;
 	private final RotateTransition rotation;
 	private final PhongMaterial skin;
 
-	public Bonus3D(Rendering2D_Common rendering2D) {
+	public Bonus3D(Rendering2D rendering2D) {
 		super(8, 8, 8);
 		this.rendering2D = rendering2D;
 		spritesByValue = new HashMap<>();

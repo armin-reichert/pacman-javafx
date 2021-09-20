@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx._2d.rendering;
+package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
 import static de.amr.games.pacman.lib.Direction.DOWN;
 import static de.amr.games.pacman.lib.Direction.LEFT;
@@ -27,7 +27,7 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public abstract class Rendering2D_Common {
+public abstract class Rendering2D {
 
 	/**
 	 * @param source    source image
@@ -54,7 +54,7 @@ public abstract class Rendering2D_Common {
 	protected final int rasterSize;
 	protected List<Direction> directionOrder = Arrays.asList(RIGHT, LEFT, UP, DOWN);
 
-	public Rendering2D_Common(String spritesheetPath, int rasterSize) {
+	public Rendering2D(String spritesheetPath, int rasterSize) {
 		this.spritesheet = new Image(resource(spritesheetPath));
 		this.rasterSize = rasterSize;
 	}

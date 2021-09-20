@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D_Common;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -27,14 +27,14 @@ public class Maze2D implements Renderable2D {
 
 	private final int x;
 	private final int y;
-	private final Rendering2D_Common rendering;
+	private final Rendering2D rendering;
 	private GameLevel gameLevel;
 	private Timeline flashingAnimation;
 	private boolean flashing;
 	private List<Energizer2D> energizers2D;
 	private TimedSequence<Boolean> energizerBlinking = TimedSequence.pulse().frameDuration(10);
 
-	public Maze2D(V2i leftUpperCorner, Rendering2D_Common rendering) {
+	public Maze2D(V2i leftUpperCorner, Rendering2D rendering) {
 		x = t(leftUpperCorner.x);
 		y = t(leftUpperCorner.y);
 		this.rendering = rendering;

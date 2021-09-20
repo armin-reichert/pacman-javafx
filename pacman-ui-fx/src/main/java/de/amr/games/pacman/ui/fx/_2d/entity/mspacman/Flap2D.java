@@ -3,7 +3,7 @@ package de.amr.games.pacman.ui.fx._2d.entity.mspacman;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.mspacman.entities.Flap;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Renderable2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D_MsPacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;

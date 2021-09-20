@@ -18,7 +18,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Maze2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D_Common;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.paint.Color;
 
@@ -40,7 +40,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	private final PlayScene2DWithAnimations animationController;
 
-	public PlayScene2D(Rendering2D_Common rendering, SoundManager sounds) {
+	public PlayScene2D(Rendering2D rendering, SoundManager sounds) {
 		super(rendering, sounds, 28, 36);
 		animationController = new PlayScene2DWithAnimations(this, sounds);
 	}

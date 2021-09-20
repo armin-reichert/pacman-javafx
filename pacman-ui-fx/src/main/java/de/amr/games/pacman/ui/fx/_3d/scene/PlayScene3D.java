@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.Env;
-import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D_Common;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.LevelCounter3D;
@@ -168,7 +168,7 @@ public class PlayScene3D implements GameScene {
 		// data binding does the job
 	}
 
-	protected Rendering2D_Common rendering2D() {
+	protected Rendering2D rendering2D() {
 		return game().variant() == GameVariant.MS_PACMAN
 				? de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacManScenes.RENDERING
 				: de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManScenes.RENDERING;

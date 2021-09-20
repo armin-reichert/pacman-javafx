@@ -4,8 +4,8 @@ import java.util.Objects;
 
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.pacman.Bonus;
-import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D_Common;
-import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D_MsPacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -16,11 +16,11 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class Bonus2D implements Renderable2D {
 
-	private final Rendering2D_Common rendering;
+	private final Rendering2D rendering;
 	private final Bonus bonus;
 	private final TimedSequence<Integer> jumpingAnimation; // Ms. Pac-Man only
 
-	public Bonus2D(Bonus bonus, Rendering2D_Common rendering) {
+	public Bonus2D(Bonus bonus, Rendering2D rendering) {
 		this.bonus = Objects.requireNonNull(bonus);
 		this.rendering = Objects.requireNonNull(rendering);
 		if (rendering instanceof Rendering2D_MsPacMan) {

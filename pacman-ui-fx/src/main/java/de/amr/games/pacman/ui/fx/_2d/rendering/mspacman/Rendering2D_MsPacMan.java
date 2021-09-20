@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx._2d.rendering;
+package de.amr.games.pacman.ui.fx._2d.rendering.mspacman;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -8,6 +8,7 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -18,7 +19,7 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class Rendering2D_MsPacMan extends Rendering2D_Common {
+public class Rendering2D_MsPacMan extends Rendering2D {
 
 	private static final Color[] MAZE_TOP_COLOR = { //
 			Color.rgb(255, 183, 174), //

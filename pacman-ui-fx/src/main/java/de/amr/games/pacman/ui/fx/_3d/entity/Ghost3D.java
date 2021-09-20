@@ -5,7 +5,7 @@ import static de.amr.games.pacman.lib.Logging.log;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
-import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D_Common;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.animation.RotateTransition;
 import javafx.animation.Transition;
 import javafx.geometry.Rectangle2D;
@@ -67,7 +67,7 @@ public class Ghost3D extends Group {
 	public final Ghost ghost;
 	public final FlashingAnimation flashingAnimation = new FlashingAnimation();
 	private final Color normalColor;
-	private final Rendering2D_Common rendering2D;
+	private final Rendering2D rendering2D;
 	private final Group ghostShape;
 	private final MeshView body;
 	private final RotateTransition ghostShapeRot;
@@ -77,7 +77,7 @@ public class Ghost3D extends Group {
 	private final PhongMaterial skinMaterial = new PhongMaterial();
 	private Direction targetDir;
 
-	public Ghost3D(Ghost ghost, PacManModel3D model3D, Rendering2D_Common rendering2D) {
+	public Ghost3D(Ghost ghost, PacManModel3D model3D, Rendering2D rendering2D) {
 		this.ghost = ghost;
 		this.targetDir = ghost.dir();
 		this.rendering2D = rendering2D;

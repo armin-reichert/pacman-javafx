@@ -1,6 +1,6 @@
 package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
-import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D_MsPacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.entity.GianmarcosPacManModel3D;
 import de.amr.games.pacman.ui.fx._3d.entity.PacManModel3D;
