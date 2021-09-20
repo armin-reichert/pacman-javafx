@@ -49,10 +49,10 @@ public abstract class Rendering2D {
 		return result;
 	}
 
-	protected final Font arcadeFont = Font.loadFont(resource("/emulogic.ttf"), 8);
 	protected final Image spritesheet;
 	protected final int rasterSize;
 	protected List<Direction> directionOrder = Arrays.asList(RIGHT, LEFT, UP, DOWN);
+	protected Font font = Font.loadFont(resource("/emulogic.ttf"), 8);
 
 	public Rendering2D(String spritesheetPath, int rasterSize) {
 		this.spritesheet = new Image(resource(spritesheetPath));
@@ -61,14 +61,6 @@ public abstract class Rendering2D {
 
 	public InputStream resource(String path) {
 		return getClass().getResourceAsStream(path);
-	}
-
-	public Image getSpritesheet() {
-		return spritesheet;
-	}
-
-	public int getRasterSize() {
-		return rasterSize;
 	}
 
 	/**
@@ -161,7 +153,7 @@ public abstract class Rendering2D {
 	 * @return font used in score and game state display
 	 */
 	public Font getScoreFont() {
-		return arcadeFont;
+		return font;
 	}
 
 	/**
