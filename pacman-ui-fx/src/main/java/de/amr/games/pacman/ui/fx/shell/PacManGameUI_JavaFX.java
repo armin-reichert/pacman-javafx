@@ -171,7 +171,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		case MS_PACMAN:
 			return Scenes.MS_PACMAN_SCENES[sceneIndex][_3D ? 1 : 0];
 		case PACMAN:
-			return Scenes.PAC_MAN_SCENES[sceneIndex][_3D ? 1 : 0];
+			return Scenes.PACMAN_SCENES[sceneIndex][_3D ? 1 : 0];
 		default:
 			throw new IllegalStateException();
 		}
