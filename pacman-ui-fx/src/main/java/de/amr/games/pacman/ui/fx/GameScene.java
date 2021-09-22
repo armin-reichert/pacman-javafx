@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.shell;
+package de.amr.games.pacman.ui.fx;
 
 import java.util.OptionalDouble;
 

@@ -32,7 +32,7 @@ public class Model3DTest {
 	}
 
 	private static void loadUsingInteractiveMeshImporter() {
-		GianmarcosPacManModel3D model = new GianmarcosPacManModel3D();
+		GianmarcosPacManModel3D model = GianmarcosPacManModel3D.get();
 		log("InteractiveMesh OBJ importer:");
 		log("\nMeshViews:");
 		model.meshViewsByName.keySet().stream().sorted().forEach(key -> log("%s", key));

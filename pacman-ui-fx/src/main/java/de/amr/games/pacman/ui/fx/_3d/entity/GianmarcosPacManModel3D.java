@@ -5,6 +5,7 @@ import java.util.Map;
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
+import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.ui.fx.Env;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
@@ -18,19 +19,27 @@ import javafx.scene.transform.Translate;
  * (https://www.artstation.com/gianmart). Thanks Gianmarco!
  * 
  * <p>
- * Unfortunately, I have neither a model with animations nor a Ms. Pac-Man model
- * yet.
+ * Unfortunately, I have neither a model with animations nor a Ms. Pac-Man model yet.
  * 
  * @author Armin Reichert
  */
 public class GianmarcosPacManModel3D implements PacManModel3D {
+
+	private static GianmarcosPacManModel3D INSTANCE;
+
+	public static GianmarcosPacManModel3D get() {
+		if (INSTANCE == null) {
+			INSTANCE = new GianmarcosPacManModel3D();
+		}
+		return INSTANCE;
+	}
 
 	static final String PATH_TO_OBJ_FILE = "/common/gianmarco/pacman.obj";
 
 	public Map<String, MeshView> meshViewsByName;
 	public Map<String, PhongMaterial> materialsByName;
 
-	public GianmarcosPacManModel3D() {
+	private GianmarcosPacManModel3D() {
 		ObjModelImporter objImporter = new ObjModelImporter();
 		try {
 			objImporter.read(getClass().getResource(PATH_TO_OBJ_FILE));
@@ -41,6 +50,7 @@ public class GianmarcosPacManModel3D implements PacManModel3D {
 		} finally {
 			objImporter.close();
 		}
+		Logging.log("3D model loaded: %s", getClass().getName());
 	}
 
 	@Override

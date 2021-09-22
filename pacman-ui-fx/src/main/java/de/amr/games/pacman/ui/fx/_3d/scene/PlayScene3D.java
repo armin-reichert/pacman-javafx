@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.Env;
+import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
@@ -19,7 +20,6 @@ import de.amr.games.pacman.ui.fx._3d.entity.Maze3D;
 import de.amr.games.pacman.ui.fx._3d.entity.PacManModel3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Player3D;
 import de.amr.games.pacman.ui.fx._3d.entity.ScoreNotReally3D;
-import de.amr.games.pacman.ui.fx.shell.GameScene;
 import de.amr.games.pacman.ui.fx.util.CoordinateSystem;
 import javafx.scene.AmbientLight;
 import javafx.scene.Camera;
@@ -170,8 +170,8 @@ public class PlayScene3D implements GameScene {
 
 	protected Rendering2D rendering2D() {
 		return game().variant() == GameVariant.MS_PACMAN
-				? de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacManScenes.RENDERING
-				: de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManScenes.RENDERING;
+				? de.amr.games.pacman.ui.fx.MsPacManScenes.RENDERING
+				: de.amr.games.pacman.ui.fx.PacManScenes.RENDERING;
 	}
 
 	protected void buildMaze() {

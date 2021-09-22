@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.shell;
+package de.amr.games.pacman.ui.fx;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Pac;
@@ -10,7 +10,7 @@ import javafx.scene.input.KeyEvent;
  * 
  * @author Armin Reichert
  */
-class ManualPlayerControl {
+public class ManualPlayerControl {
 
 	private final KeyCode upCode, downCode, leftCode, rightCode;
 	private boolean up, down, left, right;
