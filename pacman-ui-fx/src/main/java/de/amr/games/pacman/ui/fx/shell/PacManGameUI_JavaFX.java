@@ -16,8 +16,7 @@ import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.ManualPlayerControl;
-import de.amr.games.pacman.ui.fx.MsPacManScenes;
-import de.amr.games.pacman.ui.fx.PacManScenes;
+import de.amr.games.pacman.ui.fx.Scenes;
 import de.amr.games.pacman.ui.fx.TrashTalk;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
@@ -140,8 +139,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private void stopAllSounds() {
-		MsPacManScenes.SOUNDS.stopAll();
-		PacManScenes.SOUNDS.stopAll();
+		Scenes.MS_PACMAN_SOUNDS.stopAll();
+		Scenes.PACMAN_SOUNDS.stopAll();
 	}
 
 	private void toggleUse3DScenes() {
@@ -170,9 +169,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		switch (game.variant()) {
 		case MS_PACMAN:
-			return MsPacManScenes.SCENES[sceneIndex][_3D ? 1 : 0];
+			return Scenes.MS_PACMAN_SCENES[sceneIndex][_3D ? 1 : 0];
 		case PACMAN:
-			return PacManScenes.SCENES[sceneIndex][_3D ? 1 : 0];
+			return Scenes.PAC_MAN_SCENES[sceneIndex][_3D ? 1 : 0];
 		default:
 			throw new IllegalStateException();
 		}

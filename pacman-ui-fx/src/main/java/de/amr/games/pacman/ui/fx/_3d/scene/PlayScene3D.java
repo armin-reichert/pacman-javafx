@@ -169,9 +169,8 @@ public class PlayScene3D implements GameScene {
 	}
 
 	protected Rendering2D rendering2D() {
-		return game().variant() == GameVariant.MS_PACMAN
-				? de.amr.games.pacman.ui.fx.MsPacManScenes.RENDERING
-				: de.amr.games.pacman.ui.fx.PacManScenes.RENDERING;
+		return game().variant() == GameVariant.MS_PACMAN ? de.amr.games.pacman.ui.fx.Scenes.MS_PACMAN_RENDERING
+				: de.amr.games.pacman.ui.fx.Scenes.PACMAN_RENDERING;
 	}
 
 	protected void buildMaze() {

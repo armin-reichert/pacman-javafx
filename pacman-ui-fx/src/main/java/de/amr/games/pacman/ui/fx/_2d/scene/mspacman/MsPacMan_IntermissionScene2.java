@@ -4,7 +4,7 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.PacManGameSound;
-import de.amr.games.pacman.ui.fx.MsPacManScenes;
+import de.amr.games.pacman.ui.fx.Scenes;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
@@ -13,9 +13,8 @@ import de.amr.games.pacman.ui.mspacman.MsPacMan_IntermissionScene2_Controller;
 /**
  * Intermission scene 2: "The chase".
  * <p>
- * Pac-Man and Ms. Pac-Man chase each other across the screen over and over.
- * After three turns, they both rapidly run from left to right and right to
- * left. (Played after round 5)
+ * Pac-Man and Ms. Pac-Man chase each other across the screen over and over. After three turns, they
+ * both rapidly run from left to right and right to left. (Played after round 5)
  * 
  * @author Armin Reichert
  */
@@ -47,7 +46,7 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 	private Flap2D flap2D;
 
 	public MsPacMan_IntermissionScene2() {
-		super(MsPacManScenes.RENDERING, MsPacManScenes.SOUNDS, 28, 36);
+		super(Scenes.MS_PACMAN_RENDERING, Scenes.MS_PACMAN_SOUNDS, 28, 36);
 	}
 
 	@Override
@@ -55,10 +54,10 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 		super.init();
 		sceneController = new SceneController(gameController);
 		sceneController.init();
-		flap2D = new Flap2D(sceneController.flap, MsPacManScenes.RENDERING);
+		flap2D = new Flap2D(sceneController.flap, Scenes.MS_PACMAN_RENDERING);
 		msPacMan2D = new Player2D(sceneController.msPacMan, rendering);
 		pacMan2D = new Player2D(sceneController.pacMan, rendering);
-		pacMan2D.munchingAnimations = MsPacManScenes.RENDERING.createSpouseMunchingAnimations();
+		pacMan2D.munchingAnimations = Scenes.MS_PACMAN_RENDERING.createSpouseMunchingAnimations();
 		msPacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 	}

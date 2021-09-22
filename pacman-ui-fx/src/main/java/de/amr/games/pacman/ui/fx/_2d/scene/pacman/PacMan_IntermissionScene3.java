@@ -4,7 +4,7 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.PacManGameSound;
-import de.amr.games.pacman.ui.fx.PacManScenes;
+import de.amr.games.pacman.ui.fx.Scenes;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.BlinkyNaked2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.BlinkyPatched2D;
@@ -40,7 +40,7 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 	private BlinkyNaked2D blinkyNaked2D;
 
 	public PacMan_IntermissionScene3() {
-		super(PacManScenes.RENDERING, PacManScenes.SOUNDS, 28, 36);
+		super(Scenes.PACMAN_RENDERING, Scenes.PACMAN_SOUNDS, 28, 36);
 	}
 
 	@Override
@@ -49,8 +49,8 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 		sceneController = new SceneController(gameController);
 		sceneController.init();
 		pacMan2D = new Player2D(sceneController.pac, rendering);
-		blinkyPatched2D = new BlinkyPatched2D(sceneController.blinky, PacManScenes.RENDERING);
-		blinkyNaked2D = new BlinkyNaked2D(sceneController.blinky, PacManScenes.RENDERING);
+		blinkyPatched2D = new BlinkyPatched2D(sceneController.blinky, Scenes.PACMAN_RENDERING);
+		blinkyNaked2D = new BlinkyNaked2D(sceneController.blinky, Scenes.PACMAN_RENDERING);
 		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 		blinkyPatched2D.animation.restart();
 		blinkyNaked2D.animation.restart();

@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.TimedSequence;
-import de.amr.games.pacman.ui.fx.PacManScenes;
+import de.amr.games.pacman.ui.fx.Scenes;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
@@ -40,7 +40,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	private List<Ghost2D> ghostsInGallery2D;
 
 	public PacMan_IntroScene() {
-		super(PacManScenes.RENDERING, PacManScenes.SOUNDS, 28, 36);
+		super(Scenes.PACMAN_RENDERING, Scenes.PACMAN_SOUNDS, 28, 36);
 	}
 
 	@Override

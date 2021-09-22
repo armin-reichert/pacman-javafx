@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.Ghost;
-import de.amr.games.pacman.ui.fx.MsPacManScenes;
+import de.amr.games.pacman.ui.fx.Scenes;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
@@ -19,8 +19,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
- * Intro scene of the Ms. Pac-Man game. The ghosts and Ms. Pac-Man are
- * introduced one after another.
+ * Intro scene of the Ms. Pac-Man game. The ghosts and Ms. Pac-Man are introduced one after another.
  * 
  * @author Armin Reichert
  */
@@ -32,7 +31,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 	private List<Ghost2D> ghosts2D;
 
 	public MsPacMan_IntroScene() {
-		super(MsPacManScenes.RENDERING, MsPacManScenes.SOUNDS, 28, 36);
+		super(Scenes.MS_PACMAN_RENDERING, Scenes.MS_PACMAN_SOUNDS, 28, 36);
 	}
 
 	@Override
@@ -111,8 +110,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 				y = 2 * (numDotsX + numDotsY) - dot;
 			}
 			gc.setFill((dot + light) % (numDotsX / 2) == 0 ? Color.PINK : Color.RED);
-			gc.fillRect(t(sceneController.tileBoardTopLeft.x) + 4 * x, t(sceneController.tileBoardTopLeft.y) + 4 * y, 2,
-					2);
+			gc.fillRect(t(sceneController.tileBoardTopLeft.x) + 4 * x, t(sceneController.tileBoardTopLeft.y) + 4 * y, 2, 2);
 		}
 	}
 

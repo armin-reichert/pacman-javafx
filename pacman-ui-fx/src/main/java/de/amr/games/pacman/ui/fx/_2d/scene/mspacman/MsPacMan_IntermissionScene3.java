@@ -3,7 +3,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.PacManGameSound;
-import de.amr.games.pacman.ui.fx.MsPacManScenes;
+import de.amr.games.pacman.ui.fx.Scenes;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.JuniorBag2D;
@@ -16,10 +16,9 @@ import de.amr.games.pacman.ui.mspacman.MsPacMan_IntermissionScene3_Controller;
  * Intermission scene 3: "Junior".
  * 
  * <p>
- * Pac-Man and Ms. Pac-Man gradually wait for a stork, who flies overhead with a
- * little blue bundle. The stork drops the bundle, which falls to the ground in
- * front of Pac-Man and Ms. Pac-Man, and finally opens up to reveal a tiny
- * Pac-Man. (Played after rounds 9, 13, and 17)
+ * Pac-Man and Ms. Pac-Man gradually wait for a stork, who flies overhead with a little blue bundle.
+ * The stork drops the bundle, which falls to the ground in front of Pac-Man and Ms. Pac-Man, and
+ * finally opens up to reveal a tiny Pac-Man. (Played after rounds 9, 13, and 17)
  * 
  * @author Armin Reichert
  */
@@ -52,7 +51,7 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 	private JuniorBag2D bag2D;
 
 	public MsPacMan_IntermissionScene3() {
-		super(MsPacManScenes.RENDERING, MsPacManScenes.SOUNDS, 28, 36);
+		super(Scenes.MS_PACMAN_RENDERING, Scenes.MS_PACMAN_SOUNDS, 28, 36);
 	}
 
 	@Override
@@ -60,12 +59,12 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 		super.init();
 		sceneController = new SceneController(gameController);
 		sceneController.init();
-		flap2D = new Flap2D(sceneController.flap, MsPacManScenes.RENDERING);
+		flap2D = new Flap2D(sceneController.flap, Scenes.MS_PACMAN_RENDERING);
 		msPacMan2D = new Player2D(sceneController.msPacMan, rendering);
 		pacMan2D = new Player2D(sceneController.pacMan, rendering);
-		stork2D = new Stork2D(sceneController.stork, MsPacManScenes.RENDERING);
+		stork2D = new Stork2D(sceneController.stork, Scenes.MS_PACMAN_RENDERING);
 		bag2D = new JuniorBag2D(sceneController.bag, (Rendering2D_MsPacMan) rendering);
-		pacMan2D.munchingAnimations = MsPacManScenes.RENDERING.createSpouseMunchingAnimations();
+		pacMan2D.munchingAnimations = Scenes.MS_PACMAN_RENDERING.createSpouseMunchingAnimations();
 		stork2D.animation.restart();
 	}
 

@@ -7,7 +7,7 @@ import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.PacManGameSound;
-import de.amr.games.pacman.ui.fx.PacManScenes;
+import de.amr.games.pacman.ui.fx.Scenes;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.Nail2D;
@@ -46,7 +46,7 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 	private TimedSequence<Rectangle2D> blinkyDamagedAnimation;
 
 	public PacMan_IntermissionScene2() {
-		super(PacManScenes.RENDERING, PacManScenes.SOUNDS, 28, 36);
+		super(Scenes.PACMAN_RENDERING, Scenes.PACMAN_SOUNDS, 28, 36);
 	}
 
 	@Override
@@ -59,8 +59,8 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 		nail2D = new Nail2D(sceneController.nail, (Rendering2D_PacMan) rendering);
 		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 		blinky2D.kickingAnimations.values().forEach(TimedSequence::restart);
-		blinkyStretchedAnimation = PacManScenes.RENDERING.createBlinkyStretchedAnimation();
-		blinkyDamagedAnimation = PacManScenes.RENDERING.createBlinkyDamagedAnimation();
+		blinkyStretchedAnimation = Scenes.PACMAN_RENDERING.createBlinkyStretchedAnimation();
+		blinkyDamagedAnimation = Scenes.PACMAN_RENDERING.createBlinkyDamagedAnimation();
 	}
 
 	@Override
