@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx;
+package de.amr.games.pacman.ui.fx.shell;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Pac;

@@ -3,13 +3,13 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.PacManGameSound;
-import de.amr.games.pacman.ui.fx.Scenes;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.JuniorBag2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Stork2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
+import de.amr.games.pacman.ui.fx.scene.Scenes;
 import de.amr.games.pacman.ui.mspacman.MsPacMan_IntermissionScene3_Controller;
 
 /**

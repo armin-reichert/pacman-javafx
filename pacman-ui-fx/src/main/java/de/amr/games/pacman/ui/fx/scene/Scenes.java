@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx;
+package de.amr.games.pacman.ui.fx.scene;
 
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;

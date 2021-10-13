@@ -4,11 +4,11 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.PacManGameSound;
-import de.amr.games.pacman.ui.fx.Scenes;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.BigPacMan2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
+import de.amr.games.pacman.ui.fx.scene.Scenes;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene1_Controller;
 import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene1_Controller.Phase;
 

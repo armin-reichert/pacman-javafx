@@ -8,8 +8,8 @@ import java.util.OptionalDouble;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
