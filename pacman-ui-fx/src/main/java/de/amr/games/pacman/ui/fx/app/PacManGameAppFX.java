@@ -49,6 +49,23 @@ public class PacManGameAppFX extends Application {
 		launch(args);
 	}
 
+	@Override
+	public void start(Stage stage) throws IOException {
+		Options options = new Options(getParameters().getUnnamed());
+		log("Game variant: %s, window height: %.0f, 3D: %s", options.gameVariant, options.windowHeight,
+				options.use3DScenes);
+		PacManGameController gameController = new PacManGameController();
+		gameController.selectGameVariant(options.gameVariant);
+		gameController.setUI(new PacManGameUI_JavaFX(stage, gameController, options.windowHeight));
+		var gameLoop = new GameLoop( //
+				new GameLoopTask("Controller Step", gameController::step), //
+				new GameLoopTask("UI Update      ", gameController.getUI()::update));
+		Env.$totalTicks.bind(gameLoop.$totalTicks);
+		Env.$fps.bind(gameLoop.$fps);
+		Env.$use3DScenes.set(options.use3DScenes);
+		gameLoop.start();
+	}
+
 	private static class Options {
 
 		static final String[] NAMES = { "-2D", "-3D", "-height", "-mspacman", "-pacman" };
@@ -98,22 +115,5 @@ public class PacManGameAppFX extends Application {
 				++i;
 			}
 		}
-	}
-
-	@Override
-	public void start(Stage stage) throws IOException {
-		Options options = new Options(getParameters().getUnnamed());
-		log("Game variant: %s, window height: %.0f, 3D: %s", options.gameVariant, options.windowHeight,
-				options.use3DScenes);
-		PacManGameController gameController = new PacManGameController();
-		gameController.selectGameVariant(options.gameVariant);
-		gameController.setUI(new PacManGameUI_JavaFX(stage, gameController, options.windowHeight));
-		var gameLoop = new GameLoop( //
-				new GameLoopTask("Controller Step", gameController::step), //
-				new GameLoopTask("UI Update      ", gameController.getUI()::update));
-		Env.$totalTicks.bind(gameLoop.$totalTicks);
-		Env.$fps.bind(gameLoop.$fps);
-		Env.$use3DScenes.set(options.use3DScenes);
-		gameLoop.start();
 	}
 }
