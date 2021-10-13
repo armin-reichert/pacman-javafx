@@ -3,9 +3,6 @@ package de.amr.games.pacman.ui.fx.shell;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
 
-import java.text.MessageFormat;
-import java.util.ResourceBundle;
-
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
@@ -45,14 +42,6 @@ import javafx.stage.Stage;
  * @author Armin Reichert
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
-
-	private static final ResourceBundle MESSAGES = ResourceBundle.getBundle("/common/messages");
-
-	public static String message(String pattern, Object... args) {
-		return MessageFormat.format(MESSAGES.getString(pattern), args);
-	}
-
-	private static final String APP_ICON_PATH = "/pacman/graphics/pacman.png";
 
 	private final PacManGameController gameController;
 	private final Stage stage;
@@ -96,7 +85,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			String gameName = gameController.game().variant() == PACMAN ? "Pac-Man" : "Ms. Pac-Man";
 			return String.format("%s (%d frames/sec, JavaFX)", gameName, Env.$fps.get());
 		}, Env.$fps));
-		stage.getIcons().add(new Image(getClass().getResourceAsStream(APP_ICON_PATH)));
+		stage.getIcons().add(new Image(getClass().getResourceAsStream(Env.APP_ICON_PATH)));
 		stage.centerOnScreen();
 		stage.show();
 	}
@@ -224,7 +213,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		switch (e.getCode()) {
 		case A: {
 			gameController.setAutoControlled(!gameController.isAutoControlled());
-			String message = message(gameController.isAutoControlled() ? "autopilot_on" : "autopilot_off");
+			String message = Env.message(gameController.isAutoControlled() ? "autopilot_on" : "autopilot_off");
 			showFlashMessage(1, message);
 			break;
 		}
@@ -235,7 +224,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		case I: {
 			gameController.setPlayerImmune(!gameController.isPlayerImmune());
-			String message = message(gameController.isPlayerImmune() ? "player_immunity_on" : "player_immunity_off");
+			String message = Env.message(gameController.isPlayerImmune() ? "player_immunity_on" : "player_immunity_off");
 			showFlashMessage(1, message);
 			break;
 		}
@@ -287,8 +276,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			if (currentGameScene instanceof PlayScene3D) {
 				PlayScene3D playScene3D = (PlayScene3D) currentGameScene;
 				playScene3D.nextCam();
-				String cameraType = MESSAGES.getString(playScene3D.selectedCam().getClass().getSimpleName());
-				String message = message("camera_perspective", cameraType);
+				String cameraType = Env.MESSAGES.getString(playScene3D.selectedCam().getClass().getSimpleName());
+				String message = Env.message("camera_perspective", cameraType);
 				showFlashMessage(1, message);
 			}
 			break;

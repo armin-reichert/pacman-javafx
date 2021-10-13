@@ -19,10 +19,10 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.PacManGameSound;
+import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.TrashTalk;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.PacManModel3D;
-import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
@@ -102,8 +102,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 	@Override
 	public void onPlayerGainsPower(PacManGameEvent e) {
 		sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
-		ghosts3D.stream()
-				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
+		ghosts3D.stream().filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
 				.forEach(Ghost3D::setBlueSkinColor);
 	}
 
@@ -160,7 +159,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 
 	@Override
 	public void onExtraLife(PacManGameEvent e) {
-		String message = PacManGameUI_JavaFX.message("extra_life");
+		String message = Env.message("extra_life");
 		gameController.getUI().showFlashMessage(1, message);
 		sounds.play(PacManGameSound.EXTRA_LIFE);
 	}
@@ -328,7 +327,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 			game().ghosts().forEach(ghost -> ghost.setVisible(false));
 			String message = TrashTalk.LEVEL_COMPLETE_TALK.next();
 			message += "\n\n";
-			message += PacManGameUI_JavaFX.message("level_complete", game().level().number);
+			message += Env.message("level_complete", game().level().number);
 			gameController.getUI().showFlashMessage(2, message);
 		});
 		PauseTransition phase2 = new PauseTransition(Duration.seconds(2));
@@ -339,7 +338,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 	private void playAnimationLevelStarting() {
 		gameController.stateTimer().reset();
 		gameController.stateTimer().start();
-		String message = PacManGameUI_JavaFX.message("level_starting", game().level().number);
+		String message = Env.message("level_starting", game().level().number);
 		gameController.getUI().showFlashMessage(1, message);
 		PauseTransition phase1 = new PauseTransition(Duration.seconds(1));
 		phase1.setOnFinished(e -> {

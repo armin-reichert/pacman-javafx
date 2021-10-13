@@ -1,5 +1,8 @@
 package de.amr.games.pacman.ui.fx;
 
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -16,6 +19,14 @@ import javafx.scene.shape.DrawMode;
  * @author Armin Reichert
  */
 public class Env {
+
+	public static final ResourceBundle MESSAGES = ResourceBundle.getBundle("/common/messages");
+
+	public static String message(String pattern, Object... args) {
+		return MessageFormat.format(MESSAGES.getString(pattern), args);
+	}
+
+	public static final String APP_ICON_PATH = "/pacman/graphics/pacman.png";
 
 	public static final BooleanProperty $axesVisible = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<DrawMode> $drawMode3D = new SimpleObjectProperty<DrawMode>(DrawMode.FILL);
