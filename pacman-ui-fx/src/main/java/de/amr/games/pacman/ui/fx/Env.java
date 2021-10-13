@@ -3,6 +3,7 @@ package de.amr.games.pacman.ui.fx;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
+import de.amr.games.pacman.ui.fx.util.RandomEntrySelector;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -20,13 +21,28 @@ import javafx.scene.shape.DrawMode;
  */
 public class Env {
 
+	public static final String APP_ICON_PATH = "/pacman/graphics/pacman.png";
+
+	// UI messages
+
 	public static final ResourceBundle MESSAGES = ResourceBundle.getBundle("/common/messages");
 
 	public static String message(String pattern, Object... args) {
 		return MessageFormat.format(MESSAGES.getString(pattern), args);
 	}
 
-	public static final String APP_ICON_PATH = "/pacman/graphics/pacman.png";
+	// Trash talk
+
+	public static final RandomEntrySelector<String> CHEAT_TALK = load("/common/cheating_talk");
+	public static final RandomEntrySelector<String> LEVEL_COMPLETE_TALK = load("/common/level_complete_talk");
+	public static final RandomEntrySelector<String> GAME_OVER_TALK = load("/common/game_over_talk");
+
+	private static RandomEntrySelector<String> load(String bundleName) {
+		ResourceBundle bundle = ResourceBundle.getBundle(bundleName);
+		return new RandomEntrySelector<>(bundle.keySet().stream().sorted().map(bundle::getString).toArray(String[]::new));
+	}
+
+	// Global properties
 
 	public static final BooleanProperty $axesVisible = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<DrawMode> $drawMode3D = new SimpleObjectProperty<DrawMode>(DrawMode.FILL);

@@ -14,7 +14,6 @@ import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.ManualPlayerControl;
 import de.amr.games.pacman.ui.fx.Scenes;
-import de.amr.games.pacman.ui.fx.TrashTalk;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import javafx.beans.binding.Bindings;
@@ -236,7 +235,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		case N:
 			if (gameController.isGameRunning()) {
-				showFlashMessage(1, TrashTalk.CHEAT_TALK.next());
+				showFlashMessage(1, Env.CHEAT_TALK.next());
 				gameController.changeState(PacManGameState.LEVEL_COMPLETE);
 			}
 			break;

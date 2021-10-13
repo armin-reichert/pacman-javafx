@@ -20,7 +20,6 @@ import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.Env;
-import de.amr.games.pacman.ui.fx.TrashTalk;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.PacManModel3D;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -229,7 +228,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 		// enter GAME_OVER
 		else if (e.newGameState == PacManGameState.GAME_OVER) {
 			sounds.stopAll();
-			gameController.getUI().showFlashMessage(3, TrashTalk.GAME_OVER_TALK.next());
+			gameController.getUI().showFlashMessage(3, Env.GAME_OVER_TALK.next());
 		}
 
 		// exit HUNTING but not GAME_OVER
@@ -325,7 +324,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 		phase1.setOnFinished(e -> {
 			game().player().setVisible(false);
 			game().ghosts().forEach(ghost -> ghost.setVisible(false));
-			String message = TrashTalk.LEVEL_COMPLETE_TALK.next();
+			String message = Env.LEVEL_COMPLETE_TALK.next();
 			message += "\n\n";
 			message += Env.message("level_complete", game().level().number);
 			gameController.getUI().showFlashMessage(2, message);
