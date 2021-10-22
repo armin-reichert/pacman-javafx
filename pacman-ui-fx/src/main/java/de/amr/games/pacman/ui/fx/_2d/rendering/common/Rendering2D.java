@@ -37,7 +37,7 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.GameEntity;
-import de.amr.games.pacman.model.pacman.Bonus;
+import de.amr.games.pacman.model.pacman.entities.Bonus;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;

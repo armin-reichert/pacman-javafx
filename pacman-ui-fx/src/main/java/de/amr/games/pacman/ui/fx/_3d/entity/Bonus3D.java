@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.amr.games.pacman.model.pacman.Bonus;
+import de.amr.games.pacman.model.pacman.entities.Bonus;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.animation.RotateTransition;
 import javafx.animation.Transition;
