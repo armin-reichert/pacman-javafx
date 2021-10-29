@@ -244,8 +244,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			break;
 
 		case I: {
-			gameController.setPlayerImmune(!gameController.isPlayerImmune());
-			String message = Env.message(gameController.isPlayerImmune() ? "player_immunity_on" : "player_immunity_off");
+			gameController.game().player().immune = !gameController.game().player().immune;
+			String message = Env
+					.message(gameController.game().player().immune ? "player_immunity_on" : "player_immunity_off");
 			showFlashMessage(1, message);
 			break;
 		}

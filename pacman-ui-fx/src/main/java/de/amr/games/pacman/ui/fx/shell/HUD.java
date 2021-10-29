@@ -102,7 +102,7 @@ public class HUD extends Text {
 		}
 		newline();
 		line("Autopilot (A)", "%s", on_off(ui.getGameController().isAutoControlled()));
-		line("Immunity (I)", "%s", on_off(ui.getGameController().isPlayerImmune()));
+		line("Immunity (I)", "%s", on_off(ui.getGameController().game().player().immune));
 		setText(text.toString());
 	}
 
