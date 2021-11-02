@@ -32,6 +32,7 @@ import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.geometry.Rectangle2D;
@@ -83,7 +84,7 @@ public class Ghost2D implements Renderable2D {
 		if (ghost.is(LOCKED) && looksFrightened) {
 			return frightenedAnimation.animate();
 		}
-		if (ghost.speed() == 0) {
+		if (ghost.velocity().equals(V2d.NULL)) {
 			return kickingAnimations.get(ghost.wishDir()).frame();
 		}
 		return kickingAnimations.get(ghost.wishDir()).animate(); // Looks towards wish dir!

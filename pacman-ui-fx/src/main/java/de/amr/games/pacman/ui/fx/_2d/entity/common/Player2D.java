@@ -27,6 +27,7 @@ import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.geometry.Rectangle2D;
@@ -62,7 +63,7 @@ public class Player2D implements Renderable2D {
 		if (player.dead) {
 			return dyingAnimation.hasStarted() ? dyingAnimation.animate() : munchingAnimations.get(dir).frame();
 		}
-		if (player.speed() == 0) {
+		if (player.velocity().equals(V2d.NULL)) {
 			return munchingAnimations.get(dir).frame(0);
 		}
 		if (player.stuck) {
