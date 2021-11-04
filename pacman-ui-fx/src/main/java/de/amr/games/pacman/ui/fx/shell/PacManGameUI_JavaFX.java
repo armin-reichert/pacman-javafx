@@ -103,7 +103,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
 
 		stage.titleProperty().bind(Bindings.createStringBinding(() -> {
-			String gameName = gameController.game().variant() == PACMAN ? "Pac-Man" : "Ms. Pac-Man";
+			String gameName = gameController.gameVariant() == PACMAN ? "Pac-Man" : "Ms. Pac-Man";
 			return String.format("%s (%d frames/sec, JavaFX)", gameName, Env.$fps.get());
 		}, Env.$fps));
 		stage.getIcons().add(new Image(getClass().getResourceAsStream(Env.APP_ICON_PATH)));
@@ -177,7 +177,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			break;
 		}
 
-		switch (game.variant()) {
+		switch (gameController.gameVariant()) {
 		case MS_PACMAN:
 			return Scenes.MS_PACMAN_SCENES[sceneIndex][_3D ? 1 : 0];
 		case PACMAN:
@@ -270,7 +270,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		case V:
 			if (gameController.state == PacManGameState.INTRO) {
-				gameController.selectGameVariant(gameController.game().variant().succ());
+				gameController.selectGameVariant(gameController.gameVariant().succ());
 			}
 			break;
 

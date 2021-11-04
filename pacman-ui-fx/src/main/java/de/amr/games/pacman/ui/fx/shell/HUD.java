@@ -67,7 +67,7 @@ public class HUD extends Text {
 		line("Speed (CTRL/SHIFT+S)", "%.0f%%", 100.0 / Env.$slowDown.get());
 		line("Paused (CTRL+P)", "%s", yes_no(Env.$paused.get()));
 		newline();
-		line("Game Variant", "%s", ui.getGameController().game().variant());
+		line("Game Variant", "%s", ui.getGameController().gameVariant());
 		line("Playing", "%s", yes_no(ui.getGameController().isGameRunning()));
 		line("Attract Mode", "%s", yes_no(ui.getGameController().isAttractMode()));
 		line("Game Level", "%d", ui.getGameController().game().level().number);
@@ -82,8 +82,7 @@ public class HUD extends Text {
 		line("", "w=%.0f h=%.0f", ui.getCurrentGameScene().getSubSceneFX().getWidth(),
 				ui.getCurrentGameScene().getSubSceneFX().getHeight());
 		newline();
-		double w = ui.getStage().getScene().getWindow().getWidth(),
-				h = ui.getStage().getScene().getWindow().getHeight();
+		double w = ui.getStage().getScene().getWindow().getWidth(), h = ui.getStage().getScene().getWindow().getHeight();
 		line("Window Size", "w=%.0f h=%.0f", w, h);
 		line("Scene Size", "w=%.0f h=%.0f", ui.getStage().getScene().getWidth(), ui.getStage().getScene().getHeight());
 		newline();
