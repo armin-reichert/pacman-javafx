@@ -23,11 +23,15 @@ SOFTWARE.
  */
 module de.amr.games.pacman.ui.fx {
 
-	exports de.amr.games.pacman.ui.fx.app to javafx.graphics;
-	
-	// for Fxyz importer test
-	exports de.amr.games.pacman.ui.fx._3d.entity;
+	exports de.amr.games.pacman.ui.fx;
+	exports de.amr.games.pacman.ui.fx.app;
+	exports de.amr.games.pacman.ui.fx.scene;
+	exports de.amr.games.pacman.ui.fx.shell;
+	exports de.amr.games.pacman.ui.fx.sound;
 	exports de.amr.games.pacman.ui.fx._2d.rendering.common;
+	exports de.amr.games.pacman.ui.fx._2d.rendering.mspacman;
+	exports de.amr.games.pacman.ui.fx._2d.rendering.pacman;
+	exports de.amr.games.pacman.ui.fx._3d.entity;
 
 	requires transitive javafx.controls;
 	requires transitive javafx.media;
