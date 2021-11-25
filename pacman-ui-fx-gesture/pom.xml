@@ -23,7 +23,7 @@
 				<artifactId>javafx-maven-plugin</artifactId>
 				<version>0.0.6</version>
 				<configuration>
-					<mainClass>de.amr.games.pacman.ui.fx.app.PacManGameAppFX</mainClass>
+					<mainClass>org.poloskai.PacManGameGesturesApp</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>
