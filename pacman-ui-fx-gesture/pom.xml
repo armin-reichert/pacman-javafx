@@ -2,7 +2,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>de.amr.games.pacman.ui.fx.gestures</groupId>
+	<groupId>org.poloskai.pacman.ui.fx.gestures</groupId>
 	<artifactId>pacman-ui-fx-gestures</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<properties>
@@ -28,9 +28,6 @@
 			</plugin>
 		</plugins>
 	</build>
-	<organization>
-		<name>armin.reichert@web.de</name>
-	</organization>
 	<dependencies>
 		<dependency>
 			<groupId>de.amr.games.pacman.ui.fx</groupId>

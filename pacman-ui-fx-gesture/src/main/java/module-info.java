@@ -1,4 +1,4 @@
-module org.ploskai {
+module org.poloskai {
 
 	exports org.poloskai to javafx.graphics;
 
