@@ -11,7 +11,6 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
-import de.amr.games.pacman.ui.fx.app.GameLoop.GameLoopTask;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -40,16 +39,14 @@ public class PacManGameGesturesApp extends Application {
 		// use gesture consumer to control player
 		gameController.setPlayerControl(gc);
 
-		var gameLoop = new GameLoop( //
-				new GameLoopTask("Controller Step", gameController::updateState), //
-				new GameLoopTask("UI Update      ", gameController.getUI()::update));
+		var gameLoop = new GameLoop(gameController::updateState, ui::update);
 		Env.$totalTicks.bind(gameLoop.$totalTicks);
 		Env.$fps.bind(gameLoop.$fps);
 		Env.$use3DScenes.set(options.use3DScenes);
 
 		// start producing gestures
 		gp.start();
-		
+
 		// TODO: stop producing gestures when game is exited / window closed
 
 		gameLoop.start();

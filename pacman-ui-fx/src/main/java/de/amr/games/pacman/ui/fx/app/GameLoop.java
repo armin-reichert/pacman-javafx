@@ -25,9 +25,6 @@ package de.amr.games.pacman.ui.fx.app;
 
 import static de.amr.games.pacman.lib.Logging.log;
 
-import java.util.Arrays;
-import java.util.List;
-
 import de.amr.games.pacman.ui.fx.Env;
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.IntegerProperty;
@@ -36,38 +33,33 @@ import javafx.beans.property.SimpleIntegerProperty;
 /**
  * Game loop.
  * <p>
- * Note that the animation timer frequency depends on the monitor refresh rate! If your refresh rate is not 60 Hz, the
- * game does not run with intended speed.
+ * Note that the animation timer frequency depends on the monitor refresh rate! If your refresh rate
+ * is not 60 Hz, the game does not run with intended speed.
  * 
  * @author Armin Reichert
  */
 public class GameLoop extends AnimationTimer {
 
-	public static class GameLoopTask {
-		public final String description;
-		public final Runnable code;
-
-		public GameLoopTask(String description, Runnable code) {
-			this.description = description;
-			this.code = code;
-		}
-	}
-
 	public final IntegerProperty $fps = new SimpleIntegerProperty();
 	public final IntegerProperty $totalTicks = new SimpleIntegerProperty();
 
-	private final List<GameLoopTask> taskList;
+	private Runnable update;
+	private Runnable render;
 	private long fpsCountStartTime;
 	private int frames;
+	private long lastUpdate;
 
-	public GameLoop(GameLoopTask... tasks) {
-		taskList = Arrays.asList(tasks);
+	public GameLoop(Runnable update, Runnable render) {
+		this.update = update;
+		this.render = render;
 	}
 
 	@Override
 	public void handle(long now) {
-		if ($totalTicks.get() % Env.$slowDown.get() == 0 && !Env.$paused.get()) {
-			taskList.forEach(this::runTask);
+		$totalTicks.set($totalTicks.get() + 1);
+		boolean readyForUpdate = now - lastUpdate >= 1e9 / 66; // TODO this is somewhat dubios
+		if (readyForUpdate && !Env.$paused.get() && $totalTicks.get() % Env.$slowDown.get() == 0) {
+			runUpdate(now);
 		}
 		++frames;
 		if (now - fpsCountStartTime > 1e9) {
@@ -75,17 +67,18 @@ public class GameLoop extends AnimationTimer {
 			frames = 0;
 			fpsCountStartTime = now;
 		}
-		$totalTicks.set($totalTicks.get() + 1);
+		render.run();
 	}
 
-	private void runTask(GameLoopTask task) {
+	private void runUpdate(long updateTime) {
 		if (Env.$isTimeMeasured.get()) {
 			double start_ns = System.nanoTime();
-			task.code.run();
+			update.run();
 			double duration_ns = System.nanoTime() - start_ns;
-			log("%s: %f milliseconds", task.description, duration_ns / 1e6);
+			log("Update took %f milliseconds", duration_ns / 1e6);
 		} else {
-			task.code.run();
+			update.run();
 		}
+		lastUpdate = updateTime;
 	}
 }
