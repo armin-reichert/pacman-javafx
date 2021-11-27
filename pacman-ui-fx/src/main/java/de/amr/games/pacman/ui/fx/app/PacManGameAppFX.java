@@ -59,7 +59,7 @@ public class PacManGameAppFX extends Application {
 		PacManGameUI ui = new PacManGameUI_JavaFX(stage, gameController, options.windowHeight);
 		gameController.setUI(ui);
 		gameController.setPlayerControl(ui);
-		var gameLoop = new GameLoop(gameController::updateState, ui::update);
+		var gameLoop = new GameLoop2(gameController::updateState, ui::update);
 		Env.$totalTicks.bind(gameLoop.$totalTicks);
 		Env.$fps.bind(gameLoop.$fps);
 		Env.$use3DScenes.set(options.use3DScenes);
