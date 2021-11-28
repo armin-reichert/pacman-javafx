@@ -58,7 +58,7 @@ public class ScoreNotReally3D extends Group {
 		txtHiscore.setFont(font);
 
 		GridPane grid = new GridPane();
-		grid.setHgap(4 * TS);
+		grid.setHgap(3 * TS);
 		grid.setTranslateY(-2 * TS);
 		grid.setTranslateZ(-2 * TS);
 		grid.add(txtScoreTitle, 0, 0);
@@ -70,8 +70,8 @@ public class ScoreNotReally3D extends Group {
 	}
 
 	public void update(PacManGameModel game, boolean showHighscoreOnly) {
-		txtScore.setText(String.format("%07d L%d", game.score(), game.level().number));
-		txtHiscore.setText(String.format("%07d L%d", game.hiscorePoints(), game.hiscoreLevel()));
+		txtScore.setText(String.format("%07d L%03d", game.score(), game.level().number));
+		txtHiscore.setText(String.format("%07d L%03d", game.hiscorePoints(), game.hiscoreLevel()));
 		if (showHighscoreOnly) {
 			txtScore.setVisible(false);
 		} else {
