@@ -45,14 +45,14 @@ public class Cam_FollowingPlayer implements PlaySceneCam {
 		cam.setNearClip(0.1);
 		cam.setFarClip(10000.0);
 		cam.setRotationAxis(Rotate.X_AXIS);
-		cam.setRotate(30);
-		cam.setTranslateZ(-250);
+		cam.setRotate(45);
+		cam.setTranslateZ(-200);
 	}
 
 	@Override
 	public void follow(Player3D player3D) {
 		cam.setTranslateX(Math.min(10, approach(cam.getTranslateX(), player3D.getTranslateX())));
-		cam.setTranslateY(Math.max(50, approach(cam.getTranslateY(), player3D.getTranslateY())));
+		cam.setTranslateY(Math.max(50, approach(cam.getTranslateY(), player3D.getTranslateY() + 50)));
 	}
 
 	@Override
