@@ -19,7 +19,7 @@ import javafx.util.Duration;
 public class GameLoop {
 
 	private static final int FRAME_RATE = 60;
-	private static final Duration FRAME_DURATION_MILLIS = Duration.millis(1000d / FRAME_RATE);
+	private static final Duration FRAME_DURATION = Duration.millis(1000d / FRAME_RATE);
 
 	public final IntegerProperty $fps = new SimpleIntegerProperty();
 	public final IntegerProperty $totalTicks = new SimpleIntegerProperty();
@@ -37,7 +37,7 @@ public class GameLoop {
 	public void start() {
 		Timeline tl = new Timeline(FRAME_RATE);
 		tl.setCycleCount(Animation.INDEFINITE);
-		tl.getKeyFrames().add(new KeyFrame(FRAME_DURATION_MILLIS, e -> {
+		tl.getKeyFrames().add(new KeyFrame(FRAME_DURATION, e -> {
 			long now = System.nanoTime();
 			if (!Env.$paused.get() && $totalTicks.get() % Env.$slowDown.get() == 0) {
 				runUpdate(now);
