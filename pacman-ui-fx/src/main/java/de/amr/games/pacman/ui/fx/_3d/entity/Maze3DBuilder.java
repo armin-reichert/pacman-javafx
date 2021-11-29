@@ -36,7 +36,6 @@ import de.amr.games.pacman.ui.fx.Env;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Node;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 
@@ -49,12 +48,14 @@ public class Maze3DBuilder {
 
 	public DoubleProperty $wallHeight = new SimpleDoubleProperty(2.0);
 
+	private final Maze3D maze3D;
 	private FloorPlan floorPlan;
 	private List<Node> parts;
 	private PhongMaterial wallBaseMaterial;
 	private PhongMaterial wallTopMaterial;
 
-	public Maze3DBuilder() {
+	public Maze3DBuilder(Maze3D maze3D) {
+		this.maze3D = maze3D;
 		wallBaseMaterial = new PhongMaterial();
 		wallTopMaterial = new PhongMaterial();
 	}
@@ -108,14 +109,16 @@ public class Maze3DBuilder {
 	}
 
 	private void createDoors(PacManGameWorld world, double blockSize) {
-		PhongMaterial doorMaterial = new PhongMaterial(Color.PINK);
+		PhongMaterial doorMaterial = new PhongMaterial(Maze3D.DOOR_COLOR_CLOSED);
 		world.ghostHouse().doorTiles().forEach(tile -> {
 			Box door = new Box(TS - 1, 1, 1);
 			door.setMaterial(doorMaterial);
-			door.drawModeProperty().bind(Env.$drawMode3D);
 			door.setTranslateX(tile.x * TS + TS / 2);
 			door.setTranslateY(tile.y * TS + TS / 2);
 			door.setTranslateZ(-4);
+			door.setUserData(tile);
+			door.drawModeProperty().bind(Env.$drawMode3D);
+			maze3D.addDoor(door);
 			parts.add(door);
 		});
 	}

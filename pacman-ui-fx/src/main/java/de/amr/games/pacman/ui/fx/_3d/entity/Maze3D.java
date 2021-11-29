@@ -25,6 +25,9 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.model.world.PacManGameWorld;
@@ -47,6 +50,9 @@ import javafx.scene.transform.Translate;
  */
 public class Maze3D extends Group {
 
+	public static final Color DOOR_COLOR_CLOSED = Color.PINK;
+	public static final Color DOOR_COLOR_OPEN = Color.TRANSPARENT;
+
 	public final DoubleProperty $wallHeight = new SimpleDoubleProperty(2.0);
 
 	private final Box floor;
@@ -55,6 +61,7 @@ public class Maze3D extends Group {
 	private final PhongMaterial wallTopMaterial = new PhongMaterial();
 	private final Group wallGroup = new Group();
 	private final Group foodGroup = new Group();
+	private final List<Box> doors = new ArrayList<>();
 
 	public Maze3D(double mazeSizeX, double mazeSizeY) {
 		floor = new Box(mazeSizeX - 1, mazeSizeY - 1, floorSizeZ);
@@ -72,14 +79,22 @@ public class Maze3D extends Group {
 		return foodGroup.getChildren().stream();
 	}
 
+	public void addDoor(Box door) {
+		doors.add(door);
+	}
+
+	public List<Box> getDoors() {
+		return Collections.unmodifiableList(doors);
+	}
+
 	public void buildWalls(PacManGameWorld world, int resolution, double wallHeight) {
-		var wallBuilder = new Maze3DBuilder();
-		wallBuilder.$wallHeight.bind($wallHeight);
-		wallBuilder.setBaseMaterial(wallBaseMaterial);
-		wallBuilder.setTopMaterial(wallTopMaterial);
+		var mazeBuilder = new Maze3DBuilder(this);
+		mazeBuilder.$wallHeight.bind($wallHeight);
+		mazeBuilder.setBaseMaterial(wallBaseMaterial);
+		mazeBuilder.setTopMaterial(wallTopMaterial);
 		wallGroup.setTranslateX(-TS / 2);
 		wallGroup.setTranslateY(-TS / 2);
-		wallGroup.getChildren().setAll(wallBuilder.build(world, resolution));
+		wallGroup.getChildren().setAll(mazeBuilder.build(world, resolution));
 	}
 
 	public void buildWallsAndAddFood(PacManGameWorld world, int resolution, double wallHeight, Color foodColor) {

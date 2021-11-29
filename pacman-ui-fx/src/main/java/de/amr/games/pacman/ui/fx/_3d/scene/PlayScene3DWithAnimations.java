@@ -44,6 +44,7 @@ import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
+import de.amr.games.pacman.ui.fx._3d.entity.Maze3D;
 import de.amr.games.pacman.ui.fx._3d.entity.PacManModel3D;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.Animation;
@@ -55,6 +56,9 @@ import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.Node;
 import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
 import javafx.util.Duration;
 
 /**
@@ -85,6 +89,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 	@Override
 	public void update() {
 		super.update();
+		playDoorAnimation();
 		sounds.setMuted(gameController.isAttractMode());
 		if (gameController.state == PacManGameState.HUNTING) {
 			// when switching between 2D and 3D, food visibility and animations might not be
@@ -124,7 +129,8 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 	@Override
 	public void onPlayerGainsPower(PacManGameEvent e) {
 		sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
-		ghosts3D.stream().filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
+		ghosts3D.stream()
+				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
 				.forEach(Ghost3D::setBlueSkinColor);
 	}
 
@@ -370,5 +376,21 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 		PauseTransition phase2 = new PauseTransition(Duration.seconds(3));
 		phase2.setOnFinished(e -> gameController.stateTimer().expire());
 		new SequentialTransition(phase1, phase2).play();
+	}
+
+	private void playDoorAnimation() {
+		boolean ghostPassing = false;
+		for (Box door : maze3D.getDoors()) {
+			V2i doorTile = (V2i) door.getUserData();
+			ghostPassing = game().ghosts().anyMatch(ghost -> ghost.tile().equals(doorTile));
+			if (ghostPassing) {
+				break;
+			}
+		}
+		Color doorColor = ghostPassing ? Maze3D.DOOR_COLOR_OPEN : Maze3D.DOOR_COLOR_CLOSED;
+		PhongMaterial material = new PhongMaterial(doorColor);
+		for (Box door : maze3D.getDoors()) {
+			door.setMaterial(material);
+		}
 	}
 }
