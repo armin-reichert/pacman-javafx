@@ -24,6 +24,7 @@ public class GameLoop {
 	public final IntegerProperty $fps = new SimpleIntegerProperty();
 	public final IntegerProperty $totalTicks = new SimpleIntegerProperty();
 
+	private Timeline tl;
 	private Runnable update;
 	private Runnable render;
 	private long fpsCountStartTime;
@@ -32,27 +33,33 @@ public class GameLoop {
 	public GameLoop(Runnable update, Runnable render) {
 		this.update = update;
 		this.render = render;
+		tl = new Timeline(FRAME_RATE);
+		tl.setCycleCount(Animation.INDEFINITE);
+		tl.getKeyFrames().add(new KeyFrame(FRAME_DURATION, e -> runSingleFrame()));
 	}
 
 	public void start() {
-		Timeline tl = new Timeline(FRAME_RATE);
-		tl.setCycleCount(Animation.INDEFINITE);
-		tl.getKeyFrames().add(new KeyFrame(FRAME_DURATION, e -> {
-			long now = System.nanoTime();
-			if (!Env.$paused.get() && $totalTicks.get() % Env.$slowDown.get() == 0) {
-				runUpdate(now);
-				// Note: we must also render at 60Hz because some animations depend on the rendering speed
-				render.run();
-				$totalTicks.set($totalTicks.get() + 1);
-			}
-			++frames;
-			if (now - fpsCountStartTime > 1e9) {
-				$fps.set(frames);
-				frames = 0;
-				fpsCountStartTime = now;
-			}
-		}));
 		tl.play();
+	}
+
+	public void stop() {
+		tl.stop();
+	}
+
+	private void runSingleFrame() {
+		long now = System.nanoTime();
+		if (!Env.$paused.get() && $totalTicks.get() % Env.$slowDown.get() == 0) {
+			runUpdate(now);
+			// Note: we must also render at 60Hz because some animations depend on the rendering speed
+			render.run();
+			$totalTicks.set($totalTicks.get() + 1);
+		}
+		++frames;
+		if (now - fpsCountStartTime > 1e9) {
+			$fps.set(frames);
+			frames = 0;
+			fpsCountStartTime = now;
+		}
 	}
 
 	private void runUpdate(long updateTime) {
