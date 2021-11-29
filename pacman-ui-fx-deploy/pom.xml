@@ -8,18 +8,8 @@
 	<packaging>jlink</packaging>
 	<dependencies>
 		<dependency>
-			<groupId>de.amr.games.pacman</groupId>
-			<artifactId>pacman-core</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
 			<groupId>de.amr.games.pacman.ui.fx</groupId>
 			<artifactId>pacman-ui-fx</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.interactivemesh</groupId>
-			<artifactId>jimObjModelImporterJFX</artifactId>
 			<version>1.0</version>
 		</dependency>
 	</dependencies>
