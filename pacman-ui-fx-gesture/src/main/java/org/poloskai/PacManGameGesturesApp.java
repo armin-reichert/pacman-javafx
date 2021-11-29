@@ -7,13 +7,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.amr.games.pacman.controller.PacManGameController;
+import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class PacManGameGesturesApp extends Application {
 
@@ -33,7 +34,7 @@ public class PacManGameGesturesApp extends Application {
 				options.use3DScenes);
 		PacManGameController gameController = new PacManGameController();
 		gameController.selectGameVariant(options.gameVariant);
-		PacManGameUI ui = new PacManGameUI_JavaFX(stage, gameController, options.windowHeight);
+		PacManGameUI_JavaFX ui = new PacManGameUI_JavaFX(stage, gameController, options.windowHeight);
 		gameController.setUI(ui);
 
 		// use gesture consumer to control player
@@ -47,7 +48,11 @@ public class PacManGameGesturesApp extends Application {
 		// start producing gestures
 		gp.start();
 
-		// TODO: stop producing gestures when game is exited / window closed
+		// stop producing gestures when game is exited / window closed
+		ui.getStage().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> {
+			gp.stop();
+			Logging.log("Gesture producer stopped");
+		});
 
 		gameLoop.start();
 	}
