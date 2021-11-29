@@ -51,7 +51,7 @@ public class Cam_FollowingPlayer implements PlaySceneCam {
 
 	@Override
 	public void follow(Player3D player3D) {
-		cam.setTranslateX(Math.min(10, approach(cam.getTranslateX(), player3D.getTranslateX())));
+		cam.setTranslateX(Math.min(-5, approach(cam.getTranslateX(), player3D.getTranslateX())));
 		cam.setTranslateY(Math.max(50, approach(cam.getTranslateY(), player3D.getTranslateY() + 50)));
 	}
 
