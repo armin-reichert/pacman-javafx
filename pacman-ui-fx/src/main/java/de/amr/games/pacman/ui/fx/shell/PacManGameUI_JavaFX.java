@@ -253,7 +253,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		case L:
 			gameController.game().changeLivesBy(3);
-			showFlashMessage(1, String.format("Player lives increased"));
+			showFlashMessage(2, String.format("3 more lives"));
 			break;
 
 		case N:
