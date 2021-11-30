@@ -18,13 +18,11 @@ import javafx.util.Duration;
  */
 public class GameLoop {
 
-	private static final int FRAME_RATE = 60;
-	private static final Duration FRAME_DURATION = Duration.millis(1000d / FRAME_RATE);
-
 	public final IntegerProperty $fps = new SimpleIntegerProperty();
 	public final IntegerProperty $totalTicks = new SimpleIntegerProperty();
 
 	private Timeline tl;
+	private int targetFrameRate = 60;
 	private Runnable update;
 	private Runnable render;
 	private long fpsCountStartTime;
@@ -33,9 +31,26 @@ public class GameLoop {
 	public GameLoop(Runnable update, Runnable render) {
 		this.update = update;
 		this.render = render;
-		tl = new Timeline(FRAME_RATE);
+		setTargetFrameRate(60);
+	}
+
+	public int getTargetFrameRate() {
+		return targetFrameRate;
+	}
+
+	public void setTargetFrameRate(int fps) {
+		targetFrameRate = fps;
+		boolean restart = false;
+		if (tl != null) {
+			tl.stop();
+			restart = true;
+		}
+		tl = new Timeline(targetFrameRate);
 		tl.setCycleCount(Animation.INDEFINITE);
-		tl.getKeyFrames().add(new KeyFrame(FRAME_DURATION, e -> runSingleFrame()));
+		tl.getKeyFrames().add(new KeyFrame(Duration.millis(1000d / targetFrameRate), e -> runSingleFrame()));
+		if (restart) {
+			tl.play();
+		}
 	}
 
 	public void start() {
