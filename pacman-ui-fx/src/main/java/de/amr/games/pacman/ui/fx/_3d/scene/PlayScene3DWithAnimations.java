@@ -129,8 +129,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 	@Override
 	public void onPlayerGainsPower(PacManGameEvent e) {
 		sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
-		ghosts3D.stream()
-				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
+		ghosts3D.stream().filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
 				.forEach(Ghost3D::setBlueSkinColor);
 	}
 
@@ -382,7 +381,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 		boolean ghostPassing = false;
 		for (Box door : maze3D.getDoors()) {
 			V2i doorTile = (V2i) door.getUserData();
-			ghostPassing = game().ghosts().anyMatch(ghost -> ghost.tile().equals(doorTile));
+			ghostPassing = game().ghosts().map(Ghost::tile).anyMatch(ghostTile -> ghostTile.equals(doorTile));
 			if (ghostPassing) {
 				break;
 			}
