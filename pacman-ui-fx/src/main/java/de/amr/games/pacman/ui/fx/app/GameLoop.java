@@ -63,7 +63,7 @@ public class GameLoop {
 
 	private void runSingleFrame() {
 		long now = System.nanoTime();
-		if (!Env.$paused.get() && $totalTicks.get() % Env.$slowDown.get() == 0) {
+		if (!Env.$paused.get()) {
 			runUpdate(now);
 			// Note: we must also render at 60Hz because some animations depend on the rendering speed
 			render.run();

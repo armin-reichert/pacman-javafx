@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
+import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.util.RandomEntrySelector;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -65,6 +66,9 @@ public class Env {
 		return new RandomEntrySelector<>(bundle.keySet().stream().sorted().map(bundle::getString).toArray(String[]::new));
 	}
 
+	// Global objects
+	public static GameLoop gameLoop;
+
 	// Global properties
 
 	public static final BooleanProperty $axesVisible = new SimpleBooleanProperty(false);
@@ -75,7 +79,6 @@ public class Env {
 	public static final IntegerProperty $mazeResolution = new SimpleIntegerProperty(8);
 	public static final DoubleProperty $mazeWallHeight = new SimpleDoubleProperty(3.5);
 	public static final IntegerProperty $totalTicks = new SimpleIntegerProperty();
-	public static final IntegerProperty $slowDown = new SimpleIntegerProperty(1);
 	public static final BooleanProperty $paused = new SimpleBooleanProperty(false);
 	public static final BooleanProperty $use3DScenes = new SimpleBooleanProperty(true);
 }

@@ -341,10 +341,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			break;
 
 		case S:
+			int currentTargetFrameRate = Env.gameLoop.getTargetFrameRate();
 			if (!e.isShiftDown()) {
-				Env.$slowDown.set(Math.max(1, Env.$slowDown.get() - 1));
+				Env.gameLoop.setTargetFrameRate(currentTargetFrameRate + 10);
 			} else {
-				Env.$slowDown.set(Math.min(10, Env.$slowDown.get() + 1));
+				Env.gameLoop.setTargetFrameRate(Math.max(10, currentTargetFrameRate - 10));
 			}
 			break;
 

@@ -64,7 +64,7 @@ public class HUD extends Text {
 		text.setLength(0);
 		line("Total Ticks", "%d", Env.$totalTicks.get());
 		line("Frame rate", "%d Hz", Env.$fps.get());
-		line("Speed (CTRL/SHIFT+S)", "%.0f%%", 100.0 / Env.$slowDown.get());
+		line("Target frame rate", "%d Hz", Env.gameLoop.getTargetFrameRate());
 		line("Paused (CTRL+P)", "%s", yes_no(Env.$paused.get()));
 		newline();
 		line("Game Variant", "%s", ui.getGameController().gameVariant());
