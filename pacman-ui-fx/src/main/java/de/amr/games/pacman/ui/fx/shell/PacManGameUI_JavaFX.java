@@ -67,7 +67,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private final PacManGameController gameController;
 	private final Stage stage;
 	private final Canvas canvas = new Canvas();
-	private final ManualPlayerControl playerControl;
+	private final ManualPlayerControl manualPlayerControl;
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final HUD hud = new HUD(this);
 	private final Group gameSceneRoot = new Group();
@@ -97,9 +97,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		setGameScene(gameScene);
 
 		// Handle keyboard input
-		playerControl = new ManualPlayerControl(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
-		stage.addEventHandler(KeyEvent.KEY_PRESSED, playerControl::onKeyPressed);
-		stage.addEventHandler(KeyEvent.KEY_RELEASED, playerControl::onKeyReleased);
+		manualPlayerControl = new ManualPlayerControl(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
+		stage.addEventHandler(KeyEvent.KEY_PRESSED, manualPlayerControl::onKeyPressed);
+		stage.addEventHandler(KeyEvent.KEY_RELEASED, manualPlayerControl::onKeyReleased);
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
 
 		stage.titleProperty().bind(Bindings.createStringBinding(() -> {
@@ -145,7 +145,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void steer(Pac player) {
-		playerControl.steer(player);
+		manualPlayerControl.steer(player);
 	}
 
 	private void stopAllSounds() {

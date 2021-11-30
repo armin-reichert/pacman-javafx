@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell;
 
+import de.amr.games.pacman.controller.PlayerControl;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Pac;
 import javafx.scene.input.KeyCode;
@@ -33,7 +34,7 @@ import javafx.scene.input.KeyEvent;
  * 
  * @author Armin Reichert
  */
-public class ManualPlayerControl {
+public class ManualPlayerControl implements PlayerControl {
 
 	private final KeyCode upCode, downCode, leftCode, rightCode;
 	private boolean up, down, left, right;
@@ -45,6 +46,7 @@ public class ManualPlayerControl {
 		this.rightCode = rightCode;
 	}
 
+	@Override
 	public void steer(Pac player) {
 		if (up) {
 			player.setWishDir(Direction.UP);
