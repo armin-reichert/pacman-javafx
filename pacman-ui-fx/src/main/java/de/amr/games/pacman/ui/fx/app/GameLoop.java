@@ -4,7 +4,6 @@ import static de.amr.games.pacman.lib.Logging.log;
 
 import de.amr.games.pacman.ui.fx.Env;
 import javafx.animation.Animation;
-import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.IntegerProperty;
@@ -12,7 +11,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.util.Duration;
 
 /**
- * Game loop that (in contrast to the {@link AnimationTimer} class) is always running at 60Hz.
+ * Game loop with configurable frame rate.
  * 
  * @author Armin Reichert
  */
