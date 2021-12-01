@@ -23,7 +23,7 @@ Extract this file and start the application by executing the file `run.cmd` insi
 
 In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases) you find exactly this zip file.
 
-### How to use
+## How to use
 
 On the intro screen, you can switch between the two game variants by pressing <kbd>v</kbd>. You can switch between window and fullscreen mode using the standard keys <kbd>F11</kbd> and <kbd>Esc</kbd>.
 
