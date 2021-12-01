@@ -10,11 +10,9 @@ In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases
 ```
 cd interactivemesh
 install
-cd ..
-cd pacman-ui-fx
+cd ..\pacman-ui-fx
 mvn clean install
-cd ..
-cd pacman-ui-fx-deploy
+cd ..\pacman-ui-fx-deploy
 mvn clean install
 cd target
 ```
