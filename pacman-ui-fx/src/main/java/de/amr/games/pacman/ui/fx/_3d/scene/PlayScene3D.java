@@ -61,15 +61,13 @@ import javafx.scene.transform.Rotate;
  */
 public class PlayScene3D implements GameScene {
 
-	static final int CAM_TOTAL = 0, CAM_FOLLOWING_PLAYER = 1, CAM_NEAR_PLAYER = 2;
-
-	private final SubScene subSceneFX;
-	private final PlaySceneCam[] cams;
-	private int selectedCamIndex;
+	protected static final int CAM_TOTAL = 0, CAM_FOLLOWING_PLAYER = 1, CAM_NEAR_PLAYER = 2;
 
 	protected PacManGameController gameController;
-
-	protected final PacManModel3D model3D;
+	protected SubScene subSceneFX;
+	protected PlaySceneCam[] cams;
+	protected int selectedCamIndex;
+	protected PacManModel3D model3D;
 	protected Maze3D maze3D;
 	protected Player3D player3D;
 	protected List<Ghost3D> ghosts3D;
