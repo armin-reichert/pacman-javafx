@@ -9,7 +9,7 @@ In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases
 ## How to build and run
 ```
 cd interactivemesh
-install
+.\install
 cd ..\pacman-ui-fx
 mvn clean install
 cd ..\pacman-ui-fx-deploy
