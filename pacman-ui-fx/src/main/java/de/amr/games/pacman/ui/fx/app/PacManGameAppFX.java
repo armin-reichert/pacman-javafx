@@ -32,7 +32,6 @@ import java.util.List;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import javafx.application.Application;
@@ -56,10 +55,13 @@ public class PacManGameAppFX extends Application {
 				options.use3DScenes);
 		PacManGameController gameController = new PacManGameController();
 		gameController.selectGameVariant(options.gameVariant);
-		PacManGameUI ui = new PacManGameUI_JavaFX(stage, gameController, options.windowHeight);
+		PacManGameUI_JavaFX ui = new PacManGameUI_JavaFX(stage, gameController, options.windowHeight);
 		gameController.setUI(ui);
 		gameController.setPlayerControl(ui);
-		Env.gameLoop = new GameLoop(gameController::updateState, ui::update);
+		Env.gameLoop = new GameLoop(() -> {
+			gameController.updateState();
+			ui.getCurrentGameScene().update();
+		}, ui::update);
 		Env.$totalTicks.bind(Env.gameLoop.$totalTicks);
 		Env.$fps.bind(Env.gameLoop.$fps);
 		Env.$use3DScenes.set(options.use3DScenes);

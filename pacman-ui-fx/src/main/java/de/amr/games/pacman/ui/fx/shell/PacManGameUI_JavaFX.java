@@ -113,7 +113,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void update() {
-		currentGameScene.update();
 		flashMessageView.update();
 		hud.update();
 	}
