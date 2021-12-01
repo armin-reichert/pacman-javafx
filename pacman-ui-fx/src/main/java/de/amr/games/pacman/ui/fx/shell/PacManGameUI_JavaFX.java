@@ -327,6 +327,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		case P:
 			Env.$paused.set(!Env.$paused.get());
+			if (Env.$paused.get()) {
+				showFlashMessage(3, "Game paused (Press CTRL+P to resume)");
+			} else {
+				showFlashMessage(2, "Game resumed");
+			}
 			break;
 
 		case R:
