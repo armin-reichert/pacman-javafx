@@ -40,9 +40,12 @@ public class PacManGameGesturesApp extends Application {
 		// use gesture consumer to control player
 		gameController.setPlayerControl(gc);
 
-		var gameLoop = new GameLoop(gameController::updateState, ui::update);
-		Env.$totalTicks.bind(gameLoop.$totalTicks);
-		Env.$fps.bind(gameLoop.$fps);
+		Env.gameLoop = new GameLoop(() -> {
+			gameController.updateState();
+			ui.getCurrentGameScene().update();
+		}, ui::update);
+		Env.$totalTicks.bind(Env.gameLoop.$totalTicks);
+		Env.$fps.bind(Env.gameLoop.$fps);
 		Env.$use3DScenes.set(options.use3DScenes);
 
 		// start producing gestures
@@ -54,7 +57,7 @@ public class PacManGameGesturesApp extends Application {
 			Logging.log("Gesture producer stopped");
 		});
 
-		gameLoop.start();
+		Env.gameLoop.start();
 	}
 
 	private static class Options {
