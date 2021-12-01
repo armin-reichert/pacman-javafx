@@ -6,6 +6,7 @@ Unfortunately, I have no animated 3D-model yet. The Pac-Man and ghost models use
 
 
 ## How to build
+
 ```
 cd interactivemesh
 .\install
@@ -14,6 +15,9 @@ mvn clean install
 cd ..\pacman-ui-fx-deploy
 mvn clean install
 ```
+
+or just run `build.bat`.
+
 
 ## How to run
 
