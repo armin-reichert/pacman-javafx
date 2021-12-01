@@ -17,7 +17,9 @@ mvn clean install
 
 ## How to run
 
-The `pacman-ui-fx-deploy\target` directory now contains a zip file `pacman-javafx-1.0-jlink.zip`. Extract this file to any directory run the application using the batch file `run.cmd` inside the `bin` folder.  
+The `pacman-ui-fx-deploy\target` directory now contains a zip file `pacman-javafx-1.0-jlink.zip`. 
+
+Extract this file and start the application by executing the file `run.cmd` inside the `bin` folder.  
 
 In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases) you find exactly this zip file.
 
