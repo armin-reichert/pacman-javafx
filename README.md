@@ -4,12 +4,13 @@ A JavaFX user interface for my UI-agnostic [Pac-Man / Ms. Pac-Man game](https://
 
 Unfortunately, I have no animated 3D-model yet. The Pac-Man and ghost models used in this implementation have been generously provided by Gianmarco Cavallaccio (https://www.artstation.com/gianmart). Cudos to you, Gianmarco! 
 
-
 ## How to build
+
+Open a command window, then
 
 ```
 cd interactivemesh
-.\install
+mvn install:install-file -Dfile=jars/jimObjModelImporterJFX.jar -DpomFile=pom.xml
 cd ..\pacman-ui-fx
 mvn clean install
 cd ..\pacman-ui-fx-deploy
@@ -17,7 +18,6 @@ mvn clean install
 ```
 
 or just run `build.bat`.
-
 
 ## How to run
 
