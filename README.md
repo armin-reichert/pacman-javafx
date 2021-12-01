@@ -5,7 +5,7 @@ A JavaFX user interface for my UI-agnostic [Pac-Man / Ms. Pac-Man game](https://
 Unfortunately, I have no animated 3D-model yet. The Pac-Man and ghost models used in this implementation have been generously provided by Gianmarco Cavallaccio (https://www.artstation.com/gianmart). Cudos to you, Gianmarco! 
 
 
-## How to build and run
+## How to build
 ```
 cd interactivemesh
 .\install
@@ -20,14 +20,6 @@ mvn clean install
 The `pacman-ui-fx-deploy\target` directory now contains a zip file `pacman-javafx-1.0-jlink.zip`. Extract this file to any directory run the application using the batch file `run.cmd` inside the `bin` folder.  
 
 In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases) you find exactly this zip file.
-
-## How it looks
-
-![Play Scene](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/playscene3D.png)
-
-YouTube:
-
-[![YouTube](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/thumbnail.jpg)](https://youtu.be/t529vDUtCT0)
 
 ### How to use
 
@@ -50,3 +42,11 @@ On the play screen, the following functionality is available:
   - <kbd>L</kbd> Add one player life
   - <kbd>N</kbd> Enter next game level
   - <kbd>X</kbd> Kill all ghosts outside of the ghosthouse 
+
+## How it looks
+
+![Play Scene](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/playscene3D.png)
+
+YouTube:
+
+[![YouTube](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/thumbnail.jpg)](https://youtu.be/t529vDUtCT0)
