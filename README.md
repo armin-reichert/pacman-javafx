@@ -6,13 +6,30 @@ Unfortunately, I have no animated 3D-model yet. The Pac-Man and ghost models use
 
 In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases), you find a zip file containing the complete Java/JavaFX runtime needed to run the game. To start the game, unzip the archive and execute the script `bin\run.cmd`.
 
+## How to build and run
+```
+cd interactivemesh
+install
+cd ..
+cd pacman-ui-fx
+mvn clean install
+cd ..
+cd pacman-ui-fx-deploy
+mvn clean install
+cd target
+```
+
+The `target` directory contains a zip file named `pacman-javafx-1.0-jlink.zip`. Extract this file to any directory you want and run the application using the batch file `bin\run.cmd`.  
+
+## How it looks
+
 ![Play Scene](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/playscene3D.png)
 
 YouTube:
 
 [![YouTube](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/thumbnail.jpg)](https://youtu.be/t529vDUtCT0)
 
-### Keys:
+### How to use
 
 On the intro screen, you can switch between the two game variants by pressing <kbd>v</kbd>. You can switch between window and fullscreen mode using the standard keys <kbd>F11</kbd> and <kbd>Esc</kbd>.
 
