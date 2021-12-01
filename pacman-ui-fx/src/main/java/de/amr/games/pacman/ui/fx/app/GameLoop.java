@@ -65,10 +65,10 @@ public class GameLoop {
 		long now = System.nanoTime();
 		if (!Env.$paused.get()) {
 			runUpdate(now);
-			// Note: we must also render at 60Hz because some animations depend on the rendering speed
-			render.run();
-			$totalTicks.set($totalTicks.get() + 1);
 		}
+		// Note: we must also render at 60Hz because some animations depend on the rendering speed
+		render.run();
+		$totalTicks.set($totalTicks.get() + 1);
 		++frames;
 		if (now - fpsCountStartTime > 1e9) {
 			$fps.set(frames);

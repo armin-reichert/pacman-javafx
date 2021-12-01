@@ -56,7 +56,6 @@ public class HUD extends Text {
 		visibleProperty().bind(Env.$isHUDVisible);
 		setFill(Color.WHITE);
 		setFont(Font.font("Monospace", 14));
-		Env.$totalTicks.addListener((totalTicks, oldTicks, newTicks) -> update());
 	}
 
 	public void update() {

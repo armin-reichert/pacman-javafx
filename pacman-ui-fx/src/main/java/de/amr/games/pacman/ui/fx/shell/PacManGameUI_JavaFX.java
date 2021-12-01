@@ -64,12 +64,12 @@ import javafx.stage.Stage;
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
 
+	private final HUD hud = new HUD(this);
 	private final PacManGameController gameController;
 	private final Stage stage;
 	private final Canvas canvas = new Canvas();
 	private final ManualPlayerControl manualPlayerControl;
 	private final FlashMessageView flashMessageView = new FlashMessageView();
-	private final HUD hud = new HUD(this);
 	private final Group gameSceneRoot = new Group();
 	private GameScene currentGameScene;
 
@@ -115,6 +115,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	public void update() {
 		currentGameScene.update();
 		flashMessageView.update();
+		hud.update();
 	}
 
 	public void reset() {
