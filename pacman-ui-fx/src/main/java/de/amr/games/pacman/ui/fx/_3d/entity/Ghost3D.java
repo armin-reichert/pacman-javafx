@@ -29,6 +29,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import javafx.animation.Animation.Status;
 import javafx.animation.RotateTransition;
 import javafx.animation.Transition;
 import javafx.geometry.Rectangle2D;
@@ -67,7 +68,7 @@ public class Ghost3D extends Group {
 
 	private static Duration TURNING_DURATION = Duration.seconds(0.25);
 
-	private class FlashingAnimation extends Transition {
+	private static class FlashingAnimation extends Transition {
 
 		private PhongMaterial material = new PhongMaterial();
 
@@ -81,24 +82,10 @@ public class Ghost3D extends Group {
 		protected void interpolate(double frac) {
 			material.setDiffuseColor(Color.rgb((int) (frac * 120), (int) (frac * 180), 255));
 		}
-
-		@Override
-		public void play() {
-			body.setMaterial(material);
-			super.play();
-		}
-
-		@Override
-		public void stop() {
-			super.stop();
-			body.setMaterial(skinMaterial);
-			setNormalSkinColor();
-		}
 	};
 
 	public final Ghost ghost;
-
-	private final FlashingAnimation flashingAnimation = new FlashingAnimation();
+	private final FlashingAnimation flashing = new FlashingAnimation();
 	private final Color normalColor;
 	private final Rendering2D rendering2D;
 	private final Group ghostShape;
@@ -138,9 +125,23 @@ public class Ghost3D extends Group {
 		bountyShape = new Box(8, 8, 8);
 		bountyShape.setMaterial(new PhongMaterial());
 
-		setNormalSkinColor();
 		getChildren().setAll(ghostShape);
+		setNormalSkinColor();
 		setTranslateZ(-4);
+	}
+
+	public void playFlashingAnimation() {
+		if (flashing.getStatus() == Status.RUNNING) {
+			flashing.stop();
+		}
+		body.setMaterial(flashing.material);
+		flashing.playFromStart();
+	}
+
+	public void stopFlashingAnimation() {
+		flashing.stop();
+		body.setMaterial(skinMaterial);
+		setNormalSkinColor();
 	}
 
 	public void update() {
@@ -173,7 +174,7 @@ public class Ghost3D extends Group {
 	}
 
 	public void setBlueSkinColor() {
-		flashingAnimation.stop(); // iny case it was playing
+		flashing.stop(); // iny case it was playing
 		setSkinColor(Color.CORNFLOWERBLUE);
 	}
 
@@ -196,13 +197,5 @@ public class Ghost3D extends Group {
 			eyesShapeRot.play();
 			targetDir = ghost.dir();
 		}
-	}
-
-	public void playFlashingAnimation() {
-		flashingAnimation.playFromStart();
-	}
-
-	public void stopFlashingAnimation() {
-		flashingAnimation.stop();
 	}
 }
