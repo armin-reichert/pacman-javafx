@@ -23,24 +23,24 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
+import static de.amr.games.pacman.controller.pacman.PacMan_IntroScene_Controller.TOP_Y;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
-import static de.amr.games.pacman.ui.pacman.PacMan_IntroScene_Controller.TOP_Y;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import de.amr.games.pacman.controller.pacman.PacMan_IntroScene_Controller;
+import de.amr.games.pacman.controller.pacman.PacMan_IntroScene_Controller.GhostPortrait;
+import de.amr.games.pacman.controller.pacman.PacMan_IntroScene_Controller.Phase;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.scene.Scenes;
-import de.amr.games.pacman.ui.pacman.PacMan_IntroScene_Controller;
-import de.amr.games.pacman.ui.pacman.PacMan_IntroScene_Controller.GhostPortrait;
-import de.amr.games.pacman.ui.pacman.PacMan_IntroScene_Controller.Phase;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 

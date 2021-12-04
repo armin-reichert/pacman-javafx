@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import de.amr.games.pacman.controller.mspacman.MsPacMan_IntroScene_Controller;
+import de.amr.games.pacman.controller.mspacman.MsPacMan_IntroScene_Controller.Phase;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.Ghost;
@@ -36,8 +38,6 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.scene.Scenes;
-import de.amr.games.pacman.ui.mspacman.MsPacMan_IntroScene_Controller;
-import de.amr.games.pacman.ui.mspacman.MsPacMan_IntroScene_Controller.Phase;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 

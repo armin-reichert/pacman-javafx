@@ -24,6 +24,8 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
 import de.amr.games.pacman.controller.PacManGameController;
+import de.amr.games.pacman.controller.pacman.PacMan_IntermissionScene3_Controller;
+import de.amr.games.pacman.controller.pacman.PacMan_IntermissionScene3_Controller.Phase;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.PacManGameSound;
@@ -32,8 +34,6 @@ import de.amr.games.pacman.ui.fx._2d.entity.pacman.BlinkyNaked2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.BlinkyPatched2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.scene.Scenes;
-import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene3_Controller;
-import de.amr.games.pacman.ui.pacman.PacMan_IntermissionScene3_Controller.Phase;
 
 /**
  * Third intermission scene: Blinky in shred dress chases Pac-Man, comes back
