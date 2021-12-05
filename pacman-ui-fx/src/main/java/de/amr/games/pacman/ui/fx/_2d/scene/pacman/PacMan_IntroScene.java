@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
-import static de.amr.games.pacman.controller.pacman.PacMan_IntroScene_Controller.TOP_Y;
+import static de.amr.games.pacman.controller.pacman.IntroController.TOP_Y;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
@@ -32,9 +32,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.controller.pacman.PacMan_IntroScene_Controller;
-import de.amr.games.pacman.controller.pacman.PacMan_IntroScene_Controller.GhostPortrait;
-import de.amr.games.pacman.controller.pacman.PacMan_IntroScene_Controller.Phase;
+import de.amr.games.pacman.controller.pacman.IntroController;
+import de.amr.games.pacman.controller.pacman.IntroController.GhostPortrait;
+import de.amr.games.pacman.controller.pacman.IntroController.Phase;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
@@ -54,7 +54,7 @@ import javafx.scene.text.Font;
  */
 public class PacMan_IntroScene extends AbstractGameScene2D {
 
-	private PacMan_IntroScene_Controller sceneController;
+	private IntroController sceneController;
 
 	private GameScore2D score2D;
 	private GameScore2D hiscore2D;
@@ -69,7 +69,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	@Override
 	public void init() {
 		super.init();
-		sceneController = new PacMan_IntroScene_Controller(gameController);
+		sceneController = new IntroController(gameController);
 		sceneController.init();
 
 		score2D = new GameScore2D(rendering);

@@ -24,7 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.controller.pacman.PacMan_IntermissionScene2_Controller;
+import de.amr.games.pacman.controller.pacman.Intermission2Controller;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.lib.V2d;
@@ -49,7 +49,7 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 	private static final V2i LEVEL_COUNTER_POS = new V2i(25, 34);
 
-	class SceneController extends PacMan_IntermissionScene2_Controller {
+	class SceneController extends Intermission2Controller {
 
 		public SceneController(PacManGameController gameController) {
 			super(gameController);

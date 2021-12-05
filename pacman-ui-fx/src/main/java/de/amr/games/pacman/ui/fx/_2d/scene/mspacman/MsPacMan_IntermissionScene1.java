@@ -24,7 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.controller.mspacman.MsPacMan_IntermissionScene1_Controller;
+import de.amr.games.pacman.controller.mspacman.Intermission1Controller;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.PacManGameSound;
@@ -50,7 +50,7 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 
 	private static final V2i LEVEL_COUNTER_POS = new V2i(25, 34);
 
-	private class SceneController extends MsPacMan_IntermissionScene1_Controller {
+	private class SceneController extends Intermission1Controller {
 
 		public SceneController(PacManGameController gameController) {
 			super(gameController);
