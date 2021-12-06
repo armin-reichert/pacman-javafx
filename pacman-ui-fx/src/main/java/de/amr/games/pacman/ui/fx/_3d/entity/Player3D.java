@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Pac;
+import javafx.animation.Animation.Status;
 import javafx.animation.RotateTransition;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
@@ -69,25 +70,37 @@ public class Player3D extends Group {
 		targetDir = player.dir();
 		rotateTransition = new RotateTransition(Duration.seconds(0.25), this);
 		rotateTransition.setAxis(Rotate.Z_AXIS);
-		int[] rotationInterval = rotationInterval(player.dir(), player.dir());
 		setRotationAxis(Rotate.Z_AXIS);
-		setRotate(rotationInterval[0]);
+		setRotate(rotationAngle(player.dir()));
 		light = new PointLight(Color.WHITE);
 		light.setTranslateZ(-4);
 		getChildren().addAll(model3D.createPacMan(), light);
 		setTranslateZ(-3);
 	}
 
+	public int rotationAngle(Direction dir) {
+		return ROTATION_INTERVALS[index(dir)][index(dir)][0];
+	}
+
+	public void playRotateAnimation(Direction from, Direction to) {
+		if (rotateTransition.getStatus() == Status.RUNNING) {
+			rotateTransition.stop();
+		}
+		int[] rotationInterval = rotationInterval(from, to);
+		rotateTransition.setFromAngle(rotationInterval[1]);
+		rotateTransition.setToAngle(rotationInterval[0]);
+		rotateTransition.play();
+	}
+
 	public void update() {
 		setVisible(player.isVisible());
 		setTranslateX(player.position().x);
 		setTranslateY(player.position().y);
+		if (player.dead) {
+			return;
+		}
 		if (targetDir != player.dir()) {
-			int[] rotationInterval = rotationInterval(targetDir, player.dir());
-			rotateTransition.stop();
-			rotateTransition.setFromAngle(rotationInterval[0]);
-			rotateTransition.setToAngle(rotationInterval[1]);
-			rotateTransition.play();
+			playRotateAnimation(player.dir(), targetDir);
 			targetDir = player.dir();
 		}
 	}
