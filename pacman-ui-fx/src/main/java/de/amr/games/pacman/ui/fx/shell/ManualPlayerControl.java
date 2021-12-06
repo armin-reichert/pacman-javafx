@@ -31,7 +31,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Window;
 
 /**
- * Controls player movement using cursor keys.
+ * Controls player movement using keys.
  * 
  * @author Armin Reichert
  */
