@@ -28,6 +28,7 @@ import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
+import de.amr.games.pacman.controller.PlayerControl;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.model.common.Pac;
@@ -64,18 +65,27 @@ import javafx.stage.Stage;
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
 
-	private final HUD hud = new HUD(this);
 	private final PacManGameController gameController;
+	private final PlayerControl playerControl;
+
 	private final Stage stage;
 	private final Canvas canvas = new Canvas();
-	private final ManualPlayerControl manualPlayerControl;
 	private final FlashMessageView flashMessageView = new FlashMessageView();
+	private final HUD hud = new HUD(this);
 	private final Group gameSceneRoot = new Group();
 	private GameScene currentGameScene;
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController gameController, double height) {
 		this.stage = stage;
 		this.gameController = gameController;
+		this.playerControl = new ManualPlayerControl(stage, KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
+
+		stage.titleProperty().bind(Bindings.createStringBinding(() -> {
+			String gameName = gameController.gameVariant() == PACMAN ? "Pac-Man" : "Ms. Pac-Man";
+			return String.format("%s (%d frames/sec, JavaFX)", gameName, Env.$fps.get());
+		}, Env.$fps));
+		stage.getIcons().add(new Image(getClass().getResourceAsStream(Env.APP_ICON_PATH)));
+		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
 
 		// Determine the initial game scene
 		GameScene gameScene = getSceneForCurrentGameState(Env.$use3DScenes.get());
@@ -93,20 +103,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		StackPane.setAlignment(hud, Pos.TOP_LEFT);
 		stage.setScene(new Scene(mainSceneRoot, aspectRatio * height, height));
 
-		// Must be done *after* main scene has been created:
+		// Note: Must be done *after* main scene has been created:
 		setGameScene(gameScene);
 
-		// Handle keyboard input
-		manualPlayerControl = new ManualPlayerControl(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
-		stage.addEventHandler(KeyEvent.KEY_PRESSED, manualPlayerControl::onKeyPressed);
-		stage.addEventHandler(KeyEvent.KEY_RELEASED, manualPlayerControl::onKeyReleased);
-		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
-
-		stage.titleProperty().bind(Bindings.createStringBinding(() -> {
-			String gameName = gameController.gameVariant() == PACMAN ? "Pac-Man" : "Ms. Pac-Man";
-			return String.format("%s (%d frames/sec, JavaFX)", gameName, Env.$fps.get());
-		}, Env.$fps));
-		stage.getIcons().add(new Image(getClass().getResourceAsStream(Env.APP_ICON_PATH)));
 		stage.centerOnScreen();
 		stage.show();
 	}
@@ -145,7 +144,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void steer(Pac player) {
-		manualPlayerControl.steer(player);
+		playerControl.steer(player);
 	}
 
 	private void stopAllSounds() {

@@ -28,6 +28,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Pac;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.Window;
 
 /**
  * Controls player movement using cursor keys.
@@ -39,11 +40,13 @@ public class ManualPlayerControl implements PlayerControl {
 	private final KeyCode upCode, downCode, leftCode, rightCode;
 	private boolean up, down, left, right;
 
-	public ManualPlayerControl(KeyCode upCode, KeyCode downCode, KeyCode leftCode, KeyCode rightCode) {
+	public ManualPlayerControl(Window window, KeyCode upCode, KeyCode downCode, KeyCode leftCode, KeyCode rightCode) {
 		this.upCode = upCode;
 		this.downCode = downCode;
 		this.leftCode = leftCode;
 		this.rightCode = rightCode;
+		window.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
+		window.addEventHandler(KeyEvent.KEY_RELEASED, this::onKeyReleased);
 	}
 
 	@Override
@@ -59,7 +62,7 @@ public class ManualPlayerControl implements PlayerControl {
 		}
 	}
 
-	public void onKeyPressed(KeyEvent e) {
+	private void onKeyPressed(KeyEvent e) {
 		if (e.getCode() == upCode) {
 			up = true;
 		} else if (e.getCode() == downCode) {
@@ -71,7 +74,7 @@ public class ManualPlayerControl implements PlayerControl {
 		}
 	}
 
-	public void onKeyReleased(KeyEvent e) {
+	private void onKeyReleased(KeyEvent e) {
 		if (e.getCode() == upCode) {
 			up = false;
 		} else if (e.getCode() == downCode) {
