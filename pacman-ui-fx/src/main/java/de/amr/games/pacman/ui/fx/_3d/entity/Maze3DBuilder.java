@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
 import java.util.ArrayList;
@@ -111,11 +112,11 @@ public class Maze3DBuilder {
 	private void createDoors(PacManGameWorld world, double blockSize) {
 		PhongMaterial doorMaterial = new PhongMaterial(Maze3D.DOOR_COLOR_CLOSED);
 		world.ghostHouse().doorTiles().forEach(tile -> {
-			Box door = new Box(TS - 1, 1, 1);
+			Box door = new Box(TS - 1, 1, HTS);
 			door.setMaterial(doorMaterial);
-			door.setTranslateX(tile.x * TS + TS / 2);
-			door.setTranslateY(tile.y * TS + TS / 2);
-			door.setTranslateZ(-4);
+			door.setTranslateX(tile.x * TS + HTS);
+			door.setTranslateY(tile.y * TS + HTS);
+			door.setTranslateZ(-HTS / 2);
 			door.setUserData(tile);
 			door.drawModeProperty().bind(Env.$drawMode3D);
 			maze3D.addDoor(door);
