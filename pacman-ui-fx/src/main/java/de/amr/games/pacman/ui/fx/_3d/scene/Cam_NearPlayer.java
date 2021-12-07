@@ -45,8 +45,8 @@ public class Cam_NearPlayer implements PlaySceneCam {
 		cam.setNearClip(0.1);
 		cam.setFarClip(10000.0);
 		cam.setRotationAxis(Rotate.X_AXIS);
-		cam.setRotate(60);
-		cam.setTranslateZ(-60);
+		cam.setRotate(70);
+		cam.setTranslateZ(-40);
 	}
 
 	@Override
