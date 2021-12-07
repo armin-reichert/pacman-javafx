@@ -133,8 +133,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 	@Override
 	public void onPlayerGainsPower(PacManGameEvent e) {
 		sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
-		ghosts3D.stream()
-				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
+		ghosts3D.stream().filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
 				.forEach(Ghost3D::setBlueSkinColor);
 	}
 
@@ -304,45 +303,34 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 		energizerAnimations.forEach(Animation::stop);
 	}
 
-	//TODO make this work
-	private void playAnimationPlayerDying_new() {
-		final Pac player = player3D.player;
-		final List<Ghost> killers = game().ghosts().filter(ghost -> ghost.meets(player)).collect(Collectors.toList());
-
-		PauseTransition hideCollidingGhost = idle(0);
-		hideCollidingGhost.setOnFinished(e -> {
-			killers.forEach(killer -> killer.setVisible(false));
-			game().ghosts().filter(ghost -> ghost.meets(player)).forEach(ghost -> ghost.setVisible(false));
-		});
-
-		PauseTransition playSound = idle(0);
-		playSound.setOnFinished(e -> sounds.play(PacManGameSound.PACMAN_DEATH));
-
-		RotateTransition fallBackwards = new RotateTransition(Duration.seconds(3), player3D);
-		Point3D axis = player.dir() == Direction.LEFT || player.dir() == Direction.RIGHT ? Rotate.Y_AXIS
-				: Rotate.X_AXIS;
-		fallBackwards.setAxis(axis);
-		fallBackwards.setFromAngle(0);
-		fallBackwards.setToAngle(-270);
-
-		SequentialTransition animation = new SequentialTransition(//
-				idle(1), //
-				hideCollidingGhost, //
-				idle(0.5), playSound, fallBackwards, //
-				idle(1));
-		animation.setOnFinished(e -> {
-			gameController.stateTimer().expire();
-
-		});
-		animation.play();
-	}
-
-	private PauseTransition idle(double seconds) {
+	private PauseTransition pause(double seconds) {
 		return new PauseTransition(Duration.seconds(seconds));
 	}
 
-	private void playAnimationPlayerDying() {
+	// TODO make this work
+	private void playAnimationPlayerDying_() {
+		final Pac player = player3D.player;
 
+		PauseTransition hideGhosts = pause(0);
+		hideGhosts.setOnFinished(e -> {
+			game().ghosts().forEach(ghost -> ghost.setVisible(false));
+		});
+
+		PauseTransition playSound = pause(0.5);
+		playSound.setOnFinished(e -> sounds.play(PacManGameSound.PACMAN_DEATH));
+
+		RotateTransition fallBackwards = new RotateTransition(Duration.seconds(3), player3D);
+		Point3D axis = player.dir() == Direction.LEFT || player.dir() == Direction.RIGHT ? Rotate.Y_AXIS : Rotate.X_AXIS;
+		fallBackwards.setAxis(axis);
+		fallBackwards.setFromAngle(player3D.getRotate());
+		fallBackwards.setToAngle(player3D.getRotate() - 270);
+
+		SequentialTransition animation = new SequentialTransition(pause(1), hideGhosts, playSound, fallBackwards, pause(1));
+		animation.setOnFinished(e -> gameController.stateTimer().expire());
+		animation.play();
+	}
+
+	private void playAnimationPlayerDying() {
 		double savedTranslateX = player3D.getTranslateX();
 		double savedTranslateY = player3D.getTranslateY();
 		double savedTranslateZ = player3D.getTranslateZ();
