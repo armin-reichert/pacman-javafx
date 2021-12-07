@@ -71,12 +71,19 @@ public class Player3D extends Group {
 		targetDir = player.dir();
 		rotateTransition = new RotateTransition(Duration.seconds(0.25), this);
 		rotateTransition.setAxis(Rotate.Z_AXIS);
-		setRotationAxis(Rotate.Z_AXIS);
-		setRotate(rotationAngle(player.dir()));
 		light = new PointLight(Color.WHITE);
 		light.setTranslateZ(-4);
 		getChildren().addAll(model3D.createPacMan(), light);
+		reset();
 		setTranslateZ(-3);
+	}
+
+	public void reset() {
+		setVisible(player.isVisible() && !outsideMaze(player));
+		setTranslateX(player.position().x);
+		setTranslateY(player.position().y);
+		setRotationAxis(Rotate.Z_AXIS);
+		setRotate(rotationAngle(player.dir()));
 	}
 
 	public int rotationAngle(Direction dir) {

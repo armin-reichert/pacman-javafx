@@ -36,12 +36,10 @@ import de.amr.games.pacman.controller.event.DefaultPacManGameEventHandler;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
-import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
-import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
@@ -55,8 +53,6 @@ import javafx.animation.RotateTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
-import javafx.animation.TranslateTransition;
-import javafx.geometry.Point3D;
 import javafx.scene.Node;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -220,6 +216,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 		// enter READY
 		if (e.newGameState == PacManGameState.READY) {
 			sounds.stopAll();
+			player3D.reset();
 			resetEnergizers();
 			if (!gameController.isAttractMode() && !gameController.isGameRunning()) {
 				sounds.play(PacManGameSound.GAME_READY);
@@ -307,72 +304,24 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 		return new PauseTransition(Duration.seconds(seconds));
 	}
 
-	// TODO make this work
-	private void playAnimationPlayerDying_() {
-		final Pac player = player3D.player;
-
+	private void playAnimationPlayerDying() {
 		PauseTransition hideGhosts = pause(0);
 		hideGhosts.setOnFinished(e -> {
 			game().ghosts().forEach(ghost -> ghost.setVisible(false));
 		});
 
-		PauseTransition playSound = pause(0.5);
+		PauseTransition playSound = pause(1);
 		playSound.setOnFinished(e -> sounds.play(PacManGameSound.PACMAN_DEATH));
 
-		RotateTransition fallBackwards = new RotateTransition(Duration.seconds(3), player3D);
-		Point3D axis = player.dir() == Direction.LEFT || player.dir() == Direction.RIGHT ? Rotate.Y_AXIS : Rotate.X_AXIS;
-		fallBackwards.setAxis(axis);
-		fallBackwards.setFromAngle(player3D.getRotate());
-		fallBackwards.setToAngle(player3D.getRotate() - 270);
+		RotateTransition spin = new RotateTransition(Duration.seconds(0.1), player3D);
+		spin.setAxis(Rotate.Z_AXIS);
+		spin.setFromAngle(player3D.getRotate());
+		spin.setToAngle(player3D.getRotate() + 360);
+		spin.setCycleCount(20);
 
-		SequentialTransition animation = new SequentialTransition(pause(1), hideGhosts, playSound, fallBackwards, pause(1));
+		SequentialTransition animation = new SequentialTransition(pause(1), hideGhosts, playSound, spin, pause(2));
 		animation.setOnFinished(e -> gameController.stateTimer().expire());
 		animation.play();
-	}
-
-	private void playAnimationPlayerDying() {
-		double savedTranslateX = player3D.getTranslateX();
-		double savedTranslateY = player3D.getTranslateY();
-		double savedTranslateZ = player3D.getTranslateZ();
-
-		PauseTransition phase1 = new PauseTransition(Duration.seconds(3));
-		phase1.setOnFinished(e -> {
-			game().ghosts().forEach(ghost -> ghost.setVisible(false));
-			game().player().setDir(Direction.DOWN);
-			sounds.play(PacManGameSound.PACMAN_DEATH);
-		});
-
-		TranslateTransition raise = new TranslateTransition(Duration.seconds(0.5), player3D);
-		raise.setFromZ(savedTranslateZ);
-		raise.setToZ(-10);
-		raise.setByZ(1);
-
-		ScaleTransition expand = new ScaleTransition(Duration.seconds(0.5), player3D);
-		expand.setToX(3);
-		expand.setToY(3);
-		expand.setToZ(3);
-
-		ScaleTransition shrink = new ScaleTransition(Duration.seconds(1), player3D);
-		shrink.setToX(0);
-		shrink.setToY(0);
-		shrink.setToZ(0);
-		shrink.setOnFinished(e -> {
-			player3D.setVisible(false);
-		});
-
-		PauseTransition end = new PauseTransition(Duration.seconds(1));
-		end.setOnFinished(e -> {
-			player3D.setVisible(true);
-			player3D.setScaleX(1);
-			player3D.setScaleY(1);
-			player3D.setScaleZ(1);
-			player3D.setTranslateX(savedTranslateX);
-			player3D.setTranslateY(savedTranslateY);
-			player3D.setTranslateZ(savedTranslateZ);
-			gameController.stateTimer().expire();
-		});
-
-		new SequentialTransition(phase1, raise, expand, shrink, end).play();
 	}
 
 	private void playAnimationLevelComplete() {
