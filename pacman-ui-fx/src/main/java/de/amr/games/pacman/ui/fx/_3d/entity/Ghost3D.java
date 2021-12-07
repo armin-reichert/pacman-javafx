@@ -28,6 +28,7 @@ import static de.amr.games.pacman.lib.Logging.log;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
+import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.animation.Animation.Status;
 import javafx.animation.RotateTransition;
@@ -145,7 +146,7 @@ public class Ghost3D extends Group {
 	}
 
 	public void update() {
-		setVisible(ghost.isVisible());
+		setVisible(ghost.isVisible() && !outsideMaze(ghost));
 		setTranslateX(ghost.position().x);
 		setTranslateY(ghost.position().y);
 		if (ghost.bounty > 0) {
@@ -167,6 +168,10 @@ public class Ghost3D extends Group {
 			getChildren().setAll(ghostShape);
 			rotateTowardsMoveDir();
 		}
+	}
+
+	private boolean outsideMaze(Ghost ghost) {
+		return ghost.position().x < 0 || ghost.position().x > (ghost.world.numCols() - 1) * PacManGameWorld.TS;
 	}
 
 	public void setNormalSkinColor() {

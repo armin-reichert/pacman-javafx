@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Pac;
+import de.amr.games.pacman.model.world.PacManGameWorld;
 import javafx.animation.Animation.Status;
 import javafx.animation.RotateTransition;
 import javafx.scene.Group;
@@ -93,7 +94,7 @@ public class Player3D extends Group {
 	}
 
 	public void update() {
-		setVisible(player.isVisible());
+		setVisible(player.isVisible() && !outsideMaze(player));
 		setTranslateX(player.position().x);
 		setTranslateY(player.position().y);
 		if (player.dead) {
@@ -103,5 +104,9 @@ public class Player3D extends Group {
 			playRotateAnimation(player.dir(), targetDir);
 			targetDir = player.dir();
 		}
+	}
+
+	private boolean outsideMaze(Pac player) {
+		return player.position().x < 0 || player.position().x > (player.world.numCols() - 1) * PacManGameWorld.TS;
 	}
 }
