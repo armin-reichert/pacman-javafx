@@ -99,8 +99,19 @@ public class HUD extends Text {
 			line("Axes (CTRL+X)", "%s", on_off(Env.$axesVisible.get()));
 		}
 		newline();
-		line("Autopilot (A)", "%s", on_off(ui.getGameController().isAutoControlled()));
-		line("Immunity (I)", "%s", on_off(ui.getGameController().game().player().immune));
+		line("Autopilot", "%s", on_off(ui.getGameController().isAutoControlled()));
+		line("Immunity", "%s", on_off(ui.getGameController().game().player().immune));
+		
+		newline();
+		line("Keyboard shortcuts", "");
+		line("Key V", "Intro Screen: Pac-Man <-> Ms. PacMan");
+		line("Key A", "Autopilot On/Off");
+		line("Key E", "Eat all normal pellets");
+		line("Key I", "Toggle player immunity");
+		line("Key L", "Add player lives");
+		line("Key N", "Enter next level");
+		line("Key Q", "Quit");
+		line("Key X", "Kill all hunting ghosts");
 		setText(text.toString());
 	}
 
