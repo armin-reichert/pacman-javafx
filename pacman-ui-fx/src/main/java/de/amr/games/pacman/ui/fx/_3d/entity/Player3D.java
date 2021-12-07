@@ -87,7 +87,7 @@ public class Player3D extends Group {
 	}
 
 	public int rotationAngle(Direction dir) {
-		return ROTATION_INTERVALS[index(dir)][index(dir)][0];
+		return ROTATION_INTERVALS[index(dir)][0][0];
 	}
 
 	public void playRotateAnimation(Direction from, Direction to) {
