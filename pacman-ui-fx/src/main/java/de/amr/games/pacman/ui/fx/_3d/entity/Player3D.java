@@ -23,12 +23,9 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
-
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Pac;
 import javafx.animation.RotateTransition;
-import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
@@ -42,33 +39,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class Player3D extends Group {
-
-	//@formatter:off
-	//TODO there sure is a more elegant way to do this
-	private static final int[][][] ROTATION_ANGLES = {
-		{ {  0, 0}, {  0, 180}, {  0, 90}, {  0, -90} }, // LEFT
-		{ {180, 0}, {180, 180}, {180, 90}, {180, 270} }, // RIGHT
-		{ { 90, 0}, { 90, 180}, { 90, 90}, { 90, 270} }, // UP
-		{ {-90, 0}, {270, 180}, {-90, 90}, {-90, -90} }, // DOWN
-	};
-	//@formatter:on
-
-	private static int index(Direction dir) {
-		return dir == Direction.LEFT ? 0 : dir == Direction.RIGHT ? 1 : dir == Direction.UP ? 2 : 3;
-	}
-
-	private static int[] rotationAngles(Direction from, Direction to) {
-		return ROTATION_ANGLES[index(from)][index(to)];
-	}
-
-	private static int rotationAngle(Direction dir) {
-		return ROTATION_ANGLES[index(dir)][0][0];
-	}
-
-	private static boolean outsideMaze(Pac player) {
-		return player.position().x < 0 || player.position().x > (player.world.numCols() - 1) * TS;
-	}
+public class Player3D extends Creature3D {
 
 	public final Pac player;
 
@@ -99,13 +70,6 @@ public class Player3D extends Group {
 		setRotate(rotationAngle(player.dir()));
 	}
 
-	public void playTurningAnimation(Direction from, Direction to) {
-		int[] angles = rotationAngles(from, to);
-		turningAnimation.setFromAngle(angles[1]);
-		turningAnimation.setToAngle(angles[0]);
-		turningAnimation.play();
-	}
-
 	public void update() {
 		setVisible(player.isVisible() && !outsideMaze(player));
 		setTranslateX(player.position().x);
@@ -115,7 +79,10 @@ public class Player3D extends Group {
 		}
 		if (targetDir != player.dir()) {
 			turningAnimation.stop();
-			playTurningAnimation(player.dir(), targetDir);
+			int[] angles = rotationAngles(player.dir(), targetDir);
+			turningAnimation.setFromAngle(angles[1]);
+			turningAnimation.setToAngle(angles[0]);
+			turningAnimation.play();
 			targetDir = player.dir();
 		}
 	}
