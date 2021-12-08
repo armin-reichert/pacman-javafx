@@ -27,6 +27,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import javafx.animation.ParallelTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.Transition;
 import javafx.geometry.Rectangle2D;
@@ -63,23 +64,22 @@ public class Ghost3D extends Creature3D {
 	};
 
 	public final Ghost ghost;
-	private final FlashingAnimation flashing = new FlashingAnimation();
-	private final Color normalColor;
+
 	private final Rendering2D rendering2D;
 	private final Group body;
 	private final MeshView skin;
-	private final RotateTransition bodyTurningAnimation;
 	private final Group eyes;
-	private final RotateTransition eyesTurningAnimation;
 	private final Box bounty;
+	private final ParallelTransition turningAnimation;
+	private final FlashingAnimation flashing = new FlashingAnimation();
 	private final PhongMaterial skinMaterial = new PhongMaterial();
+
 	private Direction targetDir;
 
 	public Ghost3D(Ghost ghost, PacManModel3D model3D, Rendering2D rendering2D) {
 		this.ghost = ghost;
 		this.targetDir = ghost.dir();
 		this.rendering2D = rendering2D;
-		this.normalColor = rendering2D.getGhostColor(ghost.id);
 
 		int[] angles = rotationAngles(ghost.dir(), targetDir);
 
@@ -90,15 +90,17 @@ public class Ghost3D extends Creature3D {
 		skin = (MeshView) body.getChildren().get(0);
 		skin.setMaterial(skinMaterial);
 
-		bodyTurningAnimation = new RotateTransition(Duration.seconds(0.25), body);
+		var bodyTurningAnimation = new RotateTransition(Duration.seconds(0.25), body);
 		bodyTurningAnimation.setAxis(Rotate.Z_AXIS);
 
 		eyes = model3D.createGhostEyes();
 		eyes.setRotationAxis(Rotate.Z_AXIS);
 		eyes.setRotate(angles[0]);
 
-		eyesTurningAnimation = new RotateTransition(Duration.seconds(0.25), eyes);
+		var eyesTurningAnimation = new RotateTransition(Duration.seconds(0.25), eyes);
 		eyesTurningAnimation.setAxis(Rotate.Z_AXIS);
+
+		turningAnimation = new ParallelTransition(bodyTurningAnimation, eyesTurningAnimation);
 
 		bounty = new Box(8, 8, 8);
 		bounty.setMaterial(new PhongMaterial());
@@ -125,24 +127,22 @@ public class Ghost3D extends Creature3D {
 			setRotate(0);
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
 			getChildren().setAll(eyes);
-			turn();
+			playTurningAnimation();
 		} else {
 			getChildren().setAll(body);
-			turn();
+			playTurningAnimation();
 		}
 	}
 
-	private void turn() {
+	private void playTurningAnimation() {
 		if (targetDir != ghost.dir()) {
 			int[] angles = rotationAngles(targetDir, ghost.dir());
-			bodyTurningAnimation.stop();
-			bodyTurningAnimation.setFromAngle(angles[0]);
-			bodyTurningAnimation.setToAngle(angles[1]);
-			bodyTurningAnimation.play();
-			eyesTurningAnimation.stop();
-			eyesTurningAnimation.setFromAngle(angles[0]);
-			eyesTurningAnimation.setToAngle(angles[1]);
-			eyesTurningAnimation.play();
+			turningAnimation.getChildren().forEach(animation -> {
+				RotateTransition rot = (RotateTransition) animation;
+				rot.setFromAngle(angles[0]);
+				rot.setToAngle(angles[1]);
+			});
+			turningAnimation.playFromStart();
 			targetDir = ghost.dir();
 		}
 	}
@@ -158,7 +158,7 @@ public class Ghost3D extends Creature3D {
 	}
 
 	public void setNormalSkinColor() {
-		setSkinColor(normalColor);
+		setSkinColor(rendering2D.getGhostColor(ghost.id));
 	}
 
 	public void setBlueSkinColor() {
