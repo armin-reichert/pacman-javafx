@@ -48,6 +48,7 @@ import de.amr.games.pacman.ui.fx._3d.entity.PacManModel3D;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
+import javafx.animation.ParallelTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.ScaleTransition;
@@ -305,21 +306,26 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 	}
 
 	private void playAnimationPlayerDying() {
-		PauseTransition hideGhosts = pause(0);
-		hideGhosts.setOnFinished(e -> {
-			game().ghosts().forEach(ghost -> ghost.setVisible(false));
-		});
+		var hideGhosts = pause(0);
+		hideGhosts.setOnFinished(e -> game().ghosts().forEach(ghost -> ghost.setVisible(false)));
 
-		PauseTransition playSound = pause(1);
+		var playSound = pause(0);
 		playSound.setOnFinished(e -> sounds.play(PacManGameSound.PACMAN_DEATH));
 
-		RotateTransition spin = new RotateTransition(Duration.seconds(0.1), player3D);
+		var spin = new RotateTransition(Duration.seconds(0.1), player3D);
 		spin.setAxis(Rotate.Z_AXIS);
 		spin.setFromAngle(player3D.getRotate());
 		spin.setToAngle(player3D.getRotate() + 360);
 		spin.setCycleCount(20);
 
-		SequentialTransition animation = new SequentialTransition(pause(1), hideGhosts, playSound, spin, pause(2));
+		var shrink = new ScaleTransition(Duration.seconds(2), player3D);
+		shrink.setToX(0);
+		shrink.setToY(0);
+		shrink.setToZ(0);
+
+		var spinAndShrink = new ParallelTransition(spin, shrink);
+
+		var animation = new SequentialTransition(pause(1), hideGhosts, pause(1), playSound, spinAndShrink, pause(2));
 		animation.setOnFinished(e -> gameController.stateTimer().expire());
 		animation.play();
 	}

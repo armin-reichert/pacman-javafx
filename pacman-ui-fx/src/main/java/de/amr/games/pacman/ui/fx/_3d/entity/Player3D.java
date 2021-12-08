@@ -75,13 +75,16 @@ public class Player3D extends Group {
 		light.setTranslateZ(-4);
 		getChildren().addAll(model3D.createPacMan(), light);
 		reset();
-		setTranslateZ(-3);
 	}
 
 	public void reset() {
 		setVisible(player.isVisible() && !outsideMaze(player));
+		setScaleX(1);
+		setScaleY(1);
+		setScaleZ(1);
 		setTranslateX(player.position().x);
 		setTranslateY(player.position().y);
+		setTranslateZ(-3);
 		setRotationAxis(Rotate.Z_AXIS);
 		setRotate(rotationAngle(player.dir()));
 	}
