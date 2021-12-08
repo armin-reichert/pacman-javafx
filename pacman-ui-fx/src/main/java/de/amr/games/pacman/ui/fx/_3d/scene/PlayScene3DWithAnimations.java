@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
-import static de.amr.games.pacman.lib.Logging.log;
 import static java.util.function.Predicate.not;
 
 import java.util.List;
@@ -32,14 +31,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.PacManGameState;
-import de.amr.games.pacman.controller.event.DefaultPacManGameEventHandler;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
-import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
+import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
@@ -67,14 +65,14 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPacManGameEventHandler {
+public class PlayScene3DWithAnimations extends PlayScene3D {
 
 	private static V2i tile(Node node) {
 		return (V2i) node.getUserData();
 	}
 
 	private final SoundManager sounds;
-	private List<ScaleTransition> energizerAnimations;
+	private List<Transition> energizerAnimations;
 
 	public PlayScene3DWithAnimations(PacManModel3D model3D, SoundManager sounds) {
 		super(model3D);
@@ -84,7 +82,8 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 	@Override
 	protected void buildMaze() {
 		super.buildMaze();
-		energizerAnimations = energizerNodes().map(this::createEnergizerAnimation).collect(Collectors.toList());
+		energizerAnimations = energizerNodes(game().level().world).map(this::createEnergizerAnimation)
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -93,8 +92,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 		playDoorAnimation();
 		sounds.setMuted(gameController.isAttractMode());
 		if (gameController.state == PacManGameState.HUNTING) {
-			// when switching between 2D and 3D, food visibility and animations might not be
-			// up-to-date, so:
+			// update food visibility and animations in case of switching between 2D and 3D view
 			maze3D.foodNodes().forEach(foodNode -> {
 				foodNode.setVisible(!game().level().isFoodRemoved(tile(foodNode)));
 			});
@@ -105,7 +103,6 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 			if (munching.isPlaying()) {
 				if (game().player().starvingTicks > 10) {
 					sounds.stop(PacManGameSound.PACMAN_MUNCH);
-					log("Munching sound clip %s stopped", munching);
 				}
 			}
 		}
@@ -165,7 +162,6 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 		AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
 		if (!munching.isPlaying()) {
 			sounds.loop(PacManGameSound.PACMAN_MUNCH, Integer.MAX_VALUE);
-			Logging.log("Munching sound clip %s started", munching);
 		}
 	}
 
@@ -187,8 +183,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 
 	@Override
 	public void onExtraLife(PacManGameEvent e) {
-		String message = Env.message("extra_life");
-		gameController.getUI().showFlashMessage(1, message);
+		gameController.getUI().showFlashMessage(1, Env.message("extra_life"));
 		sounds.play(PacManGameSound.EXTRA_LIFE);
 	}
 
@@ -206,8 +201,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 
 	@Override
 	public void onGhostLeavingHouse(PacManGameEvent e) {
-		Ghost ghost = e.ghost.get();
-		ghosts3D.get(ghost.id).setNormalSkinColor();
+		ghosts3D.get(e.ghost.get().id).setNormalSkinColor();
 	}
 
 	@Override
@@ -218,7 +212,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 		if (e.newGameState == PacManGameState.READY) {
 			sounds.stopAll();
 			player3D.reset();
-			resetEnergizers();
+			resetEnergizers(game().level().world);
 			if (!gameController.isAttractMode() && !gameController.isGameRunning()) {
 				sounds.play(PacManGameSound.GAME_READY);
 			}
@@ -268,12 +262,12 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 		}
 	}
 
-	private Stream<Node> energizerNodes() {
-		return maze3D.foodNodes().filter(node -> game().level().world.isEnergizerTile(tile(node)));
+	private Stream<Node> energizerNodes(PacManGameWorld world) {
+		return maze3D.foodNodes().filter(node -> world.isEnergizerTile(tile(node)));
 	}
 
-	private void resetEnergizers() {
-		energizerNodes().forEach(node -> {
+	private void resetEnergizers(PacManGameWorld world) {
+		energizerNodes(world).forEach(node -> {
 			node.setScaleX(1.0);
 			node.setScaleY(1.0);
 			node.setScaleZ(1.0);
@@ -281,7 +275,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 	}
 
 	private ScaleTransition createEnergizerAnimation(Node energizer) {
-		ScaleTransition animation = new ScaleTransition(Duration.seconds(0.25), energizer);
+		var animation = new ScaleTransition(Duration.seconds(0.25), energizer);
 		animation.setAutoReverse(true);
 		animation.setCycleCount(Transition.INDEFINITE);
 		animation.setFromX(1.0);
@@ -301,7 +295,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 		energizerAnimations.forEach(Animation::stop);
 	}
 
-	private PauseTransition pause(double seconds) {
+	private static PauseTransition pause(double seconds) {
 		return new PauseTransition(Duration.seconds(seconds));
 	}
 
