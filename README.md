@@ -51,6 +51,12 @@ On the play screen, the following functionality is available:
 
 ## How it looks
 
+### Pac-Man
+
+![Play Scene](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/pacman-maze.png)
+
+### Ms. Pac-Man
+
 ![Play Scene](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/playscene3D.png)
 
 YouTube:
