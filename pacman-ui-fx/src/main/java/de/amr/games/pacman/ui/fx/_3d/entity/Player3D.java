@@ -62,8 +62,12 @@ public class Player3D extends Group {
 		return ROTATION_ANGLES[index(from)][index(to)];
 	}
 
-	public static int rotationAngle(Direction dir) {
+	private static int rotationAngle(Direction dir) {
 		return ROTATION_ANGLES[index(dir)][0][0];
+	}
+
+	private static boolean outsideMaze(Pac player) {
+		return player.position().x < 0 || player.position().x > (player.world.numCols() - 1) * TS;
 	}
 
 	public final Pac player;
@@ -114,9 +118,5 @@ public class Player3D extends Group {
 			playTurningAnimation(player.dir(), targetDir);
 			targetDir = player.dir();
 		}
-	}
-
-	private boolean outsideMaze(Pac player) {
-		return player.position().x < 0 || player.position().x > (player.world.numCols() - 1) * TS;
 	}
 }
