@@ -82,7 +82,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		stage.titleProperty().bind(Bindings.createStringBinding(() -> {
 			String gameName = gameController.gameVariant() == PACMAN ? "Pac-Man" : "Ms. Pac-Man";
-			return String.format("%s (%d frames/sec, JavaFX)", gameName, Env.$fps.get());
+			return Env.$paused.get() ? String.format("%s (%d frames/sec, JavaFX, Game PAUSED)", gameName, Env.$fps.get())
+					: String.format("%s (%d frames/sec, JavaFX)", gameName, Env.$fps.get());
 		}, Env.$fps));
 		stage.getIcons().add(new Image(getClass().getResourceAsStream(Env.APP_ICON_PATH)));
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
