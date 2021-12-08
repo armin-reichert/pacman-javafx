@@ -333,17 +333,18 @@ public class PlayScene3DWithAnimations extends PlayScene3D implements DefaultPac
 	private void playAnimationLevelComplete() {
 		gameController.stateTimer().reset();
 		gameController.stateTimer().start();
-		PauseTransition phase1 = new PauseTransition(Duration.seconds(3));
+
+		var phase1 = pause(3);
 		phase1.setOnFinished(e -> {
 			game().player().setVisible(false);
 			game().ghosts().forEach(ghost -> ghost.setVisible(false));
-			String message = Env.LEVEL_COMPLETE_TALK.next();
-			message += "\n\n";
-			message += Env.message("level_complete", game().level().number);
+			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game().level().number);
 			gameController.getUI().showFlashMessage(2, message);
 		});
-		PauseTransition phase2 = new PauseTransition(Duration.seconds(2));
+
+		var phase2 = pause(2);
 		phase2.setOnFinished(e -> gameController.stateTimer().expire());
+
 		new SequentialTransition(phase1, phase2).play();
 	}
 
