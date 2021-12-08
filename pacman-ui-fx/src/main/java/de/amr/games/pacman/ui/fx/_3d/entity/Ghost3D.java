@@ -72,7 +72,6 @@ public class Ghost3D extends Creature3D {
 	private final Box bounty;
 	private final ParallelTransition turningAnimation;
 	private final FlashingAnimation flashing = new FlashingAnimation();
-	private final PhongMaterial skinMaterial = new PhongMaterial();
 
 	private Direction targetDir;
 
@@ -88,7 +87,7 @@ public class Ghost3D extends Creature3D {
 		body.setRotate(angles[0]);
 
 		skin = (MeshView) body.getChildren().get(0);
-		skin.setMaterial(skinMaterial);
+		skin.setMaterial(new PhongMaterial());
 
 		var bodyTurningAnimation = new RotateTransition(Duration.seconds(0.25), body);
 		bodyTurningAnimation.setAxis(Rotate.Z_AXIS);
@@ -103,7 +102,6 @@ public class Ghost3D extends Creature3D {
 		turningAnimation = new ParallelTransition(bodyTurningAnimation, eyesTurningAnimation);
 
 		bounty = new Box(8, 8, 8);
-		bounty.setMaterial(new PhongMaterial());
 
 		getChildren().setAll(body);
 		setNormalSkinColor();
@@ -118,9 +116,10 @@ public class Ghost3D extends Creature3D {
 			if (getChildren().get(0) != bounty) {
 				Rectangle2D sprite = rendering2D.getBountyNumberSprites().get(ghost.bounty);
 				Image image = rendering2D.createSubImage(sprite);
-				PhongMaterial material = (PhongMaterial) bounty.getMaterial();
+				PhongMaterial material = new PhongMaterial();
 				material.setBumpMap(image);
 				material.setDiffuseMap(image);
+				bounty.setMaterial(material);
 				getChildren().setAll(bounty);
 			}
 			setRotationAxis(Rotate.X_AXIS);
@@ -158,6 +157,7 @@ public class Ghost3D extends Creature3D {
 	}
 
 	public void setNormalSkinColor() {
+		flashing.stop();
 		setSkinColor(rendering2D.getGhostColor(ghost.id));
 	}
 
@@ -166,9 +166,9 @@ public class Ghost3D extends Creature3D {
 		setSkinColor(Color.CORNFLOWERBLUE);
 	}
 
-	private void setSkinColor(Color skinColor) {
-		skinMaterial.setDiffuseColor(skinColor);
-		skinMaterial.setSpecularColor(skinColor.brighter());
-		skin.setMaterial(skinMaterial);
+	private void setSkinColor(Color color) {
+		PhongMaterial material = new PhongMaterial(color);
+		material.setSpecularColor(color.brighter());
+		skin.setMaterial(material);
 	}
 }
