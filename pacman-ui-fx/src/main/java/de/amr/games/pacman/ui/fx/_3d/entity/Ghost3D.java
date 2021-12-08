@@ -151,11 +151,6 @@ public class Ghost3D extends Creature3D {
 		flashing.playFromStart();
 	}
 
-	public void stopFlashingAnimation() {
-		flashing.stop();
-		setNormalSkinColor();
-	}
-
 	public void setNormalSkinColor() {
 		flashing.stop();
 		setSkinColor(rendering2D.getGhostColor(ghost.id));

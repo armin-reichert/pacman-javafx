@@ -127,7 +127,8 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 	@Override
 	public void onPlayerGainsPower(PacManGameEvent e) {
 		sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
-		ghosts3D.stream().filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
+		ghosts3D.stream()
+				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
 				.forEach(Ghost3D::setBlueSkinColor);
 	}
 
@@ -140,7 +141,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 
 	@Override
 	public void onPlayerLostPower(PacManGameEvent e) {
-		ghosts3D.forEach(ghost3D -> ghost3D.stopFlashingAnimation());
+		ghosts3D.forEach(ghost3D -> ghost3D.setNormalSkinColor());
 		sounds.stop(PacManGameSound.PACMAN_POWER);
 	}
 
@@ -227,7 +228,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 		else if (e.newGameState == PacManGameState.PACMAN_DYING) {
 			sounds.stopAll();
 			playAnimationPlayerDying();
-			ghosts3D.forEach(ghost3D -> ghost3D.stopFlashingAnimation());
+			ghosts3D.forEach(ghost3D -> ghost3D.setNormalSkinColor());
 		}
 
 		// enter GHOST_DYING
@@ -246,7 +247,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 		else if (e.newGameState == PacManGameState.LEVEL_COMPLETE) {
 			sounds.stopAll();
 			playAnimationLevelComplete();
-			ghosts3D.forEach(ghost3D -> ghost3D.stopFlashingAnimation());
+			ghosts3D.forEach(ghost3D -> ghost3D.setNormalSkinColor());
 		}
 
 		// enter GAME_OVER
@@ -332,7 +333,8 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 		phase1.setOnFinished(e -> {
 			game().player().setVisible(false);
 			game().ghosts().forEach(ghost -> ghost.setVisible(false));
-			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game().level().number);
+			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n"
+					+ Env.message("level_complete", game().level().number);
 			gameController.getUI().showFlashMessage(2, message);
 		});
 
