@@ -69,13 +69,11 @@ public class ScoreNotReally3D extends Group {
 		getChildren().add(grid);
 	}
 
-	public void update(PacManGameModel game, boolean showHighscoreOnly) {
+	public void update(PacManGameModel game, String scoreTextOverwrite) {
 		txtScore.setText(String.format("%07d L%03d", game.score(), game.level().number));
 		txtHiscore.setText(String.format("%07d L%03d", game.hiscorePoints(), game.hiscoreLevel()));
-		if (showHighscoreOnly) {
-			txtScore.setVisible(false);
-		} else {
-			txtScore.setVisible(true);
+		if (scoreTextOverwrite != null) {
+			txtScore.setText(scoreTextOverwrite);
 		}
 	}
 }

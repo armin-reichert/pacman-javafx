@@ -138,7 +138,7 @@ public class PlayScene3D implements GameScene {
 		player3D.update();
 		ghosts3D.forEach(Ghost3D::update);
 		bonus3D.update(game().bonus());
-		score3D.update(game(), gameController.isAttractMode());
+		score3D.update(game(), gameController.isAttractMode() ? "GAME OVER!" : null);
 		// TODO: is this the recommended way to do keep the score in plain view?
 		score3D.setRotationAxis(Rotate.X_AXIS);
 		score3D.setRotate(subSceneFX.getCamera().getRotate());
