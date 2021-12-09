@@ -28,7 +28,12 @@ import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
+import javafx.geometry.Insets;
 import javafx.scene.Camera;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -38,7 +43,7 @@ import javafx.scene.text.Text;
  * 
  * @author Armin Reichert
  */
-public class HUD extends Text {
+public class HUD extends VBox {
 
 	private static String yes_no(boolean b) {
 		return b ? "YES" : "NO";
@@ -49,13 +54,18 @@ public class HUD extends Text {
 	}
 
 	private final PacManGameUI_JavaFX ui;
+	private final Text textUI = new Text();
 	private final StringBuilder text = new StringBuilder();
 
 	public HUD(PacManGameUI_JavaFX ui) {
 		this.ui = ui;
+		getChildren().add(textUI);
 		visibleProperty().bind(Env.$isHUDVisible);
-		setFill(Color.WHITE);
-		setFont(Font.font("Monospace", 14));
+		setMaxWidth(400);
+		Color bgColor = new Color(0.3, 0.3, 0.3, 0.6);
+		setBackground(new Background(new BackgroundFill(bgColor, CornerRadii.EMPTY, Insets.EMPTY)));
+		textUI.setFill(Color.WHITE);
+		textUI.setFont(Font.font("Monospace", 14));
 	}
 
 	public void update() {
@@ -101,7 +111,7 @@ public class HUD extends Text {
 		newline();
 		line("Autopilot", "%s", on_off(ui.getGameController().isAutoControlled()));
 		line("Immunity", "%s", on_off(ui.getGameController().game().player().immune));
-		
+
 		newline();
 		line("Keyboard shortcuts", "");
 		line("Key V", "Intro Screen: Pac-Man <-> Ms. PacMan");
@@ -112,7 +122,7 @@ public class HUD extends Text {
 		line("Key N", "Enter next level");
 		line("Key Q", "Quit");
 		line("Key X", "Kill all hunting ghosts");
-		setText(text.toString());
+		textUI.setText(text.toString());
 	}
 
 	private void line(String column1, String fmtColumn2, Object... args) {
