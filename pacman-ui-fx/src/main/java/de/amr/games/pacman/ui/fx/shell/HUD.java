@@ -61,7 +61,7 @@ public class HUD extends VBox {
 		this.ui = ui;
 		getChildren().add(textUI);
 		visibleProperty().bind(Env.$isHUDVisible);
-		setMaxWidth(400);
+		setMaxWidth(300);
 		Color bgColor = new Color(0.3, 0.3, 0.3, 0.6);
 		setBackground(new Background(new BackgroundFill(bgColor, CornerRadii.EMPTY, Insets.EMPTY)));
 		textUI.setFill(Color.WHITE);
@@ -113,8 +113,8 @@ public class HUD extends VBox {
 		line("Immunity", "%s", on_off(ui.getGameController().game().player().immune));
 
 		newline();
-		line("Keyboard shortcuts", "");
-		line("Key V", "Intro Screen: Pac-Man <-> Ms. PacMan");
+		line("Keyboard", "");
+		line("Key V (Intro)", "Pac-Man <-> Ms. PacMan");
 		line("Key A", "Autopilot On/Off");
 		line("Key E", "Eat all normal pellets");
 		line("Key I", "Toggle player immunity");
