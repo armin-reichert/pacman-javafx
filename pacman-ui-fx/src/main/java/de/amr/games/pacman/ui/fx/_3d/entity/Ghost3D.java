@@ -80,11 +80,9 @@ public class Ghost3D extends Creature3D {
 		this.targetDir = ghost.dir();
 		this.rendering2D = rendering2D;
 
-		int[] angles = rotationAngles(ghost.dir(), targetDir);
-
 		body = model3D.createGhost();
 		body.setRotationAxis(Rotate.Z_AXIS);
-		body.setRotate(angles[0]);
+		body.setRotate(rotationAngle(ghost.dir()));
 
 		skin = (MeshView) body.getChildren().get(0);
 		skin.setMaterial(new PhongMaterial());
@@ -94,7 +92,7 @@ public class Ghost3D extends Creature3D {
 
 		eyes = model3D.createGhostEyes();
 		eyes.setRotationAxis(Rotate.Z_AXIS);
-		eyes.setRotate(angles[0]);
+		body.setRotate(rotationAngle(ghost.dir()));
 
 		var eyesTurningAnimation = new RotateTransition(Duration.seconds(0.25), eyes);
 		eyesTurningAnimation.setAxis(Rotate.Z_AXIS);
