@@ -36,16 +36,21 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.MeshView;
+import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 /**
- * 3D-representation of a ghost.
+ * 3D-representation of a ghost. A ghost is displayed in one of 3 modes: as a full ghost, as eyes
+ * only or as a bonus symbol indicating the bounty paid for killing the ghost.
  * 
  * @author Armin Reichert
  */
 public class Ghost3D extends Creature3D {
+
+	private enum DisplayMode {
+		FULL, EYES, BOUNTY
+	}
 
 	private static class FlashingAnimation extends Transition {
 
@@ -58,8 +63,8 @@ public class Ghost3D extends Creature3D {
 		}
 
 		@Override
-		protected void interpolate(double frac) {
-			material.setDiffuseColor(Color.rgb((int) (frac * 120), (int) (frac * 180), 255));
+		protected void interpolate(double t) {
+			material.setDiffuseColor(Color.rgb((int) (t * 120), (int) (t * 180), 255));
 		}
 	};
 
@@ -67,12 +72,12 @@ public class Ghost3D extends Creature3D {
 
 	private final Rendering2D rendering2D;
 	private final Group body;
-	private final MeshView skin;
+	private final Shape3D skin;
 	private final Group eyes;
-	private final Box bounty;
 	private final ParallelTransition turningAnimation;
 	private final FlashingAnimation flashing = new FlashingAnimation();
 
+	private DisplayMode displayMode;
 	private Direction targetDir;
 
 	public Ghost3D(Ghost ghost, PacManModel3D model3D, Rendering2D rendering2D) {
@@ -84,54 +89,72 @@ public class Ghost3D extends Creature3D {
 		body.setRotationAxis(Rotate.Z_AXIS);
 		body.setRotate(rotationAngle(ghost.dir()));
 
-		skin = (MeshView) body.getChildren().get(0);
-		skin.setMaterial(new PhongMaterial());
-
-		var bodyTurningAnimation = new RotateTransition(Duration.seconds(0.25), body);
-		bodyTurningAnimation.setAxis(Rotate.Z_AXIS);
-
 		eyes = model3D.createGhostEyes();
 		eyes.setRotationAxis(Rotate.Z_AXIS);
-		body.setRotate(rotationAngle(ghost.dir()));
+		eyes.setRotate(rotationAngle(ghost.dir()));
 
-		var eyesTurningAnimation = new RotateTransition(Duration.seconds(0.25), eyes);
-		eyesTurningAnimation.setAxis(Rotate.Z_AXIS);
+		skin = (Shape3D) body.getChildren().get(0);
 
-		turningAnimation = new ParallelTransition(bodyTurningAnimation, eyesTurningAnimation);
+		var bodyTurning = new RotateTransition(Duration.seconds(0.25), body);
+		bodyTurning.setAxis(Rotate.Z_AXIS);
 
-		bounty = new Box(8, 8, 8);
+		var eyesTurning = new RotateTransition(Duration.seconds(0.25), eyes);
+		eyesTurning.setAxis(Rotate.Z_AXIS);
 
-		getChildren().setAll(body);
+		turningAnimation = new ParallelTransition(bodyTurning, eyesTurning);
+
+		displayFull();
 		setNormalSkinColor();
 		setTranslateZ(-4);
 	}
 
-	public void update() {
-		setVisible(ghost.isVisible() && !outsideMaze(ghost));
-		setTranslateX(ghost.position().x);
-		setTranslateY(ghost.position().y);
-		if (ghost.bounty > 0) {
-			if (getChildren().get(0) != bounty) {
-				Rectangle2D sprite = rendering2D.getBountyNumberSprites().get(ghost.bounty);
-				Image image = rendering2D.createSubImage(sprite);
-				PhongMaterial material = new PhongMaterial();
-				material.setBumpMap(image);
-				material.setDiffuseMap(image);
-				bounty.setMaterial(material);
-				getChildren().setAll(bounty);
-			}
-			setRotationAxis(Rotate.X_AXIS);
-			setRotate(0);
-		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
+	private void displayBounty() {
+		if (displayMode == DisplayMode.BOUNTY) {
+			return;
+		}
+		Rectangle2D sprite = rendering2D.getBountyNumberSprites().get(ghost.bounty);
+		Image image = rendering2D.createSubImage(sprite);
+		PhongMaterial material = new PhongMaterial();
+		material.setBumpMap(image);
+		material.setDiffuseMap(image);
+		var bounty = new Box(8, 8, 8);
+		bounty.setMaterial(material);
+		setRotationAxis(Rotate.X_AXIS);
+		setRotate(0);
+		getChildren().setAll(bounty);
+		displayMode = DisplayMode.BOUNTY;
+	}
+
+	private void displayEyes() {
+		if (displayMode != DisplayMode.EYES) {
 			getChildren().setAll(eyes);
-			playTurningAnimation();
-		} else {
-			getChildren().setAll(body);
-			playTurningAnimation();
+			displayMode = DisplayMode.EYES;
 		}
 	}
 
-	private void playTurningAnimation() {
+	private void displayFull() {
+		if (displayMode != DisplayMode.FULL) {
+			getChildren().setAll(body);
+			displayMode = DisplayMode.FULL;
+		}
+	}
+
+	public void update() {
+		if (ghost.bounty > 0) {
+			displayBounty();
+		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
+			displayEyes();
+			updateDirection();
+		} else {
+			displayFull();
+			updateDirection();
+		}
+		setTranslateX(ghost.position().x);
+		setTranslateY(ghost.position().y);
+		setVisible(ghost.isVisible() && !outsideMaze(ghost));
+	}
+
+	private void updateDirection() {
 		if (targetDir != ghost.dir()) {
 			int[] angles = rotationAngles(targetDir, ghost.dir());
 			turningAnimation.getChildren().forEach(animation -> {
