@@ -65,7 +65,7 @@ public class Player3D extends Creature3D {
 		setScaleZ(1);
 		setTranslateX(player.position().x);
 		setTranslateY(player.position().y);
-		setTranslateZ(-3);
+		setTranslateZ(-4);
 		setRotationAxis(Rotate.Z_AXIS);
 		setRotate(rotationAngle(player.dir()));
 	}
