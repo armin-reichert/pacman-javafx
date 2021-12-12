@@ -79,7 +79,7 @@ public class PlayScene2DWithAnimations implements DefaultPacManGameEventHandler 
 	public void update() {
 		sounds.setMuted(gameController.isAttractMode());
 
-		if (gameController.state == PacManGameState.HUNTING) {
+		if (gameController.currentStateID == PacManGameState.HUNTING) {
 
 			// when switching between 2D and 3D play scenes, animations might not be
 			// running:

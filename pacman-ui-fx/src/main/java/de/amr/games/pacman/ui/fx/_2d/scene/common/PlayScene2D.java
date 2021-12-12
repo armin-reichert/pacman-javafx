@@ -160,7 +160,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 	}
 
 	private void renderGameState() {
-		PacManGameState state = gameController.isAttractMode() ? PacManGameState.GAME_OVER : gameController.state;
+		PacManGameState state = gameController.isAttractMode() ? PacManGameState.GAME_OVER : gameController.currentStateID;
 		if (state == PacManGameState.GAME_OVER) {
 			gc.setFont(rendering.getScoreFont());
 			gc.setFill(Color.RED);

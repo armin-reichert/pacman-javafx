@@ -91,7 +91,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 		super.update();
 		playDoorAnimation();
 		sounds.setMuted(gameController.isAttractMode());
-		if (gameController.state == PacManGameState.HUNTING) {
+		if (gameController.currentStateID == PacManGameState.HUNTING) {
 			// update food visibility and animations in case of switching between 2D and 3D view
 			maze3D.foodNodes().forEach(foodNode -> {
 				foodNode.setVisible(!game().level().isFoodRemoved(tile(foodNode)));

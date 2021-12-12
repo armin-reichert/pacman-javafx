@@ -80,7 +80,7 @@ public class HUD extends VBox {
 		line("Playing", "%s", yes_no(ui.getGameController().isGameRunning()));
 		line("Attract Mode", "%s", yes_no(ui.getGameController().isAttractMode()));
 		line("Game Level", "%d", ui.getGameController().game().level().number);
-		PacManGameState state = ui.getGameController().state;
+		PacManGameState state = ui.getGameController().currentStateID;
 		String huntingPhaseName = ui.getGameController().inScatteringPhase() ? "Scattering" : "Chasing";
 		line("Game State", "%s", state == PacManGameState.HUNTING ? state + ":" + huntingPhaseName : state);
 		line("", "Running:   %s", stateTimer.ticked());

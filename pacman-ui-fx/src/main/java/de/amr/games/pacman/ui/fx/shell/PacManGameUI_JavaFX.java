@@ -165,7 +165,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		final PacManGameModel game = gameController.game();
 
 		int sceneIndex;
-		switch (gameController.state) {
+		switch (gameController.currentStateID) {
 		case INTRO:
 			sceneIndex = 0;
 			break;
@@ -269,7 +269,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			break;
 
 		case V:
-			if (gameController.state == PacManGameState.INTRO) {
+			if (gameController.currentStateID == PacManGameState.INTRO) {
 				gameController.selectGameVariant(gameController.gameVariant().succ());
 			}
 			break;
