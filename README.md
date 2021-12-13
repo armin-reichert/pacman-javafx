@@ -6,8 +6,13 @@ Unfortunately, I have no animated 3D-model yet. The Pac-Man and ghost models use
 
 ## How to build
 
-Open a command window, then
+First, build the Maven project [pacman-basic](https://github.com/armin-reichert/pacman-basic) with
 
+```
+mvn clean install
+```
+
+Then
 ```
 cd interactivemesh
 mvn install:install-file -Dfile=jars/jimObjModelImporterJFX.jar -DpomFile=pom.xml
