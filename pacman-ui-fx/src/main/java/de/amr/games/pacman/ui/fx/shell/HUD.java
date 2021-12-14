@@ -79,7 +79,7 @@ public class HUD extends VBox {
 		line("Game Variant", "%s", ui.getGameController().gameVariant());
 		line("Playing", "%s", yes_no(ui.getGameController().isGameRunning()));
 		line("Attract Mode", "%s", yes_no(ui.getGameController().isAttractMode()));
-		line("Game Level", "%d", ui.getGameController().game().level().number);
+		line("Game Level", "%d", ui.getGameController().game().levelNumber);
 		PacManGameState state = ui.getGameController().currentStateID;
 		String huntingPhaseName = ui.getGameController().inScatteringPhase() ? "Scattering" : "Chasing";
 		line("Game State", "%s", state == PacManGameState.HUNTING ? state + ":" + huntingPhaseName : state);
@@ -110,7 +110,7 @@ public class HUD extends VBox {
 		}
 		newline();
 		line("Autopilot", "%s", on_off(ui.getGameController().isAutoControlled()));
-		line("Immunity", "%s", on_off(ui.getGameController().game().player().immune));
+		line("Immunity", "%s", on_off(ui.getGameController().game().player.immune));
 
 		newline();
 		line("Keyboard", "");

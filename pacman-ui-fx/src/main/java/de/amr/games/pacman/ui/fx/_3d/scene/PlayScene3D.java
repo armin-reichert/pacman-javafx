@@ -96,17 +96,17 @@ public class PlayScene3D implements GameScene {
 	public void init() {
 		log("%s: init", this);
 
-		final var width = game().level().world.numCols() * TS;
-		final var height = game().level().world.numRows() * TS;
+		final var width = game().world.numCols() * TS;
+		final var height = game().world.numRows() * TS;
 
 		maze3D = new Maze3D(width, height);
 		maze3D.setFloorTexture(new Image(getClass().getResourceAsStream("/common/escher-texture.jpg")));
-		maze3D.setWallBaseColor(rendering2D().getMazeSideColor(game().level().mazeNumber));
-		maze3D.setWallTopColor(rendering2D().getMazeTopColor(game().level().mazeNumber));
+		maze3D.setWallBaseColor(rendering2D().getMazeSideColor(game().mazeNumber));
+		maze3D.setWallTopColor(rendering2D().getMazeTopColor(game().mazeNumber));
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		buildMaze();
 
-		player3D = new Player3D(game().player(), model3D);
+		player3D = new Player3D(game().player, model3D);
 		ghosts3D = game().ghosts().map(ghost -> new Ghost3D(ghost, model3D, rendering2D())).collect(Collectors.toList());
 		bonus3D = new Bonus3D(rendering2D());
 		score3D = new ScoreNotReally3D(rendering2D().getScoreFont());
@@ -137,12 +137,12 @@ public class PlayScene3D implements GameScene {
 	public void update() {
 		player3D.update();
 		ghosts3D.forEach(Ghost3D::update);
-		bonus3D.update(game().bonus());
+		bonus3D.update(game().bonus);
 		score3D.update(game(), gameController.isAttractMode() ? "GAME OVER!" : null);
 		// TODO: is this the recommended way to do keep the score in plain view?
 		score3D.setRotationAxis(Rotate.X_AXIS);
 		score3D.setRotate(subSceneFX.getCamera().getRotate());
-		livesCounter3D.setVisibleItems(game().lives());
+		livesCounter3D.setVisibleItems(game().lives);
 		selectedCam().follow(player3D);
 	}
 
@@ -196,11 +196,11 @@ public class PlayScene3D implements GameScene {
 	}
 
 	protected void buildMaze() {
-		var foodColor = rendering2D().getFoodColor(game().level().mazeNumber);
-		maze3D.buildWallsAndAddFood(game().level().world, Env.$mazeResolution.get(), Env.$mazeWallHeight.get(), foodColor);
+		var foodColor = rendering2D().getFoodColor(game().mazeNumber);
+		maze3D.buildWallsAndAddFood(game().world, Env.$mazeResolution.get(), Env.$mazeWallHeight.get(), foodColor);
 	}
 
 	protected void buildMazeWalls(int resolution) {
-		maze3D.buildWalls(game().level().world, resolution, Env.$mazeWallHeight.get());
+		maze3D.buildWalls(game().world, resolution, Env.$mazeWallHeight.get());
 	}
 }

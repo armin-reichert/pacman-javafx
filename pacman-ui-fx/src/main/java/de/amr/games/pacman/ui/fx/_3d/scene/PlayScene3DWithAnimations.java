@@ -82,8 +82,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 	@Override
 	protected void buildMaze() {
 		super.buildMaze();
-		energizerAnimations = energizerNodes(game().level().world).map(this::createEnergizerAnimation)
-				.collect(Collectors.toList());
+		energizerAnimations = energizerNodes(game().world).map(this::createEnergizerAnimation).collect(Collectors.toList());
 	}
 
 	@Override
@@ -94,14 +93,14 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 		if (gameController.currentStateID == PacManGameState.HUNTING) {
 			// update food visibility and animations in case of switching between 2D and 3D view
 			maze3D.foodNodes().forEach(foodNode -> {
-				foodNode.setVisible(!game().level().isFoodRemoved(tile(foodNode)));
+				foodNode.setVisible(!game().isFoodRemoved(tile(foodNode)));
 			});
 			if (energizerAnimations.stream().anyMatch(animation -> animation.getStatus() != Status.RUNNING)) {
 				energizerAnimations.forEach(Transition::play);
 			}
 			AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
 			if (munching.isPlaying()) {
-				if (game().player().starvingTicks > 10) {
+				if (game().player.starvingTicks > 10) {
 					sounds.stop(PacManGameSound.PACMAN_MUNCH);
 				}
 			}
@@ -127,8 +126,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 	@Override
 	public void onPlayerGainsPower(PacManGameEvent e) {
 		sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
-		ghosts3D.stream()
-				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
+		ghosts3D.stream().filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
 				.forEach(Ghost3D::setBlueSkinColor);
 	}
 
@@ -149,7 +147,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 	public void onPlayerFoundFood(PacManGameEvent e) {
 		if (e.tile.isEmpty()) {
 			// this happens when the "eat all pellets except energizers" cheat was triggered
-			Predicate<Node> isEnergizer = node -> game().level().world.isEnergizerTile(tile(node));
+			Predicate<Node> isEnergizer = node -> game().world.isEnergizerTile(tile(node));
 			maze3D.foodNodes()//
 					.filter(not(isEnergizer))//
 					.forEach(foodNode -> foodNode.setVisible(false));
@@ -168,12 +166,12 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 
 	@Override
 	public void onBonusActivated(PacManGameEvent e) {
-		bonus3D.showSymbol(game().bonus());
+		bonus3D.showSymbol(game().bonus);
 	}
 
 	@Override
 	public void onBonusEaten(PacManGameEvent e) {
-		bonus3D.showPoints(game().bonus());
+		bonus3D.showPoints(game().bonus);
 		sounds.play(PacManGameSound.BONUS_EATEN);
 	}
 
@@ -213,7 +211,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 		if (e.newGameState == PacManGameState.READY) {
 			sounds.stopAll();
 			player3D.reset();
-			resetEnergizers(game().level().world);
+			resetEnergizers(game().world);
 			if (!gameController.isAttractMode() && !gameController.isGameRunning()) {
 				sounds.play(PacManGameSound.GAME_READY);
 			}
@@ -239,7 +237,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 		// enter LEVEL_STARTING
 		else if (e.newGameState == PacManGameState.LEVEL_STARTING) {
 			buildMaze();
-			levelCounter3D.rebuild(e.gameModel);
+			levelCounter3D.rebuild(e.game);
 			playAnimationLevelStarting();
 		}
 
@@ -331,10 +329,9 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 
 		var phase1 = pause(3);
 		phase1.setOnFinished(e -> {
-			game().player().setVisible(false);
+			game().player.setVisible(false);
 			game().ghosts().forEach(ghost -> ghost.setVisible(false));
-			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n"
-					+ Env.message("level_complete", game().level().number);
+			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game().levelNumber);
 			gameController.getUI().showFlashMessage(2, message);
 		});
 
@@ -348,12 +345,12 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 		gameController.stateTimer().reset();
 		gameController.stateTimer().start();
 
-		var message = Env.message("level_starting", game().level().number);
+		var message = Env.message("level_starting", game().levelNumber);
 		gameController.getUI().showFlashMessage(1, message);
 
 		var phase1 = pause(1);
 		phase1.setOnFinished(e -> {
-			game().player().setVisible(true);
+			game().player.setVisible(true);
 			game().ghosts().forEach(ghost -> ghost.setVisible(true));
 		});
 

@@ -31,8 +31,8 @@ import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.PlayerControl;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Pac;
-import de.amr.games.pacman.model.common.PacManGameModel;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
@@ -162,7 +162,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private GameScene getSceneForCurrentGameState(boolean _3D) {
-		final PacManGameModel game = gameController.game();
+		final GameModel game = gameController.game();
 
 		int sceneIndex;
 		switch (gameController.currentStateID) {
@@ -170,7 +170,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			sceneIndex = 0;
 			break;
 		case INTERMISSION:
-			sceneIndex = game.intermissionAfterLevel(game.level().number).getAsInt();
+			sceneIndex = game.intermissionAfterLevel(game.levelNumber).getAsInt();
 			break;
 		default:
 			sceneIndex = 4;
@@ -244,9 +244,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			break;
 
 		case I: {
-			gameController.game().player().immune = !gameController.game().player().immune;
-			String message = Env
-					.message(gameController.game().player().immune ? "player_immunity_on" : "player_immunity_off");
+			gameController.game().player.immune = !gameController.game().player.immune;
+			String message = Env.message(gameController.game().player.immune ? "player_immunity_on" : "player_immunity_off");
 			showFlashMessage(1, message);
 			break;
 		}

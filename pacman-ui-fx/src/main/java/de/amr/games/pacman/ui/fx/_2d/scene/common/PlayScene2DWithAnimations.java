@@ -34,8 +34,8 @@ import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GhostState;
-import de.amr.games.pacman.model.common.PacManGameModel;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -72,7 +72,7 @@ public class PlayScene2DWithAnimations implements DefaultPacManGameEventHandler 
 		levelCompleteAnimation.setOnFinished(e -> gameController.stateTimer().expire());
 	}
 
-	private PacManGameModel game() {
+	private GameModel game() {
 		return gameController.game();
 	}
 
@@ -83,7 +83,7 @@ public class PlayScene2DWithAnimations implements DefaultPacManGameEventHandler 
 
 			// when switching between 2D and 3D play scenes, animations might not be
 			// running:
-			if (!playScene.player2D.munchingAnimations.get(game().player().dir()).isRunning()) {
+			if (!playScene.player2D.munchingAnimations.get(game().player.dir()).isRunning()) {
 				playScene.player2D.munchingAnimations.values().forEach(TimedSequence::restart);
 			}
 			if (!playScene.maze2D.getEnergizerBlinking().isRunning()) {
@@ -92,7 +92,7 @@ public class PlayScene2DWithAnimations implements DefaultPacManGameEventHandler 
 
 			AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
 			if (munching.isPlaying()) {
-				if (game().player().starvingTicks > 10) {
+				if (game().player.starvingTicks > 10) {
 					sounds.stop(PacManGameSound.PACMAN_MUNCH);
 					log("Munching sound clip %s stopped", munching);
 				}
@@ -118,7 +118,7 @@ public class PlayScene2DWithAnimations implements DefaultPacManGameEventHandler 
 
 	@Override
 	public void onPlayerGainsPower(PacManGameEvent e) {
-		e.gameModel.ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
+		e.game.ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
 			Ghost2D ghost2D = playScene.ghosts2D.get(ghost.id);
 			ghost2D.flashingAnimation.reset();
 			ghost2D.frightenedAnimation.restart();
@@ -195,14 +195,14 @@ public class PlayScene2DWithAnimations implements DefaultPacManGameEventHandler 
 
 		// enter GHOST_DYING
 		else if (e.newGameState == PacManGameState.GHOST_DYING) {
-			e.gameModel.player().setVisible(false);
+			e.game.player.setVisible(false);
 			sounds.play(PacManGameSound.GHOST_EATEN);
 		}
 
 		// enter LEVEL_COMPLETE
 		else if (e.newGameState == PacManGameState.LEVEL_COMPLETE) {
 			playScene.maze2D.getEnergizerBlinking().reset(); // energizers may still exist when cheat is used
-			e.gameModel.ghosts().forEach(ghost -> ghost.setVisible(false));
+			e.game.ghosts().forEach(ghost -> ghost.setVisible(false));
 			gameController.stateTimer().reset();
 			levelCompleteAnimation.play();
 			sounds.stopAll();
@@ -217,7 +217,7 @@ public class PlayScene2DWithAnimations implements DefaultPacManGameEventHandler 
 
 		// exit GHOST_DYING
 		if (e.oldGameState == PacManGameState.GHOST_DYING) {
-			e.gameModel.player().setVisible(true);
+			e.game.player.setVisible(true);
 		}
 	}
 
@@ -227,8 +227,8 @@ public class PlayScene2DWithAnimations implements DefaultPacManGameEventHandler 
 			gameController.game().ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
 				Ghost2D ghost2D = playScene.ghosts2D.get(ghost.id);
 				TimedSequence<?> flashing = ghost2D.flashingAnimation;
-				long frameTime = e.ticks / (gameController.game().level().numFlashes * flashing.numFrames());
-				flashing.frameDuration(frameTime).repetitions(gameController.game().level().numFlashes).restart();
+				long frameTime = e.ticks / (gameController.game().numFlashes * flashing.numFrames());
+				flashing.frameDuration(frameTime).repetitions(gameController.game().numFlashes).restart();
 			});
 		}
 	}
