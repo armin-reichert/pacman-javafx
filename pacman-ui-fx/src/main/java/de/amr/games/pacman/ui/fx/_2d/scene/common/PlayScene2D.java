@@ -75,8 +75,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void init() {
-		super.init();
-
 		maze2D = new Maze2D(game(), new V2i(0, 3), rendering);
 
 		livesCounter2D = new LivesCounter2D(rendering);
@@ -113,7 +111,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 	@Override
 	public void end() {
 		game().player.powerTimer.removeEventListener(animationController::handleGhostsFlashing);
-		super.end();
 	}
 
 	@Override

@@ -94,8 +94,6 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void init() {
-		log("%s: init", this);
-
 		final var width = game().world.numCols() * TS;
 		final var height = game().world.numRows() * TS;
 
@@ -148,7 +146,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void end() {
-		log("%s: end", this);
+		log("End scene '%s'", getClass().getSimpleName());
 	}
 
 	public PlaySceneCam selectedCam() {

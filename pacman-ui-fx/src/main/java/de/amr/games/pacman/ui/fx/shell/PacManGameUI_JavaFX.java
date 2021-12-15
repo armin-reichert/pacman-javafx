@@ -189,7 +189,12 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private void setGameScene(GameScene newGameScene) {
 		if (currentGameScene != newGameScene) {
-			log("Change game scene from %s to %s", currentGameScene, newGameScene);
+			if (currentGameScene != null) {
+				log("Change game scene from '%s' to '%s'", currentGameScene.getClass().getSimpleName(),
+						newGameScene.getClass().getSimpleName());
+			} else {
+				log("Set game scene to '%s'", newGameScene.getClass().getSimpleName());
+			}
 			if (currentGameScene != null) {
 				currentGameScene.end();
 			}
@@ -203,6 +208,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			}
 			newGameScene.resize(stage.getScene().getWidth(), stage.getScene().getHeight());
 			newGameScene.init();
+			log("'%s' initialized", newGameScene.getClass().getSimpleName());
 			gameSceneRoot.getChildren().setAll(newGameScene.getSubSceneFX());
 			// Note: this must be done after new scene has been added to scene graph:
 			newGameScene.getSubSceneFX().requestFocus();

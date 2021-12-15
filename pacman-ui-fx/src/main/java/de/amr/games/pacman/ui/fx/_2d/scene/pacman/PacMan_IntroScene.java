@@ -68,7 +68,6 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 
 	@Override
 	public void init() {
-		super.init();
 		sceneController = new IntroController(gameController);
 		sceneController.init();
 
@@ -102,6 +101,10 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 			Ghost2D ghost2D = new Ghost2D(sceneController.gallery[i].ghost, rendering);
 			ghostsInGallery2D.add(ghost2D);
 		}
+	}
+
+	@Override
+	public void end() {
 	}
 
 	@Override

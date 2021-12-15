@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
-import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
@@ -100,16 +99,6 @@ public abstract class AbstractGameScene2D implements GameScene {
 		canvas.setHeight(height);
 		double scaling = height / unscaledHeight;
 		canvas.getTransforms().setAll(new Scale(scaling, scaling));
-	}
-
-	@Override
-	public void init() {
-		log("%s: init", this);
-	}
-
-	@Override
-	public void end() {
-		log("%s: end", this);
 	}
 
 	@Override

@@ -59,7 +59,6 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 
 	@Override
 	public void init() {
-		super.init();
 		boardAnimationTimer.reset();
 		boardAnimationTimer.start();
 		sceneController = new IntroController(gameController);
@@ -71,6 +70,10 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 			ghost2D.kickingAnimations.values().forEach(TimedSequence::restart);
 			return ghost2D;
 		}).collect(Collectors.toList());
+	}
+
+	@Override
+	public void end() {
 	}
 
 	@Override

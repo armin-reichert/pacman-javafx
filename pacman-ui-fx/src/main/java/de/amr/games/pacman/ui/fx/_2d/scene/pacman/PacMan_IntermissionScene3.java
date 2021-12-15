@@ -36,8 +36,8 @@ import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.scene.Scenes;
 
 /**
- * Third intermission scene: Blinky in shred dress chases Pac-Man, comes back
- * half-naked drawing dress over the floor.
+ * Third intermission scene: Blinky in shred dress chases Pac-Man, comes back half-naked drawing
+ * dress over the floor.
  * 
  * @author Armin Reichert
  */
@@ -68,7 +68,6 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 
 	@Override
 	public void init() {
-		super.init();
 		sceneController = new SceneController(gameController);
 		sceneController.init();
 		pacMan2D = new Player2D(sceneController.pac, rendering);
@@ -77,6 +76,10 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 		blinkyPatched2D.animation.restart();
 		blinkyNaked2D.animation.restart();
+	}
+
+	@Override
+	public void end() {
 	}
 
 	@Override

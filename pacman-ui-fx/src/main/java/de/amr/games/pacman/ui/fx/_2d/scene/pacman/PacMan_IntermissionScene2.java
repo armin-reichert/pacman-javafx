@@ -40,8 +40,7 @@ import de.amr.games.pacman.ui.fx.scene.Scenes;
 import javafx.geometry.Rectangle2D;
 
 /**
- * Second intermission scene: Blinky pursues Pac but kicks a nail that tears his
- * dress apart.
+ * Second intermission scene: Blinky pursues Pac but kicks a nail that tears his dress apart.
  * 
  * @author Armin Reichert
  */
@@ -74,7 +73,6 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 	@Override
 	public void init() {
-		super.init();
 		sceneController = new SceneController(gameController);
 		sceneController.init();
 		pacMan2D = new Player2D(sceneController.pac, rendering);
@@ -84,6 +82,10 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 		blinky2D.kickingAnimations.values().forEach(TimedSequence::restart);
 		blinkyStretchedAnimation = Scenes.PACMAN_RENDERING.createBlinkyStretchedAnimation();
 		blinkyDamagedAnimation = Scenes.PACMAN_RENDERING.createBlinkyDamagedAnimation();
+	}
+
+	@Override
+	public void end() {
 	}
 
 	@Override
@@ -99,8 +101,7 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 		if (sceneController.nailDistance() < 0) {
 			blinky2D.render(gc);
 		} else {
-			drawBlinkyStretched(sceneController.blinky, sceneController.nail.position(),
-					sceneController.nailDistance() / 4);
+			drawBlinkyStretched(sceneController.blinky, sceneController.nail.position(), sceneController.nailDistance() / 4);
 		}
 	}
 

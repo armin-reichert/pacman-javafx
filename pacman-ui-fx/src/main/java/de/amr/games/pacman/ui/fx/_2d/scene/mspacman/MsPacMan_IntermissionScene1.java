@@ -81,7 +81,6 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 
 	@Override
 	public void init() {
-		super.init();
 		sceneController = new SceneController(gameController);
 		sceneController.init();
 		flap2D = new Flap2D(sceneController.flap, Scenes.MS_PACMAN_RENDERING);
@@ -96,6 +95,10 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 		inky2D.kickingAnimations.values().forEach(TimedSequence::restart);
 		pinky2D.kickingAnimations.values().forEach(TimedSequence::restart);
+	}
+
+	@Override
+	public void end() {
 	}
 
 	@Override

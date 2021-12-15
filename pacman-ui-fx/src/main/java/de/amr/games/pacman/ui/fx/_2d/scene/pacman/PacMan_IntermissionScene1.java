@@ -36,8 +36,7 @@ import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.scene.Scenes;
 
 /**
- * First intermission scene: Blinky chases Pac-Man and is then chased by a huge
- * Pac-Man.
+ * First intermission scene: Blinky chases Pac-Man and is then chased by a huge Pac-Man.
  * 
  * @author Armin Reichert
  */
@@ -68,7 +67,6 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 
 	@Override
 	public void init() {
-		super.init();
 		sceneController = new SceneController(gameController);
 		sceneController.init();
 		pacMan2D = new Player2D(sceneController.pac, rendering);
@@ -78,6 +76,10 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 		blinky2D.kickingAnimations.values().forEach(TimedSequence::restart);
 		blinky2D.frightenedAnimation.restart();
 		bigPacMan2D.munchingAnimation.restart();
+	}
+
+	@Override
+	public void end() {
 	}
 
 	@Override
