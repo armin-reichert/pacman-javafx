@@ -70,8 +70,7 @@ public class Ghost3D extends Creature3D {
 	public final Ghost ghost;
 
 	private final Rendering2D rendering2D;
-	private final Group bodyComplete;
-	private final Group body;
+	private final Group completeGhost;
 	private final Group eyes;
 	private final Box numberCube;
 	private final RotateTransition turningAnimation;
@@ -85,27 +84,26 @@ public class Ghost3D extends Creature3D {
 		this.targetDir = ghost.dir();
 		this.rendering2D = rendering2D;
 
-		body = model3D.createGhost();
+		completeGhost = model3D.createGhost();
 		eyes = model3D.createGhostEyes();
 
-		bodyComplete = new Group(body, eyes);
-		bodyComplete.setRotationAxis(Rotate.Z_AXIS);
-		bodyComplete.setRotate(rotationAngle(ghost.dir()));
+		Group ghostVariants = new Group(completeGhost, eyes);
+		ghostVariants.setRotationAxis(Rotate.Z_AXIS);
+		ghostVariants.setRotate(rotationAngle(ghost.dir()));
+		turningAnimation = new RotateTransition(Duration.seconds(0.25), ghostVariants);
+		turningAnimation.setAxis(Rotate.Z_AXIS);
 
 		numberCube = new Box(8, 8, 8);
 
-		getChildren().addAll(bodyComplete, numberCube);
+		getChildren().addAll(ghostVariants, numberCube);
 
-		turningAnimation = new RotateTransition(Duration.seconds(0.25), bodyComplete);
-		turningAnimation.setAxis(Rotate.Z_AXIS);
-
-		displayBodyComplete();
+		displayCompleteGhost();
 		setNormalSkinColor();
 		setTranslateZ(-4);
 	}
 
 	private Shape3D skin() {
-		return (Shape3D) body.getChildren().get(0);
+		return (Shape3D) completeGhost.getChildren().get(0);
 	}
 
 	private void displayNumberCube() {
@@ -119,7 +117,8 @@ public class Ghost3D extends Creature3D {
 		material.setDiffuseMap(image);
 		numberCube.setMaterial(material);
 		numberCube.setVisible(true);
-		bodyComplete.setVisible(false);
+		completeGhost.setVisible(false);
+		eyes.setVisible(false);
 		setRotationAxis(Rotate.X_AXIS);
 		setRotate(0);
 		displayMode = DisplayMode.BOUNTY;
@@ -127,19 +126,17 @@ public class Ghost3D extends Creature3D {
 
 	private void displayEyes() {
 		if (displayMode != DisplayMode.EYES) {
-			bodyComplete.setVisible(true);
-			body.setVisible(false);
+			completeGhost.setVisible(false);
 			eyes.setVisible(true);
 			numberCube.setVisible(false);
 			displayMode = DisplayMode.EYES;
 		}
 	}
 
-	private void displayBodyComplete() {
+	private void displayCompleteGhost() {
 		if (displayMode != DisplayMode.FULL) {
-			bodyComplete.setVisible(true);
-			body.setVisible(true);
-			eyes.setVisible(true);
+			completeGhost.setVisible(true);
+			eyes.setVisible(false);
 			numberCube.setVisible(false);
 			displayMode = DisplayMode.FULL;
 		}
@@ -152,7 +149,7 @@ public class Ghost3D extends Creature3D {
 			displayEyes();
 			updateDirection();
 		} else {
-			displayBodyComplete();
+			displayCompleteGhost();
 			updateDirection();
 		}
 		setTranslateX(ghost.position().x);
