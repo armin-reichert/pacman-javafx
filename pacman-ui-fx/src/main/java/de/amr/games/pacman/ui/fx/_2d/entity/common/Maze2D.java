@@ -48,19 +48,18 @@ import javafx.util.Duration;
 public class Maze2D implements Renderable2D {
 
 	private final Rendering2D rendering;
-	private final int x;
-	private final int y;
+	private final V2i leftUpperTile;
+	private final TimedSequence<Boolean> energizerAnimation;
+	private final Timeline flashingAnimation;
 
 	private GameModel game;
 	private List<Energizer2D> energizers2D;
-	private Timeline flashingAnimation;
 	private boolean flashing;
-	private TimedSequence<Boolean> energizerAnimation = TimedSequence.pulse().frameDuration(10);
 
-	public Maze2D(GameModel game, V2i leftUpperCorner, Rendering2D rendering) {
+	public Maze2D(GameModel game, V2i leftUpperTile, Rendering2D rendering) {
+		this.leftUpperTile = leftUpperTile;
 		this.rendering = rendering;
-		x = t(leftUpperCorner.x);
-		y = t(leftUpperCorner.y);
+		energizerAnimation = TimedSequence.pulse().frameDuration(10);
 		flashingAnimation = new Timeline(new KeyFrame(Duration.millis(150), e -> flashing = !flashing));
 		onGameChanged(game);
 	}
@@ -91,6 +90,7 @@ public class Maze2D implements Renderable2D {
 
 	@Override
 	public void render(GraphicsContext g) {
+		int x = t(leftUpperTile.x), y = t(leftUpperTile.y);
 		if (flashingAnimation.getStatus() == Status.RUNNING) {
 			if (flashing) {
 				rendering.renderMazeFlashing(g, game.mazeNumber, x, y);
