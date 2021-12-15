@@ -126,6 +126,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		return gameController;
 	}
 
+	public GameModel game() {
+		return gameController.game();
+	}
+
 	public Stage getStage() {
 		return stage;
 	}
@@ -162,15 +166,13 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private GameScene getSceneForCurrentGameState(boolean _3D) {
-		final GameModel game = gameController.game();
-
 		int sceneIndex;
 		switch (gameController.currentStateID) {
 		case INTRO:
 			sceneIndex = 0;
 			break;
 		case INTERMISSION:
-			sceneIndex = game.intermissionAfterLevel(game.levelNumber).getAsInt();
+			sceneIndex = game().intermissionAfterLevel(game().levelNumber).getAsInt();
 			break;
 		default:
 			sceneIndex = 4;
@@ -250,14 +252,14 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			break;
 
 		case I: {
-			gameController.game().player.immune = !gameController.game().player.immune;
-			String message = Env.message(gameController.game().player.immune ? "player_immunity_on" : "player_immunity_off");
+			game().player.immune = !game().player.immune;
+			String message = Env.message(game().player.immune ? "player_immunity_on" : "player_immunity_off");
 			showFlashMessage(1, message);
 			break;
 		}
 
 		case L:
-			gameController.game().lives += 3;
+			game().lives += 3;
 			showFlashMessage(2, String.format("3 more lives"));
 			break;
 
