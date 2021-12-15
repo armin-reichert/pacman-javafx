@@ -41,40 +41,37 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 /**
- * 2D representation of the maze for a given game level. Implements the flashing animation played
- * when the game level is complete.
+ * 2D representation of the maze. Implements the flashing animation played on the end of each level.
  * 
  * @author Armin Reichert
  */
 public class Maze2D implements Renderable2D {
 
-	private GameModel game;
+	private final Rendering2D rendering;
 	private final int x;
 	private final int y;
-	private final Rendering2D rendering;
+
+	private GameModel game;
+	private List<Energizer2D> energizers2D;
 	private Timeline flashingAnimation;
 	private boolean flashing;
-	private List<Energizer2D> energizers2D;
-	private TimedSequence<Boolean> energizerBlinking = TimedSequence.pulse().frameDuration(10);
+	private TimedSequence<Boolean> energizerAnimation = TimedSequence.pulse().frameDuration(10);
 
 	public Maze2D(GameModel game, V2i leftUpperCorner, Rendering2D rendering) {
-		this.game = game;
 		this.rendering = rendering;
-
 		x = t(leftUpperCorner.x);
 		y = t(leftUpperCorner.y);
-		KeyFrame switchImage = new KeyFrame(Duration.millis(150), e -> flashing = !flashing);
-		flashingAnimation = new Timeline(switchImage);
-		flashing = false;
+		flashingAnimation = new Timeline(new KeyFrame(Duration.millis(150), e -> flashing = !flashing));
+		onGameChanged(game);
 	}
 
-	public void updateGame(GameModel game) {
+	public void onGameChanged(GameModel game) {
 		this.game = game;
 		energizers2D = game.world.energizerTiles().map(energizerTile -> {
 			Energizer2D energizer2D = new Energizer2D();
 			energizer2D.x = t(energizerTile.x);
 			energizer2D.y = t(energizerTile.y);
-			energizer2D.blinkingAnimation = energizerBlinking;
+			energizer2D.animation = energizerAnimation;
 			return energizer2D;
 		}).collect(Collectors.toList());
 		flashingAnimation.setCycleCount(2 * game.numFlashes);
@@ -88,8 +85,8 @@ public class Maze2D implements Renderable2D {
 		return flashingAnimation;
 	}
 
-	public TimedSequence<Boolean> getEnergizerBlinking() {
-		return energizerBlinking;
+	public TimedSequence<Boolean> getEnergizerAnimation() {
+		return energizerAnimation;
 	}
 
 	@Override
@@ -103,7 +100,7 @@ public class Maze2D implements Renderable2D {
 		} else {
 			rendering.renderMazeFull(g, game.mazeNumber, x, y);
 			energizers2D.forEach(energizer2D -> energizer2D.render(g));
-			energizerBlinking.animate();
+			energizerAnimation.animate();
 			g.setFill(Color.BLACK);
 			game.world.tiles().filter(game::isFoodRemoved).forEach(emptyFoodTile -> {
 				g.fillRect(t(emptyFoodTile.x), t(emptyFoodTile.y), TS, TS);

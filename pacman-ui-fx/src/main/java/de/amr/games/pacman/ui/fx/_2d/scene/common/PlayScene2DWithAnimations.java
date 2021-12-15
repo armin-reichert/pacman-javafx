@@ -86,8 +86,8 @@ public class PlayScene2DWithAnimations implements DefaultPacManGameEventHandler 
 			if (!playScene.player2D.munchingAnimations.get(game().player.dir()).isRunning()) {
 				playScene.player2D.munchingAnimations.values().forEach(TimedSequence::restart);
 			}
-			if (!playScene.maze2D.getEnergizerBlinking().isRunning()) {
-				playScene.maze2D.getEnergizerBlinking().restart();
+			if (!playScene.maze2D.getEnergizerAnimation().isRunning()) {
+				playScene.maze2D.getEnergizerAnimation().restart();
 			}
 
 			AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
@@ -168,7 +168,7 @@ public class PlayScene2DWithAnimations implements DefaultPacManGameEventHandler 
 		// enter READY
 		if (e.newGameState == PacManGameState.READY) {
 			sounds.stopAll();
-			playScene.maze2D.getEnergizerBlinking().reset();
+			playScene.maze2D.getEnergizerAnimation().reset();
 			if (!gameController.isAttractMode() && !gameController.isGameRunning()) {
 				sounds.play(PacManGameSound.GAME_READY);
 			}
@@ -176,7 +176,7 @@ public class PlayScene2DWithAnimations implements DefaultPacManGameEventHandler 
 
 		// enter HUNTING
 		else if (e.newGameState == PacManGameState.HUNTING) {
-			playScene.maze2D.getEnergizerBlinking().restart();
+			playScene.maze2D.getEnergizerAnimation().restart();
 			playScene.player2D.munchingAnimations.values().forEach(TimedSequence::restart);
 			playScene.ghosts2D.forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSequence::restart));
 		}
@@ -201,7 +201,7 @@ public class PlayScene2DWithAnimations implements DefaultPacManGameEventHandler 
 
 		// enter LEVEL_COMPLETE
 		else if (e.newGameState == PacManGameState.LEVEL_COMPLETE) {
-			playScene.maze2D.getEnergizerBlinking().reset(); // energizers may still exist when cheat is used
+			playScene.maze2D.getEnergizerAnimation().reset(); // energizers may still exist when cheat is used
 			e.game.ghosts().forEach(ghost -> ghost.setVisible(false));
 			gameController.stateTimer().reset();
 			levelCompleteAnimation.play();
@@ -210,7 +210,7 @@ public class PlayScene2DWithAnimations implements DefaultPacManGameEventHandler 
 
 		// enter GAME_OVER
 		else if (e.newGameState == PacManGameState.GAME_OVER) {
-			playScene.maze2D.getEnergizerBlinking().reset();
+			playScene.maze2D.getEnergizerAnimation().reset();
 			playScene.ghosts2D.forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSequence::restart));
 			sounds.stopAll();
 		}

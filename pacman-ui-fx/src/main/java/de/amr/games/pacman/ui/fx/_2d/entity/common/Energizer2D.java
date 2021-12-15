@@ -39,11 +39,11 @@ public class Energizer2D implements Renderable2D {
 	public int x;
 	public int y;
 	public Color darkColor = Color.BLACK;
-	public TimedSequence<Boolean> blinkingAnimation;
+	public TimedSequence<Boolean> animation;
 
 	@Override
 	public void render(GraphicsContext g) {
-		if (!blinkingAnimation.frame()) {
+		if (!animation.frame()) {
 			g.setFill(darkColor);
 			g.fillRect(x, y, TS, TS);
 		}

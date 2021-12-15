@@ -124,7 +124,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	private void onGameStateChange(PacManGameStateChangeEvent event) {
 		if (event.newGameState == PacManGameState.LEVEL_STARTING) {
-			maze2D.updateGame(event.game);
+			maze2D.onGameChanged(event.game);
 			// wait 1 second
 			gameController.stateTimer().reset(60);
 			gameController.stateTimer().start();
