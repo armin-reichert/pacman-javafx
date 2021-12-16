@@ -195,14 +195,14 @@ public class PlayScene2DWithAnimations implements DefaultPacManGameEventHandler 
 
 		// enter GHOST_DYING
 		else if (e.newGameState == PacManGameState.GHOST_DYING) {
-			e.game.player.setVisible(false);
+			e.game.player.visible = false;
 			sounds.play(PacManGameSound.GHOST_EATEN);
 		}
 
 		// enter LEVEL_COMPLETE
 		else if (e.newGameState == PacManGameState.LEVEL_COMPLETE) {
 			playScene.maze2D.getEnergizerAnimation().reset(); // energizers may still exist when cheat is used
-			e.game.ghosts().forEach(ghost -> ghost.setVisible(false));
+			e.game.ghosts().forEach(ghost -> ghost.visible = false);
 			gameController.stateTimer().reset();
 			levelCompleteAnimation.play();
 			sounds.stopAll();
@@ -217,7 +217,7 @@ public class PlayScene2DWithAnimations implements DefaultPacManGameEventHandler 
 
 		// exit GHOST_DYING
 		if (e.oldGameState == PacManGameState.GHOST_DYING) {
-			e.game.player.setVisible(true);
+			e.game.player.visible = true;
 		}
 	}
 

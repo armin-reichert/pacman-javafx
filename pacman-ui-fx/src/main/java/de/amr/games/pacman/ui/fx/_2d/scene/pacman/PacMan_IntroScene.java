@@ -120,7 +120,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		if (sceneController.phase == Phase.CHASING_PAC) {
 			if (sceneController.blinking.animate()) {
 				gc.setFill(Color.PINK);
-				gc.fillOval(t(2), sceneController.pac.position().y, TS, TS);
+				gc.fillOval(t(2), sceneController.pac.position.y, TS, TS);
 			}
 		}
 		ghosts2D.forEach(ghost2D -> ghost2D.render(gc));
@@ -141,7 +141,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		gc.fillText("NICKNAME", t(18), TOP_Y);
 		for (int i = 0; i < 4; ++i) {
 			GhostPortrait portrait = sceneController.gallery[i];
-			if (portrait.ghost.isVisible()) {
+			if (portrait.ghost.visible) {
 				int y = TOP_Y + t(2 + 3 * i);
 				ghostsInGallery2D.get(i).render(gc);
 				gc.setFill(getGhostColor(i));

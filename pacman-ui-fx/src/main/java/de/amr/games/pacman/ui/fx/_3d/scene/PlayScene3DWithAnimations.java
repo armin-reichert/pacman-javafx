@@ -300,7 +300,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 
 	private void playAnimationPlayerDying() {
 		var hideGhosts = pause(0);
-		hideGhosts.setOnFinished(e -> game().ghosts().forEach(ghost -> ghost.setVisible(false)));
+		hideGhosts.setOnFinished(e -> game().ghosts().forEach(ghost -> ghost.visible = false));
 
 		var playSound = pause(0);
 		playSound.setOnFinished(e -> sounds.play(PacManGameSound.PACMAN_DEATH));
@@ -329,8 +329,8 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 
 		var phase1 = pause(3);
 		phase1.setOnFinished(e -> {
-			game().player.setVisible(false);
-			game().ghosts().forEach(ghost -> ghost.setVisible(false));
+			game().player.visible = false;
+			game().ghosts().forEach(ghost -> ghost.visible = false);
 			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game().levelNumber);
 			gameController.getUI().showFlashMessage(2, message);
 		});
@@ -350,8 +350,8 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 
 		var phase1 = pause(1);
 		phase1.setOnFinished(e -> {
-			game().player.setVisible(true);
-			game().ghosts().forEach(ghost -> ghost.setVisible(true));
+			game().player.visible = true;
+			game().ghosts().forEach(ghost -> ghost.visible = true);
 		});
 
 		var phase2 = pause(3);

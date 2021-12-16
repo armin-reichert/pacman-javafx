@@ -84,7 +84,7 @@ public class Ghost2D implements Renderable2D {
 		if (ghost.is(LOCKED) && looksFrightened) {
 			return frightenedAnimation.animate();
 		}
-		if (ghost.velocity().equals(V2d.NULL)) {
+		if (ghost.velocity.equals(V2d.NULL)) {
 			return kickingAnimations.get(ghost.wishDir()).frame();
 		}
 		return kickingAnimations.get(ghost.wishDir()).animate(); // Looks towards wish dir!

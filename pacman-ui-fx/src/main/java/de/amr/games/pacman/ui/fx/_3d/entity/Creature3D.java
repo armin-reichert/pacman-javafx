@@ -36,6 +36,6 @@ public abstract class Creature3D extends Group {
 	}
 
 	protected boolean outsideMaze(Creature creature) {
-		return creature.position().x < 0 || creature.position().x > (creature.world.numCols() - 1) * TS;
+		return creature.position.x < 0 || creature.position.x > (creature.world.numCols() - 1) * TS;
 	}
 }

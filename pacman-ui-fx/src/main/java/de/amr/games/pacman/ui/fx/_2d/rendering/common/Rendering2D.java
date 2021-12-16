@@ -187,10 +187,10 @@ public abstract class Rendering2D {
 	 * @param region region of entity sprite in spritesheet
 	 */
 	public void renderEntity(GraphicsContext g, GameEntity entity, Rectangle2D region) {
-		if (entity.isVisible()) {
+		if (entity.visible) {
 			// draw sprite centered over entity bounding box
-			renderSprite(g, region, entity.position().x - region.getWidth() / 2 + HTS,
-					entity.position().y - region.getHeight() / 2 + HTS);
+			renderSprite(g, region, entity.position.x - region.getWidth() / 2 + HTS,
+					entity.position.y - region.getHeight() / 2 + HTS);
 		}
 	}
 

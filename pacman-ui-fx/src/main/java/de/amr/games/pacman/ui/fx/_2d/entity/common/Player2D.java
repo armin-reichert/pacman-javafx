@@ -63,7 +63,7 @@ public class Player2D implements Renderable2D {
 		if (player.dead) {
 			return dyingAnimation.hasStarted() ? dyingAnimation.animate() : munchingAnimations.get(dir).frame();
 		}
-		if (player.velocity().equals(V2d.NULL)) {
+		if (player.velocity.equals(V2d.NULL)) {
 			return munchingAnimations.get(dir).frame(0);
 		}
 		if (player.stuck) {

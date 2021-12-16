@@ -53,8 +53,8 @@ public class Cam_POV implements PlaySceneCam {
 		V2d offset = new V2d(player3D.player.dir().vec).scaled(8);
 		cam.setRotationAxis(Rotate.Z_AXIS);
 		cam.setRotate(player3D.getRotate());
-		cam.setTranslateX(-14 * 8 + player3D.player.position().x + offset.x);
-		cam.setTranslateY(-18 * 8 + player3D.player.position().y + offset.y);
+		cam.setTranslateX(-14 * 8 + player3D.player.position.x + offset.x);
+		cam.setTranslateY(-18 * 8 + player3D.player.position.y + offset.y);
 	}
 
 	@Override

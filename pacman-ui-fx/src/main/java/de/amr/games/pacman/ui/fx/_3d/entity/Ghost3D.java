@@ -152,9 +152,9 @@ public class Ghost3D extends Creature3D {
 			displayCompleteGhost();
 			updateDirection();
 		}
-		setTranslateX(ghost.position().x);
-		setTranslateY(ghost.position().y);
-		setVisible(ghost.isVisible() && !outsideMaze(ghost));
+		setTranslateX(ghost.position.x);
+		setTranslateY(ghost.position.y);
+		setVisible(ghost.visible && !outsideMaze(ghost));
 	}
 
 	private void updateDirection() {

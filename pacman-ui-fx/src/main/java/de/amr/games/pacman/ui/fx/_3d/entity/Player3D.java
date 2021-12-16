@@ -59,21 +59,21 @@ public class Player3D extends Creature3D {
 	}
 
 	public void reset() {
-		setVisible(player.isVisible() && !outsideMaze(player));
+		setVisible(player.visible && !outsideMaze(player));
 		setScaleX(1);
 		setScaleY(1);
 		setScaleZ(1);
-		setTranslateX(player.position().x);
-		setTranslateY(player.position().y);
+		setTranslateX(player.position.x);
+		setTranslateY(player.position.y);
 		setTranslateZ(-4);
 		setRotationAxis(Rotate.Z_AXIS);
 		setRotate(rotationAngle(player.dir()));
 	}
 
 	public void update() {
-		setVisible(player.isVisible() && !outsideMaze(player));
-		setTranslateX(player.position().x);
-		setTranslateY(player.position().y);
+		setVisible(player.visible && !outsideMaze(player));
+		setTranslateX(player.position.x);
+		setTranslateY(player.position.y);
 		if (player.dead) {
 			return;
 		}
