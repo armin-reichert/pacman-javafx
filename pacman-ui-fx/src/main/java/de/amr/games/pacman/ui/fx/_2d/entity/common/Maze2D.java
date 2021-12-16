@@ -102,7 +102,7 @@ public class Maze2D implements Renderable2D {
 			energizers2D.forEach(energizer2D -> energizer2D.render(g));
 			energizerAnimation.animate();
 			g.setFill(Color.BLACK);
-			game.world.tiles().filter(game::isFoodRemoved).forEach(emptyFoodTile -> {
+			game.world.tiles().filter(game::isFoodEaten).forEach(emptyFoodTile -> {
 				g.fillRect(t(emptyFoodTile.x), t(emptyFoodTile.y), TS, TS);
 			});
 		}

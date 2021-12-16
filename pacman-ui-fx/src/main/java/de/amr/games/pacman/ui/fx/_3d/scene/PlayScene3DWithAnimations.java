@@ -93,7 +93,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 		if (gameController.currentStateID == PacManGameState.HUNTING) {
 			// update food visibility and animations in case of switching between 2D and 3D view
 			maze3D.foodNodes().forEach(foodNode -> {
-				foodNode.setVisible(!game().isFoodRemoved(tile(foodNode)));
+				foodNode.setVisible(!game().isFoodEaten(tile(foodNode)));
 			});
 			if (energizerAnimations.stream().anyMatch(animation -> animation.getStatus() != Status.RUNNING)) {
 				energizerAnimations.forEach(Transition::play);
