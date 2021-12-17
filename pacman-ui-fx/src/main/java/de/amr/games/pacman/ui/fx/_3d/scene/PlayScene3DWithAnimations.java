@@ -41,7 +41,6 @@ import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
-import de.amr.games.pacman.ui.fx._3d.entity.Maze3D;
 import de.amr.games.pacman.ui.fx._3d.entity.PacManModel3D;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.Animation;
@@ -361,15 +360,15 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 	}
 
 	private void playDoorAnimation() {
-		boolean ghostPassing = false;
+		boolean openDoor = false;
 		for (Box door : maze3D.getDoors()) {
 			V2i doorTile = (V2i) door.getUserData();
-			ghostPassing = game().ghosts().map(Ghost::tile).anyMatch(ghostTile -> ghostTile.equals(doorTile));
-			if (ghostPassing) {
+			openDoor = game().ghosts().map(Ghost::tile).anyMatch(ghostTile -> ghostTile.equals(doorTile));
+			if (openDoor) {
 				break;
 			}
 		}
-		Color doorColor = ghostPassing ? Maze3D.DOOR_COLOR_OPEN : Maze3D.DOOR_COLOR_CLOSED;
+		Color doorColor = openDoor ? maze3D.getDoorOpenColor() : maze3D.getDoorClosedColor();
 		PhongMaterial material = new PhongMaterial(doorColor);
 		for (Box door : maze3D.getDoors()) {
 			door.setMaterial(material);

@@ -23,13 +23,16 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
+import de.amr.games.pacman.model.world.FloorPlan;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.fx.Env;
 import javafx.beans.property.DoubleProperty;
@@ -50,34 +53,59 @@ import javafx.scene.transform.Translate;
  */
 public class Maze3D extends Group {
 
-	public static final Color DOOR_COLOR_CLOSED = Color.PINK;
-	public static final Color DOOR_COLOR_OPEN = Color.TRANSPARENT;
-
 	public final DoubleProperty $wallHeight = new SimpleDoubleProperty(2.0);
 
-	private final Box floor;
-	private final double floorSizeZ = 0.1;
-	private final double energizerSize = 2.5;
-	private final double pelletSize = 1;
-	private final PhongMaterial wallBaseMaterial = new PhongMaterial();
-	private final PhongMaterial wallTopMaterial = new PhongMaterial();
-	private final Group wallGroup = new Group();
-	private final Group foodGroup = new Group();
-	private final List<Box> doors = new ArrayList<>();
+	private double sizeX;
+	private double sizeY;
+	private FloorPlan floorPlan;
+	private List<Node> parts;
+
+	private Box floor;
+	private double floorSizeZ = 0.1;
+	private Color floorColor = Color.rgb(20, 20, 120);
+	private double energizerSize = 2.5;
+	private double pelletSize = 1;
+	private PhongMaterial wallBaseMaterial = new PhongMaterial();
+	private PhongMaterial wallTopMaterial = new PhongMaterial();
+	private Group wallGroup = new Group();
+	private Group foodGroup = new Group();
+	private List<Box> doors = new ArrayList<>();
+	private Color doorClosedColor = Color.PINK;
+	private Color doorOpenColor = Color.TRANSPARENT;
 
 	/**
-	 * @param mazeSizeX maze x-size in units
-	 * @param mazeSizeY maze y-size in units
+	 * @param sizeX maze x-size in units
+	 * @param sizeY maze y-size in units
 	 */
-	public Maze3D(double mazeSizeX, double mazeSizeY) {
-		floor = new Box(mazeSizeX - 1, mazeSizeY - 1, floorSizeZ);
+	public Maze3D(double sizeX, double sizeY) {
+		this.sizeX = sizeX;
+		this.sizeY = sizeY;
+		createFloor();
+		getChildren().addAll(floor, wallGroup, foodGroup);
+	}
+
+	public void build(PacManGameWorld world, int resolution) {
+		floorPlan = FloorPlan.build(resolution, world);
+		double stoneSize = TS / resolution;
+		createWalls(world, stoneSize);
+		createDoors(world, stoneSize);
+	}
+
+	public Color getDoorClosedColor() {
+		return doorClosedColor;
+	}
+
+	public Color getDoorOpenColor() {
+		return doorOpenColor;
+	}
+
+	private void createFloor() {
+		floor = new Box(sizeX - 1, sizeY - 1, floorSizeZ);
 		floor.drawModeProperty().bind(Env.$drawMode3D);
-		floor.getTransforms().add(new Translate(mazeSizeX / 2 - TS / 2, mazeSizeY / 2 - TS / 2, -0.5 * floorSizeZ + 0.1));
-		var floorColor = Color.rgb(20, 20, 120);
+		floor.getTransforms().add(new Translate(sizeX / 2 - TS / 2, sizeY / 2 - TS / 2, -0.5 * floorSizeZ + 0.1));
 		var floorMaterial = new PhongMaterial(floorColor);
 		floorMaterial.setSpecularColor(floorColor.brighter());
 		floor.setMaterial(floorMaterial);
-		getChildren().addAll(floor, wallGroup, foodGroup);
 	}
 
 	public Stream<Node> foodNodes() {
@@ -92,15 +120,135 @@ public class Maze3D extends Group {
 		return Collections.unmodifiableList(doors);
 	}
 
+	/**
+	 * Adds a wall at given position. A wall consists of a base and a top part which can have different
+	 * color and material.
+	 * 
+	 * @param leftX      x-coordinate of top-left stone
+	 * @param topY       y-coordinate of top-left stone
+	 * @param numStonesX number of stones in x-direction
+	 * @param numStonesY number of stones in y-direction
+	 * @param stoneSize  size of a single stone
+	 * @return pair of walls (base, top)
+	 */
+	private List<Box> addWall(int leftX, int topY, int numStonesX, int numStonesY, double stoneSize) {
+		Box wallBase = new Box(numStonesX * stoneSize, numStonesY * stoneSize, $wallHeight.get());
+		wallBase.depthProperty().bind($wallHeight);
+		wallBase.setMaterial(wallBaseMaterial);
+		wallBase.setTranslateX((leftX + 0.5 * numStonesX) * stoneSize);
+		wallBase.setTranslateY((topY + 0.5 * numStonesY) * stoneSize);
+		wallBase.translateZProperty().bind($wallHeight.multiply(-0.5));
+		wallBase.drawModeProperty().bind(Env.$drawMode3D);
+		parts.add(wallBase);
+
+		double topHeight = 0.5;
+		Box wallTop = new Box(numStonesX * stoneSize, numStonesY * stoneSize, topHeight);
+		wallTop.setMaterial(wallTopMaterial);
+		wallTop.setTranslateX(leftX * stoneSize + numStonesX * 0.5 * stoneSize);
+		wallTop.setTranslateY(topY * stoneSize + numStonesY * 0.5 * stoneSize);
+		wallTop.translateZProperty()
+				.bind(wallBase.translateZProperty().subtract($wallHeight.add(topHeight + 0.1).multiply(0.5)));
+		wallTop.drawModeProperty().bind(Env.$drawMode3D);
+		parts.add(wallTop);
+
+		return Arrays.asList(wallBase, wallTop);
+	}
+
+	// TODO I need a half cylinder or a special corner shape for smooth corners
+	private void addCorner(int x, int y, double blockSize) {
+		addWall(x, y, 1, 1, blockSize);
+	}
+
+	private void createDoors(PacManGameWorld world, double stoneSize) {
+		PhongMaterial doorMaterial = new PhongMaterial(doorClosedColor);
+		world.ghostHouse().doorTiles().forEach(tile -> {
+			Box door = new Box(TS - 1, 1, HTS);
+			door.setMaterial(doorMaterial);
+			door.setTranslateX(tile.x * TS + HTS);
+			door.setTranslateY(tile.y * TS + HTS);
+			door.setTranslateZ(-HTS / 2);
+			door.setUserData(tile);
+			door.drawModeProperty().bind(Env.$drawMode3D);
+			addDoor(door);
+			parts.add(door);
+		});
+	}
+
+	private void createWalls(PacManGameWorld world, double stoneSize) {
+		parts = new ArrayList<>();
+		// horizontal
+		for (int y = 0; y < floorPlan.sizeY(); ++y) {
+			int leftX = -1;
+			int sizeX = 0;
+			for (int x = 0; x < floorPlan.sizeX(); ++x) {
+				if (floorPlan.get(x, y) == FloorPlan.HWALL) {
+					if (leftX == -1) {
+						leftX = x;
+						sizeX = 1;
+					} else {
+						sizeX++;
+					}
+				} else {
+					if (leftX != -1) {
+						addWall(leftX, y, sizeX, 1, stoneSize);
+						leftX = -1;
+					}
+				}
+				if (x == floorPlan.sizeX() - 1 && leftX != -1) {
+					addWall(leftX, y, sizeX, 1, stoneSize);
+					leftX = -1;
+				}
+			}
+			if (y == floorPlan.sizeY() - 1 && leftX != -1) {
+				addWall(leftX, y, sizeX, 1, stoneSize);
+				leftX = -1;
+			}
+		}
+
+		// vertical
+		for (int x = 0; x < floorPlan.sizeX(); ++x) {
+			int topY = -1;
+			int sizeY = 0;
+			for (int y = 0; y < floorPlan.sizeY(); ++y) {
+				if (floorPlan.get(x, y) == FloorPlan.VWALL) {
+					if (topY == -1) {
+						topY = y;
+						sizeY = 1;
+					} else {
+						sizeY++;
+					}
+				} else {
+					if (topY != -1) {
+						addWall(x, topY, 1, sizeY, stoneSize);
+						topY = -1;
+					}
+				}
+				if (y == floorPlan.sizeY() - 1 && topY != -1) {
+					addWall(x, topY, 1, sizeY, stoneSize);
+					topY = -1;
+				}
+			}
+			if (x == floorPlan.sizeX() - 1 && topY != -1) {
+				addWall(x, topY, 1, sizeY, stoneSize);
+				topY = -1;
+			}
+		}
+
+		// corners
+		for (int y = 0; y < floorPlan.sizeY(); ++y) {
+			for (int x = 0; x < floorPlan.sizeX(); ++x) {
+				if (floorPlan.get(x, y) == FloorPlan.CORNER) {
+					addCorner(x, y, stoneSize);
+				}
+			}
+		}
+	}
+
 	public void build(PacManGameWorld world, int resolution, double wallHeight) {
-		var mazeBuilder = new Maze3DBuilder(this);
-		mazeBuilder.$wallHeight.bind($wallHeight);
-		mazeBuilder.setBaseMaterial(wallBaseMaterial);
-		mazeBuilder.setTopMaterial(wallTopMaterial);
 		wallGroup.setTranslateX(-TS / 2);
 		wallGroup.setTranslateY(-TS / 2);
-		mazeBuilder.build(world, resolution);
-		wallGroup.getChildren().setAll(mazeBuilder.getParts());
+		build(world, resolution);
+		wallGroup.getChildren().setAll(parts);
 	}
 
 	public void buildWithFood(PacManGameWorld world, int resolution, double wallHeight, Color foodColor) {

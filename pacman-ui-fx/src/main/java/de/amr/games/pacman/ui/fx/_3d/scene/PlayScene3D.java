@@ -194,11 +194,15 @@ public class PlayScene3D implements GameScene {
 	}
 
 	protected void buildMaze() {
-		var foodColor = rendering2D().getFoodColor(game().mazeNumber);
-		maze3D.buildWithFood(game().world, Env.$mazeResolution.get(), Env.$mazeWallHeight.get(), foodColor);
+		if (game() != null) {
+			var foodColor = rendering2D().getFoodColor(game().mazeNumber);
+			maze3D.buildWithFood(game().world, Env.$mazeResolution.get(), Env.$mazeWallHeight.get(), foodColor);
+		}
 	}
 
 	protected void buildMazeWalls(int resolution) {
-		maze3D.build(game().world, resolution, Env.$mazeWallHeight.get());
+		if (game() != null) {
+			maze3D.build(game().world, resolution, Env.$mazeWallHeight.get());
+		}
 	}
 }
