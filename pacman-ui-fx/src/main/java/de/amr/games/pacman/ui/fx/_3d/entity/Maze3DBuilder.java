@@ -61,6 +61,13 @@ public class Maze3DBuilder {
 		wallTopMaterial = new PhongMaterial();
 	}
 
+	public void build(PacManGameWorld world, int resolution) {
+		floorPlan = FloorPlan.build(resolution, world);
+		double stoneSize = TS / resolution;
+		createWalls(world, stoneSize);
+		createDoors(world, stoneSize);
+	}
+
 	public List<Node> getParts() {
 		return Collections.unmodifiableList(parts);
 	}
@@ -73,43 +80,46 @@ public class Maze3DBuilder {
 		this.wallTopMaterial = material;
 	}
 
-	public List<Node> build(PacManGameWorld world, int resolution) {
-		floorPlan = FloorPlan.build(resolution, world);
-		double blockSize = TS / resolution;
-		createWalls(world, blockSize);
-		createDoors(world, blockSize);
-		return getParts();
-	}
-
-	private List<Box> addBlock(int leftX, int topY, int numBlocksX, int numBlocksY, double blockSize) {
-		Box base = new Box(numBlocksX * blockSize, numBlocksY * blockSize, $wallHeight.get());
-		base.depthProperty().bind($wallHeight);
-		base.setMaterial(wallBaseMaterial);
-		base.setTranslateX(leftX * blockSize + numBlocksX * 0.5 * blockSize);
-		base.setTranslateY(topY * blockSize + numBlocksY * 0.5 * blockSize);
-		base.translateZProperty().bind($wallHeight.multiply(-0.5));
-		base.drawModeProperty().bind(Env.$drawMode3D);
-		parts.add(base);
+	/**
+	 * Adds a wall at given position. A wall consists of a base and a top part which can have different
+	 * color and material.
+	 * 
+	 * @param leftX      x-coordinate of top-left stone
+	 * @param topY       y-coordinate of top-left stone
+	 * @param numStonesX number of stones in x-direction
+	 * @param numStonesY number of stones in y-direction
+	 * @param stoneSize  size of a single stone
+	 * @return pair of walls (base, top)
+	 */
+	private List<Box> addWall(int leftX, int topY, int numStonesX, int numStonesY, double stoneSize) {
+		Box wallBase = new Box(numStonesX * stoneSize, numStonesY * stoneSize, $wallHeight.get());
+		wallBase.depthProperty().bind($wallHeight);
+		wallBase.setMaterial(wallBaseMaterial);
+		wallBase.setTranslateX((leftX + 0.5 * numStonesX) * stoneSize);
+		wallBase.setTranslateY((topY + 0.5 * numStonesY) * stoneSize);
+		wallBase.translateZProperty().bind($wallHeight.multiply(-0.5));
+		wallBase.drawModeProperty().bind(Env.$drawMode3D);
+		parts.add(wallBase);
 
 		double topHeight = 0.5;
-		Box top = new Box(numBlocksX * blockSize, numBlocksY * blockSize, topHeight);
-		top.setMaterial(wallTopMaterial);
-		top.setTranslateX(leftX * blockSize + numBlocksX * 0.5 * blockSize);
-		top.setTranslateY(topY * blockSize + numBlocksY * 0.5 * blockSize);
-		top.translateZProperty()
-				.bind(base.translateZProperty().subtract($wallHeight.add(topHeight + 0.1).multiply(0.5)));
-		top.drawModeProperty().bind(Env.$drawMode3D);
-		parts.add(top);
+		Box wallTop = new Box(numStonesX * stoneSize, numStonesY * stoneSize, topHeight);
+		wallTop.setMaterial(wallTopMaterial);
+		wallTop.setTranslateX(leftX * stoneSize + numStonesX * 0.5 * stoneSize);
+		wallTop.setTranslateY(topY * stoneSize + numStonesY * 0.5 * stoneSize);
+		wallTop.translateZProperty()
+				.bind(wallBase.translateZProperty().subtract($wallHeight.add(topHeight + 0.1).multiply(0.5)));
+		wallTop.drawModeProperty().bind(Env.$drawMode3D);
+		parts.add(wallTop);
 
-		return Arrays.asList(base, top);
+		return Arrays.asList(wallBase, wallTop);
 	}
 
 	// TODO I need a half cylinder or a special corner shape for smooth corners
 	private void addCorner(int x, int y, double blockSize) {
-		addBlock(x, y, 1, 1, blockSize);
+		addWall(x, y, 1, 1, blockSize);
 	}
 
-	private void createDoors(PacManGameWorld world, double blockSize) {
+	private void createDoors(PacManGameWorld world, double stoneSize) {
 		PhongMaterial doorMaterial = new PhongMaterial(Maze3D.DOOR_COLOR_CLOSED);
 		world.ghostHouse().doorTiles().forEach(tile -> {
 			Box door = new Box(TS - 1, 1, HTS);
@@ -124,7 +134,7 @@ public class Maze3DBuilder {
 		});
 	}
 
-	private void createWalls(PacManGameWorld world, double blockSize) {
+	private void createWalls(PacManGameWorld world, double stoneSize) {
 		parts = new ArrayList<>();
 		// horizontal
 		for (int y = 0; y < floorPlan.sizeY(); ++y) {
@@ -140,17 +150,17 @@ public class Maze3DBuilder {
 					}
 				} else {
 					if (leftX != -1) {
-						addBlock(leftX, y, sizeX, 1, blockSize);
+						addWall(leftX, y, sizeX, 1, stoneSize);
 						leftX = -1;
 					}
 				}
 				if (x == floorPlan.sizeX() - 1 && leftX != -1) {
-					addBlock(leftX, y, sizeX, 1, blockSize);
+					addWall(leftX, y, sizeX, 1, stoneSize);
 					leftX = -1;
 				}
 			}
 			if (y == floorPlan.sizeY() - 1 && leftX != -1) {
-				addBlock(leftX, y, sizeX, 1, blockSize);
+				addWall(leftX, y, sizeX, 1, stoneSize);
 				leftX = -1;
 			}
 		}
@@ -169,17 +179,17 @@ public class Maze3DBuilder {
 					}
 				} else {
 					if (topY != -1) {
-						addBlock(x, topY, 1, sizeY, blockSize);
+						addWall(x, topY, 1, sizeY, stoneSize);
 						topY = -1;
 					}
 				}
 				if (y == floorPlan.sizeY() - 1 && topY != -1) {
-					addBlock(x, topY, 1, sizeY, blockSize);
+					addWall(x, topY, 1, sizeY, stoneSize);
 					topY = -1;
 				}
 			}
 			if (x == floorPlan.sizeX() - 1 && topY != -1) {
-				addBlock(x, topY, 1, sizeY, blockSize);
+				addWall(x, topY, 1, sizeY, stoneSize);
 				topY = -1;
 			}
 		}
@@ -188,7 +198,7 @@ public class Maze3DBuilder {
 		for (int y = 0; y < floorPlan.sizeY(); ++y) {
 			for (int x = 0; x < floorPlan.sizeX(); ++x) {
 				if (floorPlan.get(x, y) == FloorPlan.CORNER) {
-					addCorner(x, y, blockSize);
+					addCorner(x, y, stoneSize);
 				}
 			}
 		}

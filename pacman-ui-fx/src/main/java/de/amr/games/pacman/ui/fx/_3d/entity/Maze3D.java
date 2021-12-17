@@ -44,7 +44,7 @@ import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Translate;
 
 /**
- * 3D-model for a maze. Creates boxes representing walls from the world map.
+ * 3D-model for a maze. Creates walls using information from the world map / floor plan.
  * 
  * @author Armin Reichert
  */
@@ -57,17 +57,22 @@ public class Maze3D extends Group {
 
 	private final Box floor;
 	private final double floorSizeZ = 0.1;
+	private final double energizerSize = 2.5;
+	private final double pelletSize = 1;
 	private final PhongMaterial wallBaseMaterial = new PhongMaterial();
 	private final PhongMaterial wallTopMaterial = new PhongMaterial();
 	private final Group wallGroup = new Group();
 	private final Group foodGroup = new Group();
 	private final List<Box> doors = new ArrayList<>();
 
+	/**
+	 * @param mazeSizeX maze x-size in units
+	 * @param mazeSizeY maze y-size in units
+	 */
 	public Maze3D(double mazeSizeX, double mazeSizeY) {
 		floor = new Box(mazeSizeX - 1, mazeSizeY - 1, floorSizeZ);
 		floor.drawModeProperty().bind(Env.$drawMode3D);
-		floor.getTransforms()
-				.add(new Translate(mazeSizeX / 2 - TS / 2, mazeSizeY / 2 - TS / 2, -0.5 * floorSizeZ + 0.1));
+		floor.getTransforms().add(new Translate(mazeSizeX / 2 - TS / 2, mazeSizeY / 2 - TS / 2, -0.5 * floorSizeZ + 0.1));
 		var floorColor = Color.rgb(20, 20, 120);
 		var floorMaterial = new PhongMaterial(floorColor);
 		floorMaterial.setSpecularColor(floorColor.brighter());
@@ -87,22 +92,23 @@ public class Maze3D extends Group {
 		return Collections.unmodifiableList(doors);
 	}
 
-	public void buildWalls(PacManGameWorld world, int resolution, double wallHeight) {
+	public void build(PacManGameWorld world, int resolution, double wallHeight) {
 		var mazeBuilder = new Maze3DBuilder(this);
 		mazeBuilder.$wallHeight.bind($wallHeight);
 		mazeBuilder.setBaseMaterial(wallBaseMaterial);
 		mazeBuilder.setTopMaterial(wallTopMaterial);
 		wallGroup.setTranslateX(-TS / 2);
 		wallGroup.setTranslateY(-TS / 2);
-		wallGroup.getChildren().setAll(mazeBuilder.build(world, resolution));
+		mazeBuilder.build(world, resolution);
+		wallGroup.getChildren().setAll(mazeBuilder.getParts());
 	}
 
-	public void buildWallsAndAddFood(PacManGameWorld world, int resolution, double wallHeight, Color foodColor) {
-		buildWalls(world, resolution, wallHeight);
+	public void buildWithFood(PacManGameWorld world, int resolution, double wallHeight, Color foodColor) {
+		build(world, resolution, wallHeight);
 		foodGroup.getChildren().clear();
 		final var foodMaterial = new PhongMaterial(foodColor);
 		world.tiles().filter(world::isFoodTile).forEach(foodTile -> {
-			double radius = world.isEnergizerTile(foodTile) ? 2.5 : 1.0;
+			double radius = world.isEnergizerTile(foodTile) ? energizerSize : pelletSize;
 			final var pellet = new Sphere(radius);
 			pellet.setMaterial(foodMaterial);
 			pellet.setTranslateX(foodTile.x * TS);
