@@ -35,7 +35,6 @@ import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.PacManGameSound;
@@ -53,7 +52,6 @@ import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
 import javafx.scene.Node;
 import javafx.scene.media.AudioClip;
-import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -358,13 +356,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 	}
 
 	private void playDoorAnimation() {
-		for (Box door : maze3D.getDoors()) {
-			V2i doorTile = (V2i) door.getUserData();
-			if (game().ghosts().map(Ghost::tile).anyMatch(ghostTile -> ghostTile.equals(doorTile))) {
-				maze3D.showDoorsOpen(true);
-				return;
-			}
-		}
-		maze3D.showDoorsOpen(false);
+		boolean open = maze3D.doors().anyMatch(door -> game().ghosts().anyMatch(ghost -> ghost.tile().equals(tile(door))));
+		maze3D.showDoorsOpen(open);
 	}
 }

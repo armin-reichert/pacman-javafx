@@ -28,7 +28,6 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -61,7 +60,6 @@ public class Maze3D extends Group {
 
 	private double sizeX;
 	private double sizeY;
-	private final List<Node> parts = new ArrayList<>();
 	private Box floor;
 	private double floorSizeZ = 0.1;
 	private Color floorColor = Color.rgb(20, 20, 120);
@@ -69,8 +67,9 @@ public class Maze3D extends Group {
 	private double pelletSize = 1;
 	private PhongMaterial wallBaseMaterial = new PhongMaterial();
 	private PhongMaterial wallTopMaterial = new PhongMaterial();
-	private Group componentsGroup = new Group();
+	private Group allPartsGroup = new Group();
 	private Group foodGroup = new Group();
+	private final List<Node> allParts = new ArrayList<>();
 	private final List<Box> doors = new ArrayList<>();
 	private Color doorClosedColor = Color.PINK;
 	private Color doorOpenColor = Color.TRANSPARENT;
@@ -89,9 +88,9 @@ public class Maze3D extends Group {
 			build(world);
 		});
 		createFloor();
-		componentsGroup.setTranslateX(-TS / 2);
-		componentsGroup.setTranslateY(-TS / 2);
-		getChildren().addAll(floor, componentsGroup, foodGroup);
+		allPartsGroup.setTranslateX(-TS / 2);
+		allPartsGroup.setTranslateY(-TS / 2);
+		getChildren().addAll(floor, allPartsGroup, foodGroup);
 	}
 
 	/**
@@ -101,13 +100,13 @@ public class Maze3D extends Group {
 	 */
 	public void build(PacManGameWorld world) {
 		int res = $resolution.get();
-		FloorPlan floorPlan = FloorPlan.build(res, world);
 		double stoneSize = TS / res;
-		parts.clear();
+		FloorPlan floorPlan = FloorPlan.build(res, world);
+		allParts.clear();
 		doors.clear();
 		addWalls(floorPlan, world, stoneSize);
 		addDoors(world, stoneSize);
-		componentsGroup.getChildren().setAll(parts);
+		allPartsGroup.getChildren().setAll(allParts);
 		Logging.log("Rebuild 3D maze with resolution %d (stone size %.2f)", res, stoneSize);
 	}
 
@@ -150,16 +149,8 @@ public class Maze3D extends Group {
 		floor.setMaterial(floorMaterial);
 	}
 
-	public Color getDoorClosedColor() {
-		return doorClosedColor;
-	}
-
-	public Color getDoorOpenColor() {
-		return doorOpenColor;
-	}
-
-	public List<Box> getDoors() {
-		return Collections.unmodifiableList(doors);
+	public Stream<Box> doors() {
+		return doors.stream();
 	}
 
 	public Stream<Node> foodNodes() {
@@ -193,7 +184,7 @@ public class Maze3D extends Group {
 		wallBase.setTranslateY((topY + 0.5 * numStonesY) * stoneSize);
 		wallBase.translateZProperty().bind($wallHeight.multiply(-0.5));
 		wallBase.drawModeProperty().bind(Env.$drawMode3D);
-		parts.add(wallBase);
+		allParts.add(wallBase);
 
 		double topHeight = 0.5;
 		Box wallTop = new Box(numStonesX * stoneSize, numStonesY * stoneSize, topHeight);
@@ -203,7 +194,7 @@ public class Maze3D extends Group {
 		wallTop.translateZProperty()
 				.bind(wallBase.translateZProperty().subtract($wallHeight.add(topHeight + 0.1).multiply(0.5)));
 		wallTop.drawModeProperty().bind(Env.$drawMode3D);
-		parts.add(wallTop);
+		allParts.add(wallTop);
 
 		return Arrays.asList(wallBase, wallTop);
 	}
@@ -224,7 +215,7 @@ public class Maze3D extends Group {
 			door.setUserData(tile);
 			door.drawModeProperty().bind(Env.$drawMode3D);
 			doors.add(door);
-			parts.add(door);
+			allParts.add(door);
 		});
 	}
 
