@@ -27,7 +27,6 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -196,7 +195,7 @@ public class Maze3D extends Group {
 		wallTop.drawModeProperty().bind(Env.$drawMode3D);
 		allParts.add(wallTop);
 
-		return Arrays.asList(wallBase, wallTop);
+		return List.of(wallBase, wallTop);
 	}
 
 	// TODO I need a half cylinder or a special corner shape for smooth corners
