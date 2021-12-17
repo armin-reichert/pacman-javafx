@@ -89,7 +89,6 @@ public class PlayScene3D implements GameScene {
 //				new POVPerspective(cam), //
 		};
 		selectCam(CAM_FOLLOWING_PLAYER);
-		Env.$mazeResolution.addListener((resolution, oldValue, newValue) -> buildMazeWalls(newValue.intValue()));
 	}
 
 	@Override
@@ -97,11 +96,12 @@ public class PlayScene3D implements GameScene {
 		final var width = game().world.numCols() * TS;
 		final var height = game().world.numRows() * TS;
 
-		maze3D = new Maze3D(width, height);
+		maze3D = new Maze3D(game().world, width, height);
 		maze3D.setFloorTexture(new Image(getClass().getResourceAsStream("/common/escher-texture.jpg")));
 		maze3D.setWallBaseColor(rendering2D().getMazeSideColor(game().mazeNumber));
 		maze3D.setWallTopColor(rendering2D().getMazeTopColor(game().mazeNumber));
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
+		maze3D.$resolution.bind(Env.$mazeResolution);
 		buildMaze();
 
 		player3D = new Player3D(game().player, model3D);
@@ -196,13 +196,7 @@ public class PlayScene3D implements GameScene {
 	protected void buildMaze() {
 		if (game() != null) {
 			var foodColor = rendering2D().getFoodColor(game().mazeNumber);
-			maze3D.buildWithFood(game().world, Env.$mazeResolution.get(), Env.$mazeWallHeight.get(), foodColor);
-		}
-	}
-
-	protected void buildMazeWalls(int resolution) {
-		if (game() != null) {
-			maze3D.build(game().world, resolution, Env.$mazeWallHeight.get());
+			maze3D.buildWithFood(game().world, foodColor);
 		}
 	}
 }

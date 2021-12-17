@@ -32,11 +32,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
+import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.model.world.FloorPlan;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.fx.Env;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -54,12 +57,11 @@ import javafx.scene.transform.Translate;
 public class Maze3D extends Group {
 
 	public final DoubleProperty $wallHeight = new SimpleDoubleProperty(2.0);
+	public final IntegerProperty $resolution = new SimpleIntegerProperty(8);
 
 	private double sizeX;
 	private double sizeY;
-	private FloorPlan floorPlan;
-	private List<Node> parts;
-
+	private final List<Node> parts = new ArrayList<>();
 	private Box floor;
 	private double floorSizeZ = 0.1;
 	private Color floorColor = Color.rgb(20, 20, 120);
@@ -67,36 +69,76 @@ public class Maze3D extends Group {
 	private double pelletSize = 1;
 	private PhongMaterial wallBaseMaterial = new PhongMaterial();
 	private PhongMaterial wallTopMaterial = new PhongMaterial();
-	private Group wallGroup = new Group();
+	private Group partsGroup = new Group();
 	private Group foodGroup = new Group();
-	private List<Box> doors = new ArrayList<>();
+	private final List<Box> doors = new ArrayList<>();
 	private Color doorClosedColor = Color.PINK;
 	private Color doorOpenColor = Color.TRANSPARENT;
 
 	/**
+	 * Creates the 3D representation of the maze without walls and doors.
+	 * 
+	 * @param world the game world
 	 * @param sizeX maze x-size in units
 	 * @param sizeY maze y-size in units
 	 */
-	public Maze3D(double sizeX, double sizeY) {
+	public Maze3D(PacManGameWorld world, double sizeX, double sizeY) {
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
+		$resolution.addListener((x, y, z) -> {
+			build(world);
+		});
 		createFloor();
-		getChildren().addAll(floor, wallGroup, foodGroup);
+		partsGroup.setTranslateX(-TS / 2);
+		partsGroup.setTranslateY(-TS / 2);
+		getChildren().addAll(floor, partsGroup, foodGroup);
 	}
 
-	public void build(PacManGameWorld world, int resolution) {
-		floorPlan = FloorPlan.build(resolution, world);
-		double stoneSize = TS / resolution;
-		createWalls(world, stoneSize);
-		createDoors(world, stoneSize);
+	/**
+	 * Creates the walls and doors accorindg to the current resolution.
+	 * 
+	 * @param world the game world
+	 */
+	public void build(PacManGameWorld world) {
+		int res = $resolution.get();
+		FloorPlan floorPlan = FloorPlan.build(res, world);
+		double stoneSize = TS / res;
+		parts.clear();
+		doors.clear();
+		addWalls(floorPlan, world, stoneSize);
+		addDoors(world, stoneSize);
+		partsGroup.getChildren().setAll(parts);
+		Logging.log("Rebuild 3D maze with resolution %d (stone size %.2f)", res, stoneSize);
 	}
 
-	public Color getDoorClosedColor() {
-		return doorClosedColor;
+	public void buildWithFood(PacManGameWorld world, Color foodColor) {
+		build(world);
+		foodGroup.getChildren().clear();
+		final var foodMaterial = new PhongMaterial(foodColor);
+		world.tiles().filter(world::isFoodTile).forEach(foodTile -> {
+			double radius = world.isEnergizerTile(foodTile) ? energizerSize : pelletSize;
+			final var pellet = new Sphere(radius);
+			pellet.setMaterial(foodMaterial);
+			pellet.setTranslateX(foodTile.x * TS);
+			pellet.setTranslateY(foodTile.y * TS);
+			pellet.setTranslateZ(-3);
+			pellet.setUserData(foodTile);
+			foodGroup.getChildren().add(pellet);
+		});
 	}
 
-	public Color getDoorOpenColor() {
-		return doorOpenColor;
+	public void setWallBaseColor(Color color) {
+		wallBaseMaterial.setDiffuseColor(color);
+		wallBaseMaterial.setSpecularColor(color.brighter());
+	}
+
+	public void setWallTopColor(Color color) {
+		wallTopMaterial.setDiffuseColor(color);
+		wallTopMaterial.setSpecularColor(color); // TODO not sure about this
+	}
+
+	public void setFloorTexture(Image floorTexture) {
+		((PhongMaterial) floor.getMaterial()).setDiffuseMap(floorTexture);
 	}
 
 	private void createFloor() {
@@ -108,8 +150,12 @@ public class Maze3D extends Group {
 		floor.setMaterial(floorMaterial);
 	}
 
-	public Stream<Node> foodNodes() {
-		return foodGroup.getChildren().stream();
+	public Color getDoorClosedColor() {
+		return doorClosedColor;
+	}
+
+	public Color getDoorOpenColor() {
+		return doorOpenColor;
 	}
 
 	public void addDoor(Box door) {
@@ -118,6 +164,10 @@ public class Maze3D extends Group {
 
 	public List<Box> getDoors() {
 		return Collections.unmodifiableList(doors);
+	}
+
+	public Stream<Node> foodNodes() {
+		return foodGroup.getChildren().stream();
 	}
 
 	/**
@@ -159,7 +209,7 @@ public class Maze3D extends Group {
 		addWall(x, y, 1, 1, blockSize);
 	}
 
-	private void createDoors(PacManGameWorld world, double stoneSize) {
+	private void addDoors(PacManGameWorld world, double stoneSize) {
 		PhongMaterial doorMaterial = new PhongMaterial(doorClosedColor);
 		world.ghostHouse().doorTiles().forEach(tile -> {
 			Box door = new Box(TS - 1, 1, HTS);
@@ -174,8 +224,7 @@ public class Maze3D extends Group {
 		});
 	}
 
-	private void createWalls(PacManGameWorld world, double stoneSize) {
-		parts = new ArrayList<>();
+	private void addWalls(FloorPlan floorPlan, PacManGameWorld world, double stoneSize) {
 		// horizontal
 		for (int y = 0; y < floorPlan.sizeY(); ++y) {
 			int leftX = -1;
@@ -242,42 +291,5 @@ public class Maze3D extends Group {
 				}
 			}
 		}
-	}
-
-	public void build(PacManGameWorld world, int resolution, double wallHeight) {
-		wallGroup.setTranslateX(-TS / 2);
-		wallGroup.setTranslateY(-TS / 2);
-		build(world, resolution);
-		wallGroup.getChildren().setAll(parts);
-	}
-
-	public void buildWithFood(PacManGameWorld world, int resolution, double wallHeight, Color foodColor) {
-		build(world, resolution, wallHeight);
-		foodGroup.getChildren().clear();
-		final var foodMaterial = new PhongMaterial(foodColor);
-		world.tiles().filter(world::isFoodTile).forEach(foodTile -> {
-			double radius = world.isEnergizerTile(foodTile) ? energizerSize : pelletSize;
-			final var pellet = new Sphere(radius);
-			pellet.setMaterial(foodMaterial);
-			pellet.setTranslateX(foodTile.x * TS);
-			pellet.setTranslateY(foodTile.y * TS);
-			pellet.setTranslateZ(-3);
-			pellet.setUserData(foodTile);
-			foodGroup.getChildren().add(pellet);
-		});
-	}
-
-	public void setWallBaseColor(Color color) {
-		wallBaseMaterial.setDiffuseColor(color);
-		wallBaseMaterial.setSpecularColor(color.brighter());
-	}
-
-	public void setWallTopColor(Color color) {
-		wallTopMaterial.setDiffuseColor(color);
-		wallTopMaterial.setSpecularColor(color); // TODO not sure about this
-	}
-
-	public void setFloorTexture(Image floorTexture) {
-		((PhongMaterial) floor.getMaterial()).setDiffuseMap(floorTexture);
 	}
 }
