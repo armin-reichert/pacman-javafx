@@ -95,7 +95,7 @@ public class Maze3D extends Group {
 	}
 
 	/**
-	 * Creates the walls and doors accorindg to the current resolution.
+	 * Creates the walls and doors according to the current resolution.
 	 * 
 	 * @param world the game world
 	 */
