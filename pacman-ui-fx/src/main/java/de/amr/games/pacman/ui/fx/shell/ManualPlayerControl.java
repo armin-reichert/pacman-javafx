@@ -63,6 +63,9 @@ public class ManualPlayerControl implements PlayerControl {
 	}
 
 	private void onKeyPressed(KeyEvent e) {
+		if (e.isControlDown()) {
+			return;
+		}
 		if (e.getCode() == upCode) {
 			up = true;
 		} else if (e.getCode() == downCode) {
@@ -75,6 +78,9 @@ public class ManualPlayerControl implements PlayerControl {
 	}
 
 	private void onKeyReleased(KeyEvent e) {
+		if (e.isControlDown()) {
+			return;
+		}
 		if (e.getCode() == upCode) {
 			up = false;
 		} else if (e.getCode() == downCode) {
