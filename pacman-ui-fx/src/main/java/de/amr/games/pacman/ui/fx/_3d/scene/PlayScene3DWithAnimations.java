@@ -53,8 +53,6 @@ import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
 import javafx.scene.Node;
 import javafx.scene.media.AudioClip;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -360,18 +358,13 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 	}
 
 	private void playDoorAnimation() {
-		boolean openDoor = false;
 		for (Box door : maze3D.getDoors()) {
 			V2i doorTile = (V2i) door.getUserData();
-			openDoor = game().ghosts().map(Ghost::tile).anyMatch(ghostTile -> ghostTile.equals(doorTile));
-			if (openDoor) {
-				break;
+			if (game().ghosts().map(Ghost::tile).anyMatch(ghostTile -> ghostTile.equals(doorTile))) {
+				maze3D.showDoorsOpen(true);
+				return;
 			}
 		}
-		Color doorColor = openDoor ? maze3D.getDoorOpenColor() : maze3D.getDoorClosedColor();
-		PhongMaterial material = new PhongMaterial(doorColor);
-		for (Box door : maze3D.getDoors()) {
-			door.setMaterial(material);
-		}
+		maze3D.showDoorsOpen(false);
 	}
 }

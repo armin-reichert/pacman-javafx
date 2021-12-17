@@ -69,7 +69,7 @@ public class Maze3D extends Group {
 	private double pelletSize = 1;
 	private PhongMaterial wallBaseMaterial = new PhongMaterial();
 	private PhongMaterial wallTopMaterial = new PhongMaterial();
-	private Group partsGroup = new Group();
+	private Group componentsGroup = new Group();
 	private Group foodGroup = new Group();
 	private final List<Box> doors = new ArrayList<>();
 	private Color doorClosedColor = Color.PINK;
@@ -89,9 +89,9 @@ public class Maze3D extends Group {
 			build(world);
 		});
 		createFloor();
-		partsGroup.setTranslateX(-TS / 2);
-		partsGroup.setTranslateY(-TS / 2);
-		getChildren().addAll(floor, partsGroup, foodGroup);
+		componentsGroup.setTranslateX(-TS / 2);
+		componentsGroup.setTranslateY(-TS / 2);
+		getChildren().addAll(floor, componentsGroup, foodGroup);
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class Maze3D extends Group {
 		doors.clear();
 		addWalls(floorPlan, world, stoneSize);
 		addDoors(world, stoneSize);
-		partsGroup.getChildren().setAll(parts);
+		componentsGroup.getChildren().setAll(parts);
 		Logging.log("Rebuild 3D maze with resolution %d (stone size %.2f)", res, stoneSize);
 	}
 
@@ -158,16 +158,20 @@ public class Maze3D extends Group {
 		return doorOpenColor;
 	}
 
-	public void addDoor(Box door) {
-		doors.add(door);
-	}
-
 	public List<Box> getDoors() {
 		return Collections.unmodifiableList(doors);
 	}
 
 	public Stream<Node> foodNodes() {
 		return foodGroup.getChildren().stream();
+	}
+
+	public void showDoorsOpen(boolean open) {
+		Color doorColor = open ? doorOpenColor : doorClosedColor;
+		PhongMaterial material = new PhongMaterial(doorColor);
+		for (Box door : doors) {
+			door.setMaterial(material);
+		}
 	}
 
 	/**
@@ -219,7 +223,7 @@ public class Maze3D extends Group {
 			door.setTranslateZ(-HTS / 2);
 			door.setUserData(tile);
 			door.drawModeProperty().bind(Env.$drawMode3D);
-			addDoor(door);
+			doors.add(door);
 			parts.add(door);
 		});
 	}
