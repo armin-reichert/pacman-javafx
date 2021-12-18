@@ -113,7 +113,6 @@ public class HUD extends VBox {
 		line("Immunity", "%s", on_off(ui.getGameController().game().player.immune));
 
 		newline();
-		line("Keyboard", "");
 		line("Key V (Intro)", "Pac-Man <-> Ms. PacMan");
 		line("Key A", "Autopilot On/Off");
 		line("Key E", "Eat all normal pellets");
