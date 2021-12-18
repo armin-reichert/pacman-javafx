@@ -324,7 +324,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			break;
 
 		case I:
-			Env.$isHUDVisible.set(!Env.$isHUDVisible.get());
+			if (!hud.isVisible()) {
+				hud.fadeIn();
+			} else {
+				hud.fadeOut();
+			}
 			break;
 
 		case L:

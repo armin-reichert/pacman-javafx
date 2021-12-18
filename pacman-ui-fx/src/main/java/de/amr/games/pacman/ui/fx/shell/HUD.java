@@ -28,6 +28,7 @@ import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
+import javafx.animation.FadeTransition;
 import javafx.geometry.Insets;
 import javafx.scene.Camera;
 import javafx.scene.layout.Background;
@@ -37,6 +38,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 /**
  * Heads-Up-Display with information about the UI.
@@ -60,12 +62,12 @@ public class HUD extends VBox {
 	public HUD(PacManGameUI_JavaFX ui) {
 		this.ui = ui;
 		getChildren().add(textUI);
-		visibleProperty().bind(Env.$isHUDVisible);
 		setMaxWidth(300);
 		Color bgColor = new Color(0.3, 0.3, 0.3, 0.6);
 		setBackground(new Background(new BackgroundFill(bgColor, CornerRadii.EMPTY, Insets.EMPTY)));
 		textUI.setFill(Color.WHITE);
 		textUI.setFont(Font.font("Monospace", 14));
+		setVisible(false);
 	}
 
 	public void update() {
@@ -137,5 +139,21 @@ public class HUD extends VBox {
 		return camera == null ? "No camera"
 				: String.format("x=%.0f y=%.0f z=%.0f rot=%.0f", camera.getTranslateX(), camera.getTranslateY(),
 						camera.getTranslateZ(), camera.getRotate());
+	}
+
+	public void fadeIn() {
+		setVisible(true);
+		FadeTransition fade = new FadeTransition(Duration.seconds(1), this);
+		fade.setFromValue(0);
+		fade.setToValue(1);
+		fade.play();
+	}
+
+	public void fadeOut() {
+		FadeTransition fade = new FadeTransition(Duration.seconds(1), this);
+		fade.setFromValue(1);
+		fade.setToValue(0);
+		fade.setOnFinished(e -> setVisible(false));
+		fade.play();
 	}
 }
