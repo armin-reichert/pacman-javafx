@@ -325,9 +325,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		case I:
 			if (!hud.isVisible()) {
-				hud.fadeIn();
+				hud.show();
 			} else {
-				hud.fadeOut();
+				hud.hide();
 			}
 			break;
 
@@ -363,6 +363,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			} else {
 				Env.gameLoop.setTargetFrameRate(Math.max(10, currentTargetFrameRate - 10));
 			}
+			showFlashMessage(1, "Target FPS set to %d Hz", Env.gameLoop.getTargetFrameRate());
 			break;
 
 		case T:
@@ -373,14 +374,13 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			Env.$axesVisible.set(!Env.$axesVisible.get());
 			break;
 
-		case DIGIT3:
+		case DIGIT3: {
 			toggleUse3DScenes();
-			if (Env.$use3DScenes.get()) {
-				showFlashMessage(2, "Using 3D play scene\nCTRL+C changes perspective");
-			} else {
-				showFlashMessage(1, "Using 2D play scene");
-			}
+			String message = Env.$use3DScenes.get() ? "Using 3D play scene\nCTRL+C changes perspective"
+					: "Using 2D play scene";
+			showFlashMessage(2, message);
 			break;
+		}
 
 		default:
 			break;
