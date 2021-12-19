@@ -140,7 +140,7 @@ public class PlayScene3D implements GameScene {
 		// TODO: is this the recommended way to do keep the score in plain view?
 		score3D.setRotationAxis(Rotate.X_AXIS);
 		score3D.setRotate(subSceneFX.getCamera().getRotate());
-		livesCounter3D.setVisibleItems(game().lives);
+		livesCounter3D.setVisibleItems(game().player.lives);
 		selectedCam().follow(player3D);
 	}
 

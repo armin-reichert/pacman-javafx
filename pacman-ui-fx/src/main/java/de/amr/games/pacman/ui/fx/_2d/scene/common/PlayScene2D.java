@@ -115,7 +115,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void doUpdate() {
-		livesCounter2D.lives = game().lives;
+		livesCounter2D.lives = game().player.lives;
 		animationController.update();
 	}
 
