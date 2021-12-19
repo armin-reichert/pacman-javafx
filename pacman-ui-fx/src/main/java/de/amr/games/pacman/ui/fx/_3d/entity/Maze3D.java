@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
@@ -30,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.model.world.FloorPlan;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.fx.Env;
@@ -62,12 +62,12 @@ public class Maze3D extends Group {
 	private Box floor;
 	private double floorSizeZ = 0.1;
 	private Color floorColor = Color.rgb(20, 20, 120);
-	private double energizerSize = 2.5;
-	private double pelletSize = 1;
+	private double energizerRadius = 2.5;
+	private double pelletRadius = 1;
 	private PhongMaterial wallBaseMaterial = new PhongMaterial();
 	private PhongMaterial wallTopMaterial = new PhongMaterial();
-	private Group allPartsGroup = new Group();
-	private Group foodGroup = new Group();
+	private final Group allPartsGroup = new Group();
+	private final Group foodGroup = new Group();
 	private final List<Node> allParts = new ArrayList<>();
 	private final List<Box> doors = new ArrayList<>();
 	private Color doorClosedColor = Color.PINK;
@@ -92,6 +92,15 @@ public class Maze3D extends Group {
 		getChildren().addAll(floor, allPartsGroup, foodGroup);
 	}
 
+	private void createFloor() {
+		floor = new Box(sizeX - 1, sizeY - 1, floorSizeZ);
+		floor.drawModeProperty().bind(Env.$drawMode3D);
+		floor.getTransforms().add(new Translate(0.5 * (sizeX - TS), 0.5 * (sizeY - TS), -0.5 * floorSizeZ + 0.1));
+		var floorMaterial = new PhongMaterial(floorColor);
+		floorMaterial.setSpecularColor(floorColor.brighter());
+		floor.setMaterial(floorMaterial);
+	}
+
 	/**
 	 * Creates the walls and doors according to the current resolution.
 	 * 
@@ -106,16 +115,16 @@ public class Maze3D extends Group {
 		addWalls(floorPlan, world, stoneSize);
 		addDoors(world, stoneSize);
 		allPartsGroup.getChildren().setAll(allParts);
-		Logging.log("Rebuild 3D maze with resolution %d (stone size %.2f)", res, stoneSize);
+		log("Rebuild 3D maze with resolution %d (stone size %.2f)", res, stoneSize);
 	}
 
 	public void buildWithFood(PacManGameWorld world, Color foodColor) {
+		var foodMaterial = new PhongMaterial(foodColor);
 		build(world);
 		foodGroup.getChildren().clear();
-		final var foodMaterial = new PhongMaterial(foodColor);
 		world.tiles().filter(world::isFoodTile).forEach(foodTile -> {
-			double radius = world.isEnergizerTile(foodTile) ? energizerSize : pelletSize;
-			final var pellet = new Sphere(radius);
+			double r = world.isEnergizerTile(foodTile) ? energizerRadius : pelletRadius;
+			var pellet = new Sphere(r);
 			pellet.setMaterial(foodMaterial);
 			pellet.setTranslateX(foodTile.x * TS);
 			pellet.setTranslateY(foodTile.y * TS);
@@ -132,20 +141,11 @@ public class Maze3D extends Group {
 
 	public void setWallTopColor(Color color) {
 		wallTopMaterial.setDiffuseColor(color);
-		wallTopMaterial.setSpecularColor(color); // TODO not sure about this
+		wallTopMaterial.setSpecularColor(color);
 	}
 
 	public void setFloorTexture(Image floorTexture) {
 		((PhongMaterial) floor.getMaterial()).setDiffuseMap(floorTexture);
-	}
-
-	private void createFloor() {
-		floor = new Box(sizeX - 1, sizeY - 1, floorSizeZ);
-		floor.drawModeProperty().bind(Env.$drawMode3D);
-		floor.getTransforms().add(new Translate(sizeX / 2 - TS / 2, sizeY / 2 - TS / 2, -0.5 * floorSizeZ + 0.1));
-		var floorMaterial = new PhongMaterial(floorColor);
-		floorMaterial.setSpecularColor(floorColor.brighter());
-		floor.setMaterial(floorMaterial);
 	}
 
 	public Stream<Box> doors() {
@@ -198,7 +198,6 @@ public class Maze3D extends Group {
 		return List.of(wallBase, wallTop);
 	}
 
-	// TODO I need a half cylinder or a special corner shape for smooth corners
 	private void addCorner(int x, int y, double blockSize) {
 		addWall(x, y, 1, 1, blockSize);
 	}
