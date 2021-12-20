@@ -51,10 +51,10 @@ public class Cam_Total extends ManualCameraController implements PlaySceneCam {
 		cam.setNearClip(0.1);
 		cam.setFarClip(10000.0);
 		cam.setRotationAxis(Rotate.X_AXIS);
-		cam.setRotate(30);
+		cam.setRotate(49);
 		cam.setTranslateX(0);
-		cam.setTranslateY(270);
-		cam.setTranslateZ(-460);
+		cam.setTranslateY(320);
+		cam.setTranslateZ(-260);
 	}
 
 	@Override

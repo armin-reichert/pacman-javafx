@@ -88,7 +88,7 @@ public class PlayScene3D implements GameScene {
 				new Cam_NearPlayer(cam), //
 //				new POVPerspective(cam), //
 		};
-		selectCam(CAM_FOLLOWING_PLAYER);
+		selectCam(CAM_TOTAL);
 	}
 
 	@Override
