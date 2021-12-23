@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
-import static de.amr.games.pacman.controller.pacman.IntroController.TOP_Y;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
@@ -136,13 +135,13 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	private void drawGallery() {
 		gc.setFill(Color.WHITE);
 		gc.setFont(rendering.getScoreFont());
-		gc.fillText("CHARACTER", t(6), TOP_Y);
-		gc.fillText("/", t(16), TOP_Y);
-		gc.fillText("NICKNAME", t(18), TOP_Y);
+		gc.fillText("CHARACTER", t(6), sceneController.topY);
+		gc.fillText("/", t(16), sceneController.topY);
+		gc.fillText("NICKNAME", t(18), sceneController.topY);
 		for (int i = 0; i < 4; ++i) {
 			GhostPortrait portrait = sceneController.gallery[i];
 			if (portrait.ghost.visible) {
-				int y = TOP_Y + t(2 + 3 * i);
+				int y = sceneController.topY + t(2 + 3 * i);
 				ghostsInGallery2D.get(i).render(gc);
 				gc.setFill(getGhostColor(i));
 				gc.setFont(rendering.getScoreFont());
