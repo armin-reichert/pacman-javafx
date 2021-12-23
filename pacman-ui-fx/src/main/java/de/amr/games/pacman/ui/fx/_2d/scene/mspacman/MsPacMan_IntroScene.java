@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.mspacman.IntroController;
-import de.amr.games.pacman.controller.mspacman.IntroController.Phase;
+import de.amr.games.pacman.controller.mspacman.IntroController.IntroState;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.Ghost;
@@ -88,11 +88,11 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 		gc.setFill(Color.ORANGE);
 		gc.fillText("\"MS PAC-MAN\"", t(8), t(5));
 		drawAnimatedBoard(32, 16);
-		if (sceneController.phase == Phase.PRESENTING_GHOST) {
+		if (sceneController.currentStateID == IntroState.PRESENTING_GHOST) {
 			drawPresentingGhost(sceneController.ghosts[sceneController.currentGhostIndex]);
-		} else if (sceneController.phase == Phase.PRESENTING_MSPACMAN) {
+		} else if (sceneController.currentStateID == IntroState.PRESENTING_MSPACMAN) {
 			drawStarringMsPacMan();
-		} else if (sceneController.phase == Phase.END) {
+		} else if (sceneController.currentStateID == IntroState.WAITING_FOR_GAME) {
 			drawStarringMsPacMan();
 			drawPointsAnimation(26);
 			drawPressKeyToStart(32);
