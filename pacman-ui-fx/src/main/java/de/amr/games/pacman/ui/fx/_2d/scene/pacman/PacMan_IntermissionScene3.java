@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.pacman.Intermission3Controller;
-import de.amr.games.pacman.controller.pacman.Intermission3Controller.Phase;
+import de.amr.games.pacman.controller.pacman.Intermission3Controller.IntermissionState;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.PacManGameSound;
@@ -91,7 +91,7 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 	public void doRender() {
 		renderLevelCounter(LEVEL_COUNTER_POS);
 		pacMan2D.render(gc);
-		if (sceneController.phase == Phase.CHASING_PACMAN) {
+		if (sceneController.currentStateID == IntermissionState.CHASING_PACMAN) {
 			blinkyPatched2D.render(gc);
 		} else {
 			blinkyNaked2D.render(gc);
