@@ -54,7 +54,6 @@ import javafx.scene.text.Font;
 public class PacMan_IntroScene extends AbstractGameScene2D {
 
 	private IntroController sceneController;
-
 	private GameScore2D score2D;
 	private GameScore2D hiscore2D;
 	private Player2D pacMan2D;

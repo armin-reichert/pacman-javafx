@@ -34,6 +34,7 @@ import de.amr.games.pacman.controller.mspacman.IntroController.IntroState;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.Ghost;
+import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
@@ -49,9 +50,11 @@ import javafx.scene.text.Font;
 public class MsPacMan_IntroScene extends AbstractGameScene2D {
 
 	private IntroController sceneController;
-	private TickTimer boardAnimationTimer = new TickTimer("boardAnimation-timer");
+	private GameScore2D score2D;
+	private GameScore2D hiscore2D;
 	private Player2D msPacMan2D;
 	private List<Ghost2D> ghosts2D;
+	private TickTimer boardAnimationTimer = new TickTimer("boardAnimation-timer");
 
 	public MsPacMan_IntroScene() {
 		super(Scenes.MS_PACMAN_RENDERING, Scenes.MS_PACMAN_SOUNDS, 28, 36);
@@ -59,17 +62,35 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 
 	@Override
 	public void init() {
-		boardAnimationTimer.reset();
-		boardAnimationTimer.start();
 		sceneController = new IntroController(gameController);
 		sceneController.init();
+
+		score2D = new GameScore2D(rendering);
+		score2D.title = "SCORE";
+		score2D.x = t(1);
+		score2D.y = t(1);
+		score2D.levelSupplier = () -> game().levelNumber;
+		score2D.pointsSupplier = () -> game().score;
+		score2D.showPoints = false;
+
+		hiscore2D = new GameScore2D(rendering);
+		hiscore2D.title = "HIGH SCORE";
+		hiscore2D.x = t(16);
+		hiscore2D.y = t(1);
+		hiscore2D.levelSupplier = () -> game().hiscoreLevel;
+		hiscore2D.pointsSupplier = () -> game().hiscorePoints;
+
 		msPacMan2D = new Player2D(sceneController.msPacMan, rendering);
 		msPacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
+
 		ghosts2D = Stream.of(sceneController.ghosts).map(ghost -> {
 			Ghost2D ghost2D = new Ghost2D(ghost, rendering);
 			ghost2D.kickingAnimations.values().forEach(TimedSequence::restart);
 			return ghost2D;
 		}).collect(Collectors.toList());
+
+		boardAnimationTimer.reset();
+		boardAnimationTimer.start();
 	}
 
 	@Override
@@ -84,6 +105,8 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 
 	@Override
 	public void doRender() {
+		score2D.render(gc);
+		hiscore2D.render(gc);
 		gc.setFont(rendering.getScoreFont());
 		gc.setFill(Color.ORANGE);
 		gc.fillText("\"MS PAC-MAN\"", t(8), t(5));
