@@ -109,7 +109,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 		hiscore2D.render(gc);
 		gc.setFont(rendering.getScoreFont());
 		gc.setFill(Color.ORANGE);
-		gc.fillText("\"MS PAC-MAN\"", t(8), t(sceneController.tileBoardTopLeft.y - 3));
+		gc.fillText("\"MS PAC-MAN\"", t(sceneController.tileTitle.x), t(sceneController.tileTitle.y));
 		drawAnimatedBoard(32, 16);
 		if (sceneController.currentStateID == IntroState.PRESENTING_GHOST) {
 			drawPresentingGhost(sceneController.ghosts[sceneController.currentGhostIndex]);
@@ -129,19 +129,19 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 		gc.setFill(Color.WHITE);
 		gc.setFont(rendering.getScoreFont());
 		if (ghost == sceneController.ghosts[0]) {
-			gc.fillText("WITH", t(8), t(top + 3));
+			gc.fillText("WITH", t(sceneController.tileTitle.x), t(top + 3));
 		}
 		gc.setFill(ghost.id == 0 ? Color.RED : ghost.id == 1 ? Color.PINK : ghost.id == 2 ? Color.CYAN : Color.ORANGE);
-		gc.fillText(ghost.name.toUpperCase(), t(13 - ghost.name.length() / 2), t(top + 6));
+		gc.fillText(ghost.name.toUpperCase(), t(14 - ghost.name.length() / 2), t(top + 6));
 	}
 
 	private void drawStarringMsPacMan() {
 		int top = sceneController.tileBoardTopLeft.y;
 		gc.setFill(Color.WHITE);
 		gc.setFont(rendering.getScoreFont());
-		gc.fillText("STARRING", t(8), t(top + 3));
+		gc.fillText("STARRING", t(sceneController.tileTitle.x), t(top + 3));
 		gc.setFill(Color.YELLOW);
-		gc.fillText("MS PAC-MAN", t(8), t(top + 6));
+		gc.fillText("MS PAC-MAN", t(sceneController.tileTitle.x), t(top + 6));
 	}
 
 	private void drawAnimatedBoard(int numDotsX, int numDotsY) {
