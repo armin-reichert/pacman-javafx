@@ -84,7 +84,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		hiscore2D.levelSupplier = () -> game().hiscoreLevel;
 		hiscore2D.pointsSupplier = () -> game().hiscorePoints;
 
-		pacMan2D = new Player2D(sceneController.pac, rendering);
+		pacMan2D = new Player2D(sceneController.pacMan, rendering);
 		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 
 		ghosts2D = Stream.of(sceneController.ghosts).map(ghost -> {
@@ -118,7 +118,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		if (sceneController.currentStateID == IntroState.CHASING_PAC) {
 			if (sceneController.blinking.animate()) {
 				gc.setFill(Color.PINK);
-				gc.fillOval(t(2), sceneController.pac.position.y, TS, TS);
+				gc.fillOval(t(2), sceneController.pacMan.position.y, TS, TS);
 			}
 		}
 		ghosts2D.forEach(ghost2D -> ghost2D.render(gc));
