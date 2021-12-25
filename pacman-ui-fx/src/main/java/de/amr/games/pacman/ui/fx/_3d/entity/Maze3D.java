@@ -27,8 +27,6 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.model.world.FloorPlan;
@@ -59,19 +57,22 @@ public class Maze3D extends Group {
 
 	private double sizeX;
 	private double sizeY;
-	private Box floor;
+	
 	private double floorSizeZ = 0.1;
 	private Color floorColor = Color.rgb(20, 20, 120);
+	private Box floor;
+	
 	private double energizerRadius = 2.5;
 	private double pelletRadius = 1;
+	private final Group foodGroup = new Group();
+	
 	private PhongMaterial wallBaseMaterial = new PhongMaterial();
 	private PhongMaterial wallTopMaterial = new PhongMaterial();
-	private final Group allPartsGroup = new Group();
-	private final Group foodGroup = new Group();
-	private final List<Node> allParts = new ArrayList<>();
-	private final List<Box> doors = new ArrayList<>();
+	private final Group wallsGroup = new Group();
+
 	private Color doorClosedColor = Color.PINK;
 	private Color doorOpenColor = Color.TRANSPARENT;
+	private final Group doorsGroup = new Group();
 
 	/**
 	 * Creates the 3D representation of the maze without walls and doors.
@@ -87,9 +88,10 @@ public class Maze3D extends Group {
 			build(world);
 		});
 		createFloor();
-		allPartsGroup.setTranslateX(-TS / 2);
-		allPartsGroup.setTranslateY(-TS / 2);
-		getChildren().addAll(floor, allPartsGroup, foodGroup);
+		Group wallsAndDoors = new Group(wallsGroup, doorsGroup);
+		wallsAndDoors.setTranslateX(-TS / 2);
+		wallsAndDoors.setTranslateY(-TS / 2);
+		getChildren().addAll(floor, wallsAndDoors, foodGroup);
 	}
 
 	private void createFloor() {
@@ -110,12 +112,11 @@ public class Maze3D extends Group {
 		int res = $resolution.get();
 		double stoneSize = TS / res;
 		FloorPlan floorPlan = FloorPlan.build(res, world);
-		allParts.clear();
-		doors.clear();
+		wallsGroup.getChildren().clear();
+		doorsGroup.getChildren().clear();
 		addWalls(floorPlan, world, stoneSize);
 		addDoors(world, stoneSize);
-		allPartsGroup.getChildren().setAll(allParts);
-		log("Rebuild 3D maze with resolution %d (stone size %.2f)", res, stoneSize);
+		log("Rebuilt 3D maze at resolution %d (stone size %.2f)", res, stoneSize);
 	}
 
 	public void buildWithFood(PacManGameWorld world, Color foodColor) {
@@ -149,7 +150,7 @@ public class Maze3D extends Group {
 	}
 
 	public Stream<Box> doors() {
-		return doors.stream();
+		return doorsGroup.getChildren().stream().map(node -> (Box) node);
 	}
 
 	public Stream<Node> foodNodes() {
@@ -159,14 +160,14 @@ public class Maze3D extends Group {
 	public void showDoorsOpen(boolean open) {
 		Color doorColor = open ? doorOpenColor : doorClosedColor;
 		PhongMaterial material = new PhongMaterial(doorColor);
-		for (Box door : doors) {
-			door.setMaterial(material);
+		for (Node door : doorsGroup.getChildren()) {
+			((Box) door).setMaterial(material);
 		}
 	}
 
 	/**
-	 * Adds a wall at given position. A wall consists of a base and a top part which can have different
-	 * color and material.
+	 * Adds a wall at given position. A wall consists of a base and a top part which can have different color and
+	 * material.
 	 * 
 	 * @param leftX      x-coordinate of top-left stone
 	 * @param topY       y-coordinate of top-left stone
@@ -175,31 +176,30 @@ public class Maze3D extends Group {
 	 * @param stoneSize  size of a single stone
 	 * @return pair of walls (base, top)
 	 */
-	private List<Box> addWall(int leftX, int topY, int numStonesX, int numStonesY, double stoneSize) {
-		Box wallBase = new Box(numStonesX * stoneSize, numStonesY * stoneSize, $wallHeight.get());
-		wallBase.depthProperty().bind($wallHeight);
-		wallBase.setMaterial(wallBaseMaterial);
-		wallBase.setTranslateX((leftX + 0.5 * numStonesX) * stoneSize);
-		wallBase.setTranslateY((topY + 0.5 * numStonesY) * stoneSize);
-		wallBase.translateZProperty().bind($wallHeight.multiply(-0.5));
-		wallBase.drawModeProperty().bind(Env.$drawMode3D);
-		allParts.add(wallBase);
+	private Group addWall(int leftX, int topY, int numStonesX, int numStonesY, double stoneSize) {
+
+		Box base = new Box(numStonesX * stoneSize, numStonesY * stoneSize, $wallHeight.get());
+		base.depthProperty().bind($wallHeight);
+		base.setMaterial(wallBaseMaterial);
+		base.translateZProperty().bind($wallHeight.multiply(-0.5));
+		base.drawModeProperty().bind(Env.$drawMode3D);
 
 		double topHeight = 0.5;
-		Box wallTop = new Box(numStonesX * stoneSize, numStonesY * stoneSize, topHeight);
-		wallTop.setMaterial(wallTopMaterial);
-		wallTop.setTranslateX(leftX * stoneSize + numStonesX * 0.5 * stoneSize);
-		wallTop.setTranslateY(topY * stoneSize + numStonesY * 0.5 * stoneSize);
-		wallTop.translateZProperty()
-				.bind(wallBase.translateZProperty().subtract($wallHeight.add(topHeight + 0.1).multiply(0.5)));
-		wallTop.drawModeProperty().bind(Env.$drawMode3D);
-		allParts.add(wallTop);
+		Box top = new Box(numStonesX * stoneSize, numStonesY * stoneSize, topHeight);
+		top.setMaterial(wallTopMaterial);
+		top.translateZProperty()
+				.bind(base.translateZProperty().subtract($wallHeight.add(topHeight + 0.1).multiply(0.5)));
+		top.drawModeProperty().bind(Env.$drawMode3D);
 
-		return List.of(wallBase, wallTop);
+		Group wall = new Group(base, top);
+		wall.setTranslateX((leftX + 0.5 * numStonesX) * stoneSize);
+		wall.setTranslateY((topY + 0.5 * numStonesY) * stoneSize);
+		wallsGroup.getChildren().add(wall);
+		return wall;
 	}
 
-	private void addCorner(int x, int y, double blockSize) {
-		addWall(x, y, 1, 1, blockSize);
+	private Group addCorner(int x, int y, double blockSize) {
+		return addWall(x, y, 1, 1, blockSize);
 	}
 
 	private void addDoors(PacManGameWorld world, double stoneSize) {
@@ -212,8 +212,7 @@ public class Maze3D extends Group {
 			door.setTranslateZ(-HTS / 2);
 			door.setUserData(tile);
 			door.drawModeProperty().bind(Env.$drawMode3D);
-			doors.add(door);
-			allParts.add(door);
+			doorsGroup.getChildren().add(door);
 		});
 	}
 
