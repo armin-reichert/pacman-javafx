@@ -96,7 +96,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 
 		ghostsInGallery2D = new ArrayList<>();
 		for (int i = 0; i < 4; ++i) {
-			Ghost2D ghost2D = new Ghost2D(sceneController.gallery[i].ghost, rendering);
+			Ghost2D ghost2D = new Ghost2D(sceneController.portraits[i].ghost, rendering);
 			ghostsInGallery2D.add(ghost2D);
 		}
 	}
@@ -138,7 +138,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		gc.fillText("/", t(16), sceneController.topY);
 		gc.fillText("NICKNAME", t(18), sceneController.topY);
 		for (int i = 0; i < 4; ++i) {
-			GhostPortrait portrait = sceneController.gallery[i];
+			GhostPortrait portrait = sceneController.portraits[i];
 			if (portrait.ghost.visible) {
 				int y = sceneController.topY + t(2 + 3 * i);
 				ghostsInGallery2D.get(i).render(gc);
