@@ -149,8 +149,8 @@ public class Maze3D extends Group {
 		((PhongMaterial) floor.getMaterial()).setDiffuseMap(floorTexture);
 	}
 
-	public Stream<Box> doors() {
-		return doorsGroup.getChildren().stream().map(node -> (Box) node);
+	public Stream<Node> doors() {
+		return doorsGroup.getChildren().stream();
 	}
 
 	public Stream<Node> foodNodes() {
