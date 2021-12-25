@@ -111,7 +111,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 		gc.setFill(Color.ORANGE);
 		gc.fillText("\"MS PAC-MAN\"", t(sceneController.tileTitle.x), t(sceneController.tileTitle.y));
 		drawAnimatedBoard(32, 16);
-		if (sceneController.currentStateID == IntroState.PRESENTING_GHOST) {
+		if (sceneController.currentStateID == IntroState.PRESENTING_GHOSTS) {
 			drawPresentingGhost(sceneController.ghosts[sceneController.currentGhostIndex]);
 		} else if (sceneController.currentStateID == IntroState.PRESENTING_MSPACMAN) {
 			drawStarringMsPacMan();
