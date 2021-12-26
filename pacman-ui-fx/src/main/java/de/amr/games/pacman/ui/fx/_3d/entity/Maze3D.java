@@ -83,7 +83,7 @@ public class Maze3D extends Group {
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
 		$resolution.addListener((x, y, z) -> {
-			build(world);
+			buildWallsAndDoors(world);
 		});
 		floor = createFloor(0.1, Color.rgb(20, 20, 120));
 		Group wallsAndDoors = new Group(wallsGroup, doorsGroup);
@@ -107,7 +107,7 @@ public class Maze3D extends Group {
 	 * 
 	 * @param world the game world
 	 */
-	public void build(PacManGameWorld world) {
+	public void buildWallsAndDoors(PacManGameWorld world) {
 		int res = $resolution.get();
 		double stoneSize = TS / res;
 		FloorPlan floorPlan = FloorPlan.build(res, world);
@@ -118,9 +118,8 @@ public class Maze3D extends Group {
 		log("Rebuilt 3D maze at resolution %d (stone size %.2f)", res, stoneSize);
 	}
 
-	public void buildWithFood(PacManGameWorld world, Color foodColor) {
+	public void buildFood(PacManGameWorld world, Color foodColor) {
 		var foodMaterial = new PhongMaterial(foodColor);
-		build(world);
 		foodGroup.getChildren().clear();
 		world.tiles().filter(world::isFoodTile).forEach(foodTile -> {
 			double r = world.isEnergizerTile(foodTile) ? energizerRadius : pelletRadius;
