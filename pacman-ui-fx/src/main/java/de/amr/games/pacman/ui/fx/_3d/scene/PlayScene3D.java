@@ -70,6 +70,7 @@ public class PlayScene3D implements GameScene {
 	protected PlaySceneCam[] cams;
 	protected int selectedCamIndex;
 	protected PacManModel3D model3D;
+	protected Image floorImage = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
 	protected Maze3D maze3D;
 	protected Player3D player3D;
 	protected List<Ghost3D> ghosts3D;
@@ -98,7 +99,6 @@ public class PlayScene3D implements GameScene {
 		final var width = game().world.numCols() * TS;
 		final var height = game().world.numRows() * TS;
 
-		Image floorImage = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
 		maze3D = new Maze3D(width, height, floorImage);
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
