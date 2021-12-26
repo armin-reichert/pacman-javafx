@@ -75,16 +75,12 @@ public class Maze3D extends Group {
 	/**
 	 * Creates the 3D representation of the maze without walls and doors.
 	 * 
-	 * @param world the game world
 	 * @param sizeX maze x-size in units
 	 * @param sizeY maze y-size in units
 	 */
-	public Maze3D(PacManGameWorld world, double sizeX, double sizeY) {
+	public Maze3D(double sizeX, double sizeY) {
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
-		$resolution.addListener((x, y, z) -> {
-			buildWallsAndDoors(world);
-		});
 		floor = createFloor(0.1, Color.rgb(20, 20, 120));
 		Group wallsAndDoors = new Group(wallsGroup, doorsGroup);
 		wallsAndDoors.setTranslateX(-HTS);
@@ -92,12 +88,12 @@ public class Maze3D extends Group {
 		getChildren().addAll(floor, wallsAndDoors, foodGroup);
 	}
 
-	private Box createFloor(double floorSizeZ, Color floorColor) {
+	private Box createFloor(double sizeZ, Color floorColor) {
+		var floor = new Box(sizeX - 1, sizeY - 1, sizeZ);
 		var floorMaterial = new PhongMaterial(floorColor);
 		floorMaterial.setSpecularColor(floorColor.brighter());
-		var floor = new Box(sizeX - 1, sizeY - 1, floorSizeZ);
 		floor.setMaterial(floorMaterial);
-		floor.getTransforms().add(new Translate(0.5 * (sizeX - TS), 0.5 * (sizeY - TS), -0.5 * floorSizeZ + 0.1));
+		floor.getTransforms().add(new Translate(0.5 * (sizeX - TS), 0.5 * (sizeY - TS), -0.5 * sizeZ + 0.1));
 		floor.drawModeProperty().bind(Env.$drawMode3D);
 		return floor;
 	}

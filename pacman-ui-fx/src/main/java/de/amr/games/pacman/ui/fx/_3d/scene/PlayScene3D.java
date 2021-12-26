@@ -96,12 +96,15 @@ public class PlayScene3D implements GameScene {
 		final var width = game().world.numCols() * TS;
 		final var height = game().world.numRows() * TS;
 
-		maze3D = new Maze3D(game().world, width, height);
+		maze3D = new Maze3D(width, height);
 		maze3D.setFloorTexture(new Image(getClass().getResourceAsStream("/common/escher-texture.jpg")));
 		maze3D.setWallBaseColor(rendering2D().getMazeSideColor(game().mazeNumber));
 		maze3D.setWallTopColor(rendering2D().getMazeTopColor(game().mazeNumber));
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
+		maze3D.$resolution.addListener((x, y, z) -> {
+			maze3D.buildWallsAndDoors(game().world);
+		});
 		buildMaze();
 
 		player3D = new Player3D(game().player, model3D);
