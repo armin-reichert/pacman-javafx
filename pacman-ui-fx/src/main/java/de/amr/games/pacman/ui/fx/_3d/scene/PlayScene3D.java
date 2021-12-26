@@ -98,12 +98,11 @@ public class PlayScene3D implements GameScene {
 
 		maze3D = new Maze3D(width, height);
 		maze3D.setFloorTexture(new Image(getClass().getResourceAsStream("/common/escher-texture.jpg")));
-		maze3D.setWallBaseColor(rendering2D().getMazeSideColor(game().mazeNumber));
-		maze3D.setWallTopColor(rendering2D().getMazeTopColor(game().mazeNumber));
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
 		maze3D.$resolution.addListener((x, y, z) -> {
-			maze3D.buildWallsAndDoors(game().world);
+			maze3D.buildWallsAndDoors(game().world, rendering2D().getMazeSideColor(game().mazeNumber),
+					rendering2D().getMazeTopColor(game().mazeNumber));
 		});
 		buildMaze();
 
@@ -132,6 +131,13 @@ public class PlayScene3D implements GameScene {
 		coordinateSystem.visibleProperty().bind(Env.$axesVisible);
 
 		subSceneFX.setRoot(new Group(new AmbientLight(), playground, coordinateSystem));
+	}
+
+	protected void buildMaze() {
+		var foodColor = rendering2D().getFoodColor(game().mazeNumber);
+		maze3D.buildWallsAndDoors(game().world, rendering2D().getMazeSideColor(game().mazeNumber),
+				rendering2D().getMazeTopColor(game().mazeNumber));
+		maze3D.buildFood(game().world, foodColor);
 	}
 
 	@Override
@@ -194,11 +200,5 @@ public class PlayScene3D implements GameScene {
 		return gameController.gameVariant() == GameVariant.MS_PACMAN
 				? de.amr.games.pacman.ui.fx.scene.Scenes.MS_PACMAN_RENDERING
 				: de.amr.games.pacman.ui.fx.scene.Scenes.PACMAN_RENDERING;
-	}
-
-	protected void buildMaze() {
-		var foodColor = rendering2D().getFoodColor(game().mazeNumber);
-		maze3D.buildWallsAndDoors(game().world);
-		maze3D.buildFood(game().world, foodColor);
 	}
 }
