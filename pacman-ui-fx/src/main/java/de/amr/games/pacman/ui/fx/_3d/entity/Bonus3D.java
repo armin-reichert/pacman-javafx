@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.amr.games.pacman.model.pacman.entities.Bonus;
+import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.animation.RotateTransition;
 import javafx.animation.Transition;
@@ -70,8 +71,8 @@ public class Bonus3D extends Box {
 
 	public void update(Bonus bonus) {
 		if (bonus != null) {
-			setTranslateX(bonus.position.x);
-			setTranslateY(bonus.position.y);
+			setTranslateX(bonus.position.x + PacManGameWorld.HTS);
+			setTranslateY(bonus.position.y + PacManGameWorld.HTS);
 		}
 	}
 
@@ -84,8 +85,8 @@ public class Bonus3D extends Box {
 		skin.setBumpMap(symbolImage(bonus.symbol));
 		skin.setDiffuseMap(symbolImage(bonus.symbol));
 		setMaterial(skin);
-		setTranslateX(bonus.position.x);
-		setTranslateY(bonus.position.y);
+		setTranslateX(bonus.position.x + PacManGameWorld.HTS);
+		setTranslateY(bonus.position.y + PacManGameWorld.HTS);
 		setVisible(true);
 		rotation.setCycleCount(Transition.INDEFINITE);
 		rotation.setRate(1);
@@ -99,8 +100,8 @@ public class Bonus3D extends Box {
 		skin.setBumpMap(spritesByValue.get(bonus.points));
 		skin.setDiffuseMap(spritesByValue.get(bonus.points));
 		setMaterial(skin);
-		setTranslateX(bonus.position.x);
-		setTranslateY(bonus.position.y);
+		setTranslateX(bonus.position.x + PacManGameWorld.HTS);
+		setTranslateY(bonus.position.y + PacManGameWorld.HTS);
 		setVisible(true);
 		rotation.stop();
 		rotation.setRate(2);
