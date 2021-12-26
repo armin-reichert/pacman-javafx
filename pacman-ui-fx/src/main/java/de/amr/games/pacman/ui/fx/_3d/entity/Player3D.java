@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Pac;
+import de.amr.games.pacman.model.world.PacManGameWorld;
 import javafx.animation.RotateTransition;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
@@ -63,8 +64,8 @@ public class Player3D extends Creature3D {
 		setScaleX(1);
 		setScaleY(1);
 		setScaleZ(1);
-		setTranslateX(player.position.x);
-		setTranslateY(player.position.y);
+		setTranslateX(player.position.x + PacManGameWorld.HTS);
+		setTranslateY(player.position.y + PacManGameWorld.HTS);
 		setTranslateZ(-4);
 		setRotationAxis(Rotate.Z_AXIS);
 		setRotate(rotationAngle(player.dir()));
@@ -72,8 +73,8 @@ public class Player3D extends Creature3D {
 
 	public void update() {
 		setVisible(player.visible && !outsideMaze(player));
-		setTranslateX(player.position.x);
-		setTranslateY(player.position.y);
+		setTranslateX(player.position.x + PacManGameWorld.HTS);
+		setTranslateY(player.position.y + PacManGameWorld.HTS);
 		if (player.dead) {
 			return;
 		}

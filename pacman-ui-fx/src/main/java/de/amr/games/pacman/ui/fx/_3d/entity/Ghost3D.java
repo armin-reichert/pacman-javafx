@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
+import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.animation.RotateTransition;
 import javafx.animation.Transition;
@@ -152,8 +153,8 @@ public class Ghost3D extends Creature3D {
 			displayCompleteGhost();
 			updateDirection();
 		}
-		setTranslateX(ghost.position.x);
-		setTranslateY(ghost.position.y);
+		setTranslateX(ghost.position.x + PacManGameWorld.HTS);
+		setTranslateY(ghost.position.y + PacManGameWorld.HTS);
 		setVisible(ghost.visible && !outsideMaze(ghost));
 	}
 

@@ -83,8 +83,6 @@ public class Maze3D extends Group {
 		this.sizeY = sizeY;
 		floor = createFloor(0.1, Color.rgb(20, 20, 120));
 		Group wallsAndDoors = new Group(wallsGroup, doorsGroup);
-		wallsAndDoors.setTranslateX(-HTS);
-		wallsAndDoors.setTranslateY(-HTS);
 		getChildren().addAll(floor, wallsAndDoors, foodGroup);
 	}
 
@@ -93,7 +91,7 @@ public class Maze3D extends Group {
 		var floorMaterial = new PhongMaterial(floorColor);
 		floorMaterial.setSpecularColor(floorColor.brighter());
 		floor.setMaterial(floorMaterial);
-		floor.getTransforms().add(new Translate(0.5 * (sizeX - TS), 0.5 * (sizeY - TS), -0.5 * sizeZ + 0.1));
+		floor.getTransforms().add(new Translate(0.5 * sizeX, 0.5 * sizeY, -0.5 * sizeZ + 0.1));
 		floor.drawModeProperty().bind(Env.$drawMode3D);
 		return floor;
 	}
@@ -121,8 +119,8 @@ public class Maze3D extends Group {
 			double r = world.isEnergizerTile(foodTile) ? energizerRadius : pelletRadius;
 			var pellet = new Sphere(r);
 			pellet.setMaterial(foodMaterial);
-			pellet.setTranslateX(foodTile.x * TS);
-			pellet.setTranslateY(foodTile.y * TS);
+			pellet.setTranslateX(foodTile.x * TS + HTS);
+			pellet.setTranslateY(foodTile.y * TS + HTS);
 			pellet.setTranslateZ(-3);
 			pellet.setUserData(foodTile);
 			foodGroup.getChildren().add(pellet);
