@@ -42,6 +42,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Translate;
 
@@ -73,16 +74,17 @@ public class Maze3D extends Group {
 	 * @param sizeX maze x-size
 	 * @param sizeY maze y-size
 	 */
-	public Maze3D(double sizeX, double sizeY) {
-		floor = createFloor(sizeX, sizeY, 0.1, Color.rgb(20, 20, 120));
+	public Maze3D(double sizeX, double sizeY, Image floorImage) {
+		floor = createFloor(sizeX, sizeY, 0.1, Color.rgb(20, 20, 120), floorImage);
 		Group wallsAndDoors = new Group(wallsGroup, doorsGroup);
 		getChildren().addAll(floor, wallsAndDoors, foodGroup);
 	}
 
-	private static Box createFloor(double sizeX, double sizeY, double sizeZ, Color floorColor) {
+	private static Box createFloor(double sizeX, double sizeY, double sizeZ, Color floorColor, Image floorImage) {
 		var floor = new Box(sizeX - 1, sizeY - 1, sizeZ);
 		var floorMaterial = new PhongMaterial(floorColor);
 		floorMaterial.setSpecularColor(floorColor.brighter());
+		floorMaterial.setDiffuseMap(floorImage);
 		floor.setMaterial(floorMaterial);
 		floor.getTransforms().add(new Translate(0.5 * sizeX, 0.5 * sizeY, -0.5 * sizeZ + 0.1));
 		floor.drawModeProperty().bind(Env.$drawMode3D);
@@ -120,12 +122,8 @@ public class Maze3D extends Group {
 		});
 	}
 
-	public void setFloorTexture(Image floorTexture) {
-		((PhongMaterial) floor.getMaterial()).setDiffuseMap(floorTexture);
-	}
-
-	public Stream<Node> doors() {
-		return doorsGroup.getChildren().stream();
+	public Stream<Shape3D> doors() {
+		return doorsGroup.getChildren().stream().map(node -> (Shape3D) node);
 	}
 
 	public Stream<Node> foodNodes() {
