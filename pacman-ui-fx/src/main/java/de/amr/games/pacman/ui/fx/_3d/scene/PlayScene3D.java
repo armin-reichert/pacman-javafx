@@ -25,6 +25,8 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
+import static de.amr.games.pacman.ui.fx.scene.Scenes.MS_PACMAN_RENDERING;
+import static de.amr.games.pacman.ui.fx.scene.Scenes.PACMAN_RENDERING;
 
 import java.util.List;
 import java.util.OptionalDouble;
@@ -104,7 +106,7 @@ public class PlayScene3D implements GameScene {
 			maze3D.buildWallsAndDoors(game().world, rendering2D().getMazeSideColor(game().mazeNumber),
 					rendering2D().getMazeTopColor(game().mazeNumber));
 		});
-		buildMaze();
+		buildMazeContent();
 
 		player3D = new Player3D(game().player, model3D);
 		ghosts3D = game().ghosts().map(ghost -> new Ghost3D(ghost, model3D, rendering2D())).collect(Collectors.toList());
@@ -133,11 +135,21 @@ public class PlayScene3D implements GameScene {
 		subSceneFX.setRoot(new Group(new AmbientLight(), playground, coordinateSystem));
 	}
 
-	protected void buildMaze() {
-		var foodColor = rendering2D().getFoodColor(game().mazeNumber);
+	/**
+	 * Builds the maze content including the food. Overwritten by subclass to also build energizer
+	 * animations.
+	 */
+	protected void buildMazeContent() {
 		maze3D.buildWallsAndDoors(game().world, rendering2D().getMazeSideColor(game().mazeNumber),
 				rendering2D().getMazeTopColor(game().mazeNumber));
-		maze3D.buildFood(game().world, foodColor);
+		maze3D.buildFood(game().world, rendering2D().getFoodColor(game().mazeNumber));
+	}
+
+	/**
+	 * @return 2D-rendering for current game variant
+	 */
+	protected Rendering2D rendering2D() {
+		return gameController.gameVariant() == GameVariant.MS_PACMAN ? MS_PACMAN_RENDERING : PACMAN_RENDERING;
 	}
 
 	@Override
@@ -194,11 +206,5 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void resize(double width, double height) {
 		// data binding does the job
-	}
-
-	protected Rendering2D rendering2D() {
-		return gameController.gameVariant() == GameVariant.MS_PACMAN
-				? de.amr.games.pacman.ui.fx.scene.Scenes.MS_PACMAN_RENDERING
-				: de.amr.games.pacman.ui.fx.scene.Scenes.PACMAN_RENDERING;
 	}
 }

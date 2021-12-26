@@ -75,8 +75,8 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 	}
 
 	@Override
-	protected void buildMaze() {
-		super.buildMaze();
+	protected void buildMazeContent() {
+		super.buildMazeContent();
 		energizerAnimations = energizerNodes(game().world).map(this::createEnergizerAnimation).collect(Collectors.toList());
 	}
 
@@ -231,7 +231,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 
 		// enter LEVEL_STARTING
 		else if (e.newGameState == PacManGameState.LEVEL_STARTING) {
-			buildMaze();
+			buildMazeContent();
 			levelCounter3D.rebuild(e.game);
 			playAnimationLevelStarting();
 		}
