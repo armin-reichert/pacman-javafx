@@ -55,9 +55,6 @@ public class Maze3D extends Group {
 	public final DoubleProperty $wallHeight = new SimpleDoubleProperty(2.0);
 	public final IntegerProperty $resolution = new SimpleIntegerProperty(8);
 
-	private double sizeX;
-	private double sizeY;
-
 	private final Box floor;
 
 	private double energizerRadius = 2.5;
@@ -73,20 +70,18 @@ public class Maze3D extends Group {
 	private final Group doorsGroup = new Group();
 
 	/**
-	 * Creates the 3D representation of the maze without walls and doors.
+	 * Creates the 3D representation of the maze (without walls and doors).
 	 * 
-	 * @param sizeX maze x-size in units
-	 * @param sizeY maze y-size in units
+	 * @param sizeX maze x-size
+	 * @param sizeY maze y-size
 	 */
 	public Maze3D(double sizeX, double sizeY) {
-		this.sizeX = sizeX;
-		this.sizeY = sizeY;
-		floor = createFloor(0.1, Color.rgb(20, 20, 120));
+		floor = createFloor(sizeX, sizeY, 0.1, Color.rgb(20, 20, 120));
 		Group wallsAndDoors = new Group(wallsGroup, doorsGroup);
 		getChildren().addAll(floor, wallsAndDoors, foodGroup);
 	}
 
-	private Box createFloor(double sizeZ, Color floorColor) {
+	private static Box createFloor(double sizeX, double sizeY, double sizeZ, Color floorColor) {
 		var floor = new Box(sizeX - 1, sizeY - 1, sizeZ);
 		var floorMaterial = new PhongMaterial(floorColor);
 		floorMaterial.setSpecularColor(floorColor.brighter());
