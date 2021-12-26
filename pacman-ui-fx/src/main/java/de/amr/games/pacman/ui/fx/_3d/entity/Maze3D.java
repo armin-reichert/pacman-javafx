@@ -57,15 +57,13 @@ public class Maze3D extends Group {
 
 	private double sizeX;
 	private double sizeY;
-	
-	private double floorSizeZ = 0.1;
-	private Color floorColor = Color.rgb(20, 20, 120);
-	private Box floor;
-	
+
+	private final Box floor;
+
 	private double energizerRadius = 2.5;
 	private double pelletRadius = 1;
 	private final Group foodGroup = new Group();
-	
+
 	private PhongMaterial wallBaseMaterial = new PhongMaterial();
 	private PhongMaterial wallTopMaterial = new PhongMaterial();
 	private final Group wallsGroup = new Group();
@@ -87,20 +85,21 @@ public class Maze3D extends Group {
 		$resolution.addListener((x, y, z) -> {
 			build(world);
 		});
-		createFloor();
+		floor = createFloor(0.1, Color.rgb(20, 20, 120));
 		Group wallsAndDoors = new Group(wallsGroup, doorsGroup);
-		wallsAndDoors.setTranslateX(-TS / 2);
-		wallsAndDoors.setTranslateY(-TS / 2);
+		wallsAndDoors.setTranslateX(-HTS);
+		wallsAndDoors.setTranslateY(-HTS);
 		getChildren().addAll(floor, wallsAndDoors, foodGroup);
 	}
 
-	private void createFloor() {
-		floor = new Box(sizeX - 1, sizeY - 1, floorSizeZ);
-		floor.drawModeProperty().bind(Env.$drawMode3D);
-		floor.getTransforms().add(new Translate(0.5 * (sizeX - TS), 0.5 * (sizeY - TS), -0.5 * floorSizeZ + 0.1));
+	private Box createFloor(double floorSizeZ, Color floorColor) {
 		var floorMaterial = new PhongMaterial(floorColor);
 		floorMaterial.setSpecularColor(floorColor.brighter());
+		var floor = new Box(sizeX - 1, sizeY - 1, floorSizeZ);
 		floor.setMaterial(floorMaterial);
+		floor.getTransforms().add(new Translate(0.5 * (sizeX - TS), 0.5 * (sizeY - TS), -0.5 * floorSizeZ + 0.1));
+		floor.drawModeProperty().bind(Env.$drawMode3D);
+		return floor;
 	}
 
 	/**
@@ -166,8 +165,8 @@ public class Maze3D extends Group {
 	}
 
 	/**
-	 * Adds a wall at given position. A wall consists of a base and a top part which can have different color and
-	 * material.
+	 * Adds a wall at given position. A wall consists of a base and a top part which can have different
+	 * color and material.
 	 * 
 	 * @param leftX      x-coordinate of top-left stone
 	 * @param topY       y-coordinate of top-left stone
@@ -187,8 +186,7 @@ public class Maze3D extends Group {
 		double topHeight = 0.5;
 		Box top = new Box(numStonesX * stoneSize, numStonesY * stoneSize, topHeight);
 		top.setMaterial(wallTopMaterial);
-		top.translateZProperty()
-				.bind(base.translateZProperty().subtract($wallHeight.add(topHeight + 0.1).multiply(0.5)));
+		top.translateZProperty().bind(base.translateZProperty().subtract($wallHeight.add(topHeight + 0.1).multiply(0.5)));
 		top.drawModeProperty().bind(Env.$drawMode3D);
 
 		Group wall = new Group(base, top);
