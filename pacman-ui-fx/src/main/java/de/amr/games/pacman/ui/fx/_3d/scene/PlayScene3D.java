@@ -102,11 +102,8 @@ public class PlayScene3D implements GameScene {
 		maze3D = new Maze3D(width, height, floorImage);
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
-		maze3D.$resolution.addListener((x, y, z) -> {
-			maze3D.buildWallsAndDoors(game().world, rendering2D().getMazeSideColor(game().mazeNumber),
-					rendering2D().getMazeTopColor(game().mazeNumber));
-		});
-		buildMazeContent();
+		maze3D.$resolution.addListener((x, y, z) -> buildMazeWithoutFood());
+		buildMaze();
 
 		player3D = new Player3D(game().player, model3D);
 		ghosts3D = game().ghosts().map(ghost -> new Ghost3D(ghost, model3D, rendering2D())).collect(Collectors.toList());
@@ -139,10 +136,17 @@ public class PlayScene3D implements GameScene {
 	 * Builds the maze content including the food. Overwritten by subclass to also build energizer
 	 * animations.
 	 */
-	protected void buildMazeContent() {
+	protected void buildMaze() {
+		buildMazeWithoutFood();
+		maze3D.buildFood(game().world, rendering2D().getFoodColor(game().mazeNumber));
+	}
+
+	/**
+	 * Builds the maze content without the food. Used when floorplan resolution is changed.
+	 */
+	protected void buildMazeWithoutFood() {
 		maze3D.buildWallsAndDoors(game().world, rendering2D().getMazeSideColor(game().mazeNumber),
 				rendering2D().getMazeTopColor(game().mazeNumber));
-		maze3D.buildFood(game().world, rendering2D().getFoodColor(game().mazeNumber));
 	}
 
 	/**
