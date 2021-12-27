@@ -99,7 +99,7 @@ public class Maze3D extends Group {
 	public void buildWallsAndDoors(PacManGameWorld world, Color wallBaseColor, Color wallTopColor) {
 		int res = $resolution.get();
 		double stoneSize = TS / res;
-		FloorPlan floorPlan = FloorPlan.build(res, world);
+		FloorPlan floorPlan = new FloorPlan(res, world);
 		wallsGroup.getChildren().clear();
 		doorsGroup.getChildren().clear();
 		addWalls(floorPlan, world, stoneSize, wallBaseColor, wallTopColor);
