@@ -112,23 +112,23 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 
 	@Override
 	public void doRender() {
+		IntroState state = sceneController.currentStateID;
 		score2D.render(gc);
 		hiscore2D.render(gc);
 		drawGallery();
-		if (sceneController.currentStateID == IntroState.CHASING_PAC) {
-			if (sceneController.blinking.animate()) {
+		if (state == IntroState.SHOWING_POINTS || state == IntroState.CHASING_GHOSTS || state == IntroState.CHASING_PAC) {
+			drawPointsAnimation(11, 26);
+		}
+		if (state == IntroState.CHASING_PAC) {
+			if (sceneController.blinking.frame()) {
 				gc.setFill(Color.PINK);
 				gc.fillOval(t(2), sceneController.pacMan.position.y, TS, TS);
 			}
+		} else if (state == IntroState.READY_TO_PLAY) {
+			drawPressKeyToStart(32);
 		}
 		ghosts2D.forEach(ghost2D -> ghost2D.render(gc));
 		pacMan2D.render(gc);
-		if (sceneController.currentStateID.ordinal() >= IntroState.CHASING_GHOSTS.ordinal()) {
-			drawPointsAnimation(11, 26);
-		}
-		if (sceneController.currentStateID == IntroState.READY_TO_PLAY) {
-			drawPressKeyToStart(32);
-		}
 	}
 
 	private void drawGallery() {
