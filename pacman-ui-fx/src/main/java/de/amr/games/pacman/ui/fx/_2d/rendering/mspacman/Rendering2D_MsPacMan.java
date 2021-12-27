@@ -181,8 +181,8 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 		Map<Direction, TimedSequence<Rectangle2D>> munchingAnimations = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = dirIndex(dir);
-			TimedSequence<Rectangle2D> munching = TimedSequence
-					.of(regionRight(0, d), regionRight(0, d), regionRight(1, d), regionRight(2, d)).frameDuration(2).endless();
+			TimedSequence<Rectangle2D> munching = TimedSequence.of(regionRight(0, d), regionRight(1, d), regionRight(2, d))
+					.frameDuration(4).endless();
 			munchingAnimations.put(dir, munching);
 		}
 		return munchingAnimations;
