@@ -124,8 +124,12 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 				gc.setFill(Color.PINK);
 				gc.fillOval(t(2), sceneController.pacMan.position.y, TS, TS);
 			}
-		} else if (state == IntroState.READY_TO_PLAY) {
-			drawPressKeyToStart(32);
+		}
+		if (state.ordinal() >= IntroState.CHASING_PAC.ordinal()) {
+			drawCopyright(32);
+		}
+		if (state == IntroState.READY_TO_PLAY) {
+			drawPressKeyToStart(24);
 		}
 		ghosts2D.forEach(ghost2D -> ghost2D.render(gc));
 		pacMan2D.render(gc);
@@ -180,5 +184,12 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		gc.setFont(Font.font(rendering.getScoreFont().getName(), 6));
 		gc.fillText("PTS", t(tileX + 5), t(tileY));
 		gc.fillText("PTS", t(tileX + 5), t(tileY + 2));
+	}
+
+	private void drawCopyright(int yTile) {
+		String text = "\u00A9" + "  1980 MIDWAY MFG. CO.";
+		gc.setFont(rendering.getScoreFont());
+		gc.setFill(Color.PINK);
+		gc.fillText(text, t(3), t(yTile));
 	}
 }
