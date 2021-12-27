@@ -131,11 +131,8 @@ public class Maze3D extends Group {
 	}
 
 	public void showDoorsOpen(boolean open) {
-		Color doorColor = open ? doorOpenColor : doorClosedColor;
-		PhongMaterial material = new PhongMaterial(doorColor);
-		for (Node door : doorsGroup.getChildren()) {
-			((Box) door).setMaterial(material);
-		}
+		PhongMaterial material = new PhongMaterial(open ? doorOpenColor : doorClosedColor);
+		doors().forEach(door -> door.setMaterial(material));
 	}
 
 	/**
