@@ -33,7 +33,7 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class Cam_POV implements PlaySceneCam {
+public class Cam_POV implements CameraPerspective {
 
 	private final Camera cam;
 

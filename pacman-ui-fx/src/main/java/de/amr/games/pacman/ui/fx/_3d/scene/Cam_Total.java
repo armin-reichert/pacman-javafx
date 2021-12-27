@@ -35,7 +35,7 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class Cam_Total extends ManualCameraController implements PlaySceneCam {
+public class Cam_Total extends ManualCameraController implements CameraPerspective {
 
 	public Cam_Total(Camera cam) {
 		super(cam);

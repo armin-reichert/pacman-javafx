@@ -32,7 +32,7 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class Cam_NearPlayer implements PlaySceneCam {
+public class Cam_NearPlayer implements CameraPerspective {
 
 	private final Camera cam;
 

@@ -40,7 +40,7 @@ import de.amr.games.pacman.ui.fx.sound.PacManGameSounds;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 
 /**
- * Scenes.
+ * Creates and stores all scenes used in the game. Each game variants has its own set of scenes.
  * 
  * @author Armin Reichert
  */
@@ -83,5 +83,4 @@ public class Scenes {
 		MS_PACMAN_SCENES[4][1] = new PlayScene3DWithAnimations(GianmarcosPacManModel3D.get(), MS_PACMAN_SOUNDS);
 		//@formatter:on
 	}
-
 }

@@ -45,6 +45,7 @@ import de.amr.games.pacman.ui.fx._3d.entity.PacManModel3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Player3D;
 import de.amr.games.pacman.ui.fx._3d.entity.ScoreNotReally3D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.scene.Scenes;
 import de.amr.games.pacman.ui.fx.util.CoordinateSystem;
 import javafx.scene.AmbientLight;
 import javafx.scene.Camera;
@@ -57,7 +58,12 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
 
 /**
- * 3D-scene displaying the maze and the game play. Used in both game variants.
+ * 3D-scene displaying the maze and the game play. Each game variant has an instance of this class.
+ * 
+ * <p>
+ * The scene is a JavaFX subscene of the game's main scene.
+ * 
+ * @see Scenes
  * 
  * @author Armin Reichert
  */
@@ -65,10 +71,10 @@ public class PlayScene3D implements GameScene {
 
 	protected static final int CAM_TOTAL = 0, CAM_FOLLOWING_PLAYER = 1, CAM_NEAR_PLAYER = 2;
 
+	protected SubScene fxScene;
 	protected PacManGameController gameController;
-	protected SubScene subSceneFX;
-	protected PlaySceneCam[] cams;
-	protected int selectedCamIndex;
+	protected CameraPerspective[] perspectives;
+	protected int perspectiveIndex;
 	protected PacManModel3D model3D;
 	protected Image floorImage = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
 	protected Maze3D maze3D;
@@ -82,16 +88,17 @@ public class PlayScene3D implements GameScene {
 	public PlayScene3D(PacManModel3D model3D) {
 		this.model3D = model3D;
 		Camera cam = new PerspectiveCamera(true);
-		subSceneFX = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
-		subSceneFX.setCamera(cam);
-		subSceneFX.addEventHandler(KeyEvent.KEY_PRESSED, event -> selectedCam().handle(event));
-		cams = new PlaySceneCam[] { //
-				new Cam_Total(cam), //
-				new Cam_FollowingPlayer(cam), //
-				new Cam_NearPlayer(cam), //
-//				new POVPerspective(cam), //
+		fxScene = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
+		fxScene.setCamera(cam);
+		fxScene.addEventHandler(KeyEvent.KEY_PRESSED, event -> currentPerspective().handle(event));
+		//@formatter:off
+		perspectives = new CameraPerspective[] {
+				new Cam_Total(cam), 
+				new Cam_FollowingPlayer(cam), 
+				new Cam_NearPlayer(cam)
 		};
-		selectCam(CAM_TOTAL);
+		//@formatter:on
+		setPerspective(CAM_TOTAL);
 	}
 
 	@Override
@@ -126,10 +133,10 @@ public class PlayScene3D implements GameScene {
 		playground.setTranslateX(-0.5 * width);
 		playground.setTranslateY(-0.5 * height);
 
-		var coordinateSystem = new CoordinateSystem(subSceneFX.getWidth());
+		var coordinateSystem = new CoordinateSystem(fxScene.getWidth());
 		coordinateSystem.visibleProperty().bind(Env.$axesVisible);
 
-		subSceneFX.setRoot(new Group(new AmbientLight(), playground, coordinateSystem));
+		fxScene.setRoot(new Group(new AmbientLight(), playground, coordinateSystem));
 	}
 
 	/**
@@ -164,9 +171,9 @@ public class PlayScene3D implements GameScene {
 		score3D.update(game(), gameController.isAttractMode() ? "GAME OVER!" : null);
 		// TODO: is this the recommended way to do keep the score in plain view?
 		score3D.setRotationAxis(Rotate.X_AXIS);
-		score3D.setRotate(subSceneFX.getCamera().getRotate());
+		score3D.setRotate(fxScene.getCamera().getRotate());
 		livesCounter3D.setVisibleItems(game().player.lives);
-		selectedCam().follow(player3D);
+		currentPerspective().follow(player3D);
 	}
 
 	@Override
@@ -174,17 +181,17 @@ public class PlayScene3D implements GameScene {
 		log("End scene '%s'", getClass().getSimpleName());
 	}
 
-	public PlaySceneCam selectedCam() {
-		return cams[selectedCamIndex];
+	public CameraPerspective currentPerspective() {
+		return perspectives[perspectiveIndex];
 	}
 
-	public void selectCam(int i) {
-		selectedCamIndex = i;
-		selectedCam().reset();
+	public void setPerspective(int i) {
+		perspectiveIndex = i;
+		currentPerspective().reset();
 	}
 
-	public void nextCam() {
-		selectCam((selectedCamIndex + 1) % cams.length);
+	public void nextPerspective() {
+		setPerspective((perspectiveIndex + 1) % perspectives.length);
 	}
 
 	@Override
@@ -204,7 +211,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public SubScene getSubSceneFX() {
-		return subSceneFX;
+		return fxScene;
 	}
 
 	@Override
