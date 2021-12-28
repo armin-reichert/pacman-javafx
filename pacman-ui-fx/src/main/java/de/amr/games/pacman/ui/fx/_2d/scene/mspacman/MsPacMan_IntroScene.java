@@ -107,19 +107,18 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 
 	@Override
 	public void doRender() {
+		IntroState state = sceneController.currentStateID;
 		score2D.render(gc);
 		hiscore2D.render(gc);
 		gc.setFont(rendering.getScoreFont());
 		gc.setFill(Color.ORANGE);
 		gc.fillText("\"MS PAC-MAN\"", t(sceneController.tileTitle.x), t(sceneController.tileTitle.y));
 		drawAnimatedBoard(32, 16);
-		if (sceneController.currentStateID == IntroState.BEGIN) {
-			drawCopyright();
-		} else if (sceneController.currentStateID == IntroState.PRESENTING_GHOSTS) {
+		if (state == IntroState.PRESENTING_GHOSTS) {
 			drawPresentingGhost(sceneController.ghosts[sceneController.currentGhostIndex]);
-		} else if (sceneController.currentStateID == IntroState.PRESENTING_MSPACMAN) {
+		} else if (state == IntroState.PRESENTING_MSPACMAN) {
 			drawStarringMsPacMan();
-		} else if (sceneController.currentStateID == IntroState.WAITING_FOR_GAME) {
+		} else if (state == IntroState.WAITING_FOR_GAME) {
 			drawStarringMsPacMan();
 			drawPressKeyToStart(26);
 		}
