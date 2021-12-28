@@ -140,18 +140,17 @@ public class PlayScene2D extends AbstractGameScene2D {
 	@Override
 	public void doRender() {
 		if (!gameController.isAttractMode()) {
-			livesCounter2D.render(gc);
 			score2D.showPoints = true;
+			livesCounter2D.render(gc);
+			renderLevelCounter(new V2i(25, 34));
 		} else {
 			score2D.showPoints = false;
 		}
+		renderGameState();
 		game().ghosts(GhostState.LOCKED)
 				.forEach(ghost -> ghosts2D.get(ghost.id).setLooksFrightened(game().player.powerTimer.isRunning()));
-
 		Stream.concat(Stream.of(score2D, hiscore2D, maze2D, bonus2D, player2D), ghosts2D.stream())
 				.forEach(r -> r.render(gc));
-		renderGameState();
-		renderLevelCounter(new V2i(25, 34));
 	}
 
 	private void renderGameState() {
