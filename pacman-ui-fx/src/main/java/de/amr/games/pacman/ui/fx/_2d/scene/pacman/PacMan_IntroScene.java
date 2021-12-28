@@ -144,7 +144,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		for (int i = 0; i < 4; ++i) {
 			GhostPortrait portrait = sceneController.portraits[i];
 			if (portrait.ghost.visible) {
-				int y = sceneController.topY + t(2 + 3 * i);
+				int y = sceneController.topY + t(1 + 3 * i);
 				ghostsInGallery2D.get(i).render(gc);
 				gc.setFill(getGhostColor(i));
 				gc.setFont(rendering.getScoreFont());
@@ -152,7 +152,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 					gc.fillText("-" + portrait.character, t(6), y + 8);
 				}
 				if (portrait.nicknameVisible) {
-					gc.fillText("\"" + portrait.ghost.name + "\"", t(18), y + 8);
+					gc.fillText("\"" + portrait.ghost.name + "\"", t(17), y + 8);
 				}
 			}
 		}
