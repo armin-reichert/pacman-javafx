@@ -123,12 +123,6 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		if (state == IntroState.SHOWING_POINTS || state == IntroState.CHASING_GHOSTS || state == IntroState.CHASING_PAC) {
 			drawPointsAnimation(11, 26);
 		}
-		if (state == IntroState.CHASING_PAC) {
-			if (sceneController.blinking.frame()) {
-				gc.setFill(PINK);
-				gc.fillOval(t(2), sceneController.pacMan.position.y, TS, TS);
-			}
-		}
 		if (state.ordinal() >= IntroState.SHOWING_POINTS.ordinal()) {
 			drawCopyright(32);
 		}
@@ -176,6 +170,10 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	}
 
 	private void drawPointsAnimation(int tileX, int tileY) {
+		if (sceneController.blinking.frame() && sceneController.currentStateID == IntroState.CHASING_PAC) {
+			gc.setFill(PINK);
+			gc.fillOval(t(2), sceneController.pacMan.position.y, TS, TS);
+		}
 		gc.setFill(PINK);
 		gc.fillRect(t(tileX) + 6, t(tileY - 1) + 2, 2, 2);
 		if (sceneController.blinking.frame()) {
