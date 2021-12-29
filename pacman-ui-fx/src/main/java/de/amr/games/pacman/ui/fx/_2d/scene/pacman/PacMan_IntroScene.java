@@ -53,6 +53,10 @@ import javafx.scene.text.Font;
  */
 public class PacMan_IntroScene extends AbstractGameScene2D {
 
+	// use exactly same RGB values as sprites
+	static final Color PINK = Color.rgb(252, 181, 255);
+	static final Color ORANGE = Color.rgb(253, 192, 90);
+
 	private IntroController sceneController;
 	private GameScore2D score2D;
 	private GameScore2D hiscore2D;
@@ -121,11 +125,11 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		}
 		if (state == IntroState.CHASING_PAC) {
 			if (sceneController.blinking.frame()) {
-				gc.setFill(Color.PINK);
+				gc.setFill(PINK);
 				gc.fillOval(t(2), sceneController.pacMan.position.y, TS, TS);
 			}
 		}
-		if (state.ordinal() >= IntroState.CHASING_PAC.ordinal()) {
+		if (state.ordinal() >= IntroState.SHOWING_POINTS.ordinal()) {
 			drawCopyright(32);
 		}
 		if (state == IntroState.READY_TO_PLAY) {
@@ -159,22 +163,22 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	}
 
 	private Color getGhostColor(int i) {
-		return i == 0 ? Color.RED : i == 1 ? Color.PINK : i == 2 ? Color.CYAN : Color.ORANGE;
+		return i == 0 ? Color.RED : i == 1 ? PINK : i == 2 ? Color.CYAN : ORANGE;
 	}
 
 	private void drawPressKeyToStart(int yTile) {
 		if (sceneController.blinking.frame()) {
 			String text = "PRESS SPACE TO PLAY";
-			gc.setFill(Color.ORANGE);
+			gc.setFill(ORANGE);
 			gc.setFont(rendering.getScoreFont());
 			gc.fillText(text, t(14 - text.length() / 2), t(yTile));
 		}
 	}
 
 	private void drawPointsAnimation(int tileX, int tileY) {
+		gc.setFill(PINK);
+		gc.fillRect(t(tileX) + 6, t(tileY - 1) + 2, 2, 2);
 		if (sceneController.blinking.frame()) {
-			gc.setFill(Color.PINK);
-			gc.fillRect(t(tileX) + 6, t(tileY - 1) + 2, 2, 2);
 			gc.fillOval(t(tileX), t(tileY + 1) - 2, 10, 10);
 		}
 		gc.setFill(Color.WHITE);
@@ -189,7 +193,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	private void drawCopyright(int yTile) {
 		String text = "\u00A9" + "  1980 MIDWAY MFG. CO.";
 		gc.setFont(rendering.getScoreFont());
-		gc.setFill(Color.PINK);
+		gc.setFill(PINK);
 		gc.fillText(text, t(3), t(yTile));
 	}
 }
