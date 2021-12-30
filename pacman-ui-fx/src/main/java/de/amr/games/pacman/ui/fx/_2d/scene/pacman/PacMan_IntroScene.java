@@ -124,7 +124,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 			drawEnergizer(true);
 		}
 		if (state == IntroState.SHOWING_POINTS || state == IntroState.CHASING_GHOSTS || state == IntroState.CHASING_PAC) {
-			drawPointsAnimation(11, 26);
+			drawPointsAnimation(11, 25);
 		}
 		if (state.ordinal() >= IntroState.SHOWING_POINTS.ordinal()) {
 			drawCopyright(32);
