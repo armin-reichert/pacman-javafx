@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
+import static de.amr.games.pacman.lib.TickTimer.sec_to_ticks;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
@@ -33,8 +34,8 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.pacman.IntroController;
 import de.amr.games.pacman.controller.pacman.IntroController.GhostPortrait;
-import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
@@ -99,10 +100,9 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 			return ghost2D;
 		}).collect(Collectors.toList());
 
-		ghostsInGallery2D = new ArrayList<>();
+		ghostsInGallery2D = new ArrayList<>(4);
 		for (int i = 0; i < 4; ++i) {
-			Ghost2D ghost2D = new Ghost2D(sceneController.portraits[i].ghost, rendering);
-			ghostsInGallery2D.add(ghost2D);
+			ghostsInGallery2D.add(new Ghost2D(sceneController.portraits[i].ghost, rendering));
 		}
 	}
 
@@ -127,7 +127,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		case SHOWING_POINTS:
 			drawGallery();
 			drawPoints(11, 25);
-			if (sceneController.stateTimer().ticked() > TickTimer.sec_to_ticks(1)) {
+			if (sceneController.stateTimer().ticked() > sec_to_ticks(1)) {
 				drawEnergizer();
 				drawCopyright(32);
 			}
@@ -172,20 +172,16 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 			if (portrait.ghost.visible) {
 				int y = sceneController.topY + t(1 + 3 * i);
 				ghostsInGallery2D.get(i).render(gc);
-				gc.setFill(getGhostColor(i));
-				gc.setFont(rendering.getScoreFont());
 				if (portrait.characterVisible) {
+					gc.setFill(getGhostColor(i));
 					gc.fillText("-" + portrait.character, t(6), y + 8);
 				}
 				if (portrait.nicknameVisible) {
+					gc.setFill(getGhostColor(i));
 					gc.fillText("\"" + portrait.ghost.name + "\"", t(17), y + 8);
 				}
 			}
 		}
-	}
-
-	private Color getGhostColor(int i) {
-		return i == 0 ? Color.RED : i == 1 ? PINK : i == 2 ? Color.CYAN : ORANGE;
 	}
 
 	private void drawPressKeyToStart(int yTile) {
@@ -222,5 +218,10 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		gc.setFont(rendering.getScoreFont());
 		gc.setFill(PINK);
 		gc.fillText(text, t(3), t(yTile));
+	}
+
+	private Color getGhostColor(int id) {
+		return id == GameModel.RED_GHOST ? Color.RED
+				: id == GameModel.PINK_GHOST ? PINK : id == GameModel.CYAN_GHOST ? Color.CYAN : ORANGE;
 	}
 }
