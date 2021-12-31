@@ -64,7 +64,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	private GameScore2D hiscore2D;
 	private Player2D pacMan2D;
 	private List<Ghost2D> ghosts2D;
-	private List<Ghost2D> ghostsInGallery2D;
+	private List<Ghost2D> gallery2D;
 
 	public PacMan_IntroScene() {
 		super(Scenes.PACMAN_RENDERING, Scenes.PACMAN_SOUNDS, 28, 36);
@@ -100,9 +100,9 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 			return ghost2D;
 		}).collect(Collectors.toList());
 
-		ghostsInGallery2D = new ArrayList<>(4);
+		gallery2D = new ArrayList<>(4);
 		for (int i = 0; i < 4; ++i) {
-			ghostsInGallery2D.add(new Ghost2D(sceneController.portraits[i].ghost, rendering));
+			gallery2D.add(new Ghost2D(sceneController.portraits[i].ghost, rendering));
 		}
 	}
 
@@ -167,11 +167,11 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		gc.fillText("CHARACTER", t(6), sceneController.topY);
 		gc.fillText("/", t(16), sceneController.topY);
 		gc.fillText("NICKNAME", t(18), sceneController.topY);
-		for (int i = 0; i < 4; ++i) {
+		for (int i = 0; i < sceneController.portraits.length; ++i) {
 			GhostPortrait portrait = sceneController.portraits[i];
 			if (portrait.ghost.visible) {
 				int y = sceneController.topY + t(1 + 3 * i);
-				ghostsInGallery2D.get(i).render(gc);
+				gallery2D.get(i).render(gc);
 				if (portrait.characterVisible) {
 					gc.setFill(getGhostColor(i));
 					gc.fillText("-" + portrait.character, t(6), y + 8);
