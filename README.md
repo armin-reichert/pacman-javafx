@@ -66,4 +66,4 @@ On the play screen, the following functionality is available:
 
 YouTube:
 
-[![YouTube](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/thumbnail.jpg)](https://youtu.be/t529vDUtCT0)
+[![YouTube](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/thumbnail.jpg)](https://www.youtube.com/watch?v=-ANLq4mMn3Q)
