@@ -27,6 +27,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import javafx.animation.RotateTransition;
+import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
@@ -48,14 +49,14 @@ public class Player3D extends Creature3D {
 	private final PointLight light;
 	private Direction targetDir;
 
-	public Player3D(Pac player, PacManModel3D model3D) {
+	public Player3D(Pac player, Group pacMan3D) {
 		this.player = player;
 		targetDir = player.dir();
 		turningAnimation = new RotateTransition(Duration.seconds(0.25), this);
 		turningAnimation.setAxis(Rotate.Z_AXIS);
 		light = new PointLight(Color.WHITE);
 		light.setTranslateZ(-4);
-		getChildren().addAll(model3D.createPacMan(), light);
+		getChildren().addAll(pacMan3D, light);
 		reset();
 	}
 

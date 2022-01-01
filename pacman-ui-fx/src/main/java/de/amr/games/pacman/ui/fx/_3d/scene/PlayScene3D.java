@@ -112,8 +112,10 @@ public class PlayScene3D implements GameScene {
 		maze3D.$resolution.addListener((x, y, z) -> buildMazeWithoutFood());
 		buildMaze();
 
-		player3D = new Player3D(game().player, model3D);
-		ghosts3D = game().ghosts().map(ghost -> new Ghost3D(ghost, model3D, rendering2D())).collect(Collectors.toList());
+		player3D = new Player3D(game().player, model3D.createPacMan());
+		ghosts3D = game().ghosts()
+				.map(ghost -> new Ghost3D(ghost, model3D.createGhost(), model3D.createGhostEyes(), rendering2D()))
+				.collect(Collectors.toList());
 		bonus3D = new Bonus3D(rendering2D());
 		score3D = new ScoreNotReally3D(rendering2D().getScoreFont());
 

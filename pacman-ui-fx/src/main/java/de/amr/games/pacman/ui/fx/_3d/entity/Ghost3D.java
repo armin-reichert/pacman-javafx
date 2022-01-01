@@ -80,13 +80,13 @@ public class Ghost3D extends Creature3D {
 	private DisplayMode displayMode;
 	private Direction targetDir;
 
-	public Ghost3D(Ghost ghost, PacManModel3D model3D, Rendering2D rendering2D) {
+	public Ghost3D(Ghost ghost, Group ghostComplete3D, Group ghostEyes3D, Rendering2D rendering2D) {
 		this.ghost = ghost;
 		this.targetDir = ghost.dir();
 		this.rendering2D = rendering2D;
 
-		completeGhost = model3D.createGhost();
-		eyes = model3D.createGhostEyes();
+		completeGhost = ghostComplete3D;
+		eyes = ghostEyes3D;
 
 		Group ghostVariants = new Group(completeGhost, eyes);
 		ghostVariants.setRotationAxis(Rotate.Z_AXIS);
