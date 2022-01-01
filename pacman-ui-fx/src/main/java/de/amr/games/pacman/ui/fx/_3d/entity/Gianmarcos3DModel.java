@@ -45,25 +45,23 @@ import javafx.scene.transform.Translate;
  * 
  * @author Armin Reichert
  */
-public class GianmarcosPacManModel3D implements PacManModel3D {
-
-	static final String PATH_TO_OBJ_FILE = "/common/gianmarco/pacman.obj";
+public class Gianmarcos3DModel implements PacManModel3D {
 
 	public Map<String, MeshView> meshViewsByName;
 	public Map<String, PhongMaterial> materialsByName;
 
-	public GianmarcosPacManModel3D() {
+	public Gianmarcos3DModel(String pathToObjFile) {
 		ObjModelImporter objImporter = new ObjModelImporter();
 		try {
-			objImporter.read(getClass().getResource(PATH_TO_OBJ_FILE));
+			objImporter.read(getClass().getResource(pathToObjFile));
 			meshViewsByName = objImporter.getNamedMeshViews();
 			materialsByName = objImporter.getNamedMaterials();
 		} catch (ImportException e) {
+			Logging.log("3D model '%s' could not be loaded", getClass().getName());
 			e.printStackTrace();
-		} finally {
-			objImporter.close();
 		}
-		Logging.log("3D model loaded: %s", getClass().getName());
+		objImporter.close();
+		Logging.log("3D model '%s' loaded successfully", getClass().getName());
 	}
 
 	@Override

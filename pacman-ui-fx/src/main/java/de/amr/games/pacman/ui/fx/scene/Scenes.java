@@ -34,7 +34,7 @@ import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntermissionScene1;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntermissionScene2;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntermissionScene3;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntroScene;
-import de.amr.games.pacman.ui.fx._3d.entity.GianmarcosPacManModel3D;
+import de.amr.games.pacman.ui.fx._3d.entity.Gianmarcos3DModel;
 import de.amr.games.pacman.ui.fx._3d.entity.PacManModel3D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3DWithAnimations;
 import de.amr.games.pacman.ui.fx.sound.PacManGameSounds;
@@ -49,7 +49,7 @@ public class Scenes {
 
 	public static final GameScene PACMAN_SCENES[][] = new GameScene[5][2];
 	public static final Rendering2D_PacMan PACMAN_RENDERING = new Rendering2D_PacMan();
-	public static final PacManModel3D MODEL_3D = new GianmarcosPacManModel3D();
+	public static final PacManModel3D MODEL_3D = new Gianmarcos3DModel("/common/gianmarco/pacman.obj");
 	public static final SoundManager PACMAN_SOUNDS = new SoundManager(PacManGameSounds::pacManSoundURL);
 
 	static {

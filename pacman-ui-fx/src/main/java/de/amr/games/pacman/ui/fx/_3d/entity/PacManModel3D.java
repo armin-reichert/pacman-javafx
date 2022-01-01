@@ -26,16 +26,24 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import javafx.scene.Group;
 
 /**
- * Pac-Man 3D model interface.
+ * Pac-Man 3D model factory.
  * 
  * @author Armin Reichert
  */
 public interface PacManModel3D {
 
+	/**
+	 * @return transformation group for Pac-Man
+	 */
 	Group createPacMan();
 
+	/**
+	 * @return transformation group for a ghost
+	 */
 	Group createGhost();
 
+	/**
+	 * @return transformation group for the eyes of a ghost
+	 */
 	Group createGhostEyes();
-
 }
