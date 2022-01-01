@@ -35,6 +35,7 @@ import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntermissionScene2;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntermissionScene3;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntroScene;
 import de.amr.games.pacman.ui.fx._3d.entity.GianmarcosPacManModel3D;
+import de.amr.games.pacman.ui.fx._3d.entity.PacManModel3D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3DWithAnimations;
 import de.amr.games.pacman.ui.fx.sound.PacManGameSounds;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -48,6 +49,7 @@ public class Scenes {
 
 	public static final GameScene PACMAN_SCENES[][] = new GameScene[5][2];
 	public static final Rendering2D_PacMan PACMAN_RENDERING = new Rendering2D_PacMan();
+	public static final PacManModel3D MODEL_3D = new GianmarcosPacManModel3D();
 	public static final SoundManager PACMAN_SOUNDS = new SoundManager(PacManGameSounds::pacManSoundURL);
 
 	static {
@@ -61,7 +63,7 @@ public class Scenes {
 		PACMAN_SCENES[3][0] = 
 		PACMAN_SCENES[3][1] = new PacMan_IntermissionScene3();
 		PACMAN_SCENES[4][0] = new PlayScene2D(PACMAN_RENDERING, PACMAN_SOUNDS);
-		PACMAN_SCENES[4][1] = new PlayScene3DWithAnimations(GianmarcosPacManModel3D.get(), PACMAN_SOUNDS);
+		PACMAN_SCENES[4][1] = new PlayScene3DWithAnimations(MODEL_3D, PACMAN_SOUNDS);
 		//@formatter:on
 	}
 
@@ -80,7 +82,7 @@ public class Scenes {
 		MS_PACMAN_SCENES[3][0] = 
 		MS_PACMAN_SCENES[3][1] = new MsPacMan_IntermissionScene3();
 		MS_PACMAN_SCENES[4][0] = new PlayScene2D(MS_PACMAN_RENDERING, MS_PACMAN_SOUNDS);
-		MS_PACMAN_SCENES[4][1] = new PlayScene3DWithAnimations(GianmarcosPacManModel3D.get(), MS_PACMAN_SOUNDS);
+		MS_PACMAN_SCENES[4][1] = new PlayScene3DWithAnimations(MODEL_3D, MS_PACMAN_SOUNDS);
 		//@formatter:on
 	}
 }
