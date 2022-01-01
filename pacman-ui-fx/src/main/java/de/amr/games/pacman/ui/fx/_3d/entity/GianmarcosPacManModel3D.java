@@ -38,19 +38,19 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 
 /**
- * The imported 3D model has been generously provided to me by Gianmarco Cavallaccio
+ * The imported 3D model has been generously provided by Gianmarco Cavallaccio
  * (https://www.artstation.com/gianmart). Currently, I just use Pac-Man and one ghost from this
- * model, the rest is waste for me. What I really need is an animated 3D model of Pac-Man and a
- * single ghost.
+ * model, the rest is not needed. What I really need is an animated 3D model of Pac-Man and a single
+ * ghost.
  * 
  * @author Armin Reichert
  */
-public class Gianmarcos3DModel implements PacManModel3D {
+public class GianmarcosPacManModel3D implements PacManModel3D {
 
 	public Map<String, MeshView> meshViewsByName;
 	public Map<String, PhongMaterial> materialsByName;
 
-	public Gianmarcos3DModel(String pathToObjFile) {
+	public GianmarcosPacManModel3D(String pathToObjFile) {
 		ObjModelImporter objImporter = new ObjModelImporter();
 		try {
 			objImporter.read(getClass().getResource(pathToObjFile));
