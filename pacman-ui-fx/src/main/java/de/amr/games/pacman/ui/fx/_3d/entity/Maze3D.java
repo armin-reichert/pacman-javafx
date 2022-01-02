@@ -47,7 +47,7 @@ import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Translate;
 
 /**
- * 3D-model for a maze. Creates walls using information from the world map / floor plan.
+ * 3D-model for a maze. Creates walls/doors using information from the floor plan.
  * 
  * @author Armin Reichert
  */
@@ -57,38 +57,33 @@ public class Maze3D extends Group {
 	public final IntegerProperty $resolution = new SimpleIntegerProperty(8);
 
 	private final Box floor;
+	private final Group wallsGroup = new Group();
+	private final Group doorsGroup = new Group();
+	private final Group foodGroup = new Group();
 
 	private double energizerRadius = 2.5;
 	private double pelletRadius = 1;
-	private final Group foodGroup = new Group();
-
-	private final Group wallsGroup = new Group();
-
 	private Color doorClosedColor = Color.PINK;
 	private Color doorOpenColor = Color.TRANSPARENT;
-	private final Group doorsGroup = new Group();
 
 	/**
-	 * Creates the 3D representation of the maze (without walls and doors).
+	 * Creates the 3D-maze without walls, doors or food.
 	 * 
 	 * @param sizeX maze x-size
 	 * @param sizeY maze y-size
 	 */
 	public Maze3D(double sizeX, double sizeY, Image floorImage) {
-		floor = createFloor(sizeX, sizeY, 0.1, Color.rgb(20, 20, 120), floorImage);
-		Group wallsAndDoors = new Group(wallsGroup, doorsGroup);
-		getChildren().addAll(floor, wallsAndDoors, foodGroup);
-	}
-
-	private static Box createFloor(double sizeX, double sizeY, double sizeZ, Color floorColor, Image floorImage) {
-		var floor = new Box(sizeX - 1, sizeY - 1, sizeZ);
+		var sizeZ = 0.1;
+		var floorColor = Color.rgb(20, 20, 120);
 		var floorMaterial = new PhongMaterial(floorColor);
 		floorMaterial.setSpecularColor(floorColor.brighter());
 		floorMaterial.setDiffuseMap(floorImage);
+		floor = new Box(sizeX - 1, sizeY - 1, sizeZ);
 		floor.setMaterial(floorMaterial);
-		floor.getTransforms().add(new Translate(0.5 * sizeX, 0.5 * sizeY, -0.5 * sizeZ + 0.1));
+		floor.getTransforms().add(new Translate(0.5 * sizeX, 0.5 * sizeY, 0.5 * sizeZ));
 		floor.drawModeProperty().bind(Env.$drawMode3D);
-		return floor;
+		Group wallsAndDoors = new Group(wallsGroup, doorsGroup);
+		getChildren().addAll(floor, wallsAndDoors, foodGroup);
 	}
 
 	/**
@@ -100,10 +95,8 @@ public class Maze3D extends Group {
 		int res = $resolution.get();
 		double stoneSize = TS / res;
 		FloorPlan floorPlan = new FloorPlan(res, world);
-		wallsGroup.getChildren().clear();
-		doorsGroup.getChildren().clear();
-		addWalls(floorPlan, world, stoneSize, wallBaseColor, wallTopColor);
-		addDoors(world, stoneSize);
+		rebuildWalls(floorPlan, world, stoneSize, wallBaseColor, wallTopColor);
+		rebuildDoors(world, stoneSize);
 		log("Rebuilt 3D maze at resolution %d (stone size %.2f)", res, stoneSize);
 	}
 
@@ -173,7 +166,8 @@ public class Maze3D extends Group {
 		return addWall(x, y, 1, 1, blockSize, wallBaseMaterial, wallTopMaterial);
 	}
 
-	private void addDoors(PacManGameWorld world, double stoneSize) {
+	private void rebuildDoors(PacManGameWorld world, double stoneSize) {
+		doorsGroup.getChildren().clear();
 		PhongMaterial doorMaterial = new PhongMaterial(doorClosedColor);
 		world.ghostHouse().doorTiles().forEach(tile -> {
 			Box door = new Box(TS - 1, 1, HTS);
@@ -187,13 +181,15 @@ public class Maze3D extends Group {
 		});
 	}
 
-	private void addWalls(FloorPlan floorPlan, PacManGameWorld world, double stoneSize, Color wallBaseColor,
+	private void rebuildWalls(FloorPlan floorPlan, PacManGameWorld world, double stoneSize, Color wallBaseColor,
 			Color wallTopColor) {
 
 		var wallBaseMaterial = new PhongMaterial(wallBaseColor);
 		wallBaseMaterial.setSpecularColor(wallBaseColor.brighter());
 		var wallTopMaterial = new PhongMaterial(wallTopColor);
 		wallTopMaterial.setDiffuseColor(wallTopColor);
+
+		wallsGroup.getChildren().clear();
 
 		// horizontal
 		for (int y = 0; y < floorPlan.sizeY(); ++y) {
