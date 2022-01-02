@@ -172,7 +172,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			sceneIndex = 0;
 			break;
 		case INTERMISSION:
-			sceneIndex = game().intermissionAfterLevel(game().levelNumber).getAsInt();
+			sceneIndex = gameController.intermissionNumber(game().levelNumber);
 			break;
 		default:
 			sceneIndex = 4;
