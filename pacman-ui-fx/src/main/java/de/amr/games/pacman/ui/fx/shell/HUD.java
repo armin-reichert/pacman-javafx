@@ -80,8 +80,8 @@ public class HUD extends VBox {
 		String huntingPhaseName = ui.getGameController().inScatteringPhase() ? "Scattering" : "Chasing";
 		TickTimer stateTimer = ui.getGameController().stateTimer();
 		text.setLength(0);
-		line("Total Ticks", "%d", Env.$totalTicks.get());
-		line("Current FPS", "%d Hz", Env.$fps.get());
+		line("Total Ticks", "%d", Env.gameLoop.$totalTicks.get());
+		line("Current FPS", "%d Hz", Env.gameLoop.$fps.get());
 		line("Target FPS", "%d Hz", Env.gameLoop.getTargetFrameRate());
 		line("Game Variant", "%s", ui.getGameController().gameVariant());
 		line("Paused", "%s", yes_no(Env.$paused.get()));

@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell;
 
 import static de.amr.games.pacman.lib.Logging.log;
-import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
@@ -80,14 +79,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		this.gameController = gameController;
 		this.playerControl = new ManualPlayerControl(stage, KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 
-		stage.titleProperty().bind(Bindings.createStringBinding(() -> {
-			String gameName = gameController.gameVariant() == PACMAN ? "Pac-Man" : "Ms. Pac-Man";
-			return Env.$paused.get() ? String.format("%s (JavaFX, Game PAUSED)", gameName)
-					: String.format("%s (JavaFX)", gameName);
-		}, Env.$fps));
-		stage.getIcons().add(new Image(getClass().getResourceAsStream(Env.APP_ICON_PATH)));
-		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
-
 		// Determine the initial game scene
 		GameScene gameScene = getSceneForCurrentGameState(Env.$use3DScenes.get());
 		double aspectRatio = gameScene.aspectRatio().orElseGet(() -> {
@@ -107,6 +98,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		// Note: Must be done *after* main scene has been created:
 		setGameScene(gameScene);
 
+		stage.getIcons().add(new Image(getClass().getResourceAsStream(Env.APP_ICON_PATH)));
+		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
 		stage.centerOnScreen();
 		stage.show();
 	}

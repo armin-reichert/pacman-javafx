@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.app;
 
 import static de.amr.games.pacman.lib.Logging.log;
+import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -34,6 +35,7 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
 import javafx.stage.Stage;
 
 /**
@@ -50,10 +52,7 @@ public class PacManGameAppFX extends Application {
 	@Override
 	public void start(Stage stage) throws IOException {
 		Options options = new Options(getParameters().getUnnamed());
-		log("Game variant: %s, window height: %.0f, 3D: %s", options.gameVariant, options.windowHeight,
-				options.use3DScenes);
-		PacManGameController gameController = new PacManGameController();
-		gameController.selectGameVariant(options.gameVariant);
+		PacManGameController gameController = new PacManGameController(options.gameVariant);
 		PacManGameUI_JavaFX ui = new PacManGameUI_JavaFX(stage, gameController, options.windowHeight);
 		gameController.setUI(ui);
 		gameController.setPlayerControl(ui);
@@ -61,9 +60,14 @@ public class PacManGameAppFX extends Application {
 			gameController.updateState();
 			ui.getCurrentGameScene().update();
 		}, ui::update);
-		Env.$totalTicks.bind(Env.gameLoop.$totalTicks);
-		Env.$fps.bind(Env.gameLoop.$fps);
 		Env.$use3DScenes.set(options.use3DScenes);
+		stage.titleProperty().bind(Bindings.createStringBinding(() -> {
+			String gameName = gameController.gameVariant() == PACMAN ? "Pac-Man" : "Ms. Pac-Man";
+			return Env.$paused.get() ? String.format("%s (JavaFX, Game PAUSED)", gameName)
+					: String.format("%s (JavaFX)", gameName);
+		}, Env.gameLoop.$fps));
+		log("Application started, game variant: %s, window height: %.0f, 3D: %s", options.gameVariant, options.windowHeight,
+				options.use3DScenes);
 		Env.gameLoop.start();
 	}
 
