@@ -54,7 +54,7 @@ public class Flap2D implements Renderable2D {
 			Rectangle2D sprite = animation.animate();
 			rendering.renderEntity(g, flap, sprite);
 			g.setFont(rendering.getScoreFont());
-			g.setFill(Color.rgb(222, 222, 225));
+			g.setFill(Color.rgb(222, 222, 255));
 			g.fillText(String.valueOf(flap.sceneNumber), flap.position.x + sprite.getWidth() - 25, flap.position.y + 18);
 			g.fillText(flap.sceneTitle, flap.position.x + sprite.getWidth(), flap.position.y);
 		}
