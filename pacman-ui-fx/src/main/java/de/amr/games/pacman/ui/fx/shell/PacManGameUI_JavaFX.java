@@ -380,8 +380,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			break;
 
 		case DIGIT1:
-			showFlashMessage(1, "Intermission Scene Test");
-			gameController.startIntermissionTest();
+			if (gameController.currentStateID == PacManGameState.INTRO) {
+				showFlashMessage(1, "Intermission Scene Test");
+				gameController.startIntermissionTest();
+			}
 			break;
 
 		case DIGIT3: {
