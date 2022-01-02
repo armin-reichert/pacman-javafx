@@ -167,16 +167,21 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private GameScene getSceneForCurrentGameState(boolean _3D) {
 		int sceneIndex;
-		switch (gameController.currentStateID) {
-		case INTRO:
-			sceneIndex = 0;
-			break;
-		case INTERMISSION:
-			sceneIndex = gameController.intermissionNumber(game().levelNumber);
-			break;
-		default:
-			sceneIndex = 4;
-			break;
+
+		if (gameController.currentStateID == PacManGameState.INTERMISSION_TEST) {
+			sceneIndex = gameController.intermissionTestNumber;
+		} else {
+			switch (gameController.currentStateID) {
+			case INTRO:
+				sceneIndex = 0;
+				break;
+			case INTERMISSION:
+				sceneIndex = gameController.intermissionNumber(game().levelNumber);
+				break;
+			default:
+				sceneIndex = 4;
+				break;
+			}
 		}
 
 		switch (gameController.gameVariant()) {
@@ -372,6 +377,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		case X:
 			Env.$axesVisible.set(!Env.$axesVisible.get());
+			break;
+
+		case DIGIT1:
+			showFlashMessage(1, "Intermission Scene Test");
+			gameController.startIntermissionTest();
 			break;
 
 		case DIGIT3: {
