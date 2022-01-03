@@ -169,9 +169,9 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 	}
 
 	private void drawPressKeyToStart(int tileY) {
-		if (sceneController.blinking.frame()) {
+		if (sceneController.slowBlinking.frame()) {
 			String text = "PRESS SPACE TO PLAY";
-			gc.setFill(Color.ORANGE);
+			gc.setFill(Color.WHITE);
 			gc.setFont(rendering.getScoreFont());
 			gc.fillText(text, t(13 - text.length() / 2), t(tileY));
 		}
