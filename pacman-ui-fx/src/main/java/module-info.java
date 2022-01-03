@@ -37,5 +37,6 @@ module de.amr.games.pacman.ui.fx {
 	requires transitive javafx.media;
 
 	requires transitive de.amr.games.pacman;
-	requires jimObjModelImporterJFX; // TODO use "real" module
+	requires jimObjModelImporterJFX;
+	requires javafx.graphics; // TODO use "real" module
 }

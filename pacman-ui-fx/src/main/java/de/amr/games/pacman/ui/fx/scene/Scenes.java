@@ -49,7 +49,7 @@ public class Scenes {
 
 	public static final GameScene PACMAN_SCENES[][] = new GameScene[5][2];
 	public static final Rendering2D_PacMan PACMAN_RENDERING = new Rendering2D_PacMan();
-	public static final PacManModel3D MODEL_3D = new GianmarcosPacManModel3D("/common/gianmarco/pacman.obj");
+	public static final PacManModel3D MODEL_3D = new GianmarcosPacManModel3D();
 	public static final SoundManager PACMAN_SOUNDS = new SoundManager(PacManGameSounds::pacManSoundURL);
 
 	static {
