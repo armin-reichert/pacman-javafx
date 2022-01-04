@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
+import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.util.RandomEntrySelector;
 import javafx.beans.property.BooleanProperty;
@@ -78,4 +79,6 @@ public class Env {
 	public static final DoubleProperty $mazeWallHeight = new SimpleDoubleProperty(3.5);
 	public static final BooleanProperty $paused = new SimpleBooleanProperty(false);
 	public static final BooleanProperty $use3DScenes = new SimpleBooleanProperty(true);
+	public static final ObjectProperty<Perspective> $perspective = new SimpleObjectProperty<Perspective>(
+			Perspective.CAM_FOLLOWING_PLAYER);
 }

@@ -28,6 +28,7 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.ui.fx.scene.Scenes.MS_PACMAN_RENDERING;
 import static de.amr.games.pacman.ui.fx.scene.Scenes.PACMAN_RENDERING;
 
+import java.util.EnumMap;
 import java.util.List;
 import java.util.OptionalDouble;
 import java.util.stream.Collectors;
@@ -69,12 +70,10 @@ import javafx.scene.transform.Rotate;
  */
 public class PlayScene3D implements GameScene {
 
-	protected static final int CAM_TOTAL = 0, CAM_FOLLOWING_PLAYER = 1, CAM_NEAR_PLAYER = 2;
-
 	protected SubScene fxScene;
 	protected PacManGameController gameController;
-	protected CameraPerspective[] perspectives;
-	protected int perspectiveIndex;
+	protected EnumMap<Perspective, CameraPerspective> perspectives = new EnumMap<>(Perspective.class);
+	protected Perspective perspective;
 	protected PacManModel3D model3D;
 	protected Image floorImage = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
 	protected Maze3D maze3D;
@@ -92,17 +91,16 @@ public class PlayScene3D implements GameScene {
 		fxScene.setCamera(cam);
 		fxScene.addEventHandler(KeyEvent.KEY_PRESSED, event -> currentPerspective().handle(event));
 		//@formatter:off
-		perspectives = new CameraPerspective[] {
-				new Cam_Total(cam), 
-				new Cam_FollowingPlayer(cam), 
-				new Cam_NearPlayer(cam)
-		};
+		perspectives.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer(cam));
+		perspectives.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer(cam));
+		perspectives.put(Perspective.CAM_TOTAL, new Cam_Total(cam));
 		//@formatter:on
-		setPerspective(CAM_TOTAL);
 	}
 
 	@Override
 	public void init() {
+		setPerspective(Env.$perspective.get());
+
 		final var width = game().world.numCols() * TS;
 		final var height = game().world.numRows() * TS;
 
@@ -184,16 +182,17 @@ public class PlayScene3D implements GameScene {
 	}
 
 	public CameraPerspective currentPerspective() {
-		return perspectives[perspectiveIndex];
+		return perspectives.get(perspective);
 	}
 
-	public void setPerspective(int i) {
-		perspectiveIndex = i;
+	public void setPerspective(Perspective perspective) {
+		this.perspective = perspective;
 		currentPerspective().reset();
 	}
 
 	public void nextPerspective() {
-		setPerspective((perspectiveIndex + 1) % perspectives.length);
+		int next = (perspective.ordinal() + 1) % Perspective.values().length;
+		setPerspective(Perspective.values()[next]);
 	}
 
 	@Override

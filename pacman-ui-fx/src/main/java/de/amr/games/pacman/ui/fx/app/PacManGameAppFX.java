@@ -33,6 +33,7 @@ import java.util.List;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.Env;
+import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
@@ -61,22 +62,24 @@ public class PacManGameAppFX extends Application {
 			ui.getCurrentGameScene().update();
 		}, ui::update);
 		Env.$use3DScenes.set(options.use3DScenes);
+		Env.$perspective.set(options.perspective);
 		stage.titleProperty().bind(Bindings.createStringBinding(() -> {
 			String gameName = gameController.gameVariant() == PACMAN ? "Pac-Man" : "Ms. Pac-Man";
 			return Env.$paused.get() ? String.format("%s (JavaFX, Game PAUSED)", gameName)
 					: String.format("%s (JavaFX)", gameName);
 		}, Env.gameLoop.$fps));
-		log("Application started, game variant: %s, window height: %.0f, 3D: %s", options.gameVariant, options.windowHeight,
-				options.use3DScenes);
+		log("Application started, game variant: %s, window height: %.0f, 3D: %s, perspective: %s", options.gameVariant,
+				options.windowHeight, options.use3DScenes, options.perspective);
 		Env.gameLoop.start();
 	}
 
 	private static class Options {
 
-		static final String[] NAMES = { "-2D", "-3D", "-height", "-mspacman", "-pacman" };
+		static final String[] NAMES = { "-2D", "-3D", "-height", "-mspacman", "-pacman", "perspective" };
 
 		double windowHeight = 576;
 		boolean use3DScenes = true;
+		Perspective perspective = Perspective.CAM_FOLLOWING_PLAYER;
 		GameVariant gameVariant = GameVariant.PACMAN;
 
 		Options(List<String> params) {
@@ -111,6 +114,20 @@ public class PacManGameAppFX extends Application {
 
 				else if ("-3D".equals(params.get(i))) {
 					use3DScenes = true;
+				}
+
+				else if ("-perspective".equals(params.get(i))) {
+					if (i + 1 == params.size() || parameterNamesList.contains(params.get(i + 1))) {
+						log("!!! Error parsing parameters: missing perspective value.");
+					} else {
+						++i;
+						String perspectiveName = params.get(i);
+						try {
+							perspective = Perspective.valueOf(perspectiveName.toUpperCase());
+						} catch (Exception x) {
+							log("!!! Error parsing parameters: '%s' is no legal perspective value.", params.get(i));
+						}
+					}
 				}
 
 				else {
