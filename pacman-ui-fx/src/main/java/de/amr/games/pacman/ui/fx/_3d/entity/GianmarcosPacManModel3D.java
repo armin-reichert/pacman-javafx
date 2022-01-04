@@ -52,7 +52,7 @@ public class GianmarcosPacManModel3D implements PacManModel3D {
 	@Override
 	public Group createPacMan() {
 		MeshView head = pacManModel.createMeshView("Sphere_yellow_packman");
-		head.setMaterial(pacManModel.getMaterial("yellow_packman"));
+		head.setMaterial(new PhongMaterial(Color.YELLOW));
 
 		MeshView eyes = pacManModel.createMeshView("Sphere.008_Sphere.010_grey_wall");
 		eyes.setMaterial(new PhongMaterial(Color.rgb(20, 20, 20)));

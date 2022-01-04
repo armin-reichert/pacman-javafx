@@ -300,6 +300,8 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 		var playSound = pause(0);
 		playSound.setOnFinished(e -> sounds.play(PacManGameSound.PACMAN_DEATH));
 
+		var impale = player3D.createImpaleAnimation(Duration.seconds(1));
+
 		var spin = new RotateTransition(Duration.seconds(0.1), player3D);
 		spin.setAxis(Rotate.Z_AXIS);
 		spin.setFromAngle(player3D.getRotate());
@@ -311,9 +313,8 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 		shrink.setToY(0);
 		shrink.setToZ(0);
 
-		var spinAndShrink = new ParallelTransition(spin, shrink);
-
-		var animation = new SequentialTransition(pause(1), hideGhosts, pause(1), playSound, spinAndShrink, pause(2));
+		var animation = new SequentialTransition(pause(1), hideGhosts, pause(1), impale, pause(0.5), playSound,
+				new ParallelTransition(spin, shrink), pause(2));
 		animation.setOnFinished(e -> gameController.stateTimer().expire());
 		animation.play();
 	}

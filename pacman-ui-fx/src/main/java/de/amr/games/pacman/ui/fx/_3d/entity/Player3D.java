@@ -23,13 +23,18 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
+import static de.amr.games.pacman.ui.fx._3d.entity.Model3DHelper.lerp;
+
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Pac;
-import de.amr.games.pacman.model.world.PacManGameWorld;
 import javafx.animation.RotateTransition;
+import javafx.animation.Transition;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -37,45 +42,66 @@ import javafx.util.Duration;
  * 3D-representation of the player.
  * 
  * <p>
- * TODO: 3D-model for Ms. Pac-Man TODO: animated 3D models
+ * TODO: 3D-model for Ms. Pac-Man, mouth animation
  * 
  * @author Armin Reichert
  */
 public class Player3D extends Creature3D {
 
+	public class ImpaleAnimation extends Transition {
+
+		private PhongMaterial material = new PhongMaterial(Color.YELLOW);
+
+		public ImpaleAnimation(Duration duration) {
+			setCycleCount(1);
+			setCycleDuration(duration);
+		}
+
+		@Override
+		protected void interpolate(double t) {
+			Color from = Color.YELLOW, to = Color.LIGHTGRAY;
+			Color color = Color.color(lerp(from.getRed(), to.getRed(), t), lerp(from.getGreen(), to.getGreen(), t),
+					lerp(from.getBlue(), to.getBlue(), t));
+			material.setDiffuseColor(color);
+		}
+	};
+
 	public final Pac player;
 
 	private final RotateTransition turningAnimation;
 	private final PointLight light;
+	private final Group model3D;
 	private Direction targetDir;
 
-	public Player3D(Pac player, Group pacMan3D) {
+	public Player3D(Pac player, Group model3D) {
 		this.player = player;
+		this.model3D = model3D;
 		targetDir = player.dir();
 		turningAnimation = new RotateTransition(Duration.seconds(0.25), this);
 		turningAnimation.setAxis(Rotate.Z_AXIS);
 		light = new PointLight(Color.WHITE);
 		light.setTranslateZ(-4);
-		getChildren().addAll(pacMan3D, light);
+		getChildren().addAll(model3D, light);
 		reset();
 	}
 
 	public void reset() {
+		head().setMaterial(new PhongMaterial(Color.YELLOW));
 		setVisible(player.visible && !outsideMaze(player));
-		setScaleX(1);
-		setScaleY(1);
-		setScaleZ(1);
-		setTranslateX(player.position.x + PacManGameWorld.HTS);
-		setTranslateY(player.position.y + PacManGameWorld.HTS);
-		setTranslateZ(-4);
+		setScaleX(1.05);
+		setScaleY(1.05);
+		setScaleZ(1.05);
+		setTranslateX(player.position.x + HTS);
+		setTranslateY(player.position.y + HTS);
+		setTranslateZ(-HTS);
 		setRotationAxis(Rotate.Z_AXIS);
 		setRotate(rotationAngle(player.dir()));
 	}
 
 	public void update() {
 		setVisible(player.visible && !outsideMaze(player));
-		setTranslateX(player.position.x + PacManGameWorld.HTS);
-		setTranslateY(player.position.y + PacManGameWorld.HTS);
+		setTranslateX(player.position.x + HTS);
+		setTranslateY(player.position.y + HTS);
 		if (player.dead) {
 			return;
 		}
@@ -87,5 +113,15 @@ public class Player3D extends Creature3D {
 			turningAnimation.play();
 			targetDir = player.dir();
 		}
+	}
+
+	public ImpaleAnimation createImpaleAnimation(Duration duration) {
+		ImpaleAnimation impale = new ImpaleAnimation(duration);
+		head().setMaterial(impale.material);
+		return impale;
+	}
+
+	private Shape3D head() {
+		return (Shape3D) model3D.getChildrenUnmodifiable().get(0);
 	}
 }
