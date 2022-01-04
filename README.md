@@ -38,7 +38,7 @@ You can switch between window and fullscreen mode using the standard keys <kbd>F
 
 Intro screen shortcuts:
 - <kbd>v</kbd>: Switch between the two game variants
-- <kbd>CTRL+3</kbd>: Toggle using 2D/3D play scene
+- <kbd>CTRL+1</kbd>: Play all intermission scenes
 
 Play screen shortcuts:
 - <kbd>CTRL+3</kbd> Toggle using 2D/3D play scene
