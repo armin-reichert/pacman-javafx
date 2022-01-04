@@ -75,7 +75,7 @@ public class PlayScene3D implements GameScene {
 
 	protected final PacManModel3D model3D;
 	protected final SubScene fxScene;
-	public final ObjectProperty<Perspective> $perspective = new SimpleObjectProperty<Perspective>(
+	protected final ObjectProperty<Perspective> $perspective = new SimpleObjectProperty<Perspective>(
 			Perspective.CAM_FOLLOWING_PLAYER);
 	protected final EnumMap<Perspective, AbstractCameraController> cameraControllers = new EnumMap<>(Perspective.class);
 	protected final Image floorImage = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
