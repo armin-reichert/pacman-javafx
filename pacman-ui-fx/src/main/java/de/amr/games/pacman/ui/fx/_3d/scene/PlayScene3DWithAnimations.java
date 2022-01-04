@@ -302,18 +302,18 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 
 		var impale = player3D.createImpaleAnimation(Duration.seconds(2));
 
-		var spin = new RotateTransition(Duration.seconds(0.1), player3D);
+		var spin = new RotateTransition(Duration.seconds(0.2), player3D);
 		spin.setAxis(Rotate.Z_AXIS);
 		spin.setFromAngle(player3D.getRotate());
 		spin.setToAngle(player3D.getRotate() + 360);
-		spin.setCycleCount(20);
+		spin.setCycleCount(10);
 
 		var shrink = new ScaleTransition(Duration.seconds(2), player3D);
 		shrink.setToX(0);
 		shrink.setToY(0);
 		shrink.setToZ(0);
 
-		var animation = new SequentialTransition(impale, pause(0.5), hideGhosts, pause(1), playSound,
+		var animation = new SequentialTransition(pause(0.5), hideGhosts, pause(1), impale, playSound,
 				new ParallelTransition(spin, shrink), pause(2));
 		animation.setOnFinished(e -> gameController.stateTimer().expire());
 		animation.play();
