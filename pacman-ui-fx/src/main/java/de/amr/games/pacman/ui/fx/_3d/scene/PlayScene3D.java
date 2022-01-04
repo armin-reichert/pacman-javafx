@@ -34,7 +34,6 @@ import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 
 import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -94,10 +93,7 @@ public class PlayScene3D implements GameScene {
 		var cam = new PerspectiveCamera(true);
 		fxScene = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
 		fxScene.setCamera(cam);
-		fxScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-			Logging.log("Camera event %s", e);
-			currentCameraController().handle(e);
-		});
+		fxScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> currentCameraController().handle(e));
 		cameraControllers.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer(cam));
 		cameraControllers.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer(cam));
 		cameraControllers.put(Perspective.CAM_TOTAL, new Cam_Total(cam));
