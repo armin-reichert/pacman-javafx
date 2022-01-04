@@ -105,7 +105,7 @@ public class HUD extends VBox {
 		} else {
 			if (ui.getCurrentGameScene() instanceof PlayScene3D) {
 				PlayScene3D playScene = (PlayScene3D) ui.getCurrentGameScene();
-				line("Camera", "%s", playScene.currentPerspective());
+				line("Camera", "%s", playScene.currentCameraController());
 				line("", "%s", cameraInfo(playScene.getSubSceneFX().getCamera()));
 			}
 			line("Draw Mode", "%s", Env.$drawMode3D.get());

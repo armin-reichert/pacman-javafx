@@ -23,27 +23,19 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
-import de.amr.games.pacman.ui.fx._3d.entity.Player3D;
 import de.amr.games.pacman.ui.fx.util.ManualCameraController;
 import javafx.scene.Camera;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
 
 /**
- * Shows a total of the complete game. Using the keyboard, can zoom in and out
- * and change angle.
+ * Shows a total of the complete game. Using the keyboard, can zoom in and out and change angle.
  * 
  * @author Armin Reichert
  */
-public class Cam_Total extends ManualCameraController implements CameraPerspective {
+public class Cam_Total extends ManualCameraController {
 
 	public Cam_Total(Camera cam) {
 		super(cam);
-	}
-
-	@Override
-	public void handle(KeyEvent event) {
-		super.handleKeyEvent(event);
 	}
 
 	@Override
@@ -55,10 +47,6 @@ public class Cam_Total extends ManualCameraController implements CameraPerspecti
 		cam.setTranslateX(0);
 		cam.setTranslateY(320);
 		cam.setTranslateZ(-260);
-	}
-
-	@Override
-	public void follow(Player3D player3D) {
 	}
 
 	@Override

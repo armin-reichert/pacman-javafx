@@ -21,28 +21,37 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx._3d.scene;
+package de.amr.games.pacman.ui.fx.util;
 
-import de.amr.games.pacman.ui.fx._3d.entity.Player3D;
 import javafx.event.EventHandler;
+import javafx.scene.Camera;
+import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;
 
 /**
- * Common interface of perspectives (camera settings) of the play scene.
+ * Base class for all camera controllers.
  * 
  * @author Armin Reichert
  */
-public interface CameraPerspective extends EventHandler<KeyEvent> {
+public abstract class AbstractCameraController implements EventHandler<KeyEvent> {
 
-	@Override
-	default void handle(KeyEvent event) {
+	protected final Camera cam;
+
+	public AbstractCameraController(Camera cam) {
+		this.cam = cam;
 	}
 
-	void reset();
+	@Override
+	public void handle(KeyEvent event) {
+	}
 
-	void follow(Player3D player3D);
+	public void reset() {
+	}
 
-	default double approach(double current, double target) {
+	public void follow(Node target) {
+	}
+
+	public double approach(double current, double target) {
 		return current + (target - current) * 0.02;
 	}
 }

@@ -23,8 +23,9 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
-import de.amr.games.pacman.ui.fx._3d.entity.Player3D;
+import de.amr.games.pacman.ui.fx.util.AbstractCameraController;
 import javafx.scene.Camera;
+import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 
 /**
@@ -32,12 +33,10 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class Cam_NearPlayer implements CameraPerspective {
-
-	private final Camera cam;
+public class Cam_NearPlayer extends AbstractCameraController {
 
 	public Cam_NearPlayer(Camera cam) {
-		this.cam = cam;
+		super(cam);
 	}
 
 	@Override
@@ -50,7 +49,7 @@ public class Cam_NearPlayer implements CameraPerspective {
 	}
 
 	@Override
-	public void follow(Player3D player3D) {
+	public void follow(Node player3D) {
 		cam.setTranslateX(approach(cam.getTranslateX(), player3D.getTranslateX() - 100));
 		cam.setTranslateY(approach(cam.getTranslateY(), player3D.getTranslateY()));
 	}

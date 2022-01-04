@@ -25,7 +25,9 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.ui.fx._3d.entity.Player3D;
+import de.amr.games.pacman.ui.fx.util.AbstractCameraController;
 import javafx.scene.Camera;
+import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 
 /**
@@ -33,12 +35,10 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class Cam_POV implements CameraPerspective {
-
-	private final Camera cam;
+public class Cam_POV extends AbstractCameraController {
 
 	public Cam_POV(Camera cam) {
-		this.cam = cam;
+		super(cam);
 	}
 
 	@Override
@@ -49,7 +49,8 @@ public class Cam_POV implements CameraPerspective {
 	}
 
 	@Override
-	public void follow(Player3D player3D) {
+	public void follow(Node node) {
+		Player3D player3D = (Player3D) node;
 		V2d offset = new V2d(player3D.player.dir().vec).scaled(8);
 		cam.setRotationAxis(Rotate.Z_AXIS);
 		cam.setRotate(player3D.getRotate());

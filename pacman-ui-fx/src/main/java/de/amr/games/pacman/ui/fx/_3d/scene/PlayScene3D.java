@@ -47,7 +47,10 @@ import de.amr.games.pacman.ui.fx._3d.entity.Player3D;
 import de.amr.games.pacman.ui.fx._3d.entity.ScoreNotReally3D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.Scenes;
+import de.amr.games.pacman.ui.fx.util.AbstractCameraController;
 import de.amr.games.pacman.ui.fx.util.CoordinateSystem;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.AmbientLight;
 import javafx.scene.Camera;
 import javafx.scene.Group;
@@ -72,8 +75,9 @@ public class PlayScene3D implements GameScene {
 
 	protected SubScene fxScene;
 	protected PacManGameController gameController;
-	protected EnumMap<Perspective, CameraPerspective> perspectives = new EnumMap<>(Perspective.class);
-	protected Perspective perspective;
+	public final ObjectProperty<Perspective> $perspective = new SimpleObjectProperty<Perspective>(
+			Perspective.CAM_FOLLOWING_PLAYER);
+	protected EnumMap<Perspective, AbstractCameraController> cameraControllers = new EnumMap<>(Perspective.class);
 	protected PacManModel3D model3D;
 	protected Image floorImage = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
 	protected Maze3D maze3D;
@@ -89,18 +93,20 @@ public class PlayScene3D implements GameScene {
 		Camera cam = new PerspectiveCamera(true);
 		fxScene = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
 		fxScene.setCamera(cam);
-		fxScene.addEventHandler(KeyEvent.KEY_PRESSED, event -> currentPerspective().handle(event));
+		fxScene.addEventHandler(KeyEvent.KEY_PRESSED, event -> currentCameraController().handle(event));
 		//@formatter:off
-		perspectives.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer(cam));
-		perspectives.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer(cam));
-		perspectives.put(Perspective.CAM_TOTAL, new Cam_Total(cam));
+		cameraControllers.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer(cam));
+		cameraControllers.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer(cam));
+		cameraControllers.put(Perspective.CAM_TOTAL, new Cam_Total(cam));
 		//@formatter:on
+		$perspective.bind(Env.$perspective);
+		$perspective.addListener((x, y, newCameraController) -> {
+			cameraControllers.get(newCameraController).reset();
+		});
 	}
 
 	@Override
 	public void init() {
-		setPerspective(Env.$perspective.get());
-
 		final var width = game().world.numCols() * TS;
 		final var height = game().world.numRows() * TS;
 
@@ -173,7 +179,7 @@ public class PlayScene3D implements GameScene {
 		score3D.setRotationAxis(Rotate.X_AXIS);
 		score3D.setRotate(fxScene.getCamera().getRotate());
 		livesCounter3D.setVisibleItems(game().player.lives);
-		currentPerspective().follow(player3D);
+		currentCameraController().follow(player3D);
 	}
 
 	@Override
@@ -181,18 +187,8 @@ public class PlayScene3D implements GameScene {
 		log("End scene '%s'", getClass().getSimpleName());
 	}
 
-	public CameraPerspective currentPerspective() {
-		return perspectives.get(perspective);
-	}
-
-	public void setPerspective(Perspective perspective) {
-		this.perspective = perspective;
-		currentPerspective().reset();
-	}
-
-	public void nextPerspective() {
-		int next = (perspective.ordinal() + 1) % Perspective.values().length;
-		setPerspective(Perspective.values()[next]);
+	public AbstractCameraController currentCameraController() {
+		return cameraControllers.get(Env.$perspective.get());
 	}
 
 	@Override

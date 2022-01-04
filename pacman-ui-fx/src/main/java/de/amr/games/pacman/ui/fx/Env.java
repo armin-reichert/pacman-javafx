@@ -81,4 +81,10 @@ public class Env {
 	public static final BooleanProperty $use3DScenes = new SimpleBooleanProperty(true);
 	public static final ObjectProperty<Perspective> $perspective = new SimpleObjectProperty<Perspective>(
 			Perspective.CAM_FOLLOWING_PLAYER);
+
+	public static void nextPerspective() {
+		int next = ($perspective.get().ordinal() + 1) % Perspective.values().length;
+		$perspective.set(Perspective.values()[next]);
+	}
+
 }
