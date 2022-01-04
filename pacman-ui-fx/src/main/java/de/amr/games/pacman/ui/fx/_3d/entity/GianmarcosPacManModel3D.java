@@ -23,101 +23,70 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import java.util.Map;
-import java.util.stream.Stream;
+import static de.amr.games.pacman.ui.fx._3d.entity.Model3DHelper.bindDrawModeToEnv;
+import static de.amr.games.pacman.ui.fx._3d.entity.Model3DHelper.centerOverOrigin;
+import static de.amr.games.pacman.ui.fx._3d.entity.Model3DHelper.scale;
 
-import com.interactivemesh.jfx.importer.ImportException;
-import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
-
-import de.amr.games.pacman.lib.Logging;
-import de.amr.games.pacman.ui.fx.Env;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
 
 /**
- * The original 3D-model has been generously provided by Gianmarco Cavallaccio (https://www.artstation.com/gianmart).
+ * The original 3D-model has been generously provided by Gianmarco Cavallaccio
+ * (https://www.artstation.com/gianmart).
  * 
  * @author Armin Reichert
  */
 public class GianmarcosPacManModel3D implements PacManModel3D {
 
-	private static class ObjModel {
-
-		Map<String, MeshView> meshViews;
-		Map<String, PhongMaterial> materials;
-
-		public ObjModel(String path) {
-			ObjModelImporter objImporter = new ObjModelImporter();
-			try {
-				objImporter.read(getClass().getResource(path));
-				meshViews = objImporter.getNamedMeshViews();
-				materials = objImporter.getNamedMaterials();
-				Logging.log("3D model '%s' loaded successfully", path);
-			} catch (ImportException e) {
-				e.printStackTrace();
-			} finally {
-				objImporter.close();
-			}
-		}
-	}
-
 	private ObjModel pacManModel;
 	private ObjModel ghostModel;
 
 	public GianmarcosPacManModel3D() {
-		pacManModel = new ObjModel("/common/gianmarco/pacman-only.obj");
-		ghostModel = new ObjModel("/common/gianmarco/ghost-only.obj");
+		pacManModel = new ObjModel("/common/gianmarco/pacman.obj");
+		ghostModel = new ObjModel("/common/gianmarco/ghost.obj");
 	}
 
 	@Override
 	public Group createPacMan() {
-		MeshView head = new MeshView(pacManModel.meshViews.get("Sphere_yellow_packman").getMesh());
-		head.setMaterial(pacManModel.materials.get("yellow_packman"));
+		MeshView head = pacManModel.createMeshView("Sphere_yellow_packman");
+		head.setMaterial(pacManModel.getMaterial("yellow_packman"));
 
-		MeshView eyes = new MeshView(pacManModel.meshViews.get("Sphere.008_Sphere.010_grey_wall").getMesh());
+		MeshView eyes = pacManModel.createMeshView("Sphere.008_Sphere.010_grey_wall");
 		eyes.setMaterial(new PhongMaterial(Color.rgb(20, 20, 20)));
 
-		MeshView palate = new MeshView(pacManModel.meshViews.get("Sphere_grey_wall").getMesh());
+		MeshView palate = pacManModel.createMeshView("Sphere_grey_wall");
 		palate.setMaterial(new PhongMaterial(Color.rgb(10, 10, 10)));
 
-		Stream.of(head, eyes, palate).forEach(meshView -> meshView.drawModeProperty().bind(Env.$drawMode3D));
+		centerOverOrigin(head, eyes, palate);
+		bindDrawModeToEnv(head, eyes, palate);
 
-		// TODO: simplify
-		Translate centering = Model3DHelper.centerNodeOverOrigin(head);
-		eyes.getTransforms().add(centering);
-		palate.getTransforms().add(centering);
-
-		Group pacman = new Group(eyes, palate, head);
+		Group pacman = new Group(head, eyes, palate);
 		pacman.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-		Model3DHelper.scaleNode(pacman, 8);
+		scale(pacman, 8);
 
 		return pacman;
 	}
 
 	@Override
 	public Group createGhost() {
-		MeshView body = new MeshView(ghostModel.meshViews.get("Sphere.004_Sphere.034_light_blue_ghost").getMesh());
-		body.setMaterial(ghostModel.materials.get("blue_ghost"));
+		MeshView body = ghostModel.createMeshView("Sphere.004_Sphere.034_light_blue_ghost");
+		body.setMaterial(ghostModel.getMaterial("blue_ghost"));
 
-		MeshView eyesOuter = new MeshView(ghostModel.meshViews.get("Sphere.009_Sphere.036_white").getMesh());
+		MeshView eyesOuter = ghostModel.createMeshView("Sphere.009_Sphere.036_white");
 		eyesOuter.setMaterial(new PhongMaterial(Color.WHITE));
 
-		MeshView eyesInner = new MeshView(ghostModel.meshViews.get("Sphere.010_Sphere.039_grey_wall").getMesh());
+		MeshView eyesInner = ghostModel.createMeshView("Sphere.010_Sphere.039_grey_wall");
 		eyesInner.setMaterial(new PhongMaterial(Color.BLACK));
 
-		Stream.of(body, eyesOuter, eyesInner).forEach(meshView -> meshView.drawModeProperty().bind(Env.$drawMode3D));
-
-		Translate centering = Model3DHelper.centerNodeOverOrigin(body);
-		eyesOuter.getTransforms().add(centering);
-		eyesInner.getTransforms().add(centering);
+		centerOverOrigin(body, eyesOuter, eyesInner);
+		bindDrawModeToEnv(body, eyesOuter, eyesInner);
 
 		Group ghost = new Group(body, eyesOuter, eyesInner);
 		ghost.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-		Model3DHelper.scaleNode(ghost, 8);
+		scale(ghost, 8);
 
 		return ghost;
 	}
@@ -126,7 +95,7 @@ public class GianmarcosPacManModel3D implements PacManModel3D {
 	public Group createGhostEyes() {
 		Group eyes = createGhost();
 		eyes.getChildren().remove(0);
-		Model3DHelper.centerNodeOverOrigin(eyes);
+		centerOverOrigin(eyes);
 		return eyes;
 	}
 }
