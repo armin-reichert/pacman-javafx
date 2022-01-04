@@ -37,7 +37,7 @@ In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases
 You can switch between window and fullscreen mode using the standard keys <kbd>F11</kbd> and <kbd>Esc</kbd>.
 
 Intro screen shortcuts:
-- <kbd>v</kbd>: Switch between the two game variants
+- <kbd>V</kbd>: Switch between the two game variants
 - <kbd>CTRL+1</kbd>: Play all intermission scenes
 
 Play screen shortcuts:
@@ -54,7 +54,7 @@ Play screen shortcuts:
 - <kbd>Q</kbd> Quit play scene
 - Cheats:
   - <kbd>E</kbd> Eat all pills except the energizers
-  - <kbd>L</kbd> Add one player life
+  - <kbd>L</kbd> Add 3 player lives
   - <kbd>N</kbd> Enter next game level
   - <kbd>X</kbd> Kill all ghosts outside of the ghosthouse 
 
