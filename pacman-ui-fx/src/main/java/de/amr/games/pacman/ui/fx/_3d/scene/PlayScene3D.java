@@ -34,6 +34,7 @@ import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 
 import de.amr.games.pacman.controller.PacManGameController;
+import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -52,7 +53,6 @@ import de.amr.games.pacman.ui.fx.util.CoordinateSystem;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.AmbientLight;
-import javafx.scene.Camera;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SceneAntialiasing;
@@ -73,13 +73,14 @@ import javafx.scene.transform.Rotate;
  */
 public class PlayScene3D implements GameScene {
 
-	protected SubScene fxScene;
-	protected PacManGameController gameController;
+	protected final PacManModel3D model3D;
+	protected final SubScene fxScene;
 	public final ObjectProperty<Perspective> $perspective = new SimpleObjectProperty<Perspective>(
 			Perspective.CAM_FOLLOWING_PLAYER);
-	protected EnumMap<Perspective, AbstractCameraController> cameraControllers = new EnumMap<>(Perspective.class);
-	protected PacManModel3D model3D;
-	protected Image floorImage = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
+	protected final EnumMap<Perspective, AbstractCameraController> cameraControllers = new EnumMap<>(Perspective.class);
+	protected final Image floorImage = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
+
+	protected PacManGameController gameController;
 	protected Maze3D maze3D;
 	protected Player3D player3D;
 	protected List<Ghost3D> ghosts3D;
@@ -90,19 +91,18 @@ public class PlayScene3D implements GameScene {
 
 	public PlayScene3D(PacManModel3D model3D) {
 		this.model3D = model3D;
-		Camera cam = new PerspectiveCamera(true);
+		var cam = new PerspectiveCamera(true);
 		fxScene = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
 		fxScene.setCamera(cam);
-		fxScene.addEventHandler(KeyEvent.KEY_PRESSED, event -> currentCameraController().handle(event));
-		//@formatter:off
+		fxScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+			Logging.log("Camera event %s", e);
+			currentCameraController().handle(e);
+		});
 		cameraControllers.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer(cam));
 		cameraControllers.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer(cam));
 		cameraControllers.put(Perspective.CAM_TOTAL, new Cam_Total(cam));
-		//@formatter:on
 		$perspective.bind(Env.$perspective);
-		$perspective.addListener((x, y, newCameraController) -> {
-			cameraControllers.get(newCameraController).reset();
-		});
+		$perspective.addListener(($1, $2, $3) -> currentCameraController().reset());
 	}
 
 	@Override

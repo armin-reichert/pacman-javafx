@@ -38,7 +38,8 @@ public class ManualCameraController extends AbstractCameraController {
 		super(cam);
 	}
 
-	public void handleKeyEvent(KeyEvent e) {
+	@Override
+	public void handle(KeyEvent e) {
 		if (e.isControlDown()) {
 			switch (e.getCode()) {
 			case DIGIT0:
