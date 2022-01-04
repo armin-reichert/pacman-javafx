@@ -34,9 +34,13 @@ In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases
 
 ## How to use
 
-On the intro screen, you can switch between the two game variants by pressing <kbd>v</kbd>. You can switch between window and fullscreen mode using the standard keys <kbd>F11</kbd> and <kbd>Esc</kbd>.
+You can switch between window and fullscreen mode using the standard keys <kbd>F11</kbd> and <kbd>Esc</kbd>.
 
-On the play screen, the following functionality is available:
+Intro screen shortcuts:
+- <kbd>v</kbd>: Switch between the two game variants
+- <kbd>CTRL+3</kbd>: Toggle using 2D/3D play scene
+
+Play screen shortcuts:
 - <kbd>CTRL+3</kbd> Toggle using 2D/3D play scene
 - <kbd>CTRL+C</kbd> Change 3D camera (3 cameras currently implemented)
 - <kbd>CTRL+I</kbd> Toggle information about current scene (HUD)
