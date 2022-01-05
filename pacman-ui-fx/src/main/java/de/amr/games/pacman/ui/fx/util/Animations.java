@@ -37,9 +37,13 @@ public class Animations {
 		return new PauseTransition(Duration.seconds(seconds));
 	}
 
-	public static PauseTransition immediately(Runnable runnable) {
-		PauseTransition p = new PauseTransition(Duration.ZERO);
+	public static PauseTransition afterSeconds(double seconds, Runnable runnable) {
+		PauseTransition p = new PauseTransition(Duration.seconds(seconds));
 		p.setOnFinished(e -> runnable.run());
 		return p;
+	}
+
+	public static PauseTransition now(Runnable runnable) {
+		return afterSeconds(0, runnable);
 	}
 }

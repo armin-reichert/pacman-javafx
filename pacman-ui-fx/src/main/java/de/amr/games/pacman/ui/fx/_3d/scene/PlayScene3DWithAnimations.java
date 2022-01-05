@@ -23,7 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
-import static de.amr.games.pacman.ui.fx.util.Animations.immediately;
+import static de.amr.games.pacman.ui.fx.util.Animations.afterSeconds;
+import static de.amr.games.pacman.ui.fx.util.Animations.now;
 import static de.amr.games.pacman.ui.fx.util.Animations.pause;
 import static java.util.function.Predicate.not;
 
@@ -287,8 +288,8 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 	}
 
 	private void playAnimationPlayerDying() {
-		var hideGhosts = immediately(() -> game().ghosts().forEach(ghost -> ghost.visible = false));
-		var playSound = immediately(() -> sounds.play(PacManGameSound.PACMAN_DEATH));
+		var hideGhosts = now(() -> game().ghosts().forEach(ghost -> ghost.visible = false));
+		var playSound = now(() -> sounds.play(PacManGameSound.PACMAN_DEATH));
 		var impale = player3D.createImpaleAnimation(Duration.seconds(1));
 
 		var spin = new RotateTransition(Duration.seconds(0.2), player3D);
@@ -310,35 +311,24 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 	private void playAnimationLevelComplete() {
 		gameController.stateTimer().reset();
 		gameController.stateTimer().start();
-
-		var phase1 = pause(3);
-		phase1.setOnFinished(e -> {
+		var hideGuysAndShowMessage = afterSeconds(3, () -> {
 			game().player.visible = false;
 			game().ghosts().forEach(ghost -> ghost.visible = false);
 			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game().levelNumber);
 			gameController.getUI().showFlashMessage(2, message);
 		});
-
-		var phase2 = pause(2);
-		phase2.setOnFinished(e -> gameController.stateTimer().expire());
-
-		new SequentialTransition(phase1, phase2).play();
+		var quitLevel = afterSeconds(2, () -> gameController.stateTimer().expire());
+		new SequentialTransition(hideGuysAndShowMessage, quitLevel).play();
 	}
 
 	private void playAnimationLevelStarting() {
-		var message = Env.message("level_starting", game().levelNumber);
-		gameController.getUI().showFlashMessage(1, message);
-
-		var phase1 = pause(1);
-		phase1.setOnFinished(e -> {
+		gameController.getUI().showFlashMessage(1, Env.message("level_starting", game().levelNumber));
+		var hideGuys = afterSeconds(1, () -> {
 			game().player.visible = true;
 			game().ghosts().forEach(ghost -> ghost.visible = true);
 		});
-
-		var phase2 = pause(3);
-		phase2.setOnFinished(e -> gameController.stateTimer().expire());
-
-		new SequentialTransition(phase1, phase2).play();
+		var startLevel = afterSeconds(3, () -> gameController.stateTimer().expire());
+		new SequentialTransition(hideGuys, startLevel).play();
 	}
 
 	private void playDoorAnimation() {
