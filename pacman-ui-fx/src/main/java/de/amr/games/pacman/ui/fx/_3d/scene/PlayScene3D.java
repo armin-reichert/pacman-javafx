@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
@@ -106,8 +107,8 @@ public class PlayScene3D implements GameScene {
 		maze3D = new Maze3D(width, height, floorImage);
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
-		maze3D.$resolution.addListener((x, y, z) -> buildMazeWithoutFood());
-		buildMaze();
+		maze3D.$resolution.addListener((x, y, z) -> buildMazeWithoutFood(game().world, game().mazeNumber));
+		buildMaze(game().world, game().mazeNumber);
 
 		player3D = new Player3D(game().player, model3D.createPacMan());
 		ghosts3D = game().ghosts()
@@ -164,17 +165,17 @@ public class PlayScene3D implements GameScene {
 	/**
 	 * Builds the maze content including the food. Overwritten by subclass to also build energizer animations.
 	 */
-	protected void buildMaze() {
-		buildMazeWithoutFood();
-		maze3D.buildFood(game().world, rendering2D().getFoodColor(game().mazeNumber));
+	protected void buildMaze(PacManGameWorld world, int mazeNumber) {
+		buildMazeWithoutFood(world, mazeNumber);
+		maze3D.buildFood(world, rendering2D().getFoodColor(mazeNumber));
 	}
 
 	/**
 	 * Builds the maze content without the food. Used when floorplan resolution is changed.
 	 */
-	protected void buildMazeWithoutFood() {
-		maze3D.buildWallsAndDoors(game().world, rendering2D().getMazeSideColor(game().mazeNumber),
-				rendering2D().getMazeTopColor(game().mazeNumber));
+	protected void buildMazeWithoutFood(PacManGameWorld world, int mazeNumber) {
+		maze3D.buildWallsAndDoors(world, rendering2D().getMazeSideColor(mazeNumber),
+				rendering2D().getMazeTopColor(mazeNumber));
 	}
 
 	/**

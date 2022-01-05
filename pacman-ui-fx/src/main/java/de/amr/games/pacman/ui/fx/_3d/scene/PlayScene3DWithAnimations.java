@@ -85,9 +85,9 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 	}
 
 	@Override
-	protected void buildMaze() {
-		super.buildMaze();
-		energizerAnimations = energizerNodes(game().world).map(PlayScene3DWithAnimations::createEnergizerAnimation)
+	protected void buildMaze(PacManGameWorld world, int mazeNumber) {
+		super.buildMaze(world, mazeNumber);
+		energizerAnimations = energizerNodes(world).map(PlayScene3DWithAnimations::createEnergizerAnimation)
 				.collect(Collectors.toList());
 	}
 
@@ -132,8 +132,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 	@Override
 	public void onPlayerGainsPower(PacManGameEvent e) {
 		sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
-		ghosts3D.stream()
-				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
+		ghosts3D.stream().filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
 				.forEach(Ghost3D::setBlueSkinColor);
 	}
 
@@ -243,7 +242,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 
 		// enter LEVEL_STARTING
 		else if (e.newGameState == PacManGameState.LEVEL_STARTING) {
-			buildMaze();
+			buildMaze(game().world, game().mazeNumber);
 			levelCounter3D.rebuild(e.game);
 			playAnimationLevelStarting();
 		}
@@ -333,8 +332,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 	}
 
 	private void playDoorAnimation() {
-		boolean open = maze3D.doors()
-				.anyMatch(door -> game().ghosts().anyMatch(ghost -> ghost.tile().equals(tile(door))));
+		boolean open = maze3D.doors().anyMatch(door -> game().ghosts().anyMatch(ghost -> ghost.tile().equals(tile(door))));
 		maze3D.showDoorsOpen(open);
 	}
 }
