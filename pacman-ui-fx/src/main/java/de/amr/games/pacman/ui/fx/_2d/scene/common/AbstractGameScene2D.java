@@ -30,6 +30,7 @@ import java.util.OptionalDouble;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -82,16 +83,6 @@ public abstract class AbstractGameScene2D implements GameScene {
 	}
 
 	@Override
-	public PacManGameController getGameController() {
-		return gameController;
-	}
-
-	@Override
-	public void setGameController(PacManGameController controller) {
-		this.gameController = controller;
-	}
-
-	@Override
 	public void resize(double width, double height) {
 		// resize canvas to take given height and respect aspect ratio
 		Canvas canvas = gc.getCanvas();
@@ -104,6 +95,11 @@ public abstract class AbstractGameScene2D implements GameScene {
 	@Override
 	public SubScene getSubSceneFX() {
 		return subSceneFX;
+	}
+
+	@Override
+	public void init(PacManGameController gameController) {
+		this.gameController = gameController;
 	}
 
 	@Override
@@ -126,11 +122,12 @@ public abstract class AbstractGameScene2D implements GameScene {
 
 	// this is used in play scene and intermission scenes, so define it here
 	protected void renderLevelCounter(V2i tileRight) {
-		int levelNumber = game().levelNumber;
+		final GameModel game = gameController.game();
+		int levelNumber = game.levelNumber;
 		int x = tileRight.x * TS, y = tileRight.y * TS;
 		int firstLevel = Math.max(1, levelNumber - 6);
 		for (int level = firstLevel; level <= levelNumber; ++level) {
-			Rectangle2D sprite = rendering.getSymbolSprites().get(game().levelSymbol(level));
+			Rectangle2D sprite = rendering.getSymbolSprites().get(game.levelSymbol(level));
 			rendering.renderSprite(gc, sprite, x, y);
 			x -= t(2);
 		}

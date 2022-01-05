@@ -27,7 +27,6 @@ import java.util.OptionalDouble;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.event.DefaultPacManGameEventHandler;
-import de.amr.games.pacman.model.common.GameModel;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 
@@ -49,7 +48,7 @@ public interface GameScene extends DefaultPacManGameEventHandler {
 	/**
 	 * Called before the scene is started.
 	 */
-	void init();
+	void init(PacManGameController gameController);
 
 	/**
 	 * Called on every tick.
@@ -60,25 +59,6 @@ public interface GameScene extends DefaultPacManGameEventHandler {
 	 * Called before the scene is terminated.
 	 */
 	void end();
-
-	/**
-	 * @return the game controller
-	 */
-	PacManGameController getGameController();
-
-	/**
-	 * Sets the game controller
-	 * 
-	 * @param gameController the game controller
-	 */
-	void setGameController(PacManGameController gameController);
-
-	/**
-	 * @return the game model or {@code null}
-	 */
-	default GameModel game() {
-		return getGameController() != null ? getGameController().game() : null;
-	}
 
 	/**
 	 * @return aspect ratio defined for this scene

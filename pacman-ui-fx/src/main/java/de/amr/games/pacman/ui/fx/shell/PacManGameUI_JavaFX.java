@@ -201,13 +201,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			if (newGameScene instanceof AbstractGameScene2D) {
 				((AbstractGameScene2D) newGameScene).setCanvas(canvas);
 			}
-			if (newGameScene.getGameController() == null) {
-				// new scene is displayed first time
-				newGameScene.setGameController(gameController);
-				newGameScene.keepSizeOf(stage.getScene());
-			}
+			newGameScene.keepSizeOf(stage.getScene());
 			newGameScene.resize(stage.getScene().getWidth(), stage.getScene().getHeight());
-			newGameScene.init();
+			newGameScene.init(gameController);
 			log("'%s' initialized", newGameScene.getClass().getSimpleName());
 			gameSceneRoot.getChildren().setAll(newGameScene.getSubSceneFX());
 			// Note: this must be done after new scene has been added to scene graph:
@@ -303,8 +299,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			if (currentGameScene instanceof PlayScene3D) {
 				PlayScene3D playScene3D = (PlayScene3D) currentGameScene;
 				Env.nextPerspective();
-				String cameraType = Env.MESSAGES
-						.getString(playScene3D.currentCameraController().getClass().getSimpleName());
+				String cameraType = Env.MESSAGES.getString(playScene3D.currentCameraController().getClass().getSimpleName());
 				String message = Env.message("camera_perspective", cameraType);
 				showFlashMessage(1, message);
 			}

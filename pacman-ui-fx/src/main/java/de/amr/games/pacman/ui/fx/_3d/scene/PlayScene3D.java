@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.fx.Env;
@@ -100,18 +101,21 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public void init() {
-		final var width = game().world.numCols() * TS;
-		final var height = game().world.numRows() * TS;
+	public void init(PacManGameController gameController) {
+		this.gameController = gameController;
+
+		final GameModel game = gameController.game();
+		final int width = game.world.numCols() * TS;
+		final int height = game.world.numRows() * TS;
 
 		maze3D = new Maze3D(width, height, floorImage);
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
-		maze3D.$resolution.addListener((x, y, z) -> buildMazeWithoutFood(game().world, game().mazeNumber));
-		buildMaze(game().world, game().mazeNumber);
+		maze3D.$resolution.addListener((x, y, z) -> buildMazeWithoutFood(game.world, game.mazeNumber));
+		buildMaze(game.world, game.mazeNumber);
 
-		player3D = new Player3D(game().player, model3D.createPacMan());
-		ghosts3D = game().ghosts()
+		player3D = new Player3D(game.player, model3D.createPacMan());
+		ghosts3D = game.ghosts()
 				.map(ghost -> new Ghost3D(ghost, model3D.createGhost(), model3D.createGhostEyes(), rendering2D()))
 				.collect(Collectors.toList());
 		bonus3D = new Bonus3D(rendering2D());
@@ -126,7 +130,7 @@ public class PlayScene3D implements GameScene {
 		levelCounter3D = new LevelCounter3D(rendering2D());
 		levelCounter3D.setRightPosition(26 * TS, TS);
 		levelCounter3D.setTranslateZ(-4); // TODO
-		levelCounter3D.rebuild(game());
+		levelCounter3D.rebuild(game);
 
 		var playground = new Group(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
 		playground.getChildren().addAll(ghosts3D);
@@ -142,14 +146,15 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void update() {
+		final GameModel game = gameController.game();
 		player3D.update();
 		ghosts3D.forEach(Ghost3D::update);
-		bonus3D.update(game().bonus);
-		score3D.update(game(), gameController.isAttractMode() ? "GAME OVER!" : null);
+		bonus3D.update(game.bonus);
+		score3D.update(game, gameController.isAttractMode() ? "GAME OVER!" : null);
 		// TODO: is this the recommended way to do keep the score in plain view?
 		score3D.setRotationAxis(Rotate.X_AXIS);
 		score3D.setRotate(fxScene.getCamera().getRotate());
-		livesCounter3D.setVisibleItems(game().player.lives);
+		livesCounter3D.setVisibleItems(game.player.lives);
 		currentCameraController().follow(player3D);
 	}
 
@@ -190,16 +195,6 @@ public class PlayScene3D implements GameScene {
 			return cameraControllers.get(Env.$perspective.get());
 		}
 		throw new IllegalStateException("No camera perspective has been set");
-	}
-
-	@Override
-	public PacManGameController getGameController() {
-		return gameController;
-	}
-
-	@Override
-	public void setGameController(PacManGameController gameController) {
-		this.gameController = gameController;
 	}
 
 	@Override

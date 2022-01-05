@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.pacman.IntroController;
 import de.amr.games.pacman.controller.pacman.IntroController.GhostPortrait;
 import de.amr.games.pacman.lib.TimedSequence;
@@ -71,7 +72,9 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	}
 
 	@Override
-	public void init() {
+	public void init(PacManGameController gameController) {
+		super.init(gameController);
+
 		sceneController = new IntroController(gameController);
 		sceneController.init();
 
@@ -79,16 +82,16 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		score2D.title = "SCORE";
 		score2D.x = t(1);
 		score2D.y = t(1);
-		score2D.levelSupplier = () -> game().levelNumber;
-		score2D.pointsSupplier = () -> game().score;
+		score2D.levelSupplier = () -> gameController.game().levelNumber;
+		score2D.pointsSupplier = () -> gameController.game().score;
 		score2D.showPoints = false;
 
 		hiscore2D = new GameScore2D(rendering);
 		hiscore2D.title = "HIGH SCORE";
 		hiscore2D.x = t(16);
 		hiscore2D.y = t(1);
-		hiscore2D.levelSupplier = () -> game().hiscoreLevel;
-		hiscore2D.pointsSupplier = () -> game().hiscorePoints;
+		hiscore2D.levelSupplier = () -> gameController.game().hiscoreLevel;
+		hiscore2D.pointsSupplier = () -> gameController.game().hiscorePoints;
 
 		pacMan2D = new Player2D(sceneController.pacMan, rendering);
 		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);

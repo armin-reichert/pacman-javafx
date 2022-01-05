@@ -37,6 +37,7 @@ import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.PacManGameSound;
@@ -94,19 +95,20 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 	@Override
 	public void update() {
 		super.update();
+		final GameModel game = gameController.game();
 		playDoorAnimation();
 		sounds.setMuted(gameController.isAttractMode());
 		if (gameController.currentStateID == PacManGameState.HUNTING) {
 			// update food visibility and animations in case of switching between 2D and 3D view
 			maze3D.foodNodes().forEach(foodNode -> {
-				foodNode.setVisible(!game().isFoodEaten(tile(foodNode)));
+				foodNode.setVisible(!game.isFoodEaten(tile(foodNode)));
 			});
 			if (energizerAnimations.stream().anyMatch(animation -> animation.getStatus() != Status.RUNNING)) {
 				energizerAnimations.forEach(Transition::play);
 			}
 			AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
 			if (munching.isPlaying()) {
-				if (game().player.starvingTicks > 10) {
+				if (game.player.starvingTicks > 10) {
 					sounds.stop(PacManGameSound.PACMAN_MUNCH);
 				}
 			}
@@ -153,7 +155,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 	public void onPlayerFoundFood(PacManGameEvent e) {
 		if (e.tile.isEmpty()) {
 			// this happens when the "eat all pellets except energizers" cheat was triggered
-			Predicate<Node> isEnergizer = node -> game().world.isEnergizerTile(tile(node));
+			Predicate<Node> isEnergizer = node -> gameController.game().world.isEnergizerTile(tile(node));
 			maze3D.foodNodes()//
 					.filter(not(isEnergizer))//
 					.forEach(foodNode -> foodNode.setVisible(false));
@@ -172,12 +174,12 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 
 	@Override
 	public void onBonusActivated(PacManGameEvent e) {
-		bonus3D.showSymbol(game().bonus);
+		bonus3D.showSymbol(gameController.game().bonus);
 	}
 
 	@Override
 	public void onBonusEaten(PacManGameEvent e) {
-		bonus3D.showPoints(game().bonus);
+		bonus3D.showPoints(gameController.game().bonus);
 		sounds.play(PacManGameSound.BONUS_EATEN);
 	}
 
@@ -199,7 +201,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 
 	@Override
 	public void onGhostEntersHouse(PacManGameEvent e) {
-		if (game().ghosts(GhostState.DEAD).count() == 0) {
+		if (gameController.game().ghosts(GhostState.DEAD).count() == 0) {
 			sounds.stop(PacManGameSound.GHOST_RETURNING_HOME);
 		}
 	}
@@ -217,7 +219,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 		if (e.newGameState == PacManGameState.READY) {
 			sounds.stopAll();
 			player3D.reset();
-			resetEnergizers(game().world);
+			resetEnergizers(gameController.game().world);
 			if (!gameController.isAttractMode() && !gameController.isGameRunning()) {
 				sounds.play(PacManGameSound.GAME_READY);
 			}
@@ -242,7 +244,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 
 		// enter LEVEL_STARTING
 		else if (e.newGameState == PacManGameState.LEVEL_STARTING) {
-			buildMaze(game().world, game().mazeNumber);
+			buildMaze(gameController.game().world, gameController.game().mazeNumber);
 			levelCounter3D.rebuild(e.game);
 			playAnimationLevelStarting();
 		}
@@ -288,7 +290,7 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 	}
 
 	private void playAnimationPlayerDying() {
-		var hideGhosts = now(() -> game().ghosts().forEach(ghost -> ghost.visible = false));
+		var hideGhosts = now(() -> gameController.game().ghosts().forEach(ghost -> ghost.visible = false));
 		var playSound = now(() -> sounds.play(PacManGameSound.PACMAN_DEATH));
 		var impale = player3D.createImpaleAnimation(Duration.seconds(1));
 
@@ -312,9 +314,10 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 		gameController.stateTimer().reset();
 		gameController.stateTimer().start();
 		var hideGuysAndShowMessage = afterSeconds(3, () -> {
-			game().player.visible = false;
-			game().ghosts().forEach(ghost -> ghost.visible = false);
-			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game().levelNumber);
+			gameController.game().player.visible = false;
+			gameController.game().ghosts().forEach(ghost -> ghost.visible = false);
+			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n"
+					+ Env.message("level_complete", gameController.game().levelNumber);
 			gameController.getUI().showFlashMessage(2, message);
 		});
 		var quitLevel = afterSeconds(2, () -> gameController.stateTimer().expire());
@@ -322,17 +325,18 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 	}
 
 	private void playAnimationLevelStarting() {
-		gameController.getUI().showFlashMessage(1, Env.message("level_starting", game().levelNumber));
+		gameController.getUI().showFlashMessage(1, Env.message("level_starting", gameController.game().levelNumber));
 		var hideGuys = afterSeconds(1, () -> {
-			game().player.visible = true;
-			game().ghosts().forEach(ghost -> ghost.visible = true);
+			gameController.game().player.visible = true;
+			gameController.game().ghosts().forEach(ghost -> ghost.visible = true);
 		});
 		var startLevel = afterSeconds(3, () -> gameController.stateTimer().expire());
 		new SequentialTransition(hideGuys, startLevel).play();
 	}
 
 	private void playDoorAnimation() {
-		boolean open = maze3D.doors().anyMatch(door -> game().ghosts().anyMatch(ghost -> ghost.tile().equals(tile(door))));
+		boolean open = maze3D.doors()
+				.anyMatch(door -> gameController.game().ghosts().anyMatch(ghost -> ghost.tile().equals(tile(door))));
 		maze3D.showDoorsOpen(open);
 	}
 }

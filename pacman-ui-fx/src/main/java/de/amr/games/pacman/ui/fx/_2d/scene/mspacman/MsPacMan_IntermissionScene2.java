@@ -73,7 +73,9 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 	}
 
 	@Override
-	public void init() {
+	public void init(PacManGameController gameController) {
+		super.init(gameController);
+
 		sceneController = new SceneController(gameController);
 		sceneController.init();
 		flap2D = new Flap2D(sceneController.flap, Scenes.MS_PACMAN_RENDERING);
