@@ -31,40 +31,44 @@ import javafx.scene.Scene;
 import javafx.scene.SubScene;
 
 /**
- * Common interface for all game scenes (2D and 3D).
+ * Common base class for all game scenes (2D and 3D).
  * 
  * <p>
  * Each game scene has an associated JavaFX subscene.
  * 
  * @author Armin Reichert
  */
-public interface GameScene extends DefaultPacManGameEventHandler {
+public abstract class AbstractGameScene implements DefaultPacManGameEventHandler {
+
+	protected PacManGameController gameController;
 
 	/**
 	 * @return the JavaFX subscene
 	 */
-	SubScene getSubSceneFX();
+	public abstract SubScene getSubSceneFX();
 
 	/**
 	 * Called when the scene gets initialized. Stores a reference to the game controller such that the other lifecycle
 	 * methods have access to it.
 	 */
-	void init(PacManGameController gameController);
+	public void init(PacManGameController gameController) {
+		this.gameController = gameController;
+	}
 
 	/**
 	 * Called on every tick.
 	 */
-	void update();
+	public abstract void update();
 
 	/**
 	 * Called when the scene ends.
 	 */
-	void end();
+	public abstract void end();
 
 	/**
 	 * @return aspect ratio for this scene
 	 */
-	OptionalDouble aspectRatio();
+	public abstract OptionalDouble aspectRatio();
 
 	/**
 	 * Resizes the scene to the given size.
@@ -72,14 +76,14 @@ public interface GameScene extends DefaultPacManGameEventHandler {
 	 * @param width  with in pixels
 	 * @param height height in pixels
 	 */
-	void resize(double width, double height);
+	public abstract void resize(double width, double height);
 
 	/**
 	 * Keeps the scene size at the size of the parent scene.
 	 * 
 	 * @param parentScene the parent scene (main scene)
 	 */
-	default void keepSizeOf(Scene parentScene) {
+	public void keepSizeOf(Scene parentScene) {
 		if (aspectRatio().isPresent()) {
 			double aspectRatio = aspectRatio().getAsDouble();
 			parentScene.widthProperty().addListener(($1, $2, targetWidth) -> {

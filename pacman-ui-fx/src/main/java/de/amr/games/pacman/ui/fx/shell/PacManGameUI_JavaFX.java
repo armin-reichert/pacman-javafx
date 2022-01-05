@@ -36,7 +36,7 @@ import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
-import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
 import de.amr.games.pacman.ui.fx.scene.Scenes;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
@@ -72,7 +72,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final HUD hud = new HUD(this);
 	private final Group gameSceneRoot = new Group();
-	private GameScene currentGameScene;
+	private AbstractGameScene currentGameScene;
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController gameController, double height) {
 		this.stage = stage;
@@ -80,7 +80,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		this.playerControl = new ManualPlayerControl(stage, KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 
 		// Determine the initial game scene
-		GameScene gameScene = getSceneForCurrentGameState(Env.$use3DScenes.get());
+		AbstractGameScene gameScene = getSceneForCurrentGameState(Env.$use3DScenes.get());
 		double aspectRatio = gameScene.aspectRatio().orElseGet(() -> {
 			Rectangle2D bounds = Screen.getPrimary().getBounds();
 			return bounds.getWidth() / bounds.getHeight();
@@ -127,7 +127,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		return stage;
 	}
 
-	public GameScene getCurrentGameScene() {
+	public AbstractGameScene getCurrentGameScene() {
 		return currentGameScene;
 	}
 
@@ -158,7 +158,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 	}
 
-	private GameScene getSceneForCurrentGameState(boolean _3D) {
+	private AbstractGameScene getSceneForCurrentGameState(boolean _3D) {
 		int sceneIndex;
 
 		if (gameController.currentStateID == PacManGameState.INTERMISSION_TEST) {
@@ -187,7 +187,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 	}
 
-	private void setGameScene(GameScene newGameScene) {
+	private void setGameScene(AbstractGameScene newGameScene) {
 		if (currentGameScene != newGameScene) {
 			if (currentGameScene != null) {
 				log("Change game scene from '%s' to '%s'", currentGameScene.getClass().getSimpleName(),

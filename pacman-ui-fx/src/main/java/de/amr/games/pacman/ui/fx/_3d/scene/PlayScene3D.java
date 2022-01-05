@@ -48,7 +48,7 @@ import de.amr.games.pacman.ui.fx._3d.entity.Maze3D;
 import de.amr.games.pacman.ui.fx._3d.entity.PacManModel3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Player3D;
 import de.amr.games.pacman.ui.fx._3d.entity.ScoreNotReally3D;
-import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
 import de.amr.games.pacman.ui.fx.scene.Scenes;
 import de.amr.games.pacman.ui.fx.util.AbstractCameraController;
 import de.amr.games.pacman.ui.fx.util.CoordinateSystem;
@@ -72,14 +72,13 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class PlayScene3D implements GameScene {
+public class PlayScene3D extends AbstractGameScene {
 
 	protected final PacManModel3D model3D;
 	protected final SubScene fxScene;
 	protected final EnumMap<Perspective, AbstractCameraController> cameraControllers = new EnumMap<>(Perspective.class);
 	protected final Image floorImage = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
 
-	protected PacManGameController gameController;
 	protected Maze3D maze3D;
 	protected Player3D player3D;
 	protected List<Ghost3D> ghosts3D;

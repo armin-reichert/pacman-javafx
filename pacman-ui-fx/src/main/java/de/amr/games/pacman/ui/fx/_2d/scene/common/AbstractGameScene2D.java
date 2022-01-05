@@ -28,11 +28,10 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
 import java.util.OptionalDouble;
 
-import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
@@ -47,7 +46,7 @@ import javafx.scene.transform.Scale;
  * 
  * @author Armin Reichert
  */
-public abstract class AbstractGameScene2D implements GameScene {
+public abstract class AbstractGameScene2D extends AbstractGameScene {
 
 	protected final double unscaledWidth;
 	protected final double unscaledHeight;
@@ -56,7 +55,6 @@ public abstract class AbstractGameScene2D implements GameScene {
 	protected final Rendering2D rendering;
 	protected final SoundManager sounds;
 
-	protected PacManGameController gameController;
 	protected SubScene subSceneFX;
 	protected GraphicsContext gc;
 
@@ -96,12 +94,6 @@ public abstract class AbstractGameScene2D implements GameScene {
 	public SubScene getSubSceneFX() {
 		return subSceneFX;
 	}
-
-	@Override
-	public void init(PacManGameController gameController) {
-		this.gameController = gameController;
-	}
-
 	@Override
 	public final void update() {
 		doUpdate();
