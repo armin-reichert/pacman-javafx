@@ -93,10 +93,6 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 	}
 
 	@Override
-	public void end() {
-	}
-
-	@Override
 	public void doUpdate() {
 		sceneController.update();
 	}

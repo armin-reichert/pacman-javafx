@@ -23,14 +23,12 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
-import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.ui.fx.scene.Scenes.MS_PACMAN_RENDERING;
 import static de.amr.games.pacman.ui.fx.scene.Scenes.PACMAN_RENDERING;
 
 import java.util.EnumMap;
 import java.util.List;
-import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 
 import de.amr.games.pacman.controller.PacManGameController;
@@ -157,11 +155,6 @@ public class PlayScene3D extends AbstractGameScene {
 		currentCameraController().follow(player3D);
 	}
 
-	@Override
-	public void end() {
-		log("End scene '%s'", getClass().getSimpleName());
-	}
-
 	protected static V2i tile(Node node) {
 		return (V2i) node.getUserData();
 	}
@@ -197,17 +190,7 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	@Override
-	public OptionalDouble aspectRatio() {
-		return OptionalDouble.empty();
-	}
-
-	@Override
 	public SubScene getSubSceneFX() {
 		return fxScene;
-	}
-
-	@Override
-	public void resize(double width, double height) {
-		// data binding does the job
 	}
 }

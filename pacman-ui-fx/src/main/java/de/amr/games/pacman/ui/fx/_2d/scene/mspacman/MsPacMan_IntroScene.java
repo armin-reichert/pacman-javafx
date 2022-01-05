@@ -99,10 +99,6 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 	}
 
 	@Override
-	public void end() {
-	}
-
-	@Override
 	public void doUpdate() {
 		sceneController.update();
 		boardAnimationTimer.tick();

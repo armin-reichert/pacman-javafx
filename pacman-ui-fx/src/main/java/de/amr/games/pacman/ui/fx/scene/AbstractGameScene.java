@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.scene;
 
+import static de.amr.games.pacman.lib.Logging.log;
+
 import java.util.OptionalDouble;
 
 import de.amr.games.pacman.controller.PacManGameController;
@@ -63,12 +65,16 @@ public abstract class AbstractGameScene implements DefaultPacManGameEventHandler
 	/**
 	 * Called when the scene ends.
 	 */
-	public abstract void end();
+	public void end() {
+		log("End scene '%s'", getClass().getSimpleName());
+	}
 
 	/**
 	 * @return aspect ratio for this scene
 	 */
-	public abstract OptionalDouble aspectRatio();
+	public OptionalDouble aspectRatio() {
+		return OptionalDouble.empty();
+	}
 
 	/**
 	 * Resizes the scene to the given size.
@@ -76,7 +82,8 @@ public abstract class AbstractGameScene implements DefaultPacManGameEventHandler
 	 * @param width  with in pixels
 	 * @param height height in pixels
 	 */
-	public abstract void resize(double width, double height);
+	public void resize(double width, double height) {
+	}
 
 	/**
 	 * Keeps the scene size at the size of the parent scene.
