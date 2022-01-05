@@ -132,7 +132,8 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 	@Override
 	public void onPlayerGainsPower(PacManGameEvent e) {
 		sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
-		ghosts3D.stream().filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
+		ghosts3D.stream()
+				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
 				.forEach(Ghost3D::setBlueSkinColor);
 	}
 
@@ -332,7 +333,8 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 	}
 
 	private void playDoorAnimation() {
-		boolean open = maze3D.doors().anyMatch(door -> game().ghosts().anyMatch(ghost -> ghost.tile().equals(tile(door))));
+		boolean open = maze3D.doors()
+				.anyMatch(door -> game().ghosts().anyMatch(ghost -> ghost.tile().equals(tile(door))));
 		maze3D.showDoorsOpen(open);
 	}
 }

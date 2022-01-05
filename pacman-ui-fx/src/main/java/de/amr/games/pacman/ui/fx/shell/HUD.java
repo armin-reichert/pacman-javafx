@@ -75,7 +75,8 @@ public class HUD extends VBox {
 	}
 
 	public void update() {
-		double w = ui.getStage().getScene().getWindow().getWidth(), h = ui.getStage().getScene().getWindow().getHeight();
+		double w = ui.getStage().getScene().getWindow().getWidth(),
+				h = ui.getStage().getScene().getWindow().getHeight();
 		PacManGameState state = ui.getGameController().currentStateID;
 		String huntingPhaseName = ui.getGameController().inScatteringPhase() ? "Scattering" : "Chasing";
 		TickTimer stateTimer = ui.getGameController().stateTimer();

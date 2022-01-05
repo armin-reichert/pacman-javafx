@@ -41,8 +41,8 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 /**
- * 3D-representation of a ghost. A ghost is displayed in one of 3 modes: as a full ghost, as eyes
- * only or as a bonus symbol indicating the bounty paid for killing the ghost.
+ * 3D-representation of a ghost. A ghost is displayed in one of 3 modes: as a full ghost, as eyes only or as a bonus
+ * symbol indicating the bounty paid for killing the ghost.
  * 
  * @author Armin Reichert
  */

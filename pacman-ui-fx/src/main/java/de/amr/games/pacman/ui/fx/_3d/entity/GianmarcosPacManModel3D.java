@@ -34,8 +34,7 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 
 /**
- * The original 3D-model has been generously provided by Gianmarco Cavallaccio
- * (https://www.artstation.com/gianmart).
+ * The original 3D-model has been generously provided by Gianmarco Cavallaccio (https://www.artstation.com/gianmart).
  * 
  * @author Armin Reichert
  */

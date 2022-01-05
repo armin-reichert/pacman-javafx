@@ -181,8 +181,8 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 		Map<Direction, TimedSequence<Rectangle2D>> munchingAnimations = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = dirIndex(dir);
-			TimedSequence<Rectangle2D> munching = TimedSequence.of(regionRight(0, d), regionRight(1, d), regionRight(2, d))
-					.frameDuration(4).endless();
+			TimedSequence<Rectangle2D> munching = TimedSequence
+					.of(regionRight(0, d), regionRight(1, d), regionRight(2, d)).frameDuration(4).endless();
 			munchingAnimations.put(dir, munching);
 		}
 		return munchingAnimations;
@@ -200,7 +200,8 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 		for (Direction dir : Direction.values()) {
 			int d = dirIndex(dir);
 			TimedSequence<Rectangle2D> kicking = TimedSequence
-					.of(regionRight(2 * d, 4 + ghostID), regionRight(2 * d + 1, 4 + ghostID)).frameDuration(4).endless();
+					.of(regionRight(2 * d, 4 + ghostID), regionRight(2 * d + 1, 4 + ghostID)).frameDuration(4)
+					.endless();
 			kickingAnimations.put(dir, kicking);
 		}
 		return kickingAnimations;
@@ -228,8 +229,8 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 		Map<Direction, TimedSequence<Rectangle2D>> pacManMunchingAnim = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = dirIndex(dir);
-			pacManMunchingAnim.put(dir,
-					TimedSequence.of(regionRight(0, 9 + d), regionRight(1, 9 + d), regionRight(2, 9)).frameDuration(2).endless());
+			pacManMunchingAnim.put(dir, TimedSequence
+					.of(regionRight(0, 9 + d), regionRight(1, 9 + d), regionRight(2, 9)).frameDuration(2).endless());
 		}
 		return pacManMunchingAnim;
 	}

@@ -36,8 +36,7 @@ import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.scene.Scenes;
 
 /**
- * Third intermission scene: Blinky in shred dress chases Pac-Man, comes back half-naked drawing
- * dress over the floor.
+ * Third intermission scene: Blinky in shred dress chases Pac-Man, comes back half-naked drawing dress over the floor.
  * 
  * @author Armin Reichert
  */

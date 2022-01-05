@@ -303,7 +303,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			if (currentGameScene instanceof PlayScene3D) {
 				PlayScene3D playScene3D = (PlayScene3D) currentGameScene;
 				Env.nextPerspective();
-				String cameraType = Env.MESSAGES.getString(playScene3D.currentCameraController().getClass().getSimpleName());
+				String cameraType = Env.MESSAGES
+						.getString(playScene3D.currentCameraController().getClass().getSimpleName());
 				String message = Env.message("camera_perspective", cameraType);
 				showFlashMessage(1, message);
 			}

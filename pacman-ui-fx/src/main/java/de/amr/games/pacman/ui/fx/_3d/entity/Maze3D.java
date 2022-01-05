@@ -129,8 +129,8 @@ public class Maze3D extends Group {
 	}
 
 	/**
-	 * Adds a wall at given position. A wall consists of a base and a top part which can have different
-	 * color and material.
+	 * Adds a wall at given position. A wall consists of a base and a top part which can have different color and
+	 * material.
 	 * 
 	 * @param leftX      x-coordinate of top-left stone
 	 * @param topY       y-coordinate of top-left stone
@@ -151,7 +151,8 @@ public class Maze3D extends Group {
 		double topHeight = 0.5;
 		Box top = new Box(numStonesX * stoneSize, numStonesY * stoneSize, topHeight);
 		top.setMaterial(wallTopMaterial);
-		top.translateZProperty().bind(base.translateZProperty().subtract($wallHeight.add(topHeight + 0.1).multiply(0.5)));
+		top.translateZProperty()
+				.bind(base.translateZProperty().subtract($wallHeight.add(topHeight + 0.1).multiply(0.5)));
 		top.drawModeProperty().bind(Env.$drawMode3D);
 
 		Group wall = new Group(base, top);
