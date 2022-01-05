@@ -66,6 +66,29 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 		return (V2i) node.getUserData();
 	}
 
+	private static PauseTransition pause(double seconds) {
+		return new PauseTransition(Duration.seconds(seconds));
+	}
+
+	private static PauseTransition immediately(Runnable runnable) {
+		PauseTransition p = new PauseTransition(Duration.ZERO);
+		p.setOnFinished(e -> runnable.run());
+		return p;
+	}
+
+	private static ScaleTransition createEnergizerAnimation(Node energizer) {
+		var animation = new ScaleTransition(Duration.seconds(0.25), energizer);
+		animation.setAutoReverse(true);
+		animation.setCycleCount(Transition.INDEFINITE);
+		animation.setFromX(1.0);
+		animation.setFromY(1.0);
+		animation.setFromZ(1.0);
+		animation.setToX(0.1);
+		animation.setToY(0.1);
+		animation.setToZ(0.1);
+		return animation;
+	}
+
 	private final SoundManager sounds;
 	private List<Transition> energizerAnimations;
 
@@ -77,7 +100,8 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 	@Override
 	protected void buildMaze() {
 		super.buildMaze();
-		energizerAnimations = energizerNodes(game().world).map(this::createEnergizerAnimation).collect(Collectors.toList());
+		energizerAnimations = energizerNodes(game().world).map(PlayScene3DWithAnimations::createEnergizerAnimation)
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -268,19 +292,6 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 		});
 	}
 
-	private ScaleTransition createEnergizerAnimation(Node energizer) {
-		var animation = new ScaleTransition(Duration.seconds(0.25), energizer);
-		animation.setAutoReverse(true);
-		animation.setCycleCount(Transition.INDEFINITE);
-		animation.setFromX(1.0);
-		animation.setFromY(1.0);
-		animation.setFromZ(1.0);
-		animation.setToX(0.1);
-		animation.setToY(0.1);
-		animation.setToZ(0.1);
-		return animation;
-	}
-
 	private void playEnergizerAnimations() {
 		energizerAnimations.forEach(Animation::play);
 	}
@@ -289,23 +300,14 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 		energizerAnimations.forEach(Animation::stop);
 	}
 
-	private static PauseTransition pause(double seconds) {
-		return new PauseTransition(Duration.seconds(seconds));
-	}
-
 	private void playAnimationPlayerDying() {
-		var hideGhosts = pause(0);
-		hideGhosts.setOnFinished(e -> game().ghosts().forEach(ghost -> ghost.visible = false));
-
-		var playSound = pause(0);
-		playSound.setOnFinished(e -> sounds.play(PacManGameSound.PACMAN_DEATH));
-
-		var impale = player3D.createImpaleAnimation(Duration.seconds(2));
+		var hideGhosts = immediately(() -> game().ghosts().forEach(ghost -> ghost.visible = false));
+		var playSound = immediately(() -> sounds.play(PacManGameSound.PACMAN_DEATH));
+		var impale = player3D.createImpaleAnimation(Duration.seconds(1));
 
 		var spin = new RotateTransition(Duration.seconds(0.2), player3D);
 		spin.setAxis(Rotate.Z_AXIS);
-		spin.setFromAngle(player3D.getRotate());
-		spin.setToAngle(player3D.getRotate() + 360);
+		spin.setByAngle(360);
 		spin.setCycleCount(10);
 
 		var shrink = new ScaleTransition(Duration.seconds(2), player3D);
@@ -313,8 +315,8 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 		shrink.setToY(0);
 		shrink.setToZ(0);
 
-		var animation = new SequentialTransition(pause(0.5), hideGhosts, pause(1), impale, playSound,
-				new ParallelTransition(spin, shrink), pause(2));
+		var animation = new SequentialTransition(pause(0.5), hideGhosts, impale, pause(1),
+				new ParallelTransition(playSound, spin, shrink), pause(2));
 		animation.setOnFinished(e -> gameController.stateTimer().expire());
 		animation.play();
 	}
