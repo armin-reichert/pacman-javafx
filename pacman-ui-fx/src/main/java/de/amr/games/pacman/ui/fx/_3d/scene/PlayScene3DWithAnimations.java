@@ -326,9 +326,6 @@ public class PlayScene3DWithAnimations extends PlayScene3D {
 	}
 
 	private void playAnimationLevelStarting() {
-		gameController.stateTimer().reset();
-		gameController.stateTimer().start();
-
 		var message = Env.message("level_starting", game().levelNumber);
 		gameController.getUI().showFlashMessage(1, message);
 
