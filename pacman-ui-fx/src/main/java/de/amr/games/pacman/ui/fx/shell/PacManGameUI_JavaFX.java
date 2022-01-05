@@ -49,6 +49,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -101,6 +102,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		stage.getIcons().add(new Image(getClass().getResourceAsStream(Env.APP_ICON_PATH)));
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
+		stage.addEventHandler(ScrollEvent.SCROLL, this::onScrolled);
 		stage.centerOnScreen();
 		stage.show();
 	}
@@ -308,15 +310,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			break;
 
 		case H:
-			if (!e.isShiftDown()) {
-				if (Env.$mazeWallHeight.get() < 16) {
-					Env.$mazeWallHeight.set(Env.$mazeWallHeight.get() + 0.2);
-				}
-			} else {
-				if (Env.$mazeWallHeight.get() > 0.2) {
-					Env.$mazeWallHeight.set(Env.$mazeWallHeight.get() - 0.2);
-				}
-			}
+			changeMazeWallHeight(!e.isShiftDown());
 			break;
 
 		case I:
@@ -341,15 +335,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			break;
 
 		case R:
-			if (!e.isShiftDown()) {
-				if (Env.$mazeResolution.get() < 8) {
-					Env.$mazeResolution.set(Env.$mazeResolution.get() * 2);
-				}
-			} else {
-				if (Env.$mazeResolution.get() > 1) {
-					Env.$mazeResolution.set(Env.$mazeResolution.get() / 2);
-				}
-			}
+			changeMazeResolution(!e.isShiftDown());
 			break;
 
 		case S:
@@ -388,5 +374,36 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		default:
 			break;
 		}
+	}
+
+	private void onScrolled(ScrollEvent e) {
+		boolean shift = e.isShiftDown();
+		boolean up = shift ? e.getDeltaX() > 0 : e.getDeltaY() > 0;
+		if (currentGameScene instanceof PlayScene3D) {
+			if (e.isShiftDown()) {
+				changeMazeWallHeight(up);
+			} else {
+				changeMazeResolution(up);
+			}
+		}
+	}
+
+	private void changeMazeResolution(boolean up) {
+		int res = Env.$mazeResolution.get();
+		if (up) {
+			Env.$mazeResolution.set(Math.min(res * 2, 8));
+		} else {
+			Env.$mazeResolution.set(Math.max(res / 2, 1));
+		}
+	}
+
+	private void changeMazeWallHeight(boolean up) {
+		double height = Env.$mazeWallHeight.get();
+		if (up) {
+			Env.$mazeWallHeight.set(Math.min(height + 0.2, 8.0));
+		} else {
+			Env.$mazeWallHeight.set(Math.max(height - 0.2, 0.1));
+		}
+		log("Maze wall height is now %.2f", Env.$mazeWallHeight.get());
 	}
 }
