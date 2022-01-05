@@ -54,4 +54,9 @@ public abstract class AbstractCameraController implements EventHandler<KeyEvent>
 	public double approach(double current, double target) {
 		return current + (target - current) * 0.02;
 	}
+
+	public String info() {
+		return String.format("x=%.0f y=%.0f z=%.0f rot=%.0f", cam.getTranslateX(), cam.getTranslateY(),
+				cam.getTranslateZ(), cam.getRotate());
+	}
 }

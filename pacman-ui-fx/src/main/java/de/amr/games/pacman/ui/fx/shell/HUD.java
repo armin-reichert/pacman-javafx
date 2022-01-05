@@ -32,7 +32,6 @@ import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
-import javafx.scene.Camera;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -106,7 +105,7 @@ public class HUD extends VBox {
 		} else {
 			PlayScene3D playScene = (PlayScene3D) ui.getCurrentGameScene();
 			line("Perspective", "%s", Env.$perspective.get());
-			line("Camera", "%s", cameraInfo(playScene.getSubSceneFX().getCamera()));
+			line("Camera", "%s", playScene.currentCameraController().info());
 			line("Draw Mode", "%s", Env.$drawMode3D.get());
 			line("Axes", "%s", on_off(Env.$axesVisible.get()));
 		}
@@ -142,12 +141,6 @@ public class HUD extends VBox {
 
 	private void newline() {
 		text.append("\n");
-	}
-
-	private String cameraInfo(Camera camera) {
-		return camera == null ? "No camera"
-				: String.format("x=%.0f y=%.0f z=%.0f rot=%.0f", camera.getTranslateX(), camera.getTranslateY(),
-						camera.getTranslateZ(), camera.getRotate());
 	}
 
 	public void show() {
