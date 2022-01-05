@@ -63,6 +63,7 @@ public class Maze3D extends Group {
 
 	private double energizerRadius = 2.5;
 	private double pelletRadius = 1;
+	private Color floorColor = Color.rgb(20, 20, 120);
 	private Color doorClosedColor = Color.PINK;
 	private Color doorOpenColor = Color.TRANSPARENT;
 
@@ -74,7 +75,6 @@ public class Maze3D extends Group {
 	 */
 	public Maze3D(double sizeX, double sizeY, Image floorImage) {
 		var sizeZ = 0.1;
-		var floorColor = Color.rgb(20, 20, 120);
 		var floorMaterial = new PhongMaterial(floorColor);
 		floorMaterial.setSpecularColor(floorColor.brighter());
 		floorMaterial.setDiffuseMap(floorImage);
