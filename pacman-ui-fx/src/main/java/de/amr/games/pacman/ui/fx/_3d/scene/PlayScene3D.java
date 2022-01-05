@@ -34,6 +34,7 @@ import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 
 import de.amr.games.pacman.controller.PacManGameController;
+import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -53,6 +54,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
@@ -139,6 +141,10 @@ public class PlayScene3D implements GameScene {
 		coordinateSystem.visibleProperty().bind(Env.$axesVisible);
 
 		fxScene.setRoot(new Group(new AmbientLight(), playground, coordinateSystem));
+	}
+
+	protected static V2i tile(Node node) {
+		return (V2i) node.getUserData();
 	}
 
 	/**

@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
+import static de.amr.games.pacman.ui.fx.util.Animations.immediately;
+import static de.amr.games.pacman.ui.fx.util.Animations.pause;
 import static java.util.function.Predicate.not;
 
 import java.util.List;
@@ -34,7 +36,6 @@ import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.PacManGameSound;
@@ -45,7 +46,6 @@ import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.ParallelTransition;
-import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
@@ -61,20 +61,6 @@ import javafx.util.Duration;
  * @author Armin Reichert
  */
 public class PlayScene3DWithAnimations extends PlayScene3D {
-
-	private static V2i tile(Node node) {
-		return (V2i) node.getUserData();
-	}
-
-	private static PauseTransition pause(double seconds) {
-		return new PauseTransition(Duration.seconds(seconds));
-	}
-
-	private static PauseTransition immediately(Runnable runnable) {
-		PauseTransition p = new PauseTransition(Duration.ZERO);
-		p.setOnFinished(e -> runnable.run());
-		return p;
-	}
 
 	private static ScaleTransition createEnergizerAnimation(Node energizer) {
 		var animation = new ScaleTransition(Duration.seconds(0.25), energizer);
