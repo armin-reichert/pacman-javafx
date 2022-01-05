@@ -46,7 +46,8 @@ public interface GameScene extends DefaultPacManGameEventHandler {
 	SubScene getSubSceneFX();
 
 	/**
-	 * Called before the scene is started.
+	 * Called when the scene gets initialized. Stores a reference to the game controller such that the other lifecycle
+	 * methods have access to it.
 	 */
 	void init(PacManGameController gameController);
 
@@ -56,17 +57,17 @@ public interface GameScene extends DefaultPacManGameEventHandler {
 	void update();
 
 	/**
-	 * Called before the scene is terminated.
+	 * Called when the scene ends.
 	 */
 	void end();
 
 	/**
-	 * @return aspect ratio defined for this scene
+	 * @return aspect ratio for this scene
 	 */
 	OptionalDouble aspectRatio();
 
 	/**
-	 * Resizes the scene to the given size
+	 * Resizes the scene to the given size.
 	 * 
 	 * @param width  with in pixels
 	 * @param height height in pixels
@@ -74,19 +75,19 @@ public interface GameScene extends DefaultPacManGameEventHandler {
 	void resize(double width, double height);
 
 	/**
-	 * Keeps the scene size to the size of the parent scene
+	 * Keeps the scene size at the size of the parent scene.
 	 * 
 	 * @param parentScene the parent scene (main scene)
 	 */
 	default void keepSizeOf(Scene parentScene) {
 		if (aspectRatio().isPresent()) {
 			double aspectRatio = aspectRatio().getAsDouble();
-			parentScene.widthProperty().addListener((foo, bar, targetWidth) -> {
+			parentScene.widthProperty().addListener(($1, $2, targetWidth) -> {
 				double newHeight = Math.min(targetWidth.doubleValue() / aspectRatio, parentScene.getHeight());
 				double newWidth = newHeight * aspectRatio;
 				resize(newWidth, newHeight);
 			});
-			parentScene.heightProperty().addListener((foo, bar, targetHeight) -> {
+			parentScene.heightProperty().addListener(($1, $2, targetHeight) -> {
 				double newHeight = targetHeight.doubleValue();
 				double newWidth = Math.min(parentScene.getHeight() * aspectRatio, parentScene.getWidth());
 				resize(newWidth, newHeight);
