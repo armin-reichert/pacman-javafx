@@ -27,8 +27,10 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.world.FloorPlan;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.fx.Env;
@@ -102,17 +104,20 @@ public class Maze3D extends Group {
 
 	public void buildFood(PacManGameWorld world, Color foodColor) {
 		var foodMaterial = new PhongMaterial(foodColor);
-		foodGroup.getChildren().clear();
-		world.tiles().filter(world::isFoodTile).forEach(foodTile -> {
-			double r = world.isEnergizerTile(foodTile) ? energizerRadius : pelletRadius;
-			var pellet = new Sphere(r);
-			pellet.setMaterial(foodMaterial);
-			pellet.setTranslateX(foodTile.x * TS + HTS);
-			pellet.setTranslateY(foodTile.y * TS + HTS);
-			pellet.setTranslateZ(-3);
-			pellet.setUserData(foodTile);
-			foodGroup.getChildren().add(pellet);
-		});
+		foodGroup.getChildren()
+				.setAll(world.tiles().filter(world::isFoodTile)
+						.map(tile -> createPellet(tile, world.isEnergizerTile(tile), foodMaterial))
+						.collect(Collectors.toList()));
+	}
+
+	private Shape3D createPellet(V2i tile, boolean energizer, PhongMaterial material) {
+		var pellet = new Sphere(energizer ? energizerRadius : pelletRadius);
+		pellet.setMaterial(material);
+		pellet.setTranslateX(tile.x * TS + HTS);
+		pellet.setTranslateY(tile.y * TS + HTS);
+		pellet.setTranslateZ(-3);
+		pellet.setUserData(tile);
+		return pellet;
 	}
 
 	public Stream<Shape3D> doors() {
