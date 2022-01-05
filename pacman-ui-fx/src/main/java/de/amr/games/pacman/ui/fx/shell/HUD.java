@@ -104,11 +104,9 @@ public class HUD extends VBox {
 		if (ui.getCurrentGameScene() instanceof AbstractGameScene2D) {
 			line("Canvas2D", "w=%.0f h=%.0f", ui.getCanvas().getWidth(), ui.getCanvas().getHeight());
 		} else {
-			if (ui.getCurrentGameScene() instanceof PlayScene3D) {
-				PlayScene3D playScene = (PlayScene3D) ui.getCurrentGameScene();
-				line("Camera", "%s", playScene.currentCameraController());
-				line("", "%s", cameraInfo(playScene.getSubSceneFX().getCamera()));
-			}
+			PlayScene3D playScene = (PlayScene3D) ui.getCurrentGameScene();
+			line("Perspective", "%s", Env.$perspective.get());
+			line("Camera", "%s", cameraInfo(playScene.getSubSceneFX().getCamera()));
 			line("Draw Mode", "%s", Env.$drawMode3D.get());
 			line("Axes", "%s", on_off(Env.$axesVisible.get()));
 		}
@@ -131,6 +129,7 @@ public class HUD extends VBox {
 		line("Ctrl+R", "Increase Maze Resolution (SHIFT=Decrease)");
 		line("Ctrl+S", "Increase Speed (SHIFT=Decrease)");
 		line("Ctrl+X", "Toggle Show Axes");
+		line("Ctrl+1", "Play Intermission Scenes");
 		line("Ctrl+3", "Toggle 2D-3D Play Scene");
 
 		textUI.setText(text.toString());
