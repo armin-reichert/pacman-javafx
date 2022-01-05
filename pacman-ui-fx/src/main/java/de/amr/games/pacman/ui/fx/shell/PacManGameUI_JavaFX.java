@@ -37,7 +37,8 @@ import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
-import de.amr.games.pacman.ui.fx.scene.Scenes;
+import de.amr.games.pacman.ui.fx.scene.ScenesMsPacMan;
+import de.amr.games.pacman.ui.fx.scene.ScenesPacMan;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -146,8 +147,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	}
 
 	private void stopAllSounds() {
-		Scenes.MS_PACMAN_SOUNDS.stopAll();
-		Scenes.PACMAN_SOUNDS.stopAll();
+		ScenesMsPacMan.SOUNDS.stopAll();
+		ScenesPacMan.SOUNDS.stopAll();
 	}
 
 	private void toggleUse3DScenes() {
@@ -179,9 +180,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		switch (gameController.gameVariant()) {
 		case MS_PACMAN:
-			return Scenes.MS_PACMAN_SCENES[sceneIndex][_3D ? 1 : 0];
+			return ScenesMsPacMan.SCENES[sceneIndex][_3D ? 1 : 0];
 		case PACMAN:
-			return Scenes.PACMAN_SCENES[sceneIndex][_3D ? 1 : 0];
+			return ScenesPacMan.SCENES[sceneIndex][_3D ? 1 : 0];
 		default:
 			throw new IllegalStateException();
 		}
@@ -299,7 +300,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			if (currentGameScene instanceof PlayScene3D) {
 				PlayScene3D playScene3D = (PlayScene3D) currentGameScene;
 				Env.nextPerspective();
-				String cameraType = Env.MESSAGES.getString(playScene3D.currentCameraController().getClass().getSimpleName());
+				String cameraType = Env.MESSAGES
+						.getString(playScene3D.currentCameraController().getClass().getSimpleName());
 				String message = Env.message("camera_perspective", cameraType);
 				showFlashMessage(1, message);
 			}

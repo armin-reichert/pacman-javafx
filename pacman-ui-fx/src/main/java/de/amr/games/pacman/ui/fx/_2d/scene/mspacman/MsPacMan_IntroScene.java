@@ -39,7 +39,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
-import de.amr.games.pacman.ui.fx.scene.Scenes;
+import de.amr.games.pacman.ui.fx.scene.ScenesMsPacMan;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -60,7 +60,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 	private TickTimer boardAnimationTimer = new TickTimer("boardAnimation-timer");
 
 	public MsPacMan_IntroScene() {
-		super(Scenes.MS_PACMAN_RENDERING, Scenes.MS_PACMAN_SOUNDS, 28, 36);
+		super(ScenesMsPacMan.RENDERING, ScenesMsPacMan.SOUNDS, 28, 36);
 	}
 
 	@Override

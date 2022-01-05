@@ -24,8 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.scene;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
-import static de.amr.games.pacman.ui.fx.scene.Scenes.MS_PACMAN_RENDERING;
-import static de.amr.games.pacman.ui.fx.scene.Scenes.PACMAN_RENDERING;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -47,7 +45,8 @@ import de.amr.games.pacman.ui.fx._3d.entity.PacManModel3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Player3D;
 import de.amr.games.pacman.ui.fx._3d.entity.ScoreNotReally3D;
 import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
-import de.amr.games.pacman.ui.fx.scene.Scenes;
+import de.amr.games.pacman.ui.fx.scene.ScenesMsPacMan;
+import de.amr.games.pacman.ui.fx.scene.ScenesPacMan;
 import de.amr.games.pacman.ui.fx.util.AbstractCameraController;
 import de.amr.games.pacman.ui.fx.util.CoordinateSystem;
 import javafx.scene.AmbientLight;
@@ -66,7 +65,7 @@ import javafx.scene.transform.Rotate;
  * <p>
  * The scene is a JavaFX subscene of the game's main scene.
  * 
- * @see Scenes
+ * @see ScenesPacMan
  * 
  * @author Armin Reichert
  */
@@ -179,7 +178,8 @@ public class PlayScene3D extends AbstractGameScene {
 	 * @return 2D-rendering for current game variant
 	 */
 	protected Rendering2D rendering2D() {
-		return gameController.gameVariant() == GameVariant.MS_PACMAN ? MS_PACMAN_RENDERING : PACMAN_RENDERING;
+		return gameController.gameVariant() == GameVariant.MS_PACMAN ? ScenesMsPacMan.RENDERING
+				: ScenesPacMan.RENDERING;
 	}
 
 	public AbstractCameraController currentCameraController() {

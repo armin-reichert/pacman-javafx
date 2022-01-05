@@ -31,7 +31,7 @@ import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
-import de.amr.games.pacman.ui.fx.scene.Scenes;
+import de.amr.games.pacman.ui.fx.scene.ScenesMsPacMan;
 
 /**
  * Intermission scene 2: "The chase".
@@ -69,7 +69,7 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 	private Flap2D flap2D;
 
 	public MsPacMan_IntermissionScene2() {
-		super(Scenes.MS_PACMAN_RENDERING, Scenes.MS_PACMAN_SOUNDS, 28, 36);
+		super(ScenesMsPacMan.RENDERING, ScenesMsPacMan.SOUNDS, 28, 36);
 	}
 
 	@Override
@@ -78,10 +78,10 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 		sceneController = new SceneController(gameController);
 		sceneController.init();
-		flap2D = new Flap2D(sceneController.flap, Scenes.MS_PACMAN_RENDERING);
+		flap2D = new Flap2D(sceneController.flap, ScenesMsPacMan.RENDERING);
 		msPacMan2D = new Player2D(sceneController.msPacMan, rendering);
 		pacMan2D = new Player2D(sceneController.pacMan, rendering);
-		pacMan2D.munchingAnimations = Scenes.MS_PACMAN_RENDERING.createSpouseMunchingAnimations();
+		pacMan2D.munchingAnimations = ScenesMsPacMan.RENDERING.createSpouseMunchingAnimations();
 		msPacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 	}
