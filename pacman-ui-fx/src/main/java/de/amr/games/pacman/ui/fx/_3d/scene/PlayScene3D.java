@@ -50,8 +50,6 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.Scenes;
 import de.amr.games.pacman.ui.fx.util.AbstractCameraController;
 import de.amr.games.pacman.ui.fx.util.CoordinateSystem;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -76,8 +74,6 @@ public class PlayScene3D implements GameScene {
 
 	protected final PacManModel3D model3D;
 	protected final SubScene fxScene;
-	protected final ObjectProperty<Perspective> $perspective = new SimpleObjectProperty<Perspective>(
-			Perspective.CAM_FOLLOWING_PLAYER);
 	protected final EnumMap<Perspective, AbstractCameraController> cameraControllers = new EnumMap<>(Perspective.class);
 	protected final Image floorImage = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
 
@@ -99,8 +95,7 @@ public class PlayScene3D implements GameScene {
 		cameraControllers.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer(cam));
 		cameraControllers.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer(cam));
 		cameraControllers.put(Perspective.CAM_TOTAL, new Cam_Total(cam));
-		$perspective.bind(Env.$perspective);
-		$perspective.addListener(($1, $2, $3) -> currentCameraController().reset());
+		Env.$perspective.addListener(($1, $2, $3) -> currentCameraController().reset());
 	}
 
 	@Override
@@ -141,6 +136,25 @@ public class PlayScene3D implements GameScene {
 		coordinateSystem.visibleProperty().bind(Env.$axesVisible);
 
 		fxScene.setRoot(new Group(new AmbientLight(), playground, coordinateSystem));
+		currentCameraController().reset();
+	}
+
+	@Override
+	public void update() {
+		player3D.update();
+		ghosts3D.forEach(Ghost3D::update);
+		bonus3D.update(game().bonus);
+		score3D.update(game(), gameController.isAttractMode() ? "GAME OVER!" : null);
+		// TODO: is this the recommended way to do keep the score in plain view?
+		score3D.setRotationAxis(Rotate.X_AXIS);
+		score3D.setRotate(fxScene.getCamera().getRotate());
+		livesCounter3D.setVisibleItems(game().player.lives);
+		currentCameraController().follow(player3D);
+	}
+
+	@Override
+	public void end() {
+		log("End scene '%s'", getClass().getSimpleName());
 	}
 
 	protected static V2i tile(Node node) {
@@ -148,8 +162,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	/**
-	 * Builds the maze content including the food. Overwritten by subclass to also build energizer
-	 * animations.
+	 * Builds the maze content including the food. Overwritten by subclass to also build energizer animations.
 	 */
 	protected void buildMaze() {
 		buildMazeWithoutFood();
@@ -171,26 +184,11 @@ public class PlayScene3D implements GameScene {
 		return gameController.gameVariant() == GameVariant.MS_PACMAN ? MS_PACMAN_RENDERING : PACMAN_RENDERING;
 	}
 
-	@Override
-	public void update() {
-		player3D.update();
-		ghosts3D.forEach(Ghost3D::update);
-		bonus3D.update(game().bonus);
-		score3D.update(game(), gameController.isAttractMode() ? "GAME OVER!" : null);
-		// TODO: is this the recommended way to do keep the score in plain view?
-		score3D.setRotationAxis(Rotate.X_AXIS);
-		score3D.setRotate(fxScene.getCamera().getRotate());
-		livesCounter3D.setVisibleItems(game().player.lives);
-		currentCameraController().follow(player3D);
-	}
-
-	@Override
-	public void end() {
-		log("End scene '%s'", getClass().getSimpleName());
-	}
-
 	public AbstractCameraController currentCameraController() {
-		return cameraControllers.get(Env.$perspective.get());
+		if (cameraControllers.containsKey(Env.$perspective.get())) {
+			return cameraControllers.get(Env.$perspective.get());
+		}
+		throw new IllegalStateException("No camera perspective has been set");
 	}
 
 	@Override
