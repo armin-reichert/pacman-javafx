@@ -121,9 +121,8 @@ public class PacManGameAppFX extends Application {
 						log("!!! Error parsing parameters: missing perspective value.");
 					} else {
 						++i;
-						String perspectiveName = params.get(i);
 						try {
-							perspective = Perspective.valueOf(perspectiveName.toUpperCase());
+							perspective = Perspective.valueOf(params.get(i).toUpperCase());
 						} catch (Exception x) {
 							log("!!! Error parsing parameters: '%s' is no legal perspective value.", params.get(i));
 						}
