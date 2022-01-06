@@ -164,20 +164,19 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private AbstractGameScene getSceneForCurrentGameState(boolean _3D) {
 		int sceneIndex;
 
-		if (gameController.currentStateID == PacManGameState.INTERMISSION_TEST) {
+		switch (gameController.currentStateID) {
+		case INTRO:
+			sceneIndex = 0;
+			break;
+		case INTERMISSION:
+			sceneIndex = gameController.intermissionNumber(game().levelNumber);
+			break;
+		case INTERMISSION_TEST:
 			sceneIndex = gameController.intermissionTestNumber;
-		} else {
-			switch (gameController.currentStateID) {
-			case INTRO:
-				sceneIndex = 0;
-				break;
-			case INTERMISSION:
-				sceneIndex = gameController.intermissionNumber(game().levelNumber);
-				break;
-			default:
-				sceneIndex = 4;
-				break;
-			}
+			break;
+		default:
+			sceneIndex = 4; // play scene
+			break;
 		}
 
 		switch (gameController.gameVariant()) {
@@ -190,28 +189,26 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		}
 	}
 
-	private void setGameScene(AbstractGameScene newGameScene) {
-		if (currentGameScene != newGameScene) {
+	private void setGameScene(AbstractGameScene newScene) {
+		if (currentGameScene != newScene) {
 			if (currentGameScene != null) {
-				log("Change game scene from '%s' to '%s'", currentGameScene.getClass().getSimpleName(),
-						newGameScene.getClass().getSimpleName());
-			} else {
-				log("Set game scene to '%s'", newGameScene.getClass().getSimpleName());
-			}
-			if (currentGameScene != null) {
+				log("Change scene from '%s' to '%s'", currentGameScene.getClass().getSimpleName(),
+						newScene.getClass().getSimpleName());
 				currentGameScene.end();
+			} else {
+				log("Set scene to '%s'", newScene.getClass().getSimpleName());
 			}
-			if (newGameScene instanceof AbstractGameScene2D) {
-				((AbstractGameScene2D) newGameScene).setCanvas(canvas);
+			if (newScene instanceof AbstractGameScene2D) {
+				((AbstractGameScene2D) newScene).setCanvas(canvas);
 			}
-			newGameScene.keepSizeOf(stage.getScene());
-			newGameScene.resize(stage.getScene().getWidth(), stage.getScene().getHeight());
-			newGameScene.init(gameController);
-			log("'%s' initialized", newGameScene.getClass().getSimpleName());
-			gameSceneRoot.getChildren().setAll(newGameScene.getSubSceneFX());
+			newScene.keepSizeOf(stage.getScene());
+			newScene.resize(stage.getScene().getWidth(), stage.getScene().getHeight());
+			newScene.init(gameController);
+			log("Scene '%s' initialized", newScene.getClass().getSimpleName());
+			gameSceneRoot.getChildren().setAll(newScene.getSubSceneFX());
 			// Note: this must be done after new scene has been added to scene graph:
-			newGameScene.getSubSceneFX().requestFocus();
-			currentGameScene = newGameScene;
+			newScene.getSubSceneFX().requestFocus();
+			currentGameScene = newScene;
 		}
 	}
 
@@ -302,8 +299,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			if (currentGameScene instanceof PlayScene3D) {
 				PlayScene3D playScene3D = (PlayScene3D) currentGameScene;
 				Env.nextPerspective();
-				String cameraType = Env.MESSAGES
-						.getString(playScene3D.currentCameraController().getClass().getSimpleName());
+				String cameraType = Env.MESSAGES.getString(playScene3D.currentCameraController().getClass().getSimpleName());
 				String message = Env.message("camera_perspective", cameraType);
 				showFlashMessage(1, message);
 			}
