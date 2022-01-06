@@ -42,7 +42,6 @@ import de.amr.games.pacman.ui.fx.scene.ScenesPacMan;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -68,7 +67,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private final PacManGameController gameController;
 	private final PlayerControl playerControl;
-
 	private final Stage stage;
 	private final Canvas canvas = new Canvas();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
@@ -83,26 +81,28 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		// Determine the initial game scene
 		AbstractGameScene gameScene = getSceneForCurrentGameState(Env.$use3DScenes.get());
-		double aspectRatio = gameScene.aspectRatio().orElseGet(() -> {
-			Rectangle2D bounds = Screen.getPrimary().getBounds();
-			return bounds.getWidth() / bounds.getHeight();
-		});
+		double aspectRatio = gameScene.aspectRatio()
+				.orElse(Screen.getPrimary().getBounds().getWidth() / Screen.getPrimary().getBounds().getHeight());
 
 		// Create the main scene containing all other sub-scenes
 		StackPane mainSceneRoot = new StackPane(gameSceneRoot, flashMessageView, hud);
+		StackPane.setAlignment(hud, Pos.TOP_LEFT);
+
+		// Set blue background color, use black in wireframe display mode
 		mainSceneRoot.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
 			Color color = Env.$drawMode3D.get() == DrawMode.FILL ? Color.CORNFLOWERBLUE : Color.BLACK;
 			return new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY));
 		}, Env.$drawMode3D));
-		StackPane.setAlignment(hud, Pos.TOP_LEFT);
-		stage.setScene(new Scene(mainSceneRoot, aspectRatio * height, height));
 
-		// Note: Must be done *after* main scene has been created:
+		Scene mainScene = new Scene(mainSceneRoot, aspectRatio * height, height);
+		stage.setScene(mainScene);
+
+		// Note: Can only be called *after* main scene has been set
 		setGameScene(gameScene);
 
-		stage.getIcons().add(new Image(getClass().getResourceAsStream(Env.APP_ICON_PATH)));
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
 		stage.addEventHandler(ScrollEvent.SCROLL, this::onScrolled);
+		stage.getIcons().add(new Image(getClass().getResourceAsStream(Env.APP_ICON_PATH)));
 		stage.centerOnScreen();
 		stage.show();
 	}
@@ -163,6 +163,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	private AbstractGameScene getSceneForCurrentGameState(boolean _3D) {
 		int sceneIndex;
+		int twoOrThreeD = _3D ? 1 : 0;
 
 		switch (gameController.currentStateID) {
 		case INTRO:
@@ -181,9 +182,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 		switch (gameController.gameVariant()) {
 		case MS_PACMAN:
-			return ScenesMsPacMan.SCENES[sceneIndex][_3D ? 1 : 0];
+			return ScenesMsPacMan.SCENES[sceneIndex][twoOrThreeD];
 		case PACMAN:
-			return ScenesPacMan.SCENES[sceneIndex][_3D ? 1 : 0];
+			return ScenesPacMan.SCENES[sceneIndex][twoOrThreeD];
 		default:
 			throw new IllegalStateException();
 		}
