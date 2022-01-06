@@ -40,7 +40,12 @@ import javafx.beans.binding.Bindings;
 import javafx.stage.Stage;
 
 /**
- * The Pac-Man / Ms. Pac-Man game running in a JavaFX UI.
+ * This is the entry point of the Pac-Man and Ms. Pac-Man games.
+ * 
+ * <p>
+ * The application structure follows the MVC (model-view-controller) design pattern. It creates the controller (which in
+ * turn creates the model(s)) and the view (JavaFX UI) components. A game loop drives the controller which implements
+ * the complete game logic. Game events from the controller are handled by the UI.
  * 
  * @author Armin Reichert
  */
@@ -53,24 +58,29 @@ public class PacManGameAppFX extends Application {
 	@Override
 	public void start(Stage stage) throws IOException {
 		Options options = new Options(getParameters().getUnnamed());
-		PacManGameController gameController = new PacManGameController(options.gameVariant);
-		PacManGameUI_JavaFX ui = new PacManGameUI_JavaFX(stage, gameController, options.windowHeight);
-		gameController.setUI(ui);
-		gameController.setPlayerControl(ui);
+
+		PacManGameController controller = new PacManGameController(options.gameVariant);
+		PacManGameUI_JavaFX view = new PacManGameUI_JavaFX(stage, controller, options.windowHeight);
+		controller.setUI(view);
+		controller.setPlayerControl(view);
+
 		Env.gameLoop = new GameLoop(() -> {
-			gameController.updateState();
-			ui.getCurrentGameScene().update();
-		}, ui::update);
+			controller.updateState();
+			view.getCurrentGameScene().update();
+		}, view::update);
 		Env.$use3DScenes.set(options.use3DScenes);
 		Env.$perspective.set(options.perspective);
+		Env.gameLoop.start();
+
+		// this must be done *after* creating the game loop
 		stage.titleProperty().bind(Bindings.createStringBinding(() -> {
-			String gameName = gameController.gameVariant() == PACMAN ? "Pac-Man" : "Ms. Pac-Man";
+			String gameName = controller.gameVariant() == PACMAN ? "Pac-Man" : "Ms. Pac-Man";
 			return Env.$paused.get() ? String.format("%s (JavaFX, Game PAUSED)", gameName)
 					: String.format("%s (JavaFX)", gameName);
 		}, Env.gameLoop.$fps));
-		log("Application started, game variant: %s, window height: %.0f, 3D: %s, perspective: %s", options.gameVariant,
-				options.windowHeight, options.use3DScenes, options.perspective);
-		Env.gameLoop.start();
+
+		log("Application started. Game variant: %s, window height: %.0f, 3D: %s, camera perspective: %s",
+				options.gameVariant, options.windowHeight, options.use3DScenes, options.perspective);
 	}
 
 	private static class Options {
