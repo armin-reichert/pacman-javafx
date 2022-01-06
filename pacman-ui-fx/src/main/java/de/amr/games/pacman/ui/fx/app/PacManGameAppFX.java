@@ -75,12 +75,12 @@ public class PacManGameAppFX extends Application {
 
 	private static class Options {
 
-		static final String[] NAMES = { "-2D", "-3D", "-height", "-mspacman", "-pacman", "perspective" };
+		static final String[] NAMES = { "-2D", "-3D", "-height", "-mspacman", "-pacman", "-perspective" };
 
-		double windowHeight = 576;
 		boolean use3DScenes = true;
-		Perspective perspective = Perspective.CAM_FOLLOWING_PLAYER;
+		double windowHeight = 576;
 		GameVariant gameVariant = GameVariant.PACMAN;
+		Perspective perspective = Perspective.CAM_FOLLOWING_PLAYER;
 
 		Options(List<String> params) {
 			List<String> parameterNamesList = Arrays.asList(NAMES);
