@@ -182,10 +182,11 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	public AbstractCameraController currentCameraController() {
-		if (cameraControllers.containsKey(Env.$perspective.get())) {
-			return cameraControllers.get(Env.$perspective.get());
+		if (!cameraControllers.containsKey(Env.$perspective.get())) {
+			// This should not happen:
+			Env.$perspective.set(cameraControllers.keySet().iterator().next());
 		}
-		throw new IllegalStateException("No camera perspective has been set");
+		return cameraControllers.get(Env.$perspective.get());
 	}
 
 	@Override
