@@ -98,7 +98,7 @@ public class PlayScene3D extends AbstractGameScene {
 
 	@Override
 	public void init(PacManGameController gameController) {
-		this.gameController = gameController;
+		super.init(gameController);
 
 		final GameModel game = gameController.game();
 		final int width = game.world.numCols() * TS;
@@ -178,8 +178,7 @@ public class PlayScene3D extends AbstractGameScene {
 	 * @return 2D-rendering for current game variant
 	 */
 	protected Rendering2D rendering2D() {
-		return gameController.gameVariant() == GameVariant.MS_PACMAN ? ScenesMsPacMan.RENDERING
-				: ScenesPacMan.RENDERING;
+		return gameController.gameVariant() == GameVariant.MS_PACMAN ? ScenesMsPacMan.RENDERING : ScenesPacMan.RENDERING;
 	}
 
 	public AbstractCameraController currentCameraController() {
