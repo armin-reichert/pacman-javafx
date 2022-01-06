@@ -76,8 +76,11 @@ public class Player3D extends Creature3D {
 		}
 
 		public void reset() {
+			double angle = rotationAngle(player.dir());
 			rotate.setAxis(Rotate.Z_AXIS);
-			rotate.setFromAngle(rotationAngle(player.dir()));
+			rotate.setFromAngle(angle);
+			setRotationAxis(Rotate.Z_AXIS);
+			setRotate(angle);
 			targetDir = player.dir();
 		}
 
