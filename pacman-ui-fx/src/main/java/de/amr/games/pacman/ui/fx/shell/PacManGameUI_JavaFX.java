@@ -140,7 +140,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 
 	@Override
 	public void showFlashMessage(double seconds, String message, Object... args) {
-		flashMessageView.showMessage(String.format(message, args), (long) (60 * seconds));
+		flashMessageView.showMessage(String.format(message, args), seconds);
 	}
 
 	@Override
