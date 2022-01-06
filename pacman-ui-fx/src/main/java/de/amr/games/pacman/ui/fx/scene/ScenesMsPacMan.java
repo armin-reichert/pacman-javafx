@@ -31,7 +31,7 @@ import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntermissionScene3;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntroScene;
 import de.amr.games.pacman.ui.fx._3d.entity.GianmarcosPacManModel3D;
 import de.amr.games.pacman.ui.fx._3d.entity.PacManModel3D;
-import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3DWithAnimations;
+import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.sound.PacManGameSounds;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 
@@ -58,7 +58,7 @@ public class ScenesMsPacMan {
 		SCENES[3][0] = 
 		SCENES[3][1] = new MsPacMan_IntermissionScene3();
 		SCENES[4][0] = new PlayScene2D(RENDERING, SOUNDS);
-		SCENES[4][1] = new PlayScene3DWithAnimations(MODEL_3D, SOUNDS);
+		SCENES[4][1] = new PlayScene3D(MODEL_3D, SOUNDS);
 		//@formatter:on
 	}
 }
