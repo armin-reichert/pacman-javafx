@@ -30,13 +30,13 @@ import static de.amr.games.pacman.lib.Direction.UP;
 import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.GameEntity;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.pacman.entities.Bonus;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -74,7 +74,7 @@ public abstract class Rendering2D {
 
 	protected final Image spritesheet;
 	protected final int rasterSize;
-	protected List<Direction> directionOrder = Arrays.asList(RIGHT, LEFT, UP, DOWN);
+	protected List<Direction> directionOrder = List.of(RIGHT, LEFT, UP, DOWN);
 	protected Font font = Font.loadFont(resource("/emulogic.ttf"), 8);
 
 	public Rendering2D(String spritesheetPath, int rasterSize) {
@@ -155,7 +155,18 @@ public abstract class Rendering2D {
 	 * @return color of ghost
 	 */
 	public Color getGhostColor(int ghostID) {
-		return ghostID == 0 ? Color.RED : ghostID == 1 ? Color.PINK : ghostID == 2 ? Color.CYAN : Color.ORANGE;
+		switch (ghostID) {
+		case GameModel.RED_GHOST:
+			return Color.RED;
+		case GameModel.PINK_GHOST:
+			return Color.rgb(252, 181, 255);
+		case GameModel.CYAN_GHOST:
+			return Color.CYAN;
+		case GameModel.ORANGE_GHOST:
+			return Color.rgb(253, 192, 90);
+		default:
+			return Color.WHITE; // should not happen
+		}
 	}
 
 	/**

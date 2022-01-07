@@ -55,11 +55,6 @@ import javafx.scene.text.Font;
  */
 public class PacMan_IntroScene extends AbstractGameScene2D {
 
-	// use exactly same RGB values as sprites
-	static final Color PINK = Color.rgb(252, 181, 255);
-	static final Color ORANGE = Color.rgb(253, 192, 90);
-	static final Color PELLET_COLOR = Color.rgb(254, 189, 180);
-
 	private IntroController sceneController;
 	private GameScore2D score2D;
 	private GameScore2D hiscore2D;
@@ -166,17 +161,17 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		gc.fillText("CHARACTER", t(6), sceneController.topY);
 		gc.fillText("/", t(16), sceneController.topY);
 		gc.fillText("NICKNAME", t(18), sceneController.topY);
-		for (int i = 0; i < sceneController.portraits.length; ++i) {
-			GhostPortrait portrait = sceneController.portraits[i];
+		for (int ghostID = 0; ghostID < sceneController.portraits.length; ++ghostID) {
+			GhostPortrait portrait = sceneController.portraits[ghostID];
 			if (portrait.ghost.visible) {
-				int y = sceneController.topY + t(1 + 3 * i);
-				gallery2D.get(i).render(gc);
+				int y = sceneController.topY + t(1 + 3 * ghostID);
+				gallery2D.get(ghostID).render(gc);
 				if (portrait.characterVisible) {
-					gc.setFill(getGhostColor(i));
+					gc.setFill(rendering.getGhostColor(ghostID));
 					gc.fillText("-" + portrait.character, t(6), y + 8);
 				}
 				if (portrait.nicknameVisible) {
-					gc.setFill(getGhostColor(i));
+					gc.setFill(rendering.getGhostColor(ghostID));
 					gc.fillText("\"" + portrait.ghost.name + "\"", t(17), y + 8);
 				}
 			}
@@ -193,7 +188,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	}
 
 	private void drawPoints(int tileX, int tileY) {
-		gc.setFill(PELLET_COLOR);
+		gc.setFill(rendering.getFoodColor(1));
 		gc.fillRect(t(tileX) + 6, t(tileY - 1) + 2, 2, 2);
 		if (sceneController.blinking.frame()) {
 			gc.fillOval(t(tileX), t(tileY + 1) - 2, 10, 10);
@@ -208,19 +203,14 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	}
 
 	private void drawEnergizer() {
-		gc.setFill(PELLET_COLOR);
+		gc.setFill(rendering.getFoodColor(1));
 		gc.fillOval(t(2), t(20), TS, TS);
 	}
 
 	private void drawCopyright(int yTile) {
 		String text = "\u00A9" + "  1980 MIDWAY MFG. CO.";
 		gc.setFont(rendering.getScoreFont());
-		gc.setFill(PINK);
+		gc.setFill(rendering.getGhostColor(GameModel.PINK_GHOST));
 		gc.fillText(text, t(3), t(yTile));
-	}
-
-	private Color getGhostColor(int id) {
-		return id == GameModel.RED_GHOST ? Color.RED
-				: id == GameModel.PINK_GHOST ? PINK : id == GameModel.CYAN_GHOST ? Color.CYAN : ORANGE;
 	}
 }
