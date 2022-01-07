@@ -60,7 +60,7 @@ public class PacManGameAppFX extends Application {
 		Options options = new Options(getParameters().getUnnamed());
 
 		PacManGameController controller = new PacManGameController(options.gameVariant);
-		PacManGameUI_JavaFX view = new PacManGameUI_JavaFX(stage, controller, options.windowHeight);
+		PacManGameUI_JavaFX view = new PacManGameUI_JavaFX(stage, controller, options.windowHeight, options.fullscreen);
 		controller.setUI(view);
 		controller.setPlayerControl(view);
 
@@ -85,8 +85,9 @@ public class PacManGameAppFX extends Application {
 
 	private static class Options {
 
-		static final String[] NAMES = { "-2D", "-3D", "-height", "-mspacman", "-pacman", "-perspective" };
+		static final String[] NAMES = { "-2D", "-3D", "-height", "-fullscreen", "-mspacman", "-pacman", "-perspective" };
 
+		boolean fullscreen = false;
 		boolean use3DScenes = true;
 		double windowHeight = 576;
 		GameVariant gameVariant = GameVariant.PACMAN;
@@ -108,6 +109,10 @@ public class PacManGameAppFX extends Application {
 							log("!!! Error parsing parameters: '%s' is no legal height value.", params.get(i));
 						}
 					}
+				}
+
+				else if ("-fullscreen".equals(params.get(i))) {
+					fullscreen = true;
 				}
 
 				else if ("-mspacman".equals(params.get(i))) {

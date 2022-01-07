@@ -74,7 +74,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	private final Group gameSceneRoot = new Group();
 	private AbstractGameScene currentGameScene;
 
-	public PacManGameUI_JavaFX(Stage stage, PacManGameController gameController, double height) {
+	public PacManGameUI_JavaFX(Stage stage, PacManGameController gameController, double height, boolean fullscreen) {
 		this.stage = stage;
 		this.gameController = gameController;
 		this.playerControl = new ManualPlayerControl(stage, KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
@@ -103,6 +103,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
 		stage.addEventHandler(ScrollEvent.SCROLL, this::onScrolled);
 		stage.getIcons().add(new Image(getClass().getResourceAsStream(Env.APP_ICON_PATH)));
+		stage.setFullScreen(fullscreen);
 		stage.centerOnScreen();
 		stage.show();
 	}
