@@ -120,8 +120,8 @@ public abstract class Rendering2D {
 	 * @param row grid row (y)
 	 * @return region at given coordinates
 	 */
-	public Rectangle2D region(int col, int row) {
-		return region(col, row, 1, 1);
+	public Rectangle2D r(int col, int row) {
+		return r(col, row, 1, 1);
 	}
 
 	/**
@@ -131,8 +131,8 @@ public abstract class Rendering2D {
 	 * @param numRows number of grid rows
 	 * @return region at given grid coordinates
 	 */
-	public Rectangle2D region(int col, int row, int numCols, int numRows) {
-		return region(0, 0, col, row, numCols, numRows);
+	public Rectangle2D r(int col, int row, int numCols, int numRows) {
+		return r(0, 0, col, row, numCols, numRows);
 	}
 
 	/**
@@ -144,7 +144,7 @@ public abstract class Rendering2D {
 	 * @param numRows number of grid rows
 	 * @return region at given grid coordinates relative to given origin
 	 */
-	public Rectangle2D region(int x, int y, int col, int row, int numCols, int numRows) {
+	public Rectangle2D r(int x, int y, int col, int row, int numCols, int numRows) {
 		return new Rectangle2D(x + col * rasterSize, y + row * rasterSize, numCols * rasterSize, numRows * rasterSize);
 	}
 

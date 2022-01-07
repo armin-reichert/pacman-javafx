@@ -84,7 +84,7 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	 * @return Sprite at given row and column from the right-hand-side of the spritesheet
 	 */
 	private Rectangle2D rhs(int col, int row) {
-		return region(456, 0, col, row, 1, 1);
+		return r(456, 0, col, row, 1, 1);
 	}
 
 	public Rendering2D_MsPacMan() {
