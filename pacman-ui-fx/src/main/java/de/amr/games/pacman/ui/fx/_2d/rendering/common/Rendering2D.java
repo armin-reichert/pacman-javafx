@@ -95,12 +95,11 @@ public abstract class Rendering2D {
 	}
 
 	/**
-	 * @param region spritesheet region
+	 * @param r spritesheet region
 	 * @return copy of subimage at spritesheet region
 	 */
-	public Image createSubImage(Rectangle2D region) {
-		return createSubImage((int) region.getMinX(), (int) region.getMinY(), (int) region.getWidth(),
-				(int) region.getHeight());
+	public Image createSubImage(Rectangle2D r) {
+		return createSubImage((int) r.getMinX(), (int) r.getMinY(), (int) r.getWidth(), (int) r.getHeight());
 	}
 
 	/**
@@ -137,17 +136,16 @@ public abstract class Rendering2D {
 	}
 
 	/**
-	 * @param originX origin x-coordinate
-	 * @param originY origin y-coordinate
+	 * @param x       origin x-coordinate
+	 * @param y       origin y-coordinate
 	 * @param col     grid column (x)
 	 * @param row     grid row (y)
 	 * @param numCols number of grid columns
 	 * @param numRows number of grid rows
 	 * @return region at given grid coordinates relative to given origin
 	 */
-	public Rectangle2D region(int originX, int originY, int col, int row, int numCols, int numRows) {
-		return new Rectangle2D(originX + col * rasterSize, originY + row * rasterSize, numCols * rasterSize,
-				numRows * rasterSize);
+	public Rectangle2D region(int x, int y, int col, int row, int numCols, int numRows) {
+		return new Rectangle2D(x + col * rasterSize, y + row * rasterSize, numCols * rasterSize, numRows * rasterSize);
 	}
 
 	/**
@@ -195,27 +193,25 @@ public abstract class Rendering2D {
 	 * 
 	 * @param g      the graphics context
 	 * @param entity the entity getting rendered
-	 * @param region region of entity sprite in spritesheet
+	 * @param r      region of entity sprite in spritesheet
 	 */
-	public void renderEntity(GraphicsContext g, GameEntity entity, Rectangle2D region) {
+	public void renderEntity(GraphicsContext g, GameEntity entity, Rectangle2D r) {
 		if (entity.visible) {
 			// draw sprite centered over entity bounding box
-			renderSprite(g, region, entity.position.x - region.getWidth() / 2 + HTS,
-					entity.position.y - region.getHeight() / 2 + HTS);
+			renderSprite(g, r, entity.position.x - r.getWidth() / 2 + HTS, entity.position.y - r.getHeight() / 2 + HTS);
 		}
 	}
 
 	/**
 	 * Renders a sprite at a given location.
 	 * 
-	 * @param g      the graphics context
-	 * @param region sprite region in spritesheet
-	 * @param x      render location x
-	 * @param y      render location y
+	 * @param g the graphics context
+	 * @param r sprite region in spritesheet
+	 * @param x render location x
+	 * @param y render location y
 	 */
-	public void renderSprite(GraphicsContext g, Rectangle2D region, double x, double y) {
-		g.drawImage(spritesheet, region.getMinX(), region.getMinY(), region.getWidth(), region.getHeight(), x, y,
-				region.getWidth(), region.getHeight());
+	public void renderSprite(GraphicsContext g, Rectangle2D r, double x, double y) {
+		g.drawImage(spritesheet, r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y, r.getWidth(), r.getHeight());
 	}
 
 	// Maze
@@ -233,8 +229,7 @@ public abstract class Rendering2D {
 	public abstract Color getMazeSideColor(int mazeNumber);
 
 	/**
-	 * @param gameVariant Pac-Man vs. Ms. Pac-Man
-	 * @param mazeNumber  the 1-based maze number
+	 * @param mazeNumber the 1-based maze number
 	 * @return color of pellets in this maze
 	 */
 	public abstract Color getFoodColor(int mazeNumber);
