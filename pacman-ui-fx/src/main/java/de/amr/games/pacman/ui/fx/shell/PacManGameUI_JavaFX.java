@@ -27,11 +27,9 @@ import static de.amr.games.pacman.lib.Logging.log;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
-import de.amr.games.pacman.controller.PlayerControl;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
@@ -46,7 +44,6 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Background;
@@ -65,9 +62,8 @@ import javafx.stage.Stage;
  */
 public class PacManGameUI_JavaFX implements PacManGameUI {
 
+	public final Stage stage;
 	private final PacManGameController gameController;
-	private final PlayerControl playerControl;
-	private final Stage stage;
 	private final Canvas canvas = new Canvas();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final HUD hud = new HUD(this);
@@ -77,7 +73,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController gameController, double height, boolean fullscreen) {
 		this.stage = stage;
 		this.gameController = gameController;
-		this.playerControl = new ManualPlayerControl(stage, KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 
 		// Determine the initial game scene
 		AbstractGameScene gameScene = getSceneForCurrentGameState(Env.$use3DScenes.get());
@@ -142,11 +137,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	@Override
 	public void showFlashMessage(double seconds, String message, Object... args) {
 		flashMessageView.showMessage(String.format(message, args), seconds);
-	}
-
-	@Override
-	public void steer(Pac player) {
-		playerControl.steer(player);
 	}
 
 	private void stopAllSounds() {
@@ -301,7 +291,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 			if (currentGameScene instanceof PlayScene3DNaked) {
 				PlayScene3DNaked playScene3D = (PlayScene3DNaked) currentGameScene;
 				Env.nextPerspective();
-				String cameraType = Env.MESSAGES.getString(playScene3D.currentCameraController().getClass().getSimpleName());
+				String cameraType = Env.MESSAGES
+						.getString(playScene3D.currentCameraController().getClass().getSimpleName());
 				String message = Env.message("camera_perspective", cameraType);
 				showFlashMessage(1, message);
 			}

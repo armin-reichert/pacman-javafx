@@ -34,9 +34,11 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
+import de.amr.games.pacman.ui.fx.shell.ManualPlayerControl;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 /**
@@ -62,7 +64,7 @@ public class PacManGameAppFX extends Application {
 		PacManGameController controller = new PacManGameController(options.gameVariant);
 		PacManGameUI_JavaFX view = new PacManGameUI_JavaFX(stage, controller, options.windowHeight, options.fullscreen);
 		controller.setUI(view);
-		controller.setPlayerControl(view);
+		controller.setPlayerControl(new ManualPlayerControl(view.stage, KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT));
 
 		Env.gameLoop = new GameLoop(() -> {
 			controller.updateState();
