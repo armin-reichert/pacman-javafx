@@ -64,6 +64,7 @@ public class PacManGameAppFX extends Application {
 		PacManGameController controller = new PacManGameController(options.gameVariant);
 		PacManGameUI_JavaFX view = new PacManGameUI_JavaFX(stage, controller, options.windowHeight, options.fullscreen);
 		controller.setUI(view);
+		controller.addGameEventListener(view);
 		controller.setPlayerControl(new ManualPlayerControl(view.stage, KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT));
 
 		Env.gameLoop = new GameLoop(() -> {

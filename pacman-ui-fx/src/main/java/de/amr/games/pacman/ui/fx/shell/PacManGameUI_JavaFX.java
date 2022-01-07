@@ -27,6 +27,7 @@ import static de.amr.games.pacman.lib.Logging.log;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
+import de.amr.games.pacman.controller.event.DefaultPacManGameEventHandler;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameModel;
@@ -60,7 +61,7 @@ import javafx.stage.Stage;
  * 
  * @author Armin Reichert
  */
-public class PacManGameUI_JavaFX implements PacManGameUI {
+public class PacManGameUI_JavaFX implements PacManGameUI, DefaultPacManGameEventHandler {
 
 	public final Stage stage;
 	private final PacManGameController gameController;
@@ -207,7 +208,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI {
 	@Override
 	public void onGameEvent(PacManGameEvent event) {
 		log("UI received game event %s", event);
-		PacManGameUI.super.onGameEvent(event);
+		DefaultPacManGameEventHandler.super.onGameEvent(event);
 		currentGameScene.onGameEvent(event);
 	}
 
