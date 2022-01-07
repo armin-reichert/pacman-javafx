@@ -63,7 +63,7 @@ import javafx.stage.Stage;
  */
 public class PacManGameUI_JavaFX implements PacManGameUI, DefaultPacManGameEventHandler {
 
-	public final Stage stage;
+	private final Stage stage;
 	private final PacManGameController gameController;
 	private final Canvas canvas = new Canvas();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
