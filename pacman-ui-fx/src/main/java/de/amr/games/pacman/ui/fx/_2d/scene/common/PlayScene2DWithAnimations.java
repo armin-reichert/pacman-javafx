@@ -169,6 +169,7 @@ public class PlayScene2DWithAnimations implements DefaultPacManGameEventHandler 
 		if (e.newGameState == PacManGameState.READY) {
 			sounds.stopAll();
 			playScene.maze2D.getEnergizerAnimation().reset();
+			playScene.player2D.reset();
 			if (!gameController.isAttractMode() && !gameController.isGameRunning()) {
 				sounds.play(PacManGameSound.GAME_READY);
 			}

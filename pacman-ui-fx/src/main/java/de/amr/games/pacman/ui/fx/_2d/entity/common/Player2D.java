@@ -53,6 +53,11 @@ public class Player2D implements Renderable2D {
 		dyingAnimation = rendering.createPlayerDyingAnimation();
 	}
 
+	public void reset() {
+		munchingAnimations.values().forEach(TimedSequence::reset);
+		dyingAnimation.reset();
+	}
+
 	@Override
 	public void render(GraphicsContext g) {
 		rendering.renderEntity(g, player, currentSprite());
