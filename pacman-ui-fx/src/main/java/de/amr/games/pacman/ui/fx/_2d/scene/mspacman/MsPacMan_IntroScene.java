@@ -118,6 +118,8 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 		} else if (state == IntroState.PRESENTING_MSPACMAN) {
 			drawStarringMsPacMan();
 		} else if (state == IntroState.WAITING_FOR_GAME) {
+			// TODO: this hack ensures that Ms. Pac-Man is displayed with mouth half open
+			msPacMan2D.reset();
 			drawStarringMsPacMan();
 			drawPressKeyToStart(26);
 		}
