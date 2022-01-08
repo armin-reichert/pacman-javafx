@@ -360,9 +360,11 @@ public class PlayScene3D extends AbstractGameScene {
 
 		// enter PACMAN_DYING
 		else if (e.newGameState == PacManGameState.PACMAN_DYING) {
+			ghosts3D.forEach(ghost3D -> ghost3D.setNormalSkinColor());
 			sounds.stopAll();
 			playAnimationPlayerDying();
-			ghosts3D.forEach(ghost3D -> ghost3D.setNormalSkinColor());
+			gameController.stateTimer().resetSeconds(3);
+			gameController.stateTimer().start();
 		}
 
 		// enter GHOST_DYING
@@ -429,15 +431,15 @@ public class PlayScene3D extends AbstractGameScene {
 		var spin = new RotateTransition(Duration.seconds(0.2), player3D);
 		spin.setAxis(Rotate.Z_AXIS);
 		spin.setByAngle(360);
-		spin.setCycleCount(10);
+		spin.setCycleCount(5);
 
-		var shrink = new ScaleTransition(Duration.seconds(2), player3D);
+		var shrink = new ScaleTransition(Duration.seconds(1), player3D);
 		shrink.setToX(0);
 		shrink.setToY(0);
 		shrink.setToZ(0);
 
 		var animation = new SequentialTransition( //
-				pause(0.5), hideGhosts, impale, pause(1), new ParallelTransition(playSound, spin, shrink), pause(2));
+				pause(0.25), hideGhosts, impale, new ParallelTransition(playSound, spin, shrink), pause(2));
 		animation.setOnFinished(e -> gameController.stateTimer().expire());
 		animation.play();
 	}
