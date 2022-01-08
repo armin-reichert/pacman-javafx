@@ -32,6 +32,7 @@ import static java.util.function.Predicate.not;
 
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -213,7 +214,7 @@ public class PlayScene3D extends AbstractGameScene {
 
 		AmbientLight light = new AmbientLight();
 		light.setColor(Color.GHOSTWHITE);
-		
+
 		fxScene.setRoot(new Group(light, playground, coordinateSystem));
 		currentCameraController().reset();
 	}
@@ -227,8 +228,10 @@ public class PlayScene3D extends AbstractGameScene {
 		livesCounter3D.setVisibleItems(game.player.lives);
 		currentCameraController().follow(player3D);
 		playDoorAnimation();
+
+		// update food visibility and animations in case of switching between 2D and 3D view
+		// TODO: incomplete
 		if (gameController.currentStateID == PacManGameState.HUNTING) {
-			// update food visibility and animations in case of switching between 2D and 3D view
 			maze3D.foodNodes().forEach(foodNode -> {
 				foodNode.setVisible(!game.isFoodEaten(tile(foodNode)));
 			});
@@ -263,22 +266,22 @@ public class PlayScene3D extends AbstractGameScene {
 	@Override
 	public void onPlayerGainsPower(PacManGameEvent e) {
 		sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
-		ghosts3D.stream()
+		ghosts3D.stream() //
 				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
 				.forEach(Ghost3D::setBlueSkinColor);
 	}
 
 	@Override
 	public void onPlayerLosingPower(PacManGameEvent e) {
-		ghosts3D.stream()//
-				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED))//
+		ghosts3D.stream() //
+				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED)) //
 				.forEach(ghost3D -> ghost3D.playFlashingAnimation());
 	}
 
 	@Override
 	public void onPlayerLostPower(PacManGameEvent e) {
-		ghosts3D.forEach(ghost3D -> ghost3D.setNormalSkinColor());
 		sounds.stop(PacManGameSound.PACMAN_POWER);
+		ghosts3D.forEach(Ghost3D::setNormalSkinColor);
 	}
 
 	@Override
@@ -286,19 +289,13 @@ public class PlayScene3D extends AbstractGameScene {
 		if (e.tile.isEmpty()) {
 			// this happens when the "eat all pellets except energizers" cheat was triggered
 			Predicate<Node> isEnergizer = node -> game.world.isEnergizerTile(tile(node));
-			maze3D.foodNodes()//
-					.filter(not(isEnergizer))//
-					.forEach(foodNode -> foodNode.setVisible(false));
-			return;
-		}
-		maze3D.foodNodes()//
-				.filter(node -> tile(node).equals(e.tile.get()))//
-				.findFirst()//
-				.ifPresent(foodNode -> foodNode.setVisible(false));
-
-		AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
-		if (!munching.isPlaying()) {
-			sounds.loop(PacManGameSound.PACMAN_MUNCH, Integer.MAX_VALUE);
+			maze3D.foodNodes().filter(not(isEnergizer)).forEach(foodNode -> foodNode.setVisible(false));
+		} else {
+			foodNodeAt(e.tile.get()).ifPresent(foodNode -> foodNode.setVisible(false));
+			AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
+			if (!munching.isPlaying()) {
+				sounds.loop(PacManGameSound.PACMAN_MUNCH, Integer.MAX_VALUE);
+			}
 		}
 	}
 
@@ -320,7 +317,7 @@ public class PlayScene3D extends AbstractGameScene {
 
 	@Override
 	public void onExtraLife(PacManGameEvent e) {
-		gameController.getUI().showFlashMessage(1, Env.message("extra_life"));
+		gameController.getUI().showFlashMessage(1.5, Env.message("extra_life"));
 		sounds.play(PacManGameSound.EXTRA_LIFE);
 	}
 
@@ -404,6 +401,10 @@ public class PlayScene3D extends AbstractGameScene {
 		return maze3D.foodNodes().filter(node -> world.isEnergizerTile(tile(node)));
 	}
 
+	private Optional<Node> foodNodeAt(V2i tile) {
+		return maze3D.foodNodes().filter(node -> tile(node).equals(tile)).findFirst();
+	}
+
 	private void resetEnergizers(PacManGameWorld world) {
 		energizerNodes(world).forEach(node -> {
 			node.setScaleX(1.0);
@@ -435,8 +436,8 @@ public class PlayScene3D extends AbstractGameScene {
 		shrink.setToY(0);
 		shrink.setToZ(0);
 
-		var animation = new SequentialTransition(pause(0.5), hideGhosts, impale, pause(1),
-				new ParallelTransition(playSound, spin, shrink), pause(2));
+		var animation = new SequentialTransition( //
+				pause(0.5), hideGhosts, impale, pause(1), new ParallelTransition(playSound, spin, shrink), pause(2));
 		animation.setOnFinished(e -> gameController.stateTimer().expire());
 		animation.play();
 	}
