@@ -77,16 +77,16 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		score2D.title = "SCORE";
 		score2D.x = t(1);
 		score2D.y = t(1);
-		score2D.levelSupplier = () -> gameController.game().levelNumber;
-		score2D.pointsSupplier = () -> gameController.game().score;
+		score2D.levelSupplier = () -> game.levelNumber;
+		score2D.pointsSupplier = () -> game.score;
 		score2D.showPoints = false;
 
 		hiscore2D = new GameScore2D(rendering);
 		hiscore2D.title = "HIGH SCORE";
 		hiscore2D.x = t(16);
 		hiscore2D.y = t(1);
-		hiscore2D.levelSupplier = () -> gameController.game().hiscoreLevel;
-		hiscore2D.pointsSupplier = () -> gameController.game().hiscorePoints;
+		hiscore2D.levelSupplier = () -> game.hiscoreLevel;
+		hiscore2D.pointsSupplier = () -> game.hiscorePoints;
 
 		pacMan2D = new Player2D(sceneController.pacMan, rendering);
 		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);

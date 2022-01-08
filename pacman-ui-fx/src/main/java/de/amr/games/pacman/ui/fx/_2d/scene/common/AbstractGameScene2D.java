@@ -29,7 +29,6 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 import java.util.OptionalDouble;
 
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -117,7 +116,6 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 
 	// this is used in play scene and intermission scenes, so define it here
 	protected void renderLevelCounter(V2i tileRight) {
-		final GameModel game = gameController.game();
 		int levelNumber = game.levelNumber;
 		int x = tileRight.x * TS, y = tileRight.y * TS;
 		int firstLevel = Math.max(1, levelNumber - 6);

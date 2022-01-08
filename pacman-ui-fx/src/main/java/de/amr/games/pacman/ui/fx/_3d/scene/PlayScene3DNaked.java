@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.fx.Env;
@@ -100,7 +99,6 @@ public class PlayScene3DNaked extends AbstractGameScene {
 	public void init(PacManGameController gameController) {
 		super.init(gameController);
 
-		final GameModel game = gameController.game();
 		final int width = game.world.numCols() * TS;
 		final int height = game.world.numRows() * TS;
 
@@ -142,7 +140,6 @@ public class PlayScene3DNaked extends AbstractGameScene {
 
 	@Override
 	public void update() {
-		final GameModel game = gameController.game();
 		player3D.update();
 		ghosts3D.forEach(Ghost3D::update);
 		bonus3D.update(game.bonus);

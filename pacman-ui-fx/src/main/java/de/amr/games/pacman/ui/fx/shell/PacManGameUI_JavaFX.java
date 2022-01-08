@@ -76,7 +76,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI, DefaultPacManGameEvent
 		this.gameController = gameController;
 
 		// Determine the initial game scene
-		AbstractGameScene gameScene = getSceneForCurrentGameState(Env.$use3DScenes.get());
+		AbstractGameScene gameScene = getSceneForCurrentGameState(gameController.game(), Env.$use3DScenes.get());
 		double aspectRatio = gameScene.aspectRatio()
 				.orElse(Screen.getPrimary().getBounds().getWidth() / Screen.getPrimary().getBounds().getHeight());
 
@@ -119,10 +119,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI, DefaultPacManGameEvent
 		return gameController;
 	}
 
-	public GameModel game() {
-		return gameController.game();
-	}
-
 	public Stage getStage() {
 		return stage;
 	}
@@ -146,14 +142,15 @@ public class PacManGameUI_JavaFX implements PacManGameUI, DefaultPacManGameEvent
 	}
 
 	private void toggleUse3DScenes() {
+		GameModel game = gameController.game();
 		Env.$use3DScenes.set(!Env.$use3DScenes.get());
-		if (getSceneForCurrentGameState(false) != getSceneForCurrentGameState(true)) {
+		if (getSceneForCurrentGameState(game, false) != getSceneForCurrentGameState(game, true)) {
 			stopAllSounds();
-			setGameScene(getSceneForCurrentGameState(Env.$use3DScenes.get()));
+			setGameScene(getSceneForCurrentGameState(game, Env.$use3DScenes.get()));
 		}
 	}
 
-	private AbstractGameScene getSceneForCurrentGameState(boolean _3D) {
+	private AbstractGameScene getSceneForCurrentGameState(GameModel game, boolean _3D) {
 		int sceneIndex;
 		int twoOrThreeD = _3D ? 1 : 0;
 
@@ -162,7 +159,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI, DefaultPacManGameEvent
 			sceneIndex = 0;
 			break;
 		case INTERMISSION:
-			sceneIndex = game().intermissionNumber(game().levelNumber);
+			sceneIndex = game.intermissionNumber(game.levelNumber);
 			break;
 		case INTERMISSION_TEST:
 			sceneIndex = gameController.intermissionTestNumber;
@@ -217,10 +214,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI, DefaultPacManGameEvent
 		if (e.newGameState == PacManGameState.INTRO) {
 			stopAllSounds();
 		}
-		setGameScene(getSceneForCurrentGameState(Env.$use3DScenes.get()));
+		setGameScene(getSceneForCurrentGameState(gameController.game(), Env.$use3DScenes.get()));
 	}
 
 	private void onKeyPressed(KeyEvent e) {
+		final GameModel game = gameController.game();
 		if (e.isControlDown()) {
 			onControlKeyPressed(e);
 			return;
@@ -239,14 +237,14 @@ public class PacManGameUI_JavaFX implements PacManGameUI, DefaultPacManGameEvent
 			break;
 
 		case I: {
-			game().player.immune = !game().player.immune;
-			String message = Env.message(game().player.immune ? "player_immunity_on" : "player_immunity_off");
+			game.player.immune = !game.player.immune;
+			String message = Env.message(game.player.immune ? "player_immunity_on" : "player_immunity_off");
 			showFlashMessage(1, message);
 			break;
 		}
 
 		case L:
-			game().player.lives += 3;
+			game.player.lives += 3;
 			showFlashMessage(2, String.format("3 more lives"));
 			break;
 
@@ -292,8 +290,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI, DefaultPacManGameEvent
 			if (currentGameScene instanceof PlayScene3DNaked) {
 				PlayScene3DNaked playScene3D = (PlayScene3DNaked) currentGameScene;
 				Env.nextPerspective();
-				String cameraType = Env.MESSAGES
-						.getString(playScene3D.currentCameraController().getClass().getSimpleName());
+				String cameraType = Env.MESSAGES.getString(playScene3D.currentCameraController().getClass().getSimpleName());
 				String message = Env.message("camera_perspective", cameraType);
 				showFlashMessage(1, message);
 			}
