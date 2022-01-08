@@ -23,27 +23,44 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
+import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.ui.fx.util.Animations.afterSeconds;
 import static de.amr.games.pacman.ui.fx.util.Animations.now;
 import static de.amr.games.pacman.ui.fx.util.Animations.pause;
 import static java.util.function.Predicate.not;
 
+import java.util.EnumMap;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
+import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx.Env;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
+import de.amr.games.pacman.ui.fx._3d.entity.LevelCounter3D;
+import de.amr.games.pacman.ui.fx._3d.entity.LivesCounter3D;
+import de.amr.games.pacman.ui.fx._3d.entity.Maze3D;
 import de.amr.games.pacman.ui.fx._3d.entity.PacManModel3D;
+import de.amr.games.pacman.ui.fx._3d.entity.Player3D;
+import de.amr.games.pacman.ui.fx._3d.entity.ScoreNotReally3D;
+import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
+import de.amr.games.pacman.ui.fx.scene.ScenesMsPacMan;
+import de.amr.games.pacman.ui.fx.scene.ScenesPacMan;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
+import de.amr.games.pacman.ui.fx.util.AbstractCameraController;
+import de.amr.games.pacman.ui.fx.util.CoordinateSystem;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.ParallelTransition;
@@ -51,7 +68,14 @@ import javafx.animation.RotateTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
+import javafx.scene.AmbientLight;
+import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.PerspectiveCamera;
+import javafx.scene.SceneAntialiasing;
+import javafx.scene.SubScene;
+import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.media.AudioClip;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -61,9 +85,13 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class PlayScene3D extends PlayScene3DNaked {
+public class PlayScene3D extends AbstractGameScene {
 
-	private static ScaleTransition createEnergizerAnimation(Node energizer) {
+	private static V2i tile(Node node) {
+		return (V2i) node.getUserData();
+	}
+
+	private static Transition createEnergizerAnimation(Node energizer) {
 		var animation = new ScaleTransition(Duration.seconds(0.25), energizer);
 		animation.setAutoReverse(true);
 		animation.setCycleCount(Transition.INDEFINITE);
@@ -76,23 +104,129 @@ public class PlayScene3D extends PlayScene3DNaked {
 		return animation;
 	}
 
+	private final PacManModel3D model3D;
+	private final SubScene fxScene;
+	private final EnumMap<Perspective, AbstractCameraController> cameraControllers = new EnumMap<>(Perspective.class);
+	private final Image floorImage = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
+	private Maze3D maze3D;
+	private Player3D player3D;
+	private List<Ghost3D> ghosts3D;
+	private Bonus3D bonus3D;
+	private ScoreNotReally3D score3D;
+	private LevelCounter3D levelCounter3D;
+	private LivesCounter3D livesCounter3D;
 	private final SoundManager sounds;
 	private List<Transition> energizerAnimations;
 
 	public PlayScene3D(PacManModel3D model3D, SoundManager sounds) {
-		super(model3D);
+		this.model3D = model3D;
+		var cam = new PerspectiveCamera(true);
+		fxScene = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
+		fxScene.setCamera(cam);
+		fxScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> currentCameraController().handle(e));
+		cameraControllers.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer(cam));
+		cameraControllers.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer(cam));
+		cameraControllers.put(Perspective.CAM_TOTAL, new Cam_Total(cam));
+		Env.$perspective.addListener(($1, $2, $3) -> currentCameraController().reset());
 		this.sounds = sounds;
+	}
+	
+	@Override
+	public boolean is3D() {
+		return true;
 	}
 
 	@Override
+	public AbstractCameraController currentCameraController() {
+		if (!cameraControllers.containsKey(Env.$perspective.get())) {
+			// This should not happen:
+			Env.$perspective.set(cameraControllers.keySet().iterator().next());
+		}
+		return cameraControllers.get(Env.$perspective.get());
+	}
+
+	@Override
+	public SubScene getSubSceneFX() {
+		return fxScene;
+	}
+
+	/**
+	 * @return 2D-rendering for current game variant
+	 */
+	protected Rendering2D rendering2D() {
+		return gameController.gameVariant() == GameVariant.MS_PACMAN ? ScenesMsPacMan.RENDERING
+				: ScenesPacMan.RENDERING;
+	}
+
 	protected void buildMaze(PacManGameWorld world, int mazeNumber) {
-		super.buildMaze(world, mazeNumber);
-		energizerAnimations = energizerNodes(world).map(PlayScene3D::createEnergizerAnimation).collect(Collectors.toList());
+		buildMazeWithoutFood(world, mazeNumber);
+		maze3D.buildFood(world, rendering2D().getFoodColor(mazeNumber));
+		energizerAnimations = energizerNodes(world).map(PlayScene3D::createEnergizerAnimation)
+				.collect(Collectors.toList());
+	}
+
+	/**
+	 * Builds the maze content without the food. Used when floorplan resolution is changed.
+	 */
+	protected void buildMazeWithoutFood(PacManGameWorld world, int mazeNumber) {
+		maze3D.buildWallsAndDoors(world, rendering2D().getMazeSideColor(mazeNumber),
+				rendering2D().getMazeTopColor(mazeNumber));
+	}
+
+	@Override
+	public void init(PacManGameController gameController) {
+		super.init(gameController);
+
+		final int width = game.world.numCols() * TS;
+		final int height = game.world.numRows() * TS;
+
+		maze3D = new Maze3D(width, height, floorImage);
+		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
+		maze3D.$resolution.bind(Env.$mazeResolution);
+		maze3D.$resolution.addListener((x, y, z) -> buildMazeWithoutFood(game.world, game.mazeNumber));
+		buildMaze(game.world, game.mazeNumber);
+
+		player3D = new Player3D(game.player, model3D.createPacMan());
+		ghosts3D = game.ghosts()
+				.map(ghost -> new Ghost3D(ghost, model3D.createGhost(), model3D.createGhostEyes(), rendering2D()))
+				.collect(Collectors.toList());
+		bonus3D = new Bonus3D(rendering2D());
+		score3D = new ScoreNotReally3D(rendering2D().getScoreFont());
+
+		livesCounter3D = new LivesCounter3D(model3D);
+		livesCounter3D.setTranslateX(TS);
+		livesCounter3D.setTranslateY(TS);
+		livesCounter3D.setTranslateZ(-4); // TODO
+		livesCounter3D.setVisible(!gameController.isAttractMode());
+
+		levelCounter3D = new LevelCounter3D(rendering2D());
+		levelCounter3D.setRightPosition(26 * TS, TS);
+		levelCounter3D.setTranslateZ(-4); // TODO
+		levelCounter3D.rebuild(game);
+
+		var playground = new Group(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
+		playground.getChildren().addAll(ghosts3D);
+		playground.setTranslateX(-0.5 * width);
+		playground.setTranslateY(-0.5 * height);
+
+		var coordinateSystem = new CoordinateSystem(fxScene.getWidth());
+		coordinateSystem.visibleProperty().bind(Env.$axesVisible);
+
+		fxScene.setRoot(new Group(new AmbientLight(), playground, coordinateSystem));
+		currentCameraController().reset();
 	}
 
 	@Override
 	public void update() {
-		super.update();
+		player3D.update();
+		ghosts3D.forEach(Ghost3D::update);
+		bonus3D.update(game.bonus);
+		score3D.update(game, gameController.isAttractMode() ? "GAME OVER!" : null);
+		// TODO: is this the recommended way to do keep the score in plain view?
+		score3D.setRotationAxis(Rotate.X_AXIS);
+		score3D.setRotate(fxScene.getCamera().getRotate());
+		livesCounter3D.setVisibleItems(game.player.lives);
+		currentCameraController().follow(player3D);
 		playDoorAnimation();
 		sounds.setMuted(gameController.isAttractMode());
 		if (gameController.currentStateID == PacManGameState.HUNTING) {
@@ -131,7 +265,8 @@ public class PlayScene3D extends PlayScene3DNaked {
 	@Override
 	public void onPlayerGainsPower(PacManGameEvent e) {
 		sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
-		ghosts3D.stream().filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
+		ghosts3D.stream()
+				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
 				.forEach(Ghost3D::setBlueSkinColor);
 	}
 
@@ -331,7 +466,8 @@ public class PlayScene3D extends PlayScene3DNaked {
 	}
 
 	private void playDoorAnimation() {
-		boolean open = maze3D.doors().anyMatch(door -> game.ghosts().anyMatch(ghost -> ghost.tile().equals(tile(door))));
+		boolean open = maze3D.doors()
+				.anyMatch(door -> game.ghosts().anyMatch(ghost -> ghost.tile().equals(tile(door))));
 		maze3D.showDoorsOpen(open);
 	}
 }
