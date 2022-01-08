@@ -102,9 +102,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		hiscore2D.levelSupplier = () -> game.hiscoreLevel;
 
 		player2D = new Player2D(game.player, rendering);
-		player2D.dyingAnimation.delay(120).onStart(() -> {
-			game.ghosts().forEach(ghost -> ghost.visible = false);
-		});
+		player2D.dyingAnimation.delay(120).onStart(game::hideGhosts);
 
 		ghosts2D = game.ghosts().map(ghost -> new Ghost2D(ghost, rendering)).collect(Collectors.toList());
 
@@ -245,7 +243,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		else if (e.newGameState == PacManGameState.LEVEL_COMPLETE) {
 			sounds.stopAll();
 			player2D.reset();
-			e.game.ghosts().forEach(ghost -> ghost.visible = false);
+			game.hideGhosts();
 			gameController.stateTimer().reset();
 			maze2D.getEnergizerAnimation().reset(); // energizers might still exist if "next level" cheat has been used
 			createLevelCompleteAnimation();
