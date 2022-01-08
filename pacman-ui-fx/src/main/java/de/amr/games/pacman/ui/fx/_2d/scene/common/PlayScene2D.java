@@ -211,6 +211,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 			maze2D.getEnergizerAnimation().reset();
 			player2D.reset();
 			if (!gameController.isAttractMode() && !gameController.isGameRunning()) {
+				sounds.setMuted(false);
 				sounds.play(PacManGameSound.GAME_READY);
 			}
 		}
@@ -228,8 +229,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 			ghosts2D.forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSequence::reset));
 			// TODO use parallel transition and resume game in onFinished()?
 			player2D.dyingAnimation.restart();
-			Animations.afterSeconds(2, () -> sounds.play(PacManGameSound.PACMAN_DEATH)).play();
-			gameController.stateTimer().resetSeconds(5);
+			Animations.afterSeconds(1, () -> sounds.play(PacManGameSound.PACMAN_DEATH)).play();
+			gameController.stateTimer().resetSeconds(3);
 			gameController.stateTimer().start();
 		}
 
