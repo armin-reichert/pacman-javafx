@@ -32,6 +32,7 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
+import de.amr.games.pacman.ui.fx.util.AbstractCameraController;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.SubScene;
@@ -63,6 +64,16 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 		this.aspectRatio = unscaledWidth / unscaledHeight;
 		this.rendering = rendering;
 		this.sounds = sounds;
+	}
+
+	@Override
+	public boolean is3D() {
+		return false;
+	}
+
+	@Override
+	public AbstractCameraController currentCameraController() {
+		return null;
 	}
 
 	public void setCanvas(Canvas canvas) {

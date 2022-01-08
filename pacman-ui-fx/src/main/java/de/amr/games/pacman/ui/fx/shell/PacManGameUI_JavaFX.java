@@ -34,7 +34,7 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
-import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3DNaked;
+import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
 import de.amr.games.pacman.ui.fx.scene.ScenesMsPacMan;
 import de.amr.games.pacman.ui.fx.scene.ScenesPacMan;
@@ -287,10 +287,11 @@ public class PacManGameUI_JavaFX implements PacManGameUI, DefaultPacManGameEvent
 		switch (e.getCode()) {
 
 		case C:
-			if (currentGameScene instanceof PlayScene3DNaked) {
-				PlayScene3DNaked playScene3D = (PlayScene3DNaked) currentGameScene;
+			if (currentGameScene instanceof PlayScene3D) {
+				PlayScene3D playScene3D = (PlayScene3D) currentGameScene;
 				Env.nextPerspective();
-				String cameraType = Env.MESSAGES.getString(playScene3D.currentCameraController().getClass().getSimpleName());
+				String cameraType = Env.MESSAGES
+						.getString(playScene3D.currentCameraController().getClass().getSimpleName());
 				String message = Env.message("camera_perspective", cameraType);
 				showFlashMessage(1, message);
 			}
@@ -366,7 +367,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI, DefaultPacManGameEvent
 	private void onScrolled(ScrollEvent e) {
 		boolean shift = e.isShiftDown();
 		boolean up = shift ? e.getDeltaX() > 0 : e.getDeltaY() > 0;
-		if (currentGameScene instanceof PlayScene3DNaked) {
+		if (currentGameScene instanceof PlayScene3D) {
 			if (e.isShiftDown()) {
 				changeMazeWallHeight(up);
 			} else {
