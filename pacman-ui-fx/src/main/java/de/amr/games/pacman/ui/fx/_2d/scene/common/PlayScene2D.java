@@ -40,7 +40,6 @@ import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Bonus2D;
@@ -65,7 +64,6 @@ import javafx.util.Duration;
  */
 public class PlayScene2D extends AbstractGameScene2D {
 
-	private GameModel game;
 	private Maze2D maze2D;
 	private GameScore2D score2D;
 	private GameScore2D hiscore2D;
@@ -82,8 +80,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 	@Override
 	public void init(PacManGameController gameController) {
 		super.init(gameController);
-
-		game = gameController.game();
 
 		maze2D = new Maze2D(game, new V2i(0, 3), rendering);
 

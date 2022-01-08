@@ -29,6 +29,7 @@ import java.util.OptionalDouble;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.event.DefaultPacManGameEventHandler;
+import de.amr.games.pacman.model.common.GameModel;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 
@@ -43,6 +44,7 @@ import javafx.scene.SubScene;
 public abstract class AbstractGameScene implements DefaultPacManGameEventHandler {
 
 	protected PacManGameController gameController;
+	protected GameModel game;
 
 	/**
 	 * @return the JavaFX subscene
@@ -50,11 +52,12 @@ public abstract class AbstractGameScene implements DefaultPacManGameEventHandler
 	public abstract SubScene getSubSceneFX();
 
 	/**
-	 * Called when the scene gets initialized. Stores a reference to the game controller such that the other lifecycle
-	 * methods have access to it.
+	 * Called when the scene gets initialized. Stores a reference to the game controller and the current game such that
+	 * the other lifecycle methods can use them.
 	 */
 	public void init(PacManGameController gameController) {
 		this.gameController = gameController;
+		game = gameController.game();
 	}
 
 	/**
