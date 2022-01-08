@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
+import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.ui.fx.util.Animations.afterSeconds;
 import static de.amr.games.pacman.ui.fx.util.Animations.now;
@@ -77,6 +78,7 @@ import javafx.scene.SubScene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -105,6 +107,7 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	private final PacManModel3D model3D;
+	private final SoundManager sounds;
 	private final SubScene fxScene;
 	private final EnumMap<Perspective, AbstractCameraController> cameraControllers = new EnumMap<>(Perspective.class);
 	private final Image floorImage = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
@@ -115,22 +118,21 @@ public class PlayScene3D extends AbstractGameScene {
 	private ScoreNotReally3D score3D;
 	private LevelCounter3D levelCounter3D;
 	private LivesCounter3D livesCounter3D;
-	private final SoundManager sounds;
 	private List<Transition> energizerAnimations;
 
 	public PlayScene3D(PacManModel3D model3D, SoundManager sounds) {
 		this.model3D = model3D;
-		var cam = new PerspectiveCamera(true);
+		this.sounds = sounds;
 		fxScene = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
+		var cam = new PerspectiveCamera(true);
 		fxScene.setCamera(cam);
 		fxScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> currentCameraController().handle(e));
 		cameraControllers.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer(cam));
 		cameraControllers.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer(cam));
 		cameraControllers.put(Perspective.CAM_TOTAL, new Cam_Total(cam));
 		Env.$perspective.addListener(($1, $2, $3) -> currentCameraController().reset());
-		this.sounds = sounds;
 	}
-	
+
 	@Override
 	public boolean is3D() {
 		return true;
@@ -150,25 +152,19 @@ public class PlayScene3D extends AbstractGameScene {
 		return fxScene;
 	}
 
-	/**
-	 * @return 2D-rendering for current game variant
-	 */
-	protected Rendering2D rendering2D() {
+	private Rendering2D rendering2D() {
 		return gameController.gameVariant() == GameVariant.MS_PACMAN ? ScenesMsPacMan.RENDERING
 				: ScenesPacMan.RENDERING;
 	}
 
-	protected void buildMaze(PacManGameWorld world, int mazeNumber) {
-		buildMazeWithoutFood(world, mazeNumber);
+	private void buildMaze(PacManGameWorld world, int mazeNumber) {
+		buildMazeStructure(world, mazeNumber);
 		maze3D.buildFood(world, rendering2D().getFoodColor(mazeNumber));
 		energizerAnimations = energizerNodes(world).map(PlayScene3D::createEnergizerAnimation)
 				.collect(Collectors.toList());
 	}
 
-	/**
-	 * Builds the maze content without the food. Used when floorplan resolution is changed.
-	 */
-	protected void buildMazeWithoutFood(PacManGameWorld world, int mazeNumber) {
+	private void buildMazeStructure(PacManGameWorld world, int mazeNumber) {
 		maze3D.buildWallsAndDoors(world, rendering2D().getMazeSideColor(mazeNumber),
 				rendering2D().getMazeTopColor(mazeNumber));
 	}
@@ -183,7 +179,7 @@ public class PlayScene3D extends AbstractGameScene {
 		maze3D = new Maze3D(width, height, floorImage);
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
-		maze3D.$resolution.addListener((x, y, z) -> buildMazeWithoutFood(game.world, game.mazeNumber));
+		maze3D.$resolution.addListener((x, y, z) -> buildMazeStructure(game.world, game.mazeNumber));
 		buildMaze(game.world, game.mazeNumber);
 
 		player3D = new Player3D(game.player, model3D.createPacMan());
@@ -192,19 +188,22 @@ public class PlayScene3D extends AbstractGameScene {
 				.collect(Collectors.toList());
 		bonus3D = new Bonus3D(rendering2D());
 		score3D = new ScoreNotReally3D(rendering2D().getScoreFont());
+		score3D.setRotationAxis(Rotate.X_AXIS);
+		score3D.rotateProperty().bind(fxScene.getCamera().rotateProperty());
 
 		livesCounter3D = new LivesCounter3D(model3D);
 		livesCounter3D.setTranslateX(TS);
 		livesCounter3D.setTranslateY(TS);
-		livesCounter3D.setTranslateZ(-4); // TODO
+		livesCounter3D.setTranslateZ(-HTS);
 		livesCounter3D.setVisible(!gameController.isAttractMode());
 
 		levelCounter3D = new LevelCounter3D(rendering2D());
 		levelCounter3D.setRightPosition(26 * TS, TS);
-		levelCounter3D.setTranslateZ(-4); // TODO
+		levelCounter3D.setTranslateZ(-HTS);
 		levelCounter3D.rebuild(game);
 
-		var playground = new Group(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
+		var playground = new Group();
+		playground.getChildren().addAll(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
 		playground.getChildren().addAll(ghosts3D);
 		playground.setTranslateX(-0.5 * width);
 		playground.setTranslateY(-0.5 * height);
@@ -212,7 +211,10 @@ public class PlayScene3D extends AbstractGameScene {
 		var coordinateSystem = new CoordinateSystem(fxScene.getWidth());
 		coordinateSystem.visibleProperty().bind(Env.$axesVisible);
 
-		fxScene.setRoot(new Group(new AmbientLight(), playground, coordinateSystem));
+		AmbientLight light = new AmbientLight();
+		light.setColor(Color.GHOSTWHITE);
+		
+		fxScene.setRoot(new Group(light, playground, coordinateSystem));
 		currentCameraController().reset();
 	}
 
@@ -222,13 +224,9 @@ public class PlayScene3D extends AbstractGameScene {
 		ghosts3D.forEach(Ghost3D::update);
 		bonus3D.update(game.bonus);
 		score3D.update(game, gameController.isAttractMode() ? "GAME OVER!" : null);
-		// TODO: is this the recommended way to do keep the score in plain view?
-		score3D.setRotationAxis(Rotate.X_AXIS);
-		score3D.setRotate(fxScene.getCamera().getRotate());
 		livesCounter3D.setVisibleItems(game.player.lives);
 		currentCameraController().follow(player3D);
 		playDoorAnimation();
-		sounds.setMuted(gameController.isAttractMode());
 		if (gameController.currentStateID == PacManGameState.HUNTING) {
 			// update food visibility and animations in case of switching between 2D and 3D view
 			maze3D.foodNodes().forEach(foodNode -> {
@@ -352,7 +350,8 @@ public class PlayScene3D extends AbstractGameScene {
 			sounds.stopAll();
 			player3D.reset();
 			resetEnergizers(game.world);
-			if (!gameController.isAttractMode() && !gameController.isGameRunning()) {
+			sounds.setMuted(gameController.isAttractMode());
+			if (!gameController.isGameRunning()) {
 				sounds.play(PacManGameSound.GAME_READY);
 			}
 		}
