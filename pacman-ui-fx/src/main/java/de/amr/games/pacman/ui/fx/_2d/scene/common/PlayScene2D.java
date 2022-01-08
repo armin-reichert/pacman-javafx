@@ -248,6 +248,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		// enter LEVEL_COMPLETE
 		else if (e.newGameState == PacManGameState.LEVEL_COMPLETE) {
 			sounds.stopAll();
+			player2D.reset();
 			e.game.ghosts().forEach(ghost -> ghost.visible = false);
 			gameController.stateTimer().reset();
 			maze2D.getEnergizerAnimation().reset(); // energizers might still exist if "next level" cheat has been used
