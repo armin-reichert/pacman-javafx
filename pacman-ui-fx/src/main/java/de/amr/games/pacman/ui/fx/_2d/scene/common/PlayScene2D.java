@@ -235,7 +235,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// enter GHOST_DYING
 		else if (e.newGameState == PacManGameState.GHOST_DYING) {
-			e.game.player.visible = false;
+			e.game.player.hide();
 			sounds.play(PacManGameSound.GHOST_EATEN);
 		}
 
@@ -266,7 +266,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// exit GHOST_DYING
 		if (e.oldGameState == PacManGameState.GHOST_DYING) {
-			e.game.player.visible = true;
+			e.game.player.show();
 		}
 	}
 

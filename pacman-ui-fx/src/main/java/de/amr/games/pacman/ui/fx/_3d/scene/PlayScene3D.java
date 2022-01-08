@@ -311,7 +311,7 @@ public class PlayScene3D extends PlayScene3DNaked {
 		gameController.stateTimer().reset();
 		gameController.stateTimer().start();
 		var hideGuysAndShowMessage = afterSeconds(3, () -> {
-			game.player.visible = false;
+			game.player.hide();
 			game.hideGhosts();
 			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game.levelNumber);
 			gameController.getUI().showFlashMessage(2, message);
@@ -323,7 +323,7 @@ public class PlayScene3D extends PlayScene3DNaked {
 	private void playAnimationLevelStarting() {
 		gameController.getUI().showFlashMessage(1, Env.message("level_starting", game.levelNumber));
 		var hideGuys = afterSeconds(1, () -> {
-			game.player.visible = true;
+			game.player.show();
 			game.showGhosts();
 		});
 		var startLevel = afterSeconds(3, () -> gameController.stateTimer().expire());
