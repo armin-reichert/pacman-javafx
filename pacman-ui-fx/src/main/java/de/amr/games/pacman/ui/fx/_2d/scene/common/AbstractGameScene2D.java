@@ -94,9 +94,12 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	public SubScene getSubSceneFX() {
 		return subSceneFX;
 	}
+
 	@Override
 	public final void update() {
-		doUpdate();
+		if (gameController != null) {
+			doUpdate();
+		}
 		gc.setFill(Color.BLACK);
 		gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
 		doRender();
