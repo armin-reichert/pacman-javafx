@@ -66,6 +66,15 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 		this.sounds = sounds;
 	}
 
+	public void setCanvas(Canvas canvas) {
+		gc = canvas.getGraphicsContext2D();
+		canvas.setWidth(unscaledWidth);
+		canvas.setHeight(unscaledHeight);
+		subSceneFX = new SubScene(new Group(canvas), unscaledWidth, unscaledHeight);
+		subSceneFX.widthProperty().bind(canvas.widthProperty());
+		subSceneFX.heightProperty().bind(canvas.heightProperty());
+	}
+
 	@Override
 	public boolean is3D() {
 		return false;
@@ -74,15 +83,6 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	@Override
 	public AbstractCameraController currentCameraController() {
 		return null;
-	}
-
-	public void setCanvas(Canvas canvas) {
-		gc = canvas.getGraphicsContext2D();
-		canvas.setWidth(unscaledWidth);
-		canvas.setHeight(unscaledHeight);
-		subSceneFX = new SubScene(new Group(canvas), unscaledWidth, unscaledHeight);
-		subSceneFX.widthProperty().bind(canvas.widthProperty());
-		subSceneFX.heightProperty().bind(canvas.heightProperty());
 	}
 
 	@Override
@@ -125,14 +125,17 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	 */
 	protected abstract void doRender();
 
-	// this is used in play scene and intermission scenes, so define it here
+	/**
+	 * this is used in play scene and intermission scenes, so define it here
+	 * 
+	 * @param tileRight right tile position
+	 */
 	protected void renderLevelCounter(V2i tileRight) {
-		int levelNumber = game.levelNumber;
 		int x = tileRight.x * TS, y = tileRight.y * TS;
-		int firstLevel = Math.max(1, levelNumber - 6);
-		for (int level = firstLevel; level <= levelNumber; ++level) {
-			Rectangle2D sprite = rendering.getSymbolSprites().get(game.levelSymbol(level));
-			rendering.renderSprite(gc, sprite, x, y);
+		int firstLevel = Math.max(1, game.levelNumber - 6);
+		for (int level = firstLevel; level <= game.levelNumber; ++level) {
+			Rectangle2D r = rendering.getSymbolSprites().get(game.levelSymbol(level));
+			rendering.renderSprite(gc, r, x, y);
 			x -= t(2);
 		}
 	}
