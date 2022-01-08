@@ -73,8 +73,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 	private Bonus2D bonus2D;
 	private SequentialTransition levelCompleteAnimation;
 
-	public PlayScene2D(Rendering2D rendering, SoundManager sounds) {
-		super(rendering, sounds, 28, 36);
+	public PlayScene2D(int tilesX, int tilesY, Rendering2D rendering, SoundManager sounds) {
+		super(rendering, sounds, tilesX, tilesY);
 	}
 
 	@Override
@@ -299,8 +299,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 	}
 
 	private void renderGameState() {
-		PacManGameState state = gameController.isAttractMode() ? PacManGameState.GAME_OVER
-				: gameController.currentStateID;
+		PacManGameState state = gameController.isAttractMode() ? PacManGameState.GAME_OVER : gameController.currentStateID;
 		if (state == PacManGameState.GAME_OVER) {
 			gc.setFont(rendering.getScoreFont());
 			gc.setFill(Color.RED);

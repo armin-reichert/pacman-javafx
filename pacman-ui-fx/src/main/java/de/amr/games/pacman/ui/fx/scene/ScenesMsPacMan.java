@@ -42,6 +42,8 @@ import de.amr.games.pacman.ui.fx.sound.SoundManager;
  */
 public class ScenesMsPacMan {
 
+	public static final int TILES_X = 28;
+	public static final int TILES_Y = 36;
 	public static final AbstractGameScene SCENES[][] = new AbstractGameScene[5][2];
 	public static final Rendering2D_MsPacMan RENDERING = new Rendering2D_MsPacMan();
 	public static final SoundManager SOUNDS = new SoundManager(PacManGameSounds::msPacManSoundURL);
@@ -57,7 +59,7 @@ public class ScenesMsPacMan {
 		SCENES[2][1] = new MsPacMan_IntermissionScene2();
 		SCENES[3][0] = 
 		SCENES[3][1] = new MsPacMan_IntermissionScene3();
-		SCENES[4][0] = new PlayScene2D(RENDERING, SOUNDS);
+		SCENES[4][0] = new PlayScene2D(TILES_X, TILES_Y, RENDERING, SOUNDS);
 		SCENES[4][1] = new PlayScene3D(MODEL_3D, SOUNDS);
 		//@formatter:on
 	}
