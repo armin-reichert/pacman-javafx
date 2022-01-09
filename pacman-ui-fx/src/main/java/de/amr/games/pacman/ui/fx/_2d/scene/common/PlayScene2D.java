@@ -227,7 +227,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 		else if (e.newGameState == PacManGameState.PACMAN_DYING) {
 			sounds.stopAll();
 			ghosts2D.forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSequence::reset));
-			// TODO use parallel transition and resume game in onFinished()?
 			player2D.dyingAnimation.restart();
 			Animations.afterSeconds(2, () -> sounds.play(PacManGameSound.PACMAN_DEATH)).play();
 			gameController.stateTimer().resetSeconds(4);
