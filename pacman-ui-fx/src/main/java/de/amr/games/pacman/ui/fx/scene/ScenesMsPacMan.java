@@ -58,7 +58,7 @@ public class ScenesMsPacMan {
 	public static final SoundManager SOUNDS = new SoundManager(SOUND_URL);
 
 	private static void install(PacManGameSound sound, String path) {
-		SOUND_URL.put(sound, ScenesPacMan.class.getResource(path));
+		SOUND_URL.put(sound, ScenesMsPacMan.class.getResource(path));
 	}
 
 	static {
