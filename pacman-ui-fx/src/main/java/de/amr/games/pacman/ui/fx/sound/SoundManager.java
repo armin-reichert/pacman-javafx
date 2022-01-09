@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx.sound;
 import static de.amr.games.pacman.lib.Logging.log;
 
 import java.net.URL;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,12 +42,12 @@ import javafx.scene.media.AudioClip;
  */
 public class SoundManager {
 
-	private final Map<PacManGameSound, URL> soundURL;
+	private final Map<PacManGameSound, URL> url = new EnumMap<>(PacManGameSound.class);
 	private final Map<PacManGameSound, AudioClip> clipCache = new HashMap<>();
 	private boolean muted;
 
-	public SoundManager(Map<PacManGameSound, URL> soundURL) {
-		this.soundURL = soundURL;
+	public void put(PacManGameSound sound, String path) {
+		url.put(sound, getClass().getResource(path));
 	}
 
 	public void setMuted(boolean muted) {
@@ -55,7 +56,7 @@ public class SoundManager {
 
 	public AudioClip getClip(PacManGameSound sound) {
 		if (!clipCache.containsKey(sound)) {
-			AudioClip clip = new AudioClip(soundURL.get(sound).toExternalForm());
+			AudioClip clip = new AudioClip(url.get(sound).toExternalForm());
 			clipCache.put(sound, clip);
 		}
 		return clipCache.get(sound);

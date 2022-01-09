@@ -192,13 +192,13 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void onGhostReturnsHome(PacManGameEvent e) {
-		sounds.play(PacManGameSound.GHOST_RETURNING_HOME);
+		sounds.play(PacManGameSound.GHOST_RETURNING);
 	}
 
 	@Override
 	public void onGhostEntersHouse(PacManGameEvent e) {
 		if (game.ghosts(GhostState.DEAD).count() == 0) {
-			sounds.stop(PacManGameSound.GHOST_RETURNING_HOME);
+			sounds.stop(PacManGameSound.GHOST_RETURNING);
 		}
 	}
 
