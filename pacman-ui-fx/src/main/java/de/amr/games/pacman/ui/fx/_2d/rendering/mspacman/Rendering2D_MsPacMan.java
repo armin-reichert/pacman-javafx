@@ -190,7 +190,9 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 		Map<Direction, TimedSequence<Rectangle2D>> munchingAnimations = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = dirIndex(dir);
-			var munching = TimedSequence.of(rhs(1, d), rhs(2, d), rhs(0, d)).frameDuration(4).endless();
+			Rectangle2D wide_open = rhs(0, d), open = rhs(1, d), closed = rhs(2, d);
+			var munching = TimedSequence.of(open, open, wide_open, wide_open, open, open, closed, closed, closed)
+					.frameDuration(1).endless();
 			munchingAnimations.put(dir, munching);
 		}
 		return munchingAnimations;
@@ -206,7 +208,7 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 		EnumMap<Direction, TimedSequence<Rectangle2D>> kickingAnimations = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = dirIndex(dir);
-			var kicking = TimedSequence.of(rhs(2 * d, 4 + ghostID), rhs(2 * d + 1, 4 + ghostID)).frameDuration(4).endless();
+			var kicking = TimedSequence.of(rhs(2 * d, 4 + ghostID), rhs(2 * d + 1, 4 + ghostID)).frameDuration(8).endless();
 			kickingAnimations.put(dir, kicking);
 		}
 		return kickingAnimations;
@@ -214,7 +216,7 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 
 	@Override
 	public TimedSequence<Rectangle2D> createGhostFrightenedAnimation() {
-		return TimedSequence.of(rhs(8, 4), rhs(9, 4)).frameDuration(20).endless();
+		return TimedSequence.of(rhs(8, 4), rhs(9, 4)).frameDuration(8).endless();
 	}
 
 	@Override
