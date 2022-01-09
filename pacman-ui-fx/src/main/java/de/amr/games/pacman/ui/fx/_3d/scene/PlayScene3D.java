@@ -95,7 +95,7 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	private static Transition createEnergizerAnimation(Node energizer) {
-		var animation = new ScaleTransition(Duration.seconds(0.25), energizer);
+		var animation = new ScaleTransition(Duration.seconds(0.16), energizer);
 		animation.setAutoReverse(true);
 		animation.setCycleCount(Transition.INDEFINITE);
 		animation.setFromX(1.0);
@@ -154,15 +154,13 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	private Rendering2D rendering2D() {
-		return gameController.gameVariant() == GameVariant.MS_PACMAN ? ScenesMsPacMan.RENDERING
-				: ScenesPacMan.RENDERING;
+		return gameController.gameVariant() == GameVariant.MS_PACMAN ? ScenesMsPacMan.RENDERING : ScenesPacMan.RENDERING;
 	}
 
 	private void buildMaze(PacManGameWorld world, int mazeNumber) {
 		buildMazeStructure(world, mazeNumber);
 		maze3D.buildFood(world, rendering2D().getFoodColor(mazeNumber));
-		energizerAnimations = energizerNodes(world).map(PlayScene3D::createEnergizerAnimation)
-				.collect(Collectors.toList());
+		energizerAnimations = energizerNodes(world).map(PlayScene3D::createEnergizerAnimation).collect(Collectors.toList());
 	}
 
 	private void buildMazeStructure(PacManGameWorld world, int mazeNumber) {
@@ -468,8 +466,7 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	private void playDoorAnimation() {
-		boolean open = maze3D.doors()
-				.anyMatch(door -> game.ghosts().anyMatch(ghost -> ghost.tile().equals(tile(door))));
+		boolean open = maze3D.doors().anyMatch(door -> game.ghosts().anyMatch(ghost -> ghost.tile().equals(tile(door))));
 		maze3D.showDoorsOpen(open);
 	}
 }
