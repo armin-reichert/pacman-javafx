@@ -245,7 +245,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI, DefaultPacManGameEvent
 
 		case L:
 			game.player.lives += 3;
-			showFlashMessage(2, String.format("3 more lives"));
+			showFlashMessage(2, "You have %d lives", game.player.lives);
 			break;
 
 		case N:
@@ -290,8 +290,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI, DefaultPacManGameEvent
 			if (currentGameScene instanceof PlayScene3D) {
 				PlayScene3D playScene3D = (PlayScene3D) currentGameScene;
 				Env.nextPerspective();
-				String cameraType = Env.MESSAGES
-						.getString(playScene3D.currentCameraController().getClass().getSimpleName());
+				String cameraType = Env.MESSAGES.getString(playScene3D.currentCameraController().getClass().getSimpleName());
 				String message = Env.message("camera_perspective", cameraType);
 				showFlashMessage(1, message);
 			}
