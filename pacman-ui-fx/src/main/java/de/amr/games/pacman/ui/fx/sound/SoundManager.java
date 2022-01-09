@@ -28,24 +28,25 @@ import static de.amr.games.pacman.lib.Logging.log;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 import de.amr.games.pacman.ui.PacManGameSound;
 import javafx.scene.media.AudioClip;
 
 /**
- * Sound manager for Pac-Man game variants.
+ * Sound manager.
+ * <p>
+ * TODO: I have no clue how to handle sound "professionally"
  * 
  * @author Armin Reichert
  */
 public class SoundManager {
 
-	private final Function<PacManGameSound, URL> fnSoundURL;
+	private final Map<PacManGameSound, URL> soundURL;
 	private final Map<PacManGameSound, AudioClip> clipCache = new HashMap<>();
 	private boolean muted;
 
-	public SoundManager(Function<PacManGameSound, URL> fnSoundURL) {
-		this.fnSoundURL = fnSoundURL;
+	public SoundManager(Map<PacManGameSound, URL> soundURL) {
+		this.soundURL = soundURL;
 	}
 
 	public void setMuted(boolean muted) {
@@ -54,7 +55,7 @@ public class SoundManager {
 
 	public AudioClip getClip(PacManGameSound sound) {
 		if (!clipCache.containsKey(sound)) {
-			AudioClip clip = new AudioClip(fnSoundURL.apply(sound).toExternalForm());
+			AudioClip clip = new AudioClip(soundURL.get(sound).toExternalForm());
 			clipCache.put(sound, clip);
 		}
 		return clipCache.get(sound);
