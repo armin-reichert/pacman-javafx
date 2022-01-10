@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
+import static de.amr.games.pacman.ui.fx.util.Animations.pause;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,11 +51,9 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.Animations;
-import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
-import javafx.util.Duration;
 
 /**
  * 2D scene displaying the maze and the game play.
@@ -312,9 +311,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 	}
 
 	private void createLevelCompleteAnimation() {
-		levelCompleteAnimation = new SequentialTransition(maze2D.getFlashingAnimation(),
-				new PauseTransition(Duration.seconds(1)));
-		levelCompleteAnimation.setDelay(Duration.seconds(2));
+		levelCompleteAnimation = new SequentialTransition(pause(2), maze2D.getFlashingAnimation(), pause(1));
 		levelCompleteAnimation.setOnFinished(e -> gameController.stateTimer().expire());
 	}
 }
