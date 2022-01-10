@@ -80,7 +80,15 @@ public class Ghost2D implements Renderable2D {
 		} else if (ghost.is(DEAD) || ghost.is(ENTERING_HOUSE)) {
 			currentSprite = returningHomeAnimations.get(dir).animate();
 		} else if (ghost.is(FRIGHTENED)) {
-			currentSprite = flashingAnimation.isRunning() ? flashingAnimation.animate() : frightenedAnimation.animate();
+			if (flashingAnimation.isRunning()) {
+				currentSprite = flashingAnimation.animate();
+			} else {
+				if (ghost.velocity.equals(V2d.NULL)) {
+					currentSprite = frightenedAnimation.frame();
+				} else {
+					currentSprite = frightenedAnimation.animate();
+				}
+			}
 		} else if (ghost.is(LOCKED) && looksFrightened) {
 			currentSprite = frightenedAnimation.animate();
 		} else if (ghost.velocity.equals(V2d.NULL)) {

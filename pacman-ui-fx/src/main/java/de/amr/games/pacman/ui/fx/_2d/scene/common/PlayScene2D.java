@@ -39,6 +39,7 @@ import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Bonus2D;
@@ -200,7 +201,10 @@ public class PlayScene2D extends AbstractGameScene2D {
 			sounds.stopAll();
 			ghosts2D.forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSequence::reset));
 			player2D.dyingAnimation.restart();
-			Animations.afterSeconds(2, () -> sounds.play(PacManGameSound.PACMAN_DEATH)).play();
+			Animations.afterSeconds(2, () -> {
+				game.ghosts().forEach(Ghost::hide);
+				sounds.play(PacManGameSound.PACMAN_DEATH);
+			}).play();
 			gameController.stateTimer().resetSeconds(4);
 			gameController.stateTimer().start();
 		}

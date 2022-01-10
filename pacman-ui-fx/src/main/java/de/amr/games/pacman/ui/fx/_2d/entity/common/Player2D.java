@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.Pac;
@@ -57,6 +58,7 @@ public class Player2D implements Renderable2D {
 	public void reset() {
 		munchingAnimations = rendering.createPlayerMunchingAnimations();
 		dyingAnimation = rendering.createPlayerDyingAnimation();
+		dyingAnimation.delay(TickTimer.sec_to_ticks(2));
 		currentSprite = munchingAnimations.get(player.dir()).frame();
 	}
 
