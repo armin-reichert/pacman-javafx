@@ -50,6 +50,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.Animations;
+import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -68,7 +69,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 	private Player2D player2D;
 	private List<Ghost2D> ghosts2D;
 	private Bonus2D bonus2D;
-	private SequentialTransition levelCompleteAnimation;
 
 	public PlayScene2D(int tilesX, int tilesY, Rendering2D rendering, SoundManager sounds) {
 		super(tilesX, tilesY, rendering, sounds);
@@ -106,7 +106,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 		bonus2D = new Bonus2D(game.bonus, rendering);
 
 		game.player.powerTimer.addEventListener(this::handleGhostsFlashing);
-		createLevelCompleteAnimation();
 	}
 
 	@Override
@@ -243,7 +242,9 @@ public class PlayScene2D extends AbstractGameScene2D {
 			game.hideGhosts();
 			gameController.stateTimer().reset();
 			maze2D.getEnergizerAnimation().reset(); // energizers might still exist if "next level" cheat has been used
-			createLevelCompleteAnimation();
+
+			Animation levelCompleteAnimation = new SequentialTransition(pause(2), maze2D.getFlashingAnimation(), pause(1));
+			levelCompleteAnimation.setOnFinished(event -> gameController.stateTimer().expire());
 			levelCompleteAnimation.play();
 		}
 
@@ -307,10 +308,5 @@ public class PlayScene2D extends AbstractGameScene2D {
 			gc.setFill(Color.YELLOW);
 			gc.fillText("READY!", t(11), t(21));
 		}
-	}
-
-	private void createLevelCompleteAnimation() {
-		levelCompleteAnimation = new SequentialTransition(pause(2), maze2D.getFlashingAnimation(), pause(1));
-		levelCompleteAnimation.setOnFinished(e -> gameController.stateTimer().expire());
 	}
 }
