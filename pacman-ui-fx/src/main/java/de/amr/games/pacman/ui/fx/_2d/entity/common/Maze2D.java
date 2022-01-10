@@ -26,9 +26,6 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -53,7 +50,6 @@ public class Maze2D implements Renderable2D {
 	private final Timeline flashingAnimation;
 
 	private GameModel game;
-	private List<Energizer2D> energizers2D;
 	private boolean flashing;
 
 	/**
@@ -74,13 +70,6 @@ public class Maze2D implements Renderable2D {
 
 	public void setGame(GameModel game) {
 		this.game = game;
-		energizers2D = game.world.energizerTiles().map(energizerTile -> {
-			Energizer2D energizer2D = new Energizer2D();
-			energizer2D.x = t(energizerTile.x);
-			energizer2D.y = t(energizerTile.y);
-			energizer2D.animation = energizerAnimation;
-			return energizer2D;
-		}).collect(Collectors.toList());
 		flashingAnimation.setCycleCount(2 * game.numFlashes);
 	}
 
@@ -106,8 +95,13 @@ public class Maze2D implements Renderable2D {
 			}
 		} else {
 			rendering.renderMazeFull(g, game.mazeNumber, x, y);
-			energizers2D.forEach(energizer2D -> energizer2D.render(g));
 			energizerAnimation.animate();
+			game.world.energizerTiles().forEach(tile -> {
+				if (!energizerAnimation.frame()) {
+					g.setFill(Color.BLACK);
+					g.fillRect(t(tile.x), t(tile.y), TS, TS);
+				}
+			});
 			g.setFill(Color.BLACK);
 			game.world.tiles().filter(game::isFoodEaten).forEach(emptyFoodTile -> {
 				g.fillRect(t(emptyFoodTile.x), t(emptyFoodTile.y), TS, TS);
