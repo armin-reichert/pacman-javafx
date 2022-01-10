@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -41,24 +42,27 @@ public class LivesCounter2D implements Renderable2D {
 	private final Rendering2D rendering;
 	private final int maxLivesDisplayed = 5;
 
-	public int x;
-	public int y;
-	public int lives;
+	private int x;
+	private int y;
+	private GameModel game;
 
-	public LivesCounter2D(Rendering2D rendering) {
+	public LivesCounter2D(int x, int y, GameModel game, Rendering2D rendering) {
+		this.x = x;
+		this.y = y;
+		this.game = game;
 		this.rendering = rendering;
 	}
 
 	@Override
 	public void render(GraphicsContext g) {
 		var sprite = rendering.getLifeSprite();
-		for (int i = 0; i < Math.min(lives, maxLivesDisplayed); ++i) {
+		for (int i = 0; i < Math.min(game.player.lives, maxLivesDisplayed); ++i) {
 			rendering.renderSprite(g, sprite, x + t(2 * i), y);
 		}
-		if (lives > maxLivesDisplayed) {
+		if (game.player.lives > maxLivesDisplayed) {
 			g.setFill(Color.YELLOW);
 			g.setFont(Font.font("Sans Serif", FontWeight.BOLD, 6));
-			g.fillText("+" + (lives - maxLivesDisplayed), x + t(10), y + t(1) - 2);
+			g.fillText("+" + (game.player.lives - maxLivesDisplayed), x + t(10), y + t(1) - 2);
 		}
 	}
 }

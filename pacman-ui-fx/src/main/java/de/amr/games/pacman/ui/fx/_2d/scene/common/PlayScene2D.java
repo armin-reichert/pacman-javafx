@@ -80,9 +80,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		maze2D = new Maze2D(0, t(3), game, rendering);
 
-		livesCounter2D = new LivesCounter2D(rendering);
-		livesCounter2D.x = t(2);
-		livesCounter2D.y = t(34);
+		livesCounter2D = new LivesCounter2D(t(2), t(34), game, rendering);
 
 		score2D = new GameScore2D(rendering);
 		score2D.title = "SCORE";
@@ -115,7 +113,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void doUpdate() {
-		livesCounter2D.lives = game.player.lives;
 		sounds.setMuted(gameController.isAttractMode());
 		if (gameController.currentStateID == PacManGameState.HUNTING) {
 			// ensure animations are running when switching between 2D and 3D
