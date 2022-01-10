@@ -46,6 +46,8 @@ public class Player2D implements Renderable2D {
 	public Map<Direction, TimedSequence<Rectangle2D>> munchingAnimations;
 	public TimedSequence<Rectangle2D> dyingAnimation;
 
+	private Rectangle2D currentSprite;
+
 	public Player2D(Pac player, Rendering2D rendering) {
 		this.player = player;
 		this.rendering = rendering;
@@ -56,21 +58,23 @@ public class Player2D implements Renderable2D {
 	public void reset() {
 		munchingAnimations.values().forEach(TimedSequence::reset);
 		dyingAnimation.reset();
+		currentSprite = munchingAnimations.get(player.dir()).frame();
 	}
 
 	@Override
 	public void render(GraphicsContext g) {
-		rendering.renderEntity(g, player, currentSprite());
-	}
-
-	private Rectangle2D currentSprite() {
 		final Direction dir = player.dir();
 		if (player.dead) {
-			return dyingAnimation.hasStarted() ? dyingAnimation.animate() : munchingAnimations.get(dir).frame();
+			if (dyingAnimation.hasStarted()) {
+				dyingAnimation.animate();
+			}
+			currentSprite = dyingAnimation.frame();
+		} else {
+			if (!player.velocity.equals(V2d.NULL) && !player.stuck) {
+				munchingAnimations.get(dir).animate();
+			}
+			currentSprite = munchingAnimations.get(dir).frame();
 		}
-		if (!player.velocity.equals(V2d.NULL) && !player.stuck) {
-			munchingAnimations.get(dir).animate();
-		}
-		return munchingAnimations.get(dir).frame();
+		rendering.renderEntity(g, player, currentSprite);
 	}
 }
