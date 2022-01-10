@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import de.amr.games.pacman.lib.TimedSequence;
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.animation.Animation.Status;
@@ -48,7 +47,8 @@ import javafx.util.Duration;
 public class Maze2D implements Renderable2D {
 
 	private final Rendering2D rendering;
-	private final V2i leftUpperTile;
+	private final int x;
+	private final int y;
 	private final TimedSequence<Boolean> energizerAnimation;
 	private final Timeline flashingAnimation;
 
@@ -56,15 +56,23 @@ public class Maze2D implements Renderable2D {
 	private List<Energizer2D> energizers2D;
 	private boolean flashing;
 
-	public Maze2D(GameModel game, V2i leftUpperTile, Rendering2D rendering) {
-		this.leftUpperTile = leftUpperTile;
+	/**
+	 * 
+	 * @param x         x position (in pixels)
+	 * @param y         y position (in pixels)
+	 * @param game      the game model
+	 * @param rendering the 2D rendering
+	 */
+	public Maze2D(int x, int y, GameModel game, Rendering2D rendering) {
+		this.x = x;
+		this.y = y;
 		this.rendering = rendering;
 		energizerAnimation = TimedSequence.pulse().frameDuration(10);
 		flashingAnimation = new Timeline(new KeyFrame(Duration.millis(150), e -> flashing = !flashing));
-		onGameChanged(game);
+		setGame(game);
 	}
 
-	public void onGameChanged(GameModel game) {
+	public void setGame(GameModel game) {
 		this.game = game;
 		energizers2D = game.world.energizerTiles().map(energizerTile -> {
 			Energizer2D energizer2D = new Energizer2D();
@@ -90,7 +98,6 @@ public class Maze2D implements Renderable2D {
 
 	@Override
 	public void render(GraphicsContext g) {
-		int x = t(leftUpperTile.x), y = t(leftUpperTile.y);
 		if (flashingAnimation.getStatus() == Status.RUNNING) {
 			if (flashing) {
 				rendering.renderMazeFlashing(g, game.mazeNumber, x, y);

@@ -80,7 +80,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 	public void init(PacManGameController gameController) {
 		super.init(gameController);
 
-		maze2D = new Maze2D(game, new V2i(0, 3), rendering);
+		maze2D = new Maze2D(0, t(3), game, rendering);
 
 		livesCounter2D = new LivesCounter2D(rendering);
 		livesCounter2D.x = t(2);
@@ -156,7 +156,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void onPlayerGainsPower(PacManGameEvent e) {
-		e.game.ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
+		game.ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
 			Ghost2D ghost2D = ghosts2D.get(ghost.id);
 			ghost2D.flashingAnimation.reset();
 			ghost2D.frightenedAnimation.restart();
@@ -234,7 +234,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// enter GHOST_DYING
 		else if (e.newGameState == PacManGameState.GHOST_DYING) {
-			e.game.player.hide();
+			game.player.hide();
 			sounds.play(PacManGameSound.GHOST_EATEN);
 		}
 
@@ -251,7 +251,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// enter LEVEL_STARTING
 		else if (e.newGameState == PacManGameState.LEVEL_STARTING) {
-			maze2D.onGameChanged(e.game);
+			maze2D.setGame(game);
 			gameController.stateTimer().reset(TickTimer.sec_to_ticks(1));
 			gameController.stateTimer().start();
 		}
@@ -265,7 +265,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// exit GHOST_DYING
 		if (e.oldGameState == PacManGameState.GHOST_DYING) {
-			e.game.player.show();
+			game.player.show();
 		}
 	}
 
