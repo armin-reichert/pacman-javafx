@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.mspacman.Intermission3Controller;
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
@@ -46,8 +45,6 @@ import de.amr.games.pacman.ui.fx.scene.ScenesMsPacMan;
  * @author Armin Reichert
  */
 public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
-
-	private static final V2i LEVEL_COUNTER_POS = new V2i(25, 34);
 
 	private class SceneController extends Intermission3Controller {
 
@@ -99,7 +96,7 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 
 	@Override
 	public void doRender() {
-		renderLevelCounter(LEVEL_COUNTER_POS);
+		renderLevelCounter();
 		flap2D.render(gc);
 		msPacMan2D.render(gc);
 		pacMan2D.render(gc);

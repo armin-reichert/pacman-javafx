@@ -23,12 +23,11 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
-import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
 import java.util.OptionalDouble;
 
-import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -51,6 +50,9 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	protected final double unscaledWidth;
 	protected final double unscaledHeight;
 	protected final double aspectRatio;
+
+	protected final int levelCounterRightX = t(25);
+	protected final int levelCounterRightY = t(34);
 
 	protected final Rendering2D rendering;
 	protected final SoundManager sounds;
@@ -113,6 +115,16 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 		gc.setFill(Color.BLACK);
 		gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
 		doRender();
+		if (Env.$tilesVisible.get()) {
+			double lineWidth = 0.5;
+			gc.setFill(Color.GRAY);
+			for (int row = 0; row < 36; ++row) {
+				gc.fillRect(0, t(row), t(28), lineWidth);
+			}
+			for (int col = 0; col < 28; ++col) {
+				gc.fillRect(t(col), 0, lineWidth, t(36));
+			}
+		}
 	}
 
 	/**
@@ -126,12 +138,10 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	protected abstract void doRender();
 
 	/**
-	 * this is used in play scene and intermission scenes, so define it here
-	 * 
-	 * @param tileRight right tile position
+	 * This is used in play scene and intermission scenes, so define it here
 	 */
-	protected void renderLevelCounter(V2i tileRight) {
-		int x = tileRight.x * TS, y = tileRight.y * TS;
+	protected void renderLevelCounter() {
+		int x = levelCounterRightX, y = levelCounterRightY;
 		int firstLevel = Math.max(1, game.levelNumber - 6);
 		for (int level = firstLevel; level <= game.levelNumber; ++level) {
 			Rectangle2D r = rendering.getSymbolSprites().get(game.levelSymbol(level));

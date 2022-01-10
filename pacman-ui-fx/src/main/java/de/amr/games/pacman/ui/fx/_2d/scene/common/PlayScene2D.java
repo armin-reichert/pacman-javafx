@@ -39,7 +39,6 @@ import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.lib.TimedSequence;
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Bonus2D;
@@ -282,12 +281,12 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void doRender() {
-		if (!gameController.isAttractMode()) {
+		if (gameController.isAttractMode()) {
+			score2D.showPoints = false;
+		} else {
 			score2D.showPoints = true;
 			livesCounter2D.render(gc);
-			renderLevelCounter(new V2i(25, 34));
-		} else {
-			score2D.showPoints = false;
+			renderLevelCounter();
 		}
 		renderGameState();
 		game.ghosts(GhostState.LOCKED)

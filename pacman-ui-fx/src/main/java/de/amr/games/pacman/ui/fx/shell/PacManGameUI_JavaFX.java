@@ -343,6 +343,10 @@ public class PacManGameUI_JavaFX implements PacManGameUI, DefaultPacManGameEvent
 			Env.$axesVisible.set(!Env.$axesVisible.get());
 			break;
 
+		case Y:
+			Env.$tilesVisible.set(!Env.$tilesVisible.get());
+			break;
+
 		case DIGIT1:
 			if (gameController.currentStateID == PacManGameState.INTRO) {
 				showFlashMessage(1, "Intermission Scene Test");

@@ -28,7 +28,6 @@ import de.amr.games.pacman.controller.pacman.Intermission2Controller;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.lib.V2d;
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
@@ -45,8 +44,6 @@ import javafx.geometry.Rectangle2D;
  * @author Armin Reichert
  */
 public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
-
-	private static final V2i LEVEL_COUNTER_POS = new V2i(25, 34);
 
 	class SceneController extends Intermission2Controller {
 
@@ -93,7 +90,7 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 	@Override
 	public void doRender() {
-		renderLevelCounter(LEVEL_COUNTER_POS);
+		renderLevelCounter();
 		pacMan2D.render(gc);
 		nail2D.render(gc);
 		if (sceneController.nailDistance() < 0) {
