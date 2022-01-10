@@ -35,7 +35,6 @@ import de.amr.games.pacman.controller.mspacman.IntroController.IntroState;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.Ghost;
-import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
@@ -53,8 +52,6 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 
 	private Image midwayLogo = new Image(getClass().getResourceAsStream("/mspacman/graphics/midway.png"));
 	private IntroController sceneController;
-	private GameScore2D score2D;
-	private GameScore2D hiscore2D;
 	private Player2D msPacMan2D;
 	private List<Ghost2D> ghosts2D;
 	private TickTimer boardAnimationTimer = new TickTimer("boardAnimation-timer");
@@ -70,20 +67,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 		sceneController = new IntroController(gameController);
 		sceneController.init();
 
-		score2D = new GameScore2D(rendering);
-		score2D.title = "SCORE";
-		score2D.x = t(1);
-		score2D.y = t(1);
-		score2D.levelSupplier = () -> game.levelNumber;
-		score2D.pointsSupplier = () -> game.score;
 		score2D.showPoints = false;
-
-		hiscore2D = new GameScore2D(rendering);
-		hiscore2D.title = "HIGH SCORE";
-		hiscore2D.x = t(16);
-		hiscore2D.y = t(1);
-		hiscore2D.levelSupplier = () -> game.hiscoreLevel;
-		hiscore2D.pointsSupplier = () -> game.hiscorePoints;
 
 		msPacMan2D = new Player2D(sceneController.msPacMan, rendering);
 		msPacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
@@ -108,7 +92,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 	public void doRender() {
 		IntroState state = sceneController.currentStateID;
 		score2D.render(gc);
-		hiscore2D.render(gc);
+		highScore2D.render(gc);
 		gc.setFont(rendering.getScoreFont());
 		gc.setFill(Color.ORANGE);
 		gc.fillText("\"MS PAC-MAN\"", t(sceneController.tileTitle.x), t(sceneController.tileTitle.y));

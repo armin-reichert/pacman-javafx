@@ -25,8 +25,7 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
-import java.util.function.IntSupplier;
-
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -38,18 +37,24 @@ import javafx.scene.paint.Color;
  */
 public class GameScore2D implements Renderable2D {
 
-	private final Rendering2D rendering;
-
-	public int x;
-	public int y;
-	public IntSupplier pointsSupplier;
-	public IntSupplier levelSupplier;
-	public Color titleColor = Color.WHITE;
-	public Color pointsColor = Color.YELLOW;
-	public String title = "SCORE";
 	public boolean showPoints = true;
 
-	public GameScore2D(Rendering2D rendering) {
+	private final GameModel game;
+	private final Rendering2D rendering;
+	private final boolean showHighscore;
+
+	private int x;
+	private int y;
+	private String title = "SCORE";
+	private Color titleColor = Color.WHITE;
+	private Color pointsColor = Color.YELLOW;
+
+	public GameScore2D(String title, int x, int y, GameModel game, boolean showHighscore, Rendering2D rendering) {
+		this.title = title;
+		this.x = x;
+		this.y = y;
+		this.game = game;
+		this.showHighscore = showHighscore;
 		this.rendering = rendering;
 	}
 
@@ -65,9 +70,9 @@ public class GameScore2D implements Renderable2D {
 		if (showPoints) {
 			g.setFill(pointsColor);
 			g.translate(0, t(1));
-			g.fillText(String.format("%08d", pointsSupplier.getAsInt()), 0, 0);
+			g.fillText(String.format("%08d", showHighscore ? game.hiscorePoints : game.score), 0, 0);
 			g.setFill(Color.LIGHTGRAY);
-			g.fillText(String.format("L%02d", levelSupplier.getAsInt()), t(8), 0);
+			g.fillText(String.format("L%02d", showHighscore ? game.hiscoreLevel : game.levelNumber), t(8), 0);
 		}
 		g.restore();
 	}

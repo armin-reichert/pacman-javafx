@@ -42,7 +42,6 @@ import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Bonus2D;
-import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Maze2D;
@@ -63,8 +62,6 @@ import javafx.scene.paint.Color;
 public class PlayScene2D extends AbstractGameScene2D {
 
 	private Maze2D maze2D;
-	private GameScore2D score2D;
-	private GameScore2D hiscore2D;
 	private LivesCounter2D livesCounter2D;
 	private Player2D player2D;
 	private List<Ghost2D> ghosts2D;
@@ -79,30 +76,11 @@ public class PlayScene2D extends AbstractGameScene2D {
 		super.init(gameController);
 
 		maze2D = new Maze2D(0, t(3), game, rendering);
-
 		livesCounter2D = new LivesCounter2D(t(2), t(34), game, rendering);
-
-		score2D = new GameScore2D(rendering);
-		score2D.title = "SCORE";
-		score2D.x = t(1);
-		score2D.y = t(1);
-		score2D.levelSupplier = () -> game.levelNumber;
-		score2D.pointsSupplier = () -> game.score;
-
-		hiscore2D = new GameScore2D(rendering);
-		hiscore2D.title = "HIGH SCORE";
-		hiscore2D.x = t(16);
-		hiscore2D.y = t(1);
-		hiscore2D.pointsSupplier = () -> game.hiscorePoints;
-		hiscore2D.levelSupplier = () -> game.hiscoreLevel;
-
 		player2D = new Player2D(game.player, rendering);
 		player2D.dyingAnimation.delay(120).onStart(game::hideGhosts);
-
 		ghosts2D = game.ghosts().map(ghost -> new Ghost2D(ghost, rendering)).collect(Collectors.toList());
-
 		bonus2D = new Bonus2D(game.bonus, rendering);
-
 		game.player.powerTimer.addEventListener(this::handleGhostsFlashing);
 	}
 
@@ -289,7 +267,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		renderGameState();
 		game.ghosts(GhostState.LOCKED)
 				.forEach(ghost -> ghosts2D.get(ghost.id).setLooksFrightened(game.player.powerTimer.isRunning()));
-		Stream.concat(Stream.of(score2D, hiscore2D, maze2D, bonus2D, player2D), ghosts2D.stream())
+		Stream.concat(Stream.of(score2D, highScore2D, maze2D, bonus2D, player2D), ghosts2D.stream())
 				.forEach(r -> r.render(gc));
 	}
 

@@ -27,7 +27,9 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
 import java.util.OptionalDouble;
 
+import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.ui.fx.Env;
+import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -53,6 +55,9 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 
 	protected final int levelCounterRightX = t(25);
 	protected final int levelCounterRightY = t(34);
+
+	protected GameScore2D score2D;
+	protected GameScore2D highScore2D;
 
 	protected final Rendering2D rendering;
 	protected final SoundManager sounds;
@@ -108,13 +113,28 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	}
 
 	@Override
+	public void init(PacManGameController gameController) {
+		super.init(gameController);
+		score2D = new GameScore2D("SCORE", t(1), t(1), game, false, rendering);
+		highScore2D = new GameScore2D("HIGH SCORE", t(16), t(1), game, true, rendering);
+	}
+
+	@Override
 	public final void update() {
 		if (gameController != null) {
 			doUpdate();
 		}
+		drawBackground();
+		doRender();
+		drawTileBorders();
+	}
+
+	private void drawBackground() {
 		gc.setFill(Color.BLACK);
 		gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
-		doRender();
+	}
+
+	private void drawTileBorders() {
 		if (Env.$tilesVisible.get()) {
 			double lineWidth = 0.5;
 			gc.setFill(Color.GRAY);

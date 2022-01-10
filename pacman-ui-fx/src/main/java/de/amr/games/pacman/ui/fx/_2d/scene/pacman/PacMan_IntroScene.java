@@ -37,7 +37,6 @@ import de.amr.games.pacman.controller.pacman.IntroController;
 import de.amr.games.pacman.controller.pacman.IntroController.GhostPortrait;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
@@ -56,8 +55,6 @@ import javafx.scene.text.Font;
 public class PacMan_IntroScene extends AbstractGameScene2D {
 
 	private IntroController sceneController;
-	private GameScore2D score2D;
-	private GameScore2D hiscore2D;
 	private Player2D pacMan2D;
 	private List<Ghost2D> ghosts2D;
 	private List<Ghost2D> gallery2D;
@@ -73,20 +70,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		sceneController = new IntroController(gameController);
 		sceneController.init();
 
-		score2D = new GameScore2D(rendering);
-		score2D.title = "SCORE";
-		score2D.x = t(1);
-		score2D.y = t(1);
-		score2D.levelSupplier = () -> game.levelNumber;
-		score2D.pointsSupplier = () -> game.score;
 		score2D.showPoints = false;
-
-		hiscore2D = new GameScore2D(rendering);
-		hiscore2D.title = "HIGH SCORE";
-		hiscore2D.x = t(16);
-		hiscore2D.y = t(1);
-		hiscore2D.levelSupplier = () -> game.hiscoreLevel;
-		hiscore2D.pointsSupplier = () -> game.hiscorePoints;
 
 		pacMan2D = new Player2D(sceneController.pacMan, rendering);
 		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
@@ -112,7 +96,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	@Override
 	public void doRender() {
 		score2D.render(gc);
-		hiscore2D.render(gc);
+		highScore2D.render(gc);
 		switch (sceneController.currentStateID) {
 		case BEGIN:
 		case PRESENTING_GHOSTS:
