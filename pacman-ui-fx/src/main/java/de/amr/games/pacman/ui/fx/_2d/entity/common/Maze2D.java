@@ -95,17 +95,11 @@ public class Maze2D implements Renderable2D {
 			}
 		} else {
 			rendering.renderMazeFull(g, game.mazeNumber, x, y);
-			energizerAnimation.animate();
-			game.world.energizerTiles().forEach(tile -> {
-				if (!energizerAnimation.frame()) {
-					g.setFill(Color.BLACK);
-					g.fillRect(t(tile.x), t(tile.y), TS, TS);
-				}
-			});
 			g.setFill(Color.BLACK);
-			game.world.tiles().filter(game::isFoodEaten).forEach(emptyFoodTile -> {
-				g.fillRect(t(emptyFoodTile.x), t(emptyFoodTile.y), TS, TS);
-			});
+			if (!energizerAnimation.animate()) {
+				game.world.energizerTiles().forEach(tile -> g.fillRect(t(tile.x), t(tile.y), TS, TS));
+			}
+			game.world.tiles().filter(game::isFoodEaten).forEach(tile -> g.fillRect(t(tile.x), t(tile.y), TS, TS));
 		}
 	}
 }
