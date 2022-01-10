@@ -457,12 +457,12 @@ public class PlayScene3D extends AbstractGameScene {
 
 	private void playAnimationLevelStarting() {
 		gameController.getUI().showFlashMessage(1, Env.message("level_starting", game.levelNumber));
-		var hideGuys = afterSeconds(1, () -> {
+		var showGuys = afterSeconds(1, () -> {
 			game.player.show();
 			game.showGhosts();
 		});
 		var startLevel = afterSeconds(3, () -> gameController.stateTimer().expire());
-		new SequentialTransition(hideGuys, startLevel).play();
+		new SequentialTransition(showGuys, startLevel).play();
 	}
 
 	private void playDoorAnimation() {
