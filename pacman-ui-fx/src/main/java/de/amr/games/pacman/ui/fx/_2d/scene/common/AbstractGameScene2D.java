@@ -58,7 +58,7 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	protected SubScene subSceneFX;
 	protected GraphicsContext gc;
 
-	public AbstractGameScene2D(Rendering2D rendering, SoundManager sounds, int tilesX, int tilesY) {
+	public AbstractGameScene2D(int tilesX, int tilesY, Rendering2D rendering, SoundManager sounds) {
 		this.unscaledWidth = t(tilesX);
 		this.unscaledHeight = t(tilesY);
 		this.aspectRatio = unscaledWidth / unscaledHeight;

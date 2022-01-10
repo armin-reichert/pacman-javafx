@@ -75,7 +75,7 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 	private Heart2D heart2D;
 
 	public MsPacMan_IntermissionScene1() {
-		super(ScenesMsPacMan.RENDERING, ScenesMsPacMan.SOUNDS, 28, 36);
+		super(28, 36, ScenesMsPacMan.RENDERING, ScenesMsPacMan.SOUNDS);
 	}
 
 	@Override

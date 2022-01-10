@@ -35,7 +35,6 @@ import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
-import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.lib.TimedSequence;
@@ -58,7 +57,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 /**
- * 2D scene displaying the maze and the game play for both, Pac-Man and Ms. Pac-Man games.
+ * 2D scene displaying the maze and the game play.
  * 
  * @author Armin Reichert
  */
@@ -74,7 +73,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 	private SequentialTransition levelCompleteAnimation;
 
 	public PlayScene2D(int tilesX, int tilesY, Rendering2D rendering, SoundManager sounds) {
-		super(rendering, sounds, tilesX, tilesY);
+		super(tilesX, tilesY, rendering, sounds);
 	}
 
 	@Override
@@ -133,7 +132,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 			if (munching.isPlaying()) {
 				if (game.player.starvingTicks > 10) {
 					sounds.stop(PacManGameSound.PACMAN_MUNCH);
-					log("Munching sound clip %s stopped", munching);
+					log("Munching sound stopped");
 				}
 			}
 		}
@@ -170,7 +169,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
 		if (!munching.isPlaying()) {
 			sounds.loop(PacManGameSound.PACMAN_MUNCH, Integer.MAX_VALUE);
-			Logging.log("Munching sound clip %s started", munching);
+			log("Munching sound started");
 		}
 	}
 
