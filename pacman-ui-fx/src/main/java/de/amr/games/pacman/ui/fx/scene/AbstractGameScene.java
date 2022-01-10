@@ -79,6 +79,13 @@ public abstract class AbstractGameScene implements DefaultPacManGameEventHandler
 	public abstract void update();
 
 	/**
+	 * Forces the timer of the current state to expire.
+	 */
+	public void continueGame() {
+		gameController.stateTimer().expire();
+	}
+
+	/**
 	 * Called when the scene ends.
 	 */
 	public void end() {

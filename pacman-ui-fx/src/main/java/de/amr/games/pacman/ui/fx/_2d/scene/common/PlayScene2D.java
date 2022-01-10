@@ -224,7 +224,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 			maze2D.getEnergizerAnimation().reset(); // energizers might still exist if "next level" cheat has been used
 
 			Animation levelCompleteAnimation = new SequentialTransition(pause(2), maze2D.getFlashingAnimation(), pause(1));
-			levelCompleteAnimation.setOnFinished(event -> gameController.stateTimer().expire());
+			levelCompleteAnimation.setOnFinished(event -> continueGame());
 			levelCompleteAnimation.play();
 		}
 

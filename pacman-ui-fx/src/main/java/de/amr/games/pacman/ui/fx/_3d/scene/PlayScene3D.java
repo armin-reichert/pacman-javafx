@@ -438,7 +438,7 @@ public class PlayScene3D extends AbstractGameScene {
 
 		var animation = new SequentialTransition( //
 				pause(0.25), hideGhosts, impale, new ParallelTransition(playSound, spin, shrink), pause(2));
-		animation.setOnFinished(e -> gameController.stateTimer().expire());
+		animation.setOnFinished(e -> continueGame());
 		animation.play();
 	}
 
@@ -451,7 +451,7 @@ public class PlayScene3D extends AbstractGameScene {
 			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game.levelNumber);
 			gameController.getUI().showFlashMessage(2, message);
 		});
-		var quitLevel = afterSeconds(2, () -> gameController.stateTimer().expire());
+		var quitLevel = afterSeconds(2, () -> continueGame());
 		new SequentialTransition(hideGuysAndShowMessage, quitLevel).play();
 	}
 
@@ -461,7 +461,7 @@ public class PlayScene3D extends AbstractGameScene {
 			game.player.show();
 			game.showGhosts();
 		});
-		var startLevel = afterSeconds(3, () -> gameController.stateTimer().expire());
+		var startLevel = afterSeconds(3, () -> continueGame());
 		new SequentialTransition(showGuys, startLevel).play();
 	}
 
