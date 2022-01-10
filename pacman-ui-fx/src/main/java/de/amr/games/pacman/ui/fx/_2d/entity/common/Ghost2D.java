@@ -52,14 +52,20 @@ public class Ghost2D implements Renderable2D {
 	public TimedSequence<Rectangle2D> flashingAnimation;
 	public TimedSequence<Rectangle2D> frightenedAnimation;
 	private boolean looksFrightened;
+	private Rectangle2D currentSprite;
 
 	public Ghost2D(Ghost ghost, Rendering2D rendering) {
 		this.ghost = ghost;
 		this.rendering = rendering;
+		reset();
+	}
+
+	public void reset() {
 		flashingAnimation = rendering.createGhostFlashingAnimation();
 		frightenedAnimation = rendering.createGhostFrightenedAnimation();
 		kickingAnimations = rendering.createGhostKickingAnimations(ghost.id);
 		returningHomeAnimations = rendering.createGhostReturningHomeAnimations();
+		currentSprite = kickingAnimations.get(ghost.wishDir()).frame();
 	}
 
 	public void setLooksFrightened(boolean looksFrightened) {
@@ -68,25 +74,20 @@ public class Ghost2D implements Renderable2D {
 
 	@Override
 	public void render(GraphicsContext g) {
-		rendering.renderEntity(g, ghost, currentSprite());
-	}
-
-	private Rectangle2D currentSprite() {
+		final Direction dir = ghost.wishDir();
 		if (ghost.bounty > 0) {
-			return rendering.getBountyNumberSprites().get(ghost.bounty);
+			currentSprite = rendering.getBountyNumberSprites().get(ghost.bounty);
+		} else if (ghost.is(DEAD) || ghost.is(ENTERING_HOUSE)) {
+			currentSprite = returningHomeAnimations.get(dir).animate();
+		} else if (ghost.is(FRIGHTENED)) {
+			currentSprite = flashingAnimation.isRunning() ? flashingAnimation.animate() : frightenedAnimation.animate();
+		} else if (ghost.is(LOCKED) && looksFrightened) {
+			currentSprite = frightenedAnimation.animate();
+		} else if (ghost.velocity.equals(V2d.NULL)) {
+			currentSprite = kickingAnimations.get(dir).frame();
+		} else {
+			currentSprite = kickingAnimations.get(dir).animate();
 		}
-		if (ghost.is(DEAD) || ghost.is(ENTERING_HOUSE)) {
-			return returningHomeAnimations.get(ghost.dir()).animate();
-		}
-		if (ghost.is(FRIGHTENED)) {
-			return flashingAnimation.isRunning() ? flashingAnimation.animate() : frightenedAnimation.animate();
-		}
-		if (ghost.is(LOCKED) && looksFrightened) {
-			return frightenedAnimation.animate();
-		}
-		if (ghost.velocity.equals(V2d.NULL)) {
-			return kickingAnimations.get(ghost.wishDir()).frame();
-		}
-		return kickingAnimations.get(ghost.wishDir()).animate(); // Looks towards wish dir!
+		rendering.renderEntity(g, ghost, currentSprite);
 	}
 }

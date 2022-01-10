@@ -181,6 +181,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 			sounds.stopAll();
 			maze2D.getEnergizerAnimation().reset();
 			player2D.reset();
+			ghosts2D.forEach(Ghost2D::reset);
 			if (!gameController.isAttractMode() && !gameController.isGameRunning()) {
 				sounds.setMuted(false);
 				sounds.play(PacManGameSound.GAME_READY);

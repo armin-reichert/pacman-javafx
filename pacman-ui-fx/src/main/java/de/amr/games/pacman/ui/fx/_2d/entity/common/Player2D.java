@@ -51,13 +51,12 @@ public class Player2D implements Renderable2D {
 	public Player2D(Pac player, Rendering2D rendering) {
 		this.player = player;
 		this.rendering = rendering;
-		munchingAnimations = rendering.createPlayerMunchingAnimations();
-		dyingAnimation = rendering.createPlayerDyingAnimation();
+		reset();
 	}
 
 	public void reset() {
-		munchingAnimations.values().forEach(TimedSequence::reset);
-		dyingAnimation.reset();
+		munchingAnimations = rendering.createPlayerMunchingAnimations();
+		dyingAnimation = rendering.createPlayerDyingAnimation();
 		currentSprite = munchingAnimations.get(player.dir()).frame();
 	}
 
