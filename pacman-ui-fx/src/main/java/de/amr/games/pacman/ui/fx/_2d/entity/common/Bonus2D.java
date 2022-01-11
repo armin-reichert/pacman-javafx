@@ -26,8 +26,8 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 import java.util.Objects;
 
 import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.model.common.BonusState;
 import de.amr.games.pacman.model.pacman.entities.Bonus;
-import de.amr.games.pacman.model.pacman.entities.BonusState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import javafx.geometry.Rectangle2D;
