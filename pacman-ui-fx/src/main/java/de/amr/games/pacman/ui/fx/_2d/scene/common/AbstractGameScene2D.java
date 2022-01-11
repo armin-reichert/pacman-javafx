@@ -134,15 +134,16 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 		gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
 	}
 
+	// TODO: why do the lines look blurred?
 	private void drawTileBorders() {
 		if (Env.$tilesVisible.get()) {
-			double lineWidth = 0.5;
-			gc.setFill(Color.GRAY);
+			gc.setStroke(Color.WHITE);
+			gc.setLineWidth(0.5);
 			for (int row = 0; row < 36; ++row) {
-				gc.fillRect(0, t(row), t(28), lineWidth);
+				gc.strokeLine(0, t(row), t(28), t(row));
 			}
 			for (int col = 0; col < 28; ++col) {
-				gc.fillRect(t(col), 0, lineWidth, t(36));
+				gc.strokeLine(t(col), 0, t(col), t(36));
 			}
 		}
 	}
