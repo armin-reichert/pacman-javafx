@@ -34,6 +34,7 @@ import de.amr.games.pacman.controller.mspacman.IntroController;
 import de.amr.games.pacman.controller.mspacman.IntroController.IntroState;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
@@ -50,6 +51,7 @@ import javafx.scene.text.Font;
  */
 public class MsPacMan_IntroScene extends AbstractGameScene2D {
 
+	private final V2i titlePosition = new V2i(t(9), t(8));
 	private Image midwayLogo = new Image(getClass().getResourceAsStream("/mspacman/graphics/midway.png"));
 	private IntroController sceneController;
 	private Player2D msPacMan2D;
@@ -95,7 +97,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 		highScore2D.render(gc);
 		gc.setFont(rendering.getScoreFont());
 		gc.setFill(Color.ORANGE);
-		gc.fillText("\"MS PAC-MAN\"", t(sceneController.tileTitle.x), t(sceneController.tileTitle.y));
+		gc.fillText("\"MS PAC-MAN\"", titlePosition.x, titlePosition.y);
 		drawAnimatedBoard(32, 16);
 		if (state == IntroState.PRESENTING_GHOSTS) {
 			drawPresentingGhost(sceneController.ghosts[sceneController.currentGhostIndex]);
@@ -117,7 +119,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 		gc.setFill(Color.WHITE);
 		gc.setFont(rendering.getScoreFont());
 		if (ghost == sceneController.ghosts[0]) {
-			gc.fillText("WITH", t(sceneController.tileTitle.x), t(top + 3));
+			gc.fillText("WITH", titlePosition.x, t(top + 3));
 		}
 		gc.setFill(ghost.id == 0 ? Color.RED : ghost.id == 1 ? Color.PINK : ghost.id == 2 ? Color.CYAN : Color.ORANGE);
 		gc.fillText(ghost.name.toUpperCase(), t(14 - ghost.name.length() / 2), t(top + 6));
@@ -127,9 +129,9 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 		int top = sceneController.tileBoardTopLeft.y;
 		gc.setFill(Color.WHITE);
 		gc.setFont(rendering.getScoreFont());
-		gc.fillText("STARRING", t(sceneController.tileTitle.x), t(top + 3));
+		gc.fillText("STARRING", titlePosition.x, t(top + 3));
 		gc.setFill(Color.YELLOW);
-		gc.fillText("MS PAC-MAN", t(sceneController.tileTitle.x), t(top + 6));
+		gc.fillText("MS PAC-MAN", titlePosition.x, t(top + 6));
 	}
 
 	private void drawAnimatedBoard(int numDotsX, int numDotsY) {
