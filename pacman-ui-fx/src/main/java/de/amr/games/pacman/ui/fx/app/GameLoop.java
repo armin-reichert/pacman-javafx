@@ -77,10 +77,12 @@ public class GameLoop {
 
 	public void start() {
 		tl.play();
+		log("Game loop started. Target frame rate: %d", targetFrameRate);
 	}
 
 	public void stop() {
 		tl.stop();
+		log("Game loop stopped");
 	}
 
 	private void runSingleFrame() {

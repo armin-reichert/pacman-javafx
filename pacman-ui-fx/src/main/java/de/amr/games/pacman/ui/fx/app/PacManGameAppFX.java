@@ -46,8 +46,8 @@ import javafx.stage.Stage;
  * 
  * <p>
  * The application structure follows the MVC (model-view-controller) design pattern. It creates the controller (which in
- * turn creates the model(s)) and the view (JavaFX UI) components. A game loop drives the controller which implements
- * the complete game logic. Game events from the controller are handled by the UI.
+ * turn creates the model(s)) and the view (JavaFX UI). A game loop drives the controller which implements the complete
+ * game logic. Game events from the controller are handled by the UI.
  * 
  * @author Armin Reichert
  */
@@ -60,7 +60,6 @@ public class PacManGameAppFX extends Application {
 	@Override
 	public void start(Stage stage) throws IOException {
 		Options options = new Options(getParameters().getUnnamed());
-
 		PacManGameController controller = new PacManGameController(options.gameVariant);
 		PacManGameUI_JavaFX view = new PacManGameUI_JavaFX(stage, controller, options.windowHeight, options.fullscreen);
 		controller.setUI(view);
@@ -73,7 +72,6 @@ public class PacManGameAppFX extends Application {
 		}, view::update);
 		Env.$use3DScenes.set(options.use3DScenes);
 		Env.$perspective.set(options.perspective);
-		Env.gameLoop.start();
 
 		// this must be done *after* creating the game loop
 		stage.titleProperty().bind(Bindings.createStringBinding(() -> {
@@ -82,8 +80,9 @@ public class PacManGameAppFX extends Application {
 					: String.format("%s (JavaFX)", gameName);
 		}, Env.gameLoop.$fps));
 
-		log("Application started. Game variant: %s, window height: %.0f, 3D: %s, camera perspective: %s",
+		log("Application created. Game variant: %s, window height: %.0f, 3D: %s, camera perspective: %s",
 				options.gameVariant, options.windowHeight, options.use3DScenes, options.perspective);
+		Env.gameLoop.start();
 	}
 
 	private static class Options {

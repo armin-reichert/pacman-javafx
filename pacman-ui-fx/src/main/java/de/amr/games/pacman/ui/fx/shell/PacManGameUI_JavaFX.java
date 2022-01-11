@@ -55,6 +55,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  * JavaFX implementation of the Pac-Man game UI.
@@ -96,6 +97,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI, DefaultPacManGameEvent
 		// Note: Can only be called *after* main scene has been set
 		setGameScene(gameScene);
 
+		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> Env.gameLoop.stop());
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
 		stage.addEventHandler(ScrollEvent.SCROLL, this::onScrolled);
 		stage.getIcons().add(new Image(getClass().getResourceAsStream(Env.APP_ICON_PATH)));
