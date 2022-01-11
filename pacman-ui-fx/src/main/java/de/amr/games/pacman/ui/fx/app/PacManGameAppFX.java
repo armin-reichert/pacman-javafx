@@ -29,6 +29,7 @@ import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
 import java.io.IOException;
 
 import de.amr.games.pacman.controller.PacManGameController;
+import de.amr.games.pacman.controller.PlayerControl;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.shell.ManualPlayerControl;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
@@ -56,28 +57,40 @@ public class PacManGameAppFX extends Application {
 	@Override
 	public void start(Stage stage) throws IOException {
 		Options options = new Options(getParameters().getUnnamed());
+
+		// Create the game controller and the game models, select the specified game variant
 		PacManGameController controller = new PacManGameController(options.gameVariant);
+
+		// By default, player is controlled using keyboard
+		PlayerControl playerController = new ManualPlayerControl(stage, KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT,
+				KeyCode.RIGHT);
+
+		// Create the user interface and the connections with the controllers
 		PacManGameUI_JavaFX view = new PacManGameUI_JavaFX(stage, controller, options.windowHeight, options.fullscreen);
 		controller.setUI(view);
 		controller.addGameEventListener(view);
-		controller.setPlayerControl(new ManualPlayerControl(stage, KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT));
+		controller.setPlayerControl(playerController);
 
-		Env.gameLoop = new GameLoop(() -> {
+		// Create the game loop
+		GameLoop gameLoop = new GameLoop(() -> {
 			controller.updateState();
 			view.getCurrentGameScene().update();
 		}, view::update);
-		Env.$use3DScenes.set(options.use3DScenes);
-		Env.$perspective.set(options.perspective);
 
-		// this must be done *after* creating the game loop
+		// Note; this must be done *after* creating the game loop
 		stage.titleProperty().bind(Bindings.createStringBinding(() -> {
 			String gameName = controller.gameVariant() == PACMAN ? "Pac-Man" : "Ms. Pac-Man";
 			return Env.$paused.get() ? String.format("%s (JavaFX, Game PAUSED)", gameName)
 					: String.format("%s (JavaFX)", gameName);
-		}, Env.gameLoop.$fps));
+		}, gameLoop.$fps));
 
 		log("Application created. Game variant: %s, window height: %.0f, 3D: %s, camera perspective: %s",
 				options.gameVariant, options.windowHeight, options.use3DScenes, options.perspective);
+
+		// Initialize the environment and start the game
+		Env.gameLoop = gameLoop;
+		Env.$use3DScenes.set(options.use3DScenes);
+		Env.$perspective.set(options.perspective);
 		Env.gameLoop.start();
 	}
 }
