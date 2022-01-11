@@ -27,6 +27,7 @@ import java.util.Objects;
 
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.pacman.entities.Bonus;
+import de.amr.games.pacman.model.pacman.entities.BonusState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import javafx.geometry.Rectangle2D;
@@ -80,10 +81,10 @@ public class Bonus2D implements Renderable2D {
 	}
 
 	private Rectangle2D currentSprite() {
-		if (bonus.state == Bonus.EDIBLE) {
+		if (bonus.state == BonusState.EDIBLE) {
 			return rendering.getSymbolSprites().get(bonus.symbol);
 		}
-		if (bonus.state == Bonus.EATEN) {
+		if (bonus.state == BonusState.EATEN) {
 			return rendering.getBonusValuesSprites().get(bonus.points);
 		}
 		return null;

@@ -38,6 +38,7 @@ import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.GameEntity;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.pacman.entities.Bonus;
+import de.amr.games.pacman.model.pacman.entities.BonusState;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -172,10 +173,10 @@ public abstract class Rendering2D {
 	 * @return sprite (region) for bonus symbol depending on its state (edible/eaten)
 	 */
 	public Rectangle2D bonusSprite(Bonus bonus) {
-		if (bonus.state == Bonus.EDIBLE) {
+		if (bonus.state == BonusState.EDIBLE) {
 			return getSymbolSprites().get(bonus.symbol);
 		}
-		if (bonus.state == Bonus.EATEN) {
+		if (bonus.state == BonusState.EATEN) {
 			return getBonusValuesSprites().get(bonus.points);
 		}
 		throw new IllegalStateException();
