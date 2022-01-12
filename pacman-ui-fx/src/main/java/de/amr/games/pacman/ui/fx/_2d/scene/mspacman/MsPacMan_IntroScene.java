@@ -52,7 +52,7 @@ import javafx.scene.text.Font;
 public class MsPacMan_IntroScene extends AbstractGameScene2D {
 
 	private final V2i titlePosition = new V2i(t(9), t(8));
-	private Image midwayLogo = new Image(getClass().getResourceAsStream("/mspacman/graphics/midway.png"));
+	private Image midwayLogo;
 	private IntroController sceneController;
 	private Player2D msPacMan2D;
 	private List<Ghost2D> ghosts2D;
@@ -68,6 +68,8 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 
 		sceneController = new IntroController(gameController);
 		sceneController.init();
+
+		midwayLogo = new Image(getClass().getResourceAsStream("/mspacman/graphics/midway.png"));
 
 		score2D.showPoints = false;
 

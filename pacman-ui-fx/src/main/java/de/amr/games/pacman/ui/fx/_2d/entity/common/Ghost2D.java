@@ -47,6 +47,7 @@ public class Ghost2D implements Renderable2D {
 
 	private final Ghost ghost;
 	private final Rendering2D rendering;
+
 	public Map<Direction, TimedSequence<Rectangle2D>> kickingAnimations;
 	public Map<Direction, TimedSequence<Rectangle2D>> returningHomeAnimations;
 	public TimedSequence<Rectangle2D> flashingAnimation;
@@ -61,10 +62,10 @@ public class Ghost2D implements Renderable2D {
 	}
 
 	public void reset() {
-		flashingAnimation = rendering.createGhostFlashingAnimation();
-		frightenedAnimation = rendering.createGhostFrightenedAnimation();
 		kickingAnimations = rendering.createGhostKickingAnimations(ghost.id);
 		returningHomeAnimations = rendering.createGhostReturningHomeAnimations();
+		frightenedAnimation = rendering.createGhostFrightenedAnimation();
+		flashingAnimation = rendering.createGhostFlashingAnimation();
 		currentSprite = kickingAnimations.get(ghost.wishDir()).frame();
 	}
 
