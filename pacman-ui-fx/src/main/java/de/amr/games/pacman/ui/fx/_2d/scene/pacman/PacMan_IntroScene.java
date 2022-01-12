@@ -136,13 +136,17 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	}
 
 	private void drawGuys(int offset) {
-		gc.save();
-		gc.translate(offset, 0);
-		ghosts2D.get(0).render(gc);
-		ghosts2D.get(2).render(gc);
-		gc.restore();
-		ghosts2D.get(1).render(gc);
-		ghosts2D.get(3).render(gc);
+		if (offset != 0) {
+			gc.save();
+			gc.translate(offset, 0);
+			ghosts2D.get(0).render(gc);
+			ghosts2D.get(2).render(gc);
+			gc.restore();
+			ghosts2D.get(1).render(gc);
+			ghosts2D.get(3).render(gc);
+		} else {
+			ghosts2D.forEach(ghost2D -> ghost2D.render(gc));
+		}
 		pacMan2D.render(gc);
 	}
 
