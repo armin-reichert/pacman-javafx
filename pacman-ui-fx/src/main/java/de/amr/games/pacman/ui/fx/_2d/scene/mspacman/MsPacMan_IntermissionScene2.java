@@ -57,7 +57,6 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 		public void playFlapAnimation() {
 			flap2D.animation.restart();
 		}
-
 	}
 
 	private SceneController sceneController;
@@ -75,11 +74,14 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 		sceneController = new SceneController(gameController);
 		sceneController.init();
+
 		flap2D = new Flap2D(sceneController.flap, ScenesMsPacMan.RENDERING);
+
 		msPacMan2D = new Player2D(sceneController.msPacMan, rendering);
+		msPacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
+
 		pacMan2D = new Player2D(sceneController.pacMan, rendering);
 		pacMan2D.munchingAnimations = ScenesMsPacMan.RENDERING.createSpouseMunchingAnimations();
-		msPacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 	}
 
