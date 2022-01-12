@@ -200,7 +200,7 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 
 	@Override
 	public TimedSequence<Rectangle2D> createPlayerDyingAnimation() {
-		return TimedSequence.of(rhs(0, 3), rhs(0, 0), rhs(0, 1), rhs(0, 2)).frameDuration(10).repetitions(2);
+		return TimedSequence.of(rhs(0, 3), rhs(0, 0), rhs(0, 1), rhs(0, 2)).frameDuration(8).repetitions(2);
 	}
 
 	@Override
