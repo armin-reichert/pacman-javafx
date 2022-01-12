@@ -257,6 +257,12 @@ public class PacManGameUI_JavaFX implements PacManGameUI, DefaultPacManGameEvent
 			}
 			break;
 
+		case P:
+			if (Env.$paused.get()) {
+				Env.gameLoop.runSingleStep(true);
+			}
+			break;
+
 		case Q:
 			reset();
 			gameController.changeState(PacManGameState.INTRO);
@@ -317,7 +323,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI, DefaultPacManGameEvent
 		case P:
 			Env.$paused.set(!Env.$paused.get());
 			if (Env.$paused.get()) {
-				showFlashMessage(3, "Game paused (Press CTRL+P to resume)");
+				showFlashMessage(2, "Game paused\n(CTRL+P = resume, P = single step)");
 			} else {
 				showFlashMessage(2, "Game resumed");
 			}

@@ -67,9 +67,10 @@ public class GameLoop {
 			tl.stop();
 			restart = true;
 		}
+		Duration frameDuration = Duration.millis(1000d / targetFrameRate);
 		tl = new Timeline(targetFrameRate);
 		tl.setCycleCount(Animation.INDEFINITE);
-		tl.getKeyFrames().add(new KeyFrame(Duration.millis(1000d / targetFrameRate), e -> runSingleFrame()));
+		tl.getKeyFrames().add(new KeyFrame(frameDuration, e -> runSingleStep(!Env.$paused.get())));
 		if (restart) {
 			tl.play();
 		}
@@ -85,12 +86,11 @@ public class GameLoop {
 		log("Game loop stopped");
 	}
 
-	private void runSingleFrame() {
+	public void runSingleStep(boolean updateEnabled) {
 		long now = System.nanoTime();
-		if (!Env.$paused.get()) {
-			runUpdate(now);
+		if (updateEnabled) {
+			runUpdate();
 		}
-		// Note: we must also render at 60Hz because some animations depend on the rendering speed
 		render.run();
 		$totalTicks.set($totalTicks.get() + 1);
 		++frames;
@@ -101,7 +101,7 @@ public class GameLoop {
 		}
 	}
 
-	private void runUpdate(long updateTime) {
+	private void runUpdate() {
 		if (Env.$isTimeMeasured.get()) {
 			double start_ns = System.nanoTime();
 			update.run();
