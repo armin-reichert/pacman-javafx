@@ -30,7 +30,6 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.JuniorBag2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Stork2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.scene.ScenesMsPacMan;
 
@@ -80,13 +79,17 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 
 		sceneController = new SceneController(gameController);
 		sceneController.init();
-		flap2D = new Flap2D(sceneController.flap, ScenesMsPacMan.RENDERING);
+
 		msPacMan2D = new Player2D(sceneController.msPacMan, rendering);
 		pacMan2D = new Player2D(sceneController.pacMan, rendering);
-		stork2D = new Stork2D(sceneController.stork, ScenesMsPacMan.RENDERING);
-		bag2D = new JuniorBag2D(sceneController.bag, (Rendering2D_MsPacMan) rendering);
 		pacMan2D.munchingAnimations = ScenesMsPacMan.RENDERING.createSpouseMunchingAnimations();
+
+		flap2D = new Flap2D(sceneController.flap, ScenesMsPacMan.RENDERING);
+
+		stork2D = new Stork2D(sceneController.stork, ScenesMsPacMan.RENDERING);
 		stork2D.animation.restart();
+
+		bag2D = new JuniorBag2D(sceneController.bag, ScenesMsPacMan.RENDERING);
 	}
 
 	@Override
