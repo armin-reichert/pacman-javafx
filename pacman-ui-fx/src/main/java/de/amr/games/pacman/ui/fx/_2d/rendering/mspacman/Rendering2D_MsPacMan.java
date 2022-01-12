@@ -191,8 +191,8 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 		for (Direction dir : Direction.values()) {
 			int d = dirIndex(dir);
 			Rectangle2D wide_open = rhs(0, d), open = rhs(1, d), closed = rhs(2, d);
-			var munching = TimedSequence.of(open, open, wide_open, wide_open, open, open, closed, closed, closed)
-					.frameDuration(1).endless();
+			// TODO: not 100% sure
+			var munching = TimedSequence.of(open, wide_open, open, closed).frameDuration(2).endless();
 			munchingAnimations.put(dir, munching);
 		}
 		return munchingAnimations;

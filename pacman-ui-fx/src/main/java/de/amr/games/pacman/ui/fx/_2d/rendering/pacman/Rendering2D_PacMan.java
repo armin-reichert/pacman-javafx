@@ -174,8 +174,7 @@ public class Rendering2D_PacMan extends Rendering2D {
 		for (Direction dir : Direction.values()) {
 			int d = dirIndex(dir);
 			Rectangle2D wide_open = r(0, d), open = r(1, d), closed = r(2, 0);
-			var animation = TimedSequence.of(closed, closed, open, open, wide_open, wide_open, closed).frameDuration(1)
-					.endless();
+			var animation = TimedSequence.of(closed, open, wide_open, open).frameDuration(2).endless();
 			munchingAnimation.put(dir, animation);
 		}
 		return munchingAnimation;
