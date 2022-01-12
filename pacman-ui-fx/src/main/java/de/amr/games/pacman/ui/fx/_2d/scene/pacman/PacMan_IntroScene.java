@@ -117,7 +117,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 			if (sceneController.blinking.frame()) {
 				drawEnergizer();
 			}
-			int offset = sceneController.stateTimer().ticked() % 5 < 1 ? 0 : -1;
+			int offset = sceneController.stateTimer().ticked() % 5 < 2 ? 0 : -1;
 			drawGuys(offset);
 			break;
 		case CHASING_GHOSTS:
