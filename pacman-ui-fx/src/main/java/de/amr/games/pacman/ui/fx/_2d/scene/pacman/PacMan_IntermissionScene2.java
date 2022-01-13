@@ -45,19 +45,7 @@ import javafx.geometry.Rectangle2D;
  */
 public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 
-	class SceneController extends Intermission2Controller {
-
-		public SceneController(PacManGameController gameController) {
-			super(gameController);
-		}
-
-		@Override
-		public void playIntermissionSound() {
-			sounds.play(PacManGameSound.INTERMISSION_2);
-		}
-	}
-
-	private SceneController sceneController;
+	private Intermission2Controller sceneController;
 	private Player2D pacMan2D;
 	private Ghost2D blinky2D;
 	private Nail2D nail2D;
@@ -72,8 +60,10 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 	public void init(PacManGameController gameController) {
 		super.init(gameController);
 
-		sceneController = new SceneController(gameController);
+		sceneController = new Intermission2Controller(gameController);
+		sceneController.playIntermissionSound = () -> sounds.play(PacManGameSound.INTERMISSION_2);
 		sceneController.init();
+
 		pacMan2D = new Player2D(sceneController.pac, rendering);
 		blinky2D = new Ghost2D(sceneController.blinky, rendering);
 		nail2D = new Nail2D(sceneController.nail, (Rendering2D_PacMan) rendering);
@@ -85,7 +75,7 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 	@Override
 	public void doUpdate() {
-		sceneController.update();
+		sceneController.updateState();
 	}
 
 	@Override
