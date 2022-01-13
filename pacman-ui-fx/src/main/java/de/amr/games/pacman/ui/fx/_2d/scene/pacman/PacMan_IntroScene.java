@@ -27,7 +27,6 @@ import static de.amr.games.pacman.lib.TickTimer.sec_to_ticks;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -81,10 +80,11 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 			return ghost2D;
 		}).collect(Collectors.toList());
 
-		gallery2D = new ArrayList<>(4);
-		for (int i = 0; i < 4; ++i) {
-			gallery2D.add(new Ghost2D(sceneController.portraits[i].ghost, rendering));
-		}
+		gallery2D = List.of( //
+				new Ghost2D(sceneController.portraits[0].ghost, rendering),
+				new Ghost2D(sceneController.portraits[1].ghost, rendering),
+				new Ghost2D(sceneController.portraits[2].ghost, rendering),
+				new Ghost2D(sceneController.portraits[3].ghost, rendering));
 	}
 
 	@Override
