@@ -167,13 +167,13 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 	}
 
 	private void drawCopyright() {
-		double scale = 36.0 / 391;
-		gc.drawImage(midwayLogo, t(6), t(28) + 3, scale * 400, scale * 391);
+		double scale = 36.0 / midwayLogo.getHeight();
+		gc.drawImage(midwayLogo, t(4), t(28) + 3, scale * midwayLogo.getWidth(), scale * midwayLogo.getHeight());
 		gc.setFill(Color.RED);
 		gc.setFont(Font.font("Dialog", 11.0));
-		gc.fillText("\u00a9", t(11), t(30) + 2); // (c) symbol
+		gc.fillText("\u00a9", t(9), t(30) + 2); // (c) symbol
 		gc.setFont(rendering.getScoreFont());
-		gc.fillText("MIDWAY MFG CO", t(13), t(30));
-		gc.fillText("1980/1981", t(14), t(32));
+		gc.fillText("MIDWAY MFG CO", t(11), t(30));
+		gc.fillText("1980/1981", t(12), t(32));
 	}
 }
