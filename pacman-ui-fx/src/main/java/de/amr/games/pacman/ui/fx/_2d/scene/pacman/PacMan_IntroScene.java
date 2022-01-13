@@ -202,7 +202,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	}
 
 	private void drawCopyright(int yTile) {
-		String text = "\u00A9" + "  1980 MIDWAY MFG. CO.";
+		String text = "\u00A9 1980 MIDWAY MFG. CO.";
 		gc.setFont(rendering.getScoreFont());
 		gc.setFill(rendering.getGhostColor(GameModel.PINK_GHOST));
 		gc.fillText(text, t(3), t(yTile));
