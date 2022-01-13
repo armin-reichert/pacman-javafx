@@ -42,24 +42,7 @@ import de.amr.games.pacman.ui.fx.scene.ScenesMsPacMan;
  */
 public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 
-	private class SceneController extends Intermission2Controller {
-
-		public SceneController(PacManGameController gameController) {
-			super(gameController);
-		}
-
-		@Override
-		public void playIntermissionSound() {
-			sounds.play(PacManGameSound.INTERMISSION_2);
-		}
-
-		@Override
-		public void playFlapAnimation() {
-			flap2D.animation.restart();
-		}
-	}
-
-	private SceneController sceneController;
+	private Intermission2Controller sceneController;
 	private Player2D msPacMan2D;
 	private Player2D pacMan2D;
 	private Flap2D flap2D;
@@ -72,7 +55,9 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 	public void init(PacManGameController gameController) {
 		super.init(gameController);
 
-		sceneController = new SceneController(gameController);
+		sceneController = new Intermission2Controller(gameController);
+		sceneController.playIntermissionSound = () -> sounds.play(PacManGameSound.INTERMISSION_2);
+		sceneController.playFlapAnimation = () -> flap2D.animation.restart();
 		sceneController.init();
 
 		flap2D = new Flap2D(sceneController.flap, ScenesMsPacMan.RENDERING);
