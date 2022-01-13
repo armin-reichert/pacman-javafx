@@ -45,7 +45,8 @@ import javafx.geometry.Rectangle2D;
  */
 public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 
-	private Intermission2Controller sceneController;
+	private final Intermission2Controller sceneController = new Intermission2Controller();
+
 	private Player2D pacMan2D;
 	private Ghost2D blinky2D;
 	private Nail2D nail2D;
@@ -60,9 +61,8 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 	public void init(PacManGameController gameController) {
 		super.init(gameController);
 
-		sceneController = new Intermission2Controller(gameController);
 		sceneController.playIntermissionSound = () -> sounds.play(PacManGameSound.INTERMISSION_2);
-		sceneController.init();
+		sceneController.init(gameController);
 
 		pacMan2D = new Player2D(sceneController.pac, rendering);
 		blinky2D = new Ghost2D(sceneController.blinky, rendering);
