@@ -54,7 +54,8 @@ import javafx.scene.text.Font;
  */
 public class PacMan_IntroScene extends AbstractGameScene2D {
 
-	private IntroController sceneController;
+	private final IntroController sceneController = new IntroController();
+
 	private Player2D pacMan2D;
 	private List<Ghost2D> ghosts2D;
 	private List<Ghost2D> gallery2D;
@@ -66,9 +67,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	@Override
 	public void init(PacManGameController gameController) {
 		super.init(gameController);
-
-		sceneController = new IntroController(gameController);
-		sceneController.init();
+		sceneController.init(gameController);
 
 		score2D.showPoints = false;
 
@@ -90,7 +89,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 
 	@Override
 	public void doUpdate() {
-		sceneController.update();
+		sceneController.updateState();
 	}
 
 	@Override
