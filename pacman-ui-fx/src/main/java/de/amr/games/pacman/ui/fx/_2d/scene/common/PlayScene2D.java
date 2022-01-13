@@ -68,8 +68,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 	private List<Ghost2D> ghosts2D;
 	private Bonus2D bonus2D;
 
-	public PlayScene2D(int tilesX, int tilesY, Rendering2D rendering, SoundManager sounds) {
-		super(tilesX, tilesY, rendering, sounds);
+	public PlayScene2D(Rendering2D rendering, SoundManager sounds) {
+		super(rendering, sounds);
 	}
 
 	@Override

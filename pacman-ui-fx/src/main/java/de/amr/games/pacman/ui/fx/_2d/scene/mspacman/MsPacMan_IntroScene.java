@@ -60,7 +60,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 	private List<Ghost2D> ghosts2D;
 
 	public MsPacMan_IntroScene() {
-		super(28, 36, ScenesMsPacMan.RENDERING, ScenesMsPacMan.SOUNDS);
+		super(ScenesMsPacMan.RENDERING, ScenesMsPacMan.SOUNDS);
 	}
 
 	@Override

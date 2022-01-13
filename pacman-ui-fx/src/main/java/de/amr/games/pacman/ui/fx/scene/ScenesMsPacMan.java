@@ -81,7 +81,7 @@ public class ScenesMsPacMan {
 		SCENES[2][1] = new MsPacMan_IntermissionScene2();
 		SCENES[3][0] = 
 		SCENES[3][1] = new MsPacMan_IntermissionScene3();
-		SCENES[4][0] = new PlayScene2D(TILES_X, TILES_Y, RENDERING, SOUNDS);
+		SCENES[4][0] = new PlayScene2D(RENDERING, SOUNDS);
 		SCENES[4][1] = new PlayScene3D(MODEL_3D, SOUNDS);
 		//@formatter:on
 	}

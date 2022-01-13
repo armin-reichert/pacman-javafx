@@ -49,6 +49,9 @@ import javafx.scene.transform.Scale;
  */
 public abstract class AbstractGameScene2D extends AbstractGameScene {
 
+	public static final int DEFAULT_TILES_X = 28;
+	public static final int DEFAULT_TILES_Y = 36;
+
 	protected final double unscaledWidth;
 	protected final double unscaledHeight;
 	protected final double aspectRatio;
@@ -64,6 +67,10 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 
 	protected SubScene subSceneFX;
 	protected GraphicsContext gc;
+
+	public AbstractGameScene2D(Rendering2D rendering, SoundManager sounds) {
+		this(DEFAULT_TILES_X, DEFAULT_TILES_Y, rendering, sounds);
+	}
 
 	public AbstractGameScene2D(int tilesX, int tilesY, Rendering2D rendering, SoundManager sounds) {
 		this.unscaledWidth = t(tilesX);

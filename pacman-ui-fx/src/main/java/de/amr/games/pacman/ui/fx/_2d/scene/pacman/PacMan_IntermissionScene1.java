@@ -48,7 +48,7 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 	private BigPacMan2D bigPacMan2D;
 
 	public PacMan_IntermissionScene1() {
-		super(28, 36, ScenesPacMan.RENDERING, ScenesPacMan.SOUNDS);
+		super(ScenesPacMan.RENDERING, ScenesPacMan.SOUNDS);
 	}
 
 	@Override
