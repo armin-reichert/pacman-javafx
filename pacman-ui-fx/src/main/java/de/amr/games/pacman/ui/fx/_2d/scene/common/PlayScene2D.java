@@ -201,10 +201,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 			sounds.stopAll();
 			ghosts2D.forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSequence::reset));
 			player2D.dyingAnimation.restart();
-			Animations.afterSeconds(2, () -> {
-				game.ghosts().forEach(Ghost::hide);
-				sounds.play(PacManGameSound.PACMAN_DEATH);
-			}).play();
+			Animations.afterSeconds(1, () -> game.ghosts().forEach(Ghost::hide)).play();
+			Animations.afterSeconds(2, () -> sounds.play(PacManGameSound.PACMAN_DEATH)).play();
 			gameController.stateTimer().resetSeconds(4);
 			gameController.stateTimer().start();
 		}
