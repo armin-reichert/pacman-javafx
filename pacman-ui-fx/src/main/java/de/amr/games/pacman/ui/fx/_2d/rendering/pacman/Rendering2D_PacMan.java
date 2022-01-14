@@ -45,7 +45,6 @@ public class Rendering2D_PacMan extends Rendering2D {
 
 	private static final Color MAZE_TOP_COLOR = Color.rgb(255, 255, 255);
 	private static final Color MAZE_SIDE_COLOR = Color.rgb(33, 33, 255);
-
 	private static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
 
 	private final Image mazeFullImage;
@@ -144,6 +143,58 @@ public class Rendering2D_PacMan extends Rendering2D {
 		return symbolSprites;
 	}
 
+	@Override
+	public Map<Direction, TimedSequence<Rectangle2D>> createPlayerMunchingAnimations() {
+		Map<Direction, TimedSequence<Rectangle2D>> animations = new EnumMap<>(Direction.class);
+		for (Direction dir : Direction.values()) {
+			int d = dirIndex(dir);
+			Rectangle2D wide_open = r(0, d), open = r(1, d), closed = r(2, 0);
+			var animation = TimedSequence.of(closed, open, wide_open, open).frameDuration(2).endless();
+			animations.put(dir, animation);
+		}
+		return animations;
+	}
+
+	@Override
+	public TimedSequence<Rectangle2D> createPlayerDyingAnimation() {
+		return TimedSequence
+				.of(r(3, 0), r(4, 0), r(5, 0), r(6, 0), r(7, 0), r(8, 0), r(9, 0), r(10, 0), r(11, 0), r(12, 0), r(13, 0))
+				.frameDuration(8);
+	}
+
+	@Override
+	public Map<Direction, TimedSequence<Rectangle2D>> createGhostKickingAnimations(int ghostID) {
+		EnumMap<Direction, TimedSequence<Rectangle2D>> animations = new EnumMap<>(Direction.class);
+		for (Direction dir : Direction.values()) {
+			int d = dirIndex(dir);
+			var animation = TimedSequence.of(r(2 * d, 4 + ghostID), r(2 * d + 1, 4 + ghostID)).frameDuration(8).endless();
+			animations.put(dir, animation);
+		}
+		return animations;
+	}
+
+	@Override
+	public TimedSequence<Rectangle2D> createGhostFrightenedAnimation() {
+		return TimedSequence.of(r(8, 4), r(9, 4)).frameDuration(8).endless();
+	}
+
+	@Override
+	public TimedSequence<Rectangle2D> createGhostFlashingAnimation() {
+		return TimedSequence.of(r(8, 4), r(9, 4), r(10, 4), r(11, 4)).frameDuration(6);
+	}
+
+	@Override
+	public Map<Direction, TimedSequence<Rectangle2D>> createGhostReturningHomeAnimations() {
+		Map<Direction, TimedSequence<Rectangle2D>> animations = new EnumMap<>(Direction.class);
+		for (Direction dir : Direction.values()) {
+			int d = dirIndex(dir);
+			animations.put(dir, TimedSequence.of(r(8 + d, 5)));
+		}
+		return animations;
+	}
+
+	// Pac-Man specific:
+
 	public Rectangle2D getNail() {
 		return r(8, 6);
 	}
@@ -168,53 +219,4 @@ public class Rendering2D_PacMan extends Rendering2D {
 		return TimedSequence.of(r(8, 8, 2, 1), r(10, 8, 2, 1)).frameDuration(4).endless();
 	}
 
-	@Override
-	public Map<Direction, TimedSequence<Rectangle2D>> createPlayerMunchingAnimations() {
-		Map<Direction, TimedSequence<Rectangle2D>> munchingAnimation = new EnumMap<>(Direction.class);
-		for (Direction dir : Direction.values()) {
-			int d = dirIndex(dir);
-			Rectangle2D wide_open = r(0, d), open = r(1, d), closed = r(2, 0);
-			var animation = TimedSequence.of(closed, open, wide_open, open).frameDuration(2).endless();
-			munchingAnimation.put(dir, animation);
-		}
-		return munchingAnimation;
-	}
-
-	@Override
-	public TimedSequence<Rectangle2D> createPlayerDyingAnimation() {
-		return TimedSequence
-				.of(r(3, 0), r(4, 0), r(5, 0), r(6, 0), r(7, 0), r(8, 0), r(9, 0), r(10, 0), r(11, 0), r(12, 0), r(13, 0))
-				.frameDuration(8);
-	}
-
-	@Override
-	public Map<Direction, TimedSequence<Rectangle2D>> createGhostKickingAnimations(int ghostID) {
-		EnumMap<Direction, TimedSequence<Rectangle2D>> kickingAnimation = new EnumMap<>(Direction.class);
-		for (Direction dir : Direction.values()) {
-			int d = dirIndex(dir);
-			var animation = TimedSequence.of(r(2 * d, 4 + ghostID), r(2 * d + 1, 4 + ghostID)).frameDuration(8).endless();
-			kickingAnimation.put(dir, animation);
-		}
-		return kickingAnimation;
-	}
-
-	@Override
-	public TimedSequence<Rectangle2D> createGhostFrightenedAnimation() {
-		return TimedSequence.of(r(8, 4), r(9, 4)).frameDuration(8).endless();
-	}
-
-	@Override
-	public TimedSequence<Rectangle2D> createGhostFlashingAnimation() {
-		return TimedSequence.of(r(8, 4), r(9, 4), r(10, 4), r(11, 4)).frameDuration(6);
-	}
-
-	@Override
-	public Map<Direction, TimedSequence<Rectangle2D>> createGhostReturningHomeAnimations() {
-		Map<Direction, TimedSequence<Rectangle2D>> eyesAnimation = new EnumMap<>(Direction.class);
-		for (Direction dir : Direction.values()) {
-			int d = dirIndex(dir);
-			eyesAnimation.put(dir, TimedSequence.of(r(8 + d, 5)));
-		}
-		return eyesAnimation;
-	}
 }
