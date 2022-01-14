@@ -209,12 +209,12 @@ public class PlayScene2D extends AbstractGameScene2D {
 			gameController.stateTimer().reset();
 			gameController.stateTimer().start();
 
-			SequentialTransition pacManDies = new SequentialTransition();
-			pacManDies.getChildren().add(afterSeconds(1, () -> game.ghosts().forEach(Ghost::hide)));
-			pacManDies.getChildren().add(afterSeconds(1, () -> sounds.play(PacManGameSound.PACMAN_DEATH)));
-			pacManDies.getChildren().add(afterSeconds(2, () -> game.player.hide()));
-			pacManDies.getChildren().add(afterSeconds(1, () -> continueGame()));
-			pacManDies.play();
+			new SequentialTransition( //
+					afterSeconds(1, () -> game.ghosts().forEach(Ghost::hide)), //
+					afterSeconds(1, () -> sounds.play(PacManGameSound.PACMAN_DEATH)), //
+					afterSeconds(2, () -> game.player.hide()), //
+					afterSeconds(1, () -> continueGame()) //
+			).play();
 		}
 
 		// enter GHOST_DYING
