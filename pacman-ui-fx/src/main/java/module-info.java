@@ -18,6 +18,11 @@
  */
 module de.amr.games.pacman.ui.fx {
 
+	requires transitive javafx.controls;
+	requires transitive javafx.media;
+	requires transitive de.amr.games.pacman;
+	requires jimObjModelImporterJFX;
+
 	exports de.amr.games.pacman.ui.fx.app;
 	exports de.amr.games.pacman.ui.fx.scene;
 	exports de.amr.games.pacman.ui.fx.shell;
@@ -28,11 +33,4 @@ module de.amr.games.pacman.ui.fx {
 	exports de.amr.games.pacman.ui.fx._2d.rendering.pacman;
 	exports de.amr.games.pacman.ui.fx._3d.entity;
 	exports de.amr.games.pacman.ui.fx._3d.scene;
-
-	requires transitive javafx.controls;
-	requires transitive javafx.media;
-
-	requires transitive de.amr.games.pacman;
-	requires jimObjModelImporterJFX;
-	requires javafx.graphics; // TODO use "real" module
 }
