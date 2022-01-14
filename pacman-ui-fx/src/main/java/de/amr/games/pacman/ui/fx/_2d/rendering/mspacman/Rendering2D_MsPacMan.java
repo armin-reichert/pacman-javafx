@@ -192,8 +192,8 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 
 	@Override
 	public TimedSequence<Rectangle2D> createPlayerDyingAnimation() {
-		Rectangle2D right = rhs(0, 0), left = rhs(0, 1), up = rhs(0, 2), down = rhs(0, 3);
-		// TODO fixme
+		Rectangle2D right = rhs(1, 0), left = rhs(1, 1), up = rhs(1, 2), down = rhs(1, 3);
+		// TODO not yet 100% accurate
 		return TimedSequence.of(down, left, up, right, down, left, up, right, down, left, up).frameDuration(8);
 	}
 
