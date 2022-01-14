@@ -42,9 +42,6 @@ import de.amr.games.pacman.ui.fx.sound.SoundManager;
  */
 public class ScenesMsPacMan {
 
-	public static final int TILES_X = 28;
-	public static final int TILES_Y = 36;
-
 	public static final Rendering2D_MsPacMan RENDERING = new Rendering2D_MsPacMan();
 	public static final PacManModel3D MODEL_3D = new GianmarcosPacManModel3D();
 
