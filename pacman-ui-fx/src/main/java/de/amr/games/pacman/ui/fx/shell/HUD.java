@@ -78,19 +78,19 @@ public class HUD extends VBox {
 		TickTimer stateTimer = ui.getGameController().stateTimer();
 		text.setLength(0);
 		row("Total Ticks", "%d", Env.gameLoop.$totalTicks.get());
-		row("Current FPS", "%d Hz", Env.gameLoop.$fps.get());
 		row("Target FPS", "%d Hz", Env.gameLoop.getTargetFrameRate());
-		row("Game Variant", "%s", ui.getGameController().gameVariant());
+		row("Current FPS", "%d Hz", Env.gameLoop.$fps.get());
 		row("Paused", "%s", yes_no(Env.$paused.get()));
 		row("Playing", "%s", yes_no(ui.getGameController().isGameRunning()));
 		row("Attract Mode", "%s", yes_no(ui.getGameController().isAttractMode()));
-		row("Autopilot", "%s", on_off(ui.getGameController().isAutoControlled()));
-		row("Immunity", "%s", on_off(ui.getGameController().game().player.immune));
+		row("Game Variant", "%s", ui.getGameController().gameVariant());
 		row("Game Level", "%d", ui.getGameController().game().levelNumber);
 		row("Game State", "%s", state == PacManGameState.HUNTING ? state + ":" + huntingPhaseName : state);
-		row("", "Running:   %s", stateTimer.ticked());
+		row("", "Running:   %s%s", stateTimer.ticked(), stateTimer.isStopped() ? " (STOPPED)" : "");
 		row("", "Remaining: %s",
 				stateTimer.ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer.ticksRemaining());
+		row("Autopilot", "%s", on_off(ui.getGameController().isAutoControlled()));
+		row("Immunity", "%s", on_off(ui.getGameController().game().player.immune));
 		row("Game Scene", "%s", ui.getCurrentGameScene().getClass().getSimpleName());
 		row("", "w=%.0f h=%.0f", ui.getCurrentGameScene().getSubSceneFX().getWidth(),
 				ui.getCurrentGameScene().getSubSceneFX().getHeight());
