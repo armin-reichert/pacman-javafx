@@ -28,7 +28,6 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 import static de.amr.games.pacman.ui.fx.util.Animations.pause;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.PacManGameController;
@@ -80,7 +79,11 @@ public class PlayScene2D extends AbstractGameScene2D {
 		livesCounter2D = new LivesCounter2D(t(2), t(34), game, rendering);
 		player2D = new Player2D(game.player, rendering);
 		player2D.dyingAnimation.delay(120).onStart(game::hideGhosts);
-		ghosts2D = game.ghosts().map(ghost -> new Ghost2D(ghost, rendering)).collect(Collectors.toList());
+		ghosts2D = List.of( //
+				new Ghost2D(game.ghosts[0], rendering), //
+				new Ghost2D(game.ghosts[1], rendering), //
+				new Ghost2D(game.ghosts[2], rendering), //
+				new Ghost2D(game.ghosts[3], rendering));
 		bonus2D = new Bonus2D(game.bonus, rendering);
 		game.player.powerTimer.addEventListener(this::handleGhostsFlashing);
 	}
