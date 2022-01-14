@@ -43,7 +43,7 @@ import javafx.scene.paint.Color;
  */
 public class Rendering2D_PacMan extends Rendering2D {
 
-	private static final Color MAZE_TOP_COLOR = Color.rgb(255, 255, 255);
+	private static final Color MAZE_TOP_COLOR = Color.AZURE;
 	private static final Color MAZE_SIDE_COLOR = Color.rgb(33, 33, 255);
 	private static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
 

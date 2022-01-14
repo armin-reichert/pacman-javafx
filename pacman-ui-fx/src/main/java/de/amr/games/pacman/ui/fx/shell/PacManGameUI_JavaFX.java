@@ -39,7 +39,6 @@ import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
 import de.amr.games.pacman.ui.fx.scene.ScenesMsPacMan;
 import de.amr.games.pacman.ui.fx.scene.ScenesPacMan;
 import javafx.beans.binding.Bindings;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -49,7 +48,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
@@ -83,13 +81,12 @@ public class PacManGameUI_JavaFX implements PacManGameUI, DefaultPacManGameEvent
 
 		// Create the main scene containing all other sub-scenes
 		StackPane mainSceneRoot = new StackPane(gameSceneRoot, flashMessageView, hud);
-		StackPane.setAlignment(hud, Pos.TOP_LEFT);
-
 		// Set blue background color, use black in wireframe display mode
 		mainSceneRoot.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
 			Color color = Env.$drawMode3D.get() == DrawMode.FILL ? Color.CORNFLOWERBLUE : Color.BLACK;
-			return new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY));
+			return new Background(new BackgroundFill(color, null, null));
 		}, Env.$drawMode3D));
+		StackPane.setAlignment(hud, Pos.TOP_LEFT);
 
 		Scene mainScene = new Scene(mainSceneRoot, aspectRatio * height, height);
 		stage.setScene(mainScene);
@@ -104,6 +101,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI, DefaultPacManGameEvent
 		stage.setFullScreen(fullscreen);
 		stage.centerOnScreen();
 		stage.show();
+
 	}
 
 	@Override
