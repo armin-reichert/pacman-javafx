@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import de.amr.games.pacman.ui.fx.Env;
+import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.shape.Shape3D;

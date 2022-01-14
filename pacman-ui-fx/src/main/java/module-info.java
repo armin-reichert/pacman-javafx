@@ -18,7 +18,6 @@
  */
 module de.amr.games.pacman.ui.fx {
 
-	exports de.amr.games.pacman.ui.fx;
 	exports de.amr.games.pacman.ui.fx.app;
 	exports de.amr.games.pacman.ui.fx.scene;
 	exports de.amr.games.pacman.ui.fx.shell;

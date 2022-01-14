@@ -33,7 +33,7 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.world.FloorPlan;
 import de.amr.games.pacman.model.world.PacManGameWorld;
-import de.amr.games.pacman.ui.fx.Env;
+import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;

@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx.shell;
 
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.lib.TickTimer;
-import de.amr.games.pacman.ui.fx.Env;
+import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
