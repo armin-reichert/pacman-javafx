@@ -85,7 +85,7 @@ public class Bonus2D implements Renderable2D {
 			return rendering.getSymbolSprites().get(bonus.symbol);
 		}
 		if (bonus.state == BonusState.EATEN) {
-			return rendering.getBonusValuesSprites().get(bonus.points);
+			return rendering.getBonusValueSprites().get(bonus.points);
 		}
 		return null;
 	}

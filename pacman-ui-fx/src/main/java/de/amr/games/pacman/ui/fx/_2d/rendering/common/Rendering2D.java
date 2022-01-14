@@ -75,8 +75,8 @@ public abstract class Rendering2D {
 
 	protected final Image spritesheet;
 	protected final int rasterSize;
-	protected List<Direction> directionOrder = List.of(RIGHT, LEFT, UP, DOWN);
-	protected Font font = Font.loadFont(resource("/emulogic.ttf"), 8);
+	protected final List<Direction> directionOrder = List.of(RIGHT, LEFT, UP, DOWN);
+	protected final Font font = Font.loadFont(resource("/emulogic.ttf"), 8);
 
 	public Rendering2D(String spritesheetPath, int rasterSize) {
 		this.spritesheet = new Image(resource(spritesheetPath));
@@ -177,7 +177,7 @@ public abstract class Rendering2D {
 			return getSymbolSprites().get(bonus.symbol);
 		}
 		if (bonus.state == BonusState.EATEN) {
-			return getBonusValuesSprites().get(bonus.points);
+			return getBonusValueSprites().get(bonus.points);
 		}
 		throw new IllegalStateException();
 	}
@@ -190,7 +190,8 @@ public abstract class Rendering2D {
 	}
 
 	/**
-	 * Renders a game entity centered over its tile position
+	 * Renders an entity sprite centered over the entity's collision box. Entity position is left upper corner of
+	 * collision box which has a size of one square tile.
 	 * 
 	 * @param g      the graphics context
 	 * @param entity the entity getting rendered
@@ -198,8 +199,7 @@ public abstract class Rendering2D {
 	 */
 	public void renderEntity(GraphicsContext g, GameEntity entity, Rectangle2D r) {
 		if (entity.visible) {
-			// draw sprite centered over entity bounding box
-			renderSprite(g, r, entity.position.x - r.getWidth() / 2 + HTS, entity.position.y - r.getHeight() / 2 + HTS);
+			renderSprite(g, r, entity.position.x + HTS - r.getWidth() / 2, entity.position.y + HTS - r.getHeight() / 2);
 		}
 	}
 
@@ -219,13 +219,13 @@ public abstract class Rendering2D {
 
 	/**
 	 * @param mazeNumber the 1-based maze number
-	 * @return color of maze walls on top
+	 * @return color of maze walls on top (3D) or inside (2D)
 	 */
 	public abstract Color getMazeTopColor(int mazeNumber);
 
 	/**
 	 * @param mazeNumber the 1-based maze number
-	 * @return color of maze walls on side
+	 * @return color of maze walls on side (3D) or outside (2D)
 	 */
 	public abstract Color getMazeSideColor(int mazeNumber);
 
@@ -261,7 +261,7 @@ public abstract class Rendering2D {
 
 	public abstract Map<Integer, Rectangle2D> getBountyNumberSprites();
 
-	public abstract Map<Integer, Rectangle2D> getBonusValuesSprites();
+	public abstract Map<Integer, Rectangle2D> getBonusValueSprites();
 
 	public abstract Map<String, Rectangle2D> getSymbolSprites();
 }
