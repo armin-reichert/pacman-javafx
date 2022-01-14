@@ -42,6 +42,7 @@ import de.amr.games.pacman.model.pacman.entities.Bonus;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -60,13 +61,12 @@ public abstract class Rendering2D {
 	 */
 	public static Image colorsExchanged(Image source, Map<Color, Color> exchanges) {
 		WritableImage result = new WritableImage((int) source.getWidth(), (int) source.getHeight());
+		PixelWriter out = result.getPixelWriter();
 		for (int x = 0; x < source.getWidth(); ++x) {
 			for (int y = 0; y < source.getHeight(); ++y) {
-				Color oldColor = source.getPixelReader().getColor(x, y);
-				for (Map.Entry<Color, Color> entry : exchanges.entrySet()) {
-					if (oldColor.equals(entry.getKey())) {
-						result.getPixelWriter().setColor(x, y, entry.getValue());
-					}
+				Color color = source.getPixelReader().getColor(x, y);
+				if (exchanges.containsKey(color)) {
+					out.setColor(x, y, exchanges.get(color));
 				}
 			}
 		}
