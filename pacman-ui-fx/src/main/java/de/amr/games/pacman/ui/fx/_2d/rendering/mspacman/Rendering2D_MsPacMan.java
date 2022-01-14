@@ -44,32 +44,34 @@ import javafx.scene.paint.Color;
  */
 public class Rendering2D_MsPacMan extends Rendering2D {
 
-	private static final Color[] MAZE_TOP_COLOR = { //
-			Color.rgb(255, 183, 174), //
-			Color.rgb(71, 183, 255), //
-			Color.rgb(222, 151, 81), //
-			Color.rgb(33, 33, 255), //
-			Color.rgb(255, 183, 255), //
-			Color.rgb(255, 183, 174), //
+	//@formatter:off
+	private static final Color[] MAZE_TOP_COLORS = { 
+		Color.rgb(255, 183, 174), 
+		Color.rgb(71, 183, 255), 
+		Color.rgb(222, 151, 81), 
+		Color.rgb(33, 33, 255), 
+		Color.rgb(255, 183, 255), 
+		Color.rgb(255, 183, 174), 
 	};
 
-	private static final Color[] MAZE_SIDE_COLOR = { //
-			Color.rgb(255, 0, 0), //
-			Color.rgb(222, 222, 255), //
-			Color.rgb(222, 222, 255), //
-			Color.rgb(255, 183, 81), //
-			Color.rgb(255, 255, 0), //
-			Color.rgb(255, 0, 0), //
+	private static final Color[] MAZE_SIDE_COLORS = { 
+		Color.rgb(255, 0, 0), 
+		Color.rgb(222, 222, 255), 
+		Color.rgb(222, 222, 255), 
+		Color.rgb(255, 183, 81), 
+		Color.rgb(255, 255, 0), 
+		Color.rgb(255, 0, 0), 
 	};
 
-	private static final Color[] FOOD_COLOR = { //
-			Color.rgb(222, 222, 255), //
-			Color.rgb(255, 255, 0), //
-			Color.rgb(255, 0, 0), //
-			Color.rgb(222, 222, 255), //
-			Color.rgb(0, 255, 255), //
-			Color.rgb(222, 222, 255), //
+	private static final Color[] FOOD_COLORS = { 
+		Color.rgb(222, 222, 255), 
+		Color.rgb(255, 255, 0), 
+		Color.rgb(255, 0, 0), 
+		Color.rgb(222, 222, 255), 
+		Color.rgb(0, 255, 255), 
+		Color.rgb(222, 222, 255), 
 	};
+	//@formatter:on
 
 	private final List<Rectangle2D> mazeFullSprites;
 	private final List<Rectangle2D> mazeEmptySprites;
@@ -77,15 +79,6 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	private final Map<Integer, Rectangle2D> bonusValueSprites;
 	private final Map<String, Rectangle2D> symbolSprites;
 	private final Map<Integer, Rectangle2D> bountyNumberSprites;
-
-	/**
-	 * @param col column
-	 * @param row row
-	 * @return Sprite at given row and column from the right-hand-side of the spritesheet
-	 */
-	private Rectangle2D rhs(int col, int row) {
-		return r(456, 0, col, row, 1, 1);
-	}
 
 	public Rendering2D_MsPacMan() {
 		super("/mspacman/graphics/sprites.png", 16);
@@ -119,17 +112,17 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 		);
 		//@formatter:on
 
-		mazeFullSprites = new ArrayList<>(6);
-		mazeEmptySprites = new ArrayList<>(6);
-		mazeFlashImages = new ArrayList<>(6);
-		for (int mazeIndex = 0; mazeIndex < 6; ++mazeIndex) {
+		final int numMazes = 6;
+		mazeFullSprites = new ArrayList<>(numMazes);
+		mazeEmptySprites = new ArrayList<>(numMazes);
+		mazeFlashImages = new ArrayList<>(numMazes);
+		for (int mazeIndex = 0; mazeIndex < numMazes; ++mazeIndex) {
 			Rectangle2D mazeFullRegion = new Rectangle2D(0, 248 * mazeIndex, 226, 248);
 			Rectangle2D mazeEmptyRegion = new Rectangle2D(226, 248 * mazeIndex, 226, 248);
-			// TODO can we avoid copying image data?
-			Image mazeFlashImage = colorsExchanged(createSubImage(mazeEmptyRegion), //
-					Map.of( //
-							getMazeSideColor(mazeIndex + 1), Color.WHITE, //
-							getMazeTopColor(mazeIndex + 1), Color.BLACK));
+			Image mazeFlashImage = colorsExchanged(copyRegion(mazeEmptyRegion), Map.of( //
+					getMazeSideColor(mazeIndex + 1), Color.WHITE, //
+					getMazeTopColor(mazeIndex + 1), Color.BLACK) //
+			);
 			mazeFullSprites.add(mazeFullRegion);
 			mazeEmptySprites.add(mazeEmptyRegion);
 			mazeFlashImages.add(mazeFlashImage);
@@ -138,12 +131,12 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 
 	@Override
 	public Color getMazeTopColor(int mazeNumber) {
-		return MAZE_TOP_COLOR[mazeNumber - 1];
+		return MAZE_TOP_COLORS[mazeNumber - 1];
 	}
 
 	@Override
 	public Color getMazeSideColor(int mazeNumber) {
-		return MAZE_SIDE_COLOR[mazeNumber - 1];
+		return MAZE_SIDE_COLORS[mazeNumber - 1];
 	}
 
 	@Override
@@ -163,7 +156,7 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 
 	@Override
 	public Color getFoodColor(int mazeNumber) {
-		return FOOD_COLOR[mazeNumber - 1];
+		return FOOD_COLORS[mazeNumber - 1];
 	}
 
 	@Override
@@ -187,31 +180,32 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 
 	@Override
 	public Map<Direction, TimedSequence<Rectangle2D>> createPlayerMunchingAnimations() {
-		Map<Direction, TimedSequence<Rectangle2D>> munchingAnimations = new EnumMap<>(Direction.class);
+		Map<Direction, TimedSequence<Rectangle2D>> animations = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = dirIndex(dir);
 			Rectangle2D wide_open = rhs(0, d), open = rhs(1, d), closed = rhs(2, d);
-			// TODO: not 100% sure
 			var munching = TimedSequence.of(open, wide_open, open, closed).frameDuration(2).endless();
-			munchingAnimations.put(dir, munching);
+			animations.put(dir, munching);
 		}
-		return munchingAnimations;
+		return animations;
 	}
 
 	@Override
 	public TimedSequence<Rectangle2D> createPlayerDyingAnimation() {
-		return TimedSequence.of(rhs(0, 3), rhs(0, 0), rhs(0, 1), rhs(0, 2)).frameDuration(8).repetitions(2);
+		Rectangle2D right = rhs(0, 0), left = rhs(0, 1), up = rhs(0, 2), down = rhs(0, 3);
+		// TODO fixme
+		return TimedSequence.of(down, left, up, right, down, left, up, right, down, left, up).frameDuration(8);
 	}
 
 	@Override
 	public Map<Direction, TimedSequence<Rectangle2D>> createGhostKickingAnimations(int ghostID) {
-		EnumMap<Direction, TimedSequence<Rectangle2D>> kickingAnimations = new EnumMap<>(Direction.class);
+		EnumMap<Direction, TimedSequence<Rectangle2D>> animations = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = dirIndex(dir);
 			var kicking = TimedSequence.of(rhs(2 * d, 4 + ghostID), rhs(2 * d + 1, 4 + ghostID)).frameDuration(8).endless();
-			kickingAnimations.put(dir, kicking);
+			animations.put(dir, kicking);
 		}
-		return kickingAnimations;
+		return animations;
 	}
 
 	@Override
@@ -226,18 +220,28 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 
 	@Override
 	public Map<Direction, TimedSequence<Rectangle2D>> createGhostReturningHomeAnimations() {
-		Map<Direction, TimedSequence<Rectangle2D>> eyesAnimation = new EnumMap<>(Direction.class);
-		Direction.stream().forEach(dir -> eyesAnimation.put(dir, TimedSequence.of(rhs(8 + dirIndex(dir), 5))));
-		return eyesAnimation;
-	}
-
-	public Map<Direction, TimedSequence<Rectangle2D>> createSpouseMunchingAnimations() {
-		Map<Direction, TimedSequence<Rectangle2D>> pacManMunchingAnim = new EnumMap<>(Direction.class);
+		Map<Direction, TimedSequence<Rectangle2D>> animations = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = dirIndex(dir);
-			pacManMunchingAnim.put(dir, TimedSequence.of(rhs(0, 9 + d), rhs(1, 9 + d), rhs(2, 9)).frameDuration(2).endless());
+			animations.put(dir, TimedSequence.of(rhs(8 + d, 5)));
 		}
-		return pacManMunchingAnim;
+		return animations;
+	}
+
+	@Override
+	public Rectangle2D getLifeSprite() {
+		return rhs(1, 0);
+	}
+
+	// Ms. Pac-Man specific:
+
+	public Map<Direction, TimedSequence<Rectangle2D>> createSpouseMunchingAnimations() {
+		Map<Direction, TimedSequence<Rectangle2D>> animations = new EnumMap<>(Direction.class);
+		for (Direction dir : Direction.values()) {
+			int d = dirIndex(dir);
+			animations.put(dir, TimedSequence.of(rhs(0, 9 + d), rhs(1, 9 + d), rhs(2, 9)).frameDuration(2).endless());
+		}
+		return animations;
 	}
 
 	public TimedSequence<Rectangle2D> createFlapAnimation() {
@@ -255,13 +259,8 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 				.frameDuration(10);
 	}
 
-	public TimedSequence<Integer> createBonusAnimation() {
+	public TimedSequence<Integer> createBonusJumpingAnimation() {
 		return TimedSequence.of(2, -2).frameDuration(20).endless();
-	}
-
-	@Override
-	public Rectangle2D getLifeSprite() {
-		return rhs(1, 0);
 	}
 
 	public Rectangle2D getHeart() {
@@ -274,5 +273,14 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 
 	public Rectangle2D getBlueBag() {
 		return new Rectangle2D(488, 199, 8, 8);
+	}
+
+	/**
+	 * @param col column
+	 * @param row row
+	 * @return Sprite at given row and column from the right-hand-side of the spritesheet
+	 */
+	private Rectangle2D rhs(int col, int row) {
+		return r(456, 0, col, row, 1, 1);
 	}
 }

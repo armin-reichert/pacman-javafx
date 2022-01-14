@@ -112,7 +112,7 @@ public class Ghost3D extends Creature3D {
 			return;
 		}
 		Rectangle2D sprite = rendering2D.getBountyNumberSprites().get(ghost.bounty);
-		Image image = rendering2D.createSubImage(sprite);
+		Image image = rendering2D.copyRegion(sprite);
 		PhongMaterial material = new PhongMaterial();
 		material.setBumpMap(image);
 		material.setDiffuseMap(image);

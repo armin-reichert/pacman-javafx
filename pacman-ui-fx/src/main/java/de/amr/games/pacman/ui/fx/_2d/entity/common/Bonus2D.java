@@ -49,7 +49,7 @@ public class Bonus2D implements Renderable2D {
 		this.rendering = Objects.requireNonNull(rendering);
 		if (rendering instanceof Rendering2D_MsPacMan) {
 			Rendering2D_MsPacMan msPacManRendering = (Rendering2D_MsPacMan) rendering;
-			jumpingAnimation = msPacManRendering.createBonusAnimation();
+			jumpingAnimation = msPacManRendering.createBonusJumpingAnimation();
 		} else {
 			jumpingAnimation = null;
 		}
