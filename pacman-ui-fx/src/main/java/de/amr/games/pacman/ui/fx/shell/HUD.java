@@ -72,8 +72,7 @@ public class HUD extends VBox {
 	}
 
 	public void update() {
-		double w = ui.getStage().getScene().getWindow().getWidth(),
-				h = ui.getStage().getScene().getWindow().getHeight();
+		double w = ui.getStage().getScene().getWindow().getWidth(), h = ui.getStage().getScene().getWindow().getHeight();
 		PacManGameState state = ui.getGameController().currentStateID;
 		String huntingPhaseName = ui.getGameController().inScatteringPhase() ? "Scattering" : "Chasing";
 		TickTimer stateTimer = ui.getGameController().stateTimer();
@@ -108,7 +107,7 @@ public class HUD extends VBox {
 		}
 
 		newRow();
-		row("Key V", "Toggle playing Pac-Man vs. Ms. PacMan");
+		row("Key V", "Switch Pac-Man <-> Ms. PacMan");
 		row("Key A", "Autopilot On/Off");
 		row("Key E", "Eat all normal pellets");
 		row("Key I", "Toggle player immunity");
@@ -118,12 +117,12 @@ public class HUD extends VBox {
 		row("Key X", "Kill all hunting ghosts");
 		newRow();
 		row("Ctrl+C", "Next Camera Perspective");
-		row("Ctrl+H", "Increase Wall Height (SHIFT=Decrease)");
+		row("Ctrl+H", "In-/(SHIFT=Decrease) Wall Height");
 		row("Ctrl+I", "Toggle information view");
 		row("Ctrl+L", "Toggle 3D Drawing Mode");
 		row("Ctrl+P", "Toggle Pause");
-		row("Ctrl+R", "Increase Maze Resolution (SHIFT=Decrease)");
-		row("Ctrl+S", "Increase Speed (SHIFT=Decrease)");
+		row("Ctrl+R", "In-/(SHIFT=Decrease) Resolution");
+		row("Ctrl+S", "In-/(SHIFT=Decrease) Speed");
 		row("Ctrl+X", "Toggle Show Axes");
 		row("Ctrl+1", "Play Intermission Scenes");
 		row("Ctrl+3", "Toggle 2D-3D Play Scene");
