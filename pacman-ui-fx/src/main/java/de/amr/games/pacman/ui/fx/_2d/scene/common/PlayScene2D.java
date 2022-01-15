@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.lib.Logging.log;
-import static de.amr.games.pacman.lib.TickTimer.sec_to_ticks;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 import static de.amr.games.pacman.ui.fx.util.Animations.afterSeconds;
 
@@ -243,8 +242,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		// enter LEVEL_STARTING
 		else if (e.newGameState == PacManGameState.LEVEL_STARTING) {
 			maze2D.setGame(game);
-			gameController.stateTimer().set(sec_to_ticks(1));
-			gameController.stateTimer().start();
+			gameController.stateTimer().setSeconds(1).start();
 		}
 
 		// enter GAME_OVER

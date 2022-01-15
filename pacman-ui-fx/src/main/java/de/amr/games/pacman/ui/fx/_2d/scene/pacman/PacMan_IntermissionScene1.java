@@ -69,7 +69,7 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 
 	@Override
 	public void doUpdate() {
-		sceneController.update();
+		sceneController.updateState();
 	}
 
 	@Override
