@@ -27,7 +27,6 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.lib.TickTimer.sec_to_ticks;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 import static de.amr.games.pacman.ui.fx.util.Animations.afterSeconds;
-import static de.amr.games.pacman.ui.fx.util.Animations.pause;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -55,6 +54,7 @@ import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 
 /**
  * 2D scene displaying the maze and the game play.
@@ -226,15 +226,18 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// enter LEVEL_COMPLETE
 		else if (e.newGameState == PacManGameState.LEVEL_COMPLETE) {
+			gameController.stateTimer().reset(); // wait until continueGame() is called
 			sounds.stopAll();
 			player2D.reset();
 			game.hideGhosts();
-			gameController.stateTimer().reset();
-			maze2D.getEnergizerAnimation().reset(); // energizers might still exist if "next level" cheat has been used
-
-			Animation levelCompleteAnimation = new SequentialTransition(pause(2), maze2D.getFlashingAnimation(), pause(1));
-			levelCompleteAnimation.setOnFinished(event -> continueGame());
-			levelCompleteAnimation.play();
+			// Energizers can still exist if "next level" cheat has been used
+			maze2D.getEnergizerAnimation().reset();
+			Animation animation = new SequentialTransition( //
+					maze2D.getFlashingAnimation(), //
+					afterSeconds(1, this::continueGame) //
+			);
+			animation.setDelay(Duration.seconds(2));
+			animation.play();
 		}
 
 		// enter LEVEL_STARTING
