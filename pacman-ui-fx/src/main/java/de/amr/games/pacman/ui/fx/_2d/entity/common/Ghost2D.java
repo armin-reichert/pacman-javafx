@@ -45,8 +45,8 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class Ghost2D implements Renderable2D {
 
-	private final Ghost ghost;
-	private final Rendering2D rendering;
+	public final Ghost ghost;
+	public final Rendering2D rendering;
 
 	public Map<Direction, TimedSequence<Rectangle2D>> kickingAnimations;
 	public Map<Direction, TimedSequence<Rectangle2D>> returningHomeAnimations;

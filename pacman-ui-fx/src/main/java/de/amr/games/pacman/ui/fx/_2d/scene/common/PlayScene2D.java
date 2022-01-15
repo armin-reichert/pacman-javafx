@@ -132,31 +132,30 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void onPlayerGainsPower(PacManGameEvent e) {
-		game.ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
-			Ghost2D ghost2D = ghosts2D.get(ghost.id);
+		ghosts2D.stream().filter(ghost2D -> ghost2D.ghost.is(GhostState.FRIGHTENED)).forEach(ghost2D -> {
 			ghost2D.flashingAnimation.reset();
 			ghost2D.frightenedAnimation.restart();
 		});
-		sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
+		if (!sounds.getClip(PacManGameSound.PACMAN_POWER).isPlaying()) {
+			sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
+		}
 	}
 
 	@Override
 	public void onPlayerFoundFood(PacManGameEvent e) {
-		AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
-		if (!munching.isPlaying()) {
+		if (!sounds.getClip(PacManGameSound.PACMAN_MUNCH).isPlaying()) {
 			sounds.loop(PacManGameSound.PACMAN_MUNCH, Integer.MAX_VALUE);
-			log("Munching sound started");
 		}
 	}
 
 	@Override
 	public void onBonusActivated(PacManGameEvent e) {
-		bonus2D.startAnimation();
+		bonus2D.animation.ifPresent(TimedSequence::restart);
 	}
 
 	@Override
 	public void onBonusEaten(PacManGameEvent e) {
-		bonus2D.stopAnimation();
+		bonus2D.animation.ifPresent(TimedSequence::stop);
 		sounds.play(PacManGameSound.BONUS_EATEN);
 	}
 

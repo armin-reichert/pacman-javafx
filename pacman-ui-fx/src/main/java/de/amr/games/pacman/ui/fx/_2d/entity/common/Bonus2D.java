@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.BonusState;
@@ -42,41 +43,29 @@ public class Bonus2D implements Renderable2D {
 
 	private final Rendering2D rendering;
 	private final Bonus bonus;
-	private final TimedSequence<Integer> jumpingAnimation; // Ms. Pac-Man only
+	public final Optional<TimedSequence<Integer>> animation; // Ms. Pac-Man only
 
 	public Bonus2D(Bonus bonus, Rendering2D rendering) {
 		this.bonus = Objects.requireNonNull(bonus);
 		this.rendering = Objects.requireNonNull(rendering);
 		if (rendering instanceof Rendering2D_MsPacMan) {
 			Rendering2D_MsPacMan msPacManRendering = (Rendering2D_MsPacMan) rendering;
-			jumpingAnimation = msPacManRendering.createBonusJumpingAnimation();
+			animation = Optional.of(msPacManRendering.createBonusJumpingAnimation());
 		} else {
-			jumpingAnimation = null;
-		}
-	}
-
-	public void startAnimation() {
-		if (jumpingAnimation != null) {
-			jumpingAnimation.restart();
-		}
-	}
-
-	public void stopAnimation() {
-		if (jumpingAnimation != null) {
-			jumpingAnimation.stop();
+			animation = Optional.empty();
 		}
 	}
 
 	@Override
 	public void render(GraphicsContext g) {
-		if (bonus.visible) {
-			Rectangle2D sprite = currentSprite();
+		if (animation.isPresent()) {
 			// Ms. Pac.Man bonus is jumping up and down while wandering the maze
-			int dy = jumpingAnimation != null ? jumpingAnimation.animate() : 0;
 			g.save();
-			g.translate(0, dy);
-			rendering.renderEntity(g, bonus, sprite);
+			g.translate(0, animation.get().animate());
+			rendering.renderEntity(g, bonus, currentSprite());
 			g.restore();
+		} else {
+			rendering.renderEntity(g, bonus, currentSprite());
 		}
 	}
 
