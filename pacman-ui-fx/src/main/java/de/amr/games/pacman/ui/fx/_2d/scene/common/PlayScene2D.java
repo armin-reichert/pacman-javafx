@@ -36,7 +36,6 @@ import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
-import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.GameVariant;
@@ -243,7 +242,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		// enter LEVEL_STARTING
 		else if (e.newGameState == PacManGameState.LEVEL_STARTING) {
 			maze2D.setGame(game);
-			gameController.stateTimer().reset(TickTimer.sec_to_ticks(1));
+			gameController.stateTimer().reset(sec_to_ticks(1));
 			gameController.stateTimer().start();
 		}
 
