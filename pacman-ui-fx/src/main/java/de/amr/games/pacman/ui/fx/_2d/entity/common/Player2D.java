@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
-import static de.amr.games.pacman.lib.TickTimer.sec_to_ticks;
-
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
@@ -59,7 +57,6 @@ public class Player2D implements Renderable2D {
 	public void reset() {
 		munchingAnimations = rendering.createPlayerMunchingAnimations();
 		dyingAnimation = rendering.createPlayerDyingAnimation();
-		dyingAnimation.delay(sec_to_ticks(2));
 		currentSprite = munchingAnimations.get(player.dir()).frame();
 	}
 

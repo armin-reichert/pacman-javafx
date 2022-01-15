@@ -79,7 +79,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		maze2D = new Maze2D(0, t(3), game, rendering);
 		livesCounter2D = new LivesCounter2D(t(2), t(34), game, rendering);
 		player2D = new Player2D(game.player, rendering);
-		player2D.dyingAnimation.delay(sec_to_ticks(2)).onStart(game::hideGhosts);
+		player2D.dyingAnimation.onStart(game::hideGhosts);
 		ghosts2D = List.of( //
 				new Ghost2D(game.ghosts[0], rendering), //
 				new Ghost2D(game.ghosts[1], rendering), //
@@ -201,17 +201,19 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// enter PACMAN_DYING
 		else if (e.newGameState == PacManGameState.PACMAN_DYING) {
-			sounds.stopAll();
-			ghosts2D.forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSequence::reset));
-			player2D.dyingAnimation.restart();
-
 			// wait until game is continued
 			gameController.stateTimer().reset();
 			gameController.stateTimer().start();
 
+			sounds.stopAll();
+
+			ghosts2D.forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSequence::reset));
 			new SequentialTransition( //
 					afterSeconds(1, () -> game.ghosts().forEach(Ghost::hide)), //
-					afterSeconds(1, () -> sounds.play(PacManGameSound.PACMAN_DEATH)), //
+					afterSeconds(1, () -> {
+						sounds.play(PacManGameSound.PACMAN_DEATH);
+						player2D.dyingAnimation.restart();
+					}), //
 					afterSeconds(2, () -> game.player.hide()), //
 					afterSeconds(1, () -> continueGame()) //
 			).play();
