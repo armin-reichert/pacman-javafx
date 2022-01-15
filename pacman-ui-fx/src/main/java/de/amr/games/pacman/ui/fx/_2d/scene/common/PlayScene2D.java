@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.lib.Logging.log;
+import static de.amr.games.pacman.lib.TickTimer.sec_to_ticks;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 import static de.amr.games.pacman.ui.fx.util.Animations.afterSeconds;
 import static de.amr.games.pacman.ui.fx.util.Animations.pause;
@@ -79,7 +80,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		maze2D = new Maze2D(0, t(3), game, rendering);
 		livesCounter2D = new LivesCounter2D(t(2), t(34), game, rendering);
 		player2D = new Player2D(game.player, rendering);
-		player2D.dyingAnimation.delay(120).onStart(game::hideGhosts);
+		player2D.dyingAnimation.delay(sec_to_ticks(2)).onStart(game::hideGhosts);
 		ghosts2D = List.of( //
 				new Ghost2D(game.ghosts[0], rendering), //
 				new Ghost2D(game.ghosts[1], rendering), //
@@ -87,6 +88,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 				new Ghost2D(game.ghosts[3], rendering));
 		bonus2D = new Bonus2D(game.bonus, rendering, gameController.gameVariant() == GameVariant.MS_PACMAN);
 		game.player.powerTimer.addEventListener(this::handleGhostsFlashing);
+		sounds.setMuted(gameController.isAttractMode());
 	}
 
 	@Override
@@ -96,7 +98,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void doUpdate() {
-		sounds.setMuted(gameController.isAttractMode());
 		if (gameController.currentStateID == PacManGameState.HUNTING) {
 			// ensure animations are running when switching between 2D and 3D
 			if (!player2D.munchingAnimations.get(game.player.dir()).isRunning()) {
