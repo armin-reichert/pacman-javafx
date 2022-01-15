@@ -202,7 +202,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		// enter PACMAN_DYING
 		else if (e.newGameState == PacManGameState.PACMAN_DYING) {
 			// wait until game is continued
-			gameController.stateTimer().reset();
+			gameController.stateTimer().resetIndefinite();
 			gameController.stateTimer().start();
 
 			sounds.stopAll();
@@ -227,7 +227,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// enter LEVEL_COMPLETE
 		else if (e.newGameState == PacManGameState.LEVEL_COMPLETE) {
-			gameController.stateTimer().reset(); // wait until continueGame() is called
+			gameController.stateTimer().resetIndefinite(); // wait until continueGame() is called
 			sounds.stopAll();
 			player2D.reset();
 			game.hideGhosts();

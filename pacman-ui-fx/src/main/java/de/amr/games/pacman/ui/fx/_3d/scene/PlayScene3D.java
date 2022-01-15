@@ -360,7 +360,7 @@ public class PlayScene3D extends AbstractGameScene {
 		else if (e.newGameState == PacManGameState.PACMAN_DYING) {
 			ghosts3D.forEach(ghost3D -> ghost3D.setNormalSkinColor());
 			sounds.stopAll();
-			gameController.stateTimer().reset();
+			gameController.stateTimer().resetIndefinite();
 			gameController.stateTimer().start();
 			playAnimationPlayerDying();
 		}
@@ -443,7 +443,7 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	private void playAnimationLevelComplete() {
-		gameController.stateTimer().reset();
+		gameController.stateTimer().resetIndefinite();
 		gameController.stateTimer().start();
 		var hideGuysAndShowMessage = afterSeconds(3, () -> {
 			game.player.hide();
