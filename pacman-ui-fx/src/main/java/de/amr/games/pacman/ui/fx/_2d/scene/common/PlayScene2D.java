@@ -39,6 +39,7 @@ import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.PacManGameSound;
@@ -84,7 +85,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 				new Ghost2D(game.ghosts[1], rendering), //
 				new Ghost2D(game.ghosts[2], rendering), //
 				new Ghost2D(game.ghosts[3], rendering));
-		bonus2D = new Bonus2D(game.bonus, rendering);
+		bonus2D = new Bonus2D(game.bonus, rendering, gameController.gameVariant() == GameVariant.MS_PACMAN);
 		game.player.powerTimer.addEventListener(this::handleGhostsFlashing);
 	}
 
@@ -230,8 +231,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 			gameController.stateTimer().reset();
 			maze2D.getEnergizerAnimation().reset(); // energizers might still exist if "next level" cheat has been used
 
-			Animation levelCompleteAnimation = new SequentialTransition(pause(2), maze2D.getFlashingAnimation(),
-					pause(1));
+			Animation levelCompleteAnimation = new SequentialTransition(pause(2), maze2D.getFlashingAnimation(), pause(1));
 			levelCompleteAnimation.setOnFinished(event -> continueGame());
 			levelCompleteAnimation.play();
 		}
@@ -285,8 +285,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 	}
 
 	private void renderGameState() {
-		PacManGameState state = gameController.isAttractMode() ? PacManGameState.GAME_OVER
-				: gameController.currentStateID;
+		PacManGameState state = gameController.isAttractMode() ? PacManGameState.GAME_OVER : gameController.currentStateID;
 		if (state == PacManGameState.GAME_OVER) {
 			gc.setFont(rendering.getScoreFont());
 			gc.setFill(Color.RED);

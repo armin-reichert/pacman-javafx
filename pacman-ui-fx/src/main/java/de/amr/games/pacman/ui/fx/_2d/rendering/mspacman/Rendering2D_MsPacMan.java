@@ -259,10 +259,6 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 				.frameDuration(10);
 	}
 
-	public TimedSequence<Integer> createBonusJumpingAnimation() {
-		return TimedSequence.of(2, 0, -2).frameDuration(8).endless();
-	}
-
 	public Rectangle2D getHeart() {
 		return rhs(2, 10);
 	}
