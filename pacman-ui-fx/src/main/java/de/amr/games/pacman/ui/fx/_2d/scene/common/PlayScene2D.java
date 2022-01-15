@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
+import static de.amr.games.pacman.ui.fx.util.Animations.afterSeconds;
 import static de.amr.games.pacman.ui.fx.util.Animations.pause;
 
 import java.util.List;
@@ -48,7 +49,6 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Maze2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.util.Animations;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.scene.media.AudioClip;
@@ -203,10 +203,17 @@ public class PlayScene2D extends AbstractGameScene2D {
 			sounds.stopAll();
 			ghosts2D.forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSequence::reset));
 			player2D.dyingAnimation.restart();
-			Animations.afterSeconds(1, () -> game.ghosts().forEach(Ghost::hide)).play();
-			Animations.afterSeconds(2, () -> sounds.play(PacManGameSound.PACMAN_DEATH)).play();
-			gameController.stateTimer().resetSeconds(4);
+
+			// wait until game is continued
+			gameController.stateTimer().reset();
 			gameController.stateTimer().start();
+
+			new SequentialTransition( //
+					afterSeconds(1, () -> game.ghosts().forEach(Ghost::hide)), //
+					afterSeconds(1, () -> sounds.play(PacManGameSound.PACMAN_DEATH)), //
+					afterSeconds(2, () -> game.player.hide()), //
+					afterSeconds(1, () -> continueGame()) //
+			).play();
 		}
 
 		// enter GHOST_DYING
@@ -223,7 +230,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 			gameController.stateTimer().reset();
 			maze2D.getEnergizerAnimation().reset(); // energizers might still exist if "next level" cheat has been used
 
-			Animation levelCompleteAnimation = new SequentialTransition(pause(2), maze2D.getFlashingAnimation(), pause(1));
+			Animation levelCompleteAnimation = new SequentialTransition(pause(2), maze2D.getFlashingAnimation(),
+					pause(1));
 			levelCompleteAnimation.setOnFinished(event -> continueGame());
 			levelCompleteAnimation.play();
 		}
@@ -277,7 +285,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 	}
 
 	private void renderGameState() {
-		PacManGameState state = gameController.isAttractMode() ? PacManGameState.GAME_OVER : gameController.currentStateID;
+		PacManGameState state = gameController.isAttractMode() ? PacManGameState.GAME_OVER
+				: gameController.currentStateID;
 		if (state == PacManGameState.GAME_OVER) {
 			gc.setFont(rendering.getScoreFont());
 			gc.setFill(Color.RED);
