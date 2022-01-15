@@ -56,24 +56,22 @@ public class Bonus2D implements Renderable2D {
 
 	@Override
 	public void render(GraphicsContext g) {
+		Rectangle2D sprite;
+		if (bonus.state == BonusState.EDIBLE) {
+			sprite = rendering.getSymbolSprites().get(bonus.symbol);
+		} else if (bonus.state == BonusState.EATEN) {
+			sprite = rendering.getBonusValueSprites().get(bonus.points);
+		} else {
+			return;
+		}
 		if (animation.isPresent()) {
 			// Ms. Pac.Man bonus is jumping up and down while wandering the maze
 			g.save();
 			g.translate(0, animation.get().animate());
-			rendering.renderEntity(g, bonus, currentSprite());
+			rendering.renderEntity(g, bonus, sprite);
 			g.restore();
 		} else {
-			rendering.renderEntity(g, bonus, currentSprite());
+			rendering.renderEntity(g, bonus, sprite);
 		}
-	}
-
-	private Rectangle2D currentSprite() {
-		if (bonus.state == BonusState.EDIBLE) {
-			return rendering.getSymbolSprites().get(bonus.symbol);
-		}
-		if (bonus.state == BonusState.EATEN) {
-			return rendering.getBonusValueSprites().get(bonus.points);
-		}
-		return null;
 	}
 }
