@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx.shell;
 
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.lib.TickTimer;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
@@ -72,6 +73,7 @@ public class HUD extends VBox {
 	}
 
 	public void update() {
+		GameModel game = ui.getGameController().game();
 		double w = ui.getStage().getScene().getWindow().getWidth(), h = ui.getStage().getScene().getWindow().getHeight();
 		PacManGameState state = ui.getGameController().currentStateID;
 		String huntingPhaseName = ui.getGameController().inScatteringPhase() ? "Scattering" : "Chasing";
@@ -84,13 +86,16 @@ public class HUD extends VBox {
 		row("Playing", "%s", yes_no(ui.getGameController().isGameRunning()));
 		row("Attract Mode", "%s", yes_no(ui.getGameController().isAttractMode()));
 		row("Game Variant", "%s", ui.getGameController().gameVariant());
-		row("Game Level", "%d", ui.getGameController().game().levelNumber);
-		row("Game State", "%s", state == PacManGameState.HUNTING ? state + ":" + huntingPhaseName : state);
+		row("Game Level", "%d", game.levelNumber);
+		row("Game State", "%s",
+				state == PacManGameState.HUNTING
+						? state + ":" + " Phase #" + ui.getGameController().getHuntingPhase() + " (" + huntingPhaseName + ")"
+						: state);
 		row("", "Running:   %s%s", stateTimer.ticked(), stateTimer.isStopped() ? " (STOPPED)" : "");
 		row("", "Remaining: %s",
 				stateTimer.ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer.ticksRemaining());
 		row("Autopilot", "%s", on_off(ui.getGameController().isAutoControlled()));
-		row("Immunity", "%s", on_off(ui.getGameController().game().player.immune));
+		row("Immunity", "%s", on_off(game.player.immune));
 		row("Game Scene", "%s", ui.getCurrentGameScene().getClass().getSimpleName());
 		row("", "w=%.0f h=%.0f", ui.getCurrentGameScene().getSubSceneFX().getWidth(),
 				ui.getCurrentGameScene().getSubSceneFX().getHeight());
