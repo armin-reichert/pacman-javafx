@@ -23,10 +23,12 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell;
 
+import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
@@ -48,7 +50,7 @@ import javafx.util.Duration;
 public class HUD extends VBox {
 
 	static final int MAX_WIDTH = 400;
-	static final Color BG_COLOR = new Color(0.3, 0.3, 0.3, 0.7);
+	static final Color BG_COLOR = new Color(0.3, 0.3, 0.3, 0.6);
 
 	private static String yes_no(boolean b) {
 		return b ? "YES" : "NO";
@@ -72,39 +74,63 @@ public class HUD extends VBox {
 		getChildren().add(textUI);
 	}
 
+	public void show() {
+		setVisible(true);
+		setOpacity(1);
+		setTranslateX(-MAX_WIDTH);
+		TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), this);
+		transition.setFromX(-MAX_WIDTH);
+		transition.setToX(0);
+		transition.setInterpolator(Interpolator.EASE_IN);
+		transition.play();
+	}
+
+	public void hide() {
+		FadeTransition fade = new FadeTransition(Duration.seconds(0.5), this);
+		fade.setFromValue(1);
+		fade.setToValue(0);
+		fade.setOnFinished(e -> setVisible(false));
+		fade.play();
+	}
+
 	public void update() {
-		GameModel game = ui.getGameController().game();
-		double w = ui.getStage().getScene().getWindow().getWidth(), h = ui.getStage().getScene().getWindow().getHeight();
-		PacManGameState state = ui.getGameController().currentStateID;
-		String huntingPhaseName = ui.getGameController().inScatteringPhase() ? "Scattering" : "Chasing";
-		TickTimer stateTimer = ui.getGameController().stateTimer();
+		final PacManGameController gameController = ui.getGameController();
+		final GameModel game = gameController.game();
+		final PacManGameState state = gameController.currentStateID;
+		final String huntingPhaseName = gameController.inScatteringPhase() ? "Scattering" : "Chasing";
+		final TickTimer stateTimer = gameController.stateTimer();
+		final double width = ui.getStage().getScene().getWindow().getWidth();
+		final double height = ui.getStage().getScene().getWindow().getHeight();
+		final AbstractGameScene currentScene = ui.getCurrentGameScene();
+		final double sceneWidth = ui.getStage().getScene().getWidth();
+		final double sceneHeight = ui.getStage().getScene().getHeight();
+
 		text.setLength(0);
 		row("Total Ticks", "%d", Env.gameLoop.$totalTicks.get());
 		row("Target FPS", "%d Hz", Env.gameLoop.getTargetFrameRate());
 		row("Current FPS", "%d Hz", Env.gameLoop.$fps.get());
 		row("Paused", "%s", yes_no(Env.$paused.get()));
-		row("Playing", "%s", yes_no(ui.getGameController().isGameRunning()));
-		row("Attract Mode", "%s", yes_no(ui.getGameController().isAttractMode()));
-		row("Game Variant", "%s", ui.getGameController().gameVariant());
+		row("Playing", "%s", yes_no(gameController.isGameRunning()));
+		row("Attract Mode", "%s", yes_no(gameController.isAttractMode()));
+		row("Game Variant", "%s", gameController.gameVariant());
 		row("Game Level", "%d", game.levelNumber);
 		row("Game State", "%s",
 				state == PacManGameState.HUNTING
-						? state + ":" + " Phase #" + ui.getGameController().getHuntingPhase() + " (" + huntingPhaseName + ")"
+						? String.format("%s: Phase #%d (%s)", state, gameController.getHuntingPhase(), huntingPhaseName)
 						: state);
 		row("", "Running:   %s%s", stateTimer.ticked(), stateTimer.isStopped() ? " (STOPPED)" : "");
 		row("", "Remaining: %s",
 				stateTimer.ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer.ticksRemaining());
-		row("Autopilot", "%s", on_off(ui.getGameController().isAutoControlled()));
+		row("Autopilot", "%s", on_off(gameController.isAutoControlled()));
 		row("Immunity", "%s", on_off(game.player.immune));
-		row("Game Scene", "%s", ui.getCurrentGameScene().getClass().getSimpleName());
-		row("", "w=%.0f h=%.0f", ui.getCurrentGameScene().getSubSceneFX().getWidth(),
-				ui.getCurrentGameScene().getSubSceneFX().getHeight());
-		row("Window Size", "w=%.0f h=%.0f", w, h);
-		row("Scene Size", "w=%.0f h=%.0f", ui.getStage().getScene().getWidth(), ui.getStage().getScene().getHeight());
+		row("Game Scene", "%s", currentScene.getClass().getSimpleName());
+		row("", "w=%.0f h=%.0f", currentScene.getSubSceneFX().getWidth(), currentScene.getSubSceneFX().getHeight());
+		row("Window Size", "w=%.0f h=%.0f", width, height);
+		row("Scene Size", "w=%.0f h=%.0f", sceneWidth, sceneHeight);
 		row("3D Scenes", "%s", on_off(Env.$use3DScenes.get()));
-		if (ui.getCurrentGameScene().is3D()) {
+		if (currentScene.is3D()) {
 			row("Perspective", "%s", Env.$perspective.get());
-			row("Camera", "%s", ui.getCurrentGameScene().currentCameraController().info());
+			row("Camera", "%s", currentScene.currentCameraController().info());
 			row("Draw Mode", "%s", Env.$drawMode3D.get());
 			row("Axes", "%s", on_off(Env.$axesVisible.get()));
 		} else {
@@ -120,6 +146,7 @@ public class HUD extends VBox {
 		row("Key N", "Enter Next Level");
 		row("Key Q", "Quit Game");
 		row("Key X", "Kill all hunting ghosts");
+
 		newRow();
 		row("Ctrl+C", "Next Camera Perspective");
 		row("Ctrl+H", "In-/(SHIFT=Decrease) Wall Height");
@@ -142,24 +169,5 @@ public class HUD extends VBox {
 
 	private void newRow() {
 		text.append("\n");
-	}
-
-	public void show() {
-		setVisible(true);
-		setOpacity(1);
-		setTranslateX(-MAX_WIDTH);
-		TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), this);
-		transition.setFromX(-MAX_WIDTH);
-		transition.setToX(0);
-		transition.setInterpolator(Interpolator.EASE_IN);
-		transition.play();
-	}
-
-	public void hide() {
-		FadeTransition fade = new FadeTransition(Duration.seconds(0.5), this);
-		fade.setFromValue(1);
-		fade.setToValue(0);
-		fade.setOnFinished(e -> setVisible(false));
-		fade.play();
 	}
 }
