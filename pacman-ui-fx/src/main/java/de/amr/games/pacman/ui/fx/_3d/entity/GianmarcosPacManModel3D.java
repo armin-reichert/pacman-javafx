@@ -57,7 +57,7 @@ public class GianmarcosPacManModel3D implements PacManModel3D {
 		eyes.setMaterial(new PhongMaterial(Color.rgb(20, 20, 20)));
 
 		MeshView palate = pacManModel.createMeshView("Sphere_grey_wall");
-		palate.setMaterial(new PhongMaterial(Color.rgb(10, 10, 10)));
+		palate.setMaterial(new PhongMaterial(Color.CHOCOLATE));
 
 		centerOverOrigin(head, eyes, palate);
 		bindDrawModeToEnv(head, eyes, palate);
