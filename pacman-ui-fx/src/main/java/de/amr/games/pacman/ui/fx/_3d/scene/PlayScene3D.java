@@ -377,8 +377,8 @@ public class PlayScene3D extends AbstractGameScene {
 		// enter LEVEL_COMPLETE
 		else if (e.newGameState == PacManGameState.LEVEL_COMPLETE) {
 			sounds.stopAll();
-			playAnimationLevelComplete();
 			ghosts3D.forEach(ghost3D -> ghost3D.setNormalSkinColor());
+			playAnimationLevelComplete();
 		}
 
 		// enter GAME_OVER
@@ -428,7 +428,6 @@ public class PlayScene3D extends AbstractGameScene {
 
 	private void playAnimationLevelComplete() {
 		var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game.levelNumber);
-		gameController.stateTimer().setIndefinite().start();
 		new SequentialTransition( //
 				afterSeconds(3, () -> {
 					game.player.hide();
@@ -442,7 +441,6 @@ public class PlayScene3D extends AbstractGameScene {
 	private void playAnimationLevelStarting() {
 		var message = Env.message("level_starting", game.levelNumber);
 		ui.showFlashMessage(1, message);
-		gameController.stateTimer().setIndefinite().start();
 		new SequentialTransition( //
 				afterSeconds(1, () -> {
 					game.player.show();
