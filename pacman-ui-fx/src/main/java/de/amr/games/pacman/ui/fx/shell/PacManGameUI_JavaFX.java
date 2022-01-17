@@ -105,7 +105,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI, DefaultPacManGameEvent
 	}
 
 	@Override
-	public void update() {
+	public void onTick() {
 		flashMessageView.update();
 		hud.update();
 	}

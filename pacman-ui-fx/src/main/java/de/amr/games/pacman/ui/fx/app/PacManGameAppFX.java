@@ -74,7 +74,7 @@ public class PacManGameAppFX extends Application {
 		GameLoop gameLoop = new GameLoop(() -> {
 			controller.updateState();
 			view.getCurrentGameScene().update();
-		}, view::update);
+		}, view::onTick);
 
 		// Note; this must be done *after* creating the game loop
 		stage.titleProperty().bind(Bindings.createStringBinding(() -> {
