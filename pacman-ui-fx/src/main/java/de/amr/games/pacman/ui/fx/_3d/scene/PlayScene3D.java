@@ -441,13 +441,7 @@ public class PlayScene3D extends AbstractGameScene {
 	private void playAnimationLevelStarting() {
 		var message = Env.message("level_starting", game.levelNumber);
 		ui.showFlashMessage(1, message);
-		new SequentialTransition( //
-				afterSeconds(1, () -> {
-					game.player.show();
-					game.showGhosts();
-				}), //
-				afterSeconds(3, this::continueGame) //
-		).play();
+		afterSeconds(3, this::continueGame).play();
 	}
 
 	private void playDoorAnimation() {
