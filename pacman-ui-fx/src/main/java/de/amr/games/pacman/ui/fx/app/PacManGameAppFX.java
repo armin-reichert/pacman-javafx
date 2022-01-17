@@ -66,7 +66,6 @@ public class PacManGameAppFX extends Application {
 
 		// Create the user interface and the connections with the controllers
 		PacManGameUI_JavaFX view = new PacManGameUI_JavaFX(stage, controller, options.windowHeight, options.fullscreen);
-		controller.setUI(view);
 		controller.addGameEventListener(view);
 		controller.setPlayerControl(playerController);
 

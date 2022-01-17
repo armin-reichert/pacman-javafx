@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.scene;
 
 import de.amr.games.pacman.ui.PacManGameSound;
+import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntermissionScene1;
@@ -42,10 +43,11 @@ import de.amr.games.pacman.ui.fx.sound.SoundManager;
  */
 public class ScenesMsPacMan {
 
+	public static final AbstractGameScene SCENES[][] = new AbstractGameScene[5][2];
 	public static final Rendering2D_MsPacMan RENDERING = new Rendering2D_MsPacMan();
 	public static final PacManModel3D MODEL_3D = new GianmarcosPacManModel3D();
-
 	public static final SoundManager SOUNDS = new SoundManager();
+
 	static {
 		//@formatter:off
 		SOUNDS.put(PacManGameSound.CREDIT,          "/mspacman/sound/Coin Credit.mp3");
@@ -67,19 +69,18 @@ public class ScenesMsPacMan {
 		//@formatter:on
 	}
 
-	public static final AbstractGameScene SCENES[][] = new AbstractGameScene[5][2];
-	static {
+	public static void init(PacManGameUI ui) {
 		//@formatter:off
 		SCENES[0][0] = 
-		SCENES[0][1] = new MsPacMan_IntroScene();
+		SCENES[0][1] = new MsPacMan_IntroScene(ui);
 		SCENES[1][0] = 
-		SCENES[1][1] = new MsPacMan_IntermissionScene1();
+		SCENES[1][1] = new MsPacMan_IntermissionScene1(ui);
 		SCENES[2][0] = 
-		SCENES[2][1] = new MsPacMan_IntermissionScene2();
+		SCENES[2][1] = new MsPacMan_IntermissionScene2(ui);
 		SCENES[3][0] = 
-		SCENES[3][1] = new MsPacMan_IntermissionScene3();
-		SCENES[4][0] = new PlayScene2D(RENDERING, SOUNDS);
-		SCENES[4][1] = new PlayScene3D(MODEL_3D, SOUNDS);
+		SCENES[3][1] = new MsPacMan_IntermissionScene3(ui);
+		SCENES[4][0] = new PlayScene2D(ui, RENDERING, SOUNDS);
+		SCENES[4][1] = new PlayScene3D(ui, MODEL_3D, SOUNDS);
 		//@formatter:on
 	}
 }

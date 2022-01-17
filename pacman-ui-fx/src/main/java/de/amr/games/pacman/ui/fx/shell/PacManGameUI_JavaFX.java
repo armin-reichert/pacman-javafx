@@ -74,6 +74,9 @@ public class PacManGameUI_JavaFX implements PacManGameUI, DefaultPacManGameEvent
 		this.stage = stage;
 		this.gameController = gameController;
 
+		ScenesPacMan.init(this);
+		ScenesMsPacMan.init(this);
+
 		// Determine the initial game scene
 		AbstractGameScene gameScene = getSceneForCurrentGameState(gameController.game(), Env.$use3DScenes.get());
 		double aspectRatio = gameScene.aspectRatio()

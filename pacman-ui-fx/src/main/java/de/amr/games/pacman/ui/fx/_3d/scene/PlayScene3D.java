@@ -47,6 +47,7 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.PacManGameSound;
+import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
@@ -121,7 +122,8 @@ public class PlayScene3D extends AbstractGameScene {
 	private LivesCounter3D livesCounter3D;
 	private List<Transition> energizerAnimations;
 
-	public PlayScene3D(PacManModel3D model3D, SoundManager sounds) {
+	public PlayScene3D(PacManGameUI ui, PacManModel3D model3D, SoundManager sounds) {
+		super(ui);
 		this.model3D = model3D;
 		this.sounds = sounds;
 		fxScene = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
@@ -315,7 +317,7 @@ public class PlayScene3D extends AbstractGameScene {
 
 	@Override
 	public void onExtraLife(PacManGameEvent e) {
-		gameController.getUI().showFlashMessage(1.5, Env.message("extra_life"));
+		ui.showFlashMessage(1.5, Env.message("extra_life"));
 		sounds.play(PacManGameSound.EXTRA_LIFE);
 	}
 
@@ -386,7 +388,7 @@ public class PlayScene3D extends AbstractGameScene {
 		// enter GAME_OVER
 		else if (e.newGameState == PacManGameState.GAME_OVER) {
 			sounds.stopAll();
-			gameController.getUI().showFlashMessage(3, Env.GAME_OVER_TALK.next());
+			ui.showFlashMessage(3, Env.GAME_OVER_TALK.next());
 		}
 
 		// exit HUNTING but not GAME_OVER
@@ -447,14 +449,14 @@ public class PlayScene3D extends AbstractGameScene {
 			game.player.hide();
 			game.hideGhosts();
 			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game.levelNumber);
-			gameController.getUI().showFlashMessage(2, message);
+			ui.showFlashMessage(2, message);
 		});
 		var quitLevel = afterSeconds(2, () -> continueGame());
 		new SequentialTransition(hideGuysAndShowMessage, quitLevel).play();
 	}
 
 	private void playAnimationLevelStarting() {
-		gameController.getUI().showFlashMessage(1, Env.message("level_starting", game.levelNumber));
+		ui.showFlashMessage(1, Env.message("level_starting", game.levelNumber));
 		var showGuys = afterSeconds(1, () -> {
 			game.player.show();
 			game.showGhosts();

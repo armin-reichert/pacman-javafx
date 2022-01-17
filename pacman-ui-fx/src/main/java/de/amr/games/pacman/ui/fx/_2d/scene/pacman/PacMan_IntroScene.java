@@ -36,6 +36,7 @@ import de.amr.games.pacman.controller.pacman.IntroController;
 import de.amr.games.pacman.controller.pacman.IntroController.GhostPortrait;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
@@ -59,8 +60,8 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	private List<Ghost2D> ghosts2D;
 	private List<Ghost2D> gallery2D;
 
-	public PacMan_IntroScene() {
-		super(ScenesPacMan.RENDERING, ScenesPacMan.SOUNDS);
+	public PacMan_IntroScene(PacManGameUI ui) {
+		super(ui, ScenesPacMan.RENDERING, ScenesPacMan.SOUNDS);
 	}
 
 	@Override
