@@ -25,10 +25,17 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.ui.fx._3d.entity.Model3DHelper.lerp;
+import static de.amr.games.pacman.ui.fx.util.Animations.now;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Pac;
+import de.amr.games.pacman.ui.PacManGameSound;
+import de.amr.games.pacman.ui.fx.sound.SoundManager;
+import javafx.animation.Animation;
+import javafx.animation.ParallelTransition;
 import javafx.animation.RotateTransition;
+import javafx.animation.ScaleTransition;
+import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
@@ -59,6 +66,9 @@ public class Player3D extends Creature3D {
 
 		@Override
 		protected void interpolate(double t) {
+			if (t == 0) {
+				head().setMaterial(material);
+			}
 			Color from = Color.YELLOW, to = Color.LIGHTGRAY;
 			Color color = Color.color(lerp(from.getRed(), to.getRed(), t), lerp(from.getGreen(), to.getGreen(), t),
 					lerp(from.getBlue(), to.getBlue(), t));
@@ -110,6 +120,24 @@ public class Player3D extends Creature3D {
 		reset();
 	}
 
+	public Animation createDyingAnimation(SoundManager sounds) {
+		var spin = new RotateTransition(Duration.seconds(0.2), this);
+		spin.setAxis(Rotate.Z_AXIS);
+		spin.setByAngle(360);
+		spin.setCycleCount(10);
+
+		var shrink = new ScaleTransition(Duration.seconds(2), this);
+		shrink.setToX(0);
+		shrink.setToY(0);
+		shrink.setToZ(0);
+
+		var playSound = now(() -> sounds.play(PacManGameSound.PACMAN_DEATH));
+
+		return new SequentialTransition(//
+				new ImpaleAnimation(Duration.seconds(2)), //
+				new ParallelTransition(spin, shrink, playSound));
+	}
+
 	public void reset() {
 		head().setMaterial(new PhongMaterial(Color.YELLOW));
 		setScaleX(1.05);
@@ -129,12 +157,6 @@ public class Player3D extends Creature3D {
 		if (!player.dead) {
 			turningAnimation.update();
 		}
-	}
-
-	public Transition createImpaleAnimation(Duration duration) {
-		ImpaleAnimation impale = new ImpaleAnimation(duration);
-		head().setMaterial(impale.material);
-		return impale;
 	}
 
 	private Shape3D head() {

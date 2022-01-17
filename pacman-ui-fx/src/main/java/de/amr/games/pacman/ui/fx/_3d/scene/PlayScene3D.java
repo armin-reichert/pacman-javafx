@@ -26,8 +26,6 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.ui.fx.util.Animations.afterSeconds;
-import static de.amr.games.pacman.ui.fx.util.Animations.now;
-import static de.amr.games.pacman.ui.fx.util.Animations.pause;
 import static java.util.function.Predicate.not;
 
 import java.util.EnumMap;
@@ -66,8 +64,6 @@ import de.amr.games.pacman.ui.fx.util.AbstractCameraController;
 import de.amr.games.pacman.ui.fx.util.CoordinateSystem;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
-import javafx.animation.ParallelTransition;
-import javafx.animation.RotateTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
@@ -423,24 +419,11 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	private void playAnimationPlayerDying() {
-		var hideGhosts = now(game::hideGhosts);
-		var playSound = now(() -> sounds.play(PacManGameSound.PACMAN_DEATH));
-		var impale = player3D.createImpaleAnimation(Duration.seconds(1));
-
-		var spin = new RotateTransition(Duration.seconds(0.2), player3D);
-		spin.setAxis(Rotate.Z_AXIS);
-		spin.setByAngle(360);
-		spin.setCycleCount(5);
-
-		var shrink = new ScaleTransition(Duration.seconds(1), player3D);
-		shrink.setToX(0);
-		shrink.setToY(0);
-		shrink.setToZ(0);
-
-		var animation = new SequentialTransition( //
-				pause(0.25), hideGhosts, impale, new ParallelTransition(playSound, spin, shrink), pause(2));
-		animation.setOnFinished(e -> continueGame());
-		animation.play();
+		new SequentialTransition( //
+				afterSeconds(1, () -> game.hideGhosts()), //
+				player3D.createDyingAnimation(sounds), //
+				afterSeconds(2, this::continueGame) //
+		).play();
 	}
 
 	private void playAnimationLevelComplete() {
