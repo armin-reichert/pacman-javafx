@@ -33,16 +33,35 @@ import javafx.util.Duration;
  */
 public class Animations {
 
+	/**
+	 * Pauses for the given number of seconds.
+	 * 
+	 * @param seconds number of seconds
+	 * @return pause transition
+	 */
 	public static PauseTransition pause(double seconds) {
 		return new PauseTransition(Duration.seconds(seconds));
 	}
 
+	/**
+	 * Runs the given code after the given number of seconds
+	 * 
+	 * @param seconds  number of seconds
+	 * @param runnable code to run
+	 * @return pause transition
+	 */
 	public static PauseTransition afterSeconds(double seconds, Runnable runnable) {
 		PauseTransition p = new PauseTransition(Duration.seconds(seconds));
 		p.setOnFinished(e -> runnable.run());
 		return p;
 	}
 
+	/**
+	 * Runs the given code immediatetly.
+	 * 
+	 * @param runnable code to run
+	 * @return pause transition
+	 */
 	public static PauseTransition now(Runnable runnable) {
 		return afterSeconds(0, runnable);
 	}

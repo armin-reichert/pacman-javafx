@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.ui.fx.util.Animations.afterSeconds;
-import static de.amr.games.pacman.ui.fx.util.Animations.now;
 import static java.util.function.Predicate.not;
 
 import java.util.EnumMap;
@@ -442,9 +441,9 @@ public class PlayScene3D extends AbstractGameScene {
 
 	private void playAnimationLevelStarting() {
 		var message = Env.message("level_starting", game.levelNumber);
+		ui.showFlashMessage(1, message);
 		gameController.stateTimer().setIndefinite().start();
 		new SequentialTransition( //
-				now(() -> ui.showFlashMessage(1, message)), //
 				afterSeconds(1, () -> {
 					game.player.show();
 					game.showGhosts();
