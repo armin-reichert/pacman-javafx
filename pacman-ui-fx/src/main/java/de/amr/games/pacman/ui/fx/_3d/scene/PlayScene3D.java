@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.ui.fx.util.Animations.afterSeconds;
-import static de.amr.games.pacman.ui.fx.util.Animations.now;
 import static java.util.function.Predicate.not;
 
 import java.util.EnumMap;
@@ -153,13 +152,15 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	private Rendering2D rendering2D() {
-		return gameController.gameVariant() == GameVariant.MS_PACMAN ? ScenesMsPacMan.RENDERING : ScenesPacMan.RENDERING;
+		return gameController.gameVariant() == GameVariant.MS_PACMAN ? ScenesMsPacMan.RENDERING
+				: ScenesPacMan.RENDERING;
 	}
 
 	private void buildMaze(PacManGameWorld world, int mazeNumber) {
 		buildMazeStructure(world, mazeNumber);
 		maze3D.buildFood(world, rendering2D().getFoodColor(mazeNumber));
-		energizerAnimations = energizerNodes(world).map(PlayScene3D::createEnergizerAnimation).collect(Collectors.toList());
+		energizerAnimations = energizerNodes(world).map(PlayScene3D::createEnergizerAnimation)
+				.collect(Collectors.toList());
 	}
 
 	private void buildMazeStructure(PacManGameWorld world, int mazeNumber) {
@@ -378,8 +379,8 @@ public class PlayScene3D extends AbstractGameScene {
 		// enter LEVEL_COMPLETE
 		else if (e.newGameState == PacManGameState.LEVEL_COMPLETE) {
 			sounds.stopAll();
-			playAnimationLevelComplete();
 			ghosts3D.forEach(ghost3D -> ghost3D.setNormalSkinColor());
+			playAnimationLevelComplete();
 		}
 
 		// enter GAME_OVER
@@ -429,7 +430,6 @@ public class PlayScene3D extends AbstractGameScene {
 
 	private void playAnimationLevelComplete() {
 		var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game.levelNumber);
-		gameController.stateTimer().setIndefinite().start();
 		new SequentialTransition( //
 				afterSeconds(3, () -> {
 					game.player.hide();
@@ -442,19 +442,13 @@ public class PlayScene3D extends AbstractGameScene {
 
 	private void playAnimationLevelStarting() {
 		var message = Env.message("level_starting", game.levelNumber);
-		gameController.stateTimer().setIndefinite().start();
-		new SequentialTransition( //
-				now(() -> ui.showFlashMessage(1, message)), //
-				afterSeconds(1, () -> {
-					game.player.show();
-					game.showGhosts();
-				}), //
-				afterSeconds(3, this::continueGame) //
-		).play();
+		ui.showFlashMessage(1, message);
+		afterSeconds(3, this::continueGame).play();
 	}
 
 	private void playDoorAnimation() {
-		boolean open = maze3D.doors().anyMatch(door -> game.ghosts().anyMatch(ghost -> ghost.tile().equals(tile(door))));
+		boolean open = maze3D.doors()
+				.anyMatch(door -> game.ghosts().anyMatch(ghost -> ghost.tile().equals(tile(door))));
 		maze3D.showDoorsOpen(open);
 	}
 }
