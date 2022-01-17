@@ -97,7 +97,7 @@ public class HUD extends VBox {
 		final PacManGameController gameController = ui.getGameController();
 		final GameModel game = gameController.game();
 		final PacManGameState state = gameController.currentStateID;
-		final String huntingPhaseName = gameController.inScatteringPhase() ? "Scattering" : "Chasing";
+		final String huntingPhaseName = game.inScatteringPhase() ? "Scattering" : "Chasing";
 		final TickTimer stateTimer = gameController.stateTimer();
 		final double width = ui.getStage().getScene().getWindow().getWidth();
 		final double height = ui.getStage().getScene().getWindow().getHeight();
@@ -116,7 +116,7 @@ public class HUD extends VBox {
 		row("Game Level", "%d", game.levelNumber);
 		row("Game State", "%s",
 				state == PacManGameState.HUNTING
-						? String.format("%s: Phase #%d (%s)", state, gameController.getHuntingPhase(), huntingPhaseName)
+						? String.format("%s: Phase #%d (%s)", state, game.huntingPhase, huntingPhaseName)
 						: state);
 		row("", "Running:   %s%s", stateTimer.ticked(), stateTimer.isStopped() ? " (STOPPED)" : "");
 		row("", "Remaining: %s",
