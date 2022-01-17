@@ -421,7 +421,7 @@ public class PlayScene3D extends AbstractGameScene {
 	private void playAnimationPlayerDying() {
 		new SequentialTransition( //
 				afterSeconds(1, game::hideGhosts), //
-				player3D.createDyingAnimation(sounds), //
+				player3D.dyingAnimation(sounds), //
 				afterSeconds(2, this::continueGame) //
 		).play();
 	}

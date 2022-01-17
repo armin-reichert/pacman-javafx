@@ -76,51 +76,42 @@ public class Player3D extends Creature3D {
 		}
 	}
 
-	private class TurningAnimation {
-
-		private RotateTransition rotate = new RotateTransition(Duration.seconds(0.25), Player3D.this);
-		private Direction targetDir;
-
-		public TurningAnimation() {
-			reset();
-		}
-
-		public void reset() {
-			double angle = rotationAngle(player.dir());
-			rotate.setAxis(Rotate.Z_AXIS);
-			rotate.setFromAngle(angle);
-			setRotationAxis(Rotate.Z_AXIS);
-			setRotate(angle);
-			targetDir = player.dir();
-		}
-
-		public void update() {
-			if (targetDir != player.dir()) {
-				rotate.stop();
-				int[] angles = rotationAngles(player.dir(), targetDir);
-				rotate.setFromAngle(angles[1]);
-				rotate.setToAngle(angles[0]);
-				rotate.play();
-				targetDir = player.dir();
-			}
-		}
-	}
-
 	public final Pac player;
-	private final Group model3D;
-	private final TurningAnimation turningAnimation;
+	private Group model3D;
+	private RotateTransition turningAnimation;
+	private Direction targetDir;
 
 	public Player3D(Pac player, Group model3D) {
 		this.player = player;
 		this.model3D = model3D;
-		turningAnimation = new TurningAnimation();
+		this.turningAnimation = new RotateTransition(Duration.seconds(0.25), this);
 		PointLight light = new PointLight(Color.WHITE);
 		light.setTranslateZ(-4);
 		getChildren().addAll(model3D, light);
 		reset();
 	}
 
-	public Animation createDyingAnimation(SoundManager sounds) {
+	private void resetTurning() {
+		double angle = rotationAngle(player.dir());
+		turningAnimation.setAxis(Rotate.Z_AXIS);
+		turningAnimation.setFromAngle(angle);
+		setRotationAxis(Rotate.Z_AXIS);
+		setRotate(angle);
+		targetDir = player.dir();
+	}
+
+	private void updateTurning() {
+		if (targetDir != player.dir()) {
+			turningAnimation.stop();
+			int[] angles = rotationAngles(player.dir(), targetDir);
+			turningAnimation.setFromAngle(angles[1]);
+			turningAnimation.setToAngle(angles[0]);
+			turningAnimation.play();
+			targetDir = player.dir();
+		}
+	}
+
+	public Animation dyingAnimation(SoundManager sounds) {
 		var spin = new RotateTransition(Duration.seconds(0.2), this);
 		spin.setAxis(Rotate.Z_AXIS);
 		spin.setByAngle(360);
@@ -147,7 +138,7 @@ public class Player3D extends Creature3D {
 		setTranslateX(player.position.x + HTS);
 		setTranslateY(player.position.y + HTS);
 		setTranslateZ(-HTS);
-		turningAnimation.reset();
+		resetTurning();
 	}
 
 	public void update() {
@@ -155,7 +146,7 @@ public class Player3D extends Creature3D {
 		setTranslateX(player.position.x + HTS);
 		setTranslateY(player.position.y + HTS);
 		if (!player.dead) {
-			turningAnimation.update();
+			updateTurning();
 		}
 	}
 
