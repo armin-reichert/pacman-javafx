@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.ui.fx.util.Animations.afterSeconds;
+import static de.amr.games.pacman.ui.fx.util.Animations.now;
 import static java.util.function.Predicate.not;
 
 import java.util.EnumMap;
@@ -427,25 +428,29 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	private void playAnimationLevelComplete() {
+		var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game.levelNumber);
 		gameController.stateTimer().setIndefinite().start();
-		var hideGuysAndShowMessage = afterSeconds(3, () -> {
-			game.player.hide();
-			game.hideGhosts();
-			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game.levelNumber);
-			ui.showFlashMessage(2, message);
-		});
-		var quitLevel = afterSeconds(2, () -> continueGame());
-		new SequentialTransition(hideGuysAndShowMessage, quitLevel).play();
+		new SequentialTransition( //
+				afterSeconds(3, () -> {
+					game.player.hide();
+					game.hideGhosts();
+					ui.showFlashMessage(2, message);
+				}), //
+				afterSeconds(2, this::continueGame) //
+		).play();
 	}
 
 	private void playAnimationLevelStarting() {
-		ui.showFlashMessage(1, Env.message("level_starting", game.levelNumber));
-		var showGuys = afterSeconds(1, () -> {
-			game.player.show();
-			game.showGhosts();
-		});
-		var startLevel = afterSeconds(3, () -> continueGame());
-		new SequentialTransition(showGuys, startLevel).play();
+		var message = Env.message("level_starting", game.levelNumber);
+		gameController.stateTimer().setIndefinite().start();
+		new SequentialTransition( //
+				now(() -> ui.showFlashMessage(1, message)), //
+				afterSeconds(1, () -> {
+					game.player.show();
+					game.showGhosts();
+				}), //
+				afterSeconds(3, this::continueGame) //
+		).play();
 	}
 
 	private void playDoorAnimation() {
