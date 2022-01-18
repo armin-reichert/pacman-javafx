@@ -23,11 +23,13 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
+import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import de.amr.games.pacman.model.pacman.entities.Bonus;
-import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.animation.RotateTransition;
 import javafx.animation.Transition;
@@ -45,17 +47,16 @@ import javafx.util.Duration;
  */
 public class Bonus3D extends Box {
 
-	private final Map<Integer, Image> spritesByValue;
+	private final Map<Integer, Image> numberImages;
 	private final Rendering2D rendering2D;
 	private final RotateTransition rotation;
 	private final PhongMaterial skin;
 
 	public Bonus3D(Rendering2D rendering2D) {
-		super(8, 8, 8);
+		super(TS, TS, TS);
 		this.rendering2D = rendering2D;
-		spritesByValue = new HashMap<>();
-		rendering2D.getBonusValueSprites().forEach(
-				(points, spriteRegion) -> spritesByValue.put(points, rendering2D.copyRegion(spriteRegion)));
+		numberImages = new HashMap<>();
+		rendering2D.getBonusValueSprites().forEach((n, r) -> numberImages.put(n, rendering2D.extractRegion(r)));
 		skin = new PhongMaterial(Color.WHITE);
 		rotation = new RotateTransition(Duration.seconds(2), this);
 		rotation.setAxis(Rotate.X_AXIS);
@@ -66,13 +67,13 @@ public class Bonus3D extends Box {
 	}
 
 	private Image symbolImage(String symbol) {
-		return rendering2D.copyRegion(rendering2D.getSymbolSprites().get(symbol));
+		return rendering2D.extractRegion(rendering2D.getSymbolSprites().get(symbol));
 	}
 
 	public void update(Bonus bonus) {
 		if (bonus != null) {
-			setTranslateX(bonus.position.x + PacManGameWorld.HTS);
-			setTranslateY(bonus.position.y + PacManGameWorld.HTS);
+			setTranslateX(bonus.position.x + HTS);
+			setTranslateY(bonus.position.y + HTS);
 		}
 	}
 
@@ -82,30 +83,28 @@ public class Bonus3D extends Box {
 	}
 
 	public void showSymbol(Bonus bonus) {
-		skin.setBumpMap(symbolImage(bonus.symbol));
-		skin.setDiffuseMap(symbolImage(bonus.symbol));
+		Image symbolImage = symbolImage(bonus.symbol);
+		skin.setBumpMap(symbolImage);
+		skin.setDiffuseMap(symbolImage);
 		setMaterial(skin);
-		setTranslateX(bonus.position.x + PacManGameWorld.HTS);
-		setTranslateY(bonus.position.y + PacManGameWorld.HTS);
 		setVisible(true);
-		rotation.setCycleCount(Transition.INDEFINITE);
 		rotation.setRate(1);
+		rotation.setCycleCount(Transition.INDEFINITE);
 		rotation.play();
 	}
 
 	public void showPoints(Bonus bonus) {
+		Image pointsImage = numberImages.get(bonus.points);
+		skin.setBumpMap(pointsImage);
+		skin.setDiffuseMap(pointsImage);
+		setMaterial(skin);
 		if (bonus.points >= 1000) {
 			setWidth(10);
 		}
-		skin.setBumpMap(spritesByValue.get(bonus.points));
-		skin.setDiffuseMap(spritesByValue.get(bonus.points));
-		setMaterial(skin);
-		setTranslateX(bonus.position.x + PacManGameWorld.HTS);
-		setTranslateY(bonus.position.y + PacManGameWorld.HTS);
 		setVisible(true);
 		rotation.stop();
-		rotation.setRate(2);
-		rotation.setCycleCount(2);
+		rotation.setRate(3);
+		rotation.setCycleCount(3);
 		rotation.play();
 	}
 }

@@ -88,6 +88,6 @@ public class LevelCounter3D extends Group {
 	}
 
 	private Image symbolImage(String symbol) {
-		return rendering2D.copyRegion(rendering2D.getSymbolSprites().get(symbol));
+		return rendering2D.extractRegion(rendering2D.getSymbolSprites().get(symbol));
 	}
 }

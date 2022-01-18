@@ -119,7 +119,7 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 		for (int mazeIndex = 0; mazeIndex < numMazes; ++mazeIndex) {
 			Rectangle2D mazeFullRegion = new Rectangle2D(0, 248 * mazeIndex, 226, 248);
 			Rectangle2D mazeEmptyRegion = new Rectangle2D(226, 248 * mazeIndex, 226, 248);
-			Image mazeFlashImage = colorsExchanged(copyRegion(mazeEmptyRegion), Map.of( //
+			Image mazeFlashImage = colorsExchanged(extractRegion(mazeEmptyRegion), Map.of( //
 					getMazeSideColor(mazeIndex + 1), Color.WHITE, //
 					getMazeTopColor(mazeIndex + 1), Color.BLACK) //
 			);
