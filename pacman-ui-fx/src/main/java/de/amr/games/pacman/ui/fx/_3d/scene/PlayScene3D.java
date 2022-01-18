@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.ui.fx.util.Animations.afterSeconds;
+import static de.amr.games.pacman.ui.fx.util.Animations.pause;
 import static java.util.function.Predicate.not;
 
 import java.util.EnumMap;
@@ -419,20 +420,19 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	private void playAnimationPlayerDying() {
-		new SequentialTransition( //
+		Animation animation = new SequentialTransition( //
 				afterSeconds(1, game::hideGhosts), //
 				player3D.dyingAnimation(sounds), //
-				afterSeconds(2, this::continueGame) //
-		).play();
+				pause(2) //
+		);
+		animation.setOnFinished(e -> continueGame());
+		animation.play();
 	}
 
 	private void playAnimationLevelComplete() {
 		var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game.levelNumber);
 		Animation animation = new SequentialTransition( //
-				afterSeconds(1, () -> {
-					game.player.hide();
-					game.hideGhosts();
-				}), //
+				afterSeconds(1, game::hideGuys), //
 				maze3D.flashingAnimation(game.numFlashes), //
 				afterSeconds(1, () -> ui.showFlashMessage(2, message)) //
 		);
