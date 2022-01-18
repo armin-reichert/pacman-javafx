@@ -118,14 +118,15 @@ public class Maze3D extends Group {
 
 			{
 				startWallHeight = Env.$mazeWallHeight.get();
-				setCycleDuration(Duration.seconds(0.5));
-				setCycleCount(times);
+				setCycleDuration(Duration.seconds(0.25));
+				setCycleCount(2 * times);
 				setAutoReverse(true);
+				setOnFinished(e -> Env.$mazeWallHeight.set(startWallHeight));
 			}
 
 			@Override
 			protected void interpolate(double t) {
-				Env.$mazeWallHeight.set(Math.cos(t * 2 * Math.PI) * startWallHeight);
+				Env.$mazeWallHeight.set(Math.cos(t * Math.PI / 2) * startWallHeight);
 			}
 		};
 	}
