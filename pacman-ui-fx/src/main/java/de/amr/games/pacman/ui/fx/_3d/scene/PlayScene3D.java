@@ -30,9 +30,7 @@ import static de.amr.games.pacman.ui.fx.util.Animations.afterSeconds;
 import static de.amr.games.pacman.ui.fx.util.Animations.pause;
 
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.PacManGameController;
@@ -76,7 +74,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
-import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 /**
@@ -87,16 +84,17 @@ import javafx.util.Duration;
 public class PlayScene3D extends AbstractGameScene {
 
 	private final PacManModel3D model3D;
-	private final EnumMap<Perspective, AbstractCameraController> cameraControllers = new EnumMap<>(Perspective.class);
-	private final Image floorImage = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
+	private final EnumMap<Perspective, AbstractCameraController> camControllers = new EnumMap<>(Perspective.class);
+	private final Image floorImage = new Image(getClass().getResource("/common/escher-texture.jpg").toString());
+
 	private Maze3D maze3D;
 	private Player3D player3D;
-	private List<Ghost3D> ghosts3D;
+	private Ghost3D[] ghosts3D;
 	private Bonus3D bonus3D;
 	private ScoreNotReally3D score3D;
 	private LevelCounter3D levelCounter3D;
 	private LivesCounter3D livesCounter3D;
-	private List<Transition> energizerAnimations;
+	private Animation[] energizerAnimations;
 	private Rendering2D rendering2D;
 
 	public PlayScene3D(PacManGameUI ui, PacManModel3D model3D, SoundManager sounds) {
@@ -105,49 +103,11 @@ public class PlayScene3D extends AbstractGameScene {
 		fxSubScene = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
 		var cam = new PerspectiveCamera(true);
 		fxSubScene.setCamera(cam);
-		fxSubScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> currentCameraController().handle(e));
-		cameraControllers.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer(cam));
-		cameraControllers.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer(cam));
-		cameraControllers.put(Perspective.CAM_TOTAL, new Cam_Total(cam));
-		Env.$perspective.addListener(($1, $2, $3) -> currentCameraController().reset());
-	}
-
-	@Override
-	public boolean is3D() {
-		return true;
-	}
-
-	@Override
-	public AbstractCameraController currentCameraController() {
-		if (!cameraControllers.containsKey(Env.$perspective.get())) {
-			// This should not happen:
-			Env.$perspective.set(cameraControllers.keySet().iterator().next());
-		}
-		return cameraControllers.get(Env.$perspective.get());
-	}
-
-	private void buildMaze(int mazeNumber) {
-		buildMazeStructure(mazeNumber);
-		maze3D.buildFood(game.world, rendering2D.getFoodColor(mazeNumber));
-		energizerAnimations = energizerNodes().map(this::createEnergizerAnimation).collect(Collectors.toList());
-	}
-
-	private void buildMazeStructure(int mazeNumber) {
-		maze3D.buildWallsAndDoors(game.world, rendering2D.getMazeSideColor(mazeNumber),
-				rendering2D.getMazeTopColor(mazeNumber));
-	}
-
-	private Transition createEnergizerAnimation(Node energizer) {
-		var animation = new ScaleTransition(Duration.seconds(0.16), energizer);
-		animation.setAutoReverse(true);
-		animation.setCycleCount(Transition.INDEFINITE);
-		animation.setFromX(1.0);
-		animation.setFromY(1.0);
-		animation.setFromZ(1.0);
-		animation.setToX(0.1);
-		animation.setToY(0.1);
-		animation.setToZ(0.1);
-		return animation;
+		fxSubScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> currentCamController().handle(e));
+		camControllers.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer(cam));
+		camControllers.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer(cam));
+		camControllers.put(Perspective.CAM_TOTAL, new Cam_Total(cam));
+		Env.$perspective.addListener(($1, $2, $3) -> currentCamController().reset());
 	}
 
 	@Override
@@ -169,11 +129,9 @@ public class PlayScene3D extends AbstractGameScene {
 		player3D = new Player3D(game.player, model3D.createPacMan());
 		ghosts3D = game.ghosts()
 				.map(ghost -> new Ghost3D(ghost, model3D.createGhost(), model3D.createGhostEyes(), rendering2D))
-				.collect(Collectors.toList());
+				.toArray(Ghost3D[]::new);
 		bonus3D = new Bonus3D(rendering2D);
-		score3D = new ScoreNotReally3D(rendering2D.getScoreFont());
-		score3D.setRotationAxis(Rotate.X_AXIS);
-		score3D.rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
+		score3D = new ScoreNotReally3D(rendering2D.getScoreFont(), fxSubScene.getCamera());
 
 		livesCounter3D = new LivesCounter3D(model3D);
 		livesCounter3D.setTranslateX(TS);
@@ -199,17 +157,17 @@ public class PlayScene3D extends AbstractGameScene {
 		light.setColor(Color.GHOSTWHITE);
 
 		fxSubScene.setRoot(new Group(light, playground, coordinateSystem));
-		currentCameraController().reset();
+		currentCamController().reset();
 	}
 
 	@Override
 	public void update() {
 		player3D.update();
-		ghosts3D.forEach(Ghost3D::update);
+		Stream.of(ghosts3D).forEach(Ghost3D::update);
 		bonus3D.update(game.bonus);
 		score3D.update(game, gameController.isAttractMode() ? "GAME OVER!" : null);
 		livesCounter3D.setVisibleItems(game.player.lives);
-		currentCameraController().follow(player3D);
+		currentCamController().follow(player3D);
 		playDoorAnimation();
 
 		// update food visibility and animations in case of switching between 2D and 3D view
@@ -218,8 +176,8 @@ public class PlayScene3D extends AbstractGameScene {
 			maze3D.foodNodes().forEach(foodNode -> {
 				foodNode.setVisible(!game.isFoodEaten(Maze3D.info(foodNode).tile));
 			});
-			if (energizerAnimations.stream().anyMatch(animation -> animation.getStatus() != Status.RUNNING)) {
-				energizerAnimations.forEach(Transition::play);
+			if (Stream.of(energizerAnimations).anyMatch(animation -> animation.getStatus() != Status.RUNNING)) {
+				Stream.of(energizerAnimations).forEach(Animation::play);
 			}
 			AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
 			if (munching.isPlaying()) {
@@ -228,6 +186,44 @@ public class PlayScene3D extends AbstractGameScene {
 				}
 			}
 		}
+	}
+
+	@Override
+	public boolean is3D() {
+		return true;
+	}
+
+	@Override
+	public AbstractCameraController currentCamController() {
+		if (!camControllers.containsKey(Env.$perspective.get())) {
+			// This should not happen:
+			Env.$perspective.set(camControllers.keySet().iterator().next());
+		}
+		return camControllers.get(Env.$perspective.get());
+	}
+
+	private void buildMaze(int mazeNumber) {
+		buildMazeStructure(mazeNumber);
+		maze3D.buildFood(game.world, rendering2D.getFoodColor(mazeNumber));
+		energizerAnimations = energizerNodes().map(this::createEnergizerAnimation).toArray(Animation[]::new);
+	}
+
+	private void buildMazeStructure(int mazeNumber) {
+		maze3D.buildWallsAndDoors(game.world, rendering2D.getMazeSideColor(mazeNumber),
+				rendering2D.getMazeTopColor(mazeNumber));
+	}
+
+	private Transition createEnergizerAnimation(Node energizer) {
+		var animation = new ScaleTransition(Duration.seconds(0.16), energizer);
+		animation.setAutoReverse(true);
+		animation.setCycleCount(Transition.INDEFINITE);
+		animation.setFromX(1.0);
+		animation.setFromY(1.0);
+		animation.setFromZ(1.0);
+		animation.setToX(0.1);
+		animation.setToY(0.1);
+		animation.setToZ(0.1);
+		return animation;
 	}
 
 	@Override
@@ -243,14 +239,14 @@ public class PlayScene3D extends AbstractGameScene {
 	@Override
 	public void onPlayerGainsPower(PacManGameEvent e) {
 		sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
-		ghosts3D.stream() //
+		Stream.of(ghosts3D) //
 				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
 				.forEach(Ghost3D::setBlueSkinColor);
 	}
 
 	@Override
 	public void onPlayerLosingPower(PacManGameEvent e) {
-		ghosts3D.stream() //
+		Stream.of(ghosts3D) //
 				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED)) //
 				.forEach(ghost3D -> ghost3D.playFlashingAnimation());
 	}
@@ -258,7 +254,7 @@ public class PlayScene3D extends AbstractGameScene {
 	@Override
 	public void onPlayerLostPower(PacManGameEvent e) {
 		sounds.stop(PacManGameSound.PACMAN_POWER);
-		ghosts3D.forEach(Ghost3D::setNormalSkinColor);
+		Stream.of(ghosts3D).forEach(Ghost3D::setNormalSkinColor);
 	}
 
 	@Override
@@ -310,7 +306,7 @@ public class PlayScene3D extends AbstractGameScene {
 
 	@Override
 	public void onGhostLeavingHouse(PacManGameEvent e) {
-		ghosts3D.get(e.ghost.get().id).setNormalSkinColor();
+		ghosts3D[e.ghost.get().id].setNormalSkinColor();
 	}
 
 	@Override
@@ -335,7 +331,7 @@ public class PlayScene3D extends AbstractGameScene {
 
 		// enter PACMAN_DYING
 		else if (e.newGameState == PacManGameState.PACMAN_DYING) {
-			ghosts3D.forEach(ghost3D -> ghost3D.setNormalSkinColor());
+			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setNormalSkinColor());
 			sounds.stopAll();
 			gameController.stateTimer().setIndefinite().start();
 			playAnimationPlayerDying();
@@ -356,7 +352,7 @@ public class PlayScene3D extends AbstractGameScene {
 		// enter LEVEL_COMPLETE
 		else if (e.newGameState == PacManGameState.LEVEL_COMPLETE) {
 			sounds.stopAll();
-			ghosts3D.forEach(ghost3D -> ghost3D.setNormalSkinColor());
+			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setNormalSkinColor());
 			playAnimationLevelComplete();
 		}
 
@@ -390,11 +386,11 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	private void playEnergizerAnimations() {
-		energizerAnimations.forEach(Animation::play);
+		Stream.of(energizerAnimations).forEach(Animation::play);
 	}
 
 	private void stopEnergizerAnimations() {
-		energizerAnimations.forEach(Animation::stop);
+		Stream.of(energizerAnimations).forEach(Animation::stop);
 	}
 
 	private void playAnimationPlayerDying() {

@@ -26,12 +26,19 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
 import de.amr.games.pacman.model.common.GameModel;
+import javafx.scene.Camera;
 import javafx.scene.Group;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Rotate;
 
+/**
+ * Displays the score and high score.
+ * 
+ * @author Armin Reichert
+ */
 public class ScoreNotReally3D extends Group {
 
 	private final Text txtScoreTitle;
@@ -39,7 +46,7 @@ public class ScoreNotReally3D extends Group {
 	private final Text txtHiscoreTitle;
 	private final Text txtHiscore;
 
-	public ScoreNotReally3D(Font font) {
+	public ScoreNotReally3D(Font font, Camera cam) {
 
 		txtScoreTitle = new Text("SCORE");
 		txtScoreTitle.setFill(Color.WHITE);
@@ -67,6 +74,10 @@ public class ScoreNotReally3D extends Group {
 		grid.add(txtHiscore, 1, 1);
 
 		getChildren().add(grid);
+
+		// TODO: mybe this is not the right solution
+		setRotationAxis(Rotate.X_AXIS);
+		rotateProperty().bind(cam.rotateProperty());
 	}
 
 	public void update(GameModel game, String scoreTextOverwrite) {

@@ -93,7 +93,7 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	}
 
 	@Override
-	public AbstractCameraController currentCameraController() {
+	public AbstractCameraController currentCamController() {
 		return null;
 	}
 

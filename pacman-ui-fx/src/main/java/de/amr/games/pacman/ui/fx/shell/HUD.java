@@ -130,7 +130,7 @@ public class HUD extends VBox {
 		row("3D Scenes", "%s", on_off(Env.$use3DScenes.get()));
 		if (currentScene.is3D()) {
 			row("Perspective", "%s", Env.$perspective.get());
-			row("Camera", "%s", currentScene.currentCameraController().info());
+			row("Camera", "%s", currentScene.currentCamController().info());
 			row("Draw Mode", "%s", Env.$drawMode3D.get());
 			row("Axes", "%s", on_off(Env.$axesVisible.get()));
 		} else {

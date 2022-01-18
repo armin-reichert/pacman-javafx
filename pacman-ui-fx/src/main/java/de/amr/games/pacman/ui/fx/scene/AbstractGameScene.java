@@ -74,7 +74,7 @@ public abstract class AbstractGameScene implements DefaultPacManGameEventHandler
 	/**
 	 * @return for 3D scenes, the current camera controller, for 2D scenes returns {@code null}
 	 */
-	public abstract AbstractCameraController currentCameraController();
+	public abstract AbstractCameraController currentCamController();
 
 	/**
 	 * Called when the scene gets initialized. Stores a reference to the game controller and the current game such that
