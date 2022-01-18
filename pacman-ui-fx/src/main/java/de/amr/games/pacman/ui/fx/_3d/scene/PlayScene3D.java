@@ -97,6 +97,7 @@ public class PlayScene3D extends AbstractGameScene {
 	private LevelCounter3D levelCounter3D;
 	private LivesCounter3D livesCounter3D;
 	private List<Transition> energizerAnimations;
+	private Rendering2D rendering2D;
 
 	public PlayScene3D(PacManGameUI ui, PacManModel3D model3D, SoundManager sounds) {
 		super(ui, sounds);
@@ -125,19 +126,15 @@ public class PlayScene3D extends AbstractGameScene {
 		return cameraControllers.get(Env.$perspective.get());
 	}
 
-	private Rendering2D rendering2D() {
-		return gameController.gameVariant() == GameVariant.MS_PACMAN ? ScenesMsPacMan.RENDERING : ScenesPacMan.RENDERING;
-	}
-
 	private void buildMaze(int mazeNumber) {
 		buildMazeStructure(mazeNumber);
-		maze3D.buildFood(game.world, rendering2D().getFoodColor(mazeNumber));
+		maze3D.buildFood(game.world, rendering2D.getFoodColor(mazeNumber));
 		energizerAnimations = energizerNodes().map(this::createEnergizerAnimation).collect(Collectors.toList());
 	}
 
 	private void buildMazeStructure(int mazeNumber) {
-		maze3D.buildWallsAndDoors(game.world, rendering2D().getMazeSideColor(mazeNumber),
-				rendering2D().getMazeTopColor(mazeNumber));
+		maze3D.buildWallsAndDoors(game.world, rendering2D.getMazeSideColor(mazeNumber),
+				rendering2D.getMazeTopColor(mazeNumber));
 	}
 
 	private Transition createEnergizerAnimation(Node energizer) {
@@ -160,6 +157,9 @@ public class PlayScene3D extends AbstractGameScene {
 		final int width = game.world.numCols() * TS;
 		final int height = game.world.numRows() * TS;
 
+		rendering2D = gameController.gameVariant() == GameVariant.MS_PACMAN ? ScenesMsPacMan.RENDERING
+				: ScenesPacMan.RENDERING;
+
 		maze3D = new Maze3D(width, height, floorImage);
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
@@ -168,10 +168,10 @@ public class PlayScene3D extends AbstractGameScene {
 
 		player3D = new Player3D(game.player, model3D.createPacMan());
 		ghosts3D = game.ghosts()
-				.map(ghost -> new Ghost3D(ghost, model3D.createGhost(), model3D.createGhostEyes(), rendering2D()))
+				.map(ghost -> new Ghost3D(ghost, model3D.createGhost(), model3D.createGhostEyes(), rendering2D))
 				.collect(Collectors.toList());
-		bonus3D = new Bonus3D(rendering2D());
-		score3D = new ScoreNotReally3D(rendering2D().getScoreFont());
+		bonus3D = new Bonus3D(rendering2D);
+		score3D = new ScoreNotReally3D(rendering2D.getScoreFont());
 		score3D.setRotationAxis(Rotate.X_AXIS);
 		score3D.rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
 
@@ -181,7 +181,7 @@ public class PlayScene3D extends AbstractGameScene {
 		livesCounter3D.setTranslateZ(-HTS);
 		livesCounter3D.setVisible(!gameController.isAttractMode());
 
-		levelCounter3D = new LevelCounter3D(rendering2D());
+		levelCounter3D = new LevelCounter3D(rendering2D);
 		levelCounter3D.setRightPosition(26 * TS, TS);
 		levelCounter3D.setTranslateZ(-HTS);
 		levelCounter3D.rebuild(game);
