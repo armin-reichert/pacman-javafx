@@ -44,7 +44,6 @@ import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.GhostState;
-import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -87,19 +86,6 @@ import javafx.util.Duration;
  * @author Armin Reichert
  */
 public class PlayScene3D extends AbstractGameScene {
-
-	private static Transition createEnergizerAnimation(Node energizer) {
-		var animation = new ScaleTransition(Duration.seconds(0.16), energizer);
-		animation.setAutoReverse(true);
-		animation.setCycleCount(Transition.INDEFINITE);
-		animation.setFromX(1.0);
-		animation.setFromY(1.0);
-		animation.setFromZ(1.0);
-		animation.setToX(0.1);
-		animation.setToY(0.1);
-		animation.setToZ(0.1);
-		return animation;
-	}
 
 	private final PacManModel3D model3D;
 	private final SoundManager sounds;
@@ -153,14 +139,27 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	private void buildMaze(int mazeNumber) {
-		buildMazeStructure(game.world, mazeNumber);
+		buildMazeStructure(mazeNumber);
 		maze3D.buildFood(game.world, rendering2D().getFoodColor(mazeNumber));
-		energizerAnimations = energizerNodes().map(PlayScene3D::createEnergizerAnimation).collect(Collectors.toList());
+		energizerAnimations = energizerNodes().map(this::createEnergizerAnimation).collect(Collectors.toList());
 	}
 
-	private void buildMazeStructure(PacManGameWorld world, int mazeNumber) {
-		maze3D.buildWallsAndDoors(world, rendering2D().getMazeSideColor(mazeNumber),
+	private void buildMazeStructure(int mazeNumber) {
+		maze3D.buildWallsAndDoors(game.world, rendering2D().getMazeSideColor(mazeNumber),
 				rendering2D().getMazeTopColor(mazeNumber));
+	}
+
+	private Transition createEnergizerAnimation(Node energizer) {
+		var animation = new ScaleTransition(Duration.seconds(0.16), energizer);
+		animation.setAutoReverse(true);
+		animation.setCycleCount(Transition.INDEFINITE);
+		animation.setFromX(1.0);
+		animation.setFromY(1.0);
+		animation.setFromZ(1.0);
+		animation.setToX(0.1);
+		animation.setToY(0.1);
+		animation.setToZ(0.1);
+		return animation;
 	}
 
 	@Override
@@ -173,7 +172,7 @@ public class PlayScene3D extends AbstractGameScene {
 		maze3D = new Maze3D(width, height, floorImage);
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
-		maze3D.$resolution.addListener((x, y, z) -> buildMazeStructure(game.world, game.mazeNumber));
+		maze3D.$resolution.addListener((x, y, z) -> buildMazeStructure(game.mazeNumber));
 		buildMaze(game.mazeNumber);
 
 		player3D = new Player3D(game.player, model3D.createPacMan());
