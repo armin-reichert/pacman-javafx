@@ -25,9 +25,9 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
+import static de.amr.games.pacman.ui.fx._3d.entity.Maze3D.info;
 import static de.amr.games.pacman.ui.fx.util.Animations.afterSeconds;
 import static de.amr.games.pacman.ui.fx.util.Animations.pause;
-import static java.util.function.Predicate.not;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -87,10 +87,6 @@ import javafx.util.Duration;
  * @author Armin Reichert
  */
 public class PlayScene3D extends AbstractGameScene {
-
-	private static V2i tile(Node node) {
-		return (V2i) node.getUserData();
-	}
 
 	private static Transition createEnergizerAnimation(Node energizer) {
 		var animation = new ScaleTransition(Duration.seconds(0.16), energizer);
@@ -156,10 +152,10 @@ public class PlayScene3D extends AbstractGameScene {
 		return gameController.gameVariant() == GameVariant.MS_PACMAN ? ScenesMsPacMan.RENDERING : ScenesPacMan.RENDERING;
 	}
 
-	private void buildMaze(PacManGameWorld world, int mazeNumber) {
-		buildMazeStructure(world, mazeNumber);
-		maze3D.buildFood(world, rendering2D().getFoodColor(mazeNumber));
-		energizerAnimations = energizerNodes(world).map(PlayScene3D::createEnergizerAnimation).collect(Collectors.toList());
+	private void buildMaze(int mazeNumber) {
+		buildMazeStructure(game.world, mazeNumber);
+		maze3D.buildFood(game.world, rendering2D().getFoodColor(mazeNumber));
+		energizerAnimations = energizerNodes().map(PlayScene3D::createEnergizerAnimation).collect(Collectors.toList());
 	}
 
 	private void buildMazeStructure(PacManGameWorld world, int mazeNumber) {
@@ -178,7 +174,7 @@ public class PlayScene3D extends AbstractGameScene {
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
 		maze3D.$resolution.addListener((x, y, z) -> buildMazeStructure(game.world, game.mazeNumber));
-		buildMaze(game.world, game.mazeNumber);
+		buildMaze(game.mazeNumber);
 
 		player3D = new Player3D(game.player, model3D.createPacMan());
 		ghosts3D = game.ghosts()
@@ -230,7 +226,7 @@ public class PlayScene3D extends AbstractGameScene {
 		// TODO: incomplete
 		if (gameController.currentStateID == PacManGameState.HUNTING) {
 			maze3D.foodNodes().forEach(foodNode -> {
-				foodNode.setVisible(!game.isFoodEaten(tile(foodNode)));
+				foodNode.setVisible(!game.isFoodEaten(Maze3D.info(foodNode).tile));
 			});
 			if (energizerAnimations.stream().anyMatch(animation -> animation.getStatus() != Status.RUNNING)) {
 				energizerAnimations.forEach(Transition::play);
@@ -285,8 +281,8 @@ public class PlayScene3D extends AbstractGameScene {
 	public void onPlayerFoundFood(PacManGameEvent e) {
 		if (e.tile.isEmpty()) {
 			// this happens when the "eat all pellets except energizers" cheat was triggered
-			Predicate<Node> isEnergizer = node -> game.world.isEnergizerTile(tile(node));
-			maze3D.foodNodes().filter(not(isEnergizer)).forEach(foodNode -> foodNode.setVisible(false));
+			Predicate<Node> isNormalPellet = node -> !Maze3D.info(node).energizer;
+			maze3D.foodNodes().filter(isNormalPellet).forEach(foodNode -> foodNode.setVisible(false));
 		} else {
 			foodNodeAt(e.tile.get()).ifPresent(foodNode -> foodNode.setVisible(false));
 			AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
@@ -343,7 +339,7 @@ public class PlayScene3D extends AbstractGameScene {
 		if (e.newGameState == PacManGameState.READY) {
 			sounds.stopAll();
 			player3D.reset();
-			resetEnergizers(game.world);
+			resetEnergizers();
 			sounds.setMuted(gameController.isAttractMode());
 			if (!gameController.isGameRunning()) {
 				sounds.play(PacManGameSound.GAME_READY);
@@ -370,7 +366,7 @@ public class PlayScene3D extends AbstractGameScene {
 
 		// enter LEVEL_STARTING
 		else if (e.newGameState == PacManGameState.LEVEL_STARTING) {
-			buildMaze(game.world, game.mazeNumber);
+			buildMaze(game.mazeNumber);
 			levelCounter3D.rebuild(game);
 			playAnimationLevelStarting();
 		}
@@ -395,16 +391,16 @@ public class PlayScene3D extends AbstractGameScene {
 		}
 	}
 
-	private Stream<Node> energizerNodes(PacManGameWorld world) {
-		return maze3D.foodNodes().filter(node -> world.isEnergizerTile(tile(node)));
+	private Stream<Node> energizerNodes() {
+		return maze3D.foodNodes().filter(node -> info(node).energizer);
 	}
 
 	private Optional<Node> foodNodeAt(V2i tile) {
-		return maze3D.foodNodes().filter(node -> tile(node).equals(tile)).findFirst();
+		return maze3D.foodNodes().filter(node -> info(node).tile.equals(tile)).findFirst();
 	}
 
-	private void resetEnergizers(PacManGameWorld world) {
-		energizerNodes(world).forEach(node -> {
+	private void resetEnergizers() {
+		energizerNodes().forEach(node -> {
 			node.setScaleX(1.0);
 			node.setScaleY(1.0);
 			node.setScaleZ(1.0);
@@ -420,7 +416,7 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	private void playAnimationPlayerDying() {
-		Animation animation = new SequentialTransition( //
+		var animation = new SequentialTransition( //
 				afterSeconds(1, game::hideGhosts), //
 				player3D.dyingAnimation(sounds), //
 				pause(2) //
@@ -431,8 +427,9 @@ public class PlayScene3D extends AbstractGameScene {
 
 	private void playAnimationLevelComplete() {
 		var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game.levelNumber);
-		Animation animation = new SequentialTransition( //
+		var animation = new SequentialTransition( //
 				afterSeconds(1, game::hideGuys), //
+				pause(1), //
 				maze3D.flashingAnimation(game.numFlashes), //
 				afterSeconds(1, () -> ui.showFlashMessage(2, message)) //
 		);
@@ -447,7 +444,8 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	private void playDoorAnimation() {
-		boolean open = maze3D.doors().anyMatch(door -> game.ghosts().anyMatch(ghost -> ghost.tile().equals(tile(door))));
+		boolean open = maze3D.doors()
+				.anyMatch(door -> game.ghosts().anyMatch(ghost -> ghost.tile().equals(info(door).tile)));
 		maze3D.showDoorsOpen(open);
 	}
 }
