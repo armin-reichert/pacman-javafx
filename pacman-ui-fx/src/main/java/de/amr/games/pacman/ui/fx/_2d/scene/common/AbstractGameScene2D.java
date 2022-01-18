@@ -50,15 +50,12 @@ import javafx.scene.transform.Scale;
  */
 public abstract class AbstractGameScene2D extends AbstractGameScene {
 
-	public static final int DEFAULT_TILES_X = 28;
-	public static final int DEFAULT_TILES_Y = 36;
-
 	protected final double unscaledWidth;
 	protected final double unscaledHeight;
 	protected final double aspectRatio;
 
-	protected final int levelCounterRightX = t(25);
-	protected final int levelCounterRightY = t(34);
+	protected final int levelCounterRightX = t(TILES_X - 3);
+	protected final int levelCounterRightY = t(TILES_Y - 2);
 
 	protected final Rendering2D rendering;
 
@@ -67,7 +64,7 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	protected GraphicsContext gc;
 
 	public AbstractGameScene2D(PacManGameUI ui, Rendering2D rendering, SoundManager sounds) {
-		this(ui, DEFAULT_TILES_X, DEFAULT_TILES_Y, rendering, sounds);
+		this(ui, TILES_X, TILES_Y, rendering, sounds);
 	}
 
 	public AbstractGameScene2D(PacManGameUI ui, int tilesX, int tilesY, Rendering2D rendering, SoundManager sounds) {

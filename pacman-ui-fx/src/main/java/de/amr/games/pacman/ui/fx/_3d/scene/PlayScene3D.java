@@ -45,7 +45,6 @@ import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.LevelCounter3D;
@@ -142,7 +141,7 @@ public class PlayScene3D extends AbstractGameScene {
 		livesCounter3D.setVisible(!gameController.isAttractMode());
 
 		levelCounter3D = new LevelCounter3D(rendering2D);
-		levelCounter3D.setRightPosition(t(AbstractGameScene2D.DEFAULT_TILES_X - 1), TS);
+		levelCounter3D.setRightPosition(t(AbstractGameScene.TILES_X - 1), TS);
 		levelCounter3D.setTranslateZ(-HTS);
 		levelCounter3D.rebuild(game);
 
