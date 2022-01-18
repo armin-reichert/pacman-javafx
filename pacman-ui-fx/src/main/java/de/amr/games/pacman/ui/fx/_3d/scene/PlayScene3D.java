@@ -76,6 +76,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 /**
@@ -129,28 +130,27 @@ public class PlayScene3D extends AbstractGameScene {
 		buildMaze(game.mazeNumber);
 
 		player3D = new Player3D(game.player, model3D.createPacMan());
+
 		ghosts3D = game.ghosts()
 				.map(ghost -> new Ghost3D(ghost, model3D.createGhost(), model3D.createGhostEyes(), rendering2D))
 				.toArray(Ghost3D[]::new);
+
 		bonus3D = new Bonus3D(rendering2D);
+
 		score3D = new ScoreNotReally3D(rendering2D.getScoreFont(), fxSubScene.getCamera());
 
 		livesCounter3D = new LivesCounter3D(model3D);
-		livesCounter3D.setTranslateX(TS);
-		livesCounter3D.setTranslateY(TS);
-		livesCounter3D.setTranslateZ(-HTS);
+		livesCounter3D.getTransforms().add(new Translate(TS, TS, -HTS));
 		livesCounter3D.setVisible(!gameController.isAttractMode());
 
 		levelCounter3D = new LevelCounter3D(rendering2D);
 		levelCounter3D.setRightPosition(t(GameModel.TILES_X - 1), TS);
-		levelCounter3D.setTranslateZ(-HTS);
-		levelCounter3D.rebuild(game);
+		levelCounter3D.init(game);
 
 		var playground = new Group();
+		playground.getTransforms().add(new Translate(-0.5 * width, -0.5 * height)); // center at origin
 		playground.getChildren().addAll(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
 		playground.getChildren().addAll(ghosts3D);
-		playground.setTranslateX(-0.5 * width);
-		playground.setTranslateY(-0.5 * height);
 
 		var coordinateSystem = new CoordinateSystem(fxSubScene.getWidth());
 		coordinateSystem.visibleProperty().bind(Env.$axesVisible);
@@ -347,7 +347,7 @@ public class PlayScene3D extends AbstractGameScene {
 		// enter LEVEL_STARTING
 		else if (e.newGameState == PacManGameState.LEVEL_STARTING) {
 			buildMaze(game.mazeNumber);
-			levelCounter3D.rebuild(game);
+			levelCounter3D.init(game);
 			playAnimationLevelStarting();
 		}
 

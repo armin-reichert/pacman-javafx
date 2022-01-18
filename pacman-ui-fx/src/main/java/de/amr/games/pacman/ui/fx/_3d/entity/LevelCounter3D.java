@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
@@ -47,7 +48,35 @@ public class LevelCounter3D extends Group {
 
 	static final int MAX_ENTRIES = 7;
 
-	private static Box createSpinningCube(Image symbol, boolean forward) {
+	private final Rendering2D rendering2D;
+	private V2d rightPosition;
+
+	public LevelCounter3D(Rendering2D rendering2D) {
+		this.rendering2D = rendering2D;
+	}
+
+	public void init(GameModel game) {
+		// NOTE: all variables named ...Number are starting at 1
+		int firstLevelNumber = Math.max(1, game.levelNumber - MAX_ENTRIES + 1);
+		getChildren().clear();
+		double x = rightPosition.x, y = rightPosition.y;
+		for (int levelNumber = firstLevelNumber; levelNumber <= game.levelNumber; ++levelNumber) {
+			String symbol = game.levelSymbol(levelNumber);
+			Image symbolImage = rendering2D.extractRegion(rendering2D.getSymbolSprites().get(symbol));
+			Box cube = createSpinningCube(symbolImage, levelNumber % 2 == 0);
+			cube.setTranslateX(x);
+			cube.setTranslateY(y);
+			cube.setTranslateZ(-HTS);
+			getChildren().add(cube);
+			x -= t(2);
+		}
+	}
+
+	public void setRightPosition(double x, double y) {
+		rightPosition = new V2d(x, y);
+	}
+
+	private Box createSpinningCube(Image symbol, boolean forward) {
 		Box box = new Box(TS, TS, TS);
 		PhongMaterial material = new PhongMaterial();
 		material.setDiffuseMap(symbol);
@@ -59,35 +88,5 @@ public class LevelCounter3D extends Group {
 		spinning.setRate(forward ? 1 : -1);
 		spinning.play();
 		return box;
-	}
-
-	private final Rendering2D rendering2D;
-	private V2d rightPosition;
-
-	public LevelCounter3D(Rendering2D rendering2D) {
-		this.rendering2D = rendering2D;
-	}
-
-	public void setRightPosition(double x, double y) {
-		rightPosition = new V2d(x, y);
-	}
-
-	public void rebuild(GameModel game) {
-		// NOTE: all variables named ...Number are starting at 1
-		int firstLevelNumber = Math.max(1, game.levelNumber - MAX_ENTRIES + 1);
-		getChildren().clear();
-		double x = rightPosition.x, y = rightPosition.y;
-		for (int levelNumber = firstLevelNumber; levelNumber <= game.levelNumber; ++levelNumber) {
-			Image symbol = symbolImage(game.levelSymbol(levelNumber));
-			Box cube = createSpinningCube(symbol, levelNumber % 2 == 0);
-			cube.setTranslateX(x);
-			cube.setTranslateY(y);
-			getChildren().add(cube);
-			x -= t(2);
-		}
-	}
-
-	private Image symbolImage(String symbol) {
-		return rendering2D.extractRegion(rendering2D.getSymbolSprites().get(symbol));
 	}
 }
