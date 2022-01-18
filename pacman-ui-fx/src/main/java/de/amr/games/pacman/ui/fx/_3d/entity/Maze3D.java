@@ -58,13 +58,14 @@ import javafx.util.Duration;
  */
 public class Maze3D extends Group {
 
-	public static class MazeNodeInfo {
+	public static class NodeInfo {
+
 		public boolean energizer;
 		public V2i tile;
-	}
 
-	public static MazeNodeInfo info(Node node) {
-		return (MazeNodeInfo) node.getUserData();
+		public static NodeInfo info(Node node) {
+			return (NodeInfo) node.getUserData();
+		}
 	}
 
 	public final DoubleProperty $wallHeight = new SimpleDoubleProperty(2.0);
@@ -146,7 +147,7 @@ public class Maze3D extends Group {
 		pellet.setTranslateX(tile.x * TS + HTS);
 		pellet.setTranslateY(tile.y * TS + HTS);
 		pellet.setTranslateZ(-3);
-		MazeNodeInfo info = new MazeNodeInfo();
+		NodeInfo info = new NodeInfo();
 		info.energizer = energizer;
 		info.tile = tile;
 		pellet.setUserData(info);
@@ -213,7 +214,7 @@ public class Maze3D extends Group {
 			door.setTranslateX(tile.x * TS + HTS);
 			door.setTranslateY(tile.y * TS + HTS);
 			door.setTranslateZ(-HTS / 2);
-			MazeNodeInfo info = new MazeNodeInfo();
+			NodeInfo info = new NodeInfo();
 			info.tile = tile;
 			door.setUserData(info);
 			door.drawModeProperty().bind(Env.$drawMode3D);

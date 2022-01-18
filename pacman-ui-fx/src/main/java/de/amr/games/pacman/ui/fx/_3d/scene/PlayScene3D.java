@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
-import static de.amr.games.pacman.ui.fx._3d.entity.Maze3D.info;
+import static de.amr.games.pacman.ui.fx._3d.entity.Maze3D.NodeInfo.info;
 import static de.amr.games.pacman.ui.fx.util.Animations.afterSeconds;
 import static de.amr.games.pacman.ui.fx.util.Animations.pause;
 
@@ -174,7 +174,7 @@ public class PlayScene3D extends AbstractGameScene {
 		// TODO: incomplete
 		if (gameController.currentStateID == PacManGameState.HUNTING) {
 			maze3D.foodNodes().forEach(foodNode -> {
-				foodNode.setVisible(!game.isFoodEaten(Maze3D.info(foodNode).tile));
+				foodNode.setVisible(!game.isFoodEaten(info(foodNode).tile));
 			});
 			if (Stream.of(energizerAnimations).anyMatch(animation -> animation.getStatus() != Status.RUNNING)) {
 				Stream.of(energizerAnimations).forEach(Animation::play);
