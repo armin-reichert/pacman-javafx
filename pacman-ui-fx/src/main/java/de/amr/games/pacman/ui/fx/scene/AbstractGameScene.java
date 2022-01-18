@@ -46,9 +46,6 @@ import javafx.scene.SubScene;
  */
 public abstract class AbstractGameScene implements DefaultPacManGameEventHandler {
 
-	public static final int TILES_X = 28;
-	public static final int TILES_Y = 36;
-
 	protected final PacManGameUI ui;
 	protected final SoundManager sounds;
 	protected SubScene fxSubScene;

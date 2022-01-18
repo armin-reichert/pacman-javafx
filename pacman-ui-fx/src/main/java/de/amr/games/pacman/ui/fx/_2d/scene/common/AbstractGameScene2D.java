@@ -28,6 +28,7 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 import java.util.OptionalDouble;
 
 import de.amr.games.pacman.controller.PacManGameController;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -54,8 +55,8 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	protected final double unscaledHeight;
 	protected final double aspectRatio;
 
-	protected final int levelCounterRightX = t(TILES_X - 3);
-	protected final int levelCounterRightY = t(TILES_Y - 2);
+	protected final int levelCounterRightX = t(GameModel.TILES_X - 3);
+	protected final int levelCounterRightY = t(GameModel.TILES_Y - 2);
 
 	protected final Rendering2D rendering;
 
@@ -64,7 +65,7 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	protected GraphicsContext gc;
 
 	public AbstractGameScene2D(PacManGameUI ui, Rendering2D rendering, SoundManager sounds) {
-		this(ui, TILES_X, TILES_Y, rendering, sounds);
+		this(ui, GameModel.TILES_X, GameModel.TILES_Y, rendering, sounds);
 	}
 
 	public AbstractGameScene2D(PacManGameUI ui, int tilesX, int tilesY, Rendering2D rendering, SoundManager sounds) {

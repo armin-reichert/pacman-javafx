@@ -40,6 +40,7 @@ import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.PacManGameSound;
@@ -141,7 +142,7 @@ public class PlayScene3D extends AbstractGameScene {
 		livesCounter3D.setVisible(!gameController.isAttractMode());
 
 		levelCounter3D = new LevelCounter3D(rendering2D);
-		levelCounter3D.setRightPosition(t(AbstractGameScene.TILES_X - 1), TS);
+		levelCounter3D.setRightPosition(t(GameModel.TILES_X - 1), TS);
 		levelCounter3D.setTranslateZ(-HTS);
 		levelCounter3D.rebuild(game);
 
