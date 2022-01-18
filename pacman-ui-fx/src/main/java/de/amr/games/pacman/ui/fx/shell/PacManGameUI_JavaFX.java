@@ -39,6 +39,8 @@ import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
 import de.amr.games.pacman.ui.fx.scene.ScenesMsPacMan;
 import de.amr.games.pacman.ui.fx.scene.ScenesPacMan;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -48,6 +50,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
@@ -69,6 +72,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI, DefaultPacManGameEvent
 	private final HUD hud = new HUD(this);
 	private final Group gameSceneRoot = new Group();
 	private AbstractGameScene currentGameScene;
+	private BooleanProperty $is3D = new SimpleBooleanProperty();
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController gameController, double height, boolean fullscreen) {
 		this.stage = stage;
@@ -84,11 +88,18 @@ public class PacManGameUI_JavaFX implements PacManGameUI, DefaultPacManGameEvent
 
 		// Create the main scene containing all other sub-scenes
 		StackPane mainSceneRoot = new StackPane(gameSceneRoot, flashMessageView, hud);
+
 		// Set blue background color, use black in wireframe display mode
+		Image milkyway = new Image(getClass().getResource("/common/milkyway.jpg").toString());
+		Background bgMilkyWay = new Background(new BackgroundImage(milkyway, null, null, null, null));
+		Background bgBlack = new Background(new BackgroundFill(Color.BLACK, null, null));
+		Background bgBlue = new Background(new BackgroundFill(Color.CORNFLOWERBLUE, null, null));
 		mainSceneRoot.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-			Color color = Env.$drawMode3D.get() == DrawMode.FILL ? Color.CORNFLOWERBLUE : Color.BLACK;
-			return new Background(new BackgroundFill(color, null, null));
-		}, Env.$drawMode3D));
+			if ($is3D.get()) {
+				return Env.$drawMode3D.get() == DrawMode.LINE ? bgBlack : bgMilkyWay;
+			}
+			return bgBlue;
+		}, Env.$drawMode3D, $is3D));
 		StackPane.setAlignment(hud, Pos.TOP_LEFT);
 
 		Scene mainScene = new Scene(mainSceneRoot, aspectRatio * height, height);
@@ -201,6 +212,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI, DefaultPacManGameEvent
 			// Note: this must be done after new scene has been added to scene graph:
 			newScene.getSubSceneFX().requestFocus();
 			currentGameScene = newScene;
+			$is3D.set(currentGameScene.is3D());
 		}
 	}
 
@@ -298,7 +310,8 @@ public class PacManGameUI_JavaFX implements PacManGameUI, DefaultPacManGameEvent
 			if (currentGameScene instanceof PlayScene3D) {
 				PlayScene3D playScene3D = (PlayScene3D) currentGameScene;
 				Env.nextPerspective();
-				String cameraType = Env.MESSAGES.getString(playScene3D.currentCamController().getClass().getSimpleName());
+				String cameraType = Env.MESSAGES
+						.getString(playScene3D.currentCamController().getClass().getSimpleName());
 				String message = Env.message("camera_perspective", cameraType);
 				showFlashMessage(1, message);
 			}
