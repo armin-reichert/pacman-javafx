@@ -65,15 +65,15 @@ public class PacManGameAppFX extends Application {
 				KeyCode.RIGHT);
 
 		// Create the user interface and the connections with the controllers
-		PacManGameUI_JavaFX view = new PacManGameUI_JavaFX(stage, controller, options.windowHeight, options.fullscreen);
-		controller.addGameEventListener(view);
+		PacManGameUI_JavaFX ui = new PacManGameUI_JavaFX(stage, controller, options.windowHeight, options.fullscreen);
+		controller.addGameEventListener(ui);
 		controller.setPlayerControl(playerController);
 
 		// Create the game loop
 		GameLoop gameLoop = new GameLoop(() -> {
 			controller.updateState();
-			view.getCurrentGameScene().update();
-		}, view::onTick);
+			ui.getCurrentGameScene().update();
+		}, ui::update);
 
 		// Note; this must be done *after* creating the game loop
 		stage.titleProperty().bind(Bindings.createStringBinding(() -> {
