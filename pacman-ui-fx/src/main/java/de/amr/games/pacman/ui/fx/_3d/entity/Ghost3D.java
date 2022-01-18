@@ -23,10 +23,11 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
+
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
-import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.animation.RotateTransition;
 import javafx.animation.Transition;
@@ -72,6 +73,7 @@ public class Ghost3D extends Creature3D {
 
 	private final Rendering2D rendering2D;
 	private final Group completeGhost;
+	private final Shape3D skin;
 	private final Group eyes;
 	private final Box numberCube;
 	private final RotateTransition turningAnimation;
@@ -86,6 +88,7 @@ public class Ghost3D extends Creature3D {
 		this.rendering2D = rendering2D;
 
 		completeGhost = ghostComplete3D;
+		skin = (Shape3D) completeGhost.getChildren().get(0); // TODO cleanup
 		eyes = ghostEyes3D;
 
 		Group ghostVariants = new Group(completeGhost, eyes);
@@ -101,10 +104,6 @@ public class Ghost3D extends Creature3D {
 		displayCompleteGhost();
 		setNormalSkinColor();
 		setTranslateZ(-4);
-	}
-
-	private Shape3D skin() {
-		return (Shape3D) completeGhost.getChildren().get(0);
 	}
 
 	private void displayNumberCube() {
@@ -132,6 +131,7 @@ public class Ghost3D extends Creature3D {
 			numberCube.setVisible(false);
 			displayMode = DisplayMode.EYES;
 		}
+		updateDirection();
 	}
 
 	private void displayCompleteGhost() {
@@ -141,6 +141,7 @@ public class Ghost3D extends Creature3D {
 			numberCube.setVisible(false);
 			displayMode = DisplayMode.FULL;
 		}
+		updateDirection();
 	}
 
 	public void update() {
@@ -148,13 +149,11 @@ public class Ghost3D extends Creature3D {
 			displayNumberCube();
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
 			displayEyes();
-			updateDirection();
 		} else {
 			displayCompleteGhost();
-			updateDirection();
 		}
-		setTranslateX(ghost.position.x + PacManGameWorld.HTS);
-		setTranslateY(ghost.position.y + PacManGameWorld.HTS);
+		setTranslateX(ghost.position.x + HTS);
+		setTranslateY(ghost.position.y + HTS);
 		setVisible(ghost.visible && !outsideMaze(ghost));
 	}
 
@@ -169,7 +168,7 @@ public class Ghost3D extends Creature3D {
 	}
 
 	public void playFlashingAnimation() {
-		skin().setMaterial(flashing.material);
+		skin.setMaterial(flashing.material);
 		flashing.playFromStart();
 	}
 
@@ -186,6 +185,6 @@ public class Ghost3D extends Creature3D {
 	private void setSkinColor(Color color) {
 		PhongMaterial material = new PhongMaterial(color);
 		material.setSpecularColor(color.brighter());
-		skin().setMaterial(material);
+		skin.setMaterial(material);
 	}
 }
