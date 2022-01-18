@@ -139,8 +139,8 @@ public abstract class AbstractGameScene implements DefaultPacManGameEventHandler
 				resize(newWidth, newHeight);
 			});
 		} else {
-			getSubSceneFX().widthProperty().bind(parentScene.widthProperty());
-			getSubSceneFX().heightProperty().bind(parentScene.heightProperty());
+			fxSubScene.widthProperty().bind(parentScene.widthProperty());
+			fxSubScene.heightProperty().bind(parentScene.heightProperty());
 		}
 	}
 }
