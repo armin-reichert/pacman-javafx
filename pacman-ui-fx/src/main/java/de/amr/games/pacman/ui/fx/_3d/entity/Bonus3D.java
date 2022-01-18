@@ -87,6 +87,7 @@ public class Bonus3D extends Box {
 		skin.setBumpMap(symbolImage);
 		skin.setDiffuseMap(symbolImage);
 		setMaterial(skin);
+		setWidth(TS);
 		setVisible(true);
 		rotation.setRate(1);
 		rotation.setCycleCount(Transition.INDEFINITE);
