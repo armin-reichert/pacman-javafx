@@ -32,7 +32,6 @@ import static de.amr.games.pacman.ui.fx.util.Animations.pause;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -240,12 +239,6 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	@Override
-	public void onGameEvent(PacManGameEvent gameEvent) {
-		sounds.setMuted(gameController.isAttractMode());
-		super.onGameEvent(gameEvent);
-	}
-
-	@Override
 	public void onScatterPhaseStarted(ScatterPhaseStartedEvent e) {
 		if (e.scatterPhase > 0) {
 			sounds.stop(PacManGameSound.SIRENS.get(e.scatterPhase - 1));
@@ -278,12 +271,10 @@ public class PlayScene3D extends AbstractGameScene {
 
 	@Override
 	public void onPlayerFoundFood(PacManGameEvent e) {
-		if (e.tile.isEmpty()) {
-			// this happens when the "eat all pellets except energizers" cheat was triggered
-			Predicate<Node> isNormalPellet = node -> !Maze3D.info(node).energizer;
-			maze3D.foodNodes().filter(isNormalPellet).forEach(foodNode -> foodNode.setVisible(false));
+		if (e.tile.isEmpty()) { // happens when using the "eat all pellets except energizers" cheat
+			maze3D.foodNodes().filter(node -> !info(node).energizer).forEach(node -> node.setVisible(false));
 		} else {
-			foodNodeAt(e.tile.get()).ifPresent(foodNode -> foodNode.setVisible(false));
+			foodNodeAt(e.tile.get()).ifPresent(node -> node.setVisible(false));
 			AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
 			if (!munching.isPlaying()) {
 				sounds.loop(PacManGameSound.PACMAN_MUNCH, Integer.MAX_VALUE);
