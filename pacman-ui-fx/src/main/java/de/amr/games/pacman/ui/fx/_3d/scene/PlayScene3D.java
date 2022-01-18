@@ -428,14 +428,16 @@ public class PlayScene3D extends AbstractGameScene {
 
 	private void playAnimationLevelComplete() {
 		var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game.levelNumber);
-		new SequentialTransition( //
-				afterSeconds(3, () -> {
+		Animation animation = new SequentialTransition( //
+				afterSeconds(1, () -> {
 					game.player.hide();
 					game.hideGhosts();
-					ui.showFlashMessage(2, message);
 				}), //
-				afterSeconds(2, this::continueGame) //
-		).play();
+				maze3D.flashingAnimation(game.numFlashes), //
+				afterSeconds(1, () -> ui.showFlashMessage(2, message)) //
+		);
+		animation.setOnFinished(e -> continueGame());
+		animation.play();
 	}
 
 	private void playAnimationLevelStarting() {

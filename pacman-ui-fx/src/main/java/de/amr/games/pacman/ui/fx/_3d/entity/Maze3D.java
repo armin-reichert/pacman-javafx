@@ -34,6 +34,8 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.world.FloorPlan;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.fx.app.Env;
+import javafx.animation.Animation;
+import javafx.animation.Transition;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -47,6 +49,7 @@ import javafx.scene.shape.Box;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Translate;
+import javafx.util.Duration;
 
 /**
  * 3D-model for a maze. Creates walls/doors using information from the floor plan.
@@ -104,10 +107,27 @@ public class Maze3D extends Group {
 
 	public void buildFood(PacManGameWorld world, Color foodColor) {
 		var foodMaterial = new PhongMaterial(foodColor);
-		foodGroup.getChildren()
-				.setAll(world.tiles().filter(world::isFoodTile)
-						.map(tile -> createPellet(tile, world.isEnergizerTile(tile), foodMaterial))
-						.collect(Collectors.toList()));
+		foodGroup.getChildren().setAll(world.tiles().filter(world::isFoodTile)
+				.map(tile -> createPellet(tile, world.isEnergizerTile(tile), foodMaterial)).collect(Collectors.toList()));
+	}
+
+	public Animation flashingAnimation(int times) {
+		return new Transition() {
+
+			private double startWallHeight;
+
+			{
+				startWallHeight = Env.$mazeWallHeight.get();
+				setCycleDuration(Duration.seconds(0.5));
+				setCycleCount(times);
+				setAutoReverse(true);
+			}
+
+			@Override
+			protected void interpolate(double t) {
+				Env.$mazeWallHeight.set(Math.cos(t * 2 * Math.PI) * startWallHeight);
+			}
+		};
 	}
 
 	private Shape3D createPellet(V2i tile, boolean energizer, PhongMaterial material) {
@@ -156,8 +176,7 @@ public class Maze3D extends Group {
 		double topHeight = 0.5;
 		Box top = new Box(numStonesX * stoneSize, numStonesY * stoneSize, topHeight);
 		top.setMaterial(wallTopMaterial);
-		top.translateZProperty()
-				.bind(base.translateZProperty().subtract($wallHeight.add(topHeight + 0.1).multiply(0.5)));
+		top.translateZProperty().bind(base.translateZProperty().subtract($wallHeight.add(topHeight + 0.1).multiply(0.5)));
 		top.drawModeProperty().bind(Env.$drawMode3D);
 
 		Group wall = new Group(base, top);
