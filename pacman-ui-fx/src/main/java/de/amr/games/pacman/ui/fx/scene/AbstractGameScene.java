@@ -31,6 +31,7 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.event.DefaultPacManGameEventHandler;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.PacManGameUI;
+import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.AbstractCameraController;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
@@ -39,24 +40,29 @@ import javafx.scene.SubScene;
  * Common base class for all game scenes (2D and 3D).
  * 
  * <p>
- * Each game scene has an associated JavaFX subscene.
+ * Each game scene has an associated JavaFX subscene of the main scene.
  * 
  * @author Armin Reichert
  */
 public abstract class AbstractGameScene implements DefaultPacManGameEventHandler {
 
 	protected final PacManGameUI ui;
+	protected final SoundManager sounds;
+	protected SubScene fxSubScene;
 	protected PacManGameController gameController;
 	protected GameModel game;
 
-	public AbstractGameScene(PacManGameUI ui) {
+	public AbstractGameScene(PacManGameUI ui, SoundManager sounds) {
 		this.ui = ui;
+		this.sounds = sounds;
 	}
 
 	/**
 	 * @return the JavaFX subscene
 	 */
-	public abstract SubScene getSubSceneFX();
+	public SubScene getSubSceneFX() {
+		return fxSubScene;
+	}
 
 	/**
 	 * Tells if this is a 3D scene.

@@ -87,8 +87,6 @@ import javafx.util.Duration;
 public class PlayScene3D extends AbstractGameScene {
 
 	private final PacManModel3D model3D;
-	private final SoundManager sounds;
-	private final SubScene fxScene;
 	private final EnumMap<Perspective, AbstractCameraController> cameraControllers = new EnumMap<>(Perspective.class);
 	private final Image floorImage = new Image(getClass().getResourceAsStream("/common/escher-texture.jpg"));
 	private Maze3D maze3D;
@@ -101,13 +99,12 @@ public class PlayScene3D extends AbstractGameScene {
 	private List<Transition> energizerAnimations;
 
 	public PlayScene3D(PacManGameUI ui, PacManModel3D model3D, SoundManager sounds) {
-		super(ui);
+		super(ui, sounds);
 		this.model3D = model3D;
-		this.sounds = sounds;
-		fxScene = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
+		fxSubScene = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
 		var cam = new PerspectiveCamera(true);
-		fxScene.setCamera(cam);
-		fxScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> currentCameraController().handle(e));
+		fxSubScene.setCamera(cam);
+		fxSubScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> currentCameraController().handle(e));
 		cameraControllers.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer(cam));
 		cameraControllers.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer(cam));
 		cameraControllers.put(Perspective.CAM_TOTAL, new Cam_Total(cam));
@@ -126,11 +123,6 @@ public class PlayScene3D extends AbstractGameScene {
 			Env.$perspective.set(cameraControllers.keySet().iterator().next());
 		}
 		return cameraControllers.get(Env.$perspective.get());
-	}
-
-	@Override
-	public SubScene getSubSceneFX() {
-		return fxScene;
 	}
 
 	private Rendering2D rendering2D() {
@@ -181,7 +173,7 @@ public class PlayScene3D extends AbstractGameScene {
 		bonus3D = new Bonus3D(rendering2D());
 		score3D = new ScoreNotReally3D(rendering2D().getScoreFont());
 		score3D.setRotationAxis(Rotate.X_AXIS);
-		score3D.rotateProperty().bind(fxScene.getCamera().rotateProperty());
+		score3D.rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
 
 		livesCounter3D = new LivesCounter3D(model3D);
 		livesCounter3D.setTranslateX(TS);
@@ -200,13 +192,13 @@ public class PlayScene3D extends AbstractGameScene {
 		playground.setTranslateX(-0.5 * width);
 		playground.setTranslateY(-0.5 * height);
 
-		var coordinateSystem = new CoordinateSystem(fxScene.getWidth());
+		var coordinateSystem = new CoordinateSystem(fxSubScene.getWidth());
 		coordinateSystem.visibleProperty().bind(Env.$axesVisible);
 
 		AmbientLight light = new AmbientLight();
 		light.setColor(Color.GHOSTWHITE);
 
-		fxScene.setRoot(new Group(light, playground, coordinateSystem));
+		fxSubScene.setRoot(new Group(light, playground, coordinateSystem));
 		currentCameraController().reset();
 	}
 

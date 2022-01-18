@@ -60,13 +60,10 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	protected final int levelCounterRightX = t(25);
 	protected final int levelCounterRightY = t(34);
 
+	protected final Rendering2D rendering;
+
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
-
-	protected final Rendering2D rendering;
-	protected final SoundManager sounds;
-
-	protected SubScene subSceneFX;
 	protected GraphicsContext gc;
 
 	public AbstractGameScene2D(PacManGameUI ui, Rendering2D rendering, SoundManager sounds) {
@@ -74,21 +71,20 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	}
 
 	public AbstractGameScene2D(PacManGameUI ui, int tilesX, int tilesY, Rendering2D rendering, SoundManager sounds) {
-		super(ui);
+		super(ui, sounds);
 		this.unscaledWidth = t(tilesX);
 		this.unscaledHeight = t(tilesY);
 		this.aspectRatio = unscaledWidth / unscaledHeight;
 		this.rendering = rendering;
-		this.sounds = sounds;
 	}
 
 	public void setCanvas(Canvas canvas) {
 		gc = canvas.getGraphicsContext2D();
 		canvas.setWidth(unscaledWidth);
 		canvas.setHeight(unscaledHeight);
-		subSceneFX = new SubScene(new Group(canvas), unscaledWidth, unscaledHeight);
-		subSceneFX.widthProperty().bind(canvas.widthProperty());
-		subSceneFX.heightProperty().bind(canvas.heightProperty());
+		fxSubScene = new SubScene(new Group(canvas), unscaledWidth, unscaledHeight);
+		fxSubScene.widthProperty().bind(canvas.widthProperty());
+		fxSubScene.heightProperty().bind(canvas.heightProperty());
 	}
 
 	@Override
@@ -114,11 +110,6 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 		canvas.setHeight(height);
 		double scaling = height / unscaledHeight;
 		canvas.getTransforms().setAll(new Scale(scaling, scaling));
-	}
-
-	@Override
-	public SubScene getSubSceneFX() {
-		return subSceneFX;
 	}
 
 	@Override
