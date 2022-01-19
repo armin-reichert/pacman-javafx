@@ -40,10 +40,19 @@ import javafx.scene.transform.Rotate;
  */
 public class GianmarcosPacManModel3D implements PacManModel3D {
 
+	private static GianmarcosPacManModel3D instance;
+
+	public static GianmarcosPacManModel3D get() {
+		if (instance == null) {
+			instance = new GianmarcosPacManModel3D();
+		}
+		return instance;
+	}
+
 	private ObjModel pacManModel;
 	private ObjModel ghostModel;
 
-	public GianmarcosPacManModel3D() {
+	private GianmarcosPacManModel3D() {
 		pacManModel = new ObjModel("/common/gianmarco/pacman.obj");
 		ghostModel = new ObjModel("/common/gianmarco/ghost.obj");
 	}

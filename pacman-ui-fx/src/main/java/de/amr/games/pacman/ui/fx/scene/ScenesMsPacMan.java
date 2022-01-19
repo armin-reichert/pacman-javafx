@@ -45,7 +45,7 @@ public class ScenesMsPacMan {
 
 	public static final AbstractGameScene SCENES[][] = new AbstractGameScene[5][2];
 	public static final Rendering2D_MsPacMan RENDERING = new Rendering2D_MsPacMan();
-	public static final PacManModel3D MODEL_3D = new GianmarcosPacManModel3D();
+	public static final PacManModel3D MODEL_3D = GianmarcosPacManModel3D.get();
 	public static final SoundManager SOUNDS = new SoundManager();
 
 	static {
