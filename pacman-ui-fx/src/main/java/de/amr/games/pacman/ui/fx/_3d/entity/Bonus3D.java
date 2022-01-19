@@ -66,7 +66,7 @@ public class Bonus3D extends Box {
 		hide();
 	}
 
-	private Image symbolImage(String symbol) {
+	private Image symbolImage(int symbol) {
 		return rendering2D.extractRegion(rendering2D.getSymbolSprites().get(symbol));
 	}
 

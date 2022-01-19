@@ -263,5 +263,5 @@ public abstract class Rendering2D {
 
 	public abstract Map<Integer, Rectangle2D> getBonusValueSprites();
 
-	public abstract Map<String, Rectangle2D> getSymbolSprites();
+	public abstract Map<Integer, Rectangle2D> getSymbolSprites();
 }

@@ -77,7 +77,7 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	private final List<Rectangle2D> mazeEmptySprites;
 	private final List<Image> mazeFlashImages;
 	private final Map<Integer, Rectangle2D> bonusValueSprites;
-	private final Map<String, Rectangle2D> symbolSprites;
+	private final Map<Integer, Rectangle2D> symbolSprites;
 	private final Map<Integer, Rectangle2D> bountyNumberSprites;
 
 	public Rendering2D_MsPacMan() {
@@ -170,7 +170,7 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	}
 
 	@Override
-	public Map<String, Rectangle2D> getSymbolSprites() {
+	public Map<Integer, Rectangle2D> getSymbolSprites() {
 		return symbolSprites;
 	}
 
