@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.scene;
 
 import de.amr.games.pacman.ui.PacManGameSound;
-import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntermissionScene1;
@@ -34,6 +33,7 @@ import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntroScene;
 import de.amr.games.pacman.ui.fx._3d.entity.GianmarcosPacManModel3D;
 import de.amr.games.pacman.ui.fx._3d.entity.PacManModel3D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
+import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 
 /**
@@ -69,7 +69,7 @@ public class ScenesMsPacMan {
 		//@formatter:on
 	}
 
-	public static void init(PacManGameUI ui) {
+	public static void init(PacManGameUI_JavaFX ui) {
 		//@formatter:off
 		SCENES[0][0] = 
 		SCENES[0][1] = new MsPacMan_IntroScene(ui);

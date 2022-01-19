@@ -31,7 +31,6 @@ import de.amr.games.pacman.controller.event.DefaultPacManGameEventHandler;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -63,7 +62,7 @@ import javafx.stage.WindowEvent;
  * 
  * @author Armin Reichert
  */
-public class PacManGameUI_JavaFX implements PacManGameUI, DefaultPacManGameEventHandler {
+public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 
 	private final Stage stage;
 	private final PacManGameController gameController;
@@ -144,7 +143,6 @@ public class PacManGameUI_JavaFX implements PacManGameUI, DefaultPacManGameEvent
 		return canvas;
 	}
 
-	@Override
 	public void showFlashMessage(double seconds, String message, Object... args) {
 		flashMessageView.showMessage(String.format(message, args), seconds);
 	}
@@ -310,8 +308,7 @@ public class PacManGameUI_JavaFX implements PacManGameUI, DefaultPacManGameEvent
 			if (currentGameScene instanceof PlayScene3D) {
 				PlayScene3D playScene3D = (PlayScene3D) currentGameScene;
 				Env.nextPerspective();
-				String cameraType = Env.MESSAGES
-						.getString(playScene3D.currentCamController().getClass().getSimpleName());
+				String cameraType = Env.MESSAGES.getString(playScene3D.currentCamController().getClass().getSimpleName());
 				String message = Env.message("camera_perspective", cameraType);
 				showFlashMessage(1, message);
 			}

@@ -27,11 +27,11 @@ import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.mspacman.Intermission2Controller;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.ui.PacManGameSound;
-import de.amr.games.pacman.ui.PacManGameUI;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.scene.ScenesMsPacMan;
+import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 
 /**
  * Intermission scene 2: "The chase".
@@ -48,7 +48,7 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 	private Player2D pacMan2D;
 	private Flap2D flap2D;
 
-	public MsPacMan_IntermissionScene2(PacManGameUI ui) {
+	public MsPacMan_IntermissionScene2(PacManGameUI_JavaFX ui) {
 		super(ui, ScenesMsPacMan.RENDERING, ScenesMsPacMan.SOUNDS);
 	}
 
