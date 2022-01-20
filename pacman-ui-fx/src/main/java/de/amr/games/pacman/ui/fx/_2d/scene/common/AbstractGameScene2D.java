@@ -35,7 +35,7 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.util.AbstractCameraController;
+import de.amr.games.pacman.ui.fx.util.CameraController;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -126,7 +126,7 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	}
 
 	@Override
-	public Optional<AbstractCameraController> camController() {
+	public Optional<CameraController> camController() {
 		return Optional.empty();
 	}
 

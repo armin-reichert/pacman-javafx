@@ -58,7 +58,7 @@ import de.amr.games.pacman.ui.fx.scene.ScenesMsPacMan;
 import de.amr.games.pacman.ui.fx.scene.ScenesPacMan;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.util.AbstractCameraController;
+import de.amr.games.pacman.ui.fx.util.CameraController;
 import de.amr.games.pacman.ui.fx.util.CoordinateSystem;
 import javafx.animation.SequentialTransition;
 import javafx.scene.AmbientLight;
@@ -83,7 +83,7 @@ import javafx.scene.transform.Translate;
 public class PlayScene3D extends AbstractGameScene {
 
 	private final PacManModel3D model3D;
-	private final EnumMap<Perspective, AbstractCameraController> camControllers = new EnumMap<>(Perspective.class);
+	private final EnumMap<Perspective, CameraController> camControllers = new EnumMap<>(Perspective.class);
 	private final Image floorImage = new Image(getClass().getResource("/common/escher-texture.jpg").toString());
 	private final AmbientLight ambientLight = new AmbientLight(Color.GHOSTWHITE);
 	private final CoordinateSystem coordSystem = new CoordinateSystem(1000);
@@ -102,7 +102,7 @@ public class PlayScene3D extends AbstractGameScene {
 		super(ui, sounds);
 		this.model3D = model3D;
 		coordSystem.visibleProperty().bind(Env.$axesVisible);
-		Env.$perspective.addListener(($1, $2, $3) -> camController().ifPresent(AbstractCameraController::reset));
+		Env.$perspective.addListener(($1, $2, $3) -> camController().ifPresent(CameraController::reset));
 	}
 
 	@Override
@@ -163,7 +163,7 @@ public class PlayScene3D extends AbstractGameScene {
 		playground.getChildren().addAll(ghosts3D);
 
 		fxSubScene.setRoot(new Group(ambientLight, playground, coordSystem));
-		camController().ifPresent(AbstractCameraController::reset);
+		camController().ifPresent(CameraController::reset);
 	}
 
 	@Override
@@ -198,7 +198,7 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	@Override
-	public Optional<AbstractCameraController> camController() {
+	public Optional<CameraController> camController() {
 		if (!camControllers.containsKey(Env.$perspective.get())) {
 			return Optional.empty();
 		}

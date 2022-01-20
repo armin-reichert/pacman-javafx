@@ -23,9 +23,10 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
-import de.amr.games.pacman.ui.fx.util.AbstractCameraController;
+import de.amr.games.pacman.ui.fx.util.CameraController;
 import javafx.scene.Camera;
 import javafx.scene.Node;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
 
 /**
@@ -33,10 +34,17 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class Cam_NearPlayer extends AbstractCameraController {
+public class Cam_NearPlayer implements CameraController {
+
+	private final Camera cam;
 
 	public Cam_NearPlayer(Camera cam) {
-		super(cam);
+		this.cam = cam;
+	}
+
+	@Override
+	public Camera cam() {
+		return cam;
 	}
 
 	@Override
@@ -57,5 +65,9 @@ public class Cam_NearPlayer extends AbstractCameraController {
 	@Override
 	public String toString() {
 		return "Near Player";
+	}
+
+	@Override
+	public void handle(KeyEvent event) {
 	}
 }

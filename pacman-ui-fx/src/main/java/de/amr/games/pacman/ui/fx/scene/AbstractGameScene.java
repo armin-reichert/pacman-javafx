@@ -33,7 +33,7 @@ import de.amr.games.pacman.controller.event.DefaultPacManGameEventHandler;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.util.AbstractCameraController;
+import de.amr.games.pacman.ui.fx.util.CameraController;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 
@@ -74,7 +74,7 @@ public abstract class AbstractGameScene implements DefaultPacManGameEventHandler
 	/**
 	 * @return The current camera controller in case of a 3D scene, else {@code Optional.empty()}.
 	 */
-	public abstract Optional<AbstractCameraController> camController();
+	public abstract Optional<CameraController> camController();
 
 	/**
 	 * Called when the scene gets initialized.

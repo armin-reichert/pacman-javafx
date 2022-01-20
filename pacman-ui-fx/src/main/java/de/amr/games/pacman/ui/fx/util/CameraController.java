@@ -21,45 +21,32 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx._3d.scene;
+package de.amr.games.pacman.ui.fx.util;
 
-import de.amr.games.pacman.lib.V2d;
-import de.amr.games.pacman.ui.fx._3d.entity.Player3D;
-import de.amr.games.pacman.ui.fx.util.AbstractCameraController;
+import javafx.event.EventHandler;
 import javafx.scene.Camera;
 import javafx.scene.Node;
-import javafx.scene.transform.Rotate;
+import javafx.scene.input.KeyEvent;
 
 /**
- * Point Of View perspective.
+ * Implemented by all camera controllers.
  * 
  * @author Armin Reichert
  */
-public class Cam_POV extends AbstractCameraController {
+public interface CameraController extends EventHandler<KeyEvent> {
 
-	public Cam_POV(Camera cam) {
-		super(cam);
+	Camera cam();
+
+	void reset();
+
+	void follow(Node target);
+
+	default double approach(double current, double target) {
+		return current + (target - current) * 0.02;
 	}
 
-	@Override
-	public void reset() {
-		cam.setNearClip(0.001);
-		cam.setFarClip(100);
-		cam.setTranslateZ(-40);
-	}
-
-	@Override
-	public void follow(Node node) {
-		Player3D player3D = (Player3D) node;
-		V2d offset = new V2d(player3D.player.dir().vec).scaled(8);
-		cam.setRotationAxis(Rotate.Z_AXIS);
-		cam.setRotate(player3D.getRotate());
-		cam.setTranslateX(-14 * 8 + player3D.player.position.x + offset.x);
-		cam.setTranslateY(-18 * 8 + player3D.player.position.y + offset.y);
-	}
-
-	@Override
-	public String toString() {
-		return "POV";
+	default String info() {
+		return String.format("x=%.0f y=%.0f z=%.0f rot=%.0f", cam().getTranslateX(), cam().getTranslateY(),
+				cam().getTranslateZ(), cam().getRotate());
 	}
 }

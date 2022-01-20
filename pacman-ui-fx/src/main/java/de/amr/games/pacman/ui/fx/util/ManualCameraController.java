@@ -32,10 +32,17 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class ManualCameraController extends AbstractCameraController {
+public abstract class ManualCameraController implements CameraController {
+
+	protected final Camera cam;
 
 	public ManualCameraController(Camera cam) {
-		super(cam);
+		this.cam = cam;
+	}
+
+	@Override
+	public Camera cam() {
+		return cam;
 	}
 
 	@Override
