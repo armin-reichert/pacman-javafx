@@ -63,16 +63,17 @@ import javafx.stage.WindowEvent;
  */
 public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 
-	private final Stage stage;
-	private final PacManGameController gameController;
-	private final Canvas canvas = new Canvas();
-	private final FlashMessageView flashMessageView = new FlashMessageView();
-	private final HUD hud = new HUD(this);
+	public final Stage stage;
+	public final PacManGameController gameController;
+	public final Canvas canvas = new Canvas();
+	public final FlashMessageView flashMessageView = new FlashMessageView();
+	public final HUD hud = new HUD(this);
+
+	public AbstractGameScene currentGameScene;
+
 	private final Group gameSceneRoot = new Group();
 	private final StackPane mainSceneRoot;
 	private final BooleanProperty $is3D = new SimpleBooleanProperty();
-
-	private AbstractGameScene currentGameScene;
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController gameController, double height, boolean fullscreen) {
 		this.stage = stage;
@@ -123,22 +124,6 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 	public void reset() {
 		stopAllSounds();
 		currentGameScene.end();
-	}
-
-	public PacManGameController getGameController() {
-		return gameController;
-	}
-
-	public Stage getStage() {
-		return stage;
-	}
-
-	public AbstractGameScene getCurrentGameScene() {
-		return currentGameScene;
-	}
-
-	public Canvas getCanvas() {
-		return canvas;
 	}
 
 	public void showFlashMessage(double seconds, String message, Object... args) {

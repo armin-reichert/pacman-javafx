@@ -72,7 +72,7 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 		this.unscaledHeight = t(GameModel.TILES_Y);
 		this.aspectRatio = unscaledWidth / unscaledHeight;
 		this.rendering = rendering;
-		this.canvas = ui.getCanvas();
+		this.canvas = ui.canvas;
 		this.gc = canvas.getGraphicsContext2D();
 	}
 
@@ -115,7 +115,9 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 		}
 		drawBackground();
 		doRender();
-		drawTileBorders();
+		if (Env.$tilesVisible.get()) {
+			drawTileBorders();
+		}
 	}
 
 	@Override
@@ -139,15 +141,13 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	}
 
 	private void drawTileBorders() {
-		if (Env.$tilesVisible.get()) {
-			gc.setStroke(Color.rgb(160, 160, 160, 0.5));
-			gc.setLineWidth(1);
-			for (int row = 0; row < 36; ++row) {
-				line(0, t(row), t(28), t(row));
-			}
-			for (int col = 0; col < 28; ++col) {
-				line(t(col), 0, t(col), t(36));
-			}
+		gc.setStroke(Color.rgb(160, 160, 160, 0.5));
+		gc.setLineWidth(1);
+		for (int row = 0; row < 36; ++row) {
+			line(0, t(row), t(28), t(row));
+		}
+		for (int col = 0; col < 28; ++col) {
+			line(t(col), 0, t(col), t(36));
 		}
 	}
 

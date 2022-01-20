@@ -28,7 +28,6 @@ import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
@@ -94,16 +93,15 @@ public class HUD extends VBox {
 	}
 
 	public void update() {
-		final PacManGameController gameController = ui.getGameController();
+		final PacManGameController gameController = ui.gameController;
 		final GameModel game = gameController.game();
 		final PacManGameState state = gameController.currentStateID;
 		final String huntingPhaseName = game.inScatteringPhase() ? "Scattering" : "Chasing";
 		final TickTimer stateTimer = gameController.stateTimer();
-		final double width = ui.getStage().getScene().getWindow().getWidth();
-		final double height = ui.getStage().getScene().getWindow().getHeight();
-		final AbstractGameScene currentScene = ui.getCurrentGameScene();
-		final double sceneWidth = ui.getStage().getScene().getWidth();
-		final double sceneHeight = ui.getStage().getScene().getHeight();
+		final double width = ui.stage.getScene().getWindow().getWidth();
+		final double height = ui.stage.getScene().getWindow().getHeight();
+		final double sceneWidth = ui.stage.getScene().getWidth();
+		final double sceneHeight = ui.stage.getScene().getHeight();
 
 		text.setLength(0);
 		row("Total Ticks", "%d", Env.gameLoop.$totalTicks.get());
@@ -123,20 +121,21 @@ public class HUD extends VBox {
 				stateTimer.ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer.ticksRemaining());
 		row("Autopilot", "%s", on_off(gameController.isAutoControlled()));
 		row("Immunity", "%s", on_off(game.player.immune));
-		row("Game Scene", "%s", currentScene.getClass().getSimpleName());
-		row("", "w=%.0f h=%.0f", currentScene.getSubSceneFX().getWidth(), currentScene.getSubSceneFX().getHeight());
+		row("Game Scene", "%s", ui.currentGameScene.getClass().getSimpleName());
+		row("", "w=%.0f h=%.0f", ui.currentGameScene.getSubSceneFX().getWidth(),
+				ui.currentGameScene.getSubSceneFX().getHeight());
 		row("Window Size", "w=%.0f h=%.0f", width, height);
 		row("Scene Size", "w=%.0f h=%.0f", sceneWidth, sceneHeight);
 		row("3D Scenes", "%s", on_off(Env.$use3DScenes.get()));
-		if (currentScene.is3D()) {
+		if (ui.currentGameScene.is3D()) {
 			row("Perspective", "%s", Env.$perspective.get());
-			currentScene.camController().ifPresent(camController -> {
+			ui.currentGameScene.camController().ifPresent(camController -> {
 				row("Camera", "%s", camController.info());
 			});
 			row("Draw Mode", "%s", Env.$drawMode3D.get());
 			row("Axes", "%s", on_off(Env.$axesVisible.get()));
 		} else {
-			row("Canvas2D", "w=%.0f h=%.0f", ui.getCanvas().getWidth(), ui.getCanvas().getHeight());
+			row("Canvas2D", "w=%.0f h=%.0f", ui.canvas.getWidth(), ui.canvas.getHeight());
 		}
 
 		newRow();

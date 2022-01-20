@@ -72,7 +72,7 @@ public class PacManGameAppFX extends Application {
 		// Create the game loop
 		GameLoop gameLoop = new GameLoop(() -> {
 			controller.updateState();
-			ui.getCurrentGameScene().update();
+			ui.currentGameScene.update();
 		}, ui::update);
 
 		// Note; this must be done *after* creating the game loop

@@ -56,7 +56,7 @@ public abstract class AbstractGameScene implements DefaultPacManGameEventHandler
 
 	public AbstractGameScene(PacManGameUI_JavaFX ui, SoundManager sounds) {
 		this.ui = ui;
-		this.gameController = ui.getGameController();
+		this.gameController = ui.gameController;
 		this.sounds = sounds;
 	}
 
@@ -72,7 +72,7 @@ public abstract class AbstractGameScene implements DefaultPacManGameEventHandler
 	public abstract boolean is3D();
 
 	/**
-	 * @return The current camera controller of a 3D scene, else {@code Optional.empty()}.
+	 * @return The current camera controller in case of a 3D scene, else {@code Optional.empty()}.
 	 */
 	public abstract Optional<AbstractCameraController> camController();
 
