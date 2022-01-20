@@ -132,7 +132,8 @@ public class PlayScene3D extends AbstractGameScene {
 		final int width = game.world.numCols() * TS;
 		final int height = game.world.numRows() * TS;
 
-		rendering2D = gameController.gameVariant() == GameVariant.MS_PACMAN ? ScenesMsPacMan.RENDERING
+		rendering2D = gameController.gameVariant() == GameVariant.MS_PACMAN //
+				? ScenesMsPacMan.RENDERING
 				: ScenesPacMan.RENDERING;
 
 		maze3D = new Maze3D(width, height, floorImage);
@@ -168,7 +169,7 @@ public class PlayScene3D extends AbstractGameScene {
 		playground.getChildren().addAll(ghosts3D);
 
 		fxSubScene.setRoot(new Group(ambientLight, playground, coordSystem));
-		camController().ifPresent(cc -> cc.reset());
+		camController().ifPresent(AbstractCameraController::reset);
 	}
 
 	@Override
@@ -215,7 +216,7 @@ public class PlayScene3D extends AbstractGameScene {
 	private void buildMaze(int mazeNumber) {
 		buildMazeStructure(mazeNumber);
 		maze3D.buildFood(game.world, rendering2D.getFoodColor(mazeNumber));
-		energizerAnimations = energizerNodes().map(this::createEnergizerAnimation).toArray(Animation[]::new);
+		energizerAnimations = maze3D.energizerNodes().map(this::createEnergizerAnimation).toArray(Animation[]::new);
 	}
 
 	private void buildMazeStructure(int mazeNumber) {
@@ -224,7 +225,7 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	private Transition createEnergizerAnimation(Node energizer) {
-		var animation = new ScaleTransition(Duration.seconds(0.16), energizer);
+		var animation = new ScaleTransition(Duration.seconds(1.0 / 6), energizer);
 		animation.setAutoReverse(true);
 		animation.setCycleCount(Transition.INDEFINITE);
 		animation.setFromX(1.0);
@@ -327,7 +328,7 @@ public class PlayScene3D extends AbstractGameScene {
 		if (e.newGameState == PacManGameState.READY) {
 			sounds.stopAll();
 			player3D.reset();
-			resetEnergizers();
+			maze3D.resetEnergizerSize();
 			sounds.setMuted(gameController.isAttractMode());
 			if (!gameController.isGameRunning()) {
 				sounds.play(PacManGameSound.GAME_READY);
@@ -372,27 +373,15 @@ public class PlayScene3D extends AbstractGameScene {
 			ui.showFlashMessage(3, Env.GAME_OVER_TALK.next());
 		}
 
-		// exit HUNTING but not GAME_OVER
+		// exit HUNTING
 		if (e.oldGameState == PacManGameState.HUNTING && e.newGameState != PacManGameState.GHOST_DYING) {
 			stopEnergizerAnimations();
 			bonus3D.hide();
 		}
 	}
 
-	private Stream<Node> energizerNodes() {
-		return maze3D.foodNodes().filter(node -> info(node).energizer);
-	}
-
 	private Optional<Node> foodNodeAt(V2i tile) {
 		return maze3D.foodNodes().filter(node -> info(node).tile.equals(tile)).findFirst();
-	}
-
-	private void resetEnergizers() {
-		energizerNodes().forEach(node -> {
-			node.setScaleX(1.0);
-			node.setScaleY(1.0);
-			node.setScaleZ(1.0);
-		});
 	}
 
 	private void playEnergizerAnimations() {

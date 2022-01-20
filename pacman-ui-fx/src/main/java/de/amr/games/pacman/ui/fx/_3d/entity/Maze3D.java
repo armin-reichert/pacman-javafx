@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
+import static de.amr.games.pacman.ui.fx._3d.entity.Maze3D.NodeInfo.info;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -162,6 +163,18 @@ public class Maze3D extends Group {
 
 	public Stream<Node> foodNodes() {
 		return foodGroup.getChildren().stream();
+	}
+
+	public Stream<Node> energizerNodes() {
+		return foodNodes().filter(node -> info(node).energizer);
+	}
+
+	public void resetEnergizerSize() {
+		energizerNodes().forEach(node -> {
+			node.setScaleX(1.0);
+			node.setScaleY(1.0);
+			node.setScaleZ(1.0);
+		});
 	}
 
 	public void showDoorsOpen(boolean open) {
