@@ -297,16 +297,13 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 		switch (e.getCode()) {
 
 		case C:
-			if (currentGameScene instanceof PlayScene3D) {
-				PlayScene3D playScene3D = (PlayScene3D) currentGameScene;
-				Env.nextPerspective();
-				String message = "No Camera";
-				String perspective = "";
-				if (playScene3D.camController().isPresent()) {
-					perspective = Env.message(playScene3D.camController().get().getClass().getSimpleName());
-					message = Env.message("camera_perspective", perspective);
+			if (currentGameScene.is3D()) {
+				if (currentGameScene.camController().isPresent()) {
+					Env.nextPerspective();
+					String perspective = Env.message(currentGameScene.camController().get().getClass().getSimpleName());
+					String message = Env.message("camera_perspective", perspective);
+					showFlashMessage(1, message);
 				}
-				showFlashMessage(1, message);
 			}
 			break;
 
