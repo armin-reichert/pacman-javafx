@@ -185,9 +185,8 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 			newGameScene.init(stage.getScene());
 			log("Game scene '%s' initialized", newGameScene.name());
 			gameSceneRoot.getChildren().setAll(newGameScene.getSubSceneFX());
-			// Note: this must be done after new scene has been added to scene graph:
-			newGameScene.getSubSceneFX().requestFocus();
 			currentGameScene = newGameScene;
+			currentGameScene.getSubSceneFX().requestFocus();
 		}
 	}
 
