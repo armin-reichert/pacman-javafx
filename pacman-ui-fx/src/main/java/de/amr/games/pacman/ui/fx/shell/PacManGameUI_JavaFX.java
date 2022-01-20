@@ -85,8 +85,8 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 		var gameScene = selectScene(gameController.game(), Env.$use3DScenes.get());
 
 		mainSceneRoot = new StackPane(gameSceneRoot, flashMessageView, hud);
+		defineMainSceneBackground();
 		StackPane.setAlignment(hud, Pos.TOP_LEFT);
-		defineBackground(mainSceneRoot);
 
 		double aspectRatio = gameScene.aspectRatio()
 				.orElse(Screen.getPrimary().getBounds().getWidth() / Screen.getPrimary().getBounds().getHeight());
@@ -103,27 +103,9 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 		stage.show();
 	}
 
-	private void defineBackground(StackPane mainSceneRoot) {
-		Image milkyway = new Image(getClass().getResource("/common/milkyway.jpg").toString());
-		Background bgMilkyWay = new Background(new BackgroundImage(milkyway, null, null, null, null));
-		Background bgBlack = new Background(new BackgroundFill(Color.BLACK, null, null));
-		Background bgBlue = new Background(new BackgroundFill(Color.CORNFLOWERBLUE, null, null));
-		mainSceneRoot.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-			if ($is3D.get()) {
-				return Env.$drawMode3D.get() == DrawMode.LINE ? bgBlack : bgMilkyWay;
-			}
-			return bgBlue;
-		}, Env.$drawMode3D, $is3D));
-	}
-
 	public void update() {
 		flashMessageView.update();
 		hud.update();
-	}
-
-	public void reset() {
-		stopAllSounds();
-		currentGameScene.end();
 	}
 
 	public void showFlashMessage(double seconds, String message, Object... args) {
@@ -133,6 +115,18 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 	private void stopAllSounds() {
 		ScenesMsPacMan.SOUNDS.stopAll();
 		ScenesPacMan.SOUNDS.stopAll();
+	}
+
+	private void defineMainSceneBackground() {
+		Image milkyway = new Image(getClass().getResource("/common/milkyway.jpg").toString());
+		Background bgMilkyWay = new Background(new BackgroundImage(milkyway, null, null, null, null));
+		Background bgBlack = new Background(new BackgroundFill(Color.BLACK, null, null));
+		Background bgBlue = new Background(new BackgroundFill(Color.CORNFLOWERBLUE, null, null));
+		mainSceneRoot.backgroundProperty().bind(Bindings.createObjectBinding( //
+				() -> $is3D.get() //
+						? Env.$drawMode3D.get() == DrawMode.LINE ? bgBlack : bgMilkyWay //
+						: bgBlue, //
+				Env.$drawMode3D, $is3D));
 	}
 
 	private void toggleUse3DScenes() {
@@ -250,7 +244,8 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 			break;
 
 		case Q:
-			reset();
+			currentGameScene.end();
+			stopAllSounds();
 			gameController.changeState(PacManGameState.INTRO);
 			break;
 
@@ -261,7 +256,9 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 			break;
 
 		case X:
-			gameController.cheatKillGhosts();
+			if (gameController.isGameRunning()) {
+				gameController.cheatKillGhosts();
+			}
 			break;
 
 		case SPACE:
@@ -312,7 +309,7 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 		case P:
 			Env.$paused.set(!Env.$paused.get());
 			if (Env.$paused.get()) {
-				showFlashMessage(2, "Game paused\n(CTRL+P = resume, P = single step)");
+				showFlashMessage(3, "Game paused");
 			} else {
 				showFlashMessage(2, "Game resumed");
 			}

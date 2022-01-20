@@ -78,8 +78,8 @@ public class PacManGameAppFX extends Application {
 		// Note; this must be done *after* creating the game loop
 		stage.titleProperty().bind(Bindings.createStringBinding(() -> {
 			String gameName = controller.gameVariant() == PACMAN ? "Pac-Man" : "Ms. Pac-Man";
-			return Env.$paused.get() ? String.format("%s (JavaFX, Game PAUSED)", gameName)
-					: String.format("%s (JavaFX)", gameName);
+			return Env.$paused.get() ? String.format("%s (PAUSED, CTRL+P: resume, P: Step)", gameName)
+					: String.format("%s", gameName);
 		}, gameLoop.$fps));
 
 		log("Application created. Game variant: %s, window height: %.0f, 3D: %s, camera perspective: %s",
