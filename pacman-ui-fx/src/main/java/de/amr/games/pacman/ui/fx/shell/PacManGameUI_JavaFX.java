@@ -90,10 +90,8 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 
 		double aspectRatio = gameScene.aspectRatio()
 				.orElse(Screen.getPrimary().getBounds().getWidth() / Screen.getPrimary().getBounds().getHeight());
-		Scene mainScene = new Scene(mainSceneRoot, aspectRatio * height, height);
-		stage.setScene(mainScene);
-
-		// Note: Can only be called *after* main scene has been set
+		double width = aspectRatio * height;
+		stage.setScene(new Scene(mainSceneRoot, width, height));
 		setGameScene(gameScene);
 
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> Env.gameLoop.stop());
