@@ -63,13 +63,6 @@ public abstract class AbstractGameScene implements DefaultPacManGameEventHandler
 	}
 
 	/**
-	 * @return the JavaFX subscene
-	 */
-	public SubScene getSubSceneFX() {
-		return fxSubScene;
-	}
-
-	/**
 	 * Tells if this is a 3D scene.
 	 * 
 	 * @return {@code true} if this is a 3D scene
@@ -82,8 +75,10 @@ public abstract class AbstractGameScene implements DefaultPacManGameEventHandler
 	public abstract Optional<AbstractCameraController> camController();
 
 	/**
-	 * Called when the scene gets initialized. Stores a reference to the game controller and the current game such that
-	 * the other lifecycle methods can use them.
+	 * Called when the scene gets initialized.
+	 * 
+	 * <p>
+	 * Stores a reference to the game controller and the current game such that the other lifecycle methods can use them.
 	 */
 	public void init(Scene parentScene, PacManGameController gameController) {
 		this.gameController = gameController;
@@ -91,7 +86,19 @@ public abstract class AbstractGameScene implements DefaultPacManGameEventHandler
 		createFXSubScene(parentScene);
 	}
 
+	/**
+	 * Creates the JavaFX subscene associated with this game scene
+	 * 
+	 * @param parentScene
+	 */
 	protected abstract void createFXSubScene(Scene parentScene);
+
+	/**
+	 * @return the JavaFX subscene
+	 */
+	public SubScene getSubSceneFX() {
+		return fxSubScene;
+	}
 
 	/**
 	 * Called on every tick.
@@ -99,7 +106,7 @@ public abstract class AbstractGameScene implements DefaultPacManGameEventHandler
 	public abstract void update();
 
 	/**
-	 * Forces the timer of the current state to expire.
+	 * Forces the timer of the game controller's current state to expire.
 	 */
 	public void continueGame() {
 		gameController.stateTimer().expire();
@@ -117,38 +124,5 @@ public abstract class AbstractGameScene implements DefaultPacManGameEventHandler
 	 */
 	public OptionalDouble aspectRatio() {
 		return OptionalDouble.empty();
-	}
-
-	/**
-	 * Resizes the scene to the given size.
-	 * 
-	 * @param width  with in pixels
-	 * @param height height in pixels
-	 */
-	public void resize(double width, double height) {
-	}
-
-	/**
-	 * Keeps the scene size at the size of the parent scene.
-	 * 
-	 * @param parentScene the parent scene (main scene)
-	 */
-	public void keepSizeOf(Scene parentScene) {
-		if (aspectRatio().isPresent()) {
-			double aspectRatio = aspectRatio().getAsDouble();
-			parentScene.widthProperty().addListener(($1, $2, targetWidth) -> {
-				double newHeight = Math.min(targetWidth.doubleValue() / aspectRatio, parentScene.getHeight());
-				double newWidth = newHeight * aspectRatio;
-				resize(newWidth, newHeight);
-			});
-			parentScene.heightProperty().addListener(($1, $2, targetHeight) -> {
-				double newHeight = targetHeight.doubleValue();
-				double newWidth = Math.min(parentScene.getHeight() * aspectRatio, parentScene.getWidth());
-				resize(newWidth, newHeight);
-			});
-		} else {
-			fxSubScene.widthProperty().bind(parentScene.widthProperty());
-			fxSubScene.heightProperty().bind(parentScene.heightProperty());
-		}
 	}
 }

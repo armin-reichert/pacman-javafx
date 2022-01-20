@@ -60,6 +60,7 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	protected final int levelCounterRightX = t(GameModel.TILES_X - 3);
 	protected final int levelCounterRightY = t(GameModel.TILES_Y - 2);
 
+	protected final Canvas canvas;
 	protected final GraphicsContext gc;
 	protected final Rendering2D rendering;
 
@@ -72,40 +73,32 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 		this.unscaledHeight = t(GameModel.TILES_Y);
 		this.aspectRatio = unscaledWidth / unscaledHeight;
 		this.rendering = rendering;
-		this.gc = ui.getCanvas().getGraphicsContext2D();
+		this.canvas = ui.getCanvas();
+		this.gc = canvas.getGraphicsContext2D();
 	}
 
 	@Override
 	public void createFXSubScene(Scene parentScene) {
-		fxSubScene = new SubScene(new Group(ui.getCanvas()), unscaledWidth, unscaledHeight);
-		fxSubScene.widthProperty().bind(ui.getCanvas().widthProperty());
-		fxSubScene.heightProperty().bind(ui.getCanvas().heightProperty());
-		keepSizeOf(parentScene);
-		resize(parentScene.getWidth(), parentScene.getHeight());
+		fxSubScene = new SubScene(new Group(canvas), unscaledWidth, unscaledHeight);
+		fxSubScene.widthProperty().bind(canvas.widthProperty());
+		fxSubScene.heightProperty().bind(canvas.heightProperty());
+		parentScene.widthProperty().addListener(($1, $2, parentWidth) -> {
+			double newHeight = Math.min(parentWidth.doubleValue() / aspectRatio, parentScene.getHeight());
+			double newWidth = newHeight * aspectRatio;
+			resizeCanvas(newWidth, newHeight);
+		});
+		parentScene.heightProperty().addListener(($1, $2, parentHeight) -> {
+			double newHeight = parentHeight.doubleValue();
+			double newWidth = Math.min(parentScene.getHeight() * aspectRatio, parentScene.getWidth());
+			resizeCanvas(newWidth, newHeight);
+		});
+		resizeCanvas(parentScene.getWidth(), parentScene.getHeight());
 	}
 
-	@Override
-	public boolean is3D() {
-		return false;
-	}
-
-	@Override
-	public Optional<AbstractCameraController> camController() {
-		return Optional.empty();
-	}
-
-	@Override
-	public final OptionalDouble aspectRatio() {
-		return OptionalDouble.of(aspectRatio);
-	}
-
-	@Override
-	public void resize(double width, double height) {
-		// resize canvas to take given height and respect aspect ratio
-		Canvas canvas = gc.getCanvas();
-		canvas.setWidth(aspectRatio().getAsDouble() * height);
-		canvas.setHeight(height);
+	private void resizeCanvas(double width, double height) {
 		double scaling = height / unscaledHeight;
+		canvas.setWidth(aspectRatio * height);
+		canvas.setHeight(height);
 		canvas.getTransforms().setAll(new Scale(scaling, scaling));
 	}
 
@@ -124,6 +117,21 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 		drawBackground();
 		doRender();
 		drawTileBorders();
+	}
+
+	@Override
+	public boolean is3D() {
+		return false;
+	}
+
+	@Override
+	public Optional<AbstractCameraController> camController() {
+		return Optional.empty();
+	}
+
+	@Override
+	public final OptionalDouble aspectRatio() {
+		return OptionalDouble.of(aspectRatio);
 	}
 
 	private void drawBackground() {

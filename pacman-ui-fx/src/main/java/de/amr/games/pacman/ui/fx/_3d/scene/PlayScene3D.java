@@ -111,7 +111,7 @@ public class PlayScene3D extends AbstractGameScene {
 		Env.$perspective.addListener(($1, $2, $3) -> camController().ifPresent(cc -> cc.reset()));
 		light = new AmbientLight();
 		light.setColor(Color.GHOSTWHITE);
-		coordinateSystem = new CoordinateSystem(ui.getStage().getWidth());
+		coordinateSystem = new CoordinateSystem(1000);
 		coordinateSystem.visibleProperty().bind(Env.$axesVisible);
 		playground = new Group(light, coordinateSystem);
 	}
