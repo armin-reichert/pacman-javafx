@@ -1,12 +1,14 @@
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.lib.Logging.log;
+
+import java.net.URL;
 import java.util.Collections;
 import java.util.Map;
 
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
-import de.amr.games.pacman.lib.Logging;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 
@@ -21,17 +23,22 @@ public class ObjModel {
 	public Map<String, PhongMaterial> materials = Collections.emptyMap();
 
 	public ObjModel(String path) {
-		ObjModelImporter objImporter = new ObjModelImporter();
+		ObjModelImporter importer = new ObjModelImporter();
+		URL url = getClass().getResource(path);
+		if (url == null) {
+			log("Loading 3D model failed: could not access resource using path '%s'", path);
+			throw new RuntimeException("3D model loading failed");
+		}
 		try {
-			objImporter.read(getClass().getResource(path));
-			meshViews = objImporter.getNamedMeshViews();
-			materials = objImporter.getNamedMaterials();
-			Logging.log("3D model '%s' loaded successfully", path);
+			importer.read(url);
+			meshViews = importer.getNamedMeshViews();
+			materials = importer.getNamedMaterials();
+			log("Loading 3D model '%s' succeeded", path);
 		} catch (ImportException e) {
-			Logging.log("3D model '%s' loading failed", path);
-			e.printStackTrace();
+			log("Loading 3D model '%s' failed", path);
+			throw new RuntimeException("3D model loading failed", e);
 		} finally {
-			objImporter.close();
+			importer.close();
 		}
 	}
 
