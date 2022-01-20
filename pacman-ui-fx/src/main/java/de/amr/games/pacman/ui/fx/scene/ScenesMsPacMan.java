@@ -30,7 +30,7 @@ import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntermissionScene1;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntermissionScene2;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntermissionScene3;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntroScene;
-import de.amr.games.pacman.ui.fx._3d.model.GianmarcosPacManModel3D;
+import de.amr.games.pacman.ui.fx._3d.model.GianmarcosModel3D;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
@@ -45,7 +45,7 @@ public class ScenesMsPacMan {
 
 	public static final AbstractGameScene SCENES[][] = new AbstractGameScene[5][2];
 	public static final Rendering2D_MsPacMan RENDERING = new Rendering2D_MsPacMan();
-	public static final PacManModel3D MODEL_3D = GianmarcosPacManModel3D.get();
+	public static final PacManModel3D MODEL_3D = GianmarcosModel3D.get();
 	public static final SoundManager SOUNDS = new SoundManager();
 
 	static {
