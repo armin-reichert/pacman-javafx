@@ -76,6 +76,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
@@ -92,6 +93,7 @@ public class PlayScene3D extends AbstractGameScene {
 	private final AmbientLight ambientLight = new AmbientLight(Color.GHOSTWHITE);
 	private final CoordinateSystem coordSystem = new CoordinateSystem(1000);
 
+	private Group playground;
 	private Maze3D maze3D;
 	private Player3D player3D;
 	private Ghost3D[] ghosts3D;
@@ -101,8 +103,6 @@ public class PlayScene3D extends AbstractGameScene {
 	private LivesCounter3D livesCounter3D;
 	private Animation[] energizerAnimations;
 	private Rendering2D rendering2D;
-
-	private Group playground;
 
 	public PlayScene3D(PacManGameUI_JavaFX ui, PacManModel3D model3D, SoundManager sounds) {
 		super(ui, sounds);
@@ -114,9 +114,9 @@ public class PlayScene3D extends AbstractGameScene {
 	@Override
 	public void createFXSubScene(Scene parentScene) {
 		fxSubScene = new SubScene(new Group(), 400, 300, true, SceneAntialiasing.BALANCED);
-		var cam = new PerspectiveCamera(true);
 		fxSubScene.widthProperty().bind(parentScene.widthProperty());
 		fxSubScene.heightProperty().bind(parentScene.heightProperty());
+		var cam = new PerspectiveCamera(true);
 		fxSubScene.setCamera(cam);
 		fxSubScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> camController().ifPresent(cc -> cc.handle(e)));
 		camControllers.clear();
@@ -149,7 +149,10 @@ public class PlayScene3D extends AbstractGameScene {
 
 		bonus3D = new Bonus3D(rendering2D);
 
-		score3D = new ScoreNotReally3D(rendering2D.getScoreFont(), fxSubScene.getCamera());
+		score3D = new ScoreNotReally3D(rendering2D.getScoreFont());
+		// TODO: maybe this is not the best solution to keep the score display in plain view
+		score3D.setRotationAxis(Rotate.X_AXIS);
+		score3D.rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
 
 		livesCounter3D = new LivesCounter3D(model3D);
 		livesCounter3D.getTransforms().add(new Translate(TS, TS, -HTS));
