@@ -65,14 +65,9 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	protected GraphicsContext gc;
 
 	public AbstractGameScene2D(PacManGameUI_JavaFX ui, Rendering2D rendering, SoundManager sounds) {
-		this(ui, GameModel.TILES_X, GameModel.TILES_Y, rendering, sounds);
-	}
-
-	public AbstractGameScene2D(PacManGameUI_JavaFX ui, int tilesX, int tilesY, Rendering2D rendering,
-			SoundManager sounds) {
 		super(ui, sounds);
-		this.unscaledWidth = t(tilesX);
-		this.unscaledHeight = t(tilesY);
+		this.unscaledWidth = t(GameModel.TILES_X);
+		this.unscaledHeight = t(GameModel.TILES_Y);
 		this.aspectRatio = unscaledWidth / unscaledHeight;
 		this.rendering = rendering;
 	}
