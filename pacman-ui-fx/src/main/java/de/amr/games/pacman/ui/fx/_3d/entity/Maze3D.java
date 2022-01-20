@@ -36,6 +36,8 @@ import de.amr.games.pacman.model.world.FloorPlan;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.animation.Animation;
+import javafx.animation.Animation.Status;
+import javafx.animation.ScaleTransition;
 import javafx.animation.Transition;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -88,6 +90,8 @@ public class Maze3D extends Group {
 	private Color doorClosedColor = Color.PINK;
 	private Color doorOpenColor = Color.TRANSPARENT;
 
+	private Animation[] energizerAnimations;
+
 	/**
 	 * Creates the 3D-maze without walls, doors or food.
 	 * 
@@ -125,6 +129,28 @@ public class Maze3D extends Group {
 		var foodMaterial = new PhongMaterial(foodColor);
 		foodGroup.getChildren().setAll(world.tiles().filter(world::isFoodTile)
 				.map(tile -> createPellet(tile, world.isEnergizerTile(tile), foodMaterial)).collect(Collectors.toList()));
+		energizerAnimations = energizerNodes().map(this::createEnergizerAnimation).toArray(Animation[]::new);
+	}
+
+	private Animation createEnergizerAnimation(Node energizer) {
+		var animation = new ScaleTransition(Duration.seconds(1.0 / 6), energizer);
+		animation.setAutoReverse(true);
+		animation.setCycleCount(Transition.INDEFINITE);
+		animation.setFromX(1.0);
+		animation.setFromY(1.0);
+		animation.setFromZ(1.0);
+		animation.setToX(0.1);
+		animation.setToY(0.1);
+		animation.setToZ(0.1);
+		return animation;
+	}
+
+	public void playEnergizerAnimations() {
+		Stream.of(energizerAnimations).forEach(Animation::play);
+	}
+
+	public void stopEnergizerAnimations() {
+		Stream.of(energizerAnimations).forEach(Animation::stop);
 	}
 
 	public Animation flashingAnimation(int times) {
@@ -311,6 +337,12 @@ public class Maze3D extends Group {
 					addCorner(x, y, stoneSize, wallBaseMaterial, wallTopMaterial);
 				}
 			}
+		}
+	}
+
+	public void startEnergizerAnimations() {
+		if (Stream.of(energizerAnimations).anyMatch(animation -> animation.getStatus() != Status.RUNNING)) {
+			Stream.of(energizerAnimations).forEach(Animation::play);
 		}
 	}
 }

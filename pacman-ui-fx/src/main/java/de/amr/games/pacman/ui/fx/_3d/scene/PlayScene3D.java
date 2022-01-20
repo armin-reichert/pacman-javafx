@@ -60,11 +60,7 @@ import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.AbstractCameraController;
 import de.amr.games.pacman.ui.fx.util.CoordinateSystem;
-import javafx.animation.Animation;
-import javafx.animation.Animation.Status;
-import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
-import javafx.animation.Transition;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -78,7 +74,6 @@ import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
-import javafx.util.Duration;
 
 /**
  * 3D play scene with sound and animations.
@@ -101,7 +96,6 @@ public class PlayScene3D extends AbstractGameScene {
 	private ScoreNotReally3D score3D;
 	private LevelCounter3D levelCounter3D;
 	private LivesCounter3D livesCounter3D;
-	private Animation[] energizerAnimations;
 	private Rendering2D rendering2D;
 
 	public PlayScene3D(PacManGameUI_JavaFX ui, PacManModel3D model3D, SoundManager sounds) {
@@ -188,9 +182,7 @@ public class PlayScene3D extends AbstractGameScene {
 			maze3D.foodNodes().forEach(foodNode -> {
 				foodNode.setVisible(!game.isFoodEaten(info(foodNode).tile));
 			});
-			if (Stream.of(energizerAnimations).anyMatch(animation -> animation.getStatus() != Status.RUNNING)) {
-				Stream.of(energizerAnimations).forEach(Animation::play);
-			}
+			maze3D.startEnergizerAnimations();
 			AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
 			if (munching.isPlaying()) {
 				if (game.player.starvingTicks > 10) {
@@ -216,25 +208,11 @@ public class PlayScene3D extends AbstractGameScene {
 	private void buildMaze(int mazeNumber) {
 		buildMazeStructure(mazeNumber);
 		maze3D.buildFood(game.world, rendering2D.getFoodColor(mazeNumber));
-		energizerAnimations = maze3D.energizerNodes().map(this::createEnergizerAnimation).toArray(Animation[]::new);
 	}
 
 	private void buildMazeStructure(int mazeNumber) {
 		maze3D.buildWallsAndDoors(game.world, rendering2D.getMazeSideColor(mazeNumber),
 				rendering2D.getMazeTopColor(mazeNumber));
-	}
-
-	private Transition createEnergizerAnimation(Node energizer) {
-		var animation = new ScaleTransition(Duration.seconds(1.0 / 6), energizer);
-		animation.setAutoReverse(true);
-		animation.setCycleCount(Transition.INDEFINITE);
-		animation.setFromX(1.0);
-		animation.setFromY(1.0);
-		animation.setFromZ(1.0);
-		animation.setToX(0.1);
-		animation.setToY(0.1);
-		animation.setToZ(0.1);
-		return animation;
 	}
 
 	@Override
@@ -337,7 +315,7 @@ public class PlayScene3D extends AbstractGameScene {
 
 		// enter HUNTING
 		else if (e.newGameState == PacManGameState.HUNTING) {
-			playEnergizerAnimations();
+			maze3D.playEnergizerAnimations();
 		}
 
 		// enter PACMAN_DYING
@@ -375,21 +353,13 @@ public class PlayScene3D extends AbstractGameScene {
 
 		// exit HUNTING
 		if (e.oldGameState == PacManGameState.HUNTING && e.newGameState != PacManGameState.GHOST_DYING) {
-			stopEnergizerAnimations();
+			maze3D.stopEnergizerAnimations();
 			bonus3D.hide();
 		}
 	}
 
 	private Optional<Node> foodNodeAt(V2i tile) {
 		return maze3D.foodNodes().filter(node -> info(node).tile.equals(tile)).findFirst();
-	}
-
-	private void playEnergizerAnimations() {
-		Stream.of(energizerAnimations).forEach(Animation::play);
-	}
-
-	private void stopEnergizerAnimations() {
-		Stream.of(energizerAnimations).forEach(Animation::stop);
 	}
 
 	private void playAnimationPlayerDying() {
