@@ -45,7 +45,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 
 /**
- * Base class of all 2D scenes that get rendered inside a canvas.
+ * Base class of all 2D scenes that get rendered inside the canvas provided by the UI.
  * 
  * @author Armin Reichert
  */
@@ -58,11 +58,11 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	protected final int levelCounterRightX = t(GameModel.TILES_X - 3);
 	protected final int levelCounterRightY = t(GameModel.TILES_Y - 2);
 
+	protected final GraphicsContext gc;
 	protected final Rendering2D rendering;
 
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
-	protected GraphicsContext gc;
 
 	public AbstractGameScene2D(PacManGameUI_JavaFX ui, Rendering2D rendering, SoundManager sounds) {
 		super(ui, sounds);
@@ -70,15 +70,13 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 		this.unscaledHeight = t(GameModel.TILES_Y);
 		this.aspectRatio = unscaledWidth / unscaledHeight;
 		this.rendering = rendering;
+		this.gc = ui.getCanvas().getGraphicsContext2D();
 	}
 
-	public void setCanvas(Canvas canvas) {
-		gc = canvas.getGraphicsContext2D();
-		canvas.setWidth(unscaledWidth);
-		canvas.setHeight(unscaledHeight);
-		fxSubScene = new SubScene(new Group(canvas), unscaledWidth, unscaledHeight);
-		fxSubScene.widthProperty().bind(canvas.widthProperty());
-		fxSubScene.heightProperty().bind(canvas.heightProperty());
+	public void createSubScene() {
+		fxSubScene = new SubScene(new Group(ui.getCanvas()), unscaledWidth, unscaledHeight);
+		fxSubScene.widthProperty().bind(ui.getCanvas().widthProperty());
+		fxSubScene.heightProperty().bind(ui.getCanvas().heightProperty());
 	}
 
 	@Override

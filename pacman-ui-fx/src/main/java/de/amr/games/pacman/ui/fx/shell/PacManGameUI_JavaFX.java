@@ -199,7 +199,7 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 				log("Set scene to '%s'", newScene.getClass().getSimpleName());
 			}
 			if (newScene instanceof AbstractGameScene2D) {
-				((AbstractGameScene2D) newScene).setCanvas(canvas);
+				((AbstractGameScene2D) newScene).createSubScene();
 			}
 			newScene.keepSizeOf(stage.getScene());
 			newScene.resize(stage.getScene().getWidth(), stage.getScene().getHeight());
