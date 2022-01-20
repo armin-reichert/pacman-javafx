@@ -291,7 +291,9 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 			break;
 
 		case H:
-			changeMazeWallHeight(!e.isShiftDown());
+			if (currentGameScene.is3D()) {
+				Env.changeMazeWallHeight(!e.isShiftDown());
+			}
 			break;
 
 		case I:
@@ -303,7 +305,9 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 			break;
 
 		case L:
-			Env.$drawMode3D.set(Env.$drawMode3D.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+			if (currentGameScene.is3D()) {
+				Env.$drawMode3D.set(Env.$drawMode3D.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+			}
 			break;
 
 		case P:
@@ -316,7 +320,9 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 			break;
 
 		case R:
-			changeMazeResolution(!e.isShiftDown());
+			if (currentGameScene.is3D()) {
+				Env.changeMazeResolution(!e.isShiftDown());
+			}
 			break;
 
 		case S:
@@ -334,11 +340,15 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 			break;
 
 		case X:
-			Env.$axesVisible.set(!Env.$axesVisible.get());
+			if (currentGameScene.is3D()) {
+				Env.$axesVisible.set(!Env.$axesVisible.get());
+			}
 			break;
 
 		case Y:
-			Env.$tilesVisible.set(!Env.$tilesVisible.get());
+			if (!currentGameScene.is3D()) {
+				Env.$tilesVisible.set(!Env.$tilesVisible.get());
+			}
 			break;
 
 		case DIGIT1:
@@ -366,29 +376,11 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 		boolean up = shift ? e.getDeltaX() > 0 : e.getDeltaY() > 0;
 		if (currentGameScene instanceof PlayScene3D) {
 			if (e.isShiftDown()) {
-				changeMazeWallHeight(up);
+				Env.changeMazeWallHeight(up);
 			} else {
-				changeMazeResolution(up);
+				Env.changeMazeResolution(up);
 			}
 		}
 	}
 
-	private void changeMazeResolution(boolean up) {
-		int res = Env.$mazeResolution.get();
-		if (up) {
-			Env.$mazeResolution.set(Math.min(res * 2, 8));
-		} else {
-			Env.$mazeResolution.set(Math.max(res / 2, 1));
-		}
-	}
-
-	private void changeMazeWallHeight(boolean up) {
-		double height = Env.$mazeWallHeight.get();
-		if (up) {
-			Env.$mazeWallHeight.set(Math.min(height + 0.2, 8.0));
-		} else {
-			Env.$mazeWallHeight.set(Math.max(height - 0.2, 0.1));
-		}
-		log("Maze wall height is now %.2f", Env.$mazeWallHeight.get());
-	}
 }
