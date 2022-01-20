@@ -108,7 +108,7 @@ public class PlayScene3D extends AbstractGameScene {
 	public PlayScene3D(PacManGameUI_JavaFX ui, PacManModel3D model3D, SoundManager sounds) {
 		super(ui, sounds);
 		this.model3D = model3D;
-		Env.$perspective.addListener(($1, $2, $3) -> currentCamController().reset());
+		Env.$perspective.addListener(($1, $2, $3) -> camController().ifPresent(cc -> cc.reset()));
 		light = new AmbientLight();
 		light.setColor(Color.GHOSTWHITE);
 		coordinateSystem = new CoordinateSystem(ui.getStage().getWidth());
@@ -123,7 +123,7 @@ public class PlayScene3D extends AbstractGameScene {
 		fxSubScene.widthProperty().bind(parentScene.widthProperty());
 		fxSubScene.heightProperty().bind(parentScene.heightProperty());
 		fxSubScene.setCamera(cam);
-		fxSubScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> currentCamController().handle(e));
+		fxSubScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> camController().ifPresent(cc -> cc.handle(e)));
 		camControllers.clear();
 		camControllers.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer(cam));
 		camControllers.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer(cam));
@@ -170,7 +170,7 @@ public class PlayScene3D extends AbstractGameScene {
 		playground.getChildren().addAll(ghosts3D);
 
 		fxSubScene.setRoot(new Group(light, playground, coordinateSystem));
-		currentCamController().reset();
+		camController().ifPresent(cc -> cc.reset());
 	}
 
 	@Override
@@ -180,7 +180,7 @@ public class PlayScene3D extends AbstractGameScene {
 		bonus3D.update(game.bonus);
 		score3D.update(game, gameController.isAttractMode() ? "GAME OVER!" : null);
 		livesCounter3D.setVisibleItems(game.player.lives);
-		currentCamController().follow(player3D);
+		camController().ifPresent(camController -> camController.follow(player3D));
 		playDoorAnimation();
 
 		// update food visibility and animations in case of switching between 2D and 3D view
@@ -207,12 +207,11 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	@Override
-	public AbstractCameraController currentCamController() {
+	public Optional<AbstractCameraController> camController() {
 		if (!camControllers.containsKey(Env.$perspective.get())) {
-			// This should not happen:
-			Env.$perspective.set(camControllers.keySet().iterator().next());
+			return Optional.empty();
 		}
-		return camControllers.get(Env.$perspective.get());
+		return Optional.of(camControllers.get(Env.$perspective.get()));
 	}
 
 	private void buildMaze(int mazeNumber) {

@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
+import java.util.Optional;
 import java.util.OptionalDouble;
 
 import de.amr.games.pacman.controller.PacManGameController;
@@ -89,8 +90,8 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	}
 
 	@Override
-	public AbstractCameraController currentCamController() {
-		return null;
+	public Optional<AbstractCameraController> camController() {
+		return Optional.empty();
 	}
 
 	@Override
