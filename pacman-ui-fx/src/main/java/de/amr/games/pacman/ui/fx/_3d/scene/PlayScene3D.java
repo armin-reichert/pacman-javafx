@@ -70,6 +70,7 @@ import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
+import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
@@ -100,22 +101,38 @@ public class PlayScene3D extends AbstractGameScene {
 	private Animation[] energizerAnimations;
 	private Rendering2D rendering2D;
 
+	private Group playground;
+	private AmbientLight light;
+	private CoordinateSystem coordinateSystem;
+
 	public PlayScene3D(PacManGameUI_JavaFX ui, PacManModel3D model3D, SoundManager sounds) {
 		super(ui, sounds);
 		this.model3D = model3D;
-		fxSubScene = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
-		var cam = new PerspectiveCamera(true);
-		fxSubScene.setCamera(cam);
-		fxSubScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> currentCamController().handle(e));
-		camControllers.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer(cam));
-		camControllers.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer(cam));
-		camControllers.put(Perspective.CAM_TOTAL, new Cam_Total(cam));
 		Env.$perspective.addListener(($1, $2, $3) -> currentCamController().reset());
+		light = new AmbientLight();
+		light.setColor(Color.GHOSTWHITE);
+		coordinateSystem = new CoordinateSystem(ui.getStage().getWidth());
+		coordinateSystem.visibleProperty().bind(Env.$axesVisible);
+		playground = new Group(light, coordinateSystem);
 	}
 
 	@Override
-	public void init(PacManGameController gameController) {
-		super.init(gameController);
+	public void createFXSubScene(Scene parentScene) {
+		fxSubScene = new SubScene(new Group(), 400, 300, true, SceneAntialiasing.BALANCED);
+		var cam = new PerspectiveCamera(true);
+		fxSubScene.widthProperty().bind(parentScene.widthProperty());
+		fxSubScene.heightProperty().bind(parentScene.heightProperty());
+		fxSubScene.setCamera(cam);
+		fxSubScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> currentCamController().handle(e));
+		camControllers.clear();
+		camControllers.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer(cam));
+		camControllers.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer(cam));
+		camControllers.put(Perspective.CAM_TOTAL, new Cam_Total(cam));
+	}
+
+	@Override
+	public void init(Scene parentScene, PacManGameController gameController) {
+		super.init(parentScene, gameController);
 
 		final int width = game.world.numCols() * TS;
 		final int height = game.world.numRows() * TS;
@@ -147,16 +164,10 @@ public class PlayScene3D extends AbstractGameScene {
 		levelCounter3D.setRightPosition(t(GameModel.TILES_X - 1), TS);
 		levelCounter3D.init(game);
 
-		var playground = new Group();
+		playground = new Group();
 		playground.getTransforms().add(new Translate(-0.5 * width, -0.5 * height)); // center at origin
 		playground.getChildren().addAll(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
 		playground.getChildren().addAll(ghosts3D);
-
-		var coordinateSystem = new CoordinateSystem(fxSubScene.getWidth());
-		coordinateSystem.visibleProperty().bind(Env.$axesVisible);
-
-		AmbientLight light = new AmbientLight();
-		light.setColor(Color.GHOSTWHITE);
 
 		fxSubScene.setRoot(new Group(light, playground, coordinateSystem));
 		currentCamController().reset();

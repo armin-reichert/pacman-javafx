@@ -51,6 +51,7 @@ import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
+import javafx.scene.Scene;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -73,8 +74,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 	}
 
 	@Override
-	public void init(PacManGameController gameController) {
-		super.init(gameController);
+	public void init(Scene parentScene, PacManGameController gameController) {
+		super.init(parentScene, gameController);
 
 		maze2D = new Maze2D(0, t(3), game, rendering);
 		livesCounter2D = new LivesCounter2D(t(2), t(34), game, rendering);

@@ -41,6 +41,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.scene.ScenesPacMan;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
+import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -65,8 +66,8 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	}
 
 	@Override
-	public void init(PacManGameController gameController) {
-		super.init(gameController);
+	public void init(Scene parentScene, PacManGameController gameController) {
+		super.init(parentScene, gameController);
 		sceneController.init(gameController);
 
 		score2D.showPoints = false;

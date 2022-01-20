@@ -34,6 +34,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.pacman.BigPacMan2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.scene.ScenesPacMan;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
+import javafx.scene.Scene;
 
 /**
  * First intermission scene: Blinky chases Pac-Man and is then chased by a huge Pac-Man.
@@ -53,8 +54,8 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 	}
 
 	@Override
-	public void init(PacManGameController gameController) {
-		super.init(gameController);
+	public void init(Scene parentScene, PacManGameController gameController) {
+		super.init(parentScene, gameController);
 
 		sceneController.playIntermissionSound = () -> sounds.loop(PacManGameSound.INTERMISSION_1, 2);
 		sceneController.init(gameController);

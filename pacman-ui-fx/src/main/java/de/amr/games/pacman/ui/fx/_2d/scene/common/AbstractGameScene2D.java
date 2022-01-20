@@ -38,6 +38,7 @@ import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.AbstractCameraController;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -73,10 +74,13 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 		this.gc = ui.getCanvas().getGraphicsContext2D();
 	}
 
-	public void createSubScene() {
+	@Override
+	public void createFXSubScene(Scene parentScene) {
 		fxSubScene = new SubScene(new Group(ui.getCanvas()), unscaledWidth, unscaledHeight);
 		fxSubScene.widthProperty().bind(ui.getCanvas().widthProperty());
 		fxSubScene.heightProperty().bind(ui.getCanvas().heightProperty());
+		keepSizeOf(parentScene);
+		resize(parentScene.getWidth(), parentScene.getHeight());
 	}
 
 	@Override
@@ -105,8 +109,8 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	}
 
 	@Override
-	public void init(PacManGameController gameController) {
-		super.init(gameController);
+	public void init(Scene parentScene, PacManGameController gameController) {
+		super.init(parentScene, gameController);
 		score2D = new GameScore2D("SCORE", t(1), t(1), game, false, rendering);
 		highScore2D = new GameScore2D("HIGH SCORE", t(16), t(1), game, true, rendering);
 	}

@@ -57,6 +57,10 @@ public abstract class AbstractGameScene implements DefaultPacManGameEventHandler
 		this.sounds = sounds;
 	}
 
+	public String name() {
+		return getClass().getSimpleName();
+	}
+
 	/**
 	 * @return the JavaFX subscene
 	 */
@@ -80,10 +84,13 @@ public abstract class AbstractGameScene implements DefaultPacManGameEventHandler
 	 * Called when the scene gets initialized. Stores a reference to the game controller and the current game such that
 	 * the other lifecycle methods can use them.
 	 */
-	public void init(PacManGameController gameController) {
+	public void init(Scene parentScene, PacManGameController gameController) {
 		this.gameController = gameController;
 		this.game = gameController.game();
+		createFXSubScene(parentScene);
 	}
+
+	protected abstract void createFXSubScene(Scene parentScene);
 
 	/**
 	 * Called on every tick.

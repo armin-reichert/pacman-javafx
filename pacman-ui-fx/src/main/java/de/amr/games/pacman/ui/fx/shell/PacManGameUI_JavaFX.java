@@ -31,7 +31,6 @@ import de.amr.games.pacman.controller.event.DefaultPacManGameEventHandler;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
@@ -189,27 +188,21 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 		}
 	}
 
-	private void setGameScene(AbstractGameScene newScene) {
-		if (currentGameScene != newScene) {
+	private void setGameScene(AbstractGameScene newGameScene) {
+		if (currentGameScene != newGameScene) {
 			if (currentGameScene != null) {
-				log("Change scene from '%s' to '%s'", currentGameScene.getClass().getSimpleName(),
-						newScene.getClass().getSimpleName());
+				log("Change game scene from '%s' to '%s'", currentGameScene.name(), newGameScene.name());
 				currentGameScene.end();
 			} else {
-				log("Set scene to '%s'", newScene.getClass().getSimpleName());
+				log("Set game scene to '%s'", newGameScene.name());
 			}
-			if (newScene instanceof AbstractGameScene2D) {
-				((AbstractGameScene2D) newScene).createSubScene();
-			}
-			newScene.keepSizeOf(stage.getScene());
-			newScene.resize(stage.getScene().getWidth(), stage.getScene().getHeight());
-			newScene.init(gameController);
-			log("Scene '%s' initialized", newScene.getClass().getSimpleName());
-			gameSceneRoot.getChildren().setAll(newScene.getSubSceneFX());
+			$is3D.set(newGameScene.is3D());
+			newGameScene.init(stage.getScene(), gameController);
+			log("Game scene '%s' initialized", newGameScene.name());
+			gameSceneRoot.getChildren().setAll(newGameScene.getSubSceneFX());
 			// Note: this must be done after new scene has been added to scene graph:
-			newScene.getSubSceneFX().requestFocus();
-			currentGameScene = newScene;
-			$is3D.set(currentGameScene.is3D());
+			newGameScene.getSubSceneFX().requestFocus();
+			currentGameScene = newGameScene;
 		}
 	}
 
