@@ -21,11 +21,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx._3d.entity;
+package de.amr.games.pacman.ui.fx._3d.model;
 
-import static de.amr.games.pacman.ui.fx._3d.entity.Model3DHelper.bindDrawModeToEnv;
-import static de.amr.games.pacman.ui.fx._3d.entity.Model3DHelper.centerOverOrigin;
-import static de.amr.games.pacman.ui.fx._3d.entity.Model3DHelper.scale;
+import static de.amr.games.pacman.ui.fx._3d.model.Model3DHelper.bindDrawModeToEnv;
+import static de.amr.games.pacman.ui.fx._3d.model.Model3DHelper.centerOverOrigin;
+import static de.amr.games.pacman.ui.fx._3d.model.Model3DHelper.scale;
 
 import javafx.scene.Group;
 import javafx.scene.paint.Color;

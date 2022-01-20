@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 
+import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 

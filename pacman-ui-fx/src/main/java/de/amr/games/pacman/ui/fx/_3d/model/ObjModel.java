@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx._3d.entity;
+package de.amr.games.pacman.ui.fx._3d.model;
 
 import static de.amr.games.pacman.lib.Logging.log;
 
