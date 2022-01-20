@@ -23,7 +23,14 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.model;
 
+import javafx.beans.property.Property;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.shape.DrawMode;
+import javafx.scene.shape.Shape3D;
+import javafx.scene.transform.Scale;
+import javafx.scene.transform.Translate;
 
 /**
  * Pac-Man 3D model factory.
@@ -46,4 +53,34 @@ public interface PacManModel3D {
 	 * @return transformation group for the eyes of a ghost
 	 */
 	Group createGhostEyes();
+
+	// Useful methods
+
+	public static double lerp(double from, double to, double t) {
+		return (1 - t) * from + t * to;
+	}
+
+	public static Translate centerOverOrigin(Node master, Node... servants) {
+		Bounds bounds = master.getBoundsInLocal();
+		Translate t = new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
+		master.getTransforms().add(t);
+		for (Node servant : servants) {
+			servant.getTransforms().add(t);
+		}
+		return t;
+	}
+
+	public static void scale(Node node, double size) {
+		Bounds bounds = node.getBoundsInLocal();
+		double s1 = size / bounds.getWidth();
+		double s2 = size / bounds.getHeight();
+		double s3 = size / bounds.getDepth();
+		node.getTransforms().add(new Scale(s1, s2, s3));
+	}
+
+	public static void bindDrawMode(Property<DrawMode> property, Shape3D... shapes) {
+		for (Shape3D shape : shapes) {
+			shape.drawModeProperty().bind(property);
+		}
+	}
 }

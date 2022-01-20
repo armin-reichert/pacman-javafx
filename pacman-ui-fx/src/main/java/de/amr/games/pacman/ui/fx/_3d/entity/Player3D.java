@@ -24,7 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
-import static de.amr.games.pacman.ui.fx._3d.model.Model3DHelper.lerp;
+import static de.amr.games.pacman.ui.fx._3d.model.PacManModel3D.lerp;
 import static de.amr.games.pacman.ui.fx.util.Animations.now;
 
 import de.amr.games.pacman.lib.Direction;

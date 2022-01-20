@@ -60,8 +60,13 @@ public class Maze3D extends Group {
 
 	public static class NodeInfo {
 
-		public boolean energizer;
-		public V2i tile;
+		public final boolean energizer;
+		public final V2i tile;
+
+		public NodeInfo(boolean energizer, V2i tile) {
+			this.energizer = energizer;
+			this.tile = tile;
+		}
 
 		public static NodeInfo info(Node node) {
 			return (NodeInfo) node.getUserData();
@@ -147,10 +152,7 @@ public class Maze3D extends Group {
 		pellet.setTranslateX(tile.x * TS + HTS);
 		pellet.setTranslateY(tile.y * TS + HTS);
 		pellet.setTranslateZ(-3);
-		NodeInfo info = new NodeInfo();
-		info.energizer = energizer;
-		info.tile = tile;
-		pellet.setUserData(info);
+		pellet.setUserData(new NodeInfo(energizer, tile));
 		return pellet;
 	}
 
@@ -214,8 +216,7 @@ public class Maze3D extends Group {
 			door.setTranslateX(tile.x * TS + HTS);
 			door.setTranslateY(tile.y * TS + HTS);
 			door.setTranslateZ(-HTS / 2);
-			NodeInfo info = new NodeInfo();
-			info.tile = tile;
+			NodeInfo info = new NodeInfo(false, tile);
 			door.setUserData(info);
 			door.drawModeProperty().bind(Env.$drawMode3D);
 			doorsGroup.getChildren().add(door);

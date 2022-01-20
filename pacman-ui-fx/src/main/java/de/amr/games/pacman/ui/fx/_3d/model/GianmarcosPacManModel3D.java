@@ -23,10 +23,10 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.model;
 
-import static de.amr.games.pacman.ui.fx._3d.model.Model3DHelper.bindDrawModeToEnv;
-import static de.amr.games.pacman.ui.fx._3d.model.Model3DHelper.centerOverOrigin;
-import static de.amr.games.pacman.ui.fx._3d.model.Model3DHelper.scale;
+import static de.amr.games.pacman.ui.fx._3d.model.PacManModel3D.centerOverOrigin;
+import static de.amr.games.pacman.ui.fx._3d.model.PacManModel3D.scale;
 
+import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -34,7 +34,8 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 
 /**
- * The original 3D-model has been generously provided by Gianmarco Cavallaccio (https://www.artstation.com/gianmart).
+ * The original 3D-model has been provided by Gianmarco Cavallaccio (https://www.artstation.com/gianmart). I extracted
+ * the meshes for Pac-Man and a ghost into separate obj files.
  * 
  * @author Armin Reichert
  */
@@ -69,7 +70,7 @@ public class GianmarcosPacManModel3D implements PacManModel3D {
 		palate.setMaterial(new PhongMaterial(Color.CHOCOLATE));
 
 		centerOverOrigin(head, eyes, palate);
-		bindDrawModeToEnv(head, eyes, palate);
+		PacManModel3D.bindDrawMode(Env.$drawMode3D, head, eyes, palate);
 
 		Group pacman = new Group(head, eyes, palate);
 		pacman.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
@@ -90,7 +91,7 @@ public class GianmarcosPacManModel3D implements PacManModel3D {
 		eyesInner.setMaterial(new PhongMaterial(Color.BLACK));
 
 		centerOverOrigin(body, eyesOuter, eyesInner);
-		bindDrawModeToEnv(body, eyesOuter, eyesInner);
+		PacManModel3D.bindDrawMode(Env.$drawMode3D, body, eyesOuter, eyesInner);
 
 		Group ghost = new Group(body, eyesOuter, eyesInner);
 		ghost.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
