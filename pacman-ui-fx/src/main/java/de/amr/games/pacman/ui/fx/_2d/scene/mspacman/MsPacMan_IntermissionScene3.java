@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
-import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.mspacman.Intermission3Controller;
 import de.amr.games.pacman.ui.PacManGameSound;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
@@ -60,8 +59,8 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 	}
 
 	@Override
-	public void init(Scene parentScene, PacManGameController gameController) {
-		super.init(parentScene, gameController);
+	public void init(Scene parentScene) {
+		super.init(parentScene);
 		sceneController.playIntermissionSound = () -> sounds.play(PacManGameSound.INTERMISSION_3);
 		sceneController.playFlapAnimation = () -> flap2D.animation.restart();
 		sceneController.init(gameController);

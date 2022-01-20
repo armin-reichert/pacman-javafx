@@ -34,7 +34,6 @@ import java.util.EnumMap;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
@@ -131,8 +130,8 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	@Override
-	public void init(Scene parentScene, PacManGameController gameController) {
-		super.init(parentScene, gameController);
+	public void init(Scene parentScene) {
+		super.init(parentScene);
 
 		final int width = game.world.numCols() * TS;
 		final int height = game.world.numRows() * TS;

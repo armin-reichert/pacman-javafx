@@ -30,7 +30,6 @@ import static de.amr.games.pacman.ui.fx.util.Animations.afterSeconds;
 import java.util.List;
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
@@ -74,8 +73,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 	}
 
 	@Override
-	public void init(Scene parentScene, PacManGameController gameController) {
-		super.init(parentScene, gameController);
+	public void init(Scene parentScene) {
+		super.init(parentScene);
 
 		maze2D = new Maze2D(0, t(3), game, rendering);
 		livesCounter2D = new LivesCounter2D(t(2), t(34), game, rendering);

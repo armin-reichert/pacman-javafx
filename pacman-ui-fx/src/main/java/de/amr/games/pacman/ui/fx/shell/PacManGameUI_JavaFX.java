@@ -197,7 +197,7 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 				log("Set game scene to '%s'", newGameScene.name());
 			}
 			$is3D.set(newGameScene.is3D());
-			newGameScene.init(stage.getScene(), gameController);
+			newGameScene.init(stage.getScene());
 			log("Game scene '%s' initialized", newGameScene.name());
 			gameSceneRoot.getChildren().setAll(newGameScene.getSubSceneFX());
 			// Note: this must be done after new scene has been added to scene graph:

@@ -28,7 +28,6 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 import java.util.Optional;
 import java.util.OptionalDouble;
 
-import de.amr.games.pacman.controller.PacManGameController;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -103,8 +102,8 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	}
 
 	@Override
-	public void init(Scene parentScene, PacManGameController gameController) {
-		super.init(parentScene, gameController);
+	public void init(Scene parentScene) {
+		super.init(parentScene);
 		score2D = new GameScore2D("SCORE", t(1), t(1), game, false, rendering);
 		highScore2D = new GameScore2D("HIGH SCORE", t(16), t(1), game, true, rendering);
 	}
