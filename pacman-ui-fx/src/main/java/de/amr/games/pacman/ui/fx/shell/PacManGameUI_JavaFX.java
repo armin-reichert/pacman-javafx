@@ -114,7 +114,6 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 		stage.setFullScreen(fullscreen);
 		stage.centerOnScreen();
 		stage.show();
-
 	}
 
 	public void update() {

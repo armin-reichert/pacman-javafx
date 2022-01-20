@@ -36,6 +36,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 public class FlashMessageView extends VBox {
 
@@ -72,6 +73,7 @@ public class FlashMessageView extends VBox {
 
 	public FlashMessageView() {
 		textView.setFont(textFont);
+		textView.setTextAlignment(TextAlignment.CENTER);
 		setAlignment(Pos.CENTER);
 		getChildren().add(textView);
 	}
