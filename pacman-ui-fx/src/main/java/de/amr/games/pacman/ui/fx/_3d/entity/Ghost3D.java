@@ -94,7 +94,7 @@ public class Ghost3D extends Creature3D {
 		Group ghostVariants = new Group(completeGhost, eyes);
 		ghostVariants.setRotationAxis(Rotate.Z_AXIS);
 		ghostVariants.setRotate(rotationAngle(ghost.dir()));
-		turningAnimation = new RotateTransition(Duration.seconds(0.25), ghostVariants);
+		turningAnimation = new RotateTransition(Duration.seconds(0.3), ghostVariants);
 		turningAnimation.setAxis(Rotate.Z_AXIS);
 
 		numberCube = new Box(8, 8, 8);

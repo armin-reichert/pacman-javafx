@@ -84,7 +84,7 @@ public class Player3D extends Creature3D {
 	public Player3D(Pac player, Group model3D) {
 		this.player = player;
 		this.model3D = model3D;
-		this.turningAnimation = new RotateTransition(Duration.seconds(0.25), this);
+		this.turningAnimation = new RotateTransition(Duration.seconds(0.3), this);
 		PointLight light = new PointLight(Color.WHITE);
 		light.setTranslateZ(-4);
 		getChildren().addAll(model3D, light);
