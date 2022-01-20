@@ -80,7 +80,7 @@ public abstract class AbstractGameScene implements DefaultPacManGameEventHandler
 	 * Called when the scene gets initialized.
 	 * 
 	 * <p>
-	 * Stores a reference to current game such that the other lifecycle methods can use it.
+	 * Stores a reference to the current game model such that the other lifecycle methods can use it.
 	 */
 	public void init(Scene parentScene) {
 		this.game = gameController.game();
@@ -90,7 +90,7 @@ public abstract class AbstractGameScene implements DefaultPacManGameEventHandler
 	/**
 	 * Creates the JavaFX subscene associated with this game scene
 	 * 
-	 * @param parentScene
+	 * @param parentScene the main scene
 	 */
 	protected abstract void createFXSubScene(Scene parentScene);
 
