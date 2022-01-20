@@ -89,6 +89,8 @@ public class PlayScene3D extends AbstractGameScene {
 	private final PacManModel3D model3D;
 	private final EnumMap<Perspective, AbstractCameraController> camControllers = new EnumMap<>(Perspective.class);
 	private final Image floorImage = new Image(getClass().getResource("/common/escher-texture.jpg").toString());
+	private final AmbientLight ambientLight = new AmbientLight(Color.GHOSTWHITE);
+	private final CoordinateSystem coordSystem = new CoordinateSystem(1000);
 
 	private Maze3D maze3D;
 	private Player3D player3D;
@@ -101,18 +103,12 @@ public class PlayScene3D extends AbstractGameScene {
 	private Rendering2D rendering2D;
 
 	private Group playground;
-	private AmbientLight light;
-	private CoordinateSystem coordinateSystem;
 
 	public PlayScene3D(PacManGameUI_JavaFX ui, PacManModel3D model3D, SoundManager sounds) {
 		super(ui, sounds);
 		this.model3D = model3D;
-		Env.$perspective.addListener(($1, $2, $3) -> camController().ifPresent(cc -> cc.reset()));
-		light = new AmbientLight();
-		light.setColor(Color.GHOSTWHITE);
-		coordinateSystem = new CoordinateSystem(1000);
-		coordinateSystem.visibleProperty().bind(Env.$axesVisible);
-		playground = new Group(light, coordinateSystem);
+		coordSystem.visibleProperty().bind(Env.$axesVisible);
+		Env.$perspective.addListener(($1, $2, $3) -> camController().ifPresent(AbstractCameraController::reset));
 	}
 
 	@Override
@@ -168,7 +164,7 @@ public class PlayScene3D extends AbstractGameScene {
 		playground.getChildren().addAll(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
 		playground.getChildren().addAll(ghosts3D);
 
-		fxSubScene.setRoot(new Group(light, playground, coordinateSystem));
+		fxSubScene.setRoot(new Group(ambientLight, playground, coordSystem));
 		camController().ifPresent(cc -> cc.reset());
 	}
 
