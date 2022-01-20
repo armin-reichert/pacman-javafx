@@ -28,19 +28,16 @@ import java.time.Instant;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 
-public class FlashMessageView extends HBox {
+public class FlashMessageView extends VBox {
 
 	private static class FlashMessage {
 
@@ -69,15 +66,14 @@ public class FlashMessageView extends HBox {
 	}
 
 	private final Deque<FlashMessage> activeMessages = new ArrayDeque<>();
-	private final Text display = new Text();
-	private Color displayColor;
+	private final Text textView = new Text();
+	private Color textColor = Color.WHEAT;
+	private Font textFont = Font.font("Sans", FontWeight.BOLD, 30);
 
 	public FlashMessageView() {
-		displayColor = Color.WHEAT;
-		display.setFont(Font.font("Sans", FontWeight.BOLD, 30));
-		display.setTextAlignment(TextAlignment.CENTER);
+		textView.setFont(textFont);
 		setAlignment(Pos.CENTER);
-		getChildren().add(display);
+		getChildren().add(textView);
 	}
 
 	public void showMessage(String messageText, double seconds) {
@@ -102,9 +98,9 @@ public class FlashMessageView extends HBox {
 		double activeMillis = Duration.between(message.activeFrom, Instant.now()).toMillis();
 		double alpha = Math.cos(0.5 * Math.PI * activeMillis / message.durationMillis());
 		Color color = Color.rgb(0, 0, 0, 0.2 + 0.5 * alpha);
-		setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
-		display.setFill(displayColor.deriveColor(0, 1, 1, alpha));
-		display.setText(message.text);
+		setBackground(new Background(new BackgroundFill(color, null, null)));
+		textView.setFill(textColor.deriveColor(0, 1, 1, alpha));
+		textView.setText(message.text);
 		setVisible(true);
 	}
 }

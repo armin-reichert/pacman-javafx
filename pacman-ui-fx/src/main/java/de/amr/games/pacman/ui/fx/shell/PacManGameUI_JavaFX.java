@@ -87,6 +87,7 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 
 		// Create the main scene containing all other sub-scenes
 		StackPane mainSceneRoot = new StackPane(gameSceneRoot, flashMessageView, hud);
+		StackPane.setAlignment(hud, Pos.TOP_LEFT);
 
 		// Set blue background color, use black in wireframe display mode
 		Image milkyway = new Image(getClass().getResource("/common/milkyway.jpg").toString());
@@ -99,7 +100,6 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 			}
 			return bgBlue;
 		}, Env.$drawMode3D, $is3D));
-		StackPane.setAlignment(hud, Pos.TOP_LEFT);
 
 		Scene mainScene = new Scene(mainSceneRoot, aspectRatio * height, height);
 		stage.setScene(mainScene);
