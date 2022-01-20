@@ -45,8 +45,6 @@ import javafx.scene.shape.DrawMode;
  */
 public class Env {
 
-	public static final String APP_ICON_PATH = "/pacman/graphics/pacman.png";
-
 	// UI messages
 
 	public static final ResourceBundle MESSAGES = ResourceBundle.getBundle("/common/messages");

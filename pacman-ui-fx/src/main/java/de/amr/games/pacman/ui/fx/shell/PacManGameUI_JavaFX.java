@@ -70,8 +70,10 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final HUD hud = new HUD(this);
 	private final Group gameSceneRoot = new Group();
+	private final StackPane mainSceneRoot;
+	private final BooleanProperty $is3D = new SimpleBooleanProperty();
+
 	private AbstractGameScene currentGameScene;
-	private BooleanProperty $is3D = new SimpleBooleanProperty();
 
 	public PacManGameUI_JavaFX(Stage stage, PacManGameController gameController, double height, boolean fullscreen) {
 		this.stage = stage;
@@ -80,16 +82,30 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 		ScenesPacMan.init(this);
 		ScenesMsPacMan.init(this);
 
-		// Determine the initial game scene
-		AbstractGameScene gameScene = getSceneForCurrentGameState(gameController.game(), Env.$use3DScenes.get());
+		var gameScene = selectScene(gameController.game(), Env.$use3DScenes.get());
+
+		mainSceneRoot = new StackPane(gameSceneRoot, flashMessageView, hud);
+		StackPane.setAlignment(hud, Pos.TOP_LEFT);
+		defineBackground(mainSceneRoot);
+
 		double aspectRatio = gameScene.aspectRatio()
 				.orElse(Screen.getPrimary().getBounds().getWidth() / Screen.getPrimary().getBounds().getHeight());
+		Scene mainScene = new Scene(mainSceneRoot, aspectRatio * height, height);
+		stage.setScene(mainScene);
 
-		// Create the main scene containing all other sub-scenes
-		StackPane mainSceneRoot = new StackPane(gameSceneRoot, flashMessageView, hud);
-		StackPane.setAlignment(hud, Pos.TOP_LEFT);
+		// Note: Can only be called *after* main scene has been set
+		setGameScene(gameScene);
 
-		// Set blue background color, use black in wireframe display mode
+		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> Env.gameLoop.stop());
+		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
+		stage.addEventHandler(ScrollEvent.SCROLL, this::onScrolled);
+		stage.getIcons().add(new Image(getClass().getResource("/pacman/graphics/pacman.png").toString()));
+		stage.setFullScreen(fullscreen);
+		stage.centerOnScreen();
+		stage.show();
+	}
+
+	private void defineBackground(StackPane mainSceneRoot) {
 		Image milkyway = new Image(getClass().getResource("/common/milkyway.jpg").toString());
 		Background bgMilkyWay = new Background(new BackgroundImage(milkyway, null, null, null, null));
 		Background bgBlack = new Background(new BackgroundFill(Color.BLACK, null, null));
@@ -100,20 +116,6 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 			}
 			return bgBlue;
 		}, Env.$drawMode3D, $is3D));
-
-		Scene mainScene = new Scene(mainSceneRoot, aspectRatio * height, height);
-		stage.setScene(mainScene);
-
-		// Note: Can only be called *after* main scene has been set
-		setGameScene(gameScene);
-
-		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> Env.gameLoop.stop());
-		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
-		stage.addEventHandler(ScrollEvent.SCROLL, this::onScrolled);
-		stage.getIcons().add(new Image(getClass().getResourceAsStream(Env.APP_ICON_PATH)));
-		stage.setFullScreen(fullscreen);
-		stage.centerOnScreen();
-		stage.show();
 	}
 
 	public void update() {
@@ -154,13 +156,13 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 	private void toggleUse3DScenes() {
 		GameModel game = gameController.game();
 		Env.$use3DScenes.set(!Env.$use3DScenes.get());
-		if (getSceneForCurrentGameState(game, false) != getSceneForCurrentGameState(game, true)) {
+		if (selectScene(game, false) != selectScene(game, true)) {
 			stopAllSounds();
-			setGameScene(getSceneForCurrentGameState(game, Env.$use3DScenes.get()));
+			setGameScene(selectScene(game, Env.$use3DScenes.get()));
 		}
 	}
 
-	private AbstractGameScene getSceneForCurrentGameState(GameModel game, boolean _3D) {
+	private AbstractGameScene selectScene(GameModel game, boolean _3D) {
 		int sceneIndex;
 		int twoOrThreeD = _3D ? 1 : 0;
 
@@ -225,7 +227,7 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 		if (e.newGameState == PacManGameState.INTRO) {
 			stopAllSounds();
 		}
-		setGameScene(getSceneForCurrentGameState(gameController.game(), Env.$use3DScenes.get()));
+		setGameScene(selectScene(gameController.game(), Env.$use3DScenes.get()));
 	}
 
 	private void onKeyPressed(KeyEvent e) {
