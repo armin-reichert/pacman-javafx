@@ -168,6 +168,7 @@ public class PlayScene3D extends AbstractGameScene {
 
 	@Override
 	public void update() {
+		sounds.setMuted(gameController.attractMode); // TODO check this
 		player3D.update();
 		Stream.of(ghosts3D).forEach(Ghost3D::update);
 		bonus3D.update(game.bonus);

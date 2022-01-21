@@ -52,6 +52,9 @@ public class SoundManager {
 
 	public void setMuted(boolean muted) {
 		this.muted = muted;
+		if (muted) {
+			stopAll();
+		}
 	}
 
 	public AudioClip getClip(PacManGameSound sound) {
