@@ -126,7 +126,7 @@ public class PlayScene3D extends AbstractGameScene {
 		final int width = game.world.numCols() * TS;
 		final int height = game.world.numRows() * TS;
 
-		rendering2D = gameController.gameVariant() == GameVariant.MS_PACMAN //
+		rendering2D = gameController.gameVariant == GameVariant.MS_PACMAN //
 				? ScenesMsPacMan.RENDERING
 				: ScenesPacMan.RENDERING;
 
@@ -151,7 +151,7 @@ public class PlayScene3D extends AbstractGameScene {
 
 		livesCounter3D = new LivesCounter3D(model3D);
 		livesCounter3D.getTransforms().add(new Translate(TS, TS, -HTS));
-		livesCounter3D.setVisible(!gameController.isAttractMode());
+		livesCounter3D.setVisible(!gameController.attractMode);
 
 		levelCounter3D = new LevelCounter3D(rendering2D);
 		levelCounter3D.setRightPosition(t(GameModel.TILES_X - 1), TS);
@@ -171,7 +171,7 @@ public class PlayScene3D extends AbstractGameScene {
 		player3D.update();
 		Stream.of(ghosts3D).forEach(Ghost3D::update);
 		bonus3D.update(game.bonus);
-		score3D.update(game, gameController.isAttractMode() ? "GAME OVER!" : null);
+		score3D.update(game, gameController.attractMode ? "GAME OVER!" : null);
 		livesCounter3D.setVisibleItems(game.player.lives);
 		camController().ifPresent(camController -> camController.follow(player3D));
 		playDoorAnimation();
@@ -300,15 +300,15 @@ public class PlayScene3D extends AbstractGameScene {
 
 	@Override
 	public void onPacManGameStateChange(PacManGameStateChangeEvent e) {
-		sounds.setMuted(gameController.isAttractMode());
+		sounds.setMuted(gameController.attractMode); // TODO check this
 
 		// enter READY
 		if (e.newGameState == PacManGameState.READY) {
 			sounds.stopAll();
 			player3D.reset();
 			maze3D.resetEnergizerSize();
-			sounds.setMuted(gameController.isAttractMode());
-			if (!gameController.isGameRunning()) {
+			sounds.setMuted(gameController.attractMode);
+			if (!gameController.gameRunning) {
 				sounds.play(PacManGameSound.GAME_READY);
 			}
 		}

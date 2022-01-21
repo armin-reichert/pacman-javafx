@@ -85,9 +85,9 @@ public class PlayScene2D extends AbstractGameScene2D {
 				new Ghost2D(game.ghosts[1], rendering), //
 				new Ghost2D(game.ghosts[2], rendering), //
 				new Ghost2D(game.ghosts[3], rendering));
-		bonus2D = new Bonus2D(game.bonus, rendering, gameController.gameVariant() == GameVariant.MS_PACMAN);
+		bonus2D = new Bonus2D(game.bonus, rendering, gameController.gameVariant == GameVariant.MS_PACMAN);
 		game.player.powerTimer.addEventListener(this::handleGhostsFlashing);
-		sounds.setMuted(gameController.isAttractMode());
+		sounds.setMuted(gameController.attractMode);
 	}
 
 	@Override
@@ -186,7 +186,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 			maze2D.getEnergizerAnimation().reset();
 			player2D.reset();
 			ghosts2D.forEach(Ghost2D::reset);
-			if (!gameController.isAttractMode() && !gameController.isGameRunning()) {
+			if (!gameController.attractMode && !gameController.gameRunning) {
 				sounds.setMuted(false);
 				sounds.play(PacManGameSound.GAME_READY);
 			}
@@ -273,7 +273,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void doRender() {
-		if (gameController.isAttractMode()) {
+		if (gameController.attractMode) {
 			score2D.showPoints = false;
 		} else {
 			score2D.showPoints = true;
@@ -288,7 +288,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 	}
 
 	private void renderGameState() {
-		PacManGameState state = gameController.isAttractMode() ? PacManGameState.GAME_OVER : gameController.currentStateID;
+		var state = gameController.attractMode ? PacManGameState.GAME_OVER : gameController.currentStateID;
 		if (state == PacManGameState.GAME_OVER) {
 			gc.setFont(rendering.getScoreFont());
 			gc.setFill(Color.RED);

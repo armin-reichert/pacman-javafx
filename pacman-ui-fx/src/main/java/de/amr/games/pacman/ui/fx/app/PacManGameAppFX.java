@@ -77,7 +77,7 @@ public class PacManGameAppFX extends Application {
 
 		// Note; this must be done *after* creating the game loop
 		stage.titleProperty().bind(Bindings.createStringBinding(() -> {
-			String gameName = controller.gameVariant() == PACMAN ? "Pac-Man" : "Ms. Pac-Man";
+			String gameName = controller.gameVariant == PACMAN ? "Pac-Man" : "Ms. Pac-Man";
 			return Env.$paused.get() ? String.format("%s (PAUSED, CTRL+P: resume, P: Step)", gameName)
 					: String.format("%s", gameName);
 		}, gameLoop.$fps));
@@ -87,7 +87,7 @@ public class PacManGameAppFX extends Application {
 
 		// Initialize the environment and start the game
 		Env.gameLoop = gameLoop;
-		Env.$use3DScenes.set(options.use3DScenes);
+		Env.$3D.set(options.use3DScenes);
 		Env.$perspective.set(options.perspective);
 		Env.gameLoop.start();
 	}

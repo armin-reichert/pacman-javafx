@@ -94,7 +94,7 @@ public class HUD extends VBox {
 
 	public void update() {
 		final PacManGameController gameController = ui.gameController;
-		final GameModel game = gameController.game();
+		final GameModel game = gameController.game;
 		final PacManGameState state = gameController.currentStateID;
 		final String huntingPhaseName = game.inScatteringPhase() ? "Scattering" : "Chasing";
 		final TickTimer stateTimer = gameController.stateTimer();
@@ -108,9 +108,9 @@ public class HUD extends VBox {
 		row("Target FPS", "%d Hz", Env.gameLoop.getTargetFrameRate());
 		row("Current FPS", "%d Hz", Env.gameLoop.$fps.get());
 		row("Paused", "%s", yes_no(Env.$paused.get()));
-		row("Playing", "%s", yes_no(gameController.isGameRunning()));
-		row("Attract Mode", "%s", yes_no(gameController.isAttractMode()));
-		row("Game Variant", "%s", gameController.gameVariant());
+		row("Playing", "%s", yes_no(gameController.gameRunning));
+		row("Attract Mode", "%s", yes_no(gameController.attractMode));
+		row("Game Variant", "%s", gameController.gameVariant);
 		row("Game Level", "%d", game.levelNumber);
 		row("Game State", "%s",
 				state == PacManGameState.HUNTING
@@ -119,14 +119,14 @@ public class HUD extends VBox {
 		row("", "Running:   %s%s", stateTimer.ticked(), stateTimer.isStopped() ? " (STOPPED)" : "");
 		row("", "Remaining: %s",
 				stateTimer.ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer.ticksRemaining());
-		row("Autopilot", "%s", on_off(gameController.isAutoControlled()));
+		row("Autopilot", "%s", on_off(gameController.autoControlled));
 		row("Immunity", "%s", on_off(game.player.immune));
 		row("Game Scene", "%s", ui.currentGameScene.getClass().getSimpleName());
 		row("", "w=%.0f h=%.0f", ui.currentGameScene.getSubSceneFX().getWidth(),
 				ui.currentGameScene.getSubSceneFX().getHeight());
 		row("Window Size", "w=%.0f h=%.0f", width, height);
 		row("Scene Size", "w=%.0f h=%.0f", sceneWidth, sceneHeight);
-		row("3D Scenes", "%s", on_off(Env.$use3DScenes.get()));
+		row("3D Scenes", "%s", on_off(Env.$3D.get()));
 		if (ui.currentGameScene.is3D()) {
 			row("Perspective", "%s", Env.$perspective.get());
 			ui.currentGameScene.camController().ifPresent(camController -> {

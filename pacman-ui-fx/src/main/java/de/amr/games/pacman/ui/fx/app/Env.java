@@ -41,7 +41,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.shape.DrawMode;
 
 /**
- * Globally available properties.
+ * Global stuff.
  * 
  * @author Armin Reichert
  */
@@ -75,7 +75,7 @@ public class Env {
 	public static final DoubleProperty $mazeWallHeight = new SimpleDoubleProperty(3.5);
 	public static final BooleanProperty $paused = new SimpleBooleanProperty(false);
 	public static final BooleanProperty $tilesVisible = new SimpleBooleanProperty(false);
-	public static final BooleanProperty $use3DScenes = new SimpleBooleanProperty(true);
+	public static final BooleanProperty $3D = new SimpleBooleanProperty(true);
 
 	public static final ObjectProperty<Perspective> $perspective = new SimpleObjectProperty<Perspective>(
 			Perspective.CAM_FOLLOWING_PLAYER);
@@ -104,5 +104,4 @@ public class Env {
 		}
 		log("Maze wall height is now %.2f", $mazeWallHeight.get());
 	}
-
 }

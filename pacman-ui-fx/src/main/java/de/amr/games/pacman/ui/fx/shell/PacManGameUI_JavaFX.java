@@ -85,7 +85,7 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 		defineMainSceneBackground();
 		StackPane.setAlignment(hud, Pos.TOP_LEFT);
 
-		var gameScene = selectScene(Env.$use3DScenes.get());
+		var gameScene = selectScene(Env.$3D.get());
 		double aspectRatio = gameScene.aspectRatio()
 				.orElse(Screen.getPrimary().getBounds().getWidth() / Screen.getPrimary().getBounds().getHeight());
 		double width = aspectRatio * height;
@@ -128,15 +128,15 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 	}
 
 	private void toggleUse3DScenes() {
-		Env.$use3DScenes.set(!Env.$use3DScenes.get());
+		Env.$3D.set(!Env.$3D.get());
 		if (selectScene(false) != selectScene(true)) {
 			stopAllSounds();
-			setGameScene(selectScene(Env.$use3DScenes.get()));
+			setGameScene(selectScene(Env.$3D.get()));
 		}
 	}
 
 	private AbstractGameScene selectScene(boolean _3D) {
-		final var game = gameController.game();
+		final var game = gameController.game;
 		final int _2D_or_3_D = _3D ? 1 : 0;
 
 		int sceneIndex;
@@ -155,13 +155,13 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 			break;
 		}
 
-		switch (gameController.gameVariant()) {
+		switch (gameController.gameVariant) {
 		case MS_PACMAN:
 			return ScenesMsPacMan.SCENES[sceneIndex][_2D_or_3_D];
 		case PACMAN:
 			return ScenesPacMan.SCENES[sceneIndex][_2D_or_3_D];
 		default:
-			throw new IllegalArgumentException("Unknown game variant: " + gameController.gameVariant());
+			throw new IllegalArgumentException("Unknown game variant: " + gameController.gameVariant);
 		}
 	}
 
@@ -174,13 +174,12 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 			} else {
 				log("Set game scene to '%s'", newGameScene.name());
 			}
-			$is3D.set(newGameScene.is3D());
 			newGameScene.init(stage.getScene());
-			log("Game scene '%s' initialized", newGameScene.name());
+			$is3D.set(newGameScene.is3D());
 			gameSceneRoot.getChildren().setAll(newGameScene.getSubSceneFX());
+			newGameScene.getSubSceneFX().requestFocus();
+			gameController.addGameEventListener(newGameScene);
 			currentGameScene = newGameScene;
-			currentGameScene.getSubSceneFX().requestFocus();
-			gameController.addGameEventListener(currentGameScene);
 		}
 	}
 
@@ -189,11 +188,11 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 		if (e.newGameState == PacManGameState.INTRO) {
 			stopAllSounds();
 		}
-		setGameScene(selectScene(Env.$use3DScenes.get()));
+		setGameScene(selectScene(Env.$3D.get()));
 	}
 
 	private void onKeyPressed(KeyEvent e) {
-		final GameModel game = gameController.game();
+		final GameModel game = gameController.game;
 		if (e.isControlDown()) {
 			onControlKeyPressed(e);
 			return;
@@ -201,14 +200,16 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 
 		switch (e.getCode()) {
 		case A: {
-			gameController.setAutoControlled(!gameController.isAutoControlled());
-			String message = Env.message(gameController.isAutoControlled() ? "autopilot_on" : "autopilot_off");
+			gameController.autoControlled = !gameController.autoControlled;
+			String message = Env.message(gameController.autoControlled ? "autopilot_on" : "autopilot_off");
 			showFlashMessage(1, message);
 			break;
 		}
 
 		case E:
-			gameController.cheatEatAllPellets();
+			if (gameController.gameRunning) {
+				gameController.cheatEatAllPellets();
+			}
 			break;
 
 		case I: {
@@ -224,7 +225,7 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 			break;
 
 		case N:
-			if (gameController.isGameRunning()) {
+			if (gameController.gameRunning) {
 				showFlashMessage(1, Env.CHEAT_TALK.next());
 				gameController.changeState(PacManGameState.LEVEL_COMPLETE);
 			}
@@ -244,12 +245,12 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 
 		case V:
 			if (gameController.currentStateID == PacManGameState.INTRO) {
-				gameController.selectGameVariant(gameController.gameVariant().succ());
+				gameController.selectGameVariant(gameController.gameVariant.succ());
 			}
 			break;
 
 		case X:
-			if (gameController.isGameRunning()) {
+			if (gameController.gameRunning) {
 				gameController.cheatKillGhosts();
 			}
 			break;
@@ -349,8 +350,7 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 
 		case DIGIT3: {
 			toggleUse3DScenes();
-			String message = Env.$use3DScenes.get() ? "Using 3D play scene\nCTRL+C changes perspective"
-					: "Using 2D play scene";
+			String message = Env.$3D.get() ? "Using 3D play scene\nCTRL+C changes perspective" : "Using 2D play scene";
 			showFlashMessage(2, message);
 			break;
 		}
