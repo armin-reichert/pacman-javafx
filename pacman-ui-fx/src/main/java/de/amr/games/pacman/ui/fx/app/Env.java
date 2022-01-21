@@ -72,13 +72,13 @@ public class Env {
 	public static final ObjectProperty<DrawMode> $drawMode3D = new SimpleObjectProperty<DrawMode>(DrawMode.FILL);
 	public static final BooleanProperty $isTimeMeasured = new SimpleBooleanProperty(false);
 	public static final IntegerProperty $mazeResolution = new SimpleIntegerProperty(8);
-	public static final DoubleProperty $mazeWallHeight = new SimpleDoubleProperty(3.5);
+	public static final DoubleProperty $mazeWallHeight = new SimpleDoubleProperty(2.5);
 	public static final BooleanProperty $paused = new SimpleBooleanProperty(false);
 	public static final BooleanProperty $tilesVisible = new SimpleBooleanProperty(false);
 	public static final BooleanProperty $3D = new SimpleBooleanProperty(true);
 
 	public static final ObjectProperty<Perspective> $perspective = new SimpleObjectProperty<Perspective>(
-			Perspective.CAM_FOLLOWING_PLAYER);
+			Perspective.CAM_NEAR_PLAYER);
 
 	public static void nextPerspective() {
 		int next = ($perspective.get().ordinal() + 1) % Perspective.values().length;

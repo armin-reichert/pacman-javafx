@@ -116,15 +116,20 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 	}
 
 	private void defineMainSceneBackground() {
-		Image milkyway = new Image(getClass().getResource("/common/milkyway.jpg").toString());
-		Background bgMilkyWay = new Background(new BackgroundImage(milkyway, null, null, null, null));
-		Background bgBlack = new Background(new BackgroundFill(Color.BLACK, null, null));
-		Background bgBlue = new Background(new BackgroundFill(Color.CORNFLOWERBLUE, null, null));
+		Background bgImage = bgImage("/common/beach.jpg");
+		Background bgBlack = bgColored(Color.BLACK);
 		mainSceneRoot.backgroundProperty().bind(Bindings.createObjectBinding( //
-				() -> $is3D.get() //
-						? Env.$drawMode3D.get() == DrawMode.LINE ? bgBlack : bgMilkyWay //
-						: bgBlue, //
+				() -> $is3D.get() && Env.$drawMode3D.get() == DrawMode.LINE ? bgBlack : bgImage, //
 				Env.$drawMode3D, $is3D));
+	}
+
+	private Background bgColored(Color color) {
+		return new Background(new BackgroundFill(color, null, null));
+	}
+
+	private Background bgImage(String path) {
+		Image image = new Image(getClass().getResource(path).toString());
+		return new Background(new BackgroundImage(image, null, null, null, null));
 	}
 
 	private void toggleUse3DScenes() {

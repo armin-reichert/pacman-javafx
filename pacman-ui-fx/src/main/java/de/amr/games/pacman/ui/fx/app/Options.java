@@ -44,7 +44,7 @@ class Options {
 	boolean use3DScenes = true;
 	double windowHeight = 576;
 	GameVariant gameVariant = GameVariant.PACMAN;
-	Perspective perspective = Perspective.CAM_FOLLOWING_PLAYER;
+	Perspective perspective = Perspective.CAM_NEAR_PLAYER;
 
 	Options(List<String> params) {
 		List<String> parameterNamesList = Arrays.asList(NAMES);
