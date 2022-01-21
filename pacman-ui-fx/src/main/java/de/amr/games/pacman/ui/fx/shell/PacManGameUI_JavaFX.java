@@ -256,7 +256,7 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 			break;
 
 		case SPACE:
-			gameController.startGame();
+			gameController.requestGame();
 			break;
 
 		case F11:
