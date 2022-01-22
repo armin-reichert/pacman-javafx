@@ -114,21 +114,30 @@ public class Maze3D extends Group {
 	/**
 	 * Creates the walls and doors according to the current resolution.
 	 * 
-	 * @param world the game world
+	 * @param world         the game world
+	 * @param wallBaseColor color of wall at base
+	 * @param wallTopColor  color of wall at top
 	 */
 	public void buildWallsAndDoors(PacManGameWorld world, Color wallBaseColor, Color wallTopColor) {
-		int res = $resolution.get();
-		double stoneSize = TS / res;
-		FloorPlan floorPlan = new FloorPlan(res, world);
+		int stoneSize = TS / $resolution.get();
+		FloorPlan floorPlan = new FloorPlan($resolution.get(), world);
 		rebuildWalls(floorPlan, world, stoneSize, wallBaseColor, wallTopColor);
 		rebuildDoors(world, stoneSize);
-		log("Rebuilt 3D maze: resolution=%d (stone size=%.2f), wall height=%.2f", res, stoneSize, $wallHeight.get());
+		log("Rebuilt 3D maze: resolution=%d (stone size=%d), wall height=%.2f", $resolution.get(), stoneSize,
+				$wallHeight.get());
 	}
 
+	/**
+	 * Creates the pellets/food and the energizer animations.
+	 * 
+	 * @param world     the game world
+	 * @param foodColor color of pellets
+	 */
 	public void buildFood(PacManGameWorld world, Color foodColor) {
-		var foodMaterial = new PhongMaterial(foodColor);
-		foodGroup.getChildren().setAll(world.tiles().filter(world::isFoodTile)
-				.map(tile -> createPellet(tile, world.isEnergizerTile(tile), foodMaterial)).collect(Collectors.toList()));
+		var material = new PhongMaterial(foodColor);
+		var pellets = world.tiles().filter(world::isFoodTile)
+				.map(tile -> createPellet(tile, world.isEnergizerTile(tile), material)).collect(Collectors.toList());
+		foodGroup.getChildren().setAll(pellets);
 		energizerAnimations = energizerNodes().map(this::createEnergizerAnimation).toArray(Animation[]::new);
 	}
 
@@ -173,7 +182,7 @@ public class Maze3D extends Group {
 		};
 	}
 
-	private Shape3D createPellet(V2i tile, boolean energizer, PhongMaterial material) {
+	private Sphere createPellet(V2i tile, boolean energizer, PhongMaterial material) {
 		var pellet = new Sphere(energizer ? energizerRadius : pelletRadius);
 		pellet.setMaterial(material);
 		pellet.setTranslateX(tile.x * TS + HTS);
