@@ -23,10 +23,11 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
+import static de.amr.games.pacman.ui.fx.util.Animations.lerp;
+
 import de.amr.games.pacman.ui.fx.util.CameraController;
 import javafx.scene.Camera;
 import javafx.scene.Node;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
 
 /**
@@ -53,21 +54,17 @@ public class Cam_NearPlayer implements CameraController {
 		cam.setFarClip(10000.0);
 		cam.setRotationAxis(Rotate.X_AXIS);
 		cam.setRotate(75);
-		cam.setTranslateZ(-50);
+		cam.setTranslateZ(-30);
 	}
 
 	@Override
 	public void follow(Node player3D) {
-		cam.setTranslateX(approach(cam.getTranslateX(), player3D.getTranslateX() - 100));
-		cam.setTranslateY(approach(cam.getTranslateY(), player3D.getTranslateY()));
+		cam.setTranslateX(lerp(cam.getTranslateX(), player3D.getTranslateX() - 100, 0.02));
+		cam.setTranslateY(lerp(cam.getTranslateY(), player3D.getTranslateY(), 0.02));
 	}
 
 	@Override
 	public String toString() {
 		return "Near Player";
-	}
-
-	@Override
-	public void handle(KeyEvent event) {
 	}
 }

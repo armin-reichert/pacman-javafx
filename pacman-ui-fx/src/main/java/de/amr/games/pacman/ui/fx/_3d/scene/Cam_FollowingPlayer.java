@@ -23,10 +23,11 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
+import static de.amr.games.pacman.ui.fx.util.Animations.lerp;
+
 import de.amr.games.pacman.ui.fx.util.CameraController;
 import javafx.scene.Camera;
 import javafx.scene.Node;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
 
 /**
@@ -52,22 +53,18 @@ public class Cam_FollowingPlayer implements CameraController {
 		cam.setNearClip(0.1);
 		cam.setFarClip(10000.0);
 		cam.setRotationAxis(Rotate.X_AXIS);
-		cam.setRotate(45);
-		cam.setTranslateZ(-200);
+		cam.setRotate(60);
+		cam.setTranslateZ(-160);
 	}
 
 	@Override
 	public void follow(Node player3D) {
-		cam.setTranslateX(Math.min(-5, approach(cam.getTranslateX(), player3D.getTranslateX())));
-		cam.setTranslateY(Math.max(50, approach(cam.getTranslateY(), player3D.getTranslateY() + 50)));
+		cam.setTranslateX(Math.min(-5, lerp(cam.getTranslateX(), player3D.getTranslateX(), 0.03)));
+		cam.setTranslateY(Math.max(80, lerp(cam.getTranslateY(), player3D.getTranslateY() + 50, 0.03)));
 	}
 
 	@Override
 	public String toString() {
 		return "Following Player";
-	}
-
-	@Override
-	public void handle(KeyEvent event) {
 	}
 }

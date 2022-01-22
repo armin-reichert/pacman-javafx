@@ -34,6 +34,16 @@ import javafx.util.Duration;
 public class Animations {
 
 	/**
+	 * @param from from value
+	 * @param to   to value
+	 * @param t    time between 0 and 1
+	 * @return linear interpolation between {@code from} and {@code to} values
+	 */
+	public static double lerp(double from, double to, double t) {
+		return (1 - t) * from + t * to;
+	}
+
+	/**
 	 * Pauses for the given number of seconds.
 	 * 
 	 * @param seconds number of seconds

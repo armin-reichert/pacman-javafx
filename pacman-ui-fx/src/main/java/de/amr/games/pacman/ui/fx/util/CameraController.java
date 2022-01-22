@@ -41,8 +41,8 @@ public interface CameraController extends EventHandler<KeyEvent> {
 
 	void follow(Node target);
 
-	default double approach(double current, double target) {
-		return current + (target - current) * 0.02;
+	@Override
+	default void handle(KeyEvent event) {
 	}
 
 	default String info() {

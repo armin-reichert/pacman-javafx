@@ -54,11 +54,6 @@ public interface PacManModel3D {
 	 */
 	Group createGhostEyes();
 
-	// Useful methods
-
-	public static double lerp(double from, double to, double t) {
-		return (1 - t) * from + t * to;
-	}
 
 	public static Translate centerOverOrigin(Node master, Node... servants) {
 		Bounds bounds = master.getBoundsInLocal();

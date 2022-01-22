@@ -24,7 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
-import static de.amr.games.pacman.ui.fx._3d.model.PacManModel3D.lerp;
+import static de.amr.games.pacman.ui.fx.util.Animations.lerp;
 import static de.amr.games.pacman.ui.fx.util.Animations.now;
 
 import de.amr.games.pacman.lib.Direction;
@@ -70,7 +70,9 @@ public class Player3D extends Creature3D {
 				head().setMaterial(material);
 			}
 			Color from = Color.YELLOW, to = Color.LIGHTGRAY;
-			Color color = Color.color(lerp(from.getRed(), to.getRed(), t), lerp(from.getGreen(), to.getGreen(), t),
+			Color color = Color.color( //
+					lerp(from.getRed(), to.getRed(), t), //
+					lerp(from.getGreen(), to.getGreen(), t), //
 					lerp(from.getBlue(), to.getBlue(), t));
 			material.setDiffuseColor(color);
 		}
