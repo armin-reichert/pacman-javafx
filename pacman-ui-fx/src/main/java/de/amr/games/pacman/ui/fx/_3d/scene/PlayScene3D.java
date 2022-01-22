@@ -168,17 +168,18 @@ public class PlayScene3D extends AbstractGameScene {
 
 	@Override
 	public void update() {
-		sounds.setMuted(gameController.attractMode); // TODO check this
+		maze3D.updateGhostHouseDoorState(game);
 		player3D.update();
 		Stream.of(ghosts3D).forEach(Ghost3D::update);
 		bonus3D.update(game.bonus);
 		score3D.update(game, gameController.attractMode ? "GAME OVER!" : null);
 		livesCounter3D.setVisibleItems(game.player.lives);
 		camController().ifPresent(camController -> camController.follow(player3D));
-		playDoorAnimation();
 
-		// update food visibility and animations in case of switching between 2D and 3D view
-		// TODO: incomplete
+		sounds.setMuted(gameController.attractMode); // TODO check this
+
+		// Update food visibility and start animations and audio in case of switching between 2D and 3D scene
+		// TODO: still incomplete
 		if (gameController.currentStateID == PacManGameState.HUNTING) {
 			maze3D.foodNodes().forEach(foodNode -> {
 				foodNode.setVisible(!game.isFoodEaten(info(foodNode).tile));
@@ -389,11 +390,5 @@ public class PlayScene3D extends AbstractGameScene {
 		var message = Env.message("level_starting", game.levelNumber);
 		ui.showFlashMessage(1, message);
 		afterSeconds(3, this::continueGame).play();
-	}
-
-	private void playDoorAnimation() {
-		boolean open = maze3D.doors()
-				.anyMatch(door -> game.ghosts().anyMatch(ghost -> ghost.tile().equals(info(door).tile)));
-		maze3D.showDoorsOpen(open);
 	}
 }

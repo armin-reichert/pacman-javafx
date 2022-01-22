@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.world.FloorPlan;
 import de.amr.games.pacman.model.world.PacManGameWorld;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -154,6 +155,12 @@ public class Maze3D extends Group {
 		return animation;
 	}
 
+	public void startEnergizerAnimations() {
+		if (Stream.of(energizerAnimations).anyMatch(animation -> animation.getStatus() != Status.RUNNING)) {
+			Stream.of(energizerAnimations).forEach(Animation::play);
+		}
+	}
+
 	public void playEnergizerAnimations() {
 		Stream.of(energizerAnimations).forEach(Animation::play);
 	}
@@ -196,6 +203,12 @@ public class Maze3D extends Group {
 		return doorsGroup.getChildren().stream().map(node -> (Shape3D) node);
 	}
 
+	public void updateGhostHouseDoorState(GameModel game) {
+		boolean open = doors().anyMatch(door -> game.ghosts().anyMatch(ghost -> ghost.tile().equals(info(door).tile)));
+		PhongMaterial material = new PhongMaterial(open ? doorOpenColor : doorClosedColor);
+		doors().forEach(door -> door.setMaterial(material));
+	}
+
 	public Stream<Node> foodNodes() {
 		return foodGroup.getChildren().stream();
 	}
@@ -210,11 +223,6 @@ public class Maze3D extends Group {
 			node.setScaleY(1.0);
 			node.setScaleZ(1.0);
 		});
-	}
-
-	public void showDoorsOpen(boolean open) {
-		PhongMaterial material = new PhongMaterial(open ? doorOpenColor : doorClosedColor);
-		doors().forEach(door -> door.setMaterial(material));
 	}
 
 	/**
@@ -346,12 +354,6 @@ public class Maze3D extends Group {
 					addCorner(x, y, stoneSize, wallBaseMaterial, wallTopMaterial);
 				}
 			}
-		}
-	}
-
-	public void startEnergizerAnimations() {
-		if (Stream.of(energizerAnimations).anyMatch(animation -> animation.getStatus() != Status.RUNNING)) {
-			Stream.of(energizerAnimations).forEach(Animation::play);
 		}
 	}
 }
