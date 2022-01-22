@@ -122,7 +122,7 @@ public class Maze3D extends Group {
 		FloorPlan floorPlan = new FloorPlan(res, world);
 		rebuildWalls(floorPlan, world, stoneSize, wallBaseColor, wallTopColor);
 		rebuildDoors(world, stoneSize);
-		log("Rebuilt 3D maze at resolution %d (stone size %.2f)", res, stoneSize);
+		log("Rebuilt 3D maze: resolution=%d (stone size=%.2f), wall height=%.2f", res, stoneSize, $wallHeight.get());
 	}
 
 	public void buildFood(PacManGameWorld world, Color foodColor) {
