@@ -31,7 +31,6 @@ import java.util.OptionalDouble;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -115,9 +114,6 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 		}
 		drawBackground();
 		doRender();
-		if (Env.$tilesVisible.get()) {
-			drawTileBorders();
-		}
 	}
 
 	@Override
@@ -138,23 +134,6 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	private void drawBackground() {
 		gc.setFill(Color.BLACK);
 		gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
-	}
-
-	private void drawTileBorders() {
-		gc.setStroke(Color.rgb(160, 160, 160, 0.5));
-		gc.setLineWidth(1);
-		for (int row = 0; row < 36; ++row) {
-			line(0, t(row), t(28), t(row));
-		}
-		for (int col = 0; col < 28; ++col) {
-			line(t(col), 0, t(col), t(36));
-		}
-	}
-
-	// WTF
-	private void line(double x1, double y1, double x2, double y2) {
-		double offset = 0.5;
-		gc.strokeLine(x1 + offset, y1 + offset, x2 + offset, y2 + offset);
 	}
 
 	/**
