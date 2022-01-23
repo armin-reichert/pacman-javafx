@@ -69,7 +69,7 @@ public class ScenesMsPacMan {
 		//@formatter:on
 	}
 
-	public static void init(PacManGameUI_JavaFX ui) {
+	public static void createScenes(PacManGameUI_JavaFX ui) {
 		//@formatter:off
 		SCENES[0][0] = 
 		SCENES[0][1] = new MsPacMan_IntroScene(ui);

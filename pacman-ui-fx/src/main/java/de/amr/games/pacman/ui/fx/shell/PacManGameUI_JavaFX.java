@@ -78,8 +78,8 @@ public class PacManGameUI_JavaFX implements DefaultGameEventHandler {
 		this.stage = stage;
 		this.gameController = gameController;
 
-		ScenesPacMan.init(this);
-		ScenesMsPacMan.init(this);
+		ScenesPacMan.createScenes(this);
+		ScenesMsPacMan.createScenes(this);
 
 		mainSceneRoot = new StackPane(gameSceneRoot, flashMessageView, hud);
 		defineMainSceneBackground();

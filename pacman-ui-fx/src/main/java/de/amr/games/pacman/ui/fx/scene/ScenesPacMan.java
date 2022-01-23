@@ -68,7 +68,7 @@ public class ScenesPacMan {
 		SOUNDS.put(GameSounds.INTERMISSION_3,  "/pacman/sound/intermission.mp3");
 	}
 	
-	public static void init(PacManGameUI_JavaFX ui) {
+	public static void createScenes(PacManGameUI_JavaFX ui) {
 		//@formatter:off
 		SCENES[0][0] = 
 		SCENES[0][1] = new PacMan_IntroScene(ui);
