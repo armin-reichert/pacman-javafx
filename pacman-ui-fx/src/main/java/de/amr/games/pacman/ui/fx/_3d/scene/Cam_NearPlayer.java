@@ -25,9 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 
 import static de.amr.games.pacman.ui.fx.util.Animations.lerp;
 
-import de.amr.games.pacman.ui.fx.util.CameraController;
 import javafx.scene.Camera;
-import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 
 /**
@@ -35,17 +33,10 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class Cam_NearPlayer implements CameraController {
-
-	private final Camera cam;
+public class Cam_NearPlayer extends PlayScene3DCameraController {
 
 	public Cam_NearPlayer(Camera cam) {
-		this.cam = cam;
-	}
-
-	@Override
-	public Camera cam() {
-		return cam;
+		super(cam);
 	}
 
 	@Override
@@ -53,14 +44,14 @@ public class Cam_NearPlayer implements CameraController {
 		cam.setNearClip(0.1);
 		cam.setFarClip(10000.0);
 		cam.setRotationAxis(Rotate.X_AXIS);
-		cam.setRotate(75);
-		cam.setTranslateZ(-30);
+		cam.setRotate(80);
+		cam.setTranslateZ(-40);
 	}
 
 	@Override
-	public void follow(Node player3D) {
-		cam.setTranslateX(lerp(cam.getTranslateX(), player3D.getTranslateX() - 100, 0.02));
-		cam.setTranslateY(lerp(cam.getTranslateY(), player3D.getTranslateY(), 0.02));
+	public void update(PlayScene3D scene) {
+		cam.setTranslateX(lerp(cam.getTranslateX(), scene.player3D.getTranslateX() - 100, 0.02));
+		cam.setTranslateY(lerp(cam.getTranslateY(), scene.player3D.getTranslateY(), 0.02));
 	}
 
 	@Override

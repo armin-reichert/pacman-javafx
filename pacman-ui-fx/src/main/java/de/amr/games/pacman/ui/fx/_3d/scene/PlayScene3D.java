@@ -58,7 +58,6 @@ import de.amr.games.pacman.ui.fx.scene.ScenesMsPacMan;
 import de.amr.games.pacman.ui.fx.scene.ScenesPacMan;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.util.CameraController;
 import de.amr.games.pacman.ui.fx.util.CoordinateSystem;
 import javafx.animation.SequentialTransition;
 import javafx.scene.AmbientLight;
@@ -82,27 +81,27 @@ import javafx.scene.transform.Translate;
  */
 public class PlayScene3D extends AbstractGameScene {
 
-	private final PacManModel3D model3D;
-	private final EnumMap<Perspective, CameraController> camControllers = new EnumMap<>(Perspective.class);
-	private final Image floorImage = new Image(getClass().getResource("/common/escher-texture.jpg").toString());
-	private final AmbientLight ambientLight = new AmbientLight(Color.GHOSTWHITE);
-	private final CoordinateSystem coordSystem = new CoordinateSystem(1000);
+	final PacManModel3D model3D;
+	final EnumMap<Perspective, PlayScene3DCameraController> camControllers = new EnumMap<>(Perspective.class);
+	final Image floorImage = new Image(getClass().getResource("/common/escher-texture.jpg").toString());
+	final AmbientLight ambientLight = new AmbientLight(Color.GHOSTWHITE);
+	final CoordinateSystem coordSystem = new CoordinateSystem(1000);
 
-	private Group playground;
-	private Maze3D maze3D;
-	private Player3D player3D;
-	private Ghost3D[] ghosts3D;
-	private Bonus3D bonus3D;
-	private ScoreNotReally3D score3D;
-	private LevelCounter3D levelCounter3D;
-	private LivesCounter3D livesCounter3D;
-	private Rendering2D rendering2D;
+	Group playground;
+	Maze3D maze3D;
+	Player3D player3D;
+	Ghost3D[] ghosts3D;
+	Bonus3D bonus3D;
+	ScoreNotReally3D score3D;
+	LevelCounter3D levelCounter3D;
+	LivesCounter3D livesCounter3D;
+	Rendering2D rendering2D;
 
 	public PlayScene3D(PacManGameUI_JavaFX ui, PacManModel3D model3D, SoundManager sounds) {
 		super(ui, sounds);
 		this.model3D = model3D;
 		coordSystem.visibleProperty().bind(Env.$axesVisible);
-		Env.$perspective.addListener(($1, $2, $3) -> camController().ifPresent(CameraController::reset));
+		Env.$perspective.addListener(($1, $2, $3) -> camController().ifPresent(PlayScene3DCameraController::reset));
 	}
 
 	@Override
@@ -163,7 +162,7 @@ public class PlayScene3D extends AbstractGameScene {
 		playground.getChildren().addAll(ghosts3D);
 
 		fxSubScene.setRoot(new Group(ambientLight, playground, coordSystem));
-		camController().ifPresent(CameraController::reset);
+		camController().ifPresent(PlayScene3DCameraController::reset);
 	}
 
 	@Override
@@ -174,7 +173,7 @@ public class PlayScene3D extends AbstractGameScene {
 		bonus3D.update(game.bonus);
 		score3D.update(game, gameController.attractMode ? "GAME OVER!" : null);
 		livesCounter3D.setVisibleItems(game.player.lives);
-		camController().ifPresent(camController -> camController.follow(player3D));
+		camController().ifPresent(camController -> camController.update(this));
 
 		sounds.setMuted(gameController.attractMode); // TODO check this
 
@@ -200,7 +199,7 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	@Override
-	public Optional<CameraController> camController() {
+	public Optional<PlayScene3DCameraController> camController() {
 		if (!camControllers.containsKey(Env.$perspective.get())) {
 			return Optional.empty();
 		}

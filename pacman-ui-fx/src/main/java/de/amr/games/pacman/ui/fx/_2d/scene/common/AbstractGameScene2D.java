@@ -31,11 +31,11 @@ import java.util.OptionalDouble;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3DCameraController;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.util.CameraController;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -126,7 +126,7 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	}
 
 	@Override
-	public Optional<CameraController> camController() {
+	public Optional<PlayScene3DCameraController> camController() {
 		return Optional.empty();
 	}
 

@@ -23,9 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
-import de.amr.games.pacman.ui.fx.util.ManualCameraController;
 import javafx.scene.Camera;
-import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 
 /**
@@ -56,6 +54,6 @@ public class Cam_Total extends ManualCameraController {
 	}
 
 	@Override
-	public void follow(Node target) {
+	public void update(PlayScene3D scene) {
 	}
 }

@@ -21,11 +21,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx.util;
+package de.amr.games.pacman.ui.fx._3d.scene;
 
 import javafx.event.EventHandler;
 import javafx.scene.Camera;
-import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;
 
 /**
@@ -33,20 +32,24 @@ import javafx.scene.input.KeyEvent;
  * 
  * @author Armin Reichert
  */
-public interface CameraController extends EventHandler<KeyEvent> {
+public abstract class PlayScene3DCameraController implements EventHandler<KeyEvent> {
 
-	Camera cam();
+	public final Camera cam;
 
-	void reset();
-
-	void follow(Node target);
-
-	@Override
-	default void handle(KeyEvent event) {
+	public PlayScene3DCameraController(Camera cam) {
+		this.cam = cam;
 	}
 
-	default String info() {
-		return String.format("x=%.0f y=%.0f z=%.0f rot=%.0f", cam().getTranslateX(), cam().getTranslateY(),
-				cam().getTranslateZ(), cam().getRotate());
+	abstract void reset();
+
+	abstract void update(PlayScene3D scene);
+
+	@Override
+	public void handle(KeyEvent event) {
+	}
+
+	public String info() {
+		return String.format("x=%.0f y=%.0f z=%.0f rot=%.0f", cam.getTranslateX(), cam.getTranslateY(), cam.getTranslateZ(),
+				cam.getRotate());
 	}
 }

@@ -25,9 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 
 import static de.amr.games.pacman.ui.fx.util.Animations.lerp;
 
-import de.amr.games.pacman.ui.fx.util.CameraController;
 import javafx.scene.Camera;
-import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 
 /**
@@ -35,17 +33,10 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class Cam_FollowingPlayer implements CameraController {
-
-	private final Camera cam;
+public class Cam_FollowingPlayer extends PlayScene3DCameraController {
 
 	public Cam_FollowingPlayer(Camera cam) {
-		this.cam = cam;
-	}
-
-	@Override
-	public Camera cam() {
-		return cam;
+		super(cam);
 	}
 
 	@Override
@@ -58,9 +49,9 @@ public class Cam_FollowingPlayer implements CameraController {
 	}
 
 	@Override
-	public void follow(Node player3D) {
-		cam.setTranslateX(Math.min(-5, lerp(cam.getTranslateX(), player3D.getTranslateX(), 0.03)));
-		cam.setTranslateY(Math.max(80, lerp(cam.getTranslateY(), player3D.getTranslateY() + 50, 0.03)));
+	public void update(PlayScene3D scene) {
+		cam.setTranslateX(Math.min(-5, lerp(cam.getTranslateX(), scene.player3D.getTranslateX(), 0.03)));
+		cam.setTranslateY(Math.max(80, lerp(cam.getTranslateY(), scene.player3D.getTranslateY() + 50, 0.03)));
 	}
 
 	@Override

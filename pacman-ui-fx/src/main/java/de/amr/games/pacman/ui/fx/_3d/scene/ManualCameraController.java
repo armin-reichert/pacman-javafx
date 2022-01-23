@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx.util;
+package de.amr.games.pacman.ui.fx._3d.scene;
 
 import javafx.scene.Camera;
 import javafx.scene.input.KeyEvent;
@@ -32,17 +32,10 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public abstract class ManualCameraController implements CameraController {
-
-	protected final Camera cam;
+public abstract class ManualCameraController extends PlayScene3DCameraController {
 
 	public ManualCameraController(Camera cam) {
-		this.cam = cam;
-	}
-
-	@Override
-	public Camera cam() {
-		return cam;
+		super(cam);
 	}
 
 	@Override
