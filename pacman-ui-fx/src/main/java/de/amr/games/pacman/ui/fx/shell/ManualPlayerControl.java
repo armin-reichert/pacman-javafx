@@ -63,7 +63,7 @@ public class ManualPlayerControl implements PlayerControl {
 	}
 
 	private void onKeyPressed(KeyEvent e) {
-		if (e.isControlDown()) {
+		if (e.isControlDown() || e.isShiftDown() || e.isAltDown()) {
 			return;
 		}
 		if (e.getCode() == upCode) {
