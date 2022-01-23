@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
-import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 import static de.amr.games.pacman.ui.fx.util.Animations.afterSeconds;
 
@@ -109,7 +108,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 			if (munching.isPlaying()) {
 				if (game.player.starvingTicks > 10) {
 					sounds.stop(PacManGameSound.PACMAN_MUNCH);
-					log("Munching sound stopped");
 				}
 			}
 		}

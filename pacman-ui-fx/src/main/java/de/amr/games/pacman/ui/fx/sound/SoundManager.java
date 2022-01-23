@@ -23,13 +23,12 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.sound;
 
-import static de.amr.games.pacman.lib.Logging.log;
-
 import java.net.URL;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.ui.PacManGameSound;
 import javafx.scene.media.AudioClip;
 
@@ -41,6 +40,14 @@ import javafx.scene.media.AudioClip;
  * @author Armin Reichert
  */
 public class SoundManager {
+
+	public boolean loggingEnabled = false;
+
+	private void log(String message, Object... args) {
+		if (loggingEnabled) {
+			Logging.log(message, args);
+		}
+	}
 
 	private final Map<PacManGameSound, URL> url = new EnumMap<>(PacManGameSound.class);
 	private final Map<PacManGameSound, AudioClip> clipCache = new HashMap<>();

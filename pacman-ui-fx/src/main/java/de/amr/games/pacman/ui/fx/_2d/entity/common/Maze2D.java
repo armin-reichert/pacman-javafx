@@ -27,8 +27,10 @@ import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
 import static de.amr.games.pacman.model.world.PacManGameWorld.t;
 
 import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -86,20 +88,48 @@ public class Maze2D implements Renderable2D {
 	}
 
 	@Override
-	public void render(GraphicsContext g) {
+	public void render(GraphicsContext gc) {
 		if (flashingAnimation.getStatus() == Status.RUNNING) {
 			if (flashing) {
-				rendering.renderMazeFlashing(g, game.mazeNumber, x, y);
+				rendering.renderMazeFlashing(gc, game.mazeNumber, x, y);
 			} else {
-				rendering.renderMazeEmpty(g, game.mazeNumber, x, y);
+				rendering.renderMazeEmpty(gc, game.mazeNumber, x, y);
 			}
 		} else {
-			rendering.renderMazeFull(g, game.mazeNumber, x, y);
-			g.setFill(Color.BLACK);
-			if (!energizerAnimation.animate()) {
-				game.world.energizerTiles().forEach(tile -> g.fillRect(t(tile.x), t(tile.y), TS, TS));
+			rendering.renderMazeFull(gc, game.mazeNumber, x, y);
+			Color dark = Color.BLACK;
+			if (!energizerAnimation.animate()) { // dark phase
+				gc.setFill(dark);
+				game.world.energizerTiles().forEach(tile -> fillTile(gc, tile, dark));
 			}
-			game.world.tiles().filter(game::isFoodEaten).forEach(tile -> g.fillRect(t(tile.x), t(tile.y), TS, TS));
+			game.world.tiles().filter(game::isFoodEaten).forEach(tile -> fillTile(gc, tile, dark));
+			if (Env.$tilesVisible.get()) {
+				drawTileBorders(gc);
+			}
 		}
 	}
+
+	private void fillTile(GraphicsContext gc, V2i tile, Color color) {
+		gc.setFill(color);
+		gc.fillRect(t(tile.x) + 0.2, t(tile.y) + 0.2, TS - 0.2, TS - 0.2);
+
+	}
+
+	private void drawTileBorders(GraphicsContext gc) {
+		gc.setStroke(Color.rgb(160, 160, 160, 0.5));
+		gc.setLineWidth(1);
+		for (int row = 0; row < 36; ++row) {
+			line(gc, 0, t(row), t(28), t(row));
+		}
+		for (int col = 0; col < 28; ++col) {
+			line(gc, t(col), 0, t(col), t(36));
+		}
+	}
+
+	// WTF
+	private void line(GraphicsContext gc, double x1, double y1, double x2, double y2) {
+		double offset = 0.5;
+		gc.strokeLine(x1 + offset, y1 + offset, x2 + offset, y2 + offset);
+	}
+
 }
