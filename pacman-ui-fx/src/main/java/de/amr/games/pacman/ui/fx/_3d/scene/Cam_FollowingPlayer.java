@@ -50,8 +50,12 @@ public class Cam_FollowingPlayer extends PlayScene3DCameraController {
 
 	@Override
 	public void update(PlayScene3D scene) {
-		cam.setTranslateX(Math.min(-5, lerp(cam.getTranslateX(), scene.player3D.getTranslateX(), 0.03)));
-		cam.setTranslateY(Math.max(80, lerp(cam.getTranslateY(), scene.player3D.getTranslateY() + 50, 0.03)));
+		// TODO this is just trial and error
+		double frac = 0.03;
+		double x = lerp(cam.getTranslateX(), scene.player3D.getTranslateX() - 100, frac);
+		double y = lerp(cam.getTranslateY(), scene.player3D.getTranslateY() + 60, frac);
+		cam.setTranslateX(x);
+		cam.setTranslateY(y);
 	}
 
 	@Override
