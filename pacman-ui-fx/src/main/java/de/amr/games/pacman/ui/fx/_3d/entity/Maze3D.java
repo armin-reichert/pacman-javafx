@@ -24,8 +24,8 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.lib.Logging.log;
-import static de.amr.games.pacman.model.world.PacManGameWorld.HTS;
-import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
+import static de.amr.games.pacman.model.world.World.HTS;
+import static de.amr.games.pacman.model.world.World.TS;
 import static de.amr.games.pacman.ui.fx._3d.entity.Maze3D.NodeInfo.info;
 
 import java.util.Optional;
@@ -35,7 +35,7 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.world.FloorPlan;
-import de.amr.games.pacman.model.world.PacManGameWorld;
+import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
@@ -120,7 +120,7 @@ public class Maze3D extends Group {
 	 * @param wallBaseColor color of wall at base
 	 * @param wallTopColor  color of wall at top
 	 */
-	public void buildWallsAndDoors(PacManGameWorld world, Color wallBaseColor, Color wallTopColor) {
+	public void buildWallsAndDoors(World world, Color wallBaseColor, Color wallTopColor) {
 		int stoneSize = TS / $resolution.get();
 		FloorPlan floorPlan = new FloorPlan($resolution.get(), world);
 		rebuildWalls(floorPlan, world, stoneSize, wallBaseColor, wallTopColor);
@@ -135,7 +135,7 @@ public class Maze3D extends Group {
 	 * @param world     the game world
 	 * @param foodColor color of pellets
 	 */
-	public void buildFood(PacManGameWorld world, Color foodColor) {
+	public void buildFood(World world, Color foodColor) {
 		var material = new PhongMaterial(foodColor);
 		var pellets = world.tiles().filter(world::isFoodTile)
 				.map(tile -> createPellet(tile, world.isEnergizerTile(tile), material)).collect(Collectors.toList());
@@ -276,7 +276,7 @@ public class Maze3D extends Group {
 		return addWall(x, y, 1, 1, blockSize, wallBaseMaterial, wallTopMaterial);
 	}
 
-	private void rebuildDoors(PacManGameWorld world, double stoneSize) {
+	private void rebuildDoors(World world, double stoneSize) {
 		doorsGroup.getChildren().clear();
 		PhongMaterial doorMaterial = new PhongMaterial(doorClosedColor);
 		world.ghostHouse().doorTiles().forEach(tile -> {
@@ -292,7 +292,7 @@ public class Maze3D extends Group {
 		});
 	}
 
-	private void rebuildWalls(FloorPlan floorPlan, PacManGameWorld world, double stoneSize, Color wallBaseColor,
+	private void rebuildWalls(FloorPlan floorPlan, World world, double stoneSize, Color wallBaseColor,
 			Color wallTopColor) {
 
 		var wallBaseMaterial = new PhongMaterial(wallBaseColor);

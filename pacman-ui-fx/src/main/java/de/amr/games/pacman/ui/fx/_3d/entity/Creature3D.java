@@ -1,6 +1,6 @@
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
+import static de.amr.games.pacman.model.world.World.TS;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Creature;

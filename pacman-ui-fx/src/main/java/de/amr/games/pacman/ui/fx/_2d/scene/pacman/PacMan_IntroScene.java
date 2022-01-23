@@ -24,8 +24,8 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
 import static de.amr.games.pacman.lib.TickTimer.sec_to_ticks;
-import static de.amr.games.pacman.model.world.PacManGameWorld.TS;
-import static de.amr.games.pacman.model.world.PacManGameWorld.t;
+import static de.amr.games.pacman.model.world.World.TS;
+import static de.amr.games.pacman.model.world.World.t;
 
 import java.util.List;
 import java.util.stream.Collectors;
