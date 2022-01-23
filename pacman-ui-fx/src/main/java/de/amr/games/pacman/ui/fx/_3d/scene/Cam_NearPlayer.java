@@ -50,8 +50,12 @@ public class Cam_NearPlayer extends PlayScene3DCameraController {
 
 	@Override
 	public void update(PlayScene3D scene) {
-		cam.setTranslateX(lerp(cam.getTranslateX(), scene.player3D.getTranslateX() - 100, 0.02));
-		cam.setTranslateY(lerp(cam.getTranslateY(), scene.player3D.getTranslateY(), 0.02));
+		// TODO this is just trial and error
+		double fraction = 0.02;
+		double x = lerp(cam.getTranslateX(), scene.player3D.getTranslateX() - 110, fraction);
+		double y = lerp(cam.getTranslateY(), scene.player3D.getTranslateY(), fraction);
+		cam.setTranslateX(x);
+		cam.setTranslateY(y);
 	}
 
 	@Override
