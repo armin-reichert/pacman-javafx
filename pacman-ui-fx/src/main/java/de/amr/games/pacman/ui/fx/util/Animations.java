@@ -43,6 +43,10 @@ public class Animations {
 		return (1 - t) * from + t * to;
 	}
 
+	public static double clamp(double value, double min, double max) {
+		return value < min ? min : value > max ? max : value;
+	}
+
 	/**
 	 * Pauses for the given number of seconds.
 	 * 
