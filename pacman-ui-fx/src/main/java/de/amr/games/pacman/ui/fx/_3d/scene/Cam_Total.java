@@ -31,10 +31,11 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class Cam_Total extends ManualCameraController {
+public class Cam_Total extends PlayScene3DCameraController {
 
 	public Cam_Total(Camera cam) {
 		super(cam);
+		manualControl = true;
 	}
 
 	@Override
@@ -49,11 +50,11 @@ public class Cam_Total extends ManualCameraController {
 	}
 
 	@Override
-	public String toString() {
-		return "Total";
+	public void update(PlayScene3D scene) {
 	}
 
 	@Override
-	public void update(PlayScene3D scene) {
+	public String toString() {
+		return "Total";
 	}
 }
