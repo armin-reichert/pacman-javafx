@@ -54,7 +54,9 @@ public class Animations {
 	}
 
 	/**
-	 * Runs the given code after the given number of seconds
+	 * Runs the given code after the given number of seconds.
+	 * <p>
+	 * NOTE: Do NOT start an animation in the code!
 	 * 
 	 * @param seconds  number of seconds
 	 * @param runnable code to run
@@ -68,6 +70,8 @@ public class Animations {
 
 	/**
 	 * Runs the given code immediatetly.
+	 * <p>
+	 * NOTE: Do NOT start an animation in the code!
 	 * 
 	 * @param runnable code to run
 	 * @return pause transition

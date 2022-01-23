@@ -376,9 +376,9 @@ public class PlayScene3D extends AbstractGameScene {
 	private void playAnimationLevelComplete() {
 		var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game.levelNumber);
 		var animation = new SequentialTransition( //
-				afterSeconds(1, game::hideGuys), //
 				pause(1), //
 				maze3D.flashingAnimation(game.numFlashes), //
+				afterSeconds(1, () -> game.player.hide()), //
 				afterSeconds(1, () -> ui.showFlashMessage(2, message)) //
 		);
 		animation.setOnFinished(e -> continueGame());

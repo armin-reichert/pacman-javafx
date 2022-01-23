@@ -227,7 +227,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 			gameController.stateTimer().setIndefinite(); // wait until continueGame() is called
 			sounds.stopAll();
 			player2D.reset();
-			game.hideGhosts();
+//			game.hideGhosts();
 			// Energizers can still exist if "next level" cheat has been used
 			maze2D.getEnergizerAnimation().reset();
 			Animation animation = new SequentialTransition( //
