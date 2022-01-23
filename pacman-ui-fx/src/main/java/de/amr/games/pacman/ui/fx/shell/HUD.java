@@ -23,8 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell;
 
-import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.controller.PacManGameState;
+import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -93,9 +93,9 @@ public class HUD extends VBox {
 	}
 
 	public void update() {
-		final PacManGameController gameController = ui.gameController;
+		final GameController gameController = ui.gameController;
 		final GameModel game = gameController.game;
-		final PacManGameState state = gameController.currentStateID;
+		final GameState state = gameController.currentStateID;
 		final String huntingPhaseName = game.inScatteringPhase() ? "Scattering" : "Chasing";
 		final TickTimer stateTimer = gameController.stateTimer();
 		final double width = ui.stage.getScene().getWindow().getWidth();
@@ -113,7 +113,7 @@ public class HUD extends VBox {
 		row("Game Variant", "%s", gameController.gameVariant);
 		row("Game Level", "%d", game.levelNumber);
 		row("Game State", "%s",
-				state == PacManGameState.HUNTING
+				state == GameState.HUNTING
 						? String.format("%s: Phase #%d (%s)", state, game.huntingPhase, huntingPhaseName)
 						: state);
 		row("", "Running:   %s%s", stateTimer.ticked(), stateTimer.isStopped() ? " (STOPPED)" : "");

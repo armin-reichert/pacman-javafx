@@ -25,8 +25,8 @@ package de.amr.games.pacman.ui.fx.shell;
 
 import static de.amr.games.pacman.lib.Logging.log;
 
-import de.amr.games.pacman.controller.PacManGameController;
-import de.amr.games.pacman.controller.PacManGameState;
+import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.controller.event.DefaultPacManGameEventHandler;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameModel;
@@ -63,7 +63,7 @@ import javafx.stage.WindowEvent;
 public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 
 	public final Stage stage;
-	public final PacManGameController gameController;
+	public final GameController gameController;
 	public final Canvas canvas = new Canvas();
 	public final FlashMessageView flashMessageView = new FlashMessageView();
 	public final HUD hud = new HUD(this);
@@ -74,7 +74,7 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 	private final StackPane mainSceneRoot;
 	private final BooleanProperty $is3D = new SimpleBooleanProperty();
 
-	public PacManGameUI_JavaFX(Stage stage, PacManGameController gameController, double height, boolean fullscreen) {
+	public PacManGameUI_JavaFX(Stage stage, GameController gameController, double height, boolean fullscreen) {
 		this.stage = stage;
 		this.gameController = gameController;
 
@@ -190,7 +190,7 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 
 	@Override
 	public void onPacManGameStateChange(PacManGameStateChangeEvent e) {
-		if (e.newGameState == PacManGameState.INTRO) {
+		if (e.newGameState == GameState.INTRO) {
 			stopAllSounds();
 		}
 		setGameScene(selectScene(Env.$3D.get()));
@@ -232,7 +232,7 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 		case N:
 			if (gameController.gameRunning) {
 				showFlashMessage(1, Env.CHEAT_TALK.next());
-				gameController.changeState(PacManGameState.LEVEL_COMPLETE);
+				gameController.changeState(GameState.LEVEL_COMPLETE);
 			}
 			break;
 
@@ -245,11 +245,11 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 		case Q:
 			currentGameScene.end();
 			stopAllSounds();
-			gameController.changeState(PacManGameState.INTRO);
+			gameController.changeState(GameState.INTRO);
 			break;
 
 		case V:
-			if (gameController.currentStateID == PacManGameState.INTRO) {
+			if (gameController.currentStateID == GameState.INTRO) {
 				gameController.selectGameVariant(gameController.gameVariant.succ());
 			}
 			break;
@@ -347,7 +347,7 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 			break;
 
 		case DIGIT1:
-			if (gameController.currentStateID == PacManGameState.INTRO) {
+			if (gameController.currentStateID == GameState.INTRO) {
 				showFlashMessage(1, "Intermission Scene Test");
 				gameController.startIntermissionTest();
 			}

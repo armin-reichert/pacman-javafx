@@ -34,7 +34,7 @@ import java.util.EnumMap;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.controller.PacManGameState;
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
@@ -176,7 +176,7 @@ public class PlayScene3D extends AbstractGameScene {
 
 		// Update food visibility and start animations and audio in case of switching between 2D and 3D scene
 		// TODO: still incomplete
-		if (gameController.currentStateID == PacManGameState.HUNTING) {
+		if (gameController.currentStateID == GameState.HUNTING) {
 			maze3D.foodNodes().forEach(foodNode -> {
 				foodNode.setVisible(!game.isFoodEaten(info(foodNode).tile));
 			});
@@ -298,7 +298,7 @@ public class PlayScene3D extends AbstractGameScene {
 		sounds.setMuted(gameController.attractMode); // TODO check this
 
 		// enter READY
-		if (e.newGameState == PacManGameState.READY) {
+		if (e.newGameState == GameState.READY) {
 			sounds.stopAll();
 			player3D.reset();
 			maze3D.resetEnergizerSize();
@@ -309,12 +309,12 @@ public class PlayScene3D extends AbstractGameScene {
 		}
 
 		// enter HUNTING
-		else if (e.newGameState == PacManGameState.HUNTING) {
+		else if (e.newGameState == GameState.HUNTING) {
 			maze3D.playEnergizerAnimations();
 		}
 
 		// enter PACMAN_DYING
-		else if (e.newGameState == PacManGameState.PACMAN_DYING) {
+		else if (e.newGameState == GameState.PACMAN_DYING) {
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setNormalSkinColor());
 			sounds.stopAll();
 			gameController.stateTimer().setIndefinite().start();
@@ -322,32 +322,32 @@ public class PlayScene3D extends AbstractGameScene {
 		}
 
 		// enter GHOST_DYING
-		else if (e.newGameState == PacManGameState.GHOST_DYING) {
+		else if (e.newGameState == GameState.GHOST_DYING) {
 			sounds.play(GameSounds.GHOST_EATEN);
 		}
 
 		// enter LEVEL_STARTING
-		else if (e.newGameState == PacManGameState.LEVEL_STARTING) {
+		else if (e.newGameState == GameState.LEVEL_STARTING) {
 			buildMaze(game.mazeNumber, true);
 			levelCounter3D.init(game);
 			playAnimationLevelStarting();
 		}
 
 		// enter LEVEL_COMPLETE
-		else if (e.newGameState == PacManGameState.LEVEL_COMPLETE) {
+		else if (e.newGameState == GameState.LEVEL_COMPLETE) {
 			sounds.stopAll();
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setNormalSkinColor());
 			playAnimationLevelComplete();
 		}
 
 		// enter GAME_OVER
-		else if (e.newGameState == PacManGameState.GAME_OVER) {
+		else if (e.newGameState == GameState.GAME_OVER) {
 			sounds.stopAll();
 			ui.showFlashMessage(3, Env.GAME_OVER_TALK.next());
 		}
 
 		// exit HUNTING
-		if (e.oldGameState == PacManGameState.HUNTING && e.newGameState != PacManGameState.GHOST_DYING) {
+		if (e.oldGameState == GameState.HUNTING && e.newGameState != GameState.GHOST_DYING) {
 			maze3D.stopEnergizerAnimations();
 			bonus3D.hide();
 		}

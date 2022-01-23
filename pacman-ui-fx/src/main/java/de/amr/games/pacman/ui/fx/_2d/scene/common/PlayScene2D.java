@@ -29,7 +29,7 @@ import static de.amr.games.pacman.ui.fx.util.Animations.afterSeconds;
 import java.util.List;
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.controller.PacManGameState;
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
@@ -96,7 +96,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void doUpdate() {
-		if (gameController.currentStateID == PacManGameState.HUNTING) {
+		if (gameController.currentStateID == GameState.HUNTING) {
 			// ensure animations are running when switching between 2D and 3D
 			if (!player2D.munchingAnimations.get(game.player.dir()).isRunning()) {
 				player2D.munchingAnimations.values().forEach(TimedSequence::restart);
@@ -179,7 +179,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 	public void onPacManGameStateChange(PacManGameStateChangeEvent e) {
 
 		// enter READY
-		if (e.newGameState == PacManGameState.READY) {
+		if (e.newGameState == GameState.READY) {
 			sounds.stopAll();
 			maze2D.getEnergizerAnimation().reset();
 			player2D.reset();
@@ -191,14 +191,14 @@ public class PlayScene2D extends AbstractGameScene2D {
 		}
 
 		// enter HUNTING
-		else if (e.newGameState == PacManGameState.HUNTING) {
+		else if (e.newGameState == GameState.HUNTING) {
 			maze2D.getEnergizerAnimation().restart();
 			player2D.munchingAnimations.values().forEach(TimedSequence::restart);
 			ghosts2D.forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSequence::restart));
 		}
 
 		// enter PACMAN_DYING
-		else if (e.newGameState == PacManGameState.PACMAN_DYING) {
+		else if (e.newGameState == GameState.PACMAN_DYING) {
 			// wait until game is continued
 			gameController.stateTimer().setIndefinite().start();
 
@@ -217,13 +217,13 @@ public class PlayScene2D extends AbstractGameScene2D {
 		}
 
 		// enter GHOST_DYING
-		else if (e.newGameState == PacManGameState.GHOST_DYING) {
+		else if (e.newGameState == GameState.GHOST_DYING) {
 			game.player.hide();
 			sounds.play(GameSounds.GHOST_EATEN);
 		}
 
 		// enter LEVEL_COMPLETE
-		else if (e.newGameState == PacManGameState.LEVEL_COMPLETE) {
+		else if (e.newGameState == GameState.LEVEL_COMPLETE) {
 			gameController.stateTimer().setIndefinite(); // wait until continueGame() is called
 			sounds.stopAll();
 			player2D.reset();
@@ -239,20 +239,20 @@ public class PlayScene2D extends AbstractGameScene2D {
 		}
 
 		// enter LEVEL_STARTING
-		else if (e.newGameState == PacManGameState.LEVEL_STARTING) {
+		else if (e.newGameState == GameState.LEVEL_STARTING) {
 			maze2D.setGame(game);
 			gameController.stateTimer().setSeconds(1).start();
 		}
 
 		// enter GAME_OVER
-		else if (e.newGameState == PacManGameState.GAME_OVER) {
+		else if (e.newGameState == GameState.GAME_OVER) {
 			maze2D.getEnergizerAnimation().reset();
 			ghosts2D.forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSequence::restart));
 			sounds.stopAll();
 		}
 
 		// exit GHOST_DYING
-		if (e.oldGameState == PacManGameState.GHOST_DYING) {
+		if (e.oldGameState == GameState.GHOST_DYING) {
 			game.player.show();
 		}
 	}
@@ -286,13 +286,13 @@ public class PlayScene2D extends AbstractGameScene2D {
 	}
 
 	private void renderGameState() {
-		var state = gameController.attractMode ? PacManGameState.GAME_OVER : gameController.currentStateID;
-		if (state == PacManGameState.GAME_OVER) {
+		var state = gameController.attractMode ? GameState.GAME_OVER : gameController.currentStateID;
+		if (state == GameState.GAME_OVER) {
 			gc.setFont(rendering.getScoreFont());
 			gc.setFill(Color.RED);
 			gc.fillText("GAME", t(9), t(21));
 			gc.fillText("OVER", t(15), t(21));
-		} else if (state == PacManGameState.READY) {
+		} else if (state == GameState.READY) {
 			gc.setFont(rendering.getScoreFont());
 			gc.setFill(Color.YELLOW);
 			gc.fillText("READY!", t(11), t(21));

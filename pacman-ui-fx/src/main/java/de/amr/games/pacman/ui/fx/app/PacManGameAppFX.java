@@ -28,7 +28,7 @@ import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
 
 import java.io.IOException;
 
-import de.amr.games.pacman.controller.PacManGameController;
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.PlayerControl;
 import de.amr.games.pacman.ui.fx.shell.ManualPlayerControl;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
@@ -58,7 +58,7 @@ public class PacManGameAppFX extends Application {
 		Options options = new Options(getParameters().getUnnamed());
 
 		// Create the game controller and the game models, select the specified game variant
-		PacManGameController controller = new PacManGameController(options.gameVariant);
+		GameController controller = new GameController(options.gameVariant);
 
 		// By default, player is controlled using keyboard
 		PlayerControl playerController = new ManualPlayerControl(stage, KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT,

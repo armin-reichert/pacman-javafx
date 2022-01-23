@@ -28,7 +28,7 @@ import static de.amr.games.pacman.lib.Logging.log;
 import java.util.Optional;
 import java.util.OptionalDouble;
 
-import de.amr.games.pacman.controller.PacManGameController;
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.event.DefaultPacManGameEventHandler;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3DCameraController;
@@ -48,7 +48,7 @@ import javafx.scene.SubScene;
 public abstract class AbstractGameScene implements DefaultPacManGameEventHandler {
 
 	protected final PacManGameUI_JavaFX ui;
-	protected final PacManGameController gameController;
+	protected final GameController gameController;
 	protected final SoundManager sounds;
 
 	protected SubScene fxSubScene;
