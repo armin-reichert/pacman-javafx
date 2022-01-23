@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Logging;
-import de.amr.games.pacman.ui.PacManGameSound;
+import de.amr.games.pacman.ui.GameSounds;
 import javafx.scene.media.AudioClip;
 
 /**
@@ -49,11 +49,11 @@ public class SoundManager {
 		}
 	}
 
-	private final Map<PacManGameSound, URL> url = new EnumMap<>(PacManGameSound.class);
-	private final Map<PacManGameSound, AudioClip> clipCache = new HashMap<>();
+	private final Map<GameSounds, URL> url = new EnumMap<>(GameSounds.class);
+	private final Map<GameSounds, AudioClip> clipCache = new HashMap<>();
 	private boolean muted;
 
-	public void put(PacManGameSound sound, String path) {
+	public void put(GameSounds sound, String path) {
 		url.put(sound, getClass().getResource(path));
 	}
 
@@ -64,7 +64,7 @@ public class SoundManager {
 		}
 	}
 
-	public AudioClip getClip(PacManGameSound sound) {
+	public AudioClip getClip(GameSounds sound) {
 		if (!clipCache.containsKey(sound)) {
 			AudioClip clip = new AudioClip(url.get(sound).toExternalForm());
 			clipCache.put(sound, clip);
@@ -72,14 +72,14 @@ public class SoundManager {
 		return clipCache.get(sound);
 	}
 
-	public void play(PacManGameSound sound) {
+	public void play(GameSounds sound) {
 		if (!muted) {
 			log("Play sound %s", sound);
 			getClip(sound).play();
 		}
 	}
 
-	public void loop(PacManGameSound sound, int repetitions) {
+	public void loop(GameSounds sound, int repetitions) {
 		if (!muted) {
 			log("Loop sound %s repetition=%d", sound, repetitions);
 			AudioClip clip = getClip(sound);
@@ -88,7 +88,7 @@ public class SoundManager {
 		}
 	}
 
-	public void stop(PacManGameSound sound) {
+	public void stop(GameSounds sound) {
 		log("Stop sound %s", sound);
 		getClip(sound).stop();
 	}

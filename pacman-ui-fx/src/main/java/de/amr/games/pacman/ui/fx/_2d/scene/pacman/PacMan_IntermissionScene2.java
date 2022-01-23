@@ -28,7 +28,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.Ghost;
-import de.amr.games.pacman.ui.PacManGameSound;
+import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.Nail2D;
@@ -62,7 +62,7 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 	public void init(Scene parentScene) {
 		super.init(parentScene);
 
-		sceneController.playIntermissionSound = () -> sounds.play(PacManGameSound.INTERMISSION_2);
+		sceneController.playIntermissionSound = () -> sounds.play(GameSounds.INTERMISSION_2);
 		sceneController.init(gameController);
 
 		pacMan2D = new Player2D(sceneController.pac, rendering);

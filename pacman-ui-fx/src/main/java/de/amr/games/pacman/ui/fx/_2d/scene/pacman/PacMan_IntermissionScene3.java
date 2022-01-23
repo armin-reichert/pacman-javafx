@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 import de.amr.games.pacman.controller.pacman.Intermission3Controller;
 import de.amr.games.pacman.controller.pacman.Intermission3Controller.IntermissionState;
 import de.amr.games.pacman.lib.TimedSequence;
-import de.amr.games.pacman.ui.PacManGameSound;
+import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.BlinkyNaked2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.BlinkyPatched2D;
@@ -56,7 +56,7 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 	public void init(Scene parentScene) {
 		super.init(parentScene);
 
-		sceneController.playIntermissionSound = () -> sounds.loop(PacManGameSound.INTERMISSION_3, 2);
+		sceneController.playIntermissionSound = () -> sounds.loop(GameSounds.INTERMISSION_3, 2);
 		sceneController.init(gameController);
 
 		pacMan2D = new Player2D(sceneController.pac, rendering);

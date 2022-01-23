@@ -38,7 +38,7 @@ import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
-import de.amr.games.pacman.ui.PacManGameSound;
+import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Bonus2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
@@ -104,10 +104,10 @@ public class PlayScene2D extends AbstractGameScene2D {
 			if (!maze2D.getEnergizerAnimation().isRunning()) {
 				maze2D.getEnergizerAnimation().restart();
 			}
-			AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
+			AudioClip munching = sounds.getClip(GameSounds.PACMAN_MUNCH);
 			if (munching.isPlaying()) {
 				if (game.player.starvingTicks > 10) {
-					sounds.stop(PacManGameSound.PACMAN_MUNCH);
+					sounds.stop(GameSounds.PACMAN_MUNCH);
 				}
 			}
 		}
@@ -116,9 +116,9 @@ public class PlayScene2D extends AbstractGameScene2D {
 	@Override
 	public void onScatterPhaseStarted(ScatterPhaseStartedEvent e) {
 		if (e.scatterPhase > 0) {
-			sounds.stop(PacManGameSound.SIRENS.get(e.scatterPhase - 1));
+			sounds.stop(GameSounds.SIRENS.get(e.scatterPhase - 1));
 		}
-		PacManGameSound siren = PacManGameSound.SIRENS.get(e.scatterPhase);
+		GameSounds siren = GameSounds.SIRENS.get(e.scatterPhase);
 		if (!sounds.getClip(siren).isPlaying()) {
 			sounds.loop(siren, Integer.MAX_VALUE);
 		}
@@ -126,7 +126,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void onPlayerLostPower(PacManGameEvent e) {
-		sounds.stop(PacManGameSound.PACMAN_POWER);
+		sounds.stop(GameSounds.PACMAN_POWER);
 	}
 
 	@Override
@@ -135,15 +135,15 @@ public class PlayScene2D extends AbstractGameScene2D {
 			ghost2D.flashingAnimation.reset();
 			ghost2D.frightenedAnimation.restart();
 		});
-		if (!sounds.getClip(PacManGameSound.PACMAN_POWER).isPlaying()) {
-			sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
+		if (!sounds.getClip(GameSounds.PACMAN_POWER).isPlaying()) {
+			sounds.loop(GameSounds.PACMAN_POWER, Integer.MAX_VALUE);
 		}
 	}
 
 	@Override
 	public void onPlayerFoundFood(PacManGameEvent e) {
-		if (!sounds.getClip(PacManGameSound.PACMAN_MUNCH).isPlaying()) {
-			sounds.loop(PacManGameSound.PACMAN_MUNCH, Integer.MAX_VALUE);
+		if (!sounds.getClip(GameSounds.PACMAN_MUNCH).isPlaying()) {
+			sounds.loop(GameSounds.PACMAN_MUNCH, Integer.MAX_VALUE);
 		}
 	}
 
@@ -155,23 +155,23 @@ public class PlayScene2D extends AbstractGameScene2D {
 	@Override
 	public void onBonusEaten(PacManGameEvent e) {
 		bonus2D.animation.ifPresent(TimedSequence::stop);
-		sounds.play(PacManGameSound.BONUS_EATEN);
+		sounds.play(GameSounds.BONUS_EATEN);
 	}
 
 	@Override
 	public void onExtraLife(PacManGameEvent e) {
-		sounds.play(PacManGameSound.EXTRA_LIFE);
+		sounds.play(GameSounds.EXTRA_LIFE);
 	}
 
 	@Override
 	public void onGhostReturnsHome(PacManGameEvent e) {
-		sounds.play(PacManGameSound.GHOST_RETURNING);
+		sounds.play(GameSounds.GHOST_RETURNING);
 	}
 
 	@Override
 	public void onGhostEntersHouse(PacManGameEvent e) {
 		if (game.ghosts(GhostState.DEAD).count() == 0) {
-			sounds.stop(PacManGameSound.GHOST_RETURNING);
+			sounds.stop(GameSounds.GHOST_RETURNING);
 		}
 	}
 
@@ -186,7 +186,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 			ghosts2D.forEach(Ghost2D::reset);
 			if (!gameController.attractMode && !gameController.gameRunning) {
 				sounds.setMuted(false);
-				sounds.play(PacManGameSound.GAME_READY);
+				sounds.play(GameSounds.GAME_READY);
 			}
 		}
 
@@ -208,7 +208,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 			new SequentialTransition( //
 					afterSeconds(1, () -> game.ghosts().forEach(Ghost::hide)), //
 					afterSeconds(1, () -> {
-						sounds.play(PacManGameSound.PACMAN_DEATH);
+						sounds.play(GameSounds.PACMAN_DEATH);
 						player2D.dyingAnimation.restart();
 					}), //
 					afterSeconds(2, () -> game.player.hide()), //
@@ -219,7 +219,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		// enter GHOST_DYING
 		else if (e.newGameState == PacManGameState.GHOST_DYING) {
 			game.player.hide();
-			sounds.play(PacManGameSound.GHOST_EATEN);
+			sounds.play(GameSounds.GHOST_EATEN);
 		}
 
 		// enter LEVEL_COMPLETE

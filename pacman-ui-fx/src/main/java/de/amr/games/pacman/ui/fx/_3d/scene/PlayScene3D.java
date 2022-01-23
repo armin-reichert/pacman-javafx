@@ -41,7 +41,7 @@ import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.GhostState;
-import de.amr.games.pacman.ui.PacManGameSound;
+import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
@@ -181,10 +181,10 @@ public class PlayScene3D extends AbstractGameScene {
 				foodNode.setVisible(!game.isFoodEaten(info(foodNode).tile));
 			});
 			maze3D.startEnergizerAnimations();
-			AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
+			AudioClip munching = sounds.getClip(GameSounds.PACMAN_MUNCH);
 			if (munching.isPlaying()) {
 				if (game.player.starvingTicks > 10) {
-					sounds.stop(PacManGameSound.PACMAN_MUNCH);
+					sounds.stop(GameSounds.PACMAN_MUNCH);
 				}
 			}
 		}
@@ -213,16 +213,16 @@ public class PlayScene3D extends AbstractGameScene {
 	@Override
 	public void onScatterPhaseStarted(ScatterPhaseStartedEvent e) {
 		if (e.scatterPhase > 0) {
-			sounds.stop(PacManGameSound.SIRENS.get(e.scatterPhase - 1));
+			sounds.stop(GameSounds.SIRENS.get(e.scatterPhase - 1));
 		}
-		PacManGameSound siren = PacManGameSound.SIRENS.get(e.scatterPhase);
+		GameSounds siren = GameSounds.SIRENS.get(e.scatterPhase);
 		if (!sounds.getClip(siren).isPlaying())
 			sounds.loop(siren, Integer.MAX_VALUE);
 	}
 
 	@Override
 	public void onPlayerGainsPower(PacManGameEvent e) {
-		sounds.loop(PacManGameSound.PACMAN_POWER, Integer.MAX_VALUE);
+		sounds.loop(GameSounds.PACMAN_POWER, Integer.MAX_VALUE);
 		Stream.of(ghosts3D) //
 				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
 				.forEach(Ghost3D::setBlueSkinColor);
@@ -237,7 +237,7 @@ public class PlayScene3D extends AbstractGameScene {
 
 	@Override
 	public void onPlayerLostPower(PacManGameEvent e) {
-		sounds.stop(PacManGameSound.PACMAN_POWER);
+		sounds.stop(GameSounds.PACMAN_POWER);
 		Stream.of(ghosts3D).forEach(Ghost3D::setNormalSkinColor);
 	}
 
@@ -247,9 +247,9 @@ public class PlayScene3D extends AbstractGameScene {
 			maze3D.foodNodes().filter(node -> !info(node).energizer).forEach(node -> node.setVisible(false));
 		} else {
 			maze3D.foodNodeAt(e.tile.get()).ifPresent(node -> node.setVisible(false));
-			AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
+			AudioClip munching = sounds.getClip(GameSounds.PACMAN_MUNCH);
 			if (!munching.isPlaying()) {
-				sounds.loop(PacManGameSound.PACMAN_MUNCH, Integer.MAX_VALUE);
+				sounds.loop(GameSounds.PACMAN_MUNCH, Integer.MAX_VALUE);
 			}
 		}
 	}
@@ -262,7 +262,7 @@ public class PlayScene3D extends AbstractGameScene {
 	@Override
 	public void onBonusEaten(PacManGameEvent e) {
 		bonus3D.showPoints(game.bonus);
-		sounds.play(PacManGameSound.BONUS_EATEN);
+		sounds.play(GameSounds.BONUS_EATEN);
 	}
 
 	@Override
@@ -273,18 +273,18 @@ public class PlayScene3D extends AbstractGameScene {
 	@Override
 	public void onExtraLife(PacManGameEvent e) {
 		ui.showFlashMessage(1.5, Env.message("extra_life"));
-		sounds.play(PacManGameSound.EXTRA_LIFE);
+		sounds.play(GameSounds.EXTRA_LIFE);
 	}
 
 	@Override
 	public void onGhostReturnsHome(PacManGameEvent e) {
-		sounds.play(PacManGameSound.GHOST_RETURNING);
+		sounds.play(GameSounds.GHOST_RETURNING);
 	}
 
 	@Override
 	public void onGhostEntersHouse(PacManGameEvent e) {
 		if (game.ghosts(GhostState.DEAD).count() == 0) {
-			sounds.stop(PacManGameSound.GHOST_RETURNING);
+			sounds.stop(GameSounds.GHOST_RETURNING);
 		}
 	}
 
@@ -304,7 +304,7 @@ public class PlayScene3D extends AbstractGameScene {
 			maze3D.resetEnergizerSize();
 			sounds.setMuted(gameController.attractMode);
 			if (!gameController.gameRunning) {
-				sounds.play(PacManGameSound.GAME_READY);
+				sounds.play(GameSounds.GAME_READY);
 			}
 		}
 
@@ -323,7 +323,7 @@ public class PlayScene3D extends AbstractGameScene {
 
 		// enter GHOST_DYING
 		else if (e.newGameState == PacManGameState.GHOST_DYING) {
-			sounds.play(PacManGameSound.GHOST_EATEN);
+			sounds.play(GameSounds.GHOST_EATEN);
 		}
 
 		// enter LEVEL_STARTING

@@ -29,7 +29,7 @@ import static de.amr.games.pacman.ui.fx.util.Animations.now;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Pac;
-import de.amr.games.pacman.ui.PacManGameSound;
+import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
@@ -124,7 +124,7 @@ public class Player3D extends Creature3D {
 		shrink.setToY(0);
 		shrink.setToZ(0);
 
-		var playSound = now(() -> sounds.play(PacManGameSound.PACMAN_DEATH));
+		var playSound = now(() -> sounds.play(GameSounds.PACMAN_DEATH));
 
 		return new SequentialTransition(//
 				new ImpaleAnimation(Duration.seconds(1)), //
