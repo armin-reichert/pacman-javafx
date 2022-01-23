@@ -168,7 +168,8 @@ public class PlayScene3D extends AbstractGameScene {
 		player3D.update();
 		Stream.of(ghosts3D).forEach(Ghost3D::update);
 		bonus3D.update(game.bonus);
-		score3D.update(game, gameController.attractMode ? "GAME OVER!" : null);
+		score3D.scoreOverwrite = gameController.attractMode ? "GAME OVER!" : null;
+		score3D.update(game);
 		livesCounter3D.setVisibleItems(game.player.lives);
 		camController().ifPresent(camController -> camController.update(this));
 

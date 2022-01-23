@@ -39,29 +39,24 @@ import javafx.scene.text.Text;
  */
 public class ScoreNotReally3D extends Group {
 
-	private final Text txtScoreTitle;
-	private final Text txtScore;
-	private final Text txtHiscoreTitle;
-	private final Text txtHiscore;
+	public Color titleColor = Color.GHOSTWHITE;
+	public Color scoreColor = Color.YELLOW;
+
+	public Font font;
+
+	public final Text txtScoreTitle;
+	public final Text txtScore;
+	public final Text txtHiscoreTitle;
+	public final Text txtHiscore;
+
+	public String scoreOverwrite;
 
 	public ScoreNotReally3D(Font font) {
-
+		this.font = font;
 		txtScoreTitle = new Text("SCORE");
-		txtScoreTitle.setFill(Color.WHITE);
-		txtScoreTitle.setFont(font);
-
 		txtScore = new Text();
-		txtScore.setFill(Color.YELLOW);
-		txtScore.setFont(font);
-
 		txtHiscoreTitle = new Text("HIGH SCORE");
-		txtHiscoreTitle.setFill(Color.WHITE);
-		txtHiscoreTitle.setFont(font);
-
 		txtHiscore = new Text();
-		txtHiscore.setFill(Color.YELLOW);
-		txtHiscore.setFont(font);
-
 		GridPane grid = new GridPane();
 		grid.setHgap(5 * TS);
 		grid.setTranslateY(-2 * TS);
@@ -70,15 +65,21 @@ public class ScoreNotReally3D extends Group {
 		grid.add(txtScore, 0, 1);
 		grid.add(txtHiscoreTitle, 1, 0);
 		grid.add(txtHiscore, 1, 1);
-
 		getChildren().add(grid);
 	}
 
-	public void update(GameModel game, String scoreTextOverwrite) {
-		txtScore.setText(String.format("%7d L%d", game.score, game.levelNumber));
+	public void update(GameModel game) {
+		txtScoreTitle.setFill(titleColor);
+		txtScoreTitle.setFont(font);
+		txtScore.setFill(scoreOverwrite != null ? Color.RED : scoreColor);
+		txtScore.setFont(font);
+		String scoreText = scoreOverwrite != null ? scoreOverwrite : String.format("%7d L%d", game.score, game.levelNumber);
+		txtScore.setText(scoreText);
+
+		txtHiscoreTitle.setFill(titleColor);
+		txtHiscoreTitle.setFont(font);
+		txtHiscore.setFill(scoreColor);
+		txtHiscore.setFont(font);
 		txtHiscore.setText(String.format("%7d L%d", game.hiscorePoints, game.hiscoreLevel));
-		if (scoreTextOverwrite != null) {
-			txtScore.setText(scoreTextOverwrite);
-		}
 	}
 }
