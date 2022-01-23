@@ -82,7 +82,7 @@ import javafx.scene.transform.Translate;
 public class PlayScene3D extends AbstractGameScene {
 
 	final PacManModel3D model3D;
-	final EnumMap<Perspective, PlayScene3DCameraController> camControllers = new EnumMap<>(Perspective.class);
+	final EnumMap<Perspective, PlayScene3DCameraController> cams = new EnumMap<>(Perspective.class);
 	final Image floorImage = new Image(getClass().getResource("/common/escher-texture.jpg").toString());
 	final AmbientLight ambientLight = new AmbientLight(Color.GHOSTWHITE);
 	final CoordinateSystem coordSystem = new CoordinateSystem(1000);
@@ -112,10 +112,10 @@ public class PlayScene3D extends AbstractGameScene {
 		var cam = new PerspectiveCamera(true);
 		fxSubScene.setCamera(cam);
 		fxSubScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> camController().ifPresent(cc -> cc.handle(e)));
-		camControllers.clear();
-		camControllers.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer(cam));
-		camControllers.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer(cam));
-		camControllers.put(Perspective.CAM_TOTAL, new Cam_Total(cam));
+		cams.clear();
+		cams.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer(cam));
+		cams.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer(cam));
+		cams.put(Perspective.CAM_TOTAL, new Cam_Total(cam));
 	}
 
 	@Override
@@ -132,8 +132,8 @@ public class PlayScene3D extends AbstractGameScene {
 		maze3D = new Maze3D(width, height, floorImage);
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
-		maze3D.$resolution.addListener((x, y, z) -> buildMazeStructure(game.mazeNumber));
-		buildMaze(game.mazeNumber);
+		maze3D.$resolution.addListener((x, y, z) -> buildMaze(game.mazeNumber, false));
+		buildMaze(game.mazeNumber, true);
 
 		player3D = new Player3D(game.player, model3D.createPacMan());
 
@@ -200,20 +200,18 @@ public class PlayScene3D extends AbstractGameScene {
 
 	@Override
 	public Optional<PlayScene3DCameraController> camController() {
-		if (!camControllers.containsKey(Env.$perspective.get())) {
+		if (!cams.containsKey(Env.$perspective.get())) {
 			return Optional.empty();
 		}
-		return Optional.of(camControllers.get(Env.$perspective.get()));
+		return Optional.of(cams.get(Env.$perspective.get()));
 	}
 
-	private void buildMaze(int mazeNumber) {
-		buildMazeStructure(mazeNumber);
-		maze3D.buildFood(game.world, rendering2D.getFoodColor(mazeNumber));
-	}
-
-	private void buildMazeStructure(int mazeNumber) {
+	private void buildMaze(int mazeNumber, boolean withFood) {
 		maze3D.buildWallsAndDoors(game.world, rendering2D.getMazeSideColor(mazeNumber),
 				rendering2D.getMazeTopColor(mazeNumber));
+		if (withFood) {
+			maze3D.buildFood(game.world, rendering2D.getFoodColor(mazeNumber));
+		}
 	}
 
 	@Override
@@ -334,7 +332,7 @@ public class PlayScene3D extends AbstractGameScene {
 
 		// enter LEVEL_STARTING
 		else if (e.newGameState == PacManGameState.LEVEL_STARTING) {
-			buildMaze(game.mazeNumber);
+			buildMaze(game.mazeNumber, true);
 			levelCounter3D.init(game);
 			playAnimationLevelStarting();
 		}
