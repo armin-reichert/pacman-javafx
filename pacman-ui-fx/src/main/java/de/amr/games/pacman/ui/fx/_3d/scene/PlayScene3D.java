@@ -38,7 +38,6 @@ import de.amr.games.pacman.controller.PacManGameState;
 import de.amr.games.pacman.controller.event.PacManGameEvent;
 import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.GhostState;
@@ -62,7 +61,6 @@ import de.amr.games.pacman.ui.fx.util.CoordinateSystem;
 import javafx.animation.SequentialTransition;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
@@ -95,7 +93,7 @@ public class PlayScene3D extends AbstractGameScene {
 	ScoreNotReally3D score3D;
 	LevelCounter3D levelCounter3D;
 	LivesCounter3D livesCounter3D;
-	Rendering2D rendering2D;
+	Rendering2D r2D;
 
 	public PlayScene3D(PacManGameUI_JavaFX ui, PacManModel3D model3D, SoundManager sounds) {
 		super(ui, sounds);
@@ -125,7 +123,7 @@ public class PlayScene3D extends AbstractGameScene {
 		final int width = game.world.numCols() * TS;
 		final int height = game.world.numRows() * TS;
 
-		rendering2D = gameController.gameVariant == GameVariant.MS_PACMAN //
+		r2D = gameController.gameVariant == GameVariant.MS_PACMAN //
 				? ScenesMsPacMan.RENDERING
 				: ScenesPacMan.RENDERING;
 
@@ -137,13 +135,12 @@ public class PlayScene3D extends AbstractGameScene {
 
 		player3D = new Player3D(game.player, model3D.createPacMan());
 
-		ghosts3D = game.ghosts()
-				.map(ghost -> new Ghost3D(ghost, model3D.createGhost(), model3D.createGhostEyes(), rendering2D))
+		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D.createGhost(), model3D.createGhostEyes(), r2D))
 				.toArray(Ghost3D[]::new);
 
-		bonus3D = new Bonus3D(rendering2D);
+		bonus3D = new Bonus3D(r2D);
 
-		score3D = new ScoreNotReally3D(rendering2D.getScoreFont());
+		score3D = new ScoreNotReally3D(r2D.getScoreFont());
 		// TODO: maybe this is not the best solution to keep the score display in plain view
 		score3D.setRotationAxis(Rotate.X_AXIS);
 		score3D.rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
@@ -152,7 +149,7 @@ public class PlayScene3D extends AbstractGameScene {
 		livesCounter3D.getTransforms().add(new Translate(TS, TS, -HTS));
 		livesCounter3D.setVisible(!gameController.attractMode);
 
-		levelCounter3D = new LevelCounter3D(rendering2D);
+		levelCounter3D = new LevelCounter3D(r2D);
 		levelCounter3D.setRightPosition(t(GameModel.TILES_X - 1), TS);
 		levelCounter3D.init(game);
 
@@ -207,10 +204,9 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	private void buildMaze(int mazeNumber, boolean withFood) {
-		maze3D.buildWallsAndDoors(game.world, rendering2D.getMazeSideColor(mazeNumber),
-				rendering2D.getMazeTopColor(mazeNumber));
+		maze3D.buildWallsAndDoors(game.world, r2D.getMazeSideColor(mazeNumber), r2D.getMazeTopColor(mazeNumber));
 		if (withFood) {
-			maze3D.buildFood(game.world, rendering2D.getFoodColor(mazeNumber));
+			maze3D.buildFood(game.world, r2D.getFoodColor(mazeNumber));
 		}
 	}
 
@@ -250,7 +246,7 @@ public class PlayScene3D extends AbstractGameScene {
 		if (e.tile.isEmpty()) { // happens when using the "eat all pellets except energizers" cheat
 			maze3D.foodNodes().filter(node -> !info(node).energizer).forEach(node -> node.setVisible(false));
 		} else {
-			foodNodeAt(e.tile.get()).ifPresent(node -> node.setVisible(false));
+			maze3D.foodNodeAt(e.tile.get()).ifPresent(node -> node.setVisible(false));
 			AudioClip munching = sounds.getClip(PacManGameSound.PACMAN_MUNCH);
 			if (!munching.isPlaying()) {
 				sounds.loop(PacManGameSound.PACMAN_MUNCH, Integer.MAX_VALUE);
@@ -355,10 +351,6 @@ public class PlayScene3D extends AbstractGameScene {
 			maze3D.stopEnergizerAnimations();
 			bonus3D.hide();
 		}
-	}
-
-	private Optional<Node> foodNodeAt(V2i tile) {
-		return maze3D.foodNodes().filter(node -> info(node).tile.equals(tile)).findFirst();
 	}
 
 	private void playAnimationPlayerDying() {
