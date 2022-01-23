@@ -35,8 +35,8 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.controller.event.PacManGameEvent;
-import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
+import de.amr.games.pacman.controller.event.GameEvent;
+import de.amr.games.pacman.controller.event.GameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
@@ -221,7 +221,7 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	@Override
-	public void onPlayerGainsPower(PacManGameEvent e) {
+	public void onPlayerGainsPower(GameEvent e) {
 		sounds.loop(GameSounds.PACMAN_POWER, Integer.MAX_VALUE);
 		Stream.of(ghosts3D) //
 				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
@@ -229,20 +229,20 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	@Override
-	public void onPlayerLosingPower(PacManGameEvent e) {
+	public void onPlayerLosingPower(GameEvent e) {
 		Stream.of(ghosts3D) //
 				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED)) //
 				.forEach(ghost3D -> ghost3D.playFlashingAnimation());
 	}
 
 	@Override
-	public void onPlayerLostPower(PacManGameEvent e) {
+	public void onPlayerLostPower(GameEvent e) {
 		sounds.stop(GameSounds.PACMAN_POWER);
 		Stream.of(ghosts3D).forEach(Ghost3D::setNormalSkinColor);
 	}
 
 	@Override
-	public void onPlayerFoundFood(PacManGameEvent e) {
+	public void onPlayerFoundFood(GameEvent e) {
 		if (e.tile.isEmpty()) { // happens when using the "eat all pellets except energizers" cheat
 			maze3D.foodNodes().filter(node -> !info(node).energizer).forEach(node -> node.setVisible(false));
 		} else {
@@ -255,46 +255,46 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	@Override
-	public void onBonusActivated(PacManGameEvent e) {
+	public void onBonusActivated(GameEvent e) {
 		bonus3D.showSymbol(game.bonus);
 	}
 
 	@Override
-	public void onBonusEaten(PacManGameEvent e) {
+	public void onBonusEaten(GameEvent e) {
 		bonus3D.showPoints(game.bonus);
 		sounds.play(GameSounds.BONUS_EATEN);
 	}
 
 	@Override
-	public void onBonusExpired(PacManGameEvent e) {
+	public void onBonusExpired(GameEvent e) {
 		bonus3D.hide();
 	}
 
 	@Override
-	public void onExtraLife(PacManGameEvent e) {
+	public void onExtraLife(GameEvent e) {
 		ui.showFlashMessage(1.5, Env.message("extra_life"));
 		sounds.play(GameSounds.EXTRA_LIFE);
 	}
 
 	@Override
-	public void onGhostReturnsHome(PacManGameEvent e) {
+	public void onGhostReturnsHome(GameEvent e) {
 		sounds.play(GameSounds.GHOST_RETURNING);
 	}
 
 	@Override
-	public void onGhostEntersHouse(PacManGameEvent e) {
+	public void onGhostEntersHouse(GameEvent e) {
 		if (game.ghosts(GhostState.DEAD).count() == 0) {
 			sounds.stop(GameSounds.GHOST_RETURNING);
 		}
 	}
 
 	@Override
-	public void onGhostLeavingHouse(PacManGameEvent e) {
+	public void onGhostLeavingHouse(GameEvent e) {
 		ghosts3D[e.ghost.get().id].setNormalSkinColor();
 	}
 
 	@Override
-	public void onPacManGameStateChange(PacManGameStateChangeEvent e) {
+	public void onPacManGameStateChange(GameStateChangeEvent e) {
 		sounds.setMuted(gameController.attractMode); // TODO check this
 
 		// enter READY

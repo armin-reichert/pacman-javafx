@@ -27,8 +27,8 @@ import static de.amr.games.pacman.lib.Logging.log;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.controller.event.DefaultPacManGameEventHandler;
-import de.amr.games.pacman.controller.event.PacManGameStateChangeEvent;
+import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
+import de.amr.games.pacman.controller.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -60,7 +60,7 @@ import javafx.stage.WindowEvent;
  * 
  * @author Armin Reichert
  */
-public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
+public class PacManGameUI_JavaFX implements DefaultGameEventHandler {
 
 	public final Stage stage;
 	public final GameController gameController;
@@ -189,7 +189,7 @@ public class PacManGameUI_JavaFX implements DefaultPacManGameEventHandler {
 	}
 
 	@Override
-	public void onPacManGameStateChange(PacManGameStateChangeEvent e) {
+	public void onPacManGameStateChange(GameStateChangeEvent e) {
 		if (e.newGameState == GameState.INTRO) {
 			stopAllSounds();
 		}

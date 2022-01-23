@@ -29,7 +29,7 @@ import java.util.Optional;
 import java.util.OptionalDouble;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.controller.event.DefaultPacManGameEventHandler;
+import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3DCameraController;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
@@ -45,7 +45,7 @@ import javafx.scene.SubScene;
  * 
  * @author Armin Reichert
  */
-public abstract class AbstractGameScene implements DefaultPacManGameEventHandler {
+public abstract class AbstractGameScene implements DefaultGameEventHandler {
 
 	protected final PacManGameUI_JavaFX ui;
 	protected final GameController gameController;
