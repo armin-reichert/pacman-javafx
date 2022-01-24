@@ -39,7 +39,6 @@ import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -59,7 +58,6 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	protected final int levelCounterRightX = t(GameModel.TILES_X - 3);
 	protected final int levelCounterRightY = t(GameModel.TILES_Y - 2);
 
-	protected final Canvas canvas;
 	protected final GraphicsContext gc;
 	protected final Rendering2D r2D;
 
@@ -72,28 +70,26 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 		this.height = t(GameModel.TILES_Y);
 		this.aspectRatio = width / height;
 		this.r2D = r2D;
-		this.canvas = ui.canvas;
-		this.gc = canvas.getGraphicsContext2D();
+		this.gc = ui.canvas.getGraphicsContext2D();
 	}
 
 	@Override
 	public void createFXSubScene(Scene parentScene) {
-		resizeCanvas(parentScene.getHeight());
-		fxSubScene = new SubScene(new StackPane(canvas), width, height);
-		fxSubScene.widthProperty().bind(canvas.widthProperty());
-		fxSubScene.heightProperty().bind(canvas.heightProperty());
+		fxSubScene = new SubScene(new StackPane(ui.canvas), width, height);
+		fxSubScene.widthProperty().bind(ui.canvas.widthProperty());
+		fxSubScene.heightProperty().bind(ui.canvas.heightProperty());
 		parentScene.widthProperty().addListener(($1, $2, parentWidth) -> {
-			double newHeight = Math.min(parentWidth.doubleValue() / aspectRatio, parentScene.getHeight());
-			resizeCanvas(newHeight);
+			resizeCanvas(Math.min(parentWidth.doubleValue() / aspectRatio, parentScene.getHeight()));
 		});
 		parentScene.heightProperty().addListener(($1, $2, parentHeight) -> resizeCanvas(parentHeight.doubleValue()));
+		resizeCanvas(parentScene.getHeight());
 	}
 
 	private void resizeCanvas(double newHeight) {
 		double scaling = newHeight / height;
-		canvas.setWidth(aspectRatio * newHeight);
-		canvas.setHeight(newHeight);
-		canvas.getTransforms().setAll(new Scale(scaling, scaling));
+		ui.canvas.setWidth(aspectRatio * newHeight);
+		ui.canvas.setHeight(newHeight);
+		ui.canvas.getTransforms().setAll(new Scale(scaling, scaling));
 	}
 
 	@Override
