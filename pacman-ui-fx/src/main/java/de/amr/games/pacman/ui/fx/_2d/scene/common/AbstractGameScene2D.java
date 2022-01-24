@@ -28,6 +28,7 @@ import static de.amr.games.pacman.model.world.World.t;
 import java.util.Optional;
 import java.util.OptionalDouble;
 
+import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -51,8 +52,7 @@ import javafx.scene.transform.Scale;
  */
 public abstract class AbstractGameScene2D extends AbstractGameScene {
 
-	protected final double width;
-	protected final double height;
+	protected final V2d unscaledSize;
 	protected final double aspectRatio;
 
 	protected final double levelCounterRightX;
@@ -67,13 +67,12 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	public AbstractGameScene2D(PacManGameUI_JavaFX ui, double width, double height, Rendering2D r2D,
 			SoundManager sounds) {
 		super(ui, sounds);
-		this.width = width;
-		this.height = height;
-		this.aspectRatio = width / height;
+		this.r2D = r2D;
+		gc = ui.canvas.getGraphicsContext2D();
+		unscaledSize = new V2d(width, height);
+		aspectRatio = width / height;
 		levelCounterRightX = width - t(3);
 		levelCounterRightY = height - t(2);
-		this.r2D = r2D;
-		this.gc = ui.canvas.getGraphicsContext2D();
 	}
 
 	public AbstractGameScene2D(PacManGameUI_JavaFX ui, Rendering2D r2D, SoundManager sounds) {
@@ -82,7 +81,7 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 
 	@Override
 	public void createFXSubScene(Scene parentScene) {
-		fxSubScene = new SubScene(new StackPane(ui.canvas), width, height);
+		fxSubScene = new SubScene(new StackPane(ui.canvas), unscaledSize.x, unscaledSize.y);
 		fxSubScene.widthProperty().bind(ui.canvas.widthProperty());
 		fxSubScene.heightProperty().bind(ui.canvas.heightProperty());
 		parentScene.widthProperty().addListener(($1, $2, parentWidth) -> {
@@ -93,7 +92,7 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	}
 
 	private void resizeCanvas(double newHeight) {
-		double scaling = newHeight / height;
+		double scaling = newHeight / unscaledSize.y;
 		ui.canvas.setWidth(aspectRatio * newHeight);
 		ui.canvas.setHeight(newHeight);
 		ui.canvas.getTransforms().setAll(new Scale(scaling, scaling));
