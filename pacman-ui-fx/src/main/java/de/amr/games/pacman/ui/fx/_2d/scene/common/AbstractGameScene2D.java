@@ -54,10 +54,7 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 
 	protected final V2d unscaledSize;
 	protected final double aspectRatio;
-
-	protected final double levelCounterRightX;
-	protected final double levelCounterRightY;
-
+	protected final V2d levelCounterRight;
 	protected final GraphicsContext gc;
 	protected final Rendering2D r2D;
 
@@ -71,8 +68,7 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 		gc = ui.canvas.getGraphicsContext2D();
 		unscaledSize = new V2d(width, height);
 		aspectRatio = width / height;
-		levelCounterRightX = width - t(3);
-		levelCounterRightY = height - t(2);
+		levelCounterRight = new V2d(width - t(3), height - t(2));
 	}
 
 	public AbstractGameScene2D(PacManGameUI_JavaFX ui, Rendering2D r2D, SoundManager sounds) {
@@ -165,14 +161,14 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	protected abstract void doRender();
 
 	/**
-	 * This is used in play scene and intermission scenes, so define it here
+	 * Used in play scene and intermission scenes, so define it here.
 	 */
 	protected void renderLevelCounter() {
-		double x = levelCounterRightX, y = levelCounterRightY;
-		int firstLevel = Math.max(1, game.levelNumber - 6);
-		for (int level = firstLevel; level <= game.levelNumber; ++level) {
-			Rectangle2D r = r2D.getSymbolSprites().get(game.levelSymbol(level));
-			r2D.renderSprite(gc, r, x, y);
+		int firstLevelNumber = Math.max(1, game.levelNumber - 6);
+		double x = levelCounterRight.x;
+		for (int levelNumber = firstLevelNumber; levelNumber <= game.levelNumber; ++levelNumber) {
+			Rectangle2D r = r2D.getSymbolSprites().get(game.levelSymbol(levelNumber));
+			r2D.renderSprite(gc, r, x, levelCounterRight.y);
 			x -= t(2);
 		}
 	}
