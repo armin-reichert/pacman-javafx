@@ -48,26 +48,22 @@ import javafx.util.Duration;
 public class Bonus3D extends Box {
 
 	private final Map<Integer, Image> numberImages;
-	private final Rendering2D rendering2D;
+	private final Rendering2D r2D;
 	private final RotateTransition rotation;
 	private final PhongMaterial skin;
 
 	public Bonus3D(Rendering2D rendering2D) {
 		super(TS, TS, TS);
-		this.rendering2D = rendering2D;
+		this.r2D = rendering2D;
 		numberImages = new HashMap<>();
 		rendering2D.getBonusValueSprites().forEach((n, r) -> numberImages.put(n, rendering2D.extractRegion(r)));
 		skin = new PhongMaterial(Color.WHITE);
-		rotation = new RotateTransition(Duration.seconds(2), this);
+		rotation = new RotateTransition(Duration.seconds(1), this);
 		rotation.setAxis(Rotate.X_AXIS);
 		rotation.setByAngle(360);
 		rotation.setOnFinished(e -> hide());
 		setTranslateZ(-4);
 		hide();
-	}
-
-	private Image symbolImage(int symbol) {
-		return rendering2D.extractRegion(rendering2D.getSymbolSprites().get(symbol));
 	}
 
 	public void update(Bonus bonus) {
@@ -83,12 +79,13 @@ public class Bonus3D extends Box {
 	}
 
 	public void showSymbol(Bonus bonus) {
-		Image symbolImage = symbolImage(bonus.symbol);
+		Image symbolImage = r2D.extractRegion(r2D.getSymbolSprites().get(bonus.symbol));
 		skin.setBumpMap(symbolImage);
 		skin.setDiffuseMap(symbolImage);
 		setMaterial(skin);
 		setWidth(TS);
 		setVisible(true);
+		rotation.stop();
 		rotation.setRate(1);
 		rotation.setCycleCount(Transition.INDEFINITE);
 		rotation.play();
@@ -104,8 +101,8 @@ public class Bonus3D extends Box {
 		}
 		setVisible(true);
 		rotation.stop();
-		rotation.setRate(3);
-		rotation.setCycleCount(3);
+		rotation.setRate(2);
+		rotation.setCycleCount(5);
 		rotation.play();
 	}
 }
