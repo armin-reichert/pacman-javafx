@@ -189,7 +189,7 @@ public class PacManGameUI_JavaFX implements DefaultGameEventHandler {
 	}
 
 	@Override
-	public void onPacManGameStateChange(GameStateChangeEvent e) {
+	public void onGameStateChange(GameStateChangeEvent e) {
 		if (e.newGameState == GameState.INTRO) {
 			stopAllSounds();
 		}

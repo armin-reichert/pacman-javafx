@@ -295,7 +295,7 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	@Override
-	public void onPacManGameStateChange(GameStateChangeEvent e) {
+	public void onGameStateChange(GameStateChangeEvent e) {
 		sounds.setMuted(gameController.attractMode); // TODO check this
 
 		// enter READY

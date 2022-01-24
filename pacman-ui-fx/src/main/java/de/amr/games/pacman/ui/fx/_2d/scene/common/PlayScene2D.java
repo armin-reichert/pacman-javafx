@@ -175,7 +175,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 	}
 
 	@Override
-	public void onPacManGameStateChange(GameStateChangeEvent e) {
+	public void onGameStateChange(GameStateChangeEvent e) {
 
 		// enter READY
 		if (e.newGameState == GameState.READY) {
