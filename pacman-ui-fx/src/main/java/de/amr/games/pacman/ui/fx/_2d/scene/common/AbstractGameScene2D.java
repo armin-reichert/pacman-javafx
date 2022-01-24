@@ -61,7 +61,7 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
 
-	public AbstractGameScene2D(PacManGameUI_JavaFX ui, double width, double height, Rendering2D r2D,
+	public AbstractGameScene2D(double width, double height, PacManGameUI_JavaFX ui, Rendering2D r2D,
 			SoundManager sounds) {
 		super(ui, sounds);
 		this.r2D = r2D;
@@ -72,7 +72,7 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	}
 
 	public AbstractGameScene2D(PacManGameUI_JavaFX ui, Rendering2D r2D, SoundManager sounds) {
-		this(ui, t(GameModel.TILES_X), t(GameModel.TILES_Y), r2D, sounds);
+		this(t(GameModel.TILES_X), t(GameModel.TILES_Y), ui, r2D, sounds);
 	}
 
 	@Override
