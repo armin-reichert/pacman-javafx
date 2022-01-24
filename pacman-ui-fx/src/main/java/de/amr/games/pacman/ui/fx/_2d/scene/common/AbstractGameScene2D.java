@@ -55,8 +55,8 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	protected final double height;
 	protected final double aspectRatio;
 
-	protected final int levelCounterRightX = t(GameModel.TILES_X - 3);
-	protected final int levelCounterRightY = t(GameModel.TILES_Y - 2);
+	protected final double levelCounterRightX;
+	protected final double levelCounterRightY;
 
 	protected final GraphicsContext gc;
 	protected final Rendering2D r2D;
@@ -64,13 +64,20 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
 
-	public AbstractGameScene2D(PacManGameUI_JavaFX ui, Rendering2D r2D, SoundManager sounds) {
+	public AbstractGameScene2D(PacManGameUI_JavaFX ui, double width, double height, Rendering2D r2D,
+			SoundManager sounds) {
 		super(ui, sounds);
-		this.width = t(GameModel.TILES_X);
-		this.height = t(GameModel.TILES_Y);
+		this.width = width;
+		this.height = height;
 		this.aspectRatio = width / height;
+		levelCounterRightX = width - t(3);
+		levelCounterRightY = height - t(2);
 		this.r2D = r2D;
 		this.gc = ui.canvas.getGraphicsContext2D();
+	}
+
+	public AbstractGameScene2D(PacManGameUI_JavaFX ui, Rendering2D r2D, SoundManager sounds) {
+		this(ui, t(GameModel.TILES_X), t(GameModel.TILES_Y), r2D, sounds);
 	}
 
 	@Override
@@ -162,7 +169,7 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	 * This is used in play scene and intermission scenes, so define it here
 	 */
 	protected void renderLevelCounter() {
-		int x = levelCounterRightX, y = levelCounterRightY;
+		double x = levelCounterRightX, y = levelCounterRightY;
 		int firstLevel = Math.max(1, game.levelNumber - 6);
 		for (int level = firstLevel; level <= game.levelNumber; ++level) {
 			Rectangle2D r = r2D.getSymbolSprites().get(game.levelSymbol(level));
