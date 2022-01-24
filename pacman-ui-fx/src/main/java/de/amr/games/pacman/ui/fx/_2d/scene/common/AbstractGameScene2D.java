@@ -37,7 +37,6 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.GraphicsContext;
@@ -54,7 +53,6 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 
 	protected final V2d unscaledSize;
 	protected final double aspectRatio;
-	protected final V2d levelCounterRight;
 	protected final GraphicsContext gc;
 	protected final Rendering2D r2D;
 
@@ -68,7 +66,6 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 		gc = ui.canvas.getGraphicsContext2D();
 		unscaledSize = new V2d(width, height);
 		aspectRatio = width / height;
-		levelCounterRight = new V2d(width - t(3), height - t(2));
 	}
 
 	public AbstractGameScene2D(PacManGameUI_JavaFX ui, Rendering2D r2D, SoundManager sounds) {
@@ -87,10 +84,10 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 		resizeCanvas(parentScene.getHeight());
 	}
 
-	private void resizeCanvas(double newHeight) {
-		double scaling = newHeight / unscaledSize.y;
-		ui.canvas.setWidth(aspectRatio * newHeight);
-		ui.canvas.setHeight(newHeight);
+	private void resizeCanvas(double newUnscaledHeight) {
+		ui.canvas.setWidth(aspectRatio * newUnscaledHeight);
+		ui.canvas.setHeight(newUnscaledHeight);
+		double scaling = newUnscaledHeight / unscaledSize.y;
 		ui.canvas.getTransforms().setAll(new Scale(scaling, scaling));
 	}
 
@@ -106,7 +103,8 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 		if (gameController != null) {
 			doUpdate();
 		}
-		drawBackground();
+		gc.setFill(Color.BLACK);
+		gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
 		doRender();
 		if (Env.$tilesVisible.get()) {
 			drawTileBorders();
@@ -126,11 +124,6 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	@Override
 	public final OptionalDouble aspectRatio() {
 		return OptionalDouble.of(aspectRatio);
-	}
-
-	private void drawBackground() {
-		gc.setFill(Color.BLACK);
-		gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
 	}
 
 	private void drawTileBorders() {
@@ -164,12 +157,11 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	 * Used in play scene and intermission scenes, so define it here.
 	 */
 	protected void renderLevelCounter() {
+		V2d rightPosition = unscaledSize.minus(t(3), t(2));
 		int firstLevelNumber = Math.max(1, game.levelNumber - 6);
-		double x = levelCounterRight.x;
-		for (int levelNumber = firstLevelNumber; levelNumber <= game.levelNumber; ++levelNumber) {
-			Rectangle2D r = r2D.getSymbolSprites().get(game.levelSymbol(levelNumber));
-			r2D.renderSprite(gc, r, x, levelCounterRight.y);
-			x -= t(2);
+		double x = rightPosition.x;
+		for (int levelNumber = firstLevelNumber; levelNumber <= game.levelNumber; ++levelNumber, x -= t(2)) {
+			r2D.renderSprite(gc, r2D.getSymbolSprites().get(game.levelSymbol(levelNumber)), x, rightPosition.y);
 		}
 	}
 }
