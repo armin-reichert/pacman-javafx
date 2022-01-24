@@ -27,7 +27,6 @@ import static de.amr.games.pacman.model.world.World.t;
 import static de.amr.games.pacman.ui.fx.util.Animations.afterSeconds;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.controller.event.GameEvent;
@@ -271,31 +270,32 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void doRender() {
+		maze2D.render(gc);
 		if (gameController.attractMode) {
 			score2D.showPoints = false;
 		} else {
 			score2D.showPoints = true;
 			livesCounter2D.render(gc);
-			renderLevelCounter();
+			drawLevelCounter();
 		}
-		renderGameState();
-		game.ghosts(GhostState.LOCKED)
-				.forEach(ghost -> ghosts2D.get(ghost.id).setLooksFrightened(game.player.powerTimer.isRunning()));
-		Stream.concat(Stream.of(score2D, highScore2D, maze2D, bonus2D, player2D), ghosts2D.stream())
-				.forEach(r -> r.render(gc));
-	}
-
-	private void renderGameState() {
-		var state = gameController.attractMode ? GameState.GAME_OVER : gameController.currentStateID;
-		if (state == GameState.GAME_OVER) {
+		score2D.render(gc);
+		highScore2D.render(gc);
+		if (gameController.currentStateID == GameState.GAME_OVER || gameController.attractMode) {
 			gc.setFont(r2D.getScoreFont());
 			gc.setFill(Color.RED);
 			gc.fillText("GAME", t(9), t(21));
 			gc.fillText("OVER", t(15), t(21));
-		} else if (state == GameState.READY) {
+		} else if (gameController.currentStateID == GameState.READY) {
 			gc.setFont(r2D.getScoreFont());
 			gc.setFill(Color.YELLOW);
 			gc.fillText("READY!", t(11), t(21));
 		}
+		bonus2D.render(gc);
+		player2D.render(gc);
+		// TODO maybe this is not the right thing to do
+		boolean playerHasPower = game.player.powerTimer.isRunning();
+		ghosts2D.stream().filter(ghost2D -> ghost2D.ghost.is(GhostState.LOCKED))
+				.forEach(ghost2D -> ghost2D.setLooksFrightened(playerHasPower));
+		ghosts2D.stream().forEach(ghost -> ghost.render(gc));
 	}
 }

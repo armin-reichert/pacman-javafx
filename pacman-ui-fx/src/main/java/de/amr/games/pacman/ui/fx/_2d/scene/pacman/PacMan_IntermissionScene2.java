@@ -81,7 +81,7 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 	@Override
 	public void doRender() {
-		renderLevelCounter();
+		drawLevelCounter();
 		pacMan2D.render(gc);
 		nail2D.render(gc);
 		if (sceneController.nailDistance() < 0) {

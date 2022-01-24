@@ -156,7 +156,7 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	/**
 	 * Used in play scene and intermission scenes, so define it here.
 	 */
-	protected void renderLevelCounter() {
+	protected void drawLevelCounter() {
 		V2d rightPosition = unscaledSize.minus(t(3), t(2));
 		int firstLevelNumber = Math.max(1, game.levelNumber - 6);
 		double x = rightPosition.x;

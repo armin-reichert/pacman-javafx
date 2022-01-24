@@ -84,7 +84,7 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 
 	@Override
 	public void doRender() {
-		renderLevelCounter();
+		drawLevelCounter();
 		flap2D.render(gc);
 		msPacMan2D.render(gc);
 		pacMan2D.render(gc);
