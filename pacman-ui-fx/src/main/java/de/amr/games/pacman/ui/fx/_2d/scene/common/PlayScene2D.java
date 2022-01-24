@@ -256,14 +256,12 @@ public class PlayScene2D extends AbstractGameScene2D {
 		}
 	}
 
-	// TODO simplify
+	// TODO there should be a simpler way than this
 	public void handleGhostsFlashing(TickTimerEvent e) {
 		if (e.type == TickTimerEvent.Type.HALF_EXPIRED) {
-			game.ghosts(GhostState.FRIGHTENED).forEach(ghost -> {
-				Ghost2D ghost2D = ghosts2D.get(ghost.id);
-				TimedSequence<?> flashing = ghost2D.flashingAnimation;
-				long frameTime = e.ticks / (game.numFlashes * flashing.numFrames());
-				flashing.frameDuration(frameTime).repetitions(game.numFlashes).restart();
+			game.ghosts(GhostState.FRIGHTENED).map(ghost -> ghosts2D.get(ghost.id)).forEach(ghost2D -> {
+				long frameTicks = e.ticks / (game.numFlashes * ghost2D.flashingAnimation.numFrames());
+				ghost2D.flashingAnimation.frameDuration(frameTicks).repetitions(game.numFlashes).restart();
 			});
 		}
 	}
