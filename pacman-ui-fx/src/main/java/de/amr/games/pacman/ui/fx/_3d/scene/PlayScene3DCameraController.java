@@ -57,7 +57,7 @@ public abstract class PlayScene3DCameraController implements EventHandler<KeyEve
 			case DIGIT0:
 				cam.setTranslateX(0);
 				cam.setTranslateY(0);
-				cam.setTranslateZ(-300);
+				cam.setTranslateZ(-630);
 				cam.setRotationAxis(Rotate.X_AXIS);
 				cam.setRotate(0);
 				cam.setRotationAxis(Rotate.Y_AXIS);
