@@ -66,8 +66,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 	private List<Ghost2D> ghosts2D;
 	private Bonus2D bonus2D;
 
-	public PlayScene2D(PacManGameUI_JavaFX ui, Rendering2D rendering, SoundManager sounds) {
-		super(ui, rendering, sounds);
+	public PlayScene2D(PacManGameUI_JavaFX ui, Rendering2D r2D, SoundManager sounds) {
+		super(ui, r2D, sounds);
 	}
 
 	@Override
