@@ -22,6 +22,7 @@ module de.amr.games.pacman.ui.fx {
 	requires transitive javafx.media;
 	requires transitive de.amr.games.pacman;
 	requires jimObjModelImporterJFX;
+	requires javafx.graphics;
 
 	exports de.amr.games.pacman.ui.fx.app;
 	exports de.amr.games.pacman.ui.fx.scene;

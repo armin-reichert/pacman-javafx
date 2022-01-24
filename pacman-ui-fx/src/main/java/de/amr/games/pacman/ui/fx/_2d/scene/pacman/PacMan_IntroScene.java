@@ -71,21 +71,21 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 
 		score2D.showPoints = false;
 
-		pacMan2D = new Player2D(sceneController.pacMan, rendering);
+		pacMan2D = new Player2D(sceneController.pacMan, r2D);
 		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 
 		ghosts2D = Stream.of(sceneController.ghosts).map(ghost -> {
-			Ghost2D ghost2D = new Ghost2D(ghost, rendering);
+			Ghost2D ghost2D = new Ghost2D(ghost, r2D);
 			ghost2D.kickingAnimations.values().forEach(TimedSequence::restart);
 			ghost2D.frightenedAnimation.restart();
 			return ghost2D;
 		}).collect(Collectors.toList());
 
 		gallery2D = List.of( //
-				new Ghost2D(sceneController.portraits[0].ghost, rendering),
-				new Ghost2D(sceneController.portraits[1].ghost, rendering),
-				new Ghost2D(sceneController.portraits[2].ghost, rendering),
-				new Ghost2D(sceneController.portraits[3].ghost, rendering));
+				new Ghost2D(sceneController.portraits[0].ghost, r2D),
+				new Ghost2D(sceneController.portraits[1].ghost, r2D),
+				new Ghost2D(sceneController.portraits[2].ghost, r2D),
+				new Ghost2D(sceneController.portraits[3].ghost, r2D));
 	}
 
 	@Override
@@ -148,7 +148,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 
 	private void drawGallery() {
 		gc.setFill(Color.WHITE);
-		gc.setFont(rendering.getScoreFont());
+		gc.setFont(r2D.getScoreFont());
 		gc.fillText("CHARACTER", t(6), sceneController.topY);
 		gc.fillText("/", t(16), sceneController.topY);
 		gc.fillText("NICKNAME", t(18), sceneController.topY);
@@ -158,11 +158,11 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 				int y = sceneController.topY + t(1 + 3 * ghostID);
 				gallery2D.get(ghostID).render(gc);
 				if (portrait.characterVisible) {
-					gc.setFill(rendering.getGhostColor(ghostID));
+					gc.setFill(r2D.getGhostColor(ghostID));
 					gc.fillText("-" + portrait.character, t(6), y + 8);
 				}
 				if (portrait.nicknameVisible) {
-					gc.setFill(rendering.getGhostColor(ghostID));
+					gc.setFill(r2D.getGhostColor(ghostID));
 					gc.fillText("\"" + portrait.ghost.name + "\"", t(17), y + 8);
 				}
 			}
@@ -173,35 +173,35 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		if (sceneController.slowBlinking.frame()) {
 			String text = "PRESS SPACE TO PLAY";
 			gc.setFill(Color.WHITE);
-			gc.setFont(rendering.getScoreFont());
+			gc.setFont(r2D.getScoreFont());
 			gc.fillText(text, t(14 - text.length() / 2), t(yTile));
 		}
 	}
 
 	private void drawPoints(int tileX, int tileY) {
-		gc.setFill(rendering.getFoodColor(1));
+		gc.setFill(r2D.getFoodColor(1));
 		gc.fillRect(t(tileX) + 6, t(tileY - 1) + 2, 2, 2);
 		if (sceneController.blinking.frame()) {
 			gc.fillOval(t(tileX), t(tileY + 1) - 2, 10, 10);
 		}
 		gc.setFill(Color.WHITE);
-		gc.setFont(rendering.getScoreFont());
+		gc.setFont(r2D.getScoreFont());
 		gc.fillText("10", t(tileX + 2), t(tileY));
 		gc.fillText("50", t(tileX + 2), t(tileY + 2));
-		gc.setFont(Font.font(rendering.getScoreFont().getName(), 6));
+		gc.setFont(Font.font(r2D.getScoreFont().getName(), 6));
 		gc.fillText("PTS", t(tileX + 5), t(tileY));
 		gc.fillText("PTS", t(tileX + 5), t(tileY + 2));
 	}
 
 	private void drawEnergizer() {
-		gc.setFill(rendering.getFoodColor(1));
+		gc.setFill(r2D.getFoodColor(1));
 		gc.fillOval(t(2), t(20), TS, TS);
 	}
 
 	private void drawCopyright(int yTile) {
 		String text = "\u00A9 1980 MIDWAY MFG. CO.";
-		gc.setFont(rendering.getScoreFont());
-		gc.setFill(rendering.getGhostColor(GameModel.PINK_GHOST));
+		gc.setFont(r2D.getScoreFont());
+		gc.setFill(r2D.getGhostColor(GameModel.PINK_GHOST));
 		gc.fillText(text, t(3), t(yTile));
 	}
 }

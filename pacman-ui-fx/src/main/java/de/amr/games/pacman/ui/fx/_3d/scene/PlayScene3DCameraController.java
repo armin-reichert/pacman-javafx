@@ -29,7 +29,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
 
 /**
- * Implemented by all camera controllers.
+ * Base class of all camera controllers.
  * 
  * @author Armin Reichert
  */

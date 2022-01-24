@@ -65,8 +65,8 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 		sceneController.playFlapAnimation = () -> flap2D.animation.restart();
 		sceneController.init(gameController);
 
-		msPacMan2D = new Player2D(sceneController.msPacMan, rendering);
-		pacMan2D = new Player2D(sceneController.pacMan, rendering);
+		msPacMan2D = new Player2D(sceneController.msPacMan, r2D);
+		pacMan2D = new Player2D(sceneController.pacMan, r2D);
 		pacMan2D.munchingAnimations = ScenesMsPacMan.RENDERING.createSpouseMunchingAnimations();
 
 		flap2D = new Flap2D(sceneController.flap, ScenesMsPacMan.RENDERING);

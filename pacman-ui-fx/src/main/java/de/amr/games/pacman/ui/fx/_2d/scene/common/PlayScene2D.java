@@ -75,16 +75,16 @@ public class PlayScene2D extends AbstractGameScene2D {
 	public void init(Scene parentScene) {
 		super.init(parentScene);
 
-		maze2D = new Maze2D(0, t(3), game, rendering);
-		livesCounter2D = new LivesCounter2D(t(2), t(34), game, rendering);
-		player2D = new Player2D(game.player, rendering);
+		maze2D = new Maze2D(0, t(3), game, r2D);
+		livesCounter2D = new LivesCounter2D(t(2), t(34), game, r2D);
+		player2D = new Player2D(game.player, r2D);
 		player2D.dyingAnimation.onStart(game::hideGhosts);
 		ghosts2D = List.of( //
-				new Ghost2D(game.ghosts[0], rendering), //
-				new Ghost2D(game.ghosts[1], rendering), //
-				new Ghost2D(game.ghosts[2], rendering), //
-				new Ghost2D(game.ghosts[3], rendering));
-		bonus2D = new Bonus2D(game.bonus, rendering, gameController.gameVariant == GameVariant.MS_PACMAN);
+				new Ghost2D(game.ghosts[0], r2D), //
+				new Ghost2D(game.ghosts[1], r2D), //
+				new Ghost2D(game.ghosts[2], r2D), //
+				new Ghost2D(game.ghosts[3], r2D));
+		bonus2D = new Bonus2D(game.bonus, r2D, gameController.gameVariant == GameVariant.MS_PACMAN);
 		game.player.powerTimer.addEventListener(this::handleGhostsFlashing);
 		sounds.setMuted(gameController.attractMode);
 	}
@@ -288,12 +288,12 @@ public class PlayScene2D extends AbstractGameScene2D {
 	private void renderGameState() {
 		var state = gameController.attractMode ? GameState.GAME_OVER : gameController.currentStateID;
 		if (state == GameState.GAME_OVER) {
-			gc.setFont(rendering.getScoreFont());
+			gc.setFont(r2D.getScoreFont());
 			gc.setFill(Color.RED);
 			gc.fillText("GAME", t(9), t(21));
 			gc.fillText("OVER", t(15), t(21));
 		} else if (state == GameState.READY) {
-			gc.setFont(rendering.getScoreFont());
+			gc.setFont(r2D.getScoreFont());
 			gc.setFill(Color.YELLOW);
 			gc.fillText("READY!", t(11), t(21));
 		}

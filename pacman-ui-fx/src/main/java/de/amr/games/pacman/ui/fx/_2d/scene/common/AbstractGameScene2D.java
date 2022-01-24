@@ -37,11 +37,11 @@ import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 
@@ -52,8 +52,8 @@ import javafx.scene.transform.Scale;
  */
 public abstract class AbstractGameScene2D extends AbstractGameScene {
 
-	protected final double unscaledWidth;
-	protected final double unscaledHeight;
+	protected final double width;
+	protected final double height;
 	protected final double aspectRatio;
 
 	protected final int levelCounterRightX = t(GameModel.TILES_X - 3);
@@ -61,51 +61,46 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 
 	protected final Canvas canvas;
 	protected final GraphicsContext gc;
-	protected final Rendering2D rendering;
+	protected final Rendering2D r2D;
 
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
 
-	public AbstractGameScene2D(PacManGameUI_JavaFX ui, Rendering2D rendering, SoundManager sounds) {
+	public AbstractGameScene2D(PacManGameUI_JavaFX ui, Rendering2D r2D, SoundManager sounds) {
 		super(ui, sounds);
-		this.unscaledWidth = t(GameModel.TILES_X);
-		this.unscaledHeight = t(GameModel.TILES_Y);
-		this.aspectRatio = unscaledWidth / unscaledHeight;
-		this.rendering = rendering;
+		this.width = t(GameModel.TILES_X);
+		this.height = t(GameModel.TILES_Y);
+		this.aspectRatio = width / height;
+		this.r2D = r2D;
 		this.canvas = ui.canvas;
 		this.gc = canvas.getGraphicsContext2D();
 	}
 
 	@Override
 	public void createFXSubScene(Scene parentScene) {
-		fxSubScene = new SubScene(new Group(canvas), unscaledWidth, unscaledHeight);
+		resizeCanvas(parentScene.getHeight());
+		fxSubScene = new SubScene(new StackPane(canvas), width, height);
 		fxSubScene.widthProperty().bind(canvas.widthProperty());
 		fxSubScene.heightProperty().bind(canvas.heightProperty());
 		parentScene.widthProperty().addListener(($1, $2, parentWidth) -> {
 			double newHeight = Math.min(parentWidth.doubleValue() / aspectRatio, parentScene.getHeight());
-			double newWidth = newHeight * aspectRatio;
-			resizeCanvas(newWidth, newHeight);
+			resizeCanvas(newHeight);
 		});
-		parentScene.heightProperty().addListener(($1, $2, parentHeight) -> {
-			double newHeight = parentHeight.doubleValue();
-			double newWidth = Math.min(parentScene.getHeight() * aspectRatio, parentScene.getWidth());
-			resizeCanvas(newWidth, newHeight);
-		});
-		resizeCanvas(parentScene.getWidth(), parentScene.getHeight());
+		parentScene.heightProperty().addListener(($1, $2, parentHeight) -> resizeCanvas(parentHeight.doubleValue()));
 	}
 
-	private void resizeCanvas(double width, double height) {
-		double scaling = height / unscaledHeight;
-		canvas.setWidth(aspectRatio * height);
-		canvas.setHeight(height);
+	private void resizeCanvas(double newHeight) {
+		double scaling = newHeight / height;
+		canvas.setWidth(aspectRatio * newHeight);
+		canvas.setHeight(newHeight);
 		canvas.getTransforms().setAll(new Scale(scaling, scaling));
 	}
 
 	@Override
 	public void init(Scene parentScene) {
 		super.init(parentScene);
-		score2D = new GameScore2D("SCORE", t(1), t(1), game, false, rendering);
-		highScore2D = new GameScore2D("HIGH SCORE", t(16), t(1), game, true, rendering);
+		score2D = new GameScore2D("SCORE", t(1), t(1), game, false, r2D);
+		highScore2D = new GameScore2D("HIGH SCORE", t(16), t(1), game, true, r2D);
 	}
 
 	@Override
@@ -174,8 +169,8 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 		int x = levelCounterRightX, y = levelCounterRightY;
 		int firstLevel = Math.max(1, game.levelNumber - 6);
 		for (int level = firstLevel; level <= game.levelNumber; ++level) {
-			Rectangle2D r = rendering.getSymbolSprites().get(game.levelSymbol(level));
-			rendering.renderSprite(gc, r, x, y);
+			Rectangle2D r = r2D.getSymbolSprites().get(game.levelSymbol(level));
+			r2D.renderSprite(gc, r, x, y);
 			x -= t(2);
 		}
 	}
