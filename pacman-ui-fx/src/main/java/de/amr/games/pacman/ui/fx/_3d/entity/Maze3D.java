@@ -34,6 +34,7 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.model.world.FloorPlan;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -205,9 +206,14 @@ public class Maze3D extends Group {
 	}
 
 	public void updateGhostHouseDoorState(GameModel game) {
-		boolean open = doors().anyMatch(door -> game.ghosts().anyMatch(ghost -> ghost.tile().equals(info(door).tile)));
+		boolean open = doors().anyMatch(door -> isAnyGhostPassingDoor(game, door));
 		PhongMaterial material = new PhongMaterial(open ? doorOpenColor : doorClosedColor);
 		doors().forEach(door -> door.setMaterial(material));
+	}
+
+	private boolean isAnyGhostPassingDoor(GameModel game, Shape3D door) {
+		return game.ghosts().filter(ghost -> ghost.is(GhostState.ENTERING_HOUSE) || ghost.is(GhostState.LEAVING_HOUSE))
+				.anyMatch(ghost -> isNodeAtTile(door, ghost.tile()) || isNodeAtTile(door, ghost.tile().plus(0, 1)));
 	}
 
 	public Stream<Node> foodNodes() {
@@ -215,7 +221,7 @@ public class Maze3D extends Group {
 	}
 
 	public Optional<Node> foodNodeAt(V2i tile) {
-		return foodNodes().filter(node -> isNodeAt(node, tile)).findFirst();
+		return foodNodes().filter(node -> isNodeAtTile(node, tile)).findFirst();
 	}
 
 	public Stream<Node> energizerNodes() {
@@ -223,10 +229,10 @@ public class Maze3D extends Group {
 	}
 
 	public Optional<Node> energizerNodeAt(V2i tile) {
-		return energizerNodes().filter(node -> isNodeAt(node, tile)).findFirst();
+		return energizerNodes().filter(node -> isNodeAtTile(node, tile)).findFirst();
 	}
 
-	private boolean isNodeAt(Node node, V2i tile) {
+	private boolean isNodeAtTile(Node node, V2i tile) {
 		return info(node).tile.equals(tile);
 	}
 
