@@ -29,8 +29,8 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx._3d.animation.BlueFlashingAnimation;
 import javafx.animation.RotateTransition;
-import javafx.animation.Transition;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
@@ -53,22 +53,6 @@ public class Ghost3D extends Creature3D {
 		FULL, EYES, BOUNTY
 	}
 
-	private static class FlashingAnimation extends Transition {
-
-		private PhongMaterial material = new PhongMaterial();
-
-		public FlashingAnimation() {
-			setCycleCount(INDEFINITE);
-			setCycleDuration(Duration.seconds(0.1));
-			setAutoReverse(true);
-		}
-
-		@Override
-		protected void interpolate(double t) {
-			material.setDiffuseColor(Color.rgb((int) (t * 120), (int) (t * 180), 255));
-		}
-	};
-
 	public final Ghost ghost;
 
 	private final Rendering2D rendering2D;
@@ -77,7 +61,7 @@ public class Ghost3D extends Creature3D {
 	private final Group eyes;
 	private final Box numberCube;
 	private final RotateTransition turningAnimation;
-	private final FlashingAnimation flashing = new FlashingAnimation();
+	private final BlueFlashingAnimation flashing = new BlueFlashingAnimation();
 
 	private DisplayMode displayMode;
 	private Direction targetDir;
@@ -168,7 +152,7 @@ public class Ghost3D extends Creature3D {
 	}
 
 	public void playFlashingAnimation() {
-		skin.setMaterial(flashing.material);
+		skin.setMaterial(flashing.getMaterial());
 		flashing.playFromStart();
 	}
 

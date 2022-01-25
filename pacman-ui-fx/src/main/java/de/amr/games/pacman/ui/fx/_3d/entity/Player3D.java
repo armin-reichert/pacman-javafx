@@ -24,19 +24,18 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.world.World.HTS;
-import static de.amr.games.pacman.ui.fx.util.Animations.lerp;
 import static de.amr.games.pacman.ui.fx.util.Animations.now;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.GameSounds;
+import de.amr.games.pacman.ui.fx._3d.animation.ImpaleAnimation;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
-import javafx.animation.Transition;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
@@ -55,41 +54,18 @@ import javafx.util.Duration;
  */
 public class Player3D extends Creature3D {
 
-	private class ImpaleAnimation extends Transition {
-
-		private PhongMaterial material = new PhongMaterial(Color.YELLOW);
-
-		public ImpaleAnimation(Duration duration) {
-			setCycleCount(1);
-			setCycleDuration(duration);
-		}
-
-		@Override
-		protected void interpolate(double t) {
-			if (t == 0) {
-				head().setMaterial(material);
-			}
-			Color from = Color.YELLOW, to = Color.LIGHTGRAY;
-			Color color = Color.color( //
-					lerp(from.getRed(), to.getRed(), t), //
-					lerp(from.getGreen(), to.getGreen(), t), //
-					lerp(from.getBlue(), to.getBlue(), t));
-			material.setDiffuseColor(color);
-		}
-	}
-
-	public final Pac player;
-	private Group model3D;
+	private final Pac player;
+	private final Shape3D head;
 	private RotateTransition turningAnimation;
 	private Direction targetDir;
 
-	public Player3D(Pac player, Group model3D) {
+	public Player3D(Pac player, Group completePlayer) {
 		this.player = player;
-		this.model3D = model3D;
-		this.turningAnimation = new RotateTransition(Duration.seconds(0.3), this);
+		head = (Shape3D) completePlayer.getChildrenUnmodifiable().get(0);
+		turningAnimation = new RotateTransition(Duration.seconds(0.3), this);
 		PointLight light = new PointLight(Color.WHITE);
 		light.setTranslateZ(-4);
-		getChildren().addAll(model3D, light);
+		getChildren().addAll(completePlayer, light);
 		reset();
 	}
 
@@ -127,12 +103,12 @@ public class Player3D extends Creature3D {
 		var playSound = now(() -> sounds.play(GameSounds.PACMAN_DEATH));
 
 		return new SequentialTransition(//
-				new ImpaleAnimation(Duration.seconds(1)), //
+				new ImpaleAnimation(Duration.seconds(1), head, Color.YELLOW, Color.LIGHTGRAY), //
 				new ParallelTransition(spin, shrink, playSound));
 	}
 
 	public void reset() {
-		head().setMaterial(new PhongMaterial(Color.YELLOW));
+		head.setMaterial(new PhongMaterial(Color.YELLOW));
 		setScaleX(1.05);
 		setScaleY(1.05);
 		setScaleZ(1.05);
@@ -150,9 +126,5 @@ public class Player3D extends Creature3D {
 		if (!player.dead) {
 			updateTurning();
 		}
-	}
-
-	private Shape3D head() {
-		return (Shape3D) model3D.getChildrenUnmodifiable().get(0);
 	}
 }
