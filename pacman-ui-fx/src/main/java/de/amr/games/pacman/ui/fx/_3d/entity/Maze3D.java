@@ -34,7 +34,6 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.model.world.FloorPlan;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -52,7 +51,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
@@ -90,7 +88,6 @@ public class Maze3D extends Group {
 	private double energizerRadius = 2.5;
 	private double pelletRadius = 1;
 	private Color floorColor = Color.rgb(20, 20, 120);
-	private Color doorColor = Color.PINK;
 
 	private Animation[] energizerAnimations;
 
@@ -141,6 +138,10 @@ public class Maze3D extends Group {
 				.map(tile -> createPellet(tile, world.isEnergizerTile(tile), material)).collect(Collectors.toList());
 		foodGroup.getChildren().setAll(pellets);
 		energizerAnimations = energizerNodes().map(this::createEnergizerAnimation).toArray(Animation[]::new);
+	}
+
+	public void update(GameModel game) {
+		doors().forEach(door -> door.updateState(game));
 	}
 
 	private Animation createEnergizerAnimation(Node energizer) {
@@ -200,18 +201,8 @@ public class Maze3D extends Group {
 		return pellet;
 	}
 
-	public Stream<Shape3D> doors() {
-		return doorsGroup.getChildren().stream().map(node -> (Shape3D) node);
-	}
-
-	public void updateGhostHouseDoorState(GameModel game) {
-		boolean ghostIsPassingDoor = doors().anyMatch(door -> isAnyGhostPassingDoor(game, door));
-		doors().forEach(door -> door.setVisible(!ghostIsPassingDoor));
-	}
-
-	private boolean isAnyGhostPassingDoor(GameModel game, Shape3D door) {
-		return game.ghosts().filter(ghost -> ghost.is(GhostState.ENTERING_HOUSE) || ghost.is(GhostState.LEAVING_HOUSE))
-				.anyMatch(ghost -> sameTile(door, ghost.tile()) || sameTile(door, ghost.tile().plus(0, 1)));
+	public Stream<Door3D> doors() {
+		return doorsGroup.getChildren().stream().map(node -> (Door3D) node);
 	}
 
 	public Stream<Node> foodNodes() {
@@ -282,16 +273,8 @@ public class Maze3D extends Group {
 
 	private void rebuildDoors(World world, double stoneSize) {
 		doorsGroup.getChildren().clear();
-		PhongMaterial doorMaterial = new PhongMaterial(doorColor);
 		world.ghostHouse().doorTiles().forEach(tile -> {
-			Box door = new Box(TS - 1, 1, HTS);
-			door.setMaterial(doorMaterial);
-			door.setTranslateX(tile.x * TS + HTS);
-			door.setTranslateY(tile.y * TS + HTS);
-			door.setTranslateZ(-HTS / 2);
-			door.setUserData(new NodeInfo(false, tile));
-			door.drawModeProperty().bind(Env.$drawMode3D);
-			doorsGroup.getChildren().add(door);
+			doorsGroup.getChildren().add(new Door3D(tile));
 		});
 	}
 

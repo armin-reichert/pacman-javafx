@@ -164,7 +164,7 @@ public class PlayScene3D extends AbstractGameScene {
 
 	@Override
 	public void update() {
-		maze3D.updateGhostHouseDoorState(game);
+		maze3D.update(game);
 		player3D.update();
 		Stream.of(ghosts3D).forEach(Ghost3D::update);
 		bonus3D.update(game.bonus);
