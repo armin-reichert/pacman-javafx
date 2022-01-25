@@ -90,8 +90,7 @@ public class Maze3D extends Group {
 	private double energizerRadius = 2.5;
 	private double pelletRadius = 1;
 	private Color floorColor = Color.rgb(20, 20, 120);
-	private Color doorClosedColor = Color.PINK;
-	private Color doorOpenColor = Color.TRANSPARENT;
+	private Color doorColor = Color.PINK;
 
 	private Animation[] energizerAnimations;
 
@@ -206,9 +205,8 @@ public class Maze3D extends Group {
 	}
 
 	public void updateGhostHouseDoorState(GameModel game) {
-		boolean open = doors().anyMatch(door -> isAnyGhostPassingDoor(game, door));
-		PhongMaterial material = new PhongMaterial(open ? doorOpenColor : doorClosedColor);
-		doors().forEach(door -> door.setMaterial(material));
+		boolean ghostIsPassingDoor = doors().anyMatch(door -> isAnyGhostPassingDoor(game, door));
+		doors().forEach(door -> door.setVisible(!ghostIsPassingDoor));
 	}
 
 	private boolean isAnyGhostPassingDoor(GameModel game, Shape3D door) {
@@ -284,15 +282,14 @@ public class Maze3D extends Group {
 
 	private void rebuildDoors(World world, double stoneSize) {
 		doorsGroup.getChildren().clear();
-		PhongMaterial doorMaterial = new PhongMaterial(doorClosedColor);
+		PhongMaterial doorMaterial = new PhongMaterial(doorColor);
 		world.ghostHouse().doorTiles().forEach(tile -> {
 			Box door = new Box(TS - 1, 1, HTS);
 			door.setMaterial(doorMaterial);
 			door.setTranslateX(tile.x * TS + HTS);
 			door.setTranslateY(tile.y * TS + HTS);
 			door.setTranslateZ(-HTS / 2);
-			NodeInfo info = new NodeInfo(false, tile);
-			door.setUserData(info);
+			door.setUserData(new NodeInfo(false, tile));
 			door.drawModeProperty().bind(Env.$drawMode3D);
 			doorsGroup.getChildren().add(door);
 		});
