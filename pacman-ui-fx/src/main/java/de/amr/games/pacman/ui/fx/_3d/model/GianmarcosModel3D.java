@@ -54,8 +54,8 @@ public class GianmarcosModel3D implements PacManModel3D {
 	private ObjModel ghostModel;
 
 	private GianmarcosModel3D() {
-		pacManModel = new ObjModel("/common/gianmarco/pacman.obj");
-		ghostModel = new ObjModel("/common/gianmarco/ghost.obj");
+		pacManModel = new ObjModel(getClass().getResource("/common/gianmarco/pacman.obj"));
+		ghostModel = new ObjModel(getClass().getResource("/common/gianmarco/ghost.obj"));
 	}
 
 	@Override

@@ -22,20 +22,19 @@ public class ObjModel {
 	public Map<String, MeshView> meshViews = Collections.emptyMap();
 	public Map<String, PhongMaterial> materials = Collections.emptyMap();
 
-	public ObjModel(String path) {
+	public ObjModel(URL url) {
 		ObjModelImporter importer = new ObjModelImporter();
-		URL url = getClass().getResource(path);
 		if (url == null) {
-			log("Loading 3D model failed: could not access resource using path '%s'", path);
+			log("Loading 3D model failed: could not access resource from URL '%s'", url);
 			throw new RuntimeException("3D model loading failed");
 		}
 		try {
 			importer.read(url);
 			meshViews = importer.getNamedMeshViews();
 			materials = importer.getNamedMaterials();
-			log("Loading 3D model '%s' succeeded", path);
+			log("Loading 3D model '%s' succeeded", url);
 		} catch (ImportException e) {
-			log("Loading 3D model '%s' failed", path);
+			log("Loading 3D model '%s' failed", url);
 			throw new RuntimeException("3D model loading failed", e);
 		} finally {
 			importer.close();
@@ -43,7 +42,10 @@ public class ObjModel {
 	}
 
 	public MeshView createMeshView(String name) {
-		return new MeshView(meshViews.get(name).getMesh());
+		if (meshViews.containsKey(name)) {
+			return new MeshView(meshViews.get(name).getMesh());
+		}
+		return null;
 	}
 
 	public PhongMaterial getMaterial(String name) {
