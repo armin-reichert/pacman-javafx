@@ -44,6 +44,8 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Maze2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx.scene.ScenesMsPacMan;
+import de.amr.games.pacman.ui.fx.scene.ScenesPacMan;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.Animation;
@@ -60,20 +62,31 @@ import javafx.util.Duration;
  */
 public class PlayScene2D extends AbstractGameScene2D {
 
+	private SoundManager sounds;
 	private Maze2D maze2D;
 	private LivesCounter2D livesCounter2D;
 	private Player2D player2D;
 	private List<Ghost2D> ghosts2D;
 	private Bonus2D bonus2D;
 
-	public PlayScene2D(PacManGameUI_JavaFX ui, Rendering2D r2D, SoundManager sounds) {
-		super(ui, r2D, sounds);
+	public PlayScene2D(PacManGameUI_JavaFX ui, Rendering2D r2D) {
+		super(ui, r2D);
 	}
 
 	@Override
 	public void init(Scene parentScene) {
 		super.init(parentScene);
 
+		switch (gameController.gameVariant) {
+		case MS_PACMAN:
+			sounds = ScenesMsPacMan.SOUNDS;
+			break;
+		case PACMAN:
+			sounds = ScenesPacMan.SOUNDS;
+			break;
+		default:
+			throw new IllegalArgumentException("Illegal game variant: " + gameController.gameVariant);
+		}
 		maze2D = new Maze2D(0, t(3), game, r2D);
 		livesCounter2D = new LivesCounter2D(t(2), t(34), game, r2D);
 		player2D = new Player2D(game.player, r2D);

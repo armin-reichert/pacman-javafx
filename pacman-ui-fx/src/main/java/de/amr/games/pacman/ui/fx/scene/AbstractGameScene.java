@@ -33,7 +33,6 @@ import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3DCameraController;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 
@@ -49,15 +48,13 @@ public abstract class AbstractGameScene implements DefaultGameEventHandler {
 
 	protected final PacManGameUI_JavaFX ui;
 	protected final GameController gameController;
-	protected final SoundManager sounds;
 
 	protected SubScene fxSubScene;
 	protected GameModel game;
 
-	public AbstractGameScene(PacManGameUI_JavaFX ui, SoundManager sounds) {
+	public AbstractGameScene(PacManGameUI_JavaFX ui) {
 		this.ui = ui;
 		this.gameController = ui.gameController;
-		this.sounds = sounds;
 	}
 
 	public String name() {

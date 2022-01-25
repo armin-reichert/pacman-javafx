@@ -33,6 +33,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.pacman.BigPacMan2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.scene.ScenesPacMan;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
+import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.Scene;
 
 /**
@@ -43,13 +44,13 @@ import javafx.scene.Scene;
 public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 
 	private final Intermission1Controller sceneController = new Intermission1Controller();
-
+	private final SoundManager sounds = ScenesPacMan.SOUNDS;
 	private Player2D pacMan2D;
 	private Ghost2D blinky2D;
 	private BigPacMan2D bigPacMan2D;
 
 	public PacMan_IntermissionScene1(PacManGameUI_JavaFX ui) {
-		super(ui, ScenesPacMan.RENDERING, ScenesPacMan.SOUNDS);
+		super(ui, ScenesPacMan.RENDERING);
 	}
 
 	@Override

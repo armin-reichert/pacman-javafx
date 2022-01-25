@@ -79,8 +79,8 @@ public class ScenesMsPacMan {
 		SCENES[2][1] = new MsPacMan_IntermissionScene2(ui);
 		SCENES[3][0] = 
 		SCENES[3][1] = new MsPacMan_IntermissionScene3(ui);
-		SCENES[4][0] = new PlayScene2D(ui, RENDERING, SOUNDS);
-		SCENES[4][1] = new PlayScene3D(ui, MODEL_3D, SOUNDS);
+		SCENES[4][0] = new PlayScene2D(ui, RENDERING);
+		SCENES[4][1] = new PlayScene3D(ui, MODEL_3D);
 		//@formatter:on
 	}
 }

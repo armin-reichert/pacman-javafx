@@ -36,7 +36,6 @@ import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3DCameraController;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.GraphicsContext;
@@ -59,17 +58,16 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
 
-	public AbstractGameScene2D(double width, double height, PacManGameUI_JavaFX ui, Rendering2D r2D,
-			SoundManager sounds) {
-		super(ui, sounds);
+	public AbstractGameScene2D(double width, double height, PacManGameUI_JavaFX ui, Rendering2D r2D) {
+		super(ui);
 		this.r2D = r2D;
 		gc = ui.canvas.getGraphicsContext2D();
 		unscaledSize = new V2d(width, height);
 		aspectRatio = width / height;
 	}
 
-	public AbstractGameScene2D(PacManGameUI_JavaFX ui, Rendering2D r2D, SoundManager sounds) {
-		this(t(GameModel.TILES_X), t(GameModel.TILES_Y), ui, r2D, sounds);
+	public AbstractGameScene2D(PacManGameUI_JavaFX ui, Rendering2D r2D) {
+		this(t(GameModel.TILES_X), t(GameModel.TILES_Y), ui, r2D);
 	}
 
 	@Override

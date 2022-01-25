@@ -36,6 +36,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.scene.ScenesPacMan;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
+import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 
@@ -47,7 +48,7 @@ import javafx.scene.Scene;
 public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 	private final Intermission2Controller sceneController = new Intermission2Controller();
-
+	private final SoundManager sounds = ScenesPacMan.SOUNDS;
 	private Player2D pacMan2D;
 	private Ghost2D blinky2D;
 	private Nail2D nail2D;
@@ -55,7 +56,7 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 	private TimedSequence<Rectangle2D> blinkyDamagedAnimation;
 
 	public PacMan_IntermissionScene2(PacManGameUI_JavaFX ui) {
-		super(ui, ScenesPacMan.RENDERING, ScenesPacMan.SOUNDS);
+		super(ui, ScenesPacMan.RENDERING);
 	}
 
 	@Override

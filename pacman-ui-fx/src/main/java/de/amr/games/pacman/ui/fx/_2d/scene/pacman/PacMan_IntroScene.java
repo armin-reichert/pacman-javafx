@@ -61,7 +61,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	private List<Ghost2D> gallery2D;
 
 	public PacMan_IntroScene(PacManGameUI_JavaFX ui) {
-		super(ui, ScenesPacMan.RENDERING, ScenesPacMan.SOUNDS);
+		super(ui, ScenesPacMan.RENDERING);
 	}
 
 	@Override
@@ -82,10 +82,8 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		}).collect(Collectors.toList());
 
 		gallery2D = List.of( //
-				new Ghost2D(sceneController.portraits[0].ghost, r2D),
-				new Ghost2D(sceneController.portraits[1].ghost, r2D),
-				new Ghost2D(sceneController.portraits[2].ghost, r2D),
-				new Ghost2D(sceneController.portraits[3].ghost, r2D));
+				new Ghost2D(sceneController.portraits[0].ghost, r2D), new Ghost2D(sceneController.portraits[1].ghost, r2D),
+				new Ghost2D(sceneController.portraits[2].ghost, r2D), new Ghost2D(sceneController.portraits[3].ghost, r2D));
 	}
 
 	@Override

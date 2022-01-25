@@ -39,7 +39,6 @@ import de.amr.games.pacman.controller.event.GameEvent;
 import de.amr.games.pacman.controller.event.GameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -85,6 +84,7 @@ public class PlayScene3D extends AbstractGameScene {
 	final AmbientLight ambientLight = new AmbientLight(Color.GHOSTWHITE);
 	final CoordinateSystem coordSystem = new CoordinateSystem(1000);
 
+	SoundManager sounds;
 	Group playground;
 	Maze3D maze3D;
 	Player3D player3D;
@@ -95,8 +95,8 @@ public class PlayScene3D extends AbstractGameScene {
 	LivesCounter3D livesCounter3D;
 	Rendering2D r2D;
 
-	public PlayScene3D(PacManGameUI_JavaFX ui, PacManModel3D model3D, SoundManager sounds) {
-		super(ui, sounds);
+	public PlayScene3D(PacManGameUI_JavaFX ui, PacManModel3D model3D) {
+		super(ui);
 		this.model3D = model3D;
 		coordSystem.visibleProperty().bind(Env.$axesVisible);
 		Env.$perspective.addListener(($1, $2, $3) -> camController().ifPresent(PlayScene3DCameraController::reset));
@@ -123,9 +123,18 @@ public class PlayScene3D extends AbstractGameScene {
 		final int width = game.world.numCols() * TS;
 		final int height = game.world.numRows() * TS;
 
-		r2D = gameController.gameVariant == GameVariant.MS_PACMAN //
-				? ScenesMsPacMan.RENDERING
-				: ScenesPacMan.RENDERING;
+		switch (gameController.gameVariant) {
+		case MS_PACMAN:
+			r2D = ScenesMsPacMan.RENDERING;
+			sounds = ScenesMsPacMan.SOUNDS;
+			break;
+		case PACMAN:
+			r2D = ScenesPacMan.RENDERING;
+			sounds = ScenesPacMan.SOUNDS;
+			break;
+		default:
+			throw new IllegalArgumentException("Illegal game variant: " + gameController.gameVariant);
+		}
 
 		maze3D = new Maze3D(width, height, floorImage);
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
