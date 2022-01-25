@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.model;
 
+import static de.amr.games.pacman.ui.fx._3d.model.PacManModel3D.bindDrawMode;
 import static de.amr.games.pacman.ui.fx._3d.model.PacManModel3D.centerOverOrigin;
 import static de.amr.games.pacman.ui.fx._3d.model.PacManModel3D.scale;
 
@@ -70,7 +71,7 @@ public class GianmarcosModel3D implements PacManModel3D {
 		palate.setMaterial(new PhongMaterial(Color.CHOCOLATE));
 
 		centerOverOrigin(head, eyes, palate);
-		PacManModel3D.bindDrawMode(Env.$drawMode3D, head, eyes, palate);
+		bindDrawMode(Env.$drawMode3D, head, eyes, palate);
 
 		Group pacman = new Group(head, eyes, palate);
 		pacman.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
@@ -91,7 +92,7 @@ public class GianmarcosModel3D implements PacManModel3D {
 		eyesInner.setMaterial(new PhongMaterial(Color.BLACK));
 
 		centerOverOrigin(body, eyesOuter, eyesInner);
-		PacManModel3D.bindDrawMode(Env.$drawMode3D, body, eyesOuter, eyesInner);
+		bindDrawMode(Env.$drawMode3D, body, eyesOuter, eyesInner);
 
 		Group ghost = new Group(body, eyesOuter, eyesInner);
 		ghost.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
