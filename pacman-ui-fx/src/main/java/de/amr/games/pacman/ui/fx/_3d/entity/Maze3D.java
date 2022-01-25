@@ -211,7 +211,7 @@ public class Maze3D extends Group {
 
 	private boolean isAnyGhostPassingDoor(GameModel game, Shape3D door) {
 		return game.ghosts().filter(ghost -> ghost.is(GhostState.ENTERING_HOUSE) || ghost.is(GhostState.LEAVING_HOUSE))
-				.anyMatch(ghost -> isNodeAtTile(door, ghost.tile()) || isNodeAtTile(door, ghost.tile().plus(0, 1)));
+				.anyMatch(ghost -> sameTile(door, ghost.tile()) || sameTile(door, ghost.tile().plus(0, 1)));
 	}
 
 	public Stream<Node> foodNodes() {
@@ -219,7 +219,7 @@ public class Maze3D extends Group {
 	}
 
 	public Optional<Node> foodNodeAt(V2i tile) {
-		return foodNodes().filter(node -> isNodeAtTile(node, tile)).findFirst();
+		return foodNodes().filter(node -> sameTile(node, tile)).findFirst();
 	}
 
 	public Stream<Node> energizerNodes() {
@@ -227,10 +227,10 @@ public class Maze3D extends Group {
 	}
 
 	public Optional<Node> energizerNodeAt(V2i tile) {
-		return energizerNodes().filter(node -> isNodeAtTile(node, tile)).findFirst();
+		return energizerNodes().filter(node -> sameTile(node, tile)).findFirst();
 	}
 
-	private boolean isNodeAtTile(Node node, V2i tile) {
+	private boolean sameTile(Node node, V2i tile) {
 		return info(node).tile.equals(tile);
 	}
 
