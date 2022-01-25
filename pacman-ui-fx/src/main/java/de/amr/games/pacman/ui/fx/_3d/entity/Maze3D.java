@@ -78,18 +78,20 @@ public class Maze3D extends Group {
 	}
 
 	private static class FlashingAnimation extends Transition {
+
 		private double wallStartHeight;
 
 		public FlashingAnimation(int times) {
-			wallStartHeight = Env.$mazeWallHeight.get();
 			setCycleDuration(Duration.seconds(0.25));
 			setCycleCount(2 * times);
 			setAutoReverse(true);
-			setOnFinished(e -> Env.$mazeWallHeight.set(wallStartHeight));
 		}
 
 		@Override
 		protected void interpolate(double t) {
+			if (t == 0) {
+				wallStartHeight = Env.$mazeWallHeight.get();
+			}
 			Env.$mazeWallHeight.set(Math.cos(t * Math.PI / 2) * wallStartHeight);
 		}
 	}
