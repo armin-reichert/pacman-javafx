@@ -23,13 +23,16 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.model.common.GhostState.ENTERING_HOUSE;
+import static de.amr.games.pacman.model.common.GhostState.LEAVING_HOUSE;
 import static de.amr.games.pacman.model.world.World.HTS;
 import static de.amr.games.pacman.model.world.World.TS;
+
+import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Ghost;
-import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.fx._3d.entity.Maze3D.NodeInfo;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.scene.paint.Color;
@@ -57,12 +60,11 @@ public class Door3D extends Box {
 	}
 
 	public void updateState(GameModel game) {
-		setVisible(!isAnyGhostPassing(game));
+		setVisible(!isAnyGhostNearby(game.ghosts().filter(ghost -> ghost.is(ENTERING_HOUSE) || ghost.is(LEAVING_HOUSE))));
 	}
 
-	private boolean isAnyGhostPassing(GameModel game) {
-		return game.ghosts().filter(ghost -> ghost.is(GhostState.ENTERING_HOUSE) || ghost.is(GhostState.LEAVING_HOUSE))
-				.anyMatch(this::isGhostNearby);
+	private boolean isAnyGhostNearby(Stream<Ghost> ghosts) {
+		return ghosts.anyMatch(this::isGhostNearby);
 	}
 
 	private boolean isGhostNearby(Ghost ghost) {
