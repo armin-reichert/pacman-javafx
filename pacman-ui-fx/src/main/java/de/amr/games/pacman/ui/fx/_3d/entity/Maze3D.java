@@ -121,7 +121,8 @@ public class Maze3D extends Group {
 		int stoneSize = TS / $resolution.get();
 		FloorPlan floorPlan = new FloorPlan($resolution.get(), world);
 		rebuildWalls(floorPlan, world, stoneSize, wallBaseColor, wallTopColor);
-		rebuildDoors(world, stoneSize);
+		doorsGroup.getChildren().clear();
+		world.ghostHouse().doorTiles().forEach(tile -> doorsGroup.getChildren().add(new Door3D(tile)));
 		log("Rebuilt 3D maze: resolution=%d (stone size=%d), wall height=%.2f", $resolution.get(), stoneSize,
 				$wallHeight.get());
 	}
@@ -269,13 +270,6 @@ public class Maze3D extends Group {
 	private Group addCorner(int x, int y, double blockSize, PhongMaterial wallBaseMaterial,
 			PhongMaterial wallTopMaterial) {
 		return addWall(x, y, 1, 1, blockSize, wallBaseMaterial, wallTopMaterial);
-	}
-
-	private void rebuildDoors(World world, double stoneSize) {
-		doorsGroup.getChildren().clear();
-		world.ghostHouse().doorTiles().forEach(tile -> {
-			doorsGroup.getChildren().add(new Door3D(tile));
-		});
 	}
 
 	private void rebuildWalls(FloorPlan floorPlan, World world, double stoneSize, Color wallBaseColor,
