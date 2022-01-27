@@ -28,6 +28,7 @@ import static de.amr.games.pacman.lib.Logging.log;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
+import de.amr.games.pacman.controller.event.GameEvent;
 import de.amr.games.pacman.controller.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
@@ -60,7 +61,7 @@ import javafx.stage.WindowEvent;
  * 
  * @author Armin Reichert
  */
-public class PacManGameUI_JavaFX implements DefaultGameEventHandler {
+public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 
 	public final Stage stage;
 	public final GameController gameController;
@@ -86,11 +87,12 @@ public class PacManGameUI_JavaFX implements DefaultGameEventHandler {
 		StackPane.setAlignment(hud, Pos.TOP_LEFT);
 
 		var gameScene = selectScene(Env.$3D.get());
+		// TODO rethink this
 		double aspectRatio = gameScene.aspectRatio()
 				.orElse(Screen.getPrimary().getBounds().getWidth() / Screen.getPrimary().getBounds().getHeight());
 		double width = aspectRatio * height;
 		stage.setScene(new Scene(mainSceneRoot, width, height));
-		setGameScene(gameScene);
+		updateGameScene();
 
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> Env.gameLoop.stop());
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
@@ -136,7 +138,7 @@ public class PacManGameUI_JavaFX implements DefaultGameEventHandler {
 		Env.$3D.set(!Env.$3D.get());
 		if (selectScene(false) != selectScene(true)) {
 			stopAllSounds();
-			setGameScene(selectScene(Env.$3D.get()));
+			updateGameScene();
 		}
 	}
 
@@ -170,12 +172,12 @@ public class PacManGameUI_JavaFX implements DefaultGameEventHandler {
 		}
 	}
 
-	private void setGameScene(AbstractGameScene newGameScene) {
+	private void updateGameScene() {
+		AbstractGameScene newGameScene = selectScene(Env.$3D.get());
 		if (currentGameScene != newGameScene) {
 			if (currentGameScene != null) {
 				log("Change game scene from '%s' to '%s'", currentGameScene.name(), newGameScene.name());
 				currentGameScene.end();
-				gameController.removeGameEventListener(currentGameScene);
 			} else {
 				log("Set game scene to '%s'", newGameScene.name());
 			}
@@ -183,17 +185,19 @@ public class PacManGameUI_JavaFX implements DefaultGameEventHandler {
 			$is3D.set(newGameScene.is3D());
 			gameSceneRoot.getChildren().setAll(newGameScene.getSubSceneFX());
 			newGameScene.getSubSceneFX().requestFocus();
-			gameController.addGameEventListener(newGameScene);
 			currentGameScene = newGameScene;
 		}
 	}
 
 	@Override
+	public void onGameEvent(GameEvent event) {
+		super.onGameEvent(event);
+		currentGameScene.onGameEvent(event);
+	}
+
+	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
-		if (e.newGameState == GameState.INTRO) {
-			stopAllSounds();
-		}
-		setGameScene(selectScene(Env.$3D.get()));
+		updateGameScene();
 	}
 
 	private void onKeyPressed(KeyEvent e) {

@@ -327,8 +327,11 @@ public class PlayScene3D extends AbstractGameScene {
 		else if (e.newGameState == GameState.PACMAN_DYING) {
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setNormalSkinColor());
 			sounds.stopAll();
-			gameController.stateTimer().setIndefinite().start();
-			playAnimationPlayerDying();
+			new SequentialTransition( //
+					afterSeconds(1, game::hideGhosts), //
+					player3D.dyingAnimation(sounds), //
+					afterSeconds(2, this::continueGame) //
+			).play();
 		}
 
 		// enter GHOST_DYING
@@ -340,14 +343,24 @@ public class PlayScene3D extends AbstractGameScene {
 		else if (e.newGameState == GameState.LEVEL_STARTING) {
 			buildMaze(game.mazeNumber, true);
 			levelCounter3D.init(game);
-			playAnimationLevelStarting();
+			var message = Env.message("level_starting", game.levelNumber);
+			ui.showFlashMessage(1, message);
+			afterSeconds(3, this::continueGame).play();
 		}
 
 		// enter LEVEL_COMPLETE
 		else if (e.newGameState == GameState.LEVEL_COMPLETE) {
 			sounds.stopAll();
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setNormalSkinColor());
-			playAnimationLevelComplete();
+			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game.levelNumber);
+			var animation = new SequentialTransition( //
+					pause(1), //
+					maze3D.flashingAnimation(game.numFlashes), //
+					afterSeconds(1, () -> game.player.hide()), //
+					afterSeconds(1, () -> ui.showFlashMessage(2, message)) //
+			);
+			animation.setOnFinished(ae -> continueGame());
+			animation.play();
 		}
 
 		// enter GAME_OVER
@@ -361,33 +374,5 @@ public class PlayScene3D extends AbstractGameScene {
 			maze3D.stopEnergizerAnimations();
 			bonus3D.hide();
 		}
-	}
-
-	private void playAnimationPlayerDying() {
-		var animation = new SequentialTransition( //
-				afterSeconds(1, game::hideGhosts), //
-				player3D.dyingAnimation(sounds), //
-				pause(2) //
-		);
-		animation.setOnFinished(e -> continueGame());
-		animation.play();
-	}
-
-	private void playAnimationLevelComplete() {
-		var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game.levelNumber);
-		var animation = new SequentialTransition( //
-				pause(1), //
-				maze3D.flashingAnimation(game.numFlashes), //
-				afterSeconds(1, () -> game.player.hide()), //
-				afterSeconds(1, () -> ui.showFlashMessage(2, message)) //
-		);
-		animation.setOnFinished(e -> continueGame());
-		animation.play();
-	}
-
-	private void playAnimationLevelStarting() {
-		var message = Env.message("level_starting", game.levelNumber);
-		ui.showFlashMessage(1, message);
-		afterSeconds(3, this::continueGame).play();
 	}
 }

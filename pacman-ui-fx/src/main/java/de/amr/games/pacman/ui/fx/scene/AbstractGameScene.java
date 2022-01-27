@@ -44,7 +44,7 @@ import javafx.scene.SubScene;
  * 
  * @author Armin Reichert
  */
-public abstract class AbstractGameScene implements DefaultGameEventHandler {
+public abstract class AbstractGameScene extends DefaultGameEventHandler {
 
 	protected final PacManGameUI_JavaFX ui;
 	protected final GameController gameController;
