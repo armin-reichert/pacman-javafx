@@ -111,6 +111,14 @@ public class Maze3D extends Group {
 		getChildren().addAll(floor, wallsAndDoors, foodGroup);
 	}
 
+	public void reset() {
+		energizerNodes().forEach(node -> {
+			node.setScaleX(1.0);
+			node.setScaleY(1.0);
+			node.setScaleZ(1.0);
+		});
+	}
+
 	public void updateState(GameModel game) {
 		doors().forEach(door -> door.updateState(game));
 	}
@@ -220,14 +228,6 @@ public class Maze3D extends Group {
 
 	private boolean sameTile(Node node, V2i tile) {
 		return info(node).tile.equals(tile);
-	}
-
-	public void resetEnergizerSize() {
-		energizerNodes().forEach(node -> {
-			node.setScaleX(1.0);
-			node.setScaleY(1.0);
-			node.setScaleZ(1.0);
-		});
 	}
 
 	/**

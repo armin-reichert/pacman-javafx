@@ -313,9 +313,9 @@ public class PlayScene3D extends AbstractGameScene {
 
 		// enter READY
 		if (e.newGameState == GameState.READY) {
-			sounds.stopAll();
+			maze3D.reset();
 			player3D.reset();
-			maze3D.resetEnergizerSize();
+			sounds.stopAll();
 			sounds.setMuted(gameController.attractMode);
 			if (!gameController.gameRunning) {
 				sounds.play(GameSounds.GAME_READY);
