@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
+import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.World.HTS;
 import static de.amr.games.pacman.model.world.World.TS;
 import static de.amr.games.pacman.model.world.World.t;
@@ -173,7 +174,7 @@ public class PlayScene3D extends AbstractGameScene {
 
 	@Override
 	public void update() {
-		maze3D.update(game);
+		maze3D.updateState(game);
 		player3D.update();
 		Stream.of(ghosts3D).forEach(Ghost3D::update);
 		bonus3D.update(game.bonus);
@@ -218,6 +219,7 @@ public class PlayScene3D extends AbstractGameScene {
 		if (withFood) {
 			maze3D.buildFood(game.world, r2D.getFoodColor(mazeNumber));
 		}
+		log("Built 3D maze (resolution=%d, wall height=%.2f)", maze3D.$resolution.get(), maze3D.$wallHeight.get());
 	}
 
 	@Override

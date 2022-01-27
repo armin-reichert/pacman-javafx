@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.World.HTS;
 import static de.amr.games.pacman.model.world.World.TS;
 import static de.amr.games.pacman.ui.fx._3d.entity.Maze3D.NodeInfo.info;
@@ -36,6 +35,7 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.world.FloorPlan;
 import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.ui.fx._3d.animation.RaiseAndLowerWallAnimation;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
@@ -77,25 +77,6 @@ public class Maze3D extends Group {
 		}
 	}
 
-	private static class FlashingAnimation extends Transition {
-
-		private double wallStartHeight;
-
-		public FlashingAnimation(int times) {
-			setCycleDuration(Duration.seconds(0.25));
-			setCycleCount(2 * times);
-			setAutoReverse(true);
-		}
-
-		@Override
-		protected void interpolate(double t) {
-			if (t == 0) {
-				wallStartHeight = Env.$mazeWallHeight.get();
-			}
-			Env.$mazeWallHeight.set(Math.cos(t * Math.PI / 2) * wallStartHeight);
-		}
-	}
-
 	public final DoubleProperty $wallHeight = new SimpleDoubleProperty(2.0);
 	public final IntegerProperty $resolution = new SimpleIntegerProperty(8);
 
@@ -111,22 +92,47 @@ public class Maze3D extends Group {
 	private Animation[] energizerAnimations;
 
 	/**
-	 * Creates the 3D-maze without walls, doors or food.
+	 * Creates the 3D-maze base (no walls, no doors, no food).
 	 * 
-	 * @param sizeX maze x-size
-	 * @param sizeY maze y-size
+	 * @param sizeX           maze x-size
+	 * @param sizeY           maze y-size
+	 * @param floorImagefloor texture
 	 */
-	public Maze3D(double sizeX, double sizeY, Image floorImage) {
+	public Maze3D(double sizeX, double sizeY, Image floorTexture) {
 		var sizeZ = 0.1;
 		var floorMaterial = new PhongMaterial(floorColor);
 		floorMaterial.setSpecularColor(floorColor.brighter());
-		floorMaterial.setDiffuseMap(floorImage);
+		floorMaterial.setDiffuseMap(floorTexture);
 		floor = new Box(sizeX - 1, sizeY - 1, sizeZ);
 		floor.setMaterial(floorMaterial);
 		floor.getTransforms().add(new Translate(0.5 * sizeX, 0.5 * sizeY, 0.5 * sizeZ));
 		floor.drawModeProperty().bind(Env.$drawMode3D);
 		Group wallsAndDoors = new Group(wallsGroup, doorsGroup);
 		getChildren().addAll(floor, wallsAndDoors, foodGroup);
+	}
+
+	public void updateState(GameModel game) {
+		doors().forEach(door -> door.updateState(game));
+	}
+
+	public Stream<Door3D> doors() {
+		return doorsGroup.getChildren().stream().map(node -> (Door3D) node);
+	}
+
+	public Stream<Node> foodNodes() {
+		return foodGroup.getChildren().stream();
+	}
+
+	public Optional<Node> foodNodeAt(V2i tile) {
+		return foodNodes().filter(node -> sameTile(node, tile)).findFirst();
+	}
+
+	public Stream<Node> energizerNodes() {
+		return foodNodes().filter(node -> info(node).energizer);
+	}
+
+	public Optional<Node> energizerNodeAt(V2i tile) {
+		return energizerNodes().filter(node -> sameTile(node, tile)).findFirst();
 	}
 
 	/**
@@ -137,13 +143,11 @@ public class Maze3D extends Group {
 	 * @param wallTopColor  color of wall at top
 	 */
 	public void buildWallsAndDoors(World world, Color wallBaseColor, Color wallTopColor) {
-		int stoneSize = TS / $resolution.get();
-		FloorPlan floorPlan = new FloorPlan($resolution.get(), world);
-		rebuildWalls(floorPlan, world, stoneSize, wallBaseColor, wallTopColor);
-		doorsGroup.getChildren().clear();
-		world.ghostHouse().doorTiles().forEach(tile -> doorsGroup.getChildren().add(new Door3D(tile)));
-		log("Rebuilt 3D maze: resolution=%d (stone size=%d), wall height=%.2f", $resolution.get(), stoneSize,
-				$wallHeight.get());
+		int resolution = $resolution.get();
+		int stoneSize = TS / resolution;
+		buildWalls(new FloorPlan(resolution, world), world, stoneSize, wallBaseColor, wallTopColor);
+		doorsGroup.getChildren().setAll( //
+				world.ghostHouse().doorTiles().stream().map(Door3D::new).collect(Collectors.toList()));
 	}
 
 	/**
@@ -160,12 +164,8 @@ public class Maze3D extends Group {
 		energizerAnimations = energizerNodes().map(this::createEnergizerAnimation).toArray(Animation[]::new);
 	}
 
-	public void update(GameModel game) {
-		doors().forEach(door -> door.updateState(game));
-	}
-
-	private Animation createEnergizerAnimation(Node energizer) {
-		var animation = new ScaleTransition(Duration.seconds(1.0 / 6), energizer);
+	private Animation createEnergizerAnimation(Node energizerNode) {
+		var animation = new ScaleTransition(Duration.seconds(1.0 / 6), energizerNode);
 		animation.setAutoReverse(true);
 		animation.setCycleCount(Transition.INDEFINITE);
 		animation.setFromX(1.0);
@@ -192,7 +192,7 @@ public class Maze3D extends Group {
 	}
 
 	public Animation flashingAnimation(int times) {
-		return new FlashingAnimation(times);
+		return new RaiseAndLowerWallAnimation(times);
 	}
 
 	private Sphere createPellet(V2i tile, boolean energizer, PhongMaterial material) {
@@ -203,26 +203,6 @@ public class Maze3D extends Group {
 		pellet.setTranslateZ(-3);
 		pellet.setUserData(new NodeInfo(energizer, tile));
 		return pellet;
-	}
-
-	public Stream<Door3D> doors() {
-		return doorsGroup.getChildren().stream().map(node -> (Door3D) node);
-	}
-
-	public Stream<Node> foodNodes() {
-		return foodGroup.getChildren().stream();
-	}
-
-	public Optional<Node> foodNodeAt(V2i tile) {
-		return foodNodes().filter(node -> sameTile(node, tile)).findFirst();
-	}
-
-	public Stream<Node> energizerNodes() {
-		return foodNodes().filter(node -> info(node).energizer);
-	}
-
-	public Optional<Node> energizerNodeAt(V2i tile) {
-		return energizerNodes().filter(node -> sameTile(node, tile)).findFirst();
 	}
 
 	private boolean sameTile(Node node, V2i tile) {
@@ -275,8 +255,7 @@ public class Maze3D extends Group {
 		return addWall(x, y, 1, 1, blockSize, wallBaseMaterial, wallTopMaterial);
 	}
 
-	private void rebuildWalls(FloorPlan floorPlan, World world, double stoneSize, Color wallBaseColor,
-			Color wallTopColor) {
+	private void buildWalls(FloorPlan floorPlan, World world, double stoneSize, Color wallBaseColor, Color wallTopColor) {
 
 		var wallBaseMaterial = new PhongMaterial(wallBaseColor);
 		wallBaseMaterial.setSpecularColor(wallBaseColor.brighter());
