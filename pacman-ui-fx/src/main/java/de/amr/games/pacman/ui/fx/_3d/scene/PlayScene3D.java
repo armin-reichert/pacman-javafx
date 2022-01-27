@@ -39,6 +39,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.controller.event.GameEvent;
 import de.amr.games.pacman.controller.event.GameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
+import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.GameSounds;
@@ -256,9 +257,10 @@ public class PlayScene3D extends AbstractGameScene {
 	@Override
 	public void onPlayerFoundFood(GameEvent e) {
 		if (e.tile.isEmpty()) { // happens when using the "eat all pellets except energizers" cheat
-			maze3D.foodNodes().filter(node -> !info(node).energizer).forEach(node -> node.setVisible(false));
+			maze3D.foodNodes().filter(node -> !info(node).energizer).forEach(maze3D::hideFoodNode);
 		} else {
-			maze3D.foodNodeAt(e.tile.get()).ifPresent(node -> node.setVisible(false));
+			V2i tile = e.tile.get();
+			maze3D.foodNodeAt(tile).ifPresent(maze3D::hideFoodNode);
 			AudioClip munching = sounds.getClip(GameSounds.PACMAN_MUNCH);
 			if (!munching.isPlaying()) {
 				sounds.loop(GameSounds.PACMAN_MUNCH, Integer.MAX_VALUE);

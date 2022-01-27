@@ -27,6 +27,7 @@ import static de.amr.games.pacman.model.world.World.HTS;
 import static de.amr.games.pacman.model.world.World.TS;
 import static de.amr.games.pacman.ui.fx._3d.entity.Maze3D.NodeInfo.info;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -66,6 +67,7 @@ public class Maze3D extends Group {
 
 		public final boolean energizer;
 		public final V2i tile;
+		public Animation animation;
 
 		public NodeInfo(boolean energizer, V2i tile) {
 			this.energizer = energizer;
@@ -88,8 +90,6 @@ public class Maze3D extends Group {
 	private double energizerRadius = 2.5;
 	private double pelletRadius = 1;
 	private Color floorColor = Color.rgb(20, 20, 120);
-
-	private Animation[] energizerAnimations;
 
 	/**
 	 * Creates the 3D-maze base (no walls, no doors, no food).
@@ -131,8 +131,20 @@ public class Maze3D extends Group {
 		return foodNodes().filter(node -> info(node).energizer);
 	}
 
+	public Stream<Animation> energizerAnimations() {
+		return energizerNodes().map(node -> info(node).animation).filter(Objects::nonNull);
+	}
+
 	public Optional<Node> energizerNodeAt(V2i tile) {
 		return energizerNodes().filter(node -> sameTile(node, tile)).findFirst();
+	}
+
+	public void hideFoodNode(Node node) {
+		node.setVisible(false);
+		NodeInfo info = info(node);
+		if (info.energizer) {
+			info.animation.stop();
+		}
 	}
 
 	/**
@@ -161,7 +173,7 @@ public class Maze3D extends Group {
 		var pellets = world.tiles().filter(world::isFoodTile)
 				.map(tile -> createPellet(tile, world.isEnergizerTile(tile), material)).collect(Collectors.toList());
 		foodGroup.getChildren().setAll(pellets);
-		energizerAnimations = energizerNodes().map(this::createEnergizerAnimation).toArray(Animation[]::new);
+		energizerNodes().forEach(node -> info(node).animation = createEnergizerAnimation(node));
 	}
 
 	private Animation createEnergizerAnimation(Node energizerNode) {
@@ -178,17 +190,18 @@ public class Maze3D extends Group {
 	}
 
 	public void startEnergizerAnimations() {
-		if (Stream.of(energizerAnimations).anyMatch(animation -> animation.getStatus() != Status.RUNNING)) {
-			Stream.of(energizerAnimations).forEach(Animation::play);
+		boolean notRunning = energizerAnimations().anyMatch(anim -> anim.getStatus() != Status.RUNNING);
+		if (notRunning) {
+			energizerAnimations().forEach(Animation::play);
 		}
 	}
 
 	public void playEnergizerAnimations() {
-		Stream.of(energizerAnimations).forEach(Animation::play);
+		energizerAnimations().forEach(Animation::play);
 	}
 
 	public void stopEnergizerAnimations() {
-		Stream.of(energizerAnimations).forEach(Animation::stop);
+		energizerAnimations().forEach(Animation::stop);
 	}
 
 	public Animation flashingAnimation(int times) {
