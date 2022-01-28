@@ -85,7 +85,7 @@ public class Ghost3D extends Creature3D {
 		} else {
 			displayComplete();
 		}
-		super.update(ghost);
+		update(ghost);
 	}
 
 	private void displayNumberCube() {
