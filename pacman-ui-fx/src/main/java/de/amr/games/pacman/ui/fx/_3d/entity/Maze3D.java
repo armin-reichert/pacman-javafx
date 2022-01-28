@@ -263,11 +263,6 @@ public class Maze3D extends Group {
 		return wall;
 	}
 
-	private Group addCorner(int x, int y, double blockSize, PhongMaterial wallBaseMaterial,
-			PhongMaterial wallTopMaterial) {
-		return addWall(x, y, 1, 1, blockSize, wallBaseMaterial, wallTopMaterial);
-	}
-
 	private void buildWalls(FloorPlan floorPlan, World world, double stoneSize, Color wallBaseColor, Color wallTopColor) {
 
 		var wallBaseMaterial = new PhongMaterial(wallBaseColor);
@@ -339,7 +334,7 @@ public class Maze3D extends Group {
 		for (int y = 0; y < floorPlan.sizeY(); ++y) {
 			for (int x = 0; x < floorPlan.sizeX(); ++x) {
 				if (floorPlan.get(x, y) == FloorPlan.CORNER) {
-					addCorner(x, y, stoneSize, wallBaseMaterial, wallTopMaterial);
+					addWall(x, y, 1, 1, stoneSize, wallBaseMaterial, wallTopMaterial);
 				}
 			}
 		}
