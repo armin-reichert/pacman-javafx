@@ -68,7 +68,7 @@ public class Ghost3D extends Creature3D {
 
 		Group ghostVariants = new Group(completeGhost3D, eyes3D);
 		ghostVariants.setRotationAxis(Rotate.Z_AXIS);
-		ghostVariants.setRotate(rotationAngle(ghost.dir()));
+		ghostVariants.setRotate(turnAngle(ghost.dir()));
 
 		// TODO checkme
 		turningAnimation.setNode(ghostVariants);
@@ -81,8 +81,8 @@ public class Ghost3D extends Creature3D {
 		setNormalSkinColor();
 	}
 
+	@Override
 	public void update() {
-		super.update(ghost);
 		if (ghost.bounty > 0) {
 			displayNumberCube();
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
@@ -90,7 +90,7 @@ public class Ghost3D extends Creature3D {
 		} else {
 			displayComplete();
 		}
-		updateVisualDirection(ghost);
+		super.update(ghost);
 	}
 
 	private void displayNumberCube() {

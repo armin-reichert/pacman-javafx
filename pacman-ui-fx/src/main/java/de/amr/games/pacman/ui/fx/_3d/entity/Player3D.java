@@ -73,16 +73,13 @@ public class Player3D extends Creature3D {
 		setScaleX(1.05);
 		setScaleY(1.05);
 		setScaleZ(1.05);
-		setRotate(rotationAngle(player.dir()));
-		updateVisualDirection(player);
+		setRotate(turnAngle(player.dir()));
 		skull.setMaterial(new PhongMaterial(skullColor));
 	}
 
+	@Override
 	public void update() {
-		super.update(player);
-		if (!player.dead) {
-			updateVisualDirection(player);
-		}
+		update(player);
 	}
 
 	public Animation dyingAnimation(SoundManager sounds) {
