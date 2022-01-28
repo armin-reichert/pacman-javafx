@@ -80,9 +80,20 @@ public class Ghost3D extends Creature3D {
 
 		getChildren().addAll(ghostVariants, cube3D);
 
-		displayCompleteGhost();
+		displayComplete();
 		setNormalSkinColor();
 		setTranslateZ(-HTS);
+	}
+
+	public void update() {
+		super.update(ghost);
+		if (ghost.bounty > 0) {
+			displayNumberCube();
+		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
+			displayEyes();
+		} else {
+			displayComplete();
+		}
 	}
 
 	private void displayNumberCube() {
@@ -113,7 +124,7 @@ public class Ghost3D extends Creature3D {
 		updateDirection(ghost);
 	}
 
-	private void displayCompleteGhost() {
+	private void displayComplete() {
 		if (displayMode != DisplayMode.FULL) {
 			completeGhost3D.setVisible(true);
 			eyes3D.setVisible(false);
@@ -121,17 +132,6 @@ public class Ghost3D extends Creature3D {
 			displayMode = DisplayMode.FULL;
 		}
 		updateDirection(ghost);
-	}
-
-	public void update() {
-		super.update(ghost);
-		if (ghost.bounty > 0) {
-			displayNumberCube();
-		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
-			displayEyes();
-		} else {
-			displayCompleteGhost();
-		}
 	}
 
 	public void playFlashingAnimation() {

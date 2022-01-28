@@ -55,15 +55,28 @@ public class Player3D extends Creature3D {
 
 	private final Pac player;
 	private final Shape3D head;
+	private final PointLight light;
 
 	public Player3D(Pac player, Group completePlayer) {
 		this.player = player;
 		head = (Shape3D) completePlayer.getChildrenUnmodifiable().get(0);
-		PointLight light = new PointLight(Color.WHITE);
+		light = new PointLight(Color.WHITE);
 		light.setTranslateZ(-4);
 		getChildren().addAll(completePlayer, light);
 		turningAnimation.setNode(this);
 		reset();
+	}
+
+	public void reset() {
+		head.setMaterial(new PhongMaterial(Color.YELLOW));
+		setScaleX(1.05);
+		setScaleY(1.05);
+		setScaleZ(1.05);
+		setVisible(player.visible && !outsideMaze(player));
+		setTranslateX(player.position.x + HTS);
+		setTranslateY(player.position.y + HTS);
+		setTranslateZ(-HTS);
+		resetTurning();
 	}
 
 	private void resetTurning() {
@@ -72,6 +85,13 @@ public class Player3D extends Creature3D {
 		setRotationAxis(Rotate.Z_AXIS);
 		setRotate(angle);
 		targetDir = player.dir();
+	}
+
+	public void update() {
+		super.update(player);
+		if (!player.dead) {
+			updateDirection(player);
+		}
 	}
 
 	public Animation dyingAnimation(SoundManager sounds) {
@@ -92,22 +112,4 @@ public class Player3D extends Creature3D {
 				new ParallelTransition(spin, shrink, playSound));
 	}
 
-	public void reset() {
-		head.setMaterial(new PhongMaterial(Color.YELLOW));
-		setScaleX(1.05);
-		setScaleY(1.05);
-		setScaleZ(1.05);
-		setVisible(player.visible && !outsideMaze(player));
-		setTranslateX(player.position.x + HTS);
-		setTranslateY(player.position.y + HTS);
-		setTranslateZ(-HTS);
-		resetTurning();
-	}
-
-	public void update() {
-		super.update(player);
-		if (!player.dead) {
-			updateDirection(player);
-		}
-	}
 }
