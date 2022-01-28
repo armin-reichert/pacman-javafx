@@ -61,8 +61,8 @@ public class GianmarcosModel3D implements PacManModel3D {
 
 	@Override
 	public Group createPacMan() {
-		MeshView head = pacManModel.createMeshView("Sphere_yellow_packman");
-		head.setMaterial(new PhongMaterial(Color.YELLOW));
+		MeshView skull = pacManModel.createMeshView("Sphere_yellow_packman");
+		skull.setMaterial(new PhongMaterial(Color.YELLOW));
 
 		MeshView eyes = pacManModel.createMeshView("Sphere.008_Sphere.010_grey_wall");
 		eyes.setMaterial(new PhongMaterial(Color.rgb(20, 20, 20)));
@@ -70,10 +70,10 @@ public class GianmarcosModel3D implements PacManModel3D {
 		MeshView palate = pacManModel.createMeshView("Sphere_grey_wall");
 		palate.setMaterial(new PhongMaterial(Color.CHOCOLATE));
 
-		centerOverOrigin(head, eyes, palate);
-		bindDrawMode(Env.$drawMode3D, head, eyes, palate);
+		centerOverOrigin(skull, eyes, palate);
+		bindDrawMode(Env.$drawMode3D, skull, eyes, palate);
 
-		Group pacman = new Group(head, eyes, palate);
+		Group pacman = new Group(skull, eyes, palate);
 		pacman.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 		scale(pacman, 8);
 

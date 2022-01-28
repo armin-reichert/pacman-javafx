@@ -61,6 +61,7 @@ public abstract class Creature3D extends Group {
 		setVisible(creature.visible && !outsideMaze(creature));
 		setTranslateX(creature.position.x + HTS);
 		setTranslateY(creature.position.y + HTS);
+		setTranslateZ(-HTS);
 	}
 
 	protected boolean outsideMaze(Creature creature) {

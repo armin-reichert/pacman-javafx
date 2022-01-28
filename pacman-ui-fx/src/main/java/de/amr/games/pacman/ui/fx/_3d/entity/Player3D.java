@@ -54,28 +54,26 @@ import javafx.util.Duration;
 public class Player3D extends Creature3D {
 
 	private final Pac player;
-	private final Shape3D head;
+	private final Shape3D skull;
 	private final PointLight light;
+	private Color skullColor = Color.YELLOW;
 
 	public Player3D(Pac player, Group completePlayer) {
 		this.player = player;
-		head = (Shape3D) completePlayer.getChildrenUnmodifiable().get(0);
-		light = new PointLight(Color.WHITE);
-		light.setTranslateZ(-4);
+		this.skull = (Shape3D) completePlayer.getChildren().get(0);
+		this.light = new PointLight(Color.WHITE);
 		getChildren().addAll(completePlayer, light);
+		light.setTranslateZ(-HTS);
 		turningAnimation.setNode(this);
 		reset();
 	}
 
 	public void reset() {
-		head.setMaterial(new PhongMaterial(Color.YELLOW));
+		super.update(player);
+		skull.setMaterial(new PhongMaterial(skullColor));
 		setScaleX(1.05);
 		setScaleY(1.05);
 		setScaleZ(1.05);
-		setVisible(player.visible && !outsideMaze(player));
-		setTranslateX(player.position.x + HTS);
-		setTranslateY(player.position.y + HTS);
-		setTranslateZ(-HTS);
 		resetTurning();
 	}
 
@@ -108,8 +106,7 @@ public class Player3D extends Creature3D {
 		var playSound = now(() -> sounds.play(GameSounds.PACMAN_DEATH));
 
 		return new SequentialTransition(//
-				new ImpaleAnimation(Duration.seconds(1), head, Color.YELLOW, Color.LIGHTGRAY), //
+				new ImpaleAnimation(Duration.seconds(1), skull, Color.YELLOW, Color.LIGHTGRAY), //
 				new ParallelTransition(spin, shrink, playSound));
 	}
-
 }

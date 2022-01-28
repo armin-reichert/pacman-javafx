@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import static de.amr.games.pacman.model.world.World.HTS;
-
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -82,7 +80,6 @@ public class Ghost3D extends Creature3D {
 
 		displayComplete();
 		setNormalSkinColor();
-		setTranslateZ(-HTS);
 	}
 
 	public void update() {
