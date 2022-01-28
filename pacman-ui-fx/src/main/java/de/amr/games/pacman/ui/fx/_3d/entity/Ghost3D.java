@@ -27,7 +27,6 @@ import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.animation.BlueFlashingAnimation;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -45,13 +44,13 @@ import javafx.scene.transform.Rotate;
 public class Ghost3D extends Creature3D {
 
 	private enum DisplayMode {
-		FULL, EYES, BOUNTY
+		FULL, EYES, NUMBER_CUBE
 	}
 
 	public final Ghost ghost;
 
 	private final Rendering2D r2D;
-	private final Group completeGhost3D;
+	private final Group complete3D;
 	private final Shape3D skin3D;
 	private final Group eyes3D;
 	private final Box cube3D;
@@ -63,7 +62,7 @@ public class Ghost3D extends Creature3D {
 		this.targetDir = ghost.dir();
 		this.ghost = ghost;
 		this.r2D = r2D;
-		this.completeGhost3D = completeGhost3D;
+		this.complete3D = completeGhost3D;
 		this.skin3D = (Shape3D) completeGhost3D.getChildren().get(0); // TODO cleanup
 		this.eyes3D = eyes3D;
 
@@ -91,44 +90,41 @@ public class Ghost3D extends Creature3D {
 		} else {
 			displayComplete();
 		}
+		updateVisualDirection(ghost);
 	}
 
 	private void displayNumberCube() {
-		if (displayMode == DisplayMode.BOUNTY) {
-			return;
+		if (displayMode != DisplayMode.NUMBER_CUBE) {
+			PhongMaterial material = new PhongMaterial();
+			Image image = r2D.extractRegion(r2D.getBountyNumberSprites().get(ghost.bounty));
+			material.setBumpMap(image);
+			material.setDiffuseMap(image);
+			cube3D.setMaterial(material);
+			setRotationAxis(Rotate.X_AXIS);
+			setRotate(0);
+			cube3D.setVisible(true);
+			complete3D.setVisible(false);
+			eyes3D.setVisible(false);
+			displayMode = DisplayMode.NUMBER_CUBE;
 		}
-		Rectangle2D sprite = r2D.getBountyNumberSprites().get(ghost.bounty);
-		Image image = r2D.extractRegion(sprite);
-		PhongMaterial material = new PhongMaterial();
-		material.setBumpMap(image);
-		material.setDiffuseMap(image);
-		cube3D.setMaterial(material);
-		cube3D.setVisible(true);
-		completeGhost3D.setVisible(false);
-		eyes3D.setVisible(false);
-		setRotationAxis(Rotate.X_AXIS);
-		setRotate(0);
-		displayMode = DisplayMode.BOUNTY;
 	}
 
 	private void displayEyes() {
 		if (displayMode != DisplayMode.EYES) {
-			completeGhost3D.setVisible(false);
-			eyes3D.setVisible(true);
 			cube3D.setVisible(false);
+			complete3D.setVisible(false);
+			eyes3D.setVisible(true);
 			displayMode = DisplayMode.EYES;
 		}
-		updateVisualDirection(ghost);
 	}
 
 	private void displayComplete() {
 		if (displayMode != DisplayMode.FULL) {
-			completeGhost3D.setVisible(true);
-			eyes3D.setVisible(false);
 			cube3D.setVisible(false);
+			complete3D.setVisible(true);
+			eyes3D.setVisible(false);
 			displayMode = DisplayMode.FULL;
 		}
-		updateVisualDirection(ghost);
 	}
 
 	public void playFlashingAnimation() {
