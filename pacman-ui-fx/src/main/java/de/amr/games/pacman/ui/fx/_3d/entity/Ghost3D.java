@@ -52,33 +52,28 @@ public class Ghost3D extends Creature3D {
 	private final Rendering2D r2D;
 	private final Group complete3D;
 	private final Shape3D skin3D;
-	private final Group eyes3D;
+	private final Group eyesOnly3D;
 	private final Box cube3D;
 	private final BlueFlashingAnimation flashing = new BlueFlashingAnimation();
 
 	private DisplayMode displayMode;
 
-	public Ghost3D(Ghost ghost, Group completeGhost3D, Group eyes3D, Rendering2D r2D) {
+	public Ghost3D(Ghost ghost, Group completeGhost3D, Group eyesOnly3D, Rendering2D r2D) {
 		this.targetDir = ghost.dir();
 		this.ghost = ghost;
 		this.r2D = r2D;
 		this.complete3D = completeGhost3D;
-		this.skin3D = (Shape3D) completeGhost3D.getChildren().get(0); // TODO cleanup
-		this.eyes3D = eyes3D;
-
-		Group ghostVariants = new Group(completeGhost3D, eyes3D);
-		ghostVariants.setRotationAxis(Rotate.Z_AXIS);
-		ghostVariants.setRotate(turnAngle(ghost.dir()));
-
+		this.skin3D = (Shape3D) completeGhost3D.getChildren().get(0);
+		this.eyesOnly3D = eyesOnly3D;
+		this.cube3D = new Box(8, 8, 8);
+		Group modes = new Group(completeGhost3D, eyesOnly3D);
+		modes.setRotationAxis(Rotate.Z_AXIS);
+		modes.setRotate(turnAngle(ghost.dir()));
+		getChildren().addAll(modes, cube3D);
 		// TODO checkme
-		turningAnimation.setNode(ghostVariants);
-
-		cube3D = new Box(8, 8, 8);
-
-		getChildren().addAll(ghostVariants, cube3D);
-
-		displayComplete();
+		turningAnimation.setNode(modes);
 		setNormalSkinColor();
+		update();
 	}
 
 	@Override
@@ -104,7 +99,7 @@ public class Ghost3D extends Creature3D {
 			setRotate(0);
 			cube3D.setVisible(true);
 			complete3D.setVisible(false);
-			eyes3D.setVisible(false);
+			eyesOnly3D.setVisible(false);
 			displayMode = DisplayMode.NUMBER_CUBE;
 		}
 	}
@@ -113,7 +108,7 @@ public class Ghost3D extends Creature3D {
 		if (displayMode != DisplayMode.EYES) {
 			cube3D.setVisible(false);
 			complete3D.setVisible(false);
-			eyes3D.setVisible(true);
+			eyesOnly3D.setVisible(true);
 			displayMode = DisplayMode.EYES;
 		}
 	}
@@ -122,7 +117,7 @@ public class Ghost3D extends Creature3D {
 		if (displayMode != DisplayMode.FULL) {
 			cube3D.setVisible(false);
 			complete3D.setVisible(true);
-			eyes3D.setVisible(false);
+			eyesOnly3D.setVisible(false);
 			displayMode = DisplayMode.FULL;
 		}
 	}
