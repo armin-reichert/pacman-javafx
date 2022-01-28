@@ -44,7 +44,16 @@ import javafx.scene.transform.Rotate;
 public class Ghost3D extends Creature3D {
 
 	private enum DisplayMode {
-		FULL, EYES, NUMBER_CUBE
+		COMPLETE, EYES_ONLY, NUMBER_CUBE
+	}
+
+	private void setDisplayMode(DisplayMode mode) {
+		if (displayMode != mode) {
+			displayMode = mode;
+			cube3D.setVisible(displayMode == DisplayMode.NUMBER_CUBE);
+			complete3D.setVisible(displayMode == DisplayMode.COMPLETE);
+			eyesOnly3D.setVisible(displayMode == DisplayMode.EYES_ONLY);
+		}
 	}
 
 	public final Ghost ghost;
@@ -82,47 +91,22 @@ public class Ghost3D extends Creature3D {
 	@Override
 	public void update() {
 		if (ghost.bounty > 0) {
-			displayNumberCube();
+			if (displayMode != DisplayMode.NUMBER_CUBE) {
+				setDisplayMode(DisplayMode.NUMBER_CUBE);
+				PhongMaterial material = new PhongMaterial();
+				Image image = r2D.extractRegion(r2D.getBountyNumberSprites().get(ghost.bounty));
+				material.setBumpMap(image);
+				material.setDiffuseMap(image);
+				cube3D.setMaterial(material);
+				setRotationAxis(Rotate.X_AXIS);
+				setRotate(0);
+			}
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
-			displayEyes();
+			setDisplayMode(DisplayMode.EYES_ONLY);
 		} else {
-			displayComplete();
+			setDisplayMode(DisplayMode.COMPLETE);
 		}
 		update(ghost);
-	}
-
-	private void displayNumberCube() {
-		if (displayMode != DisplayMode.NUMBER_CUBE) {
-			PhongMaterial material = new PhongMaterial();
-			Image image = r2D.extractRegion(r2D.getBountyNumberSprites().get(ghost.bounty));
-			material.setBumpMap(image);
-			material.setDiffuseMap(image);
-			cube3D.setMaterial(material);
-			setRotationAxis(Rotate.X_AXIS);
-			setRotate(0);
-			cube3D.setVisible(true);
-			complete3D.setVisible(false);
-			eyesOnly3D.setVisible(false);
-			displayMode = DisplayMode.NUMBER_CUBE;
-		}
-	}
-
-	private void displayEyes() {
-		if (displayMode != DisplayMode.EYES) {
-			cube3D.setVisible(false);
-			complete3D.setVisible(false);
-			eyesOnly3D.setVisible(true);
-			displayMode = DisplayMode.EYES;
-		}
-	}
-
-	private void displayComplete() {
-		if (displayMode != DisplayMode.FULL) {
-			cube3D.setVisible(false);
-			complete3D.setVisible(true);
-			eyesOnly3D.setVisible(false);
-			displayMode = DisplayMode.FULL;
-		}
 	}
 
 	public void playFlashingAnimation() {
