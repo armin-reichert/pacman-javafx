@@ -118,7 +118,7 @@ public class Ghost3D extends Creature3D {
 			cube3D.setVisible(false);
 			displayMode = DisplayMode.EYES;
 		}
-		updateDirection(ghost);
+		updateVisualDirection(ghost);
 	}
 
 	private void displayComplete() {
@@ -128,7 +128,7 @@ public class Ghost3D extends Creature3D {
 			cube3D.setVisible(false);
 			displayMode = DisplayMode.FULL;
 		}
-		updateDirection(ghost);
+		updateVisualDirection(ghost);
 	}
 
 	public void playFlashingAnimation() {

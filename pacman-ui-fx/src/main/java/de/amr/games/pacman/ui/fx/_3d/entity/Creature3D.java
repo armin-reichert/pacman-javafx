@@ -47,7 +47,7 @@ public abstract class Creature3D extends Group {
 		return ROTATION_ANGLES[index(dir)][0][0];
 	}
 
-	protected void updateDirection(Creature creature) {
+	protected void updateVisualDirection(Creature creature) {
 		if (targetDir != creature.dir()) {
 			int[] angles = rotationAngles(targetDir, creature.dir());
 			turningAnimation.setFromAngle(angles[0]);

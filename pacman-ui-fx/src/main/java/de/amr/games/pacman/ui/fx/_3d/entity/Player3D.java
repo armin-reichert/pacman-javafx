@@ -58,11 +58,11 @@ public class Player3D extends Creature3D {
 	private final PointLight light;
 	private Color skullColor = Color.YELLOW;
 
-	public Player3D(Pac player, Group completePlayer) {
+	public Player3D(Pac player, Group completePlayer3D) {
 		this.player = player;
-		this.skull = (Shape3D) completePlayer.getChildren().get(0);
+		this.skull = (Shape3D) completePlayer3D.getChildren().get(0);
 		this.light = new PointLight(Color.WHITE);
-		getChildren().addAll(completePlayer, light);
+		getChildren().addAll(completePlayer3D, light);
 		light.setTranslateZ(-HTS);
 		turningAnimation.setNode(this);
 		reset();
@@ -70,25 +70,18 @@ public class Player3D extends Creature3D {
 
 	public void reset() {
 		super.update(player);
-		skull.setMaterial(new PhongMaterial(skullColor));
 		setScaleX(1.05);
 		setScaleY(1.05);
 		setScaleZ(1.05);
-		resetTurning();
-	}
-
-	private void resetTurning() {
-		double angle = rotationAngle(player.dir());
-		turningAnimation.setFromAngle(angle);
-		setRotationAxis(Rotate.Z_AXIS);
-		setRotate(angle);
-		targetDir = player.dir();
+		setRotate(rotationAngle(player.dir()));
+		updateVisualDirection(player);
+		skull.setMaterial(new PhongMaterial(skullColor));
 	}
 
 	public void update() {
 		super.update(player);
 		if (!player.dead) {
-			updateDirection(player);
+			updateVisualDirection(player);
 		}
 	}
 
