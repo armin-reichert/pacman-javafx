@@ -59,16 +59,15 @@ public class Player3D extends Creature3D {
 	public Player3D(Pac player, Group completePlayer) {
 		this.player = player;
 		head = (Shape3D) completePlayer.getChildrenUnmodifiable().get(0);
-		turningAnimation = new RotateTransition(Duration.seconds(0.3), this);
 		PointLight light = new PointLight(Color.WHITE);
 		light.setTranslateZ(-4);
 		getChildren().addAll(completePlayer, light);
+		turningAnimation.setNode(this);
 		reset();
 	}
 
 	private void resetTurning() {
 		double angle = rotationAngle(player.dir());
-		turningAnimation.setAxis(Rotate.Z_AXIS);
 		turningAnimation.setFromAngle(angle);
 		setRotationAxis(Rotate.Z_AXIS);
 		setRotate(angle);

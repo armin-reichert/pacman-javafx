@@ -7,6 +7,8 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Creature;
 import javafx.animation.RotateTransition;
 import javafx.scene.Group;
+import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
 
 /**
  * Common base class for 3D creatures (Pac-Man, ghosts).
@@ -25,9 +27,13 @@ public abstract class Creature3D extends Group {
 	};
 	//@formatter:on
 
+	protected final RotateTransition turningAnimation;
 	protected Direction targetDir;
 
-	protected RotateTransition turningAnimation;
+	public Creature3D() {
+		turningAnimation = new RotateTransition(Duration.seconds(0.3));
+		turningAnimation.setAxis(Rotate.Z_AXIS);
+	}
 
 	protected int index(Direction dir) {
 		return dir == Direction.LEFT ? 0 : dir == Direction.RIGHT ? 1 : dir == Direction.UP ? 2 : 3;
