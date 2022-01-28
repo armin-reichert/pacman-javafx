@@ -1,5 +1,6 @@
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.model.world.World.HTS;
 import static de.amr.games.pacman.model.world.World.TS;
 
 import de.amr.games.pacman.lib.Direction;
@@ -48,6 +49,12 @@ public abstract class Creature3D extends Group {
 			turningAnimation.playFromStart();
 			targetDir = creature.dir();
 		}
+	}
+
+	public void update(Creature creature) {
+		setVisible(creature.visible && !outsideMaze(creature));
+		setTranslateX(creature.position.x + HTS);
+		setTranslateY(creature.position.y + HTS);
 	}
 
 	protected boolean outsideMaze(Creature creature) {

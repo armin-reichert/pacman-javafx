@@ -84,7 +84,7 @@ public class Ghost3D extends Creature3D {
 
 		displayCompleteGhost();
 		setNormalSkinColor();
-		setTranslateZ(-4);
+		setTranslateZ(-HTS);
 	}
 
 	private void displayNumberCube() {
@@ -126,6 +126,7 @@ public class Ghost3D extends Creature3D {
 	}
 
 	public void update() {
+		super.update(ghost);
 		if (ghost.bounty > 0) {
 			displayNumberCube();
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
@@ -133,9 +134,6 @@ public class Ghost3D extends Creature3D {
 		} else {
 			displayCompleteGhost();
 		}
-		setTranslateX(ghost.position.x + HTS);
-		setTranslateY(ghost.position.y + HTS);
-		setVisible(ghost.visible && !outsideMaze(ghost));
 	}
 
 	public void playFlashingAnimation() {

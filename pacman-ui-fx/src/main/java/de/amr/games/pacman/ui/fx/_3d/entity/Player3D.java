@@ -106,9 +106,7 @@ public class Player3D extends Creature3D {
 	}
 
 	public void update() {
-		setVisible(player.visible && !outsideMaze(player));
-		setTranslateX(player.position.x + HTS);
-		setTranslateY(player.position.y + HTS);
+		super.update(player);
 		if (!player.dead) {
 			updateDirection(player);
 		}
