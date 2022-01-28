@@ -47,15 +47,6 @@ public class Ghost3D extends Creature3D {
 		COMPLETE, EYES_ONLY, NUMBER_CUBE
 	}
 
-	private void setDisplayMode(DisplayMode mode) {
-		if (displayMode != mode) {
-			displayMode = mode;
-			cube3D.setVisible(displayMode == DisplayMode.NUMBER_CUBE);
-			complete3D.setVisible(displayMode == DisplayMode.COMPLETE);
-			eyesOnly3D.setVisible(displayMode == DisplayMode.EYES_ONLY);
-		}
-	}
-
 	public final Ghost ghost;
 
 	private final Rendering2D r2D;
@@ -81,6 +72,15 @@ public class Ghost3D extends Creature3D {
 		getChildren().addAll(modes, cube3D);
 		turningAnimation.setNode(modes);
 		reset();
+	}
+
+	private void setDisplayMode(DisplayMode mode) {
+		if (displayMode != mode) {
+			displayMode = mode;
+			cube3D.setVisible(displayMode == DisplayMode.NUMBER_CUBE);
+			complete3D.setVisible(displayMode == DisplayMode.COMPLETE);
+			eyesOnly3D.setVisible(displayMode == DisplayMode.EYES_ONLY);
+		}
 	}
 
 	public void reset() {
