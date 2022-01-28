@@ -165,7 +165,8 @@ public class Maze3D extends Group {
 	public void buildWallsAndDoors(World world, Color wallBaseColor, Color wallTopColor) {
 		int resolution = $resolution.get();
 		int stoneSize = TS / resolution;
-		buildWalls(new FloorPlan(resolution, world), world, stoneSize, wallBaseColor, wallTopColor);
+		wallsGroup.getChildren().clear();
+		addWalls(new FloorPlan(resolution, world), world, stoneSize, wallBaseColor, wallTopColor);
 		doorsGroup.getChildren().setAll( //
 				world.ghostHouse().doorTiles().stream().map(Door3D::new).collect(Collectors.toList()));
 	}
@@ -242,17 +243,17 @@ public class Maze3D extends Group {
 	 * @return pair of walls (base, top)
 	 */
 	private Group addWall(int leftX, int topY, int numStonesX, int numStonesY, double stoneSize,
-			PhongMaterial wallBaseMaterial, PhongMaterial wallTopMaterial) {
+			PhongMaterial baseMaterial, PhongMaterial topMaterial) {
 
 		Box base = new Box(numStonesX * stoneSize, numStonesY * stoneSize, $wallHeight.get());
 		base.depthProperty().bind($wallHeight);
-		base.setMaterial(wallBaseMaterial);
+		base.setMaterial(baseMaterial);
 		base.translateZProperty().bind($wallHeight.multiply(-0.5));
 		base.drawModeProperty().bind(Env.$drawMode3D);
 
 		double topHeight = 0.5;
 		Box top = new Box(numStonesX * stoneSize, numStonesY * stoneSize, topHeight);
-		top.setMaterial(wallTopMaterial);
+		top.setMaterial(topMaterial);
 		top.translateZProperty().bind(base.translateZProperty().subtract($wallHeight.add(topHeight + 0.1).multiply(0.5)));
 		top.drawModeProperty().bind(Env.$drawMode3D);
 
@@ -263,14 +264,12 @@ public class Maze3D extends Group {
 		return wall;
 	}
 
-	private void buildWalls(FloorPlan floorPlan, World world, double stoneSize, Color wallBaseColor, Color wallTopColor) {
+	private void addWalls(FloorPlan floorPlan, World world, double stoneSize, Color wallBaseColor, Color wallTopColor) {
+		var baseMaterial = new PhongMaterial(wallBaseColor);
+		baseMaterial.setSpecularColor(wallBaseColor.brighter());
 
-		var wallBaseMaterial = new PhongMaterial(wallBaseColor);
-		wallBaseMaterial.setSpecularColor(wallBaseColor.brighter());
-		var wallTopMaterial = new PhongMaterial(wallTopColor);
-		wallTopMaterial.setDiffuseColor(wallTopColor);
-
-		wallsGroup.getChildren().clear();
+		var topMaterial = new PhongMaterial(wallTopColor);
+		topMaterial.setDiffuseColor(wallTopColor);
 
 		// horizontal
 		for (int y = 0; y < floorPlan.sizeY(); ++y) {
@@ -286,17 +285,17 @@ public class Maze3D extends Group {
 					}
 				} else {
 					if (leftX != -1) {
-						addWall(leftX, y, sizeX, 1, stoneSize, wallBaseMaterial, wallTopMaterial);
+						addWall(leftX, y, sizeX, 1, stoneSize, baseMaterial, topMaterial);
 						leftX = -1;
 					}
 				}
 				if (x == floorPlan.sizeX() - 1 && leftX != -1) {
-					addWall(leftX, y, sizeX, 1, stoneSize, wallBaseMaterial, wallTopMaterial);
+					addWall(leftX, y, sizeX, 1, stoneSize, baseMaterial, topMaterial);
 					leftX = -1;
 				}
 			}
 			if (y == floorPlan.sizeY() - 1 && leftX != -1) {
-				addWall(leftX, y, sizeX, 1, stoneSize, wallBaseMaterial, wallTopMaterial);
+				addWall(leftX, y, sizeX, 1, stoneSize, baseMaterial, topMaterial);
 				leftX = -1;
 			}
 		}
@@ -315,17 +314,17 @@ public class Maze3D extends Group {
 					}
 				} else {
 					if (topY != -1) {
-						addWall(x, topY, 1, sizeY, stoneSize, wallBaseMaterial, wallTopMaterial);
+						addWall(x, topY, 1, sizeY, stoneSize, baseMaterial, topMaterial);
 						topY = -1;
 					}
 				}
 				if (y == floorPlan.sizeY() - 1 && topY != -1) {
-					addWall(x, topY, 1, sizeY, stoneSize, wallBaseMaterial, wallTopMaterial);
+					addWall(x, topY, 1, sizeY, stoneSize, baseMaterial, topMaterial);
 					topY = -1;
 				}
 			}
 			if (x == floorPlan.sizeX() - 1 && topY != -1) {
-				addWall(x, topY, 1, sizeY, stoneSize, wallBaseMaterial, wallTopMaterial);
+				addWall(x, topY, 1, sizeY, stoneSize, baseMaterial, topMaterial);
 				topY = -1;
 			}
 		}
@@ -334,7 +333,7 @@ public class Maze3D extends Group {
 		for (int y = 0; y < floorPlan.sizeY(); ++y) {
 			for (int x = 0; x < floorPlan.sizeX(); ++x) {
 				if (floorPlan.get(x, y) == FloorPlan.CORNER) {
-					addWall(x, y, 1, 1, stoneSize, wallBaseMaterial, wallTopMaterial);
+					addWall(x, y, 1, 1, stoneSize, baseMaterial, topMaterial);
 				}
 			}
 		}
