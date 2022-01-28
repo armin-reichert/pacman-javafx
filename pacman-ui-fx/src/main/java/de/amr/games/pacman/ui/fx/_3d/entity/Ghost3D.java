@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.world.World.HTS;
 
-import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -60,11 +59,9 @@ public class Ghost3D extends Creature3D {
 	private final Shape3D skin;
 	private final Group eyes;
 	private final Box numberCube;
-	private final RotateTransition turningAnimation;
 	private final BlueFlashingAnimation flashing = new BlueFlashingAnimation();
 
 	private DisplayMode displayMode;
-	private Direction targetDir;
 
 	public Ghost3D(Ghost ghost, Group ghostComplete3D, Group ghostEyes3D, Rendering2D rendering2D) {
 		this.ghost = ghost;
@@ -115,7 +112,7 @@ public class Ghost3D extends Creature3D {
 			numberCube.setVisible(false);
 			displayMode = DisplayMode.EYES;
 		}
-		updateDirection();
+		updateDirection(ghost);
 	}
 
 	private void displayCompleteGhost() {
@@ -125,7 +122,7 @@ public class Ghost3D extends Creature3D {
 			numberCube.setVisible(false);
 			displayMode = DisplayMode.FULL;
 		}
-		updateDirection();
+		updateDirection(ghost);
 	}
 
 	public void update() {
@@ -139,16 +136,6 @@ public class Ghost3D extends Creature3D {
 		setTranslateX(ghost.position.x + HTS);
 		setTranslateY(ghost.position.y + HTS);
 		setVisible(ghost.visible && !outsideMaze(ghost));
-	}
-
-	private void updateDirection() {
-		if (targetDir != ghost.dir()) {
-			int[] angles = rotationAngles(targetDir, ghost.dir());
-			turningAnimation.setFromAngle(angles[0]);
-			turningAnimation.setToAngle(angles[1]);
-			turningAnimation.playFromStart();
-			targetDir = ghost.dir();
-		}
 	}
 
 	public void playFlashingAnimation() {

@@ -4,6 +4,7 @@ import static de.amr.games.pacman.model.world.World.TS;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Creature;
+import javafx.animation.RotateTransition;
 import javafx.scene.Group;
 
 /**
@@ -23,6 +24,10 @@ public abstract class Creature3D extends Group {
 	};
 	//@formatter:on
 
+	protected Direction targetDir;
+
+	protected RotateTransition turningAnimation;
+
 	protected int index(Direction dir) {
 		return dir == Direction.LEFT ? 0 : dir == Direction.RIGHT ? 1 : dir == Direction.UP ? 2 : 3;
 	}
@@ -33,6 +38,16 @@ public abstract class Creature3D extends Group {
 
 	protected int rotationAngle(Direction dir) {
 		return ROTATION_ANGLES[index(dir)][0][0];
+	}
+
+	protected void updateDirection(Creature creature) {
+		if (targetDir != creature.dir()) {
+			int[] angles = rotationAngles(targetDir, creature.dir());
+			turningAnimation.setFromAngle(angles[0]);
+			turningAnimation.setToAngle(angles[1]);
+			turningAnimation.playFromStart();
+			targetDir = creature.dir();
+		}
 	}
 
 	protected boolean outsideMaze(Creature creature) {

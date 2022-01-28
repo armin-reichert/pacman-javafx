@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import static de.amr.games.pacman.model.world.World.HTS;
 import static de.amr.games.pacman.ui.fx.util.Animations.now;
 
-import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx._3d.animation.ImpaleAnimation;
@@ -56,8 +55,6 @@ public class Player3D extends Creature3D {
 
 	private final Pac player;
 	private final Shape3D head;
-	private RotateTransition turningAnimation;
-	private Direction targetDir;
 
 	public Player3D(Pac player, Group completePlayer) {
 		this.player = player;
@@ -76,17 +73,6 @@ public class Player3D extends Creature3D {
 		setRotationAxis(Rotate.Z_AXIS);
 		setRotate(angle);
 		targetDir = player.dir();
-	}
-
-	private void updateTurning() {
-		if (targetDir != player.dir()) {
-			turningAnimation.stop();
-			int[] angles = rotationAngles(player.dir(), targetDir);
-			turningAnimation.setFromAngle(angles[1]);
-			turningAnimation.setToAngle(angles[0]);
-			turningAnimation.play();
-			targetDir = player.dir();
-		}
 	}
 
 	public Animation dyingAnimation(SoundManager sounds) {
@@ -124,7 +110,7 @@ public class Player3D extends Creature3D {
 		setTranslateX(player.position.x + HTS);
 		setTranslateY(player.position.y + HTS);
 		if (!player.dead) {
-			updateTurning();
+			updateDirection(player);
 		}
 	}
 }
