@@ -69,12 +69,12 @@ public class Player3D extends Creature3D {
 	}
 
 	public void reset() {
-		super.update(player);
 		setScaleX(1.05);
 		setScaleY(1.05);
 		setScaleZ(1.05);
 		setRotate(turnAngle(player.dir()));
 		skull.setMaterial(new PhongMaterial(skullColor));
+		update();
 	}
 
 	@Override

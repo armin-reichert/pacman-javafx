@@ -70,8 +70,11 @@ public class Ghost3D extends Creature3D {
 		modes.setRotationAxis(Rotate.Z_AXIS);
 		modes.setRotate(turnAngle(ghost.dir()));
 		getChildren().addAll(modes, cube3D);
-		// TODO checkme
 		turningAnimation.setNode(modes);
+		reset();
+	}
+
+	public void reset() {
 		setNormalSkinColor();
 		update();
 	}

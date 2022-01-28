@@ -315,6 +315,7 @@ public class PlayScene3D extends AbstractGameScene {
 		if (e.newGameState == GameState.READY) {
 			maze3D.reset();
 			player3D.reset();
+			Stream.of(ghosts3D).forEach(Ghost3D::reset);
 			sounds.stopAll();
 			sounds.setMuted(gameController.attractMode);
 			if (!gameController.gameRunning) {
