@@ -40,6 +40,10 @@ public class ManualPlayerControl implements PlayerControl {
 	private final KeyCode upCode, downCode, leftCode, rightCode;
 	private boolean up, down, left, right;
 
+	public ManualPlayerControl(Window window) {
+		this(window, KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
+	}
+
 	public ManualPlayerControl(Window window, KeyCode upCode, KeyCode downCode, KeyCode leftCode, KeyCode rightCode) {
 		this.upCode = upCode;
 		this.downCode = downCode;

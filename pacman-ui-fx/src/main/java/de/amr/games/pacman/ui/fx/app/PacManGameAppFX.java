@@ -31,7 +31,6 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.ui.fx.shell.ManualPlayerControl;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import javafx.application.Application;
-import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 /**
@@ -58,7 +57,7 @@ public class PacManGameAppFX extends Application {
 		var controller = new GameController(options.gameVariant);
 
 		// By default, player is controlled using keyboard
-		var playerController = new ManualPlayerControl(stage, KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
+		var playerController = new ManualPlayerControl(stage);
 
 		// Create the user interface and the connections with the controllers
 		var ui = new PacManGameUI_JavaFX(stage, controller, options.windowHeight, options.fullscreen);
