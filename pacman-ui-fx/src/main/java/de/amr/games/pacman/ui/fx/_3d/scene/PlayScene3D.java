@@ -144,10 +144,8 @@ public class PlayScene3D extends AbstractGameScene {
 		maze3D.$resolution.addListener((x, y, z) -> buildMaze(game.mazeNumber, false));
 		buildMaze(game.mazeNumber, true);
 
-		player3D = new Player3D(game.player, model3D.createPacMan(Color.YELLOW, Color.rgb(20, 20, 20), Color.CHOCOLATE));
-		ghosts3D = game.ghosts()
-				.map(ghost -> new Ghost3D(ghost, model3D.createGhost(Color.WHITE, Color.WHITE, Color.BLACK), r2D))
-				.toArray(Ghost3D[]::new);
+		player3D = new Player3D(game.player, model3D);
+		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D)).toArray(Ghost3D[]::new);
 		bonus3D = new Bonus3D(r2D);
 
 		score3D = new ScoreNotReally3D(r2D.getScoreFont());

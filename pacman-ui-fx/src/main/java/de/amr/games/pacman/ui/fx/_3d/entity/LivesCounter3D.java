@@ -41,7 +41,7 @@ public class LivesCounter3D extends Group {
 
 	public LivesCounter3D(PacManModel3D model3D) {
 		for (int i = 0; i < max; ++i) {
-			Node indicator = model3D.createPacMan(Color.YELLOW, Color.rgb(20, 20, 20), Color.CHOCOLATE);
+			Node indicator = model3D.createPacMan(Color.YELLOW, Color.rgb(60, 60, 60), Color.rgb(60, 60, 60));
 			indicator.setTranslateX(2 * i * TS);
 			getChildren().add(indicator);
 		}

@@ -27,6 +27,7 @@ import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.animation.BlueFlashingAnimation;
+import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -58,9 +59,10 @@ public class Ghost3D extends Creature3D {
 
 	private DisplayMode displayMode;
 
-	public Ghost3D(Ghost ghost, Group body3D, Rendering2D r2D) {
+	public Ghost3D(Ghost ghost, PacManModel3D model3D, Rendering2D r2D) {
 		this.ghost = ghost;
 		this.r2D = r2D;
+		Group body3D = model3D.createGhost(r2D.getGhostColor(ghost.id), Color.WHITE, Color.BLACK);
 		skin3D = (Shape3D) body3D.getChildren().get(0);
 		eyes3D = body3D.getChildren().get(1);
 		cube3D = new Box(8, 8, 8);

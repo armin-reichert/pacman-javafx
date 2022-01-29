@@ -29,6 +29,7 @@ import static de.amr.games.pacman.ui.fx.util.Animations.now;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx._3d.animation.ImpaleAnimation;
+import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
@@ -56,13 +57,17 @@ public class Player3D extends Creature3D {
 	private final Pac player;
 	private final Shape3D skull;
 	private final PointLight light;
-	private Color skullColor = Color.YELLOW;
 
-	public Player3D(Pac player, Group completePlayer3D) {
+	private Color skullColor = Color.YELLOW;
+	private Color eyesColor = Color.rgb(20, 20, 20);
+	private Color palateColor = Color.CHOCOLATE;
+
+	public Player3D(Pac player, PacManModel3D model3D) {
 		this.player = player;
-		this.skull = (Shape3D) completePlayer3D.getChildren().get(0);
+		Group pac3D = model3D.createPacMan(skullColor, eyesColor, palateColor);
+		this.skull = (Shape3D) pac3D.getChildren().get(0);
 		this.light = new PointLight(Color.WHITE);
-		getChildren().addAll(completePlayer3D, light);
+		getChildren().addAll(pac3D, light);
 		light.setTranslateZ(-HTS);
 		turningAnimation.setNode(this);
 		reset();
