@@ -39,14 +39,15 @@ import javafx.util.Duration;
 public class ImpaleAnimation extends Transition {
 
 	private final Shape3D shape;
-	private final PhongMaterial material = new PhongMaterial(Color.YELLOW);
+	private final PhongMaterial material;
 	private Color fromColor;
 	private Color toColor;
 
-	public ImpaleAnimation(Duration duration, Shape3D shape, Color fromColor, Color toColor) {
+	public ImpaleAnimation(Duration duration, Shape3D shape, Color fromColor) {
 		this.shape = shape;
 		this.fromColor = fromColor;
-		this.toColor = toColor;
+		this.toColor = Color.GHOSTWHITE;
+		this.material = new PhongMaterial(fromColor);
 		setCycleCount(1);
 		setCycleDuration(duration);
 	}

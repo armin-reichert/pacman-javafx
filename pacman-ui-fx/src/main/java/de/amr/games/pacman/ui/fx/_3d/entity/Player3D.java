@@ -101,7 +101,7 @@ public class Player3D extends Creature3D {
 		var playSound = now(() -> sounds.play(GameSounds.PACMAN_DEATH));
 
 		return new SequentialTransition(//
-				new ImpaleAnimation(Duration.seconds(1), skull, Color.YELLOW, Color.LIGHTGRAY), //
+				new ImpaleAnimation(Duration.seconds(1), skull, skullColor), //
 				new ParallelTransition(spin, shrink, playSound));
 	}
 }
