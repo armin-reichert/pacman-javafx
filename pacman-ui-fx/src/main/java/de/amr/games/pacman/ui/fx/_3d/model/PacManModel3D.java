@@ -27,6 +27,7 @@ import javafx.beans.property.Property;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Scale;
@@ -42,18 +43,12 @@ public interface PacManModel3D {
 	/**
 	 * @return transformation group for Pac-Man
 	 */
-	Group createPacMan();
+	Group createPacMan(Color skullColor, Color eyesColor, Color palateColor);
 
 	/**
 	 * @return transformation group for a ghost
 	 */
-	Group createGhost();
-
-	/**
-	 * @return transformation group for the eyes of a ghost
-	 */
-	Group createGhostEyes();
-
+	Group createGhost(Color skinColor, Color eyeBallColor, Color pupilColor);
 
 	public static Translate centerOverOrigin(Node master, Node... servants) {
 		Bounds bounds = master.getBoundsInLocal();

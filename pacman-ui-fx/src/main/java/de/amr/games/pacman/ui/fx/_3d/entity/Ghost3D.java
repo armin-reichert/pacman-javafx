@@ -28,6 +28,7 @@ import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.animation.BlueFlashingAnimation;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -50,27 +51,24 @@ public class Ghost3D extends Creature3D {
 	public final Ghost ghost;
 
 	private final Rendering2D r2D;
-	private final Group complete3D;
 	private final Shape3D skin3D;
-	private final Group eyesOnly3D;
+	private final Node eyes3D;
 	private final Box cube3D;
 	private final BlueFlashingAnimation flashing = new BlueFlashingAnimation();
 
 	private DisplayMode displayMode;
 
-	public Ghost3D(Ghost ghost, Group completeGhost3D, Group eyesOnly3D, Rendering2D r2D) {
-		this.targetDir = ghost.dir();
+	public Ghost3D(Ghost ghost, Group body3D, Rendering2D r2D) {
 		this.ghost = ghost;
 		this.r2D = r2D;
-		this.complete3D = completeGhost3D;
-		this.skin3D = (Shape3D) completeGhost3D.getChildren().get(0);
-		this.eyesOnly3D = eyesOnly3D;
-		this.cube3D = new Box(8, 8, 8);
-		Group modes = new Group(completeGhost3D, eyesOnly3D);
-		modes.setRotationAxis(Rotate.Z_AXIS);
-		modes.setRotate(turnAngle(ghost.dir()));
-		getChildren().addAll(modes, cube3D);
-		turningAnimation.setNode(modes);
+		skin3D = (Shape3D) body3D.getChildren().get(0);
+		eyes3D = body3D.getChildren().get(1);
+		cube3D = new Box(8, 8, 8);
+		getChildren().addAll(body3D, cube3D);
+		body3D.setRotationAxis(Rotate.Z_AXIS);
+		body3D.setRotate(turnAngle(ghost.dir()));
+		turningAnimation.setNode(body3D);
+		targetDir = ghost.dir();
 		reset();
 	}
 
@@ -78,8 +76,8 @@ public class Ghost3D extends Creature3D {
 		if (displayMode != mode) {
 			displayMode = mode;
 			cube3D.setVisible(displayMode == DisplayMode.NUMBER_CUBE);
-			complete3D.setVisible(displayMode == DisplayMode.COMPLETE);
-			eyesOnly3D.setVisible(displayMode == DisplayMode.EYES_ONLY);
+			skin3D.setVisible(displayMode == DisplayMode.COMPLETE);
+			eyes3D.setVisible(displayMode == DisplayMode.COMPLETE || displayMode == DisplayMode.EYES_ONLY);
 		}
 	}
 

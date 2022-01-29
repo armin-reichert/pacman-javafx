@@ -60,15 +60,15 @@ public class GianmarcosModel3D implements PacManModel3D {
 	}
 
 	@Override
-	public Group createPacMan() {
+	public Group createPacMan(Color skullColor, Color eyesColor, Color palateColor) {
 		MeshView skull = pacManModel.createMeshView("Sphere_yellow_packman");
-		skull.setMaterial(new PhongMaterial(Color.YELLOW));
+		skull.setMaterial(new PhongMaterial(skullColor));
 
 		MeshView eyes = pacManModel.createMeshView("Sphere.008_Sphere.010_grey_wall");
-		eyes.setMaterial(new PhongMaterial(Color.rgb(20, 20, 20)));
+		eyes.setMaterial(new PhongMaterial(eyesColor));
 
 		MeshView palate = pacManModel.createMeshView("Sphere_grey_wall");
-		palate.setMaterial(new PhongMaterial(Color.CHOCOLATE));
+		palate.setMaterial(new PhongMaterial(palateColor));
 
 		centerOverOrigin(skull, eyes, palate);
 		bindDrawMode(Env.$drawMode3D, skull, eyes, palate);
@@ -81,31 +81,23 @@ public class GianmarcosModel3D implements PacManModel3D {
 	}
 
 	@Override
-	public Group createGhost() {
-		MeshView body = ghostModel.createMeshView("Sphere.004_Sphere.034_light_blue_ghost");
-		body.setMaterial(ghostModel.getMaterial("blue_ghost"));
+	public Group createGhost(Color skinColor, Color eyeBallColor, Color pupilColor) {
+		MeshView skin = ghostModel.createMeshView("Sphere.004_Sphere.034_light_blue_ghost");
+		MeshView eyeBalls = ghostModel.createMeshView("Sphere.009_Sphere.036_white");
+		MeshView pupils = ghostModel.createMeshView("Sphere.010_Sphere.039_grey_wall");
+		Group eyes = new Group(pupils, eyeBalls);
+		Group ghost = new Group(skin, eyes);
 
-		MeshView eyesOuter = ghostModel.createMeshView("Sphere.009_Sphere.036_white");
-		eyesOuter.setMaterial(new PhongMaterial(Color.WHITE));
-
-		MeshView eyesInner = ghostModel.createMeshView("Sphere.010_Sphere.039_grey_wall");
-		eyesInner.setMaterial(new PhongMaterial(Color.BLACK));
-
-		centerOverOrigin(body, eyesOuter, eyesInner);
-		bindDrawMode(Env.$drawMode3D, body, eyesOuter, eyesInner);
-
-		Group ghost = new Group(body, eyesOuter, eyesInner);
+		centerOverOrigin(skin, eyes);
 		ghost.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 		scale(ghost, 8);
 
-		return ghost;
-	}
+		skin.setMaterial(new PhongMaterial(skinColor));
+		eyeBalls.setMaterial(new PhongMaterial(eyeBallColor));
+		pupils.setMaterial(new PhongMaterial(pupilColor));
 
-	@Override
-	public Group createGhostEyes() {
-		Group eyes = createGhost();
-		eyes.getChildren().remove(0);
-		centerOverOrigin(eyes);
-		return eyes;
+		bindDrawMode(Env.$drawMode3D, skin, eyeBalls, pupils);
+
+		return ghost;
 	}
 }

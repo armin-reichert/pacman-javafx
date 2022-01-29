@@ -28,6 +28,7 @@ import static de.amr.games.pacman.model.world.World.TS;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.paint.Color;
 
 /**
  * Displays a Pac-Man for each live remaining.
@@ -40,7 +41,7 @@ public class LivesCounter3D extends Group {
 
 	public LivesCounter3D(PacManModel3D model3D) {
 		for (int i = 0; i < max; ++i) {
-			Node indicator = model3D.createPacMan();
+			Node indicator = model3D.createPacMan(Color.YELLOW, Color.rgb(20, 20, 20), Color.CHOCOLATE);
 			indicator.setTranslateX(2 * i * TS);
 			getChildren().add(indicator);
 		}
