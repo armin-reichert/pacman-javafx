@@ -28,7 +28,6 @@ import static de.amr.games.pacman.lib.Logging.log;
 import java.io.IOException;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.controller.PlayerControl;
 import de.amr.games.pacman.ui.fx.shell.ManualPlayerControl;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import javafx.application.Application;
@@ -56,27 +55,24 @@ public class PacManGameAppFX extends Application {
 		Options options = new Options(getParameters().getUnnamed());
 
 		// Create the game controller and the game models, select the specified game variant
-		GameController controller = new GameController(options.gameVariant);
+		var controller = new GameController(options.gameVariant);
 
 		// By default, player is controlled using keyboard
-		PlayerControl playerController = new ManualPlayerControl(stage, KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT,
-				KeyCode.RIGHT);
+		var playerController = new ManualPlayerControl(stage, KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 
 		// Create the user interface and the connections with the controllers
-		PacManGameUI_JavaFX ui = new PacManGameUI_JavaFX(stage, controller, options.windowHeight, options.fullscreen);
+		var ui = new PacManGameUI_JavaFX(stage, controller, options.windowHeight, options.fullscreen);
 		controller.addGameEventListener(ui);
 		controller.setPlayerControl(playerController);
 
-		// Configure the game loop
+		// Initialize the environment and start the game
+		Env.$3D.set(options.use3DScenes);
+		Env.$perspective.set(options.perspective);
 		Env.gameLoop.update = () -> {
 			controller.updateState();
 			ui.currentGameScene.update();
 		};
 		Env.gameLoop.render = ui::update;
-
-		// Initialize the environment and start the game
-		Env.$3D.set(options.use3DScenes);
-		Env.$perspective.set(options.perspective);
 		Env.gameLoop.start();
 
 		log("Application started. Game variant: %s, window height: %.0f, 3D: %s, camera perspective: %s",
