@@ -113,8 +113,7 @@ public class HUD extends VBox {
 		row("Game Variant", "%s", gameController.gameVariant);
 		row("Game Level", "%d", game.levelNumber);
 		row("Game State", "%s",
-				state == GameState.HUNTING
-						? String.format("%s: Phase #%d (%s)", state, game.huntingPhase, huntingPhaseName)
+				state == GameState.HUNTING ? String.format("%s: Phase #%d (%s)", state, game.huntingPhase, huntingPhaseName)
 						: state);
 		row("", "Running:   %s%s", stateTimer.ticked(), stateTimer.isStopped() ? " (STOPPED)" : "");
 		row("", "Remaining: %s",
@@ -138,27 +137,27 @@ public class HUD extends VBox {
 			row("Canvas2D", "w=%.0f h=%.0f", ui.canvas.getWidth(), ui.canvas.getHeight());
 		}
 
-		newRow();
-		row("Key V", "Switch Pac-Man <-> Ms. PacMan");
+		row();
+		row("Key V", "Switch Pac-Man/Ms. PacMan");
 		row("Key A", "Autopilot On/Off");
 		row("Key E", "Eat all normal pellets");
-		row("Key I", "Toggle player immunity");
-		row("Key L", "Add player lives");
-		row("Key N", "Enter Next Level");
+		row("Key I", "Player immunity On/Off");
+		row("Key L", "Add 3 player lives");
+		row("Key N", "Next Level");
 		row("Key Q", "Quit Game");
 		row("Key X", "Kill all hunting ghosts");
 
-		newRow();
-		row("Ctrl+C", "Next Camera Perspective");
-		row("Ctrl+H", "In-/(SHIFT=Decrease) Wall Height");
-		row("Ctrl+I", "Toggle information view");
-		row("Ctrl+L", "Toggle 3D Drawing Mode");
-		row("Ctrl+P", "Toggle Pause");
-		row("Ctrl+R", "In-/(SHIFT=Decrease) Resolution");
-		row("Ctrl+S", "In-/(SHIFT=Decrease) Speed");
-		row("Ctrl+X", "Toggle Show Axes");
+		row();
+		row("Ctrl+C", "Next Perspective");
+		row("Ctrl+H", "Wall Height (SHIFT=Decrease)");
+		row("Ctrl+I", "Information On/Off");
+		row("Ctrl+L", "Wireframe Mode On/Off");
+		row("Ctrl+P", "Pause On/Off");
+		row("Ctrl+R", "Maze resolution (SHIFT=Decrease)");
+		row("Ctrl+S", "Speed (SHIFT=Decrease)");
+		row("Ctrl+X", "Axes On/Off");
 		row("Ctrl+1", "Play Intermission Scenes");
-		row("Ctrl+3", "Toggle 2D-3D Play Scene");
+		row("Ctrl+3", "3D Play Scene On/Off");
 
 		textUI.setText(text.toString());
 	}
@@ -168,7 +167,7 @@ public class HUD extends VBox {
 		text.append(String.format("%-12s: %s\n", column1, column2));
 	}
 
-	private void newRow() {
+	private void row() {
 		text.append("\n");
 	}
 }
