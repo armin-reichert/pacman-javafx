@@ -66,7 +66,7 @@ public class Env {
 		return new RandomEntrySelector<>(bundle.keySet().stream().sorted().map(bundle::getString).toArray(String[]::new));
 	}
 
-	public static GameLoop gameLoop;
+	public static final GameLoop gameLoop = new GameLoop();
 
 	public static final BooleanProperty $axesVisible = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<DrawMode> $drawMode3D = new SimpleObjectProperty<DrawMode>(DrawMode.FILL);

@@ -31,6 +31,7 @@ import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
 import de.amr.games.pacman.controller.event.GameEvent;
 import de.amr.games.pacman.controller.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
@@ -93,6 +94,12 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 		double width = aspectRatio * height;
 		stage.setScene(new Scene(mainSceneRoot, width, height));
 		updateGameScene();
+
+		stage.titleProperty().bind(Bindings.createStringBinding(() -> {
+			String gameName = gameController.gameVariant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man";
+			return Env.$paused.get() ? String.format("%s (PAUSED, CTRL+P: resume, P: Step)", gameName)
+					: String.format("%s", gameName);
+		}, Env.gameLoop.$fps));
 
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> Env.gameLoop.stop());
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);

@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.app;
 
 import static de.amr.games.pacman.lib.Logging.log;
-import static de.amr.games.pacman.model.common.GameVariant.PACMAN;
 
 import java.io.IOException;
 
@@ -33,7 +32,6 @@ import de.amr.games.pacman.controller.PlayerControl;
 import de.amr.games.pacman.ui.fx.shell.ManualPlayerControl;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import javafx.application.Application;
-import javafx.beans.binding.Bindings;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
@@ -69,26 +67,19 @@ public class PacManGameAppFX extends Application {
 		controller.addGameEventListener(ui);
 		controller.setPlayerControl(playerController);
 
-		// Create the game loop
-		GameLoop gameLoop = new GameLoop(() -> {
+		// Configure the game loop
+		Env.gameLoop.update = () -> {
 			controller.updateState();
 			ui.currentGameScene.update();
-		}, ui::update);
-
-		// Note; this must be done *after* creating the game loop
-		stage.titleProperty().bind(Bindings.createStringBinding(() -> {
-			String gameName = controller.gameVariant == PACMAN ? "Pac-Man" : "Ms. Pac-Man";
-			return Env.$paused.get() ? String.format("%s (PAUSED, CTRL+P: resume, P: Step)", gameName)
-					: String.format("%s", gameName);
-		}, gameLoop.$fps));
-
-		log("Application created. Game variant: %s, window height: %.0f, 3D: %s, camera perspective: %s",
-				options.gameVariant, options.windowHeight, options.use3DScenes, options.perspective);
+		};
+		Env.gameLoop.render = ui::update;
 
 		// Initialize the environment and start the game
-		Env.gameLoop = gameLoop;
 		Env.$3D.set(options.use3DScenes);
 		Env.$perspective.set(options.perspective);
 		Env.gameLoop.start();
+
+		log("Application started. Game variant: %s, window height: %.0f, 3D: %s, camera perspective: %s",
+				options.gameVariant, options.windowHeight, options.use3DScenes, options.perspective);
 	}
 }

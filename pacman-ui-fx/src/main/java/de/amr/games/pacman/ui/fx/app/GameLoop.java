@@ -42,16 +42,15 @@ public class GameLoop {
 	public final IntegerProperty $fps = new SimpleIntegerProperty();
 	public final IntegerProperty $totalTicks = new SimpleIntegerProperty();
 
+	public Runnable update;
+	public Runnable render;
+
 	private Timeline tl;
-	private int targetFrameRate = 60;
-	private Runnable update;
-	private Runnable render;
+	private int targetFrameRate;
 	private long fpsCountStartTime;
 	private int frames;
 
-	public GameLoop(Runnable update, Runnable render) {
-		this.update = update;
-		this.render = render;
+	public GameLoop() {
 		setTargetFrameRate(60);
 	}
 
