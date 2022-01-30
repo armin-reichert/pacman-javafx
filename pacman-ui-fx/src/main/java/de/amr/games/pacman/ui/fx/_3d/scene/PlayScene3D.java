@@ -100,7 +100,6 @@ public class PlayScene3D extends AbstractGameScene {
 	public PlayScene3D(PacManGameUI_JavaFX ui, PacManModel3D model3D) {
 		super(ui);
 		this.model3D = model3D;
-		createCameras();
 		coordSystem.visibleProperty().bind(Env.$axesVisible);
 	}
 
@@ -110,15 +109,11 @@ public class PlayScene3D extends AbstractGameScene {
 		subScene.widthProperty().bind(parentScene.widthProperty());
 		subScene.heightProperty().bind(parentScene.heightProperty());
 		subScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> camController().ifPresent(cc -> cc.handle(e)));
-		createCameras();
-		return subScene;
-	}
-
-	private void createCameras() {
 		camControllers.clear();
 		camControllers.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer());
 		camControllers.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer());
 		camControllers.put(Perspective.CAM_TOTAL, new Cam_Total());
+		return subScene;
 	}
 
 	private void onPerspectiveChanged(Observable unused) {
