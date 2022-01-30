@@ -34,13 +34,15 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class Cam_NearPlayer implements CameraController {
+public class Cam_NearPlayer extends PerspectiveCamera implements CameraController {
 
-	public final Camera cam = new PerspectiveCamera(true);
+	public Cam_NearPlayer() {
+		super(true);
+	}
 
 	@Override
 	public Camera cam() {
-		return cam;
+		return this;
 	}
 
 	@Override
@@ -50,21 +52,21 @@ public class Cam_NearPlayer implements CameraController {
 
 	@Override
 	public void reset() {
-		cam.setNearClip(0.1);
-		cam.setFarClip(10000.0);
-		cam.setRotationAxis(Rotate.X_AXIS);
-		cam.setRotate(80);
-		cam.setTranslateZ(-40);
+		setNearClip(0.1);
+		setFarClip(10000.0);
+		setRotationAxis(Rotate.X_AXIS);
+		setRotate(80);
+		setTranslateZ(-40);
 	}
 
 	@Override
 	public void update(PlayScene3D scene) {
 		// TODO this is just trial and error
 		double fraction = 0.02;
-		double x = lerp(cam.getTranslateX(), scene.player3D.getTranslateX() - 110, fraction);
-		double y = lerp(cam.getTranslateY(), scene.player3D.getTranslateY(), fraction);
-		cam.setTranslateX(x);
-		cam.setTranslateY(y);
+		double x = lerp(getTranslateX(), scene.player3D.getTranslateX() - 110, fraction);
+		double y = lerp(getTranslateY(), scene.player3D.getTranslateY(), fraction);
+		setTranslateX(x);
+		setTranslateY(y);
 	}
 
 	@Override

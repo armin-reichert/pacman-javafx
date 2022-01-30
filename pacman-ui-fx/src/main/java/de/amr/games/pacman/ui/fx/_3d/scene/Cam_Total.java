@@ -32,13 +32,15 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class Cam_Total implements CameraController {
+public class Cam_Total extends PerspectiveCamera implements CameraController {
 
-	public final Camera cam = new PerspectiveCamera(true);
+	public Cam_Total() {
+		super(true);
+	}
 
 	@Override
 	public Camera cam() {
-		return cam;
+		return this;
 	}
 
 	@Override
@@ -48,13 +50,13 @@ public class Cam_Total implements CameraController {
 
 	@Override
 	public void reset() {
-		cam.setNearClip(0.1);
-		cam.setFarClip(10000.0);
-		cam.setRotationAxis(Rotate.X_AXIS);
-		cam.setRotate(49);
-		cam.setTranslateX(0);
-		cam.setTranslateY(320);
-		cam.setTranslateZ(-260);
+		setNearClip(0.1);
+		setFarClip(10000.0);
+		setRotationAxis(Rotate.X_AXIS);
+		setRotate(49);
+		setTranslateX(0);
+		setTranslateY(320);
+		setTranslateZ(-260);
 	}
 
 	@Override
