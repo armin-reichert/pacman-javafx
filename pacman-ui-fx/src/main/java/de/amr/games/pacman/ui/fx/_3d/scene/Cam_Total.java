@@ -38,13 +38,13 @@ public class Cam_Total extends CameraController {
 
 	@Override
 	public void reset() {
-		cam.setNearClip(0.1);
-		cam.setFarClip(10000.0);
-		cam.setRotationAxis(Rotate.X_AXIS);
-		cam.setRotate(49);
-		cam.setTranslateX(0);
-		cam.setTranslateY(320);
-		cam.setTranslateZ(-260);
+		perspectiveCam.setNearClip(0.1);
+		perspectiveCam.setFarClip(10000.0);
+		perspectiveCam.setRotationAxis(Rotate.X_AXIS);
+		perspectiveCam.setRotate(49);
+		perspectiveCam.setTranslateX(0);
+		perspectiveCam.setTranslateY(320);
+		perspectiveCam.setTranslateZ(-260);
 	}
 
 	@Override

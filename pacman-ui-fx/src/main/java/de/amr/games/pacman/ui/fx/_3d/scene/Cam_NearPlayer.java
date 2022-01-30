@@ -36,21 +36,21 @@ public class Cam_NearPlayer extends CameraController {
 
 	@Override
 	public void reset() {
-		cam.setNearClip(0.1);
-		cam.setFarClip(10000.0);
-		cam.setRotationAxis(Rotate.X_AXIS);
-		cam.setRotate(80);
-		cam.setTranslateZ(-40);
+		perspectiveCam.setNearClip(0.1);
+		perspectiveCam.setFarClip(10000.0);
+		perspectiveCam.setRotationAxis(Rotate.X_AXIS);
+		perspectiveCam.setRotate(80);
+		perspectiveCam.setTranslateZ(-40);
 	}
 
 	@Override
 	public void update(PlayScene3D scene) {
 		// TODO this is just trial and error
 		double fraction = 0.02;
-		double x = lerp(cam.getTranslateX(), scene.player3D.getTranslateX() - 110, fraction);
-		double y = lerp(cam.getTranslateY(), scene.player3D.getTranslateY(), fraction);
-		cam.setTranslateX(x);
-		cam.setTranslateY(y);
+		double x = lerp(perspectiveCam.getTranslateX(), scene.player3D.getTranslateX() - 110, fraction);
+		double y = lerp(perspectiveCam.getTranslateY(), scene.player3D.getTranslateY(), fraction);
+		perspectiveCam.setTranslateX(x);
+		perspectiveCam.setTranslateY(y);
 	}
 
 	@Override

@@ -123,7 +123,7 @@ public class PlayScene3D extends AbstractGameScene {
 
 	private void onPerspectiveChanged(Observable unused) {
 		camController().ifPresent(camController -> {
-			fxSubScene.setCamera(camController.cam);
+			fxSubScene.setCamera(camController.perspectiveCam);
 			camController.reset();
 		});
 	}
