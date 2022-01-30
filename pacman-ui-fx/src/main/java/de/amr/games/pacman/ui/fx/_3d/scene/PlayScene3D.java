@@ -80,22 +80,22 @@ import javafx.scene.transform.Translate;
  */
 public class PlayScene3D extends AbstractGameScene {
 
-	final PacManModel3D model3D;
-	final EnumMap<Perspective, PlayScene3DCameraController> cams = new EnumMap<>(Perspective.class);
-	final Image floorImage = new Image(getClass().getResource("/common/escher-texture.jpg").toString());
-	final AmbientLight ambientLight = new AmbientLight(Color.GHOSTWHITE);
-	final CoordinateSystem coordSystem = new CoordinateSystem(1000);
+	protected final PacManModel3D model3D;
+	protected final EnumMap<Perspective, PlayScene3DCameraController> cams = new EnumMap<>(Perspective.class);
+	protected final Image floorImage = new Image(getClass().getResource("/common/escher-texture.jpg").toString());
+	protected final AmbientLight ambientLight = new AmbientLight(Color.GHOSTWHITE);
+	protected final CoordinateSystem coordSystem = new CoordinateSystem(1000);
 
-	SoundManager sounds;
-	Group playground;
-	Maze3D maze3D;
-	Player3D player3D;
-	Ghost3D[] ghosts3D;
-	Bonus3D bonus3D;
-	ScoreNotReally3D score3D;
-	LevelCounter3D levelCounter3D;
-	LivesCounter3D livesCounter3D;
-	Rendering2D r2D;
+	protected SoundManager sounds;
+	protected Group playground;
+	protected Maze3D maze3D;
+	protected Player3D player3D;
+	protected Ghost3D[] ghosts3D;
+	protected Bonus3D bonus3D;
+	protected ScoreNotReally3D score3D;
+	protected LevelCounter3D levelCounter3D;
+	protected LivesCounter3D livesCounter3D;
+	protected Rendering2D r2D;
 
 	public PlayScene3D(PacManGameUI_JavaFX ui, PacManModel3D model3D) {
 		super(ui);
