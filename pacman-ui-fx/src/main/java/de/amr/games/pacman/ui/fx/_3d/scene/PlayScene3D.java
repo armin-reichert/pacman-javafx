@@ -81,7 +81,7 @@ import javafx.scene.transform.Translate;
 public class PlayScene3D extends AbstractGameScene {
 
 	protected final PacManModel3D model3D;
-	protected final EnumMap<Perspective, PlayScene3DCameraController> cams = new EnumMap<>(Perspective.class);
+	protected final EnumMap<Perspective, CameraController> cams = new EnumMap<>(Perspective.class);
 	protected final Image floorImage = new Image(getClass().getResource("/common/escher-texture.jpg").toString());
 	protected final AmbientLight ambientLight = new AmbientLight(Color.GHOSTWHITE);
 	protected final CoordinateSystem coordSystem = new CoordinateSystem(1000);
@@ -101,7 +101,7 @@ public class PlayScene3D extends AbstractGameScene {
 		super(ui);
 		this.model3D = model3D;
 		coordSystem.visibleProperty().bind(Env.$axesVisible);
-		Env.$perspective.addListener(($1, $2, $3) -> camController().ifPresent(PlayScene3DCameraController::reset));
+		Env.$perspective.addListener(($1, $2, $3) -> camController().ifPresent(CameraController::reset));
 	}
 
 	@Override
@@ -167,7 +167,7 @@ public class PlayScene3D extends AbstractGameScene {
 		playground.getChildren().addAll(ghosts3D);
 
 		fxSubScene.setRoot(new Group(ambientLight, playground, coordSystem));
-		camController().ifPresent(PlayScene3DCameraController::reset);
+		camController().ifPresent(CameraController::reset);
 	}
 
 	@Override
@@ -205,7 +205,7 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	@Override
-	public Optional<PlayScene3DCameraController> camController() {
+	public Optional<CameraController> camController() {
 		if (!cams.containsKey(Env.$perspective.get())) {
 			return Optional.empty();
 		}

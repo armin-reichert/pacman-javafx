@@ -33,7 +33,7 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class Cam_FollowingPlayer extends PlayScene3DCameraController {
+public class Cam_FollowingPlayer extends CameraController {
 
 	public Cam_FollowingPlayer(Camera cam) {
 		super(cam);

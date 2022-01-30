@@ -33,12 +33,12 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public abstract class PlayScene3DCameraController implements EventHandler<KeyEvent> {
+public abstract class CameraController implements EventHandler<KeyEvent> {
 
 	public final Camera cam;
 	public boolean manualControl;
 
-	public PlayScene3DCameraController(Camera cam) {
+	public CameraController(Camera cam) {
 		this.cam = cam;
 		manualControl = false;
 	}
