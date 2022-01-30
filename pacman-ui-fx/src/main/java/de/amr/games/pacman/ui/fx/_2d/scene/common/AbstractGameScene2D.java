@@ -25,14 +25,12 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.model.world.World.t;
 
-import java.util.Optional;
 import java.util.OptionalDouble;
 
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx._3d.scene.CameraController;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
@@ -113,11 +111,6 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	@Override
 	public boolean is3D() {
 		return false;
-	}
-
-	@Override
-	public Optional<CameraController> camController() {
-		return Optional.empty();
 	}
 
 	@Override

@@ -27,6 +27,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
@@ -127,10 +128,10 @@ public class HUD extends VBox {
 		row("Scene Size", "w=%.0f h=%.0f", sceneWidth, sceneHeight);
 		row("3D Scenes", "%s", on_off(Env.$3D.get()));
 		if (ui.currentGameScene.is3D()) {
+			// Currently PlayScene3D is the only 3D scene
+			var scene3D = (PlayScene3D) ui.currentGameScene;
 			row("Perspective", "%s", Env.$perspective.get());
-			ui.currentGameScene.camController().ifPresent(camController -> {
-				row("Camera", "%s", camController.info());
-			});
+			row("Camera", "%s", scene3D.cam().info());
 			row("Draw Mode", "%s", Env.$drawMode3D.get());
 			row("Axes", "%s", on_off(Env.$axesVisible.get()));
 		} else {

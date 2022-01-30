@@ -32,7 +32,6 @@ import static de.amr.games.pacman.ui.fx.util.Animations.afterSeconds;
 import static de.amr.games.pacman.ui.fx.util.Animations.pause;
 
 import java.util.EnumMap;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.GameState;
@@ -80,7 +79,7 @@ import javafx.scene.transform.Translate;
 public class PlayScene3D extends AbstractGameScene {
 
 	protected final PacManModel3D model3D;
-	protected final EnumMap<Perspective, CameraController> cams = new EnumMap<>(Perspective.class);
+	protected final EnumMap<Perspective, CameraController<PlayScene3D>> cams = new EnumMap<>(Perspective.class);
 	protected final Image floorImage = new Image(getClass().getResource("/common/escher-texture.jpg").toString());
 	protected final AmbientLight ambientLight = new AmbientLight(Color.GHOSTWHITE);
 	protected final CoordinateSystem coordSystem = new CoordinateSystem(1000);
@@ -107,7 +106,7 @@ public class PlayScene3D extends AbstractGameScene {
 		var subScene = new SubScene(new Group(), 400, 300, true, SceneAntialiasing.BALANCED);
 		subScene.widthProperty().bind(parentScene.widthProperty());
 		subScene.heightProperty().bind(parentScene.heightProperty());
-		subScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> camController().ifPresent(cc -> cc.handle(e)));
+		subScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> cam().handle(e));
 		cams.clear();
 		cams.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer());
 		cams.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer());
@@ -115,20 +114,18 @@ public class PlayScene3D extends AbstractGameScene {
 		return subScene;
 	}
 
-	@Override
-	public Optional<CameraController> camController() {
-		return Optional.ofNullable(cams.get(Env.$perspective.get()));
+	public CameraController<PlayScene3D> cam() {
+		return cams.get(Env.$perspective.get());
 	}
 
 	private void onPerspectiveChanged(Observable unused) {
-		camController().ifPresent(camController -> {
-			fxSubScene.setCamera(camController.cam());
-			camController.reset();
-			if (score3D != null) {
-				score3D.rotationAxisProperty().bind(camController.cam().rotationAxisProperty());
-				score3D.rotateProperty().bind(camController.cam().rotateProperty());
-			}
-		});
+		var camController = cams.get(Env.$perspective.get());
+		fxSubScene.setCamera(camController.cam());
+		camController.reset();
+		if (score3D != null) {
+			score3D.rotationAxisProperty().bind(camController.cam().rotationAxisProperty());
+			score3D.rotateProperty().bind(camController.cam().rotateProperty());
+		}
 	}
 
 	@Override
@@ -199,7 +196,8 @@ public class PlayScene3D extends AbstractGameScene {
 		score3D.scoreOverwrite = gameController.attractMode ? "GAME OVER!" : null;
 		score3D.update(game);
 		livesCounter3D.setVisibleItems(game.player.lives);
-		camController().ifPresent(camController -> camController.update(this));
+		var camController = cams.get(Env.$perspective.get());
+		camController.update(this);
 
 		sounds.setMuted(gameController.attractMode); // TODO check this
 

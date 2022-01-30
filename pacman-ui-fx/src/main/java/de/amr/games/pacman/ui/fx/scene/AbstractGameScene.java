@@ -25,13 +25,11 @@ package de.amr.games.pacman.ui.fx.scene;
 
 import static de.amr.games.pacman.lib.Logging.log;
 
-import java.util.Optional;
 import java.util.OptionalDouble;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.ui.fx._3d.scene.CameraController;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
@@ -67,11 +65,6 @@ public abstract class AbstractGameScene extends DefaultGameEventHandler {
 	 * @return {@code true} if this is a 3D scene
 	 */
 	public abstract boolean is3D();
-
-	/**
-	 * @return The current camera controller in case of a 3D scene, else {@code Optional.empty()}.
-	 */
-	public abstract Optional<CameraController> camController();
 
 	/**
 	 * Called when the scene gets initialized.

@@ -33,7 +33,7 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public interface CameraController extends EventHandler<KeyEvent> {
+public interface CameraController<T> extends EventHandler<KeyEvent> {
 
 	Camera cam();
 
@@ -41,7 +41,7 @@ public interface CameraController extends EventHandler<KeyEvent> {
 
 	void reset();
 
-	void update(PlayScene3D scene);
+	void update(T target);
 
 	@Override
 	default void handle(KeyEvent e) {
