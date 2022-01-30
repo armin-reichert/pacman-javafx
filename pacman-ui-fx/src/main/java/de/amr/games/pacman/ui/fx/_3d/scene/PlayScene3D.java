@@ -81,7 +81,7 @@ import javafx.scene.transform.Translate;
 public class PlayScene3D extends AbstractGameScene {
 
 	protected final PacManModel3D model3D;
-	protected final EnumMap<Perspective, CameraController> camControllers = new EnumMap<>(Perspective.class);
+	protected final EnumMap<Perspective, CameraController> cams = new EnumMap<>(Perspective.class);
 	protected final Image floorImage = new Image(getClass().getResource("/common/escher-texture.jpg").toString());
 	protected final AmbientLight ambientLight = new AmbientLight(Color.GHOSTWHITE);
 	protected final CoordinateSystem coordSystem = new CoordinateSystem(1000);
@@ -109,11 +109,16 @@ public class PlayScene3D extends AbstractGameScene {
 		subScene.widthProperty().bind(parentScene.widthProperty());
 		subScene.heightProperty().bind(parentScene.heightProperty());
 		subScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> camController().ifPresent(cc -> cc.handle(e)));
-		camControllers.clear();
-		camControllers.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer());
-		camControllers.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer());
-		camControllers.put(Perspective.CAM_TOTAL, new Cam_Total());
+		cams.clear();
+		cams.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer());
+		cams.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer());
+		cams.put(Perspective.CAM_TOTAL, new Cam_Total());
 		return subScene;
+	}
+
+	@Override
+	public Optional<CameraController> camController() {
+		return Optional.ofNullable(cams.get(Env.$perspective.get()));
 	}
 
 	private void onPerspectiveChanged(Observable unused) {
@@ -216,14 +221,6 @@ public class PlayScene3D extends AbstractGameScene {
 	@Override
 	public boolean is3D() {
 		return true;
-	}
-
-	@Override
-	public Optional<CameraController> camController() {
-		if (!camControllers.containsKey(Env.$perspective.get())) {
-			return Optional.empty();
-		}
-		return Optional.of(camControllers.get(Env.$perspective.get()));
 	}
 
 	private void buildMaze(int mazeNumber, boolean withFood) {
