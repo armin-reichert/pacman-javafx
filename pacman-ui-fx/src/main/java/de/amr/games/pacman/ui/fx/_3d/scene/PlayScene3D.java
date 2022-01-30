@@ -70,7 +70,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
-import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 
 /**
@@ -125,6 +124,10 @@ public class PlayScene3D extends AbstractGameScene {
 		camController().ifPresent(camController -> {
 			fxSubScene.setCamera(camController.perspectiveCam);
 			camController.reset();
+			if (score3D != null) {
+				score3D.rotationAxisProperty().bind(camController.perspectiveCam.rotationAxisProperty());
+				score3D.rotateProperty().bind(camController.perspectiveCam.rotateProperty());
+			}
 		});
 	}
 
@@ -132,7 +135,6 @@ public class PlayScene3D extends AbstractGameScene {
 	public void init(Scene parentScene) {
 		super.init(parentScene);
 
-		onPerspectiveChanged(null);
 		Env.$perspective.addListener(this::onPerspectiveChanged);
 
 		final int width = game.world.numCols() * TS;
@@ -162,9 +164,6 @@ public class PlayScene3D extends AbstractGameScene {
 		bonus3D = new Bonus3D(r2D);
 
 		score3D = new ScoreNotReally3D(r2D.getScoreFont());
-		// TODO: maybe this is not the best solution to keep the score display in plain view
-		score3D.setRotationAxis(Rotate.X_AXIS);
-		score3D.rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
 
 		livesCounter3D = new LivesCounter3D(model3D);
 		livesCounter3D.getTransforms().add(new Translate(TS, TS, -HTS));
@@ -180,6 +179,8 @@ public class PlayScene3D extends AbstractGameScene {
 		playground.getChildren().addAll(ghosts3D);
 
 		fxSubScene.setRoot(new Group(ambientLight, playground, coordSystem));
+
+		onPerspectiveChanged(null);
 	}
 
 	@Override
