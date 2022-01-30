@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
-import javafx.scene.Camera;
 import javafx.scene.transform.Rotate;
 
 /**
@@ -33,8 +32,7 @@ import javafx.scene.transform.Rotate;
  */
 public class Cam_Total extends CameraController {
 
-	public Cam_Total(Camera cam) {
-		super(cam);
+	public Cam_Total() {
 		keysEnabled = true;
 	}
 

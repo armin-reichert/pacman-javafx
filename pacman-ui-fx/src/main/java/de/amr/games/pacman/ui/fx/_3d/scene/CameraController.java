@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 
 import javafx.event.EventHandler;
 import javafx.scene.Camera;
+import javafx.scene.PerspectiveCamera;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
 
@@ -35,13 +36,8 @@ import javafx.scene.transform.Rotate;
  */
 public abstract class CameraController implements EventHandler<KeyEvent> {
 
-	public final Camera cam;
-	public boolean keysEnabled;
-
-	public CameraController(Camera cam) {
-		this.cam = cam;
-		keysEnabled = false;
-	}
+	public final Camera cam = new PerspectiveCamera(true);
+	public boolean keysEnabled = false;
 
 	abstract void reset();
 

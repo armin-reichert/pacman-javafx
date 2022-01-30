@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 
 import static de.amr.games.pacman.ui.fx.util.Animations.lerp;
 
-import javafx.scene.Camera;
 import javafx.scene.transform.Rotate;
 
 /**
@@ -34,10 +33,6 @@ import javafx.scene.transform.Rotate;
  * @author Armin Reichert
  */
 public class Cam_NearPlayer extends CameraController {
-
-	public Cam_NearPlayer(Camera cam) {
-		super(cam);
-	}
 
 	@Override
 	public void reset() {

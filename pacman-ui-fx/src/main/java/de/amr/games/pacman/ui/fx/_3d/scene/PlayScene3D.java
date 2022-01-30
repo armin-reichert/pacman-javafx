@@ -60,9 +60,9 @@ import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.CoordinateSystem;
 import javafx.animation.SequentialTransition;
+import javafx.beans.Observable;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
-import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
@@ -81,7 +81,7 @@ import javafx.scene.transform.Translate;
 public class PlayScene3D extends AbstractGameScene {
 
 	protected final PacManModel3D model3D;
-	protected final EnumMap<Perspective, CameraController> cams = new EnumMap<>(Perspective.class);
+	protected final EnumMap<Perspective, CameraController> camControllers = new EnumMap<>(Perspective.class);
 	protected final Image floorImage = new Image(getClass().getResource("/common/escher-texture.jpg").toString());
 	protected final AmbientLight ambientLight = new AmbientLight(Color.GHOSTWHITE);
 	protected final CoordinateSystem coordSystem = new CoordinateSystem(1000);
@@ -100,27 +100,34 @@ public class PlayScene3D extends AbstractGameScene {
 	public PlayScene3D(PacManGameUI_JavaFX ui, PacManModel3D model3D) {
 		super(ui);
 		this.model3D = model3D;
+		camControllers.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer());
+		camControllers.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer());
+		camControllers.put(Perspective.CAM_TOTAL, new Cam_Total());
 		coordSystem.visibleProperty().bind(Env.$axesVisible);
-		Env.$perspective.addListener(($1, $2, $3) -> camController().ifPresent(CameraController::reset));
 	}
 
 	@Override
-	public void createFXSubScene(Scene parentScene) {
-		fxSubScene = new SubScene(new Group(), 400, 300, true, SceneAntialiasing.BALANCED);
-		fxSubScene.widthProperty().bind(parentScene.widthProperty());
-		fxSubScene.heightProperty().bind(parentScene.heightProperty());
-		var cam = new PerspectiveCamera(true);
-		fxSubScene.setCamera(cam);
-		fxSubScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> camController().ifPresent(cc -> cc.handle(e)));
-		cams.clear();
-		cams.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer(cam));
-		cams.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer(cam));
-		cams.put(Perspective.CAM_TOTAL, new Cam_Total(cam));
+	protected SubScene createFXSubScene(Scene parentScene) {
+		var subScene = new SubScene(new Group(), 400, 300, true, SceneAntialiasing.BALANCED);
+		subScene.widthProperty().bind(parentScene.widthProperty());
+		subScene.heightProperty().bind(parentScene.heightProperty());
+		subScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> camController().ifPresent(cc -> cc.handle(e)));
+		return subScene;
+	}
+
+	private void onPerspectiveChanged(Observable unused) {
+		camController().ifPresent(camController -> {
+			fxSubScene.setCamera(camController.cam);
+			camController.reset();
+		});
 	}
 
 	@Override
 	public void init(Scene parentScene) {
 		super.init(parentScene);
+
+		onPerspectiveChanged(null);
+		Env.$perspective.addListener(this::onPerspectiveChanged);
 
 		final int width = game.world.numCols() * TS;
 		final int height = game.world.numRows() * TS;
@@ -167,7 +174,12 @@ public class PlayScene3D extends AbstractGameScene {
 		playground.getChildren().addAll(ghosts3D);
 
 		fxSubScene.setRoot(new Group(ambientLight, playground, coordSystem));
-		camController().ifPresent(CameraController::reset);
+	}
+
+	@Override
+	public void end() {
+		Env.$perspective.removeListener(this::onPerspectiveChanged);
+		super.end();
 	}
 
 	@Override
@@ -206,10 +218,10 @@ public class PlayScene3D extends AbstractGameScene {
 
 	@Override
 	public Optional<CameraController> camController() {
-		if (!cams.containsKey(Env.$perspective.get())) {
+		if (!camControllers.containsKey(Env.$perspective.get())) {
 			return Optional.empty();
 		}
-		return Optional.of(cams.get(Env.$perspective.get()));
+		return Optional.of(camControllers.get(Env.$perspective.get()));
 	}
 
 	private void buildMaze(int mazeNumber, boolean withFood) {

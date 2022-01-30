@@ -81,7 +81,7 @@ public abstract class AbstractGameScene extends DefaultGameEventHandler {
 	 */
 	public void init(Scene parentScene) {
 		this.game = gameController.game;
-		createFXSubScene(parentScene);
+		this.fxSubScene = createFXSubScene(parentScene);
 	}
 
 	/**
@@ -89,7 +89,7 @@ public abstract class AbstractGameScene extends DefaultGameEventHandler {
 	 * 
 	 * @param parentScene the main scene
 	 */
-	protected abstract void createFXSubScene(Scene parentScene);
+	protected abstract SubScene createFXSubScene(Scene parentScene);
 
 	/**
 	 * @return the JavaFX subscene

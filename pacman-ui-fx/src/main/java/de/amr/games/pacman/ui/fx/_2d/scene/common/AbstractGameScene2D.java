@@ -71,15 +71,16 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	}
 
 	@Override
-	public void createFXSubScene(Scene parentScene) {
-		fxSubScene = new SubScene(new StackPane(ui.canvas), unscaledSize.x, unscaledSize.y);
-		fxSubScene.widthProperty().bind(ui.canvas.widthProperty());
-		fxSubScene.heightProperty().bind(ui.canvas.heightProperty());
+	protected SubScene createFXSubScene(Scene parentScene) {
+		var subScene = new SubScene(new StackPane(ui.canvas), unscaledSize.x, unscaledSize.y);
+		subScene.widthProperty().bind(ui.canvas.widthProperty());
+		subScene.heightProperty().bind(ui.canvas.heightProperty());
 		parentScene.widthProperty().addListener(($1, $2, parentWidth) -> {
 			resizeCanvas(Math.min(parentWidth.doubleValue() / aspectRatio, parentScene.getHeight()));
 		});
 		parentScene.heightProperty().addListener(($1, $2, parentHeight) -> resizeCanvas(parentHeight.doubleValue()));
 		resizeCanvas(parentScene.getHeight());
+		return subScene;
 	}
 
 	private void resizeCanvas(double newUnscaledHeight) {
