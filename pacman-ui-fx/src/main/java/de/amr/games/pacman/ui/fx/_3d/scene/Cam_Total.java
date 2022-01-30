@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
+import javafx.scene.Camera;
+import javafx.scene.PerspectiveCamera;
 import javafx.scene.transform.Rotate;
 
 /**
@@ -30,21 +32,29 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class Cam_Total extends CameraController {
+public class Cam_Total implements CameraController {
 
-	public Cam_Total() {
-		keysEnabled = true;
+	public final Camera cam = new PerspectiveCamera(true);
+
+	@Override
+	public Camera cam() {
+		return cam;
+	}
+
+	@Override
+	public boolean keysEnabled() {
+		return true;
 	}
 
 	@Override
 	public void reset() {
-		perspectiveCam.setNearClip(0.1);
-		perspectiveCam.setFarClip(10000.0);
-		perspectiveCam.setRotationAxis(Rotate.X_AXIS);
-		perspectiveCam.setRotate(49);
-		perspectiveCam.setTranslateX(0);
-		perspectiveCam.setTranslateY(320);
-		perspectiveCam.setTranslateZ(-260);
+		cam.setNearClip(0.1);
+		cam.setFarClip(10000.0);
+		cam.setRotationAxis(Rotate.X_AXIS);
+		cam.setRotate(49);
+		cam.setTranslateX(0);
+		cam.setTranslateY(320);
+		cam.setTranslateZ(-260);
 	}
 
 	@Override

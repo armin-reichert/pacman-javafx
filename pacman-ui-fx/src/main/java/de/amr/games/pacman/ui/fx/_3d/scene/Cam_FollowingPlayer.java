@@ -25,6 +25,8 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 
 import static de.amr.games.pacman.ui.fx.util.Animations.lerp;
 
+import javafx.scene.Camera;
+import javafx.scene.PerspectiveCamera;
 import javafx.scene.transform.Rotate;
 
 /**
@@ -32,25 +34,37 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class Cam_FollowingPlayer extends CameraController {
+public class Cam_FollowingPlayer implements CameraController {
+
+	public final Camera cam = new PerspectiveCamera(true);
+
+	@Override
+	public Camera cam() {
+		return cam;
+	}
+
+	@Override
+	public boolean keysEnabled() {
+		return false;
+	}
 
 	@Override
 	public void reset() {
-		perspectiveCam.setNearClip(0.1);
-		perspectiveCam.setFarClip(10000.0);
-		perspectiveCam.setRotationAxis(Rotate.X_AXIS);
-		perspectiveCam.setRotate(60);
-		perspectiveCam.setTranslateZ(-160);
+		cam.setNearClip(0.1);
+		cam.setFarClip(10000.0);
+		cam.setRotationAxis(Rotate.X_AXIS);
+		cam.setRotate(60);
+		cam.setTranslateZ(-160);
 	}
 
 	@Override
 	public void update(PlayScene3D scene) {
 		// TODO this is just trial and error
 		double frac = 0.03;
-		double x = lerp(perspectiveCam.getTranslateX(), scene.player3D.getTranslateX() - 100, frac);
-		double y = lerp(perspectiveCam.getTranslateY(), scene.player3D.getTranslateY() + 60, frac);
-		perspectiveCam.setTranslateX(x);
-		perspectiveCam.setTranslateY(y);
+		double x = lerp(cam.getTranslateX(), scene.player3D.getTranslateX() - 100, frac);
+		double y = lerp(cam.getTranslateY(), scene.player3D.getTranslateY() + 60, frac);
+		cam.setTranslateX(x);
+		cam.setTranslateY(y);
 	}
 
 	@Override

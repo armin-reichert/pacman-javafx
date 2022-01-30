@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 
 import javafx.event.EventHandler;
 import javafx.scene.Camera;
-import javafx.scene.PerspectiveCamera;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
 
@@ -34,50 +33,51 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public abstract class CameraController implements EventHandler<KeyEvent> {
+public interface CameraController extends EventHandler<KeyEvent> {
 
-	public final Camera perspectiveCam = new PerspectiveCamera(true);
-	public boolean keysEnabled = false;
+	Camera cam();
 
-	abstract void reset();
+	boolean keysEnabled();
 
-	abstract void update(PlayScene3D scene);
+	void reset();
+
+	void update(PlayScene3D scene);
 
 	@Override
-	public void handle(KeyEvent e) {
-		if (!keysEnabled) {
+	default void handle(KeyEvent e) {
+		if (!keysEnabled()) {
 			return;
 		}
 		if (e.isControlDown()) {
 			switch (e.getCode()) {
 			case DIGIT0:
-				perspectiveCam.setTranslateX(0);
-				perspectiveCam.setTranslateY(0);
-				perspectiveCam.setTranslateZ(-630);
-				perspectiveCam.setRotationAxis(Rotate.X_AXIS);
-				perspectiveCam.setRotate(0);
-				perspectiveCam.setRotationAxis(Rotate.Y_AXIS);
-				perspectiveCam.setRotate(0);
-				perspectiveCam.setRotationAxis(Rotate.Z_AXIS);
-				perspectiveCam.setRotate(0);
+				cam().setTranslateX(0);
+				cam().setTranslateY(0);
+				cam().setTranslateZ(-630);
+				cam().setRotationAxis(Rotate.X_AXIS);
+				cam().setRotate(0);
+				cam().setRotationAxis(Rotate.Y_AXIS);
+				cam().setRotate(0);
+				cam().setRotationAxis(Rotate.Z_AXIS);
+				cam().setRotate(0);
 				break;
 			case LEFT:
-				perspectiveCam.setTranslateX(perspectiveCam.getTranslateX() + 10);
+				cam().setTranslateX(cam().getTranslateX() + 10);
 				break;
 			case RIGHT:
-				perspectiveCam.setTranslateX(perspectiveCam.getTranslateX() - 10);
+				cam().setTranslateX(cam().getTranslateX() - 10);
 				break;
 			case UP:
-				perspectiveCam.setTranslateY(perspectiveCam.getTranslateY() + 10);
+				cam().setTranslateY(cam().getTranslateY() + 10);
 				break;
 			case DOWN:
-				perspectiveCam.setTranslateY(perspectiveCam.getTranslateY() - 10);
+				cam().setTranslateY(cam().getTranslateY() - 10);
 				break;
 			case PLUS:
-				perspectiveCam.setTranslateZ(perspectiveCam.getTranslateZ() + 10);
+				cam().setTranslateZ(cam().getTranslateZ() + 10);
 				break;
 			case MINUS:
-				perspectiveCam.setTranslateZ(perspectiveCam.getTranslateZ() - 10);
+				cam().setTranslateZ(cam().getTranslateZ() - 10);
 				break;
 			default:
 				break;
@@ -86,20 +86,20 @@ public abstract class CameraController implements EventHandler<KeyEvent> {
 		if (e.isShiftDown()) {
 			switch (e.getCode()) {
 			case DOWN:
-				perspectiveCam.setRotationAxis(Rotate.X_AXIS);
-				perspectiveCam.setRotate((360 + perspectiveCam.getRotate() - 1) % 360);
+				cam().setRotationAxis(Rotate.X_AXIS);
+				cam().setRotate((360 + cam().getRotate() - 1) % 360);
 				break;
 			case UP:
-				perspectiveCam.setRotationAxis(Rotate.X_AXIS);
-				perspectiveCam.setRotate((perspectiveCam.getRotate() + 1) % 360);
+				cam().setRotationAxis(Rotate.X_AXIS);
+				cam().setRotate((cam().getRotate() + 1) % 360);
 				break;
 			case LEFT:
-				perspectiveCam.setRotationAxis(Rotate.Z_AXIS);
-				perspectiveCam.setRotate((360 + perspectiveCam.getRotate() - 1) % 360);
+				cam().setRotationAxis(Rotate.Z_AXIS);
+				cam().setRotate((360 + cam().getRotate() - 1) % 360);
 				break;
 			case RIGHT:
-				perspectiveCam.setRotationAxis(Rotate.Z_AXIS);
-				perspectiveCam.setRotate((360 + perspectiveCam.getRotate() + 1) % 360);
+				cam().setRotationAxis(Rotate.Z_AXIS);
+				cam().setRotate((360 + cam().getRotate() + 1) % 360);
 				break;
 			default:
 				break;
@@ -107,8 +107,8 @@ public abstract class CameraController implements EventHandler<KeyEvent> {
 		}
 	}
 
-	public String info() {
-		return String.format("x=%.0f y=%.0f z=%.0f rot=%.0f", perspectiveCam.getTranslateX(), perspectiveCam.getTranslateY(), perspectiveCam.getTranslateZ(),
-				perspectiveCam.getRotate());
+	default String info() {
+		return String.format("x=%.0f y=%.0f z=%.0f rot=%.0f", cam().getTranslateX(), cam().getTranslateY(),
+				cam().getTranslateZ(), cam().getRotate());
 	}
 }

@@ -122,11 +122,11 @@ public class PlayScene3D extends AbstractGameScene {
 
 	private void onPerspectiveChanged(Observable unused) {
 		camController().ifPresent(camController -> {
-			fxSubScene.setCamera(camController.perspectiveCam);
+			fxSubScene.setCamera(camController.cam());
 			camController.reset();
 			if (score3D != null) {
-				score3D.rotationAxisProperty().bind(camController.perspectiveCam.rotationAxisProperty());
-				score3D.rotateProperty().bind(camController.perspectiveCam.rotateProperty());
+				score3D.rotationAxisProperty().bind(camController.cam().rotationAxisProperty());
+				score3D.rotateProperty().bind(camController.cam().rotateProperty());
 			}
 		});
 	}
