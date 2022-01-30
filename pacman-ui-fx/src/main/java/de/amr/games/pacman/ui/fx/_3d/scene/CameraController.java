@@ -36,11 +36,11 @@ import javafx.scene.transform.Rotate;
 public abstract class CameraController implements EventHandler<KeyEvent> {
 
 	public final Camera cam;
-	public boolean manualControl;
+	public boolean keysEnabled;
 
 	public CameraController(Camera cam) {
 		this.cam = cam;
-		manualControl = false;
+		keysEnabled = false;
 	}
 
 	abstract void reset();
@@ -49,7 +49,7 @@ public abstract class CameraController implements EventHandler<KeyEvent> {
 
 	@Override
 	public void handle(KeyEvent e) {
-		if (!manualControl) {
+		if (!keysEnabled) {
 			return;
 		}
 		if (e.isControlDown()) {

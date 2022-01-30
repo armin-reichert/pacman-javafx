@@ -35,7 +35,7 @@ public class Cam_Total extends CameraController {
 
 	public Cam_Total(Camera cam) {
 		super(cam);
-		manualControl = true;
+		keysEnabled = true;
 	}
 
 	@Override
