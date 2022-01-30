@@ -290,8 +290,8 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 		case C:
 			if (currentGameScene.camController().isPresent()) {
 				Env.nextPerspective();
-				String perspective = Env.message(currentGameScene.camController().get().getClass().getSimpleName());
-				String message = Env.message("camera_perspective", perspective);
+				String key = Env.message(Env.$perspective.get().name().toLowerCase());
+				String message = Env.message("camera_perspective", key);
 				showFlashMessage(1, message);
 			}
 			break;
