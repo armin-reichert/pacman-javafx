@@ -58,6 +58,7 @@ public class Ghost3D extends Creature3D {
 	private final BlueFlashingAnimation flashing = new BlueFlashingAnimation();
 
 	private DisplayMode displayMode;
+	private Color frightenedColor = Color.CORNFLOWERBLUE;
 
 	public Ghost3D(Ghost ghost, PacManModel3D model3D, Rendering2D r2D) {
 		this.ghost = ghost;
@@ -119,9 +120,9 @@ public class Ghost3D extends Creature3D {
 		setSkinColor(r2D.getGhostColor(ghost.id));
 	}
 
-	public void setBlueSkinColor() {
+	public void setFrightenedSkinColor() {
 		flashing.stop();
-		setSkinColor(Color.CORNFLOWERBLUE);
+		setSkinColor(frightenedColor);
 	}
 
 	private void setSkinColor(Color color) {

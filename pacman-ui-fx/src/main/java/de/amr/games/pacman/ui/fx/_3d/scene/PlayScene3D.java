@@ -235,7 +235,7 @@ public class PlayScene3D extends AbstractGameScene {
 		sounds.loop(GameSounds.PACMAN_POWER, Integer.MAX_VALUE);
 		Stream.of(ghosts3D) //
 				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
-				.forEach(Ghost3D::setBlueSkinColor);
+				.forEach(Ghost3D::setFrightenedSkinColor);
 	}
 
 	@Override
