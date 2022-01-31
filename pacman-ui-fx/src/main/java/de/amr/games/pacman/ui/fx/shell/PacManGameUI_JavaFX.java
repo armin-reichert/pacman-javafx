@@ -38,8 +38,6 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.ScenesMsPacMan;
 import de.amr.games.pacman.ui.fx.scene.ScenesPacMan;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -74,7 +72,8 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 
 	private final Group gameSceneRoot = new Group();
 	private final StackPane mainSceneRoot;
-	private final BooleanProperty $is3D = new SimpleBooleanProperty();
+	private final Background bgImage = bgImage("/common/beach.jpg");
+	private final Background bgBlack = bgColored(Color.BLACK);
 
 	public PacManGameUI_JavaFX(Stage stage, GameController gameController, double height, boolean fullscreen) {
 		this.stage = stage;
@@ -84,14 +83,15 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 		ScenesMsPacMan.createScenes(this);
 
 		mainSceneRoot = new StackPane(gameSceneRoot, flashMessageView, hud);
-		defineMainSceneBackground();
 		StackPane.setAlignment(hud, Pos.TOP_LEFT);
 
 		var gameScene = selectScene(Env.$3D.get());
+
 		// TODO rethink this
 		double aspectRatio = gameScene.aspectRatio()
 				.orElse(Screen.getPrimary().getBounds().getWidth() / Screen.getPrimary().getBounds().getHeight());
 		double width = aspectRatio * height;
+
 		stage.setScene(new Scene(mainSceneRoot, width, height));
 		updateGameScene();
 
@@ -100,6 +100,8 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 			return Env.$paused.get() ? String.format("%s (PAUSED, CTRL+P: resume, P: Step)", gameName)
 					: String.format("%s", gameName);
 		}, Env.gameLoop.$fps));
+
+		Env.$drawMode3D.addListener(observable -> updateBackground());
 
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> Env.gameLoop.stop());
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
@@ -122,14 +124,6 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 	private void stopAllSounds() {
 		ScenesMsPacMan.SOUNDS.stopAll();
 		ScenesPacMan.SOUNDS.stopAll();
-	}
-
-	private void defineMainSceneBackground() {
-		Background bgImage = bgImage("/common/beach.jpg");
-		Background bgBlack = bgColored(Color.BLACK);
-		mainSceneRoot.backgroundProperty().bind(Bindings.createObjectBinding( //
-				() -> $is3D.get() && Env.$drawMode3D.get() == DrawMode.LINE ? bgBlack : bgImage, //
-				Env.$drawMode3D, $is3D));
 	}
 
 	private Background bgColored(Color color) {
@@ -190,11 +184,15 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 			}
 			newGameScene.createFXSubScene(stage.getScene());
 			newGameScene.init();
-			$is3D.set(newGameScene.is3D());
 			gameSceneRoot.getChildren().setAll(newGameScene.getSubSceneFX());
 			newGameScene.getSubSceneFX().requestFocus();
 			currentGameScene = newGameScene;
+			updateBackground();
 		}
+	}
+
+	private void updateBackground() {
+		mainSceneRoot.setBackground(currentGameScene.is3D() && Env.$drawMode3D.get() == DrawMode.LINE ? bgBlack : bgImage);
 	}
 
 	@Override
