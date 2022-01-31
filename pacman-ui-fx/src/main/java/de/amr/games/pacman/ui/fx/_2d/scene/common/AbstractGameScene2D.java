@@ -23,12 +23,12 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
+import static de.amr.games.pacman.model.world.World.TS;
 import static de.amr.games.pacman.model.world.World.t;
 
 import java.util.OptionalDouble;
 
 import de.amr.games.pacman.lib.V2d;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -48,24 +48,25 @@ import javafx.scene.transform.Scale;
  */
 public abstract class AbstractGameScene2D extends AbstractGameScene {
 
-	protected final V2d unscaledSize;
-	protected final double aspectRatio;
 	protected final GraphicsContext gc;
 	protected final Rendering2D r2D;
+
+	protected V2d unscaledSize;
+	protected double aspectRatio;
 
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
 
-	public AbstractGameScene2D(double width, double height, PacManGameUI_JavaFX ui, Rendering2D r2D) {
+	public AbstractGameScene2D(PacManGameUI_JavaFX ui, Rendering2D r2D) {
 		super(ui);
 		this.r2D = r2D;
 		gc = ui.canvas.getGraphicsContext2D();
-		unscaledSize = new V2d(width, height);
-		aspectRatio = width / height;
+		setSizeInTiles(28, 36);
 	}
 
-	public AbstractGameScene2D(PacManGameUI_JavaFX ui, Rendering2D r2D) {
-		this(t(GameModel.TILES_X), t(GameModel.TILES_Y), ui, r2D);
+	public void setSizeInTiles(int tilesX, int tilesY) {
+		unscaledSize = new V2d(tilesX * TS, tilesY * TS);
+		aspectRatio = unscaledSize.x / unscaledSize.y;
 	}
 
 	@Override

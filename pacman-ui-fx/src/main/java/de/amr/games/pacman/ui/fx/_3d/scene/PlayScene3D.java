@@ -39,7 +39,6 @@ import de.amr.games.pacman.controller.event.GameEvent;
 import de.amr.games.pacman.controller.event.GameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -167,7 +166,7 @@ public class PlayScene3D extends AbstractGameScene {
 		livesCounter3D.setVisible(!gameController.attractMode);
 
 		levelCounter3D = new LevelCounter3D(r2D);
-		levelCounter3D.setRightPosition(t(GameModel.TILES_X - 1), TS);
+		levelCounter3D.setRightPosition(t(game.world.numCols() - 1), TS);
 		levelCounter3D.init(game);
 
 		playground = new Group();
