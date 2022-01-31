@@ -60,12 +60,10 @@ public class HUD extends VBox {
 		return b ? "ON" : "OFF";
 	}
 
-	private final PacManGameUI_JavaFX ui;
 	private final Text textUI = new Text();
 	private final StringBuilder text = new StringBuilder();
 
-	public HUD(PacManGameUI_JavaFX ui) {
-		this.ui = ui;
+	public HUD() {
 		setVisible(false);
 		setMaxWidth(MAX_WIDTH);
 		setBackground(new Background(new BackgroundFill(BG_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -93,7 +91,7 @@ public class HUD extends VBox {
 		fade.play();
 	}
 
-	public void update() {
+	public void update(PacManGameUI_JavaFX ui) {
 		final GameController gameController = ui.gameController;
 		final GameModel game = gameController.game;
 		final GameState state = gameController.currentStateID;
@@ -122,8 +120,7 @@ public class HUD extends VBox {
 		row("Autopilot", "%s", on_off(gameController.autoControlled));
 		row("Immunity", "%s", on_off(game.player.immune));
 		row("Game Scene", "%s", ui.currentScene.getClass().getSimpleName());
-		row("", "w=%.0f h=%.0f", ui.currentScene.getSubSceneFX().getWidth(),
-				ui.currentScene.getSubSceneFX().getHeight());
+		row("", "w=%.0f h=%.0f", ui.currentScene.getSubSceneFX().getWidth(), ui.currentScene.getSubSceneFX().getHeight());
 		row("Window Size", "w=%.0f h=%.0f", width, height);
 		row("Scene Size", "w=%.0f h=%.0f", sceneWidth, sceneHeight);
 		row("3D Scenes", "%s", on_off(Env.$3D.get()));

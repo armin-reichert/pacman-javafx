@@ -66,7 +66,7 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 	public final Stage stage;
 	public final Canvas canvas = new Canvas();
 	public final FlashMessageView flashMessageView = new FlashMessageView();
-	public final HUD hud = new HUD(this);
+	public final HUD hud = new HUD();
 
 	private final StackPane mainSceneRoot;
 	private final Scene mainScene;
@@ -113,7 +113,7 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 
 	public void update() {
 		flashMessageView.update();
-		hud.update();
+		hud.update(this);
 	}
 
 	public void showFlashMessage(double seconds, String message, Object... args) {
