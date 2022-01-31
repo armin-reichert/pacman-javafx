@@ -62,22 +62,25 @@ import javafx.stage.WindowEvent;
  */
 public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 
-	public final Stage stage;
 	public final GameController gameController;
+	public final Stage stage;
 	public final Canvas canvas = new Canvas();
 	public final FlashMessageView flashMessageView = new FlashMessageView();
 	public final HUD hud = new HUD(this);
 
-	public GameScene currentScene;
-
-	private final Group gameSceneRoot = new Group();
 	private final StackPane mainSceneRoot;
+	private final Scene mainScene;
+	private final Group gameSceneRoot = new Group();
 	private final Background bgImage = bgImage("/common/beach.jpg");
 	private final Background bgBlack = bgColored(Color.BLACK);
+
+	public GameScene currentScene;
 
 	public PacManGameUI_JavaFX(Stage stage, GameController gameController, double height, boolean fullscreen) {
 		this.stage = stage;
 		this.gameController = gameController;
+
+		Env.$drawMode3D.addListener(observable -> updateBackground());
 
 		ScenesPacMan.createScenes(this);
 		ScenesMsPacMan.createScenes(this);
@@ -86,13 +89,11 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 		StackPane.setAlignment(hud, Pos.TOP_LEFT);
 
 		var gameScene = selectScene(Env.$3D.get());
-
 		// TODO rethink this
 		double aspectRatio = gameScene.aspectRatio()
 				.orElse(Screen.getPrimary().getBounds().getWidth() / Screen.getPrimary().getBounds().getHeight());
 		double width = aspectRatio * height;
-
-		stage.setScene(new Scene(mainSceneRoot, width, height));
+		mainScene = new Scene(mainSceneRoot, width, height);
 		updateGameScene();
 
 		stage.titleProperty().bind(Bindings.createStringBinding(() -> {
@@ -100,15 +101,13 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 			return Env.$paused.get() ? String.format("%s (PAUSED, CTRL+P: resume, P: Step)", gameName)
 					: String.format("%s", gameName);
 		}, Env.gameLoop.$fps));
-
-		Env.$drawMode3D.addListener(observable -> updateBackground());
-
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> Env.gameLoop.stop());
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
 		stage.addEventHandler(ScrollEvent.SCROLL, this::onScrolled);
 		stage.getIcons().add(new Image(getClass().getResource("/pacman/graphics/pacman.png").toString()));
 		stage.setFullScreen(fullscreen);
 		stage.centerOnScreen();
+		stage.setScene(mainScene);
 		stage.show();
 	}
 
@@ -182,7 +181,7 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 			} else {
 				log("Set scene to '%s'", nextScene.name());
 			}
-			nextScene.createFXSubScene(stage.getScene());
+			nextScene.createFXSubScene(mainScene);
 			nextScene.init();
 			gameSceneRoot.getChildren().setAll(nextScene.getSubSceneFX());
 			nextScene.getSubSceneFX().requestFocus();
