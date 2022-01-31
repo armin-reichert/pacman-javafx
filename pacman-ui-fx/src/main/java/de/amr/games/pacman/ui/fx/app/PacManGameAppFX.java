@@ -57,12 +57,12 @@ public class PacManGameAppFX extends Application {
 		var controller = new GameController(options.gameVariant);
 
 		// By default, player is controlled using keyboard
-		var playerController = new ManualPlayerControl(stage);
+		var playerControl = new ManualPlayerControl(stage);
 
 		// Create the user interface and the connections with the controllers
 		var ui = new PacManGameUI_JavaFX(stage, controller, options.windowHeight, options.fullscreen);
 		controller.addGameEventListener(ui);
-		controller.setPlayerControl(playerController);
+		controller.setPlayerControl(playerControl);
 
 		// Initialize the environment and start the game
 		Env.$3D.set(options.use3DScenes);
