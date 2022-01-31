@@ -43,7 +43,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Background;
@@ -104,7 +103,7 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> Env.gameLoop.stop());
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
 		stage.addEventHandler(ScrollEvent.SCROLL, this::onScrolled);
-		stage.getIcons().add(new Image(getClass().getResource("/pacman/graphics/pacman.png").toString()));
+		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
 		stage.setFullScreen(fullscreen);
 		stage.centerOnScreen();
 		stage.setScene(mainScene);

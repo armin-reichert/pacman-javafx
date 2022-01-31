@@ -89,6 +89,10 @@ public class U {
 		return afterSeconds(0, runnable);
 	}
 
+	public static Image image(String path) {
+		return new Image(U.class.getResource(path).toString());
+	}
+
 	public static Background colorBackground(Color color) {
 		return new Background(new BackgroundFill(color, null, null));
 	}
