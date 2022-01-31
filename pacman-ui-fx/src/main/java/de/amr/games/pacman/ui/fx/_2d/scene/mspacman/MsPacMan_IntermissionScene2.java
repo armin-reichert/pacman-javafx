@@ -43,7 +43,7 @@ import de.amr.games.pacman.ui.fx.sound.SoundManager;
  */
 public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 
-	private final Intermission2Controller sceneController = new Intermission2Controller();
+	private final Intermission2Controller sc = new Intermission2Controller();
 	private final SoundManager sounds = ScenesMsPacMan.SOUNDS;
 	private Player2D msPacMan2D;
 	private Player2D pacMan2D;
@@ -57,23 +57,23 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 	public void init() {
 		super.init();
 
-		sceneController.playIntermissionSound = () -> sounds.play(GameSounds.INTERMISSION_2);
-		sceneController.playFlapAnimation = () -> flap2D.animation.restart();
-		sceneController.init(gameController);
+		sc.playIntermissionSound = () -> sounds.play(GameSounds.INTERMISSION_2);
+		sc.playFlapAnimation = () -> flap2D.animation.restart();
+		sc.init(gameController);
 
-		flap2D = new Flap2D(sceneController.flap, ScenesMsPacMan.RENDERING);
+		flap2D = new Flap2D(sc.flap, ScenesMsPacMan.RENDERING);
 
-		msPacMan2D = new Player2D(sceneController.msPacMan, r2D);
+		msPacMan2D = new Player2D(sc.msPacMan, r2D);
 		msPacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 
-		pacMan2D = new Player2D(sceneController.pacMan, r2D);
+		pacMan2D = new Player2D(sc.pacMan, r2D);
 		pacMan2D.munchingAnimations = ScenesMsPacMan.RENDERING.createSpouseMunchingAnimations();
 		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 	}
 
 	@Override
 	public void doUpdate() {
-		sceneController.update();
+		sc.update();
 	}
 
 	@Override

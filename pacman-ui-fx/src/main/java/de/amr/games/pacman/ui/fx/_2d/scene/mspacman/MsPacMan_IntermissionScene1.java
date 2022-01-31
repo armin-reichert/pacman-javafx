@@ -47,7 +47,7 @@ import de.amr.games.pacman.ui.fx.sound.SoundManager;
  */
 public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 
-	private final Intermission1Controller sceneController = new Intermission1Controller();
+	private final Intermission1Controller sc = new Intermission1Controller();
 
 	private SoundManager sounds = ScenesMsPacMan.SOUNDS;
 	private Player2D msPacMan2D;
@@ -65,18 +65,18 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 	public void init() {
 		super.init();
 
-		sceneController.playIntermissionSound = () -> sounds.loop(GameSounds.INTERMISSION_1, 1);
-		sceneController.playFlapAnimation = () -> flap2D.animation.restart();
-		sceneController.init(gameController);
+		sc.playIntermissionSound = () -> sounds.loop(GameSounds.INTERMISSION_1, 1);
+		sc.playFlapAnimation = () -> flap2D.animation.restart();
+		sc.init(gameController);
 
-		flap2D = new Flap2D(sceneController.flap, ScenesMsPacMan.RENDERING);
-		msPacMan2D = new Player2D(sceneController.msPac, r2D);
+		flap2D = new Flap2D(sc.flap, ScenesMsPacMan.RENDERING);
+		msPacMan2D = new Player2D(sc.msPac, r2D);
 		// overwrite by Pac-Man instead of Ms. Pac-Man sprites:
-		pacMan2D = new Player2D(sceneController.pacMan, r2D);
+		pacMan2D = new Player2D(sc.pacMan, r2D);
 		pacMan2D.munchingAnimations = ScenesMsPacMan.RENDERING.createSpouseMunchingAnimations();
-		inky2D = new Ghost2D(sceneController.inky, r2D);
-		pinky2D = new Ghost2D(sceneController.pinky, r2D);
-		heart2D = new Heart2D(sceneController.heart, (Rendering2D_MsPacMan) r2D);
+		inky2D = new Ghost2D(sc.inky, r2D);
+		pinky2D = new Ghost2D(sc.pinky, r2D);
+		heart2D = new Heart2D(sc.heart, (Rendering2D_MsPacMan) r2D);
 
 		// start animations
 		msPacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
@@ -87,7 +87,7 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 
 	@Override
 	public void doUpdate() {
-		sceneController.updateState();
+		sc.updateState();
 	}
 
 	@Override

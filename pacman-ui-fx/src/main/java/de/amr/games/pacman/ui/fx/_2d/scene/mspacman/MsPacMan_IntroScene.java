@@ -51,7 +51,7 @@ import javafx.scene.text.Font;
  */
 public class MsPacMan_IntroScene extends AbstractGameScene2D {
 
-	private final IntroController sceneController = new IntroController();
+	private final IntroController sc = new IntroController();
 	private final Image midwayLogo = new Image(getClass().getResourceAsStream("/mspacman/graphics/midway.png"));
 	private final TickTimer boardAnimationTimer = new TickTimer("boardAnimation-timer");
 	private final V2i titlePosition = new V2i(t(9), t(8));
@@ -66,14 +66,14 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 	@Override
 	public void init() {
 		super.init();
-		sceneController.init(gameController);
+		sc.init(gameController);
 
 		score2D.showPoints = false;
 
-		msPacMan2D = new Player2D(sceneController.msPacMan, r2D);
+		msPacMan2D = new Player2D(sc.msPacMan, r2D);
 		msPacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 
-		ghosts2D = Stream.of(sceneController.ghosts).map(ghost -> {
+		ghosts2D = Stream.of(sc.ghosts).map(ghost -> {
 			Ghost2D ghost2D = new Ghost2D(ghost, r2D);
 			ghost2D.kickingAnimations.values().forEach(TimedSequence::restart);
 			return ghost2D;
@@ -84,13 +84,13 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 
 	@Override
 	public void doUpdate() {
-		sceneController.updateState();
+		sc.updateState();
 		boardAnimationTimer.tick();
 	}
 
 	@Override
 	public void doRender() {
-		IntroState state = sceneController.currentStateID;
+		IntroState state = sc.currentStateID;
 		score2D.render(gc);
 		highScore2D.render(gc);
 		gc.setFont(r2D.getScoreFont());
@@ -98,7 +98,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 		gc.fillText("\"MS PAC-MAN\"", titlePosition.x, titlePosition.y);
 		drawAnimatedBoard(32, 16);
 		if (state == IntroState.PRESENTING_GHOSTS) {
-			drawPresentingGhost(sceneController.ghosts[sceneController.currentGhostIndex]);
+			drawPresentingGhost(sc.ghosts[sc.currentGhostIndex]);
 		} else if (state == IntroState.PRESENTING_MSPACMAN) {
 			drawStarringMsPacMan();
 		} else if (state == IntroState.WAITING_FOR_GAME) {
@@ -113,10 +113,10 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 	}
 
 	private void drawPresentingGhost(Ghost ghost) {
-		int top = sceneController.tileBoardTopLeft.y;
+		int top = sc.tileBoardTopLeft.y;
 		gc.setFill(Color.WHITE);
 		gc.setFont(r2D.getScoreFont());
-		if (ghost == sceneController.ghosts[0]) {
+		if (ghost == sc.ghosts[0]) {
 			gc.fillText("WITH", titlePosition.x, t(top + 3));
 		}
 		gc.setFill(ghost.id == 0 ? Color.RED : ghost.id == 1 ? Color.PINK : ghost.id == 2 ? Color.CYAN : Color.ORANGE);
@@ -124,7 +124,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 	}
 
 	private void drawStarringMsPacMan() {
-		int top = sceneController.tileBoardTopLeft.y;
+		int top = sc.tileBoardTopLeft.y;
 		gc.setFill(Color.WHITE);
 		gc.setFont(r2D.getScoreFont());
 		gc.fillText("STARRING", titlePosition.x, t(top + 3));
@@ -149,12 +149,12 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 				y = 2 * (numDotsX + numDotsY) - dot;
 			}
 			gc.setFill((dot + light) % (numDotsX / 2) == 0 ? Color.PINK : Color.RED);
-			gc.fillRect(t(sceneController.tileBoardTopLeft.x) + 4 * x, t(sceneController.tileBoardTopLeft.y) + 4 * y, 2, 2);
+			gc.fillRect(t(sc.tileBoardTopLeft.x) + 4 * x, t(sc.tileBoardTopLeft.y) + 4 * y, 2, 2);
 		}
 	}
 
 	private void drawPressKeyToStart(int tileY) {
-		if (sceneController.blinking.frame()) {
+		if (sc.blinking.frame()) {
 			String text = "PRESS SPACE TO PLAY";
 			gc.setFill(Color.WHITE);
 			gc.setFont(r2D.getScoreFont());

@@ -42,7 +42,7 @@ import de.amr.games.pacman.ui.fx.sound.SoundManager;
  */
 public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 
-	private final Intermission3Controller sceneController = new Intermission3Controller();
+	private final Intermission3Controller sc = new Intermission3Controller();
 	private final SoundManager sounds = ScenesPacMan.SOUNDS;
 	private Player2D pacMan2D;
 	private BlinkyPatched2D blinkyPatched2D;
@@ -56,12 +56,12 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 	public void init() {
 		super.init();
 
-		sceneController.playIntermissionSound = () -> sounds.loop(GameSounds.INTERMISSION_3, 2);
-		sceneController.init(gameController);
+		sc.playIntermissionSound = () -> sounds.loop(GameSounds.INTERMISSION_3, 2);
+		sc.init(gameController);
 
-		pacMan2D = new Player2D(sceneController.pac, r2D);
-		blinkyPatched2D = new BlinkyPatched2D(sceneController.blinky, ScenesPacMan.RENDERING);
-		blinkyNaked2D = new BlinkyNaked2D(sceneController.blinky, ScenesPacMan.RENDERING);
+		pacMan2D = new Player2D(sc.pac, r2D);
+		blinkyPatched2D = new BlinkyPatched2D(sc.blinky, ScenesPacMan.RENDERING);
+		blinkyNaked2D = new BlinkyNaked2D(sc.blinky, ScenesPacMan.RENDERING);
 		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 		blinkyPatched2D.animation.restart();
 		blinkyNaked2D.animation.restart();
@@ -69,14 +69,14 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 
 	@Override
 	public void doUpdate() {
-		sceneController.updateState();
+		sc.updateState();
 	}
 
 	@Override
 	public void doRender() {
 		drawLevelCounter();
 		pacMan2D.render(gc);
-		if (sceneController.currentStateID == IntermissionState.CHASING_PACMAN) {
+		if (sc.currentStateID == IntermissionState.CHASING_PACMAN) {
 			blinkyPatched2D.render(gc);
 		} else {
 			blinkyNaked2D.render(gc);

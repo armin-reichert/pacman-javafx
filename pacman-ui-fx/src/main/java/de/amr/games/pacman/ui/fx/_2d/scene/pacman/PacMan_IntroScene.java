@@ -53,7 +53,7 @@ import javafx.scene.text.Font;
  */
 public class PacMan_IntroScene extends AbstractGameScene2D {
 
-	private final IntroController sceneController = new IntroController();
+	private final IntroController sc = new IntroController();
 
 	private Player2D pacMan2D;
 	private List<Ghost2D> ghosts2D;
@@ -66,14 +66,14 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	@Override
 	public void init() {
 		super.init();
-		sceneController.init(gameController);
+		sc.init(gameController);
 
 		score2D.showPoints = false;
 
-		pacMan2D = new Player2D(sceneController.pacMan, r2D);
+		pacMan2D = new Player2D(sc.pacMan, r2D);
 		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 
-		ghosts2D = Stream.of(sceneController.ghosts).map(ghost -> {
+		ghosts2D = Stream.of(sc.ghosts).map(ghost -> {
 			Ghost2D ghost2D = new Ghost2D(ghost, r2D);
 			ghost2D.kickingAnimations.values().forEach(TimedSequence::restart);
 			ghost2D.frightenedAnimation.restart();
@@ -81,20 +81,22 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		}).collect(Collectors.toList());
 
 		gallery2D = List.of( //
-				new Ghost2D(sceneController.portraits[0].ghost, r2D), new Ghost2D(sceneController.portraits[1].ghost, r2D),
-				new Ghost2D(sceneController.portraits[2].ghost, r2D), new Ghost2D(sceneController.portraits[3].ghost, r2D));
+				new Ghost2D(sc.portraits[0].ghost, r2D), //
+				new Ghost2D(sc.portraits[1].ghost, r2D), //
+				new Ghost2D(sc.portraits[2].ghost, r2D), //
+				new Ghost2D(sc.portraits[3].ghost, r2D));
 	}
 
 	@Override
 	public void doUpdate() {
-		sceneController.updateState();
+		sc.updateState();
 	}
 
 	@Override
 	public void doRender() {
 		score2D.render(gc);
 		highScore2D.render(gc);
-		switch (sceneController.currentStateID) {
+		switch (sc.currentStateID) {
 		case BEGIN:
 		case PRESENTING_GHOSTS:
 			drawGallery();
@@ -102,7 +104,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		case SHOWING_POINTS:
 			drawGallery();
 			drawPoints(11, 25);
-			if (sceneController.stateTimer().ticked() > sec_to_ticks(1)) {
+			if (sc.stateTimer().ticked() > sec_to_ticks(1)) {
 				drawEnergizer();
 				drawCopyright(32);
 			}
@@ -111,10 +113,10 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 			drawGallery();
 			drawPoints(11, 25);
 			drawCopyright(32);
-			if (sceneController.blinking.frame()) {
+			if (sc.blinking.frame()) {
 				drawEnergizer();
 			}
-			int offset = sceneController.stateTimer().ticked() % 5 < 2 ? 0 : -1;
+			int offset = sc.stateTimer().ticked() % 5 < 2 ? 0 : -1;
 			drawGuys(offset);
 			break;
 		case CHASING_GHOSTS:
@@ -146,13 +148,13 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	private void drawGallery() {
 		gc.setFill(Color.WHITE);
 		gc.setFont(r2D.getScoreFont());
-		gc.fillText("CHARACTER", t(6), sceneController.topY);
-		gc.fillText("/", t(16), sceneController.topY);
-		gc.fillText("NICKNAME", t(18), sceneController.topY);
-		for (int ghostID = 0; ghostID < sceneController.portraits.length; ++ghostID) {
-			GhostPortrait portrait = sceneController.portraits[ghostID];
+		gc.fillText("CHARACTER", t(6), sc.topY);
+		gc.fillText("/", t(16), sc.topY);
+		gc.fillText("NICKNAME", t(18), sc.topY);
+		for (int ghostID = 0; ghostID < sc.portraits.length; ++ghostID) {
+			GhostPortrait portrait = sc.portraits[ghostID];
 			if (portrait.ghost.visible) {
-				int y = sceneController.topY + t(1 + 3 * ghostID);
+				int y = sc.topY + t(1 + 3 * ghostID);
 				gallery2D.get(ghostID).render(gc);
 				if (portrait.characterVisible) {
 					gc.setFill(r2D.getGhostColor(ghostID));
@@ -167,7 +169,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	}
 
 	private void drawPressKeyToStart(int yTile) {
-		if (sceneController.slowBlinking.frame()) {
+		if (sc.slowBlinking.frame()) {
 			String text = "PRESS SPACE TO PLAY";
 			gc.setFill(Color.WHITE);
 			gc.setFont(r2D.getScoreFont());
@@ -178,7 +180,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	private void drawPoints(int tileX, int tileY) {
 		gc.setFill(r2D.getFoodColor(1));
 		gc.fillRect(t(tileX) + 6, t(tileY - 1) + 2, 2, 2);
-		if (sceneController.blinking.frame()) {
+		if (sc.blinking.frame()) {
 			gc.fillOval(t(tileX), t(tileY + 1) - 2, 10, 10);
 		}
 		gc.setFill(Color.WHITE);

@@ -46,7 +46,7 @@ import de.amr.games.pacman.ui.fx.sound.SoundManager;
  */
 public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 
-	private final Intermission3Controller sceneController = new Intermission3Controller();
+	private final Intermission3Controller sc = new Intermission3Controller();
 	private final SoundManager sounds = ScenesMsPacMan.SOUNDS;
 	private Player2D msPacMan2D;
 	private Player2D pacMan2D;
@@ -62,25 +62,25 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 	public void init() {
 		super.init();
 
-		sceneController.playIntermissionSound = () -> sounds.play(GameSounds.INTERMISSION_3);
-		sceneController.playFlapAnimation = () -> flap2D.animation.restart();
-		sceneController.init(gameController);
+		sc.playIntermissionSound = () -> sounds.play(GameSounds.INTERMISSION_3);
+		sc.playFlapAnimation = () -> flap2D.animation.restart();
+		sc.init(gameController);
 
-		msPacMan2D = new Player2D(sceneController.msPacMan, r2D);
-		pacMan2D = new Player2D(sceneController.pacMan, r2D);
+		msPacMan2D = new Player2D(sc.msPacMan, r2D);
+		pacMan2D = new Player2D(sc.pacMan, r2D);
 		pacMan2D.munchingAnimations = ScenesMsPacMan.RENDERING.createSpouseMunchingAnimations();
 
-		flap2D = new Flap2D(sceneController.flap, ScenesMsPacMan.RENDERING);
+		flap2D = new Flap2D(sc.flap, ScenesMsPacMan.RENDERING);
 
-		stork2D = new Stork2D(sceneController.stork, ScenesMsPacMan.RENDERING);
+		stork2D = new Stork2D(sc.stork, ScenesMsPacMan.RENDERING);
 		stork2D.animation.restart();
 
-		bag2D = new JuniorBag2D(sceneController.bag, ScenesMsPacMan.RENDERING);
+		bag2D = new JuniorBag2D(sc.bag, ScenesMsPacMan.RENDERING);
 	}
 
 	@Override
 	public void doUpdate() {
-		sceneController.updateState();
+		sc.updateState();
 	}
 
 	@Override

@@ -46,7 +46,7 @@ import javafx.geometry.Rectangle2D;
  */
 public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 
-	private final Intermission2Controller sceneController = new Intermission2Controller();
+	private final Intermission2Controller sc = new Intermission2Controller();
 	private final SoundManager sounds = ScenesPacMan.SOUNDS;
 	private Player2D pacMan2D;
 	private Ghost2D blinky2D;
@@ -62,12 +62,12 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 	public void init() {
 		super.init();
 
-		sceneController.playIntermissionSound = () -> sounds.play(GameSounds.INTERMISSION_2);
-		sceneController.init(gameController);
+		sc.playIntermissionSound = () -> sounds.play(GameSounds.INTERMISSION_2);
+		sc.init(gameController);
 
-		pacMan2D = new Player2D(sceneController.pac, r2D);
-		blinky2D = new Ghost2D(sceneController.blinky, r2D);
-		nail2D = new Nail2D(sceneController.nail, (Rendering2D_PacMan) r2D);
+		pacMan2D = new Player2D(sc.pac, r2D);
+		blinky2D = new Ghost2D(sc.blinky, r2D);
+		nail2D = new Nail2D(sc.nail, (Rendering2D_PacMan) r2D);
 		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 		blinky2D.kickingAnimations.values().forEach(TimedSequence::restart);
 		blinkyStretchedAnimation = ScenesPacMan.RENDERING.createBlinkyStretchedAnimation();
@@ -76,7 +76,7 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 	@Override
 	public void doUpdate() {
-		sceneController.updateState();
+		sc.updateState();
 	}
 
 	@Override
@@ -84,10 +84,10 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 		drawLevelCounter();
 		pacMan2D.render(gc);
 		nail2D.render(gc);
-		if (sceneController.nailDistance() < 0) {
+		if (sc.nailDistance() < 0) {
 			blinky2D.render(gc);
 		} else {
-			drawBlinkyStretched(sceneController.blinky, sceneController.nail.position, sceneController.nailDistance() / 4);
+			drawBlinkyStretched(sc.blinky, sc.nail.position, sc.nailDistance() / 4);
 		}
 	}
 
