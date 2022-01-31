@@ -70,7 +70,7 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 	private final StackPane mainSceneRoot;
 	private final Scene mainScene;
 	private final Group gameSceneRoot = new Group();
-	private final Background bgImage = U.imageBackkground("/common/beach.jpg");
+	private final Background bgBeach = U.imageBackkground("/common/beach.jpg");
 	private final Background bgBlack = U.colorBackground(Color.BLACK);
 	private final Background bgBlue = U.colorBackground(Color.CORNFLOWERBLUE);
 
@@ -183,7 +183,7 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 
 	private void selectBackground(GameScene scene) {
 		if (scene.is3D()) {
-			mainSceneRoot.setBackground(Env.$drawMode3D.get() == DrawMode.LINE ? bgBlack : bgImage);
+			mainSceneRoot.setBackground(Env.$drawMode3D.get() == DrawMode.LINE ? bgBlack : bgBeach);
 		} else {
 			mainSceneRoot.setBackground(bgBlue);
 		}
