@@ -24,14 +24,19 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.util;
 
 import javafx.animation.PauseTransition;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 /**
- * Useful methods for building animations.
+ * Useful methods.
  * 
  * @author Armin Reichert
  */
-public class Animations {
+public class U {
 
 	/**
 	 * @param from from value
@@ -82,5 +87,14 @@ public class Animations {
 	 */
 	public static PauseTransition now(Runnable runnable) {
 		return afterSeconds(0, runnable);
+	}
+
+	public static Background colorBackground(Color color) {
+		return new Background(new BackgroundFill(color, null, null));
+	}
+
+	public static Background imageBackkground(String path) {
+		Image image = new Image(U.class.getResource(path).toString());
+		return new Background(new BackgroundImage(image, null, null, null, null));
 	}
 }

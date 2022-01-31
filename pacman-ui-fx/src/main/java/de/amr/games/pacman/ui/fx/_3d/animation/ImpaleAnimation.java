@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.animation;
 
-import static de.amr.games.pacman.ui.fx.util.Animations.lerp;
+import static de.amr.games.pacman.ui.fx.util.U.lerp;
 
 import javafx.animation.Transition;
 import javafx.scene.paint.Color;

@@ -28,8 +28,8 @@ import static de.amr.games.pacman.model.world.World.HTS;
 import static de.amr.games.pacman.model.world.World.TS;
 import static de.amr.games.pacman.model.world.World.t;
 import static de.amr.games.pacman.ui.fx._3d.entity.Maze3D.NodeInfo.info;
-import static de.amr.games.pacman.ui.fx.util.Animations.afterSeconds;
-import static de.amr.games.pacman.ui.fx.util.Animations.pause;
+import static de.amr.games.pacman.ui.fx.util.U.afterSeconds;
+import static de.amr.games.pacman.ui.fx.util.U.pause;
 
 import java.util.EnumMap;
 import java.util.stream.Stream;

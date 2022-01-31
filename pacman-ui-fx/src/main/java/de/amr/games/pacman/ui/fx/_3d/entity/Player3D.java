@@ -24,7 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.world.World.HTS;
-import static de.amr.games.pacman.ui.fx.util.Animations.now;
+import static de.amr.games.pacman.ui.fx.util.U.now;
 
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.GameSounds;

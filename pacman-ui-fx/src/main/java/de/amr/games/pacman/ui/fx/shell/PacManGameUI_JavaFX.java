@@ -37,6 +37,7 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.ScenesMsPacMan;
 import de.amr.games.pacman.ui.fx.scene.ScenesPacMan;
+import de.amr.games.pacman.ui.fx.util.U;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -46,8 +47,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
@@ -71,8 +70,8 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 	private final StackPane mainSceneRoot;
 	private final Scene mainScene;
 	private final Group gameSceneRoot = new Group();
-	private final Background bgImage = bgImage("/common/beach.jpg");
-	private final Background bgBlack = bgColored(Color.BLACK);
+	private final Background bgImage = U.imageBackkground("/common/beach.jpg");
+	private final Background bgBlack = U.colorBackground(Color.BLACK);
 
 	public GameScene currentScene;
 
@@ -123,15 +122,6 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 	private void stopAllSounds() {
 		ScenesMsPacMan.SOUNDS.stopAll();
 		ScenesPacMan.SOUNDS.stopAll();
-	}
-
-	private Background bgColored(Color color) {
-		return new Background(new BackgroundFill(color, null, null));
-	}
-
-	private Background bgImage(String path) {
-		Image image = new Image(getClass().getResource(path).toString());
-		return new Background(new BackgroundImage(image, null, null, null, null));
 	}
 
 	private void toggleUse3DScenes() {
@@ -385,5 +375,4 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 			}
 		}
 	}
-
 }
