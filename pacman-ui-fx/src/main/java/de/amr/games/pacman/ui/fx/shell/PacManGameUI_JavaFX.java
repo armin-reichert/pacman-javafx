@@ -72,6 +72,7 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 	private final Group gameSceneRoot = new Group();
 	private final Background bgImage = U.imageBackkground("/common/beach.jpg");
 	private final Background bgBlack = U.colorBackground(Color.BLACK);
+	private final Background bgBlue = U.colorBackground(Color.CORNFLOWERBLUE);
 
 	public GameScene currentScene;
 
@@ -79,7 +80,7 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 		this.stage = stage;
 		this.gameController = gameController;
 
-		Env.$drawMode3D.addListener(observable -> updateBackground());
+		Env.$drawMode3D.addListener(observable -> selectBackground(currentScene));
 
 		ScenesPacMan.createScenes(this);
 		ScenesMsPacMan.createScenes(this);
@@ -172,16 +173,20 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 				log("Set scene to '%s'", nextScene.name());
 			}
 			nextScene.createFXSubScene(mainScene);
-			nextScene.init();
 			gameSceneRoot.getChildren().setAll(nextScene.getSubSceneFX());
+			nextScene.init();
 			nextScene.getSubSceneFX().requestFocus();
+			selectBackground(nextScene);
 			currentScene = nextScene;
-			updateBackground();
 		}
 	}
 
-	private void updateBackground() {
-		mainSceneRoot.setBackground(currentScene.is3D() && Env.$drawMode3D.get() == DrawMode.LINE ? bgBlack : bgImage);
+	private void selectBackground(GameScene scene) {
+		if (scene.is3D()) {
+			mainSceneRoot.setBackground(Env.$drawMode3D.get() == DrawMode.LINE ? bgBlack : bgImage);
+		} else {
+			mainSceneRoot.setBackground(bgBlue);
+		}
 	}
 
 	@Override
