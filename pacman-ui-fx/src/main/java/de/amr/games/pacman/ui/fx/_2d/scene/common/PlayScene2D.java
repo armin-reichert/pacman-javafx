@@ -50,7 +50,6 @@ import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
-import javafx.scene.Scene;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -74,8 +73,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 	}
 
 	@Override
-	public void init(Scene parentScene) {
-		super.init(parentScene);
+	public void init() {
+		super.init();
 
 		switch (gameController.gameVariant) {
 		case MS_PACMAN:
@@ -224,7 +223,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 						player2D.dyingAnimation.restart();
 					}), //
 					afterSeconds(2, () -> game.player.hide()), //
-					afterSeconds(1, () -> continueGame()) //
+					afterSeconds(1, () -> gameController.stateTimer().expire()) //
 			).play();
 		}
 
@@ -244,7 +243,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 			maze2D.getEnergizerAnimation().reset();
 			Animation animation = new SequentialTransition( //
 					maze2D.getFlashingAnimation(), //
-					afterSeconds(1, this::continueGame) //
+					afterSeconds(1, () -> gameController.stateTimer().expire()) //
 			);
 			animation.setDelay(Duration.seconds(2));
 			animation.play();

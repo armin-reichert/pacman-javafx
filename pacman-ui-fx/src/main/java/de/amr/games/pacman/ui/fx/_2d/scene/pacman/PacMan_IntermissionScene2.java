@@ -38,7 +38,6 @@ import de.amr.games.pacman.ui.fx.scene.ScenesPacMan;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Scene;
 
 /**
  * Second intermission scene: Blinky pursues Pac but kicks a nail that tears his dress apart.
@@ -60,8 +59,8 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 	}
 
 	@Override
-	public void init(Scene parentScene) {
-		super.init(parentScene);
+	public void init() {
+		super.init();
 
 		sceneController.playIntermissionSound = () -> sounds.play(GameSounds.INTERMISSION_2);
 		sceneController.init(gameController);

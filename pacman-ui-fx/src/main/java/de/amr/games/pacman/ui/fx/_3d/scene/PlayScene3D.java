@@ -34,11 +34,14 @@ import static de.amr.games.pacman.ui.fx.util.Animations.pause;
 import java.util.EnumMap;
 import java.util.stream.Stream;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
 import de.amr.games.pacman.controller.event.GameEvent;
 import de.amr.games.pacman.controller.event.GameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -51,7 +54,7 @@ import de.amr.games.pacman.ui.fx._3d.entity.Player3D;
 import de.amr.games.pacman.ui.fx._3d.entity.ScoreNotReally3D;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
+import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.ScenesMsPacMan;
 import de.amr.games.pacman.ui.fx.scene.ScenesPacMan;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
@@ -75,8 +78,10 @@ import javafx.scene.transform.Translate;
  * 
  * @author Armin Reichert
  */
-public class PlayScene3D extends AbstractGameScene {
+public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
+	protected final PacManGameUI_JavaFX ui;
+	protected final GameController gameController;
 	protected final PacManModel3D model3D;
 	protected final EnumMap<Perspective, CameraController<PlayScene3D>> cams = new EnumMap<>(Perspective.class);
 	protected final Image floorImage = new Image(getClass().getResource("/common/escher-texture.jpg").toString());
@@ -85,6 +90,8 @@ public class PlayScene3D extends AbstractGameScene {
 
 	protected SoundManager sounds;
 	protected Group playground;
+	protected SubScene fxSubScene;
+	protected GameModel game;
 	protected Maze3D maze3D;
 	protected Player3D player3D;
 	protected Ghost3D[] ghosts3D;
@@ -95,22 +102,27 @@ public class PlayScene3D extends AbstractGameScene {
 	protected Rendering2D r2D;
 
 	public PlayScene3D(PacManGameUI_JavaFX ui, PacManModel3D model3D) {
-		super(ui);
+		this.ui = ui;
+		this.gameController = ui.gameController;
 		this.model3D = model3D;
 		coordSystem.visibleProperty().bind(Env.$axesVisible);
 	}
 
 	@Override
-	protected SubScene createFXSubScene(Scene parentScene) {
-		var subScene = new SubScene(new Group(), 400, 300, true, SceneAntialiasing.BALANCED);
-		subScene.widthProperty().bind(parentScene.widthProperty());
-		subScene.heightProperty().bind(parentScene.heightProperty());
-		subScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> cam().handle(e));
+	public void createFXSubScene(Scene parentScene) {
+		fxSubScene = new SubScene(new Group(), 400, 300, true, SceneAntialiasing.BALANCED);
+		fxSubScene.widthProperty().bind(parentScene.widthProperty());
+		fxSubScene.heightProperty().bind(parentScene.heightProperty());
+		fxSubScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> cam().handle(e));
 		cams.clear();
 		cams.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer());
 		cams.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer());
 		cams.put(Perspective.CAM_TOTAL, new Cam_Total());
-		return subScene;
+	}
+
+	@Override
+	public SubScene getSubSceneFX() {
+		return fxSubScene;
 	}
 
 	public CameraController<PlayScene3D> cam() {
@@ -128,8 +140,8 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	@Override
-	public void init(Scene parentScene) {
-		super.init(parentScene);
+	public void init() {
+		game = gameController.game;
 
 		Env.$perspective.addListener(this::onPerspectiveChanged);
 
@@ -183,7 +195,7 @@ public class PlayScene3D extends AbstractGameScene {
 	public void end() {
 		fxSubScene.setCamera(null);
 		Env.$perspective.removeListener(this::onPerspectiveChanged);
-		super.end();
+		GameScene.super.end();
 	}
 
 	@Override
@@ -341,7 +353,7 @@ public class PlayScene3D extends AbstractGameScene {
 			new SequentialTransition( //
 					afterSeconds(1, game::hideGhosts), //
 					player3D.dyingAnimation(sounds), //
-					afterSeconds(2, this::continueGame) //
+					afterSeconds(2, () -> gameController.stateTimer().expire()) //
 			).play();
 		}
 
@@ -356,7 +368,7 @@ public class PlayScene3D extends AbstractGameScene {
 			levelCounter3D.init(game);
 			var message = Env.message("level_starting", game.levelNumber);
 			ui.showFlashMessage(1, message);
-			afterSeconds(3, this::continueGame).play();
+			afterSeconds(3, () -> gameController.stateTimer().expire()).play();
 		}
 
 		// enter LEVEL_COMPLETE
@@ -370,7 +382,7 @@ public class PlayScene3D extends AbstractGameScene {
 					afterSeconds(1, () -> game.player.hide()), //
 					afterSeconds(1, () -> ui.showFlashMessage(2, message)) //
 			);
-			animation.setOnFinished(ae -> continueGame());
+			animation.setOnFinished(ae -> gameController.stateTimer().expire());
 			animation.play();
 		}
 

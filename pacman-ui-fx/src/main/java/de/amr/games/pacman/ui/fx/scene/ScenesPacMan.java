@@ -43,7 +43,7 @@ import de.amr.games.pacman.ui.fx.sound.SoundManager;
  */
 public class ScenesPacMan {
 
-	public static final AbstractGameScene SCENES[][] = new AbstractGameScene[5][2];
+	public static final GameScene SCENES[][] = new GameScene[5][2];
 	public static final Rendering2D_PacMan RENDERING = new Rendering2D_PacMan();
 	public static final PacManModel3D MODEL_3D = GianmarcosModel3D.get();
 	public static final SoundManager SOUNDS = new SoundManager();

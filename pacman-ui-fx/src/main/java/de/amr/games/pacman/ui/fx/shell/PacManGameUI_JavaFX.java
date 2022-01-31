@@ -34,7 +34,7 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
+import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.ScenesMsPacMan;
 import de.amr.games.pacman.ui.fx.scene.ScenesPacMan;
 import javafx.beans.binding.Bindings;
@@ -70,7 +70,7 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 	public final FlashMessageView flashMessageView = new FlashMessageView();
 	public final HUD hud = new HUD(this);
 
-	public AbstractGameScene currentGameScene;
+	public GameScene currentGameScene;
 
 	private final Group gameSceneRoot = new Group();
 	private final StackPane mainSceneRoot;
@@ -149,7 +149,7 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 		}
 	}
 
-	private AbstractGameScene selectScene(boolean _3D) {
+	private GameScene selectScene(boolean _3D) {
 		final var game = gameController.game;
 		final int _2D_or_3_D = _3D ? 1 : 0;
 
@@ -180,7 +180,7 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 	}
 
 	private void updateGameScene() {
-		AbstractGameScene newGameScene = selectScene(Env.$3D.get());
+		GameScene newGameScene = selectScene(Env.$3D.get());
 		if (currentGameScene != newGameScene) {
 			if (currentGameScene != null) {
 				log("Change game scene from '%s' to '%s'", currentGameScene.name(), newGameScene.name());
@@ -188,7 +188,8 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 			} else {
 				log("Set game scene to '%s'", newGameScene.name());
 			}
-			newGameScene.init(stage.getScene());
+			newGameScene.createFXSubScene(stage.getScene());
+			newGameScene.init();
 			$is3D.set(newGameScene.is3D());
 			gameSceneRoot.getChildren().setAll(newGameScene.getSubSceneFX());
 			newGameScene.getSubSceneFX().requestFocus();

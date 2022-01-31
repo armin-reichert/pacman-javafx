@@ -34,7 +34,6 @@ import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.scene.ScenesPacMan;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
-import javafx.scene.Scene;
 
 /**
  * Third intermission scene: Blinky in shred dress chases Pac-Man, comes back half-naked drawing dress over the floor.
@@ -54,8 +53,8 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 	}
 
 	@Override
-	public void init(Scene parentScene) {
-		super.init(parentScene);
+	public void init() {
+		super.init();
 
 		sceneController.playIntermissionSound = () -> sounds.loop(GameSounds.INTERMISSION_3, 2);
 		sceneController.init(gameController);

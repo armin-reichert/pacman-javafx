@@ -28,11 +28,14 @@ import static de.amr.games.pacman.model.world.World.t;
 
 import java.util.OptionalDouble;
 
+import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
 import de.amr.games.pacman.lib.V2d;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
+import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
@@ -46,7 +49,12 @@ import javafx.scene.transform.Scale;
  * 
  * @author Armin Reichert
  */
-public abstract class AbstractGameScene2D extends AbstractGameScene {
+public abstract class AbstractGameScene2D extends DefaultGameEventHandler implements GameScene {
+
+	protected final PacManGameUI_JavaFX ui;
+	protected final GameController gameController;
+	protected SubScene fxSubScene;
+	protected GameModel game;
 
 	protected final GraphicsContext gc;
 	protected final Rendering2D r2D;
@@ -58,7 +66,8 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	protected GameScore2D highScore2D;
 
 	public AbstractGameScene2D(PacManGameUI_JavaFX ui, Rendering2D r2D) {
-		super(ui);
+		this.ui = ui;
+		this.gameController = ui.gameController;
 		this.r2D = r2D;
 		gc = ui.canvas.getGraphicsContext2D();
 		setSizeInTiles(28, 36);
@@ -70,16 +79,20 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	}
 
 	@Override
-	protected SubScene createFXSubScene(Scene parentScene) {
-		var subScene = new SubScene(new StackPane(ui.canvas), unscaledSize.x, unscaledSize.y);
-		subScene.widthProperty().bind(ui.canvas.widthProperty());
-		subScene.heightProperty().bind(ui.canvas.heightProperty());
+	public void createFXSubScene(Scene parentScene) {
+		fxSubScene = new SubScene(new StackPane(ui.canvas), unscaledSize.x, unscaledSize.y);
+		fxSubScene.widthProperty().bind(ui.canvas.widthProperty());
+		fxSubScene.heightProperty().bind(ui.canvas.heightProperty());
 		parentScene.widthProperty().addListener(($1, $2, parentWidth) -> {
 			resizeCanvas(Math.min(parentWidth.doubleValue() / aspectRatio, parentScene.getHeight()));
 		});
 		parentScene.heightProperty().addListener(($1, $2, parentHeight) -> resizeCanvas(parentHeight.doubleValue()));
 		resizeCanvas(parentScene.getHeight());
-		return subScene;
+	}
+
+	@Override
+	public SubScene getSubSceneFX() {
+		return fxSubScene;
 	}
 
 	private void resizeCanvas(double newUnscaledHeight) {
@@ -90,8 +103,8 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	}
 
 	@Override
-	public void init(Scene parentScene) {
-		super.init(parentScene);
+	public void init() {
+		game = gameController.game;
 		score2D = new GameScore2D("SCORE", t(1), t(1), game, false, r2D);
 		highScore2D = new GameScore2D("HIGH SCORE", t(16), t(1), game, true, r2D);
 	}
