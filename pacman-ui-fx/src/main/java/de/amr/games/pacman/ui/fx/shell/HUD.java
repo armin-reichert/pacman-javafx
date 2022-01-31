@@ -121,15 +121,15 @@ public class HUD extends VBox {
 				stateTimer.ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer.ticksRemaining());
 		row("Autopilot", "%s", on_off(gameController.autoControlled));
 		row("Immunity", "%s", on_off(game.player.immune));
-		row("Game Scene", "%s", ui.currentGameScene.getClass().getSimpleName());
-		row("", "w=%.0f h=%.0f", ui.currentGameScene.getSubSceneFX().getWidth(),
-				ui.currentGameScene.getSubSceneFX().getHeight());
+		row("Game Scene", "%s", ui.currentScene.getClass().getSimpleName());
+		row("", "w=%.0f h=%.0f", ui.currentScene.getSubSceneFX().getWidth(),
+				ui.currentScene.getSubSceneFX().getHeight());
 		row("Window Size", "w=%.0f h=%.0f", width, height);
 		row("Scene Size", "w=%.0f h=%.0f", sceneWidth, sceneHeight);
 		row("3D Scenes", "%s", on_off(Env.$3D.get()));
-		if (ui.currentGameScene.is3D()) {
+		if (ui.currentScene.is3D()) {
 			// Currently PlayScene3D is the only 3D scene
-			var scene3D = (PlayScene3D) ui.currentGameScene;
+			var scene3D = (PlayScene3D) ui.currentScene;
 			row("Perspective", "%s", Env.$perspective.get());
 			row("Camera", "%s", scene3D.cam().info());
 			row("Draw Mode", "%s", Env.$drawMode3D.get());

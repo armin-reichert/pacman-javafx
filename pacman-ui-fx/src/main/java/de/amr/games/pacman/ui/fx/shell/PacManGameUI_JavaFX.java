@@ -68,7 +68,7 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 	public final FlashMessageView flashMessageView = new FlashMessageView();
 	public final HUD hud = new HUD(this);
 
-	public GameScene currentGameScene;
+	public GameScene currentScene;
 
 	private final Group gameSceneRoot = new Group();
 	private final StackPane mainSceneRoot;
@@ -174,31 +174,31 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 	}
 
 	private void updateGameScene() {
-		GameScene newGameScene = selectScene(Env.$3D.get());
-		if (currentGameScene != newGameScene) {
-			if (currentGameScene != null) {
-				log("Change game scene from '%s' to '%s'", currentGameScene.name(), newGameScene.name());
-				currentGameScene.end();
+		GameScene nextScene = selectScene(Env.$3D.get());
+		if (currentScene != nextScene) {
+			if (currentScene != null) {
+				log("Change scene from '%s' to '%s'", currentScene.name(), nextScene.name());
+				currentScene.end();
 			} else {
-				log("Set game scene to '%s'", newGameScene.name());
+				log("Set scene to '%s'", nextScene.name());
 			}
-			newGameScene.createFXSubScene(stage.getScene());
-			newGameScene.init();
-			gameSceneRoot.getChildren().setAll(newGameScene.getSubSceneFX());
-			newGameScene.getSubSceneFX().requestFocus();
-			currentGameScene = newGameScene;
+			nextScene.createFXSubScene(stage.getScene());
+			nextScene.init();
+			gameSceneRoot.getChildren().setAll(nextScene.getSubSceneFX());
+			nextScene.getSubSceneFX().requestFocus();
+			currentScene = nextScene;
 			updateBackground();
 		}
 	}
 
 	private void updateBackground() {
-		mainSceneRoot.setBackground(currentGameScene.is3D() && Env.$drawMode3D.get() == DrawMode.LINE ? bgBlack : bgImage);
+		mainSceneRoot.setBackground(currentScene.is3D() && Env.$drawMode3D.get() == DrawMode.LINE ? bgBlack : bgImage);
 	}
 
 	@Override
 	public void onGameEvent(GameEvent event) {
 		super.onGameEvent(event);
-		currentGameScene.onGameEvent(event);
+		currentScene.onGameEvent(event);
 	}
 
 	@Override
@@ -253,7 +253,7 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 			break;
 
 		case Q:
-			currentGameScene.end();
+			currentScene.end();
 			stopAllSounds();
 			gameController.changeState(GameState.INTRO);
 			break;
@@ -287,7 +287,7 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 		switch (e.getCode()) {
 
 		case C:
-			if (currentGameScene.is3D()) {
+			if (currentScene.is3D()) {
 				Env.nextPerspective();
 				String perspective_key = Env.message(Env.$perspective.get().name().toLowerCase());
 				String message = Env.message("camera_perspective", perspective_key);
@@ -296,7 +296,7 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 			break;
 
 		case H:
-			if (currentGameScene.is3D()) {
+			if (currentScene.is3D()) {
 				Env.changeMazeWallHeight(!e.isShiftDown());
 			}
 			break;
@@ -310,7 +310,7 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 			break;
 
 		case L:
-			if (currentGameScene.is3D()) {
+			if (currentScene.is3D()) {
 				Env.$drawMode3D.set(Env.$drawMode3D.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 			}
 			break;
@@ -325,7 +325,7 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 			break;
 
 		case R:
-			if (currentGameScene.is3D()) {
+			if (currentScene.is3D()) {
 				Env.changeMazeResolution(!e.isShiftDown());
 			}
 			break;
@@ -345,13 +345,13 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 			break;
 
 		case X:
-			if (currentGameScene.is3D()) {
+			if (currentScene.is3D()) {
 				Env.$axesVisible.set(!Env.$axesVisible.get());
 			}
 			break;
 
 		case Y:
-			if (!currentGameScene.is3D()) {
+			if (!currentScene.is3D()) {
 				Env.$tilesVisible.set(!Env.$tilesVisible.get());
 			}
 			break;
@@ -378,7 +378,7 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 	private void onScrolled(ScrollEvent e) {
 		boolean shift = e.isShiftDown();
 		boolean up = shift ? e.getDeltaX() > 0 : e.getDeltaY() > 0;
-		if (currentGameScene instanceof PlayScene3D) {
+		if (currentScene instanceof PlayScene3D) {
 			if (e.isShiftDown()) {
 				Env.changeMazeWallHeight(up);
 			} else {

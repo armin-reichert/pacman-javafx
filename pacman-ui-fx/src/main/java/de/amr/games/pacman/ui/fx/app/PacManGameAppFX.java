@@ -69,7 +69,7 @@ public class PacManGameAppFX extends Application {
 		Env.$perspective.set(options.perspective);
 		Env.gameLoop.update = () -> {
 			controller.updateState();
-			ui.currentGameScene.update();
+			ui.currentScene.update();
 		};
 		Env.gameLoop.render = ui::update;
 		Env.gameLoop.start();
