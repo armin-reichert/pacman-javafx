@@ -93,7 +93,7 @@ public class U {
 		return new Background(new BackgroundFill(color, null, null));
 	}
 
-	public static Background imageBackkground(String path) {
+	public static Background imageBackground(String path) {
 		Image image = new Image(U.class.getResource(path).toString());
 		return new Background(new BackgroundImage(image, null, null, null, null));
 	}
