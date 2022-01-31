@@ -64,6 +64,7 @@ import javafx.animation.SequentialTransition;
 import javafx.beans.Observable;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
+import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
@@ -106,6 +107,9 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		this.gameController = ui.gameController;
 		this.model3D = model3D;
 		coordSystem.visibleProperty().bind(Env.$axesVisible);
+		cams.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer());
+		cams.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer());
+		cams.put(Perspective.CAM_TOTAL, new Cam_Total());
 	}
 
 	@Override
@@ -114,10 +118,9 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		fxSubScene.widthProperty().bind(parentScene.widthProperty());
 		fxSubScene.heightProperty().bind(parentScene.heightProperty());
 		fxSubScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> cam().handle(e));
-		cams.clear();
-		cams.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer());
-		cams.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer());
-		cams.put(Perspective.CAM_TOTAL, new Cam_Total());
+		PerspectiveCamera cam = new PerspectiveCamera(true);
+		fxSubScene.setCamera(cam);
+		cams.values().forEach(cc -> cc.attachTo(cam));
 	}
 
 	@Override
