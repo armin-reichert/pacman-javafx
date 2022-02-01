@@ -122,6 +122,8 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			PerspectiveCamera cam = new PerspectiveCamera(true);
 			fxSubScene.setCamera(cam);
 			cams.values().forEach(cc -> cc.attachTo(cam));
+			log("Subscene for game scene '%s' created, width=%.0f, height=%.0f", name(), fxSubScene.getWidth(),
+					fxSubScene.getHeight());
 		}
 	}
 
