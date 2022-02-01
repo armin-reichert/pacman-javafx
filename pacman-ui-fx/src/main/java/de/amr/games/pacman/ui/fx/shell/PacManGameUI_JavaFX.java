@@ -186,7 +186,6 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 			nextScene.init();
 			nextScene.getSubSceneFX().requestFocus();
 			selectBackground(nextScene);
-//			setCanvasHeight(mainScene.getHeight());
 			currentScene = nextScene;
 		}
 	}
