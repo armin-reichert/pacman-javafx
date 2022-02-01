@@ -25,10 +25,12 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.model.world.World.TS;
 import static de.amr.games.pacman.model.world.World.t;
+import static de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX.TILES_X;
+import static de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX.TILES_Y;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
-import de.amr.games.pacman.lib.V2d;
+import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -40,7 +42,6 @@ import javafx.scene.SubScene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.transform.Scale;
 
 /**
  * Base class of all 2D scenes that get rendered inside the canvas provided by the UI.
@@ -51,14 +52,12 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 
 	protected final PacManGameUI_JavaFX ui;
 	protected final GameController gameController;
-	protected SubScene fxSubScene;
-	protected GameModel game;
-
 	protected final GraphicsContext gc;
 	protected final Rendering2D r2D;
+	protected final V2i unscaledSize;
 
-	protected V2d unscaledSize;
-
+	protected SubScene fxSubScene;
+	protected GameModel game;
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
 
@@ -66,12 +65,8 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 		this.ui = ui;
 		this.gameController = ui.gameController;
 		this.r2D = r2D;
+		unscaledSize = new V2i(TILES_X * TS, TILES_Y * TS);
 		gc = ui.canvas.getGraphicsContext2D();
-		setSizeInTiles(28, 36);
-	}
-
-	public void setSizeInTiles(int tilesX, int tilesY) {
-		unscaledSize = new V2d(tilesX * TS, tilesY * TS);
 	}
 
 	@Override
@@ -79,25 +74,11 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 		fxSubScene = new SubScene(new StackPane(ui.canvas), unscaledSize.x, unscaledSize.y);
 		fxSubScene.widthProperty().bind(ui.canvas.widthProperty());
 		fxSubScene.heightProperty().bind(ui.canvas.heightProperty());
-		parentScene.widthProperty().addListener(($1, $2, parentWidth) -> {
-			double aspectRatio = unscaledSize.x / unscaledSize.y;
-			resizeCanvas(Math.min(parentWidth.doubleValue() / aspectRatio, parentScene.getHeight()));
-		});
-		parentScene.heightProperty().addListener(($1, $2, parentHeight) -> resizeCanvas(parentHeight.doubleValue()));
-		resizeCanvas(parentScene.getHeight());
 	}
 
 	@Override
 	public SubScene getSubSceneFX() {
 		return fxSubScene;
-	}
-
-	private void resizeCanvas(double newUnscaledHeight) {
-		double aspectRatio = unscaledSize.x / unscaledSize.y;
-		ui.canvas.setWidth(aspectRatio * newUnscaledHeight);
-		ui.canvas.setHeight(newUnscaledHeight);
-		double scaling = newUnscaledHeight / unscaledSize.y;
-		ui.canvas.getTransforms().setAll(new Scale(scaling, scaling));
 	}
 
 	@Override
@@ -156,7 +137,7 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	 * Used in play scene and intermission scenes, so define it here.
 	 */
 	protected void drawLevelCounter() {
-		V2d rightPosition = unscaledSize.minus(t(3), t(2));
+		V2i rightPosition = unscaledSize.minus(t(3), t(2));
 		int firstLevelNumber = Math.max(1, game.levelNumber - 6);
 		double x = rightPosition.x;
 		for (int levelNumber = firstLevelNumber; levelNumber <= game.levelNumber; ++levelNumber, x -= t(2)) {

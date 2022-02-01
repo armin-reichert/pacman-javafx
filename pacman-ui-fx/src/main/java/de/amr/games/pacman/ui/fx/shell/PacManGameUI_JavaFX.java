@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell;
 
 import static de.amr.games.pacman.lib.Logging.log;
+import static de.amr.games.pacman.model.world.World.t;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
@@ -49,6 +50,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -59,6 +61,14 @@ import javafx.stage.WindowEvent;
  */
 public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 
+	public static final int TILES_X = 28;
+	public static final int TILES_Y = 36;
+	public static final double ASPECT_RATIO = (double) TILES_X / TILES_Y;
+
+	private static final Background BG_BEACH = U.imageBackground("/common/beach.jpg");
+	private static final Background BG_BLACK = U.colorBackground(Color.BLACK);
+	private static final Background BG_BLUE = U.colorBackground(Color.CORNFLOWERBLUE);
+
 	public final GameController gameController;
 	public final Stage stage;
 	public final Canvas canvas = new Canvas();
@@ -68,9 +78,6 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 	private final StackPane mainSceneRoot;
 	private final Scene mainScene;
 	private final Group gameSceneRoot = new Group();
-	private final Background bgBeach = U.imageBackground("/common/beach.jpg");
-	private final Background bgBlack = U.colorBackground(Color.BLACK);
-	private final Background bgBlue = U.colorBackground(Color.CORNFLOWERBLUE);
 
 	public GameScene currentScene;
 
@@ -97,14 +104,28 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
 		stage.addEventHandler(ScrollEvent.SCROLL, this::onScrolled);
 
-		double aspectRatio = 28.0 / 36.0;
-		mainScene = new Scene(mainSceneRoot, aspectRatio * height, height);
-		updateGameScene();
+		mainScene = new Scene(mainSceneRoot, ASPECT_RATIO * height, height);
+		mainScene.widthProperty().addListener(($1, $2, newWidth) -> {
+			double newHeight = newWidth.doubleValue() / ASPECT_RATIO;
+			setCanvasHeight(Math.min(newHeight, mainScene.getHeight()));
+		});
+		mainScene.heightProperty().addListener(($1, $2, newHeight) -> {
+			setCanvasHeight(newHeight.doubleValue());
+		});
+
 		stage.setScene(mainScene);
+		updateGameScene();
 
 		stage.centerOnScreen();
 		stage.setFullScreen(fullscreen);
 		stage.show();
+	}
+
+	public void setCanvasHeight(double newUnscaledHeight) {
+		canvas.setWidth(ASPECT_RATIO * newUnscaledHeight);
+		canvas.setHeight(newUnscaledHeight);
+		double scaling = newUnscaledHeight / t(TILES_Y);
+		canvas.getTransforms().setAll(new Scale(scaling, scaling));
 	}
 
 	public void update() {
@@ -173,15 +194,16 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 			nextScene.init();
 			nextScene.getSubSceneFX().requestFocus();
 			selectBackground(nextScene);
+			setCanvasHeight(mainScene.getHeight());
 			currentScene = nextScene;
 		}
 	}
 
 	private void selectBackground(GameScene scene) {
 		if (scene.is3D()) {
-			mainSceneRoot.setBackground(Env.$drawMode3D.get() == DrawMode.LINE ? bgBlack : bgBeach);
+			mainSceneRoot.setBackground(Env.$drawMode3D.get() == DrawMode.LINE ? BG_BLACK : BG_BEACH);
 		} else {
-			mainSceneRoot.setBackground(bgBlue);
+			mainSceneRoot.setBackground(BG_BLUE);
 		}
 	}
 
