@@ -164,8 +164,10 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 
 		switch (gameController.gameVariant) {
 		case MS_PACMAN:
+			Env.sounds = ScenesMsPacMan.SOUNDS;
 			return ScenesMsPacMan.SCENES[sceneIndex][_2D_or_3_D];
 		case PACMAN:
+			Env.sounds = ScenesPacMan.SOUNDS;
 			return ScenesPacMan.SCENES[sceneIndex][_2D_or_3_D];
 		default:
 			throw new IllegalArgumentException("Unknown game variant: " + gameController.gameVariant);

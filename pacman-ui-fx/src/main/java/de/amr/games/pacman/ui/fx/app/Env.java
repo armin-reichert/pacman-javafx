@@ -29,6 +29,7 @@ import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
 import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
+import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.RandomEntrySelector;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -54,6 +55,9 @@ public class Env {
 	public static String message(String pattern, Object... args) {
 		return MessageFormat.format(MESSAGES.getString(pattern), args);
 	}
+
+	// Sounds for selected game variant
+	public static SoundManager sounds;
 
 	// Trash talk
 

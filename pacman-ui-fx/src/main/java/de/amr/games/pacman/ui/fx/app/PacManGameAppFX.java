@@ -28,6 +28,9 @@ import static de.amr.games.pacman.lib.Logging.log;
 import java.io.IOException;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.ui.fx.scene.ScenesMsPacMan;
+import de.amr.games.pacman.ui.fx.scene.ScenesPacMan;
 import de.amr.games.pacman.ui.fx.shell.ManualPlayerControl;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import javafx.application.Application;
@@ -67,6 +70,7 @@ public class PacManGameAppFX extends Application {
 		// Initialize the environment and start the game
 		Env.$3D.set(options.use3DScenes);
 		Env.$perspective.set(options.perspective);
+		Env.sounds = options.gameVariant == GameVariant.MS_PACMAN ? ScenesMsPacMan.SOUNDS : ScenesPacMan.SOUNDS;
 		Env.gameLoop.update = () -> {
 			controller.updateState();
 			ui.currentScene.update();
