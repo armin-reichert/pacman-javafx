@@ -114,13 +114,15 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 	@Override
 	public void createFXSubScene(Scene parentScene) {
-		fxSubScene = new SubScene(new Group(), 400, 300, true, SceneAntialiasing.BALANCED);
-		fxSubScene.widthProperty().bind(parentScene.widthProperty());
-		fxSubScene.heightProperty().bind(parentScene.heightProperty());
-		fxSubScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> cam().handle(e));
-		PerspectiveCamera cam = new PerspectiveCamera(true);
-		fxSubScene.setCamera(cam);
-		cams.values().forEach(cc -> cc.attachTo(cam));
+		if (fxSubScene == null) {
+			fxSubScene = new SubScene(new Group(), 400, 300, true, SceneAntialiasing.BALANCED);
+			fxSubScene.widthProperty().bind(parentScene.widthProperty());
+			fxSubScene.heightProperty().bind(parentScene.heightProperty());
+			fxSubScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> cam().handle(e));
+			PerspectiveCamera cam = new PerspectiveCamera(true);
+			fxSubScene.setCamera(cam);
+			cams.values().forEach(cc -> cc.attachTo(cam));
+		}
 	}
 
 	@Override
