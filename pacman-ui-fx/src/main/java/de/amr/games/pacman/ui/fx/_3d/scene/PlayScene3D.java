@@ -355,7 +355,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			Env.sounds.stopAll();
 			new SequentialTransition( //
 					afterSeconds(1, game::hideGhosts), //
-					player3D.dyingAnimation(Env.sounds), //
+					player3D.dyingAnimation(), //
 					afterSeconds(2, () -> gameController.stateTimer().expire()) //
 			).play();
 		}

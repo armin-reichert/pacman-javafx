@@ -30,7 +30,7 @@ import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx._3d.animation.ImpaleAnimation;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
+import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.animation.RotateTransition;
@@ -87,7 +87,7 @@ public class Player3D extends Creature3D {
 		update(player);
 	}
 
-	public Animation dyingAnimation(SoundManager sounds) {
+	public Animation dyingAnimation() {
 		var spin = new RotateTransition(Duration.seconds(0.2), this);
 		spin.setAxis(Rotate.Z_AXIS);
 		spin.setByAngle(360);
@@ -98,7 +98,7 @@ public class Player3D extends Creature3D {
 		shrink.setToY(0);
 		shrink.setToZ(0);
 
-		var playSound = now(() -> sounds.play(GameSounds.PACMAN_DEATH));
+		var playSound = now(() -> Env.sounds.play(GameSounds.PACMAN_DEATH));
 
 		return new SequentialTransition(//
 				new ImpaleAnimation(Duration.seconds(1), skull, skullColor), //
