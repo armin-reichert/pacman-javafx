@@ -181,12 +181,13 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 			} else {
 				log("Set scene to '%s'", nextScene.name());
 			}
+			// TODO why do I have to create the subscene each time?
 			nextScene.createFXSubScene(mainScene);
-			gameSceneRoot.getChildren().setAll(nextScene.getSubSceneFX());
 			nextScene.init();
 			nextScene.getSubSceneFX().requestFocus();
 			selectBackground(nextScene);
 			currentScene = nextScene;
+			gameSceneRoot.getChildren().setAll(currentScene.getSubSceneFX());
 		}
 	}
 
