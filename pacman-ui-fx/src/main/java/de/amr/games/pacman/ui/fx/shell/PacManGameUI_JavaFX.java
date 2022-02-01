@@ -105,13 +105,12 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 		stage.addEventHandler(ScrollEvent.SCROLL, this::onScrolled);
 
 		mainScene = new Scene(mainSceneRoot, ASPECT_RATIO * height, height);
-		mainScene.widthProperty().addListener(($1, $2, newWidth) -> {
-			double newHeight = newWidth.doubleValue() / ASPECT_RATIO;
-			setCanvasHeight(Math.min(newHeight, mainScene.getHeight()));
-		});
-		mainScene.heightProperty().addListener(($1, $2, newHeight) -> {
-			setCanvasHeight(newHeight.doubleValue());
-		});
+		canvas.heightProperty().bind(mainScene.heightProperty());
+		canvas.widthProperty().bind(Bindings.createDoubleBinding(() -> {
+			double scaling = mainScene.getHeight() / t(TILES_Y);
+			canvas.getTransforms().setAll(new Scale(scaling, scaling));
+			return mainScene.getHeight() * ASPECT_RATIO;
+		}, mainScene.heightProperty()));
 
 		stage.setScene(mainScene);
 		updateGameScene();
@@ -119,13 +118,6 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 		stage.centerOnScreen();
 		stage.setFullScreen(fullscreen);
 		stage.show();
-	}
-
-	public void setCanvasHeight(double newUnscaledHeight) {
-		canvas.setWidth(ASPECT_RATIO * newUnscaledHeight);
-		canvas.setHeight(newUnscaledHeight);
-		double scaling = newUnscaledHeight / t(TILES_Y);
-		canvas.getTransforms().setAll(new Scale(scaling, scaling));
 	}
 
 	public void update() {
@@ -194,7 +186,7 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 			nextScene.init();
 			nextScene.getSubSceneFX().requestFocus();
 			selectBackground(nextScene);
-			setCanvasHeight(mainScene.getHeight());
+//			setCanvasHeight(mainScene.getHeight());
 			currentScene = nextScene;
 		}
 	}
