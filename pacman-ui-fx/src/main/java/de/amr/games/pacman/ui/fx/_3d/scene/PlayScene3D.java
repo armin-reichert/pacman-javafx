@@ -58,7 +58,6 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.ScenesMsPacMan;
 import de.amr.games.pacman.ui.fx.scene.ScenesPacMan;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.CoordinateSystem;
 import javafx.animation.SequentialTransition;
 import javafx.beans.Observable;
@@ -89,7 +88,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	protected final AmbientLight ambientLight = new AmbientLight(Color.GHOSTWHITE);
 	protected final CoordinateSystem coordSystem = new CoordinateSystem(1000);
 
-	protected SoundManager sounds;
 	protected Group playground;
 	protected SubScene fxSubScene;
 	protected GameModel game;
@@ -158,11 +156,9 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		switch (gameController.gameVariant) {
 		case MS_PACMAN:
 			r2D = ScenesMsPacMan.RENDERING;
-			sounds = ScenesMsPacMan.SOUNDS;
 			break;
 		case PACMAN:
 			r2D = ScenesPacMan.RENDERING;
-			sounds = ScenesPacMan.SOUNDS;
 			break;
 		default:
 			throw new IllegalArgumentException("Illegal game variant: " + gameController.gameVariant);
@@ -217,7 +213,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		var camController = cams.get(Env.$perspective.get());
 		camController.update(this);
 
-		sounds.setMuted(gameController.attractMode); // TODO check this
+		Env.sounds.setMuted(gameController.attractMode); // TODO check this
 
 		// Update food visibility and start animations and audio in case of switching between 2D and 3D scene
 		// TODO: still incomplete
@@ -226,10 +222,10 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 				foodNode.setVisible(!game.isFoodEaten(info(foodNode).tile));
 			});
 			maze3D.startEnergizerAnimations();
-			AudioClip munching = sounds.getClip(GameSounds.PACMAN_MUNCH);
+			AudioClip munching = Env.sounds.getClip(GameSounds.PACMAN_MUNCH);
 			if (munching.isPlaying()) {
 				if (game.player.starvingTicks > 10) {
-					sounds.stop(GameSounds.PACMAN_MUNCH);
+					Env.sounds.stop(GameSounds.PACMAN_MUNCH);
 				}
 			}
 		}
@@ -251,16 +247,16 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	@Override
 	public void onScatterPhaseStarted(ScatterPhaseStartedEvent e) {
 		if (e.scatterPhase > 0) {
-			sounds.stop(GameSounds.SIRENS.get(e.scatterPhase - 1));
+			Env.sounds.stop(GameSounds.SIRENS.get(e.scatterPhase - 1));
 		}
 		GameSounds siren = GameSounds.SIRENS.get(e.scatterPhase);
-		if (!sounds.getClip(siren).isPlaying())
-			sounds.loop(siren, Integer.MAX_VALUE);
+		if (!Env.sounds.getClip(siren).isPlaying())
+			Env.sounds.loop(siren, Integer.MAX_VALUE);
 	}
 
 	@Override
 	public void onPlayerGainsPower(GameEvent e) {
-		sounds.loop(GameSounds.PACMAN_POWER, Integer.MAX_VALUE);
+		Env.sounds.loop(GameSounds.PACMAN_POWER, Integer.MAX_VALUE);
 		Stream.of(ghosts3D) //
 				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
 				.forEach(Ghost3D::setFrightenedSkinColor);
@@ -275,7 +271,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 	@Override
 	public void onPlayerLostPower(GameEvent e) {
-		sounds.stop(GameSounds.PACMAN_POWER);
+		Env.sounds.stop(GameSounds.PACMAN_POWER);
 		Stream.of(ghosts3D).forEach(Ghost3D::setNormalSkinColor);
 	}
 
@@ -286,9 +282,9 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		} else {
 			V2i tile = e.tile.get();
 			maze3D.foodNodeAt(tile).ifPresent(maze3D::hideFoodNode);
-			AudioClip munching = sounds.getClip(GameSounds.PACMAN_MUNCH);
+			AudioClip munching = Env.sounds.getClip(GameSounds.PACMAN_MUNCH);
 			if (!munching.isPlaying()) {
-				sounds.loop(GameSounds.PACMAN_MUNCH, Integer.MAX_VALUE);
+				Env.sounds.loop(GameSounds.PACMAN_MUNCH, Integer.MAX_VALUE);
 			}
 		}
 	}
@@ -301,7 +297,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	@Override
 	public void onBonusEaten(GameEvent e) {
 		bonus3D.showPoints(game.bonus);
-		sounds.play(GameSounds.BONUS_EATEN);
+		Env.sounds.play(GameSounds.BONUS_EATEN);
 	}
 
 	@Override
@@ -312,18 +308,18 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	@Override
 	public void onExtraLife(GameEvent e) {
 		ui.showFlashMessage(1.5, Env.message("extra_life"));
-		sounds.play(GameSounds.EXTRA_LIFE);
+		Env.sounds.play(GameSounds.EXTRA_LIFE);
 	}
 
 	@Override
 	public void onGhostReturnsHome(GameEvent e) {
-		sounds.play(GameSounds.GHOST_RETURNING);
+		Env.sounds.play(GameSounds.GHOST_RETURNING);
 	}
 
 	@Override
 	public void onGhostEntersHouse(GameEvent e) {
 		if (game.ghosts(GhostState.DEAD).count() == 0) {
-			sounds.stop(GameSounds.GHOST_RETURNING);
+			Env.sounds.stop(GameSounds.GHOST_RETURNING);
 		}
 	}
 
@@ -334,17 +330,17 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
-		sounds.setMuted(gameController.attractMode); // TODO check this
+		Env.sounds.setMuted(gameController.attractMode); // TODO check this
 
 		// enter READY
 		if (e.newGameState == GameState.READY) {
 			maze3D.reset();
 			player3D.reset();
 			Stream.of(ghosts3D).forEach(Ghost3D::reset);
-			sounds.stopAll();
-			sounds.setMuted(gameController.attractMode);
+			Env.sounds.stopAll();
+			Env.sounds.setMuted(gameController.attractMode);
 			if (!gameController.gameRunning) {
-				sounds.play(GameSounds.GAME_READY);
+				Env.sounds.play(GameSounds.GAME_READY);
 			}
 		}
 
@@ -356,17 +352,17 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		// enter PACMAN_DYING
 		else if (e.newGameState == GameState.PACMAN_DYING) {
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setNormalSkinColor());
-			sounds.stopAll();
+			Env.sounds.stopAll();
 			new SequentialTransition( //
 					afterSeconds(1, game::hideGhosts), //
-					player3D.dyingAnimation(sounds), //
+					player3D.dyingAnimation(Env.sounds), //
 					afterSeconds(2, () -> gameController.stateTimer().expire()) //
 			).play();
 		}
 
 		// enter GHOST_DYING
 		else if (e.newGameState == GameState.GHOST_DYING) {
-			sounds.play(GameSounds.GHOST_EATEN);
+			Env.sounds.play(GameSounds.GHOST_EATEN);
 		}
 
 		// enter LEVEL_STARTING
@@ -380,7 +376,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 		// enter LEVEL_COMPLETE
 		else if (e.newGameState == GameState.LEVEL_COMPLETE) {
-			sounds.stopAll();
+			Env.sounds.stopAll();
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setNormalSkinColor());
 			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game.levelNumber);
 			var animation = new SequentialTransition( //
@@ -395,7 +391,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 		// enter GAME_OVER
 		else if (e.newGameState == GameState.GAME_OVER) {
-			sounds.stopAll();
+			Env.sounds.stopAll();
 			ui.showFlashMessage(3, Env.GAME_OVER_TALK.next());
 		}
 
