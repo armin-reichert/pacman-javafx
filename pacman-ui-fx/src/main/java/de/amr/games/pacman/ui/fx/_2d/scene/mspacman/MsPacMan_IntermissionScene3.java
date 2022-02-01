@@ -30,9 +30,9 @@ import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.JuniorBag2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Stork2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
+import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.ScenesMsPacMan;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
 
 /**
  * Intermission scene 3: "Junior".
@@ -47,7 +47,6 @@ import de.amr.games.pacman.ui.fx.sound.SoundManager;
 public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 
 	private final Intermission3Controller sc = new Intermission3Controller();
-	private final SoundManager sounds = ScenesMsPacMan.SOUNDS;
 	private Player2D msPacMan2D;
 	private Player2D pacMan2D;
 	private Flap2D flap2D;
@@ -62,7 +61,7 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 	public void init() {
 		super.init();
 
-		sc.playIntermissionSound = () -> sounds.play(GameSounds.INTERMISSION_3);
+		sc.playIntermissionSound = () -> Env.sounds.play(GameSounds.INTERMISSION_3);
 		sc.playFlapAnimation = () -> flap2D.animation.restart();
 		sc.init(gameController);
 

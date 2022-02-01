@@ -29,9 +29,9 @@ import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
+import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.ScenesMsPacMan;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
 
 /**
  * Intermission scene 2: "The chase".
@@ -44,7 +44,6 @@ import de.amr.games.pacman.ui.fx.sound.SoundManager;
 public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 	private final Intermission2Controller sc = new Intermission2Controller();
-	private final SoundManager sounds = ScenesMsPacMan.SOUNDS;
 	private Player2D msPacMan2D;
 	private Player2D pacMan2D;
 	private Flap2D flap2D;
@@ -57,7 +56,7 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 	public void init() {
 		super.init();
 
-		sc.playIntermissionSound = () -> sounds.play(GameSounds.INTERMISSION_2);
+		sc.playIntermissionSound = () -> Env.sounds.play(GameSounds.INTERMISSION_2);
 		sc.playFlapAnimation = () -> flap2D.animation.restart();
 		sc.init(gameController);
 
