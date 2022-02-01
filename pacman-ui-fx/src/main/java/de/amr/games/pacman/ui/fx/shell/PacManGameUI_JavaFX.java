@@ -86,24 +86,24 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 		mainSceneRoot = new StackPane(gameSceneRoot, flashMessageView, hud);
 		StackPane.setAlignment(hud, Pos.TOP_LEFT);
 
-		// TODO rethink this
-		double aspectRatio = 28.0 / 36.0;
-
-		mainScene = new Scene(mainSceneRoot, aspectRatio * height, height);
-		updateGameScene();
-
+		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
 		stage.titleProperty().bind(Bindings.createStringBinding(() -> {
 			String gameName = gameController.gameVariant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man";
 			return Env.$paused.get() ? String.format("%s (PAUSED, CTRL+P: resume, P: Step)", gameName)
 					: String.format("%s", gameName);
 		}, Env.gameLoop.$fps));
+
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> Env.gameLoop.stop());
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
 		stage.addEventHandler(ScrollEvent.SCROLL, this::onScrolled);
-		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
-		stage.setFullScreen(fullscreen);
-		stage.centerOnScreen();
+
+		double aspectRatio = 28.0 / 36.0;
+		mainScene = new Scene(mainSceneRoot, aspectRatio * height, height);
+		updateGameScene();
 		stage.setScene(mainScene);
+
+		stage.centerOnScreen();
+		stage.setFullScreen(fullscreen);
 		stage.show();
 	}
 
