@@ -129,15 +129,10 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 		flashMessageView.showMessage(String.format(message, args), seconds);
 	}
 
-	private void stopAllSounds() {
-		ScenesMsPacMan.SOUNDS.stopAll();
-		ScenesPacMan.SOUNDS.stopAll();
-	}
-
 	private void toggleUse3DScenes() {
 		Env.$3D.set(!Env.$3D.get());
 		if (selectScene(false) != selectScene(true)) {
-			stopAllSounds();
+			Env.sounds.stopAll();
 			updateGameScene();
 		}
 	}
@@ -260,7 +255,7 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 
 		case Q:
 			currentScene.end();
-			stopAllSounds();
+			Env.sounds.stopAll();
 			gameController.changeState(GameState.INTRO);
 			break;
 
