@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.scene;
 
-import java.util.OptionalDouble;
-
 import de.amr.games.pacman.controller.event.GameEvent;
 import de.amr.games.pacman.lib.Logging;
 import javafx.scene.Scene;
@@ -56,9 +54,5 @@ public interface GameScene {
 
 	default String name() {
 		return getClass().getSimpleName();
-	}
-
-	default OptionalDouble aspectRatio() {
-		return OptionalDouble.empty();
 	}
 }

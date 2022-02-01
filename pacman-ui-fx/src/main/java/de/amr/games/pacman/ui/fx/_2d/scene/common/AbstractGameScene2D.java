@@ -26,8 +26,6 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 import static de.amr.games.pacman.model.world.World.TS;
 import static de.amr.games.pacman.model.world.World.t;
 
-import java.util.OptionalDouble;
-
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
 import de.amr.games.pacman.lib.V2d;
@@ -60,7 +58,6 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	protected final Rendering2D r2D;
 
 	protected V2d unscaledSize;
-	protected double aspectRatio;
 
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
@@ -75,7 +72,6 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 
 	public void setSizeInTiles(int tilesX, int tilesY) {
 		unscaledSize = new V2d(tilesX * TS, tilesY * TS);
-		aspectRatio = unscaledSize.x / unscaledSize.y;
 	}
 
 	@Override
@@ -84,6 +80,7 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 		fxSubScene.widthProperty().bind(ui.canvas.widthProperty());
 		fxSubScene.heightProperty().bind(ui.canvas.heightProperty());
 		parentScene.widthProperty().addListener(($1, $2, parentWidth) -> {
+			double aspectRatio = unscaledSize.x / unscaledSize.y;
 			resizeCanvas(Math.min(parentWidth.doubleValue() / aspectRatio, parentScene.getHeight()));
 		});
 		parentScene.heightProperty().addListener(($1, $2, parentHeight) -> resizeCanvas(parentHeight.doubleValue()));
@@ -96,6 +93,7 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	}
 
 	private void resizeCanvas(double newUnscaledHeight) {
+		double aspectRatio = unscaledSize.x / unscaledSize.y;
 		ui.canvas.setWidth(aspectRatio * newUnscaledHeight);
 		ui.canvas.setHeight(newUnscaledHeight);
 		double scaling = newUnscaledHeight / unscaledSize.y;
@@ -125,11 +123,6 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	@Override
 	public boolean is3D() {
 		return false;
-	}
-
-	@Override
-	public final OptionalDouble aspectRatio() {
-		return OptionalDouble.of(aspectRatio);
 	}
 
 	private void drawTileBorders() {

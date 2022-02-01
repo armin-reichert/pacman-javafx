@@ -49,7 +49,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -87,12 +86,10 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 		mainSceneRoot = new StackPane(gameSceneRoot, flashMessageView, hud);
 		StackPane.setAlignment(hud, Pos.TOP_LEFT);
 
-		var gameScene = selectScene(Env.$3D.get());
 		// TODO rethink this
-		double aspectRatio = gameScene.aspectRatio()
-				.orElse(Screen.getPrimary().getBounds().getWidth() / Screen.getPrimary().getBounds().getHeight());
-		double width = aspectRatio * height;
-		mainScene = new Scene(mainSceneRoot, width, height);
+		double aspectRatio = 28.0 / 36.0;
+
+		mainScene = new Scene(mainSceneRoot, aspectRatio * height, height);
 		updateGameScene();
 
 		stage.titleProperty().bind(Bindings.createStringBinding(() -> {
