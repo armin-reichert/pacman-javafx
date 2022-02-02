@@ -78,11 +78,11 @@ public class GameUI extends DefaultGameEventHandler {
 	public static final int TILES_Y = 36;
 	public static final double ASPECT_RATIO = (double) TILES_X / TILES_Y;
 
-	private static final Background BG_BEACH = U.imageBackground("/common/beach.jpg");
-	private static final Background BG_BLACK = U.colorBackground(Color.BLACK);
-	private static final Background BG_BLUE = U.colorBackground(Color.CORNFLOWERBLUE);
+	private final Background BG_BEACH = U.imageBackground("/common/beach.jpg");
+	private final Background BG_BLACK = U.colorBackground(Color.BLACK);
+	private final Background BG_BLUE = U.colorBackground(Color.CORNFLOWERBLUE);
 
-	private static final PacManModel3D MODEL_3D = GianmarcosModel3D.get();
+	private final PacManModel3D MODEL_3D = GianmarcosModel3D.get();
 
 	private final Rendering2D_PacMan RENDERING_PACMAN = new Rendering2D_PacMan();
 	private final Rendering2D_MsPacMan RENDERING_MSPACMAN = new Rendering2D_MsPacMan();
