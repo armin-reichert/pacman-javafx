@@ -63,10 +63,8 @@ public class GameScore2D implements Renderable2D {
 		g.save();
 		g.translate(x, y);
 		g.setFont(rendering.getScoreFont());
-		g.translate(0, 2);
 		g.setFill(titleColor);
 		g.fillText(title, 0, 0);
-		g.translate(0, 1);
 		if (showPoints) {
 			g.setFill(pointsColor);
 			g.translate(0, t(1));
