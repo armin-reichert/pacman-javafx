@@ -49,10 +49,6 @@ public interface GameScene {
 	boolean is3D();
 
 	default void end() {
-		Logging.log("Scene '%s' ended", name());
-	}
-
-	default String name() {
-		return getClass().getSimpleName();
+		Logging.log("Scene '%s' ended", getClass().getName());
 	}
 }

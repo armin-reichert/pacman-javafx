@@ -252,10 +252,10 @@ public class GameUI extends DefaultGameEventHandler {
 		GameScene nextScene = gameSceneForCurrentState(Env.$3D.get());
 		if (currentScene != nextScene) {
 			if (currentScene != null) {
-				log("Change scene from '%s' to '%s'", currentScene.name(), nextScene.name());
+				log("Change scene from '%s' to '%s'", currentScene.getClass().getName(), nextScene.getClass().getName());
 				currentScene.end();
 			} else {
-				log("Set scene to '%s'", nextScene.name());
+				log("Set scene to '%s'", nextScene.getClass().getName());
 			}
 			selectBackground(nextScene);
 			selectSounds(nextScene);
