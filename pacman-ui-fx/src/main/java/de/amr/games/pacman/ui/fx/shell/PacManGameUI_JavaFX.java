@@ -280,6 +280,13 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 			}
 			break;
 
+		case Z:
+			if (gameController.currentStateID == GameState.INTRO) {
+				showFlashMessage(1, "Intermission Scene Test");
+				gameController.startIntermissionTest();
+			}
+			break;
+
 		case SPACE:
 			gameController.requestGame();
 			break;
@@ -363,13 +370,6 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 		case Y:
 			if (!currentScene.is3D()) {
 				Env.$tilesVisible.set(!Env.$tilesVisible.get());
-			}
-			break;
-
-		case DIGIT1:
-			if (gameController.currentStateID == GameState.INTRO) {
-				showFlashMessage(1, "Intermission Scene Test");
-				gameController.startIntermissionTest();
 			}
 			break;
 

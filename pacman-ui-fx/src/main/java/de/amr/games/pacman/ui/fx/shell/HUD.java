@@ -143,6 +143,7 @@ public class HUD extends VBox {
 		when(gameCtrl.gameRunning, () -> row("N", "Next Level"));
 		when(state != GameState.INTRO, () -> row("Q", "Quit Screen"));
 		when(gameCtrl.gameRunning, () -> row("X", "Kill all hunting ghosts"));
+		when(state == GameState.INTRO, () -> row("Z", "Play Intermission Scenes"));
 
 		row();
 		when(gameScene.is3D(), () -> row("Ctrl+C", "Next Perspective"));
@@ -153,7 +154,6 @@ public class HUD extends VBox {
 		when(gameScene.is3D(), () -> row("Ctrl+R", "Maze resolution (SHIFT=Decrease)"));
 		row("Ctrl+S", "Speed (SHIFT=Decrease)");
 		when(gameScene.is3D(), () -> row("Ctrl+X", "Axes On/Off"));
-		when(state == GameState.INTRO, () -> row("Ctrl+1", "Play Intermission Scenes"));
 		row("Ctrl+3", "3D Play Scene On/Off");
 
 		textUI.setText(text.toString());
