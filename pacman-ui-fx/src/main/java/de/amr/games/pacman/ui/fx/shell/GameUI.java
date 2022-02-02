@@ -137,7 +137,6 @@ public class GameUI extends DefaultGameEventHandler {
 	final Canvas canvas;
 	final Scene mainScene;
 	final Stage stage;
-	final HUD hud;
 	final Group gameSceneContainer;
 	final StackPane mainSceneContainer;
 
@@ -148,10 +147,9 @@ public class GameUI extends DefaultGameEventHandler {
 		this.gameController = gameController;
 
 		gameSceneContainer = new Group();
-		hud = new HUD();
-		StackPane.setAlignment(hud, Pos.TOP_LEFT);
+		StackPane.setAlignment(HUD.get(), Pos.TOP_LEFT);
 
-		mainSceneContainer = new StackPane(gameSceneContainer, FlashMessageView.get(), hud);
+		mainSceneContainer = new StackPane(gameSceneContainer, FlashMessageView.get(), HUD.get());
 		mainScene = new Scene(mainSceneContainer, ASPECT_RATIO * height, height);
 
 		// all 2D scenes render into this canvas
@@ -208,7 +206,7 @@ public class GameUI extends DefaultGameEventHandler {
 
 	public void update() {
 		FlashMessageView.get().update();
-		hud.update(this);
+		HUD.get().update(this);
 	}
 
 	public void updateGameScene() {
@@ -402,10 +400,10 @@ public class GameUI extends DefaultGameEventHandler {
 			break;
 
 		case I:
-			if (!hud.isVisible()) {
-				hud.show();
+			if (!HUD.get().isVisible()) {
+				HUD.get().show();
 			} else {
-				hud.hide();
+				HUD.get().hide();
 			}
 			break;
 

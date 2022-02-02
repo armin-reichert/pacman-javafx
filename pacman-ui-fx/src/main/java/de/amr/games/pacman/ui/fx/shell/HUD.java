@@ -47,6 +47,12 @@ import javafx.util.Duration;
  */
 public class HUD extends VBox {
 
+	private static HUD IT = new HUD();
+
+	public static HUD get() {
+		return IT;
+	}
+
 	static final int MAX_WIDTH = 400;
 	static final Color BG_COLOR = new Color(0.3, 0.3, 0.3, 0.6);
 
@@ -61,7 +67,7 @@ public class HUD extends VBox {
 	private final Text textUI = new Text();
 	private final StringBuilder text = new StringBuilder();
 
-	public HUD() {
+	private HUD() {
 		setVisible(false);
 		setMaxWidth(MAX_WIDTH);
 		setBackground(new Background(new BackgroundFill(BG_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -111,11 +117,13 @@ public class HUD extends VBox {
 		p("Game Variant", "%s", gameCtrl.gameVariant).done();
 		p("Game Level", "%d", game.levelNumber).done();
 		p("Game State", "%s",
-				state == GameState.HUNTING ? String.format("%s: Phase #%d (%s)", state, game.huntingPhase, huntingPhaseName)
+				state == GameState.HUNTING
+						? String.format("%s: Phase #%d (%s)", state, game.huntingPhase, huntingPhaseName)
 						: state).done();
 		p("", "Running:   %s%s", stateTimer.ticked(), stateTimer.isStopped() ? " (STOPPED)" : "").done();
 		p("", "Remaining: %s",
-				stateTimer.ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer.ticksRemaining()).done();
+				stateTimer.ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer.ticksRemaining())
+						.done();
 		p("Autopilot", "%s", on_off(gameCtrl.autoControlled)).done();
 		p("Immunity", "%s", on_off(game.player.immune)).done();
 		p("Game Scene", "%s", gameScene.getClass().getSimpleName()).done();
