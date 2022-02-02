@@ -102,59 +102,59 @@ public class HUD extends VBox {
 		var gameScene = ui.currentScene;
 
 		text.setLength(0);
-		p("Total Ticks", "%d", Env.gameLoop.$totalTicks.get()).end();
-		p("Target FPS", "%d Hz", Env.gameLoop.getTargetFrameRate()).end();
-		p("Current FPS", "%d Hz", Env.gameLoop.$fps.get()).end();
-		p("Paused", "%s", yes_no(Env.$paused.get())).end();
-		p("Playing", "%s", yes_no(gameCtrl.gameRunning)).end();
-		p("Attract Mode", "%s", yes_no(gameCtrl.attractMode)).end();
-		p("Game Variant", "%s", gameCtrl.gameVariant).end();
-		p("Game Level", "%d", game.levelNumber).end();
+		p("Total Ticks", "%d", Env.gameLoop.$totalTicks.get()).done();
+		p("Target FPS", "%d Hz", Env.gameLoop.getTargetFrameRate()).done();
+		p("Current FPS", "%d Hz", Env.gameLoop.$fps.get()).done();
+		p("Paused", "%s", yes_no(Env.$paused.get())).done();
+		p("Playing", "%s", yes_no(gameCtrl.gameRunning)).done();
+		p("Attract Mode", "%s", yes_no(gameCtrl.attractMode)).done();
+		p("Game Variant", "%s", gameCtrl.gameVariant).done();
+		p("Game Level", "%d", game.levelNumber).done();
 		p("Game State", "%s",
 				state == GameState.HUNTING ? String.format("%s: Phase #%d (%s)", state, game.huntingPhase, huntingPhaseName)
-						: state).end();
-		p("", "Running:   %s%s", stateTimer.ticked(), stateTimer.isStopped() ? " (STOPPED)" : "").end();
+						: state).done();
+		p("", "Running:   %s%s", stateTimer.ticked(), stateTimer.isStopped() ? " (STOPPED)" : "").done();
 		p("", "Remaining: %s",
-				stateTimer.ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer.ticksRemaining()).end();
-		p("Autopilot", "%s", on_off(gameCtrl.autoControlled)).end();
-		p("Immunity", "%s", on_off(game.player.immune)).end();
-		p("Game Scene", "%s", gameScene.getClass().getSimpleName()).end();
-		p("", "w=%.0f h=%.0f", gameScene.getSubScene().getWidth(), gameScene.getSubScene().getHeight()).end();
-		p("Window Size", "w=%.0f h=%.0f", width, height).end();
-		p("Scene Size", "w=%.0f h=%.0f", sceneWidth, sceneHeight).end();
-		p("3D Scenes", "%s", on_off(Env.$3D.get())).end();
+				stateTimer.ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer.ticksRemaining()).done();
+		p("Autopilot", "%s", on_off(gameCtrl.autoControlled)).done();
+		p("Immunity", "%s", on_off(game.player.immune)).done();
+		p("Game Scene", "%s", gameScene.getClass().getSimpleName()).done();
+		p("", "w=%.0f h=%.0f", gameScene.getSubScene().getWidth(), gameScene.getSubScene().getHeight()).done();
+		p("Window Size", "w=%.0f h=%.0f", width, height).done();
+		p("Scene Size", "w=%.0f h=%.0f", sceneWidth, sceneHeight).done();
+		p("3D Scenes", "%s", on_off(Env.$3D.get())).done();
 		if (gameScene.is3D()) {
 			// Currently PlayScene3D is the only 3D scene
 			var scene3D = (PlayScene3D) gameScene;
-			p("Perspective", "%s", Env.$perspective.get()).end();
-			p("Camera", "%s", scene3D.cam().info()).end();
-			p("Draw Mode", "%s", Env.$drawMode3D.get()).end();
-			p("Axes", "%s", on_off(Env.$axesVisible.get())).end();
+			p("Perspective", "%s", Env.$perspective.get()).done();
+			p("Camera", "%s", scene3D.cam().info()).done();
+			p("Draw Mode", "%s", Env.$drawMode3D.get()).done();
+			p("Axes", "%s", on_off(Env.$axesVisible.get())).done();
 		} else {
-			p("Canvas2D", "w=%.0f h=%.0f", ui.canvas.getWidth(), ui.canvas.getHeight()).end();
+			p("Canvas2D", "w=%.0f h=%.0f", ui.canvas.getWidth(), ui.canvas.getHeight()).done();
 		}
 
 		newline();
-		p("V", "Switch Pac-Man/Ms. PacMan").when(state == GameState.INTRO).end();
-		p("A", "Autopilot On/Off").end();
-		p("E", "Eat all normal pellets").when(gameCtrl.gameRunning).end();
-		p("I", "Player immunity On/Off").end();
-		p("L", "Add 3 player lives").when(gameCtrl.gameRunning).end();
-		p("N", "Next Level").when(gameCtrl.gameRunning).end();
-		p("Q", "Quit Screen").when(state != GameState.INTRO).end();
-		p("X", "Kill all hunting ghosts").when(gameCtrl.gameRunning).end();
-		p("Z", "Play Intermission Scenes").when(state == GameState.INTRO).end();
+		p("V", "Switch Pac-Man/Ms. PacMan").when(state == GameState.INTRO);
+		p("A", "Autopilot On/Off").done();
+		p("E", "Eat all normal pellets").when(gameCtrl.gameRunning);
+		p("I", "Player immunity On/Off").done();
+		p("L", "Add 3 player lives").when(gameCtrl.gameRunning);
+		p("N", "Next Level").when(gameCtrl.gameRunning);
+		p("Q", "Quit Screen").when(state != GameState.INTRO);
+		p("X", "Kill all hunting ghosts").when(gameCtrl.gameRunning);
+		p("Z", "Play Intermission Scenes").when(state == GameState.INTRO);
 
 		newline();
-		p("Ctrl+C", "Next Perspective").when(gameScene.is3D()).end();
-		p("Ctrl+H", "Wall Height (SHIFT=Decrease)").when(gameScene.is3D()).end();
-		p("Ctrl+I", "Information On/Off").end();
-		p("Ctrl+L", "Wireframe Mode On/Off").when(gameScene.is3D()).end();
-		p("Ctrl+P", "Pause On/Off").end();
-		p("Ctrl+R", "Maze resolution (SHIFT=Decrease)").when(gameScene.is3D()).end();
-		p("Ctrl+S", "Speed (SHIFT=Decrease)").end();
-		p("Ctrl+X", "Axes On/Off").when(gameScene.is3D()).end();
-		p("Ctrl+3", "3D Play Scene On/Off").end();
+		p("Ctrl+C", "Next Perspective").when(gameScene.is3D());
+		p("Ctrl+H", "Wall Height (SHIFT=Decrease)").when(gameScene.is3D());
+		p("Ctrl+I", "Information On/Off").done();
+		p("Ctrl+L", "Wireframe Mode On/Off").when(gameScene.is3D());
+		p("Ctrl+P", "Pause On/Off").done();
+		p("Ctrl+R", "Maze resolution (SHIFT=Decrease)").when(gameScene.is3D());
+		p("Ctrl+S", "Speed (SHIFT=Decrease)").done();
+		p("Ctrl+X", "Axes On/Off").when(gameScene.is3D());
+		p("Ctrl+3", "3D Play Scene On/Off").done();
 
 		textUI.setText(text.toString());
 	}
@@ -183,10 +183,11 @@ public class HUD extends VBox {
 			if (!condition) {
 				sb.setLength(0);
 			}
+			done();
 			return this;
 		}
 
-		void end() {
+		void done() {
 			text.append(sb.toString());
 		}
 	}
