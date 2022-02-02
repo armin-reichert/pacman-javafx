@@ -73,7 +73,7 @@ public class PacManGameAppFX extends Application {
 		Env.sounds = options.gameVariant == GameVariant.MS_PACMAN ? ScenesMsPacMan.SOUNDS : ScenesPacMan.SOUNDS;
 		Env.gameLoop.update = () -> {
 			controller.updateState();
-			ui.currentScene.update();
+			ui.updateGameScene();
 		};
 		Env.gameLoop.render = ui::update;
 		Env.gameLoop.start();
