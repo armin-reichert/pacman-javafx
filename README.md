@@ -36,7 +36,7 @@ In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases
 
 General shortcuts:
 - <kbd>F11</kbd>Enter fullscreen mode
-- <kbd>Escape</kbd>Exit fullscreen mode
+- <kbd>Esc</kbd>Exit fullscreen mode
 - <kbd>A</kbd>Toggle autopilot mode
 - <kbd>I</kbd>Toggle immunity of player against ghost attacks
 - <kbd>CTRL+I</kbd> Toggle information about current scene (HUD)
