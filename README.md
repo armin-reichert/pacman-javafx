@@ -39,7 +39,7 @@ General shortcuts:
 - <kbd>Esc</kbd> Exit fullscreen mode
 - <kbd>A</kbd> Toggle autopilot mode
 - <kbd>I</kbd> Toggle immunity of player against ghost attacks
-- <kbd>CTRL+I</kbd> Toggle information about current scene (HUD)
+- <kbd>CTRL+I</kbd> Toggle information display (HUD)
 - <kbd>P</kbd> When in PAUSE mode, execute single simulation step
 - <kbd>CTRL+P</kbd> Toggle pausing game play
 - <kbd>CTRL+S</kbd> Increase speed (<kbd>CTRL+SHIFT+S</kbd> = decrease)
