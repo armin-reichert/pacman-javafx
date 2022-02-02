@@ -37,7 +37,6 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
-import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
@@ -70,10 +69,11 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	}
 
 	@Override
-	public void createFXSubScene(Scene parentScene) {
+	public SubScene createFXSubScene() {
 		fxSubScene = new SubScene(new StackPane(ui.canvas), unscaledSize.x, unscaledSize.y);
 		fxSubScene.widthProperty().bind(ui.canvas.widthProperty());
 		fxSubScene.heightProperty().bind(ui.canvas.heightProperty());
+		return fxSubScene;
 	}
 
 	@Override

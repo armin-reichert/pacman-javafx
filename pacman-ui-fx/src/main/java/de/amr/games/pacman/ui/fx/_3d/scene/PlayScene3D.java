@@ -64,7 +64,6 @@ import javafx.beans.Observable;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
-import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
@@ -111,11 +110,11 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	}
 
 	@Override
-	public void createFXSubScene(Scene parentScene) {
+	public SubScene createFXSubScene() {
 		if (fxSubScene == null) {
 			fxSubScene = new SubScene(new Group(), 400, 300, true, SceneAntialiasing.BALANCED);
-			fxSubScene.widthProperty().bind(parentScene.widthProperty());
-			fxSubScene.heightProperty().bind(parentScene.heightProperty());
+			fxSubScene.widthProperty().bind(ui.mainScene.widthProperty());
+			fxSubScene.heightProperty().bind(ui.mainScene.heightProperty());
 			fxSubScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> cam().handle(e));
 			PerspectiveCamera cam = new PerspectiveCamera(true);
 			fxSubScene.setCamera(cam);
@@ -123,6 +122,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			log("Subscene for game scene '%s' created, width=%.0f, height=%.0f", name(), fxSubScene.getWidth(),
 					fxSubScene.getHeight());
 		}
+		return fxSubScene;
 	}
 
 	@Override

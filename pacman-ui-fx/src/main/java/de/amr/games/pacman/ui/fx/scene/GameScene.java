@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx.scene;
 
 import de.amr.games.pacman.controller.event.GameEvent;
 import de.amr.games.pacman.lib.Logging;
-import javafx.scene.Scene;
 import javafx.scene.SubScene;
 
 /**
@@ -36,7 +35,7 @@ import javafx.scene.SubScene;
  */
 public interface GameScene {
 
-	void createFXSubScene(Scene parentScene);
+	SubScene createFXSubScene();
 
 	SubScene getSubSceneFX();
 

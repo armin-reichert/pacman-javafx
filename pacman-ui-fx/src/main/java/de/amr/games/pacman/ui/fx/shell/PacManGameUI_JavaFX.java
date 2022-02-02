@@ -71,13 +71,13 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 
 	public final GameController gameController;
 	public final Canvas canvas;
+	public final Scene mainScene;
 
 	final Stage stage;
 	final FlashMessageView flashMessageView;
 	final HUD hud;
 	final Group gameSceneContainer;
 	final StackPane mainSceneContainer;
-	final Scene mainScene;
 
 	GameScene currentScene;
 
@@ -164,31 +164,25 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 	}
 
 	private void selectGameScene() {
-		GameScene rightScene = gameSceneForCurrentState(Env.$3D.get());
-		if (currentScene != rightScene) {
-			Env.sounds = gameController.gameVariant == GameVariant.MS_PACMAN ? ScenesMsPacMan.SOUNDS : ScenesPacMan.SOUNDS;
+		GameScene nextScene = gameSceneForCurrentState(Env.$3D.get());
+		if (currentScene != nextScene) {
 			if (currentScene != null) {
-				log("Change scene from '%s' to '%s'", currentScene.name(), rightScene.name());
+				log("Change scene from '%s' to '%s'", currentScene.name(), nextScene.name());
 				currentScene.end();
 			} else {
-				log("Set scene to '%s'", rightScene.name());
+				log("Set scene to '%s'", nextScene.name());
 			}
-			// TODO why do I have to create the subscene each time?
-			rightScene.createFXSubScene(mainScene);
-			rightScene.init();
-			rightScene.getSubSceneFX().requestFocus();
-			selectBackground(rightScene);
-			currentScene = rightScene;
-			gameSceneContainer.getChildren().setAll(currentScene.getSubSceneFX());
+			selectBackground(nextScene);
+			selectSounds(nextScene);
+			// TODO: why do I always have to create a new subscene in the 2D case?
+			gameSceneContainer.getChildren().setAll(nextScene.createFXSubScene());
+			nextScene.init();
+			currentScene = nextScene;
 		}
 	}
 
-	private void toggleUse3D() {
-		Env.$3D.set(!Env.$3D.get());
-		if (gameSceneForCurrentState(false) != gameSceneForCurrentState(true)) {
-			Env.sounds.stopAll();
-			selectGameScene();
-		}
+	private void selectSounds(GameScene scene) {
+		Env.sounds = gameController.gameVariant == GameVariant.MS_PACMAN ? ScenesMsPacMan.SOUNDS : ScenesPacMan.SOUNDS;
 	}
 
 	private void selectBackground(GameScene scene) {
@@ -196,6 +190,14 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 			mainSceneContainer.setBackground(Env.$drawMode3D.get() == DrawMode.LINE ? BG_BLACK : BG_BEACH);
 		} else {
 			mainSceneContainer.setBackground(BG_BLUE);
+		}
+	}
+
+	private void toggle3D() {
+		Env.$3D.set(!Env.$3D.get());
+		if (gameSceneForCurrentState(false) != gameSceneForCurrentState(true)) {
+			Env.sounds.stopAll();
+			selectGameScene();
 		}
 	}
 
@@ -372,7 +374,7 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 			break;
 
 		case DIGIT3: {
-			toggleUse3D();
+			toggle3D();
 			String message = Env.$3D.get() ? "Using 3D play scene\nCTRL+C changes perspective" : "Using 2D play scene";
 			showFlashMessage(2, message);
 			break;
