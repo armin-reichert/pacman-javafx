@@ -35,19 +35,19 @@ In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases
 ## How to use
 
 General shortcuts:
-- <kbd>F11</kbd>Enter fullscreen mode
-- <kbd>Esc</kbd>Exit fullscreen mode
-- <kbd>A</kbd>Toggle autopilot mode
-- <kbd>I</kbd>Toggle immunity of player against ghost attacks
+- <kbd>F11</kbd> Enter fullscreen mode
+- <kbd>Esc</kbd> Exit fullscreen mode
+- <kbd>A</kbd> Toggle autopilot mode
+- <kbd>I</kbd> Toggle immunity of player against ghost attacks
 - <kbd>CTRL+I</kbd> Toggle information about current scene (HUD)
-- <kbd>P</kbd>When in PAUSE mode, execute single simulation step
+- <kbd>P</kbd> When in PAUSE mode, execute single simulation step
 - <kbd>CTRL+P</kbd> Toggle pausing game play
 - <kbd>CTRL+S</kbd> Increase speed (<kbd>CTRL+SHIFT+S</kbd> = decrease)
 - <kbd>CTRL+3</kbd> Toggle using 2D/3D play scene
 
 Intro screen shortcuts:
-- <kbd>V</kbd>: Switch between the two game variants
-- <kbd>Z</kbd>: Play all intermission scenes
+- <kbd>V</kbd> Switch between the two game variants
+- <kbd>Z</kbd> Play all intermission scenes
 
 Play screen shortcuts:
 - <kbd>CTRL+C</kbd> Change 3D camera (3 cameras currently implemented)
