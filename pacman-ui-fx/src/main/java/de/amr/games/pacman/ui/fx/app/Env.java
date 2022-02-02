@@ -28,6 +28,7 @@ import static de.amr.games.pacman.lib.Logging.log;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.RandomEntrySelector;
@@ -59,6 +60,9 @@ public class Env {
 	// Sounds for selected game variant
 	public static SoundManager sounds;
 
+	// Rendering for selected game variant
+	public static Rendering2D r2D;
+
 	// Trash talk
 
 	public static final RandomEntrySelector<String> CHEAT_TALK = load("/common/cheating_talk");
@@ -67,7 +71,8 @@ public class Env {
 
 	private static RandomEntrySelector<String> load(String bundleName) {
 		ResourceBundle bundle = ResourceBundle.getBundle(bundleName);
-		return new RandomEntrySelector<>(bundle.keySet().stream().sorted().map(bundle::getString).toArray(String[]::new));
+		return new RandomEntrySelector<>(
+				bundle.keySet().stream().sorted().map(bundle::getString).toArray(String[]::new));
 	}
 
 	public static final GameLoop gameLoop = new GameLoop();

@@ -42,10 +42,8 @@ import de.amr.games.pacman.controller.event.GameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.GameSounds;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.LevelCounter3D;
@@ -97,7 +95,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	protected ScoreNotReally3D score3D;
 	protected LevelCounter3D levelCounter3D;
 	protected LivesCounter3D livesCounter3D;
-	protected Rendering2D r2D;
 
 	public PlayScene3D(GameUI ui, GameController gameController, PacManModel3D model3D) {
 		this.ui = ui;
@@ -153,8 +150,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		final int width = game.world.numCols() * TS;
 		final int height = game.world.numRows() * TS;
 
-		r2D = gameController.gameVariant == GameVariant.MS_PACMAN ? ui.RENDERING_MSPACMAN : ui.RENDERING_PACMAN;
-
 		maze3D = new Maze3D(width, height, floorImage);
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
@@ -162,16 +157,16 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		buildMaze(game.mazeNumber, true);
 
 		player3D = new Player3D(game.player, model3D);
-		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D)).toArray(Ghost3D[]::new);
-		bonus3D = new Bonus3D(r2D);
+		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, Env.r2D)).toArray(Ghost3D[]::new);
+		bonus3D = new Bonus3D(Env.r2D);
 
-		score3D = new ScoreNotReally3D(r2D.getScoreFont());
+		score3D = new ScoreNotReally3D(Env.r2D.getScoreFont());
 
 		livesCounter3D = new LivesCounter3D(model3D);
 		livesCounter3D.getTransforms().add(new Translate(TS, TS, -HTS));
 		livesCounter3D.setVisible(!gameController.attractMode);
 
-		levelCounter3D = new LevelCounter3D(r2D);
+		levelCounter3D = new LevelCounter3D(Env.r2D);
 		levelCounter3D.setRightPosition(t(game.world.numCols() - 1), TS);
 		levelCounter3D.init(game);
 
@@ -228,9 +223,10 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	}
 
 	private void buildMaze(int mazeNumber, boolean withFood) {
-		maze3D.buildWallsAndDoors(game.world, r2D.getMazeSideColor(mazeNumber), r2D.getMazeTopColor(mazeNumber));
+		maze3D.buildWallsAndDoors(game.world, Env.r2D.getMazeSideColor(mazeNumber),
+				Env.r2D.getMazeTopColor(mazeNumber));
 		if (withFood) {
-			maze3D.buildFood(game.world, r2D.getFoodColor(mazeNumber));
+			maze3D.buildFood(game.world, Env.r2D.getFoodColor(mazeNumber));
 		}
 		log("Built 3D maze (resolution=%d, wall height=%.2f)", maze3D.$resolution.get(), maze3D.$wallHeight.get());
 	}

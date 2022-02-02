@@ -84,10 +84,10 @@ public class GameUI extends DefaultGameEventHandler {
 
 	private static final PacManModel3D MODEL_3D = GianmarcosModel3D.get();
 
-	public final Rendering2D_PacMan RENDERING_PACMAN = new Rendering2D_PacMan();
-	public final Rendering2D_MsPacMan RENDERING_MSPACMAN = new Rendering2D_MsPacMan();
+	private final Rendering2D_PacMan RENDERING_PACMAN = new Rendering2D_PacMan();
+	private final Rendering2D_MsPacMan RENDERING_MSPACMAN = new Rendering2D_MsPacMan();
 
-	public final SoundManager SOUNDS_PACMAN = new SoundManager();
+	private final SoundManager SOUNDS_PACMAN = new SoundManager();
 	{
 		//@formatter:off
 		SOUNDS_PACMAN.put(GameSounds.CREDIT,          "/pacman/sound/credit.mp3");
@@ -109,7 +109,7 @@ public class GameUI extends DefaultGameEventHandler {
 		//@formatter:on
 	}
 
-	public final SoundManager SOUNDS_MSPACMAN = new SoundManager();
+	private final SoundManager SOUNDS_MSPACMAN = new SoundManager();
 	{
 		//@formatter:off
 		SOUNDS_MSPACMAN.put(GameSounds.CREDIT,          "/mspacman/sound/Coin Credit.mp3");
@@ -259,6 +259,7 @@ public class GameUI extends DefaultGameEventHandler {
 				log("Set scene to '%s'", nextScene.getClass().getName());
 			}
 			selectBackground(nextScene);
+			selectRendering(nextScene);
 			selectSounds(nextScene);
 			// TODO: why do I always have to create a new subscene in the 2D case?
 			gameSceneContainer.getChildren().setAll(nextScene.createSubScene(mainScene));
@@ -269,6 +270,10 @@ public class GameUI extends DefaultGameEventHandler {
 
 	private void selectSounds(GameScene scene) {
 		Env.sounds = gameController.gameVariant == GameVariant.MS_PACMAN ? SOUNDS_MSPACMAN : SOUNDS_PACMAN;
+	}
+
+	private void selectRendering(GameScene scene) {
+		Env.r2D = gameController.gameVariant == GameVariant.MS_PACMAN ? RENDERING_MSPACMAN : RENDERING_PACMAN;
 	}
 
 	private void selectBackground(GameScene scene) {
