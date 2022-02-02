@@ -23,10 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.TickTimer;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.animation.FadeTransition;
@@ -92,24 +90,25 @@ public class HUD extends VBox {
 	}
 
 	public void update(PacManGameUI_JavaFX ui) {
-		final GameController gameController = ui.gameController;
-		final GameModel game = gameController.game;
-		final GameState state = gameController.currentStateID;
-		final String huntingPhaseName = game.inScatteringPhase() ? "Scattering" : "Chasing";
-		final TickTimer stateTimer = gameController.stateTimer();
-		final double width = ui.stage.getScene().getWindow().getWidth();
-		final double height = ui.stage.getScene().getWindow().getHeight();
-		final double sceneWidth = ui.stage.getScene().getWidth();
-		final double sceneHeight = ui.stage.getScene().getHeight();
+		var width = ui.stage.getScene().getWindow().getWidth();
+		var height = ui.stage.getScene().getWindow().getHeight();
+		var sceneWidth = ui.stage.getScene().getWidth();
+		var sceneHeight = ui.stage.getScene().getHeight();
+		var gameCtrl = ui.gameController;
+		var game = gameCtrl.game;
+		var state = gameCtrl.currentStateID;
+		var huntingPhaseName = game.inScatteringPhase() ? "Scattering" : "Chasing";
+		var stateTimer = gameCtrl.stateTimer();
+		var gameScene = ui.currentScene;
 
 		text.setLength(0);
 		row("Total Ticks", "%d", Env.gameLoop.$totalTicks.get());
 		row("Target FPS", "%d Hz", Env.gameLoop.getTargetFrameRate());
 		row("Current FPS", "%d Hz", Env.gameLoop.$fps.get());
 		row("Paused", "%s", yes_no(Env.$paused.get()));
-		row("Playing", "%s", yes_no(gameController.gameRunning));
-		row("Attract Mode", "%s", yes_no(gameController.attractMode));
-		row("Game Variant", "%s", gameController.gameVariant);
+		row("Playing", "%s", yes_no(gameCtrl.gameRunning));
+		row("Attract Mode", "%s", yes_no(gameCtrl.attractMode));
+		row("Game Variant", "%s", gameCtrl.gameVariant);
 		row("Game Level", "%d", game.levelNumber);
 		row("Game State", "%s",
 				state == GameState.HUNTING ? String.format("%s: Phase #%d (%s)", state, game.huntingPhase, huntingPhaseName)
@@ -117,16 +116,16 @@ public class HUD extends VBox {
 		row("", "Running:   %s%s", stateTimer.ticked(), stateTimer.isStopped() ? " (STOPPED)" : "");
 		row("", "Remaining: %s",
 				stateTimer.ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer.ticksRemaining());
-		row("Autopilot", "%s", on_off(gameController.autoControlled));
+		row("Autopilot", "%s", on_off(gameCtrl.autoControlled));
 		row("Immunity", "%s", on_off(game.player.immune));
-		row("Game Scene", "%s", ui.currentScene.getClass().getSimpleName());
-		row("", "w=%.0f h=%.0f", ui.currentScene.getSubSceneFX().getWidth(), ui.currentScene.getSubSceneFX().getHeight());
+		row("Game Scene", "%s", gameScene.getClass().getSimpleName());
+		row("", "w=%.0f h=%.0f", gameScene.getSubSceneFX().getWidth(), gameScene.getSubSceneFX().getHeight());
 		row("Window Size", "w=%.0f h=%.0f", width, height);
 		row("Scene Size", "w=%.0f h=%.0f", sceneWidth, sceneHeight);
 		row("3D Scenes", "%s", on_off(Env.$3D.get()));
-		if (ui.currentScene.is3D()) {
+		if (gameScene.is3D()) {
 			// Currently PlayScene3D is the only 3D scene
-			var scene3D = (PlayScene3D) ui.currentScene;
+			var scene3D = (PlayScene3D) gameScene;
 			row("Perspective", "%s", Env.$perspective.get());
 			row("Camera", "%s", scene3D.cam().info());
 			row("Draw Mode", "%s", Env.$drawMode3D.get());
@@ -136,32 +135,38 @@ public class HUD extends VBox {
 		}
 
 		row();
-		row("Key V", "Switch Pac-Man/Ms. PacMan");
-		row("Key A", "Autopilot On/Off");
-		row("Key E", "Eat all normal pellets");
-		row("Key I", "Player immunity On/Off");
-		row("Key L", "Add 3 player lives");
-		row("Key N", "Next Level");
-		row("Key Q", "Quit Game");
-		row("Key X", "Kill all hunting ghosts");
+		when(state == GameState.INTRO, () -> row("V", "Switch Pac-Man/Ms. PacMan"));
+		row("A", "Autopilot On/Off");
+		when(gameCtrl.gameRunning, () -> row("E", "Eat all normal pellets"));
+		row("I", "Player immunity On/Off");
+		when(gameCtrl.gameRunning, () -> row("L", "Add 3 player lives"));
+		when(gameCtrl.gameRunning, () -> row("N", "Next Level"));
+		when(state != GameState.INTRO, () -> row("Q", "Quit Screen"));
+		when(gameCtrl.gameRunning, () -> row("X", "Kill all hunting ghosts"));
 
 		row();
-		row("Ctrl+C", "Next Perspective");
-		row("Ctrl+H", "Wall Height (SHIFT=Decrease)");
+		when(gameScene.is3D(), () -> row("Ctrl+C", "Next Perspective"));
+		when(gameScene.is3D(), () -> row("Ctrl+H", "Wall Height (SHIFT=Decrease)"));
 		row("Ctrl+I", "Information On/Off");
-		row("Ctrl+L", "Wireframe Mode On/Off");
+		when(gameScene.is3D(), () -> row("Ctrl+L", "Wireframe Mode On/Off"));
 		row("Ctrl+P", "Pause On/Off");
-		row("Ctrl+R", "Maze resolution (SHIFT=Decrease)");
+		when(gameScene.is3D(), () -> row("Ctrl+R", "Maze resolution (SHIFT=Decrease)"));
 		row("Ctrl+S", "Speed (SHIFT=Decrease)");
-		row("Ctrl+X", "Axes On/Off");
-		row("Ctrl+1", "Play Intermission Scenes");
+		when(gameScene.is3D(), () -> row("Ctrl+X", "Axes On/Off"));
+		when(state == GameState.INTRO, () -> row("Ctrl+1", "Play Intermission Scenes"));
 		row("Ctrl+3", "3D Play Scene On/Off");
 
 		textUI.setText(text.toString());
 	}
 
-	private void row(String column1, String fmtColumn2, Object... args) {
-		String column2 = String.format(fmtColumn2, args);
+	private void when(boolean condition, Runnable code) {
+		if (condition) {
+			code.run();
+		}
+	}
+
+	private void row(String column1, String pattern, Object... args) {
+		String column2 = String.format(pattern, args);
 		text.append(String.format("%-12s: %s\n", column1, column2));
 	}
 

@@ -236,8 +236,10 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 		}
 
 		case L:
-			game.player.lives += 3;
-			showFlashMessage(2, "You have %d lives", game.player.lives);
+			if (gameController.gameRunning) {
+				game.player.lives += 3;
+				showFlashMessage(2, "You have %d lives", game.player.lives);
+			}
 			break;
 
 		case N:
@@ -254,9 +256,11 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 			break;
 
 		case Q:
-			currentScene.end();
-			Env.sounds.stopAll();
-			gameController.changeState(GameState.INTRO);
+			if (gameController.currentStateID != GameState.INTRO) {
+				currentScene.end();
+				Env.sounds.stopAll();
+				gameController.changeState(GameState.INTRO);
+			}
 			break;
 
 		case V:
