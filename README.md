@@ -34,11 +34,11 @@ In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases
 
 ## How to use
 
-You can switch between window and fullscreen mode using the standard keys <kbd>F11</kbd> and <kbd>Esc</kbd>.
-
 General shortcuts:
-- <kbd>A</kbd> Toggle autopilot mode
-- <kbd>I</kbd> Toggle immunity of player against ghost attacks
+- <kbd>F11</kbd>Enter fullscreen mode
+- <kbd>Escape</kbd>Exit fullscreen mode
+- <kbd>A</kbd>Toggle autopilot mode
+- <kbd>I</kbd>Toggle immunity of player against ghost attacks
 - <kbd>CTRL+I</kbd> Toggle information about current scene (HUD)
 - <kbd>P</kbd>When in PAUSE mode, execute single simulation step
 - <kbd>CTRL+P</kbd> Toggle pausing game play
