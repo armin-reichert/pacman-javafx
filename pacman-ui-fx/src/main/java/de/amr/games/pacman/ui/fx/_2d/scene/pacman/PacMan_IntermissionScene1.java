@@ -33,7 +33,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.BigPacMan2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.scene.ScenesPacMan;
+import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import javafx.scene.canvas.Canvas;
 
 /**
@@ -49,7 +49,7 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 	private BigPacMan2D bigPacMan2D;
 
 	public PacMan_IntermissionScene1(GameController gameController, Canvas canvas) {
-		super(gameController, canvas, ScenesPacMan.RENDERING);
+		super(gameController, canvas, PacManGameUI_JavaFX.RENDERING_PACMAN);
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 
 		pacMan2D = new Player2D(sc.pac, r2D);
 		blinky2D = new Ghost2D(sc.blinky, r2D);
-		bigPacMan2D = new BigPacMan2D(sc.pac, ScenesPacMan.RENDERING);
+		bigPacMan2D = new BigPacMan2D(sc.pac, PacManGameUI_JavaFX.RENDERING_PACMAN);
 		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 		blinky2D.kickingAnimations.values().forEach(TimedSequence::restart);
 		blinky2D.frightenedAnimation.restart();

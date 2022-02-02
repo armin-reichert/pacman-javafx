@@ -42,6 +42,7 @@ import de.amr.games.pacman.controller.event.GameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -55,8 +56,6 @@ import de.amr.games.pacman.ui.fx._3d.entity.ScoreNotReally3D;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.scene.ScenesMsPacMan;
-import de.amr.games.pacman.ui.fx.scene.ScenesPacMan;
 import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import de.amr.games.pacman.ui.fx.util.CoordinateSystem;
 import javafx.animation.SequentialTransition;
@@ -153,16 +152,9 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		final int width = game.world.numCols() * TS;
 		final int height = game.world.numRows() * TS;
 
-		switch (gameController.gameVariant) {
-		case MS_PACMAN:
-			r2D = ScenesMsPacMan.RENDERING;
-			break;
-		case PACMAN:
-			r2D = ScenesPacMan.RENDERING;
-			break;
-		default:
-			throw new IllegalArgumentException("Illegal game variant: " + gameController.gameVariant);
-		}
+		r2D = gameController.gameVariant == GameVariant.MS_PACMAN //
+				? PacManGameUI_JavaFX.RENDERING_MSPACMAN
+				: PacManGameUI_JavaFX.RENDERING_PACMAN;
 
 		maze3D = new Maze3D(width, height, floorImage);
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);

@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
+import static de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX.RENDERING_MSPACMAN;
+
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission1Controller;
 import de.amr.games.pacman.lib.TimedSequence;
@@ -34,7 +36,6 @@ import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Heart2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.scene.ScenesMsPacMan;
 import javafx.scene.canvas.Canvas;
 
 /**
@@ -58,7 +59,7 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 	private Heart2D heart2D;
 
 	public MsPacMan_IntermissionScene1(GameController gameController, Canvas canvas) {
-		super(gameController, canvas, ScenesMsPacMan.RENDERING);
+		super(gameController, canvas, RENDERING_MSPACMAN);
 	}
 
 	@Override
@@ -69,11 +70,11 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 		sc.playFlapAnimation = () -> flap2D.animation.restart();
 		sc.init(gameController);
 
-		flap2D = new Flap2D(sc.flap, ScenesMsPacMan.RENDERING);
+		flap2D = new Flap2D(sc.flap, RENDERING_MSPACMAN);
 		msPacMan2D = new Player2D(sc.msPac, r2D);
 		// overwrite by Pac-Man instead of Ms. Pac-Man sprites:
 		pacMan2D = new Player2D(sc.pacMan, r2D);
-		pacMan2D.munchingAnimations = ScenesMsPacMan.RENDERING.createSpouseMunchingAnimations();
+		pacMan2D.munchingAnimations = RENDERING_MSPACMAN.createSpouseMunchingAnimations();
 		inky2D = new Ghost2D(sc.inky, r2D);
 		pinky2D = new Ghost2D(sc.pinky, r2D);
 		heart2D = new Heart2D(sc.heart, (Rendering2D_MsPacMan) r2D);

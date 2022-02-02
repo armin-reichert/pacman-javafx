@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
+import static de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX.RENDERING_MSPACMAN;
+
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission3Controller;
 import de.amr.games.pacman.ui.GameSounds;
@@ -32,7 +34,6 @@ import de.amr.games.pacman.ui.fx._2d.entity.mspacman.JuniorBag2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Stork2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.scene.ScenesMsPacMan;
 import javafx.scene.canvas.Canvas;
 
 /**
@@ -55,7 +56,7 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 	private JuniorBag2D bag2D;
 
 	public MsPacMan_IntermissionScene3(GameController gameController, Canvas canvas) {
-		super(gameController, canvas, ScenesMsPacMan.RENDERING);
+		super(gameController, canvas, RENDERING_MSPACMAN);
 	}
 
 	@Override
@@ -68,14 +69,14 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 
 		msPacMan2D = new Player2D(sc.msPacMan, r2D);
 		pacMan2D = new Player2D(sc.pacMan, r2D);
-		pacMan2D.munchingAnimations = ScenesMsPacMan.RENDERING.createSpouseMunchingAnimations();
+		pacMan2D.munchingAnimations = RENDERING_MSPACMAN.createSpouseMunchingAnimations();
 
-		flap2D = new Flap2D(sc.flap, ScenesMsPacMan.RENDERING);
+		flap2D = new Flap2D(sc.flap, RENDERING_MSPACMAN);
 
-		stork2D = new Stork2D(sc.stork, ScenesMsPacMan.RENDERING);
+		stork2D = new Stork2D(sc.stork, RENDERING_MSPACMAN);
 		stork2D.animation.restart();
 
-		bag2D = new JuniorBag2D(sc.bag, ScenesMsPacMan.RENDERING);
+		bag2D = new JuniorBag2D(sc.bag, RENDERING_MSPACMAN);
 	}
 
 	@Override
