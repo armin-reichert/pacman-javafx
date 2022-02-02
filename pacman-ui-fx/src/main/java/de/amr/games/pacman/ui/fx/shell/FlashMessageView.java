@@ -66,6 +66,16 @@ public class FlashMessageView extends VBox {
 		}
 	}
 
+	private static FlashMessageView IT = new FlashMessageView();
+
+	public static FlashMessageView get() {
+		return IT;
+	}
+
+	public static void showFlashMessage(double seconds, String message, Object... args) {
+		IT.showMessage(String.format(message, args), seconds);
+	}
+
 	private final Deque<FlashMessage> activeMessages = new ArrayDeque<>();
 	private final Text textView = new Text();
 	private Color textColor = Color.WHEAT;

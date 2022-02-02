@@ -54,7 +54,7 @@ import de.amr.games.pacman.ui.fx._3d.entity.ScoreNotReally3D;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.shell.GameUI;
+import de.amr.games.pacman.ui.fx.shell.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.CoordinateSystem;
 import javafx.animation.SequentialTransition;
 import javafx.beans.Observable;
@@ -77,7 +77,6 @@ import javafx.scene.transform.Translate;
  */
 public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
-	protected final GameUI ui;
 	protected final GameController gameController;
 	protected final PacManModel3D model3D;
 	protected final EnumMap<Perspective, CameraController<PlayScene3D>> cams = new EnumMap<>(Perspective.class);
@@ -96,8 +95,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	protected LevelCounter3D levelCounter3D;
 	protected LivesCounter3D livesCounter3D;
 
-	public PlayScene3D(GameUI ui, GameController gameController, PacManModel3D model3D) {
-		this.ui = ui;
+	public PlayScene3D(GameController gameController, PacManModel3D model3D) {
 		this.gameController = gameController;
 		this.model3D = model3D;
 		coordSystem.visibleProperty().bind(Env.$axesVisible);
@@ -294,7 +292,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 	@Override
 	public void onExtraLife(GameEvent e) {
-		ui.showFlashMessage(1.5, Env.message("extra_life"));
+		FlashMessageView.showFlashMessage(1.5, Env.message("extra_life"));
 		Env.sounds.play(GameSounds.EXTRA_LIFE);
 	}
 
@@ -357,7 +355,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			buildMaze(game.mazeNumber, true);
 			levelCounter3D.init(game);
 			var message = Env.message("level_starting", game.levelNumber);
-			ui.showFlashMessage(1, message);
+			FlashMessageView.showFlashMessage(1, message);
 			afterSeconds(3, () -> gameController.stateTimer().expire()).play();
 		}
 
@@ -370,7 +368,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 					pause(1), //
 					maze3D.flashingAnimation(game.numFlashes), //
 					afterSeconds(1, () -> game.player.hide()), //
-					afterSeconds(1, () -> ui.showFlashMessage(2, message)) //
+					afterSeconds(1, () -> FlashMessageView.showFlashMessage(2, message)) //
 			);
 			animation.setOnFinished(ae -> gameController.stateTimer().expire());
 			animation.play();
@@ -379,7 +377,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		// enter GAME_OVER
 		else if (e.newGameState == GameState.GAME_OVER) {
 			Env.sounds.stopAll();
-			ui.showFlashMessage(3, Env.GAME_OVER_TALK.next());
+			FlashMessageView.showFlashMessage(3, Env.GAME_OVER_TALK.next());
 		}
 
 		// exit HUNTING

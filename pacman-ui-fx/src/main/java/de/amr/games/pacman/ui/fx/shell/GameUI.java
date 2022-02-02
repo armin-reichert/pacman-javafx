@@ -137,7 +137,6 @@ public class GameUI extends DefaultGameEventHandler {
 	final Canvas canvas;
 	final Scene mainScene;
 	final Stage stage;
-	final FlashMessageView flashMessageView;
 	final HUD hud;
 	final Group gameSceneContainer;
 	final StackPane mainSceneContainer;
@@ -149,11 +148,10 @@ public class GameUI extends DefaultGameEventHandler {
 		this.gameController = gameController;
 
 		gameSceneContainer = new Group();
-		flashMessageView = new FlashMessageView();
 		hud = new HUD();
 		StackPane.setAlignment(hud, Pos.TOP_LEFT);
 
-		mainSceneContainer = new StackPane(gameSceneContainer, flashMessageView, hud);
+		mainSceneContainer = new StackPane(gameSceneContainer, FlashMessageView.get(), hud);
 		mainScene = new Scene(mainSceneContainer, ASPECT_RATIO * height, height);
 
 		// all 2D scenes render into this canvas
@@ -188,7 +186,7 @@ public class GameUI extends DefaultGameEventHandler {
 		SCENES_PACMAN[3][0] = 
 		SCENES_PACMAN[3][1] = new PacMan_IntermissionScene3(gameController, canvas, RENDERING_PACMAN);
 		SCENES_PACMAN[4][0] = new PlayScene2D(gameController, canvas, RENDERING_PACMAN);
-		SCENES_PACMAN[4][1] = new PlayScene3D(this, gameController, MODEL_3D);
+		SCENES_PACMAN[4][1] = new PlayScene3D(gameController, MODEL_3D);
 		
 		SCENES_MSPACMAN[0][0] = 
 		SCENES_MSPACMAN[0][1] = new MsPacMan_IntroScene(gameController, canvas, RENDERING_MSPACMAN);
@@ -199,7 +197,7 @@ public class GameUI extends DefaultGameEventHandler {
 		SCENES_MSPACMAN[3][0] = 
 		SCENES_MSPACMAN[3][1] = new MsPacMan_IntermissionScene3(gameController, canvas, RENDERING_MSPACMAN);
 		SCENES_MSPACMAN[4][0] = new PlayScene2D(gameController, canvas, RENDERING_MSPACMAN);
-		SCENES_MSPACMAN[4][1] = new PlayScene3D(this, gameController, MODEL_3D);
+		SCENES_MSPACMAN[4][1] = new PlayScene3D(gameController, MODEL_3D);
 		//@formatter:on
 		selectGameScene();
 
@@ -209,12 +207,8 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	public void update() {
-		flashMessageView.update();
+		FlashMessageView.get().update();
 		hud.update(this);
-	}
-
-	public void showFlashMessage(double seconds, String message, Object... args) {
-		flashMessageView.showMessage(String.format(message, args), seconds);
 	}
 
 	public void updateGameScene() {
@@ -312,7 +306,7 @@ public class GameUI extends DefaultGameEventHandler {
 		case A: {
 			gameController.autoControlled = !gameController.autoControlled;
 			String message = Env.message(gameController.autoControlled ? "autopilot_on" : "autopilot_off");
-			showFlashMessage(1, message);
+			FlashMessageView.showFlashMessage(1, message);
 			break;
 		}
 
@@ -325,20 +319,20 @@ public class GameUI extends DefaultGameEventHandler {
 		case I: {
 			game.player.immune = !game.player.immune;
 			String message = Env.message(game.player.immune ? "player_immunity_on" : "player_immunity_off");
-			showFlashMessage(1, message);
+			FlashMessageView.showFlashMessage(1, message);
 			break;
 		}
 
 		case L:
 			if (gameController.gameRunning) {
 				game.player.lives += 3;
-				showFlashMessage(2, "You have %d lives", game.player.lives);
+				FlashMessageView.showFlashMessage(2, "You have %d lives", game.player.lives);
 			}
 			break;
 
 		case N:
 			if (gameController.gameRunning) {
-				showFlashMessage(1, Env.CHEAT_TALK.next());
+				FlashMessageView.showFlashMessage(1, Env.CHEAT_TALK.next());
 				gameController.changeState(GameState.LEVEL_COMPLETE);
 			}
 			break;
@@ -371,7 +365,7 @@ public class GameUI extends DefaultGameEventHandler {
 
 		case Z:
 			if (gameController.currentStateID == GameState.INTRO) {
-				showFlashMessage(1, "Intermission Scene Test");
+				FlashMessageView.showFlashMessage(1, "Intermission Scene Test");
 				gameController.startIntermissionTest();
 			}
 			break;
@@ -397,7 +391,7 @@ public class GameUI extends DefaultGameEventHandler {
 				Env.nextPerspective();
 				String perspective_key = Env.message(Env.$perspective.get().name().toLowerCase());
 				String message = Env.message("camera_perspective", perspective_key);
-				showFlashMessage(1, message);
+				FlashMessageView.showFlashMessage(1, message);
 			}
 			break;
 
@@ -424,9 +418,9 @@ public class GameUI extends DefaultGameEventHandler {
 		case P:
 			Env.$paused.set(!Env.$paused.get());
 			if (Env.$paused.get()) {
-				showFlashMessage(3, "Game paused");
+				FlashMessageView.showFlashMessage(3, "Game paused");
 			} else {
-				showFlashMessage(2, "Game resumed");
+				FlashMessageView.showFlashMessage(2, "Game resumed");
 			}
 			break;
 
@@ -443,7 +437,7 @@ public class GameUI extends DefaultGameEventHandler {
 			} else {
 				Env.gameLoop.setTargetFrameRate(Math.max(10, currentTargetFrameRate - 10));
 			}
-			showFlashMessage(1, "Target FPS set to %d Hz", Env.gameLoop.getTargetFrameRate());
+			FlashMessageView.showFlashMessage(1, "Target FPS set to %d Hz", Env.gameLoop.getTargetFrameRate());
 			break;
 
 		case T:
@@ -465,7 +459,7 @@ public class GameUI extends DefaultGameEventHandler {
 		case DIGIT3: {
 			toggle3D();
 			String message = Env.$3D.get() ? "Using 3D play scene\nCTRL+C changes perspective" : "Using 2D play scene";
-			showFlashMessage(2, message);
+			FlashMessageView.showFlashMessage(2, message);
 			break;
 		}
 
