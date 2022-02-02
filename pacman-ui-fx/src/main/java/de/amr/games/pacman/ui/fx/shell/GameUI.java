@@ -84,11 +84,11 @@ public class GameUI extends DefaultGameEventHandler {
 
 	private static final PacManModel3D MODEL_3D = GianmarcosModel3D.get();
 
-	public static final Rendering2D_PacMan RENDERING_PACMAN = new Rendering2D_PacMan();
-	public static final Rendering2D_MsPacMan RENDERING_MSPACMAN = new Rendering2D_MsPacMan();
+	public final Rendering2D_PacMan RENDERING_PACMAN = new Rendering2D_PacMan();
+	public final Rendering2D_MsPacMan RENDERING_MSPACMAN = new Rendering2D_MsPacMan();
 
-	public static final SoundManager SOUNDS_PACMAN = new SoundManager();
-	static {
+	public final SoundManager SOUNDS_PACMAN = new SoundManager();
+	{
 		//@formatter:off
 		SOUNDS_PACMAN.put(GameSounds.CREDIT,          "/pacman/sound/credit.mp3");
 		SOUNDS_PACMAN.put(GameSounds.EXTRA_LIFE,      "/pacman/sound/extend.mp3");
@@ -109,8 +109,8 @@ public class GameUI extends DefaultGameEventHandler {
 		//@formatter:on
 	}
 
-	public static final SoundManager SOUNDS_MSPACMAN = new SoundManager();
-	static {
+	public final SoundManager SOUNDS_MSPACMAN = new SoundManager();
+	{
 		//@formatter:off
 		SOUNDS_MSPACMAN.put(GameSounds.CREDIT,          "/mspacman/sound/Coin Credit.mp3");
 		SOUNDS_MSPACMAN.put(GameSounds.EXTRA_LIFE,      "/mspacman/sound/Extra Life.mp3");
@@ -182,24 +182,24 @@ public class GameUI extends DefaultGameEventHandler {
 
 		//@formatter:off
 		SCENES_PACMAN[0][0] = 
-		SCENES_PACMAN[0][1] = new PacMan_IntroScene(gameController, canvas);
+		SCENES_PACMAN[0][1] = new PacMan_IntroScene(gameController, canvas, RENDERING_PACMAN);
 		SCENES_PACMAN[1][0] = 
-		SCENES_PACMAN[1][1] = new PacMan_IntermissionScene1(gameController, canvas);
+		SCENES_PACMAN[1][1] = new PacMan_IntermissionScene1(gameController, canvas, RENDERING_PACMAN);
 		SCENES_PACMAN[2][0] = 
-		SCENES_PACMAN[2][1] = new PacMan_IntermissionScene2(gameController, canvas);
+		SCENES_PACMAN[2][1] = new PacMan_IntermissionScene2(gameController, canvas, RENDERING_PACMAN);
 		SCENES_PACMAN[3][0] = 
-		SCENES_PACMAN[3][1] = new PacMan_IntermissionScene3(gameController, canvas);
+		SCENES_PACMAN[3][1] = new PacMan_IntermissionScene3(gameController, canvas, RENDERING_PACMAN);
 		SCENES_PACMAN[4][0] = new PlayScene2D(gameController, canvas, RENDERING_PACMAN);
 		SCENES_PACMAN[4][1] = new PlayScene3D(this, gameController, MODEL_3D);
 		
 		SCENES_MSPACMAN[0][0] = 
-		SCENES_MSPACMAN[0][1] = new MsPacMan_IntroScene(gameController, canvas);
+		SCENES_MSPACMAN[0][1] = new MsPacMan_IntroScene(gameController, canvas, RENDERING_MSPACMAN);
 		SCENES_MSPACMAN[1][0] = 
-		SCENES_MSPACMAN[1][1] = new MsPacMan_IntermissionScene1(gameController, canvas);
+		SCENES_MSPACMAN[1][1] = new MsPacMan_IntermissionScene1(gameController, canvas, RENDERING_MSPACMAN);
 		SCENES_MSPACMAN[2][0] = 
-		SCENES_MSPACMAN[2][1] = new MsPacMan_IntermissionScene2(gameController, canvas);
+		SCENES_MSPACMAN[2][1] = new MsPacMan_IntermissionScene2(gameController, canvas, RENDERING_MSPACMAN);
 		SCENES_MSPACMAN[3][0] = 
-		SCENES_MSPACMAN[3][1] = new MsPacMan_IntermissionScene3(gameController, canvas);
+		SCENES_MSPACMAN[3][1] = new MsPacMan_IntermissionScene3(gameController, canvas, RENDERING_MSPACMAN);
 		SCENES_MSPACMAN[4][0] = new PlayScene2D(gameController, canvas, RENDERING_MSPACMAN);
 		SCENES_MSPACMAN[4][1] = new PlayScene3D(this, gameController, MODEL_3D);
 		//@formatter:on

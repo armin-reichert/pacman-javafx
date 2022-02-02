@@ -119,8 +119,8 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			PerspectiveCamera cam = new PerspectiveCamera(true);
 			fxSubScene.setCamera(cam);
 			cams.values().forEach(cc -> cc.attachTo(cam));
-			log("Subscene for game scene '%s' created, width=%.0f, height=%.0f", getClass().getName(), fxSubScene.getWidth(),
-					fxSubScene.getHeight());
+			log("Subscene for game scene '%s' created, width=%.0f, height=%.0f", getClass().getName(),
+					fxSubScene.getWidth(), fxSubScene.getHeight());
 		}
 		return fxSubScene;
 	}
@@ -153,9 +153,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		final int width = game.world.numCols() * TS;
 		final int height = game.world.numRows() * TS;
 
-		r2D = gameController.gameVariant == GameVariant.MS_PACMAN //
-				? GameUI.RENDERING_MSPACMAN
-				: GameUI.RENDERING_PACMAN;
+		r2D = gameController.gameVariant == GameVariant.MS_PACMAN ? ui.RENDERING_MSPACMAN : ui.RENDERING_PACMAN;
 
 		maze3D = new Maze3D(width, height, floorImage);
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);

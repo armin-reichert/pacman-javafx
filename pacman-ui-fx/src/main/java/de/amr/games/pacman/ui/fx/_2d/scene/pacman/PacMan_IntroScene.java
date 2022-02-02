@@ -38,8 +38,8 @@ import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
-import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -60,8 +60,8 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	private List<Ghost2D> ghosts2D;
 	private List<Ghost2D> gallery2D;
 
-	public PacMan_IntroScene(GameController gameController, Canvas canvas) {
-		super(gameController, canvas, GameUI.RENDERING_PACMAN);
+	public PacMan_IntroScene(GameController gameController, Canvas canvas, Rendering2D_PacMan r2D) {
+		super(gameController, canvas, r2D);
 	}
 
 	@Override

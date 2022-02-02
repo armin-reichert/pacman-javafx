@@ -23,14 +23,13 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
-import static de.amr.games.pacman.ui.fx.shell.GameUI.RENDERING_MSPACMAN;
-
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission2Controller;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.scene.canvas.Canvas;
@@ -50,8 +49,8 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 	private Player2D pacMan2D;
 	private Flap2D flap2D;
 
-	public MsPacMan_IntermissionScene2(GameController gameController, Canvas canvas) {
-		super(gameController, canvas, RENDERING_MSPACMAN);
+	public MsPacMan_IntermissionScene2(GameController gameController, Canvas canvas, Rendering2D_MsPacMan r2D) {
+		super(gameController, canvas, r2D);
 	}
 
 	@Override
@@ -62,13 +61,13 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 		sc.playFlapAnimation = () -> flap2D.animation.restart();
 		sc.init(gameController);
 
-		flap2D = new Flap2D(sc.flap, RENDERING_MSPACMAN);
+		flap2D = new Flap2D(sc.flap, (Rendering2D_MsPacMan) r2D);
 
 		msPacMan2D = new Player2D(sc.msPacMan, r2D);
 		msPacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 
 		pacMan2D = new Player2D(sc.pacMan, r2D);
-		pacMan2D.munchingAnimations = RENDERING_MSPACMAN.createSpouseMunchingAnimations();
+		pacMan2D.munchingAnimations = ((Rendering2D_MsPacMan) r2D).createSpouseMunchingAnimations();
 		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 	}
 

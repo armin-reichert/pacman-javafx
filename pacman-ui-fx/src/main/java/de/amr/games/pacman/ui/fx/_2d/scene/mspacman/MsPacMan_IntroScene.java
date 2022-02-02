@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import static de.amr.games.pacman.model.world.World.t;
-import static de.amr.games.pacman.ui.fx.shell.GameUI.RENDERING_MSPACMAN;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,6 +38,7 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -60,8 +60,8 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 	private Player2D msPacMan2D;
 	private List<Ghost2D> ghosts2D;
 
-	public MsPacMan_IntroScene(GameController gameController, Canvas canvas) {
-		super(gameController, canvas, RENDERING_MSPACMAN);
+	public MsPacMan_IntroScene(GameController gameController, Canvas canvas, Rendering2D_MsPacMan r2D) {
+		super(gameController, canvas, r2D);
 	}
 
 	@Override

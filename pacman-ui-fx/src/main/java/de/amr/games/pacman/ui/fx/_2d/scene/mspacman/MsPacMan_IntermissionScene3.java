@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
-import static de.amr.games.pacman.ui.fx.shell.GameUI.RENDERING_MSPACMAN;
-
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission3Controller;
 import de.amr.games.pacman.ui.GameSounds;
@@ -32,6 +30,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.JuniorBag2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Stork2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.scene.canvas.Canvas;
@@ -55,8 +54,8 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 	private Stork2D stork2D;
 	private JuniorBag2D bag2D;
 
-	public MsPacMan_IntermissionScene3(GameController gameController, Canvas canvas) {
-		super(gameController, canvas, RENDERING_MSPACMAN);
+	public MsPacMan_IntermissionScene3(GameController gameController, Canvas canvas, Rendering2D_MsPacMan r2D) {
+		super(gameController, canvas, r2D);
 	}
 
 	@Override
@@ -69,14 +68,14 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 
 		msPacMan2D = new Player2D(sc.msPacMan, r2D);
 		pacMan2D = new Player2D(sc.pacMan, r2D);
-		pacMan2D.munchingAnimations = RENDERING_MSPACMAN.createSpouseMunchingAnimations();
+		pacMan2D.munchingAnimations = ((Rendering2D_MsPacMan) r2D).createSpouseMunchingAnimations();
 
-		flap2D = new Flap2D(sc.flap, RENDERING_MSPACMAN);
+		flap2D = new Flap2D(sc.flap, (Rendering2D_MsPacMan) r2D);
 
-		stork2D = new Stork2D(sc.stork, RENDERING_MSPACMAN);
+		stork2D = new Stork2D(sc.stork, (Rendering2D_MsPacMan) r2D);
 		stork2D.animation.restart();
 
-		bag2D = new JuniorBag2D(sc.bag, RENDERING_MSPACMAN);
+		bag2D = new JuniorBag2D(sc.bag, (Rendering2D_MsPacMan) r2D);
 	}
 
 	@Override
