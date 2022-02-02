@@ -97,10 +97,10 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 		canvas = new Canvas();
 		canvas.heightProperty().bind(mainScene.heightProperty());
 		canvas.widthProperty().bind(Bindings.createDoubleBinding(() -> {
-			double scaling = mainScene.getHeight() / t(TILES_Y);
+			double scaling = canvas.getHeight() / t(TILES_Y);
 			canvas.getTransforms().setAll(new Scale(scaling, scaling));
-			return mainScene.getHeight() * ASPECT_RATIO;
-		}, mainScene.heightProperty()));
+			return canvas.getHeight() * ASPECT_RATIO;
+		}, canvas.heightProperty()));
 
 		stage.setScene(mainScene);
 		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
