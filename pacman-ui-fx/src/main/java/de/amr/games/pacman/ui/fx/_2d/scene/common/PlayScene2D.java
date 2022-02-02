@@ -28,6 +28,7 @@ import static de.amr.games.pacman.ui.fx.util.U.afterSeconds;
 
 import java.util.List;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.controller.event.GameEvent;
 import de.amr.games.pacman.controller.event.GameStateChangeEvent;
@@ -45,9 +46,9 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Maze2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -65,8 +66,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 	private List<Ghost2D> ghosts2D;
 	private Bonus2D bonus2D;
 
-	public PlayScene2D(PacManGameUI_JavaFX ui, Rendering2D r2D) {
-		super(ui, r2D);
+	public PlayScene2D(GameController gameController, Canvas canvas, Rendering2D r2D) {
+		super(gameController, canvas, r2D);
 	}
 
 	@Override

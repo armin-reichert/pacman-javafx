@@ -72,14 +72,14 @@ public class ScenesMsPacMan {
 	public static void createScenes(PacManGameUI_JavaFX ui) {
 		//@formatter:off
 		SCENES[0][0] = 
-		SCENES[0][1] = new MsPacMan_IntroScene(ui);
+		SCENES[0][1] = new MsPacMan_IntroScene(ui.gameController, ui.canvas);
 		SCENES[1][0] = 
-		SCENES[1][1] = new MsPacMan_IntermissionScene1(ui);
+		SCENES[1][1] = new MsPacMan_IntermissionScene1(ui.gameController, ui.canvas);
 		SCENES[2][0] = 
-		SCENES[2][1] = new MsPacMan_IntermissionScene2(ui);
+		SCENES[2][1] = new MsPacMan_IntermissionScene2(ui.gameController, ui.canvas);
 		SCENES[3][0] = 
-		SCENES[3][1] = new MsPacMan_IntermissionScene3(ui);
-		SCENES[4][0] = new PlayScene2D(ui, RENDERING);
+		SCENES[3][1] = new MsPacMan_IntermissionScene3(ui.gameController, ui.canvas);
+		SCENES[4][0] = new PlayScene2D(ui.gameController, ui.canvas, RENDERING);
 		SCENES[4][1] = new PlayScene3D(ui, MODEL_3D);
 		//@formatter:on
 	}

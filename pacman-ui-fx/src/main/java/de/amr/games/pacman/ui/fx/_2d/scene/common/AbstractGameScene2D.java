@@ -36,8 +36,8 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import javafx.scene.SubScene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -49,7 +49,6 @@ import javafx.scene.paint.Color;
  */
 public abstract class AbstractGameScene2D extends DefaultGameEventHandler implements GameScene {
 
-	protected final PacManGameUI_JavaFX ui;
 	protected final GameController gameController;
 	protected final GraphicsContext gc;
 	protected final Rendering2D r2D;
@@ -60,19 +59,19 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
 
-	public AbstractGameScene2D(PacManGameUI_JavaFX ui, Rendering2D r2D) {
-		this.ui = ui;
-		this.gameController = ui.gameController;
+	public AbstractGameScene2D(GameController gameController, Canvas canvas, Rendering2D r2D) {
+		this.gameController = gameController;
 		this.r2D = r2D;
 		unscaledSize = new V2i(TILES_X * TS, TILES_Y * TS);
-		gc = ui.canvas.getGraphicsContext2D();
+		gc = canvas.getGraphicsContext2D();
 	}
 
 	@Override
 	public SubScene createSubScene() {
-		fxSubScene = new SubScene(new StackPane(ui.canvas), unscaledSize.x, unscaledSize.y);
-		fxSubScene.widthProperty().bind(ui.canvas.widthProperty());
-		fxSubScene.heightProperty().bind(ui.canvas.heightProperty());
+		Canvas canvas = gc.getCanvas();
+		fxSubScene = new SubScene(new StackPane(canvas), unscaledSize.x, unscaledSize.y);
+		fxSubScene.widthProperty().bind(canvas.widthProperty());
+		fxSubScene.heightProperty().bind(canvas.heightProperty());
 		return fxSubScene;
 	}
 

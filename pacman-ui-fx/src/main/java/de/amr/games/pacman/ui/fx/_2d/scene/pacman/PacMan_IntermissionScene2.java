@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.pacman.Intermission2Controller;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSequence;
@@ -36,8 +37,8 @@ import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.ScenesPacMan;
-import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.canvas.Canvas;
 
 /**
  * Second intermission scene: Blinky pursues Pac but kicks a nail that tears his dress apart.
@@ -53,8 +54,8 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 	private TimedSequence<Rectangle2D> blinkyStretchedAnimation;
 	private TimedSequence<Rectangle2D> blinkyDamagedAnimation;
 
-	public PacMan_IntermissionScene2(PacManGameUI_JavaFX ui) {
-		super(ui, ScenesPacMan.RENDERING);
+	public PacMan_IntermissionScene2(GameController gameController, Canvas canvas) {
+		super(gameController, canvas, ScenesPacMan.RENDERING);
 	}
 
 	@Override
