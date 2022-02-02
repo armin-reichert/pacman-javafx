@@ -42,7 +42,7 @@ General shortcuts:
 - <kbd>CTRL+I</kbd> Toggle information display (HUD)
 - <kbd>P</kbd> When in PAUSE mode, execute single simulation step
 - <kbd>CTRL+P</kbd> Toggle pausing game play
-- <kbd>CTRL+S</kbd> Increase speed (<kbd>CTRL+SHIFT+S</kbd> = decrease)
+- <kbd>CTRL+S</kbd> Increase speed (<kbd>SHIFT</kbd> = decrease)
 - <kbd>CTRL+3</kbd> Toggle using 2D/3D play scene
 
 Intro screen shortcuts:
@@ -52,8 +52,8 @@ Intro screen shortcuts:
 Play screen shortcuts:
 - <kbd>CTRL+C</kbd> Change 3D camera (3 cameras currently implemented)
 - <kbd>CTRL+L</kbd> Toggle draw mode (line vs. shaded)
-- <kbd>CTRL+R</kbd> Increase maze "resolution" (<kbd>CTRL+SHIFT+R</kbd> = decrease)
-- <kbd>CTRL+H</kbd> Increase maze wall height (<kbd>CTRL+SHIFT+H</kbd> = decrease)
+- <kbd>CTRL+R</kbd> Increase maze "resolution" (<kbd>SHIFT</kbd> = decrease)
+- <kbd>CTRL+H</kbd> Increase maze wall height (<kbd>SHIFT</kbd> = decrease)
 - <kbd>Q</kbd> Quit scene
 
 Cheats:
