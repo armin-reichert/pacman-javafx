@@ -176,7 +176,7 @@ public class GameUI extends DefaultGameEventHandler {
 
 		Env.$drawMode3D.addListener($1 -> selectBackground(currentScene));
 
-		final V2i sceneSize = new V2i(TILES_X * TS, TILES_Y * TS);
+		final V2i sceneSize = new V2i(TILES_X, TILES_Y).scaled(TS);
 		//@formatter:off
 		SCENES_PACMAN[0][0] = 
 		SCENES_PACMAN[0][1] = new PacMan_IntroScene(gameController, sceneSize, canvas,  RENDERING_PACMAN);
@@ -245,8 +245,7 @@ public class GameUI extends DefaultGameEventHandler {
 		GameScene nextScene = gameSceneForCurrentState(Env.$3D.get());
 		if (currentScene != nextScene) {
 			if (currentScene != null) {
-				log("Change scene from '%s' to '%s'", currentScene.getClass().getName(),
-						nextScene.getClass().getName());
+				log("Change scene from '%s' to '%s'", currentScene.getClass().getName(), nextScene.getClass().getName());
 				currentScene.end();
 			} else {
 				log("Set scene to '%s'", nextScene.getClass().getName());
