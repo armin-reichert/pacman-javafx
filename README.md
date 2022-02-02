@@ -36,23 +36,27 @@ In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases
 
 You can switch between window and fullscreen mode using the standard keys <kbd>F11</kbd> and <kbd>Esc</kbd>.
 
-Intro screen shortcuts:
-- <kbd>V</kbd>: Switch between the two game variants
-- <kbd>CTRL+1</kbd>: Play all intermission scenes
-
-Play screen shortcuts:
-- <kbd>CTRL+3</kbd> Toggle using 2D/3D play scene
-- <kbd>CTRL+C</kbd> Change 3D camera (3 cameras currently implemented)
-- <kbd>CTRL+I</kbd> Toggle information about current scene (HUD)
-- <kbd>CTRL+L</kbd> Toggle draw mode (line vs. shaded)
-- <kbd>CTRL+P</kbd> Toggle pausing game play
-- <kbd>CTRL+R</kbd> Increase maze "resolution" (<kbd>CTRL+SHIFT+R</kbd> = decrease)
-- <kbd>CTRL+H</kbd> Increase maze wall height (<kbd>CTRL+SHIFT+H</kbd> = decrease)
-- <kbd>CTRL+S</kbd> Increase speed (<kbd>CTRL+SHIFT+S</kbd> = decrease)
+General shortcuts:
 - <kbd>A</kbd> Toggle autopilot mode
 - <kbd>I</kbd> Toggle immunity of player against ghost attacks
-- <kbd>Q</kbd> Quit play scene
-- Cheats:
+- <kbd>CTRL+I</kbd> Toggle information about current scene (HUD)
+- <kbd>P</kbd>When in PAUSE mode, execute single simulation step
+- <kbd>CTRL+P</kbd> Toggle pausing game play
+- <kbd>CTRL+S</kbd> Increase speed (<kbd>CTRL+SHIFT+S</kbd> = decrease)
+- <kbd>CTRL+3</kbd> Toggle using 2D/3D play scene
+
+Intro screen shortcuts:
+- <kbd>V</kbd>: Switch between the two game variants
+- <kbd>Z</kbd>: Play all intermission scenes
+
+Play screen shortcuts:
+- <kbd>CTRL+C</kbd> Change 3D camera (3 cameras currently implemented)
+- <kbd>CTRL+L</kbd> Toggle draw mode (line vs. shaded)
+- <kbd>CTRL+R</kbd> Increase maze "resolution" (<kbd>CTRL+SHIFT+R</kbd> = decrease)
+- <kbd>CTRL+H</kbd> Increase maze wall height (<kbd>CTRL+SHIFT+H</kbd> = decrease)
+- <kbd>Q</kbd> Quit scene
+
+Cheats:
   - <kbd>E</kbd> Eat all pills except the energizers
   - <kbd>L</kbd> Add 3 player lives
   - <kbd>N</kbd> Enter next game level
