@@ -1,4 +1,4 @@
-# pacman-javafx
+# JavaFX Pac-Man and Ms. Pac-Man
 
 A JavaFX user interface for my UI-agnostic [Pac-Man / Ms. Pac-Man game](https://github.com/armin-reichert/pacman-basic) implementations. Both games can be played in 2D and 3D.
 
