@@ -89,7 +89,7 @@ public class HUD extends VBox {
 		fade.play();
 	}
 
-	public void update(PacManGameUI_JavaFX ui) {
+	public void update(GameUI ui) {
 		var width = ui.stage.getScene().getWindow().getWidth();
 		var height = ui.stage.getScene().getWindow().getHeight();
 		var sceneWidth = ui.stage.getScene().getWidth();

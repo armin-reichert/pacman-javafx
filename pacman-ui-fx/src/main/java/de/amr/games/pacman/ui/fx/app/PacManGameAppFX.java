@@ -30,7 +30,7 @@ import java.io.IOException;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.shell.ManualPlayerControl;
-import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
+import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -61,15 +61,15 @@ public class PacManGameAppFX extends Application {
 		var playerControl = new ManualPlayerControl(stage);
 
 		// Create the user interface and the connections with the controllers
-		var ui = new PacManGameUI_JavaFX(stage, controller, options.windowHeight, options.fullscreen);
+		var ui = new GameUI(stage, controller, options.windowHeight, options.fullscreen);
 		controller.addGameEventListener(ui);
 		controller.setPlayerControl(playerControl);
 
 		// Initialize the environment and start the game
 		Env.$3D.set(options.use3DScenes);
 		Env.$perspective.set(options.perspective);
-		Env.sounds = options.gameVariant == GameVariant.MS_PACMAN ? PacManGameUI_JavaFX.SOUNDS_MSPACMAN
-				: PacManGameUI_JavaFX.SOUNDS_PACMAN;
+		Env.sounds = options.gameVariant == GameVariant.MS_PACMAN ? GameUI.SOUNDS_MSPACMAN
+				: GameUI.SOUNDS_PACMAN;
 		Env.gameLoop.update = () -> {
 			controller.updateState();
 			ui.updateGameScene();

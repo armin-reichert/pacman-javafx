@@ -25,8 +25,8 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.model.world.World.TS;
 import static de.amr.games.pacman.model.world.World.t;
-import static de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX.TILES_X;
-import static de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX.TILES_Y;
+import static de.amr.games.pacman.ui.fx.shell.GameUI.TILES_X;
+import static de.amr.games.pacman.ui.fx.shell.GameUI.TILES_Y;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
@@ -36,6 +36,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
+import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -67,7 +68,7 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	}
 
 	@Override
-	public SubScene createSubScene() {
+	public SubScene createSubScene(Scene parent) {
 		Canvas canvas = gc.getCanvas();
 		fxSubScene = new SubScene(new StackPane(canvas), unscaledSize.x, unscaledSize.y);
 		fxSubScene.widthProperty().bind(canvas.widthProperty());

@@ -72,19 +72,21 @@ import javafx.stage.WindowEvent;
  * 
  * @author Armin Reichert
  */
-public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
+public class GameUI extends DefaultGameEventHandler {
 
 	public static final int TILES_X = 28;
 	public static final int TILES_Y = 36;
 	public static final double ASPECT_RATIO = (double) TILES_X / TILES_Y;
 
-	static final Background BG_BEACH = U.imageBackground("/common/beach.jpg");
-	static final Background BG_BLACK = U.colorBackground(Color.BLACK);
-	static final Background BG_BLUE = U.colorBackground(Color.CORNFLOWERBLUE);
+	private static final Background BG_BEACH = U.imageBackground("/common/beach.jpg");
+	private static final Background BG_BLACK = U.colorBackground(Color.BLACK);
+	private static final Background BG_BLUE = U.colorBackground(Color.CORNFLOWERBLUE);
 
-	public static final PacManModel3D MODEL_3D = GianmarcosModel3D.get();
+	private static final PacManModel3D MODEL_3D = GianmarcosModel3D.get();
 
 	public static final Rendering2D_PacMan RENDERING_PACMAN = new Rendering2D_PacMan();
+	public static final Rendering2D_MsPacMan RENDERING_MSPACMAN = new Rendering2D_MsPacMan();
+
 	public static final SoundManager SOUNDS_PACMAN = new SoundManager();
 	static {
 		//@formatter:off
@@ -97,16 +99,16 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 		SOUNDS_PACMAN.put(GameSounds.PACMAN_POWER,    "/pacman/sound/power_pellet.mp3");
 		SOUNDS_PACMAN.put(GameSounds.GHOST_EATEN,     "/pacman/sound/eat_ghost.mp3");
 		SOUNDS_PACMAN.put(GameSounds.GHOST_RETURNING, "/pacman/sound/retreating.mp3");
-		SOUNDS_PACMAN.put(GameSounds.SIREN_1,   "/pacman/sound/siren_1.mp3");
-		SOUNDS_PACMAN.put(GameSounds.SIREN_2,   "/pacman/sound/siren_2.mp3");
-		SOUNDS_PACMAN.put(GameSounds.SIREN_3,   "/pacman/sound/siren_3.mp3");
-		SOUNDS_PACMAN.put(GameSounds.SIREN_4,   "/pacman/sound/siren_4.mp3");
+		SOUNDS_PACMAN.put(GameSounds.SIREN_1,         "/pacman/sound/siren_1.mp3");
+		SOUNDS_PACMAN.put(GameSounds.SIREN_2,         "/pacman/sound/siren_2.mp3");
+		SOUNDS_PACMAN.put(GameSounds.SIREN_3,         "/pacman/sound/siren_3.mp3");
+		SOUNDS_PACMAN.put(GameSounds.SIREN_4,         "/pacman/sound/siren_4.mp3");
 		SOUNDS_PACMAN.put(GameSounds.INTERMISSION_1,  "/pacman/sound/intermission.mp3");
 		SOUNDS_PACMAN.put(GameSounds.INTERMISSION_2,  "/pacman/sound/intermission.mp3");
 		SOUNDS_PACMAN.put(GameSounds.INTERMISSION_3,  "/pacman/sound/intermission.mp3");
 	}
 	
-	public static final Rendering2D_MsPacMan RENDERING_MSPACMAN = new Rendering2D_MsPacMan();
+	
 	public static final SoundManager SOUNDS_MSPACMAN = new SoundManager();
 	static {
 		//@formatter:off
@@ -129,13 +131,12 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 		//@formatter:on
 	}
 
-	private final GameScene SCENES_MSPACMAN[][] = new GameScene[5][2];
 	private final GameScene SCENES_PACMAN[][] = new GameScene[5][2];
+	private final GameScene SCENES_MSPACMAN[][] = new GameScene[5][2];
 
-	public final GameController gameController;
-	public final Canvas canvas;
-	public final Scene mainScene;
-
+	final GameController gameController;
+	final Canvas canvas;
+	final Scene mainScene;
 	final Stage stage;
 	final FlashMessageView flashMessageView;
 	final HUD hud;
@@ -144,7 +145,7 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 
 	GameScene currentScene;
 
-	public PacManGameUI_JavaFX(Stage stage, GameController gameController, double height, boolean fullscreen) {
+	public GameUI(Stage stage, GameController gameController, double height, boolean fullscreen) {
 		this.stage = stage;
 		this.gameController = gameController;
 
@@ -189,7 +190,7 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 		SCENES_PACMAN[3][0] = 
 		SCENES_PACMAN[3][1] = new PacMan_IntermissionScene3(gameController, canvas);
 		SCENES_PACMAN[4][0] = new PlayScene2D(gameController, canvas, RENDERING_PACMAN);
-		SCENES_PACMAN[4][1] = new PlayScene3D(this, MODEL_3D);
+		SCENES_PACMAN[4][1] = new PlayScene3D(this, gameController, MODEL_3D);
 		
 		SCENES_MSPACMAN[0][0] = 
 		SCENES_MSPACMAN[0][1] = new MsPacMan_IntroScene(gameController, canvas);
@@ -200,7 +201,7 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 		SCENES_MSPACMAN[3][0] = 
 		SCENES_MSPACMAN[3][1] = new MsPacMan_IntermissionScene3(gameController, canvas);
 		SCENES_MSPACMAN[4][0] = new PlayScene2D(gameController, canvas, RENDERING_MSPACMAN);
-		SCENES_MSPACMAN[4][1] = new PlayScene3D(this, MODEL_3D);
+		SCENES_MSPACMAN[4][1] = new PlayScene3D(this, gameController, MODEL_3D);
 		//@formatter:on
 		selectGameScene();
 
@@ -259,7 +260,7 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 			selectBackground(nextScene);
 			selectSounds(nextScene);
 			// TODO: why do I always have to create a new subscene in the 2D case?
-			gameSceneContainer.getChildren().setAll(nextScene.createSubScene());
+			gameSceneContainer.getChildren().setAll(nextScene.createSubScene(mainScene));
 			nextScene.init();
 			currentScene = nextScene;
 		}

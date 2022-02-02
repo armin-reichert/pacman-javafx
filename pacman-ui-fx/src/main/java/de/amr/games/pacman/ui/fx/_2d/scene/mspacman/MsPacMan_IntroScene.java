@@ -24,7 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import static de.amr.games.pacman.model.world.World.t;
-import static de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX.RENDERING_MSPACMAN;
+import static de.amr.games.pacman.ui.fx.shell.GameUI.RENDERING_MSPACMAN;
 
 import java.util.List;
 import java.util.stream.Collectors;

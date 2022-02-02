@@ -56,13 +56,14 @@ import de.amr.games.pacman.ui.fx._3d.entity.ScoreNotReally3D;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.shell.PacManGameUI_JavaFX;
+import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.CoordinateSystem;
 import javafx.animation.SequentialTransition;
 import javafx.beans.Observable;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
+import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
@@ -78,7 +79,7 @@ import javafx.scene.transform.Translate;
  */
 public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
-	protected final PacManGameUI_JavaFX ui;
+	protected final GameUI ui;
 	protected final GameController gameController;
 	protected final PacManModel3D model3D;
 	protected final EnumMap<Perspective, CameraController<PlayScene3D>> cams = new EnumMap<>(Perspective.class);
@@ -98,9 +99,9 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	protected LivesCounter3D livesCounter3D;
 	protected Rendering2D r2D;
 
-	public PlayScene3D(PacManGameUI_JavaFX ui, PacManModel3D model3D) {
+	public PlayScene3D(GameUI ui, GameController gameController, PacManModel3D model3D) {
 		this.ui = ui;
-		this.gameController = ui.gameController;
+		this.gameController = gameController;
 		this.model3D = model3D;
 		coordSystem.visibleProperty().bind(Env.$axesVisible);
 		cams.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer());
@@ -109,11 +110,11 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	}
 
 	@Override
-	public SubScene createSubScene() {
+	public SubScene createSubScene(Scene parent) {
 		if (fxSubScene == null) {
 			fxSubScene = new SubScene(new Group(), 400, 300, true, SceneAntialiasing.BALANCED);
-			fxSubScene.widthProperty().bind(ui.mainScene.widthProperty());
-			fxSubScene.heightProperty().bind(ui.mainScene.heightProperty());
+			fxSubScene.widthProperty().bind(parent.widthProperty());
+			fxSubScene.heightProperty().bind(parent.heightProperty());
 			fxSubScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> cam().handle(e));
 			PerspectiveCamera cam = new PerspectiveCamera(true);
 			fxSubScene.setCamera(cam);
@@ -153,8 +154,8 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		final int height = game.world.numRows() * TS;
 
 		r2D = gameController.gameVariant == GameVariant.MS_PACMAN //
-				? PacManGameUI_JavaFX.RENDERING_MSPACMAN
-				: PacManGameUI_JavaFX.RENDERING_PACMAN;
+				? GameUI.RENDERING_MSPACMAN
+				: GameUI.RENDERING_PACMAN;
 
 		maze3D = new Maze3D(width, height, floorImage);
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
