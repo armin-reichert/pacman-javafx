@@ -119,7 +119,7 @@ public class HUD extends VBox {
 		row("Autopilot", "%s", on_off(gameCtrl.autoControlled));
 		row("Immunity", "%s", on_off(game.player.immune));
 		row("Game Scene", "%s", gameScene.getClass().getSimpleName());
-		row("", "w=%.0f h=%.0f", gameScene.getSubSceneFX().getWidth(), gameScene.getSubSceneFX().getHeight());
+		row("", "w=%.0f h=%.0f", gameScene.getSubScene().getWidth(), gameScene.getSubScene().getHeight());
 		row("Window Size", "w=%.0f h=%.0f", width, height);
 		row("Scene Size", "w=%.0f h=%.0f", sceneWidth, sceneHeight);
 		row("3D Scenes", "%s", on_off(Env.$3D.get()));

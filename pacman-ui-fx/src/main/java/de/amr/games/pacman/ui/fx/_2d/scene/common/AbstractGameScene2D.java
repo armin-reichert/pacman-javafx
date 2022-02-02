@@ -69,7 +69,7 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	}
 
 	@Override
-	public SubScene createFXSubScene() {
+	public SubScene createSubScene() {
 		fxSubScene = new SubScene(new StackPane(ui.canvas), unscaledSize.x, unscaledSize.y);
 		fxSubScene.widthProperty().bind(ui.canvas.widthProperty());
 		fxSubScene.heightProperty().bind(ui.canvas.heightProperty());
@@ -77,7 +77,7 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	}
 
 	@Override
-	public SubScene getSubSceneFX() {
+	public SubScene getSubScene() {
 		return fxSubScene;
 	}
 

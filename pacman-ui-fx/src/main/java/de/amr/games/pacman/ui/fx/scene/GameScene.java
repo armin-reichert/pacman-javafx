@@ -35,9 +35,9 @@ import javafx.scene.SubScene;
  */
 public interface GameScene {
 
-	SubScene createFXSubScene();
+	SubScene createSubScene();
 
-	SubScene getSubSceneFX();
+	SubScene getSubScene();
 
 	void init();
 

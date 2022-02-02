@@ -175,7 +175,7 @@ public class PacManGameUI_JavaFX extends DefaultGameEventHandler {
 			selectBackground(nextScene);
 			selectSounds(nextScene);
 			// TODO: why do I always have to create a new subscene in the 2D case?
-			gameSceneContainer.getChildren().setAll(nextScene.createFXSubScene());
+			gameSceneContainer.getChildren().setAll(nextScene.createSubScene());
 			nextScene.init();
 			currentScene = nextScene;
 		}

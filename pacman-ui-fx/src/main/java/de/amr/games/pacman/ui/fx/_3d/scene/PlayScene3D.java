@@ -110,7 +110,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	}
 
 	@Override
-	public SubScene createFXSubScene() {
+	public SubScene createSubScene() {
 		if (fxSubScene == null) {
 			fxSubScene = new SubScene(new Group(), 400, 300, true, SceneAntialiasing.BALANCED);
 			fxSubScene.widthProperty().bind(ui.mainScene.widthProperty());
@@ -126,7 +126,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	}
 
 	@Override
-	public SubScene getSubSceneFX() {
+	public SubScene getSubScene() {
 		return fxSubScene;
 	}
 
