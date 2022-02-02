@@ -35,6 +35,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.pacman.IntroController;
 import de.amr.games.pacman.controller.pacman.IntroController.GhostPortrait;
 import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
@@ -60,8 +61,8 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	private List<Ghost2D> ghosts2D;
 	private List<Ghost2D> gallery2D;
 
-	public PacMan_IntroScene(GameController gameController, Canvas canvas, Rendering2D_PacMan r2D) {
-		super(gameController, canvas, r2D);
+	public PacMan_IntroScene(GameController gameController, V2i unscaledSize, Canvas canvas, Rendering2D_PacMan r2D) {
+		super(gameController, unscaledSize, canvas, r2D);
 	}
 
 	@Override

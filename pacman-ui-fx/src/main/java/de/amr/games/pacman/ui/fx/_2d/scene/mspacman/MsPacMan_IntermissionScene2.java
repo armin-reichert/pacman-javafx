@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission2Controller;
 import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
@@ -49,8 +50,9 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 	private Player2D pacMan2D;
 	private Flap2D flap2D;
 
-	public MsPacMan_IntermissionScene2(GameController gameController, Canvas canvas, Rendering2D_MsPacMan r2D) {
-		super(gameController, canvas, r2D);
+	public MsPacMan_IntermissionScene2(GameController gameController, V2i unscaledSize, Canvas canvas,
+			Rendering2D_MsPacMan r2D) {
+		super(gameController, unscaledSize, canvas, r2D);
 	}
 
 	@Override

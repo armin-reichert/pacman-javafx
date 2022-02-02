@@ -60,8 +60,9 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 	private Player2D msPacMan2D;
 	private List<Ghost2D> ghosts2D;
 
-	public MsPacMan_IntroScene(GameController gameController, Canvas canvas, Rendering2D_MsPacMan r2D) {
-		super(gameController, canvas, r2D);
+	public MsPacMan_IntroScene(GameController gameController, V2i unscaledSize, Canvas canvas,
+			Rendering2D_MsPacMan r2D) {
+		super(gameController, unscaledSize, canvas, r2D);
 	}
 
 	@Override

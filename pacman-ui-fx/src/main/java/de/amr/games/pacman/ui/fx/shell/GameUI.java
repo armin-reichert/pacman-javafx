@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell;
 
 import static de.amr.games.pacman.lib.Logging.log;
+import static de.amr.games.pacman.model.world.World.TS;
 import static de.amr.games.pacman.model.world.World.t;
 
 import de.amr.games.pacman.controller.GameController;
@@ -31,6 +32,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
 import de.amr.games.pacman.controller.event.GameEvent;
 import de.amr.games.pacman.controller.event.GameStateChangeEvent;
+import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.GameSounds;
@@ -73,9 +75,9 @@ import javafx.stage.WindowEvent;
  */
 public class GameUI extends DefaultGameEventHandler {
 
-	public static final int TILES_X = 28;
-	public static final int TILES_Y = 36;
-	public static final double ASPECT_RATIO = (double) TILES_X / TILES_Y;
+	private final int TILES_X = 28;
+	private final int TILES_Y = 36;
+	private final double ASPECT_RATIO = (double) TILES_X / TILES_Y;
 
 	private final Background BG_BEACH = U.imageBackground("/common/beach.jpg");
 	private final Background BG_BLACK = U.colorBackground(Color.BLACK);
@@ -174,27 +176,28 @@ public class GameUI extends DefaultGameEventHandler {
 
 		Env.$drawMode3D.addListener($1 -> selectBackground(currentScene));
 
+		final V2i sceneSize = new V2i(TILES_X * TS, TILES_Y * TS);
 		//@formatter:off
 		SCENES_PACMAN[0][0] = 
-		SCENES_PACMAN[0][1] = new PacMan_IntroScene(gameController, canvas, RENDERING_PACMAN);
+		SCENES_PACMAN[0][1] = new PacMan_IntroScene(gameController, sceneSize, canvas,  RENDERING_PACMAN);
 		SCENES_PACMAN[1][0] = 
-		SCENES_PACMAN[1][1] = new PacMan_IntermissionScene1(gameController, canvas, RENDERING_PACMAN);
+		SCENES_PACMAN[1][1] = new PacMan_IntermissionScene1(gameController, sceneSize, canvas, RENDERING_PACMAN);
 		SCENES_PACMAN[2][0] = 
-		SCENES_PACMAN[2][1] = new PacMan_IntermissionScene2(gameController, canvas, RENDERING_PACMAN);
+		SCENES_PACMAN[2][1] = new PacMan_IntermissionScene2(gameController, sceneSize, canvas, RENDERING_PACMAN);
 		SCENES_PACMAN[3][0] = 
-		SCENES_PACMAN[3][1] = new PacMan_IntermissionScene3(gameController, canvas, RENDERING_PACMAN);
-		SCENES_PACMAN[4][0] = new PlayScene2D(gameController, canvas, RENDERING_PACMAN);
+		SCENES_PACMAN[3][1] = new PacMan_IntermissionScene3(gameController, sceneSize, canvas, RENDERING_PACMAN);
+		SCENES_PACMAN[4][0] = new PlayScene2D(gameController, sceneSize, canvas, RENDERING_PACMAN);
 		SCENES_PACMAN[4][1] = new PlayScene3D(gameController, MODEL_3D);
 		
 		SCENES_MSPACMAN[0][0] = 
-		SCENES_MSPACMAN[0][1] = new MsPacMan_IntroScene(gameController, canvas, RENDERING_MSPACMAN);
+		SCENES_MSPACMAN[0][1] = new MsPacMan_IntroScene(gameController, sceneSize, canvas, RENDERING_MSPACMAN);
 		SCENES_MSPACMAN[1][0] = 
-		SCENES_MSPACMAN[1][1] = new MsPacMan_IntermissionScene1(gameController, canvas, RENDERING_MSPACMAN);
+		SCENES_MSPACMAN[1][1] = new MsPacMan_IntermissionScene1(gameController, sceneSize, canvas, RENDERING_MSPACMAN);
 		SCENES_MSPACMAN[2][0] = 
-		SCENES_MSPACMAN[2][1] = new MsPacMan_IntermissionScene2(gameController, canvas, RENDERING_MSPACMAN);
+		SCENES_MSPACMAN[2][1] = new MsPacMan_IntermissionScene2(gameController, sceneSize, canvas, RENDERING_MSPACMAN);
 		SCENES_MSPACMAN[3][0] = 
-		SCENES_MSPACMAN[3][1] = new MsPacMan_IntermissionScene3(gameController, canvas, RENDERING_MSPACMAN);
-		SCENES_MSPACMAN[4][0] = new PlayScene2D(gameController, canvas, RENDERING_MSPACMAN);
+		SCENES_MSPACMAN[3][1] = new MsPacMan_IntermissionScene3(gameController, sceneSize, canvas, RENDERING_MSPACMAN);
+		SCENES_MSPACMAN[4][0] = new PlayScene2D(gameController, sceneSize, canvas, RENDERING_MSPACMAN);
 		SCENES_MSPACMAN[4][1] = new PlayScene3D(gameController, MODEL_3D);
 		//@formatter:on
 		selectGameScene();

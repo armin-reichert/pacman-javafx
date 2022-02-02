@@ -23,10 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
-import static de.amr.games.pacman.model.world.World.TS;
 import static de.amr.games.pacman.model.world.World.t;
-import static de.amr.games.pacman.ui.fx.shell.GameUI.TILES_X;
-import static de.amr.games.pacman.ui.fx.shell.GameUI.TILES_Y;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
@@ -60,10 +57,11 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
 
-	public AbstractGameScene2D(GameController gameController, Canvas canvas, Rendering2D r2D) {
+	public AbstractGameScene2D(GameController gameController, V2i unscaledSize, Canvas canvas, Rendering2D r2D) {
 		this.gameController = gameController;
+//		unscaledSize = new V2i(TILES_X * TS, TILES_Y * TS);
+		this.unscaledSize = unscaledSize;
 		this.r2D = r2D;
-		unscaledSize = new V2i(TILES_X * TS, TILES_Y * TS);
 		gc = canvas.getGraphicsContext2D();
 	}
 
