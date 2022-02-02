@@ -106,9 +106,9 @@ public class GameUI extends DefaultGameEventHandler {
 		SOUNDS_PACMAN.put(GameSounds.INTERMISSION_1,  "/pacman/sound/intermission.mp3");
 		SOUNDS_PACMAN.put(GameSounds.INTERMISSION_2,  "/pacman/sound/intermission.mp3");
 		SOUNDS_PACMAN.put(GameSounds.INTERMISSION_3,  "/pacman/sound/intermission.mp3");
+		//@formatter:on
 	}
-	
-	
+
 	public static final SoundManager SOUNDS_MSPACMAN = new SoundManager();
 	static {
 		//@formatter:off
@@ -252,7 +252,8 @@ public class GameUI extends DefaultGameEventHandler {
 		GameScene nextScene = gameSceneForCurrentState(Env.$3D.get());
 		if (currentScene != nextScene) {
 			if (currentScene != null) {
-				log("Change scene from '%s' to '%s'", currentScene.getClass().getName(), nextScene.getClass().getName());
+				log("Change scene from '%s' to '%s'", currentScene.getClass().getName(),
+						nextScene.getClass().getName());
 				currentScene.end();
 			} else {
 				log("Set scene to '%s'", nextScene.getClass().getName());
