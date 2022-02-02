@@ -102,75 +102,92 @@ public class HUD extends VBox {
 		var gameScene = ui.currentScene;
 
 		text.setLength(0);
-		row("Total Ticks", "%d", Env.gameLoop.$totalTicks.get());
-		row("Target FPS", "%d Hz", Env.gameLoop.getTargetFrameRate());
-		row("Current FPS", "%d Hz", Env.gameLoop.$fps.get());
-		row("Paused", "%s", yes_no(Env.$paused.get()));
-		row("Playing", "%s", yes_no(gameCtrl.gameRunning));
-		row("Attract Mode", "%s", yes_no(gameCtrl.attractMode));
-		row("Game Variant", "%s", gameCtrl.gameVariant);
-		row("Game Level", "%d", game.levelNumber);
-		row("Game State", "%s",
+		p("Total Ticks", "%d", Env.gameLoop.$totalTicks.get()).end();
+		p("Target FPS", "%d Hz", Env.gameLoop.getTargetFrameRate()).end();
+		p("Current FPS", "%d Hz", Env.gameLoop.$fps.get()).end();
+		p("Paused", "%s", yes_no(Env.$paused.get())).end();
+		p("Playing", "%s", yes_no(gameCtrl.gameRunning)).end();
+		p("Attract Mode", "%s", yes_no(gameCtrl.attractMode)).end();
+		p("Game Variant", "%s", gameCtrl.gameVariant).end();
+		p("Game Level", "%d", game.levelNumber).end();
+		p("Game State", "%s",
 				state == GameState.HUNTING ? String.format("%s: Phase #%d (%s)", state, game.huntingPhase, huntingPhaseName)
-						: state);
-		row("", "Running:   %s%s", stateTimer.ticked(), stateTimer.isStopped() ? " (STOPPED)" : "");
-		row("", "Remaining: %s",
-				stateTimer.ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer.ticksRemaining());
-		row("Autopilot", "%s", on_off(gameCtrl.autoControlled));
-		row("Immunity", "%s", on_off(game.player.immune));
-		row("Game Scene", "%s", gameScene.getClass().getSimpleName());
-		row("", "w=%.0f h=%.0f", gameScene.getSubScene().getWidth(), gameScene.getSubScene().getHeight());
-		row("Window Size", "w=%.0f h=%.0f", width, height);
-		row("Scene Size", "w=%.0f h=%.0f", sceneWidth, sceneHeight);
-		row("3D Scenes", "%s", on_off(Env.$3D.get()));
+						: state).end();
+		p("", "Running:   %s%s", stateTimer.ticked(), stateTimer.isStopped() ? " (STOPPED)" : "").end();
+		p("", "Remaining: %s",
+				stateTimer.ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer.ticksRemaining()).end();
+		p("Autopilot", "%s", on_off(gameCtrl.autoControlled)).end();
+		p("Immunity", "%s", on_off(game.player.immune)).end();
+		p("Game Scene", "%s", gameScene.getClass().getSimpleName()).end();
+		p("", "w=%.0f h=%.0f", gameScene.getSubScene().getWidth(), gameScene.getSubScene().getHeight()).end();
+		p("Window Size", "w=%.0f h=%.0f", width, height).end();
+		p("Scene Size", "w=%.0f h=%.0f", sceneWidth, sceneHeight).end();
+		p("3D Scenes", "%s", on_off(Env.$3D.get())).end();
 		if (gameScene.is3D()) {
 			// Currently PlayScene3D is the only 3D scene
 			var scene3D = (PlayScene3D) gameScene;
-			row("Perspective", "%s", Env.$perspective.get());
-			row("Camera", "%s", scene3D.cam().info());
-			row("Draw Mode", "%s", Env.$drawMode3D.get());
-			row("Axes", "%s", on_off(Env.$axesVisible.get()));
+			p("Perspective", "%s", Env.$perspective.get()).end();
+			p("Camera", "%s", scene3D.cam().info()).end();
+			p("Draw Mode", "%s", Env.$drawMode3D.get()).end();
+			p("Axes", "%s", on_off(Env.$axesVisible.get())).end();
 		} else {
-			row("Canvas2D", "w=%.0f h=%.0f", ui.canvas.getWidth(), ui.canvas.getHeight());
+			p("Canvas2D", "w=%.0f h=%.0f", ui.canvas.getWidth(), ui.canvas.getHeight()).end();
 		}
 
-		row();
-		when(state == GameState.INTRO, () -> row("V", "Switch Pac-Man/Ms. PacMan"));
-		row("A", "Autopilot On/Off");
-		when(gameCtrl.gameRunning, () -> row("E", "Eat all normal pellets"));
-		row("I", "Player immunity On/Off");
-		when(gameCtrl.gameRunning, () -> row("L", "Add 3 player lives"));
-		when(gameCtrl.gameRunning, () -> row("N", "Next Level"));
-		when(state != GameState.INTRO, () -> row("Q", "Quit Screen"));
-		when(gameCtrl.gameRunning, () -> row("X", "Kill all hunting ghosts"));
-		when(state == GameState.INTRO, () -> row("Z", "Play Intermission Scenes"));
+		newline();
+		p("V", "Switch Pac-Man/Ms. PacMan").when(state == GameState.INTRO).end();
+		p("A", "Autopilot On/Off").end();
+		p("E", "Eat all normal pellets").when(gameCtrl.gameRunning).end();
+		p("I", "Player immunity On/Off").end();
+		p("L", "Add 3 player lives").when(gameCtrl.gameRunning).end();
+		p("N", "Next Level").when(gameCtrl.gameRunning).end();
+		p("Q", "Quit Screen").when(state != GameState.INTRO).end();
+		p("X", "Kill all hunting ghosts").when(gameCtrl.gameRunning).end();
+		p("Z", "Play Intermission Scenes").when(state == GameState.INTRO).end();
 
-		row();
-		when(gameScene.is3D(), () -> row("Ctrl+C", "Next Perspective"));
-		when(gameScene.is3D(), () -> row("Ctrl+H", "Wall Height (SHIFT=Decrease)"));
-		row("Ctrl+I", "Information On/Off");
-		when(gameScene.is3D(), () -> row("Ctrl+L", "Wireframe Mode On/Off"));
-		row("Ctrl+P", "Pause On/Off");
-		when(gameScene.is3D(), () -> row("Ctrl+R", "Maze resolution (SHIFT=Decrease)"));
-		row("Ctrl+S", "Speed (SHIFT=Decrease)");
-		when(gameScene.is3D(), () -> row("Ctrl+X", "Axes On/Off"));
-		row("Ctrl+3", "3D Play Scene On/Off");
+		newline();
+		p("Ctrl+C", "Next Perspective").when(gameScene.is3D()).end();
+		p("Ctrl+H", "Wall Height (SHIFT=Decrease)").when(gameScene.is3D()).end();
+		p("Ctrl+I", "Information On/Off").end();
+		p("Ctrl+L", "Wireframe Mode On/Off").when(gameScene.is3D()).end();
+		p("Ctrl+P", "Pause On/Off").end();
+		p("Ctrl+R", "Maze resolution (SHIFT=Decrease)").when(gameScene.is3D()).end();
+		p("Ctrl+S", "Speed (SHIFT=Decrease)").end();
+		p("Ctrl+X", "Axes On/Off").when(gameScene.is3D()).end();
+		p("Ctrl+3", "3D Play Scene On/Off").end();
 
 		textUI.setText(text.toString());
 	}
 
-	private void when(boolean condition, Runnable code) {
-		if (condition) {
-			code.run();
-		}
+	private final RowBuffer rowBuffer = new RowBuffer();
+
+	private RowBuffer p(String firstColumn, String secondColumnPattern, Object... args) {
+		rowBuffer.clear();
+		rowBuffer.sb.append(String.format("%-12s: %s\n", firstColumn, String.format(secondColumnPattern, args)));
+		return rowBuffer;
 	}
 
-	private void row(String column1, String pattern, Object... args) {
-		String column2 = String.format(pattern, args);
-		text.append(String.format("%-12s: %s\n", column1, column2));
-	}
-
-	private void row() {
+	private void newline() {
 		text.append("\n");
+	}
+
+	private class RowBuffer {
+
+		final StringBuilder sb = new StringBuilder();
+
+		void clear() {
+			sb.setLength(0);
+		}
+
+		RowBuffer when(boolean condition) {
+			if (!condition) {
+				sb.setLength(0);
+			}
+			return this;
+		}
+
+		void end() {
+			text.append(sb.toString());
+		}
 	}
 }
