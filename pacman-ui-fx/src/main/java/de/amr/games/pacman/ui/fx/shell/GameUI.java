@@ -58,7 +58,6 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -176,7 +175,6 @@ public class GameUI extends DefaultGameEventHandler {
 
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> Env.gameLoop.stop());
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
-		stage.addEventHandler(ScrollEvent.SCROLL, this::onScrolled);
 
 		Env.$drawMode3D.addListener($1 -> selectBackground(currentScene));
 
@@ -473,18 +471,6 @@ public class GameUI extends DefaultGameEventHandler {
 
 		default:
 			break;
-		}
-	}
-
-	private void onScrolled(ScrollEvent e) {
-		boolean shift = e.isShiftDown();
-		boolean up = shift ? e.getDeltaX() > 0 : e.getDeltaY() > 0;
-		if (currentScene instanceof PlayScene3D) {
-			if (e.isShiftDown()) {
-				Env.changeMazeWallHeight(up);
-			} else {
-				Env.changeMazeResolution(up);
-			}
 		}
 	}
 }
