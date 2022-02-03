@@ -36,17 +36,6 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
-import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
-import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntermissionScene1;
-import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntermissionScene2;
-import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntermissionScene3;
-import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntroScene;
-import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntermissionScene1;
-import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntermissionScene2;
-import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntermissionScene3;
-import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntroScene;
-import de.amr.games.pacman.ui.fx._3d.model.GianmarcosModel3D;
-import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.sound.mspacman.SoundManager_MsPacMan;
@@ -80,8 +69,7 @@ public class GameUI extends DefaultGameEventHandler {
 	private final Background bg_black = U.colorBackground(Color.BLACK);
 	private final Background bg_blue = U.colorBackground(Color.CORNFLOWERBLUE);
 
-	private final GameScene scenes_PacMan[][] = new GameScene[5][2];
-	private final GameScene scenes_MsPacMan[][] = new GameScene[5][2];
+	private final GameScenes scenes;
 
 	final GameController gameController;
 	final Canvas canvas; // common canvas of all 2D scenes
@@ -101,30 +89,7 @@ public class GameUI extends DefaultGameEventHandler {
 
 		canvas = new Canvas();
 
-		V2i sceneSize = new V2i(TILES_X, TILES_Y).scaled(TS);
-		//@formatter:off
-		scenes_PacMan  [0][0] = 
-		scenes_PacMan  [0][1] = new PacMan_IntroScene(gameController, sceneSize, canvas,  Rendering2D_PacMan.get());
-		scenes_PacMan  [1][0] = 
-		scenes_PacMan  [1][1] = new PacMan_IntermissionScene1(gameController, sceneSize, canvas, Rendering2D_PacMan.get());
-		scenes_PacMan  [2][0] = 
-		scenes_PacMan  [2][1] = new PacMan_IntermissionScene2(gameController, sceneSize, canvas, Rendering2D_PacMan.get());
-		scenes_PacMan  [3][0] = 
-		scenes_PacMan  [3][1] = new PacMan_IntermissionScene3(gameController, sceneSize, canvas, Rendering2D_PacMan.get());
-		scenes_PacMan  [4][0] = new PlayScene2D(gameController, sceneSize, canvas, Rendering2D_PacMan.get());
-		scenes_PacMan  [4][1] = new PlayScene3D(gameController, GianmarcosModel3D.get());
-		
-		scenes_MsPacMan[0][0] = 
-		scenes_MsPacMan[0][1] = new MsPacMan_IntroScene(gameController, sceneSize, canvas, Rendering2D_MsPacMan.get());
-		scenes_MsPacMan[1][0] = 
-		scenes_MsPacMan[1][1] = new MsPacMan_IntermissionScene1(gameController, sceneSize, canvas, Rendering2D_MsPacMan.get());
-		scenes_MsPacMan[2][0] = 
-		scenes_MsPacMan[2][1] = new MsPacMan_IntermissionScene2(gameController, sceneSize, canvas, Rendering2D_MsPacMan.get());
-		scenes_MsPacMan[3][0] = 
-		scenes_MsPacMan[3][1] = new MsPacMan_IntermissionScene3(gameController, sceneSize, canvas, Rendering2D_MsPacMan.get());
-		scenes_MsPacMan[4][0] = new PlayScene2D(gameController, sceneSize, canvas, Rendering2D_MsPacMan.get());
-		scenes_MsPacMan[4][1] = new PlayScene3D(gameController, GianmarcosModel3D.get());
-		//@formatter:on
+		scenes = new GameScenes(gameController, new V2i(TILES_X, TILES_Y).scaled(TS), canvas);
 
 		mainSceneRoot = new StackPane(gameSceneRoot, FlashMessageView.get(), HUD.get());
 		mainScene = new Scene(mainSceneRoot, ASPECT_RATIO * height, height);
@@ -158,23 +123,22 @@ public class GameUI extends DefaultGameEventHandler {
 
 	private GameScene gameSceneForCurrentState(boolean _3D) {
 		var game = gameController.game;
-		int variant = _3D ? 1 : 0;
-		int index = 4; // default = Play Scene
+		int sceneVariant = _3D ? 1 : 0;
+		int sceneIndex = 4; // default = Play Scene
 		switch (gameController.currentStateID) {
 		case INTRO:
-			index = 0;
+			sceneIndex = 0;
 			break;
 		case INTERMISSION:
-			index = game.intermissionNumber(game.levelNumber);
+			sceneIndex = game.intermissionNumber(game.levelNumber);
 			break;
 		case INTERMISSION_TEST:
-			index = gameController.intermissionTestNumber;
+			sceneIndex = gameController.intermissionTestNumber;
 			break;
 		default:
 			break;
 		}
-		return gameController.gameVariant == GameVariant.MS_PACMAN ? //
-				scenes_MsPacMan[index][variant] : scenes_PacMan[index][variant];
+		return scenes.getScene(gameController.gameVariant, sceneIndex, sceneVariant);
 	}
 
 	private void selectGameScene() {
