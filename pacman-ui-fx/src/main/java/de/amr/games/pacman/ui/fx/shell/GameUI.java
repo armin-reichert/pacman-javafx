@@ -47,7 +47,6 @@ import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntermissionScene2;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntermissionScene3;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntroScene;
 import de.amr.games.pacman.ui.fx._3d.model.GianmarcosModel3D;
-import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -80,8 +79,6 @@ public class GameUI extends DefaultGameEventHandler {
 	private final Background bg_beach = U.imageBackground("/common/beach.jpg");
 	private final Background bg_black = U.colorBackground(Color.BLACK);
 	private final Background bg_blue = U.colorBackground(Color.CORNFLOWERBLUE);
-
-	private final PacManModel3D model3D = GianmarcosModel3D.get();
 
 	private final SoundManager sounds_PacMan = new SoundManager();
 	{
@@ -159,7 +156,7 @@ public class GameUI extends DefaultGameEventHandler {
 		scenes_PacMan  [3][0] = 
 		scenes_PacMan  [3][1] = new PacMan_IntermissionScene3(gameController, sceneSize, canvas, Rendering2D_PacMan.get());
 		scenes_PacMan  [4][0] = new PlayScene2D(gameController, sceneSize, canvas, Rendering2D_PacMan.get());
-		scenes_PacMan  [4][1] = new PlayScene3D(gameController, model3D);
+		scenes_PacMan  [4][1] = new PlayScene3D(gameController, GianmarcosModel3D.get());
 		
 		scenes_MsPacMan[0][0] = 
 		scenes_MsPacMan[0][1] = new MsPacMan_IntroScene(gameController, sceneSize, canvas, Rendering2D_MsPacMan.get());
@@ -170,7 +167,7 @@ public class GameUI extends DefaultGameEventHandler {
 		scenes_MsPacMan[3][0] = 
 		scenes_MsPacMan[3][1] = new MsPacMan_IntermissionScene3(gameController, sceneSize, canvas, Rendering2D_MsPacMan.get());
 		scenes_MsPacMan[4][0] = new PlayScene2D(gameController, sceneSize, canvas, Rendering2D_MsPacMan.get());
-		scenes_MsPacMan[4][1] = new PlayScene3D(gameController, model3D);
+		scenes_MsPacMan[4][1] = new PlayScene3D(gameController, GianmarcosModel3D.get());
 		//@formatter:on
 
 		mainSceneRoot = new StackPane(gameSceneRoot, FlashMessageView.get(), HUD.get());
