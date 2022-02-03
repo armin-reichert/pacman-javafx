@@ -69,14 +69,14 @@ public class GameUI extends DefaultGameEventHandler {
 	private final Background bg_black = U.colorBackground(Color.BLACK);
 	private final Background bg_blue = U.colorBackground(Color.CORNFLOWERBLUE);
 
-	private final GameScenes scenes;
+	private final GameScenes gameScenes;
 
 	final GameController gameController;
-	final Canvas canvas; // common canvas of all 2D scenes
+	final Canvas canvas = new Canvas(); // common canvas of all 2D scenes
 	final Scene mainScene;
 	final Stage stage;
-	final Group gameSceneRoot;
-	final StackPane mainSceneRoot;
+	final Group gameSceneRoot = new Group();
+	final StackPane mainSceneRoot = new StackPane();
 
 	GameScene currentScene;
 
@@ -84,22 +84,17 @@ public class GameUI extends DefaultGameEventHandler {
 		this.stage = stage;
 		this.gameController = gameController;
 
-		gameSceneRoot = new Group();
+		mainSceneRoot.getChildren().addAll(gameSceneRoot, FlashMessageView.get(), HUD.get());
 		StackPane.setAlignment(HUD.get(), Pos.TOP_LEFT);
-
-		canvas = new Canvas();
-
-		scenes = new GameScenes(gameController, new V2i(TILES_X, TILES_Y).scaled(TS), canvas);
-
-		mainSceneRoot = new StackPane(gameSceneRoot, FlashMessageView.get(), HUD.get());
 		mainScene = new Scene(mainSceneRoot, ASPECT_RATIO * height, height);
-
 		mainScene.heightProperty().addListener($1 -> adaptCanvasSize(mainScene.getHeight()));
+		adaptCanvasSize(mainScene.getHeight());
+
 		Env.$drawMode3D.addListener($1 -> updateBackground(currentScene));
 		Env.gameLoop.$fps.addListener($1 -> updateStageTitle());
 
+		gameScenes = new GameScenes(gameController, new V2i(TILES_X, TILES_Y).scaled(TS), canvas);
 		selectGameScene();
-		adaptCanvasSize(mainScene.getHeight());
 
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> Env.gameLoop.stop());
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
@@ -138,7 +133,7 @@ public class GameUI extends DefaultGameEventHandler {
 		default:
 			break;
 		}
-		return scenes.getScene(gameController.gameVariant, sceneIndex, sceneVariant);
+		return gameScenes.getScene(gameController.gameVariant, sceneIndex, sceneVariant);
 	}
 
 	private void selectGameScene() {
