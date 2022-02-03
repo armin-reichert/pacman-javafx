@@ -61,23 +61,21 @@ import javafx.stage.WindowEvent;
  */
 public class GameUI extends DefaultGameEventHandler {
 
-	private static final int TILES_X = 28;
-	private static final int TILES_Y = 36;
+	private static final int TILES_X = 28, TILES_Y = 36;
 	private static final double ASPECT_RATIO = (double) TILES_X / TILES_Y;
 
 	private final Background bg_beach = U.imageBackground("/common/beach.jpg");
 	private final Background bg_black = U.colorBackground(Color.BLACK);
 	private final Background bg_blue = U.colorBackground(Color.CORNFLOWERBLUE);
 
-	private final GameScenes gameScenes;
-
 	final GameController gameController;
-	final Canvas canvas = new Canvas(); // common canvas of all 2D scenes
-	final Scene mainScene;
 	final Stage stage;
-	final Group gameSceneRoot = new Group();
-	final StackPane mainSceneRoot = new StackPane();
+	final Canvas canvas = new Canvas(); // common canvas of all 2D scenes
+	private final Scene mainScene;
+	private final Group gameSceneRoot = new Group();
+	private final StackPane mainSceneRoot = new StackPane();
 
+	private final GameScenes gameScenes;
 	GameScene currentScene;
 
 	public GameUI(Stage stage, GameController gameController, double height, boolean fullscreen) {
@@ -91,7 +89,7 @@ public class GameUI extends DefaultGameEventHandler {
 		adaptCanvasSize(mainScene.getHeight());
 
 		Env.$drawMode3D.addListener($1 -> updateBackground(currentScene));
-		Env.gameLoop.$fps.addListener($1 -> updateStageTitle());
+		Env.gameLoop.$fps.addListener($1 -> stage.setTitle(computeStageTitle()));
 
 		gameScenes = new GameScenes(gameController, new V2i(TILES_X, TILES_Y).scaled(TS), canvas);
 		selectGameScene();
@@ -99,7 +97,7 @@ public class GameUI extends DefaultGameEventHandler {
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> Env.gameLoop.stop());
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
 
-		updateStageTitle();
+		stage.setTitle(computeStageTitle());
 		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
 		stage.setScene(mainScene);
 		stage.centerOnScreen();
@@ -171,11 +169,10 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 	}
 
-	private void updateStageTitle() {
+	private String computeStageTitle() {
 		String gameName = gameController.gameVariant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man";
-		String title = Env.$paused.get() ? String.format("%s (PAUSED, CTRL+P: resume, P: Step)", gameName)
+		return Env.$paused.get() ? String.format("%s (PAUSED, CTRL+P: resume, P: Step)", gameName)
 				: String.format("%s", gameName);
-		stage.setTitle(title);
 	}
 
 	private void updateBackground(GameScene scene) {
