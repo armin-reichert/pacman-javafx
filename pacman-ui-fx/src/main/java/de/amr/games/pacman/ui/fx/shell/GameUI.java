@@ -206,11 +206,16 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	private void onKeyPressed(KeyEvent e) {
-		final GameModel game = gameController.game;
+		if (e.isShiftDown() || e.isAltDown()) {
+			return;
+		}
 		if (e.isControlDown()) {
 			onControlKeyPressed(e);
 			return;
 		}
+
+		final GameModel game = gameController.game;
+		final GameState state = gameController.currentStateID;
 
 		switch (e.getCode()) {
 		case A: {
@@ -254,7 +259,7 @@ public class GameUI extends DefaultGameEventHandler {
 			break;
 
 		case Q:
-			if (gameController.currentStateID != GameState.INTRO) {
+			if (state != GameState.INTRO) {
 				currentScene.end();
 				Env.sounds.stopAll();
 				gameController.changeState(GameState.INTRO);
@@ -262,7 +267,7 @@ public class GameUI extends DefaultGameEventHandler {
 			break;
 
 		case V:
-			if (gameController.currentStateID == GameState.INTRO) {
+			if (state == GameState.INTRO) {
 				gameController.selectGameVariant(gameController.gameVariant.succ());
 			}
 			break;
@@ -274,9 +279,9 @@ public class GameUI extends DefaultGameEventHandler {
 			break;
 
 		case Z:
-			if (gameController.currentStateID == GameState.INTRO) {
-				FlashMessageView.showFlashMessage(1, "Intermission Scene Test");
+			if (state == GameState.INTRO) {
 				gameController.startIntermissionTest();
+				FlashMessageView.showFlashMessage(1, "Intermission Scene Test");
 			}
 			break;
 
@@ -325,16 +330,12 @@ public class GameUI extends DefaultGameEventHandler {
 			}
 			break;
 
-		case P:
+		case P: {
 			Env.$paused.set(!Env.$paused.get());
-			if (Env.$paused.get()) {
-				FlashMessageView.showFlashMessage(3, "Game paused");
-				log("Game paused.");
-			} else {
-				FlashMessageView.showFlashMessage(2, "Game resumed");
-				log("Game resumed.");
-			}
+			FlashMessageView.showFlashMessage(2, Env.$paused.get() ? "Game paused" : "Game resumed");
+			log(Env.$paused.get() ? "Game paused." : "Game resumed.");
 			break;
+		}
 
 		case R:
 			if (currentScene.is3D()) {
@@ -342,15 +343,16 @@ public class GameUI extends DefaultGameEventHandler {
 			}
 			break;
 
-		case S:
-			int currentTargetFrameRate = Env.gameLoop.getTargetFrameRate();
+		case S: {
+			int targetFrameRate = Env.gameLoop.getTargetFrameRate();
 			if (!e.isShiftDown()) {
-				Env.gameLoop.setTargetFrameRate(currentTargetFrameRate + 10);
+				Env.gameLoop.setTargetFrameRate(targetFrameRate + 10);
 			} else {
-				Env.gameLoop.setTargetFrameRate(Math.max(10, currentTargetFrameRate - 10));
+				Env.gameLoop.setTargetFrameRate(Math.max(10, targetFrameRate - 10));
 			}
 			FlashMessageView.showFlashMessage(1, "Target FPS set to %d Hz", Env.gameLoop.getTargetFrameRate());
 			break;
+		}
 
 		case T:
 			Env.$isTimeMeasured.set(!Env.$isTimeMeasured.get());
