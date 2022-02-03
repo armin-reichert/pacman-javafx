@@ -207,28 +207,24 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	private GameScene gameSceneForCurrentState(boolean _3D) {
-		final var game = gameController.game;
-		final int sceneVariant = _3D ? 1 : 0;
-
-		int sceneIndex;
+		var game = gameController.game;
+		int variant = _3D ? 1 : 0;
+		int index = 4; // default = Play Scene
 		switch (gameController.currentStateID) {
 		case INTRO:
-			sceneIndex = 0;
+			index = 0;
 			break;
 		case INTERMISSION:
-			sceneIndex = game.intermissionNumber(game.levelNumber);
+			index = game.intermissionNumber(game.levelNumber);
 			break;
 		case INTERMISSION_TEST:
-			sceneIndex = gameController.intermissionTestNumber;
+			index = gameController.intermissionTestNumber;
 			break;
 		default:
-			sceneIndex = 4; // Play Scene
 			break;
 		}
-
-		return gameController.gameVariant == GameVariant.MS_PACMAN //
-				? scenes_MsPacMan[sceneIndex][sceneVariant]
-				: scenes_PacMan[sceneIndex][sceneVariant];
+		return gameController.gameVariant == GameVariant.MS_PACMAN ? //
+				scenes_MsPacMan[index][variant] : scenes_PacMan[index][variant];
 	}
 
 	private void selectGameScene() {
