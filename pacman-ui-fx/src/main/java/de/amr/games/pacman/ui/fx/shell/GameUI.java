@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx.shell;
 
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.World.TS;
-import static de.amr.games.pacman.model.world.World.t;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
@@ -54,7 +53,6 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.U;
-import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -136,11 +134,11 @@ public class GameUI extends DefaultGameEventHandler {
 	private final GameScene scenes_MsPacMan[][] = new GameScene[5][2];
 
 	final GameController gameController;
-	final Canvas canvas;
+	final Canvas canvas; // common canvas of all 2D scenes
 	final Scene mainScene;
 	final Stage stage;
-	final Group gameSceneContainer;
-	final StackPane mainSceneContainer;
+	final Group gameSceneRoot;
+	final StackPane mainSceneRoot;
 
 	GameScene currentScene;
 
@@ -148,35 +146,12 @@ public class GameUI extends DefaultGameEventHandler {
 		this.stage = stage;
 		this.gameController = gameController;
 
-		gameSceneContainer = new Group();
+		gameSceneRoot = new Group();
 		StackPane.setAlignment(HUD.get(), Pos.TOP_LEFT);
 
-		mainSceneContainer = new StackPane(gameSceneContainer, FlashMessageView.get(), HUD.get());
-		mainScene = new Scene(mainSceneContainer, ASPECT_RATIO * height, height);
-
-		// all 2D scenes render into this canvas
 		canvas = new Canvas();
-		canvas.heightProperty().bind(mainScene.heightProperty());
-		canvas.widthProperty().bind(Bindings.createDoubleBinding(() -> {
-			double scaling = canvas.getHeight() / t(TILES_Y);
-			canvas.getTransforms().setAll(new Scale(scaling, scaling));
-			return canvas.getHeight() * ASPECT_RATIO;
-		}, canvas.heightProperty()));
 
-		stage.setScene(mainScene);
-		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
-		stage.titleProperty().bind(Bindings.createStringBinding(() -> {
-			String gameName = gameController.gameVariant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man";
-			return Env.$paused.get() ? String.format("%s (PAUSED, CTRL+P: resume, P: Step)", gameName)
-					: String.format("%s", gameName);
-		}, Env.gameLoop.$fps));
-
-		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> Env.gameLoop.stop());
-		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
-
-		Env.$drawMode3D.addListener($1 -> updateBackground(currentScene));
-
-		final V2i sceneSize = new V2i(TILES_X, TILES_Y).scaled(TS);
+		V2i sceneSize = new V2i(TILES_X, TILES_Y).scaled(TS);
 		//@formatter:off
 		scenes_PacMan  [0][0] = 
 		scenes_PacMan  [0][1] = new PacMan_IntroScene(gameController, sceneSize, canvas,  r2D_PacMan);
@@ -200,8 +175,23 @@ public class GameUI extends DefaultGameEventHandler {
 		scenes_MsPacMan[4][0] = new PlayScene2D(gameController, sceneSize, canvas, r2D_MsPacMan);
 		scenes_MsPacMan[4][1] = new PlayScene3D(gameController, model3D);
 		//@formatter:on
-		selectGameScene();
 
+		mainSceneRoot = new StackPane(gameSceneRoot, FlashMessageView.get(), HUD.get());
+		mainScene = new Scene(mainSceneRoot, ASPECT_RATIO * height, height);
+
+		mainScene.heightProperty().addListener($1 -> adaptCanvasSize(mainScene.getHeight()));
+		Env.$drawMode3D.addListener($1 -> updateBackground(currentScene));
+		Env.gameLoop.$fps.addListener($1 -> updateStageTitle());
+
+		selectGameScene();
+		adaptCanvasSize(mainScene.getHeight());
+
+		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> Env.gameLoop.stop());
+		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
+
+		updateStageTitle();
+		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
+		stage.setScene(mainScene);
 		stage.centerOnScreen();
 		stage.setFullScreen(fullscreen);
 		stage.show();
@@ -252,10 +242,17 @@ public class GameUI extends DefaultGameEventHandler {
 			}
 			updateSceneContext(nextScene);
 			// TODO: why do I always have to create a new subscene in the 2D case?
-			gameSceneContainer.getChildren().setAll(nextScene.createSubScene(mainScene));
+			gameSceneRoot.getChildren().setAll(nextScene.createSubScene(mainScene));
 			nextScene.init();
 			currentScene = nextScene;
 		}
+	}
+
+	private void adaptCanvasSize(double height) {
+		canvas.setHeight(height);
+		canvas.setWidth(canvas.getHeight() * ASPECT_RATIO);
+		double scaling = canvas.getHeight() / (TILES_Y * TS);
+		canvas.getTransforms().setAll(new Scale(scaling, scaling));
 	}
 
 	private void updateSceneContext(GameScene gameScene) {
@@ -269,11 +266,18 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 	}
 
+	private void updateStageTitle() {
+		String gameName = gameController.gameVariant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man";
+		String title = Env.$paused.get() ? String.format("%s (PAUSED, CTRL+P: resume, P: Step)", gameName)
+				: String.format("%s", gameName);
+		stage.setTitle(title);
+	}
+
 	private void updateBackground(GameScene scene) {
 		if (scene.is3D()) {
-			mainSceneContainer.setBackground(Env.$drawMode3D.get() == DrawMode.LINE ? bg_black : bg_beach);
+			mainSceneRoot.setBackground(Env.$drawMode3D.get() == DrawMode.LINE ? bg_black : bg_beach);
 		} else {
-			mainSceneContainer.setBackground(bg_blue);
+			mainSceneRoot.setBackground(bg_blue);
 		}
 	}
 
