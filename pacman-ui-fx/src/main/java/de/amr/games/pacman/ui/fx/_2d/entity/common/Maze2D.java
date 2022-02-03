@@ -43,9 +43,9 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class Maze2D implements Renderable2D {
+public class Maze2D {
 
-	private final Rendering2D rendering;
+	private final Rendering2D r2D;
 	private final int x;
 	private final int y;
 	private final TimedSequence<Boolean> energizerAnimation;
@@ -56,15 +56,15 @@ public class Maze2D implements Renderable2D {
 
 	/**
 	 * 
-	 * @param x         x position (in pixels)
-	 * @param y         y position (in pixels)
-	 * @param game      the game model
-	 * @param rendering the 2D rendering
+	 * @param x    x position (in pixels)
+	 * @param y    y position (in pixels)
+	 * @param game the game model
+	 * @param r2D  the 2D rendering
 	 */
-	public Maze2D(int x, int y, GameModel game, Rendering2D rendering) {
+	public Maze2D(int x, int y, GameModel game, Rendering2D r2D) {
 		this.x = x;
 		this.y = y;
-		this.rendering = rendering;
+		this.r2D = r2D;
 		energizerAnimation = TimedSequence.pulse().frameDuration(10);
 		flashingAnimation = new Timeline(new KeyFrame(Duration.millis(150), e -> flashing = !flashing));
 		setGame(game);
@@ -87,16 +87,15 @@ public class Maze2D implements Renderable2D {
 		return energizerAnimation;
 	}
 
-	@Override
 	public void render(GraphicsContext gc) {
 		if (flashingAnimation.getStatus() == Status.RUNNING) {
 			if (flashing) {
-				rendering.renderMazeFlashing(gc, game.mazeNumber, x, y);
+				r2D.renderMazeFlashing(gc, game.mazeNumber, x, y);
 			} else {
-				rendering.renderMazeEmpty(gc, game.mazeNumber, x, y);
+				r2D.renderMazeEmpty(gc, game.mazeNumber, x, y);
 			}
 		} else {
-			rendering.renderMazeFull(gc, game.mazeNumber, x, y);
+			r2D.renderMazeFull(gc, game.mazeNumber, x, y);
 			Color dark = Color.BLACK;
 			if (!energizerAnimation.animate()) { // dark phase
 				gc.setFill(dark);

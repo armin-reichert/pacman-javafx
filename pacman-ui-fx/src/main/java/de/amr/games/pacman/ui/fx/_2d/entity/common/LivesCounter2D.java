@@ -37,27 +37,26 @@ import javafx.scene.text.FontWeight;
  * 
  * @author Armin Reichert
  */
-public class LivesCounter2D implements Renderable2D {
+public class LivesCounter2D {
 
-	private final Rendering2D rendering;
+	private final Rendering2D r2D;
 	private final int maxLivesDisplayed = 5;
 
 	private int x;
 	private int y;
 	private GameModel game;
 
-	public LivesCounter2D(int x, int y, GameModel game, Rendering2D rendering) {
+	public LivesCounter2D(int x, int y, GameModel game, Rendering2D r2D) {
 		this.x = x;
 		this.y = y;
 		this.game = game;
-		this.rendering = rendering;
+		this.r2D = r2D;
 	}
 
-	@Override
 	public void render(GraphicsContext g) {
-		var sprite = rendering.getLifeSprite();
+		var sprite = r2D.getLifeSprite();
 		for (int i = 0; i < Math.min(game.player.lives, maxLivesDisplayed); ++i) {
-			rendering.renderSprite(g, sprite, x + t(2 * i), y);
+			r2D.renderSprite(g, sprite, x + t(2 * i), y);
 		}
 		if (game.player.lives > maxLivesDisplayed) {
 			g.setFill(Color.YELLOW);

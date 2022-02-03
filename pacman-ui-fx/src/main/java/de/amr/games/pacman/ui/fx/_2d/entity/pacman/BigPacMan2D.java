@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx._2d.entity.pacman;
 
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.model.common.Pac;
-import de.amr.games.pacman.ui.fx._2d.entity.common.Renderable2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -35,7 +34,7 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class BigPacMan2D implements Renderable2D {
+public class BigPacMan2D {
 
 	private final Rendering2D_PacMan rendering;
 	private final Pac pacMan;
@@ -47,7 +46,6 @@ public class BigPacMan2D implements Renderable2D {
 		munchingAnimation = rendering.createBigPacManMunchingAnimation();
 	}
 
-	@Override
 	public void render(GraphicsContext g) {
 		Rectangle2D sprite = munchingAnimation.animate();
 		// lift it up such that it sits on the ground instead of being vertically

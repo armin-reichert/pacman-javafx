@@ -38,15 +38,15 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class Bonus2D implements Renderable2D {
+public class Bonus2D  {
 
 	private final Rendering2D rendering;
 	private final Bonus bonus;
 	public final Optional<TimedSequence<Integer>> animation; // Ms. Pac-Man only
 
-	public Bonus2D(Bonus bonus, Rendering2D rendering, boolean animated) {
+	public Bonus2D(Bonus bonus, Rendering2D r2D, boolean animated) {
 		this.bonus = Objects.requireNonNull(bonus);
-		this.rendering = Objects.requireNonNull(rendering);
+		this.rendering = Objects.requireNonNull(r2D);
 		if (animated) {
 			animation = Optional.of(TimedSequence.of(2, 0, -2).frameDuration(8).endless());
 		} else {
@@ -54,7 +54,6 @@ public class Bonus2D implements Renderable2D {
 		}
 	}
 
-	@Override
 	public void render(GraphicsContext g) {
 		Rectangle2D sprite;
 		if (bonus.state == BonusState.EDIBLE) {

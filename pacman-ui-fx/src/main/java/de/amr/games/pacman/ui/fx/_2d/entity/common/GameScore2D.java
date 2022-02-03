@@ -35,12 +35,12 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class GameScore2D implements Renderable2D {
+public class GameScore2D  {
 
 	public boolean showPoints = true;
 
 	private final GameModel game;
-	private final Rendering2D rendering;
+	private final Rendering2D r2D;
 	private final boolean showHighscore;
 
 	private int x;
@@ -49,20 +49,19 @@ public class GameScore2D implements Renderable2D {
 	private Color titleColor = Color.WHITE;
 	private Color pointsColor = Color.YELLOW;
 
-	public GameScore2D(String title, int x, int y, GameModel game, boolean showHighscore, Rendering2D rendering) {
+	public GameScore2D(String title, int x, int y, GameModel game, boolean showHighscore, Rendering2D r2D) {
 		this.title = title;
 		this.x = x;
 		this.y = y;
 		this.game = game;
 		this.showHighscore = showHighscore;
-		this.rendering = rendering;
+		this.r2D = r2D;
 	}
 
-	@Override
 	public void render(GraphicsContext g) {
 		g.save();
 		g.translate(x, y);
-		g.setFont(rendering.getScoreFont());
+		g.setFont(r2D.getScoreFont());
 		g.setFill(titleColor);
 		g.fillText(title, 0, 0);
 		if (showPoints) {
