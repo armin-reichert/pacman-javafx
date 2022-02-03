@@ -75,65 +75,65 @@ import javafx.stage.WindowEvent;
  */
 public class GameUI extends DefaultGameEventHandler {
 
-	private final int TILES_X = 28;
-	private final int TILES_Y = 36;
-	private final double ASPECT_RATIO = (double) TILES_X / TILES_Y;
+	private static final int TILES_X = 28;
+	private static final int TILES_Y = 36;
+	private static final double ASPECT_RATIO = (double) TILES_X / TILES_Y;
 
-	private final Background BG_BEACH = U.imageBackground("/common/beach.jpg");
-	private final Background BG_BLACK = U.colorBackground(Color.BLACK);
-	private final Background BG_BLUE = U.colorBackground(Color.CORNFLOWERBLUE);
+	private final Background bg_beach = U.imageBackground("/common/beach.jpg");
+	private final Background bg_black = U.colorBackground(Color.BLACK);
+	private final Background bg_blue = U.colorBackground(Color.CORNFLOWERBLUE);
 
-	private final PacManModel3D MODEL_3D = GianmarcosModel3D.get();
+	private final PacManModel3D model3D = GianmarcosModel3D.get();
 
-	private final Rendering2D_PacMan RENDERING_PACMAN = new Rendering2D_PacMan();
-	private final Rendering2D_MsPacMan RENDERING_MSPACMAN = new Rendering2D_MsPacMan();
+	private final Rendering2D_PacMan r2D_PacMan = new Rendering2D_PacMan();
+	private final Rendering2D_MsPacMan r2D_MsPacMan = new Rendering2D_MsPacMan();
 
-	private final SoundManager SOUNDS_PACMAN = new SoundManager();
+	private final SoundManager sounds_PacMan = new SoundManager();
 	{
 		//@formatter:off
-		SOUNDS_PACMAN.put(GameSounds.CREDIT,          "/pacman/sound/credit.mp3");
-		SOUNDS_PACMAN.put(GameSounds.EXTRA_LIFE,      "/pacman/sound/extend.mp3");
-		SOUNDS_PACMAN.put(GameSounds.GAME_READY,      "/pacman/sound/game_start.mp3");
-		SOUNDS_PACMAN.put(GameSounds.BONUS_EATEN,     "/pacman/sound/eat_fruit.mp3");
-		SOUNDS_PACMAN.put(GameSounds.PACMAN_MUNCH,    "/pacman/sound/munch_1.wav");
-		SOUNDS_PACMAN.put(GameSounds.PACMAN_DEATH,    "/pacman/sound/pacman_death.wav");
-		SOUNDS_PACMAN.put(GameSounds.PACMAN_POWER,    "/pacman/sound/power_pellet.mp3");
-		SOUNDS_PACMAN.put(GameSounds.GHOST_EATEN,     "/pacman/sound/eat_ghost.mp3");
-		SOUNDS_PACMAN.put(GameSounds.GHOST_RETURNING, "/pacman/sound/retreating.mp3");
-		SOUNDS_PACMAN.put(GameSounds.SIREN_1,         "/pacman/sound/siren_1.mp3");
-		SOUNDS_PACMAN.put(GameSounds.SIREN_2,         "/pacman/sound/siren_2.mp3");
-		SOUNDS_PACMAN.put(GameSounds.SIREN_3,         "/pacman/sound/siren_3.mp3");
-		SOUNDS_PACMAN.put(GameSounds.SIREN_4,         "/pacman/sound/siren_4.mp3");
-		SOUNDS_PACMAN.put(GameSounds.INTERMISSION_1,  "/pacman/sound/intermission.mp3");
-		SOUNDS_PACMAN.put(GameSounds.INTERMISSION_2,  "/pacman/sound/intermission.mp3");
-		SOUNDS_PACMAN.put(GameSounds.INTERMISSION_3,  "/pacman/sound/intermission.mp3");
+		sounds_PacMan.put(GameSounds.CREDIT,          "/pacman/sound/credit.mp3");
+		sounds_PacMan.put(GameSounds.EXTRA_LIFE,      "/pacman/sound/extend.mp3");
+		sounds_PacMan.put(GameSounds.GAME_READY,      "/pacman/sound/game_start.mp3");
+		sounds_PacMan.put(GameSounds.BONUS_EATEN,     "/pacman/sound/eat_fruit.mp3");
+		sounds_PacMan.put(GameSounds.PACMAN_MUNCH,    "/pacman/sound/munch_1.wav");
+		sounds_PacMan.put(GameSounds.PACMAN_DEATH,    "/pacman/sound/pacman_death.wav");
+		sounds_PacMan.put(GameSounds.PACMAN_POWER,    "/pacman/sound/power_pellet.mp3");
+		sounds_PacMan.put(GameSounds.GHOST_EATEN,     "/pacman/sound/eat_ghost.mp3");
+		sounds_PacMan.put(GameSounds.GHOST_RETURNING, "/pacman/sound/retreating.mp3");
+		sounds_PacMan.put(GameSounds.SIREN_1,         "/pacman/sound/siren_1.mp3");
+		sounds_PacMan.put(GameSounds.SIREN_2,         "/pacman/sound/siren_2.mp3");
+		sounds_PacMan.put(GameSounds.SIREN_3,         "/pacman/sound/siren_3.mp3");
+		sounds_PacMan.put(GameSounds.SIREN_4,         "/pacman/sound/siren_4.mp3");
+		sounds_PacMan.put(GameSounds.INTERMISSION_1,  "/pacman/sound/intermission.mp3");
+		sounds_PacMan.put(GameSounds.INTERMISSION_2,  "/pacman/sound/intermission.mp3");
+		sounds_PacMan.put(GameSounds.INTERMISSION_3,  "/pacman/sound/intermission.mp3");
 		//@formatter:on
 	}
 
-	private final SoundManager SOUNDS_MSPACMAN = new SoundManager();
+	private final SoundManager sounds_MsPacMan = new SoundManager();
 	{
 		//@formatter:off
-		SOUNDS_MSPACMAN.put(GameSounds.CREDIT,          "/mspacman/sound/Coin Credit.mp3");
-		SOUNDS_MSPACMAN.put(GameSounds.EXTRA_LIFE,      "/mspacman/sound/Extra Life.mp3");
-		SOUNDS_MSPACMAN.put(GameSounds.GAME_READY,      "/mspacman/sound/Start.mp3");
-		SOUNDS_MSPACMAN.put(GameSounds.BONUS_EATEN,     "/mspacman/sound/Fruit.mp3");
-		SOUNDS_MSPACMAN.put(GameSounds.PACMAN_MUNCH,    "/mspacman/sound/Ms. Pac Man Pill.mp3");
-		SOUNDS_MSPACMAN.put(GameSounds.PACMAN_DEATH,    "/mspacman/sound/Died.mp3");
-		SOUNDS_MSPACMAN.put(GameSounds.PACMAN_POWER,    "/mspacman/sound/Scared Ghost.mp3");
-		SOUNDS_MSPACMAN.put(GameSounds.GHOST_EATEN,     "/mspacman/sound/Ghost.mp3");
-		SOUNDS_MSPACMAN.put(GameSounds.GHOST_RETURNING, "/mspacman/sound/Ghost Eyes.mp3");
-		SOUNDS_MSPACMAN.put(GameSounds.SIREN_1,         "/mspacman/sound/Ghost Noise 1.mp3");
-		SOUNDS_MSPACMAN.put(GameSounds.SIREN_2,         "/mspacman/sound/Ghost Noise 2.mp3");
-		SOUNDS_MSPACMAN.put(GameSounds.SIREN_3,         "/mspacman/sound/Ghost Noise 3.mp3");
-		SOUNDS_MSPACMAN.put(GameSounds.SIREN_4,         "/mspacman/sound/Ghost Noise 4.mp3");
-		SOUNDS_MSPACMAN.put(GameSounds.INTERMISSION_1,  "/mspacman/sound/They Meet Act 1.mp3");
-		SOUNDS_MSPACMAN.put(GameSounds.INTERMISSION_2,  "/mspacman/sound/The Chase Act 2.mp3");
-		SOUNDS_MSPACMAN.put(GameSounds.INTERMISSION_3,  "/mspacman/sound/Junior Act 3.mp3");
+		sounds_MsPacMan.put(GameSounds.CREDIT,          "/mspacman/sound/Coin Credit.mp3");
+		sounds_MsPacMan.put(GameSounds.EXTRA_LIFE,      "/mspacman/sound/Extra Life.mp3");
+		sounds_MsPacMan.put(GameSounds.GAME_READY,      "/mspacman/sound/Start.mp3");
+		sounds_MsPacMan.put(GameSounds.BONUS_EATEN,     "/mspacman/sound/Fruit.mp3");
+		sounds_MsPacMan.put(GameSounds.PACMAN_MUNCH,    "/mspacman/sound/Ms. Pac Man Pill.mp3");
+		sounds_MsPacMan.put(GameSounds.PACMAN_DEATH,    "/mspacman/sound/Died.mp3");
+		sounds_MsPacMan.put(GameSounds.PACMAN_POWER,    "/mspacman/sound/Scared Ghost.mp3");
+		sounds_MsPacMan.put(GameSounds.GHOST_EATEN,     "/mspacman/sound/Ghost.mp3");
+		sounds_MsPacMan.put(GameSounds.GHOST_RETURNING, "/mspacman/sound/Ghost Eyes.mp3");
+		sounds_MsPacMan.put(GameSounds.SIREN_1,         "/mspacman/sound/Ghost Noise 1.mp3");
+		sounds_MsPacMan.put(GameSounds.SIREN_2,         "/mspacman/sound/Ghost Noise 2.mp3");
+		sounds_MsPacMan.put(GameSounds.SIREN_3,         "/mspacman/sound/Ghost Noise 3.mp3");
+		sounds_MsPacMan.put(GameSounds.SIREN_4,         "/mspacman/sound/Ghost Noise 4.mp3");
+		sounds_MsPacMan.put(GameSounds.INTERMISSION_1,  "/mspacman/sound/They Meet Act 1.mp3");
+		sounds_MsPacMan.put(GameSounds.INTERMISSION_2,  "/mspacman/sound/The Chase Act 2.mp3");
+		sounds_MsPacMan.put(GameSounds.INTERMISSION_3,  "/mspacman/sound/Junior Act 3.mp3");
 		//@formatter:on
 	}
 
-	private final GameScene SCENES_PACMAN[][] = new GameScene[5][2];
-	private final GameScene SCENES_MSPACMAN[][] = new GameScene[5][2];
+	private final GameScene scenes_PacMan[][] = new GameScene[5][2];
+	private final GameScene scenes_MsPacMan[][] = new GameScene[5][2];
 
 	final GameController gameController;
 	final Canvas canvas;
@@ -174,31 +174,31 @@ public class GameUI extends DefaultGameEventHandler {
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> Env.gameLoop.stop());
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
 
-		Env.$drawMode3D.addListener($1 -> selectBackground(currentScene));
+		Env.$drawMode3D.addListener($1 -> updateBackground(currentScene));
 
 		final V2i sceneSize = new V2i(TILES_X, TILES_Y).scaled(TS);
 		//@formatter:off
-		SCENES_PACMAN[0][0] = 
-		SCENES_PACMAN[0][1] = new PacMan_IntroScene(gameController, sceneSize, canvas,  RENDERING_PACMAN);
-		SCENES_PACMAN[1][0] = 
-		SCENES_PACMAN[1][1] = new PacMan_IntermissionScene1(gameController, sceneSize, canvas, RENDERING_PACMAN);
-		SCENES_PACMAN[2][0] = 
-		SCENES_PACMAN[2][1] = new PacMan_IntermissionScene2(gameController, sceneSize, canvas, RENDERING_PACMAN);
-		SCENES_PACMAN[3][0] = 
-		SCENES_PACMAN[3][1] = new PacMan_IntermissionScene3(gameController, sceneSize, canvas, RENDERING_PACMAN);
-		SCENES_PACMAN[4][0] = new PlayScene2D(gameController, sceneSize, canvas, RENDERING_PACMAN);
-		SCENES_PACMAN[4][1] = new PlayScene3D(gameController, MODEL_3D);
+		scenes_PacMan  [0][0] = 
+		scenes_PacMan  [0][1] = new PacMan_IntroScene(gameController, sceneSize, canvas,  r2D_PacMan);
+		scenes_PacMan  [1][0] = 
+		scenes_PacMan  [1][1] = new PacMan_IntermissionScene1(gameController, sceneSize, canvas, r2D_PacMan);
+		scenes_PacMan  [2][0] = 
+		scenes_PacMan  [2][1] = new PacMan_IntermissionScene2(gameController, sceneSize, canvas, r2D_PacMan);
+		scenes_PacMan  [3][0] = 
+		scenes_PacMan  [3][1] = new PacMan_IntermissionScene3(gameController, sceneSize, canvas, r2D_PacMan);
+		scenes_PacMan  [4][0] = new PlayScene2D(gameController, sceneSize, canvas, r2D_PacMan);
+		scenes_PacMan  [4][1] = new PlayScene3D(gameController, model3D);
 		
-		SCENES_MSPACMAN[0][0] = 
-		SCENES_MSPACMAN[0][1] = new MsPacMan_IntroScene(gameController, sceneSize, canvas, RENDERING_MSPACMAN);
-		SCENES_MSPACMAN[1][0] = 
-		SCENES_MSPACMAN[1][1] = new MsPacMan_IntermissionScene1(gameController, sceneSize, canvas, RENDERING_MSPACMAN);
-		SCENES_MSPACMAN[2][0] = 
-		SCENES_MSPACMAN[2][1] = new MsPacMan_IntermissionScene2(gameController, sceneSize, canvas, RENDERING_MSPACMAN);
-		SCENES_MSPACMAN[3][0] = 
-		SCENES_MSPACMAN[3][1] = new MsPacMan_IntermissionScene3(gameController, sceneSize, canvas, RENDERING_MSPACMAN);
-		SCENES_MSPACMAN[4][0] = new PlayScene2D(gameController, sceneSize, canvas, RENDERING_MSPACMAN);
-		SCENES_MSPACMAN[4][1] = new PlayScene3D(gameController, MODEL_3D);
+		scenes_MsPacMan[0][0] = 
+		scenes_MsPacMan[0][1] = new MsPacMan_IntroScene(gameController, sceneSize, canvas, r2D_MsPacMan);
+		scenes_MsPacMan[1][0] = 
+		scenes_MsPacMan[1][1] = new MsPacMan_IntermissionScene1(gameController, sceneSize, canvas, r2D_MsPacMan);
+		scenes_MsPacMan[2][0] = 
+		scenes_MsPacMan[2][1] = new MsPacMan_IntermissionScene2(gameController, sceneSize, canvas, r2D_MsPacMan);
+		scenes_MsPacMan[3][0] = 
+		scenes_MsPacMan[3][1] = new MsPacMan_IntermissionScene3(gameController, sceneSize, canvas, r2D_MsPacMan);
+		scenes_MsPacMan[4][0] = new PlayScene2D(gameController, sceneSize, canvas, r2D_MsPacMan);
+		scenes_MsPacMan[4][1] = new PlayScene3D(gameController, model3D);
 		//@formatter:on
 		selectGameScene();
 
@@ -237,8 +237,8 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 
 		return gameController.gameVariant == GameVariant.MS_PACMAN //
-				? SCENES_MSPACMAN[sceneIndex][sceneVariant]
-				: SCENES_PACMAN[sceneIndex][sceneVariant];
+				? scenes_MsPacMan[sceneIndex][sceneVariant]
+				: scenes_PacMan[sceneIndex][sceneVariant];
 	}
 
 	private void selectGameScene() {
@@ -250,9 +250,7 @@ public class GameUI extends DefaultGameEventHandler {
 			} else {
 				log("Set scene to '%s'", nextScene.getClass().getName());
 			}
-			selectBackground(nextScene);
-			selectRendering(nextScene);
-			selectSounds(nextScene);
+			updateSceneContext(nextScene);
 			// TODO: why do I always have to create a new subscene in the 2D case?
 			gameSceneContainer.getChildren().setAll(nextScene.createSubScene(mainScene));
 			nextScene.init();
@@ -260,19 +258,22 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 	}
 
-	private void selectSounds(GameScene scene) {
-		Env.sounds = gameController.gameVariant == GameVariant.MS_PACMAN ? SOUNDS_MSPACMAN : SOUNDS_PACMAN;
-	}
-
-	private void selectRendering(GameScene scene) {
-		Env.r2D = gameController.gameVariant == GameVariant.MS_PACMAN ? RENDERING_MSPACMAN : RENDERING_PACMAN;
-	}
-
-	private void selectBackground(GameScene scene) {
-		if (scene.is3D()) {
-			mainSceneContainer.setBackground(Env.$drawMode3D.get() == DrawMode.LINE ? BG_BLACK : BG_BEACH);
+	private void updateSceneContext(GameScene gameScene) {
+		updateBackground(gameScene);
+		if (gameController.gameVariant == GameVariant.MS_PACMAN) {
+			Env.r2D = r2D_MsPacMan;
+			Env.sounds = sounds_MsPacMan;
 		} else {
-			mainSceneContainer.setBackground(BG_BLUE);
+			Env.r2D = r2D_PacMan;
+			Env.sounds = sounds_PacMan;
+		}
+	}
+
+	private void updateBackground(GameScene scene) {
+		if (scene.is3D()) {
+			mainSceneContainer.setBackground(Env.$drawMode3D.get() == DrawMode.LINE ? bg_black : bg_beach);
+		} else {
+			mainSceneContainer.setBackground(bg_blue);
 		}
 	}
 
