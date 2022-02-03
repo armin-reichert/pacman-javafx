@@ -237,7 +237,7 @@ public class GameUI extends DefaultGameEventHandler {
 				log("Set scene to '%s'", nextScene.getClass().getName());
 			}
 			updateSceneContext(nextScene);
-			// TODO: why do I always have to create a new subscene in the 2D case?
+			// TODO: when the 2D subscene is cached (as is in the 3D case), strange things happen. Why?
 			gameSceneRoot.getChildren().setAll(nextScene.createSubScene(mainScene));
 			nextScene.init();
 			currentScene = nextScene;
