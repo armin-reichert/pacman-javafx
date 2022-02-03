@@ -43,10 +43,10 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class Ghost2D implements Renderable2D {
+public class Ghost2D {
 
 	public final Ghost ghost;
-	public final Rendering2D rendering;
+	public final Rendering2D r2D;
 
 	public Map<Direction, TimedSequence<Rectangle2D>> kickingAnimations;
 	public Map<Direction, TimedSequence<Rectangle2D>> returningHomeAnimations;
@@ -55,17 +55,17 @@ public class Ghost2D implements Renderable2D {
 	private boolean looksFrightened;
 	private Rectangle2D currentSprite;
 
-	public Ghost2D(Ghost ghost, Rendering2D rendering) {
+	public Ghost2D(Ghost ghost, Rendering2D r2D) {
 		this.ghost = ghost;
-		this.rendering = rendering;
+		this.r2D = r2D;
 		reset();
 	}
 
 	public void reset() {
-		kickingAnimations = rendering.createGhostKickingAnimations(ghost.id);
-		returningHomeAnimations = rendering.createGhostReturningHomeAnimations();
-		frightenedAnimation = rendering.createGhostFrightenedAnimation();
-		flashingAnimation = rendering.createGhostFlashingAnimation();
+		kickingAnimations = r2D.createGhostKickingAnimations(ghost.id);
+		returningHomeAnimations = r2D.createGhostReturningHomeAnimations();
+		frightenedAnimation = r2D.createGhostFrightenedAnimation();
+		flashingAnimation = r2D.createGhostFlashingAnimation();
 		currentSprite = kickingAnimations.get(ghost.wishDir()).frame();
 	}
 
@@ -73,11 +73,10 @@ public class Ghost2D implements Renderable2D {
 		this.looksFrightened = looksFrightened;
 	}
 
-	@Override
 	public void render(GraphicsContext g) {
 		final Direction dir = ghost.wishDir();
 		if (ghost.bounty > 0) {
-			currentSprite = rendering.getBountyNumberSprites().get(ghost.bounty);
+			currentSprite = r2D.getBountyNumberSprites().get(ghost.bounty);
 		} else if (ghost.is(DEAD) || ghost.is(ENTERING_HOUSE)) {
 			currentSprite = returningHomeAnimations.get(dir).animate();
 		} else if (ghost.is(FRIGHTENED)) {
@@ -97,6 +96,6 @@ public class Ghost2D implements Renderable2D {
 		} else {
 			currentSprite = kickingAnimations.get(dir).animate();
 		}
-		rendering.renderEntity(g, ghost, currentSprite);
+		r2D.renderEntity(g, ghost, currentSprite);
 	}
 }

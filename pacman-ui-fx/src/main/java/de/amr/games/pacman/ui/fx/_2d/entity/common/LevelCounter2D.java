@@ -21,32 +21,40 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx._2d.entity.pacman;
+package de.amr.games.pacman.ui.fx._2d.entity.common;
 
-import de.amr.games.pacman.lib.TimedSequence;
-import de.amr.games.pacman.model.common.Ghost;
-import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
-import javafx.geometry.Rectangle2D;
+import static de.amr.games.pacman.model.world.World.t;
+
+import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
- * The naked Blinky from the third intermission scene in Pac-Man.
+ * Indicates current level by bonus symbols.
  * 
  * @author Armin Reichert
  */
-public class BlinkyNaked2D {
+public class LevelCounter2D {
 
-	private final Ghost blinky;
-	private final Rendering2D_PacMan rendering;
-	public final TimedSequence<Rectangle2D> animation;
+	private final Rendering2D r2D;
+	private final GameModel game;
+	public V2i rightPosition = V2i.NULL;
+	public boolean visible = true;
 
-	public BlinkyNaked2D(Ghost blinky, Rendering2D_PacMan rendering) {
-		this.blinky = blinky;
-		this.rendering = rendering;
-		animation = rendering.createBlinkyNakedAnimation();
+	public LevelCounter2D(GameModel game, Rendering2D r2d) {
+		this.game = game;
+		this.r2D = r2d;
 	}
 
-	public void render(GraphicsContext g) {
-		rendering.renderEntity(g, blinky, animation.animate());
+	public void render(GraphicsContext gc) {
+		if (!visible) {
+			return;
+		}
+		int firstLevelNumber = Math.max(1, game.levelNumber - 6);
+		double x = rightPosition.x;
+		for (int levelNumber = firstLevelNumber; levelNumber <= game.levelNumber; ++levelNumber, x -= t(2)) {
+			r2D.renderSprite(gc, r2D.getSymbolSprites().get(game.levelSymbol(levelNumber)), x, rightPosition.y);
+		}
 	}
 }

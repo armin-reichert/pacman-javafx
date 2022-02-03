@@ -38,29 +38,28 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class Player2D implements Renderable2D {
+public class Player2D {
 
 	private final Pac player;
-	private final Rendering2D rendering;
+	private final Rendering2D r2D;
 
 	public Map<Direction, TimedSequence<Rectangle2D>> munchingAnimations;
 	public TimedSequence<Rectangle2D> dyingAnimation;
 
 	private Rectangle2D currentSprite;
 
-	public Player2D(Pac player, Rendering2D rendering) {
+	public Player2D(Pac player, Rendering2D r2D) {
 		this.player = player;
-		this.rendering = rendering;
+		this.r2D = r2D;
 		reset();
 	}
 
 	public void reset() {
-		munchingAnimations = rendering.createPlayerMunchingAnimations();
-		dyingAnimation = rendering.createPlayerDyingAnimation();
+		munchingAnimations = r2D.createPlayerMunchingAnimations();
+		dyingAnimation = r2D.createPlayerDyingAnimation();
 		currentSprite = munchingAnimations.get(player.dir()).frame();
 	}
 
-	@Override
 	public void render(GraphicsContext g) {
 		final Direction dir = player.dir();
 		if (player.dead) {
@@ -74,6 +73,6 @@ public class Player2D implements Renderable2D {
 			}
 			currentSprite = munchingAnimations.get(dir).frame();
 		}
-		rendering.renderEntity(g, player, currentSprite);
+		r2D.renderEntity(g, player, currentSprite);
 	}
 }

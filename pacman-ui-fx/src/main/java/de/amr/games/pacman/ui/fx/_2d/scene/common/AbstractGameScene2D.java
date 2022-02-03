@@ -59,7 +59,6 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 
 	public AbstractGameScene2D(GameController gameController, V2i unscaledSize, Canvas canvas, Rendering2D r2D) {
 		this.gameController = gameController;
-//		unscaledSize = new V2i(TILES_X * TS, TILES_Y * TS);
 		this.unscaledSize = unscaledSize;
 		this.r2D = r2D;
 		gc = canvas.getGraphicsContext2D();
@@ -130,16 +129,4 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	 * Renders the scene content. Subclasses override this method.
 	 */
 	protected abstract void doRender();
-
-	/**
-	 * Used in play scene and intermission scenes, so define it here.
-	 */
-	protected void drawLevelCounter() {
-		V2i rightPosition = unscaledSize.minus(t(3), t(2));
-		int firstLevelNumber = Math.max(1, game.levelNumber - 6);
-		double x = rightPosition.x;
-		for (int levelNumber = firstLevelNumber; levelNumber <= game.levelNumber; ++levelNumber, x -= t(2)) {
-			r2D.renderSprite(gc, r2D.getSymbolSprites().get(game.levelSymbol(levelNumber)), x, rightPosition.y);
-		}
-	}
 }

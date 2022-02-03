@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
+import static de.amr.games.pacman.model.world.World.t;
+
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.pacman.Intermission1Controller;
 import de.amr.games.pacman.controller.pacman.Intermission1Controller.IntermissionState;
@@ -30,6 +32,7 @@ import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
+import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.BigPacMan2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
@@ -45,6 +48,8 @@ import javafx.scene.canvas.Canvas;
 public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 
 	private final Intermission1Controller sc = new Intermission1Controller();
+	
+	private LevelCounter2D levelCounter2D;
 	private Player2D pacMan2D;
 	private Ghost2D blinky2D;
 	private BigPacMan2D bigPacMan2D;
@@ -60,6 +65,9 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 
 		sc.playIntermissionSound = () -> Env.sounds.loop(GameSounds.INTERMISSION_1, 2);
 		sc.init(gameController);
+
+		levelCounter2D = new LevelCounter2D(game, r2D);
+		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
 
 		pacMan2D = new Player2D(sc.pac, r2D);
 		blinky2D = new Ghost2D(sc.blinky, r2D);
@@ -77,7 +85,7 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 
 	@Override
 	public void doRender() {
-		drawLevelCounter();
+		levelCounter2D.render(gc);
 		blinky2D.render(gc);
 		if (sc.currentStateID == IntermissionState.BLINKY_CHASING_PACMAN) {
 			pacMan2D.render(gc);

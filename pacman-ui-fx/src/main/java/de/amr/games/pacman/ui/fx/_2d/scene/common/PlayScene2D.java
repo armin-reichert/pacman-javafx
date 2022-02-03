@@ -42,6 +42,7 @@ import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Bonus2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
+import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Maze2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
@@ -63,6 +64,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	private Maze2D maze2D;
 	private LivesCounter2D livesCounter2D;
+	private LevelCounter2D levelCounter2D;
 	private Player2D player2D;
 	private List<Ghost2D> ghosts2D;
 	private Bonus2D bonus2D;
@@ -77,6 +79,10 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		maze2D = new Maze2D(0, t(3), game, r2D);
 		livesCounter2D = new LivesCounter2D(t(2), t(34), game, r2D);
+		livesCounter2D.visible = !gameController.attractMode;
+		levelCounter2D = new LevelCounter2D(game, r2D);
+		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
+		levelCounter2D.visible = !gameController.attractMode;
 		player2D = new Player2D(game.player, r2D);
 		player2D.dyingAnimation.onStart(game::hideGhosts);
 		ghosts2D = List.of( //
@@ -85,6 +91,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 				new Ghost2D(game.ghosts[2], r2D), //
 				new Ghost2D(game.ghosts[3], r2D));
 		bonus2D = new Bonus2D(game.bonus, r2D, gameController.gameVariant == GameVariant.MS_PACMAN);
+		score2D.showPoints = !gameController.attractMode;
+
 		game.player.powerTimer.addEventListener(this::handleGhostsFlashing);
 		Env.sounds.setMuted(gameController.attractMode);
 	}
@@ -271,13 +279,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 	@Override
 	public void doRender() {
 		maze2D.render(gc);
-		if (gameController.attractMode) {
-			score2D.showPoints = false;
-		} else {
-			score2D.showPoints = true;
-			livesCounter2D.render(gc);
-			drawLevelCounter();
-		}
+		levelCounter2D.render(gc);
+		livesCounter2D.render(gc);
 		score2D.render(gc);
 		highScore2D.render(gc);
 		if (gameController.currentStateID == GameState.GAME_OVER || gameController.attractMode) {
