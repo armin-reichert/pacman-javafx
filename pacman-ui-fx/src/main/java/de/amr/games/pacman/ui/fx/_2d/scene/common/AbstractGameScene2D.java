@@ -30,6 +30,7 @@ import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
+import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -56,10 +57,10 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	protected GameModel game;
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
+	protected LevelCounter2D levelCounter2D;
 
 	public AbstractGameScene2D(GameController gameController, V2i unscaledSize, Canvas canvas, Rendering2D r2D) {
 		this.gameController = gameController;
-//		unscaledSize = new V2i(TILES_X * TS, TILES_Y * TS);
 		this.unscaledSize = unscaledSize;
 		this.r2D = r2D;
 		gc = canvas.getGraphicsContext2D();
@@ -130,16 +131,4 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	 * Renders the scene content. Subclasses override this method.
 	 */
 	protected abstract void doRender();
-
-	/**
-	 * Used in play scene and intermission scenes, so define it here.
-	 */
-	protected void drawLevelCounter() {
-		V2i rightPosition = unscaledSize.minus(t(3), t(2));
-		int firstLevelNumber = Math.max(1, game.levelNumber - 6);
-		double x = rightPosition.x;
-		for (int levelNumber = firstLevelNumber; levelNumber <= game.levelNumber; ++levelNumber, x -= t(2)) {
-			r2D.renderSprite(gc, r2D.getSymbolSprites().get(game.levelSymbol(levelNumber)), x, rightPosition.y);
-		}
-	}
 }

@@ -45,6 +45,8 @@ public class LivesCounter2D {
 	private int x;
 	private int y;
 	private GameModel game;
+	
+	public boolean visible = true;
 
 	public LivesCounter2D(int x, int y, GameModel game, Rendering2D r2D) {
 		this.x = x;
@@ -54,6 +56,9 @@ public class LivesCounter2D {
 	}
 
 	public void render(GraphicsContext g) {
+		if (!visible) {
+			return;
+		}
 		var sprite = r2D.getLifeSprite();
 		for (int i = 0; i < Math.min(game.player.lives, maxLivesDisplayed); ++i) {
 			r2D.renderSprite(g, sprite, x + t(2 * i), y);

@@ -23,10 +23,13 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
+import static de.amr.games.pacman.model.world.World.t;
+
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission3Controller;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.GameSounds;
+import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.JuniorBag2D;
@@ -68,6 +71,9 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 		sc.playFlapAnimation = () -> flap2D.animation.restart();
 		sc.init(gameController);
 
+		levelCounter2D = new LevelCounter2D(game, r2D);
+		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
+
 		msPacMan2D = new Player2D(sc.msPacMan, r2D);
 		pacMan2D = new Player2D(sc.pacMan, r2D);
 		pacMan2D.munchingAnimations = ((Rendering2D_MsPacMan) r2D).createSpouseMunchingAnimations();
@@ -87,7 +93,7 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 
 	@Override
 	public void doRender() {
-		drawLevelCounter();
+		levelCounter2D.render(gc);
 		flap2D.render(gc);
 		msPacMan2D.render(gc);
 		pacMan2D.render(gc);
