@@ -419,8 +419,10 @@ public class GameUI extends DefaultGameEventHandler {
 			Env.$paused.set(!Env.$paused.get());
 			if (Env.$paused.get()) {
 				FlashMessageView.showFlashMessage(3, "Game paused");
+				log("Game paused.");
 			} else {
 				FlashMessageView.showFlashMessage(2, "Game resumed");
+				log("Game resumed.");
 			}
 			break;
 

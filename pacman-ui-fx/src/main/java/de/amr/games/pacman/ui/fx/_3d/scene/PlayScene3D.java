@@ -114,8 +114,8 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			PerspectiveCamera cam = new PerspectiveCamera(true);
 			fxSubScene.setCamera(cam);
 			cams.values().forEach(cc -> cc.attachTo(cam));
-			log("Subscene for game scene '%s' created, width=%.0f, height=%.0f", getClass().getName(),
-					fxSubScene.getWidth(), fxSubScene.getHeight());
+			log("Subscene for game scene '%s' created, width=%.0f, height=%.0f", getClass().getName(), fxSubScene.getWidth(),
+					fxSubScene.getHeight());
 		}
 		return fxSubScene;
 	}
@@ -175,6 +175,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 		fxSubScene.setRoot(new Group(ambientLight, playground, coordSystem));
 
+		Env.sounds.setMuted(gameController.attractMode);
 		onPerspectiveChanged(null);
 	}
 
@@ -182,6 +183,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	public void end() {
 		fxSubScene.setCamera(null);
 		Env.$perspective.removeListener(this::onPerspectiveChanged);
+		Env.sounds.setMuted(false);
 		GameScene.super.end();
 	}
 
@@ -196,8 +198,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		livesCounter3D.setVisibleItems(game.player.lives);
 		var camController = cams.get(Env.$perspective.get());
 		camController.update(this);
-
-		Env.sounds.setMuted(gameController.attractMode); // TODO check this
 
 		// Update food visibility and start animations and audio in case of switching between 2D and 3D scene
 		// TODO: still incomplete
@@ -221,8 +221,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	}
 
 	private void buildMaze(int mazeNumber, boolean withFood) {
-		maze3D.buildWallsAndDoors(game.world, Env.r2D.getMazeSideColor(mazeNumber),
-				Env.r2D.getMazeTopColor(mazeNumber));
+		maze3D.buildWallsAndDoors(game.world, Env.r2D.getMazeSideColor(mazeNumber), Env.r2D.getMazeTopColor(mazeNumber));
 		if (withFood) {
 			maze3D.buildFood(game.world, Env.r2D.getFoodColor(mazeNumber));
 		}
@@ -315,7 +314,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
-		Env.sounds.setMuted(gameController.attractMode); // TODO check this
 
 		// enter READY
 		if (e.newGameState == GameState.READY) {
