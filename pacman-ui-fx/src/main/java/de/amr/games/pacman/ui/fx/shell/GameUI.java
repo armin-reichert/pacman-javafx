@@ -83,9 +83,6 @@ public class GameUI extends DefaultGameEventHandler {
 
 	private final PacManModel3D model3D = GianmarcosModel3D.get();
 
-	private final Rendering2D_PacMan r2D_PacMan = new Rendering2D_PacMan();
-	private final Rendering2D_MsPacMan r2D_MsPacMan = new Rendering2D_MsPacMan();
-
 	private final SoundManager sounds_PacMan = new SoundManager();
 	{
 		//@formatter:off
@@ -154,25 +151,25 @@ public class GameUI extends DefaultGameEventHandler {
 		V2i sceneSize = new V2i(TILES_X, TILES_Y).scaled(TS);
 		//@formatter:off
 		scenes_PacMan  [0][0] = 
-		scenes_PacMan  [0][1] = new PacMan_IntroScene(gameController, sceneSize, canvas,  r2D_PacMan);
+		scenes_PacMan  [0][1] = new PacMan_IntroScene(gameController, sceneSize, canvas,  Rendering2D_PacMan.get());
 		scenes_PacMan  [1][0] = 
-		scenes_PacMan  [1][1] = new PacMan_IntermissionScene1(gameController, sceneSize, canvas, r2D_PacMan);
+		scenes_PacMan  [1][1] = new PacMan_IntermissionScene1(gameController, sceneSize, canvas, Rendering2D_PacMan.get());
 		scenes_PacMan  [2][0] = 
-		scenes_PacMan  [2][1] = new PacMan_IntermissionScene2(gameController, sceneSize, canvas, r2D_PacMan);
+		scenes_PacMan  [2][1] = new PacMan_IntermissionScene2(gameController, sceneSize, canvas, Rendering2D_PacMan.get());
 		scenes_PacMan  [3][0] = 
-		scenes_PacMan  [3][1] = new PacMan_IntermissionScene3(gameController, sceneSize, canvas, r2D_PacMan);
-		scenes_PacMan  [4][0] = new PlayScene2D(gameController, sceneSize, canvas, r2D_PacMan);
+		scenes_PacMan  [3][1] = new PacMan_IntermissionScene3(gameController, sceneSize, canvas, Rendering2D_PacMan.get());
+		scenes_PacMan  [4][0] = new PlayScene2D(gameController, sceneSize, canvas, Rendering2D_PacMan.get());
 		scenes_PacMan  [4][1] = new PlayScene3D(gameController, model3D);
 		
 		scenes_MsPacMan[0][0] = 
-		scenes_MsPacMan[0][1] = new MsPacMan_IntroScene(gameController, sceneSize, canvas, r2D_MsPacMan);
+		scenes_MsPacMan[0][1] = new MsPacMan_IntroScene(gameController, sceneSize, canvas, Rendering2D_MsPacMan.get());
 		scenes_MsPacMan[1][0] = 
-		scenes_MsPacMan[1][1] = new MsPacMan_IntermissionScene1(gameController, sceneSize, canvas, r2D_MsPacMan);
+		scenes_MsPacMan[1][1] = new MsPacMan_IntermissionScene1(gameController, sceneSize, canvas, Rendering2D_MsPacMan.get());
 		scenes_MsPacMan[2][0] = 
-		scenes_MsPacMan[2][1] = new MsPacMan_IntermissionScene2(gameController, sceneSize, canvas, r2D_MsPacMan);
+		scenes_MsPacMan[2][1] = new MsPacMan_IntermissionScene2(gameController, sceneSize, canvas, Rendering2D_MsPacMan.get());
 		scenes_MsPacMan[3][0] = 
-		scenes_MsPacMan[3][1] = new MsPacMan_IntermissionScene3(gameController, sceneSize, canvas, r2D_MsPacMan);
-		scenes_MsPacMan[4][0] = new PlayScene2D(gameController, sceneSize, canvas, r2D_MsPacMan);
+		scenes_MsPacMan[3][1] = new MsPacMan_IntermissionScene3(gameController, sceneSize, canvas, Rendering2D_MsPacMan.get());
+		scenes_MsPacMan[4][0] = new PlayScene2D(gameController, sceneSize, canvas, Rendering2D_MsPacMan.get());
 		scenes_MsPacMan[4][1] = new PlayScene3D(gameController, model3D);
 		//@formatter:on
 
@@ -254,10 +251,10 @@ public class GameUI extends DefaultGameEventHandler {
 	private void updateSceneContext(GameScene gameScene) {
 		updateBackground(gameScene);
 		if (gameController.gameVariant == GameVariant.MS_PACMAN) {
-			Env.r2D = r2D_MsPacMan;
+			Env.r2D = Rendering2D_MsPacMan.get();
 			Env.sounds = sounds_MsPacMan;
 		} else {
-			Env.r2D = r2D_PacMan;
+			Env.r2D = Rendering2D_PacMan.get();
 			Env.sounds = sounds_PacMan;
 		}
 	}

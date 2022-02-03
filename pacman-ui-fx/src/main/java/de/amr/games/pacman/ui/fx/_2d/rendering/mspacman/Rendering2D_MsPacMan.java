@@ -73,6 +73,12 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	};
 	//@formatter:on
 
+	public static Rendering2D_MsPacMan IT = new Rendering2D_MsPacMan();
+
+	public static Rendering2D_MsPacMan get() {
+		return IT;
+	}
+
 	private final List<Rectangle2D> mazeFullSprites;
 	private final List<Rectangle2D> mazeEmptySprites;
 	private final List<Image> mazeFlashImages;
@@ -80,7 +86,7 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	private final Map<Integer, Rectangle2D> symbolSprites;
 	private final Map<Integer, Rectangle2D> bountyNumberSprites;
 
-	public Rendering2D_MsPacMan() {
+	private Rendering2D_MsPacMan() {
 		super("/mspacman/graphics/sprites.png", 16);
 
 		//@formatter:off

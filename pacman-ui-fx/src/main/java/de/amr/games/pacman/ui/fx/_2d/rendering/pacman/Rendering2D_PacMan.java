@@ -47,6 +47,12 @@ public class Rendering2D_PacMan extends Rendering2D {
 	private static final Color MAZE_SIDE_COLOR = Color.rgb(33, 33, 255);
 	private static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
 
+	public static Rendering2D_PacMan IT = new Rendering2D_PacMan();
+
+	public static Rendering2D_PacMan get() {
+		return IT;
+	}
+
 	private final Image mazeFullImage;
 	private final Image mazeEmptyImage;
 	private final Image mazeFlashingImage;
@@ -54,7 +60,7 @@ public class Rendering2D_PacMan extends Rendering2D {
 	private final Map<Integer, Rectangle2D> symbolSprites;
 	private final Map<Integer, Rectangle2D> bountyNumberSprites;
 
-	public Rendering2D_PacMan() {
+	private Rendering2D_PacMan() {
 		super("/pacman/graphics/sprites.png", 16);
 
 		mazeFullImage = new Image(resource("/pacman/graphics/maze_full.png"));
