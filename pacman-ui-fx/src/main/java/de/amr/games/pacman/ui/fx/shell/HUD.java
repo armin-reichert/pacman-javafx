@@ -30,10 +30,8 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
-import javafx.geometry.Insets;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -47,14 +45,7 @@ import javafx.util.Duration;
  */
 public class HUD extends VBox {
 
-	private static HUD IT = new HUD();
-
-	public static HUD get() {
-		return IT;
-	}
-
-	static final int MAX_WIDTH = 400;
-	static final Color BG_COLOR = new Color(0.3, 0.3, 0.3, 0.6);
+	private static final int MAX_WIDTH = 400;
 
 	private static String yes_no(boolean b) {
 		return b ? "YES" : "NO";
@@ -64,13 +55,19 @@ public class HUD extends VBox {
 		return b ? "ON" : "OFF";
 	}
 
+	private static HUD IT = new HUD();
+
+	public static HUD get() {
+		return IT;
+	}
+
 	private final Text textUI = new Text();
 	private final StringBuilder text = new StringBuilder();
 
 	private HUD() {
 		setVisible(false);
 		setMaxWidth(MAX_WIDTH);
-		setBackground(new Background(new BackgroundFill(BG_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
+		setBackground(new Background(new BackgroundFill(new Color(0.3, 0.3, 0.3, 0.6), null, null)));
 		textUI.setFill(Color.WHITE);
 		textUI.setFont(Font.font("Monospace", 14));
 		getChildren().add(textUI);
@@ -117,13 +114,11 @@ public class HUD extends VBox {
 		p("Game Variant", "%s", gameCtrl.gameVariant).done();
 		p("Game Level", "%d", game.levelNumber).done();
 		p("Game State", "%s",
-				state == GameState.HUNTING
-						? String.format("%s: Phase #%d (%s)", state, game.huntingPhase, huntingPhaseName)
+				state == GameState.HUNTING ? String.format("%s: Phase #%d (%s)", state, game.huntingPhase, huntingPhaseName)
 						: state).done();
 		p("", "Running:   %s%s", stateTimer.ticked(), stateTimer.isStopped() ? " (STOPPED)" : "").done();
 		p("", "Remaining: %s",
-				stateTimer.ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer.ticksRemaining())
-						.done();
+				stateTimer.ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer.ticksRemaining()).done();
 		p("Autopilot", "%s", on_off(gameCtrl.autoControlled)).done();
 		p("Immunity", "%s", on_off(game.player.immune)).done();
 		p("Game Scene", "%s", gameScene.getClass().getSimpleName()).done();
