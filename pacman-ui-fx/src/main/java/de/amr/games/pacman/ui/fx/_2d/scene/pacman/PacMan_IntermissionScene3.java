@@ -48,6 +48,8 @@ import javafx.scene.canvas.Canvas;
 public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 
 	private final Intermission3Controller sc = new Intermission3Controller();
+
+	private LevelCounter2D levelCounter2D;
 	private Player2D pacMan2D;
 	private BlinkyPatched2D blinkyPatched2D;
 	private BlinkyNaked2D blinkyNaked2D;
@@ -82,7 +84,8 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 
 	@Override
 	public void doRender() {
-		levelCounter2D.render(gc);;
+		levelCounter2D.render(gc);
+		;
 		pacMan2D.render(gc);
 		if (sc.currentStateID == IntermissionState.CHASING_PACMAN) {
 			blinkyPatched2D.render(gc);

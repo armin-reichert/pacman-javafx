@@ -52,6 +52,8 @@ import javafx.scene.canvas.Canvas;
 public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 
 	private final Intermission3Controller sc = new Intermission3Controller();
+
+	private LevelCounter2D levelCounter2D;
 	private Player2D msPacMan2D;
 	private Player2D pacMan2D;
 	private Flap2D flap2D;

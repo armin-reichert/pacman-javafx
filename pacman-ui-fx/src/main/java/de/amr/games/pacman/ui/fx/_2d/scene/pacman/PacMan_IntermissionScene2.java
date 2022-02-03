@@ -51,6 +51,8 @@ import javafx.scene.canvas.Canvas;
 public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 	private final Intermission2Controller sc = new Intermission2Controller();
+
+	private LevelCounter2D levelCounter2D;
 	private Player2D pacMan2D;
 	private Ghost2D blinky2D;
 	private Nail2D nail2D;
@@ -88,7 +90,8 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 	@Override
 	public void doRender() {
-		levelCounter2D.render(gc);;
+		levelCounter2D.render(gc);
+		;
 		pacMan2D.render(gc);
 		nail2D.render(gc);
 		if (sc.nailDistance() < 0) {

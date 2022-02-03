@@ -30,7 +30,6 @@ import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
-import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -57,7 +56,6 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	protected GameModel game;
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
-	protected LevelCounter2D levelCounter2D;
 
 	public AbstractGameScene2D(GameController gameController, V2i unscaledSize, Canvas canvas, Rendering2D r2D) {
 		this.gameController = gameController;

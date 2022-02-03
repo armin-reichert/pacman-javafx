@@ -64,6 +64,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	private Maze2D maze2D;
 	private LivesCounter2D livesCounter2D;
+	private LevelCounter2D levelCounter2D;
 	private Player2D player2D;
 	private List<Ghost2D> ghosts2D;
 	private Bonus2D bonus2D;

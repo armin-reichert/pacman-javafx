@@ -48,6 +48,8 @@ import javafx.scene.canvas.Canvas;
 public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 
 	private final Intermission1Controller sc = new Intermission1Controller();
+	
+	private LevelCounter2D levelCounter2D;
 	private Player2D pacMan2D;
 	private Ghost2D blinky2D;
 	private BigPacMan2D bigPacMan2D;

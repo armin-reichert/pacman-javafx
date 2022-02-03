@@ -53,6 +53,7 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 
 	private final Intermission1Controller sc = new Intermission1Controller();
 
+	private LevelCounter2D levelCounter2D;
 	private Player2D msPacMan2D;
 	private Player2D pacMan2D;
 	private Ghost2D inky2D;
