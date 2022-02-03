@@ -34,7 +34,6 @@ import de.amr.games.pacman.controller.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
@@ -50,7 +49,8 @@ import de.amr.games.pacman.ui.fx._3d.model.GianmarcosModel3D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
+import de.amr.games.pacman.ui.fx.sound.mspacman.SoundManager_MsPacMan;
+import de.amr.games.pacman.ui.fx.sound.pacman.SoundManager_PacMan;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -79,50 +79,6 @@ public class GameUI extends DefaultGameEventHandler {
 	private final Background bg_beach = U.imageBackground("/common/beach.jpg");
 	private final Background bg_black = U.colorBackground(Color.BLACK);
 	private final Background bg_blue = U.colorBackground(Color.CORNFLOWERBLUE);
-
-	private final SoundManager sounds_PacMan = new SoundManager();
-	{
-		//@formatter:off
-		sounds_PacMan.put(GameSounds.CREDIT,          "/pacman/sound/credit.mp3");
-		sounds_PacMan.put(GameSounds.EXTRA_LIFE,      "/pacman/sound/extend.mp3");
-		sounds_PacMan.put(GameSounds.GAME_READY,      "/pacman/sound/game_start.mp3");
-		sounds_PacMan.put(GameSounds.BONUS_EATEN,     "/pacman/sound/eat_fruit.mp3");
-		sounds_PacMan.put(GameSounds.PACMAN_MUNCH,    "/pacman/sound/munch_1.wav");
-		sounds_PacMan.put(GameSounds.PACMAN_DEATH,    "/pacman/sound/pacman_death.wav");
-		sounds_PacMan.put(GameSounds.PACMAN_POWER,    "/pacman/sound/power_pellet.mp3");
-		sounds_PacMan.put(GameSounds.GHOST_EATEN,     "/pacman/sound/eat_ghost.mp3");
-		sounds_PacMan.put(GameSounds.GHOST_RETURNING, "/pacman/sound/retreating.mp3");
-		sounds_PacMan.put(GameSounds.SIREN_1,         "/pacman/sound/siren_1.mp3");
-		sounds_PacMan.put(GameSounds.SIREN_2,         "/pacman/sound/siren_2.mp3");
-		sounds_PacMan.put(GameSounds.SIREN_3,         "/pacman/sound/siren_3.mp3");
-		sounds_PacMan.put(GameSounds.SIREN_4,         "/pacman/sound/siren_4.mp3");
-		sounds_PacMan.put(GameSounds.INTERMISSION_1,  "/pacman/sound/intermission.mp3");
-		sounds_PacMan.put(GameSounds.INTERMISSION_2,  "/pacman/sound/intermission.mp3");
-		sounds_PacMan.put(GameSounds.INTERMISSION_3,  "/pacman/sound/intermission.mp3");
-		//@formatter:on
-	}
-
-	private final SoundManager sounds_MsPacMan = new SoundManager();
-	{
-		//@formatter:off
-		sounds_MsPacMan.put(GameSounds.CREDIT,          "/mspacman/sound/Coin Credit.mp3");
-		sounds_MsPacMan.put(GameSounds.EXTRA_LIFE,      "/mspacman/sound/Extra Life.mp3");
-		sounds_MsPacMan.put(GameSounds.GAME_READY,      "/mspacman/sound/Start.mp3");
-		sounds_MsPacMan.put(GameSounds.BONUS_EATEN,     "/mspacman/sound/Fruit.mp3");
-		sounds_MsPacMan.put(GameSounds.PACMAN_MUNCH,    "/mspacman/sound/Ms. Pac Man Pill.mp3");
-		sounds_MsPacMan.put(GameSounds.PACMAN_DEATH,    "/mspacman/sound/Died.mp3");
-		sounds_MsPacMan.put(GameSounds.PACMAN_POWER,    "/mspacman/sound/Scared Ghost.mp3");
-		sounds_MsPacMan.put(GameSounds.GHOST_EATEN,     "/mspacman/sound/Ghost.mp3");
-		sounds_MsPacMan.put(GameSounds.GHOST_RETURNING, "/mspacman/sound/Ghost Eyes.mp3");
-		sounds_MsPacMan.put(GameSounds.SIREN_1,         "/mspacman/sound/Ghost Noise 1.mp3");
-		sounds_MsPacMan.put(GameSounds.SIREN_2,         "/mspacman/sound/Ghost Noise 2.mp3");
-		sounds_MsPacMan.put(GameSounds.SIREN_3,         "/mspacman/sound/Ghost Noise 3.mp3");
-		sounds_MsPacMan.put(GameSounds.SIREN_4,         "/mspacman/sound/Ghost Noise 4.mp3");
-		sounds_MsPacMan.put(GameSounds.INTERMISSION_1,  "/mspacman/sound/They Meet Act 1.mp3");
-		sounds_MsPacMan.put(GameSounds.INTERMISSION_2,  "/mspacman/sound/The Chase Act 2.mp3");
-		sounds_MsPacMan.put(GameSounds.INTERMISSION_3,  "/mspacman/sound/Junior Act 3.mp3");
-		//@formatter:on
-	}
 
 	private final GameScene scenes_PacMan[][] = new GameScene[5][2];
 	private final GameScene scenes_MsPacMan[][] = new GameScene[5][2];
@@ -249,10 +205,10 @@ public class GameUI extends DefaultGameEventHandler {
 		updateBackground(gameScene);
 		if (gameController.gameVariant == GameVariant.MS_PACMAN) {
 			Env.r2D = Rendering2D_MsPacMan.get();
-			Env.sounds = sounds_MsPacMan;
+			Env.sounds = SoundManager_MsPacMan.get();
 		} else {
 			Env.r2D = Rendering2D_PacMan.get();
-			Env.sounds = sounds_PacMan;
+			Env.sounds = SoundManager_PacMan.get();
 		}
 	}
 
