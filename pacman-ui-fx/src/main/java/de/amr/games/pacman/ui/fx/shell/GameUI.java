@@ -155,8 +155,8 @@ public class GameUI extends DefaultGameEventHandler {
 
 	private void adaptCanvasSize(double height) {
 		canvas.setHeight(height);
-		canvas.setWidth(canvas.getHeight() * ASPECT_RATIO);
-		double scaling = canvas.getHeight() / (TILES_Y * TS);
+		canvas.setWidth(height * ASPECT_RATIO);
+		double scaling = height / (TILES_Y * TS);
 		canvas.getTransforms().setAll(new Scale(scaling, scaling));
 	}
 
