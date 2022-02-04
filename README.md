@@ -50,7 +50,8 @@ Intro screen shortcuts:
 - <kbd>Z</kbd> Play all intermission scenes
 
 Play screen shortcuts:
-- <kbd>CTRL+C</kbd> Change 3D camera (3 cameras currently implemented)
+- <kbd>CTRL+LEFT</kbd> Select next camera perspective
+- <kbd>CTRL+RIGHT</kbd> Select previous camera perspective
 - <kbd>CTRL+L</kbd> Toggle draw mode (line vs. shaded)
 - <kbd>CTRL+R</kbd> Increase maze "resolution" (<kbd>SHIFT</kbd> = decrease)
 - <kbd>CTRL+H</kbd> Increase maze wall height (<kbd>SHIFT</kbd> = decrease)
