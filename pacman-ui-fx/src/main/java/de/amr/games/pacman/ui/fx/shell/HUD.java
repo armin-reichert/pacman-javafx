@@ -149,7 +149,8 @@ public class HUD extends VBox {
 		p("Z", "Play Intermission Scenes").when(state == GameState.INTRO);
 
 		newline();
-		p("Ctrl+C", "Next Perspective").when(gameScene.is3D());
+		p("Ctrl+LEFT", "%s", Env.prevPerspectiveName()).when(gameScene.is3D());
+		p("Ctrl+RIGHT", "%s", Env.nextPerspectiveName()).when(gameScene.is3D());
 		p("Ctrl+H", "Wall Height (SHIFT=Decrease)").when(gameScene.is3D());
 		p("Ctrl+I", "Information On/Off").done();
 		p("Ctrl+L", "Wireframe Mode On/Off").when(gameScene.is3D());

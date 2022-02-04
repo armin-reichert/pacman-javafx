@@ -71,8 +71,7 @@ public class Env {
 
 	private static RandomEntrySelector<String> load(String bundleName) {
 		ResourceBundle bundle = ResourceBundle.getBundle(bundleName);
-		return new RandomEntrySelector<>(
-				bundle.keySet().stream().sorted().map(bundle::getString).toArray(String[]::new));
+		return new RandomEntrySelector<>(bundle.keySet().stream().sorted().map(bundle::getString).toArray(String[]::new));
 	}
 
 	public static final GameLoop gameLoop = new GameLoop();
@@ -89,9 +88,28 @@ public class Env {
 	public static final ObjectProperty<Perspective> $perspective = new SimpleObjectProperty<Perspective>(
 			Perspective.CAM_NEAR_PLAYER);
 
-	public static void nextPerspective() {
-		int next = ($perspective.get().ordinal() + 1) % Perspective.values().length;
+	public static void selectNextPerspective() {
+		int n = Perspective.values().length;
+		int next = ($perspective.get().ordinal() + 1) % n;
 		$perspective.set(Perspective.values()[next]);
+	}
+
+	public static String nextPerspectiveName() {
+		int n = Perspective.values().length;
+		int next = ($perspective.get().ordinal() + 1) % n;
+		return Perspective.values()[next].name();
+	}
+
+	public static void selectPrevPerspective() {
+		int n = Perspective.values().length;
+		int prev = ($perspective.get().ordinal() + n - 1) % n;
+		$perspective.set(Perspective.values()[prev]);
+	}
+
+	public static String prevPerspectiveName() {
+		int n = Perspective.values().length;
+		int prev = ($perspective.get().ordinal() + n - 1) % n;
+		return Perspective.values()[prev].name();
 	}
 
 	public static void changeMazeResolution(boolean up) {

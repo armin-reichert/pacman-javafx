@@ -45,6 +45,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
@@ -286,9 +287,13 @@ public class GameUI extends DefaultGameEventHandler {
 	private void onControlKeyPressed(KeyEvent e) {
 		switch (e.getCode()) {
 
-		case C -> {
+		case LEFT, RIGHT -> {
 			if (currentScene.is3D()) {
-				Env.nextPerspective();
+				if (e.getCode() == KeyCode.LEFT) {
+					Env.selectPrevPerspective();
+				} else {
+					Env.selectNextPerspective();
+				}
 				String perspective_key = Env.message(Env.$perspective.get().name().toLowerCase());
 				String message = Env.message("camera_perspective", perspective_key);
 				FlashMessageView.showFlashMessage(1, message);
@@ -302,10 +307,10 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 
 		case I -> {
-			if (!HUD.get().isVisible()) {
-				HUD.get().show();
-			} else {
+			if (HUD.get().isVisible()) {
 				HUD.get().hide();
+			} else {
+				HUD.get().show();
 			}
 		}
 
