@@ -99,19 +99,19 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		score2D.render(gc);
 		highScore2D.render(gc);
 		switch (sc.currentStateID) {
-		case BEGIN:
-		case PRESENTING_GHOSTS:
-			drawGallery();
-			break;
-		case SHOWING_POINTS:
+
+		case BEGIN, PRESENTING_GHOSTS -> drawGallery();
+
+		case SHOWING_POINTS -> {
 			drawGallery();
 			drawPoints(11, 25);
 			if (sc.stateTimer().ticked() > sec_to_ticks(1)) {
 				drawEnergizer();
 				drawCopyright(32);
 			}
-			break;
-		case CHASING_PAC:
+		}
+
+		case CHASING_PAC -> {
 			drawGallery();
 			drawPoints(11, 25);
 			drawCopyright(32);
@@ -120,19 +120,23 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 			}
 			int offset = sc.stateTimer().ticked() % 5 < 2 ? 0 : -1;
 			drawGuys(offset);
-			break;
-		case CHASING_GHOSTS:
+		}
+
+		case CHASING_GHOSTS -> {
 			drawGallery();
 			drawPoints(11, 25);
 			drawCopyright(32);
 			drawGuys(0);
-			break;
-		case READY_TO_PLAY:
+		}
+
+		case READY_TO_PLAY -> {
 			drawGallery();
 			drawPressKeyToStart(24);
-			break;
-		default:
-			break;
+		}
+
+		default -> {
+		}
+
 		}
 	}
 

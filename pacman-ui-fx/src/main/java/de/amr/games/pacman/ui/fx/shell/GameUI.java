@@ -206,132 +206,127 @@ public class GameUI extends DefaultGameEventHandler {
 		final GameState state = gameController.currentStateID;
 
 		switch (e.getCode()) {
-		case A: {
+
+		case A -> {
 			gameController.autoControlled = !gameController.autoControlled;
 			String message = Env.message(gameController.autoControlled ? "autopilot_on" : "autopilot_off");
 			FlashMessageView.showFlashMessage(1, message);
-			break;
 		}
 
-		case E:
+		case E -> {
 			if (gameController.gameRunning) {
 				gameController.cheatEatAllPellets();
 			}
-			break;
+		}
 
-		case I: {
+		case I -> {
 			game.player.immune = !game.player.immune;
 			String message = Env.message(game.player.immune ? "player_immunity_on" : "player_immunity_off");
 			FlashMessageView.showFlashMessage(1, message);
-			break;
 		}
 
-		case L:
+		case L -> {
 			if (gameController.gameRunning) {
 				game.player.lives += 3;
 				FlashMessageView.showFlashMessage(2, "You have %d lives", game.player.lives);
 			}
-			break;
+		}
 
-		case N:
+		case N -> {
 			if (gameController.gameRunning) {
 				FlashMessageView.showFlashMessage(1, Env.CHEAT_TALK.next());
 				gameController.changeState(GameState.LEVEL_COMPLETE);
 			}
-			break;
+		}
 
-		case P:
+		case P -> {
 			if (Env.$paused.get()) {
 				Env.gameLoop.runSingleStep(true);
 			}
-			break;
+		}
 
-		case Q:
+		case Q -> {
 			if (state != GameState.INTRO) {
 				currentScene.end();
 				Env.sounds.stopAll();
 				gameController.changeState(GameState.INTRO);
 			}
-			break;
+		}
 
-		case V:
+		case V -> {
 			if (state == GameState.INTRO) {
 				gameController.selectGameVariant(gameController.gameVariant.succ());
 			}
-			break;
+		}
 
-		case X:
+		case X -> {
 			if (gameController.gameRunning) {
 				gameController.cheatKillGhosts();
 			}
-			break;
+		}
 
-		case Z:
+		case Z -> {
 			if (state == GameState.INTRO) {
 				gameController.startIntermissionTest();
 				FlashMessageView.showFlashMessage(1, "Intermission Scene Test");
 			}
-			break;
+		}
 
-		case SPACE:
-			gameController.requestGame();
-			break;
+		case SPACE -> gameController.requestGame();
 
-		case F11:
-			stage.setFullScreen(true);
-			break;
+		case F11 -> stage.setFullScreen(true);
 
-		default:
-			break;
+		default -> {
+		}
+
 		}
 	}
 
 	private void onControlKeyPressed(KeyEvent e) {
 		switch (e.getCode()) {
 
-		case C:
+		case C -> {
 			if (currentScene.is3D()) {
 				Env.nextPerspective();
 				String perspective_key = Env.message(Env.$perspective.get().name().toLowerCase());
 				String message = Env.message("camera_perspective", perspective_key);
 				FlashMessageView.showFlashMessage(1, message);
 			}
-			break;
+		}
 
-		case H:
+		case H -> {
 			if (currentScene.is3D()) {
 				Env.changeMazeWallHeight(!e.isShiftDown());
 			}
-			break;
+		}
 
-		case I:
+		case I -> {
 			if (!HUD.get().isVisible()) {
 				HUD.get().show();
 			} else {
 				HUD.get().hide();
 			}
-			break;
+		}
 
-		case L:
+		case L -> {
 			if (currentScene.is3D()) {
 				Env.$drawMode3D.set(Env.$drawMode3D.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 			}
-			break;
+		}
 
-		case P: {
+		case P -> {
 			Env.$paused.set(!Env.$paused.get());
 			FlashMessageView.showFlashMessage(2, Env.$paused.get() ? "Game paused" : "Game resumed");
 			log(Env.$paused.get() ? "Game paused." : "Game resumed.");
-			break;
 		}
 
-		case R:
+		case R -> {
 			if (currentScene.is3D()) {
 				Env.changeMazeResolution(!e.isShiftDown());
 			}
-			break;
+		}
 
-		case S: {
+		case S -> {
 			int targetFrameRate = Env.gameLoop.getTargetFrameRate();
 			if (!e.isShiftDown()) {
 				Env.gameLoop.setTargetFrameRate(targetFrameRate + 10);
@@ -339,34 +334,33 @@ public class GameUI extends DefaultGameEventHandler {
 				Env.gameLoop.setTargetFrameRate(Math.max(10, targetFrameRate - 10));
 			}
 			FlashMessageView.showFlashMessage(1, "Target FPS set to %d Hz", Env.gameLoop.getTargetFrameRate());
-			break;
 		}
 
-		case T:
+		case T -> {
 			Env.$isTimeMeasured.set(!Env.$isTimeMeasured.get());
-			break;
+		}
 
-		case X:
+		case X -> {
 			if (currentScene.is3D()) {
 				Env.$axesVisible.set(!Env.$axesVisible.get());
 			}
-			break;
+		}
 
-		case Y:
+		case Y -> {
 			if (!currentScene.is3D()) {
 				Env.$tilesVisible.set(!Env.$tilesVisible.get());
 			}
-			break;
+		}
 
-		case DIGIT3: {
+		case DIGIT3 -> {
 			toggle3D();
 			String message = Env.$3D.get() ? "Using 3D play scene\nCTRL+C changes perspective" : "Using 2D play scene";
 			FlashMessageView.showFlashMessage(2, message);
-			break;
 		}
 
-		default:
-			break;
+		default -> {
+		}
+
 		}
 	}
 }

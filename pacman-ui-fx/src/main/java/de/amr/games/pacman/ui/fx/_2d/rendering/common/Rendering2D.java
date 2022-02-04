@@ -154,18 +154,13 @@ public abstract class Rendering2D {
 	 * @return color of ghost
 	 */
 	public Color getGhostColor(int ghostID) {
-		switch (ghostID) {
-		case GameModel.RED_GHOST:
-			return Color.RED;
-		case GameModel.PINK_GHOST:
-			return Color.rgb(252, 181, 255);
-		case GameModel.CYAN_GHOST:
-			return Color.CYAN;
-		case GameModel.ORANGE_GHOST:
-			return Color.rgb(253, 192, 90);
-		default:
-			return Color.WHITE; // should not happen
-		}
+		return switch (ghostID) {
+		case GameModel.RED_GHOST -> Color.RED;
+		case GameModel.PINK_GHOST -> Color.rgb(252, 181, 255);
+		case GameModel.CYAN_GHOST -> Color.CYAN;
+		case GameModel.ORANGE_GHOST -> Color.rgb(253, 192, 90);
+		default -> Color.WHITE; // should not happen
+		};
 	}
 
 	/**
