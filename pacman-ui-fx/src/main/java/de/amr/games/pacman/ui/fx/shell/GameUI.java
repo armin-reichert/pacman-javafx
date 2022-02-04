@@ -194,11 +194,12 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	private void onKeyPressed(KeyEvent e) {
-		if (e.isShiftDown() || e.isAltDown()) {
-			return;
-		}
 		if (e.isControlDown()) {
 			onControlKeyPressed(e);
+			return;
+		}
+
+		if (e.isShiftDown() || e.isAltDown()) {
 			return;
 		}
 
