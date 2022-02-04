@@ -130,7 +130,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		}
 		GameSounds siren = GameSounds.SIRENS.get(e.scatterPhase);
 		if (!Env.sounds.getClip(siren).isPlaying()) {
-			Env.sounds.loop(siren, Integer.MAX_VALUE);
+			Env.sounds.loop(siren, Animation.INDEFINITE);
 		}
 	}
 
@@ -146,14 +146,14 @@ public class PlayScene2D extends AbstractGameScene2D {
 			ghost2D.frightenedAnimation.restart();
 		});
 		if (!Env.sounds.getClip(GameSounds.PACMAN_POWER).isPlaying()) {
-			Env.sounds.loop(GameSounds.PACMAN_POWER, Integer.MAX_VALUE);
+			Env.sounds.loop(GameSounds.PACMAN_POWER, Animation.INDEFINITE);
 		}
 	}
 
 	@Override
 	public void onPlayerFoundFood(GameEvent e) {
 		if (!Env.sounds.getClip(GameSounds.PACMAN_MUNCH).isPlaying()) {
-			Env.sounds.loop(GameSounds.PACMAN_MUNCH, Integer.MAX_VALUE);
+			Env.sounds.loop(GameSounds.PACMAN_MUNCH, Animation.INDEFINITE);
 		}
 	}
 

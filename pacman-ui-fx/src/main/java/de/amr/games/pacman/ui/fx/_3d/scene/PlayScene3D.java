@@ -56,6 +56,7 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.shell.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.CoordinateSystem;
+import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.beans.Observable;
 import javafx.scene.AmbientLight;
@@ -235,12 +236,12 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		}
 		GameSounds siren = GameSounds.SIRENS.get(e.scatterPhase);
 		if (!Env.sounds.getClip(siren).isPlaying())
-			Env.sounds.loop(siren, Integer.MAX_VALUE);
+			Env.sounds.loop(siren, Animation.INDEFINITE);
 	}
 
 	@Override
 	public void onPlayerGainsPower(GameEvent e) {
-		Env.sounds.loop(GameSounds.PACMAN_POWER, Integer.MAX_VALUE);
+		Env.sounds.loop(GameSounds.PACMAN_POWER, Animation.INDEFINITE);
 		Stream.of(ghosts3D) //
 				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
 				.forEach(Ghost3D::setFrightenedSkinColor);
@@ -268,7 +269,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			maze3D.foodNodeAt(tile).ifPresent(maze3D::hideFoodNode);
 			AudioClip munching = Env.sounds.getClip(GameSounds.PACMAN_MUNCH);
 			if (!munching.isPlaying()) {
-				Env.sounds.loop(GameSounds.PACMAN_MUNCH, Integer.MAX_VALUE);
+				Env.sounds.loop(GameSounds.PACMAN_MUNCH, Animation.INDEFINITE);
 			}
 		}
 	}
