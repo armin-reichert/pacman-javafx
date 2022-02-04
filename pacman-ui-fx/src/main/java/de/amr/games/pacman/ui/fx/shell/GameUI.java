@@ -85,8 +85,8 @@ public class GameUI extends DefaultGameEventHandler {
 		mainSceneRoot.getChildren().addAll(gameSceneRoot, FlashMessageView.get(), HUD.get());
 		StackPane.setAlignment(HUD.get(), Pos.TOP_LEFT);
 		mainScene = new Scene(mainSceneRoot, ASPECT_RATIO * height, height);
-		mainScene.heightProperty().addListener($1 -> adaptCanvasSize(mainScene.getHeight()));
-		adaptCanvasSize(mainScene.getHeight());
+		mainScene.heightProperty().addListener($1 -> resizeCanvas(mainScene.getHeight()));
+		resizeCanvas(mainScene.getHeight());
 
 		Env.$drawMode3D.addListener($1 -> updateBackground(currentScene));
 		Env.gameLoop.$fps.addListener($1 -> stage.setTitle(computeStageTitle()));
@@ -116,22 +116,13 @@ public class GameUI extends DefaultGameEventHandler {
 
 	private GameScene gameSceneForCurrentState(boolean _3D) {
 		var game = gameController.game;
-		int sceneVariant = _3D ? 1 : 0;
-		int sceneIndex = 4; // default = Play Scene
-		switch (gameController.currentStateID) {
-		case INTRO:
-			sceneIndex = 0;
-			break;
-		case INTERMISSION:
-			sceneIndex = game.intermissionNumber(game.levelNumber);
-			break;
-		case INTERMISSION_TEST:
-			sceneIndex = gameController.intermissionTestNumber;
-			break;
-		default:
-			break;
-		}
-		return gameScenes.getScene(gameController.gameVariant, sceneIndex, sceneVariant);
+		int sceneIndex = switch (gameController.currentStateID) {
+		case INTRO -> 0;
+		case INTERMISSION -> game.intermissionNumber(game.levelNumber);
+		case INTERMISSION_TEST -> gameController.intermissionTestNumber;
+		default -> 4;
+		};
+		return gameScenes.getScene(gameController.gameVariant, sceneIndex, _3D ? 1 : 0);
 	}
 
 	private void selectGameScene() {
@@ -151,7 +142,7 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 	}
 
-	private void adaptCanvasSize(double height) {
+	private void resizeCanvas(double height) {
 		canvas.setHeight(height);
 		canvas.setWidth(height * ASPECT_RATIO);
 		double scaling = height / (TILES_Y * TS);
