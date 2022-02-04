@@ -87,9 +87,7 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 
 	@Override
 	public final void update() {
-		if (gameController != null) {
-			doUpdate();
-		}
+		doUpdate();
 		gc.setFill(Color.BLACK);
 		gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
 		doRender();

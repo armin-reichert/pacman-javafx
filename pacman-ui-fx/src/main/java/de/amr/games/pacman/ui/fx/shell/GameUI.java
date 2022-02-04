@@ -116,7 +116,7 @@ public class GameUI extends DefaultGameEventHandler {
 
 	private GameScene gameSceneForCurrentState(boolean _3D) {
 		var game = gameController.game;
-		int sceneIndex = switch (gameController.currentStateID) {
+		int sceneIndex = switch (gameController.state) {
 		case INTRO -> 0;
 		case INTERMISSION -> game.intermissionNumber(game.levelNumber);
 		case INTERMISSION_TEST -> gameController.intermissionTestNumber;
@@ -203,7 +203,7 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 
 		final GameModel game = gameController.game;
-		final GameState state = gameController.currentStateID;
+		final GameState state = gameController.state;
 
 		switch (e.getCode()) {
 

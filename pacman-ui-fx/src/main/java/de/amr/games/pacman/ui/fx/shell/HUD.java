@@ -99,7 +99,7 @@ public class HUD extends VBox {
 		var sceneHeight = ui.stage.getScene().getHeight();
 		var gameCtrl = ui.gameController;
 		var game = gameCtrl.game;
-		var state = gameCtrl.currentStateID;
+		var state = gameCtrl.state;
 		var huntingPhaseName = game.inScatteringPhase() ? "Scattering" : "Chasing";
 		var stateTimer = gameCtrl.stateTimer();
 		var gameScene = ui.currentScene;

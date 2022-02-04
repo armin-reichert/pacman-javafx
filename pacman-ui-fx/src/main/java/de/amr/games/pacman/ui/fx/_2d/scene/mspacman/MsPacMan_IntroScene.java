@@ -92,7 +92,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 
 	@Override
 	public void doRender() {
-		IntroState state = sc.currentStateID;
+		IntroState state = sc.state;
 		score2D.render(gc);
 		highScore2D.render(gc);
 		gc.setFont(r2D.getScoreFont());

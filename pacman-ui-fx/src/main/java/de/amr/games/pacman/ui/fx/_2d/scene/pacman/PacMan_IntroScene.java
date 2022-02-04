@@ -98,7 +98,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	public void doRender() {
 		score2D.render(gc);
 		highScore2D.render(gc);
-		switch (sc.currentStateID) {
+		switch (sc.state) {
 
 		case BEGIN, PRESENTING_GHOSTS -> drawGallery();
 

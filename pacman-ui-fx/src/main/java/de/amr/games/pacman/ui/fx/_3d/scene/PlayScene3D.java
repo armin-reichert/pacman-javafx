@@ -201,7 +201,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 		// Update food visibility and start animations and audio in case of switching between 2D and 3D scene
 		// TODO: still incomplete
-		if (gameController.currentStateID == GameState.HUNTING) {
+		if (gameController.state == GameState.HUNTING) {
 			maze3D.foodNodes().forEach(foodNode -> {
 				foodNode.setVisible(!game.isFoodEaten(info(foodNode).tile));
 			});

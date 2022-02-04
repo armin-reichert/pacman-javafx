@@ -78,6 +78,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		super.init();
 
 		maze2D = new Maze2D(0, t(3), game, r2D);
+		score2D.showPoints = !gameController.attractMode;
 		livesCounter2D = new LivesCounter2D(t(2), t(34), game, r2D);
 		livesCounter2D.visible = !gameController.attractMode;
 		levelCounter2D = new LevelCounter2D(game, r2D);
@@ -91,7 +92,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 				new Ghost2D(game.ghosts[2], r2D), //
 				new Ghost2D(game.ghosts[3], r2D));
 		bonus2D = new Bonus2D(game.bonus, r2D, gameController.gameVariant == GameVariant.MS_PACMAN);
-		score2D.showPoints = !gameController.attractMode;
 
 		game.player.powerTimer.addEventListener(this::handleGhostsFlashing);
 		Env.sounds.setMuted(gameController.attractMode);
@@ -106,7 +106,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void doUpdate() {
-		if (gameController.currentStateID == GameState.HUNTING) {
+		if (gameController.state == GameState.HUNTING) {
 			// ensure animations are running when switching between 2D and 3D
 			if (!player2D.munchingAnimations.get(game.player.dir()).isRunning()) {
 				player2D.munchingAnimations.values().forEach(TimedSequence::restart);
@@ -283,12 +283,12 @@ public class PlayScene2D extends AbstractGameScene2D {
 		livesCounter2D.render(gc);
 		score2D.render(gc);
 		highScore2D.render(gc);
-		if (gameController.currentStateID == GameState.GAME_OVER || gameController.attractMode) {
+		if (gameController.state == GameState.GAME_OVER || gameController.attractMode) {
 			gc.setFont(r2D.getScoreFont());
 			gc.setFill(Color.RED);
 			gc.fillText("GAME", t(9), t(21));
 			gc.fillText("OVER", t(15), t(21));
-		} else if (gameController.currentStateID == GameState.READY) {
+		} else if (gameController.state == GameState.READY) {
 			gc.setFont(r2D.getScoreFont());
 			gc.setFill(Color.YELLOW);
 			gc.fillText("READY!", t(11), t(21));
