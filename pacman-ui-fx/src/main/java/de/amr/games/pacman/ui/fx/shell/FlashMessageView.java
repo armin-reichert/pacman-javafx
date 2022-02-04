@@ -66,14 +66,14 @@ public class FlashMessageView extends VBox {
 		}
 	}
 
-	private static FlashMessageView IT = new FlashMessageView();
+	private static FlashMessageView it = new FlashMessageView();
 
 	public static FlashMessageView get() {
-		return IT;
+		return it;
 	}
 
 	public static void showFlashMessage(double seconds, String message, Object... args) {
-		IT.showMessage(String.format(message, args), seconds);
+		it.showMessage(String.format(message, args), seconds);
 	}
 
 	private final Deque<FlashMessage> activeMessages = new ArrayDeque<>();

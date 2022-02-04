@@ -55,10 +55,10 @@ public class HUD extends VBox {
 		return b ? "ON" : "OFF";
 	}
 
-	private static HUD IT = new HUD();
+	private static HUD it = new HUD();
 
 	public static HUD get() {
-		return IT;
+		return it;
 	}
 
 	private final Text textUI = new Text();

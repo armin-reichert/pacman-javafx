@@ -47,10 +47,13 @@ public class Rendering2D_PacMan extends Rendering2D {
 	private static final Color MAZE_SIDE_COLOR = Color.rgb(33, 33, 255);
 	private static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
 
-	public static Rendering2D_PacMan IT = new Rendering2D_PacMan();
+	public static Rendering2D_PacMan it;
 
 	public static Rendering2D_PacMan get() {
-		return IT;
+		if (it == null) {
+			it = new Rendering2D_PacMan();
+		}
+		return it;
 	}
 
 	private final Image mazeFullImage;
@@ -224,5 +227,4 @@ public class Rendering2D_PacMan extends Rendering2D {
 	public TimedSequence<Rectangle2D> createBlinkyNakedAnimation() {
 		return TimedSequence.of(r(8, 8, 2, 1), r(10, 8, 2, 1)).frameDuration(4).endless();
 	}
-
 }

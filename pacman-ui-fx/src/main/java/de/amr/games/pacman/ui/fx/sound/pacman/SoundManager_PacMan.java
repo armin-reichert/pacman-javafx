@@ -33,10 +33,10 @@ import de.amr.games.pacman.ui.fx.sound.SoundManager;
  */
 public class SoundManager_PacMan extends SoundManager {
 
-	private static final SoundManager_PacMan IT = new SoundManager_PacMan();
+	private static final SoundManager_PacMan it = new SoundManager_PacMan();
 
 	public static SoundManager_PacMan get() {
-		return IT;
+		return it;
 	}
 
 	private SoundManager_PacMan() {

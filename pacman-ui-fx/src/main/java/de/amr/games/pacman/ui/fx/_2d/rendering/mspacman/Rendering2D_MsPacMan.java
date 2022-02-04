@@ -73,10 +73,13 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	};
 	//@formatter:on
 
-	public static Rendering2D_MsPacMan IT = new Rendering2D_MsPacMan();
+	public static Rendering2D_MsPacMan it;
 
 	public static Rendering2D_MsPacMan get() {
-		return IT;
+		if (it == null) {
+			it = new Rendering2D_MsPacMan();
+		}
+		return it;
 	}
 
 	private final List<Rectangle2D> mazeFullSprites;
@@ -85,6 +88,15 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	private final Map<Integer, Rectangle2D> bonusValueSprites;
 	private final Map<Integer, Rectangle2D> symbolSprites;
 	private final Map<Integer, Rectangle2D> bountyNumberSprites;
+
+	/**
+	 * @param col column
+	 * @param row row
+	 * @return Sprite at given row and column from the right-hand-side of the spritesheet
+	 */
+	private Rectangle2D rhs(int col, int row) {
+		return r(456, 0, col, row, 1, 1);
+	}
 
 	private Rendering2D_MsPacMan() {
 		super("/mspacman/graphics/sprites.png", 16);
@@ -261,8 +273,10 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	}
 
 	public TimedSequence<Rectangle2D> createStorkFlyingAnimation() {
-		return TimedSequence.of(new Rectangle2D(489, 176, 32, 16), new Rectangle2D(521, 176, 32, 16)).endless()
-				.frameDuration(10);
+		return TimedSequence.of( //
+				new Rectangle2D(489, 176, 32, 16), //
+				new Rectangle2D(521, 176, 32, 16) //
+		).endless().frameDuration(10);
 	}
 
 	public Rectangle2D getHeart() {
@@ -275,14 +289,5 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 
 	public Rectangle2D getBlueBag() {
 		return new Rectangle2D(488, 199, 8, 8);
-	}
-
-	/**
-	 * @param col column
-	 * @param row row
-	 * @return Sprite at given row and column from the right-hand-side of the spritesheet
-	 */
-	private Rectangle2D rhs(int col, int row) {
-		return r(456, 0, col, row, 1, 1);
 	}
 }
