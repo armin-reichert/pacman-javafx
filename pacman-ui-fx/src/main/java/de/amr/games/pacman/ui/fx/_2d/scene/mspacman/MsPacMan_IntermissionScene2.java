@@ -49,7 +49,7 @@ import javafx.scene.canvas.Canvas;
 public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 	private final Intermission2Controller sc = new Intermission2Controller();
-	
+
 	private LevelCounter2D levelCounter2D;
 	private Player2D msPacMan2D;
 	private Player2D pacMan2D;
@@ -83,7 +83,7 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 	@Override
 	public void doUpdate() {
-		sc.update();
+		sc.updateState();
 	}
 
 	@Override
