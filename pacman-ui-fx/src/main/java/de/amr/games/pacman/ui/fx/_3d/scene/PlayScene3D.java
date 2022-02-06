@@ -156,6 +156,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		bonus3D = new Bonus3D(Env.r2D);
 
 		score3D = new ScoreNotReally3D(Env.r2D.getScoreFont());
+		score3D.scoreTextOverwrite = gameController.attractMode ? "GAME OVER!" : null;
 
 		livesCounter3D = new LivesCounter3D(model3D);
 		livesCounter3D.getTransforms().add(new Translate(TS, TS, -HTS));
@@ -188,7 +189,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		player3D.update();
 		Stream.of(ghosts3D).forEach(Ghost3D::update);
 		bonus3D.update(game.bonus);
-		score3D.scoreOverwrite = gameController.attractMode ? "GAME OVER!" : null;
 		score3D.update(game);
 		livesCounter3D.setVisibleItems(game.player.lives);
 		var camController = cams.get(Env.$perspective.get());

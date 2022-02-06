@@ -49,7 +49,7 @@ public class ScoreNotReally3D extends Group {
 	public final Text txtHiscoreTitle;
 	public final Text txtHiscore;
 
-	public String scoreOverwrite;
+	public String scoreTextOverwrite;
 
 	public ScoreNotReally3D(Font font) {
 		this.font = font;
@@ -71,9 +71,9 @@ public class ScoreNotReally3D extends Group {
 	public void update(GameModel game) {
 		txtScoreTitle.setFill(titleColor);
 		txtScoreTitle.setFont(font);
-		txtScore.setFill(scoreOverwrite != null ? Color.RED : scoreColor);
+		txtScore.setFill(scoreTextOverwrite != null ? Color.RED : scoreColor);
 		txtScore.setFont(font);
-		String scoreText = scoreOverwrite != null ? scoreOverwrite : String.format("%7d L%d", game.score, game.levelNumber);
+		String scoreText = scoreTextOverwrite != null ? scoreTextOverwrite : String.format("%7d L%d", game.score, game.levelNumber);
 		txtScore.setText(scoreText);
 
 		txtHiscoreTitle.setFill(titleColor);
