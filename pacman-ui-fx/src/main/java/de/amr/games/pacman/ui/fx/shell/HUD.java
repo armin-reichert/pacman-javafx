@@ -130,7 +130,7 @@ public class HUD extends VBox {
 			// Currently PlayScene3D is the only 3D scene
 			var scene3D = (PlayScene3D) gameScene;
 			p("Perspective", "%s", Env.$perspective.get()).done();
-			p("Camera", "%s", scene3D.cam().info()).done();
+			p("Camera", "%s", scene3D.camController().info()).done();
 			p("Draw Mode", "%s", Env.$drawMode3D.get()).done();
 			p("Axes", "%s", on_off(Env.$axesVisible.get())).done();
 		} else {

@@ -107,7 +107,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			fxSubScene = new SubScene(new Group(), 400, 300, true, SceneAntialiasing.BALANCED);
 			fxSubScene.widthProperty().bind(parent.widthProperty());
 			fxSubScene.heightProperty().bind(parent.heightProperty());
-			fxSubScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> cam().handle(e));
+			fxSubScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> camController().handle(e));
 			PerspectiveCamera cam = new PerspectiveCamera(true);
 			fxSubScene.setCamera(cam);
 			cams.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer(cam));
@@ -124,7 +124,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		return fxSubScene;
 	}
 
-	public CameraController<PlayScene3D> cam() {
+	public CameraController<PlayScene3D> camController() {
 		return cams.get(Env.$perspective.get());
 	}
 
@@ -175,14 +175,14 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 	@Override
 	public void update() {
+		keepInSyncWith2DScene(); // TODO find a better solution
 		maze3D.update(game);
 		player3D.update();
 		Stream.of(ghosts3D).forEach(Ghost3D::update);
 		bonus3D.update(game.bonus);
 		score3D.update(game);
 		livesCounter3D.setVisibleItems(game.player.lives);
-		cam().update(this);
-		keepInSyncWith2DScene(); // TODO find a better solution
+		camController().update(this);
 	}
 
 	private void buildMaze3D(int mazeNumber, boolean withFood) {
@@ -194,12 +194,12 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	}
 
 	private void onPerspectiveChange(Observable unused) {
-		var camController = cams.get(Env.$perspective.get());
-		fxSubScene.setCamera(camController.cam()); // TODO why is this needed?
-		camController.reset();
+		fxSubScene.setCamera(camController().cam()); // TODO why is this needed?
+		camController().reset();
 		if (score3D != null) {
-			score3D.rotationAxisProperty().bind(camController.cam().rotationAxisProperty());
-			score3D.rotateProperty().bind(camController.cam().rotateProperty());
+			// TODO maybe there is some smarter way to keep the score in play sight
+			score3D.rotationAxisProperty().bind(camController().cam().rotationAxisProperty());
+			score3D.rotateProperty().bind(camController().cam().rotateProperty());
 		}
 	}
 
