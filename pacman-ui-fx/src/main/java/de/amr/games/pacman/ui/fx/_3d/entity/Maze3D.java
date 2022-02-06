@@ -198,7 +198,7 @@ public class Maze3D extends Group {
 		return animation;
 	}
 
-	public void startEnergizerAnimations() {
+	public void startEnergizerAnimationsIfNotRunning() {
 		boolean notRunning = energizerAnimations().anyMatch(anim -> anim.getStatus() != Status.RUNNING);
 		if (notRunning) {
 			playEnergizerAnimations();

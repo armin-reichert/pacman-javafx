@@ -128,16 +128,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		return cams.get(Env.$perspective.get());
 	}
 
-	private void onPerspectiveChanged(Observable unused) {
-		var camController = cams.get(Env.$perspective.get());
-		fxSubScene.setCamera(camController.cam()); // TODO why is this needed?
-		camController.reset();
-		if (score3D != null) {
-			score3D.rotationAxisProperty().bind(camController.cam().rotationAxisProperty());
-			score3D.rotateProperty().bind(camController.cam().rotateProperty());
-		}
-	}
-
 	@Override
 	public void init() {
 		game = gameController.game;
@@ -172,14 +162,14 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		fxSubScene.setRoot(new Group(ambientLight, playground, coordSystem));
 
 		Env.sounds.setMuted(gameController.attractMode);
-		Env.$perspective.addListener(this::onPerspectiveChanged);
-		onPerspectiveChanged(null);
+		Env.$perspective.addListener(this::onPerspectiveChange);
+		onPerspectiveChange(null);
 	}
 
 	@Override
 	public void end() {
 		Env.sounds.setMuted(false);
-		Env.$perspective.removeListener(this::onPerspectiveChanged);
+		Env.$perspective.removeListener(this::onPerspectiveChange);
 		GameScene.super.end();
 	}
 
@@ -191,28 +181,8 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		bonus3D.update(game.bonus);
 		score3D.update(game);
 		livesCounter3D.setVisibleItems(game.player.lives);
-		var camController = cams.get(Env.$perspective.get());
-		camController.update(this);
-
-		// Update food visibility and start animations and audio in case of switching between 2D and 3D scene
-		// TODO: still incomplete
-		if (gameController.state == GameState.HUNTING) {
-			maze3D.foodNodes().forEach(foodNode -> {
-				foodNode.setVisible(!game.isFoodEaten(info(foodNode).tile));
-			});
-			maze3D.startEnergizerAnimations();
-			AudioClip munching = Env.sounds.getClip(GameSounds.PACMAN_MUNCH);
-			if (munching.isPlaying()) {
-				if (game.player.starvingTicks > 10) {
-					Env.sounds.stop(GameSounds.PACMAN_MUNCH);
-				}
-			}
-		}
-	}
-
-	@Override
-	public boolean is3D() {
-		return true;
+		cam().update(this);
+		keepInSyncWith2DScene(); // TODO find a better solution
 	}
 
 	private void buildMaze3D(int mazeNumber, boolean withFood) {
@@ -221,6 +191,39 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			maze3D.buildFood(game.world, Env.r2D.getFoodColor(mazeNumber));
 		}
 		log("Built 3D maze (resolution=%d, wall height=%.2f)", maze3D.$resolution.get(), maze3D.$wallHeight.get());
+	}
+
+	private void onPerspectiveChange(Observable unused) {
+		var camController = cams.get(Env.$perspective.get());
+		fxSubScene.setCamera(camController.cam()); // TODO why is this needed?
+		camController.reset();
+		if (score3D != null) {
+			score3D.rotationAxisProperty().bind(camController.cam().rotationAxisProperty());
+			score3D.rotateProperty().bind(camController.cam().rotateProperty());
+		}
+	}
+
+	/*
+	 * Updates food visibility, animations and audio in case of switching between 2D and 3D scene
+	 * 
+	 * TODO: still incomplete
+	 */
+	private void keepInSyncWith2DScene() {
+		maze3D.foodNodes().forEach(foodNode -> {
+			foodNode.setVisible(!game.isFoodEaten(info(foodNode).tile));
+		});
+		maze3D.startEnergizerAnimationsIfNotRunning();
+		AudioClip munching = Env.sounds.getClip(GameSounds.PACMAN_MUNCH);
+		if (munching.isPlaying()) {
+			if (game.player.starvingTicks > 10) {
+				Env.sounds.stop(GameSounds.PACMAN_MUNCH);
+			}
+		}
+	}
+
+	@Override
+	public boolean is3D() {
+		return true;
 	}
 
 	@Override
