@@ -37,14 +37,13 @@ public class Cam_FollowingPlayer implements CameraController<PlayScene3D> {
 
 	private Camera cam;
 
-	@Override
-	public Camera cam() {
-		return cam;
+	public Cam_FollowingPlayer(Camera cam) {
+		this.cam = cam;
 	}
 
 	@Override
-	public void attachTo(Camera cam) {
-		this.cam = cam;
+	public Camera cam() {
+		return cam;
 	}
 
 	@Override

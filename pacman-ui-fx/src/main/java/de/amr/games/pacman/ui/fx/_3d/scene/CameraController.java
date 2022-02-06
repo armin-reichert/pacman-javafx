@@ -35,8 +35,6 @@ import javafx.scene.transform.Rotate;
  */
 public interface CameraController<T> extends EventHandler<KeyEvent> {
 
-	void attachTo(Camera cam);
-
 	Camera cam();
 
 	boolean keysEnabled();

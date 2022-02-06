@@ -35,14 +35,13 @@ public class Cam_Total implements CameraController<PlayScene3D> {
 
 	private Camera cam;
 
-	@Override
-	public Camera cam() {
-		return cam;
+	public Cam_Total(Camera cam) {
+		this.cam = cam;
 	}
 
 	@Override
-	public void attachTo(Camera cam) {
-		this.cam = cam;
+	public Camera cam() {
+		return cam;
 	}
 
 	@Override

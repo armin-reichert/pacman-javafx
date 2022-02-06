@@ -100,9 +100,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		this.gameController = gameController;
 		this.model3D = model3D;
 		coordSystem.visibleProperty().bind(Env.$axesVisible);
-		cams.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer());
-		cams.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer());
-		cams.put(Perspective.CAM_TOTAL, new Cam_Total());
 	}
 
 	@Override
@@ -114,7 +111,9 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			fxSubScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> cam().handle(e));
 			PerspectiveCamera cam = new PerspectiveCamera(true);
 			fxSubScene.setCamera(cam);
-			cams.values().forEach(cc -> cc.attachTo(cam));
+			cams.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer(cam));
+			cams.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer(cam));
+			cams.put(Perspective.CAM_TOTAL, new Cam_Total(cam));
 			log("Subscene for game scene '%s' created, width=%.0f, height=%.0f", getClass().getName(), fxSubScene.getWidth(),
 					fxSubScene.getHeight());
 		}
