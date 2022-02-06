@@ -46,23 +46,27 @@ import javafx.util.Duration;
  */
 public class LevelCounter3D extends Group {
 
-	static final int MAX_ENTRIES = 7;
+	private static final int MAX_ENTRIES = 7;
 
-	private final Rendering2D rendering2D;
+	private final GameModel game;
+	private final Rendering2D r2D;
 	private V2d rightPosition;
 
-	public LevelCounter3D(Rendering2D rendering2D) {
-		this.rendering2D = rendering2D;
+	public LevelCounter3D(GameModel game, Rendering2D r2D, double x, double y) {
+		this.game = game;
+		this.r2D = r2D;
+		this.rightPosition = new V2d(x, y);
+		update();
 	}
 
-	public void init(GameModel game) {
-		// NOTE: all variables named ...Number are starting at 1
+	public void update() {
+		// NOTE: all variables named *Number are starting at 1
 		int firstLevelNumber = Math.max(1, game.levelNumber - MAX_ENTRIES + 1);
 		getChildren().clear();
 		double x = rightPosition.x, y = rightPosition.y;
 		for (int levelNumber = firstLevelNumber; levelNumber <= game.levelNumber; ++levelNumber) {
 			int symbol = game.levelSymbol(levelNumber);
-			Image symbolImage = rendering2D.extractRegion(rendering2D.getSymbolSprites().get(symbol));
+			Image symbolImage = r2D.extractRegion(r2D.getSymbolSprites().get(symbol));
 			Box cube = createSpinningCube(symbolImage, levelNumber % 2 == 0);
 			cube.setTranslateX(x);
 			cube.setTranslateY(y);
@@ -72,21 +76,17 @@ public class LevelCounter3D extends Group {
 		}
 	}
 
-	public void setRightPosition(double x, double y) {
-		rightPosition = new V2d(x, y);
-	}
-
 	private Box createSpinningCube(Image symbol, boolean forward) {
-		Box box = new Box(TS, TS, TS);
+		Box cube = new Box(TS, TS, TS);
 		PhongMaterial material = new PhongMaterial();
 		material.setDiffuseMap(symbol);
-		box.setMaterial(material);
-		RotateTransition spinning = new RotateTransition(Duration.seconds(6), box);
+		cube.setMaterial(material);
+		RotateTransition spinning = new RotateTransition(Duration.seconds(6), cube);
 		spinning.setAxis(Rotate.X_AXIS);
 		spinning.setCycleCount(Transition.INDEFINITE);
 		spinning.setByAngle(360);
 		spinning.setRate(forward ? 1 : -1);
 		spinning.play();
-		return box;
+		return cube;
 	}
 }
