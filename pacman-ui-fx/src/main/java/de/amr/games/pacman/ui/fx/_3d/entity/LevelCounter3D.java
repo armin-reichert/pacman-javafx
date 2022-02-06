@@ -50,7 +50,7 @@ public class LevelCounter3D extends Group {
 
 	private final GameModel game;
 	private final Rendering2D r2D;
-	private V2d rightPosition;
+	private final V2d rightPosition;
 
 	public LevelCounter3D(GameModel game, Rendering2D r2D, double x, double y) {
 		this.game = game;
