@@ -26,9 +26,6 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import static de.amr.games.pacman.model.world.World.HTS;
 import static de.amr.games.pacman.model.world.World.TS;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import de.amr.games.pacman.model.pacman.entities.Bonus;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.animation.RotateTransition;
@@ -47,23 +44,25 @@ import javafx.util.Duration;
  */
 public class Bonus3D extends Box {
 
-	private final Map<Integer, Image> numberImages;
 	private final Rendering2D r2D;
 	private final RotateTransition rotation;
 	private final PhongMaterial skin;
 
-	public Bonus3D(Rendering2D rendering2D) {
+	public Bonus3D(Rendering2D r2D) {
 		super(TS, TS, TS);
-		this.r2D = rendering2D;
-		numberImages = new HashMap<>();
-		rendering2D.getBonusValueSprites().forEach((n, r) -> numberImages.put(n, rendering2D.extractRegion(r)));
+		this.r2D = r2D;
 		skin = new PhongMaterial(Color.WHITE);
 		rotation = new RotateTransition(Duration.seconds(1), this);
 		rotation.setAxis(Rotate.X_AXIS);
 		rotation.setByAngle(360);
-		rotation.setOnFinished(e -> hide());
+		rotation.setOnFinished(e -> setVisible(false));
+		visibleProperty().addListener($1 -> {
+			if (!isVisible()) {
+				rotation.stop();
+			}
+		});
 		setTranslateZ(-4);
-		hide();
+		setVisible(false);
 	}
 
 	public void update(Bonus bonus) {
@@ -73,15 +72,10 @@ public class Bonus3D extends Box {
 		}
 	}
 
-	public void hide() {
-		rotation.stop();
-		setVisible(false);
-	}
-
-	public void showSymbol(Bonus bonus) {
-		Image symbolImage = r2D.extractRegion(r2D.getSymbolSprites().get(bonus.symbol));
-		skin.setBumpMap(symbolImage);
-		skin.setDiffuseMap(symbolImage);
+	public void showSymbol(int symbol) {
+		Image image = r2D.extractRegion(r2D.getSymbolSprites().get(symbol));
+		skin.setBumpMap(image);
+		skin.setDiffuseMap(image);
 		setMaterial(skin);
 		setWidth(TS);
 		setVisible(true);
@@ -91,12 +85,12 @@ public class Bonus3D extends Box {
 		rotation.play();
 	}
 
-	public void showPoints(Bonus bonus) {
-		Image pointsImage = numberImages.get(bonus.points);
-		skin.setBumpMap(pointsImage);
-		skin.setDiffuseMap(pointsImage);
+	public void showPoints(int points) {
+		Image image = r2D.extractRegion(r2D.getBonusValueSprites().get(points));
+		skin.setBumpMap(image);
+		skin.setDiffuseMap(image);
 		setMaterial(skin);
-		if (bonus.points >= 1000) {
+		if (points >= 1000) {
 			setWidth(10);
 		}
 		setVisible(true);

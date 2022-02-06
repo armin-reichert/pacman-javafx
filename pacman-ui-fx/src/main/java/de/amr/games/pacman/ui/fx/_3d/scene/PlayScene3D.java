@@ -142,8 +142,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	public void init() {
 		game = gameController.game;
 
-		Env.$perspective.addListener(this::onPerspectiveChanged);
-
 		final int width = game.world.numCols() * TS;
 		final int height = game.world.numRows() * TS;
 
@@ -166,27 +164,27 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		levelCounter3D = new LevelCounter3D(game, Env.r2D, width - TS, TS);
 
 		playground = new Group();
-		playground.getTransforms().add(new Translate(-0.5 * width, -0.5 * height)); // center at origin
 		playground.getChildren().addAll(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
 		playground.getChildren().addAll(ghosts3D);
+		playground.getTransforms().add(new Translate(-width / 2, -height / 2)); // center at origin
 
 		fxSubScene.setRoot(new Group(ambientLight, playground, coordSystem));
 
 		Env.sounds.setMuted(gameController.attractMode);
+		Env.$perspective.addListener(this::onPerspectiveChanged);
 		onPerspectiveChanged(null);
 	}
 
 	@Override
 	public void end() {
-		fxSubScene.setCamera(null);
-		Env.$perspective.removeListener(this::onPerspectiveChanged);
 		Env.sounds.setMuted(false);
+		Env.$perspective.removeListener(this::onPerspectiveChanged);
 		GameScene.super.end();
 	}
 
 	@Override
 	public void update() {
-		maze3D.updateState(game);
+		maze3D.update(game);
 		player3D.update();
 		Stream.of(ghosts3D).forEach(Ghost3D::update);
 		bonus3D.update(game.bonus);
@@ -272,18 +270,18 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 	@Override
 	public void onBonusActivated(GameEvent e) {
-		bonus3D.showSymbol(game.bonus);
+		bonus3D.showSymbol(game.bonus.symbol);
 	}
 
 	@Override
 	public void onBonusEaten(GameEvent e) {
-		bonus3D.showPoints(game.bonus);
+		bonus3D.showPoints(game.bonus.points);
 		Env.sounds.play(GameSounds.BONUS_EATEN);
 	}
 
 	@Override
 	public void onBonusExpired(GameEvent e) {
-		bonus3D.hide();
+		bonus3D.setVisible(false);
 	}
 
 	@Override
@@ -378,7 +376,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		// exit HUNTING
 		if (e.oldGameState == GameState.HUNTING && e.newGameState != GameState.GHOST_DYING) {
 			maze3D.stopEnergizerAnimations();
-			bonus3D.hide();
+			bonus3D.setVisible(false);
 		}
 	}
 }

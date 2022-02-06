@@ -119,7 +119,7 @@ public class Maze3D extends Group {
 		});
 	}
 
-	public void updateState(GameModel game) {
+	public void update(GameModel game) {
 		doors().forEach(door -> door.updateState(game));
 	}
 
