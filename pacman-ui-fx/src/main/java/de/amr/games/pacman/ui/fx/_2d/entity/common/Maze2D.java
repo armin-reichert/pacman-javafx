@@ -46,9 +46,10 @@ import javafx.util.Duration;
 public class Maze2D {
 
 	private final GameModel game;
+	private final Rendering2D r2D;
+
 	private final int x;
 	private final int y;
-	private final Rendering2D r2D;
 	private final TimedSequence<Boolean> energizerAnimation;
 	private final Timeline flashingAnimation;
 

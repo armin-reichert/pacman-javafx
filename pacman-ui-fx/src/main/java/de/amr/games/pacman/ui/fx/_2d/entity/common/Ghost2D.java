@@ -53,7 +53,6 @@ public class Ghost2D {
 	public TimedSequence<Rectangle2D> flashingAnimation;
 	public TimedSequence<Rectangle2D> frightenedAnimation;
 	private boolean looksFrightened;
-	private Rectangle2D currentSprite;
 
 	public Ghost2D(Ghost ghost, Rendering2D r2D) {
 		this.ghost = ghost;
@@ -66,7 +65,6 @@ public class Ghost2D {
 		returningHomeAnimations = r2D.createGhostReturningHomeAnimations();
 		frightenedAnimation = r2D.createGhostFrightenedAnimation();
 		flashingAnimation = r2D.createGhostFlashingAnimation();
-		currentSprite = kickingAnimations.get(ghost.wishDir()).frame();
 	}
 
 	public void setLooksFrightened(boolean looksFrightened) {
@@ -74,28 +72,28 @@ public class Ghost2D {
 	}
 
 	public void render(GraphicsContext g) {
-		final Direction dir = ghost.wishDir();
+		Rectangle2D sprite = null;
 		if (ghost.bounty > 0) {
-			currentSprite = r2D.getBountyNumberSprite(ghost.bounty);
+			sprite = r2D.getBountyNumberSprite(ghost.bounty);
 		} else if (ghost.is(DEAD) || ghost.is(ENTERING_HOUSE)) {
-			currentSprite = returningHomeAnimations.get(dir).animate();
+			sprite = returningHomeAnimations.get(ghost.wishDir()).animate();
 		} else if (ghost.is(FRIGHTENED)) {
 			if (flashingAnimation.isRunning()) {
-				currentSprite = flashingAnimation.animate();
+				sprite = flashingAnimation.animate();
 			} else {
 				if (ghost.velocity.equals(V2d.NULL)) {
-					currentSprite = frightenedAnimation.frame();
+					sprite = frightenedAnimation.frame();
 				} else {
-					currentSprite = frightenedAnimation.animate();
+					sprite = frightenedAnimation.animate();
 				}
 			}
 		} else if (ghost.is(LOCKED) && looksFrightened) {
-			currentSprite = frightenedAnimation.animate();
+			sprite = frightenedAnimation.animate();
 		} else if (ghost.velocity.equals(V2d.NULL)) {
-			currentSprite = kickingAnimations.get(dir).frame();
+			sprite = kickingAnimations.get(ghost.wishDir()).frame();
 		} else {
-			currentSprite = kickingAnimations.get(dir).animate();
+			sprite = kickingAnimations.get(ghost.wishDir()).animate();
 		}
-		r2D.renderEntity(g, ghost, currentSprite);
+		r2D.renderEntity(g, ghost, sprite);
 	}
 }

@@ -42,8 +42,8 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class Bonus2D {
 
-	private final Rendering2D r2D;
 	private final Bonus bonus;
+	private final Rendering2D r2D;
 	private final TimedSequence<Integer> animation;
 
 	public Bonus2D(Bonus bonus, Rendering2D r2D, boolean animated) {

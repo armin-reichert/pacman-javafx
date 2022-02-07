@@ -39,11 +39,12 @@ import javafx.scene.text.FontWeight;
  */
 public class LivesCounter2D {
 
+	private final GameModel game;
+	private final Rendering2D r2D;
+
 	private final int maxLivesDisplayed = 5;
 	private final int x;
 	private final int y;
-	private final GameModel game;
-	private final Rendering2D r2D;
 
 	public boolean visible = true;
 
