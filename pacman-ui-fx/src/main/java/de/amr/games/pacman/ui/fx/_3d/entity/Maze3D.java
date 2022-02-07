@@ -162,7 +162,7 @@ public class Maze3D extends Group {
 	 * @param wallBaseColor color of wall at base
 	 * @param wallTopColor  color of wall at top
 	 */
-	public void buildWallsAndDoors(World world, Color wallBaseColor, Color wallTopColor) {
+	public void buildStructure(World world, Color wallBaseColor, Color wallTopColor) {
 		int resolution = $resolution.get();
 		int stoneSize = TS / resolution;
 		wallsGroup.getChildren().clear();

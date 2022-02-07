@@ -187,8 +187,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	}
 
 	private void buildMaze3D(int mazeNumber, boolean withFood) {
-		maze3D.buildWallsAndDoors(game.world, Env.r2D.getMazeSideColor(mazeNumber),
-				Env.r2D.getMazeTopColor(mazeNumber));
+		maze3D.buildStructure(game.world, Env.r2D.getMazeSideColor(mazeNumber), Env.r2D.getMazeTopColor(mazeNumber));
 		if (withFood) {
 			maze3D.buildFood(game.world, Env.r2D.getFoodColor(mazeNumber));
 		}
