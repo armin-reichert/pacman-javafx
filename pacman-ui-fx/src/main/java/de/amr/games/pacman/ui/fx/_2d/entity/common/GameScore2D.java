@@ -31,23 +31,22 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 /**
- * 2D representation of the score or the high score.
+ * 2D representation of the score / high score.
  * 
  * @author Armin Reichert
  */
-public class GameScore2D  {
-
-	public boolean showPoints = true;
+public class GameScore2D {
 
 	private final GameModel game;
 	private final Rendering2D r2D;
 	private final boolean showHighscore;
+	private final int x;
+	private final int y;
+	private final String title;
+	private final Color titleColor = Color.WHITE;
+	private final Color pointsColor = Color.YELLOW;
 
-	private int x;
-	private int y;
-	private String title = "SCORE";
-	private Color titleColor = Color.WHITE;
-	private Color pointsColor = Color.YELLOW;
+	public boolean showPoints = true;
 
 	public GameScore2D(String title, int x, int y, GameModel game, boolean showHighscore, Rendering2D r2D) {
 		this.title = title;
