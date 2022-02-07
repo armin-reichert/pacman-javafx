@@ -41,6 +41,7 @@ import de.amr.games.pacman.controller.event.GameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
@@ -334,9 +335,10 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		else if (e.newGameState == GameState.PACMAN_DYING) {
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setNormalSkinColor());
 			Env.sounds.stopAll();
+			Ghost killer = Stream.of(game.ghosts).filter(ghost -> ghost.tile().equals(game.player.tile())).findAny().get();
 			new SequentialTransition( //
 					afterSeconds(1, game::hideGhosts), //
-					player3D.dyingAnimation(), //
+					player3D.dyingAnimation(Env.r2D.getGhostColor(killer.id)), //
 					afterSeconds(2, () -> gameController.stateTimer().expire()) //
 			).play();
 		}

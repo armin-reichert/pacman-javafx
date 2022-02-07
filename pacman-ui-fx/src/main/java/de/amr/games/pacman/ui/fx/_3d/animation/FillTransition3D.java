@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.animation;
 
 import static de.amr.games.pacman.ui.fx.util.U.lerp;
 
+import javafx.animation.FillTransition;
 import javafx.animation.Transition;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -32,21 +33,21 @@ import javafx.scene.shape.Shape3D;
 import javafx.util.Duration;
 
 /**
- * Let's Pac-Man impale.
+ * Kind of a {@link FillTransition} for 3D shapes.
  * 
  * @author Armin Reichert
  */
-public class ImpaleAnimation extends Transition {
+public class FillTransition3D extends Transition {
 
 	private final Shape3D shape;
 	private final PhongMaterial material;
 	private Color fromColor;
 	private Color toColor;
 
-	public ImpaleAnimation(Duration duration, Shape3D shape, Color fromColor) {
+	public FillTransition3D(Duration duration, Shape3D shape, Color fromColor, Color toColor) {
 		this.shape = shape;
 		this.fromColor = fromColor;
-		this.toColor = Color.GHOSTWHITE;
+		this.toColor = toColor;
 		this.material = new PhongMaterial(fromColor);
 		setCycleCount(1);
 		setCycleDuration(duration);
@@ -54,13 +55,11 @@ public class ImpaleAnimation extends Transition {
 
 	@Override
 	protected void interpolate(double t) {
-		if (t == 0) {
-			shape.setMaterial(material);
-		}
 		Color color = Color.color( //
 				lerp(fromColor.getRed(), toColor.getRed(), t), //
 				lerp(fromColor.getGreen(), toColor.getGreen(), t), //
 				lerp(fromColor.getBlue(), toColor.getBlue(), t));
 		material.setDiffuseColor(color);
+		shape.setMaterial(material);
 	}
 }

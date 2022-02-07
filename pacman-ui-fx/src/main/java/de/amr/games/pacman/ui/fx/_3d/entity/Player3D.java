@@ -28,7 +28,7 @@ import static de.amr.games.pacman.ui.fx.util.U.now;
 
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.GameSounds;
-import de.amr.games.pacman.ui.fx._3d.animation.ImpaleAnimation;
+import de.amr.games.pacman.ui.fx._3d.animation.FillTransition3D;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.animation.Animation;
@@ -59,6 +59,7 @@ public class Player3D extends Creature3D {
 	private final PointLight light;
 
 	private Color skullColor = Color.YELLOW;
+	private Color deadColor = Color.GHOSTWHITE;
 	private Color eyesColor = Color.rgb(20, 20, 20);
 	private Color palateColor = Color.CHOCOLATE;
 
@@ -87,7 +88,7 @@ public class Player3D extends Creature3D {
 		update(player);
 	}
 
-	public Animation dyingAnimation() {
+	public Animation dyingAnimation(Color ghostColor) {
 		var spin = new RotateTransition(Duration.seconds(0.2), this);
 		spin.setAxis(Rotate.Z_AXIS);
 		spin.setByAngle(360);
@@ -100,8 +101,9 @@ public class Player3D extends Creature3D {
 
 		var playSound = now(() -> Env.sounds.play(GameSounds.PACMAN_DEATH));
 
-		return new SequentialTransition(//
-				new ImpaleAnimation(Duration.seconds(1), skull, skullColor), //
+		return new SequentialTransition( //
+				new FillTransition3D(Duration.seconds(1), skull, skullColor, ghostColor), //
+				new FillTransition3D(Duration.seconds(1), skull, ghostColor, deadColor), //
 				new ParallelTransition(spin, shrink, playSound));
 	}
 }
