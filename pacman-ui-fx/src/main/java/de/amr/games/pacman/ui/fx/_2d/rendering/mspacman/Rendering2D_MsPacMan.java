@@ -73,7 +73,7 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	};
 	//@formatter:on
 
-	public static Rendering2D_MsPacMan it;
+	private static Rendering2D_MsPacMan it;
 
 	public static Rendering2D_MsPacMan get() {
 		if (it == null) {

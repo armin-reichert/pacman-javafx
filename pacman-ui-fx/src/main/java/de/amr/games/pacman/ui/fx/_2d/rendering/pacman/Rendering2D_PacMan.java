@@ -47,7 +47,7 @@ public class Rendering2D_PacMan extends Rendering2D {
 	private static final Color MAZE_SIDE_COLOR = Color.rgb(33, 33, 255);
 	private static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
 
-	public static Rendering2D_PacMan it;
+	private static Rendering2D_PacMan it;
 
 	public static Rendering2D_PacMan get() {
 		if (it == null) {
