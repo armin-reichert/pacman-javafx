@@ -42,13 +42,13 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class Bonus2D {
 
-	private final Rendering2D rendering;
+	private final Rendering2D r2D;
 	private final Bonus bonus;
 	private final TimedSequence<Integer> animation;
 
 	public Bonus2D(Bonus bonus, Rendering2D r2D, boolean animated) {
 		this.bonus = Objects.requireNonNull(bonus);
-		this.rendering = Objects.requireNonNull(r2D);
+		this.r2D = Objects.requireNonNull(r2D);
 		animation = animated ? TimedSequence.of(2, 0, -2).frameDuration(8).endless() : null;
 	}
 
@@ -58,8 +58,8 @@ public class Bonus2D {
 
 	public void render(GraphicsContext g) {
 		Rectangle2D sprite = switch (bonus.state) {
-		case EDIBLE -> rendering.getSymbolSprite(bonus.symbol);
-		case EATEN -> rendering.getBonusValueSprite(bonus.points);
+		case EDIBLE -> r2D.getSymbolSprite(bonus.symbol);
+		case EATEN -> r2D.getBonusValueSprite(bonus.points);
 		default -> null;
 		};
 		if (sprite == null) {
@@ -68,10 +68,10 @@ public class Bonus2D {
 		if (animation != null) {
 			g.save();
 			g.translate(0, animation.animate());
-			rendering.renderEntity(g, bonus, sprite);
+			r2D.renderEntity(g, bonus, sprite);
 			g.restore();
 		} else {
-			rendering.renderEntity(g, bonus, sprite);
+			r2D.renderEntity(g, bonus, sprite);
 		}
 	}
 }

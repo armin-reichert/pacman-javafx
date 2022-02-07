@@ -37,8 +37,9 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class LevelCounter2D {
 
-	private final Rendering2D r2D;
 	private final GameModel game;
+	private final Rendering2D r2D;
+
 	public V2i rightPosition = V2i.NULL;
 	public boolean visible = true;
 
