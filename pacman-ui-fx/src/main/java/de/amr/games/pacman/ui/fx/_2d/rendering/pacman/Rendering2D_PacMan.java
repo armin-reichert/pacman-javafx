@@ -138,18 +138,18 @@ public class Rendering2D_PacMan extends Rendering2D {
 	}
 
 	@Override
-	public Map<Integer, Rectangle2D> getBonusValueSprites() {
-		return bonusValueSprites;
+	public Rectangle2D getBonusValueSprite(int number) {
+		return bonusValueSprites.get(number);
 	}
 
 	@Override
-	public Map<Integer, Rectangle2D> getBountyNumberSprites() {
-		return bountyNumberSprites;
+	public Rectangle2D getBountyNumberSprite(int number) {
+		return bountyNumberSprites.get(number);
 	}
 
 	@Override
-	public Map<Integer, Rectangle2D> getSymbolSprites() {
-		return symbolSprites;
+	public Rectangle2D getSymbolSprite(int symbol) {
+		return symbolSprites.get(symbol);
 	}
 
 	@Override

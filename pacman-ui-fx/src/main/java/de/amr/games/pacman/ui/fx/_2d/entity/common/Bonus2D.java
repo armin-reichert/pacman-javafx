@@ -38,7 +38,7 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class Bonus2D  {
+public class Bonus2D {
 
 	private final Rendering2D rendering;
 	private final Bonus bonus;
@@ -57,9 +57,9 @@ public class Bonus2D  {
 	public void render(GraphicsContext g) {
 		Rectangle2D sprite;
 		if (bonus.state == BonusState.EDIBLE) {
-			sprite = rendering.getSymbolSprites().get(bonus.symbol);
+			sprite = rendering.getSymbolSprite(bonus.symbol);
 		} else if (bonus.state == BonusState.EATEN) {
-			sprite = rendering.getBonusValueSprites().get(bonus.points);
+			sprite = rendering.getBonusValueSprite(bonus.points);
 		} else {
 			return;
 		}

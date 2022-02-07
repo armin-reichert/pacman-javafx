@@ -169,10 +169,10 @@ public abstract class Rendering2D {
 	 */
 	public Rectangle2D bonusSprite(Bonus bonus) {
 		if (bonus.state == BonusState.EDIBLE) {
-			return getSymbolSprites().get(bonus.symbol);
+			return getSymbolSprite(bonus.symbol);
 		}
 		if (bonus.state == BonusState.EATEN) {
-			return getBonusValueSprites().get(bonus.points);
+			return getBonusValueSprite(bonus.points);
 		}
 		throw new IllegalStateException();
 	}
@@ -254,9 +254,9 @@ public abstract class Rendering2D {
 
 	public abstract Rectangle2D getLifeSprite();
 
-	public abstract Map<Integer, Rectangle2D> getBountyNumberSprites();
+	public abstract Rectangle2D getBountyNumberSprite(int number);
 
-	public abstract Map<Integer, Rectangle2D> getBonusValueSprites();
+	public abstract Rectangle2D getBonusValueSprite(int number);
 
-	public abstract Map<Integer, Rectangle2D> getSymbolSprites();
+	public abstract Rectangle2D getSymbolSprite(int symbol);
 }

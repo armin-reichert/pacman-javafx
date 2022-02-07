@@ -54,7 +54,7 @@ public class LevelCounter2D {
 		int firstLevelNumber = Math.max(1, game.levelNumber - 6);
 		double x = rightPosition.x;
 		for (int levelNumber = firstLevelNumber; levelNumber <= game.levelNumber; ++levelNumber, x -= t(2)) {
-			r2D.renderSprite(gc, r2D.getSymbolSprites().get(game.levelSymbol(levelNumber)), x, rightPosition.y);
+			r2D.renderSprite(gc, r2D.getSymbolSprite(game.levelSymbol(levelNumber)), x, rightPosition.y);
 		}
 	}
 }

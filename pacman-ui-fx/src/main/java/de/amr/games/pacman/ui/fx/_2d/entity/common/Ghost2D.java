@@ -76,7 +76,7 @@ public class Ghost2D {
 	public void render(GraphicsContext g) {
 		final Direction dir = ghost.wishDir();
 		if (ghost.bounty > 0) {
-			currentSprite = r2D.getBountyNumberSprites().get(ghost.bounty);
+			currentSprite = r2D.getBountyNumberSprite(ghost.bounty);
 		} else if (ghost.is(DEAD) || ghost.is(ENTERING_HOUSE)) {
 			currentSprite = returningHomeAnimations.get(dir).animate();
 		} else if (ghost.is(FRIGHTENED)) {
