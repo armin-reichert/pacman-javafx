@@ -85,7 +85,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	protected final AmbientLight ambientLight = new AmbientLight(Color.GHOSTWHITE);
 	protected final CoordinateSystem coordSystem = new CoordinateSystem(1000);
 
-	protected Group playground;
 	protected SubScene fxSubScene;
 	protected GameModel game;
 	protected Maze3D maze3D;
@@ -105,7 +104,8 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	@Override
 	public SubScene createSubScene(Scene parent) {
 		if (fxSubScene == null) {
-			fxSubScene = new SubScene(new Group(), 400, 300, true, SceneAntialiasing.BALANCED);
+			fxSubScene = new SubScene(new Group(), parent.getWidth(), parent.getHeight(), true,
+					SceneAntialiasing.BALANCED);
 			fxSubScene.widthProperty().bind(parent.widthProperty());
 			fxSubScene.heightProperty().bind(parent.heightProperty());
 			fxSubScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> camController().handle(e));
@@ -114,8 +114,8 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			cams.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer(cam));
 			cams.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer(cam));
 			cams.put(Perspective.CAM_TOTAL, new Cam_Total(cam));
-			log("Subscene for game scene '%s' created, width=%.0f, height=%.0f", getClass().getName(), fxSubScene.getWidth(),
-					fxSubScene.getHeight());
+			log("Subscene for game scene '%s' created, width=%.0f, height=%.0f", getClass().getName(),
+					fxSubScene.getWidth(), fxSubScene.getHeight());
 		}
 		return fxSubScene;
 	}
@@ -155,7 +155,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 		levelCounter3D = new LevelCounter3D(game, Env.r2D, width - TS, TS);
 
-		playground = new Group();
+		Group playground = new Group();
 		playground.getChildren().addAll(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
 		playground.getChildren().addAll(ghosts3D);
 		playground.getTransforms().add(new Translate(-width / 2, -height / 2)); // center at origin
@@ -187,7 +187,8 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	}
 
 	private void buildMaze3D(int mazeNumber, boolean withFood) {
-		maze3D.buildWallsAndDoors(game.world, Env.r2D.getMazeSideColor(mazeNumber), Env.r2D.getMazeTopColor(mazeNumber));
+		maze3D.buildWallsAndDoors(game.world, Env.r2D.getMazeSideColor(mazeNumber),
+				Env.r2D.getMazeTopColor(mazeNumber));
 		if (withFood) {
 			maze3D.buildFood(game.world, Env.r2D.getFoodColor(mazeNumber));
 		}
@@ -335,7 +336,8 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		else if (e.newGameState == GameState.PACMAN_DYING) {
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setNormalSkinColor());
 			Env.sounds.stopAll();
-			Ghost killer = Stream.of(game.ghosts).filter(ghost -> ghost.tile().equals(game.player.tile())).findAny().get();
+			Ghost killer = Stream.of(game.ghosts).filter(ghost -> ghost.tile().equals(game.player.tile())).findAny()
+					.get();
 			new SequentialTransition( //
 					afterSeconds(1, game::hideGhosts), //
 					player3D.dyingAnimation(Env.r2D.getGhostColor(killer.id)), //
