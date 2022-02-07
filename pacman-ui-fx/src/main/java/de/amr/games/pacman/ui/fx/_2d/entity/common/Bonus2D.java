@@ -42,16 +42,18 @@ public class Bonus2D {
 
 	private final Rendering2D rendering;
 	private final Bonus bonus;
-	public final Optional<TimedSequence<Integer>> animation; // Ms. Pac-Man only
+	private TimedSequence<Integer> animation;
 
 	public Bonus2D(Bonus bonus, Rendering2D r2D, boolean animated) {
 		this.bonus = Objects.requireNonNull(bonus);
 		this.rendering = Objects.requireNonNull(r2D);
-		if (animated) {
-			animation = Optional.of(TimedSequence.of(2, 0, -2).frameDuration(8).endless());
-		} else {
-			animation = Optional.empty();
+		if (animated) { // Ms. Pac-Man only
+			animation = TimedSequence.of(2, 0, -2).frameDuration(8).endless();
 		}
+	}
+
+	public Optional<TimedSequence<Integer>> animation() {
+		return Optional.ofNullable(animation);
 	}
 
 	public void render(GraphicsContext g) {
@@ -63,10 +65,10 @@ public class Bonus2D {
 		} else {
 			return;
 		}
-		if (animation.isPresent()) {
+		if (animation != null) {
 			// Ms. Pac.Man bonus is jumping up and down while wandering the maze
 			g.save();
-			g.translate(0, animation.get().animate());
+			g.translate(0, animation.animate());
 			rendering.renderEntity(g, bonus, sprite);
 			g.restore();
 		} else {

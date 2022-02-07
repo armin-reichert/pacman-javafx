@@ -159,12 +159,12 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void onBonusActivated(GameEvent e) {
-		bonus2D.animation.ifPresent(TimedSequence::restart);
+		bonus2D.animation().ifPresent(TimedSequence::restart);
 	}
 
 	@Override
 	public void onBonusEaten(GameEvent e) {
-		bonus2D.animation.ifPresent(TimedSequence::stop);
+		bonus2D.animation().ifPresent(TimedSequence::stop);
 		Env.sounds.play(GameSounds.BONUS_EATEN);
 	}
 
