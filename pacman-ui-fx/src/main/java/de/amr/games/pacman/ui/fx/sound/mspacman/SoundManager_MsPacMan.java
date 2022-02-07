@@ -40,25 +40,23 @@ public class SoundManager_MsPacMan extends SoundManager {
 	}
 
 	private SoundManager_MsPacMan() {
-		{
-			//@formatter:off
-			put(GameSounds.CREDIT,          "/mspacman/sound/Coin Credit.mp3");
-			put(GameSounds.EXTRA_LIFE,      "/mspacman/sound/Extra Life.mp3");
-			put(GameSounds.GAME_READY,      "/mspacman/sound/Start.mp3");
-			put(GameSounds.BONUS_EATEN,     "/mspacman/sound/Fruit.mp3");
-			put(GameSounds.PACMAN_MUNCH,    "/mspacman/sound/Ms. Pac Man Pill.mp3");
-			put(GameSounds.PACMAN_DEATH,    "/mspacman/sound/Died.mp3");
-			put(GameSounds.PACMAN_POWER,    "/mspacman/sound/Scared Ghost.mp3");
-			put(GameSounds.GHOST_EATEN,     "/mspacman/sound/Ghost.mp3");
-			put(GameSounds.GHOST_RETURNING, "/mspacman/sound/Ghost Eyes.mp3");
-			put(GameSounds.SIREN_1,         "/mspacman/sound/Ghost Noise 1.mp3");
-			put(GameSounds.SIREN_2,         "/mspacman/sound/Ghost Noise 2.mp3");
-			put(GameSounds.SIREN_3,         "/mspacman/sound/Ghost Noise 3.mp3");
-			put(GameSounds.SIREN_4,         "/mspacman/sound/Ghost Noise 4.mp3");
-			put(GameSounds.INTERMISSION_1,  "/mspacman/sound/They Meet Act 1.mp3");
-			put(GameSounds.INTERMISSION_2,  "/mspacman/sound/The Chase Act 2.mp3");
-			put(GameSounds.INTERMISSION_3,  "/mspacman/sound/Junior Act 3.mp3");
-			//@formatter:on
-		}
+		//@formatter:off
+		put(GameSounds.CREDIT,          "/mspacman/sound/Coin Credit.mp3");
+		put(GameSounds.EXTRA_LIFE,      "/mspacman/sound/Extra Life.mp3");
+		put(GameSounds.GAME_READY,      "/mspacman/sound/Start.mp3");
+		put(GameSounds.BONUS_EATEN,     "/mspacman/sound/Fruit.mp3");
+		put(GameSounds.PACMAN_MUNCH,    "/mspacman/sound/Ms. Pac Man Pill.mp3");
+		put(GameSounds.PACMAN_DEATH,    "/mspacman/sound/Died.mp3");
+		put(GameSounds.PACMAN_POWER,    "/mspacman/sound/Scared Ghost.mp3");
+		put(GameSounds.GHOST_EATEN,     "/mspacman/sound/Ghost.mp3");
+		put(GameSounds.GHOST_RETURNING, "/mspacman/sound/Ghost Eyes.mp3");
+		put(GameSounds.SIREN_1,         "/mspacman/sound/Ghost Noise 1.mp3");
+		put(GameSounds.SIREN_2,         "/mspacman/sound/Ghost Noise 2.mp3");
+		put(GameSounds.SIREN_3,         "/mspacman/sound/Ghost Noise 3.mp3");
+		put(GameSounds.SIREN_4,         "/mspacman/sound/Ghost Noise 4.mp3");
+		put(GameSounds.INTERMISSION_1,  "/mspacman/sound/They Meet Act 1.mp3");
+		put(GameSounds.INTERMISSION_2,  "/mspacman/sound/The Chase Act 2.mp3");
+		put(GameSounds.INTERMISSION_3,  "/mspacman/sound/Junior Act 3.mp3");
+		//@formatter:on
 	}
 }
