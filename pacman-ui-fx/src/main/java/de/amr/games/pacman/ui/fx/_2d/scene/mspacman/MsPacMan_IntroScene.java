@@ -60,8 +60,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 	private Player2D msPacMan2D;
 	private List<Ghost2D> ghosts2D;
 
-	public MsPacMan_IntroScene(GameController gameController, V2i unscaledSize, Canvas canvas,
-			Rendering2D_MsPacMan r2D) {
+	public MsPacMan_IntroScene(GameController gameController, V2i unscaledSize, Canvas canvas, Rendering2D_MsPacMan r2D) {
 		super(gameController, unscaledSize, canvas, r2D);
 	}
 
@@ -115,23 +114,21 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 	}
 
 	private void drawPresentingGhost(Ghost ghost) {
-		int top = sc.tileBoardTopLeft.y;
 		gc.setFill(Color.WHITE);
 		gc.setFont(r2D.getScoreFont());
 		if (ghost == sc.ghosts[0]) {
-			gc.fillText("WITH", titlePosition.x, t(top + 3));
+			gc.fillText("WITH", titlePosition.x, sc.adBoardTopLeft.y + t(3));
 		}
 		gc.setFill(ghost.id == 0 ? Color.RED : ghost.id == 1 ? Color.PINK : ghost.id == 2 ? Color.CYAN : Color.ORANGE);
-		gc.fillText(ghost.name.toUpperCase(), t(14 - ghost.name.length() / 2), t(top + 6));
+		gc.fillText(ghost.name.toUpperCase(), t(14 - ghost.name.length() / 2), sc.adBoardTopLeft.y + t(6));
 	}
 
 	private void drawStarringMsPacMan() {
-		int top = sc.tileBoardTopLeft.y;
 		gc.setFill(Color.WHITE);
 		gc.setFont(r2D.getScoreFont());
-		gc.fillText("STARRING", titlePosition.x, t(top + 3));
+		gc.fillText("STARRING", titlePosition.x, sc.adBoardTopLeft.y + t(3));
 		gc.setFill(Color.YELLOW);
-		gc.fillText("MS PAC-MAN", titlePosition.x, t(top + 6));
+		gc.fillText("MS PAC-MAN", titlePosition.x, sc.adBoardTopLeft.y + t(6));
 	}
 
 	private void drawAnimatedBoard(int numDotsX, int numDotsY) {
@@ -151,7 +148,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 				y = 2 * (numDotsX + numDotsY) - dot;
 			}
 			gc.setFill((dot + light) % (numDotsX / 2) == 0 ? Color.PINK : Color.RED);
-			gc.fillRect(t(sc.tileBoardTopLeft.x) + 4 * x, t(sc.tileBoardTopLeft.y) + 4 * y, 2, 2);
+			gc.fillRect(sc.adBoardTopLeft.x + 4 * x, sc.adBoardTopLeft.y + 4 * y, 2, 2);
 		}
 	}
 
