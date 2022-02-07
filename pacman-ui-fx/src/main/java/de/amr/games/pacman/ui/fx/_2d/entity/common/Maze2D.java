@@ -45,17 +45,16 @@ import javafx.util.Duration;
  */
 public class Maze2D {
 
-	private final Rendering2D r2D;
+	private final GameModel game;
 	private final int x;
 	private final int y;
+	private final Rendering2D r2D;
 	private final TimedSequence<Boolean> energizerAnimation;
 	private final Timeline flashingAnimation;
 
-	private GameModel game;
 	private boolean flashing;
 
 	/**
-	 * 
 	 * @param x    x position (in pixels)
 	 * @param y    y position (in pixels)
 	 * @param game the game model
@@ -65,13 +64,9 @@ public class Maze2D {
 		this.x = x;
 		this.y = y;
 		this.r2D = r2D;
+		this.game = game;
 		energizerAnimation = TimedSequence.pulse().frameDuration(10);
 		flashingAnimation = new Timeline(new KeyFrame(Duration.millis(150), e -> flashing = !flashing));
-		setGame(game);
-	}
-
-	public void setGame(GameModel game) {
-		this.game = game;
 		flashingAnimation.setCycleCount(2 * game.numFlashes);
 	}
 

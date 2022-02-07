@@ -249,7 +249,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// enter LEVEL_STARTING
 		else if (e.newGameState == GameState.LEVEL_STARTING) {
-			maze2D.setGame(game);
+			maze2D = new Maze2D(0, t(3), game, r2D);
 			gameController.stateTimer().setSeconds(1).start();
 		}
 
