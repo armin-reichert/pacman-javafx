@@ -27,14 +27,16 @@ import java.util.Objects;
 import java.util.Optional;
 
 import de.amr.games.pacman.lib.TimedSequence;
-import de.amr.games.pacman.model.common.BonusState;
 import de.amr.games.pacman.model.pacman.entities.Bonus;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
- * 2D-representation of the bonus in Pac-Man and Ms. Pac-Man.
+ * 2D-representation of the bonus symbol. In the Ms. Pac-Man game, the bonus is jumping up and down while wandering the
+ * maze.
+ * <p>
+ * TODO: jumping animation is not 100% accurate
  * 
  * @author Armin Reichert
  */
@@ -42,14 +44,12 @@ public class Bonus2D {
 
 	private final Rendering2D rendering;
 	private final Bonus bonus;
-	private TimedSequence<Integer> animation;
+	private final TimedSequence<Integer> animation;
 
 	public Bonus2D(Bonus bonus, Rendering2D r2D, boolean animated) {
 		this.bonus = Objects.requireNonNull(bonus);
 		this.rendering = Objects.requireNonNull(r2D);
-		if (animated) { // Ms. Pac-Man only
-			animation = TimedSequence.of(2, 0, -2).frameDuration(8).endless();
-		}
+		animation = animated ? TimedSequence.of(2, 0, -2).frameDuration(8).endless() : null;
 	}
 
 	public Optional<TimedSequence<Integer>> animation() {
@@ -57,16 +57,15 @@ public class Bonus2D {
 	}
 
 	public void render(GraphicsContext g) {
-		Rectangle2D sprite;
-		if (bonus.state == BonusState.EDIBLE) {
-			sprite = rendering.getSymbolSprite(bonus.symbol);
-		} else if (bonus.state == BonusState.EATEN) {
-			sprite = rendering.getBonusValueSprite(bonus.points);
-		} else {
+		Rectangle2D sprite = switch (bonus.state) {
+		case EDIBLE -> rendering.getSymbolSprite(bonus.symbol);
+		case EATEN -> rendering.getBonusValueSprite(bonus.points);
+		default -> null;
+		};
+		if (sprite == null) {
 			return;
 		}
 		if (animation != null) {
-			// Ms. Pac.Man bonus is jumping up and down while wandering the maze
 			g.save();
 			g.translate(0, animation.animate());
 			rendering.renderEntity(g, bonus, sprite);
