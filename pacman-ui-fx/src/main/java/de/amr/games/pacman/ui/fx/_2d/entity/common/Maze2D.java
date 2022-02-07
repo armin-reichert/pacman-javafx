@@ -111,7 +111,6 @@ public class Maze2D {
 	private void fillTile(GraphicsContext gc, V2i tile, Color color) {
 		gc.setFill(color);
 		gc.fillRect(t(tile.x) + 0.2, t(tile.y) + 0.2, TS - 0.2, TS - 0.2);
-
 	}
 
 	private void drawTileBorders(GraphicsContext gc) {
@@ -130,5 +129,4 @@ public class Maze2D {
 		double offset = 0.5;
 		gc.strokeLine(x1 + offset, y1 + offset, x2 + offset, y2 + offset);
 	}
-
 }
