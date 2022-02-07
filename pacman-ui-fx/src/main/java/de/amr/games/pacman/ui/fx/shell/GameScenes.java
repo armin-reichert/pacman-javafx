@@ -79,7 +79,8 @@ public class GameScenes {
 	}
 
 	public GameScene getScene(GameVariant gameVariant, int sceneIndex, int sceneVariant) {
-		return gameVariant == GameVariant.MS_PACMAN ? scenes_MsPacMan[sceneIndex][sceneVariant]
+		return gameVariant == GameVariant.MS_PACMAN //
+				? scenes_MsPacMan[sceneIndex][sceneVariant]
 				: scenes_PacMan[sceneIndex][sceneVariant];
 	}
 }

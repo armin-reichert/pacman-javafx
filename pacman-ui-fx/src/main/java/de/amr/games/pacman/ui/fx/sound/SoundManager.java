@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.sound;
 
-import java.net.URL;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,32 +40,25 @@ import javafx.scene.media.AudioClip;
  */
 public class SoundManager {
 
-	public boolean loggingEnabled = false;
+	public boolean logEnabled = false;
 
 	private void log(String message, Object... args) {
-		if (loggingEnabled) {
+		if (logEnabled) {
 			Logging.log(message, args);
 		}
 	}
 
-	private final Map<GameSounds, URL> url = new EnumMap<>(GameSounds.class);
+	private final Map<GameSounds, String> urlMap = new EnumMap<>(GameSounds.class);
 	private final Map<GameSounds, AudioClip> clipCache = new HashMap<>();
 	private boolean muted;
 
 	public void put(GameSounds sound, String path) {
-		url.put(sound, getClass().getResource(path));
-	}
-
-	public void setMuted(boolean muted) {
-		this.muted = muted;
-		if (muted) {
-			stopAll();
-		}
+		urlMap.put(sound, getClass().getResource(path).toString());
 	}
 
 	public AudioClip getClip(GameSounds sound) {
 		if (!clipCache.containsKey(sound)) {
-			AudioClip clip = new AudioClip(url.get(sound).toExternalForm());
+			AudioClip clip = new AudioClip(urlMap.get(sound));
 			clipCache.put(sound, clip);
 		}
 		return clipCache.get(sound);
@@ -75,6 +67,8 @@ public class SoundManager {
 	public void play(GameSounds sound) {
 		if (!muted) {
 			log("Play sound %s", sound);
+			AudioClip clip = getClip(sound);
+			clip.setCycleCount(1);
 			getClip(sound).play();
 		}
 	}
@@ -98,5 +92,12 @@ public class SoundManager {
 			clip.stop();
 		}
 		clipCache.clear();
+	}
+
+	public void setMuted(boolean muted) {
+		this.muted = muted;
+		if (muted) {
+			stopAll();
+		}
 	}
 }
