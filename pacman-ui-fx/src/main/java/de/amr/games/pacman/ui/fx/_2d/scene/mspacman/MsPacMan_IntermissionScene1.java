@@ -81,7 +81,7 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 		msPacMan2D = new Player2D(sc.msPac, r2D);
 		// overwrite by Pac-Man instead of Ms. Pac-Man sprites:
 		pacMan2D = new Player2D(sc.pacMan, r2D);
-		pacMan2D.munchingAnimations = ((Rendering2D_MsPacMan) r2D).createSpouseMunchingAnimations();
+		pacMan2D.munchingAnimations = ((Rendering2D_MsPacMan) r2D).createHusbandMunchingAnimations();
 		inky2D = new Ghost2D(sc.inky, r2D);
 		pinky2D = new Ghost2D(sc.pinky, r2D);
 		heart2D = new Heart2D(sc.heart, (Rendering2D_MsPacMan) r2D);

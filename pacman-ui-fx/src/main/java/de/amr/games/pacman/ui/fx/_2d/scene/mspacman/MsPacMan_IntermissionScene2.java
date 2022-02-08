@@ -77,7 +77,7 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 		msPacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 
 		pacMan2D = new Player2D(sc.pacMan, r2D);
-		pacMan2D.munchingAnimations = ((Rendering2D_MsPacMan) r2D).createSpouseMunchingAnimations();
+		pacMan2D.munchingAnimations = ((Rendering2D_MsPacMan) r2D).createHusbandMunchingAnimations();
 		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 	}
 

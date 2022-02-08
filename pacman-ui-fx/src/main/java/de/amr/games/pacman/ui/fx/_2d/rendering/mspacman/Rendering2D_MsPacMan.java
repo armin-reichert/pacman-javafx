@@ -253,7 +253,7 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 
 	// Ms. Pac-Man specific:
 
-	public Map<Direction, TimedSequence<Rectangle2D>> createSpouseMunchingAnimations() {
+	public Map<Direction, TimedSequence<Rectangle2D>> createHusbandMunchingAnimations() {
 		Map<Direction, TimedSequence<Rectangle2D>> animations = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = dirIndex(dir);
