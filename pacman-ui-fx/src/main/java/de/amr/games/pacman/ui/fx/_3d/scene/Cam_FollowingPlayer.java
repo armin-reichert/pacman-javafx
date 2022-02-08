@@ -47,11 +47,6 @@ public class Cam_FollowingPlayer implements CameraController<PlayScene3D> {
 	}
 
 	@Override
-	public boolean keysEnabled() {
-		return false;
-	}
-
-	@Override
 	public void reset() {
 		cam.setNearClip(0.1);
 		cam.setFarClip(10000.0);
