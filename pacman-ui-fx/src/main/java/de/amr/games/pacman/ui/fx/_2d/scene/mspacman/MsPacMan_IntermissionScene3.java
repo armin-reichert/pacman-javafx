@@ -60,9 +60,8 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 	private Stork2D stork2D;
 	private JuniorBag2D bag2D;
 
-	public MsPacMan_IntermissionScene3(GameController gameController, V2i unscaledSize, Canvas canvas,
-			Rendering2D_MsPacMan r2D) {
-		super(gameController, unscaledSize, canvas, r2D);
+	public MsPacMan_IntermissionScene3(GameController gameController, V2i unscaledSize, Canvas canvas) {
+		super(gameController, unscaledSize, canvas);
 	}
 
 	@Override
@@ -73,19 +72,19 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 		sc.playFlapAnimation = () -> flap2D.animation.restart();
 		sc.init(gameController);
 
-		levelCounter2D = new LevelCounter2D(game, r2D);
+		levelCounter2D = new LevelCounter2D(game, Env.r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
 
-		msPacMan2D = new Player2D(sc.msPacMan, r2D);
-		pacMan2D = new Player2D(sc.pacMan, r2D);
-		pacMan2D.munchingAnimations = ((Rendering2D_MsPacMan) r2D).createHusbandMunchingAnimations();
+		msPacMan2D = new Player2D(sc.msPacMan, Env.r2D);
+		pacMan2D = new Player2D(sc.pacMan, Env.r2D);
+		pacMan2D.munchingAnimations = ((Rendering2D_MsPacMan) Env.r2D).createHusbandMunchingAnimations();
 
-		flap2D = new Flap2D(sc.flap, (Rendering2D_MsPacMan) r2D);
+		flap2D = new Flap2D(sc.flap, (Rendering2D_MsPacMan) Env.r2D);
 
-		stork2D = new Stork2D(sc.stork, (Rendering2D_MsPacMan) r2D);
+		stork2D = new Stork2D(sc.stork, (Rendering2D_MsPacMan) Env.r2D);
 		stork2D.animation.restart();
 
-		bag2D = new JuniorBag2D(sc.bag, (Rendering2D_MsPacMan) r2D);
+		bag2D = new JuniorBag2D(sc.bag, (Rendering2D_MsPacMan) Env.r2D);
 	}
 
 	@Override

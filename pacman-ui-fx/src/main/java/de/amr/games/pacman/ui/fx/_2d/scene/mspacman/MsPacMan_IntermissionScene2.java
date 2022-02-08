@@ -55,9 +55,8 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 	private Player2D pacMan2D;
 	private Flap2D flap2D;
 
-	public MsPacMan_IntermissionScene2(GameController gameController, V2i unscaledSize, Canvas canvas,
-			Rendering2D_MsPacMan r2D) {
-		super(gameController, unscaledSize, canvas, r2D);
+	public MsPacMan_IntermissionScene2(GameController gameController, V2i unscaledSize, Canvas canvas) {
+		super(gameController, unscaledSize, canvas);
 	}
 
 	@Override
@@ -68,16 +67,16 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 		sc.playFlapAnimation = () -> flap2D.animation.restart();
 		sc.init(gameController);
 
-		levelCounter2D = new LevelCounter2D(game, r2D);
+		levelCounter2D = new LevelCounter2D(game, Env.r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
 
-		flap2D = new Flap2D(sc.flap, (Rendering2D_MsPacMan) r2D);
+		flap2D = new Flap2D(sc.flap, (Rendering2D_MsPacMan) Env.r2D);
 
-		msPacMan2D = new Player2D(sc.msPacMan, r2D);
+		msPacMan2D = new Player2D(sc.msPacMan, Env.r2D);
 		msPacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 
-		pacMan2D = new Player2D(sc.pacMan, r2D);
-		pacMan2D.munchingAnimations = ((Rendering2D_MsPacMan) r2D).createHusbandMunchingAnimations();
+		pacMan2D = new Player2D(sc.pacMan, Env.r2D);
+		pacMan2D.munchingAnimations = ((Rendering2D_MsPacMan) Env.r2D).createHusbandMunchingAnimations();
 		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 	}
 

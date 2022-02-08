@@ -59,9 +59,8 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 	private TimedSequence<Rectangle2D> blinkyStretchedAnimation;
 	private TimedSequence<Rectangle2D> blinkyDamagedAnimation;
 
-	public PacMan_IntermissionScene2(GameController gameController, V2i unscaledSize, Canvas canvas,
-			Rendering2D_PacMan r2D) {
-		super(gameController, unscaledSize, canvas, r2D);
+	public PacMan_IntermissionScene2(GameController gameController, V2i unscaledSize, Canvas canvas) {
+		super(gameController, unscaledSize, canvas);
 	}
 
 	@Override
@@ -71,16 +70,16 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 		sc.playIntermissionSound = () -> Env.sounds.play(GameSounds.INTERMISSION_2);
 		sc.init(gameController);
 
-		levelCounter2D = new LevelCounter2D(game, r2D);
+		levelCounter2D = new LevelCounter2D(game, Env.r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
 
-		pacMan2D = new Player2D(sc.pac, r2D);
-		blinky2D = new Ghost2D(sc.blinky, r2D);
-		nail2D = new Nail2D(sc.nail, (Rendering2D_PacMan) r2D);
+		pacMan2D = new Player2D(sc.pac, Env.r2D);
+		blinky2D = new Ghost2D(sc.blinky, Env.r2D);
+		nail2D = new Nail2D(sc.nail, (Rendering2D_PacMan) Env.r2D);
 		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 		blinky2D.kickingAnimations.values().forEach(TimedSequence::restart);
-		blinkyStretchedAnimation = ((Rendering2D_PacMan) r2D).createBlinkyStretchedAnimation();
-		blinkyDamagedAnimation = ((Rendering2D_PacMan) r2D).createBlinkyDamagedAnimation();
+		blinkyStretchedAnimation = ((Rendering2D_PacMan) Env.r2D).createBlinkyStretchedAnimation();
+		blinkyDamagedAnimation = ((Rendering2D_PacMan) Env.r2D).createBlinkyDamagedAnimation();
 	}
 
 	@Override
@@ -103,12 +102,12 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 	private void drawBlinkyStretched(Ghost blinky, V2d nailPosition, int stretching) {
 		Rectangle2D stretchedDress = blinkyStretchedAnimation.frame(stretching);
-		r2D.renderSprite(gc, stretchedDress, (int) (nailPosition.x - 4), (int) (nailPosition.y - 4));
+		Env.r2D.renderSprite(gc, stretchedDress, (int) (nailPosition.x - 4), (int) (nailPosition.y - 4));
 		if (stretching < 3) {
 			blinky2D.render(gc);
 		} else {
 			Rectangle2D damagedDress = blinkyDamagedAnimation.frame(blinky.dir() == Direction.UP ? 0 : 1);
-			r2D.renderSprite(gc, damagedDress, (int) (blinky.position.x - 4), (int) (blinky.position.y - 4));
+			Env.r2D.renderSprite(gc, damagedDress, (int) (blinky.position.x - 4), (int) (blinky.position.y - 4));
 		}
 	}
 }

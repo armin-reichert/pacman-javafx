@@ -54,9 +54,8 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 	private BlinkyPatched2D blinkyPatched2D;
 	private BlinkyNaked2D blinkyNaked2D;
 
-	public PacMan_IntermissionScene3(GameController gameController, V2i unscaledSize, Canvas canvas,
-			Rendering2D_PacMan r2D) {
-		super(gameController, unscaledSize, canvas, r2D);
+	public PacMan_IntermissionScene3(GameController gameController, V2i unscaledSize, Canvas canvas) {
+		super(gameController, unscaledSize, canvas);
 	}
 
 	@Override
@@ -66,12 +65,12 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 		sc.playIntermissionSound = () -> Env.sounds.loop(GameSounds.INTERMISSION_3, 2);
 		sc.init(gameController);
 
-		levelCounter2D = new LevelCounter2D(game, r2D);
+		levelCounter2D = new LevelCounter2D(game, Env.r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
 
-		pacMan2D = new Player2D(sc.pac, r2D);
-		blinkyPatched2D = new BlinkyPatched2D(sc.blinky, (Rendering2D_PacMan) r2D);
-		blinkyNaked2D = new BlinkyNaked2D(sc.blinky, (Rendering2D_PacMan) r2D);
+		pacMan2D = new Player2D(sc.pac, Env.r2D);
+		blinkyPatched2D = new BlinkyPatched2D(sc.blinky, (Rendering2D_PacMan) Env.r2D);
+		blinkyNaked2D = new BlinkyNaked2D(sc.blinky, (Rendering2D_PacMan) Env.r2D);
 		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 		blinkyPatched2D.animation.restart();
 		blinkyNaked2D.animation.restart();

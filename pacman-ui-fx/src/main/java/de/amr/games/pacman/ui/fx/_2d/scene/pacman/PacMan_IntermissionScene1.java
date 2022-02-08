@@ -48,15 +48,14 @@ import javafx.scene.canvas.Canvas;
 public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 
 	private final Intermission1Controller sc = new Intermission1Controller();
-	
+
 	private LevelCounter2D levelCounter2D;
 	private Player2D pacMan2D;
 	private Ghost2D blinky2D;
 	private BigPacMan2D bigPacMan2D;
 
-	public PacMan_IntermissionScene1(GameController gameController, V2i unscaledSize, Canvas canvas,
-			Rendering2D_PacMan r2D) {
-		super(gameController, unscaledSize, canvas, r2D);
+	public PacMan_IntermissionScene1(GameController gameController, V2i unscaledSize, Canvas canvas) {
+		super(gameController, unscaledSize, canvas);
 	}
 
 	@Override
@@ -66,12 +65,12 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 		sc.playIntermissionSound = () -> Env.sounds.loop(GameSounds.INTERMISSION_1, 2);
 		sc.init(gameController);
 
-		levelCounter2D = new LevelCounter2D(game, r2D);
+		levelCounter2D = new LevelCounter2D(game, Env.r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
 
-		pacMan2D = new Player2D(sc.pac, r2D);
-		blinky2D = new Ghost2D(sc.blinky, r2D);
-		bigPacMan2D = new BigPacMan2D(sc.pac, (Rendering2D_PacMan) r2D);
+		pacMan2D = new Player2D(sc.pac, Env.r2D);
+		blinky2D = new Ghost2D(sc.blinky, Env.r2D);
+		bigPacMan2D = new BigPacMan2D(sc.pac, (Rendering2D_PacMan) Env.r2D);
 		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 		blinky2D.kickingAnimations.values().forEach(TimedSequence::restart);
 		blinky2D.frightenedAnimation.restart();

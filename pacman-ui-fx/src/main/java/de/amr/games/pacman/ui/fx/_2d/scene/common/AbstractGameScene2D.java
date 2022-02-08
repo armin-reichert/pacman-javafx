@@ -30,7 +30,6 @@ import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import javafx.scene.Scene;
@@ -49,7 +48,6 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 
 	protected final GameController gameController;
 	protected final GraphicsContext gc;
-	protected final Rendering2D r2D;
 	protected final V2i unscaledSize;
 
 	protected SubScene fxSubScene;
@@ -57,10 +55,9 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
 
-	public AbstractGameScene2D(GameController gameController, V2i unscaledSize, Canvas canvas, Rendering2D r2D) {
+	public AbstractGameScene2D(GameController gameController, V2i unscaledSize, Canvas canvas) {
 		this.gameController = gameController;
 		this.unscaledSize = unscaledSize;
-		this.r2D = r2D;
 		gc = canvas.getGraphicsContext2D();
 	}
 
@@ -81,8 +78,8 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	@Override
 	public void init() {
 		game = gameController.game;
-		score2D = new GameScore2D("SCORE", t(1), t(1), game, false, r2D);
-		highScore2D = new GameScore2D("HIGH SCORE", t(16), t(1), game, true, r2D);
+		score2D = new GameScore2D("SCORE", t(1), t(1), game, false, Env.r2D);
+		highScore2D = new GameScore2D("HIGH SCORE", t(16), t(1), game, true, Env.r2D);
 	}
 
 	@Override

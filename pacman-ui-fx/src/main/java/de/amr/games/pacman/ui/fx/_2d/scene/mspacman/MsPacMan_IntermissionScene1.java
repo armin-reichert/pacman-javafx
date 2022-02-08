@@ -61,9 +61,8 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 	private Flap2D flap2D;
 	private Heart2D heart2D;
 
-	public MsPacMan_IntermissionScene1(GameController gameController, V2i unscaledSize, Canvas canvas,
-			Rendering2D_MsPacMan r2D) {
-		super(gameController, unscaledSize, canvas, r2D);
+	public MsPacMan_IntermissionScene1(GameController gameController, V2i unscaledSize, Canvas canvas) {
+		super(gameController, unscaledSize, canvas);
 	}
 
 	@Override
@@ -73,18 +72,18 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 		sc.playIntermissionSound = () -> Env.sounds.loop(GameSounds.INTERMISSION_1, 1);
 		sc.playFlapAnimation = () -> flap2D.animation.restart();
 		sc.init(gameController);
-		
-		levelCounter2D = new LevelCounter2D(game, r2D);
+
+		levelCounter2D = new LevelCounter2D(game, Env.r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
 
-		flap2D = new Flap2D(sc.flap, (Rendering2D_MsPacMan) r2D);
-		msPacMan2D = new Player2D(sc.msPac, r2D);
+		flap2D = new Flap2D(sc.flap, (Rendering2D_MsPacMan) Env.r2D);
+		msPacMan2D = new Player2D(sc.msPac, Env.r2D);
 		// overwrite by Pac-Man instead of Ms. Pac-Man sprites:
-		pacMan2D = new Player2D(sc.pacMan, r2D);
-		pacMan2D.munchingAnimations = ((Rendering2D_MsPacMan) r2D).createHusbandMunchingAnimations();
-		inky2D = new Ghost2D(sc.inky, r2D);
-		pinky2D = new Ghost2D(sc.pinky, r2D);
-		heart2D = new Heart2D(sc.heart, (Rendering2D_MsPacMan) r2D);
+		pacMan2D = new Player2D(sc.pacMan, Env.r2D);
+		pacMan2D.munchingAnimations = ((Rendering2D_MsPacMan) Env.r2D).createHusbandMunchingAnimations();
+		inky2D = new Ghost2D(sc.inky, Env.r2D);
+		pinky2D = new Ghost2D(sc.pinky, Env.r2D);
+		heart2D = new Heart2D(sc.heart, (Rendering2D_MsPacMan) Env.r2D);
 
 		// start animations
 		msPacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);

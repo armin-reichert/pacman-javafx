@@ -39,8 +39,8 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
+import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -61,8 +61,8 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	private List<Ghost2D> ghosts2D;
 	private List<Ghost2D> gallery2D;
 
-	public PacMan_IntroScene(GameController gameController, V2i unscaledSize, Canvas canvas, Rendering2D_PacMan r2D) {
-		super(gameController, unscaledSize, canvas, r2D);
+	public PacMan_IntroScene(GameController gameController, V2i unscaledSize, Canvas canvas) {
+		super(gameController, unscaledSize, canvas);
 	}
 
 	@Override
@@ -72,21 +72,21 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 
 		score2D.showPoints = false;
 
-		pacMan2D = new Player2D(sc.pacMan, r2D);
+		pacMan2D = new Player2D(sc.pacMan, Env.r2D);
 		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
 
 		ghosts2D = Stream.of(sc.ghosts).map(ghost -> {
-			Ghost2D ghost2D = new Ghost2D(ghost, r2D);
+			Ghost2D ghost2D = new Ghost2D(ghost, Env.r2D);
 			ghost2D.kickingAnimations.values().forEach(TimedSequence::restart);
 			ghost2D.frightenedAnimation.restart();
 			return ghost2D;
 		}).collect(Collectors.toList());
 
 		gallery2D = List.of( //
-				new Ghost2D(sc.portraits[0].ghost, r2D), //
-				new Ghost2D(sc.portraits[1].ghost, r2D), //
-				new Ghost2D(sc.portraits[2].ghost, r2D), //
-				new Ghost2D(sc.portraits[3].ghost, r2D));
+				new Ghost2D(sc.portraits[0].ghost, Env.r2D), //
+				new Ghost2D(sc.portraits[1].ghost, Env.r2D), //
+				new Ghost2D(sc.portraits[2].ghost, Env.r2D), //
+				new Ghost2D(sc.portraits[3].ghost, Env.r2D));
 	}
 
 	@Override
@@ -153,7 +153,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 
 	private void drawGallery() {
 		gc.setFill(Color.WHITE);
-		gc.setFont(r2D.getScoreFont());
+		gc.setFont(Env.r2D.getScoreFont());
 		gc.fillText("CHARACTER", t(6), sc.topY);
 		gc.fillText("/", t(16), sc.topY);
 		gc.fillText("NICKNAME", t(18), sc.topY);
@@ -163,11 +163,11 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 				int y = sc.topY + t(1 + 3 * ghostID);
 				gallery2D.get(ghostID).render(gc);
 				if (portrait.characterVisible) {
-					gc.setFill(r2D.getGhostColor(ghostID));
+					gc.setFill(Env.r2D.getGhostColor(ghostID));
 					gc.fillText("-" + portrait.character, t(6), y + 8);
 				}
 				if (portrait.nicknameVisible) {
-					gc.setFill(r2D.getGhostColor(ghostID));
+					gc.setFill(Env.r2D.getGhostColor(ghostID));
 					gc.fillText("\"" + portrait.ghost.name + "\"", t(17), y + 8);
 				}
 			}
@@ -178,35 +178,35 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 		if (sc.slowBlinking.frame()) {
 			String text = "PRESS SPACE TO PLAY";
 			gc.setFill(Color.WHITE);
-			gc.setFont(r2D.getScoreFont());
+			gc.setFont(Env.r2D.getScoreFont());
 			gc.fillText(text, t(14 - text.length() / 2), t(yTile));
 		}
 	}
 
 	private void drawPoints(int tileX, int tileY) {
-		gc.setFill(r2D.getFoodColor(1));
+		gc.setFill(Env.r2D.getFoodColor(1));
 		gc.fillRect(t(tileX) + 6, t(tileY - 1) + 2, 2, 2);
 		if (sc.blinking.frame()) {
 			gc.fillOval(t(tileX), t(tileY + 1) - 2, 10, 10);
 		}
 		gc.setFill(Color.WHITE);
-		gc.setFont(r2D.getScoreFont());
+		gc.setFont(Env.r2D.getScoreFont());
 		gc.fillText("10", t(tileX + 2), t(tileY));
 		gc.fillText("50", t(tileX + 2), t(tileY + 2));
-		gc.setFont(Font.font(r2D.getScoreFont().getName(), 6));
+		gc.setFont(Font.font(Env.r2D.getScoreFont().getName(), 6));
 		gc.fillText("PTS", t(tileX + 5), t(tileY));
 		gc.fillText("PTS", t(tileX + 5), t(tileY + 2));
 	}
 
 	private void drawEnergizer() {
-		gc.setFill(r2D.getFoodColor(1));
+		gc.setFill(Env.r2D.getFoodColor(1));
 		gc.fillOval(t(2), t(20), TS, TS);
 	}
 
 	private void drawCopyright(int yTile) {
 		String text = "\u00A9 1980 MIDWAY MFG. CO.";
-		gc.setFont(r2D.getScoreFont());
-		gc.setFill(r2D.getGhostColor(GameModel.PINK_GHOST));
+		gc.setFont(Env.r2D.getScoreFont());
+		gc.setFill(Env.r2D.getGhostColor(GameModel.PINK_GHOST));
 		gc.fillText(text, t(3), t(yTile));
 	}
 }
