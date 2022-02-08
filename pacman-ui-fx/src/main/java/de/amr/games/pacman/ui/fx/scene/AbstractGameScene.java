@@ -23,33 +23,37 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.scene;
 
+import static de.amr.games.pacman.lib.Logging.log;
+
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.controller.event.GameEvent;
+import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
 import de.amr.games.pacman.model.common.GameModel;
-import javafx.scene.Scene;
 import javafx.scene.SubScene;
 
 /**
- * Common interface for all game scenes (2D and 3D). Every implementation of this interface has a JavaFX sub scene which
- * is a child of the main scene inside the stage.
+ * Base class for all scenes (2D and 3D).
  * 
  * @author Armin Reichert
  */
-public interface GameScene {
+public abstract class AbstractGameScene extends DefaultGameEventHandler implements GameScene {
 
-	void setGameContext(GameController gameController, GameModel game);
+	protected GameController gameController;
+	protected GameModel game;
+	protected SubScene fxSubScene;
 
-	SubScene createSubScene(Scene parent);
+	@Override
+	public void setGameContext(GameController gameController, GameModel game) {
+		this.gameController = gameController;
+		this.game = game;
+	}
 
-	SubScene getSubScene();
+	@Override
+	public void end() {
+		log("Scene '%s' ended", getClass().getName());
+	}
 
-	void init();
-
-	void onGameEvent(GameEvent event);
-
-	void update();
-
-	boolean is3D();
-
-	void end();
+	@Override
+	public SubScene getSubScene() {
+		return fxSubScene;
+	}
 }

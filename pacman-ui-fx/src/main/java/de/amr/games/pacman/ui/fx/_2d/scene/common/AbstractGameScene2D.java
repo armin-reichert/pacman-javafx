@@ -25,13 +25,10 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.model.world.World.t;
 
-import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
@@ -44,21 +41,12 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public abstract class AbstractGameScene2D extends DefaultGameEventHandler implements GameScene {
+public abstract class AbstractGameScene2D extends AbstractGameScene {
 
-	protected GameController gameController;
-	protected GameModel game;
-	protected SubScene fxSubScene;
 	protected V2i unscaledSize;
 	protected GraphicsContext gc;
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
-
-	@Override
-	public void setGameContext(GameController gameController, GameModel game) {
-		this.gameController = gameController;
-		this.game = game;
-	}
 
 	public void setUnscaledSize(V2i unscaledSize) {
 		this.unscaledSize = unscaledSize;
@@ -74,11 +62,6 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 		fxSubScene = new SubScene(new StackPane(canvas), unscaledSize.x, unscaledSize.y);
 		fxSubScene.widthProperty().bind(canvas.widthProperty());
 		fxSubScene.heightProperty().bind(canvas.heightProperty());
-		return fxSubScene;
-	}
-
-	@Override
-	public SubScene getSubScene() {
 		return fxSubScene;
 	}
 

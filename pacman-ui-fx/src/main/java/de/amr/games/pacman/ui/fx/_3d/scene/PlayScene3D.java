@@ -33,14 +33,11 @@ import static de.amr.games.pacman.ui.fx.util.U.pause;
 import java.util.EnumMap;
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
 import de.amr.games.pacman.controller.event.GameEvent;
 import de.amr.games.pacman.controller.event.GameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.GameSounds;
@@ -53,7 +50,7 @@ import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import de.amr.games.pacman.ui.fx._3d.entity.ScoreNotReally3D;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
 import de.amr.games.pacman.ui.fx.shell.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.CoordinateSystem;
 import javafx.animation.Animation;
@@ -76,7 +73,7 @@ import javafx.scene.transform.Translate;
  * 
  * @author Armin Reichert
  */
-public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
+public class PlayScene3D extends AbstractGameScene {
 
 	protected final PacManModel3D model3D;
 	protected final EnumMap<Perspective, CameraController<PlayScene3D>> cams = new EnumMap<>(Perspective.class);
@@ -84,9 +81,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	protected final AmbientLight ambientLight = new AmbientLight(Color.GHOSTWHITE);
 	protected final CoordinateSystem coordSystem = new CoordinateSystem(1000);
 
-	protected GameController gameController;
-	protected GameModel game;
-	protected SubScene fxSubScene;
 	protected Maze3D maze3D;
 	protected Pac3D player3D;
 	protected Ghost3D[] ghosts3D;
@@ -98,12 +92,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	public PlayScene3D(PacManModel3D model3D) {
 		this.model3D = model3D;
 		coordSystem.visibleProperty().bind(Env.$axesVisible);
-	}
-
-	@Override
-	public void setGameContext(GameController gameController, GameModel game) {
-		this.gameController = gameController;
-		this.game = game;
 	}
 
 	@Override
@@ -121,11 +109,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			log("Subscene for game scene '%s' created, width=%.0f, height=%.0f", getClass().getName(), fxSubScene.getWidth(),
 					fxSubScene.getHeight());
 		}
-		return fxSubScene;
-	}
-
-	@Override
-	public SubScene getSubScene() {
 		return fxSubScene;
 	}
 
@@ -173,7 +156,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	public void end() {
 		Env.sounds.setMuted(false);
 		Env.$perspective.removeListener(this::onPerspectiveChange);
-		GameScene.super.end();
+		super.end();
 	}
 
 	@Override
