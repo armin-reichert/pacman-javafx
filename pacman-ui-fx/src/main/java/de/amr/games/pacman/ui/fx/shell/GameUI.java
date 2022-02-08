@@ -39,6 +39,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
+import de.amr.games.pacman.ui.fx.scene.GameScenes;
 import de.amr.games.pacman.ui.fx.sound.mspacman.SoundManager_MsPacMan;
 import de.amr.games.pacman.ui.fx.sound.pacman.SoundManager_PacMan;
 import de.amr.games.pacman.ui.fx.util.U;

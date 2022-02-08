@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx.shell;
+package de.amr.games.pacman.ui.fx.scene;
 
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
@@ -35,7 +35,6 @@ import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntermissionScene3;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntroScene;
 import de.amr.games.pacman.ui.fx._3d.model.GianmarcosModel3D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
-import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
 
 /**
  * The game scenes.
