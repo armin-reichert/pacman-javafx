@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
 import static de.amr.games.pacman.model.world.World.t;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.pacman.Intermission3Controller;
 import de.amr.games.pacman.controller.pacman.Intermission3Controller.IntermissionState;
 import de.amr.games.pacman.lib.TimedSequence;
@@ -51,10 +50,6 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 	private Player2D pacMan2D;
 	private BlinkyPatched2D blinkyPatched2D;
 	private BlinkyNaked2D blinkyNaked2D;
-
-	public PacMan_IntermissionScene3(GameController gameController) {
-		super(gameController);
-	}
 
 	@Override
 	public void init() {

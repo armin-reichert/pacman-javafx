@@ -23,8 +23,10 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.scene;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.event.GameEvent;
 import de.amr.games.pacman.lib.Logging;
+import de.amr.games.pacman.model.common.GameModel;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 
@@ -35,6 +37,8 @@ import javafx.scene.SubScene;
  * @author Armin Reichert
  */
 public interface GameScene {
+
+	void setGameContext(GameController gameController, GameModel game);
 
 	SubScene createSubScene(Scene parent);
 

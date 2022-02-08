@@ -78,15 +78,15 @@ import javafx.scene.transform.Translate;
  */
 public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
-	protected final GameController gameController;
 	protected final PacManModel3D model3D;
 	protected final EnumMap<Perspective, CameraController<PlayScene3D>> cams = new EnumMap<>(Perspective.class);
 	protected final Image floorImage = new Image(getClass().getResource("/common/escher-texture.jpg").toString());
 	protected final AmbientLight ambientLight = new AmbientLight(Color.GHOSTWHITE);
 	protected final CoordinateSystem coordSystem = new CoordinateSystem(1000);
 
-	protected SubScene fxSubScene;
+	protected GameController gameController;
 	protected GameModel game;
+	protected SubScene fxSubScene;
 	protected Maze3D maze3D;
 	protected Pac3D player3D;
 	protected Ghost3D[] ghosts3D;
@@ -95,10 +95,15 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	protected LevelCounter3D levelCounter3D;
 	protected LivesCounter3D livesCounter3D;
 
-	public PlayScene3D(GameController gameController, PacManModel3D model3D) {
-		this.gameController = gameController;
+	public PlayScene3D(PacManModel3D model3D) {
 		this.model3D = model3D;
 		coordSystem.visibleProperty().bind(Env.$axesVisible);
+	}
+
+	@Override
+	public void setGameContext(GameController gameController, GameModel game) {
+		this.gameController = gameController;
+		this.game = game;
 	}
 
 	@Override
@@ -130,8 +135,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 	@Override
 	public void init() {
-		game = gameController.game;
-
 		final int width = game.world.numCols() * TS;
 		final int height = game.world.numRows() * TS;
 

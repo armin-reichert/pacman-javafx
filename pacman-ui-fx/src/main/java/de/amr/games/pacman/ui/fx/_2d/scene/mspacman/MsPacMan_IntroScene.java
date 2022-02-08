@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.mspacman.IntroController;
 import de.amr.games.pacman.controller.mspacman.IntroController.IntroState;
 import de.amr.games.pacman.lib.TickTimer;
@@ -58,10 +57,6 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 
 	private Player2D msPacMan2D;
 	private List<Ghost2D> ghosts2D;
-
-	public MsPacMan_IntroScene(GameController gameController) {
-		super(gameController);
-	}
 
 	@Override
 	public void init() {

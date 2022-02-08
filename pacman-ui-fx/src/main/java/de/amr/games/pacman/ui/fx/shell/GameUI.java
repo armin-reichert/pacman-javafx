@@ -77,7 +77,7 @@ public class GameUI extends DefaultGameEventHandler {
 	private final Group gameSceneRoot = new Group();
 	private final StackPane mainSceneRoot = new StackPane();
 
-	private final GameScenes gameScenes;
+	private final GameScenes gameScenes = new GameScenes();
 	GameScene currentScene;
 
 	public GameUI(Stage stage, GameController gameController, double height, boolean fullscreen) {
@@ -93,7 +93,6 @@ public class GameUI extends DefaultGameEventHandler {
 		Env.$drawMode3D.addListener($1 -> updateBackground(currentScene));
 		Env.gameLoop.$fps.addListener($1 -> stage.setTitle(computeStageTitle()));
 
-		gameScenes = new GameScenes(gameController);
 		selectGameScene();
 
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> Env.gameLoop.stop());
@@ -145,7 +144,7 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	private void updateSceneContext(GameScene gameScene) {
-		updateBackground(gameScene);
+		gameScene.setGameContext(gameController, gameController.game);
 		if (gameScene instanceof AbstractGameScene2D) {
 			((AbstractGameScene2D) gameScene).setCanvas(canvas);
 			((AbstractGameScene2D) gameScene).setUnscaledSize(new V2i(TILES_X, TILES_Y).scaled(TS));
@@ -157,6 +156,7 @@ public class GameUI extends DefaultGameEventHandler {
 			Env.r2D = Rendering2D_PacMan.get();
 			Env.sounds = SoundManager_PacMan.get();
 		}
+		updateBackground(gameScene);
 	}
 
 	private void resizeCanvas(double height) {

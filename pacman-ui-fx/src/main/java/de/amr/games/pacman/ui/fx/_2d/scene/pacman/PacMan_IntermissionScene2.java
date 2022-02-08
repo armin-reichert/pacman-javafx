@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
 import static de.amr.games.pacman.model.world.World.t;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.pacman.Intermission2Controller;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSequence;
@@ -56,10 +55,6 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 	private Nail2D nail2D;
 	private TimedSequence<Rectangle2D> blinkyStretchedAnimation;
 	private TimedSequence<Rectangle2D> blinkyDamagedAnimation;
-
-	public PacMan_IntermissionScene2(GameController gameController) {
-		super(gameController);
-	}
 
 	@Override
 	public void init() {

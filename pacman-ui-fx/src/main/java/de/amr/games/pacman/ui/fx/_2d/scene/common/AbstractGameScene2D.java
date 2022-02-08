@@ -46,8 +46,7 @@ import javafx.scene.paint.Color;
  */
 public abstract class AbstractGameScene2D extends DefaultGameEventHandler implements GameScene {
 
-	protected final GameController gameController;
-
+	protected GameController gameController;
 	protected GameModel game;
 	protected SubScene fxSubScene;
 	protected V2i unscaledSize;
@@ -55,8 +54,10 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
 
-	public AbstractGameScene2D(GameController gameController) {
+	@Override
+	public void setGameContext(GameController gameController, GameModel game) {
 		this.gameController = gameController;
+		this.game = game;
 	}
 
 	public void setUnscaledSize(V2i unscaledSize) {
@@ -83,7 +84,6 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 
 	@Override
 	public void init() {
-		game = gameController.game;
 		score2D = new GameScore2D("SCORE", t(1), t(1), game, false, Env.r2D);
 		highScore2D = new GameScore2D("HIGH SCORE", t(16), t(1), game, true, Env.r2D);
 	}
