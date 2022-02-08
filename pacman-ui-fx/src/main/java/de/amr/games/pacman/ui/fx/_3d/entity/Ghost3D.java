@@ -27,6 +27,7 @@ import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.animation.BlueFlashingAnimation;
+import de.amr.games.pacman.ui.fx._3d.animation.FadeInTransition3D;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -36,6 +37,7 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
 
 /**
  * 3D-representation of a ghost. A ghost is displayed in one of 3 modes: as a full ghost, as eyes only or as a bonus
@@ -111,6 +113,11 @@ public class Ghost3D extends Creature3D<Ghost> {
 	public void playFlashingAnimation() {
 		skin3D.setMaterial(flashing.getMaterial());
 		flashing.playFromStart();
+	}
+
+	public void playRevivalAnimation() {
+		var animation = new FadeInTransition3D(Duration.seconds(2), skin3D, r2D.getGhostColor(creature.id));
+		animation.playFromStart();
 	}
 
 	public void setNormalSkinColor() {

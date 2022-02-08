@@ -294,11 +294,13 @@ public class PlayScene3D extends AbstractGameScene {
 	@Override
 	public void onGhostRevived(GameEvent e) {
 		log("Ghost '%s' revived", e.ghost.get().name);
+		Ghost3D ghost3D = ghosts3D[e.ghost.get().id];
+		ghost3D.playRevivalAnimation();
 	}
 
 	@Override
 	public void onGhostLeavingHouse(GameEvent e) {
-		ghosts3D[e.ghost.get().id].setNormalSkinColor();
+//		ghosts3D[e.ghost.get().id].setNormalSkinColor();
 	}
 
 	@Override

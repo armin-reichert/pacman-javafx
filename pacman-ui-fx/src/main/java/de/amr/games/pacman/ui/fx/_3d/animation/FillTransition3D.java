@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.animation;
 
-import static de.amr.games.pacman.ui.fx.util.U.lerp;
-
 import javafx.animation.FillTransition;
 import javafx.animation.Transition;
 import javafx.scene.paint.Color;
@@ -55,11 +53,7 @@ public class FillTransition3D extends Transition {
 
 	@Override
 	protected void interpolate(double t) {
-		Color color = Color.color( //
-				lerp(fromColor.getRed(), toColor.getRed(), t), //
-				lerp(fromColor.getGreen(), toColor.getGreen(), t), //
-				lerp(fromColor.getBlue(), toColor.getBlue(), t));
-		material.setDiffuseColor(color);
+		material.setDiffuseColor(fromColor.interpolate(toColor, t));
 		shape.setMaterial(material);
 	}
 }
