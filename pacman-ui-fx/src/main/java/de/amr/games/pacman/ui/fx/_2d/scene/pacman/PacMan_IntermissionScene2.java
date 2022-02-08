@@ -30,7 +30,6 @@ import de.amr.games.pacman.controller.pacman.Intermission2Controller;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSequence;
 import de.amr.games.pacman.lib.V2d;
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
@@ -58,8 +57,8 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 	private TimedSequence<Rectangle2D> blinkyStretchedAnimation;
 	private TimedSequence<Rectangle2D> blinkyDamagedAnimation;
 
-	public PacMan_IntermissionScene2(GameController gameController, V2i unscaledSize) {
-		super(gameController, unscaledSize);
+	public PacMan_IntermissionScene2(GameController gameController) {
+		super(gameController);
 	}
 
 	@Override

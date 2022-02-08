@@ -35,7 +35,6 @@ import de.amr.games.pacman.controller.event.GameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.lib.TimedSequence;
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
@@ -67,8 +66,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 	private List<Ghost2D> ghosts2D;
 	private Bonus2D bonus2D;
 
-	public PlayScene2D(GameController gameController, V2i unscaledSize) {
-		super(gameController, unscaledSize);
+	public PlayScene2D(GameController gameController) {
+		super(gameController);
 	}
 
 	@Override

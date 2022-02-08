@@ -93,7 +93,7 @@ public class GameUI extends DefaultGameEventHandler {
 		Env.$drawMode3D.addListener($1 -> updateBackground(currentScene));
 		Env.gameLoop.$fps.addListener($1 -> stage.setTitle(computeStageTitle()));
 
-		gameScenes = new GameScenes(gameController, new V2i(TILES_X, TILES_Y).scaled(TS));
+		gameScenes = new GameScenes(gameController);
 		selectGameScene();
 
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> Env.gameLoop.stop());
@@ -144,17 +144,11 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 	}
 
-	private void resizeCanvas(double height) {
-		canvas.setHeight(height);
-		canvas.setWidth(height * ASPECT_RATIO);
-		double scaling = height / (TILES_Y * TS);
-		canvas.getTransforms().setAll(new Scale(scaling, scaling));
-	}
-
 	private void updateSceneContext(GameScene gameScene) {
 		updateBackground(gameScene);
 		if (gameScene instanceof AbstractGameScene2D) {
 			((AbstractGameScene2D) gameScene).setCanvas(canvas);
+			((AbstractGameScene2D) gameScene).setUnscaledSize(new V2i(TILES_X, TILES_Y).scaled(TS));
 		}
 		if (gameController.gameVariant == GameVariant.MS_PACMAN) {
 			Env.r2D = Rendering2D_MsPacMan.get();
@@ -163,6 +157,13 @@ public class GameUI extends DefaultGameEventHandler {
 			Env.r2D = Rendering2D_PacMan.get();
 			Env.sounds = SoundManager_PacMan.get();
 		}
+	}
+
+	private void resizeCanvas(double height) {
+		canvas.setHeight(height);
+		canvas.setWidth(height * ASPECT_RATIO);
+		double scaling = height / (TILES_Y * TS);
+		canvas.getTransforms().setAll(new Scale(scaling, scaling));
 	}
 
 	private String computeStageTitle() {
