@@ -131,6 +131,7 @@ public class Ghost3D extends Creature3D<Ghost> {
 	}
 
 	private void setSkinColor(Color color) {
+		color = Color.color(color.getRed(), color.getGreen(), color.getBlue(), 0.8);
 		PhongMaterial material = new PhongMaterial(color);
 		material.setSpecularColor(color.brighter());
 		skin3D.setMaterial(material);
