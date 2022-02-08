@@ -67,8 +67,8 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 
 	@Override
 	public void init() {
-		score2D = new GameScore2D("SCORE", t(1), t(1), game, false, Env.r2D);
-		highScore2D = new GameScore2D("HIGH SCORE", t(16), t(1), game, true, Env.r2D);
+		score2D = new GameScore2D("SCORE", t(1), t(1), game, false, r2D);
+		highScore2D = new GameScore2D("HIGH SCORE", t(16), t(1), game, true, r2D);
 	}
 
 	@Override

@@ -35,7 +35,7 @@ import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntermissionScene3;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntroScene;
 import de.amr.games.pacman.ui.fx._3d.model.GianmarcosModel3D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
-import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
 
 /**
  * The game scenes.
@@ -44,8 +44,8 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
  */
 public class GameScenes {
 
-	private final GameScene scenes_PacMan[][] = new GameScene[5][2];
-	private final GameScene scenes_MsPacMan[][] = new GameScene[5][2];
+	private final AbstractGameScene scenes_PacMan[][] = new AbstractGameScene[5][2];
+	private final AbstractGameScene scenes_MsPacMan[][] = new AbstractGameScene[5][2];
 
 	public GameScenes() {
 		//@formatter:off
@@ -73,7 +73,7 @@ public class GameScenes {
 		//@formatter:on
 	}
 
-	public GameScene getScene(GameVariant gameVariant, int sceneIndex, int sceneVariant) {
+	public AbstractGameScene getScene(GameVariant gameVariant, int sceneIndex, int sceneVariant) {
 		return gameVariant == GameVariant.MS_PACMAN //
 				? scenes_MsPacMan[sceneIndex][sceneVariant]
 				: scenes_PacMan[sceneIndex][sceneVariant];

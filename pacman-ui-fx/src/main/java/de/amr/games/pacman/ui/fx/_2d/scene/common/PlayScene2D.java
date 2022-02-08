@@ -44,7 +44,6 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Maze2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
-import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.scene.media.AudioClip;
@@ -69,30 +68,30 @@ public class PlayScene2D extends AbstractGameScene2D {
 	public void init() {
 		super.init();
 
-		maze2D = new Maze2D(0, t(3), game, Env.r2D);
+		maze2D = new Maze2D(0, t(3), game, r2D);
 		score2D.showPoints = !gameController.attractMode;
-		livesCounter2D = new LivesCounter2D(t(2), t(34), game, Env.r2D);
+		livesCounter2D = new LivesCounter2D(t(2), t(34), game, r2D);
 		livesCounter2D.visible = !gameController.attractMode;
-		levelCounter2D = new LevelCounter2D(game, Env.r2D);
+		levelCounter2D = new LevelCounter2D(game, r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
 		levelCounter2D.visible = !gameController.attractMode;
-		player2D = new Player2D(game.player, Env.r2D);
+		player2D = new Player2D(game.player, r2D);
 		player2D.dyingAnimation.onStart(game::hideGhosts);
 		ghosts2D = List.of( //
-				new Ghost2D(game.ghosts[0], Env.r2D), //
-				new Ghost2D(game.ghosts[1], Env.r2D), //
-				new Ghost2D(game.ghosts[2], Env.r2D), //
-				new Ghost2D(game.ghosts[3], Env.r2D));
-		bonus2D = new Bonus2D(game.bonus, Env.r2D, gameController.gameVariant == GameVariant.MS_PACMAN);
+				new Ghost2D(game.ghosts[0], r2D), //
+				new Ghost2D(game.ghosts[1], r2D), //
+				new Ghost2D(game.ghosts[2], r2D), //
+				new Ghost2D(game.ghosts[3], r2D));
+		bonus2D = new Bonus2D(game.bonus, r2D, gameController.gameVariant == GameVariant.MS_PACMAN);
 
 		game.player.powerTimer.addEventListener(this::handleGhostsFlashing);
-		Env.sounds.setMuted(gameController.attractMode);
+		sounds.setMuted(gameController.attractMode);
 	}
 
 	@Override
 	public void end() {
 		game.player.powerTimer.removeEventListener(this::handleGhostsFlashing);
-		Env.sounds.setMuted(false);
+		sounds.setMuted(false);
 		super.end();
 	}
 
@@ -106,10 +105,10 @@ public class PlayScene2D extends AbstractGameScene2D {
 			if (!maze2D.getEnergizerAnimation().isRunning()) {
 				maze2D.getEnergizerAnimation().restart();
 			}
-			AudioClip munching = Env.sounds.getClip(GameSounds.PACMAN_MUNCH);
+			AudioClip munching = sounds.getClip(GameSounds.PACMAN_MUNCH);
 			if (munching.isPlaying()) {
 				if (game.player.starvingTicks > 10) {
-					Env.sounds.stop(GameSounds.PACMAN_MUNCH);
+					sounds.stop(GameSounds.PACMAN_MUNCH);
 				}
 			}
 		}
@@ -118,17 +117,17 @@ public class PlayScene2D extends AbstractGameScene2D {
 	@Override
 	public void onScatterPhaseStarted(ScatterPhaseStartedEvent e) {
 		if (e.scatterPhase > 0) {
-			Env.sounds.stop(GameSounds.SIRENS.get(e.scatterPhase - 1));
+			sounds.stop(GameSounds.SIRENS.get(e.scatterPhase - 1));
 		}
 		GameSounds siren = GameSounds.SIRENS.get(e.scatterPhase);
-		if (!Env.sounds.getClip(siren).isPlaying()) {
-			Env.sounds.loop(siren, Animation.INDEFINITE);
+		if (!sounds.getClip(siren).isPlaying()) {
+			sounds.loop(siren, Animation.INDEFINITE);
 		}
 	}
 
 	@Override
 	public void onPlayerLostPower(GameEvent e) {
-		Env.sounds.stop(GameSounds.PACMAN_POWER);
+		sounds.stop(GameSounds.PACMAN_POWER);
 	}
 
 	@Override
@@ -137,15 +136,15 @@ public class PlayScene2D extends AbstractGameScene2D {
 			ghost2D.flashingAnimation.reset();
 			ghost2D.frightenedAnimation.restart();
 		});
-		if (!Env.sounds.getClip(GameSounds.PACMAN_POWER).isPlaying()) {
-			Env.sounds.loop(GameSounds.PACMAN_POWER, Animation.INDEFINITE);
+		if (!sounds.getClip(GameSounds.PACMAN_POWER).isPlaying()) {
+			sounds.loop(GameSounds.PACMAN_POWER, Animation.INDEFINITE);
 		}
 	}
 
 	@Override
 	public void onPlayerFoundFood(GameEvent e) {
-		if (!Env.sounds.getClip(GameSounds.PACMAN_MUNCH).isPlaying()) {
-			Env.sounds.loop(GameSounds.PACMAN_MUNCH, Animation.INDEFINITE);
+		if (!sounds.getClip(GameSounds.PACMAN_MUNCH).isPlaying()) {
+			sounds.loop(GameSounds.PACMAN_MUNCH, Animation.INDEFINITE);
 		}
 	}
 
@@ -157,23 +156,23 @@ public class PlayScene2D extends AbstractGameScene2D {
 	@Override
 	public void onBonusEaten(GameEvent e) {
 		bonus2D.animation().ifPresent(TimedSequence::stop);
-		Env.sounds.play(GameSounds.BONUS_EATEN);
+		sounds.play(GameSounds.BONUS_EATEN);
 	}
 
 	@Override
 	public void onExtraLife(GameEvent e) {
-		Env.sounds.play(GameSounds.EXTRA_LIFE);
+		sounds.play(GameSounds.EXTRA_LIFE);
 	}
 
 	@Override
 	public void onGhostReturnsHome(GameEvent e) {
-		Env.sounds.play(GameSounds.GHOST_RETURNING);
+		sounds.play(GameSounds.GHOST_RETURNING);
 	}
 
 	@Override
 	public void onGhostEntersHouse(GameEvent e) {
 		if (game.ghosts(GhostState.DEAD).count() == 0) {
-			Env.sounds.stop(GameSounds.GHOST_RETURNING);
+			sounds.stop(GameSounds.GHOST_RETURNING);
 		}
 	}
 
@@ -182,13 +181,13 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// enter READY
 		if (e.newGameState == GameState.READY) {
-			Env.sounds.stopAll();
+			sounds.stopAll();
 			maze2D.getEnergizerAnimation().reset();
 			player2D.reset();
 			ghosts2D.forEach(Ghost2D::reset);
 			if (!gameController.attractMode && !gameController.gameRunning) {
-				Env.sounds.setMuted(false);
-				Env.sounds.play(GameSounds.GAME_READY);
+				sounds.setMuted(false);
+				sounds.play(GameSounds.GAME_READY);
 			}
 		}
 
@@ -204,13 +203,13 @@ public class PlayScene2D extends AbstractGameScene2D {
 			// wait until game is continued
 			gameController.stateTimer().setIndefinite().start();
 
-			Env.sounds.stopAll();
+			sounds.stopAll();
 
 			ghosts2D.forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSequence::reset));
 			new SequentialTransition( //
 					afterSeconds(1, () -> game.ghosts().forEach(Ghost::hide)), //
 					afterSeconds(1, () -> {
-						Env.sounds.play(GameSounds.PACMAN_DEATH);
+						sounds.play(GameSounds.PACMAN_DEATH);
 						player2D.dyingAnimation.restart();
 					}), //
 					afterSeconds(2, () -> game.player.hide()), //
@@ -221,13 +220,13 @@ public class PlayScene2D extends AbstractGameScene2D {
 		// enter GHOST_DYING
 		else if (e.newGameState == GameState.GHOST_DYING) {
 			game.player.hide();
-			Env.sounds.play(GameSounds.GHOST_EATEN);
+			sounds.play(GameSounds.GHOST_EATEN);
 		}
 
 		// enter LEVEL_COMPLETE
 		else if (e.newGameState == GameState.LEVEL_COMPLETE) {
 			gameController.stateTimer().setIndefinite(); // wait until continueGame() is called
-			Env.sounds.stopAll();
+			sounds.stopAll();
 			player2D.reset();
 			// Energizers can still exist if "next level" cheat has been used
 			maze2D.getEnergizerAnimation().reset();
@@ -241,7 +240,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		// enter LEVEL_STARTING
 		else if (e.newGameState == GameState.LEVEL_STARTING) {
-			maze2D = new Maze2D(0, t(3), game, Env.r2D);
+			maze2D = new Maze2D(0, t(3), game, r2D);
 			gameController.stateTimer().setSeconds(1).start();
 		}
 
@@ -249,7 +248,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		else if (e.newGameState == GameState.GAME_OVER) {
 			maze2D.getEnergizerAnimation().reset();
 			ghosts2D.forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSequence::restart));
-			Env.sounds.stopAll();
+			sounds.stopAll();
 		}
 
 		// exit GHOST_DYING
@@ -276,12 +275,12 @@ public class PlayScene2D extends AbstractGameScene2D {
 		score2D.render(gc);
 		highScore2D.render(gc);
 		if (gameController.state == GameState.GAME_OVER || gameController.attractMode) {
-			gc.setFont(Env.r2D.getScoreFont());
+			gc.setFont(r2D.getScoreFont());
 			gc.setFill(Color.RED);
 			gc.fillText("GAME", t(9), t(21));
 			gc.fillText("OVER", t(15), t(21));
 		} else if (gameController.state == GameState.READY) {
-			gc.setFont(Env.r2D.getScoreFont());
+			gc.setFont(r2D.getScoreFont());
 			gc.setFill(Color.YELLOW);
 			gc.fillText("READY!", t(11), t(21));
 		}

@@ -35,7 +35,6 @@ import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Heart2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
-import de.amr.games.pacman.ui.fx.app.Env;
 
 /**
  * Intermission scene 1: "They meet".
@@ -62,21 +61,21 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 	public void init() {
 		super.init();
 
-		sc.playIntermissionSound = () -> Env.sounds.loop(GameSounds.INTERMISSION_1, 1);
+		sc.playIntermissionSound = () -> sounds.loop(GameSounds.INTERMISSION_1, 1);
 		sc.playFlapAnimation = () -> flap2D.animation.restart();
 		sc.init(gameController);
 
-		levelCounter2D = new LevelCounter2D(game, Env.r2D);
+		levelCounter2D = new LevelCounter2D(game, r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
 
-		flap2D = new Flap2D(sc.flap, (Rendering2D_MsPacMan) Env.r2D);
-		msPacMan2D = new Player2D(sc.msPac, Env.r2D);
+		flap2D = new Flap2D(sc.flap, (Rendering2D_MsPacMan) r2D);
+		msPacMan2D = new Player2D(sc.msPac, r2D);
 		// overwrite by Pac-Man instead of Ms. Pac-Man sprites:
-		pacMan2D = new Player2D(sc.pacMan, Env.r2D);
-		pacMan2D.munchingAnimations = ((Rendering2D_MsPacMan) Env.r2D).createHusbandMunchingAnimations();
-		inky2D = new Ghost2D(sc.inky, Env.r2D);
-		pinky2D = new Ghost2D(sc.pinky, Env.r2D);
-		heart2D = new Heart2D(sc.heart, (Rendering2D_MsPacMan) Env.r2D);
+		pacMan2D = new Player2D(sc.pacMan, r2D);
+		pacMan2D.munchingAnimations = ((Rendering2D_MsPacMan) r2D).createHusbandMunchingAnimations();
+		inky2D = new Ghost2D(sc.inky, r2D);
+		pinky2D = new Ghost2D(sc.pinky, r2D);
+		heart2D = new Heart2D(sc.heart, (Rendering2D_MsPacMan) r2D);
 
 		// start animations
 		msPacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
