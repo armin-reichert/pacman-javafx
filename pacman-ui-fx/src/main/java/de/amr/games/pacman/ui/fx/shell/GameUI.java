@@ -145,11 +145,11 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	private void updateSceneContext(AbstractGameScene gameScene) {
-		gameScene.setGameContext(gameController, gameController.game);
 		if (gameController.gameVariant == GameVariant.MS_PACMAN) {
-			gameScene.setRenderingContext(Rendering2D_MsPacMan.get(), SoundManager_MsPacMan.get());
+			gameScene.setContext(gameController, gameController.game, Rendering2D_MsPacMan.get(),
+					SoundManager_MsPacMan.get());
 		} else {
-			gameScene.setRenderingContext(Rendering2D_PacMan.get(), SoundManager_PacMan.get());
+			gameScene.setContext(gameController, gameController.game, Rendering2D_PacMan.get(), SoundManager_PacMan.get());
 		}
 		if (gameScene instanceof AbstractGameScene2D) {
 			((AbstractGameScene2D) gameScene).setDrawingContext(canvas, new V2i(TILES_X, TILES_Y).scaled(TS));
