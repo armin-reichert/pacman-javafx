@@ -49,7 +49,7 @@ import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.LevelCounter3D;
 import de.amr.games.pacman.ui.fx._3d.entity.LivesCounter3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Maze3D;
-import de.amr.games.pacman.ui.fx._3d.entity.Player3D;
+import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import de.amr.games.pacman.ui.fx._3d.entity.ScoreNotReally3D;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -88,7 +88,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	protected SubScene fxSubScene;
 	protected GameModel game;
 	protected Maze3D maze3D;
-	protected Player3D player3D;
+	protected Pac3D player3D;
 	protected Ghost3D[] ghosts3D;
 	protected Bonus3D bonus3D;
 	protected ScoreNotReally3D score3D;
@@ -141,7 +141,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		maze3D.$resolution.addListener($1 -> buildMaze3D(game.mazeNumber, false));
 		buildMaze3D(game.mazeNumber, true);
 
-		player3D = new Player3D(game.player, model3D);
+		player3D = new Pac3D(game.player, model3D);
 		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, Env.r2D)).toArray(Ghost3D[]::new);
 		bonus3D = new Bonus3D(Env.r2D);
 
@@ -181,7 +181,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		Stream.of(ghosts3D).forEach(Ghost3D::update);
 		bonus3D.update(game.bonus);
 		score3D.update(game.score, game.levelNumber, game.hiscorePoints, game.hiscoreLevel);
-		livesCounter3D.setVisibleItems(game.player.lives);
+		livesCounter3D.update(game.player.lives);
 		camController().update(this);
 	}
 
@@ -240,14 +240,14 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	public void onPlayerGainsPower(GameEvent e) {
 		Env.sounds.loop(GameSounds.PACMAN_POWER, Animation.INDEFINITE);
 		Stream.of(ghosts3D) //
-				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
+				.filter(ghost3D -> ghost3D.creature.is(GhostState.FRIGHTENED) || ghost3D.creature.is(GhostState.LOCKED))
 				.forEach(Ghost3D::setFrightenedSkinColor);
 	}
 
 	@Override
 	public void onPlayerLosingPower(GameEvent e) {
 		Stream.of(ghosts3D) //
-				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED)) //
+				.filter(ghost3D -> ghost3D.creature.is(GhostState.FRIGHTENED)) //
 				.forEach(ghost3D -> ghost3D.playFlashingAnimation());
 	}
 

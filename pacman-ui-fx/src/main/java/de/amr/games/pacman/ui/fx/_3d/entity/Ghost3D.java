@@ -43,13 +43,11 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class Ghost3D extends Creature3D {
+public class Ghost3D extends Creature3D<Ghost> {
 
 	private enum DisplayMode {
 		COMPLETE, EYES_ONLY, NUMBER_CUBE
 	}
-
-	public final Ghost ghost;
 
 	private final Rendering2D r2D;
 	private final Shape3D skin3D;
@@ -61,7 +59,7 @@ public class Ghost3D extends Creature3D {
 	private Color frightenedColor = Color.CORNFLOWERBLUE;
 
 	public Ghost3D(Ghost ghost, PacManModel3D model3D, Rendering2D r2D) {
-		this.ghost = ghost;
+		super(ghost);
 		this.r2D = r2D;
 		Group body3D = model3D.createGhost(r2D.getGhostColor(ghost.id), Color.WHITE, Color.BLACK);
 		skin3D = (Shape3D) body3D.getChildren().get(0);
@@ -91,23 +89,23 @@ public class Ghost3D extends Creature3D {
 
 	@Override
 	public void update() {
-		if (ghost.bounty > 0) {
+		if (creature.bounty > 0) {
 			if (displayMode != DisplayMode.NUMBER_CUBE) {
 				setDisplayMode(DisplayMode.NUMBER_CUBE);
 				PhongMaterial material = new PhongMaterial();
-				Image image = r2D.extractRegion(r2D.getBountyNumberSprite(ghost.bounty));
+				Image image = r2D.extractRegion(r2D.getBountyNumberSprite(creature.bounty));
 				material.setBumpMap(image);
 				material.setDiffuseMap(image);
 				cube3D.setMaterial(material);
 				setRotationAxis(Rotate.X_AXIS);
 				setRotate(0);
 			}
-		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
+		} else if (creature.is(GhostState.DEAD) || creature.is(GhostState.ENTERING_HOUSE)) {
 			setDisplayMode(DisplayMode.EYES_ONLY);
 		} else {
 			setDisplayMode(DisplayMode.COMPLETE);
 		}
-		update(ghost);
+		super.update();
 	}
 
 	public void playFlashingAnimation() {
@@ -117,7 +115,7 @@ public class Ghost3D extends Creature3D {
 
 	public void setNormalSkinColor() {
 		flashing.stop();
-		setSkinColor(r2D.getGhostColor(ghost.id));
+		setSkinColor(r2D.getGhostColor(creature.id));
 	}
 
 	public void setFrightenedSkinColor() {

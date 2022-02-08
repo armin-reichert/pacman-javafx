@@ -15,7 +15,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public abstract class Creature3D extends Group {
+public abstract class Creature3D<C extends Creature> extends Group {
 
 	//@formatter:off
 	//TODO there sure is a more elegant way to do this
@@ -27,15 +27,15 @@ public abstract class Creature3D extends Group {
 	};
 	//@formatter:on
 
+	public final C creature;
 	protected final RotateTransition turningAnimation;
 	protected Direction targetDir;
 
-	public Creature3D() {
+	public Creature3D(C creature) {
+		this.creature = creature;
 		turningAnimation = new RotateTransition(Duration.seconds(0.3));
 		turningAnimation.setAxis(Rotate.Z_AXIS);
 	}
-
-	public abstract void update();
 
 	protected int index(Direction dir) {
 		return dir == Direction.LEFT ? 0 : dir == Direction.RIGHT ? 1 : dir == Direction.UP ? 2 : 3;
@@ -49,7 +49,7 @@ public abstract class Creature3D extends Group {
 		return TURN_ANGLES[index(dir)][0][0];
 	}
 
-	protected void update(Creature creature) {
+	public void update() {
 		boolean outsideMaze = creature.position.x < 0 || creature.position.x > (creature.world.numCols() - 1) * TS;
 		setVisible(creature.visible && !outsideMaze);
 		setTranslateX(creature.position.x + HTS);

@@ -31,26 +31,26 @@ import javafx.scene.Node;
 import javafx.scene.paint.Color;
 
 /**
- * Displays a Pac-Man for each live remaining.
+ * Displays a Pac-Man shape for each live remaining.
  * 
  * @author Armin Reichert
  */
 public class LivesCounter3D extends Group {
 
-	static final int max = 5;
+	static final int maxLivesDisplayed = 5;
 
 	public LivesCounter3D(PacManModel3D model3D) {
-		for (int i = 0; i < max; ++i) {
+		for (int i = 0; i < maxLivesDisplayed; ++i) {
 			Node indicator = model3D.createPacMan(Color.YELLOW, Color.rgb(60, 60, 60), Color.rgb(60, 60, 60));
 			indicator.setTranslateX(2 * i * TS);
 			getChildren().add(indicator);
 		}
-		setVisibleItems(max);
+		update(maxLivesDisplayed); // show all
 	}
 
-	public void setVisibleItems(int n) {
-		for (int i = 0; i < max; ++i) {
-			getChildren().get(i).setVisible(i < n);
+	public void update(int numLives) {
+		for (int i = 0; i < maxLivesDisplayed; ++i) {
+			getChildren().get(i).setVisible(i < numLives);
 		}
 	}
 }

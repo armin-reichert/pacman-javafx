@@ -45,16 +45,15 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 /**
- * 3D-representation of the player.
+ * 3D-representation of Pac-Man or Ms. Pac-Man.
  * 
  * <p>
- * TODO: 3D-model for Ms. Pac-Man, mouth animation
+ * TODO: Specific 3D-model for Ms. Pac-Man, mouth animation
  * 
  * @author Armin Reichert
  */
-public class Player3D extends Creature3D {
+public class Pac3D extends Creature3D<Pac> {
 
-	private final Pac player;
 	private final Shape3D skull;
 	private final PointLight light;
 
@@ -63,8 +62,8 @@ public class Player3D extends Creature3D {
 	private Color eyesColor = Color.rgb(20, 20, 20);
 	private Color palateColor = Color.CHOCOLATE;
 
-	public Player3D(Pac player, PacManModel3D model3D) {
-		this.player = player;
+	public Pac3D(Pac player, PacManModel3D model3D) {
+		super(player);
 		Group pac3D = model3D.createPacMan(skullColor, eyesColor, palateColor);
 		this.skull = (Shape3D) pac3D.getChildren().get(0);
 		this.light = new PointLight(Color.WHITE);
@@ -78,14 +77,9 @@ public class Player3D extends Creature3D {
 		setScaleX(1.05);
 		setScaleY(1.05);
 		setScaleZ(1.05);
-		setRotate(turnAngle(player.dir()));
+		setRotate(turnAngle(creature.dir()));
 		skull.setMaterial(new PhongMaterial(skullColor));
 		update();
-	}
-
-	@Override
-	public void update() {
-		update(player);
 	}
 
 	public Animation dyingAnimation(Color ghostColor) {
