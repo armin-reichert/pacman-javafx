@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.world.World.TS;
 
-import de.amr.games.pacman.model.common.GameModel;
 import javafx.scene.Group;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -68,18 +67,18 @@ public class ScoreNotReally3D extends Group {
 		getChildren().add(grid);
 	}
 
-	public void update(GameModel game) {
+	public void update(int score, int levelNumber, int highscore, int highscoreLevelNumber) {
 		txtScoreTitle.setFill(titleColor);
 		txtScoreTitle.setFont(font);
 		txtScore.setFill(scoreValueOverwrite != null ? Color.RED : scoreColor);
 		txtScore.setFont(font);
-		String text = scoreValueOverwrite != null ? scoreValueOverwrite : String.format("%7d L%d", game.score, game.levelNumber);
+		String text = scoreValueOverwrite != null ? scoreValueOverwrite : String.format("%7d L%d", score, levelNumber);
 		txtScore.setText(text);
 
 		txtHiscoreTitle.setFill(titleColor);
 		txtHiscoreTitle.setFont(font);
 		txtHiscore.setFill(scoreColor);
 		txtHiscore.setFont(font);
-		txtHiscore.setText(String.format("%7d L%d", game.hiscorePoints, game.hiscoreLevel));
+		txtHiscore.setText(String.format("%7d L%d", highscore, highscoreLevelNumber));
 	}
 }
