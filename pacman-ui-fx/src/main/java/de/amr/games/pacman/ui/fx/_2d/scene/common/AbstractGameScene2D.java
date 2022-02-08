@@ -48,12 +48,9 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
 
-	public void setUnscaledSize(V2i unscaledSize) {
+	public void setDrawingContext(Canvas canvas, V2i unscaledSize) {
+		this.gc = canvas.getGraphicsContext2D();
 		this.unscaledSize = unscaledSize;
-	}
-
-	public void setCanvas(Canvas canvas) {
-		gc = canvas.getGraphicsContext2D();
 	}
 
 	@Override

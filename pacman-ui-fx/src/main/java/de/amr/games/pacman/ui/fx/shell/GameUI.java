@@ -151,8 +151,7 @@ public class GameUI extends DefaultGameEventHandler {
 			gameScene.setRenderingContext(Rendering2D_PacMan.get(), SoundManager_PacMan.get());
 		}
 		if (gameScene instanceof AbstractGameScene2D) {
-			((AbstractGameScene2D) gameScene).setCanvas(canvas);
-			((AbstractGameScene2D) gameScene).setUnscaledSize(new V2i(TILES_X, TILES_Y).scaled(TS));
+			((AbstractGameScene2D) gameScene).setDrawingContext(canvas, new V2i(TILES_X, TILES_Y).scaled(TS));
 		}
 		updateBackground(gameScene);
 	}
