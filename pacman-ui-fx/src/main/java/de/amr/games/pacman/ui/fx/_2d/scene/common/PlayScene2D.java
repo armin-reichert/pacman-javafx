@@ -49,7 +49,6 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -68,8 +67,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 	private List<Ghost2D> ghosts2D;
 	private Bonus2D bonus2D;
 
-	public PlayScene2D(GameController gameController, V2i unscaledSize, Canvas canvas) {
-		super(gameController, unscaledSize, canvas);
+	public PlayScene2D(GameController gameController, V2i unscaledSize) {
+		super(gameController, unscaledSize);
 	}
 
 	@Override

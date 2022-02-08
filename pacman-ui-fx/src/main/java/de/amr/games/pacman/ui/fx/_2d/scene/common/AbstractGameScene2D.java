@@ -47,17 +47,20 @@ import javafx.scene.paint.Color;
 public abstract class AbstractGameScene2D extends DefaultGameEventHandler implements GameScene {
 
 	protected final GameController gameController;
-	protected final GraphicsContext gc;
 	protected final V2i unscaledSize;
 
-	protected SubScene fxSubScene;
 	protected GameModel game;
+	protected SubScene fxSubScene;
+	protected GraphicsContext gc;
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
 
-	public AbstractGameScene2D(GameController gameController, V2i unscaledSize, Canvas canvas) {
+	public AbstractGameScene2D(GameController gameController, V2i unscaledSize) {
 		this.gameController = gameController;
 		this.unscaledSize = unscaledSize;
+	}
+
+	public void setCanvas(Canvas canvas) {
 		gc = canvas.getGraphicsContext2D();
 	}
 

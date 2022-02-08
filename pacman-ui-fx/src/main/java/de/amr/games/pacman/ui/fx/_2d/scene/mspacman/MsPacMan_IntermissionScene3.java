@@ -37,7 +37,6 @@ import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Stork2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
-import javafx.scene.canvas.Canvas;
 
 /**
  * Intermission scene 3: "Junior".
@@ -60,8 +59,8 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 	private Stork2D stork2D;
 	private JuniorBag2D bag2D;
 
-	public MsPacMan_IntermissionScene3(GameController gameController, V2i unscaledSize, Canvas canvas) {
-		super(gameController, unscaledSize, canvas);
+	public MsPacMan_IntermissionScene3(GameController gameController, V2i unscaledSize) {
+		super(gameController, unscaledSize);
 	}
 
 	@Override

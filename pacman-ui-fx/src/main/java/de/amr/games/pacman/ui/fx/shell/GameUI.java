@@ -36,6 +36,7 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
+import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.sound.mspacman.SoundManager_MsPacMan;
@@ -92,7 +93,7 @@ public class GameUI extends DefaultGameEventHandler {
 		Env.$drawMode3D.addListener($1 -> updateBackground(currentScene));
 		Env.gameLoop.$fps.addListener($1 -> stage.setTitle(computeStageTitle()));
 
-		gameScenes = new GameScenes(gameController, new V2i(TILES_X, TILES_Y).scaled(TS), canvas);
+		gameScenes = new GameScenes(gameController, new V2i(TILES_X, TILES_Y).scaled(TS));
 		selectGameScene();
 
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> Env.gameLoop.stop());
@@ -152,6 +153,9 @@ public class GameUI extends DefaultGameEventHandler {
 
 	private void updateSceneContext(GameScene gameScene) {
 		updateBackground(gameScene);
+		if (gameScene instanceof AbstractGameScene2D) {
+			((AbstractGameScene2D) gameScene).setCanvas(canvas);
+		}
 		if (gameController.gameVariant == GameVariant.MS_PACMAN) {
 			Env.r2D = Rendering2D_MsPacMan.get();
 			Env.sounds = SoundManager_MsPacMan.get();

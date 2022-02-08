@@ -38,7 +38,6 @@ import de.amr.games.pacman.ui.fx._2d.entity.pacman.BlinkyPatched2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
-import javafx.scene.canvas.Canvas;
 
 /**
  * Third intermission scene: Blinky in shred dress chases Pac-Man, comes back half-naked drawing dress over the floor.
@@ -54,8 +53,8 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 	private BlinkyPatched2D blinkyPatched2D;
 	private BlinkyNaked2D blinkyNaked2D;
 
-	public PacMan_IntermissionScene3(GameController gameController, V2i unscaledSize, Canvas canvas) {
-		super(gameController, unscaledSize, canvas);
+	public PacMan_IntermissionScene3(GameController gameController, V2i unscaledSize) {
+		super(gameController, unscaledSize);
 	}
 
 	@Override

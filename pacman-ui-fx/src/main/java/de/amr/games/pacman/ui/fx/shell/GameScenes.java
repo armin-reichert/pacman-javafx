@@ -38,7 +38,6 @@ import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntroScene;
 import de.amr.games.pacman.ui.fx._3d.model.GianmarcosModel3D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import javafx.scene.canvas.Canvas;
 
 /**
  * The game scenes.
@@ -50,28 +49,28 @@ public class GameScenes {
 	private final GameScene scenes_PacMan[][] = new GameScene[5][2];
 	private final GameScene scenes_MsPacMan[][] = new GameScene[5][2];
 
-	public GameScenes(GameController gameController, V2i sceneSize, Canvas canvas) {
+	public GameScenes(GameController gameController, V2i sceneSize) {
 		//@formatter:off
 		scenes_PacMan  [0][0] = 
-		scenes_PacMan  [0][1] = new PacMan_IntroScene(gameController, sceneSize, canvas);
+		scenes_PacMan  [0][1] = new PacMan_IntroScene(gameController, sceneSize);
 		scenes_PacMan  [1][0] = 
-		scenes_PacMan  [1][1] = new PacMan_IntermissionScene1(gameController, sceneSize, canvas);
+		scenes_PacMan  [1][1] = new PacMan_IntermissionScene1(gameController, sceneSize);
 		scenes_PacMan  [2][0] = 
-		scenes_PacMan  [2][1] = new PacMan_IntermissionScene2(gameController, sceneSize, canvas);
+		scenes_PacMan  [2][1] = new PacMan_IntermissionScene2(gameController, sceneSize);
 		scenes_PacMan  [3][0] = 
-		scenes_PacMan  [3][1] = new PacMan_IntermissionScene3(gameController, sceneSize, canvas);
-		scenes_PacMan  [4][0] = new PlayScene2D(gameController, sceneSize, canvas);
+		scenes_PacMan  [3][1] = new PacMan_IntermissionScene3(gameController, sceneSize);
+		scenes_PacMan  [4][0] = new PlayScene2D(gameController, sceneSize);
 		scenes_PacMan  [4][1] = new PlayScene3D(gameController, GianmarcosModel3D.get());
 		
 		scenes_MsPacMan[0][0] = 
-		scenes_MsPacMan[0][1] = new MsPacMan_IntroScene(gameController, sceneSize, canvas);
+		scenes_MsPacMan[0][1] = new MsPacMan_IntroScene(gameController, sceneSize);
 		scenes_MsPacMan[1][0] = 
-		scenes_MsPacMan[1][1] = new MsPacMan_IntermissionScene1(gameController, sceneSize, canvas);
+		scenes_MsPacMan[1][1] = new MsPacMan_IntermissionScene1(gameController, sceneSize);
 		scenes_MsPacMan[2][0] = 
-		scenes_MsPacMan[2][1] = new MsPacMan_IntermissionScene2(gameController, sceneSize, canvas);
+		scenes_MsPacMan[2][1] = new MsPacMan_IntermissionScene2(gameController, sceneSize);
 		scenes_MsPacMan[3][0] = 
-		scenes_MsPacMan[3][1] = new MsPacMan_IntermissionScene3(gameController, sceneSize, canvas);
-		scenes_MsPacMan[4][0] = new PlayScene2D(gameController, sceneSize, canvas);
+		scenes_MsPacMan[3][1] = new MsPacMan_IntermissionScene3(gameController, sceneSize);
+		scenes_MsPacMan[4][0] = new PlayScene2D(gameController, sceneSize);
 		scenes_MsPacMan[4][1] = new PlayScene3D(gameController, GianmarcosModel3D.get());
 		//@formatter:on
 	}

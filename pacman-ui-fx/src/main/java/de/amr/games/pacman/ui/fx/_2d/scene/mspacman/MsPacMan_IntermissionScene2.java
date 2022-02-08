@@ -36,7 +36,6 @@ import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
-import javafx.scene.canvas.Canvas;
 
 /**
  * Intermission scene 2: "The chase".
@@ -55,8 +54,8 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 	private Player2D pacMan2D;
 	private Flap2D flap2D;
 
-	public MsPacMan_IntermissionScene2(GameController gameController, V2i unscaledSize, Canvas canvas) {
-		super(gameController, unscaledSize, canvas);
+	public MsPacMan_IntermissionScene2(GameController gameController, V2i unscaledSize) {
+		super(gameController, unscaledSize);
 	}
 
 	@Override
