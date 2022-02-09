@@ -67,19 +67,21 @@ public class GameUI extends DefaultGameEventHandler {
 	private static final int TILES_X = 28, TILES_Y = 36;
 	private static final double ASPECT_RATIO = (double) TILES_X / TILES_Y;
 
+	private final GameScenes gameScenes = new GameScenes();
+
 	private final Background bg_beach = U.imageBackground("/common/beach.jpg");
 	private final Background bg_black = U.colorBackground(Color.BLACK);
 	private final Background bg_blue = U.colorBackground(Color.CORNFLOWERBLUE);
 
-	final GameController gameController;
-	final Stage stage;
-	final Canvas canvas = new Canvas(); // common canvas of all 2D scenes
+	protected final GameController gameController;
+	protected final Stage stage;
+	protected final Canvas canvas = new Canvas(); // common canvas of all 2D scenes
+
 	private final Scene mainScene;
 	private final Group gameSceneRoot = new Group();
 	private final StackPane mainSceneRoot = new StackPane();
 
-	private final GameScenes gameScenes = new GameScenes();
-	AbstractGameScene currentScene;
+	protected AbstractGameScene currentScene;
 
 	public GameUI(Stage stage, GameController gameController, double height, boolean fullscreen) {
 		this.stage = stage;
@@ -145,14 +147,21 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	private void updateSceneContext(AbstractGameScene gameScene) {
-		if (gameController.gameVariant == GameVariant.MS_PACMAN) {
-			gameScene.setContext(gameController, gameController.game, Rendering2D_MsPacMan.get(),
-					SoundManager_MsPacMan.get());
-		} else {
-			gameScene.setContext(gameController, gameController.game, Rendering2D_PacMan.get(), SoundManager_PacMan.get());
+		switch (gameController.gameVariant) {
+		case MS_PACMAN -> {
+			gameScene.setContext(gameController, gameController.game, SoundManager_MsPacMan.get());
+			if (gameScene instanceof AbstractGameScene2D) {
+				((AbstractGameScene2D) gameScene).setDrawingContext(canvas, new V2i(TILES_X, TILES_Y).scaled(TS),
+						Rendering2D_MsPacMan.get());
+			}
 		}
-		if (gameScene instanceof AbstractGameScene2D) {
-			((AbstractGameScene2D) gameScene).setDrawingContext(canvas, new V2i(TILES_X, TILES_Y).scaled(TS));
+		case PACMAN -> {
+			gameScene.setContext(gameController, gameController.game, SoundManager_PacMan.get());
+			if (gameScene instanceof AbstractGameScene2D) {
+				((AbstractGameScene2D) gameScene).setDrawingContext(canvas, new V2i(TILES_X, TILES_Y).scaled(TS),
+						Rendering2D_PacMan.get());
+			}
+		}
 		}
 		updateBackground(gameScene);
 	}
@@ -181,7 +190,7 @@ public class GameUI extends DefaultGameEventHandler {
 	private void toggle3D() {
 		Env.$3D.set(!Env.$3D.get());
 		if (gameSceneForCurrentState(false) != gameSceneForCurrentState(true)) {
-			currentScene.sounds.stopAll();
+			currentScene.getSounds().stopAll();
 			selectGameScene();
 		}
 	}
@@ -253,7 +262,7 @@ public class GameUI extends DefaultGameEventHandler {
 		case Q -> {
 			if (state != GameState.INTRO) {
 				currentScene.end();
-				currentScene.sounds.stopAll();
+				currentScene.getSounds().stopAll();
 				gameController.changeState(GameState.INTRO);
 			}
 		}

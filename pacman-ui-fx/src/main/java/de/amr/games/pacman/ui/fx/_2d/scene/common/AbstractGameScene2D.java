@@ -27,6 +27,7 @@ import static de.amr.games.pacman.model.world.World.t;
 
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
 import javafx.scene.Scene;
@@ -48,9 +49,10 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
 
-	public void setDrawingContext(Canvas canvas, V2i unscaledSize) {
+	public void setDrawingContext(Canvas canvas, V2i unscaledSize, Rendering2D r2D) {
 		this.gc = canvas.getGraphicsContext2D();
 		this.unscaledSize = unscaledSize;
+		this.r2D = r2D;
 	}
 
 	@Override

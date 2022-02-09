@@ -40,16 +40,15 @@ import javafx.scene.SubScene;
  */
 public abstract class AbstractGameScene extends DefaultGameEventHandler {
 
-	public GameController gameController;
-	public GameModel game;
-	public SubScene fxSubScene;
-	public SoundManager sounds;
-	public Rendering2D r2D;
+	protected GameController gameController;
+	protected GameModel game;
+	protected SubScene fxSubScene;
+	protected SoundManager sounds;
+	protected Rendering2D r2D;
 
-	public void setContext(GameController gameController, GameModel game, Rendering2D r2d, SoundManager sounds) {
+	public void setContext(GameController gameController, GameModel game, SoundManager sounds) {
 		this.gameController = gameController;
 		this.game = game;
-		this.r2D = r2d;
 		this.sounds = sounds;
 	}
 
@@ -59,11 +58,15 @@ public abstract class AbstractGameScene extends DefaultGameEventHandler {
 		return fxSubScene;
 	}
 
+	public SoundManager getSounds() {
+		return sounds;
+	}
+
+	public abstract boolean is3D();
+
 	public abstract void init();
 
 	public abstract void update();
-
-	public abstract boolean is3D();
 
 	public void end() {
 		log("Scene '%s' ended", getClass().getName());

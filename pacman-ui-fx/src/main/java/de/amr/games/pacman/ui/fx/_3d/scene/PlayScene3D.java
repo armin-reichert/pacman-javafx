@@ -96,8 +96,7 @@ public class PlayScene3D extends AbstractGameScene {
 	@Override
 	public SubScene createSubScene(Scene parent) {
 		if (fxSubScene == null) {
-			fxSubScene = new SubScene(new Group(), parent.getWidth(), parent.getHeight(), true,
-					SceneAntialiasing.BALANCED);
+			fxSubScene = new SubScene(new Group(), parent.getWidth(), parent.getHeight(), true, SceneAntialiasing.BALANCED);
 			fxSubScene.widthProperty().bind(parent.widthProperty());
 			fxSubScene.heightProperty().bind(parent.heightProperty());
 			PerspectiveCamera cam = new PerspectiveCamera(true);
@@ -106,8 +105,8 @@ public class PlayScene3D extends AbstractGameScene {
 			cams.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer(cam));
 			cams.put(Perspective.CAM_TOTAL, new Cam_Total(cam));
 			parent.addEventHandler(KeyEvent.ANY, e -> camController().handle(e));
-			log("Subscene for game scene '%s' created, width=%.0f, height=%.0f", getClass().getName(),
-					fxSubScene.getWidth(), fxSubScene.getHeight());
+			log("Subscene for game scene '%s' created, width=%.0f, height=%.0f", getClass().getName(), fxSubScene.getWidth(),
+					fxSubScene.getHeight());
 		}
 		return fxSubScene;
 	}
@@ -148,7 +147,7 @@ public class PlayScene3D extends AbstractGameScene {
 		AmbientLight ambient = new AmbientLight(Color.WHITE);
 		Group lights = new Group();
 		lights.getChildren().add(ambient);
-		
+
 		fxSubScene.setRoot(new Group(lights, playground, coordSystem));
 
 		sounds.setMuted(gameController.attractMode);
@@ -331,8 +330,7 @@ public class PlayScene3D extends AbstractGameScene {
 		else if (e.newGameState == GameState.PACMAN_DYING) {
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setNormalSkinColor());
 			sounds.stopAll();
-			Ghost killer = Stream.of(game.ghosts).filter(ghost -> ghost.tile().equals(game.player.tile())).findAny()
-					.get();
+			Ghost killer = Stream.of(game.ghosts).filter(ghost -> ghost.tile().equals(game.player.tile())).findAny().get();
 			new SequentialTransition( //
 					afterSeconds(1, game::hideGhosts), //
 					player3D.dyingAnimation(r2D.getGhostColor(killer.id), sounds), //
