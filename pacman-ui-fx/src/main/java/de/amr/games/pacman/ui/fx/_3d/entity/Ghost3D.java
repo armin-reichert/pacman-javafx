@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx._3d.animation.BlueFlashingAnimation;
+import de.amr.games.pacman.ui.fx._3d.animation.ColorFlashingTransition;
 import de.amr.games.pacman.ui.fx._3d.animation.FadeInTransition3D;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import javafx.scene.Group;
@@ -55,7 +55,7 @@ public class Ghost3D extends Creature3D<Ghost> {
 	private final Shape3D skin3D;
 	private final Node eyes3D;
 	private final Box cube3D;
-	private final BlueFlashingAnimation flashing = new BlueFlashingAnimation();
+	private final ColorFlashingTransition flashing = new ColorFlashingTransition(Color.color(0.5, 0.7, 1.0));
 
 	private DisplayMode displayMode;
 	private Color frightenedColor = Color.CORNFLOWERBLUE;

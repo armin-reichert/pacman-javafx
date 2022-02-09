@@ -29,15 +29,17 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
 
 /**
- * Let's the material's color flash blueish.
+ * Let's the material's color flash.
  * 
  * @author Armin Reichert
  */
-public class BlueFlashingAnimation extends Transition {
+public class ColorFlashingTransition extends Transition {
 
-	private PhongMaterial material = new PhongMaterial();
+	private final Color color;
+	private final PhongMaterial material = new PhongMaterial();
 
-	public BlueFlashingAnimation() {
+	public ColorFlashingTransition(Color color) {
+		this.color = color;
 		setCycleCount(INDEFINITE);
 		setCycleDuration(Duration.seconds(0.1));
 		setAutoReverse(true);
@@ -49,6 +51,6 @@ public class BlueFlashingAnimation extends Transition {
 
 	@Override
 	protected void interpolate(double t) {
-		material.setDiffuseColor(Color.rgb((int) (t * 120), (int) (t * 180), 255));
+		material.setDiffuseColor(Color.color(t * color.getRed(), t * color.getGreen(), color.getBlue()));
 	}
 }
