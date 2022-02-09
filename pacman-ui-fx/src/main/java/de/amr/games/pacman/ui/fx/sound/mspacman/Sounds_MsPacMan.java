@@ -31,15 +31,15 @@ import de.amr.games.pacman.ui.fx.sound.SoundManager;
  * 
  * @author Armin Reichert
  */
-public class SoundManager_MsPacMan extends SoundManager {
+public class Sounds_MsPacMan extends SoundManager {
 
-	private static final SoundManager_MsPacMan it = new SoundManager_MsPacMan();
+	private static final Sounds_MsPacMan it = new Sounds_MsPacMan();
 
-	public static SoundManager_MsPacMan get() {
+	public static Sounds_MsPacMan get() {
 		return it;
 	}
 
-	private SoundManager_MsPacMan() {
+	private Sounds_MsPacMan() {
 		//@formatter:off
 		put(GameSounds.CREDIT,          "/mspacman/sound/Coin Credit.mp3");
 		put(GameSounds.EXTRA_LIFE,      "/mspacman/sound/Extra Life.mp3");

@@ -40,8 +40,8 @@ import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
 import de.amr.games.pacman.ui.fx.scene.GameScenes;
-import de.amr.games.pacman.ui.fx.sound.mspacman.SoundManager_MsPacMan;
-import de.amr.games.pacman.ui.fx.sound.pacman.SoundManager_PacMan;
+import de.amr.games.pacman.ui.fx.sound.mspacman.Sounds_MsPacMan;
+import de.amr.games.pacman.ui.fx.sound.pacman.Sounds_PacMan;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -149,18 +149,14 @@ public class GameUI extends DefaultGameEventHandler {
 	private void updateSceneContext(AbstractGameScene gameScene) {
 		switch (gameController.gameVariant) {
 		case MS_PACMAN -> {
-			gameScene.setContext(gameController, gameController.game, Rendering2D_MsPacMan.get(),
-					SoundManager_MsPacMan.get());
-			if (gameScene instanceof AbstractGameScene2D) {
-				((AbstractGameScene2D) gameScene).setDrawingContext(canvas, new V2i(TILES_X, TILES_Y).scaled(TS));
-			}
+			gameScene.setContext(gameController, gameController.game, Rendering2D_MsPacMan.get(), Sounds_MsPacMan.get());
 		}
 		case PACMAN -> {
-			gameScene.setContext(gameController, gameController.game, Rendering2D_PacMan.get(), SoundManager_PacMan.get());
-			if (gameScene instanceof AbstractGameScene2D) {
-				((AbstractGameScene2D) gameScene).setDrawingContext(canvas, new V2i(TILES_X, TILES_Y).scaled(TS));
-			}
+			gameScene.setContext(gameController, gameController.game, Rendering2D_PacMan.get(), Sounds_PacMan.get());
 		}
+		}
+		if (gameScene instanceof AbstractGameScene2D) {
+			((AbstractGameScene2D) gameScene).setDrawingContext(canvas, new V2i(TILES_X, TILES_Y).scaled(TS));
 		}
 		updateBackground(gameScene);
 	}

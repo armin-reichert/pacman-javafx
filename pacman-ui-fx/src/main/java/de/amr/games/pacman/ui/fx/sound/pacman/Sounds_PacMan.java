@@ -31,15 +31,15 @@ import de.amr.games.pacman.ui.fx.sound.SoundManager;
  * 
  * @author Armin Reichert
  */
-public class SoundManager_PacMan extends SoundManager {
+public class Sounds_PacMan extends SoundManager {
 
-	private static final SoundManager_PacMan it = new SoundManager_PacMan();
+	private static final Sounds_PacMan it = new Sounds_PacMan();
 
-	public static SoundManager_PacMan get() {
+	public static Sounds_PacMan get() {
 		return it;
 	}
 
-	private SoundManager_PacMan() {
+	private Sounds_PacMan() {
 		//@formatter:off
 		put(GameSounds.CREDIT,          "/pacman/sound/credit.mp3");
 		put(GameSounds.EXTRA_LIFE,      "/pacman/sound/extend.mp3");
