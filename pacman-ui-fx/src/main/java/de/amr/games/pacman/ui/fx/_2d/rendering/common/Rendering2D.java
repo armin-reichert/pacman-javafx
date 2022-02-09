@@ -67,14 +67,14 @@ public abstract class Rendering2D {
 		return result;
 	}
 
-	protected final Font font = Font.loadFont(getClass().getResourceAsStream("/emulogic.ttf"), 8);
+	protected final Font arcadeFont = Font.loadFont(getClass().getResourceAsStream("/emulogic.ttf"), 8);
 	protected final Spritesheet ss;
 
 	public Rendering2D(String spritesheetPath, int rasterSize, Direction... directions) {
-		this.ss = new Spritesheet(spritesheetPath, rasterSize, directions);
+		ss = new Spritesheet(spritesheetPath, rasterSize, directions);
 	}
 
-	public Spritesheet getSpritesheet() {
+	public Spritesheet spritesheet() {
 		return ss;
 	}
 
@@ -107,10 +107,10 @@ public abstract class Rendering2D {
 	}
 
 	/**
-	 * @return font used in score and game state display
+	 * @return font used for score and game state display
 	 */
-	public Font getScoreFont() {
-		return font;
+	public Font getArcadeFont() {
+		return arcadeFont;
 	}
 
 	/**

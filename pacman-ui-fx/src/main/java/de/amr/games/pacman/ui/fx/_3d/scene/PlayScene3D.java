@@ -131,7 +131,7 @@ public class PlayScene3D extends AbstractGameScene {
 		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D)).toArray(Ghost3D[]::new);
 		bonus3D = new Bonus3D(r2D);
 
-		score3D = new ScoreNotReally3D(r2D.getScoreFont());
+		score3D = new ScoreNotReally3D(r2D.getArcadeFont());
 		score3D.scoreValueOverwrite = gameController.attractMode ? "GAME OVER!" : null;
 
 		livesCounter3D = new LivesCounter3D(model3D);

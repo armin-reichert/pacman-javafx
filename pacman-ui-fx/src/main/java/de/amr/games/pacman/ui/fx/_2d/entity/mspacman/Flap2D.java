@@ -51,7 +51,7 @@ public class Flap2D {
 		if (flap.visible) {
 			Rectangle2D sprite = animation.animate();
 			rendering.renderEntity(g, flap, sprite);
-			g.setFont(rendering.getScoreFont());
+			g.setFont(rendering.getArcadeFont());
 			g.setFill(Color.rgb(222, 222, 255));
 			g.fillText(String.valueOf(flap.sceneNumber), flap.position.x + sprite.getWidth() - 25,
 					flap.position.y + 18);

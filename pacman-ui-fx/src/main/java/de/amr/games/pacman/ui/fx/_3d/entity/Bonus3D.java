@@ -73,7 +73,7 @@ public class Bonus3D extends Box {
 	}
 
 	public void showSymbol(int symbol) {
-		Image image = r2D.getSpritesheet().extractRegion(r2D.getSymbolSprite(symbol));
+		Image image = r2D.spritesheet().extractRegion(r2D.getSymbolSprite(symbol));
 		skin.setBumpMap(image);
 		skin.setDiffuseMap(image);
 		setMaterial(skin);
@@ -86,7 +86,7 @@ public class Bonus3D extends Box {
 	}
 
 	public void showPoints(int points) {
-		Image image = r2D.getSpritesheet().extractRegion(r2D.getBonusValueSprite(points));
+		Image image = r2D.spritesheet().extractRegion(r2D.getBonusValueSprite(points));
 		skin.setBumpMap(image);
 		skin.setDiffuseMap(image);
 		setMaterial(skin);

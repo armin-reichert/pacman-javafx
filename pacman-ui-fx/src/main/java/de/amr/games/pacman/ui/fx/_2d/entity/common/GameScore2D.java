@@ -60,7 +60,7 @@ public class GameScore2D {
 	public void render(GraphicsContext g) {
 		g.save();
 		g.translate(x, y);
-		g.setFont(r2D.getScoreFont());
+		g.setFont(r2D.getArcadeFont());
 		g.setFill(titleColor);
 		g.fillText(title, 0, 0);
 		if (showPoints) {

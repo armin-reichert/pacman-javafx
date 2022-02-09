@@ -275,12 +275,12 @@ public class PlayScene2D extends AbstractGameScene2D {
 		score2D.render(gc);
 		highScore2D.render(gc);
 		if (gameController.state == GameState.GAME_OVER || gameController.attractMode) {
-			gc.setFont(r2D.getScoreFont());
+			gc.setFont(r2D.getArcadeFont());
 			gc.setFill(Color.RED);
 			gc.fillText("GAME", t(9), t(21));
 			gc.fillText("OVER", t(15), t(21));
 		} else if (gameController.state == GameState.READY) {
-			gc.setFont(r2D.getScoreFont());
+			gc.setFont(r2D.getArcadeFont());
 			gc.setFill(Color.YELLOW);
 			gc.fillText("READY!", t(11), t(21));
 		}

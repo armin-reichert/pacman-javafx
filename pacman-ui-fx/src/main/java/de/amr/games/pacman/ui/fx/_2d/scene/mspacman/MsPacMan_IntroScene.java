@@ -87,7 +87,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 		IntroState state = sc.state;
 		score2D.render(gc);
 		highScore2D.render(gc);
-		gc.setFont(r2D.getScoreFont());
+		gc.setFont(r2D.getArcadeFont());
 		gc.setFill(Color.ORANGE);
 		gc.fillText("\"MS PAC-MAN\"", titlePosition.x, titlePosition.y);
 		drawAnimatedBoard(32, 16);
@@ -108,7 +108,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 
 	private void drawPresentingGhost(Ghost ghost) {
 		gc.setFill(Color.WHITE);
-		gc.setFont(r2D.getScoreFont());
+		gc.setFont(r2D.getArcadeFont());
 		if (ghost == sc.ghosts[0]) {
 			gc.fillText("WITH", titlePosition.x, sc.adBoardTopLeft.y + t(3));
 		}
@@ -118,7 +118,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 
 	private void drawStarringMsPacMan() {
 		gc.setFill(Color.WHITE);
-		gc.setFont(r2D.getScoreFont());
+		gc.setFont(r2D.getArcadeFont());
 		gc.fillText("STARRING", titlePosition.x, sc.adBoardTopLeft.y + t(3));
 		gc.setFill(Color.YELLOW);
 		gc.fillText("MS PAC-MAN", titlePosition.x, sc.adBoardTopLeft.y + t(6));
@@ -149,7 +149,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 		if (sc.blinking.frame()) {
 			String text = "PRESS SPACE TO PLAY";
 			gc.setFill(Color.WHITE);
-			gc.setFont(r2D.getScoreFont());
+			gc.setFont(r2D.getArcadeFont());
 			gc.fillText(text, t(13 - text.length() / 2), t(tileY));
 		}
 	}
@@ -160,7 +160,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 		gc.setFill(Color.RED);
 		gc.setFont(Font.font("Dialog", 11.0));
 		gc.fillText("\u00a9", t(9), t(30) + 2); // (c) symbol
-		gc.setFont(r2D.getScoreFont());
+		gc.setFont(r2D.getArcadeFont());
 		gc.fillText("MIDWAY MFG CO", t(11), t(30));
 		gc.fillText("1980/1981", t(12), t(32));
 	}
