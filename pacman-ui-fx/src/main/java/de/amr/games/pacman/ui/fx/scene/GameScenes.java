@@ -43,38 +43,35 @@ import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
  */
 public class GameScenes {
 
-	private final AbstractGameScene scenes_PacMan[][] = new AbstractGameScene[5][2];
-	private final AbstractGameScene scenes_MsPacMan[][] = new AbstractGameScene[5][2];
+	private final AbstractGameScene scenes[][][] = new AbstractGameScene[2][5][2];
 
 	public GameScenes() {
 		//@formatter:off
-		scenes_PacMan  [0][0] = 
-		scenes_PacMan  [0][1] = new PacMan_IntroScene();
-		scenes_PacMan  [1][0] = 
-		scenes_PacMan  [1][1] = new PacMan_IntermissionScene1();
-		scenes_PacMan  [2][0] = 
-		scenes_PacMan  [2][1] = new PacMan_IntermissionScene2();
-		scenes_PacMan  [3][0] = 
-		scenes_PacMan  [3][1] = new PacMan_IntermissionScene3();
-		scenes_PacMan  [4][0] = new PlayScene2D();
-		scenes_PacMan  [4][1] = new PlayScene3D(GianmarcosModel3D.get());
+		scenes[0][0][0] = 
+		scenes[0][0][1] = new MsPacMan_IntroScene();
+		scenes[0][1][0] = 
+		scenes[0][1][1] = new MsPacMan_IntermissionScene1();
+		scenes[0][2][0] = 
+		scenes[0][2][1] = new MsPacMan_IntermissionScene2();
+		scenes[0][3][0] = 
+		scenes[0][3][1] = new MsPacMan_IntermissionScene3();
+		scenes[0][4][0] = new PlayScene2D();
+		scenes[0][4][1] = new PlayScene3D(GianmarcosModel3D.get());
 		
-		scenes_MsPacMan[0][0] = 
-		scenes_MsPacMan[0][1] = new MsPacMan_IntroScene();
-		scenes_MsPacMan[1][0] = 
-		scenes_MsPacMan[1][1] = new MsPacMan_IntermissionScene1();
-		scenes_MsPacMan[2][0] = 
-		scenes_MsPacMan[2][1] = new MsPacMan_IntermissionScene2();
-		scenes_MsPacMan[3][0] = 
-		scenes_MsPacMan[3][1] = new MsPacMan_IntermissionScene3();
-		scenes_MsPacMan[4][0] = new PlayScene2D();
-		scenes_MsPacMan[4][1] = new PlayScene3D(GianmarcosModel3D.get());
+		scenes[1][0][0] = 
+		scenes[1][0][1] = new PacMan_IntroScene();
+		scenes[1][1][0] = 
+		scenes[1][1][1] = new PacMan_IntermissionScene1();
+		scenes[1][2][0] = 
+		scenes[1][2][1] = new PacMan_IntermissionScene2();
+		scenes[1][3][0] = 
+		scenes[1][3][1] = new PacMan_IntermissionScene3();
+		scenes[1][4][0] = new PlayScene2D();
+		scenes[1][4][1] = new PlayScene3D(GianmarcosModel3D.get());
 		//@formatter:on
 	}
 
 	public AbstractGameScene getScene(GameVariant gameVariant, int sceneIndex, int sceneVariant) {
-		return gameVariant == GameVariant.MS_PACMAN //
-				? scenes_MsPacMan[sceneIndex][sceneVariant]
-				: scenes_PacMan[sceneIndex][sceneVariant];
+		return scenes[gameVariant.ordinal()][sceneIndex][sceneVariant];
 	}
 }
