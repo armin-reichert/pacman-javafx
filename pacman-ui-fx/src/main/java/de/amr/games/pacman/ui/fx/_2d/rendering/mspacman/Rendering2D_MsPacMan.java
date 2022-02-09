@@ -98,6 +98,20 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 		return r(456, 0, col, row, 1, 1);
 	}
 
+	/**
+	 * @param dir direction
+	 * @return index used for this direction in the spritesheet
+	 */
+	private int dirIndex(Direction dir) {
+		return switch (dir) {
+		case RIGHT -> 0;
+		case LEFT -> 1;
+		case UP -> 2;
+		case DOWN -> 3;
+		default -> throw new IllegalArgumentException("Illegal direction: " + dir);
+		};
+	}
+
 	private Rendering2D_MsPacMan() {
 		super("/mspacman/graphics/sprites.png", 16);
 

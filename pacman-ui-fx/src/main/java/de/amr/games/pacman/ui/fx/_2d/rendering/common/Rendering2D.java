@@ -23,14 +23,9 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
-import static de.amr.games.pacman.lib.Direction.DOWN;
-import static de.amr.games.pacman.lib.Direction.LEFT;
-import static de.amr.games.pacman.lib.Direction.RIGHT;
-import static de.amr.games.pacman.lib.Direction.UP;
 import static de.amr.games.pacman.model.world.World.HTS;
 
 import java.io.InputStream;
-import java.util.List;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
@@ -75,7 +70,6 @@ public abstract class Rendering2D {
 
 	protected final Image spritesheet;
 	protected final int rasterSize;
-	protected final List<Direction> directionOrder = List.of(RIGHT, LEFT, UP, DOWN);
 	protected final Font font = Font.loadFont(resource("/emulogic.ttf"), 8);
 
 	public Rendering2D(String spritesheetPath, int rasterSize) {
@@ -85,14 +79,6 @@ public abstract class Rendering2D {
 
 	public InputStream resource(String path) {
 		return getClass().getResourceAsStream(path);
-	}
-
-	/**
-	 * @param dir direction
-	 * @return index used for this direction in the spritesheet
-	 */
-	public int dirIndex(Direction dir) {
-		return directionOrder.indexOf(dir);
 	}
 
 	/**

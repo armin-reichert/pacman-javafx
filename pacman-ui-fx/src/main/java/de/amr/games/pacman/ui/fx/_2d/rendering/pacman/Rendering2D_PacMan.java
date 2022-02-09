@@ -63,6 +63,20 @@ public class Rendering2D_PacMan extends Rendering2D {
 	private final Map<Integer, Rectangle2D> symbolSprites;
 	private final Map<Integer, Rectangle2D> bountyNumberSprites;
 
+	/**
+	 * @param dir direction
+	 * @return index used for this direction in the spritesheet
+	 */
+	private int dirIndex(Direction dir) {
+		return switch (dir) {
+		case RIGHT -> 0;
+		case LEFT -> 1;
+		case UP -> 2;
+		case DOWN -> 3;
+		default -> throw new IllegalArgumentException("Illegal direction: " + dir);
+		};
+	}
+
 	private Rendering2D_PacMan() {
 		super("/pacman/graphics/sprites.png", 16);
 
