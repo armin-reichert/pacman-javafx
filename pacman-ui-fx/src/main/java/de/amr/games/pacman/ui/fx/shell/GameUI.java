@@ -149,17 +149,16 @@ public class GameUI extends DefaultGameEventHandler {
 	private void updateSceneContext(AbstractGameScene gameScene) {
 		switch (gameController.gameVariant) {
 		case MS_PACMAN -> {
-			gameScene.setContext(gameController, gameController.game, SoundManager_MsPacMan.get());
+			gameScene.setContext(gameController, gameController.game, Rendering2D_MsPacMan.get(),
+					SoundManager_MsPacMan.get());
 			if (gameScene instanceof AbstractGameScene2D) {
-				((AbstractGameScene2D) gameScene).setDrawingContext(canvas, new V2i(TILES_X, TILES_Y).scaled(TS),
-						Rendering2D_MsPacMan.get());
+				((AbstractGameScene2D) gameScene).setDrawingContext(canvas, new V2i(TILES_X, TILES_Y).scaled(TS));
 			}
 		}
 		case PACMAN -> {
-			gameScene.setContext(gameController, gameController.game, SoundManager_PacMan.get());
+			gameScene.setContext(gameController, gameController.game, Rendering2D_PacMan.get(), SoundManager_PacMan.get());
 			if (gameScene instanceof AbstractGameScene2D) {
-				((AbstractGameScene2D) gameScene).setDrawingContext(canvas, new V2i(TILES_X, TILES_Y).scaled(TS),
-						Rendering2D_PacMan.get());
+				((AbstractGameScene2D) gameScene).setDrawingContext(canvas, new V2i(TILES_X, TILES_Y).scaled(TS));
 			}
 		}
 		}
