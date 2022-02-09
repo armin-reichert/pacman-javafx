@@ -63,22 +63,8 @@ public class Rendering2D_PacMan extends Rendering2D {
 	private final Map<Integer, Rectangle2D> symbolSprites;
 	private final Map<Integer, Rectangle2D> bountyNumberSprites;
 
-	/**
-	 * @param dir direction
-	 * @return index used for this direction in the spritesheet
-	 */
-	private int dirIndex(Direction dir) {
-		return switch (dir) {
-		case RIGHT -> 0;
-		case LEFT -> 1;
-		case UP -> 2;
-		case DOWN -> 3;
-		default -> throw new IllegalArgumentException("Illegal direction: " + dir);
-		};
-	}
-
 	private Rendering2D_PacMan() {
-		super("/pacman/graphics/sprites.png", 16);
+		super("/pacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
 		mazeFullImage = new Image(resource("/pacman/graphics/maze_full.png"));
 		mazeEmptyImage = new Image(resource("/pacman/graphics/maze_empty.png"));
@@ -170,7 +156,7 @@ public class Rendering2D_PacMan extends Rendering2D {
 	public Map<Direction, TimedSequence<Rectangle2D>> createPlayerMunchingAnimations() {
 		Map<Direction, TimedSequence<Rectangle2D>> animations = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
-			int d = dirIndex(dir);
+			int d = spritesheet.dirIndex(dir);
 			Rectangle2D wide_open = r(0, d), open = r(1, d), closed = r(2, 0);
 			var animation = TimedSequence.of(closed, open, wide_open, open).frameDuration(2).endless();
 			animations.put(dir, animation);
@@ -189,7 +175,7 @@ public class Rendering2D_PacMan extends Rendering2D {
 	public Map<Direction, TimedSequence<Rectangle2D>> createGhostKickingAnimations(int ghostID) {
 		EnumMap<Direction, TimedSequence<Rectangle2D>> animations = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
-			int d = dirIndex(dir);
+			int d = spritesheet.dirIndex(dir);
 			var animation = TimedSequence.of(r(2 * d, 4 + ghostID), r(2 * d + 1, 4 + ghostID)).frameDuration(8).endless();
 			animations.put(dir, animation);
 		}
@@ -210,7 +196,7 @@ public class Rendering2D_PacMan extends Rendering2D {
 	public Map<Direction, TimedSequence<Rectangle2D>> createGhostReturningHomeAnimations() {
 		Map<Direction, TimedSequence<Rectangle2D>> animations = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
-			int d = dirIndex(dir);
+			int d = spritesheet.dirIndex(dir);
 			animations.put(dir, TimedSequence.of(r(8 + d, 5)));
 		}
 		return animations;

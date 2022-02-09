@@ -68,13 +68,11 @@ public abstract class Rendering2D {
 		return result;
 	}
 
-	protected final Image spritesheet;
-	protected final int rasterSize;
 	protected final Font font = Font.loadFont(resource("/emulogic.ttf"), 8);
+	protected final Spritesheet spritesheet;
 
-	public Rendering2D(String spritesheetPath, int rasterSize) {
-		this.spritesheet = new Image(resource(spritesheetPath));
-		this.rasterSize = rasterSize;
+	public Rendering2D(String spritesheetPath, int rasterSize, Direction... directions) {
+		this.spritesheet = new Spritesheet(spritesheetPath, rasterSize, directions);
 	}
 
 	public InputStream resource(String path) {
@@ -98,7 +96,7 @@ public abstract class Rendering2D {
 	 */
 	public Image createSubImage(int x, int y, int width, int height) {
 		WritableImage subImage = new WritableImage(width, height);
-		subImage.getPixelWriter().setPixels(0, 0, width, height, spritesheet.getPixelReader(), x, y);
+		subImage.getPixelWriter().setPixels(0, 0, width, height, spritesheet.getImage().getPixelReader(), x, y);
 		return subImage;
 	}
 
@@ -132,7 +130,8 @@ public abstract class Rendering2D {
 	 * @return region at given grid coordinates relative to given origin
 	 */
 	public Rectangle2D r(int x, int y, int col, int row, int numCols, int numRows) {
-		return new Rectangle2D(x + col * rasterSize, y + row * rasterSize, numCols * rasterSize, numRows * rasterSize);
+		return new Rectangle2D(x + col * spritesheet.getRasterSize(), y + row * spritesheet.getRasterSize(),
+				numCols * spritesheet.getRasterSize(), numRows * spritesheet.getRasterSize());
 	}
 
 	/**
@@ -193,7 +192,8 @@ public abstract class Rendering2D {
 	 * @param y render location y
 	 */
 	public void renderSprite(GraphicsContext g, Rectangle2D r, double x, double y) {
-		g.drawImage(spritesheet, r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y, r.getWidth(), r.getHeight());
+		g.drawImage(spritesheet.getImage(), r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y, r.getWidth(),
+				r.getHeight());
 	}
 
 	// Maze
