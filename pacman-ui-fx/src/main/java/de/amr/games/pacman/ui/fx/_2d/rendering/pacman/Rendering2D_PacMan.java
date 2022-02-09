@@ -72,32 +72,32 @@ public class Rendering2D_PacMan extends Rendering2D {
 
 		//@formatter:off
 		symbolSprites = Map.of(
-			PacManGame.CHERRIES,   r(2, 3),
-			PacManGame.STRAWBERRY, r(3, 3),
-			PacManGame.PEACH,      r(4, 3),
-			PacManGame.APPLE,      r(5, 3),
-			PacManGame.GRAPES,     r(6, 3),
-			PacManGame.GALAXIAN,   r(7, 3),
-			PacManGame.BELL,       r(8, 3),
-			PacManGame.KEY,        r(9, 3)
+			PacManGame.CHERRIES,   ss.r(2, 3),
+			PacManGame.STRAWBERRY, ss.r(3, 3),
+			PacManGame.PEACH,      ss.r(4, 3),
+			PacManGame.APPLE,      ss.r(5, 3),
+			PacManGame.GRAPES,     ss.r(6, 3),
+			PacManGame.GALAXIAN,   ss.r(7, 3),
+			PacManGame.BELL,       ss.r(8, 3),
+			PacManGame.KEY,        ss.r(9, 3)
 		);
 
 		bonusValueSprites = Map.of(
-			100,  r(0, 9, 1, 1),
-			300,  r(1, 9, 1, 1),
-			500,  r(2, 9, 1, 1),
-			700,  r(3, 9, 1, 1),
-			1000, r(4, 9, 2, 1), // left-aligned 
-			2000, r(3, 10, 3, 1),
-			3000, r(3, 11, 3, 1),
-			5000, r(3, 12, 3, 1)
+			100,  ss.r(0, 9, 1, 1),
+			300,  ss.r(1, 9, 1, 1),
+			500,  ss.r(2, 9, 1, 1),
+			700,  ss.r(3, 9, 1, 1),
+			1000, ss.r(4, 9, 2, 1), // left-aligned 
+			2000, ss.r(3, 10, 3, 1),
+			3000, ss.r(3, 11, 3, 1),
+			5000, ss.r(3, 12, 3, 1)
 		);
 		
 		bountyNumberSprites = Map.of(
-			200,  r(0, 8, 1, 1),
-			400,  r(1, 8, 1, 1),
-			800,  r(2, 8, 1, 1),
-			1600, r(3, 8, 1, 1)
+			200,  ss.r(0, 8, 1, 1),
+			400,  ss.r(1, 8, 1, 1),
+			800,  ss.r(2, 8, 1, 1),
+			1600, ss.r(3, 8, 1, 1)
 		);
 		//@formatter:on
 	}
@@ -134,7 +134,7 @@ public class Rendering2D_PacMan extends Rendering2D {
 
 	@Override
 	public Rectangle2D getLifeSprite() {
-		return r(8, 1);
+		return ss.r(8, 1);
 	}
 
 	@Override
@@ -156,8 +156,8 @@ public class Rendering2D_PacMan extends Rendering2D {
 	public Map<Direction, TimedSequence<Rectangle2D>> createPlayerMunchingAnimations() {
 		Map<Direction, TimedSequence<Rectangle2D>> animations = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
-			int d = spritesheet.dirIndex(dir);
-			Rectangle2D wide_open = r(0, d), open = r(1, d), closed = r(2, 0);
+			int d = ss.dirIndex(dir);
+			Rectangle2D wide_open = ss.r(0, d), open = ss.r(1, d), closed = ss.r(2, 0);
 			var animation = TimedSequence.of(closed, open, wide_open, open).frameDuration(2).endless();
 			animations.put(dir, animation);
 		}
@@ -166,17 +166,17 @@ public class Rendering2D_PacMan extends Rendering2D {
 
 	@Override
 	public TimedSequence<Rectangle2D> createPlayerDyingAnimation() {
-		return TimedSequence
-				.of(r(3, 0), r(4, 0), r(5, 0), r(6, 0), r(7, 0), r(8, 0), r(9, 0), r(10, 0), r(11, 0), r(12, 0), r(13, 0))
-				.frameDuration(8);
+		return TimedSequence.of(ss.r(3, 0), ss.r(4, 0), ss.r(5, 0), ss.r(6, 0), ss.r(7, 0), ss.r(8, 0), ss.r(9, 0),
+				ss.r(10, 0), ss.r(11, 0), ss.r(12, 0), ss.r(13, 0)).frameDuration(8);
 	}
 
 	@Override
 	public Map<Direction, TimedSequence<Rectangle2D>> createGhostKickingAnimations(int ghostID) {
 		EnumMap<Direction, TimedSequence<Rectangle2D>> animations = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
-			int d = spritesheet.dirIndex(dir);
-			var animation = TimedSequence.of(r(2 * d, 4 + ghostID), r(2 * d + 1, 4 + ghostID)).frameDuration(8).endless();
+			int d = ss.dirIndex(dir);
+			var animation = TimedSequence.of(ss.r(2 * d, 4 + ghostID), ss.r(2 * d + 1, 4 + ghostID)).frameDuration(8)
+					.endless();
 			animations.put(dir, animation);
 		}
 		return animations;
@@ -184,20 +184,20 @@ public class Rendering2D_PacMan extends Rendering2D {
 
 	@Override
 	public TimedSequence<Rectangle2D> createGhostFrightenedAnimation() {
-		return TimedSequence.of(r(8, 4), r(9, 4)).frameDuration(8).endless();
+		return TimedSequence.of(ss.r(8, 4), ss.r(9, 4)).frameDuration(8).endless();
 	}
 
 	@Override
 	public TimedSequence<Rectangle2D> createGhostFlashingAnimation() {
-		return TimedSequence.of(r(8, 4), r(9, 4), r(10, 4), r(11, 4)).frameDuration(6);
+		return TimedSequence.of(ss.r(8, 4), ss.r(9, 4), ss.r(10, 4), ss.r(11, 4)).frameDuration(6);
 	}
 
 	@Override
 	public Map<Direction, TimedSequence<Rectangle2D>> createGhostReturningHomeAnimations() {
 		Map<Direction, TimedSequence<Rectangle2D>> animations = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
-			int d = spritesheet.dirIndex(dir);
-			animations.put(dir, TimedSequence.of(r(8 + d, 5)));
+			int d = ss.dirIndex(dir);
+			animations.put(dir, TimedSequence.of(ss.r(8 + d, 5)));
 		}
 		return animations;
 	}
@@ -205,26 +205,26 @@ public class Rendering2D_PacMan extends Rendering2D {
 	// Pac-Man specific:
 
 	public Rectangle2D getNail() {
-		return r(8, 6);
+		return ss.r(8, 6);
 	}
 
 	public TimedSequence<Rectangle2D> createBigPacManMunchingAnimation() {
-		return TimedSequence.of(r(2, 1, 2, 2), r(4, 1, 2, 2), r(6, 1, 2, 2)).frameDuration(4).endless();
+		return TimedSequence.of(ss.r(2, 1, 2, 2), ss.r(4, 1, 2, 2), ss.r(6, 1, 2, 2)).frameDuration(4).endless();
 	}
 
 	public TimedSequence<Rectangle2D> createBlinkyStretchedAnimation() {
-		return TimedSequence.of(r(9, 6), r(10, 6), r(11, 6), r(12, 6));
+		return TimedSequence.of(ss.r(9, 6), ss.r(10, 6), ss.r(11, 6), ss.r(12, 6));
 	}
 
 	public TimedSequence<Rectangle2D> createBlinkyDamagedAnimation() {
-		return TimedSequence.of(r(8, 7), r(9, 7));
+		return TimedSequence.of(ss.r(8, 7), ss.r(9, 7));
 	}
 
 	public TimedSequence<Rectangle2D> createBlinkyPatchedAnimation() {
-		return TimedSequence.of(r(10, 7), r(11, 7)).frameDuration(4).endless();
+		return TimedSequence.of(ss.r(10, 7), ss.r(11, 7)).frameDuration(4).endless();
 	}
 
 	public TimedSequence<Rectangle2D> createBlinkyNakedAnimation() {
-		return TimedSequence.of(r(8, 8, 2, 1), r(10, 8, 2, 1)).frameDuration(4).endless();
+		return TimedSequence.of(ss.r(8, 8, 2, 1), ss.r(10, 8, 2, 1)).frameDuration(4).endless();
 	}
 }

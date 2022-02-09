@@ -85,4 +85,37 @@ public class Spritesheet {
 		return subImage;
 	}
 
+	/**
+	 * @param col grid column (x)
+	 * @param row grid row (y)
+	 * @return region at given coordinates
+	 */
+	public Rectangle2D r(int col, int row) {
+		return r(col, row, 1, 1);
+	}
+
+	/**
+	 * @param col     grid column (x)
+	 * @param row     grid row (y)
+	 * @param numCols number of grid columns
+	 * @param numRows number of grid rows
+	 * @return region at given grid coordinates
+	 */
+	public Rectangle2D r(int col, int row, int numCols, int numRows) {
+		return r(0, 0, col, row, numCols, numRows);
+	}
+
+	/**
+	 * @param x       origin x-coordinate
+	 * @param y       origin y-coordinate
+	 * @param col     grid column (x)
+	 * @param row     grid row (y)
+	 * @param numCols number of grid columns
+	 * @param numRows number of grid rows
+	 * @return region at given grid coordinates relative to given origin
+	 */
+	public Rectangle2D r(int x, int y, int col, int row, int numCols, int numRows) {
+		return new Rectangle2D(x + col * rasterSize, y + row * rasterSize, numCols * rasterSize, numRows * rasterSize);
+	}
+
 }

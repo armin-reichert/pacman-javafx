@@ -68,48 +68,14 @@ public abstract class Rendering2D {
 	}
 
 	protected final Font font = Font.loadFont(getClass().getResourceAsStream("/emulogic.ttf"), 8);
-	protected final Spritesheet spritesheet;
+	protected final Spritesheet ss;
 
 	public Rendering2D(String spritesheetPath, int rasterSize, Direction... directions) {
-		this.spritesheet = new Spritesheet(spritesheetPath, rasterSize, directions);
+		this.ss = new Spritesheet(spritesheetPath, rasterSize, directions);
 	}
 
 	public Spritesheet getSpritesheet() {
-		return spritesheet;
-	}
-
-	/**
-	 * @param col grid column (x)
-	 * @param row grid row (y)
-	 * @return region at given coordinates
-	 */
-	public Rectangle2D r(int col, int row) {
-		return r(col, row, 1, 1);
-	}
-
-	/**
-	 * @param col     grid column (x)
-	 * @param row     grid row (y)
-	 * @param numCols number of grid columns
-	 * @param numRows number of grid rows
-	 * @return region at given grid coordinates
-	 */
-	public Rectangle2D r(int col, int row, int numCols, int numRows) {
-		return r(0, 0, col, row, numCols, numRows);
-	}
-
-	/**
-	 * @param x       origin x-coordinate
-	 * @param y       origin y-coordinate
-	 * @param col     grid column (x)
-	 * @param row     grid row (y)
-	 * @param numCols number of grid columns
-	 * @param numRows number of grid rows
-	 * @return region at given grid coordinates relative to given origin
-	 */
-	public Rectangle2D r(int x, int y, int col, int row, int numCols, int numRows) {
-		return new Rectangle2D(x + col * spritesheet.getRasterSize(), y + row * spritesheet.getRasterSize(),
-				numCols * spritesheet.getRasterSize(), numRows * spritesheet.getRasterSize());
+		return ss;
 	}
 
 	/**
@@ -170,7 +136,7 @@ public abstract class Rendering2D {
 	 * @param y render location y
 	 */
 	public void renderSprite(GraphicsContext g, Rectangle2D r, double x, double y) {
-		g.drawImage(spritesheet.getImage(), r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y, r.getWidth(),
+		g.drawImage(ss.getImage(), r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y, r.getWidth(),
 				r.getHeight());
 	}
 
