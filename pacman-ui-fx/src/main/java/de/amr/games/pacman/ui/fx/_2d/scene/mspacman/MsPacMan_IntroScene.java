@@ -65,11 +65,11 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 		score2D.showPoints = false;
 
 		msPacMan2D = new Player2D(sc.msPacMan, r2D);
-		msPacMan2D.munchingAnimations.values().forEach(TimedSeq::restart);
+		msPacMan2D.munchings.values().forEach(TimedSeq::restart);
 
 		ghosts2D = Stream.of(sc.ghosts).map(ghost -> {
 			Ghost2D ghost2D = new Ghost2D(ghost, r2D);
-			ghost2D.kickingAnimations.values().forEach(TimedSeq::restart);
+			ghost2D.kickings.values().forEach(TimedSeq::restart);
 			return ghost2D;
 		}).collect(Collectors.toList());
 

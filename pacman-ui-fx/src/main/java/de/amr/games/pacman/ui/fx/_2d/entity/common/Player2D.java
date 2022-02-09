@@ -43,8 +43,8 @@ public class Player2D {
 	private final Pac player;
 	private final Rendering2D r2D;
 
-	public Map<Direction, TimedSeq<Rectangle2D>> munchingAnimations;
-	public TimedSeq<Rectangle2D> dyingAnimation;
+	public Map<Direction, TimedSeq<Rectangle2D>> munchings;
+	public TimedSeq<Rectangle2D> dying;
 
 	public Player2D(Pac player, Rendering2D r2D) {
 		this.player = player;
@@ -53,22 +53,22 @@ public class Player2D {
 	}
 
 	public void reset() {
-		munchingAnimations = r2D.createPlayerMunchingAnimations();
-		dyingAnimation = r2D.createPlayerDyingAnimation();
+		munchings = r2D.createPlayerMunchingAnimations();
+		dying = r2D.createPlayerDyingAnimation();
 	}
 
 	public void render(GraphicsContext g) {
 		Rectangle2D sprite = null;
 		if (player.dead) {
-			if (dyingAnimation.hasStarted()) {
-				dyingAnimation.animate();
+			if (dying.hasStarted()) {
+				dying.animate();
 			}
-			sprite = dyingAnimation.frame();
+			sprite = dying.frame();
 		} else {
 			if (!player.velocity.equals(V2d.NULL) && !player.stuck) {
-				munchingAnimations.get(player.dir()).animate();
+				munchings.get(player.dir()).animate();
 			}
-			sprite = munchingAnimations.get(player.dir()).frame();
+			sprite = munchings.get(player.dir()).frame();
 		}
 		r2D.renderEntity(g, player, sprite);
 	}

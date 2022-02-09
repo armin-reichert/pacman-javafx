@@ -76,7 +76,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
 		levelCounter2D.visible = !gameController.attractMode;
 		player2D = new Player2D(game.player, r2D);
-		player2D.dyingAnimation.onStart(game::hideGhosts);
+		player2D.dying.onStart(game::hideGhosts);
 		for (int ghostID = 0; ghostID < 4; ++ghostID) {
 			ghosts2D[ghostID] = new Ghost2D(game.ghosts[ghostID], r2D);
 		}
@@ -97,8 +97,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 	public void doUpdate() {
 		if (gameController.state == GameState.HUNTING) {
 			// ensure animations are running when switching between 2D and 3D
-			if (!player2D.munchingAnimations.get(game.player.dir()).isRunning()) {
-				player2D.munchingAnimations.values().forEach(TimedSeq::restart);
+			if (!player2D.munchings.get(game.player.dir()).isRunning()) {
+				player2D.munchings.values().forEach(TimedSeq::restart);
 			}
 			if (!maze2D.getEnergizerAnimation().isRunning()) {
 				maze2D.getEnergizerAnimation().restart();
@@ -192,8 +192,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 		// enter HUNTING
 		else if (e.newGameState == GameState.HUNTING) {
 			maze2D.getEnergizerAnimation().restart();
-			player2D.munchingAnimations.values().forEach(TimedSeq::restart);
-			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSeq::restart));
+			player2D.munchings.values().forEach(TimedSeq::restart);
+			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.kickings.values().forEach(TimedSeq::restart));
 		}
 
 		// enter PACMAN_DYING
@@ -203,12 +203,12 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 			sounds.stopAll();
 
-			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSeq::reset));
+			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.kickings.values().forEach(TimedSeq::reset));
 			new SequentialTransition( //
 					afterSeconds(1, () -> game.ghosts().forEach(Ghost::hide)), //
 					afterSeconds(1, () -> {
 						sounds.play(GameSounds.PACMAN_DEATH);
-						player2D.dyingAnimation.restart();
+						player2D.dying.restart();
 					}), //
 					afterSeconds(2, () -> game.player.hide()), //
 					afterSeconds(1, () -> gameController.stateTimer().expire()) //
@@ -245,7 +245,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		// enter GAME_OVER
 		else if (e.newGameState == GameState.GAME_OVER) {
 			maze2D.getEnergizerAnimation().reset();
-			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSeq::restart));
+			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.kickings.values().forEach(TimedSeq::restart));
 			sounds.stopAll();
 		}
 

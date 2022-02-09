@@ -48,7 +48,7 @@ public class Ghost2D {
 	public final Ghost ghost;
 	public final Rendering2D r2D;
 
-	public Map<Direction, TimedSeq<Rectangle2D>> kickingAnimations;
+	public Map<Direction, TimedSeq<Rectangle2D>> kickings;
 	public Map<Direction, TimedSeq<Rectangle2D>> returningHomeAnimations;
 	public TimedSeq<Rectangle2D> flashingAnimation;
 	public TimedSeq<Rectangle2D> frightenedAnimation;
@@ -61,7 +61,7 @@ public class Ghost2D {
 	}
 
 	public void reset() {
-		kickingAnimations = r2D.createGhostKickingAnimations(ghost.id);
+		kickings = r2D.createGhostKickingAnimations(ghost.id);
 		returningHomeAnimations = r2D.createGhostReturningHomeAnimations();
 		frightenedAnimation = r2D.createGhostFrightenedAnimation();
 		flashingAnimation = r2D.createGhostFlashingAnimation();
@@ -90,9 +90,9 @@ public class Ghost2D {
 		} else if (ghost.is(LOCKED) && looksFrightened) {
 			sprite = frightenedAnimation.animate();
 		} else if (ghost.velocity.equals(V2d.NULL)) {
-			sprite = kickingAnimations.get(ghost.wishDir()).frame();
+			sprite = kickings.get(ghost.wishDir()).frame();
 		} else {
-			sprite = kickingAnimations.get(ghost.wishDir()).animate();
+			sprite = kickings.get(ghost.wishDir()).animate();
 		}
 		r2D.renderEntity(g, ghost, sprite);
 	}
