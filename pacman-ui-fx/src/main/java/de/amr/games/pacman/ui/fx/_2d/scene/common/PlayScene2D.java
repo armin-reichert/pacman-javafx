@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 import static de.amr.games.pacman.model.world.World.t;
 import static de.amr.games.pacman.ui.fx.util.U.afterSeconds;
 
-import java.util.List;
+import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.controller.event.GameEvent;
@@ -61,7 +61,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 	private LivesCounter2D livesCounter2D;
 	private LevelCounter2D levelCounter2D;
 	private Player2D player2D;
-	private List<Ghost2D> ghosts2D;
+	private Ghost2D[] ghosts2D = new Ghost2D[4];
 	private Bonus2D bonus2D;
 
 	@Override
@@ -77,11 +77,9 @@ public class PlayScene2D extends AbstractGameScene2D {
 		levelCounter2D.visible = !gameController.attractMode;
 		player2D = new Player2D(game.player, r2D);
 		player2D.dyingAnimation.onStart(game::hideGhosts);
-		ghosts2D = List.of( //
-				new Ghost2D(game.ghosts[0], r2D), //
-				new Ghost2D(game.ghosts[1], r2D), //
-				new Ghost2D(game.ghosts[2], r2D), //
-				new Ghost2D(game.ghosts[3], r2D));
+		for (int ghostID = 0; ghostID < 4; ++ghostID) {
+			ghosts2D[ghostID] = new Ghost2D(game.ghosts[ghostID], r2D);
+		}
 		bonus2D = new Bonus2D(game.bonus, r2D, gameController.gameVariant == GameVariant.MS_PACMAN);
 
 		game.player.powerTimer.addEventListener(this::handleGhostsFlashing);
@@ -132,7 +130,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void onPlayerGainsPower(GameEvent e) {
-		ghosts2D.stream().filter(ghost2D -> ghost2D.ghost.is(GhostState.FRIGHTENED)).forEach(ghost2D -> {
+		Stream.of(ghosts2D).filter(ghost2D -> ghost2D.ghost.is(GhostState.FRIGHTENED)).forEach(ghost2D -> {
 			ghost2D.flashingAnimation.reset();
 			ghost2D.frightenedAnimation.restart();
 		});
@@ -184,7 +182,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 			sounds.stopAll();
 			maze2D.getEnergizerAnimation().reset();
 			player2D.reset();
-			ghosts2D.forEach(Ghost2D::reset);
+			Stream.of(ghosts2D).forEach(Ghost2D::reset);
 			if (!gameController.attractMode && !gameController.gameRunning) {
 				sounds.setMuted(false);
 				sounds.play(GameSounds.GAME_READY);
@@ -195,7 +193,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		else if (e.newGameState == GameState.HUNTING) {
 			maze2D.getEnergizerAnimation().restart();
 			player2D.munchingAnimations.values().forEach(TimedSequence::restart);
-			ghosts2D.forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSequence::restart));
+			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSequence::restart));
 		}
 
 		// enter PACMAN_DYING
@@ -205,7 +203,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 			sounds.stopAll();
 
-			ghosts2D.forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSequence::reset));
+			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSequence::reset));
 			new SequentialTransition( //
 					afterSeconds(1, () -> game.ghosts().forEach(Ghost::hide)), //
 					afterSeconds(1, () -> {
@@ -247,7 +245,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		// enter GAME_OVER
 		else if (e.newGameState == GameState.GAME_OVER) {
 			maze2D.getEnergizerAnimation().reset();
-			ghosts2D.forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSequence::restart));
+			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSequence::restart));
 			sounds.stopAll();
 		}
 
@@ -260,7 +258,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 	// TODO there should be a simpler way than this
 	public void handleGhostsFlashing(TickTimerEvent e) {
 		if (e.type == TickTimerEvent.Type.HALF_EXPIRED) {
-			game.ghosts(GhostState.FRIGHTENED).map(ghost -> ghosts2D.get(ghost.id)).forEach(ghost2D -> {
+			game.ghosts(GhostState.FRIGHTENED).map(ghost -> ghosts2D[ghost.id]).forEach(ghost2D -> {
 				long frameTicks = e.ticks / (game.numFlashes * ghost2D.flashingAnimation.numFrames());
 				ghost2D.flashingAnimation.frameDuration(frameTicks).repetitions(game.numFlashes).restart();
 			});
@@ -288,8 +286,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 		player2D.render(gc);
 		// TODO maybe this is not the right thing to do
 		boolean playerHasPower = game.player.powerTimer.isRunning();
-		ghosts2D.stream().filter(ghost2D -> ghost2D.ghost.is(GhostState.LOCKED))
+		Stream.of(ghosts2D).filter(ghost2D -> ghost2D.ghost.is(GhostState.LOCKED))
 				.forEach(ghost2D -> ghost2D.setLooksFrightened(playerHasPower));
-		ghosts2D.stream().forEach(ghost -> ghost.render(gc));
+		Stream.of(ghosts2D).forEach(ghost -> ghost.render(gc));
 	}
 }
