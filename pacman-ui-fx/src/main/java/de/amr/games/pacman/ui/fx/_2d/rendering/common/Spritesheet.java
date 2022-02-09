@@ -23,9 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
-import java.util.EnumMap;
-import java.util.Map;
-
 import de.amr.games.pacman.lib.Direction;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
@@ -41,19 +38,18 @@ public class Spritesheet {
 
 	private final Image image;
 	private final int rasterSize;
-	private final Map<Direction, Integer> dirIndex;
+	private final int[] dirIndex = new int[4];
 
-	public Spritesheet(String imagePath, int rasterSize, Direction... directions) {
+	public Spritesheet(String imagePath, int rasterSize, Direction... dirs) {
 		this.image = new Image(getClass().getResource(imagePath).toString());
 		this.rasterSize = rasterSize;
-		dirIndex = new EnumMap<>(Direction.class);
-		for (int i = 0; i < directions.length; ++i) {
-			dirIndex.put(directions[i], i);
+		for (int i = 0; i < dirs.length; ++i) {
+			dirIndex[dirs[i].ordinal()] = i;
 		}
 	}
 
 	public int dirIndex(Direction dir) {
-		return dirIndex.get(dir);
+		return dirIndex[dir.ordinal()];
 	}
 
 	public Image getImage() {
