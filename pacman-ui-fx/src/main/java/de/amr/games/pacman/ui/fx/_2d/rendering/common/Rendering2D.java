@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
 import static de.amr.games.pacman.model.world.World.HTS;
 
-import java.io.InputStream;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
@@ -68,36 +67,15 @@ public abstract class Rendering2D {
 		return result;
 	}
 
-	protected final Font font = Font.loadFont(resource("/emulogic.ttf"), 8);
+	protected final Font font = Font.loadFont(getClass().getResourceAsStream("/emulogic.ttf"), 8);
 	protected final Spritesheet spritesheet;
 
 	public Rendering2D(String spritesheetPath, int rasterSize, Direction... directions) {
 		this.spritesheet = new Spritesheet(spritesheetPath, rasterSize, directions);
 	}
 
-	public InputStream resource(String path) {
-		return getClass().getResourceAsStream(path);
-	}
-
-	/**
-	 * @param r spritesheet region
-	 * @return copy of subimage at spritesheet region
-	 */
-	public Image extractRegion(Rectangle2D r) {
-		return createSubImage((int) r.getMinX(), (int) r.getMinY(), (int) r.getWidth(), (int) r.getHeight());
-	}
-
-	/**
-	 * @param x      region x-coordinate
-	 * @param y      region y-coordinate
-	 * @param width  region width
-	 * @param height region height
-	 * @return copy of subimage at spritesheet region
-	 */
-	public Image createSubImage(int x, int y, int width, int height) {
-		WritableImage subImage = new WritableImage(width, height);
-		subImage.getPixelWriter().setPixels(0, 0, width, height, spritesheet.getImage().getPixelReader(), x, y);
-		return subImage;
+	public Spritesheet getSpritesheet() {
+		return spritesheet;
 	}
 
 	/**

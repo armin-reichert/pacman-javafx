@@ -27,7 +27,9 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 
 /**
  * A spritesheet.
@@ -61,4 +63,26 @@ public class Spritesheet {
 	public int getRasterSize() {
 		return rasterSize;
 	}
+
+	/**
+	 * @param r spritesheet region
+	 * @return copy of subimage at spritesheet region
+	 */
+	public Image extractRegion(Rectangle2D r) {
+		return createSubImage((int) r.getMinX(), (int) r.getMinY(), (int) r.getWidth(), (int) r.getHeight());
+	}
+
+	/**
+	 * @param x      region x-coordinate
+	 * @param y      region y-coordinate
+	 * @param width  region width
+	 * @param height region height
+	 * @return copy of subimage at spritesheet region
+	 */
+	public Image createSubImage(int x, int y, int width, int height) {
+		WritableImage subImage = new WritableImage(width, height);
+		subImage.getPixelWriter().setPixels(0, 0, width, height, image.getPixelReader(), x, y);
+		return subImage;
+	}
+
 }

@@ -95,7 +95,7 @@ public class Ghost3D extends Creature3D<Ghost> {
 			if (displayMode != DisplayMode.NUMBER_CUBE) {
 				setDisplayMode(DisplayMode.NUMBER_CUBE);
 				PhongMaterial material = new PhongMaterial();
-				Image image = r2D.extractRegion(r2D.getBountyNumberSprite(creature.bounty));
+				Image image = r2D.getSpritesheet().extractRegion(r2D.getBountyNumberSprite(creature.bounty));
 				material.setBumpMap(image);
 				material.setDiffuseMap(image);
 				cube3D.setMaterial(material);

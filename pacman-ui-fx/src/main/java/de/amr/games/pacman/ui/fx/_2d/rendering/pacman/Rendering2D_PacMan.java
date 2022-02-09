@@ -66,8 +66,8 @@ public class Rendering2D_PacMan extends Rendering2D {
 	private Rendering2D_PacMan() {
 		super("/pacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
-		mazeFullImage = new Image(resource("/pacman/graphics/maze_full.png"));
-		mazeEmptyImage = new Image(resource("/pacman/graphics/maze_empty.png"));
+		mazeFullImage = new Image(getClass().getResourceAsStream(("/pacman/graphics/maze_full.png")));
+		mazeEmptyImage = new Image(getClass().getResourceAsStream(("/pacman/graphics/maze_empty.png")));
 		mazeFlashingImage = colorsExchanged(mazeEmptyImage, Collections.singletonMap(getMazeSideColor(1), Color.WHITE));
 
 		//@formatter:off
