@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 import static de.amr.games.pacman.model.world.World.t;
 
 import de.amr.games.pacman.controller.mspacman.Intermission1Controller;
-import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
@@ -78,10 +78,10 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 		heart2D = new Heart2D(sc.heart, (Rendering2D_MsPacMan) r2D);
 
 		// start animations
-		msPacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
-		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
-		inky2D.kickingAnimations.values().forEach(TimedSequence::restart);
-		pinky2D.kickingAnimations.values().forEach(TimedSequence::restart);
+		msPacMan2D.munchingAnimations.values().forEach(TimedSeq::restart);
+		pacMan2D.munchingAnimations.values().forEach(TimedSeq::restart);
+		inky2D.kickingAnimations.values().forEach(TimedSeq::restart);
+		pinky2D.kickingAnimations.values().forEach(TimedSeq::restart);
 	}
 
 	@Override

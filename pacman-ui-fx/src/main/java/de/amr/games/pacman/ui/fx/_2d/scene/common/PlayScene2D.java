@@ -33,7 +33,7 @@ import de.amr.games.pacman.controller.event.GameEvent;
 import de.amr.games.pacman.controller.event.GameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.TickTimerEvent;
-import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
@@ -98,7 +98,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		if (gameController.state == GameState.HUNTING) {
 			// ensure animations are running when switching between 2D and 3D
 			if (!player2D.munchingAnimations.get(game.player.dir()).isRunning()) {
-				player2D.munchingAnimations.values().forEach(TimedSequence::restart);
+				player2D.munchingAnimations.values().forEach(TimedSeq::restart);
 			}
 			if (!maze2D.getEnergizerAnimation().isRunning()) {
 				maze2D.getEnergizerAnimation().restart();
@@ -148,12 +148,12 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void onBonusActivated(GameEvent e) {
-		bonus2D.animation().ifPresent(TimedSequence::restart);
+		bonus2D.animation().ifPresent(TimedSeq::restart);
 	}
 
 	@Override
 	public void onBonusEaten(GameEvent e) {
-		bonus2D.animation().ifPresent(TimedSequence::stop);
+		bonus2D.animation().ifPresent(TimedSeq::stop);
 		sounds.play(GameSounds.BONUS_EATEN);
 	}
 
@@ -192,8 +192,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 		// enter HUNTING
 		else if (e.newGameState == GameState.HUNTING) {
 			maze2D.getEnergizerAnimation().restart();
-			player2D.munchingAnimations.values().forEach(TimedSequence::restart);
-			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSequence::restart));
+			player2D.munchingAnimations.values().forEach(TimedSeq::restart);
+			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSeq::restart));
 		}
 
 		// enter PACMAN_DYING
@@ -203,7 +203,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 			sounds.stopAll();
 
-			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSequence::reset));
+			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSeq::reset));
 			new SequentialTransition( //
 					afterSeconds(1, () -> game.ghosts().forEach(Ghost::hide)), //
 					afterSeconds(1, () -> {
@@ -245,7 +245,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		// enter GAME_OVER
 		else if (e.newGameState == GameState.GAME_OVER) {
 			maze2D.getEnergizerAnimation().reset();
-			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSequence::restart));
+			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.kickingAnimations.values().forEach(TimedSeq::restart));
 			sounds.stopAll();
 		}
 

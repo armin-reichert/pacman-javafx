@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.entity.mspacman;
 
-import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.model.common.GameEntity;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import javafx.geometry.Rectangle2D;
@@ -38,7 +38,7 @@ public class Stork2D {
 
 	private final GameEntity stork;
 	private final Rendering2D_MsPacMan rendering;
-	public final TimedSequence<Rectangle2D> animation;
+	public final TimedSeq<Rectangle2D> animation;
 
 	public Stork2D(GameEntity stork, Rendering2D_MsPacMan rendering) {
 		this.stork = stork;

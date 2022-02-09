@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 import static de.amr.games.pacman.model.world.World.t;
 
 import de.amr.games.pacman.controller.mspacman.Intermission2Controller;
-import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
@@ -65,11 +65,11 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 		flap2D = new Flap2D(sc.flap, (Rendering2D_MsPacMan) r2D);
 
 		msPacMan2D = new Player2D(sc.msPacMan, r2D);
-		msPacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
+		msPacMan2D.munchingAnimations.values().forEach(TimedSeq::restart);
 
 		pacMan2D = new Player2D(sc.pacMan, r2D);
 		pacMan2D.munchingAnimations = ((Rendering2D_MsPacMan) r2D).createHusbandMunchingAnimations();
-		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
+		pacMan2D.munchingAnimations.values().forEach(TimedSeq::restart);
 	}
 
 	@Override

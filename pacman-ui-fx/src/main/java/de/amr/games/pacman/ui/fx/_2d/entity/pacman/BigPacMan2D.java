@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.entity.pacman;
 
-import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import javafx.geometry.Rectangle2D;
@@ -38,7 +38,7 @@ public class BigPacMan2D {
 
 	private final Rendering2D_PacMan rendering;
 	private final Pac pacMan;
-	public final TimedSequence<Rectangle2D> munchingAnimation;
+	public final TimedSeq<Rectangle2D> munchingAnimation;
 
 	public BigPacMan2D(Pac pacMan, Rendering2D_PacMan rendering) {
 		this.pacMan = pacMan;

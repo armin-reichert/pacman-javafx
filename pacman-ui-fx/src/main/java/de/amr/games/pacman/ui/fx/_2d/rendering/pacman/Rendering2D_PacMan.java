@@ -28,7 +28,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.geometry.Rectangle2D;
@@ -153,29 +153,29 @@ public class Rendering2D_PacMan extends Rendering2D {
 	}
 
 	@Override
-	public Map<Direction, TimedSequence<Rectangle2D>> createPlayerMunchingAnimations() {
-		Map<Direction, TimedSequence<Rectangle2D>> animations = new EnumMap<>(Direction.class);
+	public Map<Direction, TimedSeq<Rectangle2D>> createPlayerMunchingAnimations() {
+		Map<Direction, TimedSeq<Rectangle2D>> animations = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
 			Rectangle2D wide_open = ss.r(0, d), open = ss.r(1, d), closed = ss.r(2, 0);
-			var animation = TimedSequence.of(closed, open, wide_open, open).frameDuration(2).endless();
+			var animation = TimedSeq.of(closed, open, wide_open, open).frameDuration(2).endless();
 			animations.put(dir, animation);
 		}
 		return animations;
 	}
 
 	@Override
-	public TimedSequence<Rectangle2D> createPlayerDyingAnimation() {
-		return TimedSequence.of(ss.r(3, 0), ss.r(4, 0), ss.r(5, 0), ss.r(6, 0), ss.r(7, 0), ss.r(8, 0), ss.r(9, 0),
+	public TimedSeq<Rectangle2D> createPlayerDyingAnimation() {
+		return TimedSeq.of(ss.r(3, 0), ss.r(4, 0), ss.r(5, 0), ss.r(6, 0), ss.r(7, 0), ss.r(8, 0), ss.r(9, 0),
 				ss.r(10, 0), ss.r(11, 0), ss.r(12, 0), ss.r(13, 0)).frameDuration(8);
 	}
 
 	@Override
-	public Map<Direction, TimedSequence<Rectangle2D>> createGhostKickingAnimations(int ghostID) {
-		EnumMap<Direction, TimedSequence<Rectangle2D>> animations = new EnumMap<>(Direction.class);
+	public Map<Direction, TimedSeq<Rectangle2D>> createGhostKickingAnimations(int ghostID) {
+		EnumMap<Direction, TimedSeq<Rectangle2D>> animations = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
-			var animation = TimedSequence.of(ss.r(2 * d, 4 + ghostID), ss.r(2 * d + 1, 4 + ghostID)).frameDuration(8)
+			var animation = TimedSeq.of(ss.r(2 * d, 4 + ghostID), ss.r(2 * d + 1, 4 + ghostID)).frameDuration(8)
 					.endless();
 			animations.put(dir, animation);
 		}
@@ -183,21 +183,21 @@ public class Rendering2D_PacMan extends Rendering2D {
 	}
 
 	@Override
-	public TimedSequence<Rectangle2D> createGhostFrightenedAnimation() {
-		return TimedSequence.of(ss.r(8, 4), ss.r(9, 4)).frameDuration(8).endless();
+	public TimedSeq<Rectangle2D> createGhostFrightenedAnimation() {
+		return TimedSeq.of(ss.r(8, 4), ss.r(9, 4)).frameDuration(8).endless();
 	}
 
 	@Override
-	public TimedSequence<Rectangle2D> createGhostFlashingAnimation() {
-		return TimedSequence.of(ss.r(8, 4), ss.r(9, 4), ss.r(10, 4), ss.r(11, 4)).frameDuration(6);
+	public TimedSeq<Rectangle2D> createGhostFlashingAnimation() {
+		return TimedSeq.of(ss.r(8, 4), ss.r(9, 4), ss.r(10, 4), ss.r(11, 4)).frameDuration(6);
 	}
 
 	@Override
-	public Map<Direction, TimedSequence<Rectangle2D>> createGhostReturningHomeAnimations() {
-		Map<Direction, TimedSequence<Rectangle2D>> animations = new EnumMap<>(Direction.class);
+	public Map<Direction, TimedSeq<Rectangle2D>> createGhostReturningHomeAnimations() {
+		Map<Direction, TimedSeq<Rectangle2D>> animations = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
-			animations.put(dir, TimedSequence.of(ss.r(8 + d, 5)));
+			animations.put(dir, TimedSeq.of(ss.r(8 + d, 5)));
 		}
 		return animations;
 	}
@@ -208,23 +208,23 @@ public class Rendering2D_PacMan extends Rendering2D {
 		return ss.r(8, 6);
 	}
 
-	public TimedSequence<Rectangle2D> createBigPacManMunchingAnimation() {
-		return TimedSequence.of(ss.r(2, 1, 2, 2), ss.r(4, 1, 2, 2), ss.r(6, 1, 2, 2)).frameDuration(4).endless();
+	public TimedSeq<Rectangle2D> createBigPacManMunchingAnimation() {
+		return TimedSeq.of(ss.r(2, 1, 2, 2), ss.r(4, 1, 2, 2), ss.r(6, 1, 2, 2)).frameDuration(4).endless();
 	}
 
-	public TimedSequence<Rectangle2D> createBlinkyStretchedAnimation() {
-		return TimedSequence.of(ss.r(9, 6), ss.r(10, 6), ss.r(11, 6), ss.r(12, 6));
+	public TimedSeq<Rectangle2D> createBlinkyStretchedAnimation() {
+		return TimedSeq.of(ss.r(9, 6), ss.r(10, 6), ss.r(11, 6), ss.r(12, 6));
 	}
 
-	public TimedSequence<Rectangle2D> createBlinkyDamagedAnimation() {
-		return TimedSequence.of(ss.r(8, 7), ss.r(9, 7));
+	public TimedSeq<Rectangle2D> createBlinkyDamagedAnimation() {
+		return TimedSeq.of(ss.r(8, 7), ss.r(9, 7));
 	}
 
-	public TimedSequence<Rectangle2D> createBlinkyPatchedAnimation() {
-		return TimedSequence.of(ss.r(10, 7), ss.r(11, 7)).frameDuration(4).endless();
+	public TimedSeq<Rectangle2D> createBlinkyPatchedAnimation() {
+		return TimedSeq.of(ss.r(10, 7), ss.r(11, 7)).frameDuration(4).endless();
 	}
 
-	public TimedSequence<Rectangle2D> createBlinkyNakedAnimation() {
-		return TimedSequence.of(ss.r(8, 8, 2, 1), ss.r(10, 8, 2, 1)).frameDuration(4).endless();
+	public TimedSeq<Rectangle2D> createBlinkyNakedAnimation() {
+		return TimedSeq.of(ss.r(8, 8, 2, 1), ss.r(10, 8, 2, 1)).frameDuration(4).endless();
 	}
 }

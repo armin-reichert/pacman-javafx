@@ -31,7 +31,7 @@ import static de.amr.games.pacman.model.common.GhostState.LOCKED;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -48,10 +48,10 @@ public class Ghost2D {
 	public final Ghost ghost;
 	public final Rendering2D r2D;
 
-	public Map<Direction, TimedSequence<Rectangle2D>> kickingAnimations;
-	public Map<Direction, TimedSequence<Rectangle2D>> returningHomeAnimations;
-	public TimedSequence<Rectangle2D> flashingAnimation;
-	public TimedSequence<Rectangle2D> frightenedAnimation;
+	public Map<Direction, TimedSeq<Rectangle2D>> kickingAnimations;
+	public Map<Direction, TimedSeq<Rectangle2D>> returningHomeAnimations;
+	public TimedSeq<Rectangle2D> flashingAnimation;
+	public TimedSeq<Rectangle2D> frightenedAnimation;
 	private boolean looksFrightened;
 
 	public Ghost2D(Ghost ghost, Rendering2D r2D) {

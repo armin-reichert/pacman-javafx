@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.controller.mspacman.IntroController;
 import de.amr.games.pacman.controller.mspacman.IntroController.IntroState;
 import de.amr.games.pacman.lib.TickTimer;
-import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
@@ -65,11 +65,11 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 		score2D.showPoints = false;
 
 		msPacMan2D = new Player2D(sc.msPacMan, r2D);
-		msPacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
+		msPacMan2D.munchingAnimations.values().forEach(TimedSeq::restart);
 
 		ghosts2D = Stream.of(sc.ghosts).map(ghost -> {
 			Ghost2D ghost2D = new Ghost2D(ghost, r2D);
-			ghost2D.kickingAnimations.values().forEach(TimedSequence::restart);
+			ghost2D.kickingAnimations.values().forEach(TimedSeq::restart);
 			return ghost2D;
 		}).collect(Collectors.toList());
 

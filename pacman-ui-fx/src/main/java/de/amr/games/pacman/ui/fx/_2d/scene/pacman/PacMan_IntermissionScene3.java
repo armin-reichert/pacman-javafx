@@ -27,7 +27,7 @@ import static de.amr.games.pacman.model.world.World.t;
 
 import de.amr.games.pacman.controller.pacman.Intermission3Controller;
 import de.amr.games.pacman.controller.pacman.Intermission3Controller.IntermissionState;
-import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
@@ -63,7 +63,7 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 		pacMan2D = new Player2D(sc.pac, r2D);
 		blinkyPatched2D = new BlinkyPatched2D(sc.blinky, (Rendering2D_PacMan) r2D);
 		blinkyNaked2D = new BlinkyNaked2D(sc.blinky, (Rendering2D_PacMan) r2D);
-		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
+		pacMan2D.munchingAnimations.values().forEach(TimedSeq::restart);
 		blinkyPatched2D.animation.restart();
 		blinkyNaked2D.animation.restart();
 	}

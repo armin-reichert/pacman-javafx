@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.entity.mspacman;
 
-import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.model.mspacman.entities.Flap;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import javafx.geometry.Rectangle2D;
@@ -39,7 +39,7 @@ public class Flap2D {
 
 	private final Flap flap;
 	private Rendering2D_MsPacMan rendering;
-	public final TimedSequence<Rectangle2D> animation;
+	public final TimedSeq<Rectangle2D> animation;
 
 	public Flap2D(Flap flap, Rendering2D_MsPacMan rendering) {
 		this.flap = flap;

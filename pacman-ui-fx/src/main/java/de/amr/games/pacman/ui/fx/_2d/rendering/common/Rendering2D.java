@@ -28,7 +28,7 @@ import static de.amr.games.pacman.model.world.World.HTS;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.model.common.BonusState;
 import de.amr.games.pacman.model.common.GameEntity;
 import de.amr.games.pacman.model.common.GameModel;
@@ -168,17 +168,17 @@ public abstract class Rendering2D {
 
 	// Animations
 
-	public abstract Map<Direction, TimedSequence<Rectangle2D>> createPlayerMunchingAnimations();
+	public abstract Map<Direction, TimedSeq<Rectangle2D>> createPlayerMunchingAnimations();
 
-	public abstract TimedSequence<Rectangle2D> createPlayerDyingAnimation();
+	public abstract TimedSeq<Rectangle2D> createPlayerDyingAnimation();
 
-	public abstract Map<Direction, TimedSequence<Rectangle2D>> createGhostKickingAnimations(int ghostID);
+	public abstract Map<Direction, TimedSeq<Rectangle2D>> createGhostKickingAnimations(int ghostID);
 
-	public abstract TimedSequence<Rectangle2D> createGhostFrightenedAnimation();
+	public abstract TimedSeq<Rectangle2D> createGhostFrightenedAnimation();
 
-	public abstract TimedSequence<Rectangle2D> createGhostFlashingAnimation();
+	public abstract TimedSeq<Rectangle2D> createGhostFlashingAnimation();
 
-	public abstract Map<Direction, TimedSequence<Rectangle2D>> createGhostReturningHomeAnimations();
+	public abstract Map<Direction, TimedSeq<Rectangle2D>> createGhostReturningHomeAnimations();
 
 	// Sprites
 

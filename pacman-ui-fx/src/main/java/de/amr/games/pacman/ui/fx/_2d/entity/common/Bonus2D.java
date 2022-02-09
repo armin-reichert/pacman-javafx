@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 import java.util.Objects;
 import java.util.Optional;
 
-import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.model.pacman.entities.Bonus;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.geometry.Rectangle2D;
@@ -44,15 +44,15 @@ public class Bonus2D {
 
 	private final Bonus bonus;
 	private final Rendering2D r2D;
-	private final TimedSequence<Integer> animation;
+	private final TimedSeq<Integer> animation;
 
 	public Bonus2D(Bonus bonus, Rendering2D r2D, boolean animated) {
 		this.bonus = Objects.requireNonNull(bonus);
 		this.r2D = Objects.requireNonNull(r2D);
-		animation = animated ? TimedSequence.of(2, 0, -2).frameDuration(8).endless() : null;
+		animation = animated ? TimedSeq.of(2, 0, -2).frameDuration(8).endless() : null;
 	}
 
-	public Optional<TimedSequence<Integer>> animation() {
+	public Optional<TimedSeq<Integer>> animation() {
 		return Optional.ofNullable(animation);
 	}
 

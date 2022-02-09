@@ -27,7 +27,7 @@ import static de.amr.games.pacman.model.world.World.t;
 
 import de.amr.games.pacman.controller.pacman.Intermission2Controller;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.GameSounds;
@@ -52,8 +52,8 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 	private Player2D pacMan2D;
 	private Ghost2D blinky2D;
 	private Nail2D nail2D;
-	private TimedSequence<Rectangle2D> blinkyStretchedAnimation;
-	private TimedSequence<Rectangle2D> blinkyDamagedAnimation;
+	private TimedSeq<Rectangle2D> blinkyStretchedAnimation;
+	private TimedSeq<Rectangle2D> blinkyDamagedAnimation;
 
 	@Override
 	public void init() {
@@ -68,8 +68,8 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 		pacMan2D = new Player2D(sc.pac, r2D);
 		blinky2D = new Ghost2D(sc.blinky, r2D);
 		nail2D = new Nail2D(sc.nail, (Rendering2D_PacMan) r2D);
-		pacMan2D.munchingAnimations.values().forEach(TimedSequence::restart);
-		blinky2D.kickingAnimations.values().forEach(TimedSequence::restart);
+		pacMan2D.munchingAnimations.values().forEach(TimedSeq::restart);
+		blinky2D.kickingAnimations.values().forEach(TimedSeq::restart);
 		blinkyStretchedAnimation = ((Rendering2D_PacMan) r2D).createBlinkyStretchedAnimation();
 		blinkyDamagedAnimation = ((Rendering2D_PacMan) r2D).createBlinkyDamagedAnimation();
 	}

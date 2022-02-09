@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 import static de.amr.games.pacman.model.world.World.TS;
 import static de.amr.games.pacman.model.world.World.t;
 
-import de.amr.games.pacman.lib.TimedSequence;
+import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -50,7 +50,7 @@ public class Maze2D {
 
 	private final int x;
 	private final int y;
-	private final TimedSequence<Boolean> energizerAnimation;
+	private final TimedSeq<Boolean> energizerAnimation;
 	private final Timeline flashingAnimation;
 
 	private boolean flashing;
@@ -66,7 +66,7 @@ public class Maze2D {
 		this.y = y;
 		this.r2D = r2D;
 		this.game = game;
-		energizerAnimation = TimedSequence.pulse().frameDuration(10);
+		energizerAnimation = TimedSeq.pulse().frameDuration(10);
 		flashingAnimation = new Timeline(new KeyFrame(Duration.millis(150), e -> flashing = !flashing));
 		flashingAnimation.setCycleCount(2 * game.numFlashes);
 	}
@@ -79,7 +79,7 @@ public class Maze2D {
 		return flashingAnimation;
 	}
 
-	public TimedSequence<Boolean> getEnergizerAnimation() {
+	public TimedSeq<Boolean> getEnergizerAnimation() {
 		return energizerAnimation;
 	}
 
