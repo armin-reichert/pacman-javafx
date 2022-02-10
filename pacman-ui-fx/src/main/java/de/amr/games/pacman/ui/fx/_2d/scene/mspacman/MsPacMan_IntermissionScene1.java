@@ -80,8 +80,8 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 		// start animations
 		msPacMan2D.munchings.values().forEach(TimedSeq::restart);
 		pacMan2D.munchings.values().forEach(TimedSeq::restart);
-		inky2D.kickings.values().forEach(TimedSeq::restart);
-		pinky2D.kickings.values().forEach(TimedSeq::restart);
+		inky2D.animKicking.values().forEach(TimedSeq::restart);
+		pinky2D.animKicking.values().forEach(TimedSeq::restart);
 	}
 
 	@Override

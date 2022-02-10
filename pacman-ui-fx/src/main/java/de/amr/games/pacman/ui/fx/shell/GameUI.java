@@ -37,6 +37,7 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
+import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
 import de.amr.games.pacman.ui.fx.scene.GameScenes;
@@ -187,6 +188,9 @@ public class GameUI extends DefaultGameEventHandler {
 		if (gameSceneForCurrentState(false) != gameSceneForCurrentState(true)) {
 			currentScene.getSounds().stopAll();
 			selectGameScene();
+			if (currentScene instanceof PlayScene2D) {
+				((PlayScene2D) currentScene).onSwitchFrom3DTo2D();
+			}
 		}
 	}
 

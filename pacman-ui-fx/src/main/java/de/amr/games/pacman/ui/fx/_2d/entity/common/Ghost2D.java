@@ -46,25 +46,30 @@ import javafx.scene.canvas.GraphicsContext;
 public class Ghost2D {
 
 	public final Ghost ghost;
-	public final Rendering2D r2D;
+	public final Map<Direction, TimedSeq<Rectangle2D>> animKicking;
+	public final Map<Direction, TimedSeq<Rectangle2D>> animReturningHome;
+	public final TimedSeq<Rectangle2D> animFlashing;
+	public final TimedSeq<Rectangle2D> animFrightened;
 
-	public Map<Direction, TimedSeq<Rectangle2D>> kickings;
-	public Map<Direction, TimedSeq<Rectangle2D>> returningHomeAnimations;
-	public TimedSeq<Rectangle2D> flashingAnimation;
-	public TimedSeq<Rectangle2D> frightenedAnimation;
+	private final Rendering2D r2D;
 	private boolean looksFrightened;
 
 	public Ghost2D(Ghost ghost, Rendering2D r2D) {
 		this.ghost = ghost;
 		this.r2D = r2D;
-		reset();
+		animKicking = r2D.createGhostKickingAnimations(ghost.id);
+		animReturningHome = r2D.createGhostReturningHomeAnimations();
+		animFrightened = r2D.createGhostFrightenedAnimation();
+		animFlashing = r2D.createGhostFlashingAnimation();
 	}
 
 	public void reset() {
-		kickings = r2D.createGhostKickingAnimations(ghost.id);
-		returningHomeAnimations = r2D.createGhostReturningHomeAnimations();
-		frightenedAnimation = r2D.createGhostFrightenedAnimation();
-		flashingAnimation = r2D.createGhostFlashingAnimation();
+		for (Direction dir : Direction.values()) {
+			animKicking.get(dir).reset();
+			animReturningHome.get(dir).reset();
+		}
+		animFlashing.reset();
+		animFrightened.reset();
 	}
 
 	public void setLooksFrightened(boolean looksFrightened) {
@@ -76,23 +81,23 @@ public class Ghost2D {
 		if (ghost.bounty > 0) {
 			sprite = r2D.getBountyNumberSprite(ghost.bounty);
 		} else if (ghost.is(DEAD) || ghost.is(ENTERING_HOUSE)) {
-			sprite = returningHomeAnimations.get(ghost.wishDir()).animate();
+			sprite = animReturningHome.get(ghost.wishDir()).animate();
 		} else if (ghost.is(FRIGHTENED)) {
-			if (flashingAnimation.isRunning()) {
-				sprite = flashingAnimation.animate();
+			if (animFlashing.isRunning()) {
+				sprite = animFlashing.animate();
 			} else {
 				if (ghost.velocity.equals(V2d.NULL)) {
-					sprite = frightenedAnimation.frame();
+					sprite = animFrightened.frame();
 				} else {
-					sprite = frightenedAnimation.animate();
+					sprite = animFrightened.animate();
 				}
 			}
 		} else if (ghost.is(LOCKED) && looksFrightened) {
-			sprite = frightenedAnimation.animate();
+			sprite = animFrightened.animate();
 		} else if (ghost.velocity.equals(V2d.NULL)) {
-			sprite = kickings.get(ghost.wishDir()).frame();
+			sprite = animKicking.get(ghost.wishDir()).frame();
 		} else {
-			sprite = kickings.get(ghost.wishDir()).animate();
+			sprite = animKicking.get(ghost.wishDir()).animate();
 		}
 		r2D.renderEntity(g, ghost, sprite);
 	}

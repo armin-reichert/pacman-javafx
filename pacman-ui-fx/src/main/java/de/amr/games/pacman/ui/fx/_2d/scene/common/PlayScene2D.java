@@ -32,6 +32,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.controller.event.GameEvent;
 import de.amr.games.pacman.controller.event.GameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.model.common.GameVariant;
@@ -94,20 +95,30 @@ public class PlayScene2D extends AbstractGameScene2D {
 	}
 
 	@Override
-	public void doUpdate() {
-		if (gameController.state == GameState.HUNTING) {
-			// ensure animations are running when switching between 2D and 3D
-			if (!player2D.munchings.get(game.player.dir()).isRunning()) {
-				player2D.munchings.values().forEach(TimedSeq::restart);
-			}
-			if (!maze2D.getEnergizerAnimation().isRunning()) {
-				maze2D.getEnergizerAnimation().restart();
-			}
-			AudioClip munching = sounds.getClip(GameSounds.PACMAN_MUNCH);
-			if (munching.isPlaying()) {
-				if (game.player.starvingTicks > 10) {
-					sounds.stop(GameSounds.PACMAN_MUNCH);
+	protected void doUpdate() {
+	}
+
+	public void onSwitchFrom3DTo2D() {
+		if (!player2D.munchings.get(game.player.dir()).isRunning()) {
+			player2D.munchings.values().forEach(TimedSeq::restart);
+		}
+		for (Ghost2D ghost2D : ghosts2D) {
+			for (Direction dir : Direction.values()) {
+				if (!ghost2D.animKicking.get(dir).isRunning()) {
+					ghost2D.animKicking.get(dir).restart();
 				}
+			}
+			if (!ghost2D.animFrightened.isRunning()) {
+				ghost2D.animFrightened.restart();
+			}
+		}
+		if (!maze2D.getEnergizerAnimation().isRunning()) {
+			maze2D.getEnergizerAnimation().restart();
+		}
+		AudioClip munching = sounds.getClip(GameSounds.PACMAN_MUNCH);
+		if (munching.isPlaying()) {
+			if (game.player.starvingTicks > 10) {
+				sounds.stop(GameSounds.PACMAN_MUNCH);
 			}
 		}
 	}
@@ -131,8 +142,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 	@Override
 	public void onPlayerGainsPower(GameEvent e) {
 		Stream.of(ghosts2D).filter(ghost2D -> ghost2D.ghost.is(GhostState.FRIGHTENED)).forEach(ghost2D -> {
-			ghost2D.flashingAnimation.reset();
-			ghost2D.frightenedAnimation.restart();
+			ghost2D.animFlashing.reset();
+			ghost2D.animFrightened.restart();
 		});
 		if (!sounds.getClip(GameSounds.PACMAN_POWER).isPlaying()) {
 			sounds.loop(GameSounds.PACMAN_POWER, Animation.INDEFINITE);
@@ -193,7 +204,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		else if (e.newGameState == GameState.HUNTING) {
 			maze2D.getEnergizerAnimation().restart();
 			player2D.munchings.values().forEach(TimedSeq::restart);
-			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.kickings.values().forEach(TimedSeq::restart));
+			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animKicking.values().forEach(TimedSeq::restart));
 		}
 
 		// enter PACMAN_DYING
@@ -203,7 +214,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 			sounds.stopAll();
 
-			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.kickings.values().forEach(TimedSeq::reset));
+			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animKicking.values().forEach(TimedSeq::reset));
 			new SequentialTransition( //
 					afterSeconds(1, () -> game.ghosts().forEach(Ghost::hide)), //
 					afterSeconds(1, () -> {
@@ -245,7 +256,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		// enter GAME_OVER
 		else if (e.newGameState == GameState.GAME_OVER) {
 			maze2D.getEnergizerAnimation().reset();
-			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.kickings.values().forEach(TimedSeq::restart));
+			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animKicking.values().forEach(TimedSeq::restart));
 			sounds.stopAll();
 		}
 
@@ -259,8 +270,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 	public void handleGhostsFlashing(TickTimerEvent e) {
 		if (e.type == TickTimerEvent.Type.HALF_EXPIRED) {
 			game.ghosts(GhostState.FRIGHTENED).map(ghost -> ghosts2D[ghost.id]).forEach(ghost2D -> {
-				long frameTicks = e.ticks / (game.numFlashes * ghost2D.flashingAnimation.numFrames());
-				ghost2D.flashingAnimation.frameDuration(frameTicks).repetitions(game.numFlashes).restart();
+				long frameTicks = e.ticks / (game.numFlashes * ghost2D.animFlashing.numFrames());
+				ghost2D.animFlashing.frameDuration(frameTicks).repetitions(game.numFlashes).restart();
 			});
 		}
 	}
