@@ -29,5 +29,5 @@ package de.amr.games.pacman.ui.fx._3d.scene;
  * @author Armin Reichert
  */
 public enum Perspective {
-	CAM_TOTAL, CAM_FOLLOWING_PLAYER, CAM_NEAR_PLAYER;
+	CAM_TOTAL, CAM_FOLLOWING_PLAYER, CAM_NEAR_PLAYER, CAM_DRONE;
 }

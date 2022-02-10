@@ -104,6 +104,7 @@ public class PlayScene3D extends AbstractGameScene {
 			cams.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer(cam));
 			cams.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer(cam));
 			cams.put(Perspective.CAM_TOTAL, new Cam_Total(cam));
+			cams.put(Perspective.CAM_DRONE, new Cam_Drone(cam));
 			parent.addEventHandler(KeyEvent.ANY, e -> camController().handle(e));
 			log("Subscene for game scene '%s' created, width=%.0f, height=%.0f", getClass().getName(), fxSubScene.getWidth(),
 					fxSubScene.getHeight());
