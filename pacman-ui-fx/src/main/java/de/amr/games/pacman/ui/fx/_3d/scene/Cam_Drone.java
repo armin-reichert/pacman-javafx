@@ -55,13 +55,13 @@ public class Cam_Drone implements CameraController<PlayScene3D> {
 		cam.setRotate(0);
 		cam.setTranslateX(0);
 		cam.setTranslateY(0);
-		cam.setTranslateZ(-450);
+		cam.setTranslateZ(-400);
 	}
 
 	@Override
 	public void update(PlayScene3D scene) {
 		// TODO camera speed should be dependent from height over ground
-		double frac = 0.004;
+		double frac = 0.005;
 		double x = lerp(cam.getTranslateX(), scene.player3D.getTranslateX() - 100, frac);
 		double y = lerp(cam.getTranslateY(), scene.player3D.getTranslateY() - 150, frac);
 		cam.setTranslateX(x);
