@@ -58,18 +58,18 @@ public class Pac3D extends Creature3D<Pac> {
 	private final PointLight light;
 
 	private Color skullColor = Color.YELLOW;
-	private Color deadColor = Color.GHOSTWHITE;
+	private Color skullColorWhenDead = Color.GHOSTWHITE;
 	private Color eyesColor = Color.rgb(20, 20, 20);
 	private Color palateColor = Color.CHOCOLATE;
 
 	public Pac3D(Pac player, PacManModel3D model3D) {
 		super(player);
 		Group pac3D = model3D.createPacMan(skullColor, eyesColor, palateColor);
-		this.skull = (Shape3D) pac3D.getChildren().get(0);
-		this.light = new PointLight(Color.WHITE);
-		getChildren().addAll(pac3D, light);
+		skull = (Shape3D) pac3D.getChildren().get(0);
+		light = new PointLight(Color.WHITE);
 		light.setTranslateZ(-HTS);
 		turningAnimation.setNode(this);
+		getChildren().addAll(pac3D, light);
 		reset();
 	}
 
@@ -97,7 +97,7 @@ public class Pac3D extends Creature3D<Pac> {
 
 		return new SequentialTransition( //
 				new FillTransition3D(Duration.seconds(1), skull, skullColor, ghostColor), //
-				new FillTransition3D(Duration.seconds(1), skull, ghostColor, deadColor), //
+				new FillTransition3D(Duration.seconds(1), skull, ghostColor, skullColorWhenDead), //
 				new ParallelTransition(spin, shrink, playSound));
 	}
 }
