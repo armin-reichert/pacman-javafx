@@ -152,10 +152,10 @@ public class GameUI extends DefaultGameEventHandler {
 	private void updateSceneContext(AbstractGameScene gameScene) {
 		switch (gameController.gameVariant) {
 		case MS_PACMAN -> {
-			gameScene.setContext(gameController, gameController.game, Rendering2D_MsPacMan.get(), Sounds_MsPacMan.get());
+			gameScene.setContext(gameController.game, Rendering2D_MsPacMan.get(), Sounds_MsPacMan.get());
 		}
 		case PACMAN -> {
-			gameScene.setContext(gameController, gameController.game, Rendering2D_PacMan.get(), Sounds_PacMan.get());
+			gameScene.setContext(gameController.game, Rendering2D_PacMan.get(), Sounds_PacMan.get());
 		}
 		}
 		if (gameScene instanceof AbstractGameScene2D) {

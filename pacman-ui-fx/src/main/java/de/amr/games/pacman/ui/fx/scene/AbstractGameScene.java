@@ -50,7 +50,7 @@ public abstract class AbstractGameScene extends DefaultGameEventHandler {
 		this.gameController = gameController;
 	}
 
-	public void setContext(GameController gameController, GameModel game, Rendering2D r2D, SoundManager sounds) {
+	public void setContext(GameModel game, Rendering2D r2D, SoundManager sounds) {
 		this.game = game;
 		this.r2D = r2D;
 		this.sounds = sounds;
