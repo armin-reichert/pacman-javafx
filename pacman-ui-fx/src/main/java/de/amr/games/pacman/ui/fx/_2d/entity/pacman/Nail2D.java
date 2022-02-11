@@ -35,14 +35,14 @@ import javafx.scene.canvas.GraphicsContext;
 public class Nail2D {
 
 	private final GameEntity nail;
-	private final Rendering2D_PacMan rendering;
+	private final Rendering2D_PacMan r2D;
 
 	public Nail2D(GameEntity nail, Rendering2D_PacMan rendering) {
 		this.nail = nail;
-		this.rendering = rendering;
+		this.r2D = rendering;
 	}
 
 	public void render(GraphicsContext g) {
-		rendering.renderEntity(g, nail, rendering.getNail());
+		r2D.renderEntity(g, nail, r2D.getNail());
 	}
 }
