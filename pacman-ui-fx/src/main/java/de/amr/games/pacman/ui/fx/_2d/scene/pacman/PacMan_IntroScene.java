@@ -27,8 +27,6 @@ import static de.amr.games.pacman.lib.TickTimer.sec_to_ticks;
 import static de.amr.games.pacman.model.world.World.TS;
 import static de.amr.games.pacman.model.world.World.t;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.GameController;
@@ -55,8 +53,8 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	private final IntroController sc = new IntroController();
 
 	private Player2D pacMan2D;
-	private List<Ghost2D> ghosts2D;
-	private List<Ghost2D> gallery2D;
+	private Ghost2D[] ghosts2D;
+	private Ghost2D[] gallery2D;
 
 	public PacMan_IntroScene(GameController gameController) {
 		super(gameController);
@@ -77,13 +75,13 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 			ghost2D.animKicking.values().forEach(TimedSeq::restart);
 			ghost2D.animFrightened.restart();
 			return ghost2D;
-		}).collect(Collectors.toList());
+		}).toArray(Ghost2D[]::new);
 
-		gallery2D = List.of( //
+		gallery2D = new Ghost2D[] { //
 				new Ghost2D(sc.portraits[0].ghost, game, r2D), //
 				new Ghost2D(sc.portraits[1].ghost, game, r2D), //
 				new Ghost2D(sc.portraits[2].ghost, game, r2D), //
-				new Ghost2D(sc.portraits[3].ghost, game, r2D));
+				new Ghost2D(sc.portraits[3].ghost, game, r2D) };
 	}
 
 	@Override
@@ -138,13 +136,13 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	}
 
 	private void drawGuys(int offset) {
-		ghosts2D.get(0).render(gc);
+		ghosts2D[0].render(gc);
 		gc.save();
 		gc.translate(offset, 0);
-		ghosts2D.get(1).render(gc);
-		ghosts2D.get(2).render(gc);
+		ghosts2D[1].render(gc);
+		ghosts2D[2].render(gc);
 		gc.restore();
-		ghosts2D.get(3).render(gc);
+		ghosts2D[3].render(gc);
 		pacMan2D.render(gc);
 	}
 
@@ -158,7 +156,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 			GhostPortrait portrait = sc.portraits[ghostID];
 			if (portrait.ghost.visible) {
 				int y = sc.topY + t(1 + 3 * ghostID);
-				gallery2D.get(ghostID).render(gc);
+				gallery2D[ghostID].render(gc);
 				if (portrait.characterVisible) {
 					gc.setFill(r2D.getGhostColor(ghostID));
 					gc.fillText("-" + portrait.character, t(6), y + 8);
