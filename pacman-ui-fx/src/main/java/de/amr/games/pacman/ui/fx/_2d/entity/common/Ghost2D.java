@@ -33,6 +33,7 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2d;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.geometry.Rectangle2D;
@@ -43,7 +44,7 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class Ghost2D {
+public class Ghost2D extends GameEntity2D {
 
 	public final Ghost ghost;
 	public final Map<Direction, TimedSeq<Rectangle2D>> animKicking;
@@ -51,12 +52,11 @@ public class Ghost2D {
 	public final TimedSeq<Rectangle2D> animFlashing;
 	public final TimedSeq<Rectangle2D> animFrightened;
 
-	private final Rendering2D r2D;
 	private boolean looksFrightened;
 
-	public Ghost2D(Ghost ghost, Rendering2D r2D) {
+	public Ghost2D(Ghost ghost, GameModel game, Rendering2D r2D) {
+		super(game, r2D);
 		this.ghost = ghost;
-		this.r2D = r2D;
 		animKicking = r2D.createGhostKickingAnimations(ghost.id);
 		animReturningHome = r2D.createGhostReturningHomeAnimations();
 		animFrightened = r2D.createGhostFrightenedAnimation();
@@ -76,6 +76,7 @@ public class Ghost2D {
 		this.looksFrightened = looksFrightened;
 	}
 
+	@Override
 	public void render(GraphicsContext g) {
 		Rectangle2D sprite = null;
 		if (ghost.bounty > 0) {

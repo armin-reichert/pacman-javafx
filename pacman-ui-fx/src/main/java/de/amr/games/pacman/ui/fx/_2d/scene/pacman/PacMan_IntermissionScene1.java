@@ -65,8 +65,8 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 		levelCounter2D = new LevelCounter2D(game, r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
 
-		pacMan2D = new Player2D(sc.pac, r2D);
-		blinky2D = new Ghost2D(sc.blinky, r2D);
+		pacMan2D = new Player2D(sc.pac, game, r2D);
+		blinky2D = new Ghost2D(sc.blinky, game, r2D);
 		bigPacMan2D = new BigPacMan2D(sc.pac, (Rendering2D_PacMan) r2D);
 		pacMan2D.munchings.values().forEach(TimedSeq::restart);
 		blinky2D.animKicking.values().forEach(TimedSeq::restart);

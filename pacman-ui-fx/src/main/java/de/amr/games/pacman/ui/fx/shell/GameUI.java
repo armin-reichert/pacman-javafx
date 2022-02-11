@@ -136,7 +136,8 @@ public class GameUI extends DefaultGameEventHandler {
 		AbstractGameScene nextScene = gameSceneForCurrentState(Env.$3D.get());
 		if (currentScene != nextScene) {
 			if (currentScene != null) {
-				log("Change scene from '%s' to '%s'", currentScene.getClass().getName(), nextScene.getClass().getName());
+				log("Change scene from '%s' to '%s'", currentScene.getClass().getName(),
+						nextScene.getClass().getName());
 				currentScene.end();
 			} else {
 				log("Set scene to '%s'", nextScene.getClass().getName());
@@ -153,6 +154,7 @@ public class GameUI extends DefaultGameEventHandler {
 		switch (gameController.gameVariant) {
 		case MS_PACMAN -> gameScene.setContext(gameController.game, Rendering2D_MsPacMan.get(), Sounds_MsPacMan.get());
 		case PACMAN -> gameScene.setContext(gameController.game, Rendering2D_PacMan.get(), Sounds_PacMan.get());
+		default -> throw new IllegalArgumentException();
 		}
 		if (gameScene instanceof AbstractGameScene2D) {
 			((AbstractGameScene2D) gameScene).setDrawingContext(canvas, new V2i(TILES_X, TILES_Y).scaled(TS));

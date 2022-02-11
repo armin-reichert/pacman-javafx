@@ -69,10 +69,10 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 		flap2D = new Flap2D(sc.flap, (Rendering2D_MsPacMan) r2D);
 
-		msPacMan2D = new Player2D(sc.msPacMan, r2D);
+		msPacMan2D = new Player2D(sc.msPacMan, game, r2D);
 		msPacMan2D.munchings.values().forEach(TimedSeq::restart);
 
-		pacMan2D = new Player2D(sc.pacMan, r2D);
+		pacMan2D = new Player2D(sc.pacMan, game, r2D);
 		pacMan2D.munchings = ((Rendering2D_MsPacMan) r2D).createHusbandMunchingAnimations();
 		pacMan2D.munchings.values().forEach(TimedSeq::restart);
 	}

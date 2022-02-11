@@ -72,8 +72,8 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 		levelCounter2D = new LevelCounter2D(game, r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
 
-		msPacMan2D = new Player2D(sc.msPacMan, r2D);
-		pacMan2D = new Player2D(sc.pacMan, r2D);
+		msPacMan2D = new Player2D(sc.msPacMan, game, r2D);
+		pacMan2D = new Player2D(sc.pacMan, game, r2D);
 		pacMan2D.munchings = ((Rendering2D_MsPacMan) r2D).createHusbandMunchingAnimations();
 
 		flap2D = new Flap2D(sc.flap, (Rendering2D_MsPacMan) r2D);

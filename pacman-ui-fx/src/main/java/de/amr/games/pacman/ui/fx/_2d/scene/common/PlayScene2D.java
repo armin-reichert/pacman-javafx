@@ -81,10 +81,10 @@ public class PlayScene2D extends AbstractGameScene2D {
 		levelCounter2D = new LevelCounter2D(game, r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
 		levelCounter2D.visible = !gameController.attractMode;
-		player2D = new Player2D(game.player, r2D);
+		player2D = new Player2D(game.player, game, r2D);
 		player2D.dying.onStart(game::hideGhosts);
 		for (int ghostID = 0; ghostID < 4; ++ghostID) {
-			ghosts2D[ghostID] = new Ghost2D(game.ghosts[ghostID], r2D);
+			ghosts2D[ghostID] = new Ghost2D(game.ghosts[ghostID], game, r2D);
 		}
 		bonus2D = new Bonus2D(game.bonus, r2D, gameController.gameVariant == GameVariant.MS_PACMAN);
 

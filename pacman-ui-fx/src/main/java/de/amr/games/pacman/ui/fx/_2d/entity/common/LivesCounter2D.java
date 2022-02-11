@@ -37,24 +37,17 @@ import javafx.scene.text.FontWeight;
  * 
  * @author Armin Reichert
  */
-public class LivesCounter2D {
-
-	private final GameModel game;
-	private final Rendering2D r2D;
+public class LivesCounter2D extends GameEntity2D {
 
 	private final int maxLivesDisplayed = 5;
-	private final int x;
-	private final int y;
-
-	public boolean visible = true;
 
 	public LivesCounter2D(int x, int y, GameModel game, Rendering2D r2D) {
+		super(game, r2D);
 		this.x = x;
 		this.y = y;
-		this.game = game;
-		this.r2D = r2D;
 	}
 
+	@Override
 	public void render(GraphicsContext g) {
 		if (!visible) {
 			return;

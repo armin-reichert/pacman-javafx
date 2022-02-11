@@ -28,6 +28,7 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2d;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.geometry.Rectangle2D;
@@ -38,17 +39,15 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class Player2D {
+public class Player2D extends GameEntity2D {
 
-	private final Pac player;
-	private final Rendering2D r2D;
-
+	public final Pac player;
 	public Map<Direction, TimedSeq<Rectangle2D>> munchings;
 	public TimedSeq<Rectangle2D> dying;
 
-	public Player2D(Pac player, Rendering2D r2D) {
+	public Player2D(Pac player, GameModel game, Rendering2D r2D) {
+		super(game, r2D);
 		this.player = player;
-		this.r2D = r2D;
 		reset();
 	}
 
@@ -57,6 +56,7 @@ public class Player2D {
 		dying = r2D.createPlayerDyingAnimation();
 	}
 
+	@Override
 	public void render(GraphicsContext g) {
 		Rectangle2D sprite = null;
 		if (player.dead) {

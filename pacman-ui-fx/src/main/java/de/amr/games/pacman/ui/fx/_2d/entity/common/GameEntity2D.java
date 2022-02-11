@@ -23,35 +23,34 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
-import static de.amr.games.pacman.model.world.World.t;
-
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 /**
- * Indicates current level by bonus symbols.
+ * Base class of 2D entities.
  * 
  * @author Armin Reichert
  */
-public class LevelCounter2D extends GameEntity2D {
+public abstract class GameEntity2D {
 
-	public V2i rightPosition = V2i.NULL;
+	public final GameModel game;
+	public final Rendering2D r2D;
+	public int x;
+	public int y;
+	public boolean visible;
 
-	public LevelCounter2D(GameModel game, Rendering2D r2d) {
-		super(game, r2d);
+	public GameEntity2D(GameModel game, Rendering2D r2d) {
+		this.game = game;
+		this.r2D = r2d;
+		visible = true;
 	}
 
-	@Override
 	public void render(GraphicsContext g) {
-		if (!visible) {
-			return;
-		}
-		int firstLevelNumber = Math.max(1, game.levelNumber - 6);
-		double x = rightPosition.x;
-		for (int levelNumber = firstLevelNumber; levelNumber <= game.levelNumber; ++levelNumber, x -= t(2)) {
-			r2D.renderSprite(g, r2D.getSymbolSprite(game.levelSymbol(levelNumber)), x, rightPosition.y);
+		if (visible) {
+			g.setFill(Color.RED);
+			g.fillRect(x, y, 8, 8);
 		}
 	}
 }

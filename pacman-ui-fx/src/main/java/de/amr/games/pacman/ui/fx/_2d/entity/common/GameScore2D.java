@@ -35,13 +35,9 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class GameScore2D {
+public class GameScore2D extends GameEntity2D {
 
-	private final GameModel game;
-	private final Rendering2D r2D;
 	private final boolean showHighscore;
-	private final int x;
-	private final int y;
 	private final String title;
 	private final Color titleColor = Color.WHITE;
 	private final Color pointsColor = Color.YELLOW;
@@ -49,14 +45,13 @@ public class GameScore2D {
 	public boolean showPoints = true;
 
 	public GameScore2D(String title, int x, int y, GameModel game, boolean showHighscore, Rendering2D r2D) {
+		super(game, r2D);
 		this.title = title;
 		this.x = x;
-		this.y = y;
-		this.game = game;
 		this.showHighscore = showHighscore;
-		this.r2D = r2D;
 	}
 
+	@Override
 	public void render(GraphicsContext g) {
 		g.save();
 		g.translate(x, y);

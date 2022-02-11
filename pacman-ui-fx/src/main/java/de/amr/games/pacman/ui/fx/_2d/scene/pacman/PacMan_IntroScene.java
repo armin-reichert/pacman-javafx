@@ -69,21 +69,21 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 
 		score2D.showPoints = false;
 
-		pacMan2D = new Player2D(sc.pacMan, r2D);
+		pacMan2D = new Player2D(sc.pacMan, game, r2D);
 		pacMan2D.munchings.values().forEach(TimedSeq::restart);
 
 		ghosts2D = Stream.of(sc.ghosts).map(ghost -> {
-			Ghost2D ghost2D = new Ghost2D(ghost, r2D);
+			Ghost2D ghost2D = new Ghost2D(ghost, game, r2D);
 			ghost2D.animKicking.values().forEach(TimedSeq::restart);
 			ghost2D.animFrightened.restart();
 			return ghost2D;
 		}).collect(Collectors.toList());
 
 		gallery2D = List.of( //
-				new Ghost2D(sc.portraits[0].ghost, r2D), //
-				new Ghost2D(sc.portraits[1].ghost, r2D), //
-				new Ghost2D(sc.portraits[2].ghost, r2D), //
-				new Ghost2D(sc.portraits[3].ghost, r2D));
+				new Ghost2D(sc.portraits[0].ghost, game, r2D), //
+				new Ghost2D(sc.portraits[1].ghost, game, r2D), //
+				new Ghost2D(sc.portraits[2].ghost, game, r2D), //
+				new Ghost2D(sc.portraits[3].ghost, game, r2D));
 	}
 
 	@Override

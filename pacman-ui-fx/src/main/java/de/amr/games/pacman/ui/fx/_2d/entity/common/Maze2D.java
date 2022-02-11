@@ -43,16 +43,10 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class Maze2D {
+public class Maze2D extends GameEntity2D {
 
-	private final GameModel game;
-	private final Rendering2D r2D;
-
-	private final int x;
-	private final int y;
 	private final TimedSeq<Boolean> energizerAnimation;
 	private final Timeline flashingAnimation;
-
 	private boolean flashing;
 
 	/**
@@ -62,10 +56,9 @@ public class Maze2D {
 	 * @param r2D  the 2D rendering
 	 */
 	public Maze2D(int x, int y, GameModel game, Rendering2D r2D) {
+		super(game, r2D);
 		this.x = x;
 		this.y = y;
-		this.r2D = r2D;
-		this.game = game;
 		energizerAnimation = TimedSeq.pulse().frameDuration(10);
 		flashingAnimation = new Timeline(new KeyFrame(Duration.millis(150), e -> flashing = !flashing));
 		flashingAnimation.setCycleCount(2 * game.numFlashes);
@@ -83,23 +76,24 @@ public class Maze2D {
 		return energizerAnimation;
 	}
 
-	public void render(GraphicsContext gc) {
+	@Override
+	public void render(GraphicsContext g) {
 		if (flashingAnimation.getStatus() == Status.RUNNING) {
 			if (flashing) {
-				r2D.renderMazeFlashing(gc, game.mazeNumber, x, y);
+				r2D.renderMazeFlashing(g, game.mazeNumber, x, y);
 			} else {
-				r2D.renderMazeEmpty(gc, game.mazeNumber, x, y);
+				r2D.renderMazeEmpty(g, game.mazeNumber, x, y);
 			}
 		} else {
-			r2D.renderMazeFull(gc, game.mazeNumber, x, y);
+			r2D.renderMazeFull(g, game.mazeNumber, x, y);
 			Color dark = Color.BLACK;
 			if (!energizerAnimation.animate()) { // dark phase
-				gc.setFill(dark);
-				game.world.energizerTiles().forEach(tile -> fillTile(gc, tile, dark));
+				g.setFill(dark);
+				game.world.energizerTiles().forEach(tile -> fillTile(g, tile, dark));
 			}
-			game.world.tiles().filter(game::isFoodEaten).forEach(tile -> fillTile(gc, tile, dark));
+			game.world.tiles().filter(game::isFoodEaten).forEach(tile -> fillTile(g, tile, dark));
 			if (Env.$tilesVisible.get()) {
-				drawTileBorders(gc);
+				drawTileBorders(g);
 			}
 		}
 	}
