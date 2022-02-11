@@ -151,17 +151,21 @@ public class GameUI extends DefaultGameEventHandler {
 
 	private void updateSceneContext(AbstractGameScene gameScene) {
 		switch (gameController.gameVariant) {
-		case MS_PACMAN -> {
-			gameScene.setContext(gameController.game, Rendering2D_MsPacMan.get(), Sounds_MsPacMan.get());
-		}
-		case PACMAN -> {
-			gameScene.setContext(gameController.game, Rendering2D_PacMan.get(), Sounds_PacMan.get());
-		}
+		case MS_PACMAN -> gameScene.setContext(gameController.game, Rendering2D_MsPacMan.get(), Sounds_MsPacMan.get());
+		case PACMAN -> gameScene.setContext(gameController.game, Rendering2D_PacMan.get(), Sounds_PacMan.get());
 		}
 		if (gameScene instanceof AbstractGameScene2D) {
 			((AbstractGameScene2D) gameScene).setDrawingContext(canvas, new V2i(TILES_X, TILES_Y).scaled(TS));
 		}
 		updateBackground(gameScene);
+	}
+
+	private void updateBackground(AbstractGameScene scene) {
+		if (scene.is3D()) {
+			mainSceneRoot.setBackground(Env.$drawMode3D.get() == DrawMode.LINE ? bg_black : bg_beach);
+		} else {
+			mainSceneRoot.setBackground(bg_blue);
+		}
 	}
 
 	private void resizeCanvas(double height) {
@@ -175,14 +179,6 @@ public class GameUI extends DefaultGameEventHandler {
 		String gameName = gameController.gameVariant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man";
 		return Env.$paused.get() ? String.format("%s (PAUSED, CTRL+P: resume, P: Step)", gameName)
 				: String.format("%s", gameName);
-	}
-
-	private void updateBackground(AbstractGameScene scene) {
-		if (scene.is3D()) {
-			mainSceneRoot.setBackground(Env.$drawMode3D.get() == DrawMode.LINE ? bg_black : bg_beach);
-		} else {
-			mainSceneRoot.setBackground(bg_blue);
-		}
 	}
 
 	private void toggle3D() {
