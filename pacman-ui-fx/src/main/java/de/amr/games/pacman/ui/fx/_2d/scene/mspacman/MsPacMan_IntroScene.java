@@ -25,8 +25,6 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import static de.amr.games.pacman.model.world.World.t;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.GameController;
@@ -56,7 +54,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 	private final V2i titlePosition = new V2i(t(9), t(8));
 
 	private Player2D msPacMan2D;
-	private List<Ghost2D> ghosts2D;
+	private Ghost2D[] ghosts2D;
 
 	public MsPacMan_IntroScene(GameController gameController) {
 		super(gameController);
@@ -76,7 +74,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 			Ghost2D ghost2D = new Ghost2D(ghost, game, r2D);
 			ghost2D.animKicking.values().forEach(TimedSeq::restart);
 			return ghost2D;
-		}).collect(Collectors.toList());
+		}).toArray(Ghost2D[]::new);
 
 		boardAnimationTimer.setIndefinite().start();
 	}
@@ -106,7 +104,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 			drawStarringMsPacMan();
 			drawPressKeyToStart(26);
 		}
-		ghosts2D.forEach(ghost2D -> ghost2D.render(gc));
+		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(gc));
 		msPacMan2D.render(gc);
 		drawCopyright();
 	}
