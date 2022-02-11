@@ -23,8 +23,11 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.entity.mspacman;
 
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.mspacman.entities.JuniorBag;
+import de.amr.games.pacman.ui.fx._2d.entity.common.GameEntity2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -32,17 +35,20 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class JuniorBag2D {
+public class JuniorBag2D extends GameEntity2D {
 
 	private final JuniorBag bag;
-	private final Rendering2D_MsPacMan rendering;
+	private final Rectangle2D juniorSprite, bagSprite;
 
-	public JuniorBag2D(JuniorBag bag, Rendering2D_MsPacMan rendering) {
+	public JuniorBag2D(JuniorBag bag, GameModel game, Rendering2D_MsPacMan r2D) {
+		super(game, r2D);
 		this.bag = bag;
-		this.rendering = rendering;
+		juniorSprite = r2D.getJunior();
+		bagSprite = r2D.getBlueBag();
 	}
 
+	@Override
 	public void render(GraphicsContext gc) {
-		rendering.renderEntity(gc, bag, bag.open ? rendering.getJunior() : rendering.getBlueBag());
+		r2D.renderEntity(gc, bag, bag.open ? juniorSprite : bagSprite);
 	}
 }
