@@ -43,6 +43,8 @@ import javafx.scene.text.Font;
 
 /**
  * Intro scene of the Ms. Pac-Man game. The ghosts and Ms. Pac-Man are introduced one after another.
+ * <p>
+ * TODO: fix Midway logo
  * 
  * @author Armin Reichert
  */
@@ -94,22 +96,22 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 		gc.setFill(Color.ORANGE);
 		gc.fillText("\"MS PAC-MAN\"", titlePosition.x, titlePosition.y);
 		drawAnimatedBoard(32, 16);
-		if (state == IntroState.PRESENTING_GHOSTS) {
-			drawPresentingGhost(sc.ghosts[sc.currentGhostIndex]);
-		} else if (state == IntroState.PRESENTING_MSPACMAN) {
-			drawStarringMsPacMan();
-		} else if (state == IntroState.WAITING_FOR_GAME) {
-			// TODO: this hack ensures that Ms. Pac-Man is displayed with mouth half open
-			msPacMan2D.reset();
-			drawStarringMsPacMan();
+		switch (state) {
+		case PRESENTING_GHOSTS -> drawGhostMarchingIn(sc.ghosts[sc.currentGhostIndex]);
+		case PRESENTING_MSPACMAN -> drawMsPacManMarchingIn();
+		case WAITING_FOR_GAME -> {
+			drawMsPacManMarchingIn();
 			drawPressKeyToStart(26);
+		}
+		default -> {
+		}
 		}
 		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(gc));
 		msPacMan2D.render(gc);
 		drawCopyright();
 	}
 
-	private void drawPresentingGhost(Ghost ghost) {
+	private void drawGhostMarchingIn(Ghost ghost) {
 		gc.setFill(Color.WHITE);
 		gc.setFont(r2D.getArcadeFont());
 		if (ghost == sc.ghosts[0]) {
@@ -119,7 +121,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 		gc.fillText(ghost.name.toUpperCase(), t(14 - ghost.name.length() / 2), sc.adBoardTopLeft.y + t(6));
 	}
 
-	private void drawStarringMsPacMan() {
+	private void drawMsPacManMarchingIn() {
 		gc.setFill(Color.WHITE);
 		gc.setFont(r2D.getArcadeFont());
 		gc.fillText("STARRING", titlePosition.x, sc.adBoardTopLeft.y + t(3));
