@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import static de.amr.games.pacman.model.world.World.t;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission1Controller;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.ui.GameSounds;
@@ -56,6 +57,10 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 	private Ghost2D pinky2D;
 	private Flap2D flap2D;
 	private Heart2D heart2D;
+
+	public MsPacMan_IntermissionScene1(GameController gameController) {
+		super(gameController);
+	}
 
 	@Override
 	public void init() {

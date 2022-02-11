@@ -33,6 +33,7 @@ import static de.amr.games.pacman.ui.fx.util.U.pause;
 import java.util.EnumMap;
 import java.util.stream.Stream;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.controller.event.GameEvent;
 import de.amr.games.pacman.controller.event.GameStateChangeEvent;
@@ -88,7 +89,8 @@ public class PlayScene3D extends AbstractGameScene {
 	protected LevelCounter3D levelCounter3D;
 	protected LivesCounter3D livesCounter3D;
 
-	public PlayScene3D(PacManModel3D model3D) {
+	public PlayScene3D(GameController gameController, PacManModel3D model3D) {
+		super(gameController);
 		this.model3D = model3D;
 		coordSystem.visibleProperty().bind(Env.$axesVisible);
 	}

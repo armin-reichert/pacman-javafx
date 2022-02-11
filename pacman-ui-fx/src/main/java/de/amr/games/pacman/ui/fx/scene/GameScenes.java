@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.scene;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntermissionScene1;
@@ -45,29 +46,29 @@ public class GameScenes {
 
 	private final AbstractGameScene scenes[][][] = new AbstractGameScene[2][5][2];
 
-	public GameScenes() {
+	public GameScenes(GameController gameController) {
 		//@formatter:off
 		scenes[0][0][0] = 
-		scenes[0][0][1] = new MsPacMan_IntroScene();
+		scenes[0][0][1] = new MsPacMan_IntroScene(gameController);
 		scenes[0][1][0] = 
-		scenes[0][1][1] = new MsPacMan_IntermissionScene1();
+		scenes[0][1][1] = new MsPacMan_IntermissionScene1(gameController);
 		scenes[0][2][0] = 
-		scenes[0][2][1] = new MsPacMan_IntermissionScene2();
+		scenes[0][2][1] = new MsPacMan_IntermissionScene2(gameController);
 		scenes[0][3][0] = 
-		scenes[0][3][1] = new MsPacMan_IntermissionScene3();
-		scenes[0][4][0] = new PlayScene2D();
-		scenes[0][4][1] = new PlayScene3D(GianmarcosModel3D.get());
+		scenes[0][3][1] = new MsPacMan_IntermissionScene3(gameController);
+		scenes[0][4][0] = new PlayScene2D(gameController);
+		scenes[0][4][1] = new PlayScene3D(gameController, GianmarcosModel3D.get());
 		
 		scenes[1][0][0] = 
-		scenes[1][0][1] = new PacMan_IntroScene();
+		scenes[1][0][1] = new PacMan_IntroScene(gameController);
 		scenes[1][1][0] = 
-		scenes[1][1][1] = new PacMan_IntermissionScene1();
+		scenes[1][1][1] = new PacMan_IntermissionScene1(gameController);
 		scenes[1][2][0] = 
-		scenes[1][2][1] = new PacMan_IntermissionScene2();
+		scenes[1][2][1] = new PacMan_IntermissionScene2(gameController);
 		scenes[1][3][0] = 
-		scenes[1][3][1] = new PacMan_IntermissionScene3();
-		scenes[1][4][0] = new PlayScene2D();
-		scenes[1][4][1] = new PlayScene3D(GianmarcosModel3D.get());
+		scenes[1][3][1] = new PacMan_IntermissionScene3(gameController);
+		scenes[1][4][0] = new PlayScene2D(gameController);
+		scenes[1][4][1] = new PlayScene3D(gameController, GianmarcosModel3D.get());
 		//@formatter:on
 	}
 

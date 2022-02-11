@@ -28,6 +28,7 @@ import static de.amr.games.pacman.ui.fx.util.U.afterSeconds;
 
 import java.util.stream.Stream;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.controller.event.GameEvent;
 import de.amr.games.pacman.controller.event.GameStateChangeEvent;
@@ -64,6 +65,10 @@ public class PlayScene2D extends AbstractGameScene2D {
 	private Player2D player2D;
 	private Ghost2D[] ghosts2D = new Ghost2D[4];
 	private Bonus2D bonus2D;
+
+	public PlayScene2D(GameController gameController) {
+		super(gameController);
+	}
 
 	@Override
 	public void init() {

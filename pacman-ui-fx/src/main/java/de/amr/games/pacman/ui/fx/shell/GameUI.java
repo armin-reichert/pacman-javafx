@@ -69,7 +69,7 @@ public class GameUI extends DefaultGameEventHandler {
 	private static final int TILES_X = 28, TILES_Y = 36;
 	private static final double ASPECT_RATIO = (double) TILES_X / TILES_Y;
 
-	private final GameScenes gameScenes = new GameScenes();
+	private final GameScenes gameScenes;
 
 	private final Background bg_beach = U.imageBackground("/common/beach.jpg");
 	private final Background bg_black = U.colorBackground(Color.BLACK);
@@ -88,6 +88,7 @@ public class GameUI extends DefaultGameEventHandler {
 	public GameUI(Stage stage, GameController gameController, double height, boolean fullscreen) {
 		this.stage = stage;
 		this.gameController = gameController;
+		gameScenes = new GameScenes(gameController);
 
 		mainSceneRoot.getChildren().addAll(gameSceneRoot, FlashMessageView.get(), HUD.get());
 		StackPane.setAlignment(HUD.get(), Pos.TOP_LEFT);

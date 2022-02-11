@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import static de.amr.games.pacman.model.world.World.t;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission3Controller;
 import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
@@ -55,6 +56,10 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 	private Flap2D flap2D;
 	private Stork2D stork2D;
 	private JuniorBag2D bag2D;
+
+	public MsPacMan_IntermissionScene3(GameController gameController) {
+		super(gameController);
+	}
 
 	@Override
 	public void init() {
