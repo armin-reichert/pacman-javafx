@@ -98,25 +98,25 @@ public class Maze2D extends GameEntity2D {
 		}
 	}
 
-	private void fillTile(GraphicsContext gc, V2i tile, Color color) {
-		gc.setFill(color);
-		gc.fillRect(t(tile.x) + 0.2, t(tile.y) + 0.2, TS - 0.2, TS - 0.2);
+	private void fillTile(GraphicsContext g, V2i tile, Color color) {
+		g.setFill(color);
+		g.fillRect(t(tile.x) + 0.2, t(tile.y) + 0.2, TS - 0.2, TS - 0.2);
 	}
 
-	private void drawTileBorders(GraphicsContext gc) {
-		gc.setStroke(Color.rgb(160, 160, 160, 0.5));
-		gc.setLineWidth(1);
+	private void drawTileBorders(GraphicsContext g) {
+		g.setStroke(Color.rgb(160, 160, 160, 0.5));
+		g.setLineWidth(1);
 		for (int row = 0; row < 36; ++row) {
-			line(gc, 0, t(row), t(28), t(row));
+			line(g, 0, t(row), t(28), t(row));
 		}
 		for (int col = 0; col < 28; ++col) {
-			line(gc, t(col), 0, t(col), t(36));
+			line(g, t(col), 0, t(col), t(36));
 		}
 	}
 
 	// WTF
-	private void line(GraphicsContext gc, double x1, double y1, double x2, double y2) {
+	private void line(GraphicsContext g, double x1, double y1, double x2, double y2) {
 		double offset = 0.5;
-		gc.strokeLine(x1 + offset, y1 + offset, x2 + offset, y2 + offset);
+		g.strokeLine(x1 + offset, y1 + offset, x2 + offset, y2 + offset);
 	}
 }
