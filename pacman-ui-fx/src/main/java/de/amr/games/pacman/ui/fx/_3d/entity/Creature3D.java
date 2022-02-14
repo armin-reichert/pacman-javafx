@@ -55,12 +55,12 @@ public abstract class Creature3D<C extends Creature> extends Group {
 		setTranslateX(creature.position.x + HTS);
 		setTranslateY(creature.position.y + HTS);
 		setTranslateZ(-HTS);
-		if (targetDir != creature.dir()) {
-			int[] angles = turnAngles(targetDir, creature.dir());
+		if (targetDir != creature.moveDir()) {
+			int[] angles = turnAngles(targetDir, creature.moveDir());
 			turningAnimation.setFromAngle(angles[0]);
 			turningAnimation.setToAngle(angles[1]);
 			turningAnimation.playFromStart();
-			targetDir = creature.dir();
+			targetDir = creature.moveDir();
 		}
 	}
 }

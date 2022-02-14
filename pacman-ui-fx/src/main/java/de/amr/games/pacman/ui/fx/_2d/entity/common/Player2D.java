@@ -66,9 +66,9 @@ public class Player2D extends GameEntity2D {
 			sprite = dying.frame();
 		} else {
 			if (!player.velocity.equals(V2d.NULL) && !player.stuck) {
-				munchings.get(player.dir()).animate();
+				munchings.get(player.moveDir()).animate();
 			}
-			sprite = munchings.get(player.dir()).frame();
+			sprite = munchings.get(player.moveDir()).frame();
 		}
 		r2D.renderEntity(g, player, sprite);
 	}

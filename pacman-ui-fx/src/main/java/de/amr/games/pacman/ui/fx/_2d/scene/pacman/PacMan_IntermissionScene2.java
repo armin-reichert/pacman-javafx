@@ -102,7 +102,7 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 		if (stretching < 3) {
 			blinky2D.render(gc);
 		} else {
-			Rectangle2D damagedDress = blinkyDamagedAnimation.frame(blinky.dir() == Direction.UP ? 0 : 1);
+			Rectangle2D damagedDress = blinkyDamagedAnimation.frame(blinky.moveDir() == Direction.UP ? 0 : 1);
 			r2D.renderSprite(gc, damagedDress, (int) (blinky.position.x - 4), (int) (blinky.position.y - 4));
 		}
 	}

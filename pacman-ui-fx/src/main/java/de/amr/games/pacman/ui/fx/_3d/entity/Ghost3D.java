@@ -69,9 +69,9 @@ public class Ghost3D extends Creature3D<Ghost> {
 		cube3D = new Box(8, 8, 8);
 		getChildren().addAll(body3D, cube3D);
 		body3D.setRotationAxis(Rotate.Z_AXIS);
-		body3D.setRotate(turnAngle(ghost.dir()));
+		body3D.setRotate(turnAngle(ghost.moveDir()));
 		turningAnimation.setNode(body3D);
-		targetDir = ghost.dir();
+		targetDir = ghost.moveDir();
 		reset();
 	}
 

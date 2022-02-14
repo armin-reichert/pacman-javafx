@@ -104,7 +104,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 	}
 
 	public void onSwitchFrom3DTo2D() {
-		if (!player2D.munchings.get(game.player.dir()).isRunning()) {
+		if (!player2D.munchings.get(game.player.moveDir()).isRunning()) {
 			player2D.munchings.values().forEach(TimedSeq::restart);
 		}
 		for (Ghost2D ghost2D : ghosts2D) {
