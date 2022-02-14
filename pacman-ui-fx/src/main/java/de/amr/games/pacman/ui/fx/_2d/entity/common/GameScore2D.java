@@ -48,6 +48,7 @@ public class GameScore2D extends GameEntity2D {
 		super(game, r2D);
 		this.title = title;
 		this.x = x;
+		this.y = y;
 		this.showHighscore = showHighscore;
 	}
 
