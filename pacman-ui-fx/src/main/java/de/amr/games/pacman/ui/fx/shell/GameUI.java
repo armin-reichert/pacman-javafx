@@ -136,8 +136,7 @@ public class GameUI extends DefaultGameEventHandler {
 		AbstractGameScene nextScene = gameSceneForCurrentState(Env.$3D.get());
 		if (currentScene != nextScene) {
 			if (currentScene != null) {
-				log("Change scene from '%s' to '%s'", currentScene.getClass().getName(),
-						nextScene.getClass().getName());
+				log("Change scene from '%s' to '%s'", currentScene.getClass().getName(), nextScene.getClass().getName());
 				currentScene.end();
 			} else {
 				log("Set scene to '%s'", nextScene.getClass().getName());
@@ -372,7 +371,7 @@ public class GameUI extends DefaultGameEventHandler {
 
 		case DIGIT3 -> {
 			toggle3D();
-			String message = Env.$3D.get() ? "Using 3D play scene\nCTRL+C changes perspective" : "Using 2D play scene";
+			String message = Env.$3D.get() ? "Using 3D Play Scene" : "Using 2D Play Scene";
 			FlashMessageView.showFlashMessage(2, message);
 		}
 
