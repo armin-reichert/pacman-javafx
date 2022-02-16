@@ -86,7 +86,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 		for (int ghostID = 0; ghostID < 4; ++ghostID) {
 			ghosts2D[ghostID] = new Ghost2D(game.ghosts[ghostID], game, r2D);
 		}
-		bonus2D = new Bonus2D(game.bonus, r2D, gameController.gameVariant == GameVariant.MS_PACMAN);
+		boolean movingBonus = gameController.gameVariant == GameVariant.MS_PACMAN;
+		bonus2D = new Bonus2D(game.bonus, r2D, movingBonus);
 
 		game.player.powerTimer.addEventListener(this::handleGhostsFlashing);
 		sounds.setMuted(gameController.attractMode);
@@ -101,6 +102,10 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	protected void doUpdate() {
+		AudioClip munching = sounds.getClip(GameSounds.PACMAN_MUNCH);
+		if (munching.isPlaying() && game.player.starvingTicks > 10) {
+			sounds.stop(GameSounds.PACMAN_MUNCH);
+		}
 	}
 
 	public void onSwitchFrom3DTo2D() {
@@ -121,10 +126,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 			maze2D.getEnergizerAnimation().restart();
 		}
 		AudioClip munching = sounds.getClip(GameSounds.PACMAN_MUNCH);
-		if (munching.isPlaying()) {
-			if (game.player.starvingTicks > 10) {
-				sounds.stop(GameSounds.PACMAN_MUNCH);
-			}
+		if (munching.isPlaying() && game.player.starvingTicks > 10) {
+			sounds.stop(GameSounds.PACMAN_MUNCH);
 		}
 	}
 
@@ -164,12 +167,12 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void onBonusActivated(GameEvent e) {
-		bonus2D.animation().ifPresent(TimedSeq::restart);
+		bonus2D.startAnimation();
 	}
 
 	@Override
 	public void onBonusEaten(GameEvent e) {
-		bonus2D.animation().ifPresent(TimedSeq::stop);
+		bonus2D.stopAnimation();
 		sounds.play(GameSounds.BONUS_EATEN);
 	}
 

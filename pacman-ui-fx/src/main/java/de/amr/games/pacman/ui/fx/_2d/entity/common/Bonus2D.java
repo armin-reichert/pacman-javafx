@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import java.util.Objects;
-import java.util.Optional;
 
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.model.pacman.entities.Bonus;
@@ -33,10 +32,11 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
- * 2D-representation of the bonus symbol. In the Ms. Pac-Man game, the bonus is jumping up and down while wandering the
- * maze.
+ * 2D-representation of the bonus symbol.
  * <p>
- * TODO: jumping animation is not 100% accurate
+ * In Ms. Pac-Man, the bonus is jumping up and down while wandering the maze.
+ * <p>
+ * TODO: Animation is not 100% accurate
  * 
  * @author Armin Reichert
  */
@@ -46,14 +46,22 @@ public class Bonus2D {
 	private final Rendering2D r2D;
 	private final TimedSeq<Integer> animation;
 
-	public Bonus2D(Bonus bonus, Rendering2D r2D, boolean animated) {
+	public Bonus2D(Bonus bonus, Rendering2D r2D, boolean movingBonus) {
 		this.bonus = Objects.requireNonNull(bonus);
 		this.r2D = Objects.requireNonNull(r2D);
-		animation = animated ? TimedSeq.of(2, 0, -2).frameDuration(8).endless() : null;
+		animation = movingBonus ? TimedSeq.of(2, 0, -2).frameDuration(8).endless() : null;
 	}
 
-	public Optional<TimedSeq<Integer>> animation() {
-		return Optional.ofNullable(animation);
+	public void startAnimation() {
+		if (animation != null) {
+			animation.restart();
+		}
+	}
+
+	public void stopAnimation() {
+		if (animation != null) {
+			animation.stop();
+		}
 	}
 
 	public void render(GraphicsContext g) {
@@ -62,16 +70,12 @@ public class Bonus2D {
 		case EATEN -> r2D.getBonusValueSprite(bonus.points);
 		default -> null;
 		};
-		if (sprite == null) {
-			return;
-		}
-		if (animation != null) {
+		if (sprite != null) {
+			int ty = animation != null ? animation.animate() : 0;
 			g.save();
-			g.translate(0, animation.animate());
+			g.translate(0, ty);
 			r2D.renderEntity(g, bonus, sprite);
 			g.restore();
-		} else {
-			r2D.renderEntity(g, bonus, sprite);
 		}
 	}
 }
