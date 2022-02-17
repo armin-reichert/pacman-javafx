@@ -202,7 +202,7 @@ public class PlayScene3D extends AbstractGameScene {
 	 */
 	private void keepInSyncWith2DScene() {
 		maze3D.foodNodes().forEach(foodNode -> {
-			foodNode.setVisible(!game.isFoodEaten(info(foodNode).tile));
+			foodNode.setVisible(!game.world.isFoodEaten(info(foodNode).tile));
 		});
 		maze3D.startEnergizerAnimationsIfNotRunning();
 		AudioClip munching = sounds.getClip(GameSounds.PACMAN_MUNCH);
