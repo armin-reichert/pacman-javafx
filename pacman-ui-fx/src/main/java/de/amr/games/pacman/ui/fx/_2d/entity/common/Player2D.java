@@ -59,7 +59,7 @@ public class Player2D extends GameEntity2D {
 	@Override
 	public void render(GraphicsContext g) {
 		Rectangle2D sprite = null;
-		if (player.dead) {
+		if (player.killed) {
 			if (dying.hasStarted()) {
 				dying.animate();
 			}
