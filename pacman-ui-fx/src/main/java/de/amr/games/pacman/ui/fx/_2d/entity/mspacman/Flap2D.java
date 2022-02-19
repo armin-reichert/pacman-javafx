@@ -55,9 +55,8 @@ public class Flap2D extends GameEntity2D {
 			r2D.renderEntity(g, flap, sprite);
 			g.setFont(r2D.getArcadeFont());
 			g.setFill(Color.rgb(222, 222, 255));
-			g.fillText(String.valueOf(flap.sceneNumber), flap.position.x + sprite.getWidth() - 25,
-					flap.position.y + 18);
-			g.fillText(flap.sceneTitle, flap.position.x + sprite.getWidth(), flap.position.y);
+			g.fillText(String.valueOf(flap.number), flap.position.x + sprite.getWidth() - 25, flap.position.y + 18);
+			g.fillText(flap.title, flap.position.x + sprite.getWidth(), flap.position.y);
 		}
 	}
 }
