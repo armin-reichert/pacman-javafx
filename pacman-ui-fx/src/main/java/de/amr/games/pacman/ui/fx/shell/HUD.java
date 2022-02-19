@@ -138,7 +138,7 @@ public class HUD extends VBox {
 		}
 
 		newline();
-		p("V", "Switch Pac-Man/Ms. PacMan").when(state == GameState.INTRO);
+		p("V", "Switch Pac-Man/Ms. Pac-Man").when(state == GameState.INTRO);
 		p("A", "Autopilot On/Off").done();
 		p("E", "Eat all normal pellets").when(gameCtrl.gameRunning);
 		p("I", "Player immunity On/Off").done();
