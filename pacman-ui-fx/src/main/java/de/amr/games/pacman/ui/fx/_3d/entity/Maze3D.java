@@ -168,7 +168,7 @@ public class Maze3D extends Group {
 		wallsGroup.getChildren().clear();
 		addWalls(new FloorPlan(resolution, world), world, stoneSize, wallBaseColor, wallTopColor);
 		doorsGroup.getChildren().setAll( //
-				world.ghostHouse().doorTiles().stream().map(Door3D::new).collect(Collectors.toList()));
+				world.ghostHouse().doors.stream().map(Door3D::new).collect(Collectors.toList()));
 	}
 
 	/**
