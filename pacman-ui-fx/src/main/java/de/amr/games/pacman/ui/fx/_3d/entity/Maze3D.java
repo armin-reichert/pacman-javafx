@@ -40,6 +40,7 @@ import de.amr.games.pacman.ui.fx._3d.animation.RaiseAndLowerWallAnimation;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
+import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Transition;
 import javafx.beans.property.DoubleProperty;
@@ -214,7 +215,7 @@ public class Maze3D extends Group {
 	}
 
 	public Animation flashingAnimation(int times) {
-		return new RaiseAndLowerWallAnimation(times);
+		return times > 0 ? new RaiseAndLowerWallAnimation(times) : new PauseTransition(Duration.seconds(1));
 	}
 
 	private Sphere createPellet(V2i tile, boolean energizer, PhongMaterial material) {
@@ -254,7 +255,8 @@ public class Maze3D extends Group {
 		double topHeight = 0.5;
 		Box top = new Box(numStonesX * stoneSize, numStonesY * stoneSize, topHeight);
 		top.setMaterial(topMaterial);
-		top.translateZProperty().bind(base.translateZProperty().subtract($wallHeight.add(topHeight + 0.1).multiply(0.5)));
+		top.translateZProperty()
+				.bind(base.translateZProperty().subtract($wallHeight.add(topHeight + 0.1).multiply(0.5)));
 		top.drawModeProperty().bind(Env.$drawMode3D);
 
 		Group wall = new Group(base, top);
