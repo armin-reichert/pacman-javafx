@@ -51,7 +51,7 @@ public class LevelCounter2D extends GameEntity2D {
 		int firstLevelNumber = Math.max(1, game.levelNumber - 6);
 		double x = rightPosition.x;
 		for (int levelNumber = firstLevelNumber; levelNumber <= game.levelNumber; ++levelNumber, x -= t(2)) {
-			r2D.renderSprite(g, r2D.getSymbolSprite(game.levelSymbol(levelNumber)), x, rightPosition.y);
+			r2D.renderSprite(g, r2D.getSymbolSprite(game.levelCounter.get(levelNumber - 1)), x, rightPosition.y);
 		}
 	}
 }
