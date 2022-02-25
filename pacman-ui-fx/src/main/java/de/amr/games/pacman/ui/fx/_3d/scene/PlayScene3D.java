@@ -172,7 +172,7 @@ public class PlayScene3D extends AbstractGameScene {
 		player3D.update();
 		Stream.of(ghosts3D).forEach(Ghost3D::update);
 		bonus3D.update(game.bonus);
-		score3D.update(game.score, game.levelNumber, game.hiscorePoints, game.hiscoreLevel);
+		score3D.update(game.score, game.levelNumber, game.highscorePoints, game.highscoreLevel);
 		livesCounter3D.update(game.player.lives);
 		camController().update(this);
 	}

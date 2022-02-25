@@ -57,9 +57,9 @@ public class GameScore2D extends GameEntity2D {
 		if (showPoints) {
 			g.setFill(pointsColor);
 			g.translate(0, t(1));
-			g.fillText(String.format("%7d", showHighscore ? game.hiscorePoints : game.score), 0, 0);
+			g.fillText(String.format("%7d", showHighscore ? game.highscorePoints : game.score), 0, 0);
 			g.setFill(Color.LIGHTGRAY);
-			g.fillText(String.format("L%d", showHighscore ? game.hiscoreLevel : game.levelNumber), t(8), 0);
+			g.fillText(String.format("L%d", showHighscore ? game.highscoreLevel : game.levelNumber), t(8), 0);
 		}
 		g.restore();
 	}
