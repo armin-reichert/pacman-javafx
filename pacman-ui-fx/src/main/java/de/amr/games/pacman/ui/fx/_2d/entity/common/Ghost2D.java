@@ -52,8 +52,6 @@ public class Ghost2D extends GameEntity2D {
 	public final TimedSeq<Rectangle2D> animFlashing;
 	public final TimedSeq<Rectangle2D> animFrightened;
 
-	private boolean looksFrightened;
-
 	public Ghost2D(Ghost ghost, GameModel game, Rendering2D r2D) {
 		super(game, r2D);
 		this.ghost = ghost;
@@ -72,10 +70,6 @@ public class Ghost2D extends GameEntity2D {
 		animFrightened.reset();
 	}
 
-	public void setLooksFrightened(boolean looksFrightened) {
-		this.looksFrightened = looksFrightened;
-	}
-
 	@Override
 	public void render(GraphicsContext g) {
 		Rectangle2D sprite = null;
@@ -87,13 +81,12 @@ public class Ghost2D extends GameEntity2D {
 			if (animFlashing.isRunning()) {
 				sprite = animFlashing.animate();
 			} else {
-				if (ghost.velocity.equals(V2d.NULL)) {
-					sprite = animFrightened.frame();
-				} else {
-					sprite = animFrightened.animate();
-				}
+				sprite = animFrightened.animate();
 			}
-		} else if (ghost.is(LOCKED) && looksFrightened) {
+		} else if (ghost.is(LOCKED) && game.player.powerTimer.isRunning()) {
+			if (!animFrightened.isRunning()) {
+				animFrightened.restart();
+			}
 			sprite = animFrightened.animate();
 		} else if (ghost.velocity.equals(V2d.NULL)) {
 			sprite = animKicking.get(ghost.wishDir()).frame();

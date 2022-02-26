@@ -303,10 +303,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 		}
 		bonus2D.render(gc);
 		player2D.render(gc);
-		// TODO maybe this is not the right thing to do
-		boolean playerHasPower = game.player.powerTimer.isRunning();
-		Stream.of(ghosts2D).filter(ghost2D -> ghost2D.ghost.is(GhostState.LOCKED))
-				.forEach(ghost2D -> ghost2D.setLooksFrightened(playerHasPower));
 		Stream.of(ghosts2D).forEach(ghost -> ghost.render(gc));
 	}
 }
