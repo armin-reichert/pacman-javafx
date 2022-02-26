@@ -32,8 +32,11 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.pacman.IntroController;
 import de.amr.games.pacman.controller.pacman.IntroController.GhostPortrait;
+import de.amr.games.pacman.controller.pacman.IntroController.IntroState;
 import de.amr.games.pacman.lib.TimedSeq;
+import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
@@ -87,6 +90,16 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	@Override
 	public void doUpdate() {
 		sc.updateState();
+		// TODO find a better solution:
+		if (sc.state == IntroState.CHASING_GHOSTS) {
+			for (Ghost ghost : sc.ghosts) {
+				if (ghost.velocity.equals(V2d.NULL)) {
+					ghosts2D[ghost.id].animFrightened.stop();
+				} else if (!ghosts2D[ghost.id].animFrightened.isRunning()) {
+					ghosts2D[ghost.id].animFrightened.restart();
+				}
+			}
+		}
 	}
 
 	@Override
