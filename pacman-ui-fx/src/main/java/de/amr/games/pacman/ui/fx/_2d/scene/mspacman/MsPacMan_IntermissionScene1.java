@@ -27,7 +27,9 @@ import static de.amr.games.pacman.model.world.World.t;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission1Controller;
+import de.amr.games.pacman.controller.mspacman.Intermission1Controller.IntermissonState;
 import de.amr.games.pacman.lib.TimedSeq;
+import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
@@ -92,6 +94,11 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 	@Override
 	public void doUpdate() {
 		sc.updateState();
+		// stop ghost animation when Pac-Man and Ms. Pac-Man are in heaven
+		if (sc.state == IntermissonState.READY_TO_PLAY && sc.pacMan.velocity.equals(V2d.NULL)) {
+			inky2D.animKicking.values().forEach(TimedSeq::stop);
+			pinky2D.animKicking.values().forEach(TimedSeq::stop);
+		}
 	}
 
 	@Override
