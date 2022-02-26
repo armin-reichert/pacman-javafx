@@ -222,7 +222,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 			sounds.stopAll();
 
-			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animKicking.values().forEach(TimedSeq::reset));
 			new SequentialTransition( //
 					afterSeconds(1, () -> game.ghosts().forEach(Ghost::hide)), //
 					afterSeconds(1, () -> {
