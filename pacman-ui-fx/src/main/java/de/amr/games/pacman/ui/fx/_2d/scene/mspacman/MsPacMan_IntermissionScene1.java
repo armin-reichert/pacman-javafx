@@ -95,7 +95,7 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 	public void doUpdate() {
 		sc.updateState();
 		// stop ghost animation when Pac-Man and Ms. Pac-Man are in heaven
-		if (sc.state == IntermissonState.READY_TO_PLAY && sc.pacMan.velocity.equals(V2d.NULL)) {
+		if (sc.state == IntermissonState.IN_HEAVEN && sc.pacMan.velocity.equals(V2d.NULL)) {
 			inky2D.animKicking.values().forEach(TimedSeq::stop);
 			pinky2D.animKicking.values().forEach(TimedSeq::stop);
 		}
