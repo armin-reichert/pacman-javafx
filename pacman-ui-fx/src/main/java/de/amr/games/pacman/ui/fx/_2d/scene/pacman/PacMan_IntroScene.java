@@ -53,7 +53,7 @@ import javafx.scene.text.Font;
  */
 public class PacMan_IntroScene extends AbstractGameScene2D {
 
-	private final IntroController sc = new IntroController();
+	private final IntroController sc;
 
 	private Player2D pacMan2D;
 	private Ghost2D[] ghosts2D;
@@ -61,12 +61,13 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 
 	public PacMan_IntroScene(GameController gameController) {
 		super(gameController);
+		sc = new IntroController(gameController);
 	}
 
 	@Override
 	public void init() {
 		super.init();
-		sc.init(gameController);
+		sc.init();
 
 		score2D.showPoints = false;
 
@@ -123,7 +124,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 			drawGallery();
 			drawPoints(11, 25);
 			drawCopyright(32);
-			if (sc.blinking.frame()) {
+			if (sc.fastBlinking.frame()) {
 				drawEnergizer();
 			}
 			int offset = sc.stateTimer().ticked() % 5 < 2 ? 0 : -1;
@@ -194,7 +195,7 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	private void drawPoints(int tileX, int tileY) {
 		gc.setFill(r2D.getFoodColor(1));
 		gc.fillRect(t(tileX) + 6, t(tileY - 1) + 2, 2, 2);
-		if (sc.blinking.frame()) {
+		if (sc.fastBlinking.frame()) {
 			gc.fillOval(t(tileX), t(tileY + 1) - 2, 10, 10);
 		}
 		gc.setFill(Color.WHITE);

@@ -97,8 +97,8 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 		gc.fillText("\"MS PAC-MAN\"", titlePosition.x, titlePosition.y);
 		drawAnimatedBoard(32, 16);
 		switch (state) {
-		case PRESENTING_GHOSTS -> drawGhostMarchingIn(sc.ghosts[sc.currentGhostIndex]);
-		case PRESENTING_MSPACMAN -> drawMsPacManMarchingIn();
+		case GHOSTS -> drawGhostMarchingIn(sc.ghosts[sc.currentGhostIndex]);
+		case MSPACMAN -> drawMsPacManMarchingIn();
 		case WAITING_FOR_GAME -> {
 			drawMsPacManMarchingIn();
 			drawPressKeyToStart(26);
