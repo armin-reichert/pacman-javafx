@@ -48,8 +48,7 @@ import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
  */
 public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 
-	private final Intermission3Controller sc = new Intermission3Controller();
-
+	private final Intermission3Controller sc;
 	private LevelCounter2D levelCounter2D;
 	private Player2D msPacMan2D;
 	private Player2D pacMan2D;
@@ -59,15 +58,16 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 
 	public MsPacMan_IntermissionScene3(GameController gameController) {
 		super(gameController);
+		sc = new Intermission3Controller(gameController);
 	}
 
 	@Override
 	public void init() {
 		super.init();
+		sc.init();
 
 		sc.playIntermissionSound = () -> sounds.play(GameSounds.INTERMISSION_3);
 		sc.playFlapAnimation = () -> flap2D.animation.restart();
-		sc.init(gameController);
 
 		levelCounter2D = new LevelCounter2D(game, r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
@@ -76,9 +76,9 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 		pacMan2D = new Player2D(sc.pacMan, game, r2D);
 		pacMan2D.munchings = ((Rendering2D_MsPacMan) r2D).createHusbandMunchingAnimations();
 
-		flap2D = new Flap2D(sc.flap,game,  (Rendering2D_MsPacMan) r2D);
+		flap2D = new Flap2D(sc.flap, game, (Rendering2D_MsPacMan) r2D);
 
-		stork2D = new Stork2D(sc.stork,game,  (Rendering2D_MsPacMan) r2D);
+		stork2D = new Stork2D(sc.stork, game, (Rendering2D_MsPacMan) r2D);
 		stork2D.animation.restart();
 
 		bag2D = new JuniorBag2D(sc.bag, game, (Rendering2D_MsPacMan) r2D);

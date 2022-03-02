@@ -50,8 +50,7 @@ import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
  */
 public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 
-	private final Intermission1Controller sc = new Intermission1Controller();
-
+	private final Intermission1Controller sc;
 	private LevelCounter2D levelCounter2D;
 	private Player2D msPacMan2D;
 	private Player2D pacMan2D;
@@ -62,15 +61,16 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 
 	public MsPacMan_IntermissionScene1(GameController gameController) {
 		super(gameController);
+		sc = new Intermission1Controller(gameController);
 	}
 
 	@Override
 	public void init() {
 		super.init();
+		sc.init();
 
 		sc.playIntermissionSound = () -> sounds.loop(GameSounds.INTERMISSION_1, 1);
 		sc.playFlapAnimation = () -> flap2D.animation.restart();
-		sc.init(gameController);
 
 		levelCounter2D = new LevelCounter2D(game, r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));

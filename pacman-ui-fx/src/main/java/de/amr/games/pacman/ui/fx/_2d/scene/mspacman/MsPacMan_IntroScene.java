@@ -50,7 +50,7 @@ import javafx.scene.text.Font;
  */
 public class MsPacMan_IntroScene extends AbstractGameScene2D {
 
-	private final IntroController sc = new IntroController();
+	private final IntroController sc;
 	private final Image midwayLogo = new Image(getClass().getResourceAsStream("/mspacman/graphics/midway.png"));
 	private final TickTimer boardAnimationTimer = new TickTimer("boardAnimation-timer");
 	private final V2i titlePosition = new V2i(t(9), t(8));
@@ -60,12 +60,13 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 
 	public MsPacMan_IntroScene(GameController gameController) {
 		super(gameController);
+		sc = new IntroController(gameController);
 	}
 
 	@Override
 	public void init() {
 		super.init();
-		sc.init(gameController);
+		sc.init();
 
 		score2D.showPoints = false;
 
