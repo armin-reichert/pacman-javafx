@@ -40,9 +40,8 @@ General shortcuts:
 - <kbd>A</kbd> Toggle autopilot mode
 - <kbd>I</kbd> Toggle immunity of player against ghost attacks
 - <kbd>CTRL+I</kbd> Toggle information display (HUD)
-- <kbd>P</kbd> When in PAUSE mode, execute single simulation step
-- <kbd>P</kbd> Toggle pausing game play
-- <kbd>SHIFT+P</kbd> Single step (when paused)
+- <kbd>P</kbd> Toggle pause
+- <kbd>SHIFT+P</kbd> When paused, execute single simulation step
 - <kbd>CTRL+S</kbd> Increase speed (<kbd>SHIFT</kbd> = decrease)
 - <kbd>CTRL+3</kbd> Toggle using 2D/3D play scene
 
