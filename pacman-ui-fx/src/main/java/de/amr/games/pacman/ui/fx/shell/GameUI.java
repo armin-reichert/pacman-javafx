@@ -178,7 +178,7 @@ public class GameUI extends DefaultGameEventHandler {
 
 	private String computeStageTitle() {
 		String gameName = gameController.gameVariant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man";
-		return Env.$paused.get() ? String.format("%s (PAUSED, CTRL+P: resume, P: Step)", gameName)
+		return Env.$paused.get() ? String.format("%s (PAUSED, P: Resume, SHIFT+P: Step)", gameName)
 				: String.format("%s", gameName);
 	}
 
@@ -205,12 +205,13 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	private void onKeyPressed(KeyEvent e) {
+
 		if (e.isControlDown()) {
 			onControlKeyPressed(e);
 			return;
 		}
 
-		if (e.isShiftDown() || e.isAltDown()) {
+		if (e.isAltDown()) {
 			return;
 		}
 
@@ -220,24 +221,36 @@ public class GameUI extends DefaultGameEventHandler {
 		switch (e.getCode()) {
 
 		case A -> {
+			if (e.isShiftDown()) {
+				return;
+			}
 			gameController.autoControlled = !gameController.autoControlled;
 			String message = Env.message(gameController.autoControlled ? "autopilot_on" : "autopilot_off");
 			FlashMessageView.showFlashMessage(1, message);
 		}
 
 		case E -> {
+			if (e.isShiftDown()) {
+				return;
+			}
 			if (gameController.gameRunning) {
 				gameController.cheatEatAllPellets();
 			}
 		}
 
 		case I -> {
+			if (e.isShiftDown()) {
+				return;
+			}
 			game.player.immune = !game.player.immune;
 			String message = Env.message(game.player.immune ? "player_immunity_on" : "player_immunity_off");
 			FlashMessageView.showFlashMessage(1, message);
 		}
 
 		case L -> {
+			if (e.isShiftDown()) {
+				return;
+			}
 			if (gameController.gameRunning) {
 				game.player.lives += 3;
 				FlashMessageView.showFlashMessage(2, "You have %d lives", game.player.lives);
@@ -245,6 +258,9 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 
 		case N -> {
+			if (e.isShiftDown()) {
+				return;
+			}
 			if (gameController.gameRunning) {
 				FlashMessageView.showFlashMessage(1, Env.CHEAT_TALK.next());
 				gameController.changeState(GameState.LEVEL_COMPLETE);
@@ -252,12 +268,21 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 
 		case P -> {
-			if (Env.$paused.get()) {
-				Env.gameLoop.runSingleStep(true);
+			if (e.isShiftDown()) {
+				if (Env.$paused.get()) {
+					Env.gameLoop.runSingleStep(true);
+				}
+			} else {
+				Env.$paused.set(!Env.$paused.get());
+				FlashMessageView.showFlashMessage(2, Env.$paused.get() ? "Game paused" : "Game resumed");
+				log(Env.$paused.get() ? "Game paused." : "Game resumed.");
 			}
 		}
 
 		case Q -> {
+			if (e.isShiftDown()) {
+				return;
+			}
 			if (state != GameState.INTRO) {
 				currentScene.end();
 				currentScene.getSounds().stopAll();
@@ -266,27 +291,46 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 
 		case V -> {
+			if (e.isShiftDown()) {
+				return;
+			}
 			if (state == GameState.INTRO) {
 				gameController.selectGameVariant(gameController.gameVariant.succ());
 			}
 		}
 
 		case X -> {
+			if (e.isShiftDown()) {
+				return;
+			}
 			if (gameController.gameRunning) {
 				gameController.cheatKillGhosts();
 			}
 		}
 
 		case Z -> {
+			if (e.isShiftDown()) {
+				return;
+			}
 			if (state == GameState.INTRO) {
 				gameController.startIntermissionTest();
 				FlashMessageView.showFlashMessage(1, "Intermission Scene Test");
 			}
 		}
 
-		case SPACE -> gameController.requestGame();
+		case SPACE -> {
+			if (e.isShiftDown()) {
+				return;
+			}
+			gameController.requestGame();
+		}
 
-		case F11 -> stage.setFullScreen(true);
+		case F11 -> {
+			if (e.isShiftDown()) {
+				return;
+			}
+			stage.setFullScreen(true);
+		}
 
 		default -> {
 		}
@@ -329,12 +373,6 @@ public class GameUI extends DefaultGameEventHandler {
 			if (currentScene.is3D()) {
 				Env.$drawMode3D.set(Env.$drawMode3D.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 			}
-		}
-
-		case P -> {
-			Env.$paused.set(!Env.$paused.get());
-			FlashMessageView.showFlashMessage(2, Env.$paused.get() ? "Game paused" : "Game resumed");
-			log(Env.$paused.get() ? "Game paused." : "Game resumed.");
 		}
 
 		case R -> {
