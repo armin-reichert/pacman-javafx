@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
+import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.world.World.t;
 import static de.amr.games.pacman.ui.fx.util.U.afterSeconds;
 
@@ -196,8 +197,10 @@ public class PlayScene2D extends AbstractGameScene2D {
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
 
-		// enter READY
-		if (e.newGameState == GameState.READY) {
+		// enter state XYZ
+		switch (e.newGameState) {
+
+		case READY -> {
 			sounds.stopAll();
 			maze2D.getEnergizerAnimation().reset();
 			player2D.reset();
@@ -208,15 +211,13 @@ public class PlayScene2D extends AbstractGameScene2D {
 			}
 		}
 
-		// enter HUNTING
-		else if (e.newGameState == GameState.HUNTING) {
+		case HUNTING -> {
 			maze2D.getEnergizerAnimation().restart();
 			player2D.munchings.values().forEach(TimedSeq::restart);
 			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animKicking.values().forEach(TimedSeq::restart));
 		}
 
-		// enter PACMAN_DYING
-		else if (e.newGameState == GameState.PACMAN_DYING) {
+		case PACMAN_DYING -> {
 			// wait until game is continued
 			gameController.stateTimer().setIndefinite().start();
 
@@ -233,14 +234,12 @@ public class PlayScene2D extends AbstractGameScene2D {
 			).play();
 		}
 
-		// enter GHOST_DYING
-		else if (e.newGameState == GameState.GHOST_DYING) {
+		case GHOST_DYING -> {
 			game.player.hide();
 			sounds.play(GameSounds.GHOST_EATEN);
 		}
 
-		// enter LEVEL_COMPLETE
-		else if (e.newGameState == GameState.LEVEL_COMPLETE) {
+		case LEVEL_COMPLETE -> {
 			gameController.stateTimer().setIndefinite(); // wait until continueGame() is called
 			sounds.stopAll();
 			player2D.reset();
@@ -254,16 +253,20 @@ public class PlayScene2D extends AbstractGameScene2D {
 			animation.play();
 		}
 
-		// enter LEVEL_STARTING
-		else if (e.newGameState == GameState.LEVEL_STARTING) {
+		case LEVEL_STARTING -> {
 			maze2D = new Maze2D(0, t(3), game, r2D);
 			gameController.stateTimer().setSeconds(1).start();
 		}
 
-		// enter GAME_OVER
-		else if (e.newGameState == GameState.GAME_OVER) {
+		case GAME_OVER -> {
 			maze2D.getEnergizerAnimation().reset();
 			sounds.stopAll();
+		}
+
+		default -> {
+			log("PlayScene entered game state %s", e.newGameState);
+		}
+
 		}
 
 		// exit GHOST_DYING
