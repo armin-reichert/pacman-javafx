@@ -263,7 +263,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 		// enter GAME_OVER
 		else if (e.newGameState == GameState.GAME_OVER) {
 			maze2D.getEnergizerAnimation().reset();
-			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animKicking.values().forEach(TimedSeq::restart));
 			sounds.stopAll();
 		}
 
