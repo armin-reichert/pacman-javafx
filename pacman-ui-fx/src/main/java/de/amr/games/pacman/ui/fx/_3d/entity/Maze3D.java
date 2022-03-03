@@ -23,8 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import static de.amr.games.pacman.model.world.World.HTS;
-import static de.amr.games.pacman.model.world.World.TS;
+import static de.amr.games.pacman.model.common.world.World.HTS;
+import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.ui.fx._3d.entity.Maze3D.NodeInfo.info;
 
 import java.util.Objects;
@@ -34,8 +34,8 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.world.FloorPlan;
-import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.model.common.world.FloorPlan;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.RaiseAndLowerWallAnimation;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.animation.Animation;

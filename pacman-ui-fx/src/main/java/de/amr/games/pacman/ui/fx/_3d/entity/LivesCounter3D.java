@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import static de.amr.games.pacman.model.world.World.TS;
+import static de.amr.games.pacman.model.common.world.World.TS;
 
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import javafx.scene.Group;
