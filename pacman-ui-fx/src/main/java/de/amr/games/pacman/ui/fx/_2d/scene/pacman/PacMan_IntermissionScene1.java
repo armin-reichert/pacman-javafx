@@ -53,14 +53,13 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 	public PacMan_IntermissionScene1(GameController gameController) {
 		super(gameController);
 		sc = new Intermission1Controller(gameController);
+		sc.playIntermissionSound = () -> sounds.loop(GameSounds.INTERMISSION_1, 2);
 	}
 
 	@Override
 	public void init() {
 		super.init();
 		sc.init();
-
-		sc.playIntermissionSound = () -> sounds.loop(GameSounds.INTERMISSION_1, 2);
 
 		levelCounter2D = new LevelCounter2D(game, r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
