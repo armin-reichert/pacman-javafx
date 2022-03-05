@@ -276,7 +276,7 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 		return TimedSeq.of( //
 				new Rectangle2D(489, 176, 32, 16), //
 				new Rectangle2D(521, 176, 32, 16) //
-		).endless().frameDuration(10);
+		).endless().frameDuration(8);
 	}
 
 	public Rectangle2D getHeart() {
