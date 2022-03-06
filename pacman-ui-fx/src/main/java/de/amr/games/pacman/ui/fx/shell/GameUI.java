@@ -36,7 +36,6 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
-import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -77,7 +76,7 @@ public class GameUI extends DefaultGameEventHandler {
 
 	protected final GameController gameController;
 	protected final Stage stage;
-	protected final Canvas canvas = new Canvas(); // common canvas of all 2D scenes
+	protected final Canvas canvas;
 
 	private final Scene mainScene;
 	private final Group gameSceneRoot = new Group();
@@ -88,7 +87,9 @@ public class GameUI extends DefaultGameEventHandler {
 	public GameUI(Stage stage, GameController gameController, double height, boolean fullscreen) {
 		this.stage = stage;
 		this.gameController = gameController;
-		gameScenes = new GameScenes(gameController);
+		this.canvas = new Canvas(); // common canvas of all 2D scenes
+
+		gameScenes = new GameScenes(gameController, canvas, new V2i(TILES_X, TILES_Y).scaled(TS));
 
 		mainSceneRoot.getChildren().addAll(gameSceneRoot, FlashMessageView.get(), HUD.get());
 		StackPane.setAlignment(HUD.get(), Pos.TOP_LEFT);
@@ -136,7 +137,8 @@ public class GameUI extends DefaultGameEventHandler {
 		AbstractGameScene nextScene = gameSceneForCurrentState(Env.$3D.get());
 		if (currentScene != nextScene) {
 			if (currentScene != null) {
-				log("Change scene from '%s' to '%s'", currentScene.getClass().getName(), nextScene.getClass().getName());
+				log("Change scene from '%s' to '%s'", currentScene.getClass().getName(),
+						nextScene.getClass().getName());
 				currentScene.end();
 			} else {
 				log("Set scene to '%s'", nextScene.getClass().getName());
@@ -154,9 +156,6 @@ public class GameUI extends DefaultGameEventHandler {
 		case MS_PACMAN -> gameScene.setContext(gameController.game, Rendering2D_MsPacMan.get(), Sounds_MsPacMan.get());
 		case PACMAN -> gameScene.setContext(gameController.game, Rendering2D_PacMan.get(), Sounds_PacMan.get());
 		default -> throw new IllegalArgumentException();
-		}
-		if (gameScene instanceof AbstractGameScene2D) {
-			((AbstractGameScene2D) gameScene).setDrawingContext(canvas, new V2i(TILES_X, TILES_Y).scaled(TS));
 		}
 		updateBackground(gameScene);
 	}

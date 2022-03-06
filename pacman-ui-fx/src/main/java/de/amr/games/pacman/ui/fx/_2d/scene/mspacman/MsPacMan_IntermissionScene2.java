@@ -28,12 +28,14 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission2Controller;
 import de.amr.games.pacman.lib.TimedSeq;
+import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
+import javafx.scene.canvas.Canvas;
 
 /**
  * Intermission scene 2: "The chase".
@@ -51,8 +53,8 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 	private Player2D pacMan2D;
 	private Flap2D flap2D;
 
-	public MsPacMan_IntermissionScene2(GameController gameController) {
-		super(gameController);
+	public MsPacMan_IntermissionScene2(GameController gameController, Canvas canvas, V2i unscaledSize) {
+		super(gameController, canvas, unscaledSize);
 		sc = new Intermission2Controller(gameController);
 		sc.playIntermissionSound = () -> sounds.play(GameSounds.INTERMISSION_2);
 		sc.playFlapAnimation = () -> flap2D.animation.restart();
