@@ -29,6 +29,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.pacman.Intermission3Controller;
 import de.amr.games.pacman.controller.pacman.Intermission3Controller.IntermissionState;
 import de.amr.games.pacman.lib.TimedSeq;
+import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
@@ -36,6 +37,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.pacman.BlinkyNaked2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.BlinkyPatched2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
+import javafx.scene.canvas.Canvas;
 
 /**
  * Third intermission scene: Blinky in shred dress chases Pac-Man, comes back half-naked drawing dress over the floor.
@@ -50,8 +52,8 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 	private BlinkyPatched2D blinkyPatched2D;
 	private BlinkyNaked2D blinkyNaked2D;
 
-	public PacMan_IntermissionScene3(GameController gameController) {
-		super(gameController);
+	public PacMan_IntermissionScene3(GameController gameController, Canvas canvas, V2i unscaledSize) {
+		super(gameController, canvas, unscaledSize);
 		sc = new Intermission3Controller(gameController);
 		sc.playIntermissionSound = () -> sounds.loop(GameSounds.INTERMISSION_3, 2);
 	}

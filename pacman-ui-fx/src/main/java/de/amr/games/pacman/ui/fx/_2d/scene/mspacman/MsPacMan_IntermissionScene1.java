@@ -30,6 +30,7 @@ import de.amr.games.pacman.controller.mspacman.Intermission1Controller;
 import de.amr.games.pacman.controller.mspacman.Intermission1Controller.IntermissonState;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2d;
+import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
@@ -38,6 +39,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Heart2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
+import javafx.scene.canvas.Canvas;
 
 /**
  * Intermission scene 1: "They meet".
@@ -59,8 +61,8 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 	private Flap2D flap2D;
 	private Heart2D heart2D;
 
-	public MsPacMan_IntermissionScene1(GameController gameController) {
-		super(gameController);
+	public MsPacMan_IntermissionScene1(GameController gameController, Canvas canvas, V2i unscaledSize) {
+		super(gameController, canvas, unscaledSize);
 		sc = new Intermission1Controller(gameController);
 		sc.playIntermissionSound = () -> sounds.loop(GameSounds.INTERMISSION_1, 1);
 		sc.playFlapAnimation = () -> flap2D.animation.restart();
