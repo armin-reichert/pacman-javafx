@@ -98,9 +98,9 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 		gc.fillText("\"MS PAC-MAN\"", titlePosition.x, titlePosition.y);
 		drawAnimatedBoard(32, 16);
 		switch (state) {
-		case GHOSTS -> drawGhostMarchingIn(sc.ghosts[sc.currentGhostIndex]);
+		case GHOSTS -> drawGhostMarchingIn(sc.ghosts[sc.ghostIndex]);
 		case MSPACMAN -> drawMsPacManMarchingIn();
-		case WAITING_FOR_GAME -> {
+		case READY -> {
 			drawMsPacManMarchingIn();
 			drawPressKeyToStart(26);
 		}
@@ -116,18 +116,18 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 		gc.setFill(Color.WHITE);
 		gc.setFont(r2D.getArcadeFont());
 		if (ghost == sc.ghosts[0]) {
-			gc.fillText("WITH", titlePosition.x, sc.adBoardTopLeft.y + t(3));
+			gc.fillText("WITH", titlePosition.x, sc.boardTopLeft.y + t(3));
 		}
 		gc.setFill(ghost.id == 0 ? Color.RED : ghost.id == 1 ? Color.PINK : ghost.id == 2 ? Color.CYAN : Color.ORANGE);
-		gc.fillText(ghost.name.toUpperCase(), t(14 - ghost.name.length() / 2), sc.adBoardTopLeft.y + t(6));
+		gc.fillText(ghost.name.toUpperCase(), t(14 - ghost.name.length() / 2), sc.boardTopLeft.y + t(6));
 	}
 
 	private void drawMsPacManMarchingIn() {
 		gc.setFill(Color.WHITE);
 		gc.setFont(r2D.getArcadeFont());
-		gc.fillText("STARRING", titlePosition.x, sc.adBoardTopLeft.y + t(3));
+		gc.fillText("STARRING", titlePosition.x, sc.boardTopLeft.y + t(3));
 		gc.setFill(Color.YELLOW);
-		gc.fillText("MS PAC-MAN", titlePosition.x, sc.adBoardTopLeft.y + t(6));
+		gc.fillText("MS PAC-MAN", titlePosition.x, sc.boardTopLeft.y + t(6));
 	}
 
 	private void drawAnimatedBoard(int numDotsX, int numDotsY) {
@@ -147,7 +147,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 				y = 2 * (numDotsX + numDotsY) - dot;
 			}
 			gc.setFill((dot + light) % (numDotsX / 2) == 0 ? Color.PINK : Color.RED);
-			gc.fillRect(sc.adBoardTopLeft.x + 4 * x, sc.adBoardTopLeft.y + 4 * y, 2, 2);
+			gc.fillRect(sc.boardTopLeft.x + 4 * x, sc.boardTopLeft.y + 4 * y, 2, 2);
 		}
 	}
 
