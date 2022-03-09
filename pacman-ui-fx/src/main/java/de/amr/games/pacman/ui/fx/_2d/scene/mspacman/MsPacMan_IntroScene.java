@@ -23,14 +23,12 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
-import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.mspacman.IntroController;
-import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.Ghost;
@@ -53,9 +51,6 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 
 	private final IntroController sc;
 	private final Image midwayLogo = new Image(getClass().getResourceAsStream("/mspacman/graphics/midway.png"));
-	private final TickTimer boardAnimationTimer = new TickTimer("boardAnimation-timer");
-	private final V2i titlePosition = new V2i(9, 8).scaled(TS);
-
 	private Player2D msPacMan2D;
 	private Ghost2D[] ghosts2D;
 
@@ -73,22 +68,22 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 		msPacMan2D.munchings.values().forEach(TimedSeq::restart);
 		ghosts2D = Stream.of(sc.ghosts).map(ghost -> new Ghost2D(ghost, game, r2D)).toArray(Ghost2D[]::new);
 		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animKicking.values().forEach(TimedSeq::restart));
-		boardAnimationTimer.setIndefinite().start();
 	}
 
 	@Override
 	public void doUpdate() {
 		sc.updateState();
-		boardAnimationTimer.tick();
 	}
 
 	@Override
 	public void doRender() {
 		score2D.render(gc);
 		highScore2D.render(gc);
+
 		gc.setFont(r2D.getArcadeFont());
 		gc.setFill(Color.ORANGE);
-		gc.fillText("\"MS PAC-MAN\"", titlePosition.x, titlePosition.y);
+		gc.fillText("\"MS PAC-MAN\"", sc.titlePosition.x, sc.titlePosition.y);
+
 		drawAnimatedBoard(32, 16);
 		switch (sc.state) {
 		case GHOSTS -> drawGhostText();
@@ -100,6 +95,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 		default -> {
 		}
 		}
+
 		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(gc));
 		msPacMan2D.render(gc);
 		drawCopyright();
@@ -109,7 +105,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 		gc.setFill(Color.WHITE);
 		gc.setFont(r2D.getArcadeFont());
 		if (sc.ghostIndex == 0) {
-			gc.fillText("WITH", titlePosition.x, sc.boardTopLeft.y + t(3));
+			gc.fillText("WITH", sc.titlePosition.x, sc.boardTopLeft.y + t(3));
 		}
 		Ghost ghost = sc.ghosts[sc.ghostIndex];
 		gc.setFill(r2D.getGhostColor(ghost.id));
@@ -119,13 +115,13 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 	private void drawMsPacManText() {
 		gc.setFill(Color.WHITE);
 		gc.setFont(r2D.getArcadeFont());
-		gc.fillText("STARRING", titlePosition.x, sc.boardTopLeft.y + t(3));
+		gc.fillText("STARRING", sc.titlePosition.x, sc.boardTopLeft.y + t(3));
 		gc.setFill(Color.YELLOW);
-		gc.fillText("MS PAC-MAN", titlePosition.x, sc.boardTopLeft.y + t(6));
+		gc.fillText("MS PAC-MAN", sc.titlePosition.x, sc.boardTopLeft.y + t(6));
 	}
 
 	private void drawAnimatedBoard(int numDotsX, int numDotsY) {
-		long time = boardAnimationTimer.ticked();
+		long time = sc.boardAnimationTimer.ticked();
 		int light = (int) (time / 2) % (numDotsX / 2);
 		for (int dot = 0; dot < 2 * (numDotsX + numDotsY); ++dot) {
 			int x = 0, y = 0;
