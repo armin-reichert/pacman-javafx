@@ -23,13 +23,13 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
+import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.mspacman.IntroController;
-import de.amr.games.pacman.controller.mspacman.IntroController.IntroState;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2i;
@@ -43,9 +43,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
- * Intro scene of the Ms. Pac-Man game. The ghosts and Ms. Pac-Man are introduced one after another.
+ * Intro scene of the Ms. Pac-Man game.
  * <p>
- * TODO: fix Midway logo
+ * The ghosts and Ms. Pac-Man are introduced on a billboard and are marching in one after another.
  * 
  * @author Armin Reichert
  */
@@ -54,7 +54,7 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 	private final IntroController sc;
 	private final Image midwayLogo = new Image(getClass().getResourceAsStream("/mspacman/graphics/midway.png"));
 	private final TickTimer boardAnimationTimer = new TickTimer("boardAnimation-timer");
-	private final V2i titlePosition = new V2i(t(9), t(8));
+	private final V2i titlePosition = new V2i(9, 8).scaled(TS);
 
 	private Player2D msPacMan2D;
 	private Ghost2D[] ghosts2D;
@@ -68,18 +68,11 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 	public void init() {
 		super.init();
 		sc.init();
-
 		score2D.showPoints = false;
-
 		msPacMan2D = new Player2D(sc.msPacMan, game, r2D);
 		msPacMan2D.munchings.values().forEach(TimedSeq::restart);
-
-		ghosts2D = Stream.of(sc.ghosts).map(ghost -> {
-			Ghost2D ghost2D = new Ghost2D(ghost, game, r2D);
-			ghost2D.animKicking.values().forEach(TimedSeq::restart);
-			return ghost2D;
-		}).toArray(Ghost2D[]::new);
-
+		ghosts2D = Stream.of(sc.ghosts).map(ghost -> new Ghost2D(ghost, game, r2D)).toArray(Ghost2D[]::new);
+		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animKicking.values().forEach(TimedSeq::restart));
 		boardAnimationTimer.setIndefinite().start();
 	}
 
@@ -91,18 +84,17 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 
 	@Override
 	public void doRender() {
-		IntroState state = sc.state;
 		score2D.render(gc);
 		highScore2D.render(gc);
 		gc.setFont(r2D.getArcadeFont());
 		gc.setFill(Color.ORANGE);
 		gc.fillText("\"MS PAC-MAN\"", titlePosition.x, titlePosition.y);
 		drawAnimatedBoard(32, 16);
-		switch (state) {
-		case GHOSTS -> drawGhostMarchingIn(sc.ghosts[sc.ghostIndex]);
-		case MSPACMAN -> drawMsPacManMarchingIn();
+		switch (sc.state) {
+		case GHOSTS -> drawGhostText();
+		case MSPACMAN -> drawMsPacManText();
 		case READY -> {
-			drawMsPacManMarchingIn();
+			drawMsPacManText();
 			drawPressKeyToStart(26);
 		}
 		default -> {
@@ -113,17 +105,18 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 		drawCopyright();
 	}
 
-	private void drawGhostMarchingIn(Ghost ghost) {
+	private void drawGhostText() {
 		gc.setFill(Color.WHITE);
 		gc.setFont(r2D.getArcadeFont());
-		if (ghost == sc.ghosts[0]) {
+		if (sc.ghostIndex == 0) {
 			gc.fillText("WITH", titlePosition.x, sc.boardTopLeft.y + t(3));
 		}
-		gc.setFill(ghost.id == 0 ? Color.RED : ghost.id == 1 ? Color.PINK : ghost.id == 2 ? Color.CYAN : Color.ORANGE);
+		Ghost ghost = sc.ghosts[sc.ghostIndex];
+		gc.setFill(r2D.getGhostColor(ghost.id));
 		gc.fillText(ghost.name.toUpperCase(), t(14 - ghost.name.length() / 2), sc.boardTopLeft.y + t(6));
 	}
 
-	private void drawMsPacManMarchingIn() {
+	private void drawMsPacManText() {
 		gc.setFill(Color.WHITE);
 		gc.setFont(r2D.getArcadeFont());
 		gc.fillText("STARRING", titlePosition.x, sc.boardTopLeft.y + t(3));
