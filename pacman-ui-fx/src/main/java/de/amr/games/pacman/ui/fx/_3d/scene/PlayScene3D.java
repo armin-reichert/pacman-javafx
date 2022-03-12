@@ -76,18 +76,18 @@ import javafx.scene.transform.Translate;
  */
 public class PlayScene3D extends AbstractGameScene {
 
-	protected final PacManModel3D model3D;
-	protected final EnumMap<Perspective, CameraController<PlayScene3D>> cams = new EnumMap<>(Perspective.class);
-	protected final Image floorImage = new Image(getClass().getResource("/common/escher-texture.jpg").toString());
-	protected final CoordinateSystem coordSystem = new CoordinateSystem(1000);
+	private final PacManModel3D model3D;
+	private final EnumMap<Perspective, CameraController<PlayScene3D>> cams = new EnumMap<>(Perspective.class);
+	private final Image floorImage = new Image(getClass().getResource("/common/escher-texture.jpg").toString());
+	private final CoordinateSystem coordSystem = new CoordinateSystem(1000);
 
-	protected Maze3D maze3D;
-	protected Pac3D player3D;
-	protected Ghost3D[] ghosts3D;
-	protected Bonus3D bonus3D;
-	protected ScoreNotReally3D score3D;
-	protected LevelCounter3D levelCounter3D;
-	protected LivesCounter3D livesCounter3D;
+	private Maze3D maze3D;
+	Pac3D player3D; // must be accessible by cam controllers
+	private Ghost3D[] ghosts3D;
+	private Bonus3D bonus3D;
+	private ScoreNotReally3D score3D;
+	private LevelCounter3D levelCounter3D;
+	private LivesCounter3D livesCounter3D;
 
 	public PlayScene3D(GameController gameController, PacManModel3D model3D) {
 		super(gameController);
@@ -306,14 +306,13 @@ public class PlayScene3D extends AbstractGameScene {
 
 	@Override
 	public void onGhostLeavingHouse(GameEvent e) {
-//		ghosts3D[e.ghost.get().id].setNormalSkinColor();
 	}
 
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
 
-		// enter READY
-		if (e.newGameState == GameState.READY) {
+		switch (e.newGameState) {
+		case READY -> {
 			maze3D.reset();
 			player3D.reset();
 			Stream.of(ghosts3D).forEach(Ghost3D::reset);
@@ -323,14 +322,10 @@ public class PlayScene3D extends AbstractGameScene {
 				sounds.play(GameSounds.GAME_READY);
 			}
 		}
-
-		// enter HUNTING
-		else if (e.newGameState == GameState.HUNTING) {
+		case HUNTING -> {
 			maze3D.playEnergizerAnimations();
 		}
-
-		// enter PACMAN_DYING
-		else if (e.newGameState == GameState.PACMAN_DYING) {
+		case PACMAN_DYING -> {
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setNormalSkinColor());
 			sounds.stopAll();
 			Ghost killer = Stream.of(game.ghosts).filter(ghost -> ghost.tile().equals(game.player.tile())).findAny().get();
@@ -340,23 +335,17 @@ public class PlayScene3D extends AbstractGameScene {
 					afterSeconds(2, () -> gameController.stateTimer().expire()) //
 			).play();
 		}
-
-		// enter GHOST_DYING
-		else if (e.newGameState == GameState.GHOST_DYING) {
+		case GHOST_DYING -> {
 			sounds.play(GameSounds.GHOST_EATEN);
 		}
-
-		// enter LEVEL_STARTING
-		else if (e.newGameState == GameState.LEVEL_STARTING) {
+		case LEVEL_STARTING -> {
 			buildMaze3D(game.mazeNumber, true);
 			levelCounter3D.update();
 			var message = Env.message("level_starting", game.levelNumber);
 			FlashMessageView.showFlashMessage(1, message);
 			afterSeconds(3, () -> gameController.stateTimer().expire()).play();
 		}
-
-		// enter LEVEL_COMPLETE
-		else if (e.newGameState == GameState.LEVEL_COMPLETE) {
+		case LEVEL_COMPLETE -> {
 			sounds.stopAll();
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setNormalSkinColor());
 			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game.levelNumber);
@@ -369,11 +358,12 @@ public class PlayScene3D extends AbstractGameScene {
 			animation.setOnFinished(ae -> gameController.stateTimer().expire());
 			animation.play();
 		}
-
-		// enter GAME_OVER
-		else if (e.newGameState == GameState.GAME_OVER) {
+		case GAME_OVER -> {
 			sounds.stopAll();
 			FlashMessageView.showFlashMessage(3, Env.GAME_OVER_TALK.next());
+		}
+		default -> {
+		}
 		}
 
 		// exit HUNTING
