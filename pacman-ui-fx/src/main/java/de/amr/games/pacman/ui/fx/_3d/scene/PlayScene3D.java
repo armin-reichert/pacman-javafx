@@ -48,7 +48,7 @@ import de.amr.games.pacman.ui.fx._3d.entity.LevelCounter3D;
 import de.amr.games.pacman.ui.fx._3d.entity.LivesCounter3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Maze3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
-import de.amr.games.pacman.ui.fx._3d.entity.ScoreNotReally3D;
+import de.amr.games.pacman.ui.fx._3d.entity.Score3D;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
@@ -85,7 +85,7 @@ public class PlayScene3D extends AbstractGameScene {
 	Pac3D player3D; // must be accessible by cam controllers
 	private Ghost3D[] ghosts3D;
 	private Bonus3D bonus3D;
-	private ScoreNotReally3D score3D;
+	private Score3D score3D;
 	private LevelCounter3D levelCounter3D;
 	private LivesCounter3D livesCounter3D;
 
@@ -133,8 +133,13 @@ public class PlayScene3D extends AbstractGameScene {
 		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D)).toArray(Ghost3D[]::new);
 		bonus3D = new Bonus3D(r2D);
 
-		score3D = new ScoreNotReally3D(r2D.getArcadeFont());
-		score3D.scoreValueOverwrite = gameController.attractMode ? "GAME OVER!" : null;
+		score3D = new Score3D();
+		score3D.setFont(r2D.getArcadeFont());
+		score3D.setComputeScoreText(!gameController.attractMode);
+		if (gameController.attractMode) {
+			score3D.txtScore.setFill(Color.RED);
+			score3D.txtScore.setText("GAME OVER!");
+		}
 
 		livesCounter3D = new LivesCounter3D(model3D);
 		livesCounter3D.getTransforms().add(new Translate(TS, TS, -HTS));

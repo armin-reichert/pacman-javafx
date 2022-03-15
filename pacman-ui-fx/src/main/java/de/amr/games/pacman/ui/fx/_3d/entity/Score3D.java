@@ -36,22 +36,19 @@ import javafx.scene.text.Text;
  * 
  * @author Armin Reichert
  */
-public class ScoreNotReally3D extends Group {
-
-	public Color titleColor = Color.GHOSTWHITE;
-	public Color scoreColor = Color.YELLOW;
-
-	public Font font;
+public class Score3D extends Group {
 
 	public final Text txtScoreTitle;
 	public final Text txtScore;
 	public final Text txtHiscoreTitle;
 	public final Text txtHiscore;
 
-	public String scoreValueOverwrite;
+	private Color titleColor = Color.GHOSTWHITE;
+	private Color scoreColor = Color.YELLOW;
+	private Font font;
+	private boolean computeScoreText = true;
 
-	public ScoreNotReally3D(Font font) {
-		this.font = font;
+	public Score3D() {
 		txtScoreTitle = new Text("SCORE");
 		txtScore = new Text();
 		txtHiscoreTitle = new Text("HIGH SCORE");
@@ -67,13 +64,22 @@ public class ScoreNotReally3D extends Group {
 		getChildren().add(grid);
 	}
 
+	public void setFont(Font font) {
+		this.font = font;
+	}
+
+	public void setComputeScoreText(boolean state) {
+		this.computeScoreText = state;
+	}
+
 	public void update(int score, int levelNumber, int highscore, int highscoreLevelNumber) {
 		txtScoreTitle.setFill(titleColor);
 		txtScoreTitle.setFont(font);
-		txtScore.setFill(scoreValueOverwrite != null ? Color.RED : scoreColor);
+		if (computeScoreText) {
+			txtScore.setText(String.format("%7d L%d", score, levelNumber));
+			txtScore.setFill(Color.YELLOW);
+		}
 		txtScore.setFont(font);
-		String text = scoreValueOverwrite != null ? scoreValueOverwrite : String.format("%7d L%d", score, levelNumber);
-		txtScore.setText(text);
 
 		txtHiscoreTitle.setFill(titleColor);
 		txtHiscoreTitle.setFont(font);
