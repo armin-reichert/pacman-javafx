@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
-import static de.amr.games.pacman.ui.fx._3d.entity.Maze3D.NodeInfo.info;
+import static de.amr.games.pacman.ui.fx._3d.entity.Maze3D.FoodInfo.foodInfo;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -39,7 +39,6 @@ import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.RaiseAndLowerWallAnimation;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.animation.Animation;
-import javafx.animation.Animation.Status;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Transition;
@@ -64,19 +63,20 @@ import javafx.util.Duration;
  */
 public class Maze3D extends Group {
 
-	public static class NodeInfo {
+	public static class FoodInfo {
 
-		public final boolean energizer;
 		public final V2i tile;
-		public Animation animation;
+		public final boolean energizer;
+		public final Animation animation;
 
-		public NodeInfo(boolean energizer, V2i tile) {
+		public FoodInfo(boolean energizer, V2i tile, Animation animation) {
 			this.energizer = energizer;
 			this.tile = tile;
+			this.animation = animation;
 		}
 
-		public static NodeInfo info(Node node) {
-			return (NodeInfo) node.getUserData();
+		public static FoodInfo foodInfo(Node node) {
+			return (FoodInfo) node.getUserData();
 		}
 	}
 
@@ -130,24 +130,16 @@ public class Maze3D extends Group {
 	}
 
 	public Optional<Node> foodNodeAt(V2i tile) {
-		return foodNodes().filter(node -> info(node).equals(tile)).findFirst();
+		return foodNodes().filter(node -> foodInfo(node).tile.equals(tile)).findFirst();
 	}
 
 	public Stream<Node> energizerNodes() {
-		return foodNodes().filter(node -> info(node).energizer);
-	}
-
-	public Stream<Animation> energizerAnimations() {
-		return energizerNodes().map(node -> info(node).animation).filter(Objects::nonNull);
-	}
-
-	public Optional<Node> energizerNodeAt(V2i tile) {
-		return energizerNodes().filter(node -> info(node).equals(tile)).findFirst();
+		return foodNodes().filter(node -> foodInfo(node).energizer);
 	}
 
 	public void hideFoodNode(Node node) {
 		node.setVisible(false);
-		NodeInfo info = info(node);
+		FoodInfo info = foodInfo(node);
 		if (info.energizer) {
 			info.animation.stop();
 		}
@@ -180,35 +172,23 @@ public class Maze3D extends Group {
 		var pellets = world.tiles().filter(world::isFoodTile)
 				.map(tile -> createPellet(tile, world.isEnergizerTile(tile), material)).collect(Collectors.toList());
 		foodGroup.getChildren().setAll(pellets);
-		energizerNodes().forEach(node -> info(node).animation = createEnergizerAnimation(node));
 	}
 
 	private Animation createEnergizerAnimation(Node energizerNode) {
-		var animation = new ScaleTransition(Duration.seconds(1.0 / 6), energizerNode);
-		animation.setAutoReverse(true);
-		animation.setCycleCount(Transition.INDEFINITE);
-		animation.setFromX(1.0);
-		animation.setFromY(1.0);
-		animation.setFromZ(1.0);
-		animation.setToX(0.1);
-		animation.setToY(0.1);
-		animation.setToZ(0.1);
-		return animation;
+		var anim = new ScaleTransition(Duration.seconds(1.0 / 6), energizerNode);
+		anim.setAutoReverse(true);
+		anim.setCycleCount(Transition.INDEFINITE);
+		anim.setFromX(1.0);
+		anim.setFromY(1.0);
+		anim.setFromZ(1.0);
+		anim.setToX(0.1);
+		anim.setToY(0.1);
+		anim.setToZ(0.1);
+		return anim;
 	}
 
-	public void startEnergizerAnimationsIfNotRunning() {
-		boolean notRunning = energizerAnimations().anyMatch(anim -> anim.getStatus() != Status.RUNNING);
-		if (notRunning) {
-			playEnergizerAnimations();
-		}
-	}
-
-	public void playEnergizerAnimations() {
-		energizerAnimations().forEach(Animation::play);
-	}
-
-	public void stopEnergizerAnimations() {
-		energizerAnimations().forEach(Animation::stop);
+	public Stream<Animation> energizerAnimations() {
+		return energizerNodes().map(node -> foodInfo(node).animation).filter(Objects::nonNull);
 	}
 
 	public Animation flashingAnimation(int times) {
@@ -221,7 +201,8 @@ public class Maze3D extends Group {
 		pellet.setTranslateX(tile.x * TS + HTS);
 		pellet.setTranslateY(tile.y * TS + HTS);
 		pellet.setTranslateZ(-3);
-		pellet.setUserData(new NodeInfo(energizer, tile));
+		Animation animation = energizer ? createEnergizerAnimation(pellet) : null;
+		pellet.setUserData(new FoodInfo(energizer, tile, animation));
 		return pellet;
 	}
 

@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
-import static de.amr.games.pacman.ui.fx._3d.entity.Maze3D.NodeInfo.info;
+import static de.amr.games.pacman.ui.fx._3d.entity.Maze3D.FoodInfo.foodInfo;
 import static de.amr.games.pacman.ui.fx.util.U.afterSeconds;
 import static de.amr.games.pacman.ui.fx.util.U.pause;
 
@@ -208,9 +208,13 @@ public class PlayScene3D extends AbstractGameScene {
 	 */
 	private void keepInSyncWith2DScene() {
 		maze3D.foodNodes().forEach(foodNode -> {
-			foodNode.setVisible(!game.world.isFoodEaten(info(foodNode).tile));
+			foodNode.setVisible(!game.world.isFoodEaten(foodInfo(foodNode).tile));
 		});
-		maze3D.startEnergizerAnimationsIfNotRunning();
+		if (gameController.state == GameState.READY) {
+			maze3D.energizerAnimations().forEach(Animation::stop);
+		} else {
+			maze3D.energizerAnimations().forEach(Animation::play);
+		}
 		AudioClip munching = sounds.getClip(GameSounds.PACMAN_MUNCH);
 		if (munching.isPlaying()) {
 			if (game.player.starvingTicks > 10) {
@@ -258,7 +262,7 @@ public class PlayScene3D extends AbstractGameScene {
 	@Override
 	public void onPlayerFoundFood(GameEvent e) {
 		if (e.tile.isEmpty()) { // happens when using the "eat all pellets except energizers" cheat
-			maze3D.foodNodes().filter(node -> !info(node).energizer).forEach(maze3D::hideFoodNode);
+			maze3D.foodNodes().filter(node -> !foodInfo(node).energizer).forEach(maze3D::hideFoodNode);
 		} else {
 			V2i tile = e.tile.get();
 			maze3D.foodNodeAt(tile).ifPresent(maze3D::hideFoodNode);
@@ -320,6 +324,7 @@ public class PlayScene3D extends AbstractGameScene {
 		switch (e.newGameState) {
 		case READY -> {
 			maze3D.reset();
+			maze3D.energizerAnimations().forEach(Animation::stop);
 			player3D.reset();
 			Stream.of(ghosts3D).forEach(Ghost3D::reset);
 			sounds.stopAll();
@@ -329,7 +334,7 @@ public class PlayScene3D extends AbstractGameScene {
 			}
 		}
 		case HUNTING -> {
-			maze3D.playEnergizerAnimations();
+			maze3D.energizerAnimations().forEach(Animation::play);
 		}
 		case PACMAN_DYING -> {
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setNormalSkinColor());
@@ -374,7 +379,7 @@ public class PlayScene3D extends AbstractGameScene {
 
 		// exit HUNTING
 		if (e.oldGameState == GameState.HUNTING && e.newGameState != GameState.GHOST_DYING) {
-			maze3D.stopEnergizerAnimations();
+			maze3D.energizerAnimations().forEach(Animation::stop);
 			bonus3D.setVisible(false);
 		}
 	}
