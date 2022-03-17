@@ -124,7 +124,7 @@ public class PlayScene3D extends AbstractGameScene {
 		final int width = game.world.numCols() * TS;
 		final int height = game.world.numRows() * TS;
 
-		maze3D = new Maze3D(width, height, floorImage);
+		maze3D = new Maze3D(width, height, floorImage, Color.rgb(30, 30, 120));
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
 		maze3D.$resolution.addListener($1 -> buildMaze3D(game.world, game.mazeNumber, false));

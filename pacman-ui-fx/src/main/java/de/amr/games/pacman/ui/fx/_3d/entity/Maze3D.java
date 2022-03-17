@@ -89,7 +89,6 @@ public class Maze3D extends Group {
 
 	private double energizerRadius = 2.5;
 	private double pelletRadius = 1;
-	private Color floorColor = Color.rgb(20, 20, 120);
 
 	/**
 	 * Creates the 3D-maze base structure (without walls, doors, food).
@@ -97,8 +96,9 @@ public class Maze3D extends Group {
 	 * @param mazeWidth    maze width in units
 	 * @param mazeHeight   maze height in units
 	 * @param floorTexture floor texture
+	 * @param floorColor   floor color
 	 */
-	public Maze3D(double mazeWidth, double mazeHeight, Image floorTexture) {
+	public Maze3D(double mazeWidth, double mazeHeight, Image floorTexture, Color floorColor) {
 		var floorMaterial = new PhongMaterial(floorColor);
 		floorMaterial.setSpecularColor(floorColor.brighter());
 		floorMaterial.setDiffuseMap(floorTexture);
