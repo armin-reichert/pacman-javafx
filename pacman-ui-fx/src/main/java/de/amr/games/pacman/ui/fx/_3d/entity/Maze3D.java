@@ -166,7 +166,10 @@ public class Maze3D extends Group {
 	public void buildStructure(World world, Color wallBaseColor, Color wallTopColor) {
 		wallsGroup.getChildren().clear();
 		addWalls(new FloorPlan($resolution.get(), world), world, TS / $resolution.get(), wallBaseColor, wallTopColor);
-		doorsGroup.getChildren().setAll(world.ghostHouse().doors.stream().map(Door3D::new).collect(Collectors.toList()));
+		doorsGroup.getChildren().clear();
+		for (V2i doorTile : world.ghostHouse().doorTiles) {
+			doorsGroup.getChildren().add(new Door3D(doorTile));
+		}
 	}
 
 	/**
@@ -238,9 +241,8 @@ public class Maze3D extends Group {
 	 * @param numBricksX number of bricks in x-direction
 	 * @param numBricksY number of bricks in y-direction
 	 * @param brickSize  size of a single brick
-	 * @return pair of walls (base, top)
 	 */
-	private Group addWall(int leftX, int topY, int numBricksX, int numBricksY, double brickSize,
+	private void addWall(int leftX, int topY, int numBricksX, int numBricksY, double brickSize,
 			PhongMaterial baseMaterial, PhongMaterial topMaterial) {
 
 		Box base = new Box(numBricksX * brickSize, numBricksY * brickSize, $wallHeight.get());
@@ -258,8 +260,8 @@ public class Maze3D extends Group {
 		Group wall = new Group(base, top);
 		wall.setTranslateX((leftX + 0.5 * numBricksX) * brickSize);
 		wall.setTranslateY((topY + 0.5 * numBricksY) * brickSize);
+
 		wallsGroup.getChildren().add(wall);
-		return wall;
 	}
 
 	private void addWalls(FloorPlan floorPlan, World world, double brickSize, Color wallBaseColor, Color wallTopColor) {
