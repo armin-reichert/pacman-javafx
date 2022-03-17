@@ -41,6 +41,7 @@ import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.GameSounds;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
@@ -126,8 +127,8 @@ public class PlayScene3D extends AbstractGameScene {
 		maze3D = new Maze3D(width, height, floorImage);
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
-		maze3D.$resolution.addListener($1 -> buildMaze3D(game.mazeNumber, false));
-		buildMaze3D(game.mazeNumber, true);
+		maze3D.$resolution.addListener($1 -> buildMaze3D(game.world, game.mazeNumber, false));
+		buildMaze3D(game.world, game.mazeNumber, true);
 
 		player3D = new Pac3D(game.player, model3D);
 		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D)).toArray(Ghost3D[]::new);
@@ -182,10 +183,10 @@ public class PlayScene3D extends AbstractGameScene {
 		camController().update(this);
 	}
 
-	private void buildMaze3D(int mazeNumber, boolean withFood) {
-		maze3D.buildStructure(game.world, r2D.getMazeSideColor(mazeNumber), r2D.getMazeTopColor(mazeNumber));
+	private void buildMaze3D(World world, int mazeNumber, boolean withFood) {
+		maze3D.buildStructure(world, r2D.getMazeSideColor(mazeNumber), r2D.getMazeTopColor(mazeNumber));
 		if (withFood) {
-			maze3D.buildFood(game.world, r2D.getFoodColor(mazeNumber));
+			maze3D.buildFood(world, r2D.getFoodColor(mazeNumber));
 		}
 		log("Built 3D maze (resolution=%d, wall height=%.2f)", maze3D.$resolution.get(), maze3D.$wallHeight.get());
 	}
@@ -344,7 +345,7 @@ public class PlayScene3D extends AbstractGameScene {
 			sounds.play(GameSounds.GHOST_EATEN);
 		}
 		case LEVEL_STARTING -> {
-			buildMaze3D(game.mazeNumber, true);
+			buildMaze3D(game.world, game.mazeNumber, true);
 			levelCounter3D.update();
 			var message = Env.message("level_starting", game.levelNumber);
 			FlashMessageView.showFlashMessage(1, message);
