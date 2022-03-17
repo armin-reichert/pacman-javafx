@@ -130,7 +130,7 @@ public class Maze3D extends Group {
 	}
 
 	public Optional<Node> foodNodeAt(V2i tile) {
-		return foodNodes().filter(node -> sameTile(node, tile)).findFirst();
+		return foodNodes().filter(node -> info(node).equals(tile)).findFirst();
 	}
 
 	public Stream<Node> energizerNodes() {
@@ -142,7 +142,7 @@ public class Maze3D extends Group {
 	}
 
 	public Optional<Node> energizerNodeAt(V2i tile) {
-		return energizerNodes().filter(node -> sameTile(node, tile)).findFirst();
+		return energizerNodes().filter(node -> info(node).equals(tile)).findFirst();
 	}
 
 	public void hideFoodNode(Node node) {
@@ -223,10 +223,6 @@ public class Maze3D extends Group {
 		pellet.setTranslateZ(-3);
 		pellet.setUserData(new NodeInfo(energizer, tile));
 		return pellet;
-	}
-
-	private boolean sameTile(Node node, V2i tile) {
-		return info(node).tile.equals(tile);
 	}
 
 	/**

@@ -33,7 +33,6 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Ghost;
-import de.amr.games.pacman.ui.fx._3d.entity.Maze3D.NodeInfo;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -46,7 +45,7 @@ import javafx.scene.shape.Box;
  */
 public class Door3D extends Box {
 
-	private V2i tile;
+	public final V2i tile;
 
 	public Door3D(V2i tile) {
 		super(TS - 1, 1, HTS);
@@ -55,7 +54,6 @@ public class Door3D extends Box {
 		setTranslateX(tile.x * TS + HTS);
 		setTranslateY(tile.y * TS + HTS);
 		setTranslateZ(-HTS / 2);
-		setUserData(new NodeInfo(false, tile));
 		drawModeProperty().bind(Env.$drawMode3D);
 	}
 
