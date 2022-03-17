@@ -262,10 +262,10 @@ public class PlayScene3D extends AbstractGameScene {
 	@Override
 	public void onPlayerFoundFood(GameEvent e) {
 		if (e.tile.isEmpty()) { // happens when using the "eat all pellets except energizers" cheat
-			maze3D.foodNodes().filter(node -> !foodInfo(node).energizer).forEach(maze3D::hideFoodNode);
+			maze3D.foodNodes().filter(node -> !foodInfo(node).energizer).forEach(maze3D::hideFood);
 		} else {
 			V2i tile = e.tile.get();
-			maze3D.foodNodeAt(tile).ifPresent(maze3D::hideFoodNode);
+			maze3D.foodAt(tile).ifPresent(maze3D::hideFood);
 			AudioClip munching = sounds.getClip(GameSounds.PACMAN_MUNCH);
 			if (!munching.isPlaying()) {
 				sounds.loop(GameSounds.PACMAN_MUNCH, Animation.INDEFINITE);
@@ -362,7 +362,7 @@ public class PlayScene3D extends AbstractGameScene {
 			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game.levelNumber);
 			var animation = new SequentialTransition( //
 					pause(1), //
-					maze3D.flashingAnimation(game.numFlashes), //
+					maze3D.createMazeFlashingAnimation(game.numFlashes), //
 					afterSeconds(1, () -> game.player.hide()), //
 					afterSeconds(1, () -> FlashMessageView.showFlashMessage(2, message)) //
 			);

@@ -129,18 +129,18 @@ public class Maze3D extends Group {
 		return foodGroup.getChildren().stream();
 	}
 
-	public Optional<Node> foodNodeAt(V2i tile) {
-		return foodNodes().filter(node -> foodInfo(node).tile.equals(tile)).findFirst();
-	}
-
 	public Stream<Node> energizerNodes() {
 		return foodNodes().filter(node -> foodInfo(node).energizer);
 	}
 
-	public void hideFoodNode(Node node) {
+	public Optional<Node> foodAt(V2i tile) {
+		return foodNodes().filter(node -> foodInfo(node).tile.equals(tile)).findFirst();
+	}
+
+	public void hideFood(Node node) {
 		node.setVisible(false);
 		FoodInfo info = foodInfo(node);
-		if (info.energizer) {
+		if (info.animation != null) {
 			info.animation.stop();
 		}
 	}
@@ -164,34 +164,21 @@ public class Maze3D extends Group {
 	/**
 	 * Creates the pellets/food and the energizer animations.
 	 * 
-	 * @param world     the game world
-	 * @param foodColor color of pellets
+	 * @param world       the game world
+	 * @param pelletColor color of pellets
 	 */
-	public void buildFood(World world, Color foodColor) {
-		var material = new PhongMaterial(foodColor);
+	public void buildFood(World world, Color pelletColor) {
+		var material = new PhongMaterial(pelletColor);
 		var pellets = world.tiles().filter(world::isFoodTile)
 				.map(tile -> createPellet(tile, world.isEnergizerTile(tile), material)).collect(Collectors.toList());
 		foodGroup.getChildren().setAll(pellets);
-	}
-
-	private Animation createEnergizerAnimation(Node energizerNode) {
-		var anim = new ScaleTransition(Duration.seconds(1.0 / 6), energizerNode);
-		anim.setAutoReverse(true);
-		anim.setCycleCount(Transition.INDEFINITE);
-		anim.setFromX(1.0);
-		anim.setFromY(1.0);
-		anim.setFromZ(1.0);
-		anim.setToX(0.1);
-		anim.setToY(0.1);
-		anim.setToZ(0.1);
-		return anim;
 	}
 
 	public Stream<Animation> energizerAnimations() {
 		return energizerNodes().map(node -> foodInfo(node).animation).filter(Objects::nonNull);
 	}
 
-	public Animation flashingAnimation(int times) {
+	public Animation createMazeFlashingAnimation(int times) {
 		return times > 0 ? new RaiseAndLowerWallAnimation(times) : new PauseTransition(Duration.seconds(1));
 	}
 
@@ -201,9 +188,22 @@ public class Maze3D extends Group {
 		pellet.setTranslateX(tile.x * TS + HTS);
 		pellet.setTranslateY(tile.y * TS + HTS);
 		pellet.setTranslateZ(-3);
-		Animation animation = energizer ? createEnergizerAnimation(pellet) : null;
+		var animation = energizer ? createEnergizerAnimation(pellet) : null;
 		pellet.setUserData(new FoodInfo(energizer, tile, animation));
 		return pellet;
+	}
+
+	private Animation createEnergizerAnimation(Node pellet) {
+		var anim = new ScaleTransition(Duration.seconds(1.0 / 6), pellet);
+		anim.setAutoReverse(true);
+		anim.setCycleCount(Transition.INDEFINITE);
+		anim.setFromX(1.0);
+		anim.setFromY(1.0);
+		anim.setFromZ(1.0);
+		anim.setToX(0.1);
+		anim.setToY(0.1);
+		anim.setToZ(0.1);
+		return anim;
 	}
 
 	/**
