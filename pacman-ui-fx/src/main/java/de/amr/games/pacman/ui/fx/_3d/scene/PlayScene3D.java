@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
-import static de.amr.games.pacman.ui.fx._3d.entity.Maze3D.FoodInfo.foodInfo;
 import static de.amr.games.pacman.ui.fx.util.U.afterSeconds;
 import static de.amr.games.pacman.ui.fx.util.U.pause;
 
@@ -208,7 +207,7 @@ public class PlayScene3D extends AbstractGameScene {
 	 */
 	private void keepInSyncWith2DScene() {
 		maze3D.foodNodes().forEach(foodNode -> {
-			foodNode.setVisible(!game.world.isFoodEaten(foodInfo(foodNode).tile));
+			foodNode.setVisible(!game.world.isFoodEaten(Maze3D.pelletInfo(foodNode).tile));
 		});
 		if (gameController.state == GameState.READY) {
 			maze3D.energizerAnimations().forEach(Animation::stop);
@@ -262,7 +261,7 @@ public class PlayScene3D extends AbstractGameScene {
 	@Override
 	public void onPlayerFoundFood(GameEvent e) {
 		if (e.tile.isEmpty()) { // happens when using the "eat all pellets except energizers" cheat
-			maze3D.foodNodes().filter(node -> !foodInfo(node).energizer).forEach(maze3D::hideFood);
+			maze3D.foodNodes().filter(node -> !Maze3D.pelletInfo(node).energizer).forEach(maze3D::hideFood);
 		} else {
 			V2i tile = e.tile.get();
 			maze3D.foodAt(tile).ifPresent(maze3D::hideFood);

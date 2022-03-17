@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
-import static de.amr.games.pacman.ui.fx._3d.entity.Maze3D.FoodInfo.foodInfo;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -63,21 +62,53 @@ import javafx.util.Duration;
  */
 public class Maze3D extends Group {
 
-	public static class FoodInfo {
-
+	public static class PelletInfo {
 		public final V2i tile;
 		public final boolean energizer;
 		public final Animation animation;
 
-		public FoodInfo(boolean energizer, V2i tile, Animation animation) {
-			this.energizer = energizer;
+		private PelletInfo(V2i tile, boolean energizer, Animation animation) {
 			this.tile = tile;
+			this.energizer = energizer;
 			this.animation = animation;
 		}
+	}
 
-		public static FoodInfo foodInfo(Node node) {
-			return (FoodInfo) node.getUserData();
-		}
+	public static PelletInfo pelletInfo(Node node) {
+		return (PelletInfo) node.getUserData();
+	}
+
+	private static Node makePellet(V2i tile, PhongMaterial pelletMaterial) {
+		var pellet = new Sphere(1);
+		pellet.setMaterial(pelletMaterial);
+		pellet.setTranslateX(tile.x * TS + HTS);
+		pellet.setTranslateY(tile.y * TS + HTS);
+		pellet.setTranslateZ(-3);
+		pellet.setUserData(new PelletInfo(tile, false, null));
+		return pellet;
+	}
+
+	private static Node makeEnergizer(V2i tile, PhongMaterial pelletMaterial) {
+		var pellet = new Sphere(2.5);
+		pellet.setMaterial(pelletMaterial);
+		pellet.setTranslateX(tile.x * TS + HTS);
+		pellet.setTranslateY(tile.y * TS + HTS);
+		pellet.setTranslateZ(-3);
+		pellet.setUserData(new PelletInfo(tile, true, createEnergizerAnimation(pellet)));
+		return pellet;
+	}
+
+	private static Animation createEnergizerAnimation(Node pellet) {
+		var anim = new ScaleTransition(Duration.seconds(1.0 / 6), pellet);
+		anim.setAutoReverse(true);
+		anim.setCycleCount(Transition.INDEFINITE);
+		anim.setFromX(1.0);
+		anim.setFromY(1.0);
+		anim.setFromZ(1.0);
+		anim.setToX(0.1);
+		anim.setToY(0.1);
+		anim.setToZ(0.1);
+		return anim;
 	}
 
 	public final DoubleProperty $wallHeight = new SimpleDoubleProperty(2.0);
@@ -86,9 +117,6 @@ public class Maze3D extends Group {
 	private final Group wallsGroup = new Group();
 	private final Group doorsGroup = new Group();
 	private final Group foodGroup = new Group();
-
-	private double energizerRadius = 2.5;
-	private double pelletRadius = 1;
 
 	/**
 	 * Creates the 3D-maze base structure (without walls, doors, food).
@@ -130,16 +158,16 @@ public class Maze3D extends Group {
 	}
 
 	public Stream<Node> energizerNodes() {
-		return foodNodes().filter(node -> foodInfo(node).energizer);
+		return foodNodes().filter(node -> pelletInfo(node).energizer);
 	}
 
 	public Optional<Node> foodAt(V2i tile) {
-		return foodNodes().filter(node -> foodInfo(node).tile.equals(tile)).findFirst();
+		return foodNodes().filter(node -> pelletInfo(node).tile.equals(tile)).findFirst();
 	}
 
 	public void hideFood(Node node) {
 		node.setVisible(false);
-		FoodInfo info = foodInfo(node);
+		PelletInfo info = pelletInfo(node);
 		if (info.animation != null) {
 			info.animation.stop();
 		}
@@ -170,40 +198,17 @@ public class Maze3D extends Group {
 	public void buildFood(World world, Color pelletColor) {
 		var material = new PhongMaterial(pelletColor);
 		var pellets = world.tiles().filter(world::isFoodTile)
-				.map(tile -> createPellet(tile, world.isEnergizerTile(tile), material)).collect(Collectors.toList());
+				.map(tile -> world.isEnergizerTile(tile) ? makeEnergizer(tile, material) : makePellet(tile, material))
+				.collect(Collectors.toList());
 		foodGroup.getChildren().setAll(pellets);
 	}
 
 	public Stream<Animation> energizerAnimations() {
-		return energizerNodes().map(node -> foodInfo(node).animation).filter(Objects::nonNull);
+		return energizerNodes().map(node -> pelletInfo(node).animation).filter(Objects::nonNull);
 	}
 
 	public Animation createMazeFlashingAnimation(int times) {
 		return times > 0 ? new RaiseAndLowerWallAnimation(times) : new PauseTransition(Duration.seconds(1));
-	}
-
-	private Sphere createPellet(V2i tile, boolean energizer, PhongMaterial material) {
-		var pellet = new Sphere(energizer ? energizerRadius : pelletRadius);
-		pellet.setMaterial(material);
-		pellet.setTranslateX(tile.x * TS + HTS);
-		pellet.setTranslateY(tile.y * TS + HTS);
-		pellet.setTranslateZ(-3);
-		var animation = energizer ? createEnergizerAnimation(pellet) : null;
-		pellet.setUserData(new FoodInfo(energizer, tile, animation));
-		return pellet;
-	}
-
-	private Animation createEnergizerAnimation(Node pellet) {
-		var anim = new ScaleTransition(Duration.seconds(1.0 / 6), pellet);
-		anim.setAutoReverse(true);
-		anim.setCycleCount(Transition.INDEFINITE);
-		anim.setFromX(1.0);
-		anim.setFromY(1.0);
-		anim.setFromZ(1.0);
-		anim.setToX(0.1);
-		anim.setToY(0.1);
-		anim.setToZ(0.1);
-		return anim;
 	}
 
 	/**
