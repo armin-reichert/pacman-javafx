@@ -83,7 +83,6 @@ public class Maze3D extends Group {
 	public final DoubleProperty $wallHeight = new SimpleDoubleProperty(2.0);
 	public final IntegerProperty $resolution = new SimpleIntegerProperty(8);
 
-	private final Box floor;
 	private final Group wallsGroup = new Group();
 	private final Group doorsGroup = new Group();
 	private final Group foodGroup = new Group();
@@ -93,23 +92,21 @@ public class Maze3D extends Group {
 	private Color floorColor = Color.rgb(20, 20, 120);
 
 	/**
-	 * Creates the 3D-maze base (no walls, no doors, no food).
+	 * Creates the 3D-maze base structure (without walls, doors, food).
 	 * 
-	 * @param sizeX           maze x-size
-	 * @param sizeY           maze y-size
-	 * @param floorImagefloor texture
+	 * @param mazeWidth    maze width in units
+	 * @param mazeHeight   maze height in units
+	 * @param floorTexture floor texture
 	 */
-	public Maze3D(double sizeX, double sizeY, Image floorTexture) {
-		var sizeZ = 0.1;
+	public Maze3D(double mazeWidth, double mazeHeight, Image floorTexture) {
 		var floorMaterial = new PhongMaterial(floorColor);
 		floorMaterial.setSpecularColor(floorColor.brighter());
 		floorMaterial.setDiffuseMap(floorTexture);
-		floor = new Box(sizeX - 1, sizeY - 1, sizeZ);
+		Box floor = new Box(mazeWidth - 1, mazeHeight - 1, 0.01);
 		floor.setMaterial(floorMaterial);
-		floor.getTransforms().add(new Translate(0.5 * sizeX, 0.5 * sizeY, 0.5 * sizeZ));
+		floor.getTransforms().add(new Translate(0.5 * floor.getWidth(), 0.5 * floor.getHeight(), 0.5 * floor.getDepth()));
 		floor.drawModeProperty().bind(Env.$drawMode3D);
-		Group wallsAndDoors = new Group(wallsGroup, doorsGroup);
-		getChildren().addAll(floor, wallsAndDoors, foodGroup);
+		getChildren().addAll(floor, new Group(wallsGroup, doorsGroup), foodGroup);
 	}
 
 	public void reset() {
