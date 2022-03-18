@@ -26,6 +26,11 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
+import static de.amr.games.pacman.ui.fx._3d.entity.Maze3D.pelletInfo;
+import static de.amr.games.pacman.ui.fx._3d.scene.Perspective.CAM_DRONE;
+import static de.amr.games.pacman.ui.fx._3d.scene.Perspective.CAM_FOLLOWING_PLAYER;
+import static de.amr.games.pacman.ui.fx._3d.scene.Perspective.CAM_NEAR_PLAYER;
+import static de.amr.games.pacman.ui.fx._3d.scene.Perspective.CAM_TOTAL;
 import static de.amr.games.pacman.ui.fx.util.U.afterSeconds;
 import static de.amr.games.pacman.ui.fx.util.U.pause;
 
@@ -103,10 +108,10 @@ public class PlayScene3D extends AbstractGameScene {
 			fxSubScene.heightProperty().bind(parent.heightProperty());
 			PerspectiveCamera cam = new PerspectiveCamera(true);
 			fxSubScene.setCamera(cam);
-			cams.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer(cam));
-			cams.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer(cam));
-			cams.put(Perspective.CAM_TOTAL, new Cam_Total(cam));
-			cams.put(Perspective.CAM_DRONE, new Cam_Drone(cam));
+			cams.put(CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer(cam));
+			cams.put(CAM_NEAR_PLAYER, new Cam_NearPlayer(cam));
+			cams.put(CAM_TOTAL, new Cam_Total(cam));
+			cams.put(CAM_DRONE, new Cam_Drone(cam));
 			parent.addEventHandler(KeyEvent.ANY, e -> camController().handle(e));
 			log("Subscene for game scene '%s' created, width=%.0f, height=%.0f", getClass().getName(), fxSubScene.getWidth(),
 					fxSubScene.getHeight());
@@ -194,7 +199,7 @@ public class PlayScene3D extends AbstractGameScene {
 		fxSubScene.setCamera(camController().cam()); // TODO why is this needed?
 		camController().reset();
 		if (score3D != null) {
-			// TODO maybe there is some smarter way to keep the score in play sight
+			// TODO maybe there is some smarter way to keep the score in plain sight
 			score3D.rotationAxisProperty().bind(camController().cam().rotationAxisProperty());
 			score3D.rotateProperty().bind(camController().cam().rotateProperty());
 		}
@@ -207,7 +212,7 @@ public class PlayScene3D extends AbstractGameScene {
 	 */
 	private void keepInSyncWith2DScene() {
 		maze3D.foodNodes().forEach(foodNode -> {
-			foodNode.setVisible(!game.world.isFoodEaten(Maze3D.pelletInfo(foodNode).tile));
+			foodNode.setVisible(!game.world.isFoodEaten(pelletInfo(foodNode).tile));
 		});
 		if (gameController.state == GameState.READY) {
 			maze3D.energizerAnimations().forEach(Animation::stop);
@@ -336,7 +341,7 @@ public class PlayScene3D extends AbstractGameScene {
 			maze3D.energizerAnimations().forEach(Animation::play);
 		}
 		case PACMAN_DYING -> {
-			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setNormalSkinColor());
+			Stream.of(ghosts3D).forEach(Ghost3D::setNormalSkinColor);
 			sounds.stopAll();
 			Ghost killer = Stream.of(game.ghosts).filter(ghost -> ghost.tile().equals(game.player.tile())).findAny().get();
 			new SequentialTransition( //
@@ -357,16 +362,14 @@ public class PlayScene3D extends AbstractGameScene {
 		}
 		case LEVEL_COMPLETE -> {
 			sounds.stopAll();
-			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setNormalSkinColor());
+			Stream.of(ghosts3D).forEach(Ghost3D::setNormalSkinColor);
 			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game.levelNumber);
-			var animation = new SequentialTransition( //
+			new SequentialTransition( //
 					pause(1), //
 					maze3D.createMazeFlashingAnimation(game.numFlashes), //
 					afterSeconds(1, () -> game.player.hide()), //
-					afterSeconds(1, () -> FlashMessageView.showFlashMessage(2, message)) //
-			);
-			animation.setOnFinished(ae -> gameController.stateTimer().expire());
-			animation.play();
+					afterSeconds(1, () -> FlashMessageView.showFlashMessage(2, message)), //
+					afterSeconds(2.5, () -> gameController.stateTimer().expire())).play();
 		}
 		case GAME_OVER -> {
 			sounds.stopAll();
