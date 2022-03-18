@@ -81,9 +81,9 @@ public class PlayScene3D extends AbstractGameScene {
 	private final Image floorImage = new Image(getClass().getResource("/common/escher-texture.jpg").toString());
 	private final CoordinateSystem coordSystem = new CoordinateSystem(1000);
 
-	public CameraController<PlayScene3D> currentCamController;
-	public Pac3D player3D;
+	public CameraController currentCamController;
 
+	private Pac3D player3D;
 	private Maze3D maze3D;
 	private Ghost3D[] ghosts3D;
 	private Bonus3D bonus3D;
@@ -115,9 +115,9 @@ public class PlayScene3D extends AbstractGameScene {
 
 	private void updatePerspective(Camera cam) {
 		currentCamController = switch (Env.$perspective.get()) {
-		case CAM_DRONE -> new Cam_Drone(cam);
-		case CAM_FOLLOWING_PLAYER -> new Cam_FollowingPlayer(cam);
-		case CAM_NEAR_PLAYER -> new Cam_NearPlayer(cam);
+		case CAM_DRONE -> new Cam_Drone(cam, player3D);
+		case CAM_FOLLOWING_PLAYER -> new Cam_FollowingPlayer(cam, player3D);
+		case CAM_NEAR_PLAYER -> new Cam_NearPlayer(cam, player3D);
 		case CAM_TOTAL -> new Cam_Total(cam);
 		};
 		currentCamController.reset();
@@ -184,7 +184,7 @@ public class PlayScene3D extends AbstractGameScene {
 		bonus3D.update(game.bonus);
 		score3D.update(game.score, game.levelNumber, game.highscorePoints, game.highscoreLevel);
 		livesCounter3D.update(game.player.lives);
-		currentCamController.update(this);
+		currentCamController.update();
 	}
 
 	private void buildMaze3D(World world, int mazeNumber, boolean withFood) {

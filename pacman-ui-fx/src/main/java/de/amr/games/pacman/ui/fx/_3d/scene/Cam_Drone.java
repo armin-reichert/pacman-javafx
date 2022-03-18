@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 
 import static de.amr.games.pacman.ui.fx.util.U.lerp;
 
+import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import javafx.scene.Camera;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
@@ -34,12 +35,14 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class Cam_Drone implements CameraController<PlayScene3D> {
+public class Cam_Drone implements CameraController {
 
 	private Camera cam;
+	private Pac3D player;
 
-	public Cam_Drone(Camera cam) {
+	public Cam_Drone(Camera cam, Pac3D player) {
 		this.cam = cam;
+		this.player = player;
 	}
 
 	@Override
@@ -59,11 +62,11 @@ public class Cam_Drone implements CameraController<PlayScene3D> {
 	}
 
 	@Override
-	public void update(PlayScene3D scene) {
+	public void update() {
 		// TODO camera speed should be dependent from height over ground
 		double frac = 0.005;
-		double x = lerp(cam.getTranslateX(), scene.player3D.getTranslateX() - 100, frac);
-		double y = lerp(cam.getTranslateY(), scene.player3D.getTranslateY() - 150, frac);
+		double x = lerp(cam.getTranslateX(), player.getTranslateX() - 100, frac);
+		double y = lerp(cam.getTranslateY(), player.getTranslateY() - 150, frac);
 		cam.setTranslateX(x);
 		cam.setTranslateY(y);
 	}

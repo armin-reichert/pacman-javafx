@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 
 import static de.amr.games.pacman.ui.fx.util.U.lerp;
 
+import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import javafx.scene.Camera;
 import javafx.scene.transform.Rotate;
 
@@ -33,12 +34,14 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class Cam_NearPlayer implements CameraController<PlayScene3D> {
+public class Cam_NearPlayer implements CameraController {
 
 	private Camera cam;
+	private Pac3D player;
 
-	public Cam_NearPlayer(Camera cam) {
+	public Cam_NearPlayer(Camera cam, Pac3D player) {
 		this.cam = cam;
+		this.player = player;
 	}
 
 	@Override
@@ -56,11 +59,11 @@ public class Cam_NearPlayer implements CameraController<PlayScene3D> {
 	}
 
 	@Override
-	public void update(PlayScene3D scene) {
+	public void update() {
 		// TODO this is just trial and error
 		double fraction = 0.02;
-		double x = lerp(cam.getTranslateX(), scene.player3D.getTranslateX() - 110, fraction);
-		double y = lerp(cam.getTranslateY(), scene.player3D.getTranslateY(), fraction);
+		double x = lerp(cam.getTranslateX(), player.getTranslateX() - 110, fraction);
+		double y = lerp(cam.getTranslateY(), player.getTranslateY(), fraction);
 		cam.setTranslateX(x);
 		cam.setTranslateY(y);
 	}

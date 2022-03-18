@@ -32,13 +32,13 @@ import javafx.scene.input.KeyEvent;
  * 
  * @author Armin Reichert
  */
-public interface CameraController<T> extends EventHandler<KeyEvent> {
+public interface CameraController extends EventHandler<KeyEvent> {
 
 	Camera cam();
 
 	void reset();
 
-	void update(T target);
+	void update();
 
 	@Override
 	default void handle(KeyEvent e) {

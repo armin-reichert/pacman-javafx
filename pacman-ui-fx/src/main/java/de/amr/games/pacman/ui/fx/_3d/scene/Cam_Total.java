@@ -32,7 +32,7 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class Cam_Total implements CameraController<PlayScene3D> {
+public class Cam_Total implements CameraController {
 
 	private Camera cam;
 
@@ -57,7 +57,7 @@ public class Cam_Total implements CameraController<PlayScene3D> {
 	}
 
 	@Override
-	public void update(PlayScene3D scene) {
+	public void update() {
 	}
 
 	@Override
