@@ -26,6 +26,8 @@ package de.amr.games.pacman.ui.fx.shell;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
+import java.util.Random;
+
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
@@ -70,24 +72,36 @@ public class GameUI extends DefaultGameEventHandler {
 
 	private final GameScenes gameScenes;
 
-	private final Background bg_beach = U.imageBackground("/common/beach.jpg");
-	private final Background bg_black = U.colorBackground(Color.BLACK);
-	private final Background bg_blue = U.colorBackground(Color.CORNFLOWERBLUE);
-
 	protected final GameController gameController;
 	protected final Stage stage;
 	protected final Canvas canvas;
-
 	private final Scene mainScene;
 	private final Group gameSceneRoot = new Group();
 	private final StackPane mainSceneRoot = new StackPane();
 
+	private final Background bg_black = U.colorBackground(Color.BLACK);
+	private final Background bg_blue = U.colorBackground(Color.CORNFLOWERBLUE);
+	private Background backgroundImage;
 	protected AbstractGameScene currentScene;
+
+	private Background randomBackground() {
+		switch (new Random().nextInt(3)) {
+		case 0:
+			return U.imageBackground("/common/wallpapers/beach.jpg");
+		case 1:
+			return U.imageBackground("/common/wallpapers/space.jpg");
+		case 2:
+			return U.imageBackground("/common/wallpapers/easter_island.jpg");
+		default:
+			return U.imageBackground("/common/wallpapers/beach.jpg");
+		}
+	}
 
 	public GameUI(Stage stage, GameController gameController, double height, boolean fullscreen) {
 		this.stage = stage;
 		this.gameController = gameController;
 		this.canvas = new Canvas(); // common canvas of all 2D scenes
+		this.backgroundImage = randomBackground();
 
 		gameScenes = new GameScenes(gameController, canvas, new V2i(TILES_X, TILES_Y).scaled(TS));
 
@@ -137,7 +151,8 @@ public class GameUI extends DefaultGameEventHandler {
 		AbstractGameScene nextScene = gameSceneForCurrentState(Env.$3D.get());
 		if (currentScene != nextScene) {
 			if (currentScene != null) {
-				log("Change scene from '%s' to '%s'", currentScene.getClass().getName(), nextScene.getClass().getName());
+				log("Change scene from '%s' to '%s'", currentScene.getClass().getName(),
+						nextScene.getClass().getName());
 				currentScene.end();
 			} else {
 				log("Set scene to '%s'", nextScene.getClass().getName());
@@ -161,7 +176,7 @@ public class GameUI extends DefaultGameEventHandler {
 
 	private void updateBackground(AbstractGameScene scene) {
 		if (scene.is3D()) {
-			mainSceneRoot.setBackground(Env.$drawMode3D.get() == DrawMode.LINE ? bg_black : bg_beach);
+			mainSceneRoot.setBackground(Env.$drawMode3D.get() == DrawMode.LINE ? bg_black : backgroundImage);
 		} else {
 			mainSceneRoot.setBackground(bg_blue);
 		}
@@ -200,6 +215,9 @@ public class GameUI extends DefaultGameEventHandler {
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
 		selectGameScene();
+		if (e.oldGameState == GameState.GAME_OVER) {
+			backgroundImage = randomBackground();
+		}
 	}
 
 	private void onKeyPressed(KeyEvent e) {
