@@ -120,6 +120,7 @@ public class PlayScene3D extends AbstractGameScene {
 		case CAM_NEAR_PLAYER -> new Cam_NearPlayer(cam);
 		case CAM_TOTAL -> new Cam_Total(cam);
 		};
+		currentCamController.reset();
 	}
 
 	@Override
@@ -196,8 +197,6 @@ public class PlayScene3D extends AbstractGameScene {
 
 	private void onPerspectiveChange(Observable unused) {
 		updatePerspective(fxSubScene.getCamera());
-		fxSubScene.setCamera(currentCamController.cam()); // TODO why is this needed?
-		currentCamController.reset();
 		if (score3D != null) {
 			// TODO maybe there is some smarter way to keep the score in plain sight
 			score3D.rotationAxisProperty().bind(currentCamController.cam().rotationAxisProperty());
