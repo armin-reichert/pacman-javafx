@@ -254,7 +254,7 @@ public class PlayScene3D extends AbstractGameScene {
 	public void onPlayerLosingPower(GameEvent e) {
 		Stream.of(ghosts3D) //
 				.filter(ghost3D -> ghost3D.creature.is(GhostState.FRIGHTENED)) //
-				.forEach(ghost3D -> ghost3D.playFlashingAnimation());
+				.forEach(Ghost3D::playFlashingAnimation);
 	}
 
 	@Override
@@ -266,7 +266,7 @@ public class PlayScene3D extends AbstractGameScene {
 	@Override
 	public void onPlayerFoundFood(GameEvent e) {
 		if (e.tile.isEmpty()) { // happens when using the "eat all pellets except energizers" cheat
-			maze3D.foodNodes().filter(node -> !Maze3D.pelletInfo(node).energizer).forEach(maze3D::hideFood);
+			maze3D.foodNodes().filter(node -> !pelletInfo(node).energizer).forEach(maze3D::hideFood);
 		} else {
 			V2i tile = e.tile.get();
 			maze3D.foodAt(tile).ifPresent(maze3D::hideFood);
@@ -313,13 +313,8 @@ public class PlayScene3D extends AbstractGameScene {
 
 	@Override
 	public void onGhostRevived(GameEvent e) {
-		log("Ghost '%s' revived", e.ghost.get().name);
-		Ghost3D ghost3D = ghosts3D[e.ghost.get().id];
-		ghost3D.playRevivalAnimation();
-	}
-
-	@Override
-	public void onGhostLeavingHouse(GameEvent e) {
+		Ghost ghost = e.ghost.get();
+		ghosts3D[ghost.id].playRevivalAnimation();
 	}
 
 	@Override
