@@ -105,7 +105,6 @@ public class PlayScene3D extends AbstractGameScene {
 			fxSubScene.heightProperty().bind(parent.heightProperty());
 			PerspectiveCamera cam = new PerspectiveCamera(true);
 			fxSubScene.setCamera(cam);
-			updatePerspective(cam);
 			parent.addEventHandler(KeyEvent.ANY, e -> currentCamController.handle(e));
 			log("Subscene created for game scene '%s', width=%.0f, height=%.0f", getClass().getName(), fxSubScene.getWidth(),
 					fxSubScene.getHeight());
@@ -113,7 +112,11 @@ public class PlayScene3D extends AbstractGameScene {
 		return fxSubScene;
 	}
 
-	private void updatePerspective(Camera cam) {
+	private void updatePerspective() {
+		if (fxSubScene == null) {
+			return;
+		}
+		Camera cam = fxSubScene.getCamera();
 		currentCamController = switch (Env.$perspective.get()) {
 		case CAM_DRONE -> new Cam_Drone(cam, player3D);
 		case CAM_FOLLOWING_PLAYER -> new Cam_FollowingPlayer(cam, player3D);
@@ -196,7 +199,7 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	private void onPerspectiveChange(Observable unused) {
-		updatePerspective(fxSubScene.getCamera());
+		updatePerspective();
 		if (score3D != null) {
 			// TODO maybe there is some smarter way to keep the score in plain sight
 			score3D.rotationAxisProperty().bind(currentCamController.cam().rotationAxisProperty());
