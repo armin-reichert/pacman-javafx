@@ -27,14 +27,9 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.ui.fx._3d.entity.Maze3D.pelletInfo;
-import static de.amr.games.pacman.ui.fx._3d.scene.Perspective.CAM_DRONE;
-import static de.amr.games.pacman.ui.fx._3d.scene.Perspective.CAM_FOLLOWING_PLAYER;
-import static de.amr.games.pacman.ui.fx._3d.scene.Perspective.CAM_NEAR_PLAYER;
-import static de.amr.games.pacman.ui.fx._3d.scene.Perspective.CAM_TOTAL;
 import static de.amr.games.pacman.ui.fx.util.U.afterSeconds;
 import static de.amr.games.pacman.ui.fx.util.U.pause;
 
-import java.util.EnumMap;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.GameController;
@@ -63,6 +58,7 @@ import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.beans.Observable;
 import javafx.scene.AmbientLight;
+import javafx.scene.Camera;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
@@ -82,12 +78,13 @@ import javafx.scene.transform.Translate;
 public class PlayScene3D extends AbstractGameScene {
 
 	private final PacManModel3D model3D;
-	private final EnumMap<Perspective, CameraController<PlayScene3D>> cams = new EnumMap<>(Perspective.class);
 	private final Image floorImage = new Image(getClass().getResource("/common/escher-texture.jpg").toString());
 	private final CoordinateSystem coordSystem = new CoordinateSystem(1000);
 
+	public CameraController<PlayScene3D> currentCamController;
+	public Pac3D player3D;
+
 	private Maze3D maze3D;
-	Pac3D player3D; // must be accessible by cam controllers
 	private Ghost3D[] ghosts3D;
 	private Bonus3D bonus3D;
 	private Score3D score3D;
@@ -108,19 +105,21 @@ public class PlayScene3D extends AbstractGameScene {
 			fxSubScene.heightProperty().bind(parent.heightProperty());
 			PerspectiveCamera cam = new PerspectiveCamera(true);
 			fxSubScene.setCamera(cam);
-			cams.put(CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer(cam));
-			cams.put(CAM_NEAR_PLAYER, new Cam_NearPlayer(cam));
-			cams.put(CAM_TOTAL, new Cam_Total(cam));
-			cams.put(CAM_DRONE, new Cam_Drone(cam));
-			parent.addEventHandler(KeyEvent.ANY, e -> camController().handle(e));
-			log("Subscene for game scene '%s' created, width=%.0f, height=%.0f", getClass().getName(), fxSubScene.getWidth(),
+			updatePerspective(cam);
+			parent.addEventHandler(KeyEvent.ANY, e -> currentCamController.handle(e));
+			log("Subscene created for game scene '%s', width=%.0f, height=%.0f", getClass().getName(), fxSubScene.getWidth(),
 					fxSubScene.getHeight());
 		}
 		return fxSubScene;
 	}
 
-	public CameraController<PlayScene3D> camController() {
-		return cams.get(Env.$perspective.get());
+	private void updatePerspective(Camera cam) {
+		currentCamController = switch (Env.$perspective.get()) {
+		case CAM_DRONE -> new Cam_Drone(cam);
+		case CAM_FOLLOWING_PLAYER -> new Cam_FollowingPlayer(cam);
+		case CAM_NEAR_PLAYER -> new Cam_NearPlayer(cam);
+		case CAM_TOTAL -> new Cam_Total(cam);
+		};
 	}
 
 	@Override
@@ -184,7 +183,7 @@ public class PlayScene3D extends AbstractGameScene {
 		bonus3D.update(game.bonus);
 		score3D.update(game.score, game.levelNumber, game.highscorePoints, game.highscoreLevel);
 		livesCounter3D.update(game.player.lives);
-		camController().update(this);
+		currentCamController.update(this);
 	}
 
 	private void buildMaze3D(World world, int mazeNumber, boolean withFood) {
@@ -196,12 +195,13 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	private void onPerspectiveChange(Observable unused) {
-		fxSubScene.setCamera(camController().cam()); // TODO why is this needed?
-		camController().reset();
+		updatePerspective(fxSubScene.getCamera());
+		fxSubScene.setCamera(currentCamController.cam()); // TODO why is this needed?
+		currentCamController.reset();
 		if (score3D != null) {
 			// TODO maybe there is some smarter way to keep the score in plain sight
-			score3D.rotationAxisProperty().bind(camController().cam().rotationAxisProperty());
-			score3D.rotateProperty().bind(camController().cam().rotateProperty());
+			score3D.rotationAxisProperty().bind(currentCamController.cam().rotationAxisProperty());
+			score3D.rotateProperty().bind(currentCamController.cam().rotateProperty());
 		}
 	}
 

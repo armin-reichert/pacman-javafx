@@ -137,8 +137,7 @@ public class GameUI extends DefaultGameEventHandler {
 		AbstractGameScene nextScene = gameSceneForCurrentState(Env.$3D.get());
 		if (currentScene != nextScene) {
 			if (currentScene != null) {
-				log("Change scene from '%s' to '%s'", currentScene.getClass().getName(),
-						nextScene.getClass().getName());
+				log("Change scene from '%s' to '%s'", currentScene.getClass().getName(), nextScene.getClass().getName());
 				currentScene.end();
 			} else {
 				log("Set scene to '%s'", nextScene.getClass().getName());
@@ -348,7 +347,7 @@ public class GameUI extends DefaultGameEventHandler {
 				} else {
 					Env.selectNextPerspective();
 				}
-				String perspective_key = Env.message(playScene.camController().getClass().getSimpleName());
+				String perspective_key = Env.message(playScene.currentCamController.getClass().getSimpleName());
 				String message = Env.message("camera_perspective", perspective_key);
 				FlashMessageView.showFlashMessage(1, message);
 			}
