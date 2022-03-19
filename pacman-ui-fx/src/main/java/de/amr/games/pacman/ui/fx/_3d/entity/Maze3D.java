@@ -145,7 +145,7 @@ public class Maze3D extends Group {
 	}
 
 	public void update(GameModel game) {
-		doors().forEach(door -> door.updateState(game));
+		doors().forEach(door -> door.update(game));
 	}
 
 	public Stream<Door3D> doors() {

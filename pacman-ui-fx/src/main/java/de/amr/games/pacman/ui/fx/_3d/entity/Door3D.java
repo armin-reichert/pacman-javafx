@@ -57,7 +57,7 @@ public class Door3D extends Box {
 		drawModeProperty().bind(Env.$drawMode3D);
 	}
 
-	public void updateState(GameModel game) {
+	public void update(GameModel game) {
 		setVisible(!isAnyGhostNearby(game.ghosts().filter(ghost -> ghost.is(ENTERING_HOUSE) || ghost.is(LEAVING_HOUSE))));
 	}
 
