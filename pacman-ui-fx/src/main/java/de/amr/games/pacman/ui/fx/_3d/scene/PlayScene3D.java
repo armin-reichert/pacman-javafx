@@ -215,9 +215,7 @@ public class PlayScene3D extends AbstractGameScene {
 		maze3D.foodNodes().forEach(foodNode -> {
 			foodNode.setVisible(!game.world.isFoodEaten(pelletInfo(foodNode).tile));
 		});
-		if (gameController.state == GameState.READY) {
-			maze3D.energizerAnimations().forEach(Animation::stop);
-		} else {
+		if (gameController.state == GameState.HUNTING || gameController.state == GameState.GHOST_DYING) {
 			maze3D.energizerAnimations().forEach(Animation::play);
 		}
 		AudioClip munching = sounds.getClip(GameSounds.PACMAN_MUNCH);
@@ -349,6 +347,7 @@ public class PlayScene3D extends AbstractGameScene {
 		}
 		case LEVEL_STARTING -> {
 			buildMaze3D(game.world, game.mazeNumber, true);
+			maze3D.energizerAnimations().forEach(Animation::stop);
 			levelCounter3D.update(game);
 			var message = Env.message("level_starting", game.levelNumber);
 			showFlashMessage(1, message);
@@ -356,6 +355,7 @@ public class PlayScene3D extends AbstractGameScene {
 		}
 		case LEVEL_COMPLETE -> {
 			sounds.stopAll();
+			maze3D.energizerAnimations().forEach(Animation::stop);
 			Stream.of(ghosts3D).forEach(Ghost3D::setNormalSkinColor);
 			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game.levelNumber);
 			new SequentialTransition( //
