@@ -160,7 +160,7 @@ public class HUD extends VBox {
 		p("Ctrl+R", "Maze resolution (SHIFT=Decrease)").when(gameScene.is3D());
 		p("Ctrl+S", "Speed (SHIFT=Decrease)").done();
 		p("Ctrl+X", "Axes On/Off").when(gameScene.is3D());
-		p("Ctrl+Y", "Toggle tile grid").done();
+		p("Ctrl+Y", "Toggle tile grid").when(!gameScene.is3D());
 		p("Ctrl+3", "3D Play Scene On/Off").done();
 
 		textUI.setText(text.toString());
