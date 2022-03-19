@@ -66,6 +66,9 @@ public class Door3D extends Box {
 	}
 
 	private boolean isGhostNearby(Ghost ghost) {
+		if (!ghost.visible) {
+			return false;
+		}
 		V2i ghostTile = ghost.tile();
 		return Math.abs(ghostTile.x - tile.x) <= 1 || Math.abs(ghostTile.y - tile.y) <= 1;
 	}
