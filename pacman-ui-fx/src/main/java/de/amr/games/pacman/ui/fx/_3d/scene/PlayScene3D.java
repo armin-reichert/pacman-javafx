@@ -53,7 +53,6 @@ import de.amr.games.pacman.ui.fx._3d.entity.Score3D;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
-import de.amr.games.pacman.ui.fx.shell.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.CoordinateSystem;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
@@ -298,7 +297,7 @@ public class PlayScene3D extends AbstractGameScene {
 
 	@Override
 	public void onExtraLife(GameEvent e) {
-		FlashMessageView.showFlashMessage(1.5, Env.message("extra_life"));
+		showFlashMessage(1.5, Env.message("extra_life"));
 		sounds.play(GameSounds.EXTRA_LIFE);
 	}
 
