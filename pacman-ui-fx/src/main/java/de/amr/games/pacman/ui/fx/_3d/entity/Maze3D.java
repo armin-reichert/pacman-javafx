@@ -120,11 +120,11 @@ public class Maze3D extends Group {
 	}
 
 	public Stream<Energizer3D> energizerNodes() {
-		return pelletNodes().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
+		return pelletGroup.getChildren().stream().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
 	}
 
 	public Optional<Pellet3D> foodAt(V2i tile) {
-		return pelletNodes().filter(Pellet3D.class::isInstance).filter(pellet -> pellet.tile.equals(tile)).findFirst();
+		return pelletNodes().filter(pellet -> pellet.tile.equals(tile)).findFirst();
 	}
 
 	public void hideFood(Node node) {
