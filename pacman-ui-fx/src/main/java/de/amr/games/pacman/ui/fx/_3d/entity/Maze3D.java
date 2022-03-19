@@ -63,7 +63,7 @@ public class Maze3D extends Group {
 
 	private final Group wallsGroup = new Group();
 	private final Group doorsGroup = new Group();
-	private final Group pelletGroup = new Group();
+	private final Group pelletsGroup = new Group();
 
 	private final PhongMaterial floorMaterial = new PhongMaterial();
 	private Image floorTexture;
@@ -71,17 +71,15 @@ public class Maze3D extends Group {
 	/**
 	 * Creates the 3D-maze base structure (without walls, doors, food).
 	 * 
-	 * @param mazeWidth    maze width in units
-	 * @param mazeHeight   maze height in units
-	 * @param floorTexture floor texture
-	 * @param floorColor   floor color
+	 * @param mazeWidth  maze width in units
+	 * @param mazeHeight maze height in units
 	 */
 	public Maze3D(double mazeWidth, double mazeHeight) {
 		Box floor = new Box(mazeWidth - 1, mazeHeight - 1, 0.01);
 		floor.setMaterial(floorMaterial);
 		floor.getTransforms().add(new Translate(0.5 * floor.getWidth(), 0.5 * floor.getHeight(), 0.5 * floor.getDepth()));
 		floor.drawModeProperty().bind(Env.$drawMode3D);
-		getChildren().addAll(floor, new Group(wallsGroup, doorsGroup), pelletGroup);
+		getChildren().addAll(floor, wallsGroup, doorsGroup, pelletsGroup);
 		setFloorColor(Color.BLUE);
 	}
 
@@ -116,11 +114,11 @@ public class Maze3D extends Group {
 	}
 
 	public Stream<Pellet3D> pelletNodes() {
-		return pelletGroup.getChildren().stream().map(Pellet3D.class::cast);
+		return pelletsGroup.getChildren().stream().map(Pellet3D.class::cast);
 	}
 
 	public Stream<Energizer3D> energizerNodes() {
-		return pelletGroup.getChildren().stream().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
+		return pelletsGroup.getChildren().stream().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
 	}
 
 	public Optional<Pellet3D> foodAt(V2i tile) {
@@ -164,7 +162,7 @@ public class Maze3D extends Group {
 		var pellets = world.tiles().filter(world::isFoodTile)
 				.map(tile -> world.isEnergizerTile(tile) ? new Energizer3D(tile, material) : new Pellet3D(tile, material))
 				.collect(Collectors.toList());
-		pelletGroup.getChildren().setAll(pellets);
+		pelletsGroup.getChildren().setAll(pellets);
 	}
 
 	public Stream<Animation> energizerAnimations() {
