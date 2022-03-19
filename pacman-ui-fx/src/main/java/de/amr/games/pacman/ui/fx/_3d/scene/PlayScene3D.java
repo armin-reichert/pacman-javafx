@@ -222,7 +222,7 @@ public class PlayScene3D extends AbstractGameScene {
 	 * TODO: still incomplete
 	 */
 	private void keepInSyncWith2DScene() {
-		maze3D.pelletNodes().forEach(foodNode -> {
+		maze3D.pellets().forEach(foodNode -> {
 			foodNode.setVisible(!game.world.isFoodEaten(foodNode.tile));
 		});
 		if (gameController.state == GameState.HUNTING || gameController.state == GameState.GHOST_DYING) {

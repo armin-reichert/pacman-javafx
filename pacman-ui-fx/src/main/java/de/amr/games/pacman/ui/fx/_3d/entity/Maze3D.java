@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -97,7 +96,7 @@ public class Maze3D extends Group {
 	}
 
 	public void reset() {
-		energizerNodes().forEach(node -> {
+		energizers().forEach(node -> {
 			node.setScaleX(1.0);
 			node.setScaleY(1.0);
 			node.setScaleZ(1.0);
@@ -112,25 +111,23 @@ public class Maze3D extends Group {
 		return doorsGroup.getChildren().stream().map(Door3D.class::cast);
 	}
 
-	public Stream<Pellet3D> pelletNodes() {
+	public Stream<Pellet3D> pellets() {
 		return pelletsGroup.getChildren().stream().map(Pellet3D.class::cast);
 	}
 
-	public Stream<Energizer3D> energizerNodes() {
-		return pelletsGroup.getChildren().stream().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
+	public Optional<Pellet3D> pelletAt(V2i tile) {
+		return pellets().filter(pellet -> pellet.tile.equals(tile)).findFirst();
 	}
 
-	public Optional<Pellet3D> pelletAt(V2i tile) {
-		return pelletNodes().filter(pellet -> pellet.tile.equals(tile)).findFirst();
+	public Stream<Energizer3D> energizers() {
+		return pelletsGroup.getChildren().stream().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
 	}
 
 	public void hidePellet(Pellet3D pellet) {
 		pellet.setVisible(false);
 		if (Energizer3D.class.isInstance(pellet)) {
 			Energizer3D energizer = (Energizer3D) pellet;
-			if (energizer.animation != null) {
-				energizer.animation.stop();
-			}
+			energizer.animation.stop();
 		}
 	}
 
@@ -165,7 +162,7 @@ public class Maze3D extends Group {
 	}
 
 	public Stream<Animation> energizerAnimations() {
-		return energizerNodes().map(energizer -> energizer.animation).filter(Objects::nonNull);
+		return energizers().map(energizer -> energizer.animation);
 	}
 
 	public Animation createMazeFlashingAnimation(int times) {
