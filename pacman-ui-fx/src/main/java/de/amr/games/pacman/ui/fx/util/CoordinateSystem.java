@@ -42,13 +42,23 @@ public class CoordinateSystem extends Group {
 		origin.setMaterial(new PhongMaterial(Color.CHOCOLATE));
 
 		Cylinder xAxis = createAxis(Color.RED.brighter(), axisLength);
-		Cylinder yAxis = createAxis(Color.GREEN.brighter(), axisLength);
-		Cylinder zAxis = createAxis(Color.BLUE.brighter(), axisLength / 2);
-
 		xAxis.getTransforms().add(new Rotate(90, Rotate.Z_AXIS));
-		zAxis.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
+		Sphere xAxisMarker = new Sphere(1);
+		xAxisMarker.setMaterial(new PhongMaterial(Color.RED));
+		xAxisMarker.setTranslateX(10);
 
-		getChildren().addAll(origin, xAxis, yAxis, zAxis);
+		Cylinder yAxis = createAxis(Color.GREEN.brighter(), axisLength);
+		Sphere yAxisMarker = new Sphere(1);
+		yAxisMarker.setMaterial(new PhongMaterial(Color.GREEN));
+		yAxisMarker.setTranslateY(10);
+
+		Cylinder zAxis = createAxis(Color.BLUE.brighter(), axisLength / 2);
+		zAxis.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
+		Sphere zAxisMarker = new Sphere(1);
+		zAxisMarker.setMaterial(new PhongMaterial(Color.BLUE));
+		zAxisMarker.setTranslateZ(10);
+
+		getChildren().addAll(origin, xAxis, xAxisMarker, yAxis, yAxisMarker, zAxis, zAxisMarker);
 	}
 
 	// Cylinder height points to y-direction
