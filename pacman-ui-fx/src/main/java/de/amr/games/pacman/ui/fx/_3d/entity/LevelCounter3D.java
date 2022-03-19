@@ -48,18 +48,15 @@ public class LevelCounter3D extends Group {
 
 	private static final int MAX_ENTRIES = 7;
 
-	private final GameModel game;
 	private final Rendering2D r2D;
 	private final V2d rightPosition;
 
-	public LevelCounter3D(GameModel game, Rendering2D r2D, double x, double y) {
-		this.game = game;
+	public LevelCounter3D(Rendering2D r2D, double x, double y) {
 		this.r2D = r2D;
 		this.rightPosition = new V2d(x, y);
-		update();
 	}
 
-	public void update() {
+	public void update(GameModel game) {
 		// NOTE: all variables named *Number are starting at 1
 		int firstLevelNumber = Math.max(1, game.levelNumber - MAX_ENTRIES + 1);
 		getChildren().clear();

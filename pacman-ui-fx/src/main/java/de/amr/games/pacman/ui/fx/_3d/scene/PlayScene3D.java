@@ -151,7 +151,8 @@ public class PlayScene3D extends AbstractGameScene {
 		livesCounter3D.getTransforms().add(new Translate(TS, TS, -HTS));
 		livesCounter3D.setVisible(!gameController.attractMode);
 
-		levelCounter3D = new LevelCounter3D(game, r2D, width - TS, TS);
+		levelCounter3D = new LevelCounter3D(r2D, width - TS, TS);
+		levelCounter3D.update(game);
 
 		Group playground = new Group();
 		playground.getChildren().addAll(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
@@ -348,7 +349,7 @@ public class PlayScene3D extends AbstractGameScene {
 		}
 		case LEVEL_STARTING -> {
 			buildMaze3D(game.world, game.mazeNumber, true);
-			levelCounter3D.update();
+			levelCounter3D.update(game);
 			var message = Env.message("level_starting", game.levelNumber);
 			showFlashMessage(1, message);
 			afterSeconds(3, () -> gameController.stateTimer().expire()).play();
