@@ -124,8 +124,7 @@ public class Maze3D extends Group {
 	}
 
 	public Optional<Pellet3D> foodAt(V2i tile) {
-		return foodNodes().filter(this::isPellet3D).map(node -> node).filter(pellet -> pellet.tile.equals(tile))
-				.findFirst();
+		return foodNodes().filter(this::isPellet3D).filter(pellet -> pellet.tile.equals(tile)).findFirst();
 	}
 
 	public void hideFood(Node node) {
