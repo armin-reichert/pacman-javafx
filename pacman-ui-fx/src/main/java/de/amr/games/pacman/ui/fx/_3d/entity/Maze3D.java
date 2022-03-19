@@ -43,7 +43,6 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -121,14 +120,14 @@ public class Maze3D extends Group {
 		return pelletsGroup.getChildren().stream().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
 	}
 
-	public Optional<Pellet3D> foodAt(V2i tile) {
+	public Optional<Pellet3D> pelletAt(V2i tile) {
 		return pelletNodes().filter(pellet -> pellet.tile.equals(tile)).findFirst();
 	}
 
-	public void hideFood(Node node) {
-		node.setVisible(false);
-		if (Energizer3D.class.isInstance(node)) {
-			Energizer3D energizer = (Energizer3D) node;
+	public void hidePellet(Pellet3D pellet) {
+		pellet.setVisible(false);
+		if (Energizer3D.class.isInstance(pellet)) {
+			Energizer3D energizer = (Energizer3D) pellet;
 			if (energizer.animation != null) {
 				energizer.animation.stop();
 			}

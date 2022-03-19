@@ -276,7 +276,7 @@ public class PlayScene3D extends AbstractGameScene {
 	public void onPlayerFoundFood(GameEvent e) {
 		// when cheat "eat all pellets" is used, no tile is present
 		e.tile.ifPresent(tile -> {
-			maze3D.foodAt(tile).ifPresent(maze3D::hideFood);
+			maze3D.pelletAt(tile).ifPresent(maze3D::hidePellet);
 			AudioClip munching = sounds.getClip(GameSounds.PACMAN_MUNCH);
 			if (!munching.isPlaying()) {
 				sounds.loop(GameSounds.PACMAN_MUNCH, Animation.INDEFINITE);
