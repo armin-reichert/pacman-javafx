@@ -153,6 +153,7 @@ public class HUD extends VBox {
 		newline();
 		p("Ctrl+LEFT", "%s", Env.prevPerspectiveName()).when(gameScene.is3D());
 		p("Ctrl+RIGHT", "%s", Env.nextPerspectiveName()).when(gameScene.is3D());
+		p("Ctrl+F", "Toggle Floor Texture").when(gameScene.is3D());
 		p("Ctrl+H", "Wall Height (SHIFT=Decrease)").when(gameScene.is3D());
 		p("Ctrl+I", "Information On/Off").done();
 		p("Ctrl+L", "Wireframe Mode On/Off").when(gameScene.is3D());

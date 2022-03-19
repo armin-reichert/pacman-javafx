@@ -62,7 +62,7 @@ public class Cam_Total implements CameraController {
 
 	@Override
 	public void handle(KeyEvent e) {
-		if (e.isControlDown()) {
+		if (e.isAltDown()) {
 			switch (e.getCode()) {
 			case DIGIT0:
 				cam().setTranslateX(0);
