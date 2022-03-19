@@ -70,21 +70,7 @@ public class GameUI extends DefaultGameEventHandler {
 	private static final int TILES_X = 28, TILES_Y = 36;
 	private static final double ASPECT_RATIO = (double) TILES_X / TILES_Y;
 
-	private final GameScenes gameScenes;
-
-	protected final GameController gameController;
-	protected final Stage stage;
-	protected final Canvas canvas;
-	private final Scene mainScene;
-	private final Group gameSceneRoot = new Group();
-	private final StackPane mainSceneRoot = new StackPane();
-
-	private final Background bg_black = U.colorBackground(Color.BLACK);
-	private final Background bg_blue = U.colorBackground(Color.CORNFLOWERBLUE);
-	private Background backgroundImage;
-	protected AbstractGameScene currentScene;
-
-	private Background randomBackground() {
+	private static Background randomBackground() {
 		switch (new Random().nextInt(3)) {
 		case 0:
 			return U.imageBackground("/common/wallpapers/beach.jpg");
@@ -96,6 +82,17 @@ public class GameUI extends DefaultGameEventHandler {
 			return U.imageBackground("/common/wallpapers/beach.jpg");
 		}
 	}
+
+	private final GameController gameController;
+	private final GameScenes gameScenes;
+	private final Stage stage;
+	private final Canvas canvas;
+	private final Scene mainScene;
+	private final Group gameSceneRoot = new Group();
+	private final StackPane mainSceneRoot = new StackPane();
+
+	private Background backgroundImage;
+	private AbstractGameScene currentScene;
 
 	public GameUI(Stage stage, GameController gameController, double height, boolean fullscreen) {
 		this.stage = stage;
@@ -129,7 +126,7 @@ public class GameUI extends DefaultGameEventHandler {
 
 	public void update() {
 		FlashMessageView.get().update();
-		HUD.get().update(this);
+		HUD.get().update(gameController, currentScene, stage, canvas);
 	}
 
 	public void updateGameScene() {
@@ -176,9 +173,11 @@ public class GameUI extends DefaultGameEventHandler {
 
 	private void updateBackground(AbstractGameScene scene) {
 		if (scene.is3D()) {
-			mainSceneRoot.setBackground(Env.$drawMode3D.get() == DrawMode.LINE ? bg_black : backgroundImage);
+			mainSceneRoot.setBackground(Env.$drawMode3D.get() == DrawMode.LINE //
+					? U.colorBackground(Color.BLACK)
+					: backgroundImage);
 		} else {
-			mainSceneRoot.setBackground(bg_blue);
+			mainSceneRoot.setBackground(U.colorBackground(Color.CORNFLOWERBLUE));
 		}
 	}
 
