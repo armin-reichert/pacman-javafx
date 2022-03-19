@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
 import java.util.Objects;
@@ -39,7 +38,6 @@ import de.amr.games.pacman.ui.fx._3d.animation.RaiseAndLowerWallAnimation;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
-import javafx.animation.ScaleTransition;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -50,7 +48,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
@@ -60,55 +57,6 @@ import javafx.util.Duration;
  * @author Armin Reichert
  */
 public class Maze3D extends Group {
-
-	public static class PelletInfo {
-		public final V2i tile;
-		public final boolean energizer;
-		public final Animation animation;
-
-		private PelletInfo(V2i tile, boolean energizer, Animation animation) {
-			this.tile = tile;
-			this.energizer = energizer;
-			this.animation = animation;
-		}
-	}
-
-	public static PelletInfo pelletInfo(Node node) {
-		return (PelletInfo) node.getUserData();
-	}
-
-	private static Node makePellet(V2i tile, PhongMaterial pelletMaterial) {
-		var pellet = new Sphere(1);
-		pellet.setMaterial(pelletMaterial);
-		pellet.setTranslateX(tile.x * TS + HTS);
-		pellet.setTranslateY(tile.y * TS + HTS);
-		pellet.setTranslateZ(-3);
-		pellet.setUserData(new PelletInfo(tile, false, null));
-		return pellet;
-	}
-
-	private static Node makeEnergizer(V2i tile, PhongMaterial pelletMaterial) {
-		var pellet = new Sphere(2.5);
-		pellet.setMaterial(pelletMaterial);
-		pellet.setTranslateX(tile.x * TS + HTS);
-		pellet.setTranslateY(tile.y * TS + HTS);
-		pellet.setTranslateZ(-3);
-		pellet.setUserData(new PelletInfo(tile, true, createEnergizerAnimation(pellet)));
-		return pellet;
-	}
-
-	private static Animation createEnergizerAnimation(Node pellet) {
-		var anim = new ScaleTransition(Duration.seconds(1.0 / 6), pellet);
-		anim.setAutoReverse(true);
-		anim.setCycleCount(Animation.INDEFINITE);
-		anim.setFromX(1.0);
-		anim.setFromY(1.0);
-		anim.setFromZ(1.0);
-		anim.setToX(0.1);
-		anim.setToY(0.1);
-		anim.setToZ(0.1);
-		return anim;
-	}
 
 	public final DoubleProperty $wallHeight = new SimpleDoubleProperty(2.0);
 	public final IntegerProperty $resolution = new SimpleIntegerProperty(8);
@@ -167,24 +115,35 @@ public class Maze3D extends Group {
 		return doorsGroup.getChildren().stream().map(node -> (Door3D) node);
 	}
 
-	public Stream<Node> foodNodes() {
-		return foodGroup.getChildren().stream();
+	public Stream<Pellet3D> foodNodes() {
+		return foodGroup.getChildren().stream().map(node -> (Pellet3D) node);
 	}
 
-	public Stream<Node> energizerNodes() {
-		return foodNodes().filter(node -> pelletInfo(node).energizer);
+	public Stream<Energizer3D> energizerNodes() {
+		return foodNodes().filter(this::isEnergizer3D).map(node -> (Energizer3D) node);
 	}
 
-	public Optional<Node> foodAt(V2i tile) {
-		return foodNodes().filter(node -> pelletInfo(node).tile.equals(tile)).findFirst();
+	public Optional<Pellet3D> foodAt(V2i tile) {
+		return foodNodes().filter(this::isPellet3D).map(node -> node).filter(pellet -> pellet.tile.equals(tile))
+				.findFirst();
 	}
 
 	public void hideFood(Node node) {
 		node.setVisible(false);
-		PelletInfo info = pelletInfo(node);
-		if (info.animation != null) {
-			info.animation.stop();
+		if (isEnergizer3D(node)) {
+			Energizer3D energizer = (Energizer3D) node;
+			if (energizer.animation != null) {
+				energizer.animation.stop();
+			}
 		}
+	}
+
+	private boolean isPellet3D(Node node) {
+		return node instanceof Pellet3D;
+	}
+
+	private boolean isEnergizer3D(Node node) {
+		return node instanceof Energizer3D;
 	}
 
 	/**
@@ -212,13 +171,13 @@ public class Maze3D extends Group {
 	public void buildFood(World world, Color pelletColor) {
 		var material = new PhongMaterial(pelletColor);
 		var pellets = world.tiles().filter(world::isFoodTile)
-				.map(tile -> world.isEnergizerTile(tile) ? makeEnergizer(tile, material) : makePellet(tile, material))
+				.map(tile -> world.isEnergizerTile(tile) ? new Energizer3D(tile, material) : new Pellet3D(tile, material))
 				.collect(Collectors.toList());
 		foodGroup.getChildren().setAll(pellets);
 	}
 
 	public Stream<Animation> energizerAnimations() {
-		return energizerNodes().map(node -> pelletInfo(node).animation).filter(Objects::nonNull);
+		return energizerNodes().map(energizer -> energizer.animation).filter(Objects::nonNull);
 	}
 
 	public Animation createMazeFlashingAnimation(int times) {

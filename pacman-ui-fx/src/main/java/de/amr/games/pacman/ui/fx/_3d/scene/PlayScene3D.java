@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
-import static de.amr.games.pacman.ui.fx._3d.entity.Maze3D.pelletInfo;
 import static de.amr.games.pacman.ui.fx.shell.FlashMessageView.showFlashMessage;
 import static de.amr.games.pacman.ui.fx.util.U.afterSeconds;
 import static de.amr.games.pacman.ui.fx.util.U.pause;
@@ -224,7 +223,7 @@ public class PlayScene3D extends AbstractGameScene {
 	 */
 	private void keepInSyncWith2DScene() {
 		maze3D.foodNodes().forEach(foodNode -> {
-			foodNode.setVisible(!game.world.isFoodEaten(pelletInfo(foodNode).tile));
+			foodNode.setVisible(!game.world.isFoodEaten(foodNode.tile));
 		});
 		if (gameController.state == GameState.HUNTING || gameController.state == GameState.GHOST_DYING) {
 			maze3D.energizerAnimations().forEach(Animation::play);
