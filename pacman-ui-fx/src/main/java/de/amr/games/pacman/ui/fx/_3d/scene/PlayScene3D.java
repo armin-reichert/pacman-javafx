@@ -27,6 +27,7 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.ui.fx._3d.entity.Maze3D.pelletInfo;
+import static de.amr.games.pacman.ui.fx.shell.FlashMessageView.showFlashMessage;
 import static de.amr.games.pacman.ui.fx.util.U.afterSeconds;
 import static de.amr.games.pacman.ui.fx.util.U.pause;
 
@@ -354,7 +355,7 @@ public class PlayScene3D extends AbstractGameScene {
 			buildMaze3D(game.world, game.mazeNumber, true);
 			levelCounter3D.update();
 			var message = Env.message("level_starting", game.levelNumber);
-			FlashMessageView.showFlashMessage(1, message);
+			showFlashMessage(1, message);
 			afterSeconds(3, () -> gameController.stateTimer().expire()).play();
 		}
 		case LEVEL_COMPLETE -> {
@@ -362,15 +363,15 @@ public class PlayScene3D extends AbstractGameScene {
 			Stream.of(ghosts3D).forEach(Ghost3D::setNormalSkinColor);
 			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game.levelNumber);
 			new SequentialTransition( //
-					pause(1), //
+					pause(2), //
 					maze3D.createMazeFlashingAnimation(game.numFlashes), //
 					afterSeconds(1, () -> game.player.hide()), //
-					afterSeconds(1, () -> FlashMessageView.showFlashMessage(2, message)), //
+					afterSeconds(1, () -> showFlashMessage(2, message)), //
 					afterSeconds(2.5, () -> gameController.stateTimer().expire())).play();
 		}
 		case GAME_OVER -> {
 			sounds.stopAll();
-			FlashMessageView.showFlashMessage(3, Env.GAME_OVER_TALK.next());
+			showFlashMessage(3, Env.GAME_OVER_TALK.next());
 		}
 		default -> {
 		}
