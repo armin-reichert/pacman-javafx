@@ -30,8 +30,8 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
-import javafx.animation.Transition;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
@@ -83,7 +83,7 @@ public class LevelCounter3D extends Group {
 		cube.setMaterial(material);
 		RotateTransition spinning = new RotateTransition(Duration.seconds(6), cube);
 		spinning.setAxis(Rotate.X_AXIS);
-		spinning.setCycleCount(Transition.INDEFINITE);
+		spinning.setCycleCount(Animation.INDEFINITE);
 		spinning.setByAngle(360);
 		spinning.setRate(forward ? 1 : -1);
 		spinning.play();

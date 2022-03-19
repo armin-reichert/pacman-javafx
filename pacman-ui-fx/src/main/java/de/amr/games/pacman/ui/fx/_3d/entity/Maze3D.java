@@ -40,7 +40,6 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
-import javafx.animation.Transition;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -101,7 +100,7 @@ public class Maze3D extends Group {
 	private static Animation createEnergizerAnimation(Node pellet) {
 		var anim = new ScaleTransition(Duration.seconds(1.0 / 6), pellet);
 		anim.setAutoReverse(true);
-		anim.setCycleCount(Transition.INDEFINITE);
+		anim.setCycleCount(Animation.INDEFINITE);
 		anim.setFromX(1.0);
 		anim.setFromY(1.0);
 		anim.setFromZ(1.0);

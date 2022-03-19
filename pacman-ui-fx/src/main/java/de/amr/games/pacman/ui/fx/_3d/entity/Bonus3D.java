@@ -28,8 +28,8 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 
 import de.amr.games.pacman.model.pacman.Bonus;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
-import javafx.animation.Transition;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -81,7 +81,7 @@ public class Bonus3D extends Box {
 		setVisible(true);
 		rotation.stop();
 		rotation.setRate(1);
-		rotation.setCycleCount(Transition.INDEFINITE);
+		rotation.setCycleCount(Animation.INDEFINITE);
 		rotation.play();
 	}
 
