@@ -80,7 +80,7 @@ public class PlayScene3D extends AbstractGameScene {
 	private final Image floorImage = new Image(getClass().getResource("/common/escher-texture.jpg").toString());
 	private final CoordinateSystem coordSystem = new CoordinateSystem(1000);
 
-	public CameraController currentCamController;
+	public CameraController camController;
 
 	private Pac3D player3D;
 	private Maze3D maze3D;
@@ -97,18 +97,17 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	@Override
-	public SubScene createSubScene(Scene parent) {
+	public void createFXSubScene(Scene parent) {
 		if (fxSubScene == null) {
 			fxSubScene = new SubScene(new Group(), parent.getWidth(), parent.getHeight(), true, SceneAntialiasing.BALANCED);
 			fxSubScene.widthProperty().bind(parent.widthProperty());
 			fxSubScene.heightProperty().bind(parent.heightProperty());
 			PerspectiveCamera cam = new PerspectiveCamera(true);
 			fxSubScene.setCamera(cam);
-			parent.addEventHandler(KeyEvent.ANY, e -> currentCamController.handle(e));
+			parent.addEventHandler(KeyEvent.ANY, e -> camController.handle(e));
 			log("Subscene created for game scene '%s', width=%.0f, height=%.0f", getClass().getName(), fxSubScene.getWidth(),
 					fxSubScene.getHeight());
 		}
-		return fxSubScene;
 	}
 
 	private void updatePerspective() {
@@ -116,13 +115,13 @@ public class PlayScene3D extends AbstractGameScene {
 			return;
 		}
 		Camera cam = fxSubScene.getCamera();
-		currentCamController = switch (Env.$perspective.get()) {
+		camController = switch (Env.$perspective.get()) {
 		case CAM_DRONE -> new Cam_Drone(cam, player3D);
 		case CAM_FOLLOWING_PLAYER -> new Cam_FollowingPlayer(cam, player3D);
 		case CAM_NEAR_PLAYER -> new Cam_NearPlayer(cam, player3D);
 		case CAM_TOTAL -> new Cam_Total(cam);
 		};
-		currentCamController.reset();
+		camController.reset();
 	}
 
 	@Override
@@ -186,7 +185,7 @@ public class PlayScene3D extends AbstractGameScene {
 		bonus3D.update(game.bonus);
 		score3D.update(game.score, game.levelNumber, game.highscorePoints, game.highscoreLevel);
 		livesCounter3D.update(game.player.lives);
-		currentCamController.update();
+		camController.update();
 	}
 
 	private void buildMaze3D(World world, int mazeNumber, boolean withFood) {
@@ -201,8 +200,8 @@ public class PlayScene3D extends AbstractGameScene {
 		updatePerspective();
 		if (score3D != null) {
 			// TODO maybe there is some smarter way to keep the score in plain sight
-			score3D.rotationAxisProperty().bind(currentCamController.cam().rotationAxisProperty());
-			score3D.rotateProperty().bind(currentCamController.cam().rotateProperty());
+			score3D.rotationAxisProperty().bind(camController.cam().rotationAxisProperty());
+			score3D.rotateProperty().bind(camController.cam().rotateProperty());
 		}
 	}
 

@@ -34,7 +34,7 @@ import javafx.scene.Scene;
 import javafx.scene.SubScene;
 
 /**
- * Base class for all scenes (2D and 3D).
+ * Base class for all game scenes (2D and 3D). Each game scene has a corresponding JavaFX subscene of the main scene.
  * 
  * @author Armin Reichert
  */
@@ -42,9 +42,9 @@ public abstract class AbstractGameScene extends DefaultGameEventHandler {
 
 	protected final GameController gameController;
 	protected GameModel game;
-	protected SubScene fxSubScene;
 	protected SoundManager sounds;
 	protected Rendering2D r2D;
+	protected SubScene fxSubScene;
 
 	public AbstractGameScene(GameController gameController) {
 		this.gameController = gameController;
@@ -56,9 +56,9 @@ public abstract class AbstractGameScene extends DefaultGameEventHandler {
 		this.sounds = sounds;
 	}
 
-	public abstract SubScene createSubScene(Scene parent);
+	public abstract void createFXSubScene(Scene parent);
 
-	public SubScene getSubScene() {
+	public SubScene getFXSubScene() {
 		return fxSubScene;
 	}
 

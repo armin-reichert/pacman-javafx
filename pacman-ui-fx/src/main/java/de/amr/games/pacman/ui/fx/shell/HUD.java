@@ -122,7 +122,7 @@ public class HUD extends VBox {
 		p("Autopilot", "%s", on_off(gameCtrl.autoControlled)).done();
 		p("Immunity", "%s", on_off(game.player.immune)).done();
 		p("Game Scene", "%s", gameScene.getClass().getSimpleName()).done();
-		p("", "w=%.0f h=%.0f", gameScene.getSubScene().getWidth(), gameScene.getSubScene().getHeight()).done();
+		p("", "w=%.0f h=%.0f", gameScene.getFXSubScene().getWidth(), gameScene.getFXSubScene().getHeight()).done();
 		p("Window Size", "w=%.0f h=%.0f", width, height).done();
 		p("Scene Size", "w=%.0f h=%.0f", sceneWidth, sceneHeight).done();
 		p("3D Scenes", "%s", on_off(Env.$3D.get())).done();
@@ -130,7 +130,7 @@ public class HUD extends VBox {
 			// Currently PlayScene3D is the only 3D scene
 			var scene3D = (PlayScene3D) gameScene;
 			p("Perspective", "%s", Env.$perspective.get()).done();
-			p("Camera", "%s", scene3D.currentCamController.info()).done();
+			p("Camera", "%s", scene3D.camController.info()).done();
 			p("Draw Mode", "%s", Env.$drawMode3D.get()).done();
 			p("Axes", "%s", on_off(Env.$axesVisible.get())).done();
 		} else {

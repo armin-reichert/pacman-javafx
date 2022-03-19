@@ -151,15 +151,15 @@ public class GameUI extends DefaultGameEventHandler {
 		AbstractGameScene nextScene = gameSceneForCurrentState(Env.$3D.get());
 		if (currentScene != nextScene) {
 			if (currentScene != null) {
-				log("Change scene from '%s' to '%s'", currentScene.getClass().getName(),
-						nextScene.getClass().getName());
+				log("Change scene from '%s' to '%s'", currentScene.getClass().getName(), nextScene.getClass().getName());
 				currentScene.end();
 			} else {
 				log("Set scene to '%s'", nextScene.getClass().getName());
 			}
 			updateSceneContext(nextScene);
 			// TODO: when the 2D subscene is cached (as is in the 3D case), strange things happen. Why?
-			gameSceneRoot.getChildren().setAll(nextScene.createSubScene(mainScene));
+			nextScene.createFXSubScene(mainScene);
+			gameSceneRoot.getChildren().setAll(nextScene.getFXSubScene());
 			nextScene.init();
 			currentScene = nextScene;
 		}
@@ -365,7 +365,7 @@ public class GameUI extends DefaultGameEventHandler {
 				} else {
 					Env.selectNextPerspective();
 				}
-				String perspective_key = Env.message(playScene.currentCamController.getClass().getSimpleName());
+				String perspective_key = Env.message(playScene.camController.getClass().getSimpleName());
 				String message = Env.message("camera_perspective", perspective_key);
 				FlashMessageView.showFlashMessage(1, message);
 			}

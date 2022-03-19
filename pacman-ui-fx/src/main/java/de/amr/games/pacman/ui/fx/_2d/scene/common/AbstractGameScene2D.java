@@ -56,12 +56,11 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	}
 
 	@Override
-	public SubScene createSubScene(Scene parent) {
+	public void createFXSubScene(Scene parent) {
 		Canvas canvas = gc.getCanvas();
 		fxSubScene = new SubScene(new StackPane(canvas), canvas.getWidth(), canvas.getHeight());
 		fxSubScene.widthProperty().bind(canvas.widthProperty());
 		fxSubScene.heightProperty().bind(canvas.heightProperty());
-		return fxSubScene;
 	}
 
 	@Override
