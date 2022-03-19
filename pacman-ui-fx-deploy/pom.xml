@@ -17,9 +17,17 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<release>15</release>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.tentackle</groupId>
 				<artifactId>tentackle-jlink-maven-plugin</artifactId>
-				<version>11.7.1.0</version>
+				<version>11.7.4.0</version>
 				<extensions>true</extensions>
 				<configuration>
 					<mainModule>de.amr.games.pacman.ui.fx</mainModule>
