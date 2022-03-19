@@ -117,6 +117,9 @@ public class Maze3D extends Group {
 	private final Group doorsGroup = new Group();
 	private final Group foodGroup = new Group();
 
+	private final PhongMaterial floorMaterial = new PhongMaterial();
+	private Image floorTexture;
+
 	/**
 	 * Creates the 3D-maze base structure (without walls, doors, food).
 	 * 
@@ -125,15 +128,27 @@ public class Maze3D extends Group {
 	 * @param floorTexture floor texture
 	 * @param floorColor   floor color
 	 */
-	public Maze3D(double mazeWidth, double mazeHeight, Image floorTexture, Color floorColor) {
-		var floorMaterial = new PhongMaterial(floorColor);
-		floorMaterial.setSpecularColor(floorColor.brighter());
-		floorMaterial.setDiffuseMap(floorTexture);
+	public Maze3D(double mazeWidth, double mazeHeight) {
 		Box floor = new Box(mazeWidth - 1, mazeHeight - 1, 0.01);
 		floor.setMaterial(floorMaterial);
 		floor.getTransforms().add(new Translate(0.5 * floor.getWidth(), 0.5 * floor.getHeight(), 0.5 * floor.getDepth()));
 		floor.drawModeProperty().bind(Env.$drawMode3D);
 		getChildren().addAll(floor, new Group(wallsGroup, doorsGroup), foodGroup);
+		setFloorColor(Color.BLUE);
+	}
+
+	public void setFloorColor(Color floorColor) {
+		floorMaterial.setDiffuseColor(floorColor);
+		floorMaterial.setSpecularColor(floorColor.brighter());
+	}
+
+	public void setFloorTexture(Image floorTexture) {
+		this.floorTexture = floorTexture;
+		floorMaterial.setDiffuseMap(floorTexture);
+	}
+
+	public Image getFloorTexture() {
+		return floorTexture;
 	}
 
 	public void reset() {

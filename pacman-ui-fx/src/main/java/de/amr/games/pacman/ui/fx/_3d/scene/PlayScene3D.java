@@ -110,6 +110,16 @@ public class PlayScene3D extends AbstractGameScene {
 		}
 	}
 
+	public void toggleFloorTexture() {
+		if (maze3D.getFloorTexture() == null) {
+			maze3D.setFloorTexture(floorImage);
+			maze3D.setFloorColor(Color.DARKBLUE);
+		} else {
+			maze3D.setFloorTexture(null);
+			maze3D.setFloorColor(Color.rgb(30, 30, 30));
+		}
+	}
+
 	private void updatePerspective() {
 		if (fxSubScene == null) {
 			return;
@@ -129,10 +139,11 @@ public class PlayScene3D extends AbstractGameScene {
 		final int width = game.world.numCols() * TS;
 		final int height = game.world.numRows() * TS;
 
-		maze3D = new Maze3D(width, height, floorImage, Color.rgb(30, 30, 120));
+		maze3D = new Maze3D(width, height);
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
 		maze3D.$resolution.addListener($1 -> buildMaze3D(game.world, game.mazeNumber, false));
+		maze3D.setFloorColor(Color.rgb(30, 30, 30));
 		buildMaze3D(game.world, game.mazeNumber, true);
 
 		player3D = new Pac3D(game.player, model3D);

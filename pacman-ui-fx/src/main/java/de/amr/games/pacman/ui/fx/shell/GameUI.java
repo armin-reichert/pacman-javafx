@@ -370,6 +370,13 @@ public class GameUI extends DefaultGameEventHandler {
 			}
 		}
 
+		case F -> {
+			if (currentScene instanceof PlayScene3D) {
+				PlayScene3D playScene = (PlayScene3D) currentScene;
+				playScene.toggleFloorTexture();
+			}
+		}
+
 		case H -> {
 			if (currentScene.is3D()) {
 				Env.changeMazeWallHeight(!e.isShiftDown());
