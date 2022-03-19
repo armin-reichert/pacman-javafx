@@ -63,7 +63,7 @@ public class Maze3D extends Group {
 
 	private final Group wallsGroup = new Group();
 	private final Group doorsGroup = new Group();
-	private final Group foodGroup = new Group();
+	private final Group pelletGroup = new Group();
 
 	private final PhongMaterial floorMaterial = new PhongMaterial();
 	private Image floorTexture;
@@ -81,7 +81,7 @@ public class Maze3D extends Group {
 		floor.setMaterial(floorMaterial);
 		floor.getTransforms().add(new Translate(0.5 * floor.getWidth(), 0.5 * floor.getHeight(), 0.5 * floor.getDepth()));
 		floor.drawModeProperty().bind(Env.$drawMode3D);
-		getChildren().addAll(floor, new Group(wallsGroup, doorsGroup), foodGroup);
+		getChildren().addAll(floor, new Group(wallsGroup, doorsGroup), pelletGroup);
 		setFloorColor(Color.BLUE);
 	}
 
@@ -112,37 +112,29 @@ public class Maze3D extends Group {
 	}
 
 	public Stream<Door3D> doors() {
-		return doorsGroup.getChildren().stream().map(node -> (Door3D) node);
+		return doorsGroup.getChildren().stream().map(Door3D.class::cast);
 	}
 
-	public Stream<Pellet3D> foodNodes() {
-		return foodGroup.getChildren().stream().map(node -> (Pellet3D) node);
+	public Stream<Pellet3D> pelletNodes() {
+		return pelletGroup.getChildren().stream().map(Pellet3D.class::cast);
 	}
 
 	public Stream<Energizer3D> energizerNodes() {
-		return foodNodes().filter(this::isEnergizer3D).map(node -> (Energizer3D) node);
+		return pelletNodes().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
 	}
 
 	public Optional<Pellet3D> foodAt(V2i tile) {
-		return foodNodes().filter(this::isPellet3D).filter(pellet -> pellet.tile.equals(tile)).findFirst();
+		return pelletNodes().filter(Pellet3D.class::isInstance).filter(pellet -> pellet.tile.equals(tile)).findFirst();
 	}
 
 	public void hideFood(Node node) {
 		node.setVisible(false);
-		if (isEnergizer3D(node)) {
+		if (Energizer3D.class.isInstance(node)) {
 			Energizer3D energizer = (Energizer3D) node;
 			if (energizer.animation != null) {
 				energizer.animation.stop();
 			}
 		}
-	}
-
-	private boolean isPellet3D(Node node) {
-		return node instanceof Pellet3D;
-	}
-
-	private boolean isEnergizer3D(Node node) {
-		return node instanceof Energizer3D;
 	}
 
 	/**
@@ -172,7 +164,7 @@ public class Maze3D extends Group {
 		var pellets = world.tiles().filter(world::isFoodTile)
 				.map(tile -> world.isEnergizerTile(tile) ? new Energizer3D(tile, material) : new Pellet3D(tile, material))
 				.collect(Collectors.toList());
-		foodGroup.getChildren().setAll(pellets);
+		pelletGroup.getChildren().setAll(pellets);
 	}
 
 	public Stream<Animation> energizerAnimations() {
