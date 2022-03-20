@@ -49,14 +49,14 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
 
-	public AbstractGameScene2D(GameController gameController, Canvas canvas, V2i unscaledSize) {
-		super(gameController);
+	public AbstractGameScene2D(Scene parent, GameController gameController, Canvas canvas, V2i unscaledSize) {
+		super(parent, gameController);
 		this.gc = canvas.getGraphicsContext2D();
 		this.unscaledSize = unscaledSize;
 	}
 
 	@Override
-	public void createFXSubScene(Scene parent) {
+	public void createFXSubScene() {
 		Canvas canvas = gc.getCanvas();
 		fxSubScene = new SubScene(new StackPane(canvas), canvas.getWidth(), canvas.getHeight());
 		fxSubScene.widthProperty().bind(canvas.widthProperty());

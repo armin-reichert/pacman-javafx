@@ -100,8 +100,6 @@ public class GameUI extends DefaultGameEventHandler {
 		this.canvas = new Canvas(); // common canvas of all 2D scenes
 		this.backgroundImage = randomBackground();
 
-		gameScenes = new GameScenes(gameController, canvas, new V2i(TILES_X, TILES_Y).scaled(TS));
-
 		mainSceneRoot.getChildren().addAll(gameSceneRoot, FlashMessageView.get(), HUD.get());
 		StackPane.setAlignment(HUD.get(), Pos.TOP_LEFT);
 		mainScene = new Scene(mainSceneRoot, ASPECT_RATIO * height, height);
@@ -111,6 +109,7 @@ public class GameUI extends DefaultGameEventHandler {
 		Env.$drawMode3D.addListener($1 -> updateBackground(currentScene));
 		Env.gameLoop.$fps.addListener($1 -> stage.setTitle(computeStageTitle()));
 
+		gameScenes = new GameScenes(mainScene, gameController, canvas, new V2i(TILES_X, TILES_Y).scaled(TS));
 		selectGameScene();
 
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> Env.gameLoop.stop());
@@ -148,14 +147,15 @@ public class GameUI extends DefaultGameEventHandler {
 		AbstractGameScene nextScene = gameSceneForCurrentState(Env.$3D.get());
 		if (currentScene != nextScene) {
 			if (currentScene != null) {
-				log("Change scene from '%s' to '%s'", currentScene.getClass().getName(), nextScene.getClass().getName());
+				log("Change scene from '%s' to '%s'", currentScene.getClass().getName(),
+						nextScene.getClass().getName());
 				currentScene.end();
 			} else {
 				log("Set scene to '%s'", nextScene.getClass().getName());
 			}
 			updateSceneContext(nextScene);
 			// TODO: when the 2D subscene is cached (as is in the 3D case), strange things happen. Why?
-			nextScene.createFXSubScene(mainScene);
+			nextScene.createFXSubScene();
 			gameSceneRoot.getChildren().setAll(nextScene.getFXSubScene());
 			nextScene.init();
 			currentScene = nextScene;

@@ -40,13 +40,15 @@ import javafx.scene.SubScene;
  */
 public abstract class AbstractGameScene extends DefaultGameEventHandler {
 
+	protected final Scene parent;
 	protected final GameController gameController;
 	protected GameModel game;
 	protected SoundManager sounds;
 	protected Rendering2D r2D;
 	protected SubScene fxSubScene;
 
-	public AbstractGameScene(GameController gameController) {
+	public AbstractGameScene(Scene parent, GameController gameController) {
+		this.parent = parent;
 		this.gameController = gameController;
 	}
 
@@ -56,7 +58,7 @@ public abstract class AbstractGameScene extends DefaultGameEventHandler {
 		this.sounds = sounds;
 	}
 
-	public abstract void createFXSubScene(Scene parent);
+	public abstract void createFXSubScene();
 
 	public SubScene getFXSubScene() {
 		return fxSubScene;

@@ -40,6 +40,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.pacman.Nail2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 
 /**
@@ -57,8 +58,8 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 	private TimedSeq<Rectangle2D> blinkyStretchedAnimation;
 	private TimedSeq<Rectangle2D> blinkyDamagedAnimation;
 
-	public PacMan_IntermissionScene2(GameController gameController, Canvas canvas, V2i unscaledSize) {
-		super(gameController, canvas, unscaledSize);
+	public PacMan_IntermissionScene2(Scene parent, GameController gameController, Canvas canvas, V2i unscaledSize) {
+		super(parent, gameController, canvas, unscaledSize);
 		sc = new Intermission2Controller(gameController);
 		sc.playIntermissionSound = () -> sounds.play(GameSounds.INTERMISSION_2);
 	}
