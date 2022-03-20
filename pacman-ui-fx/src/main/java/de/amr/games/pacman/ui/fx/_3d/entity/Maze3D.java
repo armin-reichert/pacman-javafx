@@ -209,6 +209,7 @@ public class Maze3D extends Group {
 
 	private void addWalls(FloorPlan floorPlan, World world, double brickSize, PhongMaterial baseMaterial,
 			PhongMaterial topMaterial) {
+
 		// horizontal
 		for (int y = 0; y < floorPlan.sizeY(); ++y) {
 			int leftX = -1;
@@ -268,8 +269,8 @@ public class Maze3D extends Group {
 		}
 
 		// corners
-		for (int y = 0; y < floorPlan.sizeY(); ++y) {
-			for (int x = 0; x < floorPlan.sizeX(); ++x) {
+		for (int x = 0; x < floorPlan.sizeX(); ++x) {
+			for (int y = 0; y < floorPlan.sizeY(); ++y) {
 				if (floorPlan.get(x, y) == FloorPlan.CORNER) {
 					addWall(x, y, 1, 1, brickSize, baseMaterial, topMaterial);
 				}
