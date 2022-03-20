@@ -41,7 +41,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
+import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameScenes;
 import de.amr.games.pacman.ui.fx.sound.mspacman.Sounds_MsPacMan;
 import de.amr.games.pacman.ui.fx.sound.pacman.Sounds_PacMan;
@@ -92,7 +92,7 @@ public class GameUI extends DefaultGameEventHandler {
 	private final StackPane mainSceneRoot = new StackPane();
 
 	private Background backgroundImage;
-	private AbstractGameScene currentScene;
+	private GameScene currentScene;
 
 	public GameUI(Stage stage, GameController gameController, double height, boolean fullscreen) {
 		this.stage = stage;
@@ -132,7 +132,7 @@ public class GameUI extends DefaultGameEventHandler {
 		currentScene.update();
 	}
 
-	private AbstractGameScene gameSceneForCurrentState(boolean _3D) {
+	private GameScene gameSceneForCurrentState(boolean _3D) {
 		var game = gameController.game;
 		int sceneIndex = switch (gameController.state) {
 		case INTRO -> 0;
@@ -144,7 +144,7 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	private void selectGameScene() {
-		AbstractGameScene nextScene = gameSceneForCurrentState(Env.$3D.get());
+		GameScene nextScene = gameSceneForCurrentState(Env.$3D.get());
 		if (currentScene != nextScene) {
 			if (currentScene != null) {
 				log("Change scene from '%s' to '%s'", currentScene.getClass().getName(),
@@ -161,7 +161,7 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 	}
 
-	private void updateSceneContext(AbstractGameScene gameScene) {
+	private void updateSceneContext(GameScene gameScene) {
 		switch (gameController.gameVariant) {
 		case MS_PACMAN -> gameScene.setContext(gameController.game, Rendering2D_MsPacMan.get(), Sounds_MsPacMan.get());
 		case PACMAN -> gameScene.setContext(gameController.game, Rendering2D_PacMan.get(), Sounds_PacMan.get());
@@ -170,7 +170,7 @@ public class GameUI extends DefaultGameEventHandler {
 		updateBackground(gameScene);
 	}
 
-	private void updateBackground(AbstractGameScene scene) {
+	private void updateBackground(GameScene scene) {
 		if (scene.is3D()) {
 			mainSceneRoot.setBackground(Env.$drawMode3D.get() == DrawMode.LINE //
 					? U.colorBackground(Color.BLACK)

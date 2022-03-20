@@ -47,7 +47,7 @@ import javafx.scene.canvas.Canvas;
  */
 public class GameScenes {
 
-	private final AbstractGameScene scenes[][][] = new AbstractGameScene[2][5][2];
+	private final GameScene scenes[][][] = new GameScene[2][5][2];
 
 	public GameScenes(Scene parent, GameController gameController, Canvas canvas, V2i unscaledSize) {
 		//@formatter:off
@@ -75,7 +75,7 @@ public class GameScenes {
 		//@formatter:on
 	}
 
-	public AbstractGameScene getScene(GameVariant gameVariant, int sceneIndex, int sceneVariant) {
+	public GameScene getScene(GameVariant gameVariant, int sceneIndex, int sceneVariant) {
 		return scenes[gameVariant.ordinal()][sceneIndex][sceneVariant];
 	}
 }

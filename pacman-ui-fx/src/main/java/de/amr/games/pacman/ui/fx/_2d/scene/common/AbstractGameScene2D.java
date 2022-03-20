@@ -26,10 +26,15 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
+import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
+import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
@@ -42,20 +47,44 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public abstract class AbstractGameScene2D extends AbstractGameScene {
+public abstract class AbstractGameScene2D extends DefaultGameEventHandler implements GameScene {
 
+	protected final Scene parent;
+	protected final GameController gameController;
+	protected GameModel game;
+	protected SoundManager sounds;
+	protected Rendering2D r2D;
+	protected SubScene fxSubScene;
 	protected V2i unscaledSize;
 	protected GraphicsContext gc;
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
 
 	public AbstractGameScene2D(Scene parent, GameController gameController, Canvas canvas, V2i unscaledSize) {
-		super(parent, gameController);
+		this.parent = parent;
+		this.gameController = gameController;
 		this.gc = canvas.getGraphicsContext2D();
 		this.unscaledSize = unscaledSize;
 		fxSubScene = new SubScene(new StackPane(), canvas.getWidth(), canvas.getHeight());
 		fxSubScene.widthProperty().bind(canvas.widthProperty());
 		fxSubScene.heightProperty().bind(canvas.heightProperty());
+	}
+
+	@Override
+	public void setContext(GameModel game, Rendering2D r2d, SoundManager sounds) {
+		this.game = game;
+		this.r2D = r2d;
+		this.sounds = sounds;
+	}
+
+	@Override
+	public SubScene getFXSubScene() {
+		return fxSubScene;
+	}
+
+	@Override
+	public SoundManager getSounds() {
+		return sounds;
 	}
 
 	@Override
@@ -84,6 +113,11 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 		if (Env.$tilesVisible.get()) {
 			drawTileBorders();
 		}
+	}
+
+	@Override
+	public void end() {
+		Logging.log("Scene '%s' ended", getClass().getName());
 	}
 
 	@Override

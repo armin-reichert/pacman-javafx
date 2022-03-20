@@ -23,56 +23,30 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.scene;
 
-import static de.amr.games.pacman.lib.Logging.log;
-
-import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
+import de.amr.games.pacman.controller.event.GameEventListener;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
-import javafx.scene.Scene;
 import javafx.scene.SubScene;
 
 /**
- * Base class for all game scenes (2D and 3D). Each game scene has a corresponding JavaFX subscene of the main scene.
+ * Interface implemented by all game scenes (2D and 3D).
  * 
  * @author Armin Reichert
  */
-public abstract class AbstractGameScene extends DefaultGameEventHandler {
+public interface GameScene extends GameEventListener {
 
-	protected final Scene parent;
-	protected final GameController gameController;
-	protected GameModel game;
-	protected SoundManager sounds;
-	protected Rendering2D r2D;
-	protected SubScene fxSubScene;
+	void setContext(GameModel game, Rendering2D r2D, SoundManager sounds);
 
-	public AbstractGameScene(Scene parent, GameController gameController) {
-		this.parent = parent;
-		this.gameController = gameController;
-	}
+	SubScene getFXSubScene();
 
-	public void setContext(GameModel game, Rendering2D r2D, SoundManager sounds) {
-		this.game = game;
-		this.r2D = r2D;
-		this.sounds = sounds;
-	}
+	SoundManager getSounds();
 
-	public SubScene getFXSubScene() {
-		return fxSubScene;
-	}
+	boolean is3D();
 
-	public SoundManager getSounds() {
-		return sounds;
-	}
+	void init();
 
-	public abstract boolean is3D();
+	void update();
 
-	public abstract void init();
-
-	public abstract void update();
-
-	public void end() {
-		log("Scene '%s' ended", getClass().getName());
-	}
+	void end();
 }

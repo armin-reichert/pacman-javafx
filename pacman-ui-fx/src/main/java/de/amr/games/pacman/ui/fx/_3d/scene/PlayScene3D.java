@@ -34,12 +34,15 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
 import de.amr.games.pacman.controller.event.GameEvent;
 import de.amr.games.pacman.controller.event.GameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.GameSounds;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.LevelCounter3D;
@@ -49,7 +52,8 @@ import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Score3D;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
+import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.CoordinateSystem;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
@@ -72,11 +76,17 @@ import javafx.scene.transform.Translate;
  * 
  * @author Armin Reichert
  */
-public class PlayScene3D extends AbstractGameScene {
+public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
+	private final GameController gameController;
+	private final SubScene fxSubScene;
 	private final PacManModel3D model3D;
 	private final Image floorImage = new Image(getClass().getResource("/common/escher-texture.jpg").toString());
 	private final PerspectiveCamera cam = new PerspectiveCamera(true);
+
+	private GameModel game;
+	private SoundManager sounds;
+	private Rendering2D r2D;
 	private CameraController camController;
 	private Pac3D player3D;
 	private Maze3D maze3D;
@@ -88,7 +98,7 @@ public class PlayScene3D extends AbstractGameScene {
 	private CoordinateSystem coordSystem;
 
 	public PlayScene3D(Scene parent, GameController gameController, PacManModel3D model3D) {
-		super(parent, gameController);
+		this.gameController = gameController;
 		this.model3D = model3D;
 
 		fxSubScene = new SubScene(new Group(), parent.getWidth(), parent.getHeight(), true, SceneAntialiasing.BALANCED);
@@ -103,6 +113,23 @@ public class PlayScene3D extends AbstractGameScene {
 
 		log("Subscene created. Game scene='%s', width=%.0f, height=%.0f", getClass().getName(), fxSubScene.getWidth(),
 				fxSubScene.getHeight());
+	}
+
+	@Override
+	public void setContext(GameModel game, Rendering2D r2d, SoundManager sounds) {
+		this.game = game;
+		this.r2D = r2d;
+		this.sounds = sounds;
+	}
+
+	@Override
+	public SubScene getFXSubScene() {
+		return fxSubScene;
+	}
+
+	@Override
+	public SoundManager getSounds() {
+		return sounds;
 	}
 
 	public CameraController getCamController() {
@@ -183,7 +210,6 @@ public class PlayScene3D extends AbstractGameScene {
 	public void end() {
 		sounds.setMuted(false);
 		Env.$perspective.removeListener(this::onPerspectiveChange);
-		super.end();
 	}
 
 	@Override

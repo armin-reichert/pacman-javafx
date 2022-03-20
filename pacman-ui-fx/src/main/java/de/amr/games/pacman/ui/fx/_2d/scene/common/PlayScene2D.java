@@ -101,7 +101,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 	public void end() {
 		game.player.powerTimer.removeEventListener(this::handleGhostsFlashing);
 		sounds.setMuted(false);
-		super.end();
+		log("Scene '%s' ended", getClass().getName());
 	}
 
 	@Override

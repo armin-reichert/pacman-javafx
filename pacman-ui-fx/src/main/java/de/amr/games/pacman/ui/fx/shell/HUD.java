@@ -28,7 +28,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.scene.AbstractGameScene;
+import de.amr.games.pacman.ui.fx.scene.GameScene;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
@@ -96,7 +96,7 @@ public class HUD extends VBox {
 		fade.play();
 	}
 
-	public void update(GameController gameController, AbstractGameScene gameScene, Stage stage, Canvas canvas) {
+	public void update(GameController gameController, GameScene gameScene, Stage stage, Canvas canvas) {
 		var width = stage.getScene().getWindow().getWidth();
 		var height = stage.getScene().getWindow().getHeight();
 		var sceneWidth = stage.getScene().getWidth();
