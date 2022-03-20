@@ -153,9 +153,8 @@ public class GameUI extends DefaultGameEventHandler {
 			} else {
 				log("Set scene to '%s'", nextScene.getClass().getName());
 			}
-			updateSceneContext(nextScene);
-			// TODO: when the 2D subscene is cached (as is in the 3D case), strange things happen. Why?
 			gameSceneRoot.getChildren().setAll(nextScene.getFXSubScene());
+			updateSceneContext(nextScene);
 			nextScene.init();
 			currentGameScene = nextScene;
 		}
