@@ -109,11 +109,6 @@ public class PlayScene3D extends AbstractGameScene {
 		return camController;
 	}
 
-	@Override
-	public void createFXSubScene() {
-		// done in constructor
-	}
-
 	public void toggleFloorTexture() {
 		if (maze3D.getFloorTexture() == null) {
 			maze3D.setFloorTexture(floorImage);

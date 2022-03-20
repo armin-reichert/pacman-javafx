@@ -58,8 +58,6 @@ public abstract class AbstractGameScene extends DefaultGameEventHandler {
 		this.sounds = sounds;
 	}
 
-	public abstract void createFXSubScene();
-
 	public SubScene getFXSubScene() {
 		return fxSubScene;
 	}
