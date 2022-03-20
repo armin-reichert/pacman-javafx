@@ -36,17 +36,42 @@ import javafx.scene.SubScene;
  */
 public interface GameScene extends GameEventListener {
 
-	void setContext(GameModel game, Rendering2D r2D, SoundManager sounds);
-
-	SubScene getFXSubScene();
-
-	SoundManager getSounds();
-
-	boolean is3D();
-
+	/**
+	 * Called before scene is displayed.
+	 */
 	void init();
 
+	/**
+	 * Called on every tick.
+	 */
 	void update();
 
+	/**
+	 * Called before scene ends.
+	 */
 	void end();
+
+	/**
+	 * Sets the context for the current scene.
+	 * 
+	 * @param game   the current game model
+	 * @param r2D    the 2D rendering for the current game version (Pac-Man, Ms. Pac-Man)
+	 * @param sounds the sonds for the current game version
+	 */
+	void setContext(GameModel game, Rendering2D r2D, SoundManager sounds);
+
+	/**
+	 * @return the JavaFX subscene associated with this game scene
+	 */
+	SubScene getFXSubScene();
+
+	/**
+	 * @return the sounds used by this game scene
+	 */
+	SoundManager getSounds();
+
+	/**
+	 * @return if this is a 3D scene
+	 */
+	boolean is3D();
 }
