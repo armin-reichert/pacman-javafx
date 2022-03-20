@@ -49,14 +49,15 @@ import javafx.scene.paint.Color;
  */
 public abstract class AbstractGameScene2D extends DefaultGameEventHandler implements GameScene {
 
+	protected final SubScene fxSubScene;
 	protected final Scene parent;
 	protected final GameController gameController;
+	protected final GraphicsContext gc;
+	protected final V2i unscaledSize;
+
 	protected GameModel game;
 	protected SoundManager sounds;
 	protected Rendering2D r2D;
-	protected SubScene fxSubScene;
-	protected V2i unscaledSize;
-	protected GraphicsContext gc;
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
 
