@@ -207,7 +207,6 @@ public class Maze3D extends Group {
 		baseMaterial.setSpecularColor(wallBaseColor.brighter());
 
 		var topMaterial = new PhongMaterial(wallTopColor);
-		topMaterial.setDiffuseColor(wallTopColor);
 
 		// horizontal
 		for (int y = 0; y < floorPlan.sizeY(); ++y) {
