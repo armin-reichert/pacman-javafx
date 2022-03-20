@@ -76,9 +76,8 @@ public class PlayScene3D extends AbstractGameScene {
 
 	private final PacManModel3D model3D;
 	private final Image floorImage = new Image(getClass().getResource("/common/escher-texture.jpg").toString());
-
-	public CameraController camController;
-
+	private final PerspectiveCamera cam = new PerspectiveCamera(true);
+	private CameraController camController;
 	private Pac3D player3D;
 	private Maze3D maze3D;
 	private Ghost3D[] ghosts3D;
@@ -93,13 +92,16 @@ public class PlayScene3D extends AbstractGameScene {
 		this.model3D = model3D;
 	}
 
+	public CameraController getCamController() {
+		return camController;
+	}
+
 	@Override
 	public void createFXSubScene(Scene parent) {
 		if (fxSubScene == null) {
 			fxSubScene = new SubScene(new Group(), parent.getWidth(), parent.getHeight(), true, SceneAntialiasing.BALANCED);
 			fxSubScene.widthProperty().bind(parent.widthProperty());
 			fxSubScene.heightProperty().bind(parent.heightProperty());
-			PerspectiveCamera cam = new PerspectiveCamera(true);
 			fxSubScene.setCamera(cam);
 			parent.addEventHandler(KeyEvent.ANY, e -> camController.handle(e));
 			coordSystem = new CoordinateSystem(Math.max(fxSubScene.getWidth(), fxSubScene.getHeight()));

@@ -364,7 +364,7 @@ public class GameUI extends DefaultGameEventHandler {
 				} else {
 					Env.selectNextPerspective();
 				}
-				String perspective_key = Env.message(playScene.camController.getClass().getSimpleName());
+				String perspective_key = Env.message(playScene.getCamController().getClass().getSimpleName());
 				String message = Env.message("camera_perspective", perspective_key);
 				FlashMessageView.showFlashMessage(1, message);
 			}
