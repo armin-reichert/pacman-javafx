@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
 import java.util.Optional;
@@ -138,13 +139,14 @@ public class Maze3D extends Group {
 	 * @param wallBaseColor color of wall at base
 	 * @param wallTopColor  color of wall at top
 	 */
-	public void buildStructure(World world, Color wallBaseColor, Color wallTopColor) {
+	public void build(World world, Color wallBaseColor, Color wallTopColor) {
 		wallsGroup.getChildren().clear();
 		addWalls(new FloorPlan($resolution.get(), world), world, TS / $resolution.get(), wallBaseColor, wallTopColor);
 		doorsGroup.getChildren().clear();
 		for (V2i doorTile : world.ghostHouse().doorTiles) {
 			doorsGroup.getChildren().add(new Door3D(doorTile));
 		}
+		log("Built 3D maze (resolution=%d, wall height=%.2f)", $resolution.get(), $wallHeight.get());
 	}
 
 	/**
@@ -153,7 +155,7 @@ public class Maze3D extends Group {
 	 * @param world       the game world
 	 * @param pelletColor color of pellets
 	 */
-	public void buildFood(World world, Color pelletColor) {
+	public void setFood(World world, Color pelletColor) {
 		var material = new PhongMaterial(pelletColor);
 		var pellets = world.tiles().filter(world::isFoodTile)
 				.map(tile -> world.isEnergizerTile(tile) ? new Energizer3D(tile, material) : new Pellet3D(tile, material))
