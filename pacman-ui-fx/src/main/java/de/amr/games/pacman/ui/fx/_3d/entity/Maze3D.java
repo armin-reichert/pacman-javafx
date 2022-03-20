@@ -139,12 +139,15 @@ public class Maze3D extends Group {
 	 * @param wallTopColor  color of wall at top
 	 */
 	public void build(World world, Color wallBaseColor, Color wallTopColor) {
+		var baseMaterial = new PhongMaterial(wallBaseColor);
+		baseMaterial.setSpecularColor(wallBaseColor.brighter());
+		var topMaterial = new PhongMaterial(wallTopColor);
+		var floorPlan = new FloorPlan($resolution.get(), world);
+		var brickSize = TS / $resolution.get();
 		wallsGroup.getChildren().clear();
-		addWalls(new FloorPlan($resolution.get(), world), world, TS / $resolution.get(), wallBaseColor, wallTopColor);
+		addWalls(floorPlan, world, brickSize, baseMaterial, topMaterial);
 		doorsGroup.getChildren().clear();
-		for (V2i doorTile : world.ghostHouse().doorTiles) {
-			doorsGroup.getChildren().add(new Door3D(doorTile));
-		}
+		world.ghostHouse().doorTiles.stream().map(Door3D::new).forEach(doorsGroup.getChildren()::add);
 		log("Built 3D maze (resolution=%d, wall height=%.2f)", $resolution.get(), $wallHeight.get());
 	}
 
@@ -202,12 +205,8 @@ public class Maze3D extends Group {
 		wallsGroup.getChildren().add(wall);
 	}
 
-	private void addWalls(FloorPlan floorPlan, World world, double brickSize, Color wallBaseColor, Color wallTopColor) {
-		var baseMaterial = new PhongMaterial(wallBaseColor);
-		baseMaterial.setSpecularColor(wallBaseColor.brighter());
-
-		var topMaterial = new PhongMaterial(wallTopColor);
-
+	private void addWalls(FloorPlan floorPlan, World world, double brickSize, PhongMaterial baseMaterial,
+			PhongMaterial topMaterial) {
 		// horizontal
 		for (int y = 0; y < floorPlan.sizeY(); ++y) {
 			int leftX = -1;
