@@ -177,14 +177,16 @@ public class Maze3D extends Group {
 	 * Adds a wall at given position. A wall consists of a base and a top part which can have different color and
 	 * material.
 	 * 
-	 * @param leftX      x-coordinate of top-left brick
-	 * @param topY       y-coordinate of top-left brick
-	 * @param numBricksX number of bricks in x-direction
-	 * @param numBricksY number of bricks in y-direction
-	 * @param brickSize  size of a single brick
+	 * @param x            x-coordinate of top-left brick
+	 * @param y            y-coordinate of top-left brick
+	 * @param numBricksX   number of bricks in x-direction
+	 * @param numBricksY   number of bricks in y-direction
+	 * @param brickSize    size of a single brick
+	 * @param baseMaterial material used for wall base
+	 * @param topMaterial  material used for wall top
 	 */
-	private void addWall(int leftX, int topY, int numBricksX, int numBricksY, double brickSize,
-			PhongMaterial baseMaterial, PhongMaterial topMaterial) {
+	private void addWall(int x, int y, int numBricksX, int numBricksY, double brickSize, PhongMaterial baseMaterial,
+			PhongMaterial topMaterial) {
 
 		Box base = new Box(numBricksX * brickSize, numBricksY * brickSize, $wallHeight.get());
 		base.depthProperty().bind($wallHeight);
@@ -199,8 +201,8 @@ public class Maze3D extends Group {
 		top.drawModeProperty().bind(Env.$drawMode3D);
 
 		Group wall = new Group(base, top);
-		wall.setTranslateX((leftX + 0.5 * numBricksX) * brickSize);
-		wall.setTranslateY((topY + 0.5 * numBricksY) * brickSize);
+		wall.setTranslateX((x + 0.5 * numBricksX) * brickSize);
+		wall.setTranslateY((y + 0.5 * numBricksY) * brickSize);
 
 		wallsGroup.getChildren().add(wall);
 	}
