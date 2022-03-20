@@ -90,6 +90,19 @@ public class PlayScene3D extends AbstractGameScene {
 	public PlayScene3D(Scene parent, GameController gameController, PacManModel3D model3D) {
 		super(parent, gameController);
 		this.model3D = model3D;
+
+		fxSubScene = new SubScene(new Group(), parent.getWidth(), parent.getHeight(), true, SceneAntialiasing.BALANCED);
+		fxSubScene.widthProperty().bind(parent.widthProperty());
+		fxSubScene.heightProperty().bind(parent.heightProperty());
+		fxSubScene.setCamera(cam);
+		updateCamController();
+		parent.addEventHandler(KeyEvent.ANY, e -> camController.handle(e));
+
+		coordSystem = new CoordinateSystem(Math.max(fxSubScene.getWidth(), fxSubScene.getHeight()));
+		coordSystem.visibleProperty().bind(Env.$axesVisible);
+
+		log("Subscene created. Game scene='%s', width=%.0f, height=%.0f", getClass().getName(), fxSubScene.getWidth(),
+				fxSubScene.getHeight());
 	}
 
 	public CameraController getCamController() {
@@ -98,18 +111,7 @@ public class PlayScene3D extends AbstractGameScene {
 
 	@Override
 	public void createFXSubScene() {
-		if (fxSubScene == null) {
-			fxSubScene = new SubScene(new Group(), parent.getWidth(), parent.getHeight(), true,
-					SceneAntialiasing.BALANCED);
-			fxSubScene.widthProperty().bind(parent.widthProperty());
-			fxSubScene.heightProperty().bind(parent.heightProperty());
-			fxSubScene.setCamera(cam);
-			parent.addEventHandler(KeyEvent.ANY, e -> camController.handle(e));
-			coordSystem = new CoordinateSystem(Math.max(fxSubScene.getWidth(), fxSubScene.getHeight()));
-			coordSystem.visibleProperty().bind(Env.$axesVisible);
-			log("Subscene created for game scene '%s', width=%.0f, height=%.0f", getClass().getName(),
-					fxSubScene.getWidth(), fxSubScene.getHeight());
-		}
+		// done in constructor
 	}
 
 	public void toggleFloorTexture() {
@@ -122,10 +124,7 @@ public class PlayScene3D extends AbstractGameScene {
 		}
 	}
 
-	private void updatePerspective() {
-		if (fxSubScene == null) {
-			return;
-		}
+	private void updateCamController() {
 		Camera cam = fxSubScene.getCamera();
 		camController = switch (Env.$perspective.get()) {
 		case CAM_DRONE -> new Cam_Drone(cam, player3D);
@@ -205,7 +204,7 @@ public class PlayScene3D extends AbstractGameScene {
 	}
 
 	private void onPerspectiveChange(Observable unused) {
-		updatePerspective();
+		updateCamController();
 		if (score3D != null) {
 			// TODO maybe there is some smarter way to keep the score in plain sight
 			score3D.rotationAxisProperty().bind(camController.cam().rotationAxisProperty());
