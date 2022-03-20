@@ -92,7 +92,7 @@ public class GameUI extends DefaultGameEventHandler {
 	private final StackPane mainSceneRoot = new StackPane();
 
 	private Background backgroundImage;
-	private GameScene currentScene;
+	private GameScene currentGameScene;
 
 	public GameUI(Stage stage, GameController gameController, double height, boolean fullscreen) {
 		this.stage = stage;
@@ -106,7 +106,7 @@ public class GameUI extends DefaultGameEventHandler {
 		mainScene.heightProperty().addListener($1 -> resizeCanvas(mainScene.getHeight()));
 		resizeCanvas(mainScene.getHeight());
 
-		Env.$drawMode3D.addListener($1 -> updateBackground(currentScene));
+		Env.$drawMode3D.addListener($1 -> updateBackground(currentGameScene));
 		Env.gameLoop.$fps.addListener($1 -> stage.setTitle(computeStageTitle()));
 
 		gameScenes = new GameScenes(mainScene, gameController, canvas, new V2i(TILES_X, TILES_Y).scaled(TS));
@@ -125,11 +125,11 @@ public class GameUI extends DefaultGameEventHandler {
 
 	public void update() {
 		FlashMessageView.get().update();
-		HUD.get().update(gameController, currentScene, stage, canvas);
+		HUD.get().update(gameController, currentGameScene, stage, canvas);
 	}
 
-	public void updateGameScene() {
-		currentScene.update();
+	public GameScene getCurrentGameScene() {
+		return currentGameScene;
 	}
 
 	private GameScene gameSceneForCurrentState(boolean _3D) {
@@ -145,11 +145,11 @@ public class GameUI extends DefaultGameEventHandler {
 
 	private void selectGameScene() {
 		GameScene nextScene = gameSceneForCurrentState(Env.$3D.get());
-		if (currentScene != nextScene) {
-			if (currentScene != null) {
-				log("Change scene from '%s' to '%s'", currentScene.getClass().getName(),
+		if (currentGameScene != nextScene) {
+			if (currentGameScene != null) {
+				log("Change scene from '%s' to '%s'", currentGameScene.getClass().getName(),
 						nextScene.getClass().getName());
-				currentScene.end();
+				currentGameScene.end();
 			} else {
 				log("Set scene to '%s'", nextScene.getClass().getName());
 			}
@@ -157,7 +157,7 @@ public class GameUI extends DefaultGameEventHandler {
 			// TODO: when the 2D subscene is cached (as is in the 3D case), strange things happen. Why?
 			gameSceneRoot.getChildren().setAll(nextScene.getFXSubScene());
 			nextScene.init();
-			currentScene = nextScene;
+			currentGameScene = nextScene;
 		}
 	}
 
@@ -196,10 +196,10 @@ public class GameUI extends DefaultGameEventHandler {
 	private void toggle3D() {
 		Env.$3D.set(!Env.$3D.get());
 		if (gameSceneForCurrentState(false) != gameSceneForCurrentState(true)) {
-			currentScene.getSounds().stopAll();
+			currentGameScene.getSounds().stopAll();
 			selectGameScene();
-			if (currentScene instanceof PlayScene2D) {
-				((PlayScene2D) currentScene).onSwitchFrom3DTo2D();
+			if (currentGameScene instanceof PlayScene2D) {
+				((PlayScene2D) currentGameScene).onSwitchFrom3DTo2D();
 			}
 		}
 	}
@@ -207,7 +207,7 @@ public class GameUI extends DefaultGameEventHandler {
 	@Override
 	public void onGameEvent(GameEvent event) {
 		super.onGameEvent(event);
-		currentScene.onGameEvent(event);
+		currentGameScene.onGameEvent(event);
 	}
 
 	@Override
@@ -298,8 +298,8 @@ public class GameUI extends DefaultGameEventHandler {
 				return;
 			}
 			if (state != GameState.INTRO) {
-				currentScene.end();
-				currentScene.getSounds().stopAll();
+				currentGameScene.end();
+				currentGameScene.getSounds().stopAll();
 				gameController.changeState(GameState.INTRO);
 			}
 		}
@@ -356,8 +356,8 @@ public class GameUI extends DefaultGameEventHandler {
 		switch (e.getCode()) {
 
 		case LEFT, RIGHT -> {
-			if (currentScene instanceof PlayScene3D) {
-				PlayScene3D playScene = (PlayScene3D) currentScene;
+			if (currentGameScene instanceof PlayScene3D) {
+				PlayScene3D playScene = (PlayScene3D) currentGameScene;
 				if (e.getCode() == KeyCode.LEFT) {
 					Env.selectPrevPerspective();
 				} else {
@@ -370,14 +370,14 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 
 		case F -> {
-			if (currentScene instanceof PlayScene3D) {
-				PlayScene3D playScene = (PlayScene3D) currentScene;
+			if (currentGameScene instanceof PlayScene3D) {
+				PlayScene3D playScene = (PlayScene3D) currentGameScene;
 				playScene.toggleFloorTexture();
 			}
 		}
 
 		case H -> {
-			if (currentScene.is3D()) {
+			if (currentGameScene.is3D()) {
 				Env.changeMazeWallHeight(!e.isShiftDown());
 			}
 		}
@@ -391,13 +391,13 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 
 		case L -> {
-			if (currentScene.is3D()) {
+			if (currentGameScene.is3D()) {
 				Env.$drawMode3D.set(Env.$drawMode3D.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 			}
 		}
 
 		case R -> {
-			if (currentScene.is3D()) {
+			if (currentGameScene.is3D()) {
 				Env.changeMazeResolution(!e.isShiftDown());
 			}
 		}
@@ -417,13 +417,13 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 
 		case X -> {
-			if (currentScene.is3D()) {
+			if (currentGameScene.is3D()) {
 				Env.$axesVisible.set(!Env.$axesVisible.get());
 			}
 		}
 
 		case Y -> {
-			if (!currentScene.is3D()) {
+			if (!currentGameScene.is3D()) {
 				Env.$tilesVisible.set(!Env.$tilesVisible.get());
 			}
 		}
