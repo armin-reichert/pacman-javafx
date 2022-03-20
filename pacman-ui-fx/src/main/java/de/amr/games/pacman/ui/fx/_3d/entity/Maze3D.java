@@ -27,7 +27,6 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.V2i;
@@ -157,10 +156,10 @@ public class Maze3D extends Group {
 	 */
 	public void setFood(World world, Color pelletColor) {
 		var material = new PhongMaterial(pelletColor);
-		var pellets = world.tiles().filter(world::isFoodTile)
+		pelletsGroup.getChildren().clear();
+		world.tiles().filter(world::isFoodTile)
 				.map(tile -> world.isEnergizerTile(tile) ? new Energizer3D(tile, material) : new Pellet3D(tile, material))
-				.collect(Collectors.toList());
-		pelletsGroup.getChildren().setAll(pellets);
+				.forEach(pelletsGroup.getChildren()::add);
 	}
 
 	public Stream<Animation> energizerAnimations() {
