@@ -77,7 +77,6 @@ public class PlayScene3D extends AbstractGameScene {
 
 	private final PacManModel3D model3D;
 	private final Image floorImage = new Image(getClass().getResource("/common/escher-texture.jpg").toString());
-	private final CoordinateSystem coordSystem = new CoordinateSystem(1000);
 
 	public CameraController camController;
 
@@ -88,11 +87,11 @@ public class PlayScene3D extends AbstractGameScene {
 	private Score3D score3D;
 	private LevelCounter3D levelCounter3D;
 	private LivesCounter3D livesCounter3D;
+	private CoordinateSystem coordSystem;
 
 	public PlayScene3D(GameController gameController, PacManModel3D model3D) {
 		super(gameController);
 		this.model3D = model3D;
-		coordSystem.visibleProperty().bind(Env.$axesVisible);
 	}
 
 	@Override
@@ -104,6 +103,8 @@ public class PlayScene3D extends AbstractGameScene {
 			PerspectiveCamera cam = new PerspectiveCamera(true);
 			fxSubScene.setCamera(cam);
 			parent.addEventHandler(KeyEvent.ANY, e -> camController.handle(e));
+			coordSystem = new CoordinateSystem(Math.max(fxSubScene.getWidth(), fxSubScene.getHeight()));
+			coordSystem.visibleProperty().bind(Env.$axesVisible);
 			log("Subscene created for game scene '%s', width=%.0f, height=%.0f", getClass().getName(), fxSubScene.getWidth(),
 					fxSubScene.getHeight());
 		}
