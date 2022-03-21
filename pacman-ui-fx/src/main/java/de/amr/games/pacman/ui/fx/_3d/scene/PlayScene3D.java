@@ -79,6 +79,7 @@ import javafx.scene.transform.Translate;
 public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 	private final GameController gameController;
+	private final Scene parent;
 	private final SubScene fxSubScene;
 	private final PacManModel3D model3D;
 	private final Image floorImage = new Image(getClass().getResource("/common/escher-texture.jpg").toString());
@@ -97,13 +98,13 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	private LivesCounter3D livesCounter3D;
 
 	public PlayScene3D(Scene parent, GameController gameController, PacManModel3D model3D) {
+		this.parent = parent;
 		this.gameController = gameController;
 		this.model3D = model3D;
 		fxSubScene = new SubScene(new Group(), parent.getWidth(), parent.getHeight(), true, SceneAntialiasing.BALANCED);
 		fxSubScene.widthProperty().bind(parent.widthProperty());
 		fxSubScene.heightProperty().bind(parent.heightProperty());
 		fxSubScene.setCamera(new PerspectiveCamera(true));
-		parent.addEventHandler(KeyEvent.ANY, e -> camController.handle(e));
 		coordSystem = new CoordinateSystem(Math.max(fxSubScene.getWidth(), fxSubScene.getHeight()));
 		coordSystem.visibleProperty().bind(Env.$axesVisible);
 		updateCamController();
@@ -198,7 +199,9 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		fxSubScene.setRoot(new Group(lights, playground, coordSystem));
 
 		sounds.setMuted(gameController.attractMode);
+
 		Env.$perspective.addListener(this::onPerspectiveChange);
+		parent.addEventHandler(KeyEvent.ANY, this::controlCamera);
 		onPerspectiveChange(null);
 	}
 
@@ -206,6 +209,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	public void end() {
 		sounds.setMuted(false);
 		Env.$perspective.removeListener(this::onPerspectiveChange);
+		parent.removeEventHandler(KeyEvent.ANY, this::controlCamera);
 	}
 
 	@Override
@@ -218,6 +222,10 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		score3D.update(game.score, game.levelNumber, game.highscorePoints, game.highscoreLevel);
 		livesCounter3D.update(game.player.lives);
 		camController.update();
+	}
+
+	private void controlCamera(KeyEvent e) {
+		camController.handle(e);
 	}
 
 	private void onPerspectiveChange(Observable unused) {
