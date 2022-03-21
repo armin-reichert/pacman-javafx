@@ -222,7 +222,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 	@Override
 	public void update() {
-		keepInSyncWith2DScene(); // TODO find a better solution
 		maze3D.update(game);
 		player3D.update();
 		Stream.of(ghosts3D).forEach(Ghost3D::update);
@@ -230,40 +229,30 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		score3D.update(game.score, game.levelNumber, game.highscorePoints, game.highscoreLevel);
 		livesCounter3D.update(game.player.lives);
 		camController.update();
+
+		// keep in sync with 2D scene in case user toggles between 2D and 3D
+		maze3D.pellets().forEach(pellet -> pellet.setVisible(!game.world.isFoodEaten(pellet.tile)));
+		if (gameController.state == GameState.HUNTING || gameController.state == GameState.GHOST_DYING) {
+			maze3D.energizerAnimations().forEach(Animation::play);
+		}
+		if (sounds.getClip(GameSounds.PACMAN_MUNCH).isPlaying() && game.player.starvingTicks > 10) {
+			sounds.stop(GameSounds.PACMAN_MUNCH);
+		}
 	}
 
 	private void onMazeResolutionChange(ObservableValue<? extends Number> property, Number oldValue, Number newValue) {
 		if (!oldValue.equals(newValue)) {
-			maze3D.createWallsAndDoors(game.world, r2D.getMazeSideColor(game.mazeNumber), r2D.getMazeTopColor(game.mazeNumber));
+			maze3D.createWallsAndDoors(game.world, r2D.getMazeSideColor(game.mazeNumber),
+					r2D.getMazeTopColor(game.mazeNumber));
 		}
 	}
 
 	private void onPerspectiveChange(Observable unused) {
 		updateCamController();
 		if (score3D != null) {
-			// TODO maybe there is some smarter way to keep the score in plain sight
+			// keep the score in plain sight
 			score3D.rotationAxisProperty().bind(camController.cam().rotationAxisProperty());
 			score3D.rotateProperty().bind(camController.cam().rotateProperty());
-		}
-	}
-
-	/*
-	 * Updates food visibility, animations and audio in case of switching between 2D and 3D scene
-	 * 
-	 * TODO: still incomplete
-	 */
-	private void keepInSyncWith2DScene() {
-		maze3D.pellets().forEach(foodNode -> {
-			foodNode.setVisible(!game.world.isFoodEaten(foodNode.tile));
-		});
-		if (gameController.state == GameState.HUNTING || gameController.state == GameState.GHOST_DYING) {
-			maze3D.energizerAnimations().forEach(Animation::play);
-		}
-		AudioClip munching = sounds.getClip(GameSounds.PACMAN_MUNCH);
-		if (munching.isPlaying()) {
-			if (game.player.starvingTicks > 10) {
-				sounds.stop(GameSounds.PACMAN_MUNCH);
-			}
 		}
 	}
 
@@ -387,7 +376,8 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			sounds.play(GameSounds.GHOST_EATEN);
 		}
 		case LEVEL_STARTING -> {
-			maze3D.createWallsAndDoors(game.world, r2D.getMazeSideColor(game.mazeNumber), r2D.getMazeTopColor(game.mazeNumber));
+			maze3D.createWallsAndDoors(game.world, r2D.getMazeSideColor(game.mazeNumber),
+					r2D.getMazeTopColor(game.mazeNumber));
 			maze3D.createFood(game.world, r2D.getFoodColor(game.mazeNumber));
 			maze3D.energizerAnimations().forEach(Animation::stop);
 			levelCounter3D.update(game);
