@@ -111,7 +111,6 @@ public class Env {
 		} else {
 			$mazeResolution.set(Math.max(res / 2, 1));
 		}
-		log("Maze resolution is now %d", $mazeResolution.get());
 	}
 
 	public static void changeMazeWallHeight(boolean up) {

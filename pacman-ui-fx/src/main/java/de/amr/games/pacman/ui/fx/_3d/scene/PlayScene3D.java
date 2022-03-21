@@ -58,6 +58,7 @@ import de.amr.games.pacman.ui.fx.util.CoordinateSystem;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.beans.Observable;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.AmbientLight;
 import javafx.scene.Camera;
 import javafx.scene.Group;
@@ -165,7 +166,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 		maze3D = new Maze3D(width, height);
 		maze3D.setFloorColor(Color.rgb(30, 30, 30));
-		maze3D.createWalls(game.world, r2D.getMazeSideColor(game.mazeNumber), r2D.getMazeTopColor(game.mazeNumber));
+		maze3D.createWallsAndDoors(game.world, r2D.getMazeSideColor(game.mazeNumber), r2D.getMazeTopColor(game.mazeNumber));
 		maze3D.createFood(game.world, r2D.getFoodColor(game.mazeNumber));
 
 		player3D = new Pac3D(game.player, model3D);
@@ -203,8 +204,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
-		maze3D.$resolution.addListener($1 -> maze3D.createWalls(game.world, r2D.getMazeSideColor(game.mazeNumber),
-				r2D.getMazeTopColor(game.mazeNumber)));
+		maze3D.$resolution.addListener(this::onMazeResolutionChange);
 
 		Env.$perspective.addListener(this::onPerspectiveChange);
 	}
@@ -215,6 +215,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 		maze3D.$wallHeight.unbind();
 		maze3D.$resolution.unbind();
+		maze3D.$resolution.removeListener(this::onMazeResolutionChange);
 
 		Env.$perspective.removeListener(this::onPerspectiveChange);
 	}
@@ -229,6 +230,12 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		score3D.update(game.score, game.levelNumber, game.highscorePoints, game.highscoreLevel);
 		livesCounter3D.update(game.player.lives);
 		camController.update();
+	}
+
+	private void onMazeResolutionChange(ObservableValue<? extends Number> property, Number oldValue, Number newValue) {
+		if (!oldValue.equals(newValue)) {
+			maze3D.createWallsAndDoors(game.world, r2D.getMazeSideColor(game.mazeNumber), r2D.getMazeTopColor(game.mazeNumber));
+		}
 	}
 
 	private void onPerspectiveChange(Observable unused) {
@@ -380,7 +387,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			sounds.play(GameSounds.GHOST_EATEN);
 		}
 		case LEVEL_STARTING -> {
-			maze3D.createWalls(game.world, r2D.getMazeSideColor(game.mazeNumber), r2D.getMazeTopColor(game.mazeNumber));
+			maze3D.createWallsAndDoors(game.world, r2D.getMazeSideColor(game.mazeNumber), r2D.getMazeTopColor(game.mazeNumber));
 			maze3D.createFood(game.world, r2D.getFoodColor(game.mazeNumber));
 			maze3D.energizerAnimations().forEach(Animation::stop);
 			levelCounter3D.update(game);

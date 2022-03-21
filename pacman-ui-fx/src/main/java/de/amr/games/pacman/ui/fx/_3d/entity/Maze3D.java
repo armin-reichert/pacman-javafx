@@ -138,7 +138,7 @@ public class Maze3D extends Group {
 	 * @param wallBaseColor color of wall at base
 	 * @param wallTopColor  color of wall at top
 	 */
-	public void createWalls(World world, Color wallBaseColor, Color wallTopColor) {
+	public void createWallsAndDoors(World world, Color wallBaseColor, Color wallTopColor) {
 		var baseMaterial = new PhongMaterial(wallBaseColor);
 		baseMaterial.setSpecularColor(wallBaseColor.brighter());
 		var topMaterial = new PhongMaterial(wallTopColor);
