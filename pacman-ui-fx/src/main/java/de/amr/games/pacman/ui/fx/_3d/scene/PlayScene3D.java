@@ -144,6 +144,9 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	}
 
 	private void updateCamController() {
+		if (camController != null) {
+			parent.removeEventHandler(KeyEvent.ANY, camController);
+		}
 		Camera cam = fxSubScene.getCamera();
 		camController = switch (Env.$perspective.get()) {
 		case CAM_DRONE -> new Cam_Drone(cam, player3D);
@@ -152,6 +155,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		case CAM_TOTAL -> new Cam_Total(cam);
 		};
 		camController.reset();
+		parent.addEventHandler(KeyEvent.ANY, camController);
 	}
 
 	@Override
@@ -201,7 +205,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		sounds.setMuted(gameController.attractMode);
 
 		Env.$perspective.addListener(this::onPerspectiveChange);
-		parent.addEventHandler(KeyEvent.ANY, this::controlCamera);
 		onPerspectiveChange(null);
 	}
 
@@ -209,7 +212,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	public void end() {
 		sounds.setMuted(false);
 		Env.$perspective.removeListener(this::onPerspectiveChange);
-		parent.removeEventHandler(KeyEvent.ANY, this::controlCamera);
 	}
 
 	@Override
@@ -222,10 +224,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		score3D.update(game.score, game.levelNumber, game.highscorePoints, game.highscoreLevel);
 		livesCounter3D.update(game.player.lives);
 		camController.update();
-	}
-
-	private void controlCamera(KeyEvent e) {
-		camController.handle(e);
 	}
 
 	private void onPerspectiveChange(Observable unused) {
