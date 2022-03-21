@@ -82,7 +82,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	private final SubScene fxSubScene;
 	private final PacManModel3D model3D;
 	private final Image floorImage = new Image(getClass().getResource("/common/escher-texture.jpg").toString());
-	private final PerspectiveCamera cam = new PerspectiveCamera(true);
+	private final CoordinateSystem coordSystem;
 
 	private GameModel game;
 	private SoundManager sounds;
@@ -95,22 +95,18 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	private Score3D score3D;
 	private LevelCounter3D levelCounter3D;
 	private LivesCounter3D livesCounter3D;
-	private CoordinateSystem coordSystem;
 
 	public PlayScene3D(Scene parent, GameController gameController, PacManModel3D model3D) {
 		this.gameController = gameController;
 		this.model3D = model3D;
-
 		fxSubScene = new SubScene(new Group(), parent.getWidth(), parent.getHeight(), true, SceneAntialiasing.BALANCED);
 		fxSubScene.widthProperty().bind(parent.widthProperty());
 		fxSubScene.heightProperty().bind(parent.heightProperty());
-		fxSubScene.setCamera(cam);
-		updateCamController();
+		fxSubScene.setCamera(new PerspectiveCamera(true));
 		parent.addEventHandler(KeyEvent.ANY, e -> camController.handle(e));
-
 		coordSystem = new CoordinateSystem(Math.max(fxSubScene.getWidth(), fxSubScene.getHeight()));
 		coordSystem.visibleProperty().bind(Env.$axesVisible);
-
+		updateCamController();
 		log("Subscene created. Game scene='%s', width=%.0f, height=%.0f", getClass().getName(), fxSubScene.getWidth(),
 				fxSubScene.getHeight());
 	}
@@ -165,8 +161,8 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		maze3D = new Maze3D(width, height);
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
-		maze3D.$resolution.addListener($1 -> maze3D.build(game.world, r2D.getMazeSideColor(game.mazeNumber),
-				r2D.getMazeTopColor(game.mazeNumber)));
+		maze3D.$resolution.addListener(
+				$1 -> maze3D.build(game.world, r2D.getMazeSideColor(game.mazeNumber), r2D.getMazeTopColor(game.mazeNumber)));
 		maze3D.setFloorColor(Color.rgb(30, 30, 30));
 		maze3D.build(game.world, r2D.getMazeSideColor(game.mazeNumber), r2D.getMazeTopColor(game.mazeNumber));
 		maze3D.setFood(game.world, r2D.getFoodColor(game.mazeNumber));
@@ -362,8 +358,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		case PACMAN_DYING -> {
 			Stream.of(ghosts3D).forEach(Ghost3D::setNormalSkinColor);
 			sounds.stopAll();
-			Ghost killer = Stream.of(game.ghosts).filter(ghost -> ghost.tile().equals(game.player.tile())).findAny()
-					.get();
+			Ghost killer = Stream.of(game.ghosts).filter(ghost -> ghost.tile().equals(game.player.tile())).findAny().get();
 			new SequentialTransition( //
 					afterSeconds(1, game::hideGhosts), //
 					player3D.dyingAnimation(r2D.getGhostColor(killer.id), sounds), //
