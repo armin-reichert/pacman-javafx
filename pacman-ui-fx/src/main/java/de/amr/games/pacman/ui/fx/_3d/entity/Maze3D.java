@@ -138,7 +138,7 @@ public class Maze3D extends Group {
 	 * @param wallBaseColor color of wall at base
 	 * @param wallTopColor  color of wall at top
 	 */
-	public void build(World world, Color wallBaseColor, Color wallTopColor) {
+	public void createWalls(World world, Color wallBaseColor, Color wallTopColor) {
 		var baseMaterial = new PhongMaterial(wallBaseColor);
 		baseMaterial.setSpecularColor(wallBaseColor.brighter());
 		var topMaterial = new PhongMaterial(wallTopColor);
@@ -157,7 +157,7 @@ public class Maze3D extends Group {
 	 * @param world       the game world
 	 * @param pelletColor color of pellets
 	 */
-	public void setFood(World world, Color pelletColor) {
+	public void createFood(World world, Color pelletColor) {
 		var material = new PhongMaterial(pelletColor);
 		pelletsGroup.getChildren().clear();
 		world.tiles().filter(world::isFoodTile)

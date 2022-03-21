@@ -164,13 +164,9 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		final int height = game.world.numRows() * TS;
 
 		maze3D = new Maze3D(width, height);
-		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
-		maze3D.$resolution.bind(Env.$mazeResolution);
-		maze3D.$resolution.addListener(
-				$1 -> maze3D.build(game.world, r2D.getMazeSideColor(game.mazeNumber), r2D.getMazeTopColor(game.mazeNumber)));
 		maze3D.setFloorColor(Color.rgb(30, 30, 30));
-		maze3D.build(game.world, r2D.getMazeSideColor(game.mazeNumber), r2D.getMazeTopColor(game.mazeNumber));
-		maze3D.setFood(game.world, r2D.getFoodColor(game.mazeNumber));
+		maze3D.createWalls(game.world, r2D.getMazeSideColor(game.mazeNumber), r2D.getMazeTopColor(game.mazeNumber));
+		maze3D.createFood(game.world, r2D.getFoodColor(game.mazeNumber));
 
 		player3D = new Pac3D(game.player, model3D);
 		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D)).toArray(Ghost3D[]::new);
@@ -201,16 +197,25 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		lights.getChildren().add(ambient);
 
 		fxSubScene.setRoot(new Group(lights, playground, coordSystem));
+		onPerspectiveChange(null);
 
 		sounds.setMuted(gameController.attractMode);
 
+		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
+		maze3D.$resolution.bind(Env.$mazeResolution);
+		maze3D.$resolution.addListener($1 -> maze3D.createWalls(game.world, r2D.getMazeSideColor(game.mazeNumber),
+				r2D.getMazeTopColor(game.mazeNumber)));
+
 		Env.$perspective.addListener(this::onPerspectiveChange);
-		onPerspectiveChange(null);
 	}
 
 	@Override
 	public void end() {
 		sounds.setMuted(false);
+
+		maze3D.$wallHeight.unbind();
+		maze3D.$resolution.unbind();
+
 		Env.$perspective.removeListener(this::onPerspectiveChange);
 	}
 
@@ -375,8 +380,8 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			sounds.play(GameSounds.GHOST_EATEN);
 		}
 		case LEVEL_STARTING -> {
-			maze3D.build(game.world, r2D.getMazeSideColor(game.mazeNumber), r2D.getMazeTopColor(game.mazeNumber));
-			maze3D.setFood(game.world, r2D.getFoodColor(game.mazeNumber));
+			maze3D.createWalls(game.world, r2D.getMazeSideColor(game.mazeNumber), r2D.getMazeTopColor(game.mazeNumber));
+			maze3D.createFood(game.world, r2D.getFoodColor(game.mazeNumber));
 			maze3D.energizerAnimations().forEach(Animation::stop);
 			levelCounter3D.update(game);
 			var message = Env.message("level_starting", game.levelNumber);
