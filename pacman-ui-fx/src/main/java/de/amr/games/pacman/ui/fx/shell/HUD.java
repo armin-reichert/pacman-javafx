@@ -146,7 +146,7 @@ public class HUD extends VBox {
 		p("I", "Player immunity On/Off").done();
 		p("L", "Add 3 player lives").when(gameController.gameRunning);
 		p("N", "Next Level").when(gameController.gameRunning);
-		p("Q", "Quit Screen").when(state != GameState.INTRO);
+		p("Q", "Quit Scene").when(state != GameState.INTRO);
 		p("X", "Kill all hunting ghosts").when(gameController.gameRunning);
 		p("Z", "Play Intermission Scenes").when(state == GameState.INTRO);
 
