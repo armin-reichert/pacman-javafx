@@ -146,6 +146,7 @@ public class HUD extends VBox {
 		p("I", "Player immunity On/Off").done();
 		p("L", "Add 3 player lives").when(gameController.gameRunning);
 		p("N", "Next Level").when(gameController.gameRunning);
+		p("P", "Pause On/Off (SHIFT=single step)").done();
 		p("Q", "Quit Scene").when(state != GameState.INTRO);
 		p("X", "Kill all hunting ghosts").when(gameController.gameRunning);
 		p("Z", "Play Intermission Scenes").when(state == GameState.INTRO);
@@ -157,7 +158,6 @@ public class HUD extends VBox {
 		p("Ctrl+H", "Wall Height (SHIFT=Decrease)").when(gameScene.is3D());
 		p("Ctrl+I", "Information On/Off").done();
 		p("Ctrl+L", "Wireframe Mode On/Off").when(gameScene.is3D());
-		p("Ctrl+P", "Pause On/Off").done();
 		p("Ctrl+R", "Maze resolution (SHIFT=Decrease)").when(gameScene.is3D());
 		p("Ctrl+S", "Speed (SHIFT=Decrease)").done();
 		p("Ctrl+X", "Axes On/Off").when(gameScene.is3D());
