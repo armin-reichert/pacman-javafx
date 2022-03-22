@@ -380,8 +380,8 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 					pause(2), //
 					maze3D.createMazeFlashingAnimation(game.numFlashes), //
 					afterSeconds(1, () -> game.player.hide()), //
-					afterSeconds(1, () -> showFlashMessage(2, message)), //
-					afterSeconds(2.5, () -> gameController.stateTimer().expire())).play();
+					afterSeconds(0.5, () -> showFlashMessage(2, message)), //
+					afterSeconds(2, () -> gameController.stateTimer().expire())).play();
 		}
 		case GAME_OVER -> {
 			sounds.stopAll();
