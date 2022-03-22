@@ -67,7 +67,6 @@ import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
@@ -80,7 +79,6 @@ import javafx.scene.transform.Translate;
 public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 	private final GameController gameController;
-	private final Scene parent;
 	private final SubScene fxSubScene;
 	private final PacManModel3D model3D;
 	private final Image floorImage = new Image(getClass().getResource("/common/escher-texture.jpg").toString());
@@ -99,7 +97,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	private LivesCounter3D livesCounter3D;
 
 	public PlayScene3D(Scene parent, GameController gameController, PacManModel3D model3D) {
-		this.parent = parent;
 		this.gameController = gameController;
 		this.model3D = model3D;
 		fxSubScene = new SubScene(new Group(), parent.getWidth(), parent.getHeight(), true, SceneAntialiasing.BALANCED);
@@ -145,9 +142,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	}
 
 	private void updateCamController() {
-		if (camController != null) {
-			parent.removeEventHandler(KeyEvent.ANY, camController);
-		}
 		Camera cam = fxSubScene.getCamera();
 		camController = switch (Env.$perspective.get()) {
 		case CAM_DRONE -> new Cam_Drone(cam, player3D);
@@ -156,7 +150,8 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		case CAM_TOTAL -> new Cam_Total(cam);
 		};
 		camController.reset();
-		parent.addEventHandler(KeyEvent.ANY, camController);
+		fxSubScene.setOnKeyPressed(camController);
+		fxSubScene.requestFocus();
 	}
 
 	@Override
