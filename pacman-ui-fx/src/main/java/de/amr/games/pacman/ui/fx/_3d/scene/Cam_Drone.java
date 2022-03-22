@@ -73,7 +73,7 @@ public class Cam_Drone implements CameraController {
 
 	@Override
 	public void handle(KeyEvent e) {
-		if (e.isControlDown()) {
+		if (e.isAltDown()) {
 			switch (e.getCode()) {
 			case PLUS:
 				cam().setTranslateZ(cam().getTranslateZ() + 10);
