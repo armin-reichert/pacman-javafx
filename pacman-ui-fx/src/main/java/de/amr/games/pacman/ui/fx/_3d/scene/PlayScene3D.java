@@ -105,7 +105,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		fxSubScene.setCamera(new PerspectiveCamera(true));
 		coordSystem = new CoordinateSystem(Math.max(fxSubScene.getWidth(), fxSubScene.getHeight()));
 		coordSystem.visibleProperty().bind(Env.$axesVisible);
-		updateCamController();
 		log("Subscene created. Game scene='%s', width=%.0f, height=%.0f", getClass().getName(), fxSubScene.getWidth(),
 				fxSubScene.getHeight());
 	}
@@ -139,19 +138,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			maze3D.setFloorTexture(null);
 			maze3D.setFloorColor(Color.rgb(30, 30, 30));
 		}
-	}
-
-	private void updateCamController() {
-		Camera cam = fxSubScene.getCamera();
-		camController = switch (Env.$perspective.get()) {
-		case CAM_DRONE -> new Cam_Drone(cam, player3D);
-		case CAM_FOLLOWING_PLAYER -> new Cam_FollowingPlayer(cam, player3D);
-		case CAM_NEAR_PLAYER -> new Cam_NearPlayer(cam, player3D);
-		case CAM_TOTAL -> new Cam_Total(cam);
-		};
-		camController.reset();
-		fxSubScene.setOnKeyPressed(camController);
-		fxSubScene.requestFocus();
 	}
 
 	@Override
@@ -239,7 +225,16 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	}
 
 	private void onPerspectiveChange(Observable unused) {
-		updateCamController();
+		Camera cam = fxSubScene.getCamera();
+		camController = switch (Env.$perspective.get()) {
+		case CAM_DRONE -> new Cam_Drone(cam, player3D);
+		case CAM_FOLLOWING_PLAYER -> new Cam_FollowingPlayer(cam, player3D);
+		case CAM_NEAR_PLAYER -> new Cam_NearPlayer(cam, player3D);
+		case CAM_TOTAL -> new Cam_Total(cam);
+		};
+		camController.reset();
+		fxSubScene.setOnKeyPressed(camController);
+		fxSubScene.requestFocus();
 		if (score3D != null) {
 			// keep the score in plain sight
 			score3D.rotationAxisProperty().bind(camController.cam().rotationAxisProperty());
