@@ -70,18 +70,11 @@ public class GameUI extends DefaultGameEventHandler {
 	private static final int TILES_X = 28, TILES_Y = 36;
 	private static final double ASPECT_RATIO = (double) TILES_X / TILES_Y;
 
-	private static Background randomBackground() {
-		switch (new Random().nextInt(3)) {
-		case 0:
-			return U.imageBackground("/common/wallpapers/beach.jpg");
-		case 1:
-			return U.imageBackground("/common/wallpapers/space.jpg");
-		case 2:
-			return U.imageBackground("/common/wallpapers/easter_island.jpg");
-		default:
-			return U.imageBackground("/common/wallpapers/beach.jpg");
-		}
-	}
+	private static final Background[] BACKGROUNDS = { //
+			U.imageBackground("/common/wallpapers/beach.jpg"), //
+			U.imageBackground("/common/wallpapers/space.jpg"), //
+			U.imageBackground("/common/wallpapers/easter_island.jpg"), //
+	};
 
 	private final GameController gameController;
 	private final GameScenes gameScenes;
@@ -91,14 +84,15 @@ public class GameUI extends DefaultGameEventHandler {
 	private final Group gameSceneRoot = new Group();
 	private final StackPane mainSceneRoot = new StackPane();
 
-	private Background backgroundImage;
+	private int backgroundIndex;
 	private GameScene currentGameScene;
 
 	public GameUI(Stage stage, GameController gameController, double height, boolean fullscreen) {
 		this.stage = stage;
 		this.gameController = gameController;
-		this.canvas = new Canvas(); // common canvas of all 2D scenes
-		this.backgroundImage = randomBackground();
+
+		canvas = new Canvas(); // common canvas of all 2D scenes
+		backgroundIndex = new Random().nextInt(BACKGROUNDS.length);
 
 		mainSceneRoot.getChildren().addAll(gameSceneRoot, FlashMessageView.get(), HUD.get());
 		StackPane.setAlignment(HUD.get(), Pos.TOP_LEFT);
@@ -147,8 +141,7 @@ public class GameUI extends DefaultGameEventHandler {
 		GameScene nextScene = gameSceneForCurrentState(Env.$3D.get());
 		if (currentGameScene != nextScene) {
 			if (currentGameScene != null) {
-				log("Change scene from '%s' to '%s'", currentGameScene.getClass().getName(),
-						nextScene.getClass().getName());
+				log("Change scene from '%s' to '%s'", currentGameScene.getClass().getName(), nextScene.getClass().getName());
 				currentGameScene.end();
 			} else {
 				log("Set scene to '%s'", nextScene.getClass().getName());
@@ -158,6 +151,14 @@ public class GameUI extends DefaultGameEventHandler {
 			nextScene.init();
 			currentGameScene = nextScene;
 		}
+	}
+
+	private void changeBackground() {
+		int next = backgroundIndex;
+		while (next == backgroundIndex) {
+			next = new Random().nextInt(BACKGROUNDS.length);
+		}
+		backgroundIndex = next;
 	}
 
 	private void updateSceneContext(GameScene gameScene) {
@@ -173,7 +174,7 @@ public class GameUI extends DefaultGameEventHandler {
 		if (scene.is3D()) {
 			mainSceneRoot.setBackground(Env.$drawMode3D.get() == DrawMode.LINE //
 					? U.colorBackground(Color.BLACK)
-					: backgroundImage);
+					: BACKGROUNDS[backgroundIndex]);
 		} else {
 			mainSceneRoot.setBackground(U.colorBackground(Color.CORNFLOWERBLUE));
 		}
@@ -212,9 +213,6 @@ public class GameUI extends DefaultGameEventHandler {
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
 		selectGameScene();
-		if (e.oldGameState == GameState.GAME_OVER) {
-			backgroundImage = randomBackground();
-		}
 	}
 
 	private void onKeyPressed(KeyEvent e) {
@@ -335,6 +333,7 @@ public class GameUI extends DefaultGameEventHandler {
 			if (e.isShiftDown()) {
 				return;
 			}
+			changeBackground();
 			gameController.requestGame();
 		}
 
