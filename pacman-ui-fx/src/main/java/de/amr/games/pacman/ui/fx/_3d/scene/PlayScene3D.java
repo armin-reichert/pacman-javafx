@@ -183,16 +183,12 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		levelCounter3D = new LevelCounter3D(r2D, width - TS, TS);
 		levelCounter3D.update(game);
 
-		Group playground = new Group();
-		playground.getChildren().addAll(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
-		playground.getChildren().addAll(ghosts3D);
-		playground.getTransforms().add(new Translate(-width / 2, -height / 2)); // center at origin
+		var world3D = new Group(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
+		world3D.getChildren().addAll(ghosts3D);
+		world3D.getTransforms().add(new Translate(-width / 2, -height / 2)); // center at origin
 
-		AmbientLight ambient = new AmbientLight(Color.WHITE);
-		Group lights = new Group();
-		lights.getChildren().add(ambient);
+		fxSubScene.setRoot(new Group(new AmbientLight(Color.GHOSTWHITE), world3D, coordSystem));
 
-		fxSubScene.setRoot(new Group(lights, playground, coordSystem));
 		onPerspectiveChange(null);
 
 		sounds.setMuted(gameController.attractMode);
