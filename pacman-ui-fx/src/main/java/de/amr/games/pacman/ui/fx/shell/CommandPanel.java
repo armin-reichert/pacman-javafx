@@ -37,10 +37,12 @@ public class CommandPanel extends GridPane {
 
 	public CommandPanel(GameUI ui) {
 		row = 0;
-		checkBox("Autopilot", ui::toggleAutopilot);
-		checkBox("Immunity", ui::toggleImmunity);
-		checkBox("Use 2D scene", ui::toggle3D);
-		checkBox("Axes", ui::toggleAxesVisible);
+		checkBox("Autopilot", ui::toggleAutopilot, false);
+		checkBox("Immunity", ui::toggleImmunity, false);
+		checkBox("Use 3D scene", ui::toggle3D, true);
+		checkBox("Axes", ui::toggleAxesVisible, false);
+		checkBox("Line Mode", ui::toggleDrawMode, false);
+		checkBox("Tiles", ui::toggleTilesVisible, false);
 		setVisible(false);
 	}
 
@@ -54,8 +56,9 @@ public class CommandPanel extends GridPane {
 		setVisible(false);
 	}
 
-	private void checkBox(String text, Runnable callback) {
+	private void checkBox(String text, Runnable callback, boolean selected) {
 		CheckBox cb = new CheckBox(text);
+		cb.setSelected(selected);
 		cb.setTextFill(textColor);
 		cb.setFont(textFont);
 		cb.setOnAction(e -> callback.run());

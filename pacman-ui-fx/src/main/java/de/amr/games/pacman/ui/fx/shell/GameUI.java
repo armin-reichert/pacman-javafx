@@ -372,11 +372,7 @@ public class GameUI extends DefaultGameEventHandler {
 
 		case J -> toggleCommandPanel();
 
-		case L -> {
-			if (currentGameScene.is3D()) {
-				Env.$drawMode3D.set(Env.$drawMode3D.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
-			}
-		}
+		case L -> toggleDrawMode();
 
 		case R -> {
 			if (currentGameScene.is3D()) {
@@ -400,17 +396,25 @@ public class GameUI extends DefaultGameEventHandler {
 
 		case X -> toggleAxesVisible();
 
-		case Y -> {
-			if (!currentGameScene.is3D()) {
-				Env.$tilesVisible.set(!Env.$tilesVisible.get());
-			}
-		}
+		case Y -> toggleTilesVisible();
 
 		case DIGIT3 -> toggle3D();
 
 		default -> {
 		}
 
+		}
+	}
+
+	public void toggleDrawMode() {
+		if (currentGameScene.is3D()) {
+			Env.$drawMode3D.set(Env.$drawMode3D.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+		}
+	}
+
+	public void toggleTilesVisible() {
+		if (!currentGameScene.is3D()) {
+			Env.$tilesVisible.set(!Env.$tilesVisible.get());
 		}
 	}
 
