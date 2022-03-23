@@ -81,8 +81,7 @@ public class GameUI extends DefaultGameEventHandler {
 	private final Stage stage;
 	private final Canvas canvas;
 	private final Scene mainScene;
-	private final Group gameSceneRoot = new Group();
-	private final StackPane mainSceneRoot = new StackPane();
+	private final StackPane mainSceneRoot;
 
 	private int backgroundIndex;
 	private GameScene currentGameScene;
@@ -94,8 +93,10 @@ public class GameUI extends DefaultGameEventHandler {
 		canvas = new Canvas(); // common canvas of all 2D scenes
 		backgroundIndex = new Random().nextInt(BACKGROUNDS.length);
 
-		mainSceneRoot.getChildren().addAll(gameSceneRoot, FlashMessageView.get(), HUD.get());
+		// first child will get replaced by subscene representing current game scene
+		mainSceneRoot = new StackPane(new Group(), FlashMessageView.get(), HUD.get());
 		StackPane.setAlignment(HUD.get(), Pos.TOP_LEFT);
+
 		mainScene = new Scene(mainSceneRoot, ASPECT_RATIO * height, height);
 		mainScene.heightProperty().addListener($1 -> resizeCanvas(mainScene.getHeight()));
 		resizeCanvas(mainScene.getHeight());
@@ -146,7 +147,7 @@ public class GameUI extends DefaultGameEventHandler {
 			} else {
 				log("Set scene to '%s'", nextScene.getClass().getName());
 			}
-			gameSceneRoot.getChildren().setAll(nextScene.getFXSubScene());
+			mainSceneRoot.getChildren().set(0, nextScene.getFXSubScene());
 			updateSceneContext(nextScene);
 			nextScene.init();
 			currentGameScene = nextScene;
