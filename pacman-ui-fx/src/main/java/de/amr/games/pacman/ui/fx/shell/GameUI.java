@@ -82,6 +82,8 @@ public class GameUI extends DefaultGameEventHandler {
 	private final Canvas canvas;
 	private final Scene mainScene;
 	private final StackPane mainSceneRoot;
+	private final HUD hud;
+	private final CommandPanel commandPanel;
 
 	private int backgroundIndex;
 	private GameScene currentGameScene;
@@ -93,9 +95,13 @@ public class GameUI extends DefaultGameEventHandler {
 		canvas = new Canvas(); // common canvas of all 2D scenes
 		backgroundIndex = new Random().nextInt(BACKGROUNDS.length);
 
+		hud = new HUD(this);
+		commandPanel = new CommandPanel(this);
+
 		// first child will get replaced by subscene representing current game scene
-		mainSceneRoot = new StackPane(new Group(), FlashMessageView.get(), HUD.get());
-		StackPane.setAlignment(HUD.get(), Pos.TOP_LEFT);
+		mainSceneRoot = new StackPane(new Group(), FlashMessageView.get(), hud, commandPanel);
+		StackPane.setAlignment(hud, Pos.TOP_LEFT);
+		StackPane.setAlignment(commandPanel, Pos.TOP_RIGHT);
 
 		mainScene = new Scene(mainSceneRoot, ASPECT_RATIO * height, height);
 		mainScene.heightProperty().addListener($1 -> resizeCanvas(mainScene.getHeight()));
@@ -120,7 +126,7 @@ public class GameUI extends DefaultGameEventHandler {
 
 	public void update() {
 		FlashMessageView.get().update();
-		HUD.get().update(gameController, currentGameScene, stage, canvas);
+		hud.update(gameController, currentGameScene, stage, canvas);
 	}
 
 	public GameScene getCurrentGameScene() {
@@ -142,7 +148,8 @@ public class GameUI extends DefaultGameEventHandler {
 		GameScene nextGameScene = gameSceneForCurrentState(Env.$3D.get());
 		if (currentGameScene != nextGameScene) {
 			if (currentGameScene != null) {
-				log("Change scene from '%s' to '%s'", currentGameScene.getClass().getName(), nextGameScene.getClass().getName());
+				log("Change scene from '%s' to '%s'", currentGameScene.getClass().getName(),
+						nextGameScene.getClass().getName());
 				currentGameScene.end();
 			} else {
 				log("Set scene to '%s'", nextGameScene.getClass().getName());
@@ -194,17 +201,6 @@ public class GameUI extends DefaultGameEventHandler {
 				: String.format("%s", gameName);
 	}
 
-	private void toggle3D() {
-		Env.$3D.set(!Env.$3D.get());
-		if (gameSceneForCurrentState(false) != gameSceneForCurrentState(true)) {
-			currentGameScene.getSounds().stopAll();
-			updateGameScene();
-			if (currentGameScene instanceof PlayScene2D) {
-				((PlayScene2D) currentGameScene).onSwitchFrom3DTo2D();
-			}
-		}
-	}
-
 	@Override
 	public void onGameEvent(GameEvent event) {
 		super.onGameEvent(event);
@@ -236,9 +232,7 @@ public class GameUI extends DefaultGameEventHandler {
 			if (e.isShiftDown()) {
 				return;
 			}
-			gameController.autoControlled = !gameController.autoControlled;
-			String message = Env.message(gameController.autoControlled ? "autopilot_on" : "autopilot_off");
-			FlashMessageView.showFlashMessage(1, message);
+			toggleAutopilot();
 		}
 
 		case E -> {
@@ -254,9 +248,7 @@ public class GameUI extends DefaultGameEventHandler {
 			if (e.isShiftDown()) {
 				return;
 			}
-			game.player.immune = !game.player.immune;
-			String message = Env.message(game.player.immune ? "player_immunity_on" : "player_immunity_off");
-			FlashMessageView.showFlashMessage(1, message);
+			toggleImmunity();
 		}
 
 		case L -> {
@@ -280,14 +272,10 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 
 		case P -> {
-			if (e.isShiftDown()) {
-				if (Env.$paused.get()) {
-					Env.gameLoop.runSingleStep(true);
-				}
+			if (e.isShiftDown() && Env.$paused.get()) {
+				Env.gameLoop.runSingleStep(true);
 			} else {
-				Env.$paused.set(!Env.$paused.get());
-				FlashMessageView.showFlashMessage(2, Env.$paused.get() ? "Game paused" : "Game resumed");
-				log(Env.$paused.get() ? "Game paused." : "Game resumed.");
+				togglePaused();
 			}
 		}
 
@@ -380,13 +368,9 @@ public class GameUI extends DefaultGameEventHandler {
 			}
 		}
 
-		case I -> {
-			if (HUD.get().isVisible()) {
-				HUD.get().hide();
-			} else {
-				HUD.get().show();
-			}
-		}
+		case I -> toggleHUD();
+
+		case J -> toggleCommandPanel();
 
 		case L -> {
 			if (currentGameScene.is3D()) {
@@ -414,11 +398,7 @@ public class GameUI extends DefaultGameEventHandler {
 			Env.$isTimeMeasured.set(!Env.$isTimeMeasured.get());
 		}
 
-		case X -> {
-			if (currentGameScene.is3D()) {
-				Env.$axesVisible.set(!Env.$axesVisible.get());
-			}
-		}
+		case X -> toggleAxesVisible();
 
 		case Y -> {
 			if (!currentGameScene.is3D()) {
@@ -426,15 +406,71 @@ public class GameUI extends DefaultGameEventHandler {
 			}
 		}
 
-		case DIGIT3 -> {
-			toggle3D();
-			String message = Env.$3D.get() ? "Using 3D Play Scene" : "Using 2D Play Scene";
-			FlashMessageView.showFlashMessage(2, message);
-		}
+		case DIGIT3 -> toggle3D();
 
 		default -> {
 		}
 
 		}
+	}
+
+	public void toggle3D() {
+		Env.$3D.set(!Env.$3D.get());
+		if (gameSceneForCurrentState(false) != gameSceneForCurrentState(true)) {
+			currentGameScene.getSounds().stopAll();
+			updateGameScene();
+			if (currentGameScene instanceof PlayScene2D) {
+				((PlayScene2D) currentGameScene).onSwitchFrom3DTo2D();
+			}
+		}
+		String message = Env.$3D.get() ? "Using 3D Play Scene" : "Using 2D Play Scene";
+		FlashMessageView.showFlashMessage(2, message);
+	}
+
+	public void toggleAxesVisible() {
+		if (currentGameScene.is3D()) {
+			Env.$axesVisible.set(!Env.$axesVisible.get());
+		}
+	}
+
+	public void toggleAutopilot() {
+		gameController.autoControlled = !gameController.autoControlled;
+		String message = Env.message(gameController.autoControlled ? "autopilot_on" : "autopilot_off");
+		FlashMessageView.showFlashMessage(1, message);
+	}
+
+	public void toggleCommandPanel() {
+		if (commandPanel.isVisible()) {
+			commandPanel.hide();
+		} else {
+			commandPanel.show();
+		}
+		if (commandPanel.isVisible()) {
+			hud.setVisible(false);
+		}
+	}
+
+	public void toggleHUD() {
+		if (hud.isVisible()) {
+			hud.hide();
+		} else {
+			hud.show();
+		}
+		if (hud.isVisible()) {
+			commandPanel.setVisible(false);
+		}
+	}
+
+	public void toggleImmunity() {
+		GameModel game = gameController.game;
+		game.player.immune = !game.player.immune;
+		String message = Env.message(game.player.immune ? "player_immunity_on" : "player_immunity_off");
+		FlashMessageView.showFlashMessage(1, message);
+	}
+
+	public void togglePaused() {
+		Env.$paused.set(!Env.$paused.get());
+		FlashMessageView.showFlashMessage(2, Env.$paused.get() ? "Game paused" : "Game resumed");
+		log(Env.$paused.get() ? "Game paused." : "Game resumed.");
 	}
 }

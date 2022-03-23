@@ -59,21 +59,17 @@ public class HUD extends VBox {
 		return b ? "ON" : "OFF";
 	}
 
-	private static HUD it = new HUD();
-
-	public static HUD get() {
-		return it;
-	}
-
+	private final Color textColor = Color.WHITE;
+	private final Font textFont = Font.font("Monospace", 14);
 	private final Text textUI = new Text();
 	private final StringBuilder text = new StringBuilder();
 
-	private HUD() {
+	public HUD(GameUI ui) {
 		setVisible(false);
 		setMaxWidth(MAX_WIDTH);
 		setBackground(new Background(new BackgroundFill(new Color(0.3, 0.3, 0.3, 0.6), null, null)));
-		textUI.setFill(Color.WHITE);
-		textUI.setFont(Font.font("Monospace", 14));
+		textUI.setFill(textColor);
+		textUI.setFont(textFont);
 		getChildren().add(textUI);
 	}
 
