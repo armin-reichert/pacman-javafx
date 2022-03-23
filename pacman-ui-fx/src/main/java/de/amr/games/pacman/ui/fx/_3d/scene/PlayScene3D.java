@@ -130,25 +130,15 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		return camController;
 	}
 
-	public void toggleFloorTexture() {
-		if (maze3D.getFloorTexture() == null) {
-			maze3D.setFloorTexture(floorImage);
-			maze3D.setFloorColor(Color.DARKBLUE);
-		} else {
-			maze3D.setFloorTexture(null);
-			maze3D.setFloorColor(Color.rgb(30, 30, 30));
-		}
-	}
-
 	@Override
 	public void init() {
 		final int width = game.world.numCols() * TS;
 		final int height = game.world.numRows() * TS;
 
 		maze3D = new Maze3D(width, height);
-		maze3D.setFloorColor(Color.rgb(30, 30, 30));
 		maze3D.createWallsAndDoors(game.world, r2D.getMazeSideColor(game.mazeNumber), r2D.getMazeTopColor(game.mazeNumber));
 		maze3D.createFood(game.world, r2D.getFoodColor(game.mazeNumber));
+		onUseFloorTextureChange(null);
 
 		player3D = new Pac3D(game.player, model3D);
 		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D)).toArray(Ghost3D[]::new);
@@ -184,6 +174,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		maze3D.$resolution.addListener(this::onMazeResolutionChange);
 
 		Env.$perspective.addListener(this::onPerspectiveChange);
+		Env.$useMazeFloorTexture.addListener(this::onUseFloorTextureChange);
 	}
 
 	@Override
@@ -195,6 +186,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		maze3D.$resolution.removeListener(this::onMazeResolutionChange);
 
 		Env.$perspective.removeListener(this::onPerspectiveChange);
+		Env.$useMazeFloorTexture.removeListener(this::onUseFloorTextureChange);
 	}
 
 	@Override
@@ -239,6 +231,16 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			// keep the score in plain sight
 			score3D.rotationAxisProperty().bind(camController.cam().rotationAxisProperty());
 			score3D.rotateProperty().bind(camController.cam().rotateProperty());
+		}
+	}
+
+	private void onUseFloorTextureChange(Observable unused) {
+		if (Env.$useMazeFloorTexture.get()) {
+			maze3D.setFloorTexture(floorImage);
+			maze3D.setFloorColor(Color.DARKBLUE);
+		} else {
+			maze3D.setFloorTexture(null);
+			maze3D.setFloorColor(Color.rgb(30, 30, 30));
 		}
 	}
 

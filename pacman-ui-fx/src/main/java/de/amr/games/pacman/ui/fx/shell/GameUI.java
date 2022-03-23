@@ -368,9 +368,8 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 
 		case F -> {
-			if (currentGameScene instanceof PlayScene3D) {
-				PlayScene3D playScene = (PlayScene3D) currentGameScene;
-				playScene.toggleFloorTexture();
+			if (currentGameScene.is3D()) {
+				Env.$useMazeFloorTexture.set(!Env.$useMazeFloorTexture.get());
 			}
 		}
 
