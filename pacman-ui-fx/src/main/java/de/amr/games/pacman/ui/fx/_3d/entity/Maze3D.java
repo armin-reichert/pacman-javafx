@@ -78,17 +78,20 @@ public class Maze3D extends Group {
 		floor.getTransforms().add(new Translate(0.5 * floor.getWidth(), 0.5 * floor.getHeight(), 0.5 * floor.getDepth()));
 		floor.drawModeProperty().bind(Env.$drawMode3D);
 		getChildren().addAll(floor, wallsGroup, doorsGroup, pelletsGroup);
-		setFloorColor(Color.BLUE);
+		setColoredFloor(Color.BLUE);
 	}
 
-	public void setFloorColor(Color floorColor) {
-		floorMaterial.setDiffuseColor(floorColor);
-		floorMaterial.setSpecularColor(floorColor.brighter());
+	public void setColoredFloor(Color color) {
+		floorMaterial.setDiffuseMap(null);
+		floorMaterial.setDiffuseColor(color);
+		floorMaterial.setSpecularColor(color.brighter());
 	}
 
-	public void setFloorTexture(Image floorTexture) {
+	public void setTexturedFloor(Image floorTexture, Color color) {
 		this.floorTexture = floorTexture;
 		floorMaterial.setDiffuseMap(floorTexture);
+		floorMaterial.setDiffuseColor(color);
+		floorMaterial.setSpecularColor(color.brighter());
 	}
 
 	public Image getFloorTexture() {

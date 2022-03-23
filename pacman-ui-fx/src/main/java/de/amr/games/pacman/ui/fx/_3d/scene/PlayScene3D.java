@@ -241,11 +241,9 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 	private void onUseFloorTextureChange(Observable unused) {
 		if (Env.$useMazeFloorTexture.get()) {
-			maze3D.setFloorTexture(floorImage);
-			maze3D.setFloorColor(Color.DARKBLUE);
+			maze3D.setTexturedFloor(floorImage, Color.DARKBLUE);
 		} else {
-			maze3D.setFloorTexture(null);
-			maze3D.setFloorColor(Color.rgb(30, 30, 30));
+			maze3D.setColoredFloor(Color.rgb(30, 30, 30));
 		}
 	}
 
