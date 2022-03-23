@@ -139,18 +139,18 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	private void selectGameScene() {
-		GameScene nextScene = gameSceneForCurrentState(Env.$3D.get());
-		if (currentGameScene != nextScene) {
+		GameScene nextGameScene = gameSceneForCurrentState(Env.$3D.get());
+		if (currentGameScene != nextGameScene) {
 			if (currentGameScene != null) {
-				log("Change scene from '%s' to '%s'", currentGameScene.getClass().getName(), nextScene.getClass().getName());
+				log("Change scene from '%s' to '%s'", currentGameScene.getClass().getName(), nextGameScene.getClass().getName());
 				currentGameScene.end();
 			} else {
-				log("Set scene to '%s'", nextScene.getClass().getName());
+				log("Set scene to '%s'", nextGameScene.getClass().getName());
 			}
-			mainSceneRoot.getChildren().set(0, nextScene.getFXSubScene());
-			updateSceneContext(nextScene);
-			nextScene.init();
-			currentGameScene = nextScene;
+			mainSceneRoot.getChildren().set(0, nextGameScene.getFXSubScene());
+			updateSceneContext(nextGameScene);
+			nextGameScene.init();
+			currentGameScene = nextGameScene;
 		}
 	}
 
