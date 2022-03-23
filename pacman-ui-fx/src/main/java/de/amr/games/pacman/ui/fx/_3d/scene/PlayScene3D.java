@@ -138,7 +138,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		maze3D = new Maze3D(width, height);
 		maze3D.createWallsAndDoors(game.world, r2D.getMazeSideColor(game.mazeNumber), r2D.getMazeTopColor(game.mazeNumber));
 		maze3D.createFood(game.world, r2D.getFoodColor(game.mazeNumber));
-		onUseFloorTextureChange(null);
 
 		player3D = new Pac3D(game.player, model3D);
 		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D)).toArray(Ghost3D[]::new);
@@ -166,6 +165,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		fxSubScene.setRoot(new Group(new AmbientLight(Color.GHOSTWHITE), world3D, coordSystem));
 
 		onPerspectiveChange(null);
+		onUseFloorTextureChange(null);
 
 		sounds.setMuted(gameController.attractMode);
 
