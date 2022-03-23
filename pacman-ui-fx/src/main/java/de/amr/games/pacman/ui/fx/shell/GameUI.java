@@ -76,7 +76,7 @@ public class GameUI extends DefaultGameEventHandler {
 			U.imageBackground("/common/wallpapers/easter_island.jpg"), //
 	};
 
-	private final GameController gameController;
+	public final GameController gameController;
 	private final GameScenes gameScenes;
 	private final Stage stage;
 	private final Canvas canvas;
@@ -381,13 +381,12 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 
 		case S -> {
-			int targetFrameRate = Env.gameLoop.getTargetFrameRate();
+			int rate = Env.gameLoop.getTargetFrameRate();
 			if (!e.isShiftDown()) {
-				Env.gameLoop.setTargetFrameRate(targetFrameRate + 10);
+				setTargetFrameRate(rate + 10);
 			} else {
-				Env.gameLoop.setTargetFrameRate(Math.max(10, targetFrameRate - 10));
+				setTargetFrameRate(Math.max(10, rate - 10));
 			}
-			FlashMessageView.showFlashMessage(1, "Target FPS set to %d Hz", Env.gameLoop.getTargetFrameRate());
 		}
 
 		case T -> {
@@ -404,6 +403,12 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 
 		}
+	}
+
+	public void setTargetFrameRate(int value) {
+		Env.gameLoop.setTargetFrameRate(value);
+		FlashMessageView.showFlashMessage(1, "Target FPS set to %d Hz", Env.gameLoop.getTargetFrameRate());
+
 	}
 
 	public void toggleDrawMode() {

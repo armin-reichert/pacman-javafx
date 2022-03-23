@@ -25,9 +25,11 @@ package de.amr.games.pacman.ui.fx.shell;
 
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 public class CommandPanel extends GridPane {
 
@@ -36,13 +38,16 @@ public class CommandPanel extends GridPane {
 	private int row;
 
 	public CommandPanel(GameUI ui) {
-		row = 0;
-		checkBox("Autopilot", ui::toggleAutopilot, false);
-		checkBox("Immunity", ui::toggleImmunity, false);
-		checkBox("Use 3D scene", ui::toggle3D, true);
-		checkBox("Axes", ui::toggleAxesVisible, false);
-		checkBox("Line Mode", ui::toggleDrawMode, false);
-		checkBox("Tiles", ui::toggleTilesVisible, false);
+		setHgap(20);
+		slider("Framerate", 10, 200, 60).valueProperty().addListener(($1, oldVal, newVal) -> {
+			ui.setTargetFrameRate(newVal.intValue());
+		});
+		checkBox("Autopilot", ui::toggleAutopilot);
+		checkBox("Immunity", ui::toggleImmunity);
+		checkBox("Use 3D scene", ui::toggle3D);
+		checkBox("Axes", ui::toggleAxesVisible);
+		checkBox("Wireframe Mode", ui::toggleDrawMode);
+		checkBox("Tiles", ui::toggleTilesVisible);
 		setVisible(false);
 	}
 
@@ -56,12 +61,30 @@ public class CommandPanel extends GridPane {
 		setVisible(false);
 	}
 
-	private void checkBox(String text, Runnable callback, boolean selected) {
-		CheckBox cb = new CheckBox(text);
-		cb.setSelected(selected);
+	private CheckBox checkBox(String text, Runnable callback) {
+		CheckBox cb = new CheckBox();
 		cb.setTextFill(textColor);
 		cb.setFont(textFont);
 		cb.setOnAction(e -> callback.run());
-		add(cb, 0, row++);
+		Text label = new Text(text);
+		label.setFill(textColor);
+		label.setFont(textFont);
+		add(label, 0, row);
+		add(cb, 1, row++);
+		return cb;
+	}
+
+	private Slider slider(String text, int min, int max, int value) {
+		Slider slider = new Slider(min, max, value);
+		slider.setShowTickLabels(true);
+		slider.setShowTickMarks(true);
+		slider.setMinorTickCount(5);
+		slider.setMajorTickUnit(50);
+		Text label = new Text(text);
+		label.setFill(textColor);
+		label.setFont(textFont);
+		add(label, 0, row);
+		add(slider, 1, row++);
+		return slider;
 	}
 }
