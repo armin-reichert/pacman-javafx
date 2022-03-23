@@ -105,7 +105,7 @@ public class GameUI extends DefaultGameEventHandler {
 		Env.gameLoop.$fps.addListener($1 -> stage.setTitle(computeStageTitle()));
 
 		gameScenes = new GameScenes(mainScene, gameController, canvas, new V2i(TILES_X, TILES_Y).scaled(TS));
-		selectGameScene();
+		updateGameScene();
 
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> Env.gameLoop.stop());
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
@@ -138,7 +138,7 @@ public class GameUI extends DefaultGameEventHandler {
 		return gameScenes.getScene(gameController.gameVariant, sceneIndex, _3D ? 1 : 0);
 	}
 
-	private void selectGameScene() {
+	private void updateGameScene() {
 		GameScene nextGameScene = gameSceneForCurrentState(Env.$3D.get());
 		if (currentGameScene != nextGameScene) {
 			if (currentGameScene != null) {
@@ -171,8 +171,8 @@ public class GameUI extends DefaultGameEventHandler {
 		updateBackground(gameScene);
 	}
 
-	private void updateBackground(GameScene scene) {
-		if (scene.is3D()) {
+	private void updateBackground(GameScene gameScene) {
+		if (gameScene.is3D()) {
 			mainSceneRoot.setBackground(Env.$drawMode3D.get() == DrawMode.LINE //
 					? U.colorBackground(Color.BLACK)
 					: BACKGROUNDS[backgroundIndex]);
@@ -198,7 +198,7 @@ public class GameUI extends DefaultGameEventHandler {
 		Env.$3D.set(!Env.$3D.get());
 		if (gameSceneForCurrentState(false) != gameSceneForCurrentState(true)) {
 			currentGameScene.getSounds().stopAll();
-			selectGameScene();
+			updateGameScene();
 			if (currentGameScene instanceof PlayScene2D) {
 				((PlayScene2D) currentGameScene).onSwitchFrom3DTo2D();
 			}
@@ -213,7 +213,7 @@ public class GameUI extends DefaultGameEventHandler {
 
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
-		selectGameScene();
+		updateGameScene();
 	}
 
 	private void onKeyPressed(KeyEvent e) {
