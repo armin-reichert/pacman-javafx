@@ -106,9 +106,14 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	protected void doUpdate() {
-		AudioClip munching = sounds.getClip(GameSounds.PACMAN_MUNCH);
-		if (munching.isPlaying() && game.player.starvingTicks > 10) {
+		// keep in sync with 3D scene in case user toggles between 2D and 3D
+		if (sounds.getClip(GameSounds.PACMAN_MUNCH).isPlaying() && game.player.starvingTicks > 10) {
 			sounds.stop(GameSounds.PACMAN_MUNCH);
+		}
+		int scatterPhase = game.huntingPhase % 2;
+		GameSounds siren = GameSounds.SIRENS.get(scatterPhase);
+		if (gameController.state == GameState.HUNTING && !sounds.getClip(siren).isPlaying()) {
+			sounds.loop(siren, Animation.INDEFINITE);
 		}
 	}
 

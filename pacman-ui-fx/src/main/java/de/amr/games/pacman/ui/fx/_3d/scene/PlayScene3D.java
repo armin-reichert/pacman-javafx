@@ -207,6 +207,11 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		if (sounds.getClip(GameSounds.PACMAN_MUNCH).isPlaying() && game.player.starvingTicks > 10) {
 			sounds.stop(GameSounds.PACMAN_MUNCH);
 		}
+		int scatterPhase = game.huntingPhase % 2;
+		GameSounds siren = GameSounds.SIRENS.get(scatterPhase);
+		if (gameController.state == GameState.HUNTING && !sounds.getClip(siren).isPlaying()) {
+			sounds.loop(siren, Animation.INDEFINITE);
+		}
 	}
 
 	private void onMazeResolutionChange(ObservableValue<? extends Number> property, Number oldValue, Number newValue) {
