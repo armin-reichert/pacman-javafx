@@ -455,7 +455,7 @@ public class GameUI extends DefaultGameEventHandler {
 			commandPanel.show();
 		}
 		if (commandPanel.isVisible()) {
-			hud.setVisible(false);
+			hud.hide();
 		}
 	}
 
@@ -466,7 +466,7 @@ public class GameUI extends DefaultGameEventHandler {
 			hud.show();
 		}
 		if (hud.isVisible()) {
-			commandPanel.setVisible(false);
+			commandPanel.hide();
 		}
 	}
 

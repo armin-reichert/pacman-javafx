@@ -28,31 +28,48 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public class CommandPanel extends GridPane {
 
+	private final GameUI ui;
 	private final Color textColor = Color.WHITE;
 	private final Font textFont = Font.font("Monospace", 14);
 	private int row;
 
+	private final CheckBox cbAutopilot;
+	private final CheckBox cbImmunity;
+	private final CheckBox cbUse3DScene;
+	private final CheckBox cbAxesVisible;
+	private final CheckBox cbWireframeMode;
+	private final CheckBox cbShowTiles;
+
 	public CommandPanel(GameUI ui) {
+		this.ui = ui;
 		setHgap(20);
 		slider("Framerate", 10, 200, 60).valueProperty().addListener(($1, oldVal, newVal) -> {
 			ui.setTargetFrameRate(newVal.intValue());
 		});
-		checkBox("Autopilot", ui::toggleAutopilot);
-		checkBox("Immunity", ui::toggleImmunity);
-		checkBox("Use 3D scene", ui::toggle3D);
-		checkBox("Axes", ui::toggleAxesVisible);
-		checkBox("Wireframe Mode", ui::toggleDrawMode);
-		checkBox("Tiles", ui::toggleTilesVisible);
+		cbAutopilot = checkBox("Autopilot", ui::toggleAutopilot);
+		cbImmunity = checkBox("Player immune", ui::toggleImmunity);
+		cbUse3DScene = checkBox("Use 3D scene", ui::toggle3D);
+		cbAxesVisible = checkBox("Show Axes", ui::toggleAxesVisible);
+		cbWireframeMode = checkBox("Wireframe Mode", ui::toggleDrawMode);
+		cbShowTiles = checkBox("Tiles", ui::toggleTilesVisible);
 		setVisible(false);
 	}
 
 	public void show() {
 		Env.$paused.set(true);
+		cbAutopilot.setSelected(ui.gameController.autoControlled);
+		cbImmunity.setSelected(ui.gameController.game.player.immune);
+		cbUse3DScene.setSelected(Env.$3D.get());
+		cbAxesVisible.setSelected(Env.$axesVisible.get());
+		cbWireframeMode.setSelected(Env.$drawMode3D.get() == DrawMode.LINE);
+		cbShowTiles.setSelected(Env.$tilesVisible.get());
+
 		setVisible(true);
 	}
 
