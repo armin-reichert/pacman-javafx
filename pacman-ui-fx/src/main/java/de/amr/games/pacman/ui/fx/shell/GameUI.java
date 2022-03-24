@@ -40,6 +40,7 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
+import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameScenes;
@@ -160,6 +161,9 @@ public class GameUI extends DefaultGameEventHandler {
 				log("Set scene to '%s'", nextGameScene.getClass().getName());
 			}
 			mainSceneRoot.getChildren().set(0, nextGameScene.getFXSubScene());
+			if (nextGameScene instanceof PlayScene3D) {
+				changeBackground();
+			}
 			updateSceneContext(nextGameScene);
 			nextGameScene.init();
 			currentGameScene = nextGameScene;
@@ -233,27 +237,23 @@ public class GameUI extends DefaultGameEventHandler {
 		final GameState state = gameController.state;
 
 		switch (e.getCode()) {
-		case A -> {
-			toggleAutopilot();
-		}
+		case A -> toggleAutopilot();
 		case E -> {
 			if (gameController.gameRunning) {
 				gameController.cheatEatAllPellets();
 			}
 		}
-		case I -> {
-			toggleImmunity();
-		}
+		case I -> toggleImmunity();
 		case L -> {
 			if (gameController.gameRunning) {
 				game.player.lives += 3;
-				FlashMessageView.showFlashMessage(2, "You have %d lives", game.player.lives);
+				showFlashMessage(2, "You have %d lives", game.player.lives);
 			}
 		}
 		case N -> {
 			if (gameController.gameRunning) {
-				FlashMessageView.showFlashMessage(1, Env.CHEAT_TALK.next());
 				gameController.changeState(GameState.LEVEL_COMPLETE);
+				showFlashMessage(1, Env.CHEAT_TALK.next());
 			}
 		}
 		case P -> {
@@ -279,16 +279,11 @@ public class GameUI extends DefaultGameEventHandler {
 		case Z -> {
 			if (state == GameState.INTRO) {
 				gameController.startIntermissionTest();
-				FlashMessageView.showFlashMessage(1, "Intermission Scene Test");
+				showFlashMessage(1, "Intermission Scene Test");
 			}
 		}
-		case SPACE -> {
-			changeBackground();
-			gameController.requestGame();
-		}
-		case F11 -> {
-			stage.setFullScreen(true);
-		}
+		case SPACE -> gameController.requestGame();
+		case F11 -> stage.setFullScreen(true);
 		default -> {
 		}
 		}
@@ -319,6 +314,7 @@ public class GameUI extends DefaultGameEventHandler {
 			} else {
 				setTargetFrameRate(rate + 10);
 			}
+			showFlashMessage(1, "Target FPS set to %d Hz", Env.gameLoop.getTargetFrameRate());
 		}
 		case DIGIT3 -> toggle3D();
 		default -> {
@@ -328,7 +324,6 @@ public class GameUI extends DefaultGameEventHandler {
 
 	public void setTargetFrameRate(int value) {
 		Env.gameLoop.setTargetFrameRate(value);
-		FlashMessageView.showFlashMessage(1, "Target FPS set to %d Hz", Env.gameLoop.getTargetFrameRate());
 	}
 
 	public void toggleHUDVisibility() {
