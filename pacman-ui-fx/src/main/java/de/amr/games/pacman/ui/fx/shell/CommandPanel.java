@@ -27,6 +27,7 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.U;
+import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
@@ -52,33 +53,43 @@ public class CommandPanel extends GridPane {
 	private final Font headerFont = Font.font("Monospace", FontWeight.BOLD, 18);
 	private int row;
 
+	private final CheckBox cbGamePaused;
 	private final Slider sliderTargetFrameRate;
 	private final ComboBox<GameVariant> comboGameVariant;
 	private final CheckBox cbAutopilot;
 	private final CheckBox cbImmunity;
 	private final CheckBox cbUse3DScene;
+
 	private final ComboBox<Perspective> comboPerspective;
 	private final ComboBox<Integer> comboMazeResolution;
+	private final Slider sliderMazeWallHeight;
 	private final CheckBox cbUseMazeFloorTexture;
 	private final CheckBox cbAxesVisible;
 	private final CheckBox cbWireframeMode;
+
 	private final CheckBox cbShowTiles;
 
 	public CommandPanel(GameUI ui, int width) {
 		this.ui = ui;
+
 		setBackground(U.colorBackground(new Color(0.3, 0.3, 0.3, 0.6)));
 		setHgap(20);
 		setMinWidth(width);
 		setWidth(width);
 		setMaxWidth(width);
 
+		addSectionHeader("General settings");
+
+		cbGamePaused = addCheckBox("Game Paused", () -> ui.togglePaused());
 		sliderTargetFrameRate = addSlider("Framerate", 10, 200, 60);
+		sliderTargetFrameRate.setShowTickLabels(true);
+		sliderTargetFrameRate.setShowTickMarks(true);
+		sliderTargetFrameRate.setMinorTickCount(5);
+		sliderTargetFrameRate.setMajorTickUnit(50);
 		sliderTargetFrameRate.valueProperty().addListener(($1, oldVal, newVal) -> {
 			ui.setTargetFrameRate(newVal.intValue());
 		});
-
-		addSectionHeader("General settings");
-		comboGameVariant = addComboBox("GameVariant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
+		comboGameVariant = addComboBox("Game Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
 		comboGameVariant.setOnAction(e -> ui.gameController.selectGameVariant(comboGameVariant.getValue()));
 		cbUse3DScene = addCheckBox("Use 3D Play Scene", ui::toggle3D);
 		cbAutopilot = addCheckBox("Autopilot", ui::toggleAutopilot);
@@ -89,6 +100,10 @@ public class CommandPanel extends GridPane {
 		comboPerspective.setOnAction(e -> Env.$perspective.set(comboPerspective.getValue()));
 		comboMazeResolution = addComboBox("Maze resolution", 1, 2, 4, 8);
 		comboMazeResolution.setOnAction(e -> Env.$mazeResolution.set(comboMazeResolution.getValue()));
+		sliderMazeWallHeight = addSlider("Maze wall height", 0, 10, 8);
+		sliderMazeWallHeight.valueProperty().addListener(($1, oldVal, newVal) -> {
+			Env.$mazeWallHeight.set(newVal.doubleValue());
+		});
 		cbUseMazeFloorTexture = addCheckBox("Maze floor texture", ui::toggleUseMazeFloorTexture);
 		cbAxesVisible = addCheckBox("Show Axes", ui::toggleAxesVisible);
 		cbWireframeMode = addCheckBox("Wireframe Mode", ui::toggleDrawMode);
@@ -99,6 +114,7 @@ public class CommandPanel extends GridPane {
 	}
 
 	public void update() {
+		cbGamePaused.setSelected(Env.$paused.get());
 		sliderTargetFrameRate.setValue(Env.gameLoop.getTargetFrameRate());
 		comboGameVariant.setValue(ui.gameController.gameVariant);
 		comboGameVariant.setDisable(ui.gameController.gameRunning);
@@ -111,6 +127,8 @@ public class CommandPanel extends GridPane {
 		comboPerspective.setDisable(!ui.getCurrentGameScene().is3D());
 		comboMazeResolution.setValue(Env.$mazeResolution.get());
 		comboMazeResolution.setDisable(!ui.getCurrentGameScene().is3D());
+		sliderMazeWallHeight.setValue(Env.$mazeWallHeight.get());
+		sliderMazeWallHeight.setDisable(!ui.getCurrentGameScene().is3D());
 		cbUseMazeFloorTexture.setSelected(Env.$useMazeFloorTexture.get());
 		cbUseMazeFloorTexture.setDisable(!ui.getCurrentGameScene().is3D());
 		cbAxesVisible.setSelected(Env.$axesVisible.get());
@@ -150,12 +168,8 @@ public class CommandPanel extends GridPane {
 		return cb;
 	}
 
-	private Slider addSlider(String labelText, int min, int max, int value) {
+	private Slider addSlider(String labelText, double min, double max, double value) {
 		Slider slider = new Slider(min, max, value);
-		slider.setShowTickLabels(true);
-		slider.setShowTickMarks(true);
-		slider.setMinorTickCount(5);
-		slider.setMajorTickUnit(50);
 		slider.setMinWidth(200);
 		addRow(labelText, slider);
 		return slider;
@@ -163,10 +177,7 @@ public class CommandPanel extends GridPane {
 
 	@SuppressWarnings("unchecked")
 	private <T> ComboBox<T> addComboBox(String labelText, T... items) {
-		var combo = new ComboBox<T>();
-		for (T item : items) {
-			combo.getItems().add(item);
-		}
+		var combo = new ComboBox<T>(FXCollections.observableArrayList(items));
 		addRow(labelText, combo);
 		return combo;
 	}
