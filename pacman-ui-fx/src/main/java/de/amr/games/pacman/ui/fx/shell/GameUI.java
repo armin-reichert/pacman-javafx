@@ -270,11 +270,7 @@ public class GameUI extends DefaultGameEventHandler {
 				gameController.changeState(GameState.INTRO);
 			}
 		}
-		case V -> {
-			if (state == GameState.INTRO) {
-				gameController.selectGameVariant(gameController.gameVariant.succ());
-			}
-		}
+		case V -> toggleGameVariant();
 		case X -> {
 			if (gameController.gameRunning) {
 				gameController.cheatKillGhosts();
@@ -352,16 +348,43 @@ public class GameUI extends DefaultGameEventHandler {
 		FlashMessageView.showFlashMessage(1, "Target FPS set to %d Hz", Env.gameLoop.getTargetFrameRate());
 	}
 
-	public void toggleAxesVisible() {
-		Env.$axesVisible.set(!Env.$axesVisible.get());
+	public void toggleHUDVisibility() {
+		hud.setVisible(!hud.isVisible());
+		if (hud.isVisible()) {
+			commandPanel.setVisible(false);
+		}
 	}
 
-	public void toggleDrawMode() {
-		Env.$drawMode3D.set(Env.$drawMode3D.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+	public void toggleCommandPanelVisibility() {
+		commandPanel.setVisible(!commandPanel.isVisible());
+		if (commandPanel.isVisible()) {
+			hud.setVisible(false);
+		}
 	}
 
-	public void toggleTilesVisible() {
-		Env.$tilesVisible.set(!Env.$tilesVisible.get());
+	public void togglePaused() {
+		Env.$paused.set(!Env.$paused.get());
+		FlashMessageView.showFlashMessage(2, Env.$paused.get() ? "Game paused" : "Game resumed");
+		log(Env.$paused.get() ? "Game paused." : "Game resumed.");
+	}
+
+	public void toggleGameVariant() {
+		if (!gameController.gameRunning) {
+			gameController.selectGameVariant(gameController.gameVariant.succ());
+		}
+	}
+
+	public void toggleAutopilot() {
+		gameController.autoControlled = !gameController.autoControlled;
+		String message = Env.message(gameController.autoControlled ? "autopilot_on" : "autopilot_off");
+		FlashMessageView.showFlashMessage(1, message);
+	}
+
+	public void toggleImmunity() {
+		GameModel game = gameController.game;
+		game.player.immune = !game.player.immune;
+		String message = Env.message(game.player.immune ? "player_immunity_on" : "player_immunity_off");
+		FlashMessageView.showFlashMessage(1, message);
 	}
 
 	public void toggle3D() {
@@ -377,40 +400,27 @@ public class GameUI extends DefaultGameEventHandler {
 		FlashMessageView.showFlashMessage(2, message);
 	}
 
+	public void toggleAxesVisible() {
+		if (currentGameScene.is3D()) {
+			Env.$axesVisible.set(!Env.$axesVisible.get());
+		}
+	}
+
+	public void toggleDrawMode() {
+		if (currentGameScene.is3D()) {
+			Env.$drawMode3D.set(Env.$drawMode3D.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+		}
+	}
+
 	public void toggleUseMazeFloorTexture() {
-		Env.$useMazeFloorTexture.set(!Env.$useMazeFloorTexture.get());
-	}
-
-	public void toggleAutopilot() {
-		gameController.autoControlled = !gameController.autoControlled;
-		String message = Env.message(gameController.autoControlled ? "autopilot_on" : "autopilot_off");
-		FlashMessageView.showFlashMessage(1, message);
-	}
-
-	public void toggleCommandPanelVisibility() {
-		commandPanel.setVisible(!commandPanel.isVisible());
-		if (commandPanel.isVisible()) {
-			hud.setVisible(false);
+		if (currentGameScene.is3D()) {
+			Env.$useMazeFloorTexture.set(!Env.$useMazeFloorTexture.get());
 		}
 	}
 
-	public void toggleHUDVisibility() {
-		hud.setVisible(!hud.isVisible());
-		if (hud.isVisible()) {
-			commandPanel.setVisible(false);
+	public void toggleTilesVisible() {
+		if (!currentGameScene.is3D()) {
+			Env.$tilesVisible.set(!Env.$tilesVisible.get());
 		}
-	}
-
-	public void toggleImmunity() {
-		GameModel game = gameController.game;
-		game.player.immune = !game.player.immune;
-		String message = Env.message(game.player.immune ? "player_immunity_on" : "player_immunity_off");
-		FlashMessageView.showFlashMessage(1, message);
-	}
-
-	public void togglePaused() {
-		Env.$paused.set(!Env.$paused.get());
-		FlashMessageView.showFlashMessage(2, Env.$paused.get() ? "Game paused" : "Game resumed");
-		log(Env.$paused.get() ? "Game paused." : "Game resumed.");
 	}
 }

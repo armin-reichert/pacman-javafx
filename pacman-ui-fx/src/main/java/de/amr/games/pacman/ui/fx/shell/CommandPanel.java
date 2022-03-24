@@ -80,7 +80,7 @@ public class CommandPanel extends GridPane {
 		addSectionHeader("General settings");
 		comboGameVariant = addComboBox("GameVariant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
 		comboGameVariant.setOnAction(e -> ui.gameController.selectGameVariant(comboGameVariant.getValue()));
-		cbUse3DScene = addCheckBox("Use 3D scene", ui::toggle3D);
+		cbUse3DScene = addCheckBox("Use 3D Play Scene", ui::toggle3D);
 		cbAutopilot = addCheckBox("Autopilot", ui::toggleAutopilot);
 		cbImmunity = addCheckBox("Player immune", ui::toggleImmunity);
 
@@ -101,15 +101,26 @@ public class CommandPanel extends GridPane {
 	public void update() {
 		sliderTargetFrameRate.setValue(Env.gameLoop.getTargetFrameRate());
 		comboGameVariant.setValue(ui.gameController.gameVariant);
+		comboGameVariant.setDisable(ui.gameController.gameRunning);
 		cbAutopilot.setSelected(ui.gameController.autoControlled);
 		cbImmunity.setSelected(ui.gameController.game.player.immune);
 		cbUse3DScene.setSelected(Env.$3D.get());
+
+		// 3D
 		comboPerspective.setValue(Env.$perspective.get());
+		comboPerspective.setDisable(!ui.getCurrentGameScene().is3D());
 		comboMazeResolution.setValue(Env.$mazeResolution.get());
+		comboMazeResolution.setDisable(!ui.getCurrentGameScene().is3D());
 		cbUseMazeFloorTexture.setSelected(Env.$useMazeFloorTexture.get());
+		cbUseMazeFloorTexture.setDisable(!ui.getCurrentGameScene().is3D());
 		cbAxesVisible.setSelected(Env.$axesVisible.get());
+		cbAxesVisible.setDisable(!ui.getCurrentGameScene().is3D());
 		cbWireframeMode.setSelected(Env.$drawMode3D.get() == DrawMode.LINE);
+		cbWireframeMode.setDisable(!ui.getCurrentGameScene().is3D());
+
+		// 2D
 		cbShowTiles.setSelected(Env.$tilesVisible.get());
+		cbShowTiles.setDisable(ui.getCurrentGameScene().is3D());
 	}
 
 	private void addRow(String labelText, Control control) {
