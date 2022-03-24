@@ -83,7 +83,7 @@ public class GameUI extends DefaultGameEventHandler {
 	private final Scene mainScene;
 	private final StackPane mainSceneRoot;
 	private final HUD hud;
-	private final CommandPanel commandPanel;
+	private final SettingsPanel settingsPanel;
 
 	private int backgroundIndex;
 	private GameScene currentGameScene;
@@ -96,12 +96,12 @@ public class GameUI extends DefaultGameEventHandler {
 		backgroundIndex = new Random().nextInt(BACKGROUNDS.length);
 
 		hud = new HUD(this);
-		commandPanel = new CommandPanel(this, 400);
+		settingsPanel = new SettingsPanel(this, 400);
 
 		// first child will get replaced by subscene representing current game scene
-		mainSceneRoot = new StackPane(new Group(), FlashMessageView.get(), hud, commandPanel);
+		mainSceneRoot = new StackPane(new Group(), FlashMessageView.get(), hud, settingsPanel);
 		StackPane.setAlignment(hud, Pos.TOP_LEFT);
-		StackPane.setAlignment(commandPanel, Pos.TOP_LEFT);
+		StackPane.setAlignment(settingsPanel, Pos.TOP_LEFT);
 
 		mainScene = new Scene(mainSceneRoot, ASPECT_RATIO * height, height);
 		mainScene.heightProperty().addListener($1 -> resizeCanvas(mainScene.getHeight()));
@@ -129,8 +129,8 @@ public class GameUI extends DefaultGameEventHandler {
 		if (hud.isVisible()) {
 			hud.update(gameController, currentGameScene, stage, canvas);
 		}
-		if (commandPanel.isVisible()) {
-			commandPanel.update();
+		if (settingsPanel.isVisible()) {
+			settingsPanel.update();
 		}
 	}
 
@@ -309,7 +309,6 @@ public class GameUI extends DefaultGameEventHandler {
 				showFlashMessage(1, Env.message("camera_perspective", perspectiveName));
 			}
 		}
-		case F -> toggleUseMazeFloorTexture();
 		case I -> toggleHUDVisibility();
 		case J -> toggleCommandPanelVisibility();
 		case L -> toggleDrawMode();
@@ -321,8 +320,6 @@ public class GameUI extends DefaultGameEventHandler {
 				setTargetFrameRate(rate + 10);
 			}
 		}
-		case T -> toggleTilesVisible();
-		case X -> toggleAxesVisible();
 		case DIGIT3 -> toggle3D();
 		default -> {
 		}
@@ -337,13 +334,13 @@ public class GameUI extends DefaultGameEventHandler {
 	public void toggleHUDVisibility() {
 		hud.setVisible(!hud.isVisible());
 		if (hud.isVisible()) {
-			commandPanel.setVisible(false);
+			settingsPanel.setVisible(false);
 		}
 	}
 
 	public void toggleCommandPanelVisibility() {
-		commandPanel.setVisible(!commandPanel.isVisible());
-		if (commandPanel.isVisible()) {
+		settingsPanel.setVisible(!settingsPanel.isVisible());
+		if (settingsPanel.isVisible()) {
 			hud.setVisible(false);
 		}
 	}

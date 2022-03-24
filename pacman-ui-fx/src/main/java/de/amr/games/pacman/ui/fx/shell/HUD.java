@@ -149,12 +149,10 @@ public class HUD extends VBox {
 		newline();
 		p("Ctrl+LEFT", "%s", Env.prevPerspectiveName()).when(gameScene.is3D());
 		p("Ctrl+RIGHT", "%s", Env.nextPerspectiveName()).when(gameScene.is3D());
-		p("Ctrl+F", "Toggle Floor Texture").when(gameScene.is3D());
 		p("Ctrl+I", "Information On/Off").done();
+		p("Ctrl+J", "Settings On/Off").done();
 		p("Ctrl+L", "Wireframe Mode On/Off").when(gameScene.is3D());
 		p("Ctrl+S", "Speed (SHIFT=Decrease)").done();
-		p("Ctrl+T", "Toggle tile grid").when(!gameScene.is3D());
-		p("Ctrl+X", "Axes On/Off").when(gameScene.is3D());
 		p("Ctrl+3", "3D Play Scene On/Off").done();
 
 		textUI.setText(text.toString());

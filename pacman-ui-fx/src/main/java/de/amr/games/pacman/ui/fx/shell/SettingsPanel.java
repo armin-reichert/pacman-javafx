@@ -49,7 +49,7 @@ import javafx.scene.text.TextAlignment;
  * 
  * @author Armin Reichert
  */
-public class CommandPanel extends GridPane {
+public class SettingsPanel extends GridPane {
 
 	private final GameUI ui;
 	private final Color textColor = Color.WHITE;
@@ -74,7 +74,7 @@ public class CommandPanel extends GridPane {
 
 	private final CheckBox cbShowTiles;
 
-	public CommandPanel(GameUI ui, int width) {
+	public SettingsPanel(GameUI ui, int width) {
 		this.ui = ui;
 
 		setBackground(U.colorBackground(new Color(0.3, 0.3, 0.3, 0.6)));
