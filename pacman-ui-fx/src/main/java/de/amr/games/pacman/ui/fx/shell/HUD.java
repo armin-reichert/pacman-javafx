@@ -72,32 +72,24 @@ public class HUD extends VBox {
 		textUI.setFill(textColor);
 		textUI.setFont(textFont);
 		getChildren().add(textUI);
-		visibleProperty().addListener(this::onVisibilityChanged);
+		visibleProperty().addListener(this::onVisibilityChange);
 	}
 
-	private void onVisibilityChanged(ObservableValue<? extends Boolean> property, Boolean oldVal, Boolean newVal) {
-		if (newVal) {
-			onShow();
+	private void onVisibilityChange(ObservableValue<? extends Boolean> $1, Boolean wasVisible, Boolean becomesVisible) {
+		if (becomesVisible) {
+			setOpacity(1);
+			setTranslateX(-MAX_WIDTH);
+			TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), this);
+			transition.setFromX(-MAX_WIDTH);
+			transition.setToX(0);
+			transition.setInterpolator(Interpolator.EASE_IN);
+			transition.play();
 		} else {
-			onHide();
+			FadeTransition fade = new FadeTransition(Duration.seconds(0.5), this);
+			fade.setFromValue(1);
+			fade.setToValue(0);
+			fade.play();
 		}
-	}
-
-	private void onShow() {
-		setOpacity(1);
-		setTranslateX(-MAX_WIDTH);
-		TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), this);
-		transition.setFromX(-MAX_WIDTH);
-		transition.setToX(0);
-		transition.setInterpolator(Interpolator.EASE_IN);
-		transition.play();
-	}
-
-	private void onHide() {
-		FadeTransition fade = new FadeTransition(Duration.seconds(0.5), this);
-		fade.setFromValue(1);
-		fade.setToValue(0);
-		fade.play();
 	}
 
 	public void update(GameController gameController, GameScene gameScene, Stage stage, Canvas canvas) {

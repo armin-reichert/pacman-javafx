@@ -59,30 +59,22 @@ public class CommandPanel extends GridPane {
 		cbAxesVisible = checkBox("Show Axes", ui::toggleAxesVisible);
 		cbWireframeMode = checkBox("Wireframe Mode", ui::toggleDrawMode);
 		cbShowTiles = checkBox("Tiles", ui::toggleTilesVisible);
-		visibleProperty().addListener(this::onVisibilityChanged);
+		visibleProperty().addListener(this::onVisibilityChange);
 		setVisible(false);
 	}
 
-	private void onVisibilityChanged(ObservableValue<? extends Boolean> property, Boolean oldVal, Boolean newVal) {
-		if (newVal) {
-			onShow();
+	private void onVisibilityChange(ObservableValue<? extends Boolean> $1, Boolean wasVisible, Boolean becomesVisible) {
+		if (becomesVisible) {
+			Env.$paused.set(true);
+			cbAutopilot.setSelected(ui.gameController.autoControlled);
+			cbImmunity.setSelected(ui.gameController.game.player.immune);
+			cbUse3DScene.setSelected(Env.$3D.get());
+			cbAxesVisible.setSelected(Env.$axesVisible.get());
+			cbWireframeMode.setSelected(Env.$drawMode3D.get() == DrawMode.LINE);
+			cbShowTiles.setSelected(Env.$tilesVisible.get());
 		} else {
-			onHide();
+			Env.$paused.set(false);
 		}
-	}
-
-	private void onShow() {
-		Env.$paused.set(true);
-		cbAutopilot.setSelected(ui.gameController.autoControlled);
-		cbImmunity.setSelected(ui.gameController.game.player.immune);
-		cbUse3DScene.setSelected(Env.$3D.get());
-		cbAxesVisible.setSelected(Env.$axesVisible.get());
-		cbWireframeMode.setSelected(Env.$drawMode3D.get() == DrawMode.LINE);
-		cbShowTiles.setSelected(Env.$tilesVisible.get());
-	}
-
-	private void onHide() {
-		Env.$paused.set(false);
 	}
 
 	private CheckBox checkBox(String text, Runnable callback) {
