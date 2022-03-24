@@ -114,7 +114,7 @@ public class GameUI extends DefaultGameEventHandler {
 		updateGameScene();
 
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> Env.gameLoop.stop());
-		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
+		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPressed);
 
 		stage.setTitle(computeStageTitle());
 		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
@@ -212,136 +212,91 @@ public class GameUI extends DefaultGameEventHandler {
 		updateGameScene();
 	}
 
-	private void onKeyPressed(KeyEvent e) {
-
-		if (e.isControlDown()) {
-			onControlKeyPressed(e);
-			return;
-		}
-
+	private void handleKeyPressed(KeyEvent e) {
 		if (e.isAltDown()) {
-			return;
+			// ignore
+		} else if (e.isControlDown()) {
+			onControlKeyPressed(e);
+		} else {
+			onKeyPressed(e);
 		}
+	}
 
+	private void onKeyPressed(KeyEvent e) {
+		final boolean shift = e.isShiftDown();
 		final GameModel game = gameController.game;
 		final GameState state = gameController.state;
 
 		switch (e.getCode()) {
-
 		case A -> {
-			if (e.isShiftDown()) {
-				return;
-			}
 			toggleAutopilot();
 		}
-
 		case E -> {
-			if (e.isShiftDown()) {
-				return;
-			}
 			if (gameController.gameRunning) {
 				gameController.cheatEatAllPellets();
 			}
 		}
-
 		case I -> {
-			if (e.isShiftDown()) {
-				return;
-			}
 			toggleImmunity();
 		}
-
 		case L -> {
-			if (e.isShiftDown()) {
-				return;
-			}
 			if (gameController.gameRunning) {
 				game.player.lives += 3;
 				FlashMessageView.showFlashMessage(2, "You have %d lives", game.player.lives);
 			}
 		}
-
 		case N -> {
-			if (e.isShiftDown()) {
-				return;
-			}
 			if (gameController.gameRunning) {
 				FlashMessageView.showFlashMessage(1, Env.CHEAT_TALK.next());
 				gameController.changeState(GameState.LEVEL_COMPLETE);
 			}
 		}
-
 		case P -> {
-			if (e.isShiftDown() && Env.$paused.get()) {
+			if (shift && Env.$paused.get()) {
 				Env.gameLoop.runSingleStep(true);
 			} else {
 				togglePaused();
 			}
 		}
-
 		case Q -> {
-			if (e.isShiftDown()) {
-				return;
-			}
 			if (state != GameState.INTRO) {
 				currentGameScene.end();
 				currentGameScene.getSounds().stopAll();
 				gameController.changeState(GameState.INTRO);
 			}
 		}
-
 		case V -> {
-			if (e.isShiftDown()) {
-				return;
-			}
 			if (state == GameState.INTRO) {
 				gameController.selectGameVariant(gameController.gameVariant.succ());
 			}
 		}
-
 		case X -> {
-			if (e.isShiftDown()) {
-				return;
-			}
 			if (gameController.gameRunning) {
 				gameController.cheatKillGhosts();
 			}
 		}
-
 		case Z -> {
-			if (e.isShiftDown()) {
-				return;
-			}
 			if (state == GameState.INTRO) {
 				gameController.startIntermissionTest();
 				FlashMessageView.showFlashMessage(1, "Intermission Scene Test");
 			}
 		}
-
 		case SPACE -> {
-			if (e.isShiftDown()) {
-				return;
-			}
 			changeBackground();
 			gameController.requestGame();
 		}
-
 		case F11 -> {
-			if (e.isShiftDown()) {
-				return;
-			}
 			stage.setFullScreen(true);
 		}
-
 		default -> {
 		}
-
 		}
 	}
 
 	private void onControlKeyPressed(KeyEvent e) {
-		switch (e.getCode()) {
+		final boolean shift = e.isShiftDown();
 
+		switch (e.getCode()) {
 		case LEFT, RIGHT -> {
 			if (currentGameScene instanceof PlayScene3D) {
 				if (e.getCode() == KeyCode.LEFT) {
@@ -355,47 +310,35 @@ public class GameUI extends DefaultGameEventHandler {
 				FlashMessageView.showFlashMessage(1, message);
 			}
 		}
-
 		case F -> {
 			toggleUseMazeFloorTexture();
 		}
-
 		case H -> {
 			if (currentGameScene.is3D()) {
-				Env.changeMazeWallHeight(!e.isShiftDown());
+				Env.changeMazeWallHeight(!shift);
 			}
 		}
-
 		case I -> toggleHUDVisibility();
-
 		case J -> toggleCommandPanelVisibility();
-
 		case L -> toggleDrawMode();
-
 		case R -> {
 			if (currentGameScene.is3D()) {
-				Env.changeMazeResolution(!e.isShiftDown());
+				Env.changeMazeResolution(!shift);
 			}
 		}
-
 		case S -> {
 			int rate = Env.gameLoop.getTargetFrameRate();
-			if (e.isShiftDown()) {
+			if (shift) {
 				setTargetFrameRate(Math.max(10, rate - 10));
 			} else {
 				setTargetFrameRate(rate + 10);
 			}
 		}
-
+		case T -> toggleTilesVisible();
 		case X -> toggleAxesVisible();
-
-		case Y -> toggleTilesVisible();
-
 		case DIGIT3 -> toggle3D();
-
 		default -> {
 		}
-
 		}
 	}
 

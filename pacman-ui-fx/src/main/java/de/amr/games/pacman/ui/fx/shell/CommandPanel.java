@@ -27,11 +27,15 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.VPos;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
@@ -114,7 +118,9 @@ public class CommandPanel extends GridPane {
 		header.setFill(headerColor);
 		header.setFont(headerFont);
 		header.setTextAlignment(TextAlignment.CENTER);
-		add(header, 0, row++, 2, 1);
+		setConstraints(header, 0, row, 2, 1, HPos.CENTER, VPos.CENTER, Priority.NEVER, Priority.NEVER, new Insets(10));
+		getChildren().add(header);
+		++row;
 	}
 
 	private CheckBox addCheckBox(String labelText, Runnable callback) {
