@@ -53,15 +53,15 @@ public class CommandPanel extends GridPane {
 	private int row;
 
 	private final Slider sliderTargetFrameRate;
+	private final ComboBox<GameVariant> comboGameVariant;
 	private final CheckBox cbAutopilot;
 	private final CheckBox cbImmunity;
 	private final CheckBox cbUse3DScene;
+	private final ComboBox<Integer> comboMazeResolution;
 	private final CheckBox cbUseMazeFloorTexture;
 	private final CheckBox cbAxesVisible;
 	private final CheckBox cbWireframeMode;
 	private final CheckBox cbShowTiles;
-
-	private final ComboBox<GameVariant> comboGameVariant;
 
 	public CommandPanel(GameUI ui, int width) {
 		this.ui = ui;
@@ -78,10 +78,12 @@ public class CommandPanel extends GridPane {
 		addSectionHeader("General settings");
 		comboGameVariant = addComboBox("GameVariant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
 		comboGameVariant.setOnAction(e -> ui.gameController.selectGameVariant(comboGameVariant.getValue()));
+		cbUse3DScene = addCheckBox("Use 3D scene", ui::toggle3D);
 		cbAutopilot = addCheckBox("Autopilot", ui::toggleAutopilot);
 		cbImmunity = addCheckBox("Player immune", ui::toggleImmunity);
 		addSectionHeader("3D settings");
-		cbUse3DScene = addCheckBox("Use 3D scene", ui::toggle3D);
+		comboMazeResolution = addComboBox("Maze resolution", 1, 2, 4, 8);
+		comboMazeResolution.setOnAction(e -> Env.$mazeResolution.set(comboMazeResolution.getValue()));
 		cbUseMazeFloorTexture = addCheckBox("Maze floor texture", ui::toggleUseMazeFloorTexture);
 		cbAxesVisible = addCheckBox("Show Axes", ui::toggleAxesVisible);
 		cbWireframeMode = addCheckBox("Wireframe Mode", ui::toggleDrawMode);
@@ -94,14 +96,15 @@ public class CommandPanel extends GridPane {
 	private void onVisibilityChange(ObservableValue<? extends Boolean> $1, Boolean wasVisible, Boolean becomesVisible) {
 		if (becomesVisible) {
 			sliderTargetFrameRate.setValue(Env.gameLoop.getTargetFrameRate());
+			comboGameVariant.setValue(ui.gameController.gameVariant);
 			cbAutopilot.setSelected(ui.gameController.autoControlled);
 			cbImmunity.setSelected(ui.gameController.game.player.immune);
 			cbUse3DScene.setSelected(Env.$3D.get());
+			comboMazeResolution.setValue(Env.$mazeResolution.get());
 			cbUseMazeFloorTexture.setSelected(Env.$useMazeFloorTexture.get());
 			cbAxesVisible.setSelected(Env.$axesVisible.get());
 			cbWireframeMode.setSelected(Env.$drawMode3D.get() == DrawMode.LINE);
 			cbShowTiles.setSelected(Env.$tilesVisible.get());
-			comboGameVariant.setValue(ui.gameController.gameVariant);
 		}
 	}
 
