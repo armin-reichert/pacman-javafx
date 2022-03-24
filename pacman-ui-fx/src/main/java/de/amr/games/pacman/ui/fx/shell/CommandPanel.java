@@ -44,6 +44,11 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
+/**
+ * Panel for configuring the game and the UI.
+ * 
+ * @author Armin Reichert
+ */
 public class CommandPanel extends GridPane {
 
 	private final GameUI ui;
