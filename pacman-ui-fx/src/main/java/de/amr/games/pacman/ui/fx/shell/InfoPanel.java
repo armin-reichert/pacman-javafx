@@ -47,7 +47,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class HUD extends VBox {
+public class InfoPanel extends VBox {
 
 	private static String yes_no(boolean b) {
 		return b ? "YES" : "NO";
@@ -62,7 +62,7 @@ public class HUD extends VBox {
 	private final Text textUI = new Text();
 	private final StringBuilder text = new StringBuilder();
 
-	public HUD(GameUI ui, int width) {
+	public InfoPanel(GameUI ui, int width) {
 		setVisible(false);
 		setMinWidth(width);
 		setMaxWidth(width);

@@ -83,7 +83,7 @@ public class GameUI extends DefaultGameEventHandler {
 	private final Canvas canvas;
 	private final Scene mainScene;
 	private final StackPane mainSceneRoot;
-	private final HUD hud;
+	private final InfoPanel infoPanel;
 	private final SettingsPanel settingsPanel;
 
 	private int backgroundIndex;
@@ -94,12 +94,12 @@ public class GameUI extends DefaultGameEventHandler {
 		this.gameController = gameController;
 
 		canvas = new Canvas(); // common canvas of all 2D scenes
-		hud = new HUD(this, 400);
+		infoPanel = new InfoPanel(this, 400);
 		settingsPanel = new SettingsPanel(this, 400);
 
 		// first child will get replaced by subscene representing current game scene
-		mainSceneRoot = new StackPane(new Group(), FlashMessageView.get(), hud, settingsPanel);
-		StackPane.setAlignment(hud, Pos.TOP_LEFT);
+		mainSceneRoot = new StackPane(new Group(), FlashMessageView.get(), infoPanel, settingsPanel);
+		StackPane.setAlignment(infoPanel, Pos.TOP_LEFT);
 		StackPane.setAlignment(settingsPanel, Pos.TOP_LEFT);
 
 		mainScene = new Scene(mainSceneRoot, ASPECT_RATIO * height, height);
@@ -125,8 +125,8 @@ public class GameUI extends DefaultGameEventHandler {
 
 	public void update() {
 		FlashMessageView.get().update();
-		if (hud.isVisible()) {
-			hud.update(gameController, currentGameScene, stage, canvas);
+		if (infoPanel.isVisible()) {
+			infoPanel.update(gameController, currentGameScene, stage, canvas);
 		}
 		if (settingsPanel.isVisible()) {
 			settingsPanel.update();
@@ -325,8 +325,8 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	public void toggleHUDVisibility() {
-		hud.setVisible(!hud.isVisible());
-		if (hud.isVisible()) {
+		infoPanel.setVisible(!infoPanel.isVisible());
+		if (infoPanel.isVisible()) {
 			settingsPanel.setVisible(false);
 		}
 	}
@@ -334,7 +334,7 @@ public class GameUI extends DefaultGameEventHandler {
 	public void toggleCommandPanelVisibility() {
 		settingsPanel.setVisible(!settingsPanel.isVisible());
 		if (settingsPanel.isVisible()) {
-			hud.setVisible(false);
+			infoPanel.setVisible(false);
 		}
 	}
 
