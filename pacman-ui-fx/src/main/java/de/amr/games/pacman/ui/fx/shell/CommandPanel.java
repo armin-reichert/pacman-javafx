@@ -35,13 +35,17 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 public class CommandPanel extends GridPane {
 
 	private final GameUI ui;
 	private final Color textColor = Color.WHITE;
 	private final Font textFont = Font.font("Monospace", 14);
+	private final Color headerColor = Color.YELLOW;
+	private final Font headerFont = Font.font("Monospace", FontWeight.BOLD, 18);
 	private int row;
 
 	private final Slider sliderTargetFrameRate;
@@ -53,7 +57,7 @@ public class CommandPanel extends GridPane {
 	private final CheckBox cbWireframeMode;
 	private final CheckBox cbShowTiles;
 
-	private final ComboBox<String> comboGameVariant;
+	private final ComboBox<GameVariant> comboGameVariant;
 
 	public CommandPanel(GameUI ui, int width) {
 		this.ui = ui;
@@ -67,23 +71,24 @@ public class CommandPanel extends GridPane {
 		sliderTargetFrameRate.valueProperty().addListener(($1, oldVal, newVal) -> {
 			ui.setTargetFrameRate(newVal.intValue());
 		});
+		addSectionHeader("General settings");
 		comboGameVariant = addComboBox("GameVariant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
-		comboGameVariant
-				.setOnAction(e -> ui.gameController.selectGameVariant(GameVariant.valueOf(comboGameVariant.getValue())));
+		comboGameVariant.setOnAction(e -> ui.gameController.selectGameVariant(comboGameVariant.getValue()));
 		cbAutopilot = addCheckBox("Autopilot", ui::toggleAutopilot);
 		cbImmunity = addCheckBox("Player immune", ui::toggleImmunity);
+		addSectionHeader("3D settings");
 		cbUse3DScene = addCheckBox("Use 3D scene", ui::toggle3D);
 		cbUseMazeFloorTexture = addCheckBox("Maze floor texture", ui::toggleUseMazeFloorTexture);
 		cbAxesVisible = addCheckBox("Show Axes", ui::toggleAxesVisible);
 		cbWireframeMode = addCheckBox("Wireframe Mode", ui::toggleDrawMode);
-		cbShowTiles = addCheckBox("Tiles", ui::toggleTilesVisible);
+		addSectionHeader("2D settings");
+		cbShowTiles = addCheckBox("Show Tiles", ui::toggleTilesVisible);
 		visibleProperty().addListener(this::onVisibilityChange);
 		setVisible(false);
 	}
 
 	private void onVisibilityChange(ObservableValue<? extends Boolean> $1, Boolean wasVisible, Boolean becomesVisible) {
 		if (becomesVisible) {
-			Env.$paused.set(true);
 			sliderTargetFrameRate.setValue(Env.gameLoop.getTargetFrameRate());
 			cbAutopilot.setSelected(ui.gameController.autoControlled);
 			cbImmunity.setSelected(ui.gameController.game.player.immune);
@@ -92,9 +97,7 @@ public class CommandPanel extends GridPane {
 			cbAxesVisible.setSelected(Env.$axesVisible.get());
 			cbWireframeMode.setSelected(Env.$drawMode3D.get() == DrawMode.LINE);
 			cbShowTiles.setSelected(Env.$tilesVisible.get());
-			comboGameVariant.setValue(ui.gameController.gameVariant.toString());
-		} else {
-			Env.$paused.set(false);
+			comboGameVariant.setValue(ui.gameController.gameVariant);
 		}
 	}
 
@@ -104,6 +107,14 @@ public class CommandPanel extends GridPane {
 		label.setFont(textFont);
 		add(label, 0, row);
 		add(control, 1, row++);
+	}
+
+	private void addSectionHeader(String title) {
+		Text header = new Text(title);
+		header.setFill(headerColor);
+		header.setFont(headerFont);
+		header.setTextAlignment(TextAlignment.CENTER);
+		add(header, 0, row++, 2, 1);
 	}
 
 	private CheckBox addCheckBox(String labelText, Runnable callback) {
@@ -126,10 +137,11 @@ public class CommandPanel extends GridPane {
 		return slider;
 	}
 
-	private ComboBox<String> addComboBox(String labelText, Object... items) {
-		ComboBox<String> combo = new ComboBox<>();
-		for (Object item : items) {
-			combo.getItems().add(String.valueOf(item));
+	@SuppressWarnings("unchecked")
+	private <T> ComboBox<T> addComboBox(String labelText, T... items) {
+		var combo = new ComboBox<T>();
+		for (T item : items) {
+			combo.getItems().add(item);
 		}
 		addRow(labelText, combo);
 		return combo;
