@@ -32,6 +32,7 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -71,10 +72,18 @@ public class HUD extends VBox {
 		textUI.setFill(textColor);
 		textUI.setFont(textFont);
 		getChildren().add(textUI);
+		visibleProperty().addListener(this::onVisibilityChanged);
 	}
 
-	public void show() {
-		setVisible(true);
+	private void onVisibilityChanged(ObservableValue<? extends Boolean> property, Boolean oldVal, Boolean newVal) {
+		if (newVal) {
+			onShow();
+		} else {
+			onHide();
+		}
+	}
+
+	private void onShow() {
 		setOpacity(1);
 		setTranslateX(-MAX_WIDTH);
 		TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), this);
@@ -84,11 +93,10 @@ public class HUD extends VBox {
 		transition.play();
 	}
 
-	public void hide() {
+	private void onHide() {
 		FadeTransition fade = new FadeTransition(Duration.seconds(0.5), this);
 		fade.setFromValue(1);
 		fade.setToValue(0);
-		fade.setOnFinished(e -> setVisible(false));
 		fade.play();
 	}
 

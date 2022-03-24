@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell;
 
 import de.amr.games.pacman.ui.fx.app.Env;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.GridPane;
@@ -58,10 +59,19 @@ public class CommandPanel extends GridPane {
 		cbAxesVisible = checkBox("Show Axes", ui::toggleAxesVisible);
 		cbWireframeMode = checkBox("Wireframe Mode", ui::toggleDrawMode);
 		cbShowTiles = checkBox("Tiles", ui::toggleTilesVisible);
+		visibleProperty().addListener(this::onVisibilityChanged);
 		setVisible(false);
 	}
 
-	public void show() {
+	private void onVisibilityChanged(ObservableValue<? extends Boolean> property, Boolean oldVal, Boolean newVal) {
+		if (newVal) {
+			onShow();
+		} else {
+			onHide();
+		}
+	}
+
+	private void onShow() {
 		Env.$paused.set(true);
 		cbAutopilot.setSelected(ui.gameController.autoControlled);
 		cbImmunity.setSelected(ui.gameController.game.player.immune);
@@ -69,13 +79,10 @@ public class CommandPanel extends GridPane {
 		cbAxesVisible.setSelected(Env.$axesVisible.get());
 		cbWireframeMode.setSelected(Env.$drawMode3D.get() == DrawMode.LINE);
 		cbShowTiles.setSelected(Env.$tilesVisible.get());
-
-		setVisible(true);
 	}
 
-	public void hide() {
+	private void onHide() {
 		Env.$paused.set(false);
-		setVisible(false);
 	}
 
 	private CheckBox checkBox(String text, Runnable callback) {
@@ -97,6 +104,7 @@ public class CommandPanel extends GridPane {
 		slider.setShowTickMarks(true);
 		slider.setMinorTickCount(5);
 		slider.setMajorTickUnit(50);
+		slider.setMinWidth(250);
 		Text label = new Text(text);
 		label.setFill(textColor);
 		label.setFont(textFont);

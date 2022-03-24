@@ -411,16 +411,16 @@ public class GameUI extends DefaultGameEventHandler {
 
 	}
 
+	public void toggleAxesVisible() {
+		Env.$axesVisible.set(!Env.$axesVisible.get());
+	}
+
 	public void toggleDrawMode() {
-		if (currentGameScene.is3D()) {
-			Env.$drawMode3D.set(Env.$drawMode3D.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
-		}
+		Env.$drawMode3D.set(Env.$drawMode3D.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 	}
 
 	public void toggleTilesVisible() {
-		if (!currentGameScene.is3D()) {
-			Env.$tilesVisible.set(!Env.$tilesVisible.get());
-		}
+		Env.$tilesVisible.set(!Env.$tilesVisible.get());
 	}
 
 	public void toggle3D() {
@@ -436,12 +436,6 @@ public class GameUI extends DefaultGameEventHandler {
 		FlashMessageView.showFlashMessage(2, message);
 	}
 
-	public void toggleAxesVisible() {
-		if (currentGameScene.is3D()) {
-			Env.$axesVisible.set(!Env.$axesVisible.get());
-		}
-	}
-
 	public void toggleAutopilot() {
 		gameController.autoControlled = !gameController.autoControlled;
 		String message = Env.message(gameController.autoControlled ? "autopilot_on" : "autopilot_off");
@@ -449,24 +443,16 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	public void toggleCommandPanel() {
+		commandPanel.setVisible(!commandPanel.isVisible());
 		if (commandPanel.isVisible()) {
-			commandPanel.hide();
-		} else {
-			commandPanel.show();
-		}
-		if (commandPanel.isVisible()) {
-			hud.hide();
+			hud.setVisible(false);
 		}
 	}
 
 	public void toggleHUD() {
+		hud.setVisible(!hud.isVisible());
 		if (hud.isVisible()) {
-			hud.hide();
-		} else {
-			hud.show();
-		}
-		if (hud.isVisible()) {
-			commandPanel.hide();
+			commandPanel.setVisible(false);
 		}
 	}
 
