@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx.shell;
 
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.world.World.TS;
+import static de.amr.games.pacman.ui.fx.shell.FlashMessageView.showFlashMessage;
 
 import java.util.Random;
 
@@ -39,7 +40,6 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
-import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameScenes;
@@ -299,33 +299,20 @@ public class GameUI extends DefaultGameEventHandler {
 
 		switch (e.getCode()) {
 		case LEFT, RIGHT -> {
-			if (currentGameScene instanceof PlayScene3D) {
+			if (currentGameScene.is3D()) {
 				if (e.getCode() == KeyCode.LEFT) {
 					Env.selectPrevPerspective();
 				} else {
 					Env.selectNextPerspective();
 				}
 				String perspectiveName = Env.message(Env.$perspective.get().name());
-				String message = Env.message("camera_perspective", perspectiveName);
-				FlashMessageView.showFlashMessage(1, message);
+				showFlashMessage(1, Env.message("camera_perspective", perspectiveName));
 			}
 		}
-		case F -> {
-			toggleUseMazeFloorTexture();
-		}
-		case H -> {
-			if (currentGameScene.is3D()) {
-				Env.changeMazeWallHeight(!shift);
-			}
-		}
+		case F -> toggleUseMazeFloorTexture();
 		case I -> toggleHUDVisibility();
 		case J -> toggleCommandPanelVisibility();
 		case L -> toggleDrawMode();
-		case R -> {
-			if (currentGameScene.is3D()) {
-				Env.changeMazeResolution(!shift);
-			}
-		}
 		case S -> {
 			int rate = Env.gameLoop.getTargetFrameRate();
 			if (shift) {

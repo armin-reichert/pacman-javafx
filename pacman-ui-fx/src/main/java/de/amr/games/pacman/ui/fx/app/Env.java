@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.app;
 
-import static de.amr.games.pacman.lib.Logging.log;
-
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
@@ -102,24 +100,5 @@ public class Env {
 		int n = Perspective.values().length;
 		int prev = ($perspective.get().ordinal() + n - 1) % n;
 		return Perspective.values()[prev].name();
-	}
-
-	public static void changeMazeResolution(boolean up) {
-		int res = $mazeResolution.get();
-		if (up) {
-			$mazeResolution.set(Math.min(res * 2, 8));
-		} else {
-			$mazeResolution.set(Math.max(res / 2, 1));
-		}
-	}
-
-	public static void changeMazeWallHeight(boolean up) {
-		double height = $mazeWallHeight.get();
-		if (up) {
-			$mazeWallHeight.set(Math.min(height + 0.2, 8.0));
-		} else {
-			$mazeWallHeight.set(Math.max(height - 0.2, 0.1));
-		}
-		log("Maze wall height is now %.2f", $mazeWallHeight.get());
 	}
 }
