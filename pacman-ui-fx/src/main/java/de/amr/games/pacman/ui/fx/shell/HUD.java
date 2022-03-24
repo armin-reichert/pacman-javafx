@@ -49,8 +49,6 @@ import javafx.util.Duration;
  */
 public class HUD extends VBox {
 
-	private static final int MAX_WIDTH = 400;
-
 	private static String yes_no(boolean b) {
 		return b ? "YES" : "NO";
 	}
@@ -64,9 +62,10 @@ public class HUD extends VBox {
 	private final Text textUI = new Text();
 	private final StringBuilder text = new StringBuilder();
 
-	public HUD(GameUI ui) {
+	public HUD(GameUI ui, int width) {
 		setVisible(false);
-		setMaxWidth(MAX_WIDTH);
+		setMinWidth(width);
+		setMaxWidth(width);
 		setBackground(U.colorBackground(new Color(0.3, 0.3, 0.3, 0.6)));
 		textUI.setFill(textColor);
 		textUI.setFont(textFont);
@@ -77,9 +76,9 @@ public class HUD extends VBox {
 	private void onVisibilityChange(ObservableValue<? extends Boolean> $1, Boolean wasVisible, Boolean becomesVisible) {
 		if (becomesVisible) {
 			setOpacity(1);
-			setTranslateX(-MAX_WIDTH);
+			setTranslateX(-getWidth());
 			TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), this);
-			transition.setFromX(-MAX_WIDTH);
+			transition.setFromX(-getWidth());
 			transition.setToX(0);
 			transition.setInterpolator(Interpolator.EASE_IN);
 			transition.play();

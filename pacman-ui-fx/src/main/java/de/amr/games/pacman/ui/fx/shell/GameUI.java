@@ -94,9 +94,7 @@ public class GameUI extends DefaultGameEventHandler {
 		this.gameController = gameController;
 
 		canvas = new Canvas(); // common canvas of all 2D scenes
-		backgroundIndex = new Random().nextInt(BACKGROUNDS.length);
-
-		hud = new HUD(this);
+		hud = new HUD(this, 400);
 		settingsPanel = new SettingsPanel(this, 400);
 
 		// first child will get replaced by subscene representing current game scene
