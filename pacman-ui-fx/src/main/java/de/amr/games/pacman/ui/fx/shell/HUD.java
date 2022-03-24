@@ -29,13 +29,12 @@ import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.util.U;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -68,7 +67,7 @@ public class HUD extends VBox {
 	public HUD(GameUI ui) {
 		setVisible(false);
 		setMaxWidth(MAX_WIDTH);
-		setBackground(new Background(new BackgroundFill(new Color(0.3, 0.3, 0.3, 0.6), null, null)));
+		setBackground(U.colorBackground(new Color(0.3, 0.3, 0.3, 0.6)));
 		textUI.setFill(textColor);
 		textUI.setFont(textFont);
 		getChildren().add(textUI);

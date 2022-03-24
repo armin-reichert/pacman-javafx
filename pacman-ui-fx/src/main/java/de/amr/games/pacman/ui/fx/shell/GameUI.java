@@ -96,12 +96,12 @@ public class GameUI extends DefaultGameEventHandler {
 		backgroundIndex = new Random().nextInt(BACKGROUNDS.length);
 
 		hud = new HUD(this);
-		commandPanel = new CommandPanel(this);
+		commandPanel = new CommandPanel(this, 400);
 
 		// first child will get replaced by subscene representing current game scene
 		mainSceneRoot = new StackPane(new Group(), FlashMessageView.get(), hud, commandPanel);
 		StackPane.setAlignment(hud, Pos.TOP_LEFT);
-		StackPane.setAlignment(commandPanel, Pos.TOP_RIGHT);
+		StackPane.setAlignment(commandPanel, Pos.TOP_LEFT);
 
 		mainScene = new Scene(mainSceneRoot, ASPECT_RATIO * height, height);
 		mainScene.heightProperty().addListener($1 -> resizeCanvas(mainScene.getHeight()));
@@ -344,12 +344,12 @@ public class GameUI extends DefaultGameEventHandler {
 
 		case LEFT, RIGHT -> {
 			if (currentGameScene instanceof PlayScene3D) {
-				PlayScene3D playScene = (PlayScene3D) currentGameScene;
 				if (e.getCode() == KeyCode.LEFT) {
 					Env.selectPrevPerspective();
 				} else {
 					Env.selectNextPerspective();
 				}
+				PlayScene3D playScene = (PlayScene3D) currentGameScene;
 				String perspective_key = Env.message(playScene.getCamController().getClass().getSimpleName());
 				String message = Env.message("camera_perspective", perspective_key);
 				FlashMessageView.showFlashMessage(1, message);
@@ -366,9 +366,9 @@ public class GameUI extends DefaultGameEventHandler {
 			}
 		}
 
-		case I -> toggleHUD();
+		case I -> toggleHUDVisibility();
 
-		case J -> toggleCommandPanel();
+		case J -> toggleCommandPanelVisibility();
 
 		case L -> toggleDrawMode();
 
@@ -380,10 +380,10 @@ public class GameUI extends DefaultGameEventHandler {
 
 		case S -> {
 			int rate = Env.gameLoop.getTargetFrameRate();
-			if (!e.isShiftDown()) {
-				setTargetFrameRate(rate + 10);
-			} else {
+			if (e.isShiftDown()) {
 				setTargetFrameRate(Math.max(10, rate - 10));
+			} else {
+				setTargetFrameRate(rate + 10);
 			}
 		}
 
@@ -402,7 +402,6 @@ public class GameUI extends DefaultGameEventHandler {
 	public void setTargetFrameRate(int value) {
 		Env.gameLoop.setTargetFrameRate(value);
 		FlashMessageView.showFlashMessage(1, "Target FPS set to %d Hz", Env.gameLoop.getTargetFrameRate());
-
 	}
 
 	public void toggleAxesVisible() {
@@ -440,14 +439,14 @@ public class GameUI extends DefaultGameEventHandler {
 		FlashMessageView.showFlashMessage(1, message);
 	}
 
-	public void toggleCommandPanel() {
+	public void toggleCommandPanelVisibility() {
 		commandPanel.setVisible(!commandPanel.isVisible());
 		if (commandPanel.isVisible()) {
 			hud.setVisible(false);
 		}
 	}
 
-	public void toggleHUD() {
+	public void toggleHUDVisibility() {
 		hud.setVisible(!hud.isVisible());
 		if (hud.isVisible()) {
 			commandPanel.setVisible(false);

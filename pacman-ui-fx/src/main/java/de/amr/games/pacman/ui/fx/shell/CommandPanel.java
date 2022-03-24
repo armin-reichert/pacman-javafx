@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell;
 
 import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.util.U;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
@@ -48,9 +49,13 @@ public class CommandPanel extends GridPane {
 	private final CheckBox cbWireframeMode;
 	private final CheckBox cbShowTiles;
 
-	public CommandPanel(GameUI ui) {
+	public CommandPanel(GameUI ui, int width) {
 		this.ui = ui;
+		setBackground(U.colorBackground(new Color(0.3, 0.3, 0.3, 0.6)));
 		setHgap(20);
+		setMinWidth(width);
+		setWidth(width);
+		setMaxWidth(width);
 		addSlider("Framerate", 10, 200, 60).valueProperty().addListener(($1, oldVal, newVal) -> {
 			ui.setTargetFrameRate(newVal.intValue());
 		});
@@ -99,7 +104,7 @@ public class CommandPanel extends GridPane {
 		slider.setShowTickMarks(true);
 		slider.setMinorTickCount(5);
 		slider.setMajorTickUnit(50);
-		slider.setMinWidth(250);
+		slider.setMinWidth(200);
 		Text label = new Text(text);
 		label.setFill(textColor);
 		label.setFont(textFont);
