@@ -357,9 +357,7 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 
 		case F -> {
-			if (currentGameScene.is3D()) {
-				Env.$useMazeFloorTexture.set(!Env.$useMazeFloorTexture.get());
-			}
+			toggleUseMazeFloorTexture();
 		}
 
 		case H -> {
@@ -387,10 +385,6 @@ public class GameUI extends DefaultGameEventHandler {
 			} else {
 				setTargetFrameRate(Math.max(10, rate - 10));
 			}
-		}
-
-		case T -> {
-			Env.$isTimeMeasured.set(!Env.$isTimeMeasured.get());
 		}
 
 		case X -> toggleAxesVisible();
@@ -434,6 +428,10 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 		String message = Env.$3D.get() ? "Using 3D Play Scene" : "Using 2D Play Scene";
 		FlashMessageView.showFlashMessage(2, message);
+	}
+
+	public void toggleUseMazeFloorTexture() {
+		Env.$useMazeFloorTexture.set(!Env.$useMazeFloorTexture.get());
 	}
 
 	public void toggleAutopilot() {

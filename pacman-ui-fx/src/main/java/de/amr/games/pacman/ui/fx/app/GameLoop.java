@@ -28,7 +28,9 @@ import static de.amr.games.pacman.lib.Logging.log;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.util.Duration;
 
@@ -41,6 +43,7 @@ public class GameLoop {
 
 	public final IntegerProperty $fps = new SimpleIntegerProperty();
 	public final IntegerProperty $totalTicks = new SimpleIntegerProperty();
+	public final BooleanProperty $timeMeasured = new SimpleBooleanProperty(false);
 
 	public Runnable update;
 	public Runnable render;
@@ -100,7 +103,7 @@ public class GameLoop {
 	}
 
 	private void runUpdate() {
-		if (Env.$isTimeMeasured.get()) {
+		if ($timeMeasured.get()) {
 			double start_ns = System.nanoTime();
 			update.run();
 			double duration_ns = System.nanoTime() - start_ns;

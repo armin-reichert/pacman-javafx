@@ -70,7 +70,6 @@ public class Env {
 
 	public static final BooleanProperty $axesVisible = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<DrawMode> $drawMode3D = new SimpleObjectProperty<DrawMode>(DrawMode.FILL);
-	public static final BooleanProperty $isTimeMeasured = new SimpleBooleanProperty(false);
 	public static final IntegerProperty $mazeResolution = new SimpleIntegerProperty(8);
 	public static final DoubleProperty $mazeWallHeight = new SimpleDoubleProperty(2.0);
 	public static final BooleanProperty $paused = new SimpleBooleanProperty(false);

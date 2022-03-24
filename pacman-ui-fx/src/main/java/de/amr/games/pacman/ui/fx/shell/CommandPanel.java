@@ -43,6 +43,7 @@ public class CommandPanel extends GridPane {
 	private final CheckBox cbAutopilot;
 	private final CheckBox cbImmunity;
 	private final CheckBox cbUse3DScene;
+	private final CheckBox cbUseMazeFloorTexture;
 	private final CheckBox cbAxesVisible;
 	private final CheckBox cbWireframeMode;
 	private final CheckBox cbShowTiles;
@@ -50,15 +51,16 @@ public class CommandPanel extends GridPane {
 	public CommandPanel(GameUI ui) {
 		this.ui = ui;
 		setHgap(20);
-		slider("Framerate", 10, 200, 60).valueProperty().addListener(($1, oldVal, newVal) -> {
+		addSlider("Framerate", 10, 200, 60).valueProperty().addListener(($1, oldVal, newVal) -> {
 			ui.setTargetFrameRate(newVal.intValue());
 		});
-		cbAutopilot = checkBox("Autopilot", ui::toggleAutopilot);
-		cbImmunity = checkBox("Player immune", ui::toggleImmunity);
-		cbUse3DScene = checkBox("Use 3D scene", ui::toggle3D);
-		cbAxesVisible = checkBox("Show Axes", ui::toggleAxesVisible);
-		cbWireframeMode = checkBox("Wireframe Mode", ui::toggleDrawMode);
-		cbShowTiles = checkBox("Tiles", ui::toggleTilesVisible);
+		cbAutopilot = addCheckBox("Autopilot", ui::toggleAutopilot);
+		cbImmunity = addCheckBox("Player immune", ui::toggleImmunity);
+		cbUse3DScene = addCheckBox("Use 3D scene", ui::toggle3D);
+		cbUseMazeFloorTexture = addCheckBox("Maze floor texture", ui::toggleUseMazeFloorTexture);
+		cbAxesVisible = addCheckBox("Show Axes", ui::toggleAxesVisible);
+		cbWireframeMode = addCheckBox("Wireframe Mode", ui::toggleDrawMode);
+		cbShowTiles = addCheckBox("Tiles", ui::toggleTilesVisible);
 		visibleProperty().addListener(this::onVisibilityChange);
 		setVisible(false);
 	}
@@ -69,6 +71,7 @@ public class CommandPanel extends GridPane {
 			cbAutopilot.setSelected(ui.gameController.autoControlled);
 			cbImmunity.setSelected(ui.gameController.game.player.immune);
 			cbUse3DScene.setSelected(Env.$3D.get());
+			cbUseMazeFloorTexture.setSelected(Env.$useMazeFloorTexture.get());
 			cbAxesVisible.setSelected(Env.$axesVisible.get());
 			cbWireframeMode.setSelected(Env.$drawMode3D.get() == DrawMode.LINE);
 			cbShowTiles.setSelected(Env.$tilesVisible.get());
@@ -77,7 +80,7 @@ public class CommandPanel extends GridPane {
 		}
 	}
 
-	private CheckBox checkBox(String text, Runnable callback) {
+	private CheckBox addCheckBox(String text, Runnable callback) {
 		CheckBox cb = new CheckBox();
 		cb.setTextFill(textColor);
 		cb.setFont(textFont);
@@ -90,7 +93,7 @@ public class CommandPanel extends GridPane {
 		return cb;
 	}
 
-	private Slider slider(String text, int min, int max, int value) {
+	private Slider addSlider(String text, int min, int max, int value) {
 		Slider slider = new Slider(min, max, value);
 		slider.setShowTickLabels(true);
 		slider.setShowTickMarks(true);
