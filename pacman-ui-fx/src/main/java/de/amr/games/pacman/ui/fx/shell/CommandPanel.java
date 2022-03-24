@@ -24,9 +24,9 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell;
 
 import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.U;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
@@ -57,6 +57,7 @@ public class CommandPanel extends GridPane {
 	private final CheckBox cbAutopilot;
 	private final CheckBox cbImmunity;
 	private final CheckBox cbUse3DScene;
+	private final ComboBox<Perspective> comboPerspective;
 	private final ComboBox<Integer> comboMazeResolution;
 	private final CheckBox cbUseMazeFloorTexture;
 	private final CheckBox cbAxesVisible;
@@ -75,37 +76,40 @@ public class CommandPanel extends GridPane {
 		sliderTargetFrameRate.valueProperty().addListener(($1, oldVal, newVal) -> {
 			ui.setTargetFrameRate(newVal.intValue());
 		});
+
 		addSectionHeader("General settings");
 		comboGameVariant = addComboBox("GameVariant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
 		comboGameVariant.setOnAction(e -> ui.gameController.selectGameVariant(comboGameVariant.getValue()));
 		cbUse3DScene = addCheckBox("Use 3D scene", ui::toggle3D);
 		cbAutopilot = addCheckBox("Autopilot", ui::toggleAutopilot);
 		cbImmunity = addCheckBox("Player immune", ui::toggleImmunity);
+
 		addSectionHeader("3D settings");
+		comboPerspective = addComboBox("Perspective", Perspective.values());
+		comboPerspective.setOnAction(e -> Env.$perspective.set(comboPerspective.getValue()));
 		comboMazeResolution = addComboBox("Maze resolution", 1, 2, 4, 8);
 		comboMazeResolution.setOnAction(e -> Env.$mazeResolution.set(comboMazeResolution.getValue()));
 		cbUseMazeFloorTexture = addCheckBox("Maze floor texture", ui::toggleUseMazeFloorTexture);
 		cbAxesVisible = addCheckBox("Show Axes", ui::toggleAxesVisible);
 		cbWireframeMode = addCheckBox("Wireframe Mode", ui::toggleDrawMode);
+
 		addSectionHeader("2D settings");
 		cbShowTiles = addCheckBox("Show Tiles", ui::toggleTilesVisible);
-		visibleProperty().addListener(this::onVisibilityChange);
 		setVisible(false);
 	}
 
-	private void onVisibilityChange(ObservableValue<? extends Boolean> $1, Boolean wasVisible, Boolean becomesVisible) {
-		if (becomesVisible) {
-			sliderTargetFrameRate.setValue(Env.gameLoop.getTargetFrameRate());
-			comboGameVariant.setValue(ui.gameController.gameVariant);
-			cbAutopilot.setSelected(ui.gameController.autoControlled);
-			cbImmunity.setSelected(ui.gameController.game.player.immune);
-			cbUse3DScene.setSelected(Env.$3D.get());
-			comboMazeResolution.setValue(Env.$mazeResolution.get());
-			cbUseMazeFloorTexture.setSelected(Env.$useMazeFloorTexture.get());
-			cbAxesVisible.setSelected(Env.$axesVisible.get());
-			cbWireframeMode.setSelected(Env.$drawMode3D.get() == DrawMode.LINE);
-			cbShowTiles.setSelected(Env.$tilesVisible.get());
-		}
+	public void update() {
+		sliderTargetFrameRate.setValue(Env.gameLoop.getTargetFrameRate());
+		comboGameVariant.setValue(ui.gameController.gameVariant);
+		cbAutopilot.setSelected(ui.gameController.autoControlled);
+		cbImmunity.setSelected(ui.gameController.game.player.immune);
+		cbUse3DScene.setSelected(Env.$3D.get());
+		comboPerspective.setValue(Env.$perspective.get());
+		comboMazeResolution.setValue(Env.$mazeResolution.get());
+		cbUseMazeFloorTexture.setSelected(Env.$useMazeFloorTexture.get());
+		cbAxesVisible.setSelected(Env.$axesVisible.get());
+		cbWireframeMode.setSelected(Env.$drawMode3D.get() == DrawMode.LINE);
+		cbShowTiles.setSelected(Env.$tilesVisible.get());
 	}
 
 	private void addRow(String labelText, Control control) {

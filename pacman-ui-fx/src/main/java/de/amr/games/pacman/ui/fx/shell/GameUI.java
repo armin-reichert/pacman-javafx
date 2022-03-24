@@ -126,7 +126,12 @@ public class GameUI extends DefaultGameEventHandler {
 
 	public void update() {
 		FlashMessageView.get().update();
-		hud.update(gameController, currentGameScene, stage, canvas);
+		if (hud.isVisible()) {
+			hud.update(gameController, currentGameScene, stage, canvas);
+		}
+		if (commandPanel.isVisible()) {
+			commandPanel.update();
+		}
 	}
 
 	public GameScene getCurrentGameScene() {
