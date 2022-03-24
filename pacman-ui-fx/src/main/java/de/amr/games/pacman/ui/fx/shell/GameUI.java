@@ -236,11 +236,7 @@ public class GameUI extends DefaultGameEventHandler {
 
 		switch (e.getCode()) {
 		case A -> toggleAutopilot();
-		case E -> {
-			if (gameController.gameRunning) {
-				gameController.cheatEatAllPellets();
-			}
-		}
+		case E -> gameController.cheatEatAllPellets();
 		case I -> toggleImmunity();
 		case L -> {
 			if (gameController.gameRunning) {
@@ -269,11 +265,7 @@ public class GameUI extends DefaultGameEventHandler {
 			}
 		}
 		case V -> toggleGameVariant();
-		case X -> {
-			if (gameController.gameRunning) {
-				gameController.cheatKillGhosts();
-			}
-		}
+		case X -> gameController.cheatKillGhosts();
 		case Z -> {
 			if (state == GameState.INTRO) {
 				gameController.startIntermissionTest();
