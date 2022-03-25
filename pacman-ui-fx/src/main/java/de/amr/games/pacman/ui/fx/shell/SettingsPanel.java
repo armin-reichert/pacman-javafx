@@ -72,11 +72,7 @@ public class SettingsPanel extends GridPane {
 		public void add() {
 			btnsSimulation = addButtons("Simulation", "Pause", "Step");
 			btnsSimulation[0].setOnAction(e -> ui.togglePaused());
-			btnsSimulation[1].setOnAction(e -> {
-				if (Env.$paused.get()) {
-					Env.gameLoop.runSingleStep(true);
-				}
-			});
+			btnsSimulation[1].setOnAction(e -> Env.gameLoop.runSingleStep(true));
 			comboGameVariant = addComboBox("Game Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
 			comboGameVariant.setOnAction(e -> ui.gameController.selectGameVariant(comboGameVariant.getValue()));
 			btnStartGame = addButton("Game Play", "Start", ui.gameController::requestGame);
