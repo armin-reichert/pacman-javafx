@@ -32,12 +32,13 @@ import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Control;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
@@ -60,26 +61,120 @@ public class SettingsPanel extends GridPane {
 	private final Font headerFont = Font.font("Monospace", FontWeight.BOLD, 14);
 	private int row;
 
-	private final CheckBox cbGamePaused;
-	private final Slider sliderTargetFrameRate;
-	private final ComboBox<GameVariant> comboGameVariant;
-	private final CheckBox cbAutopilot;
-	private final CheckBox cbImmunity;
-	private final CheckBox cbUse3DScene;
+	private class Commands {
+		private ComboBox<GameVariant> comboGameVariant;
+		private Button btnStartGame;
+		private Button btnQuitGameScene;
+		private Button btnEnterNextLevel;
+		private Button btnStartIntermissionTest;
 
-	private final ComboBox<Perspective> comboPerspective;
-	private final ComboBox<Integer> comboMazeResolution;
-	private final Slider sliderMazeWallHeight;
-	private final CheckBox cbUseMazeFloorTexture;
-	private final CheckBox cbAxesVisible;
-	private final CheckBox cbWireframeMode;
+		public void add() {
+			comboGameVariant = addComboBox("Game Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
+			comboGameVariant.setOnAction(e -> ui.gameController.selectGameVariant(comboGameVariant.getValue()));
+			btnStartGame = addButton("Game", "Start", () -> ui.gameController.requestGame());
+			btnQuitGameScene = addButton("Game Scene", "Quit", () -> ui.quitCurrentGameScene());
+			btnEnterNextLevel = addButton("Enter next level", "Next", () -> ui.enterNextLevel());
+			btnStartIntermissionTest = addButton("Intermission scenes", "Start", () -> ui.startIntermissionTest());
+		}
 
-	private final CheckBox cbShowTiles;
+		public void update() {
+			comboGameVariant.setValue(ui.gameController.gameVariant);
+			comboGameVariant.setDisable(ui.gameController.gameRunning);
+			btnStartGame.setDisable(
+					ui.gameController.gameRequested || ui.gameController.gameRunning || ui.gameController.attractMode);
+			btnQuitGameScene.setDisable(ui.gameController.state == GameState.INTRO);
+			btnStartIntermissionTest.setDisable(
+					ui.gameController.state == GameState.INTERMISSION_TEST || ui.gameController.state != GameState.INTRO);
+			btnEnterNextLevel.setDisable(!ui.gameController.gameRunning);
+		}
+	}
 
-	private final Button btnQuitGameScene;
-	private final Button btnStartGame;
-	private final Button btnEnterNextLevel;
-	private final Button btnStartIntermissionTest;
+	private class SettingsGeneral {
+		private CheckBox cbGamePaused;
+		private Slider sliderTargetFrameRate;
+		private CheckBox cbAutopilot;
+		private CheckBox cbImmunity;
+		private CheckBox cbUse3DScene;
+
+		public void add() {
+			cbGamePaused = addCheckBox("Game paused", () -> ui.togglePaused());
+			sliderTargetFrameRate = addSlider("Framerate", 10, 200, 60);
+			sliderTargetFrameRate.setShowTickLabels(true);
+			sliderTargetFrameRate.setShowTickMarks(true);
+			sliderTargetFrameRate.setMinorTickCount(5);
+			sliderTargetFrameRate.setMajorTickUnit(50);
+			sliderTargetFrameRate.valueProperty().addListener(($1, oldVal, newVal) -> {
+				ui.setTargetFrameRate(newVal.intValue());
+			});
+			cbUse3DScene = addCheckBox("Use 3D play scene", ui::toggle3D);
+			cbAutopilot = addCheckBox("Autopilot", ui::toggleAutopilot);
+			cbImmunity = addCheckBox("Player immune", ui::toggleImmunity);
+		}
+
+		public void update() {
+			cbGamePaused.setSelected(Env.$paused.get());
+			sliderTargetFrameRate.setValue(Env.gameLoop.getTargetFrameRate());
+			cbAutopilot.setSelected(ui.gameController.autoControlled);
+			cbImmunity.setSelected(ui.gameController.game.player.immune);
+			cbUse3DScene.setSelected(Env.$3D.get());
+		}
+	}
+
+	private class Settings3D {
+		private ComboBox<Perspective> comboPerspective;
+		private ComboBox<Integer> comboMazeResolution;
+		private Slider sliderMazeWallHeight;
+		private CheckBox cbUseMazeFloorTexture;
+		private CheckBox cbAxesVisible;
+		private CheckBox cbWireframeMode;
+
+		public void add() {
+			comboPerspective = addComboBox("Perspective", Perspective.values());
+			comboPerspective.setOnAction(e -> Env.$perspective.set(comboPerspective.getValue()));
+			comboMazeResolution = addComboBox("Maze resolution", 1, 2, 4, 8);
+			comboMazeResolution.setOnAction(e -> Env.$mazeResolution.set(comboMazeResolution.getValue()));
+			sliderMazeWallHeight = addSlider("Maze wall height", 0, 10, 8);
+			sliderMazeWallHeight.valueProperty().addListener(($1, oldVal, newVal) -> {
+				Env.$mazeWallHeight.set(newVal.doubleValue());
+			});
+			cbUseMazeFloorTexture = addCheckBox("Maze floor texture", ui::toggleUseMazeFloorTexture);
+			cbAxesVisible = addCheckBox("Show axes", ui::toggleAxesVisible);
+			cbWireframeMode = addCheckBox("Wireframe mode", ui::toggleDrawMode);
+		}
+
+		public void update() {
+			comboPerspective.setValue(Env.$perspective.get());
+			comboPerspective.setDisable(!ui.getCurrentGameScene().is3D());
+			comboMazeResolution.setValue(Env.$mazeResolution.get());
+			comboMazeResolution.setDisable(!ui.getCurrentGameScene().is3D());
+			sliderMazeWallHeight.setValue(Env.$mazeWallHeight.get());
+			sliderMazeWallHeight.setDisable(!ui.getCurrentGameScene().is3D());
+			cbUseMazeFloorTexture.setSelected(Env.$useMazeFloorTexture.get());
+			cbUseMazeFloorTexture.setDisable(!ui.getCurrentGameScene().is3D());
+			cbAxesVisible.setSelected(Env.$axesVisible.get());
+			cbAxesVisible.setDisable(!ui.getCurrentGameScene().is3D());
+			cbWireframeMode.setSelected(Env.$drawMode3D.get() == DrawMode.LINE);
+			cbWireframeMode.setDisable(!ui.getCurrentGameScene().is3D());
+		}
+	}
+
+	private class Settings2D {
+		private CheckBox cbShowTiles;
+
+		public void add() {
+			cbShowTiles = addCheckBox("Show tiles", ui::toggleTilesVisible);
+		}
+
+		public void update() {
+			cbShowTiles.setSelected(Env.$tilesVisible.get());
+			cbShowTiles.setDisable(ui.getCurrentGameScene().is3D());
+		}
+	}
+
+	private Commands commands = new Commands();
+	private SettingsGeneral settingsGeneral = new SettingsGeneral();
+	private Settings3D settings3D = new Settings3D();
+	private Settings2D settings2D = new Settings2D();
 
 	public SettingsPanel(GameUI ui, int width) {
 		this.ui = ui;
@@ -93,89 +188,28 @@ public class SettingsPanel extends GridPane {
 		setVisible(false);
 
 		addSectionHeader("Commands");
-		comboGameVariant = addComboBox("Game Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
-		comboGameVariant.setOnAction(e -> ui.gameController.selectGameVariant(comboGameVariant.getValue()));
-		btnStartGame = addButton("Game", "Start", () -> ui.gameController.requestGame());
-		btnQuitGameScene = addButton("Game Scene", "Quit", () -> ui.quitCurrentGameScene());
-		btnEnterNextLevel = addButton("Enter next level", "Next", () -> ui.enterNextLevel());
-		btnStartIntermissionTest = addButton("Intermission scenes", "Start", () -> ui.startIntermissionTest());
-
+		commands.add();
 		addSectionHeader("General Settings");
-		cbGamePaused = addCheckBox("Game paused", () -> ui.togglePaused());
-		sliderTargetFrameRate = addSlider("Framerate", 10, 200, 60);
-		sliderTargetFrameRate.setShowTickLabels(true);
-		sliderTargetFrameRate.setShowTickMarks(true);
-		sliderTargetFrameRate.setMinorTickCount(5);
-		sliderTargetFrameRate.setMajorTickUnit(50);
-		sliderTargetFrameRate.valueProperty().addListener(($1, oldVal, newVal) -> {
-			ui.setTargetFrameRate(newVal.intValue());
-		});
-		cbUse3DScene = addCheckBox("Use 3D play scene", ui::toggle3D);
-		cbAutopilot = addCheckBox("Autopilot", ui::toggleAutopilot);
-		cbImmunity = addCheckBox("Player immune", ui::toggleImmunity);
-
+		settingsGeneral.add();
 		addSectionHeader("3D Settings");
-		comboPerspective = addComboBox("Perspective", Perspective.values());
-		comboPerspective.setOnAction(e -> Env.$perspective.set(comboPerspective.getValue()));
-		comboMazeResolution = addComboBox("Maze resolution", 1, 2, 4, 8);
-		comboMazeResolution.setOnAction(e -> Env.$mazeResolution.set(comboMazeResolution.getValue()));
-		sliderMazeWallHeight = addSlider("Maze wall height", 0, 10, 8);
-		sliderMazeWallHeight.valueProperty().addListener(($1, oldVal, newVal) -> {
-			Env.$mazeWallHeight.set(newVal.doubleValue());
-		});
-		cbUseMazeFloorTexture = addCheckBox("Maze floor texture", ui::toggleUseMazeFloorTexture);
-		cbAxesVisible = addCheckBox("Show axes", ui::toggleAxesVisible);
-		cbWireframeMode = addCheckBox("Wireframe mode", ui::toggleDrawMode);
-
+		settings3D.add();
 		addSectionHeader("2D Settings");
-		cbShowTiles = addCheckBox("Show tiles", ui::toggleTilesVisible);
-
+		settings2D.add();
 	}
 
 	public void update() {
-
-		// Commands
-		comboGameVariant.setValue(ui.gameController.gameVariant);
-		btnStartGame
-				.setDisable(ui.gameController.gameRequested || ui.gameController.gameRunning || ui.gameController.attractMode);
-		btnQuitGameScene.setDisable(ui.gameController.state == GameState.INTRO);
-		btnStartIntermissionTest.setDisable(
-				ui.gameController.state == GameState.INTERMISSION_TEST || ui.gameController.state != GameState.INTRO);
-		btnEnterNextLevel.setDisable(!ui.gameController.gameRunning);
-
-		// General
-		cbGamePaused.setSelected(Env.$paused.get());
-		sliderTargetFrameRate.setValue(Env.gameLoop.getTargetFrameRate());
-		comboGameVariant.setDisable(ui.gameController.gameRunning);
-		cbAutopilot.setSelected(ui.gameController.autoControlled);
-		cbImmunity.setSelected(ui.gameController.game.player.immune);
-		cbUse3DScene.setSelected(Env.$3D.get());
-
-		// 3D
-		comboPerspective.setValue(Env.$perspective.get());
-		comboPerspective.setDisable(!ui.getCurrentGameScene().is3D());
-		comboMazeResolution.setValue(Env.$mazeResolution.get());
-		comboMazeResolution.setDisable(!ui.getCurrentGameScene().is3D());
-		sliderMazeWallHeight.setValue(Env.$mazeWallHeight.get());
-		sliderMazeWallHeight.setDisable(!ui.getCurrentGameScene().is3D());
-		cbUseMazeFloorTexture.setSelected(Env.$useMazeFloorTexture.get());
-		cbUseMazeFloorTexture.setDisable(!ui.getCurrentGameScene().is3D());
-		cbAxesVisible.setSelected(Env.$axesVisible.get());
-		cbAxesVisible.setDisable(!ui.getCurrentGameScene().is3D());
-		cbWireframeMode.setSelected(Env.$drawMode3D.get() == DrawMode.LINE);
-		cbWireframeMode.setDisable(!ui.getCurrentGameScene().is3D());
-
-		// 2D
-		cbShowTiles.setSelected(Env.$tilesVisible.get());
-		cbShowTiles.setDisable(ui.getCurrentGameScene().is3D());
+		commands.update();
+		settingsGeneral.update();
+		settings3D.update();
+		settings2D.update();
 	}
 
-	private void addRow(String labelText, Control control) {
+	private void addRow(String labelText, Node child) {
 		Text label = new Text(labelText);
 		label.setFill(textColor);
 		label.setFont(textFont);
 		add(label, 0, row);
-		add(control, 1, row++);
+		add(child, 1, row++);
 	}
 
 	private void addSectionHeader(String title) {
@@ -193,6 +227,17 @@ public class SettingsPanel extends GridPane {
 		button.setOnAction(e -> action.run());
 		addRow(labelText, button);
 		return button;
+	}
+
+	private Button[] addButtons(String labelText, String... buttonTexts) {
+		HBox hbox = new HBox();
+		Button[] buttons = new Button[buttonTexts.length];
+		for (int i = 0; i < buttonTexts.length; ++i) {
+			buttons[i] = new Button(buttonTexts[i]);
+			hbox.getChildren().add(buttons[i]);
+		}
+		addRow(labelText, hbox);
+		return buttons;
 	}
 
 	private CheckBox addCheckBox(String labelText, Runnable callback) {
