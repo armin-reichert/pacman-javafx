@@ -70,6 +70,7 @@ public class SettingsPanel extends GridPane {
 		private Button btnStartIntermissionTest;
 
 		public void add() {
+			addSectionHeader("Commands");
 			btnsSimulation = addButtons("Simulation", "Pause", "Step");
 			btnsSimulation[0].setOnAction(e -> ui.togglePaused());
 			btnsSimulation[1].setOnAction(e -> Env.gameLoop.runSingleStep(true));
@@ -102,6 +103,7 @@ public class SettingsPanel extends GridPane {
 		private CheckBox cbUse3DScene;
 
 		public void add() {
+			addSectionHeader("General Settings");
 			sliderTargetFrameRate = addSlider("Framerate", 5, 200, 60);
 			sliderTargetFrameRate.setShowTickLabels(true);
 			sliderTargetFrameRate.setShowTickMarks(true);
@@ -132,6 +134,7 @@ public class SettingsPanel extends GridPane {
 		private CheckBox cbWireframeMode;
 
 		public void add() {
+			addSectionHeader("3D Settings");
 			comboPerspective = addComboBox("Perspective", Perspective.values());
 			comboPerspective.setOnAction(e -> Env.$perspective.set(comboPerspective.getValue()));
 			comboMazeResolution = addComboBox("Maze resolution", 1, 2, 4, 8);
@@ -165,6 +168,7 @@ public class SettingsPanel extends GridPane {
 		private CheckBox cbShowTiles;
 
 		public void add() {
+			addSectionHeader("2D Settings");
 			cbShowTiles = addCheckBox("Show tiles", ui::toggleTilesVisible);
 		}
 
@@ -190,13 +194,9 @@ public class SettingsPanel extends GridPane {
 		setMaxWidth(width);
 		setVisible(false);
 
-		addSectionHeader("Commands");
 		commands.add();
-		addSectionHeader("General Settings");
 		settingsGeneral.add();
-		addSectionHeader("3D Settings");
 		settings3D.add();
-		addSectionHeader("2D Settings");
 		settings2D.add();
 	}
 
