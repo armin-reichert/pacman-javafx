@@ -243,12 +243,7 @@ public class GameUI extends DefaultGameEventHandler {
 				showFlashMessage(2, "You have %d lives", game.player.lives);
 			}
 		}
-		case N -> {
-			if (gameController.gameRunning) {
-				gameController.changeState(GameState.LEVEL_COMPLETE);
-				showFlashMessage(1, Env.CHEAT_TALK.next());
-			}
-		}
+		case N -> enterNextLevel();
 		case P -> {
 			if (shift && Env.$paused.get()) {
 				Env.gameLoop.runSingleStep(true);
@@ -304,6 +299,13 @@ public class GameUI extends DefaultGameEventHandler {
 		currentGameScene.end();
 		currentGameScene.getSounds().stopAll();
 		gameController.changeState(GameState.INTRO);
+	}
+
+	public void enterNextLevel() {
+		if (gameController.gameRunning) {
+			gameController.changeState(GameState.LEVEL_COMPLETE);
+			showFlashMessage(1, Env.CHEAT_TALK.next());
+		}
 	}
 
 	public void startIntermissionTest() {

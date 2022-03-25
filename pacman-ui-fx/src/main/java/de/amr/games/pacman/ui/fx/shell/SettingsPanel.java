@@ -57,7 +57,7 @@ public class SettingsPanel extends GridPane {
 	private final Color textColor = Color.WHITE;
 	private final Font textFont = Font.font("Monospace", 14);
 	private final Color headerColor = Color.YELLOW;
-	private final Font headerFont = Font.font("Monospace", FontWeight.BOLD, 18);
+	private final Font headerFont = Font.font("Monospace", FontWeight.BOLD, 14);
 	private int row;
 
 	private final CheckBox cbGamePaused;
@@ -77,6 +77,8 @@ public class SettingsPanel extends GridPane {
 	private final CheckBox cbShowTiles;
 
 	private final Button btnQuitGameScene;
+	private final Button btnStartGame;
+	private final Button btnEnterNextLevel;
 	private final Button btnStartIntermissionTest;
 
 	public SettingsPanel(GameUI ui, int width) {
@@ -90,8 +92,15 @@ public class SettingsPanel extends GridPane {
 		setMaxWidth(width);
 		setVisible(false);
 
-		addSectionHeader("General Settings");
+		addSectionHeader("Commands");
+		comboGameVariant = addComboBox("Game Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
+		comboGameVariant.setOnAction(e -> ui.gameController.selectGameVariant(comboGameVariant.getValue()));
+		btnStartGame = addButton("Game", "Start", () -> ui.gameController.requestGame());
+		btnQuitGameScene = addButton("Game Scene", "Quit", () -> ui.quitCurrentGameScene());
+		btnEnterNextLevel = addButton("Enter next level", "Next", () -> ui.enterNextLevel());
+		btnStartIntermissionTest = addButton("Intermission scenes", "Start", () -> ui.startIntermissionTest());
 
+		addSectionHeader("General Settings");
 		cbGamePaused = addCheckBox("Game paused", () -> ui.togglePaused());
 		sliderTargetFrameRate = addSlider("Framerate", 10, 200, 60);
 		sliderTargetFrameRate.setShowTickLabels(true);
@@ -101,8 +110,6 @@ public class SettingsPanel extends GridPane {
 		sliderTargetFrameRate.valueProperty().addListener(($1, oldVal, newVal) -> {
 			ui.setTargetFrameRate(newVal.intValue());
 		});
-		comboGameVariant = addComboBox("Game Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
-		comboGameVariant.setOnAction(e -> ui.gameController.selectGameVariant(comboGameVariant.getValue()));
 		cbUse3DScene = addCheckBox("Use 3D play scene", ui::toggle3D);
 		cbAutopilot = addCheckBox("Autopilot", ui::toggleAutopilot);
 		cbImmunity = addCheckBox("Player immune", ui::toggleImmunity);
@@ -123,15 +130,22 @@ public class SettingsPanel extends GridPane {
 		addSectionHeader("2D Settings");
 		cbShowTiles = addCheckBox("Show tiles", ui::toggleTilesVisible);
 
-		addSectionHeader("Commands");
-		btnQuitGameScene = addButton("Quit Game Scene", "Quit", () -> ui.quitCurrentGameScene());
-		btnStartIntermissionTest = addButton("Intermission scenes", "Start", () -> ui.startIntermissionTest());
 	}
 
 	public void update() {
+
+		// Commands
+		comboGameVariant.setValue(ui.gameController.gameVariant);
+		btnStartGame
+				.setDisable(ui.gameController.gameRequested || ui.gameController.gameRunning || ui.gameController.attractMode);
+		btnQuitGameScene.setDisable(ui.gameController.state == GameState.INTRO);
+		btnStartIntermissionTest.setDisable(
+				ui.gameController.state == GameState.INTERMISSION_TEST || ui.gameController.state != GameState.INTRO);
+		btnEnterNextLevel.setDisable(!ui.gameController.gameRunning);
+
+		// General
 		cbGamePaused.setSelected(Env.$paused.get());
 		sliderTargetFrameRate.setValue(Env.gameLoop.getTargetFrameRate());
-		comboGameVariant.setValue(ui.gameController.gameVariant);
 		comboGameVariant.setDisable(ui.gameController.gameRunning);
 		cbAutopilot.setSelected(ui.gameController.autoControlled);
 		cbImmunity.setSelected(ui.gameController.game.player.immune);
@@ -154,9 +168,6 @@ public class SettingsPanel extends GridPane {
 		// 2D
 		cbShowTiles.setSelected(Env.$tilesVisible.get());
 		cbShowTiles.setDisable(ui.getCurrentGameScene().is3D());
-
-		// Commands
-		btnStartIntermissionTest.setDisable(ui.gameController.state == GameState.INTERMISSION_TEST);
 	}
 
 	private void addRow(String labelText, Control control) {
@@ -172,7 +183,7 @@ public class SettingsPanel extends GridPane {
 		header.setFill(headerColor);
 		header.setFont(headerFont);
 		header.setTextAlignment(TextAlignment.CENTER);
-		setConstraints(header, 0, row, 2, 1, HPos.CENTER, VPos.CENTER, Priority.NEVER, Priority.NEVER, new Insets(10));
+		setConstraints(header, 0, row, 2, 1, HPos.CENTER, VPos.CENTER, Priority.NEVER, Priority.NEVER, new Insets(8));
 		getChildren().add(header);
 		++row;
 	}
