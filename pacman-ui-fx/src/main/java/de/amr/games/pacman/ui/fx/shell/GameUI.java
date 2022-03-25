@@ -335,8 +335,8 @@ public class GameUI extends DefaultGameEventHandler {
 
 	public void togglePaused() {
 		Env.$paused.set(!Env.$paused.get());
-		FlashMessageView.showFlashMessage(2, Env.$paused.get() ? "Game paused" : "Game resumed");
-		log(Env.$paused.get() ? "Game paused." : "Game resumed.");
+		showFlashMessage(2, Env.$paused.get() ? "Paused" : "Resumed");
+		log(Env.$paused.get() ? "Simulation paused." : "Simulation resumed.");
 	}
 
 	public void toggleGameVariant() {

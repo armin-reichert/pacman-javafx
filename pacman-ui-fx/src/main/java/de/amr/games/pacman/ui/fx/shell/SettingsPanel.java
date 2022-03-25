@@ -63,21 +63,31 @@ public class SettingsPanel extends GridPane {
 
 	private class Commands {
 		private ComboBox<GameVariant> comboGameVariant;
+		private Button[] btnsSimulation;
 		private Button btnStartGame;
 		private Button btnQuitGameScene;
 		private Button btnEnterNextLevel;
 		private Button btnStartIntermissionTest;
 
 		public void add() {
+			btnsSimulation = addButtons("Simulation", "Pause", "Step");
+			btnsSimulation[0].setOnAction(e -> ui.togglePaused());
+			btnsSimulation[1].setOnAction(e -> {
+				if (Env.$paused.get()) {
+					Env.gameLoop.runSingleStep(true);
+				}
+			});
 			comboGameVariant = addComboBox("Game Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
 			comboGameVariant.setOnAction(e -> ui.gameController.selectGameVariant(comboGameVariant.getValue()));
-			btnStartGame = addButton("Game", "Start", () -> ui.gameController.requestGame());
-			btnQuitGameScene = addButton("Game Scene", "Quit", () -> ui.quitCurrentGameScene());
-			btnEnterNextLevel = addButton("Enter next level", "Next", () -> ui.enterNextLevel());
-			btnStartIntermissionTest = addButton("Intermission scenes", "Start", () -> ui.startIntermissionTest());
+			btnStartGame = addButton("Game Play", "Start", ui.gameController::requestGame);
+			btnQuitGameScene = addButton("Game Scene", "Quit", ui::quitCurrentGameScene);
+			btnEnterNextLevel = addButton("Enter next level", "Next", ui::enterNextLevel);
+			btnStartIntermissionTest = addButton("Intermission scenes", "Start", ui::startIntermissionTest);
 		}
 
 		public void update() {
+			btnsSimulation[0].setText(Env.$paused.get() ? "Resume" : "Pause");
+			btnsSimulation[1].setDisable(!Env.$paused.get());
 			comboGameVariant.setValue(ui.gameController.gameVariant);
 			comboGameVariant.setDisable(ui.gameController.gameRunning);
 			btnStartGame.setDisable(
@@ -90,15 +100,13 @@ public class SettingsPanel extends GridPane {
 	}
 
 	private class SettingsGeneral {
-		private CheckBox cbGamePaused;
 		private Slider sliderTargetFrameRate;
 		private CheckBox cbAutopilot;
 		private CheckBox cbImmunity;
 		private CheckBox cbUse3DScene;
 
 		public void add() {
-			cbGamePaused = addCheckBox("Game paused", () -> ui.togglePaused());
-			sliderTargetFrameRate = addSlider("Framerate", 10, 200, 60);
+			sliderTargetFrameRate = addSlider("Framerate", 5, 200, 60);
 			sliderTargetFrameRate.setShowTickLabels(true);
 			sliderTargetFrameRate.setShowTickMarks(true);
 			sliderTargetFrameRate.setMinorTickCount(5);
@@ -112,7 +120,6 @@ public class SettingsPanel extends GridPane {
 		}
 
 		public void update() {
-			cbGamePaused.setSelected(Env.$paused.get());
 			sliderTargetFrameRate.setValue(Env.gameLoop.getTargetFrameRate());
 			cbAutopilot.setSelected(ui.gameController.autoControlled);
 			cbImmunity.setSelected(ui.gameController.game.player.immune);
