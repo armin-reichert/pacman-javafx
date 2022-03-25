@@ -40,7 +40,6 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
-import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameScenes;
@@ -71,7 +70,7 @@ public class GameUI extends DefaultGameEventHandler {
 	private static final int TILES_X = 28, TILES_Y = 36;
 	private static final double ASPECT_RATIO = (double) TILES_X / TILES_Y;
 
-	private static final Background[] BACKGROUNDS = { //
+	private static final Background[] WALLPAPERS = { //
 			U.imageBackground("/common/wallpapers/beach.jpg"), //
 			U.imageBackground("/common/wallpapers/space.jpg"), //
 			U.imageBackground("/common/wallpapers/easter_island.jpg"), //
@@ -86,7 +85,7 @@ public class GameUI extends DefaultGameEventHandler {
 	private final InfoPanel infoPanel;
 	private final SettingsPanel settingsPanel;
 
-	private int backgroundIndex;
+	private int wallpaperIndex;
 	private GameScene currentGameScene;
 
 	public GameUI(Stage stage, GameController gameController, double height, boolean fullscreen) {
@@ -159,21 +158,10 @@ public class GameUI extends DefaultGameEventHandler {
 				log("Set scene to '%s'", nextGameScene.getClass().getName());
 			}
 			mainSceneRoot.getChildren().set(0, nextGameScene.getFXSubScene());
-			if (nextGameScene instanceof PlayScene3D) {
-				changeBackground();
-			}
 			updateSceneContext(nextGameScene);
 			nextGameScene.init();
 			currentGameScene = nextGameScene;
 		}
-	}
-
-	private void changeBackground() {
-		int next = backgroundIndex;
-		while (next == backgroundIndex) {
-			next = new Random().nextInt(BACKGROUNDS.length);
-		}
-		backgroundIndex = next;
 	}
 
 	private void updateSceneContext(GameScene gameScene) {
@@ -187,12 +175,21 @@ public class GameUI extends DefaultGameEventHandler {
 
 	private void updateBackground(GameScene gameScene) {
 		if (gameScene.is3D()) {
+			selectRandomWallpaper();
 			mainSceneRoot.setBackground(Env.$drawMode3D.get() == DrawMode.LINE //
 					? U.colorBackground(Color.BLACK)
-					: BACKGROUNDS[backgroundIndex]);
+					: WALLPAPERS[wallpaperIndex]);
 		} else {
 			mainSceneRoot.setBackground(U.colorBackground(Color.CORNFLOWERBLUE));
 		}
+	}
+
+	private void selectRandomWallpaper() {
+		int next = wallpaperIndex;
+		while (next == wallpaperIndex) {
+			next = new Random().nextInt(WALLPAPERS.length);
+		}
+		wallpaperIndex = next;
 	}
 
 	private void resizeCanvas(double height) {
@@ -255,7 +252,7 @@ public class GameUI extends DefaultGameEventHandler {
 			setTargetFrameRate(shift ? Math.max(10, rate - 10) : rate + 10);
 			showFlashMessage(1, "Target FPS set to %d Hz", Env.gameLoop.getTargetFrameRate());
 		}
-		case DIGIT3 -> toggle3D();
+		case DIGIT3 -> togglePlayScene3D();
 		default -> {
 		}
 		}
@@ -349,7 +346,7 @@ public class GameUI extends DefaultGameEventHandler {
 		showFlashMessage(1, message);
 	}
 
-	public void toggle3D() {
+	public void togglePlayScene3D() {
 		Env.$3D.set(!Env.$3D.get());
 		if (gameSceneForCurrentState(false) != gameSceneForCurrentState(true)) {
 			currentGameScene.getSounds().stopAll();

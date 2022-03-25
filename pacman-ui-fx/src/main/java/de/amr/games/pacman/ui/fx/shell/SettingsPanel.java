@@ -112,7 +112,7 @@ public class SettingsPanel extends GridPane {
 			sliderTargetFrameRate.valueProperty().addListener(($1, oldVal, newVal) -> {
 				ui.setTargetFrameRate(newVal.intValue());
 			});
-			cbUse3DScene = addCheckBox("Use 3D play scene", ui::toggle3D);
+			cbUse3DScene = addCheckBox("Use 3D play scene", ui::togglePlayScene3D);
 			cbAutopilot = addCheckBox("Autopilot", ui::toggleAutopilot);
 			cbImmunity = addCheckBox("Player immune", ui::toggleImmunity);
 		}
