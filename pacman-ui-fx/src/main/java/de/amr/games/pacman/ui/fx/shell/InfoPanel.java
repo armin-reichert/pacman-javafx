@@ -134,25 +134,23 @@ public class InfoPanel extends VBox {
 		}
 
 		newline();
-		p("V", "Switch Pac-Man/Ms. Pac-Man").when(state == GameState.INTRO);
-		p("A", "Autopilot On/Off").done();
-		p("E", "Eat all normal pellets").when(gameController.gameRunning);
-		p("I", "Player immunity On/Off").done();
-		p("L", "Add 3 player lives").when(gameController.gameRunning);
-		p("N", "Next Level").when(gameController.gameRunning);
-		p("P", "Pause On/Off (SHIFT=single step)").done();
-		p("Q", "Quit Scene").when(state != GameState.INTRO);
-		p("X", "Kill all hunting ghosts").when(gameController.gameRunning);
-		p("Z", "Play Intermission Scenes").when(state == GameState.INTRO);
-
-		newline();
-		p("Ctrl+LEFT", "%s", Env.prevPerspectiveName()).when(gameScene.is3D());
-		p("Ctrl+RIGHT", "%s", Env.nextPerspectiveName()).when(gameScene.is3D());
 		p("Ctrl+I", "Information On/Off").done();
 		p("Ctrl+J", "Settings On/Off").done();
-		p("Ctrl+L", "Wireframe Mode On/Off").when(gameScene.is3D());
-		p("Ctrl+S", "Speed (SHIFT=Decrease)").done();
-		p("Ctrl+3", "3D Play Scene On/Off").done();
+
+		newline();
+		p("Alt+A", "Autopilot On/Off").done();
+		p("Alt+E", "Eat all normal pellets").when(gameController.gameRunning);
+		p("Alt+I", "Player immunity On/Off").done();
+		p("Alt+L", "Add 3 player lives").when(gameController.gameRunning);
+		p("Alt+N", "Next Level").when(gameController.gameRunning);
+		p("Alt+Q", "Quit Scene").when(state != GameState.INTRO);
+		p("Alt+S", "Speed (SHIFT=Decrease)").done();
+		p("Alt+V", "Switch Pac-Man/Ms. Pac-Man").when(state == GameState.INTRO);
+		p("Alt+X", "Kill all hunting ghosts").when(gameController.gameRunning);
+		p("Alt+Z", "Play Intermission Scenes").when(state == GameState.INTRO);
+		p("Alt+LEFT", "%s", Env.prevPerspectiveName()).when(gameScene.is3D());
+		p("Alt+RIGHT", "%s", Env.nextPerspectiveName()).when(gameScene.is3D());
+		p("Alt+3", "3D Play Scene On/Off").done();
 
 		textUI.setText(text.toString());
 	}

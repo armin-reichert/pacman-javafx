@@ -218,44 +218,27 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	private void handleKeyPressed(KeyEvent e) {
+		final boolean shift = e.isShiftDown();
 		if (e.isAltDown()) {
-			// ignore
+			onAltKeyPressed(e, shift);
 		} else if (e.isControlDown()) {
-			onControlKeyPressed(e);
+			onControlKeyPressed(e, shift);
 		} else {
-			onKeyPressed(e);
+			onKeyPressed(e, shift);
 		}
 	}
 
-	private void onKeyPressed(KeyEvent e) {
-		final GameModel game = gameController.game;
-
+	private void onAltKeyPressed(KeyEvent e, boolean shift) {
 		switch (e.getCode()) {
 		case A -> toggleAutopilot();
 		case E -> gameController.cheatEatAllPellets();
 		case I -> toggleImmunity();
-		case L -> {
-			if (gameController.gameRunning) {
-				game.player.lives += 3;
-				showFlashMessage(2, "You have %d lives", game.player.lives);
-			}
-		}
+		case L -> addLives(3);
 		case N -> enterNextLevel();
 		case Q -> quitCurrentGameScene();
 		case V -> toggleGameVariant();
 		case X -> gameController.cheatKillGhosts();
 		case Z -> startIntermissionTest();
-		case SPACE -> gameController.requestGame();
-		case F11 -> stage.setFullScreen(true);
-		default -> {
-		}
-		}
-	}
-
-	private void onControlKeyPressed(KeyEvent e) {
-		final boolean shift = e.isShiftDown();
-
-		switch (e.getCode()) {
 		case LEFT, RIGHT -> {
 			if (currentGameScene.is3D()) {
 				if (e.getCode() == KeyCode.LEFT) {
@@ -267,19 +250,30 @@ public class GameUI extends DefaultGameEventHandler {
 				showFlashMessage(1, Env.message("camera_perspective", perspectiveName));
 			}
 		}
-		case I -> toggleHUDVisibility();
-		case J -> toggleCommandPanelVisibility();
-		case L -> toggleDrawMode();
 		case S -> {
 			int rate = Env.gameLoop.getTargetFrameRate();
-			if (shift) {
-				setTargetFrameRate(Math.max(10, rate - 10));
-			} else {
-				setTargetFrameRate(rate + 10);
-			}
+			setTargetFrameRate(shift ? Math.max(10, rate - 10) : rate + 10);
 			showFlashMessage(1, "Target FPS set to %d Hz", Env.gameLoop.getTargetFrameRate());
 		}
 		case DIGIT3 -> toggle3D();
+		default -> {
+		}
+		}
+	}
+
+	private void onControlKeyPressed(KeyEvent e, boolean shift) {
+		switch (e.getCode()) {
+		case I -> toggleInfoPanelVisibility();
+		case J -> toggleSettingsPanelVisibility();
+		default -> {
+		}
+		}
+	}
+
+	private void onKeyPressed(KeyEvent e, boolean shift) {
+		switch (e.getCode()) {
+		case SPACE -> gameController.requestGame();
+		case F11 -> stage.setFullScreen(true);
 		default -> {
 		}
 		}
@@ -298,6 +292,13 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 	}
 
+	public void addLives(int lives) {
+		if (gameController.gameRunning) {
+			gameController.game.player.lives += lives;
+			showFlashMessage(2, "You have %d lives", gameController.game.player.lives);
+		}
+	}
+
 	public void startIntermissionTest() {
 		if (gameController.state == GameState.INTRO) {
 			gameController.startIntermissionTest();
@@ -309,14 +310,14 @@ public class GameUI extends DefaultGameEventHandler {
 		Env.gameLoop.setTargetFrameRate(value);
 	}
 
-	public void toggleHUDVisibility() {
+	public void toggleInfoPanelVisibility() {
 		infoPanel.setVisible(!infoPanel.isVisible());
 		if (infoPanel.isVisible()) {
 			settingsPanel.setVisible(false);
 		}
 	}
 
-	public void toggleCommandPanelVisibility() {
+	public void toggleSettingsPanelVisibility() {
 		settingsPanel.setVisible(!settingsPanel.isVisible());
 		if (settingsPanel.isVisible()) {
 			infoPanel.setVisible(false);
