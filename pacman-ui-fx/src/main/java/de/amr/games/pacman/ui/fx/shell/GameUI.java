@@ -107,7 +107,6 @@ public class GameUI extends DefaultGameEventHandler {
 		resizeCanvas(mainScene.getHeight());
 
 		Env.$drawMode3D.addListener($1 -> updateBackground(currentGameScene));
-		Env.gameLoop.$fps.addListener($1 -> stage.setTitle(computeStageTitle()));
 
 		gameScenes = new GameScenes(mainScene, gameController, canvas, new V2i(TILES_X, TILES_Y).scaled(TS));
 		updateGameScene();
@@ -131,6 +130,7 @@ public class GameUI extends DefaultGameEventHandler {
 		if (settingsPanel.isVisible()) {
 			settingsPanel.update();
 		}
+		stage.setTitle(computeStageTitle());
 	}
 
 	public GameScene getCurrentGameScene() {
@@ -203,9 +203,7 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	private String computeStageTitle() {
-		String gameName = gameController.gameVariant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man";
-		return Env.$paused.get() ? String.format("%s (PAUSED, P: Resume, SHIFT+P: Step)", gameName)
-				: String.format("%s", gameName);
+		return gameController.gameVariant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man";
 	}
 
 	@Override
@@ -230,7 +228,6 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	private void onKeyPressed(KeyEvent e) {
-		final boolean shift = e.isShiftDown();
 		final GameModel game = gameController.game;
 
 		switch (e.getCode()) {
@@ -244,13 +241,6 @@ public class GameUI extends DefaultGameEventHandler {
 			}
 		}
 		case N -> enterNextLevel();
-		case P -> {
-			if (shift && Env.$paused.get()) {
-				Env.gameLoop.runSingleStep(true);
-			} else {
-				togglePaused();
-			}
-		}
 		case Q -> quitCurrentGameScene();
 		case V -> toggleGameVariant();
 		case X -> gameController.cheatKillGhosts();
@@ -348,14 +338,14 @@ public class GameUI extends DefaultGameEventHandler {
 	public void toggleAutopilot() {
 		gameController.autoControlled = !gameController.autoControlled;
 		String message = Env.message(gameController.autoControlled ? "autopilot_on" : "autopilot_off");
-		FlashMessageView.showFlashMessage(1, message);
+		showFlashMessage(1, message);
 	}
 
 	public void toggleImmunity() {
 		GameModel game = gameController.game;
 		game.player.immune = !game.player.immune;
 		String message = Env.message(game.player.immune ? "player_immunity_on" : "player_immunity_off");
-		FlashMessageView.showFlashMessage(1, message);
+		showFlashMessage(1, message);
 	}
 
 	public void toggle3D() {
@@ -368,7 +358,7 @@ public class GameUI extends DefaultGameEventHandler {
 			}
 		}
 		String message = Env.$3D.get() ? "Using 3D Play Scene" : "Using 2D Play Scene";
-		FlashMessageView.showFlashMessage(2, message);
+		showFlashMessage(2, message);
 	}
 
 	public void toggleAxesVisible() {
