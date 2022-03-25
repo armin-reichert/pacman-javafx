@@ -53,6 +53,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
@@ -82,6 +83,7 @@ public class GameUI extends DefaultGameEventHandler {
 	private final Canvas canvas;
 	private final Scene mainScene;
 	private final StackPane mainSceneRoot;
+	private final BorderPane infoLayer;
 	private final InfoPanel infoPanel;
 	private final SettingsPanel settingsPanel;
 
@@ -93,11 +95,15 @@ public class GameUI extends DefaultGameEventHandler {
 		this.gameController = gameController;
 
 		canvas = new Canvas(); // common canvas of all 2D scenes
+
 		infoPanel = new InfoPanel(this, 400);
 		settingsPanel = new SettingsPanel(this, 400);
+		infoLayer = new BorderPane();
+		infoLayer.setLeft(infoPanel);
+		infoLayer.setRight(settingsPanel);
 
 		// first child will get replaced by subscene representing current game scene
-		mainSceneRoot = new StackPane(new Group(), FlashMessageView.get(), infoPanel, settingsPanel);
+		mainSceneRoot = new StackPane(new Group(), FlashMessageView.get(), infoLayer);
 		StackPane.setAlignment(infoPanel, Pos.TOP_LEFT);
 		StackPane.setAlignment(settingsPanel, Pos.TOP_LEFT);
 
@@ -119,6 +125,10 @@ public class GameUI extends DefaultGameEventHandler {
 		stage.centerOnScreen();
 		stage.setFullScreen(fullscreen);
 		stage.show();
+	}
+
+	public Stage getStage() {
+		return stage;
 	}
 
 	public void update() {
@@ -233,6 +243,11 @@ public class GameUI extends DefaultGameEventHandler {
 		case L -> addLives(3);
 		case N -> enterNextLevel();
 		case Q -> quitCurrentGameScene();
+		case S -> {
+			int rate = Env.gameLoop.getTargetFrameRate();
+			setTargetFrameRate(shift ? Math.max(10, rate - 10) : rate + 10);
+			showFlashMessage(1, "Target FPS set to %d Hz", Env.gameLoop.getTargetFrameRate());
+		}
 		case V -> toggleGameVariant();
 		case X -> gameController.cheatKillGhosts();
 		case Z -> startIntermissionTest();
@@ -246,11 +261,6 @@ public class GameUI extends DefaultGameEventHandler {
 				String perspectiveName = Env.message(Env.$perspective.get().name());
 				showFlashMessage(1, Env.message("camera_perspective", perspectiveName));
 			}
-		}
-		case S -> {
-			int rate = Env.gameLoop.getTargetFrameRate();
-			setTargetFrameRate(shift ? Math.max(10, rate - 10) : rate + 10);
-			showFlashMessage(1, "Target FPS set to %d Hz", Env.gameLoop.getTargetFrameRate());
 		}
 		case DIGIT3 -> togglePlayScene3D();
 		default -> {
@@ -309,16 +319,10 @@ public class GameUI extends DefaultGameEventHandler {
 
 	public void toggleInfoPanelVisibility() {
 		infoPanel.setVisible(!infoPanel.isVisible());
-		if (infoPanel.isVisible()) {
-			settingsPanel.setVisible(false);
-		}
 	}
 
 	public void toggleSettingsPanelVisibility() {
 		settingsPanel.setVisible(!settingsPanel.isVisible());
-		if (settingsPanel.isVisible()) {
-			infoPanel.setVisible(false);
-		}
 	}
 
 	public void togglePaused() {

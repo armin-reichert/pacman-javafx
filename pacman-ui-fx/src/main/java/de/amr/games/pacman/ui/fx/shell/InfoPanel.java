@@ -30,17 +30,13 @@ import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.util.U;
-import javafx.animation.FadeTransition;
-import javafx.animation.Interpolator;
-import javafx.animation.TranslateTransition;
-import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 /**
  * Heads-Up-Display with information about the UI.
@@ -63,31 +59,15 @@ public class InfoPanel extends VBox {
 	private final StringBuilder text = new StringBuilder();
 
 	public InfoPanel(GameUI ui, int width) {
-		setVisible(false);
+		setBackground(U.colorBackground(new Color(0.3, 0.3, 0.3, 0.6)));
 		setMinWidth(width);
 		setMaxWidth(width);
-		setBackground(U.colorBackground(new Color(0.3, 0.3, 0.3, 0.6)));
+		setPadding(new Insets(5));
+		setVisible(false);
+
 		textUI.setFill(textColor);
 		textUI.setFont(textFont);
 		getChildren().add(textUI);
-		visibleProperty().addListener(this::onVisibilityChange);
-	}
-
-	private void onVisibilityChange(ObservableValue<? extends Boolean> $1, Boolean wasVisible, Boolean becomesVisible) {
-		if (becomesVisible) {
-			setOpacity(1);
-			setTranslateX(-getWidth());
-			TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), this);
-			transition.setFromX(-getWidth());
-			transition.setToX(0);
-			transition.setInterpolator(Interpolator.EASE_IN);
-			transition.play();
-		} else {
-			FadeTransition fade = new FadeTransition(Duration.seconds(0.5), this);
-			fade.setFromValue(1);
-			fade.setToValue(0);
-			fade.play();
-		}
 	}
 
 	public void update(GameController gameController, GameScene gameScene, Stage stage, Canvas canvas) {
@@ -150,7 +130,7 @@ public class InfoPanel extends VBox {
 		p("Alt+Z", "Play Intermission Scenes").when(state == GameState.INTRO);
 		p("Alt+LEFT", "%s", Env.prevPerspectiveName()).when(gameScene.is3D());
 		p("Alt+RIGHT", "%s", Env.nextPerspectiveName()).when(gameScene.is3D());
-		p("Alt+3", "3D Play Scene On/Off").done();
+		p("Alt+3", "3D Playscene On/Off").done();
 
 		textUI.setText(text.toString());
 	}

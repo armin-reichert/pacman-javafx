@@ -187,11 +187,12 @@ public class SettingsPanel extends GridPane {
 		this.ui = ui;
 
 		setBackground(U.colorBackground(new Color(0.3, 0.3, 0.3, 0.6)));
-		setHgap(20);
-		setVgap(4);
+		setPadding(new Insets(5));
 		setMinWidth(width);
 		setWidth(width);
 		setMaxWidth(width);
+		setHgap(20);
+		setVgap(4);
 		setVisible(false);
 
 		commands.add();
