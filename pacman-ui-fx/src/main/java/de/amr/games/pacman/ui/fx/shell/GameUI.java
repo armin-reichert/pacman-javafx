@@ -40,6 +40,7 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
+import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameScenes;
@@ -253,11 +254,8 @@ public class GameUI extends DefaultGameEventHandler {
 		case Z -> startIntermissionTest();
 		case LEFT, RIGHT -> {
 			if (currentGameScene.is3D()) {
-				if (e.getCode() == KeyCode.LEFT) {
-					Env.selectPrevPerspective();
-				} else {
-					Env.selectNextPerspective();
-				}
+				int delta = e.getCode() == KeyCode.LEFT ? Perspective.values().length - 1 : 1;
+				Env.selectPerspective(delta);
 				String perspectiveName = Env.message(Env.$perspective.get().name());
 				showFlashMessage(1, Env.message("camera_perspective", perspectiveName));
 			}

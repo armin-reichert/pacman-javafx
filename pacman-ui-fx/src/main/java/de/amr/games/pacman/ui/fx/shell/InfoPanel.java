@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx.shell;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.TickTimer;
+import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -90,11 +91,13 @@ public class InfoPanel extends VBox {
 		p("Game Variant", "%s", gameController.gameVariant).done();
 		p("Game Level", "%d", game.levelNumber).done();
 		p("Game State", "%s",
-				state == GameState.HUNTING ? String.format("%s: Phase #%d (%s)", state, game.huntingPhase, huntingPhaseName)
+				state == GameState.HUNTING
+						? String.format("%s: Phase #%d (%s)", state, game.huntingPhase, huntingPhaseName)
 						: state).done();
 		p("", "Running:   %s%s", stateTimer.ticked(), stateTimer.isStopped() ? " (STOPPED)" : "").done();
 		p("", "Remaining: %s",
-				stateTimer.ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer.ticksRemaining()).done();
+				stateTimer.ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer.ticksRemaining())
+						.done();
 		p("Autopilot", "%s", on_off(gameController.autoControlled)).done();
 		p("Immunity", "%s", on_off(game.player.immune)).done();
 		p("Game Scene", "%s", gameScene.getClass().getSimpleName()).done();
@@ -128,8 +131,8 @@ public class InfoPanel extends VBox {
 		p("Alt+V", "Switch Pac-Man/Ms. Pac-Man").when(state == GameState.INTRO);
 		p("Alt+X", "Kill all hunting ghosts").when(gameController.gameRunning);
 		p("Alt+Z", "Play Intermission Scenes").when(state == GameState.INTRO);
-		p("Alt+LEFT", "%s", Env.prevPerspectiveName()).when(gameScene.is3D());
-		p("Alt+RIGHT", "%s", Env.nextPerspectiveName()).when(gameScene.is3D());
+		p("Alt+LEFT", "%s", Env.perspectiveName(Perspective.values().length - 1)).when(gameScene.is3D());
+		p("Alt+RIGHT", "%s", Env.perspectiveName(1)).when(gameScene.is3D());
 		p("Alt+3", "3D Playscene On/Off").done();
 
 		textUI.setText(text.toString());
