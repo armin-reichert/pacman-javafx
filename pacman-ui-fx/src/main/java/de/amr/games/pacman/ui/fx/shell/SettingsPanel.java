@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell;
 
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -31,6 +32,7 @@ import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
@@ -74,18 +76,22 @@ public class SettingsPanel extends GridPane {
 
 	private final CheckBox cbShowTiles;
 
+	private final Button btnStartStopIntermissionTest;
+
 	public SettingsPanel(GameUI ui, int width) {
 		this.ui = ui;
 
 		setBackground(U.colorBackground(new Color(0.3, 0.3, 0.3, 0.6)));
 		setHgap(20);
+		setVgap(4);
 		setMinWidth(width);
 		setWidth(width);
 		setMaxWidth(width);
+		setVisible(false);
 
-		addSectionHeader("General settings");
+		addSectionHeader("General Settings");
 
-		cbGamePaused = addCheckBox("Game Paused", () -> ui.togglePaused());
+		cbGamePaused = addCheckBox("Game paused", () -> ui.togglePaused());
 		sliderTargetFrameRate = addSlider("Framerate", 10, 200, 60);
 		sliderTargetFrameRate.setShowTickLabels(true);
 		sliderTargetFrameRate.setShowTickMarks(true);
@@ -96,11 +102,11 @@ public class SettingsPanel extends GridPane {
 		});
 		comboGameVariant = addComboBox("Game Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
 		comboGameVariant.setOnAction(e -> ui.gameController.selectGameVariant(comboGameVariant.getValue()));
-		cbUse3DScene = addCheckBox("Use 3D Play Scene", ui::toggle3D);
+		cbUse3DScene = addCheckBox("Use 3D play scene", ui::toggle3D);
 		cbAutopilot = addCheckBox("Autopilot", ui::toggleAutopilot);
 		cbImmunity = addCheckBox("Player immune", ui::toggleImmunity);
 
-		addSectionHeader("3D settings");
+		addSectionHeader("3D Settings");
 		comboPerspective = addComboBox("Perspective", Perspective.values());
 		comboPerspective.setOnAction(e -> Env.$perspective.set(comboPerspective.getValue()));
 		comboMazeResolution = addComboBox("Maze resolution", 1, 2, 4, 8);
@@ -110,12 +116,20 @@ public class SettingsPanel extends GridPane {
 			Env.$mazeWallHeight.set(newVal.doubleValue());
 		});
 		cbUseMazeFloorTexture = addCheckBox("Maze floor texture", ui::toggleUseMazeFloorTexture);
-		cbAxesVisible = addCheckBox("Show Axes", ui::toggleAxesVisible);
-		cbWireframeMode = addCheckBox("Wireframe Mode", ui::toggleDrawMode);
+		cbAxesVisible = addCheckBox("Show axes", ui::toggleAxesVisible);
+		cbWireframeMode = addCheckBox("Wireframe mode", ui::toggleDrawMode);
 
-		addSectionHeader("2D settings");
-		cbShowTiles = addCheckBox("Show Tiles", ui::toggleTilesVisible);
-		setVisible(false);
+		addSectionHeader("2D Settings");
+		cbShowTiles = addCheckBox("Show tiles", ui::toggleTilesVisible);
+
+		addSectionHeader("Commands");
+		btnStartStopIntermissionTest = addButton("Intermission scenes", "Start", () -> {
+			if (ui.gameController.state == GameState.INTERMISSION_TEST) {
+				ui.gameController.changeState(GameState.INTRO);
+			} else {
+				ui.startIntermissionTest();
+			}
+		});
 	}
 
 	public void update() {
@@ -144,6 +158,11 @@ public class SettingsPanel extends GridPane {
 		// 2D
 		cbShowTiles.setSelected(Env.$tilesVisible.get());
 		cbShowTiles.setDisable(ui.getCurrentGameScene().is3D());
+
+		// Commands
+		btnStartStopIntermissionTest.setText(ui.gameController.state == GameState.INTERMISSION_TEST ? "Stop" : "Start");
+		btnStartStopIntermissionTest.setDisable(
+				ui.gameController.state != GameState.INTRO && ui.gameController.state != GameState.INTERMISSION_TEST);
 	}
 
 	private void addRow(String labelText, Control control) {
@@ -162,6 +181,13 @@ public class SettingsPanel extends GridPane {
 		setConstraints(header, 0, row, 2, 1, HPos.CENTER, VPos.CENTER, Priority.NEVER, Priority.NEVER, new Insets(10));
 		getChildren().add(header);
 		++row;
+	}
+
+	private Button addButton(String labelText, String buttonText, Runnable action) {
+		Button button = new Button(buttonText);
+		button.setOnAction(e -> action.run());
+		addRow(labelText, button);
+		return button;
 	}
 
 	private CheckBox addCheckBox(String labelText, Runnable callback) {

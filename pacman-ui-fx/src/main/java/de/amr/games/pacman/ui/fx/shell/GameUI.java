@@ -266,12 +266,7 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 		case V -> toggleGameVariant();
 		case X -> gameController.cheatKillGhosts();
-		case Z -> {
-			if (state == GameState.INTRO) {
-				gameController.startIntermissionTest();
-				showFlashMessage(1, "Intermission Scene Test");
-			}
-		}
+		case Z -> startIntermissionTest();
 		case SPACE -> gameController.requestGame();
 		case F11 -> stage.setFullScreen(true);
 		default -> {
@@ -309,6 +304,13 @@ public class GameUI extends DefaultGameEventHandler {
 		case DIGIT3 -> toggle3D();
 		default -> {
 		}
+		}
+	}
+
+	public void startIntermissionTest() {
+		if (gameController.state == GameState.INTRO) {
+			gameController.startIntermissionTest();
+			showFlashMessage(1, "Intermission Scene Test");
 		}
 	}
 
