@@ -76,7 +76,8 @@ public class SettingsPanel extends GridPane {
 
 	private final CheckBox cbShowTiles;
 
-	private final Button btnStartStopIntermissionTest;
+	private final Button btnQuitGameScene;
+	private final Button btnStartIntermissionTest;
 
 	public SettingsPanel(GameUI ui, int width) {
 		this.ui = ui;
@@ -123,13 +124,8 @@ public class SettingsPanel extends GridPane {
 		cbShowTiles = addCheckBox("Show tiles", ui::toggleTilesVisible);
 
 		addSectionHeader("Commands");
-		btnStartStopIntermissionTest = addButton("Intermission scenes", "Start", () -> {
-			if (ui.gameController.state == GameState.INTERMISSION_TEST) {
-				ui.gameController.changeState(GameState.INTRO);
-			} else {
-				ui.startIntermissionTest();
-			}
-		});
+		btnQuitGameScene = addButton("Quit Game Scene", "Quit", () -> ui.quitCurrentGameScene());
+		btnStartIntermissionTest = addButton("Intermission scenes", "Start", () -> ui.startIntermissionTest());
 	}
 
 	public void update() {
@@ -160,9 +156,7 @@ public class SettingsPanel extends GridPane {
 		cbShowTiles.setDisable(ui.getCurrentGameScene().is3D());
 
 		// Commands
-		btnStartStopIntermissionTest.setText(ui.gameController.state == GameState.INTERMISSION_TEST ? "Stop" : "Start");
-		btnStartStopIntermissionTest.setDisable(
-				ui.gameController.state != GameState.INTRO && ui.gameController.state != GameState.INTERMISSION_TEST);
+		btnStartIntermissionTest.setDisable(ui.gameController.state == GameState.INTERMISSION_TEST);
 	}
 
 	private void addRow(String labelText, Control control) {

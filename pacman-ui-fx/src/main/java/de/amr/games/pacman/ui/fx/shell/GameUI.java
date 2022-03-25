@@ -232,7 +232,6 @@ public class GameUI extends DefaultGameEventHandler {
 	private void onKeyPressed(KeyEvent e) {
 		final boolean shift = e.isShiftDown();
 		final GameModel game = gameController.game;
-		final GameState state = gameController.state;
 
 		switch (e.getCode()) {
 		case A -> toggleAutopilot();
@@ -257,13 +256,7 @@ public class GameUI extends DefaultGameEventHandler {
 				togglePaused();
 			}
 		}
-		case Q -> {
-			if (state != GameState.INTRO) {
-				currentGameScene.end();
-				currentGameScene.getSounds().stopAll();
-				gameController.changeState(GameState.INTRO);
-			}
-		}
+		case Q -> quitCurrentGameScene();
 		case V -> toggleGameVariant();
 		case X -> gameController.cheatKillGhosts();
 		case Z -> startIntermissionTest();
@@ -305,6 +298,12 @@ public class GameUI extends DefaultGameEventHandler {
 		default -> {
 		}
 		}
+	}
+
+	public void quitCurrentGameScene() {
+		currentGameScene.end();
+		currentGameScene.getSounds().stopAll();
+		gameController.changeState(GameState.INTRO);
 	}
 
 	public void startIntermissionTest() {
