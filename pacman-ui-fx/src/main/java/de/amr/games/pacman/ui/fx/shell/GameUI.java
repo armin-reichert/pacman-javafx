@@ -90,7 +90,7 @@ public class GameUI extends DefaultGameEventHandler {
 	private int wallpaperIndex;
 	private GameScene currentGameScene;
 
-	public GameUI(Stage stage, GameController gameController, double height, boolean fullscreen) {
+	public GameUI(Stage stage, GameController gameController, double height) {
 		this.stage = stage;
 		this.gameController = gameController;
 
@@ -123,7 +123,6 @@ public class GameUI extends DefaultGameEventHandler {
 		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
 		stage.setScene(mainScene);
 		stage.centerOnScreen();
-		stage.setFullScreen(fullscreen);
 		stage.show();
 	}
 
