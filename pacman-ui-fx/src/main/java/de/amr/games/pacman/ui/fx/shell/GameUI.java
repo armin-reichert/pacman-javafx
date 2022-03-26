@@ -70,6 +70,7 @@ import javafx.stage.WindowEvent;
 public class GameUI extends DefaultGameEventHandler {
 
 	private static final int TILES_X = 28, TILES_Y = 36;
+	private static final V2i SCENE_SIZE = new V2i(TILES_X, TILES_Y).scaled(TS);
 	private static final double ASPECT_RATIO = (double) TILES_X / TILES_Y;
 
 	public final GameController gameController;
@@ -107,8 +108,7 @@ public class GameUI extends DefaultGameEventHandler {
 		mainScene = new Scene(mainLayout, ASPECT_RATIO * height, height);
 		mainScene.heightProperty().addListener(($height, _old, _new) -> resizeCanvas(_new.doubleValue()));
 
-		var sceneSize = new V2i(TILES_X, TILES_Y).scaled(TS);
-		gameScenes = new GameScenes(mainScene, gameController, canvas, GianmarcosModel3D.get(), sceneSize);
+		gameScenes = new GameScenes(mainScene, gameController, canvas, GianmarcosModel3D.get(), SCENE_SIZE);
 		updateGameScene();
 
 		Env.$drawMode3D.addListener(($drawMode, _old, _new) -> updateBackground(currentGameScene));
