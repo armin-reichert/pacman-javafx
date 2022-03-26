@@ -74,9 +74,9 @@ public class GameUI extends DefaultGameEventHandler {
 	public final GameController gameController;
 	public final Stage stage;
 	private final GameScenes gameScenes;
-	private final Canvas canvas;
 	private final Scene mainScene;
 	private final StackPane mainLayout;
+	private final Canvas canvas;
 	private final InfoPanel infoPanel;
 	private final SettingsPanel settingsPanel;
 
@@ -213,13 +213,17 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	private void handleKeyPressed(KeyEvent e) {
-		final boolean shift = e.isShiftDown();
 		if (e.isAltDown()) {
-			onAltKeyPressed(e, shift);
+			onAltKeyPressed(e, e.isShiftDown());
 		} else if (e.isControlDown()) {
-			onControlKeyPressed(e, shift);
+			onControlKeyPressed(e, e.isShiftDown());
 		} else {
-			onKeyPressed(e, shift);
+			switch (e.getCode()) {
+			case SPACE -> gameController.requestGame();
+			case F11 -> stage.setFullScreen(true);
+			default -> {
+			}
+			}
 		}
 	}
 
@@ -233,7 +237,7 @@ public class GameUI extends DefaultGameEventHandler {
 		case Q -> quitCurrentGameScene();
 		case S -> {
 			int rate = Env.gameLoop.getTargetFrameRate();
-			setTargetFrameRate(shift ? Math.max(10, rate - 10) : rate + 10);
+			Env.gameLoop.setTargetFrameRate(shift ? Math.max(10, rate - 10) : rate + 10);
 			showFlashMessage(1, "Target FPS set to %d Hz", Env.gameLoop.getTargetFrameRate());
 		}
 		case V -> toggleGameVariant();
@@ -257,15 +261,6 @@ public class GameUI extends DefaultGameEventHandler {
 		switch (e.getCode()) {
 		case I -> toggleInfoPanelVisibility();
 		case J -> toggleSettingsPanelVisibility();
-		default -> {
-		}
-		}
-	}
-
-	private void onKeyPressed(KeyEvent e, boolean shift) {
-		switch (e.getCode()) {
-		case SPACE -> gameController.requestGame();
-		case F11 -> stage.setFullScreen(true);
 		default -> {
 		}
 		}
@@ -296,10 +291,6 @@ public class GameUI extends DefaultGameEventHandler {
 			gameController.startIntermissionTest();
 			showFlashMessage(1, "Intermission Scene Test");
 		}
-	}
-
-	public void setTargetFrameRate(int value) {
-		Env.gameLoop.setTargetFrameRate(value);
 	}
 
 	public void toggleInfoPanelVisibility() {
