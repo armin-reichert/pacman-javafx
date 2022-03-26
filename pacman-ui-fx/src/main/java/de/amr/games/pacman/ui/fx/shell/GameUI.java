@@ -76,8 +76,7 @@ public class GameUI extends DefaultGameEventHandler {
 	private final GameScenes gameScenes;
 	private final Canvas canvas;
 	private final Scene mainScene;
-	private final StackPane mainSceneRoot;
-	private final BorderPane infoLayer;
+	private final StackPane mainLayout;
 	private final InfoPanel infoPanel;
 	private final SettingsPanel settingsPanel;
 
@@ -87,6 +86,7 @@ public class GameUI extends DefaultGameEventHandler {
 			U.imageBackground("/common/wallpapers/easter_island.jpg"), //
 	};
 	private int wallpaperIndex;
+
 	private GameScene currentGameScene;
 
 	public GameUI(Stage stage, GameController gameController, double height) {
@@ -94,18 +94,18 @@ public class GameUI extends DefaultGameEventHandler {
 		this.gameController = gameController;
 
 		canvas = new Canvas(); // common canvas of all 2D scenes
+		resizeCanvas(height);
 
+		var infoLayer = new BorderPane();
 		infoPanel = new InfoPanel(this, 400);
 		settingsPanel = new SettingsPanel(this, 400);
-		infoLayer = new BorderPane();
 		infoLayer.setLeft(infoPanel);
 		infoLayer.setRight(settingsPanel);
 
 		// first child will get replaced by subscene representing current game scene
-		mainSceneRoot = new StackPane(new Group(), FlashMessageView.get(), infoLayer);
-		mainScene = new Scene(mainSceneRoot, ASPECT_RATIO * height, height);
+		mainLayout = new StackPane(new Group(), FlashMessageView.get(), infoLayer);
+		mainScene = new Scene(mainLayout, ASPECT_RATIO * height, height);
 		mainScene.heightProperty().addListener($1 -> resizeCanvas(mainScene.getHeight()));
-		resizeCanvas(mainScene.getHeight());
 
 		Env.$drawMode3D.addListener($1 -> updateBackground(currentGameScene));
 
@@ -158,7 +158,7 @@ public class GameUI extends DefaultGameEventHandler {
 			} else {
 				log("Set scene to '%s'", nextGameScene.getClass().getName());
 			}
-			mainSceneRoot.getChildren().set(0, nextGameScene.getFXSubScene());
+			mainLayout.getChildren().set(0, nextGameScene.getFXSubScene());
 			updateSceneContext(nextGameScene);
 			nextGameScene.init();
 			currentGameScene = nextGameScene;
@@ -177,11 +177,11 @@ public class GameUI extends DefaultGameEventHandler {
 	private void updateBackground(GameScene gameScene) {
 		if (gameScene.is3D()) {
 			selectRandomWallpaper();
-			mainSceneRoot.setBackground(Env.$drawMode3D.get() == DrawMode.LINE //
+			mainLayout.setBackground(Env.$drawMode3D.get() == DrawMode.LINE //
 					? U.colorBackground(Color.BLACK)
 					: wallpapers[wallpaperIndex]);
 		} else {
-			mainSceneRoot.setBackground(U.colorBackground(Color.CORNFLOWERBLUE));
+			mainLayout.setBackground(U.colorBackground(Color.CORNFLOWERBLUE));
 		}
 	}
 

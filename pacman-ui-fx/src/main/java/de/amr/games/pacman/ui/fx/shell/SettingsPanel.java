@@ -75,7 +75,11 @@ public class SettingsPanel extends GridPane {
 			btnsSimulation[0].setOnAction(e -> ui.togglePaused());
 			btnsSimulation[1].setOnAction(e -> Env.gameLoop.runSingleStep(true));
 			comboGameVariant = addComboBox("Game Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
-			comboGameVariant.setOnAction(e -> ui.gameController.selectGameVariant(comboGameVariant.getValue()));
+			comboGameVariant.setOnAction(e -> {
+				if (comboGameVariant.getValue() != ui.gameController.gameVariant) {
+					ui.gameController.selectGameVariant(comboGameVariant.getValue());
+				}
+			});
 			btnStartGame = addButton("Game Play", "Start", ui.gameController::requestGame);
 			btnQuitGameScene = addButton("Game Scene", "Quit", ui::quitCurrentGameScene);
 			btnEnterNextLevel = addButton("Enter next level", "Next", ui::enterNextLevel);
