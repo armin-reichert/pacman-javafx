@@ -102,20 +102,18 @@ public class GameUI extends DefaultGameEventHandler {
 		infoLayer.setLeft(infoPanel);
 		infoLayer.setRight(settingsPanel);
 
-		// first child will get replaced by subscene representing current game scene
+		// first child will dynamically get replaced by subscene representing the current game scene
 		mainLayout = new StackPane(new Group(), FlashMessageView.get(), infoLayer);
 		mainScene = new Scene(mainLayout, ASPECT_RATIO * height, height);
-		mainScene.heightProperty().addListener($1 -> resizeCanvas(mainScene.getHeight()));
-
-		Env.$drawMode3D.addListener($1 -> updateBackground(currentGameScene));
+		mainScene.heightProperty().addListener(($height, _old, _new) -> resizeCanvas(_new.doubleValue()));
 
 		gameScenes = new GameScenes(mainScene, gameController, canvas, new V2i(TILES_X, TILES_Y).scaled(TS));
 		updateGameScene();
 
+		Env.$drawMode3D.addListener(($drawMode, _old, _new) -> updateBackground(currentGameScene));
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> Env.gameLoop.stop());
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPressed);
 
-		stage.setTitle(computeStageTitle());
 		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
 		stage.setScene(mainScene);
 		stage.centerOnScreen();
@@ -138,10 +136,9 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	private GameScene gameSceneForCurrentState(boolean _3D) {
-		var game = gameController.game;
 		int sceneIndex = switch (gameController.state) {
 		case INTRO -> 0;
-		case INTERMISSION -> game.intermissionNumber(game.levelNumber);
+		case INTERMISSION -> gameController.game.intermissionNumber(gameController.game.levelNumber);
 		case INTERMISSION_TEST -> gameController.intermissionTestNumber;
 		default -> 4;
 		};
