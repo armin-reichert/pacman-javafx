@@ -73,10 +73,9 @@ public class GameUI extends DefaultGameEventHandler {
 
 	public final GameController gameController;
 	public final Stage stage;
-	private final GameScenes gameScenes;
+	public final Canvas canvas = new Canvas(); // common canvas of all 2D scenes
 	private final Scene mainScene;
 	private final StackPane mainLayout;
-	private final Canvas canvas;
 	private final InfoPanel infoPanel;
 	private final SettingsPanel settingsPanel;
 
@@ -87,18 +86,18 @@ public class GameUI extends DefaultGameEventHandler {
 	};
 	private int wallpaperIndex;
 
+	private final GameScenes gameScenes;
 	private GameScene currentGameScene;
 
 	public GameUI(Stage stage, GameController gameController, double height) {
 		this.stage = stage;
 		this.gameController = gameController;
+		this.settingsPanel = new SettingsPanel(this, 400);
+		this.infoPanel = new InfoPanel(this, 400);
 
-		canvas = new Canvas(); // common canvas of all 2D scenes
 		resizeCanvas(height);
 
 		var infoLayer = new BorderPane();
-		infoPanel = new InfoPanel(this, 400);
-		settingsPanel = new SettingsPanel(this, 400);
 		infoLayer.setLeft(infoPanel);
 		infoLayer.setRight(settingsPanel);
 
@@ -123,7 +122,7 @@ public class GameUI extends DefaultGameEventHandler {
 	public void update() {
 		FlashMessageView.get().update();
 		if (infoPanel.isVisible()) {
-			infoPanel.update(gameController, currentGameScene, stage, canvas);
+			infoPanel.update(this);
 		}
 		if (settingsPanel.isVisible()) {
 			settingsPanel.update();

@@ -23,21 +23,17 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.geometry.Insets;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 /**
  * Heads-Up-Display with information about the UI.
@@ -69,24 +65,25 @@ public class InfoPanel extends VBox {
 		getChildren().add(textUI);
 	}
 
-	public void update(GameController gameController, GameScene gameScene, Stage stage, Canvas canvas) {
-		var width = stage.getScene().getWindow().getWidth();
-		var height = stage.getScene().getWindow().getHeight();
-		var sceneWidth = stage.getScene().getWidth();
-		var sceneHeight = stage.getScene().getHeight();
-		var game = gameController.game;
-		var state = gameController.state;
+	public void update(GameUI ui) {
+		var width = ui.stage.getScene().getWindow().getWidth();
+		var height = ui.stage.getScene().getWindow().getHeight();
+		var sceneWidth = ui.stage.getScene().getWidth();
+		var sceneHeight = ui.stage.getScene().getHeight();
+		var game = ui.gameController.game;
+		var state = ui.gameController.state;
 		var huntingPhaseName = game.inScatteringPhase() ? "Scattering" : "Chasing";
-		var stateTimer = gameController.stateTimer();
+		var stateTimer = ui.gameController.stateTimer();
+		var gameScene = ui.getCurrentGameScene();
 
 		text.setLength(0);
 		p("Total Ticks", "%d", Env.gameLoop.$totalTicks.get()).done();
 		p("Target FPS", "%d Hz", Env.gameLoop.getTargetFrameRate()).done();
 		p("Current FPS", "%d Hz", Env.gameLoop.$fps.get()).done();
 		p("Paused", "%s", yes_no(Env.$paused.get())).done();
-		p("Playing", "%s", yes_no(gameController.gameRunning)).done();
-		p("Attract Mode", "%s", yes_no(gameController.attractMode)).done();
-		p("Game Variant", "%s", gameController.gameVariant).done();
+		p("Playing", "%s", yes_no(ui.gameController.gameRunning)).done();
+		p("Attract Mode", "%s", yes_no(ui.gameController.attractMode)).done();
+		p("Game Variant", "%s", ui.gameController.gameVariant).done();
 		p("Game Level", "%d", game.levelNumber).done();
 		p("Game State", "%s",
 				state == GameState.HUNTING ? String.format("%s: Phase #%d (%s)", state, game.huntingPhase, huntingPhaseName)
@@ -94,7 +91,7 @@ public class InfoPanel extends VBox {
 		p("", "Running:   %s%s", stateTimer.ticked(), stateTimer.isStopped() ? " (STOPPED)" : "").done();
 		p("", "Remaining: %s",
 				stateTimer.ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer.ticksRemaining()).done();
-		p("Autopilot", "%s", on_off(gameController.autoControlled)).done();
+		p("Autopilot", "%s", on_off(ui.gameController.autoControlled)).done();
 		p("Immunity", "%s", on_off(game.player.immune)).done();
 		p("Game Scene", "%s", gameScene.getClass().getSimpleName()).done();
 		p("", "w=%.0f h=%.0f", gameScene.getFXSubScene().getWidth(), gameScene.getFXSubScene().getHeight()).done();
@@ -109,7 +106,7 @@ public class InfoPanel extends VBox {
 			p("Draw Mode", "%s", Env.$drawMode3D.get()).done();
 			p("Axes", "%s", on_off(Env.$axesVisible.get())).done();
 		} else {
-			p("Canvas2D", "w=%.0f h=%.0f", canvas.getWidth(), canvas.getHeight()).done();
+			p("Canvas2D", "w=%.0f h=%.0f", ui.canvas.getWidth(), ui.canvas.getHeight()).done();
 		}
 
 		newline();
@@ -118,14 +115,14 @@ public class InfoPanel extends VBox {
 
 		newline();
 		p("Alt+A", "Autopilot On/Off").done();
-		p("Alt+E", "Eat all normal pellets").when(gameController.gameRunning);
+		p("Alt+E", "Eat all normal pellets").when(ui.gameController.gameRunning);
 		p("Alt+I", "Player immunity On/Off").done();
-		p("Alt+L", "Add 3 player lives").when(gameController.gameRunning);
-		p("Alt+N", "Next Level").when(gameController.gameRunning);
+		p("Alt+L", "Add 3 player lives").when(ui.gameController.gameRunning);
+		p("Alt+N", "Next Level").when(ui.gameController.gameRunning);
 		p("Alt+Q", "Quit Scene").when(state != GameState.INTRO);
 		p("Alt+S", "Speed (SHIFT=Decrease)").done();
 		p("Alt+V", "Switch Pac-Man/Ms. Pac-Man").when(state == GameState.INTRO);
-		p("Alt+X", "Kill all hunting ghosts").when(gameController.gameRunning);
+		p("Alt+X", "Kill all hunting ghosts").when(ui.gameController.gameRunning);
 		p("Alt+Z", "Play Intermission Scenes").when(state == GameState.INTRO);
 		p("Alt+LEFT", "%s", Env.perspectiveName(Perspective.values().length - 1)).when(gameScene.is3D());
 		p("Alt+RIGHT", "%s", Env.perspectiveName(1)).when(gameScene.is3D());
