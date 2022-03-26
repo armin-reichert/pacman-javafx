@@ -47,7 +47,6 @@ import de.amr.games.pacman.ui.fx.scene.GameScenes;
 import de.amr.games.pacman.ui.fx.sound.mspacman.Sounds_MsPacMan;
 import de.amr.games.pacman.ui.fx.sound.pacman.Sounds_PacMan;
 import de.amr.games.pacman.ui.fx.util.U;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -72,12 +71,6 @@ public class GameUI extends DefaultGameEventHandler {
 	private static final int TILES_X = 28, TILES_Y = 36;
 	private static final double ASPECT_RATIO = (double) TILES_X / TILES_Y;
 
-	private static final Background[] WALLPAPERS = { //
-			U.imageBackground("/common/wallpapers/beach.jpg"), //
-			U.imageBackground("/common/wallpapers/space.jpg"), //
-			U.imageBackground("/common/wallpapers/easter_island.jpg"), //
-	};
-
 	public final GameController gameController;
 	public final Stage stage;
 	private final GameScenes gameScenes;
@@ -88,6 +81,11 @@ public class GameUI extends DefaultGameEventHandler {
 	private final InfoPanel infoPanel;
 	private final SettingsPanel settingsPanel;
 
+	private Background[] wallpapers = { //
+			U.imageBackground("/common/wallpapers/beach.jpg"), //
+			U.imageBackground("/common/wallpapers/space.jpg"), //
+			U.imageBackground("/common/wallpapers/easter_island.jpg"), //
+	};
 	private int wallpaperIndex;
 	private GameScene currentGameScene;
 
@@ -105,9 +103,6 @@ public class GameUI extends DefaultGameEventHandler {
 
 		// first child will get replaced by subscene representing current game scene
 		mainSceneRoot = new StackPane(new Group(), FlashMessageView.get(), infoLayer);
-		StackPane.setAlignment(infoPanel, Pos.TOP_LEFT);
-		StackPane.setAlignment(settingsPanel, Pos.TOP_LEFT);
-
 		mainScene = new Scene(mainSceneRoot, ASPECT_RATIO * height, height);
 		mainScene.heightProperty().addListener($1 -> resizeCanvas(mainScene.getHeight()));
 		resizeCanvas(mainScene.getHeight());
@@ -184,7 +179,7 @@ public class GameUI extends DefaultGameEventHandler {
 			selectRandomWallpaper();
 			mainSceneRoot.setBackground(Env.$drawMode3D.get() == DrawMode.LINE //
 					? U.colorBackground(Color.BLACK)
-					: WALLPAPERS[wallpaperIndex]);
+					: wallpapers[wallpaperIndex]);
 		} else {
 			mainSceneRoot.setBackground(U.colorBackground(Color.CORNFLOWERBLUE));
 		}
@@ -193,7 +188,7 @@ public class GameUI extends DefaultGameEventHandler {
 	private void selectRandomWallpaper() {
 		int next = wallpaperIndex;
 		while (next == wallpaperIndex) {
-			next = new Random().nextInt(WALLPAPERS.length);
+			next = new Random().nextInt(wallpapers.length);
 		}
 		wallpaperIndex = next;
 	}
