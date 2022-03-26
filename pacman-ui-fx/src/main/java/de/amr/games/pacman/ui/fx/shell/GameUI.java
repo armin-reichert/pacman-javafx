@@ -79,8 +79,8 @@ public class GameUI extends DefaultGameEventHandler {
 	};
 
 	public final GameController gameController;
+	public final Stage stage;
 	private final GameScenes gameScenes;
-	private final Stage stage;
 	private final Canvas canvas;
 	private final Scene mainScene;
 	private final StackPane mainSceneRoot;
@@ -125,10 +125,6 @@ public class GameUI extends DefaultGameEventHandler {
 		stage.setScene(mainScene);
 		stage.centerOnScreen();
 		stage.show();
-	}
-
-	public Stage getStage() {
-		return stage;
 	}
 
 	public void update() {

@@ -61,7 +61,7 @@ public class PacManGameAppFX extends Application {
 
 		// Create the user interface and the connections with the controllers
 		var ui = new GameUI(stage, controller, options.windowHeight);
-		ui.getStage().setFullScreen(options.fullscreen);
+		ui.stage.setFullScreen(options.fullscreen);
 		controller.addGameEventListener(ui);
 		controller.setPlayerControl(playerControl);
 
