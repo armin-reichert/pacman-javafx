@@ -104,11 +104,12 @@ public class SettingsPanel extends GridPane {
 
 		public void add() {
 			addSectionHeader("General Settings");
-			sliderTargetFrameRate = addSlider("Framerate", 5, 200, 60);
+			sliderTargetFrameRate = addSlider("Framerate", 0, 120, 60);
+			sliderTargetFrameRate.setSnapToTicks(true);
 			sliderTargetFrameRate.setShowTickLabels(true);
 			sliderTargetFrameRate.setShowTickMarks(true);
 			sliderTargetFrameRate.setMinorTickCount(5);
-			sliderTargetFrameRate.setMajorTickUnit(50);
+			sliderTargetFrameRate.setMajorTickUnit(30);
 			sliderTargetFrameRate.valueProperty().addListener(($1, oldVal, newVal) -> {
 				ui.setTargetFrameRate(newVal.intValue());
 			});
@@ -188,9 +189,7 @@ public class SettingsPanel extends GridPane {
 
 		setBackground(U.colorBackground(new Color(0.3, 0.3, 0.3, 0.6)));
 		setPadding(new Insets(5));
-		setMinWidth(width);
 		setWidth(width);
-		setMaxWidth(width);
 		setHgap(20);
 		setVgap(4);
 		setVisible(false);
@@ -213,7 +212,8 @@ public class SettingsPanel extends GridPane {
 		label.setFill(textColor);
 		label.setFont(textFont);
 		add(label, 0, row);
-		add(child, 1, row++);
+		add(child, 1, row);
+		++row;
 	}
 
 	private void addSectionHeader(String title) {
