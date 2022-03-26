@@ -114,8 +114,8 @@ public class SettingsPanel extends GridPane {
 			sliderTargetFrameRate.setShowTickMarks(true);
 			sliderTargetFrameRate.setMinorTickCount(5);
 			sliderTargetFrameRate.setMajorTickUnit(30);
-			sliderTargetFrameRate.valueProperty().addListener(($1, oldVal, newVal) -> {
-				ui.setTargetFrameRate(newVal.intValue());
+			sliderTargetFrameRate.valueProperty().addListener(($value, _old, _new) -> {
+				ui.setTargetFrameRate(_new.intValue());
 			});
 			cbUsePlayScene3D = addCheckBox("Use 3D play scene", ui::toggleUsePlayScene3D);
 			cbAutopilot = addCheckBox("Autopilot", ui::toggleAutopilot);
@@ -145,9 +145,7 @@ public class SettingsPanel extends GridPane {
 			comboResolution = addComboBox("Maze resolution", 1, 2, 4, 8);
 			comboResolution.setOnAction(e -> Env.$mazeResolution.set(comboResolution.getValue()));
 			sliderWallHeight = addSlider("Maze wall height", 0, 10, 8);
-			sliderWallHeight.valueProperty().addListener(($1, oldVal, newVal) -> {
-				Env.$mazeWallHeight.set(newVal.doubleValue());
-			});
+			sliderWallHeight.valueProperty().addListener(($value, _old, _new) -> Env.$mazeWallHeight.set(_new.doubleValue()));
 			cbUseFloorTexture = addCheckBox("Maze floor texture", ui::toggleUseMazeFloorTexture);
 			cbAxesVisible = addCheckBox("Show axes", ui::toggleAxesVisible);
 			cbWireframeMode = addCheckBox("Wireframe mode", ui::toggleDrawMode);

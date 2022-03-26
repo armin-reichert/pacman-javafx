@@ -56,8 +56,8 @@ public class Bonus3D extends Box {
 		rotation.setAxis(Rotate.X_AXIS);
 		rotation.setByAngle(360);
 		rotation.setOnFinished(e -> setVisible(false));
-		visibleProperty().addListener($1 -> {
-			if (!isVisible()) {
+		visibleProperty().addListener(($visible, _old, _new) -> {
+			if (!_new.booleanValue()) {
 				rotation.stop();
 			}
 		});
