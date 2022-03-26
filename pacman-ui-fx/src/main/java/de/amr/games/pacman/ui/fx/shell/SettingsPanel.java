@@ -100,7 +100,7 @@ public class SettingsPanel extends GridPane {
 		private Slider sliderTargetFrameRate;
 		private CheckBox cbAutopilot;
 		private CheckBox cbImmunity;
-		private CheckBox cbUse3DScene;
+		private CheckBox cbUsePlayScene3D;
 
 		public void add() {
 			addSectionHeader("General Settings");
@@ -113,7 +113,7 @@ public class SettingsPanel extends GridPane {
 			sliderTargetFrameRate.valueProperty().addListener(($1, oldVal, newVal) -> {
 				ui.setTargetFrameRate(newVal.intValue());
 			});
-			cbUse3DScene = addCheckBox("Use 3D play scene", ui::togglePlayScene3D);
+			cbUsePlayScene3D = addCheckBox("Use 3D play scene", ui::toggleUsePlayScene3D);
 			cbAutopilot = addCheckBox("Autopilot", ui::toggleAutopilot);
 			cbImmunity = addCheckBox("Player immune", ui::toggleImmunity);
 		}
@@ -122,15 +122,15 @@ public class SettingsPanel extends GridPane {
 			sliderTargetFrameRate.setValue(Env.gameLoop.getTargetFrameRate());
 			cbAutopilot.setSelected(ui.gameController.autoControlled);
 			cbImmunity.setSelected(ui.gameController.game.player.immune);
-			cbUse3DScene.setSelected(Env.$3D.get());
+			cbUsePlayScene3D.setSelected(Env.$3D.get());
 		}
 	}
 
 	private class Settings3D {
 		private ComboBox<Perspective> comboPerspective;
-		private ComboBox<Integer> comboMazeResolution;
-		private Slider sliderMazeWallHeight;
-		private CheckBox cbUseMazeFloorTexture;
+		private ComboBox<Integer> comboResolution;
+		private Slider sliderWallHeight;
+		private CheckBox cbUseFloorTexture;
 		private CheckBox cbAxesVisible;
 		private CheckBox cbWireframeMode;
 
@@ -138,13 +138,13 @@ public class SettingsPanel extends GridPane {
 			addSectionHeader("3D Settings");
 			comboPerspective = addComboBox("Perspective", Perspective.values());
 			comboPerspective.setOnAction(e -> Env.$perspective.set(comboPerspective.getValue()));
-			comboMazeResolution = addComboBox("Maze resolution", 1, 2, 4, 8);
-			comboMazeResolution.setOnAction(e -> Env.$mazeResolution.set(comboMazeResolution.getValue()));
-			sliderMazeWallHeight = addSlider("Maze wall height", 0, 10, 8);
-			sliderMazeWallHeight.valueProperty().addListener(($1, oldVal, newVal) -> {
+			comboResolution = addComboBox("Maze resolution", 1, 2, 4, 8);
+			comboResolution.setOnAction(e -> Env.$mazeResolution.set(comboResolution.getValue()));
+			sliderWallHeight = addSlider("Maze wall height", 0, 10, 8);
+			sliderWallHeight.valueProperty().addListener(($1, oldVal, newVal) -> {
 				Env.$mazeWallHeight.set(newVal.doubleValue());
 			});
-			cbUseMazeFloorTexture = addCheckBox("Maze floor texture", ui::toggleUseMazeFloorTexture);
+			cbUseFloorTexture = addCheckBox("Maze floor texture", ui::toggleUseMazeFloorTexture);
 			cbAxesVisible = addCheckBox("Show axes", ui::toggleAxesVisible);
 			cbWireframeMode = addCheckBox("Wireframe mode", ui::toggleDrawMode);
 		}
@@ -152,12 +152,12 @@ public class SettingsPanel extends GridPane {
 		public void update() {
 			comboPerspective.setValue(Env.$perspective.get());
 			comboPerspective.setDisable(!ui.getCurrentGameScene().is3D());
-			comboMazeResolution.setValue(Env.$mazeResolution.get());
-			comboMazeResolution.setDisable(!ui.getCurrentGameScene().is3D());
-			sliderMazeWallHeight.setValue(Env.$mazeWallHeight.get());
-			sliderMazeWallHeight.setDisable(!ui.getCurrentGameScene().is3D());
-			cbUseMazeFloorTexture.setSelected(Env.$useMazeFloorTexture.get());
-			cbUseMazeFloorTexture.setDisable(!ui.getCurrentGameScene().is3D());
+			comboResolution.setValue(Env.$mazeResolution.get());
+			comboResolution.setDisable(!ui.getCurrentGameScene().is3D());
+			sliderWallHeight.setValue(Env.$mazeWallHeight.get());
+			sliderWallHeight.setDisable(!ui.getCurrentGameScene().is3D());
+			cbUseFloorTexture.setSelected(Env.$useMazeFloorTexture.get());
+			cbUseFloorTexture.setDisable(!ui.getCurrentGameScene().is3D());
 			cbAxesVisible.setSelected(Env.$axesVisible.get());
 			cbAxesVisible.setDisable(!ui.getCurrentGameScene().is3D());
 			cbWireframeMode.setSelected(Env.$drawMode3D.get() == DrawMode.LINE);
@@ -166,30 +166,30 @@ public class SettingsPanel extends GridPane {
 	}
 
 	private class Settings2D {
-		private CheckBox cbShowTiles;
+		private CheckBox cbTilesVisible;
 
 		public void add() {
 			addSectionHeader("2D Settings");
-			cbShowTiles = addCheckBox("Show tiles", ui::toggleTilesVisible);
+			cbTilesVisible = addCheckBox("Show tiles", ui::toggleTilesVisible);
 		}
 
 		public void update() {
-			cbShowTiles.setSelected(Env.$tilesVisible.get());
-			cbShowTiles.setDisable(ui.getCurrentGameScene().is3D());
+			cbTilesVisible.setSelected(Env.$tilesVisible.get());
+			cbTilesVisible.setDisable(ui.getCurrentGameScene().is3D());
 		}
 	}
 
-	private Commands commands = new Commands();
-	private SettingsGeneral settingsGeneral = new SettingsGeneral();
-	private Settings3D settings3D = new Settings3D();
-	private Settings2D settings2D = new Settings2D();
+	private final Commands commands = new Commands();
+	private final SettingsGeneral settingsGeneral = new SettingsGeneral();
+	private final Settings3D settings3D = new Settings3D();
+	private final Settings2D settings2D = new Settings2D();
 
-	public SettingsPanel(GameUI ui, int width) {
+	public SettingsPanel(GameUI ui, int minWidth) {
 		this.ui = ui;
 
 		setBackground(U.colorBackground(new Color(0.3, 0.3, 0.3, 0.6)));
+		setMinWidth(minWidth);
 		setPadding(new Insets(5));
-		setWidth(width);
 		setHgap(20);
 		setVgap(4);
 		setVisible(false);
@@ -253,17 +253,17 @@ public class SettingsPanel extends GridPane {
 		return cb;
 	}
 
-	private Slider addSlider(String labelText, double min, double max, double value) {
-		Slider slider = new Slider(min, max, value);
-		slider.setMinWidth(200);
-		addRow(labelText, slider);
-		return slider;
-	}
-
 	@SuppressWarnings("unchecked")
 	private <T> ComboBox<T> addComboBox(String labelText, T... items) {
 		var combo = new ComboBox<T>(FXCollections.observableArrayList(items));
 		addRow(labelText, combo);
 		return combo;
+	}
+
+	private Slider addSlider(String labelText, double min, double max, double value) {
+		Slider slider = new Slider(min, max, value);
+		slider.setMinWidth(200);
+		addRow(labelText, slider);
+		return slider;
 	}
 }

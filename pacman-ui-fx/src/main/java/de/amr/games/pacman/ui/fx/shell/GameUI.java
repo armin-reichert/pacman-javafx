@@ -250,7 +250,7 @@ public class GameUI extends DefaultGameEventHandler {
 				showFlashMessage(1, Env.message("camera_perspective", perspectiveName));
 			}
 		}
-		case DIGIT3 -> togglePlayScene3D();
+		case DIGIT3 -> toggleUsePlayScene3D();
 		default -> {
 		}
 		}
@@ -338,7 +338,7 @@ public class GameUI extends DefaultGameEventHandler {
 		showFlashMessage(1, message);
 	}
 
-	public void togglePlayScene3D() {
+	public void toggleUsePlayScene3D() {
 		Env.$3D.set(!Env.$3D.get());
 		if (gameSceneForCurrentState(false) != gameSceneForCurrentState(true)) {
 			currentGameScene.getSounds().stopAll();

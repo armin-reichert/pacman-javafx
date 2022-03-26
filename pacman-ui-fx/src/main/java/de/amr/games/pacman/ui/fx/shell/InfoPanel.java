@@ -59,13 +59,11 @@ public class InfoPanel extends VBox {
 	private final Text textUI = new Text();
 	private final StringBuilder text = new StringBuilder();
 
-	public InfoPanel(GameUI ui, int width) {
+	public InfoPanel(GameUI ui, int minWidth) {
 		setBackground(U.colorBackground(new Color(0.3, 0.3, 0.3, 0.6)));
-		setMinWidth(width);
-		setMaxWidth(width);
+		setMinWidth(minWidth);
 		setPadding(new Insets(5));
 		setVisible(false);
-
 		textUI.setFill(textColor);
 		textUI.setFont(textFont);
 		getChildren().add(textUI);
@@ -91,13 +89,11 @@ public class InfoPanel extends VBox {
 		p("Game Variant", "%s", gameController.gameVariant).done();
 		p("Game Level", "%d", game.levelNumber).done();
 		p("Game State", "%s",
-				state == GameState.HUNTING
-						? String.format("%s: Phase #%d (%s)", state, game.huntingPhase, huntingPhaseName)
+				state == GameState.HUNTING ? String.format("%s: Phase #%d (%s)", state, game.huntingPhase, huntingPhaseName)
 						: state).done();
 		p("", "Running:   %s%s", stateTimer.ticked(), stateTimer.isStopped() ? " (STOPPED)" : "").done();
 		p("", "Remaining: %s",
-				stateTimer.ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer.ticksRemaining())
-						.done();
+				stateTimer.ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer.ticksRemaining()).done();
 		p("Autopilot", "%s", on_off(gameController.autoControlled)).done();
 		p("Immunity", "%s", on_off(game.player.immune)).done();
 		p("Game Scene", "%s", gameScene.getClass().getSimpleName()).done();
