@@ -56,9 +56,9 @@ public class SettingsPanel extends GridPane {
 
 	private final GameUI ui;
 	private final Color textColor = Color.WHITE;
-	private final Font textFont = Font.font("Monospace", 14);
+	private final Font textFont = Font.font("Sans", 14);
 	private final Color headerColor = Color.YELLOW;
-	private final Font headerFont = Font.font("Monospace", FontWeight.BOLD, 14);
+	private final Font headerFont = Font.font("Arial Narrow", FontWeight.BOLD, 20);
 	private int row;
 
 	private class Commands {
@@ -68,7 +68,6 @@ public class SettingsPanel extends GridPane {
 		private Button btnIntermissionTest;
 
 		public void add() {
-			addSectionHeader("Commands");
 			btnsSimulation = addButtons("Simulation", "Pause", "Step");
 			btnsSimulation[0].setOnAction(e -> ui.togglePaused());
 			btnsSimulation[1].setOnAction(e -> Env.gameLoop.runSingleStep(true));
@@ -222,7 +221,8 @@ public class SettingsPanel extends GridPane {
 		header.setFill(headerColor);
 		header.setFont(headerFont);
 		header.setTextAlignment(TextAlignment.CENTER);
-		setConstraints(header, 0, row, 2, 1, HPos.CENTER, VPos.CENTER, Priority.NEVER, Priority.NEVER, new Insets(8));
+		setConstraints(header, 0, row, 2, 1, HPos.CENTER, VPos.CENTER, Priority.NEVER, Priority.NEVER,
+				new Insets(12, 0, 8, 0));
 		getChildren().add(header);
 		++row;
 	}
