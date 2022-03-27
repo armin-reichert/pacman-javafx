@@ -37,9 +37,9 @@ import javafx.stage.Stage;
  * This is the entry point of the Pac-Man and Ms. Pac-Man games.
  * 
  * <p>
- * The application structure follows the MVC (model-view-controller) design pattern. It creates the controller (which in
- * turn creates the model(s)) and the view (JavaFX UI). A game loop drives the controller which implements the complete
- * game logic. Game events from the controller are handled by the UI.
+ * The application is structured according to the MVC (model-view-controller) design pattern. It creates the controller
+ * (which in turn creates the model(s)) and the view (JavaFX UI). A game loop drives the controller which implements the
+ * complete game logic. Game events from the controller are handled by the UI.
  * 
  * @author Armin Reichert
  */
@@ -55,15 +55,13 @@ public class PacManGameAppFX extends Application {
 
 		// Create the game controller and the game models, select the specified game variant
 		var controller = new GameController(options.gameVariant);
-
-		// By default, player is controlled using keyboard
-		var playerControl = new ManualPlayerControl(stage);
+		controller.setPlayerControl(new ManualPlayerControl(stage));
 
 		// Create the user interface and the connections with the controllers
 		var ui = new GameUI(stage, controller, options.windowHeight);
 		ui.stage.setFullScreen(options.fullscreen);
+
 		controller.addGameEventListener(ui);
-		controller.setPlayerControl(playerControl);
 
 		// Initialize the environment and start the game
 		Env.$3D.set(options.use3DScenes);
