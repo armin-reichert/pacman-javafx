@@ -64,10 +64,8 @@ public class SettingsPanel extends GridPane {
 	private class Commands {
 		private ComboBox<GameVariant> comboGameVariant;
 		private Button[] btnsSimulation;
-		private Button btnStartGame;
-		private Button btnQuitGameScene;
-		private Button btnEnterNextLevel;
-		private Button btnStartIntermissionTest;
+		private Button[] btnsGameControl;
+		private Button btnIntermissionTest;
 
 		public void add() {
 			addSectionHeader("Commands");
@@ -80,10 +78,11 @@ public class SettingsPanel extends GridPane {
 					ui.gameController.selectGameVariant(comboGameVariant.getValue());
 				}
 			});
-			btnStartGame = addButton("Game Play", "Start", ui.gameController::requestGame);
-			btnQuitGameScene = addButton("Game Scene", "Quit", ui::quitCurrentGameScene);
-			btnEnterNextLevel = addButton("Enter next level", "Next", ui::enterNextLevel);
-			btnStartIntermissionTest = addButton("Intermission scenes", "Start", ui::startIntermissionScenesTest);
+			btnsGameControl = addButtons("Game", "Start", "Quit", "Next Level");
+			btnsGameControl[0].setOnAction(e -> ui.gameController.requestGame());
+			btnsGameControl[1].setOnAction(e -> ui.quitCurrentGameScene());
+			btnsGameControl[2].setOnAction(e -> ui.enterNextLevel());
+			btnIntermissionTest = addButton("Intermission scenes", "Start", ui::startIntermissionScenesTest);
 		}
 
 		public void update() {
@@ -91,12 +90,12 @@ public class SettingsPanel extends GridPane {
 			btnsSimulation[1].setDisable(!Env.$paused.get());
 			comboGameVariant.setValue(ui.gameController.gameVariant);
 			comboGameVariant.setDisable(ui.gameController.gameRunning);
-			btnStartGame.setDisable(
+			btnsGameControl[0].setDisable(
 					ui.gameController.gameRequested || ui.gameController.gameRunning || ui.gameController.attractMode);
-			btnQuitGameScene.setDisable(ui.gameController.state == GameState.INTRO);
-			btnStartIntermissionTest.setDisable(
+			btnsGameControl[1].setDisable(ui.gameController.state == GameState.INTRO);
+			btnsGameControl[2].setDisable(ui.gameController.state != GameState.HUNTING);
+			btnIntermissionTest.setDisable(
 					ui.gameController.state == GameState.INTERMISSION_TEST || ui.gameController.state != GameState.INTRO);
-			btnEnterNextLevel.setDisable(!ui.gameController.gameRunning);
 		}
 	}
 
