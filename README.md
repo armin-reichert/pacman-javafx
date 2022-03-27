@@ -35,38 +35,38 @@ In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases
 ## How to use
 
 General shortcuts:
+
 - <kbd>F11</kbd> Enter fullscreen mode
 - <kbd>Esc</kbd> Exit fullscreen mode
-- <kbd>A</kbd> Toggle autopilot mode
-- <kbd>I</kbd> Toggle immunity of player against ghost attacks
-- <kbd>CTRL+I</kbd> Toggle information display (HUD)
-- <kbd>P</kbd> Toggle pause
-- <kbd>SHIFT+P</kbd> When paused, execute single simulation step
-- <kbd>CTRL+S</kbd> Increase speed (<kbd>SHIFT</kbd> = decrease)
-- <kbd>CTRL+3</kbd> Toggle using 2D/3D play scene
-
-Intro screen shortcuts:
-- <kbd>V</kbd> Switch between the two game variants
-- <kbd>Z</kbd> Play all intermission scenes
+- <kbd>CTRL+I</kbd> Toggle information panel
+- <kbd>CTRL+J</kbd> Toggle settings panel
+- <kbd>Alt+A</kbd> Toggle autopilot mode
+- <kbd>Alt+I</kbd> Toggle immunity of player against ghost attacks
+- <kbd>Alt+S</kbd> Increase speed (<kbd>SHIFT</kbd> = decrease)
+- <kbd>Alt+V</kbd> Switch between the game variants (Pac-Man, Ms. Pac-Man)
+- <kbd>Alt+Z</kbd> Play all intermission scenes
+- <kbd>Alt+3</kbd> Toggle using 2D/3D play scene
 
 Play screen shortcuts:
-- <kbd>CTRL+LEFT</kbd> Select next camera perspective
-- <kbd>CTRL+RIGHT</kbd> Select previous camera perspective
-- <kbd>CTRL+L</kbd> Toggle draw mode (line vs. shaded)
-- <kbd>CTRL+R</kbd> Increase maze "resolution" (<kbd>SHIFT</kbd> = decrease)
-- <kbd>CTRL+H</kbd> Increase maze wall height (<kbd>SHIFT</kbd> = decrease)
-- <kbd>Q</kbd> Quit scene
+- <kbd>Alt+LEFT</kbd> Select next camera perspective
+- <kbd>Alt+RIGHT</kbd> Select previous camera perspective
+- <kbd>Alt+L</kbd> Toggle draw mode (line vs. shaded)
+- <kbd>Alt+Q</kbd> Quit scene
 
 Cheats:
-  - <kbd>E</kbd> Eat all pills except the energizers
-  - <kbd>L</kbd> Add 3 player lives
-  - <kbd>N</kbd> Enter next game level
-  - <kbd>X</kbd> Kill all ghosts outside of the ghosthouse 
+  - <kbd>Alt+E</kbd> Eat all pills except the energizers
+  - <kbd>Alt+L</kbd> Add 3 player lives
+  - <kbd>Alt+N</kbd> Enter next game level
+  - <kbd>Alt+X</kbd> Kill all ghosts outside of the ghosthouse 
 
 ## How it looks
 
 ![Play Scene](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/pacman-maze.png)
 
+![Info Panel](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/info-panel.png)
+
+![Settings Panel](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/settings-panel.png)
+
 YouTube:
 
-[![YouTube](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/thumbnail.jpg)](https://www.youtube.com/watch?v=-ANLq4mMn3Q)
+[![YouTube](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/thumbnail.jpg)](https://youtu.be/-ANLq4mMn3Q)
