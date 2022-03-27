@@ -129,7 +129,7 @@ public class GameUI extends DefaultGameEventHandler {
 		if (settingsPanel.isVisible()) {
 			settingsPanel.update();
 		}
-		stage.setTitle(computeStageTitle());
+		stage.setTitle(gameController.gameVariant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
 	}
 
 	public GameScene getCurrentGameScene() {
@@ -196,10 +196,6 @@ public class GameUI extends DefaultGameEventHandler {
 		canvas.setWidth(height * ASPECT_RATIO);
 		double scaling = height / (TILES_Y * TS);
 		canvas.getTransforms().setAll(new Scale(scaling, scaling));
-	}
-
-	private String computeStageTitle() {
-		return gameController.gameVariant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man";
 	}
 
 	@Override
