@@ -198,11 +198,48 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	private void handleKeyPressed(KeyEvent e) {
+		boolean shift = e.isShiftDown();
+
 		if (e.isAltDown()) {
-			onAltKeyPressed(e, e.isShiftDown());
-		} else if (e.isControlDown()) {
-			onControlKeyPressed(e, e.isShiftDown());
-		} else {
+			switch (e.getCode()) {
+			case A -> toggleAutopilot();
+			case E -> gameController.cheatEatAllPellets();
+			case I -> toggleImmunity();
+			case L -> addLives(3);
+			case N -> enterNextLevel();
+			case Q -> quitCurrentGameScene();
+			case S -> {
+				int rate = Env.gameLoop.getTargetFrameRate();
+				Env.gameLoop.setTargetFrameRate(shift ? Math.max(10, rate - 10) : rate + 10);
+				showFlashMessage(1, "Target FPS set to %d Hz", Env.gameLoop.getTargetFrameRate());
+			}
+			case V -> toggleGameVariant();
+			case X -> gameController.cheatKillGhosts();
+			case Z -> startIntermissionScenesTest();
+			case LEFT, RIGHT -> {
+				if (currentGameScene.is3D()) {
+					int delta = e.getCode() == KeyCode.LEFT ? Perspective.values().length - 1 : 1;
+					Env.selectPerspective(delta);
+					String perspectiveName = Env.message(Env.$perspective.get().name());
+					showFlashMessage(1, Env.message("camera_perspective", perspectiveName));
+				}
+			}
+			case DIGIT3 -> toggleUsePlayScene3D();
+			default -> {
+			}
+			}
+		}
+
+		else if (e.isControlDown()) {
+			switch (e.getCode()) {
+			case I -> toggleInfoPanelVisible();
+			case J -> toggleSettingsPanelVisible();
+			default -> {
+			}
+			}
+		}
+
+		else {
 			switch (e.getCode()) {
 			case SPACE -> gameController.requestGame();
 			case F11 -> stage.setFullScreen(true);
@@ -212,48 +249,9 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 	}
 
-	private void onAltKeyPressed(KeyEvent e, boolean shift) {
-		switch (e.getCode()) {
-		case A -> toggleAutopilot();
-		case E -> gameController.cheatEatAllPellets();
-		case I -> toggleImmunity();
-		case L -> addLives(3);
-		case N -> enterNextLevel();
-		case Q -> quitCurrentGameScene();
-		case S -> {
-			int rate = Env.gameLoop.getTargetFrameRate();
-			Env.gameLoop.setTargetFrameRate(shift ? Math.max(10, rate - 10) : rate + 10);
-			showFlashMessage(1, "Target FPS set to %d Hz", Env.gameLoop.getTargetFrameRate());
-		}
-		case V -> toggleGameVariant();
-		case X -> gameController.cheatKillGhosts();
-		case Z -> startIntermissionTest();
-		case LEFT, RIGHT -> {
-			if (currentGameScene.is3D()) {
-				int delta = e.getCode() == KeyCode.LEFT ? Perspective.values().length - 1 : 1;
-				Env.selectPerspective(delta);
-				String perspectiveName = Env.message(Env.$perspective.get().name());
-				showFlashMessage(1, Env.message("camera_perspective", perspectiveName));
-			}
-		}
-		case DIGIT3 -> toggleUsePlayScene3D();
-		default -> {
-		}
-		}
-	}
-
-	private void onControlKeyPressed(KeyEvent e, boolean shift) {
-		switch (e.getCode()) {
-		case I -> toggleInfoPanelVisibility();
-		case J -> toggleSettingsPanelVisibility();
-		default -> {
-		}
-		}
-	}
-
 	public void quitCurrentGameScene() {
-		currentGameScene.end();
 		currentGameScene.getSounds().stopAll();
+		currentGameScene.end();
 		gameController.changeState(GameState.INTRO);
 	}
 
@@ -267,28 +265,28 @@ public class GameUI extends DefaultGameEventHandler {
 	public void addLives(int lives) {
 		if (gameController.gameRunning) {
 			gameController.game.player.lives += lives;
-			showFlashMessage(2, "You have %d lives", gameController.game.player.lives);
+			showFlashMessage(1, "You have %d lives", gameController.game.player.lives);
 		}
 	}
 
-	public void startIntermissionTest() {
+	public void startIntermissionScenesTest() {
 		if (gameController.state == GameState.INTRO) {
 			gameController.startIntermissionTest();
-			showFlashMessage(1, "Intermission Scene Test");
+			showFlashMessage(1, "Intermission Scenes Test");
 		}
 	}
 
-	public void toggleInfoPanelVisibility() {
+	public void toggleInfoPanelVisible() {
 		infoPanel.setVisible(!infoPanel.isVisible());
 	}
 
-	public void toggleSettingsPanelVisibility() {
+	public void toggleSettingsPanelVisible() {
 		settingsPanel.setVisible(!settingsPanel.isVisible());
 	}
 
 	public void togglePaused() {
 		Env.$paused.set(!Env.$paused.get());
-		showFlashMessage(2, Env.$paused.get() ? "Paused" : "Resumed");
+		showFlashMessage(1, Env.$paused.get() ? "Paused" : "Resumed");
 		log(Env.$paused.get() ? "Simulation paused." : "Simulation resumed.");
 	}
 
@@ -325,26 +323,18 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	public void toggleAxesVisible() {
-		if (currentGameScene.is3D()) {
-			Env.$axesVisible.set(!Env.$axesVisible.get());
-		}
+		Env.$axesVisible.set(!Env.$axesVisible.get());
 	}
 
 	public void toggleDrawMode() {
-		if (currentGameScene.is3D()) {
-			Env.$drawMode3D.set(Env.$drawMode3D.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
-		}
+		Env.$drawMode3D.set(Env.$drawMode3D.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 	}
 
 	public void toggleUseMazeFloorTexture() {
-		if (currentGameScene.is3D()) {
-			Env.$useMazeFloorTexture.set(!Env.$useMazeFloorTexture.get());
-		}
+		Env.$useMazeFloorTexture.set(!Env.$useMazeFloorTexture.get());
 	}
 
 	public void toggleTilesVisible() {
-		if (!currentGameScene.is3D()) {
-			Env.$tilesVisible.set(!Env.$tilesVisible.get());
-		}
+		Env.$tilesVisible.set(!Env.$tilesVisible.get());
 	}
 }

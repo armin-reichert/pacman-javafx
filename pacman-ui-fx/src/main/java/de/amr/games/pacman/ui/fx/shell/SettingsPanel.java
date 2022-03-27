@@ -83,7 +83,7 @@ public class SettingsPanel extends GridPane {
 			btnStartGame = addButton("Game Play", "Start", ui.gameController::requestGame);
 			btnQuitGameScene = addButton("Game Scene", "Quit", ui::quitCurrentGameScene);
 			btnEnterNextLevel = addButton("Enter next level", "Next", ui::enterNextLevel);
-			btnStartIntermissionTest = addButton("Intermission scenes", "Start", ui::startIntermissionTest);
+			btnStartIntermissionTest = addButton("Intermission scenes", "Start", ui::startIntermissionScenesTest);
 		}
 
 		public void update() {
