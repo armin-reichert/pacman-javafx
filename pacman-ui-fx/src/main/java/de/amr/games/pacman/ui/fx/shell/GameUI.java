@@ -148,10 +148,12 @@ public class GameUI extends DefaultGameEventHandler {
 			mainLayout.getChildren().set(0, nextGameScene.getFXSubScene());
 			updateBackground(nextGameScene);
 			switch (gameController.gameVariant) {
-			case MS_PACMAN -> nextGameScene.setContext(gameController.game, Rendering2D_MsPacMan.get(),
-					Sounds_MsPacMan.get());
-			case PACMAN -> nextGameScene.setContext(gameController.game, Rendering2D_PacMan.get(), Sounds_PacMan.get());
-			default -> throw new IllegalArgumentException();
+			case MS_PACMAN -> //
+					nextGameScene.setContext(gameController.game, Rendering2D_MsPacMan.get(), Sounds_MsPacMan.get());
+			case PACMAN -> //
+					nextGameScene.setContext(gameController.game, Rendering2D_PacMan.get(), Sounds_PacMan.get());
+			default -> //
+					throw new IllegalArgumentException();
 			}
 			nextGameScene.init();
 			currentGameScene = nextGameScene;
