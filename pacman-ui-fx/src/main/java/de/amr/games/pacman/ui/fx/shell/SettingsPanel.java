@@ -56,9 +56,9 @@ public class SettingsPanel extends GridPane {
 
 	private final GameUI ui;
 	private final Color textColor = Color.WHITE;
-	private final Font textFont = Font.font("Sans", 14);
+	private final Font textFont = Font.font("Sans", 12);
 	private final Color headerColor = Color.YELLOW;
-	private final Font headerFont = Font.font("Arial Narrow", FontWeight.BOLD, 20);
+	private final Font headerFont = Font.font("Arial", FontWeight.BOLD, 16);
 	private int row;
 
 	private class Commands {
