@@ -140,11 +140,10 @@ public class GameUI extends DefaultGameEventHandler {
 		GameScene nextGameScene = gameScenes.getScene(gameController, Env.$3D.get());
 		if (currentGameScene != nextGameScene) {
 			if (currentGameScene != null) {
-				log("Change scene from '%s' to '%s'", currentGameScene.getClass().getName(),
-						nextGameScene.getClass().getName());
 				currentGameScene.end();
+				log("Change scene from '%s' to '%s'", currentGameScene.getClass(), nextGameScene.getClass());
 			} else {
-				log("Set scene to '%s'", nextGameScene.getClass().getName());
+				log("Set scene to '%s'", nextGameScene.getClass());
 			}
 			mainLayout.getChildren().set(0, nextGameScene.getFXSubScene());
 			updateSceneContext(nextGameScene);
