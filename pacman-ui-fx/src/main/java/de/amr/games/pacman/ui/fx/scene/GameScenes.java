@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx.scene;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntermissionScene1;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntermissionScene2;
@@ -76,7 +75,13 @@ public class GameScenes {
 		//@formatter:on
 	}
 
-	public GameScene getScene(GameVariant gameVariant, int sceneIndex, int sceneVariant) {
-		return scenes[gameVariant.ordinal()][sceneIndex][sceneVariant];
+	public GameScene getScene(GameController gameController, boolean _3D) {
+		int sceneIndex = switch (gameController.state) {
+		case INTRO -> 0;
+		case INTERMISSION -> gameController.game.intermissionNumber(gameController.game.levelNumber);
+		case INTERMISSION_TEST -> gameController.intermissionTestNumber;
+		default -> 4;
+		};
+		return scenes[gameController.gameVariant.ordinal()][sceneIndex][_3D ? 1 : 0];
 	}
 }

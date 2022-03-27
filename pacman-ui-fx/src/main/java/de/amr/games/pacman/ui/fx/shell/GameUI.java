@@ -136,18 +136,8 @@ public class GameUI extends DefaultGameEventHandler {
 		return currentGameScene;
 	}
 
-	private GameScene gameSceneForCurrentState(boolean _3D) {
-		int sceneIndex = switch (gameController.state) {
-		case INTRO -> 0;
-		case INTERMISSION -> gameController.game.intermissionNumber(gameController.game.levelNumber);
-		case INTERMISSION_TEST -> gameController.intermissionTestNumber;
-		default -> 4;
-		};
-		return gameScenes.getScene(gameController.gameVariant, sceneIndex, _3D ? 1 : 0);
-	}
-
 	private void updateGameScene() {
-		GameScene nextGameScene = gameSceneForCurrentState(Env.$3D.get());
+		GameScene nextGameScene = gameScenes.getScene(gameController, Env.$3D.get());
 		if (currentGameScene != nextGameScene) {
 			if (currentGameScene != null) {
 				log("Change scene from '%s' to '%s'", currentGameScene.getClass().getName(),
@@ -325,7 +315,7 @@ public class GameUI extends DefaultGameEventHandler {
 
 	public void toggleUsePlayScene3D() {
 		Env.$3D.set(!Env.$3D.get());
-		if (gameSceneForCurrentState(false) != gameSceneForCurrentState(true)) {
+		if (gameScenes.getScene(gameController, false) != gameScenes.getScene(gameController, true)) {
 			currentGameScene.getSounds().stopAll();
 			updateGameScene();
 			if (currentGameScene instanceof PlayScene2D) {
