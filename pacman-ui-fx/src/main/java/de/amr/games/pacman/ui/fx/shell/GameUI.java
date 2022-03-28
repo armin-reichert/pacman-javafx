@@ -33,7 +33,6 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
 import de.amr.games.pacman.controller.event.GameEvent;
-import de.amr.games.pacman.controller.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
@@ -125,6 +124,13 @@ public class GameUI extends DefaultGameEventHandler {
 		Env.$drawMode3D.addListener(($drawMode, _old, _new) -> updateBackground(currentGameScene));
 	}
 
+	@Override
+	public void onGameEvent(GameEvent event) {
+		super.onGameEvent(event);
+		updateGameScene();
+		currentGameScene.onGameEvent(event);
+	}
+
 	public void start(boolean fullscreen) {
 		updateGameScene();
 		stage.setFullScreen(fullscreen);
@@ -149,27 +155,28 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	private void updateGameScene() {
-		GameScene nextGameScene = gameScenes.getScene(gameController, Env.$3D.get());
-		if (currentGameScene != nextGameScene) {
-			if (currentGameScene != null) {
-				currentGameScene.end();
-				log("Change scene from '%s' to '%s'", currentGameScene.getClass(), nextGameScene.getClass());
-			} else {
-				log("Set scene to '%s'", nextGameScene.getClass());
-			}
-			mainLayout.getChildren().set(0, nextGameScene.getFXSubScene());
-			updateBackground(nextGameScene);
-			switch (gameController.gameVariant) {
-			case MS_PACMAN -> //
-					nextGameScene.setContext(gameController.game, Rendering2D_MsPacMan.get(), Sounds_MsPacMan.get());
-			case PACMAN -> //
-					nextGameScene.setContext(gameController.game, Rendering2D_PacMan.get(), Sounds_PacMan.get());
-			default -> //
-					throw new IllegalArgumentException();
-			}
-			nextGameScene.init();
-			currentGameScene = nextGameScene;
+		var nextGameScene = gameScenes.getScene(gameController, Env.$3D.get());
+		if (currentGameScene == nextGameScene) {
+			return;
 		}
+		if (currentGameScene != null) {
+			currentGameScene.end();
+			log("Change scene from '%s' to '%s'", currentGameScene.getClass(), nextGameScene.getClass());
+		} else {
+			log("Set scene to '%s'", nextGameScene.getClass());
+		}
+		mainLayout.getChildren().set(0, nextGameScene.getFXSubScene());
+		updateBackground(nextGameScene);
+		switch (gameController.gameVariant) {
+		case MS_PACMAN -> //
+				nextGameScene.setContext(gameController.game, Rendering2D_MsPacMan.get(), Sounds_MsPacMan.get());
+		case PACMAN -> //
+				nextGameScene.setContext(gameController.game, Rendering2D_PacMan.get(), Sounds_PacMan.get());
+		default -> //
+				throw new IllegalArgumentException();
+		}
+		nextGameScene.init();
+		currentGameScene = nextGameScene;
 	}
 
 	private void updateBackground(GameScene gameScene) {
@@ -196,17 +203,6 @@ public class GameUI extends DefaultGameEventHandler {
 		canvas.setWidth(height * ASPECT_RATIO);
 		double scaling = height / (SIZE_IN_TILES.y * TS);
 		canvas.getTransforms().setAll(new Scale(scaling, scaling));
-	}
-
-	@Override
-	public void onGameEvent(GameEvent event) {
-		super.onGameEvent(event);
-		currentGameScene.onGameEvent(event);
-	}
-
-	@Override
-	public void onGameStateChange(GameStateChangeEvent e) {
-		updateGameScene();
 	}
 
 	private void handleKeyPressed(KeyEvent e) {
