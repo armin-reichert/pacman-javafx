@@ -77,7 +77,7 @@ public class GameUI extends DefaultGameEventHandler {
 	public final GameController gameController;
 	public final GameLoop gameLoop = new GameLoop();
 	public final Stage stage;
-	public final Canvas canvas = new Canvas(); // common canvas of all 2D scenes
+	public final Canvas canvas;
 	private final Scene mainScene;
 	private final StackPane mainLayout;
 	private final InfoPanel infoPanel;
@@ -93,14 +93,13 @@ public class GameUI extends DefaultGameEventHandler {
 	private final GameScenes gameScenes;
 	private GameScene currentGameScene;
 
-	public GameUI(Stage stage, GameController gameController, double height) {
-		this.stage = stage;
+	public GameUI(GameController gameController, Stage stage, double height) {
 		this.gameController = gameController;
+		this.stage = stage;
+		this.canvas = new Canvas();
+		resizeCanvas(height);
 		this.settingsPanel = new SettingsPanel(this, 400);
 		this.infoPanel = new InfoPanel(this, 400);
-
-		resizeCanvas(height);
-
 		var infoLayer = new BorderPane();
 		infoLayer.setLeft(infoPanel);
 		infoLayer.setRight(settingsPanel);
@@ -109,24 +108,30 @@ public class GameUI extends DefaultGameEventHandler {
 		mainLayout = new StackPane(new Group(), FlashMessageView.get(), infoLayer);
 		mainScene = new Scene(mainLayout, ASPECT_RATIO * height, height);
 		mainScene.heightProperty().addListener(($height, _old, _new) -> resizeCanvas(_new.doubleValue()));
-
 		gameScenes = new GameScenes(mainScene, gameController, canvas, GianmarcosModel3D.get(), SCENE_SIZE);
-		updateGameScene();
 
+		// Game loop triggers game controller updates, UI handles game controller events
+		gameController.addGameEventListener(this);
 		gameLoop.update = () -> {
 			gameController.updateState();
 			getCurrentGameScene().update();
 		};
 		gameLoop.render = this::update;
 
-		Env.$drawMode3D.addListener(($drawMode, _old, _new) -> updateBackground(currentGameScene));
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> gameLoop.stop());
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPressed);
-
 		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
 		stage.setScene(mainScene);
+
+		Env.$drawMode3D.addListener(($drawMode, _old, _new) -> updateBackground(currentGameScene));
+	}
+
+	public void start(boolean fullscreen) {
+		updateGameScene();
+		stage.setFullScreen(fullscreen);
 		stage.centerOnScreen();
 		stage.show();
+		gameLoop.start();
 	}
 
 	private void update() {

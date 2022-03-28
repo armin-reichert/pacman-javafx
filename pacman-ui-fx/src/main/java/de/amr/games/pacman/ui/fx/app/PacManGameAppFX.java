@@ -50,17 +50,15 @@ public class PacManGameAppFX extends Application {
 	}
 
 	@Override
-	public void start(Stage stage) throws IOException {
+	public void start(Stage primaryStage) throws IOException {
 		log("Starting application");
 		var options = new Options(getParameters().getUnnamed());
 		Env.$3D.set(options.use3DScenes);
 		Env.$perspective.set(options.perspective);
 		var controller = new GameController(options.gameVariant);
-		controller.setPlayerControl(new ManualPlayerControl(stage));
-		var ui = new GameUI(stage, controller, options.windowHeight);
-		ui.stage.setFullScreen(options.fullscreen);
-		controller.addGameEventListener(ui);
-		ui.gameLoop.start();
+		controller.setPlayerControl(new ManualPlayerControl(primaryStage));
+		var ui = new GameUI(controller, primaryStage, options.windowHeight);
+		ui.start(options.fullscreen);
 		log("Application started. Game variant: %s, window height: %.0f, 3D: %s, camera perspective: %s",
 				options.gameVariant, options.windowHeight, options.use3DScenes, options.perspective);
 	}
