@@ -76,14 +76,14 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 		root.setBackground(U.colorBackground(Color.BLACK));
 		fxSubScene = new SubScene(root, aspectRatio * parent.getHeight(), parent.getHeight());
 		parent.heightProperty().addListener(($height, _old, _new) -> resize(_new.doubleValue()));
+		canvas.widthProperty().bind(fxSubScene.widthProperty());
+		canvas.heightProperty().bind(fxSubScene.heightProperty());
 	}
 
 	private void resize(double height) {
 		double width = aspectRatio * height;
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
-		canvas.setHeight(height);
-		canvas.setWidth(height * aspectRatio);
 		double scaling = height / unscaledSize.y;
 		canvas.getTransforms().setAll(new Scale(scaling, scaling));
 	}
