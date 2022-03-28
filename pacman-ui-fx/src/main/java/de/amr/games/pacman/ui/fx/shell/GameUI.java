@@ -50,7 +50,6 @@ import de.amr.games.pacman.ui.fx.sound.pacman.Sounds_PacMan;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
@@ -58,7 +57,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
-import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -75,7 +73,6 @@ public class GameUI extends DefaultGameEventHandler {
 	public final GameController gameController;
 	public final GameLoop gameLoop = new GameLoop();
 	public final Stage stage;
-	public final Canvas canvas;
 	private final Scene mainScene;
 	private final StackPane mainLayout;
 	private final InfoPanel infoPanel;
@@ -94,8 +91,6 @@ public class GameUI extends DefaultGameEventHandler {
 	public GameUI(GameController gameController, Stage stage, double height) {
 		this.gameController = gameController;
 		this.stage = stage;
-		this.canvas = new Canvas();
-		resizeCanvas(height);
 		this.settingsPanel = new SettingsPanel(this, 400);
 		this.infoPanel = new InfoPanel(this, 400);
 		var infoLayer = new BorderPane();
@@ -105,8 +100,7 @@ public class GameUI extends DefaultGameEventHandler {
 		// first child will dynamically get replaced by subscene representing the current game scene
 		mainLayout = new StackPane(new Group(), FlashMessageView.get(), infoLayer);
 		mainScene = new Scene(mainLayout, ASPECT_RATIO * height, height);
-		mainScene.heightProperty().addListener(($height, _old, _new) -> resizeCanvas(_new.doubleValue()));
-		gameScenes = new GameScenes(mainScene, gameController, canvas, GianmarcosModel3D.get(), SIZE_IN_TILES.scaled(TS));
+		gameScenes = new GameScenes(mainScene, gameController, GianmarcosModel3D.get(), SIZE_IN_TILES.scaled(TS));
 
 		// Game loop triggers game controller updates, UI handles game controller events
 		gameController.addGameEventListener(this);
@@ -196,13 +190,6 @@ public class GameUI extends DefaultGameEventHandler {
 			next = new Random().nextInt(wallpapers.length);
 		}
 		wallpaperIndex = next;
-	}
-
-	private void resizeCanvas(double height) {
-		canvas.setHeight(height);
-		canvas.setWidth(height * ASPECT_RATIO);
-		double scaling = height / (SIZE_IN_TILES.y * TS);
-		canvas.getTransforms().setAll(new Scale(scaling, scaling));
 	}
 
 	private void handleKeyPressed(KeyEvent e) {

@@ -147,8 +147,10 @@ public class InfoPanel extends GridPane {
 		info("Camera", () -> scene3D().getCamController().info()).when(() -> gameScene().is3D());
 		info("Draw Mode", () -> Env.$drawMode3D.get()).when(() -> gameScene().is3D());
 		info("Axes", () -> on_off(Env.$axesVisible.get())).when(() -> gameScene().is3D());
-		info("Canvas2D", () -> String.format("w=%.0f h=%.0f", ui.canvas.getWidth(), ui.canvas.getHeight()))
-				.when(() -> !gameScene().is3D());
+
+//TODO		
+//		info("Canvas2D", () -> String.format("w=%.0f h=%.0f", ui.canvas.getWidth(), ui.canvas.getHeight()))
+//				.when(() -> !gameScene().is3D());
 
 		info("", "");
 		info("Keyboard shortcuts", "");

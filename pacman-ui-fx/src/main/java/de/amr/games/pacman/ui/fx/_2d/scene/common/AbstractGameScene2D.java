@@ -35,12 +35,14 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
+import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Scale;
 
 /**
  * Base class of all 2D scenes that get rendered inside the canvas provided by the UI.
@@ -52,6 +54,7 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	protected final SubScene fxSubScene;
 	protected final Scene parent;
 	protected final GameController gameController;
+	protected final Canvas canvas = new Canvas();
 	protected final GraphicsContext gc;
 	protected final V2i unscaledSize;
 
@@ -61,14 +64,17 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
 
-	public AbstractGameScene2D(Scene parent, GameController gameController, Canvas canvas, V2i unscaledSize) {
+	public AbstractGameScene2D(Scene parent, GameController gameController, V2i unscaledSize) {
 		this.parent = parent;
 		this.gameController = gameController;
 		this.gc = canvas.getGraphicsContext2D();
 		this.unscaledSize = unscaledSize;
-		fxSubScene = new SubScene(new StackPane(), canvas.getWidth(), canvas.getHeight());
+		StackPane root = new StackPane(canvas);
+		root.setBackground(U.colorBackground(Color.BLACK));
+		fxSubScene = new SubScene(root, canvas.getWidth(), canvas.getHeight());
 		fxSubScene.widthProperty().bind(canvas.widthProperty());
 		fxSubScene.heightProperty().bind(canvas.heightProperty());
+		parent.heightProperty().addListener(($height, _old, _new) -> resizeCanvas(_new.doubleValue()));
 	}
 
 	@Override
@@ -101,8 +107,15 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 		highScore2D.title = "HIGH SCORE";
 		highScore2D.showHighscore = true;
 
-		// TODO why is this necessary?
-		fxSubScene.setRoot(new StackPane(gc.getCanvas()));
+		resizeCanvas(parent.getHeight());
+	}
+
+	private void resizeCanvas(double height) {
+		double aspectRatio = 28.0 / 36.0; // TODO
+		canvas.setHeight(height);
+		canvas.setWidth(height * aspectRatio);
+		double scaling = height / unscaledSize.y;
+		canvas.getTransforms().setAll(new Scale(scaling, scaling));
 	}
 
 	@Override
