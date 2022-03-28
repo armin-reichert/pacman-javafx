@@ -121,9 +121,9 @@ public class InfoPanel extends GridPane {
 		setPadding(new Insets(5));
 		setVisible(false);
 
-		info("Total Ticks", () -> ui.gameLoop.$totalTicks.get());
-		info("Target FPS", () -> ui.gameLoop.getTargetFrameRate() + " Hz");
-		info("Current FPS", () -> ui.gameLoop.$fps.get() + " Hz");
+		info("Total Ticks", ui.gameLoop::getTotalTicks);
+		info("Frame Rate",
+				() -> String.format("%d Hz (target: %d Hz)", ui.gameLoop.getFPS(), ui.gameLoop.getTargetFrameRate()));
 		info("Paused", () -> yes_no(Env.$paused.get()));
 		info("Playing", () -> yes_no(ui.gameController.gameRunning));
 		info("Attract Mode", () -> yes_no(ui.gameController.attractMode));

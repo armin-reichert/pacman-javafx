@@ -29,9 +29,7 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.util.Duration;
 
 /**
@@ -41,14 +39,14 @@ import javafx.util.Duration;
  */
 public class GameLoop {
 
-	public final IntegerProperty $fps = new SimpleIntegerProperty();
-	public final IntegerProperty $totalTicks = new SimpleIntegerProperty();
-	public final BooleanProperty $timeMeasured = new SimpleBooleanProperty(false);
+	private final BooleanProperty $timeMeasured = new SimpleBooleanProperty(false);
 
 	public Runnable update;
 	public Runnable render;
 
 	private Timeline tl;
+	private int totalTicks;
+	private int fps;
 	private int targetFrameRate;
 	private long fpsCountStartTime;
 	private int frames;
@@ -77,6 +75,14 @@ public class GameLoop {
 		}
 	}
 
+	public int getTotalTicks() {
+		return totalTicks;
+	}
+
+	public int getFPS() {
+		return fps;
+	}
+
 	public void start() {
 		tl.play();
 		log("Game loop started. Target frame rate: %d", targetFrameRate);
@@ -93,10 +99,10 @@ public class GameLoop {
 			runUpdate();
 		}
 		render.run();
-		$totalTicks.set($totalTicks.get() + 1);
+		totalTicks++;
 		++frames;
 		if (now - fpsCountStartTime > 1e9) {
-			$fps.set(frames);
+			fps = frames;
 			frames = 0;
 			fpsCountStartTime = now;
 		}
