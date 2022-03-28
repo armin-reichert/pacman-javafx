@@ -70,9 +70,8 @@ import javafx.stage.WindowEvent;
  */
 public class GameUI extends DefaultGameEventHandler {
 
-	private static final int TILES_X = 28, TILES_Y = 36;
-	private static final V2i SCENE_SIZE = new V2i(TILES_X, TILES_Y).scaled(TS);
-	private static final double ASPECT_RATIO = (double) TILES_X / TILES_Y;
+	private static final V2i WORLD_SIZE = new V2i(28, 36);
+	private static final double ASPECT_RATIO = (double) WORLD_SIZE.x / WORLD_SIZE.y;
 
 	public final GameController gameController;
 	public final GameLoop gameLoop = new GameLoop();
@@ -108,7 +107,7 @@ public class GameUI extends DefaultGameEventHandler {
 		mainLayout = new StackPane(new Group(), FlashMessageView.get(), infoLayer);
 		mainScene = new Scene(mainLayout, ASPECT_RATIO * height, height);
 		mainScene.heightProperty().addListener(($height, _old, _new) -> resizeCanvas(_new.doubleValue()));
-		gameScenes = new GameScenes(mainScene, gameController, canvas, GianmarcosModel3D.get(), SCENE_SIZE);
+		gameScenes = new GameScenes(mainScene, gameController, canvas, GianmarcosModel3D.get(), WORLD_SIZE.scaled(TS));
 
 		// Game loop triggers game controller updates, UI handles game controller events
 		gameController.addGameEventListener(this);
@@ -195,7 +194,7 @@ public class GameUI extends DefaultGameEventHandler {
 	private void resizeCanvas(double height) {
 		canvas.setHeight(height);
 		canvas.setWidth(height * ASPECT_RATIO);
-		double scaling = height / (TILES_Y * TS);
+		double scaling = height / (WORLD_SIZE.y * TS);
 		canvas.getTransforms().setAll(new Scale(scaling, scaling));
 	}
 
