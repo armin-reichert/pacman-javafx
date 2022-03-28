@@ -43,6 +43,7 @@ import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.model.GianmarcosModel3D;
 import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameScenes;
 import de.amr.games.pacman.ui.fx.sound.mspacman.Sounds_MsPacMan;
@@ -74,6 +75,7 @@ public class GameUI extends DefaultGameEventHandler {
 	private static final double ASPECT_RATIO = (double) TILES_X / TILES_Y;
 
 	public final GameController gameController;
+	public final GameLoop gameLoop = new GameLoop();
 	public final Stage stage;
 	public final Canvas canvas = new Canvas(); // common canvas of all 2D scenes
 	private final Scene mainScene;
@@ -111,8 +113,14 @@ public class GameUI extends DefaultGameEventHandler {
 		gameScenes = new GameScenes(mainScene, gameController, canvas, GianmarcosModel3D.get(), SCENE_SIZE);
 		updateGameScene();
 
+		gameLoop.update = () -> {
+			gameController.updateState();
+			getCurrentGameScene().update();
+		};
+		gameLoop.render = this::update;
+
 		Env.$drawMode3D.addListener(($drawMode, _old, _new) -> updateBackground(currentGameScene));
-		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> Env.gameLoop.stop());
+		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> gameLoop.stop());
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPressed);
 
 		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
@@ -121,7 +129,7 @@ public class GameUI extends DefaultGameEventHandler {
 		stage.show();
 	}
 
-	public void update() {
+	private void update() {
 		FlashMessageView.get().update();
 		if (infoPanel.isVisible()) {
 			infoPanel.update(this);
@@ -209,9 +217,9 @@ public class GameUI extends DefaultGameEventHandler {
 			case N -> enterNextLevel();
 			case Q -> quitCurrentGameScene();
 			case S -> {
-				int rate = Env.gameLoop.getTargetFrameRate();
-				Env.gameLoop.setTargetFrameRate(shift ? Math.max(10, rate - 10) : rate + 10);
-				showFlashMessage(1, "Target FPS set to %d Hz", Env.gameLoop.getTargetFrameRate());
+				int rate = gameLoop.getTargetFrameRate();
+				gameLoop.setTargetFrameRate(shift ? Math.max(10, rate - 10) : rate + 10);
+				showFlashMessage(1, "Target FPS set to %d Hz", gameLoop.getTargetFrameRate());
 			}
 			case V -> toggleGameVariant();
 			case X -> gameController.cheatKillGhosts();

@@ -70,7 +70,7 @@ public class SettingsPanel extends GridPane {
 		public void add() {
 			btnsSimulation = addButtons("Simulation", "Pause", "Step");
 			btnsSimulation[0].setOnAction(e -> ui.togglePaused());
-			btnsSimulation[1].setOnAction(e -> Env.gameLoop.runSingleStep(true));
+			btnsSimulation[1].setOnAction(e -> ui.gameLoop.runSingleStep(true));
 			comboGameVariant = addComboBox("Game Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
 			comboGameVariant.setOnAction(e -> {
 				if (comboGameVariant.getValue() != ui.gameController.gameVariant) {
@@ -113,7 +113,7 @@ public class SettingsPanel extends GridPane {
 			sliderTargetFrameRate.setMinorTickCount(5);
 			sliderTargetFrameRate.setMajorTickUnit(30);
 			sliderTargetFrameRate.valueProperty().addListener(($value, _old, _new) -> {
-				Env.gameLoop.setTargetFrameRate(_new.intValue());
+				ui.gameLoop.setTargetFrameRate(_new.intValue());
 			});
 			cbUsePlayScene3D = addCheckBox("Use 3D play scene", ui::toggleUsePlayScene3D);
 			cbAutopilot = addCheckBox("Autopilot", ui::toggleAutopilot);
@@ -121,7 +121,7 @@ public class SettingsPanel extends GridPane {
 		}
 
 		public void update() {
-			sliderTargetFrameRate.setValue(Env.gameLoop.getTargetFrameRate());
+			sliderTargetFrameRate.setValue(ui.gameLoop.getTargetFrameRate());
 			cbAutopilot.setSelected(ui.gameController.autoControlled);
 			cbImmunity.setSelected(ui.gameController.game.player.immune);
 			cbUsePlayScene3D.setSelected(Env.$3D.get());

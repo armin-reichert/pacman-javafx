@@ -66,12 +66,7 @@ public class PacManGameAppFX extends Application {
 		// Initialize the environment and start the game
 		Env.$3D.set(options.use3DScenes);
 		Env.$perspective.set(options.perspective);
-		Env.gameLoop.update = () -> {
-			controller.updateState();
-			ui.getCurrentGameScene().update();
-		};
-		Env.gameLoop.render = ui::update;
-		Env.gameLoop.start();
+		ui.gameLoop.start();
 
 		log("Application started. Game variant: %s, window height: %.0f, 3D: %s, camera perspective: %s",
 				options.gameVariant, options.windowHeight, options.use3DScenes, options.perspective);

@@ -61,11 +61,8 @@ public class Env {
 
 	private static RandomEntrySelector<String> load(String bundleName) {
 		ResourceBundle bundle = ResourceBundle.getBundle(bundleName);
-		return new RandomEntrySelector<>(
-				bundle.keySet().stream().sorted().map(bundle::getString).toArray(String[]::new));
+		return new RandomEntrySelector<>(bundle.keySet().stream().sorted().map(bundle::getString).toArray(String[]::new));
 	}
-
-	public static final GameLoop gameLoop = new GameLoop();
 
 	public static final BooleanProperty $axesVisible = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<DrawMode> $drawMode3D = new SimpleObjectProperty<DrawMode>(DrawMode.FILL);
@@ -73,8 +70,8 @@ public class Env {
 	public static final DoubleProperty $mazeWallHeight = new SimpleDoubleProperty(2.0);
 	public static final BooleanProperty $paused = new SimpleBooleanProperty(false);
 	public static final BooleanProperty $tilesVisible = new SimpleBooleanProperty(false);
-	public static final BooleanProperty $3D = new SimpleBooleanProperty(true);
 	public static final BooleanProperty $useMazeFloorTexture = new SimpleBooleanProperty(false);
+	public static final BooleanProperty $3D = new SimpleBooleanProperty(true);
 
 	public static final ObjectProperty<Perspective> $perspective = new SimpleObjectProperty<Perspective>(
 			Perspective.CAM_NEAR_PLAYER);
