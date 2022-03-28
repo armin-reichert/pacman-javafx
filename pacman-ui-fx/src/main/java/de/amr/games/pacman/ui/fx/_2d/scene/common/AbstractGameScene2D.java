@@ -54,7 +54,7 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	protected final SubScene fxSubScene;
 	protected final Scene parent;
 	protected final GameController gameController;
-	protected final Canvas canvas = new Canvas();
+	protected final Canvas canvas;
 	protected final GraphicsContext gc;
 	protected final V2i unscaledSize;
 
@@ -67,6 +67,7 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	public AbstractGameScene2D(Scene parent, GameController gameController, V2i unscaledSize) {
 		this.parent = parent;
 		this.gameController = gameController;
+		this.canvas = new Canvas();
 		this.gc = canvas.getGraphicsContext2D();
 		this.unscaledSize = unscaledSize;
 		StackPane root = new StackPane(canvas);
