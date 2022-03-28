@@ -57,6 +57,7 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	protected final Canvas canvas;
 	protected final GraphicsContext gc;
 	protected final V2i unscaledSize;
+	protected final double aspectRatio;
 
 	protected GameModel game;
 	protected SoundManager sounds;
@@ -70,12 +71,21 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 		this.canvas = new Canvas();
 		this.gc = canvas.getGraphicsContext2D();
 		this.unscaledSize = unscaledSize;
+		this.aspectRatio = (double) unscaledSize.x / unscaledSize.y;
 		StackPane root = new StackPane(canvas);
 		root.setBackground(U.colorBackground(Color.BLACK));
-		fxSubScene = new SubScene(root, canvas.getWidth(), canvas.getHeight());
-		fxSubScene.widthProperty().bind(canvas.widthProperty());
-		fxSubScene.heightProperty().bind(canvas.heightProperty());
-		parent.heightProperty().addListener(($height, _old, _new) -> resizeCanvas(_new.doubleValue()));
+		fxSubScene = new SubScene(root, aspectRatio * parent.getHeight(), parent.getHeight());
+		parent.heightProperty().addListener(($height, _old, _new) -> resize(_new.doubleValue()));
+	}
+
+	private void resize(double height) {
+		double width = aspectRatio * height;
+		fxSubScene.setWidth(width);
+		fxSubScene.setHeight(height);
+		canvas.setHeight(height);
+		canvas.setWidth(height * aspectRatio);
+		double scaling = height / unscaledSize.y;
+		canvas.getTransforms().setAll(new Scale(scaling, scaling));
 	}
 
 	@Override
@@ -97,6 +107,7 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 
 	@Override
 	public void init() {
+		resize(parent.getHeight());
 		score2D = new GameScore2D(game, r2D);
 		score2D.x = t(1);
 		score2D.y = t(1);
@@ -107,16 +118,6 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 		highScore2D.y = t(1);
 		highScore2D.title = "HIGH SCORE";
 		highScore2D.showHighscore = true;
-
-		resizeCanvas(parent.getHeight());
-	}
-
-	private void resizeCanvas(double height) {
-		double aspectRatio = 28.0 / 36.0; // TODO
-		canvas.setHeight(height);
-		canvas.setWidth(height * aspectRatio);
-		double scaling = height / unscaledSize.y;
-		canvas.getTransforms().setAll(new Scale(scaling, scaling));
 	}
 
 	@Override
