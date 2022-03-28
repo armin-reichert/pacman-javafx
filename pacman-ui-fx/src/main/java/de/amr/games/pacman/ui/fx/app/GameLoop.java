@@ -28,8 +28,6 @@ import static de.amr.games.pacman.lib.Logging.log;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.util.Duration;
 
 /**
@@ -38,8 +36,6 @@ import javafx.util.Duration;
  * @author Armin Reichert
  */
 public class GameLoop {
-
-	private final BooleanProperty $timeMeasured = new SimpleBooleanProperty(false);
 
 	public Runnable update;
 	public Runnable render;
@@ -50,6 +46,7 @@ public class GameLoop {
 	private int targetFrameRate;
 	private long fpsCountStartTime;
 	private int frames;
+	private boolean timeMeasured;
 
 	public GameLoop() {
 		setTargetFrameRate(60);
@@ -83,6 +80,10 @@ public class GameLoop {
 		return fps;
 	}
 
+	public void setTimeMeasured(boolean timeMeasured) {
+		this.timeMeasured = timeMeasured;
+	}
+
 	public void start() {
 		tl.play();
 		log("Game loop started. Target frame rate: %d", targetFrameRate);
@@ -109,7 +110,7 @@ public class GameLoop {
 	}
 
 	private void runUpdate() {
-		if ($timeMeasured.get()) {
+		if (timeMeasured) {
 			double start_ns = System.nanoTime();
 			update.run();
 			double duration_ns = System.nanoTime() - start_ns;
