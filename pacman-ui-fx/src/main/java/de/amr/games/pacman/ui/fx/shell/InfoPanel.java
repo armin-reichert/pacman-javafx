@@ -30,6 +30,7 @@ import java.util.function.Supplier;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -147,9 +148,10 @@ public class InfoPanel extends GridPane {
 		info("Draw Mode", () -> Env.$drawMode3D.get()).when(() -> gameScene().is3D());
 		info("Axes", () -> on_off(Env.$axesVisible.get())).when(() -> gameScene().is3D());
 
-//TODO		
-//		info("Canvas2D", () -> String.format("w=%.0f h=%.0f", ui.canvas.getWidth(), ui.canvas.getHeight()))
-//				.when(() -> !gameScene().is3D());
+		info("Canvas2D", () -> {
+			AbstractGameScene2D scene2D = (AbstractGameScene2D) ui.getCurrentGameScene();
+			return String.format("w=%.0f h=%.0f", scene2D.getCanvas().getWidth(), scene2D.getCanvas().getHeight());
+		}).when(() -> !gameScene().is3D());
 
 		info("", "");
 		info("Keyboard shortcuts", "");

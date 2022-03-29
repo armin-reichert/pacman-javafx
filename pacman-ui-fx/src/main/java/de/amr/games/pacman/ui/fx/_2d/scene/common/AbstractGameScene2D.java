@@ -104,6 +104,10 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 		return sounds;
 	}
 
+	public Canvas getCanvas() {
+		return canvas;
+	}
+
 	@Override
 	public void init() {
 		score2D = new GameScore2D(game, r2D);

@@ -115,11 +115,8 @@ public class GameUI extends DefaultGameEventHandler {
 		Env.$drawMode3D.addListener(($drawMode, _old, _new) -> updateBackground(currentGameScene));
 	}
 
-	@Override
-	public void onGameEvent(GameEvent event) {
-		super.onGameEvent(event);
-		updateGameScene();
-		currentGameScene.onGameEvent(event);
+	public GameScene getCurrentGameScene() {
+		return currentGameScene;
 	}
 
 	public void start(boolean fullscreen) {
@@ -128,6 +125,13 @@ public class GameUI extends DefaultGameEventHandler {
 		stage.centerOnScreen();
 		stage.show();
 		gameLoop.start();
+	}
+
+	@Override
+	public void onGameEvent(GameEvent event) {
+		super.onGameEvent(event);
+		updateGameScene();
+		currentGameScene.onGameEvent(event);
 	}
 
 	private void update() {
@@ -139,10 +143,6 @@ public class GameUI extends DefaultGameEventHandler {
 			settingsPanel.update();
 		}
 		stage.setTitle(gameController.gameVariant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
-	}
-
-	public GameScene getCurrentGameScene() {
-		return currentGameScene;
 	}
 
 	private void updateGameScene() {
