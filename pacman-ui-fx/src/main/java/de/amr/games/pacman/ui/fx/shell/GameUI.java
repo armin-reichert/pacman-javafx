@@ -27,8 +27,6 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.ui.fx.shell.FlashMessageView.showFlashMessage;
 
-import java.util.Random;
-
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
@@ -50,7 +48,6 @@ import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -74,15 +71,8 @@ public class GameUI extends DefaultGameEventHandler {
 	private final StackPane sceneRoot;
 	private final InfoPanel infoPanel;
 	private final SettingsPanel settingsPanel;
-
-	private Background[] wallpapers = { //
-			U.imageBackground("/common/wallpapers/beach.jpg"), //
-			U.imageBackground("/common/wallpapers/space.jpg"), //
-			U.imageBackground("/common/wallpapers/easter_island.jpg"), //
-	};
-	private int wallpaperIndex;
-
 	private final GameScenes gameScenes;
+	private final Wallpapers wallpapers = new Wallpapers();
 	private GameScene currentGameScene;
 
 	public GameUI(GameController gameController, Stage stage, double height) {
@@ -98,7 +88,8 @@ public class GameUI extends DefaultGameEventHandler {
 		sceneRoot = new StackPane(new Group(), FlashMessageView.get(), infoLayer);
 		stage.setScene(new Scene(sceneRoot, ASPECT_RATIO * height, height));
 
-		gameScenes = new GameScenes(stage.getScene(), gameController, GianmarcosModel3D.get(), SIZE_IN_TILES.scaled(TS));
+		gameScenes = new GameScenes(stage.getScene(), gameController, GianmarcosModel3D.get(),
+				SIZE_IN_TILES.scaled(TS));
 
 		// Game loop triggers game controller updates, UI handles game controller events
 		gameController.addGameEventListener(this);
@@ -161,11 +152,11 @@ public class GameUI extends DefaultGameEventHandler {
 		updateBackground(nextGameScene);
 		switch (gameController.gameVariant) {
 		case MS_PACMAN -> //
-				nextGameScene.setContext(gameController.game, Rendering2D_MsPacMan.get(), Sounds_MsPacMan.get());
+			nextGameScene.setContext(gameController.game, Rendering2D_MsPacMan.get(), Sounds_MsPacMan.get());
 		case PACMAN -> //
-				nextGameScene.setContext(gameController.game, Rendering2D_PacMan.get(), Sounds_PacMan.get());
+			nextGameScene.setContext(gameController.game, Rendering2D_PacMan.get(), Sounds_PacMan.get());
 		default -> //
-				throw new IllegalArgumentException();
+			throw new IllegalArgumentException();
 		}
 		nextGameScene.init();
 		currentGameScene = nextGameScene;
@@ -173,20 +164,13 @@ public class GameUI extends DefaultGameEventHandler {
 
 	private void updateBackground(GameScene gameScene) {
 		if (gameScene.is3D()) {
-			selectRandomWallpaper();
+			wallpapers.change();
 			sceneRoot.setBackground(Env.$drawMode3D.get() == DrawMode.LINE //
 					? U.colorBackground(Color.BLACK)
-					: wallpapers[wallpaperIndex]);
+					: wallpapers.getCurrent());
 		} else {
 			sceneRoot.setBackground(U.colorBackground(Color.CORNFLOWERBLUE));
 		}
-	}
-
-	private void selectRandomWallpaper() {
-		int currentIndex = wallpaperIndex;
-		do {
-			wallpaperIndex = new Random().nextInt(wallpapers.length);
-		} while (wallpaperIndex == currentIndex);
 	}
 
 	private void handleKeyPressed(KeyEvent e) {
