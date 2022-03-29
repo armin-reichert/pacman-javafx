@@ -111,11 +111,10 @@ public class InfoPanel extends GridPane {
 		return info(labelText, () -> value);
 	}
 
-	public InfoPanel(GameUI ui, int minWidth) {
+	public InfoPanel(GameUI ui) {
 		this.ui = ui;
 
 		setBackground(U.colorBackground(new Color(0.3, 0.3, 0.3, 0.6)));
-		setMinWidth(minWidth);
 		setHgap(4);
 		setVgap(1);
 		setPadding(new Insets(5));

@@ -184,11 +184,10 @@ public class SettingsPanel extends GridPane {
 	private final Settings3D settings3D = new Settings3D();
 	private final Settings2D settings2D = new Settings2D();
 
-	public SettingsPanel(GameUI ui, int minWidth) {
+	public SettingsPanel(GameUI ui) {
 		this.ui = ui;
 
 		setBackground(U.colorBackground(new Color(0.3, 0.3, 0.3, 0.6)));
-		setMinWidth(minWidth);
 		setPadding(new Insets(5));
 		setHgap(20);
 		setVgap(4);
