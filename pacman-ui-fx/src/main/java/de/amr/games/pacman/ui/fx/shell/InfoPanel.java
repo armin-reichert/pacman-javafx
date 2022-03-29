@@ -34,6 +34,7 @@ import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.geometry.Insets;
@@ -121,17 +122,17 @@ public class InfoPanel extends GridPane {
 		setPadding(new Insets(5));
 		setVisible(false);
 
-		info("Total Ticks", ui.gameLoop::getTotalTicks);
-		info("Frame Rate",
-				() -> String.format("%d Hz (target: %d Hz)", ui.gameLoop.getFPS(), ui.gameLoop.getTargetFrameRate()));
+		info("Total Ticks", GameLoop.get()::getTotalTicks);
+		info("Frame Rate", () -> String.format("%d Hz (target: %d Hz)", GameLoop.get().getFPS(),
+				GameLoop.get().getTargetFrameRate()));
 		info("Paused", () -> yes_no(Env.$paused.get()));
 		info("Playing", () -> yes_no(ui.gameController.gameRunning));
 		info("Attract Mode", () -> yes_no(ui.gameController.attractMode));
 		info("Game Variant", () -> ui.gameController.gameVariant);
 		info("Game Level", () -> ui.gameController.game.levelNumber);
 		info("Game State", this::fmtGameState);
-		info("",
-				() -> String.format("Running:   %s%s", stateTimer().ticked(), stateTimer().isStopped() ? " (STOPPED)" : ""));
+		info("", () -> String.format("Running:   %s%s", stateTimer().ticked(),
+				stateTimer().isStopped() ? " (STOPPED)" : ""));
 		info("", () -> String.format("Remaining: %s",
 				stateTimer().ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer().ticksRemaining()));
 		info("Autopilot", () -> on_off(ui.gameController.autoControlled));

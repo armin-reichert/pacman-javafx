@@ -37,10 +37,19 @@ import javafx.util.Duration;
  */
 public class GameLoop {
 
-	public Runnable update;
-	public Runnable render;
+	private static final GameLoop it = new GameLoop();
 
-	private Timeline tl;
+	public static GameLoop get() {
+		return it;
+	}
+
+	public Runnable update = () -> {
+	};
+
+	public Runnable render = () -> {
+	};
+
+	private Timeline animation;
 	private int totalTicks;
 	private int fps;
 	private int targetFrameRate;
@@ -48,8 +57,18 @@ public class GameLoop {
 	private int frames;
 	private boolean timeMeasured;
 
-	public GameLoop() {
+	private GameLoop() {
 		setTargetFrameRate(60);
+	}
+
+	public void start() {
+		animation.play();
+		log("Game loop started. Target frame rate: %d", targetFrameRate);
+	}
+
+	public void stop() {
+		animation.stop();
+		log("Game loop stopped");
 	}
 
 	public int getTargetFrameRate() {
@@ -59,16 +78,16 @@ public class GameLoop {
 	public void setTargetFrameRate(int fps) {
 		targetFrameRate = fps;
 		boolean restart = false;
-		if (tl != null) {
-			tl.stop();
+		if (animation != null) {
+			animation.stop();
 			restart = true;
 		}
 		Duration frameDuration = Duration.millis(1000d / targetFrameRate);
-		tl = new Timeline(targetFrameRate);
-		tl.setCycleCount(Animation.INDEFINITE);
-		tl.getKeyFrames().add(new KeyFrame(frameDuration, e -> runSingleStep(!Env.$paused.get())));
+		animation = new Timeline(targetFrameRate);
+		animation.setCycleCount(Animation.INDEFINITE);
+		animation.getKeyFrames().add(new KeyFrame(frameDuration, e -> runSingleStep(!Env.$paused.get())));
 		if (restart) {
-			tl.play();
+			animation.play();
 		}
 	}
 
@@ -82,16 +101,6 @@ public class GameLoop {
 
 	public void setTimeMeasured(boolean timeMeasured) {
 		this.timeMeasured = timeMeasured;
-	}
-
-	public void start() {
-		tl.play();
-		log("Game loop started. Target frame rate: %d", targetFrameRate);
-	}
-
-	public void stop() {
-		tl.stop();
-		log("Game loop stopped");
 	}
 
 	public void runSingleStep(boolean updateEnabled) {

@@ -27,6 +27,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
@@ -70,7 +71,7 @@ public class SettingsPanel extends GridPane {
 		public void add() {
 			btnsSimulation = addButtons("Simulation", "Pause", "Step");
 			btnsSimulation[0].setOnAction(e -> ui.togglePaused());
-			btnsSimulation[1].setOnAction(e -> ui.gameLoop.runSingleStep(true));
+			btnsSimulation[1].setOnAction(e -> GameLoop.get().runSingleStep(true));
 			comboGameVariant = addComboBox("Game Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
 			comboGameVariant.setOnAction(e -> {
 				if (comboGameVariant.getValue() != ui.gameController.gameVariant) {
@@ -93,8 +94,8 @@ public class SettingsPanel extends GridPane {
 					ui.gameController.gameRequested || ui.gameController.gameRunning || ui.gameController.attractMode);
 			btnsGameControl[1].setDisable(ui.gameController.state == GameState.INTRO);
 			btnsGameControl[2].setDisable(ui.gameController.state != GameState.HUNTING);
-			btnIntermissionTest.setDisable(
-					ui.gameController.state == GameState.INTERMISSION_TEST || ui.gameController.state != GameState.INTRO);
+			btnIntermissionTest.setDisable(ui.gameController.state == GameState.INTERMISSION_TEST
+					|| ui.gameController.state != GameState.INTRO);
 		}
 	}
 
@@ -113,7 +114,7 @@ public class SettingsPanel extends GridPane {
 			sliderTargetFrameRate.setMinorTickCount(5);
 			sliderTargetFrameRate.setMajorTickUnit(30);
 			sliderTargetFrameRate.valueProperty().addListener(($value, _old, _new) -> {
-				ui.gameLoop.setTargetFrameRate(_new.intValue());
+				GameLoop.get().setTargetFrameRate(_new.intValue());
 			});
 			cbUsePlayScene3D = addCheckBox("Use 3D play scene", ui::toggleUsePlayScene3D);
 			cbAutopilot = addCheckBox("Autopilot", ui::toggleAutopilot);
@@ -121,7 +122,7 @@ public class SettingsPanel extends GridPane {
 		}
 
 		public void update() {
-			sliderTargetFrameRate.setValue(ui.gameLoop.getTargetFrameRate());
+			sliderTargetFrameRate.setValue(GameLoop.get().getTargetFrameRate());
 			cbAutopilot.setSelected(ui.gameController.autoControlled);
 			cbImmunity.setSelected(ui.gameController.game.player.immune);
 			cbUsePlayScene3D.setSelected(Env.$3D.get());
@@ -143,7 +144,8 @@ public class SettingsPanel extends GridPane {
 			comboResolution = addComboBox("Maze resolution", 1, 2, 4, 8);
 			comboResolution.setOnAction(e -> Env.$mazeResolution.set(comboResolution.getValue()));
 			sliderWallHeight = addSlider("Maze wall height", 0, 10, 8);
-			sliderWallHeight.valueProperty().addListener(($value, _old, _new) -> Env.$mazeWallHeight.set(_new.doubleValue()));
+			sliderWallHeight.valueProperty()
+					.addListener(($value, _old, _new) -> Env.$mazeWallHeight.set(_new.doubleValue()));
 			cbUseFloorTexture = addCheckBox("Maze floor texture", ui::toggleUseMazeFloorTexture);
 			cbAxesVisible = addCheckBox("Show axes", ui::toggleAxesVisible);
 			cbWireframeMode = addCheckBox("Wireframe mode", ui::toggleDrawMode);

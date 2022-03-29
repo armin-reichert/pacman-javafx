@@ -45,10 +45,10 @@ import de.amr.games.pacman.ui.fx.scene.GameScenes;
 import de.amr.games.pacman.ui.fx.sound.mspacman.Sounds_MsPacMan;
 import de.amr.games.pacman.ui.fx.sound.pacman.Sounds_PacMan;
 import de.amr.games.pacman.ui.fx.util.U;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
@@ -66,7 +66,6 @@ public class GameUI extends DefaultGameEventHandler {
 	private static final double ASPECT_RATIO = 0.777;
 
 	public final GameController gameController;
-	public final GameLoop gameLoop = new GameLoop();
 	public final Stage stage;
 	private final StackPane sceneRoot;
 	private final InfoPanel infoPanel;
@@ -75,31 +74,31 @@ public class GameUI extends DefaultGameEventHandler {
 	private final Wallpapers wallpapers = new Wallpapers();
 	private GameScene currentGameScene;
 
-	public GameUI(GameController gameController, Stage stage, double height) {
+	public GameUI(GameController gameController, Stage primaryStage, double height) {
 		this.gameController = gameController;
-		this.stage = stage;
-		this.settingsPanel = new SettingsPanel(this);
-		this.infoPanel = new InfoPanel(this);
+		gameController.addGameEventListener(this);
+
+		stage = primaryStage;
+		settingsPanel = new SettingsPanel(this);
+		infoPanel = new InfoPanel(this);
 		var infoLayer = new BorderPane();
 		infoLayer.setLeft(infoPanel);
 		infoLayer.setRight(settingsPanel);
 
-		// first child will dynamically get replaced by subscene representing the current game scene
-		sceneRoot = new StackPane(new Group(), FlashMessageView.get(), infoLayer);
+		// first child is placeholder for subscene representing the current game scene
+		sceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
 		stage.setScene(new Scene(sceneRoot, ASPECT_RATIO * height, height));
 
 		gameScenes = new GameScenes(stage.getScene(), gameController, GianmarcosModel3D.get(),
 				SIZE_IN_TILES.scaled(TS));
 
-		// Game loop triggers game controller updates, UI handles game controller events
-		gameController.addGameEventListener(this);
-		gameLoop.update = () -> {
+		GameLoop.get().update = () -> {
 			gameController.updateState();
 			getCurrentGameScene().update();
 		};
-		gameLoop.render = this::update;
+		GameLoop.get().render = this::update;
 
-		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> gameLoop.stop());
+		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> GameLoop.get().stop());
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPressed);
 		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
 
@@ -115,7 +114,7 @@ public class GameUI extends DefaultGameEventHandler {
 		stage.setFullScreen(fullscreen);
 		stage.centerOnScreen();
 		stage.show();
-		gameLoop.start();
+		GameLoop.get().start();
 	}
 
 	@Override
@@ -224,8 +223,8 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	private void changeTargetFramerate(int delta) {
-		gameLoop.setTargetFrameRate(U.clamp(gameLoop.getTargetFrameRate() + delta, 10, 120));
-		showFlashMessage(1, "Target FPS set to %d Hz", gameLoop.getTargetFrameRate());
+		GameLoop.get().setTargetFrameRate(U.clamp(GameLoop.get().getTargetFrameRate() + delta, 10, 120));
+		showFlashMessage(1, "Target FPS set to %d Hz", GameLoop.get().getTargetFrameRate());
 	}
 
 	public void quitCurrentGameScene() {
