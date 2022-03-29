@@ -200,7 +200,7 @@ public class GameUI extends DefaultGameEventHandler {
 			case L -> addLives(3);
 			case N -> enterNextLevel();
 			case Q -> quitCurrentGameScene();
-			case S -> changeTargetFramerate(shift);
+			case S -> changeTargetFramerate(shift ? -10 : 10);
 			case V -> toggleGameVariant();
 			case X -> gameController.cheatKillGhosts();
 			case Z -> startIntermissionScenesTest();
@@ -239,9 +239,8 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 	}
 
-	private void changeTargetFramerate(boolean down) {
-		int rate = gameLoop.getTargetFrameRate();
-		gameLoop.setTargetFrameRate(down ? Math.max(10, rate - 10) : rate + 10);
+	private void changeTargetFramerate(int delta) {
+		gameLoop.setTargetFrameRate(U.clamp(gameLoop.getTargetFrameRate() + delta, 10, 120));
 		showFlashMessage(1, "Target FPS set to %d Hz", gameLoop.getTargetFrameRate());
 	}
 
