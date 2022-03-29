@@ -66,13 +66,12 @@ import javafx.stage.WindowEvent;
 public class GameUI extends DefaultGameEventHandler {
 
 	private static final V2i SIZE_IN_TILES = new V2i(28, 36);
-	private static final double ASPECT_RATIO = (double) SIZE_IN_TILES.x / SIZE_IN_TILES.y;
+	private static final double ASPECT_RATIO = 0.777;
 
 	public final GameController gameController;
 	public final GameLoop gameLoop = new GameLoop();
 	public final Stage stage;
-	private final Scene mainScene;
-	private final StackPane mainLayout;
+	private final StackPane sceneRoot;
 	private final InfoPanel infoPanel;
 	private final SettingsPanel settingsPanel;
 
@@ -96,9 +95,10 @@ public class GameUI extends DefaultGameEventHandler {
 		infoLayer.setRight(settingsPanel);
 
 		// first child will dynamically get replaced by subscene representing the current game scene
-		mainLayout = new StackPane(new Group(), FlashMessageView.get(), infoLayer);
-		mainScene = new Scene(mainLayout, ASPECT_RATIO * height, height);
-		gameScenes = new GameScenes(mainScene, gameController, GianmarcosModel3D.get(), SIZE_IN_TILES.scaled(TS));
+		sceneRoot = new StackPane(new Group(), FlashMessageView.get(), infoLayer);
+		stage.setScene(new Scene(sceneRoot, ASPECT_RATIO * height, height));
+
+		gameScenes = new GameScenes(stage.getScene(), gameController, GianmarcosModel3D.get(), SIZE_IN_TILES.scaled(TS));
 
 		// Game loop triggers game controller updates, UI handles game controller events
 		gameController.addGameEventListener(this);
@@ -111,7 +111,6 @@ public class GameUI extends DefaultGameEventHandler {
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> gameLoop.stop());
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPressed);
 		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
-		stage.setScene(mainScene);
 
 		Env.$drawMode3D.addListener(($drawMode, _old, _new) -> updateBackground(currentGameScene));
 	}
@@ -157,7 +156,7 @@ public class GameUI extends DefaultGameEventHandler {
 		} else {
 			log("Set scene to '%s'", nextGameScene.getClass());
 		}
-		mainLayout.getChildren().set(0, nextGameScene.getFXSubScene());
+		sceneRoot.getChildren().set(0, nextGameScene.getFXSubScene());
 		updateBackground(nextGameScene);
 		switch (gameController.gameVariant) {
 		case MS_PACMAN -> //
@@ -174,11 +173,11 @@ public class GameUI extends DefaultGameEventHandler {
 	private void updateBackground(GameScene gameScene) {
 		if (gameScene.is3D()) {
 			selectRandomWallpaper();
-			mainLayout.setBackground(Env.$drawMode3D.get() == DrawMode.LINE //
+			sceneRoot.setBackground(Env.$drawMode3D.get() == DrawMode.LINE //
 					? U.colorBackground(Color.BLACK)
 					: wallpapers[wallpaperIndex]);
 		} else {
-			mainLayout.setBackground(U.colorBackground(Color.CORNFLOWERBLUE));
+			sceneRoot.setBackground(U.colorBackground(Color.CORNFLOWERBLUE));
 		}
 	}
 
