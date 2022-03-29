@@ -89,8 +89,8 @@ public class GameUI extends DefaultGameEventHandler {
 	public GameUI(GameController gameController, Stage stage, double height) {
 		this.gameController = gameController;
 		this.stage = stage;
-		this.settingsPanel = new SettingsPanel(this, 400);
-		this.infoPanel = new InfoPanel(this, 400);
+		this.settingsPanel = new SettingsPanel(this, 300);
+		this.infoPanel = new InfoPanel(this, 300);
 		var infoLayer = new BorderPane();
 		infoLayer.setLeft(infoPanel);
 		infoLayer.setRight(settingsPanel);
