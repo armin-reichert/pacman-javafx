@@ -55,9 +55,14 @@ public class PacManGameAppFX extends Application {
 		var options = new Options(getParameters().getUnnamed());
 		Env.$3D.set(options.use3DScenes);
 		Env.$perspective.set(options.perspective);
-		var controller = new GameController(options.gameVariant);
-		controller.setPlayerControl(new ManualPlayerControl(primaryStage));
-		var ui = new GameUI(controller, primaryStage, options.windowHeight);
+		var gameController = new GameController(options.gameVariant);
+		gameController.setPlayerControl(new ManualPlayerControl(primaryStage));
+		var ui = new GameUI(gameController, primaryStage, options.windowHeight);
+		GameLoop.get().update = () -> {
+			gameController.updateState();
+			ui.getCurrentGameScene().update();
+		};
+		GameLoop.get().render = ui::updateState;
 		ui.start(options.fullscreen);
 		log("Application started. Game variant: %s, window height: %.0f, 3D: %s, camera perspective: %s",
 				options.gameVariant, options.windowHeight, options.use3DScenes, options.perspective);

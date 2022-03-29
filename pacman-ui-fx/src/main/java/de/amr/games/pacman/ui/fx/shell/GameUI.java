@@ -92,12 +92,6 @@ public class GameUI extends DefaultGameEventHandler {
 		gameScenes = new GameScenes(stage.getScene(), gameController, GianmarcosModel3D.get(),
 				SIZE_IN_TILES.scaled(TS));
 
-		GameLoop.get().update = () -> {
-			gameController.updateState();
-			getCurrentGameScene().update();
-		};
-		GameLoop.get().render = this::update;
-
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> GameLoop.get().stop());
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPressed);
 		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
@@ -124,7 +118,7 @@ public class GameUI extends DefaultGameEventHandler {
 		currentGameScene.onGameEvent(event);
 	}
 
-	private void update() {
+	public void updateState() {
 		FlashMessageView.get().update();
 		if (infoPanel.isVisible()) {
 			infoPanel.update(this);
