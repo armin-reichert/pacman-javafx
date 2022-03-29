@@ -40,7 +40,6 @@ import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.model.GianmarcosModel3D;
-import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -50,7 +49,6 @@ import de.amr.games.pacman.ui.fx.sound.pacman.Sounds_PacMan;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
@@ -185,11 +183,10 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	private void selectRandomWallpaper() {
-		int next = wallpaperIndex;
-		while (next == wallpaperIndex) {
-			next = new Random().nextInt(wallpapers.length);
-		}
-		wallpaperIndex = next;
+		int currentIndex = wallpaperIndex;
+		do {
+			wallpaperIndex = new Random().nextInt(wallpapers.length);
+		} while (wallpaperIndex == currentIndex);
 	}
 
 	private void handleKeyPressed(KeyEvent e) {
@@ -203,22 +200,12 @@ public class GameUI extends DefaultGameEventHandler {
 			case L -> addLives(3);
 			case N -> enterNextLevel();
 			case Q -> quitCurrentGameScene();
-			case S -> {
-				int rate = gameLoop.getTargetFrameRate();
-				gameLoop.setTargetFrameRate(shift ? Math.max(10, rate - 10) : rate + 10);
-				showFlashMessage(1, "Target FPS set to %d Hz", gameLoop.getTargetFrameRate());
-			}
+			case S -> changeTargetFramerate(shift);
 			case V -> toggleGameVariant();
 			case X -> gameController.cheatKillGhosts();
 			case Z -> startIntermissionScenesTest();
-			case LEFT, RIGHT -> {
-				if (currentGameScene.is3D()) {
-					int delta = e.getCode() == KeyCode.LEFT ? Perspective.values().length - 1 : 1;
-					Env.selectPerspective(delta);
-					String perspectiveName = Env.message(Env.$perspective.get().name());
-					showFlashMessage(1, Env.message("camera_perspective", perspectiveName));
-				}
-			}
+			case LEFT -> changePerspective(-1);
+			case RIGHT -> changePerspective(1);
 			case DIGIT3 -> toggleUsePlayScene3D();
 			default -> {
 			}
@@ -242,6 +229,20 @@ public class GameUI extends DefaultGameEventHandler {
 			}
 			}
 		}
+	}
+
+	private void changePerspective(int delta) {
+		if (currentGameScene.is3D()) {
+			Env.selectPerspective(delta);
+			String perspectiveName = Env.message(Env.$perspective.get().name());
+			showFlashMessage(1, Env.message("camera_perspective", perspectiveName));
+		}
+	}
+
+	private void changeTargetFramerate(boolean down) {
+		int rate = gameLoop.getTargetFrameRate();
+		gameLoop.setTargetFrameRate(down ? Math.max(10, rate - 10) : rate + 10);
+		showFlashMessage(1, "Target FPS set to %d Hz", gameLoop.getTargetFrameRate());
 	}
 
 	public void quitCurrentGameScene() {

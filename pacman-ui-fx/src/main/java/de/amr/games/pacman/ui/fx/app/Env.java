@@ -78,12 +78,18 @@ public class Env {
 
 	public static void selectPerspective(int delta) {
 		int n = Perspective.values().length;
+		while (delta < 0) {
+			delta += n;
+		}
 		int next = ($perspective.get().ordinal() + delta) % n;
 		$perspective.set(Perspective.values()[next]);
 	}
 
 	public static String perspectiveName(int delta) {
 		int n = Perspective.values().length;
+		while (delta < 0) {
+			delta += n;
+		}
 		int next = ($perspective.get().ordinal() + delta) % n;
 		return Perspective.values()[next].name();
 	}
