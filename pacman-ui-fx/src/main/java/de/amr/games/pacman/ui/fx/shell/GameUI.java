@@ -156,6 +156,7 @@ public class GameUI extends DefaultGameEventHandler {
 		} else {
 			log("Set scene to '%s'", nextGameScene.getClass());
 		}
+		nextGameScene.resizeFXSubScene(stage.getScene().getHeight());
 		sceneRoot.getChildren().set(0, nextGameScene.getFXSubScene());
 		updateBackground(nextGameScene);
 		switch (gameController.gameVariant) {

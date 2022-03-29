@@ -122,6 +122,10 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	}
 
 	@Override
+	public void resizeFXSubScene(double height) {
+	}
+
+	@Override
 	public SoundManager getSounds() {
 		return sounds;
 	}

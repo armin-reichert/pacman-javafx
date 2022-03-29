@@ -66,6 +66,13 @@ public interface GameScene extends GameEventListener {
 	SubScene getFXSubScene();
 
 	/**
+	 * Resizes the FX scene to fit into the given height.
+	 * 
+	 * @param height height in pixels
+	 */
+	void resizeFXSubScene(double height);
+
+	/**
 	 * @return the sounds used by this game scene
 	 */
 	SoundManager getSounds();

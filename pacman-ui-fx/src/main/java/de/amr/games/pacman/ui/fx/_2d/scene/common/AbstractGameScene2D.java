@@ -51,9 +51,8 @@ import javafx.scene.transform.Scale;
  */
 public abstract class AbstractGameScene2D extends DefaultGameEventHandler implements GameScene {
 
-	protected final SubScene fxSubScene;
-	protected final Scene parent;
 	protected final GameController gameController;
+	protected final SubScene fxSubScene;
 	protected final Canvas canvas;
 	protected final GraphicsContext gc;
 	protected final V2i unscaledSize;
@@ -66,7 +65,6 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	protected GameScore2D highScore2D;
 
 	public AbstractGameScene2D(Scene parent, GameController gameController, V2i unscaledSize) {
-		this.parent = parent;
 		this.gameController = gameController;
 		this.canvas = new Canvas();
 		this.gc = canvas.getGraphicsContext2D();
@@ -75,12 +73,13 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 		StackPane root = new StackPane(canvas);
 		root.setBackground(U.colorBackground(Color.BLACK));
 		fxSubScene = new SubScene(root, aspectRatio * parent.getHeight(), parent.getHeight());
-		parent.heightProperty().addListener(($height, _old, _new) -> resize(_new.doubleValue()));
+		parent.heightProperty().addListener(($height, _old, _new) -> resizeFXSubScene(_new.doubleValue()));
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
 	}
 
-	private void resize(double height) {
+	@Override
+	public void resizeFXSubScene(double height) {
 		double width = aspectRatio * height;
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
@@ -107,7 +106,6 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 
 	@Override
 	public void init() {
-		resize(parent.getHeight());
 		score2D = new GameScore2D(game, r2D);
 		score2D.x = t(1);
 		score2D.y = t(1);
@@ -124,7 +122,7 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	public final void update() {
 		doUpdate();
 		gc.setFill(Color.BLACK);
-		gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+		gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		doRender();
 		if (Env.$tilesVisible.get()) {
 			drawTileBorders();
