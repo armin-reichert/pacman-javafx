@@ -38,6 +38,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Spinner;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -66,6 +67,7 @@ public class SettingsPanel extends GridPane {
 		private ComboBox<GameVariant> comboGameVariant;
 		private Button[] btnsSimulation;
 		private Button[] btnsGameControl;
+		private Spinner<Integer> spinnerLevel;
 		private Button btnIntermissionTest;
 
 		public void add() {
@@ -82,6 +84,8 @@ public class SettingsPanel extends GridPane {
 			btnsGameControl[0].setOnAction(e -> ui.gameController.requestGame());
 			btnsGameControl[1].setOnAction(e -> ui.quitCurrentGameScene());
 			btnsGameControl[2].setOnAction(e -> ui.enterNextLevel());
+			spinnerLevel = addSpinner("Level", 1, 100, ui.gameController.game.levelNumber);
+			spinnerLevel.valueProperty().addListener(($value, oldValue, newValue) -> ui.enterLevel(newValue.intValue()));
 			btnIntermissionTest = addButton("Intermission scenes", "Start", ui::startIntermissionScenesTest);
 		}
 
@@ -94,6 +98,9 @@ public class SettingsPanel extends GridPane {
 					ui.gameController.gameRequested || ui.gameController.gameRunning || ui.gameController.attractMode);
 			btnsGameControl[1].setDisable(ui.gameController.state == GameState.INTRO);
 			btnsGameControl[2].setDisable(ui.gameController.state != GameState.HUNTING);
+			spinnerLevel.getValueFactory().setValue(ui.gameController.game.levelNumber);
+			spinnerLevel.setDisable(ui.gameController.state != GameState.READY && ui.gameController.state != GameState.HUNTING
+					&& ui.gameController.state != GameState.LEVEL_STARTING);
 			btnIntermissionTest.setDisable(
 					ui.gameController.state == GameState.INTERMISSION_TEST || ui.gameController.state != GameState.INTRO);
 		}
@@ -266,5 +273,11 @@ public class SettingsPanel extends GridPane {
 		slider.setMinWidth(200);
 		addRow(labelText, slider);
 		return slider;
+	}
+
+	private Spinner<Integer> addSpinner(String labelText, int min, int max, int initialValue) {
+		Spinner<Integer> spinner = new Spinner<>(min, max, initialValue);
+		addRow(labelText, spinner);
+		return spinner;
 	}
 }

@@ -231,6 +231,23 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 	}
 
+	public void enterLevel(int levelNumber) {
+		if (gameController.game.levelNumber == levelNumber) {
+			return;
+		}
+		if (levelNumber == 1) {
+			gameController.game.reset();
+			gameController.changeState(GameState.READY);
+		} else {
+			// TODO game model should be able to switch directly to any level
+			int start = levelNumber > gameController.game.levelNumber ? gameController.game.levelNumber + 1 : 1;
+			for (int n = start; n < levelNumber; ++n) {
+				gameController.game.setLevel(n);
+			}
+			gameController.changeState(GameState.LEVEL_STARTING);
+		}
+	}
+
 	public void addLives(int lives) {
 		if (gameController.gameRunning) {
 			gameController.game.player.lives += lives;
