@@ -75,28 +75,25 @@ public class GameUI extends DefaultGameEventHandler {
 		this.gameController = gameController;
 		gameController.addGameEventListener(this);
 
-		stage = primaryStage;
+		var infoLayer = new BorderPane();
 		settingsPanel = new SettingsPanel(this);
 		infoPanel = new InfoPanel(this);
 		infoPanel.setMinWidth(400);
-		var infoLayer = new BorderPane();
 		infoLayer.setLeft(infoPanel);
 		infoLayer.setRight(settingsPanel);
 
 		// first child is placeholder for subscene representing the current game scene
 		sceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
-
 		// assume first game scene is a 2D scene, so use aspect ratio initially
 		Scene mainScene = new Scene(sceneRoot, ASPECT_RATIO_2D * height, height);
+		stage = primaryStage;
 		stage.setScene(mainScene);
-
-		gameScenes = new GameScenes(mainScene, gameController, GianmarcosModel3D.get());
-
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> GameLoop.get().stop());
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPressed);
 		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
 
-		Env.$drawMode3D.addListener(($drawMode, _old, _new) -> updateBackground(currentGameScene));
+		gameScenes = new GameScenes(mainScene, gameController, GianmarcosModel3D.get());
+		Env.$drawMode3D.addListener(($drawMode, oldDrawMode, newDrawMode) -> updateBackground(currentGameScene));
 	}
 
 	public GameScene getCurrentGameScene() {
