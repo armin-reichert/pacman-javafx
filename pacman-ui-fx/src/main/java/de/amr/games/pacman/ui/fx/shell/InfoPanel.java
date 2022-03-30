@@ -123,16 +123,16 @@ public class InfoPanel extends GridPane {
 		setVisible(false);
 
 		info("Total Ticks", GameLoop.get()::getTotalTicks);
-		info("Frame Rate", () -> String.format("%d Hz (target: %d Hz)", GameLoop.get().getFPS(),
-				GameLoop.get().getTargetFrameRate()));
+		info("Frame Rate",
+				() -> String.format("%d Hz (target: %d Hz)", GameLoop.get().getFPS(), GameLoop.get().getTargetFrameRate()));
 		info("Paused", () -> yes_no(Env.$paused.get()));
 		info("Playing", () -> yes_no(ui.gameController.gameRunning));
 		info("Attract Mode", () -> yes_no(ui.gameController.attractMode));
 		info("Game Variant", () -> ui.gameController.gameVariant);
 		info("Game Level", () -> ui.gameController.game.levelNumber);
 		info("Game State", this::fmtGameState);
-		info("", () -> String.format("Running:   %s%s", stateTimer().ticked(),
-				stateTimer().isStopped() ? " (STOPPED)" : ""));
+		info("",
+				() -> String.format("Running:   %s%s", stateTimer().ticked(), stateTimer().isStopped() ? " (STOPPED)" : ""));
 		info("", () -> String.format("Remaining: %s",
 				stateTimer().ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer().ticksRemaining()));
 		info("Autopilot", () -> on_off(ui.gameController.autoControlled));
@@ -140,8 +140,8 @@ public class InfoPanel extends GridPane {
 		info("Game scene", () -> gameScene().getClass().getSimpleName());
 		info("", () -> String.format("w=%.0f h=%.0f", gameScene().getFXSubScene().getWidth(),
 				gameScene().getFXSubScene().getHeight()));
-		info("Window size", () -> String.format("w=%.0f h=%.0f", sceneWidth(), sceneHeight()));
-		info("Scene size", () -> String.format("w=%.0f h=%.0f", sceneWidth(), sceneHeight()));
+		info("Window", () -> String.format("w=%.0f h=%.0f", sceneWidth(), sceneHeight()));
+		info("Main scene", () -> String.format("w=%.0f h=%.0f", sceneWidth(), sceneHeight()));
 
 		info("3D Scenes", () -> on_off(Env.$3D.get()));
 		info("Perspective", () -> Env.$perspective.get()).when(() -> gameScene().is3D());
