@@ -89,8 +89,7 @@ public class GameUI extends DefaultGameEventHandler {
 		sceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
 		stage.setScene(new Scene(sceneRoot, ASPECT_RATIO * height, height));
 
-		gameScenes = new GameScenes(stage.getScene(), gameController, GianmarcosModel3D.get(),
-				SIZE_IN_TILES.scaled(TS));
+		gameScenes = new GameScenes(stage.getScene(), gameController, GianmarcosModel3D.get(), SIZE_IN_TILES.scaled(TS));
 
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> GameLoop.get().stop());
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPressed);
@@ -131,28 +130,26 @@ public class GameUI extends DefaultGameEventHandler {
 
 	private void updateGameScene() {
 		var nextGameScene = gameScenes.getScene(gameController, Env.$3D.get());
-		if (currentGameScene == nextGameScene) {
-			return;
+		if (nextGameScene != currentGameScene) {
+			if (currentGameScene != null) {
+				currentGameScene.end();
+			}
+			displayGameScene(nextGameScene);
+			nextGameScene.init();
+			currentGameScene = nextGameScene;
 		}
-		if (currentGameScene != null) {
-			currentGameScene.end();
-			log("Change scene from '%s' to '%s'", currentGameScene.getClass(), nextGameScene.getClass());
+	}
+
+	private void displayGameScene(GameScene gameScene) {
+		gameScene.resizeFXSubScene(stage.getScene().getHeight());
+		sceneRoot.getChildren().set(0, gameScene.getFXSubScene());
+		updateBackground(gameScene);
+		if (gameController.gameVariant == GameVariant.MS_PACMAN) {
+			gameScene.setContext(gameController.game, Rendering2D_MsPacMan.get(), Sounds_MsPacMan.get());
 		} else {
-			log("Set scene to '%s'", nextGameScene.getClass());
+			gameScene.setContext(gameController.game, Rendering2D_PacMan.get(), Sounds_PacMan.get());
 		}
-		nextGameScene.resizeFXSubScene(stage.getScene().getHeight());
-		sceneRoot.getChildren().set(0, nextGameScene.getFXSubScene());
-		updateBackground(nextGameScene);
-		switch (gameController.gameVariant) {
-		case MS_PACMAN -> //
-			nextGameScene.setContext(gameController.game, Rendering2D_MsPacMan.get(), Sounds_MsPacMan.get());
-		case PACMAN -> //
-			nextGameScene.setContext(gameController.game, Rendering2D_PacMan.get(), Sounds_PacMan.get());
-		default -> //
-			throw new IllegalArgumentException();
-		}
-		nextGameScene.init();
-		currentGameScene = nextGameScene;
+		log("Game scene is now '%s'", gameScene.getClass());
 	}
 
 	private void updateBackground(GameScene gameScene) {
