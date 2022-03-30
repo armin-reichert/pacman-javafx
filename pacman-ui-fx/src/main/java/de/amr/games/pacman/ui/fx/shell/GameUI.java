@@ -284,7 +284,7 @@ public class GameUI extends DefaultGameEventHandler {
 			currentGameScene.getSounds().stopAll();
 			updateGameScene();
 			if (currentGameScene instanceof PlayScene2D) {
-				((PlayScene2D) currentGameScene).onSwitchFrom3DTo2D();
+				((PlayScene2D) currentGameScene).onSwitchBetween2DAnd3D();
 			}
 		}
 		showFlashMessage(1, Env.message(Env.$3D.get() ? "use_3D_scene" : "use_2D_scene"));

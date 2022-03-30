@@ -116,7 +116,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		}
 	}
 
-	public void onSwitchFrom3DTo2D() {
+	public void onSwitchBetween2DAnd3D() {
 		if (!player2D.munchings.get(game.player.moveDir()).isRunning()) {
 			player2D.munchings.values().forEach(TimedSeq::restart);
 		}
