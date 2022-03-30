@@ -107,7 +107,7 @@ public class GameScenes {
 	/**
 	 * Returns the scene that fits the current game state.
 	 * 
-	 * @param version SCENE_2D or SCENE_3D
+	 * @param version {@link GameScenes#SCENE_2D} or {@link GameScenes#SCENE_3D}
 	 * @return the game scene that fits the current game state
 	 */
 	public GameScene getScene(int version) {
