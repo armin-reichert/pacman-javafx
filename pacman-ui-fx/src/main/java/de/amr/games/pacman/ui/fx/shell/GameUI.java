@@ -90,7 +90,7 @@ public class GameUI extends DefaultGameEventHandler {
 		Scene mainScene = new Scene(sceneRoot, ASPECT_RATIO_2D * height, height);
 		stage.setScene(mainScene);
 
-		gameScenes = new GameScenes(stage.getScene(), gameController, GianmarcosModel3D.get());
+		gameScenes = new GameScenes(mainScene, gameController, GianmarcosModel3D.get());
 
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> GameLoop.get().stop());
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPressed);
