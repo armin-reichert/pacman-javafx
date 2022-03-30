@@ -24,14 +24,12 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell;
 
 import static de.amr.games.pacman.lib.Logging.log;
-import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.ui.fx.shell.FlashMessageView.showFlashMessage;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
 import de.amr.games.pacman.controller.event.GameEvent;
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
@@ -62,8 +60,7 @@ import javafx.stage.WindowEvent;
  */
 public class GameUI extends DefaultGameEventHandler {
 
-	private static final V2i SIZE_IN_TILES = new V2i(28, 36);
-	private static final double ASPECT_RATIO = 0.777;
+	private static final double ASPECT_RATIO_2D = 28.0 / 36.0;
 
 	public final GameController gameController;
 	public final Stage stage;
@@ -81,16 +78,19 @@ public class GameUI extends DefaultGameEventHandler {
 		stage = primaryStage;
 		settingsPanel = new SettingsPanel(this);
 		infoPanel = new InfoPanel(this);
-		infoPanel.setMinWidth(400); // avoid flutter
+		infoPanel.setMinWidth(400);
 		var infoLayer = new BorderPane();
 		infoLayer.setLeft(infoPanel);
 		infoLayer.setRight(settingsPanel);
 
 		// first child is placeholder for subscene representing the current game scene
 		sceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
-		stage.setScene(new Scene(sceneRoot, ASPECT_RATIO * height, height));
 
-		gameScenes = new GameScenes(stage.getScene(), gameController, GianmarcosModel3D.get(), SIZE_IN_TILES.scaled(TS));
+		// assume first game scene is a 2D scene, so use aspect ratio initially
+		Scene mainScene = new Scene(sceneRoot, ASPECT_RATIO_2D * height, height);
+		stage.setScene(mainScene);
+
+		gameScenes = new GameScenes(stage.getScene(), gameController, GianmarcosModel3D.get());
 
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> GameLoop.get().stop());
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPressed);
