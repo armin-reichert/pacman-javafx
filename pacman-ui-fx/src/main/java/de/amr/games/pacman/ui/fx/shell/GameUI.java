@@ -129,7 +129,7 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	private void updateGameScene() {
-		var nextGameScene = gameScenes.getScene(gameController, Env.$3D.get());
+		var nextGameScene = gameScenes.getScene(Env.$3D.get() ? GameScenes.SCENE_3D : GameScenes.SCENE_2D);
 		if (nextGameScene != currentGameScene) {
 			if (currentGameScene != null) {
 				currentGameScene.end();
@@ -180,7 +180,7 @@ public class GameUI extends DefaultGameEventHandler {
 			case Z -> startIntermissionScenesTest();
 			case LEFT -> changePerspective(-1);
 			case RIGHT -> changePerspective(1);
-			case DIGIT3 -> toggleUsePlayScene3D();
+			case DIGIT3 -> toggleUse3DScene();
 			default -> {
 			}
 			}
@@ -278,17 +278,16 @@ public class GameUI extends DefaultGameEventHandler {
 		showFlashMessage(1, message);
 	}
 
-	public void toggleUsePlayScene3D() {
+	public void toggleUse3DScene() {
 		Env.$3D.set(!Env.$3D.get());
-		if (gameScenes.getScene(gameController, false) != gameScenes.getScene(gameController, true)) {
+		if (gameScenes.getScene(GameScenes.SCENE_2D) != gameScenes.getScene(GameScenes.SCENE_3D)) {
 			currentGameScene.getSounds().stopAll();
 			updateGameScene();
 			if (currentGameScene instanceof PlayScene2D) {
 				((PlayScene2D) currentGameScene).onSwitchFrom3DTo2D();
 			}
 		}
-		String message = Env.$3D.get() ? "Using 3D Play Scene" : "Using 2D Play Scene";
-		showFlashMessage(2, message);
+		showFlashMessage(1, Env.message(Env.$3D.get() ? "use_3D_scene" : "use_2D_scene"));
 	}
 
 	public void toggleAxesVisible() {

@@ -45,6 +45,10 @@ import javafx.scene.Scene;
  */
 public class GameScenes {
 
+	public static final int SCENE_2D = 0;
+	public static final int SCENE_3D = 1;
+
+	private final GameController gameController;
 	private final GameScene scenes[][][] = new GameScene[2][5][2];
 
 	/**
@@ -56,45 +60,45 @@ public class GameScenes {
 	 * @param size           the unscaled size (number of tiles times tile size)
 	 */
 	public GameScenes(Scene parent, GameController gameController, PacManModel3D model3D, V2i size) {
+		this.gameController = gameController;
 		//@formatter:off
-		scenes[0][0][0] = 
-		scenes[0][0][1] = new MsPacMan_IntroScene(parent, gameController, size);
-		scenes[0][1][0] = 
-		scenes[0][1][1] = new MsPacMan_IntermissionScene1(parent, gameController, size);
-		scenes[0][2][0] = 
-		scenes[0][2][1] = new MsPacMan_IntermissionScene2(parent, gameController, size);
-		scenes[0][3][0] = 
-		scenes[0][3][1] = new MsPacMan_IntermissionScene3(parent, gameController, size);
-		scenes[0][4][0] = new PlayScene2D(parent, gameController, size);
-		scenes[0][4][1] = new PlayScene3D(parent, gameController, model3D);
+		scenes[0][0][SCENE_2D] = 
+		scenes[0][0][SCENE_3D] = new MsPacMan_IntroScene(parent, gameController, size);
+		scenes[0][1][SCENE_2D] = 
+		scenes[0][1][SCENE_3D] = new MsPacMan_IntermissionScene1(parent, gameController, size);
+		scenes[0][2][SCENE_2D] = 
+		scenes[0][2][SCENE_3D] = new MsPacMan_IntermissionScene2(parent, gameController, size);
+		scenes[0][3][SCENE_2D] = 
+		scenes[0][3][SCENE_3D] = new MsPacMan_IntermissionScene3(parent, gameController, size);
+		scenes[0][4][SCENE_2D] = new PlayScene2D(parent, gameController, size);
+		scenes[0][4][SCENE_3D] = new PlayScene3D(parent, gameController, model3D);
 		
-		scenes[1][0][0] = 
-		scenes[1][0][1] = new PacMan_IntroScene(parent, gameController, size);
-		scenes[1][1][0] = 
-		scenes[1][1][1] = new PacMan_IntermissionScene1(parent, gameController, size);
-		scenes[1][2][0] = 
-		scenes[1][2][1] = new PacMan_IntermissionScene2(parent, gameController, size);
-		scenes[1][3][0] = 
-		scenes[1][3][1] = new PacMan_IntermissionScene3(parent, gameController, size);
-		scenes[1][4][0] = new PlayScene2D(parent, gameController, size);
-		scenes[1][4][1] = new PlayScene3D(parent, gameController, model3D);
+		scenes[1][0][SCENE_2D] = 
+		scenes[1][0][SCENE_3D] = new PacMan_IntroScene(parent, gameController, size);
+		scenes[1][1][SCENE_2D] = 
+		scenes[1][1][SCENE_3D] = new PacMan_IntermissionScene1(parent, gameController, size);
+		scenes[1][2][SCENE_2D] = 
+		scenes[1][2][SCENE_3D] = new PacMan_IntermissionScene2(parent, gameController, size);
+		scenes[1][3][SCENE_2D] = 
+		scenes[1][3][SCENE_3D] = new PacMan_IntermissionScene3(parent, gameController, size);
+		scenes[1][4][SCENE_2D] = new PlayScene2D(parent, gameController, size);
+		scenes[1][4][SCENE_3D] = new PlayScene3D(parent, gameController, model3D);
 		//@formatter:on
 	}
 
 	/**
 	 * Returns the scene that fits the current game state.
 	 * 
-	 * @param gameController the game controller
-	 * @param _3D            if the 3D scene (if available) should be returned
+	 * @param version SCENE_2D or SCENE_3D
 	 * @return the game scene that fits the current game state
 	 */
-	public GameScene getScene(GameController gameController, boolean _3D) {
+	public GameScene getScene(int version) {
 		int sceneIndex = switch (gameController.state) {
 		case INTRO -> 0;
 		case INTERMISSION -> gameController.game.intermissionNumber(gameController.game.levelNumber);
 		case INTERMISSION_TEST -> gameController.intermissionTestNumber;
 		default -> 4; // play scene
 		};
-		return scenes[gameController.gameVariant.ordinal()][sceneIndex][_3D ? 1 : 0];
+		return scenes[gameController.gameVariant.ordinal()][sceneIndex][version];
 	}
 }

@@ -94,8 +94,8 @@ public class SettingsPanel extends GridPane {
 					ui.gameController.gameRequested || ui.gameController.gameRunning || ui.gameController.attractMode);
 			btnsGameControl[1].setDisable(ui.gameController.state == GameState.INTRO);
 			btnsGameControl[2].setDisable(ui.gameController.state != GameState.HUNTING);
-			btnIntermissionTest.setDisable(ui.gameController.state == GameState.INTERMISSION_TEST
-					|| ui.gameController.state != GameState.INTRO);
+			btnIntermissionTest.setDisable(
+					ui.gameController.state == GameState.INTERMISSION_TEST || ui.gameController.state != GameState.INTRO);
 		}
 	}
 
@@ -116,7 +116,7 @@ public class SettingsPanel extends GridPane {
 			sliderTargetFrameRate.valueProperty().addListener(($value, _old, _new) -> {
 				GameLoop.get().setTargetFrameRate(_new.intValue());
 			});
-			cbUsePlayScene3D = addCheckBox("Use 3D play scene", ui::toggleUsePlayScene3D);
+			cbUsePlayScene3D = addCheckBox("Use 3D play scene", ui::toggleUse3DScene);
 			cbAutopilot = addCheckBox("Autopilot", ui::toggleAutopilot);
 			cbImmunity = addCheckBox("Player immune", ui::toggleImmunity);
 		}
@@ -144,8 +144,7 @@ public class SettingsPanel extends GridPane {
 			comboResolution = addComboBox("Maze resolution", 1, 2, 4, 8);
 			comboResolution.setOnAction(e -> Env.$mazeResolution.set(comboResolution.getValue()));
 			sliderWallHeight = addSlider("Maze wall height", 0, 10, 8);
-			sliderWallHeight.valueProperty()
-					.addListener(($value, _old, _new) -> Env.$mazeWallHeight.set(_new.doubleValue()));
+			sliderWallHeight.valueProperty().addListener(($value, _old, _new) -> Env.$mazeWallHeight.set(_new.doubleValue()));
 			cbUseFloorTexture = addCheckBox("Maze floor texture", ui::toggleUseMazeFloorTexture);
 			cbAxesVisible = addCheckBox("Show axes", ui::toggleAxesVisible);
 			cbWireframeMode = addCheckBox("Wireframe mode", ui::toggleDrawMode);
