@@ -63,7 +63,6 @@ import javafx.scene.AmbientLight;
 import javafx.scene.Camera;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
-import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
@@ -96,12 +95,10 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	private LevelCounter3D levelCounter3D;
 	private LivesCounter3D livesCounter3D;
 
-	public PlayScene3D(Scene parent, GameController gameController, PacManModel3D model3D) {
+	public PlayScene3D(GameController gameController, PacManModel3D model3D) {
 		this.gameController = gameController;
 		this.model3D = model3D;
-		fxSubScene = new SubScene(new Group(), parent.getWidth(), parent.getHeight(), true, SceneAntialiasing.BALANCED);
-		fxSubScene.widthProperty().bind(parent.widthProperty());
-		fxSubScene.heightProperty().bind(parent.heightProperty());
+		fxSubScene = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
 		fxSubScene.setCamera(new PerspectiveCamera(true));
 		coordSystem = new CoordinateSystem(Math.max(fxSubScene.getWidth(), fxSubScene.getHeight()));
 		coordSystem.visibleProperty().bind(Env.$axesVisible);

@@ -36,7 +36,6 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.U;
-import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -64,7 +63,7 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
 
-	public AbstractGameScene2D(Scene parent, GameController gameController, V2i unscaledSize) {
+	public AbstractGameScene2D(GameController gameController, V2i unscaledSize) {
 		this.gameController = gameController;
 		this.canvas = new Canvas();
 		this.gc = canvas.getGraphicsContext2D();
@@ -72,8 +71,7 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 		this.aspectRatio = (double) unscaledSize.x / unscaledSize.y;
 		StackPane root = new StackPane(canvas);
 		root.setBackground(U.colorBackground(Color.BLACK));
-		fxSubScene = new SubScene(root, aspectRatio * parent.getHeight(), parent.getHeight());
-		parent.heightProperty().addListener(($height, _old, _new) -> resizeFXSubScene(_new.doubleValue()));
+		fxSubScene = new SubScene(root, unscaledSize.x, unscaledSize.y);
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
 	}

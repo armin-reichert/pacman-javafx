@@ -35,7 +35,6 @@ import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -54,8 +53,8 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 	private Player2D msPacMan2D;
 	private Ghost2D[] ghosts2D;
 
-	public MsPacMan_IntroScene(Scene parent, GameController gameController, V2i unscaledSize) {
-		super(parent, gameController, unscaledSize);
+	public MsPacMan_IntroScene(GameController gameController, V2i unscaledSize) {
+		super(gameController, unscaledSize);
 		sc = new IntroController(gameController);
 	}
 

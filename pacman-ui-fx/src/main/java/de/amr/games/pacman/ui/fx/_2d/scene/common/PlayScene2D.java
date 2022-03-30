@@ -50,7 +50,6 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Maze2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
-import javafx.scene.Scene;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -69,8 +68,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 	private Ghost2D[] ghosts2D = new Ghost2D[4];
 	private Bonus2D bonus2D;
 
-	public PlayScene2D(Scene parent, GameController gameController, V2i unscaledSize) {
-		super(parent, gameController, unscaledSize);
+	public PlayScene2D(GameController gameController, V2i unscaledSize) {
+		super(gameController, unscaledSize);
 	}
 
 	@Override
