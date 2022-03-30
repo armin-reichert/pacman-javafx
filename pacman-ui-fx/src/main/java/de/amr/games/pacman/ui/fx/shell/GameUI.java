@@ -81,6 +81,7 @@ public class GameUI extends DefaultGameEventHandler {
 		stage = primaryStage;
 		settingsPanel = new SettingsPanel(this);
 		infoPanel = new InfoPanel(this);
+		infoPanel.setMinWidth(400); // avoid flutter
 		var infoLayer = new BorderPane();
 		infoLayer.setLeft(infoPanel);
 		infoLayer.setRight(settingsPanel);
