@@ -100,7 +100,7 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	public void start(boolean fullscreen) {
-		updateGameScene();
+		selectGameScene();
 		stage.setFullScreen(fullscreen);
 		stage.centerOnScreen();
 		stage.show();
@@ -110,11 +110,15 @@ public class GameUI extends DefaultGameEventHandler {
 	@Override
 	public void onGameEvent(GameEvent event) {
 		super.onGameEvent(event);
-		updateGameScene();
+		selectGameScene();
 		currentGameScene.onGameEvent(event);
 	}
 
-	public void updateState() {
+	public void update() {
+		currentGameScene.update();
+	}
+
+	public void render() {
 		FlashMessageView.get().update();
 		if (infoPanel.isVisible()) {
 			infoPanel.update(this);
@@ -125,7 +129,7 @@ public class GameUI extends DefaultGameEventHandler {
 		stage.setTitle(gameController.gameVariant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
 	}
 
-	private void updateGameScene() {
+	private void selectGameScene() {
 		var nextGameScene = gameScenes.getScene(Env.$3D.get() ? GameScenes.SCENE_3D : GameScenes.SCENE_2D);
 		if (nextGameScene != currentGameScene) {
 			if (currentGameScene != null) {
@@ -296,7 +300,7 @@ public class GameUI extends DefaultGameEventHandler {
 		Env.$3D.set(!Env.$3D.get());
 		if (gameScenes.getScene(GameScenes.SCENE_2D) != gameScenes.getScene(GameScenes.SCENE_3D)) {
 			currentGameScene.getSounds().stopAll();
-			updateGameScene();
+			selectGameScene();
 			if (currentGameScene instanceof PlayScene2D) {
 				((PlayScene2D) currentGameScene).onSwitchBetween2DAnd3D();
 			}

@@ -100,7 +100,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		this.model3D = model3D;
 		fxSubScene = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
 		fxSubScene.setCamera(new PerspectiveCamera(true));
-		coordSystem = new CoordinateSystem(Math.max(fxSubScene.getWidth(), fxSubScene.getHeight()));
+		coordSystem = new CoordinateSystem(1000);
 		coordSystem.visibleProperty().bind(Env.$axesVisible);
 		log("Subscene created. Game scene='%s', width=%.0f, height=%.0f", getClass().getName(), fxSubScene.getWidth(),
 				fxSubScene.getHeight());
