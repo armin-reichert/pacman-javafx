@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
-import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.ui.fx.shell.FlashMessageView.showFlashMessage;
@@ -102,8 +101,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		fxSubScene.setCamera(new PerspectiveCamera(true));
 		coordSystem = new CoordinateSystem(1000);
 		coordSystem.visibleProperty().bind(Env.$axesVisible);
-		log("Subscene created. Game scene='%s', width=%.0f, height=%.0f", getClass().getName(), fxSubScene.getWidth(),
-				fxSubScene.getHeight());
 	}
 
 	@Override

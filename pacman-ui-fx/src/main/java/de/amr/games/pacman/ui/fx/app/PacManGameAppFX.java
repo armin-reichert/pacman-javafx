@@ -49,24 +49,33 @@ public class PacManGameAppFX extends Application {
 		launch(args);
 	}
 
+	private Options options;
+	private GameController gameController;
+	private GameUI ui;
+
 	@Override
-	public void start(Stage primaryStage) throws IOException {
-		log("Starting application");
-		var options = new Options(getParameters().getUnnamed());
+	public void init() throws Exception {
+		log("Initializing application");
+		options = new Options(getParameters().getUnnamed());
 		Env.$3D.set(options.use3DScenes);
 		Env.$perspective.set(options.perspective);
-		var gameController = new GameController(options.gameVariant);
-		gameController.setPlayerControl(new ManualPlayerControl(primaryStage));
-		double windowWidth = options.windowHeight * 28.0 / 36.0;
-		var ui = new GameUI(gameController, primaryStage, windowWidth, options.windowHeight);
-		ui.show(options.fullscreen);
+		gameController = new GameController(options.gameVariant);
 		GameLoop.get().update = () -> {
 			gameController.updateState();
 			ui.update();
 		};
-		GameLoop.get().render = ui::render;
+		GameLoop.get().render = () -> ui.render();
+		log("Application initialized. Game variant: %s", gameController.gameVariant);
+	}
+
+	@Override
+	public void start(Stage primaryStage) throws IOException {
+		log("Starting application");
+		gameController.setPlayerControl(new ManualPlayerControl(primaryStage));
+		ui = new GameUI(gameController, primaryStage, options.windowHeight * 0.77, options.windowHeight);
+		ui.show(options.fullscreen);
 		GameLoop.get().start();
-		log("Application started. Game variant: %s, window height: %.0f, 3D: %s, camera perspective: %s",
-				options.gameVariant, options.windowHeight, options.use3DScenes, options.perspective);
+		log("Application started. Stage size w=%.0f h=%.0f, 3D: %s, camera perspective: %s", ui.stage.getWidth(),
+				ui.stage.getHeight(), options.use3DScenes, options.perspective);
 	}
 }
