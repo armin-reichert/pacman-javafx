@@ -99,19 +99,11 @@ public class GameUI extends DefaultGameEventHandler {
 		return currentGameScene;
 	}
 
-	public void start(boolean fullscreen) {
+	public void show(boolean fullscreen) {
 		selectGameScene();
 		stage.setFullScreen(fullscreen);
 		stage.centerOnScreen();
 		stage.show();
-		GameLoop.get().start();
-	}
-
-	@Override
-	public void onGameEvent(GameEvent event) {
-		super.onGameEvent(event);
-		selectGameScene();
-		currentGameScene.onGameEvent(event);
 	}
 
 	public void update() {
@@ -127,6 +119,13 @@ public class GameUI extends DefaultGameEventHandler {
 			settingsPanel.update();
 		}
 		stage.setTitle(gameController.gameVariant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
+	}
+
+	@Override
+	public void onGameEvent(GameEvent event) {
+		super.onGameEvent(event);
+		selectGameScene();
+		currentGameScene.onGameEvent(event);
 	}
 
 	private void selectGameScene() {
