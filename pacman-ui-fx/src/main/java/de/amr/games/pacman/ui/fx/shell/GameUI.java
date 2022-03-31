@@ -60,18 +60,18 @@ import javafx.stage.WindowEvent;
  */
 public class GameUI extends DefaultGameEventHandler {
 
-	private static final double ASPECT_RATIO_2D = 28.0 / 36.0;
-
 	public final GameController gameController;
 	public final Stage stage;
+
 	private final StackPane sceneRoot;
 	private final InfoPanel infoPanel;
 	private final SettingsPanel settingsPanel;
 	private final GameScenes gameScenes;
 	private final Wallpapers wallpapers = new Wallpapers();
+
 	private GameScene currentGameScene;
 
-	public GameUI(GameController gameController, Stage primaryStage, double height) {
+	public GameUI(GameController gameController, Stage primaryStage, double width, double height) {
 		this.gameController = gameController;
 		gameController.addGameEventListener(this);
 
@@ -82,10 +82,9 @@ public class GameUI extends DefaultGameEventHandler {
 		infoLayer.setLeft(infoPanel);
 		infoLayer.setRight(settingsPanel);
 
-		// first child is placeholder for subscene representing the current game scene
+		// first child is placeholder for subscene assigned to current game scene
 		sceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
-		// assume first game scene is a 2D scene, so use aspect ratio initially
-		Scene mainScene = new Scene(sceneRoot, ASPECT_RATIO_2D * height, height);
+		var mainScene = new Scene(sceneRoot, width, height);
 		stage = primaryStage;
 		stage.setScene(mainScene);
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> GameLoop.get().stop());

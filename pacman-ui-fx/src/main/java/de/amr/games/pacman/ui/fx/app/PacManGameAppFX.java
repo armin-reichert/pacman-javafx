@@ -57,7 +57,8 @@ public class PacManGameAppFX extends Application {
 		Env.$perspective.set(options.perspective);
 		var gameController = new GameController(options.gameVariant);
 		gameController.setPlayerControl(new ManualPlayerControl(primaryStage));
-		var ui = new GameUI(gameController, primaryStage, options.windowHeight);
+		double windowWidth = options.windowHeight * 28.0 / 36.0;
+		var ui = new GameUI(gameController, primaryStage, windowWidth, options.windowHeight);
 		GameLoop.get().update = () -> {
 			gameController.updateState();
 			ui.getCurrentGameScene().update();
