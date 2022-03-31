@@ -75,7 +75,7 @@ public class PacManGameAppFX extends Application {
 		ui = new GameUI(gameController, primaryStage, options.windowHeight * 0.77, options.windowHeight);
 		ui.show(options.fullscreen);
 		GameLoop.get().start();
-		log("Application started. Stage size w=%.0f h=%.0f, 3D: %s, camera perspective: %s", ui.stage.getWidth(),
-				ui.stage.getHeight(), options.use3DScenes, options.perspective);
+		log("Application started. Stage size: w=%.0f h=%.0f, 3D: %s, camera perspective: %s", ui.stage.getWidth(),
+				ui.stage.getHeight(), Env.$3D.get(), Env.$perspective.get());
 	}
 }
