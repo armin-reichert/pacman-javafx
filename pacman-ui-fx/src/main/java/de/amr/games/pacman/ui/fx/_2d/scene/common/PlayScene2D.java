@@ -85,8 +85,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 		levelCounter2D.visible = !gameController.attractMode;
 		player2D = new Player2D(game.player, game, r2D);
 		player2D.animDying.onStart(game::hideGhosts);
-		for (int ghostID = 0; ghostID < 4; ++ghostID) {
-			ghosts2D[ghostID] = new Ghost2D(game.ghosts[ghostID], game, r2D);
+		for (Ghost ghost : game.ghosts) {
+			ghosts2D[ghost.id] = new Ghost2D(ghost, game, r2D);
 		}
 		boolean movingBonus = gameController.gameVariant == GameVariant.MS_PACMAN;
 		bonus2D = new Bonus2D(game.bonus, r2D, movingBonus);
@@ -104,7 +104,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	protected void doUpdate() {
-		// keep in sync with 3D scene in case user toggles between 2D and 3D
 		if (sounds.getClip(GameSounds.PACMAN_MUNCH).isPlaying() && game.player.starvingTicks > 10) {
 			sounds.stop(GameSounds.PACMAN_MUNCH);
 		}
@@ -310,6 +309,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 		}
 		bonus2D.render(gc);
 		player2D.render(gc);
-		Stream.of(ghosts2D).forEach(ghost -> ghost.render(gc));
+		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(gc));
 	}
 }
