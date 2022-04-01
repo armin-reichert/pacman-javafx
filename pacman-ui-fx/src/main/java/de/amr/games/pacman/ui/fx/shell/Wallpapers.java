@@ -47,7 +47,7 @@ public class Wallpapers {
 		return wallpapers[currentIndex];
 	}
 
-	public void change() {
+	public void next() {
 		int oldIndex = currentIndex;
 		do {
 			currentIndex = new Random().nextInt(wallpapers.length);

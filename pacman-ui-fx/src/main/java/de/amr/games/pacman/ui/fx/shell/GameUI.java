@@ -63,7 +63,7 @@ public class GameUI extends DefaultGameEventHandler {
 	public final GameController gameController;
 	public final Stage stage;
 
-	private final StackPane sceneRoot;
+	private final StackPane mainSceneRoot;
 	private final InfoPanel infoPanel;
 	private final SettingsPanel settingsPanel;
 	private final GameScenes gameScenes;
@@ -83,8 +83,8 @@ public class GameUI extends DefaultGameEventHandler {
 		infoLayer.setRight(settingsPanel);
 
 		// first child is placeholder for subscene assigned to current game scene
-		sceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
-		var mainScene = new Scene(sceneRoot, width, height);
+		mainSceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
+		var mainScene = new Scene(mainSceneRoot, width, height);
 		stage = primaryStage;
 		stage.setScene(mainScene);
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> GameLoop.get().stop());
@@ -92,7 +92,7 @@ public class GameUI extends DefaultGameEventHandler {
 		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
 
 		gameScenes = new GameScenes(mainScene, gameController, GianmarcosModel3D.get());
-		Env.$drawMode3D.addListener(($drawMode, oldDrawMode, newDrawMode) -> updateBackground(currentGameScene));
+		Env.$drawMode3D.addListener(($drawMode, oldDrawMode, newDrawMode) -> updateMainSceneBackground(currentGameScene));
 	}
 
 	public GameScene getCurrentGameScene() {
@@ -142,8 +142,8 @@ public class GameUI extends DefaultGameEventHandler {
 
 	private void displayGameScene(GameScene gameScene) {
 		gameScene.resizeFXSubScene(stage.getScene().getHeight());
-		sceneRoot.getChildren().set(0, gameScene.getFXSubScene());
-		updateBackground(gameScene);
+		mainSceneRoot.getChildren().set(0, gameScene.getFXSubScene());
+		updateMainSceneBackground(gameScene);
 		if (gameController.gameVariant == GameVariant.MS_PACMAN) {
 			gameScene.setContext(gameController.game, Rendering2D_MsPacMan.get(), Sounds_MsPacMan.get());
 		} else {
@@ -152,14 +152,14 @@ public class GameUI extends DefaultGameEventHandler {
 		log("Game scene is now '%s'", gameScene.getClass());
 	}
 
-	private void updateBackground(GameScene gameScene) {
+	private void updateMainSceneBackground(GameScene gameScene) {
 		if (gameScene.is3D()) {
-			wallpapers.change();
-			sceneRoot.setBackground(Env.$drawMode3D.get() == DrawMode.LINE //
+			wallpapers.next();
+			mainSceneRoot.setBackground(Env.$drawMode3D.get() == DrawMode.LINE //
 					? U.colorBackground(Color.BLACK)
 					: wallpapers.getCurrent());
 		} else {
-			sceneRoot.setBackground(U.colorBackground(Color.CORNFLOWERBLUE));
+			mainSceneRoot.setBackground(U.colorBackground(Color.CORNFLOWERBLUE));
 		}
 	}
 
