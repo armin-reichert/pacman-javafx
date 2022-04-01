@@ -40,11 +40,13 @@ import javafx.scene.paint.Color;
 public class Flap2D extends GameEntity2D {
 
 	private final Flap flap;
+	private final Rendering2D_MsPacMan r2D;
 	public final TimedSeq<Rectangle2D> animation;
 
 	public Flap2D(Flap flap, GameModel game, Rendering2D_MsPacMan r2D) {
-		super(game, r2D);
+		super(game);
 		this.flap = flap;
+		this.r2D = r2D;
 		animation = r2D.createFlapAnimation();
 	}
 

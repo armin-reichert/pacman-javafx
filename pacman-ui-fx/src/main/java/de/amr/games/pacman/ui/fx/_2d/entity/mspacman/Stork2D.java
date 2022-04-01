@@ -39,11 +39,13 @@ import javafx.scene.canvas.GraphicsContext;
 public class Stork2D extends GameEntity2D {
 
 	private final GameEntity stork;
+	private final Rendering2D_MsPacMan r2D;
 	public final TimedSeq<Rectangle2D> animation;
 
 	public Stork2D(GameEntity stork, GameModel game, Rendering2D_MsPacMan r2D) {
-		super(game, r2D);
+		super(game);
 		this.stork = stork;
+		this.r2D = r2D;
 		animation = r2D.createStorkFlyingAnimation();
 	}
 

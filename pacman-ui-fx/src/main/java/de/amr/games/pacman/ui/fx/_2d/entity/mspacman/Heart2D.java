@@ -39,10 +39,12 @@ public class Heart2D extends GameEntity2D {
 
 	private final GameEntity heart;
 	private final Rectangle2D heartSprite;
+	private final Rendering2D_MsPacMan r2D;
 
 	public Heart2D(GameEntity heart, GameModel game, Rendering2D_MsPacMan r2D) {
-		super(game, r2D);
+		super(game);
 		this.heart = heart;
+		this.r2D = r2D;
 		heartSprite = r2D.getHeart();
 	}
 

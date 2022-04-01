@@ -39,11 +39,13 @@ public class Nail2D extends GameEntity2D {
 
 	private final GameEntity nail;
 	private final Rectangle2D nailSprite;
+	private final Rendering2D_PacMan r2D;
 
 	public Nail2D(GameEntity nail, GameModel game, Rendering2D_PacMan r2D) {
-		super(game, r2D);
+		super(game);
 		this.nail = nail;
 		nailSprite = r2D.getNail();
+		this.r2D = r2D;
 	}
 
 	@Override

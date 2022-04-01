@@ -42,9 +42,11 @@ public class GameScore2D extends GameEntity2D {
 	public String title = "SCORE";
 	public Color titleColor = Color.WHITE;
 	public Color pointsColor = Color.YELLOW;
+	private final Rendering2D r2D;
 
 	public GameScore2D(GameModel game, Rendering2D r2D) {
-		super(game, r2D);
+		super(game);
+		this.r2D = r2D;
 	}
 
 	@Override

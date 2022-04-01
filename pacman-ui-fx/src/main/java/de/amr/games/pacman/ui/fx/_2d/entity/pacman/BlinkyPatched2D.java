@@ -39,11 +39,13 @@ import javafx.scene.canvas.GraphicsContext;
 public class BlinkyPatched2D extends GameEntity2D {
 
 	private final Ghost blinky;
+	private final Rendering2D_PacMan r2D;
 	public final TimedSeq<Rectangle2D> animation;
 
 	public BlinkyPatched2D(Ghost blinky, GameModel game, Rendering2D_PacMan r2D) {
-		super(game, r2D);
+		super(game);
 		this.blinky = blinky;
+		this.r2D = r2D;
 		animation = r2D.createBlinkyPatchedAnimation();
 	}
 

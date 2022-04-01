@@ -38,9 +38,11 @@ import javafx.scene.canvas.GraphicsContext;
 public class LevelCounter2D extends GameEntity2D {
 
 	public V2i rightPosition = V2i.NULL;
+	private final Rendering2D r2D;
 
 	public LevelCounter2D(GameModel game, Rendering2D r2d) {
-		super(game, r2d);
+		super(game);
+		this.r2D = r2d;
 	}
 
 	@Override

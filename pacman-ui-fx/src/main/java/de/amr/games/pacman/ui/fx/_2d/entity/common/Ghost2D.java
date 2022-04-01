@@ -47,14 +47,16 @@ import javafx.scene.canvas.GraphicsContext;
 public class Ghost2D extends GameEntity2D {
 
 	public final Ghost ghost;
+	private final Rendering2D r2D;
 	public final Map<Direction, TimedSeq<Rectangle2D>> animKicking;
 	public final Map<Direction, TimedSeq<Rectangle2D>> animReturningHome;
 	public final TimedSeq<Rectangle2D> animFlashing;
 	public final TimedSeq<Rectangle2D> animFrightened;
 
 	public Ghost2D(Ghost ghost, GameModel game, Rendering2D r2D) {
-		super(game, r2D);
+		super(game);
 		this.ghost = ghost;
+		this.r2D = r2D;
 		animKicking = r2D.createGhostKickingAnimations(ghost.id);
 		animReturningHome = r2D.createGhostReturningHomeAnimations();
 		animFrightened = r2D.createGhostFrightenedAnimation();

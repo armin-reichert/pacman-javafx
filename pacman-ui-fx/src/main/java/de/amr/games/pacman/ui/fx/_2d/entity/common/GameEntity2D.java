@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -36,14 +35,12 @@ import javafx.scene.paint.Color;
 public abstract class GameEntity2D {
 
 	public final GameModel game;
-	public final Rendering2D r2D;
 	public int x;
 	public int y;
 	public boolean visible;
 
-	public GameEntity2D(GameModel game, Rendering2D r2d) {
+	public GameEntity2D(GameModel game) {
 		this.game = game;
-		this.r2D = r2d;
 		visible = true;
 	}
 

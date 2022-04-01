@@ -45,14 +45,16 @@ import javafx.util.Duration;
  */
 public class Maze2D extends GameEntity2D {
 
+	private final Rendering2D r2D;
 	private final TimedSeq<Boolean> energizerAnimation;
 	private final Timeline flashingAnimation;
 	private boolean brightPhase;
 
 	public Maze2D(int x, int y, GameModel game, Rendering2D r2D) {
-		super(game, r2D);
+		super(game);
 		this.x = x;
 		this.y = y;
+		this.r2D = r2D;
 		energizerAnimation = TimedSeq.pulse().frameDuration(10);
 		flashingAnimation = new Timeline(new KeyFrame(Duration.millis(150), e -> brightPhase = !brightPhase));
 		flashingAnimation.setCycleCount(2 * game.numFlashes);
