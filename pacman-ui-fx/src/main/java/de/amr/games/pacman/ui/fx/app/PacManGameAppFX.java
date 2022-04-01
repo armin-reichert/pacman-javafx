@@ -28,8 +28,9 @@ import static de.amr.games.pacman.lib.Logging.log;
 import java.io.IOException;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.PlayerControl;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
-import de.amr.games.pacman.ui.fx.shell.ManualPlayerControl;
+import de.amr.games.pacman.ui.fx.shell.KeyboardPlayerControl;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -55,7 +56,7 @@ public class PacManGameAppFX extends Application {
 
 	@Override
 	public void init() throws Exception {
-		log("Initializing application");
+		log("Initializing application...");
 		options = new Options(getParameters().getUnnamed());
 		Env.$3D.set(options.use3DScenes);
 		Env.$perspective.set(options.perspective);
@@ -70,9 +71,10 @@ public class PacManGameAppFX extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws IOException {
-		log("Starting application");
-		gameController.setPlayerControl(new ManualPlayerControl(primaryStage));
-		ui = new GameUI(gameController, primaryStage, options.windowHeight * 0.77, options.windowHeight);
+		log("Starting application...");
+		PlayerControl keyboardControl = new KeyboardPlayerControl(primaryStage);
+		gameController.setPlayerControl(keyboardControl);
+		ui = new GameUI(gameController, primaryStage, options.windowHeight * 0.77 /* 28/36 */, options.windowHeight);
 		ui.show(options.fullscreen);
 		GameLoop.get().start();
 		log("Application started. Stage size: w=%.0f h=%.0f, 3D: %s, camera perspective: %s", ui.stage.getWidth(),

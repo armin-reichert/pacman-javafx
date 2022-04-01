@@ -35,16 +35,16 @@ import javafx.stage.Window;
  * 
  * @author Armin Reichert
  */
-public class ManualPlayerControl implements PlayerControl {
+public class KeyboardPlayerControl implements PlayerControl {
 
 	private final KeyCode upCode, downCode, leftCode, rightCode;
 	private boolean up, down, left, right;
 
-	public ManualPlayerControl(Window window) {
+	public KeyboardPlayerControl(Window window) {
 		this(window, KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 	}
 
-	public ManualPlayerControl(Window window, KeyCode upCode, KeyCode downCode, KeyCode leftCode, KeyCode rightCode) {
+	public KeyboardPlayerControl(Window window, KeyCode upCode, KeyCode downCode, KeyCode leftCode, KeyCode rightCode) {
 		this.upCode = upCode;
 		this.downCode = downCode;
 		this.leftCode = leftCode;
