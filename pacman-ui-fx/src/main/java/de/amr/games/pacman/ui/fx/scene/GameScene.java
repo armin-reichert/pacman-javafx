@@ -54,9 +54,9 @@ public interface GameScene extends GameEventListener {
 	/**
 	 * Sets the context for the current scene.
 	 * 
-	 * @param game   the current game model
-	 * @param r2D    the 2D rendering for the current game version (Pac-Man, Ms. Pac-Man)
-	 * @param sounds the sonds for the current game version
+	 * @param game   the game model
+	 * @param r2D    the 2D rendering
+	 * @param sounds the sounds
 	 */
 	void setContext(GameModel game, Rendering2D r2D, SoundManager sounds);
 
