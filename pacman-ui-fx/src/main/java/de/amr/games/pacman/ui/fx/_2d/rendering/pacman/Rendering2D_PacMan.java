@@ -123,7 +123,7 @@ public class Rendering2D_PacMan extends Rendering2D {
 	}
 
 	@Override
-	public void renderMazeFlashing(GraphicsContext g, int mazeNumber, double x, double y) {
+	public void renderMazeBright(GraphicsContext g, int mazeNumber, double x, double y) {
 		g.drawImage(mazeFlashingImage, x, y);
 	}
 

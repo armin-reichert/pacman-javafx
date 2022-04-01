@@ -47,20 +47,14 @@ public class Maze2D extends GameEntity2D {
 
 	private final TimedSeq<Boolean> energizerAnimation;
 	private final Timeline flashingAnimation;
-	private boolean flashing;
+	private boolean brightPhase;
 
-	/**
-	 * @param x    x position (in pixels)
-	 * @param y    y position (in pixels)
-	 * @param game the game model
-	 * @param r2D  the 2D rendering
-	 */
 	public Maze2D(int x, int y, GameModel game, Rendering2D r2D) {
 		super(game, r2D);
 		this.x = x;
 		this.y = y;
 		energizerAnimation = TimedSeq.pulse().frameDuration(10);
-		flashingAnimation = new Timeline(new KeyFrame(Duration.millis(150), e -> flashing = !flashing));
+		flashingAnimation = new Timeline(new KeyFrame(Duration.millis(150), e -> brightPhase = !brightPhase));
 		flashingAnimation.setCycleCount(2 * game.numFlashes);
 	}
 
@@ -78,20 +72,20 @@ public class Maze2D extends GameEntity2D {
 
 	@Override
 	public void render(GraphicsContext g) {
-		if (flashingAnimation.getStatus() == Status.RUNNING) {
-			if (flashing) {
-				r2D.renderMazeFlashing(g, game.mazeNumber, x, y);
+		if (isFlashing()) {
+			if (brightPhase) {
+				r2D.renderMazeBright(g, game.mazeNumber, x, y);
 			} else {
 				r2D.renderMazeEmpty(g, game.mazeNumber, x, y);
 			}
 		} else {
 			r2D.renderMazeFull(g, game.mazeNumber, x, y);
-			Color dark = Color.BLACK;
+			Color hiddenColor = Color.BLACK;
 			if (!energizerAnimation.animate()) { // dark phase
-				g.setFill(dark);
-				game.world.energizerTiles().forEach(tile -> fillTile(g, tile, dark));
+				g.setFill(hiddenColor);
+				game.world.energizerTiles().forEach(tile -> fillTile(g, tile, hiddenColor));
 			}
-			game.world.tiles().filter(game.world::isFoodEaten).forEach(tile -> fillTile(g, tile, dark));
+			game.world.tiles().filter(game.world::isFoodEaten).forEach(tile -> fillTile(g, tile, hiddenColor));
 			if (Env.$tilesVisible.get()) {
 				drawTileBorders(g);
 			}
@@ -114,7 +108,7 @@ public class Maze2D extends GameEntity2D {
 		}
 	}
 
-	// WTF
+	// WTF: why are lines blurred without this?
 	private void line(GraphicsContext g, double x1, double y1, double x2, double y2) {
 		double offset = 0.5;
 		g.strokeLine(x1 + offset, y1 + offset, x2 + offset, y2 + offset);

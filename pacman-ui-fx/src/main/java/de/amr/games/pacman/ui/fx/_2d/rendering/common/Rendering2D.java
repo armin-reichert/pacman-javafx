@@ -164,7 +164,7 @@ public abstract class Rendering2D {
 
 	public abstract void renderMazeEmpty(GraphicsContext g, int mazeNumber, double x, double y);
 
-	public abstract void renderMazeFlashing(GraphicsContext g, int mazeNumber, double x, double y);
+	public abstract void renderMazeBright(GraphicsContext g, int mazeNumber, double x, double y);
 
 	// Animations
 
