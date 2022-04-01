@@ -42,33 +42,37 @@ import javafx.scene.canvas.GraphicsContext;
 public class Player2D extends GameEntity2D {
 
 	public final Pac player;
-	public Map<Direction, TimedSeq<Rectangle2D>> munchings;
-	public TimedSeq<Rectangle2D> dying;
+	public Map<Direction, TimedSeq<Rectangle2D>> animMunching;
+	public final TimedSeq<Rectangle2D> animDying;
 
 	public Player2D(Pac player, GameModel game, Rendering2D r2D) {
 		super(game, r2D);
 		this.player = player;
+		animMunching = r2D.createPlayerMunchingAnimations();
+		animDying = r2D.createPlayerDyingAnimation();
 		reset();
 	}
 
 	public void reset() {
-		munchings = r2D.createPlayerMunchingAnimations();
-		dying = r2D.createPlayerDyingAnimation();
+		for (Direction dir : Direction.values()) {
+			animMunching.get(dir).reset();
+		}
+		animDying.reset();
 	}
 
 	@Override
 	public void render(GraphicsContext g) {
 		Rectangle2D sprite = null;
 		if (player.killed) {
-			if (dying.hasStarted()) {
-				dying.animate();
+			sprite = animDying.frame();
+			if (animDying.hasStarted()) {
+				animDying.animate();
 			}
-			sprite = dying.frame();
 		} else {
+			sprite = animMunching.get(player.moveDir()).frame();
 			if (!player.velocity.equals(V2d.NULL) && !player.stuck) {
-				munchings.get(player.moveDir()).animate();
+				animMunching.get(player.moveDir()).animate();
 			}
-			sprite = munchings.get(player.moveDir()).frame();
 		}
 		r2D.renderEntity(g, player, sprite);
 	}

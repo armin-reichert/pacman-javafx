@@ -84,7 +84,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
 		levelCounter2D.visible = !gameController.attractMode;
 		player2D = new Player2D(game.player, game, r2D);
-		player2D.dying.onStart(game::hideGhosts);
+		player2D.animDying.onStart(game::hideGhosts);
 		for (int ghostID = 0; ghostID < 4; ++ghostID) {
 			ghosts2D[ghostID] = new Ghost2D(game.ghosts[ghostID], game, r2D);
 		}
@@ -116,8 +116,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 	}
 
 	public void onSwitchBetween2DAnd3D() {
-		if (!player2D.munchings.get(game.player.moveDir()).isRunning()) {
-			player2D.munchings.values().forEach(TimedSeq::restart);
+		if (!player2D.animMunching.get(game.player.moveDir()).isRunning()) {
+			player2D.animMunching.values().forEach(TimedSeq::restart);
 		}
 		for (Ghost2D ghost2D : ghosts2D) {
 			for (Direction dir : Direction.values()) {
@@ -219,7 +219,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		case HUNTING -> {
 			maze2D.getEnergizerAnimation().restart();
-			player2D.munchings.values().forEach(TimedSeq::restart);
+			player2D.animMunching.values().forEach(TimedSeq::restart);
 			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animKicking.values().forEach(TimedSeq::restart));
 		}
 
@@ -233,7 +233,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 					afterSeconds(1, () -> game.ghosts().forEach(Ghost::hide)), //
 					afterSeconds(1, () -> {
 						sounds.play(GameSounds.PACMAN_DEATH);
-						player2D.dying.restart();
+						player2D.animDying.restart();
 					}), //
 					afterSeconds(2, () -> game.player.hide()), //
 					afterSeconds(1, () -> gameController.stateTimer().expire()) //
