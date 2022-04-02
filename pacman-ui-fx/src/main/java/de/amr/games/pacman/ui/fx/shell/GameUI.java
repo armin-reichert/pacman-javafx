@@ -207,7 +207,7 @@ public class GameUI extends DefaultGameEventHandler {
 
 	private void changePerspective(int delta) {
 		if (currentGameScene.is3D()) {
-			Env.selectPerspective(delta);
+			Env.$perspective.set(Env.perspectiveShifted(delta));
 			String perspectiveName = Env.message(Env.$perspective.get().name());
 			showFlashMessage(1, Env.message("camera_perspective", perspectiveName));
 		}

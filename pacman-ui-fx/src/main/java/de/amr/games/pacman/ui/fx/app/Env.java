@@ -69,28 +69,18 @@ public class Env {
 	public static final IntegerProperty $mazeResolution = new SimpleIntegerProperty(8);
 	public static final DoubleProperty $mazeWallHeight = new SimpleDoubleProperty(2.0);
 	public static final BooleanProperty $paused = new SimpleBooleanProperty(false);
+	public static final ObjectProperty<Perspective> $perspective = new SimpleObjectProperty<Perspective>(
+			Perspective.CAM_NEAR_PLAYER);
 	public static final BooleanProperty $tilesVisible = new SimpleBooleanProperty(false);
 	public static final BooleanProperty $useMazeFloorTexture = new SimpleBooleanProperty(false);
 	public static final BooleanProperty $3D = new SimpleBooleanProperty(true);
 
-	public static final ObjectProperty<Perspective> $perspective = new SimpleObjectProperty<Perspective>(
-			Perspective.CAM_NEAR_PLAYER);
-
-	public static void selectPerspective(int delta) {
+	public static Perspective perspectiveShifted(int delta) {
 		int n = Perspective.values().length;
 		while (delta < 0) {
 			delta += n;
 		}
-		int next = ($perspective.get().ordinal() + delta) % n;
-		$perspective.set(Perspective.values()[next]);
-	}
-
-	public static String perspectiveName(int delta) {
-		int n = Perspective.values().length;
-		while (delta < 0) {
-			delta += n;
-		}
-		int next = ($perspective.get().ordinal() + delta) % n;
-		return Perspective.values()[next].name();
+		int index = ($perspective.get().ordinal() + delta) % n;
+		return Perspective.values()[index];
 	}
 }

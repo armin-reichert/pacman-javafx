@@ -31,7 +31,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
-import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
@@ -168,8 +167,8 @@ public class InfoPanel extends GridPane {
 		info("Alt+V", "Switch Pac-Man/Ms. Pac-Man").when(() -> gameState() == GameState.INTRO);
 		info("Alt+X", "Kill all hunting ghosts").when(() -> ui.gameController.gameRunning);
 		info("Alt+Z", "Play Intermission Scenes").when(() -> gameState() == GameState.INTRO);
-		info("Alt+LEFT", () -> Env.perspectiveName(Perspective.values().length - 1)).when(() -> gameScene().is3D());
-		info("Alt+RIGHT", () -> Env.perspectiveName(1)).when(() -> gameScene().is3D());
+		info("Alt+LEFT", () -> Env.perspectiveShifted(-1).name()).when(() -> gameScene().is3D());
+		info("Alt+RIGHT", () -> Env.perspectiveShifted(1).name()).when(() -> gameScene().is3D());
 		info("Alt+3", "3D Playscene On/Off");
 	}
 
