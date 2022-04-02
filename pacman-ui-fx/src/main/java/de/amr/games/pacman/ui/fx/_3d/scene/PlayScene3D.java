@@ -165,8 +165,8 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 		fxSubScene.setRoot(new Group(new AmbientLight(Color.GHOSTWHITE), world3D, coordSystem));
 
-		onPerspectiveChange(null);
-		onUseMazeFloorTextureChange(null);
+		onPerspectiveChange(null, null, Env.$perspective.get());
+		onUseMazeFloorTextureChange(null, null, Env.$useMazeFloorTexture.getValue());
 
 		sounds.setMuted(gameController.attractMode);
 
@@ -222,9 +222,13 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		}
 	}
 
-	private void onPerspectiveChange(Observable unused) {
+	private void onPerspectiveChange(Observable $perspective, Perspective oldPerspective, Perspective newPerspective) {
+		setPerspective(newPerspective);
+	}
+
+	public void setPerspective(Perspective perspective) {
 		Camera cam = fxSubScene.getCamera();
-		camController = switch (Env.$perspective.get()) {
+		camController = switch (perspective) {
 		case CAM_DRONE -> new Cam_Drone(cam, player3D);
 		case CAM_FOLLOWING_PLAYER -> new Cam_FollowingPlayer(cam, player3D);
 		case CAM_NEAR_PLAYER -> new Cam_NearPlayer(cam, player3D);
@@ -240,8 +244,8 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		}
 	}
 
-	private void onUseMazeFloorTextureChange(Observable unused) {
-		if (Env.$useMazeFloorTexture.get()) {
+	private void onUseMazeFloorTextureChange(Observable $useMazeFloorTexture, Boolean oldValue, Boolean newValue) {
+		if (newValue) {
 			maze3D.setFloorTexture(floorTexture);
 			maze3D.setFloorColor(floorColorWithTexture);
 		} else {
