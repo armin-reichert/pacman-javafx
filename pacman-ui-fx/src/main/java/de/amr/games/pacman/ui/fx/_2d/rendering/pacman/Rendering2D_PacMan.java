@@ -31,6 +31,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx.util.U;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -66,8 +67,8 @@ public class Rendering2D_PacMan extends Rendering2D {
 	private Rendering2D_PacMan() {
 		super("/pacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
-		mazeFullImage = new Image(getClass().getResourceAsStream(("/pacman/graphics/maze_full.png")));
-		mazeEmptyImage = new Image(getClass().getResourceAsStream(("/pacman/graphics/maze_empty.png")));
+		mazeFullImage = U.image("/pacman/graphics/maze_full.png");
+		mazeEmptyImage = U.image("/pacman/graphics/maze_empty.png");
 		mazeFlashingImage = colorsExchanged(mazeEmptyImage, Collections.singletonMap(getMazeSideColor(1), Color.WHITE));
 
 		//@formatter:off
@@ -166,8 +167,8 @@ public class Rendering2D_PacMan extends Rendering2D {
 
 	@Override
 	public TimedSeq<Rectangle2D> createPlayerDyingAnimation() {
-		return TimedSeq.of(ss.r(3, 0), ss.r(4, 0), ss.r(5, 0), ss.r(6, 0), ss.r(7, 0), ss.r(8, 0), ss.r(9, 0),
-				ss.r(10, 0), ss.r(11, 0), ss.r(12, 0), ss.r(13, 0)).frameDuration(8);
+		return TimedSeq.of(ss.r(3, 0), ss.r(4, 0), ss.r(5, 0), ss.r(6, 0), ss.r(7, 0), ss.r(8, 0), ss.r(9, 0), ss.r(10, 0),
+				ss.r(11, 0), ss.r(12, 0), ss.r(13, 0)).frameDuration(8);
 	}
 
 	@Override
@@ -175,8 +176,7 @@ public class Rendering2D_PacMan extends Rendering2D {
 		EnumMap<Direction, TimedSeq<Rectangle2D>> animations = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
-			var animation = TimedSeq.of(ss.r(2 * d, 4 + ghostID), ss.r(2 * d + 1, 4 + ghostID)).frameDuration(8)
-					.endless();
+			var animation = TimedSeq.of(ss.r(2 * d, 4 + ghostID), ss.r(2 * d + 1, 4 + ghostID)).frameDuration(8).endless();
 			animations.put(dir, animation);
 		}
 		return animations;

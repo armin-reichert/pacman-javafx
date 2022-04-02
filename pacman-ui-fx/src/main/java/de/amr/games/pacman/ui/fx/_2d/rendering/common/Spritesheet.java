@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.ui.fx.util.U;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
@@ -41,7 +42,7 @@ public class Spritesheet {
 	private final int[] dirIndex = new int[4];
 
 	public Spritesheet(String imagePath, int rasterSize, Direction... dirs) {
-		this.image = new Image(getClass().getResource(imagePath).toString());
+		this.image = U.image(imagePath);
 		this.rasterSize = rasterSize;
 		for (int i = 0; i < dirs.length; ++i) {
 			dirIndex[dirs[i].ordinal()] = i;

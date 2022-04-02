@@ -54,6 +54,7 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.CoordinateSystem;
+import de.amr.games.pacman.ui.fx.util.U;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.beans.Observable;
@@ -79,7 +80,9 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	private final GameController gameController;
 	private final SubScene fxSubScene;
 	private final PacManModel3D model3D;
-	private final Image floorImage = new Image(getClass().getResource("/common/escher-texture.jpg").toString());
+	private final Image floorTexture = U.image("/common/escher-texture.jpg");
+	private final Color floorColorWithTexture = Color.DARKBLUE;
+	private final Color floorColorNoTexture = Color.rgb(30, 30, 30);
 	private final CoordinateSystem coordSystem;
 
 	private GameModel game;
@@ -239,9 +242,11 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 	private void onUseMazeFloorTextureChange(Observable unused) {
 		if (Env.$useMazeFloorTexture.get()) {
-			maze3D.setTexturedFloor(floorImage, Color.DARKBLUE);
+			maze3D.setFloorTexture(floorTexture);
+			maze3D.setFloorColor(floorColorWithTexture);
 		} else {
-			maze3D.setColoredFloor(Color.rgb(30, 30, 30));
+			maze3D.setFloorTexture(null);
+			maze3D.setFloorColor(floorColorNoTexture);
 		}
 	}
 
