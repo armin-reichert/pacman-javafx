@@ -42,7 +42,6 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Group;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -63,8 +62,7 @@ public class Maze3D extends Group {
 	private final Group doorsGroup = new Group();
 	private final Group pelletsGroup = new Group();
 
-	private final PhongMaterial floorMaterial = new PhongMaterial();
-	private Image floorTexture;
+	private final MazeFloor3D floor;
 
 	/**
 	 * Creates the 3D-maze base structure (without walls, doors, food).
@@ -73,26 +71,11 @@ public class Maze3D extends Group {
 	 * @param mazeHeight maze height in units
 	 */
 	public Maze3D(double mazeWidth, double mazeHeight) {
-		Box floor = new Box(mazeWidth - 1, mazeHeight - 1, 0.01);
-		floor.setMaterial(floorMaterial);
-		floor.getTransforms().add(new Translate(0.5 * floor.getWidth(), 0.5 * floor.getHeight(), 0.5 * floor.getDepth()));
-		floor.drawModeProperty().bind(Env.$drawMode3D);
+		floor = new MazeFloor3D(mazeWidth - 1, mazeHeight - 1, 0.01);
+		floor.setColor(Color.BLUE);
+		floor.getTransforms()
+				.add(new Translate(0.5 * floor.getWidth(), 0.5 * floor.getHeight(), 0.5 * floor.getDepth()));
 		getChildren().addAll(floor, wallsGroup, doorsGroup, pelletsGroup);
-		setFloorColor(Color.BLUE);
-	}
-
-	public void setFloorColor(Color color) {
-		floorMaterial.setDiffuseColor(color);
-		floorMaterial.setSpecularColor(color.brighter());
-	}
-
-	public void setFloorTexture(Image floorTexture) {
-		this.floorTexture = floorTexture;
-		floorMaterial.setDiffuseMap(floorTexture);
-	}
-
-	public Image getFloorTexture() {
-		return floorTexture;
 	}
 
 	public void reset() {
@@ -105,6 +88,10 @@ public class Maze3D extends Group {
 
 	public void update(GameModel game) {
 		doors().forEach(door -> door.update(game));
+	}
+
+	public MazeFloor3D getFloor() {
+		return floor;
 	}
 
 	public Stream<Door3D> doors() {
