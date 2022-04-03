@@ -79,19 +79,27 @@ public class PlayScene2D extends AbstractGameScene2D {
 		maze2D = new Maze2D(game, r2D);
 		maze2D.x = 0;
 		maze2D.y = t(3);
+
 		score2D.showPoints = !gameController.attractMode;
-		livesCounter2D = new LivesCounter2D(t(2), t(34), game, r2D);
+
+		livesCounter2D = new LivesCounter2D(game, r2D);
+		livesCounter2D.x = t(2);
+		livesCounter2D.y = t(34);
 		livesCounter2D.visible = !gameController.attractMode;
+
 		levelCounter2D = new LevelCounter2D(game, r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
 		levelCounter2D.visible = !gameController.attractMode;
+
 		player2D = new Player2D(game.player, game, r2D);
 		player2D.animDying.onStart(game::hideGhosts);
+
 		for (Ghost ghost : game.ghosts) {
 			ghosts2D[ghost.id] = new Ghost2D(ghost, game, r2D);
 		}
-		boolean movingBonus = gameController.gameVariant == GameVariant.MS_PACMAN;
-		bonus2D = new Bonus2D(game.bonus, r2D, movingBonus);
+
+		boolean bonusMoving = gameController.gameVariant == GameVariant.MS_PACMAN;
+		bonus2D = new Bonus2D(game.bonus, r2D, bonusMoving);
 
 		game.player.powerTimer.addEventListener(this::handleGhostsFlashing);
 		sounds.setMuted(gameController.attractMode);
@@ -102,6 +110,16 @@ public class PlayScene2D extends AbstractGameScene2D {
 		game.player.powerTimer.removeEventListener(this::handleGhostsFlashing);
 		sounds.setMuted(false);
 		log("Scene '%s' ended", getClass().getName());
+	}
+
+	private void handleGhostsFlashing(TickTimerEvent e) {
+		// TODO this is somewhat dubious
+		if (e.type == TickTimerEvent.Type.HALF_EXPIRED) {
+			game.ghosts(GhostState.FRIGHTENED).map(ghost -> ghosts2D[ghost.id]).forEach(ghost2D -> {
+				long frameTicks = e.ticks / (game.numFlashes * ghost2D.animFlashing.numFrames());
+				ghost2D.animFlashing.frameDuration(frameTicks).repetitions(game.numFlashes).restart();
+			});
+		}
 	}
 
 	@Override
@@ -279,16 +297,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 		// exit GHOST_DYING
 		if (e.oldGameState == GameState.GHOST_DYING) {
 			game.player.show();
-		}
-	}
-
-	// TODO there should be a simpler way than this
-	public void handleGhostsFlashing(TickTimerEvent e) {
-		if (e.type == TickTimerEvent.Type.HALF_EXPIRED) {
-			game.ghosts(GhostState.FRIGHTENED).map(ghost -> ghosts2D[ghost.id]).forEach(ghost2D -> {
-				long frameTicks = e.ticks / (game.numFlashes * ghost2D.animFlashing.numFrames());
-				ghost2D.animFlashing.frameDuration(frameTicks).repetitions(game.numFlashes).restart();
-			});
 		}
 	}
 

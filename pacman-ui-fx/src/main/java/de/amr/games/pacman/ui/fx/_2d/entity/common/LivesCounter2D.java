@@ -42,10 +42,8 @@ public class LivesCounter2D extends GameEntity2D {
 	private final int maxLivesDisplayed = 5;
 	private final Rendering2D r2D;
 
-	public LivesCounter2D(int x, int y, GameModel game, Rendering2D r2D) {
+	public LivesCounter2D(GameModel game, Rendering2D r2D) {
 		super(game);
-		this.x = x;
-		this.y = y;
 		this.r2D = r2D;
 	}
 

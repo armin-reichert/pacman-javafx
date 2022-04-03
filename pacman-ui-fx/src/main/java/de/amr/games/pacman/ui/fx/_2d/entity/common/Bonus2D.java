@@ -46,10 +46,10 @@ public class Bonus2D {
 	private final Rendering2D r2D;
 	private final TimedSeq<Integer> animation;
 
-	public Bonus2D(Bonus bonus, Rendering2D r2D, boolean movingBonus) {
+	public Bonus2D(Bonus bonus, Rendering2D r2D, boolean moving) {
 		this.bonus = Objects.requireNonNull(bonus);
 		this.r2D = Objects.requireNonNull(r2D);
-		animation = movingBonus ? TimedSeq.of(2, 0, -2).frameDuration(8).endless() : null;
+		animation = moving ? TimedSeq.of(2, 0, -2).frameDuration(8).endless() : null;
 	}
 
 	public void startAnimation() {
