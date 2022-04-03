@@ -27,7 +27,6 @@ import de.amr.games.pacman.model.common.GameEntity;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameEntity2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -38,18 +37,16 @@ import javafx.scene.canvas.GraphicsContext;
 public class Heart2D extends GameEntity2D {
 
 	private final GameEntity heart;
-	private final Rectangle2D heartSprite;
 	private final Rendering2D_MsPacMan r2D;
 
 	public Heart2D(GameEntity heart, GameModel game, Rendering2D_MsPacMan r2D) {
 		super(game);
 		this.heart = heart;
 		this.r2D = r2D;
-		heartSprite = r2D.getHeart();
 	}
 
 	@Override
 	public void render(GraphicsContext gc) {
-		r2D.renderEntity(gc, heart, heartSprite);
+		r2D.renderEntity(gc, heart, r2D.getHeart());
 	}
 }
