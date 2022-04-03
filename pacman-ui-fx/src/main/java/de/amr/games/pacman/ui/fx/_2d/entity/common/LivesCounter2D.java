@@ -30,6 +30,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.FontWeight;
 
 /**
@@ -39,7 +40,7 @@ import javafx.scene.text.FontWeight;
  */
 public class LivesCounter2D extends GameEntity2D {
 
-	private final int maxLivesDisplayed = 5;
+	public int maxLives = 5;
 	private final Rendering2D r2D;
 
 	public LivesCounter2D(GameModel game, Rendering2D r2D) {
@@ -53,13 +54,15 @@ public class LivesCounter2D extends GameEntity2D {
 			return;
 		}
 		var sprite = r2D.getLifeSprite();
-		for (int i = 0; i < Math.min(game.player.lives, maxLivesDisplayed); ++i) {
+		for (int i = 0; i < Math.min(game.player.lives, maxLives); ++i) {
 			r2D.renderSprite(g, sprite, x + t(2 * i), y);
 		}
-		if (game.player.lives > maxLivesDisplayed) {
+		// show text if more lives are available than displayed
+		if (game.player.lives > maxLives) {
 			g.setFill(Color.YELLOW);
-			g.setFont(Font.font("Sans Serif", FontWeight.BOLD, 6));
-			g.fillText("+" + (game.player.lives - maxLivesDisplayed), x + t(10), y + t(1) - 2);
+			g.setFont(Font.font("Serif", FontWeight.BOLD, 8));
+			g.setFontSmoothingType(FontSmoothingType.LCD);
+			g.fillText("+" + (game.player.lives - maxLives), x + t(10), y + t(1));
 		}
 	}
 }
