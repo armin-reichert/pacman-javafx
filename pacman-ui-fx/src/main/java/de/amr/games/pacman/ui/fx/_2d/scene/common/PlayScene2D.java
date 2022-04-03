@@ -261,6 +261,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		}
 
 		case LEVEL_STARTING -> {
+			maze2D.getFlashingAnimation().setCycleCount(2 * game.numFlashes);
 			gameController.stateTimer().setSeconds(1).start();
 		}
 
