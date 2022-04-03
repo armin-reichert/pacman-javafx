@@ -31,13 +31,14 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
- * Indicates current level by bonus symbols.
+ * Displays the symbols of the last (at most 7) levels.
  * 
  * @author Armin Reichert
  */
 public class LevelCounter2D extends GameEntity2D {
 
 	public V2i rightPosition = V2i.NULL;
+	public int maxLevels = 7;
 	private final Rendering2D r2D;
 
 	public LevelCounter2D(GameModel game, Rendering2D r2d) {
@@ -50,7 +51,7 @@ public class LevelCounter2D extends GameEntity2D {
 		if (!visible) {
 			return;
 		}
-		int firstLevelNumber = Math.max(1, game.levelNumber - 6);
+		int firstLevelNumber = Math.max(1, game.levelNumber - maxLevels + 1);
 		double x = rightPosition.x;
 		for (int levelNumber = firstLevelNumber; levelNumber <= game.levelNumber; ++levelNumber, x -= t(2)) {
 			r2D.renderSprite(g, r2D.getSymbolSprite(game.levelCounter.get(levelNumber - 1)), x, rightPosition.y);
