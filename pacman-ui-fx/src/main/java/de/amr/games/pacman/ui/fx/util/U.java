@@ -105,4 +105,12 @@ public class U {
 		Image image = new Image(U.class.getResource(path).toString());
 		return new Background(new BackgroundImage(image, null, null, null, null));
 	}
+
+	public static String yes_no(boolean b) {
+		return b ? "YES" : "NO";
+	}
+
+	public static String on_off(boolean b) {
+		return b ? "ON" : "OFF";
+	}
 }

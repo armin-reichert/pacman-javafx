@@ -49,37 +49,6 @@ import javafx.scene.text.Text;
  */
 public class InfoPanel extends GridPane {
 
-	private static String yes_no(boolean b) {
-		return b ? "YES" : "NO";
-	}
-
-	private static String on_off(boolean b) {
-		return b ? "ON" : "OFF";
-	}
-
-	private static class InfoText extends Text {
-
-		private Supplier<Boolean> fnEvaluate = () -> true;
-		private Supplier<Object> fnValue = () -> "Value";
-
-		public InfoText(Supplier<Object> fnValue) {
-			this.fnValue = fnValue;
-		}
-
-		public InfoText when(Supplier<Boolean> fnEvaluate) {
-			this.fnEvaluate = fnEvaluate;
-			return this;
-		}
-
-		public void update() {
-			if (fnEvaluate.get()) {
-				setText(String.valueOf(fnValue.get()));
-			} else {
-				setText("n/a");
-			}
-		}
-	}
-
 	private final Color textColor = Color.WHITE;
 	private final Font textFont = Font.font("Monospace", 12);
 	private final Font labelFont = Font.font("Sans", 12);
@@ -93,10 +62,10 @@ public class InfoPanel extends GridPane {
 		label.setFont(labelFont);
 		add(label, 0, row);
 
-		Text column = new Text(labelText.equals("") ? "" : ":");
-		column.setFill(textColor);
-		column.setFont(textFont);
-		add(column, 1, row);
+		Text separator = new Text(labelText.length() == 0 ? "" : ":");
+		separator.setFill(textColor);
+		separator.setFont(textFont);
+		add(separator, 1, row);
 
 		InfoText info = new InfoText(fnValue);
 		info.setFill(textColor);
@@ -124,9 +93,9 @@ public class InfoPanel extends GridPane {
 		info("Total Ticks", GameLoop.get()::getTotalTicks);
 		info("Frame Rate",
 				() -> String.format("%d Hz (target: %d Hz)", GameLoop.get().getFPS(), GameLoop.get().getTargetFrameRate()));
-		info("Paused", () -> yes_no(Env.$paused.get()));
-		info("Playing", () -> yes_no(ui.gameController.gameRunning));
-		info("Attract Mode", () -> yes_no(ui.gameController.attractMode));
+		info("Paused", () -> U.yes_no(Env.$paused.get()));
+		info("Playing", () -> U.yes_no(ui.gameController.gameRunning));
+		info("Attract Mode", () -> U.yes_no(ui.gameController.attractMode));
 		info("Game Variant", () -> ui.gameController.gameVariant);
 		info("Game Level", () -> ui.gameController.game.levelNumber);
 		info("Game State", this::fmtGameState);
@@ -134,19 +103,19 @@ public class InfoPanel extends GridPane {
 				() -> String.format("Running:   %s%s", stateTimer().ticked(), stateTimer().isStopped() ? " (STOPPED)" : ""));
 		info("", () -> String.format("Remaining: %s",
 				stateTimer().ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer().ticksRemaining()));
-		info("Autopilot", () -> on_off(ui.gameController.autoControlled));
-		info("Immunity", () -> on_off(game().player.immune));
+		info("Autopilot", () -> U.on_off(ui.gameController.autoControlled));
+		info("Immunity", () -> U.on_off(game().player.immune));
 		info("Game scene", () -> gameScene().getClass().getSimpleName());
 		info("", () -> String.format("w=%.0f h=%.0f", gameScene().getFXSubScene().getWidth(),
 				gameScene().getFXSubScene().getHeight()));
 		info("Window", () -> String.format("w=%.0f h=%.0f", sceneWidth(), sceneHeight()));
 		info("Main scene", () -> String.format("w=%.0f h=%.0f", sceneWidth(), sceneHeight()));
 
-		info("3D Scenes", () -> on_off(Env.$3D.get()));
+		info("3D Scenes", () -> U.on_off(Env.$3D.get()));
 		info("Perspective", () -> Env.$perspective.get()).when(() -> gameScene().is3D());
 		info("Camera", () -> scene3D().getCamController().info()).when(() -> gameScene().is3D());
 		info("Draw Mode", () -> Env.$drawMode3D.get()).when(() -> gameScene().is3D());
-		info("Axes", () -> on_off(Env.$axesVisible.get())).when(() -> gameScene().is3D());
+		info("Axes", () -> U.on_off(Env.$axesVisible.get())).when(() -> gameScene().is3D());
 
 		info("Canvas2D", () -> {
 			AbstractGameScene2D scene2D = (AbstractGameScene2D) ui.getCurrentGameScene();
