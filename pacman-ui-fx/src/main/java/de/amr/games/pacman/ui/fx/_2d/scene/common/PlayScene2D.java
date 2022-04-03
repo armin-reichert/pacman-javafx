@@ -76,7 +76,9 @@ public class PlayScene2D extends AbstractGameScene2D {
 	public void init() {
 		super.init();
 
-		maze2D = new Maze2D(0, t(3), game, r2D);
+		maze2D = new Maze2D(game, r2D);
+		maze2D.x = 0;
+		maze2D.y = t(3);
 		score2D.showPoints = !gameController.attractMode;
 		livesCounter2D = new LivesCounter2D(t(2), t(34), game, r2D);
 		livesCounter2D.visible = !gameController.attractMode;
@@ -259,7 +261,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 		}
 
 		case LEVEL_STARTING -> {
-			maze2D = new Maze2D(0, t(3), game, r2D);
 			gameController.stateTimer().setSeconds(1).start();
 		}
 

@@ -50,13 +50,11 @@ public class Maze2D extends GameEntity2D {
 	private final Timeline flashingAnimation;
 	private boolean brightPhase;
 
-	public Maze2D(int x, int y, GameModel game, Rendering2D r2D) {
+	public Maze2D(GameModel game, Rendering2D r2D) {
 		super(game);
-		this.x = x;
-		this.y = y;
 		this.r2D = r2D;
 		energizerAnimation = TimedSeq.pulse().frameDuration(10);
-		flashingAnimation = new Timeline(new KeyFrame(Duration.millis(150), e -> brightPhase = !brightPhase));
+		flashingAnimation = new Timeline(new KeyFrame(Duration.millis(200), e -> brightPhase = !brightPhase));
 		flashingAnimation.setCycleCount(2 * game.numFlashes);
 	}
 
