@@ -37,124 +37,144 @@ import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.geometry.Insets;
+import javafx.scene.control.Label;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 
 /**
  * Display information about the game and the UI.
  * 
  * @author Armin Reichert
  */
-public class InfoPanel extends GridPane {
+public class InfoPanel extends VBox {
 
-	private final Color textColor = Color.WHITE;
-	private final Font textFont = Font.font("Monospace", 12);
-	private final Font labelFont = Font.font("Sans", 12);
-	private final List<InfoText> infos = new ArrayList<>();
 	private final GameUI ui;
-	private int row;
+	private List<InfoText> infos = new ArrayList<>();
+	private Section sectionGeneral, sectionGame, section3D, section2D, sectionKeys;
 
-	private InfoText info(String labelText, Supplier<Object> fnValue) {
-		Text label = new Text(labelText);
-		label.setFill(textColor);
-		label.setFont(labelFont);
-		add(label, 0, row);
+	private class Section extends TitledPane {
 
-		Text separator = new Text(labelText.length() == 0 ? "" : ":");
-		separator.setFill(textColor);
-		separator.setFont(textFont);
-		add(separator, 1, row);
+		private final GridPane content = new GridPane();
+		private Color textColor = Color.WHITE;
+		private Font textFont = Font.font("Monospace", 12);
+		private Font labelFont = Font.font("Sans", 12);
+		private int row;
 
-		InfoText info = new InfoText(fnValue);
-		info.setFill(textColor);
-		info.setFont(textFont);
-		infos.add(info);
-		add(info, 2, row);
+		public Section(String title) {
+			setOpacity(0.7);
+			setFocusTraversable(false);
+			setText(title);
+			setContent(content);
+			content.setBackground(U.colorBackground(new Color(0.1, 0.1, 0.1, 0.8)));
+			content.setHgap(4);
+			content.setVgap(1);
+			content.setPadding(new Insets(5));
+		}
 
-		++row;
-		return info;
-	}
+		public InfoText info(String labelText, Supplier<Object> fnValue) {
+			Label label = new Label(labelText);
+			label.setTextFill(textColor);
+			label.setFont(labelFont);
+			label.setMinWidth(150);
+			content.add(label, 0, row);
 
-	private InfoText info(String labelText, String value) {
-		return info(labelText, () -> value);
+			Label separator = new Label(labelText.length() == 0 ? "" : ":");
+			separator.setTextFill(textColor);
+			separator.setFont(textFont);
+			content.add(separator, 1, row);
+
+			InfoText info = new InfoText(fnValue);
+			info.setFill(textColor);
+			info.setFont(textFont);
+			infos.add(info);
+			content.add(info, 2, row);
+
+			++row;
+			return info;
+		}
+
+		public InfoText info(String labelText, String value) {
+			return info(labelText, () -> value);
+		}
 	}
 
 	public InfoPanel(GameUI ui) {
 		this.ui = ui;
-
-		setBackground(U.colorBackground(new Color(0.3, 0.3, 0.3, 0.6)));
-		setHgap(4);
-		setVgap(1);
-		setPadding(new Insets(5));
 		setVisible(false);
 
-		info("Total Ticks", GameLoop.get()::getTotalTicks);
-		info("Frame Rate", () -> String.format("%d Hz (target: %d Hz)", GameLoop.get().getFPS(),
+		sectionGeneral = new Section("General");
+		sectionGeneral.info("Total Ticks", GameLoop.get()::getTotalTicks);
+		sectionGeneral.info("Frame Rate", () -> String.format("%d Hz (target: %d Hz)", GameLoop.get().getFPS(),
 				GameLoop.get().getTargetFrameRate()));
-		info("Paused", () -> U.yes_no(Env.$paused.get()));
-		info("Playing", () -> U.yes_no(ui.gameController.gameRunning));
-		info("Attract Mode", () -> U.yes_no(ui.gameController.attractMode));
-		info("Autopilot", () -> U.on_off(ui.gameController.autoControlled));
-		info("Immunity", () -> U.on_off(game().player.immune));
-		info("Game scene", () -> gameScene().getClass().getSimpleName());
-		info("", () -> String.format("w=%.0f h=%.0f", gameScene().getFXSubScene().getWidth(),
+		sectionGeneral.info("Paused", () -> U.yes_no(Env.$paused.get()));
+		sectionGeneral.info("Playing", () -> U.yes_no(ui.gameController.gameRunning));
+		sectionGeneral.info("Attract Mode", () -> U.yes_no(ui.gameController.attractMode));
+		sectionGeneral.info("Autopilot", () -> U.on_off(ui.gameController.autoControlled));
+		sectionGeneral.info("Immunity", () -> U.on_off(game().player.immune));
+		sectionGeneral.info("Game scene", () -> gameScene().getClass().getSimpleName());
+		sectionGeneral.info("", () -> String.format("w=%.0f h=%.0f", gameScene().getFXSubScene().getWidth(),
 				gameScene().getFXSubScene().getHeight()));
-		info("Window", () -> String.format("w=%.0f h=%.0f", sceneWidth(), sceneHeight()));
-		info("Main scene", () -> String.format("w=%.0f h=%.0f", sceneWidth(), sceneHeight()));
+		sectionGeneral.info("Window", () -> String.format("w=%.0f h=%.0f", sceneWidth(), sceneHeight()));
+		sectionGeneral.info("Main scene", () -> String.format("w=%.0f h=%.0f", sceneWidth(), sceneHeight()));
 
-		info("3D Scenes", () -> U.on_off(Env.$3D.get()));
-		info("Perspective", () -> Env.$perspective.get()).when(() -> gameScene().is3D());
-		info("Camera", () -> scene3D().getCamController().info()).when(() -> gameScene().is3D());
-		info("Draw Mode", () -> Env.$drawMode3D.get()).when(() -> gameScene().is3D());
-		info("Axes", () -> U.on_off(Env.$axesVisible.get())).when(() -> gameScene().is3D());
+		sectionGame = new Section("Game");
+		sectionGame.info("Game Variant", () -> ui.gameController.gameVariant);
+		sectionGame.info("Game Level", () -> ui.gameController.game.levelNumber);
+		sectionGame.info("Game State", this::fmtGameState);
+		sectionGame.info("", () -> String.format("Running:   %s%s", stateTimer().ticked(),
+				stateTimer().isStopped() ? " (STOPPED)" : ""));
+		sectionGame.info("", () -> String.format("Remaining: %s",
+				stateTimer().ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer().ticksRemaining()));
+		sectionGame.info("Ghost speed", () -> fmtSpeed(game().ghostSpeed));
+		sectionGame.info("Ghost speed (frightened)", () -> fmtSpeed(game().ghostSpeedFrightened));
+		sectionGame.info("Pac-Man speed", () -> fmtSpeed(game().playerSpeed));
+		sectionGame.info("Pac-Man speed (power)", () -> fmtSpeed(game().playerSpeedPowered));
+		sectionGame.info("Bonus value", () -> game().bonusValue(game().bonusSymbol));
+		sectionGame.info("Maze flashings", () -> game().numFlashes);
 
-		info("Canvas2D", () -> {
+		section3D = new Section("3D");
+		section3D.info("3D Scenes", () -> U.on_off(Env.$3D.get()));
+		section3D.info("Perspective", () -> Env.$perspective.get()).when(() -> gameScene().is3D());
+		section3D.info("Camera", () -> scene3D().getCamController().info()).when(() -> gameScene().is3D());
+		section3D.info("Draw Mode", () -> Env.$drawMode3D.get()).when(() -> gameScene().is3D());
+		section3D.info("Axes", () -> U.on_off(Env.$axesVisible.get())).when(() -> gameScene().is3D());
+
+		section2D = new Section("2D");
+		section2D.info("Canvas2D", () -> {
 			AbstractGameScene2D scene2D = (AbstractGameScene2D) ui.getCurrentGameScene();
 			return String.format("w=%.0f h=%.0f", scene2D.getCanvas().getWidth(), scene2D.getCanvas().getHeight());
 		}).when(() -> !gameScene().is3D());
 
-		info("", "");
-		info("Keyboard shortcuts", "");
-		info("Ctrl+I", "Information On/Off");
-		info("Ctrl+J", "Settings On/Off");
-		info("Alt+A", "Autopilot On/Off");
-		info("Alt+E", "Eat all normal pellets").when(() -> ui.gameController.gameRunning);
-		info("Alt+I", "Player immunity On/Off");
-		info("Alt+L", "Add 3 player lives").when(() -> ui.gameController.gameRunning);
-		info("Alt+N", "Next Level").when(() -> ui.gameController.gameRunning);
-		info("Alt+Q", "Quit Scene").when(() -> gameState() != GameState.INTRO);
-		info("Alt+S", "Speed (SHIFT=Decrease)");
-		info("Alt+V", "Switch Pac-Man/Ms. Pac-Man").when(() -> gameState() == GameState.INTRO);
-		info("Alt+X", "Kill all hunting ghosts").when(() -> ui.gameController.gameRunning);
-		info("Alt+Z", "Play Intermission Scenes").when(() -> gameState() == GameState.INTRO);
-		info("Alt+LEFT", () -> Env.perspectiveShifted(-1).name()).when(() -> gameScene().is3D());
-		info("Alt+RIGHT", () -> Env.perspectiveShifted(1).name()).when(() -> gameScene().is3D());
-		info("Alt+3", "3D Playscene On/Off");
+		sectionKeys = new Section("Keyboard Shortcuts");
+		sectionKeys.setExpanded(false);
+		sectionKeys.info("Ctrl+I", "Information On/Off");
+		sectionKeys.info("Ctrl+J", "Settings On/Off");
+		sectionKeys.info("Alt+A", "Autopilot On/Off");
+		sectionKeys.info("Alt+E", "Eat all normal pellets").when(() -> ui.gameController.gameRunning);
+		sectionKeys.info("Alt+I", "Player immunity On/Off");
+		sectionKeys.info("Alt+L", "Add 3 player lives").when(() -> ui.gameController.gameRunning);
+		sectionKeys.info("Alt+N", "Next Level").when(() -> ui.gameController.gameRunning);
+		sectionKeys.info("Alt+Q", "Quit Scene").when(() -> gameState() != GameState.INTRO);
+		sectionKeys.info("Alt+S", "Speed (SHIFT=Decrease)");
+		sectionKeys.info("Alt+V", "Switch Pac-Man/Ms. Pac-Man").when(() -> gameState() == GameState.INTRO);
+		sectionKeys.info("Alt+X", "Kill all hunting ghosts").when(() -> ui.gameController.gameRunning);
+		sectionKeys.info("Alt+Z", "Play Intermission Scenes").when(() -> gameState() == GameState.INTRO);
+		sectionKeys.info("Alt+LEFT", () -> Env.perspectiveShifted(-1).name()).when(() -> gameScene().is3D());
+		sectionKeys.info("Alt+RIGHT", () -> Env.perspectiveShifted(1).name()).when(() -> gameScene().is3D());
+		sectionKeys.info("Alt+3", "3D Playscene On/Off");
 
-		info("", "");
-		info("Game Variant", () -> ui.gameController.gameVariant);
-		info("Game Level", () -> ui.gameController.game.levelNumber);
-		info("Game State", this::fmtGameState);
-		info("", () -> String.format("Running:   %s%s", stateTimer().ticked(),
-				stateTimer().isStopped() ? " (STOPPED)" : ""));
-		info("", () -> String.format("Remaining: %s",
-				stateTimer().ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer().ticksRemaining()));
-		info("Ghost speed", () -> fmtSpeed(game().ghostSpeed));
-		info("Ghost speed (frightened)", () -> fmtSpeed(game().ghostSpeedFrightened));
-		info("Pac-Man speed", () -> fmtSpeed(game().playerSpeed));
-		info("Pac-Man speed (power)", () -> fmtSpeed(game().playerSpeedPowered));
-		info("Bonus value", () -> game().bonusValue(game().bonusSymbol));
-		info("Maze flashings", () -> game().numFlashes);
-	}
-
-	private String fmtSpeed(float fraction) {
-		return String.format("%.2f px/sec", GameModel.BASE_SPEED * fraction);
+		getChildren().addAll(sectionGeneral, sectionGame, section3D, section2D, sectionKeys);
 	}
 
 	public void update(GameUI ui) {
 		infos.forEach(InfoText::update);
+	}
+
+	private String fmtSpeed(float fraction) {
+		return String.format("%.2f px/sec", GameModel.BASE_SPEED * fraction);
 	}
 
 	private PlayScene3D scene3D() {
