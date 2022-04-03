@@ -58,10 +58,6 @@ public class Maze2D extends GameEntity2D {
 		flashingAnimation.setCycleCount(2 * game.numFlashes);
 	}
 
-	public boolean isFlashing() {
-		return flashingAnimation.getStatus() == Status.RUNNING;
-	}
-
 	public Timeline getFlashingAnimation() {
 		return flashingAnimation;
 	}
@@ -72,7 +68,7 @@ public class Maze2D extends GameEntity2D {
 
 	@Override
 	public void render(GraphicsContext g) {
-		if (isFlashing()) {
+		if (flashingAnimation.getStatus() == Status.RUNNING) {
 			if (brightPhase) {
 				r2D.renderMazeBright(g, game.mazeNumber, x, y);
 			} else {
