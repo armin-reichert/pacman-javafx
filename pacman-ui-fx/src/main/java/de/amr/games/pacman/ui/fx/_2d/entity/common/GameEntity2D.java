@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
+import static de.amr.games.pacman.model.common.world.World.TS;
+
 import de.amr.games.pacman.model.common.GameModel;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -47,7 +49,7 @@ public abstract class GameEntity2D {
 	public void render(GraphicsContext g) {
 		if (visible) {
 			g.setFill(Color.RED);
-			g.fillRect(x, y, 8, 8);
+			g.fillRect(x, y, TS, TS);
 		}
 	}
 }
