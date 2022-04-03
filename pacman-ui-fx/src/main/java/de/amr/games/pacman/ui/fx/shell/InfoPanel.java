@@ -91,18 +91,11 @@ public class InfoPanel extends GridPane {
 		setVisible(false);
 
 		info("Total Ticks", GameLoop.get()::getTotalTicks);
-		info("Frame Rate",
-				() -> String.format("%d Hz (target: %d Hz)", GameLoop.get().getFPS(), GameLoop.get().getTargetFrameRate()));
+		info("Frame Rate", () -> String.format("%d Hz (target: %d Hz)", GameLoop.get().getFPS(),
+				GameLoop.get().getTargetFrameRate()));
 		info("Paused", () -> U.yes_no(Env.$paused.get()));
 		info("Playing", () -> U.yes_no(ui.gameController.gameRunning));
 		info("Attract Mode", () -> U.yes_no(ui.gameController.attractMode));
-		info("Game Variant", () -> ui.gameController.gameVariant);
-		info("Game Level", () -> ui.gameController.game.levelNumber);
-		info("Game State", this::fmtGameState);
-		info("",
-				() -> String.format("Running:   %s%s", stateTimer().ticked(), stateTimer().isStopped() ? " (STOPPED)" : ""));
-		info("", () -> String.format("Remaining: %s",
-				stateTimer().ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer().ticksRemaining()));
 		info("Autopilot", () -> U.on_off(ui.gameController.autoControlled));
 		info("Immunity", () -> U.on_off(game().player.immune));
 		info("Game scene", () -> gameScene().getClass().getSimpleName());
@@ -139,6 +132,25 @@ public class InfoPanel extends GridPane {
 		info("Alt+LEFT", () -> Env.perspectiveShifted(-1).name()).when(() -> gameScene().is3D());
 		info("Alt+RIGHT", () -> Env.perspectiveShifted(1).name()).when(() -> gameScene().is3D());
 		info("Alt+3", "3D Playscene On/Off");
+
+		info("", "");
+		info("Game Variant", () -> ui.gameController.gameVariant);
+		info("Game Level", () -> ui.gameController.game.levelNumber);
+		info("Game State", this::fmtGameState);
+		info("", () -> String.format("Running:   %s%s", stateTimer().ticked(),
+				stateTimer().isStopped() ? " (STOPPED)" : ""));
+		info("", () -> String.format("Remaining: %s",
+				stateTimer().ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer().ticksRemaining()));
+		info("Ghost speed", () -> fmtSpeed(game().ghostSpeed));
+		info("Ghost speed (frightened)", () -> fmtSpeed(game().ghostSpeedFrightened));
+		info("Pac-Man speed", () -> fmtSpeed(game().playerSpeed));
+		info("Pac-Man speed (power)", () -> fmtSpeed(game().playerSpeedPowered));
+		info("Bonus value", () -> game().bonusValue(game().bonusSymbol));
+		info("Maze flashings", () -> game().numFlashes);
+	}
+
+	private String fmtSpeed(float fraction) {
+		return String.format("%.2f px/sec", GameModel.BASE_SPEED * fraction);
 	}
 
 	public void update(GameUI ui) {
