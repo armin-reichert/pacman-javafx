@@ -37,6 +37,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.GridPane;
@@ -85,7 +86,8 @@ public class SettingsPanel extends GridPane {
 			btnsGameControl[1].setOnAction(e -> ui.quitCurrentGameScene());
 			btnsGameControl[2].setOnAction(e -> ui.enterNextLevel());
 			spinnerLevel = addSpinner("Level", 1, 100, ui.gameController.game.levelNumber);
-			spinnerLevel.valueProperty().addListener(($value, oldValue, newValue) -> ui.enterLevel(newValue.intValue()));
+			spinnerLevel.valueProperty()
+					.addListener(($value, oldValue, newValue) -> ui.enterLevel(newValue.intValue()));
 			btnIntermissionTest = addButton("Intermission scenes", "Start", ui::startIntermissionScenesTest);
 		}
 
@@ -99,10 +101,11 @@ public class SettingsPanel extends GridPane {
 			btnsGameControl[1].setDisable(ui.gameController.state == GameState.INTRO);
 			btnsGameControl[2].setDisable(ui.gameController.state != GameState.HUNTING);
 			spinnerLevel.getValueFactory().setValue(ui.gameController.game.levelNumber);
-			spinnerLevel.setDisable(ui.gameController.state != GameState.READY && ui.gameController.state != GameState.HUNTING
-					&& ui.gameController.state != GameState.LEVEL_STARTING);
-			btnIntermissionTest.setDisable(
-					ui.gameController.state == GameState.INTERMISSION_TEST || ui.gameController.state != GameState.INTRO);
+			spinnerLevel.setDisable(
+					ui.gameController.state != GameState.READY && ui.gameController.state != GameState.HUNTING
+							&& ui.gameController.state != GameState.LEVEL_STARTING);
+			btnIntermissionTest.setDisable(ui.gameController.state == GameState.INTERMISSION_TEST
+					|| ui.gameController.state != GameState.INTRO);
 		}
 	}
 
@@ -151,7 +154,8 @@ public class SettingsPanel extends GridPane {
 			comboResolution = addComboBox("Maze resolution", 1, 2, 4, 8);
 			comboResolution.setOnAction(e -> Env.$mazeResolution.set(comboResolution.getValue()));
 			sliderWallHeight = addSlider("Maze wall height", 0, 10, 8);
-			sliderWallHeight.valueProperty().addListener(($value, _old, _new) -> Env.$mazeWallHeight.set(_new.doubleValue()));
+			sliderWallHeight.valueProperty()
+					.addListener(($value, _old, _new) -> Env.$mazeWallHeight.set(_new.doubleValue()));
 			cbUseFloorTexture = addCheckBox("Maze floor texture", ui::toggleUseMazeFloorTexture);
 			cbAxesVisible = addCheckBox("Show axes", ui::toggleAxesVisible);
 			cbWireframeMode = addCheckBox("Wireframe mode", ui::toggleDrawMode);
@@ -215,8 +219,8 @@ public class SettingsPanel extends GridPane {
 	}
 
 	private void addRow(String labelText, Node child) {
-		Text label = new Text(labelText);
-		label.setFill(textColor);
+		Label label = new Label(labelText);
+		label.setTextFill(textColor);
 		label.setFont(textFont);
 		add(label, 0, row);
 		add(child, 1, row);
