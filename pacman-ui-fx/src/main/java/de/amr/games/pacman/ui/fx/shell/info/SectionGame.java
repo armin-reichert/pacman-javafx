@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx.shell.info;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.control.Button;
@@ -61,7 +60,6 @@ public class SectionGame extends InfoSection {
 				() -> String.format("Running:   %s%s", stateTimer().ticked(), stateTimer().isStopped() ? " (STOPPED)" : ""));
 		addInfo("", () -> String.format("Remaining: %s",
 				stateTimer().ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer().ticksRemaining()));
-		addInfo("Paused", () -> U.yes_no(Env.$paused.get()));
 		addInfo("Playing", () -> U.yes_no(ui.gameController.gameRunning));
 		addInfo("Attract Mode", () -> U.yes_no(ui.gameController.attractMode));
 		addInfo("Game scene", () -> gameScene().getClass().getSimpleName());
@@ -90,7 +88,7 @@ public class SectionGame extends InfoSection {
 				ui.gameController.state == GameState.INTERMISSION_TEST || ui.gameController.state != GameState.INTRO);
 
 		spinnerGameLevel.getValueFactory().setValue(ui.gameController.game.levelNumber);
-		spinnerGameLevel.setDisable(ui.gameController.state != GameState.READY
+		spinnerGameLevel.setDisable(!ui.gameController.attractMode && ui.gameController.state != GameState.READY
 				&& ui.gameController.state != GameState.HUNTING && ui.gameController.state != GameState.LEVEL_STARTING);
 	}
 }

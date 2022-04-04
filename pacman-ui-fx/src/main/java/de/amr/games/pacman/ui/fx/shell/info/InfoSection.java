@@ -68,9 +68,9 @@ public class InfoSection extends TitledPane {
 		setFocusTraversable(false);
 		setText(title);
 		setContent(content);
-		content.setBackground(U.colorBackground(new Color(0.1, 0.1, 0.1, 0.8)));
+		content.setBackground(U.colorBackground(new Color(0.1, 0.1, 0.3, 0.8)));
 		content.setHgap(4);
-		content.setVgap(1);
+		content.setVgap(2);
 		content.setPadding(new Insets(5));
 	}
 
