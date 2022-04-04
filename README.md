@@ -63,9 +63,9 @@ Cheats:
 
 ![Play Scene](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/pacman-maze.png)
 
-![Info Panel](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/info-panel.png)
+![Info Panel](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/left-info-panel.png)
 
-![Settings Panel](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/settings-panel.png)
+![Info Panel](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/right-info-panel.png)
 
 YouTube:
 
