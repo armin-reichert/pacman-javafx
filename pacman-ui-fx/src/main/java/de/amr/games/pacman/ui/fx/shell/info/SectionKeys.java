@@ -31,8 +31,7 @@ public class SectionKeys extends InfoSection {
 
 	public SectionKeys(GameUI ui) {
 		super(ui, "Keyboard Shortcuts");
-		addInfo("Ctrl+I", "Information On/Off");
-		addInfo("Ctrl+J", "Settings On/Off");
+		addInfo("Ctrl+I", "Information Panels On/Off");
 		addInfo("Alt+A", "Autopilot On/Off");
 		addInfo("Alt+E", "Eat all normal pellets").when(() -> ui.gameController.gameRunning);
 		addInfo("Alt+I", "Player immunity On/Off");

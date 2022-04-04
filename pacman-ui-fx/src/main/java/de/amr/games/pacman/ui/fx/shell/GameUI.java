@@ -216,8 +216,7 @@ public class GameUI extends DefaultGameEventHandler {
 
 		else if (e.isControlDown()) {
 			switch (e.getCode()) {
-			case I -> toggleInfoPanelVisible();
-			case J -> toggleSettingsPanelVisible();
+			case I -> toggleInfoPanelsVisible();
 			default -> {
 			}
 			}
@@ -291,11 +290,8 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 	}
 
-	public void toggleInfoPanelVisible() {
+	public void toggleInfoPanelsVisible() {
 		leftInfoPanel.setVisible(!leftInfoPanel.isVisible());
-	}
-
-	public void toggleSettingsPanelVisible() {
 		rightInfoPanel.setVisible(!rightInfoPanel.isVisible());
 	}
 

@@ -55,11 +55,10 @@ public class InfoSection extends TitledPane {
 	protected final List<InfoText> infoTexts = new ArrayList<>();
 	protected final GridPane content = new GridPane();
 
-	public int minLabelWidth = 180;
-	public Color textColor = Color.WHITE;
-	public Font textFont = Font.font("Monospace", 12);
-	public Font labelFont = Font.font("Sans", 12);
-
+	private int minLabelWidth = 180;
+	private Color textColor = Color.WHITE;
+	private Font textFont = Font.font("Sans", 12);
+	private Font labelFont = Font.font("Sans", 12);
 	private int row;
 
 	public InfoSection(GameUI ui, String title) {
@@ -94,7 +93,7 @@ public class InfoSection extends TitledPane {
 	public void addRow(String labelText, Node child) {
 		Label label = new Label(labelText);
 		label.setTextFill(textColor);
-		label.setFont(textFont);
+		label.setFont(labelFont);
 		label.setMinWidth(minLabelWidth);
 		content.add(label, 0, row);
 		content.add(child, 1, row);

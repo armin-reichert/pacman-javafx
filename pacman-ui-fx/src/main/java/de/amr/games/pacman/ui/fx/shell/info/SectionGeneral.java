@@ -32,8 +32,7 @@ import javafx.scene.control.Slider;
 
 public class SectionGeneral extends InfoSection {
 	private Button[] btnsSimulation;
-	private Slider sliderTargetFrameRate;
-
+	private Slider sliderTargetFPS;
 	private CheckBox cbAutopilot;
 	private CheckBox cbImmunity;
 	private CheckBox cbUsePlayScene3D;
@@ -45,14 +44,11 @@ public class SectionGeneral extends InfoSection {
 		btnsSimulation[0].setOnAction(e -> ui.togglePaused());
 		btnsSimulation[1].setOnAction(e -> GameLoop.get().runSingleStep(true));
 
-		sliderTargetFrameRate = addSlider("Target Framerate", 0, 120, 60);
-		sliderTargetFrameRate.setSnapToTicks(true);
-		sliderTargetFrameRate.setShowTickLabels(true);
-		sliderTargetFrameRate.setShowTickMarks(true);
-		sliderTargetFrameRate.setMinorTickCount(5);
-		sliderTargetFrameRate.setMajorTickUnit(30);
-		sliderTargetFrameRate.valueProperty().addListener(($value, _old, _new) -> {
-			GameLoop.get().setTargetFrameRate(_new.intValue());
+		sliderTargetFPS = addSlider("Target Framerate", 0, 120, 60);
+		sliderTargetFPS.setShowTickLabels(false);
+		sliderTargetFPS.setShowTickMarks(false);
+		sliderTargetFPS.valueProperty().addListener(($value, oldValue, newValue) -> {
+			GameLoop.get().setTargetFrameRate(newValue.intValue());
 		});
 		addInfo("Current Framerate",
 				() -> String.format("%d Hz (target: %d Hz)", GameLoop.get().getFPS(), GameLoop.get().getTargetFrameRate()));
@@ -71,7 +67,7 @@ public class SectionGeneral extends InfoSection {
 
 		btnsSimulation[0].setText(Env.$paused.get() ? "Resume" : "Pause");
 		btnsSimulation[1].setDisable(!Env.$paused.get());
-		sliderTargetFrameRate.setValue(GameLoop.get().getTargetFrameRate());
+		sliderTargetFPS.setValue(GameLoop.get().getTargetFrameRate());
 
 		cbAutopilot.setSelected(ui.gameController.autoControlled);
 		cbImmunity.setSelected(ui.gameController.playerImmune);
