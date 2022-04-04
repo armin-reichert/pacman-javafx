@@ -38,8 +38,7 @@ General shortcuts:
 
 - <kbd>F11</kbd> Enter fullscreen mode
 - <kbd>Esc</kbd> Exit fullscreen mode
-- <kbd>CTRL+I</kbd> Toggle information panel
-- <kbd>CTRL+J</kbd> Toggle settings panel
+- <kbd>CTRL+I</kbd> Toggle information panels
 - <kbd>Alt+A</kbd> Toggle autopilot mode
 - <kbd>Alt+I</kbd> Toggle immunity of player against ghost attacks
 - <kbd>Alt+S</kbd> Increase speed (<kbd>SHIFT</kbd> = decrease)
