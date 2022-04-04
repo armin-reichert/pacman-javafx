@@ -21,12 +21,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx.shell;
+package de.amr.games.pacman.ui.fx.shell.info;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
+import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
@@ -51,16 +54,20 @@ import javafx.scene.text.TextAlignment;
 
 public class InfoSection extends TitledPane {
 
-	public final List<InfoText> infos = new ArrayList<>();
-	private final GridPane content = new GridPane();
+	protected final GameUI ui;
+	protected final List<InfoText> infoTexts = new ArrayList<>();
+	protected final GridPane content = new GridPane();
+
 	public Color textColor = Color.WHITE;
 	public Font textFont = Font.font("Monospace", 12);
 	public Font labelFont = Font.font("Sans", 12);
 	public Color headerColor = Color.YELLOW;
 	public Font headerFont = Font.font("Arial", FontWeight.BOLD, 16);
+
 	private int row;
 
-	public InfoSection(String title) {
+	public InfoSection(GameUI ui, String title) {
+		this.ui = ui;
 		setOpacity(0.7);
 		setFocusTraversable(false);
 		setText(title);
@@ -71,25 +78,16 @@ public class InfoSection extends TitledPane {
 		content.setPadding(new Insets(5));
 	}
 
+	public void update() {
+		infoTexts.forEach(InfoText::update);
+	}
+
 	public InfoText addInfo(String labelText, Supplier<?> fnValue) {
-		Label label = new Label(labelText);
-		label.setTextFill(textColor);
-		label.setFont(labelFont);
-		label.setMinWidth(150);
-		content.add(label, 0, row);
-
-		Label separator = new Label(labelText.length() == 0 ? "" : ":");
-		separator.setTextFill(textColor);
-		separator.setFont(textFont);
-		content.add(separator, 1, row);
-
 		InfoText info = new InfoText(fnValue);
 		info.setFill(textColor);
 		info.setFont(textFont);
-		infos.add(info);
-		content.add(info, 2, row);
-
-		++row;
+		infoTexts.add(info);
+		addRow(labelText, info);
 		return info;
 	}
 
@@ -101,6 +99,7 @@ public class InfoSection extends TitledPane {
 		Label label = new Label(labelText);
 		label.setTextFill(textColor);
 		label.setFont(textFont);
+		label.setMinWidth(150);
 		content.add(label, 0, row);
 		content.add(child, 1, row);
 		++row;
@@ -163,4 +162,15 @@ public class InfoSection extends TitledPane {
 		addRow(labelText, spinner);
 		return spinner;
 	}
+
+	// -----------------------------
+
+	protected GameScene gameScene() {
+		return ui.getCurrentGameScene();
+	}
+
+	protected PlayScene3D scene3D() {
+		return (PlayScene3D) gameScene();
+	}
+
 }

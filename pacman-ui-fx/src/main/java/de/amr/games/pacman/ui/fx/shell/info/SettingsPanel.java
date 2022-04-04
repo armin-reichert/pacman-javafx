@@ -21,13 +21,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx.shell;
+package de.amr.games.pacman.ui.fx.shell.info;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
+import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -43,17 +45,15 @@ import javafx.scene.shape.DrawMode;
  */
 public class SettingsPanel extends VBox {
 
-	private final GameUI ui;
-
-	private class SectionCommands extends InfoSection {
+	public static class SectionCommands extends InfoSection {
 		private ComboBox<GameVariant> comboGameVariant;
 		private Button[] btnsSimulation;
 		private Button[] btnsGameControl;
 		private Spinner<Integer> spinnerLevel;
 		private Button btnIntermissionTest;
 
-		public SectionCommands() {
-			super("Commands");
+		public SectionCommands(GameUI ui) {
+			super(ui, "Commands");
 			btnsSimulation = addButtons("Simulation", "Pause", "Step");
 			btnsSimulation[0].setOnAction(e -> ui.togglePaused());
 			btnsSimulation[1].setOnAction(e -> GameLoop.get().runSingleStep(true));
@@ -72,7 +72,9 @@ public class SettingsPanel extends VBox {
 			btnIntermissionTest = addButton("Intermission scenes", "Start", ui::startIntermissionScenesTest);
 		}
 
+		@Override
 		public void update() {
+			super.update();
 			btnsSimulation[0].setText(Env.$paused.get() ? "Resume" : "Pause");
 			btnsSimulation[1].setDisable(!Env.$paused.get());
 			comboGameVariant.setValue(ui.gameController.gameVariant);
@@ -89,14 +91,14 @@ public class SettingsPanel extends VBox {
 		}
 	}
 
-	private class SectionGeneral extends InfoSection {
+	public static class SectionGeneral extends InfoSection {
 		private Slider sliderTargetFrameRate;
 		private CheckBox cbAutopilot;
 		private CheckBox cbImmunity;
 		private CheckBox cbUsePlayScene3D;
 
-		public SectionGeneral() {
-			super("General Settings");
+		public SectionGeneral(GameUI ui) {
+			super(ui, "General Settings");
 			sliderTargetFrameRate = addSlider("Framerate", 0, 120, 60);
 			sliderTargetFrameRate.setSnapToTicks(true);
 			sliderTargetFrameRate.setShowTickLabels(true);
@@ -111,7 +113,9 @@ public class SettingsPanel extends VBox {
 			cbImmunity = addCheckBox("Player immune", ui::toggleImmunity);
 		}
 
+		@Override
 		public void update() {
+			super.update();
 			sliderTargetFrameRate.setValue(GameLoop.get().getTargetFrameRate());
 			cbAutopilot.setSelected(ui.gameController.autoControlled);
 			cbImmunity.setSelected(ui.gameController.game.player.immune);
@@ -119,7 +123,7 @@ public class SettingsPanel extends VBox {
 		}
 	}
 
-	private class Section3D extends InfoSection {
+	public static class Section3D extends InfoSection {
 		private ComboBox<Perspective> comboPerspective;
 		private ComboBox<Integer> comboResolution;
 		private Slider sliderWallHeight;
@@ -127,11 +131,12 @@ public class SettingsPanel extends VBox {
 		private CheckBox cbAxesVisible;
 		private CheckBox cbWireframeMode;
 
-		public Section3D() {
-			super("3D Settings");
+		public Section3D(GameUI ui) {
+			super(ui, "3D Settings");
 			comboPerspective = addComboBox("Perspective", Perspective.values());
 			comboPerspective.setOnAction(e -> Env.$perspective.set(comboPerspective.getValue()));
 			comboResolution = addComboBox("Maze resolution", 1, 2, 4, 8);
+			addInfo("Camera", () -> scene3D().getCamController().info()).when(() -> gameScene().is3D());
 			comboResolution.setOnAction(e -> Env.$mazeResolution.set(comboResolution.getValue()));
 			sliderWallHeight = addSlider("Maze wall height", 0, 10, 8);
 			sliderWallHeight.valueProperty().addListener(($value, _old, _new) -> Env.$mazeWallHeight.set(_new.doubleValue()));
@@ -140,7 +145,9 @@ public class SettingsPanel extends VBox {
 			cbWireframeMode = addCheckBox("Wireframe mode", ui::toggleDrawMode);
 		}
 
+		@Override
 		public void update() {
+			super.update();
 			comboPerspective.setValue(Env.$perspective.get());
 			comboPerspective.setDisable(!ui.getCurrentGameScene().is3D());
 			comboResolution.setValue(Env.$mazeResolution.get());
@@ -156,37 +163,42 @@ public class SettingsPanel extends VBox {
 		}
 	}
 
-	private class Section2D extends InfoSection {
+	public static class Section2D extends InfoSection {
 		private CheckBox cbTilesVisible;
 
-		public Section2D() {
-			super("2D Settings");
+		public Section2D(GameUI ui) {
+			super(ui, "2D Settings");
+			addInfo("Canvas2D", () -> {
+				AbstractGameScene2D scene2D = (AbstractGameScene2D) ui.getCurrentGameScene();
+				return String.format("w=%.0f h=%.0f", scene2D.getCanvas().getWidth(), scene2D.getCanvas().getHeight());
+			}).when(() -> !gameScene().is3D());
 			cbTilesVisible = addCheckBox("Show tiles", ui::toggleTilesVisible);
 		}
 
+		@Override
 		public void update() {
+			super.update();
 			cbTilesVisible.setSelected(Env.$tilesVisible.get());
 			cbTilesVisible.setDisable(ui.getCurrentGameScene().is3D());
 		}
 	}
 
-	private final SectionCommands sectionCcommands;
+	private final SectionCommands sectionCommands;
 	private final SectionGeneral sectionGeneral;
 	private final Section3D section3D;
 	private final Section2D section2D;
 
 	public SettingsPanel(GameUI ui) {
-		this.ui = ui;
-		sectionCcommands = new SectionCommands();
-		sectionGeneral = new SectionGeneral();
-		section3D = new Section3D();
-		section2D = new Section2D();
+		sectionCommands = new SectionCommands(ui);
+		sectionGeneral = new SectionGeneral(ui);
+		section3D = new Section3D(ui);
+		section2D = new Section2D(ui);
 		setVisible(false);
-		getChildren().addAll(sectionCcommands, sectionGeneral, section3D, section2D);
+		getChildren().addAll(sectionCommands, sectionGeneral, section3D, section2D);
 	}
 
 	public void update() {
-		sectionCcommands.update();
+		sectionCommands.update();
 		sectionGeneral.update();
 		section3D.update();
 		section2D.update();
