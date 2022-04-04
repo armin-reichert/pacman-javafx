@@ -27,14 +27,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.lib.TickTimer;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.collections.FXCollections;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -45,12 +46,8 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 
 public class InfoSection extends TitledPane {
 
@@ -58,11 +55,10 @@ public class InfoSection extends TitledPane {
 	protected final List<InfoText> infoTexts = new ArrayList<>();
 	protected final GridPane content = new GridPane();
 
+	public int minLabelWidth = 180;
 	public Color textColor = Color.WHITE;
 	public Font textFont = Font.font("Monospace", 12);
 	public Font labelFont = Font.font("Sans", 12);
-	public Color headerColor = Color.YELLOW;
-	public Font headerFont = Font.font("Arial", FontWeight.BOLD, 16);
 
 	private int row;
 
@@ -99,20 +95,9 @@ public class InfoSection extends TitledPane {
 		Label label = new Label(labelText);
 		label.setTextFill(textColor);
 		label.setFont(textFont);
-		label.setMinWidth(150);
+		label.setMinWidth(minLabelWidth);
 		content.add(label, 0, row);
 		content.add(child, 1, row);
-		++row;
-	}
-
-	public void addSectionHeader(String title) {
-		Text header = new Text(title);
-		header.setFill(headerColor);
-		header.setFont(headerFont);
-		header.setTextAlignment(TextAlignment.CENTER);
-		GridPane.setConstraints(header, 0, row, 2, 1, HPos.CENTER, VPos.CENTER, Priority.NEVER, Priority.NEVER,
-				new Insets(12, 0, 8, 0));
-		content.getChildren().add(header);
 		++row;
 	}
 
@@ -173,4 +158,38 @@ public class InfoSection extends TitledPane {
 		return (PlayScene3D) gameScene();
 	}
 
+	protected String fmtSpeed(float fraction) {
+		return String.format("%.2f px/sec", GameModel.BASE_SPEED * fraction);
+	}
+
+	protected double sceneWidth() {
+		return ui.stage.getScene().getWindow().getWidth();
+	}
+
+	protected double sceneHeight() {
+		return ui.stage.getScene().getWindow().getHeight();
+	}
+
+	protected GameModel game() {
+		return ui.gameController.game;
+	}
+
+	protected GameState gameState() {
+		return ui.gameController.state;
+	}
+
+	protected String huntingPhaseName() {
+		return game().inScatteringPhase() ? "Scattering" : "Chasing";
+	}
+
+	protected TickTimer stateTimer() {
+		return ui.gameController.stateTimer();
+	}
+
+	protected String fmtGameState() {
+		var game = ui.gameController.game;
+		var state = ui.gameController.state;
+		return state == GameState.HUNTING ? //
+				String.format("%s: Phase #%d (%s)", state, game.huntingPhase, huntingPhaseName()) : state.name();
+	}
 }

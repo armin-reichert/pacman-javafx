@@ -24,56 +24,73 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell.info;
 
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
+import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
 
-public class SectionCommands extends InfoSection {
+public class SectionGame extends InfoSection {
 	private ComboBox<GameVariant> comboGameVariant;
-	private Button[] btnsSimulation;
 	private Button[] btnsGameControl;
-	private Spinner<Integer> spinnerLevel;
 	private Button btnIntermissionTest;
+	private Spinner<Integer> spinnerGameLevel;
 
-	public SectionCommands(GameUI ui) {
-		super(ui, "Commands");
-		btnsSimulation = addButtons("Simulation", "Pause", "Step");
-		btnsSimulation[0].setOnAction(e -> ui.togglePaused());
-		btnsSimulation[1].setOnAction(e -> GameLoop.get().runSingleStep(true));
+	public SectionGame(GameUI ui) {
+		super(ui, "Game");
 		comboGameVariant = addComboBox("Game Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
 		comboGameVariant.setOnAction(e -> {
 			if (comboGameVariant.getValue() != ui.gameController.gameVariant) {
 				ui.gameController.selectGameVariant(comboGameVariant.getValue());
 			}
 		});
+
 		btnsGameControl = addButtons("Game", "Start", "Quit", "Next Level");
 		btnsGameControl[0].setOnAction(e -> ui.gameController.requestGame());
 		btnsGameControl[1].setOnAction(e -> ui.quitCurrentGameScene());
 		btnsGameControl[2].setOnAction(e -> ui.enterNextLevel());
-		spinnerLevel = addSpinner("Level", 1, 100, ui.gameController.game.levelNumber);
-		spinnerLevel.valueProperty().addListener(($value, oldValue, newValue) -> ui.enterLevel(newValue.intValue()));
 		btnIntermissionTest = addButton("Intermission scenes", "Start", ui::startIntermissionScenesTest);
+
+		spinnerGameLevel = addSpinner("Level", 1, 100, ui.gameController.game.levelNumber);
+		spinnerGameLevel.valueProperty().addListener(($value, oldValue, newValue) -> ui.enterLevel(newValue.intValue()));
+		addInfo("Game State", this::fmtGameState);
+		addInfo("",
+				() -> String.format("Running:   %s%s", stateTimer().ticked(), stateTimer().isStopped() ? " (STOPPED)" : ""));
+		addInfo("", () -> String.format("Remaining: %s",
+				stateTimer().ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer().ticksRemaining()));
+		addInfo("Paused", () -> U.yes_no(Env.$paused.get()));
+		addInfo("Playing", () -> U.yes_no(ui.gameController.gameRunning));
+		addInfo("Attract Mode", () -> U.yes_no(ui.gameController.attractMode));
+		addInfo("Game scene", () -> gameScene().getClass().getSimpleName());
+		addInfo("", () -> String.format("w=%.0f h=%.0f", gameScene().getFXSubScene().getWidth(),
+				gameScene().getFXSubScene().getHeight()));
+
+		addInfo("Ghost speed", () -> fmtSpeed(game().ghostSpeed));
+		addInfo("Ghost speed (frightened)", () -> fmtSpeed(game().ghostSpeedFrightened));
+		addInfo("Pac-Man speed", () -> fmtSpeed(game().playerSpeed));
+		addInfo("Pac-Man speed (power)", () -> fmtSpeed(game().playerSpeedPowered));
+		addInfo("Bonus value", () -> game().bonusValue(game().bonusSymbol));
+		addInfo("Maze flashings", () -> game().numFlashes);
 	}
 
 	@Override
 	public void update() {
 		super.update();
-		btnsSimulation[0].setText(Env.$paused.get() ? "Resume" : "Pause");
-		btnsSimulation[1].setDisable(!Env.$paused.get());
 		comboGameVariant.setValue(ui.gameController.gameVariant);
 		comboGameVariant.setDisable(ui.gameController.gameRunning);
+
 		btnsGameControl[0]
 				.setDisable(ui.gameController.gameRequested || ui.gameController.gameRunning || ui.gameController.attractMode);
 		btnsGameControl[1].setDisable(ui.gameController.state == GameState.INTRO);
 		btnsGameControl[2].setDisable(ui.gameController.state != GameState.HUNTING);
-		spinnerLevel.getValueFactory().setValue(ui.gameController.game.levelNumber);
-		spinnerLevel.setDisable(ui.gameController.state != GameState.READY && ui.gameController.state != GameState.HUNTING
-				&& ui.gameController.state != GameState.LEVEL_STARTING);
 		btnIntermissionTest.setDisable(
 				ui.gameController.state == GameState.INTERMISSION_TEST || ui.gameController.state != GameState.INTRO);
+
+		spinnerGameLevel.getValueFactory().setValue(ui.gameController.game.levelNumber);
+		spinnerGameLevel.setDisable(ui.gameController.state != GameState.READY
+				&& ui.gameController.state != GameState.HUNTING && ui.gameController.state != GameState.LEVEL_STARTING);
 	}
 }

@@ -26,18 +26,26 @@ package de.amr.games.pacman.ui.fx.shell.info;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 
 public class SectionGeneral extends InfoSection {
+	private Button[] btnsSimulation;
 	private Slider sliderTargetFrameRate;
+
 	private CheckBox cbAutopilot;
 	private CheckBox cbImmunity;
 	private CheckBox cbUsePlayScene3D;
 
 	public SectionGeneral(GameUI ui) {
-		super(ui, "General Settings");
-		sliderTargetFrameRate = addSlider("Framerate", 0, 120, 60);
+		super(ui, "General");
+
+		btnsSimulation = addButtons("Simulation", "Pause", "Step");
+		btnsSimulation[0].setOnAction(e -> ui.togglePaused());
+		btnsSimulation[1].setOnAction(e -> GameLoop.get().runSingleStep(true));
+
+		sliderTargetFrameRate = addSlider("Target Framerate", 0, 120, 60);
 		sliderTargetFrameRate.setSnapToTicks(true);
 		sliderTargetFrameRate.setShowTickLabels(true);
 		sliderTargetFrameRate.setShowTickMarks(true);
@@ -46,15 +54,25 @@ public class SectionGeneral extends InfoSection {
 		sliderTargetFrameRate.valueProperty().addListener(($value, _old, _new) -> {
 			GameLoop.get().setTargetFrameRate(_new.intValue());
 		});
+		addInfo("Current Framerate",
+				() -> String.format("%d Hz (target: %d Hz)", GameLoop.get().getFPS(), GameLoop.get().getTargetFrameRate()));
+		addInfo("Total Ticks", GameLoop.get()::getTotalTicks);
+
 		cbUsePlayScene3D = addCheckBox("Use 3D play scene", ui::toggleUse3DScene);
 		cbAutopilot = addCheckBox("Autopilot", ui::toggleAutopilot);
 		cbImmunity = addCheckBox("Player immune", ui::toggleImmunity);
+
+		addInfo("Main scene", () -> String.format("w=%.0f h=%.0f", sceneWidth(), sceneHeight()));
 	}
 
 	@Override
 	public void update() {
 		super.update();
+
+		btnsSimulation[0].setText(Env.$paused.get() ? "Resume" : "Pause");
+		btnsSimulation[1].setDisable(!Env.$paused.get());
 		sliderTargetFrameRate.setValue(GameLoop.get().getTargetFrameRate());
+
 		cbAutopilot.setSelected(ui.gameController.autoControlled);
 		cbImmunity.setSelected(ui.gameController.game.player.immune);
 		cbUsePlayScene3D.setSelected(Env.$3D.get());
