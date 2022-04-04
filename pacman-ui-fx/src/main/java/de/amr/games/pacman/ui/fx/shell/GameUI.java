@@ -30,7 +30,6 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
 import de.amr.games.pacman.controller.event.GameEvent;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
@@ -318,9 +317,8 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	public void toggleImmunity() {
-		GameModel game = gameController.game;
-		game.player.immune = !game.player.immune;
-		String message = Env.message(game.player.immune ? "player_immunity_on" : "player_immunity_off");
+		gameController.playerImmune = !gameController.playerImmune;
+		String message = Env.message(gameController.playerImmune ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(1, message);
 	}
 

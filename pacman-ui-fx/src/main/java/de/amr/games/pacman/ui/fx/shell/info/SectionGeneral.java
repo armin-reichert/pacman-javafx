@@ -74,7 +74,7 @@ public class SectionGeneral extends InfoSection {
 		sliderTargetFrameRate.setValue(GameLoop.get().getTargetFrameRate());
 
 		cbAutopilot.setSelected(ui.gameController.autoControlled);
-		cbImmunity.setSelected(ui.gameController.game.player.immune);
+		cbImmunity.setSelected(ui.gameController.playerImmune);
 		cbUsePlayScene3D.setSelected(Env.$3D.get());
 	}
 }
