@@ -263,6 +263,7 @@ public class GameUI extends DefaultGameEventHandler {
 		if (gameController.game.levelNumber == levelNumber) {
 			return;
 		}
+		currentGameScene.getSounds().stopAll();
 		if (levelNumber == 1) {
 			gameController.game.reset();
 			gameController.changeState(GameState.READY);
