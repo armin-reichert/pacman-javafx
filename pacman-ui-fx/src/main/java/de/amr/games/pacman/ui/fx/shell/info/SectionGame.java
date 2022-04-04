@@ -88,7 +88,12 @@ public class SectionGame extends Section {
 				ui.gameController.state == GameState.INTERMISSION_TEST || ui.gameController.state != GameState.INTRO);
 
 		spinnerGameLevel.getValueFactory().setValue(ui.gameController.game.levelNumber);
-		spinnerGameLevel.setDisable(!ui.gameController.attractMode && ui.gameController.state != GameState.READY
-				&& ui.gameController.state != GameState.HUNTING && ui.gameController.state != GameState.LEVEL_STARTING);
+		if (!ui.gameController.gameRunning) {
+			spinnerGameLevel.setDisable(true);
+		} else {
+			GameState state = ui.gameController.state;
+			spinnerGameLevel
+					.setDisable(state != GameState.READY && state != GameState.HUNTING && state != GameState.LEVEL_STARTING);
+		}
 	}
 }
