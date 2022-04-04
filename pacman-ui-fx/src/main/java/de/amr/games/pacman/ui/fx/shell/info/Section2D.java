@@ -23,34 +23,27 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell.info;
 
+import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
+import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.CheckBox;
 
-/**
- * Panel for configuring the game and the UI.
- * 
- * @author Armin Reichert
- */
-public class SettingsPanel extends VBox {
+public class Section2D extends InfoSection {
+	private CheckBox cbTilesVisible;
 
-	private final SectionCommands sectionCommands;
-	private final SectionGeneral sectionGeneral;
-	private final Section3D section3D;
-	private final Section2D section2D;
-
-	public SettingsPanel(GameUI ui) {
-		sectionCommands = new SectionCommands(ui);
-		sectionGeneral = new SectionGeneral(ui);
-		section3D = new Section3D(ui);
-		section2D = new Section2D(ui);
-		setVisible(false);
-		getChildren().addAll(sectionCommands, sectionGeneral, section3D, section2D);
+	public Section2D(GameUI ui) {
+		super(ui, "2D Settings");
+		addInfo("Canvas2D", () -> {
+			AbstractGameScene2D scene2D = (AbstractGameScene2D) ui.getCurrentGameScene();
+			return String.format("w=%.0f h=%.0f", scene2D.getCanvas().getWidth(), scene2D.getCanvas().getHeight());
+		}).when(() -> !gameScene().is3D());
+		cbTilesVisible = addCheckBox("Show tiles", ui::toggleTilesVisible);
 	}
 
+	@Override
 	public void update() {
-		sectionCommands.update();
-		sectionGeneral.update();
-		section3D.update();
-		section2D.update();
+		super.update();
+		cbTilesVisible.setSelected(Env.$tilesVisible.get());
+		cbTilesVisible.setDisable(ui.getCurrentGameScene().is3D());
 	}
 }
