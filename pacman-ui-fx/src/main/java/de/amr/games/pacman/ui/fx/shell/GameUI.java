@@ -41,7 +41,10 @@ import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameScenes;
 import de.amr.games.pacman.ui.fx.shell.info.InfoPanel;
-import de.amr.games.pacman.ui.fx.shell.info.SettingsPanel;
+import de.amr.games.pacman.ui.fx.shell.info.Section2D;
+import de.amr.games.pacman.ui.fx.shell.info.Section3D;
+import de.amr.games.pacman.ui.fx.shell.info.SectionCommands;
+import de.amr.games.pacman.ui.fx.shell.info.SectionGeneral;
 import de.amr.games.pacman.ui.fx.sound.mspacman.Sounds_MsPacMan;
 import de.amr.games.pacman.ui.fx.sound.pacman.Sounds_PacMan;
 import de.amr.games.pacman.ui.fx.util.U;
@@ -50,6 +53,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
@@ -66,10 +70,15 @@ public class GameUI extends DefaultGameEventHandler {
 	public final Stage stage;
 
 	private final StackPane mainSceneRoot;
-	private final InfoPanel infoPanel;
-	private final SettingsPanel settingsPanel;
 	private final GameScenes gameScenes;
 	private final Wallpapers wallpapers = new Wallpapers();
+
+	private final InfoPanel leftInfoPanel;
+	private final VBox rightInfoPanel = new VBox();
+	private SectionCommands sectionCommands;
+	private SectionGeneral sectionGeneral;
+	private Section3D section3D;
+	private Section2D section2D;
 
 	private GameScene currentGameScene;
 
@@ -78,11 +87,10 @@ public class GameUI extends DefaultGameEventHandler {
 		gameController.addGameEventListener(this);
 
 		var infoLayer = new BorderPane();
-		settingsPanel = new SettingsPanel(this);
-		infoPanel = new InfoPanel(this);
-		infoPanel.setMinWidth(400);
-		infoLayer.setLeft(infoPanel);
-		infoLayer.setRight(settingsPanel);
+		leftInfoPanel = new InfoPanel(this);
+		infoLayer.setLeft(leftInfoPanel);
+		infoLayer.setRight(rightInfoPanel);
+		addInfoPanels();
 
 		// first child is placeholder for subscene assigned to current game scene
 		mainSceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
@@ -114,13 +122,28 @@ public class GameUI extends DefaultGameEventHandler {
 
 	public void render() {
 		FlashMessageView.get().update();
-		if (infoPanel.isVisible()) {
-			infoPanel.update(this);
+		if (leftInfoPanel.isVisible()) {
+			leftInfoPanel.update(this);
 		}
-		if (settingsPanel.isVisible()) {
-			settingsPanel.update();
-		}
+		updateInfoPanels();
 		stage.setTitle(gameController.gameVariant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
+	}
+
+	private void addInfoPanels() {
+		sectionCommands = new SectionCommands(this);
+		sectionGeneral = new SectionGeneral(this);
+		section3D = new Section3D(this);
+		section2D = new Section2D(this);
+
+		rightInfoPanel.getChildren().addAll(sectionCommands, sectionGeneral, section3D, section2D);
+		rightInfoPanel.setVisible(false);
+	}
+
+	private void updateInfoPanels() {
+		sectionCommands.update();
+		sectionGeneral.update();
+		section3D.update();
+		section2D.update();
 	}
 
 	@Override
@@ -265,11 +288,11 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	public void toggleInfoPanelVisible() {
-		infoPanel.setVisible(!infoPanel.isVisible());
+		leftInfoPanel.setVisible(!leftInfoPanel.isVisible());
 	}
 
 	public void toggleSettingsPanelVisible() {
-		settingsPanel.setVisible(!settingsPanel.isVisible());
+		rightInfoPanel.setVisible(!rightInfoPanel.isVisible());
 	}
 
 	public void togglePaused() {
