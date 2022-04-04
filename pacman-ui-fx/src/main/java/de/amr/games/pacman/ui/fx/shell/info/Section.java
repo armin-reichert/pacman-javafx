@@ -60,7 +60,7 @@ public class Section extends TitledPane {
 	protected final List<InfoText> infoTexts = new ArrayList<>();
 	protected final GridPane content = new GridPane();
 
-	private int minLabelWidth = 180;
+	private int minLabelWidth = 160;
 	private Color textColor = Color.WHITE;
 	private Font textFont = Font.font("Sans", 12);
 	private Font labelFont = Font.font("Sans", 12);
