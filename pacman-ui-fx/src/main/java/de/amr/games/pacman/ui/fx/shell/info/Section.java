@@ -49,7 +49,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public class InfoSection extends TitledPane {
+/**
+ * Section for displaying UI info or editors for configuring the UI.
+ * 
+ * @author Armin Reichert
+ */
+public class Section extends TitledPane {
 
 	protected final GameUI ui;
 	protected final List<InfoText> infoTexts = new ArrayList<>();
@@ -61,13 +66,13 @@ public class InfoSection extends TitledPane {
 	private Font labelFont = Font.font("Sans", 12);
 	private int row;
 
-	public InfoSection(GameUI ui, String title) {
+	public Section(GameUI ui, String title) {
 		this.ui = ui;
 		setOpacity(0.7);
 		setFocusTraversable(false);
 		setText(title);
 		setContent(content);
-		content.setBackground(U.colorBackground(new Color(0.1, 0.1, 0.3, 0.8)));
+		content.setBackground(U.colorBackground(new Color(0.2, 0.2, 0.4, 0.8)));
 		content.setHgap(4);
 		content.setVgap(2);
 		content.setPadding(new Insets(5));

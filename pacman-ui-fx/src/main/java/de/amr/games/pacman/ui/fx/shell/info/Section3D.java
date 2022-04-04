@@ -31,7 +31,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.shape.DrawMode;
 
-public class Section3D extends InfoSection {
+public class Section3D extends Section {
 	private ComboBox<Perspective> comboPerspective;
 	private ComboBox<Integer> comboResolution;
 	private Slider sliderWallHeight;

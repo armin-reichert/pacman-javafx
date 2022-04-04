@@ -27,11 +27,11 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 
-public class SectionKeys extends InfoSection {
+public class SectionKeys extends Section {
 
 	public SectionKeys(GameUI ui) {
 		super(ui, "Keyboard Shortcuts");
-		addInfo("Ctrl+I", "Information Panels On/Off");
+		addInfo("Ctrl+I", "Info Panels On/Off");
 		addInfo("Alt+A", "Autopilot On/Off");
 		addInfo("Alt+E", "Eat all normal pellets").when(() -> ui.gameController.gameRunning);
 		addInfo("Alt+I", "Player immunity On/Off");

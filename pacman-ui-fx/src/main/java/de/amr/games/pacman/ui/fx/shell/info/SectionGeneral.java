@@ -30,7 +30,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 
-public class SectionGeneral extends InfoSection {
+public class SectionGeneral extends Section {
 	private Button[] btnsSimulation;
 	private Slider sliderTargetFPS;
 	private CheckBox cbAutopilot;

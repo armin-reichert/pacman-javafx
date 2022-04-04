@@ -32,7 +32,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
 
-public class SectionGame extends InfoSection {
+public class SectionGame extends Section {
 	private ComboBox<GameVariant> comboGameVariant;
 	private Button[] btnsGameControl;
 	private Button btnIntermissionTest;
