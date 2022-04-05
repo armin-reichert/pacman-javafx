@@ -42,13 +42,13 @@ public class SectionKeys extends Section {
 		addInfo("Alt+I", "Player immunity On/Off");
 		addInfo("Alt+L", "Add 3 player lives").when(() -> gc.gameRunning);
 		addInfo("Alt+N", "Next Level").when(() -> gc.gameRunning);
-		addInfo("Alt+Q", "Quit Scene").when(() -> gameState() != GameState.INTRO);
+		addInfo("Alt+Q", "Quit Scene").when(() -> gc.state != GameState.INTRO);
 		addInfo("Alt+S", "Speed (SHIFT=Decrease)");
-		addInfo("Alt+V", "Switch Pac-Man/Ms. Pac-Man").when(() -> gameState() == GameState.INTRO);
+		addInfo("Alt+V", "Switch Pac-Man/Ms. Pac-Man").when(() -> gc.state == GameState.INTRO);
 		addInfo("Alt+X", "Kill all hunting ghosts").when(() -> gc.gameRunning);
-		addInfo("Alt+Z", "Play Intermission Scenes").when(() -> gameState() == GameState.INTRO);
-		addInfo("Alt+LEFT", () -> Env.perspectiveShifted(-1).name()).when(() -> gameScene().is3D());
-		addInfo("Alt+RIGHT", () -> Env.perspectiveShifted(1).name()).when(() -> gameScene().is3D());
+		addInfo("Alt+Z", "Play Intermission Scenes").when(() -> gc.state == GameState.INTRO);
+		addInfo("Alt+LEFT", () -> Env.perspectiveShifted(-1).name()).when(() -> ui.getCurrentGameScene().is3D());
+		addInfo("Alt+RIGHT", () -> Env.perspectiveShifted(1).name()).when(() -> ui.getCurrentGameScene().is3D());
 		addInfo("Alt+3", "3D Playscene On/Off");
 	}
 }

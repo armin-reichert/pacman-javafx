@@ -63,7 +63,8 @@ public class SectionGeneral extends Section {
 		cbAutopilot = addCheckBox("Autopilot", ui::toggleAutopilot);
 		cbImmunity = addCheckBox("Player immune", ui::toggleImmunity);
 
-		addInfo("Main scene", () -> String.format("w=%.0f h=%.0f", sceneWidth(), sceneHeight()));
+		addInfo("Main scene", () -> String.format("w=%.0f h=%.0f", ui.stage.getScene().getWindow().getWidth(),
+				ui.stage.getScene().getWindow().getHeight()));
 	}
 
 	@Override

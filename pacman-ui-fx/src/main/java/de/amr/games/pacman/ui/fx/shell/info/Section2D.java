@@ -41,7 +41,7 @@ public class Section2D extends Section {
 		addInfo("Canvas2D", () -> {
 			AbstractGameScene2D scene2D = (AbstractGameScene2D) ui.getCurrentGameScene();
 			return String.format("w=%.0f h=%.0f", scene2D.getCanvas().getWidth(), scene2D.getCanvas().getHeight());
-		}).when(() -> !gameScene().is3D());
+		}).when(() -> !ui.getCurrentGameScene().is3D());
 		cbTilesVisible = addCheckBox("Show tiles", ui::toggleTilesVisible);
 	}
 

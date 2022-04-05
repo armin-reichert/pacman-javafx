@@ -28,11 +28,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.lib.TickTimer;
-import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
-import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.collections.FXCollections;
@@ -153,50 +148,5 @@ public class Section extends TitledPane {
 		Spinner<Integer> spinner = new Spinner<>(min, max, initialValue);
 		addRow(labelText, spinner);
 		return spinner;
-	}
-
-	// -----------------------------
-
-	protected GameScene gameScene() {
-		return ui.getCurrentGameScene();
-	}
-
-	protected PlayScene3D scene3D() {
-		return (PlayScene3D) gameScene();
-	}
-
-	protected String fmtSpeed(float fraction) {
-		return String.format("%.2f px/sec", GameModel.BASE_SPEED * fraction);
-	}
-
-	protected double sceneWidth() {
-		return ui.stage.getScene().getWindow().getWidth();
-	}
-
-	protected double sceneHeight() {
-		return ui.stage.getScene().getWindow().getHeight();
-	}
-
-	protected GameModel game() {
-		return gc.game;
-	}
-
-	protected GameState gameState() {
-		return gc.state;
-	}
-
-	protected String huntingPhaseName() {
-		return game().inScatteringPhase() ? "Scattering" : "Chasing";
-	}
-
-	protected TickTimer stateTimer() {
-		return gc.stateTimer();
-	}
-
-	protected String fmtGameState() {
-		var game = gc.game;
-		var state = gc.state;
-		return state == GameState.HUNTING ? //
-				String.format("%s: Phase #%d (%s)", state, game.huntingPhase, huntingPhaseName()) : state.name();
 	}
 }

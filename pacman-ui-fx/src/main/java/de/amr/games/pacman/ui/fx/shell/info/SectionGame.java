@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx.shell.info;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.TickTimer;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.U;
@@ -61,22 +62,22 @@ public class SectionGame extends Section {
 		spinnerGameLevel = addSpinner("Level", 1, 100, gc.game.levelNumber);
 		spinnerGameLevel.valueProperty().addListener(($value, oldValue, newValue) -> ui.enterLevel(newValue.intValue()));
 		addInfo("Game State", this::fmtGameState);
-		addInfo("",
-				() -> String.format("Running:   %s%s", stateTimer().ticked(), stateTimer().isStopped() ? " (STOPPED)" : ""));
+		addInfo("", () -> String.format("Running:   %s%s", gc.stateTimer().ticked(),
+				gc.stateTimer().isStopped() ? " (STOPPED)" : ""));
 		addInfo("", () -> String.format("Remaining: %s",
-				stateTimer().ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer().ticksRemaining()));
+				gc.stateTimer().ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : gc.stateTimer().ticksRemaining()));
 		addInfo("Playing", () -> U.yes_no(gc.gameRunning));
 		addInfo("Attract Mode", () -> U.yes_no(gc.attractMode));
-		addInfo("Game scene", () -> gameScene().getClass().getSimpleName());
-		addInfo("", () -> String.format("w=%.0f h=%.0f", gameScene().getFXSubScene().getWidth(),
-				gameScene().getFXSubScene().getHeight()));
+		addInfo("Game scene", () -> ui.getCurrentGameScene().getClass().getSimpleName());
+		addInfo("", () -> String.format("w=%.0f h=%.0f", ui.getCurrentGameScene().getFXSubScene().getWidth(),
+				ui.getCurrentGameScene().getFXSubScene().getHeight()));
 
-		addInfo("Ghost speed", () -> fmtSpeed(game().ghostSpeed));
-		addInfo("Ghost speed (frightened)", () -> fmtSpeed(game().ghostSpeedFrightened));
-		addInfo("Pac-Man speed", () -> fmtSpeed(game().playerSpeed));
-		addInfo("Pac-Man speed (power)", () -> fmtSpeed(game().playerSpeedPowered));
-		addInfo("Bonus value", () -> game().bonusValue(game().bonusSymbol));
-		addInfo("Maze flashings", () -> game().numFlashes);
+		addInfo("Ghost speed", () -> fmtSpeed(gc.game.ghostSpeed));
+		addInfo("Ghost speed (frightened)", () -> fmtSpeed(gc.game.ghostSpeedFrightened));
+		addInfo("Pac-Man speed", () -> fmtSpeed(gc.game.playerSpeed));
+		addInfo("Pac-Man speed (power)", () -> fmtSpeed(gc.game.playerSpeedPowered));
+		addInfo("Bonus value", () -> gc.game.bonusValue(gc.game.bonusSymbol));
+		addInfo("Maze flashings", () -> gc.game.numFlashes);
 	}
 
 	@Override
@@ -103,5 +104,20 @@ public class SectionGame extends Section {
 			spinnerGameLevel.setDisable(
 					gc.state != GameState.READY && gc.state != GameState.HUNTING && gc.state != GameState.LEVEL_STARTING);
 		}
+	}
+
+	private String fmtSpeed(float fraction) {
+		return String.format("%.2f px/sec", GameModel.BASE_SPEED * fraction);
+	}
+
+	private String huntingPhaseName() {
+		return gc.game.inScatteringPhase() ? "Scattering" : "Chasing";
+	}
+
+	private String fmtGameState() {
+		var game = gc.game;
+		var state = gc.state;
+		return state == GameState.HUNTING ? //
+				String.format("%s: Phase #%d (%s)", state, game.huntingPhase, huntingPhaseName()) : state.name();
 	}
 }

@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell.info;
 
 import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
+import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.scene.control.CheckBox;
@@ -49,7 +50,8 @@ public class Section3D extends Section {
 		comboPerspective = addComboBox("Perspective", Perspective.values());
 		comboPerspective.setOnAction(e -> Env.$perspective.set(comboPerspective.getValue()));
 		comboResolution = addComboBox("Maze resolution", 1, 2, 4, 8);
-		addInfo("Camera", () -> scene3D().getCamController().info()).when(() -> gameScene().is3D());
+		addInfo("Camera", () -> ((PlayScene3D) ui.getCurrentGameScene()).getCamController().info())
+				.when(() -> ui.getCurrentGameScene().is3D());
 		comboResolution.setOnAction(e -> Env.$mazeResolution.set(comboResolution.getValue()));
 		sliderWallHeight = addSlider("Maze wall height", 0, 10, 8);
 		sliderWallHeight.valueProperty().addListener(($value, _old, _new) -> Env.$mazeWallHeight.set(_new.doubleValue()));
