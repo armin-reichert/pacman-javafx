@@ -69,9 +69,10 @@ public class GameUI extends DefaultGameEventHandler {
 
 	private GameScene currentGameScene;
 
-	public GameUI(GameController gameController, Stage primaryStage, double width, double height) {
+	public GameUI(GameController gameController, Stage stage, double width, double height) {
 		this.gameController = gameController;
 		gameController.addGameEventListener(this);
+		this.stage = stage;
 
 		infoLayer = new InfoLayer(this);
 		infoLayer.setVisible(false);
@@ -79,7 +80,6 @@ public class GameUI extends DefaultGameEventHandler {
 		// first child is placeholder for subscene assigned to current game scene
 		mainSceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
 		var mainScene = new Scene(mainSceneRoot, width, height);
-		stage = primaryStage;
 		stage.setScene(mainScene);
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> GameLoop.get().stop());
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPressed);
@@ -101,14 +101,15 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	/**
-	 * Called when simulation is not paused.
+	 * Called on every tick (if simulation is not paused).
 	 */
 	public void update() {
+		gameController.updateState();
 		currentGameScene.update();
 	}
 
 	/**
-	 * Called also when simulation is paused.
+	 * Called on every tick (also if simulation is paused).
 	 */
 	public void render() {
 		FlashMessageView.get().update();
