@@ -91,7 +91,8 @@ public class SectionGame extends Section {
 		// quit game
 		btnsGameControl[1].setDisable(gc.state == GameState.INTRO);
 		// next level
-		btnsGameControl[2].setDisable(!gc.gameRunning || gc.state != GameState.HUNTING);
+		btnsGameControl[2].setDisable(!gc.gameRunning
+				|| (gc.state != GameState.HUNTING && gc.state != GameState.READY && gc.state != GameState.LEVEL_STARTING));
 
 		btnIntermissionTest.setDisable(gc.state == GameState.INTERMISSION_TEST || gc.state != GameState.INTRO);
 
