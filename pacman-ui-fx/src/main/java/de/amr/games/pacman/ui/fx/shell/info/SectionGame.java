@@ -32,6 +32,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
 
+/**
+ * Game related settings.
+ * 
+ * @author Armin Reichert
+ */
 public class SectionGame extends Section {
 	private ComboBox<GameVariant> comboGameVariant;
 	private Button[] btnsGameControl;
@@ -42,26 +47,26 @@ public class SectionGame extends Section {
 		super(ui, "Game");
 		comboGameVariant = addComboBox("Game Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
 		comboGameVariant.setOnAction(e -> {
-			if (comboGameVariant.getValue() != ui.gameController.gameVariant) {
-				ui.gameController.selectGameVariant(comboGameVariant.getValue());
+			if (comboGameVariant.getValue() != gc.gameVariant) {
+				gc.selectGameVariant(comboGameVariant.getValue());
 			}
 		});
 
 		btnsGameControl = addButtons("Game", "Start", "Quit", "Next Level");
-		btnsGameControl[0].setOnAction(e -> ui.gameController.requestGame());
+		btnsGameControl[0].setOnAction(e -> gc.requestGame());
 		btnsGameControl[1].setOnAction(e -> ui.quitCurrentGameScene());
 		btnsGameControl[2].setOnAction(e -> ui.enterNextLevel());
 		btnIntermissionTest = addButton("Intermission scenes", "Start", ui::startIntermissionScenesTest);
 
-		spinnerGameLevel = addSpinner("Level", 1, 100, ui.gameController.game.levelNumber);
+		spinnerGameLevel = addSpinner("Level", 1, 100, gc.game.levelNumber);
 		spinnerGameLevel.valueProperty().addListener(($value, oldValue, newValue) -> ui.enterLevel(newValue.intValue()));
 		addInfo("Game State", this::fmtGameState);
 		addInfo("",
 				() -> String.format("Running:   %s%s", stateTimer().ticked(), stateTimer().isStopped() ? " (STOPPED)" : ""));
 		addInfo("", () -> String.format("Remaining: %s",
 				stateTimer().ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer().ticksRemaining()));
-		addInfo("Playing", () -> U.yes_no(ui.gameController.gameRunning));
-		addInfo("Attract Mode", () -> U.yes_no(ui.gameController.attractMode));
+		addInfo("Playing", () -> U.yes_no(gc.gameRunning));
+		addInfo("Attract Mode", () -> U.yes_no(gc.attractMode));
 		addInfo("Game scene", () -> gameScene().getClass().getSimpleName());
 		addInfo("", () -> String.format("w=%.0f h=%.0f", gameScene().getFXSubScene().getWidth(),
 				gameScene().getFXSubScene().getHeight()));
@@ -77,23 +82,25 @@ public class SectionGame extends Section {
 	@Override
 	public void update() {
 		super.update();
-		comboGameVariant.setValue(ui.gameController.gameVariant);
-		comboGameVariant.setDisable(ui.gameController.gameRunning);
 
-		btnsGameControl[0]
-				.setDisable(ui.gameController.gameRequested || ui.gameController.gameRunning || ui.gameController.attractMode);
-		btnsGameControl[1].setDisable(ui.gameController.state == GameState.INTRO);
-		btnsGameControl[2].setDisable(ui.gameController.state != GameState.HUNTING);
-		btnIntermissionTest.setDisable(
-				ui.gameController.state == GameState.INTERMISSION_TEST || ui.gameController.state != GameState.INTRO);
+		comboGameVariant.setValue(gc.gameVariant);
+		comboGameVariant.setDisable(gc.gameRunning);
 
-		spinnerGameLevel.getValueFactory().setValue(ui.gameController.game.levelNumber);
-		if (!ui.gameController.gameRunning) {
+		// start game
+		btnsGameControl[0].setDisable(gc.gameRequested || gc.gameRunning || gc.attractMode);
+		// quit game
+		btnsGameControl[1].setDisable(gc.state == GameState.INTRO);
+		// next level
+		btnsGameControl[2].setDisable(!gc.gameRunning || gc.state != GameState.HUNTING);
+
+		btnIntermissionTest.setDisable(gc.state == GameState.INTERMISSION_TEST || gc.state != GameState.INTRO);
+
+		spinnerGameLevel.getValueFactory().setValue(gc.game.levelNumber);
+		if (!gc.gameRunning) {
 			spinnerGameLevel.setDisable(true);
 		} else {
-			GameState state = ui.gameController.state;
-			spinnerGameLevel
-					.setDisable(state != GameState.READY && state != GameState.HUNTING && state != GameState.LEVEL_STARTING);
+			spinnerGameLevel.setDisable(
+					gc.state != GameState.READY && gc.state != GameState.HUNTING && gc.state != GameState.LEVEL_STARTING);
 		}
 	}
 }

@@ -30,6 +30,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 
+/**
+ * General settings.
+ * 
+ * @author Armin Reichert
+ */
 public class SectionGeneral extends Section {
 	private Button[] btnsSimulation;
 	private Slider sliderTargetFPS;
@@ -69,8 +74,8 @@ public class SectionGeneral extends Section {
 		btnsSimulation[1].setDisable(!Env.$paused.get());
 		sliderTargetFPS.setValue(GameLoop.get().getTargetFrameRate());
 
-		cbAutopilot.setSelected(ui.gameController.autoControlled);
-		cbImmunity.setSelected(ui.gameController.playerImmune);
+		cbAutopilot.setSelected(gc.autoControlled);
+		cbImmunity.setSelected(gc.playerImmune);
 		cbUsePlayScene3D.setSelected(Env.$3D.get());
 	}
 }

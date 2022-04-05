@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.common.GameModel;
@@ -57,6 +58,7 @@ import javafx.scene.text.Font;
 public class Section extends TitledPane {
 
 	protected final GameUI ui;
+	protected final GameController gc;
 	protected final List<InfoText> infoTexts = new ArrayList<>();
 	protected final GridPane content = new GridPane();
 
@@ -68,6 +70,7 @@ public class Section extends TitledPane {
 
 	public Section(GameUI ui, String title) {
 		this.ui = ui;
+		this.gc = ui.gameController;
 		setOpacity(0.7);
 		setFocusTraversable(false);
 		setText(title);
@@ -175,11 +178,11 @@ public class Section extends TitledPane {
 	}
 
 	protected GameModel game() {
-		return ui.gameController.game;
+		return gc.game;
 	}
 
 	protected GameState gameState() {
-		return ui.gameController.state;
+		return gc.state;
 	}
 
 	protected String huntingPhaseName() {
@@ -187,12 +190,12 @@ public class Section extends TitledPane {
 	}
 
 	protected TickTimer stateTimer() {
-		return ui.gameController.stateTimer();
+		return gc.stateTimer();
 	}
 
 	protected String fmtGameState() {
-		var game = ui.gameController.game;
-		var state = ui.gameController.state;
+		var game = gc.game;
+		var state = gc.state;
 		return state == GameState.HUNTING ? //
 				String.format("%s: Phase #%d (%s)", state, game.huntingPhase, huntingPhaseName()) : state.name();
 	}

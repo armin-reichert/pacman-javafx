@@ -27,20 +27,25 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 
+/**
+ * Keyboard shortcuts.
+ * 
+ * @author Armin Reichert
+ */
 public class SectionKeys extends Section {
 
 	public SectionKeys(GameUI ui) {
 		super(ui, "Keyboard Shortcuts");
 		addInfo("Ctrl+I", "Info Panels On/Off");
 		addInfo("Alt+A", "Autopilot On/Off");
-		addInfo("Alt+E", "Eat all normal pellets").when(() -> ui.gameController.gameRunning);
+		addInfo("Alt+E", "Eat all normal pellets").when(() -> gc.gameRunning);
 		addInfo("Alt+I", "Player immunity On/Off");
-		addInfo("Alt+L", "Add 3 player lives").when(() -> ui.gameController.gameRunning);
-		addInfo("Alt+N", "Next Level").when(() -> ui.gameController.gameRunning);
+		addInfo("Alt+L", "Add 3 player lives").when(() -> gc.gameRunning);
+		addInfo("Alt+N", "Next Level").when(() -> gc.gameRunning);
 		addInfo("Alt+Q", "Quit Scene").when(() -> gameState() != GameState.INTRO);
 		addInfo("Alt+S", "Speed (SHIFT=Decrease)");
 		addInfo("Alt+V", "Switch Pac-Man/Ms. Pac-Man").when(() -> gameState() == GameState.INTRO);
-		addInfo("Alt+X", "Kill all hunting ghosts").when(() -> ui.gameController.gameRunning);
+		addInfo("Alt+X", "Kill all hunting ghosts").when(() -> gc.gameRunning);
 		addInfo("Alt+Z", "Play Intermission Scenes").when(() -> gameState() == GameState.INTRO);
 		addInfo("Alt+LEFT", () -> Env.perspectiveShifted(-1).name()).when(() -> gameScene().is3D());
 		addInfo("Alt+RIGHT", () -> Env.perspectiveShifted(1).name()).when(() -> gameScene().is3D());

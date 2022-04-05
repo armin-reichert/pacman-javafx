@@ -31,6 +31,11 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.shape.DrawMode;
 
+/**
+ * 3D related settings.
+ * 
+ * @author Armin Reichert
+ */
 public class Section3D extends Section {
 	private ComboBox<Perspective> comboPerspective;
 	private ComboBox<Integer> comboResolution;

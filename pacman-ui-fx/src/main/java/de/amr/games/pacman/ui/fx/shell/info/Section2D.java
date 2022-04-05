@@ -28,6 +28,11 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.scene.control.CheckBox;
 
+/**
+ * 2D related settings.
+ * 
+ * @author Armin Reichert
+ */
 public class Section2D extends Section {
 	private CheckBox cbTilesVisible;
 
