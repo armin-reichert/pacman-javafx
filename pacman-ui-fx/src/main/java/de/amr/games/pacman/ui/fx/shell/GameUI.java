@@ -100,10 +100,16 @@ public class GameUI extends DefaultGameEventHandler {
 		stage.show();
 	}
 
+	/**
+	 * Called when simulation is not paused.
+	 */
 	public void update() {
 		currentGameScene.update();
 	}
 
+	/**
+	 * Called also when simulation is paused.
+	 */
 	public void render() {
 		FlashMessageView.get().update();
 		infoLayer.update();
