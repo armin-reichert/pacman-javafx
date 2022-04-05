@@ -59,10 +59,11 @@ public class SectionGame extends Section {
 		btnIntermissionTest = addButton("Intermission scenes", "Start", ui::startIntermissionScenesTest);
 
 		spinnerGameLevel = addSpinner("Level", 1, 100, gc.game.levelNumber);
-		spinnerGameLevel.valueProperty().addListener(($value, oldValue, newValue) -> ui.enterLevel(newValue.intValue()));
+		spinnerGameLevel.valueProperty()
+				.addListener(($value, oldValue, newValue) -> ui.enterLevel(newValue.intValue()));
 		addInfo("Game State", this::fmtGameState);
-		addInfo("",
-				() -> String.format("Running:   %s%s", stateTimer().ticked(), stateTimer().isStopped() ? " (STOPPED)" : ""));
+		addInfo("", () -> String.format("Running:   %s%s", stateTimer().ticked(),
+				stateTimer().isStopped() ? " (STOPPED)" : ""));
 		addInfo("", () -> String.format("Remaining: %s",
 				stateTimer().ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : stateTimer().ticksRemaining()));
 		addInfo("Playing", () -> U.yes_no(gc.gameRunning));
@@ -73,10 +74,15 @@ public class SectionGame extends Section {
 
 		addInfo("Ghost speed", () -> fmtSpeed(game().ghostSpeed));
 		addInfo("Ghost speed (frightened)", () -> fmtSpeed(game().ghostSpeedFrightened));
+		addInfo("Ghost speed (tunnel)", () -> fmtSpeed(game().ghostSpeedTunnel));
+		addInfo("Ghost frightened time", () -> String.format("%d sec", game().ghostFrightenedSeconds));
 		addInfo("Pac-Man speed", () -> fmtSpeed(game().playerSpeed));
 		addInfo("Pac-Man speed (power)", () -> fmtSpeed(game().playerSpeedPowered));
 		addInfo("Bonus value", () -> game().bonusValue(game().bonusSymbol));
 		addInfo("Maze flashings", () -> game().numFlashes);
+		addInfo("Pellets total",
+				() -> String.format("%d (%d energizers)", game().world.pelletsTotal(), game().world.energizersTotal()));
+		addInfo("Pellets remaining", () -> game().world.foodRemaining());
 	}
 
 	@Override
@@ -91,8 +97,8 @@ public class SectionGame extends Section {
 		// quit game
 		btnsGameControl[1].setDisable(gc.state == GameState.INTRO);
 		// next level
-		btnsGameControl[2].setDisable(!gc.gameRunning
-				|| (gc.state != GameState.HUNTING && gc.state != GameState.READY && gc.state != GameState.LEVEL_STARTING));
+		btnsGameControl[2].setDisable(!gc.gameRunning || (gc.state != GameState.HUNTING && gc.state != GameState.READY
+				&& gc.state != GameState.LEVEL_STARTING));
 
 		btnIntermissionTest.setDisable(gc.state == GameState.INTERMISSION_TEST || gc.state != GameState.INTRO);
 
@@ -100,8 +106,8 @@ public class SectionGame extends Section {
 		if (!gc.gameRunning) {
 			spinnerGameLevel.setDisable(true);
 		} else {
-			spinnerGameLevel.setDisable(
-					gc.state != GameState.READY && gc.state != GameState.HUNTING && gc.state != GameState.LEVEL_STARTING);
+			spinnerGameLevel.setDisable(gc.state != GameState.READY && gc.state != GameState.HUNTING
+					&& gc.state != GameState.LEVEL_STARTING);
 		}
 	}
 }
