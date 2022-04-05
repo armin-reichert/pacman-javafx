@@ -71,13 +71,17 @@ public class SectionGame extends Section {
 		addInfo("Game scene", () -> ui.getCurrentGameScene().getClass().getSimpleName());
 		addInfo("", () -> String.format("w=%.0f h=%.0f", ui.getCurrentGameScene().getFXSubScene().getWidth(),
 				ui.getCurrentGameScene().getFXSubScene().getHeight()));
-
 		addInfo("Ghost speed", () -> fmtSpeed(gc.game.ghostSpeed));
 		addInfo("Ghost speed (frightened)", () -> fmtSpeed(gc.game.ghostSpeedFrightened));
+		addInfo("Ghost speed (tunnel)", () -> fmtSpeed(gc.game.ghostSpeedTunnel));
+		addInfo("Ghost frightened time", () -> String.format("%d sec", gc.game.ghostFrightenedSeconds));
 		addInfo("Pac-Man speed", () -> fmtSpeed(gc.game.playerSpeed));
 		addInfo("Pac-Man speed (power)", () -> fmtSpeed(gc.game.playerSpeedPowered));
 		addInfo("Bonus value", () -> gc.game.bonusValue(gc.game.bonusSymbol));
 		addInfo("Maze flashings", () -> gc.game.numFlashes);
+		addInfo("Pellets total",
+				() -> String.format("%d (%d energizers)", gc.game.world.pelletsTotal(), gc.game.world.energizersTotal()));
+		addInfo("Pellets remaining", () -> gc.game.world.foodRemaining());
 	}
 
 	@Override
