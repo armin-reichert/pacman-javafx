@@ -49,14 +49,14 @@ public class SectionGeneral extends Section {
 		btnsSimulation[0].setOnAction(e -> ui.togglePaused());
 		btnsSimulation[1].setOnAction(e -> GameLoop.get().runSingleStep(true));
 
-		sliderTargetFPS = addSlider("Target Framerate", 0, 120, 60);
+		sliderTargetFPS = addSlider("Target Framerate", 10, 120, 60);
 		sliderTargetFPS.setShowTickLabels(false);
 		sliderTargetFPS.setShowTickMarks(false);
 		sliderTargetFPS.valueProperty().addListener(($value, oldValue, newValue) -> {
 			GameLoop.get().setTargetFrameRate(newValue.intValue());
 		});
-		addInfo("Current Framerate",
-				() -> String.format("%d Hz (target: %d Hz)", GameLoop.get().getFPS(), GameLoop.get().getTargetFrameRate()));
+		addInfo("", () -> String.format("Current: %d Hz (Target: %d Hz)", GameLoop.get().getFPS(),
+				GameLoop.get().getTargetFrameRate()));
 		addInfo("Total Ticks", GameLoop.get()::getTotalTicks);
 
 		cbUsePlayScene3D = addCheckBox("Use 3D play scene", ui::toggleUse3DScene);
