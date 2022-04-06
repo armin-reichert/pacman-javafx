@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx.util;
 
 import javafx.animation.PauseTransition;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
@@ -102,8 +103,11 @@ public class U {
 	}
 
 	public static Background imageBackground(String path) {
-		Image image = new Image(U.class.getResource(path).toString());
-		return new Background(new BackgroundImage(image, null, null, null, null));
+		return new Background(new BackgroundImage(image(path), null, null, null, null));
+	}
+
+	public static ImageView imageView(String path) {
+		return new ImageView(image(path));
 	}
 
 	public static String yes_no(boolean b) {
