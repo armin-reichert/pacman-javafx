@@ -49,7 +49,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -72,22 +71,21 @@ public class GameUI extends DefaultGameEventHandler {
 
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
 		this.gameController = gameController;
-		gameController.addGameEventListener(this);
 		this.stage = stage;
+		this.infoLayer = new InfoLayer(this);
 
-		infoLayer = new InfoLayer(this, 160, Color.WHITE, Font.font("Sans", 12), Font.font("Sans", 12));
-		infoLayer.setVisible(false);
-
-		// first child is placeholder for subscene assigned to current game scene
+		// first child will be updated by subscene assigned to current game scene
 		mainSceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
 		var mainScene = new Scene(mainSceneRoot, width, height);
-		stage.setScene(mainScene);
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> GameLoop.get().stop());
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPressed);
 		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
+		stage.setScene(mainScene);
+
+		gameController.addGameEventListener(this);
+		Env.$drawMode3D.addListener(($drawMode, oldDrawMode, newDrawMode) -> updateMainSceneBackground(currentGameScene));
 
 		gameScenes = new GameScenes(mainScene, gameController, GianmarcosModel3D.get());
-		Env.$drawMode3D.addListener(($drawMode, oldDrawMode, newDrawMode) -> updateMainSceneBackground(currentGameScene));
 	}
 
 	public GameScene getCurrentGameScene() {

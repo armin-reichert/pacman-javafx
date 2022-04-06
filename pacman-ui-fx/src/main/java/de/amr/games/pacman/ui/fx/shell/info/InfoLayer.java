@@ -44,9 +44,11 @@ public class InfoLayer extends BorderPane {
 	private Section2D section2D;
 	private SectionKeys sectionKeys;
 
-	public InfoLayer(GameUI ui, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
-		setLeft(leftSide);
-		setRight(rightSide);
+	public InfoLayer(GameUI ui) {
+		int minLabelWidth = 160;
+		Color textColor = Color.WHITE;
+		Font textFont = Font.font("Sans", 12);
+		Font labelFont = Font.font("Sans", 12);
 		sectionGame = new SectionGame(ui, "Game", minLabelWidth, textColor, textFont, labelFont);
 		sectionGeneral = new SectionGeneral(ui, "General", minLabelWidth, textColor, textFont, labelFont);
 		sectionKeys = new SectionKeys(ui, "Keyboard Shortcuts", minLabelWidth, textColor, textFont, labelFont);
@@ -55,6 +57,9 @@ public class InfoLayer extends BorderPane {
 		section3D = new Section3D(ui, "3D Settings", minLabelWidth, textColor, textFont, labelFont);
 		leftSide.getChildren().addAll(sectionGeneral, sectionGame);
 		rightSide.getChildren().addAll(section3D, section2D, sectionKeys);
+		setLeft(leftSide);
+		setRight(rightSide);
+		setVisible(false);
 	}
 
 	public void update() {
