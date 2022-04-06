@@ -65,7 +65,7 @@ public class GameUI extends DefaultGameEventHandler {
 	private final StackPane mainSceneRoot;
 	private final GameScenes gameScenes;
 	private final InfoLayer infoLayer;
-	private final Wallpapers wallpapers = new Wallpapers();
+	private final Wallpapers wallpapers;
 
 	private GameScene currentGameScene;
 
@@ -73,12 +73,13 @@ public class GameUI extends DefaultGameEventHandler {
 		this.gameController = gameController;
 		this.stage = stage;
 		this.infoLayer = new InfoLayer(this);
+		this.wallpapers = new Wallpapers();
 
 		// first child will be updated by subscene assigned to current game scene
 		mainSceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
 		var mainScene = new Scene(mainSceneRoot, width, height);
-		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> GameLoop.get().stop());
 		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPressed);
+		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> GameLoop.get().stop());
 		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
 		stage.setScene(mainScene);
 
@@ -158,7 +159,7 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 	}
 
-	private void handleKeyPressed(KeyEvent e) {
+	public void handleKeyPressed(KeyEvent e) {
 		boolean shift = e.isShiftDown();
 
 		if (e.isAltDown()) {
