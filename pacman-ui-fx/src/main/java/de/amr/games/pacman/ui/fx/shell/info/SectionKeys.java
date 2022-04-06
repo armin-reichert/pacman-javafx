@@ -26,6 +26,8 @@ package de.amr.games.pacman.ui.fx.shell.info;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 /**
  * Keyboard shortcuts.
@@ -34,8 +36,8 @@ import de.amr.games.pacman.ui.fx.shell.GameUI;
  */
 public class SectionKeys extends Section {
 
-	public SectionKeys(GameUI ui) {
-		super(ui, "Keyboard Shortcuts");
+	public SectionKeys(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
+		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
 		addInfo("Ctrl+I", "Info Panels On/Off");
 		addInfo("Alt+A", "Autopilot On/Off");
 		addInfo("Alt+E", "Eat all normal pellets").when(() -> gc.gameRunning);

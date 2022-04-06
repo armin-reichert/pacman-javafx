@@ -26,6 +26,8 @@ package de.amr.games.pacman.ui.fx.shell.info;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 /**
  * UI layer showing different info sections.
@@ -42,15 +44,15 @@ public class InfoLayer extends BorderPane {
 	private Section2D section2D;
 	private SectionKeys sectionKeys;
 
-	public InfoLayer(GameUI ui) {
+	public InfoLayer(GameUI ui, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
 		setLeft(leftSide);
 		setRight(rightSide);
-		sectionGame = new SectionGame(ui);
-		sectionGeneral = new SectionGeneral(ui);
-		sectionKeys = new SectionKeys(ui);
+		sectionGame = new SectionGame(ui, "Game", minLabelWidth, textColor, textFont, labelFont);
+		sectionGeneral = new SectionGeneral(ui, "General", minLabelWidth, textColor, textFont, labelFont);
+		sectionKeys = new SectionKeys(ui, "Keyboard Shortcuts", minLabelWidth, textColor, textFont, labelFont);
 		sectionKeys.setExpanded(false);
-		section2D = new Section2D(ui);
-		section3D = new Section3D(ui);
+		section2D = new Section2D(ui, "2D Settings", minLabelWidth, textColor, textFont, labelFont);
+		section3D = new Section3D(ui, "3D Settings", minLabelWidth, textColor, textFont, labelFont);
 		leftSide.getChildren().addAll(sectionGeneral, sectionGame);
 		rightSide.getChildren().addAll(section3D, section2D, sectionKeys);
 	}

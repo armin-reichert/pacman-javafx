@@ -29,6 +29,8 @@ import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 /**
  * General settings.
@@ -42,8 +44,8 @@ public class SectionGeneral extends Section {
 	private CheckBox cbImmunity;
 	private CheckBox cbUsePlayScene3D;
 
-	public SectionGeneral(GameUI ui) {
-		super(ui, "General");
+	public SectionGeneral(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
+		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
 
 		btnsSimulation = addButtons("Simulation", "Pause", "Step");
 		btnsSimulation[0].setOnAction(e -> ui.togglePaused());

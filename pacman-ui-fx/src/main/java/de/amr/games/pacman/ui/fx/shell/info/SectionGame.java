@@ -32,6 +32,8 @@ import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 /**
  * Game related settings.
@@ -44,8 +46,8 @@ public class SectionGame extends Section {
 	private Button btnIntermissionTest;
 	private Spinner<Integer> spinnerGameLevel;
 
-	public SectionGame(GameUI ui) {
-		super(ui, "Game");
+	public SectionGame(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
+		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
 		comboGameVariant = addComboBox("Game Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
 		comboGameVariant.setOnAction(e -> {
 			if (comboGameVariant.getValue() != gc.gameVariant) {

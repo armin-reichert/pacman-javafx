@@ -30,7 +30,9 @@ import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
+import javafx.scene.text.Font;
 
 /**
  * 3D related settings.
@@ -45,8 +47,8 @@ public class Section3D extends Section {
 	private CheckBox cbAxesVisible;
 	private CheckBox cbWireframeMode;
 
-	public Section3D(GameUI ui) {
-		super(ui, "3D Settings");
+	public Section3D(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
+		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
 		comboPerspective = addComboBox("Perspective", Perspective.values());
 		comboPerspective.setOnAction(e -> Env.$perspective.set(comboPerspective.getValue()));
 		comboResolution = addComboBox("Maze resolution", 1, 2, 4, 8);
