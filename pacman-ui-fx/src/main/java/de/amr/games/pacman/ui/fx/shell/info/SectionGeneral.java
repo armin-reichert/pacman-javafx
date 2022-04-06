@@ -57,12 +57,17 @@ public class SectionGeneral extends Section {
 		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
 
 		btnsSimulation = addButtonList("Simulation", "Pause", "Step");
-		btnsSimulation[0].setText(null);
-		btnsSimulation[0].setOnAction(e -> ui.togglePaused());
-		btnsSimulation[1].setGraphic(iconStep);
-		btnsSimulation[1].setText(null);
-		btnsSimulation[1].setTooltip(tooltipStep);
-		btnsSimulation[1].setOnAction(e -> GameLoop.get().runSingleStep(true));
+		Button btnPlayPause = btnsSimulation[0], btnStep = btnsSimulation[1];
+
+		btnPlayPause.setText(null);
+		btnPlayPause.setStyle("-fx-background-color: transparent");
+		btnPlayPause.setOnAction(e -> ui.togglePaused());
+
+		btnStep.setGraphic(iconStep);
+		btnStep.setStyle("-fx-background-color: transparent");
+		btnStep.setText(null);
+		btnStep.setTooltip(tooltipStep);
+		btnStep.setOnAction(e -> GameLoop.get().runSingleStep(true));
 
 		sliderTargetFPS = addSlider("Target Framerate", 10, 120, 60);
 		sliderTargetFPS.setShowTickLabels(false);
