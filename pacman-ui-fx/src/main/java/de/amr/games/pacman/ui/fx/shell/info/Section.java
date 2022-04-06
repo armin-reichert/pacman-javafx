@@ -57,15 +57,23 @@ public class Section extends TitledPane {
 	protected final List<InfoText> infoTexts = new ArrayList<>();
 	protected final GridPane content = new GridPane();
 
-	private int minLabelWidth = 160;
-	private Color textColor = Color.WHITE;
-	private Font textFont = Font.font("Sans", 12);
-	private Font labelFont = Font.font("Sans", 12);
+	private int minLabelWidth;
+	private Color textColor;
+	private Font textFont;
+	private Font labelFont;
 	private int row;
 
 	public Section(GameUI ui, String title) {
+		this(ui, title, 160, Color.WHITE, Font.font("Sans", 12), Font.font("Sans", 12));
+	}
+
+	public Section(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
 		this.ui = ui;
 		this.gc = ui.gameController;
+		this.minLabelWidth = minLabelWidth;
+		this.textColor = textColor;
+		this.textFont = textFont;
+		this.labelFont = labelFont;
 		setOpacity(0.7);
 		setFocusTraversable(false);
 		setText(title);
