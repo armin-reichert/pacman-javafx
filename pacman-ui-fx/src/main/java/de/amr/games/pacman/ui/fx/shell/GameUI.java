@@ -159,7 +159,7 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 	}
 
-	public void handleKeyPressed(KeyEvent e) {
+	private void handleKeyPressed(KeyEvent e) {
 		boolean shift = e.isShiftDown();
 
 		if (e.isAltDown()) {
@@ -200,7 +200,7 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 	}
 
-	private void changePerspective(int delta) {
+	public void changePerspective(int delta) {
 		if (currentGameScene.is3D()) {
 			Env.$perspective.set(Env.perspectiveShifted(delta));
 			String perspectiveName = Env.message(Env.$perspective.get().name());
@@ -208,7 +208,7 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 	}
 
-	private void changeTargetFramerate(int delta) {
+	public void changeTargetFramerate(int delta) {
 		GameLoop.get().setTargetFrameRate(U.clamp(GameLoop.get().getTargetFrameRate() + delta, 10, 120));
 		showFlashMessage(1, "Target FPS set to %d Hz", GameLoop.get().getTargetFrameRate());
 	}
