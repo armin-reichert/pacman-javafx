@@ -26,9 +26,12 @@ package de.amr.games.pacman.ui.fx.shell.info;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
+import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -43,12 +46,22 @@ public class SectionGeneral extends Section {
 	private CheckBox cbAutopilot;
 	private CheckBox cbImmunity;
 	private CheckBox cbUsePlayScene3D;
+	private ImageView iconPlay = U.imageView("/common/icons/play.png");
+	private ImageView iconStop = U.imageView("/common/icons/stop.png");
+	private ImageView iconStep = U.imageView("/common/icons/step.png");
+	private Tooltip tooltipPlay = new Tooltip("Play");
+	private Tooltip tooltipStop = new Tooltip("Stop");
+	private Tooltip tooltipStep = new Tooltip("Single Step");
 
 	public SectionGeneral(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
 		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
 
-		btnsSimulation = addButtons("Simulation", "Pause", "Step");
+		btnsSimulation = addButtonList("Simulation", "Pause", "Step");
+		btnsSimulation[0].setText(null);
 		btnsSimulation[0].setOnAction(e -> ui.togglePaused());
+		btnsSimulation[1].setGraphic(iconStep);
+		btnsSimulation[1].setText(null);
+		btnsSimulation[1].setTooltip(tooltipStep);
 		btnsSimulation[1].setOnAction(e -> GameLoop.get().runSingleStep(true));
 
 		sliderTargetFPS = addSlider("Target Framerate", 10, 120, 60);
@@ -72,11 +85,10 @@ public class SectionGeneral extends Section {
 	@Override
 	public void update() {
 		super.update();
-
-		btnsSimulation[0].setText(Env.$paused.get() ? "Resume" : "Pause");
+		btnsSimulation[0].setGraphic(Env.$paused.get() ? iconPlay : iconStop);
+		btnsSimulation[0].setTooltip(Env.$paused.get() ? tooltipPlay : tooltipStop);
 		btnsSimulation[1].setDisable(!Env.$paused.get());
 		sliderTargetFPS.setValue(GameLoop.get().getTargetFrameRate());
-
 		cbAutopilot.setSelected(gc.autoControlled);
 		cbImmunity.setSelected(gc.playerImmune);
 		cbUsePlayScene3D.setSelected(Env.$3D.get());

@@ -55,7 +55,7 @@ public class SectionGame extends Section {
 			}
 		});
 
-		btnsGameControl = addButtons("Game", "Start", "Quit", "Next Level");
+		btnsGameControl = addButtonList("Game", "Start", "Quit", "Next Level");
 		btnsGameControl[0].setOnAction(e -> gc.requestGame());
 		btnsGameControl[1].setOnAction(e -> ui.quitCurrentGameScene());
 		btnsGameControl[2].setOnAction(e -> ui.enterNextLevel());

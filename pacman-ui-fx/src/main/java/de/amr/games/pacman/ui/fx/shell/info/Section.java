@@ -114,7 +114,7 @@ public class Section extends TitledPane {
 		return button;
 	}
 
-	public Button[] addButtons(String labelText, String... buttonTexts) {
+	public Button[] addButtonList(String labelText, String... buttonTexts) {
 		HBox hbox = new HBox();
 		Button[] buttons = new Button[buttonTexts.length];
 		for (int i = 0; i < buttonTexts.length; ++i) {
