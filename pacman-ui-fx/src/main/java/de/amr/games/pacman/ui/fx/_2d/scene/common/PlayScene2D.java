@@ -41,7 +41,7 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
-import de.amr.games.pacman.ui.GameSounds;
+import de.amr.games.pacman.ui.GameSound;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Bonus2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
@@ -125,11 +125,11 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	protected void doUpdate() {
-		if (SoundManager.get().getClip(GameSounds.PACMAN_MUNCH).isPlaying() && game.player.starvingTicks > 10) {
-			SoundManager.get().stop(GameSounds.PACMAN_MUNCH);
+		if (SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying() && game.player.starvingTicks > 10) {
+			SoundManager.get().stop(GameSound.PACMAN_MUNCH);
 		}
 		int scatterPhase = game.huntingPhase % 2;
-		GameSounds siren = GameSounds.SIRENS.get(scatterPhase);
+		GameSound siren = GameSound.SIRENS.get(scatterPhase);
 		if (gameController.state == GameState.HUNTING && !SoundManager.get().getClip(siren).isPlaying()) {
 			SoundManager.get().loop(siren, Animation.INDEFINITE);
 		}
@@ -152,18 +152,18 @@ public class PlayScene2D extends AbstractGameScene2D {
 		if (!maze2D.getEnergizerAnimation().isRunning()) {
 			maze2D.getEnergizerAnimation().restart();
 		}
-		AudioClip munching = SoundManager.get().getClip(GameSounds.PACMAN_MUNCH);
+		AudioClip munching = SoundManager.get().getClip(GameSound.PACMAN_MUNCH);
 		if (munching.isPlaying() && game.player.starvingTicks > 10) {
-			SoundManager.get().stop(GameSounds.PACMAN_MUNCH);
+			SoundManager.get().stop(GameSound.PACMAN_MUNCH);
 		}
 	}
 
 	@Override
 	public void onScatterPhaseStarted(ScatterPhaseStartedEvent e) {
 		if (e.scatterPhase > 0) {
-			SoundManager.get().stop(GameSounds.SIRENS.get(e.scatterPhase - 1));
+			SoundManager.get().stop(GameSound.SIRENS.get(e.scatterPhase - 1));
 		}
-		GameSounds siren = GameSounds.SIRENS.get(e.scatterPhase);
+		GameSound siren = GameSound.SIRENS.get(e.scatterPhase);
 		if (!SoundManager.get().getClip(siren).isPlaying()) {
 			SoundManager.get().loop(siren, Animation.INDEFINITE);
 		}
@@ -171,7 +171,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void onPlayerLostPower(GameEvent e) {
-		SoundManager.get().stop(GameSounds.PACMAN_POWER);
+		SoundManager.get().stop(GameSound.PACMAN_POWER);
 	}
 
 	@Override
@@ -180,15 +180,15 @@ public class PlayScene2D extends AbstractGameScene2D {
 			ghost2D.animFlashing.reset();
 			ghost2D.animFrightened.restart();
 		});
-		if (!SoundManager.get().getClip(GameSounds.PACMAN_POWER).isPlaying()) {
-			SoundManager.get().loop(GameSounds.PACMAN_POWER, Animation.INDEFINITE);
+		if (!SoundManager.get().getClip(GameSound.PACMAN_POWER).isPlaying()) {
+			SoundManager.get().loop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
 		}
 	}
 
 	@Override
 	public void onPlayerFoundFood(GameEvent e) {
-		if (!SoundManager.get().getClip(GameSounds.PACMAN_MUNCH).isPlaying()) {
-			SoundManager.get().loop(GameSounds.PACMAN_MUNCH, Animation.INDEFINITE);
+		if (!SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying()) {
+			SoundManager.get().loop(GameSound.PACMAN_MUNCH, Animation.INDEFINITE);
 		}
 	}
 
@@ -200,23 +200,23 @@ public class PlayScene2D extends AbstractGameScene2D {
 	@Override
 	public void onBonusEaten(GameEvent e) {
 		bonus2D.stopAnimation();
-		SoundManager.get().play(GameSounds.BONUS_EATEN);
+		SoundManager.get().play(GameSound.BONUS_EATEN);
 	}
 
 	@Override
 	public void onExtraLife(GameEvent e) {
-		SoundManager.get().play(GameSounds.EXTRA_LIFE);
+		SoundManager.get().play(GameSound.EXTRA_LIFE);
 	}
 
 	@Override
 	public void onGhostReturnsHome(GameEvent e) {
-		SoundManager.get().play(GameSounds.GHOST_RETURNING);
+		SoundManager.get().play(GameSound.GHOST_RETURNING);
 	}
 
 	@Override
 	public void onGhostEntersHouse(GameEvent e) {
 		if (game.ghosts(GhostState.DEAD).count() == 0) {
-			SoundManager.get().stop(GameSounds.GHOST_RETURNING);
+			SoundManager.get().stop(GameSound.GHOST_RETURNING);
 		}
 	}
 
@@ -233,7 +233,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 			Stream.of(ghosts2D).forEach(Ghost2D::reset);
 			if (!gameController.attractMode && !gameController.gameRunning) {
 				SoundManager.get().setMuted(false);
-				SoundManager.get().play(GameSounds.GAME_READY);
+				SoundManager.get().play(GameSound.GAME_READY);
 			}
 		}
 
@@ -252,7 +252,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 			new SequentialTransition( //
 					afterSeconds(1, () -> game.ghosts().forEach(Ghost::hide)), //
 					afterSeconds(1, () -> {
-						SoundManager.get().play(GameSounds.PACMAN_DEATH);
+						SoundManager.get().play(GameSound.PACMAN_DEATH);
 						player2D.animDying.restart();
 					}), //
 					afterSeconds(2, () -> game.player.hide()), //
@@ -262,7 +262,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		case GHOST_DYING -> {
 			game.player.hide();
-			SoundManager.get().play(GameSounds.GHOST_EATEN);
+			SoundManager.get().play(GameSound.GHOST_EATEN);
 		}
 
 		case LEVEL_COMPLETE -> {

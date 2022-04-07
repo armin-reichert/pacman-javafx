@@ -27,7 +27,7 @@ import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.ui.fx.util.U.now;
 
 import de.amr.games.pacman.model.common.Pac;
-import de.amr.games.pacman.ui.GameSounds;
+import de.amr.games.pacman.ui.GameSound;
 import de.amr.games.pacman.ui.fx._3d.animation.FillTransition3D;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -93,7 +93,7 @@ public class Pac3D extends Creature3D<Pac> {
 		shrink.setToY(0);
 		shrink.setToZ(0);
 
-		var playSound = now(() -> sounds.play(GameSounds.PACMAN_DEATH));
+		var playSound = now(() -> sounds.play(GameSound.PACMAN_DEATH));
 
 		return new SequentialTransition( //
 				new FillTransition3D(Duration.seconds(1), skull, skullColor, ghostColor), //

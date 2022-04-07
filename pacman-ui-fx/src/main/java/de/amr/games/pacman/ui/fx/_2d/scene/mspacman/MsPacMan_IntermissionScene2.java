@@ -29,7 +29,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission2Controller;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.ui.GameSounds;
+import de.amr.games.pacman.ui.GameSound;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
@@ -56,7 +56,7 @@ public class MsPacMan_IntermissionScene2 extends AbstractGameScene2D {
 	public MsPacMan_IntermissionScene2(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
 		sc = new Intermission2Controller(gameController);
-		sc.playIntermissionSound = () -> SoundManager.get().play(GameSounds.INTERMISSION_2);
+		sc.playIntermissionSound = () -> SoundManager.get().play(GameSound.INTERMISSION_2);
 		sc.playFlapAnimation = () -> flap2D.animation.restart();
 	}
 

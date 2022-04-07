@@ -24,7 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.sound;
 
 import de.amr.games.pacman.lib.Logging;
-import de.amr.games.pacman.ui.GameSounds;
+import de.amr.games.pacman.ui.GameSound;
 import javafx.scene.media.AudioClip;
 
 /**
@@ -57,11 +57,11 @@ public class SoundManager {
 		this.soundMap = soundMap;
 	}
 
-	public AudioClip getClip(GameSounds sound) {
+	public AudioClip getClip(GameSound sound) {
 		return soundMap.getClip(sound);
 	}
 
-	public void play(GameSounds sound) {
+	public void play(GameSound sound) {
 		if (!muted) {
 			log("Play sound %s", sound);
 			AudioClip clip = getClip(sound);
@@ -70,7 +70,7 @@ public class SoundManager {
 		}
 	}
 
-	public void loop(GameSounds sound, int repetitions) {
+	public void loop(GameSound sound, int repetitions) {
 		if (!muted) {
 			log("Loop sound %s repetition=%d", sound, repetitions);
 			AudioClip clip = getClip(sound);
@@ -79,7 +79,7 @@ public class SoundManager {
 		}
 	}
 
-	public void stop(GameSounds sound) {
+	public void stop(GameSound sound) {
 		log("Stop sound %s", sound);
 		getClip(sound).stop();
 	}

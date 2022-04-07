@@ -3,28 +3,33 @@
  */
 package de.amr.games.pacman.ui.fx.sound;
 
+import java.net.URL;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
-import de.amr.games.pacman.ui.GameSounds;
+import de.amr.games.pacman.ui.GameSound;
 import javafx.scene.media.AudioClip;
 
 /**
- * Sound map.
+ * Maps sound symbols to audio clips.
  * 
  * @author Armin Reichert
  */
 public class SoundMap {
 
-	private final Map<GameSounds, AudioClip> clips = new HashMap<>();
+	private final Map<GameSound, AudioClip> clips = new EnumMap<>(GameSound.class);
 
-	public void put(GameSounds sound, String path) {
-		String url = getClass().getResource(path).toExternalForm();
-		clips.put(sound, new AudioClip(url));
+	public void put(GameSound sound, String path) {
+		URL url = getClass().getResource(path);
+		if (url != null) {
+			clips.put(sound, new AudioClip(url.toString()));
+		} else {
+			throw new RuntimeException("Sound resource does not exist: " + path);
+		}
 	}
 
-	public AudioClip getClip(GameSounds sound) {
+	public AudioClip getClip(GameSound sound) {
 		return clips.get(sound);
 	}
 

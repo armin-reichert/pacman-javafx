@@ -38,7 +38,7 @@ import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
-import de.amr.games.pacman.ui.GameSounds;
+import de.amr.games.pacman.ui.GameSound;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
@@ -196,11 +196,11 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		if (gameController.state == GameState.HUNTING || gameController.state == GameState.GHOST_DYING) {
 			maze3D.energizerAnimations().forEach(Animation::play);
 		}
-		if (SoundManager.get().getClip(GameSounds.PACMAN_MUNCH).isPlaying() && game.player.starvingTicks > 10) {
-			SoundManager.get().stop(GameSounds.PACMAN_MUNCH);
+		if (SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying() && game.player.starvingTicks > 10) {
+			SoundManager.get().stop(GameSound.PACMAN_MUNCH);
 		}
 		int scatterPhase = game.huntingPhase % 2;
-		GameSounds siren = GameSounds.SIRENS.get(scatterPhase);
+		GameSound siren = GameSound.SIRENS.get(scatterPhase);
 		if (gameController.state == GameState.HUNTING && !SoundManager.get().getClip(siren).isPlaying()) {
 			SoundManager.get().loop(siren, Animation.INDEFINITE);
 		}
@@ -253,16 +253,16 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	@Override
 	public void onScatterPhaseStarted(ScatterPhaseStartedEvent e) {
 		if (e.scatterPhase > 0) {
-			SoundManager.get().stop(GameSounds.SIRENS.get(e.scatterPhase - 1));
+			SoundManager.get().stop(GameSound.SIRENS.get(e.scatterPhase - 1));
 		}
-		GameSounds siren = GameSounds.SIRENS.get(e.scatterPhase);
+		GameSound siren = GameSound.SIRENS.get(e.scatterPhase);
 		if (!SoundManager.get().getClip(siren).isPlaying())
 			SoundManager.get().loop(siren, Animation.INDEFINITE);
 	}
 
 	@Override
 	public void onPlayerGainsPower(GameEvent e) {
-		SoundManager.get().loop(GameSounds.PACMAN_POWER, Animation.INDEFINITE);
+		SoundManager.get().loop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
 		Stream.of(ghosts3D) //
 				.filter(ghost3D -> ghost3D.creature.is(GhostState.FRIGHTENED) || ghost3D.creature.is(GhostState.LOCKED))
 				.forEach(Ghost3D::setFrightenedSkinColor);
@@ -277,7 +277,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 	@Override
 	public void onPlayerLostPower(GameEvent e) {
-		SoundManager.get().stop(GameSounds.PACMAN_POWER);
+		SoundManager.get().stop(GameSound.PACMAN_POWER);
 		Stream.of(ghosts3D).forEach(Ghost3D::setNormalSkinColor);
 	}
 
@@ -286,9 +286,9 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		// when cheat "eat all pellets" is used, no tile is present
 		e.tile.ifPresent(tile -> {
 			maze3D.pelletAt(tile).ifPresent(maze3D::hidePellet);
-			AudioClip munching = SoundManager.get().getClip(GameSounds.PACMAN_MUNCH);
+			AudioClip munching = SoundManager.get().getClip(GameSound.PACMAN_MUNCH);
 			if (!munching.isPlaying()) {
-				SoundManager.get().loop(GameSounds.PACMAN_MUNCH, Animation.INDEFINITE);
+				SoundManager.get().loop(GameSound.PACMAN_MUNCH, Animation.INDEFINITE);
 			}
 		});
 	}
@@ -301,7 +301,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	@Override
 	public void onBonusEaten(GameEvent e) {
 		bonus3D.showPoints(game.bonus.points);
-		SoundManager.get().play(GameSounds.BONUS_EATEN);
+		SoundManager.get().play(GameSound.BONUS_EATEN);
 	}
 
 	@Override
@@ -312,18 +312,18 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	@Override
 	public void onExtraLife(GameEvent e) {
 		showFlashMessage(1.5, Env.message("extra_life"));
-		SoundManager.get().play(GameSounds.EXTRA_LIFE);
+		SoundManager.get().play(GameSound.EXTRA_LIFE);
 	}
 
 	@Override
 	public void onGhostReturnsHome(GameEvent e) {
-		SoundManager.get().play(GameSounds.GHOST_RETURNING);
+		SoundManager.get().play(GameSound.GHOST_RETURNING);
 	}
 
 	@Override
 	public void onGhostEntersHouse(GameEvent e) {
 		if (game.ghosts(GhostState.DEAD).count() == 0) {
-			SoundManager.get().stop(GameSounds.GHOST_RETURNING);
+			SoundManager.get().stop(GameSound.GHOST_RETURNING);
 		}
 	}
 
@@ -345,7 +345,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			SoundManager.get().stopAll();
 			SoundManager.get().setMuted(gameController.attractMode);
 			if (!gameController.gameRunning) {
-				SoundManager.get().play(GameSounds.GAME_READY);
+				SoundManager.get().play(GameSound.GAME_READY);
 			}
 		}
 		case HUNTING -> {
@@ -362,7 +362,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			).play();
 		}
 		case GHOST_DYING -> {
-			SoundManager.get().play(GameSounds.GHOST_EATEN);
+			SoundManager.get().play(GameSound.GHOST_EATEN);
 		}
 		case LEVEL_STARTING -> {
 			maze3D.createWallsAndDoors(game.world, r2D.getMazeSideColor(game.mazeNumber),
