@@ -70,8 +70,8 @@ public class GameUI extends DefaultGameEventHandler {
 	private final Wallpapers wallpapers;
 
 	private GameScene currentGameScene;
-	private SoundMap sounds_PacMan;
-	private SoundMap sounds_msPacMan;
+	private SoundMap soundMap_PacMan;
+	private SoundMap soundMap_msPacMan;
 
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
 		this.gameController = gameController;
@@ -150,7 +150,7 @@ public class GameUI extends DefaultGameEventHandler {
 		gameScene.resizeFXSubScene(stage.getScene().getHeight());
 		mainSceneRoot.getChildren().set(0, gameScene.getFXSubScene());
 		SoundManager.get().stopAll();
-		SoundManager.get().setSoundMap(getSounds(gameController.gameVariant));
+		SoundManager.get().setSoundMap(getSoundMap(gameController.gameVariant));
 		log("Game scene is now '%s'", gameScene.getClass());
 	}
 
@@ -165,19 +165,22 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 	}
 
-	private SoundMap getSounds(GameVariant variant) {
-		if (variant == GameVariant.MS_PACMAN) {
-			if (sounds_msPacMan == null) {
-				sounds_msPacMan = new Sounds_MsPacMan();
+	private SoundMap getSoundMap(GameVariant variant) {
+		switch (variant) {
+		case MS_PACMAN -> {
+			if (soundMap_msPacMan == null) {
+				soundMap_msPacMan = new Sounds_MsPacMan();
 			}
-			return sounds_msPacMan;
-		} else if (variant == GameVariant.PACMAN) {
-			if (sounds_PacMan == null) {
-				sounds_PacMan = new Sounds_PacMan();
-			}
-			return sounds_PacMan;
+			return soundMap_msPacMan;
 		}
-		throw new IllegalArgumentException("Illegal game variant: " + variant);
+		case PACMAN -> {
+			if (soundMap_PacMan == null) {
+				soundMap_PacMan = new Sounds_PacMan();
+			}
+			return soundMap_PacMan;
+		}
+		default -> throw new IllegalArgumentException("Illegal game variant: " + variant);
+		}
 	}
 
 	private void handleKeyPressed(KeyEvent e) {
