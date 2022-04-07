@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx.scene;
 import de.amr.games.pacman.controller.event.GameEventListener;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.SubScene;
 
 /**
@@ -54,11 +53,10 @@ public interface GameScene extends GameEventListener {
 	/**
 	 * Sets the context for the current scene.
 	 * 
-	 * @param game   the game model
-	 * @param r2D    the 2D rendering
-	 * @param sounds the sounds
+	 * @param game the game model
+	 * @param r2D  the 2D rendering
 	 */
-	void setContext(GameModel game, Rendering2D r2D, SoundManager sounds);
+	void setContext(GameModel game, Rendering2D r2D);
 
 	/**
 	 * @return the JavaFX subscene associated with this game scene
@@ -71,11 +69,6 @@ public interface GameScene extends GameEventListener {
 	 * @param height height in pixels
 	 */
 	void resizeFXSubScene(double height);
-
-	/**
-	 * @return the sounds used by this game scene
-	 */
-	SoundManager getSounds();
 
 	/**
 	 * @return if this is a 3D scene

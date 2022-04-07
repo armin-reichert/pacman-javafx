@@ -39,6 +39,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Heart2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
+import de.amr.games.pacman.ui.fx.sound.SoundManager;
 
 /**
  * Intermission scene 1: "They meet".
@@ -63,7 +64,7 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 	public MsPacMan_IntermissionScene1(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
 		sc = new Intermission1Controller(gameController);
-		sc.playIntermissionSound = () -> sounds.loop(GameSounds.INTERMISSION_1, 1);
+		sc.playIntermissionSound = () -> SoundManager.get().loop(GameSounds.INTERMISSION_1, 1);
 		sc.playFlapAnimation = () -> flap2D.animation.restart();
 	}
 

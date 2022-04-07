@@ -23,26 +23,19 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.sound.mspacman;
 
+import static de.amr.games.pacman.lib.Logging.log;
+
 import de.amr.games.pacman.ui.GameSounds;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
+import de.amr.games.pacman.ui.fx.sound.SoundMap;
 
 /**
  * Ms. Pac-Man game sounds.
  * 
  * @author Armin Reichert
  */
-public class Sounds_MsPacMan extends SoundManager {
+public class Sounds_MsPacMan extends SoundMap {
 
-	private static Sounds_MsPacMan it;
-
-	public static Sounds_MsPacMan get() {
-		if (it == null) {
-			it = new Sounds_MsPacMan();
-		}
-		return it;
-	}
-
-	private Sounds_MsPacMan() {
+	public Sounds_MsPacMan() {
 		//@formatter:off
 		put(GameSounds.CREDIT,          "/mspacman/sound/Coin Credit.mp3");
 		put(GameSounds.EXTRA_LIFE,      "/mspacman/sound/Extra Life.mp3");
@@ -61,5 +54,6 @@ public class Sounds_MsPacMan extends SoundManager {
 		put(GameSounds.INTERMISSION_2,  "/mspacman/sound/The Chase Act 2.mp3");
 		put(GameSounds.INTERMISSION_3,  "/mspacman/sound/Junior Act 3.mp3");
 		//@formatter:on
+		log("Ms. Pac-Man sounds loaded");
 	}
 }

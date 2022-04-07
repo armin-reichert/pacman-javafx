@@ -23,22 +23,24 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.sound;
 
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
-
 import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.ui.GameSounds;
 import javafx.scene.media.AudioClip;
 
 /**
  * Sound manager.
- * <p>
- * TODO: I have no clue how to handle sound "professionally"
+ * 
+ * TODO: I have no clue how to handle sound "professionally".
  * 
  * @author Armin Reichert
  */
 public class SoundManager {
+
+	private static SoundManager it = new SoundManager();
+
+	public static SoundManager get() {
+		return it;
+	}
 
 	public boolean logEnabled = false;
 
@@ -48,20 +50,15 @@ public class SoundManager {
 		}
 	}
 
-	private final Map<GameSounds, String> urlMap = new EnumMap<>(GameSounds.class);
-	private final Map<GameSounds, AudioClip> clipCache = new HashMap<>();
+	private SoundMap soundMap = new SoundMap();
 	private boolean muted;
 
-	public void put(GameSounds sound, String path) {
-		urlMap.put(sound, getClass().getResource(path).toString());
+	public void setSoundMap(SoundMap soundMap) {
+		this.soundMap = soundMap;
 	}
 
 	public AudioClip getClip(GameSounds sound) {
-		if (!clipCache.containsKey(sound)) {
-			AudioClip clip = new AudioClip(urlMap.get(sound));
-			clipCache.put(sound, clip);
-		}
-		return clipCache.get(sound);
+		return soundMap.getClip(sound);
 	}
 
 	public void play(GameSounds sound) {
@@ -88,10 +85,9 @@ public class SoundManager {
 	}
 
 	public void stopAll() {
-		for (AudioClip clip : clipCache.values()) {
+		for (AudioClip clip : soundMap.clips()) {
 			clip.stop();
 		}
-		clipCache.clear();
 	}
 
 	public void setMuted(boolean muted) {

@@ -48,6 +48,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Maze2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
+import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.scene.media.AudioClip;
@@ -102,13 +103,13 @@ public class PlayScene2D extends AbstractGameScene2D {
 		bonus2D = new Bonus2D(game.bonus, r2D, bonusMoving);
 
 		game.player.powerTimer.addEventListener(this::handleGhostsFlashing);
-		sounds.setMuted(gameController.attractMode);
+		SoundManager.get().setMuted(gameController.attractMode);
 	}
 
 	@Override
 	public void end() {
 		game.player.powerTimer.removeEventListener(this::handleGhostsFlashing);
-		sounds.setMuted(false);
+		SoundManager.get().setMuted(false);
 		log("Scene '%s' ended", getClass().getName());
 	}
 
@@ -124,13 +125,13 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	protected void doUpdate() {
-		if (sounds.getClip(GameSounds.PACMAN_MUNCH).isPlaying() && game.player.starvingTicks > 10) {
-			sounds.stop(GameSounds.PACMAN_MUNCH);
+		if (SoundManager.get().getClip(GameSounds.PACMAN_MUNCH).isPlaying() && game.player.starvingTicks > 10) {
+			SoundManager.get().stop(GameSounds.PACMAN_MUNCH);
 		}
 		int scatterPhase = game.huntingPhase % 2;
 		GameSounds siren = GameSounds.SIRENS.get(scatterPhase);
-		if (gameController.state == GameState.HUNTING && !sounds.getClip(siren).isPlaying()) {
-			sounds.loop(siren, Animation.INDEFINITE);
+		if (gameController.state == GameState.HUNTING && !SoundManager.get().getClip(siren).isPlaying()) {
+			SoundManager.get().loop(siren, Animation.INDEFINITE);
 		}
 	}
 
@@ -151,26 +152,26 @@ public class PlayScene2D extends AbstractGameScene2D {
 		if (!maze2D.getEnergizerAnimation().isRunning()) {
 			maze2D.getEnergizerAnimation().restart();
 		}
-		AudioClip munching = sounds.getClip(GameSounds.PACMAN_MUNCH);
+		AudioClip munching = SoundManager.get().getClip(GameSounds.PACMAN_MUNCH);
 		if (munching.isPlaying() && game.player.starvingTicks > 10) {
-			sounds.stop(GameSounds.PACMAN_MUNCH);
+			SoundManager.get().stop(GameSounds.PACMAN_MUNCH);
 		}
 	}
 
 	@Override
 	public void onScatterPhaseStarted(ScatterPhaseStartedEvent e) {
 		if (e.scatterPhase > 0) {
-			sounds.stop(GameSounds.SIRENS.get(e.scatterPhase - 1));
+			SoundManager.get().stop(GameSounds.SIRENS.get(e.scatterPhase - 1));
 		}
 		GameSounds siren = GameSounds.SIRENS.get(e.scatterPhase);
-		if (!sounds.getClip(siren).isPlaying()) {
-			sounds.loop(siren, Animation.INDEFINITE);
+		if (!SoundManager.get().getClip(siren).isPlaying()) {
+			SoundManager.get().loop(siren, Animation.INDEFINITE);
 		}
 	}
 
 	@Override
 	public void onPlayerLostPower(GameEvent e) {
-		sounds.stop(GameSounds.PACMAN_POWER);
+		SoundManager.get().stop(GameSounds.PACMAN_POWER);
 	}
 
 	@Override
@@ -179,15 +180,15 @@ public class PlayScene2D extends AbstractGameScene2D {
 			ghost2D.animFlashing.reset();
 			ghost2D.animFrightened.restart();
 		});
-		if (!sounds.getClip(GameSounds.PACMAN_POWER).isPlaying()) {
-			sounds.loop(GameSounds.PACMAN_POWER, Animation.INDEFINITE);
+		if (!SoundManager.get().getClip(GameSounds.PACMAN_POWER).isPlaying()) {
+			SoundManager.get().loop(GameSounds.PACMAN_POWER, Animation.INDEFINITE);
 		}
 	}
 
 	@Override
 	public void onPlayerFoundFood(GameEvent e) {
-		if (!sounds.getClip(GameSounds.PACMAN_MUNCH).isPlaying()) {
-			sounds.loop(GameSounds.PACMAN_MUNCH, Animation.INDEFINITE);
+		if (!SoundManager.get().getClip(GameSounds.PACMAN_MUNCH).isPlaying()) {
+			SoundManager.get().loop(GameSounds.PACMAN_MUNCH, Animation.INDEFINITE);
 		}
 	}
 
@@ -199,23 +200,23 @@ public class PlayScene2D extends AbstractGameScene2D {
 	@Override
 	public void onBonusEaten(GameEvent e) {
 		bonus2D.stopAnimation();
-		sounds.play(GameSounds.BONUS_EATEN);
+		SoundManager.get().play(GameSounds.BONUS_EATEN);
 	}
 
 	@Override
 	public void onExtraLife(GameEvent e) {
-		sounds.play(GameSounds.EXTRA_LIFE);
+		SoundManager.get().play(GameSounds.EXTRA_LIFE);
 	}
 
 	@Override
 	public void onGhostReturnsHome(GameEvent e) {
-		sounds.play(GameSounds.GHOST_RETURNING);
+		SoundManager.get().play(GameSounds.GHOST_RETURNING);
 	}
 
 	@Override
 	public void onGhostEntersHouse(GameEvent e) {
 		if (game.ghosts(GhostState.DEAD).count() == 0) {
-			sounds.stop(GameSounds.GHOST_RETURNING);
+			SoundManager.get().stop(GameSounds.GHOST_RETURNING);
 		}
 	}
 
@@ -226,13 +227,13 @@ public class PlayScene2D extends AbstractGameScene2D {
 		switch (e.newGameState) {
 
 		case READY -> {
-			sounds.stopAll();
+			SoundManager.get().stopAll();
 			maze2D.getEnergizerAnimation().reset();
 			player2D.reset();
 			Stream.of(ghosts2D).forEach(Ghost2D::reset);
 			if (!gameController.attractMode && !gameController.gameRunning) {
-				sounds.setMuted(false);
-				sounds.play(GameSounds.GAME_READY);
+				SoundManager.get().setMuted(false);
+				SoundManager.get().play(GameSounds.GAME_READY);
 			}
 		}
 
@@ -246,12 +247,12 @@ public class PlayScene2D extends AbstractGameScene2D {
 			// wait until game is continued
 			gameController.stateTimer().setIndefinite().start();
 
-			sounds.stopAll();
+			SoundManager.get().stopAll();
 
 			new SequentialTransition( //
 					afterSeconds(1, () -> game.ghosts().forEach(Ghost::hide)), //
 					afterSeconds(1, () -> {
-						sounds.play(GameSounds.PACMAN_DEATH);
+						SoundManager.get().play(GameSounds.PACMAN_DEATH);
 						player2D.animDying.restart();
 					}), //
 					afterSeconds(2, () -> game.player.hide()), //
@@ -261,12 +262,12 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		case GHOST_DYING -> {
 			game.player.hide();
-			sounds.play(GameSounds.GHOST_EATEN);
+			SoundManager.get().play(GameSounds.GHOST_EATEN);
 		}
 
 		case LEVEL_COMPLETE -> {
 			gameController.stateTimer().setIndefinite(); // wait until continueGame() is called
-			sounds.stopAll();
+			SoundManager.get().stopAll();
 			player2D.reset();
 			// Energizers can still exist if "next level" cheat has been used
 			maze2D.getEnergizerAnimation().reset();
@@ -285,7 +286,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		case GAME_OVER -> {
 			maze2D.getEnergizerAnimation().reset();
-			sounds.stopAll();
+			SoundManager.get().stopAll();
 		}
 
 		default -> {

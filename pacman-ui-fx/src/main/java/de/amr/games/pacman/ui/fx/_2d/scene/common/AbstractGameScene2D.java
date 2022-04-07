@@ -34,7 +34,6 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
@@ -58,7 +57,6 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	protected final double aspectRatio;
 
 	protected GameModel game;
-	protected SoundManager sounds;
 	protected Rendering2D r2D;
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
@@ -86,20 +84,14 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	}
 
 	@Override
-	public void setContext(GameModel game, Rendering2D r2d, SoundManager sounds) {
+	public void setContext(GameModel game, Rendering2D r2d) {
 		this.game = game;
 		this.r2D = r2d;
-		this.sounds = sounds;
 	}
 
 	@Override
 	public SubScene getFXSubScene() {
 		return fxSubScene;
-	}
-
-	@Override
-	public SoundManager getSounds() {
-		return sounds;
 	}
 
 	public Canvas getCanvas() {

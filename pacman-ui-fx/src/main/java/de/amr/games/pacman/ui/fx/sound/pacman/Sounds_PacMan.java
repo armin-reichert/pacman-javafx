@@ -23,26 +23,19 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.sound.pacman;
 
+import static de.amr.games.pacman.lib.Logging.log;
+
 import de.amr.games.pacman.ui.GameSounds;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
+import de.amr.games.pacman.ui.fx.sound.SoundMap;
 
 /**
  * Pac-Man game sounds.
  * 
  * @author Armin Reichert
  */
-public class Sounds_PacMan extends SoundManager {
+public class Sounds_PacMan extends SoundMap {
 
-	private static Sounds_PacMan it;
-
-	public static Sounds_PacMan get() {
-		if (it == null) {
-			it = new Sounds_PacMan();
-		}
-		return it;
-	}
-
-	private Sounds_PacMan() {
+	public Sounds_PacMan() {
 		//@formatter:off
 		put(GameSounds.CREDIT,          "/pacman/sound/credit.mp3");
 		put(GameSounds.EXTRA_LIFE,      "/pacman/sound/extend.mp3");
@@ -61,5 +54,7 @@ public class Sounds_PacMan extends SoundManager {
 		put(GameSounds.INTERMISSION_2,  "/pacman/sound/intermission.mp3");
 		put(GameSounds.INTERMISSION_3,  "/pacman/sound/intermission.mp3");
 		//@formatter:on
+		log("Pac-Man sounds loaded");
+
 	}
 }

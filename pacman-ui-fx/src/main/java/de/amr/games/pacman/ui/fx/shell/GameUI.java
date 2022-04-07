@@ -40,6 +40,8 @@ import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameScenes;
 import de.amr.games.pacman.ui.fx.shell.info.InfoLayer;
+import de.amr.games.pacman.ui.fx.sound.SoundManager;
+import de.amr.games.pacman.ui.fx.sound.SoundMap;
 import de.amr.games.pacman.ui.fx.sound.mspacman.Sounds_MsPacMan;
 import de.amr.games.pacman.ui.fx.sound.pacman.Sounds_PacMan;
 import de.amr.games.pacman.ui.fx.util.U;
@@ -68,6 +70,8 @@ public class GameUI extends DefaultGameEventHandler {
 	private final Wallpapers wallpapers;
 
 	private GameScene currentGameScene;
+	private SoundMap sounds_PacMan;
+	private SoundMap sounds_msPacMan;
 
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
 		this.gameController = gameController;
@@ -130,21 +134,23 @@ public class GameUI extends DefaultGameEventHandler {
 			if (currentGameScene != null) {
 				currentGameScene.end();
 			}
-			displayGameScene(nextGameScene);
+			useGameScene(nextGameScene);
 			nextGameScene.init();
 			currentGameScene = nextGameScene;
 		}
 	}
 
-	private void displayGameScene(GameScene gameScene) {
+	private void useGameScene(GameScene gameScene) {
+		switch (gameController.gameVariant) {
+		case MS_PACMAN -> gameScene.setContext(gameController.game, Rendering2D_MsPacMan.get());
+		case PACMAN -> gameScene.setContext(gameController.game, Rendering2D_PacMan.get());
+		default -> throw new IllegalStateException();
+		}
+		updateMainSceneBackground(gameScene);
 		gameScene.resizeFXSubScene(stage.getScene().getHeight());
 		mainSceneRoot.getChildren().set(0, gameScene.getFXSubScene());
-		updateMainSceneBackground(gameScene);
-		if (gameController.gameVariant == GameVariant.MS_PACMAN) {
-			gameScene.setContext(gameController.game, Rendering2D_MsPacMan.get(), Sounds_MsPacMan.get());
-		} else {
-			gameScene.setContext(gameController.game, Rendering2D_PacMan.get(), Sounds_PacMan.get());
-		}
+		SoundManager.get().stopAll();
+		SoundManager.get().setSoundMap(getSounds(gameController.gameVariant));
 		log("Game scene is now '%s'", gameScene.getClass());
 	}
 
@@ -157,6 +163,21 @@ public class GameUI extends DefaultGameEventHandler {
 		} else {
 			mainSceneRoot.setBackground(U.colorBackground(Color.CORNFLOWERBLUE));
 		}
+	}
+
+	private SoundMap getSounds(GameVariant variant) {
+		if (variant == GameVariant.MS_PACMAN) {
+			if (sounds_msPacMan == null) {
+				sounds_msPacMan = new Sounds_MsPacMan();
+			}
+			return sounds_msPacMan;
+		} else if (variant == GameVariant.PACMAN) {
+			if (sounds_PacMan == null) {
+				sounds_PacMan = new Sounds_PacMan();
+			}
+			return sounds_PacMan;
+		}
+		throw new IllegalArgumentException("Illegal game variant: " + variant);
 	}
 
 	private void handleKeyPressed(KeyEvent e) {
@@ -214,7 +235,7 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	public void quitCurrentGameScene() {
-		currentGameScene.getSounds().stopAll();
+		SoundManager.get().stopAll();
 		currentGameScene.end();
 		gameController.changeState(GameState.INTRO);
 	}
@@ -230,7 +251,7 @@ public class GameUI extends DefaultGameEventHandler {
 		if (gameController.game.levelNumber == levelNumber) {
 			return;
 		}
-		currentGameScene.getSounds().stopAll();
+		SoundManager.get().stopAll();
 		if (levelNumber == 1) {
 			gameController.game.reset();
 			gameController.changeState(GameState.READY);
@@ -289,7 +310,7 @@ public class GameUI extends DefaultGameEventHandler {
 	public void toggleUse3DScene() {
 		Env.$3D.set(!Env.$3D.get());
 		if (gameScenes.getScene(GameScenes.SCENE_2D) != gameScenes.getScene(GameScenes.SCENE_3D)) {
-			currentGameScene.getSounds().stopAll();
+			SoundManager.get().stopAll();
 			selectGameScene();
 			if (currentGameScene instanceof PlayScene2D) {
 				((PlayScene2D) currentGameScene).onSwitchBetween2DAnd3D();
