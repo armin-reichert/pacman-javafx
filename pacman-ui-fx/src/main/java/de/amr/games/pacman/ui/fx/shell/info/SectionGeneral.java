@@ -69,7 +69,7 @@ public class SectionGeneral extends Section {
 		btnStep.setTooltip(tooltipStep);
 		btnStep.setOnAction(e -> GameLoop.get().runSingleStep(true));
 
-		sliderTargetFPS = addSlider("Target Framerate", 10, 120, 60);
+		sliderTargetFPS = addSlider("Target Framerate", GameUI.MIN_FRAMERATE, GameUI.MAX_FRAMERATE, 60);
 		sliderTargetFPS.setShowTickLabels(false);
 		sliderTargetFPS.setShowTickMarks(false);
 		sliderTargetFPS.valueProperty().addListener(($value, oldValue, newValue) -> {

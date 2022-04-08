@@ -58,6 +58,9 @@ import javafx.stage.WindowEvent;
  */
 public class GameUI extends DefaultGameEventHandler {
 
+	public static final int MIN_FRAMERATE = 10;
+	public static final int MAX_FRAMERATE = 120;
+
 	public final GameController gameController;
 	public final Stage stage;
 
@@ -206,7 +209,8 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	public void changeTargetFramerate(int delta) {
-		GameLoop.get().setTargetFrameRate(U.clamp(GameLoop.get().getTargetFrameRate() + delta, 10, 120));
+		int newFrameRate = U.clamp(GameLoop.get().getTargetFrameRate() + delta, MIN_FRAMERATE, MAX_FRAMERATE);
+		GameLoop.get().setTargetFrameRate(newFrameRate);
 		showFlashMessage(1, "Target FPS set to %d Hz", GameLoop.get().getTargetFrameRate());
 	}
 
