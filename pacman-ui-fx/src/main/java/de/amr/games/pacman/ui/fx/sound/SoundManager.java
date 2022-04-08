@@ -117,11 +117,7 @@ public class SoundManager {
 	}
 
 	public void play(GameSound sound) {
-		if (!muted) {
-			AudioClip clip = getClip(sound);
-			clip.setCycleCount(1);
-			getClip(sound).play();
-		}
+		loop(sound, 1);
 	}
 
 	public void loop(GameSound sound, int repetitions) {
