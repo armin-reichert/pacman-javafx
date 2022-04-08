@@ -58,8 +58,7 @@ import javafx.stage.WindowEvent;
  */
 public class GameUI extends DefaultGameEventHandler {
 
-	public static final int MIN_FRAMERATE = 10;
-	public static final int MAX_FRAMERATE = 120;
+	public static final int MIN_FRAMERATE = 10, MAX_FRAMERATE = 120;
 
 	public final GameController gameController;
 	public final Stage stage;

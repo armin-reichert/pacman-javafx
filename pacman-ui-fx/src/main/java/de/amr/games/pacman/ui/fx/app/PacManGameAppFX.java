@@ -69,7 +69,9 @@ public class PacManGameAppFX extends Application {
 		log("Starting application...");
 		PlayerControl keyboardControl = new KeyboardPlayerControl(primaryStage);
 		gameController.setPlayerControl(keyboardControl);
-		ui = new GameUI(gameController, primaryStage, options.windowHeight * 0.77 /* 28/36 */, options.windowHeight);
+		var width = options.windowHeight * 0.77; // 28/36
+		var height = options.windowHeight;
+		ui = new GameUI(gameController, primaryStage, width, height);
 		ui.show(options.fullscreen);
 		GameLoop.get().update = ui::update;
 		GameLoop.get().render = ui::render;
