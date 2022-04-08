@@ -161,6 +161,7 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 	}
 
+	@SuppressWarnings("incomplete-switch")
 	private void handleKeyPressed(KeyEvent e) {
 		boolean shift = e.isShiftDown();
 
@@ -179,16 +180,12 @@ public class GameUI extends DefaultGameEventHandler {
 			case LEFT -> changePerspective(-1);
 			case RIGHT -> changePerspective(1);
 			case DIGIT3 -> toggleUse3DScene();
-			default -> {
-			}
 			}
 		}
 
 		else if (e.isControlDown()) {
 			switch (e.getCode()) {
 			case I -> toggleInfoPanelsVisible();
-			default -> {
-			}
 			}
 		}
 
@@ -196,8 +193,6 @@ public class GameUI extends DefaultGameEventHandler {
 			switch (e.getCode()) {
 			case SPACE -> gameController.requestGame();
 			case F11 -> stage.setFullScreen(true);
-			default -> {
-			}
 			}
 		}
 	}
