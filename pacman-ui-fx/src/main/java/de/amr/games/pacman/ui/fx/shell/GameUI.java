@@ -41,9 +41,6 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameScenes;
 import de.amr.games.pacman.ui.fx.shell.info.InfoLayer;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.sound.SoundMap;
-import de.amr.games.pacman.ui.fx.sound.mspacman.Sounds_MsPacMan;
-import de.amr.games.pacman.ui.fx.sound.pacman.Sounds_PacMan;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
@@ -70,8 +67,6 @@ public class GameUI extends DefaultGameEventHandler {
 	private final Wallpapers wallpapers;
 
 	private GameScene currentGameScene;
-	private SoundMap soundMap_PacMan;
-	private SoundMap soundMap_msPacMan;
 
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
 		this.gameController = gameController;
@@ -90,6 +85,7 @@ public class GameUI extends DefaultGameEventHandler {
 		gameController.addGameEventListener(this);
 		Env.$drawMode3D.addListener(($drawMode, oldDrawMode, newDrawMode) -> updateMainSceneBackground(currentGameScene));
 
+		SoundManager.get().selectGameVariant(gameController.gameVariant);
 		gameScenes = new GameScenes(mainScene, gameController, GianmarcosModel3D.get());
 	}
 
@@ -150,7 +146,7 @@ public class GameUI extends DefaultGameEventHandler {
 		gameScene.resizeFXSubScene(stage.getScene().getHeight());
 		mainSceneRoot.getChildren().set(0, gameScene.getFXSubScene());
 		SoundManager.get().stopAll();
-		SoundManager.get().setSoundMap(getSoundMap(gameController.gameVariant));
+		SoundManager.get().selectGameVariant(gameController.gameVariant);
 		log("Game scene is now '%s'", gameScene.getClass());
 	}
 
@@ -162,24 +158,6 @@ public class GameUI extends DefaultGameEventHandler {
 					: wallpapers.getCurrent());
 		} else {
 			mainSceneRoot.setBackground(U.colorBackground(Color.CORNFLOWERBLUE));
-		}
-	}
-
-	private SoundMap getSoundMap(GameVariant variant) {
-		switch (variant) {
-		case MS_PACMAN -> {
-			if (soundMap_msPacMan == null) {
-				soundMap_msPacMan = new Sounds_MsPacMan();
-			}
-			return soundMap_msPacMan;
-		}
-		case PACMAN -> {
-			if (soundMap_PacMan == null) {
-				soundMap_PacMan = new Sounds_PacMan();
-			}
-			return soundMap_PacMan;
-		}
-		default -> throw new IllegalArgumentException("Illegal game variant: " + variant);
 		}
 	}
 
