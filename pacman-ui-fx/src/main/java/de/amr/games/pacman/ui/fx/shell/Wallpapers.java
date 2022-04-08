@@ -47,10 +47,11 @@ public class Wallpapers {
 		return wallpapers[currentIndex];
 	}
 
-	public void next() {
+	public Background next() {
 		int oldIndex = currentIndex;
 		do {
 			currentIndex = new Random().nextInt(wallpapers.length);
 		} while (currentIndex == oldIndex);
+		return getCurrent();
 	}
 }

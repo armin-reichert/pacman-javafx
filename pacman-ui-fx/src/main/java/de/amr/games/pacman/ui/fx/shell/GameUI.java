@@ -44,6 +44,7 @@ import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -85,7 +86,8 @@ public class GameUI extends DefaultGameEventHandler {
 		stage.setScene(mainScene);
 
 		gameController.addGameEventListener(this);
-		Env.$drawMode3D.addListener(($drawMode, oldDrawMode, newDrawMode) -> updateMainSceneBackground(currentGameScene));
+		Env.$drawMode3D.addListener(
+				($drawMode, oldDrawMode, newDrawMode) -> mainSceneRoot.setBackground(getBackground(currentGameScene)));
 
 		SoundManager.get().selectGameVariant(gameController.gameVariant);
 		gameScenes = new GameScenes(mainScene, gameController, GianmarcosModel3D.get());
@@ -127,40 +129,31 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	private void selectGameScene() {
-		var nextGameScene = gameScenes.getScene(Env.$3D.get() ? GameScenes.SCENE_3D : GameScenes.SCENE_2D);
-		if (nextGameScene != currentGameScene) {
+		var newGameScene = gameScenes.getScene(Env.$3D.get() ? GameScenes.SCENE_3D : GameScenes.SCENE_2D);
+		if (newGameScene != currentGameScene) {
 			if (currentGameScene != null) {
 				currentGameScene.end();
 			}
-			useGameScene(nextGameScene);
-			nextGameScene.init();
-			currentGameScene = nextGameScene;
+			switch (gameController.gameVariant) {
+			case MS_PACMAN -> newGameScene.setContext(gameController.game, Rendering2D_MsPacMan.get());
+			case PACMAN -> newGameScene.setContext(gameController.game, Rendering2D_PacMan.get());
+			default -> throw new IllegalStateException();
+			}
+			newGameScene.resizeFXSubScene(stage.getScene().getHeight());
+			mainSceneRoot.setBackground(getBackground(newGameScene));
+			mainSceneRoot.getChildren().set(0, newGameScene.getFXSubScene());
+			SoundManager.get().stopAll();
+			SoundManager.get().selectGameVariant(gameController.gameVariant);
+			currentGameScene = newGameScene;
+			currentGameScene.init();
+			log("Game scene is now '%s'", currentGameScene.getClass());
 		}
 	}
 
-	private void useGameScene(GameScene gameScene) {
-		switch (gameController.gameVariant) {
-		case MS_PACMAN -> gameScene.setContext(gameController.game, Rendering2D_MsPacMan.get());
-		case PACMAN -> gameScene.setContext(gameController.game, Rendering2D_PacMan.get());
-		default -> throw new IllegalStateException();
-		}
-		updateMainSceneBackground(gameScene);
-		gameScene.resizeFXSubScene(stage.getScene().getHeight());
-		mainSceneRoot.getChildren().set(0, gameScene.getFXSubScene());
-		SoundManager.get().stopAll();
-		SoundManager.get().selectGameVariant(gameController.gameVariant);
-		log("Game scene is now '%s'", gameScene.getClass());
-	}
-
-	private void updateMainSceneBackground(GameScene gameScene) {
-		if (gameScene.is3D()) {
-			wallpapers.next();
-			mainSceneRoot.setBackground(Env.$drawMode3D.get() == DrawMode.LINE //
-					? U.colorBackground(Color.BLACK)
-					: wallpapers.getCurrent());
-		} else {
-			mainSceneRoot.setBackground(U.colorBackground(Color.CORNFLOWERBLUE));
-		}
+	private Background getBackground(GameScene gameScene) {
+		return gameScene.is3D()
+				? Env.$drawMode3D.get() == DrawMode.LINE ? U.colorBackground(Color.BLACK) : wallpapers.next()
+				: U.colorBackground(Color.CORNFLOWERBLUE);
 	}
 
 	@SuppressWarnings("incomplete-switch")
