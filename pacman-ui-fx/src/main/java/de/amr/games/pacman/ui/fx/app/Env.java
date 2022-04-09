@@ -64,6 +64,8 @@ public class Env {
 		return new RandomEntrySelector<>(bundle.keySet().stream().sorted().map(bundle::getString).toArray(String[]::new));
 	}
 
+	// Public properties
+
 	public static final BooleanProperty $axesVisible = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<DrawMode> $drawMode3D = new SimpleObjectProperty<DrawMode>(DrawMode.FILL);
 	public static final IntegerProperty $mazeResolution = new SimpleIntegerProperty(8);
@@ -84,7 +86,7 @@ public class Env {
 		while (delta < 0) {
 			delta += n;
 		}
-		int index = ($perspective.get().ordinal() + delta) % n;
-		return Perspective.values()[index];
+		int i = ($perspective.get().ordinal() + delta) % n;
+		return Perspective.values()[i];
 	}
 }

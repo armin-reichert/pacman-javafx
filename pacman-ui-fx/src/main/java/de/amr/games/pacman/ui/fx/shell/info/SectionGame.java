@@ -43,7 +43,7 @@ import javafx.scene.text.Font;
 public class SectionGame extends Section {
 	private ComboBox<GameVariant> comboGameVariant;
 	private Button[] btnsGameControl;
-	private Button btnIntermissionTest;
+	private Button[] btnsIntermissionTest;
 	private Spinner<Integer> spinnerGameLevel;
 
 	public SectionGame(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
@@ -59,7 +59,10 @@ public class SectionGame extends Section {
 		btnsGameControl[0].setOnAction(e -> gc.requestGame());
 		btnsGameControl[1].setOnAction(e -> ui.quitCurrentGameScene());
 		btnsGameControl[2].setOnAction(e -> ui.enterNextLevel());
-		btnIntermissionTest = addButton("Intermission scenes", "Start", ui::startIntermissionScenesTest);
+
+		btnsIntermissionTest = addButtonList("Intermission scenes", "Start", "Quit");
+		btnsIntermissionTest[0].setOnAction(e -> ui.startIntermissionScenesTest());
+		btnsIntermissionTest[1].setOnAction(e -> ui.quitCurrentGameScene());
 
 		spinnerGameLevel = addSpinner("Level", 1, 100, gc.game.levelNumber);
 		spinnerGameLevel.valueProperty().addListener(($value, oldValue, newValue) -> ui.enterLevel(newValue.intValue()));
@@ -96,12 +99,15 @@ public class SectionGame extends Section {
 		// start game
 		btnsGameControl[0].setDisable(gc.gameRequested || gc.gameRunning || gc.attractMode);
 		// quit game
-		btnsGameControl[1].setDisable(gc.state == GameState.INTRO);
+		btnsGameControl[1].setDisable(!gc.gameRunning || gc.state == GameState.INTERMISSION_TEST);
 		// next level
 		btnsGameControl[2].setDisable(!gc.gameRunning
 				|| (gc.state != GameState.HUNTING && gc.state != GameState.READY && gc.state != GameState.LEVEL_STARTING));
 
-		btnIntermissionTest.setDisable(gc.state == GameState.INTERMISSION_TEST || gc.state != GameState.INTRO);
+		// start intermission test
+		btnsIntermissionTest[0].setDisable(gc.state == GameState.INTERMISSION_TEST || gc.state != GameState.INTRO);
+		// quit intermission test
+		btnsIntermissionTest[1].setDisable(gc.state != GameState.INTERMISSION_TEST);
 
 		spinnerGameLevel.getValueFactory().setValue(gc.game.levelNumber);
 		if (!gc.gameRunning) {
