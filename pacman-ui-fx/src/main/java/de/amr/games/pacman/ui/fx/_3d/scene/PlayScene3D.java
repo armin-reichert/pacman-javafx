@@ -357,9 +357,9 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			Color killerColor = r2D.getGhostColor(
 					Stream.of(game.ghosts).filter(ghost -> ghost.tile().equals(game.player.tile())).findAny().get().id);
 			new SequentialTransition( //
-					U.afterSeconds(1.0, game::hideGhosts), //
+					U.afterSec(1.0, game::hideGhosts), //
 					player3D.dyingAnimation(killerColor), //
-					U.afterSeconds(2.0, () -> gc.stateTimer().expire()) //
+					U.afterSec(2.0, () -> gc.stateTimer().expire()) //
 			).play();
 		}
 		case GHOST_DYING -> {
@@ -375,7 +375,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			levelCounter3D.update(game);
 			var message = Env.message("level_starting", game.levelNumber);
 			showFlashMessage(1, message);
-			U.afterSeconds(3, () -> gc.stateTimer().expire()).play();
+			U.afterSec(3, () -> gc.stateTimer().expire()).play();
 		}
 		case LEVEL_COMPLETE -> {
 			Stream.of(ghosts3D).forEach(Ghost3D::setNormalSkinColor);
@@ -383,9 +383,9 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			new SequentialTransition( //
 					U.pause(2.0), //
 					maze3D.createMazeFlashingAnimation(game.numFlashes), //
-					U.afterSeconds(1.0, () -> game.player.hide()), //
-					U.afterSeconds(0.5, () -> showFlashMessage(2, message)), //
-					U.afterSeconds(2.0, () -> gc.stateTimer().expire()) //
+					U.afterSec(1.0, () -> game.player.hide()), //
+					U.afterSec(0.5, () -> showFlashMessage(2, message)), //
+					U.afterSec(2.0, () -> gc.stateTimer().expire()) //
 			).play();
 		}
 		case GAME_OVER -> {

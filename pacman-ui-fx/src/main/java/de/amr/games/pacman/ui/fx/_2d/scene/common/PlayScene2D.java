@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.world.World.t;
-import static de.amr.games.pacman.ui.fx.util.U.afterSeconds;
+import static de.amr.games.pacman.ui.fx.util.U.afterSec;
 
 import java.util.stream.Stream;
 
@@ -250,13 +250,13 @@ public class PlayScene2D extends AbstractGameScene2D {
 			SoundManager.get().stopAll();
 
 			new SequentialTransition( //
-					afterSeconds(1, () -> game.ghosts().forEach(Ghost::hide)), //
-					afterSeconds(1, () -> {
+					afterSec(1, () -> game.ghosts().forEach(Ghost::hide)), //
+					afterSec(1, () -> {
 						SoundManager.get().play(GameSound.PACMAN_DEATH);
 						player2D.animDying.restart();
 					}), //
-					afterSeconds(2, () -> game.player.hide()), //
-					afterSeconds(1, () -> gameController.stateTimer().expire()) //
+					afterSec(2, () -> game.player.hide()), //
+					afterSec(1, () -> gameController.stateTimer().expire()) //
 			).play();
 		}
 
@@ -273,7 +273,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 			maze2D.getEnergizerAnimation().reset();
 			Animation animation = new SequentialTransition( //
 					maze2D.getFlashingAnimation(), //
-					afterSeconds(1, () -> gameController.stateTimer().expire()) //
+					afterSec(1, () -> gameController.stateTimer().expire()) //
 			);
 			animation.setDelay(Duration.seconds(2));
 			animation.play();

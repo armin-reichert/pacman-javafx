@@ -76,7 +76,7 @@ public class U {
 	 * @param runnable code to run
 	 * @return pause transition
 	 */
-	public static PauseTransition afterSeconds(double seconds, Runnable runnable) {
+	public static PauseTransition afterSec(double seconds, Runnable runnable) {
 		PauseTransition p = new PauseTransition(Duration.seconds(seconds));
 		p.setOnFinished(e -> runnable.run());
 		return p;
@@ -91,7 +91,7 @@ public class U {
 	 * @return pause transition
 	 */
 	public static PauseTransition now(Runnable runnable) {
-		return afterSeconds(0, runnable);
+		return afterSec(0, runnable);
 	}
 
 	public static Image image(String path) {
