@@ -99,7 +99,7 @@ public class SectionGame extends Section {
 		// start game
 		btnsGameControl[0].setDisable(gc.gameRequested || gc.gameRunning || gc.attractMode);
 		// quit game
-		btnsGameControl[1].setDisable(!gc.gameRunning || gc.state == GameState.INTERMISSION_TEST);
+		btnsGameControl[1].setDisable(gc.state == GameState.INTRO || gc.state == GameState.INTERMISSION_TEST);
 		// next level
 		btnsGameControl[2].setDisable(!gc.gameRunning
 				|| (gc.state != GameState.HUNTING && gc.state != GameState.READY && gc.state != GameState.LEVEL_STARTING));

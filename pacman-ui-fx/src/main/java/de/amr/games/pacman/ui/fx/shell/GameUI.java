@@ -259,7 +259,6 @@ public class GameUI extends DefaultGameEventHandler {
 	public void startIntermissionScenesTest() {
 		if (gameController.state == GameState.INTRO) {
 			gameController.startIntermissionTest();
-			showFlashMessage(1, "Intermission Scenes Test");
 		}
 	}
 
