@@ -56,9 +56,10 @@ public class Section3D extends Section {
 				.when(() -> ui.getCurrentGameScene().is3D());
 		comboResolution.setOnAction(e -> Env.$mazeResolution.set(comboResolution.getValue()));
 		sliderWallHeight = addSlider("Maze wall height", 0, 10, 8);
-		sliderWallHeight.valueProperty().addListener(($value, _old, _new) -> Env.$mazeWallHeight.set(_new.doubleValue()));
-		cbUseFloorTexture = addCheckBox("Maze floor texture", ui::toggleUseMazeFloorTexture);
-		cbAxesVisible = addCheckBox("Show axes", ui::toggleAxesVisible);
+		sliderWallHeight.valueProperty()
+				.addListener(($value, oldValue, newValue) -> Env.$mazeWallHeight.set(newValue.doubleValue()));
+		cbUseFloorTexture = addCheckBox("Maze floor texture", () -> Env.toggle(Env.$useMazeFloorTexture));
+		cbAxesVisible = addCheckBox("Show axes", () -> Env.toggle(Env.$axesVisible));
 		cbWireframeMode = addCheckBox("Wireframe mode", ui::toggleDrawMode);
 	}
 

@@ -75,6 +75,10 @@ public class Env {
 	public static final BooleanProperty $useMazeFloorTexture = new SimpleBooleanProperty(false);
 	public static final BooleanProperty $3D = new SimpleBooleanProperty(true);
 
+	public static void toggle(BooleanProperty bp) {
+		bp.set(!bp.get());
+	}
+
 	public static Perspective perspectiveShifted(int delta) {
 		int n = Perspective.values().length;
 		while (delta < 0) {

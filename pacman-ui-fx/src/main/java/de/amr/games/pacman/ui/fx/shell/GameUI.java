@@ -264,11 +264,11 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	public void toggleInfoPanelsVisible() {
-		infoLayer.setVisible(!infoLayer.isVisible());
+		Env.toggle(infoLayer.visibleProperty());
 	}
 
 	public void togglePaused() {
-		Env.$paused.set(!Env.$paused.get());
+		Env.toggle(Env.$paused);
 		showFlashMessage(1, Env.$paused.get() ? "Paused" : "Resumed");
 		log(Env.$paused.get() ? "Simulation paused." : "Simulation resumed.");
 	}
@@ -292,7 +292,7 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	public void toggleUse3DScene() {
-		Env.$3D.set(!Env.$3D.get());
+		Env.toggle(Env.$3D);
 		if (gameScenes.getScene(GameScenes.SCENE_2D) != gameScenes.getScene(GameScenes.SCENE_3D)) {
 			SoundManager.get().stopAll();
 			selectGameScene();
@@ -303,19 +303,7 @@ public class GameUI extends DefaultGameEventHandler {
 		showFlashMessage(1, Env.message(Env.$3D.get() ? "use_3D_scene" : "use_2D_scene"));
 	}
 
-	public void toggleAxesVisible() {
-		Env.$axesVisible.set(!Env.$axesVisible.get());
-	}
-
 	public void toggleDrawMode() {
 		Env.$drawMode3D.set(Env.$drawMode3D.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
-	}
-
-	public void toggleUseMazeFloorTexture() {
-		Env.$useMazeFloorTexture.set(!Env.$useMazeFloorTexture.get());
-	}
-
-	public void toggleTilesVisible() {
-		Env.$tilesVisible.set(!Env.$tilesVisible.get());
 	}
 }
