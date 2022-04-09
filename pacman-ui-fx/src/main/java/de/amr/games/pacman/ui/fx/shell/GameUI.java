@@ -63,7 +63,7 @@ public class GameUI extends DefaultGameEventHandler {
 
 	public static final int MIN_FRAMERATE = 10, MAX_FRAMERATE = 120;
 
-	public final GameController gameController;
+	public final GameController gc;
 	public final Stage stage;
 
 	private final StackPane mainSceneRoot;
@@ -77,8 +77,8 @@ public class GameUI extends DefaultGameEventHandler {
 	private int wallpaperIndex;
 	private GameScene currentGameScene;
 
-	public GameUI(GameController gameController, Stage stage, double width, double height) {
-		this.gameController = gameController;
+	public GameUI(GameController gc, Stage stage, double width, double height) {
+		this.gc = gc;
 		this.stage = stage;
 		this.infoLayer = new InfoLayer(this);
 
@@ -90,12 +90,12 @@ public class GameUI extends DefaultGameEventHandler {
 		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
 		stage.setScene(mainScene);
 
-		gameController.addGameEventListener(this);
+		gc.addGameEventListener(this);
 		Env.$drawMode3D.addListener(
 				($drawMode, oldDrawMode, newDrawMode) -> mainSceneRoot.setBackground(getBackground(currentGameScene)));
 
-		SoundManager.get().selectGameVariant(gameController.gameVariant);
-		gameScenes = new GameScenes(mainScene, gameController, GianmarcosModel3D.get());
+		SoundManager.get().selectGameVariant(gc.gameVariant);
+		gameScenes = new GameScenes(mainScene, gc, GianmarcosModel3D.get());
 	}
 
 	public GameScene getCurrentGameScene() {
@@ -113,7 +113,7 @@ public class GameUI extends DefaultGameEventHandler {
 	 * Called on every tick (if simulation is not paused).
 	 */
 	public void update() {
-		gameController.updateState();
+		gc.updateState();
 		currentGameScene.update();
 	}
 
@@ -123,7 +123,7 @@ public class GameUI extends DefaultGameEventHandler {
 	public void render() {
 		FlashMessageView.get().update();
 		infoLayer.update();
-		stage.setTitle(gameController.gameVariant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
+		stage.setTitle(gc.gameVariant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
 	}
 
 	@Override
@@ -139,16 +139,16 @@ public class GameUI extends DefaultGameEventHandler {
 			if (currentGameScene != null) {
 				currentGameScene.end();
 			}
-			switch (gameController.gameVariant) {
-			case MS_PACMAN -> newGameScene.setContext(gameController.game, Rendering2D_MsPacMan.get());
-			case PACMAN -> newGameScene.setContext(gameController.game, Rendering2D_PacMan.get());
+			switch (gc.gameVariant) {
+			case MS_PACMAN -> newGameScene.setContext(gc.game, Rendering2D_MsPacMan.get());
+			case PACMAN -> newGameScene.setContext(gc.game, Rendering2D_PacMan.get());
 			default -> throw new IllegalStateException();
 			}
 			newGameScene.resizeFXSubScene(stage.getScene().getHeight());
 			mainSceneRoot.setBackground(getBackground(newGameScene));
 			mainSceneRoot.getChildren().set(0, newGameScene.getFXSubScene());
 			SoundManager.get().stopAll();
-			SoundManager.get().selectGameVariant(gameController.gameVariant);
+			SoundManager.get().selectGameVariant(gc.gameVariant);
 			currentGameScene = newGameScene;
 			currentGameScene.init();
 			log("Game scene is now '%s'", currentGameScene.getClass());
@@ -175,14 +175,14 @@ public class GameUI extends DefaultGameEventHandler {
 		if (e.isAltDown()) {
 			switch (e.getCode()) {
 			case A -> toggleAutopilot();
-			case E -> gameController.cheatEatAllPellets();
+			case E -> gc.cheatEatAllPellets();
 			case I -> toggleImmunity();
 			case L -> addLives(3);
 			case N -> enterNextLevel();
 			case Q -> quitCurrentGameScene();
 			case S -> changeTargetFramerate(shift ? -10 : 10);
 			case V -> toggleGameVariant();
-			case X -> gameController.cheatKillGhosts();
+			case X -> gc.cheatKillGhosts();
 			case Z -> startIntermissionScenesTest();
 			case LEFT -> changePerspective(-1);
 			case RIGHT -> changePerspective(1);
@@ -198,7 +198,7 @@ public class GameUI extends DefaultGameEventHandler {
 
 		else {
 			switch (e.getCode()) {
-			case SPACE -> gameController.requestGame();
+			case SPACE -> gc.requestGame();
 			case F11 -> stage.setFullScreen(true);
 			}
 		}
@@ -221,44 +221,44 @@ public class GameUI extends DefaultGameEventHandler {
 	public void quitCurrentGameScene() {
 		SoundManager.get().stopAll();
 		currentGameScene.end();
-		gameController.changeState(GameState.INTRO);
+		gc.changeState(GameState.INTRO);
 	}
 
 	public void enterNextLevel() {
-		if (gameController.gameRunning) {
-			gameController.changeState(GameState.LEVEL_COMPLETE);
+		if (gc.gameRunning) {
+			gc.changeState(GameState.LEVEL_COMPLETE);
 			showFlashMessage(1, Env.CHEAT_TALK.next());
 		}
 	}
 
 	public void enterLevel(int levelNumber) {
-		if (gameController.game.levelNumber == levelNumber) {
+		if (gc.game.levelNumber == levelNumber) {
 			return;
 		}
 		SoundManager.get().stopAll();
 		if (levelNumber == 1) {
-			gameController.game.reset();
-			gameController.changeState(GameState.READY);
+			gc.game.reset();
+			gc.changeState(GameState.READY);
 		} else {
 			// TODO game model should be able to switch directly to any level
-			int start = levelNumber > gameController.game.levelNumber ? gameController.game.levelNumber + 1 : 1;
+			int start = levelNumber > gc.game.levelNumber ? gc.game.levelNumber + 1 : 1;
 			for (int n = start; n < levelNumber; ++n) {
-				gameController.game.setLevel(n);
+				gc.game.setLevel(n);
 			}
-			gameController.changeState(GameState.LEVEL_STARTING);
+			gc.changeState(GameState.LEVEL_STARTING);
 		}
 	}
 
 	public void addLives(int lives) {
-		if (gameController.gameRunning) {
-			gameController.game.player.lives += lives;
-			showFlashMessage(1, "You have %d lives", gameController.game.player.lives);
+		if (gc.gameRunning) {
+			gc.game.player.lives += lives;
+			showFlashMessage(1, "You have %d lives", gc.game.player.lives);
 		}
 	}
 
 	public void startIntermissionScenesTest() {
-		if (gameController.state == GameState.INTRO) {
-			gameController.startIntermissionTest();
+		if (gc.state == GameState.INTRO) {
+			gc.startIntermissionTest();
 		}
 	}
 
@@ -273,20 +273,20 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	public void toggleGameVariant() {
-		if (!gameController.gameRunning) {
-			gameController.selectGameVariant(gameController.gameVariant.succ());
+		if (!gc.gameRunning) {
+			gc.selectGameVariant(gc.gameVariant.succ());
 		}
 	}
 
 	public void toggleAutopilot() {
-		gameController.autoControlled = !gameController.autoControlled;
-		String message = Env.message(gameController.autoControlled ? "autopilot_on" : "autopilot_off");
+		gc.autoControlled = !gc.autoControlled;
+		String message = Env.message(gc.autoControlled ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(1, message);
 	}
 
 	public void toggleImmunity() {
-		gameController.playerImmune = !gameController.playerImmune;
-		String message = Env.message(gameController.playerImmune ? "player_immunity_on" : "player_immunity_off");
+		gc.playerImmune = !gc.playerImmune;
+		String message = Env.message(gc.playerImmune ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(1, message);
 	}
 
