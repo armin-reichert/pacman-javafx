@@ -28,9 +28,11 @@ import static de.amr.games.pacman.lib.Logging.log;
 import java.net.URL;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.GameSound;
+import javafx.animation.Animation;
 import javafx.scene.media.AudioClip;
 
 /**
@@ -143,5 +145,30 @@ public class SoundManager {
 		if (muted) {
 			stopAll();
 		}
+	}
+
+	public Stream<GameSound> sirens() {
+		return Stream.of(GameSound.SIREN_1, GameSound.SIREN_2, GameSound.SIREN_3, GameSound.SIREN_4);
+	}
+
+	public void startSiren(int scatterPhase) {
+		var siren = switch (scatterPhase) {
+		case 0 -> GameSound.SIREN_1;
+		case 1 -> GameSound.SIREN_2;
+		case 2 -> GameSound.SIREN_3;
+		case 3 -> GameSound.SIREN_4;
+		default -> throw new IllegalArgumentException();
+		};
+		loop(siren, Animation.INDEFINITE);
+		log("Siren %s started", siren);
+	}
+
+	public void stopSirens() {
+		sirens().map(this::getClip).forEach(AudioClip::stop);
+		log("All sirens stopped");
+	}
+
+	public boolean isAnySirenPlaying() {
+		return sirens().map(this::getClip).anyMatch(AudioClip::isPlaying);
 	}
 }

@@ -128,10 +128,10 @@ public class PlayScene2D extends AbstractGameScene2D {
 		if (SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying() && game.player.starvingTicks > 10) {
 			SoundManager.get().stop(GameSound.PACMAN_MUNCH);
 		}
-		int scatterPhase = game.huntingPhase % 2;
-		GameSound siren = GameSound.SIRENS.get(scatterPhase);
-		if (gameController.state == GameState.HUNTING && !SoundManager.get().getClip(siren).isPlaying()) {
-			SoundManager.get().loop(siren, Animation.INDEFINITE);
+		if (gameController.state == GameState.HUNTING && !SoundManager.get().isAnySirenPlaying()
+				&& !game.player.powerTimer.isRunning()) {
+			int scatterPhase = game.huntingPhase / 2;
+			SoundManager.get().startSiren(scatterPhase);
 		}
 	}
 
@@ -160,13 +160,8 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void onScatterPhaseStarted(ScatterPhaseStartedEvent e) {
-		if (e.scatterPhase > 0) {
-			SoundManager.get().stop(GameSound.SIRENS.get(e.scatterPhase - 1));
-		}
-		GameSound siren = GameSound.SIRENS.get(e.scatterPhase);
-		if (!SoundManager.get().getClip(siren).isPlaying()) {
-			SoundManager.get().loop(siren, Animation.INDEFINITE);
-		}
+		SoundManager.get().stopSirens();
+		SoundManager.get().startSiren(e.scatterPhase);
 	}
 
 	@Override
@@ -180,6 +175,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 			ghost2D.animFlashing.reset();
 			ghost2D.animFrightened.restart();
 		});
+		SoundManager.get().stopSirens();
 		if (!SoundManager.get().getClip(GameSound.PACMAN_POWER).isPlaying()) {
 			SoundManager.get().loop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
 		}

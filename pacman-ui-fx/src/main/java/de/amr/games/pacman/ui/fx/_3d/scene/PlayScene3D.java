@@ -199,10 +199,10 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		if (SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying() && game.player.starvingTicks > 10) {
 			SoundManager.get().stop(GameSound.PACMAN_MUNCH);
 		}
-		int scatterPhase = game.huntingPhase % 2;
-		GameSound siren = GameSound.SIRENS.get(scatterPhase);
-		if (gc.state == GameState.HUNTING && !SoundManager.get().getClip(siren).isPlaying()) {
-			SoundManager.get().loop(siren, Animation.INDEFINITE);
+		if (gc.state == GameState.HUNTING && !SoundManager.get().isAnySirenPlaying()
+				&& !game.player.powerTimer.isRunning()) {
+			int scatterPhase = game.huntingPhase / 2;
+			SoundManager.get().startSiren(scatterPhase);
 		}
 	}
 
@@ -252,16 +252,13 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 	@Override
 	public void onScatterPhaseStarted(ScatterPhaseStartedEvent e) {
-		if (e.scatterPhase > 0) {
-			SoundManager.get().stop(GameSound.SIRENS.get(e.scatterPhase - 1));
-		}
-		GameSound siren = GameSound.SIRENS.get(e.scatterPhase);
-		if (!SoundManager.get().getClip(siren).isPlaying())
-			SoundManager.get().loop(siren, Animation.INDEFINITE);
+		SoundManager.get().stopSirens();
+		SoundManager.get().startSiren(e.scatterPhase);
 	}
 
 	@Override
 	public void onPlayerGainsPower(GameEvent e) {
+		SoundManager.get().stopSirens();
 		SoundManager.get().loop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
 		Stream.of(ghosts3D) //
 				.filter(ghost3D -> ghost3D.creature.is(GhostState.FRIGHTENED) || ghost3D.creature.is(GhostState.LOCKED))
