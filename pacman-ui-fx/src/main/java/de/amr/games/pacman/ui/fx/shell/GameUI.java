@@ -26,6 +26,8 @@ package de.amr.games.pacman.ui.fx.shell;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.ui.fx.shell.FlashMessageView.showFlashMessage;
 
+import java.util.Random;
+
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
@@ -67,15 +69,18 @@ public class GameUI extends DefaultGameEventHandler {
 	private final StackPane mainSceneRoot;
 	private final GameScenes gameScenes;
 	private final InfoLayer infoLayer;
-	private final Wallpapers wallpapers;
-
+	private final Background[] wallpapers = { //
+			U.imageBackground("/common/wallpapers/beach.jpg"), //
+			U.imageBackground("/common/wallpapers/space.jpg"), //
+			U.imageBackground("/common/wallpapers/easter_island.jpg"), //
+	};
+	private int wallpaperIndex;
 	private GameScene currentGameScene;
 
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
 		this.gameController = gameController;
 		this.stage = stage;
 		this.infoLayer = new InfoLayer(this);
-		this.wallpapers = new Wallpapers();
 
 		// first child will be updated by subscene assigned to current game scene
 		mainSceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
@@ -150,9 +155,16 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 	}
 
+	public Background nextWallpaper() {
+		int currentWallpaperIndex = wallpaperIndex;
+		do {
+			wallpaperIndex = new Random().nextInt(wallpapers.length);
+		} while (wallpaperIndex == currentWallpaperIndex);
+		return wallpapers[wallpaperIndex];
+	}
+
 	private Background getBackground(GameScene gameScene) {
-		return gameScene.is3D()
-				? Env.$drawMode3D.get() == DrawMode.LINE ? U.colorBackground(Color.BLACK) : wallpapers.next()
+		return gameScene.is3D() ? Env.$drawMode3D.get() == DrawMode.LINE ? U.colorBackground(Color.BLACK) : nextWallpaper()
 				: U.colorBackground(Color.CORNFLOWERBLUE);
 	}
 
