@@ -75,7 +75,7 @@ import javafx.scene.transform.Translate;
  */
 public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
-	private final GameController gameController;
+	private final GameController gc;
 	private final SubScene fxSubScene;
 	private final PacManModel3D model3D;
 	private final Image floorTexture = U.image("/common/escher-texture.jpg");
@@ -94,8 +94,8 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	private LevelCounter3D levelCounter3D;
 	private LivesCounter3D livesCounter3D;
 
-	public PlayScene3D(GameController gameController, PacManModel3D model3D) {
-		this.gameController = gameController;
+	public PlayScene3D(GameController gc, PacManModel3D model3D) {
+		this.gc = gc;
 		this.model3D = model3D;
 		fxSubScene = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
 		fxSubScene.setCamera(new PerspectiveCamera(true));
@@ -137,15 +137,15 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 		score3D = new Score3D();
 		score3D.setFont(r2D.getArcadeFont());
-		score3D.setComputeScoreText(!gameController.attractMode);
-		if (gameController.attractMode) {
+		score3D.setComputeScoreText(!gc.attractMode);
+		if (gc.attractMode) {
 			score3D.txtScore.setFill(Color.RED);
 			score3D.txtScore.setText("GAME OVER!");
 		}
 
 		livesCounter3D = new LivesCounter3D(model3D);
 		livesCounter3D.getTransforms().add(new Translate(TS, TS, -HTS));
-		livesCounter3D.setVisible(!gameController.attractMode);
+		livesCounter3D.setVisible(!gc.attractMode);
 
 		levelCounter3D = new LevelCounter3D(r2D, width - TS, TS);
 		levelCounter3D.update(game);
@@ -159,7 +159,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		onPerspectiveChange(null, null, Env.$perspective.get());
 		onUseMazeFloorTextureChange(null, null, Env.$useMazeFloorTexture.getValue());
 
-		SoundManager.get().setMuted(gameController.attractMode);
+		SoundManager.get().setMuted(gc.attractMode);
 
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
@@ -193,7 +193,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 		// keep in sync with 2D scene in case user toggles between 2D and 3D
 		maze3D.pellets().forEach(pellet -> pellet.setVisible(!game.world.isFoodEaten(pellet.tile)));
-		if (gameController.state == GameState.HUNTING || gameController.state == GameState.GHOST_DYING) {
+		if (gc.state == GameState.HUNTING || gc.state == GameState.GHOST_DYING) {
 			maze3D.energizerAnimations().forEach(Animation::play);
 		}
 		if (SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying() && game.player.starvingTicks > 10) {
@@ -201,7 +201,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		}
 		int scatterPhase = game.huntingPhase % 2;
 		GameSound siren = GameSound.SIRENS.get(scatterPhase);
-		if (gameController.state == GameState.HUNTING && !SoundManager.get().getClip(siren).isPlaying()) {
+		if (gc.state == GameState.HUNTING && !SoundManager.get().getClip(siren).isPlaying()) {
 			SoundManager.get().loop(siren, Animation.INDEFINITE);
 		}
 	}
@@ -333,9 +333,9 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		ghosts3D[ghost.id].playRevivalAnimation();
 	}
 
+	@SuppressWarnings("incomplete-switch")
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
-
 		switch (e.newGameState) {
 		case READY -> {
 			maze3D.reset();
@@ -343,8 +343,8 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			player3D.reset();
 			Stream.of(ghosts3D).forEach(Ghost3D::reset);
 			SoundManager.get().stopAll();
-			SoundManager.get().setMuted(gameController.attractMode);
-			if (!gameController.gameRunning) {
+			SoundManager.get().setMuted(gc.attractMode);
+			if (!gc.gameRunning) {
 				SoundManager.get().play(GameSound.GAME_READY);
 			}
 		}
@@ -352,19 +352,22 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			maze3D.energizerAnimations().forEach(Animation::play);
 		}
 		case PACMAN_DYING -> {
-			Stream.of(ghosts3D).forEach(Ghost3D::setNormalSkinColor);
 			SoundManager.get().stopAll();
-			Ghost killer = Stream.of(game.ghosts).filter(ghost -> ghost.tile().equals(game.player.tile())).findAny().get();
+			Stream.of(ghosts3D).forEach(Ghost3D::setNormalSkinColor);
+			Color killerColor = r2D.getGhostColor(
+					Stream.of(game.ghosts).filter(ghost -> ghost.tile().equals(game.player.tile())).findAny().get().id);
 			new SequentialTransition( //
-					U.afterSeconds(1, game::hideGhosts), //
-					player3D.dyingAnimation(r2D.getGhostColor(killer.id), SoundManager.get()), //
-					U.afterSeconds(2, () -> gameController.stateTimer().expire()) //
+					U.afterSeconds(1.0, game::hideGhosts), //
+					player3D.dyingAnimation(killerColor), //
+					U.afterSeconds(2.0, () -> gc.stateTimer().expire()) //
 			).play();
 		}
 		case GHOST_DYING -> {
 			SoundManager.get().play(GameSound.GHOST_EATEN);
 		}
 		case LEVEL_STARTING -> {
+			// TODO: This is not executed at the *first* level. Maybe I should change the state machine to make a transition
+			// from READY to LEVEL_STARTING when the game starts?
 			maze3D.createWallsAndDoors(game.world, r2D.getMazeSideColor(game.mazeNumber),
 					r2D.getMazeTopColor(game.mazeNumber));
 			maze3D.createFood(game.world, r2D.getFoodColor(game.mazeNumber));
@@ -372,25 +375,21 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			levelCounter3D.update(game);
 			var message = Env.message("level_starting", game.levelNumber);
 			showFlashMessage(1, message);
-			U.afterSeconds(3, () -> gameController.stateTimer().expire()).play();
+			U.afterSeconds(3, () -> gc.stateTimer().expire()).play();
 		}
 		case LEVEL_COMPLETE -> {
-			SoundManager.get().stopAll();
-			maze3D.energizerAnimations().forEach(Animation::stop);
 			Stream.of(ghosts3D).forEach(Ghost3D::setNormalSkinColor);
 			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game.levelNumber);
 			new SequentialTransition( //
-					U.pause(2), //
+					U.pause(2.0), //
 					maze3D.createMazeFlashingAnimation(game.numFlashes), //
-					U.afterSeconds(1, () -> game.player.hide()), //
+					U.afterSeconds(1.0, () -> game.player.hide()), //
 					U.afterSeconds(0.5, () -> showFlashMessage(2, message)), //
-					U.afterSeconds(2, () -> gameController.stateTimer().expire())).play();
+					U.afterSeconds(2.0, () -> gc.stateTimer().expire()) //
+			).play();
 		}
 		case GAME_OVER -> {
-			SoundManager.get().stopAll();
 			showFlashMessage(3, Env.GAME_OVER_TALK.next());
-		}
-		default -> {
 		}
 		}
 
@@ -398,6 +397,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		if (e.oldGameState == GameState.HUNTING && e.newGameState != GameState.GHOST_DYING) {
 			maze3D.energizerAnimations().forEach(Animation::stop);
 			bonus3D.setVisible(false);
+			SoundManager.get().stopAll();
 		}
 	}
 }
