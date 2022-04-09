@@ -73,12 +73,12 @@ public class Maze3D extends Group {
 	public Maze3D(double mazeWidth, double mazeHeight) {
 		floor = new MazeFloor3D(mazeWidth - 1, mazeHeight - 1, 0.01);
 		floor.setColor(Color.BLUE);
-		floor.getTransforms()
-				.add(new Translate(0.5 * floor.getWidth(), 0.5 * floor.getHeight(), 0.5 * floor.getDepth()));
+		floor.getTransforms().add(new Translate(0.5 * floor.getWidth(), 0.5 * floor.getHeight(), 0.5 * floor.getDepth()));
 		getChildren().addAll(floor, wallsGroup, doorsGroup, pelletsGroup);
 	}
 
 	public void reset() {
+		energizerAnimations().forEach(Animation::stop);
 		energizers().forEach(node -> {
 			node.setScaleX(1.0);
 			node.setScaleY(1.0);

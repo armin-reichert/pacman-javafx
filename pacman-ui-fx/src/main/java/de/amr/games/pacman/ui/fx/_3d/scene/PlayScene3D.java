@@ -339,7 +339,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		switch (e.newGameState) {
 		case READY -> {
 			maze3D.reset();
-			maze3D.energizerAnimations().forEach(Animation::stop);
 			player3D.reset();
 			Stream.of(ghosts3D).forEach(Ghost3D::reset);
 			SoundManager.get().stopAll();
