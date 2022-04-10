@@ -152,6 +152,9 @@ public class SoundManager {
 	}
 
 	public void startSiren(int scatterPhase) {
+		if (muted) {
+			return;
+		}
 		var siren = switch (scatterPhase) {
 		case 0 -> GameSound.SIREN_1;
 		case 1 -> GameSound.SIREN_2;
