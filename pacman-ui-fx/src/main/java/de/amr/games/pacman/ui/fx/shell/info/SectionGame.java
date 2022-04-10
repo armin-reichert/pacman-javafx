@@ -67,10 +67,15 @@ public class SectionGame extends Section {
 		spinnerGameLevel = addSpinner("Level", 1, 100, gc.game.levelNumber);
 		spinnerGameLevel.valueProperty().addListener(($value, oldValue, newValue) -> ui.enterLevel(newValue.intValue()));
 		addInfo("Game State", this::fmtGameState);
-		addInfo("", () -> String.format("Running:   %s%s", gc.stateTimer().ticked(),
-				gc.stateTimer().isStopped() ? " (STOPPED)" : ""));
-		addInfo("", () -> String.format("Remaining: %s",
-				gc.stateTimer().ticksRemaining() == TickTimer.INDEFINITE ? "indefinite" : gc.stateTimer().ticksRemaining()));
+		addInfo("", () -> {
+			long ticked = gc.stateTimer().ticked();
+			return String.format("Running:   %s%s", ticked, gc.stateTimer().isStopped() ? " (STOPPED)" : "");
+		});
+		addInfo("", () -> {
+			long remaining = gc.stateTimer().ticksRemaining();
+			String remainingText = remaining == TickTimer.INDEFINITE ? "indefinite" : String.valueOf(remaining);
+			return String.format("Remaining: %s", remainingText);
+		});
 		addInfo("Playing", () -> U.yes_no(gc.gameRunning));
 		addInfo("Attract Mode", () -> U.yes_no(gc.attractMode));
 		addInfo("Game scene", () -> ui.getCurrentGameScene().getClass().getSimpleName());
