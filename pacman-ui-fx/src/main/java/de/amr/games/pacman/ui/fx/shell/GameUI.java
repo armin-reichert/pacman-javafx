@@ -312,6 +312,9 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	public void toggleSoundMuted() {
+		if (gc.attractMode) {
+			return; // stay muted in attract mode
+		}
 		boolean muted = SoundManager.get().isMuted();
 		SoundManager.get().setMuted(!muted);
 	}

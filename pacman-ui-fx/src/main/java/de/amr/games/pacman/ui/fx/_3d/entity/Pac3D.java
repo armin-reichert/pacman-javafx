@@ -93,7 +93,10 @@ public class Pac3D extends Creature3D<Pac> {
 		shrink.setToY(0);
 		shrink.setToZ(0);
 
-		var playDeathSound = now(() -> SoundManager.get().play(GameSound.PACMAN_DEATH));
+		var playDeathSound = now(() -> {
+			// TODO in attract mode, no sound should be played
+			SoundManager.get().play(GameSound.PACMAN_DEATH);
+		});
 
 		return new SequentialTransition( //
 				new FillTransition3D(Duration.seconds(1), skull, skullColor, ghostColor), //

@@ -159,8 +159,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		onPerspectiveChange(null, null, Env.$perspective.get());
 		onUseMazeFloorTextureChange(null, null, Env.$useMazeFloorTexture.getValue());
 
-		SoundManager.get().setMuted(gc.attractMode);
-
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
 		maze3D.$resolution.addListener(this::onMazeResolutionChange);
@@ -171,8 +169,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 	@Override
 	public void end() {
-		SoundManager.get().setMuted(false);
-
 		maze3D.$wallHeight.unbind();
 		maze3D.$resolution.unbind();
 		maze3D.$resolution.removeListener(this::onMazeResolutionChange);
@@ -199,7 +195,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		if (SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying() && game.player.starvingTicks > 10) {
 			SoundManager.get().stop(GameSound.PACMAN_MUNCH);
 		}
-		if (gc.state == GameState.HUNTING && !SoundManager.get().isAnySirenPlaying()
+		if (!gc.attractMode && gc.state == GameState.HUNTING && !SoundManager.get().isAnySirenPlaying()
 				&& !game.player.powerTimer.isRunning()) {
 			int scatterPhase = game.huntingPhase / 2;
 			SoundManager.get().startSiren(scatterPhase);
@@ -253,13 +249,17 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	@Override
 	public void onScatterPhaseStarted(ScatterPhaseStartedEvent e) {
 		SoundManager.get().stopSirens();
-		SoundManager.get().startSiren(e.scatterPhase);
+		if (!gc.attractMode) {
+			SoundManager.get().startSiren(e.scatterPhase);
+		}
 	}
 
 	@Override
 	public void onPlayerGainsPower(GameEvent e) {
 		SoundManager.get().stopSirens();
-		SoundManager.get().loop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
+		if (!gc.attractMode) {
+			SoundManager.get().loop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
+		}
 		Stream.of(ghosts3D) //
 				.filter(ghost3D -> ghost3D.creature.is(GhostState.FRIGHTENED) || ghost3D.creature.is(GhostState.LOCKED))
 				.forEach(Ghost3D::setFrightenedSkinColor);
@@ -284,7 +284,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		e.tile.ifPresent(tile -> {
 			maze3D.pelletAt(tile).ifPresent(maze3D::hidePellet);
 			AudioClip munching = SoundManager.get().getClip(GameSound.PACMAN_MUNCH);
-			if (!munching.isPlaying()) {
+			if (!munching.isPlaying() && !gc.attractMode) {
 				SoundManager.get().loop(GameSound.PACMAN_MUNCH, Animation.INDEFINITE);
 			}
 		});
@@ -298,7 +298,9 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	@Override
 	public void onBonusEaten(GameEvent e) {
 		bonus3D.showPoints(game.bonus.points);
-		SoundManager.get().play(GameSound.BONUS_EATEN);
+		if (!gc.attractMode) {
+			SoundManager.get().play(GameSound.BONUS_EATEN);
+		}
 	}
 
 	@Override
@@ -314,7 +316,9 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 	@Override
 	public void onGhostReturnsHome(GameEvent e) {
-		SoundManager.get().play(GameSound.GHOST_RETURNING);
+		if (!gc.attractMode) {
+			SoundManager.get().play(GameSound.GHOST_RETURNING);
+		}
 	}
 
 	@Override
@@ -339,8 +343,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			player3D.reset();
 			Stream.of(ghosts3D).forEach(Ghost3D::reset);
 			SoundManager.get().stopAll();
-			SoundManager.get().setMuted(gc.attractMode);
-			if (!gc.gameRunning) {
+			if (!gc.attractMode && !gc.gameRunning) {
 				SoundManager.get().play(GameSound.GAME_READY);
 			}
 		}
@@ -359,7 +362,9 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			).play();
 		}
 		case GHOST_DYING -> {
-			SoundManager.get().play(GameSound.GHOST_EATEN);
+			if (!gc.attractMode) {
+				SoundManager.get().play(GameSound.GHOST_EATEN);
+			}
 		}
 		case LEVEL_STARTING -> {
 			// TODO: This is not executed at the *first* level. Maybe I should change the state machine to make a transition

@@ -103,13 +103,11 @@ public class PlayScene2D extends AbstractGameScene2D {
 		bonus2D = new Bonus2D(game.bonus, r2D, bonusMoving);
 
 		game.player.powerTimer.addEventListener(this::handleGhostsFlashing);
-		SoundManager.get().setMuted(gc.attractMode);
 	}
 
 	@Override
 	public void end() {
 		game.player.powerTimer.removeEventListener(this::handleGhostsFlashing);
-		SoundManager.get().setMuted(false);
 		log("Scene '%s' ended", getClass().getName());
 	}
 
@@ -128,7 +126,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		if (SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying() && game.player.starvingTicks > 10) {
 			SoundManager.get().stop(GameSound.PACMAN_MUNCH);
 		}
-		if (gc.state == GameState.HUNTING && !SoundManager.get().isAnySirenPlaying()
+		if (!gc.attractMode && gc.state == GameState.HUNTING && !SoundManager.get().isAnySirenPlaying()
 				&& !game.player.powerTimer.isRunning()) {
 			int scatterPhase = game.huntingPhase / 2;
 			SoundManager.get().startSiren(scatterPhase);
@@ -136,6 +134,10 @@ public class PlayScene2D extends AbstractGameScene2D {
 	}
 
 	public void onSwitchBetween2DAnd3D() {
+		player2D.visible = game.player.visible;
+		for (Ghost2D ghost2D : ghosts2D) {
+			ghost2D.visible = ghost2D.ghost.visible;
+		}
 		if (!player2D.animMunching.get(game.player.moveDir()).isRunning()) {
 			player2D.animMunching.values().forEach(TimedSeq::restart);
 		}
@@ -161,7 +163,9 @@ public class PlayScene2D extends AbstractGameScene2D {
 	@Override
 	public void onScatterPhaseStarted(ScatterPhaseStartedEvent e) {
 		SoundManager.get().stopSirens();
-		SoundManager.get().startSiren(e.scatterPhase);
+		if (!gc.attractMode) {
+			SoundManager.get().startSiren(e.scatterPhase);
+		}
 	}
 
 	@Override
@@ -176,14 +180,14 @@ public class PlayScene2D extends AbstractGameScene2D {
 			ghost2D.animFrightened.restart();
 		});
 		SoundManager.get().stopSirens();
-		if (!SoundManager.get().getClip(GameSound.PACMAN_POWER).isPlaying()) {
+		if (!gc.attractMode && !SoundManager.get().getClip(GameSound.PACMAN_POWER).isPlaying()) {
 			SoundManager.get().loop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
 		}
 	}
 
 	@Override
 	public void onPlayerFoundFood(GameEvent e) {
-		if (!SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying()) {
+		if (!gc.attractMode && !SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying()) {
 			SoundManager.get().loop(GameSound.PACMAN_MUNCH, Animation.INDEFINITE);
 		}
 	}
@@ -196,7 +200,9 @@ public class PlayScene2D extends AbstractGameScene2D {
 	@Override
 	public void onBonusEaten(GameEvent e) {
 		bonus2D.stopAnimation();
-		SoundManager.get().play(GameSound.BONUS_EATEN);
+		if (!gc.attractMode) {
+			SoundManager.get().play(GameSound.BONUS_EATEN);
+		}
 	}
 
 	@Override
@@ -206,7 +212,9 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void onGhostReturnsHome(GameEvent e) {
-		SoundManager.get().play(GameSound.GHOST_RETURNING);
+		if (!gc.attractMode) {
+			SoundManager.get().play(GameSound.GHOST_RETURNING);
+		}
 	}
 
 	@Override
@@ -228,7 +236,6 @@ public class PlayScene2D extends AbstractGameScene2D {
 			player2D.reset();
 			Stream.of(ghosts2D).forEach(Ghost2D::reset);
 			if (!gc.attractMode && !gc.gameRunning) {
-				SoundManager.get().setMuted(false);
 				SoundManager.get().play(GameSound.GAME_READY);
 			}
 		}
@@ -248,7 +255,9 @@ public class PlayScene2D extends AbstractGameScene2D {
 			new SequentialTransition( //
 					afterSec(1, () -> game.ghosts().forEach(Ghost::hide)), //
 					afterSec(1, () -> {
-						SoundManager.get().play(GameSound.PACMAN_DEATH);
+						if (!gc.attractMode) {
+							SoundManager.get().play(GameSound.PACMAN_DEATH);
+						}
 						player2D.animDying.restart();
 					}), //
 					afterSec(2, () -> game.player.hide()), //
@@ -258,7 +267,9 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		case GHOST_DYING -> {
 			game.player.hide();
-			SoundManager.get().play(GameSound.GHOST_EATEN);
+			if (!gc.attractMode) {
+				SoundManager.get().play(GameSound.GHOST_EATEN);
+			}
 		}
 
 		case LEVEL_COMPLETE -> {
