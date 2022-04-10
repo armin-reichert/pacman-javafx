@@ -114,6 +114,7 @@ public class GameUI extends DefaultGameEventHandler {
 	 */
 	public void update() {
 		gc.updateState();
+		// game scene is updated *and* rendered such that when simulation is paused it gets redrawn nevertheless
 		currentGameScene.update();
 	}
 

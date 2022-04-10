@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.lib.Logging.log;
+import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.GameController;
@@ -37,6 +38,7 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
@@ -109,6 +111,16 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 		highScore2D.showHighscore = true;
 	}
 
+	/**
+	 * Updates the scene. Subclasses override this method.
+	 */
+	protected abstract void doUpdate();
+
+	/**
+	 * Renders the scene content. Subclasses override this method.
+	 */
+	protected abstract void doRender();
+
 	@Override
 	public final void update() {
 		doUpdate();
@@ -117,7 +129,7 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		doRender();
 		if (Env.$tilesVisible.get()) {
-			drawTileBorders();
+			drawTileBorders(g);
 		}
 	}
 
@@ -131,32 +143,20 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 		return false;
 	}
 
-	private void drawTileBorders() {
-		var g = canvas.getGraphicsContext2D();
+	private void drawTileBorders(GraphicsContext g) {
 		g.setStroke(Color.rgb(160, 160, 160, 0.5));
-		g.setLineWidth(1);
-		for (int row = 0; row < 36; ++row) {
-			line(0, t(row), t(28), t(row));
+		g.setLineWidth(0.5);
+		for (int y = 0; y < unscaledSize.y; y += TS) {
+			line(g, 0, y, unscaledSize.x, y);
 		}
-		for (int col = 0; col < 28; ++col) {
-			line(t(col), 0, t(col), t(36));
+		for (int x = 0; x < unscaledSize.x; x += TS) {
+			line(g, x, 0, x, unscaledSize.y);
 		}
 	}
 
 	// WTF
-	private void line(double x1, double y1, double x2, double y2) {
-		var g = canvas.getGraphicsContext2D();
+	private static void line(GraphicsContext g, double x1, double y1, double x2, double y2) {
 		double offset = 0.5;
 		g.strokeLine(x1 + offset, y1 + offset, x2 + offset, y2 + offset);
 	}
-
-	/**
-	 * Updates the scene. Subclasses override this method.
-	 */
-	protected abstract void doUpdate();
-
-	/**
-	 * Renders the scene content. Subclasses override this method.
-	 */
-	protected abstract void doRender();
 }
