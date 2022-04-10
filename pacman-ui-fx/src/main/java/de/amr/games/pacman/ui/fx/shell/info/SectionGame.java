@@ -127,14 +127,9 @@ public class SectionGame extends Section {
 		return String.format("%.2f px/sec", GameModel.BASE_SPEED * fraction);
 	}
 
-	private String huntingPhaseName() {
-		return gc.game.inScatteringPhase() ? "Scattering" : "Chasing";
-	}
-
 	private String fmtGameState() {
-		var game = gc.game;
-		var state = gc.state;
-		return state == GameState.HUNTING ? //
-				String.format("%s: Phase #%d (%s)", state, game.huntingPhase, huntingPhaseName()) : state.name();
+		var huntingPhaseName = gc.game.inScatteringPhase() ? "Scattering" : "Chasing";
+		return gc.state == GameState.HUNTING ? //
+				String.format("%s: Phase #%d (%s)", gc.state, gc.game.huntingPhase, huntingPhaseName) : gc.state.name();
 	}
 }
