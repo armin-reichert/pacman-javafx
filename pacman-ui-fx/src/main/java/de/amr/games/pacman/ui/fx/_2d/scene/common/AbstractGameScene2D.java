@@ -37,7 +37,6 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
@@ -49,10 +48,9 @@ import javafx.scene.transform.Scale;
  */
 public abstract class AbstractGameScene2D extends DefaultGameEventHandler implements GameScene {
 
-	protected final GameController gameController;
+	protected final GameController gc;
 	protected final SubScene fxSubScene;
 	protected final Canvas canvas;
-	protected final GraphicsContext gc;
 	protected final V2i unscaledSize;
 	protected final double aspectRatio;
 
@@ -61,10 +59,9 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
 
-	public AbstractGameScene2D(GameController gameController, V2i unscaledSize) {
-		this.gameController = gameController;
+	public AbstractGameScene2D(GameController gc, V2i unscaledSize) {
+		this.gc = gc;
 		this.canvas = new Canvas();
-		this.gc = canvas.getGraphicsContext2D();
 		this.unscaledSize = unscaledSize;
 		this.aspectRatio = (double) unscaledSize.x / unscaledSize.y;
 		StackPane root = new StackPane(canvas);
@@ -115,8 +112,9 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	@Override
 	public final void update() {
 		doUpdate();
-		gc.setFill(Color.BLACK);
-		gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		var g = canvas.getGraphicsContext2D();
+		g.setFill(Color.BLACK);
+		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		doRender();
 		if (Env.$tilesVisible.get()) {
 			drawTileBorders();
@@ -134,8 +132,9 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	}
 
 	private void drawTileBorders() {
-		gc.setStroke(Color.rgb(160, 160, 160, 0.5));
-		gc.setLineWidth(1);
+		var g = canvas.getGraphicsContext2D();
+		g.setStroke(Color.rgb(160, 160, 160, 0.5));
+		g.setLineWidth(1);
 		for (int row = 0; row < 36; ++row) {
 			line(0, t(row), t(28), t(row));
 		}
@@ -146,8 +145,9 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 
 	// WTF
 	private void line(double x1, double y1, double x2, double y2) {
+		var g = canvas.getGraphicsContext2D();
 		double offset = 0.5;
-		gc.strokeLine(x1 + offset, y1 + offset, x2 + offset, y2 + offset);
+		g.strokeLine(x1 + offset, y1 + offset, x2 + offset, y2 + offset);
 	}
 
 	/**

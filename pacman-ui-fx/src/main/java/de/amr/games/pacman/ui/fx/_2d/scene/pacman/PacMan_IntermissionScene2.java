@@ -87,24 +87,26 @@ public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
 
 	@Override
 	public void doRender() {
-		levelCounter2D.render(gc);
-		pacMan2D.render(gc);
-		nail2D.render(gc);
+		var g = canvas.getGraphicsContext2D();
+		levelCounter2D.render(g);
+		pacMan2D.render(g);
+		nail2D.render(g);
 		if (sc.nailDistance() < 0) {
-			blinky2D.render(gc);
+			blinky2D.render(g);
 		} else {
 			drawBlinkyStretched(sc.blinky, sc.nail.position, sc.nailDistance() / 4);
 		}
 	}
 
 	private void drawBlinkyStretched(Ghost blinky, V2d nailPosition, int stretching) {
+		var g = canvas.getGraphicsContext2D();
 		Rectangle2D stretchedDress = blinkyStretchedAnimation.frame(stretching);
-		r2D.renderSprite(gc, stretchedDress, (int) (nailPosition.x - 4), (int) (nailPosition.y - 4));
+		r2D.renderSprite(g, stretchedDress, (int) (nailPosition.x - 4), (int) (nailPosition.y - 4));
 		if (stretching < 3) {
-			blinky2D.render(gc);
+			blinky2D.render(g);
 		} else {
 			Rectangle2D damagedDress = blinkyDamagedAnimation.frame(blinky.moveDir() == Direction.UP ? 0 : 1);
-			r2D.renderSprite(gc, damagedDress, (int) (blinky.position.x - 4), (int) (blinky.position.y - 4));
+			r2D.renderSprite(g, damagedDress, (int) (blinky.position.x - 4), (int) (blinky.position.y - 4));
 		}
 	}
 }

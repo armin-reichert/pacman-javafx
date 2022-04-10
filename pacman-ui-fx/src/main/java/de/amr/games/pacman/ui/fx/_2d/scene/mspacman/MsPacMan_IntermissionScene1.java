@@ -104,12 +104,13 @@ public class MsPacMan_IntermissionScene1 extends AbstractGameScene2D {
 
 	@Override
 	public void doRender() {
-		levelCounter2D.render(gc);
-		flap2D.render(gc);
-		msPacMan2D.render(gc);
-		pacMan2D.render(gc);
-		inky2D.render(gc);
-		pinky2D.render(gc);
-		heart2D.render(gc);
+		var g = canvas.getGraphicsContext2D();
+		levelCounter2D.render(g);
+		flap2D.render(g);
+		msPacMan2D.render(g);
+		pacMan2D.render(g);
+		inky2D.render(g);
+		pinky2D.render(g);
+		heart2D.render(g);
 	}
 }

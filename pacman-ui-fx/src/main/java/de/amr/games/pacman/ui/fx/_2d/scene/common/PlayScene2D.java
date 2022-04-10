@@ -81,16 +81,16 @@ public class PlayScene2D extends AbstractGameScene2D {
 		maze2D.x = 0;
 		maze2D.y = t(3);
 
-		score2D.showPoints = !gameController.attractMode;
+		score2D.showPoints = !gc.attractMode;
 
 		livesCounter2D = new LivesCounter2D(game, r2D);
 		livesCounter2D.x = t(2);
 		livesCounter2D.y = t(34);
-		livesCounter2D.visible = !gameController.attractMode;
+		livesCounter2D.visible = !gc.attractMode;
 
 		levelCounter2D = new LevelCounter2D(game, r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
-		levelCounter2D.visible = !gameController.attractMode;
+		levelCounter2D.visible = !gc.attractMode;
 
 		player2D = new Player2D(game.player, game, r2D);
 		player2D.animDying.onStart(game::hideGhosts);
@@ -99,11 +99,11 @@ public class PlayScene2D extends AbstractGameScene2D {
 			ghosts2D[ghost.id] = new Ghost2D(ghost, game, r2D);
 		}
 
-		boolean bonusMoving = gameController.gameVariant == GameVariant.MS_PACMAN;
+		boolean bonusMoving = gc.gameVariant == GameVariant.MS_PACMAN;
 		bonus2D = new Bonus2D(game.bonus, r2D, bonusMoving);
 
 		game.player.powerTimer.addEventListener(this::handleGhostsFlashing);
-		SoundManager.get().setMuted(gameController.attractMode);
+		SoundManager.get().setMuted(gc.attractMode);
 	}
 
 	@Override
@@ -128,7 +128,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 		if (SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying() && game.player.starvingTicks > 10) {
 			SoundManager.get().stop(GameSound.PACMAN_MUNCH);
 		}
-		if (gameController.state == GameState.HUNTING && !SoundManager.get().isAnySirenPlaying()
+		if (gc.state == GameState.HUNTING && !SoundManager.get().isAnySirenPlaying()
 				&& !game.player.powerTimer.isRunning()) {
 			int scatterPhase = game.huntingPhase / 2;
 			SoundManager.get().startSiren(scatterPhase);
@@ -227,7 +227,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 			maze2D.getEnergizerAnimation().reset();
 			player2D.reset();
 			Stream.of(ghosts2D).forEach(Ghost2D::reset);
-			if (!gameController.attractMode && !gameController.gameRunning) {
+			if (!gc.attractMode && !gc.gameRunning) {
 				SoundManager.get().setMuted(false);
 				SoundManager.get().play(GameSound.GAME_READY);
 			}
@@ -241,7 +241,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		case PACMAN_DYING -> {
 			// wait until game is continued
-			gameController.stateTimer().setIndefinite().start();
+			gc.stateTimer().setIndefinite().start();
 
 			SoundManager.get().stopAll();
 
@@ -252,7 +252,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 						player2D.animDying.restart();
 					}), //
 					afterSec(2, () -> game.player.hide()), //
-					afterSec(1, () -> gameController.stateTimer().expire()) //
+					afterSec(1, () -> gc.stateTimer().expire()) //
 			).play();
 		}
 
@@ -262,14 +262,14 @@ public class PlayScene2D extends AbstractGameScene2D {
 		}
 
 		case LEVEL_COMPLETE -> {
-			gameController.stateTimer().setIndefinite(); // wait until continueGame() is called
+			gc.stateTimer().setIndefinite(); // wait until continueGame() is called
 			SoundManager.get().stopAll();
 			player2D.reset();
 			// Energizers can still exist if "next level" cheat has been used
 			maze2D.getEnergizerAnimation().reset();
 			Animation animation = new SequentialTransition( //
 					maze2D.getFlashingAnimation(), //
-					afterSec(1, () -> gameController.stateTimer().expire()) //
+					afterSec(1, () -> gc.stateTimer().expire()) //
 			);
 			animation.setDelay(Duration.seconds(2));
 			animation.play();
@@ -277,7 +277,7 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 		case LEVEL_STARTING -> {
 			maze2D.getFlashingAnimation().setCycleCount(2 * game.numFlashes);
-			gameController.stateTimer().setSeconds(1).start();
+			gc.stateTimer().setSeconds(1).start();
 		}
 
 		case GAME_OVER -> {
@@ -299,23 +299,24 @@ public class PlayScene2D extends AbstractGameScene2D {
 
 	@Override
 	public void doRender() {
-		maze2D.render(gc);
-		levelCounter2D.render(gc);
-		livesCounter2D.render(gc);
-		score2D.render(gc);
-		highScore2D.render(gc);
-		if (gameController.state == GameState.GAME_OVER || gameController.attractMode) {
-			gc.setFont(r2D.getArcadeFont());
-			gc.setFill(Color.RED);
-			gc.fillText("GAME", t(9), t(21));
-			gc.fillText("OVER", t(15), t(21));
-		} else if (gameController.state == GameState.READY) {
-			gc.setFont(r2D.getArcadeFont());
-			gc.setFill(Color.YELLOW);
-			gc.fillText("READY!", t(11), t(21));
+		var g = canvas.getGraphicsContext2D();
+		maze2D.render(g);
+		levelCounter2D.render(g);
+		livesCounter2D.render(g);
+		score2D.render(g);
+		highScore2D.render(g);
+		if (gc.state == GameState.GAME_OVER || gc.attractMode) {
+			g.setFont(r2D.getArcadeFont());
+			g.setFill(Color.RED);
+			g.fillText("GAME", t(9), t(21));
+			g.fillText("OVER", t(15), t(21));
+		} else if (gc.state == GameState.READY) {
+			g.setFont(r2D.getArcadeFont());
+			g.setFill(Color.YELLOW);
+			g.fillText("READY!", t(11), t(21));
 		}
-		bonus2D.render(gc);
-		player2D.render(gc);
-		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(gc));
+		bonus2D.render(g);
+		player2D.render(g);
+		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(g));
 	}
 }

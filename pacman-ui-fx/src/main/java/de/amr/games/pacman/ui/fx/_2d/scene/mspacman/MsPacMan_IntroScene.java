@@ -77,12 +77,13 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 
 	@Override
 	public void doRender() {
-		score2D.render(gc);
-		highScore2D.render(gc);
+		var g = canvas.getGraphicsContext2D();
+		score2D.render(g);
+		highScore2D.render(g);
 
-		gc.setFont(r2D.getArcadeFont());
-		gc.setFill(Color.ORANGE);
-		gc.fillText("\"MS PAC-MAN\"", sc.titlePosition.x, sc.titlePosition.y);
+		g.setFont(r2D.getArcadeFont());
+		g.setFill(Color.ORANGE);
+		g.fillText("\"MS PAC-MAN\"", sc.titlePosition.x, sc.titlePosition.y);
 
 		drawAnimatedBoard(32, 16);
 		switch (sc.state) {
@@ -96,31 +97,34 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 		}
 		}
 
-		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(gc));
-		msPacMan2D.render(gc);
+		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(g));
+		msPacMan2D.render(g);
 		drawCopyright();
 	}
 
 	private void drawGhostText() {
-		gc.setFill(Color.WHITE);
-		gc.setFont(r2D.getArcadeFont());
+		var g = canvas.getGraphicsContext2D();
+		g.setFill(Color.WHITE);
+		g.setFont(r2D.getArcadeFont());
 		if (sc.ghostIndex == 0) {
-			gc.fillText("WITH", sc.titlePosition.x, sc.boardTopLeft.y + t(3));
+			g.fillText("WITH", sc.titlePosition.x, sc.boardTopLeft.y + t(3));
 		}
 		Ghost ghost = sc.ghosts[sc.ghostIndex];
-		gc.setFill(r2D.getGhostColor(ghost.id));
-		gc.fillText(ghost.name.toUpperCase(), t(14 - ghost.name.length() / 2), sc.boardTopLeft.y + t(6));
+		g.setFill(r2D.getGhostColor(ghost.id));
+		g.fillText(ghost.name.toUpperCase(), t(14 - ghost.name.length() / 2), sc.boardTopLeft.y + t(6));
 	}
 
 	private void drawMsPacManText() {
-		gc.setFill(Color.WHITE);
-		gc.setFont(r2D.getArcadeFont());
-		gc.fillText("STARRING", sc.titlePosition.x, sc.boardTopLeft.y + t(3));
-		gc.setFill(Color.YELLOW);
-		gc.fillText("MS PAC-MAN", sc.titlePosition.x, sc.boardTopLeft.y + t(6));
+		var g = canvas.getGraphicsContext2D();
+		g.setFill(Color.WHITE);
+		g.setFont(r2D.getArcadeFont());
+		g.fillText("STARRING", sc.titlePosition.x, sc.boardTopLeft.y + t(3));
+		g.setFill(Color.YELLOW);
+		g.fillText("MS PAC-MAN", sc.titlePosition.x, sc.boardTopLeft.y + t(6));
 	}
 
 	private void drawAnimatedBoard(int numDotsX, int numDotsY) {
+		var g = canvas.getGraphicsContext2D();
 		long time = sc.boardAnimationTimer.ticked();
 		int light = (int) (time / 2) % (numDotsX / 2);
 		for (int dot = 0; dot < 2 * (numDotsX + numDotsY); ++dot) {
@@ -136,28 +140,30 @@ public class MsPacMan_IntroScene extends AbstractGameScene2D {
 			} else {
 				y = 2 * (numDotsX + numDotsY) - dot;
 			}
-			gc.setFill((dot + light) % (numDotsX / 2) == 0 ? Color.PINK : Color.RED);
-			gc.fillRect(sc.boardTopLeft.x + 4 * x, sc.boardTopLeft.y + 4 * y, 2, 2);
+			g.setFill((dot + light) % (numDotsX / 2) == 0 ? Color.PINK : Color.RED);
+			g.fillRect(sc.boardTopLeft.x + 4 * x, sc.boardTopLeft.y + 4 * y, 2, 2);
 		}
 	}
 
 	private void drawPressKeyToStart(int tileY) {
+		var g = canvas.getGraphicsContext2D();
 		if (sc.blinking.frame()) {
 			String text = "PRESS SPACE TO PLAY";
-			gc.setFill(Color.WHITE);
-			gc.setFont(r2D.getArcadeFont());
-			gc.fillText(text, t(13 - text.length() / 2), t(tileY));
+			g.setFill(Color.WHITE);
+			g.setFont(r2D.getArcadeFont());
+			g.fillText(text, t(13 - text.length() / 2), t(tileY));
 		}
 	}
 
 	private void drawCopyright() {
+		var g = canvas.getGraphicsContext2D();
 		double scale = 36.0 / midwayLogo.getHeight();
-		gc.drawImage(midwayLogo, t(4), t(28) + 3, scale * midwayLogo.getWidth(), scale * midwayLogo.getHeight());
-		gc.setFill(Color.RED);
-		gc.setFont(Font.font("Dialog", 11.0));
-		gc.fillText("\u00a9", t(9), t(30) + 2); // (c) symbol
-		gc.setFont(r2D.getArcadeFont());
-		gc.fillText("MIDWAY MFG CO", t(11), t(30));
-		gc.fillText("1980/1981", t(12), t(32));
+		g.drawImage(midwayLogo, t(4), t(28) + 3, scale * midwayLogo.getWidth(), scale * midwayLogo.getHeight());
+		g.setFill(Color.RED);
+		g.setFont(Font.font("Dialog", 11.0));
+		g.fillText("\u00a9", t(9), t(30) + 2); // (c) symbol
+		g.setFont(r2D.getArcadeFont());
+		g.fillText("MIDWAY MFG CO", t(11), t(30));
+		g.fillText("1980/1981", t(12), t(32));
 	}
 }

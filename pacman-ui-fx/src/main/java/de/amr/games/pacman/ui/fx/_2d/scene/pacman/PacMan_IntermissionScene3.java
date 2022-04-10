@@ -81,13 +81,13 @@ public class PacMan_IntermissionScene3 extends AbstractGameScene2D {
 
 	@Override
 	public void doRender() {
-		levelCounter2D.render(gc);
-		;
-		pacMan2D.render(gc);
+		var g = canvas.getGraphicsContext2D();
+		levelCounter2D.render(g);
+		pacMan2D.render(g);
 		if (sc.state == IntermissionState.CHASING) {
-			blinkyPatched2D.render(gc);
+			blinkyPatched2D.render(g);
 		} else {
-			blinkyNaked2D.render(gc);
+			blinkyNaked2D.render(g);
 		}
 	}
 }

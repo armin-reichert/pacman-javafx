@@ -106,8 +106,10 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 
 	@Override
 	public void doRender() {
-		score2D.render(gc);
-		highScore2D.render(gc);
+		var g = canvas.getGraphicsContext2D();
+		score2D.render(g);
+		highScore2D.render(g);
+
 		switch (sc.state) {
 
 		case BEGIN, PRESENTING_GHOSTS -> drawGallery();
@@ -151,72 +153,78 @@ public class PacMan_IntroScene extends AbstractGameScene2D {
 	}
 
 	private void drawGuys(int offset) {
-		ghosts2D[0].render(gc);
-		gc.save();
-		gc.translate(offset, 0);
-		ghosts2D[1].render(gc);
-		ghosts2D[2].render(gc);
-		gc.restore();
-		ghosts2D[3].render(gc);
-		pacMan2D.render(gc);
+		var g = canvas.getGraphicsContext2D();
+		ghosts2D[0].render(g);
+		g.save();
+		g.translate(offset, 0);
+		ghosts2D[1].render(g);
+		ghosts2D[2].render(g);
+		g.restore();
+		ghosts2D[3].render(g);
+		pacMan2D.render(g);
 	}
 
 	private void drawGallery() {
-		gc.setFill(Color.WHITE);
-		gc.setFont(r2D.getArcadeFont());
-		gc.fillText("CHARACTER", t(6), sc.topY);
-		gc.fillText("/", t(16), sc.topY);
-		gc.fillText("NICKNAME", t(18), sc.topY);
+		var g = canvas.getGraphicsContext2D();
+		g.setFill(Color.WHITE);
+		g.setFont(r2D.getArcadeFont());
+		g.fillText("CHARACTER", t(6), sc.topY);
+		g.fillText("/", t(16), sc.topY);
+		g.fillText("NICKNAME", t(18), sc.topY);
 		for (int ghostID = 0; ghostID < sc.portraits.length; ++ghostID) {
 			GhostPortrait portrait = sc.portraits[ghostID];
 			if (portrait.ghost.visible) {
 				int y = sc.topY + t(1 + 3 * ghostID);
-				gallery2D[ghostID].render(gc);
+				gallery2D[ghostID].render(g);
 				if (portrait.characterVisible) {
-					gc.setFill(r2D.getGhostColor(ghostID));
-					gc.fillText("-" + portrait.character, t(6), y + 8);
+					g.setFill(r2D.getGhostColor(ghostID));
+					g.fillText("-" + portrait.character, t(6), y + 8);
 				}
 				if (portrait.nicknameVisible) {
-					gc.setFill(r2D.getGhostColor(ghostID));
-					gc.fillText("\"" + portrait.ghost.name + "\"", t(17), y + 8);
+					g.setFill(r2D.getGhostColor(ghostID));
+					g.fillText("\"" + portrait.ghost.name + "\"", t(17), y + 8);
 				}
 			}
 		}
 	}
 
 	private void drawPressKeyToStart(int yTile) {
+		var g = canvas.getGraphicsContext2D();
 		if (sc.slowBlinking.frame()) {
 			String text = "PRESS SPACE TO PLAY";
-			gc.setFill(Color.WHITE);
-			gc.setFont(r2D.getArcadeFont());
-			gc.fillText(text, t(14 - text.length() / 2), t(yTile));
+			g.setFill(Color.WHITE);
+			g.setFont(r2D.getArcadeFont());
+			g.fillText(text, t(14 - text.length() / 2), t(yTile));
 		}
 	}
 
 	private void drawPoints(int tileX, int tileY) {
-		gc.setFill(r2D.getFoodColor(1));
-		gc.fillRect(t(tileX) + 6, t(tileY - 1) + 2, 2, 2);
+		var g = canvas.getGraphicsContext2D();
+		g.setFill(r2D.getFoodColor(1));
+		g.fillRect(t(tileX) + 6, t(tileY - 1) + 2, 2, 2);
 		if (sc.fastBlinking.frame()) {
-			gc.fillOval(t(tileX), t(tileY + 1) - 2, 10, 10);
+			g.fillOval(t(tileX), t(tileY + 1) - 2, 10, 10);
 		}
-		gc.setFill(Color.WHITE);
-		gc.setFont(r2D.getArcadeFont());
-		gc.fillText("10", t(tileX + 2), t(tileY));
-		gc.fillText("50", t(tileX + 2), t(tileY + 2));
-		gc.setFont(Font.font(r2D.getArcadeFont().getName(), 6));
-		gc.fillText("PTS", t(tileX + 5), t(tileY));
-		gc.fillText("PTS", t(tileX + 5), t(tileY + 2));
+		g.setFill(Color.WHITE);
+		g.setFont(r2D.getArcadeFont());
+		g.fillText("10", t(tileX + 2), t(tileY));
+		g.fillText("50", t(tileX + 2), t(tileY + 2));
+		g.setFont(Font.font(r2D.getArcadeFont().getName(), 6));
+		g.fillText("PTS", t(tileX + 5), t(tileY));
+		g.fillText("PTS", t(tileX + 5), t(tileY + 2));
 	}
 
 	private void drawEnergizer() {
-		gc.setFill(r2D.getFoodColor(1));
-		gc.fillOval(t(2), t(20), TS, TS);
+		var g = canvas.getGraphicsContext2D();
+		g.setFill(r2D.getFoodColor(1));
+		g.fillOval(t(2), t(20), TS, TS);
 	}
 
 	private void drawCopyright(int yTile) {
+		var g = canvas.getGraphicsContext2D();
 		String text = "\u00A9 1980 MIDWAY MFG. CO.";
-		gc.setFont(r2D.getArcadeFont());
-		gc.setFill(r2D.getGhostColor(GameModel.PINK_GHOST));
-		gc.fillText(text, t(3), t(yTile));
+		g.setFont(r2D.getArcadeFont());
+		g.setFill(r2D.getGhostColor(GameModel.PINK_GHOST));
+		g.fillText(text, t(3), t(yTile));
 	}
 }
