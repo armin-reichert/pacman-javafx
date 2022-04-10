@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx.shell.info;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
+import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -43,6 +44,7 @@ import javafx.scene.text.Font;
 public class SectionGeneral extends Section {
 	private Button[] btnsSimulation;
 	private Slider sliderTargetFPS;
+	private CheckBox cbMuted;
 	private CheckBox cbAutopilot;
 	private CheckBox cbImmunity;
 	private CheckBox cbUsePlayScene3D;
@@ -79,6 +81,7 @@ public class SectionGeneral extends Section {
 				GameLoop.get().getTargetFrameRate()));
 		addInfo("Total Ticks", GameLoop.get()::getTotalTicks);
 
+		cbMuted = addCheckBox("Sound muted", ui::toggleSoundMuted);
 		cbUsePlayScene3D = addCheckBox("Use 3D play scene", ui::toggleUse3DScene);
 		cbAutopilot = addCheckBox("Autopilot", ui::toggleAutopilot);
 		cbImmunity = addCheckBox("Player immune", ui::toggleImmunity);
@@ -94,6 +97,7 @@ public class SectionGeneral extends Section {
 		btnsSimulation[0].setTooltip(Env.$paused.get() ? tooltipPlay : tooltipStop);
 		btnsSimulation[1].setDisable(!Env.$paused.get());
 		sliderTargetFPS.setValue(GameLoop.get().getTargetFrameRate());
+		cbMuted.setSelected(SoundManager.get().isMuted());
 		cbAutopilot.setSelected(gc.autoControlled);
 		cbImmunity.setSelected(gc.playerImmune);
 		cbUsePlayScene3D.setSelected(Env.$3D.get());

@@ -140,6 +140,10 @@ public class SoundManager {
 		}
 	}
 
+	public boolean isMuted() {
+		return muted;
+	}
+
 	public void setMuted(boolean muted) {
 		this.muted = muted;
 		if (muted) {

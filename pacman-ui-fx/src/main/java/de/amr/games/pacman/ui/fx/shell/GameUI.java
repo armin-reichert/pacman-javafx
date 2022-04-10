@@ -310,4 +310,9 @@ public class GameUI extends DefaultGameEventHandler {
 	public void toggleDrawMode() {
 		Env.$drawMode3D.set(Env.$drawMode3D.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 	}
+
+	public void toggleSoundMuted() {
+		boolean muted = SoundManager.get().isMuted();
+		SoundManager.get().setMuted(!muted);
+	}
 }
