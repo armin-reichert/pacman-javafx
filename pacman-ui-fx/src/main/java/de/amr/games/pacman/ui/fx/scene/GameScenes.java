@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.scene;
 
-import static de.amr.games.pacman.model.common.world.World.TS;
-
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
@@ -59,10 +57,10 @@ public class GameScenes {
 	 * @param parent         the parent scene (main scene)
 	 * @param gameController the game controller
 	 * @param model3D        the used 3D model for the actors
+	 * @param size           logical scene size (number of tiles times tile size)
 	 */
-	public GameScenes(Scene parent, GameController gameController, PacManModel3D model3D) {
+	public GameScenes(Scene parent, GameController gameController, PacManModel3D model3D, V2i size) {
 		this.gameController = gameController;
-		V2i size = new V2i(28, 36).scaled(TS);
 		//@formatter:off
 		scenes[0][0][SCENE_2D] = new MsPacMan_IntroScene(gameController, size);
 		scenes[0][0][SCENE_3D] = null;

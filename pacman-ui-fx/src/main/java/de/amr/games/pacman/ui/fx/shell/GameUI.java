@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell;
 
 import static de.amr.games.pacman.lib.Logging.log;
+import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.ui.fx.shell.FlashMessageView.showFlashMessage;
 
 import java.util.Random;
@@ -32,6 +33,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
 import de.amr.games.pacman.controller.event.GameEvent;
+import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
@@ -61,6 +63,7 @@ import javafx.stage.WindowEvent;
  */
 public class GameUI extends DefaultGameEventHandler {
 
+	public static final V2i LOGICAL_SCENE_SIZE = new V2i(28, 36).scaled(TS);
 	public static final int MIN_FRAMERATE = 10, MAX_FRAMERATE = 120;
 
 	public final GameController gc;
@@ -95,7 +98,8 @@ public class GameUI extends DefaultGameEventHandler {
 				($drawMode, oldDrawMode, newDrawMode) -> mainSceneRoot.setBackground(getBackground(currentGameScene)));
 
 		SoundManager.get().selectGameVariant(gc.gameVariant);
-		gameScenes = new GameScenes(mainScene, gc, GianmarcosModel3D.get());
+
+		gameScenes = new GameScenes(mainScene, gc, GianmarcosModel3D.get(), LOGICAL_SCENE_SIZE);
 	}
 
 	public GameScene getCurrentGameScene() {

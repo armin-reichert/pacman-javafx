@@ -61,11 +61,15 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
 
+	/**
+	 * @param gc           game controller
+	 * @param unscaledSize logical scene size (number of tiles x tile size)
+	 */
 	public AbstractGameScene2D(GameController gc, V2i unscaledSize) {
 		this.gc = gc;
-		this.canvas = new Canvas();
 		this.unscaledSize = unscaledSize;
 		this.aspectRatio = (double) unscaledSize.x / unscaledSize.y;
+		this.canvas = new Canvas();
 		StackPane root = new StackPane(canvas);
 		root.setBackground(U.colorBackground(Color.BLACK));
 		fxSubScene = new SubScene(root, unscaledSize.x, unscaledSize.y);
