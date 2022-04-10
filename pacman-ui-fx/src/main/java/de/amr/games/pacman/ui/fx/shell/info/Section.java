@@ -48,6 +48,9 @@ import javafx.scene.text.Font;
 /**
  * Section for displaying UI info or editors for configuring the UI.
  * 
+ * <p>
+ * TODO: use style sheet
+ * 
  * @author Armin Reichert
  */
 public class Section extends TitledPane {
@@ -109,6 +112,7 @@ public class Section extends TitledPane {
 
 	public Button addButton(String labelText, String buttonText, Runnable action) {
 		Button button = new Button(buttonText);
+		button.setFont(textFont);
 		button.setOnAction(e -> action.run());
 		addRow(labelText, button);
 		return button;
@@ -119,6 +123,7 @@ public class Section extends TitledPane {
 		Button[] buttons = new Button[buttonTexts.length];
 		for (int i = 0; i < buttonTexts.length; ++i) {
 			buttons[i] = new Button(buttonTexts[i]);
+			buttons[i].setFont(textFont);
 			hbox.getChildren().add(buttons[i]);
 		}
 		addRow(labelText, hbox);
@@ -137,8 +142,13 @@ public class Section extends TitledPane {
 	@SuppressWarnings("unchecked")
 	public <T> ComboBox<T> addComboBox(String labelText, T... items) {
 		var combo = new ComboBox<T>(FXCollections.observableArrayList(items));
+		combo.setStyle(style(textFont));
 		addRow(labelText, combo);
 		return combo;
+	}
+
+	private static String style(Font font) {
+		return String.format("-fx-font: %.0fpx \"%s\";", font.getSize(), font.getFamily());
 	}
 
 	public Slider addSlider(String labelText, double min, double max, double value) {
@@ -150,6 +160,7 @@ public class Section extends TitledPane {
 
 	public Spinner<Integer> addSpinner(String labelText, int min, int max, int initialValue) {
 		Spinner<Integer> spinner = new Spinner<>(min, max, initialValue);
+		spinner.setStyle(style(textFont));
 		addRow(labelText, spinner);
 		return spinner;
 	}

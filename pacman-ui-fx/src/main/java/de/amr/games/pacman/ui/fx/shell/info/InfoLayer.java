@@ -47,8 +47,8 @@ public class InfoLayer extends BorderPane {
 	public InfoLayer(GameUI ui) {
 		int minLabelWidth = 160;
 		Color textColor = Color.WHITE;
-		Font textFont = Font.font("Sans", 12);
-		Font labelFont = Font.font("Sans", 12);
+		Font textFont = Font.font("Sans", 11);
+		Font labelFont = Font.font("Sans", 11);
 		sectionGame = new SectionGame(ui, "Game", minLabelWidth, textColor, textFont, labelFont);
 		sectionGeneral = new SectionGeneral(ui, "General", minLabelWidth, textColor, textFont, labelFont);
 		sectionKeys = new SectionKeys(ui, "Keyboard Shortcuts", minLabelWidth, textColor, textFont, labelFont);
