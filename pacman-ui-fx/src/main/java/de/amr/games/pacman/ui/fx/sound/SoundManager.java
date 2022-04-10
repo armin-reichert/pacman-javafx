@@ -156,23 +156,22 @@ public class SoundManager {
 	}
 
 	public void startSiren(int scatterPhase) {
-		if (muted) {
-			return;
+		if (!muted) {
+			var siren = switch (scatterPhase) {
+			case 0 -> GameSound.SIREN_1;
+			case 1 -> GameSound.SIREN_2;
+			case 2 -> GameSound.SIREN_3;
+			case 3 -> GameSound.SIREN_4;
+			default -> throw new IllegalArgumentException();
+			};
+			loop(siren, Animation.INDEFINITE);
+			log("Siren %s started", siren);
 		}
-		var siren = switch (scatterPhase) {
-		case 0 -> GameSound.SIREN_1;
-		case 1 -> GameSound.SIREN_2;
-		case 2 -> GameSound.SIREN_3;
-		case 3 -> GameSound.SIREN_4;
-		default -> throw new IllegalArgumentException();
-		};
-		loop(siren, Animation.INDEFINITE);
-		log("Siren %s started", siren);
 	}
 
 	public void stopSirens() {
 		sirens().map(this::getClip).forEach(AudioClip::stop);
-		log("All sirens stopped");
+		log("Siren(s) stopped");
 	}
 
 	public boolean isAnySirenPlaying() {
