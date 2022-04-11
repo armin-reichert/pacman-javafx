@@ -29,6 +29,8 @@ import java.io.IOException;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.PlayerControl;
+import de.amr.games.pacman.model.mspacman.MsPacManGame;
+import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.shell.KeyboardPlayerControl;
 import javafx.application.Application;
@@ -38,9 +40,16 @@ import javafx.stage.Stage;
  * This is the entry point of the Pac-Man and Ms. Pac-Man games.
  * 
  * <p>
- * The application is structured according to the MVC (model-view-controller) design pattern. It creates the controller
- * (which in turn creates the model(s)) and the view (JavaFX UI). A game loop drives the controller which implements the
- * complete game logic. Game events from the controller are handled by the UI.
+ * The application is structured according to the MVC (model-view-controller) design pattern.
+ * 
+ * <p>
+ * The model layer consists of the two game models {@link PacManGame} and {@link MsPacManGame}. The controller
+ * {@link GameController} is a finite-state machine which is triggered 60 times per second by the {@link GameLoop}. The
+ * view {@link GameUI} listens to game events which are sent by the controller.
+ * <p>
+ * The model and controller layers are decoupled from the view layer which allow to create different user interfaces for
+ * the games without any change in the controller or model. As a proof of concept there exists also a Swing user
+ * interface.
  * 
  * @author Armin Reichert
  */
