@@ -357,7 +357,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 					Stream.of(game.ghosts).filter(ghost -> ghost.tile().equals(game.player.tile())).findAny().get().id);
 			new SequentialTransition( //
 					U.afterSec(1.0, game::hideGhosts), //
-					player3D.dyingAnimation(killerColor), //
+					player3D.dyingAnimation(killerColor, gc.attractMode), //
 					U.afterSec(2.0, () -> gc.stateTimer().expire()) //
 			).play();
 		}

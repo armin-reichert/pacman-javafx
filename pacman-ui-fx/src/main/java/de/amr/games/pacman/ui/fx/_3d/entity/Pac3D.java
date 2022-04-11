@@ -82,7 +82,7 @@ public class Pac3D extends Creature3D<Pac> {
 		update();
 	}
 
-	public Animation dyingAnimation(Color ghostColor) {
+	public Animation dyingAnimation(Color ghostColor, boolean silent) {
 		var spin = new RotateTransition(Duration.seconds(0.2), this);
 		spin.setAxis(Rotate.Z_AXIS);
 		spin.setByAngle(360);
@@ -93,14 +93,13 @@ public class Pac3D extends Creature3D<Pac> {
 		shrink.setToY(0);
 		shrink.setToZ(0);
 
-		var playDeathSound = now(() -> {
-			// TODO in attract mode, no sound should be played
-			SoundManager.get().play(GameSound.PACMAN_DEATH);
-		});
+		Animation spinAndShrink = silent //
+				? new ParallelTransition(spin, shrink) //
+				: new ParallelTransition(spin, shrink, now(() -> SoundManager.get().play(GameSound.PACMAN_DEATH)));
 
 		return new SequentialTransition( //
 				new FillTransition3D(Duration.seconds(1), skull, skullColor, ghostColor), //
 				new FillTransition3D(Duration.seconds(1), skull, ghostColor, skullColorWhenDead), //
-				new ParallelTransition(spin, shrink, playDeathSound));
+				spinAndShrink);
 	}
 }

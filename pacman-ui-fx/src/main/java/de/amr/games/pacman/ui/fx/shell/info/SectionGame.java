@@ -48,6 +48,7 @@ public class SectionGame extends Section {
 
 	public SectionGame(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
 		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
+
 		comboGameVariant = addComboBox("Game Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
 		comboGameVariant.setOnAction(e -> {
 			if (comboGameVariant.getValue() != gc.gameVariant) {
