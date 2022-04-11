@@ -89,9 +89,8 @@ public class SectionGame extends Section {
 		addInfo("Pac-Man speed (power)", () -> fmtSpeed(gc.game.playerSpeedPowered));
 		addInfo("Bonus value", () -> gc.game.bonusValue(gc.game.bonusSymbol));
 		addInfo("Maze flashings", () -> gc.game.numFlashes);
-		addInfo("Pellets total",
-				() -> String.format("%d (%d energizers)", gc.game.world.pelletsTotal(), gc.game.world.energizersTotal()));
-		addInfo("Pellets remaining", () -> gc.game.world.foodRemaining());
+		addInfo("Pellets", () -> String.format("%d of %d (%d energizers)", gc.game.world.foodRemaining(),
+				gc.game.world.pelletsTotal(), gc.game.world.energizersTotal()));
 	}
 
 	@Override
