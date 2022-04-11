@@ -77,11 +77,9 @@ public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
 		pacMan2D = new Player2D(sc.pacMan, game, r2D);
 		pacMan2D.animMunching = ((Rendering2D_MsPacMan) r2D).createHusbandMunchingAnimations();
 
-		flap2D = new Flap2D(sc.flap, game, (Rendering2D_MsPacMan) r2D);
-
-		stork2D = new Stork2D(sc.stork, game, (Rendering2D_MsPacMan) r2D);
-
-		bag2D = new JuniorBag2D(sc.bag, game, (Rendering2D_MsPacMan) r2D);
+		flap2D = new Flap2D(sc.flap, game);
+		stork2D = new Stork2D(sc.stork, game);
+		bag2D = new JuniorBag2D(sc.bag, game);
 	}
 
 	@Override

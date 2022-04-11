@@ -37,16 +37,15 @@ import javafx.scene.canvas.GraphicsContext;
 public class JuniorBag2D extends GameEntity2D {
 
 	private final JuniorBag bag;
-	private final Rendering2D_MsPacMan r2D;
 
-	public JuniorBag2D(JuniorBag bag, GameModel game, Rendering2D_MsPacMan r2D) {
+	public JuniorBag2D(JuniorBag bag, GameModel game) {
 		super(game);
 		this.bag = bag;
-		this.r2D = r2D;
 	}
 
 	@Override
 	public void render(GraphicsContext gc) {
+		var r2D = Rendering2D_MsPacMan.get();
 		r2D.renderEntity(gc, bag, bag.open ? r2D.getJunior() : r2D.getBlueBag());
 	}
 }

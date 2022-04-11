@@ -37,16 +37,14 @@ import javafx.scene.canvas.GraphicsContext;
 public class Heart2D extends GameEntity2D {
 
 	private final GameEntity heart;
-	private final Rendering2D_MsPacMan r2D;
 
-	public Heart2D(GameEntity heart, GameModel game, Rendering2D_MsPacMan r2D) {
+	public Heart2D(GameEntity heart, GameModel game) {
 		super(game);
 		this.heart = heart;
-		this.r2D = r2D;
 	}
 
 	@Override
 	public void render(GraphicsContext gc) {
-		r2D.renderEntity(gc, heart, r2D.getHeart());
+		Rendering2D_MsPacMan.get().renderEntity(gc, heart, Rendering2D_MsPacMan.get().getHeart());
 	}
 }

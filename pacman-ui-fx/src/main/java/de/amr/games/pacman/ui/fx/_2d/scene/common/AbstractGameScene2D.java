@@ -103,12 +103,12 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 
 	@Override
 	public void init() {
-		score2D = new GameScore2D(game, r2D);
+		score2D = new GameScore2D(game);
 		score2D.x = t(1);
 		score2D.y = t(1);
 		score2D.title = "SCORE";
 		score2D.showHighscore = false;
-		highScore2D = new GameScore2D(game, r2D);
+		highScore2D = new GameScore2D(game);
 		highScore2D.x = t(16);
 		highScore2D.y = t(1);
 		highScore2D.title = "HIGH SCORE";

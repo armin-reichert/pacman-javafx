@@ -23,11 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
-import static de.amr.games.pacman.model.common.world.World.TS;
-
 import de.amr.games.pacman.model.common.GameModel;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 
 /**
  * Base class of 2D entities.
@@ -37,19 +34,13 @@ import javafx.scene.paint.Color;
 public abstract class GameEntity2D {
 
 	public final GameModel game;
-	public int x;
-	public int y;
-	public boolean visible;
+	public double x;
+	public double y;
+	public boolean visible = true;
 
 	public GameEntity2D(GameModel game) {
 		this.game = game;
-		visible = true;
 	}
 
-	public void render(GraphicsContext g) {
-		if (visible) {
-			g.setFill(Color.RED);
-			g.fillRect(x, y, TS, TS);
-		}
-	}
+	public abstract void render(GraphicsContext g);
 }

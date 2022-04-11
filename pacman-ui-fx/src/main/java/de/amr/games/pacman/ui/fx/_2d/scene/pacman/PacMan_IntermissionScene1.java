@@ -35,7 +35,6 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.BigPacMan2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 
@@ -68,7 +67,7 @@ public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
 
 		pacMan2D = new Player2D(sc.pac, game, r2D);
 		blinky2D = new Ghost2D(sc.blinky, game, r2D);
-		bigPacMan2D = new BigPacMan2D(sc.pac, game, (Rendering2D_PacMan) r2D);
+		bigPacMan2D = new BigPacMan2D(sc.pac, game);
 		pacMan2D.animMunching.values().forEach(TimedSeq::restart);
 		blinky2D.animKicking.values().forEach(TimedSeq::restart);
 		blinky2D.animFrightened.restart();

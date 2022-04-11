@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -42,18 +42,16 @@ public class GameScore2D extends GameEntity2D {
 	public String title = "SCORE";
 	public Color titleColor = Color.WHITE;
 	public Color pointsColor = Color.YELLOW;
-	private final Rendering2D r2D;
 
-	public GameScore2D(GameModel game, Rendering2D r2D) {
+	public GameScore2D(GameModel game) {
 		super(game);
-		this.r2D = r2D;
 	}
 
 	@Override
 	public void render(GraphicsContext g) {
 		g.save();
 		g.translate(x, y);
-		g.setFont(r2D.getArcadeFont());
+		g.setFont(Rendering2D_PacMan.get().getArcadeFont());
 		g.setFill(titleColor);
 		g.fillText(title, 0, 0);
 		if (showPoints) {

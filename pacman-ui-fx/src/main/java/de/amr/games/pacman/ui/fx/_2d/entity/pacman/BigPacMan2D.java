@@ -39,14 +39,12 @@ import javafx.scene.canvas.GraphicsContext;
 public class BigPacMan2D extends GameEntity2D {
 
 	private final Pac pacMan;
-	private final Rendering2D_PacMan r2D;
 	public final TimedSeq<Rectangle2D> munchingAnimation;
 
-	public BigPacMan2D(Pac pacMan, GameModel game, Rendering2D_PacMan r2D) {
+	public BigPacMan2D(Pac pacMan, GameModel game) {
 		super(game);
 		this.pacMan = pacMan;
-		this.r2D = r2D;
-		munchingAnimation = r2D.createBigPacManMunchingAnimation();
+		munchingAnimation = Rendering2D_PacMan.get().createBigPacManMunchingAnimation();
 	}
 
 	@Override
@@ -56,7 +54,7 @@ public class BigPacMan2D extends GameEntity2D {
 		// centered to the ground
 		g.save();
 		g.translate(0, -sprite.getHeight() / 2 + 8);
-		r2D.renderEntity(g, pacMan, sprite);
+		Rendering2D_PacMan.get().renderEntity(g, pacMan, sprite);
 		g.restore();
 	}
 }

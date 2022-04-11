@@ -40,22 +40,20 @@ import javafx.scene.paint.Color;
 public class Flap2D extends GameEntity2D {
 
 	private final Flap flap;
-	private final Rendering2D_MsPacMan r2D;
 	public final TimedSeq<Rectangle2D> animation;
 
-	public Flap2D(Flap flap, GameModel game, Rendering2D_MsPacMan r2D) {
+	public Flap2D(Flap flap, GameModel game) {
 		super(game);
 		this.flap = flap;
-		this.r2D = r2D;
-		animation = r2D.createFlapAnimation();
+		animation = Rendering2D_MsPacMan.get().createFlapAnimation();
 	}
 
 	@Override
 	public void render(GraphicsContext g) {
 		if (flap.visible) {
 			Rectangle2D sprite = animation.animate();
-			r2D.renderEntity(g, flap, sprite);
-			g.setFont(r2D.getArcadeFont());
+			Rendering2D_MsPacMan.get().renderEntity(g, flap, sprite);
+			g.setFont(Rendering2D_MsPacMan.get().getArcadeFont());
 			g.setFill(Color.rgb(222, 222, 255));
 			g.fillText(String.valueOf(flap.number), flap.position.x + sprite.getWidth() - 25, flap.position.y + 18);
 			g.fillText(flap.text, flap.position.x + sprite.getWidth(), flap.position.y);
