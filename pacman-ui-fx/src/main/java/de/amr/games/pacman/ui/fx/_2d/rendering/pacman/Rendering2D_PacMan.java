@@ -114,6 +114,11 @@ public class Rendering2D_PacMan extends Rendering2D {
 	}
 
 	@Override
+	public Color getGhostHouseDoorColor(int mazeNumber) {
+		return Color.rgb(252, 181, 255);
+	}
+
+	@Override
 	public void renderMazeFull(GraphicsContext g, int mazeNumber, double x, double y) {
 		g.drawImage(mazeFullImage, x, y);
 	}

@@ -37,7 +37,6 @@ import javafx.scene.shape.Box;
 public class MazeFloor3D extends Box {
 
 	private final PhongMaterial material = new PhongMaterial();
-	private Image texture;
 
 	public MazeFloor3D(double width, double height, double depth) {
 		super(width, height, depth);
@@ -50,12 +49,7 @@ public class MazeFloor3D extends Box {
 		material.setSpecularColor(color.brighter());
 	}
 
-	public Image getTexture() {
-		return texture;
-	}
-
 	public void setTexture(Image texture) {
-		this.texture = texture;
 		material.setDiffuseMap(texture);
 	}
 }

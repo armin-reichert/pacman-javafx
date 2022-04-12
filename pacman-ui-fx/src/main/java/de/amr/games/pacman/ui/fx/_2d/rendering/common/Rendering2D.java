@@ -160,6 +160,12 @@ public abstract class Rendering2D {
 	 */
 	public abstract Color getFoodColor(int mazeNumber);
 
+	/**
+	 * @param mazeNumber the 1-based maze number
+	 * @return color of ghosthouse doors in this maze
+	 */
+	public abstract Color getGhostHouseDoorColor(int mazeNumber);
+
 	public abstract void renderMazeFull(GraphicsContext g, int mazeNumber, double x, double y);
 
 	public abstract void renderMazeEmpty(GraphicsContext g, int mazeNumber, double x, double y);

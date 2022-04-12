@@ -91,18 +91,18 @@ public class Ghost3D extends Creature3D<Ghost> {
 
 	@Override
 	public void update() {
-		if (creature.bounty > 0) {
+		if (guy.bounty > 0) {
 			if (displayMode != DisplayMode.NUMBER_CUBE) {
 				setDisplayMode(DisplayMode.NUMBER_CUBE);
 				PhongMaterial material = new PhongMaterial();
-				Image image = r2D.spritesheet().extractRegion(r2D.getBountyNumberSprite(creature.bounty));
+				Image image = r2D.spritesheet().extractRegion(r2D.getBountyNumberSprite(guy.bounty));
 				material.setBumpMap(image);
 				material.setDiffuseMap(image);
 				cube3D.setMaterial(material);
 				setRotationAxis(Rotate.X_AXIS);
 				setRotate(0);
 			}
-		} else if (creature.is(GhostState.DEAD) || creature.is(GhostState.ENTERING_HOUSE)) {
+		} else if (guy.is(GhostState.DEAD) || guy.is(GhostState.ENTERING_HOUSE)) {
 			setDisplayMode(DisplayMode.EYES_ONLY);
 		} else {
 			setDisplayMode(DisplayMode.COMPLETE);
@@ -116,13 +116,13 @@ public class Ghost3D extends Creature3D<Ghost> {
 	}
 
 	public void playRevivalAnimation() {
-		var animation = new FadeInTransition3D(Duration.seconds(2), skin3D, r2D.getGhostColor(creature.id));
+		var animation = new FadeInTransition3D(Duration.seconds(2), skin3D, r2D.getGhostColor(guy.id));
 		animation.playFromStart();
 	}
 
 	public void setNormalSkinColor() {
 		flashing.stop();
-		setSkinColor(r2D.getGhostColor(creature.id));
+		setSkinColor(r2D.getGhostColor(guy.id));
 	}
 
 	public void setFrightenedSkinColor() {

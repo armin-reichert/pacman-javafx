@@ -71,6 +71,8 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 		Color.rgb(0, 255, 255), 
 		Color.rgb(222, 222, 255), 
 	};
+	
+	
 	//@formatter:on
 
 	private static Rendering2D_MsPacMan it;
@@ -155,6 +157,11 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	@Override
 	public Color getMazeSideColor(int mazeNumber) {
 		return MAZE_SIDE_COLORS[mazeNumber - 1];
+	}
+
+	@Override
+	public Color getGhostHouseDoorColor(int mazeNumber) {
+		return Color.rgb(255, 183, 255);
 	}
 
 	@Override

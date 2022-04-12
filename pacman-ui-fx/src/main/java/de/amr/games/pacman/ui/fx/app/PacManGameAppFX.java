@@ -33,6 +33,7 @@ import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.shell.KeyboardPlayerControl;
+import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -82,6 +83,7 @@ public class PacManGameAppFX extends Application {
 		var height = options.windowHeight;
 		ui = new GameUI(gameController, primaryStage, width, height);
 		ui.show(options.fullscreen);
+		SoundManager.get().setMuted(options.muted);
 		GameLoop.get().update = ui::update;
 		GameLoop.get().render = ui::render;
 		GameLoop.get().start();

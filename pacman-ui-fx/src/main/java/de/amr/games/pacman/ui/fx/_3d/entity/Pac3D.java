@@ -77,7 +77,7 @@ public class Pac3D extends Creature3D<Pac> {
 		setScaleX(1.05);
 		setScaleY(1.05);
 		setScaleZ(1.05);
-		setRotate(turnAngle(creature.moveDir()));
+		setRotate(turnAngle(guy.moveDir()));
 		skull.setMaterial(new PhongMaterial(skullColor));
 		update();
 	}

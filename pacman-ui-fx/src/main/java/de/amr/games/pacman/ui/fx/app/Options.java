@@ -38,9 +38,11 @@ import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
  */
 class Options {
 
-	static final String[] NAMES = { "-2D", "-3D", "-height", "-fullscreen", "-mspacman", "-pacman", "-perspective" };
+	static final String[] NAMES = { "-2D", "-3D", "-height", "-fullscreen", "-muted", "-mspacman", "-pacman",
+			"-perspective" };
 
 	boolean fullscreen = false;
+	boolean muted = false;
 	boolean use3DScenes = true;
 	double windowHeight = 576;
 	GameVariant gameVariant = GameVariant.PACMAN;
@@ -66,6 +68,10 @@ class Options {
 
 			else if ("-fullscreen".equals(params.get(i))) {
 				fullscreen = true;
+			}
+
+			else if ("-muted".equals(params.get(i))) {
+				muted = true;
 			}
 
 			else if ("-mspacman".equals(params.get(i))) {

@@ -128,7 +128,10 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		final int height = game.world.numRows() * TS;
 
 		maze3D = new Maze3D(width, height);
-		maze3D.createWallsAndDoors(game.world, r2D.getMazeSideColor(game.mazeNumber), r2D.getMazeTopColor(game.mazeNumber));
+		maze3D.createWallsAndDoors(game.world, //
+				r2D.getMazeSideColor(game.mazeNumber), //
+				r2D.getMazeTopColor(game.mazeNumber), //
+				r2D.getGhostHouseDoorColor(game.mazeNumber));
 		maze3D.createFood(game.world, r2D.getFoodColor(game.mazeNumber));
 
 		player3D = new Pac3D(game.player, model3D);
@@ -204,8 +207,10 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 	private void onMazeResolutionChange(ObservableValue<? extends Number> property, Number oldValue, Number newValue) {
 		if (!oldValue.equals(newValue)) {
-			maze3D.createWallsAndDoors(game.world, r2D.getMazeSideColor(game.mazeNumber),
-					r2D.getMazeTopColor(game.mazeNumber));
+			maze3D.createWallsAndDoors(game.world, //
+					r2D.getMazeSideColor(game.mazeNumber), //
+					r2D.getMazeTopColor(game.mazeNumber), //
+					r2D.getGhostHouseDoorColor(game.mazeNumber));
 		}
 	}
 
@@ -261,14 +266,14 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			SoundManager.get().loop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
 		}
 		Stream.of(ghosts3D) //
-				.filter(ghost3D -> ghost3D.creature.is(GhostState.FRIGHTENED) || ghost3D.creature.is(GhostState.LOCKED))
+				.filter(ghost3D -> ghost3D.guy.is(GhostState.FRIGHTENED) || ghost3D.guy.is(GhostState.LOCKED))
 				.forEach(Ghost3D::setFrightenedSkinColor);
 	}
 
 	@Override
 	public void onPlayerLosingPower(GameEvent e) {
 		Stream.of(ghosts3D) //
-				.filter(ghost3D -> ghost3D.creature.is(GhostState.FRIGHTENED)) //
+				.filter(ghost3D -> ghost3D.guy.is(GhostState.FRIGHTENED)) //
 				.forEach(Ghost3D::playFlashingAnimation);
 	}
 
@@ -369,8 +374,10 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		case LEVEL_STARTING -> {
 			// TODO: This is not executed at the *first* level. Maybe I should change the state machine to make a transition
 			// from READY to LEVEL_STARTING when the game starts?
-			maze3D.createWallsAndDoors(game.world, r2D.getMazeSideColor(game.mazeNumber),
-					r2D.getMazeTopColor(game.mazeNumber));
+			maze3D.createWallsAndDoors(game.world, //
+					r2D.getMazeSideColor(game.mazeNumber), //
+					r2D.getMazeTopColor(game.mazeNumber), //
+					r2D.getGhostHouseDoorColor(game.mazeNumber));
 			maze3D.createFood(game.world, r2D.getFoodColor(game.mazeNumber));
 			maze3D.energizerAnimations().forEach(Animation::stop);
 			levelCounter3D.update(game);

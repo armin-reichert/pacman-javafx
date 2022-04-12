@@ -28,11 +28,9 @@ import static de.amr.games.pacman.model.common.GhostState.LEAVING_HOUSE;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
-import java.util.stream.Stream;
-
+import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -45,12 +43,9 @@ import javafx.scene.shape.Box;
  */
 public class Door3D extends Box {
 
-	public final V2i tile;
-
-	public Door3D(V2i tile) {
+	public Door3D(V2i tile, Color color) {
 		super(TS - 1, 1, HTS);
-		this.tile = tile;
-		setMaterial(new PhongMaterial(Color.PINK));
+		setMaterial(new PhongMaterial(color));
 		setTranslateX(tile.x * TS + HTS);
 		setTranslateY(tile.y * TS + HTS);
 		setTranslateZ(-HTS / 2);
@@ -58,18 +53,11 @@ public class Door3D extends Box {
 	}
 
 	public void update(GameModel game) {
-		setVisible(!isAnyGhostNearby(game.ghosts().filter(ghost -> ghost.is(ENTERING_HOUSE) || ghost.is(LEAVING_HOUSE))));
-	}
-
-	private boolean isAnyGhostNearby(Stream<Ghost> ghosts) {
-		return ghosts.anyMatch(this::isGhostNearby);
-	}
-
-	private boolean isGhostNearby(Ghost ghost) {
-		if (!ghost.visible) {
-			return false;
-		}
-		V2i ghostTile = ghost.tile();
-		return Math.abs(ghostTile.x - tile.x) <= 1 || Math.abs(ghostTile.y - tile.y) <= 1;
+		V2d doorPosition = new V2d(getTranslateX(), getTranslateY());
+		boolean ghostPassing = game.ghosts() //
+				.filter(ghost -> ghost.visible) //
+				.filter(ghost -> ghost.is(ENTERING_HOUSE) || ghost.is(LEAVING_HOUSE)) //
+				.anyMatch(ghost -> ghost.position.euclideanDistance(doorPosition) <= 2 * TS);
+		setVisible(!ghostPassing);
 	}
 }

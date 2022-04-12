@@ -1,7 +1,7 @@
 package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
-import static de.amr.games.pacman.model.common.world.World.TS;
+import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Creature;
@@ -11,11 +11,13 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 /**
- * Common base class for 3D creatures (Pac-Man, ghosts).
+ * Common base class for 3D creatures.
+ * 
+ * @param <CREATURE> type of creature (Pac, Ghost, Bonus)
  * 
  * @author Armin Reichert
  */
-public abstract class Creature3D<C extends Creature> extends Group {
+public abstract class Creature3D<CREATURE extends Creature> extends Group {
 
 	//@formatter:off
 	//TODO there sure is a more elegant way to do this
@@ -27,12 +29,12 @@ public abstract class Creature3D<C extends Creature> extends Group {
 	};
 	//@formatter:on
 
-	public final C creature;
+	public final CREATURE guy;
 	protected final RotateTransition turningAnimation;
 	protected Direction targetDir;
 
-	public Creature3D(C creature) {
-		this.creature = creature;
+	public Creature3D(CREATURE guy) {
+		this.guy = guy;
 		turningAnimation = new RotateTransition(Duration.seconds(0.3));
 		turningAnimation.setAxis(Rotate.Z_AXIS);
 	}
@@ -50,17 +52,17 @@ public abstract class Creature3D<C extends Creature> extends Group {
 	}
 
 	public void update() {
-		boolean outsideMaze = creature.position.x < 0 || creature.position.x > (creature.world.numCols() - 1) * TS;
-		setVisible(creature.visible && !outsideMaze);
-		setTranslateX(creature.position.x + HTS);
-		setTranslateY(creature.position.y + HTS);
+		boolean insideMaze = guy.position.x >= 0 && guy.position.x <= t(guy.world.numCols() - 1);
+		setVisible(guy.visible && insideMaze);
+		setTranslateX(guy.position.x + HTS);
+		setTranslateY(guy.position.y + HTS);
 		setTranslateZ(-HTS);
-		if (targetDir != creature.moveDir()) {
-			int[] angles = turnAngles(targetDir, creature.moveDir());
+		if (targetDir != guy.moveDir()) {
+			int[] angles = turnAngles(targetDir, guy.moveDir());
 			turningAnimation.setFromAngle(angles[0]);
 			turningAnimation.setToAngle(angles[1]);
 			turningAnimation.playFromStart();
-			targetDir = creature.moveDir();
+			targetDir = guy.moveDir();
 		}
 	}
 }
