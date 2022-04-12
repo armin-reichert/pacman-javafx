@@ -55,7 +55,7 @@ public class SoundManager {
 	private Map<GameSound, AudioClip> sm;
 	private boolean muted;
 
-	public SoundManager() {
+	private void loadMsPacManSounds() {
 		//@formatter:off
 		put(sm_MsPacMan, GameSound.CREDIT,          "/mspacman/sound/Coin Credit.mp3");
 		put(sm_MsPacMan, GameSound.EXTRA_LIFE,      "/mspacman/sound/Extra Life.mp3");
@@ -75,7 +75,9 @@ public class SoundManager {
 		put(sm_MsPacMan, GameSound.INTERMISSION_3,  "/mspacman/sound/Junior Act 3.mp3");
 		//@formatter:on
 		log("Ms. Pac-Man sounds loaded");
+	}
 
+	private void loadPacManSounds() {
 		//@formatter:off
 		put(sm_PacMan, GameSound.CREDIT,          "/pacman/sound/credit.mp3");
 		put(sm_PacMan, GameSound.EXTRA_LIFE,      "/pacman/sound/extend.mp3");
@@ -108,8 +110,18 @@ public class SoundManager {
 
 	public void selectGameVariant(GameVariant variant) {
 		sm = switch (variant) {
-		case MS_PACMAN -> sm_MsPacMan;
-		case PACMAN -> sm_PacMan;
+		case MS_PACMAN -> {
+			if (sm_MsPacMan.isEmpty()) {
+				loadMsPacManSounds();
+			}
+			yield sm_MsPacMan;
+		}
+		case PACMAN -> {
+			if (sm_PacMan.isEmpty()) {
+				loadPacManSounds();
+			}
+			yield sm_PacMan;
+		}
 		default -> throw new IllegalArgumentException();
 		};
 	}
