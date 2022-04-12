@@ -45,23 +45,11 @@ import javafx.util.Duration;
 public class Bonus3D extends Box {
 
 	private final Rendering2D r2D;
-	private final RotateTransition rotation;
-	private final PhongMaterial skin;
 
 	public Bonus3D(Rendering2D r2D) {
 		super(TS, TS, TS);
 		this.r2D = r2D;
-		skin = new PhongMaterial(Color.WHITE);
-		rotation = new RotateTransition(Duration.seconds(1), this);
-		rotation.setAxis(Rotate.X_AXIS);
-		rotation.setByAngle(360);
-		rotation.setOnFinished(e -> setVisible(false));
-		visibleProperty().addListener(($visible, _old, _new) -> {
-			if (!_new.booleanValue()) {
-				rotation.stop();
-			}
-		});
-		setTranslateZ(-4);
+		setTranslateZ(-HTS);
 		setVisible(false);
 	}
 
@@ -73,30 +61,34 @@ public class Bonus3D extends Box {
 	}
 
 	public void showSymbol(int symbol) {
-		Image image = r2D.spritesheet().extractRegion(r2D.getSymbolSprite(symbol));
-		skin.setBumpMap(image);
-		skin.setDiffuseMap(image);
-		setMaterial(skin);
+		var texture = r2D.spritesheet().extractRegion(r2D.getSymbolSprite(symbol));
+		showRotatingBox(texture, 1.0, Animation.INDEFINITE, 1);
 		setWidth(TS);
-		setVisible(true);
-		rotation.stop();
-		rotation.setRate(1);
-		rotation.setCycleCount(Animation.INDEFINITE);
-		rotation.play();
 	}
 
 	public void showPoints(int points) {
-		Image image = r2D.spritesheet().extractRegion(r2D.getBonusValueSprite(points));
-		skin.setBumpMap(image);
-		skin.setDiffuseMap(image);
+		var texture = r2D.spritesheet().extractRegion(r2D.getBonusValueSprite(points));
+		showRotatingBox(texture, 1.0, 5, 2);
+		setWidth(points >= 1000 ? TS * 1.25 : TS);
+	}
+
+	private void showRotatingBox(Image texture, double seconds, int cycleCount, int rate) {
+		var skin = new PhongMaterial(Color.WHITE);
+		skin.setBumpMap(texture);
+		skin.setDiffuseMap(texture);
 		setMaterial(skin);
-		if (points >= 1000) {
-			setWidth(10);
-		}
-		setVisible(true);
-		rotation.stop();
-		rotation.setRate(2);
-		rotation.setCycleCount(5);
+		var rotation = new RotateTransition(Duration.seconds(seconds), this);
+		rotation.setAxis(Rotate.X_AXIS);
+		rotation.setByAngle(360);
+		rotation.setCycleCount(cycleCount);
+		rotation.setRate(rate);
+		rotation.setOnFinished(e -> setVisible(false));
 		rotation.play();
+		visibleProperty().addListener(($visible, oldValue, newValue) -> {
+			if (newValue.booleanValue() == false) {
+				rotation.stop(); // stop when bonus expires and gets invisible
+			}
+		});
+		setVisible(true);
 	}
 }
