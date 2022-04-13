@@ -74,27 +74,27 @@ public class Ghost2D extends GameEntity2D {
 
 	@Override
 	public void render(GraphicsContext g) {
-		Rectangle2D sprite = null;
+		Rectangle2D frame = null;
 		if (ghost.bounty > 0) {
-			sprite = r2D.getBountyNumberSprite(ghost.bounty);
+			frame = r2D.getBountyNumberSprite(ghost.bounty);
 		} else if (ghost.is(DEAD) || ghost.is(ENTERING_HOUSE)) {
-			sprite = animReturningHome.get(ghost.wishDir()).animate();
+			frame = animReturningHome.get(ghost.wishDir()).animate();
 		} else if (ghost.is(FRIGHTENED)) {
 			if (animFlashing.isRunning()) {
-				sprite = animFlashing.animate();
+				frame = animFlashing.animate();
 			} else {
-				sprite = animFrightened.animate();
+				frame = animFrightened.animate();
 			}
 		} else if (ghost.is(LOCKED) && game.player.powerTimer.isRunning()) {
 			if (!animFrightened.isRunning()) {
 				animFrightened.restart();
 			}
-			sprite = animFrightened.animate();
+			frame = animFrightened.animate();
 		} else if (ghost.velocity.equals(V2d.NULL)) {
-			sprite = animKicking.get(ghost.wishDir()).frame();
+			frame = animKicking.get(ghost.wishDir()).frame();
 		} else {
-			sprite = animKicking.get(ghost.wishDir()).animate();
+			frame = animKicking.get(ghost.wishDir()).animate();
 		}
-		r2D.renderEntity(g, ghost, sprite);
+		r2D.renderEntity(g, ghost, frame);
 	}
 }

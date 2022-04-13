@@ -52,7 +52,6 @@ public class Player2D extends GameEntity2D {
 		this.r2D = r2D;
 		animMunching = r2D.createPlayerMunchingAnimations();
 		animDying = r2D.createPlayerDyingAnimation();
-		reset();
 	}
 
 	public void reset() {
@@ -68,16 +67,16 @@ public class Player2D extends GameEntity2D {
 
 	@Override
 	public void render(GraphicsContext g) {
-		Rectangle2D sprite = null;
+		Rectangle2D frame = null;
 		if (player.killed) {
-			sprite = animDying.animate();
+			frame = animDying.animate();
 		} else {
 			var munching = animMunching.get(player.moveDir());
-			sprite = munching.frame();
+			frame = munching.frame();
 			if (!player.velocity.equals(V2d.NULL) && !player.stuck) {
 				munching.advance();
 			}
 		}
-		r2D.renderEntity(g, player, sprite);
+		r2D.renderEntity(g, player, frame);
 	}
 }
