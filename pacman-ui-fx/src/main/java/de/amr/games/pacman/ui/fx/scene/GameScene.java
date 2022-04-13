@@ -85,11 +85,11 @@ public abstract class GameScene extends DefaultGameEventHandler {
 	}
 
 	/**
-	 * Resizes the FX scene to fit into the given height.
+	 * Resizes the associated FX subscene to the given height.
 	 * 
 	 * @param height height in pixels
 	 */
-	public void resizeFXSubScene(double height) {
+	public void resize(double height) {
 	}
 
 	/**

@@ -90,7 +90,7 @@ public class GameScenes {
 				// 2D scenes adapt to parent scene height keeping aspect ratio
 				GameScene scene2D = scenes[variantIndex][sceneIndex][SCENE_2D];
 				parent.heightProperty()
-						.addListener(($height, oldHeight, newHeight) -> scene2D.resizeFXSubScene(newHeight.doubleValue()));
+						.addListener(($height, oldHeight, newHeight) -> scene2D.resize(newHeight.doubleValue()));
 				// 3D scenes adapt to parent scene size
 				GameScene scene3D = scenes[variantIndex][sceneIndex][SCENE_3D];
 				if (scene3D != null) {

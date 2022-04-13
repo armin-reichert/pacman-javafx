@@ -149,7 +149,7 @@ public class GameUI extends DefaultGameEventHandler {
 			case PACMAN -> newGameScene.setContext(gc.game, Rendering2D_PacMan.get());
 			default -> throw new IllegalStateException();
 			}
-			newGameScene.resizeFXSubScene(stage.getScene().getHeight());
+			newGameScene.resize(stage.getScene().getHeight());
 			mainSceneRoot.setBackground(getBackground(newGameScene));
 			mainSceneRoot.getChildren().set(0, newGameScene.getFXSubScene());
 			SoundManager.get().stopAll();

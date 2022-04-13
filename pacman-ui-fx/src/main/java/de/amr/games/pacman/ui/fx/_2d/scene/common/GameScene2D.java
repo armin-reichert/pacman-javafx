@@ -70,7 +70,7 @@ public abstract class GameScene2D extends GameScene {
 	}
 
 	@Override
-	public void resizeFXSubScene(double height) {
+	public void resize(double height) {
 		double width = aspectRatio * height;
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
