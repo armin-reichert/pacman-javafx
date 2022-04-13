@@ -35,7 +35,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.BigPacMan2D;
-import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
+import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 
 /**
@@ -43,7 +43,7 @@ import de.amr.games.pacman.ui.fx.sound.SoundManager;
  * 
  * @author Armin Reichert
  */
-public class PacMan_IntermissionScene1 extends AbstractGameScene2D {
+public class PacMan_IntermissionScene1 extends GameScene2D {
 
 	private final Intermission1Controller sc;
 	private LevelCounter2D levelCounter2D;

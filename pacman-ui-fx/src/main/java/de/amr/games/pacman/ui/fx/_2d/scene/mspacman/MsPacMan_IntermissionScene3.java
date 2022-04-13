@@ -35,7 +35,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.JuniorBag2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Stork2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
-import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
+import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 
 /**
@@ -48,7 +48,7 @@ import de.amr.games.pacman.ui.fx.sound.SoundManager;
  * 
  * @author Armin Reichert
  */
-public class MsPacMan_IntermissionScene3 extends AbstractGameScene2D {
+public class MsPacMan_IntermissionScene3 extends GameScene2D {
 
 	private final Intermission3Controller sc;
 	private LevelCounter2D levelCounter2D;

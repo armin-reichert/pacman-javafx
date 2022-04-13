@@ -40,7 +40,7 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
-import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
+import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -52,7 +52,7 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public class PacMan_IntroScene extends AbstractGameScene2D {
+public class PacMan_IntroScene extends GameScene2D {
 
 	private final IntroController sc;
 

@@ -38,7 +38,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.Nail2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
-import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
+import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.geometry.Rectangle2D;
 
@@ -47,7 +47,7 @@ import javafx.geometry.Rectangle2D;
  * 
  * @author Armin Reichert
  */
-public class PacMan_IntermissionScene2 extends AbstractGameScene2D {
+public class PacMan_IntermissionScene2 extends GameScene2D {
 
 	private final Intermission2Controller sc;
 	private LevelCounter2D levelCounter2D;

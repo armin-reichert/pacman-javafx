@@ -60,7 +60,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class PlayScene2D extends AbstractGameScene2D {
+public class PlayScene2D extends GameScene2D {
 
 	private Maze2D maze2D;
 	private LivesCounter2D livesCounter2D;

@@ -44,7 +44,7 @@ import javafx.scene.transform.Scale;
  * 
  * @author Armin Reichert
  */
-public abstract class AbstractGameScene2D extends GameScene {
+public abstract class GameScene2D extends GameScene {
 
 	protected final Canvas canvas;
 	protected final V2i unscaledSize;
@@ -57,7 +57,7 @@ public abstract class AbstractGameScene2D extends GameScene {
 	 * @param gc           game controller
 	 * @param unscaledSize logical scene size (number of tiles x tile size)
 	 */
-	public AbstractGameScene2D(GameController gc, V2i unscaledSize) {
+	public GameScene2D(GameController gc, V2i unscaledSize) {
 		super(gc);
 		this.unscaledSize = unscaledSize;
 		this.aspectRatio = (double) unscaledSize.x / unscaledSize.y;

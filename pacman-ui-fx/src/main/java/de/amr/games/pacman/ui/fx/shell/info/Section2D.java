@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell.info;
 
-import de.amr.games.pacman.ui.fx._2d.scene.common.AbstractGameScene2D;
+import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.scene.control.CheckBox;
@@ -41,7 +41,7 @@ public class Section2D extends Section {
 	public Section2D(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
 		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
 		addInfo("Canvas2D", () -> {
-			AbstractGameScene2D scene2D = (AbstractGameScene2D) ui.getCurrentGameScene();
+			GameScene2D scene2D = (GameScene2D) ui.getCurrentGameScene();
 			return String.format("w=%.0f h=%.0f", scene2D.getCanvas().getWidth(), scene2D.getCanvas().getHeight());
 		}).when(() -> !ui.getCurrentGameScene().is3D());
 		cbTilesVisible = addCheckBox("Show tiles", () -> Env.toggle(Env.$tilesVisible));

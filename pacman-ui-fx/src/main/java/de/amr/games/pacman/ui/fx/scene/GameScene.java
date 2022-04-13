@@ -32,7 +32,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.SubScene;
 
 /**
- * Interface implemented by all game scenes (2D and 3D).
+ * Base class for all game scenes (2D and 3D).
  * 
  * @author Armin Reichert
  */
