@@ -44,7 +44,7 @@ public class Player2D extends GameEntity2D {
 	public final Pac player;
 	private final Rendering2D r2D;
 	public Map<Direction, TimedSeq<Rectangle2D>> animMunching;
-	public final TimedSeq<Rectangle2D> animDying;
+	private final TimedSeq<Rectangle2D> animDying;
 
 	public Player2D(Pac player, GameModel game, Rendering2D r2D) {
 		super(game);
@@ -62,18 +62,20 @@ public class Player2D extends GameEntity2D {
 		animDying.reset();
 	}
 
+	public void playDyingAnimation() {
+		animDying.restart();
+	}
+
 	@Override
 	public void render(GraphicsContext g) {
 		Rectangle2D sprite = null;
 		if (player.killed) {
-			sprite = animDying.frame();
-			if (animDying.hasStarted()) {
-				animDying.animate();
-			}
+			sprite = animDying.animate();
 		} else {
-			sprite = animMunching.get(player.moveDir()).frame();
+			var munching = animMunching.get(player.moveDir());
+			sprite = munching.frame();
 			if (!player.velocity.equals(V2d.NULL) && !player.stuck) {
-				animMunching.get(player.moveDir()).animate();
+				munching.advance();
 			}
 		}
 		r2D.renderEntity(g, player, sprite);

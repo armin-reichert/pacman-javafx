@@ -94,7 +94,6 @@ public class PlayScene2D extends GameScene2D {
 		levelCounter2D.visible = !gc.attractMode;
 
 		player2D = new Player2D(game.player, game, r2D);
-		player2D.animDying.onStart(game::hideGhosts);
 
 		for (Ghost ghost : game.ghosts) {
 			ghosts2D[ghost.id] = new Ghost2D(ghost, game, r2D);
@@ -259,7 +258,7 @@ public class PlayScene2D extends GameScene2D {
 						if (!gc.attractMode) {
 							SoundManager.get().play(GameSound.PACMAN_DEATH);
 						}
-						player2D.animDying.restart();
+						player2D.playDyingAnimation();
 					}), //
 					afterSec(2, () -> game.player.hide()), //
 					afterSec(1, () -> gc.stateTimer().expire()) //
