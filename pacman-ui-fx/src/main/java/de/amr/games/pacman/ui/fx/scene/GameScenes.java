@@ -45,8 +45,7 @@ import javafx.scene.Scene;
  */
 public class GameScenes {
 
-	public static final int SCENE_2D = 0;
-	public static final int SCENE_3D = 1;
+	public static final int SCENE_2D = 0, SCENE_3D = 1;
 
 	private final GameController gameController;
 	private final GameScene scenes[][][] = new GameScene[2][5][2];
@@ -86,14 +85,14 @@ public class GameScenes {
 		//@formatter:on
 
 		// define resize behavior
-		for (int gameVariant = 0; gameVariant <= 1; ++gameVariant) {
+		for (int variantIndex = 0; variantIndex <= 1; ++variantIndex) {
 			for (int sceneIndex = 0; sceneIndex <= 4; ++sceneIndex) {
 				// 2D scenes adapt to parent scene height keeping aspect ratio
-				GameScene scene2D = scenes[gameVariant][sceneIndex][SCENE_2D];
+				GameScene scene2D = scenes[variantIndex][sceneIndex][SCENE_2D];
 				parent.heightProperty()
 						.addListener(($height, oldHeight, newHeight) -> scene2D.resizeFXSubScene(newHeight.doubleValue()));
 				// 3D scenes adapt to parent scene size
-				GameScene scene3D = scenes[gameVariant][sceneIndex][SCENE_3D];
+				GameScene scene3D = scenes[variantIndex][sceneIndex][SCENE_3D];
 				if (scene3D != null) {
 					scene3D.getFXSubScene().widthProperty().bind(parent.widthProperty());
 					scene3D.getFXSubScene().heightProperty().bind(parent.heightProperty());
@@ -105,21 +104,21 @@ public class GameScenes {
 	/**
 	 * Returns the scene that fits the current game state.
 	 * 
-	 * @param version {@link GameScenes#SCENE_2D} or {@link GameScenes#SCENE_3D}
+	 * @param dimension {@link GameScenes#SCENE_2D} or {@link GameScenes#SCENE_3D}
 	 * @return the game scene that fits the current game state
 	 */
-	public GameScene getScene(int version) {
+	public GameScene getScene(int dimension) {
 		int sceneIndex = switch (gameController.state) {
 		case INTRO -> 0;
 		case INTERMISSION -> gameController.game.intermissionNumber(gameController.game.levelNumber);
 		case INTERMISSION_TEST -> gameController.intermissionTestNumber;
 		default -> 4; // play scene
 		};
-		int gameVariant = gameController.gameVariant.ordinal();
-		if (scenes[gameVariant][sceneIndex][version] == null) {
-			// if no 3D version exists, use 2D version
-			return scenes[gameVariant][sceneIndex][SCENE_2D];
+		int variantIndex = gameController.gameVariant.ordinal();
+		if (scenes[variantIndex][sceneIndex][dimension] == null) {
+			// no 3D version exists, use 2D version
+			return scenes[variantIndex][sceneIndex][SCENE_2D];
 		}
-		return scenes[gameVariant][sceneIndex][version];
+		return scenes[variantIndex][sceneIndex][dimension];
 	}
 }
