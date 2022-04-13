@@ -86,6 +86,8 @@ public class PacManGameAppFX extends Application {
 		SoundManager.get().setMuted(options.muted);
 		GameLoop.get().update = ui::update;
 		GameLoop.get().render = ui::render;
+		GameLoop.get().setTargetFrameRate(60);
+		GameLoop.get().setTimeMeasured(false);
 		GameLoop.get().start();
 		log("Application started. Stage size: w=%.0f h=%.0f, 3D: %s, camera perspective: %s", ui.stage.getWidth(),
 				ui.stage.getHeight(), Env.$3D.get(), Env.$perspective.get());

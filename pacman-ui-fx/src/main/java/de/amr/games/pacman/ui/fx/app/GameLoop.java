@@ -108,7 +108,7 @@ public class GameLoop {
 		if (updateEnabled) {
 			runUpdate();
 		}
-		render.run();
+		runRender();
 		totalTicks++;
 		++frames;
 		if (now - fpsCountStartTime > 1e9) {
@@ -123,9 +123,21 @@ public class GameLoop {
 			double start_ns = System.nanoTime();
 			update.run();
 			double duration_ns = System.nanoTime() - start_ns;
-			log("Update took %f milliseconds", duration_ns / 1e6);
+			log("Update phase: %f milliseconds", duration_ns / 1e6);
 		} else {
 			update.run();
 		}
 	}
+
+	private void runRender() {
+		if (timeMeasured) {
+			double start_ns = System.nanoTime();
+			render.run();
+			double duration_ns = System.nanoTime() - start_ns;
+			log("Render phase: %f milliseconds", duration_ns / 1e6);
+		} else {
+			render.run();
+		}
+	}
+
 }
