@@ -66,7 +66,6 @@ public class PacMan_IntermissionScene2 extends GameScene2D {
 
 	@Override
 	public void init() {
-		super.init();
 		sc.init();
 
 		levelCounter2D = new LevelCounter2D(game, r2D);

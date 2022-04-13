@@ -76,12 +76,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void init() {
-		super.init();
-
-		maze2D = new Maze2D(game, r2D);
-		maze2D.x = 0;
-		maze2D.y = t(3);
-
+		createScores();
 		score2D.showPoints = !gc.attractMode;
 
 		livesCounter2D = new LivesCounter2D(game, r2D);
@@ -92,6 +87,10 @@ public class PlayScene2D extends GameScene2D {
 		levelCounter2D = new LevelCounter2D(game, r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
 		levelCounter2D.visible = !gc.attractMode;
+
+		maze2D = new Maze2D(game, r2D);
+		maze2D.x = 0;
+		maze2D.y = t(3);
 
 		player2D = new Player2D(game.player, game, r2D);
 

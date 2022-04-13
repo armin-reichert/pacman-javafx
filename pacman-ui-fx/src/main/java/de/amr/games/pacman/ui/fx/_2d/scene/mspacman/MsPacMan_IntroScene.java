@@ -62,8 +62,8 @@ public class MsPacMan_IntroScene extends GameScene2D {
 
 	@Override
 	public void init() {
-		super.init();
 		sc.init();
+		createScores();
 		score2D.showPoints = false;
 		msPacMan2D = new Player2D(sc.msPacMan, game, r2D);
 		msPacMan2D.animMunching.values().forEach(TimedSeq::restart);

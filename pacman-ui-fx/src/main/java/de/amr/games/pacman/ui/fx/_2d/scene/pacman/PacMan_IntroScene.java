@@ -68,9 +68,9 @@ public class PacMan_IntroScene extends GameScene2D {
 
 	@Override
 	public void init() {
-		super.init();
 		sc.init();
 
+		createScores();
 		score2D.showPoints = false;
 
 		pacMan2D = new Player2D(sc.pacMan, game, r2D);

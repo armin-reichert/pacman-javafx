@@ -69,21 +69,20 @@ public abstract class GameScene2D extends GameScene {
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
 	}
 
-	@Override
-	public void resize(double height) {
-		double width = aspectRatio * height;
-		fxSubScene.setWidth(width);
-		fxSubScene.setHeight(height);
-		double scaling = height / unscaledSize.y;
-		canvas.getTransforms().setAll(new Scale(scaling, scaling));
-	}
-
 	public Canvas getCanvas() {
 		return canvas;
 	}
 
 	@Override
-	public void init() {
+	public void resize(double height) {
+		double width = aspectRatio * height;
+		double scaling = height / unscaledSize.y;
+		fxSubScene.setWidth(width);
+		fxSubScene.setHeight(height);
+		canvas.getTransforms().setAll(new Scale(scaling, scaling));
+	}
+
+	protected void createScores() {
 		score2D = new GameScore2D(game);
 		score2D.x = t(1);
 		score2D.y = t(1);
