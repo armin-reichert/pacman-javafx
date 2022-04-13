@@ -109,6 +109,10 @@ public class GameLoop {
 			run(update, "Update phase: %f milliseconds");
 		}
 		run(render, "Render phase: %f milliseconds");
+		computeFrameRate(now);
+	}
+
+	private void computeFrameRate(long now) {
 		totalTicks++;
 		++frames;
 		if (now - fpsCountStartTime > 1e9) {
