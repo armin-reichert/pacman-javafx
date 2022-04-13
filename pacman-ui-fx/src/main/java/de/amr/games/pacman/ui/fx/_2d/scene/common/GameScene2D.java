@@ -104,7 +104,7 @@ public abstract class GameScene2D extends GameScene {
 	/**
 	 * Renders the scene content. Subclasses override this method.
 	 */
-	protected abstract void doRender();
+	protected abstract void doRender(GraphicsContext g);
 
 	@Override
 	public final void update() {
@@ -112,7 +112,7 @@ public abstract class GameScene2D extends GameScene {
 		var g = canvas.getGraphicsContext2D();
 		g.setFill(Color.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		doRender();
+		doRender(g);
 		if (Env.$tilesVisible.get()) {
 			drawTileBorders(g);
 		}

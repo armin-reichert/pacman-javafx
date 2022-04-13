@@ -37,6 +37,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Stork2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
+import javafx.scene.canvas.GraphicsContext;
 
 /**
  * Intermission scene 3: "Junior".
@@ -88,8 +89,7 @@ public class MsPacMan_IntermissionScene3 extends GameScene2D {
 	}
 
 	@Override
-	public void doRender() {
-		var g = canvas.getGraphicsContext2D();
+	public void doRender(GraphicsContext g) {
 		levelCounter2D.render(g);
 		flap2D.render(g);
 		msPacMan2D.render(g);

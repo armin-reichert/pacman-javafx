@@ -36,6 +36,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.util.U;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -76,8 +77,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 	}
 
 	@Override
-	public void doRender() {
-		var g = canvas.getGraphicsContext2D();
+	public void doRender(GraphicsContext g) {
 		score2D.render(g);
 		highScore2D.render(g);
 

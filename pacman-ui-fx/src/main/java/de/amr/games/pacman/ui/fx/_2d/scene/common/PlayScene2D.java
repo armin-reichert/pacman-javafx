@@ -51,6 +51,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -309,8 +310,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	public void doRender() {
-		var g = canvas.getGraphicsContext2D();
+	public void doRender(GraphicsContext g) {
 		maze2D.render(g);
 		levelCounter2D.render(g);
 		livesCounter2D.render(g);

@@ -40,6 +40,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Heart2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
+import javafx.scene.canvas.GraphicsContext;
 
 /**
  * Intermission scene 1: "They meet".
@@ -78,7 +79,6 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 
 		flap2D = new Flap2D(sc.flap, game);
 		msPacMan2D = new Player2D(sc.msPac, game, r2D);
-		// overwrite by Pac-Man instead of Ms. Pac-Man sprites:
 		pacMan2D = new Player2D(sc.pacMan, game, r2D);
 		pacMan2D.animMunching = ((Rendering2D_MsPacMan) r2D).createHusbandMunchingAnimations();
 		inky2D = new Ghost2D(sc.inky, game, r2D);
@@ -103,8 +103,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 	}
 
 	@Override
-	public void doRender() {
-		var g = canvas.getGraphicsContext2D();
+	public void doRender(GraphicsContext g) {
 		levelCounter2D.render(g);
 		flap2D.render(g);
 		msPacMan2D.render(g);
