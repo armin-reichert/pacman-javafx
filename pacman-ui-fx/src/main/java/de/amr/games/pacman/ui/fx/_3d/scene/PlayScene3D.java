@@ -31,15 +31,12 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
 import de.amr.games.pacman.controller.event.GameEvent;
 import de.amr.games.pacman.controller.event.GameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.GameSound;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.LevelCounter3D;
@@ -73,18 +70,14 @@ import javafx.scene.transform.Translate;
  * 
  * @author Armin Reichert
  */
-public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
+public class PlayScene3D extends GameScene {
 
-	private final GameController gc;
-	private final SubScene fxSubScene;
 	private final PacManModel3D model3D;
 	private final Image floorTexture = U.image("/common/escher-texture.jpg");
 	private final Color floorColorWithTexture = Color.DARKBLUE;
 	private final Color floorColorNoTexture = Color.rgb(30, 30, 30);
 	private final CoordinateSystem coordSystem;
 
-	private GameModel game;
-	private Rendering2D r2D;
 	private CameraController camController;
 	private Pac3D player3D;
 	private Maze3D maze3D;
@@ -95,27 +88,12 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	private LivesCounter3D livesCounter3D;
 
 	public PlayScene3D(GameController gc, PacManModel3D model3D) {
-		this.gc = gc;
+		super(gc);
 		this.model3D = model3D;
 		fxSubScene = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
 		fxSubScene.setCamera(new PerspectiveCamera(true));
 		coordSystem = new CoordinateSystem(1000);
 		coordSystem.visibleProperty().bind(Env.$axesVisible);
-	}
-
-	@Override
-	public void setContext(GameModel game, Rendering2D r2d) {
-		this.game = game;
-		this.r2D = r2d;
-	}
-
-	@Override
-	public SubScene getFXSubScene() {
-		return fxSubScene;
-	}
-
-	@Override
-	public void resizeFXSubScene(double height) {
 	}
 
 	public CameraController getCamController() {

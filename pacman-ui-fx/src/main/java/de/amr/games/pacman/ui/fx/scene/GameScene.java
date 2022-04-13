@@ -23,7 +23,10 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.scene;
 
-import de.amr.games.pacman.controller.event.GameEventListener;
+import static de.amr.games.pacman.lib.Logging.log;
+
+import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.SubScene;
@@ -33,22 +36,35 @@ import javafx.scene.SubScene;
  * 
  * @author Armin Reichert
  */
-public interface GameScene extends GameEventListener {
+public abstract class GameScene extends DefaultGameEventHandler {
+
+	protected final GameController gc;
+	protected SubScene fxSubScene;
+	protected GameModel game;
+	protected Rendering2D r2D;
+
+	public GameScene(GameController gc) {
+		this.gc = gc;
+	}
 
 	/**
 	 * Called before scene is displayed.
 	 */
-	void init();
+	public void init() {
+		log("Scene '%s' init", getClass().getName());
+	}
 
 	/**
 	 * Called on every tick.
 	 */
-	void update();
+	public abstract void update();
 
 	/**
 	 * Called before scene ends.
 	 */
-	void end();
+	public void end() {
+		log("Scene '%s' end", getClass().getName());
+	}
 
 	/**
 	 * Sets the context for the current scene.
@@ -56,22 +72,28 @@ public interface GameScene extends GameEventListener {
 	 * @param game the game model
 	 * @param r2D  the 2D rendering
 	 */
-	void setContext(GameModel game, Rendering2D r2D);
+	public void setContext(GameModel game, Rendering2D r2D) {
+		this.game = game;
+		this.r2D = r2D;
+	}
 
 	/**
 	 * @return the JavaFX subscene associated with this game scene
 	 */
-	SubScene getFXSubScene();
+	public SubScene getFXSubScene() {
+		return fxSubScene;
+	}
 
 	/**
 	 * Resizes the FX scene to fit into the given height.
 	 * 
 	 * @param height height in pixels
 	 */
-	void resizeFXSubScene(double height);
+	public void resizeFXSubScene(double height) {
+	}
 
 	/**
 	 * @return if this is a 3D scene
 	 */
-	boolean is3D();
+	public abstract boolean is3D();
 }

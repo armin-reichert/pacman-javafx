@@ -23,16 +23,12 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
-import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.util.U;
@@ -48,16 +44,12 @@ import javafx.scene.transform.Scale;
  * 
  * @author Armin Reichert
  */
-public abstract class AbstractGameScene2D extends DefaultGameEventHandler implements GameScene {
+public abstract class AbstractGameScene2D extends GameScene {
 
-	protected final GameController gc;
-	protected final SubScene fxSubScene;
 	protected final Canvas canvas;
 	protected final V2i unscaledSize;
 	protected final double aspectRatio;
 
-	protected GameModel game;
-	protected Rendering2D r2D;
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
 
@@ -66,7 +58,7 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 	 * @param unscaledSize logical scene size (number of tiles x tile size)
 	 */
 	public AbstractGameScene2D(GameController gc, V2i unscaledSize) {
-		this.gc = gc;
+		super(gc);
 		this.unscaledSize = unscaledSize;
 		this.aspectRatio = (double) unscaledSize.x / unscaledSize.y;
 		this.canvas = new Canvas();
@@ -84,17 +76,6 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 		fxSubScene.setHeight(height);
 		double scaling = height / unscaledSize.y;
 		canvas.getTransforms().setAll(new Scale(scaling, scaling));
-	}
-
-	@Override
-	public void setContext(GameModel game, Rendering2D r2d) {
-		this.game = game;
-		this.r2D = r2d;
-	}
-
-	@Override
-	public SubScene getFXSubScene() {
-		return fxSubScene;
 	}
 
 	public Canvas getCanvas() {
@@ -135,11 +116,6 @@ public abstract class AbstractGameScene2D extends DefaultGameEventHandler implem
 		if (Env.$tilesVisible.get()) {
 			drawTileBorders(g);
 		}
-	}
-
-	@Override
-	public void end() {
-		log("Scene '%s' ended", getClass().getName());
 	}
 
 	@Override
