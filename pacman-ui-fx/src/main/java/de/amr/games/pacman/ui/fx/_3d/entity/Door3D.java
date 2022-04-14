@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.model.common.GhostState.DEAD;
 import static de.amr.games.pacman.model.common.GhostState.ENTERING_HOUSE;
 import static de.amr.games.pacman.model.common.GhostState.LEAVING_HOUSE;
 import static de.amr.games.pacman.model.common.world.World.HTS;
@@ -57,15 +58,16 @@ public class Door3D extends Box {
 	}
 
 	public void update(GameModel game) {
-		boolean ghostPassing = game.ghosts() //
+		boolean ghostApproaching = game.ghosts() //
 				.filter(ghost -> ghost.visible) //
-				.filter(ghost -> ghost.is(ENTERING_HOUSE) || ghost.is(LEAVING_HOUSE)) //
+				.filter(ghost -> ghost.is(DEAD) || ghost.is(ENTERING_HOUSE) || ghost.is(LEAVING_HOUSE)) //
 				.anyMatch(this::isGhostNear);
-		setVisible(!ghostPassing);
+		setVisible(!ghostApproaching);
 	}
 
 	private boolean isGhostNear(Ghost ghost) {
-		V2d middle = new V2d(getTranslateX(), getTranslateY()).plus(leftWing ? getWidth() / 2 : -getWidth() / 2, 0);
-		return ghost.position.euclideanDistance(middle) <= TS;
+		V2d center = new V2d(getTranslateX(), getTranslateY()).plus(leftWing ? getWidth() / 2 : -getWidth() / 2, 0);
+		double threshold = ghost.is(LEAVING_HOUSE) ? TS : 3 * TS;
+		return ghost.position.euclideanDistance(center) <= threshold;
 	}
 }
