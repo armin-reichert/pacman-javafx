@@ -30,6 +30,7 @@ import de.amr.games.pacman.model.pacman.Bonus;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
+import javafx.beans.value.WeakChangeListener;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -55,8 +56,8 @@ public class Bonus3D extends Box {
 
 	public void update(Bonus bonus) {
 		if (bonus != null) {
-			setTranslateX(bonus.position.x + HTS);
-			setTranslateY(bonus.position.y + HTS);
+			setTranslateX(bonus.position.x + getWidth() / 2);
+			setTranslateY(bonus.position.y + getHeight() / 2);
 		}
 	}
 
@@ -84,11 +85,11 @@ public class Bonus3D extends Box {
 		rotation.setRate(rate);
 		rotation.setOnFinished(e -> setVisible(false));
 		rotation.play();
-		visibleProperty().addListener(($visible, oldValue, newValue) -> {
+		visibleProperty().addListener(new WeakChangeListener<>(($visible, oldValue, newValue) -> {
 			if (newValue.booleanValue() == false) {
 				rotation.stop(); // stop when bonus expires and gets invisible
 			}
-		});
+		}));
 		setVisible(true);
 	}
 }
