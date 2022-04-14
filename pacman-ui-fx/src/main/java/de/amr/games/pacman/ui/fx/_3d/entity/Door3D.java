@@ -31,6 +31,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -43,8 +44,11 @@ import javafx.scene.shape.Box;
  */
 public class Door3D extends Box {
 
-	public Door3D(V2i tile, Color color) {
+	private final boolean leftWing;
+
+	public Door3D(V2i tile, boolean leftWing, Color color) {
 		super(TS - 1, 1, HTS);
+		this.leftWing = leftWing;
 		setMaterial(new PhongMaterial(color));
 		setTranslateX(tile.x * TS + HTS);
 		setTranslateY(tile.y * TS + HTS);
@@ -53,11 +57,15 @@ public class Door3D extends Box {
 	}
 
 	public void update(GameModel game) {
-		V2d doorPosition = new V2d(getTranslateX(), getTranslateY());
 		boolean ghostPassing = game.ghosts() //
 				.filter(ghost -> ghost.visible) //
 				.filter(ghost -> ghost.is(ENTERING_HOUSE) || ghost.is(LEAVING_HOUSE)) //
-				.anyMatch(ghost -> ghost.position.euclideanDistance(doorPosition) <= 2 * TS);
+				.anyMatch(this::isGhostNear);
 		setVisible(!ghostPassing);
+	}
+
+	private boolean isGhostNear(Ghost ghost) {
+		V2d middle = new V2d(getTranslateX(), getTranslateY()).plus(leftWing ? getWidth() / 2 : -getWidth() / 2, 0);
+		return ghost.position.euclideanDistance(middle) <= TS;
 	}
 }

@@ -134,7 +134,7 @@ public class Maze3D extends Group {
 		wallsGroup.getChildren().clear();
 		addWalls(floorPlan, world, brickSize, baseMaterial, topMaterial);
 		doorsGroup.getChildren().clear();
-		world.ghostHouse().doorTiles.stream().map(tile -> new Door3D(tile, doorColor))
+		world.ghostHouse().doorTiles.stream().map(tile -> new Door3D(tile, world.isLeftDoorWing(tile), doorColor))
 				.forEach(doorsGroup.getChildren()::add);
 		log("Built 3D maze (resolution=%d, wall height=%.2f)", $resolution.get(), $wallHeight.get());
 	}
