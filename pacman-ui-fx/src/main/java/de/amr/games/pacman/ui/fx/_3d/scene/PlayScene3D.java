@@ -132,9 +132,7 @@ public class PlayScene3D extends GameScene {
 		levelCounter3D.update(game);
 
 		var world3D = new Group(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
-		for (Ghost3D ghost3D : ghosts3D) {
-			world3D.getChildren().add(ghost3D);
-		}
+		world3D.getChildren().addAll(ghosts3D);
 		world3D.getTransforms().add(new Translate(-width / 2, -height / 2)); // center at origin
 
 		fxSubScene.setRoot(new Group(new AmbientLight(Color.GHOSTWHITE), world3D, coordSystem));
