@@ -105,11 +105,11 @@ public class Ghost3D extends Group {
 
 	public String identifyNode(Node node) {
 		if (node == eyes()) {
-			return String.format("eyes of %s", this);
+			return String.format("eyes of %s", ghost);
 		} else if (node == skin()) {
-			return String.format("skin of %s", this);
+			return String.format("skin of %s", ghost);
 		} else {
-			return String.format("part of %s", this);
+			return String.format("part of %s", ghost);
 		}
 	}
 

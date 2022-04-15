@@ -81,13 +81,13 @@ public class Pac3D extends Group {
 
 	public String identifyNode(Node node) {
 		if (node == eyes()) {
-			return String.format("eyes of %s", this);
+			return String.format("eyes of %s", player);
 		} else if (node == palate()) {
-			return String.format("palate of %s", this);
+			return String.format("palate of %s", player);
 		} else if (node == skull()) {
-			return String.format("skull of %s", this);
+			return String.format("skull of %s", player);
 		} else {
-			return String.format("part of %s", this);
+			return String.format("part of %s", player);
 		}
 	}
 
