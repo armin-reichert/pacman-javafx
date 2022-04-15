@@ -99,6 +99,7 @@ public class GameUI extends DefaultGameEventHandler {
 		stage.setScene(scene);
 
 		// init game scene (must happen *after* setting scene)
+		SoundManager.get().selectGameVariant(gc.gameVariant);
 		gameScenes = new GameScenes(scene, gc, GianmarcosModel3D.get(), LOGICAL_SCENE_SIZE);
 		selectGameScene();
 
@@ -148,8 +149,8 @@ public class GameUI extends DefaultGameEventHandler {
 			case PACMAN -> newGameScene.setContext(gc.game, Rendering2D_PacMan.get());
 			default -> throw new IllegalStateException();
 			}
-			SoundManager.get().selectGameVariant(gc.gameVariant);
 			SoundManager.get().stopAll();
+			SoundManager.get().selectGameVariant(gc.gameVariant);
 			newGameScene.resize(stage.getScene().getHeight());
 			sceneRoot.setBackground(getBackground(newGameScene));
 			sceneRoot.getChildren().set(0, newGameScene.getFXSubScene());
