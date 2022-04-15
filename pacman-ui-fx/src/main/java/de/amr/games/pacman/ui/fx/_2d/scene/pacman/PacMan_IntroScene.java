@@ -177,11 +177,11 @@ public class PacMan_IntroScene extends GameScene2D {
 				int y = sc.topY + t(1 + 3 * ghostID);
 				gallery2D[ghostID].render(g);
 				if (portrait.characterVisible) {
-					g.setFill(r2D.getGhostColor(ghostID));
+					g.setFill(r2D.getGhostSkinColor(ghostID));
 					g.fillText("-" + portrait.character, t(6), y + 8);
 				}
 				if (portrait.nicknameVisible) {
-					g.setFill(r2D.getGhostColor(ghostID));
+					g.setFill(r2D.getGhostSkinColor(ghostID));
 					g.fillText("\"" + portrait.ghost.name + "\"", t(17), y + 8);
 				}
 			}
@@ -224,7 +224,7 @@ public class PacMan_IntroScene extends GameScene2D {
 		var g = canvas.getGraphicsContext2D();
 		String text = "\u00A9 1980 MIDWAY MFG. CO.";
 		g.setFont(r2D.getArcadeFont());
-		g.setFill(r2D.getGhostColor(GameModel.PINK_GHOST));
+		g.setFill(r2D.getGhostSkinColor(GameModel.PINK_GHOST));
 		g.fillText(text, t(3), t(yTile));
 	}
 }

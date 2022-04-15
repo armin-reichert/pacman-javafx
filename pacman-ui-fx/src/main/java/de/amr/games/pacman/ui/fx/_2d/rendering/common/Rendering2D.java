@@ -82,7 +82,7 @@ public abstract class Rendering2D {
 	 * @param ghostID 0=Blinky, 1=Pinky, 2=Inky, 3=Clyde/Sue
 	 * @return color of ghost
 	 */
-	public Color getGhostColor(int ghostID) {
+	public Color getGhostSkinColor(int ghostID) {
 		return switch (ghostID) {
 		case GameModel.RED_GHOST -> Color.RED;
 		case GameModel.PINK_GHOST -> Color.rgb(252, 181, 255);
@@ -90,6 +90,30 @@ public abstract class Rendering2D {
 		case GameModel.ORANGE_GHOST -> Color.rgb(253, 192, 90);
 		default -> Color.WHITE; // should not happen
 		};
+	}
+
+	public Color getGhostSkinColorFrightened() {
+		return Color.rgb(33, 33, 255);
+	}
+
+	public Color getGhostSkinColorFrightened2() {
+		return Color.rgb(224, 221, 255);
+	}
+
+	public Color getGhostEyeBallColor() {
+		return Color.GHOSTWHITE;
+	}
+
+	public Color getGhostEyeBallColorFrightened() {
+		return Color.rgb(245, 189, 180);
+	}
+
+	public Color getGhostPupilColor() {
+		return Color.rgb(33, 33, 255);
+	}
+
+	public Color getGhostPupilColorFrightened() {
+		return Color.RED;
 	}
 
 	/**

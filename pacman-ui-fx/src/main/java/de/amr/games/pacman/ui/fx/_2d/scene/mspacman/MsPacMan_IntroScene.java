@@ -110,7 +110,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 			g.fillText("WITH", sc.titlePosition.x, sc.boardTopLeft.y + t(3));
 		}
 		Ghost ghost = sc.ghosts[sc.ghostIndex];
-		g.setFill(r2D.getGhostColor(ghost.id));
+		g.setFill(r2D.getGhostSkinColor(ghost.id));
 		g.fillText(ghost.name.toUpperCase(), t(14 - ghost.name.length() / 2), sc.boardTopLeft.y + t(6));
 	}
 

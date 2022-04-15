@@ -79,11 +79,6 @@ public class PlayScene3D extends GameScene {
 	private final Color playerSkinColor = Color.YELLOW;
 	private final Color playerEyesColor = Color.rgb(33, 33, 33);
 	private final Color playerPalateColor = Color.CORAL;
-	private final Color ghostEyeBallColor = Color.GHOSTWHITE;
-	private final Color ghostPupilColor = Color.rgb(33, 33, 255);
-	private final Color ghostFrightenedSkinColor = Color.rgb(33, 33, 255);
-	private final Color ghostFrightenedSkinColor2 = Color.rgb(224, 221, 255);
-	private final Color ghostFrightenedPupilColor = Color.rgb(245, 189, 180);
 	private final CoordinateSystem coordSystem;
 
 	private CameraController camController;
@@ -123,8 +118,7 @@ public class PlayScene3D extends GameScene {
 		maze3D.createFood(game.world, r2D.getFoodColor(game.mazeNumber));
 
 		player3D = new Pac3D(game.player, model3D, playerSkinColor, playerEyesColor, playerPalateColor);
-		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D, ghostEyeBallColor, ghostPupilColor,
-				ghostFrightenedSkinColor, ghostFrightenedSkinColor2, ghostFrightenedPupilColor)).toArray(Ghost3D[]::new);
+		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D)).toArray(Ghost3D[]::new);
 		bonus3D = new Bonus3D(r2D);
 
 		score3D = new Score3D();
@@ -342,7 +336,7 @@ public class PlayScene3D extends GameScene {
 		case PACMAN_DYING -> {
 			SoundManager.get().stopAll();
 			Stream.of(ghosts3D).forEach(Ghost3D::setNormalColor);
-			Color killerColor = r2D.getGhostColor(
+			Color killerColor = r2D.getGhostSkinColor(
 					Stream.of(game.ghosts).filter(ghost -> ghost.tile().equals(game.player.tile())).findAny().get().id);
 			new SequentialTransition( //
 					U.afterSec(1.0, game::hideGhosts), //
