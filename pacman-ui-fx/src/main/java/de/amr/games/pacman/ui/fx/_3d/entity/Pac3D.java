@@ -54,23 +54,48 @@ import javafx.util.Duration;
  */
 public class Pac3D extends Creature3D<Pac> {
 
-	private final Shape3D skull;
-	private final PointLight light;
+	private final Group parts;
+	private final PointLight light = new PointLight(Color.WHITE);
 
 	private Color skullColor = Color.YELLOW;
-	private Color skullColorWhenDead = Color.GHOSTWHITE;
+	private Color skullColorImpaled = Color.GHOSTWHITE;
 	private Color eyesColor = Color.rgb(20, 20, 20);
 	private Color palateColor = Color.CHOCOLATE;
 
 	public Pac3D(Pac player, PacManModel3D model3D) {
 		super(player);
-		Group pac3D = model3D.createPacMan(skullColor, eyesColor, palateColor);
-		skull = (Shape3D) pac3D.getChildren().get(0);
-		light = new PointLight(Color.WHITE);
+		parts = model3D.createPacMan(skullColor, eyesColor, palateColor);
 		light.setTranslateZ(-HTS);
 		turningAnimation.setNode(this);
-		getChildren().addAll(pac3D, light);
+		getChildren().addAll(parts, light);
 		reset();
+	}
+
+	public Shape3D skull() {
+		return (Shape3D) parts.getChildren().get(0);
+	}
+
+	public Shape3D eyes() {
+		return (Shape3D) parts.getChildren().get(1);
+	}
+
+	public Shape3D palate() {
+		return (Shape3D) parts.getChildren().get(2);
+	}
+
+	public void setSkullColor(Color color) {
+		skullColor = color;
+		skull().setMaterial(new PhongMaterial(color));
+	}
+
+	public void setEyesColor(Color color) {
+		eyesColor = color;
+		eyes().setMaterial(new PhongMaterial(color));
+	}
+
+	public void setPalateColor(Color color) {
+		this.palateColor = color;
+		palate().setMaterial(new PhongMaterial(color));
 	}
 
 	public void reset() {
@@ -78,7 +103,7 @@ public class Pac3D extends Creature3D<Pac> {
 		setScaleY(1.05);
 		setScaleZ(1.05);
 		setRotate(turnAngle(guy.moveDir()));
-		skull.setMaterial(new PhongMaterial(skullColor));
+		setSkullColor(skullColor);
 		update();
 	}
 
@@ -98,8 +123,8 @@ public class Pac3D extends Creature3D<Pac> {
 				: new ParallelTransition(spin, shrink, now(() -> SoundManager.get().play(GameSound.PACMAN_DEATH)));
 
 		return new SequentialTransition( //
-				new FillTransition3D(Duration.seconds(1), skull, skullColor, ghostColor), //
-				new FillTransition3D(Duration.seconds(1), skull, ghostColor, skullColorWhenDead), //
+				new FillTransition3D(Duration.seconds(1), skull(), skullColor, ghostColor), //
+				new FillTransition3D(Duration.seconds(1), skull(), ghostColor, skullColorImpaled), //
 				spinAndShrink);
 	}
 }
