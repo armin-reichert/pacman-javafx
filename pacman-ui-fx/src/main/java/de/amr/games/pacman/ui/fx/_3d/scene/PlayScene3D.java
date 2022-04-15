@@ -99,6 +99,8 @@ public class PlayScene3D extends GameScene {
 		fxSubScene.setCamera(new PerspectiveCamera(true));
 		coordSystem = new CoordinateSystem(1000);
 		coordSystem.visibleProperty().bind(Env.$axesVisible);
+		Env.$perspective.addListener(this::onPerspectiveChange);
+		Env.$useMazeFloorTexture.addListener(this::onUseMazeFloorTextureChange);
 	}
 
 	public CameraController getCamController() {
@@ -150,8 +152,6 @@ public class PlayScene3D extends GameScene {
 		maze3D.$resolution.bind(Env.$mazeResolution);
 		maze3D.$resolution.addListener(this::onMazeResolutionChange);
 
-		Env.$perspective.addListener(this::onPerspectiveChange);
-		Env.$useMazeFloorTexture.addListener(this::onUseMazeFloorTextureChange);
 	}
 
 	@Override
@@ -159,9 +159,6 @@ public class PlayScene3D extends GameScene {
 		maze3D.$wallHeight.unbind();
 		maze3D.$resolution.unbind();
 		maze3D.$resolution.removeListener(this::onMazeResolutionChange);
-
-		Env.$perspective.removeListener(this::onPerspectiveChange);
-		Env.$useMazeFloorTexture.removeListener(this::onUseMazeFloorTextureChange);
 	}
 
 	@Override
