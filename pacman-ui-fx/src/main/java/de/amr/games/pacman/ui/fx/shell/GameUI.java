@@ -33,12 +33,12 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
 import de.amr.games.pacman.controller.event.GameEvent;
-import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
+import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import de.amr.games.pacman.ui.fx._3d.model.GianmarcosModel3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
@@ -174,7 +174,23 @@ public class GameUI extends DefaultGameEventHandler {
 	private void handleMouseClicked(MouseEvent e) {
 		Node node = e.getPickResult().getIntersectedNode();
 		if (node != null) {
-			Logging.log("Picked node %s", node);
+			Object info = node.getUserData();
+			if (info != null) {
+				if (info instanceof Pac3D) {
+					Pac3D pac3D = (Pac3D) info;
+					if (node == pac3D.skull()) {
+						log("Picked skull of %s", pac3D);
+					} else if (node == pac3D.eyes()) {
+						log("Picked eyes of %s", pac3D);
+					} else if (node == pac3D.palate()) {
+						log("Picked palate of %s", pac3D);
+					}
+				} else {
+					log("Picked node %s (%s)", node, info);
+				}
+			} else {
+				log("Picked node %s", node);
+			}
 		}
 	}
 

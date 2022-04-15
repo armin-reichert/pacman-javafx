@@ -65,6 +65,9 @@ public class Pac3D extends Creature3D<Pac> {
 	public Pac3D(Pac player, PacManModel3D model3D) {
 		super(player);
 		parts = model3D.createPacMan(skullColor, eyesColor, palateColor);
+		skull().setUserData(this);
+		eyes().setUserData(this);
+		palate().setUserData(this);
 		light.setTranslateZ(-HTS);
 		turningAnimation.setNode(this);
 		getChildren().addAll(parts, light);
