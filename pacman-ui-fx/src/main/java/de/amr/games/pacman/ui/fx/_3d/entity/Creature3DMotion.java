@@ -41,7 +41,15 @@ public class Creature3DMotion<CREATURE extends Creature> {
 	}
 
 	private int index(Direction dir) {
-		return dir == Direction.LEFT ? 0 : dir == Direction.RIGHT ? 1 : dir == Direction.UP ? 2 : 3;
+		if (dir == null) {
+			return 0;
+		}
+		return switch (dir) {
+		case LEFT -> 0;
+		case RIGHT -> 1;
+		case UP -> 2;
+		case DOWN -> 3;
+		};
 	}
 
 	private int[] angles(Direction from, Direction to) {
