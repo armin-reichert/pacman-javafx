@@ -81,6 +81,9 @@ public class PlayScene3D extends GameScene {
 	private final Color playerPalateColor = Color.CORAL;
 	private final Color ghostEyeBallColor = Color.GHOSTWHITE;
 	private final Color ghostPupilColor = Color.rgb(33, 33, 255);
+	private final Color ghostFrightenedSkinColor = Color.rgb(33, 33, 255);
+	private final Color ghostFrightenedSkinColor2 = Color.rgb(224, 221, 255);
+	private final Color ghostFrightenedPupilColor = Color.rgb(245, 189, 180);
 	private final CoordinateSystem coordSystem;
 
 	private CameraController camController;
@@ -120,8 +123,8 @@ public class PlayScene3D extends GameScene {
 		maze3D.createFood(game.world, r2D.getFoodColor(game.mazeNumber));
 
 		player3D = new Pac3D(game.player, model3D, playerSkinColor, playerEyesColor, playerPalateColor);
-		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D, ghostEyeBallColor, ghostPupilColor))
-				.toArray(Ghost3D[]::new);
+		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D, ghostEyeBallColor, ghostPupilColor,
+				ghostFrightenedSkinColor, ghostFrightenedSkinColor2, ghostFrightenedPupilColor)).toArray(Ghost3D[]::new);
 		bonus3D = new Bonus3D(r2D);
 
 		score3D = new Score3D();
@@ -248,7 +251,7 @@ public class PlayScene3D extends GameScene {
 		}
 		Stream.of(ghosts3D) //
 				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
-				.forEach(Ghost3D::setFrightenedSkinColor);
+				.forEach(Ghost3D::setFrightenedColor);
 	}
 
 	@Override
@@ -261,7 +264,7 @@ public class PlayScene3D extends GameScene {
 	@Override
 	public void onPlayerLostPower(GameEvent e) {
 		SoundManager.get().stop(GameSound.PACMAN_POWER);
-		Stream.of(ghosts3D).forEach(Ghost3D::setNormalSkinColor);
+		Stream.of(ghosts3D).forEach(Ghost3D::setNormalColor);
 	}
 
 	@Override
@@ -338,7 +341,7 @@ public class PlayScene3D extends GameScene {
 		}
 		case PACMAN_DYING -> {
 			SoundManager.get().stopAll();
-			Stream.of(ghosts3D).forEach(Ghost3D::setNormalSkinColor);
+			Stream.of(ghosts3D).forEach(Ghost3D::setNormalColor);
 			Color killerColor = r2D.getGhostColor(
 					Stream.of(game.ghosts).filter(ghost -> ghost.tile().equals(game.player.tile())).findAny().get().id);
 			new SequentialTransition( //
@@ -367,7 +370,7 @@ public class PlayScene3D extends GameScene {
 			U.afterSec(3, () -> gc.stateTimer().expire()).play();
 		}
 		case LEVEL_COMPLETE -> {
-			Stream.of(ghosts3D).forEach(Ghost3D::setNormalSkinColor);
+			Stream.of(ghosts3D).forEach(Ghost3D::setNormalColor);
 			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game.levelNumber);
 			new SequentialTransition( //
 					U.pause(2.0), //

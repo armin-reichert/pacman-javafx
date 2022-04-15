@@ -58,15 +58,28 @@ public class Ghost3D extends Group {
 	private final Box numberCube = new Box(8, 8, 8);
 	private final Creature3DMotion<Ghost> motion;
 	private final Rendering2D r2D;
-	private final ColorFlashingTransition flashing = new ColorFlashingTransition(Color.color(0.5, 0.7, 1.0));
+	private final Color skinColor;
+	private final Color skinColorFrightened;
+	private final Color eyeBallColor;
+	private final Color pupilColor;
+	private final Color eyeBallColorFrightened;
+	private final ColorFlashingTransition skinFlashing;
 
 	private DisplayMode displayMode;
-	private Color frightenedColor = Color.CORNFLOWERBLUE;
 
-	public Ghost3D(Ghost ghost, PacManModel3D model3D, Rendering2D r2D, Color eyeBallColor, Color pupilColor) {
+	public Ghost3D(Ghost ghost, PacManModel3D model3D, Rendering2D r2D, Color eyeBallColor, Color pupilColor,
+			Color skinColorFrightened, Color skinColorFrightened2, Color eyeBallColorFrightened) {
 		this.ghost = ghost;
 		this.r2D = r2D;
-		bodyParts = model3D.createGhost(r2D.getGhostColor(ghost.id), eyeBallColor, pupilColor);
+
+		this.skinColor = r2D.getGhostColor(ghost.id);
+		this.skinColorFrightened = skinColorFrightened;
+		this.eyeBallColor = eyeBallColor;
+		this.pupilColor = pupilColor;
+		this.eyeBallColorFrightened = eyeBallColorFrightened;
+		skinFlashing = new ColorFlashingTransition(skinColorFrightened, skinColorFrightened2);
+
+		bodyParts = model3D.createGhost(skinColor, eyeBallColor, pupilColor);
 		motion = new Creature3DMotion<Ghost>(ghost, this);
 		getChildren().addAll(bodyParts, numberCube);
 		reset();
@@ -75,7 +88,7 @@ public class Ghost3D extends Group {
 	}
 
 	public void reset() {
-		setNormalSkinColor();
+		setNormalColor();
 		update();
 	}
 
@@ -117,8 +130,19 @@ public class Ghost3D extends Group {
 		return (Shape3D) bodyParts.getChildren().get(0);
 	}
 
-	public Node eyes() {
-		return bodyParts.getChildren().get(1);
+	/**
+	 * @return group representing eyes = (pupils, eyeBalls)
+	 */
+	public Group eyes() {
+		return (Group) bodyParts.getChildren().get(1);
+	}
+
+	private Shape3D pupils() {
+		return (Shape3D) eyes().getChildren().get(0);
+	}
+
+	private Shape3D eyeBalls() {
+		return (Shape3D) eyes().getChildren().get(1);
 	}
 
 	private void changeDisplayMode(DisplayMode newMode) {
@@ -145,24 +169,28 @@ public class Ghost3D extends Group {
 	}
 
 	public void playFlashingAnimation() {
-		skin().setMaterial(flashing.getMaterial());
-		flashing.playFromStart();
+		skin().setMaterial(skinFlashing.getMaterial());
+		skinFlashing.playFromStart();
 	}
 
 	public void playRevivalAnimation() {
 		new FadeInTransition3D(Duration.seconds(1.5), skin(), r2D.getGhostColor(ghost.id)).playFromStart();
 	}
 
-	public void setNormalSkinColor() {
+	public void setNormalColor() {
 		setSkinColor(r2D.getGhostColor(ghost.id));
+		eyeBalls().setMaterial(new PhongMaterial(eyeBallColor));
+		pupils().setMaterial(new PhongMaterial(pupilColor));
 	}
 
-	public void setFrightenedSkinColor() {
-		setSkinColor(frightenedColor);
+	public void setFrightenedColor() {
+		setSkinColor(skinColorFrightened);
+		eyeBalls().setMaterial(new PhongMaterial(eyeBallColorFrightened));
+		pupils().setMaterial(new PhongMaterial(Color.RED)); // TODO
 	}
 
 	private void setSkinColor(Color color) {
-		flashing.stop();
+		skinFlashing.stop();
 		PhongMaterial material = new PhongMaterial(color);
 		material.setSpecularColor(color.brighter());
 		skin().setMaterial(material);

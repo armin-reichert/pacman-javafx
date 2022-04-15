@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.animation;
 
+import de.amr.games.pacman.ui.fx.util.U;
 import javafx.animation.Transition;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -35,11 +36,13 @@ import javafx.util.Duration;
  */
 public class ColorFlashingTransition extends Transition {
 
-	private final Color color;
+	private final Color colorStart;
+	private final Color colorEnd;
 	private final PhongMaterial material = new PhongMaterial();
 
-	public ColorFlashingTransition(Color color) {
-		this.color = color;
+	public ColorFlashingTransition(Color colorStart, Color colorEnd) {
+		this.colorStart = colorStart;
+		this.colorEnd = colorEnd;
 		setCycleCount(INDEFINITE);
 		setCycleDuration(Duration.seconds(0.1));
 		setAutoReverse(true);
@@ -51,6 +54,9 @@ public class ColorFlashingTransition extends Transition {
 
 	@Override
 	protected void interpolate(double t) {
-		material.setDiffuseColor(Color.color(t * color.getRed(), t * color.getGreen(), color.getBlue()));
+		double r = U.lerp(colorStart.getRed(), colorEnd.getRed(), t);
+		double g = U.lerp(colorStart.getGreen(), colorEnd.getGreen(), t);
+		double b = U.lerp(colorStart.getBlue(), colorEnd.getBlue(), t);
+		material.setDiffuseColor(Color.color(r, g, b));
 	}
 }
