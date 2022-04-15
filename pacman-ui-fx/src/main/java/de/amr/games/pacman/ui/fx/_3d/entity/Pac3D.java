@@ -38,6 +38,7 @@ import javafx.animation.RotateTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -76,6 +77,18 @@ public class Pac3D extends Group {
 		skull().setUserData(this);
 		eyes().setUserData(this);
 		palate().setUserData(this);
+	}
+
+	public String identifyNode(Node node) {
+		if (node == eyes()) {
+			return String.format("eyes of %s", this);
+		} else if (node == palate()) {
+			return String.format("palate of %s", this);
+		} else if (node == skull()) {
+			return String.format("skull of %s", this);
+		} else {
+			return String.format("part of %s", this);
+		}
 	}
 
 	public void reset() {

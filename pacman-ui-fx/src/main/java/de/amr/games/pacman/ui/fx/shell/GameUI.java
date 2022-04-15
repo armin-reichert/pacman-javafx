@@ -180,25 +180,17 @@ public class GameUI extends DefaultGameEventHandler {
 		if (node != null) {
 			Object info = node.getUserData();
 			if (info != null) {
+				String s = "";
 				if (info instanceof Pac3D) {
 					Pac3D pac3D = (Pac3D) info;
-					if (node == pac3D.skull()) {
-						log("Picked skull of %s", pac3D);
-					} else if (node == pac3D.eyes()) {
-						log("Picked eyes of %s", pac3D);
-					} else if (node == pac3D.palate()) {
-						log("Picked palate of %s", pac3D);
-					}
+					s = pac3D.identifyNode(node);
 				} else if (info instanceof Ghost3D) {
 					Ghost3D ghost3D = (Ghost3D) info;
-					if (node == ghost3D.eyes()) {
-						log("Picked eyes of %s", ghost3D);
-					} else if (node == ghost3D.skin()) {
-						log("Picked skin of %s", ghost3D);
-					}
+					s = ghost3D.identifyNode(node);
 				} else {
-					log("Picked node %s (%s)", node, info);
+					s = String.format("node %s", node);
 				}
+				log("Picked %s", s);
 			} else {
 				log("Picked node %s", node);
 			}

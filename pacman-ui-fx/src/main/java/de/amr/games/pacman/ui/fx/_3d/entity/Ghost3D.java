@@ -103,6 +103,16 @@ public class Ghost3D extends Group {
 		bodyParts.setVisible(insideWorld && ghost.visible);
 	}
 
+	public String identifyNode(Node node) {
+		if (node == eyes()) {
+			return String.format("eyes of %s", this);
+		} else if (node == skin()) {
+			return String.format("skin of %s", this);
+		} else {
+			return String.format("part of %s", this);
+		}
+	}
+
 	public Shape3D skin() {
 		return (Shape3D) bodyParts.getChildren().get(0);
 	}
