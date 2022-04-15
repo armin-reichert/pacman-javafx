@@ -90,13 +90,13 @@ public class Ghost3D extends Group {
 				// rotate such that number appears in right orientation
 				setRotationAxis(Rotate.X_AXIS);
 				setRotate(0);
-				setDisplayMode(DisplayMode.NUMBER_CUBE);
+				changeDisplayMode(DisplayMode.NUMBER_CUBE);
 			}
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
-			setDisplayMode(DisplayMode.EYES_ONLY);
+			changeDisplayMode(DisplayMode.EYES_ONLY);
 			motion.update();
 		} else {
-			setDisplayMode(DisplayMode.COMPLETE_BODY);
+			changeDisplayMode(DisplayMode.COMPLETE_BODY);
 			motion.update();
 		}
 		boolean insideWorld = ghost.position.x >= 0 && ghost.position.x <= t(ghost.world.numCols() - 1);
@@ -121,12 +121,26 @@ public class Ghost3D extends Group {
 		return bodyParts.getChildren().get(1);
 	}
 
-	private void setDisplayMode(DisplayMode mode) {
-		if (displayMode != mode) {
-			displayMode = mode;
-			numberCube.setVisible(displayMode == DisplayMode.NUMBER_CUBE);
-			skin().setVisible(displayMode == DisplayMode.COMPLETE_BODY);
-			eyes().setVisible(displayMode == DisplayMode.COMPLETE_BODY || displayMode == DisplayMode.EYES_ONLY);
+	private void changeDisplayMode(DisplayMode newMode) {
+		if (displayMode != newMode) {
+			displayMode = newMode;
+			switch (displayMode) {
+			case COMPLETE_BODY -> {
+				numberCube.setVisible(false);
+				skin().setVisible(true);
+				eyes().setVisible(true);
+			}
+			case EYES_ONLY -> {
+				numberCube.setVisible(false);
+				skin().setVisible(false);
+				eyes().setVisible(true);
+			}
+			case NUMBER_CUBE -> {
+				numberCube.setVisible(true);
+				skin().setVisible(false);
+				eyes().setVisible(false);
+			}
+			}
 		}
 	}
 
