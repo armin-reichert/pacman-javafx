@@ -112,7 +112,7 @@ public class PlayScene3D extends GameScene {
 				r2D.getGhostHouseDoorColor(game.mazeNumber));
 		maze3D.createFood(game.world, r2D.getFoodColor(game.mazeNumber));
 
-		player3D = new Pac3D(game.player, model3D, Color.YELLOW, Color.rgb(20, 20, 20), Color.CHOCOLATE);
+		player3D = new Pac3D(game.player, model3D, Color.YELLOW, Color.rgb(20, 20, 20), Color.CORAL);
 		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D)).toArray(Ghost3D[]::new);
 		bonus3D = new Bonus3D(r2D);
 
