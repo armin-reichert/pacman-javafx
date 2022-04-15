@@ -61,13 +61,12 @@ public class Pac3D extends Group {
 	private final Creature3DMotion<Pac> motion;
 	private final PointLight light = new PointLight(Color.WHITE);
 
-	private Color skullColor = Color.YELLOW;
 	private Color skullColorImpaled = Color.GHOSTWHITE;
-	private Color eyesColor = Color.rgb(20, 20, 20);
-	private Color palateColor = Color.CHOCOLATE;
+	private Color skullColor;
 
-	public Pac3D(Pac player, PacManModel3D model3D) {
+	public Pac3D(Pac player, PacManModel3D model3D, Color skullColor, Color eyesColor, Color palateColor) {
 		this.player = player;
+		this.skullColor = skullColor;
 		bodyParts = model3D.createPacMan(skullColor, eyesColor, palateColor);
 		motion = new Creature3DMotion<Pac>(player, this);
 		light.setTranslateZ(-HTS);
@@ -123,12 +122,10 @@ public class Pac3D extends Group {
 	}
 
 	public void setEyesColor(Color color) {
-		eyesColor = color;
 		eyes().setMaterial(new PhongMaterial(color));
 	}
 
 	public void setPalateColor(Color color) {
-		this.palateColor = color;
 		palate().setMaterial(new PhongMaterial(color));
 	}
 
