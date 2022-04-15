@@ -40,7 +40,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 /**
- * 3D-representation of a ghost. A ghost is displayed in one of 3 modes: as a full ghost, as eyes only or as a bonus
+ * 3D representation of a ghost. A ghost is displayed in one of 3 modes: as a full ghost, as eyes only or as a bonus
  * symbol indicating the bounty paid for killing the ghost.
  * 
  * @author Armin Reichert
@@ -52,9 +52,8 @@ public class Ghost3D extends Creature3D<Ghost> {
 	}
 
 	private final Rendering2D r2D;
-	private final Shape3D skin3D;
-	private final Node eyes3D;
-	private final Box cube3D;
+	private final Group bodyParts;
+	private final Box pointsCube3D = new Box(8, 8, 8);
 	private final ColorFlashingTransition flashing = new ColorFlashingTransition(Color.color(0.5, 0.7, 1.0));
 
 	private DisplayMode displayMode;
@@ -63,24 +62,28 @@ public class Ghost3D extends Creature3D<Ghost> {
 	public Ghost3D(Ghost ghost, PacManModel3D model3D, Rendering2D r2D) {
 		super(ghost);
 		this.r2D = r2D;
-		Group body3D = model3D.createGhost(r2D.getGhostColor(ghost.id), Color.WHITE, Color.BLACK);
-		skin3D = (Shape3D) body3D.getChildren().get(0);
-		eyes3D = body3D.getChildren().get(1);
-		cube3D = new Box(8, 8, 8);
-		getChildren().addAll(body3D, cube3D);
-		body3D.setRotationAxis(Rotate.Z_AXIS);
-		body3D.setRotate(turnAngle(ghost.moveDir()));
-		turningAnimation.setNode(body3D);
-		targetDir = ghost.moveDir();
+		bodyParts = model3D.createGhost(r2D.getGhostColor(ghost.id), Color.WHITE, Color.BLACK);
+		bodyParts.setRotationAxis(Rotate.Z_AXIS);
+		bodyParts.setRotate(turnAngle(ghost.moveDir()));
+		turningAnimation.setNode(bodyParts);
+		getChildren().addAll(bodyParts, pointsCube3D);
 		reset();
+	}
+
+	public Shape3D skin() {
+		return (Shape3D) bodyParts.getChildren().get(0);
+	}
+
+	public Node eyes() {
+		return bodyParts.getChildren().get(1);
 	}
 
 	private void setDisplayMode(DisplayMode mode) {
 		if (displayMode != mode) {
 			displayMode = mode;
-			cube3D.setVisible(displayMode == DisplayMode.NUMBER_CUBE);
-			skin3D.setVisible(displayMode == DisplayMode.COMPLETE);
-			eyes3D.setVisible(displayMode == DisplayMode.COMPLETE || displayMode == DisplayMode.EYES_ONLY);
+			pointsCube3D.setVisible(displayMode == DisplayMode.NUMBER_CUBE);
+			skin().setVisible(displayMode == DisplayMode.COMPLETE);
+			eyes().setVisible(displayMode == DisplayMode.COMPLETE || displayMode == DisplayMode.EYES_ONLY);
 		}
 	}
 
@@ -98,7 +101,7 @@ public class Ghost3D extends Creature3D<Ghost> {
 				Image image = r2D.spritesheet().extractRegion(r2D.getBountyNumberSprite(guy.bounty));
 				material.setBumpMap(image);
 				material.setDiffuseMap(image);
-				cube3D.setMaterial(material);
+				pointsCube3D.setMaterial(material);
 				setRotationAxis(Rotate.X_AXIS);
 				setRotate(0);
 			}
@@ -111,12 +114,12 @@ public class Ghost3D extends Creature3D<Ghost> {
 	}
 
 	public void playFlashingAnimation() {
-		skin3D.setMaterial(flashing.getMaterial());
+		skin().setMaterial(flashing.getMaterial());
 		flashing.playFromStart();
 	}
 
 	public void playRevivalAnimation() {
-		var animation = new FadeInTransition3D(Duration.seconds(2), skin3D, r2D.getGhostColor(guy.id));
+		var animation = new FadeInTransition3D(Duration.seconds(2), skin(), r2D.getGhostColor(guy.id));
 		animation.playFromStart();
 	}
 
@@ -133,6 +136,6 @@ public class Ghost3D extends Creature3D<Ghost> {
 	private void setSkinColor(Color color) {
 		PhongMaterial material = new PhongMaterial(color);
 		material.setSpecularColor(color.brighter());
-		skin3D.setMaterial(material);
+		skin().setMaterial(material);
 	}
 }
