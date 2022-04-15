@@ -70,6 +70,8 @@ public class Ghost3D extends Group {
 		motion = new Creature3DMotion<Ghost>(ghost, this);
 		getChildren().addAll(bodyParts, numberCube);
 		reset();
+		skin().setUserData(this);
+		eyes().setUserData(this);
 	}
 
 	public void reset() {

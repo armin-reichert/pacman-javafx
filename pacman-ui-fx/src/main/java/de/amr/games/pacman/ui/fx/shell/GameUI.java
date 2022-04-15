@@ -38,6 +38,7 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
+import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import de.amr.games.pacman.ui.fx._3d.model.GianmarcosModel3D;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -172,7 +173,10 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	private void handleMouseClicked(MouseEvent e) {
-		Node node = e.getPickResult().getIntersectedNode();
+		identifyNode(e.getPickResult().getIntersectedNode());
+	}
+
+	private void identifyNode(Node node) {
 		if (node != null) {
 			Object info = node.getUserData();
 			if (info != null) {
@@ -184,6 +188,13 @@ public class GameUI extends DefaultGameEventHandler {
 						log("Picked eyes of %s", pac3D);
 					} else if (node == pac3D.palate()) {
 						log("Picked palate of %s", pac3D);
+					}
+				} else if (info instanceof Ghost3D) {
+					Ghost3D ghost3D = (Ghost3D) info;
+					if (node == ghost3D.eyes()) {
+						log("Picked eyes of %s", ghost3D);
+					} else if (node == ghost3D.skin()) {
+						log("Picked skin of %s", ghost3D);
 					}
 				} else {
 					log("Picked node %s (%s)", node, info);
