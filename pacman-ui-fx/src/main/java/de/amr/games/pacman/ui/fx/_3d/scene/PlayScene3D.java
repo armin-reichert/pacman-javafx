@@ -132,7 +132,9 @@ public class PlayScene3D extends GameScene {
 		levelCounter3D.update(game);
 
 		var world3D = new Group(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
-		world3D.getChildren().addAll(ghosts3D);
+		for (Ghost3D ghost3D : ghosts3D) {
+			world3D.getChildren().add(ghost3D);
+		}
 		world3D.getTransforms().add(new Translate(-width / 2, -height / 2)); // center at origin
 
 		fxSubScene.setRoot(new Group(new AmbientLight(Color.GHOSTWHITE), world3D, coordSystem));
@@ -244,14 +246,14 @@ public class PlayScene3D extends GameScene {
 			SoundManager.get().loop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
 		}
 		Stream.of(ghosts3D) //
-				.filter(ghost3D -> ghost3D.guy.is(GhostState.FRIGHTENED) || ghost3D.guy.is(GhostState.LOCKED))
+				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
 				.forEach(Ghost3D::setFrightenedSkinColor);
 	}
 
 	@Override
 	public void onPlayerLosingPower(GameEvent e) {
 		Stream.of(ghosts3D) //
-				.filter(ghost3D -> ghost3D.guy.is(GhostState.FRIGHTENED)) //
+				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED)) //
 				.forEach(Ghost3D::playFlashingAnimation);
 	}
 

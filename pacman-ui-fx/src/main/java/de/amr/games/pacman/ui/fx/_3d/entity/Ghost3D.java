@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.model.common.world.World.t;
+
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -45,29 +47,58 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class Ghost3D extends Creature3D<Ghost> {
+public class Ghost3D extends Group {
 
 	private enum DisplayMode {
-		COMPLETE, EYES_ONLY, NUMBER_CUBE
+		COMPLETE_BODY, EYES_ONLY, NUMBER_CUBE
 	}
 
-	private final Rendering2D r2D;
+	public final Ghost ghost;
 	private final Group bodyParts;
-	private final Box pointsCube3D = new Box(8, 8, 8);
+	private final Box numberCube = new Box(8, 8, 8);
+	private final Creature3DMotion<Ghost> motion;
+	private final Rendering2D r2D;
 	private final ColorFlashingTransition flashing = new ColorFlashingTransition(Color.color(0.5, 0.7, 1.0));
 
 	private DisplayMode displayMode;
 	private Color frightenedColor = Color.CORNFLOWERBLUE;
 
 	public Ghost3D(Ghost ghost, PacManModel3D model3D, Rendering2D r2D) {
-		super(ghost);
+		this.ghost = ghost;
 		this.r2D = r2D;
 		bodyParts = model3D.createGhost(r2D.getGhostColor(ghost.id), Color.WHITE, Color.BLACK);
-		bodyParts.setRotationAxis(Rotate.Z_AXIS);
-		bodyParts.setRotate(turnAngle(ghost.moveDir()));
-		turningAnimation.setNode(bodyParts);
-		getChildren().addAll(bodyParts, pointsCube3D);
+		motion = new Creature3DMotion<Ghost>(ghost, this);
+		getChildren().addAll(bodyParts, numberCube);
 		reset();
+	}
+
+	public void reset() {
+		setNormalSkinColor();
+		update();
+	}
+
+	public void update() {
+		if (ghost.bounty > 0) {
+			if (displayMode != DisplayMode.NUMBER_CUBE) {
+				Image texture = r2D.spritesheet().extractRegion(r2D.getBountyNumberSprite(ghost.bounty));
+				PhongMaterial material = new PhongMaterial();
+				material.setBumpMap(texture);
+				material.setDiffuseMap(texture);
+				numberCube.setMaterial(material);
+				// rotate such that number appears in right orientation
+				setRotationAxis(Rotate.X_AXIS);
+				setRotate(0);
+				setDisplayMode(DisplayMode.NUMBER_CUBE);
+			}
+		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
+			setDisplayMode(DisplayMode.EYES_ONLY);
+			motion.update();
+		} else {
+			setDisplayMode(DisplayMode.COMPLETE_BODY);
+			motion.update();
+		}
+		boolean insideWorld = ghost.position.x >= 0 && ghost.position.x <= t(ghost.world.numCols() - 1);
+		bodyParts.setVisible(insideWorld && ghost.visible);
 	}
 
 	public Shape3D skin() {
@@ -81,36 +112,10 @@ public class Ghost3D extends Creature3D<Ghost> {
 	private void setDisplayMode(DisplayMode mode) {
 		if (displayMode != mode) {
 			displayMode = mode;
-			pointsCube3D.setVisible(displayMode == DisplayMode.NUMBER_CUBE);
-			skin().setVisible(displayMode == DisplayMode.COMPLETE);
-			eyes().setVisible(displayMode == DisplayMode.COMPLETE || displayMode == DisplayMode.EYES_ONLY);
+			numberCube.setVisible(displayMode == DisplayMode.NUMBER_CUBE);
+			skin().setVisible(displayMode == DisplayMode.COMPLETE_BODY);
+			eyes().setVisible(displayMode == DisplayMode.COMPLETE_BODY || displayMode == DisplayMode.EYES_ONLY);
 		}
-	}
-
-	public void reset() {
-		setNormalSkinColor();
-		update();
-	}
-
-	@Override
-	public void update() {
-		if (guy.bounty > 0) {
-			if (displayMode != DisplayMode.NUMBER_CUBE) {
-				setDisplayMode(DisplayMode.NUMBER_CUBE);
-				PhongMaterial material = new PhongMaterial();
-				Image image = r2D.spritesheet().extractRegion(r2D.getBountyNumberSprite(guy.bounty));
-				material.setBumpMap(image);
-				material.setDiffuseMap(image);
-				pointsCube3D.setMaterial(material);
-				setRotationAxis(Rotate.X_AXIS);
-				setRotate(0);
-			}
-		} else if (guy.is(GhostState.DEAD) || guy.is(GhostState.ENTERING_HOUSE)) {
-			setDisplayMode(DisplayMode.EYES_ONLY);
-		} else {
-			setDisplayMode(DisplayMode.COMPLETE);
-		}
-		super.update();
 	}
 
 	public void playFlashingAnimation() {
@@ -119,21 +124,19 @@ public class Ghost3D extends Creature3D<Ghost> {
 	}
 
 	public void playRevivalAnimation() {
-		var animation = new FadeInTransition3D(Duration.seconds(2), skin(), r2D.getGhostColor(guy.id));
-		animation.playFromStart();
+		new FadeInTransition3D(Duration.seconds(1.5), skin(), r2D.getGhostColor(ghost.id)).playFromStart();
 	}
 
 	public void setNormalSkinColor() {
-		flashing.stop();
-		setSkinColor(r2D.getGhostColor(guy.id));
+		setSkinColor(r2D.getGhostColor(ghost.id));
 	}
 
 	public void setFrightenedSkinColor() {
-		flashing.stop();
 		setSkinColor(frightenedColor);
 	}
 
 	private void setSkinColor(Color color) {
+		flashing.stop();
 		PhongMaterial material = new PhongMaterial(color);
 		material.setSpecularColor(color.brighter());
 		skin().setMaterial(material);

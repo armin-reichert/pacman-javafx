@@ -37,11 +37,11 @@ import javafx.scene.transform.Rotate;
 public class Cam_FollowingPlayer implements CameraController {
 
 	private Camera cam;
-	private Pac3D player;
+	private Pac3D player3D;
 
 	public Cam_FollowingPlayer(Camera cam, Pac3D player) {
 		this.cam = cam;
-		this.player = player;
+		this.player3D = player;
 	}
 
 	@Override
@@ -62,8 +62,8 @@ public class Cam_FollowingPlayer implements CameraController {
 	public void update() {
 		// TODO this is just trial and error
 		double frac = 0.03;
-		double x = lerp(cam.getTranslateX(), player.getTranslateX() - 100, frac);
-		double y = lerp(cam.getTranslateY(), player.getTranslateY() + 60, frac);
+		double x = lerp(cam.getTranslateX(), player3D.getTranslateX() - 100, frac);
+		double y = lerp(cam.getTranslateY(), player3D.getTranslateY() + 60, frac);
 		cam.setTranslateX(x);
 		cam.setTranslateY(y);
 	}

@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
+import static de.amr.games.pacman.model.common.world.World.t;
 import static de.amr.games.pacman.ui.fx.util.U.now;
 
 import de.amr.games.pacman.model.common.Pac;
@@ -52,9 +53,11 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class Pac3D extends Creature3D<Pac> {
+public class Pac3D extends Group {
 
-	private final Group parts;
+	public final Pac player;
+	private final Group bodyParts;
+	private final Creature3DMotion<Pac> motion;
 	private final PointLight light = new PointLight(Color.WHITE);
 
 	private Color skullColor = Color.YELLOW;
@@ -63,27 +66,42 @@ public class Pac3D extends Creature3D<Pac> {
 	private Color palateColor = Color.CHOCOLATE;
 
 	public Pac3D(Pac player, PacManModel3D model3D) {
-		super(player);
-		parts = model3D.createPacMan(skullColor, eyesColor, palateColor);
+		this.player = player;
+		bodyParts = model3D.createPacMan(skullColor, eyesColor, palateColor);
+		motion = new Creature3DMotion<Pac>(player, this);
+		light.setTranslateZ(-HTS);
+		getChildren().addAll(bodyParts, light);
+		reset();
+		// only for testing
 		skull().setUserData(this);
 		eyes().setUserData(this);
 		palate().setUserData(this);
-		light.setTranslateZ(-HTS);
-		turningAnimation.setNode(this);
-		getChildren().addAll(parts, light);
-		reset();
+	}
+
+	public void reset() {
+		bodyParts.setScaleX(1.05);
+		bodyParts.setScaleY(1.05);
+		bodyParts.setScaleZ(1.05);
+		setSkullColor(skullColor);
+		update();
+	}
+
+	public void update() {
+		motion.update();
+		boolean insideWorld = player.position.x >= 0 && player.position.x <= t(player.world.numCols() - 1);
+		setVisible(player.visible && insideWorld);
 	}
 
 	public Shape3D skull() {
-		return (Shape3D) parts.getChildren().get(0);
+		return (Shape3D) bodyParts.getChildren().get(0);
 	}
 
 	public Shape3D eyes() {
-		return (Shape3D) parts.getChildren().get(1);
+		return (Shape3D) bodyParts.getChildren().get(1);
 	}
 
 	public Shape3D palate() {
-		return (Shape3D) parts.getChildren().get(2);
+		return (Shape3D) bodyParts.getChildren().get(2);
 	}
 
 	public void setSkullColor(Color color) {
@@ -101,22 +119,13 @@ public class Pac3D extends Creature3D<Pac> {
 		palate().setMaterial(new PhongMaterial(color));
 	}
 
-	public void reset() {
-		setScaleX(1.05);
-		setScaleY(1.05);
-		setScaleZ(1.05);
-		setRotate(turnAngle(guy.moveDir()));
-		setSkullColor(skullColor);
-		update();
-	}
-
 	public Animation dyingAnimation(Color ghostColor, boolean silent) {
-		var spin = new RotateTransition(Duration.seconds(0.2), this);
+		var spin = new RotateTransition(Duration.seconds(0.2), bodyParts);
 		spin.setAxis(Rotate.Z_AXIS);
 		spin.setByAngle(360);
 		spin.setCycleCount(10);
 
-		var shrink = new ScaleTransition(Duration.seconds(2), this);
+		var shrink = new ScaleTransition(Duration.seconds(2), bodyParts);
 		shrink.setToX(0);
 		shrink.setToY(0);
 		shrink.setToZ(0);
