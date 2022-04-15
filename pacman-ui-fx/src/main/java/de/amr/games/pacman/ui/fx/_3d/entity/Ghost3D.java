@@ -63,10 +63,10 @@ public class Ghost3D extends Group {
 	private DisplayMode displayMode;
 	private Color frightenedColor = Color.CORNFLOWERBLUE;
 
-	public Ghost3D(Ghost ghost, PacManModel3D model3D, Rendering2D r2D) {
+	public Ghost3D(Ghost ghost, PacManModel3D model3D, Rendering2D r2D, Color eyeBallColor, Color pupilColor) {
 		this.ghost = ghost;
 		this.r2D = r2D;
-		bodyParts = model3D.createGhost(r2D.getGhostColor(ghost.id), Color.WHITE, Color.BLACK);
+		bodyParts = model3D.createGhost(r2D.getGhostColor(ghost.id), eyeBallColor, pupilColor);
 		motion = new Creature3DMotion<Ghost>(ghost, this);
 		getChildren().addAll(bodyParts, numberCube);
 		reset();

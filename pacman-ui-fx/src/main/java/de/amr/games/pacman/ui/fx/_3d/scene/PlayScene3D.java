@@ -76,6 +76,11 @@ public class PlayScene3D extends GameScene {
 	private final Image floorTexture = U.image("/common/escher-texture.jpg");
 	private final Color floorColorWithTexture = Color.DARKBLUE;
 	private final Color floorColorNoTexture = Color.rgb(30, 30, 30);
+	private final Color playerSkinColor = Color.YELLOW;
+	private final Color playerEyesColor = Color.rgb(33, 33, 33);
+	private final Color playerPalateColor = Color.CORAL;
+	private final Color ghostEyeBallColor = Color.GHOSTWHITE;
+	private final Color ghostPupilColor = Color.rgb(33, 33, 255);
 	private final CoordinateSystem coordSystem;
 
 	private CameraController camController;
@@ -112,8 +117,9 @@ public class PlayScene3D extends GameScene {
 				r2D.getGhostHouseDoorColor(game.mazeNumber));
 		maze3D.createFood(game.world, r2D.getFoodColor(game.mazeNumber));
 
-		player3D = new Pac3D(game.player, model3D, Color.YELLOW, Color.rgb(20, 20, 20), Color.CORAL);
-		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D)).toArray(Ghost3D[]::new);
+		player3D = new Pac3D(game.player, model3D, playerSkinColor, playerEyesColor, playerPalateColor);
+		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D, ghostEyeBallColor, ghostPupilColor))
+				.toArray(Ghost3D[]::new);
 		bonus3D = new Bonus3D(r2D);
 
 		score3D = new Score3D();
