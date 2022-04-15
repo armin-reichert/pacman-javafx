@@ -33,6 +33,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
 import de.amr.games.pacman.controller.event.GameEvent;
+import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
@@ -46,15 +47,16 @@ import de.amr.games.pacman.ui.fx.scene.GameScenes;
 import de.amr.games.pacman.ui.fx.shell.info.InfoLayer;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.U;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 /**
  * JavaFX implementation of the Pac-Man game UI.
@@ -69,7 +71,7 @@ public class GameUI extends DefaultGameEventHandler {
 	public final GameController gc;
 	public final Stage stage;
 
-	private final StackPane mainSceneRoot;
+	private final StackPane sceneRoot;
 	private final GameScenes gameScenes;
 	private final InfoLayer infoLayer;
 	private final Background[] wallpapers = { //
@@ -82,35 +84,31 @@ public class GameUI extends DefaultGameEventHandler {
 
 	public GameUI(GameController gc, Stage stage, double width, double height) {
 		this.gc = gc;
+		this.gc.addGameEventListener(this);
 		this.stage = stage;
 		this.infoLayer = new InfoLayer(this);
 
-		// first child will be updated by subscene assigned to current game scene
-		mainSceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
-		var mainScene = new Scene(mainSceneRoot, width, height);
-		stage.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPressed);
-		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> GameLoop.get().stop());
+		// first child is placeholder for subscene assigned to current game scene
+		sceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
+		Env.$drawMode3D.addListener(($drawMode, _old, _new) -> sceneRoot.setBackground(getBackground(currentGameScene)));
+
+		var scene = new Scene(sceneRoot, width, height);
+		scene.setOnKeyPressed(this::handleKeyPressed);
+		scene.setOnMouseClicked(this::handleMouseClicked);
+		stage.setScene(scene);
+
+		// init game scene (must happen *after* setting scene)
+		gameScenes = new GameScenes(scene, gc, GianmarcosModel3D.get(), LOGICAL_SCENE_SIZE);
+		selectGameScene();
+
 		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
-		stage.setScene(mainScene);
-
-		gc.addGameEventListener(this);
-		Env.$drawMode3D.addListener(
-				($drawMode, oldDrawMode, newDrawMode) -> mainSceneRoot.setBackground(getBackground(currentGameScene)));
-
-		SoundManager.get().selectGameVariant(gc.gameVariant);
-
-		gameScenes = new GameScenes(mainScene, gc, GianmarcosModel3D.get(), LOGICAL_SCENE_SIZE);
+		stage.setOnCloseRequest(e -> GameLoop.get().stop());
+		stage.centerOnScreen();
+		stage.show();
 	}
 
 	public GameScene getCurrentGameScene() {
 		return currentGameScene;
-	}
-
-	public void show(boolean fullscreen) {
-		selectGameScene();
-		stage.setFullScreen(fullscreen);
-		stage.centerOnScreen();
-		stage.show();
 	}
 
 	/**
@@ -149,11 +147,11 @@ public class GameUI extends DefaultGameEventHandler {
 			case PACMAN -> newGameScene.setContext(gc.game, Rendering2D_PacMan.get());
 			default -> throw new IllegalStateException();
 			}
-			newGameScene.resize(stage.getScene().getHeight());
-			mainSceneRoot.setBackground(getBackground(newGameScene));
-			mainSceneRoot.getChildren().set(0, newGameScene.getFXSubScene());
-			SoundManager.get().stopAll();
 			SoundManager.get().selectGameVariant(gc.gameVariant);
+			SoundManager.get().stopAll();
+			newGameScene.resize(stage.getScene().getHeight());
+			sceneRoot.setBackground(getBackground(newGameScene));
+			sceneRoot.getChildren().set(0, newGameScene.getFXSubScene());
 			currentGameScene = newGameScene;
 			currentGameScene.init();
 			log("Game scene is now '%s'", currentGameScene.getClass());
@@ -171,6 +169,13 @@ public class GameUI extends DefaultGameEventHandler {
 	private Background getBackground(GameScene gameScene) {
 		return gameScene.is3D() ? Env.$drawMode3D.get() == DrawMode.LINE ? U.colorBackground(Color.BLACK) : nextWallpaper()
 				: U.colorBackground(Color.CORNFLOWERBLUE);
+	}
+
+	private void handleMouseClicked(MouseEvent e) {
+		Node node = e.getPickResult().getIntersectedNode();
+		if (node != null) {
+			Logging.log("Picked node %s", node);
+		}
 	}
 
 	@SuppressWarnings("incomplete-switch")

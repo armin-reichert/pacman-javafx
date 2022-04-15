@@ -28,7 +28,6 @@ import static de.amr.games.pacman.lib.Logging.log;
 import java.io.IOException;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.controller.PlayerControl;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
@@ -75,20 +74,23 @@ public class PacManGameAppFX extends Application {
 	}
 
 	@Override
-	public void start(Stage primaryStage) throws IOException {
+	public void start(Stage stage) throws IOException {
 		log("Starting application...");
-		PlayerControl keyboardControl = new KeyboardPlayerControl(primaryStage);
-		gameController.setPlayerControl(keyboardControl);
+
 		var width = options.windowHeight * 0.77; // 28/36
 		var height = options.windowHeight;
-		ui = new GameUI(gameController, primaryStage, width, height);
-		ui.show(options.fullscreen);
+		ui = new GameUI(gameController, stage, width, height);
+		ui.stage.setFullScreen(options.fullscreen);
+
+		gameController.setPlayerControl(new KeyboardPlayerControl(stage));
 		SoundManager.get().setMuted(options.muted);
+
 		GameLoop.get().update = ui::update;
 		GameLoop.get().render = ui::render;
 		GameLoop.get().setTargetFrameRate(60);
 		GameLoop.get().setTimeMeasured(false);
 		GameLoop.get().start();
+
 		log("Application started. Stage size: w=%.0f h=%.0f, 3D: %s, camera perspective: %s", ui.stage.getWidth(),
 				ui.stage.getHeight(), Env.$3D.get(), Env.$perspective.get());
 	}
