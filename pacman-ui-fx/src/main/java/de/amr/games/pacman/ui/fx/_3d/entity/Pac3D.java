@@ -29,6 +29,7 @@ import static de.amr.games.pacman.ui.fx.util.U.now;
 
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.GameSound;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.animation.FillTransition3D;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -60,14 +61,14 @@ public class Pac3D extends Group {
 	private final Group bodyParts;
 	private final Creature3DMotion<Pac> motion;
 	private final PointLight light = new PointLight(Color.WHITE);
+	private final Rendering2D r2D;
 
 	private Color skullColorImpaled = Color.GHOSTWHITE;
-	private Color skullColor;
 
-	public Pac3D(Pac player, PacManModel3D model3D, Color skullColor, Color eyesColor, Color palateColor) {
+	public Pac3D(Pac player, PacManModel3D model3D, Rendering2D r2D) {
 		this.player = player;
-		this.skullColor = skullColor;
-		bodyParts = model3D.createPacMan(skullColor, eyesColor, palateColor);
+		this.r2D = r2D;
+		bodyParts = model3D.createPacMan(r2D.getPlayerSkullColor(), r2D.getPlayerEyesColor(), r2D.getPlayerPalateColor());
 		motion = new Creature3DMotion<Pac>(player, this);
 		light.setTranslateZ(-HTS);
 		getChildren().addAll(bodyParts, light);
@@ -94,7 +95,7 @@ public class Pac3D extends Group {
 		bodyParts.setScaleX(1.05);
 		bodyParts.setScaleY(1.05);
 		bodyParts.setScaleZ(1.05);
-		setSkullColor(skullColor);
+		setShapeColor(skull(), r2D.getPlayerSkullColor());
 		update();
 	}
 
@@ -116,19 +117,6 @@ public class Pac3D extends Group {
 		return (Shape3D) bodyParts.getChildren().get(2);
 	}
 
-	public void setSkullColor(Color color) {
-		skullColor = color;
-		skull().setMaterial(new PhongMaterial(color));
-	}
-
-	public void setEyesColor(Color color) {
-		eyes().setMaterial(new PhongMaterial(color));
-	}
-
-	public void setPalateColor(Color color) {
-		palate().setMaterial(new PhongMaterial(color));
-	}
-
 	public Animation dyingAnimation(Color ghostColor, boolean silent) {
 		var spin = new RotateTransition(Duration.seconds(0.2), bodyParts);
 		spin.setAxis(Rotate.Z_AXIS);
@@ -145,8 +133,14 @@ public class Pac3D extends Group {
 				: new ParallelTransition(spin, shrink, now(() -> SoundManager.get().play(GameSound.PACMAN_DEATH)));
 
 		return new SequentialTransition( //
-				new FillTransition3D(Duration.seconds(1), skull(), skullColor, ghostColor), //
+				new FillTransition3D(Duration.seconds(1), skull(), r2D.getPlayerSkullColor(), ghostColor), //
 				new FillTransition3D(Duration.seconds(1), skull(), ghostColor, skullColorImpaled), //
 				spinAndShrink);
+	}
+
+	private void setShapeColor(Shape3D shape, Color diffuseColor) {
+		PhongMaterial material = new PhongMaterial(diffuseColor);
+		material.setSpecularColor(diffuseColor.brighter());
+		shape.setMaterial(material);
 	}
 }

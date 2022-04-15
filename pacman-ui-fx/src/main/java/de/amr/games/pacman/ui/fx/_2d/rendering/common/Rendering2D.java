@@ -78,6 +78,18 @@ public abstract class Rendering2D {
 		return ss;
 	}
 
+	public Color getPlayerSkullColor() {
+		return Color.YELLOW;
+	}
+
+	public Color getPlayerEyesColor() {
+		return Color.rgb(33, 33, 33);
+	}
+
+	public Color getPlayerPalateColor() {
+		return Color.CORAL;
+	}
+
 	/**
 	 * @param ghostID 0=Blinky, 1=Pinky, 2=Inky, 3=Clyde/Sue
 	 * @return color of ghost
