@@ -88,17 +88,7 @@ public class Ghost3D extends Group {
 
 	public void update() {
 		if (ghost.bounty > 0) {
-			if (displayMode != DisplayMode.NUMBER_CUBE) {
-				Image texture = r2D.spritesheet().extractRegion(r2D.getBountyNumberSprite(ghost.bounty));
-				PhongMaterial material = new PhongMaterial();
-				material.setBumpMap(texture);
-				material.setDiffuseMap(texture);
-				numberCube.setMaterial(material);
-				// rotate such that number appears in right orientation
-				setRotationAxis(Rotate.X_AXIS);
-				setRotate(0);
-				changeDisplayMode(DisplayMode.NUMBER_CUBE);
-			}
+			changeDisplayMode(DisplayMode.NUMBER_CUBE);
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
 			changeDisplayMode(DisplayMode.EYES_ONLY);
 			motion.update();
@@ -142,25 +132,34 @@ public class Ghost3D extends Group {
 	}
 
 	private void changeDisplayMode(DisplayMode newMode) {
-		if (displayMode != newMode) {
-			displayMode = newMode;
-			switch (displayMode) {
-			case COMPLETE_BODY -> {
-				numberCube.setVisible(false);
-				skin().setVisible(true);
-				eyes().setVisible(true);
-			}
-			case EYES_ONLY -> {
-				numberCube.setVisible(false);
-				skin().setVisible(false);
-				eyes().setVisible(true);
-			}
-			case NUMBER_CUBE -> {
-				numberCube.setVisible(true);
-				skin().setVisible(false);
-				eyes().setVisible(false);
-			}
-			}
+		if (displayMode == newMode) {
+			return;
+		}
+		displayMode = newMode;
+		switch (displayMode) {
+		case COMPLETE_BODY -> {
+			numberCube.setVisible(false);
+			skin().setVisible(true);
+			eyes().setVisible(true);
+		}
+		case EYES_ONLY -> {
+			numberCube.setVisible(false);
+			skin().setVisible(false);
+			eyes().setVisible(true);
+		}
+		case NUMBER_CUBE -> {
+			Image texture = r2D.spritesheet().extractRegion(r2D.getBountyNumberSprite(ghost.bounty));
+			PhongMaterial material = new PhongMaterial();
+			material.setBumpMap(texture);
+			material.setDiffuseMap(texture);
+			numberCube.setMaterial(material);
+			// rotate such that number appears in right orientation
+			setRotationAxis(Rotate.X_AXIS);
+			setRotate(0);
+			numberCube.setVisible(true);
+			skin().setVisible(false);
+			eyes().setVisible(false);
+		}
 		}
 	}
 
