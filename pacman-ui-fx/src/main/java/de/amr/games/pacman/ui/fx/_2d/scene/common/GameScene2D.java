@@ -27,8 +27,11 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
 import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.util.U;
@@ -44,13 +47,16 @@ import javafx.scene.transform.Scale;
  * 
  * @author Armin Reichert
  */
-public abstract class GameScene2D extends GameScene {
+public abstract class GameScene2D extends DefaultGameEventHandler implements GameScene {
 
+	protected final GameController gc;
 	protected final SubScene fxSubScene;
 	protected final Canvas canvas;
 	protected final V2i unscaledSize;
 	protected final double aspectRatio;
 
+	protected GameModel game;
+	protected Rendering2D r2D;
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
 
@@ -59,7 +65,7 @@ public abstract class GameScene2D extends GameScene {
 	 * @param unscaledSize logical scene size (number of tiles x tile size)
 	 */
 	public GameScene2D(GameController gc, V2i unscaledSize) {
-		super(gc);
+		this.gc = gc;
 		this.unscaledSize = unscaledSize;
 		this.aspectRatio = (double) unscaledSize.x / unscaledSize.y;
 		this.canvas = new Canvas();
@@ -68,6 +74,12 @@ public abstract class GameScene2D extends GameScene {
 		fxSubScene = new SubScene(root, unscaledSize.x, unscaledSize.y);
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
+	}
+
+	@Override
+	public void setContext(GameModel game, Rendering2D r2d) {
+		this.game = game;
+		this.r2D = r2d;
 	}
 
 	@Override

@@ -31,12 +31,15 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
 import de.amr.games.pacman.controller.event.GameEvent;
 import de.amr.games.pacman.controller.event.GameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.GameSound;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.LevelCounter3D;
@@ -68,8 +71,9 @@ import javafx.scene.transform.Translate;
  * 
  * @author Armin Reichert
  */
-public class PlayScene3D extends GameScene {
+public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
+	private final GameController gc;
 	private final SubScene fxSubScene;
 	private final PacManModel3D model3D;
 	private final AmbientLight light = new AmbientLight(Color.GHOSTWHITE);
@@ -78,6 +82,8 @@ public class PlayScene3D extends GameScene {
 	private final Color floorColorNoTexture = Color.rgb(30, 30, 30);
 	private final PlaySceneCamera camera = new PlaySceneCamera();
 
+	private GameModel game;
+	private Rendering2D r2D;
 	private Pac3D player3D;
 	private Maze3D maze3D;
 	private Ghost3D[] ghosts3D;
@@ -87,7 +93,7 @@ public class PlayScene3D extends GameScene {
 	private LivesCounter3D livesCounter3D;
 
 	public PlayScene3D(GameController gc, PacManModel3D model3D) {
-		super(gc);
+		this.gc = gc;
 		this.model3D = model3D;
 		var axes = new CoordinateAxes(1000);
 		axes.visibleProperty().bind(Env.$axesVisible);
@@ -108,6 +114,16 @@ public class PlayScene3D extends GameScene {
 
 	public PlaySceneCamera getCamera() {
 		return camera;
+	}
+
+	@Override
+	public void setContext(GameModel game, Rendering2D r2d) {
+		this.game = game;
+		this.r2D = r2d;
+	}
+
+	@Override
+	public void resize(double height) {
 	}
 
 	@Override

@@ -25,43 +25,34 @@ package de.amr.games.pacman.ui.fx.scene;
 
 import static de.amr.games.pacman.lib.Logging.log;
 
-import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
+import de.amr.games.pacman.controller.event.GameEventListener;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.SubScene;
 
 /**
- * Base class for all game scenes (2D and 3D).
+ * Common interface of all game scenes (2D and 3D).
  * 
  * @author Armin Reichert
  */
-public abstract class GameScene extends DefaultGameEventHandler {
-
-	protected final GameController gc;
-	protected GameModel game;
-	protected Rendering2D r2D;
-
-	public GameScene(GameController gc) {
-		this.gc = gc;
-	}
+public interface GameScene extends GameEventListener {
 
 	/**
 	 * Called before scene is displayed.
 	 */
-	public void init() {
+	default void init() {
 		log("Scene '%s' init", getClass().getName());
 	}
 
 	/**
 	 * Called on every tick.
 	 */
-	public abstract void update();
+	void update();
 
 	/**
 	 * Called before scene ends.
 	 */
-	public void end() {
+	default void end() {
 		log("Scene '%s' end", getClass().getName());
 	}
 
@@ -71,26 +62,22 @@ public abstract class GameScene extends DefaultGameEventHandler {
 	 * @param game the game model
 	 * @param r2D  the 2D rendering
 	 */
-	public void setContext(GameModel game, Rendering2D r2D) {
-		this.game = game;
-		this.r2D = r2D;
-	}
+	void setContext(GameModel game, Rendering2D r2D);
 
 	/**
 	 * @return the JavaFX subscene associated with this game scene
 	 */
-	public abstract SubScene getFXSubScene();
+	SubScene getFXSubScene();
 
 	/**
 	 * Resizes the associated FX subscene to the given height.
 	 * 
 	 * @param height height in pixels
 	 */
-	public void resize(double height) {
-	}
+	void resize(double height);
 
 	/**
 	 * @return if this is a 3D scene
 	 */
-	public abstract boolean is3D();
+	boolean is3D();
 }
