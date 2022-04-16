@@ -39,7 +39,6 @@ import javafx.scene.SubScene;
 public abstract class GameScene extends DefaultGameEventHandler {
 
 	protected final GameController gc;
-	protected SubScene fxSubScene;
 	protected GameModel game;
 	protected Rendering2D r2D;
 
@@ -80,9 +79,7 @@ public abstract class GameScene extends DefaultGameEventHandler {
 	/**
 	 * @return the JavaFX subscene associated with this game scene
 	 */
-	public SubScene getFXSubScene() {
-		return fxSubScene;
-	}
+	public abstract SubScene getFXSubScene();
 
 	/**
 	 * Resizes the associated FX subscene to the given height.

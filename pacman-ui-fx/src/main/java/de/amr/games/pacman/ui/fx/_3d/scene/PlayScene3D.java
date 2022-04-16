@@ -48,7 +48,7 @@ import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.util.CoordinateSystem;
+import de.amr.games.pacman.ui.fx.util.CoordinateAxes;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
@@ -70,11 +70,13 @@ import javafx.scene.transform.Translate;
  */
 public class PlayScene3D extends GameScene {
 
+	private final SubScene fxSubScene;
 	private final PacManModel3D model3D;
+	private final AmbientLight light = new AmbientLight(Color.GHOSTWHITE);
 	private final Image floorTexture = U.image("/common/escher-texture.jpg");
 	private final Color floorColorWithTexture = Color.DARKBLUE;
 	private final Color floorColorNoTexture = Color.rgb(30, 30, 30);
-	private final PlaySceneCamera camera;
+	private final PlaySceneCamera camera = new PlaySceneCamera();
 
 	private Pac3D player3D;
 	private Maze3D maze3D;
@@ -87,12 +89,21 @@ public class PlayScene3D extends GameScene {
 	public PlayScene3D(GameController gc, PacManModel3D model3D) {
 		super(gc);
 		this.model3D = model3D;
-		fxSubScene = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
-		camera = new PlaySceneCamera();
+		var axes = new CoordinateAxes(1000);
+		axes.visibleProperty().bind(Env.$axesVisible);
+		// first child is placeholder for scene content
+		var root = new Group(new Group(), axes, light);
+		// width and height of subscene are defined using data binding
+		fxSubScene = new SubScene(root, 1, 1, true, SceneAntialiasing.BALANCED);
 		fxSubScene.setCamera(camera);
 		fxSubScene.setOnKeyPressed(camera::onKeyPressed);
 		Env.$perspective.addListener(this::onPerspectiveChange);
 		Env.$useMazeFloorTexture.addListener(this::onUseMazeFloorTextureChange);
+	}
+
+	@Override
+	public SubScene getFXSubScene() {
+		return fxSubScene;
 	}
 
 	public PlaySceneCamera getCamera() {
@@ -133,9 +144,8 @@ public class PlayScene3D extends GameScene {
 		world3D.getChildren().addAll(ghosts3D);
 		world3D.getTransforms().add(new Translate(-width / 2, -height / 2)); // center at origin
 
-		var coordSystem = new CoordinateSystem(1000);
-		coordSystem.visibleProperty().bind(Env.$axesVisible);
-		fxSubScene.setRoot(new Group(new AmbientLight(Color.GHOSTWHITE), world3D, coordSystem));
+		Group root = (Group) fxSubScene.getRoot();
+		root.getChildren().set(0, world3D);
 
 		onPerspectiveChange(null, null, Env.$perspective.get());
 		onUseMazeFloorTextureChange(null, null, Env.$useMazeFloorTexture.getValue());

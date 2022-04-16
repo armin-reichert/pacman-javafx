@@ -46,6 +46,7 @@ import javafx.scene.transform.Scale;
  */
 public abstract class GameScene2D extends GameScene {
 
+	protected final SubScene fxSubScene;
 	protected final Canvas canvas;
 	protected final V2i unscaledSize;
 	protected final double aspectRatio;
@@ -67,6 +68,11 @@ public abstract class GameScene2D extends GameScene {
 		fxSubScene = new SubScene(root, unscaledSize.x, unscaledSize.y);
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
+	}
+
+	@Override
+	public SubScene getFXSubScene() {
+		return fxSubScene;
 	}
 
 	public Canvas getCanvas() {

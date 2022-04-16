@@ -35,9 +35,9 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class CoordinateSystem extends Group {
+public class CoordinateAxes extends Group {
 
-	public CoordinateSystem(double axisLength) {
+	public CoordinateAxes(double axisLength) {
 		Sphere origin = new Sphere(1);
 		origin.setMaterial(new PhongMaterial(Color.CHOCOLATE));
 
