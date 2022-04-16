@@ -76,7 +76,6 @@ public class PlayScene3D extends GameScene {
 	private final Image floorTexture = U.image("/common/escher-texture.jpg");
 	private final Color floorColorWithTexture = Color.DARKBLUE;
 	private final Color floorColorNoTexture = Color.rgb(30, 30, 30);
-	private final CoordinateSystem coordSystem;
 
 	private CameraController camController;
 	private Pac3D player3D;
@@ -92,8 +91,6 @@ public class PlayScene3D extends GameScene {
 		this.model3D = model3D;
 		fxSubScene = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
 		fxSubScene.setCamera(new PerspectiveCamera(true));
-		coordSystem = new CoordinateSystem(1000);
-		coordSystem.visibleProperty().bind(Env.$axesVisible);
 		Env.$perspective.addListener(this::onPerspectiveChange);
 		Env.$useMazeFloorTexture.addListener(this::onUseMazeFloorTextureChange);
 	}
@@ -136,6 +133,8 @@ public class PlayScene3D extends GameScene {
 		world3D.getChildren().addAll(ghosts3D);
 		world3D.getTransforms().add(new Translate(-width / 2, -height / 2)); // center at origin
 
+		var coordSystem = new CoordinateSystem(1000);
+		coordSystem.visibleProperty().bind(Env.$axesVisible);
 		fxSubScene.setRoot(new Group(new AmbientLight(Color.GHOSTWHITE), world3D, coordSystem));
 
 		onPerspectiveChange(null, null, Env.$perspective.get());
@@ -148,8 +147,7 @@ public class PlayScene3D extends GameScene {
 
 	@Override
 	public void end() {
-		maze3D.$wallHeight.unbind();
-		maze3D.$resolution.unbind();
+		// Note: property bindings are garbage collected, no need to explicitly unbind them here
 		maze3D.$resolution.removeListener(this::onMazeResolutionChange);
 	}
 
