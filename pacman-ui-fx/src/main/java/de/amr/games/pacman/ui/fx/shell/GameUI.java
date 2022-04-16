@@ -35,8 +35,6 @@ import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
 import de.amr.games.pacman.controller.event.GameEvent;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
-import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
@@ -142,20 +140,16 @@ public class GameUI extends DefaultGameEventHandler {
 	private void selectGameScene() {
 		var newGameScene = gameScenes.getScene(Env.$3D.get() ? GameScenes.SCENE_3D : GameScenes.SCENE_2D);
 		if (newGameScene != currentGameScene) {
+			SoundManager.get().stopAll();
+			SoundManager.get().selectGameVariant(gc.gameVariant);
 			if (currentGameScene != null) {
 				currentGameScene.end();
 			}
-			switch (gc.gameVariant) {
-			case MS_PACMAN -> newGameScene.setContext(gc.game, Rendering2D_MsPacMan.get());
-			case PACMAN -> newGameScene.setContext(gc.game, Rendering2D_PacMan.get());
-			default -> throw new IllegalStateException();
-			}
-			SoundManager.get().stopAll();
-			SoundManager.get().selectGameVariant(gc.gameVariant);
-			newGameScene.resize(stage.getScene().getHeight());
+			currentGameScene = newGameScene;
 			sceneRoot.setBackground(getBackground(newGameScene));
 			sceneRoot.getChildren().set(0, newGameScene.getFXSubScene());
-			currentGameScene = newGameScene;
+			currentGameScene.resize(stage.getScene().getHeight());
+			currentGameScene.initGameContext();
 			currentGameScene.init();
 			log("Game scene is now '%s'", currentGameScene.getClass());
 		}

@@ -40,6 +40,8 @@ import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.GameSound;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.LevelCounter3D;
@@ -117,9 +119,12 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	}
 
 	@Override
-	public void setContext(GameModel game, Rendering2D r2d) {
-		this.game = game;
-		this.r2D = r2d;
+	public void initGameContext() {
+		game = gc.game;
+		r2D = switch (gc.gameVariant) {
+		case MS_PACMAN -> Rendering2D_MsPacMan.get();
+		case PACMAN -> Rendering2D_PacMan.get();
+		};
 	}
 
 	@Override

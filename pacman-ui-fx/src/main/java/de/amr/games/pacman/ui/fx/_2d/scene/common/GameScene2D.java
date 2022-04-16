@@ -32,6 +32,8 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.util.U;
@@ -77,9 +79,12 @@ public abstract class GameScene2D extends DefaultGameEventHandler implements Gam
 	}
 
 	@Override
-	public void setContext(GameModel game, Rendering2D r2d) {
-		this.game = game;
-		this.r2D = r2d;
+	public void initGameContext() {
+		game = gc.game;
+		r2D = switch (gc.gameVariant) {
+		case MS_PACMAN -> Rendering2D_MsPacMan.get();
+		case PACMAN -> Rendering2D_PacMan.get();
+		};
 	}
 
 	@Override

@@ -26,8 +26,6 @@ package de.amr.games.pacman.ui.fx.scene;
 import static de.amr.games.pacman.lib.Logging.log;
 
 import de.amr.games.pacman.controller.event.GameEventListener;
-import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.SubScene;
 
 /**
@@ -57,12 +55,9 @@ public interface GameScene extends GameEventListener {
 	}
 
 	/**
-	 * Sets the context for the current scene.
-	 * 
-	 * @param game the game model
-	 * @param r2D  the 2D rendering
+	 * Sets the game context (model, rendering).
 	 */
-	void setContext(GameModel game, Rendering2D r2D);
+	void initGameContext();
 
 	/**
 	 * @return the JavaFX subscene associated with this game scene
