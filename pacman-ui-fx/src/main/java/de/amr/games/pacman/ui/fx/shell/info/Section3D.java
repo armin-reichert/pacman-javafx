@@ -52,7 +52,7 @@ public class Section3D extends Section {
 		comboPerspective = addComboBox("Perspective", Perspective.values());
 		comboPerspective.setOnAction(e -> Env.$perspective.set(comboPerspective.getValue()));
 		comboResolution = addComboBox("Maze resolution", 1, 2, 4, 8);
-		addInfo("Camera", () -> ((PlayScene3D) ui.getCurrentGameScene()).getCamController().info())
+		addInfo("Camera", () -> ((PlayScene3D) ui.getCurrentGameScene()).getCamController().transformInfo())
 				.when(() -> ui.getCurrentGameScene().is3D());
 		comboResolution.setOnAction(e -> Env.$mazeResolution.set(comboResolution.getValue()));
 		sliderWallHeight = addSlider("Maze wall height", 0, 10, 8);

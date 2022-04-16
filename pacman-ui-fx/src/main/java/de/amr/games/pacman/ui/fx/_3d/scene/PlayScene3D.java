@@ -55,9 +55,7 @@ import javafx.animation.SequentialTransition;
 import javafx.beans.Observable;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.AmbientLight;
-import javafx.scene.Camera;
 import javafx.scene.Group;
-import javafx.scene.PerspectiveCamera;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
@@ -76,8 +74,8 @@ public class PlayScene3D extends GameScene {
 	private final Image floorTexture = U.image("/common/escher-texture.jpg");
 	private final Color floorColorWithTexture = Color.DARKBLUE;
 	private final Color floorColorNoTexture = Color.rgb(30, 30, 30);
+	private final PlaySceneCamera camera;
 
-	private CameraController camController;
 	private Pac3D player3D;
 	private Maze3D maze3D;
 	private Ghost3D[] ghosts3D;
@@ -90,13 +88,15 @@ public class PlayScene3D extends GameScene {
 		super(gc);
 		this.model3D = model3D;
 		fxSubScene = new SubScene(new Group(), 1, 1, true, SceneAntialiasing.BALANCED);
-		fxSubScene.setCamera(new PerspectiveCamera(true));
+		camera = new PlaySceneCamera();
+		fxSubScene.setCamera(camera);
+		fxSubScene.setOnKeyPressed(camera::onKeyPressed);
 		Env.$perspective.addListener(this::onPerspectiveChange);
 		Env.$useMazeFloorTexture.addListener(this::onUseMazeFloorTextureChange);
 	}
 
-	public CameraController getCamController() {
-		return camController;
+	public PlaySceneCamera getCamController() {
+		return camera;
 	}
 
 	@Override
@@ -159,7 +159,7 @@ public class PlayScene3D extends GameScene {
 		bonus3D.update(game.bonus);
 		score3D.update(game.score, game.levelNumber, game.highscorePoints, game.highscoreLevel);
 		livesCounter3D.update(game.player.lives);
-		camController.update();
+		camera.update(player3D);
 
 		// keep in sync with 2D scene in case user toggles between 2D and 3D
 		maze3D.pellets().forEach(pellet -> pellet.setVisible(!game.world.isFoodEaten(pellet.tile)));
@@ -190,20 +190,12 @@ public class PlayScene3D extends GameScene {
 	}
 
 	public void setPerspective(Perspective perspective) {
-		Camera cam = fxSubScene.getCamera();
-		camController = switch (perspective) {
-		case CAM_DRONE -> new Cam_Drone(cam, player3D);
-		case CAM_FOLLOWING_PLAYER -> new Cam_FollowingPlayer(cam, player3D);
-		case CAM_NEAR_PLAYER -> new Cam_NearPlayer(cam, player3D);
-		case CAM_TOTAL -> new Cam_Total(cam);
-		};
-		camController.reset();
-		fxSubScene.setOnKeyPressed(camController);
+		camera.setPerspective(perspective);
 		fxSubScene.requestFocus();
 		if (score3D != null) {
 			// keep the score in plain sight
-			score3D.rotationAxisProperty().bind(camController.cam().rotationAxisProperty());
-			score3D.rotateProperty().bind(camController.cam().rotateProperty());
+			score3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
+			score3D.rotateProperty().bind(camera.rotateProperty());
 		}
 	}
 

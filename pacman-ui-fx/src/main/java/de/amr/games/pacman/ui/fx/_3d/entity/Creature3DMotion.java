@@ -59,7 +59,7 @@ public class Creature3DMotion<CREATURE extends Creature> {
 	public void update() {
 		root.setTranslateX(guy.position.x + HTS);
 		root.setTranslateY(guy.position.y + HTS);
-		root.setTranslateZ(-HTS);
+		root.setTranslateZ(-HTS - 1);
 		if (targetDir != guy.moveDir()) {
 			int[] angles = angles(targetDir, guy.moveDir());
 			turningAnimation.setFromAngle(angles[0]);
