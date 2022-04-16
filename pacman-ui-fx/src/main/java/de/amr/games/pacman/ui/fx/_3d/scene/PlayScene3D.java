@@ -104,8 +104,7 @@ public class PlayScene3D extends GameScene {
 
 	@Override
 	public void init() {
-		final int width = game.world.numCols() * TS;
-		final int height = game.world.numRows() * TS;
+		int width = game.world.numCols() * TS, height = game.world.numRows() * TS;
 
 		maze3D = new Maze3D(width, height);
 		maze3D.createWallsAndDoors(game.world, //
@@ -145,7 +144,6 @@ public class PlayScene3D extends GameScene {
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
 		maze3D.$resolution.addListener(this::onMazeResolutionChange);
-
 	}
 
 	@Override
