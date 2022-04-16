@@ -88,16 +88,16 @@ public class Ghost3D extends Group {
 
 	public void update() {
 		if (ghost.bounty > 0) {
-			changeDisplayMode(DisplayMode.NUMBER_CUBE);
+			enterDisplayMode(DisplayMode.NUMBER_CUBE);
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
-			changeDisplayMode(DisplayMode.EYES_ONLY);
+			enterDisplayMode(DisplayMode.EYES_ONLY);
 			motion.update();
 		} else {
-			changeDisplayMode(DisplayMode.COMPLETE_BODY);
+			enterDisplayMode(DisplayMode.COMPLETE_BODY);
 			motion.update();
 		}
 		boolean insideWorld = ghost.position.x >= 0 && ghost.position.x <= t(ghost.world.numCols() - 1);
-		bodyParts.setVisible(insideWorld && ghost.visible);
+		bodyParts.setVisible(ghost.visible && insideWorld);
 	}
 
 	public Shape3D skin() {
@@ -131,7 +131,7 @@ public class Ghost3D extends Group {
 		}
 	}
 
-	private void changeDisplayMode(DisplayMode newMode) {
+	private void enterDisplayMode(DisplayMode newMode) {
 		if (displayMode == newMode) {
 			return;
 		}
