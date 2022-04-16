@@ -160,9 +160,12 @@ public class PlayScene3D extends GameScene {
 		score3D.update(game.score, game.levelNumber, game.highscorePoints, game.highscoreLevel);
 		livesCounter3D.update(game.player.lives);
 		camera.update(player3D);
+		if (SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying() && game.player.starvingTicks > 10) {
+			SoundManager.get().stop(GameSound.PACMAN_MUNCH);
+		}
+	}
 
-		// keep in sync with 2D scene in case user toggles between 2D and 3D
-		// TODO find a better way
+	public void onSwitchFrom2DScene() {
 		if (game.player.powerTimer.isRunning()) {
 			Stream.of(ghosts3D) //
 					.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
@@ -173,9 +176,8 @@ public class PlayScene3D extends GameScene {
 		if (gc.state == GameState.HUNTING || gc.state == GameState.GHOST_DYING) {
 			maze3D.energizerAnimations().forEach(Animation::play);
 		}
-
-		if (SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying() && game.player.starvingTicks > 10) {
-			SoundManager.get().stop(GameSound.PACMAN_MUNCH);
+		if (game.player.powerTimer.isRunning() && !SoundManager.get().getClip(GameSound.PACMAN_POWER).isPlaying()) {
+			SoundManager.get().loop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
 		}
 		if (!gc.attractMode && gc.state == GameState.HUNTING && !SoundManager.get().isAnySirenPlaying()
 				&& !game.player.powerTimer.isRunning()) {
@@ -246,6 +248,9 @@ public class PlayScene3D extends GameScene {
 		Stream.of(ghosts3D) //
 				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED)) //
 				.forEach(Ghost3D::playFlashingAnimation);
+		if (!gc.attractMode) {
+			SoundManager.get().startSiren(game.huntingPhase / 2);
+		}
 	}
 
 	@Override
@@ -302,6 +307,11 @@ public class PlayScene3D extends GameScene {
 		if (game.ghosts(GhostState.DEAD).count() == 0) {
 			SoundManager.get().stop(GameSound.GHOST_RETURNING);
 		}
+	}
+
+	@Override
+	public void onGhostLeavingHouse(GameEvent e) {
+		e.ghost.ifPresent(ghost -> ghosts3D[ghost.id].setNormalLook());
 	}
 
 	@Override

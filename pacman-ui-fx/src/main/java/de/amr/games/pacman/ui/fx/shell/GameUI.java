@@ -41,6 +41,7 @@ import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import de.amr.games.pacman.ui.fx._3d.model.GianmarcosModel3D;
+import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -323,7 +324,9 @@ public class GameUI extends DefaultGameEventHandler {
 			SoundManager.get().stopAll();
 			selectGameScene();
 			if (currentGameScene instanceof PlayScene2D) {
-				((PlayScene2D) currentGameScene).onSwitchBetween2DAnd3D();
+				((PlayScene2D) currentGameScene).onSwitchFrom3DScene();
+			} else if (currentGameScene instanceof PlayScene3D) {
+				((PlayScene3D) currentGameScene).onSwitchFrom2DScene();
 			}
 		}
 		showFlashMessage(1, Env.message(Env.$3D.get() ? "use_3D_scene" : "use_2D_scene"));

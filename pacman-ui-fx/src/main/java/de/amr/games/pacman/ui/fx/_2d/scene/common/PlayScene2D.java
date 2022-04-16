@@ -132,7 +132,7 @@ public class PlayScene2D extends GameScene2D {
 		}
 	}
 
-	public void onSwitchBetween2DAnd3D() {
+	public void onSwitchFrom3DScene() {
 		player2D.visible = game.player.visible;
 		for (Ghost2D ghost2D : ghosts2D) {
 			ghost2D.visible = ghost2D.ghost.visible;
