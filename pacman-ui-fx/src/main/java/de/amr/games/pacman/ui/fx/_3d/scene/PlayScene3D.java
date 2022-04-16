@@ -95,7 +95,7 @@ public class PlayScene3D extends GameScene {
 		Env.$useMazeFloorTexture.addListener(this::onUseMazeFloorTextureChange);
 	}
 
-	public PlaySceneCamera getCamController() {
+	public PlaySceneCamera getCamera() {
 		return camera;
 	}
 
