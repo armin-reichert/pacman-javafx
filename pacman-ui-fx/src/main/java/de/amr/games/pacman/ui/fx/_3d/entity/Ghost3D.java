@@ -58,15 +58,13 @@ public class Ghost3D extends Group {
 	private final Box numberCube = new Box(8, 8, 8);
 	private final Creature3DMotion<Ghost> motion;
 	private final Rendering2D r2D;
-	private final ColorFlashingTransition skinFlashing;
+	private ColorFlashingTransition skinFlashing;
 
 	private DisplayMode displayMode;
 
 	public Ghost3D(Ghost ghost, PacManModel3D model3D, Rendering2D r2D) {
 		this.ghost = ghost;
 		this.r2D = r2D;
-
-		skinFlashing = new ColorFlashingTransition(r2D.getGhostSkinColorFrightened(), r2D.getGhostSkinColorFrightened2());
 
 		bodyParts = model3D.createGhost(r2D.getGhostSkinColor(ghost.id), r2D.getGhostEyeBallColor(),
 				r2D.getGhostPupilColor());
@@ -82,7 +80,7 @@ public class Ghost3D extends Group {
 	}
 
 	public void reset() {
-		setNormalColor();
+		setNormalLook();
 		update();
 	}
 
@@ -164,30 +162,39 @@ public class Ghost3D extends Group {
 	}
 
 	public void playFlashingAnimation() {
+		skinFlashing = new ColorFlashingTransition(r2D.getGhostSkinColorFrightened(), r2D.getGhostSkinColorFrightened2());
 		skin().setMaterial(skinFlashing.getMaterial());
 		skinFlashing.playFromStart();
 	}
 
-	public void playRevivalAnimation() {
-		new FadeInTransition3D(Duration.seconds(1.5), skin(), r2D.getGhostSkinColor(ghost.id)).playFromStart();
+	private void stopFlashingAnimation() {
+		if (skinFlashing != null) {
+			skinFlashing.stop();
+		}
 	}
 
-	public void setNormalColor() {
+	public void playRevivalAnimation() {
+		var animation = new FadeInTransition3D(Duration.seconds(1.5), skin(), r2D.getGhostSkinColor(ghost.id));
+		animation.setOnFinished(e -> setNormalLook());
+		animation.playFromStart();
+	}
+
+	public void setNormalLook() {
+		stopFlashingAnimation();
 		setShapeColor(skin(), r2D.getGhostSkinColor(ghost.id));
 		setShapeColor(eyeBalls(), r2D.getGhostEyeBallColor());
 		setShapeColor(pupils(), r2D.getGhostPupilColor());
-		skinFlashing.stop();
 	}
 
-	public void setFrightenedColor() {
+	public void setFrightenedLook() {
+		stopFlashingAnimation();
 		setShapeColor(skin(), r2D.getGhostSkinColorFrightened());
 		setShapeColor(eyeBalls(), r2D.getGhostEyeBallColorFrightened());
 		setShapeColor(pupils(), r2D.getGhostPupilColorFrightened());
-		skinFlashing.stop();
 	}
 
 	private void setShapeColor(Shape3D shape, Color diffuseColor) {
-		PhongMaterial material = new PhongMaterial(diffuseColor);
+		var material = new PhongMaterial(diffuseColor);
 		material.setSpecularColor(diffuseColor.brighter());
 		shape.setMaterial(material);
 	}

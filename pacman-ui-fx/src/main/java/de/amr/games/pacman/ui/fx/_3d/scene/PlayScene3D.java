@@ -242,7 +242,7 @@ public class PlayScene3D extends GameScene {
 		}
 		Stream.of(ghosts3D) //
 				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
-				.forEach(Ghost3D::setFrightenedColor);
+				.forEach(Ghost3D::setFrightenedLook);
 	}
 
 	@Override
@@ -255,7 +255,7 @@ public class PlayScene3D extends GameScene {
 	@Override
 	public void onPlayerLostPower(GameEvent e) {
 		SoundManager.get().stop(GameSound.PACMAN_POWER);
-		Stream.of(ghosts3D).forEach(Ghost3D::setNormalColor);
+		Stream.of(ghosts3D).forEach(Ghost3D::setNormalLook);
 	}
 
 	@Override
@@ -332,7 +332,7 @@ public class PlayScene3D extends GameScene {
 		}
 		case PACMAN_DYING -> {
 			SoundManager.get().stopAll();
-			Stream.of(ghosts3D).forEach(Ghost3D::setNormalColor);
+			Stream.of(ghosts3D).forEach(Ghost3D::setNormalLook);
 			Color killerColor = r2D.getGhostSkinColor(
 					Stream.of(game.ghosts).filter(ghost -> ghost.tile().equals(game.player.tile())).findAny().get().id);
 			new SequentialTransition( //
@@ -361,7 +361,7 @@ public class PlayScene3D extends GameScene {
 			U.afterSec(3, () -> gc.stateTimer().expire()).play();
 		}
 		case LEVEL_COMPLETE -> {
-			Stream.of(ghosts3D).forEach(Ghost3D::setNormalColor);
+			Stream.of(ghosts3D).forEach(Ghost3D::setNormalLook);
 			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game.levelNumber);
 			new SequentialTransition( //
 					U.pause(2.0), //

@@ -44,7 +44,7 @@ public class ColorFlashingTransition extends Transition {
 		this.colorStart = colorStart;
 		this.colorEnd = colorEnd;
 		setCycleCount(INDEFINITE);
-		setCycleDuration(Duration.seconds(0.1));
+		setCycleDuration(Duration.seconds(0.2));
 		setAutoReverse(true);
 	}
 
