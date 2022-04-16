@@ -59,6 +59,7 @@ public class Ghost3D extends Group {
 	private final Creature3DMotion<Ghost> motion;
 	private final Rendering2D r2D;
 	private ColorFlashingTransition skinFlashing;
+	private boolean looksFrightened;
 
 	private DisplayMode displayMode;
 
@@ -179,11 +180,16 @@ public class Ghost3D extends Group {
 		animation.playFromStart();
 	}
 
+	public boolean isLooksFrightened() {
+		return looksFrightened;
+	}
+
 	public void setNormalLook() {
 		stopFlashingAnimation();
 		setShapeColor(skin(), r2D.getGhostSkinColor(ghost.id));
 		setShapeColor(eyeBalls(), r2D.getGhostEyeBallColor());
 		setShapeColor(pupils(), r2D.getGhostPupilColor());
+		looksFrightened = false;
 	}
 
 	public void setFrightenedLook() {
@@ -191,6 +197,7 @@ public class Ghost3D extends Group {
 		setShapeColor(skin(), r2D.getGhostSkinColorFrightened());
 		setShapeColor(eyeBalls(), r2D.getGhostEyeBallColorFrightened());
 		setShapeColor(pupils(), r2D.getGhostPupilColorFrightened());
+		looksFrightened = true;
 	}
 
 	private void setShapeColor(Shape3D shape, Color diffuseColor) {

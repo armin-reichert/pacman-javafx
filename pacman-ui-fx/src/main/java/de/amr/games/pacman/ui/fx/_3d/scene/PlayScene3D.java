@@ -162,10 +162,18 @@ public class PlayScene3D extends GameScene {
 		camera.update(player3D);
 
 		// keep in sync with 2D scene in case user toggles between 2D and 3D
+		// TODO find a better way
+		if (game.player.powerTimer.isRunning()) {
+			Stream.of(ghosts3D) //
+					.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
+					.filter(ghost3D -> !ghost3D.isLooksFrightened()) //
+					.forEach(Ghost3D::setFrightenedLook);
+		}
 		maze3D.pellets().forEach(pellet -> pellet.setVisible(!game.world.isFoodEaten(pellet.tile)));
 		if (gc.state == GameState.HUNTING || gc.state == GameState.GHOST_DYING) {
 			maze3D.energizerAnimations().forEach(Animation::play);
 		}
+
 		if (SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying() && game.player.starvingTicks > 10) {
 			SoundManager.get().stop(GameSound.PACMAN_MUNCH);
 		}
