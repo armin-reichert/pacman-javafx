@@ -98,9 +98,9 @@ public class GameUI extends DefaultGameEventHandler {
 		scene.setOnMouseClicked(this::handleMouseClicked);
 		stage.setScene(scene);
 
-		// init game scene (must happen *after* setting scene)
 		SoundManager.get().selectGameVariant(gc.gameVariant);
 		gameScenes = new GameScenes(scene, gc, GianmarcosModel3D.get(), LOGICAL_SCENE_SIZE);
+		// init game scene (must happen *after* setting scene)
 		selectGameScene();
 
 		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
@@ -161,15 +161,18 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	public Background nextWallpaper() {
-		int currentWallpaperIndex = wallpaperIndex;
-		do {
-			wallpaperIndex = new Random().nextInt(wallpapers.length);
-		} while (wallpaperIndex == currentWallpaperIndex);
+		if (wallpapers.length > 1) {
+			int oldIndex = wallpaperIndex;
+			do {
+				wallpaperIndex = new Random().nextInt(wallpapers.length);
+			} while (wallpaperIndex == oldIndex);
+		}
 		return wallpapers[wallpaperIndex];
 	}
 
 	private Background getBackground(GameScene gameScene) {
-		return gameScene.is3D() ? Env.$drawMode3D.get() == DrawMode.LINE ? U.colorBackground(Color.BLACK) : nextWallpaper()
+		return gameScene.is3D() //
+				? Env.$drawMode3D.get() == DrawMode.LINE ? U.colorBackground(Color.BLACK) : nextWallpaper()
 				: U.colorBackground(Color.CORNFLOWERBLUE);
 	}
 

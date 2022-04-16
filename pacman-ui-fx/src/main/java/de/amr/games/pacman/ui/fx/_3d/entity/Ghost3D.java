@@ -74,8 +74,11 @@ public class Ghost3D extends Group {
 		motion = new Creature3DMotion<Ghost>(ghost, this);
 		getChildren().addAll(bodyParts, numberCube);
 		reset();
+
 		skin().setUserData(this);
 		eyes().setUserData(this);
+		eyeBalls().setUserData(this);
+		pupils().setUserData(this);
 	}
 
 	public void reset() {
@@ -107,16 +110,6 @@ public class Ghost3D extends Group {
 		bodyParts.setVisible(insideWorld && ghost.visible);
 	}
 
-	public String identifyNode(Node node) {
-		if (node == eyes()) {
-			return String.format("eyes of %s", ghost);
-		} else if (node == skin()) {
-			return String.format("skin of %s", ghost);
-		} else {
-			return String.format("part of %s", ghost);
-		}
-	}
-
 	public Shape3D skin() {
 		return (Shape3D) bodyParts.getChildren().get(0);
 	}
@@ -134,6 +127,18 @@ public class Ghost3D extends Group {
 
 	private Shape3D eyeBalls() {
 		return (Shape3D) eyes().getChildren().get(1);
+	}
+
+	public String identifyNode(Node node) {
+		if (node == eyeBalls()) {
+			return String.format("eyeballs of %s", ghost);
+		} else if (node == pupils()) {
+			return String.format("pupils of %s", ghost);
+		} else if (node == skin()) {
+			return String.format("skin of %s", ghost);
+		} else {
+			return String.format("part of %s", ghost);
+		}
 	}
 
 	private void changeDisplayMode(DisplayMode newMode) {

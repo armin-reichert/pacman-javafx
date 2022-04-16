@@ -82,21 +82,20 @@ public class GianmarcosModel3D implements PacManModel3D {
 	@Override
 	public Group createGhost(Color skinColor, Color eyeBallColor, Color pupilColor) {
 		MeshView skin = ghostModel.createMeshView("Sphere.004_Sphere.034_light_blue_ghost");
+		skin.setMaterial(new PhongMaterial(skinColor));
+
 		MeshView eyeBalls = ghostModel.createMeshView("Sphere.009_Sphere.036_white");
+		eyeBalls.setMaterial(new PhongMaterial(eyeBallColor));
+
 		MeshView pupils = ghostModel.createMeshView("Sphere.010_Sphere.039_grey_wall");
+		pupils.setMaterial(new PhongMaterial(pupilColor));
+
 		Group eyes = new Group(pupils, eyeBalls);
 		Group ghost = new Group(skin, eyes);
-
 		centerOverOrigin(skin, eyes);
 		scale(ghost, 8);
 		ghost.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-
-		skin.setMaterial(new PhongMaterial(skinColor));
-		eyeBalls.setMaterial(new PhongMaterial(eyeBallColor));
-		pupils.setMaterial(new PhongMaterial(pupilColor));
-
 		bindDrawMode(Env.$drawMode3D, skin, eyeBalls, pupils);
-
 		return ghost;
 	}
 }
