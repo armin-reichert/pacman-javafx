@@ -173,8 +173,8 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		Group root = (Group) fxSubScene.getRoot();
 		root.getChildren().set(0, world3D);
 
-		onPerspectiveChange(null, null, Env.$perspective.get());
-		onUseMazeFloorTextureChange(null, null, Env.$useMazeFloorTexture.getValue());
+		setPerspective(Env.$perspective.get());
+		setUseMazeFloorTexture(Env.$useMazeFloorTexture.get());
 
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
@@ -246,7 +246,11 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	}
 
 	private void onUseMazeFloorTextureChange(Observable $useMazeFloorTexture, Boolean oldValue, Boolean newValue) {
-		if (newValue) {
+		setUseMazeFloorTexture(newValue);
+	}
+
+	private void setUseMazeFloorTexture(Boolean use) {
+		if (use) {
 			maze3D.getFloor().setTexture(floorTexture);
 			maze3D.getFloor().setColor(floorColorWithTexture);
 		} else {
