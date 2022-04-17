@@ -79,7 +79,7 @@ public abstract class GameScene2D extends DefaultGameEventHandler implements Gam
 	}
 
 	@Override
-	public void initGameContext() {
+	public void setContext() {
 		game = gc.game;
 		r2D = switch (gc.gameVariant) {
 		case MS_PACMAN -> Rendering2D_MsPacMan.get();

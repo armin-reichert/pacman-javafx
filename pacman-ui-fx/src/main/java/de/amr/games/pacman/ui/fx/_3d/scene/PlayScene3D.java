@@ -35,6 +35,7 @@ import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
 import de.amr.games.pacman.controller.event.GameEvent;
 import de.amr.games.pacman.controller.event.GameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
+import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
@@ -101,7 +102,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		axes.visibleProperty().bind(Env.$axesVisible);
 		// first child is placeholder for scene content
 		var root = new Group(new Group(), axes, light);
-		// width and height of subscene are defined using data binding
+		// width and height of subscene are defined using data binding, see class GameScenes
 		fxSubScene = new SubScene(root, 1, 1, true, SceneAntialiasing.BALANCED);
 		fxSubScene.setCamera(camera);
 		fxSubScene.setOnKeyPressed(camera::onKeyPressed);
@@ -119,7 +120,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	}
 
 	@Override
-	public void initGameContext() {
+	public void setContext() {
 		game = gc.game;
 		r2D = switch (gc.gameVariant) {
 		case MS_PACMAN -> Rendering2D_MsPacMan.get();
@@ -129,13 +130,14 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 	@Override
 	public void resize(double height) {
+		// data binding does the job
 	}
 
 	@Override
 	public void init() {
-		int width = game.world.numCols() * TS, height = game.world.numRows() * TS;
+		V2i size = new V2i(game.world.numCols(), game.world.numRows()).scaled(TS);
 
-		maze3D = new Maze3D(width, height);
+		maze3D = new Maze3D(size.x, size.y);
 		maze3D.createWallsAndDoors(game.world, //
 				r2D.getMazeSideColor(game.mazeNumber), //
 				r2D.getMazeTopColor(game.mazeNumber), //
@@ -148,22 +150,25 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 		score3D = new Score3D();
 		score3D.setFont(r2D.getArcadeFont());
-		score3D.setComputeScoreText(!gc.attractMode);
 		if (gc.attractMode) {
+			score3D.setComputeScoreText(false);
 			score3D.txtScore.setFill(Color.RED);
 			score3D.txtScore.setText("GAME OVER!");
+		} else {
+			score3D.setComputeScoreText(true);
 		}
 
 		livesCounter3D = new LivesCounter3D(model3D);
 		livesCounter3D.getTransforms().add(new Translate(TS, TS, -HTS));
 		livesCounter3D.setVisible(!gc.attractMode);
 
-		levelCounter3D = new LevelCounter3D(r2D, width - TS, TS);
+		levelCounter3D = new LevelCounter3D(r2D, size.x - TS, TS);
 		levelCounter3D.update(game);
 
 		var world3D = new Group(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
 		world3D.getChildren().addAll(ghosts3D);
-		world3D.getTransforms().add(new Translate(-width / 2, -height / 2)); // center at origin
+		world3D.setTranslateX(-size.x / 2);
+		world3D.setTranslateY(-size.y / 2);
 
 		Group root = (Group) fxSubScene.getRoot();
 		root.getChildren().set(0, world3D);

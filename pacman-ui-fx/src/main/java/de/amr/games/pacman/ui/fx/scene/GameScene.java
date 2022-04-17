@@ -36,6 +36,11 @@ import javafx.scene.SubScene;
 public interface GameScene extends GameEventListener {
 
 	/**
+	 * Sets the scene context (game model, rendering).
+	 */
+	void setContext();
+
+	/**
 	 * Called before scene is displayed.
 	 */
 	default void init() {
@@ -53,11 +58,6 @@ public interface GameScene extends GameEventListener {
 	default void end() {
 		log("Scene '%s' end", getClass().getName());
 	}
-
-	/**
-	 * Sets the game context (model, rendering).
-	 */
-	void initGameContext();
 
 	/**
 	 * @return the JavaFX subscene associated with this game scene
