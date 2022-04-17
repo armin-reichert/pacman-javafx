@@ -57,7 +57,8 @@ import de.amr.games.pacman.ui.fx.util.CoordinateAxes;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
-import javafx.beans.Observable;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
@@ -83,6 +84,8 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	private final Color floorColorWithTexture = Color.DARKBLUE;
 	private final Color floorColorNoTexture = Color.rgb(30, 30, 30);
 	private final PlaySceneCamera camera = new PlaySceneCamera();
+	private final SimpleObjectProperty<Perspective> $perspective = new SimpleObjectProperty<>();
+	private final SimpleBooleanProperty $useMazeFloorTexture = new SimpleBooleanProperty();
 
 	private GameModel game;
 	private Rendering2D r2D;
@@ -97,16 +100,21 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	public PlayScene3D(GameController gc, PacManModel3D model3D) {
 		this.gc = gc;
 		this.model3D = model3D;
+
 		var axes = new CoordinateAxes(1000);
 		axes.visibleProperty().bind(Env.$axesVisible);
+
 		// first child is placeholder for scene content
 		var root = new Group(new Group(), axes, light);
 		// width and height of subscene are defined using data binding, see class GameScenes
 		fxSubScene = new SubScene(root, 1, 1, true, SceneAntialiasing.BALANCED);
 		fxSubScene.setCamera(camera);
 		fxSubScene.setOnKeyPressed(camera::onKeyPressed);
-		Env.$perspective.addListener(this::onPerspectiveChange);
-		Env.$useMazeFloorTexture.addListener(this::onUseMazeFloorTextureChange);
+
+		$perspective.bind(Env.$perspective);
+		$perspective.addListener(($perspective, oldPerspective, newPerspective) -> changePerspective(newPerspective));
+		$useMazeFloorTexture.bind(Env.$useMazeFloorTexture);
+		$useMazeFloorTexture.addListener(($useMazeFloorTexture, oldValue, newValue) -> setUseMazeFloorTexture(newValue));
 	}
 
 	@Override
@@ -137,14 +145,14 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		V2i size = new V2i(game.world.numCols(), game.world.numRows()).scaled(TS);
 
 		maze3D = new Maze3D(size.x, size.y);
+		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
+		maze3D.$resolution.bind(Env.$mazeResolution);
+		maze3D.$resolution.addListener(this::onMazeResolutionChange);
 		maze3D.createWallsAndDoors(game.world, //
 				r2D.getMazeSideColor(game.mazeNumber), //
 				r2D.getMazeTopColor(game.mazeNumber), //
 				r2D.getGhostHouseDoorColor(game.mazeNumber));
 		maze3D.createFood(game.world, r2D.getFoodColor(game.mazeNumber));
-		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
-		maze3D.$resolution.bind(Env.$mazeResolution);
-		maze3D.$resolution.addListener(this::onMazeResolutionChange);
 
 		player3D = new Pac3D(game.player, model3D, r2D);
 		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D)).toArray(Ghost3D[]::new);
@@ -175,8 +183,8 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		Group root = (Group) fxSubScene.getRoot();
 		root.getChildren().set(0, world3D);
 
-		setPerspective(Env.$perspective.get());
-		setUseMazeFloorTexture(Env.$useMazeFloorTexture.get());
+		changePerspective($perspective.get());
+		setUseMazeFloorTexture($useMazeFloorTexture.get());
 	}
 
 	@Override
@@ -229,11 +237,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		}
 	}
 
-	private void onPerspectiveChange(Observable $perspective, Perspective oldPerspective, Perspective newPerspective) {
-		setPerspective(newPerspective);
-	}
-
-	public void setPerspective(Perspective perspective) {
+	public void changePerspective(Perspective perspective) {
 		camera.setPerspective(perspective);
 		fxSubScene.requestFocus();
 		if (score3D != null) {
@@ -241,10 +245,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			score3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
 			score3D.rotateProperty().bind(camera.rotateProperty());
 		}
-	}
-
-	private void onUseMazeFloorTextureChange(Observable $useMazeFloorTexture, Boolean oldValue, Boolean newValue) {
-		setUseMazeFloorTexture(newValue);
 	}
 
 	private void setUseMazeFloorTexture(Boolean use) {
