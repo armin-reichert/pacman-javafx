@@ -124,7 +124,7 @@ public class PlaySceneCamera extends PerspectiveCamera {
 			if (shift) {
 				switch (key) {
 				case DOWN -> change(translateZProperty(), +10);
-				case UP -> change(translateZProperty(), +10);
+				case UP -> change(translateZProperty(), -10);
 				}
 			}
 		}
