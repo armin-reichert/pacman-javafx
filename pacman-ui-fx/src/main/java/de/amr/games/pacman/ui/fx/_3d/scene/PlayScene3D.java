@@ -401,10 +401,8 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 					r2D.getMazeTopColor(game.mazeNumber), //
 					r2D.getGhostHouseDoorColor(game.mazeNumber));
 			maze3D.createFood(game.world, r2D.getFoodColor(game.mazeNumber));
-//			maze3D.energizerAnimations().forEach(Animation::stop);
 			levelCounter3D.update(game);
-			var message = Env.message("level_starting", game.levelNumber);
-			showFlashMessage(1, message);
+			showFlashMessage(1, Env.message("level_starting", game.levelNumber));
 			U.afterSec(3, () -> gc.stateTimer().expire()).play();
 		}
 		case LEVEL_COMPLETE -> {
