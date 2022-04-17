@@ -130,6 +130,12 @@ public class SoundManager {
 		return sm.get(sound);
 	}
 
+	public void playIfOff(GameSound sound) {
+		if (!getClip(sound).isPlaying()) {
+			loop(sound, 1);
+		}
+	}
+
 	public void play(GameSound sound) {
 		loop(sound, 1);
 	}
