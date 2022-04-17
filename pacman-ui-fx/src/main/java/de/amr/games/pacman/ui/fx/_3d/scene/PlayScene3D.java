@@ -37,7 +37,6 @@ import de.amr.games.pacman.controller.event.GameStateChangeEvent;
 import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.GameSound;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -143,6 +142,9 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 				r2D.getMazeTopColor(game.mazeNumber), //
 				r2D.getGhostHouseDoorColor(game.mazeNumber));
 		maze3D.createFood(game.world, r2D.getFoodColor(game.mazeNumber));
+		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
+		maze3D.$resolution.bind(Env.$mazeResolution);
+		maze3D.$resolution.addListener(this::onMazeResolutionChange);
 
 		player3D = new Pac3D(game.player, model3D, r2D);
 		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D)).toArray(Ghost3D[]::new);
@@ -175,10 +177,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 		setPerspective(Env.$perspective.get());
 		setUseMazeFloorTexture(Env.$useMazeFloorTexture.get());
-
-		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
-		maze3D.$resolution.bind(Env.$mazeResolution);
-		maze3D.$resolution.addListener(this::onMazeResolutionChange);
 	}
 
 	@Override
@@ -302,13 +300,18 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	@Override
 	public void onPlayerFoundFood(GameEvent e) {
 		// when cheat "eat all pellets" is used, no tile is present
-		e.tile.ifPresent(tile -> {
+		if (!e.tile.isPresent()) {
+			game.world.tiles().filter(game.world::isFoodEaten)
+					.forEach(tile -> maze3D.pelletAt(tile).ifPresent(maze3D::hidePellet));
+		} else {
+			V2i tile = e.tile.get();
 			maze3D.pelletAt(tile).ifPresent(maze3D::hidePellet);
 			AudioClip munching = SoundManager.get().getClip(GameSound.PACMAN_MUNCH);
 			if (!munching.isPlaying() && !gc.attractMode) {
 				SoundManager.get().loop(GameSound.PACMAN_MUNCH, Animation.INDEFINITE);
 			}
-		});
+		}
+		;
 	}
 
 	@Override
@@ -356,8 +359,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 	@Override
 	public void onGhostRevived(GameEvent e) {
-		Ghost ghost = e.ghost.get();
-		ghosts3D[ghost.id].playRevivalAnimation();
+		e.ghost.ifPresent(ghost -> ghosts3D[ghost.id].playRevivalAnimation());
 	}
 
 	@SuppressWarnings("incomplete-switch")
@@ -379,11 +381,10 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		case PACMAN_DYING -> {
 			SoundManager.get().stopAll();
 			Stream.of(ghosts3D).forEach(Ghost3D::setNormalLook);
-			Color killerColor = r2D.getGhostSkinColor(
-					Stream.of(game.ghosts).filter(ghost -> ghost.tile().equals(game.player.tile())).findAny().get().id);
+			var killer = game.ghosts().filter(ghost -> ghost.tile().equals(game.player.tile())).findAny().get();
 			new SequentialTransition( //
 					U.afterSec(1.0, game::hideGhosts), //
-					player3D.dyingAnimation(killerColor, gc.attractMode), //
+					player3D.dyingAnimation(r2D.getGhostSkinColor(killer.id), gc.attractMode), //
 					U.afterSec(2.0, () -> gc.stateTimer().expire()) //
 			).play();
 		}
@@ -400,7 +401,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 					r2D.getMazeTopColor(game.mazeNumber), //
 					r2D.getGhostHouseDoorColor(game.mazeNumber));
 			maze3D.createFood(game.world, r2D.getFoodColor(game.mazeNumber));
-			maze3D.energizerAnimations().forEach(Animation::stop);
+//			maze3D.energizerAnimations().forEach(Animation::stop);
 			levelCounter3D.update(game);
 			var message = Env.message("level_starting", game.levelNumber);
 			showFlashMessage(1, message);
