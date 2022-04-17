@@ -212,7 +212,9 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void onGhostReturnsHome(GameEvent e) {
 		if (!gc.attractMode) {
-			SoundManager.get().play(GameSound.GHOST_RETURNING);
+			if (!SoundManager.get().getClip(GameSound.GHOST_RETURNING).isPlaying()) {
+				SoundManager.get().play(GameSound.GHOST_RETURNING);
+			}
 		}
 	}
 
