@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 import static de.amr.games.pacman.ui.fx.util.U.lerp;
 
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
+import javafx.beans.property.DoubleProperty;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -116,31 +117,26 @@ public class PlaySceneCamera extends PerspectiveCamera {
 	@SuppressWarnings("incomplete-switch")
 	public void onKeyPressed(KeyEvent e) {
 		KeyCode key = e.getCode();
-		boolean alt = e.isAltDown(), control = e.isControlDown(), shift = e.isShiftDown();
+		boolean control = e.isControlDown(), shift = e.isShiftDown();
+
 		switch (perspective) {
 		case CAM_DRONE -> {
-			if (alt) {
+			if (shift) {
 				switch (key) {
-				case PLUS -> setTranslateZ(getTranslateZ() + 10);
-				case MINUS -> setTranslateZ(getTranslateZ() - 10);
+				case DOWN -> change(translateZProperty(), +10);
+				case UP -> change(translateZProperty(), +10);
 				}
 			}
-		}
-		case CAM_FOLLOWING_PLAYER -> {
-			// no keyboard
-		}
-		case CAM_NEAR_PLAYER -> {
-			// no keyboard
 		}
 		case CAM_TOTAL -> {
 			if (!control && shift) {
 				switch (key) {
-				case LEFT -> setTranslateX(getTranslateX() - 10);
-				case RIGHT -> setTranslateX(getTranslateX() + 10);
-				case UP -> setTranslateY(getTranslateY() - 10);
-				case DOWN -> setTranslateY(getTranslateY() + 10);
-				case PLUS -> setTranslateZ(getTranslateZ() + 10);
-				case MINUS -> setTranslateZ(getTranslateZ() - 10);
+				case LEFT -> change(translateXProperty(), -10);
+				case RIGHT -> change(translateXProperty(), +10);
+				case MINUS -> change(translateYProperty(), -10);
+				case PLUS -> change(translateYProperty(), +10);
+				case UP -> change(translateZProperty(), -10);
+				case DOWN -> change(translateZProperty(), 10);
 				}
 			} else if (control && shift) {
 				switch (key) {
@@ -155,6 +151,16 @@ public class PlaySceneCamera extends PerspectiveCamera {
 				}
 			}
 		}
+		case CAM_FOLLOWING_PLAYER -> {
+			// no keyboard
 		}
+		case CAM_NEAR_PLAYER -> {
+			// no keyboard
+		}
+		}
+	}
+
+	private void change(DoubleProperty property, double delta) {
+		property.set(property.get() + delta);
 	}
 }
