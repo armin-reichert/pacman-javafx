@@ -61,6 +61,11 @@ public class Section3D extends Section {
 		cbUseFloorTexture = addCheckBox("Maze floor texture", () -> Env.toggle(Env.$useMazeFloorTexture));
 		cbAxesVisible = addCheckBox("Show axes", () -> Env.toggle(Env.$axesVisible));
 		cbWireframeMode = addCheckBox("Wireframe mode", ui::toggleDrawMode);
+		addInfo("Shift+LEFT / RIGHT", "Camera Left / Right").when(() -> Env.$perspective.get() == Perspective.CAM_TOTAL);
+		addInfo("Shift+UP / DOWN", "Camera Towards /Away").when(() -> Env.$perspective.get() == Perspective.CAM_TOTAL);
+		addInfo("Shift+PLUS / MINUS", "Zoom In / Out").when(() -> Env.$perspective.get() == Perspective.CAM_TOTAL);
+		addInfo("CTRL+Shift+UP / DOWN", "Rotate Towards / Away")
+				.when(() -> Env.$perspective.get() == Perspective.CAM_TOTAL);
 	}
 
 	@Override

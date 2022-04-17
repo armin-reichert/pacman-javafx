@@ -7,6 +7,7 @@ import static de.amr.games.pacman.ui.fx.util.U.lerp;
 
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import javafx.scene.PerspectiveCamera;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
 
@@ -114,10 +115,12 @@ public class PlaySceneCamera extends PerspectiveCamera {
 
 	@SuppressWarnings("incomplete-switch")
 	public void onKeyPressed(KeyEvent e) {
+		KeyCode key = e.getCode();
+		boolean alt = e.isAltDown(), control = e.isControlDown(), shift = e.isShiftDown();
 		switch (perspective) {
 		case CAM_DRONE -> {
-			if (e.isAltDown()) {
-				switch (e.getCode()) {
+			if (alt) {
+				switch (key) {
 				case PLUS -> setTranslateZ(getTranslateZ() + 10);
 				case MINUS -> setTranslateZ(getTranslateZ() - 10);
 				}
@@ -130,17 +133,17 @@ public class PlaySceneCamera extends PerspectiveCamera {
 			// no keyboard
 		}
 		case CAM_TOTAL -> {
-			if (e.isAltDown()) {
-				switch (e.getCode()) {
-				case LEFT -> setTranslateX(getTranslateX() + 10);
-				case RIGHT -> setTranslateX(getTranslateX() - 10);
-				case UP -> setTranslateY(getTranslateY() + 10);
-				case DOWN -> setTranslateY(getTranslateY() - 10);
+			if (!control && shift) {
+				switch (key) {
+				case LEFT -> setTranslateX(getTranslateX() - 10);
+				case RIGHT -> setTranslateX(getTranslateX() + 10);
+				case UP -> setTranslateY(getTranslateY() - 10);
+				case DOWN -> setTranslateY(getTranslateY() + 10);
 				case PLUS -> setTranslateZ(getTranslateZ() + 10);
 				case MINUS -> setTranslateZ(getTranslateZ() - 10);
 				}
-			} else if (e.isShiftDown()) {
-				switch (e.getCode()) {
+			} else if (control && shift) {
+				switch (key) {
 				case UP -> {
 					setRotationAxis(Rotate.X_AXIS);
 					setRotate((getRotate() - 1 + 360) % 360);

@@ -90,8 +90,7 @@ public class GameUI extends DefaultGameEventHandler {
 
 		// first child is placeholder for subscene assigned to current game scene
 		sceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
-		Env.$drawMode3D
-				.addListener(($drawMode, _old, _new) -> sceneRoot.setBackground(getBackground(currentGameScene)));
+		Env.$drawMode3D.addListener(($drawMode, _old, _new) -> sceneRoot.setBackground(getBackground(currentGameScene)));
 
 		var scene = new Scene(sceneRoot, width, height);
 		scene.setOnKeyPressed(this::handleKeyPressed);
@@ -174,6 +173,7 @@ public class GameUI extends DefaultGameEventHandler {
 
 	private void handleMouseClicked(MouseEvent e) {
 		identifyNode(e.getPickResult().getIntersectedNode());
+		currentGameScene.getFXSubScene().requestFocus();
 	}
 
 	private void identifyNode(Node node) {
