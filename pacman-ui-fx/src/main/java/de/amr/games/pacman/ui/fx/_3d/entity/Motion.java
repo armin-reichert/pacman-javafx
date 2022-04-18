@@ -47,7 +47,7 @@ public class Motion {
 		root.setTranslateY(guy.position.y + HTS);
 		root.setTranslateZ(-HTS);
 		if (targetDir != guy.moveDir()) {
-			int[] angles = angles(targetDir, guy.moveDir());
+			int[] angles = TURN_ANGLES[index(targetDir)][index(guy.moveDir())];
 			turningAnimation.setFromAngle(angles[0]);
 			turningAnimation.setToAngle(angles[1]);
 			turningAnimation.playFromStart();
@@ -65,9 +65,5 @@ public class Motion {
 		case UP -> 2;
 		case DOWN -> 3;
 		};
-	}
-
-	private int[] angles(Direction from, Direction to) {
-		return TURN_ANGLES[index(from)][index(to)];
 	}
 }
