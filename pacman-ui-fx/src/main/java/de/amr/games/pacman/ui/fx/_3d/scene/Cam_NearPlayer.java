@@ -49,10 +49,8 @@ public class Cam_NearPlayer extends PlaySceneCamera {
 
 	@Override
 	public void update(Pac3D player3D) {
-		double x = lerp(getTranslateX(), player3D.getTranslateX() - 110, speed);
-		double y = lerp(getTranslateY(), player3D.getTranslateY(), speed);
-		setTranslateX(x);
-		setTranslateY(y);
+		setTranslateX(lerp(getTranslateX(), player3D.getTranslateX() - 110, speed));
+		setTranslateY(lerp(getTranslateY(), player3D.getTranslateY(), speed));
 	}
 
 	@Override

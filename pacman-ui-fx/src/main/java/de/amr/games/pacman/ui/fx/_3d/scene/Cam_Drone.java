@@ -52,10 +52,8 @@ public class Cam_Drone extends PlaySceneCamera {
 
 	@Override
 	public void update(Pac3D player3D) {
-		double x = lerp(getTranslateX(), player3D.getTranslateX() - 100, speed);
-		double y = lerp(getTranslateY(), player3D.getTranslateY() - 150, speed);
-		setTranslateX(x);
-		setTranslateY(y);
+		setTranslateX(lerp(getTranslateX(), player3D.getTranslateX() - 100, speed));
+		setTranslateY(lerp(getTranslateY(), player3D.getTranslateY() - 150, speed));
 	}
 
 	@SuppressWarnings("incomplete-switch")
