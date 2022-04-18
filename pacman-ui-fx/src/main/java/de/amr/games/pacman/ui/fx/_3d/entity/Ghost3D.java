@@ -67,7 +67,7 @@ public class Ghost3D extends Group {
 		this.ghost = ghost;
 		this.r2D = r2D;
 
-		bodyParts = model3D.createGhost(r2D.getGhostSkinColor(ghost.id), r2D.getGhostEyeBallColor(),
+		bodyParts = model3D.createGhost(ghostify(r2D.getGhostSkinColor(ghost.id)), r2D.getGhostEyeBallColor(),
 				r2D.getGhostPupilColor());
 
 		motion = new Creature3DMotion<Ghost>(ghost, this);
@@ -175,7 +175,7 @@ public class Ghost3D extends Group {
 	}
 
 	public void playRevivalAnimation() {
-		var animation = new FadeInTransition3D(Duration.seconds(1.5), skin(), r2D.getGhostSkinColor(ghost.id));
+		var animation = new FadeInTransition3D(Duration.seconds(1.5), skin(), ghostify(r2D.getGhostSkinColor(ghost.id)));
 		animation.setOnFinished(e -> setNormalLook());
 		animation.playFromStart();
 	}
@@ -186,7 +186,7 @@ public class Ghost3D extends Group {
 
 	public void setNormalLook() {
 		stopFlashingAnimation();
-		setShapeColor(skin(), ghostyColor(r2D.getGhostSkinColor(ghost.id)));
+		setShapeColor(skin(), ghostify(r2D.getGhostSkinColor(ghost.id)));
 		setShapeColor(eyeBalls(), r2D.getGhostEyeBallColor());
 		setShapeColor(pupils(), r2D.getGhostPupilColor());
 		looksFrightened = false;
@@ -194,7 +194,7 @@ public class Ghost3D extends Group {
 
 	public void setFrightenedLook() {
 		stopFlashingAnimation();
-		setShapeColor(skin(), ghostyColor(r2D.getGhostSkinColorFrightened()));
+		setShapeColor(skin(), ghostify(r2D.getGhostSkinColorFrightened()));
 		setShapeColor(eyeBalls(), r2D.getGhostEyeBallColorFrightened());
 		setShapeColor(pupils(), r2D.getGhostPupilColorFrightened());
 		looksFrightened = true;
@@ -206,7 +206,7 @@ public class Ghost3D extends Group {
 		shape.setMaterial(material);
 	}
 
-	private Color ghostyColor(Color color) {
+	private Color ghostify(Color color) {
 		return Color.color(color.getRed(), color.getGreen(), color.getBlue(), 0.85);
 	}
 }
