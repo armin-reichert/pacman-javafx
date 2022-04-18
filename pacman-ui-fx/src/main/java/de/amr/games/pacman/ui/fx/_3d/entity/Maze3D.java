@@ -64,6 +64,9 @@ public class Maze3D extends Group {
 
 	private final MazeFloor3D floor;
 
+	private final double energizerRadius = 3.0;
+	private final double pelletRadius = 1.0;
+
 	/**
 	 * Creates the 3D-maze base structure (without walls, doors, food).
 	 * 
@@ -148,8 +151,11 @@ public class Maze3D extends Group {
 	public void createFood(World world, Color pelletColor) {
 		var material = new PhongMaterial(pelletColor);
 		pelletsGroup.getChildren().clear();
-		world.tiles().filter(world::isFoodTile)
-				.map(tile -> world.isEnergizerTile(tile) ? new Energizer3D(tile, material) : new Pellet3D(tile, material))
+		world.tiles() //
+				.filter(world::isFoodTile) //
+				.map(tile -> world.isEnergizerTile(tile) //
+						? new Energizer3D(tile, material, energizerRadius)
+						: new Pellet3D(tile, material, pelletRadius))
 				.forEach(pelletsGroup.getChildren()::add);
 	}
 

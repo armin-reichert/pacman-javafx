@@ -36,20 +36,18 @@ import javafx.util.Duration;
  */
 public class Energizer3D extends Pellet3D {
 
-	public final Animation animation;
+	public final ScaleTransition animation;
 
-	public Energizer3D(V2i tile, PhongMaterial material) {
-		super(tile, material);
-		setRadius(2.5);
-		var scaleTransition = new ScaleTransition(Duration.seconds(1.0 / 6), this);
-		scaleTransition.setAutoReverse(true);
-		scaleTransition.setCycleCount(Animation.INDEFINITE);
-		scaleTransition.setFromX(1.0);
-		scaleTransition.setFromY(1.0);
-		scaleTransition.setFromZ(1.0);
-		scaleTransition.setToX(0.1);
-		scaleTransition.setToY(0.1);
-		scaleTransition.setToZ(0.1);
-		animation = scaleTransition;
+	public Energizer3D(V2i tile, PhongMaterial material, double radius) {
+		super(tile, material, radius);
+		animation = new ScaleTransition(Duration.seconds(1.0 / 6), this);
+		animation.setAutoReverse(true);
+		animation.setCycleCount(Animation.INDEFINITE);
+		animation.setFromX(1.0);
+		animation.setFromY(1.0);
+		animation.setFromZ(1.0);
+		animation.setToX(0.1);
+		animation.setToY(0.1);
+		animation.setToZ(0.1);
 	}
 }

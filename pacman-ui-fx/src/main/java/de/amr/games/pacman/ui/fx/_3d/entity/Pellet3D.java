@@ -39,10 +39,10 @@ public class Pellet3D extends Sphere {
 
 	public final V2i tile;
 
-	public Pellet3D(V2i tile, PhongMaterial material) {
+	public Pellet3D(V2i tile, PhongMaterial material, double radius) {
 		this.tile = tile;
 		setMaterial(material);
-		setRadius(1.0);
+		setRadius(radius);
 		setTranslateX(tile.x * TS + HTS);
 		setTranslateY(tile.y * TS + HTS);
 		setTranslateZ(-3);
