@@ -27,6 +27,7 @@ import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.ui.fx.shell.FlashMessageView.showFlashMessage;
 
+import java.util.EnumMap;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.GameController;
@@ -83,9 +84,9 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	private final Image floorTexture = U.image("/common/escher-texture.jpg");
 	private final Color floorColorWithTexture = Color.DARKBLUE;
 	private final Color floorColorNoTexture = Color.rgb(30, 30, 30);
-	private final PlaySceneCamera camera = new PlaySceneCamera();
 	private final SimpleObjectProperty<Perspective> $perspective = new SimpleObjectProperty<>();
 	private final SimpleBooleanProperty $useMazeFloorTexture = new SimpleBooleanProperty();
+	private final EnumMap<Perspective, PlaySceneCamera> cameras = new EnumMap<>(Perspective.class);
 
 	private GameModel game;
 	private Rendering2D r2D;
@@ -101,6 +102,11 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		this.gc = gc;
 		this.model3D = model3D;
 
+		cameras.put(Perspective.CAM_DRONE, new Cam_Drone());
+		cameras.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer());
+		cameras.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer());
+		cameras.put(Perspective.CAM_TOTAL, new Cam_Total());
+
 		var axes = new CoordinateAxes(1000);
 		axes.visibleProperty().bind(Env.$axesVisible);
 
@@ -108,11 +114,9 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		var root = new Group(new Group(), axes, light);
 		// width and height of subscene are defined using data binding, see class GameScenes
 		fxSubScene = new SubScene(root, 1, 1, true, SceneAntialiasing.BALANCED);
-		fxSubScene.setCamera(camera);
-		fxSubScene.setOnKeyPressed(camera::onKeyPressed);
 
 		$perspective.bind(Env.$perspective);
-		$perspective.addListener(($perspective, oldPerspective, newPerspective) -> changePerspective(newPerspective));
+		$perspective.addListener(($perspective, oldPerspective, newPerspective) -> setCameraPerspective(newPerspective));
 		$useMazeFloorTexture.bind(Env.$useMazeFloorTexture);
 		$useMazeFloorTexture.addListener(($useMazeFloorTexture, oldValue, newValue) -> setUseMazeFloorTexture(newValue));
 	}
@@ -123,7 +127,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	}
 
 	public PlaySceneCamera getCamera() {
-		return camera;
+		return (PlaySceneCamera) fxSubScene.getCamera();
 	}
 
 	@Override
@@ -183,7 +187,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		Group root = (Group) fxSubScene.getRoot();
 		root.getChildren().set(0, world3D);
 
-		changePerspective($perspective.get());
+		setCameraPerspective($perspective.get());
 		setUseMazeFloorTexture($useMazeFloorTexture.get());
 	}
 
@@ -201,7 +205,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		bonus3D.update(game.bonus);
 		score3D.update(game.score, game.levelNumber, game.highscorePoints, game.highscoreLevel);
 		livesCounter3D.update(game.player.lives);
-		camera.update(player3D);
+		getCamera().update(player3D);
 		if (SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying() && game.player.starvingTicks > 10) {
 			SoundManager.get().stop(GameSound.PACMAN_MUNCH);
 		}
@@ -237,14 +241,17 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		}
 	}
 
-	public void changePerspective(Perspective perspective) {
-		camera.setPerspective(perspective);
+	private void setCameraPerspective(Perspective perspective) {
+		var camera = cameras.get(perspective);
+		fxSubScene.setCamera(camera);
+		fxSubScene.setOnKeyPressed(camera::onKeyPressed);
 		fxSubScene.requestFocus();
 		if (score3D != null) {
 			// keep the score in plain sight
 			score3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
 			score3D.rotateProperty().bind(camera.rotateProperty());
 		}
+		camera.reset();
 	}
 
 	private void setUseMazeFloorTexture(Boolean use) {
@@ -311,7 +318,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 				SoundManager.get().loop(GameSound.PACMAN_MUNCH, Animation.INDEFINITE);
 			}
 		}
-		;
 	}
 
 	@Override

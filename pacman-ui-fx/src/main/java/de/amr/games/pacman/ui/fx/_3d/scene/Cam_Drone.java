@@ -23,34 +23,51 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
+import static de.amr.games.pacman.ui.fx.util.U.lerp;
+
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
-import javafx.beans.property.DoubleProperty;
-import javafx.scene.PerspectiveCamera;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.transform.Rotate;
 
-/**
- * Cameras for the 3D play scene.
- * 
- * @author Armin Reichert
- */
-public abstract class PlaySceneCamera extends PerspectiveCamera {
+public class Cam_Drone extends PlaySceneCamera {
 
-	public static void change(DoubleProperty property, double delta) {
-		property.set(property.get() + delta);
+	private double speed = 0.005;
+
+	@Override
+	public String toString() {
+		return "Drone";
 	}
 
-	protected PlaySceneCamera() {
-		super(true);
+	@Override
+	public void reset() {
+		setNearClip(0.1);
+		setFarClip(10000.0);
+		setRotationAxis(Rotate.X_AXIS);
+		setRotate(0);
+		setTranslateX(0);
+		setTranslateY(0);
+		setTranslateZ(-400);
 	}
 
-	public String transformInfo() {
-		return String.format("x=%.0f y=%.0f z=%.0f rot=%.0f", getTranslateX(), getTranslateY(), getTranslateZ(),
-				getRotate());
+	@Override
+	public void update(Pac3D player3D) {
+		double x = lerp(getTranslateX(), player3D.getTranslateX() - 100, speed);
+		double y = lerp(getTranslateY(), player3D.getTranslateY() - 150, speed);
+		setTranslateX(x);
+		setTranslateY(y);
 	}
 
-	public abstract void reset();
-
-	public abstract void update(Pac3D player3D);
-
-	public abstract void onKeyPressed(KeyEvent e);
+	@SuppressWarnings("incomplete-switch")
+	@Override
+	public void onKeyPressed(KeyEvent e) {
+		KeyCode key = e.getCode();
+		boolean control = e.isControlDown(), shift = e.isShiftDown();
+		if (!control && shift) {
+			switch (key) {
+			case UP -> change(translateZProperty(), -10);
+			case DOWN -> change(translateZProperty(), 10);
+			}
+		}
+	}
 }
