@@ -45,6 +45,6 @@ public class Pellet3D extends Sphere {
 		setRadius(radius);
 		setTranslateX(tile.x * TS + HTS);
 		setTranslateY(tile.y * TS + HTS);
-		setTranslateZ(-3);
+		setTranslateZ(-HTS);
 	}
 }

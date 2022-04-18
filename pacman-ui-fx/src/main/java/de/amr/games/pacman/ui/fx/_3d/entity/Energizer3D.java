@@ -23,10 +23,14 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.model.common.world.World.HTS;
+import static de.amr.games.pacman.model.common.world.World.TS;
+
 import de.amr.games.pacman.lib.V2i;
 import javafx.animation.Animation;
 import javafx.animation.ScaleTransition;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
 
 /**
@@ -34,12 +38,18 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class Energizer3D extends Pellet3D {
+public class Energizer3D extends Sphere {
 
+	public final V2i tile;
 	public final ScaleTransition animation;
 
 	public Energizer3D(V2i tile, PhongMaterial material, double radius) {
-		super(tile, material, radius);
+		this.tile = tile;
+		setMaterial(material);
+		setRadius(radius);
+		setTranslateX(tile.x * TS + HTS);
+		setTranslateY(tile.y * TS + HTS);
+		setTranslateZ(-HTS);
 		animation = new ScaleTransition(Duration.seconds(1.0 / 6), this);
 		animation.setAutoReverse(true);
 		animation.setCycleCount(Animation.INDEFINITE);

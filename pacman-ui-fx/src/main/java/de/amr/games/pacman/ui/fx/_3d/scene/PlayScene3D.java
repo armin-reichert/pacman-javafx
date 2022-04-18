@@ -218,7 +218,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 					.filter(ghost3D -> !ghost3D.isLooksFrightened()) //
 					.forEach(Ghost3D::setFrightenedLook);
 		}
-		maze3D.pellets().forEach(pellet -> pellet.setVisible(!game.world.isFoodEaten(pellet.tile)));
+		maze3D.foodNodes().forEach(foodNode -> foodNode.setVisible(!game.world.isFoodEaten(maze3D.tile(foodNode))));
 		if (gc.state == GameState.HUNTING || gc.state == GameState.GHOST_DYING) {
 			maze3D.energizerAnimations().forEach(Animation::play);
 		}
@@ -309,10 +309,10 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		// when cheat "eat all pellets" is used, no tile is present
 		if (!e.tile.isPresent()) {
 			game.world.tiles().filter(game.world::isFoodEaten)
-					.forEach(tile -> maze3D.pelletAt(tile).ifPresent(maze3D::hidePellet));
+					.forEach(tile -> maze3D.foodAt(tile).ifPresent(maze3D::hideFood));
 		} else {
 			V2i tile = e.tile.get();
-			maze3D.pelletAt(tile).ifPresent(maze3D::hidePellet);
+			maze3D.foodAt(tile).ifPresent(maze3D::hideFood);
 			AudioClip munching = SoundManager.get().getClip(GameSound.PACMAN_MUNCH);
 			if (!munching.isPlaying() && !gc.attractMode) {
 				SoundManager.get().loop(GameSound.PACMAN_MUNCH, Animation.INDEFINITE);
