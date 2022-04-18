@@ -40,11 +40,10 @@ import javafx.util.Duration;
  */
 public class Energizer3D extends Sphere {
 
-	public final V2i tile;
 	public final ScaleTransition animation;
 
 	public Energizer3D(V2i tile, PhongMaterial material, double radius) {
-		this.tile = tile;
+		setUserData(tile);
 		setMaterial(material);
 		setRadius(radius);
 		setTranslateX(tile.x * TS + HTS);

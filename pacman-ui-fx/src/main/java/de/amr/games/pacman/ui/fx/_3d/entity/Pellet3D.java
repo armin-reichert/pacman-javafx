@@ -37,10 +37,8 @@ import javafx.scene.shape.Sphere;
  */
 public class Pellet3D extends Sphere {
 
-	public final V2i tile;
-
 	public Pellet3D(V2i tile, PhongMaterial material, double radius) {
-		this.tile = tile;
+		setUserData(tile);
 		setMaterial(material);
 		setRadius(radius);
 		setTranslateX(tile.x * TS + HTS);

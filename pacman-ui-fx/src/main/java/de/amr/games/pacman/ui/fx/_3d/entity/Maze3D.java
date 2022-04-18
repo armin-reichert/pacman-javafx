@@ -110,14 +110,8 @@ public class Maze3D extends Group {
 		return foodNodes().filter(food -> tile(food).equals(tile)).findFirst();
 	}
 
-	public V2i tile(Node food) {
-		if (food instanceof Pellet3D) {
-			return ((Pellet3D) food).tile;
-		} else if (food instanceof Energizer3D) {
-			return ((Energizer3D) food).tile;
-		} else {
-			return null;
-		}
+	public V2i tile(Node foodNode) {
+		return (V2i) foodNode.getUserData();
 	}
 
 	public Stream<Energizer3D> energizers() {
