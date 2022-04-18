@@ -186,7 +186,7 @@ public class Ghost3D extends Group {
 
 	public void setNormalLook() {
 		stopFlashingAnimation();
-		setShapeColor(skin(), r2D.getGhostSkinColor(ghost.id));
+		setShapeColor(skin(), ghostyColor(r2D.getGhostSkinColor(ghost.id)));
 		setShapeColor(eyeBalls(), r2D.getGhostEyeBallColor());
 		setShapeColor(pupils(), r2D.getGhostPupilColor());
 		looksFrightened = false;
@@ -194,7 +194,7 @@ public class Ghost3D extends Group {
 
 	public void setFrightenedLook() {
 		stopFlashingAnimation();
-		setShapeColor(skin(), r2D.getGhostSkinColorFrightened());
+		setShapeColor(skin(), ghostyColor(r2D.getGhostSkinColorFrightened()));
 		setShapeColor(eyeBalls(), r2D.getGhostEyeBallColorFrightened());
 		setShapeColor(pupils(), r2D.getGhostPupilColorFrightened());
 		looksFrightened = true;
@@ -204,5 +204,9 @@ public class Ghost3D extends Group {
 		var material = new PhongMaterial(diffuseColor);
 		material.setSpecularColor(diffuseColor.brighter());
 		shape.setMaterial(material);
+	}
+
+	private Color ghostyColor(Color color) {
+		return Color.color(color.getRed(), color.getGreen(), color.getBlue(), 0.85);
 	}
 }
