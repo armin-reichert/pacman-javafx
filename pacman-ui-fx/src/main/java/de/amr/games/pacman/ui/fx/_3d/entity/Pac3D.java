@@ -59,7 +59,7 @@ public class Pac3D extends Group {
 
 	public final Pac player;
 	private final Group bodyParts;
-	private final Creature3DMotion<Pac> motion;
+	private final Motion motion;
 	private final PointLight light = new PointLight(Color.WHITE);
 	private final Rendering2D r2D;
 
@@ -69,7 +69,7 @@ public class Pac3D extends Group {
 		this.player = player;
 		this.r2D = r2D;
 		bodyParts = model3D.createPacMan(r2D.getPlayerSkullColor(), r2D.getPlayerEyesColor(), r2D.getPlayerPalateColor());
-		motion = new Creature3DMotion<Pac>(player, this);
+		motion = new Motion(player, this);
 		light.setTranslateZ(-HTS);
 		getChildren().addAll(bodyParts, light);
 		reset();

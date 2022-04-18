@@ -10,13 +10,11 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 /**
- * Encapsulates motion and turning functionality of a 3D creature.
- * 
- * @param <CREATURE> type of creature (Pac, Ghost, Bonus)
+ * Encapsulates motion of a creature through the 3D world.
  * 
  * @author Armin Reichert
  */
-public class Creature3DMotion<CREATURE extends Creature> {
+public class Motion {
 
 	//@formatter:off
 	//TODO there must be a more elegant way to do this
@@ -28,16 +26,33 @@ public class Creature3DMotion<CREATURE extends Creature> {
 	};
 	//@formatter:on
 
-	public final CREATURE guy;
+	private final Creature guy;
 	private final Node root;
 	private final RotateTransition turningAnimation;
 	private Direction targetDir;
 
-	public Creature3DMotion(CREATURE guy, Node root) {
+	/**
+	 * @param guy  the creature (model)
+	 * @param root root node of the creature's 3D representation
+	 */
+	public Motion(Creature guy, Node root) {
 		this.guy = guy;
 		this.root = root;
 		turningAnimation = new RotateTransition(Duration.seconds(0.3), root);
 		turningAnimation.setAxis(Rotate.Z_AXIS);
+	}
+
+	public void update() {
+		root.setTranslateX(guy.position.x + HTS);
+		root.setTranslateY(guy.position.y + HTS);
+		root.setTranslateZ(-HTS);
+		if (targetDir != guy.moveDir()) {
+			int[] angles = angles(targetDir, guy.moveDir());
+			turningAnimation.setFromAngle(angles[0]);
+			turningAnimation.setToAngle(angles[1]);
+			turningAnimation.playFromStart();
+			targetDir = guy.moveDir();
+		}
 	}
 
 	private int index(Direction dir) {
@@ -54,18 +69,5 @@ public class Creature3DMotion<CREATURE extends Creature> {
 
 	private int[] angles(Direction from, Direction to) {
 		return TURN_ANGLES[index(from)][index(to)];
-	}
-
-	public void update() {
-		root.setTranslateX(guy.position.x + HTS);
-		root.setTranslateY(guy.position.y + HTS);
-		root.setTranslateZ(-HTS);
-		if (targetDir != guy.moveDir()) {
-			int[] angles = angles(targetDir, guy.moveDir());
-			turningAnimation.setFromAngle(angles[0]);
-			turningAnimation.setToAngle(angles[1]);
-			turningAnimation.playFromStart();
-			targetDir = guy.moveDir();
-		}
 	}
 }

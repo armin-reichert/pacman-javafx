@@ -56,7 +56,7 @@ public class Ghost3D extends Group {
 	public final Ghost ghost;
 	private final Group bodyParts;
 	private final Box numberCube = new Box(8, 8, 8);
-	private final Creature3DMotion<Ghost> motion;
+	private final Motion motion;
 	private final Rendering2D r2D;
 	private ColorFlashingTransition skinFlashing;
 	private boolean looksFrightened;
@@ -70,7 +70,7 @@ public class Ghost3D extends Group {
 		bodyParts = model3D.createGhost(ghostify(r2D.getGhostSkinColor(ghost.id)), r2D.getGhostEyeBallColor(),
 				r2D.getGhostPupilColor());
 
-		motion = new Creature3DMotion<Ghost>(ghost, this);
+		motion = new Motion(ghost, this);
 		getChildren().addAll(bodyParts, numberCube);
 		reset();
 
