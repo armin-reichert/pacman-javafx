@@ -130,6 +130,10 @@ public class SoundManager {
 		return sm.get(sound);
 	}
 
+	public boolean isPlaying(GameSound sound) {
+		return getClip(sound).isPlaying();
+	}
+
 	public void playIfOff(GameSound sound) {
 		if (!getClip(sound).isPlaying()) {
 			loop(sound, 1);
@@ -182,6 +186,7 @@ public class SoundManager {
 			case 3 -> GameSound.SIREN_4;
 			default -> throw new IllegalArgumentException();
 			};
+			getClip(siren).setVolume(0.2);
 			loop(siren, Animation.INDEFINITE);
 			log("Siren %s started", siren);
 		}

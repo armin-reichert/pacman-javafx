@@ -206,7 +206,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		score3D.update(game.score, game.levelNumber, game.highscorePoints, game.highscoreLevel);
 		livesCounter3D.update(game.player.lives);
 		getCamera().update(player3D);
-		if (SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying() && game.player.starvingTicks > 10) {
+		if (game.player.starvingTicks >= 10 && SoundManager.get().isPlaying(GameSound.PACMAN_MUNCH)) {
 			SoundManager.get().stop(GameSound.PACMAN_MUNCH);
 		}
 	}
