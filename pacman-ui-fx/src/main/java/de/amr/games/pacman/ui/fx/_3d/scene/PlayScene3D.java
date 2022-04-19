@@ -389,9 +389,9 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			Stream.of(ghosts3D).forEach(Ghost3D::setNormalLook);
 			var killer = game.ghosts().filter(ghost -> ghost.tile().equals(game.player.tile())).findAny().get();
 			new SequentialTransition( //
-					U.afterSec(1.0, game::hideGhosts), //
+					U.pauseSec(1.0, game::hideGhosts), //
 					player3D.dyingAnimation(r2D.getGhostSkinColor(killer.id), gc.attractMode), //
-					U.afterSec(2.0, () -> gc.stateTimer().expire()) //
+					U.pauseSec(2.0, () -> gc.stateTimer().expire()) //
 			).play();
 		}
 		case GHOST_DYING -> {
@@ -409,17 +409,17 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			maze3D.createFood(game.world, r2D.getFoodColor(game.mazeNumber));
 			levelCounter3D.update(game);
 			showFlashMessage(1, Env.message("level_starting", game.levelNumber));
-			U.afterSec(3, () -> gc.stateTimer().expire()).play();
+			U.pauseSec(3, () -> gc.stateTimer().expire()).play();
 		}
 		case LEVEL_COMPLETE -> {
 			Stream.of(ghosts3D).forEach(Ghost3D::setNormalLook);
 			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game.levelNumber);
 			new SequentialTransition( //
-					U.pause(2.0), //
+					U.pauseSec(2.0), //
 					maze3D.createMazeFlashingAnimation(game.numFlashes), //
-					U.afterSec(1.0, () -> game.player.hide()), //
-					U.afterSec(0.5, () -> showFlashMessage(2, message)), //
-					U.afterSec(2.0, () -> gc.stateTimer().expire()) //
+					U.pauseSec(1.0, () -> game.player.hide()), //
+					U.pauseSec(0.5, () -> showFlashMessage(2, message)), //
+					U.pauseSec(2.0, () -> gc.stateTimer().expire()) //
 			).play();
 		}
 		case GAME_OVER -> {
