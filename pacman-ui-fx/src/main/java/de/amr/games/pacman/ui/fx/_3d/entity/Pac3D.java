@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.t;
-import static de.amr.games.pacman.ui.fx.util.U.now;
 
 import de.amr.games.pacman.model.common.Pac;
 import de.amr.games.pacman.ui.GameSound;
@@ -33,6 +32,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.animation.FillTransition3D;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
+import de.amr.games.pacman.ui.fx.util.U;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.animation.RotateTransition;
@@ -130,7 +130,7 @@ public class Pac3D extends Group {
 
 		Animation spinAndShrink = silent //
 				? new ParallelTransition(spin, shrink) //
-				: new ParallelTransition(spin, shrink, now(() -> SoundManager.get().play(GameSound.PACMAN_DEATH)));
+				: new ParallelTransition(spin, shrink, U.pauseSec(0, () -> SoundManager.get().play(GameSound.PACMAN_DEATH)));
 
 		return new SequentialTransition( //
 				new FillTransition3D(Duration.seconds(1), skull(), r2D.getPlayerSkullColor(), ghostColor), //

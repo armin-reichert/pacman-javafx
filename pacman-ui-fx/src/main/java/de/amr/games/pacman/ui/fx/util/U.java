@@ -49,10 +49,24 @@ public class U {
 		return (1 - t) * from + t * to;
 	}
 
+	/**
+	 * @param value some value
+	 * @param min   lower bound of interval
+	 * @param max   upper bound of interval
+	 * @return the value if inside the interval, the lower bound if the value is smaller, the upper bound if the value is
+	 *         larger
+	 */
 	public static double clamp(double value, double min, double max) {
 		return value < min ? min : value > max ? max : value;
 	}
 
+	/**
+	 * @param value some value
+	 * @param min   lower bound of interval
+	 * @param max   upper bound of interval
+	 * @return the value if inside the interval, the lower bound if the value is smaller, the upper bound if the value is
+	 *         larger
+	 */
 	public static int clamp(int value, int min, int max) {
 		return value < min ? min : value > max ? max : value;
 	}
@@ -80,18 +94,6 @@ public class U {
 		PauseTransition p = new PauseTransition(Duration.seconds(seconds));
 		p.setOnFinished(e -> runnable.run());
 		return p;
-	}
-
-	/**
-	 * Runs the given code immediatetly.
-	 * <p>
-	 * NOTE: Do NOT start an animation in the code!
-	 * 
-	 * @param runnable code to run
-	 * @return pause transition
-	 */
-	public static PauseTransition now(Runnable runnable) {
-		return pauseSec(0, runnable);
 	}
 
 	public static Image image(String path) {
