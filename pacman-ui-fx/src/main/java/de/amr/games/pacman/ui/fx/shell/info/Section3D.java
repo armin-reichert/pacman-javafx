@@ -63,7 +63,8 @@ public class Section3D extends Section {
 		cbWireframeMode = addCheckBox("Wireframe mode", ui::toggleDrawMode);
 		addInfo("Shift+LEFT / RIGHT", "Camera -X / +X").when(() -> Env.$perspective.get() == Perspective.CAM_TOTAL);
 		addInfo("Shift+PLUS / MINUS", "Camera -Y / +Y").when(() -> Env.$perspective.get() == Perspective.CAM_TOTAL);
-		addInfo("Shift+UP / DOWN", "Camera -Z / +Z").when(() -> Env.$perspective.get() == Perspective.CAM_TOTAL);
+		addInfo("Shift+UP / DOWN", "Camera -Z / +Z")
+				.when(() -> Env.$perspective.get() == Perspective.CAM_TOTAL || Env.$perspective.get() == Perspective.CAM_DRONE);
 		addInfo("CTRL+Shift+UP / DOWN", "Camera Rotate X").when(() -> Env.$perspective.get() == Perspective.CAM_TOTAL);
 	}
 
