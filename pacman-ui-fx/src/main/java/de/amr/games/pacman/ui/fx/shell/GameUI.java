@@ -143,11 +143,11 @@ public class GameUI extends DefaultGameEventHandler {
 				currentGameScene.end();
 			}
 			currentGameScene = newGameScene;
-			sceneRoot.setBackground(getBackground(currentGameScene));
-			sceneRoot.getChildren().set(0, currentGameScene.getFXSubScene());
 			currentGameScene.resize(stage.getScene().getHeight());
 			currentGameScene.setContext();
 			currentGameScene.init();
+			sceneRoot.setBackground(getBackground(currentGameScene));
+			sceneRoot.getChildren().set(0, currentGameScene.getFXSubScene());
 			log("Game scene is now '%s'", currentGameScene.getClass());
 		}
 	}
