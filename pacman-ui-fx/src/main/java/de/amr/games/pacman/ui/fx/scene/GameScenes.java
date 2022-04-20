@@ -34,7 +34,6 @@ import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntermissionScene1;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntermissionScene2;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntermissionScene3;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntroScene;
-import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import javafx.scene.Scene;
 
@@ -58,7 +57,7 @@ public class GameScenes {
 	 * @param model3D        the used 3D model for the actors
 	 * @param size           logical scene size (number of tiles times tile size)
 	 */
-	public GameScenes(Scene parent, GameController gameController, PacManModel3D model3D, V2i size) {
+	public GameScenes(Scene parent, GameController gameController, V2i size) {
 		this.gameController = gameController;
 		//@formatter:off
 		scenes[0][0][SCENE_2D] = new MsPacMan_IntroScene(gameController, size);
@@ -70,7 +69,7 @@ public class GameScenes {
 		scenes[0][3][SCENE_2D] = new MsPacMan_IntermissionScene3(gameController, size);
 		scenes[0][3][SCENE_3D] = null;
 		scenes[0][4][SCENE_2D] = new PlayScene2D(gameController, size);
-		scenes[0][4][SCENE_3D] = new PlayScene3D(gameController, model3D);
+		scenes[0][4][SCENE_3D] = new PlayScene3D(gameController, size);
 		
 		scenes[1][0][SCENE_2D] = new PacMan_IntroScene(gameController, size);
 		scenes[1][0][SCENE_3D] = null;
@@ -81,7 +80,7 @@ public class GameScenes {
 		scenes[1][3][SCENE_2D] = new PacMan_IntermissionScene3(gameController, size);
 		scenes[1][3][SCENE_3D] = null;
 		scenes[1][4][SCENE_2D] = new PlayScene2D(gameController, size);
-		scenes[1][4][SCENE_3D] = new PlayScene3D(gameController, model3D);
+		scenes[1][4][SCENE_3D] = new PlayScene3D(gameController, size);
 		//@formatter:on
 
 		// define resize behavior
@@ -89,8 +88,7 @@ public class GameScenes {
 			for (int sceneIndex = 0; sceneIndex <= 4; ++sceneIndex) {
 				// 2D scenes adapt to parent scene height keeping aspect ratio
 				GameScene scene2D = scenes[variantIndex][sceneIndex][SCENE_2D];
-				parent.heightProperty()
-						.addListener(($height, oldHeight, newHeight) -> scene2D.resize(newHeight.doubleValue()));
+				parent.heightProperty().addListener(($height, oldHeight, newHeight) -> scene2D.resize(newHeight.doubleValue()));
 				// 3D scenes adapt to parent scene size
 				GameScene scene3D = scenes[variantIndex][sceneIndex][SCENE_3D];
 				if (scene3D != null) {

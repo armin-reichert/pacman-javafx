@@ -38,7 +38,6 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
-import de.amr.games.pacman.ui.fx._3d.model.GianmarcosModel3D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
@@ -65,7 +64,7 @@ import javafx.stage.Stage;
  */
 public class GameUI extends DefaultGameEventHandler {
 
-	public static final V2i LOGICAL_SCENE_SIZE = new V2i(28, 36).scaled(TS);
+	public static final V2i GAME_SIZE = new V2i(28 * TS, 36 * TS);
 	public static final int MIN_FRAMERATE = 10, MAX_FRAMERATE = 120;
 
 	public final GameController gc;
@@ -98,7 +97,7 @@ public class GameUI extends DefaultGameEventHandler {
 		stage.setScene(scene);
 
 		SoundManager.get().selectGameVariant(gc.gameVariant);
-		gameScenes = new GameScenes(scene, gc, GianmarcosModel3D.get(), LOGICAL_SCENE_SIZE);
+		gameScenes = new GameScenes(scene, gc, GAME_SIZE);
 		// init game scene (must happen *after* setting scene)
 		selectGameScene();
 

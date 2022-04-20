@@ -50,6 +50,7 @@ import de.amr.games.pacman.ui.fx._3d.entity.LivesCounter3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Maze3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Score3D;
+import de.amr.games.pacman.ui.fx._3d.model.GianmarcosModel3D;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -79,7 +80,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 	private final GameController gc;
 	private final SubScene fxSubScene;
-	private final PacManModel3D model3D;
+	private final V2i size;
 	private final AmbientLight light = new AmbientLight(Color.GHOSTWHITE);
 	private final Image floorTexture = U.image("/common/escher-texture.jpg");
 	private final Color floorColorWithTexture = Color.DARKBLUE;
@@ -89,6 +90,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	private final EnumMap<Perspective, PlaySceneCamera> cameras = new EnumMap<>(Perspective.class);
 
 	private GameModel game;
+	private PacManModel3D model3D;
 	private Rendering2D r2D;
 	private Pac3D player3D;
 	private Maze3D maze3D;
@@ -98,9 +100,9 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	private LevelCounter3D levelCounter3D;
 	private LivesCounter3D livesCounter3D;
 
-	public PlayScene3D(GameController gc, PacManModel3D model3D) {
+	public PlayScene3D(GameController gc, V2i size) {
 		this.gc = gc;
-		this.model3D = model3D;
+		this.size = size;
 
 		cameras.put(Perspective.CAM_DRONE, new Cam_Drone());
 		cameras.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer());
@@ -137,6 +139,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		case MS_PACMAN -> Rendering2D_MsPacMan.get();
 		case PACMAN -> Rendering2D_PacMan.get();
 		};
+		model3D = GianmarcosModel3D.get();
 	}
 
 	@Override
@@ -146,8 +149,6 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 	@Override
 	public void init() {
-		V2i size = new V2i(game.world.numCols(), game.world.numRows()).scaled(TS);
-
 		maze3D = new Maze3D(size.x, size.y);
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
