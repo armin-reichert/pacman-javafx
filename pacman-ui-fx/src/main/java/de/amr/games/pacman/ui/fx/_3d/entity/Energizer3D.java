@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import de.amr.games.pacman.lib.V2i;
 import javafx.animation.Animation;
+import javafx.animation.Animation.Status;
 import javafx.animation.ScaleTransition;
 import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
@@ -49,5 +50,11 @@ public class Energizer3D extends Pellet3D {
 		animation.setToX(0.1);
 		animation.setToY(0.1);
 		animation.setToZ(0.1);
+	}
+
+	@Override
+	public String toString() {
+		return String.format("[Energizer, tile; %s, animation running: %s]", tile(),
+				animation.getStatus() == Status.RUNNING);
 	}
 }

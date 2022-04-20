@@ -45,4 +45,13 @@ public class Pellet3D extends Sphere {
 		setTranslateY(tile.y * TS + HTS);
 		setTranslateZ(-HTS);
 	}
+
+	public V2i tile() {
+		return (V2i) getUserData();
+	}
+
+	@Override
+	public String toString() {
+		return String.format("[Pellet, tile: %s]", tile());
+	}
 }
