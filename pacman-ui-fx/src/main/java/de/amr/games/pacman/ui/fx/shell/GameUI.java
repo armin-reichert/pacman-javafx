@@ -142,14 +142,18 @@ public class GameUI extends DefaultGameEventHandler {
 			if (currentGameScene != null) {
 				currentGameScene.end();
 			}
-			sceneRoot.getChildren().set(0, newGameScene.getFXSubScene());
-			sceneRoot.setBackground(getBackground(newGameScene));
-			newGameScene.resize(sceneRoot.getHeight());
+			embedGameScene(newGameScene);
 			newGameScene.setContext();
 			newGameScene.init();
 			log("Game scene is now '%s'", newGameScene.getClass());
 			currentGameScene = newGameScene;
 		}
+	}
+
+	private void embedGameScene(GameScene gameScene) {
+		gameScene.resize(sceneRoot.getHeight());
+		sceneRoot.setBackground(getBackground(gameScene));
+		sceneRoot.getChildren().set(0, gameScene.getFXSubScene());
 	}
 
 	public Background nextWallpaper() {
