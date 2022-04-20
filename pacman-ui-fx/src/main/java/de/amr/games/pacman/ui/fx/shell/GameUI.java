@@ -27,8 +27,6 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.ui.fx.shell.FlashMessageView.showFlashMessage;
 
-import java.util.Random;
-
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
@@ -73,12 +71,6 @@ public class GameUI extends DefaultGameEventHandler {
 	private final StackPane sceneRoot;
 	private final GameScenes gameScenes;
 	private final InfoLayer infoLayer;
-	private final Background[] wallpapers = { //
-			U.imageBackground("/common/wallpapers/beach.jpg"), //
-			U.imageBackground("/common/wallpapers/space.jpg"), //
-			U.imageBackground("/common/wallpapers/easter_island.jpg"), //
-	};
-	private int wallpaperIndex;
 	private GameScene currentGameScene;
 
 	public GameUI(GameController gc, Stage stage, double width, double height) {
@@ -154,19 +146,9 @@ public class GameUI extends DefaultGameEventHandler {
 		sceneRoot.getChildren().set(0, gameScene.getFXSubScene());
 	}
 
-	public Background nextWallpaper() {
-		if (wallpapers.length > 1) {
-			int oldIndex = wallpaperIndex;
-			do {
-				wallpaperIndex = new Random().nextInt(wallpapers.length);
-			} while (wallpaperIndex == oldIndex);
-		}
-		return wallpapers[wallpaperIndex];
-	}
-
 	private Background getBackground(GameScene gameScene) {
 		return gameScene.is3D() //
-				? Env.$drawMode3D.get() == DrawMode.LINE ? U.colorBackground(Color.BLACK) : nextWallpaper()
+				? Env.$drawMode3D.get() == DrawMode.LINE ? U.colorBackground(Color.BLACK) : Wallpapers.get().random()
 				: U.colorBackground(Color.CORNFLOWERBLUE);
 	}
 
@@ -241,8 +223,8 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	public void quitCurrentGameScene() {
-		SoundManager.get().stopAll();
 		currentGameScene.end();
+		SoundManager.get().stopAll();
 		gc.changeState(GameState.INTRO);
 	}
 
