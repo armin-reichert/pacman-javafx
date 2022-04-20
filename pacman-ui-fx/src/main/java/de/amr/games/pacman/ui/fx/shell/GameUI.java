@@ -315,7 +315,6 @@ public class GameUI extends DefaultGameEventHandler {
 	public void toggleUse3DScene() {
 		Env.toggle(Env.$3D);
 		if (gameScenes.getScene(GameScenes.SCENE_2D) != gameScenes.getScene(GameScenes.SCENE_3D)) {
-			SoundManager.get().stopAll();
 			selectGameScene();
 			if (currentGameScene instanceof PlayScene2D) {
 				((PlayScene2D) currentGameScene).onSwitchFrom3DScene();
