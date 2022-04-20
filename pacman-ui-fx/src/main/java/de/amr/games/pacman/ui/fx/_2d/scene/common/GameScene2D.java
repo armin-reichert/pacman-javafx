@@ -36,6 +36,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
@@ -85,6 +86,8 @@ public abstract class GameScene2D extends DefaultGameEventHandler implements Gam
 		case MS_PACMAN -> Rendering2D_MsPacMan.get();
 		case PACMAN -> Rendering2D_PacMan.get();
 		};
+		SoundManager.get().stopAll(); // TODO: check this
+		SoundManager.get().selectGameVariant(gc.gameVariant);
 	}
 
 	@Override

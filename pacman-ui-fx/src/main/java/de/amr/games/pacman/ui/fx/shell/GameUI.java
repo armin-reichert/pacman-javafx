@@ -139,8 +139,6 @@ public class GameUI extends DefaultGameEventHandler {
 	private void selectGameScene() {
 		var newGameScene = gameScenes.getScene(Env.$3D.get() ? GameScenes.SCENE_3D : GameScenes.SCENE_2D);
 		if (newGameScene != currentGameScene) {
-			SoundManager.get().stopAll();
-			SoundManager.get().selectGameVariant(gc.gameVariant);
 			if (currentGameScene != null) {
 				currentGameScene.end();
 			}

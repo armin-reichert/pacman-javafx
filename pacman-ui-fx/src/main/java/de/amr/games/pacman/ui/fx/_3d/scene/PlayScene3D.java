@@ -140,6 +140,8 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		case PACMAN -> Rendering2D_PacMan.get();
 		};
 		model3D = GianmarcosModel3D.get();
+		SoundManager.get().stopAll(); // TODO: check this
+		SoundManager.get().selectGameVariant(gc.gameVariant);
 	}
 
 	@Override
