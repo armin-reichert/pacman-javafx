@@ -48,7 +48,6 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -56,7 +55,9 @@ import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 
 /**
- * JavaFX implementation of the Pac-Man game UI.
+ * JavaFX UI for Pac-Man / Ms. Pac-Man game.
+ * <p>
+ * The play scene is available in 2D and 3D. The intro scenes and intermission scenes are all 2D.
  * 
  * @author Armin Reichert
  */
@@ -81,7 +82,7 @@ public class GameUI extends DefaultGameEventHandler {
 
 		// first child is placeholder for subscene assigned to current game scene
 		sceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
-		Env.$drawMode3D.addListener(($drawMode, _old, _new) -> sceneRoot.setBackground(getBackground(currentGameScene)));
+		Env.$drawMode3D.addListener(($drawMode, _old, _new) -> updateBackground(currentGameScene));
 
 		var scene = new Scene(sceneRoot, width, height);
 		scene.setOnKeyPressed(this::handleKeyPressed);
@@ -132,7 +133,9 @@ public class GameUI extends DefaultGameEventHandler {
 			if (currentGameScene != null) {
 				currentGameScene.end();
 			}
-			embedGameScene(newGameScene);
+			newGameScene.resize(sceneRoot.getHeight());
+			updateBackground(newGameScene);
+			sceneRoot.getChildren().set(0, newGameScene.getFXSubScene());
 			newGameScene.setContext();
 			newGameScene.init();
 			log("Game scene is now '%s'", newGameScene.getClass());
@@ -140,16 +143,11 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 	}
 
-	private void embedGameScene(GameScene gameScene) {
-		gameScene.resize(sceneRoot.getHeight());
-		sceneRoot.setBackground(getBackground(gameScene));
-		sceneRoot.getChildren().set(0, gameScene.getFXSubScene());
-	}
-
-	private Background getBackground(GameScene gameScene) {
-		return gameScene.is3D() //
+	private void updateBackground(GameScene gameScene) {
+		var bg = gameScene.is3D() //
 				? Env.$drawMode3D.get() == DrawMode.LINE ? U.colorBackground(Color.BLACK) : Wallpapers.get().random()
 				: U.colorBackground(Color.CORNFLOWERBLUE);
+		sceneRoot.setBackground(bg);
 	}
 
 	private void handleMouseClicked(MouseEvent e) {
