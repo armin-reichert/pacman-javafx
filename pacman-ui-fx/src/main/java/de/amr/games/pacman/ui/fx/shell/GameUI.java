@@ -87,6 +87,7 @@ public class GameUI extends DefaultGameEventHandler {
 		var scene = new Scene(sceneRoot, width, height);
 		scene.setOnKeyPressed(this::handleKeyPressed);
 		scene.setOnMouseClicked(this::handleMouseClicked);
+		scene.setOnMouseMoved(this::handleMouseMoved);
 		stage.setScene(scene);
 
 		gameScenes = new GameScenes(scene, gc, GAME_SIZE);
@@ -151,13 +152,20 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	private void handleMouseClicked(MouseEvent e) {
-		identifyNode(e.getPickResult().getIntersectedNode());
 		currentGameScene.getFXSubScene().requestFocus();
+	}
+
+	// Begin test area ---
+
+	private String lastPicked = "";
+
+	private void handleMouseMoved(MouseEvent e) {
+		identifyNode(e.getPickResult().getIntersectedNode());
 	}
 
 	private void identifyNode(Node node) {
 		if (node != null) {
-			String s = String.format("node %s", node);
+			String s = String.format("%s", node);
 			Object info = node.getUserData();
 			if (info instanceof Pac3D) {
 				Pac3D pac3D = (Pac3D) info;
@@ -166,9 +174,14 @@ public class GameUI extends DefaultGameEventHandler {
 				Ghost3D ghost3D = (Ghost3D) info;
 				s = ghost3D.identifyNode(node);
 			}
-			log("Picked %s", s);
+			if (!lastPicked.equals(s)) {
+				log(s);
+				lastPicked = s;
+			}
 		}
 	}
+
+	// End test area ---
 
 	@SuppressWarnings("incomplete-switch")
 	private void handleKeyPressed(KeyEvent e) {
