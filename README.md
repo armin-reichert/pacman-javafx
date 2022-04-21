@@ -38,10 +38,9 @@ General shortcuts:
 
 - <kbd>F11</kbd> Enter fullscreen mode
 - <kbd>Esc</kbd> Exit fullscreen mode
-- <kbd>CTRL+I</kbd> Toggle information panels
+- <kbd>CTRL+I</kbd> Toggle information/settings panels
 - <kbd>Alt+A</kbd> Toggle autopilot mode
 - <kbd>Alt+I</kbd> Toggle immunity of player against ghost attacks
-- <kbd>Alt+S</kbd> Increase speed (<kbd>SHIFT</kbd> = decrease)
 - <kbd>Alt+V</kbd> Switch between the game variants (Pac-Man, Ms. Pac-Man)
 - <kbd>Alt+Z</kbd> Play all intermission scenes
 - <kbd>Alt+3</kbd> Toggle using 2D/3D play scene
