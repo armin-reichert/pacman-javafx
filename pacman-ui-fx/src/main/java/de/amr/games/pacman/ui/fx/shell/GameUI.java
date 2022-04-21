@@ -185,8 +185,6 @@ public class GameUI extends DefaultGameEventHandler {
 
 	@SuppressWarnings("incomplete-switch")
 	private void handleKeyPressed(KeyEvent e) {
-		boolean shift = e.isShiftDown();
-
 		if (e.isAltDown()) {
 			switch (e.getCode()) {
 			case A -> toggleAutopilot();
@@ -195,7 +193,6 @@ public class GameUI extends DefaultGameEventHandler {
 			case L -> addLives(3);
 			case N -> enterNextLevel();
 			case Q -> quitCurrentGameScene();
-			case S -> changeTargetFramerate(shift ? -10 : 10);
 			case V -> toggleGameVariant();
 			case X -> gc.cheatKillGhosts();
 			case Z -> startIntermissionScenesTest();
@@ -227,12 +224,6 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 	}
 
-	public void changeTargetFramerate(int delta) {
-		int newFrameRate = U.clamp(GameLoop.get().getTargetFrameRate() + delta, MIN_FRAMERATE, MAX_FRAMERATE);
-		GameLoop.get().setTargetFrameRate(newFrameRate);
-		showFlashMessage(1, "Target FPS set to %d Hz", GameLoop.get().getTargetFrameRate());
-	}
-
 	public void quitCurrentGameScene() {
 		currentGameScene.end();
 		SoundManager.get().stopAll();
@@ -242,7 +233,6 @@ public class GameUI extends DefaultGameEventHandler {
 	public void enterNextLevel() {
 		if (gc.gameRunning) {
 			gc.changeState(GameState.LEVEL_COMPLETE);
-			showFlashMessage(1, Env.CHEAT_TALK.next());
 		}
 	}
 
