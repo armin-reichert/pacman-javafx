@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.ui.GameSound;
 import javafx.animation.Animation;
 import javafx.scene.media.AudioClip;
 
