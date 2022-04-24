@@ -85,12 +85,22 @@ public class Maze2D extends GameEntity2D {
 			if (Env.$tilesVisible.get()) {
 				drawTileBorders(g);
 			}
+			if (Env.$tilesVisible.get()) {
+				game.world.tiles().filter(game.world::isIntersection).forEach(tile -> {
+					strokeTile(g, tile, Color.RED);
+				});
+			}
 		}
 	}
 
 	private void fillTile(GraphicsContext g, V2i tile, Color color) {
 		g.setFill(color);
 		g.fillRect(t(tile.x) + 0.2, t(tile.y) + 0.2, TS - 0.2, TS - 0.2);
+	}
+
+	private void strokeTile(GraphicsContext g, V2i tile, Color color) {
+		g.setStroke(color);
+		g.strokeRect(t(tile.x) + 0.2, t(tile.y) + 0.2, TS - 0.2, TS - 0.2);
 	}
 
 	private void drawTileBorders(GraphicsContext g) {
