@@ -221,7 +221,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 					.filter(ghost3D -> !ghost3D.isLooksFrightened()) //
 					.forEach(Ghost3D::setFrightenedLook);
 		}
-		maze3D.foodNodes().forEach(foodNode -> foodNode.setVisible(!game.world.isFoodEaten(maze3D.tile(foodNode))));
+		maze3D.foodNodes().forEach(foodNode -> foodNode.setVisible(!game.world.containsEatenFood(maze3D.tile(foodNode))));
 		if (gc.state == GameState.HUNTING || gc.state == GameState.GHOST_DYING) {
 			maze3D.energizerAnimations().forEach(Animation::play);
 		}
@@ -311,7 +311,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	public void onPlayerFoundFood(GameEvent e) {
 		// when cheat "eat all pellets" is used, no tile is present
 		if (!e.tile.isPresent()) {
-			game.world.tiles().filter(game.world::isFoodEaten)
+			game.world.tiles().filter(game.world::containsEatenFood)
 					.forEach(tile -> maze3D.foodAt(tile).ifPresent(maze3D::hideFood));
 		} else {
 			V2i tile = e.tile.get();

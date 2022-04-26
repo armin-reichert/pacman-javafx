@@ -81,7 +81,7 @@ public class Maze2D extends GameEntity2D {
 				g.setFill(hiddenColor);
 				game.world.energizerTiles().forEach(tile -> fillTile(g, tile, hiddenColor));
 			}
-			game.world.tiles().filter(game.world::isFoodEaten).forEach(tile -> fillTile(g, tile, hiddenColor));
+			game.world.tiles().filter(game.world::containsEatenFood).forEach(tile -> fillTile(g, tile, hiddenColor));
 			if (Env.$tilesVisible.get()) {
 				drawTileBorders(g);
 			}
