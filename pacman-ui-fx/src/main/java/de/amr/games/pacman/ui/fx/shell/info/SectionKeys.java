@@ -43,6 +43,7 @@ public class SectionKeys extends Section {
 		addInfo("Alt+E", "Eat all normal pellets").when(() -> gc.gameRunning);
 		addInfo("Alt+I", "Player immunity On/Off");
 		addInfo("Alt+L", "Add 3 player lives").when(() -> gc.gameRunning);
+		addInfo("Alt+M", "Mute/Unmute");
 		addInfo("Alt+N", "Next Level").when(() -> gc.gameRunning);
 		addInfo("Alt+Q", "Quit Scene").when(() -> gc.state != GameState.INTRO);
 		addInfo("Alt+S", "Speed (SHIFT=Decrease)");

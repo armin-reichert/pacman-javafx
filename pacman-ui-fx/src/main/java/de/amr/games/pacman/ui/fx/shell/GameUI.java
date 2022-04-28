@@ -88,11 +88,11 @@ public class GameUI extends DefaultGameEventHandler {
 		scene.setOnKeyPressed(this::handleKeyPressed);
 		scene.setOnMouseClicked(this::handleMouseClicked);
 		scene.setOnMouseMoved(this::handleMouseMoved);
-		stage.setScene(scene);
 
 		gameScenes = new GameScenes(scene, gc, GAME_SIZE);
 		selectGameScene();
 
+		stage.setScene(scene);
 		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
 		stage.setOnCloseRequest(e -> GameLoop.get().stop());
 		stage.centerOnScreen();
@@ -191,6 +191,7 @@ public class GameUI extends DefaultGameEventHandler {
 			case E -> gc.cheatEatAllPellets();
 			case I -> toggleImmunity();
 			case L -> addLives(3);
+			case M -> toggleSoundMuted();
 			case N -> enterNextLevel();
 			case Q -> quitCurrentGameScene();
 			case V -> toggleGameVariant();
