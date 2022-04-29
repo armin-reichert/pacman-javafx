@@ -91,7 +91,7 @@ public class SectionGame extends Section {
 		addInfo("Bonus value", () -> gc.game.bonusValue(gc.game.bonusSymbol));
 		addInfo("Maze flashings", () -> gc.game.numFlashes);
 		addInfo("Pellets", () -> String.format("%d of %d (%d energizers)", gc.game.world.foodRemaining(),
-				gc.game.world.tiles().filter(gc.game.world::isFoodTile).count(), gc.game.world.energizerTiles().size()));
+				gc.game.world.tiles().filter(gc.game.world::isFoodTile).count(), gc.game.world.energizerTiles().count()));
 	}
 
 	@Override
