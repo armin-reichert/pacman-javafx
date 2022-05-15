@@ -85,7 +85,7 @@ public class PlayScene2D extends GameScene2D {
 		livesCounter2D.visible = !gc.attractMode;
 
 		levelCounter2D = new LevelCounter2D(game, r2D);
-		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
+		levelCounter2D.rightPosition = unscaledSize.minus(t(4), t(2));
 		levelCounter2D.visible = !gc.attractMode;
 
 		maze2D = new Maze2D(game, r2D);
