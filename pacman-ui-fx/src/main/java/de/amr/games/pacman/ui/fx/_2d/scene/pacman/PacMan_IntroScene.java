@@ -94,7 +94,7 @@ public class PacMan_IntroScene extends GameScene2D {
 	public void doUpdate() {
 		sc.updateState();
 		// TODO find a better solution:
-		if (sc.state == IntroState.CHASING_GHOSTS) {
+		if (sc.state() == IntroState.CHASING_GHOSTS) {
 			for (Ghost ghost : sc.context.ghosts) {
 				if (ghost.velocity.equals(V2d.NULL)) {
 					ghosts2D[ghost.id].animFrightened.stop();
@@ -109,20 +109,16 @@ public class PacMan_IntroScene extends GameScene2D {
 	public void doRender(GraphicsContext g) {
 		score2D.render(g);
 		highScore2D.render(g);
-
-		switch (sc.state) {
-
+		switch (sc.state()) {
 		case BEGIN, PRESENTING_GHOSTS -> drawGallery();
-
 		case SHOWING_POINTS -> {
 			drawGallery();
 			drawPoints(11, 25);
-			if (sc.state.timer().ticked() > sec_to_ticks(1)) {
+			if (sc.state().timer().ticked() > sec_to_ticks(1)) {
 				drawEnergizer();
 				drawCopyright(32);
 			}
 		}
-
 		case CHASING_PAC -> {
 			drawGallery();
 			drawPoints(11, 25);
@@ -130,25 +126,21 @@ public class PacMan_IntroScene extends GameScene2D {
 			if (sc.context.fastBlinking.frame()) {
 				drawEnergizer();
 			}
-			int offset = sc.state.timer().ticked() % 5 < 2 ? 0 : -1;
+			int offset = sc.state().timer().ticked() % 5 < 2 ? 0 : -1;
 			drawGuys(offset);
 		}
-
 		case CHASING_GHOSTS -> {
 			drawGallery();
 			drawPoints(11, 25);
 			drawCopyright(32);
 			drawGuys(0);
 		}
-
 		case READY_TO_PLAY -> {
 			drawGallery();
 			drawPressKeyToStart(24);
 		}
-
 		default -> {
 		}
-
 		}
 	}
 

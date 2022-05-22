@@ -267,7 +267,7 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	public void startIntermissionScenesTest() {
-		if (gc.state == GameState.INTRO) {
+		if (gc.state() == GameState.INTRO) {
 			gc.startIntermissionTest();
 		}
 	}

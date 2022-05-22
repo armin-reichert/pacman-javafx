@@ -106,7 +106,7 @@ public class GameScenes {
 	 * @return the game scene that fits the current game state
 	 */
 	public GameScene getScene(int dimension) {
-		int sceneIndex = switch (gc.state) {
+		int sceneIndex = switch (gc.state()) {
 		case INTRO -> 0;
 		case INTERMISSION -> gc.game().intermissionNumber(gc.game().levelNumber);
 		case INTERMISSION_TEST -> gc.game().intermissionTestNumber;

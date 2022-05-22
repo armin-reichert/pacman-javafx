@@ -69,11 +69,11 @@ public class SectionGame extends Section {
 		spinnerGameLevel.valueProperty().addListener(($value, oldValue, newValue) -> ui.enterLevel(newValue.intValue()));
 		addInfo("Game State", this::fmtGameState);
 		addInfo("", () -> {
-			long ticked = gc.state.timer().ticked();
-			return String.format("Running:   %s%s", ticked, gc.state.timer().isStopped() ? " (STOPPED)" : "");
+			long ticked = gc.state().timer().ticked();
+			return String.format("Running:   %s%s", ticked, gc.state().timer().isStopped() ? " (STOPPED)" : "");
 		});
 		addInfo("", () -> {
-			long remaining = gc.state.timer().ticksRemaining();
+			long remaining = gc.state().timer().ticksRemaining();
 			String remainingText = remaining == TickTimer.INDEFINITE ? "indefinite" : String.valueOf(remaining);
 			return String.format("Remaining: %s", remainingText);
 		});
@@ -104,22 +104,22 @@ public class SectionGame extends Section {
 		// start game
 		btnsGameControl[0].setDisable(gc.game().requested || gc.game().running || gc.game().attractMode);
 		// quit game
-		btnsGameControl[1].setDisable(gc.state == GameState.INTRO || gc.state == GameState.INTERMISSION_TEST);
+		btnsGameControl[1].setDisable(gc.state() == GameState.INTRO || gc.state() == GameState.INTERMISSION_TEST);
 		// next level
-		btnsGameControl[2].setDisable(!gc.game().running
-				|| (gc.state != GameState.HUNTING && gc.state != GameState.READY && gc.state != GameState.LEVEL_STARTING));
+		btnsGameControl[2].setDisable(!gc.game().running || (gc.state() != GameState.HUNTING
+				&& gc.state() != GameState.READY && gc.state() != GameState.LEVEL_STARTING));
 
 		// start intermission test
-		btnsIntermissionTest[0].setDisable(gc.state == GameState.INTERMISSION_TEST || gc.state != GameState.INTRO);
+		btnsIntermissionTest[0].setDisable(gc.state() == GameState.INTERMISSION_TEST || gc.state() != GameState.INTRO);
 		// quit intermission test
-		btnsIntermissionTest[1].setDisable(gc.state != GameState.INTERMISSION_TEST);
+		btnsIntermissionTest[1].setDisable(gc.state() != GameState.INTERMISSION_TEST);
 
 		spinnerGameLevel.getValueFactory().setValue(gc.game().levelNumber);
 		if (!gc.game().running) {
 			spinnerGameLevel.setDisable(true);
 		} else {
 			spinnerGameLevel.setDisable(
-					gc.state != GameState.READY && gc.state != GameState.HUNTING && gc.state != GameState.LEVEL_STARTING);
+					gc.state() != GameState.READY && gc.state() != GameState.HUNTING && gc.state() != GameState.LEVEL_STARTING);
 		}
 	}
 
@@ -129,7 +129,7 @@ public class SectionGame extends Section {
 
 	private String fmtGameState() {
 		var huntingPhaseName = gc.game().inScatteringPhase() ? "Scattering" : "Chasing";
-		return gc.state == GameState.HUNTING ? //
-				String.format("%s: Phase #%d (%s)", gc.state, gc.game().huntingPhase, huntingPhaseName) : gc.state.name();
+		return gc.state() == GameState.HUNTING ? //
+				String.format("%s: Phase #%d (%s)", gc.state(), gc.game().huntingPhase, huntingPhaseName) : gc.state().name();
 	}
 }

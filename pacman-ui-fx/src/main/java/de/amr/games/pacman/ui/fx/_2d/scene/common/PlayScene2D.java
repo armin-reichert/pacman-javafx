@@ -125,7 +125,7 @@ public class PlayScene2D extends GameScene2D {
 		if (SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying() && game.player.starvingTicks > 10) {
 			SoundManager.get().stop(GameSound.PACMAN_MUNCH);
 		}
-		if (!game.attractMode && gc.state == GameState.HUNTING && !SoundManager.get().isAnySirenPlaying()
+		if (!game.attractMode && gc.state() == GameState.HUNTING && !SoundManager.get().isAnySirenPlaying()
 				&& !game.player.powerTimer.isRunning()) {
 			int scatterPhase = game.huntingPhase / 2;
 			SoundManager.get().startSiren(scatterPhase);
@@ -247,7 +247,7 @@ public class PlayScene2D extends GameScene2D {
 
 		case PACMAN_DYING -> {
 			// wait until game is continued
-			gc.state.timer().setIndefinite().start();
+			gc.state().timer().setIndefinite().start();
 
 			SoundManager.get().stopAll();
 
@@ -260,7 +260,7 @@ public class PlayScene2D extends GameScene2D {
 						player2D.playDyingAnimation();
 					}), //
 					pauseSec(2, () -> game.player.hide()), //
-					pauseSec(1, () -> gc.state.timer().expire()) //
+					pauseSec(1, () -> gc.state().timer().expire()) //
 			).play();
 		}
 
@@ -272,14 +272,14 @@ public class PlayScene2D extends GameScene2D {
 		}
 
 		case LEVEL_COMPLETE -> {
-			gc.state.timer().setIndefinite(); // wait until continueGame() is called
+			gc.state().timer().setIndefinite(); // wait until continueGame() is called
 			SoundManager.get().stopAll();
 			player2D.reset();
 			// Energizers can still exist if "next level" cheat has been used
 			maze2D.getEnergizerAnimation().reset();
 			Animation animation = new SequentialTransition( //
 					maze2D.getFlashingAnimation(), //
-					pauseSec(1, () -> gc.state.timer().expire()) //
+					pauseSec(1, () -> gc.state().timer().expire()) //
 			);
 			animation.setDelay(Duration.seconds(2));
 			animation.play();
@@ -287,7 +287,7 @@ public class PlayScene2D extends GameScene2D {
 
 		case LEVEL_STARTING -> {
 			maze2D.getFlashingAnimation().setCycleCount(2 * game.numFlashes);
-			gc.state.timer().setSeconds(1).start();
+			gc.state().timer().setSeconds(1).start();
 		}
 
 		case GAME_OVER -> {
@@ -314,12 +314,12 @@ public class PlayScene2D extends GameScene2D {
 		livesCounter2D.render(g);
 		score2D.render(g);
 		highScore2D.render(g);
-		if (gc.state == GameState.GAME_OVER || game.attractMode) {
+		if (gc.state() == GameState.GAME_OVER || game.attractMode) {
 			g.setFont(r2D.getArcadeFont());
 			g.setFill(Color.RED);
 			g.fillText("GAME", t(9), t(21));
 			g.fillText("OVER", t(15), t(21));
-		} else if (gc.state == GameState.READY) {
+		} else if (gc.state() == GameState.READY) {
 			g.setFont(r2D.getArcadeFont());
 			g.setFill(Color.YELLOW);
 			g.fillText("READY!", t(11), t(21));

@@ -222,13 +222,13 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 					.forEach(Ghost3D::setFrightenedLook);
 		}
 		maze3D.foodNodes().forEach(foodNode -> foodNode.setVisible(!game.world.containsEatenFood(maze3D.tile(foodNode))));
-		if (gc.state == GameState.HUNTING || gc.state == GameState.GHOST_DYING) {
+		if (gc.state() == GameState.HUNTING || gc.state() == GameState.GHOST_DYING) {
 			maze3D.energizerAnimations().forEach(Animation::play);
 		}
 		if (game.player.powerTimer.isRunning() && !SoundManager.get().getClip(GameSound.PACMAN_POWER).isPlaying()) {
 			SoundManager.get().loop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
 		}
-		if (!game.attractMode && gc.state == GameState.HUNTING && !SoundManager.get().isAnySirenPlaying()
+		if (!game.attractMode && gc.state() == GameState.HUNTING && !SoundManager.get().isAnySirenPlaying()
 				&& !game.player.powerTimer.isRunning()) {
 			int scatterPhase = game.huntingPhase / 2;
 			SoundManager.get().startSiren(scatterPhase);
@@ -395,7 +395,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			new SequentialTransition( //
 					U.pauseSec(1.0, game::hideGhosts), //
 					player3D.dyingAnimation(killerColor, game.attractMode), //
-					U.pauseSec(2.0, () -> gc.state.timer().expire()) //
+					U.pauseSec(2.0, () -> gc.state().timer().expire()) //
 			).play();
 		}
 		case GHOST_DYING -> {
@@ -413,7 +413,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			maze3D.createFood(game.world, r2D.getFoodColor(game.mazeNumber));
 			levelCounter3D.update(game);
 			showFlashMessage(1, Env.message("level_starting", game.levelNumber));
-			U.pauseSec(3, () -> gc.state.timer().expire()).play();
+			U.pauseSec(3, () -> gc.state().timer().expire()).play();
 		}
 		case LEVEL_COMPLETE -> {
 			Stream.of(ghosts3D).forEach(Ghost3D::setNormalLook);
@@ -423,7 +423,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 					maze3D.createMazeFlashingAnimation(game.numFlashes), //
 					U.pauseSec(1.0, () -> game.player.hide()), //
 					U.pauseSec(0.5, () -> showFlashMessage(2, message)), //
-					U.pauseSec(2.0, () -> gc.state.timer().expire()) //
+					U.pauseSec(2.0, () -> gc.state().timer().expire()) //
 			).play();
 		}
 		case GAME_OVER -> {

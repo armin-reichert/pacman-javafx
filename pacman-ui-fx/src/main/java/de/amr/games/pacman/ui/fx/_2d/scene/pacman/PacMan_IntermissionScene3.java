@@ -86,7 +86,7 @@ public class PacMan_IntermissionScene3 extends GameScene2D {
 	public void doRender(GraphicsContext g) {
 		levelCounter2D.render(g);
 		pacMan2D.render(g);
-		if (sc.state == Intermission3State.CHASING) {
+		if (sc.state() == Intermission3State.CHASING) {
 			blinkyPatched2D.render(g);
 		} else {
 			blinkyNaked2D.render(g);
