@@ -112,7 +112,7 @@ public class GameScenes {
 		case INTERMISSION_TEST -> gameController.intermissionTestNumber;
 		default -> 4; // play scene
 		};
-		int variantIndex = gameController.gameVariant.ordinal();
+		int variantIndex = gameController.gameVariant().ordinal();
 		if (scenes[variantIndex][sceneIndex][dimension] == null) {
 			// no 3D version exists, use 2D version
 			return scenes[variantIndex][sceneIndex][SCENE_2D];

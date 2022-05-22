@@ -118,7 +118,7 @@ public class GameUI extends DefaultGameEventHandler {
 	public void render() {
 		FlashMessageView.get().update();
 		infoLayer.update();
-		stage.setTitle(gc.gameVariant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
+		stage.setTitle(gc.gameVariant() == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
 	}
 
 	@Override
@@ -280,7 +280,7 @@ public class GameUI extends DefaultGameEventHandler {
 
 	public void toggleGameVariant() {
 		if (!gc.game.running) {
-			gc.selectGameVariant(gc.gameVariant.succ());
+			gc.selectGameVariant(gc.gameVariant().succ());
 		}
 	}
 

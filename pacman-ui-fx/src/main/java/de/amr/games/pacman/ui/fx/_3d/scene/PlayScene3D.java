@@ -135,13 +135,13 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	@Override
 	public void setContext() {
 		game = gc.game;
-		r2D = switch (gc.gameVariant) {
+		r2D = switch (gc.gameVariant()) {
 		case MS_PACMAN -> Rendering2D_MsPacMan.get();
 		case PACMAN -> Rendering2D_PacMan.get();
 		};
 		model3D = GianmarcosModel3D.get();
 		SoundManager.get().stopAll(); // TODO: check this
-		SoundManager.get().selectGameVariant(gc.gameVariant);
+		SoundManager.get().selectGameVariant(gc.gameVariant());
 	}
 
 	@Override

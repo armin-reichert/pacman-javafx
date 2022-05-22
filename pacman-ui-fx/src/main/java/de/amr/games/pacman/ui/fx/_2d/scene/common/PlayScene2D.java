@@ -98,7 +98,7 @@ public class PlayScene2D extends GameScene2D {
 			ghosts2D[ghost.id] = new Ghost2D(ghost, game, r2D);
 		}
 
-		boolean bonusMoving = gc.gameVariant == GameVariant.MS_PACMAN;
+		boolean bonusMoving = gc.gameVariant() == GameVariant.MS_PACMAN;
 		bonus2D = new Bonus2D(game.bonus, r2D, bonusMoving);
 
 		game.player.powerTimer.addEventListener(this::handleGhostsFlashing);

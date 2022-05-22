@@ -51,7 +51,7 @@ public class SectionGame extends Section {
 
 		comboGameVariant = addComboBox("Game Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
 		comboGameVariant.setOnAction(e -> {
-			if (comboGameVariant.getValue() != gc.gameVariant) {
+			if (comboGameVariant.getValue() != gc.gameVariant()) {
 				gc.selectGameVariant(comboGameVariant.getValue());
 			}
 		});
@@ -98,7 +98,7 @@ public class SectionGame extends Section {
 	public void update() {
 		super.update();
 
-		comboGameVariant.setValue(gc.gameVariant);
+		comboGameVariant.setValue(gc.gameVariant());
 		comboGameVariant.setDisable(gc.game.running);
 
 		// start game
