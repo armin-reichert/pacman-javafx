@@ -187,7 +187,7 @@ public class SoundManager {
 			};
 			getClip(siren).setVolume(0.2);
 			loop(siren, Animation.INDEFINITE);
-			log("Siren %s started", siren);
+//			log("Siren %s started", siren);
 		}
 	}
 

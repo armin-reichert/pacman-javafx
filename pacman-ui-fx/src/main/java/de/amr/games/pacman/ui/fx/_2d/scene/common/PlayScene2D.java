@@ -247,7 +247,7 @@ public class PlayScene2D extends GameScene2D {
 
 		case PACMAN_DYING -> {
 			// wait until game is continued
-			gc.stateTimer().setIndefinite().start();
+			gc.state.timer().setIndefinite().start();
 
 			SoundManager.get().stopAll();
 
@@ -260,7 +260,7 @@ public class PlayScene2D extends GameScene2D {
 						player2D.playDyingAnimation();
 					}), //
 					pauseSec(2, () -> game.player.hide()), //
-					pauseSec(1, () -> gc.stateTimer().expire()) //
+					pauseSec(1, () -> gc.state.timer().expire()) //
 			).play();
 		}
 
@@ -272,14 +272,14 @@ public class PlayScene2D extends GameScene2D {
 		}
 
 		case LEVEL_COMPLETE -> {
-			gc.stateTimer().setIndefinite(); // wait until continueGame() is called
+			gc.state.timer().setIndefinite(); // wait until continueGame() is called
 			SoundManager.get().stopAll();
 			player2D.reset();
 			// Energizers can still exist if "next level" cheat has been used
 			maze2D.getEnergizerAnimation().reset();
 			Animation animation = new SequentialTransition( //
 					maze2D.getFlashingAnimation(), //
-					pauseSec(1, () -> gc.stateTimer().expire()) //
+					pauseSec(1, () -> gc.state.timer().expire()) //
 			);
 			animation.setDelay(Duration.seconds(2));
 			animation.play();
@@ -287,7 +287,7 @@ public class PlayScene2D extends GameScene2D {
 
 		case LEVEL_STARTING -> {
 			maze2D.getFlashingAnimation().setCycleCount(2 * game.numFlashes);
-			gc.stateTimer().setSeconds(1).start();
+			gc.state.timer().setSeconds(1).start();
 		}
 
 		case GAME_OVER -> {

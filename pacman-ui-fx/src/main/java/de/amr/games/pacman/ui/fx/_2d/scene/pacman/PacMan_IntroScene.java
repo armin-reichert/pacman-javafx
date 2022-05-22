@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.pacman.IntroController;
 import de.amr.games.pacman.controller.pacman.IntroController.GhostPortrait;
-import de.amr.games.pacman.controller.pacman.IntroController.IntroState;
+import de.amr.games.pacman.controller.pacman.IntroState;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.V2i;
@@ -73,10 +73,10 @@ public class PacMan_IntroScene extends GameScene2D {
 		createScores();
 		score2D.showPoints = false;
 
-		pacMan2D = new Player2D(sc.pacMan, game, r2D);
+		pacMan2D = new Player2D(sc.context.pacMan, game, r2D);
 		pacMan2D.animMunching.values().forEach(TimedSeq::restart);
 
-		ghosts2D = Stream.of(sc.ghosts).map(ghost -> {
+		ghosts2D = Stream.of(sc.context.ghosts).map(ghost -> {
 			Ghost2D ghost2D = new Ghost2D(ghost, game, r2D);
 			ghost2D.animKicking.values().forEach(TimedSeq::restart);
 			ghost2D.animFrightened.restart();
@@ -84,10 +84,10 @@ public class PacMan_IntroScene extends GameScene2D {
 		}).toArray(Ghost2D[]::new);
 
 		gallery2D = new Ghost2D[] { //
-				new Ghost2D(sc.portraits[0].ghost, game, r2D), //
-				new Ghost2D(sc.portraits[1].ghost, game, r2D), //
-				new Ghost2D(sc.portraits[2].ghost, game, r2D), //
-				new Ghost2D(sc.portraits[3].ghost, game, r2D) };
+				new Ghost2D(sc.context.portraits[0].ghost, game, r2D), //
+				new Ghost2D(sc.context.portraits[1].ghost, game, r2D), //
+				new Ghost2D(sc.context.portraits[2].ghost, game, r2D), //
+				new Ghost2D(sc.context.portraits[3].ghost, game, r2D) };
 	}
 
 	@Override
@@ -95,7 +95,7 @@ public class PacMan_IntroScene extends GameScene2D {
 		sc.updateState();
 		// TODO find a better solution:
 		if (sc.state == IntroState.CHASING_GHOSTS) {
-			for (Ghost ghost : sc.ghosts) {
+			for (Ghost ghost : sc.context.ghosts) {
 				if (ghost.velocity.equals(V2d.NULL)) {
 					ghosts2D[ghost.id].animFrightened.stop();
 				} else if (!ghosts2D[ghost.id].animFrightened.isRunning()) {
@@ -117,7 +117,7 @@ public class PacMan_IntroScene extends GameScene2D {
 		case SHOWING_POINTS -> {
 			drawGallery();
 			drawPoints(11, 25);
-			if (sc.stateTimer().ticked() > sec_to_ticks(1)) {
+			if (sc.state.timer().ticked() > sec_to_ticks(1)) {
 				drawEnergizer();
 				drawCopyright(32);
 			}
@@ -127,10 +127,10 @@ public class PacMan_IntroScene extends GameScene2D {
 			drawGallery();
 			drawPoints(11, 25);
 			drawCopyright(32);
-			if (sc.fastBlinking.frame()) {
+			if (sc.context.fastBlinking.frame()) {
 				drawEnergizer();
 			}
-			int offset = sc.stateTimer().ticked() % 5 < 2 ? 0 : -1;
+			int offset = sc.state.timer().ticked() % 5 < 2 ? 0 : -1;
 			drawGuys(offset);
 		}
 
@@ -168,13 +168,13 @@ public class PacMan_IntroScene extends GameScene2D {
 		var g = canvas.getGraphicsContext2D();
 		g.setFill(Color.WHITE);
 		g.setFont(r2D.getArcadeFont());
-		g.fillText("CHARACTER", t(6), sc.topY);
-		g.fillText("/", t(16), sc.topY);
-		g.fillText("NICKNAME", t(18), sc.topY);
-		for (int ghostID = 0; ghostID < sc.portraits.length; ++ghostID) {
-			GhostPortrait portrait = sc.portraits[ghostID];
+		g.fillText("CHARACTER", t(6), sc.context.topY);
+		g.fillText("/", t(16), sc.context.topY);
+		g.fillText("NICKNAME", t(18), sc.context.topY);
+		for (int ghostID = 0; ghostID < sc.context.portraits.length; ++ghostID) {
+			GhostPortrait portrait = sc.context.portraits[ghostID];
 			if (portrait.ghost.visible) {
-				int y = sc.topY + t(1 + 3 * ghostID);
+				int y = sc.context.topY + t(1 + 3 * ghostID);
 				gallery2D[ghostID].render(g);
 				if (portrait.characterVisible) {
 					g.setFill(r2D.getGhostSkinColor(ghostID));
@@ -190,7 +190,7 @@ public class PacMan_IntroScene extends GameScene2D {
 
 	private void drawPressKeyToStart(int yTile) {
 		var g = canvas.getGraphicsContext2D();
-		if (sc.slowBlinking.frame()) {
+		if (sc.context.slowBlinking.frame()) {
 			String text = "PRESS SPACE TO PLAY";
 			g.setFill(Color.WHITE);
 			g.setFont(r2D.getArcadeFont());
@@ -202,7 +202,7 @@ public class PacMan_IntroScene extends GameScene2D {
 		var g = canvas.getGraphicsContext2D();
 		g.setFill(r2D.getFoodColor(1));
 		g.fillRect(t(tileX) + 6, t(tileY - 1) + 2, 2, 2);
-		if (sc.fastBlinking.frame()) {
+		if (sc.context.fastBlinking.frame()) {
 			g.fillOval(t(tileX), t(tileY + 1) - 2, 10, 10);
 		}
 		g.setFill(Color.WHITE);
