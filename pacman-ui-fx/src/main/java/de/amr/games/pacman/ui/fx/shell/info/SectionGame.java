@@ -78,7 +78,7 @@ public class SectionGame extends Section {
 			return String.format("Remaining: %s", remainingText);
 		});
 		addInfo("Playing", () -> U.yes_no(gc.gameRunning));
-		addInfo("Attract Mode", () -> U.yes_no(gc.attractMode));
+		addInfo("Attract Mode", () -> U.yes_no(gc.game.attractMode));
 		addInfo("Game scene", () -> ui.getCurrentGameScene().getClass().getSimpleName());
 		addInfo("", () -> String.format("w=%.0f h=%.0f", ui.getCurrentGameScene().getFXSubScene().getWidth(),
 				ui.getCurrentGameScene().getFXSubScene().getHeight()));
@@ -102,7 +102,7 @@ public class SectionGame extends Section {
 		comboGameVariant.setDisable(gc.gameRunning);
 
 		// start game
-		btnsGameControl[0].setDisable(gc.gameRequested || gc.gameRunning || gc.attractMode);
+		btnsGameControl[0].setDisable(gc.gameRequested || gc.gameRunning || gc.game.attractMode);
 		// quit game
 		btnsGameControl[1].setDisable(gc.state == GameState.INTRO || gc.state == GameState.INTERMISSION_TEST);
 		// next level

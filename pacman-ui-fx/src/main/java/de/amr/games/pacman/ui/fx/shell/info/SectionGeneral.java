@@ -97,7 +97,7 @@ public class SectionGeneral extends Section {
 		btnsSimulation[0].setTooltip(Env.$paused.get() ? tooltipPlay : tooltipStop);
 		btnsSimulation[1].setDisable(!Env.$paused.get());
 		sliderTargetFPS.setValue(GameLoop.get().getTargetFrameRate());
-		cbMuted.setDisable(gc.attractMode);
+		cbMuted.setDisable(gc.game.attractMode);
 		cbMuted.setSelected(SoundManager.get().isMuted());
 		cbAutopilot.setSelected(gc.autoControlled);
 		cbImmunity.setSelected(gc.playerImmune);
