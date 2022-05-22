@@ -192,14 +192,14 @@ public class GameUI extends DefaultGameEventHandler {
 		if (e.isAltDown()) {
 			switch (e.getCode()) {
 			case A -> toggleAutopilot();
-			case E -> gc.cheatEatAllPellets();
+			case E -> gc.game().cheatEatAllPellets();
 			case I -> toggleImmunity();
 			case L -> addLives(3);
 			case M -> toggleSoundMuted();
 			case N -> enterNextLevel();
 			case Q -> quitCurrentGameScene();
 			case V -> toggleGameVariant();
-			case X -> gc.cheatKillGhosts();
+			case X -> gc.game().cheatKillGhosts();
 			case Z -> startIntermissionScenesTest();
 			case LEFT -> changePerspective(-1);
 			case RIGHT -> changePerspective(1);
@@ -236,33 +236,33 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	public void enterNextLevel() {
-		if (gc.game.running) {
+		if (gc.game().running) {
 			gc.changeState(GameState.LEVEL_COMPLETE);
 		}
 	}
 
 	public void enterLevel(int levelNumber) {
-		if (gc.game.levelNumber == levelNumber) {
+		if (gc.game().levelNumber == levelNumber) {
 			return;
 		}
 		SoundManager.get().stopAll();
 		if (levelNumber == 1) {
-			gc.game.reset();
+			gc.game().reset();
 			gc.changeState(GameState.READY);
 		} else {
 			// TODO game model should be able to switch directly to any level
-			int start = levelNumber > gc.game.levelNumber ? gc.game.levelNumber + 1 : 1;
+			int start = levelNumber > gc.game().levelNumber ? gc.game().levelNumber + 1 : 1;
 			for (int n = start; n < levelNumber; ++n) {
-				gc.game.setLevel(n);
+				gc.game().setLevel(n);
 			}
 			gc.changeState(GameState.LEVEL_STARTING);
 		}
 	}
 
 	public void addLives(int lives) {
-		if (gc.game.running) {
-			gc.game.player.lives += lives;
-			showFlashMessage(1, "You have %d lives", gc.game.player.lives);
+		if (gc.game().running) {
+			gc.game().player.lives += lives;
+			showFlashMessage(1, "You have %d lives", gc.game().player.lives);
 		}
 	}
 
@@ -283,14 +283,14 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	public void toggleGameVariant() {
-		if (!gc.game.running) {
+		if (!gc.game().running) {
 			gc.selectGameVariant(gc.gameVariant().succ());
 		}
 	}
 
 	public void toggleAutopilot() {
-		gc.autoControlled = !gc.autoControlled;
-		String message = Env.message(gc.autoControlled ? "autopilot_on" : "autopilot_off");
+		gc.playerAutomove = !gc.playerAutomove;
+		String message = Env.message(gc.playerAutomove ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(1, message);
 	}
 
@@ -319,7 +319,7 @@ public class GameUI extends DefaultGameEventHandler {
 
 	public void toggleSoundMuted() {
 		if (SoundManager.get().isMuted()) {
-			if (!gc.game.attractMode) {
+			if (!gc.game().attractMode) {
 				SoundManager.get().setMuted(false);
 			}
 		} else {

@@ -65,7 +65,7 @@ public class SectionGame extends Section {
 		btnsIntermissionTest[0].setOnAction(e -> ui.startIntermissionScenesTest());
 		btnsIntermissionTest[1].setOnAction(e -> ui.quitCurrentGameScene());
 
-		spinnerGameLevel = addSpinner("Level", 1, 100, gc.game.levelNumber);
+		spinnerGameLevel = addSpinner("Level", 1, 100, gc.game().levelNumber);
 		spinnerGameLevel.valueProperty().addListener(($value, oldValue, newValue) -> ui.enterLevel(newValue.intValue()));
 		addInfo("Game State", this::fmtGameState);
 		addInfo("", () -> {
@@ -77,21 +77,21 @@ public class SectionGame extends Section {
 			String remainingText = remaining == TickTimer.INDEFINITE ? "indefinite" : String.valueOf(remaining);
 			return String.format("Remaining: %s", remainingText);
 		});
-		addInfo("Playing", () -> U.yes_no(gc.game.running));
-		addInfo("Attract Mode", () -> U.yes_no(gc.game.attractMode));
+		addInfo("Playing", () -> U.yes_no(gc.game().running));
+		addInfo("Attract Mode", () -> U.yes_no(gc.game().attractMode));
 		addInfo("Game scene", () -> ui.getCurrentGameScene().getClass().getSimpleName());
 		addInfo("", () -> String.format("w=%.0f h=%.0f", ui.getCurrentGameScene().getFXSubScene().getWidth(),
 				ui.getCurrentGameScene().getFXSubScene().getHeight()));
-		addInfo("Ghost speed", () -> fmtSpeed(gc.game.ghostSpeed));
-		addInfo("Ghost speed (frightened)", () -> fmtSpeed(gc.game.ghostSpeedFrightened));
-		addInfo("Ghost speed (tunnel)", () -> fmtSpeed(gc.game.ghostSpeedTunnel));
-		addInfo("Ghost frightened time", () -> String.format("%d sec", gc.game.ghostFrightenedSeconds));
-		addInfo("Pac-Man speed", () -> fmtSpeed(gc.game.playerSpeed));
-		addInfo("Pac-Man speed (power)", () -> fmtSpeed(gc.game.playerSpeedPowered));
-		addInfo("Bonus value", () -> gc.game.bonusValue(gc.game.bonusSymbol));
-		addInfo("Maze flashings", () -> gc.game.numFlashes);
-		addInfo("Pellets", () -> String.format("%d of %d (%d energizers)", gc.game.world.foodRemaining(),
-				gc.game.world.tiles().filter(gc.game.world::isFoodTile).count(), gc.game.world.energizerTiles().count()));
+		addInfo("Ghost speed", () -> fmtSpeed(gc.game().ghostSpeed));
+		addInfo("Ghost speed (frightened)", () -> fmtSpeed(gc.game().ghostSpeedFrightened));
+		addInfo("Ghost speed (tunnel)", () -> fmtSpeed(gc.game().ghostSpeedTunnel));
+		addInfo("Ghost frightened time", () -> String.format("%d sec", gc.game().ghostFrightenedSeconds));
+		addInfo("Pac-Man speed", () -> fmtSpeed(gc.game().playerSpeed));
+		addInfo("Pac-Man speed (power)", () -> fmtSpeed(gc.game().playerSpeedPowered));
+		addInfo("Bonus value", () -> gc.game().bonusValue(gc.game().bonusSymbol));
+		addInfo("Maze flashings", () -> gc.game().numFlashes);
+		addInfo("Pellets", () -> String.format("%d of %d (%d energizers)", gc.game().world.foodRemaining(),
+				gc.game().world.tiles().filter(gc.game().world::isFoodTile).count(), gc.game().world.energizerTiles().count()));
 	}
 
 	@Override
@@ -99,14 +99,14 @@ public class SectionGame extends Section {
 		super.update();
 
 		comboGameVariant.setValue(gc.gameVariant());
-		comboGameVariant.setDisable(gc.game.running);
+		comboGameVariant.setDisable(gc.game().running);
 
 		// start game
-		btnsGameControl[0].setDisable(gc.game.requested || gc.game.running || gc.game.attractMode);
+		btnsGameControl[0].setDisable(gc.game().requested || gc.game().running || gc.game().attractMode);
 		// quit game
 		btnsGameControl[1].setDisable(gc.state == GameState.INTRO || gc.state == GameState.INTERMISSION_TEST);
 		// next level
-		btnsGameControl[2].setDisable(!gc.game.running
+		btnsGameControl[2].setDisable(!gc.game().running
 				|| (gc.state != GameState.HUNTING && gc.state != GameState.READY && gc.state != GameState.LEVEL_STARTING));
 
 		// start intermission test
@@ -114,8 +114,8 @@ public class SectionGame extends Section {
 		// quit intermission test
 		btnsIntermissionTest[1].setDisable(gc.state != GameState.INTERMISSION_TEST);
 
-		spinnerGameLevel.getValueFactory().setValue(gc.game.levelNumber);
-		if (!gc.game.running) {
+		spinnerGameLevel.getValueFactory().setValue(gc.game().levelNumber);
+		if (!gc.game().running) {
 			spinnerGameLevel.setDisable(true);
 		} else {
 			spinnerGameLevel.setDisable(
@@ -128,8 +128,8 @@ public class SectionGame extends Section {
 	}
 
 	private String fmtGameState() {
-		var huntingPhaseName = gc.game.inScatteringPhase() ? "Scattering" : "Chasing";
+		var huntingPhaseName = gc.game().inScatteringPhase() ? "Scattering" : "Chasing";
 		return gc.state == GameState.HUNTING ? //
-				String.format("%s: Phase #%d (%s)", gc.state, gc.game.huntingPhase, huntingPhaseName) : gc.state.name();
+				String.format("%s: Phase #%d (%s)", gc.state, gc.game().huntingPhase, huntingPhaseName) : gc.state.name();
 	}
 }
