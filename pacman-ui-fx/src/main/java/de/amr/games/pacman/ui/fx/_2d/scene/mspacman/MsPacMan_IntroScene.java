@@ -28,6 +28,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.mspacman.IntroContext;
 import de.amr.games.pacman.controller.mspacman.IntroController;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2i;
@@ -51,6 +52,8 @@ import javafx.scene.text.Font;
 public class MsPacMan_IntroScene extends GameScene2D {
 
 	private final IntroController sc;
+	private final IntroContext context;
+
 	private final Image midwayLogo = U.image("/mspacman/graphics/midway.png");
 	private Player2D msPacMan2D;
 	private Ghost2D[] ghosts2D;
@@ -58,6 +61,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 	public MsPacMan_IntroScene(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
 		sc = new IntroController(gameController);
+		context = sc.getContext();
 	}
 
 	@Override
@@ -65,9 +69,9 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		sc.init();
 		createScores();
 		score2D.showPoints = false;
-		msPacMan2D = new Player2D(sc.msPacMan, game, r2D);
+		msPacMan2D = new Player2D(context.msPacMan, game, r2D);
 		msPacMan2D.animMunching.values().forEach(TimedSeq::restart);
-		ghosts2D = Stream.of(sc.ghosts).map(ghost -> new Ghost2D(ghost, game, r2D)).toArray(Ghost2D[]::new);
+		ghosts2D = Stream.of(context.ghosts).map(ghost -> new Ghost2D(ghost, game, r2D)).toArray(Ghost2D[]::new);
 		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animKicking.values().forEach(TimedSeq::restart));
 	}
 
@@ -83,7 +87,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 
 		g.setFont(r2D.getArcadeFont());
 		g.setFill(Color.ORANGE);
-		g.fillText("\"MS PAC-MAN\"", sc.titlePosition.x, sc.titlePosition.y);
+		g.fillText("\"MS PAC-MAN\"", context.titlePosition.x, context.titlePosition.y);
 
 		drawAnimatedBoard(32, 16);
 		switch (sc.state) {
@@ -106,26 +110,26 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		var g = canvas.getGraphicsContext2D();
 		g.setFill(Color.WHITE);
 		g.setFont(r2D.getArcadeFont());
-		if (sc.ghostIndex == 0) {
-			g.fillText("WITH", sc.titlePosition.x, sc.boardTopLeft.y + t(3));
+		if (context.ghostIndex == 0) {
+			g.fillText("WITH", context.titlePosition.x, context.boardTopLeft.y + t(3));
 		}
-		Ghost ghost = sc.ghosts[sc.ghostIndex];
+		Ghost ghost = context.ghosts[context.ghostIndex];
 		g.setFill(r2D.getGhostSkinColor(ghost.id));
-		g.fillText(ghost.name.toUpperCase(), t(14 - ghost.name.length() / 2), sc.boardTopLeft.y + t(6));
+		g.fillText(ghost.name.toUpperCase(), t(14 - ghost.name.length() / 2), context.boardTopLeft.y + t(6));
 	}
 
 	private void drawMsPacManText() {
 		var g = canvas.getGraphicsContext2D();
 		g.setFill(Color.WHITE);
 		g.setFont(r2D.getArcadeFont());
-		g.fillText("STARRING", sc.titlePosition.x, sc.boardTopLeft.y + t(3));
+		g.fillText("STARRING", context.titlePosition.x, context.boardTopLeft.y + t(3));
 		g.setFill(Color.YELLOW);
-		g.fillText("MS PAC-MAN", sc.titlePosition.x, sc.boardTopLeft.y + t(6));
+		g.fillText("MS PAC-MAN", context.titlePosition.x, context.boardTopLeft.y + t(6));
 	}
 
 	private void drawAnimatedBoard(int numDotsX, int numDotsY) {
 		var g = canvas.getGraphicsContext2D();
-		long time = sc.boardAnimationTimer.ticked();
+		long time = context.boardAnimationTimer.ticked();
 		int light = (int) (time / 2) % (numDotsX / 2);
 		for (int dot = 0; dot < 2 * (numDotsX + numDotsY); ++dot) {
 			int x = 0, y = 0;
@@ -141,13 +145,13 @@ public class MsPacMan_IntroScene extends GameScene2D {
 				y = 2 * (numDotsX + numDotsY) - dot;
 			}
 			g.setFill((dot + light) % (numDotsX / 2) == 0 ? Color.PINK : Color.RED);
-			g.fillRect(sc.boardTopLeft.x + 4 * x, sc.boardTopLeft.y + 4 * y, 2, 2);
+			g.fillRect(context.boardTopLeft.x + 4 * x, context.boardTopLeft.y + 4 * y, 2, 2);
 		}
 	}
 
 	private void drawPressKeyToStart(int tileY) {
 		var g = canvas.getGraphicsContext2D();
-		if (sc.blinking.frame()) {
+		if (context.blinking.frame()) {
 			String text = "PRESS SPACE TO PLAY";
 			g.setFill(Color.WHITE);
 			g.setFont(r2D.getArcadeFont());

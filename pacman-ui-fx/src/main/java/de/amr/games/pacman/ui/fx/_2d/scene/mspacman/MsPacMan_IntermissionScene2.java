@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.mspacman.Intermission2Context;
 import de.amr.games.pacman.controller.mspacman.Intermission2Controller;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2i;
@@ -49,6 +50,8 @@ import javafx.scene.canvas.GraphicsContext;
 public class MsPacMan_IntermissionScene2 extends GameScene2D {
 
 	private final Intermission2Controller sc;
+	private final Intermission2Context context;
+
 	private LevelCounter2D levelCounter2D;
 	private Player2D msPacMan2D;
 	private Player2D pacMan2D;
@@ -57,8 +60,9 @@ public class MsPacMan_IntermissionScene2 extends GameScene2D {
 	public MsPacMan_IntermissionScene2(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
 		sc = new Intermission2Controller(gameController);
-		sc.playIntermissionSound = () -> SoundManager.get().play(GameSound.INTERMISSION_2);
-		sc.playFlapAnimation = () -> flap2D.animation.restart();
+		context = sc.getContext();
+		context.playIntermissionSound = () -> SoundManager.get().play(GameSound.INTERMISSION_2);
+		context.playFlapAnimation = () -> flap2D.animation.restart();
 	}
 
 	@Override
@@ -68,12 +72,12 @@ public class MsPacMan_IntermissionScene2 extends GameScene2D {
 		levelCounter2D = new LevelCounter2D(game, r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
 
-		flap2D = new Flap2D(sc.flap, game);
+		flap2D = new Flap2D(context.flap, game);
 
-		msPacMan2D = new Player2D(sc.msPacMan, game, r2D);
+		msPacMan2D = new Player2D(context.msPacMan, game, r2D);
 		msPacMan2D.animMunching.values().forEach(TimedSeq::restart);
 
-		pacMan2D = new Player2D(sc.pacMan, game, r2D);
+		pacMan2D = new Player2D(context.pacMan, game, r2D);
 		pacMan2D.animMunching = ((Rendering2D_MsPacMan) r2D).createHusbandMunchingAnimations();
 		pacMan2D.animMunching.values().forEach(TimedSeq::restart);
 	}

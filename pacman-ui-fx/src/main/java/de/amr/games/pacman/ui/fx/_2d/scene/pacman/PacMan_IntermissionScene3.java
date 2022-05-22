@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.pacman.Intermission3Context;
 import de.amr.games.pacman.controller.pacman.Intermission3Controller;
 import de.amr.games.pacman.controller.pacman.Intermission3State;
 import de.amr.games.pacman.lib.TimedSeq;
@@ -47,6 +48,8 @@ import javafx.scene.canvas.GraphicsContext;
 public class PacMan_IntermissionScene3 extends GameScene2D {
 
 	private final Intermission3Controller sc;
+	private final Intermission3Context context;
+
 	private LevelCounter2D levelCounter2D;
 	private Player2D pacMan2D;
 	private BlinkyPatched2D blinkyPatched2D;
@@ -55,7 +58,8 @@ public class PacMan_IntermissionScene3 extends GameScene2D {
 	public PacMan_IntermissionScene3(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
 		sc = new Intermission3Controller(gameController);
-		sc.playIntermissionSound = () -> SoundManager.get().loop(GameSound.INTERMISSION_3, 2);
+		context = sc.getContext();
+		context.playIntermissionSound = () -> SoundManager.get().loop(GameSound.INTERMISSION_3, 2);
 	}
 
 	@Override
@@ -65,9 +69,9 @@ public class PacMan_IntermissionScene3 extends GameScene2D {
 		levelCounter2D = new LevelCounter2D(game, r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
 
-		pacMan2D = new Player2D(sc.pac, game, r2D);
-		blinkyPatched2D = new BlinkyPatched2D(sc.blinky, game);
-		blinkyNaked2D = new BlinkyNaked2D(sc.blinky, game);
+		pacMan2D = new Player2D(context.pac, game, r2D);
+		blinkyPatched2D = new BlinkyPatched2D(context.blinky, game);
+		blinkyNaked2D = new BlinkyNaked2D(context.blinky, game);
 		pacMan2D.animMunching.values().forEach(TimedSeq::restart);
 		blinkyPatched2D.animation.restart();
 		blinkyNaked2D.animation.restart();

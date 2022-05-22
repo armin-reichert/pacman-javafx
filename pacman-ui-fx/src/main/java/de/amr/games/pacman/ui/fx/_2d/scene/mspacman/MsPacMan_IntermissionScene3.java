@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.mspacman.Intermission3Context;
 import de.amr.games.pacman.controller.mspacman.Intermission3Controller;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
@@ -52,6 +53,8 @@ import javafx.scene.canvas.GraphicsContext;
 public class MsPacMan_IntermissionScene3 extends GameScene2D {
 
 	private final Intermission3Controller sc;
+	private final Intermission3Context context;
+
 	private LevelCounter2D levelCounter2D;
 	private Player2D msPacMan2D;
 	private Player2D pacMan2D;
@@ -62,8 +65,9 @@ public class MsPacMan_IntermissionScene3 extends GameScene2D {
 	public MsPacMan_IntermissionScene3(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
 		sc = new Intermission3Controller(gameController);
-		sc.playIntermissionSound = () -> SoundManager.get().play(GameSound.INTERMISSION_3);
-		sc.playFlapAnimation = () -> flap2D.animation.restart();
+		context = sc.getContext();
+		context.playIntermissionSound = () -> SoundManager.get().play(GameSound.INTERMISSION_3);
+		context.playFlapAnimation = () -> flap2D.animation.restart();
 	}
 
 	@Override
@@ -73,13 +77,13 @@ public class MsPacMan_IntermissionScene3 extends GameScene2D {
 		levelCounter2D = new LevelCounter2D(game, r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
 
-		msPacMan2D = new Player2D(sc.msPacMan, game, r2D);
-		pacMan2D = new Player2D(sc.pacMan, game, r2D);
+		msPacMan2D = new Player2D(context.msPacMan, game, r2D);
+		pacMan2D = new Player2D(context.pacMan, game, r2D);
 		pacMan2D.animMunching = ((Rendering2D_MsPacMan) r2D).createHusbandMunchingAnimations();
 
-		flap2D = new Flap2D(sc.flap, game);
-		stork2D = new Stork2D(sc.stork, game);
-		bag2D = new JuniorBag2D(sc.bag, game);
+		flap2D = new Flap2D(context.flap, game);
+		stork2D = new Stork2D(context.stork, game);
+		bag2D = new JuniorBag2D(context.bag, game);
 	}
 
 	@Override

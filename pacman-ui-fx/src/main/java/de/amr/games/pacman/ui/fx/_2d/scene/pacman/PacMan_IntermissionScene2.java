@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.pacman.Intermission2Context;
 import de.amr.games.pacman.controller.pacman.Intermission2Controller;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSeq;
@@ -51,6 +52,8 @@ import javafx.scene.canvas.GraphicsContext;
 public class PacMan_IntermissionScene2 extends GameScene2D {
 
 	private final Intermission2Controller sc;
+	private final Intermission2Context context;
+
 	private LevelCounter2D levelCounter2D;
 	private Player2D pacMan2D;
 	private Ghost2D blinky2D;
@@ -61,7 +64,8 @@ public class PacMan_IntermissionScene2 extends GameScene2D {
 	public PacMan_IntermissionScene2(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
 		sc = new Intermission2Controller(gameController);
-		sc.playIntermissionSound = () -> SoundManager.get().play(GameSound.INTERMISSION_2);
+		context = sc.getContext();
+		context.playIntermissionSound = () -> SoundManager.get().play(GameSound.INTERMISSION_2);
 	}
 
 	@Override
@@ -71,9 +75,9 @@ public class PacMan_IntermissionScene2 extends GameScene2D {
 		levelCounter2D = new LevelCounter2D(game, r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
 
-		pacMan2D = new Player2D(sc.pac, game, r2D);
-		blinky2D = new Ghost2D(sc.blinky, game, r2D);
-		nail2D = new Nail2D(sc.nail, game);
+		pacMan2D = new Player2D(context.pac, game, r2D);
+		blinky2D = new Ghost2D(context.blinky, game, r2D);
+		nail2D = new Nail2D(context.nail, game);
 		pacMan2D.animMunching.values().forEach(TimedSeq::restart);
 		blinky2D.animKicking.values().forEach(TimedSeq::restart);
 		blinkyStretchedAnimation = ((Rendering2D_PacMan) r2D).createBlinkyStretchedAnimation();
@@ -93,7 +97,7 @@ public class PacMan_IntermissionScene2 extends GameScene2D {
 		if (sc.nailDistance() < 0) {
 			blinky2D.render(g);
 		} else {
-			drawBlinkyStretched(sc.blinky, sc.nail.position, sc.nailDistance() / 4);
+			drawBlinkyStretched(context.blinky, context.nail.position, sc.nailDistance() / 4);
 		}
 	}
 

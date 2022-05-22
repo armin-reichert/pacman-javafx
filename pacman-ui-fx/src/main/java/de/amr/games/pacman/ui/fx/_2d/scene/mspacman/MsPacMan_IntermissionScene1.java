@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.mspacman.Intermission1Context;
 import de.amr.games.pacman.controller.mspacman.Intermission1Controller;
 import de.amr.games.pacman.controller.mspacman.Intermission1State;
 import de.amr.games.pacman.lib.TimedSeq;
@@ -54,6 +55,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class MsPacMan_IntermissionScene1 extends GameScene2D {
 
 	private final Intermission1Controller sc;
+	private final Intermission1Context context;
 	private LevelCounter2D levelCounter2D;
 	private Player2D msPacMan2D;
 	private Player2D pacMan2D;
@@ -65,8 +67,9 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 	public MsPacMan_IntermissionScene1(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
 		sc = new Intermission1Controller(gameController);
-		sc.playIntermissionSound = () -> SoundManager.get().loop(GameSound.INTERMISSION_1, 1);
-		sc.playFlapAnimation = () -> flap2D.animation.restart();
+		context = sc.getContext();
+		context.playIntermissionSound = () -> SoundManager.get().loop(GameSound.INTERMISSION_1, 1);
+		context.playFlapAnimation = () -> flap2D.animation.restart();
 	}
 
 	@Override
@@ -76,13 +79,13 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 		levelCounter2D = new LevelCounter2D(game, r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
 
-		flap2D = new Flap2D(sc.flap, game);
-		msPacMan2D = new Player2D(sc.msPac, game, r2D);
-		pacMan2D = new Player2D(sc.pacMan, game, r2D);
+		flap2D = new Flap2D(context.flap, game);
+		msPacMan2D = new Player2D(context.msPac, game, r2D);
+		pacMan2D = new Player2D(context.pacMan, game, r2D);
 		pacMan2D.animMunching = ((Rendering2D_MsPacMan) r2D).createHusbandMunchingAnimations();
-		inky2D = new Ghost2D(sc.inky, game, r2D);
-		pinky2D = new Ghost2D(sc.pinky, game, r2D);
-		heart2D = new Heart2D(sc.heart, game);
+		inky2D = new Ghost2D(context.inky, game, r2D);
+		pinky2D = new Ghost2D(context.pinky, game, r2D);
+		heart2D = new Heart2D(context.heart, game);
 
 		// start animations
 		msPacMan2D.animMunching.values().forEach(TimedSeq::restart);
@@ -95,7 +98,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 	public void doUpdate() {
 		sc.updateState();
 		// stop ghost animation when Pac-Man and Ms. Pac-Man are in heaven
-		if (sc.state == Intermission1State.IN_HEAVEN && sc.pacMan.velocity.equals(V2d.NULL)) {
+		if (sc.state == Intermission1State.IN_HEAVEN && context.pacMan.velocity.equals(V2d.NULL)) {
 			inky2D.animKicking.values().forEach(TimedSeq::stop);
 			pinky2D.animKicking.values().forEach(TimedSeq::stop);
 		}
