@@ -232,7 +232,7 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	public void enterNextLevel() {
-		if (gc.gameRunning) {
+		if (gc.game.running) {
 			gc.changeState(GameState.LEVEL_COMPLETE);
 		}
 	}
@@ -256,7 +256,7 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	public void addLives(int lives) {
-		if (gc.gameRunning) {
+		if (gc.game.running) {
 			gc.game.player.lives += lives;
 			showFlashMessage(1, "You have %d lives", gc.game.player.lives);
 		}
@@ -279,7 +279,7 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	public void toggleGameVariant() {
-		if (!gc.gameRunning) {
+		if (!gc.game.running) {
 			gc.selectGameVariant(gc.gameVariant.succ());
 		}
 	}

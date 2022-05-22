@@ -77,7 +77,7 @@ public class SectionGame extends Section {
 			String remainingText = remaining == TickTimer.INDEFINITE ? "indefinite" : String.valueOf(remaining);
 			return String.format("Remaining: %s", remainingText);
 		});
-		addInfo("Playing", () -> U.yes_no(gc.gameRunning));
+		addInfo("Playing", () -> U.yes_no(gc.game.running));
 		addInfo("Attract Mode", () -> U.yes_no(gc.game.attractMode));
 		addInfo("Game scene", () -> ui.getCurrentGameScene().getClass().getSimpleName());
 		addInfo("", () -> String.format("w=%.0f h=%.0f", ui.getCurrentGameScene().getFXSubScene().getWidth(),
@@ -99,14 +99,14 @@ public class SectionGame extends Section {
 		super.update();
 
 		comboGameVariant.setValue(gc.gameVariant);
-		comboGameVariant.setDisable(gc.gameRunning);
+		comboGameVariant.setDisable(gc.game.running);
 
 		// start game
-		btnsGameControl[0].setDisable(gc.gameRequested || gc.gameRunning || gc.game.attractMode);
+		btnsGameControl[0].setDisable(gc.game.requested || gc.game.running || gc.game.attractMode);
 		// quit game
 		btnsGameControl[1].setDisable(gc.state == GameState.INTRO || gc.state == GameState.INTERMISSION_TEST);
 		// next level
-		btnsGameControl[2].setDisable(!gc.gameRunning
+		btnsGameControl[2].setDisable(!gc.game.running
 				|| (gc.state != GameState.HUNTING && gc.state != GameState.READY && gc.state != GameState.LEVEL_STARTING));
 
 		// start intermission test
@@ -115,7 +115,7 @@ public class SectionGame extends Section {
 		btnsIntermissionTest[1].setDisable(gc.state != GameState.INTERMISSION_TEST);
 
 		spinnerGameLevel.getValueFactory().setValue(gc.game.levelNumber);
-		if (!gc.gameRunning) {
+		if (!gc.game.running) {
 			spinnerGameLevel.setDisable(true);
 		} else {
 			spinnerGameLevel.setDisable(

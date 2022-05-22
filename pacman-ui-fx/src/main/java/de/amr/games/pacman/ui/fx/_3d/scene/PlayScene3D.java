@@ -380,7 +380,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			player3D.reset();
 			Stream.of(ghosts3D).forEach(Ghost3D::reset);
 			SoundManager.get().stopAll();
-			if (!game.attractMode && !gc.gameRunning) {
+			if (!game.attractMode && !game.running) {
 				SoundManager.get().play(GameSound.GAME_READY);
 			}
 		}
