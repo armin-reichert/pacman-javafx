@@ -30,6 +30,7 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
 import javafx.scene.paint.Color;
@@ -45,6 +46,8 @@ public class SectionGame extends Section {
 	private Button[] btnsGameControl;
 	private Button[] btnsIntermissionTest;
 	private Spinner<Integer> spinnerGameLevel;
+	private CheckBox cbAutopilot;
+	private CheckBox cbImmunity;
 
 	public SectionGame(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
 		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
@@ -67,6 +70,10 @@ public class SectionGame extends Section {
 
 		spinnerGameLevel = addSpinner("Level", 1, 100, gc.game().levelNumber);
 		spinnerGameLevel.valueProperty().addListener(($value, oldValue, newValue) -> ui.enterLevel(newValue.intValue()));
+
+		cbAutopilot = addCheckBox("Autopilot", ui::toggleAutopilot);
+		cbImmunity = addCheckBox("Player immune", ui::toggleImmunity);
+
 		addInfo("Game State", this::fmtGameState);
 		addInfo("", () -> {
 			long ticked = gc.state().timer().tick();
@@ -100,6 +107,9 @@ public class SectionGame extends Section {
 
 		comboGameVariant.setValue(gc.gameVariant());
 		comboGameVariant.setDisable(gc.game().running);
+
+		cbAutopilot.setSelected(gc.game().player.autoMoving);
+		cbImmunity.setSelected(gc.game().player.immune);
 
 		// start game
 		btnsGameControl[0].setDisable(gc.game().requested || gc.game().running || gc.game().attractMode);

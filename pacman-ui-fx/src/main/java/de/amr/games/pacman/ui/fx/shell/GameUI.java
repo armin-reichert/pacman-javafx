@@ -289,14 +289,14 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	public void toggleAutopilot() {
-		gc.playerAutomove = !gc.playerAutomove;
-		String message = Env.message(gc.playerAutomove ? "autopilot_on" : "autopilot_off");
+		gc.game().player.autoMoving = !gc.game().player.autoMoving;
+		String message = Env.message(gc.game().player.autoMoving ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(1, message);
 	}
 
 	public void toggleImmunity() {
-		gc.playerImmune = !gc.playerImmune;
-		String message = Env.message(gc.playerImmune ? "player_immunity_on" : "player_immunity_off");
+		gc.game().player.immune = !gc.game().player.immune;
+		String message = Env.message(gc.game().player.immune ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(1, message);
 	}
 

@@ -45,8 +45,6 @@ public class SectionGeneral extends Section {
 	private Button[] btnsSimulation;
 	private Slider sliderTargetFPS;
 	private CheckBox cbMuted;
-	private CheckBox cbAutopilot;
-	private CheckBox cbImmunity;
 	private CheckBox cbUsePlayScene3D;
 	private ImageView iconPlay = U.imageView("/common/icons/play.png");
 	private ImageView iconStop = U.imageView("/common/icons/stop.png");
@@ -83,8 +81,6 @@ public class SectionGeneral extends Section {
 
 		cbMuted = addCheckBox("Sound muted", ui::toggleSoundMuted);
 		cbUsePlayScene3D = addCheckBox("Use 3D play scene", ui::toggleUse3DScene);
-		cbAutopilot = addCheckBox("Autopilot", ui::toggleAutopilot);
-		cbImmunity = addCheckBox("Player immune", ui::toggleImmunity);
 
 		addInfo("Main scene", () -> String.format("w=%.0f h=%.0f", ui.stage.getScene().getWindow().getWidth(),
 				ui.stage.getScene().getWindow().getHeight()));
@@ -99,8 +95,6 @@ public class SectionGeneral extends Section {
 		sliderTargetFPS.setValue(GameLoop.get().getTargetFrameRate());
 		cbMuted.setDisable(gc.game().attractMode);
 		cbMuted.setSelected(SoundManager.get().isMuted());
-		cbAutopilot.setSelected(gc.playerAutomove);
-		cbImmunity.setSelected(gc.playerImmune);
 		cbUsePlayScene3D.setSelected(Env.$3D.get());
 	}
 }
