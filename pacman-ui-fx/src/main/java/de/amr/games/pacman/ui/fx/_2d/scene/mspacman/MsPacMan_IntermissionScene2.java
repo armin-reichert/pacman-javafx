@@ -28,7 +28,6 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission2Controller;
 import de.amr.games.pacman.controller.mspacman.Intermission2Controller.Context;
-import de.amr.games.pacman.controller.mspacman.Intermission2State;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
@@ -68,7 +67,7 @@ public class MsPacMan_IntermissionScene2 extends GameScene2D {
 
 	@Override
 	public void init() {
-		sceneController.reset(Intermission2State.FLAP);
+		sceneController.reset(Intermission2Controller.State.FLAP);
 		levelCounter2D = new LevelCounter2D(game, r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
 		flap2D = new Flap2D(context.flap, game);
