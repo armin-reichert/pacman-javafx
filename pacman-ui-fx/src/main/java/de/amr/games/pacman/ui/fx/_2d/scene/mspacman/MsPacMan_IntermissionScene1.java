@@ -54,7 +54,7 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class MsPacMan_IntermissionScene1 extends GameScene2D {
 
-	private final Intermission1Controller sc;
+	private final Intermission1Controller sceneController;
 	private final Intermission1Context context;
 	private LevelCounter2D levelCounter2D;
 	private Player2D msPacMan2D;
@@ -66,15 +66,15 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 
 	public MsPacMan_IntermissionScene1(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
-		sc = new Intermission1Controller(gameController);
-		context = sc.getContext();
+		sceneController = new Intermission1Controller(gameController);
+		context = sceneController.getContext();
 		context.playIntermissionSound = () -> SoundManager.get().loop(GameSound.INTERMISSION_1, 1);
 		context.playFlapAnimation = () -> flap2D.animation.restart();
 	}
 
 	@Override
 	public void init() {
-		sc.init();
+		sceneController.enterAsInitialState(Intermission1State.FLAP);
 
 		levelCounter2D = new LevelCounter2D(game, r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
@@ -96,9 +96,9 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 
 	@Override
 	public void doUpdate() {
-		sc.updateState();
+		sceneController.updateState();
 		// stop ghost animation when Pac-Man and Ms. Pac-Man are in heaven
-		if (sc.state() == Intermission1State.IN_HEAVEN && context.pacMan.velocity.equals(V2d.NULL)) {
+		if (sceneController.state() == Intermission1State.IN_HEAVEN && context.pacMan.velocity.equals(V2d.NULL)) {
 			inky2D.animKicking.values().forEach(TimedSeq::stop);
 			pinky2D.animKicking.values().forEach(TimedSeq::stop);
 		}
