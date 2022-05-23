@@ -69,7 +69,7 @@ public class PacMan_IntroScene extends GameScene2D {
 
 	@Override
 	public void init() {
-		sceneController.init();
+		sceneController.reset(IntroController.State.BEGIN);
 
 		createScores();
 		score2D.showPoints = false;
