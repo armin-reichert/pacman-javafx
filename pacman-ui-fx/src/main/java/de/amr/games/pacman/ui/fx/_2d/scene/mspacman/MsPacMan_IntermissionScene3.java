@@ -28,6 +28,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission3Context;
 import de.amr.games.pacman.controller.mspacman.Intermission3Controller;
+import de.amr.games.pacman.controller.mspacman.Intermission3State;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
@@ -52,7 +53,7 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class MsPacMan_IntermissionScene3 extends GameScene2D {
 
-	private final Intermission3Controller sc;
+	private final Intermission3Controller sceneController;
 	private final Intermission3Context context;
 
 	private LevelCounter2D levelCounter2D;
@@ -64,15 +65,15 @@ public class MsPacMan_IntermissionScene3 extends GameScene2D {
 
 	public MsPacMan_IntermissionScene3(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
-		sc = new Intermission3Controller(gameController);
-		context = sc.getContext();
+		sceneController = new Intermission3Controller(gameController);
+		context = sceneController.getContext();
 		context.playIntermissionSound = () -> SoundManager.get().play(GameSound.INTERMISSION_3);
 		context.playFlapAnimation = () -> flap2D.animation.restart();
 	}
 
 	@Override
 	public void init() {
-		sc.init();
+		sceneController.reset(Intermission3State.FLAP);
 
 		levelCounter2D = new LevelCounter2D(game, r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
@@ -88,7 +89,7 @@ public class MsPacMan_IntermissionScene3 extends GameScene2D {
 
 	@Override
 	public void doUpdate() {
-		sc.updateState();
+		sceneController.update();
 	}
 
 	@Override

@@ -30,6 +30,7 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.IntroContext;
 import de.amr.games.pacman.controller.mspacman.IntroController;
+import de.amr.games.pacman.controller.mspacman.IntroState;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.Ghost;
@@ -51,7 +52,7 @@ import javafx.scene.text.Font;
  */
 public class MsPacMan_IntroScene extends GameScene2D {
 
-	private final IntroController sc;
+	private final IntroController sceneController;
 	private final IntroContext context;
 
 	private final Image midwayLogo = U.image("/mspacman/graphics/midway.png");
@@ -60,13 +61,13 @@ public class MsPacMan_IntroScene extends GameScene2D {
 
 	public MsPacMan_IntroScene(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
-		sc = new IntroController(gameController);
-		context = sc.getContext();
+		sceneController = new IntroController(gameController);
+		context = sceneController.getContext();
 	}
 
 	@Override
 	public void init() {
-		sc.init();
+		sceneController.reset(IntroState.BEGIN);
 		createScores();
 		score2D.showPoints = false;
 		msPacMan2D = new Player2D(context.msPacMan, game, r2D);
@@ -77,7 +78,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 
 	@Override
 	public void doUpdate() {
-		sc.updateState();
+		sceneController.update();
 	}
 
 	@Override
@@ -90,10 +91,10 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		g.fillText("\"MS PAC-MAN\"", context.titlePosition.x, context.titlePosition.y);
 
 		drawAnimatedBoard(32, 16);
-		switch (sc.state()) {
+		switch (sceneController.state()) {
 		case GHOSTS -> drawGhostText();
 		case MSPACMAN -> drawMsPacManText();
-		case READY -> {
+		case READY_TO_PLAY -> {
 			drawMsPacManText();
 			drawPressKeyToStart(26);
 		}

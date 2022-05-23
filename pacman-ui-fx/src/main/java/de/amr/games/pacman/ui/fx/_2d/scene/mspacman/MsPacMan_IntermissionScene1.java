@@ -74,7 +74,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 
 	@Override
 	public void init() {
-		sceneController.enterAsInitialState(Intermission1State.FLAP);
+		sceneController.reset(Intermission1State.FLAP);
 
 		levelCounter2D = new LevelCounter2D(game, r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
@@ -96,7 +96,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 
 	@Override
 	public void doUpdate() {
-		sceneController.updateState();
+		sceneController.update();
 		// stop ghost animation when Pac-Man and Ms. Pac-Man are in heaven
 		if (sceneController.state() == Intermission1State.IN_HEAVEN && context.pacMan.velocity.equals(V2d.NULL)) {
 			inky2D.animKicking.values().forEach(TimedSeq::stop);

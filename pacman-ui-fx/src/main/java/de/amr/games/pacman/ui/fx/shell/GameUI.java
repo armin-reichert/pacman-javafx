@@ -111,7 +111,7 @@ public class GameUI extends DefaultGameEventHandler {
 	 * Called on every tick (if simulation is not paused).
 	 */
 	public void update() {
-		gc.updateState();
+		gc.update();
 		// game scene is updated *and* rendered such that when simulation is paused it gets redrawn nevertheless
 		currentGameScene.update();
 	}
@@ -232,7 +232,7 @@ public class GameUI extends DefaultGameEventHandler {
 	public void quitCurrentGameScene() {
 		currentGameScene.end();
 		SoundManager.get().stopAll();
-		gc.enterAsInitialState(GameState.INTRO);
+		gc.reset(GameState.INTRO);
 	}
 
 	public void enterNextLevel() {

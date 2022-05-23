@@ -86,7 +86,7 @@ public class PacMan_IntermissionScene2 extends GameScene2D {
 
 	@Override
 	public void doUpdate() {
-		sc.updateState();
+		sc.update();
 	}
 
 	@Override

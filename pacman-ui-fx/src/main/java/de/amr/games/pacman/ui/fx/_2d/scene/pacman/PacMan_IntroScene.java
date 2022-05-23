@@ -89,7 +89,7 @@ public class PacMan_IntroScene extends GameScene2D {
 
 	@Override
 	public void doUpdate() {
-		sceneController.updateState();
+		sceneController.update();
 		// TODO find a better solution:
 		if (sceneController.state() == IntroState.CHASING_GHOSTS) {
 			for (Ghost ghost : context.ghosts) {
