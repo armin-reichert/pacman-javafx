@@ -26,9 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.controller.pacman.Intermission3Context;
 import de.amr.games.pacman.controller.pacman.Intermission3Controller;
-import de.amr.games.pacman.controller.pacman.Intermission3State;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
@@ -48,7 +46,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class PacMan_IntermissionScene3 extends GameScene2D {
 
 	private final Intermission3Controller sc;
-	private final Intermission3Context context;
+	private final Intermission3Controller.Context context;
 
 	private LevelCounter2D levelCounter2D;
 	private Player2D pacMan2D;
@@ -86,7 +84,7 @@ public class PacMan_IntermissionScene3 extends GameScene2D {
 	public void doRender(GraphicsContext g) {
 		levelCounter2D.render(g);
 		pacMan2D.render(g);
-		if (sc.state() == Intermission3State.CHASING) {
+		if (sc.state() == Intermission3Controller.State.CHASING) {
 			blinkyPatched2D.render(g);
 		} else {
 			blinkyNaked2D.render(g);
