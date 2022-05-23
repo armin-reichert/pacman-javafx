@@ -30,7 +30,6 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.IntroController;
 import de.amr.games.pacman.controller.mspacman.IntroController.Context;
-import de.amr.games.pacman.controller.mspacman.IntroState;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.Ghost;
@@ -67,7 +66,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 
 	@Override
 	public void init() {
-		sceneController.reset(IntroState.BEGIN);
+		sceneController.reset(IntroController.State.BEGIN);
 		createScores();
 		score2D.showPoints = false;
 		msPacMan2D = new Player2D(context.msPacMan, game, r2D);
