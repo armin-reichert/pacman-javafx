@@ -232,7 +232,7 @@ public class GameUI extends DefaultGameEventHandler {
 	public void quitCurrentGameScene() {
 		currentGameScene.end();
 		SoundManager.get().stopAll();
-		gc.changeState(GameState.INTRO);
+		gc.enterAsInitialState(GameState.INTRO);
 	}
 
 	public void enterNextLevel() {

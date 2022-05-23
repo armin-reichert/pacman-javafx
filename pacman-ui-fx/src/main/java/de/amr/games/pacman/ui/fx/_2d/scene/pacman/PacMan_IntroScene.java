@@ -29,8 +29,8 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.controller.pacman.IntroContext.GhostPortrait;
 import de.amr.games.pacman.controller.common.GameController;
+import de.amr.games.pacman.controller.pacman.IntroContext.GhostPortrait;
 import de.amr.games.pacman.controller.pacman.IntroController;
 import de.amr.games.pacman.controller.pacman.IntroState;
 import de.amr.games.pacman.lib.TimedSeq;
@@ -40,7 +40,9 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -59,7 +61,6 @@ public class PacMan_IntroScene extends GameScene2D {
 
 	private Player2D pacMan2D;
 	private Ghost2D[] ghosts2D;
-	private Ghost2D[] gallery2D;
 
 	public PacMan_IntroScene(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
@@ -82,12 +83,6 @@ public class PacMan_IntroScene extends GameScene2D {
 			ghost2D.animFrightened.restart();
 			return ghost2D;
 		}).toArray(Ghost2D[]::new);
-
-		gallery2D = new Ghost2D[] { //
-				new Ghost2D(sc.context.portraits[0].ghost, game, r2D), //
-				new Ghost2D(sc.context.portraits[1].ghost, game, r2D), //
-				new Ghost2D(sc.context.portraits[2].ghost, game, r2D), //
-				new Ghost2D(sc.context.portraits[3].ghost, game, r2D) };
 	}
 
 	@Override
@@ -160,24 +155,29 @@ public class PacMan_IntroScene extends GameScene2D {
 		var g = canvas.getGraphicsContext2D();
 		g.setFill(Color.WHITE);
 		g.setFont(r2D.getArcadeFont());
-		g.fillText("CHARACTER", t(6), sc.context.topY);
-		g.fillText("/", t(16), sc.context.topY);
-		g.fillText("NICKNAME", t(18), sc.context.topY);
+		g.fillText("CHARACTER", t(6), t(6));
+		g.fillText("/", t(16), t(6));
+		g.fillText("NICKNAME", t(18), t(6));
 		for (int ghostID = 0; ghostID < sc.context.portraits.length; ++ghostID) {
 			GhostPortrait portrait = sc.context.portraits[ghostID];
-			if (portrait.ghost.visible) {
-				int y = sc.context.topY + t(1 + 3 * ghostID);
-				gallery2D[ghostID].render(g);
+			if (portrait.pictureVisible) {
+				int tileY = 7 + 3 * ghostID;
+				drawGhost(g, ghostID, t(4), t(tileY));
 				if (portrait.characterVisible) {
 					g.setFill(r2D.getGhostSkinColor(ghostID));
-					g.fillText("-" + portrait.character, t(6), y + 8);
+					g.fillText("-" + portrait.character, t(6), t(tileY + 1));
 				}
 				if (portrait.nicknameVisible) {
 					g.setFill(r2D.getGhostSkinColor(ghostID));
-					g.fillText("\"" + portrait.ghost.name + "\"", t(17), y + 8);
+					g.fillText("\"" + portrait.nickname + "\"", t(17), t(tileY + 1));
 				}
 			}
 		}
+	}
+
+	private void drawGhost(GraphicsContext g, int ghostID, int x, int y) {
+		Rectangle2D sprite = Rendering2D_PacMan.get().spritesheet().r(0, 4 + ghostID);
+		Rendering2D_PacMan.get().renderSprite(g, sprite, x + 4 - sprite.getWidth() / 2, y + 4 - sprite.getHeight() / 2);
 	}
 
 	private void drawPressKeyToStart(int yTile) {
