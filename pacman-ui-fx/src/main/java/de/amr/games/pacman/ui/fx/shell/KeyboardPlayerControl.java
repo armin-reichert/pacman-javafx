@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell;
 
-import de.amr.games.pacman.controller.PlayerControl;
+import de.amr.games.pacman.controller.common.PlayerControl;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.Pac;
 import javafx.scene.input.KeyCode;

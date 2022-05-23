@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.pacman.Intermission2Context;
 import de.amr.games.pacman.controller.pacman.Intermission2Controller;
 import de.amr.games.pacman.lib.Direction;

@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission1Context;
 import de.amr.games.pacman.controller.mspacman.Intermission1Controller;
 import de.amr.games.pacman.controller.mspacman.Intermission1State;

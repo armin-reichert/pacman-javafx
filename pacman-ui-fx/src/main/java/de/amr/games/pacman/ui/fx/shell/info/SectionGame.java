@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell.info;
 
-import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;

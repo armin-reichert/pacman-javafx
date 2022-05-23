@@ -27,7 +27,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.IntroContext;
 import de.amr.games.pacman.controller.mspacman.IntroController;
 import de.amr.games.pacman.lib.TimedSeq;

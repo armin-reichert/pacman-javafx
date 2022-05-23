@@ -29,11 +29,11 @@ import static de.amr.games.pacman.ui.fx.util.U.pauseSec;
 
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.controller.event.GameEvent;
-import de.amr.games.pacman.controller.event.GameStateChangeEvent;
-import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
+import de.amr.games.pacman.controller.common.GameController;
+import de.amr.games.pacman.controller.common.GameState;
+import de.amr.games.pacman.controller.common.event.GameEvent;
+import de.amr.games.pacman.controller.common.event.GameStateChangeEvent;
+import de.amr.games.pacman.controller.common.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.lib.TimedSeq;

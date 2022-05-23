@@ -30,12 +30,12 @@ import static de.amr.games.pacman.ui.fx.shell.FlashMessageView.showFlashMessage;
 import java.util.EnumMap;
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
-import de.amr.games.pacman.controller.event.GameEvent;
-import de.amr.games.pacman.controller.event.GameStateChangeEvent;
-import de.amr.games.pacman.controller.event.ScatterPhaseStartedEvent;
+import de.amr.games.pacman.controller.common.GameController;
+import de.amr.games.pacman.controller.common.GameState;
+import de.amr.games.pacman.controller.common.event.DefaultGameEventHandler;
+import de.amr.games.pacman.controller.common.event.GameEvent;
+import de.amr.games.pacman.controller.common.event.GameStateChangeEvent;
+import de.amr.games.pacman.controller.common.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GhostState;

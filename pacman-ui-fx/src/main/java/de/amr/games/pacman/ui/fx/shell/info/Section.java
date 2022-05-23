@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.collections.FXCollections;

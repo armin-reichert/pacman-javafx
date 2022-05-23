@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell.info;
 
-import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.scene.paint.Color;

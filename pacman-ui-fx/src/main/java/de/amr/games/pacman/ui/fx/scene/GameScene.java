@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx.scene;
 
 import static de.amr.games.pacman.lib.Logging.log;
 
-import de.amr.games.pacman.controller.event.GameEventListener;
+import de.amr.games.pacman.controller.common.event.GameEventListener;
 import javafx.scene.SubScene;
 
 /**

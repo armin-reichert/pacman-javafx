@@ -27,10 +27,10 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.ui.fx.shell.FlashMessageView.showFlashMessage;
 
-import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.controller.event.DefaultGameEventHandler;
-import de.amr.games.pacman.controller.event.GameEvent;
+import de.amr.games.pacman.controller.common.GameController;
+import de.amr.games.pacman.controller.common.GameState;
+import de.amr.games.pacman.controller.common.event.DefaultGameEventHandler;
+import de.amr.games.pacman.controller.common.event.GameEvent;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;

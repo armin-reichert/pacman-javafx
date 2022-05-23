@@ -27,7 +27,7 @@ import static de.amr.games.pacman.lib.Logging.log;
 
 import java.io.IOException;
 
-import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
