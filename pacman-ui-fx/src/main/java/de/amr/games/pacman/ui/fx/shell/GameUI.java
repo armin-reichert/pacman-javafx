@@ -199,7 +199,7 @@ public class GameUI extends DefaultGameEventHandler {
 			case N -> enterNextLevel();
 			case Q -> quitCurrentGameScene();
 			case V -> toggleGameVariant();
-			case X -> gc.game().cheatKillGhosts();
+			case X -> gc.cheatKillAllPossibleGhosts();
 			case Z -> startIntermissionScenesTest();
 			case LEFT -> changePerspective(-1);
 			case RIGHT -> changePerspective(1);
