@@ -30,9 +30,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.controller.pacman.IntroContext;
 import de.amr.games.pacman.controller.pacman.IntroController;
-import de.amr.games.pacman.controller.pacman.IntroState;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.V2i;
@@ -58,7 +56,7 @@ import javafx.scene.text.Font;
 public class PacMan_IntroScene extends GameScene2D {
 
 	private final IntroController sceneController;
-	private final IntroContext context;
+	private final IntroController.Context context;
 
 	private Player2D pacMan2D;
 	private Ghost2D[] ghosts2D;
@@ -91,7 +89,7 @@ public class PacMan_IntroScene extends GameScene2D {
 	public void doUpdate() {
 		sceneController.update();
 		// TODO find a better solution:
-		if (sceneController.state() == IntroState.CHASING_GHOSTS) {
+		if (sceneController.state() == IntroController.State.CHASING_GHOSTS) {
 			for (Ghost ghost : context.ghosts) {
 				if (ghost.velocity.equals(V2d.NULL)) {
 					ghosts2D[ghost.id].animFrightened.stop();
