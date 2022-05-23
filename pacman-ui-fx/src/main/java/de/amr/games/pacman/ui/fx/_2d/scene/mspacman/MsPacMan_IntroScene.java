@@ -28,8 +28,8 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.controller.mspacman.IntroContext;
 import de.amr.games.pacman.controller.mspacman.IntroController;
+import de.amr.games.pacman.controller.mspacman.IntroController.Context;
 import de.amr.games.pacman.controller.mspacman.IntroState;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2i;
@@ -53,7 +53,7 @@ import javafx.scene.text.Font;
 public class MsPacMan_IntroScene extends GameScene2D {
 
 	private final IntroController sceneController;
-	private final IntroContext context;
+	private final Context context;
 
 	private final Image midwayLogo = U.image("/mspacman/graphics/midway.png");
 	private Player2D msPacMan2D;

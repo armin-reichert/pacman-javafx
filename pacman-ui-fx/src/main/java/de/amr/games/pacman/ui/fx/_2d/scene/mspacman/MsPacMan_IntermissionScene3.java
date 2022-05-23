@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.controller.mspacman.Intermission3Context;
 import de.amr.games.pacman.controller.mspacman.Intermission3Controller;
 import de.amr.games.pacman.controller.mspacman.Intermission3State;
 import de.amr.games.pacman.lib.V2i;
@@ -54,7 +53,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class MsPacMan_IntermissionScene3 extends GameScene2D {
 
 	private final Intermission3Controller sceneController;
-	private final Intermission3Context context;
+	private final Intermission3Controller.Context context;
 
 	private LevelCounter2D levelCounter2D;
 	private Player2D msPacMan2D;
