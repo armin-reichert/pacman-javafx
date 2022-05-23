@@ -247,7 +247,7 @@ public class PlayScene2D extends GameScene2D {
 
 		case PACMAN_DYING -> {
 			// wait until game is continued
-			gc.state().timer().setIndefinite().start();
+			gc.state().timer().setDurationIndefinite().start();
 
 			SoundManager.get().stopAll();
 
@@ -272,7 +272,7 @@ public class PlayScene2D extends GameScene2D {
 		}
 
 		case LEVEL_COMPLETE -> {
-			gc.state().timer().setIndefinite(); // wait until continueGame() is called
+			gc.state().timer().setDurationIndefinite(); // wait until continueGame() is called
 			SoundManager.get().stopAll();
 			player2D.reset();
 			// Energizers can still exist if "next level" cheat has been used
