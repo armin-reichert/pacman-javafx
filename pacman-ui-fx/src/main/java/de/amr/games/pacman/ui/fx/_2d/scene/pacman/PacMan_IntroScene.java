@@ -30,7 +30,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.controller.pacman.IntroContext.GhostPortrait;
+import de.amr.games.pacman.controller.pacman.IntroContext;
 import de.amr.games.pacman.controller.pacman.IntroController;
 import de.amr.games.pacman.controller.pacman.IntroState;
 import de.amr.games.pacman.lib.TimedSeq;
@@ -57,27 +57,29 @@ import javafx.scene.text.Font;
  */
 public class PacMan_IntroScene extends GameScene2D {
 
-	private final IntroController sc;
+	private final IntroController sceneController;
+	private final IntroContext context;
 
 	private Player2D pacMan2D;
 	private Ghost2D[] ghosts2D;
 
 	public PacMan_IntroScene(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
-		sc = new IntroController(gameController);
+		sceneController = new IntroController(gameController);
+		context = sceneController.getContext();
 	}
 
 	@Override
 	public void init() {
-		sc.init();
+		sceneController.init();
 
 		createScores();
 		score2D.showPoints = false;
 
-		pacMan2D = new Player2D(sc.context.pacMan, game, r2D);
+		pacMan2D = new Player2D(context.pacMan, game, r2D);
 		pacMan2D.animMunching.values().forEach(TimedSeq::restart);
 
-		ghosts2D = Stream.of(sc.context.ghosts).map(ghost -> {
+		ghosts2D = Stream.of(context.ghosts).map(ghost -> {
 			Ghost2D ghost2D = new Ghost2D(ghost, game, r2D);
 			ghost2D.animKicking.values().forEach(TimedSeq::restart);
 			ghost2D.animFrightened.restart();
@@ -87,10 +89,10 @@ public class PacMan_IntroScene extends GameScene2D {
 
 	@Override
 	public void doUpdate() {
-		sc.updateState();
+		sceneController.updateState();
 		// TODO find a better solution:
-		if (sc.state() == IntroState.CHASING_GHOSTS) {
-			for (Ghost ghost : sc.context.ghosts) {
+		if (sceneController.state() == IntroState.CHASING_GHOSTS) {
+			for (Ghost ghost : context.ghosts) {
 				if (ghost.velocity.equals(V2d.NULL)) {
 					ghosts2D[ghost.id].animFrightened.stop();
 				} else if (!ghosts2D[ghost.id].animFrightened.isRunning()) {
@@ -104,12 +106,12 @@ public class PacMan_IntroScene extends GameScene2D {
 	public void doRender(GraphicsContext g) {
 		score2D.render(g);
 		highScore2D.render(g);
-		switch (sc.state()) {
+		switch (sceneController.state()) {
 		case BEGIN, PRESENTING_GHOSTS -> drawGallery();
 		case SHOWING_POINTS -> {
 			drawGallery();
 			drawPoints(11, 25);
-			if (sc.state().timer().tick() > sec_to_ticks(1)) {
+			if (sceneController.state().timer().tick() > sec_to_ticks(1)) {
 				drawEnergizer();
 				drawCopyright(32);
 			}
@@ -118,10 +120,10 @@ public class PacMan_IntroScene extends GameScene2D {
 			drawGallery();
 			drawPoints(11, 25);
 			drawCopyright(32);
-			if (sc.context.fastBlinking.frame()) {
+			if (context.fastBlinking.frame()) {
 				drawEnergizer();
 			}
-			int offset = sc.state().timer().tick() % 5 < 2 ? 0 : -1;
+			int offset = sceneController.state().timer().tick() % 5 < 2 ? 0 : -1;
 			drawGuys(offset);
 		}
 		case CHASING_GHOSTS -> {
@@ -158,18 +160,17 @@ public class PacMan_IntroScene extends GameScene2D {
 		g.fillText("CHARACTER", t(6), t(6));
 		g.fillText("/", t(16), t(6));
 		g.fillText("NICKNAME", t(18), t(6));
-		for (int ghostID = 0; ghostID < sc.context.portraits.length; ++ghostID) {
-			GhostPortrait portrait = sc.context.portraits[ghostID];
-			if (portrait.pictureVisible) {
+		for (int ghostID = 0; ghostID < 4; ++ghostID) {
+			if (context.pictureVisible[ghostID]) {
 				int tileY = 7 + 3 * ghostID;
-				drawGhost(g, ghostID, t(4), t(tileY));
-				if (portrait.characterVisible) {
+				drawGhost(g, ghostID, t(3), t(tileY));
+				if (context.characterVisible[ghostID]) {
 					g.setFill(r2D.getGhostSkinColor(ghostID));
-					g.fillText("-" + portrait.character, t(6), t(tileY + 1));
+					g.fillText("-" + context.characters[ghostID], t(6), t(tileY + 1));
 				}
-				if (portrait.nicknameVisible) {
+				if (context.nicknameVisible[ghostID]) {
 					g.setFill(r2D.getGhostSkinColor(ghostID));
-					g.fillText("\"" + portrait.nickname + "\"", t(17), t(tileY + 1));
+					g.fillText("\"" + context.nicknames[ghostID] + "\"", t(17), t(tileY + 1));
 				}
 			}
 		}
@@ -182,7 +183,7 @@ public class PacMan_IntroScene extends GameScene2D {
 
 	private void drawPressKeyToStart(int yTile) {
 		var g = canvas.getGraphicsContext2D();
-		if (sc.context.slowBlinking.frame()) {
+		if (context.slowBlinking.frame()) {
 			String text = "PRESS SPACE TO PLAY";
 			g.setFill(Color.WHITE);
 			g.setFont(r2D.getArcadeFont());
@@ -194,7 +195,7 @@ public class PacMan_IntroScene extends GameScene2D {
 		var g = canvas.getGraphicsContext2D();
 		g.setFill(r2D.getFoodColor(1));
 		g.fillRect(t(tileX) + 6, t(tileY - 1) + 2, 2, 2);
-		if (sc.context.fastBlinking.frame()) {
+		if (context.fastBlinking.frame()) {
 			g.fillOval(t(tileX), t(tileY + 1) - 2, 10, 10);
 		}
 		g.setFill(Color.WHITE);
@@ -209,7 +210,7 @@ public class PacMan_IntroScene extends GameScene2D {
 	private void drawEnergizer() {
 		var g = canvas.getGraphicsContext2D();
 		g.setFill(r2D.getFoodColor(1));
-		g.fillOval(t(2), t(20), TS, TS);
+		g.fillOval(t(3), t(20), TS, TS);
 	}
 
 	private void drawCopyright(int yTile) {
