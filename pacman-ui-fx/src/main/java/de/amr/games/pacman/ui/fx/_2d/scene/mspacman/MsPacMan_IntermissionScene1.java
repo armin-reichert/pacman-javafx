@@ -27,7 +27,6 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission1Controller;
-import de.amr.games.pacman.controller.mspacman.Intermission1State;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.V2i;
@@ -73,7 +72,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 
 	@Override
 	public void init() {
-		sceneController.reset(Intermission1State.FLAP);
+		sceneController.reset(Intermission1Controller.State.FLAP);
 
 		levelCounter2D = new LevelCounter2D(game, r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
@@ -97,7 +96,8 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 	public void doUpdate() {
 		sceneController.update();
 		// stop ghost animation when Pac-Man and Ms. Pac-Man are in heaven
-		if (sceneController.state() == Intermission1State.IN_HEAVEN && context.pacMan.velocity.equals(V2d.NULL)) {
+		if (sceneController.state() == Intermission1Controller.State.IN_HEAVEN
+				&& context.pacMan.velocity.equals(V2d.NULL)) {
 			inky2D.animKicking.values().forEach(TimedSeq::stop);
 			pinky2D.animKicking.values().forEach(TimedSeq::stop);
 		}
