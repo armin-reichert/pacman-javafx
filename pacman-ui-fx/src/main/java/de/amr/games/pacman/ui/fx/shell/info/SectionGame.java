@@ -69,11 +69,11 @@ public class SectionGame extends Section {
 		spinnerGameLevel.valueProperty().addListener(($value, oldValue, newValue) -> ui.enterLevel(newValue.intValue()));
 		addInfo("Game State", this::fmtGameState);
 		addInfo("", () -> {
-			long ticked = gc.state().timer().ticked();
+			long ticked = gc.state().timer().tick();
 			return String.format("Running:   %s%s", ticked, gc.state().timer().isStopped() ? " (STOPPED)" : "");
 		});
 		addInfo("", () -> {
-			long remaining = gc.state().timer().ticksRemaining();
+			long remaining = gc.state().timer().remaining();
 			String remainingText = remaining == TickTimer.INDEFINITE ? "indefinite" : String.valueOf(remaining);
 			return String.format("Remaining: %s", remainingText);
 		});
