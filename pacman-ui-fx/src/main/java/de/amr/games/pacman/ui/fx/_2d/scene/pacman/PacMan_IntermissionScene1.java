@@ -26,9 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.controller.pacman.Intermission1Context;
 import de.amr.games.pacman.controller.pacman.Intermission1Controller;
-import de.amr.games.pacman.controller.pacman.Intermission1State;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
@@ -47,8 +45,8 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class PacMan_IntermissionScene1 extends GameScene2D {
 
-	private final Intermission1Controller sc;
-	private final Intermission1Context context;
+	private final Intermission1Controller sceneController;
+	private final Intermission1Controller.Context context;
 
 	private LevelCounter2D levelCounter2D;
 	private Player2D pacMan2D;
@@ -57,14 +55,14 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 
 	public PacMan_IntermissionScene1(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
-		sc = new Intermission1Controller(gameController);
-		context = sc.getContext();
+		sceneController = new Intermission1Controller(gameController);
+		context = sceneController.getContext();
 		context.playIntermissionSound = () -> SoundManager.get().loop(GameSound.INTERMISSION_1, 2);
 	}
 
 	@Override
 	public void init() {
-		sc.init();
+		sceneController.init();
 
 		levelCounter2D = new LevelCounter2D(game, r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
@@ -80,14 +78,14 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 
 	@Override
 	public void doUpdate() {
-		sc.update();
+		sceneController.update();
 	}
 
 	@Override
 	public void doRender(GraphicsContext g) {
 		levelCounter2D.render(g);
 		blinky2D.render(g);
-		if (sc.state() == Intermission1State.CHASING_PACMAN) {
+		if (sceneController.state() == Intermission1Controller.State.CHASING_PACMAN) {
 			pacMan2D.render(g);
 		} else {
 			bigPacMan2D.render(g);
