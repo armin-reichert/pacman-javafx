@@ -104,6 +104,7 @@ public class PacMan_IntroScene extends GameScene2D {
 	public void doRender(GraphicsContext g) {
 		score2D.render(g);
 		highScore2D.render(g);
+		drawCredit(g);
 		switch (sceneController.state()) {
 		case BEGIN, PRESENTING_GHOSTS -> drawGallery();
 		case SHOWING_POINTS -> {
@@ -137,6 +138,12 @@ public class PacMan_IntroScene extends GameScene2D {
 		default -> {
 		}
 		}
+	}
+
+	private void drawCredit(GraphicsContext g) {
+		g.setFont(r2D.getArcadeFont());
+		g.setFill(Color.WHITE);
+		g.fillText("CREDIT  %d".formatted(gameController.credit), t(2), t(36));
 	}
 
 	private void drawGuys(int offset) {

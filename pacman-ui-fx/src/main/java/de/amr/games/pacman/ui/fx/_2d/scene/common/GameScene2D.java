@@ -52,7 +52,7 @@ import javafx.scene.transform.Scale;
  */
 public abstract class GameScene2D extends DefaultGameEventHandler implements GameScene {
 
-	protected final GameController gc;
+	protected final GameController gameController;
 	protected final SubScene fxSubScene;
 	protected final Canvas canvas;
 	protected final V2i unscaledSize;
@@ -68,7 +68,7 @@ public abstract class GameScene2D extends DefaultGameEventHandler implements Gam
 	 * @param unscaledSize logical scene size (number of tiles x tile size)
 	 */
 	public GameScene2D(GameController gc, V2i unscaledSize) {
-		this.gc = gc;
+		this.gameController = gc;
 		this.unscaledSize = unscaledSize;
 		this.aspectRatio = (double) unscaledSize.x / unscaledSize.y;
 		this.canvas = new Canvas();
@@ -81,13 +81,13 @@ public abstract class GameScene2D extends DefaultGameEventHandler implements Gam
 
 	@Override
 	public void setContext() {
-		game = gc.game();
-		r2D = switch (gc.gameVariant()) {
+		game = gameController.game();
+		r2D = switch (gameController.gameVariant()) {
 		case MS_PACMAN -> Rendering2D_MsPacMan.get();
 		case PACMAN -> Rendering2D_PacMan.get();
 		};
 		SoundManager.get().stopAll(); // TODO: check this
-		SoundManager.get().selectGameVariant(gc.gameVariant());
+		SoundManager.get().selectGameVariant(gameController.gameVariant());
 	}
 
 	@Override

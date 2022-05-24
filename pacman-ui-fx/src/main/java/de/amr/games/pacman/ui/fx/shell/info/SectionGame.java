@@ -52,15 +52,19 @@ public class SectionGame extends Section {
 	public SectionGame(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
 		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
 
+		var game = gameController.game();
+		var gameState = gameController.state();
+		var gameVariant = gameController.gameVariant();
+
 		comboGameVariant = addComboBox("Game Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
 		comboGameVariant.setOnAction(e -> {
-			if (comboGameVariant.getValue() != gc.gameVariant()) {
-				gc.selectGameVariant(comboGameVariant.getValue());
+			if (comboGameVariant.getValue() != gameVariant) {
+				gameController.selectGameVariant(comboGameVariant.getValue());
 			}
 		});
 
 		btnsGameControl = addButtonList("Game", "Start", "Quit", "Next Level");
-		btnsGameControl[0].setOnAction(e -> gc.requestGame());
+		btnsGameControl[0].setOnAction(e -> gameController.requestGame());
 		btnsGameControl[1].setOnAction(e -> ui.quitCurrentGameScene());
 		btnsGameControl[2].setOnAction(e -> ui.enterNextLevel());
 
@@ -68,68 +72,73 @@ public class SectionGame extends Section {
 		btnsIntermissionTest[0].setOnAction(e -> ui.startIntermissionScenesTest());
 		btnsIntermissionTest[1].setOnAction(e -> ui.quitCurrentGameScene());
 
-		spinnerGameLevel = addSpinner("Level", 1, 100, gc.game().levelNumber);
+		spinnerGameLevel = addSpinner("Level", 1, 100, game.levelNumber);
 		spinnerGameLevel.valueProperty().addListener(($value, oldValue, newValue) -> ui.enterLevel(newValue.intValue()));
 
 		cbAutopilot = addCheckBox("Autopilot", ui::toggleAutopilot);
 		cbImmunity = addCheckBox("Player immune", ui::toggleImmunity);
 
-		addInfo("Game State", this::fmtGameState);
+		addInfo("Game State", () -> fmtGameState(game, gameState));
 		addInfo("", () -> {
-			long ticked = gc.state().timer().tick();
-			return String.format("Running:   %s%s", ticked, gc.state().timer().isStopped() ? " (STOPPED)" : "");
+			long ticked = gameState.timer().tick();
+			return String.format("Running:   %s%s", ticked, gameState.timer().isStopped() ? " (STOPPED)" : "");
 		});
 		addInfo("", () -> {
-			long remaining = gc.state().timer().remaining();
+			long remaining = gameState.timer().remaining();
 			String remainingText = remaining == TickTimer.INDEFINITE ? "indefinite" : String.valueOf(remaining);
 			return String.format("Remaining: %s", remainingText);
 		});
-		addInfo("Playing", () -> U.yes_no(gc.game().running));
-		addInfo("Attract Mode", () -> U.yes_no(gc.game().attractMode));
+		addInfo("Credit", () -> "%d".formatted(gameController.credit));
+		addInfo("Playing", () -> U.yes_no(game.running));
+		addInfo("Attract Mode", () -> U.yes_no(game.attractMode));
 		addInfo("Game scene", () -> ui.getCurrentGameScene().getClass().getSimpleName());
 		addInfo("", () -> String.format("w=%.0f h=%.0f", ui.getCurrentGameScene().getFXSubScene().getWidth(),
 				ui.getCurrentGameScene().getFXSubScene().getHeight()));
-		addInfo("Ghost speed", () -> fmtSpeed(gc.game().ghostSpeed));
-		addInfo("Ghost speed (frightened)", () -> fmtSpeed(gc.game().ghostSpeedFrightened));
-		addInfo("Ghost speed (tunnel)", () -> fmtSpeed(gc.game().ghostSpeedTunnel));
-		addInfo("Ghost frightened time", () -> String.format("%d sec", gc.game().ghostFrightenedSeconds));
-		addInfo("Pac-Man speed", () -> fmtSpeed(gc.game().playerSpeed));
-		addInfo("Pac-Man speed (power)", () -> fmtSpeed(gc.game().playerSpeedPowered));
-		addInfo("Bonus value", () -> gc.game().bonusValue(gc.game().bonusSymbol));
-		addInfo("Maze flashings", () -> gc.game().numFlashes);
-		addInfo("Pellets", () -> String.format("%d of %d (%d energizers)", gc.game().world.foodRemaining(),
-				gc.game().world.tiles().filter(gc.game().world::isFoodTile).count(), gc.game().world.energizerTiles().count()));
+		addInfo("Ghost speed", () -> fmtSpeed(game.ghostSpeed));
+		addInfo("Ghost speed (frightened)", () -> fmtSpeed(game.ghostSpeedFrightened));
+		addInfo("Ghost speed (tunnel)", () -> fmtSpeed(game.ghostSpeedTunnel));
+		addInfo("Ghost frightened time", () -> String.format("%d sec", game.ghostFrightenedSeconds));
+		addInfo("Pac-Man speed", () -> fmtSpeed(game.playerSpeed));
+		addInfo("Pac-Man speed (power)", () -> fmtSpeed(game.playerSpeedPowered));
+		addInfo("Bonus value", () -> game.bonusValue(game.bonusSymbol));
+		addInfo("Maze flashings", () -> game.numFlashes);
+		addInfo("Pellets", () -> String.format("%d of %d (%d energizers)", game.world.foodRemaining(),
+				game.world.tiles().filter(game.world::isFoodTile).count(), game.world.energizerTiles().count()));
 	}
 
 	@Override
 	public void update() {
 		super.update();
 
-		comboGameVariant.setValue(gc.gameVariant());
-		comboGameVariant.setDisable(gc.game().running);
+		var game = gameController.game();
+		var gameState = gameController.state();
+		var gameVariant = gameController.gameVariant();
 
-		cbAutopilot.setSelected(gc.game().player.autoMoving);
-		cbImmunity.setSelected(gc.game().player.immune);
+		comboGameVariant.setValue(gameVariant);
+		comboGameVariant.setDisable(game.running);
+
+		cbAutopilot.setSelected(game.player.autoMoving);
+		cbImmunity.setSelected(game.player.immune);
 
 		// start game
-		btnsGameControl[0].setDisable(gc.game().requested || gc.game().running || gc.game().attractMode);
+		btnsGameControl[0].setDisable(gameController.credit == 0 || game.running || game.attractMode);
 		// quit game
-		btnsGameControl[1].setDisable(gc.state() == GameState.INTRO || gc.state() == GameState.INTERMISSION_TEST);
+		btnsGameControl[1].setDisable(gameState == GameState.INTRO || gameState == GameState.INTERMISSION_TEST);
 		// next level
-		btnsGameControl[2].setDisable(!gc.game().running || (gc.state() != GameState.HUNTING
-				&& gc.state() != GameState.READY && gc.state() != GameState.LEVEL_STARTING));
+		btnsGameControl[2].setDisable(!game.running
+				|| (gameState != GameState.HUNTING && gameState != GameState.READY && gameState != GameState.LEVEL_STARTING));
 
 		// start intermission test
-		btnsIntermissionTest[0].setDisable(gc.state() == GameState.INTERMISSION_TEST || gc.state() != GameState.INTRO);
+		btnsIntermissionTest[0].setDisable(gameState == GameState.INTERMISSION_TEST || gameState != GameState.INTRO);
 		// quit intermission test
-		btnsIntermissionTest[1].setDisable(gc.state() != GameState.INTERMISSION_TEST);
+		btnsIntermissionTest[1].setDisable(gameState != GameState.INTERMISSION_TEST);
 
-		spinnerGameLevel.getValueFactory().setValue(gc.game().levelNumber);
-		if (!gc.game().running) {
+		spinnerGameLevel.getValueFactory().setValue(game.levelNumber);
+		if (!game.running) {
 			spinnerGameLevel.setDisable(true);
 		} else {
 			spinnerGameLevel.setDisable(
-					gc.state() != GameState.READY && gc.state() != GameState.HUNTING && gc.state() != GameState.LEVEL_STARTING);
+					gameState != GameState.READY && gameState != GameState.HUNTING && gameState != GameState.LEVEL_STARTING);
 		}
 	}
 
@@ -137,9 +146,9 @@ public class SectionGame extends Section {
 		return String.format("%.2f px/sec", GameModel.BASE_SPEED * fraction);
 	}
 
-	private String fmtGameState() {
-		var huntingPhaseName = gc.game().inScatteringPhase() ? "Scattering" : "Chasing";
-		return gc.state() == GameState.HUNTING ? //
-				String.format("%s: Phase #%d (%s)", gc.state(), gc.game().huntingPhase, huntingPhaseName) : gc.state().name();
+	private String fmtGameState(GameModel game, GameState gameState) {
+		var huntingPhaseName = game.inScatteringPhase() ? "Scattering" : "Chasing";
+		return gameState == GameState.HUNTING ? //
+				String.format("%s: Phase #%d (%s)", gameState, game.huntingPhase, huntingPhaseName) : gameState.name();
 	}
 }

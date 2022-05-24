@@ -56,7 +56,7 @@ import javafx.scene.text.Font;
 public class Section extends TitledPane {
 
 	protected final GameUI ui;
-	protected final GameController gc;
+	protected final GameController gameController;
 	protected final List<InfoText> infoTexts = new ArrayList<>();
 	protected final GridPane content = new GridPane();
 
@@ -68,7 +68,7 @@ public class Section extends TitledPane {
 
 	public Section(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
 		this.ui = ui;
-		this.gc = ui.gc;
+		this.gameController = ui.gc;
 		this.minLabelWidth = minLabelWidth;
 		this.textColor = textColor;
 		this.textFont = textFont;

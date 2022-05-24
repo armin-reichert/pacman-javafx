@@ -42,6 +42,7 @@ import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameScenes;
 import de.amr.games.pacman.ui.fx.shell.info.InfoLayer;
+import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.Node;
@@ -201,6 +202,7 @@ public class GameUI extends DefaultGameEventHandler {
 			case LEFT -> changePerspective(-1);
 			case RIGHT -> changePerspective(1);
 			case DIGIT3 -> toggleUse3DScene();
+			case DIGIT5 -> addCredit();
 			}
 		}
 
@@ -216,6 +218,11 @@ public class GameUI extends DefaultGameEventHandler {
 			case F11 -> stage.setFullScreen(true);
 			}
 		}
+	}
+
+	public void addCredit() {
+		gc.credit++;
+		SoundManager.get().play(GameSound.CREDIT);
 	}
 
 	public void changePerspective(int delta) {
