@@ -348,7 +348,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	}
 
 	@Override
-	public void onGhostReturnedHome(GameEvent e) {
+	public void onGhostStartedReturningHome(GameEvent e) {
 		if (!game.attractMode) {
 			SoundManager.get().playIfOff(GameSound.GHOST_RETURNING);
 		}

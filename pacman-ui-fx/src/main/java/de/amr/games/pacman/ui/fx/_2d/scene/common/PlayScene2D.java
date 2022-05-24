@@ -210,7 +210,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	public void onGhostReturnedHome(GameEvent e) {
+	public void onGhostStartedReturningHome(GameEvent e) {
 		if (!game.attractMode) {
 			SoundManager.get().playIfOff(GameSound.GHOST_RETURNING);
 		}
