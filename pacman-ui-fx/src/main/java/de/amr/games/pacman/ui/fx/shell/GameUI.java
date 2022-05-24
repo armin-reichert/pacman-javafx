@@ -79,10 +79,7 @@ public class GameUI extends DefaultGameEventHandler {
 		this.stage = stage;
 		this.infoLayer = new InfoLayer(this);
 
-		// listens to events from all game variants
-		gc.games.values().forEach(game -> {
-			game.addEventListener(this);
-		});
+		gc.games().forEach(game -> game.addEventListener(this));
 
 		// first child is placeholder for subscene assigned to current game scene
 		sceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
