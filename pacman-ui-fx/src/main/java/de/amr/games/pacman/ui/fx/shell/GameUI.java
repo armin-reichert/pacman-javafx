@@ -190,7 +190,7 @@ public class GameUI extends DefaultGameEventHandler {
 		if (e.isAltDown()) {
 			switch (e.getCode()) {
 			case A -> toggleAutopilot();
-			case E -> gc.game().cheatEatAllPellets();
+			case E -> gc.cheatEatAllPellets();
 			case I -> toggleImmunity();
 			case L -> addLives(3);
 			case M -> toggleSoundMuted();
@@ -261,7 +261,7 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	public void addLives(int lives) {
-		if (gc.game().running) {
+		if (gc.gameRunning) {
 			gc.game().player.lives += lives;
 			showFlashMessage(1, "You have %d lives", gc.game().player.lives);
 		}
@@ -284,7 +284,7 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	public void toggleGameVariant() {
-		if (!gc.game().running) {
+		if (!gc.gameRunning) {
 			gc.selectGameVariant(gc.gameVariant().succ());
 		}
 	}

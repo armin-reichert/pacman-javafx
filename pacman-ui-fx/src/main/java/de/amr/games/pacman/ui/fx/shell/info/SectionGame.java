@@ -89,7 +89,7 @@ public class SectionGame extends Section {
 			return String.format("Remaining: %s", remainingText);
 		});
 		addInfo("Credit", () -> "%d".formatted(gameController.credit()));
-		addInfo("Playing", () -> U.yes_no(game.running));
+		addInfo("Playing", () -> U.yes_no(gameController.gameRunning));
 		addInfo("Game scene", () -> ui.getCurrentGameScene().getClass().getSimpleName());
 		addInfo("", () -> String.format("w=%.0f h=%.0f", ui.getCurrentGameScene().getFXSubScene().getWidth(),
 				ui.getCurrentGameScene().getFXSubScene().getHeight()));
@@ -114,17 +114,17 @@ public class SectionGame extends Section {
 		var gameVariant = gameController.gameVariant();
 
 		comboGameVariant.setValue(gameVariant);
-		comboGameVariant.setDisable(game.running);
+		comboGameVariant.setDisable(gameController.gameRunning);
 
 		cbAutopilot.setSelected(game.player.autoMoving);
 		cbImmunity.setSelected(game.player.immune);
 
 		// start game
-		btnsGameControl[0].setDisable(gameController.credit() == 0 || game.running);
+		btnsGameControl[0].setDisable(gameController.credit() == 0 || gameController.gameRunning);
 		// quit game
 		btnsGameControl[1].setDisable(gameState == GameState.INTRO || gameState == GameState.INTERMISSION_TEST);
 		// next level
-		btnsGameControl[2].setDisable(!game.running
+		btnsGameControl[2].setDisable(!gameController.gameRunning
 				|| (gameState != GameState.HUNTING && gameState != GameState.READY && gameState != GameState.LEVEL_STARTING));
 
 		// start intermission test
@@ -133,7 +133,7 @@ public class SectionGame extends Section {
 		btnsIntermissionTest[1].setDisable(gameState != GameState.INTERMISSION_TEST);
 
 		spinnerGameLevel.getValueFactory().setValue(game.levelNumber);
-		if (!game.running) {
+		if (!gameController.gameRunning) {
 			spinnerGameLevel.setDisable(true);
 		} else {
 			spinnerGameLevel.setDisable(

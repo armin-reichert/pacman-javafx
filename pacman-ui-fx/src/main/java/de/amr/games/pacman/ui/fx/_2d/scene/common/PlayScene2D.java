@@ -242,7 +242,7 @@ public class PlayScene2D extends GameScene2D {
 			maze2D.getEnergizerAnimation().reset();
 			player2D.reset();
 			Stream.of(ghosts2D).forEach(Ghost2D::reset);
-			if (gameController.credit() > 0 && !game.running) {
+			if (gameController.credit() > 0 && !gameController.gameRunning) {
 				SoundManager.get().play(GameSound.GAME_READY);
 			}
 		}
