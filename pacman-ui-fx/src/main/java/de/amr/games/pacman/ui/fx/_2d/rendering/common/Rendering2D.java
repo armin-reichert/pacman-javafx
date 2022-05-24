@@ -23,6 +23,10 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
+import static de.amr.games.pacman.model.common.Ghost.CYAN_GHOST;
+import static de.amr.games.pacman.model.common.Ghost.ORANGE_GHOST;
+import static de.amr.games.pacman.model.common.Ghost.PINK_GHOST;
+import static de.amr.games.pacman.model.common.Ghost.RED_GHOST;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 
 import java.util.Map;
@@ -30,7 +34,6 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.model.common.GameEntity;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.pacman.Bonus;
 import de.amr.games.pacman.model.pacman.Bonus.BonusState;
 import javafx.geometry.Rectangle2D;
@@ -96,10 +99,10 @@ public abstract class Rendering2D {
 	 */
 	public Color getGhostSkinColor(int ghostID) {
 		return switch (ghostID) {
-		case GameModel.RED_GHOST -> Color.RED;
-		case GameModel.PINK_GHOST -> Color.rgb(252, 181, 255);
-		case GameModel.CYAN_GHOST -> Color.CYAN;
-		case GameModel.ORANGE_GHOST -> Color.rgb(253, 192, 90);
+		case RED_GHOST -> Color.RED;
+		case PINK_GHOST -> Color.rgb(252, 181, 255);
+		case CYAN_GHOST -> Color.CYAN;
+		case ORANGE_GHOST -> Color.rgb(253, 192, 90);
 		default -> Color.WHITE; // should not happen
 		};
 	}

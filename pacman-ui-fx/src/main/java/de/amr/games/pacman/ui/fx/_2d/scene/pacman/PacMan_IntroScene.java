@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
 import static de.amr.games.pacman.lib.TickTimer.sec_to_ticks;
+import static de.amr.games.pacman.model.common.Ghost.PINK_GHOST;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
@@ -34,7 +35,6 @@ import de.amr.games.pacman.controller.pacman.IntroController;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Credit2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
@@ -217,7 +217,7 @@ public class PacMan_IntroScene extends GameScene2D {
 		var g = canvas.getGraphicsContext2D();
 		String text = "\u00A9 1980 MIDWAY MFG. CO.";
 		g.setFont(r2D.getArcadeFont());
-		g.setFill(r2D.getGhostSkinColor(GameModel.PINK_GHOST));
+		g.setFill(r2D.getGhostSkinColor(PINK_GHOST));
 		g.fillText(text, t(3), t(yTile));
 	}
 }
