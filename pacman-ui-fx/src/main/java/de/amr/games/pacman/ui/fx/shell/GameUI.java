@@ -194,7 +194,7 @@ public class GameUI extends DefaultGameEventHandler {
 			case I -> toggleImmunity();
 			case L -> addLives(3);
 			case M -> toggleSoundMuted();
-			case N -> enterNextLevel();
+			case N -> gc.cheatEnterNextLevel();
 			case Q -> quitCurrentScene();
 			case V -> toggleGameVariant();
 			case X -> gc.cheatKillAllPossibleGhosts();
@@ -240,12 +240,6 @@ public class GameUI extends DefaultGameEventHandler {
 			gc.consumeCredit();
 		}
 		gc.reset(GameState.INTRO);
-	}
-
-	public void enterNextLevel() {
-		if (gc.game().running) {
-			gc.changeState(GameState.LEVEL_COMPLETE);
-		}
 	}
 
 	public void enterLevel(int levelNumber) {

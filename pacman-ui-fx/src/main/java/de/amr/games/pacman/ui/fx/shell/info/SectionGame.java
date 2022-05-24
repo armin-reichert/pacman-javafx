@@ -66,7 +66,7 @@ public class SectionGame extends Section {
 		btnsGameControl = addButtonList("Game", "Start", "Quit", "Next Level");
 		btnsGameControl[0].setOnAction(e -> gameController.requestGame());
 		btnsGameControl[1].setOnAction(e -> ui.quitCurrentScene());
-		btnsGameControl[2].setOnAction(e -> ui.enterNextLevel());
+		btnsGameControl[2].setOnAction(e -> gameController.cheatEnterNextLevel());
 
 		btnsIntermissionTest = addButtonList("Intermission scenes", "Start", "Quit");
 		btnsIntermissionTest[0].setOnAction(e -> ui.startIntermissionScenesTest());
