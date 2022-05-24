@@ -50,8 +50,10 @@ public class Credit2D extends GameEntity2D {
 
 	@Override
 	public void render(GraphicsContext g) {
-		g.setFont(r2D.getArcadeFont());
-		g.setFill(Color.WHITE);
-		g.fillText("CREDIT  %d".formatted(fnCredit.getAsInt()), x, y);
+		if (visible) {
+			g.setFont(r2D.getArcadeFont());
+			g.setFill(Color.WHITE);
+			g.fillText("CREDIT  %d".formatted(fnCredit.getAsInt()), x, y);
+		}
 	}
 }

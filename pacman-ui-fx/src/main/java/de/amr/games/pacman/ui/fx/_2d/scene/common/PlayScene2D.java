@@ -79,20 +79,23 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void init() {
 		createScores();
-		score2D.showPoints = !game.attractMode;
-
 		credit2D = new Credit2D(r2D, gameController::credit);
-		credit2D.visible = game.attractMode;
-
 		livesCounter2D = new LivesCounter2D(game, r2D);
 		livesCounter2D.x = t(2);
 		livesCounter2D.y = t(34);
-		livesCounter2D.visible = !game.attractMode;
-
 		levelCounter2D = new LevelCounter2D(game, r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(4), t(2));
-		levelCounter2D.visible = !game.attractMode;
-
+		if (gameController.credit() > 0) {
+			score2D.showPoints = true;
+			credit2D.visible = false;
+			livesCounter2D.visible = true;
+			levelCounter2D.visible = true;
+		} else {
+			score2D.showPoints = false;
+			credit2D.visible = true;
+			livesCounter2D.visible = false;
+			levelCounter2D.visible = false;
+		}
 		maze2D = new Maze2D(game, r2D);
 		maze2D.x = 0;
 		maze2D.y = t(3);
@@ -130,8 +133,8 @@ public class PlayScene2D extends GameScene2D {
 		if (SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying() && game.player.starvingTicks > 10) {
 			SoundManager.get().stop(GameSound.PACMAN_MUNCH);
 		}
-		if (!game.attractMode && gameController.state() == GameState.HUNTING && !SoundManager.get().isAnySirenPlaying()
-				&& !game.player.powerTimer.isRunning()) {
+		if (gameController.credit() > 0 && gameController.state() == GameState.HUNTING
+				&& !SoundManager.get().isAnySirenPlaying() && !game.player.powerTimer.isRunning()) {
 			int scatterPhase = game.huntingPhase / 2;
 			SoundManager.get().startSiren(scatterPhase);
 		}
@@ -167,7 +170,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void onScatterPhaseStarted(ScatterPhaseStartedEvent e) {
 		SoundManager.get().stopSirens();
-		if (!game.attractMode) {
+		if (gameController.credit() > 0) {
 			SoundManager.get().startSiren(e.scatterPhase);
 		}
 	}
@@ -184,14 +187,14 @@ public class PlayScene2D extends GameScene2D {
 			ghost2D.animFrightened.restart();
 		});
 		SoundManager.get().stopSirens();
-		if (!game.attractMode && !SoundManager.get().getClip(GameSound.PACMAN_POWER).isPlaying()) {
+		if (gameController.credit() > 0 && !SoundManager.get().getClip(GameSound.PACMAN_POWER).isPlaying()) {
 			SoundManager.get().loop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
 		}
 	}
 
 	@Override
 	public void onPlayerFoundFood(GameEvent e) {
-		if (!game.attractMode && !SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying()) {
+		if (gameController.credit() > 0 && !SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying()) {
 			SoundManager.get().loop(GameSound.PACMAN_MUNCH, Animation.INDEFINITE);
 		}
 	}
@@ -204,7 +207,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void onBonusEaten(GameEvent e) {
 		bonus2D.stopAnimation();
-		if (!game.attractMode) {
+		if (gameController.credit() > 0) {
 			SoundManager.get().play(GameSound.BONUS_EATEN);
 		}
 	}
@@ -216,7 +219,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void onGhostStartedReturningHome(GameEvent e) {
-		if (!game.attractMode) {
+		if (gameController.credit() > 0) {
 			SoundManager.get().playIfOff(GameSound.GHOST_RETURNING);
 		}
 	}
@@ -239,7 +242,7 @@ public class PlayScene2D extends GameScene2D {
 			maze2D.getEnergizerAnimation().reset();
 			player2D.reset();
 			Stream.of(ghosts2D).forEach(Ghost2D::reset);
-			if (!game.attractMode && !game.running) {
+			if (gameController.credit() > 0 && !game.running) {
 				SoundManager.get().play(GameSound.GAME_READY);
 			}
 		}
@@ -259,7 +262,7 @@ public class PlayScene2D extends GameScene2D {
 			new SequentialTransition( //
 					pauseSec(1, () -> game.ghosts().forEach(Ghost::hide)), //
 					pauseSec(1, () -> {
-						if (!game.attractMode) {
+						if (gameController.credit() > 0) {
 							SoundManager.get().play(GameSound.PACMAN_DEATH);
 						}
 						player2D.playDyingAnimation();
@@ -271,7 +274,7 @@ public class PlayScene2D extends GameScene2D {
 
 		case GHOST_DYING -> {
 			game.player.hide();
-			if (!game.attractMode) {
+			if (gameController.credit() > 0) {
 				SoundManager.get().play(GameSound.GHOST_EATEN);
 			}
 		}
@@ -320,7 +323,7 @@ public class PlayScene2D extends GameScene2D {
 		livesCounter2D.render(g);
 		credit2D.render(g);
 		maze2D.render(g);
-		if (gameController.state() == GameState.GAME_OVER || game.attractMode) {
+		if (gameController.state() == GameState.GAME_OVER || gameController.credit() == 0) {
 			g.setFont(r2D.getArcadeFont());
 			g.setFill(Color.RED);
 			g.fillText("GAME", t(9), t(21));

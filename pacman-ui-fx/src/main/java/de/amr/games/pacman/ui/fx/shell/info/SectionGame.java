@@ -65,12 +65,12 @@ public class SectionGame extends Section {
 
 		btnsGameControl = addButtonList("Game", "Start", "Quit", "Next Level");
 		btnsGameControl[0].setOnAction(e -> gameController.requestGame());
-		btnsGameControl[1].setOnAction(e -> ui.quitCurrentGameScene());
+		btnsGameControl[1].setOnAction(e -> ui.quitCurrentScene());
 		btnsGameControl[2].setOnAction(e -> ui.enterNextLevel());
 
 		btnsIntermissionTest = addButtonList("Intermission scenes", "Start", "Quit");
 		btnsIntermissionTest[0].setOnAction(e -> ui.startIntermissionScenesTest());
-		btnsIntermissionTest[1].setOnAction(e -> ui.quitCurrentGameScene());
+		btnsIntermissionTest[1].setOnAction(e -> ui.quitCurrentScene());
 
 		spinnerGameLevel = addSpinner("Level", 1, 100, game.levelNumber);
 		spinnerGameLevel.valueProperty().addListener(($value, oldValue, newValue) -> ui.enterLevel(newValue.intValue()));
@@ -90,7 +90,6 @@ public class SectionGame extends Section {
 		});
 		addInfo("Credit", () -> "%d".formatted(gameController.credit()));
 		addInfo("Playing", () -> U.yes_no(game.running));
-		addInfo("Attract Mode", () -> U.yes_no(game.attractMode));
 		addInfo("Game scene", () -> ui.getCurrentGameScene().getClass().getSimpleName());
 		addInfo("", () -> String.format("w=%.0f h=%.0f", ui.getCurrentGameScene().getFXSubScene().getWidth(),
 				ui.getCurrentGameScene().getFXSubScene().getHeight()));
@@ -121,7 +120,7 @@ public class SectionGame extends Section {
 		cbImmunity.setSelected(game.player.immune);
 
 		// start game
-		btnsGameControl[0].setDisable(gameController.credit() == 0 || game.running || game.attractMode);
+		btnsGameControl[0].setDisable(gameController.credit() == 0 || game.running);
 		// quit game
 		btnsGameControl[1].setDisable(gameState == GameState.INTRO || gameState == GameState.INTERMISSION_TEST);
 		// next level

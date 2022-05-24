@@ -167,7 +167,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 		score3D = new Score3D();
 		score3D.setFont(r2D.getArcadeFont());
-		if (game.attractMode) {
+		if (gc.credit() == 0) {
 			score3D.setComputeScoreText(false);
 			score3D.txtScore.setFill(Color.RED);
 			score3D.txtScore.setText("GAME OVER!");
@@ -177,7 +177,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 		livesCounter3D = new LivesCounter3D(model3D);
 		livesCounter3D.getTransforms().add(new Translate(TS, TS, -HTS));
-		livesCounter3D.setVisible(!game.attractMode);
+		livesCounter3D.setVisible(gc.credit() > 0);
 
 		levelCounter3D = new LevelCounter3D(r2D, size.x - TS, TS);
 		levelCounter3D.update(game);
@@ -228,7 +228,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		if (game.player.powerTimer.isRunning() && !SoundManager.get().getClip(GameSound.PACMAN_POWER).isPlaying()) {
 			SoundManager.get().loop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
 		}
-		if (!game.attractMode && gc.state() == GameState.HUNTING && !SoundManager.get().isAnySirenPlaying()
+		if (gc.credit() > 0 && gc.state() == GameState.HUNTING && !SoundManager.get().isAnySirenPlaying()
 				&& !game.player.powerTimer.isRunning()) {
 			int scatterPhase = game.huntingPhase / 2;
 			SoundManager.get().startSiren(scatterPhase);
@@ -274,8 +274,8 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 	@Override
 	public void onScatterPhaseStarted(ScatterPhaseStartedEvent e) {
-		SoundManager.get().stopSirens();
-		if (!game.attractMode) {
+		if (gc.credit() > 0) {
+			SoundManager.get().stopSirens();
 			SoundManager.get().startSiren(e.scatterPhase);
 		}
 	}
@@ -283,7 +283,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	@Override
 	public void onPlayerGotPower(GameEvent e) {
 		SoundManager.get().stopSirens();
-		if (!game.attractMode) {
+		if (gc.credit() > 0) {
 			SoundManager.get().loop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
 		}
 		Stream.of(ghosts3D) //
@@ -296,7 +296,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		Stream.of(ghosts3D) //
 				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED)) //
 				.forEach(Ghost3D::playFlashingAnimation);
-		if (!game.attractMode) {
+		if (gc.credit() > 0) {
 			SoundManager.get().startSiren(game.huntingPhase / 2);
 		}
 	}
@@ -317,7 +317,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			V2i tile = e.tile.get();
 			maze3D.foodAt(tile).ifPresent(maze3D::hideFood);
 			AudioClip munching = SoundManager.get().getClip(GameSound.PACMAN_MUNCH);
-			if (!munching.isPlaying() && !game.attractMode) {
+			if (!munching.isPlaying() && gc.credit() > 0) {
 				SoundManager.get().loop(GameSound.PACMAN_MUNCH, Animation.INDEFINITE);
 			}
 		}
@@ -331,7 +331,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	@Override
 	public void onBonusEaten(GameEvent e) {
 		bonus3D.showPoints(game.bonus.points);
-		if (!game.attractMode) {
+		if (gc.credit() > 0) {
 			SoundManager.get().play(GameSound.BONUS_EATEN);
 		}
 	}
@@ -349,7 +349,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 	@Override
 	public void onGhostStartedReturningHome(GameEvent e) {
-		if (!game.attractMode) {
+		if (gc.credit() > 0) {
 			SoundManager.get().playIfOff(GameSound.GHOST_RETURNING);
 		}
 	}
@@ -380,7 +380,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			player3D.reset();
 			Stream.of(ghosts3D).forEach(Ghost3D::reset);
 			SoundManager.get().stopAll();
-			if (!game.attractMode && !game.running) {
+			if (gc.credit() > 0 && !game.running) {
 				SoundManager.get().play(GameSound.GAME_READY);
 			}
 		}
@@ -394,12 +394,12 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			var killerColor = r2D.getGhostSkinColor(killer.id);
 			new SequentialTransition( //
 					U.pauseSec(1.0, game::hideGhosts), //
-					player3D.dyingAnimation(killerColor, game.attractMode), //
+					player3D.dyingAnimation(killerColor, gc.credit() == 0), //
 					U.pauseSec(2.0, () -> gc.state().timer().expire()) //
 			).play();
 		}
 		case GHOST_DYING -> {
-			if (!game.attractMode) {
+			if (gc.credit() > 0) {
 				SoundManager.get().play(GameSound.GHOST_EATEN);
 			}
 		}

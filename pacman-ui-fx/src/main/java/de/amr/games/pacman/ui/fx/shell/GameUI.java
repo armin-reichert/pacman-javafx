@@ -195,7 +195,7 @@ public class GameUI extends DefaultGameEventHandler {
 			case L -> addLives(3);
 			case M -> toggleSoundMuted();
 			case N -> enterNextLevel();
-			case Q -> quitCurrentGameScene();
+			case Q -> quitCurrentScene();
 			case V -> toggleGameVariant();
 			case X -> gc.cheatKillAllPossibleGhosts();
 			case Z -> startIntermissionScenesTest();
@@ -233,9 +233,12 @@ public class GameUI extends DefaultGameEventHandler {
 		}
 	}
 
-	public void quitCurrentGameScene() {
+	public void quitCurrentScene() {
 		currentGameScene.end();
 		SoundManager.get().stopAll();
+		if (currentGameScene instanceof PlayScene2D || currentGameScene instanceof PlayScene3D) {
+			gc.consumeCredit();
+		}
 		gc.reset(GameState.INTRO);
 	}
 
@@ -323,7 +326,7 @@ public class GameUI extends DefaultGameEventHandler {
 
 	public void toggleSoundMuted() {
 		if (SoundManager.get().isMuted()) {
-			if (!gc.game().attractMode) {
+			if (gc.credit() > 0) {
 				SoundManager.get().setMuted(false);
 			}
 		} else {
