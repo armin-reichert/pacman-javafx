@@ -281,7 +281,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	}
 
 	@Override
-	public void onPlayerGainsPower(GameEvent e) {
+	public void onPlayerGotPower(GameEvent e) {
 		SoundManager.get().stopSirens();
 		if (!game.attractMode) {
 			SoundManager.get().loop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
@@ -292,7 +292,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	}
 
 	@Override
-	public void onPlayerLosingPower(GameEvent e) {
+	public void onPlayerStartedLosingPower(GameEvent e) {
 		Stream.of(ghosts3D) //
 				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED)) //
 				.forEach(Ghost3D::playFlashingAnimation);
@@ -342,27 +342,27 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	}
 
 	@Override
-	public void onExtraLife(GameEvent e) {
+	public void onPlayerGotExtraLife(GameEvent e) {
 		showFlashMessage(1.5, Env.message("extra_life"));
 		SoundManager.get().play(GameSound.EXTRA_LIFE);
 	}
 
 	@Override
-	public void onGhostReturnsHome(GameEvent e) {
+	public void onGhostReturnedHome(GameEvent e) {
 		if (!game.attractMode) {
 			SoundManager.get().playIfOff(GameSound.GHOST_RETURNING);
 		}
 	}
 
 	@Override
-	public void onGhostEntersHouse(GameEvent e) {
+	public void onGhostEnteredHouse(GameEvent e) {
 		if (game.ghosts(GhostState.DEAD).count() == 0) {
 			SoundManager.get().stop(GameSound.GHOST_RETURNING);
 		}
 	}
 
 	@Override
-	public void onGhostLeavingHouse(GameEvent e) {
+	public void onGhostStartedLeavingHouse(GameEvent e) {
 		e.ghost.ifPresent(ghost -> ghosts3D[ghost.id].setNormalLook());
 	}
 
