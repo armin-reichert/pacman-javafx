@@ -53,5 +53,6 @@ public class SectionKeys extends Section {
 		addInfo("Alt+LEFT", () -> Env.perspectiveShifted(-1).name()).when(() -> ui.getCurrentGameScene().is3D());
 		addInfo("Alt+RIGHT", () -> Env.perspectiveShifted(1).name()).when(() -> ui.getCurrentGameScene().is3D());
 		addInfo("Alt+3", "3D Playscene On/Off");
+		addInfo("Alt+5", "Add 1 credit");
 	}
 }

@@ -33,6 +33,7 @@ import de.amr.games.pacman.controller.mspacman.IntroController.Context;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.Ghost;
+import de.amr.games.pacman.ui.fx._2d.entity.common.Credit2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
@@ -57,6 +58,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 	private final Image midwayLogo = U.image("/mspacman/graphics/midway.png");
 	private Player2D msPacMan2D;
 	private Ghost2D[] ghosts2D;
+	private Credit2D credit2D;
 
 	public MsPacMan_IntroScene(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
@@ -69,6 +71,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		sceneController.reset(IntroController.State.BEGIN);
 		createScores();
 		score2D.showPoints = false;
+		credit2D = new Credit2D(r2D, gameController::credit);
 		msPacMan2D = new Player2D(context.msPacMan, game, r2D);
 		msPacMan2D.animMunching.values().forEach(TimedSeq::restart);
 		ghosts2D = Stream.of(context.ghosts).map(ghost -> new Ghost2D(ghost, game, r2D)).toArray(Ghost2D[]::new);
@@ -84,11 +87,11 @@ public class MsPacMan_IntroScene extends GameScene2D {
 	public void doRender(GraphicsContext g) {
 		score2D.render(g);
 		highScore2D.render(g);
+		credit2D.render(g);
 
 		g.setFont(r2D.getArcadeFont());
 		g.setFill(Color.ORANGE);
 		g.fillText("\"MS PAC-MAN\"", context.titlePosition.x, context.titlePosition.y);
-
 		drawAnimatedBoard(32, 16);
 		switch (sceneController.state()) {
 		case GHOSTS -> drawGhostText();

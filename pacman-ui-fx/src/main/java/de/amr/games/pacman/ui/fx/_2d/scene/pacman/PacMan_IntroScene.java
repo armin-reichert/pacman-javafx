@@ -36,6 +36,7 @@ import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Ghost;
+import de.amr.games.pacman.ui.fx._2d.entity.common.Credit2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
@@ -60,6 +61,7 @@ public class PacMan_IntroScene extends GameScene2D {
 
 	private Player2D pacMan2D;
 	private Ghost2D[] ghosts2D;
+	private Credit2D credit2D;
 
 	public PacMan_IntroScene(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
@@ -70,10 +72,9 @@ public class PacMan_IntroScene extends GameScene2D {
 	@Override
 	public void init() {
 		sceneController.reset(IntroController.State.BEGIN);
-
 		createScores();
 		score2D.showPoints = false;
-
+		credit2D = new Credit2D(r2D, gameController::credit);
 		pacMan2D = new Player2D(context.pacMan, game, r2D);
 		pacMan2D.animMunching.values().forEach(TimedSeq::restart);
 
@@ -104,7 +105,7 @@ public class PacMan_IntroScene extends GameScene2D {
 	public void doRender(GraphicsContext g) {
 		score2D.render(g);
 		highScore2D.render(g);
-		drawCredit(g);
+		credit2D.render(g);
 		switch (sceneController.state()) {
 		case BEGIN, PRESENTING_GHOSTS -> drawGallery();
 		case SHOWING_POINTS -> {
@@ -138,12 +139,6 @@ public class PacMan_IntroScene extends GameScene2D {
 		default -> {
 		}
 		}
-	}
-
-	private void drawCredit(GraphicsContext g) {
-		g.setFont(r2D.getArcadeFont());
-		g.setFill(Color.WHITE);
-		g.fillText("CREDIT  %d".formatted(gameController.credit), t(2), t(36));
 	}
 
 	private void drawGuys(int offset) {

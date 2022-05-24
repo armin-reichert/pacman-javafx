@@ -88,7 +88,7 @@ public class SectionGame extends Section {
 			String remainingText = remaining == TickTimer.INDEFINITE ? "indefinite" : String.valueOf(remaining);
 			return String.format("Remaining: %s", remainingText);
 		});
-		addInfo("Credit", () -> "%d".formatted(gameController.credit));
+		addInfo("Credit", () -> "%d".formatted(gameController.credit()));
 		addInfo("Playing", () -> U.yes_no(game.running));
 		addInfo("Attract Mode", () -> U.yes_no(game.attractMode));
 		addInfo("Game scene", () -> ui.getCurrentGameScene().getClass().getSimpleName());
@@ -121,7 +121,7 @@ public class SectionGame extends Section {
 		cbImmunity.setSelected(game.player.immune);
 
 		// start game
-		btnsGameControl[0].setDisable(gameController.credit == 0 || game.running || game.attractMode);
+		btnsGameControl[0].setDisable(gameController.credit() == 0 || game.running || game.attractMode);
 		// quit game
 		btnsGameControl[1].setDisable(gameState == GameState.INTRO || gameState == GameState.INTERMISSION_TEST);
 		// next level

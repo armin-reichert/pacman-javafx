@@ -42,6 +42,7 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Bonus2D;
+import de.amr.games.pacman.ui.fx._2d.entity.common.Credit2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
@@ -66,6 +67,7 @@ public class PlayScene2D extends GameScene2D {
 	private Maze2D maze2D;
 	private LivesCounter2D livesCounter2D;
 	private LevelCounter2D levelCounter2D;
+	private Credit2D credit2D;
 	private Player2D player2D;
 	private Ghost2D[] ghosts2D = new Ghost2D[4];
 	private Bonus2D bonus2D;
@@ -78,6 +80,9 @@ public class PlayScene2D extends GameScene2D {
 	public void init() {
 		createScores();
 		score2D.showPoints = !game.attractMode;
+
+		credit2D = new Credit2D(r2D, gameController::credit);
+		credit2D.visible = game.attractMode;
 
 		livesCounter2D = new LivesCounter2D(game, r2D);
 		livesCounter2D.x = t(2);
@@ -309,11 +314,12 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void doRender(GraphicsContext g) {
-		maze2D.render(g);
-		levelCounter2D.render(g);
-		livesCounter2D.render(g);
 		score2D.render(g);
 		highScore2D.render(g);
+		levelCounter2D.render(g);
+		livesCounter2D.render(g);
+		credit2D.render(g);
+		maze2D.render(g);
 		if (gameController.state() == GameState.GAME_OVER || game.attractMode) {
 			g.setFont(r2D.getArcadeFont());
 			g.setFill(Color.RED);

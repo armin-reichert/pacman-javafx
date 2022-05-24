@@ -221,7 +221,7 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	public void addCredit() {
-		gc.credit++;
+		gc.addCredit();
 		SoundManager.get().play(GameSound.CREDIT);
 	}
 
