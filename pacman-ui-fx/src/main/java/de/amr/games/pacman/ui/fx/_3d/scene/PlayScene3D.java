@@ -38,6 +38,7 @@ import de.amr.games.pacman.controller.common.event.GameStateChangeEvent;
 import de.amr.games.pacman.controller.common.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
@@ -393,7 +394,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			var killer = game.ghosts().filter(ghost -> ghost.meets(game.player)).findAny().get();
 			var killerColor = r2D.getGhostSkinColor(killer.id);
 			new SequentialTransition( //
-					U.pauseSec(1.0, game::hideGhosts), //
+					U.pauseSec(1.0, () -> game.ghosts().forEach(Ghost::hide)), //
 					player3D.dyingAnimation(killerColor, gc.credit() == 0), //
 					U.pauseSec(2.0, () -> gc.state().timer().expire()) //
 			).play();
