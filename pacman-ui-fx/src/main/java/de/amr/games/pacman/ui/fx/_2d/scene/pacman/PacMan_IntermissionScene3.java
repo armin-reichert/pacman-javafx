@@ -45,7 +45,7 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class PacMan_IntermissionScene3 extends GameScene2D {
 
-	private final Intermission3Controller sc;
+	private final Intermission3Controller sceneController;
 	private final Intermission3Controller.Context context;
 
 	private LevelCounter2D levelCounter2D;
@@ -55,14 +55,14 @@ public class PacMan_IntermissionScene3 extends GameScene2D {
 
 	public PacMan_IntermissionScene3(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
-		sc = new Intermission3Controller(gameController);
-		context = sc.getContext();
-		context.playIntermissionSound = () -> SoundManager.get().loop(GameSound.INTERMISSION_3, 2);
+		sceneController = new Intermission3Controller(gameController);
+		sceneController.playIntermissionSound = () -> SoundManager.get().loop(GameSound.INTERMISSION_3, 2);
+		context = sceneController.getContext();
 	}
 
 	@Override
 	public void init() {
-		sc.init();
+		sceneController.init();
 
 		levelCounter2D = new LevelCounter2D(game, r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
@@ -77,14 +77,14 @@ public class PacMan_IntermissionScene3 extends GameScene2D {
 
 	@Override
 	public void doUpdate() {
-		sc.update();
+		sceneController.update();
 	}
 
 	@Override
 	public void doRender(GraphicsContext g) {
 		levelCounter2D.render(g);
 		pacMan2D.render(g);
-		if (sc.state() == Intermission3Controller.State.CHASING) {
+		if (sceneController.state() == Intermission3Controller.State.CHASING) {
 			blinkyPatched2D.render(g);
 		} else {
 			blinkyNaked2D.render(g);
