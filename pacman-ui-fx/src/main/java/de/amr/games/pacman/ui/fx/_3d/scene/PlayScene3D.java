@@ -420,7 +420,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game.levelNumber);
 			new SequentialTransition( //
 					U.pauseSec(2.0), //
-					maze3D.createMazeFlashingAnimation(game.numFlashes), //
+					maze3D.createMazeFlashingAnimation(game.level.numFlashes), //
 					U.pauseSec(1.0, () -> game.player.hide()), //
 					U.pauseSec(0.5, () -> showFlashMessage(2, message)), //
 					U.pauseSec(2.0, () -> gc.state().timer().expire()) //

@@ -122,8 +122,8 @@ public class PlayScene2D extends GameScene2D {
 		// TODO this is somewhat dubious
 		if (e.type == TickTimerEvent.Type.HALF_EXPIRED) {
 			game.ghosts(GhostState.FRIGHTENED).map(ghost -> ghosts2D[ghost.id]).forEach(ghost2D -> {
-				long frameTicks = e.ticks / (game.numFlashes * ghost2D.animFlashing.numFrames());
-				ghost2D.animFlashing.frameDuration(frameTicks).repetitions(game.numFlashes).restart();
+				long frameTicks = e.ticks / (game.level.numFlashes * ghost2D.animFlashing.numFrames());
+				ghost2D.animFlashing.frameDuration(frameTicks).repetitions(game.level.numFlashes).restart();
 			});
 		}
 	}
@@ -294,7 +294,7 @@ public class PlayScene2D extends GameScene2D {
 		}
 
 		case LEVEL_STARTING -> {
-			maze2D.getFlashingAnimation().setCycleCount(2 * game.numFlashes);
+			maze2D.getFlashingAnimation().setCycleCount(2 * game.level.numFlashes);
 			gameController.state().timer().setDurationSeconds(1).start();
 		}
 

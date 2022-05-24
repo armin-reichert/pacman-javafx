@@ -93,14 +93,14 @@ public class SectionGame extends Section {
 		addInfo("Game scene", () -> ui.getCurrentGameScene().getClass().getSimpleName());
 		addInfo("", () -> String.format("w=%.0f h=%.0f", ui.getCurrentGameScene().getFXSubScene().getWidth(),
 				ui.getCurrentGameScene().getFXSubScene().getHeight()));
-		addInfo("Ghost speed", () -> fmtSpeed(game.ghostSpeed));
-		addInfo("Ghost speed (frightened)", () -> fmtSpeed(game.ghostSpeedFrightened));
-		addInfo("Ghost speed (tunnel)", () -> fmtSpeed(game.ghostSpeedTunnel));
-		addInfo("Ghost frightened time", () -> String.format("%d sec", game.ghostFrightenedSeconds));
-		addInfo("Pac-Man speed", () -> fmtSpeed(game.playerSpeed));
-		addInfo("Pac-Man speed (power)", () -> fmtSpeed(game.playerSpeedPowered));
-		addInfo("Bonus value", () -> game.bonusValue(game.bonusSymbol));
-		addInfo("Maze flashings", () -> game.numFlashes);
+		addInfo("Ghost speed", () -> fmtSpeed(game.level.ghostSpeed));
+		addInfo("Ghost speed (frightened)", () -> fmtSpeed(game.level.ghostSpeedFrightened));
+		addInfo("Ghost speed (tunnel)", () -> fmtSpeed(game.level.ghostSpeedTunnel));
+		addInfo("Ghost frightened time", () -> String.format("%d sec", game.level.ghostFrightenedSeconds));
+		addInfo("Pac-Man speed", () -> fmtSpeed(game.level.playerSpeed));
+		addInfo("Pac-Man speed (power)", () -> fmtSpeed(game.level.playerSpeedPowered));
+		addInfo("Bonus value", () -> game.bonusValue(game.level.bonusSymbol));
+		addInfo("Maze flashings", () -> game.level.numFlashes);
 		addInfo("Pellets", () -> String.format("%d of %d (%d energizers)", game.world.foodRemaining(),
 				game.world.tiles().filter(game.world::isFoodTile).count(), game.world.energizerTiles().count()));
 	}
