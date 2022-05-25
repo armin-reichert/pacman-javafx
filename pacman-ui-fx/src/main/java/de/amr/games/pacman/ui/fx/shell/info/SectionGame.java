@@ -90,8 +90,8 @@ public class SectionGame extends Section {
 						gc.getHuntingTimer().getScatteringPhase() != -1 ? gc.getHuntingTimer().getScatteringPhase()
 								: gc.getHuntingTimer().getChasingPhase(),
 						gc.getHuntingTimer().isStopped() ? " STOPPED" : ""));
-		addInfo("", () -> "Running:   %d".formatted(gc.getHuntingTimer().getTick()));
-		addInfo("", () -> "Remaining: %s".formatted(ticksAsString(gc.getHuntingTimer().getTicksRemaining())));
+		addInfo("", () -> "Running:   %d".formatted(gc.getHuntingTimer().tick()));
+		addInfo("", () -> "Remaining: %s".formatted(ticksAsString(gc.getHuntingTimer().remaining())));
 
 		addInfo("Credit", () -> "%d".formatted(gc.credit()));
 		addInfo("Playing", () -> U.yes_no(gc.isGameRunning()));
