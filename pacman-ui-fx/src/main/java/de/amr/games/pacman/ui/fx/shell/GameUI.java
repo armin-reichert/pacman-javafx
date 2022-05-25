@@ -29,8 +29,8 @@ import static de.amr.games.pacman.ui.fx.shell.FlashMessageView.showFlashMessage;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
-import de.amr.games.pacman.controller.common.event.DefaultGameEventHandler;
-import de.amr.games.pacman.controller.common.event.GameEvent;
+import de.amr.games.pacman.event.DefaultGameEventHandler;
+import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
@@ -67,7 +67,7 @@ public class GameUI extends DefaultGameEventHandler {
 	public static final V2i GAME_SIZE = new V2i(28 * TS, 36 * TS);
 	public static final int MIN_FRAMERATE = 5, MAX_FRAMERATE = 120;
 
-	public final GameController gc;
+	public final GameController gameController;
 	public final Stage stage;
 
 	private final StackPane sceneRoot;
@@ -75,12 +75,10 @@ public class GameUI extends DefaultGameEventHandler {
 	private final InfoLayer infoLayer;
 	private GameScene currentGameScene;
 
-	public GameUI(GameController gc, Stage stage, double width, double height) {
-		this.gc = gc;
+	public GameUI(GameController gameController, Stage stage, double width, double height) {
+		this.gameController = gameController;
 		this.stage = stage;
 		this.infoLayer = new InfoLayer(this);
-
-		gc.games().forEach(game -> game.addEventListener(this));
 
 		// first child is placeholder for subscene assigned to current game scene
 		sceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
@@ -91,7 +89,7 @@ public class GameUI extends DefaultGameEventHandler {
 		scene.setOnMouseClicked(this::handleMouseClicked);
 		scene.setOnMouseMoved(this::handleMouseMoved);
 
-		gameScenes = new GameScenes(scene, gc, GAME_SIZE);
+		gameScenes = new GameScenes(scene, gameController, GAME_SIZE);
 		selectGameScene();
 
 		stage.setScene(scene);
@@ -109,7 +107,7 @@ public class GameUI extends DefaultGameEventHandler {
 	 * Called on every tick (if simulation is not paused).
 	 */
 	public void update() {
-		gc.update();
+		gameController.update();
 		// game scene is updated *and* rendered such that when simulation is paused it gets redrawn nevertheless
 		currentGameScene.update();
 	}
@@ -120,7 +118,7 @@ public class GameUI extends DefaultGameEventHandler {
 	public void render() {
 		FlashMessageView.get().update();
 		infoLayer.update();
-		stage.setTitle(gc.gameVariant() == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
+		stage.setTitle(gameController.gameVariant() == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
 	}
 
 	@Override
@@ -190,14 +188,14 @@ public class GameUI extends DefaultGameEventHandler {
 		if (e.isAltDown()) {
 			switch (e.getCode()) {
 			case A -> toggleAutopilot();
-			case E -> gc.cheatEatAllPellets();
+			case E -> gameController.cheatEatAllPellets();
 			case I -> toggleImmunity();
 			case L -> addLives(3);
 			case M -> toggleSoundMuted();
-			case N -> gc.cheatEnterNextLevel();
+			case N -> gameController.cheatEnterNextLevel();
 			case Q -> quitCurrentScene();
 			case V -> toggleGameVariant();
-			case X -> gc.cheatKillAllPossibleGhosts();
+			case X -> gameController.cheatKillAllPossibleGhosts();
 			case Z -> startIntermissionScenesTest();
 			case LEFT -> changePerspective(-1);
 			case RIGHT -> changePerspective(1);
@@ -214,14 +212,14 @@ public class GameUI extends DefaultGameEventHandler {
 
 		else {
 			switch (e.getCode()) {
-			case SPACE -> gc.requestGame();
+			case SPACE -> gameController.requestGame();
 			case F11 -> stage.setFullScreen(true);
 			}
 		}
 	}
 
 	public void addCredit() {
-		gc.addCredit();
+		gameController.addCredit();
 		SoundManager.get().play(GameSound.CREDIT);
 	}
 
@@ -236,40 +234,37 @@ public class GameUI extends DefaultGameEventHandler {
 	public void quitCurrentScene() {
 		currentGameScene.end();
 		SoundManager.get().stopAll();
-		if (currentGameScene instanceof PlayScene2D || currentGameScene instanceof PlayScene3D) {
-			gc.consumeCredit();
-		}
-		gc.reset(GameState.INTRO);
+		gameController.returnToIntro();
 	}
 
 	public void enterLevel(int levelNumber) {
-		if (gc.game().levelNumber == levelNumber) {
+		if (gameController.game().levelNumber == levelNumber) {
 			return;
 		}
 		SoundManager.get().stopAll();
 		if (levelNumber == 1) {
-			gc.game().reset();
-			gc.changeState(GameState.READY);
+			gameController.game().reset();
+			gameController.changeState(GameState.READY);
 		} else {
 			// TODO game model should be able to switch directly to any level
-			int start = levelNumber > gc.game().levelNumber ? gc.game().levelNumber + 1 : 1;
+			int start = levelNumber > gameController.game().levelNumber ? gameController.game().levelNumber + 1 : 1;
 			for (int n = start; n < levelNumber; ++n) {
-				gc.game().setLevel(n);
+				gameController.game().setLevel(n);
 			}
-			gc.changeState(GameState.LEVEL_STARTING);
+			gameController.changeState(GameState.LEVEL_STARTING);
 		}
 	}
 
 	public void addLives(int lives) {
-		if (gc.gameRunning) {
-			gc.game().player.lives += lives;
-			showFlashMessage(1, "You have %d lives", gc.game().player.lives);
+		if (gameController.isGameRunning()) {
+			gameController.game().player.lives += lives;
+			showFlashMessage(1, "You have %d lives", gameController.game().player.lives);
 		}
 	}
 
 	public void startIntermissionScenesTest() {
-		if (gc.state() == GameState.INTRO) {
-			gc.startIntermissionTest();
+		if (gameController.state() == GameState.INTRO) {
+			gameController.startIntermissionTest();
 		}
 	}
 
@@ -284,20 +279,20 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	public void toggleGameVariant() {
-		if (!gc.gameRunning) {
-			gc.selectGameVariant(gc.gameVariant().succ());
+		if (!gameController.isGameRunning()) {
+			gameController.selectGameVariant(gameController.gameVariant().succ());
 		}
 	}
 
 	public void toggleAutopilot() {
-		gc.game().player.autoMoving = !gc.game().player.autoMoving;
-		String message = Env.message(gc.game().player.autoMoving ? "autopilot_on" : "autopilot_off");
+		gameController.game().player.autoMoving = !gameController.game().player.autoMoving;
+		String message = Env.message(gameController.game().player.autoMoving ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(1, message);
 	}
 
 	public void toggleImmunity() {
-		gc.game().player.immune = !gc.game().player.immune;
-		String message = Env.message(gc.game().player.immune ? "player_immunity_on" : "player_immunity_off");
+		gameController.game().player.immune = !gameController.game().player.immune;
+		String message = Env.message(gameController.game().player.immune ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(1, message);
 	}
 
@@ -320,7 +315,7 @@ public class GameUI extends DefaultGameEventHandler {
 
 	public void toggleSoundMuted() {
 		if (SoundManager.get().isMuted()) {
-			if (gc.credit() > 0) {
+			if (gameController.credit() > 0) {
 				SoundManager.get().setMuted(false);
 			}
 		} else {

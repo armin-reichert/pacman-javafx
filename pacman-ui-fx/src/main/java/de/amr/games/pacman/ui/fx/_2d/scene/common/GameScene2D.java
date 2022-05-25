@@ -27,7 +27,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.controller.common.event.DefaultGameEventHandler;
+import de.amr.games.pacman.event.DefaultGameEventHandler;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;

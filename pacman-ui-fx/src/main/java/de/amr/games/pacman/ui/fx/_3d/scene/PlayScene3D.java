@@ -32,10 +32,10 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
-import de.amr.games.pacman.controller.common.event.DefaultGameEventHandler;
-import de.amr.games.pacman.controller.common.event.GameEvent;
-import de.amr.games.pacman.controller.common.event.GameStateChangeEvent;
-import de.amr.games.pacman.controller.common.event.ScatterPhaseStartedEvent;
+import de.amr.games.pacman.event.DefaultGameEventHandler;
+import de.amr.games.pacman.event.GameEvent;
+import de.amr.games.pacman.event.GameStateChangeEvent;
+import de.amr.games.pacman.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Ghost;
@@ -381,7 +381,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			player3D.reset();
 			Stream.of(ghosts3D).forEach(Ghost3D::reset);
 			SoundManager.get().stopAll();
-			if (gc.credit() > 0 && !gc.gameRunning) {
+			if (gc.credit() > 0 && !gc.isGameRunning()) {
 				SoundManager.get().play(GameSound.GAME_READY);
 			}
 		}

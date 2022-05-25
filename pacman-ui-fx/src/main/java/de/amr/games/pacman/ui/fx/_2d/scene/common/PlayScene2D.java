@@ -31,9 +31,9 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
-import de.amr.games.pacman.controller.common.event.GameEvent;
-import de.amr.games.pacman.controller.common.event.GameStateChangeEvent;
-import de.amr.games.pacman.controller.common.event.ScatterPhaseStartedEvent;
+import de.amr.games.pacman.event.GameEvent;
+import de.amr.games.pacman.event.GameStateChangeEvent;
+import de.amr.games.pacman.event.ScatterPhaseStartedEvent;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.lib.TimedSeq;
@@ -242,7 +242,7 @@ public class PlayScene2D extends GameScene2D {
 			maze2D.getEnergizerAnimation().reset();
 			player2D.reset();
 			Stream.of(ghosts2D).forEach(Ghost2D::reset);
-			if (gameController.credit() > 0 && !gameController.gameRunning) {
+			if (gameController.credit() > 0 && !gameController.isGameRunning()) {
 				SoundManager.get().play(GameSound.GAME_READY);
 			}
 		}

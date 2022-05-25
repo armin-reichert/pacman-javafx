@@ -79,9 +79,11 @@ public class PacManGameAppFX extends Application {
 
 		var width = options.windowHeight * 0.77; // 28/36
 		var height = options.windowHeight;
+
 		ui = new GameUI(gameController, stage, width, height);
 		ui.stage.setFullScreen(options.fullscreen);
 
+		gameController.games().forEach(game -> game.addEventListener(ui));
 		gameController.setPlayerControl(new KeyboardPlayerControl(stage));
 		SoundManager.get().setMuted(options.muted);
 
