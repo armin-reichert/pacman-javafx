@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import de.amr.games.pacman.controller.common.GameController;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.collections.FXCollections;
@@ -56,7 +57,7 @@ import javafx.scene.text.Font;
 public class Section extends TitledPane {
 
 	protected final GameUI ui;
-	protected final GameController gameController;
+	protected final GameController gc;
 	protected final List<InfoText> infoTexts = new ArrayList<>();
 	protected final GridPane content = new GridPane();
 
@@ -68,7 +69,7 @@ public class Section extends TitledPane {
 
 	public Section(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
 		this.ui = ui;
-		this.gameController = ui.gameController;
+		this.gc = ui.gameController;
 		this.minLabelWidth = minLabelWidth;
 		this.textColor = textColor;
 		this.textFont = textFont;
@@ -81,6 +82,10 @@ public class Section extends TitledPane {
 		content.setHgap(4);
 		content.setVgap(2);
 		content.setPadding(new Insets(5));
+	}
+
+	protected GameModel game() {
+		return gc.game();
 	}
 
 	public void update() {

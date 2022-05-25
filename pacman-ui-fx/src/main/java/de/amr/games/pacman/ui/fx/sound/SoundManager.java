@@ -176,18 +176,17 @@ public class SoundManager {
 		return Stream.of(GameSound.SIREN_1, GameSound.SIREN_2, GameSound.SIREN_3, GameSound.SIREN_4);
 	}
 
-	public void startSiren(int scatterPhase) {
+	public void startSiren(int sirenIndex) {
 		if (!muted) {
-			var siren = switch (scatterPhase) {
+			var sirenSound = switch (sirenIndex) {
 			case 0 -> GameSound.SIREN_1;
 			case 1 -> GameSound.SIREN_2;
 			case 2 -> GameSound.SIREN_3;
 			case 3 -> GameSound.SIREN_4;
-			default -> throw new IllegalArgumentException();
+			default -> throw new IllegalArgumentException("Illegal siren index: " + sirenIndex);
 			};
-			getClip(siren).setVolume(0.2);
-			loop(siren, Animation.INDEFINITE);
-//			log("Siren %s started", siren);
+			getClip(sirenSound).setVolume(0.2);
+			loop(sirenSound, Animation.INDEFINITE);
 		}
 	}
 
