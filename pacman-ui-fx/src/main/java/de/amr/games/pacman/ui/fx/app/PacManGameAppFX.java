@@ -28,6 +28,7 @@ import static de.amr.games.pacman.lib.Logging.log;
 import java.io.IOException;
 
 import de.amr.games.pacman.controller.common.GameController;
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
@@ -77,7 +78,8 @@ public class PacManGameAppFX extends Application {
 	public void start(Stage stage) throws IOException {
 		log("Starting application...");
 
-		var width = options.windowHeight * 0.77; // 28/36
+		var aspectRatio = (double) ArcadeWorld.TILES_X / (double) ArcadeWorld.TILES_Y;
+		var width = options.windowHeight * aspectRatio;
 		var height = options.windowHeight;
 
 		ui = new GameUI(gameController, stage, width, height);
