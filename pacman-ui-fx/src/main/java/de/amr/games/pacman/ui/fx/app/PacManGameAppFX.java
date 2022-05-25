@@ -83,7 +83,7 @@ public class PacManGameAppFX extends Application {
 		ui = new GameUI(gameController, stage, width, height);
 		ui.stage.setFullScreen(options.fullscreen);
 
-		gameController.games().forEach(game -> game.addEventListener(ui));
+		gameController.addListener(ui);
 		gameController.setPlayerControl(new KeyboardPlayerControl(stage));
 		SoundManager.get().setMuted(options.muted);
 
