@@ -33,6 +33,7 @@ import de.amr.games.pacman.controller.mspacman.IntroController.Context;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.Ghost;
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Credit2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
@@ -164,7 +165,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 
 	private void drawCopyright() {
 		var g = canvas.getGraphicsContext2D();
-		double scale = 36.0 / midwayLogo.getHeight();
+		double scale = ArcadeWorld.TILES_Y / midwayLogo.getHeight();
 		g.drawImage(midwayLogo, t(4), t(28) + 3, scale * midwayLogo.getWidth(), scale * midwayLogo.getHeight());
 		g.setFill(Color.RED);
 		g.setFont(Font.font("Dialog", 11.0));

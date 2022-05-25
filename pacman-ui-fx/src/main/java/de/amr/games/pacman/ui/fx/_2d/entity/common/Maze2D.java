@@ -29,6 +29,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.animation.Animation.Status;
@@ -106,11 +107,11 @@ public class Maze2D extends GameEntity2D {
 	private void drawTileBorders(GraphicsContext g) {
 		g.setStroke(Color.rgb(160, 160, 160, 0.5));
 		g.setLineWidth(1);
-		for (int row = 0; row < 36; ++row) {
-			line(g, 0, t(row), t(28), t(row));
+		for (int row = 0; row < ArcadeWorld.TILES_Y; ++row) {
+			line(g, 0, t(row), t(ArcadeWorld.TILES_X), t(row));
 		}
-		for (int col = 0; col < 28; ++col) {
-			line(g, t(col), 0, t(col), t(36));
+		for (int col = 0; col < ArcadeWorld.TILES_X; ++col) {
+			line(g, t(col), 0, t(col), t(ArcadeWorld.TILES_Y));
 		}
 	}
 

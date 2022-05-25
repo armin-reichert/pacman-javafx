@@ -33,6 +33,7 @@ import de.amr.games.pacman.event.DefaultGameEventHandler;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
@@ -64,7 +65,7 @@ import javafx.stage.Stage;
  */
 public class GameUI extends DefaultGameEventHandler {
 
-	public static final V2i GAME_SIZE = new V2i(28 * TS, 36 * TS);
+	public static final V2i GAME_SIZE = new V2i(ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y).scaled(TS);
 	public static final int MIN_FRAMERATE = 5, MAX_FRAMERATE = 120;
 
 	public final GameController gameController;

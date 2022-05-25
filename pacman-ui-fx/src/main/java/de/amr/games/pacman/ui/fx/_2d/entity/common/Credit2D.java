@@ -28,6 +28,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import java.util.function.IntSupplier;
 
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -45,7 +46,7 @@ public class Credit2D extends GameEntity2D {
 		this.r2D = r2D;
 		this.fnCredit = fnCredit;
 		x = t(2);
-		y = t(36);
+		y = t(ArcadeWorld.TILES_Y);
 	}
 
 	@Override
