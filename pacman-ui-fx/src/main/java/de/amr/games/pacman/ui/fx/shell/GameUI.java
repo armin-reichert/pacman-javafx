@@ -194,7 +194,7 @@ public class GameUI extends DefaultGameEventHandler {
 			case M -> toggleSoundMuted();
 			case N -> gameController.cheatEnterNextLevel();
 			case Q -> quitCurrentScene();
-			case V -> toggleGameVariant();
+			case V -> selectNextGameVariant();
 			case X -> gameController.cheatKillAllPossibleGhosts();
 			case Z -> startIntermissionScenesTest();
 			case LEFT -> changePerspective(-1);
@@ -278,10 +278,8 @@ public class GameUI extends DefaultGameEventHandler {
 		log(Env.$paused.get() ? "Simulation paused." : "Simulation resumed.");
 	}
 
-	public void toggleGameVariant() {
-		if (!gameController.isGameRunning()) {
-			gameController.selectGameVariant(gameController.gameVariant().succ());
-		}
+	public void selectNextGameVariant() {
+		gameController.selectGameVariant(gameController.gameVariant().succ());
 	}
 
 	public void toggleAutopilot() {
