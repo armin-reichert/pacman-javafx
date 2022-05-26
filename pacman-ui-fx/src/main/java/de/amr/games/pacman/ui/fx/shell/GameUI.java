@@ -212,6 +212,7 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	private void handleKeyPressed(KeyEvent e) {
+		// ALT + key
 		if (pressed(e, MOD_ALT, KeyCode.A)) {
 			toggleAutopilot();
 		} else if (pressed(e, MOD_ALT, KeyCode.E)) {
@@ -238,9 +239,13 @@ public class GameUI extends DefaultGameEventHandler {
 			changePerspective(+1);
 		} else if (pressed(e, MOD_ALT, KeyCode.DIGIT3)) {
 			toggleUse3DScene();
-		} else if (pressed(e, MOD_CTRL, KeyCode.I)) {
+		}
+		// CTRL + key
+		else if (pressed(e, MOD_CTRL, KeyCode.I)) {
 			toggleInfoPanelsVisible();
-		} else if (pressed(e, MOD_NONE, KeyCode.SPACE)) {
+		}
+		// No modifier
+		else if (pressed(e, MOD_NONE, KeyCode.SPACE)) {
 			gameController.requestGame();
 		} else if (pressed(e, MOD_NONE, KeyCode.F11)) {
 			stage.setFullScreen(true);

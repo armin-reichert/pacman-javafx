@@ -49,16 +49,23 @@ public class InfoLayer extends BorderPane {
 		Color textColor = Color.WHITE;
 		Font textFont = Font.font("Sans", 11);
 		Font labelFont = Font.font("Sans", 11);
-		sectionGame = new SectionGame(ui, "Game", minLabelWidth, textColor, textFont, labelFont);
-		sectionGeneral = new SectionGeneral(ui, "General", minLabelWidth, textColor, textFont, labelFont);
-		sectionKeys = new SectionKeys(ui, "Keyboard Shortcuts", minLabelWidth, textColor, textFont, labelFont);
-		sectionKeys.setExpanded(false);
-		section2D = new Section2D(ui, "2D Settings", minLabelWidth, textColor, textFont, labelFont);
-		section3D = new Section3D(ui, "3D Settings", minLabelWidth, textColor, textFont, labelFont);
-		leftSide.getChildren().addAll(sectionGeneral, sectionGame);
-		rightSide.getChildren().addAll(section3D, section2D, sectionKeys);
+
 		setLeft(leftSide);
+		sectionGeneral = new SectionGeneral(ui, "General", minLabelWidth, textColor, textFont, labelFont);
+		sectionGame = new SectionGame(ui, "Game", minLabelWidth, textColor, textFont, labelFont);
+		leftSide.getChildren().addAll(sectionGeneral, sectionGame);
+		sectionGeneral.setExpanded(false);
+		sectionGame.setExpanded(true);
+
 		setRight(rightSide);
+		section3D = new Section3D(ui, "3D Settings", minLabelWidth, textColor, textFont, labelFont);
+		section2D = new Section2D(ui, "2D Settings", minLabelWidth, textColor, textFont, labelFont);
+		sectionKeys = new SectionKeys(ui, "Keyboard Shortcuts", minLabelWidth, textColor, textFont, labelFont);
+		rightSide.getChildren().addAll(section3D, section2D, sectionKeys);
+		section3D.setExpanded(false);
+		section2D.setExpanded(false);
+		sectionKeys.setExpanded(true);
+
 		setVisible(false);
 	}
 

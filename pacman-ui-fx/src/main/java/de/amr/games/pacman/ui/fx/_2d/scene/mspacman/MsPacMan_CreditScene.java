@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.ui.fx._2d.entity.common.Credit2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
@@ -41,8 +42,15 @@ import javafx.scene.text.Font;
  */
 public class MsPacMan_CreditScene extends GameScene2D {
 
+	private Credit2D credit2D;
+
 	public MsPacMan_CreditScene(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
+	}
+
+	@Override
+	public void init() {
+		credit2D = new Credit2D(r2D, gameController::credit);
 	}
 
 	@Override
@@ -63,6 +71,8 @@ public class MsPacMan_CreditScene extends GameScene2D {
 
 	@Override
 	protected void doRender(GraphicsContext g) {
+		credit2D.render(g);
+
 		g.setFill(Color.WHITE);
 		g.setFont(Font.font("Arial", 20));
 		g.fillText("CREDIT SCENE", 20, 100);

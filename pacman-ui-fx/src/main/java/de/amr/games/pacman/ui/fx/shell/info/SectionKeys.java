@@ -46,13 +46,12 @@ public class SectionKeys extends Section {
 		addInfo("Alt+M", "Mute/Unmute");
 		addInfo("Alt+N", "Next Level").when(() -> gc.isGameRunning());
 		addInfo("Alt+Q", "Quit Scene").when(() -> gc.state() != GameState.INTRO);
-		addInfo("Alt+S", "Speed (SHIFT=Decrease)");
-		addInfo("Alt+V", "Switch Pac-Man/Ms. Pac-Man").when(() -> gc.state() == GameState.INTRO);
-		addInfo("Alt+X", "Kill all hunting ghosts").when(() -> gc.isGameRunning());
+		addInfo("Alt+V", "Switch game variant").when(() -> gc.state() == GameState.INTRO);
+		addInfo("Alt+X", "Kill hunting ghosts").when(() -> gc.isGameRunning());
 		addInfo("Alt+Z", "Play Intermission Scenes").when(() -> gc.state() == GameState.INTRO);
 		addInfo("Alt+LEFT", () -> Env.perspectiveShifted(-1).name()).when(() -> ui.getCurrentGameScene().is3D());
 		addInfo("Alt+RIGHT", () -> Env.perspectiveShifted(1).name()).when(() -> ui.getCurrentGameScene().is3D());
 		addInfo("Alt+3", "3D Playscene On/Off");
-		addInfo("Alt+5", "Add 1 credit");
+		addInfo("5", "Add credit");
 	}
 }
