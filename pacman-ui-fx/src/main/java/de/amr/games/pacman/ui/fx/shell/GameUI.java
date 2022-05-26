@@ -240,10 +240,6 @@ public class GameUI extends DefaultGameEventHandler {
 			toggleSoundMuted();
 		} else if (pressed(e, MOD_ALT, KeyCode.N)) {
 			gameController.cheatEnterNextLevel();
-		} else if (pressed(e, MOD_ALT, KeyCode.Q)) {
-			quitCurrentScene();
-		} else if (pressed(e, MOD_ALT, KeyCode.V)) {
-			selectNextGameVariant();
 		} else if (pressed(e, MOD_ALT, KeyCode.X)) {
 			gameController.cheatKillAllPossibleGhosts();
 		} else if (pressed(e, MOD_ALT, KeyCode.Z)) {
@@ -255,14 +251,18 @@ public class GameUI extends DefaultGameEventHandler {
 		} else if (pressed(e, MOD_ALT, KeyCode.DIGIT3)) {
 			toggleUse3DScene();
 		}
-		// CTRL + key
+
 		else if (pressed(e, MOD_CTRL, KeyCode.I)) {
 			toggleInfoPanelsVisible();
 		}
-		// No modifier
-		else if (pressed(e, MOD_NONE, KeyCode.SPACE)) {
+
+		else if (pressed(e, KeyCode.Q)) {
+			quitCurrentScene();
+		} else if (pressed(e, KeyCode.V)) {
+			selectNextGameVariant();
+		} else if (pressed(e, KeyCode.SPACE)) {
 			gameController.requestGame();
-		} else if (pressed(e, MOD_NONE, KeyCode.F11)) {
+		} else if (pressed(e, KeyCode.F11)) {
 			stage.setFullScreen(true);
 		}
 		currentGameScene.handleKeyPressed(e);
