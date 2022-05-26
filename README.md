@@ -41,7 +41,7 @@ General shortcuts:
 - <kbd>CTRL+I</kbd> Toggle information/settings panels
 - <kbd>Alt+A</kbd> Toggle autopilot mode
 - <kbd>Alt+I</kbd> Toggle immunity of player against ghost attacks
-- <kbd>Alt+V</kbd> Switch between the game variants (Pac-Man, Ms. Pac-Man)
+- <kbd>V</kbd> Switch between the game variants (Pac-Man, Ms. Pac-Man)
 - <kbd>Alt+Z</kbd> Play all intermission scenes
 - <kbd>Alt+3</kbd> Toggle using 2D/3D play scene
 
@@ -49,7 +49,7 @@ Play screen shortcuts:
 - <kbd>Alt+LEFT</kbd> Select next camera perspective
 - <kbd>Alt+RIGHT</kbd> Select previous camera perspective
 - <kbd>Alt+L</kbd> Toggle draw mode (line vs. shaded)
-- <kbd>Alt+Q</kbd> Quit scene
+- <kbd>Q</kbd> Quit scene
 
 Cheats:
   - <kbd>Alt+E</kbd> Eat all pills except the energizers
