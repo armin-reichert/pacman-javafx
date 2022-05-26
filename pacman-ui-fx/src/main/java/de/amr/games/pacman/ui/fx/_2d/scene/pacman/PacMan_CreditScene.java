@@ -24,8 +24,11 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
+import static de.amr.games.pacman.model.common.world.World.t;
+
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Credit2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
@@ -34,7 +37,6 @@ import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
@@ -50,6 +52,8 @@ public class PacMan_CreditScene extends GameScene2D {
 
 	@Override
 	public void init() {
+		createScores();
+		score2D.showPoints = false;
 		credit2D = new Credit2D(r2D, gameController::credit);
 	}
 
@@ -71,10 +75,25 @@ public class PacMan_CreditScene extends GameScene2D {
 
 	@Override
 	protected void doRender(GraphicsContext g) {
+		score2D.render(g);
+		highScore2D.render(g);
 		credit2D.render(g);
 
-		g.setFill(Color.WHITE);
-		g.setFont(Font.font("Arial", 20));
-		g.fillText("CREDIT SCENE", 20, 100);
+		g.setFont(r2D.getArcadeFont());
+		g.setFill(r2D.getGhostSkinColor(Ghost.ORANGE_GHOST));
+		g.fillText("PUSH START BUTTON", t(6), t(17));
+
+		g.setFont(r2D.getArcadeFont());
+		g.setFill(r2D.getGhostSkinColor(Ghost.CYAN_GHOST));
+		g.fillText("1 PLAYER ONLY", t(8), t(21));
+
+		g.setFont(r2D.getArcadeFont());
+		g.setFill(r2D.getGhostSkinColor(Ghost.ORANGE_GHOST));
+		g.fillText("BONUS PAC-MAN FOR 10000", t(1), t(25));
+
+		g.setFont(Font.font(r2D.getArcadeFont().getName(), 6));
+		g.fillText("PTS", t(25), t(25));
+
+		r2D.renderCopyright(g, t(3), t(32));
 	}
 }

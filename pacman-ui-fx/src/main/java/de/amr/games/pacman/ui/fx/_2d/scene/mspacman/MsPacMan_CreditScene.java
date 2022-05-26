@@ -79,16 +79,21 @@ public class MsPacMan_CreditScene extends GameScene2D {
 		score2D.render(g);
 		highScore2D.render(g);
 		credit2D.render(g);
+
 		g.setFont(r2D.getArcadeFont());
 		g.setFill(r2D.getGhostSkinColor(Ghost.ORANGE_GHOST));
 		g.fillText("PUSH START BUTTON", t(6), t(16));
+
 		g.fillText("1 PLAYER ONLY", t(8), t(18));
+
 		g.fillText("ADDITIONAL    AT 10000", t(2), t(25));
+
 		Rendering2D_MsPacMan r2DMs = (Rendering2D_MsPacMan) r2D;
 		r2D.renderSprite(g, r2DMs.rhs(1, 0), t(13), t(23) + 2);
-		g.setFont(r2D.getArcadeFont());
+
 		g.setFont(Font.font(r2D.getArcadeFont().getName(), 6));
 		g.fillText("PTS", t(25), t(25));
+
 		r2D.renderCopyright(g, t(4), t(28));
 	}
 }
