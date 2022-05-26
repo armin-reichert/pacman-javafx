@@ -48,6 +48,7 @@ import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
@@ -184,39 +185,67 @@ public class GameUI extends DefaultGameEventHandler {
 
 	// End test area ---
 
-	@SuppressWarnings("incomplete-switch")
+	public static final byte MOD_NONE = 0x0;
+	public static final byte MOD_ALT = 0x1;
+	public static final byte MOD_CTRL = 0x2;
+	public static final byte MOD_SHIFT = 0x4;
+
+	public static boolean pressed(KeyEvent e, KeyCode code) {
+		return pressed(e, MOD_NONE, code);
+	}
+
+	public static boolean pressed(KeyEvent e, int modfierMask, KeyCode code) {
+		if ((modfierMask & MOD_ALT) != 0 && !e.isAltDown()) {
+			return false;
+		}
+		if ((modfierMask & MOD_CTRL) != 0 && !e.isControlDown()) {
+			return false;
+		}
+		if ((modfierMask & MOD_SHIFT) != 0 && !e.isShiftDown()) {
+			return false;
+		}
+		if (e.getCode() != code) {
+			return false;
+		}
+		e.consume();
+		return true;
+	}
+
 	private void handleKeyPressed(KeyEvent e) {
-		if (e.isAltDown()) {
-			switch (e.getCode()) {
-			case A -> toggleAutopilot();
-			case E -> gameController.cheatEatAllPellets();
-			case I -> toggleImmunity();
-			case L -> addLives(3);
-			case M -> toggleSoundMuted();
-			case N -> gameController.cheatEnterNextLevel();
-			case Q -> quitCurrentScene();
-			case V -> selectNextGameVariant();
-			case X -> gameController.cheatKillAllPossibleGhosts();
-			case Z -> startIntermissionScenesTest();
-			case LEFT -> changePerspective(-1);
-			case RIGHT -> changePerspective(1);
-			case DIGIT3 -> toggleUse3DScene();
-			case DIGIT5 -> addCredit();
-			}
+		if (pressed(e, MOD_ALT, KeyCode.A)) {
+			toggleAutopilot();
+		} else if (pressed(e, MOD_ALT, KeyCode.E)) {
+			gameController.cheatEatAllPellets();
+		} else if (pressed(e, MOD_ALT, KeyCode.I)) {
+			toggleImmunity();
+		} else if (pressed(e, MOD_ALT, KeyCode.L)) {
+			addLives(3);
+		} else if (pressed(e, MOD_ALT, KeyCode.M)) {
+			toggleSoundMuted();
+		} else if (pressed(e, MOD_ALT, KeyCode.N)) {
+			gameController.cheatEnterNextLevel();
+		} else if (pressed(e, MOD_ALT, KeyCode.Q)) {
+			quitCurrentScene();
+		} else if (pressed(e, MOD_ALT, KeyCode.V)) {
+			selectNextGameVariant();
+		} else if (pressed(e, MOD_ALT, KeyCode.X)) {
+			gameController.cheatKillAllPossibleGhosts();
+		} else if (pressed(e, MOD_ALT, KeyCode.Z)) {
+			startIntermissionScenesTest();
+		} else if (pressed(e, MOD_ALT, KeyCode.LEFT)) {
+			changePerspective(-1);
+		} else if (pressed(e, MOD_ALT, KeyCode.RIGHT)) {
+			changePerspective(+1);
+		} else if (pressed(e, MOD_ALT, KeyCode.DIGIT3)) {
+			toggleUse3DScene();
+		} else if (pressed(e, MOD_CTRL, KeyCode.I)) {
+			toggleInfoPanelsVisible();
+		} else if (pressed(e, MOD_NONE, KeyCode.SPACE)) {
+			gameController.requestGame();
+		} else if (pressed(e, MOD_NONE, KeyCode.F11)) {
+			stage.setFullScreen(true);
 		}
-
-		else if (e.isControlDown()) {
-			switch (e.getCode()) {
-			case I -> toggleInfoPanelsVisible();
-			}
-		}
-
-		else {
-			switch (e.getCode()) {
-			case SPACE -> gameController.requestGame();
-			case F11 -> stage.setFullScreen(true);
-			}
-		}
+		currentGameScene.handleKeyPressed(e);
 	}
 
 	public void addCredit() {

@@ -41,8 +41,13 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
+import de.amr.games.pacman.ui.fx.shell.GameUI;
+import de.amr.games.pacman.ui.fx.sound.GameSound;
+import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -87,7 +92,20 @@ public class PacMan_IntroScene extends GameScene2D {
 	}
 
 	@Override
+	public void handleKeyPressed(KeyEvent e) {
+		if (GameUI.pressed(e, KeyCode.DIGIT5)) {
+			SoundManager.get().play(GameSound.CREDIT);
+			gameController.addCredit();
+			return;
+		} else if (GameUI.pressed(e, KeyCode.SPACE)) {
+			gameController.requestGame();
+			return;
+		}
+	}
+
+	@Override
 	public void doUpdate() {
+
 		sceneController.update();
 		// TODO find a better solution:
 		if (sceneController.state() == IntroController.State.CHASING_GHOSTS) {
