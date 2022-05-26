@@ -31,6 +31,7 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.DefaultGameEventHandler;
 import de.amr.games.pacman.event.GameEvent;
+import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
@@ -91,14 +92,16 @@ public class GameUI extends DefaultGameEventHandler {
 		scene.setOnMouseClicked(this::handleMouseClicked);
 		scene.setOnMouseMoved(this::handleMouseMoved);
 
-		gameScenes = new GameScenes(scene, gameController, GAME_SIZE);
-		selectGameScene();
+		gameScenes = new GameScenes(gameController, GAME_SIZE);
+		gameScenes.defineResizingBehavior(scene);
+		updateGameScene(gameController.state(), true);
 
 		stage.setScene(scene);
 		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
 		stage.setOnCloseRequest(e -> GameLoop.get().stop());
 		stage.centerOnScreen();
 		stage.show();
+
 	}
 
 	public GameScene getCurrentGameScene() {
@@ -126,13 +129,25 @@ public class GameUI extends DefaultGameEventHandler {
 	@Override
 	public void onGameEvent(GameEvent event) {
 		super.onGameEvent(event);
-		selectGameScene();
 		currentGameScene.onGameEvent(event);
 	}
 
-	private void selectGameScene() {
+	@Override
+	public void onUIChange(GameEvent e) {
+		updateGameScene(gameController.state(), true);
+	}
+
+	@Override
+	public void onGameStateChange(GameStateChangeEvent e) {
+		updateGameScene(e.newGameState, false);
+	}
+
+	private void updateGameScene(GameState gameState, boolean forced) {
 		var newGameScene = gameScenes.getScene(Env.$3D.get() ? GameScenes.SCENE_3D : GameScenes.SCENE_2D);
-		if (newGameScene != currentGameScene) {
+		if (newGameScene == null) {
+			throw new IllegalStateException("No scene found for game state " + gameState);
+		}
+		if (newGameScene != currentGameScene || forced) {
 			if (currentGameScene != null) {
 				currentGameScene.end();
 			}
@@ -141,7 +156,7 @@ public class GameUI extends DefaultGameEventHandler {
 			sceneRoot.getChildren().set(0, newGameScene.getFXSubScene());
 			newGameScene.setContext();
 			newGameScene.init();
-			log("Game scene is now '%s'", newGameScene.getClass());
+			log("Current scene changed from %s to %s", currentGameScene, newGameScene);
 			currentGameScene = newGameScene;
 		}
 	}
@@ -332,7 +347,7 @@ public class GameUI extends DefaultGameEventHandler {
 	public void toggleUse3DScene() {
 		Env.toggle(Env.$3D);
 		if (gameScenes.getScene(GameScenes.SCENE_2D) != gameScenes.getScene(GameScenes.SCENE_3D)) {
-			selectGameScene();
+			updateGameScene(gameController.state(), true);
 			if (currentGameScene instanceof PlayScene2D) {
 				((PlayScene2D) currentGameScene).onSwitchFrom3DScene();
 			} else if (currentGameScene instanceof PlayScene3D) {

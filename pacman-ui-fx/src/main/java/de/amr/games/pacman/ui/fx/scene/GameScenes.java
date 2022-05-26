@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx.scene;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_CreditScene;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntermissionScene1;
@@ -46,10 +47,11 @@ import javafx.scene.Scene;
  */
 public class GameScenes {
 
+	public static final int NUM_SCENES = 6;
 	public static final int SCENE_2D = 0, SCENE_3D = 1;
 
 	private final GameController gc;
-	private final GameScene scenes[][][] = new GameScene[2][6][2];
+	private final GameScene scenes[][][] = new GameScene[GameVariant.numValues()][NUM_SCENES][2];
 
 	/**
 	 * Creates all game scenes.
@@ -59,7 +61,7 @@ public class GameScenes {
 	 * @param model3D the used 3D model for the actors
 	 * @param size    logical scene size (number of tiles times tile size)
 	 */
-	public GameScenes(Scene parent, GameController gc, V2i size) {
+	public GameScenes(GameController gc, V2i size) {
 		this.gc = gc;
 		//@formatter:off
 		scenes[0][0][SCENE_2D] = new MsPacMan_IntroScene(gc, size);
@@ -88,7 +90,22 @@ public class GameScenes {
 		scenes[1][5][SCENE_2D] = new PlayScene2D(gc, size);
 		scenes[1][5][SCENE_3D] = new PlayScene3D(gc, size);
 		//@formatter:on
-		defineResizing(parent);
+	}
+
+	public void defineResizingBehavior(Scene parent) {
+		for (int variant = 0; variant < GameVariant.numValues(); ++variant) {
+			for (int scene = 0; scene < NUM_SCENES; ++scene) {
+				// 2D scenes adapt to parent scene height keeping aspect ratio
+				GameScene scene2D = scenes[variant][scene][SCENE_2D];
+				parent.heightProperty().addListener(($height, oldHeight, newHeight) -> scene2D.resize(newHeight.doubleValue()));
+				// 3D scenes adapt to parent scene size
+				GameScene scene3D = scenes[variant][scene][SCENE_3D];
+				if (scene3D != null) {
+					scene3D.getFXSubScene().widthProperty().bind(parent.widthProperty());
+					scene3D.getFXSubScene().heightProperty().bind(parent.heightProperty());
+				}
+			}
+		}
 	}
 
 	/**
@@ -111,21 +128,5 @@ public class GameScenes {
 			return scenes[variantIndex][sceneIndex][SCENE_2D];
 		}
 		return scenes[variantIndex][sceneIndex][dimension];
-	}
-
-	private void defineResizing(Scene parent) {
-		for (int variantIndex = 0; variantIndex <= 1; ++variantIndex) {
-			for (int sceneIndex = 0; sceneIndex <= 4; ++sceneIndex) {
-				// 2D scenes adapt to parent scene height keeping aspect ratio
-				GameScene scene2D = scenes[variantIndex][sceneIndex][SCENE_2D];
-				parent.heightProperty().addListener(($height, oldHeight, newHeight) -> scene2D.resize(newHeight.doubleValue()));
-				// 3D scenes adapt to parent scene size
-				GameScene scene3D = scenes[variantIndex][sceneIndex][SCENE_3D];
-				if (scene3D != null) {
-					scene3D.getFXSubScene().widthProperty().bind(parent.widthProperty());
-					scene3D.getFXSubScene().heightProperty().bind(parent.heightProperty());
-				}
-			}
-		}
 	}
 }

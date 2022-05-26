@@ -80,6 +80,8 @@ public class SectionGame extends Section {
 		cbImmunity = addCheckBox("Player immune", ui::toggleImmunity);
 
 		addInfo("Game scene", () -> ui.getCurrentGameScene().getClass().getSimpleName());
+		addInfo("", () -> "w=%.0f h=%.0f".formatted(ui.getCurrentGameScene().getFXSubScene().getWidth(),
+				ui.getCurrentGameScene().getFXSubScene().getHeight()));
 		addInfo("Game State", () -> "%s".formatted(gc.state()));
 		addInfo("", () -> "Running:   %s%s".formatted(gc.state().timer().tick(),
 				gc.state().timer().isStopped() ? " (STOPPED)" : ""));
@@ -95,8 +97,6 @@ public class SectionGame extends Section {
 
 		addInfo("Credit", () -> "%d".formatted(gc.credit()));
 		addInfo("Playing", () -> U.yes_no(gc.isGameRunning()));
-		addInfo("", () -> "w=%.0f h=%.0f".formatted(ui.getCurrentGameScene().getFXSubScene().getWidth(),
-				ui.getCurrentGameScene().getFXSubScene().getHeight()));
 
 		addInfo("Pellets", () -> String.format("%d of %d (%d energizers)", game().world.foodRemaining(),
 				game().world.tiles().filter(game().world::isFoodTile).count(), game().world.energizerTiles().count()));
