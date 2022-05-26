@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
 import static de.amr.games.pacman.lib.TickTimer.sec_to_ticks;
-import static de.amr.games.pacman.model.common.Ghost.PINK_GHOST;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
@@ -96,10 +95,6 @@ public class PacMan_IntroScene extends GameScene2D {
 		if (GameUI.pressed(e, KeyCode.DIGIT5)) {
 			SoundManager.get().play(GameSound.CREDIT);
 			gameController.addCredit();
-			return;
-		} else if (GameUI.pressed(e, KeyCode.SPACE)) {
-			gameController.requestGame();
-			return;
 		}
 	}
 
@@ -130,13 +125,13 @@ public class PacMan_IntroScene extends GameScene2D {
 			drawPoints(11, 25);
 			if (sceneController.state().timer().tick() > sec_to_ticks(1)) {
 				drawEnergizer();
-				drawCopyright(32);
+				r2D.renderCopyright(g, t(3), t(32));
 			}
 		}
 		case CHASING_PAC -> {
 			drawGallery();
 			drawPoints(11, 25);
-			drawCopyright(32);
+			r2D.renderCopyright(g, t(3), t(32));
 			if (context.fastBlinking.frame()) {
 				drawEnergizer();
 			}
@@ -146,12 +141,11 @@ public class PacMan_IntroScene extends GameScene2D {
 		case CHASING_GHOSTS -> {
 			drawGallery();
 			drawPoints(11, 25);
-			drawCopyright(32);
+			r2D.renderCopyright(g, t(3), t(32));
 			drawGuys(0);
 		}
 		case READY_TO_PLAY -> {
 			drawGallery();
-			drawPressKeyToStart(24);
 		}
 		default -> {
 		}
@@ -198,16 +192,6 @@ public class PacMan_IntroScene extends GameScene2D {
 		Rendering2D_PacMan.get().renderSprite(g, sprite, x + 4 - sprite.getWidth() / 2, y + 4 - sprite.getHeight() / 2);
 	}
 
-	private void drawPressKeyToStart(int yTile) {
-		var g = canvas.getGraphicsContext2D();
-		if (context.slowBlinking.frame()) {
-			String text = "PRESS SPACE TO PLAY";
-			g.setFill(Color.WHITE);
-			g.setFont(r2D.getArcadeFont());
-			g.fillText(text, t(14 - text.length() / 2), t(yTile));
-		}
-	}
-
 	private void drawPoints(int tileX, int tileY) {
 		var g = canvas.getGraphicsContext2D();
 		g.setFill(r2D.getFoodColor(1));
@@ -228,13 +212,5 @@ public class PacMan_IntroScene extends GameScene2D {
 		var g = canvas.getGraphicsContext2D();
 		g.setFill(r2D.getFoodColor(1));
 		g.fillOval(t(3), t(20), TS, TS);
-	}
-
-	private void drawCopyright(int yTile) {
-		var g = canvas.getGraphicsContext2D();
-		String text = "\u00A9 1980 MIDWAY MFG. CO.";
-		g.setFont(r2D.getArcadeFont());
-		g.setFill(r2D.getGhostSkinColor(PINK_GHOST));
-		g.fillText(text, t(3), t(yTile));
 	}
 }
