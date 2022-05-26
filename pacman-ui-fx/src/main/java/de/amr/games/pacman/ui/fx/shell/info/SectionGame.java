@@ -86,12 +86,12 @@ public class SectionGame extends Section {
 		addInfo("", () -> "Remaining: %s".formatted(ticksAsString(gc.state().timer().remaining())));
 
 		addInfo("Hunting timer",
-				() -> "%s #%d%s".formatted(gc.getHuntingTimer().getPhaseName(),
-						gc.getHuntingTimer().getScatteringPhase() != -1 ? gc.getHuntingTimer().getScatteringPhase()
-								: gc.getHuntingTimer().getChasingPhase(),
-						gc.getHuntingTimer().isStopped() ? " STOPPED" : ""));
-		addInfo("", () -> "Running:   %d".formatted(gc.getHuntingTimer().tick()));
-		addInfo("", () -> "Remaining: %s".formatted(ticksAsString(gc.getHuntingTimer().remaining())));
+				() -> "%s #%d%s".formatted(gc.huntingTimer().phaseName(),
+						gc.huntingTimer().scatteringPhase() != -1 ? gc.huntingTimer().scatteringPhase()
+								: gc.huntingTimer().chasingPhase(),
+						gc.huntingTimer().isStopped() ? " STOPPED" : ""));
+		addInfo("", () -> "Running:   %d".formatted(gc.huntingTimer().tick()));
+		addInfo("", () -> "Remaining: %s".formatted(ticksAsString(gc.huntingTimer().remaining())));
 
 		addInfo("Credit", () -> "%d".formatted(gc.credit()));
 		addInfo("Playing", () -> U.yes_no(gc.isGameRunning()));

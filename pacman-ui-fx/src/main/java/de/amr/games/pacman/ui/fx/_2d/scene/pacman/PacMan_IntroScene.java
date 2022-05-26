@@ -66,7 +66,7 @@ public class PacMan_IntroScene extends GameScene2D {
 	public PacMan_IntroScene(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
 		sceneController = new IntroController(gameController);
-		context = sceneController.getContext();
+		context = sceneController.context();
 	}
 
 	@Override

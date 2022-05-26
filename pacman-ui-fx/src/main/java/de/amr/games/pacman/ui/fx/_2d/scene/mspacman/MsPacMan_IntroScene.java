@@ -64,7 +64,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 	public MsPacMan_IntroScene(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
 		sceneController = new IntroController(gameController);
-		context = sceneController.getContext();
+		context = sceneController.context();
 	}
 
 	@Override

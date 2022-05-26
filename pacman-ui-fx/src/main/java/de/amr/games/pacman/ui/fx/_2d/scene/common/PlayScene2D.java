@@ -135,7 +135,7 @@ public class PlayScene2D extends GameScene2D {
 		}
 		if (gameController.credit() > 0 && gameController.state() == GameState.HUNTING
 				&& !SoundManager.get().isAnySirenPlaying() && !game.player.powerTimer.isRunning()) {
-			int sirenIndex = gameController.getHuntingTimer().getPhase() / 2;
+			int sirenIndex = gameController.huntingTimer().phase() / 2;
 			SoundManager.get().startSiren(sirenIndex);
 		}
 	}
