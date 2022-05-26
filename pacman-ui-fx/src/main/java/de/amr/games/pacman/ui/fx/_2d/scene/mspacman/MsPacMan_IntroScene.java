@@ -38,9 +38,14 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Credit2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
+import de.amr.games.pacman.ui.fx.shell.GameUI;
+import de.amr.games.pacman.ui.fx.sound.GameSound;
+import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -77,6 +82,18 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		msPacMan2D.animMunching.values().forEach(TimedSeq::restart);
 		ghosts2D = Stream.of(context.ghosts).map(ghost -> new Ghost2D(ghost, game, r2D)).toArray(Ghost2D[]::new);
 		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animKicking.values().forEach(TimedSeq::restart));
+	}
+
+	@Override
+	public void handleKeyPressed(KeyEvent e) {
+		if (GameUI.pressed(e, KeyCode.DIGIT5)) {
+			SoundManager.get().play(GameSound.CREDIT);
+			gameController.addCredit();
+			return;
+		} else if (GameUI.pressed(e, KeyCode.SPACE)) {
+			gameController.requestGame();
+			return;
+		}
 	}
 
 	@Override
