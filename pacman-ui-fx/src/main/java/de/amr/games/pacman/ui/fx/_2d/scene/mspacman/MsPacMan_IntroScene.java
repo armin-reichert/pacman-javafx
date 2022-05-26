@@ -69,7 +69,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 
 	@Override
 	public void init() {
-		sceneController.reset(IntroController.State.BEGIN);
+		sceneController.restartInInitialState(IntroController.State.BEGIN);
 		createScores();
 		score2D.showPoints = false;
 		credit2D = new Credit2D(r2D, gameController::credit);

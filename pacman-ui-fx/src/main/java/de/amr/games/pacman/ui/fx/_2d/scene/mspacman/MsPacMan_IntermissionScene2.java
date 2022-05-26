@@ -67,7 +67,7 @@ public class MsPacMan_IntermissionScene2 extends GameScene2D {
 
 	@Override
 	public void init() {
-		sceneController.reset(Intermission2Controller.State.FLAP);
+		sceneController.restartInInitialState(Intermission2Controller.State.FLAP);
 		levelCounter2D = new LevelCounter2D(game, r2D);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
 		flap2D = new Flap2D(context.flap, game);
