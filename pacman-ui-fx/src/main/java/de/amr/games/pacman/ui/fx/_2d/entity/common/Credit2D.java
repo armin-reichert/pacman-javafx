@@ -46,7 +46,7 @@ public class Credit2D extends GameEntity2D {
 		this.r2D = r2D;
 		this.fnCredit = fnCredit;
 		x = t(2);
-		y = t(ArcadeWorld.TILES_Y);
+		y = t(ArcadeWorld.TILES_Y) - 2;
 	}
 
 	@Override
