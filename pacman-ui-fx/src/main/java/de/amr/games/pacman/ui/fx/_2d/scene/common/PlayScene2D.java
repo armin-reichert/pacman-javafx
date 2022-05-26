@@ -48,11 +48,14 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Maze2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
+import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -74,6 +77,14 @@ public class PlayScene2D extends GameScene2D {
 
 	public PlayScene2D(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
+	}
+
+	@Override
+	public void handleKeyPressed(KeyEvent e) {
+		if (GameUI.pressed(e, KeyCode.DIGIT5)) {
+			SoundManager.get().play(GameSound.CREDIT);
+			gameController.addCredit();
+		}
 	}
 
 	@Override

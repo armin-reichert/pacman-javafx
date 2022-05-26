@@ -30,6 +30,7 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Credit2D;
+import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
@@ -45,6 +46,7 @@ import javafx.scene.text.Font;
 public class PacMan_CreditScene extends GameScene2D {
 
 	private Credit2D credit2D;
+	private LevelCounter2D levelCounter2D;
 
 	public PacMan_CreditScene(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
@@ -55,6 +57,8 @@ public class PacMan_CreditScene extends GameScene2D {
 		createScores();
 		score2D.showPoints = false;
 		credit2D = new Credit2D(r2D, gameController::credit);
+		levelCounter2D = new LevelCounter2D(game, r2D);
+		levelCounter2D.rightPosition = unscaledSize.minus(t(4), t(2));
 	}
 
 	@Override
@@ -94,6 +98,7 @@ public class PacMan_CreditScene extends GameScene2D {
 		g.setFont(Font.font(r2D.getArcadeFont().getName(), 6));
 		g.fillText("PTS", t(25), t(25));
 
-		r2D.renderCopyright(g, t(3), t(32));
+		r2D.renderCopyright(g, t(3), t(29));
+		levelCounter2D.render(g);
 	}
 }
