@@ -33,7 +33,6 @@ import de.amr.games.pacman.controller.mspacman.IntroController.Context;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.Ghost;
-import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Credit2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
@@ -41,13 +40,10 @@ import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -61,7 +57,6 @@ public class MsPacMan_IntroScene extends GameScene2D {
 	private final IntroController sceneController;
 	private final Context context;
 
-	private final Image midwayLogo = U.image("/mspacman/graphics/midway.png");
 	private Player2D msPacMan2D;
 	private Ghost2D[] ghosts2D;
 	private Credit2D credit2D;
@@ -124,7 +119,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 
 		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(g));
 		msPacMan2D.render(g);
-		drawCopyright();
+		r2D.renderCopyright(g, t(4), t(28));
 	}
 
 	private void drawGhostText() {
@@ -178,17 +173,5 @@ public class MsPacMan_IntroScene extends GameScene2D {
 			g.setFont(r2D.getArcadeFont());
 			g.fillText(text, t(13 - text.length() / 2), t(tileY));
 		}
-	}
-
-	private void drawCopyright() {
-		var g = canvas.getGraphicsContext2D();
-		double scale = ArcadeWorld.TILES_Y / midwayLogo.getHeight();
-		g.drawImage(midwayLogo, t(4), t(28) + 3, scale * midwayLogo.getWidth(), scale * midwayLogo.getHeight());
-		g.setFill(Color.RED);
-		g.setFont(Font.font("Dialog", 11.0));
-		g.fillText("\u00a9", t(9), t(30) + 2); // (c) symbol
-		g.setFont(r2D.getArcadeFont());
-		g.fillText("MIDWAY MFG CO", t(11), t(30));
-		g.fillText("1980/1981", t(12), t(32));
 	}
 }

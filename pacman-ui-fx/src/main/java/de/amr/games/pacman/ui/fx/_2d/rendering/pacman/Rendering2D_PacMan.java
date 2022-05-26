@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.rendering.pacman;
 
+import static de.amr.games.pacman.model.common.Ghost.PINK_GHOST;
+
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
@@ -131,6 +133,15 @@ public class Rendering2D_PacMan extends Rendering2D {
 	@Override
 	public void renderMazeBright(GraphicsContext g, int mazeNumber, double x, double y) {
 		g.drawImage(mazeFlashingImage, x, y);
+	}
+
+	@Override
+	public void renderCopyright(GraphicsContext g, int x, int y) {
+		// t(3), t(32)
+		String text = "\u00A9 1980 MIDWAY MFG. CO.";
+		g.setFont(getArcadeFont());
+		g.setFill(getGhostSkinColor(PINK_GHOST));
+		g.fillText(text, x, y);
 	}
 
 	@Override

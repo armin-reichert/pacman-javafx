@@ -211,6 +211,8 @@ public abstract class Rendering2D {
 
 	public abstract void renderMazeBright(GraphicsContext g, int mazeNumber, double x, double y);
 
+	public abstract void renderCopyright(GraphicsContext g, int x, int y);
+
 	// Animations
 
 	public abstract Map<Direction, TimedSeq<Rectangle2D>> createPlayerMunchingAnimations();

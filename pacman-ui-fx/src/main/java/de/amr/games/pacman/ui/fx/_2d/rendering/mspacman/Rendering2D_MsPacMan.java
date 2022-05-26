@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.rendering.mspacman;
 
+import static de.amr.games.pacman.model.common.world.World.t;
+
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -30,12 +32,15 @@ import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSeq;
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx.util.U;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 /**
  * Ms. Pac-Man game-specific rendering.
@@ -84,6 +89,7 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 		return it;
 	}
 
+	private final Image midwayLogo;
 	private final List<Rectangle2D> mazeFullSprites;
 	private final List<Rectangle2D> mazeEmptySprites;
 	private final List<Image> mazeFlashImages;
@@ -96,12 +102,14 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	 * @param row row
 	 * @return Sprite at given row and column from the right-hand-side of the spritesheet
 	 */
-	private Rectangle2D rhs(int col, int row) {
+	public Rectangle2D rhs(int col, int row) {
 		return ss.r(456, 0, col, row, 1, 1);
 	}
 
 	private Rendering2D_MsPacMan() {
 		super("/mspacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
+
+		midwayLogo = U.image("/mspacman/graphics/midway.png");
 
 		//@formatter:off
 		symbolSprites = Map.of(
@@ -147,6 +155,19 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 			mazeEmptySprites.add(mazeEmptyRegion);
 			mazeFlashImages.add(mazeFlashImage);
 		}
+	}
+
+	@Override
+	public void renderCopyright(GraphicsContext g, int x, int y) {
+		// x=t(4), y=t(28)
+		double scale = ArcadeWorld.TILES_Y / midwayLogo.getHeight();
+		g.drawImage(midwayLogo, x, y + 3, scale * midwayLogo.getWidth(), scale * midwayLogo.getHeight());
+		g.setFill(Color.RED);
+		g.setFont(Font.font("Dialog", 11.0));
+		g.fillText("\u00a9", x + t(5), y + t(2) + 2); // (c) symbol
+		g.setFont(getArcadeFont());
+		g.fillText("MIDWAY MFG CO", x + t(7), y + t(2));
+		g.fillText("1980/1981", x + t(8), y + t(4));
 	}
 
 	@Override
