@@ -101,7 +101,6 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		score2D.render(g);
 		highScore2D.render(g);
 		credit2D.render(g);
-
 		g.setFont(r2D.getArcadeFont());
 		g.setFill(Color.ORANGE);
 		g.fillText("\"MS PAC-MAN\"", context.titlePosition.x, context.titlePosition.y);
@@ -116,10 +115,9 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		default -> {
 		}
 		}
-
 		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(g));
 		msPacMan2D.render(g);
-		r2D.renderCopyright(g, t(3), t(32));
+		r2D.renderCopyright(g, t(3), t(28));
 	}
 
 	private void drawGhostText() {
