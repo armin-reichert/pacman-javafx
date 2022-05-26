@@ -28,7 +28,9 @@ import static de.amr.games.pacman.model.common.Ghost.ORANGE_GHOST;
 import static de.amr.games.pacman.model.common.Ghost.PINK_GHOST;
 import static de.amr.games.pacman.model.common.Ghost.RED_GHOST;
 import static de.amr.games.pacman.model.common.world.World.HTS;
+import static de.amr.games.pacman.model.common.world.World.t;
 
+import java.util.List;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
@@ -212,6 +214,14 @@ public abstract class Rendering2D {
 	public abstract void renderMazeBright(GraphicsContext g, int mazeNumber, double x, double y);
 
 	public abstract void renderCopyright(GraphicsContext g, int x, int y);
+
+	public void renderLevelCounter(GraphicsContext g, int levelNumber, List<Integer> counter, int x_right, int y_right) {
+		int firstLevelNumber = Math.max(1, levelNumber - 7 + 1);
+		double x = x_right;
+		for (int i = firstLevelNumber; i <= levelNumber; ++i, x -= t(2)) {
+			renderSprite(g, getSymbolSprite(counter.get(i - 1)), x, y_right);
+		}
+	}
 
 	// Animations
 

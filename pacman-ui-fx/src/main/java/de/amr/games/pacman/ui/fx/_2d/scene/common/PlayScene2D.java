@@ -44,7 +44,6 @@ import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Bonus2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Credit2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
-import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Maze2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
@@ -69,7 +68,6 @@ public class PlayScene2D extends GameScene2D {
 
 	private Maze2D maze2D;
 	private LivesCounter2D livesCounter2D;
-	private LevelCounter2D levelCounter2D;
 	private Credit2D credit2D;
 	private Player2D player2D;
 	private Ghost2D[] ghosts2D = new Ghost2D[4];
@@ -94,18 +92,14 @@ public class PlayScene2D extends GameScene2D {
 		livesCounter2D = new LivesCounter2D(game, r2D);
 		livesCounter2D.x = t(2);
 		livesCounter2D.y = t(34);
-		levelCounter2D = new LevelCounter2D(game, r2D);
-		levelCounter2D.rightPosition = unscaledSize.minus(t(4), t(2));
 		if (gameController.credit() > 0) {
 			score2D.showPoints = true;
 			credit2D.visible = false;
 			livesCounter2D.visible = true;
-			levelCounter2D.visible = true;
 		} else {
 			score2D.showPoints = false;
 			credit2D.visible = true;
 			livesCounter2D.visible = false;
-			levelCounter2D.visible = false;
 		}
 		maze2D = new Maze2D(game, r2D);
 		maze2D.x = 0;
@@ -330,7 +324,6 @@ public class PlayScene2D extends GameScene2D {
 	public void doRender(GraphicsContext g) {
 		score2D.render(g);
 		highScore2D.render(g);
-		levelCounter2D.render(g);
 		livesCounter2D.render(g);
 		credit2D.render(g);
 		maze2D.render(g);
@@ -347,5 +340,8 @@ public class PlayScene2D extends GameScene2D {
 		bonus2D.render(g);
 		player2D.render(g);
 		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(g));
+		if (gameController.credit() > 0) {
+			r2D.renderLevelCounter(g, game.levelNumber, game.levelCounter, unscaledSize.x - t(4), unscaledSize.y - t(2));
+		}
 	}
 }

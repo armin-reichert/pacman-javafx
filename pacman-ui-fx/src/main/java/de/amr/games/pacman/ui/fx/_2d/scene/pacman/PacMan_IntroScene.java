@@ -95,6 +95,8 @@ public class PacMan_IntroScene extends GameScene2D {
 		if (GameUI.pressed(e, KeyCode.DIGIT5)) {
 			SoundManager.get().play(GameSound.CREDIT);
 			gameController.addCredit();
+		} else if (GameUI.pressed(e, KeyCode.SPACE) || GameUI.pressed(e, KeyCode.DIGIT1)) {
+			gameController.requestGame();
 		}
 	}
 

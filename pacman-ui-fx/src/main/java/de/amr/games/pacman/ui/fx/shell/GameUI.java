@@ -260,8 +260,6 @@ public class GameUI extends DefaultGameEventHandler {
 			quitCurrentScene();
 		} else if (pressed(e, KeyCode.V)) {
 			selectNextGameVariant();
-		} else if (pressed(e, KeyCode.SPACE)) {
-			gameController.requestGame();
 		} else if (pressed(e, KeyCode.F11)) {
 			stage.setFullScreen(true);
 		}
