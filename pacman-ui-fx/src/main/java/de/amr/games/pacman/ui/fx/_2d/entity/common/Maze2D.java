@@ -80,14 +80,15 @@ public class Maze2D extends GameEntity2D {
 			Color hiddenColor = Color.BLACK;
 			if (!energizerAnimation.animate()) { // dark phase
 				g.setFill(hiddenColor);
-				game.world.energizerTiles().forEach(tile -> fillTile(g, tile, hiddenColor));
+				game.level.world.energizerTiles().forEach(tile -> fillTile(g, tile, hiddenColor));
 			}
-			game.world.tiles().filter(game.world::containsEatenFood).forEach(tile -> fillTile(g, tile, hiddenColor));
+			game.level.world.tiles().filter(game.level.world::containsEatenFood)
+					.forEach(tile -> fillTile(g, tile, hiddenColor));
 			if (Env.$tilesVisible.get()) {
 				drawTileBorders(g);
 			}
 			if (Env.$tilesVisible.get()) {
-				game.world.tiles().filter(game.world::isIntersection).forEach(tile -> {
+				game.level.world.tiles().filter(game.level.world::isIntersection).forEach(tile -> {
 					strokeTile(g, tile, Color.RED);
 				});
 			}
