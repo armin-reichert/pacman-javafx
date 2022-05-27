@@ -104,13 +104,10 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		g.setFont(r2D.getArcadeFont());
 		g.setFill(Color.ORANGE);
 		g.fillText("\"MS PAC-MAN\"", context.titlePosition.x, context.titlePosition.y);
-		drawAnimatedBoard(32, 16);
+		drawAnimatedBoard(g, 32, 16);
 		switch (sceneController.state()) {
-		case GHOSTS -> drawGhostText();
-		case MSPACMAN -> drawMsPacManText();
-		case READY_TO_PLAY -> {
-			drawMsPacManText();
-		}
+		case GHOSTS -> drawGhostText(g, context.ghosts[context.ghostIndex]);
+		case MSPACMAN, READY_TO_PLAY -> drawMsPacManText(g);
 		default -> {
 		}
 		}
@@ -119,20 +116,17 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		r2D.renderCopyright(g, t(3), t(28));
 	}
 
-	private void drawGhostText() {
-		var g = canvas.getGraphicsContext2D();
+	private void drawGhostText(GraphicsContext g, Ghost ghost) {
 		g.setFill(Color.WHITE);
 		g.setFont(r2D.getArcadeFont());
-		if (context.ghostIndex == 0) {
+		if (ghost.id == Ghost.RED_GHOST) {
 			g.fillText("WITH", context.titlePosition.x, context.lightsTopLeft.y + t(3));
 		}
-		Ghost ghost = context.ghosts[context.ghostIndex];
 		g.setFill(r2D.getGhostSkinColor(ghost.id));
 		g.fillText(ghost.name.toUpperCase(), t(14 - ghost.name.length() / 2), context.lightsTopLeft.y + t(6));
 	}
 
-	private void drawMsPacManText() {
-		var g = canvas.getGraphicsContext2D();
+	private void drawMsPacManText(GraphicsContext g) {
 		g.setFill(Color.WHITE);
 		g.setFont(r2D.getArcadeFont());
 		g.fillText("STARRING", context.titlePosition.x, context.lightsTopLeft.y + t(3));
@@ -140,8 +134,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		g.fillText("MS PAC-MAN", context.titlePosition.x, context.lightsTopLeft.y + t(6));
 	}
 
-	private void drawAnimatedBoard(int numDotsX, int numDotsY) {
-		var g = canvas.getGraphicsContext2D();
+	private void drawAnimatedBoard(GraphicsContext g, int numDotsX, int numDotsY) {
 		long time = context.lightsTimer.tick();
 		int light = (int) (time / 2) % (numDotsX / 2);
 		for (int dot = 0; dot < 2 * (numDotsX + numDotsY); ++dot) {
