@@ -29,7 +29,6 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.Bonus;
 import de.amr.games.pacman.model.common.BonusState;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
@@ -67,27 +66,24 @@ public class Bonus3D extends Box {
 		setVisible(false);
 	}
 
-	public void update(GameModel game) {
-		if (game.bonus().isPresent()) {
-			Bonus bonus = game.bonus().get();
-			if (bonus.state() != BonusState.INACTIVE) {
-				V2d position = bonus.position();
-				setTranslateX(position.x + getWidth() / 2);
-				setTranslateY(position.y + getHeight() / 2);
-			}
+	public void update(Bonus bonus) {
+		if (bonus.state() != BonusState.INACTIVE) {
+			V2d position = bonus.position();
+			setTranslateX(position.x + getWidth() / 2);
+			setTranslateY(position.y + getHeight() / 2);
 		}
 	}
 
-	public void showSymbol(int symbol) {
-		var texture = r2D.spritesheet().extractRegion(r2D.getSymbolSprite(symbol));
+	public void showSymbol(Bonus bonus) {
+		var texture = r2D.spritesheet().extractRegion(r2D.getSymbolSprite(bonus.symbol()));
 		showRotating(texture, 1.0, Animation.INDEFINITE, 1);
 		setWidth(TS);
 	}
 
-	public void showPoints(int points) {
-		var texture = r2D.spritesheet().extractRegion(r2D.getBonusValueSprite(points));
+	public void showPoints(Bonus bonus) {
+		var texture = r2D.spritesheet().extractRegion(r2D.getBonusValueSprite(bonus.value()));
 		showRotating(texture, 1.0, 5, 2);
-		setWidth(points >= 1000 ? TS * 1.25 : TS);
+		setWidth(bonus.value() >= 1000 ? TS * 1.25 : TS);
 	}
 
 	private void showRotating(Image texture, double seconds, int cycleCount, int rate) {

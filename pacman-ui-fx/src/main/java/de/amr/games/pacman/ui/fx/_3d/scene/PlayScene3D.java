@@ -157,10 +157,10 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		maze3D.$resolution.bind(Env.$mazeResolution);
 		maze3D.$resolution.addListener(this::onMazeResolutionChange);
 		maze3D.createWallsAndDoors(game.world, //
-				r2D.getMazeSideColor(game.mazeNumber), //
-				r2D.getMazeTopColor(game.mazeNumber), //
-				r2D.getGhostHouseDoorColor(game.mazeNumber));
-		maze3D.createFood(game.world, r2D.getFoodColor(game.mazeNumber));
+				r2D.getMazeSideColor(game.level.mazeNumber), //
+				r2D.getMazeTopColor(game.level.mazeNumber), //
+				r2D.getGhostHouseDoorColor(game.level.mazeNumber));
+		maze3D.createFood(game.world, r2D.getFoodColor(game.level.mazeNumber));
 
 		player3D = new Pac3D(game.player, model3D, r2D);
 		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D)).toArray(Ghost3D[]::new);
@@ -206,7 +206,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		maze3D.update(game);
 		player3D.update();
 		Stream.of(ghosts3D).forEach(Ghost3D::update);
-		bonus3D.update(game);
+		bonus3D.update(game.bonus().get());
 		score3D.update(game.score, game.levelNumber, game.highscorePoints, game.highscoreLevel);
 		livesCounter3D.update(game.player.lives);
 		getCamera().update(player3D);
@@ -239,9 +239,9 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	private void onMazeResolutionChange(ObservableValue<? extends Number> property, Number oldValue, Number newValue) {
 		if (!oldValue.equals(newValue)) {
 			maze3D.createWallsAndDoors(game.world, //
-					r2D.getMazeSideColor(game.mazeNumber), //
-					r2D.getMazeTopColor(game.mazeNumber), //
-					r2D.getGhostHouseDoorColor(game.mazeNumber));
+					r2D.getMazeSideColor(game.level.mazeNumber), //
+					r2D.getMazeTopColor(game.level.mazeNumber), //
+					r2D.getGhostHouseDoorColor(game.level.mazeNumber));
 		}
 	}
 
@@ -327,12 +327,12 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 	@Override
 	public void onBonusActivated(GameEvent e) {
-		bonus3D.showSymbol(game.level.bonusSymbol);
+		bonus3D.showSymbol(game.bonus().get());
 	}
 
 	@Override
 	public void onBonusEaten(GameEvent e) {
-		bonus3D.showPoints(game.bonusValue(game.level.bonusSymbol));
+		bonus3D.showPoints(game.bonus().get());
 		if (gameController.credit() > 0) {
 			SoundManager.get().play(GameSound.BONUS_EATEN);
 		}
@@ -409,10 +409,10 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 			// TODO: This is not executed at the *first* level. Maybe I should change the state machine to make a transition
 			// from READY to LEVEL_STARTING when the game starts?
 			maze3D.createWallsAndDoors(game.world, //
-					r2D.getMazeSideColor(game.mazeNumber), //
-					r2D.getMazeTopColor(game.mazeNumber), //
-					r2D.getGhostHouseDoorColor(game.mazeNumber));
-			maze3D.createFood(game.world, r2D.getFoodColor(game.mazeNumber));
+					r2D.getMazeSideColor(game.level.mazeNumber), //
+					r2D.getMazeTopColor(game.level.mazeNumber), //
+					r2D.getGhostHouseDoorColor(game.level.mazeNumber));
+			maze3D.createFood(game.world, r2D.getFoodColor(game.level.mazeNumber));
 			levelCounter3D.update(game);
 			showFlashMessage(1, Env.message("level_starting", game.levelNumber));
 			U.pauseSec(3, () -> gameController.state().timer().expire()).play();
