@@ -110,7 +110,6 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		case MSPACMAN -> drawMsPacManText();
 		case READY_TO_PLAY -> {
 			drawMsPacManText();
-			drawPressKeyToStart(26);
 		}
 		default -> {
 		}
@@ -160,16 +159,6 @@ public class MsPacMan_IntroScene extends GameScene2D {
 			}
 			g.setFill((dot + light) % (numDotsX / 2) == 0 ? Color.PINK : Color.RED);
 			g.fillRect(context.lightsTopLeft.x + 4 * x, context.lightsTopLeft.y + 4 * y, 2, 2);
-		}
-	}
-
-	private void drawPressKeyToStart(int tileY) {
-		var g = canvas.getGraphicsContext2D();
-		if (context.blinking.frame()) {
-			String text = "PRESS SPACE TO PLAY";
-			g.setFill(Color.WHITE);
-			g.setFont(r2D.getArcadeFont());
-			g.fillText(text, t(13 - text.length() / 2), t(tileY));
 		}
 	}
 }
