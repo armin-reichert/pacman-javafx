@@ -98,8 +98,10 @@ public class SectionGame extends Section {
 		addInfo("Credit", () -> "%d".formatted(gc.credit()));
 		addInfo("Playing", () -> U.yes_no(gc.isGameRunning()));
 
-		addInfo("Pellets", () -> String.format("%d of %d (%d energizers)", game().world.foodRemaining(),
-				game().world.tiles().filter(game().world::isFoodTile).count(), game().world.energizerTiles().count()));
+		addInfo("Pellets",
+				() -> String.format("%d of %d (%d energizers)", game().level.world.foodRemaining(),
+						game().level.world.tiles().filter(game().level.world::isFoodTile).count(),
+						game().level.world.energizerTiles().count()));
 		addInfo("Ghost speed", () -> fmtSpeed(game().level.ghostSpeed));
 		addInfo("Ghost speed (frightened)", () -> fmtSpeed(game().level.ghostSpeedFrightened));
 		addInfo("Ghost speed (tunnel)", () -> fmtSpeed(game().level.ghostSpeedTunnel));

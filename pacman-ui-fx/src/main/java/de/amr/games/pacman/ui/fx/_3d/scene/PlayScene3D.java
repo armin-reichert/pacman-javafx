@@ -156,11 +156,11 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
 		maze3D.$resolution.addListener(this::onMazeResolutionChange);
-		maze3D.createWallsAndDoors(game.world, //
+		maze3D.createWallsAndDoors(game.level.world, //
 				r2D.getMazeSideColor(game.level.mazeNumber), //
 				r2D.getMazeTopColor(game.level.mazeNumber), //
 				r2D.getGhostHouseDoorColor(game.level.mazeNumber));
-		maze3D.createFood(game.world, r2D.getFoodColor(game.level.mazeNumber));
+		maze3D.createFood(game.level.world, r2D.getFoodColor(game.level.mazeNumber));
 
 		player3D = new Pac3D(game.player, model3D, r2D);
 		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D)).toArray(Ghost3D[]::new);
@@ -222,7 +222,8 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 					.filter(ghost3D -> !ghost3D.isLooksFrightened()) //
 					.forEach(Ghost3D::setFrightenedLook);
 		}
-		maze3D.foodNodes().forEach(foodNode -> foodNode.setVisible(!game.world.containsEatenFood(maze3D.tile(foodNode))));
+		maze3D.foodNodes()
+				.forEach(foodNode -> foodNode.setVisible(!game.level.world.containsEatenFood(maze3D.tile(foodNode))));
 		if (gameController.state() == GameState.HUNTING || gameController.state() == GameState.GHOST_DYING) {
 			maze3D.energizerAnimations().forEach(Animation::play);
 		}
@@ -238,7 +239,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 	private void onMazeResolutionChange(ObservableValue<? extends Number> property, Number oldValue, Number newValue) {
 		if (!oldValue.equals(newValue)) {
-			maze3D.createWallsAndDoors(game.world, //
+			maze3D.createWallsAndDoors(game.level.world, //
 					r2D.getMazeSideColor(game.level.mazeNumber), //
 					r2D.getMazeTopColor(game.level.mazeNumber), //
 					r2D.getGhostHouseDoorColor(game.level.mazeNumber));
@@ -313,7 +314,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	public void onPlayerFoundFood(GameEvent e) {
 		// when cheat "eat all pellets" is used, no tile is present
 		if (!e.tile.isPresent()) {
-			game.world.tiles().filter(game.world::containsEatenFood)
+			game.level.world.tiles().filter(game.level.world::containsEatenFood)
 					.forEach(tile -> maze3D.foodAt(tile).ifPresent(maze3D::hideFood));
 		} else {
 			V2i tile = e.tile.get();
@@ -408,11 +409,11 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		case LEVEL_STARTING -> {
 			// TODO: This is not executed at the *first* level. Maybe I should change the state machine to make a transition
 			// from READY to LEVEL_STARTING when the game starts?
-			maze3D.createWallsAndDoors(game.world, //
+			maze3D.createWallsAndDoors(game.level.world, //
 					r2D.getMazeSideColor(game.level.mazeNumber), //
 					r2D.getMazeTopColor(game.level.mazeNumber), //
 					r2D.getGhostHouseDoorColor(game.level.mazeNumber));
-			maze3D.createFood(game.world, r2D.getFoodColor(game.level.mazeNumber));
+			maze3D.createFood(game.level.world, r2D.getFoodColor(game.level.mazeNumber));
 			levelCounter3D.update(game);
 			showFlashMessage(1, Env.message("level_starting", game.levelNumber));
 			U.pauseSec(3, () -> gameController.state().timer().expire()).play();
