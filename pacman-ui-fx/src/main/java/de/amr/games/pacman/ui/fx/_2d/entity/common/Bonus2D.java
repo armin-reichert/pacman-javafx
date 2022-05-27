@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
+import static de.amr.games.pacman.model.common.world.World.HTS;
+
 import java.util.Objects;
 
 import de.amr.games.pacman.lib.TimedSeq;
@@ -71,10 +73,11 @@ public class Bonus2D {
 		default -> null;
 		};
 		if (sprite != null) {
+			double sw = sprite.getWidth(), sh = sprite.getHeight();
 			int ty = animation != null ? animation.animate() : 0;
 			g.save();
 			g.translate(0, ty);
-			r2D.renderSprite(g, sprite, game.bonusPosition().x, game.bonusPosition().y);
+			r2D.renderSprite(g, sprite, game.bonusPosition().x + HTS - sw / 2, game.bonusPosition().y + HTS - sh / 2);
 			g.restore();
 		}
 	}
