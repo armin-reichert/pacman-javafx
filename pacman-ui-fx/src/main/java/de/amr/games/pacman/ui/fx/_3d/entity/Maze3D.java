@@ -141,8 +141,8 @@ public class Maze3D extends Group {
 		var brickSize = TS / $resolution.get();
 		wallsGroup.getChildren().clear();
 		addWalls(floorPlan, world, brickSize, baseMaterial, topMaterial);
-		var leftDoor = new Door3D(world.ghostHouse().doorTileLeft, true, doorColor);
-		var rightDoor = new Door3D(world.ghostHouse().doorTileLeft.plus(1, 0), false, doorColor);
+		var leftDoor = new Door3D(world.ghostHouse().doorTileLeft(), true, doorColor);
+		var rightDoor = new Door3D(world.ghostHouse().doorTileRight(), false, doorColor);
 		doorsGroup.getChildren().setAll(leftDoor, rightDoor);
 		log("Built 3D maze (resolution=%d, wall height=%.2f)", $resolution.get(), $wallHeight.get());
 	}
