@@ -206,7 +206,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		maze3D.update(game);
 		player3D.update();
 		Stream.of(ghosts3D).forEach(Ghost3D::update);
-		bonus3D.update(game.bonus);
+		bonus3D.update(game);
 		score3D.update(game.score, game.levelNumber, game.highscorePoints, game.highscoreLevel);
 		livesCounter3D.update(game.player.lives);
 		getCamera().update(player3D);
@@ -327,12 +327,12 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 
 	@Override
 	public void onBonusActivated(GameEvent e) {
-		bonus3D.showSymbol(game.bonus.symbol);
+		bonus3D.showSymbol(game.level.bonusSymbol);
 	}
 
 	@Override
 	public void onBonusEaten(GameEvent e) {
-		bonus3D.showPoints(game.bonus.points);
+		bonus3D.showPoints(game.bonusValue(game.level.bonusSymbol));
 		if (gameController.credit() > 0) {
 			SoundManager.get().play(GameSound.BONUS_EATEN);
 		}

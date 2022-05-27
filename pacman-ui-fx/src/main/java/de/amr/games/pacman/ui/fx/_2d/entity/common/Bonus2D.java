@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 import java.util.Objects;
 
 import de.amr.games.pacman.lib.TimedSeq;
-import de.amr.games.pacman.model.pacman.Bonus;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -42,12 +42,12 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class Bonus2D {
 
-	private final Bonus bonus;
+	private final GameModel game;
 	private final Rendering2D r2D;
 	private final TimedSeq<Integer> animation;
 
-	public Bonus2D(Bonus bonus, Rendering2D r2D, boolean moving) {
-		this.bonus = Objects.requireNonNull(bonus);
+	public Bonus2D(GameModel game, Rendering2D r2D, boolean moving) {
+		this.game = game;
 		this.r2D = Objects.requireNonNull(r2D);
 		animation = moving ? TimedSeq.of(2, 0, -2).frameDuration(8).endless() : null;
 	}
@@ -65,16 +65,16 @@ public class Bonus2D {
 	}
 
 	public void render(GraphicsContext g) {
-		Rectangle2D sprite = switch (bonus.state) {
-		case EDIBLE -> r2D.getSymbolSprite(bonus.symbol);
-		case EATEN -> r2D.getBonusValueSprite(bonus.points);
+		Rectangle2D sprite = switch (game.bonusState) {
+		case EDIBLE -> r2D.getSymbolSprite(game.level.bonusSymbol);
+		case EATEN -> r2D.getBonusValueSprite(game.bonusValue(game.level.bonusSymbol));
 		default -> null;
 		};
 		if (sprite != null) {
 			int ty = animation != null ? animation.animate() : 0;
 			g.save();
 			g.translate(0, ty);
-			r2D.renderEntity(g, bonus, sprite);
+			r2D.renderSprite(g, sprite, game.bonusPosition().x, game.bonusPosition().y);
 			g.restore();
 		}
 	}

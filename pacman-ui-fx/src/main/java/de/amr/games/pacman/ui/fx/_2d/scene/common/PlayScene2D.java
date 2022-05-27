@@ -112,7 +112,7 @@ public class PlayScene2D extends GameScene2D {
 		}
 
 		boolean bonusMoving = gameController.gameVariant() == GameVariant.MS_PACMAN;
-		bonus2D = new Bonus2D(game.bonus, r2D, bonusMoving);
+		bonus2D = new Bonus2D(game, r2D, bonusMoving);
 
 		game.player.powerTimer.addEventListener(this::handleGhostsFlashing);
 	}
