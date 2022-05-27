@@ -28,6 +28,7 @@ import static de.amr.games.pacman.model.common.world.World.HTS;
 import java.util.Objects;
 
 import de.amr.games.pacman.lib.TimedSeq;
+import de.amr.games.pacman.model.common.Bonus;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.geometry.Rectangle2D;
@@ -67,18 +68,21 @@ public class Bonus2D {
 	}
 
 	public void render(GraphicsContext g) {
-		Rectangle2D sprite = switch (game.bonusState) {
-		case EDIBLE -> r2D.getSymbolSprite(game.level.bonusSymbol);
-		case EATEN -> r2D.getBonusValueSprite(game.bonusValue(game.level.bonusSymbol));
-		default -> null;
-		};
-		if (sprite != null) {
-			double sw = sprite.getWidth(), sh = sprite.getHeight();
-			int ty = animation != null ? animation.animate() : 0;
-			g.save();
-			g.translate(0, ty);
-			r2D.renderSprite(g, sprite, game.bonusPosition().x + HTS - sw / 2, game.bonusPosition().y + HTS - sh / 2);
-			g.restore();
+		if (game.bonus().isPresent()) {
+			Bonus bonus = game.bonus().get();
+			Rectangle2D sprite = switch (bonus.state()) {
+			case EDIBLE -> r2D.getSymbolSprite(game.level.bonusSymbol);
+			case EATEN -> r2D.getBonusValueSprite(game.bonusValue(game.level.bonusSymbol));
+			default -> null;
+			};
+			if (sprite != null) {
+				double sw = sprite.getWidth(), sh = sprite.getHeight();
+				int ty = animation != null ? animation.animate() : 0;
+				g.save();
+				g.translate(0, ty);
+				r2D.renderSprite(g, sprite, bonus.position().x + HTS - sw / 2, bonus.position().y + HTS - sh / 2);
+				g.restore();
+			}
 		}
 	}
 }

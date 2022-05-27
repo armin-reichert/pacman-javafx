@@ -27,6 +27,7 @@ import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
 import de.amr.games.pacman.lib.V2d;
+import de.amr.games.pacman.model.common.Bonus;
 import de.amr.games.pacman.model.common.BonusState;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -67,10 +68,13 @@ public class Bonus3D extends Box {
 	}
 
 	public void update(GameModel game) {
-		if (game.bonusState != BonusState.INACTIVE) {
-			V2d position = game.bonusPosition();
-			setTranslateX(position.x + getWidth() / 2);
-			setTranslateY(position.y + getHeight() / 2);
+		if (game.bonus().isPresent()) {
+			Bonus bonus = game.bonus().get();
+			if (bonus.state() != BonusState.INACTIVE) {
+				V2d position = bonus.position();
+				setTranslateX(position.x + getWidth() / 2);
+				setTranslateY(position.y + getHeight() / 2);
+			}
 		}
 	}
 
