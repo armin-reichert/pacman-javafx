@@ -38,7 +38,6 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.Bonus;
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
 import de.amr.games.pacman.model.mspacman.MovingBonus;
@@ -111,8 +110,7 @@ public class PlayScene2D extends GameScene2D {
 		for (Ghost ghost : game.ghosts) {
 			ghosts2D[ghost.id] = new Ghost2D(ghost, game, r2D);
 		}
-		Bonus bonus = game.bonus().get();
-		bonus2D = new Bonus2D(bonus, r2D, bonus instanceof MovingBonus);
+		bonus2D = new Bonus2D(game.bonus(), r2D, game.bonus() instanceof MovingBonus);
 
 		game.player.powerTimer.addEventListener(this::handleGhostsFlashing);
 	}
