@@ -38,6 +38,7 @@ import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
@@ -92,13 +93,13 @@ public class PacMan_CreditScene extends GameScene2D {
 		g.fillText("1 PLAYER ONLY", t(8), t(21));
 
 		g.setFont(r2D.getArcadeFont());
-		g.setFill(r2D.getGhostSkinColor(Ghost.ORANGE_GHOST));
+		g.setFill(Color.rgb(255, 184, 174));
 		g.fillText("BONUS PAC-MAN FOR 10000", t(1), t(25));
 
 		g.setFont(Font.font(r2D.getArcadeFont().getName(), 6));
 		g.fillText("PTS", t(25), t(25));
 
 		r2D.renderCopyright(g, t(3), t(29));
-		levelCounter2D.render(g);
+//		levelCounter2D.render(g);
 	}
 }
