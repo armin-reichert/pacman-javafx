@@ -35,7 +35,7 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.DefaultGameEventHandler;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
-import de.amr.games.pacman.event.ScatterPhaseStartedEvent;
+import de.amr.games.pacman.event.ScatterPhaseStartsEvent;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Ghost;
@@ -275,7 +275,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	}
 
 	@Override
-	public void onScatterPhaseStarted(ScatterPhaseStartedEvent e) {
+	public void onScatterPhaseStarts(ScatterPhaseStartsEvent e) {
 		if (gameController.credit() > 0) {
 			SoundManager.get().stopSirens();
 			SoundManager.get().startSiren(e.scatterPhase);
@@ -283,7 +283,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	}
 
 	@Override
-	public void onPlayerGotPower(GameEvent e) {
+	public void onPlayerGetsPower(GameEvent e) {
 		SoundManager.get().stopSirens();
 		if (gameController.credit() > 0) {
 			SoundManager.get().loop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
@@ -294,7 +294,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	}
 
 	@Override
-	public void onPlayerStartedLosingPower(GameEvent e) {
+	public void onPlayerStartsLosingPower(GameEvent e) {
 		Stream.of(ghosts3D) //
 				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED)) //
 				.forEach(Ghost3D::playFlashingAnimation);
@@ -305,13 +305,13 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	}
 
 	@Override
-	public void onPlayerLostPower(GameEvent e) {
+	public void onPlayerLosesPower(GameEvent e) {
 		SoundManager.get().stop(GameSound.PACMAN_POWER);
 		Stream.of(ghosts3D).forEach(Ghost3D::setNormalLook);
 	}
 
 	@Override
-	public void onPlayerFoundFood(GameEvent e) {
+	public void onPlayerFindsFood(GameEvent e) {
 		// when cheat "eat all pellets" is used, no tile is present
 		if (!e.tile.isPresent()) {
 			game.level.world.tiles().filter(game.level.world::containsEatenFood)
@@ -327,12 +327,12 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	}
 
 	@Override
-	public void onBonusActivated(GameEvent e) {
+	public void onBonusGetsActivate(GameEvent e) {
 		bonus3D.showSymbol(game.bonus());
 	}
 
 	@Override
-	public void onBonusEaten(GameEvent e) {
+	public void onBonusGetsEaten(GameEvent e) {
 		bonus3D.showPoints(game.bonus());
 		if (gameController.credit() > 0) {
 			SoundManager.get().play(GameSound.BONUS_EATEN);
@@ -340,37 +340,32 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	}
 
 	@Override
-	public void onBonusExpired(GameEvent e) {
+	public void onBonusExpires(GameEvent e) {
 		bonus3D.setVisible(false);
 	}
 
 	@Override
-	public void onPlayerGotExtraLife(GameEvent e) {
+	public void onPlayerGetsExtraLife(GameEvent e) {
 		showFlashMessage(1.5, Env.message("extra_life"));
 		SoundManager.get().play(GameSound.EXTRA_LIFE);
 	}
 
 	@Override
-	public void onGhostStartedReturningHome(GameEvent e) {
+	public void onGhostStartsReturningHome(GameEvent e) {
 		if (gameController.credit() > 0) {
 			SoundManager.get().playIfOff(GameSound.GHOST_RETURNING);
 		}
 	}
 
 	@Override
-	public void onGhostEnteredHouse(GameEvent e) {
+	public void onGhostEntersHouse(GameEvent e) {
 		if (game.ghosts(GhostState.DEAD).count() == 0) {
 			SoundManager.get().stop(GameSound.GHOST_RETURNING);
 		}
 	}
 
 	@Override
-	public void onGhostStartedLeavingHouse(GameEvent e) {
-		e.ghost.ifPresent(ghost -> ghosts3D[ghost.id].setNormalLook());
-	}
-
-	@Override
-	public void onGhostRevived(GameEvent e) {
+	public void onGhostStartsLeavingHouse(GameEvent e) {
 		e.ghost.ifPresent(ghost -> ghosts3D[ghost.id].playRevivalAnimation());
 	}
 
