@@ -50,7 +50,6 @@ public class GameScenes {
 	public static final int NUM_SCENES = 6;
 	public static final int SCENE_2D = 0, SCENE_3D = 1;
 
-	private final GameController gc;
 	private final GameScene scenes[][][] = new GameScene[GameVariant.numValues()][NUM_SCENES][2];
 
 	/**
@@ -62,7 +61,6 @@ public class GameScenes {
 	 * @param size    logical scene size (number of tiles times tile size)
 	 */
 	public GameScenes(GameController gc, V2i size) {
-		this.gc = gc;
 		//@formatter:off
 		scenes[0][0][SCENE_2D] = new MsPacMan_IntroScene(gc, size);
 		scenes[0][0][SCENE_3D] = null;
@@ -110,23 +108,26 @@ public class GameScenes {
 
 	/**
 	 * Returns the scene that fits the current game state.
-	 * 
-	 * @param dimension {@link GameScenes#SCENE_2D} or {@link GameScenes#SCENE_3D}
+	 *
+	 * @param gameController the game controller
+	 * @param dimension      {@link GameScenes#SCENE_2D} or {@link GameScenes#SCENE_3D}
 	 * @return the game scene that fits the current game state
 	 */
-	public GameScene getScene(int dimension) {
-		int sceneIndex = switch (gc.state()) {
+	public GameScene getScene(GameController gameController, int dimension) {
+		var game = gameController.game();
+		var gameState = gameController.state();
+		var variant = gameController.gameVariant();
+		int sceneIndex = switch (gameState) {
 		case INTRO -> 0;
 		case CREDIT -> 1;
-		case INTERMISSION -> 1 + gc.game().intermissionNumber(gc.game().level.number);
-		case INTERMISSION_TEST -> 1 + gc.game().intermissionTestNumber;
-		default -> 5; // play scene
+		case INTERMISSION -> 1 + game.level.intermissionNumber;
+		case INTERMISSION_TEST -> 1 + game.intermissionTestNumber;
+		default -> 5;
 		};
-		int variantIndex = gc.gameVariant().ordinal();
-		if (scenes[variantIndex][sceneIndex][dimension] == null) {
+		if (scenes[variant.ordinal()][sceneIndex][dimension] == null) {
 			// no 3D version exists, use 2D version
-			return scenes[variantIndex][sceneIndex][SCENE_2D];
+			return scenes[variant.ordinal()][sceneIndex][SCENE_2D];
 		}
-		return scenes[variantIndex][sceneIndex][dimension];
+		return scenes[variant.ordinal()][sceneIndex][dimension];
 	}
 }

@@ -25,6 +25,8 @@ package de.amr.games.pacman.ui.fx.shell;
 
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.world.World.TS;
+import static de.amr.games.pacman.ui.fx.scene.GameScenes.SCENE_2D;
+import static de.amr.games.pacman.ui.fx.scene.GameScenes.SCENE_3D;
 import static de.amr.games.pacman.ui.fx.shell.FlashMessageView.showFlashMessage;
 
 import de.amr.games.pacman.controller.common.GameController;
@@ -143,7 +145,7 @@ public class GameUI extends DefaultGameEventHandler {
 	}
 
 	private void updateGameScene(GameState gameState, boolean forced) {
-		var newGameScene = gameScenes.getScene(Env.$3D.get() ? GameScenes.SCENE_3D : GameScenes.SCENE_2D);
+		var newGameScene = gameScenes.getScene(gameController, Env.$3D.get() ? GameScenes.SCENE_3D : GameScenes.SCENE_2D);
 		if (newGameScene == null) {
 			throw new IllegalStateException("No scene found for game state " + gameState);
 		}
@@ -344,7 +346,7 @@ public class GameUI extends DefaultGameEventHandler {
 
 	public void toggleUse3DScene() {
 		Env.toggle(Env.$3D);
-		if (gameScenes.getScene(GameScenes.SCENE_2D) != gameScenes.getScene(GameScenes.SCENE_3D)) {
+		if (gameScenes.getScene(gameController, SCENE_2D) != gameScenes.getScene(gameController, SCENE_3D)) {
 			updateGameScene(gameController.state(), true);
 			if (currentGameScene instanceof PlayScene2D) {
 				((PlayScene2D) currentGameScene).onSwitchFrom3DScene();
