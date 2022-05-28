@@ -138,7 +138,7 @@ public class PlayScene2D extends GameScene2D {
 		}
 		if (gameController.credit() > 0 && gameController.state() == GameState.HUNTING
 				&& !SoundManager.get().isAnySirenPlaying() && !game.player.powerTimer.isRunning()) {
-			int sirenIndex = gameController.huntingTimer().phase() / 2;
+			int sirenIndex = game.huntingTimer.scatteringPhase();
 			SoundManager.get().startSiren(sirenIndex);
 		}
 	}
@@ -339,7 +339,7 @@ public class PlayScene2D extends GameScene2D {
 		player2D.render(g);
 		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(g));
 		if (gameController.credit() > 0) {
-			r2D.renderLevelCounter(g, game.levelNumber, game.levelCounter, unscaledSize.x - t(4), unscaledSize.y - t(2));
+			r2D.renderLevelCounter(g, game.level.number, game.levelCounter, unscaledSize.x - t(4), unscaledSize.y - t(2));
 		}
 	}
 }

@@ -58,10 +58,10 @@ public class LevelCounter3D extends Group {
 
 	public void update(GameModel game) {
 		// NOTE: all variables named *Number are starting at 1
-		int firstLevelNumber = Math.max(1, game.levelNumber - MAX_ENTRIES + 1);
+		int firstLevelNumber = Math.max(1, game.level.number - MAX_ENTRIES + 1);
 		getChildren().clear();
 		double x = rightPosition.x, y = rightPosition.y;
-		for (int levelNumber = firstLevelNumber; levelNumber <= game.levelNumber; ++levelNumber) {
+		for (int levelNumber = firstLevelNumber; levelNumber <= game.level.number; ++levelNumber) {
 			int symbol = game.levelCounter.get(levelNumber - 1);
 			Image symbolImage = r2D.spritesheet().extractRegion(r2D.getSymbolSprite(symbol));
 			Box cube = createSpinningCube(symbolImage, levelNumber % 2 == 0);

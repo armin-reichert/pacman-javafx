@@ -118,7 +118,7 @@ public class GameScenes {
 		int sceneIndex = switch (gc.state()) {
 		case INTRO -> 0;
 		case CREDIT -> 1;
-		case INTERMISSION -> 1 + gc.game().intermissionNumber(gc.game().levelNumber);
+		case INTERMISSION -> 1 + gc.game().intermissionNumber(gc.game().level.number);
 		case INTERMISSION_TEST -> 1 + gc.game().intermissionTestNumber;
 		default -> 5; // play scene
 		};

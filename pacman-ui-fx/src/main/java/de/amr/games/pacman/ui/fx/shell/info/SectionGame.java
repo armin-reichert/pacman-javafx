@@ -73,7 +73,7 @@ public class SectionGame extends Section {
 		btnsIntermissionTest[0].setOnAction(e -> ui.startIntermissionScenesTest());
 		btnsIntermissionTest[1].setOnAction(e -> ui.quitCurrentScene());
 
-		spinnerGameLevel = addSpinner("Level", 1, 100, game().levelNumber);
+		spinnerGameLevel = addSpinner("Level", 1, 100, game().level.number);
 		spinnerGameLevel.valueProperty().addListener(($value, oldValue, newValue) -> ui.enterLevel(newValue.intValue()));
 
 		cbAutopilot = addCheckBox("Autopilot", ui::toggleAutopilot);
@@ -88,12 +88,12 @@ public class SectionGame extends Section {
 		addInfo("", () -> "Remaining: %s".formatted(ticksAsString(gc.state().timer().remaining())));
 
 		addInfo("Hunting timer",
-				() -> "%s #%d%s".formatted(gc.huntingTimer().phaseName(),
-						gc.huntingTimer().scatteringPhase() != -1 ? gc.huntingTimer().scatteringPhase()
-								: gc.huntingTimer().chasingPhase(),
-						gc.huntingTimer().isStopped() ? " STOPPED" : ""));
-		addInfo("", () -> "Running:   %d".formatted(gc.huntingTimer().tick()));
-		addInfo("", () -> "Remaining: %s".formatted(ticksAsString(gc.huntingTimer().remaining())));
+				() -> "%s #%d%s".formatted(gc.game().huntingTimer.phaseName(),
+						gc.game().huntingTimer.scatteringPhase() != -1 ? gc.game().huntingTimer.scatteringPhase()
+								: gc.game().huntingTimer.chasingPhase(),
+						gc.game().huntingTimer.isStopped() ? " STOPPED" : ""));
+		addInfo("", () -> "Running:   %d".formatted(gc.game().huntingTimer.tick()));
+		addInfo("", () -> "Remaining: %s".formatted(ticksAsString(gc.game().huntingTimer.remaining())));
 
 		addInfo("Credit", () -> "%d".formatted(gc.credit()));
 		addInfo("Playing", () -> U.yes_no(gc.isGameRunning()));
@@ -135,7 +135,7 @@ public class SectionGame extends Section {
 		// quit intermission test
 		btnsIntermissionTest[1].setDisable(gc.state() != GameState.INTERMISSION_TEST);
 
-		spinnerGameLevel.getValueFactory().setValue(game().levelNumber);
+		spinnerGameLevel.getValueFactory().setValue(game().level.number);
 		if (!gc.isGameRunning()) {
 			spinnerGameLevel.setDisable(true);
 		} else {

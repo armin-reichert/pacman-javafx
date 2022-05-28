@@ -207,7 +207,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		player3D.update();
 		Stream.of(ghosts3D).forEach(Ghost3D::update);
 		bonus3D.update(game.bonus());
-		score3D.update(game.score, game.levelNumber, game.highscorePoints, game.highscoreLevel);
+		score3D.update(game.score, game.level.number, game.highscorePoints, game.highscoreLevel);
 		livesCounter3D.update(game.player.lives);
 		getCamera().update(player3D);
 		if (game.player.starvingTicks >= 10 && SoundManager.get().isPlaying(GameSound.PACMAN_MUNCH)) {
@@ -232,7 +232,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		}
 		if (gameController.credit() > 0 && gameController.state() == GameState.HUNTING
 				&& !SoundManager.get().isAnySirenPlaying() && !game.player.powerTimer.isRunning()) {
-			int sirenIndex = gameController.huntingTimer().phase() / 2;
+			int sirenIndex = game.huntingTimer.scatteringPhase();
 			SoundManager.get().startSiren(sirenIndex);
 		}
 	}
@@ -299,7 +299,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED)) //
 				.forEach(Ghost3D::playFlashingAnimation);
 		if (gameController.credit() > 0) {
-			int sirenIndex = gameController.huntingTimer().phase() / 2;
+			int sirenIndex = game.huntingTimer.scatteringPhase();
 			SoundManager.get().startSiren(sirenIndex);
 		}
 	}
@@ -410,12 +410,12 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 					r2D.getGhostHouseDoorColor(game.level.mazeNumber));
 			maze3D.createFood(game.level.world, r2D.getFoodColor(game.level.mazeNumber));
 			levelCounter3D.update(game);
-			showFlashMessage(1, Env.message("level_starting", game.levelNumber));
+			showFlashMessage(1, Env.message("level_starting", game.level.number));
 			U.pauseSec(3, () -> gameController.state().timer().expire()).play();
 		}
 		case LEVEL_COMPLETE -> {
 			Stream.of(ghosts3D).forEach(Ghost3D::setNormalLook);
-			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game.levelNumber);
+			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game.level.number);
 			new SequentialTransition( //
 					U.pauseSec(2.0), //
 					maze3D.createMazeFlashingAnimation(game.level.numFlashes), //
