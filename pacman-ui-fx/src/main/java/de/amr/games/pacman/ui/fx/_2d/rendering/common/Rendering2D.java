@@ -36,7 +36,7 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.model.common.BonusState;
-import de.amr.games.pacman.model.common.GameEntity;
+import de.amr.games.pacman.model.common.Entity;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -161,7 +161,7 @@ public abstract class Rendering2D {
 	 * @param entity the entity getting rendered
 	 * @param r      region of entity sprite in spritesheet
 	 */
-	public void renderEntity(GraphicsContext g, GameEntity entity, Rectangle2D r) {
+	public void renderEntity(GraphicsContext g, Entity entity, Rectangle2D r) {
 		if (entity.visible) {
 			renderSprite(g, r, entity.position.x + HTS - r.getWidth() / 2, entity.position.y + HTS - r.getHeight() / 2);
 		}
