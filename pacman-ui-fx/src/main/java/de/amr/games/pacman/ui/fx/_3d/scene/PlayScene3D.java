@@ -162,7 +162,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 				r2D.getGhostHouseDoorColor(game.level.mazeNumber));
 		maze3D.createFood(game.level.world, r2D.getFoodColor(game.level.mazeNumber));
 
-		player3D = new Pac3D(game.player, model3D, r2D);
+		player3D = new Pac3D(game.level.world, game.player, model3D, r2D);
 		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D)).toArray(Ghost3D[]::new);
 		bonus3D = new Bonus3D(r2D);
 

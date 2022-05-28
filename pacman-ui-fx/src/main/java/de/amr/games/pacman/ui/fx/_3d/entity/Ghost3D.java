@@ -27,6 +27,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.model.common.Ghost;
 import de.amr.games.pacman.model.common.GhostState;
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.animation.ColorFlashingTransition;
 import de.amr.games.pacman.ui.fx._3d.animation.FadeInTransition3D;
@@ -95,7 +96,7 @@ public class Ghost3D extends Group {
 			enterDisplayMode(DisplayMode.COMPLETE_BODY);
 			motion.update();
 		}
-		boolean insideWorld = ghost.position.x >= 0 && ghost.position.x <= t(ghost.world.numCols() - 1);
+		boolean insideWorld = 0 <= ghost.position.x && ghost.position.x <= t(ArcadeWorld.TILES_X - 1);
 		bodyParts.setVisible(ghost.visible && insideWorld);
 	}
 

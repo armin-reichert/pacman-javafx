@@ -24,9 +24,10 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
-import static de.amr.games.pacman.model.common.world.World.t;
 
+import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.Pac;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.animation.FillTransition3D;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
@@ -57,6 +58,7 @@ import javafx.util.Duration;
  */
 public class Pac3D extends Group {
 
+	private final World world;
 	public final Pac player;
 	private final Group bodyParts;
 	private final Motion motion;
@@ -65,7 +67,8 @@ public class Pac3D extends Group {
 
 	private Color skullColorImpaled = Color.GHOSTWHITE;
 
-	public Pac3D(Pac player, PacManModel3D model3D, Rendering2D r2D) {
+	public Pac3D(World world, Pac player, PacManModel3D model3D, Rendering2D r2D) {
+		this.world = world;
 		this.player = player;
 		this.r2D = r2D;
 		bodyParts = model3D.createPacMan(r2D.getPlayerSkullColor(), r2D.getPlayerEyesColor(), r2D.getPlayerPalateColor());
@@ -77,6 +80,11 @@ public class Pac3D extends Group {
 		skull().setUserData(this);
 		eyes().setUserData(this);
 		palate().setUserData(this);
+	}
+
+	private boolean insideWorld() {
+		V2i tile = player.tile();
+		return 0 <= tile.x && tile.x < world.numCols() && 0 <= tile.y && tile.y < world.numRows();
 	}
 
 	public String identifyNode(Node node) {
@@ -101,8 +109,7 @@ public class Pac3D extends Group {
 
 	public void update() {
 		motion.update();
-		boolean insideWorld = player.position.x >= 0 && player.position.x <= t(player.world.numCols() - 1);
-		setVisible(player.visible && insideWorld);
+		setVisible(player.visible && insideWorld());
 	}
 
 	public Shape3D skull() {
