@@ -41,7 +41,7 @@ public class GameScore2D extends GameEntity2D {
 	public boolean showPoints = true;
 	public String title = "SCORE";
 	public Color titleColor = Color.WHITE;
-	public Color pointsColor = Color.YELLOW;
+	public Color pointsColor = Color.WHITE;
 
 	public GameScore2D(GameModel game) {
 		super(game);
@@ -49,18 +49,18 @@ public class GameScore2D extends GameEntity2D {
 
 	@Override
 	public void render(GraphicsContext g) {
-		g.save();
-		g.translate(x, y);
+		String pointsText = "%02d".formatted(showHighscore ? game.highscorePoints : game.score);
+		String levelText = "L" + (showHighscore ? game.highscoreLevel : game.levelNumber);
+		if (!showHighscore && !showPoints) {
+			pointsText = "00";
+			levelText = "";
+		}
 		g.setFont(Rendering2D_PacMan.get().getArcadeFont());
 		g.setFill(titleColor);
-		g.fillText(title, 0, 0);
-		if (showPoints) {
-			g.setFill(pointsColor);
-			g.translate(0, t(1));
-			g.fillText(String.format("%7d", showHighscore ? game.highscorePoints : game.score), 0, 0);
-			g.setFill(Color.LIGHTGRAY);
-			g.fillText(String.format("L%d", showHighscore ? game.highscoreLevel : game.levelNumber), t(8), 0);
-		}
-		g.restore();
+		g.fillText(title, x, y);
+		g.setFill(pointsColor);
+		g.fillText("%7s".formatted(pointsText), x, y + t(1));
+		g.setFill(Color.LIGHTGRAY);
+		g.fillText(levelText, x + t(8), y + t(1));
 	}
 }
