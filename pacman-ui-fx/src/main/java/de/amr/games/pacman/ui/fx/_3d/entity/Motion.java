@@ -3,7 +3,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.model.common.Creature;
+import de.amr.games.pacman.model.common.actors.Creature;
 import javafx.animation.RotateTransition;
 import javafx.scene.Node;
 import javafx.scene.transform.Rotate;

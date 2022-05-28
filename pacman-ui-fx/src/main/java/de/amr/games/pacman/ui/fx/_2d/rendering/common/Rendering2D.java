@@ -23,10 +23,10 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
-import static de.amr.games.pacman.model.common.Ghost.CYAN_GHOST;
-import static de.amr.games.pacman.model.common.Ghost.ORANGE_GHOST;
-import static de.amr.games.pacman.model.common.Ghost.PINK_GHOST;
-import static de.amr.games.pacman.model.common.Ghost.RED_GHOST;
+import static de.amr.games.pacman.model.common.actors.Ghost.CYAN_GHOST;
+import static de.amr.games.pacman.model.common.actors.Ghost.ORANGE_GHOST;
+import static de.amr.games.pacman.model.common.actors.Ghost.PINK_GHOST;
+import static de.amr.games.pacman.model.common.actors.Ghost.RED_GHOST;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
@@ -35,8 +35,8 @@ import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TimedSeq;
-import de.amr.games.pacman.model.common.BonusState;
-import de.amr.games.pacman.model.common.Entity;
+import de.amr.games.pacman.model.common.actors.BonusState;
+import de.amr.games.pacman.model.common.actors.Entity;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;

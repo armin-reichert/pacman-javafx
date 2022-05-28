@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx.shell;
 import java.util.function.Consumer;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.model.common.Pac;
+import de.amr.games.pacman.model.common.actors.Pac;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Window;

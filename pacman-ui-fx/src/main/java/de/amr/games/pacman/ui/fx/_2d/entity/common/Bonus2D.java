@@ -29,7 +29,7 @@ import java.util.Objects;
 
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2d;
-import de.amr.games.pacman.model.common.Bonus;
+import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
