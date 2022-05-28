@@ -232,8 +232,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 		}
 		if (gameController.credit() > 0 && gameController.state() == GameState.HUNTING
 				&& !SoundManager.get().isAnySirenPlaying() && !game.player.powerTimer.isRunning()) {
-			int sirenIndex = game.huntingTimer.scatteringPhase();
-			SoundManager.get().startSiren(sirenIndex);
+			SoundManager.get().startSiren(0);
 		}
 	}
 
@@ -278,7 +277,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 	public void onScatterPhaseStarts(ScatterPhaseStartsEvent e) {
 		if (gameController.credit() > 0) {
 			SoundManager.get().stopSirens();
-			SoundManager.get().startSiren(e.scatterPhase);
+			SoundManager.get().startSiren(0);
 		}
 	}
 
@@ -299,8 +298,7 @@ public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
 				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED)) //
 				.forEach(Ghost3D::playFlashingAnimation);
 		if (gameController.credit() > 0) {
-			int sirenIndex = game.huntingTimer.scatteringPhase();
-			SoundManager.get().startSiren(sirenIndex);
+			SoundManager.get().startSiren(0);
 		}
 	}
 
