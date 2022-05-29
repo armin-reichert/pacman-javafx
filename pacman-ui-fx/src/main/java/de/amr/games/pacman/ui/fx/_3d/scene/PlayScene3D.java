@@ -32,8 +32,8 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
-import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameEvent;
+import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.event.ScatterPhaseStartsEvent;
 import de.amr.games.pacman.lib.V2i;
@@ -136,13 +136,13 @@ public class PlayScene3D extends GameEventAdapter implements GameScene {
 	@Override
 	public void setContext() {
 		game = gameController.game();
-		r2D = switch (gameController.gameVariant()) {
+		r2D = switch (game.variant) {
 		case MS_PACMAN -> Rendering2D_MsPacMan.get();
 		case PACMAN -> Rendering2D_PacMan.get();
 		};
 		model3D = GianmarcosModel3D.get();
 		SoundManager.get().stopAll(); // TODO: check this
-		SoundManager.get().selectGameVariant(gameController.gameVariant());
+		SoundManager.get().selectGameVariant(game.variant);
 	}
 
 	@Override

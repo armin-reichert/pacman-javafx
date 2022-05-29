@@ -71,7 +71,7 @@ public class PacManGameAppFX extends Application {
 		Env.$3D.set(options.use3DScenes);
 		Env.$perspective.set(options.perspective);
 		gameController = new GameController(options.gameVariant);
-		log("Application initialized. Game variant: %s", gameController.gameVariant());
+		log("Application initialized. Game variant: %s", gameController.game().variant);
 	}
 
 	@Override

@@ -115,8 +115,8 @@ public class GameScenes {
 	 */
 	public GameScene getScene(GameController gameController, int dimension) {
 		var game = gameController.game();
+		var variantIndex = game.variant.ordinal();
 		var gameState = gameController.state();
-		var variant = gameController.gameVariant();
 		int sceneIndex = switch (gameState) {
 		case INTRO -> 0;
 		case CREDIT -> 1;
@@ -124,10 +124,10 @@ public class GameScenes {
 		case INTERMISSION_TEST -> 1 + game.intermissionTestNumber;
 		default -> 5;
 		};
-		if (scenes[variant.ordinal()][sceneIndex][dimension] == null) {
+		if (scenes[variantIndex][sceneIndex][dimension] == null) {
 			// no 3D version exists, use 2D version
-			return scenes[variant.ordinal()][sceneIndex][SCENE_2D];
+			return scenes[variantIndex][sceneIndex][SCENE_2D];
 		}
-		return scenes[variant.ordinal()][sceneIndex][dimension];
+		return scenes[variantIndex][sceneIndex][dimension];
 	}
 }

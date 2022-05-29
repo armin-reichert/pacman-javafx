@@ -31,8 +31,8 @@ import static de.amr.games.pacman.ui.fx.shell.FlashMessageView.showFlashMessage;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
-import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameEvent;
+import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
@@ -125,7 +125,7 @@ public class GameUI extends GameEventAdapter {
 	public void render() {
 		FlashMessageView.get().update();
 		infoLayer.update();
-		stage.setTitle(gameController.gameVariant() == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
+		stage.setTitle(gameController.game().variant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
 	}
 
 	@Override
@@ -329,7 +329,7 @@ public class GameUI extends GameEventAdapter {
 	}
 
 	public void selectNextGameVariant() {
-		gameController.selectGameVariant(gameController.gameVariant().succ());
+		gameController.selectGameVariant(gameController.game().variant.succ());
 	}
 
 	public void toggleAutopilot() {

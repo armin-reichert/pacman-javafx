@@ -82,12 +82,12 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 	@Override
 	public void setContext() {
 		game = gameController.game();
-		r2D = switch (gameController.gameVariant()) {
+		r2D = switch (game.variant) {
 		case MS_PACMAN -> Rendering2D_MsPacMan.get();
 		case PACMAN -> Rendering2D_PacMan.get();
 		};
 		SoundManager.get().stopAll(); // TODO: check this
-		SoundManager.get().selectGameVariant(gameController.gameVariant());
+		SoundManager.get().selectGameVariant(game.variant);
 	}
 
 	@Override
