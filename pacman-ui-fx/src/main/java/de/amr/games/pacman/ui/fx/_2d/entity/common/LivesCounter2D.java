@@ -54,15 +54,15 @@ public class LivesCounter2D extends GameEntity2D {
 			return;
 		}
 		var sprite = r2D.getLifeSprite();
-		for (int i = 0; i < Math.min(game.player.lives, maxLives); ++i) {
+		for (int i = 0; i < Math.min(game.lives, maxLives); ++i) {
 			r2D.renderSprite(g, sprite, x + t(2 * i), y);
 		}
 		// show text if more lives are available than displayed
-		if (game.player.lives > maxLives) {
+		if (game.lives > maxLives) {
 			g.setFill(Color.YELLOW);
 			g.setFont(Font.font("Serif", FontWeight.BOLD, 8));
 			g.setFontSmoothingType(FontSmoothingType.LCD);
-			g.fillText("+" + (game.player.lives - maxLives), x + t(10), y + t(1));
+			g.fillText("+" + (game.lives - maxLives), x + t(10), y + t(1));
 		}
 	}
 }

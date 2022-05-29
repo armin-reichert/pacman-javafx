@@ -307,8 +307,8 @@ public class GameUI extends DefaultGameEventHandler {
 
 	public void addLives(int lives) {
 		if (gameController.isGameRunning()) {
-			gameController.game().player.lives += lives;
-			showFlashMessage(1, "You have %d lives", gameController.game().player.lives);
+			gameController.game().lives += lives;
+			showFlashMessage(1, "You have %d lives", gameController.game().lives);
 		}
 	}
 
