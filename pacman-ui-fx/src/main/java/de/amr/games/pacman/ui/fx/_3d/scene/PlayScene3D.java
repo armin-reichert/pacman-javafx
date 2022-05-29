@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
-import de.amr.games.pacman.event.DefaultGameEventHandler;
+import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.event.ScatterPhaseStartsEvent;
@@ -77,7 +77,7 @@ import javafx.scene.transform.Translate;
  * 
  * @author Armin Reichert
  */
-public class PlayScene3D extends DefaultGameEventHandler implements GameScene {
+public class PlayScene3D extends GameEventAdapter implements GameScene {
 
 	private final GameController gameController;
 	private final SubScene fxSubScene;

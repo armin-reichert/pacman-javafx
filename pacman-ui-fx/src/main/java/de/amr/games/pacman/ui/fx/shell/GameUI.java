@@ -31,7 +31,7 @@ import static de.amr.games.pacman.ui.fx.shell.FlashMessageView.showFlashMessage;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
-import de.amr.games.pacman.event.DefaultGameEventHandler;
+import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.V2i;
@@ -67,7 +67,7 @@ import javafx.stage.Stage;
  * 
  * @author Armin Reichert
  */
-public class GameUI extends DefaultGameEventHandler {
+public class GameUI extends GameEventAdapter {
 
 	public static final V2i GAME_SIZE = new V2i(ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y).scaled(TS);
 	public static final int MIN_FRAMERATE = 5, MAX_FRAMERATE = 120;
@@ -243,7 +243,7 @@ public class GameUI extends DefaultGameEventHandler {
 		} else if (pressed(e, MOD_ALT, KeyCode.N)) {
 			gameController.cheatEnterNextLevel();
 		} else if (pressed(e, MOD_ALT, KeyCode.X)) {
-			gameController.cheatKillAllPossibleGhosts();
+			gameController.cheatKillAllEatableGhosts();
 		} else if (pressed(e, MOD_ALT, KeyCode.Z)) {
 			startIntermissionScenesTest();
 		} else if (pressed(e, MOD_ALT, KeyCode.LEFT)) {

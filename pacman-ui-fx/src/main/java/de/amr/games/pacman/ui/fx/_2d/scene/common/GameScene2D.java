@@ -27,7 +27,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.event.DefaultGameEventHandler;
+import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
@@ -50,7 +50,7 @@ import javafx.scene.transform.Scale;
  * 
  * @author Armin Reichert
  */
-public abstract class GameScene2D extends DefaultGameEventHandler implements GameScene {
+public abstract class GameScene2D extends GameEventAdapter implements GameScene {
 
 	protected final GameController gameController;
 	protected final SubScene fxSubScene;
