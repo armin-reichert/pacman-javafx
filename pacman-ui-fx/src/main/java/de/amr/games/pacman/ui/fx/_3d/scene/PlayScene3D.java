@@ -156,11 +156,12 @@ public class PlayScene3D extends GameEventAdapter implements GameScene {
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
 		maze3D.$resolution.addListener(this::onMazeResolutionChange);
+		int mazeNumber = Rendering2D_MsPacMan.mazeNumber(game.level.number);
 		maze3D.createWallsAndDoors(game.level.world, //
-				r2D.getMazeSideColor(game.level.mazeNumber), //
-				r2D.getMazeTopColor(game.level.mazeNumber), //
-				r2D.getGhostHouseDoorColor(game.level.mazeNumber));
-		maze3D.createFood(game.level.world, r2D.getFoodColor(game.level.mazeNumber));
+				r2D.getMazeSideColor(mazeNumber), //
+				r2D.getMazeTopColor(mazeNumber), //
+				r2D.getGhostHouseDoorColor(mazeNumber));
+		maze3D.createFood(game.level.world, r2D.getFoodColor(mazeNumber));
 
 		player3D = new Pac3D(game.level.world, game.player, model3D, r2D);
 		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D)).toArray(Ghost3D[]::new);
@@ -238,10 +239,11 @@ public class PlayScene3D extends GameEventAdapter implements GameScene {
 
 	private void onMazeResolutionChange(ObservableValue<? extends Number> property, Number oldValue, Number newValue) {
 		if (!oldValue.equals(newValue)) {
+			int mazeNumber = Rendering2D_MsPacMan.mazeNumber(game.level.number);
 			maze3D.createWallsAndDoors(game.level.world, //
-					r2D.getMazeSideColor(game.level.mazeNumber), //
-					r2D.getMazeTopColor(game.level.mazeNumber), //
-					r2D.getGhostHouseDoorColor(game.level.mazeNumber));
+					r2D.getMazeSideColor(mazeNumber), //
+					r2D.getMazeTopColor(mazeNumber), //
+					r2D.getGhostHouseDoorColor(mazeNumber));
 		}
 	}
 
@@ -402,11 +404,12 @@ public class PlayScene3D extends GameEventAdapter implements GameScene {
 		case LEVEL_STARTING -> {
 			// TODO: This is not executed at the *first* level. Maybe I should change the state machine to make a transition
 			// from READY to LEVEL_STARTING when the game starts?
+			int mazeNumber = Rendering2D_MsPacMan.mazeNumber(game.level.number);
 			maze3D.createWallsAndDoors(game.level.world, //
-					r2D.getMazeSideColor(game.level.mazeNumber), //
-					r2D.getMazeTopColor(game.level.mazeNumber), //
-					r2D.getGhostHouseDoorColor(game.level.mazeNumber));
-			maze3D.createFood(game.level.world, r2D.getFoodColor(game.level.mazeNumber));
+					r2D.getMazeSideColor(mazeNumber), //
+					r2D.getMazeTopColor(mazeNumber), //
+					r2D.getGhostHouseDoorColor(mazeNumber));
+			maze3D.createFood(game.level.world, r2D.getFoodColor(mazeNumber));
 			levelCounter3D.update(game);
 			showFlashMessage(1, Env.message("level_starting", game.level.number));
 			U.pauseSec(3, () -> gameController.state().timer().expire()).play();

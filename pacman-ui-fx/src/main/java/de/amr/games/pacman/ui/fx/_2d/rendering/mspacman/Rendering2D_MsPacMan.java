@@ -49,6 +49,16 @@ import javafx.scene.text.Font;
  */
 public class Rendering2D_MsPacMan extends Rendering2D {
 
+	public static int mazeNumber(int levelNumber) {
+		return switch (levelNumber) {
+		case 1, 2 -> 1;
+		case 3, 4, 5 -> 2;
+		case 6, 7, 8, 9 -> 3;
+		case 10, 11, 12, 13 -> 4;
+		default -> (levelNumber - 14) % 8 < 4 ? 5 : 6;
+		};
+	}
+
 	//@formatter:off
 	private static final Color[] MAZE_TOP_COLORS = { 
 		Color.rgb(255, 183, 174), 
