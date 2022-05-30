@@ -120,7 +120,7 @@ public class GameScenes {
 		int sceneIndex = switch (gameState) {
 		case INTRO -> 0;
 		case CREDIT -> 1;
-		case INTERMISSION -> 1 + game.level.intermissionNumber;
+		case INTERMISSION -> 1 + game.intermissionNumber(game.level.number);
 		case INTERMISSION_TEST -> 1 + game.intermissionTestNumber;
 		default -> 5;
 		};
