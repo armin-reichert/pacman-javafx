@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell.info;
 
-import static de.amr.games.pacman.lib.TickTimer.ticksAsString;
+import static de.amr.games.pacman.lib.TickTimer.ticksToString;
 
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.model.common.GameModel;
@@ -85,7 +85,7 @@ public class SectionGame extends Section {
 		addInfo("Game State", () -> "%s".formatted(gc.state()));
 		addInfo("", () -> "Running:   %s%s".formatted(gc.state().timer().tick(),
 				gc.state().timer().isStopped() ? " (STOPPED)" : ""));
-		addInfo("", () -> "Remaining: %s".formatted(ticksAsString(gc.state().timer().remaining())));
+		addInfo("", () -> "Remaining: %s".formatted(ticksToString(gc.state().timer().remaining())));
 
 		addInfo("Hunting timer",
 				() -> "%s #%d%s".formatted(gc.game().huntingTimer.phaseName(),
@@ -93,7 +93,7 @@ public class SectionGame extends Section {
 								: gc.game().huntingTimer.chasingPhase(),
 						gc.game().huntingTimer.isStopped() ? " STOPPED" : ""));
 		addInfo("", () -> "Running:   %d".formatted(gc.game().huntingTimer.tick()));
-		addInfo("", () -> "Remaining: %s".formatted(ticksAsString(gc.game().huntingTimer.remaining())));
+		addInfo("", () -> "Remaining: %s".formatted(ticksToString(gc.game().huntingTimer.remaining())));
 
 		addInfo("Credit", () -> "%d".formatted(gc.credit()));
 		addInfo("Playing", () -> U.yes_no(gc.isGameRunning()));
@@ -108,7 +108,6 @@ public class SectionGame extends Section {
 		addInfo("Ghost frightened time", () -> String.format("%d sec", game().level.ghostFrightenedSeconds));
 		addInfo("Pac-Man speed", () -> fmtSpeed(game().level.playerSpeed));
 		addInfo("Pac-Man speed (power)", () -> fmtSpeed(game().level.playerSpeedPowered));
-		addInfo("Bonus value", () -> game().bonusValue(game().level.bonusSymbol));
 		addInfo("Maze flashings", () -> game().level.numFlashes);
 	}
 
