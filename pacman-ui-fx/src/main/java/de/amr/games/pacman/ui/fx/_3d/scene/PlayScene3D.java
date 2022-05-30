@@ -208,7 +208,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene {
 		player3D.update();
 		Stream.of(ghosts3D).forEach(Ghost3D::update);
 		bonus3D.update(game.bonus());
-		score3D.update(game.score, game.level.number, game.hiscore.points, game.hiscore.level);
+		score3D.update(game.score().points(), game.level.number, game.score().hiscore(), game.score().hiscoreLevel());
 		livesCounter3D.update(game.lives);
 		getCamera().update(player3D);
 		if (game.player.starvingTicks >= 10 && SoundManager.get().isPlaying(GameSound.PACMAN_MUNCH)) {
