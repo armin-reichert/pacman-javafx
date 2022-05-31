@@ -27,6 +27,7 @@ import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.mspacman.Flap;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameEntity2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -49,7 +50,7 @@ public class Flap2D extends GameEntity2D {
 	}
 
 	@Override
-	public void render(GraphicsContext g) {
+	public void render(GraphicsContext g, Rendering2D r2D) {
 		if (flap.visible) {
 			Rectangle2D sprite = animation.animate();
 			Rendering2D_MsPacMan.get().renderEntity(g, flap, sprite);

@@ -64,7 +64,7 @@ public class PacMan_IntermissionScene3 extends GameScene2D {
 	public void init() {
 		sceneController.init();
 
-		levelCounter2D = new LevelCounter2D(game, r2D);
+		levelCounter2D = new LevelCounter2D(game);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
 
 		pacMan2D = new Player2D(context.pac, game, r2D);
@@ -82,12 +82,12 @@ public class PacMan_IntermissionScene3 extends GameScene2D {
 
 	@Override
 	public void doRender(GraphicsContext g) {
-		levelCounter2D.render(g);
-		pacMan2D.render(g);
+		levelCounter2D.render(g, r2D);
+		pacMan2D.render(g, r2D);
 		if (sceneController.state() == Intermission3Controller.State.CHASING) {
-			blinkyPatched2D.render(g);
+			blinkyPatched2D.render(g, r2D);
 		} else {
-			blinkyNaked2D.render(g);
+			blinkyNaked2D.render(g, r2D);
 		}
 	}
 }

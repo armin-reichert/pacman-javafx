@@ -27,6 +27,7 @@ import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameEntity2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -48,7 +49,7 @@ public class BlinkyNaked2D extends GameEntity2D {
 	}
 
 	@Override
-	public void render(GraphicsContext g) {
-		Rendering2D_PacMan.get().renderEntity(g, blinky, animation.animate());
+	public void render(GraphicsContext g, Rendering2D r2D) {
+		r2D.renderEntity(g, blinky, animation.animate());
 	}
 }

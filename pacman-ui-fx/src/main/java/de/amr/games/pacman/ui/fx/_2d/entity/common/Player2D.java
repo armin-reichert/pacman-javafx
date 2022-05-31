@@ -42,14 +42,13 @@ import javafx.scene.canvas.GraphicsContext;
 public class Player2D extends GameEntity2D {
 
 	public final Pac player;
-	private final Rendering2D r2D;
 	public Map<Direction, TimedSeq<Rectangle2D>> animMunching;
 	private final TimedSeq<Rectangle2D> animDying;
 
 	public Player2D(Pac player, GameModel game, Rendering2D r2D) {
 		super(game);
 		this.player = player;
-		this.r2D = r2D;
+		// TODO
 		animMunching = r2D.createPlayerMunchingAnimations();
 		animDying = r2D.createPlayerDyingAnimation();
 	}
@@ -66,7 +65,7 @@ public class Player2D extends GameEntity2D {
 	}
 
 	@Override
-	public void render(GraphicsContext g) {
+	public void render(GraphicsContext g, Rendering2D r2D) {
 		Rectangle2D frame = null;
 		if (player.killed) {
 			frame = animDying.animate();

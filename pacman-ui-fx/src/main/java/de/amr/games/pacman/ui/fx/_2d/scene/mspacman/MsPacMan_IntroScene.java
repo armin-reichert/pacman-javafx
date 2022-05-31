@@ -72,10 +72,11 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		sceneController.restartInInitialState(IntroController.State.BEGIN);
 		createScores();
 		score2D.showPoints = false;
-		credit2D = new Credit2D(r2D, gameController::credit);
+		credit2D = new Credit2D(gameController::credit);
 		msPacMan2D = new Player2D(context.msPacMan, game, r2D);
 		msPacMan2D.animMunching.values().forEach(TimedSeq::restart);
-		ghosts2D = Stream.of(context.ghosts).map(ghost -> new Ghost2D(ghost, game, r2D)).toArray(Ghost2D[]::new);
+		ghosts2D = Stream.of(context.ghosts).map(ghost -> new Ghost2D(ghost, game).createAnimations(r2D))
+				.toArray(Ghost2D[]::new);
 		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animKicking.values().forEach(TimedSeq::restart));
 	}
 
@@ -98,9 +99,9 @@ public class MsPacMan_IntroScene extends GameScene2D {
 
 	@Override
 	public void doRender(GraphicsContext g) {
-		score2D.render(g);
-		highScore2D.render(g);
-		credit2D.render(g);
+		score2D.render(g, r2D);
+		highScore2D.render(g, r2D);
+		credit2D.render(g, r2D);
 		g.setFont(r2D.getArcadeFont());
 		g.setFill(Color.ORANGE);
 		g.fillText("\"MS PAC-MAN\"", context.titlePosition.x, context.titlePosition.y);
@@ -111,8 +112,8 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		default -> {
 		}
 		}
-		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(g));
-		msPacMan2D.render(g);
+		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(g, r2D));
+		msPacMan2D.render(g, r2D);
 		r2D.renderCopyright(g, t(3), t(28));
 	}
 

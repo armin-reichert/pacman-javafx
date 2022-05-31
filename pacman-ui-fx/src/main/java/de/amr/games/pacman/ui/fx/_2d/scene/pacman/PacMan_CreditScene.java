@@ -57,8 +57,8 @@ public class PacMan_CreditScene extends GameScene2D {
 	public void init() {
 		createScores();
 		score2D.showPoints = false;
-		credit2D = new Credit2D(r2D, gameController::credit);
-		levelCounter2D = new LevelCounter2D(game, r2D);
+		credit2D = new Credit2D(gameController::credit);
+		levelCounter2D = new LevelCounter2D(game);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(4), t(2));
 	}
 
@@ -80,9 +80,9 @@ public class PacMan_CreditScene extends GameScene2D {
 
 	@Override
 	protected void doRender(GraphicsContext g) {
-		score2D.render(g);
-		highScore2D.render(g);
-		credit2D.render(g);
+		score2D.render(g, r2D);
+		highScore2D.render(g, r2D);
+		credit2D.render(g, r2D);
 
 		g.setFont(r2D.getArcadeFont());
 		g.setFill(r2D.getGhostSkinColor(Ghost.ORANGE_GHOST));

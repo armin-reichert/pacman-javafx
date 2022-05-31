@@ -78,12 +78,12 @@ public class PacMan_IntroScene extends GameScene2D {
 		sceneController.restartInInitialState(IntroController.State.BEGIN);
 		createScores();
 		score2D.showPoints = false;
-		credit2D = new Credit2D(r2D, gameController::credit);
+		credit2D = new Credit2D(gameController::credit);
 		pacMan2D = new Player2D(context.pacMan, game, r2D);
 		pacMan2D.animMunching.values().forEach(TimedSeq::restart);
 
 		ghosts2D = Stream.of(context.ghosts).map(ghost -> {
-			Ghost2D ghost2D = new Ghost2D(ghost, game, r2D);
+			Ghost2D ghost2D = new Ghost2D(ghost, game).createAnimations(r2D);
 			ghost2D.animKicking.values().forEach(TimedSeq::restart);
 			ghost2D.animFrightened.restart();
 			return ghost2D;
@@ -117,9 +117,9 @@ public class PacMan_IntroScene extends GameScene2D {
 
 	@Override
 	public void doRender(GraphicsContext g) {
-		score2D.render(g);
-		highScore2D.render(g);
-		credit2D.render(g);
+		score2D.render(g, r2D);
+		highScore2D.render(g, r2D);
+		credit2D.render(g, r2D);
 		switch (sceneController.state()) {
 		case BEGIN, PRESENTING_GHOSTS -> drawGallery();
 		case SHOWING_POINTS -> {
@@ -156,14 +156,14 @@ public class PacMan_IntroScene extends GameScene2D {
 
 	private void drawGuys(int offset) {
 		var g = canvas.getGraphicsContext2D();
-		ghosts2D[0].render(g);
+		ghosts2D[0].render(g, r2D);
 		g.save();
 		g.translate(offset, 0);
-		ghosts2D[1].render(g);
-		ghosts2D[2].render(g);
+		ghosts2D[1].render(g, r2D);
+		ghosts2D[2].render(g, r2D);
 		g.restore();
-		ghosts2D[3].render(g);
-		pacMan2D.render(g);
+		ghosts2D[3].render(g, r2D);
+		pacMan2D.render(g, r2D);
 	}
 
 	private void drawGallery() {

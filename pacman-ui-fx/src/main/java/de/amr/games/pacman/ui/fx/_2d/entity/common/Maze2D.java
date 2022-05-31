@@ -47,14 +47,12 @@ import javafx.util.Duration;
  */
 public class Maze2D extends GameEntity2D {
 
-	private final Rendering2D r2D;
 	private final TimedSeq<Boolean> energizerAnimation;
 	private final Timeline flashingAnimation;
 	private boolean brightPhase;
 
-	public Maze2D(GameModel game, Rendering2D r2D) {
+	public Maze2D(GameModel game) {
 		super(game);
-		this.r2D = r2D;
 		energizerAnimation = TimedSeq.pulse().frameDuration(10);
 		flashingAnimation = new Timeline(new KeyFrame(Duration.millis(200), e -> brightPhase = !brightPhase));
 		flashingAnimation.setCycleCount(2 * game.level.numFlashes);
@@ -69,7 +67,7 @@ public class Maze2D extends GameEntity2D {
 	}
 
 	@Override
-	public void render(GraphicsContext g) {
+	public void render(GraphicsContext g, Rendering2D r2D) {
 		int mazeNumber = Rendering2D_MsPacMan.mazeNumber(game.level.number);
 		if (flashingAnimation.getStatus() == Status.RUNNING) {
 			if (brightPhase) {

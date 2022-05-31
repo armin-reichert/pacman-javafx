@@ -55,7 +55,7 @@ public class MsPacMan_CreditScene extends GameScene2D {
 	public void init() {
 		createScores();
 		score2D.showPoints = false;
-		credit2D = new Credit2D(r2D, gameController::credit);
+		credit2D = new Credit2D(gameController::credit);
 	}
 
 	@Override
@@ -76,9 +76,9 @@ public class MsPacMan_CreditScene extends GameScene2D {
 
 	@Override
 	protected void doRender(GraphicsContext g) {
-		score2D.render(g);
-		highScore2D.render(g);
-		credit2D.render(g);
+		score2D.render(g, r2D);
+		highScore2D.render(g, r2D);
+		credit2D.render(g, r2D);
 		g.setFont(r2D.getArcadeFont());
 		g.setFill(r2D.getGhostSkinColor(Ghost.ORANGE_GHOST));
 		g.fillText("PUSH START BUTTON", t(6), t(16));

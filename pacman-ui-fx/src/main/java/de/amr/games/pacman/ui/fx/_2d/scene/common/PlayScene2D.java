@@ -89,7 +89,7 @@ public class PlayScene2D extends GameScene2D {
 	public void init() {
 		createScores();
 		credit2D = new Credit2D(gameController::credit);
-		livesCounter2D = new LivesCounter2D(game, r2D);
+		livesCounter2D = new LivesCounter2D(game);
 		livesCounter2D.x = t(2);
 		livesCounter2D.y = t(34);
 		if (gameController.credit() > 0) {
@@ -101,16 +101,12 @@ public class PlayScene2D extends GameScene2D {
 			credit2D.visible = true;
 			livesCounter2D.visible = false;
 		}
-		maze2D = new Maze2D(game, r2D);
+		maze2D = new Maze2D(game);
 		maze2D.x = 0;
 		maze2D.y = t(3);
 		player2D = new Player2D(game.player, game, r2D);
 		for (Ghost ghost : game.ghosts) {
-			ghosts2D[ghost.id] = new Ghost2D(ghost, game);
-			ghosts2D[ghost.id].animKicking = r2D.createGhostKickingAnimations(ghost.id);
-			ghosts2D[ghost.id].animReturningHome = r2D.createGhostReturningHomeAnimations();
-			ghosts2D[ghost.id].animFrightened = r2D.createGhostFrightenedAnimation();
-			ghosts2D[ghost.id].animFlashing = r2D.createGhostFlashingAnimation();
+			ghosts2D[ghost.id] = new Ghost2D(ghost, game).createAnimations(r2D);
 		}
 		bonus2D = new Bonus2D(game.bonus());
 		if (game.variant == GameVariant.MS_PACMAN) {
@@ -328,11 +324,11 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void doRender(GraphicsContext g) {
-		score2D.render(g);
-		highScore2D.render(g);
-		livesCounter2D.render(g);
-		credit2D.render(g);
-		maze2D.render(g);
+		score2D.render(g, r2D);
+		highScore2D.render(g, r2D);
+		livesCounter2D.render(g, r2D);
+		credit2D.render(g, r2D);
+		maze2D.render(g, r2D);
 		if (gameController.state() == GameState.GAME_OVER || gameController.credit() == 0) {
 			g.setFont(r2D.getArcadeFont());
 			g.setFill(Color.RED);
@@ -344,8 +340,8 @@ public class PlayScene2D extends GameScene2D {
 			g.fillText("READY!", t(11), t(21));
 		}
 		bonus2D.render(g, r2D);
-		player2D.render(g);
-		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(g));
+		player2D.render(g, r2D);
+		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(g, r2D));
 		if (gameController.credit() > 0) {
 			r2D.renderLevelCounter(g, game.level.number, game.levelCounter, unscaledSize.x - t(4), unscaledSize.y - t(2));
 		}

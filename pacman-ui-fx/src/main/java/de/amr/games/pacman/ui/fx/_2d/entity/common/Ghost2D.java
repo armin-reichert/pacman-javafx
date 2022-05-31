@@ -57,6 +57,14 @@ public class Ghost2D extends GameEntity2D {
 		this.ghost = ghost;
 	}
 
+	public Ghost2D createAnimations(Rendering2D r2D) {
+		animKicking = r2D.createGhostKickingAnimations(ghost.id);
+		animReturningHome = r2D.createGhostReturningHomeAnimations();
+		animFrightened = r2D.createGhostFrightenedAnimation();
+		animFlashing = r2D.createGhostFlashingAnimation();
+		return this;
+	}
+
 	public void reset() {
 		if (animKicking != null) {
 			for (Direction dir : Direction.values()) {

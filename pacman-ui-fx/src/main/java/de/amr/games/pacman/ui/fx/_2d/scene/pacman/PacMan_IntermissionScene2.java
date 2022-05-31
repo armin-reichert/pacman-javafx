@@ -71,11 +71,11 @@ public class PacMan_IntermissionScene2 extends GameScene2D {
 	public void init() {
 		sceneController.init();
 
-		levelCounter2D = new LevelCounter2D(game, r2D);
+		levelCounter2D = new LevelCounter2D(game);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
 
 		pacMan2D = new Player2D(context.pac, game, r2D);
-		blinky2D = new Ghost2D(context.blinky, game, r2D);
+		blinky2D = new Ghost2D(context.blinky, game).createAnimations(r2D);
 		nail2D = new Nail2D(context.nail, game);
 		pacMan2D.animMunching.values().forEach(TimedSeq::restart);
 		blinky2D.animKicking.values().forEach(TimedSeq::restart);
@@ -90,11 +90,11 @@ public class PacMan_IntermissionScene2 extends GameScene2D {
 
 	@Override
 	public void doRender(GraphicsContext g) {
-		levelCounter2D.render(g);
-		pacMan2D.render(g);
-		nail2D.render(g);
+		levelCounter2D.render(g, r2D);
+		pacMan2D.render(g, r2D);
+		nail2D.render(g, r2D);
 		if (sceneController.nailDistance() < 0) {
-			blinky2D.render(g);
+			blinky2D.render(g, r2D);
 		} else {
 			drawBlinkyStretched(context.blinky, context.nail.position, sceneController.nailDistance() / 4);
 		}
@@ -105,7 +105,7 @@ public class PacMan_IntermissionScene2 extends GameScene2D {
 		Rectangle2D stretchedDress = blinkyStretchedAnimation.frame(stretching);
 		r2D.renderSprite(g, stretchedDress, (int) (nailPosition.x - 4), (int) (nailPosition.y - 4));
 		if (stretching < 3) {
-			blinky2D.render(g);
+			blinky2D.render(g, r2D);
 		} else {
 			Rectangle2D damagedDress = blinkyDamagedAnimation.frame(blinky.moveDir() == Direction.UP ? 0 : 1);
 			r2D.renderSprite(g, damagedDress, (int) (blinky.position.x - 4), (int) (blinky.position.y - 4));
