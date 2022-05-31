@@ -108,11 +108,10 @@ public class PlayScene2D extends GameScene2D {
 		for (Ghost ghost : game.ghosts) {
 			ghosts2D[ghost.id] = new Ghost2D(ghost, game, r2D);
 		}
-		var bonusJumpAnimation = game.variant == GameVariant.MS_PACMAN
-				? Rendering2D_MsPacMan.get().createBonusJumpAnimation()
-				: null;
-		bonus2D = new Bonus2D(game.bonus(), bonusJumpAnimation);
-
+		bonus2D = new Bonus2D(game.bonus());
+		if (game.variant == GameVariant.MS_PACMAN) {
+			bonus2D.setJumpAnimation(Rendering2D_MsPacMan.get().createBonusJumpAnimation());
+		}
 		game.player.powerTimer.addEventListener(this::handleGhostsFlashing);
 	}
 
@@ -209,12 +208,12 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void onBonusGetsActivate(GameEvent e) {
-		bonus2D.startAnimation();
+		bonus2D.startJumping();
 	}
 
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
-		bonus2D.stopAnimation();
+		bonus2D.stopJumping();
 		if (gameController.credit() > 0) {
 			SoundManager.get().play(GameSound.BONUS_EATEN);
 		}

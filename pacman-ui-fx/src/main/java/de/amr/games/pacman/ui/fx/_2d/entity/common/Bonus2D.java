@@ -44,22 +44,25 @@ import javafx.scene.canvas.GraphicsContext;
 public class Bonus2D {
 
 	private final Bonus bonus;
-	private final TimedSeq<Integer> animation;
+	private TimedSeq<Integer> jumpAnimation;
 
-	public Bonus2D(Bonus bonus, TimedSeq<Integer> animation) {
+	public Bonus2D(Bonus bonus) {
 		this.bonus = bonus;
-		this.animation = animation;
 	}
 
-	public void startAnimation() {
-		if (animation != null) {
-			animation.restart();
+	public void setJumpAnimation(TimedSeq<Integer> jumpAnimation) {
+		this.jumpAnimation = jumpAnimation;
+	}
+
+	public void startJumping() {
+		if (jumpAnimation != null) {
+			jumpAnimation.restart();
 		}
 	}
 
-	public void stopAnimation() {
-		if (animation != null) {
-			animation.stop();
+	public void stopJumping() {
+		if (jumpAnimation != null) {
+			jumpAnimation.stop();
 		}
 	}
 
@@ -68,9 +71,9 @@ public class Bonus2D {
 		case INACTIVE -> {
 		}
 		case EDIBLE -> {
-			if (animation != null) {
+			if (jumpAnimation != null) {
 				g.save();
-				g.translate(0, animation.animate());
+				g.translate(0, jumpAnimation.animate());
 				renderSprite(g, r2D, r2D.getSymbolSprite(bonus.symbol()), bonus.position());
 				g.restore();
 			} else {
