@@ -30,6 +30,7 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.ui.fx._2d.entity.common.Credit2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
@@ -62,6 +63,7 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 	protected Rendering2D r2D;
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
+	protected Credit2D credit2D;
 
 	/**
 	 * @param gc           game controller
@@ -108,7 +110,7 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 		canvas.getTransforms().setAll(new Scale(scaling, scaling));
 	}
 
-	protected void createScores() {
+	protected void createCommonParts() {
 		score2D = new GameScore2D(game);
 		score2D.x = t(1);
 		score2D.y = t(1);
@@ -119,6 +121,8 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 		highScore2D.y = t(1);
 		highScore2D.title = "HIGH SCORE";
 		highScore2D.showHighscore = true;
+		credit2D = new Credit2D(gameController::credit);
+		credit2D.visible = false;
 	}
 
 	/**

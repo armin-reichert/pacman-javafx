@@ -40,7 +40,6 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Bonus2D;
-import de.amr.games.pacman.ui.fx._2d.entity.common.Credit2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Maze2D;
@@ -68,7 +67,6 @@ public class PlayScene2D extends GameScene2D {
 
 	private Maze2D maze2D;
 	private LivesCounter2D livesCounter2D;
-	private Credit2D credit2D;
 	private Player2D player2D;
 	private Ghost2D[] ghosts2D = new Ghost2D[4];
 	private Bonus2D bonus2D;
@@ -87,8 +85,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void init() {
-		createScores();
-		credit2D = new Credit2D(gameController::credit);
+		createCommonParts();
 		livesCounter2D = new LivesCounter2D(game);
 		livesCounter2D.x = t(2);
 		livesCounter2D.y = t(34);

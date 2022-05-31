@@ -34,7 +34,6 @@ import de.amr.games.pacman.controller.pacman.IntroController;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.ui.fx._2d.entity.common.Credit2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
@@ -65,7 +64,6 @@ public class PacMan_IntroScene extends GameScene2D {
 
 	private Player2D pacMan2D;
 	private Ghost2D[] ghosts2D;
-	private Credit2D credit2D;
 
 	public PacMan_IntroScene(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
@@ -76,9 +74,9 @@ public class PacMan_IntroScene extends GameScene2D {
 	@Override
 	public void init() {
 		sceneController.restartInInitialState(IntroController.State.BEGIN);
-		createScores();
+		createCommonParts();
 		score2D.showPoints = false;
-		credit2D = new Credit2D(gameController::credit);
+		credit2D.visible=true;
 		pacMan2D = new Player2D(context.pacMan, game).createAnimations(r2D);
 		pacMan2D.animMunching.values().forEach(SpriteAnimation::restart);
 

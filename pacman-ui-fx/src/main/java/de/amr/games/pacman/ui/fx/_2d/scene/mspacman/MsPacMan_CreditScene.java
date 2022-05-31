@@ -29,7 +29,6 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.ui.fx._2d.entity.common.Credit2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
@@ -45,17 +44,15 @@ import javafx.scene.text.Font;
  */
 public class MsPacMan_CreditScene extends GameScene2D {
 
-	private Credit2D credit2D;
-
 	public MsPacMan_CreditScene(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
 	}
 
 	@Override
 	public void init() {
-		createScores();
+		createCommonParts();
 		score2D.showPoints = false;
-		credit2D = new Credit2D(gameController::credit);
+		credit2D.visible=true;
 	}
 
 	@Override

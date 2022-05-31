@@ -32,7 +32,6 @@ import de.amr.games.pacman.controller.mspacman.IntroController;
 import de.amr.games.pacman.controller.mspacman.IntroController.Context;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.ui.fx._2d.entity.common.Credit2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
@@ -59,7 +58,6 @@ public class MsPacMan_IntroScene extends GameScene2D {
 
 	private Player2D msPacMan2D;
 	private Ghost2D[] ghosts2D;
-	private Credit2D credit2D;
 
 	public MsPacMan_IntroScene(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
@@ -70,9 +68,9 @@ public class MsPacMan_IntroScene extends GameScene2D {
 	@Override
 	public void init() {
 		sceneController.restartInInitialState(IntroController.State.BEGIN);
-		createScores();
+		createCommonParts();
 		score2D.showPoints = false;
-		credit2D = new Credit2D(gameController::credit);
+		credit2D.visible = true;
 		msPacMan2D = new Player2D(context.msPacMan, game).createAnimations(r2D);
 		msPacMan2D.animMunching.values().forEach(SpriteAnimation::restart);
 		ghosts2D = Stream.of(context.ghosts).map(ghost -> new Ghost2D(ghost, game).createAnimations(r2D))
