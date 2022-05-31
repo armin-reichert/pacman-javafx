@@ -30,6 +30,7 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Credit2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -83,7 +84,7 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 
 	@Override
 	public void setSceneContext(GameModel game) {
-		this.game=game;
+		this.game = game;
 		r2D = switch (game.variant) {
 		case MS_PACMAN -> Rendering2D_MsPacMan.get();
 		case PACMAN -> Rendering2D_PacMan.get();
@@ -122,6 +123,8 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 		highScore2D.title = "HIGH SCORE";
 		highScore2D.showHighscore = true;
 		credit2D = new Credit2D(gameController::credit);
+		credit2D.x = t(2);
+		credit2D.y = t(ArcadeWorld.TILES_Y) - 2;
 		credit2D.visible = false;
 	}
 
