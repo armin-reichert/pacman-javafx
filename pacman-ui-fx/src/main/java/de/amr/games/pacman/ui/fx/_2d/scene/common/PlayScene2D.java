@@ -86,9 +86,17 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void init() {
 		createCommonParts();
-		livesCounter2D = new LivesCounter2D(game);
-		livesCounter2D.x = t(2);
-		livesCounter2D.y = t(34);
+		livesCounter2D = new LivesCounter2D(game, t(2), t(34));
+		maze2D = new Maze2D(game, 0, t(3));
+		player2D = new Player2D(game.player, game).createAnimations(r2D);
+		for (Ghost ghost : game.ghosts) {
+			ghosts2D[ghost.id] = new Ghost2D(ghost, game).createAnimations(r2D);
+		}
+		bonus2D = new Bonus2D(game.bonus());
+		if (game.variant == GameVariant.MS_PACMAN) {
+			bonus2D.setJumpAnimation(Rendering2D_MsPacMan.get().createBonusJumpAnimation());
+		}
+
 		if (gameController.credit() > 0) {
 			score2D.showPoints = true;
 			credit2D.visible = false;
@@ -98,17 +106,7 @@ public class PlayScene2D extends GameScene2D {
 			credit2D.visible = true;
 			livesCounter2D.visible = false;
 		}
-		maze2D = new Maze2D(game);
-		maze2D.x = 0;
-		maze2D.y = t(3);
-		player2D = new Player2D(game.player, game).createAnimations(r2D);
-		for (Ghost ghost : game.ghosts) {
-			ghosts2D[ghost.id] = new Ghost2D(ghost, game).createAnimations(r2D);
-		}
-		bonus2D = new Bonus2D(game.bonus());
-		if (game.variant == GameVariant.MS_PACMAN) {
-			bonus2D.setJumpAnimation(Rendering2D_MsPacMan.get().createBonusJumpAnimation());
-		}
+
 		game.player.powerTimer.addEventListener(this::handleGhostsFlashing);
 	}
 

@@ -42,8 +42,10 @@ public class LivesCounter2D extends GameEntity2D {
 
 	public int maxLives = 5;
 
-	public LivesCounter2D(GameModel game) {
+	public LivesCounter2D(GameModel game, int x, int y) {
 		super(game);
+		this.x = x;
+		this.y = y;
 	}
 
 	@Override
