@@ -23,11 +23,11 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.entity.mspacman;
 
-import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.mspacman.Flap;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameEntity2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -41,7 +41,7 @@ import javafx.scene.paint.Color;
 public class Flap2D extends GameEntity2D {
 
 	private final Flap flap;
-	public final TimedSeq<Rectangle2D> animation;
+	public final SpriteAnimation animation;
 
 	public Flap2D(Flap flap, GameModel game) {
 		super(game);

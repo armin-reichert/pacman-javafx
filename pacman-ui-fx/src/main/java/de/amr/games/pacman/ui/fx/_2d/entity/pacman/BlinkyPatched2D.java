@@ -23,13 +23,12 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.entity.pacman;
 
-import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameEntity2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -40,7 +39,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class BlinkyPatched2D extends GameEntity2D {
 
 	private final Ghost blinky;
-	public final TimedSeq<Rectangle2D> animation;
+	public final SpriteAnimation animation;
 
 	public BlinkyPatched2D(Ghost blinky, GameModel game) {
 		super(game);

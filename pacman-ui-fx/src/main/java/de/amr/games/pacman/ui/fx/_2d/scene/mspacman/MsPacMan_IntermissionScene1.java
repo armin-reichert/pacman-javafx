@@ -27,7 +27,6 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission1Controller;
-import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
@@ -35,6 +34,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Heart2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
@@ -86,10 +86,10 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 		heart2D = new Heart2D(context.heart, game);
 
 		// start animations
-		msPacMan2D.animMunching.values().forEach(TimedSeq::restart);
-		pacMan2D.animMunching.values().forEach(TimedSeq::restart);
-		inky2D.animKicking.values().forEach(TimedSeq::restart);
-		pinky2D.animKicking.values().forEach(TimedSeq::restart);
+		msPacMan2D.animMunching.values().forEach(SpriteAnimation::restart);
+		pacMan2D.animMunching.values().forEach(SpriteAnimation::restart);
+		inky2D.animKicking.values().forEach(SpriteAnimation::restart);
+		pinky2D.animKicking.values().forEach(SpriteAnimation::restart);
 	}
 
 	@Override
@@ -98,8 +98,8 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 		// stop ghost animation when Pac-Man and Ms. Pac-Man are in heaven
 		if (sceneController.state() == Intermission1Controller.State.IN_HEAVEN
 				&& context.pacMan.velocity.equals(V2d.NULL)) {
-			inky2D.animKicking.values().forEach(TimedSeq::stop);
-			pinky2D.animKicking.values().forEach(TimedSeq::stop);
+			inky2D.animKicking.values().forEach(SpriteAnimation::stop);
+			pinky2D.animKicking.values().forEach(SpriteAnimation::stop);
 		}
 	}
 

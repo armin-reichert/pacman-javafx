@@ -26,15 +26,76 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 import de.amr.games.pacman.lib.TimedSeq;
 import javafx.geometry.Rectangle2D;
 
-//TODO do not extend
-public class SpriteAnimation extends TimedSeq<Rectangle2D> {
+public class SpriteAnimation {
+
+	private TimedSeq<Rectangle2D> seq;
 
 	public static SpriteAnimation of(Rectangle2D... sprites) {
 		if (sprites.length == 0) {
 			throw new IllegalArgumentException("Animation must have at least one frame");
 		}
-		SpriteAnimation a = new SpriteAnimation();
-		a.things = sprites;
-		return a;
+		SpriteAnimation animation = new SpriteAnimation();
+		animation.seq = TimedSeq.of(sprites);
+		return animation;
+	}
+
+	public SpriteAnimation repetitions(int n) {
+		seq.repetitions(n);
+		return this;
+	}
+
+	public SpriteAnimation frameDuration(long ticks) {
+		seq.frameDuration(ticks);
+		return this;
+	}
+
+	public SpriteAnimation endless() {
+		seq.endless();
+		return this;
+	}
+
+	public SpriteAnimation run() {
+		seq.run();
+		return this;
+	}
+
+	public Rectangle2D animate() {
+		return seq.animate();
+	}
+
+	public void advance() {
+		seq.advance();
+	}
+
+	public void reset() {
+		seq.reset();
+	}
+
+	public void restart() {
+		seq.restart();
+	}
+
+	public void stop() {
+		seq.stop();
+	}
+
+	public boolean isRunning() {
+		return seq.isRunning();
+	}
+
+	public int numFrames() {
+		return seq.numFrames();
+	}
+
+	public Rectangle2D frame() {
+		return seq.frame();
+	}
+
+	public Rectangle2D frame(int i) {
+		return seq.frame(i);
+	}
+
+	public long getFrameDuration() {
+		return seq.getFrameDuration();
 	}
 }

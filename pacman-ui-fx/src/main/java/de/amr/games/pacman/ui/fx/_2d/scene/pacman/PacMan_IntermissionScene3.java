@@ -27,12 +27,12 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.pacman.Intermission3Controller;
-import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.BlinkyNaked2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.BlinkyPatched2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -70,7 +70,7 @@ public class PacMan_IntermissionScene3 extends GameScene2D {
 		pacMan2D = new Player2D(context.pac, game).createAnimations(r2D);
 		blinkyPatched2D = new BlinkyPatched2D(context.blinky, game);
 		blinkyNaked2D = new BlinkyNaked2D(context.blinky, game);
-		pacMan2D.animMunching.values().forEach(TimedSeq::restart);
+		pacMan2D.animMunching.values().forEach(SpriteAnimation::restart);
 		blinkyPatched2D.animation.restart();
 		blinkyNaked2D.animation.restart();
 	}

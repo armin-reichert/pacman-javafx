@@ -28,7 +28,6 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.pacman.Intermission2Controller;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -36,6 +35,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.Nail2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
@@ -57,8 +57,8 @@ public class PacMan_IntermissionScene2 extends GameScene2D {
 	private Player2D pacMan2D;
 	private Ghost2D blinky2D;
 	private Nail2D nail2D;
-	private TimedSeq<Rectangle2D> blinkyStretchedAnimation;
-	private TimedSeq<Rectangle2D> blinkyDamagedAnimation;
+	private SpriteAnimation blinkyStretchedAnimation;
+	private SpriteAnimation blinkyDamagedAnimation;
 
 	public PacMan_IntermissionScene2(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
@@ -77,8 +77,8 @@ public class PacMan_IntermissionScene2 extends GameScene2D {
 		pacMan2D = new Player2D(context.pac, game).createAnimations(r2D);
 		blinky2D = new Ghost2D(context.blinky, game).createAnimations(r2D);
 		nail2D = new Nail2D(context.nail, game);
-		pacMan2D.animMunching.values().forEach(TimedSeq::restart);
-		blinky2D.animKicking.values().forEach(TimedSeq::restart);
+		pacMan2D.animMunching.values().forEach(SpriteAnimation::restart);
+		blinky2D.animKicking.values().forEach(SpriteAnimation::restart);
 		blinkyStretchedAnimation = ((Rendering2D_PacMan) r2D).createBlinkyStretchedAnimation();
 		blinkyDamagedAnimation = ((Rendering2D_PacMan) r2D).createBlinkyDamagedAnimation();
 	}

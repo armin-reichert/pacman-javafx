@@ -35,7 +35,6 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TickTimerEvent;
-import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -46,6 +45,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Maze2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
@@ -161,7 +161,7 @@ public class PlayScene2D extends GameScene2D {
 			ghost2D.visible = ghost2D.ghost.visible;
 		}
 		if (!player2D.animMunching.get(game.player.moveDir()).isRunning()) {
-			player2D.animMunching.values().forEach(TimedSeq::restart);
+			player2D.animMunching.values().forEach(SpriteAnimation::restart);
 		}
 		for (Ghost2D ghost2D : ghosts2D) {
 			for (Direction dir : Direction.values()) {
@@ -256,8 +256,8 @@ public class PlayScene2D extends GameScene2D {
 
 		case HUNTING -> {
 			maze2D.getEnergizerAnimation().restart();
-			player2D.animMunching.values().forEach(TimedSeq::restart);
-			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animKicking.values().forEach(TimedSeq::restart));
+			player2D.animMunching.values().forEach(SpriteAnimation::restart);
+			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animKicking.values().forEach(SpriteAnimation::restart));
 		}
 
 		case PACMAN_DYING -> {

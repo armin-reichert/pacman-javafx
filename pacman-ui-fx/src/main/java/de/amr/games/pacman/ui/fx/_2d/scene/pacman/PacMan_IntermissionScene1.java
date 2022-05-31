@@ -27,12 +27,12 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.pacman.Intermission1Controller;
-import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.BigPacMan2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -71,8 +71,8 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 		blinky2D = new Ghost2D(context.blinky, game).createAnimations(r2D);
 		bigPacMan2D = new BigPacMan2D(context.pac, game);
 
-		pacMan2D.animMunching.values().forEach(TimedSeq::restart);
-		blinky2D.animKicking.values().forEach(TimedSeq::restart);
+		pacMan2D.animMunching.values().forEach(SpriteAnimation::restart);
+		blinky2D.animKicking.values().forEach(SpriteAnimation::restart);
 		blinky2D.animFrightened.restart();
 		bigPacMan2D.munchingAnimation.restart();
 	}

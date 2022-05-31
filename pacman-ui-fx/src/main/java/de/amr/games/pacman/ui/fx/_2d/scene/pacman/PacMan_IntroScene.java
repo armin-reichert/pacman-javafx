@@ -31,13 +31,13 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.pacman.IntroController;
-import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Credit2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
@@ -80,11 +80,11 @@ public class PacMan_IntroScene extends GameScene2D {
 		score2D.showPoints = false;
 		credit2D = new Credit2D(gameController::credit);
 		pacMan2D = new Player2D(context.pacMan, game).createAnimations(r2D);
-		pacMan2D.animMunching.values().forEach(TimedSeq::restart);
+		pacMan2D.animMunching.values().forEach(SpriteAnimation::restart);
 
 		ghosts2D = Stream.of(context.ghosts).map(ghost -> {
 			Ghost2D ghost2D = new Ghost2D(ghost, game).createAnimations(r2D);
-			ghost2D.animKicking.values().forEach(TimedSeq::restart);
+			ghost2D.animKicking.values().forEach(SpriteAnimation::restart);
 			ghost2D.animFrightened.restart();
 			return ghost2D;
 		}).toArray(Ghost2D[]::new);
