@@ -33,7 +33,6 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
-import de.amr.games.pacman.event.ScatterPhaseStartsEvent;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.lib.TimedSeq;
@@ -133,12 +132,24 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	protected void doUpdate() {
-		if (SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying() && game.player.starvingTicks > 10) {
-			SoundManager.get().stop(GameSound.PACMAN_MUNCH);
+		updateSound();
+	}
+
+	private void updateSound() {
+		if (gameController.credit() == 0) {
+			return;
 		}
-		if (gameController.credit() > 0 && gameController.state() == GameState.HUNTING
-				&& !SoundManager.get().isAnySirenPlaying() && !game.player.powerTimer.isRunning()) {
-			SoundManager.get().startSiren(0);
+		switch (gameController.state()) {
+		case HUNTING -> {
+			if (SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying() && game.player.starvingTicks > 10) {
+				SoundManager.get().stop(GameSound.PACMAN_MUNCH);
+			}
+			if (game.huntingTimer.scatteringPhase() >= 0 && game.huntingTimer.tick() == 0) {
+				SoundManager.get().startSiren(game.huntingTimer.scatteringPhase());
+			}
+		}
+		default -> {
+		}
 		}
 	}
 
@@ -166,14 +177,6 @@ public class PlayScene2D extends GameScene2D {
 		AudioClip munching = SoundManager.get().getClip(GameSound.PACMAN_MUNCH);
 		if (munching.isPlaying() && game.player.starvingTicks > 10) {
 			SoundManager.get().stop(GameSound.PACMAN_MUNCH);
-		}
-	}
-
-	@Override
-	public void onScatterPhaseStarts(ScatterPhaseStartsEvent e) {
-		SoundManager.get().stopSirens();
-		if (gameController.credit() > 0) {
-			SoundManager.get().startSiren(e.scatterPhase);
 		}
 	}
 

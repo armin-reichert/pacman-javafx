@@ -35,7 +35,6 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameStateChangeEvent;
-import de.amr.games.pacman.event.ScatterPhaseStartsEvent;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -212,8 +211,24 @@ public class PlayScene3D extends GameEventAdapter implements GameScene {
 				game.scoring().hiscore().levelNumber);
 		livesCounter3D.update(game.lives);
 		getCamera().update(player3D);
-		if (game.player.starvingTicks >= 10 && SoundManager.get().isPlaying(GameSound.PACMAN_MUNCH)) {
-			SoundManager.get().stop(GameSound.PACMAN_MUNCH);
+		updateSound();
+	}
+
+	private void updateSound() {
+		if (gameController.credit() == 0) {
+			return;
+		}
+		switch (gameController.state()) {
+		case HUNTING -> {
+			if (SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying() && game.player.starvingTicks > 10) {
+				SoundManager.get().stop(GameSound.PACMAN_MUNCH);
+			}
+			if (game.huntingTimer.scatteringPhase() >= 0 && game.huntingTimer.tick() == 0) {
+				SoundManager.get().startSiren(game.huntingTimer.scatteringPhase());
+			}
+		}
+		default -> {
+		}
 		}
 	}
 
@@ -274,14 +289,6 @@ public class PlayScene3D extends GameEventAdapter implements GameScene {
 	@Override
 	public boolean is3D() {
 		return true;
-	}
-
-	@Override
-	public void onScatterPhaseStarts(ScatterPhaseStartsEvent e) {
-		if (gameController.credit() > 0) {
-			SoundManager.get().stopSirens();
-			SoundManager.get().startSiren(0);
-		}
 	}
 
 	@Override
