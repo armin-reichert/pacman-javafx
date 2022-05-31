@@ -50,8 +50,8 @@ public class GameScore2D extends GameEntity2D {
 	@Override
 	public void render(GraphicsContext g) {
 		String pointsText = "%02d"
-				.formatted(showHighscore ? game.scoreSupport().hiscore().points : game.scoreSupport().score().points);
-		String levelText = "L" + (showHighscore ? game.scoreSupport().hiscore().levelNumber : game.level.number);
+				.formatted(showHighscore ? game.scoring().hiscore().points : game.scoring().score().points);
+		String levelText = "L" + (showHighscore ? game.scoring().hiscore().levelNumber : game.level.number);
 		if (!showHighscore && !showPoints) {
 			pointsText = "00";
 			levelText = "";
