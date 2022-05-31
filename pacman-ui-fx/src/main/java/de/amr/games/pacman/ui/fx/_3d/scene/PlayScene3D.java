@@ -224,6 +224,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene {
 				SoundManager.get().stop(GameSound.PACMAN_MUNCH);
 			}
 			if (game.huntingTimer.scatteringPhase() >= 0 && game.huntingTimer.tick() == 0) {
+				SoundManager.get().stopSirens();
 				SoundManager.get().startSiren(game.huntingTimer.scatteringPhase());
 			}
 		}
