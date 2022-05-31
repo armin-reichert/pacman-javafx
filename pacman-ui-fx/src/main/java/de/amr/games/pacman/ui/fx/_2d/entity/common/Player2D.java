@@ -69,16 +69,16 @@ public class Player2D extends GameEntity2D {
 
 	@Override
 	public void render(GraphicsContext g, Rendering2D r2D) {
-		Rectangle2D frame = null;
+		Rectangle2D sprite = null;
 		if (player.killed) {
-			frame = animDying.animate();
+			sprite = animDying.animate();
 		} else {
 			var munching = animMunching.get(player.moveDir());
-			frame = munching.frame();
+			sprite = munching.frame();
 			if (!player.velocity.equals(V2d.NULL) && !player.stuck) {
 				munching.advance();
 			}
 		}
-		r2D.renderEntity(g, player, frame);
+		r2D.renderEntity(g, player, sprite);
 	}
 }
