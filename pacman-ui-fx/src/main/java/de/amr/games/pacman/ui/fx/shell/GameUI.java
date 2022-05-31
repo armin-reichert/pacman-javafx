@@ -156,7 +156,7 @@ public class GameUI extends GameEventAdapter {
 			newGameScene.resize(sceneRoot.getHeight());
 			updateBackground(newGameScene);
 			sceneRoot.getChildren().set(0, newGameScene.getFXSubScene());
-			newGameScene.setContext();
+			newGameScene.setSceneContext(gameController.game());
 			newGameScene.init();
 			log("Current scene changed from %s to %s", currentGameScene, newGameScene);
 			currentGameScene = newGameScene;
