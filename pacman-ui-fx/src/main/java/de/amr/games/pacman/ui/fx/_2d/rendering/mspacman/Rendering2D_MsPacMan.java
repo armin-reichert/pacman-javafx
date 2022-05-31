@@ -291,6 +291,10 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 
 	// Ms. Pac-Man specific:
 
+	public TimedSeq<Integer> createBonusJumpAnimation() {
+		return TimedSeq.of(2, 0, -2).frameDuration(8).endless();
+	}
+
 	public Map<Direction, TimedSeq<Rectangle2D>> createHusbandMunchingAnimations() {
 		Map<Direction, TimedSeq<Rectangle2D>> animations = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {

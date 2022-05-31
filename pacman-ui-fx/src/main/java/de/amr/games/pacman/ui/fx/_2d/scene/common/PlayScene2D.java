@@ -37,15 +37,16 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
-import de.amr.games.pacman.model.mspacman.MovingBonus;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Bonus2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Credit2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Maze2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -103,13 +104,14 @@ public class PlayScene2D extends GameScene2D {
 		maze2D = new Maze2D(game, r2D);
 		maze2D.x = 0;
 		maze2D.y = t(3);
-
 		player2D = new Player2D(game.player, game, r2D);
-
 		for (Ghost ghost : game.ghosts) {
 			ghosts2D[ghost.id] = new Ghost2D(ghost, game, r2D);
 		}
-		bonus2D = new Bonus2D(game.bonus(), r2D, game.bonus() instanceof MovingBonus);
+		var bonusJumpAnimation = game.variant == GameVariant.MS_PACMAN
+				? Rendering2D_MsPacMan.get().createBonusJumpAnimation()
+				: null;
+		bonus2D = new Bonus2D(game.bonus(), bonusJumpAnimation);
 
 		game.player.powerTimer.addEventListener(this::handleGhostsFlashing);
 	}
