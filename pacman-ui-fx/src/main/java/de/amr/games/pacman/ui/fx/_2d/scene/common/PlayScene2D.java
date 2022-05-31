@@ -41,6 +41,7 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Bonus2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
+import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Maze2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
@@ -67,6 +68,7 @@ public class PlayScene2D extends GameScene2D {
 
 	private Maze2D maze2D;
 	private LivesCounter2D livesCounter2D;
+	private LevelCounter2D levelCounter2D;
 	private Player2D player2D;
 	private Ghost2D[] ghosts2D = new Ghost2D[4];
 	private Bonus2D bonus2D;
@@ -87,6 +89,9 @@ public class PlayScene2D extends GameScene2D {
 	public void init() {
 		createCommonParts();
 		livesCounter2D = new LivesCounter2D(game, t(2), t(34));
+		levelCounter2D = new LevelCounter2D(game);
+		levelCounter2D.rightPosition = new V2i(unscaledSize.x - t(4), unscaledSize.y - t(2));
+		levelCounter2D.visible = gameController.credit() > 0;
 		maze2D = new Maze2D(game, 0, t(3));
 		player2D = new Player2D(game.player, game).createAnimations(r2D);
 		for (Ghost ghost : game.ghosts) {
@@ -129,6 +134,35 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	protected void doUpdate() {
 		updateSound();
+//	if (gameController.credit() > 0) {
+//	r2D.renderLevelCounter(g, game.level.number, game.levelCounter, unscaledSize.x - t(4), unscaledSize.y - t(2));
+//}
+	}
+
+	@Override
+	public void doRender(GraphicsContext g) {
+		score2D.render(g, r2D);
+		highScore2D.render(g, r2D);
+		livesCounter2D.render(g, r2D);
+		credit2D.render(g, r2D);
+		maze2D.render(g, r2D);
+		if (gameController.state() == GameState.GAME_OVER || gameController.credit() == 0) {
+			g.setFont(r2D.getArcadeFont());
+			g.setFill(Color.RED);
+			g.fillText("GAME", t(9), t(21));
+			g.fillText("OVER", t(15), t(21));
+		} else if (gameController.state() == GameState.READY) {
+			g.setFont(r2D.getArcadeFont());
+			g.setFill(Color.YELLOW);
+			g.fillText("READY!", t(11), t(21));
+		}
+		bonus2D.render(g, r2D);
+		player2D.render(g, r2D);
+		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(g, r2D));
+		levelCounter2D.render(g, r2D);
+//		if (gameController.credit() > 0) {
+//			r2D.renderLevelCounter(g, game.level.number, game.levelCounter, unscaledSize.x - t(4), unscaledSize.y - t(2));
+//		}
 	}
 
 	private void updateSound() {
@@ -314,31 +348,6 @@ public class PlayScene2D extends GameScene2D {
 		// exit GHOST_DYING
 		if (e.oldGameState == GameState.GHOST_DYING) {
 			game.player.show();
-		}
-	}
-
-	@Override
-	public void doRender(GraphicsContext g) {
-		score2D.render(g, r2D);
-		highScore2D.render(g, r2D);
-		livesCounter2D.render(g, r2D);
-		credit2D.render(g, r2D);
-		maze2D.render(g, r2D);
-		if (gameController.state() == GameState.GAME_OVER || gameController.credit() == 0) {
-			g.setFont(r2D.getArcadeFont());
-			g.setFill(Color.RED);
-			g.fillText("GAME", t(9), t(21));
-			g.fillText("OVER", t(15), t(21));
-		} else if (gameController.state() == GameState.READY) {
-			g.setFont(r2D.getArcadeFont());
-			g.setFill(Color.YELLOW);
-			g.fillText("READY!", t(11), t(21));
-		}
-		bonus2D.render(g, r2D);
-		player2D.render(g, r2D);
-		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(g, r2D));
-		if (gameController.credit() > 0) {
-			r2D.renderLevelCounter(g, game.level.number, game.levelCounter, unscaledSize.x - t(4), unscaledSize.y - t(2));
 		}
 	}
 }
