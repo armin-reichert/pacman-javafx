@@ -68,26 +68,29 @@ public class Bonus2D {
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
 		switch (bonus.state()) {
-		case INACTIVE -> {
-		}
 		case EDIBLE -> {
+			g.save();
 			if (jumpAnimation != null) {
-				g.save();
 				g.translate(0, jumpAnimation.animate());
-				renderSprite(g, r2D, r2D.getSymbolSprite(bonus.symbol()), bonus.position());
-				g.restore();
-			} else {
-				renderSprite(g, r2D, r2D.getSymbolSprite(bonus.symbol()), bonus.position());
 			}
+			drawBonusSymbol(g, r2D);
+			g.restore();
 		}
-		case EATEN -> {
-			renderSprite(g, r2D, r2D.getBonusValueSprite(bonus.value()), bonus.position());
+		case EATEN -> drawBonusValue(g, r2D);
+		default -> {
 		}
 		}
 	}
 
+	private void drawBonusSymbol(GraphicsContext g, Rendering2D r2D) {
+		renderSprite(g, r2D, r2D.getSymbolSprite(bonus.symbol()), bonus.position());
+	}
+
+	private void drawBonusValue(GraphicsContext g, Rendering2D r2D) {
+		renderSprite(g, r2D, r2D.getBonusValueSprite(bonus.value()), bonus.position());
+	}
+
 	private void renderSprite(GraphicsContext g, Rendering2D r2D, Rectangle2D sprite, V2d position) {
-		double sw = sprite.getWidth(), sh = sprite.getHeight();
-		r2D.renderSprite(g, sprite, bonus.position().x + HTS - sw / 2, bonus.position().y + HTS - sh / 2);
+		r2D.renderSprite(g, sprite, position.x + HTS - sprite.getWidth() / 2, position.y + HTS - sprite.getHeight() / 2);
 	}
 }
