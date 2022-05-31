@@ -234,7 +234,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene {
 	}
 
 	public void onSwitchFrom2DScene() {
-		if (game.player.powerTimer.isRunning()) {
+		if (game.player.hasPower()) {
 			Stream.of(ghosts3D) //
 					.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
 					.filter(ghost3D -> !ghost3D.isLooksFrightened()) //
@@ -245,11 +245,11 @@ public class PlayScene3D extends GameEventAdapter implements GameScene {
 		if (gameController.state() == GameState.HUNTING || gameController.state() == GameState.GHOST_DYING) {
 			maze3D.energizerAnimations().forEach(Animation::play);
 		}
-		if (game.player.powerTimer.isRunning() && !SoundManager.get().getClip(GameSound.PACMAN_POWER).isPlaying()) {
+		if (game.player.hasPower() && !SoundManager.get().getClip(GameSound.PACMAN_POWER).isPlaying()) {
 			SoundManager.get().loop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
 		}
 		if (gameController.credit() > 0 && gameController.state() == GameState.HUNTING
-				&& !SoundManager.get().isAnySirenPlaying() && !game.player.powerTimer.isRunning()) {
+				&& !SoundManager.get().isAnySirenPlaying() && !game.player.hasPower()) {
 			SoundManager.get().startSiren(0);
 		}
 	}
