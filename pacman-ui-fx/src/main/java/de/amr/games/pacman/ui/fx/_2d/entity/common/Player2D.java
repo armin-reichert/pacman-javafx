@@ -26,11 +26,11 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -42,8 +42,8 @@ import javafx.scene.canvas.GraphicsContext;
 public class Player2D extends GameEntity2D {
 
 	public final Pac player;
-	public Map<Direction, TimedSeq<Rectangle2D>> animMunching;
-	public TimedSeq<Rectangle2D> animDying;
+	public Map<Direction, SpriteAnimation> animMunching;
+	public SpriteAnimation animDying;
 
 	public Player2D(Pac player, GameModel game) {
 		super(game);
@@ -57,14 +57,14 @@ public class Player2D extends GameEntity2D {
 	}
 
 	public void reset() {
-		for (Direction dir : Direction.values()) {
-			animMunching.get(dir).reset();
+		if (animMunching != null) {
+			for (Direction dir : Direction.values()) {
+				animMunching.get(dir).reset();
+			}
 		}
-		animDying.reset();
-	}
-
-	public void playDyingAnimation() {
-		animDying.restart();
+		if (animDying != null) {
+			animDying.reset();
+		}
 	}
 
 	@Override

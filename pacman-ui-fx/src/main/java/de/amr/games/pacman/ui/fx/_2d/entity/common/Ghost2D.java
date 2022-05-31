@@ -31,11 +31,11 @@ import static de.amr.games.pacman.model.common.actors.GhostState.LOCKED;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -47,10 +47,10 @@ import javafx.scene.canvas.GraphicsContext;
 public class Ghost2D extends GameEntity2D {
 
 	public final Ghost ghost;
-	public Map<Direction, TimedSeq<Rectangle2D>> animKicking;
-	public Map<Direction, TimedSeq<Rectangle2D>> animReturningHome;
-	public TimedSeq<Rectangle2D> animFlashing;
-	public TimedSeq<Rectangle2D> animFrightened;
+	public Map<Direction, SpriteAnimation> animKicking;
+	public Map<Direction, SpriteAnimation> animReturningHome;
+	public SpriteAnimation animFlashing;
+	public SpriteAnimation animFrightened;
 
 	public Ghost2D(Ghost ghost, GameModel game) {
 		super(game);

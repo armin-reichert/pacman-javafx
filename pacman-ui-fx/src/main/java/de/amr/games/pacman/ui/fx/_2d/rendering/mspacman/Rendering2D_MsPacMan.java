@@ -35,6 +35,7 @@ import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -235,51 +236,54 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	 */
 
 	@Override
-	public Map<Direction, TimedSeq<Rectangle2D>> createPlayerMunchingAnimations() {
-		Map<Direction, TimedSeq<Rectangle2D>> animations = new EnumMap<>(Direction.class);
+	public Map<Direction, SpriteAnimation> createPlayerMunchingAnimations() {
+		Map<Direction, SpriteAnimation> animations = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
 			Rectangle2D wide_open = rhs(0, d), open = rhs(1, d), closed = rhs(2, d);
-			var munching = TimedSeq.of(open, wide_open, open, closed).frameDuration(2).endless();
+			SpriteAnimation munching = (SpriteAnimation) SpriteAnimation.of(open, wide_open, open, closed).frameDuration(2)
+					.endless();
 			animations.put(dir, munching);
 		}
 		return animations;
 	}
 
 	@Override
-	public TimedSeq<Rectangle2D> createPlayerDyingAnimation() {
+	public SpriteAnimation createPlayerDyingAnimation() {
 		Rectangle2D right = rhs(1, 0), left = rhs(1, 1), up = rhs(1, 2), down = rhs(1, 3);
 		// TODO not yet 100% accurate
-		return TimedSeq.of(down, left, up, right, down, left, up, right, down, left, up).frameDuration(8);
+		return (SpriteAnimation) SpriteAnimation.of(down, left, up, right, down, left, up, right, down, left, up)
+				.frameDuration(8);
 	}
 
 	@Override
-	public Map<Direction, TimedSeq<Rectangle2D>> createGhostKickingAnimations(int ghostID) {
-		EnumMap<Direction, TimedSeq<Rectangle2D>> animations = new EnumMap<>(Direction.class);
+	public Map<Direction, SpriteAnimation> createGhostKickingAnimations(int ghostID) {
+		EnumMap<Direction, SpriteAnimation> animations = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
-			var kicking = TimedSeq.of(rhs(2 * d, 4 + ghostID), rhs(2 * d + 1, 4 + ghostID)).frameDuration(8).endless();
+			SpriteAnimation kicking = (SpriteAnimation) SpriteAnimation
+					.of(rhs(2 * d, 4 + ghostID), rhs(2 * d + 1, 4 + ghostID)).frameDuration(8).endless();
 			animations.put(dir, kicking);
 		}
 		return animations;
 	}
 
 	@Override
-	public TimedSeq<Rectangle2D> createGhostFrightenedAnimation() {
-		return TimedSeq.of(rhs(8, 4), rhs(9, 4)).frameDuration(8).endless();
+	public SpriteAnimation createGhostFrightenedAnimation() {
+		return (SpriteAnimation) SpriteAnimation.of(rhs(8, 4), rhs(9, 4)).frameDuration(8).endless();
 	}
 
 	@Override
-	public TimedSeq<Rectangle2D> createGhostFlashingAnimation() {
-		return TimedSeq.of(rhs(8, 4), rhs(9, 4), rhs(10, 4), rhs(11, 4)).frameDuration(4);
+	public SpriteAnimation createGhostFlashingAnimation() {
+		return (SpriteAnimation) SpriteAnimation.of(rhs(8, 4), rhs(9, 4), rhs(10, 4), rhs(11, 4)).frameDuration(4);
 	}
 
 	@Override
-	public Map<Direction, TimedSeq<Rectangle2D>> createGhostReturningHomeAnimations() {
-		Map<Direction, TimedSeq<Rectangle2D>> animations = new EnumMap<>(Direction.class);
+	public Map<Direction, SpriteAnimation> createGhostReturningHomeAnimations() {
+		Map<Direction, SpriteAnimation> animations = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
-			animations.put(dir, TimedSeq.of(rhs(8 + d, 5)));
+			animations.put(dir, SpriteAnimation.of(rhs(8 + d, 5)));
 		}
 		return animations;
 	}
@@ -295,17 +299,18 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 		return TimedSeq.of(2, 0, -2).frameDuration(8).endless();
 	}
 
-	public Map<Direction, TimedSeq<Rectangle2D>> createHusbandMunchingAnimations() {
-		Map<Direction, TimedSeq<Rectangle2D>> animations = new EnumMap<>(Direction.class);
+	public Map<Direction, SpriteAnimation> createHusbandMunchingAnimations() {
+		Map<Direction, SpriteAnimation> animations = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
-			animations.put(dir, TimedSeq.of(rhs(0, 9 + d), rhs(1, 9 + d), rhs(2, 9)).frameDuration(2).endless());
+			animations.put(dir,
+					(SpriteAnimation) SpriteAnimation.of(rhs(0, 9 + d), rhs(1, 9 + d), rhs(2, 9)).frameDuration(2).endless());
 		}
 		return animations;
 	}
 
-	public TimedSeq<Rectangle2D> createFlapAnimation() {
-		return TimedSeq.of( //
+	public SpriteAnimation createFlapAnimation() {
+		return (SpriteAnimation) SpriteAnimation.of( //
 				new Rectangle2D(456, 208, 32, 32), //
 				new Rectangle2D(488, 208, 32, 32), //
 				new Rectangle2D(520, 208, 32, 32), //
@@ -314,8 +319,8 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 		).repetitions(1).frameDuration(4);
 	}
 
-	public TimedSeq<Rectangle2D> createStorkFlyingAnimation() {
-		return TimedSeq.of( //
+	public SpriteAnimation createStorkFlyingAnimation() {
+		return (SpriteAnimation) SpriteAnimation.of( //
 				new Rectangle2D(489, 176, 32, 16), //
 				new Rectangle2D(521, 176, 32, 16) //
 		).endless().frameDuration(8);

@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.model.common.actors.BonusState;
 import de.amr.games.pacman.model.common.actors.Entity;
 import javafx.geometry.Rectangle2D;
@@ -224,17 +223,17 @@ public abstract class Rendering2D {
 
 	// Animations
 
-	public abstract Map<Direction, TimedSeq<Rectangle2D>> createPlayerMunchingAnimations();
+	public abstract Map<Direction, SpriteAnimation> createPlayerMunchingAnimations();
 
-	public abstract TimedSeq<Rectangle2D> createPlayerDyingAnimation();
+	public abstract SpriteAnimation createPlayerDyingAnimation();
 
-	public abstract Map<Direction, TimedSeq<Rectangle2D>> createGhostKickingAnimations(int ghostID);
+	public abstract Map<Direction, SpriteAnimation> createGhostKickingAnimations(int ghostID);
 
-	public abstract TimedSeq<Rectangle2D> createGhostFrightenedAnimation();
+	public abstract SpriteAnimation createGhostFrightenedAnimation();
 
-	public abstract TimedSeq<Rectangle2D> createGhostFlashingAnimation();
+	public abstract SpriteAnimation createGhostFlashingAnimation();
 
-	public abstract Map<Direction, TimedSeq<Rectangle2D>> createGhostReturningHomeAnimations();
+	public abstract Map<Direction, SpriteAnimation> createGhostReturningHomeAnimations();
 
 	// Sprites
 
