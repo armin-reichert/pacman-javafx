@@ -335,7 +335,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene {
 	}
 
 	@Override
-	public void onBonusGetsActivate(GameEvent e) {
+	public void onBonusGetsActive(GameEvent e) {
 		bonus3D.showSymbol(game.bonus());
 	}
 

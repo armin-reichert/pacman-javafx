@@ -204,7 +204,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	public void onBonusGetsActivate(GameEvent e) {
+	public void onBonusGetsActive(GameEvent e) {
 		bonus2D.startJumping();
 	}
 
