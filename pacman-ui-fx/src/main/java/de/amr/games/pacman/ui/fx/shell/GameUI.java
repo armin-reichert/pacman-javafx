@@ -340,7 +340,7 @@ public class GameUI extends GameEventAdapter {
 
 	public void toggleImmunity() {
 		gameController.togglePlayerImmune();
-		String message = Env.message(gameController.isPlayerImmune() ? "player_immunity_on" : "player_immunity_off");
+		String message = Env.message(gameController.game().playerImmune ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(1, message);
 	}
 
