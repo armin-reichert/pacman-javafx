@@ -25,8 +25,6 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
 
-import java.util.Objects;
-
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.actors.Bonus;
@@ -46,12 +44,10 @@ import javafx.scene.canvas.GraphicsContext;
 public class Bonus2D {
 
 	private final Bonus bonus;
-	private final Rendering2D r2D;
 	private final TimedSeq<Integer> animation;
 
 	public Bonus2D(Bonus bonus, Rendering2D r2D, boolean moving) {
 		this.bonus = bonus;
-		this.r2D = Objects.requireNonNull(r2D);
 		animation = moving ? TimedSeq.of(2, 0, -2).frameDuration(8).endless() : null;
 	}
 
@@ -67,7 +63,7 @@ public class Bonus2D {
 		}
 	}
 
-	public void render(GraphicsContext g) {
+	public void render(GraphicsContext g, Rendering2D r2D) {
 		switch (bonus.state()) {
 		case INACTIVE -> {
 		}
@@ -75,19 +71,19 @@ public class Bonus2D {
 			if (animation != null) {
 				g.save();
 				g.translate(0, animation.animate());
-				renderSprite(g, r2D.getSymbolSprite(bonus.symbol()), bonus.position());
+				renderSprite(g, r2D, r2D.getSymbolSprite(bonus.symbol()), bonus.position());
 				g.restore();
 			} else {
-				renderSprite(g, r2D.getSymbolSprite(bonus.symbol()), bonus.position());
+				renderSprite(g, r2D, r2D.getSymbolSprite(bonus.symbol()), bonus.position());
 			}
 		}
 		case EATEN -> {
-			renderSprite(g, r2D.getBonusValueSprite(bonus.value()), bonus.position());
+			renderSprite(g, r2D, r2D.getBonusValueSprite(bonus.value()), bonus.position());
 		}
 		}
 	}
 
-	private void renderSprite(GraphicsContext g, Rectangle2D sprite, V2d position) {
+	private void renderSprite(GraphicsContext g, Rendering2D r2D, Rectangle2D sprite, V2d position) {
 		double sw = sprite.getWidth(), sh = sprite.getHeight();
 		r2D.renderSprite(g, sprite, bonus.position().x + HTS - sw / 2, bonus.position().y + HTS - sh / 2);
 	}

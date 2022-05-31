@@ -338,7 +338,7 @@ public class PlayScene2D extends GameScene2D {
 			g.setFill(Color.YELLOW);
 			g.fillText("READY!", t(11), t(21));
 		}
-		bonus2D.render(g);
+		bonus2D.render(g, r2D);
 		player2D.render(g);
 		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(g));
 		if (gameController.credit() > 0) {
