@@ -104,7 +104,7 @@ public class PlayScene2D extends GameScene2D {
 		maze2D = new Maze2D(game);
 		maze2D.x = 0;
 		maze2D.y = t(3);
-		player2D = new Player2D(game.player, game, r2D);
+		player2D = new Player2D(game.player, game).createAnimations(r2D);
 		for (Ghost ghost : game.ghosts) {
 			ghosts2D[ghost.id] = new Ghost2D(ghost, game).createAnimations(r2D);
 		}

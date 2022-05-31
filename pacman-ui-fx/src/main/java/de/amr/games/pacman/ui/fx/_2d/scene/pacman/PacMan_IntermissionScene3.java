@@ -67,7 +67,7 @@ public class PacMan_IntermissionScene3 extends GameScene2D {
 		levelCounter2D = new LevelCounter2D(game);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
 
-		pacMan2D = new Player2D(context.pac, game, r2D);
+		pacMan2D = new Player2D(context.pac, game).createAnimations(r2D);
 		blinkyPatched2D = new BlinkyPatched2D(context.blinky, game);
 		blinkyNaked2D = new BlinkyNaked2D(context.blinky, game);
 		pacMan2D.animMunching.values().forEach(TimedSeq::restart);

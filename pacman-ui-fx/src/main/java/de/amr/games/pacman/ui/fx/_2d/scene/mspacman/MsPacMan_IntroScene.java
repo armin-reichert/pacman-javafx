@@ -73,7 +73,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		createScores();
 		score2D.showPoints = false;
 		credit2D = new Credit2D(gameController::credit);
-		msPacMan2D = new Player2D(context.msPacMan, game, r2D);
+		msPacMan2D = new Player2D(context.msPacMan, game).createAnimations(r2D);
 		msPacMan2D.animMunching.values().forEach(TimedSeq::restart);
 		ghosts2D = Stream.of(context.ghosts).map(ghost -> new Ghost2D(ghost, game).createAnimations(r2D))
 				.toArray(Ghost2D[]::new);

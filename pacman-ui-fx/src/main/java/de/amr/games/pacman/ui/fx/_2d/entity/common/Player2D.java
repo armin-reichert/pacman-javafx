@@ -43,14 +43,17 @@ public class Player2D extends GameEntity2D {
 
 	public final Pac player;
 	public Map<Direction, TimedSeq<Rectangle2D>> animMunching;
-	private final TimedSeq<Rectangle2D> animDying;
+	public TimedSeq<Rectangle2D> animDying;
 
-	public Player2D(Pac player, GameModel game, Rendering2D r2D) {
+	public Player2D(Pac player, GameModel game) {
 		super(game);
 		this.player = player;
-		// TODO
+	}
+
+	public Player2D createAnimations(Rendering2D r2D) {
 		animMunching = r2D.createPlayerMunchingAnimations();
 		animDying = r2D.createPlayerDyingAnimation();
+		return this;
 	}
 
 	public void reset() {

@@ -71,9 +71,9 @@ public class MsPacMan_IntermissionScene2 extends GameScene2D {
 		levelCounter2D = new LevelCounter2D(game);
 		levelCounter2D.rightPosition = unscaledSize.minus(t(3), t(2));
 		flap2D = new Flap2D(context.flap, game);
-		msPacMan2D = new Player2D(context.msPacMan, game, r2D);
+		msPacMan2D = new Player2D(context.msPacMan, game).createAnimations(r2D);
 		msPacMan2D.animMunching.values().forEach(TimedSeq::restart);
-		pacMan2D = new Player2D(context.pacMan, game, r2D);
+		pacMan2D = new Player2D(context.pacMan, game).createAnimations(r2D);
 		pacMan2D.animMunching = ((Rendering2D_MsPacMan) r2D).createHusbandMunchingAnimations();
 		pacMan2D.animMunching.values().forEach(TimedSeq::restart);
 	}
