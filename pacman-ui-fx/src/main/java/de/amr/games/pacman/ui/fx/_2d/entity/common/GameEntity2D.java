@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -33,14 +34,18 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public abstract class GameEntity2D {
 
-	public final GameModel game;
+	public GameModel game; // may be null
 	public double x;
 	public double y;
 	public boolean visible = true;
 
-	public GameEntity2D(GameModel game) {
+	protected GameEntity2D() {
+		this(null);
+	}
+
+	protected GameEntity2D(GameModel game) {
 		this.game = game;
 	}
 
-	public abstract void render(GraphicsContext g);
+	public abstract void render(GraphicsContext g, Rendering2D r2D);
 }

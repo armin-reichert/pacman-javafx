@@ -39,15 +39,13 @@ public class LevelCounter2D extends GameEntity2D {
 
 	public V2i rightPosition = V2i.NULL;
 	public int maxLevels = 7;
-	private final Rendering2D r2D;
 
-	public LevelCounter2D(GameModel game, Rendering2D r2d) {
+	public LevelCounter2D(GameModel game) {
 		super(game);
-		this.r2D = r2d;
 	}
 
 	@Override
-	public void render(GraphicsContext g) {
+	public void render(GraphicsContext g, Rendering2D r2D) {
 		if (!visible) {
 			return;
 		}

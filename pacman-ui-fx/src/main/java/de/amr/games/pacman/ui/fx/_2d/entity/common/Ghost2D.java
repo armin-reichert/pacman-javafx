@@ -47,33 +47,37 @@ import javafx.scene.canvas.GraphicsContext;
 public class Ghost2D extends GameEntity2D {
 
 	public final Ghost ghost;
-	private final Rendering2D r2D;
-	public final Map<Direction, TimedSeq<Rectangle2D>> animKicking;
-	public final Map<Direction, TimedSeq<Rectangle2D>> animReturningHome;
-	public final TimedSeq<Rectangle2D> animFlashing;
-	public final TimedSeq<Rectangle2D> animFrightened;
+	public Map<Direction, TimedSeq<Rectangle2D>> animKicking;
+	public Map<Direction, TimedSeq<Rectangle2D>> animReturningHome;
+	public TimedSeq<Rectangle2D> animFlashing;
+	public TimedSeq<Rectangle2D> animFrightened;
 
-	public Ghost2D(Ghost ghost, GameModel game, Rendering2D r2D) {
+	public Ghost2D(Ghost ghost, GameModel game) {
 		super(game);
 		this.ghost = ghost;
-		this.r2D = r2D;
-		animKicking = r2D.createGhostKickingAnimations(ghost.id);
-		animReturningHome = r2D.createGhostReturningHomeAnimations();
-		animFrightened = r2D.createGhostFrightenedAnimation();
-		animFlashing = r2D.createGhostFlashingAnimation();
 	}
 
 	public void reset() {
-		for (Direction dir : Direction.values()) {
-			animKicking.get(dir).reset();
-			animReturningHome.get(dir).reset();
+		if (animKicking != null) {
+			for (Direction dir : Direction.values()) {
+				animKicking.get(dir).reset();
+			}
 		}
-		animFlashing.reset();
-		animFrightened.reset();
+		if (animReturningHome != null) {
+			for (Direction dir : Direction.values()) {
+				animKicking.get(dir).reset();
+			}
+		}
+		if (animFlashing != null) {
+			animFlashing.reset();
+		}
+		if (animFrightened != null) {
+			animFrightened.reset();
+		}
 	}
 
 	@Override
-	public void render(GraphicsContext g) {
+	public void render(GraphicsContext g, Rendering2D r2D) {
 		Rectangle2D frame = null;
 		if (ghost.bounty > 0) {
 			frame = r2D.getBountyNumberSprite(ghost.bounty);

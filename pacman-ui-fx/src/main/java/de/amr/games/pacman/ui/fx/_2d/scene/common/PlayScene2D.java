@@ -88,7 +88,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void init() {
 		createScores();
-		credit2D = new Credit2D(r2D, gameController::credit);
+		credit2D = new Credit2D(gameController::credit);
 		livesCounter2D = new LivesCounter2D(game, r2D);
 		livesCounter2D.x = t(2);
 		livesCounter2D.y = t(34);
@@ -106,7 +106,11 @@ public class PlayScene2D extends GameScene2D {
 		maze2D.y = t(3);
 		player2D = new Player2D(game.player, game, r2D);
 		for (Ghost ghost : game.ghosts) {
-			ghosts2D[ghost.id] = new Ghost2D(ghost, game, r2D);
+			ghosts2D[ghost.id] = new Ghost2D(ghost, game);
+			ghosts2D[ghost.id].animKicking = r2D.createGhostKickingAnimations(ghost.id);
+			ghosts2D[ghost.id].animReturningHome = r2D.createGhostReturningHomeAnimations();
+			ghosts2D[ghost.id].animFrightened = r2D.createGhostFrightenedAnimation();
+			ghosts2D[ghost.id].animFlashing = r2D.createGhostFlashingAnimation();
 		}
 		bonus2D = new Bonus2D(game.bonus());
 		if (game.variant == GameVariant.MS_PACMAN) {

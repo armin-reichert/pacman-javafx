@@ -38,19 +38,16 @@ import javafx.scene.paint.Color;
  */
 public class Credit2D extends GameEntity2D {
 
-	private final Rendering2D r2D;
 	private final IntSupplier fnCredit;
 
-	public Credit2D(Rendering2D r2D, IntSupplier fnCredit) {
-		super(null);
-		this.r2D = r2D;
+	public Credit2D(IntSupplier fnCredit) {
 		this.fnCredit = fnCredit;
 		x = t(2);
 		y = t(ArcadeWorld.TILES_Y) - 2;
 	}
 
 	@Override
-	public void render(GraphicsContext g) {
+	public void render(GraphicsContext g, Rendering2D r2D) {
 		if (visible) {
 			g.setFont(r2D.getArcadeFont());
 			g.setFill(Color.WHITE);

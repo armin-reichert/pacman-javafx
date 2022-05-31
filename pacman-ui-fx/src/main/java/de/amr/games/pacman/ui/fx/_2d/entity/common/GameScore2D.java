@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -48,7 +49,7 @@ public class GameScore2D extends GameEntity2D {
 	}
 
 	@Override
-	public void render(GraphicsContext g) {
+	public void render(GraphicsContext g, Rendering2D r2D) {
 		String pointsText = "%02d"
 				.formatted(showHighscore ? game.scoring().hiscore().points : game.scoring().score().points);
 		String levelText = "L" + (showHighscore ? game.scoring().hiscore().levelNumber : game.level.number);
