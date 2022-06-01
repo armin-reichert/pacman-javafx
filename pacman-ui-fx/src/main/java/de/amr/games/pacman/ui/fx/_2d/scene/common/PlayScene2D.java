@@ -100,17 +100,10 @@ public class PlayScene2D extends GameScene2D {
 		if (game.variant == GameVariant.MS_PACMAN) {
 			bonus2D.setJumpAnimation(Rendering2D_MsPacMan.get().createBonusJumpAnimation());
 		}
-
-		if (gameController.credit() > 0) {
-			score2D.showPoints = true;
-			credit2D.visible = false;
-			livesCounter2D.visible = true;
-		} else {
-			score2D.showPoints = false;
-			credit2D.visible = true;
-			livesCounter2D.visible = false;
-		}
-
+		boolean hasCredit = gameController.credit() > 0;
+		score2D.showPoints = hasCredit;
+		credit2D.visible = !hasCredit;
+		livesCounter2D.visible = hasCredit;
 		game.player.powerTimer.addEventListener(this::handleGhostsFlashing);
 	}
 
