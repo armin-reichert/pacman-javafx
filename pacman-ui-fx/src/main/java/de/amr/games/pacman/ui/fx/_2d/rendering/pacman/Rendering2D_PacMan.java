@@ -33,6 +33,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -44,7 +45,7 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class Rendering2D_PacMan extends Rendering2D {
+public class Rendering2D_PacMan implements Rendering2D {
 
 	private static final Color MAZE_TOP_COLOR = Color.AZURE;
 	private static final Color MAZE_SIDE_COLOR = Color.rgb(33, 33, 255);
@@ -54,11 +55,13 @@ public class Rendering2D_PacMan extends Rendering2D {
 
 	public static Rendering2D_PacMan get() {
 		if (it == null) {
-			it = new Rendering2D_PacMan();
+			it = new Rendering2D_PacMan("/pacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP,
+					Direction.DOWN);
 		}
 		return it;
 	}
 
+	private final Spritesheet ss;
 	private final Image mazeFullImage;
 	private final Image mazeEmptyImage;
 	private final Image mazeFlashingImage;
@@ -66,12 +69,13 @@ public class Rendering2D_PacMan extends Rendering2D {
 	private final Map<Integer, Rectangle2D> symbolSprites;
 	private final Map<Integer, Rectangle2D> bountyNumberSprites;
 
-	private Rendering2D_PacMan() {
-		super("/pacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
+	private Rendering2D_PacMan(String path, int rasterSize, Direction... dirOrder) {
+		ss = new Spritesheet(path, rasterSize, dirOrder);
 
 		mazeFullImage = U.image("/pacman/graphics/maze_full.png");
 		mazeEmptyImage = U.image("/pacman/graphics/maze_empty.png");
-		mazeFlashingImage = colorsExchanged(mazeEmptyImage, Collections.singletonMap(getMazeSideColor(1), Color.WHITE));
+		mazeFlashingImage = Rendering2D.colorsExchanged(mazeEmptyImage,
+				Collections.singletonMap(getMazeSideColor(1), Color.WHITE));
 
 		//@formatter:off
 		symbolSprites = Map.of(
@@ -103,6 +107,11 @@ public class Rendering2D_PacMan extends Rendering2D {
 			1600, ss.r(3, 8, 1, 1)
 		);
 		//@formatter:on
+	}
+
+	@Override
+	public Spritesheet spritesheet() {
+		return ss;
 	}
 
 	@Override
@@ -175,8 +184,7 @@ public class Rendering2D_PacMan extends Rendering2D {
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
 			Rectangle2D wide_open = ss.r(0, d), open = ss.r(1, d), closed = ss.r(2, 0);
-			SpriteAnimation animation = (SpriteAnimation) SpriteAnimation.of(closed, open, wide_open, open).frameDuration(2)
-					.endless();
+			SpriteAnimation animation = SpriteAnimation.of(closed, open, wide_open, open).frameDuration(2).endless();
 			animations.put(dir, animation);
 		}
 		return animations;
@@ -184,8 +192,8 @@ public class Rendering2D_PacMan extends Rendering2D {
 
 	@Override
 	public SpriteAnimation createPlayerDyingAnimation() {
-		return (SpriteAnimation) SpriteAnimation.of(ss.r(3, 0), ss.r(4, 0), ss.r(5, 0), ss.r(6, 0), ss.r(7, 0), ss.r(8, 0),
-				ss.r(9, 0), ss.r(10, 0), ss.r(11, 0), ss.r(12, 0), ss.r(13, 0)).frameDuration(8);
+		return SpriteAnimation.of(ss.r(3, 0), ss.r(4, 0), ss.r(5, 0), ss.r(6, 0), ss.r(7, 0), ss.r(8, 0), ss.r(9, 0),
+				ss.r(10, 0), ss.r(11, 0), ss.r(12, 0), ss.r(13, 0)).frameDuration(8);
 	}
 
 	@Override
@@ -193,8 +201,8 @@ public class Rendering2D_PacMan extends Rendering2D {
 		EnumMap<Direction, SpriteAnimation> animations = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
-			SpriteAnimation animation = (SpriteAnimation) SpriteAnimation
-					.of(ss.r(2 * d, 4 + ghostID), ss.r(2 * d + 1, 4 + ghostID)).frameDuration(8).endless();
+			SpriteAnimation animation = SpriteAnimation.of(ss.r(2 * d, 4 + ghostID), ss.r(2 * d + 1, 4 + ghostID))
+					.frameDuration(8).endless();
 			animations.put(dir, animation);
 		}
 		return animations;
@@ -202,12 +210,12 @@ public class Rendering2D_PacMan extends Rendering2D {
 
 	@Override
 	public SpriteAnimation createGhostFrightenedAnimation() {
-		return (SpriteAnimation) SpriteAnimation.of(ss.r(8, 4), ss.r(9, 4)).frameDuration(8).endless();
+		return SpriteAnimation.of(ss.r(8, 4), ss.r(9, 4)).frameDuration(8).endless();
 	}
 
 	@Override
 	public SpriteAnimation createGhostFlashingAnimation() {
-		return (SpriteAnimation) SpriteAnimation.of(ss.r(8, 4), ss.r(9, 4), ss.r(10, 4), ss.r(11, 4)).frameDuration(6);
+		return SpriteAnimation.of(ss.r(8, 4), ss.r(9, 4), ss.r(10, 4), ss.r(11, 4)).frameDuration(6);
 	}
 
 	@Override
@@ -227,8 +235,7 @@ public class Rendering2D_PacMan extends Rendering2D {
 	}
 
 	public SpriteAnimation createBigPacManMunchingAnimation() {
-		return (SpriteAnimation) SpriteAnimation.of(ss.r(2, 1, 2, 2), ss.r(4, 1, 2, 2), ss.r(6, 1, 2, 2)).frameDuration(4)
-				.endless();
+		return SpriteAnimation.of(ss.r(2, 1, 2, 2), ss.r(4, 1, 2, 2), ss.r(6, 1, 2, 2)).frameDuration(4).endless();
 	}
 
 	public SpriteAnimation createBlinkyStretchedAnimation() {
@@ -240,10 +247,10 @@ public class Rendering2D_PacMan extends Rendering2D {
 	}
 
 	public SpriteAnimation createBlinkyPatchedAnimation() {
-		return (SpriteAnimation) SpriteAnimation.of(ss.r(10, 7), ss.r(11, 7)).frameDuration(4).endless();
+		return SpriteAnimation.of(ss.r(10, 7), ss.r(11, 7)).frameDuration(4).endless();
 	}
 
 	public SpriteAnimation createBlinkyNakedAnimation() {
-		return (SpriteAnimation) SpriteAnimation.of(ss.r(8, 8, 2, 1), ss.r(10, 8, 2, 1)).frameDuration(4).endless();
+		return SpriteAnimation.of(ss.r(8, 8, 2, 1), ss.r(10, 8, 2, 1)).frameDuration(4).endless();
 	}
 }

@@ -36,6 +36,7 @@ import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -48,7 +49,7 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public class Rendering2D_MsPacMan extends Rendering2D {
+public class Rendering2D_MsPacMan implements Rendering2D {
 
 	public static int mazeNumber(int levelNumber) {
 		return switch (levelNumber) {
@@ -95,11 +96,13 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 
 	public static Rendering2D_MsPacMan get() {
 		if (it == null) {
-			it = new Rendering2D_MsPacMan();
+			it = new Rendering2D_MsPacMan("/mspacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP,
+					Direction.DOWN);
 		}
 		return it;
 	}
 
+	private final Spritesheet ss;
 	private final Image midwayLogo;
 	private final List<Rectangle2D> mazeFullSprites;
 	private final List<Rectangle2D> mazeEmptySprites;
@@ -117,8 +120,8 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 		return ss.r(456, 0, col, row, 1, 1);
 	}
 
-	private Rendering2D_MsPacMan() {
-		super("/mspacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
+	private Rendering2D_MsPacMan(String path, int rasterSize, Direction... dirOrder) {
+		ss = new Spritesheet(path, rasterSize, dirOrder);
 
 		midwayLogo = U.image("/mspacman/graphics/midway.png");
 
@@ -158,7 +161,7 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 		for (int mazeIndex = 0; mazeIndex < numMazes; ++mazeIndex) {
 			Rectangle2D mazeFullRegion = new Rectangle2D(0, 248 * mazeIndex, 226, 248);
 			Rectangle2D mazeEmptyRegion = new Rectangle2D(226, 248 * mazeIndex, 226, 248);
-			Image mazeFlashImage = colorsExchanged(ss.extractRegion(mazeEmptyRegion), Map.of( //
+			Image mazeFlashImage = Rendering2D.colorsExchanged(ss.extractRegion(mazeEmptyRegion), Map.of( //
 					getMazeSideColor(mazeIndex + 1), Color.WHITE, //
 					getMazeTopColor(mazeIndex + 1), Color.BLACK) //
 			);
@@ -166,6 +169,11 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 			mazeEmptySprites.add(mazeEmptyRegion);
 			mazeFlashImages.add(mazeFlashImage);
 		}
+	}
+
+	@Override
+	public Spritesheet spritesheet() {
+		return ss;
 	}
 
 	@Override
@@ -241,8 +249,7 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
 			Rectangle2D wide_open = rhs(0, d), open = rhs(1, d), closed = rhs(2, d);
-			SpriteAnimation munching = (SpriteAnimation) SpriteAnimation.of(open, wide_open, open, closed).frameDuration(2)
-					.endless();
+			SpriteAnimation munching = SpriteAnimation.of(open, wide_open, open, closed).frameDuration(2).endless();
 			animations.put(dir, munching);
 		}
 		return animations;
@@ -252,8 +259,7 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	public SpriteAnimation createPlayerDyingAnimation() {
 		Rectangle2D right = rhs(1, 0), left = rhs(1, 1), up = rhs(1, 2), down = rhs(1, 3);
 		// TODO not yet 100% accurate
-		return (SpriteAnimation) SpriteAnimation.of(down, left, up, right, down, left, up, right, down, left, up)
-				.frameDuration(8);
+		return SpriteAnimation.of(down, left, up, right, down, left, up, right, down, left, up).frameDuration(8);
 	}
 
 	@Override
@@ -261,8 +267,8 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 		EnumMap<Direction, SpriteAnimation> animations = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
-			SpriteAnimation kicking = (SpriteAnimation) SpriteAnimation
-					.of(rhs(2 * d, 4 + ghostID), rhs(2 * d + 1, 4 + ghostID)).frameDuration(8).endless();
+			SpriteAnimation kicking = SpriteAnimation.of(rhs(2 * d, 4 + ghostID), rhs(2 * d + 1, 4 + ghostID))
+					.frameDuration(8).endless();
 			animations.put(dir, kicking);
 		}
 		return animations;
@@ -270,12 +276,12 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 
 	@Override
 	public SpriteAnimation createGhostFrightenedAnimation() {
-		return (SpriteAnimation) SpriteAnimation.of(rhs(8, 4), rhs(9, 4)).frameDuration(8).endless();
+		return SpriteAnimation.of(rhs(8, 4), rhs(9, 4)).frameDuration(8).endless();
 	}
 
 	@Override
 	public SpriteAnimation createGhostFlashingAnimation() {
-		return (SpriteAnimation) SpriteAnimation.of(rhs(8, 4), rhs(9, 4), rhs(10, 4), rhs(11, 4)).frameDuration(4);
+		return SpriteAnimation.of(rhs(8, 4), rhs(9, 4), rhs(10, 4), rhs(11, 4)).frameDuration(4);
 	}
 
 	@Override
@@ -303,14 +309,13 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 		Map<Direction, SpriteAnimation> animations = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
-			animations.put(dir,
-					(SpriteAnimation) SpriteAnimation.of(rhs(0, 9 + d), rhs(1, 9 + d), rhs(2, 9)).frameDuration(2).endless());
+			animations.put(dir, SpriteAnimation.of(rhs(0, 9 + d), rhs(1, 9 + d), rhs(2, 9)).frameDuration(2).endless());
 		}
 		return animations;
 	}
 
 	public SpriteAnimation createFlapAnimation() {
-		return (SpriteAnimation) SpriteAnimation.of( //
+		return SpriteAnimation.of( //
 				new Rectangle2D(456, 208, 32, 32), //
 				new Rectangle2D(488, 208, 32, 32), //
 				new Rectangle2D(520, 208, 32, 32), //
@@ -320,7 +325,7 @@ public class Rendering2D_MsPacMan extends Rendering2D {
 	}
 
 	public SpriteAnimation createStorkFlyingAnimation() {
-		return (SpriteAnimation) SpriteAnimation.of( //
+		return SpriteAnimation.of( //
 				new Rectangle2D(489, 176, 32, 16), //
 				new Rectangle2D(521, 176, 32, 16) //
 		).endless().frameDuration(8);

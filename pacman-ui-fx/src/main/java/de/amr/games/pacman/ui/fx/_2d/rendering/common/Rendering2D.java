@@ -23,10 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
-import static de.amr.games.pacman.model.common.actors.Ghost.CYAN_GHOST;
-import static de.amr.games.pacman.model.common.actors.Ghost.ORANGE_GHOST;
-import static de.amr.games.pacman.model.common.actors.Ghost.PINK_GHOST;
-import static de.amr.games.pacman.model.common.actors.Ghost.RED_GHOST;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
@@ -36,6 +32,7 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.actors.BonusState;
 import de.amr.games.pacman.model.common.actors.Entity;
+import de.amr.games.pacman.model.common.actors.Ghost;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -49,7 +46,7 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public abstract class Rendering2D {
+public interface Rendering2D {
 
 	/**
 	 * @param source    source image
@@ -72,25 +69,17 @@ public abstract class Rendering2D {
 
 	public static final Font ARCADE_FONT = Font.loadFont(Rendering2D.class.getResourceAsStream("/emulogic.ttf"), 8);
 
-	protected final Spritesheet ss;
+	Spritesheet spritesheet();
 
-	public Rendering2D(String spritesheetPath, int rasterSize, Direction... directions) {
-		ss = new Spritesheet(spritesheetPath, rasterSize, directions);
-	}
-
-	public Spritesheet spritesheet() {
-		return ss;
-	}
-
-	public Color getPlayerSkullColor() {
+	default Color getPlayerSkullColor() {
 		return Color.YELLOW;
 	}
 
-	public Color getPlayerEyesColor() {
+	default Color getPlayerEyesColor() {
 		return Color.rgb(33, 33, 33);
 	}
 
-	public Color getPlayerPalateColor() {
+	default Color getPlayerPalateColor() {
 		return Color.CORAL;
 	}
 
@@ -98,37 +87,37 @@ public abstract class Rendering2D {
 	 * @param ghostID 0=Blinky, 1=Pinky, 2=Inky, 3=Clyde/Sue
 	 * @return color of ghost
 	 */
-	public Color getGhostSkinColor(int ghostID) {
+	default Color getGhostSkinColor(int ghostID) {
 		return switch (ghostID) {
-		case RED_GHOST -> Color.RED;
-		case PINK_GHOST -> Color.rgb(252, 181, 255);
-		case CYAN_GHOST -> Color.CYAN;
-		case ORANGE_GHOST -> Color.rgb(253, 192, 90);
+		case Ghost.RED_GHOST -> Color.RED;
+		case Ghost.PINK_GHOST -> Color.rgb(252, 181, 255);
+		case Ghost.CYAN_GHOST -> Color.CYAN;
+		case Ghost.ORANGE_GHOST -> Color.rgb(253, 192, 90);
 		default -> Color.WHITE; // should not happen
 		};
 	}
 
-	public Color getGhostSkinColorFrightened() {
+	default Color getGhostSkinColorFrightened() {
 		return Color.rgb(33, 33, 255);
 	}
 
-	public Color getGhostSkinColorFrightened2() {
+	default Color getGhostSkinColorFrightened2() {
 		return Color.rgb(224, 221, 255);
 	}
 
-	public Color getGhostEyeBallColor() {
+	default Color getGhostEyeBallColor() {
 		return Color.GHOSTWHITE;
 	}
 
-	public Color getGhostEyeBallColorFrightened() {
+	default Color getGhostEyeBallColorFrightened() {
 		return Color.rgb(245, 189, 180);
 	}
 
-	public Color getGhostPupilColor() {
+	default Color getGhostPupilColor() {
 		return Color.rgb(33, 33, 255);
 	}
 
-	public Color getGhostPupilColorFrightened() {
+	default Color getGhostPupilColorFrightened() {
 		return Color.RED;
 	}
 
@@ -136,7 +125,7 @@ public abstract class Rendering2D {
 	 * @param bonus game bonus
 	 * @return sprite (region) for bonus symbol depending on its state (edible/eaten)
 	 */
-	public Rectangle2D bonusSprite(BonusState bonusState, int bonusSymbol, int bonusValue) {
+	default Rectangle2D bonusSprite(BonusState bonusState, int bonusSymbol, int bonusValue) {
 		if (bonusState == BonusState.EDIBLE) {
 			return getSymbolSprite(bonusSymbol);
 		}
@@ -149,7 +138,7 @@ public abstract class Rendering2D {
 	/**
 	 * @return font used for score and game state display
 	 */
-	public Font getArcadeFont() {
+	default Font getArcadeFont() {
 		return ARCADE_FONT;
 	}
 
@@ -161,7 +150,7 @@ public abstract class Rendering2D {
 	 * @param entity the entity getting rendered
 	 * @param r      region of entity sprite in spritesheet
 	 */
-	public void renderEntity(GraphicsContext g, Entity entity, Rectangle2D r) {
+	default void renderEntity(GraphicsContext g, Entity entity, Rectangle2D r) {
 		if (entity.visible) {
 			renderSprite(g, r, entity.position.x + HTS - r.getWidth() / 2, entity.position.y + HTS - r.getHeight() / 2);
 		}
@@ -175,8 +164,8 @@ public abstract class Rendering2D {
 	 * @param x render location x
 	 * @param y render location y
 	 */
-	public void renderSprite(GraphicsContext g, Rectangle2D r, double x, double y) {
-		g.drawImage(ss.getImage(), r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y, r.getWidth(),
+	default void renderSprite(GraphicsContext g, Rectangle2D r, double x, double y) {
+		g.drawImage(spritesheet().getImage(), r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y, r.getWidth(),
 				r.getHeight());
 	}
 
@@ -186,35 +175,35 @@ public abstract class Rendering2D {
 	 * @param mazeNumber the 1-based maze number
 	 * @return color of maze walls on top (3D) or inside (2D)
 	 */
-	public abstract Color getMazeTopColor(int mazeNumber);
+	Color getMazeTopColor(int mazeNumber);
 
 	/**
 	 * @param mazeNumber the 1-based maze number
 	 * @return color of maze walls on side (3D) or outside (2D)
 	 */
-	public abstract Color getMazeSideColor(int mazeNumber);
+	Color getMazeSideColor(int mazeNumber);
 
 	/**
 	 * @param mazeNumber the 1-based maze number
 	 * @return color of pellets in this maze
 	 */
-	public abstract Color getFoodColor(int mazeNumber);
+	Color getFoodColor(int mazeNumber);
 
 	/**
 	 * @param mazeNumber the 1-based maze number
 	 * @return color of ghosthouse doors in this maze
 	 */
-	public abstract Color getGhostHouseDoorColor(int mazeNumber);
+	Color getGhostHouseDoorColor(int mazeNumber);
 
-	public abstract void renderMazeFull(GraphicsContext g, int mazeNumber, double x, double y);
+	void renderMazeFull(GraphicsContext g, int mazeNumber, double x, double y);
 
-	public abstract void renderMazeEmpty(GraphicsContext g, int mazeNumber, double x, double y);
+	void renderMazeEmpty(GraphicsContext g, int mazeNumber, double x, double y);
 
-	public abstract void renderMazeBright(GraphicsContext g, int mazeNumber, double x, double y);
+	void renderMazeBright(GraphicsContext g, int mazeNumber, double x, double y);
 
-	public abstract void renderCopyright(GraphicsContext g, int x, int y);
+	void renderCopyright(GraphicsContext g, int x, int y);
 
-	public void renderLevelCounter(GraphicsContext g, int levelNumber, List<Integer> counter, int x_right, int y_right) {
+	default void renderLevelCounter(GraphicsContext g, int levelNumber, List<Integer> counter, int x_right, int y_right) {
 		int firstLevelNumber = Math.max(1, levelNumber - 7 + 1);
 		double x = x_right;
 		for (int i = firstLevelNumber; i <= levelNumber; ++i, x -= t(2)) {
@@ -224,25 +213,25 @@ public abstract class Rendering2D {
 
 	// Animations
 
-	public abstract Map<Direction, SpriteAnimation> createPlayerMunchingAnimations();
+	Map<Direction, SpriteAnimation> createPlayerMunchingAnimations();
 
-	public abstract SpriteAnimation createPlayerDyingAnimation();
+	SpriteAnimation createPlayerDyingAnimation();
 
-	public abstract Map<Direction, SpriteAnimation> createGhostKickingAnimations(int ghostID);
+	Map<Direction, SpriteAnimation> createGhostKickingAnimations(int ghostID);
 
-	public abstract SpriteAnimation createGhostFrightenedAnimation();
+	SpriteAnimation createGhostFrightenedAnimation();
 
-	public abstract SpriteAnimation createGhostFlashingAnimation();
+	SpriteAnimation createGhostFlashingAnimation();
 
-	public abstract Map<Direction, SpriteAnimation> createGhostReturningHomeAnimations();
+	Map<Direction, SpriteAnimation> createGhostReturningHomeAnimations();
 
 	// Sprites
 
-	public abstract Rectangle2D getLifeSprite();
+	Rectangle2D getLifeSprite();
 
-	public abstract Rectangle2D getBountyNumberSprite(int number);
+	Rectangle2D getBountyNumberSprite(int number);
 
-	public abstract Rectangle2D getBonusValueSprite(int number);
+	Rectangle2D getBonusValueSprite(int number);
 
-	public abstract Rectangle2D getSymbolSprite(int symbol);
+	Rectangle2D getSymbolSprite(int symbol);
 }
