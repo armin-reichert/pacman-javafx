@@ -134,9 +134,6 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	protected void doUpdate() {
 		updateSound();
-//	if (gameController.credit() > 0) {
-//	r2D.renderLevelCounter(g, game.level.number, game.levelCounter, unscaledSize.x - t(4), unscaledSize.y - t(2));
-//}
 	}
 
 	@Override
@@ -160,9 +157,6 @@ public class PlayScene2D extends GameScene2D {
 		player2D.render(g, r2D);
 		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(g, r2D));
 		levelCounter2D.render(g, r2D);
-//		if (gameController.credit() > 0) {
-//			r2D.renderLevelCounter(g, game.level.number, game.levelCounter, unscaledSize.x - t(4), unscaledSize.y - t(2));
-//		}
 	}
 
 	private void updateSound() {
@@ -177,6 +171,9 @@ public class PlayScene2D extends GameScene2D {
 			if (game.huntingTimer.scatteringPhase() >= 0 && game.huntingTimer.tick() == 0) {
 				SoundManager.get().stopSirens();
 				SoundManager.get().startSiren(game.huntingTimer.scatteringPhase());
+			}
+			if (game.huntingTimer.chasingPhase() >= 0 && !SoundManager.get().isAnySirenPlaying()) {
+				SoundManager.get().startSiren(game.huntingTimer.chasingPhase());
 			}
 		}
 		default -> {
