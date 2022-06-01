@@ -273,8 +273,8 @@ public class PlayScene2D extends GameScene2D {
 		case READY -> {
 			SoundManager.get().stopAll();
 			maze2D.getEnergizerAnimation().reset();
-			player2D.reset();
-			Stream.of(ghosts2D).forEach(Ghost2D::reset);
+			player2D.resetAnimations();
+			Stream.of(ghosts2D).forEach(Ghost2D::resetAnimations);
 			if (gameController.credit() > 0 && !gameController.isGameRunning()) {
 				SoundManager.get().play(GameSound.GAME_READY);
 			}
@@ -315,7 +315,7 @@ public class PlayScene2D extends GameScene2D {
 		case LEVEL_COMPLETE -> {
 			gameController.state().timer().setDurationIndefinite(); // wait until continueGame() is called
 			SoundManager.get().stopAll();
-			player2D.reset();
+			player2D.resetAnimations();
 			// Energizers can still exist if "next level" cheat has been used
 			maze2D.getEnergizerAnimation().reset();
 			Animation animation = new SequentialTransition( //

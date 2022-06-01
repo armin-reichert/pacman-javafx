@@ -56,7 +56,7 @@ public class Player2D extends GameEntity2D {
 		return this;
 	}
 
-	public void reset() {
+	public void resetAnimations() {
 		if (animMunching != null) {
 			for (Direction dir : Direction.values()) {
 				animMunching.get(dir).reset();

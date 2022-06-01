@@ -65,7 +65,7 @@ public class Ghost2D extends GameEntity2D {
 		return this;
 	}
 
-	public void reset() {
+	public void resetAnimations() {
 		if (animKicking != null) {
 			for (Direction dir : Direction.values()) {
 				animKicking.get(dir).reset();
