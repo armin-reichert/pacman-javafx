@@ -72,8 +72,7 @@ public class Rendering2D_PacMan implements Rendering2D {
 
 	private Rendering2D_PacMan(String path, int rasterSize, Direction... dirOrder) {
 		ss = new Spritesheet(path, rasterSize, dirOrder);
-		font = Font.loadFont(getClass().getResourceAsStream("/common/emulogic.ttf"), 8);
-
+		font = U.font("/common/emulogic.ttf", 8);
 		mazeFullImage = U.image("/pacman/graphics/maze_full.png");
 		mazeEmptyImage = U.image("/pacman/graphics/maze_empty.png");
 		mazeFlashingImage = Rendering2D.colorsExchanged(mazeEmptyImage,

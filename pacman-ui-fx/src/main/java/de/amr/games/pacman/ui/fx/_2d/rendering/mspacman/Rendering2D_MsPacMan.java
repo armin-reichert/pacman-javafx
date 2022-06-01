@@ -70,9 +70,14 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 		Color.rgb(255, 0, 0), 
 	};
 
-	private static final Color[] FOOD_COLORS = { Color.rgb(222, 222, 255), Color.rgb(255, 255, 0), Color.rgb(255, 0, 0),
-			Color.rgb(222, 222, 255), Color.rgb(0, 255, 255), Color.rgb(222, 222, 255), };
-
+	private static final Color[] FOOD_COLORS = { 
+		Color.rgb(222, 222, 255), 
+		Color.rgb(255, 255, 0), 
+		Color.rgb(255, 0, 0),
+		Color.rgb(222, 222, 255), 
+		Color.rgb(0, 255, 255), 
+		Color.rgb(222, 222, 255), 
+	};
 	//@formatter:on
 
 	private static Rendering2D_MsPacMan it;
@@ -106,8 +111,7 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 
 	private Rendering2D_MsPacMan(String path, int rasterSize, Direction... dirOrder) {
 		ss = new Spritesheet(path, rasterSize, dirOrder);
-		font = Font.loadFont(getClass().getResourceAsStream("/common/emulogic.ttf"), 8);
-
+		font = U.font("/common/emulogic.ttf", 8);
 		midwayLogo = U.image("/mspacman/graphics/midway.png");
 
 		//@formatter:off

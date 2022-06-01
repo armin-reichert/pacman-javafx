@@ -68,6 +68,16 @@ public interface Rendering2D {
 
 	Font getArcadeFont();
 
+	// Sprites
+
+	Rectangle2D getLifeSprite();
+
+	Rectangle2D getBountyNumberSprite(int number);
+
+	Rectangle2D getBonusValueSprite(int number);
+
+	Rectangle2D getSymbolSprite(int symbol);
+
 	/**
 	 * Draws the entity's sprite centered over its collision box. The entity position is the left corner of the collision
 	 * box which has a size of one square tile.
@@ -147,14 +157,4 @@ public interface Rendering2D {
 	SpriteAnimation createGhostFlashingAnimation();
 
 	Map<Direction, SpriteAnimation> createGhostReturningHomeAnimations();
-
-	// Sprites
-
-	Rectangle2D getLifeSprite();
-
-	Rectangle2D getBountyNumberSprite(int number);
-
-	Rectangle2D getBonusValueSprite(int number);
-
-	Rectangle2D getSymbolSprite(int symbol);
 }

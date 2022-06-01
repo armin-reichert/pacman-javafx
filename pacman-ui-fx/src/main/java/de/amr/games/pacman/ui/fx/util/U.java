@@ -30,6 +30,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 /**
@@ -94,6 +95,10 @@ public class U {
 		PauseTransition p = new PauseTransition(Duration.seconds(seconds));
 		p.setOnFinished(e -> runnable.run());
 		return p;
+	}
+
+	public static Font font(String path, double size) {
+		return Font.loadFont(U.class.getResource(path).toString(), size);
 	}
 
 	public static Image image(String path) {
