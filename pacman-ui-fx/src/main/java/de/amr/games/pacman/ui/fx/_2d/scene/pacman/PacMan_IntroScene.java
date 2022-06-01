@@ -176,11 +176,11 @@ public class PacMan_IntroScene extends GameScene2D {
 				int tileY = 7 + 3 * ghostID;
 				drawGhost(g, ghostID, t(3), t(tileY));
 				if (context.characterVisible[ghostID]) {
-					g.setFill(r2D.getGhostSkinColor(ghostID));
+					g.setFill(r2D.getGhostColor(ghostID));
 					g.fillText("-" + context.characters[ghostID], t(6), t(tileY + 1));
 				}
 				if (context.nicknameVisible[ghostID]) {
-					g.setFill(r2D.getGhostSkinColor(ghostID));
+					g.setFill(r2D.getGhostColor(ghostID));
 					g.fillText("\"" + context.nicknames[ghostID] + "\"", t(17), t(tileY + 1));
 				}
 			}

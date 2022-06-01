@@ -83,11 +83,11 @@ public class PacMan_CreditScene extends GameScene2D {
 		credit2D.render(g, r2D);
 
 		g.setFont(r2D.getArcadeFont());
-		g.setFill(r2D.getGhostSkinColor(Ghost.ORANGE_GHOST));
+		g.setFill(r2D.getGhostColor(Ghost.ORANGE_GHOST));
 		g.fillText("PUSH START BUTTON", t(6), t(17));
 
 		g.setFont(r2D.getArcadeFont());
-		g.setFill(r2D.getGhostSkinColor(Ghost.CYAN_GHOST));
+		g.setFill(r2D.getGhostColor(Ghost.CYAN_GHOST));
 		g.fillText("1 PLAYER ONLY", t(8), t(21));
 
 		g.setFont(r2D.getArcadeFont());

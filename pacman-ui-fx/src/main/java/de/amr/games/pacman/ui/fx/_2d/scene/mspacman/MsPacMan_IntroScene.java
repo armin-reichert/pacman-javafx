@@ -121,7 +121,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		if (ghost.id == Ghost.RED_GHOST) {
 			g.fillText("WITH", context.titlePosition.x, context.lightsTopLeft.y + t(3));
 		}
-		g.setFill(r2D.getGhostSkinColor(ghost.id));
+		g.setFill(r2D.getGhostColor(ghost.id));
 		g.fillText(ghost.name.toUpperCase(), t(14 - ghost.name.length() / 2), context.lightsTopLeft.y + t(6));
 	}
 

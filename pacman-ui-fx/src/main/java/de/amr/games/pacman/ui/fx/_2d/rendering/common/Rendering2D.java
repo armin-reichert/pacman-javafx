@@ -114,7 +114,7 @@ public interface Rendering2D {
 	 * @param ghostID 0=Blinky, 1=Pinky, 2=Inky, 3=Clyde/Sue
 	 * @return color of ghost as given in spritesheet
 	 */
-	default Color getGhostSkinColor(int ghostID) {
+	default Color getGhostColor(int ghostID) {
 		return switch (ghostID) {
 		case Ghost.RED_GHOST -> Color.RED;
 		case Ghost.PINK_GHOST -> Color.rgb(252, 181, 255);

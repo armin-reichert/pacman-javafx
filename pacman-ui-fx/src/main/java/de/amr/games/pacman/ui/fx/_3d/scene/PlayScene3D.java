@@ -399,7 +399,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 			SoundManager.get().stopAll();
 			Stream.of(ghosts3D).forEach(Ghost3D::setNormalLook);
 			var killer = game.ghosts().filter(ghost -> ghost.sameTile(game.player)).findAny().get();
-			var killerColor = r2D.getGhostSkinColor(killer.id);
+			var killerColor = r2D.getGhostColor(killer.id);
 			new SequentialTransition( //
 					U.pauseSec(1.0, () -> game.ghosts().forEach(Ghost::hide)), //
 					player3D.dyingAnimation(killerColor, gameController.credit() == 0), //

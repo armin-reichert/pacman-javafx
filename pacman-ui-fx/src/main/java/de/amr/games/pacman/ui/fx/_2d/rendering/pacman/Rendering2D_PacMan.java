@@ -145,7 +145,7 @@ public class Rendering2D_PacMan implements Rendering2D {
 		// t(3), t(32)
 		String text = "\u00A9 1980 MIDWAY MFG. CO.";
 		g.setFont(getArcadeFont());
-		g.setFill(getGhostSkinColor(PINK_GHOST));
+		g.setFill(getGhostColor(PINK_GHOST));
 		g.fillText(text, x, y);
 	}
 
