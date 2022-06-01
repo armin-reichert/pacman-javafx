@@ -50,19 +50,17 @@ public class LivesCounter2D extends GameEntity2D {
 
 	@Override
 	public void render(GraphicsContext g, Rendering2D r2D) {
-		if (!visible) {
-			return;
-		}
-		var sprite = r2D.getLifeSprite();
-		for (int i = 0; i < Math.min(game.lives, maxLives); ++i) {
-			r2D.drawSprite(g, sprite, x + t(2 * i), y);
-		}
-		// show text if more lives are available than displayed
-		if (game.lives > maxLives) {
-			g.setFill(Color.YELLOW);
-			g.setFont(Font.font("Serif", FontWeight.BOLD, 8));
-			g.setFontSmoothingType(FontSmoothingType.LCD);
-			g.fillText("+" + (game.lives - maxLives), x + t(10), y + t(1));
+		if (visible) {
+			for (int i = 0; i < Math.min(game.lives, maxLives); ++i) {
+				r2D.drawSprite(g, r2D.getLifeSprite(), x + t(2 * i), y);
+			}
+			// show text indicating that more lives are available than displayed
+			if (game.lives > maxLives) {
+				g.setFill(Color.YELLOW);
+				g.setFont(Font.font("Serif", FontWeight.BOLD, 8));
+				g.setFontSmoothingType(FontSmoothingType.LCD);
+				g.fillText("+" + (game.lives - maxLives), x + t(10), y + t(1));
+			}
 		}
 	}
 }

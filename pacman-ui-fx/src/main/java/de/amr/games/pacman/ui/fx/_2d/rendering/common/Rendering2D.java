@@ -45,75 +45,15 @@ public interface Rendering2D {
 
 	Font getArcadeFont();
 
-	// Sprites
-
-	Rectangle2D getLifeSprite();
+	Color getGhostColor(int ghostID);
 
 	Rectangle2D getBountyNumberSprite(int number);
 
 	Rectangle2D getBonusValueSprite(int number);
 
+	Rectangle2D getLifeSprite();
+
 	Rectangle2D getSymbolSprite(int symbol);
-
-	/**
-	 * Draws the entity's sprite centered over its collision box. The entity position is the left corner of the collision
-	 * box which has a size of one square tile.
-	 * 
-	 * @param g      the graphics context
-	 * @param e      the entity getting drawn
-	 * @param sprite entity sprite (region) in spritesheet
-	 */
-	default void drawEntity(GraphicsContext g, Entity e, Rectangle2D sprite) {
-		if (e.visible) {
-			drawSprite(g, sprite, e.position.x + HTS - sprite.getWidth() / 2, e.position.y + HTS - sprite.getHeight() / 2);
-		}
-	}
-
-	/**
-	 * Renders a sprite at a given location.
-	 * 
-	 * @param g the graphics context
-	 * @param s sprite (region)
-	 * @param x left upper corner x
-	 * @param y left upper corner y
-	 */
-	default void drawSprite(GraphicsContext g, Rectangle2D s, double x, double y) {
-		g.drawImage(spritesheet().getImage(), s.getMinX(), s.getMinY(), s.getWidth(), s.getHeight(), x, y, s.getWidth(),
-				s.getHeight());
-	}
-
-	/**
-	 * Draws the copyright information. Not sure if this belongs here.
-	 */
-	void drawCopyright(GraphicsContext g, int x, int y);
-
-	/**
-	 * @param ghostID 0=Blinky, 1=Pinky, 2=Inky, 3=Clyde/Sue
-	 * @return color of ghost as given in spritesheet
-	 */
-	Color getGhostColor(int ghostID);
-
-	// Maze
-
-	/**
-	 * @param levelNumber 1-based game level number
-	 * @return maze number (1, 2, ...) used in this level
-	 */
-	int mazeNumber(int levelNumber);
-
-	/**
-	 * @param mazeNumber the 1-based maze number
-	 * @return color of pellets in this maze
-	 */
-	Color getFoodColor(int mazeNumber);
-
-	void drawMazeFull(GraphicsContext g, int mazeNumber, double x, double y);
-
-	void drawMazeEmpty(GraphicsContext g, int mazeNumber, double x, double y);
-
-	void drawMazeBright(GraphicsContext g, int mazeNumber, double x, double y);
-
-	// Animations
 
 	Map<Direction, SpriteAnimation> createPlayerMunchingAnimations();
 
@@ -126,4 +66,27 @@ public interface Rendering2D {
 	SpriteAnimation createGhostFlashingAnimation();
 
 	Map<Direction, SpriteAnimation> createGhostReturningHomeAnimations();
+
+	default void drawEntity(GraphicsContext g, Entity e, Rectangle2D sprite) {
+		if (e.visible) {
+			drawSprite(g, sprite, e.position.x + HTS - sprite.getWidth() / 2, e.position.y + HTS - sprite.getHeight() / 2);
+		}
+	}
+
+	default void drawSprite(GraphicsContext g, Rectangle2D s, double x, double y) {
+		g.drawImage(spritesheet().getImage(), s.getMinX(), s.getMinY(), s.getWidth(), s.getHeight(), x, y, s.getWidth(),
+				s.getHeight());
+	}
+
+	void drawCopyright(GraphicsContext g, int x, int y);
+
+	int mazeNumber(int levelNumber);
+
+	Color getFoodColor(int mazeNumber);
+
+	void drawMazeFull(GraphicsContext g, int mazeNumber, double x, double y);
+
+	void drawMazeEmpty(GraphicsContext g, int mazeNumber, double x, double y);
+
+	void drawMazeBright(GraphicsContext g, int mazeNumber, double x, double y);
 }

@@ -237,6 +237,11 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 	}
 
 	@Override
+	public Rectangle2D getLifeSprite() {
+		return rhs(1, 0);
+	}
+
+	@Override
 	public Rectangle2D getSymbolSprite(int symbol) {
 		return symbolSprites.get(symbol);
 	}
@@ -294,11 +299,6 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 			animations.put(dir, SpriteAnimation.of(rhs(8 + d, 5)));
 		}
 		return animations;
-	}
-
-	@Override
-	public Rectangle2D getLifeSprite() {
-		return rhs(1, 0);
 	}
 
 	// Ms. Pac-Man specific:
