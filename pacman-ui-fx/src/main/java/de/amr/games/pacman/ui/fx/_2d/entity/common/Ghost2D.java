@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ISpriteAnimation;
@@ -49,8 +48,8 @@ public class Ghost2D extends GameEntity2D {
 	public final Ghost ghost;
 	public GhostAnimation selectedAnimationKey;
 
-	public SpriteAnimationMap<Direction> animEyes;
-	public SpriteAnimation animFlashing;
+	private SpriteAnimationMap<Direction> animEyes;
+	private SpriteAnimation animFlashing;
 	public SpriteAnimation animFrightened;
 	public SpriteAnimationMap<Direction> animKicking;
 	public SpriteAnimation animNumber;
@@ -60,8 +59,6 @@ public class Ghost2D extends GameEntity2D {
 		this.ghost = ghost;
 		animEyes = r2D.createGhostReturningHomeAnimations();
 		animFlashing = r2D.createGhostFlashingAnimation();
-		long flashTicks = TickTimer.sec_to_ticks(2) / (game.level.numFlashes * animFlashing.numFrames());
-		animFlashing.frameDuration(flashTicks).repetitions(game.level.numFlashes);
 		animFrightened = r2D.createGhostFrightenedAnimation();
 		animKicking = r2D.createGhostKickingAnimations(ghost.id);
 		animNumber = SpriteAnimation.of(r2D.getBountyNumberSprite(200), r2D.getBountyNumberSprite(400),
@@ -70,14 +67,16 @@ public class Ghost2D extends GameEntity2D {
 		selectAnimation(GhostAnimation.KICKING);
 	}
 
-	private ISpriteAnimation selectedAnimation() {
-		return switch (selectedAnimationKey) {
-		case EYES -> animEyes;
-		case FLASHING -> animFlashing;
-		case FRIGHTENED -> animFrightened;
-		case KICKING -> animKicking;
-		case NUMBER -> animNumber;
+	@Override
+	public void render(GraphicsContext g, Rendering2D r2D) {
+		var sprite = switch (selectedAnimationKey) {
+		case EYES -> animEyes.get(ghost.wishDir()).animate();
+		case FLASHING -> animFlashing.animate();
+		case FRIGHTENED -> animFrightened.animate();
+		case KICKING -> animKicking.get(ghost.wishDir()).animate();
+		case NUMBER -> animNumber.frame(numberFrame(ghost.bounty));
 		};
+		r2D.drawEntity(g, ghost, sprite);
 	}
 
 	public void selectAnimation(GhostAnimation key) {
@@ -95,6 +94,23 @@ public class Ghost2D extends GameEntity2D {
 		animFlashing.frameDuration(frameTicks).repetitions(numFlashes).restart();
 	}
 
+	public void refresh() {
+		visible = ghost.visible;
+		animKicking.ensureRunning();
+		animFrightened.ensureRunning();
+		animFlashing.ensureRunning();
+	}
+
+	private ISpriteAnimation selectedAnimation() {
+		return switch (selectedAnimationKey) {
+		case EYES -> animEyes;
+		case FLASHING -> animFlashing;
+		case FRIGHTENED -> animFrightened;
+		case KICKING -> animKicking;
+		case NUMBER -> animNumber;
+		};
+	}
+
 	private int numberFrame(int number) {
 		return switch (number) {
 		case 200 -> 0;
@@ -103,17 +119,5 @@ public class Ghost2D extends GameEntity2D {
 		case 1600 -> 3;
 		default -> throw new IllegalArgumentException();
 		};
-	}
-
-	@Override
-	public void render(GraphicsContext g, Rendering2D r2D) {
-		var sprite = switch (selectedAnimationKey) {
-		case EYES -> animEyes.get(ghost.wishDir()).animate();
-		case FLASHING -> animFlashing.animate();
-		case FRIGHTENED -> animFrightened.animate();
-		case KICKING -> animKicking.get(ghost.wishDir()).animate();
-		case NUMBER -> animNumber.frame(numberFrame(ghost.bounty));
-		};
-		r2D.drawEntity(g, ghost, sprite);
 	}
 }

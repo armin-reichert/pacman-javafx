@@ -187,10 +187,7 @@ public class PlayScene2D extends GameScene2D {
 		player2D.visible = game.player.visible;
 		player2D.animMunching.ensureRunning();
 		for (Ghost2D ghost2D : ghosts2D) {
-			ghost2D.visible = ghost2D.ghost.visible;
-			ghost2D.animKicking.ensureRunning();
-			ghost2D.animFrightened.ensureRunning();
-			ghost2D.animFlashing.ensureRunning();
+			ghost2D.refresh();
 		}
 		maze2D.getEnergizerAnimation().restart();
 		AudioClip munching = SoundManager.get().getClip(GameSound.PACMAN_MUNCH);
@@ -206,10 +203,6 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void onPlayerGetsPower(GameEvent e) {
-		Stream.of(ghosts2D).filter(ghost2D -> ghost2D.ghost.is(GhostState.FRIGHTENED)).forEach(ghost2D -> {
-			ghost2D.animFlashing.reset();
-			ghost2D.animFrightened.restart();
-		});
 		SoundManager.get().stopSirens();
 		if (gameController.credit() > 0 && !SoundManager.get().getClip(GameSound.PACMAN_POWER).isPlaying()) {
 			SoundManager.get().loop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
