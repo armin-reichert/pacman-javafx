@@ -47,14 +47,14 @@ import javafx.scene.text.Font;
  */
 public class Rendering2D_PacMan implements Rendering2D {
 
-	private static Rendering2D_PacMan theThing;
+	private static Rendering2D_PacMan cmonManYouKnowTheThing;
 
 	public static Rendering2D_PacMan get() {
-		if (theThing == null) {
-			theThing = new Rendering2D_PacMan("/pacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP,
+		if (cmonManYouKnowTheThing == null) {
+			cmonManYouKnowTheThing = new Rendering2D_PacMan("/pacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP,
 					Direction.DOWN);
 		}
-		return theThing;
+		return cmonManYouKnowTheThing;
 	}
 
 	//@formatter:off

@@ -51,14 +51,14 @@ import javafx.scene.text.Font;
  */
 public class Rendering2D_MsPacMan implements Rendering2D {
 
-	private static Rendering2D_MsPacMan theThing;
+	private static Rendering2D_MsPacMan cmonManYouKnowTheThing;
 
 	public static Rendering2D_MsPacMan get() {
-		if (theThing == null) {
-			theThing = new Rendering2D_MsPacMan("/mspacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT,
+		if (cmonManYouKnowTheThing == null) {
+			cmonManYouKnowTheThing = new Rendering2D_MsPacMan("/mspacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT,
 					Direction.UP, Direction.DOWN);
 		}
-		return theThing;
+		return cmonManYouKnowTheThing;
 	}
 
 	//@formatter:off
