@@ -33,6 +33,7 @@ import de.amr.games.pacman.controller.mspacman.IntroController.Context;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
+import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D.GhostAnimation;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
@@ -74,7 +75,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		msPacMan2D = new Player2D(context.msPacMan, game).createAnimations(r2D);
 		msPacMan2D.animMunching.values().forEach(SpriteAnimation::restart);
 		ghosts2D = Stream.of(context.ghosts).map(ghost -> new Ghost2D(ghost, game, r2D)).toArray(Ghost2D[]::new);
-		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animKicking.values().forEach(SpriteAnimation::restart));
+		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.restart(GhostAnimation.KICKING));
 	}
 
 	@Override

@@ -51,8 +51,8 @@ public class Ghost2D extends GameEntity2D {
 	private SpriteAnimationMap<Direction> animEyes;
 	private SpriteAnimation animFlashing;
 	private SpriteAnimation animFrightened;
-	public SpriteAnimationMap<Direction> animKicking;
-	public SpriteAnimation animNumber;
+	private SpriteAnimationMap<Direction> animKicking;
+	private SpriteAnimation animNumber;
 
 	public Ghost2D(Ghost ghost, GameModel game, Rendering2D r2D) {
 		super(game);
@@ -90,6 +90,10 @@ public class Ghost2D extends GameEntity2D {
 
 	public void run(GhostAnimation key) {
 		animation(key).run();
+	}
+
+	public void restart(GhostAnimation key) {
+		animation(key).restart();
 	}
 
 	public void resetAnimations() {
