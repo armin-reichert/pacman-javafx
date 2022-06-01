@@ -51,6 +51,9 @@ public interface Rendering3D {
 		Color.rgb(255, 255, 0), 
 		Color.rgb(255, 0, 0), 
 	};
+	
+	static final Color[] FOOD_COLORS = { Color.rgb(222, 222, 255), Color.rgb(255, 255, 0), Color.rgb(255, 0, 0),
+			Color.rgb(222, 222, 255), Color.rgb(0, 255, 255), Color.rgb(222, 222, 255), };
 
 	/**
 	 * @param mazeNumber the 1-based maze number
@@ -70,7 +73,7 @@ public interface Rendering3D {
 	 */
 	default Color getMazeSideColor(GameVariant gameVariant, int mazeNumber) {
 		return switch (gameVariant) {
-		case MS_PACMAN -> MAZE_SIDE_COLORS[mazeNumber - 1];
+		case MS_PACMAN -> MAZE_SIDE_COLORS[mazeNumber-1];
 		case PACMAN -> Color.rgb(33, 33, 255);
 		};
 	}
@@ -84,6 +87,18 @@ public interface Rendering3D {
 		return switch (gameVariant) {
 		case MS_PACMAN -> Color.rgb(255, 183, 255);
 		case PACMAN -> Color.rgb(252, 181, 255);
+		};
+	}
+
+	/**
+	 * @param gameVariant game variant
+	 * @param mazeNumber the 1-based maze number
+	 * @return color of pellets in this maze
+	 */
+	default Color getFoodColor(GameVariant gameVariant,int mazeNumber) {
+		return switch (gameVariant) {
+		case MS_PACMAN -> FOOD_COLORS[mazeNumber-1];
+		case PACMAN -> Color.rgb(254, 189, 180);
 		};
 	}
 
