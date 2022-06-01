@@ -42,12 +42,12 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class Ghost2D extends GameEntity2D {
 
-	public enum AnimationKey {
+	public enum GhostAnimation {
 		KICKING, EYES, NUMBER, FRIGHTENED, FLASHING;
 	};
 
 	public final Ghost ghost;
-	private AnimationKey selected;
+	private GhostAnimation selected;
 
 	public SpriteAnimationMap<Direction> animEyes;
 	public SpriteAnimation animFlashing;
@@ -67,7 +67,7 @@ public class Ghost2D extends GameEntity2D {
 		animNumber = SpriteAnimation.of(r2D.getBountyNumberSprite(200), r2D.getBountyNumberSprite(400),
 				r2D.getBountyNumberSprite(800), r2D.getBountyNumberSprite(1600));
 
-		selectAnimation(AnimationKey.KICKING);
+		selectAnimation(GhostAnimation.KICKING);
 	}
 
 	private ISpriteAnimation selectedAnimation() {
@@ -80,7 +80,7 @@ public class Ghost2D extends GameEntity2D {
 		};
 	}
 
-	public void selectAnimation(AnimationKey key) {
+	public void selectAnimation(GhostAnimation key) {
 		this.selected = key;
 		selectedAnimation().ensureRunning();
 	}

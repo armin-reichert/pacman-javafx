@@ -40,12 +40,11 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Bonus2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
-import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D.AnimationKey;
+import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D.GhostAnimation;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Maze2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
@@ -142,16 +141,16 @@ public class PlayScene2D extends GameScene2D {
 
 	private void updateAnimations() {
 		boolean frightened = game.player.hasPower();
-		boolean flashing = game.player.powerTimer.remaining() <= sec_to_ticks(2);
+		boolean lessFrightened = game.player.powerTimer.remaining() <= sec_to_ticks(2);
 		for (var ghost2D : ghosts2D) {
-			switch (ghost2D.ghost.state) {
-			case DEAD -> ghost2D.selectAnimation(ghost2D.ghost.bounty == 0 ? AnimationKey.EYES : AnimationKey.NUMBER);
-			case ENTERING_HOUSE -> ghost2D.selectAnimation(AnimationKey.EYES);
-			case FRIGHTENED -> ghost2D.selectAnimation(flashing ? AnimationKey.FLASHING : AnimationKey.FRIGHTENED);
-			case HUNTING_PAC, LEAVING_HOUSE -> ghost2D.selectAnimation(AnimationKey.KICKING);
-			case LOCKED -> ghost2D.selectAnimation(
-					flashing ? AnimationKey.FLASHING : frightened ? AnimationKey.FRIGHTENED : AnimationKey.KICKING);
-			}
+			GhostAnimation selection = switch (ghost2D.ghost.state) {
+			case DEAD -> ghost2D.ghost.bounty == 0 ? GhostAnimation.EYES : GhostAnimation.NUMBER;
+			case ENTERING_HOUSE -> GhostAnimation.EYES;
+			case FRIGHTENED -> lessFrightened ? GhostAnimation.FLASHING : GhostAnimation.FRIGHTENED;
+			case HUNTING_PAC, LEAVING_HOUSE -> GhostAnimation.KICKING;
+			case LOCKED -> lessFrightened ? GhostAnimation.FLASHING : frightened ? GhostAnimation.FRIGHTENED : GhostAnimation.KICKING;
+			};
+			ghost2D.selectAnimation(selection);
 		}
 	}
 
@@ -267,7 +266,7 @@ public class PlayScene2D extends GameScene2D {
 
 		case HUNTING -> {
 			maze2D.getEnergizerAnimation().restart();
-			player2D.animMunching.values().forEach(SpriteAnimation::restart);
+			player2D.animMunching.restart();
 			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animKicking.restart());
 		}
 
