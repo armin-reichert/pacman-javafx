@@ -111,6 +111,8 @@ public interface Rendering2D {
 
 	// Maze
 
+	int mazeNumber(int levelNumber);
+
 	/**
 	 * @param mazeNumber the 1-based maze number
 	 * @return color of maze walls on top (3D) or inside (2D)

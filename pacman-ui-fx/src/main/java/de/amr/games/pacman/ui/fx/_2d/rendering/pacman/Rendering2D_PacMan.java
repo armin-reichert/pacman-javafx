@@ -138,6 +138,11 @@ public class Rendering2D_PacMan implements Rendering2D {
 	}
 
 	@Override
+	public int mazeNumber(int levelNumber) {
+		return 1;
+	}
+
+	@Override
 	public void renderMazeFull(GraphicsContext g, int mazeNumber, double x, double y) {
 		g.drawImage(mazeFullImage, x, y);
 	}
