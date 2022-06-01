@@ -55,9 +55,10 @@ public class PacMan_CreditScene extends GameScene2D {
 	public void init() {
 		createCommonParts();
 		score2D.showPoints = false;
-		credit2D.visible=true;
+		credit2D.visible = true;
 		levelCounter2D = new LevelCounter2D(game);
-		levelCounter2D.rightPosition = unscaledSize.minus(t(4), t(2));
+		levelCounter2D.right_x = unscaledSize.x - t(3);
+		levelCounter2D.y = unscaledSize.y - t(2);
 	}
 
 	@Override

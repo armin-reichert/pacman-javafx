@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -37,7 +36,7 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class LevelCounter2D extends GameEntity2D {
 
-	public V2i rightPosition = V2i.NULL;
+	public double right_x;
 	public int maxLevels = 7;
 
 	public LevelCounter2D(GameModel game) {
@@ -50,9 +49,8 @@ public class LevelCounter2D extends GameEntity2D {
 			return;
 		}
 		int firstLevelNumber = Math.max(1, game.level.number - maxLevels + 1);
-		double x = rightPosition.x;
 		for (int levelNumber = firstLevelNumber; levelNumber <= game.level.number; ++levelNumber, x -= t(2)) {
-			r2D.drawSprite(g, r2D.getSymbolSprite(game.levelCounter.get(levelNumber - 1)), x, rightPosition.y);
+			r2D.drawSprite(g, r2D.getSymbolSprite(game.levelCounter.get(levelNumber - 1)), right_x, y);
 		}
 	}
 }
