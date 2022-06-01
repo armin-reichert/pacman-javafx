@@ -50,7 +50,7 @@ public class Ghost2D extends GameEntity2D {
 
 	private SpriteAnimationMap<Direction> animEyes;
 	private SpriteAnimation animFlashing;
-	public SpriteAnimation animFrightened;
+	private SpriteAnimation animFrightened;
 	public SpriteAnimationMap<Direction> animKicking;
 	public SpriteAnimation animNumber;
 
@@ -81,11 +81,31 @@ public class Ghost2D extends GameEntity2D {
 
 	public void selectAnimation(GhostAnimation key) {
 		this.selectedAnimationKey = key;
-		selectedAnimation().ensureRunning();
+		animation(selectedAnimationKey).ensureRunning();
+	}
+
+	public void stop(GhostAnimation key) {
+		animation(key).stop();
+	}
+
+	public void run(GhostAnimation key) {
+		animation(key).run();
 	}
 
 	public void resetAnimations() {
 		Stream.of(animEyes, animFlashing, animFrightened, animKicking, animNumber).forEach(ISpriteAnimation::reset);
+	}
+
+	public void stopAnimations() {
+		Stream.of(animEyes, animFlashing, animFrightened, animKicking, animNumber).forEach(ISpriteAnimation::stop);
+	}
+
+	public void runAnimations() {
+		Stream.of(animEyes, animFlashing, animFrightened, animKicking, animNumber).forEach(ISpriteAnimation::run);
+	}
+
+	public void restartAnimations() {
+		Stream.of(animEyes, animFlashing, animFrightened, animKicking, animNumber).forEach(ISpriteAnimation::restart);
 	}
 
 	public void startFlashingAnimation(int numFlashes, long ticksTotal) {
@@ -101,8 +121,8 @@ public class Ghost2D extends GameEntity2D {
 		animFlashing.ensureRunning();
 	}
 
-	private ISpriteAnimation selectedAnimation() {
-		return switch (selectedAnimationKey) {
+	private ISpriteAnimation animation(GhostAnimation key) {
+		return switch (key) {
 		case EYES -> animEyes;
 		case FLASHING -> animFlashing;
 		case FRIGHTENED -> animFrightened;

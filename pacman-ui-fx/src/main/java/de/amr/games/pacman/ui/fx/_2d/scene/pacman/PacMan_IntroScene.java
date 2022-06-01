@@ -82,8 +82,7 @@ public class PacMan_IntroScene extends GameScene2D {
 
 		ghosts2D = Stream.of(context.ghosts).map(ghost -> {
 			Ghost2D ghost2D = new Ghost2D(ghost, game, r2D);
-			ghost2D.animKicking.values().forEach(SpriteAnimation::restart);
-			ghost2D.animFrightened.restart();
+			ghost2D.restartAnimations();
 			return ghost2D;
 		}).toArray(Ghost2D[]::new);
 	}
@@ -109,13 +108,18 @@ public class PacMan_IntroScene extends GameScene2D {
 	@Override
 	public void doUpdate() {
 		sceneController.update();
-		// TODO this is not optimal but works
+		// TODO this is not elegant but works
 		if (sceneController.state() == State.CHASING_GHOSTS) {
 			for (var ghost2D : ghosts2D) {
-				if (ghost2D.ghost.velocity.length() == 0) {
-					ghost2D.animFrightened.stop();
+				if (ghost2D.ghost.bounty > 0) {
+					ghost2D.selectAnimation(GhostAnimation.NUMBER);
 				} else {
-					ghost2D.animFrightened.run();
+					ghost2D.selectAnimation(GhostAnimation.FRIGHTENED);
+					if (ghost2D.ghost.velocity.length() == 0) {
+						ghost2D.stop(GhostAnimation.FRIGHTENED);
+					} else {
+						ghost2D.run(GhostAnimation.FRIGHTENED);
+					}
 				}
 			}
 		}

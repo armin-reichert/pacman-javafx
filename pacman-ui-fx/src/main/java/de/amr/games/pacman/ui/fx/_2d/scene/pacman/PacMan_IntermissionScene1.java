@@ -71,8 +71,7 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 		bigPacMan2D = new BigPacMan2D(context.pac, game);
 
 		pacMan2D.animMunching.values().forEach(SpriteAnimation::restart);
-		blinky2D.animKicking.values().forEach(SpriteAnimation::restart);
-		blinky2D.animFrightened.restart();
+		blinky2D.restartAnimations();
 		bigPacMan2D.munchingAnimation.restart();
 	}
 

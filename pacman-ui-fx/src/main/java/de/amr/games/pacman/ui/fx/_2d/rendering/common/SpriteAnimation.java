@@ -54,9 +54,9 @@ public class SpriteAnimation implements ISpriteAnimation {
 		return this;
 	}
 
-	public SpriteAnimation run() {
+	@Override
+	public void run() {
 		seq.run();
-		return this;
 	}
 
 	public Rectangle2D animate() {
@@ -72,6 +72,7 @@ public class SpriteAnimation implements ISpriteAnimation {
 		seq.reset();
 	}
 
+	@Override
 	public void restart() {
 		seq.restart();
 	}

@@ -58,6 +58,7 @@ public class SpriteAnimationMap<K extends Enum<K>> implements ISpriteAnimation {
 		values().forEach(SpriteAnimation::reset);
 	}
 
+	@Override
 	public void restart() {
 		values().forEach(SpriteAnimation::restart);
 	}
@@ -67,6 +68,7 @@ public class SpriteAnimationMap<K extends Enum<K>> implements ISpriteAnimation {
 		values().forEach(SpriteAnimation::stop);
 	}
 
+	@Override
 	public void run() {
 		values().forEach(SpriteAnimation::run);
 	}

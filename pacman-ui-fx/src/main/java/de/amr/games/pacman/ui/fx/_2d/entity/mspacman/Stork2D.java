@@ -44,7 +44,8 @@ public class Stork2D extends GameEntity2D {
 	public Stork2D(Entity stork, GameModel game) {
 		super(game);
 		this.stork = stork;
-		animation = Rendering2D_MsPacMan.get().createStorkFlyingAnimation().run();
+		animation = Rendering2D_MsPacMan.get().createStorkFlyingAnimation();
+		animation.run();
 	}
 
 	@Override
