@@ -289,9 +289,7 @@ public class PlayScene2D extends GameScene2D {
 		case PACMAN_DYING -> {
 			// wait until game is continued
 			gameController.state().timer().setDurationIndefinite().start();
-
 			SoundManager.get().stopAll();
-
 			new SequentialTransition( //
 					pauseSec(1, () -> game.ghosts().forEach(Ghost::hide)), //
 					pauseSec(1, () -> player2D.startDyingAnimation(gameController.credit() > 0)), //
