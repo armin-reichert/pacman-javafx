@@ -36,8 +36,8 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class LevelCounter2D extends GameEntity2D {
 
-	public double right_x;
 	public int maxLevels = 7;
+	public double right_x;
 
 	public LevelCounter2D(GameModel game) {
 		super(game);
