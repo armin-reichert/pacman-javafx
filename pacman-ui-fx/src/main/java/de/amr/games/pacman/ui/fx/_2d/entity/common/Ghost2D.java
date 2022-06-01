@@ -92,28 +92,31 @@ public class Ghost2D extends GameEntity2D {
 		animation(key).run();
 	}
 
+	private Stream<ISpriteAnimation> all() {
+		return Stream.of(animEyes, animFlashing, animFrightened, animKicking, animNumber);
+	}
+
 	public void restart(GhostAnimation key) {
 		animation(key).restart();
 	}
 
 	public void resetAnimations() {
-		Stream.of(animEyes, animFlashing, animFrightened, animKicking, animNumber).forEach(ISpriteAnimation::reset);
+		all().forEach(ISpriteAnimation::reset);
 	}
 
 	public void stopAnimations() {
-		Stream.of(animEyes, animFlashing, animFrightened, animKicking, animNumber).forEach(ISpriteAnimation::stop);
+		all().forEach(ISpriteAnimation::stop);
 	}
 
 	public void runAnimations() {
-		Stream.of(animEyes, animFlashing, animFrightened, animKicking, animNumber).forEach(ISpriteAnimation::run);
+		all().forEach(ISpriteAnimation::run);
 	}
 
 	public void restartAnimations() {
-		Stream.of(animEyes, animFlashing, animFrightened, animKicking, animNumber).forEach(ISpriteAnimation::restart);
+		all().forEach(ISpriteAnimation::restart);
 	}
 
 	public void startFlashingAnimation(int numFlashes, long ticksTotal) {
-		animFrightened.stop();
 		long frameTicks = ticksTotal / (numFlashes * animFlashing.numFrames());
 		animFlashing.frameDuration(frameTicks).repetitions(numFlashes).restart();
 	}
