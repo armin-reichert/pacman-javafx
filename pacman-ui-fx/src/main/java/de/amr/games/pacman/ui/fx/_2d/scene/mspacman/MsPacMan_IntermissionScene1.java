@@ -86,8 +86,8 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 		// start animations
 		msPacMan2D.animMunching.restart();
 		pacMan2D.animMunching.restart();
-		inky2D.restartAnimations();
-		pinky2D.restartAnimations();
+		inky2D.animations.restart();
+		pinky2D.animations.restart();
 	}
 
 	@Override
@@ -96,8 +96,8 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 		// stop ghost animation when Pac-Man and Ms. Pac-Man are in heaven
 		if (sceneController.state() == Intermission1Controller.State.IN_HEAVEN
 				&& context.pacMan.velocity.equals(V2d.NULL)) {
-			inky2D.stop(GhostAnimation.KICKING);
-			pinky2D.stop(GhostAnimation.KICKING);
+			inky2D.animations.stop(GhostAnimation.KICKING);
+			pinky2D.animations.stop(GhostAnimation.KICKING);
 		}
 	}
 

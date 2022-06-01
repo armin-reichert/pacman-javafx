@@ -82,7 +82,7 @@ public class PacMan_IntroScene extends GameScene2D {
 
 		ghosts2D = Stream.of(context.ghosts).map(ghost -> {
 			Ghost2D ghost2D = new Ghost2D(ghost, game, r2D);
-			ghost2D.restartAnimations();
+			ghost2D.animations.restart();
 			return ghost2D;
 		}).toArray(Ghost2D[]::new);
 	}
@@ -100,7 +100,7 @@ public class PacMan_IntroScene extends GameScene2D {
 	private void onSceneStateChange(State fromState, State toState) {
 		if (fromState == State.CHASING_PAC && toState == State.CHASING_GHOSTS) {
 			for (var ghost2D : ghosts2D) {
-				ghost2D.selectAnimation(GhostAnimation.FRIGHTENED);
+				ghost2D.animations.select(GhostAnimation.FRIGHTENED);
 			}
 		}
 	}
@@ -112,13 +112,13 @@ public class PacMan_IntroScene extends GameScene2D {
 		if (sceneController.state() == State.CHASING_GHOSTS) {
 			for (var ghost2D : ghosts2D) {
 				if (ghost2D.ghost.bounty > 0) {
-					ghost2D.selectAnimation(GhostAnimation.NUMBER);
+					ghost2D.animations.select(GhostAnimation.NUMBER);
 				} else {
-					ghost2D.selectAnimation(GhostAnimation.FRIGHTENED);
+					ghost2D.animations.select(GhostAnimation.FRIGHTENED);
 					if (ghost2D.ghost.velocity.length() == 0) {
-						ghost2D.stop(GhostAnimation.FRIGHTENED);
+						ghost2D.animations.stop(GhostAnimation.FRIGHTENED);
 					} else {
-						ghost2D.run(GhostAnimation.FRIGHTENED);
+						ghost2D.animations.run(GhostAnimation.FRIGHTENED);
 					}
 				}
 			}

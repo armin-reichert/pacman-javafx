@@ -157,7 +157,7 @@ public class PlayScene2D extends GameScene2D {
 			case LOCKED -> lessFrightened ? GhostAnimation.FLASHING
 					: frightened ? GhostAnimation.FRIGHTENED : GhostAnimation.KICKING;
 			};
-			ghost2D.selectAnimation(selection);
+			ghost2D.animations.select(selection);
 		}
 	}
 
@@ -258,7 +258,7 @@ public class PlayScene2D extends GameScene2D {
 			SoundManager.get().stopAll();
 			maze2D.getEnergizerAnimation().reset();
 			player2D.resetAnimations();
-			Stream.of(ghosts2D).forEach(Ghost2D::resetAnimations);
+			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart());
 			if (gameController.credit() > 0 && !gameController.isGameRunning()) {
 				SoundManager.get().play(GameSound.GAME_READY);
 			}
@@ -267,7 +267,7 @@ public class PlayScene2D extends GameScene2D {
 		case HUNTING -> {
 			maze2D.getEnergizerAnimation().restart();
 			player2D.animMunching.restart();
-			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.restart(GhostAnimation.KICKING));
+			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart(GhostAnimation.KICKING));
 		}
 
 		case PACMAN_DYING -> {
