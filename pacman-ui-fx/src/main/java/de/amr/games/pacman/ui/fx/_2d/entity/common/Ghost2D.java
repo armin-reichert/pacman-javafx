@@ -46,67 +46,73 @@ public class Ghost2D extends GameEntity2D {
 		KICKING, EYES, NUMBER, FRIGHTENED, FLASHING;
 	};
 
-	public final Ghost ghost;
+	public class Animations extends SpriteAnimationCollection<GhostAnimation> {
 
-	private SpriteAnimationMap<Direction> animEyes;
-	private SpriteAnimation animFlashing;
-	private SpriteAnimation animFrightened;
-	private SpriteAnimationMap<Direction> animKicking;
-	private SpriteAnimation animNumber;
+		private SpriteAnimationMap<Direction> eyes;
+		private SpriteAnimation flashing;
+		private SpriteAnimation frightened;
+		private SpriteAnimationMap<Direction> kicking;
+		private SpriteAnimation number;
 
-	public SpriteAnimationCollection<GhostAnimation> animations = new SpriteAnimationCollection<>() {
+		public Animations(Rendering2D r2D) {
+			eyes = r2D.createGhostReturningHomeAnimations();
+			flashing = r2D.createGhostFlashingAnimation();
+			frightened = r2D.createGhostFrightenedAnimation();
+			kicking = r2D.createGhostKickingAnimations(ghost.id);
+			number = SpriteAnimation.of(r2D.getBountyNumberSprite(200), r2D.getBountyNumberSprite(400),
+					r2D.getBountyNumberSprite(800), r2D.getBountyNumberSprite(1600));
+		}
 
+		@Override
 		public ISpriteAnimation animation(GhostAnimation key) {
 			return switch (key) {
-			case EYES -> animEyes;
-			case FLASHING -> animFlashing;
-			case FRIGHTENED -> animFrightened;
-			case KICKING -> animKicking;
-			case NUMBER -> animNumber;
+			case EYES -> eyes;
+			case FLASHING -> flashing;
+			case FRIGHTENED -> frightened;
+			case KICKING -> kicking;
+			case NUMBER -> number;
 			};
 		}
 
 		@Override
 		public Stream<ISpriteAnimation> all() {
-			return Stream.of(animEyes, animFlashing, animFrightened, animKicking, animNumber);
+			return Stream.of(eyes, flashing, frightened, kicking, number);
 		}
-	};
+
+	}
+
+	public final Ghost ghost;
+	public final Animations animations;
 
 	public Ghost2D(Ghost ghost, GameModel game, Rendering2D r2D) {
 		super(game);
 		this.ghost = ghost;
-		animEyes = r2D.createGhostReturningHomeAnimations();
-		animFlashing = r2D.createGhostFlashingAnimation();
-		animFrightened = r2D.createGhostFrightenedAnimation();
-		animKicking = r2D.createGhostKickingAnimations(ghost.id);
-		animNumber = SpriteAnimation.of(r2D.getBountyNumberSprite(200), r2D.getBountyNumberSprite(400),
-				r2D.getBountyNumberSprite(800), r2D.getBountyNumberSprite(1600));
-
+		animations = new Animations(r2D);
 		animations.select(GhostAnimation.KICKING);
 	}
 
 	@Override
 	public void render(GraphicsContext g, Rendering2D r2D) {
 		var sprite = switch (animations.selectedKey()) {
-		case EYES -> animEyes.get(ghost.wishDir()).animate();
-		case FLASHING -> animFlashing.animate();
-		case FRIGHTENED -> animFrightened.animate();
-		case KICKING -> animKicking.get(ghost.wishDir()).animate();
-		case NUMBER -> animNumber.frame(numberFrame(ghost.bounty));
+		case EYES -> animations.eyes.get(ghost.wishDir()).animate();
+		case FLASHING -> animations.flashing.animate();
+		case FRIGHTENED -> animations.frightened.animate();
+		case KICKING -> animations.kicking.get(ghost.wishDir()).animate();
+		case NUMBER -> animations.number.frame(numberFrame(ghost.bounty));
 		};
 		r2D.drawEntity(g, ghost, sprite);
 	}
 
 	public void startFlashingAnimation(int numFlashes, long ticksTotal) {
-		long frameTicks = ticksTotal / (numFlashes * animFlashing.numFrames());
-		animFlashing.frameDuration(frameTicks).repetitions(numFlashes).restart();
+		long frameTicks = ticksTotal / (numFlashes * animations.flashing.numFrames());
+		animations.flashing.frameDuration(frameTicks).repetitions(numFlashes).restart();
 	}
 
 	public void refresh() {
 		visible = ghost.visible;
-		animKicking.ensureRunning();
-		animFrightened.ensureRunning();
-		animFlashing.ensureRunning();
+		animations.kicking.ensureRunning();
+		animations.frightened.ensureRunning();
+		animations.flashing.ensureRunning();
 	}
 
 	private int numberFrame(int number) {
