@@ -37,10 +37,16 @@ import javafx.scene.canvas.GraphicsContext;
 public class LevelCounter2D extends GameEntity2D {
 
 	public int maxLevels = 7;
-	public double right_x;
 
-	public LevelCounter2D(GameModel game) {
+	/**
+	 * @param game the game
+	 * @param x    the RIGHT border x-coordinate of the counter!
+	 * @param y    the y-coordinate
+	 */
+	public LevelCounter2D(GameModel game, double x, double y) {
 		super(game);
+		this.x = x;
+		this.y = y;
 	}
 
 	@Override
@@ -48,9 +54,9 @@ public class LevelCounter2D extends GameEntity2D {
 		if (visible) {
 			int first = Math.max(1, game.level.number - maxLevels + 1);
 			int last = game.level.number;
-			double x = right_x;
-			for (int number = first; number <= last; ++number, x -= t(2)) {
-				r2D.drawSprite(g, r2D.getSymbolSprite(game.levelCounter.get(number - 1)), x, y);
+			double xx = x;
+			for (int number = first; number <= last; ++number, xx -= t(2)) {
+				r2D.drawSprite(g, r2D.getSymbolSprite(game.levelCounter.get(number - 1)), xx, y);
 			}
 		}
 	}

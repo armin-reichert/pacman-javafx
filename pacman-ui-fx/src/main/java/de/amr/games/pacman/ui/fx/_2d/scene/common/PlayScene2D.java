@@ -89,9 +89,7 @@ public class PlayScene2D extends GameScene2D {
 	public void init() {
 		createCommonParts();
 		livesCounter2D = new LivesCounter2D(game, t(2), t(34));
-		levelCounter2D = new LevelCounter2D(game);
-		levelCounter2D.right_x = unscaledSize.x - t(4);
-		levelCounter2D.y = unscaledSize.y - t(2);
+		levelCounter2D = new LevelCounter2D(game, unscaledSize.x - t(4), unscaledSize.y - t(2));
 		levelCounter2D.visible = gameController.credit() > 0;
 		maze2D = new Maze2D(game, 0, t(3));
 		player2D = new Player2D(game.player, game).createAnimations(r2D);

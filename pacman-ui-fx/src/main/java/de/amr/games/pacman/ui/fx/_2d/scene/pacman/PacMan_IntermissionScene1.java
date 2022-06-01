@@ -64,9 +64,7 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 	public void init() {
 		sceneController.init();
 
-		levelCounter2D = new LevelCounter2D(game);
-		levelCounter2D.right_x = unscaledSize.x - t(3);
-		levelCounter2D.y = unscaledSize.y - t(2);
+		levelCounter2D = new LevelCounter2D(game, unscaledSize.x - t(3), unscaledSize.y - t(2));
 
 		pacMan2D = new Player2D(context.pac, game).createAnimations(r2D);
 		blinky2D = new Ghost2D(context.blinky, game).createAnimations(r2D);
