@@ -110,6 +110,7 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 	private final Map<Integer, Rectangle2D> bonusValueSprites;
 	private final Map<Integer, Rectangle2D> symbolSprites;
 	private final Map<Integer, Rectangle2D> bountyNumberSprites;
+	private final Font font;
 
 	/**
 	 * @param col column
@@ -122,6 +123,7 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 
 	private Rendering2D_MsPacMan(String path, int rasterSize, Direction... dirOrder) {
 		ss = new Spritesheet(path, rasterSize, dirOrder);
+		font = Font.loadFont(getClass().getResourceAsStream("/common/emulogic.ttf"), 8);
 
 		midwayLogo = U.image("/mspacman/graphics/midway.png");
 
@@ -174,6 +176,11 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 	@Override
 	public Spritesheet spritesheet() {
 		return ss;
+	}
+
+	@Override
+	public Font getArcadeFont() {
+		return font;
 	}
 
 	@Override

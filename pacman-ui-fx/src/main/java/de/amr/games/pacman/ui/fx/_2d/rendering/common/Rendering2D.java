@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.model.common.actors.BonusState;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import javafx.geometry.Rectangle2D;
@@ -66,8 +65,6 @@ public interface Rendering2D {
 		}
 		return result;
 	}
-
-	public static final Font ARCADE_FONT = Font.loadFont(Rendering2D.class.getResourceAsStream("/emulogic.ttf"), 8);
 
 	Spritesheet spritesheet();
 
@@ -121,26 +118,7 @@ public interface Rendering2D {
 		return Color.RED;
 	}
 
-	/**
-	 * @param bonus game bonus
-	 * @return sprite (region) for bonus symbol depending on its state (edible/eaten)
-	 */
-	default Rectangle2D bonusSprite(BonusState bonusState, int bonusSymbol, int bonusValue) {
-		if (bonusState == BonusState.EDIBLE) {
-			return getSymbolSprite(bonusSymbol);
-		}
-		if (bonusState == BonusState.EATEN) {
-			return getBonusValueSprite(bonusValue);
-		}
-		throw new IllegalStateException();
-	}
-
-	/**
-	 * @return font used for score and game state display
-	 */
-	default Font getArcadeFont() {
-		return ARCADE_FONT;
-	}
+	Font getArcadeFont();
 
 	/**
 	 * Renders an entity sprite centered over the entity's collision box. Entity position is left upper corner of

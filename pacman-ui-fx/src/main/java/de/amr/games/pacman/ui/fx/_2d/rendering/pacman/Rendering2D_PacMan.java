@@ -39,6 +39,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 /**
  * Pac-Man game-specific rendering.
@@ -68,9 +69,11 @@ public class Rendering2D_PacMan implements Rendering2D {
 	private final Map<Integer, Rectangle2D> bonusValueSprites;
 	private final Map<Integer, Rectangle2D> symbolSprites;
 	private final Map<Integer, Rectangle2D> bountyNumberSprites;
+	private final Font font;
 
 	private Rendering2D_PacMan(String path, int rasterSize, Direction... dirOrder) {
 		ss = new Spritesheet(path, rasterSize, dirOrder);
+		font = Font.loadFont(getClass().getResourceAsStream("/common/emulogic.ttf"), 8);
 
 		mazeFullImage = U.image("/pacman/graphics/maze_full.png");
 		mazeEmptyImage = U.image("/pacman/graphics/maze_empty.png");
@@ -107,6 +110,11 @@ public class Rendering2D_PacMan implements Rendering2D {
 			1600, ss.r(3, 8, 1, 1)
 		);
 		//@formatter:on
+	}
+
+	@Override
+	public Font getArcadeFont() {
+		return font;
 	}
 
 	@Override
