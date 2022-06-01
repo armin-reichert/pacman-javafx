@@ -125,13 +125,13 @@ public class PacMan_IntroScene extends GameScene2D {
 			drawPoints(11, 25);
 			if (sceneController.state().timer().tick() > sec_to_ticks(1)) {
 				drawEnergizer();
-				r2D.renderCopyright(g, t(3), t(32));
+				r2D.drawCopyright(g, t(3), t(32));
 			}
 		}
 		case CHASING_PAC -> {
 			drawGallery();
 			drawPoints(11, 25);
-			r2D.renderCopyright(g, t(3), t(32));
+			r2D.drawCopyright(g, t(3), t(32));
 			if (context.fastBlinking.frame()) {
 				drawEnergizer();
 			}
@@ -141,7 +141,7 @@ public class PacMan_IntroScene extends GameScene2D {
 		case CHASING_GHOSTS -> {
 			drawGallery();
 			drawPoints(11, 25);
-			r2D.renderCopyright(g, t(3), t(32));
+			r2D.drawCopyright(g, t(3), t(32));
 			drawGuys(0);
 		}
 		case READY_TO_PLAY -> {
@@ -189,7 +189,7 @@ public class PacMan_IntroScene extends GameScene2D {
 
 	private void drawGhost(GraphicsContext g, int ghostID, int x, int y) {
 		Rectangle2D sprite = Rendering2D_PacMan.get().spritesheet().r(0, 4 + ghostID);
-		Rendering2D_PacMan.get().renderSprite(g, sprite, x + 4 - sprite.getWidth() / 2, y + 4 - sprite.getHeight() / 2);
+		Rendering2D_PacMan.get().drawSprite(g, sprite, x + 4 - sprite.getWidth() / 2, y + 4 - sprite.getHeight() / 2);
 	}
 
 	private void drawPoints(int tileX, int tileY) {

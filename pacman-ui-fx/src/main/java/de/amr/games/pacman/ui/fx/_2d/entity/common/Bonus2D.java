@@ -91,6 +91,6 @@ public class Bonus2D {
 	}
 
 	private void renderSprite(GraphicsContext g, Rendering2D r2D, Rectangle2D sprite, V2d position) {
-		r2D.renderSprite(g, sprite, position.x + HTS - sprite.getWidth() / 2, position.y + HTS - sprite.getHeight() / 2);
+		r2D.drawSprite(g, sprite, position.x + HTS - sprite.getWidth() / 2, position.y + HTS - sprite.getHeight() / 2);
 	}
 }

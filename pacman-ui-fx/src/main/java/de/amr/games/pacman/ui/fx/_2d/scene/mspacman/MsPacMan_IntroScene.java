@@ -112,7 +112,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		}
 		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(g, r2D));
 		msPacMan2D.render(g, r2D);
-		r2D.renderCopyright(g, t(3), t(28));
+		r2D.drawCopyright(g, t(3), t(28));
 	}
 
 	private void drawGhostText(GraphicsContext g, Ghost ghost) {

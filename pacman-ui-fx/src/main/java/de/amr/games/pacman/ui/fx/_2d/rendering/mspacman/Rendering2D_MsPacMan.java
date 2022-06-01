@@ -174,7 +174,7 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 	}
 
 	@Override
-	public void renderCopyright(GraphicsContext g, int x, int y) {
+	public void drawCopyright(GraphicsContext g, int x, int y) {
 		// x=t(4), y=t(28)
 		double scale = ArcadeWorld.TILES_Y / midwayLogo.getHeight();
 		g.drawImage(midwayLogo, x, y + 3, scale * midwayLogo.getWidth(), scale * midwayLogo.getHeight());
@@ -213,17 +213,17 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 	}
 
 	@Override
-	public void renderMazeFull(GraphicsContext g, int mazeNumber, double x, double y) {
-		renderSprite(g, mazeFullSprites.get(mazeNumber - 1), x, y);
+	public void drawMazeFull(GraphicsContext g, int mazeNumber, double x, double y) {
+		drawSprite(g, mazeFullSprites.get(mazeNumber - 1), x, y);
 	}
 
 	@Override
-	public void renderMazeEmpty(GraphicsContext g, int mazeNumber, double x, double y) {
-		renderSprite(g, mazeEmptySprites.get(mazeNumber - 1), x, y);
+	public void drawMazeEmpty(GraphicsContext g, int mazeNumber, double x, double y) {
+		drawSprite(g, mazeEmptySprites.get(mazeNumber - 1), x, y);
 	}
 
 	@Override
-	public void renderMazeBright(GraphicsContext g, int mazeNumber, double x, double y) {
+	public void drawMazeBright(GraphicsContext g, int mazeNumber, double x, double y) {
 		g.drawImage(mazeFlashImages.get(mazeNumber - 1), x, y);
 	}
 

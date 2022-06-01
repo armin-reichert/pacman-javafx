@@ -143,22 +143,22 @@ public class Rendering2D_PacMan implements Rendering2D {
 	}
 
 	@Override
-	public void renderMazeFull(GraphicsContext g, int mazeNumber, double x, double y) {
+	public void drawMazeFull(GraphicsContext g, int mazeNumber, double x, double y) {
 		g.drawImage(mazeFullImage, x, y);
 	}
 
 	@Override
-	public void renderMazeEmpty(GraphicsContext g, int mazeNumber, double x, double y) {
+	public void drawMazeEmpty(GraphicsContext g, int mazeNumber, double x, double y) {
 		g.drawImage(mazeEmptyImage, x, y);
 	}
 
 	@Override
-	public void renderMazeBright(GraphicsContext g, int mazeNumber, double x, double y) {
+	public void drawMazeBright(GraphicsContext g, int mazeNumber, double x, double y) {
 		g.drawImage(mazeFlashingImage, x, y);
 	}
 
 	@Override
-	public void renderCopyright(GraphicsContext g, int x, int y) {
+	public void drawCopyright(GraphicsContext g, int x, int y) {
 		// t(3), t(32)
 		String text = "\u00A9 1980 MIDWAY MFG. CO.";
 		g.setFont(getArcadeFont());

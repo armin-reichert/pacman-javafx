@@ -72,12 +72,12 @@ public class Maze2D extends GameEntity2D {
 		int mazeNumber = r2D.mazeNumber(game.level.number);
 		if (flashingAnimation.getStatus() == Status.RUNNING) {
 			if (brightPhase) {
-				r2D.renderMazeBright(g, mazeNumber, x, y);
+				r2D.drawMazeBright(g, mazeNumber, x, y);
 			} else {
-				r2D.renderMazeEmpty(g, mazeNumber, x, y);
+				r2D.drawMazeEmpty(g, mazeNumber, x, y);
 			}
 		} else {
-			r2D.renderMazeFull(g, mazeNumber, x, y);
+			r2D.drawMazeFull(g, mazeNumber, x, y);
 			Color hiddenColor = Color.BLACK;
 			if (!energizerAnimation.animate()) { // dark phase
 				g.setFill(hiddenColor);

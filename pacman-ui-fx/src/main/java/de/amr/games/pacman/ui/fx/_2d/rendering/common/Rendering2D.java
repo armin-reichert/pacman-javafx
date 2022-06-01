@@ -39,7 +39,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
- * Base class for Pac-Man and Ms. Pac-Man spritesheet-based rendering.
+ * Common interface for Pac-Man and Ms. Pac-Man (spritesheet based) rendering.
  * 
  * @author Armin Reichert
  */
@@ -78,9 +78,11 @@ public interface Rendering2D {
 	 */
 	default void renderEntity(GraphicsContext g, Entity entity, Rectangle2D r) {
 		if (entity.visible) {
-			renderSprite(g, r, entity.position.x + HTS - r.getWidth() / 2, entity.position.y + HTS - r.getHeight() / 2);
+			drawSprite(g, r, entity.position.x + HTS - r.getWidth() / 2, entity.position.y + HTS - r.getHeight() / 2);
 		}
 	}
+
+	void drawCopyright(GraphicsContext g, int x, int y);
 
 	/**
 	 * Renders a sprite at a given location.
@@ -90,7 +92,7 @@ public interface Rendering2D {
 	 * @param x render location x
 	 * @param y render location y
 	 */
-	default void renderSprite(GraphicsContext g, Rectangle2D r, double x, double y) {
+	default void drawSprite(GraphicsContext g, Rectangle2D r, double x, double y) {
 		g.drawImage(spritesheet().getImage(), r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y, r.getWidth(),
 				r.getHeight());
 	}
@@ -137,13 +139,11 @@ public interface Rendering2D {
 	 */
 	Color getGhostHouseDoorColor(int mazeNumber);
 
-	void renderMazeFull(GraphicsContext g, int mazeNumber, double x, double y);
+	void drawMazeFull(GraphicsContext g, int mazeNumber, double x, double y);
 
-	void renderMazeEmpty(GraphicsContext g, int mazeNumber, double x, double y);
+	void drawMazeEmpty(GraphicsContext g, int mazeNumber, double x, double y);
 
-	void renderMazeBright(GraphicsContext g, int mazeNumber, double x, double y);
-
-	void renderCopyright(GraphicsContext g, int x, int y);
+	void drawMazeBright(GraphicsContext g, int mazeNumber, double x, double y);
 
 	// Animations
 
