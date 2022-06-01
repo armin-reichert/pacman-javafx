@@ -96,7 +96,7 @@ public class PlayScene2D extends GameScene2D {
 		for (Ghost ghost : game.ghosts) {
 			ghosts2D[ghost.id] = new Ghost2D(ghost, game).createAnimations(r2D);
 		}
-		bonus2D = new Bonus2D(game.bonus());
+		bonus2D = new Bonus2D(game::bonus);
 		if (game.variant == GameVariant.MS_PACMAN) {
 			bonus2D.setJumpAnimation(Rendering2D_MsPacMan.get().createBonusJumpAnimation());
 		}

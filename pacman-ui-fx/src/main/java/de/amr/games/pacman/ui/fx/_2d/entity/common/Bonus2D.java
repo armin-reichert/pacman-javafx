@@ -25,6 +25,8 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
 
+import java.util.function.Supplier;
+
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.actors.Bonus;
@@ -43,11 +45,11 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class Bonus2D {
 
-	private final Bonus bonus;
+	private final Supplier<Bonus> fnBonus;
 	private TimedSeq<Integer> jumpAnimation;
 
-	public Bonus2D(Bonus bonus) {
-		this.bonus = bonus;
+	public Bonus2D(Supplier<Bonus> fnBonus) {
+		this.fnBonus = fnBonus;
 	}
 
 	public void setJumpAnimation(TimedSeq<Integer> jumpAnimation) {
@@ -67,26 +69,30 @@ public class Bonus2D {
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
+		var bonus = fnBonus.get();
+		if (bonus == null) {
+			return;
+		}
 		switch (bonus.state()) {
 		case EDIBLE -> {
 			g.save();
 			if (jumpAnimation != null) {
 				g.translate(0, jumpAnimation.animate());
 			}
-			drawBonusSymbol(g, r2D);
+			drawBonusSymbol(g, r2D, bonus);
 			g.restore();
 		}
-		case EATEN -> drawBonusValue(g, r2D);
+		case EATEN -> drawBonusValue(g, r2D, bonus);
 		default -> {
 		}
 		}
 	}
 
-	private void drawBonusSymbol(GraphicsContext g, Rendering2D r2D) {
+	private void drawBonusSymbol(GraphicsContext g, Rendering2D r2D, Bonus bonus) {
 		renderSprite(g, r2D, r2D.getSymbolSprite(bonus.symbol()), bonus.position());
 	}
 
-	private void drawBonusValue(GraphicsContext g, Rendering2D r2D) {
+	private void drawBonusValue(GraphicsContext g, Rendering2D r2D, Bonus bonus) {
 		renderSprite(g, r2D, r2D.getBonusValueSprite(bonus.value()), bonus.position());
 	}
 
