@@ -334,10 +334,5 @@ public class PlayScene2D extends GameScene2D {
 		}
 
 		}
-
-		// exit GHOST_DYING
-		if (e.oldGameState == GameState.GHOST_DYING) {
-			game.player.show();
-		}
 	}
 }
