@@ -180,11 +180,6 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 	}
 
 	@Override
-	public Color getGhostHouseDoorColor(int mazeNumber) {
-		return Color.rgb(255, 183, 255);
-	}
-
-	@Override
 	public int mazeNumber(int levelNumber) {
 		return switch (levelNumber) {
 		case 1, 2 -> 1;

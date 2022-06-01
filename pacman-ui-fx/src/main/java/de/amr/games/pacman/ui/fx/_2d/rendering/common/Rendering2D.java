@@ -128,12 +128,6 @@ public interface Rendering2D {
 	 */
 	Color getFoodColor(int mazeNumber);
 
-	/**
-	 * @param mazeNumber the 1-based maze number
-	 * @return color of ghosthouse doors in this maze
-	 */
-	Color getGhostHouseDoorColor(int mazeNumber);
-
 	void drawMazeFull(GraphicsContext g, int mazeNumber, double x, double y);
 
 	void drawMazeEmpty(GraphicsContext g, int mazeNumber, double x, double y);

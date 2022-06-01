@@ -64,6 +64,7 @@ public interface Rendering3D {
 	}
 
 	/**
+	 * @param gameVariant game variant
 	 * @param mazeNumber the 1-based maze number
 	 * @return color of maze walls on side (3D) or outside (2D)
 	 */
@@ -71,6 +72,18 @@ public interface Rendering3D {
 		return switch (gameVariant) {
 		case MS_PACMAN -> MAZE_SIDE_COLORS[mazeNumber - 1];
 		case PACMAN -> Color.rgb(33, 33, 255);
+		};
+	}
+	
+	/**
+	 * @param gameVariant game variant
+	 * @param mazeNumber the 1-based maze number
+	 * @return color of ghosthouse doors in this maze
+	 */
+	default Color getGhostHouseDoorColor(GameVariant gameVariant, int mazeNumber) {
+		return switch (gameVariant) {
+		case MS_PACMAN -> Color.rgb(255, 183, 255);
+		case PACMAN -> Color.rgb(252, 181, 255);
 		};
 	}
 

@@ -160,7 +160,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 		maze3D.createWallsAndDoors(game.level.world, //
 				getMazeSideColor(game.variant, mazeNumber), //
 				getMazeTopColor(game.variant, mazeNumber), //
-				r2D.getGhostHouseDoorColor(mazeNumber));
+				getGhostHouseDoorColor(game.variant, mazeNumber));
 		maze3D.createFood(game.level.world, r2D.getFoodColor(mazeNumber));
 
 		player3D = new Pac3D(game.level.world, game.player, model3D);
@@ -261,7 +261,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 			maze3D.createWallsAndDoors(game.level.world, //
 					getMazeSideColor(game.variant, mazeNumber), //
 					getMazeTopColor(game.variant, mazeNumber), //
-					r2D.getGhostHouseDoorColor(mazeNumber));
+					getGhostHouseDoorColor(game.variant, mazeNumber));
 		}
 	}
 
@@ -418,7 +418,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 			maze3D.createWallsAndDoors(game.level.world, //
 					getMazeSideColor(game.variant, mazeNumber), //
 					getMazeTopColor(game.variant, mazeNumber), //
-					r2D.getGhostHouseDoorColor(mazeNumber));
+					getGhostHouseDoorColor(game.variant, mazeNumber));
 			maze3D.createFood(game.level.world, r2D.getFoodColor(mazeNumber));
 			levelCounter3D.update(game);
 			showFlashMessage(1, Env.message("level_starting", game.level.number));
