@@ -55,8 +55,8 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 
 	public static Rendering2D_MsPacMan get() {
 		if (cmonManYouKnowTheThing == null) {
-			cmonManYouKnowTheThing = new Rendering2D_MsPacMan("/mspacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT,
-					Direction.UP, Direction.DOWN);
+			cmonManYouKnowTheThing = new Rendering2D_MsPacMan("/mspacman/graphics/sprites.png", 16, Direction.RIGHT,
+					Direction.LEFT, Direction.UP, Direction.DOWN);
 		}
 		return cmonManYouKnowTheThing;
 	}
@@ -252,14 +252,14 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 
 	@Override
 	public Map<Direction, SpriteAnimation> createPlayerMunchingAnimations() {
-		Map<Direction, SpriteAnimation> animations = new EnumMap<>(Direction.class);
+		Map<Direction, SpriteAnimation> animationMap = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
 			Rectangle2D wide_open = rhs(0, d), open = rhs(1, d), closed = rhs(2, d);
-			SpriteAnimation munching = SpriteAnimation.of(open, wide_open, open, closed).frameDuration(2).endless();
-			animations.put(dir, munching);
+			var munching = SpriteAnimation.of(open, wide_open, open, closed).frameDuration(2).endless();
+			animationMap.put(dir, munching);
 		}
-		return animations;
+		return animationMap;
 	}
 
 	@Override
@@ -271,14 +271,13 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 
 	@Override
 	public Map<Direction, SpriteAnimation> createGhostKickingAnimations(int ghostID) {
-		EnumMap<Direction, SpriteAnimation> animations = new EnumMap<>(Direction.class);
+		EnumMap<Direction, SpriteAnimation> animationMap = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
-			SpriteAnimation kicking = SpriteAnimation.of(rhs(2 * d, 4 + ghostID), rhs(2 * d + 1, 4 + ghostID))
-					.frameDuration(8).endless();
-			animations.put(dir, kicking);
+			var kicking = SpriteAnimation.of(rhs(2 * d, 4 + ghostID), rhs(2 * d + 1, 4 + ghostID)).frameDuration(8).endless();
+			animationMap.put(dir, kicking);
 		}
-		return animations;
+		return animationMap;
 	}
 
 	@Override
@@ -293,12 +292,12 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 
 	@Override
 	public Map<Direction, SpriteAnimation> createGhostReturningHomeAnimations() {
-		Map<Direction, SpriteAnimation> animations = new EnumMap<>(Direction.class);
+		Map<Direction, SpriteAnimation> animationMap = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
-			animations.put(dir, SpriteAnimation.of(rhs(8 + d, 5)));
+			animationMap.put(dir, SpriteAnimation.of(rhs(8 + d, 5)));
 		}
-		return animations;
+		return animationMap;
 	}
 
 	// Ms. Pac-Man specific:
@@ -308,12 +307,12 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 	}
 
 	public Map<Direction, SpriteAnimation> createHusbandMunchingAnimations() {
-		Map<Direction, SpriteAnimation> animations = new EnumMap<>(Direction.class);
+		Map<Direction, SpriteAnimation> animationMap = new EnumMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
-			animations.put(dir, SpriteAnimation.of(rhs(0, 9 + d), rhs(1, 9 + d), rhs(2, 9)).frameDuration(2).endless());
+			animationMap.put(dir, SpriteAnimation.of(rhs(0, 9 + d), rhs(1, 9 + d), rhs(2, 9)).frameDuration(2).endless());
 		}
-		return animations;
+		return animationMap;
 	}
 
 	public SpriteAnimation createFlapAnimation() {
