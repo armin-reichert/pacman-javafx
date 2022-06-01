@@ -134,6 +134,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene {
 
 	@Override
 	public void setSceneContext(GameModel game) {
+		this.game = game;
 		r2D = switch (game.variant) {
 		case MS_PACMAN -> Rendering2D_MsPacMan.get();
 		case PACMAN -> Rendering2D_PacMan.get();
@@ -161,7 +162,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene {
 				r2D.getGhostHouseDoorColor(mazeNumber));
 		maze3D.createFood(game.level.world, r2D.getFoodColor(mazeNumber));
 
-		player3D = new Pac3D(game.level.world, game.player, model3D, r2D);
+		player3D = new Pac3D(game.level.world, game.player, model3D);
 		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D)).toArray(Ghost3D[]::new);
 		bonus3D = new Bonus3D(r2D);
 

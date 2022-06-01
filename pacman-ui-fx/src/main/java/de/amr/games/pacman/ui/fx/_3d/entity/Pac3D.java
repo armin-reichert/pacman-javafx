@@ -28,7 +28,7 @@ import static de.amr.games.pacman.model.common.world.World.HTS;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.animation.FillTransition3D;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
@@ -56,22 +56,20 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class Pac3D extends Group {
+public class Pac3D extends Group implements Rendering3D {
 
 	private final World world;
 	public final Pac player;
 	private final Group bodyParts;
 	private final Motion motion;
 	private final PointLight light = new PointLight(Color.WHITE);
-	private final Rendering2D r2D;
 
 	private Color skullColorImpaled = Color.GHOSTWHITE;
 
-	public Pac3D(World world, Pac player, PacManModel3D model3D, Rendering2D r2D) {
+	public Pac3D(World world, Pac player, PacManModel3D model3D) {
 		this.world = world;
 		this.player = player;
-		this.r2D = r2D;
-		bodyParts = model3D.createPacMan(r2D.getPlayerSkullColor(), r2D.getPlayerEyesColor(), r2D.getPlayerPalateColor());
+		bodyParts = model3D.createPacMan(getPlayerSkullColor(), getPlayerEyesColor(), getPlayerPalateColor());
 		motion = new Motion(player, this);
 		light.setTranslateZ(-HTS);
 		getChildren().addAll(bodyParts, light);
@@ -103,7 +101,7 @@ public class Pac3D extends Group {
 		bodyParts.setScaleX(1.05);
 		bodyParts.setScaleY(1.05);
 		bodyParts.setScaleZ(1.05);
-		setShapeColor(skull(), r2D.getPlayerSkullColor());
+		setShapeColor(skull(), getPlayerSkullColor());
 		update();
 	}
 
@@ -140,7 +138,7 @@ public class Pac3D extends Group {
 				: new ParallelTransition(spin, shrink, U.pauseSec(0, () -> SoundManager.get().play(GameSound.PACMAN_DEATH)));
 
 		return new SequentialTransition( //
-				new FillTransition3D(Duration.seconds(1), skull(), r2D.getPlayerSkullColor(), ghostColor), //
+				new FillTransition3D(Duration.seconds(1), skull(), getPlayerSkullColor(), ghostColor), //
 				new FillTransition3D(Duration.seconds(1), skull(), ghostColor, skullColorImpaled), //
 				spinAndShrink);
 	}

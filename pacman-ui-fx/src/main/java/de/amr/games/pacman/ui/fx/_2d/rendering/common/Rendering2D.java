@@ -68,56 +68,6 @@ public interface Rendering2D {
 
 	Spritesheet spritesheet();
 
-	default Color getPlayerSkullColor() {
-		return Color.YELLOW;
-	}
-
-	default Color getPlayerEyesColor() {
-		return Color.rgb(33, 33, 33);
-	}
-
-	default Color getPlayerPalateColor() {
-		return Color.CORAL;
-	}
-
-	/**
-	 * @param ghostID 0=Blinky, 1=Pinky, 2=Inky, 3=Clyde/Sue
-	 * @return color of ghost
-	 */
-	default Color getGhostSkinColor(int ghostID) {
-		return switch (ghostID) {
-		case Ghost.RED_GHOST -> Color.RED;
-		case Ghost.PINK_GHOST -> Color.rgb(252, 181, 255);
-		case Ghost.CYAN_GHOST -> Color.CYAN;
-		case Ghost.ORANGE_GHOST -> Color.rgb(253, 192, 90);
-		default -> Color.WHITE; // should not happen
-		};
-	}
-
-	default Color getGhostSkinColorFrightened() {
-		return Color.rgb(33, 33, 255);
-	}
-
-	default Color getGhostSkinColorFrightened2() {
-		return Color.rgb(224, 221, 255);
-	}
-
-	default Color getGhostEyeBallColor() {
-		return Color.GHOSTWHITE;
-	}
-
-	default Color getGhostEyeBallColorFrightened() {
-		return Color.rgb(245, 189, 180);
-	}
-
-	default Color getGhostPupilColor() {
-		return Color.rgb(33, 33, 255);
-	}
-
-	default Color getGhostPupilColorFrightened() {
-		return Color.RED;
-	}
-
 	Font getArcadeFont();
 
 	/**
@@ -145,6 +95,20 @@ public interface Rendering2D {
 	default void renderSprite(GraphicsContext g, Rectangle2D r, double x, double y) {
 		g.drawImage(spritesheet().getImage(), r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y, r.getWidth(),
 				r.getHeight());
+	}
+
+	/**
+	 * @param ghostID 0=Blinky, 1=Pinky, 2=Inky, 3=Clyde/Sue
+	 * @return color of ghost
+	 */
+	default Color getGhostSkinColor(int ghostID) {
+		return switch (ghostID) {
+		case Ghost.RED_GHOST -> Color.RED;
+		case Ghost.PINK_GHOST -> Color.rgb(252, 181, 255);
+		case Ghost.CYAN_GHOST -> Color.CYAN;
+		case Ghost.ORANGE_GHOST -> Color.rgb(253, 192, 90);
+		default -> Color.WHITE; // should not happen
+		};
 	}
 
 	// Maze

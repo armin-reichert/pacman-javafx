@@ -29,6 +29,7 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.animation.ColorFlashingTransition;
 import de.amr.games.pacman.ui.fx._3d.animation.FadeInTransition3D;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
@@ -48,7 +49,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class Ghost3D extends Group {
+public class Ghost3D extends Group implements Rendering3D {
 
 	private enum DisplayMode {
 		COMPLETE_BODY, EYES_ONLY, NUMBER_CUBE
@@ -68,8 +69,8 @@ public class Ghost3D extends Group {
 		this.ghost = ghost;
 		this.r2D = r2D;
 
-		bodyParts = model3D.createGhost(ghostify(r2D.getGhostSkinColor(ghost.id)), r2D.getGhostEyeBallColor(),
-				r2D.getGhostPupilColor());
+		bodyParts = model3D.createGhost(ghostify(getGhostSkinColor(ghost.id)), getGhostEyeBallColor(),
+				getGhostPupilColor());
 
 		motion = new Motion(ghost, this);
 		getChildren().addAll(bodyParts, numberCube);
@@ -164,7 +165,7 @@ public class Ghost3D extends Group {
 	}
 
 	public void playFlashingAnimation() {
-		skinFlashing = new ColorFlashingTransition(r2D.getGhostSkinColorFrightened(), r2D.getGhostSkinColorFrightened2());
+		skinFlashing = new ColorFlashingTransition(getGhostSkinColorFrightened(), getGhostSkinColorFrightened2());
 		skin().setMaterial(skinFlashing.getMaterial());
 		skinFlashing.playFromStart();
 	}
@@ -176,7 +177,7 @@ public class Ghost3D extends Group {
 	}
 
 	public void playRevivalAnimation() {
-		var animation = new FadeInTransition3D(Duration.seconds(1.5), skin(), ghostify(r2D.getGhostSkinColor(ghost.id)));
+		var animation = new FadeInTransition3D(Duration.seconds(1.5), skin(), ghostify(getGhostSkinColor(ghost.id)));
 		animation.setOnFinished(e -> setNormalLook());
 		animation.playFromStart();
 	}
@@ -187,17 +188,17 @@ public class Ghost3D extends Group {
 
 	public void setNormalLook() {
 		stopFlashingAnimation();
-		setShapeColor(skin(), ghostify(r2D.getGhostSkinColor(ghost.id)));
-		setShapeColor(eyeBalls(), r2D.getGhostEyeBallColor());
-		setShapeColor(pupils(), r2D.getGhostPupilColor());
+		setShapeColor(skin(), ghostify(getGhostSkinColor(ghost.id)));
+		setShapeColor(eyeBalls(), getGhostEyeBallColor());
+		setShapeColor(pupils(), getGhostPupilColor());
 		looksFrightened = false;
 	}
 
 	public void setFrightenedLook() {
 		stopFlashingAnimation();
-		setShapeColor(skin(), ghostify(r2D.getGhostSkinColorFrightened()));
-		setShapeColor(eyeBalls(), r2D.getGhostEyeBallColorFrightened());
-		setShapeColor(pupils(), r2D.getGhostPupilColorFrightened());
+		setShapeColor(skin(), ghostify(getGhostSkinColorFrightened()));
+		setShapeColor(eyeBalls(), getGhostEyeBallColorFrightened());
+		setShapeColor(pupils(), getGhostPupilColorFrightened());
 		looksFrightened = true;
 	}
 
