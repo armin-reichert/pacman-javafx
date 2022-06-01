@@ -84,6 +84,11 @@ public class Ghost2D extends GameEntity2D {
 		}
 	}
 
+	public void startFlashing(int numFlashes, long ticksTotal) {
+		long frameTicks = ticksTotal / (numFlashes * animFlashing.numFrames());
+		animFlashing.frameDuration(frameTicks).repetitions(numFlashes).restart();
+	}
+
 	@Override
 	public void render(GraphicsContext g, Rendering2D r2D) {
 		Rectangle2D frame = null;

@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.lib.Logging.log;
+import static de.amr.games.pacman.lib.TickTimer.sec_to_ticks;
 import static de.amr.games.pacman.model.common.world.World.t;
 import static de.amr.games.pacman.ui.fx.util.U.pauseSec;
 
@@ -34,7 +35,6 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.TickTimerEvent;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -87,10 +87,14 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void init() {
+		boolean hasCredit = gameController.credit() > 0;
 		createCommonParts(game);
+		score2D.showPoints = hasCredit;
+		credit2D.visible = !hasCredit;
 		livesCounter2D = new LivesCounter2D(game, t(2), t(34));
+		livesCounter2D.visible = hasCredit;
 		levelCounter2D = new LevelCounter2D(game, unscaledSize.x - t(4), unscaledSize.y - t(2));
-		levelCounter2D.visible = gameController.credit() > 0;
+		levelCounter2D.visible = hasCredit;
 		maze2D = new Maze2D(game, 0, t(3));
 		player2D = new Player2D(game.player, game).createAnimations(r2D);
 		for (Ghost ghost : game.ghosts) {
@@ -100,31 +104,20 @@ public class PlayScene2D extends GameScene2D {
 		if (game.variant == GameVariant.MS_PACMAN) {
 			bonus2D.setJumpAnimation(Rendering2D_MsPacMan.get().createBonusJumpAnimation());
 		}
-		boolean hasCredit = gameController.credit() > 0;
-		score2D.showPoints = hasCredit;
-		credit2D.visible = !hasCredit;
-		livesCounter2D.visible = hasCredit;
-		game.player.powerTimer.addEventListener(this::handleGhostsFlashing);
 	}
 
 	@Override
 	public void end() {
-		game.player.powerTimer.removeEventListener(this::handleGhostsFlashing);
 		log("Scene '%s' ended", getClass().getName());
-	}
-
-	private void handleGhostsFlashing(TickTimerEvent e) {
-		// TODO this is somewhat dubious
-		if (e.type == TickTimerEvent.Type.HALF_EXPIRED) {
-			game.ghosts(GhostState.FRIGHTENED).map(ghost -> ghosts2D[ghost.id]).forEach(ghost2D -> {
-				long frameTicks = e.ticks / (game.level.numFlashes * ghost2D.animFlashing.numFrames());
-				ghost2D.animFlashing.frameDuration(frameTicks).repetitions(game.level.numFlashes).restart();
-			});
-		}
 	}
 
 	@Override
 	protected void doUpdate() {
+		long powerRemaining = game.player.powerTimer.remaining();
+		if (powerRemaining == sec_to_ticks(2)) {
+			game.ghosts().map(ghost -> ghosts2D[ghost.id]).filter(ghost2D -> ghost2D.animFrightened.isRunning())
+					.forEach(ghost2D -> ghost2D.startFlashing(game.level.numFlashes, powerRemaining));
+		}
 		updateSound();
 	}
 
