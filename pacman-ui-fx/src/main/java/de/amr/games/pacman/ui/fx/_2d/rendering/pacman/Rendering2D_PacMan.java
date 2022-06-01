@@ -47,6 +47,16 @@ import javafx.scene.text.Font;
  */
 public class Rendering2D_PacMan implements Rendering2D {
 
+	private static Rendering2D_PacMan theThing;
+
+	public static Rendering2D_PacMan get() {
+		if (theThing == null) {
+			theThing = new Rendering2D_PacMan("/pacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP,
+					Direction.DOWN);
+		}
+		return theThing;
+	}
+
 	//@formatter:off
 	static final Color[] GHOST_COLORS = {
 		Color.RED,
@@ -58,16 +68,6 @@ public class Rendering2D_PacMan implements Rendering2D {
 
 	private static final Color MAZE_WALL_COLOR = Color.rgb(33, 33, 255);
 	private static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
-
-	private static Rendering2D_PacMan it;
-
-	public static Rendering2D_PacMan get() {
-		if (it == null) {
-			it = new Rendering2D_PacMan("/pacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP,
-					Direction.DOWN);
-		}
-		return it;
-	}
 
 	private final Spritesheet ss;
 	private final Image mazeFullImage;

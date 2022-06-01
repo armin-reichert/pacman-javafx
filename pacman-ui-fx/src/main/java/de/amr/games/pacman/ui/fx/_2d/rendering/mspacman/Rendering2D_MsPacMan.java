@@ -51,6 +51,16 @@ import javafx.scene.text.Font;
  */
 public class Rendering2D_MsPacMan implements Rendering2D {
 
+	private static Rendering2D_MsPacMan theThing;
+
+	public static Rendering2D_MsPacMan get() {
+		if (theThing == null) {
+			theThing = new Rendering2D_MsPacMan("/mspacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT,
+					Direction.UP, Direction.DOWN);
+		}
+		return theThing;
+	}
+
 	//@formatter:off
 	static final Color[] GHOST_COLORS = {
 		Color.RED,
@@ -86,16 +96,6 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 		Color.rgb(222, 222, 255), 
 	};
 	//@formatter:on
-
-	private static Rendering2D_MsPacMan it;
-
-	public static Rendering2D_MsPacMan get() {
-		if (it == null) {
-			it = new Rendering2D_MsPacMan("/mspacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP,
-					Direction.DOWN);
-		}
-		return it;
-	}
 
 	private final Spritesheet ss;
 	private final Image midwayLogo;
