@@ -141,14 +141,21 @@ public class PlayScene2D extends GameScene2D {
 
 	private void updateAnimations() {
 		boolean frightened = game.player.hasPower();
-		boolean lessFrightened = game.player.powerTimer.remaining() <= sec_to_ticks(2);
+		long lessFrightenedTime = sec_to_ticks(2);
+		boolean lessFrightened = game.player.powerTimer.remaining() <= lessFrightenedTime;
+		if (game.player.powerTimer.remaining() == lessFrightenedTime) {
+			for (var ghost2D : ghosts2D) {
+				ghost2D.startFlashingAnimation(game.level.numFlashes, lessFrightenedTime);
+			}
+		}
 		for (var ghost2D : ghosts2D) {
 			GhostAnimation selection = switch (ghost2D.ghost.state) {
 			case DEAD -> ghost2D.ghost.bounty == 0 ? GhostAnimation.EYES : GhostAnimation.NUMBER;
 			case ENTERING_HOUSE -> GhostAnimation.EYES;
 			case FRIGHTENED -> lessFrightened ? GhostAnimation.FLASHING : GhostAnimation.FRIGHTENED;
 			case HUNTING_PAC, LEAVING_HOUSE -> GhostAnimation.KICKING;
-			case LOCKED -> lessFrightened ? GhostAnimation.FLASHING : frightened ? GhostAnimation.FRIGHTENED : GhostAnimation.KICKING;
+			case LOCKED -> lessFrightened ? GhostAnimation.FLASHING
+					: frightened ? GhostAnimation.FRIGHTENED : GhostAnimation.KICKING;
 			};
 			ghost2D.selectAnimation(selection);
 		}
