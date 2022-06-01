@@ -37,8 +37,10 @@ public class Credit2D extends GameEntity2D {
 
 	private final IntSupplier fnCredit;
 
-	public Credit2D(IntSupplier fnCredit) {
+	public Credit2D(IntSupplier fnCredit, double x, double y) {
 		this.fnCredit = fnCredit;
+		this.x = x;
+		this.y = y;
 	}
 
 	@Override

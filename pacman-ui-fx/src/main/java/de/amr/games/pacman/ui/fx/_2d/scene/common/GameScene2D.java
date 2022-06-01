@@ -60,18 +60,21 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 	protected final V2i unscaledSize;
 	protected final double aspectRatio;
 
+	// context
 	protected GameModel game;
 	protected Rendering2D r2D;
+
+	// common parts
 	protected GameScore2D score2D;
 	protected GameScore2D highScore2D;
 	protected Credit2D credit2D;
 
 	/**
-	 * @param gc           game controller
-	 * @param unscaledSize logical scene size (number of tiles x tile size)
+	 * @param gameController game controller
+	 * @param unscaledSize   logical scene size (number of tiles x tile size)
 	 */
-	public GameScene2D(GameController gc, V2i unscaledSize) {
-		this.gameController = gc;
+	public GameScene2D(GameController gameController, V2i unscaledSize) {
+		this.gameController = gameController;
 		this.unscaledSize = unscaledSize;
 		this.aspectRatio = (double) unscaledSize.x / unscaledSize.y;
 		this.canvas = new Canvas();
@@ -82,8 +85,19 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
 	}
 
+	protected void createCommonParts(GameModel game) {
+		score2D = new GameScore2D(game, t(1), t(1));
+		score2D.title = "SCORE";
+		score2D.showHighscore = false;
+		highScore2D = new GameScore2D(game, t(16), t(1));
+		highScore2D.title = "HIGH SCORE";
+		highScore2D.showHighscore = true;
+		credit2D = new Credit2D(gameController::credit, t(2), t(ArcadeWorld.TILES_Y) - 2);
+		credit2D.visible = false;
+	}
+
 	@Override
-	public void setSceneContext(GameModel game) {
+	public void setGame(GameModel game) {
 		this.game = game;
 		r2D = switch (game.variant) {
 		case MS_PACMAN -> Rendering2D_MsPacMan.get();
@@ -109,23 +123,6 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
 		canvas.getTransforms().setAll(new Scale(scaling, scaling));
-	}
-
-	protected void createCommonParts() {
-		score2D = new GameScore2D(game);
-		score2D.x = t(1);
-		score2D.y = t(1);
-		score2D.title = "SCORE";
-		score2D.showHighscore = false;
-		highScore2D = new GameScore2D(game);
-		highScore2D.x = t(16);
-		highScore2D.y = t(1);
-		highScore2D.title = "HIGH SCORE";
-		highScore2D.showHighscore = true;
-		credit2D = new Credit2D(gameController::credit);
-		credit2D.x = t(2);
-		credit2D.y = t(ArcadeWorld.TILES_Y) - 2;
-		credit2D.visible = false;
 	}
 
 	/**

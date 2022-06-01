@@ -134,7 +134,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 	}
 
 	@Override
-	public void setSceneContext(GameModel game) {
+	public void setGame(GameModel game) {
 		this.game = game;
 		r2D = switch (game.variant) {
 		case MS_PACMAN -> Rendering2D_MsPacMan.get();

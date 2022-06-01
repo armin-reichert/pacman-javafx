@@ -44,8 +44,10 @@ public class GameScore2D extends GameEntity2D {
 	public Color titleColor = Color.WHITE;
 	public Color pointsColor = Color.WHITE;
 
-	public GameScore2D(GameModel game) {
+	public GameScore2D(GameModel game, double x, double y) {
 		super(game);
+		this.x = x;
+		this.y = y;
 	}
 
 	@Override

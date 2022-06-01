@@ -40,7 +40,7 @@ public interface GameScene extends GameEventListener {
 	/**
 	 * Sets the scene "context" (game model, rendering, 3D model, sound).
 	 */
-	void setSceneContext(GameModel game);
+	void setGame(GameModel game);
 
 	/**
 	 * Called before scene is displayed.

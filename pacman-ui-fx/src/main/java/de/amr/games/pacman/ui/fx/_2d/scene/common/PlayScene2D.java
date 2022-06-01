@@ -87,7 +87,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void init() {
-		createCommonParts();
+		createCommonParts(game);
 		livesCounter2D = new LivesCounter2D(game, t(2), t(34));
 		levelCounter2D = new LevelCounter2D(game, unscaledSize.x - t(4), unscaledSize.y - t(2));
 		levelCounter2D.visible = gameController.credit() > 0;
