@@ -51,8 +51,8 @@ public class Rendering2D_PacMan implements Rendering2D {
 
 	public static Rendering2D_PacMan get() {
 		if (cmonManYouKnowTheThing == null) {
-			cmonManYouKnowTheThing = new Rendering2D_PacMan("/pacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP,
-					Direction.DOWN);
+			cmonManYouKnowTheThing = new Rendering2D_PacMan("/pacman/graphics/sprites.png", 16, Direction.RIGHT,
+					Direction.LEFT, Direction.UP, Direction.DOWN);
 		}
 		return cmonManYouKnowTheThing;
 	}
@@ -70,9 +70,9 @@ public class Rendering2D_PacMan implements Rendering2D {
 	private static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
 
 	private final Spritesheet ss;
-	private final Image mazeFullImage;
-	private final Image mazeEmptyImage;
-	private final Image mazeFlashingImage;
+	private final Image mazeFull;
+	private final Image mazeEmpty;
+	private final Image mazeFlashing;
 	private final Map<Integer, Rectangle2D> bonusValueSprites;
 	private final Map<Integer, Rectangle2D> symbolSprites;
 	private final Map<Integer, Rectangle2D> bountyNumberSprites;
@@ -81,9 +81,9 @@ public class Rendering2D_PacMan implements Rendering2D {
 	private Rendering2D_PacMan(String path, int rasterSize, Direction... dirOrder) {
 		ss = new Spritesheet(path, rasterSize, dirOrder);
 		font = U.font("/common/emulogic.ttf", 8);
-		mazeFullImage = U.image("/pacman/graphics/maze_full.png");
-		mazeEmptyImage = U.image("/pacman/graphics/maze_empty.png");
-		mazeFlashingImage = U.colorsExchanged(mazeEmptyImage, Map.of(MAZE_WALL_COLOR, Color.WHITE));
+		mazeFull = U.image("/pacman/graphics/maze_full.png");
+		mazeEmpty = U.image("/pacman/graphics/maze_empty.png");
+		mazeFlashing = U.colorsExchanged(mazeEmpty, Map.of(MAZE_WALL_COLOR, Color.WHITE));
 
 		//@formatter:off
 		symbolSprites = Map.of(
@@ -139,17 +139,17 @@ public class Rendering2D_PacMan implements Rendering2D {
 
 	@Override
 	public void drawMazeFull(GraphicsContext g, int mazeNumber, double x, double y) {
-		g.drawImage(mazeFullImage, x, y);
+		g.drawImage(mazeFull, x, y);
 	}
 
 	@Override
 	public void drawMazeEmpty(GraphicsContext g, int mazeNumber, double x, double y) {
-		g.drawImage(mazeEmptyImage, x, y);
+		g.drawImage(mazeEmpty, x, y);
 	}
 
 	@Override
 	public void drawMazeBright(GraphicsContext g, int mazeNumber, double x, double y) {
-		g.drawImage(mazeFlashingImage, x, y);
+		g.drawImage(mazeFlashing, x, y);
 	}
 
 	@Override
