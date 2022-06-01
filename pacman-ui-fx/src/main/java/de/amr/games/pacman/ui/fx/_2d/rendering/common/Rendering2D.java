@@ -29,7 +29,6 @@ import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.actors.Entity;
-import de.amr.games.pacman.model.common.actors.Ghost;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -114,15 +113,7 @@ public interface Rendering2D {
 	 * @param ghostID 0=Blinky, 1=Pinky, 2=Inky, 3=Clyde/Sue
 	 * @return color of ghost as given in spritesheet
 	 */
-	default Color getGhostColor(int ghostID) {
-		return switch (ghostID) {
-		case Ghost.RED_GHOST -> Color.RED;
-		case Ghost.PINK_GHOST -> Color.rgb(252, 181, 255);
-		case Ghost.CYAN_GHOST -> Color.CYAN;
-		case Ghost.ORANGE_GHOST -> Color.rgb(253, 192, 90);
-		default -> Color.WHITE; // should not happen
-		};
-	}
+	Color getGhostColor(int ghostID);
 
 	// Maze
 

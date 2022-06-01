@@ -52,6 +52,13 @@ import javafx.scene.text.Font;
 public class Rendering2D_MsPacMan implements Rendering2D {
 
 	//@formatter:off
+	static final Color[] GHOST_COLORS = {
+		Color.RED,
+		Color.rgb(252, 181, 255),
+		Color.CYAN,
+		Color.rgb(253, 192, 90)
+	};
+	
 	static final Color[] MAZE_TOP_COLORS = { 
 		Color.rgb(255, 183, 174), 
 		Color.rgb(71, 183, 255), 
@@ -168,6 +175,11 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 	@Override
 	public Font getArcadeFont() {
 		return font;
+	}
+
+	@Override
+	public Color getGhostColor(int ghostID) {
+		return GHOST_COLORS[ghostID];
 	}
 
 	@Override

@@ -48,6 +48,15 @@ import javafx.scene.text.Font;
  */
 public class Rendering2D_PacMan implements Rendering2D {
 
+	//@formatter:off
+	static final Color[] GHOST_COLORS = {
+		Color.RED,
+		Color.rgb(252, 181, 255),
+		Color.CYAN,
+		Color.rgb(253, 192, 90)
+	};
+	//@formatter:on
+
 	private static final Color MAZE_WALL_COLOR = Color.rgb(33, 33, 255);
 	private static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
 
@@ -111,13 +120,18 @@ public class Rendering2D_PacMan implements Rendering2D {
 	}
 
 	@Override
+	public Spritesheet spritesheet() {
+		return ss;
+	}
+
+	@Override
 	public Font getArcadeFont() {
 		return font;
 	}
 
 	@Override
-	public Spritesheet spritesheet() {
-		return ss;
+	public Color getGhostColor(int ghostID) {
+		return GHOST_COLORS[ghostID];
 	}
 
 	@Override
