@@ -23,14 +23,13 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
-import java.util.Map;
-
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimationMap;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.geometry.Rectangle2D;
@@ -44,7 +43,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class Player2D extends GameEntity2D {
 
 	public final Pac player;
-	public Map<Direction, SpriteAnimation> animMunching;
+	public SpriteAnimationMap<Direction> animMunching;
 	private SpriteAnimation animDying;
 
 	public Player2D(Pac player, GameModel game) {

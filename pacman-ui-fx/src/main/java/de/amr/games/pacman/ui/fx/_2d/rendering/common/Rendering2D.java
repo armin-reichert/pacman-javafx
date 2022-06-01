@@ -25,8 +25,6 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
 
-import java.util.Map;
-
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.actors.Entity;
 import javafx.geometry.Rectangle2D;
@@ -55,17 +53,17 @@ public interface Rendering2D {
 
 	Rectangle2D getSymbolSprite(int symbol);
 
-	Map<Direction, SpriteAnimation> createPlayerMunchingAnimations();
+	SpriteAnimationMap<Direction> createPlayerMunchingAnimations();
 
 	SpriteAnimation createPlayerDyingAnimation();
 
-	Map<Direction, SpriteAnimation> createGhostKickingAnimations(int ghostID);
+	SpriteAnimationMap<Direction> createGhostKickingAnimations(int ghostID);
 
 	SpriteAnimation createGhostFrightenedAnimation();
 
 	SpriteAnimation createGhostFlashingAnimation();
 
-	Map<Direction, SpriteAnimation> createGhostReturningHomeAnimations();
+	SpriteAnimationMap<Direction> createGhostReturningHomeAnimations();
 
 	default void drawEntity(GraphicsContext g, Entity e, Rectangle2D sprite) {
 		if (e.visible) {

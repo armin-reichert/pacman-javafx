@@ -23,14 +23,13 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
-import java.util.Map;
-
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimationMap;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -47,8 +46,8 @@ public class Ghost2D extends GameEntity2D {
 	public final Ghost ghost;
 	private AnimationKey animationKey;
 
-	public Map<Direction, SpriteAnimation> animKicking;
-	public Map<Direction, SpriteAnimation> animEyes;
+	public SpriteAnimationMap<Direction> animKicking;
+	public SpriteAnimationMap<Direction> animEyes;
 	public SpriteAnimation animFlashing;
 	public SpriteAnimation animFrightened;
 	public SpriteAnimation animNumber;
@@ -80,8 +79,8 @@ public class Ghost2D extends GameEntity2D {
 			if (!sa.isRunning()) {
 				sa.run();
 			}
-		} else if (selectedAnimation instanceof Map) {
-			Map<Direction, SpriteAnimation> am = (Map<Direction, SpriteAnimation>) selectedAnimation;
+		} else if (selectedAnimation instanceof SpriteAnimationMap) {
+			SpriteAnimationMap<Direction> am = (SpriteAnimationMap<Direction>) selectedAnimation;
 			for (var dir : Direction.values()) {
 				if (!am.get(dir).isRunning()) {
 					am.get(dir).run();
