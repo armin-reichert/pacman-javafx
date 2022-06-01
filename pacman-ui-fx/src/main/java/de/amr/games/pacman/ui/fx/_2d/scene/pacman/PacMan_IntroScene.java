@@ -31,10 +31,10 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.pacman.IntroController;
-import de.amr.games.pacman.lib.V2d;
+import de.amr.games.pacman.controller.pacman.IntroController.State;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
+import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D.AnimationKey;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
@@ -68,6 +68,7 @@ public class PacMan_IntroScene extends GameScene2D {
 		super(gameController, unscaledSize);
 		sceneController = new IntroController(gameController);
 		context = sceneController.context();
+		sceneController.addStateChangeListener(this::onSceneStateChange);
 	}
 
 	@Override
@@ -97,16 +98,24 @@ public class PacMan_IntroScene extends GameScene2D {
 		}
 	}
 
+	private void onSceneStateChange(State fromState, State toState) {
+		if (fromState == State.CHASING_PAC && toState == State.CHASING_GHOSTS) {
+			for (var ghost2D : ghosts2D) {
+				ghost2D.selectAnimation(AnimationKey.FRIGHTENED);
+			}
+		}
+	}
+
 	@Override
 	public void doUpdate() {
 		sceneController.update();
-		// TODO find a better solution:
-		if (sceneController.state() == IntroController.State.CHASING_GHOSTS) {
-			for (Ghost ghost : context.ghosts) {
-				if (ghost.velocity.equals(V2d.NULL)) {
-					ghosts2D[ghost.id].animFrightened.stop();
-				} else if (!ghosts2D[ghost.id].animFrightened.isRunning()) {
-					ghosts2D[ghost.id].animFrightened.restart();
+		// TODO this is not optimal but works
+		if (sceneController.state() == State.CHASING_GHOSTS) {
+			for (var ghost2D : ghosts2D) {
+				if (ghost2D.ghost.velocity.length() == 0) {
+					ghost2D.animFrightened.stop();
+				} else {
+					ghost2D.animFrightened.run();
 				}
 			}
 		}

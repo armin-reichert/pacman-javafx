@@ -41,6 +41,7 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Bonus2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
+import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D.AnimationKey;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Maze2D;
@@ -113,11 +114,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	protected void doUpdate() {
-		long powerRemaining = game.player.powerTimer.remaining();
-		if (powerRemaining == sec_to_ticks(2)) {
-			game.ghosts().map(ghost -> ghosts2D[ghost.id]).filter(ghost2D -> ghost2D.animFrightened.isRunning())
-					.forEach(ghost2D -> ghost2D.startFlashing(game.level.numFlashes, powerRemaining));
-		}
+		updateAnimations();
 		updateSound();
 	}
 
@@ -142,6 +139,21 @@ public class PlayScene2D extends GameScene2D {
 		player2D.render(g, r2D);
 		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(g, r2D));
 		levelCounter2D.render(g, r2D);
+	}
+
+	private void updateAnimations() {
+		boolean frightened = game.player.hasPower();
+		boolean flashing = game.player.powerTimer.remaining() <= sec_to_ticks(2);
+		for (var ghost2D : ghosts2D) {
+			switch (ghost2D.ghost.state) {
+			case DEAD -> ghost2D.selectAnimation(ghost2D.ghost.bounty == 0 ? AnimationKey.EYES : AnimationKey.NUMBER);
+			case ENTERING_HOUSE -> ghost2D.selectAnimation(AnimationKey.EYES);
+			case FRIGHTENED -> ghost2D.selectAnimation(flashing ? AnimationKey.FLASHING : AnimationKey.FRIGHTENED);
+			case HUNTING_PAC, LEAVING_HOUSE -> ghost2D.selectAnimation(AnimationKey.KICKING);
+			case LOCKED -> ghost2D.selectAnimation(
+					flashing ? AnimationKey.FLASHING : frightened ? AnimationKey.FRIGHTENED : AnimationKey.KICKING);
+			}
+		}
 	}
 
 	private void updateSound() {

@@ -87,6 +87,10 @@ public class SpriteAnimation {
 		return seq.numFrames();
 	}
 
+	public void setFrameIndex(int i) {
+		seq.setFrameIndex(i);
+	}
+
 	public Rectangle2D frame() {
 		return seq.frame();
 	}
