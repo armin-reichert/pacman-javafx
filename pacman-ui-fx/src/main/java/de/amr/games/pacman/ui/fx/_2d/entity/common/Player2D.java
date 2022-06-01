@@ -79,6 +79,6 @@ public class Player2D extends GameEntity2D {
 				munching.advance();
 			}
 		}
-		r2D.renderEntity(g, player, sprite);
+		r2D.drawEntity(g, player, sprite);
 	}
 }

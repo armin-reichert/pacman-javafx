@@ -24,6 +24,7 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._3d.animation;
 
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import javafx.scene.paint.Color;
 
@@ -31,6 +32,47 @@ import javafx.scene.paint.Color;
  * @author Armin Reichert
  */
 public interface Rendering3D {
+
+	//@formatter:off
+	static final Color[] MAZE_TOP_COLORS = { 
+		Color.rgb(255, 183, 174), 
+		Color.rgb(71, 183, 255), 
+		Color.rgb(222, 151, 81), 
+		Color.rgb(33, 33, 255), 
+		Color.rgb(255, 183, 255), 
+		Color.rgb(255, 183, 174), 
+	};
+
+	static final Color[] MAZE_SIDE_COLORS = { 
+		Color.rgb(255, 0, 0), 
+		Color.rgb(222, 222, 255), 
+		Color.rgb(222, 222, 255), 
+		Color.rgb(255, 183, 81), 
+		Color.rgb(255, 255, 0), 
+		Color.rgb(255, 0, 0), 
+	};
+
+	/**
+	 * @param mazeNumber the 1-based maze number
+	 * @return color of maze walls on top (3D) or inside (2D)
+	 */
+	default Color getMazeTopColor(GameVariant gameVariant, int mazeNumber) {
+		return switch (gameVariant) {
+		case MS_PACMAN -> MAZE_TOP_COLORS[mazeNumber - 1];
+		case PACMAN -> Color.AZURE;
+		};
+	}
+
+	/**
+	 * @param mazeNumber the 1-based maze number
+	 * @return color of maze walls on side (3D) or outside (2D)
+	 */
+	default Color getMazeSideColor(GameVariant gameVariant, int mazeNumber) {
+		return switch (gameVariant) {
+		case MS_PACMAN -> MAZE_SIDE_COLORS[mazeNumber - 1];
+		case PACMAN -> Color.rgb(33, 33, 255);
+		};
+	}
 
 	default Color getPlayerSkullColor() {
 		return Color.YELLOW;

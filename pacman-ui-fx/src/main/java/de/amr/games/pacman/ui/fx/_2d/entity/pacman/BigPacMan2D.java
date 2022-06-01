@@ -55,7 +55,7 @@ public class BigPacMan2D extends GameEntity2D {
 		// centered to the ground
 		g.save();
 		g.translate(0, -sprite.getHeight() / 2 + 8);
-		r2D.renderEntity(g, pacMan, sprite);
+		r2D.drawEntity(g, pacMan, sprite);
 		g.restore();
 	}
 }

@@ -46,6 +46,6 @@ public class Heart2D extends GameEntity2D {
 
 	@Override
 	public void render(GraphicsContext g, Rendering2D r2D) {
-		Rendering2D_MsPacMan.get().renderEntity(g, heart, Rendering2D_MsPacMan.get().getHeart());
+		Rendering2D_MsPacMan.get().drawEntity(g, heart, Rendering2D_MsPacMan.get().getHeart());
 	}
 }

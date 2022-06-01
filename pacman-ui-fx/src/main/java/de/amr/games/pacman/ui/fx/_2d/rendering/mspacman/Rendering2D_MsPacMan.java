@@ -52,7 +52,7 @@ import javafx.scene.text.Font;
 public class Rendering2D_MsPacMan implements Rendering2D {
 
 	//@formatter:off
-	private static final Color[] MAZE_TOP_COLORS = { 
+	static final Color[] MAZE_TOP_COLORS = { 
 		Color.rgb(255, 183, 174), 
 		Color.rgb(71, 183, 255), 
 		Color.rgb(222, 151, 81), 
@@ -61,7 +61,7 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 		Color.rgb(255, 183, 174), 
 	};
 
-	private static final Color[] MAZE_SIDE_COLORS = { 
+	static final Color[] MAZE_SIDE_COLORS = { 
 		Color.rgb(255, 0, 0), 
 		Color.rgb(222, 222, 255), 
 		Color.rgb(222, 222, 255), 
@@ -70,16 +70,9 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 		Color.rgb(255, 0, 0), 
 	};
 
-	private static final Color[] FOOD_COLORS = { 
-		Color.rgb(222, 222, 255), 
-		Color.rgb(255, 255, 0), 
-		Color.rgb(255, 0, 0), 
-		Color.rgb(222, 222, 255), 
-		Color.rgb(0, 255, 255), 
-		Color.rgb(222, 222, 255), 
-	};
-	
-	
+	private static final Color[] FOOD_COLORS = { Color.rgb(222, 222, 255), Color.rgb(255, 255, 0), Color.rgb(255, 0, 0),
+			Color.rgb(222, 222, 255), Color.rgb(0, 255, 255), Color.rgb(222, 222, 255), };
+
 	//@formatter:on
 
 	private static Rendering2D_MsPacMan it;
@@ -154,8 +147,8 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 			Rectangle2D mazeFullRegion = new Rectangle2D(0, 248 * mazeIndex, 226, 248);
 			Rectangle2D mazeEmptyRegion = new Rectangle2D(226, 248 * mazeIndex, 226, 248);
 			Image mazeFlashImage = Rendering2D.colorsExchanged(ss.extractRegion(mazeEmptyRegion), Map.of( //
-					getMazeSideColor(mazeIndex + 1), Color.WHITE, //
-					getMazeTopColor(mazeIndex + 1), Color.BLACK) //
+					MAZE_SIDE_COLORS[mazeIndex], Color.WHITE, //
+					MAZE_TOP_COLORS[mazeIndex], Color.BLACK) //
 			);
 			mazeFullSprites.add(mazeFullRegion);
 			mazeEmptySprites.add(mazeEmptyRegion);
@@ -184,16 +177,6 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 		g.setFont(getArcadeFont());
 		g.fillText("MIDWAY MFG CO", x + t(7), y + t(2));
 		g.fillText("1980/1981", x + t(8), y + t(4));
-	}
-
-	@Override
-	public Color getMazeTopColor(int mazeNumber) {
-		return MAZE_TOP_COLORS[mazeNumber - 1];
-	}
-
-	@Override
-	public Color getMazeSideColor(int mazeNumber) {
-		return MAZE_SIDE_COLORS[mazeNumber - 1];
 	}
 
 	@Override

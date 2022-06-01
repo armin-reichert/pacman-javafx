@@ -46,7 +46,7 @@ public class JuniorBag2D extends GameEntity2D {
 
 	@Override
 	public void render(GraphicsContext g, Rendering2D r2D) {
-		r2D.renderEntity(g, bag,
+		r2D.drawEntity(g, bag,
 				bag.open ? ((Rendering2D_MsPacMan) r2D).getJunior() : ((Rendering2D_MsPacMan) r2D).getBlueBag());
 	}
 }

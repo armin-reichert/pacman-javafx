@@ -49,6 +49,6 @@ public class BlinkyNaked2D extends GameEntity2D {
 
 	@Override
 	public void render(GraphicsContext g, Rendering2D r2D) {
-		r2D.renderEntity(g, blinky, animation.animate());
+		r2D.drawEntity(g, blinky, animation.animate());
 	}
 }

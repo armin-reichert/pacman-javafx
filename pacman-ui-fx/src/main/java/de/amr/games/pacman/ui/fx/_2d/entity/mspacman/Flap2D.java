@@ -53,7 +53,7 @@ public class Flap2D extends GameEntity2D {
 	public void render(GraphicsContext g, Rendering2D r2D) {
 		if (flap.visible) {
 			Rectangle2D sprite = animation.animate();
-			Rendering2D_MsPacMan.get().renderEntity(g, flap, sprite);
+			Rendering2D_MsPacMan.get().drawEntity(g, flap, sprite);
 			g.setFont(Rendering2D_MsPacMan.get().getArcadeFont());
 			g.setFill(Color.rgb(222, 222, 255));
 			g.fillText(String.valueOf(flap.number), flap.position.x + sprite.getWidth() - 25, flap.position.y + 18);

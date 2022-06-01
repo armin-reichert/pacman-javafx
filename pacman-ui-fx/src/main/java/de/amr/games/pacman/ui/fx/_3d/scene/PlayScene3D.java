@@ -42,6 +42,7 @@ import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
+import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.LevelCounter3D;
@@ -76,7 +77,7 @@ import javafx.scene.transform.Translate;
  * 
  * @author Armin Reichert
  */
-public class PlayScene3D extends GameEventAdapter implements GameScene {
+public class PlayScene3D extends GameEventAdapter implements GameScene, Rendering3D {
 
 	private final GameController gameController;
 	private final SubScene fxSubScene;
@@ -157,8 +158,8 @@ public class PlayScene3D extends GameEventAdapter implements GameScene {
 		maze3D.$resolution.addListener(this::onMazeResolutionChange);
 		int mazeNumber = r2D.mazeNumber(game.level.number);
 		maze3D.createWallsAndDoors(game.level.world, //
-				r2D.getMazeSideColor(mazeNumber), //
-				r2D.getMazeTopColor(mazeNumber), //
+				getMazeSideColor(game.variant, mazeNumber), //
+				getMazeTopColor(game.variant, mazeNumber), //
 				r2D.getGhostHouseDoorColor(mazeNumber));
 		maze3D.createFood(game.level.world, r2D.getFoodColor(mazeNumber));
 
@@ -258,8 +259,8 @@ public class PlayScene3D extends GameEventAdapter implements GameScene {
 		if (!oldValue.equals(newValue)) {
 			int mazeNumber = r2D.mazeNumber(game.level.number);
 			maze3D.createWallsAndDoors(game.level.world, //
-					r2D.getMazeSideColor(mazeNumber), //
-					r2D.getMazeTopColor(mazeNumber), //
+					getMazeSideColor(game.variant, mazeNumber), //
+					getMazeTopColor(game.variant, mazeNumber), //
 					r2D.getGhostHouseDoorColor(mazeNumber));
 		}
 	}
@@ -415,8 +416,8 @@ public class PlayScene3D extends GameEventAdapter implements GameScene {
 			// from READY to LEVEL_STARTING when the game starts?
 			int mazeNumber = r2D.mazeNumber(game.level.number);
 			maze3D.createWallsAndDoors(game.level.world, //
-					r2D.getMazeSideColor(mazeNumber), //
-					r2D.getMazeTopColor(mazeNumber), //
+					getMazeSideColor(game.variant, mazeNumber), //
+					getMazeTopColor(game.variant, mazeNumber), //
 					r2D.getGhostHouseDoorColor(mazeNumber));
 			maze3D.createFood(game.level.world, r2D.getFoodColor(mazeNumber));
 			levelCounter3D.update(game);

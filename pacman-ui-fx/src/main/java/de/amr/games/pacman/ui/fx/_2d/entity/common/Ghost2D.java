@@ -107,6 +107,6 @@ public class Ghost2D extends GameEntity2D {
 		} else {
 			frame = animKicking.get(ghost.wishDir()).animate();
 		}
-		r2D.renderEntity(g, ghost, frame);
+		r2D.drawEntity(g, ghost, frame);
 	}
 }

@@ -48,8 +48,7 @@ import javafx.scene.text.Font;
  */
 public class Rendering2D_PacMan implements Rendering2D {
 
-	private static final Color MAZE_TOP_COLOR = Color.AZURE;
-	private static final Color MAZE_SIDE_COLOR = Color.rgb(33, 33, 255);
+	private static final Color MAZE_WALL_COLOR = Color.rgb(33, 33, 255);
 	private static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
 
 	private static Rendering2D_PacMan it;
@@ -78,7 +77,7 @@ public class Rendering2D_PacMan implements Rendering2D {
 		mazeFullImage = U.image("/pacman/graphics/maze_full.png");
 		mazeEmptyImage = U.image("/pacman/graphics/maze_empty.png");
 		mazeFlashingImage = Rendering2D.colorsExchanged(mazeEmptyImage,
-				Collections.singletonMap(getMazeSideColor(1), Color.WHITE));
+				Collections.singletonMap(MAZE_WALL_COLOR, Color.WHITE));
 
 		//@formatter:off
 		symbolSprites = Map.of(
@@ -120,16 +119,6 @@ public class Rendering2D_PacMan implements Rendering2D {
 	@Override
 	public Spritesheet spritesheet() {
 		return ss;
-	}
-
-	@Override
-	public Color getMazeTopColor(int mazeNumber) {
-		return MAZE_TOP_COLOR;
-	}
-
-	@Override
-	public Color getMazeSideColor(int mazeNumber) {
-		return MAZE_SIDE_COLOR;
 	}
 
 	@Override

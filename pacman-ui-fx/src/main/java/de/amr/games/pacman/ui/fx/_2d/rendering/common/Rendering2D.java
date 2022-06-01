@@ -69,37 +69,40 @@ public interface Rendering2D {
 	Font getArcadeFont();
 
 	/**
-	 * Renders an entity sprite centered over the entity's collision box. Entity position is left upper corner of
-	 * collision box which has a size of one square tile.
+	 * Draws the entity's sprite centered over its collision box. The entity position is the left corner of the collision
+	 * box which has a size of one square tile.
 	 * 
 	 * @param g      the graphics context
-	 * @param entity the entity getting rendered
-	 * @param r      region of entity sprite in spritesheet
+	 * @param e      the entity getting drawn
+	 * @param sprite entity sprite (region) in spritesheet
 	 */
-	default void renderEntity(GraphicsContext g, Entity entity, Rectangle2D r) {
-		if (entity.visible) {
-			drawSprite(g, r, entity.position.x + HTS - r.getWidth() / 2, entity.position.y + HTS - r.getHeight() / 2);
+	default void drawEntity(GraphicsContext g, Entity e, Rectangle2D sprite) {
+		if (e.visible) {
+			drawSprite(g, sprite, e.position.x + HTS - sprite.getWidth() / 2, e.position.y + HTS - sprite.getHeight() / 2);
 		}
 	}
-
-	void drawCopyright(GraphicsContext g, int x, int y);
 
 	/**
 	 * Renders a sprite at a given location.
 	 * 
 	 * @param g the graphics context
-	 * @param r sprite region in spritesheet
-	 * @param x render location x
-	 * @param y render location y
+	 * @param s sprite (region)
+	 * @param x left upper corner x
+	 * @param y left upper corner y
 	 */
-	default void drawSprite(GraphicsContext g, Rectangle2D r, double x, double y) {
-		g.drawImage(spritesheet().getImage(), r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y, r.getWidth(),
-				r.getHeight());
+	default void drawSprite(GraphicsContext g, Rectangle2D s, double x, double y) {
+		g.drawImage(spritesheet().getImage(), s.getMinX(), s.getMinY(), s.getWidth(), s.getHeight(), x, y, s.getWidth(),
+				s.getHeight());
 	}
 
 	/**
+	 * Draws the copyright information. Not sure if this belongs here.
+	 */
+	void drawCopyright(GraphicsContext g, int x, int y);
+
+	/**
 	 * @param ghostID 0=Blinky, 1=Pinky, 2=Inky, 3=Clyde/Sue
-	 * @return color of ghost
+	 * @return color of ghost as given in spritesheet
 	 */
 	default Color getGhostSkinColor(int ghostID) {
 		return switch (ghostID) {
@@ -113,19 +116,11 @@ public interface Rendering2D {
 
 	// Maze
 
+	/**
+	 * @param levelNumber 1-based game level number
+	 * @return maze number (1, 2, ...) used in this level
+	 */
 	int mazeNumber(int levelNumber);
-
-	/**
-	 * @param mazeNumber the 1-based maze number
-	 * @return color of maze walls on top (3D) or inside (2D)
-	 */
-	Color getMazeTopColor(int mazeNumber);
-
-	/**
-	 * @param mazeNumber the 1-based maze number
-	 * @return color of maze walls on side (3D) or outside (2D)
-	 */
-	Color getMazeSideColor(int mazeNumber);
 
 	/**
 	 * @param mazeNumber the 1-based maze number
