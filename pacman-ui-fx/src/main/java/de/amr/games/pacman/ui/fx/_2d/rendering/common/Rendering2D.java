@@ -24,9 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
-import static de.amr.games.pacman.model.common.world.World.t;
 
-import java.util.List;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
@@ -144,14 +142,6 @@ public interface Rendering2D {
 	void renderMazeBright(GraphicsContext g, int mazeNumber, double x, double y);
 
 	void renderCopyright(GraphicsContext g, int x, int y);
-
-	default void renderLevelCounter(GraphicsContext g, int levelNumber, List<Integer> counter, int x_right, int y_right) {
-		int firstLevelNumber = Math.max(1, levelNumber - 7 + 1);
-		double x = x_right;
-		for (int i = firstLevelNumber; i <= levelNumber; ++i, x -= t(2)) {
-			renderSprite(g, getSymbolSprite(counter.get(i - 1)), x, y_right);
-		}
-	}
 
 	// Animations
 
