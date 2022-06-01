@@ -114,5 +114,4 @@ public class Spritesheet {
 	public Rectangle2D r(int x, int y, int col, int row, int numCols, int numRows) {
 		return new Rectangle2D(x + col * rasterSize, y + row * rasterSize, numCols * rasterSize, numRows * rasterSize);
 	}
-
 }

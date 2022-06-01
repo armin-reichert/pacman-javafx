@@ -69,8 +69,12 @@ public interface Rendering2D {
 
 	default void drawEntity(GraphicsContext g, Entity e, Rectangle2D sprite) {
 		if (e.visible) {
-			drawSprite(g, sprite, e.position.x + HTS - sprite.getWidth() / 2, e.position.y + HTS - sprite.getHeight() / 2);
+			drawSpriteCentered(g, sprite, e.position.x, e.position.y);
 		}
+	}
+
+	default void drawSpriteCentered(GraphicsContext g, Rectangle2D s, double x, double y) {
+		drawSprite(g, s, x + HTS - s.getWidth() / 2, y + HTS - s.getHeight() / 2);
 	}
 
 	default void drawSprite(GraphicsContext g, Rectangle2D s, double x, double y) {
