@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
+import java.util.stream.Stream;
+
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.common.GameModel;
@@ -45,12 +47,12 @@ public class Ghost2D extends GameEntity2D {
 	};
 
 	public final Ghost ghost;
-	private AnimationKey animationKey;
+	private AnimationKey selected;
 
-	public SpriteAnimationMap<Direction> animKicking;
 	public SpriteAnimationMap<Direction> animEyes;
 	public SpriteAnimation animFlashing;
 	public SpriteAnimation animFrightened;
+	public SpriteAnimationMap<Direction> animKicking;
 	public SpriteAnimation animNumber;
 
 	public Ghost2D(Ghost ghost, GameModel game, Rendering2D r2D) {
@@ -68,27 +70,23 @@ public class Ghost2D extends GameEntity2D {
 		selectAnimation(AnimationKey.KICKING);
 	}
 
-	public void selectAnimation(AnimationKey key) {
-		this.animationKey = key;
-		selectedAnimation().ensureRunning();
-	}
-
 	private ISpriteAnimation selectedAnimation() {
-		return switch (animationKey) {
+		return switch (selected) {
 		case EYES -> animEyes;
-		case NUMBER -> animNumber;
 		case FLASHING -> animFlashing;
 		case FRIGHTENED -> animFrightened;
 		case KICKING -> animKicking;
+		case NUMBER -> animNumber;
 		};
 	}
 
+	public void selectAnimation(AnimationKey key) {
+		this.selected = key;
+		selectedAnimation().ensureRunning();
+	}
+
 	public void resetAnimations() {
-		animEyes.reset();
-		animFlashing.reset();
-		animFrightened.reset();
-		animKicking.reset();
-		animNumber.reset();
+		Stream.of(animEyes, animFlashing, animFrightened, animKicking, animNumber).forEach(ISpriteAnimation::reset);
 	}
 
 	public void startFlashing(int numFlashes, long ticksTotal) {
@@ -111,12 +109,12 @@ public class Ghost2D extends GameEntity2D {
 
 	@Override
 	public void render(GraphicsContext g, Rendering2D r2D) {
-		var sprite = switch (animationKey) {
+		var sprite = switch (selected) {
 		case EYES -> animEyes.get(ghost.wishDir()).animate();
-		case NUMBER -> animNumber.frame(numberFrame(ghost.bounty));
 		case FLASHING -> animFlashing.animate();
 		case FRIGHTENED -> animFrightened.animate();
 		case KICKING -> animKicking.get(ghost.wishDir()).animate();
+		case NUMBER -> animNumber.frame(numberFrame(ghost.bounty));
 		};
 		r2D.drawEntity(g, ghost, sprite);
 	}

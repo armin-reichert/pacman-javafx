@@ -76,6 +76,7 @@ public class SpriteAnimation implements ISpriteAnimation {
 		seq.restart();
 	}
 
+	@Override
 	public void stop() {
 		seq.stop();
 	}

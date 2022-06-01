@@ -34,7 +34,6 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
-import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -180,25 +179,14 @@ public class PlayScene2D extends GameScene2D {
 
 	public void onSwitchFrom3DScene() {
 		player2D.visible = game.player.visible;
+		player2D.animMunching.ensureRunning();
 		for (Ghost2D ghost2D : ghosts2D) {
 			ghost2D.visible = ghost2D.ghost.visible;
+			ghost2D.animKicking.ensureRunning();
+			ghost2D.animFrightened.ensureRunning();
+			ghost2D.animFlashing.ensureRunning();
 		}
-		if (!player2D.animMunching.get(game.player.moveDir()).isRunning()) {
-			player2D.animMunching.values().forEach(SpriteAnimation::restart);
-		}
-		for (Ghost2D ghost2D : ghosts2D) {
-			for (Direction dir : Direction.values()) {
-				if (!ghost2D.animKicking.get(dir).isRunning()) {
-					ghost2D.animKicking.get(dir).restart();
-				}
-			}
-			if (!ghost2D.animFrightened.isRunning()) {
-				ghost2D.animFrightened.restart();
-			}
-		}
-		if (!maze2D.getEnergizerAnimation().isRunning()) {
-			maze2D.getEnergizerAnimation().restart();
-		}
+		maze2D.getEnergizerAnimation().restart();
 		AudioClip munching = SoundManager.get().getClip(GameSound.PACMAN_MUNCH);
 		if (munching.isPlaying() && game.player.starvingTicks > 10) {
 			SoundManager.get().stop(GameSound.PACMAN_MUNCH);
@@ -280,7 +268,7 @@ public class PlayScene2D extends GameScene2D {
 		case HUNTING -> {
 			maze2D.getEnergizerAnimation().restart();
 			player2D.animMunching.values().forEach(SpriteAnimation::restart);
-			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animKicking.values().forEach(SpriteAnimation::restart));
+			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animKicking.restart());
 		}
 
 		case PACMAN_DYING -> {
