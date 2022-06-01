@@ -23,9 +23,13 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.util;
 
+import java.util.Map;
+
 import javafx.animation.PauseTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
@@ -103,6 +107,25 @@ public class U {
 
 	public static Image image(String path) {
 		return new Image(U.class.getResource(path).toString());
+	}
+
+	/**
+	 * @param source    source image
+	 * @param exchanges map of color exchanges
+	 * @return copy of source image with colors exchanged
+	 */
+	public static Image colorsExchanged(Image source, Map<Color, Color> exchanges) {
+		WritableImage result = new WritableImage((int) source.getWidth(), (int) source.getHeight());
+		PixelWriter out = result.getPixelWriter();
+		for (int x = 0; x < source.getWidth(); ++x) {
+			for (int y = 0; y < source.getHeight(); ++y) {
+				Color color = source.getPixelReader().getColor(x, y);
+				if (exchanges.containsKey(color)) {
+					out.setColor(x, y, exchanges.get(color));
+				}
+			}
+		}
+		return result;
 	}
 
 	public static Background colorBackground(Color color) {

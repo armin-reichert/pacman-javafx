@@ -157,7 +157,7 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 		for (int mazeIndex = 0; mazeIndex < numMazes; ++mazeIndex) {
 			Rectangle2D mazeFullRegion = new Rectangle2D(0, 248 * mazeIndex, 226, 248);
 			Rectangle2D mazeEmptyRegion = new Rectangle2D(226, 248 * mazeIndex, 226, 248);
-			Image mazeFlashImage = Rendering2D.colorsExchanged(ss.extractRegion(mazeEmptyRegion), Map.of( //
+			Image mazeFlashImage = U.colorsExchanged(ss.extractRegion(mazeEmptyRegion), Map.of( //
 					MAZE_SIDE_COLORS[mazeIndex], Color.WHITE, //
 					MAZE_TOP_COLORS[mazeIndex], Color.BLACK) //
 			);

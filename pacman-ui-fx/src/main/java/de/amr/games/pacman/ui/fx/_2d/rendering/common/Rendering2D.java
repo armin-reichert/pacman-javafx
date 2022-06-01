@@ -31,9 +31,6 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.actors.Entity;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -43,25 +40,6 @@ import javafx.scene.text.Font;
  * @author Armin Reichert
  */
 public interface Rendering2D {
-
-	/**
-	 * @param source    source image
-	 * @param exchanges map of color exchanges
-	 * @return copy of source image with colors exchanged
-	 */
-	public static Image colorsExchanged(Image source, Map<Color, Color> exchanges) {
-		WritableImage result = new WritableImage((int) source.getWidth(), (int) source.getHeight());
-		PixelWriter out = result.getPixelWriter();
-		for (int x = 0; x < source.getWidth(); ++x) {
-			for (int y = 0; y < source.getHeight(); ++y) {
-				Color color = source.getPixelReader().getColor(x, y);
-				if (exchanges.containsKey(color)) {
-					out.setColor(x, y, exchanges.get(color));
-				}
-			}
-		}
-		return result;
-	}
 
 	Spritesheet spritesheet();
 

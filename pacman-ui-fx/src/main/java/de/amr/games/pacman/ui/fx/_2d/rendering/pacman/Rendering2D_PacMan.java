@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx._2d.rendering.pacman;
 
 import static de.amr.games.pacman.model.common.actors.Ghost.PINK_GHOST;
 
-import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -84,8 +83,7 @@ public class Rendering2D_PacMan implements Rendering2D {
 		font = U.font("/common/emulogic.ttf", 8);
 		mazeFullImage = U.image("/pacman/graphics/maze_full.png");
 		mazeEmptyImage = U.image("/pacman/graphics/maze_empty.png");
-		mazeFlashingImage = Rendering2D.colorsExchanged(mazeEmptyImage,
-				Collections.singletonMap(MAZE_WALL_COLOR, Color.WHITE));
+		mazeFlashingImage = U.colorsExchanged(mazeEmptyImage, Map.of(MAZE_WALL_COLOR, Color.WHITE));
 
 		//@formatter:off
 		symbolSprites = Map.of(
