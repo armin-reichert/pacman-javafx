@@ -295,10 +295,7 @@ public class PlayScene2D extends GameScene2D {
 			new SequentialTransition( //
 					pauseSec(1, () -> game.ghosts().forEach(Ghost::hide)), //
 					pauseSec(1, () -> {
-						if (gameController.credit() > 0) {
-							SoundManager.get().play(GameSound.PACMAN_DEATH);
-						}
-						player2D.animDying.restart();
+						player2D.startDyingAnimation(gameController.credit() > 0);
 					}), //
 					pauseSec(2, () -> game.player.hide()), //
 					pauseSec(1, () -> gameController.state().timer().expire()) //
