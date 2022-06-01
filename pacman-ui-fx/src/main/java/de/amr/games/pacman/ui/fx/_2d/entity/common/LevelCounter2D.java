@@ -45,12 +45,13 @@ public class LevelCounter2D extends GameEntity2D {
 
 	@Override
 	public void render(GraphicsContext g, Rendering2D r2D) {
-		if (!visible) {
-			return;
-		}
-		int firstLevelNumber = Math.max(1, game.level.number - maxLevels + 1);
-		for (int levelNumber = firstLevelNumber; levelNumber <= game.level.number; ++levelNumber, x -= t(2)) {
-			r2D.drawSprite(g, r2D.getSymbolSprite(game.levelCounter.get(levelNumber - 1)), right_x, y);
+		if (visible) {
+			int first = Math.max(1, game.level.number - maxLevels + 1);
+			int last = game.level.number;
+			double x = right_x;
+			for (int number = first; number <= last; ++number, x -= t(2)) {
+				r2D.drawSprite(g, r2D.getSymbolSprite(game.levelCounter.get(number - 1)), x, y);
+			}
 		}
 	}
 }
