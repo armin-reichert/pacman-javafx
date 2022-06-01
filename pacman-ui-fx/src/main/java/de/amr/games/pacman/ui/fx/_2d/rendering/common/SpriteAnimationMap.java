@@ -33,7 +33,7 @@ import java.util.Map;
  *
  * @param <K> key type of map (enum)
  */
-public class SpriteAnimationMap<K extends Enum<K>> {
+public class SpriteAnimationMap<K extends Enum<K>> implements ISpriteAnimation {
 
 	private final Map<K, SpriteAnimation> animationMap;
 
@@ -51,5 +51,31 @@ public class SpriteAnimationMap<K extends Enum<K>> {
 
 	public Collection<SpriteAnimation> values() {
 		return animationMap.values();
+	}
+
+	@Override
+	public void reset() {
+		values().forEach(SpriteAnimation::reset);
+	}
+
+	public void restart() {
+		values().forEach(SpriteAnimation::restart);
+	}
+
+	public void stop() {
+		values().forEach(SpriteAnimation::stop);
+	}
+
+	public void run() {
+		values().forEach(SpriteAnimation::run);
+	}
+
+	@Override
+	public void ensureRunning() {
+		values().forEach(animation -> {
+			if (!animation.isRunning()) {
+				animation.run();
+			}
+		});
 	}
 }

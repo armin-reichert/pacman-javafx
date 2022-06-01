@@ -74,7 +74,7 @@ public class PacMan_IntermissionScene2 extends GameScene2D {
 		levelCounter2D = new LevelCounter2D(game, unscaledSize.x - t(3), unscaledSize.y - t(2));
 
 		pacMan2D = new Player2D(context.pac, game).createAnimations(r2D);
-		blinky2D = new Ghost2D(context.blinky, game).createAnimations(r2D);
+		blinky2D = new Ghost2D(context.blinky, game, r2D);
 		nail2D = new Nail2D(context.nail, game);
 		pacMan2D.animMunching.values().forEach(SpriteAnimation::restart);
 		blinky2D.animKicking.values().forEach(SpriteAnimation::restart);

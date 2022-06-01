@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 import de.amr.games.pacman.lib.TimedSeq;
 import javafx.geometry.Rectangle2D;
 
-public class SpriteAnimation {
+public class SpriteAnimation implements ISpriteAnimation {
 
 	private TimedSeq<Rectangle2D> seq;
 
@@ -67,6 +67,7 @@ public class SpriteAnimation {
 		seq.advance();
 	}
 
+	@Override
 	public void reset() {
 		seq.reset();
 	}
@@ -101,5 +102,12 @@ public class SpriteAnimation {
 
 	public long getFrameDuration() {
 		return seq.getFrameDuration();
+	}
+
+	@Override
+	public void ensureRunning() {
+		if (seq.isRunning()) {
+			seq.run();
+		}
 	}
 }

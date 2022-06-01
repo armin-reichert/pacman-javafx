@@ -79,8 +79,8 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 		msPacMan2D = new Player2D(context.msPac, game).createAnimations(r2D);
 		pacMan2D = new Player2D(context.pacMan, game).createAnimations(r2D);
 		pacMan2D.animMunching = ((Rendering2D_MsPacMan) r2D).createHusbandMunchingAnimations();
-		inky2D = new Ghost2D(context.inky, game).createAnimations(r2D);
-		pinky2D = new Ghost2D(context.pinky, game).createAnimations(r2D);
+		inky2D = new Ghost2D(context.inky, game, r2D);
+		pinky2D = new Ghost2D(context.pinky, game, r2D);
 		heart2D = new Heart2D(context.heart, game);
 
 		// start animations

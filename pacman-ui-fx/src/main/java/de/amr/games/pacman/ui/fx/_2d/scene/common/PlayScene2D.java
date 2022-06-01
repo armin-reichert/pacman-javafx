@@ -99,7 +99,7 @@ public class PlayScene2D extends GameScene2D {
 		maze2D = new Maze2D(game, 0, t(3));
 		player2D = new Player2D(game.player, game).createAnimations(r2D);
 		for (Ghost ghost : game.ghosts) {
-			ghosts2D[ghost.id] = new Ghost2D(ghost, game).createAnimations(r2D);
+			ghosts2D[ghost.id] = new Ghost2D(ghost, game, r2D);
 		}
 		bonus2D = new Bonus2D(game::bonus);
 		if (game.variant == GameVariant.MS_PACMAN) {

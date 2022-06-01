@@ -27,6 +27,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.ISpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimationMap;
@@ -52,17 +53,27 @@ public class Ghost2D extends GameEntity2D {
 	public SpriteAnimation animFrightened;
 	public SpriteAnimation animNumber;
 
-	public Ghost2D(Ghost ghost, GameModel game) {
+	public Ghost2D(Ghost ghost, GameModel game, Rendering2D r2D) {
 		super(game);
 		this.ghost = ghost;
+		animEyes = r2D.createGhostReturningHomeAnimations();
+		animFlashing = r2D.createGhostFlashingAnimation();
+		long flashTicks = TickTimer.sec_to_ticks(2) / (game.level.numFlashes * animFlashing.numFrames());
+		animFlashing.frameDuration(flashTicks).repetitions(game.level.numFlashes);
+		animFrightened = r2D.createGhostFrightenedAnimation();
+		animKicking = r2D.createGhostKickingAnimations(ghost.id);
+		animNumber = SpriteAnimation.of(r2D.getBountyNumberSprite(200), r2D.getBountyNumberSprite(400),
+				r2D.getBountyNumberSprite(800), r2D.getBountyNumberSprite(1600));
+
+		selectAnimation(AnimationKey.KICKING);
 	}
 
 	public void selectAnimation(AnimationKey key) {
 		this.animationKey = key;
-		ensureRunning(selectedAnimation());
+		selectedAnimation().ensureRunning();
 	}
 
-	private Object selectedAnimation() {
+	private ISpriteAnimation selectedAnimation() {
 		return switch (animationKey) {
 		case EYES -> animEyes;
 		case NUMBER -> animNumber;
@@ -72,53 +83,12 @@ public class Ghost2D extends GameEntity2D {
 		};
 	}
 
-	@SuppressWarnings("unchecked")
-	private void ensureRunning(Object selectedAnimation) {
-		if (selectedAnimation instanceof SpriteAnimation) {
-			SpriteAnimation sa = (SpriteAnimation) selectedAnimation;
-			if (!sa.isRunning()) {
-				sa.run();
-			}
-		} else if (selectedAnimation instanceof SpriteAnimationMap) {
-			SpriteAnimationMap<Direction> am = (SpriteAnimationMap<Direction>) selectedAnimation;
-			for (var dir : Direction.values()) {
-				if (!am.get(dir).isRunning()) {
-					am.get(dir).run();
-				}
-			}
-		}
-	}
-
-	public Ghost2D createAnimations(Rendering2D r2D) {
-		animKicking = r2D.createGhostKickingAnimations(ghost.id);
-		animEyes = r2D.createGhostReturningHomeAnimations();
-		animNumber = SpriteAnimation.of(r2D.getBountyNumberSprite(200), r2D.getBountyNumberSprite(400),
-				r2D.getBountyNumberSprite(800), r2D.getBountyNumberSprite(1600));
-		animFrightened = r2D.createGhostFrightenedAnimation();
-		animFlashing = r2D.createGhostFlashingAnimation();
-		long flashTicks = TickTimer.sec_to_ticks(2) / (game.level.numFlashes * animFlashing.numFrames());
-		animFlashing.frameDuration(flashTicks).repetitions(game.level.numFlashes);
-		selectAnimation(AnimationKey.KICKING);
-		return this;
-	}
-
 	public void resetAnimations() {
-		if (animKicking != null) {
-			for (Direction dir : Direction.values()) {
-				animKicking.get(dir).reset();
-			}
-		}
-		if (animEyes != null) {
-			for (Direction dir : Direction.values()) {
-				animKicking.get(dir).reset();
-			}
-		}
-		if (animFlashing != null) {
-			animFlashing.reset();
-		}
-		if (animFrightened != null) {
-			animFrightened.reset();
-		}
+		animEyes.reset();
+		animFlashing.reset();
+		animFrightened.reset();
+		animKicking.reset();
+		animNumber.reset();
 	}
 
 	public void startFlashing(int numFlashes, long ticksTotal) {

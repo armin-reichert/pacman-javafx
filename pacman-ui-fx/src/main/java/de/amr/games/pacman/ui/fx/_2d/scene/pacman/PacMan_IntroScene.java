@@ -81,7 +81,7 @@ public class PacMan_IntroScene extends GameScene2D {
 		pacMan2D.animMunching.values().forEach(SpriteAnimation::restart);
 
 		ghosts2D = Stream.of(context.ghosts).map(ghost -> {
-			Ghost2D ghost2D = new Ghost2D(ghost, game).createAnimations(r2D);
+			Ghost2D ghost2D = new Ghost2D(ghost, game, r2D);
 			ghost2D.animKicking.values().forEach(SpriteAnimation::restart);
 			ghost2D.animFrightened.restart();
 			return ghost2D;
