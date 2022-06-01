@@ -70,7 +70,8 @@ public abstract class Rendering2D {
 		return result;
 	}
 
-	protected final Font arcadeFont = Font.loadFont(getClass().getResourceAsStream("/emulogic.ttf"), 8);
+	public static final Font ARCADE_FONT = Font.loadFont(Rendering2D.class.getResourceAsStream("/emulogic.ttf"), 8);
+
 	protected final Spritesheet ss;
 
 	public Rendering2D(String spritesheetPath, int rasterSize, Direction... directions) {
@@ -149,7 +150,7 @@ public abstract class Rendering2D {
 	 * @return font used for score and game state display
 	 */
 	public Font getArcadeFont() {
-		return arcadeFont;
+		return ARCADE_FONT;
 	}
 
 	/**
