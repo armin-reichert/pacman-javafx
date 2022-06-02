@@ -37,7 +37,7 @@ import javafx.geometry.Rectangle2D;
 public class PacAnimations extends AnimationSet<PacAnimation> {
 
 	protected SpriteAnimationMap<Direction> munching;
-	protected SpriteAnimation dying;
+	protected SpriteAnimation<Rectangle2D> dying;
 
 	public PacAnimations(Rendering2D r2D) {
 		munching = r2D.createPlayerMunchingAnimations();
@@ -45,7 +45,7 @@ public class PacAnimations extends AnimationSet<PacAnimation> {
 	}
 
 	@Override
-	public ISpriteAnimation animation(PacAnimation key) {
+	public ISpriteAnimation<Rectangle2D> animation(PacAnimation key) {
 		return switch (key) {
 		case DYING -> dying;
 		case MUNCHING -> munching;
@@ -53,7 +53,7 @@ public class PacAnimations extends AnimationSet<PacAnimation> {
 	}
 
 	@Override
-	public Stream<ISpriteAnimation> animations() {
+	public Stream<ISpriteAnimation<Rectangle2D>> animations() {
 		return Stream.of(munching, dying);
 	}
 

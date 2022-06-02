@@ -59,8 +59,8 @@ public class PacMan_IntermissionScene2 extends GameScene2D {
 	private Pac2D pacMan2D;
 	private Ghost2D blinky2D;
 	private Nail2D nail2D;
-	private SpriteAnimation blinkyStretchedAnimation;
-	private SpriteAnimation blinkyDamagedAnimation;
+	private SpriteAnimation<Rectangle2D> blinkyStretchedAnimation;
+	private SpriteAnimation<Rectangle2D> blinkyDamagedAnimation;
 
 	public PacMan_IntermissionScene2(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);

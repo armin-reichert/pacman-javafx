@@ -24,93 +24,87 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
 import de.amr.games.pacman.lib.TimedSeq;
-import javafx.geometry.Rectangle2D;
 
-public class SpriteAnimation implements ISpriteAnimation {
+/**
+ * @author Armin Reichert
+ */
+public class SpriteAnimation<S> implements ISpriteAnimation<S> {
 
-	private TimedSeq<Rectangle2D> seq;
+	private final TimedSeq<S> ts;
 
-	public static SpriteAnimation of(Rectangle2D... sprites) {
-		if (sprites.length == 0) {
-			throw new IllegalArgumentException("Animation must have at least one frame");
-		}
-		SpriteAnimation animation = new SpriteAnimation();
-		animation.seq = TimedSeq.of(sprites);
-		return animation;
-	}
-
-	public SpriteAnimation repetitions(int n) {
-		seq.repetitions(n);
-		return this;
-	}
-
-	public SpriteAnimation frameDuration(long ticks) {
-		seq.frameDuration(ticks);
-		return this;
-	}
-
-	public SpriteAnimation endless() {
-		seq.endless();
-		return this;
+	@SuppressWarnings("unchecked")
+	public SpriteAnimation(S... sprites) {
+		ts = new TimedSeq<>(sprites);
 	}
 
 	@Override
 	public void run() {
-		seq.run();
-	}
-
-	public Rectangle2D animate() {
-		return seq.animate();
-	}
-
-	public void advance() {
-		seq.advance();
-	}
-
-	@Override
-	public void reset() {
-		seq.reset();
-	}
-
-	@Override
-	public void restart() {
-		seq.restart();
+		ts.run();
 	}
 
 	@Override
 	public void stop() {
-		seq.stop();
-	}
-
-	public boolean isRunning() {
-		return seq.isRunning();
-	}
-
-	public int numFrames() {
-		return seq.numFrames();
+		ts.stop();
 	}
 
 	@Override
-	public void setFrameIndex(int i) {
-		seq.setFrameIndex(i);
+	public void reset() {
+		ts.reset();
 	}
 
-	public Rectangle2D frame() {
-		return seq.frame();
-	}
-
-	public Rectangle2D frame(int i) {
-		return seq.frame(i);
-	}
-
-	public long getFrameDuration() {
-		return seq.getFrameDuration();
+	@Override
+	public void restart() {
+		ts.restart();
 	}
 
 	@Override
 	public void ensureRunning() {
-		if (seq.isRunning()) {
-			seq.run();
-		}
+		ts.ensureRunning();
 	}
+
+	@Override
+	public void setFrameIndex(int index) {
+		ts.setFrameIndex(index);
+	}
+
+	public S animate() {
+		return ts.animate();
+	}
+
+	public S frame() {
+		return ts.frame();
+	}
+
+	public S frame(int index) {
+		return ts.frame(index);
+	}
+
+	public int numFrames() {
+		return ts.numFrames();
+	}
+
+	public boolean isRunning() {
+		return ts.isRunning();
+	}
+
+	public SpriteAnimation<S> repetitions(int n) {
+		ts.repetitions(n);
+		return this;
+	}
+
+	public SpriteAnimation<S> frameDuration(long ticks) {
+		ts.frameDuration(ticks);
+		return this;
+	}
+
+	public SpriteAnimation<S> endless() {
+		ts.endless();
+		return this;
+	}
+
+	public SpriteAnimation<S> advance() {
+		ts.advance();
+		return this;
+	}
+
 }

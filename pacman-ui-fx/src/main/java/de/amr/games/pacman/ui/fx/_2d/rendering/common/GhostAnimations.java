@@ -36,22 +36,22 @@ import javafx.geometry.Rectangle2D;
 public class GhostAnimations extends AnimationSet<GhostAnimation> {
 
 	private SpriteAnimationMap<Direction> dead;
-	private SpriteAnimation flashing;
-	private SpriteAnimation frightened;
+	private SpriteAnimation<Rectangle2D> flashing;
+	private SpriteAnimation<Rectangle2D> frightened;
 	private SpriteAnimationMap<Direction> kicking;
-	private SpriteAnimation numbers;
+	private SpriteAnimation<Rectangle2D> numbers;
 
 	public GhostAnimations(int ghostID, Rendering2D r2D) {
 		dead = r2D.createGhostDeadAnimation();
 		flashing = r2D.createGhostLessFrightenedAnimation();
 		frightened = r2D.createGhostFrightenedAnimation();
 		kicking = r2D.createGhostAliveAnimation(ghostID);
-		numbers = SpriteAnimation.of(r2D.getNumberSprite(200), r2D.getNumberSprite(400), r2D.getNumberSprite(800),
+		numbers = new SpriteAnimation<>(r2D.getNumberSprite(200), r2D.getNumberSprite(400), r2D.getNumberSprite(800),
 				r2D.getNumberSprite(1600));
 	}
 
 	@Override
-	public ISpriteAnimation animation(GhostAnimation key) {
+	public ISpriteAnimation<Rectangle2D> animation(GhostAnimation key) {
 		return switch (key) {
 		case DEAD -> dead;
 		case RECOVERING -> flashing;
@@ -62,7 +62,7 @@ public class GhostAnimations extends AnimationSet<GhostAnimation> {
 	}
 
 	@Override
-	public Stream<ISpriteAnimation> animations() {
+	public Stream<ISpriteAnimation<Rectangle2D>> animations() {
 		return Stream.of(dead, flashing, frightened, kicking, numbers);
 	}
 

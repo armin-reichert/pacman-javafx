@@ -41,7 +41,7 @@ import javafx.scene.paint.Color;
 public class Flap2D extends GameEntity2D {
 
 	private final Flap flap;
-	public final SpriteAnimation animation;
+	public final SpriteAnimation<Rectangle2D> animation;
 
 	public Flap2D(Flap flap, GameModel game) {
 		super(game);

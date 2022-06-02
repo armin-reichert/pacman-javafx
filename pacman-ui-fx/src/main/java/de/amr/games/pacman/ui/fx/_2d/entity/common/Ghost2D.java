@@ -27,11 +27,11 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.ISpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimationMap;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -70,7 +70,6 @@ public class Ghost2D extends GameEntity2D {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private void renderAnimationState(GraphicsContext g) {
 		if (!ghost.visible) {
 			return;
@@ -78,9 +77,9 @@ public class Ghost2D extends GameEntity2D {
 		g.setFill(Color.WHITE);
 		g.setFont(Font.font("Arial Narrow", 10));
 		String text = animations.selectedKey().name();
-		ISpriteAnimation anim = animations.selectedAnimation();
+		var anim = animations.selectedAnimation();
 		if (anim instanceof SpriteAnimation) {
-			var sa = (SpriteAnimation) anim;
+			var sa = (SpriteAnimation<Rectangle2D>) anim;
 			text += !sa.isRunning() ? " stopped" : "";
 		} else {
 			var sa = ((SpriteAnimationMap<Direction>) anim).get(ghost.wishDir());

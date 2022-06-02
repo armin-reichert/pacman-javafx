@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Pac;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.ISpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
@@ -34,6 +33,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimationMap;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -80,7 +80,6 @@ public class Pac2D extends GameEntity2D {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private void renderAnimationState(GraphicsContext g) {
 		if (!pac.visible) {
 			return;
@@ -88,13 +87,13 @@ public class Pac2D extends GameEntity2D {
 		g.setFill(Color.WHITE);
 		g.setFont(Font.font("Arial Narrow", 10));
 		String text = animations.selectedKey().name();
-		ISpriteAnimation anim = animations.selectedAnimation();
+		var anim = animations.selectedAnimation();
 		if (anim instanceof SpriteAnimation) {
-			var sa = (SpriteAnimation) anim;
+			var sa = (SpriteAnimation<Rectangle2D>) anim;
 			text += !sa.isRunning() ? " stopped" : "";
 		} else {
-			var sa = ((SpriteAnimationMap<Direction>) anim).get(pac.moveDir());
-			text += !sa.isRunning() ? " stopped" : "";
+			var sam = ((SpriteAnimationMap<Direction>) anim).get(pac.moveDir());
+			text += !sam.isRunning() ? " stopped" : "";
 		}
 		g.fillText(text, pac.position.x - 10, pac.position.y - 5);
 	}

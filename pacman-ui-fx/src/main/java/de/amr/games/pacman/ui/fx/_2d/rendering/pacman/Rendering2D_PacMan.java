@@ -190,15 +190,16 @@ public class Rendering2D_PacMan implements Rendering2D {
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
 			Rectangle2D wide_open = ss.r(0, d), open = ss.r(1, d), closed = ss.r(2, 0);
-			SpriteAnimation animation = SpriteAnimation.of(closed, open, wide_open, open).frameDuration(2).endless();
+			SpriteAnimation<Rectangle2D> animation = new SpriteAnimation<>(closed, open, wide_open, open).frameDuration(2)
+					.endless();
 			animationMap.put(dir, animation);
 		}
 		return animationMap;
 	}
 
 	@Override
-	public SpriteAnimation createPlayerDyingAnimation() {
-		return SpriteAnimation.of(ss.r(3, 0), ss.r(4, 0), ss.r(5, 0), ss.r(6, 0), ss.r(7, 0), ss.r(8, 0), ss.r(9, 0),
+	public SpriteAnimation<Rectangle2D> createPlayerDyingAnimation() {
+		return new SpriteAnimation<>(ss.r(3, 0), ss.r(4, 0), ss.r(5, 0), ss.r(6, 0), ss.r(7, 0), ss.r(8, 0), ss.r(9, 0),
 				ss.r(10, 0), ss.r(11, 0), ss.r(12, 0), ss.r(13, 0)).frameDuration(8);
 	}
 
@@ -207,7 +208,7 @@ public class Rendering2D_PacMan implements Rendering2D {
 		SpriteAnimationMap<Direction> animationMap = new SpriteAnimationMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
-			var animation = SpriteAnimation.of(ss.r(2 * d, 4 + ghostID), ss.r(2 * d + 1, 4 + ghostID)).frameDuration(8)
+			var animation = new SpriteAnimation<>(ss.r(2 * d, 4 + ghostID), ss.r(2 * d + 1, 4 + ghostID)).frameDuration(8)
 					.endless();
 			animationMap.put(dir, animation);
 		}
@@ -215,13 +216,13 @@ public class Rendering2D_PacMan implements Rendering2D {
 	}
 
 	@Override
-	public SpriteAnimation createGhostFrightenedAnimation() {
-		return SpriteAnimation.of(ss.r(8, 4), ss.r(9, 4)).frameDuration(8).endless();
+	public SpriteAnimation<Rectangle2D> createGhostFrightenedAnimation() {
+		return new SpriteAnimation<>(ss.r(8, 4), ss.r(9, 4)).frameDuration(8).endless();
 	}
 
 	@Override
-	public SpriteAnimation createGhostLessFrightenedAnimation() {
-		return SpriteAnimation.of(ss.r(8, 4), ss.r(9, 4), ss.r(10, 4), ss.r(11, 4)).frameDuration(6);
+	public SpriteAnimation<Rectangle2D> createGhostLessFrightenedAnimation() {
+		return new SpriteAnimation<>(ss.r(8, 4), ss.r(9, 4), ss.r(10, 4), ss.r(11, 4)).frameDuration(6);
 	}
 
 	@Override
@@ -229,7 +230,7 @@ public class Rendering2D_PacMan implements Rendering2D {
 		SpriteAnimationMap<Direction> animationMap = new SpriteAnimationMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
-			animationMap.put(dir, SpriteAnimation.of(ss.r(8 + d, 5)));
+			animationMap.put(dir, new SpriteAnimation<>(ss.r(8 + d, 5)));
 		}
 		return animationMap;
 	}
@@ -240,23 +241,23 @@ public class Rendering2D_PacMan implements Rendering2D {
 		return ss.r(8, 6);
 	}
 
-	public SpriteAnimation createBigPacManMunchingAnimation() {
-		return SpriteAnimation.of(ss.r(2, 1, 2, 2), ss.r(4, 1, 2, 2), ss.r(6, 1, 2, 2)).frameDuration(4).endless();
+	public SpriteAnimation<Rectangle2D> createBigPacManMunchingAnimation() {
+		return new SpriteAnimation<>(ss.r(2, 1, 2, 2), ss.r(4, 1, 2, 2), ss.r(6, 1, 2, 2)).frameDuration(4).endless();
 	}
 
-	public SpriteAnimation createBlinkyStretchedAnimation() {
-		return SpriteAnimation.of(ss.r(9, 6), ss.r(10, 6), ss.r(11, 6), ss.r(12, 6));
+	public SpriteAnimation<Rectangle2D> createBlinkyStretchedAnimation() {
+		return new SpriteAnimation<>(ss.r(9, 6), ss.r(10, 6), ss.r(11, 6), ss.r(12, 6));
 	}
 
-	public SpriteAnimation createBlinkyDamagedAnimation() {
-		return SpriteAnimation.of(ss.r(8, 7), ss.r(9, 7));
+	public SpriteAnimation<Rectangle2D> createBlinkyDamagedAnimation() {
+		return new SpriteAnimation<>(ss.r(8, 7), ss.r(9, 7));
 	}
 
-	public SpriteAnimation createBlinkyPatchedAnimation() {
-		return SpriteAnimation.of(ss.r(10, 7), ss.r(11, 7)).frameDuration(4).endless();
+	public SpriteAnimation<Rectangle2D> createBlinkyPatchedAnimation() {
+		return new SpriteAnimation<>(ss.r(10, 7), ss.r(11, 7)).frameDuration(4).endless();
 	}
 
-	public SpriteAnimation createBlinkyNakedAnimation() {
-		return SpriteAnimation.of(ss.r(8, 8, 2, 1), ss.r(10, 8, 2, 1)).frameDuration(4).endless();
+	public SpriteAnimation<Rectangle2D> createBlinkyNakedAnimation() {
+		return new SpriteAnimation<>(ss.r(8, 8, 2, 1), ss.r(10, 8, 2, 1)).frameDuration(4).endless();
 	}
 }

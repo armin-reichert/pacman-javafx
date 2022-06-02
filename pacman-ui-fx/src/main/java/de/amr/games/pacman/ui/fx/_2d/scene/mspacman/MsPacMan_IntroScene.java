@@ -96,7 +96,6 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		sceneController.update();
 	}
 
-	@SuppressWarnings("unchecked")
 	private void onSceneStateChanged(State fromState, State toState) {
 		if (fromState == State.MSPACMAN && toState == State.READY_TO_PLAY) {
 			var munching = (SpriteAnimationMap<Direction>) msPacMan2D.animations.selectedAnimation();

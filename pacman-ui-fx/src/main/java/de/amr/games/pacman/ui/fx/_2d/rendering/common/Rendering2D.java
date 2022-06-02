@@ -55,13 +55,13 @@ public interface Rendering2D {
 
 	SpriteAnimationMap<Direction> createPlayerMunchingAnimations();
 
-	SpriteAnimation createPlayerDyingAnimation();
+	SpriteAnimation<Rectangle2D> createPlayerDyingAnimation();
 
 	SpriteAnimationMap<Direction> createGhostAliveAnimation(int ghostID);
 
-	SpriteAnimation createGhostFrightenedAnimation();
+	SpriteAnimation<Rectangle2D> createGhostFrightenedAnimation();
 
-	SpriteAnimation createGhostLessFrightenedAnimation();
+	SpriteAnimation<Rectangle2D> createGhostLessFrightenedAnimation();
 
 	SpriteAnimationMap<Direction> createGhostDeadAnimation();
 

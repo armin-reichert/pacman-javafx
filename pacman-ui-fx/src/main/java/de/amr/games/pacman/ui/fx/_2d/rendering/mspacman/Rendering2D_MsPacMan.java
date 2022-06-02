@@ -256,17 +256,17 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
 			Rectangle2D wide_open = rhs(0, d), open = rhs(1, d), closed = rhs(2, d);
-			var munching = SpriteAnimation.of(open, wide_open, open, closed).frameDuration(2).endless();
+			var munching = new SpriteAnimation<>(open, wide_open, open, closed).frameDuration(2).endless();
 			animationMap.put(dir, munching);
 		}
 		return animationMap;
 	}
 
 	@Override
-	public SpriteAnimation createPlayerDyingAnimation() {
+	public SpriteAnimation<Rectangle2D> createPlayerDyingAnimation() {
 		Rectangle2D right = rhs(1, 0), left = rhs(1, 1), up = rhs(1, 2), down = rhs(1, 3);
 		// TODO not yet 100% accurate
-		return SpriteAnimation.of(down, left, up, right, down, left, up, right, down, left, up).frameDuration(8);
+		return new SpriteAnimation<>(down, left, up, right, down, left, up, right, down, left, up).frameDuration(8);
 	}
 
 	@Override
@@ -274,20 +274,21 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 		SpriteAnimationMap<Direction> animationMap = new SpriteAnimationMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
-			var kicking = SpriteAnimation.of(rhs(2 * d, 4 + ghostID), rhs(2 * d + 1, 4 + ghostID)).frameDuration(8).endless();
+			var kicking = new SpriteAnimation<>(rhs(2 * d, 4 + ghostID), rhs(2 * d + 1, 4 + ghostID)).frameDuration(8)
+					.endless();
 			animationMap.put(dir, kicking);
 		}
 		return animationMap;
 	}
 
 	@Override
-	public SpriteAnimation createGhostFrightenedAnimation() {
-		return SpriteAnimation.of(rhs(8, 4), rhs(9, 4)).frameDuration(8).endless();
+	public SpriteAnimation<Rectangle2D> createGhostFrightenedAnimation() {
+		return new SpriteAnimation<>(rhs(8, 4), rhs(9, 4)).frameDuration(8).endless();
 	}
 
 	@Override
-	public SpriteAnimation createGhostLessFrightenedAnimation() {
-		return SpriteAnimation.of(rhs(8, 4), rhs(9, 4), rhs(10, 4), rhs(11, 4)).frameDuration(4);
+	public SpriteAnimation<Rectangle2D> createGhostLessFrightenedAnimation() {
+		return new SpriteAnimation<>(rhs(8, 4), rhs(9, 4), rhs(10, 4), rhs(11, 4)).frameDuration(4);
 	}
 
 	@Override
@@ -295,7 +296,7 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 		SpriteAnimationMap<Direction> animationMap = new SpriteAnimationMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
-			animationMap.put(dir, SpriteAnimation.of(rhs(8 + d, 5)));
+			animationMap.put(dir, new SpriteAnimation<>(rhs(8 + d, 5)));
 		}
 		return animationMap;
 	}
@@ -310,13 +311,13 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 		SpriteAnimationMap<Direction> animationMap = new SpriteAnimationMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
-			animationMap.put(dir, SpriteAnimation.of(rhs(0, 9 + d), rhs(1, 9 + d), rhs(2, 9)).frameDuration(2).endless());
+			animationMap.put(dir, new SpriteAnimation<>(rhs(0, 9 + d), rhs(1, 9 + d), rhs(2, 9)).frameDuration(2).endless());
 		}
 		return animationMap;
 	}
 
-	public SpriteAnimation createFlapAnimation() {
-		return SpriteAnimation.of( //
+	public SpriteAnimation<Rectangle2D> createFlapAnimation() {
+		return new SpriteAnimation<>( //
 				new Rectangle2D(456, 208, 32, 32), //
 				new Rectangle2D(488, 208, 32, 32), //
 				new Rectangle2D(520, 208, 32, 32), //
@@ -325,8 +326,8 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 		).repetitions(1).frameDuration(4);
 	}
 
-	public SpriteAnimation createStorkFlyingAnimation() {
-		return SpriteAnimation.of( //
+	public SpriteAnimation<Rectangle2D> createStorkFlyingAnimation() {
+		return new SpriteAnimation<>( //
 				new Rectangle2D(489, 176, 32, 16), //
 				new Rectangle2D(521, 176, 32, 16) //
 		).endless().frameDuration(8);
