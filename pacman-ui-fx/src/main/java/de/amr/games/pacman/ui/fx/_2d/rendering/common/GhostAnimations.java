@@ -22,18 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.amr.games.pacman.ui.fx._2d.entity.common;
+package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.actors.Ghost;
+import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D.GhostAnimation;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.AnimationSet;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.ISpriteAnimation;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimationMap;
 import javafx.geometry.Rectangle2D;
 
 /**
