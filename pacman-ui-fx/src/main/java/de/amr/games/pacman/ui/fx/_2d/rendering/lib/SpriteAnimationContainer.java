@@ -32,9 +32,9 @@ import java.util.stream.Stream;
  * @param <K> Key type
  * @param <S> Sprite type (Rectangle, Image)
  */
-public abstract class SpriteAnimationCollection<K, S> {
+public abstract class SpriteAnimationContainer<K, S> {
 
-	private K selectedAnimationKey;
+	private K selectedKey;
 
 	public abstract ISpriteAnimation animation(K key);
 
@@ -42,15 +42,15 @@ public abstract class SpriteAnimationCollection<K, S> {
 
 	public void selectAnimation(K key) {
 		animation(key).ensureRunning();
-		selectedAnimationKey = key;
+		selectedKey = key;
 	}
 
 	public K selectedKey() {
-		return selectedAnimationKey;
+		return selectedKey;
 	}
 
 	public ISpriteAnimation selectedAnimation() {
-		return animation(selectedAnimationKey);
+		return animation(selectedKey);
 	}
 
 	public void stop(K key) {

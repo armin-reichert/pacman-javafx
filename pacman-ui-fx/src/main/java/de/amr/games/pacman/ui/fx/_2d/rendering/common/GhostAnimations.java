@@ -30,14 +30,14 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D.GhostAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.lib.ISpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimation;
-import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimationCollection;
+import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimationContainer;
 import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimationMap;
 import javafx.geometry.Rectangle2D;
 
 /**
  * @author Armin Reichert
  */
-public class GhostAnimations extends SpriteAnimationCollection<GhostAnimation, Rectangle2D> {
+public class GhostAnimations extends SpriteAnimationContainer<GhostAnimation, Rectangle2D> {
 
 	private SpriteAnimationMap<Direction, Rectangle2D> dead;
 	private SpriteAnimation<Rectangle2D> flashing;
