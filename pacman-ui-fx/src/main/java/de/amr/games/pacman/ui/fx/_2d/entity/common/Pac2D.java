@@ -31,6 +31,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimationMap;
+import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.canvas.GraphicsContext;
@@ -43,8 +44,6 @@ import javafx.scene.text.Font;
  * @author Armin Reichert
  */
 public class Pac2D extends GameEntity2D {
-
-	boolean debug = true;
 
 	public enum PacAnimation {
 		MUNCHING, DYING;
@@ -76,7 +75,7 @@ public class Pac2D extends GameEntity2D {
 	@Override
 	public void render(GraphicsContext g, Rendering2D r2D) {
 		r2D.drawEntity(g, pac, animations.currentSprite(pac));
-		if (debug) {
+		if (GameUI.debug) {
 			renderAnimationState(g);
 		}
 	}

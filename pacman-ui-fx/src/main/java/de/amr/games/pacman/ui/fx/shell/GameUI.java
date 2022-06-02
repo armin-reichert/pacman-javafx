@@ -72,6 +72,8 @@ public class GameUI extends GameEventAdapter {
 	public static final V2i GAME_SIZE = new V2i(ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y).scaled(TS);
 	public static final int MIN_FRAMERATE = 5, MAX_FRAMERATE = 120;
 
+	public static boolean debug;
+
 	public final GameController gameController;
 	public final Stage stage;
 
@@ -234,6 +236,8 @@ public class GameUI extends GameEventAdapter {
 			toggleAutopilot();
 		} else if (pressed(e, MOD_ALT, KeyCode.E)) {
 			gameController.cheatEatAllPellets();
+		} else if (pressed(e, MOD_ALT, KeyCode.D)) {
+			debug = !debug;
 		} else if (pressed(e, MOD_ALT, KeyCode.I)) {
 			toggleImmunity();
 		} else if (pressed(e, MOD_ALT, KeyCode.L)) {

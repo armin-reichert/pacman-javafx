@@ -31,6 +31,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.ISpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimationMap;
+import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -41,8 +42,6 @@ import javafx.scene.text.Font;
  * @author Armin Reichert
  */
 public class Ghost2D extends GameEntity2D {
-
-	boolean debug = true;
 
 	public enum GhostAnimation {
 		ALIVE, DEAD, EATEN, FRIGHTENED, RECOVERING;
@@ -66,7 +65,7 @@ public class Ghost2D extends GameEntity2D {
 	@Override
 	public void render(GraphicsContext g, Rendering2D r2D) {
 		r2D.drawEntity(g, ghost, animations.currentSprite(ghost));
-		if (debug) {
+		if (GameUI.debug) {
 			renderAnimationState(g);
 		}
 	}

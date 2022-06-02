@@ -23,6 +23,9 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
+/**
+ * @author Armin Reichert
+ */
 public interface ISpriteAnimation {
 
 	void run();
