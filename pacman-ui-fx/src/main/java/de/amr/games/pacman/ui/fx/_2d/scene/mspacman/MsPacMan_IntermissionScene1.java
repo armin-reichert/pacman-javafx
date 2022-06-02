@@ -27,11 +27,9 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission1Controller;
-import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
-import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D.GhostAnimation;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
@@ -72,12 +70,12 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 		context = sceneController.context();
 		sceneController.playIntermissionSound = () -> SoundManager.get().loop(GameSound.INTERMISSION_1, 1);
 		sceneController.playFlapAnimation = () -> flap2D.animation.restart();
+		sceneController.addStateChangeListener(this::onSceneStateChange);
 	}
 
 	@Override
 	public void init() {
 		sceneController.restartInInitialState(Intermission1Controller.State.FLAP);
-
 		levelCounter2D = new LevelCounter2D(game, unscaledSize.x - t(3), unscaledSize.y - t(2));
 		flap2D = new Flap2D(context.flap, game);
 		msPacMan2D = new Pac2D(context.msPac, game, new PacAnimations(r2D));
@@ -85,21 +83,17 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 		inky2D = new Ghost2D(context.inky, game, new GhostAnimations(Ghost.CYAN_GHOST, r2D));
 		pinky2D = new Ghost2D(context.pinky, game, new GhostAnimations(Ghost.PINK_GHOST, r2D));
 		heart2D = new Heart2D(context.heart, game);
-
-		msPacMan2D.animations.restart();
-		msPacMansHusband2D.animations.restart();
-		inky2D.animations.restart();
-		pinky2D.animations.restart();
 	}
 
 	@Override
 	public void doUpdate() {
 		sceneController.update();
-		// stop ghost animation when Pac-Man and Ms. Pac-Man are in heaven
-		if (sceneController.state() == Intermission1Controller.State.IN_HEAVEN
-				&& context.pacMan.velocity.equals(V2d.NULL)) {
-			inky2D.animations.stop(GhostAnimation.ALIVE);
-			pinky2D.animations.stop(GhostAnimation.ALIVE);
+	}
+
+	private void onSceneStateChange(Intermission1Controller.State fromState, Intermission1Controller.State toState) {
+		if (toState == Intermission1Controller.State.IN_HEAVEN) {
+			inky2D.animations.selectedAnimation().stop();
+			pinky2D.animations.selectedAnimation().stop();
 		}
 	}
 
