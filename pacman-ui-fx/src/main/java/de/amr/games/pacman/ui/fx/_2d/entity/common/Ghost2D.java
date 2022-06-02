@@ -42,10 +42,10 @@ public class Ghost2D extends GameEntity2D {
 	public final Ghost ghost;
 	public final GhostAnimations animations;
 
-	public Ghost2D(Ghost ghost, GameModel game, Rendering2D r2D) {
+	public Ghost2D(Ghost ghost, GameModel game, GhostAnimations animations) {
 		super(game);
 		this.ghost = ghost;
-		animations = new GhostAnimations(ghost.id, r2D);
+		this.animations = animations;
 		animations.select(GhostAnimation.KICKING);
 	}
 
