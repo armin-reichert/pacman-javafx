@@ -153,9 +153,9 @@ public class PlayScene2D extends GameScene2D {
 			GhostAnimation selection = switch (ghost2D.ghost.state) {
 			case DEAD -> ghost2D.ghost.bounty == 0 ? GhostAnimation.DEAD : GhostAnimation.EATEN;
 			case ENTERING_HOUSE -> GhostAnimation.DEAD;
-			case FRIGHTENED -> lessFrightened ? GhostAnimation.LESS_FRIGHTENED : GhostAnimation.FRIGHTENED;
+			case FRIGHTENED -> lessFrightened ? GhostAnimation.RECOVERING : GhostAnimation.FRIGHTENED;
 			case HUNTING_PAC, LEAVING_HOUSE -> GhostAnimation.ALIVE;
-			case LOCKED -> lessFrightened ? GhostAnimation.LESS_FRIGHTENED
+			case LOCKED -> lessFrightened ? GhostAnimation.RECOVERING
 					: frightened ? GhostAnimation.FRIGHTENED : GhostAnimation.ALIVE;
 			};
 			ghost2D.animations.select(selection);

@@ -60,7 +60,7 @@ public class GhostAnimations extends AnimationSet<GhostAnimation> {
 	public ISpriteAnimation animation(GhostAnimation key) {
 		return switch (key) {
 		case DEAD -> dead;
-		case LESS_FRIGHTENED -> flashing;
+		case RECOVERING -> flashing;
 		case FRIGHTENED -> frightened;
 		case ALIVE -> kicking; // alive and kicking :-)
 		case EATEN -> numbers;
@@ -75,7 +75,7 @@ public class GhostAnimations extends AnimationSet<GhostAnimation> {
 	public Rectangle2D currentSprite(Ghost ghost) {
 		return switch (selectedKey()) {
 		case DEAD -> dead.get(ghost.wishDir()).animate();
-		case LESS_FRIGHTENED -> flashing.animate();
+		case RECOVERING -> flashing.animate();
 		case FRIGHTENED -> frightened.animate();
 		case ALIVE -> {
 			var sprite = kicking.get(ghost.wishDir()).frame();

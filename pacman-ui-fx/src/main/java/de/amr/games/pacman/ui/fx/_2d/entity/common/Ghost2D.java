@@ -36,7 +36,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class Ghost2D extends GameEntity2D {
 
 	public enum GhostAnimation {
-		ALIVE, DEAD, EATEN, FRIGHTENED, LESS_FRIGHTENED;
+		ALIVE, DEAD, EATEN, FRIGHTENED, RECOVERING;
 	};
 
 	public final Ghost ghost;
