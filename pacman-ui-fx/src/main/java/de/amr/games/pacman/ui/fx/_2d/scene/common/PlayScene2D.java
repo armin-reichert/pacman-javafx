@@ -143,24 +143,16 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void updateAnimations() {
-		boolean frightened = game.pac.hasPower();
-		long lessFrightenedTime = sec_to_ticks(2);
-		boolean lessFrightened = game.pac.powerTimer.remaining() <= lessFrightenedTime;
-		if (game.pac.powerTimer.remaining() == lessFrightenedTime) {
+		long recoveringTicks = sec_to_ticks(2); // TODO not sure about recovering duration
+		boolean recoveringStarts = game.pac.powerTimer.remaining() == recoveringTicks;
+		boolean recovering = game.pac.powerTimer.remaining() <= recoveringTicks;
+		if (recoveringStarts) {
 			for (var ghost2D : ghosts2D) {
-				ghost2D.animations.startFlashing(game.level.numFlashes, lessFrightenedTime);
+				ghost2D.animations.startFlashing(game.level.numFlashes, recoveringTicks);
 			}
 		}
 		for (var ghost2D : ghosts2D) {
-			GhostAnimation selection = switch (ghost2D.ghost.state) {
-			case DEAD -> ghost2D.ghost.bounty == 0 ? GhostAnimation.DEAD : GhostAnimation.EATEN;
-			case ENTERING_HOUSE -> GhostAnimation.DEAD;
-			case FRIGHTENED -> lessFrightened ? GhostAnimation.RECOVERING : GhostAnimation.FRIGHTENED;
-			case HUNTING_PAC, LEAVING_HOUSE -> GhostAnimation.ALIVE;
-			case LOCKED -> lessFrightened ? GhostAnimation.RECOVERING
-					: frightened ? GhostAnimation.FRIGHTENED : GhostAnimation.ALIVE;
-			};
-			ghost2D.animations.selectAnimation(selection);
+			ghost2D.updateAnimation(game.pac.hasPower(), recovering);
 		}
 	}
 
