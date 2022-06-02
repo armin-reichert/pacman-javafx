@@ -102,19 +102,10 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 	private final List<Rectangle2D> mazeFullSprites;
 	private final List<Rectangle2D> mazeEmptySprites;
 	private final List<Image> mazeFlashImages;
-	private final Map<Integer, Rectangle2D> bonusValueSprites;
 	private final Map<Integer, Rectangle2D> symbolSprites;
+	private final Map<Integer, Rectangle2D> bonusValueSprites;
 	private final Map<Integer, Rectangle2D> bountyNumberSprites;
 	private final Font font;
-
-	/**
-	 * @param col column
-	 * @param row row
-	 * @return Sprite at given row and column from the right-hand-side of the spritesheet
-	 */
-	public Rectangle2D rhs(int col, int row) {
-		return ss.r(456, 0, col, row, 1, 1);
-	}
 
 	private Rendering2D_MsPacMan(String path, int rasterSize, Direction... dirOrder) {
 		ss = new Spritesheet(path, rasterSize, dirOrder);
@@ -150,21 +141,30 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 		);
 		//@formatter:on
 
-		final int numMazes = 6;
+		int numMazes = 6;
 		mazeFullSprites = new ArrayList<>(numMazes);
 		mazeEmptySprites = new ArrayList<>(numMazes);
 		mazeFlashImages = new ArrayList<>(numMazes);
 		for (int mazeIndex = 0; mazeIndex < numMazes; ++mazeIndex) {
 			Rectangle2D mazeFullRegion = new Rectangle2D(0, 248 * mazeIndex, 226, 248);
+			mazeFullSprites.add(mazeFullRegion);
 			Rectangle2D mazeEmptyRegion = new Rectangle2D(226, 248 * mazeIndex, 226, 248);
+			mazeEmptySprites.add(mazeEmptyRegion);
 			Image mazeFlashImage = U.colorsExchanged(ss.extractRegion(mazeEmptyRegion), Map.of( //
 					MAZE_SIDE_COLORS[mazeIndex], Color.WHITE, //
 					MAZE_TOP_COLORS[mazeIndex], Color.BLACK) //
 			);
-			mazeFullSprites.add(mazeFullRegion);
-			mazeEmptySprites.add(mazeEmptyRegion);
 			mazeFlashImages.add(mazeFlashImage);
 		}
+	}
+
+	/**
+	 * @param col column
+	 * @param row row
+	 * @return Sprite at given row and column from the right-hand-side of the spritesheet
+	 */
+	public Rectangle2D rhs(int col, int row) {
+		return ss.r(456, 0, col, row, 1, 1);
 	}
 
 	@Override
