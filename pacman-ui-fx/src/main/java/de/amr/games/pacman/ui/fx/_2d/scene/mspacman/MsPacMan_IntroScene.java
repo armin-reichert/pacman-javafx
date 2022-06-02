@@ -36,7 +36,6 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D.GhostAnimation;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
@@ -74,7 +73,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		score2D.showPoints = false;
 		credit2D.visible = true;
 		msPacMan2D = new Player2D(context.msPacMan, game).createAnimations(r2D);
-		msPacMan2D.animMunching.values().forEach(SpriteAnimation::restart);
+		msPacMan2D.animMunching.restart();
 		ghosts2D = Stream.of(context.ghosts).map(ghost -> new Ghost2D(ghost, game, new GhostAnimations(ghost.id, r2D)))
 				.toArray(Ghost2D[]::new);
 		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart(GhostAnimation.KICKING));
@@ -85,10 +84,8 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		if (GameUI.pressed(e, KeyCode.DIGIT5)) {
 			SoundManager.get().play(GameSound.CREDIT);
 			gameController.addCredit();
-			return;
 		} else if (GameUI.pressed(e, KeyCode.SPACE)) {
 			gameController.requestGame();
-			return;
 		}
 	}
 

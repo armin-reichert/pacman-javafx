@@ -74,7 +74,13 @@ public class GhostAnimations extends AnimationSet<GhostAnimation> {
 		case EYES -> eyes.get(ghost.wishDir()).animate();
 		case FLASHING -> flashing.animate();
 		case FRIGHTENED -> frightened.animate();
-		case KICKING -> kicking.get(ghost.wishDir()).animate();
+		case KICKING -> {
+			var sprite = kicking.get(ghost.wishDir()).frame();
+			if (ghost.velocity.length() > 0) {
+				kicking.get(ghost.wishDir()).advance();
+			}
+			yield sprite;
+		}
 		case NUMBER -> number.frame(numberFrame(ghost.bounty));
 		};
 	}
