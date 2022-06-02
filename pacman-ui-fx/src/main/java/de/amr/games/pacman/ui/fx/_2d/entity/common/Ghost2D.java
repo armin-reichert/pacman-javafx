@@ -56,15 +56,9 @@ public class Ghost2D extends GameEntity2D {
 		case ENTERING_HOUSE -> GhostAnimation.EYES;
 		case FRIGHTENED -> recovering ? GhostAnimation.FLASHING : GhostAnimation.BLUE;
 		case HUNTING_PAC, LEAVING_HOUSE -> GhostAnimation.COLOR;
-		case LOCKED -> recovering ? GhostAnimation.FLASHING
-				: frightened ? GhostAnimation.BLUE : GhostAnimation.COLOR;
+		case LOCKED -> recovering ? GhostAnimation.FLASHING : frightened ? GhostAnimation.BLUE : GhostAnimation.COLOR;
 		};
 		animations.selectAnimation(key);
-	}
-
-	public void refresh() {
-		visible = ghost.visible;
-		animations.refresh();
 	}
 
 	@Override

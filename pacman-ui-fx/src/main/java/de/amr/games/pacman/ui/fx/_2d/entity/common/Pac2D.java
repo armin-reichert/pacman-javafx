@@ -50,11 +50,6 @@ public class Pac2D extends GameEntity2D {
 		animations.selectAnimation(PacAnimation.MUNCHING);
 	}
 
-	public void refresh() {
-		visible = pac.visible;
-		animations.refresh();
-	}
-
 	@Override
 	public void render(GraphicsContext g, Rendering2D r2D) {
 		r2D.drawEntity(g, pac, animations.currentSprite(pac));

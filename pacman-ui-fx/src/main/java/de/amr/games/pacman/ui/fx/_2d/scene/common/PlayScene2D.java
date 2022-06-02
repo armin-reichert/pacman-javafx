@@ -230,9 +230,11 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	public void onSwitchFrom3DScene() {
-		pac2D.refresh();
+		pac2D.visible = pac2D.pac.visible;
+		pac2D.animations.refresh();
 		for (Ghost2D ghost2D : ghosts2D) {
-			ghost2D.refresh();
+			ghost2D.visible = ghost2D.ghost.visible;
+			ghost2D.animations.refresh();
 		}
 		maze2D.getEnergizerAnimation().restart();
 		AudioClip munching = SoundManager.get().getClip(GameSound.PACMAN_MUNCH);
