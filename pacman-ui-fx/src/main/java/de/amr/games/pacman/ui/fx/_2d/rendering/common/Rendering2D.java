@@ -63,7 +63,7 @@ public interface Rendering2D {
 
 	SpriteAnimation createGhostFlashingAnimation();
 
-	SpriteAnimationMap<Direction> createEyesAnimationMap();
+	SpriteAnimationMap<Direction> createGhostEyesAnimationMap();
 
 	default void drawEntity(GraphicsContext g, Entity e, Rectangle2D sprite) {
 		if (e.visible) {

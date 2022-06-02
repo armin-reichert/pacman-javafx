@@ -291,7 +291,7 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 	}
 
 	@Override
-	public SpriteAnimationMap<Direction> createEyesAnimationMap() {
+	public SpriteAnimationMap<Direction> createGhostEyesAnimationMap() {
 		SpriteAnimationMap<Direction> animationMap = new SpriteAnimationMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);

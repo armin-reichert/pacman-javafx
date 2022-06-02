@@ -48,7 +48,7 @@ public class GhostAnimations extends AnimationSet<GhostAnimation> {
 	private SpriteAnimation number;
 
 	public GhostAnimations(int ghostID, Rendering2D r2D) {
-		eyes = r2D.createEyesAnimationMap();
+		eyes = r2D.createGhostEyesAnimationMap();
 		flashing = r2D.createGhostFlashingAnimation();
 		frightened = r2D.createGhostFrightenedAnimation();
 		kicking = r2D.createGhostKickingAnimationMap(ghostID);
