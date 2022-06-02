@@ -24,10 +24,54 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
+import java.util.stream.Stream;
+
+import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.model.common.actors.Pac;
+import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D.PacAnimation;
+import javafx.geometry.Rectangle2D;
+
 /**
  * @author Armin Reichert
- *
  */
-public class PacAnimations {
+public class PacAnimations extends AnimationSet<PacAnimation> {
 
+	private final SpriteAnimationMap<Direction> munching;
+	private final SpriteAnimation dying;
+
+	public PacAnimations(Rendering2D r2D) {
+		munching = r2D.createPlayerMunchingAnimations();
+		dying = r2D.createPlayerDyingAnimation();
+	}
+
+	@Override
+	public ISpriteAnimation animation(PacAnimation key) {
+		return switch (key) {
+		case DYING -> dying;
+		case MUNCHING -> munching;
+		};
+	}
+
+	@Override
+	public Stream<ISpriteAnimation> animations() {
+		return Stream.of(munching, dying);
+	}
+
+	public void refresh() {
+		munching.ensureRunning();
+		dying.reset();// TODO check this
+	}
+
+	public Rectangle2D currentSprite(Pac pac) {
+		return switch (selectedKey()) {
+		case DYING -> dying.animate();
+		case MUNCHING -> {
+			var munchingToDir = munching.get(pac.moveDir());
+			if (!pac.stuck && pac.velocity.length() > 0) {
+				munchingToDir.advance();
+			}
+			yield munchingToDir.frame();
+		}
+		};
+	}
 }

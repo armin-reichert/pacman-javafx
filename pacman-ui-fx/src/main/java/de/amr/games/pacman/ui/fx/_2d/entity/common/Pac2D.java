@@ -23,16 +23,12 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
-import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Pac;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimationMap;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -43,37 +39,27 @@ import javafx.scene.canvas.GraphicsContext;
 public class Pac2D extends GameEntity2D {
 
 	public enum PacAnimation {
-		IDLE, MUNCHING, DYING;
+		MUNCHING, DYING;
 	}
 
 	public final Pac pac;
-	public SpriteAnimationMap<Direction> animMunching;
-	private SpriteAnimation animDying;
+	public final PacAnimations animations;
 
-	public Pac2D(Pac pac, GameModel game) {
+	public Pac2D(Pac pac, GameModel game, PacAnimations animations) {
 		super(game);
 		this.pac = pac;
+		this.animations = animations;
+		animations.select(PacAnimation.MUNCHING);
 	}
 
-	public Pac2D createAnimations(Rendering2D r2D) {
-		animMunching = r2D.createPlayerMunchingAnimations();
-		animDying = r2D.createPlayerDyingAnimation();
-		return this;
+	public void refresh() {
+		visible = pac.visible;
+		animations.refresh();
 	}
 
-	public void resetAnimations() {
-		if (animMunching != null) {
-			for (Direction dir : Direction.values()) {
-				animMunching.get(dir).reset();
-			}
-		}
-		if (animDying != null) {
-			animDying.reset();
-		}
-	}
-
+	// TODO reconsider
 	public void startDyingAnimation(boolean sound) {
-		animDying.restart();
+		animations.select(PacAnimation.DYING);
 		if (sound) {
 			SoundManager.get().play(GameSound.PACMAN_DEATH);
 		}
@@ -81,16 +67,6 @@ public class Pac2D extends GameEntity2D {
 
 	@Override
 	public void render(GraphicsContext g, Rendering2D r2D) {
-		Rectangle2D sprite = null;
-		if (pac.killed) {
-			sprite = animDying.animate();
-		} else {
-			var munching = animMunching.get(pac.moveDir());
-			sprite = munching.frame();
-			if (!pac.velocity.equals(V2d.NULL) && !pac.stuck) {
-				munching.advance();
-			}
-		}
-		r2D.drawEntity(g, pac, sprite);
+		r2D.drawEntity(g, pac, animations.currentSprite(pac));
 	}
 }

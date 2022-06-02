@@ -45,7 +45,9 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Maze2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
+import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D.PacAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
@@ -96,7 +98,7 @@ public class PlayScene2D extends GameScene2D {
 		levelCounter2D = new LevelCounter2D(game, unscaledSize.x - t(4), unscaledSize.y - t(2));
 		levelCounter2D.visible = hasCredit;
 		maze2D = new Maze2D(game, 0, t(3));
-		player2D = new Pac2D(game.player, game).createAnimations(r2D);
+		player2D = new Pac2D(game.player, game, new PacAnimations(r2D));
 		for (Ghost ghost : game.ghosts) {
 			ghosts2D[ghost.id] = new Ghost2D(ghost, game, new GhostAnimations(ghost.id, r2D));
 		}
@@ -185,8 +187,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	public void onSwitchFrom3DScene() {
-		player2D.visible = game.player.visible;
-		player2D.animMunching.ensureRunning();
+		player2D.refresh();
 		for (Ghost2D ghost2D : ghosts2D) {
 			ghost2D.refresh();
 		}
@@ -258,7 +259,9 @@ public class PlayScene2D extends GameScene2D {
 		case READY -> {
 			SoundManager.get().stopAll();
 			maze2D.getEnergizerAnimation().reset();
-			player2D.resetAnimations();
+			player2D.animations.select(PacAnimation.MUNCHING);
+			// TODO check this:
+			player2D.animations.reset();
 			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart());
 			if (gameController.credit() > 0 && !gameController.isGameRunning()) {
 				SoundManager.get().play(GameSound.GAME_READY);
@@ -267,7 +270,7 @@ public class PlayScene2D extends GameScene2D {
 
 		case HUNTING -> {
 			maze2D.getEnergizerAnimation().restart();
-			player2D.animMunching.restart();
+			player2D.animations.restart();
 			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart(GhostAnimation.ALIVE));
 		}
 
@@ -293,7 +296,7 @@ public class PlayScene2D extends GameScene2D {
 		case LEVEL_COMPLETE -> {
 			gameController.state().timer().setDurationIndefinite(); // wait until continueGame() is called
 			SoundManager.get().stopAll();
-			player2D.resetAnimations();
+			player2D.animations.reset();
 			// Energizers can still exist if "next level" cheat has been used
 			maze2D.getEnergizerAnimation().reset();
 			Animation animation = new SequentialTransition( //

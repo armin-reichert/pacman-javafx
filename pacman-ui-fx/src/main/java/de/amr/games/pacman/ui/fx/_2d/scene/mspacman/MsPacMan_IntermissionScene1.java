@@ -37,7 +37,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Heart2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -78,16 +78,17 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 
 		levelCounter2D = new LevelCounter2D(game, unscaledSize.x - t(3), unscaledSize.y - t(2));
 		flap2D = new Flap2D(context.flap, game);
-		msPacMan2D = new Pac2D(context.msPac, game).createAnimations(r2D);
-		pacMan2D = new Pac2D(context.pacMan, game).createAnimations(r2D);
-		pacMan2D.animMunching = ((Rendering2D_MsPacMan) r2D).createHusbandMunchingAnimations();
+		msPacMan2D = new Pac2D(context.msPac, game, new PacAnimations(r2D));
+		pacMan2D = new Pac2D(context.pacMan, game, new PacAnimations(r2D));
+		// TODO fixme
+//		pacMan2D.animMunching = ((Rendering2D_MsPacMan) r2D).createHusbandMunchingAnimations();
 		inky2D = new Ghost2D(context.inky, game, new GhostAnimations(Ghost.CYAN_GHOST, r2D));
 		pinky2D = new Ghost2D(context.pinky, game, new GhostAnimations(Ghost.PINK_GHOST, r2D));
 		heart2D = new Heart2D(context.heart, game);
 
 		// start animations
-		msPacMan2D.animMunching.restart();
-		pacMan2D.animMunching.restart();
+		msPacMan2D.animations.restart();
+		pacMan2D.animations.restart();
 		inky2D.animations.restart();
 		pinky2D.animations.restart();
 	}

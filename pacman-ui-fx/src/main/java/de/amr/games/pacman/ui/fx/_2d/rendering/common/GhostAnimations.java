@@ -66,6 +66,17 @@ public class GhostAnimations extends AnimationSet<GhostAnimation> {
 		return Stream.of(dead, flashing, frightened, kicking, numbers);
 	}
 
+	public void startFlashing(int numFlashes, long ticksTotal) {
+		long frameTicks = ticksTotal / (numFlashes * flashing.numFrames());
+		flashing.frameDuration(frameTicks).repetitions(numFlashes).restart();
+	}
+
+	public void refresh() {
+		kicking.ensureRunning();
+		frightened.ensureRunning();
+		flashing.ensureRunning();
+	}
+
 	public Rectangle2D currentSprite(Ghost ghost) {
 		return switch (selectedKey()) {
 		case DEAD -> dead.get(ghost.wishDir()).animate();
@@ -80,17 +91,6 @@ public class GhostAnimations extends AnimationSet<GhostAnimation> {
 		}
 		case EATEN -> numbers.frame(numberFrame(ghost.bounty));
 		};
-	}
-
-	public void startFlashing(int numFlashes, long ticksTotal) {
-		long frameTicks = ticksTotal / (numFlashes * flashing.numFrames());
-		flashing.frameDuration(frameTicks).repetitions(numFlashes).restart();
-	}
-
-	public void refresh() {
-		kicking.ensureRunning();
-		frightened.ensureRunning();
-		flashing.ensureRunning();
 	}
 
 	private int numberFrame(int number) {

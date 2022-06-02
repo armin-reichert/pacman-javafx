@@ -32,11 +32,11 @@ import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
-import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D.GhostAnimation;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.Nail2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
@@ -75,11 +75,11 @@ public class PacMan_IntermissionScene2 extends GameScene2D {
 
 		levelCounter2D = new LevelCounter2D(game, unscaledSize.x - t(3), unscaledSize.y - t(2));
 
-		pacMan2D = new Pac2D(context.pac, game).createAnimations(r2D);
+		pacMan2D = new Pac2D(context.pac, game, new PacAnimations(r2D));
 		blinky2D = new Ghost2D(context.blinky, game, new GhostAnimations(Ghost.RED_GHOST, r2D));
 		nail2D = new Nail2D(context.nail, game);
-		pacMan2D.animMunching.restart(); // TODO
-		blinky2D.animations.restart(GhostAnimation.ALIVE);
+		pacMan2D.animations.restart();
+		blinky2D.animations.restart();
 		blinkyStretchedAnimation = ((Rendering2D_PacMan) r2D).createBlinkyStretchedAnimation();
 		blinkyDamagedAnimation = ((Rendering2D_PacMan) r2D).createBlinkyDamagedAnimation();
 	}

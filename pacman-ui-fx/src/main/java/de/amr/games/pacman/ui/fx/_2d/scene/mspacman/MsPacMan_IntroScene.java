@@ -34,8 +34,9 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D.GhostAnimation;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
@@ -72,8 +73,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		createCommonParts(game);
 		score2D.showPoints = false;
 		credit2D.visible = true;
-		msPacMan2D = new Pac2D(context.msPacMan, game).createAnimations(r2D);
-		msPacMan2D.animMunching.restart();
+		msPacMan2D = new Pac2D(context.msPacMan, game, new PacAnimations(r2D));
 		ghosts2D = Stream.of(context.ghosts).map(ghost -> new Ghost2D(ghost, game, new GhostAnimations(ghost.id, r2D)))
 				.toArray(Ghost2D[]::new);
 		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart(GhostAnimation.ALIVE));

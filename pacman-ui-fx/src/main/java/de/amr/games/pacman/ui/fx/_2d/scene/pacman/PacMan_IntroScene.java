@@ -37,7 +37,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D.GhostAnimation;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
@@ -78,12 +78,10 @@ public class PacMan_IntroScene extends GameScene2D {
 		createCommonParts(game);
 		score2D.showPoints = false;
 		credit2D.visible = true;
-		pacMan2D = new Pac2D(context.pacMan, game).createAnimations(r2D);
-		pacMan2D.animMunching.values().forEach(SpriteAnimation::restart);
-
+		pacMan2D = new Pac2D(context.pacMan, game, new PacAnimations(r2D));
 		ghosts2D = Stream.of(context.ghosts).map(ghost -> {
 			Ghost2D ghost2D = new Ghost2D(ghost, game, new GhostAnimations(ghost.id, r2D));
-			ghost2D.animations.restart();
+			ghost2D.animations.restart();// TODO check this
 			return ghost2D;
 		}).toArray(Ghost2D[]::new);
 	}
