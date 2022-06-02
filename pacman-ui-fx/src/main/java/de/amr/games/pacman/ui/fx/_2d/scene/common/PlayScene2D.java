@@ -38,6 +38,7 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Bonus2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D.GhostAnimation;
@@ -54,12 +55,14 @@ import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
+import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
 /**
@@ -77,6 +80,7 @@ public class PlayScene2D extends GameScene2D {
 		public InfoPane() {
 			for (int id = 0; id < 4; ++id) {
 				ghostInfos[id] = new Text();
+				ghostInfos[id].setTextAlignment(TextAlignment.CENTER);
 				ghostInfos[id].setFill(Color.WHITE);
 				getChildren().add(ghostInfos[id]);
 			}
@@ -90,13 +94,15 @@ public class PlayScene2D extends GameScene2D {
 				var ghost = game.ghosts[id];
 				String text = "%s\n(%s %s)".formatted(ghost.name, ghost.state, ghost2D.animations.selectedKey());
 				ghostInfos[id].setText(text);
-				ghostInfos[id].setX(ghost.position.x * scaling() - 20);
+				Bounds bounds = ghostInfos[id].getBoundsInLocal();
+				ghostInfos[id].setX((ghost.position.x + World.HTS) * scaling() - bounds.getWidth() / 2);
 				ghostInfos[id].setY(ghost.position.y * scaling() - 30);
 				ghostInfos[id].setVisible(ghost.visible);
 			}
 			String text = "%s (%s)".formatted(game.pac.name, pac2D.animations.selectedKey());
 			pacInfo.setText(text);
-			pacInfo.setX(game.pac.position.x * scaling() - 20);
+			Bounds bounds = pacInfo.getBoundsInLocal();
+			pacInfo.setX((game.pac.position.x + World.HTS) * scaling() - bounds.getWidth() / 2);
 			pacInfo.setY(game.pac.position.y * scaling() - 20);
 			pacInfo.setVisible(game.pac.visible);
 		}
