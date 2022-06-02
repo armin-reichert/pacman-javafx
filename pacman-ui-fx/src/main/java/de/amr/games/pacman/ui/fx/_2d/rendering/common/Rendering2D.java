@@ -62,7 +62,7 @@ public interface Rendering2D {
 
 	SpriteAnimation<Rectangle2D> createPlayerDyingAnimation();
 
-	SpriteAnimationMap<Direction, Rectangle2D> createGhostColorfulAnimation(int ghostID);
+	SpriteAnimationMap<Direction, Rectangle2D> createGhostColorAnimation(int ghostID);
 
 	SpriteAnimation<Rectangle2D> createGhostBlueAnimation();
 

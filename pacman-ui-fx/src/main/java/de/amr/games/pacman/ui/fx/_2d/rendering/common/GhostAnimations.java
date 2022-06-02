@@ -42,14 +42,14 @@ public class GhostAnimations extends SpriteAnimationContainer<GhostAnimation, Re
 	private SpriteAnimationMap<Direction, Rectangle2D> eyes;
 	private SpriteAnimation<Rectangle2D> flashing;
 	private SpriteAnimation<Rectangle2D> blue;
-	private SpriteAnimationMap<Direction, Rectangle2D> colorful;
+	private SpriteAnimationMap<Direction, Rectangle2D> color;
 	private SpriteAnimation<Rectangle2D> numbers;
 
 	public GhostAnimations(int ghostID, Rendering2D r2D) {
 		eyes = r2D.createGhostEyesAnimation();
 		flashing = r2D.createGhostFlashingAnimation();
 		blue = r2D.createGhostBlueAnimation();
-		colorful = r2D.createGhostColorfulAnimation(ghostID);
+		color = r2D.createGhostColorAnimation(ghostID);
 		numbers = new SpriteAnimation<>(r2D.getNumberSprite(200), r2D.getNumberSprite(400), r2D.getNumberSprite(800),
 				r2D.getNumberSprite(1600));
 	}
@@ -60,14 +60,14 @@ public class GhostAnimations extends SpriteAnimationContainer<GhostAnimation, Re
 		case EYES -> eyes;
 		case FLASHING -> flashing;
 		case BLUE -> blue;
-		case COLOR -> colorful; // alive and kicking :-)
+		case COLOR -> color;
 		case NUMBER -> numbers;
 		};
 	}
 
 	@Override
 	public Stream<ISpriteAnimation> animations() {
-		return Stream.of(eyes, flashing, blue, colorful, numbers);
+		return Stream.of(eyes, flashing, blue, color, numbers);
 	}
 
 	public void startFlashing(int numFlashes, long ticksTotal) {
@@ -79,7 +79,7 @@ public class GhostAnimations extends SpriteAnimationContainer<GhostAnimation, Re
 		eyes.ensureRunning();
 		blue.ensureRunning();
 		flashing.ensureRunning();
-		colorful.ensureRunning();
+		color.ensureRunning();
 	}
 
 	public Rectangle2D currentSprite(Ghost ghost) {
@@ -88,9 +88,9 @@ public class GhostAnimations extends SpriteAnimationContainer<GhostAnimation, Re
 		case FLASHING -> flashing.animate();
 		case BLUE -> blue.animate();
 		case COLOR -> {
-			var sprite = colorful.get(ghost.wishDir()).frame();
+			var sprite = color.get(ghost.wishDir()).frame();
 			if (ghost.velocity.length() > 0) {
-				colorful.get(ghost.wishDir()).advance();
+				color.get(ghost.wishDir()).advance();
 			}
 			yield sprite;
 		}
