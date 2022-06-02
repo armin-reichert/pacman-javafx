@@ -34,4 +34,6 @@ public interface ISpriteAnimation {
 	void restart();
 
 	void ensureRunning();
+
+	void setFrameIndex(int index);
 }

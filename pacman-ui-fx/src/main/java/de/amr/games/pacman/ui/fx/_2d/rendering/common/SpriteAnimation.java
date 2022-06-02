@@ -90,6 +90,7 @@ public class SpriteAnimation implements ISpriteAnimation {
 		return seq.numFrames();
 	}
 
+	@Override
 	public void setFrameIndex(int i) {
 		seq.setFrameIndex(i);
 	}

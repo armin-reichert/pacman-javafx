@@ -81,4 +81,9 @@ public class SpriteAnimationMap<K extends Enum<K>> implements ISpriteAnimation {
 			}
 		});
 	}
+
+	@Override
+	public void setFrameIndex(int index) {
+		throw new UnsupportedOperationException();
+	}
 }

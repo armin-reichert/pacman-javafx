@@ -30,13 +30,16 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.IntroController;
 import de.amr.games.pacman.controller.mspacman.IntroController.Context;
+import de.amr.games.pacman.controller.mspacman.IntroController.State;
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
-import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D.GhostAnimation;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
+import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D.PacAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimationMap;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
@@ -64,6 +67,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 	public MsPacMan_IntroScene(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
 		sceneController = new IntroController(gameController);
+		sceneController.addStateChangeListener(this::onSceneStateChanged);
 		context = sceneController.context();
 	}
 
@@ -76,7 +80,6 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		msPacMan2D = new Pac2D(context.msPacMan, game, new PacAnimations(r2D));
 		ghosts2D = Stream.of(context.ghosts).map(ghost -> new Ghost2D(ghost, game, new GhostAnimations(ghost.id, r2D)))
 				.toArray(Ghost2D[]::new);
-		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart(GhostAnimation.ALIVE));
 	}
 
 	@Override
@@ -94,24 +97,36 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		sceneController.update();
 	}
 
+	@SuppressWarnings("unchecked")
+	private void onSceneStateChanged(State fromState, State toState) {
+		if (fromState == State.MSPACMAN && toState == State.READY_TO_PLAY) {
+			var munching = (SpriteAnimationMap<Direction>) msPacMan2D.animations.animation(PacAnimation.MUNCHING);
+			munching.get(msPacMan2D.pac.moveDir()).setFrameIndex(2);
+			munching.stop();
+		}
+	}
+
 	@Override
 	public void doRender(GraphicsContext g) {
 		score2D.render(g, r2D);
 		highScore2D.render(g, r2D);
-		credit2D.render(g, r2D);
-		g.setFont(r2D.getArcadeFont());
-		g.setFill(Color.ORANGE);
-		g.fillText("\"MS PAC-MAN\"", context.titlePosition.x, context.titlePosition.y);
-		drawAnimatedBoard(g, 32, 16);
-		switch (sceneController.state()) {
-		case GHOSTS -> drawGhostText(g, context.ghosts[context.ghostIndex]);
-		case MSPACMAN, READY_TO_PLAY -> drawMsPacManText(g);
-		default -> {
-		}
+		drawTitle(g);
+		drawLights(g, 32, 16);
+		if (sceneController.state() == State.GHOSTS) {
+			drawGhostText(g, context.ghosts[context.ghostIndex]);
+		} else if (sceneController.state() == State.MSPACMAN || sceneController.state() == State.READY_TO_PLAY) {
+			drawMsPacManText(g);
 		}
 		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(g, r2D));
 		msPacMan2D.render(g, r2D);
 		r2D.drawCopyright(g, t(3), t(28));
+		credit2D.render(g, r2D);
+	}
+
+	private void drawTitle(GraphicsContext g) {
+		g.setFont(r2D.getArcadeFont());
+		g.setFill(Color.ORANGE);
+		g.fillText("\"MS PAC-MAN\"", context.titlePosition.x, context.titlePosition.y);
 	}
 
 	private void drawGhostText(GraphicsContext g, Ghost ghost) {
@@ -132,7 +147,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		g.fillText("MS PAC-MAN", context.titlePosition.x, context.lightsTopLeft.y + t(6));
 	}
 
-	private void drawAnimatedBoard(GraphicsContext g, int numDotsX, int numDotsY) {
+	private void drawLights(GraphicsContext g, int numDotsX, int numDotsY) {
 		long time = context.lightsTimer.tick();
 		int light = (int) (time / 2) % (numDotsX / 2);
 		for (int dot = 0; dot < 2 * (numDotsX + numDotsY); ++dot) {
