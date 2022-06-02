@@ -41,8 +41,8 @@ public abstract class SpriteAnimationCollection<K, S> {
 	public abstract Stream<ISpriteAnimation> animations();
 
 	public void selectAnimation(K key) {
+		animation(key).ensureRunning();
 		selectedAnimationKey = key;
-		animation(selectedAnimationKey).ensureRunning();
 	}
 
 	public K selectedKey() {
