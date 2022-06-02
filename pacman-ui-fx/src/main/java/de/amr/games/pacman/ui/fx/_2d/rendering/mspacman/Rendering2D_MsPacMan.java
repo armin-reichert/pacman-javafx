@@ -30,13 +30,13 @@ import java.util.List;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.SpriteAnimation;
+import de.amr.games.pacman.lib.SpriteAnimationMap;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimation;
-import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimationMap;
-import de.amr.games.pacman.ui.fx._2d.rendering.lib.Spritesheet;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;

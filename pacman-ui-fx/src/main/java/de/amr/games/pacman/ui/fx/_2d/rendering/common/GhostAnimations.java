@@ -26,12 +26,12 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.ISpriteAnimation;
+import de.amr.games.pacman.lib.SpriteAnimation;
+import de.amr.games.pacman.lib.SpriteAnimationContainer;
+import de.amr.games.pacman.lib.SpriteAnimationMap;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D.GhostAnimation;
-import de.amr.games.pacman.ui.fx._2d.rendering.lib.ISpriteAnimation;
-import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimation;
-import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimationContainer;
-import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimationMap;
 import javafx.geometry.Rectangle2D;
 
 /**
