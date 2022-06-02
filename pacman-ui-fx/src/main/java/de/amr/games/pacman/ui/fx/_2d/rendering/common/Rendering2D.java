@@ -56,6 +56,8 @@ public interface Rendering2D {
 
 	Rectangle2D getSymbolSprite(int symbol);
 
+	// Animations
+
 	SpriteAnimationMap<Direction, Rectangle2D> createPlayerMunchingAnimations();
 
 	SpriteAnimation<Rectangle2D> createPlayerDyingAnimation();
@@ -68,22 +70,7 @@ public interface Rendering2D {
 
 	SpriteAnimationMap<Direction, Rectangle2D> createGhostDeadAnimation();
 
-	default void drawEntity(GraphicsContext g, Entity entity, Rectangle2D sprite) {
-		if (entity.visible) {
-			drawSpriteCentered(g, sprite, entity.position.x, entity.position.y);
-		}
-	}
-
-	default void drawSpriteCentered(GraphicsContext g, Rectangle2D s, double x, double y) {
-		drawWithSpritesheet(g, s, x + HTS - s.getWidth() / 2, y + HTS - s.getHeight() / 2);
-	}
-
-	default void drawWithSpritesheet(GraphicsContext g, Rectangle2D s, double x, double y) {
-		g.drawImage(spritesheet().getImage(), s.getMinX(), s.getMinY(), s.getWidth(), s.getHeight(), x, y, s.getWidth(),
-				s.getHeight());
-	}
-
-	void drawCopyright(GraphicsContext g, int x, int y);
+	// Maze
 
 	int mazeNumber(int levelNumber);
 
@@ -94,4 +81,51 @@ public interface Rendering2D {
 	void drawMazeEmpty(GraphicsContext g, int mazeNumber, double x, double y);
 
 	void drawMazeBright(GraphicsContext g, int mazeNumber, double x, double y);
+
+	// Drawing
+
+	/**
+	 * Draws entity sprite centered over its bounding box (one square tile). Respects entity visibility.
+	 * 
+	 * @param g      graphics context
+	 * @param entity entity
+	 * @param s      entity sprite (region in spritesheet)
+	 */
+	default void drawEntity(GraphicsContext g, Entity entity, Rectangle2D sprite) {
+		if (entity.visible) {
+			drawSpriteCenteredOverBBox(g, sprite, entity.position.x, entity.position.y);
+		}
+	}
+
+	/**
+	 * @param g graphics context
+	 * @param s sprite (region in spritesheet)
+	 * @param x left upper corner of entity bounding box (one square tile)
+	 * @param y left upper corner of entity bounding box
+	 */
+	default void drawSpriteCenteredOverBBox(GraphicsContext g, Rectangle2D s, double x, double y) {
+		drawSprite(g, s, x + HTS - s.getWidth() / 2, y + HTS - s.getHeight() / 2);
+	}
+
+	/**
+	 * Draws sprite (region) using spritesheet.
+	 * 
+	 * @param g graphics context
+	 * @param s sprite (region in spritesheet)
+	 * @param x left upper corner x
+	 * @param y left upper corner y
+	 */
+	default void drawSprite(GraphicsContext g, Rectangle2D s, double x, double y) {
+		g.drawImage(spritesheet().getImage(), s.getMinX(), s.getMinY(), s.getWidth(), s.getHeight(), x, y, s.getWidth(),
+				s.getHeight());
+	}
+
+	/**
+	 * Draws the copyright text and image. Used in several scenes so put this here.
+	 * 
+	 * @param g graphics context
+	 * @param x left upper corner x
+	 * @param y left upper corner y
+	 */
+	void drawCopyright(GraphicsContext g, int x, int y);
 }

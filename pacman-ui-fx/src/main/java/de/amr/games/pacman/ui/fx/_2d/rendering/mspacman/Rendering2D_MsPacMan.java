@@ -208,12 +208,12 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 
 	@Override
 	public void drawMazeFull(GraphicsContext g, int mazeNumber, double x, double y) {
-		drawWithSpritesheet(g, mazeFullSprites.get(mazeNumber - 1), x, y);
+		drawSprite(g, mazeFullSprites.get(mazeNumber - 1), x, y);
 	}
 
 	@Override
 	public void drawMazeEmpty(GraphicsContext g, int mazeNumber, double x, double y) {
-		drawWithSpritesheet(g, mazeEmptySprites.get(mazeNumber - 1), x, y);
+		drawSprite(g, mazeEmptySprites.get(mazeNumber - 1), x, y);
 	}
 
 	@Override

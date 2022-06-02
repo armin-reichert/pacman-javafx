@@ -104,12 +104,12 @@ public class PacMan_IntermissionScene2 extends GameScene2D {
 	private void drawBlinkyStretched(Ghost blinky, V2d nailPosition, int stretching) {
 		var g = canvas.getGraphicsContext2D();
 		Rectangle2D stretchedDress = blinkyStretchedAnimation.frame(stretching);
-		r2D.drawWithSpritesheet(g, stretchedDress, (int) (nailPosition.x - 4), (int) (nailPosition.y - 4));
+		r2D.drawSprite(g, stretchedDress, (int) (nailPosition.x - 4), (int) (nailPosition.y - 4));
 		if (stretching < 3) {
 			blinky2D.render(g, r2D);
 		} else {
 			Rectangle2D damagedDress = blinkyDamagedAnimation.frame(blinky.moveDir() == Direction.UP ? 0 : 1);
-			r2D.drawWithSpritesheet(g, damagedDress, (int) (blinky.position.x - 4), (int) (blinky.position.y - 4));
+			r2D.drawSprite(g, damagedDress, (int) (blinky.position.x - 4), (int) (blinky.position.y - 4));
 		}
 	}
 }

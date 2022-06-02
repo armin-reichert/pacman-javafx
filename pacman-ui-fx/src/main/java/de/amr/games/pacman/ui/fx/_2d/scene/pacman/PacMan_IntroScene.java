@@ -187,7 +187,7 @@ public class PacMan_IntroScene extends GameScene2D {
 		for (int id = 0; id < 4; ++id) {
 			if (context.pictureVisible[id]) {
 				int tileY = 7 + 3 * id;
-				r2D.drawSpriteCentered(g, ghostLookingRight(id), t(3), t(tileY));
+				r2D.drawSpriteCenteredOverBBox(g, ghostLookingRight(id), t(3), t(tileY));
 				if (context.characterVisible[id]) {
 					g.setFill(r2D.getGhostColor(id));
 					g.fillText("-" + context.characters[id], t(6), t(tileY + 1));
