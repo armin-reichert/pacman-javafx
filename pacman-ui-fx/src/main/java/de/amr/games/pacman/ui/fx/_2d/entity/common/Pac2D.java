@@ -28,8 +28,8 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimationMap;
+import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimation;
+import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimationMap;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -80,6 +80,7 @@ public class Pac2D extends GameEntity2D {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void renderAnimationState(GraphicsContext g) {
 		if (!pac.visible) {
 			return;

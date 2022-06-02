@@ -21,69 +21,90 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx._2d.rendering.common;
+package de.amr.games.pacman.ui.fx._2d.rendering.lib;
 
-import java.util.Collection;
-import java.util.EnumMap;
-import java.util.Map;
+import de.amr.games.pacman.lib.TimedSeq;
 
 /**
  * @author Armin Reichert
- *
- * @param <K> key type of map (enum)
- * @param <S> sprite type (Image, Rectangle)
  */
-public class SpriteAnimationMap<K extends Enum<K>, S> implements ISpriteAnimation<S> {
+public class SpriteAnimation<S> implements ISpriteAnimation {
 
-	private final Map<K, SpriteAnimation<S>> animationMap;
+	private final TimedSeq<S> ts;
 
-	public SpriteAnimationMap(Class<K> keyClass) {
-		animationMap = new EnumMap<>(keyClass);
-	}
-
-	public void put(K key, SpriteAnimation<S> animation) {
-		animationMap.put(key, animation);
-	}
-
-	public SpriteAnimation<S> get(K key) {
-		return animationMap.get(key);
-	}
-
-	public Collection<SpriteAnimation<S>> values() {
-		return animationMap.values();
-	}
-
-	@Override
-	public void reset() {
-		values().forEach(SpriteAnimation::reset);
-	}
-
-	@Override
-	public void restart() {
-		values().forEach(SpriteAnimation::restart);
-	}
-
-	@Override
-	public void stop() {
-		values().forEach(SpriteAnimation::stop);
+	@SuppressWarnings("unchecked")
+	public SpriteAnimation(S... sprites) {
+		ts = new TimedSeq<>(sprites);
 	}
 
 	@Override
 	public void run() {
-		values().forEach(SpriteAnimation::run);
+		ts.run();
+	}
+
+	@Override
+	public void stop() {
+		ts.stop();
+	}
+
+	@Override
+	public void reset() {
+		ts.reset();
+	}
+
+	@Override
+	public void restart() {
+		ts.restart();
 	}
 
 	@Override
 	public void ensureRunning() {
-		values().forEach(animation -> {
-			if (!animation.isRunning()) {
-				animation.run();
-			}
-		});
+		ts.ensureRunning();
 	}
 
 	@Override
 	public void setFrameIndex(int index) {
-		throw new UnsupportedOperationException();
+		ts.setFrameIndex(index);
 	}
+
+	public S animate() {
+		return ts.animate();
+	}
+
+	public S frame() {
+		return ts.frame();
+	}
+
+	public S frame(int index) {
+		return ts.frame(index);
+	}
+
+	public int numFrames() {
+		return ts.numFrames();
+	}
+
+	public boolean isRunning() {
+		return ts.isRunning();
+	}
+
+	public SpriteAnimation<S> repetitions(int n) {
+		ts.repetitions(n);
+		return this;
+	}
+
+	public SpriteAnimation<S> frameDuration(long ticks) {
+		ts.frameDuration(ticks);
+		return this;
+	}
+
+	public SpriteAnimation<S> endless() {
+		ts.endless();
+		return this;
+	}
+
+	public SpriteAnimation<S> advance() {
+		ts.advance();
+		return this;
+	}
+
 }

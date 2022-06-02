@@ -28,8 +28,8 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimationMap;
+import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimation;
+import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimationMap;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -70,6 +70,7 @@ public class Ghost2D extends GameEntity2D {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void renderAnimationState(GraphicsContext g) {
 		if (!ghost.visible) {
 			return;

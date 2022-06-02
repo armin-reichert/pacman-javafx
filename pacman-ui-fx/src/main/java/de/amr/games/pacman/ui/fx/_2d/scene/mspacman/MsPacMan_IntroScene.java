@@ -38,7 +38,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimationMap;
+import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimationMap;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
@@ -97,6 +97,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		sceneController.update();
 	}
 
+	@SuppressWarnings("unchecked")
 	private void onSceneStateChanged(State fromState, State toState) {
 		if (fromState == State.MSPACMAN && toState == State.READY_TO_PLAY) {
 			var munching = (SpriteAnimationMap<Direction, Rectangle2D>) msPacMan2D.animations.selectedAnimation();

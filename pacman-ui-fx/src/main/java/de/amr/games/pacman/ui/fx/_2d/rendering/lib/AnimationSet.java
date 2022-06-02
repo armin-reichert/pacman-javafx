@@ -22,20 +22,23 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.amr.games.pacman.ui.fx._2d.rendering.common;
+package de.amr.games.pacman.ui.fx._2d.rendering.lib;
 
 import java.util.stream.Stream;
 
 /**
  * @author Armin Reichert
+ * 
+ * @param <K> Key type (enum)
+ * @param <S> Sprite type (Rectangle, Image)
  */
 public abstract class AnimationSet<K, S> {
 
 	private K selectedKey;
 
-	public abstract ISpriteAnimation<S> animation(K key);
+	public abstract ISpriteAnimation animation(K key);
 
-	public abstract Stream<ISpriteAnimation<S>> animations();
+	public abstract Stream<ISpriteAnimation> animations();
 
 	public void select(K key) {
 		selectedKey = key;
@@ -46,7 +49,7 @@ public abstract class AnimationSet<K, S> {
 		return selectedKey;
 	}
 
-	public ISpriteAnimation<S> selectedAnimation() {
+	public ISpriteAnimation selectedAnimation() {
 		return animation(selectedKey);
 	}
 

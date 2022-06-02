@@ -21,90 +21,69 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx._2d.rendering.common;
+package de.amr.games.pacman.ui.fx._2d.rendering.lib;
 
-import de.amr.games.pacman.lib.TimedSeq;
+import java.util.Collection;
+import java.util.EnumMap;
+import java.util.Map;
 
 /**
  * @author Armin Reichert
+ *
+ * @param <K> key type of map (enum)
+ * @param <S> sprite type (Image, Rectangle)
  */
-public class SpriteAnimation<S> implements ISpriteAnimation<S> {
+public class SpriteAnimationMap<K extends Enum<K>, S> implements ISpriteAnimation {
 
-	private final TimedSeq<S> ts;
+	private final Map<K, SpriteAnimation<S>> animationMap;
 
-	@SuppressWarnings("unchecked")
-	public SpriteAnimation(S... sprites) {
-		ts = new TimedSeq<>(sprites);
+	public SpriteAnimationMap(Class<K> keyClass) {
+		animationMap = new EnumMap<>(keyClass);
 	}
 
-	@Override
-	public void run() {
-		ts.run();
+	public void put(K key, SpriteAnimation<S> animation) {
+		animationMap.put(key, animation);
 	}
 
-	@Override
-	public void stop() {
-		ts.stop();
+	public SpriteAnimation<S> get(K key) {
+		return animationMap.get(key);
+	}
+
+	public Collection<SpriteAnimation<S>> values() {
+		return animationMap.values();
 	}
 
 	@Override
 	public void reset() {
-		ts.reset();
+		values().forEach(SpriteAnimation::reset);
 	}
 
 	@Override
 	public void restart() {
-		ts.restart();
+		values().forEach(SpriteAnimation::restart);
+	}
+
+	@Override
+	public void stop() {
+		values().forEach(SpriteAnimation::stop);
+	}
+
+	@Override
+	public void run() {
+		values().forEach(SpriteAnimation::run);
 	}
 
 	@Override
 	public void ensureRunning() {
-		ts.ensureRunning();
+		values().forEach(animation -> {
+			if (!animation.isRunning()) {
+				animation.run();
+			}
+		});
 	}
 
 	@Override
 	public void setFrameIndex(int index) {
-		ts.setFrameIndex(index);
+		throw new UnsupportedOperationException();
 	}
-
-	public S animate() {
-		return ts.animate();
-	}
-
-	public S frame() {
-		return ts.frame();
-	}
-
-	public S frame(int index) {
-		return ts.frame(index);
-	}
-
-	public int numFrames() {
-		return ts.numFrames();
-	}
-
-	public boolean isRunning() {
-		return ts.isRunning();
-	}
-
-	public SpriteAnimation<S> repetitions(int n) {
-		ts.repetitions(n);
-		return this;
-	}
-
-	public SpriteAnimation<S> frameDuration(long ticks) {
-		ts.frameDuration(ticks);
-		return this;
-	}
-
-	public SpriteAnimation<S> endless() {
-		ts.endless();
-		return this;
-	}
-
-	public SpriteAnimation<S> advance() {
-		ts.advance();
-		return this;
-	}
-
 }

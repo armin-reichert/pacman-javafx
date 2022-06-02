@@ -29,6 +29,10 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D.PacAnimation;
+import de.amr.games.pacman.ui.fx._2d.rendering.lib.AnimationSet;
+import de.amr.games.pacman.ui.fx._2d.rendering.lib.ISpriteAnimation;
+import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimation;
+import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimationMap;
 import javafx.geometry.Rectangle2D;
 
 /**
@@ -45,7 +49,7 @@ public class PacAnimations extends AnimationSet<PacAnimation, Rectangle2D> {
 	}
 
 	@Override
-	public ISpriteAnimation<Rectangle2D> animation(PacAnimation key) {
+	public ISpriteAnimation animation(PacAnimation key) {
 		return switch (key) {
 		case DYING -> dying;
 		case MUNCHING -> munching;
@@ -53,7 +57,7 @@ public class PacAnimations extends AnimationSet<PacAnimation, Rectangle2D> {
 	}
 
 	@Override
-	public Stream<ISpriteAnimation<Rectangle2D>> animations() {
+	public Stream<ISpriteAnimation> animations() {
 		return Stream.of(munching, dying);
 	}
 
