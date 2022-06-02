@@ -319,7 +319,8 @@ public class PlayScene2D extends GameScene2D {
 		}
 
 		case PACMAN_DYING -> {
-			gameController.state().timer().setDurationIndefinite().start();
+			gameController.state().timer().setDurationIndefinite();
+			gameController.state().timer().start();
 			SoundManager.get().stopAll();
 			pac2D.animations.selectAnimation(PacAnimation.DYING);
 			pac2D.animations.selectedAnimation().stop();
@@ -355,7 +356,8 @@ public class PlayScene2D extends GameScene2D {
 
 		case LEVEL_STARTING -> {
 			maze2D.getFlashingAnimation().setCycleCount(2 * game.level.numFlashes);
-			gameController.state().timer().setDurationSeconds(1).start();
+			gameController.state().timer().setDurationSeconds(1);
+			gameController.state().timer().start();
 		}
 
 		case GAME_OVER -> {
