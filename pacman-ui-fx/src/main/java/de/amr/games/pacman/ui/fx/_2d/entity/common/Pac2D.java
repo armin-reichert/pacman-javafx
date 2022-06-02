@@ -76,7 +76,7 @@ public class Pac2D extends GameEntity2D {
 			return;
 		}
 		g.setFill(Color.WHITE);
-		g.setFont(Font.font("Arial Narrow", 10));
+		g.setFont(Font.font("Arial Narrow", 8));
 		String text = animations.selectedKey().name();
 		var anim = animations.selectedAnimation();
 		if (anim instanceof SpriteAnimation) {

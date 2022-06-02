@@ -88,7 +88,7 @@ public class Ghost2D extends GameEntity2D {
 			return;
 		}
 		g.setFill(Color.WHITE);
-		g.setFont(Font.font("Arial Narrow", 10));
+		g.setFont(Font.font("Arial Narrow", 8));
 		String text = animations.selectedKey().name();
 		var animation = unpack(animations.selectedAnimation());
 		text += !animation.isRunning() ? " stopped" : "";
