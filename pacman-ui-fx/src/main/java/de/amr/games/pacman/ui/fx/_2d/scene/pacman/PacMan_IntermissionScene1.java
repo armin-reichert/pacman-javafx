@@ -30,6 +30,7 @@ import de.amr.games.pacman.controller.pacman.Intermission1Controller;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
+import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D.GhostAnimation;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.BigPacMan2D;
@@ -65,21 +66,22 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 	@Override
 	public void init() {
 		sceneController.init();
-
 		levelCounter2D = new LevelCounter2D(game, unscaledSize.x - t(3), unscaledSize.y - t(2));
-
 		pacMan2D = new Pac2D(context.pac, game, new PacAnimations(r2D));
 		blinky2D = new Ghost2D(context.blinky, game, new GhostAnimations(Ghost.RED_GHOST, r2D));
+		blinky2D.animations.run();
 		bigPacMan2D = new BigPacMan2D(context.pac, game);
-
-		pacMan2D.animations.restart();
-		blinky2D.animations.restart();
 		bigPacMan2D.munchingAnimation.restart();
 	}
 
 	@Override
 	public void doUpdate() {
 		sceneController.update();
+		blinky2D.animations.select(switch (context.blinky.state) {
+		case FRIGHTENED -> GhostAnimation.FRIGHTENED;
+		case HUNTING_PAC -> GhostAnimation.ALIVE;
+		default -> blinky2D.animations.selectedKey();
+		});
 	}
 
 	@Override

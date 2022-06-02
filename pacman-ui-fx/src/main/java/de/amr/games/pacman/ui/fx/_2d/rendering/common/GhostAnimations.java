@@ -72,9 +72,10 @@ public class GhostAnimations extends AnimationSet<GhostAnimation> {
 	}
 
 	public void refresh() {
-		kicking.ensureRunning();
+		dead.ensureRunning();
 		frightened.ensureRunning();
 		flashing.ensureRunning();
+		kicking.ensureRunning();
 	}
 
 	public Rectangle2D currentSprite(Ghost ghost) {
