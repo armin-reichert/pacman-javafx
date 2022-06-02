@@ -53,6 +53,7 @@ public class SoundManager {
 	private Map<GameSound, AudioClip> soundMap_MsPacMan = new EnumMap<>(GameSound.class);
 	private Map<GameSound, AudioClip> soundMap = soundMap_PacMan;
 	private boolean muted;
+	private boolean stopped;
 
 	private void loadMsPacManSounds() {
 		//@formatter:off
@@ -144,7 +145,7 @@ public class SoundManager {
 	}
 
 	public void loop(GameSound sound, int repetitions) {
-		if (!muted) {
+		if (!muted && !stopped) {
 			AudioClip clip = getClip(sound);
 			clip.setCycleCount(repetitions);
 			clip.play();
@@ -172,12 +173,16 @@ public class SoundManager {
 		}
 	}
 
+	public void setStopped(boolean stopped) {
+		this.stopped = stopped;
+	}
+
 	public Stream<GameSound> sirens() {
 		return Stream.of(GameSound.SIREN_1, GameSound.SIREN_2, GameSound.SIREN_3, GameSound.SIREN_4);
 	}
 
 	public void startSiren(int sirenIndex) {
-		if (muted) {
+		if (muted || stopped) {
 			return;
 		}
 		if (sirenIndex < 0 || sirenIndex > 3) {

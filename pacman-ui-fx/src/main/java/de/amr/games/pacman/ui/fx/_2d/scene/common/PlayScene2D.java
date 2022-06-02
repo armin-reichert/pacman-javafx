@@ -90,6 +90,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void init() {
 		boolean hasCredit = gameController.credit() > 0;
+		SoundManager.get().setStopped(!hasCredit);
 		createCommonParts(game);
 		score2D.showPoints = hasCredit;
 		credit2D.visible = !hasCredit;
@@ -111,6 +112,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void end() {
 		log("Scene '%s' ended", getClass().getName());
+		SoundManager.get().setStopped(false);
 	}
 
 	@Override
@@ -165,12 +167,9 @@ public class PlayScene2D extends GameScene2D {
 			if (SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying() && game.pac.starvingTicks > 10) {
 				SoundManager.get().stop(GameSound.PACMAN_MUNCH);
 			}
-			if (game.huntingTimer.scatteringPhase() >= 0 && game.huntingTimer.tick() == 0) {
+			if (game.huntingTimer.tick() == 0) {
 				SoundManager.get().stopSirens();
-				SoundManager.get().startSiren(game.huntingTimer.scatteringPhase());
-			}
-			if (game.huntingTimer.chasingPhase() >= 0 && !SoundManager.get().isAnySirenPlaying()) {
-				SoundManager.get().startSiren(game.huntingTimer.chasingPhase());
+				SoundManager.get().startSiren(game.huntingTimer.phase() / 2);
 			}
 		}
 		default -> {
@@ -193,19 +192,22 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void onPlayerLosesPower(GameEvent e) {
 		SoundManager.get().stop(GameSound.PACMAN_POWER);
+		if (!SoundManager.get().isAnySirenPlaying()) {
+			SoundManager.get().startSiren(game.huntingTimer.phase() / 2);
+		}
 	}
 
 	@Override
 	public void onPlayerGetsPower(GameEvent e) {
 		SoundManager.get().stopSirens();
-		if (gameController.credit() > 0 && !SoundManager.get().getClip(GameSound.PACMAN_POWER).isPlaying()) {
+		if (!SoundManager.get().getClip(GameSound.PACMAN_POWER).isPlaying()) {
 			SoundManager.get().loop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
 		}
 	}
 
 	@Override
 	public void onPlayerFindsFood(GameEvent e) {
-		if (gameController.credit() > 0 && !SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying()) {
+		if (!SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying()) {
 			SoundManager.get().loop(GameSound.PACMAN_MUNCH, Animation.INDEFINITE);
 		}
 	}
@@ -218,9 +220,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
 		bonus2D.stopJumping();
-		if (gameController.credit() > 0) {
-			SoundManager.get().play(GameSound.BONUS_EATEN);
-		}
+		SoundManager.get().play(GameSound.BONUS_EATEN);
 	}
 
 	@Override
@@ -230,9 +230,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void onGhostStartsReturningHome(GameEvent e) {
-		if (gameController.credit() > 0) {
-			SoundManager.get().playIfOff(GameSound.GHOST_RETURNING);
-		}
+		SoundManager.get().playIfOff(GameSound.GHOST_RETURNING);
 	}
 
 	@Override
@@ -255,7 +253,7 @@ public class PlayScene2D extends GameScene2D {
 			// TODO check this:
 			pac2D.animations.reset();
 			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart());
-			if (gameController.credit() > 0 && !gameController.isGameRunning()) {
+			if (!gameController.isGameRunning()) {
 				SoundManager.get().play(GameSound.GAME_READY);
 			}
 		}
@@ -274,9 +272,7 @@ public class PlayScene2D extends GameScene2D {
 			new SequentialTransition( //
 					pauseSec(1, () -> game.ghosts().forEach(Ghost::hide)), //
 					pauseSec(1, () -> {
-						if (gameController.credit() > 0) {
-							SoundManager.get().play(GameSound.PACMAN_DEATH);
-						}
+						SoundManager.get().play(GameSound.PACMAN_DEATH);
 						pac2D.animations.selectedAnimation().run();
 					}), //
 					pauseSec(2, () -> game.pac.hide()), //
@@ -286,9 +282,7 @@ public class PlayScene2D extends GameScene2D {
 
 		case GHOST_DYING -> {
 			game.pac.hide();
-			if (gameController.credit() > 0) {
-				SoundManager.get().play(GameSound.GHOST_EATEN);
-			}
+			SoundManager.get().play(GameSound.GHOST_EATEN);
 		}
 
 		case LEVEL_COMPLETE -> {
