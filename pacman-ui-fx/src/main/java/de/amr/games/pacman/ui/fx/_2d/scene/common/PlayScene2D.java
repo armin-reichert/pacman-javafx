@@ -275,14 +275,20 @@ public class PlayScene2D extends GameScene2D {
 		}
 
 		case PACMAN_DYING -> {
-			// wait until game is continued
 			gameController.state().timer().setDurationIndefinite().start();
 			SoundManager.get().stopAll();
+			player2D.animations.select(PacAnimation.DYING);
+			player2D.animations.selectedAnimation().stop();
 			new SequentialTransition( //
 					pauseSec(1, () -> game.ghosts().forEach(Ghost::hide)), //
-					pauseSec(1, () -> player2D.startDyingAnimation(gameController.credit() > 0)), //
+					pauseSec(1, () -> {
+						if (gameController.credit() > 0) {
+							SoundManager.get().play(GameSound.PACMAN_DEATH);
+						}
+						player2D.animations.selectedAnimation().run();
+					}), //
 					pauseSec(2, () -> game.player.hide()), //
-					pauseSec(1, () -> gameController.state().timer().expire()) //
+					pauseSec(1, () -> gameController.state().timer().expire()) // exit game state
 			).play();
 		}
 

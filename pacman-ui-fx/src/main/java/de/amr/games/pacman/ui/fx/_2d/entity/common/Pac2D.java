@@ -31,8 +31,6 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimationMap;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
-import de.amr.games.pacman.ui.fx.sound.GameSound;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -62,14 +60,6 @@ public class Pac2D extends GameEntity2D {
 	public void refresh() {
 		visible = pac.visible;
 		animations.refresh();
-	}
-
-	// TODO reconsider
-	public void startDyingAnimation(boolean sound) {
-		animations.select(PacAnimation.DYING);
-		if (sound) {
-			SoundManager.get().play(GameSound.PACMAN_DEATH);
-		}
 	}
 
 	@Override
