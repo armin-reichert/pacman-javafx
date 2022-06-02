@@ -29,9 +29,9 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D.PacAnimation;
-import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimationContainer;
 import de.amr.games.pacman.ui.fx._2d.rendering.lib.ISpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimation;
+import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimationContainer;
 import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimationMap;
 import javafx.geometry.Rectangle2D;
 

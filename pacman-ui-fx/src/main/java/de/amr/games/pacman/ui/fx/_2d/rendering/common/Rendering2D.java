@@ -29,6 +29,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimationMap;
+import de.amr.games.pacman.ui.fx._2d.rendering.lib.Spritesheet;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
