@@ -113,11 +113,11 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		drawLights(g, 32, 16);
 		if (sceneController.state() == State.GHOSTS) {
 			drawGhostText(g, context.ghosts[context.ghostIndex]);
+			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(g, r2D));
 		} else if (sceneController.state() == State.MSPACMAN || sceneController.state() == State.READY_TO_PLAY) {
 			drawMsPacManText(g);
+			msPacMan2D.render(g, r2D);
 		}
-		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(g, r2D));
-		msPacMan2D.render(g, r2D);
 		r2D.drawCopyright(g, t(3), t(28));
 		credit2D.render(g, r2D);
 	}
