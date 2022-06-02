@@ -269,7 +269,7 @@ public class GameUI extends GameEventAdapter {
 		} else if (pressed(e, KeyCode.F11)) {
 			stage.setFullScreen(true);
 		}
-		currentGameScene.handleKeyPressed(e);
+		currentGameScene.onKeyPressed(e.getCode());
 	}
 
 	public void addCredit() {
