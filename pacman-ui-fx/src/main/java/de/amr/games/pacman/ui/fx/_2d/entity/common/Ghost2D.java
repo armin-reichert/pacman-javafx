@@ -23,11 +23,17 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.ISpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimationMap;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 /**
  * 2D representation of a ghost.
@@ -35,6 +41,8 @@ import javafx.scene.canvas.GraphicsContext;
  * @author Armin Reichert
  */
 public class Ghost2D extends GameEntity2D {
+
+	boolean debug = true;
 
 	public enum GhostAnimation {
 		ALIVE, DEAD, EATEN, FRIGHTENED, RECOVERING;
@@ -58,5 +66,27 @@ public class Ghost2D extends GameEntity2D {
 	@Override
 	public void render(GraphicsContext g, Rendering2D r2D) {
 		r2D.drawEntity(g, ghost, animations.currentSprite(ghost));
+		if (debug) {
+			renderAnimationState(g);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void renderAnimationState(GraphicsContext g) {
+		if (!ghost.visible) {
+			return;
+		}
+		g.setFill(Color.WHITE);
+		g.setFont(Font.font("Arial Narrow", 10));
+		String text = animations.selectedKey().name();
+		ISpriteAnimation anim = animations.selectedAnimation();
+		if (anim instanceof SpriteAnimation) {
+			var sa = (SpriteAnimation) anim;
+			text += !sa.isRunning() ? " stopped" : "";
+		} else {
+			var sa = ((SpriteAnimationMap<Direction>) anim).get(ghost.wishDir());
+			text += !sa.isRunning() ? " stopped" : "";
+		}
+		g.fillText(text, ghost.position.x - 10, ghost.position.y - 5);
 	}
 }

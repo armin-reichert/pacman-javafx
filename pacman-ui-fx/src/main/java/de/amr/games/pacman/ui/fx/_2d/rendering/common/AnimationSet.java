@@ -46,6 +46,10 @@ public abstract class AnimationSet<KEY> {
 		return selectedKey;
 	}
 
+	public ISpriteAnimation selectedAnimation() {
+		return animation(selectedKey);
+	}
+
 	public void stop(KEY key) {
 		animation(key).stop();
 	}
