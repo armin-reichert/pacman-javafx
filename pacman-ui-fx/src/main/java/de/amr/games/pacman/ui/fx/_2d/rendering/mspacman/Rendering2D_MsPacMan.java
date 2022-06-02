@@ -270,7 +270,7 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 	}
 
 	@Override
-	public SpriteAnimationMap<Direction> createGhostKickingAnimationMap(int ghostID) {
+	public SpriteAnimationMap<Direction> createGhostKickingAnimation(int ghostID) {
 		SpriteAnimationMap<Direction> animationMap = new SpriteAnimationMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
@@ -291,7 +291,7 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 	}
 
 	@Override
-	public SpriteAnimationMap<Direction> createGhostEyesAnimationMap() {
+	public SpriteAnimationMap<Direction> createGhostEyesAnimation() {
 		SpriteAnimationMap<Direction> animationMap = new SpriteAnimationMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
