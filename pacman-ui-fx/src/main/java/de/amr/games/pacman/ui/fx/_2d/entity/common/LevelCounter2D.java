@@ -56,7 +56,7 @@ public class LevelCounter2D extends GameEntity2D {
 			int last = game.level.number;
 			double xx = x;
 			for (int number = first; number <= last; ++number, xx -= t(2)) {
-				r2D.drawSprite(g, r2D.getSymbolSprite(game.levelCounter.get(number - 1)), xx, y);
+				r2D.drawWithSpritesheet(g, r2D.getSymbolSprite(game.levelCounter.get(number - 1)), xx, y);
 			}
 		}
 	}

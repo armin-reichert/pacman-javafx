@@ -68,17 +68,17 @@ public interface Rendering2D {
 
 	SpriteAnimationMap<Direction, Rectangle2D> createGhostDeadAnimation();
 
-	default void drawEntity(GraphicsContext g, Entity e, Rectangle2D sprite) {
-		if (e.visible) {
-			drawSpriteCentered(g, sprite, e.position.x, e.position.y);
+	default void drawEntity(GraphicsContext g, Entity entity, Rectangle2D sprite) {
+		if (entity.visible) {
+			drawSpriteCentered(g, sprite, entity.position.x, entity.position.y);
 		}
 	}
 
 	default void drawSpriteCentered(GraphicsContext g, Rectangle2D s, double x, double y) {
-		drawSprite(g, s, x + HTS - s.getWidth() / 2, y + HTS - s.getHeight() / 2);
+		drawWithSpritesheet(g, s, x + HTS - s.getWidth() / 2, y + HTS - s.getHeight() / 2);
 	}
 
-	default void drawSprite(GraphicsContext g, Rectangle2D s, double x, double y) {
+	default void drawWithSpritesheet(GraphicsContext g, Rectangle2D s, double x, double y) {
 		g.drawImage(spritesheet().getImage(), s.getMinX(), s.getMinY(), s.getWidth(), s.getHeight(), x, y, s.getWidth(),
 				s.getHeight());
 	}

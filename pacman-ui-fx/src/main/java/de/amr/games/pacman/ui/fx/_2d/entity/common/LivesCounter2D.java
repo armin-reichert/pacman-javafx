@@ -52,7 +52,7 @@ public class LivesCounter2D extends GameEntity2D {
 	public void render(GraphicsContext g, Rendering2D r2D) {
 		if (visible) {
 			for (int i = 0; i < Math.min(game.lives, maxLives); ++i) {
-				r2D.drawSprite(g, r2D.getLifeSprite(), x + t(2 * i), y);
+				r2D.drawWithSpritesheet(g, r2D.getLifeSprite(), x + t(2 * i), y);
 			}
 			// show text indicating that more lives are available than displayed
 			if (game.lives > maxLives) {
