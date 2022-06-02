@@ -82,7 +82,7 @@ public class Ghost2D extends GameEntity2D {
 			var sa = (SpriteAnimation<Rectangle2D>) anim;
 			text += !sa.isRunning() ? " stopped" : "";
 		} else {
-			var sa = ((SpriteAnimationMap<Direction>) anim).get(ghost.wishDir());
+			var sa = ((SpriteAnimationMap<Direction, Rectangle2D>) anim).get(ghost.wishDir());
 			text += !sa.isRunning() ? " stopped" : "";
 		}
 		g.fillText(text, ghost.position.x - 10, ghost.position.y - 5);

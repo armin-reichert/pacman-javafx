@@ -43,6 +43,7 @@ import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -98,7 +99,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 
 	private void onSceneStateChanged(State fromState, State toState) {
 		if (fromState == State.MSPACMAN && toState == State.READY_TO_PLAY) {
-			var munching = (SpriteAnimationMap<Direction>) msPacMan2D.animations.selectedAnimation();
+			var munching = (SpriteAnimationMap<Direction, Rectangle2D>) msPacMan2D.animations.selectedAnimation();
 			munching.get(msPacMan2D.pac.moveDir()).setFrameIndex(2);
 			munching.stop();
 		}

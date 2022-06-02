@@ -53,17 +53,17 @@ public interface Rendering2D {
 
 	Rectangle2D getSymbolSprite(int symbol);
 
-	SpriteAnimationMap<Direction> createPlayerMunchingAnimations();
+	SpriteAnimationMap<Direction, Rectangle2D> createPlayerMunchingAnimations();
 
 	SpriteAnimation<Rectangle2D> createPlayerDyingAnimation();
 
-	SpriteAnimationMap<Direction> createGhostAliveAnimation(int ghostID);
+	SpriteAnimationMap<Direction, Rectangle2D> createGhostAliveAnimation(int ghostID);
 
 	SpriteAnimation<Rectangle2D> createGhostFrightenedAnimation();
 
 	SpriteAnimation<Rectangle2D> createGhostLessFrightenedAnimation();
 
-	SpriteAnimationMap<Direction> createGhostDeadAnimation();
+	SpriteAnimationMap<Direction, Rectangle2D> createGhostDeadAnimation();
 
 	default void drawEntity(GraphicsContext g, Entity e, Rectangle2D sprite) {
 		if (e.visible) {

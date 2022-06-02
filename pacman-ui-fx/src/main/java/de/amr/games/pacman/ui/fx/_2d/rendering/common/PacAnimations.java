@@ -34,9 +34,9 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class PacAnimations extends AnimationSet<PacAnimation> {
+public class PacAnimations extends AnimationSet<PacAnimation, Rectangle2D> {
 
-	protected SpriteAnimationMap<Direction> munching;
+	protected SpriteAnimationMap<Direction, Rectangle2D> munching;
 	protected SpriteAnimation<Rectangle2D> dying;
 
 	public PacAnimations(Rendering2D r2D) {

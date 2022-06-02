@@ -26,41 +26,39 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
 import java.util.stream.Stream;
 
-import javafx.geometry.Rectangle2D;
-
 /**
  * @author Armin Reichert
  */
-public abstract class AnimationSet<KEY> {
+public abstract class AnimationSet<K, S> {
 
-	private KEY selectedKey;
+	private K selectedKey;
 
-	public abstract ISpriteAnimation<Rectangle2D> animation(KEY key);
+	public abstract ISpriteAnimation<S> animation(K key);
 
-	public abstract Stream<ISpriteAnimation<Rectangle2D>> animations();
+	public abstract Stream<ISpriteAnimation<S>> animations();
 
-	public void select(KEY key) {
+	public void select(K key) {
 		selectedKey = key;
 		animation(selectedKey).ensureRunning();
 	}
 
-	public KEY selectedKey() {
+	public K selectedKey() {
 		return selectedKey;
 	}
 
-	public ISpriteAnimation<Rectangle2D> selectedAnimation() {
+	public ISpriteAnimation<S> selectedAnimation() {
 		return animation(selectedKey);
 	}
 
-	public void stop(KEY key) {
+	public void stop(K key) {
 		animation(key).stop();
 	}
 
-	public void run(KEY key) {
+	public void run(K key) {
 		animation(key).run();
 	}
 
-	public void restart(KEY key) {
+	public void restart(K key) {
 		animation(key).restart();
 	}
 

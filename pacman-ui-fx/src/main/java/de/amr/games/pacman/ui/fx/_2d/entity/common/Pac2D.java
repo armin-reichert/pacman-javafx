@@ -92,7 +92,7 @@ public class Pac2D extends GameEntity2D {
 			var sa = (SpriteAnimation<Rectangle2D>) anim;
 			text += !sa.isRunning() ? " stopped" : "";
 		} else {
-			var sam = ((SpriteAnimationMap<Direction>) anim).get(pac.moveDir());
+			var sam = ((SpriteAnimationMap<Direction, Rectangle2D>) anim).get(pac.moveDir());
 			text += !sam.isRunning() ? " stopped" : "";
 		}
 		g.fillText(text, pac.position.x - 10, pac.position.y - 5);

@@ -27,31 +27,29 @@ import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
 
-import javafx.geometry.Rectangle2D;
-
 /**
- * 
  * @author Armin Reichert
  *
  * @param <K> key type of map (enum)
+ * @param <S> sprite type (Image, Rectangle)
  */
-public class SpriteAnimationMap<K extends Enum<K>> implements ISpriteAnimation<Rectangle2D> {
+public class SpriteAnimationMap<K extends Enum<K>, S> implements ISpriteAnimation<S> {
 
-	private final Map<K, SpriteAnimation<Rectangle2D>> animationMap;
+	private final Map<K, SpriteAnimation<S>> animationMap;
 
 	public SpriteAnimationMap(Class<K> keyClass) {
 		animationMap = new EnumMap<>(keyClass);
 	}
 
-	public void put(K key, SpriteAnimation<Rectangle2D> animation) {
+	public void put(K key, SpriteAnimation<S> animation) {
 		animationMap.put(key, animation);
 	}
 
-	public SpriteAnimation<Rectangle2D> get(K key) {
+	public SpriteAnimation<S> get(K key) {
 		return animationMap.get(key);
 	}
 
-	public Collection<SpriteAnimation<Rectangle2D>> values() {
+	public Collection<SpriteAnimation<S>> values() {
 		return animationMap.values();
 	}
 

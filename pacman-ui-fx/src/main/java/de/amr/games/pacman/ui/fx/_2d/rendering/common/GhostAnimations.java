@@ -33,12 +33,12 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class GhostAnimations extends AnimationSet<GhostAnimation> {
+public class GhostAnimations extends AnimationSet<GhostAnimation, Rectangle2D> {
 
-	private SpriteAnimationMap<Direction> dead;
+	private SpriteAnimationMap<Direction, Rectangle2D> dead;
 	private SpriteAnimation<Rectangle2D> flashing;
 	private SpriteAnimation<Rectangle2D> frightened;
-	private SpriteAnimationMap<Direction> kicking;
+	private SpriteAnimationMap<Direction, Rectangle2D> kicking;
 	private SpriteAnimation<Rectangle2D> numbers;
 
 	public GhostAnimations(int ghostID, Rendering2D r2D) {

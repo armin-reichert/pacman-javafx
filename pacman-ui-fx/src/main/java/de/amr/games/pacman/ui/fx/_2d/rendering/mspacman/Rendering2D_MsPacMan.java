@@ -251,8 +251,8 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 	 */
 
 	@Override
-	public SpriteAnimationMap<Direction> createPlayerMunchingAnimations() {
-		SpriteAnimationMap<Direction> animationMap = new SpriteAnimationMap<>(Direction.class);
+	public SpriteAnimationMap<Direction, Rectangle2D> createPlayerMunchingAnimations() {
+		SpriteAnimationMap<Direction, Rectangle2D> animationMap = new SpriteAnimationMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
 			Rectangle2D wide_open = rhs(0, d), open = rhs(1, d), closed = rhs(2, d);
@@ -270,8 +270,8 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 	}
 
 	@Override
-	public SpriteAnimationMap<Direction> createGhostAliveAnimation(int ghostID) {
-		SpriteAnimationMap<Direction> animationMap = new SpriteAnimationMap<>(Direction.class);
+	public SpriteAnimationMap<Direction, Rectangle2D> createGhostAliveAnimation(int ghostID) {
+		SpriteAnimationMap<Direction, Rectangle2D> animationMap = new SpriteAnimationMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
 			var kicking = new SpriteAnimation<>(rhs(2 * d, 4 + ghostID), rhs(2 * d + 1, 4 + ghostID)).frameDuration(8)
@@ -292,8 +292,8 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 	}
 
 	@Override
-	public SpriteAnimationMap<Direction> createGhostDeadAnimation() {
-		SpriteAnimationMap<Direction> animationMap = new SpriteAnimationMap<>(Direction.class);
+	public SpriteAnimationMap<Direction, Rectangle2D> createGhostDeadAnimation() {
+		SpriteAnimationMap<Direction, Rectangle2D> animationMap = new SpriteAnimationMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
 			animationMap.put(dir, new SpriteAnimation<>(rhs(8 + d, 5)));
@@ -307,8 +307,8 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 		return TimedSeq.of(2, 0, -2).frameDuration(8).endless();
 	}
 
-	public SpriteAnimationMap<Direction> createHusbandMunchingAnimations() {
-		SpriteAnimationMap<Direction> animationMap = new SpriteAnimationMap<>(Direction.class);
+	public SpriteAnimationMap<Direction, Rectangle2D> createHusbandMunchingAnimations() {
+		SpriteAnimationMap<Direction, Rectangle2D> animationMap = new SpriteAnimationMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
 			animationMap.put(dir, new SpriteAnimation<>(rhs(0, 9 + d), rhs(1, 9 + d), rhs(2, 9)).frameDuration(2).endless());
