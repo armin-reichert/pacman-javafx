@@ -57,13 +57,13 @@ public interface Rendering2D {
 
 	SpriteAnimation createPlayerDyingAnimation();
 
-	SpriteAnimationMap<Direction> createGhostKickingAnimations(int ghostID);
+	SpriteAnimationMap<Direction> createGhostKickingAnimationMap(int ghostID);
 
 	SpriteAnimation createGhostFrightenedAnimation();
 
 	SpriteAnimation createGhostFlashingAnimation();
 
-	SpriteAnimationMap<Direction> createGhostReturningHomeAnimations();
+	SpriteAnimationMap<Direction> createEyesAnimationMap();
 
 	default void drawEntity(GraphicsContext g, Entity e, Rectangle2D sprite) {
 		if (e.visible) {

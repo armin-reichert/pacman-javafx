@@ -36,6 +36,9 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimationMap;
 import javafx.geometry.Rectangle2D;
 
+/**
+ * @author Armin Reichert
+ */
 public class GhostAnimations extends AnimationSet<GhostAnimation> {
 
 	private SpriteAnimationMap<Direction> eyes;
@@ -45,10 +48,10 @@ public class GhostAnimations extends AnimationSet<GhostAnimation> {
 	private SpriteAnimation number;
 
 	public GhostAnimations(int ghostID, Rendering2D r2D) {
-		eyes = r2D.createGhostReturningHomeAnimations();
+		eyes = r2D.createEyesAnimationMap();
 		flashing = r2D.createGhostFlashingAnimation();
 		frightened = r2D.createGhostFrightenedAnimation();
-		kicking = r2D.createGhostKickingAnimations(ghostID);
+		kicking = r2D.createGhostKickingAnimationMap(ghostID);
 		number = SpriteAnimation.of(r2D.getBountyNumberSprite(200), r2D.getBountyNumberSprite(400),
 				r2D.getBountyNumberSprite(800), r2D.getBountyNumberSprite(1600));
 	}
