@@ -126,6 +126,14 @@ public class PlayScene2D extends GameScene2D {
 		livesCounter2D.render(g, r2D);
 		credit2D.render(g, r2D);
 		maze2D.render(g, r2D);
+		drawGameStateMessage(g);
+		bonus2D.render(g, r2D);
+		pac2D.render(g, r2D);
+		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(g, r2D));
+		levelCounter2D.render(g, r2D);
+	}
+
+	private void drawGameStateMessage(GraphicsContext g) {
 		if (gameController.state() == GameState.GAME_OVER || gameController.credit() == 0) {
 			g.setFont(r2D.getArcadeFont());
 			g.setFill(Color.RED);
@@ -136,10 +144,6 @@ public class PlayScene2D extends GameScene2D {
 			g.setFill(Color.YELLOW);
 			g.fillText("READY!", t(11), t(21));
 		}
-		bonus2D.render(g, r2D);
-		pac2D.render(g, r2D);
-		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(g, r2D));
-		levelCounter2D.render(g, r2D);
 	}
 
 	private void updateAnimations() {

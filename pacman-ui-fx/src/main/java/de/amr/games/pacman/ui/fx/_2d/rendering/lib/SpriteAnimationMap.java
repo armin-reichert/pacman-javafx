@@ -49,37 +49,33 @@ public class SpriteAnimationMap<K extends Enum<K>, S> implements ISpriteAnimatio
 		return animationMap.get(key);
 	}
 
-	public Collection<SpriteAnimation<S>> values() {
+	public Collection<SpriteAnimation<S>> allAnimations() {
 		return animationMap.values();
 	}
 
 	@Override
 	public void reset() {
-		values().forEach(SpriteAnimation::reset);
+		allAnimations().forEach(SpriteAnimation::reset);
 	}
 
 	@Override
 	public void restart() {
-		values().forEach(SpriteAnimation::restart);
+		allAnimations().forEach(SpriteAnimation::restart);
 	}
 
 	@Override
 	public void stop() {
-		values().forEach(SpriteAnimation::stop);
+		allAnimations().forEach(SpriteAnimation::stop);
 	}
 
 	@Override
 	public void run() {
-		values().forEach(SpriteAnimation::run);
+		allAnimations().forEach(SpriteAnimation::run);
 	}
 
 	@Override
 	public void ensureRunning() {
-		values().forEach(animation -> {
-			if (!animation.isRunning()) {
-				animation.run();
-			}
-		});
+		allAnimations().forEach(SpriteAnimation::ensureRunning);
 	}
 
 	@Override
