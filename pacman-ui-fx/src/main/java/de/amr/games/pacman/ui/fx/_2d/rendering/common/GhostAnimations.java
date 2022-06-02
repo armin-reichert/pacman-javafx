@@ -39,17 +39,17 @@ import javafx.geometry.Rectangle2D;
  */
 public class GhostAnimations extends SpriteAnimationContainer<GhostAnimation, Rectangle2D> {
 
-	private SpriteAnimationMap<Direction, Rectangle2D> dead;
+	private SpriteAnimationMap<Direction, Rectangle2D> eyes;
 	private SpriteAnimation<Rectangle2D> flashing;
-	private SpriteAnimation<Rectangle2D> frightened;
-	private SpriteAnimationMap<Direction, Rectangle2D> kicking;
+	private SpriteAnimation<Rectangle2D> blue;
+	private SpriteAnimationMap<Direction, Rectangle2D> colorful;
 	private SpriteAnimation<Rectangle2D> numbers;
 
 	public GhostAnimations(int ghostID, Rendering2D r2D) {
-		dead = r2D.createGhostDeadAnimation();
-		flashing = r2D.createGhostLessFrightenedAnimation();
-		frightened = r2D.createGhostFrightenedAnimation();
-		kicking = r2D.createGhostAliveAnimation(ghostID);
+		eyes = r2D.createGhostEyesAnimation();
+		flashing = r2D.createGhostFlashingAnimation();
+		blue = r2D.createGhostBlueAnimation();
+		colorful = r2D.createGhostColorfulAnimation(ghostID);
 		numbers = new SpriteAnimation<>(r2D.getNumberSprite(200), r2D.getNumberSprite(400), r2D.getNumberSprite(800),
 				r2D.getNumberSprite(1600));
 	}
@@ -57,17 +57,17 @@ public class GhostAnimations extends SpriteAnimationContainer<GhostAnimation, Re
 	@Override
 	public ISpriteAnimation animation(GhostAnimation key) {
 		return switch (key) {
-		case DEAD -> dead;
-		case RECOVERING -> flashing;
-		case FRIGHTENED -> frightened;
-		case ALIVE -> kicking; // alive and kicking :-)
-		case EATEN -> numbers;
+		case EYES -> eyes;
+		case FLASHING -> flashing;
+		case BLUE -> blue;
+		case COLOR -> colorful; // alive and kicking :-)
+		case NUMBER -> numbers;
 		};
 	}
 
 	@Override
 	public Stream<ISpriteAnimation> animations() {
-		return Stream.of(dead, flashing, frightened, kicking, numbers);
+		return Stream.of(eyes, flashing, blue, colorful, numbers);
 	}
 
 	public void startFlashing(int numFlashes, long ticksTotal) {
@@ -76,25 +76,25 @@ public class GhostAnimations extends SpriteAnimationContainer<GhostAnimation, Re
 	}
 
 	public void refresh() {
-		dead.ensureRunning();
-		frightened.ensureRunning();
+		eyes.ensureRunning();
+		blue.ensureRunning();
 		flashing.ensureRunning();
-		kicking.ensureRunning();
+		colorful.ensureRunning();
 	}
 
 	public Rectangle2D currentSprite(Ghost ghost) {
 		return switch (selectedKey()) {
-		case DEAD -> dead.get(ghost.wishDir()).frame();
-		case RECOVERING -> flashing.animate();
-		case FRIGHTENED -> frightened.animate();
-		case ALIVE -> {
-			var sprite = kicking.get(ghost.wishDir()).frame();
+		case EYES -> eyes.get(ghost.wishDir()).frame();
+		case FLASHING -> flashing.animate();
+		case BLUE -> blue.animate();
+		case COLOR -> {
+			var sprite = colorful.get(ghost.wishDir()).frame();
 			if (ghost.velocity.length() > 0) {
-				kicking.get(ghost.wishDir()).advance();
+				colorful.get(ghost.wishDir()).advance();
 			}
 			yield sprite;
 		}
-		case EATEN -> numbers.frame(numberFrame(ghost.bounty));
+		case NUMBER -> numbers.frame(numberFrame(ghost.bounty));
 		};
 	}
 

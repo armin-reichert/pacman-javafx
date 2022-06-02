@@ -37,7 +37,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class Ghost2D extends GameEntity2D {
 
 	public enum GhostAnimation {
-		ALIVE, DEAD, EATEN, FRIGHTENED, RECOVERING;
+		COLOR, EYES, NUMBER, BLUE, FLASHING;
 	};
 
 	public final Ghost ghost;
@@ -47,17 +47,17 @@ public class Ghost2D extends GameEntity2D {
 		super(game);
 		this.ghost = ghost;
 		this.animations = animations;
-		animations.selectAnimation(GhostAnimation.ALIVE);
+		animations.selectAnimation(GhostAnimation.COLOR);
 	}
 
 	public void updateAnimation(boolean frightened, boolean recovering) {
 		GhostAnimation key = switch (ghost.state) {
-		case DEAD -> ghost.bounty == 0 ? GhostAnimation.DEAD : GhostAnimation.EATEN;
-		case ENTERING_HOUSE -> GhostAnimation.DEAD;
-		case FRIGHTENED -> recovering ? GhostAnimation.RECOVERING : GhostAnimation.FRIGHTENED;
-		case HUNTING_PAC, LEAVING_HOUSE -> GhostAnimation.ALIVE;
-		case LOCKED -> recovering ? GhostAnimation.RECOVERING
-				: frightened ? GhostAnimation.FRIGHTENED : GhostAnimation.ALIVE;
+		case DEAD -> ghost.bounty == 0 ? GhostAnimation.EYES : GhostAnimation.NUMBER;
+		case ENTERING_HOUSE -> GhostAnimation.EYES;
+		case FRIGHTENED -> recovering ? GhostAnimation.FLASHING : GhostAnimation.BLUE;
+		case HUNTING_PAC, LEAVING_HOUSE -> GhostAnimation.COLOR;
+		case LOCKED -> recovering ? GhostAnimation.FLASHING
+				: frightened ? GhostAnimation.BLUE : GhostAnimation.COLOR;
 		};
 		animations.selectAnimation(key);
 	}

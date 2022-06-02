@@ -307,7 +307,7 @@ public class PlayScene2D extends GameScene2D {
 		case HUNTING -> {
 			maze2D.getEnergizerAnimation().restart();
 			pac2D.animations.restart();
-			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart(GhostAnimation.ALIVE));
+			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart(GhostAnimation.COLOR));
 		}
 
 		case PACMAN_DYING -> {

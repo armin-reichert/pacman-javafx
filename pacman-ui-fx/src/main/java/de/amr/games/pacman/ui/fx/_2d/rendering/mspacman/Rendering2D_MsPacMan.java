@@ -270,7 +270,7 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 	}
 
 	@Override
-	public SpriteAnimationMap<Direction, Rectangle2D> createGhostAliveAnimation(int ghostID) {
+	public SpriteAnimationMap<Direction, Rectangle2D> createGhostColorfulAnimation(int ghostID) {
 		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
@@ -282,17 +282,17 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 	}
 
 	@Override
-	public SpriteAnimation<Rectangle2D> createGhostFrightenedAnimation() {
+	public SpriteAnimation<Rectangle2D> createGhostBlueAnimation() {
 		return new SpriteAnimation<>(rhs(8, 4), rhs(9, 4)).frameDuration(8).endless();
 	}
 
 	@Override
-	public SpriteAnimation<Rectangle2D> createGhostLessFrightenedAnimation() {
+	public SpriteAnimation<Rectangle2D> createGhostFlashingAnimation() {
 		return new SpriteAnimation<>(rhs(8, 4), rhs(9, 4), rhs(10, 4), rhs(11, 4)).frameDuration(4);
 	}
 
 	@Override
-	public SpriteAnimationMap<Direction, Rectangle2D> createGhostDeadAnimation() {
+	public SpriteAnimationMap<Direction, Rectangle2D> createGhostEyesAnimation() {
 		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
 			int d = ss.dirIndex(dir);

@@ -62,13 +62,13 @@ public interface Rendering2D {
 
 	SpriteAnimation<Rectangle2D> createPlayerDyingAnimation();
 
-	SpriteAnimationMap<Direction, Rectangle2D> createGhostAliveAnimation(int ghostID);
+	SpriteAnimationMap<Direction, Rectangle2D> createGhostColorfulAnimation(int ghostID);
 
-	SpriteAnimation<Rectangle2D> createGhostFrightenedAnimation();
+	SpriteAnimation<Rectangle2D> createGhostBlueAnimation();
 
-	SpriteAnimation<Rectangle2D> createGhostLessFrightenedAnimation();
+	SpriteAnimation<Rectangle2D> createGhostFlashingAnimation();
 
-	SpriteAnimationMap<Direction, Rectangle2D> createGhostDeadAnimation();
+	SpriteAnimationMap<Direction, Rectangle2D> createGhostEyesAnimation();
 
 	// Maze
 
