@@ -151,12 +151,12 @@ public class PlayScene2D extends GameScene2D {
 		}
 		for (var ghost2D : ghosts2D) {
 			GhostAnimation selection = switch (ghost2D.ghost.state) {
-			case DEAD -> ghost2D.ghost.bounty == 0 ? GhostAnimation.EYES : GhostAnimation.NUMBER;
-			case ENTERING_HOUSE -> GhostAnimation.EYES;
-			case FRIGHTENED -> lessFrightened ? GhostAnimation.FLASHING : GhostAnimation.FRIGHTENED;
-			case HUNTING_PAC, LEAVING_HOUSE -> GhostAnimation.KICKING;
-			case LOCKED -> lessFrightened ? GhostAnimation.FLASHING
-					: frightened ? GhostAnimation.FRIGHTENED : GhostAnimation.KICKING;
+			case DEAD -> ghost2D.ghost.bounty == 0 ? GhostAnimation.DEAD : GhostAnimation.EATEN;
+			case ENTERING_HOUSE -> GhostAnimation.DEAD;
+			case FRIGHTENED -> lessFrightened ? GhostAnimation.LESS_FRIGHTENED : GhostAnimation.FRIGHTENED;
+			case HUNTING_PAC, LEAVING_HOUSE -> GhostAnimation.ALIVE;
+			case LOCKED -> lessFrightened ? GhostAnimation.LESS_FRIGHTENED
+					: frightened ? GhostAnimation.FRIGHTENED : GhostAnimation.ALIVE;
 			};
 			ghost2D.animations.select(selection);
 		}
@@ -268,7 +268,7 @@ public class PlayScene2D extends GameScene2D {
 		case HUNTING -> {
 			maze2D.getEnergizerAnimation().restart();
 			player2D.animMunching.restart();
-			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart(GhostAnimation.KICKING));
+			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart(GhostAnimation.ALIVE));
 		}
 
 		case PACMAN_DYING -> {

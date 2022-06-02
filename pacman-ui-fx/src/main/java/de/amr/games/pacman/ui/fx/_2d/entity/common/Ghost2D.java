@@ -36,7 +36,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class Ghost2D extends GameEntity2D {
 
 	public enum GhostAnimation {
-		KICKING, EYES, NUMBER, FRIGHTENED, FLASHING;
+		ALIVE, DEAD, EATEN, FRIGHTENED, LESS_FRIGHTENED;
 	};
 
 	public final Ghost ghost;
@@ -46,7 +46,7 @@ public class Ghost2D extends GameEntity2D {
 		super(game);
 		this.ghost = ghost;
 		this.animations = animations;
-		animations.select(GhostAnimation.KICKING);
+		animations.select(GhostAnimation.ALIVE);
 	}
 
 	public void refresh() {

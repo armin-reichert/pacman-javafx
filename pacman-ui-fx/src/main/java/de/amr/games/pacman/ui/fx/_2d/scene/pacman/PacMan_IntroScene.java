@@ -113,7 +113,7 @@ public class PacMan_IntroScene extends GameScene2D {
 		if (sceneController.state() == State.CHASING_GHOSTS) {
 			for (var ghost2D : ghosts2D) {
 				if (ghost2D.ghost.bounty > 0) {
-					ghost2D.animations.select(GhostAnimation.NUMBER);
+					ghost2D.animations.select(GhostAnimation.EATEN);
 				} else {
 					ghost2D.animations.select(GhostAnimation.FRIGHTENED);
 					if (ghost2D.ghost.velocity.length() == 0) {

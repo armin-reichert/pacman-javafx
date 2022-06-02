@@ -175,7 +175,7 @@ public class Rendering2D_PacMan implements Rendering2D {
 	}
 
 	@Override
-	public Rectangle2D getBountyNumberSprite(int number) {
+	public Rectangle2D getNumberSprite(int number) {
 		return bountyNumberSprites.get(number);
 	}
 
@@ -203,7 +203,7 @@ public class Rendering2D_PacMan implements Rendering2D {
 	}
 
 	@Override
-	public SpriteAnimationMap<Direction> createGhostKickingAnimation(int ghostID) {
+	public SpriteAnimationMap<Direction> createGhostAliveAnimation(int ghostID) {
 		SpriteAnimationMap<Direction> animationMap = new SpriteAnimationMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
@@ -220,12 +220,12 @@ public class Rendering2D_PacMan implements Rendering2D {
 	}
 
 	@Override
-	public SpriteAnimation createGhostFlashingAnimation() {
+	public SpriteAnimation createGhostLessFrightenedAnimation() {
 		return SpriteAnimation.of(ss.r(8, 4), ss.r(9, 4), ss.r(10, 4), ss.r(11, 4)).frameDuration(6);
 	}
 
 	@Override
-	public SpriteAnimationMap<Direction> createGhostEyesAnimation() {
+	public SpriteAnimationMap<Direction> createGhostDeadAnimation() {
 		SpriteAnimationMap<Direction> animationMap = new SpriteAnimationMap<>(Direction.class);
 		for (Direction dir : Direction.values()) {
 			int d = ss.dirIndex(dir);

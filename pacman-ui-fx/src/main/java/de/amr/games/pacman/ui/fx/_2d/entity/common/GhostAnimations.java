@@ -41,50 +41,50 @@ import javafx.geometry.Rectangle2D;
  */
 public class GhostAnimations extends AnimationSet<GhostAnimation> {
 
-	private SpriteAnimationMap<Direction> eyes;
+	private SpriteAnimationMap<Direction> dead;
 	private SpriteAnimation flashing;
 	private SpriteAnimation frightened;
 	private SpriteAnimationMap<Direction> kicking;
-	private SpriteAnimation number;
+	private SpriteAnimation numbers;
 
 	public GhostAnimations(int ghostID, Rendering2D r2D) {
-		eyes = r2D.createGhostEyesAnimation();
-		flashing = r2D.createGhostFlashingAnimation();
+		dead = r2D.createGhostDeadAnimation();
+		flashing = r2D.createGhostLessFrightenedAnimation();
 		frightened = r2D.createGhostFrightenedAnimation();
-		kicking = r2D.createGhostKickingAnimation(ghostID);
-		number = SpriteAnimation.of(r2D.getBountyNumberSprite(200), r2D.getBountyNumberSprite(400),
-				r2D.getBountyNumberSprite(800), r2D.getBountyNumberSprite(1600));
+		kicking = r2D.createGhostAliveAnimation(ghostID);
+		numbers = SpriteAnimation.of(r2D.getNumberSprite(200), r2D.getNumberSprite(400), r2D.getNumberSprite(800),
+				r2D.getNumberSprite(1600));
 	}
 
 	@Override
 	public ISpriteAnimation animation(GhostAnimation key) {
 		return switch (key) {
-		case EYES -> eyes;
-		case FLASHING -> flashing;
+		case DEAD -> dead;
+		case LESS_FRIGHTENED -> flashing;
 		case FRIGHTENED -> frightened;
-		case KICKING -> kicking;
-		case NUMBER -> number;
+		case ALIVE -> kicking; // alive and kicking :-)
+		case EATEN -> numbers;
 		};
 	}
 
 	@Override
 	public Stream<ISpriteAnimation> animations() {
-		return Stream.of(eyes, flashing, frightened, kicking, number);
+		return Stream.of(dead, flashing, frightened, kicking, numbers);
 	}
 
 	public Rectangle2D currentSprite(Ghost ghost) {
 		return switch (selectedKey()) {
-		case EYES -> eyes.get(ghost.wishDir()).animate();
-		case FLASHING -> flashing.animate();
+		case DEAD -> dead.get(ghost.wishDir()).animate();
+		case LESS_FRIGHTENED -> flashing.animate();
 		case FRIGHTENED -> frightened.animate();
-		case KICKING -> {
+		case ALIVE -> {
 			var sprite = kicking.get(ghost.wishDir()).frame();
 			if (ghost.velocity.length() > 0) {
 				kicking.get(ghost.wishDir()).advance();
 			}
 			yield sprite;
 		}
-		case NUMBER -> number.frame(numberFrame(ghost.bounty));
+		case EATEN -> numbers.frame(numberFrame(ghost.bounty));
 		};
 	}
 

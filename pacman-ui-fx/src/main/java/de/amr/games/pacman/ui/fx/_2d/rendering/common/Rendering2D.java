@@ -45,7 +45,7 @@ public interface Rendering2D {
 
 	Color getGhostColor(int ghostID);
 
-	Rectangle2D getBountyNumberSprite(int number);
+	Rectangle2D getNumberSprite(int number);
 
 	Rectangle2D getBonusValueSprite(int number);
 
@@ -57,13 +57,13 @@ public interface Rendering2D {
 
 	SpriteAnimation createPlayerDyingAnimation();
 
-	SpriteAnimationMap<Direction> createGhostKickingAnimation(int ghostID);
+	SpriteAnimationMap<Direction> createGhostAliveAnimation(int ghostID);
 
 	SpriteAnimation createGhostFrightenedAnimation();
 
-	SpriteAnimation createGhostFlashingAnimation();
+	SpriteAnimation createGhostLessFrightenedAnimation();
 
-	SpriteAnimationMap<Direction> createGhostEyesAnimation();
+	SpriteAnimationMap<Direction> createGhostDeadAnimation();
 
 	default void drawEntity(GraphicsContext g, Entity e, Rectangle2D sprite) {
 		if (e.visible) {
