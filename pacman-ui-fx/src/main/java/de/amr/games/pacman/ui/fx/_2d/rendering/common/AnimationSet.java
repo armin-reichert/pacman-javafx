@@ -29,48 +29,48 @@ import java.util.stream.Stream;
 /**
  * @author Armin Reichert
  */
-public abstract class SpriteAnimationCollection<A> {
+public abstract class AnimationSet<KEY> {
 
-	private A selectedKey;
+	private KEY selectedKey;
 
-	public abstract ISpriteAnimation animation(A key);
+	public abstract ISpriteAnimation animation(KEY key);
 
-	public abstract Stream<ISpriteAnimation> all();
+	public abstract Stream<ISpriteAnimation> animations();
 
-	public void select(A key) {
+	public void select(KEY key) {
 		selectedKey = key;
 		animation(selectedKey).ensureRunning();
 	}
 
-	public A selectedKey() {
+	public KEY selectedKey() {
 		return selectedKey;
 	}
 
-	public void stop(A key) {
+	public void stop(KEY key) {
 		animation(key).stop();
 	}
 
-	public void run(A key) {
+	public void run(KEY key) {
 		animation(key).run();
 	}
 
-	public void restart(A key) {
+	public void restart(KEY key) {
 		animation(key).restart();
 	}
 
 	public void reset() {
-		all().forEach(ISpriteAnimation::reset);
+		animations().forEach(ISpriteAnimation::reset);
 	}
 
 	public void stop() {
-		all().forEach(ISpriteAnimation::stop);
+		animations().forEach(ISpriteAnimation::stop);
 	}
 
 	public void run() {
-		all().forEach(ISpriteAnimation::run);
+		animations().forEach(ISpriteAnimation::run);
 	}
 
 	public void restart() {
-		all().forEach(ISpriteAnimation::restart);
+		animations().forEach(ISpriteAnimation::restart);
 	}
 }

@@ -145,7 +145,7 @@ public class PlayScene2D extends GameScene2D {
 		boolean lessFrightened = game.player.powerTimer.remaining() <= lessFrightenedTime;
 		if (game.player.powerTimer.remaining() == lessFrightenedTime) {
 			for (var ghost2D : ghosts2D) {
-				ghost2D.startFlashingAnimation(game.level.numFlashes, lessFrightenedTime);
+				ghost2D.animations.startFlashing(game.level.numFlashes, lessFrightenedTime);
 			}
 		}
 		for (var ghost2D : ghosts2D) {
