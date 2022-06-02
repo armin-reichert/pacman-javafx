@@ -40,18 +40,22 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class Player2D extends GameEntity2D {
+public class Pac2D extends GameEntity2D {
 
-	public final Pac player;
+	public enum PacAnimation {
+		IDLE, MUNCHING, DYING;
+	}
+
+	public final Pac pac;
 	public SpriteAnimationMap<Direction> animMunching;
 	private SpriteAnimation animDying;
 
-	public Player2D(Pac player, GameModel game) {
+	public Pac2D(Pac pac, GameModel game) {
 		super(game);
-		this.player = player;
+		this.pac = pac;
 	}
 
-	public Player2D createAnimations(Rendering2D r2D) {
+	public Pac2D createAnimations(Rendering2D r2D) {
 		animMunching = r2D.createPlayerMunchingAnimations();
 		animDying = r2D.createPlayerDyingAnimation();
 		return this;
@@ -78,15 +82,15 @@ public class Player2D extends GameEntity2D {
 	@Override
 	public void render(GraphicsContext g, Rendering2D r2D) {
 		Rectangle2D sprite = null;
-		if (player.killed) {
+		if (pac.killed) {
 			sprite = animDying.animate();
 		} else {
-			var munching = animMunching.get(player.moveDir());
+			var munching = animMunching.get(pac.moveDir());
 			sprite = munching.frame();
-			if (!player.velocity.equals(V2d.NULL) && !player.stuck) {
+			if (!pac.velocity.equals(V2d.NULL) && !pac.stuck) {
 				munching.advance();
 			}
 		}
-		r2D.drawEntity(g, player, sprite);
+		r2D.drawEntity(g, pac, sprite);
 	}
 }

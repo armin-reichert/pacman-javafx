@@ -31,7 +31,7 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
-import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
+import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.BigPacMan2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
@@ -50,7 +50,7 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 	private final Intermission1Controller.Context context;
 
 	private LevelCounter2D levelCounter2D;
-	private Player2D pacMan2D;
+	private Pac2D pacMan2D;
 	private Ghost2D blinky2D;
 	private BigPacMan2D bigPacMan2D;
 
@@ -67,7 +67,7 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 
 		levelCounter2D = new LevelCounter2D(game, unscaledSize.x - t(3), unscaledSize.y - t(2));
 
-		pacMan2D = new Player2D(context.pac, game).createAnimations(r2D);
+		pacMan2D = new Pac2D(context.pac, game).createAnimations(r2D);
 		blinky2D = new Ghost2D(context.blinky, game, new GhostAnimations(Ghost.RED_GHOST, r2D));
 		bigPacMan2D = new BigPacMan2D(context.pac, game);
 

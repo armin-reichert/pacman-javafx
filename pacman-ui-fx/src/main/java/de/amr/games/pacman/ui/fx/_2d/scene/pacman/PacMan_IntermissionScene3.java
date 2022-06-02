@@ -29,7 +29,7 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.pacman.Intermission3Controller;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
-import de.amr.games.pacman.ui.fx._2d.entity.common.Player2D;
+import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.BlinkyNaked2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.BlinkyPatched2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpriteAnimation;
@@ -49,7 +49,7 @@ public class PacMan_IntermissionScene3 extends GameScene2D {
 	private final Intermission3Controller.Context context;
 
 	private LevelCounter2D levelCounter2D;
-	private Player2D pacMan2D;
+	private Pac2D pacMan2D;
 	private BlinkyPatched2D blinkyPatched2D;
 	private BlinkyNaked2D blinkyNaked2D;
 
@@ -64,7 +64,7 @@ public class PacMan_IntermissionScene3 extends GameScene2D {
 	public void init() {
 		sceneController.init();
 		levelCounter2D = new LevelCounter2D(game, unscaledSize.x - t(3), unscaledSize.y - t(2));
-		pacMan2D = new Player2D(context.pac, game).createAnimations(r2D);
+		pacMan2D = new Pac2D(context.pac, game).createAnimations(r2D);
 		blinkyPatched2D = new BlinkyPatched2D(context.blinky, game);
 		blinkyNaked2D = new BlinkyNaked2D(context.blinky, game);
 		pacMan2D.animMunching.values().forEach(SpriteAnimation::restart);
