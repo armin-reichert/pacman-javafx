@@ -56,6 +56,7 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 
 	protected final GameController gameController;
 	protected final SubScene fxSubScene;
+	protected final StackPane root;
 	protected final Canvas canvas;
 	protected final V2i unscaledSize;
 	protected final double aspectRatio;
@@ -78,7 +79,7 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 		this.unscaledSize = unscaledSize;
 		this.aspectRatio = (double) unscaledSize.x / unscaledSize.y;
 		this.canvas = new Canvas();
-		StackPane root = new StackPane(canvas);
+		root = new StackPane(canvas);
 		root.setBackground(U.colorBackground(Color.BLACK));
 		fxSubScene = new SubScene(root, unscaledSize.x, unscaledSize.y);
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
@@ -114,6 +115,10 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 
 	public Canvas getCanvas() {
 		return canvas;
+	}
+
+	protected double scaling() {
+		return fxSubScene.getHeight() / unscaledSize.y;
 	}
 
 	@Override

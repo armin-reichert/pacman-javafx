@@ -49,14 +49,17 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D.PacAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
+import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Pane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 /**
@@ -66,15 +69,42 @@ import javafx.util.Duration;
  */
 public class PlayScene2D extends GameScene2D {
 
+	private class GhostInfoPane extends Pane {
+
+		private Text[] ghostInfos = new Text[4];
+
+		public GhostInfoPane() {
+			for (int id = 0; id < 4; ++id) {
+				ghostInfos[id] = new Text();
+				ghostInfos[id].setFill(Color.WHITE);
+				getChildren().add(ghostInfos[id]);
+			}
+		}
+
+		public void update() {
+			for (int id = 0; id < 4; ++id) {
+				var ghost2D = ghosts2D[id];
+				var ghost = game.ghosts[id];
+				String text = "%s\n(%s, %s)".formatted(ghost.name, ghost.state, ghost2D.animations.selectedKey());
+				ghostInfos[id].setText(text);
+				// TODO use binding
+				ghostInfos[id].setX(game.ghosts[id].position.x * scaling() - 20);
+				ghostInfos[id].setY(game.ghosts[id].position.y * scaling() - 30);
+			}
+		}
+	}
+
 	private Maze2D maze2D;
 	private LivesCounter2D livesCounter2D;
 	private LevelCounter2D levelCounter2D;
 	private Pac2D pac2D;
 	private Ghost2D[] ghosts2D = new Ghost2D[4];
 	private Bonus2D bonus2D;
+	private GhostInfoPane ghostInfoPane = new GhostInfoPane();
 
 	public PlayScene2D(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
+		root.getChildren().add(ghostInfoPane);
 	}
 
 	@Override
@@ -117,6 +147,12 @@ public class PlayScene2D extends GameScene2D {
 	protected void doUpdate() {
 		updateAnimations();
 		updateSound();
+		if (GameUI.debug) {
+			ghostInfoPane.update();
+			ghostInfoPane.setVisible(true);
+		} else {
+			ghostInfoPane.setVisible(false);
+		}
 	}
 
 	@Override

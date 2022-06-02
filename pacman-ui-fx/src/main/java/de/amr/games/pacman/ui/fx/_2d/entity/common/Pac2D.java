@@ -23,18 +23,11 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
-import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimation;
-import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimationMap;
-import de.amr.games.pacman.ui.fx.shell.GameUI;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 /**
  * 2D representation of the player (Pac-Man or Ms. Pac-Man).
@@ -65,27 +58,5 @@ public class Pac2D extends GameEntity2D {
 	@Override
 	public void render(GraphicsContext g, Rendering2D r2D) {
 		r2D.drawEntity(g, pac, animations.currentSprite(pac));
-		if (GameUI.debug) {
-			renderAnimationState(g);
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private void renderAnimationState(GraphicsContext g) {
-		if (!pac.visible) {
-			return;
-		}
-		g.setFill(Color.WHITE);
-		g.setFont(Font.font("Arial Narrow", 8));
-		String text = animations.selectedKey().name();
-		var anim = animations.selectedAnimation();
-		if (anim instanceof SpriteAnimation) {
-			var sa = (SpriteAnimation<Rectangle2D>) anim;
-			text += !sa.isRunning() ? " stopped" : "";
-		} else {
-			var sam = ((SpriteAnimationMap<Direction, Rectangle2D>) anim).get(pac.moveDir());
-			text += !sam.isRunning() ? " stopped" : "";
-		}
-		g.fillText(text, pac.position.x - 10, pac.position.y - 5);
 	}
 }
