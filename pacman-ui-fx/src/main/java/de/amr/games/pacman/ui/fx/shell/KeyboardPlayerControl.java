@@ -55,15 +55,15 @@ public class KeyboardPlayerControl implements Consumer<Pac> {
 	}
 
 	@Override
-	public void accept(Pac player) {
+	public void accept(Pac pac) {
 		if (up) {
-			player.setWishDir(Direction.UP);
+			pac.setWishDir(Direction.UP);
 		} else if (down) {
-			player.setWishDir(Direction.DOWN);
+			pac.setWishDir(Direction.DOWN);
 		} else if (left) {
-			player.setWishDir(Direction.LEFT);
+			pac.setWishDir(Direction.LEFT);
 		} else if (right) {
-			player.setWishDir(Direction.RIGHT);
+			pac.setWishDir(Direction.RIGHT);
 		}
 	}
 

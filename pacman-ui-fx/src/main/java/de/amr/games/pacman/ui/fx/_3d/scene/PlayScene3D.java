@@ -163,7 +163,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 				getGhostHouseDoorColor(game.variant, mazeNumber));
 		maze3D.createFood(game.level.world, r2D.getFoodColor(mazeNumber));
 
-		player3D = new Pac3D(game.level.world, game.player, model3D);
+		player3D = new Pac3D(game.level.world, game.pac, model3D);
 		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D)).toArray(Ghost3D[]::new);
 		bonus3D = new Bonus3D(r2D);
 
@@ -221,7 +221,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 		}
 		switch (gameController.state()) {
 		case HUNTING -> {
-			if (SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying() && game.player.starvingTicks > 10) {
+			if (SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying() && game.pac.starvingTicks > 10) {
 				SoundManager.get().stop(GameSound.PACMAN_MUNCH);
 			}
 			if (game.huntingTimer.scatteringPhase() >= 0 && game.huntingTimer.tick() == 0) {
@@ -235,7 +235,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 	}
 
 	public void onSwitchFrom2DScene() {
-		if (game.player.hasPower()) {
+		if (game.pac.hasPower()) {
 			Stream.of(ghosts3D) //
 					.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
 					.filter(ghost3D -> !ghost3D.isLooksFrightened()) //
@@ -246,11 +246,11 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 		if (gameController.state() == GameState.HUNTING || gameController.state() == GameState.GHOST_DYING) {
 			maze3D.energizerAnimations().forEach(Animation::play);
 		}
-		if (game.player.hasPower() && !SoundManager.get().getClip(GameSound.PACMAN_POWER).isPlaying()) {
+		if (game.pac.hasPower() && !SoundManager.get().getClip(GameSound.PACMAN_POWER).isPlaying()) {
 			SoundManager.get().loop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
 		}
 		if (gameController.credit() > 0 && gameController.state() == GameState.HUNTING
-				&& !SoundManager.get().isAnySirenPlaying() && !game.player.hasPower()) {
+				&& !SoundManager.get().isAnySirenPlaying() && !game.pac.hasPower()) {
 			SoundManager.get().startSiren(0);
 		}
 	}
@@ -398,7 +398,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 		case PACMAN_DYING -> {
 			SoundManager.get().stopAll();
 			Stream.of(ghosts3D).forEach(Ghost3D::setNormalLook);
-			var killer = game.ghosts().filter(ghost -> ghost.sameTile(game.player)).findAny().get();
+			var killer = game.ghosts().filter(ghost -> ghost.sameTile(game.pac)).findAny().get();
 			var killerColor = r2D.getGhostColor(killer.id);
 			new SequentialTransition( //
 					U.pauseSec(1.0, () -> game.ghosts().forEach(Ghost::hide)), //
@@ -430,7 +430,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 			new SequentialTransition( //
 					U.pauseSec(2.0), //
 					maze3D.createMazeFlashingAnimation(game.level.numFlashes), //
-					U.pauseSec(1.0, () -> game.player.hide()), //
+					U.pauseSec(1.0, () -> game.pac.hide()), //
 					U.pauseSec(0.5, () -> showFlashMessage(2, message)), //
 					U.pauseSec(2.0, () -> gameController.state().timer().expire()) //
 			).play();

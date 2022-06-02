@@ -59,18 +59,18 @@ import javafx.util.Duration;
 public class Pac3D extends Group implements Rendering3D {
 
 	private final World world;
-	public final Pac player;
+	public final Pac pac;
 	private final Group bodyParts;
 	private final Motion motion;
 	private final PointLight light = new PointLight(Color.WHITE);
 
 	private Color skullColorImpaled = Color.GHOSTWHITE;
 
-	public Pac3D(World world, Pac player, PacManModel3D model3D) {
+	public Pac3D(World world, Pac pac, PacManModel3D model3D) {
 		this.world = world;
-		this.player = player;
+		this.pac = pac;
 		bodyParts = model3D.createPacMan(getPlayerSkullColor(), getPlayerEyesColor(), getPlayerPalateColor());
-		motion = new Motion(player, this);
+		motion = new Motion(pac, this);
 		light.setTranslateZ(-HTS);
 		getChildren().addAll(bodyParts, light);
 		reset();
@@ -81,19 +81,19 @@ public class Pac3D extends Group implements Rendering3D {
 	}
 
 	private boolean insideWorld() {
-		V2i tile = player.tile();
+		V2i tile = pac.tile();
 		return 0 <= tile.x && tile.x < world.numCols() && 0 <= tile.y && tile.y < world.numRows();
 	}
 
 	public String identifyNode(Node node) {
 		if (node == eyes()) {
-			return String.format("eyes of %s", player);
+			return String.format("eyes of %s", pac);
 		} else if (node == palate()) {
-			return String.format("palate of %s", player);
+			return String.format("palate of %s", pac);
 		} else if (node == skull()) {
-			return String.format("skull of %s", player);
+			return String.format("skull of %s", pac);
 		} else {
-			return String.format("part of %s", player);
+			return String.format("part of %s", pac);
 		}
 	}
 
@@ -107,7 +107,7 @@ public class Pac3D extends Group implements Rendering3D {
 
 	public void update() {
 		motion.update();
-		setVisible(player.visible && insideWorld());
+		setVisible(pac.visible && insideWorld());
 	}
 
 	public Shape3D skull() {
