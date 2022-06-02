@@ -84,7 +84,7 @@ public class GhostAnimations extends SpriteAnimationContainer<GhostAnimation, Re
 
 	public Rectangle2D currentSprite(Ghost ghost) {
 		return switch (selectedKey()) {
-		case DEAD -> dead.get(ghost.wishDir()).animate();
+		case DEAD -> dead.get(ghost.wishDir()).frame();
 		case RECOVERING -> flashing.animate();
 		case FRIGHTENED -> frightened.animate();
 		case ALIVE -> {
