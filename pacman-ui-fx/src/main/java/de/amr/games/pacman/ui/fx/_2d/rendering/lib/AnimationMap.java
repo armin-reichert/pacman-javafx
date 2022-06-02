@@ -32,7 +32,7 @@ import java.util.stream.Stream;
  * @param <K> Key type (enum)
  * @param <S> Sprite type (Rectangle, Image)
  */
-public abstract class AnimationSet<K, S> {
+public abstract class AnimationMap<K, S> {
 
 	private K selectedKey;
 
