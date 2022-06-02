@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D.PacAnimation;
-import de.amr.games.pacman.ui.fx._2d.rendering.lib.AnimationMap;
+import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimationCollection;
 import de.amr.games.pacman.ui.fx._2d.rendering.lib.ISpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.lib.SpriteAnimationMap;
@@ -38,7 +38,7 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class PacAnimations extends AnimationMap<PacAnimation, Rectangle2D> {
+public class PacAnimations extends SpriteAnimationCollection<PacAnimation, Rectangle2D> {
 
 	protected SpriteAnimationMap<Direction, Rectangle2D> munching;
 	protected SpriteAnimation<Rectangle2D> dying;

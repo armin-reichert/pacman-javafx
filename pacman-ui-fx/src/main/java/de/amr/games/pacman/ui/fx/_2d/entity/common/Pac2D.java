@@ -54,7 +54,7 @@ public class Pac2D extends GameEntity2D {
 		super(game);
 		this.pac = pac;
 		this.animations = animations;
-		animations.select(PacAnimation.MUNCHING);
+		animations.selectAnimation(PacAnimation.MUNCHING);
 	}
 
 	public void refresh() {

@@ -160,7 +160,7 @@ public class PlayScene2D extends GameScene2D {
 			case LOCKED -> lessFrightened ? GhostAnimation.RECOVERING
 					: frightened ? GhostAnimation.FRIGHTENED : GhostAnimation.ALIVE;
 			};
-			ghost2D.animations.select(selection);
+			ghost2D.animations.selectAnimation(selection);
 		}
 	}
 
@@ -259,7 +259,7 @@ public class PlayScene2D extends GameScene2D {
 		case READY -> {
 			SoundManager.get().stopAll();
 			maze2D.getEnergizerAnimation().reset();
-			pac2D.animations.select(PacAnimation.MUNCHING);
+			pac2D.animations.selectAnimation(PacAnimation.MUNCHING);
 			// TODO check this:
 			pac2D.animations.reset();
 			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart());
@@ -277,7 +277,7 @@ public class PlayScene2D extends GameScene2D {
 		case PACMAN_DYING -> {
 			gameController.state().timer().setDurationIndefinite().start();
 			SoundManager.get().stopAll();
-			pac2D.animations.select(PacAnimation.DYING);
+			pac2D.animations.selectAnimation(PacAnimation.DYING);
 			pac2D.animations.selectedAnimation().stop();
 			new SequentialTransition( //
 					pauseSec(1, () -> game.ghosts().forEach(Ghost::hide)), //

@@ -77,7 +77,7 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 	@Override
 	public void doUpdate() {
 		sceneController.update();
-		blinky2D.animations.select(switch (context.blinky.state) {
+		blinky2D.animations.selectAnimation(switch (context.blinky.state) {
 		case FRIGHTENED -> GhostAnimation.FRIGHTENED;
 		case HUNTING_PAC -> GhostAnimation.ALIVE;
 		default -> blinky2D.animations.selectedKey();

@@ -29,28 +29,28 @@ import java.util.stream.Stream;
 /**
  * @author Armin Reichert
  * 
- * @param <K> Key type (enum)
+ * @param <K> Key type
  * @param <S> Sprite type (Rectangle, Image)
  */
-public abstract class AnimationMap<K, S> {
+public abstract class SpriteAnimationCollection<K, S> {
 
-	private K selectedKey;
+	private K selectedAnimationKey;
 
 	public abstract ISpriteAnimation animation(K key);
 
 	public abstract Stream<ISpriteAnimation> animations();
 
-	public void select(K key) {
-		selectedKey = key;
-		animation(selectedKey).ensureRunning();
+	public void selectAnimation(K key) {
+		selectedAnimationKey = key;
+		animation(selectedAnimationKey).ensureRunning();
 	}
 
 	public K selectedKey() {
-		return selectedKey;
+		return selectedAnimationKey;
 	}
 
 	public ISpriteAnimation selectedAnimation() {
-		return animation(selectedKey);
+		return animation(selectedAnimationKey);
 	}
 
 	public void stop(K key) {

@@ -54,7 +54,7 @@ public class Ghost2D extends GameEntity2D {
 		super(game);
 		this.ghost = ghost;
 		this.animations = animations;
-		animations.select(GhostAnimation.ALIVE);
+		animations.selectAnimation(GhostAnimation.ALIVE);
 	}
 
 	public void refresh() {
