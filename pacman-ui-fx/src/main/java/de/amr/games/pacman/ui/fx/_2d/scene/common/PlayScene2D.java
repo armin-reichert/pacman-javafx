@@ -69,28 +69,36 @@ import javafx.util.Duration;
  */
 public class PlayScene2D extends GameScene2D {
 
-	private class GhostInfoPane extends Pane {
+	private class InfoPane extends Pane {
 
+		private Text pacInfo = new Text();
 		private Text[] ghostInfos = new Text[4];
 
-		public GhostInfoPane() {
+		public InfoPane() {
 			for (int id = 0; id < 4; ++id) {
 				ghostInfos[id] = new Text();
 				ghostInfos[id].setFill(Color.WHITE);
 				getChildren().add(ghostInfos[id]);
 			}
+			pacInfo.setFill(Color.WHITE);
+			getChildren().add(pacInfo);
 		}
 
 		public void update() {
 			for (int id = 0; id < 4; ++id) {
 				var ghost2D = ghosts2D[id];
 				var ghost = game.ghosts[id];
-				String text = "%s\n(%s, %s)".formatted(ghost.name, ghost.state, ghost2D.animations.selectedKey());
+				String text = "%s\n(%s %s)".formatted(ghost.name, ghost.state, ghost2D.animations.selectedKey());
 				ghostInfos[id].setText(text);
-				// TODO use binding
-				ghostInfos[id].setX(game.ghosts[id].position.x * scaling() - 20);
-				ghostInfos[id].setY(game.ghosts[id].position.y * scaling() - 30);
+				ghostInfos[id].setX(ghost.position.x * scaling() - 20);
+				ghostInfos[id].setY(ghost.position.y * scaling() - 30);
+				ghostInfos[id].setVisible(ghost.visible);
 			}
+			String text = "%s (%s)".formatted(game.pac.name, pac2D.animations.selectedKey());
+			pacInfo.setText(text);
+			pacInfo.setX(game.pac.position.x * scaling() - 20);
+			pacInfo.setY(game.pac.position.y * scaling() - 20);
+			pacInfo.setVisible(game.pac.visible);
 		}
 	}
 
@@ -100,11 +108,11 @@ public class PlayScene2D extends GameScene2D {
 	private Pac2D pac2D;
 	private Ghost2D[] ghosts2D = new Ghost2D[4];
 	private Bonus2D bonus2D;
-	private GhostInfoPane ghostInfoPane = new GhostInfoPane();
+	private InfoPane infoPane = new InfoPane();
 
 	public PlayScene2D(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
-		root.getChildren().add(ghostInfoPane);
+		root.getChildren().add(infoPane);
 	}
 
 	@Override
@@ -148,10 +156,10 @@ public class PlayScene2D extends GameScene2D {
 		updateAnimations();
 		updateSound();
 		if (GameUI.debug) {
-			ghostInfoPane.update();
-			ghostInfoPane.setVisible(true);
+			infoPane.update();
+			infoPane.setVisible(true);
 		} else {
-			ghostInfoPane.setVisible(false);
+			infoPane.setVisible(false);
 		}
 	}
 
