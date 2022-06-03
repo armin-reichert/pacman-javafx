@@ -29,15 +29,15 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.ISpriteAnimation;
 import de.amr.games.pacman.lib.SpriteAnimation;
 import de.amr.games.pacman.lib.SpriteAnimationMap;
+import de.amr.games.pacman.lib.SpriteAnimationSet;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostAnimation;
-import de.amr.games.pacman.model.common.actors.GhostAnimationSet;
 import javafx.geometry.Rectangle2D;
 
 /**
  * @author Armin Reichert
  */
-public class MyGhostAnimationSet extends GhostAnimationSet<Rectangle2D> {
+public class MyGhostAnimationSet extends SpriteAnimationSet<GhostAnimation, Rectangle2D> {
 
 	private SpriteAnimationMap<Direction, Rectangle2D> eyes;
 	private SpriteAnimation<Rectangle2D> flashing;
@@ -70,13 +70,11 @@ public class MyGhostAnimationSet extends GhostAnimationSet<Rectangle2D> {
 		return Stream.of(eyes, flashing, blue, color, numbers);
 	}
 
-	@Override
 	public void startFlashing(int numFlashes, long ticksTotal) {
 		long frameTicks = ticksTotal / (numFlashes * flashing.numFrames());
 		flashing.frameDuration(frameTicks).repetitions(numFlashes).restart();
 	}
 
-	@Override
 	public void refresh() {
 		eyes.ensureRunning();
 		blue.ensureRunning();
@@ -84,7 +82,6 @@ public class MyGhostAnimationSet extends GhostAnimationSet<Rectangle2D> {
 		color.ensureRunning();
 	}
 
-	@Override
 	public Rectangle2D currentSprite(Ghost ghost) {
 		return switch (selectedKey()) {
 		case EYES -> eyes.get(ghost.wishDir()).frame();

@@ -30,15 +30,15 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.ISpriteAnimation;
 import de.amr.games.pacman.lib.SpriteAnimation;
 import de.amr.games.pacman.lib.SpriteAnimationMap;
+import de.amr.games.pacman.lib.SpriteAnimationSet;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.actors.PacAnimation;
-import de.amr.games.pacman.model.common.actors.PacAnimationSet;
 import javafx.geometry.Rectangle2D;
 
 /**
  * @author Armin Reichert
  */
-public class MyPacAnimationSet extends PacAnimationSet<Rectangle2D> {
+public class MyPacAnimationSet extends SpriteAnimationSet<PacAnimation, Rectangle2D> {
 
 	protected SpriteAnimationMap<Direction, Rectangle2D> munching;
 	protected SpriteAnimation<Rectangle2D> dying;
@@ -61,13 +61,11 @@ public class MyPacAnimationSet extends PacAnimationSet<Rectangle2D> {
 		return Stream.of(munching, dying);
 	}
 
-	@Override
 	public void refresh() {
 		munching.ensureRunning();
 		dying.reset();// TODO check this
 	}
 
-	@Override
 	public Rectangle2D currentSprite(Pac pac) {
 		return switch (selectedKey()) {
 		case DYING -> dying.animate();
