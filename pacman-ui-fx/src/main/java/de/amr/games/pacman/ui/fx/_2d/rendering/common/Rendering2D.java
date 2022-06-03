@@ -59,9 +59,9 @@ public interface Rendering2D {
 
 	// Animations
 
-	SpriteAnimationMap<Direction, Rectangle2D> createPlayerMunchingAnimations();
+	SpriteAnimationMap<Direction, Rectangle2D> createPacMunchingAnimations();
 
-	SpriteAnimation<Rectangle2D> createPlayerDyingAnimation();
+	SpriteAnimation<Rectangle2D> createPacDyingAnimation();
 
 	SpriteAnimationMap<Direction, Rectangle2D> createGhostColorAnimation(int ghostID);
 

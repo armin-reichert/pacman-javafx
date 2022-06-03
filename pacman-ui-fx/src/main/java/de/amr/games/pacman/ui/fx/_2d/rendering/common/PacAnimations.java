@@ -44,8 +44,8 @@ public class PacAnimations extends SpriteAnimationContainer<PacAnimation, Rectan
 	protected SpriteAnimation<Rectangle2D> dying;
 
 	public PacAnimations(Rendering2D r2D) {
-		munching = r2D.createPlayerMunchingAnimations();
-		dying = r2D.createPlayerDyingAnimation();
+		munching = r2D.createPacMunchingAnimations();
+		dying = r2D.createPacDyingAnimation();
 	}
 
 	@Override

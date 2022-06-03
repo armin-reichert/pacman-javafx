@@ -186,7 +186,7 @@ public class Rendering2D_PacMan implements Rendering2D {
 	}
 
 	@Override
-	public SpriteAnimationMap<Direction, Rectangle2D> createPlayerMunchingAnimations() {
+	public SpriteAnimationMap<Direction, Rectangle2D> createPacMunchingAnimations() {
 		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
 			int d = ss.dirIndex(dir);
@@ -199,7 +199,7 @@ public class Rendering2D_PacMan implements Rendering2D {
 	}
 
 	@Override
-	public SpriteAnimation<Rectangle2D> createPlayerDyingAnimation() {
+	public SpriteAnimation<Rectangle2D> createPacDyingAnimation() {
 		return new SpriteAnimation<>(ss.r(3, 0), ss.r(4, 0), ss.r(5, 0), ss.r(6, 0), ss.r(7, 0), ss.r(8, 0), ss.r(9, 0),
 				ss.r(10, 0), ss.r(11, 0), ss.r(12, 0), ss.r(13, 0)).frameDuration(8);
 	}
