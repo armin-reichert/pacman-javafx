@@ -38,7 +38,7 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class MyPacAnimationSet extends SpriteAnimationSet<PacAnimation, Rectangle2D> {
+public class MyPacAnimationSet extends SpriteAnimationSet<Pac, PacAnimation, Rectangle2D> {
 
 	protected SpriteAnimationMap<Direction, Rectangle2D> munching;
 	protected SpriteAnimation<Rectangle2D> dying;
@@ -61,6 +61,7 @@ public class MyPacAnimationSet extends SpriteAnimationSet<PacAnimation, Rectangl
 		return Stream.of(munching, dying);
 	}
 
+	@Override
 	public Rectangle2D currentSprite(Pac pac) {
 		return switch (selectedKey()) {
 		case DYING -> dying.animate();

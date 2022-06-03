@@ -179,7 +179,8 @@ public class PlayScene2D extends GameScene2D {
 		boolean recovering = game.pac.powerTimer.remaining() <= recoveringTicks;
 		if (recoveringStarts) {
 			for (var ghost2D : ghosts2D) {
-				ghost2D.animations.startFlashing(game.level.numFlashes, recoveringTicks);
+				MyGhostAnimationSet animations = (MyGhostAnimationSet) ghost2D.animations;
+				animations.startFlashing(game.level.numFlashes, recoveringTicks);
 			}
 		}
 		for (var ghost2D : ghosts2D) {
@@ -238,7 +239,9 @@ public class PlayScene2D extends GameScene2D {
 		pac2D.animations.animation(PacAnimation.MUNCHING).ensureRunning();
 		for (Ghost2D ghost2D : ghosts2D) {
 			ghost2D.visible = ghost2D.ghost.visible;
-			ghost2D.animations.ensureAllRunning();
+			// TODO avoid casting
+			var animations = (MyGhostAnimationSet) ghost2D.animations;
+			animations.ensureAllRunning();
 		}
 		maze2D.getEnergizerAnimation().restart();
 		AudioClip munching = SoundManager.get().getClip(GameSound.PACMAN_MUNCH);
