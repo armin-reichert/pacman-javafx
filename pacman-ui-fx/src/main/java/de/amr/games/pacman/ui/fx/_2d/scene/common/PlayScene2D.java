@@ -133,6 +133,7 @@ public class PlayScene2D extends GameScene2D {
 	public void init() {
 		boolean hasCredit = gameController.credit() > 0;
 		SoundManager.get().setStopped(!hasCredit);
+
 		createCommonParts(game);
 		score2D.showPoints = hasCredit;
 		credit2D.visible = !hasCredit;
@@ -140,7 +141,9 @@ public class PlayScene2D extends GameScene2D {
 		livesCounter2D.visible = hasCredit;
 		levelCounter2D = new LevelCounter2D(game, unscaledSize.x - t(4), unscaledSize.y - t(2));
 		levelCounter2D.visible = hasCredit;
+
 		maze2D = new Maze2D(game, 0, t(3));
+
 		pac2D = new Pac2D(game.pac, game, new PacAnimations(r2D));
 		for (Ghost ghost : game.ghosts) {
 			ghosts2D[ghost.id] = new Ghost2D(ghost, game, new GhostAnimations(ghost.id, r2D));
@@ -166,33 +169,6 @@ public class PlayScene2D extends GameScene2D {
 			infoPane.setVisible(true);
 		} else {
 			infoPane.setVisible(false);
-		}
-	}
-
-	@Override
-	public void doRender(GraphicsContext g) {
-		score2D.render(g, r2D);
-		highScore2D.render(g, r2D);
-		livesCounter2D.render(g, r2D);
-		credit2D.render(g, r2D);
-		maze2D.render(g, r2D);
-		drawGameStateMessage(g);
-		bonus2D.render(g, r2D);
-		pac2D.render(g, r2D);
-		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(g, r2D));
-		levelCounter2D.render(g, r2D);
-	}
-
-	private void drawGameStateMessage(GraphicsContext g) {
-		if (gameController.state() == GameState.GAME_OVER || gameController.credit() == 0) {
-			g.setFont(r2D.getArcadeFont());
-			g.setFill(Color.RED);
-			g.fillText("GAME", t(9), t(21));
-			g.fillText("OVER", t(15), t(21));
-		} else if (gameController.state() == GameState.READY) {
-			g.setFont(r2D.getArcadeFont());
-			g.setFill(Color.YELLOW);
-			g.fillText("READY!", t(11), t(21));
 		}
 	}
 
@@ -226,6 +202,33 @@ public class PlayScene2D extends GameScene2D {
 		}
 		default -> {
 		}
+		}
+	}
+
+	@Override
+	public void doRender(GraphicsContext g) {
+		score2D.render(g, r2D);
+		highScore2D.render(g, r2D);
+		livesCounter2D.render(g, r2D);
+		levelCounter2D.render(g, r2D);
+		credit2D.render(g, r2D);
+		maze2D.render(g, r2D);
+		drawGameStateMessage(g);
+		bonus2D.render(g, r2D);
+		pac2D.render(g, r2D);
+		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(g, r2D));
+	}
+
+	private void drawGameStateMessage(GraphicsContext g) {
+		if (gameController.state() == GameState.GAME_OVER || gameController.credit() == 0) {
+			g.setFont(r2D.getArcadeFont());
+			g.setFill(Color.RED);
+			g.fillText("GAME", t(9), t(21));
+			g.fillText("OVER", t(15), t(21));
+		} else if (gameController.state() == GameState.READY) {
+			g.setFont(r2D.getArcadeFont());
+			g.setFill(Color.YELLOW);
+			g.fillText("READY!", t(11), t(21));
 		}
 	}
 
@@ -296,28 +299,21 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
-
-		// enter state XYZ
 		switch (e.newGameState) {
-
 		case READY -> {
 			SoundManager.get().stopAll();
 			maze2D.getEnergizerAnimation().reset();
 			pac2D.animations.selectAnimation(PacAnimation.MUNCHING);
-			// TODO check this:
-			pac2D.animations.reset();
 			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart());
 			if (!gameController.isGameRunning()) {
 				SoundManager.get().play(GameSound.GAME_READY);
 			}
 		}
-
 		case HUNTING -> {
 			maze2D.getEnergizerAnimation().restart();
 			pac2D.animations.restart();
 			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart(GhostAnimation.COLOR));
 		}
-
 		case PACMAN_DYING -> {
 			gameController.state().timer().setDurationIndefinite();
 			gameController.state().timer().start();
@@ -334,12 +330,10 @@ public class PlayScene2D extends GameScene2D {
 					pauseSec(1, () -> gameController.state().timer().expire()) // exit game state
 			).play();
 		}
-
 		case GHOST_DYING -> {
 			game.pac.hide();
 			SoundManager.get().play(GameSound.GHOST_EATEN);
 		}
-
 		case LEVEL_COMPLETE -> {
 			gameController.state().timer().setDurationIndefinite(); // wait until continueGame() is called
 			SoundManager.get().stopAll();
@@ -353,18 +347,15 @@ public class PlayScene2D extends GameScene2D {
 			animation.setDelay(Duration.seconds(2));
 			animation.play();
 		}
-
 		case LEVEL_STARTING -> {
 			maze2D.getFlashingAnimation().setCycleCount(2 * game.level.numFlashes);
 			gameController.state().timer().setDurationSeconds(1);
 			gameController.state().timer().start();
 		}
-
 		case GAME_OVER -> {
 			maze2D.getEnergizerAnimation().reset();
 			SoundManager.get().stopAll();
 		}
-
 		default -> {
 			log("PlayScene entered game state %s", e.newGameState);
 		}
