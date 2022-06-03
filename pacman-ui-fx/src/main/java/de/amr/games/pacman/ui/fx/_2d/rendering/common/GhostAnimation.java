@@ -22,17 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.amr.games.pacman.ui.fx._2d.rendering.mspacman;
+package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
-import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimationSet;
-
-/**
- * @author Armin Reichert
- */
-public class MsPacMansHusbandAnimations extends PacAnimationSet {
-
-	public MsPacMansHusbandAnimations(Rendering2D_MsPacMan r2D) {
-		super(r2D);
-		munching = r2D.createHusbandMunchingAnimations();
-	}
+public enum GhostAnimation {
+	COLOR, EYES, NUMBER, BLUE, FLASHING;
 }

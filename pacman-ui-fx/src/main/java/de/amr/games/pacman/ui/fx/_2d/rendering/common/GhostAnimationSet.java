@@ -28,16 +28,15 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.ISpriteAnimation;
 import de.amr.games.pacman.lib.SpriteAnimation;
-import de.amr.games.pacman.lib.SpriteAnimationContainer;
+import de.amr.games.pacman.lib.SpriteAnimationSet;
 import de.amr.games.pacman.lib.SpriteAnimationMap;
 import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D.GhostAnimation;
 import javafx.geometry.Rectangle2D;
 
 /**
  * @author Armin Reichert
  */
-public class GhostAnimations extends SpriteAnimationContainer<GhostAnimation, Rectangle2D> {
+public class GhostAnimationSet extends SpriteAnimationSet<GhostAnimation, Rectangle2D> {
 
 	private SpriteAnimationMap<Direction, Rectangle2D> eyes;
 	private SpriteAnimation<Rectangle2D> flashing;
@@ -45,7 +44,7 @@ public class GhostAnimations extends SpriteAnimationContainer<GhostAnimation, Re
 	private SpriteAnimationMap<Direction, Rectangle2D> color;
 	private SpriteAnimation<Rectangle2D> numbers;
 
-	public GhostAnimations(int ghostID, Rendering2D r2D) {
+	public GhostAnimationSet(int ghostID, Rendering2D r2D) {
 		eyes = r2D.createGhostEyesAnimation();
 		flashing = r2D.createGhostFlashingAnimation();
 		blue = r2D.createGhostBlueAnimation();

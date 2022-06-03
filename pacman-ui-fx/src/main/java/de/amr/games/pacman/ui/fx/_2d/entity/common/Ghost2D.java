@@ -25,7 +25,8 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimation;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimationSet;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -36,14 +37,10 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class Ghost2D extends GameEntity2D {
 
-	public enum GhostAnimation {
-		COLOR, EYES, NUMBER, BLUE, FLASHING;
-	};
-
 	public final Ghost ghost;
-	public final GhostAnimations animations;
+	public final GhostAnimationSet animations;
 
-	public Ghost2D(Ghost ghost, GameModel game, GhostAnimations animations) {
+	public Ghost2D(Ghost ghost, GameModel game, GhostAnimationSet animations) {
 		super(game);
 		this.ghost = ghost;
 		this.animations = animations;

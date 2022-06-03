@@ -41,14 +41,14 @@ import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Bonus2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
-import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D.GhostAnimation;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Maze2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
-import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D.PacAnimation;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimation;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimationSet;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimation;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimationSet;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
@@ -144,9 +144,9 @@ public class PlayScene2D extends GameScene2D {
 
 		maze2D = new Maze2D(game, 0, t(3));
 
-		pac2D = new Pac2D(game.pac, game, new PacAnimations(r2D));
+		pac2D = new Pac2D(game.pac, game, new PacAnimationSet(r2D));
 		for (Ghost ghost : game.ghosts) {
-			ghosts2D[ghost.id] = new Ghost2D(ghost, game, new GhostAnimations(ghost.id, r2D));
+			ghosts2D[ghost.id] = new Ghost2D(ghost, game, new GhostAnimationSet(ghost.id, r2D));
 		}
 		bonus2D = new Bonus2D(game::bonus);
 		if (game.variant == GameVariant.MS_PACMAN) {
