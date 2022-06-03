@@ -61,11 +61,6 @@ public class MyPacAnimationSet extends SpriteAnimationSet<PacAnimation, Rectangl
 		return Stream.of(munching, dying);
 	}
 
-	public void refresh() {
-		munching.ensureRunning();
-		dying.reset();// TODO check this
-	}
-
 	public Rectangle2D currentSprite(Pac pac) {
 		return switch (selectedKey()) {
 		case DYING -> dying.animate();

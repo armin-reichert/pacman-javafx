@@ -86,6 +86,7 @@ public class PlayScene2D extends GameScene2D {
 			}
 			pacInfo.setFill(Color.WHITE);
 			getChildren().add(pacInfo);
+			root.getChildren().add(this);
 		}
 
 		public void update() {
@@ -114,11 +115,11 @@ public class PlayScene2D extends GameScene2D {
 	private Pac2D pac2D;
 	private Ghost2D[] ghosts2D = new Ghost2D[4];
 	private Bonus2D bonus2D;
-	private InfoPane infoPane = new InfoPane();
+	private final InfoPane infoPane;
 
 	public PlayScene2D(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
-		root.getChildren().add(infoPane);
+		infoPane = new InfoPane();
 	}
 
 	@Override
@@ -234,10 +235,10 @@ public class PlayScene2D extends GameScene2D {
 
 	public void onSwitchFrom3DScene() {
 		pac2D.visible = pac2D.pac.visible;
-		pac2D.animations.refresh();
+		pac2D.animations.animation(PacAnimation.MUNCHING).ensureRunning();
 		for (Ghost2D ghost2D : ghosts2D) {
 			ghost2D.visible = ghost2D.ghost.visible;
-			ghost2D.animations.refresh();
+			ghost2D.animations.ensureAllRunning();
 		}
 		maze2D.getEnergizerAnimation().restart();
 		AudioClip munching = SoundManager.get().getClip(GameSound.PACMAN_MUNCH);

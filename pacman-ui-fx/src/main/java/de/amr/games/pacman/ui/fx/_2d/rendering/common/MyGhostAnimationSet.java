@@ -75,7 +75,7 @@ public class MyGhostAnimationSet extends SpriteAnimationSet<GhostAnimation, Rect
 		flashing.frameDuration(frameTicks).repetitions(numFlashes).restart();
 	}
 
-	public void refresh() {
+	public void ensureAllRunning() {
 		eyes.ensureRunning();
 		blue.ensureRunning();
 		flashing.ensureRunning();
