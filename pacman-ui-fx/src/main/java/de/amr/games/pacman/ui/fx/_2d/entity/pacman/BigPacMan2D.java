@@ -40,12 +40,16 @@ import javafx.scene.canvas.GraphicsContext;
 public class BigPacMan2D extends GameEntity2D {
 
 	private final Pac pacMan;
-	public final SpriteAnimation<Rectangle2D> munchingAnimation;
+	private final SpriteAnimation<Rectangle2D> munchingAnimation;
 
 	public BigPacMan2D(Pac pacMan, GameModel game) {
 		super(game);
 		this.pacMan = pacMan;
 		munchingAnimation = Rendering2D_PacMan.get().createBigPacManMunchingAnimation();
+	}
+
+	public void startMunching() {
+		munchingAnimation.restart();
 	}
 
 	@Override
