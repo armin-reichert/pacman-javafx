@@ -29,13 +29,13 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.pacman.Intermission1Controller;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.actors.Ghost;
+import de.amr.games.pacman.model.common.actors.GhostAnimation;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.BigPacMan2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimation;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimationSet;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimationSet;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.MyGhostAnimationSet;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.MyPacAnimationSet;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -67,8 +67,8 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 	public void init() {
 		sceneController.init();
 		levelCounter2D = new LevelCounter2D(game, unscaledSize.x - t(3), unscaledSize.y - t(2));
-		pacMan2D = new Pac2D(context.pac, game, new PacAnimationSet(r2D));
-		blinky2D = new Ghost2D(context.blinky, game, new GhostAnimationSet(Ghost.RED_GHOST, r2D));
+		pacMan2D = new Pac2D(context.pac, game, new MyPacAnimationSet(r2D));
+		blinky2D = new Ghost2D(context.blinky, game, new MyGhostAnimationSet(Ghost.RED_GHOST, r2D));
 		bigPacMan2D = new BigPacMan2D(context.pac, game);
 		bigPacMan2D.startMunching();
 	}

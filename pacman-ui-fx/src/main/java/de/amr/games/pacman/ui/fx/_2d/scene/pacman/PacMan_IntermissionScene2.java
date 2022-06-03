@@ -36,8 +36,8 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.Nail2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimationSet;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimationSet;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.MyGhostAnimationSet;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.MyPacAnimationSet;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
@@ -75,8 +75,8 @@ public class PacMan_IntermissionScene2 extends GameScene2D {
 
 		levelCounter2D = new LevelCounter2D(game, unscaledSize.x - t(3), unscaledSize.y - t(2));
 
-		pacMan2D = new Pac2D(context.pac, game, new PacAnimationSet(r2D));
-		blinky2D = new Ghost2D(context.blinky, game, new GhostAnimationSet(Ghost.RED_GHOST, r2D));
+		pacMan2D = new Pac2D(context.pac, game, new MyPacAnimationSet(r2D));
+		blinky2D = new Ghost2D(context.blinky, game, new MyGhostAnimationSet(Ghost.RED_GHOST, r2D));
 		nail2D = new Nail2D(context.nail, game);
 		pacMan2D.animations.restart();
 		blinky2D.animations.restart();

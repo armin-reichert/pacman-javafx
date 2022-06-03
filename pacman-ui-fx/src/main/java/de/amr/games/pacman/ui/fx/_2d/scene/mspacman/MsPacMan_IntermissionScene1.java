@@ -34,8 +34,8 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Heart2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimationSet;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimationSet;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.MyGhostAnimationSet;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.MyPacAnimationSet;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacMansHusbandAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
@@ -78,10 +78,10 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 		sceneController.restartInInitialState(Intermission1Controller.State.FLAP);
 		levelCounter2D = new LevelCounter2D(game, unscaledSize.x - t(3), unscaledSize.y - t(2));
 		flap2D = new Flap2D(context.flap, game);
-		msPacMan2D = new Pac2D(context.msPac, game, new PacAnimationSet(r2D));
+		msPacMan2D = new Pac2D(context.msPac, game, new MyPacAnimationSet(r2D));
 		msPacMansHusband2D = new Pac2D(context.pacMan, game, new MsPacMansHusbandAnimations(Rendering2D_MsPacMan.get()));
-		inky2D = new Ghost2D(context.inky, game, new GhostAnimationSet(Ghost.CYAN_GHOST, r2D));
-		pinky2D = new Ghost2D(context.pinky, game, new GhostAnimationSet(Ghost.PINK_GHOST, r2D));
+		inky2D = new Ghost2D(context.inky, game, new MyGhostAnimationSet(Ghost.CYAN_GHOST, r2D));
+		pinky2D = new Ghost2D(context.pinky, game, new MyGhostAnimationSet(Ghost.PINK_GHOST, r2D));
 		heart2D = new Heart2D(context.heart, game);
 	}
 
