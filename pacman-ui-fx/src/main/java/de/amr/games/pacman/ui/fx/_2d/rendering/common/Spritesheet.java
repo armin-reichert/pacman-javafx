@@ -38,18 +38,18 @@ public class Spritesheet {
 
 	private final Image image;
 	private final int rasterSize;
-	private final int[] dirIndex = new int[4];
+	private final int[] dirOrder = new int[4];
 
 	public Spritesheet(String imagePath, int rasterSize, Direction... dirs) {
 		this.image = U.image(imagePath);
 		this.rasterSize = rasterSize;
 		for (int i = 0; i < dirs.length; ++i) {
-			dirIndex[dirs[i].ordinal()] = i;
+			dirOrder[dirs[i].ordinal()] = i;
 		}
 	}
 
-	public int dirIndex(Direction dir) {
-		return dirIndex[dir.ordinal()];
+	public int dirOrder(Direction dir) {
+		return dirOrder[dir.ordinal()];
 	}
 
 	public Image getImage() {

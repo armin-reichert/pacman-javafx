@@ -189,7 +189,7 @@ public class Rendering2D_PacMan implements Rendering2D {
 	public SpriteAnimationMap<Direction, Rectangle2D> createPacMunchingAnimations() {
 		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
-			int d = ss.dirIndex(dir);
+			int d = ss.dirOrder(dir);
 			Rectangle2D wide_open = ss.r(0, d), open = ss.r(1, d), closed = ss.r(2, 0);
 			SpriteAnimation<Rectangle2D> animation = new SpriteAnimation<>(closed, open, wide_open, open).frameDuration(2)
 					.endless();
@@ -208,7 +208,7 @@ public class Rendering2D_PacMan implements Rendering2D {
 	public SpriteAnimationMap<Direction, Rectangle2D> createGhostColorAnimation(int ghostID) {
 		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
-			int d = ss.dirIndex(dir);
+			int d = ss.dirOrder(dir);
 			var animation = new SpriteAnimation<>(ss.r(2 * d, 4 + ghostID), ss.r(2 * d + 1, 4 + ghostID)).frameDuration(8)
 					.endless();
 			map.put(dir, animation);
@@ -230,7 +230,7 @@ public class Rendering2D_PacMan implements Rendering2D {
 	public SpriteAnimationMap<Direction, Rectangle2D> createGhostEyesAnimation() {
 		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
-			int d = ss.dirIndex(dir);
+			int d = ss.dirOrder(dir);
 			map.put(dir, new SpriteAnimation<>(ss.r(8 + d, 5)));
 		}
 		return map;
