@@ -87,6 +87,6 @@ public class MsPacMan_CreditScene extends GameScene2D {
 		r2D.drawSprite(g, r2DMs.rhs(1, 0), t(13), t(23) + 2);
 		g.setFont(Font.font(r2D.getArcadeFont().getName(), 6));
 		g.fillText("PTS", t(25), t(25));
-		r2D.drawCopyright(g, t(3), t(28));
+		r2D.drawCopyright(g, t(6), t(28));
 	}
 }
