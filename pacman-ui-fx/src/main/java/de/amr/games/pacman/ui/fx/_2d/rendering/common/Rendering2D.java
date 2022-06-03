@@ -49,13 +49,13 @@ public interface Rendering2D {
 
 	// Sprites
 
-	Rectangle2D getNumberSprite(int number);
+	Rectangle2D getSymbolSprite(int symbol);
 
 	Rectangle2D getBonusValueSprite(int number);
 
-	Rectangle2D getLifeSprite();
+	Rectangle2D getNumberSprite(int number);
 
-	Rectangle2D getSymbolSprite(int symbol);
+	Rectangle2D getLifeSprite();
 
 	// Animations
 
