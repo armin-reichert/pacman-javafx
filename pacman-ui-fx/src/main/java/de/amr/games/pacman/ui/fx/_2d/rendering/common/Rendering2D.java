@@ -105,7 +105,8 @@ public interface Rendering2D {
 	 * @param y left upper corner of entity bounding box
 	 */
 	default void drawSpriteCenteredOverBBox(GraphicsContext g, Rectangle2D s, double x, double y) {
-		drawSprite(g, s, x + HTS - s.getWidth() / 2, y + HTS - s.getHeight() / 2);
+		double dx = HTS - s.getWidth() / 2, dy = HTS - s.getHeight() / 2;
+		drawSprite(g, s, x + dx, y + dy);
 	}
 
 	/**
