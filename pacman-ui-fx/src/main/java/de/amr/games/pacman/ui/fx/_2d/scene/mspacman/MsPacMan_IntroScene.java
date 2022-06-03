@@ -58,7 +58,6 @@ public class MsPacMan_IntroScene extends GameScene2D {
 
 	private final IntroController sceneController;
 	private final Context context;
-
 	private Pac2D msPacMan2D;
 	private Ghost2D[] ghosts2D;
 
@@ -90,8 +89,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		case SPACE, DIGIT1 -> {
 			gameController.requestGame();
 		}
-		default -> {
-			// ignore
+		default -> { // ignore
 		}
 		}
 	}
