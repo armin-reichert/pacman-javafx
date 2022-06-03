@@ -79,7 +79,6 @@ public class PacMan_IntroScene extends GameScene2D {
 		pacMan2D = new Pac2D(context.pacMan, game, new PacAnimations(r2D));
 		ghosts2D = Stream.of(context.ghosts).map(ghost -> {
 			Ghost2D ghost2D = new Ghost2D(ghost, game, new GhostAnimations(ghost.id, r2D));
-			ghost2D.animations.restart();// TODO check this
 			return ghost2D;
 		}).toArray(Ghost2D[]::new);
 	}
@@ -94,8 +93,7 @@ public class PacMan_IntroScene extends GameScene2D {
 		case SPACE, DIGIT1 -> {
 			gameController.requestGame();
 		}
-		default -> {
-			// ignore
+		default -> { // ignore
 		}
 		}
 	}
@@ -111,6 +109,10 @@ public class PacMan_IntroScene extends GameScene2D {
 	@Override
 	public void doUpdate() {
 		sceneController.update();
+		updateAnimations();
+	}
+
+	private void updateAnimations() {
 		// TODO this is not elegant but works
 		if (sceneController.state() == State.CHASING_GHOSTS) {
 			for (var ghost2D : ghosts2D) {
@@ -133,6 +135,7 @@ public class PacMan_IntroScene extends GameScene2D {
 		score2D.render(g, r2D);
 		highScore2D.render(g, r2D);
 		credit2D.render(g, r2D);
+
 		switch (sceneController.state()) {
 		case BEGIN, PRESENTING_GHOSTS -> drawGallery(g);
 		case SHOWING_POINTS -> {
@@ -168,12 +171,12 @@ public class PacMan_IntroScene extends GameScene2D {
 	}
 
 	private void drawGuys(GraphicsContext g, int offset) {
-		ghosts2D[0].render(g, r2D);
 		g.save();
 		g.translate(offset, 0);
 		ghosts2D[1].render(g, r2D);
 		ghosts2D[2].render(g, r2D);
 		g.restore();
+		ghosts2D[0].render(g, r2D);
 		ghosts2D[3].render(g, r2D);
 		pacMan2D.render(g, r2D);
 	}
