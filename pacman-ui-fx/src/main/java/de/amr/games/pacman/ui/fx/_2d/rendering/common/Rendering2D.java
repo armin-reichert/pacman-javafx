@@ -47,6 +47,8 @@ public interface Rendering2D {
 
 	Color getGhostColor(int ghostID);
 
+	// Sprites
+
 	Rectangle2D getNumberSprite(int number);
 
 	Rectangle2D getBonusValueSprite(int number);

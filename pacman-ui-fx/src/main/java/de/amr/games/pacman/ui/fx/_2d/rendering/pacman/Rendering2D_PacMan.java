@@ -71,14 +71,15 @@ public class Rendering2D_PacMan implements Rendering2D {
 
 	private final Spritesheet ss;
 	private final Image mazeFull, mazeEmpty, mazeFlashing;
-	private final Map<Integer, Rectangle2D> bonusValueSprites;
 	private final Map<Integer, Rectangle2D> symbolSprites;
+	private final Map<Integer, Rectangle2D> bonusValueSprites;
 	private final Map<Integer, Rectangle2D> bountyNumberSprites;
 	private final Font font;
 
 	private Rendering2D_PacMan(String path, int rasterSize, Direction... dirOrder) {
 		ss = new Spritesheet(path, rasterSize, dirOrder);
 		font = U.font("/common/emulogic.ttf", 8);
+
 		mazeFull = U.image("/pacman/graphics/maze_full.png");
 		mazeEmpty = U.image("/pacman/graphics/maze_empty.png");
 		mazeFlashing = U.colorsExchanged(mazeEmpty, Map.of(MAZE_WALL_COLOR, Color.WHITE));

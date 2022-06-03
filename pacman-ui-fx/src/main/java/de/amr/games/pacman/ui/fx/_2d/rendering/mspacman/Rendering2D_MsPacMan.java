@@ -87,7 +87,7 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 		Color.rgb(255, 0, 0), 
 	};
 
-	private static final Color[] FOOD_COLORS = { 
+	static final Color[] FOOD_COLORS = { 
 		Color.rgb(222, 222, 255), 
 		Color.rgb(255, 255, 0), 
 		Color.rgb(255, 0, 0),
