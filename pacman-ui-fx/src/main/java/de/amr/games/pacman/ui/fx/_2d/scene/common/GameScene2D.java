@@ -83,7 +83,7 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 		this.gameController = gameController;
 		this.unscaledSize = new V2d(ArcadeWorld.TILES_X * TS, ArcadeWorld.TILES_Y * TS);
 		this.aspectRatio = unscaledSize.x / unscaledSize.y;
-		this.canvas = new Canvas(1, 1);
+		this.canvas = new Canvas(1, 1); // will be resized by sub-scene
 		root = new StackPane(canvas, infoPane);
 		root.setBackground(U.colorBackground(Color.BLACK));
 		fxSubScene = new SubScene(root, unscaledSize.x, unscaledSize.y);
