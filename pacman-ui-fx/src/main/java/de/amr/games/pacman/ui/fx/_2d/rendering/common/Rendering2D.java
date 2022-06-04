@@ -80,9 +80,9 @@ public interface Rendering2D {
 
 	Color getFoodColor(int mazeNumber);
 
-	void drawMazeFull(GraphicsContext g, int mazeNumber, double x, double y);
+	Image getMazeFullImage(int mazeNumber);
 
-	void drawMazeEmpty(GraphicsContext g, int mazeNumber, double x, double y);
+	Image getMazeEmptyImage(int mazeNumber);
 
 	// Drawing
 

@@ -68,7 +68,7 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	private static final Color MAZE_WALL_COLOR = Color.rgb(33, 33, 255);
 	private static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
 
-	private final Image mazeFull, mazeEmpty, mazeFlashing;
+	private final Image mazeFull, mazeEmpty;
 	private final Map<Integer, Rectangle2D> symbolSprites;
 	private final Map<Integer, Rectangle2D> bonusValueSprites;
 	private final Map<Integer, Rectangle2D> bountyNumberSprites;
@@ -81,7 +81,6 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 
 		mazeFull = U.image("/pacman/graphics/maze_full.png");
 		mazeEmpty = U.image("/pacman/graphics/maze_empty.png");
-		mazeFlashing = U.colorsExchanged(mazeEmpty, Map.of(MAZE_WALL_COLOR, Color.WHITE));
 
 		//@formatter:off
 		symbolSprites = Map.of(
@@ -138,17 +137,17 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	@Override
 	public SpriteAnimation<Image> createMazeFlashingAnimation(int mazeNumber) {
 		var brightImage = U.colorsExchanged(mazeEmpty, Map.of(MAZE_WALL_COLOR, Color.WHITE));
-		return new SpriteAnimation<>(brightImage, mazeEmpty).frameDuration(15);
+		return new SpriteAnimation<>(brightImage, mazeEmpty).frameDuration(10);
 	}
 
 	@Override
-	public void drawMazeFull(GraphicsContext g, int mazeNumber, double x, double y) {
-		g.drawImage(mazeFull, x, y);
+	public Image getMazeFullImage(int mazeNumber) {
+		return mazeFull;
 	}
 
 	@Override
-	public void drawMazeEmpty(GraphicsContext g, int mazeNumber, double x, double y) {
-		g.drawImage(mazeEmpty, x, y);
+	public Image getMazeEmptyImage(int mazeNumber) {
+		return mazeEmpty;
 	}
 
 	@Override

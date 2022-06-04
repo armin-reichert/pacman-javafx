@@ -79,7 +79,7 @@ public class World2D {
 
 	private void drawMazeWithFood(GraphicsContext g, Rendering2D r2D, int mazeNumber) {
 		var world = game.level.world;
-		r2D.drawMazeFull(g, mazeNumber, x, y);
+		g.drawImage(r2D.getMazeFullImage(mazeNumber), x, y);
 		world.tiles().filter(world::containsEatenFood).forEach(tile -> clearTile(g, tile));
 		if (!energizerAnimation.animate()) { // dark blinking phase
 			world.energizerTiles().forEach(tile -> clearTile(g, tile));

@@ -94,9 +94,9 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	//@formatter:on
 
 	private final Image midwayLogo;
-	private final Rectangle2D[] mazeFullSprites;
-	private final Rectangle2D[] mazeEmptySprites;
-	private final Image[] mazeFlashImages;
+	private final Image[] mazesFull;
+	private final Image[] mazesEmpty;
+	private final Image[] mazesBlackWhite;
 	private final Rectangle2D[] symbolSprites;
 	private final Map<Integer, Rectangle2D> bonusValueSprites;
 	private final Map<Integer, Rectangle2D> bountyNumberSprites;
@@ -137,18 +137,18 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 		//@formatter:on
 
 		int numMazes = 6;
-		mazeFullSprites = new Rectangle2D[numMazes];
-		mazeEmptySprites = new Rectangle2D[numMazes];
-		mazeFlashImages = new Image[numMazes];
+		mazesFull = new Image[numMazes];
+		mazesEmpty = new Image[numMazes];
+		mazesBlackWhite = new Image[numMazes];
 		for (int mazeIndex = 0; mazeIndex < numMazes; ++mazeIndex) {
-			mazeFullSprites[mazeIndex] = new Rectangle2D(0, 248 * mazeIndex, 226, 248);
-			var mazeEmptyRegion = new Rectangle2D(228, 248 * mazeIndex, 226, 248);
-			mazeEmptySprites[mazeIndex] = mazeEmptyRegion;
-			var mazeFlashImage = U.colorsExchanged(subImage(mazeEmptyRegion), Map.of( //
+			mazesFull[mazeIndex] = subImage(0, 248 * mazeIndex, 226, 248);
+			var empty = subImage(228, 248 * mazeIndex, 226, 248);
+			mazesEmpty[mazeIndex] = empty;
+			var bw = U.colorsExchanged(empty, Map.of( //
 					MAZE_SIDE_COLORS[mazeIndex], Color.WHITE, //
 					MAZE_TOP_COLORS[mazeIndex], Color.BLACK) //
 			);
-			mazeFlashImages[mazeIndex] = mazeFlashImage;
+			mazesBlackWhite[mazeIndex] = bw;
 		}
 	}
 
@@ -206,17 +206,17 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 				MAZE_SIDE_COLORS[mazeIndex], Color.WHITE, //
 				MAZE_TOP_COLORS[mazeIndex], Color.BLACK) //
 		);
-		return new SpriteAnimation<>(brightImage, mazeEmpty).frameDuration(15);
+		return new SpriteAnimation<>(brightImage, mazeEmpty).frameDuration(10);
 	}
 
 	@Override
-	public void drawMazeFull(GraphicsContext g, int mazeNumber, double x, double y) {
-		drawSprite(g, mazeFullSprites[mazeNumber - 1], x, y);
+	public Image getMazeFullImage(int mazeNumber) {
+		return mazesFull[mazeNumber - 1];
 	}
 
 	@Override
-	public void drawMazeEmpty(GraphicsContext g, int mazeNumber, double x, double y) {
-		drawSprite(g, mazeEmptySprites[mazeNumber - 1], x, y);
+	public Image getMazeEmptyImage(int mazeNumber) {
+		return mazesEmpty[mazeNumber - 1];
 	}
 
 	@Override

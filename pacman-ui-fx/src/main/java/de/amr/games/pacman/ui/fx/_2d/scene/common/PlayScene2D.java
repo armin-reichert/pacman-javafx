@@ -342,8 +342,8 @@ public class PlayScene2D extends GameScene2D {
 			// Energizers can still exist if "next level" cheat has been used
 			world2D.getEnergizerAnimation().reset();
 			new SequentialTransition( //
-					pauseSec(2, () -> world2D.startFlashing(game.level.numFlashes)), //
-					pauseSec(4, () -> {
+					pauseSec(1, () -> world2D.startFlashing(game.level.numFlashes)), //
+					pauseSec(2.5, () -> {
 						gameController.state().timer().expire();
 					}) //
 			).play();
