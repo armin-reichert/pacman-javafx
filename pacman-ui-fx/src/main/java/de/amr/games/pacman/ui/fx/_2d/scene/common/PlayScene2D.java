@@ -55,7 +55,6 @@ import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
-import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.media.AudioClip;
@@ -90,21 +89,21 @@ public class PlayScene2D extends GameScene2D {
 		public void update() {
 			for (int id = 0; id < 4; ++id) {
 				var ghost2D = ghosts2D[id];
-				var ghost = game.ghosts[id];
+				var ghost = ghost2D.ghost;
 				String state = ghost.state.name();
 				if (ghost.state == GhostState.HUNTING_PAC) {
 					state += game.huntingTimer.chasingPhase() != -1 ? " (Chasing)" : " (Scattering)";
 				}
-				String text = "%s\nState: %s\nAnimation: %s".formatted(ghost.name, state, ghost2D.animations.selectedKey());
+				var text = "%s\nState: %s\nAnimation: %s".formatted(ghost.name, state, ghost2D.animations.selectedKey());
+				var bounds = ghostInfos[id].getBoundsInLocal();
 				ghostInfos[id].setText(text);
-				Bounds bounds = ghostInfos[id].getBoundsInLocal();
 				ghostInfos[id].setX((ghost.position.x + World.HTS) * scaling() - bounds.getWidth() / 2);
 				ghostInfos[id].setY(ghost.position.y * scaling() - 50);
 				ghostInfos[id].setVisible(ghost.visible);
 			}
-			String text = "%s\nAnimation: %s".formatted(game.pac.name, pac2D.animations.selectedKey());
+			var text = "%s\nAnimation: %s".formatted(game.pac.name, pac2D.animations.selectedKey());
+			var bounds = pacInfo.getBoundsInLocal();
 			pacInfo.setText(text);
-			Bounds bounds = pacInfo.getBoundsInLocal();
 			pacInfo.setX((game.pac.position.x + World.HTS) * scaling() - bounds.getWidth() / 2);
 			pacInfo.setY(game.pac.position.y * scaling() - 30);
 			pacInfo.setVisible(game.pac.visible);
@@ -144,11 +143,9 @@ public class PlayScene2D extends GameScene2D {
 		livesCounter2D.visible = hasCredit;
 		levelCounter2D = new LevelCounter2D(game.levelCounter);
 		levelCounter2D.visible = hasCredit;
-
 		world2D = new World2D(game, 0, t(3), r2D.createMazeFlashingAnimation(r2D.mazeNumber(game.level.number)));
-
 		pac2D = new Pac2D(game.pac, new PacAnimationSet(r2D));
-		for (Ghost ghost : game.ghosts) {
+		for (var ghost : game.ghosts) {
 			ghosts2D[ghost.id] = new Ghost2D(ghost, new GhostAnimationSet(ghost.id, r2D));
 		}
 		bonus2D = new Bonus2D(game::bonus);
