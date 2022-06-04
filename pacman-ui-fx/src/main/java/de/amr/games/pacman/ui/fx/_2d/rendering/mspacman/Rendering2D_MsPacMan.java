@@ -179,7 +179,6 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 
 	@Override
 	public void drawCopyright(GraphicsContext g, int x, int y) {
-		// x=t(4), y=t(28)
 		g.drawImage(midwayLogo, x, y + 3, 30, 32);
 		g.setFill(Color.RED);
 		g.setFont(Font.font("Dialog", 11.0));
@@ -298,7 +297,7 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 	// Ms. Pac-Man specific:
 
 	public TimedSeq<Integer> createBonusJumpAnimation() {
-		return TimedSeq.of(2, 0, -2).frameDuration(8).endless();
+		return TimedSeq.of(2, -2).frameDuration(10).endless();
 	}
 
 	public SpriteAnimationMap<Direction, Rectangle2D> createHusbandMunchingAnimations() {
