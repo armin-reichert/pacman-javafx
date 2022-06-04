@@ -83,6 +83,7 @@ public class PlayScene2D extends GameScene2D {
 				infoPane.getChildren().add(ghostInfos[id]);
 			}
 			pacInfo.setFill(Color.WHITE);
+			pacInfo.setTextAlignment(TextAlignment.CENTER);
 			infoPane.getChildren().add(pacInfo);
 		}
 
@@ -90,18 +91,22 @@ public class PlayScene2D extends GameScene2D {
 			for (int id = 0; id < 4; ++id) {
 				var ghost2D = ghosts2D[id];
 				var ghost = game.ghosts[id];
-				String text = "%s\n(%s %s)".formatted(ghost.name, ghost.state, ghost2D.animations.selectedKey());
+				String state = ghost.state.name();
+				if (ghost.state == GhostState.HUNTING_PAC) {
+					state += game.huntingTimer.chasingPhase() != -1 ? " (Chasing)" : " (Scattering)";
+				}
+				String text = "%s\nState: %s\nAnimation: %s".formatted(ghost.name, state, ghost2D.animations.selectedKey());
 				ghostInfos[id].setText(text);
 				Bounds bounds = ghostInfos[id].getBoundsInLocal();
 				ghostInfos[id].setX((ghost.position.x + World.HTS) * scaling() - bounds.getWidth() / 2);
-				ghostInfos[id].setY(ghost.position.y * scaling() - 30);
+				ghostInfos[id].setY(ghost.position.y * scaling() - 50);
 				ghostInfos[id].setVisible(ghost.visible);
 			}
-			String text = "%s (%s)".formatted(game.pac.name, pac2D.animations.selectedKey());
+			String text = "%s\nAnimation: %s".formatted(game.pac.name, pac2D.animations.selectedKey());
 			pacInfo.setText(text);
 			Bounds bounds = pacInfo.getBoundsInLocal();
 			pacInfo.setX((game.pac.position.x + World.HTS) * scaling() - bounds.getWidth() / 2);
-			pacInfo.setY(game.pac.position.y * scaling() - 20);
+			pacInfo.setY(game.pac.position.y * scaling() - 30);
 			pacInfo.setVisible(game.pac.visible);
 		}
 	}
