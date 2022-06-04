@@ -25,8 +25,7 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import java.util.List;
-
+import de.amr.games.pacman.model.common.LevelCounter;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -37,29 +36,29 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class LevelCounter2D {
 
-	private final List<Integer> levelCounter;
+	private final LevelCounter levelCounter;
 	public boolean visible;
 	public double right_x, y;
+	private double x;
 
 	/**
 	 * @param game    the game
 	 * @param right_x the RIGHT border x-coordinate of the counter!
 	 * @param y       the y-coordinate
 	 */
-	public LevelCounter2D(List<Integer> levelCounter, double right_x, double y) {
+	public LevelCounter2D(LevelCounter levelCounter, double right_x, double y) {
 		this.levelCounter = levelCounter;
 		this.right_x = right_x;
 		this.y = y;
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
-		if (visible && !levelCounter.isEmpty()) {
-			double x = right_x;
-			for (int i = 0; i < Math.min(7, levelCounter.size()); ++i) {
-				int symbol = levelCounter.get(i);
+		if (visible) {
+			x = right_x;
+			levelCounter.symbols().forEach(symbol -> {
 				r2D.drawSprite(g, r2D.getSymbolSprite(symbol), x, y);
 				x -= t(2);
-			}
+			});
 		}
 	}
 }

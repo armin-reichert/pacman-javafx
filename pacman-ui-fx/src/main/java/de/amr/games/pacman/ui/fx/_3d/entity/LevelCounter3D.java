@@ -46,8 +46,6 @@ import javafx.util.Duration;
  */
 public class LevelCounter3D extends Group {
 
-	private static final int MAX_ENTRIES = 7;
-
 	private final Rendering2D r2D;
 	private final V2d rightPosition;
 
@@ -57,14 +55,12 @@ public class LevelCounter3D extends Group {
 	}
 
 	public void update(GameModel game) {
-		// NOTE: all variables named *Number are starting at 1
-		int firstLevelNumber = Math.max(1, game.level.number - MAX_ENTRIES + 1);
 		getChildren().clear();
 		double x = rightPosition.x, y = rightPosition.y;
-		for (int levelNumber = firstLevelNumber; levelNumber <= game.level.number; ++levelNumber) {
-			int symbol = game.levelCounter.get(levelNumber - 1);
+		for (int i = 0; i < game.levelCounter.size(); ++i) {
+			int symbol = game.levelCounter.symbol(i);
 			Image symbolImage = r2D.getSpritesheet().subImage(r2D.getSymbolSprite(symbol));
-			Box cube = createSpinningCube(symbolImage, levelNumber % 2 == 0);
+			Box cube = createSpinningCube(symbolImage, i % 2 == 0);
 			cube.setTranslateX(x);
 			cube.setTranslateY(y);
 			cube.setTranslateZ(-HTS);
