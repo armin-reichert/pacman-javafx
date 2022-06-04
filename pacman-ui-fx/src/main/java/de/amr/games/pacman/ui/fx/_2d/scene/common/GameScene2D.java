@@ -79,9 +79,9 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 	 * @param gameController game controller
 	 * @param unscaledSize   logical scene size (number of tiles x tile size)
 	 */
-	public GameScene2D(GameController gameController, V2i unscaledSize) {
+	public GameScene2D(GameController gameController) {
 		this.gameController = gameController;
-		this.unscaledSize = unscaledSize;
+		this.unscaledSize = new V2i(ArcadeWorld.TILES_X * TS, ArcadeWorld.TILES_Y * TS);
 		this.aspectRatio = (double) unscaledSize.x / unscaledSize.y;
 		this.canvas = new Canvas();
 		root = new StackPane(canvas, infoPane);

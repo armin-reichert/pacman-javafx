@@ -27,7 +27,6 @@ package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
@@ -42,8 +41,8 @@ import javafx.scene.text.Font;
  */
 public class PacMan_CreditScene extends GameScene2D {
 
-	public PacMan_CreditScene(GameController gameController, V2i unscaledSize) {
-		super(gameController, unscaledSize);
+	public PacMan_CreditScene(GameController gameController) {
+		super(gameController);
 	}
 
 	@Override

@@ -39,6 +39,7 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
@@ -81,7 +82,6 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 
 	private final GameController gameController;
 	private final SubScene fxSubScene;
-	private final V2i size;
 	private final AmbientLight light = new AmbientLight(Color.GHOSTWHITE);
 	private final Image floorTexture = U.image("/common/escher-texture.jpg");
 	private final Color floorColorWithTexture = Color.DARKBLUE;
@@ -101,9 +101,8 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 	private LevelCounter3D levelCounter3D;
 	private LivesCounter3D livesCounter3D;
 
-	public PlayScene3D(GameController gc, V2i size) {
+	public PlayScene3D(GameController gc) {
 		this.gameController = gc;
-		this.size = size;
 
 		cameras.put(Perspective.CAM_DRONE, new Cam_Drone());
 		cameras.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer());
@@ -152,7 +151,8 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 
 	@Override
 	public void init() {
-		maze3D = new Maze3D(size.x, size.y);
+		int size_x = ArcadeWorld.TILES_X * TS, size_y = ArcadeWorld.TILES_Y * TS;
+		maze3D = new Maze3D(size_x, size_y);
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
 		maze3D.$resolution.addListener(this::onMazeResolutionChange);
@@ -181,13 +181,13 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 		livesCounter3D.getTransforms().add(new Translate(TS, TS, -HTS));
 		livesCounter3D.setVisible(gameController.credit() > 0);
 
-		levelCounter3D = new LevelCounter3D(r2D, size.x - TS, TS);
+		levelCounter3D = new LevelCounter3D(r2D, size_x - TS, TS);
 		levelCounter3D.update(game);
 
 		var world3D = new Group(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
 		world3D.getChildren().addAll(ghosts3D);
-		world3D.setTranslateX(-size.x / 2);
-		world3D.setTranslateY(-size.y / 2);
+		world3D.setTranslateX(-size_x / 2);
+		world3D.setTranslateY(-size_y / 2);
 
 		Group root = (Group) fxSubScene.getRoot();
 		root.getChildren().set(0, world3D);

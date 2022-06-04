@@ -32,7 +32,6 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.pacman.IntroController;
 import de.amr.games.pacman.controller.pacman.IntroController.State;
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.actors.GhostAnimation;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
@@ -63,8 +62,8 @@ public class PacMan_IntroScene extends GameScene2D {
 	private Pac2D pacMan2D;
 	private Ghost2D[] ghosts2D;
 
-	public PacMan_IntroScene(GameController gameController, V2i unscaledSize) {
-		super(gameController, unscaledSize);
+	public PacMan_IntroScene(GameController gameController) {
+		super(gameController);
 		sceneController = new IntroController(gameController);
 		context = sceneController.context();
 		sceneController.addStateChangeListener(this::onSceneStateChange);

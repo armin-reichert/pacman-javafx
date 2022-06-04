@@ -34,7 +34,6 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostAnimation;
@@ -119,8 +118,8 @@ public class PlayScene2D extends GameScene2D {
 
 	private final SceneInfo info = new SceneInfo();
 
-	public PlayScene2D(GameController gameController, V2i unscaledSize) {
-		super(gameController, unscaledSize);
+	public PlayScene2D(GameController gameController) {
+		super(gameController);
 	}
 
 	@Override

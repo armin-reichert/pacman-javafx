@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.pacman.Intermission1Controller;
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostAnimation;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
@@ -54,8 +53,8 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 	private Ghost2D blinky2D;
 	private BigPacMan2D bigPacMan2D;
 
-	public PacMan_IntermissionScene1(GameController gameController, V2i unscaledSize) {
-		super(gameController, unscaledSize);
+	public PacMan_IntermissionScene1(GameController gameController) {
+		super(gameController);
 		sceneController = new Intermission1Controller(gameController);
 		sceneController.playIntermissionSound = () -> SoundManager.get().loop(GameSound.INTERMISSION_1, 2);
 		context = sceneController.context();

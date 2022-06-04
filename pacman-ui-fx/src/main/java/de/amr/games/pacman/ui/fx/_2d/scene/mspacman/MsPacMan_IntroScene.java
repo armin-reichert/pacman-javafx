@@ -33,7 +33,6 @@ import de.amr.games.pacman.controller.mspacman.IntroController.Context;
 import de.amr.games.pacman.controller.mspacman.IntroController.State;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.SpriteAnimationMap;
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
@@ -61,8 +60,8 @@ public class MsPacMan_IntroScene extends GameScene2D {
 	private Pac2D msPacMan2D;
 	private Ghost2D[] ghosts2D;
 
-	public MsPacMan_IntroScene(GameController gameController, V2i unscaledSize) {
-		super(gameController, unscaledSize);
+	public MsPacMan_IntroScene(GameController gameController) {
+		super(gameController);
 		sceneController = new IntroController(gameController);
 		sceneController.addStateChangeListener(this::onSceneStateChanged);
 		context = sceneController.context();

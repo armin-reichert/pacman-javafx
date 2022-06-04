@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell;
 
 import static de.amr.games.pacman.lib.Logging.log;
-import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.ui.fx.scene.GameScenes.SCENE_2D;
 import static de.amr.games.pacman.ui.fx.scene.GameScenes.SCENE_3D;
 import static de.amr.games.pacman.ui.fx.shell.FlashMessageView.showFlashMessage;
@@ -34,9 +33,7 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameStateChangeEvent;
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
@@ -69,7 +66,6 @@ import javafx.stage.Stage;
  */
 public class GameUI extends GameEventAdapter {
 
-	public static final V2i GAME_SIZE = new V2i(ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y).scaled(TS);
 	public static final int MIN_FRAMERATE = 5, MAX_FRAMERATE = 120;
 
 	public static boolean debug;
@@ -96,7 +92,7 @@ public class GameUI extends GameEventAdapter {
 		scene.setOnMouseClicked(this::handleMouseClicked);
 		scene.setOnMouseMoved(this::handleMouseMoved);
 
-		gameScenes = new GameScenes(gameController, GAME_SIZE);
+		gameScenes = new GameScenes(gameController);
 		gameScenes.defineResizingBehavior(scene);
 		updateGameScene(gameController.state(), true);
 

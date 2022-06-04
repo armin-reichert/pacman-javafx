@@ -28,7 +28,6 @@ import de.amr.games.pacman.controller.pacman.Intermission2Controller;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.SpriteAnimation;
 import de.amr.games.pacman.lib.V2d;
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
@@ -60,8 +59,8 @@ public class PacMan_IntermissionScene2 extends GameScene2D {
 	private SpriteAnimation<Rectangle2D> blinkyStretchedAnimation;
 	private SpriteAnimation<Rectangle2D> blinkyDamagedAnimation;
 
-	public PacMan_IntermissionScene2(GameController gameController, V2i unscaledSize) {
-		super(gameController, unscaledSize);
+	public PacMan_IntermissionScene2(GameController gameController) {
+		super(gameController);
 		sceneController = new Intermission2Controller(gameController);
 		sceneController.playIntermissionSound = () -> SoundManager.get().play(GameSound.INTERMISSION_2);
 		context = sceneController.context();
