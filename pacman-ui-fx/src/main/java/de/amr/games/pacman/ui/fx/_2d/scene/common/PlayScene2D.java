@@ -235,10 +235,8 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	public void onSwitchFrom3DScene() {
-		pac2D.visible = pac2D.pac.visible;
 		pac2D.animations.animation(PacAnimation.MUNCHING).ensureRunning();
 		for (Ghost2D ghost2D : ghosts2D) {
-			ghost2D.visible = ghost2D.ghost.visible;
 			// TODO avoid casting
 			var animations = (GhostAnimationSet) ghost2D.animations;
 			animations.ensureAllRunning();

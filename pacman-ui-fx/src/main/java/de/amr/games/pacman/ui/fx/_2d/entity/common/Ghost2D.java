@@ -36,13 +36,14 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class Ghost2D extends GameEntity2D {
+public class Ghost2D {
 
+	public final GameModel game;
 	public final Ghost ghost;
 	public final SpriteAnimationSet<Ghost, GhostAnimation, Rectangle2D> animations;
 
 	public Ghost2D(Ghost ghost, GameModel game, SpriteAnimationSet<Ghost, GhostAnimation, Rectangle2D> animations) {
-		super(game);
+		this.game = game;
 		this.ghost = ghost;
 		this.animations = animations;
 		animations.selectAnimation(GhostAnimation.COLOR);
@@ -59,8 +60,9 @@ public class Ghost2D extends GameEntity2D {
 		animations.selectAnimation(key);
 	}
 
-	@Override
 	public void render(GraphicsContext g, Rendering2D r2D) {
-		r2D.drawEntity(g, ghost, animations.currentSprite(ghost));
+		if (ghost.visible) {
+			r2D.drawEntity(g, ghost, animations.currentSprite(ghost));
+		}
 	}
 }

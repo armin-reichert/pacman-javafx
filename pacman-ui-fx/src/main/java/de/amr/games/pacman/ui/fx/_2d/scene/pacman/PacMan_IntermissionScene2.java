@@ -77,7 +77,7 @@ public class PacMan_IntermissionScene2 extends GameScene2D {
 
 		pacMan2D = new Pac2D(context.pac, game, new PacAnimationSet(r2D));
 		blinky2D = new Ghost2D(context.blinky, game, new GhostAnimationSet(Ghost.RED_GHOST, r2D));
-		nail2D = new Nail2D(context.nail, game);
+		nail2D = new Nail2D(context.nail);
 		pacMan2D.animations.restart();
 		blinky2D.animations.restart();
 		blinkyStretchedAnimation = ((Spritesheet_PacMan) r2D).createBlinkyStretchedAnimation();

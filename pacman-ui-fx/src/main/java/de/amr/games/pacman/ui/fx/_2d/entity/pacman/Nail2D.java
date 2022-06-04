@@ -23,9 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.entity.pacman;
 
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Entity;
-import de.amr.games.pacman.ui.fx._2d.entity.common.GameEntity2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
 import javafx.geometry.Rectangle2D;
@@ -36,18 +34,16 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class Nail2D extends GameEntity2D {
+public class Nail2D {
 
 	private final Entity nail;
 	private final Rectangle2D nailSprite;
 
-	public Nail2D(Entity nail, GameModel game) {
-		super(game);
+	public Nail2D(Entity nail) {
 		this.nail = nail;
 		nailSprite = Spritesheet_PacMan.get().getNail();
 	}
 
-	@Override
 	public void render(GraphicsContext g, Rendering2D r2D) {
 		r2D.drawEntity(g, nail, nailSprite);
 	}

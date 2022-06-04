@@ -24,9 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.entity.pacman;
 
 import de.amr.games.pacman.lib.SpriteAnimation;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Pac;
-import de.amr.games.pacman.ui.fx._2d.entity.common.GameEntity2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
 import javafx.geometry.Rectangle2D;
@@ -37,13 +35,12 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class BigPacMan2D extends GameEntity2D {
+public class BigPacMan2D {
 
 	private final Pac pacMan;
 	private final SpriteAnimation<Rectangle2D> munchingAnimation;
 
-	public BigPacMan2D(Pac pacMan, GameModel game) {
-		super(game);
+	public BigPacMan2D(Pac pacMan) {
 		this.pacMan = pacMan;
 		munchingAnimation = Spritesheet_PacMan.get().createBigPacManMunchingAnimation();
 	}
@@ -52,7 +49,6 @@ public class BigPacMan2D extends GameEntity2D {
 		munchingAnimation.restart();
 	}
 
-	@Override
 	public void render(GraphicsContext g, Rendering2D r2D) {
 		Rectangle2D sprite = munchingAnimation.animate();
 		// lift it up such that it sits on the ground instead of being vertically

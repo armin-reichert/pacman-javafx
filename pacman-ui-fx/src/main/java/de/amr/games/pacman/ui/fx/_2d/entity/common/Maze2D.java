@@ -44,14 +44,16 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class Maze2D extends GameEntity2D {
+public class Maze2D {
 
+	public final GameModel game;
+	public double x, y;
 	private final TimedSeq<Boolean> energizerAnimation;
 	private final Timeline flashingAnimation;
 	private boolean brightPhase;
 
 	public Maze2D(GameModel game, int x, int y) {
-		super(game);
+		this.game = game;
 		this.x = x;
 		this.y = y;
 		energizerAnimation = TimedSeq.pulse().frameDuration(10);
@@ -67,7 +69,6 @@ public class Maze2D extends GameEntity2D {
 		return energizerAnimation;
 	}
 
-	@Override
 	public void render(GraphicsContext g, Rendering2D r2D) {
 		int mazeNumber = r2D.mazeNumber(game.level.number);
 		if (flashingAnimation.getStatus() == Status.RUNNING) {

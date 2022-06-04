@@ -23,9 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.entity.mspacman;
 
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Entity;
-import de.amr.games.pacman.ui.fx._2d.entity.common.GameEntity2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import javafx.scene.canvas.GraphicsContext;
@@ -35,16 +33,14 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class Heart2D extends GameEntity2D {
+public class Heart2D {
 
 	private final Entity heart;
 
-	public Heart2D(Entity heart, GameModel game) {
-		super(game);
+	public Heart2D(Entity heart) {
 		this.heart = heart;
 	}
 
-	@Override
 	public void render(GraphicsContext g, Rendering2D r2D) {
 		Spritesheet_MsPacMan.get().drawEntity(g, heart, Spritesheet_MsPacMan.get().getHeart());
 	}

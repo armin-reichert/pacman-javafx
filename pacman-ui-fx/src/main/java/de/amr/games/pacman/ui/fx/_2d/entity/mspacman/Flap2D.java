@@ -24,9 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.entity.mspacman;
 
 import de.amr.games.pacman.lib.SpriteAnimation;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.mspacman.Flap;
-import de.amr.games.pacman.ui.fx._2d.entity.common.GameEntity2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import javafx.geometry.Rectangle2D;
@@ -38,18 +36,16 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class Flap2D extends GameEntity2D {
+public class Flap2D {
 
 	private final Flap flap;
 	public final SpriteAnimation<Rectangle2D> animation;
 
-	public Flap2D(Flap flap, GameModel game) {
-		super(game);
+	public Flap2D(Flap flap) {
 		this.flap = flap;
 		animation = Spritesheet_MsPacMan.get().createFlapAnimation();
 	}
 
-	@Override
 	public void render(GraphicsContext g, Rendering2D r2D) {
 		if (flap.visible) {
 			Rectangle2D sprite = animation.animate();

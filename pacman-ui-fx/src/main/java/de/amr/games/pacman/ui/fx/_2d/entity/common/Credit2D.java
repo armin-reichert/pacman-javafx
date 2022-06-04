@@ -33,8 +33,10 @@ import javafx.scene.paint.Color;
 /**
  * @author Armin Reichert
  */
-public class Credit2D extends GameEntity2D {
+public class Credit2D {
 
+	public boolean visible;
+	public double x, y;
 	private final IntSupplier fnCredit;
 
 	public Credit2D(IntSupplier fnCredit, double x, double y) {
@@ -43,7 +45,6 @@ public class Credit2D extends GameEntity2D {
 		this.y = y;
 	}
 
-	@Override
 	public void render(GraphicsContext g, Rendering2D r2D) {
 		if (visible) {
 			g.setFont(r2D.getArcadeFont());

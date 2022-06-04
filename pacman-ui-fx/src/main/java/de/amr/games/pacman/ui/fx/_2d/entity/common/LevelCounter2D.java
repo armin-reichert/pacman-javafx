@@ -34,29 +34,31 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class LevelCounter2D extends GameEntity2D {
+public class LevelCounter2D {
 
+	public final GameModel game;
+	public boolean visible;
+	public double right_x, y;
 	public int maxLevels = 7;
 
 	/**
-	 * @param game the game
-	 * @param x    the RIGHT border x-coordinate of the counter!
-	 * @param y    the y-coordinate
+	 * @param game    the game
+	 * @param right_x the RIGHT border x-coordinate of the counter!
+	 * @param y       the y-coordinate
 	 */
-	public LevelCounter2D(GameModel game, double x, double y) {
-		super(game);
-		this.x = x;
+	public LevelCounter2D(GameModel game, double right_x, double y) {
+		this.game = game;
+		this.right_x = right_x;
 		this.y = y;
 	}
 
-	@Override
 	public void render(GraphicsContext g, Rendering2D r2D) {
 		if (visible) {
 			int first = Math.max(1, game.level.number - maxLevels + 1);
 			int last = game.level.number;
-			double xx = x;
-			for (int number = first; number <= last; ++number, xx -= t(2)) {
-				r2D.drawSprite(g, r2D.getSymbolSprite(game.levelCounter.get(number - 1)), xx, y);
+			double x = right_x;
+			for (int number = first; number <= last; ++number, x -= t(2)) {
+				r2D.drawSprite(g, r2D.getSymbolSprite(game.levelCounter.get(number - 1)), x, y);
 			}
 		}
 	}

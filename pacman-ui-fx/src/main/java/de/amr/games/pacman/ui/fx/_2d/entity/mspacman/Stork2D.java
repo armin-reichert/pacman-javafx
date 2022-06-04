@@ -24,9 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.entity.mspacman;
 
 import de.amr.games.pacman.lib.SpriteAnimation;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Entity;
-import de.amr.games.pacman.ui.fx._2d.entity.common.GameEntity2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import javafx.geometry.Rectangle2D;
@@ -37,19 +35,17 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class Stork2D extends GameEntity2D {
+public class Stork2D {
 
 	private final Entity stork;
 	private final SpriteAnimation<Rectangle2D> animation;
 
-	public Stork2D(Entity stork, GameModel game) {
-		super(game);
+	public Stork2D(Entity stork) {
 		this.stork = stork;
 		animation = Spritesheet_MsPacMan.get().createStorkFlyingAnimation();
 		animation.run();
 	}
 
-	@Override
 	public void render(GraphicsContext g, Rendering2D r2D) {
 		r2D.drawEntity(g, stork, animation.animate());
 	}

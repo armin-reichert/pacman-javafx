@@ -77,9 +77,9 @@ public class MsPacMan_IntermissionScene3 extends GameScene2D {
 		levelCounter2D = new LevelCounter2D(game, unscaledSize.x - t(3), unscaledSize.y - t(2));
 		msPacMan2D = new Pac2D(context.msPacMan, game, new PacAnimationSet(r2D));
 		msPacMansHusband2D = new Pac2D(context.pacMan, game, new MsPacMansHusbandAnimations(Spritesheet_MsPacMan.get()));
-		flap2D = new Flap2D(context.flap, game);
-		stork2D = new Stork2D(context.stork, game);
-		bag2D = new JuniorBag2D(context.bag, game);
+		flap2D = new Flap2D(context.flap);
+		stork2D = new Stork2D(context.stork);
+		bag2D = new JuniorBag2D(context.bag);
 	}
 
 	@Override

@@ -37,20 +37,22 @@ import javafx.scene.canvas.GraphicsContext;
  * 
  * @author Armin Reichert
  */
-public class Pac2D extends GameEntity2D {
+public class Pac2D {
 
+	public final GameModel game;
 	public final Pac pac;
 	public final SpriteAnimationSet<Pac, PacAnimation, Rectangle2D> animations;
 
 	public Pac2D(Pac pac, GameModel game, PacAnimationSet animations) {
-		super(game);
+		this.game = game;
 		this.pac = pac;
 		this.animations = animations;
 		animations.selectAnimation(PacAnimation.MUNCHING);
 	}
 
-	@Override
 	public void render(GraphicsContext g, Rendering2D r2D) {
-		r2D.drawEntity(g, pac, animations.currentSprite(pac));
+		if (pac.visible) {
+			r2D.drawEntity(g, pac, animations.currentSprite(pac));
+		}
 	}
 }
