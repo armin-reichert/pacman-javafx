@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import de.amr.games.pacman.lib.SpriteAnimationSet;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.actors.PacAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimationSet;
@@ -39,20 +38,16 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class Pac2D {
 
-	public final GameModel game;
 	public final Pac pac;
 	public final SpriteAnimationSet<Pac, PacAnimation, Rectangle2D> animations;
 
-	public Pac2D(Pac pac, GameModel game, PacAnimationSet animations) {
-		this.game = game;
+	public Pac2D(Pac pac, PacAnimationSet animations) {
 		this.pac = pac;
 		this.animations = animations;
 		animations.selectAnimation(PacAnimation.MUNCHING);
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
-		if (pac.visible) {
-			r2D.drawEntity(g, pac, animations.currentSprite(pac));
-		}
+		r2D.drawEntity(g, pac, animations.currentSprite(pac));
 	}
 }

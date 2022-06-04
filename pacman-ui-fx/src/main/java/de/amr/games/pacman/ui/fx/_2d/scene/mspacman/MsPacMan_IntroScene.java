@@ -74,7 +74,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		createCommonParts(game);
 		score2D.showScore = false;
 		credit2D.visible = true;
-		msPacMan2D = new Pac2D(context.msPacMan, game, new PacAnimationSet(r2D));
+		msPacMan2D = new Pac2D(context.msPacMan, new PacAnimationSet(r2D));
 		ghosts2D = Stream.of(context.ghosts).map(ghost -> new Ghost2D(ghost, new GhostAnimationSet(ghost.id, r2D)))
 				.toArray(Ghost2D[]::new);
 	}

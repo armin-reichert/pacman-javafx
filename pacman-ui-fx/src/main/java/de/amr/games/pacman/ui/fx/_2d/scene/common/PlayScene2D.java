@@ -145,7 +145,7 @@ public class PlayScene2D extends GameScene2D {
 
 		maze2D = new Maze2D(game, 0, t(3));
 
-		pac2D = new Pac2D(game.pac, game, new PacAnimationSet(r2D));
+		pac2D = new Pac2D(game.pac, new PacAnimationSet(r2D));
 		for (Ghost ghost : game.ghosts) {
 			ghosts2D[ghost.id] = new Ghost2D(ghost, new GhostAnimationSet(ghost.id, r2D));
 		}
