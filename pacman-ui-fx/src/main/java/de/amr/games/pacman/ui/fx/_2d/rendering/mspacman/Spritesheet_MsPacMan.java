@@ -199,6 +199,17 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
+	public SpriteAnimation<Image> createMazeFlashingAnimation(int mazeNumber) {
+		int mazeIndex = mazeNumber - 1;
+		var mazeEmpty = subImage(228, 248 * mazeIndex, 226, 248);
+		var brightImage = U.colorsExchanged(mazeEmpty, Map.of( //
+				MAZE_SIDE_COLORS[mazeIndex], Color.WHITE, //
+				MAZE_TOP_COLORS[mazeIndex], Color.BLACK) //
+		);
+		return new SpriteAnimation<>(brightImage, mazeEmpty).frameDuration(15);
+	}
+
+	@Override
 	public void drawMazeFull(GraphicsContext g, int mazeNumber, double x, double y) {
 		drawSprite(g, mazeFullSprites[mazeNumber - 1], x, y);
 	}

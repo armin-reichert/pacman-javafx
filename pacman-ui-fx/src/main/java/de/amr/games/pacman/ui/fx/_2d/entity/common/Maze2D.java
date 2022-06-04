@@ -26,18 +26,16 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
+import de.amr.games.pacman.lib.SpriteAnimation;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameLevel;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.DebugDraw;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Env;
-import javafx.animation.Animation.Status;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.util.Duration;
 
 /**
  * 2D representation of the maze. Implements the flashing animation played on the end of each level.
@@ -47,23 +45,21 @@ import javafx.util.Duration;
 public class Maze2D {
 
 	public double x, y;
-	private final GameLevel level;
+	private final GameModel game;
 	private final TimedSeq<Boolean> energizerAnimation;
-	private final Timeline flashingAnimation;
-	private boolean brightPhase;
+	private SpriteAnimation<Image> flashingAnim;
 
-	public Maze2D(GameLevel level, int x, int y) {
-		this.level = level;
+	public Maze2D(GameModel game, int x, int y, SpriteAnimation<Image> flashingAnim) {
+		this.game = game;
 		this.x = x;
 		this.y = y;
 		energizerAnimation = TimedSeq.pulse().frameDuration(10);
-		// TODO find some simpler solution
-		flashingAnimation = new Timeline(new KeyFrame(Duration.millis(200), e -> brightPhase = !brightPhase));
-		flashingAnimation.setCycleCount(2 * level.numFlashes);
+		this.flashingAnim = flashingAnim;
 	}
 
-	public Timeline getFlashingAnimation() {
-		return flashingAnimation;
+	public void startFlashing(int numFlashes) {
+		flashingAnim.repetitions(numFlashes);
+		flashingAnim.restart();
 	}
 
 	public TimedSeq<Boolean> getEnergizerAnimation() {
@@ -71,26 +67,23 @@ public class Maze2D {
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
-		int mazeNumber = r2D.mazeNumber(level.number);
-		if (flashingAnimation.getStatus() == Status.RUNNING) {
-			if (brightPhase) {
-				r2D.drawMazeBright(g, mazeNumber, x, y);
-			} else {
-				r2D.drawMazeEmpty(g, mazeNumber, x, y);
-			}
+		int mazeNumber = r2D.mazeNumber(game.level.number);
+		if (flashingAnim.isRunning()) {
+			g.drawImage(flashingAnim.animate(), x, y);
 		} else {
 			r2D.drawMazeFull(g, mazeNumber, x, y);
 			Color hiddenColor = Color.BLACK;
 			if (!energizerAnimation.animate()) { // dark phase
 				g.setFill(hiddenColor);
-				level.world.energizerTiles().forEach(tile -> fillTile(g, tile, hiddenColor));
+				game.level.world.energizerTiles().forEach(tile -> fillTile(g, tile, hiddenColor));
 			}
-			level.world.tiles().filter(level.world::containsEatenFood).forEach(tile -> fillTile(g, tile, hiddenColor));
+			game.level.world.tiles().filter(game.level.world::containsEatenFood)
+					.forEach(tile -> fillTile(g, tile, hiddenColor));
 			if (Env.$tilesVisible.get()) {
 				DebugDraw.drawTileBorders(g);
 			}
 			if (Env.$tilesVisible.get()) {
-				level.world.tiles().filter(level.world::isIntersection).forEach(tile -> {
+				game.level.world.tiles().filter(game.level.world::isIntersection).forEach(tile -> {
 					strokeTile(g, tile, Color.RED);
 				});
 			}
@@ -106,5 +99,4 @@ public class Maze2D {
 		g.setStroke(color);
 		g.strokeRect(t(tile.x) + 0.2, t(tile.y) + 0.2, TS - 0.2, TS - 0.2);
 	}
-
 }

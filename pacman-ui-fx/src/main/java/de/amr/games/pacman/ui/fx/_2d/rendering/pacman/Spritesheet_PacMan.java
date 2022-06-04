@@ -136,6 +136,12 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
+	public SpriteAnimation<Image> createMazeFlashingAnimation(int mazeNumber) {
+		var brightImage = U.colorsExchanged(mazeEmpty, Map.of(MAZE_WALL_COLOR, Color.WHITE));
+		return new SpriteAnimation<>(brightImage, mazeEmpty).frameDuration(15);
+	}
+
+	@Override
 	public void drawMazeFull(GraphicsContext g, int mazeNumber, double x, double y) {
 		g.drawImage(mazeFull, x, y);
 	}

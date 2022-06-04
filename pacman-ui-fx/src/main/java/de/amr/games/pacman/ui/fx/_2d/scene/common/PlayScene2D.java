@@ -63,7 +63,6 @@ import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.util.Duration;
 
 /**
  * 2D scene displaying the maze and the game play.
@@ -143,7 +142,7 @@ public class PlayScene2D extends GameScene2D {
 		levelCounter2D = new LevelCounter2D(game.levelCounter, unscaledSize.x - t(4), unscaledSize.y - t(2));
 		levelCounter2D.visible = hasCredit;
 
-		maze2D = new Maze2D(game.level, 0, t(3));
+		maze2D = new Maze2D(game, 0, t(3), r2D.createMazeFlashingAnimation(r2D.mazeNumber(game.level.number)));
 
 		pac2D = new Pac2D(game.pac, new PacAnimationSet(r2D));
 		for (Ghost ghost : game.ghosts) {
@@ -342,15 +341,14 @@ public class PlayScene2D extends GameScene2D {
 			pac2D.animations.reset();
 			// Energizers can still exist if "next level" cheat has been used
 			maze2D.getEnergizerAnimation().reset();
-			Animation animation = new SequentialTransition( //
-					maze2D.getFlashingAnimation(), //
-					pauseSec(1, () -> gameController.state().timer().expire()) //
-			);
-			animation.setDelay(Duration.seconds(2));
-			animation.play();
+			new SequentialTransition( //
+					pauseSec(2, () -> maze2D.startFlashing(game.level.numFlashes)), //
+					pauseSec(4, () -> {
+						gameController.state().timer().expire();
+					}) //
+			).play();
 		}
 		case LEVEL_STARTING -> {
-			maze2D.getFlashingAnimation().setCycleCount(2 * game.level.numFlashes);
 			gameController.state().timer().setDurationSeconds(1);
 			gameController.state().timer().start();
 		}

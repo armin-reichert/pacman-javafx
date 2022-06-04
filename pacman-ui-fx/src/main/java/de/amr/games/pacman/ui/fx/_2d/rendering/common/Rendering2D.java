@@ -31,6 +31,7 @@ import de.amr.games.pacman.lib.SpriteAnimationMap;
 import de.amr.games.pacman.model.common.actors.Entity;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -70,6 +71,8 @@ public interface Rendering2D {
 	SpriteAnimation<Rectangle2D> createGhostFlashingAnimation();
 
 	SpriteAnimationMap<Direction, Rectangle2D> createGhostEyesAnimation();
+
+	SpriteAnimation<Image> createMazeFlashingAnimation(int mazeNumber);
 
 	// Maze
 
