@@ -79,7 +79,9 @@ public class PacManGameAppFX extends Application {
 		log("Starting application...");
 
 		var aspectRatio = (double) ArcadeWorld.TILES_X / (double) ArcadeWorld.TILES_Y;
-		var width = options.windowHeight * aspectRatio;
+		// HACK: I multiply with 0.97 to make the size identical to the Mame emulator.
+		// The aspect ratio should not be applied to the window size but to the canvas size!
+		var width = options.windowHeight * aspectRatio * 0.97;
 		var height = options.windowHeight;
 
 		ui = new GameUI(gameController, stage, width, height);
