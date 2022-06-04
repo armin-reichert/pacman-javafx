@@ -135,7 +135,7 @@ public class SectionGame extends Section {
 		btnsIntermissionTest[1].setDisable(gc.state() != GameState.INTERMISSION_TEST);
 
 		spinnerGameLevel.getValueFactory().setValue(game().level.number);
-		if (!gc.isGameRunning()) {
+		if (!gc.isGameRunning() || gc.state() == GameState.LEVEL_STARTING) {
 			spinnerGameLevel.setDisable(true);
 		} else {
 			spinnerGameLevel.setDisable(

@@ -76,7 +76,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 	@Override
 	public void init() {
 		sceneController.restartInInitialState(Intermission1Controller.State.FLAP);
-		levelCounter2D = new LevelCounter2D(game, unscaledSize.x - t(3), unscaledSize.y - t(2));
+		levelCounter2D = new LevelCounter2D(game.levelCounter, unscaledSize.x - t(3), unscaledSize.y - t(2));
 		flap2D = new Flap2D(context.flap);
 		msPacMan2D = new Pac2D(context.msPac, new PacAnimationSet(r2D));
 		msPacMansHusband2D = new Pac2D(context.pacMan, new MsPacMansHusbandAnimations(Spritesheet_MsPacMan.get()));

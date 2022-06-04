@@ -292,6 +292,9 @@ public class GameUI extends GameEventAdapter {
 	}
 
 	public void enterLevel(int levelNumber) {
+		if (gameController.state() == GameState.LEVEL_STARTING) {
+			return;
+		}
 		if (gameController.game().level.number == levelNumber) {
 			return;
 		}

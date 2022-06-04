@@ -25,7 +25,8 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import de.amr.games.pacman.model.common.GameModel;
+import java.util.List;
+
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -36,29 +37,28 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class LevelCounter2D {
 
-	public final GameModel game;
+	private final List<Integer> levelCounter;
 	public boolean visible;
 	public double right_x, y;
-	public int maxLevels = 7;
 
 	/**
 	 * @param game    the game
 	 * @param right_x the RIGHT border x-coordinate of the counter!
 	 * @param y       the y-coordinate
 	 */
-	public LevelCounter2D(GameModel game, double right_x, double y) {
-		this.game = game;
+	public LevelCounter2D(List<Integer> levelCounter, double right_x, double y) {
+		this.levelCounter = levelCounter;
 		this.right_x = right_x;
 		this.y = y;
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
-		if (visible) {
-			int first = Math.max(1, game.level.number - maxLevels + 1);
-			int last = game.level.number;
+		if (visible && !levelCounter.isEmpty()) {
 			double x = right_x;
-			for (int number = first; number <= last; ++number, x -= t(2)) {
-				r2D.drawSprite(g, r2D.getSymbolSprite(game.levelCounter.get(number - 1)), x, y);
+			for (int i = 0; i < Math.min(7, levelCounter.size()); ++i) {
+				int symbol = levelCounter.get(i);
+				r2D.drawSprite(g, r2D.getSymbolSprite(symbol), x, y);
+				x -= t(2);
 			}
 		}
 	}
