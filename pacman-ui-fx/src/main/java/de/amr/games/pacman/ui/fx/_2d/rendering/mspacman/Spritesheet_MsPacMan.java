@@ -42,18 +42,17 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
- * Ms. Pac-Man game-specific rendering.
+ * Ms. Pac-Man game spritsheet renderer.
  * 
  * @author Armin Reichert
  */
-public class Rendering2D_MsPacMan implements Rendering2D {
+public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 
-	private static Rendering2D_MsPacMan cmonManYouKnowTheThing;
+	private static Spritesheet_MsPacMan cmonManYouKnowTheThing;
 
-	public static Rendering2D_MsPacMan get() {
+	public static Spritesheet_MsPacMan get() {
 		if (cmonManYouKnowTheThing == null) {
-			cmonManYouKnowTheThing = new Rendering2D_MsPacMan("/mspacman/graphics/sprites.png", 16, //
-					Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
+			cmonManYouKnowTheThing = new Spritesheet_MsPacMan();
 		}
 		return cmonManYouKnowTheThing;
 	}
@@ -94,7 +93,6 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 	};
 	//@formatter:on
 
-	private final Spritesheet ss;
 	private final Image midwayLogo;
 	private final Rectangle2D[] mazeFullSprites;
 	private final Rectangle2D[] mazeEmptySprites;
@@ -104,8 +102,9 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 	private final Map<Integer, Rectangle2D> bountyNumberSprites;
 	private final Font font;
 
-	private Rendering2D_MsPacMan(String path, int rasterSize, Direction... dirOrder) {
-		ss = new Spritesheet(path, rasterSize, dirOrder);
+	private Spritesheet_MsPacMan() {
+		super("/mspacman/graphics/sprites.png", 16, //
+				Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 		font = U.font("/common/emulogic.ttf", 8);
 		midwayLogo = U.image("/mspacman/graphics/midway.png");
 
@@ -145,12 +144,17 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 			mazeFullSprites[mazeIndex] = new Rectangle2D(0, 248 * mazeIndex, 226, 248);
 			var mazeEmptyRegion = new Rectangle2D(228, 248 * mazeIndex, 226, 248);
 			mazeEmptySprites[mazeIndex] = mazeEmptyRegion;
-			var mazeFlashImage = U.colorsExchanged(ss.image(mazeEmptyRegion), Map.of( //
+			var mazeFlashImage = U.colorsExchanged(image(mazeEmptyRegion), Map.of( //
 					MAZE_SIDE_COLORS[mazeIndex], Color.WHITE, //
 					MAZE_TOP_COLORS[mazeIndex], Color.BLACK) //
 			);
 			mazeFlashImages[mazeIndex] = mazeFlashImage;
 		}
+	}
+
+	@Override
+	public Spritesheet getSpritesheet() {
+		return this;
 	}
 
 	/**
@@ -159,12 +163,7 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 	 * @return Sprite at given row and column from the right-hand-side of the spritesheet
 	 */
 	public Rectangle2D rhs(int col, int row) {
-		return ss.r(456, 0, col, row, 1, 1);
-	}
-
-	@Override
-	public Spritesheet spritesheet() {
-		return ss;
+		return r(456, 0, col, row, 1, 1);
 	}
 
 	@Override
@@ -247,7 +246,7 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 	public SpriteAnimationMap<Direction, Rectangle2D> createPacMunchingAnimations() {
 		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
-			int d = ss.dirOrder(dir);
+			int d = dirOrder(dir);
 			Rectangle2D wide_open = rhs(0, d), open = rhs(1, d), closed = rhs(2, d);
 			var munching = new SpriteAnimation<>(open, wide_open, open, closed).frameDuration(2).endless();
 			map.put(dir, munching);
@@ -266,7 +265,7 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 	public SpriteAnimationMap<Direction, Rectangle2D> createGhostColorAnimation(int ghostID) {
 		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
-			int d = ss.dirOrder(dir);
+			int d = dirOrder(dir);
 			var kicking = new SpriteAnimation<>(rhs(2 * d, 4 + ghostID), rhs(2 * d + 1, 4 + ghostID)).frameDuration(8)
 					.endless();
 			map.put(dir, kicking);
@@ -288,7 +287,7 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 	public SpriteAnimationMap<Direction, Rectangle2D> createGhostEyesAnimation() {
 		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
-			int d = ss.dirOrder(dir);
+			int d = dirOrder(dir);
 			map.put(dir, new SpriteAnimation<>(rhs(8 + d, 5)));
 		}
 		return map;
@@ -303,7 +302,7 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 	public SpriteAnimationMap<Direction, Rectangle2D> createHusbandMunchingAnimations() {
 		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
-			int d = ss.dirOrder(dir);
+			int d = dirOrder(dir);
 			map.put(dir, new SpriteAnimation<>(rhs(0, 9 + d), rhs(1, 9 + d), rhs(2, 9)).frameDuration(2).endless());
 		}
 		return map;

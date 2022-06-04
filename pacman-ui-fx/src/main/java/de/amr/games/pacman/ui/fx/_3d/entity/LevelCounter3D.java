@@ -63,7 +63,7 @@ public class LevelCounter3D extends Group {
 		double x = rightPosition.x, y = rightPosition.y;
 		for (int levelNumber = firstLevelNumber; levelNumber <= game.level.number; ++levelNumber) {
 			int symbol = game.levelCounter.get(levelNumber - 1);
-			Image symbolImage = r2D.spritesheet().image(r2D.getSymbolSprite(symbol));
+			Image symbolImage = r2D.getSpritesheet().image(r2D.getSymbolSprite(symbol));
 			Box cube = createSpinningCube(symbolImage, levelNumber % 2 == 0);
 			cube.setTranslateX(x);
 			cube.setTranslateY(y);

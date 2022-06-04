@@ -49,7 +49,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Maze2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.MyGhostAnimationSet;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.MyPacAnimationSet;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -151,7 +151,7 @@ public class PlayScene2D extends GameScene2D {
 		}
 		bonus2D = new Bonus2D(game::bonus);
 		if (game.variant == GameVariant.MS_PACMAN) {
-			bonus2D.setJumpAnimation(Rendering2D_MsPacMan.get().createBonusJumpAnimation());
+			bonus2D.setJumpAnimation(Spritesheet_MsPacMan.get().createBonusJumpAnimation());
 		}
 	}
 

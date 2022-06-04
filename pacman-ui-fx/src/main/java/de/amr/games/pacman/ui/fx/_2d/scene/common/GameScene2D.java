@@ -34,8 +34,8 @@ import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Credit2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
-import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -101,8 +101,8 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 	public void setGame(GameModel game) {
 		this.game = game;
 		r2D = switch (game.variant) {
-		case MS_PACMAN -> Rendering2D_MsPacMan.get();
-		case PACMAN -> Rendering2D_PacMan.get();
+		case MS_PACMAN -> Spritesheet_MsPacMan.get();
+		case PACMAN -> Spritesheet_PacMan.get();
 		};
 		SoundManager.get().stopAll(); // TODO: check this
 		SoundManager.get().selectGameVariant(game.variant);

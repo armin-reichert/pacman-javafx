@@ -41,18 +41,17 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
- * Pac-Man game-specific rendering.
+ * Pac-Man game spritesheet renderer.
  * 
  * @author Armin Reichert
  */
-public class Rendering2D_PacMan implements Rendering2D {
+public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 
-	private static Rendering2D_PacMan cmonManYouKnowTheThing;
+	private static Spritesheet_PacMan cmonManYouKnowTheThing;
 
-	public static Rendering2D_PacMan get() {
+	public static Spritesheet_PacMan get() {
 		if (cmonManYouKnowTheThing == null) {
-			cmonManYouKnowTheThing = new Rendering2D_PacMan("/pacman/graphics/sprites.png", 16, Direction.RIGHT,
-					Direction.LEFT, Direction.UP, Direction.DOWN);
+			cmonManYouKnowTheThing = new Spritesheet_PacMan();
 		}
 		return cmonManYouKnowTheThing;
 	}
@@ -69,15 +68,15 @@ public class Rendering2D_PacMan implements Rendering2D {
 	private static final Color MAZE_WALL_COLOR = Color.rgb(33, 33, 255);
 	private static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
 
-	private final Spritesheet ss;
 	private final Image mazeFull, mazeEmpty, mazeFlashing;
 	private final Map<Integer, Rectangle2D> symbolSprites;
 	private final Map<Integer, Rectangle2D> bonusValueSprites;
 	private final Map<Integer, Rectangle2D> bountyNumberSprites;
 	private final Font font;
 
-	private Rendering2D_PacMan(String path, int rasterSize, Direction... dirOrder) {
-		ss = new Spritesheet(path, rasterSize, dirOrder);
+	private Spritesheet_PacMan() {
+		super("/pacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
+
 		font = U.font("/common/emulogic.ttf", 8);
 
 		mazeFull = U.image("/pacman/graphics/maze_full.png");
@@ -86,39 +85,39 @@ public class Rendering2D_PacMan implements Rendering2D {
 
 		//@formatter:off
 		symbolSprites = Map.of(
-			PacManGame.CHERRIES,   ss.r(2, 3),
-			PacManGame.STRAWBERRY, ss.r(3, 3),
-			PacManGame.PEACH,      ss.r(4, 3),
-			PacManGame.APPLE,      ss.r(5, 3),
-			PacManGame.GRAPES,     ss.r(6, 3),
-			PacManGame.GALAXIAN,   ss.r(7, 3),
-			PacManGame.BELL,       ss.r(8, 3),
-			PacManGame.KEY,        ss.r(9, 3)
+			PacManGame.CHERRIES,   r(2, 3),
+			PacManGame.STRAWBERRY, r(3, 3),
+			PacManGame.PEACH,      r(4, 3),
+			PacManGame.APPLE,      r(5, 3),
+			PacManGame.GRAPES,     r(6, 3),
+			PacManGame.GALAXIAN,   r(7, 3),
+			PacManGame.BELL,       r(8, 3),
+			PacManGame.KEY,        r(9, 3)
 		);
 
 		bonusValueSprites = Map.of(
-			100,  ss.r(0, 9, 1, 1),
-			300,  ss.r(1, 9, 1, 1),
-			500,  ss.r(2, 9, 1, 1),
-			700,  ss.r(3, 9, 1, 1),
-			1000, ss.r(4, 9, 2, 1), // left-aligned 
-			2000, ss.r(3, 10, 3, 1),
-			3000, ss.r(3, 11, 3, 1),
-			5000, ss.r(3, 12, 3, 1)
+			100,  r(0, 9, 1, 1),
+			300,  r(1, 9, 1, 1),
+			500,  r(2, 9, 1, 1),
+			700,  r(3, 9, 1, 1),
+			1000, r(4, 9, 2, 1), // left-aligned 
+			2000, r(3, 10, 3, 1),
+			3000, r(3, 11, 3, 1),
+			5000, r(3, 12, 3, 1)
 		);
 		
 		bountyNumberSprites = Map.of(
-			200,  ss.r(0, 8, 1, 1),
-			400,  ss.r(1, 8, 1, 1),
-			800,  ss.r(2, 8, 1, 1),
-			1600, ss.r(3, 8, 1, 1)
+			200,  r(0, 8, 1, 1),
+			400,  r(1, 8, 1, 1),
+			800,  r(2, 8, 1, 1),
+			1600, r(3, 8, 1, 1)
 		);
 		//@formatter:on
 	}
 
 	@Override
-	public Spritesheet spritesheet() {
-		return ss;
+	public Spritesheet getSpritesheet() {
+		return this;
 	}
 
 	@Override
@@ -167,7 +166,7 @@ public class Rendering2D_PacMan implements Rendering2D {
 
 	@Override
 	public Rectangle2D getLifeSprite() {
-		return ss.r(8, 1);
+		return r(8, 1);
 	}
 
 	@Override
@@ -189,8 +188,8 @@ public class Rendering2D_PacMan implements Rendering2D {
 	public SpriteAnimationMap<Direction, Rectangle2D> createPacMunchingAnimations() {
 		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
-			int d = ss.dirOrder(dir);
-			Rectangle2D wide_open = ss.r(0, d), open = ss.r(1, d), closed = ss.r(2, 0);
+			int d = dirOrder(dir);
+			Rectangle2D wide_open = r(0, d), open = r(1, d), closed = r(2, 0);
 			SpriteAnimation<Rectangle2D> animation = new SpriteAnimation<>(closed, open, wide_open, open).frameDuration(2)
 					.endless();
 			map.put(dir, animation);
@@ -200,16 +199,16 @@ public class Rendering2D_PacMan implements Rendering2D {
 
 	@Override
 	public SpriteAnimation<Rectangle2D> createPacDyingAnimation() {
-		return new SpriteAnimation<>(ss.r(3, 0), ss.r(4, 0), ss.r(5, 0), ss.r(6, 0), ss.r(7, 0), ss.r(8, 0), ss.r(9, 0),
-				ss.r(10, 0), ss.r(11, 0), ss.r(12, 0), ss.r(13, 0)).frameDuration(8);
+		return new SpriteAnimation<>(r(3, 0), r(4, 0), r(5, 0), r(6, 0), r(7, 0), r(8, 0), r(9, 0), r(10, 0), r(11, 0),
+				r(12, 0), r(13, 0)).frameDuration(8);
 	}
 
 	@Override
 	public SpriteAnimationMap<Direction, Rectangle2D> createGhostColorAnimation(int ghostID) {
 		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
-			int d = ss.dirOrder(dir);
-			var animation = new SpriteAnimation<>(ss.r(2 * d, 4 + ghostID), ss.r(2 * d + 1, 4 + ghostID)).frameDuration(8)
+			int d = dirOrder(dir);
+			var animation = new SpriteAnimation<>(r(2 * d, 4 + ghostID), r(2 * d + 1, 4 + ghostID)).frameDuration(8)
 					.endless();
 			map.put(dir, animation);
 		}
@@ -218,20 +217,20 @@ public class Rendering2D_PacMan implements Rendering2D {
 
 	@Override
 	public SpriteAnimation<Rectangle2D> createGhostBlueAnimation() {
-		return new SpriteAnimation<>(ss.r(8, 4), ss.r(9, 4)).frameDuration(8).endless();
+		return new SpriteAnimation<>(r(8, 4), r(9, 4)).frameDuration(8).endless();
 	}
 
 	@Override
 	public SpriteAnimation<Rectangle2D> createGhostFlashingAnimation() {
-		return new SpriteAnimation<>(ss.r(8, 4), ss.r(9, 4), ss.r(10, 4), ss.r(11, 4)).frameDuration(6);
+		return new SpriteAnimation<>(r(8, 4), r(9, 4), r(10, 4), r(11, 4)).frameDuration(6);
 	}
 
 	@Override
 	public SpriteAnimationMap<Direction, Rectangle2D> createGhostEyesAnimation() {
 		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
-			int d = ss.dirOrder(dir);
-			map.put(dir, new SpriteAnimation<>(ss.r(8 + d, 5)));
+			int d = dirOrder(dir);
+			map.put(dir, new SpriteAnimation<>(r(8 + d, 5)));
 		}
 		return map;
 	}
@@ -239,26 +238,26 @@ public class Rendering2D_PacMan implements Rendering2D {
 	// Pac-Man specific:
 
 	public Rectangle2D getNail() {
-		return ss.r(8, 6);
+		return r(8, 6);
 	}
 
 	public SpriteAnimation<Rectangle2D> createBigPacManMunchingAnimation() {
-		return new SpriteAnimation<>(ss.r(2, 1, 2, 2), ss.r(4, 1, 2, 2), ss.r(6, 1, 2, 2)).frameDuration(4).endless();
+		return new SpriteAnimation<>(r(2, 1, 2, 2), r(4, 1, 2, 2), r(6, 1, 2, 2)).frameDuration(4).endless();
 	}
 
 	public SpriteAnimation<Rectangle2D> createBlinkyStretchedAnimation() {
-		return new SpriteAnimation<>(ss.r(9, 6), ss.r(10, 6), ss.r(11, 6), ss.r(12, 6));
+		return new SpriteAnimation<>(r(9, 6), r(10, 6), r(11, 6), r(12, 6));
 	}
 
 	public SpriteAnimation<Rectangle2D> createBlinkyDamagedAnimation() {
-		return new SpriteAnimation<>(ss.r(8, 7), ss.r(9, 7));
+		return new SpriteAnimation<>(r(8, 7), r(9, 7));
 	}
 
 	public SpriteAnimation<Rectangle2D> createBlinkyPatchedAnimation() {
-		return new SpriteAnimation<>(ss.r(10, 7), ss.r(11, 7)).frameDuration(4).endless();
+		return new SpriteAnimation<>(r(10, 7), r(11, 7)).frameDuration(4).endless();
 	}
 
 	public SpriteAnimation<Rectangle2D> createBlinkyNakedAnimation() {
-		return new SpriteAnimation<>(ss.r(8, 8, 2, 1), ss.r(10, 8, 2, 1)).frameDuration(4).endless();
+		return new SpriteAnimation<>(r(8, 8, 2, 1), r(10, 8, 2, 1)).frameDuration(4).endless();
 	}
 }

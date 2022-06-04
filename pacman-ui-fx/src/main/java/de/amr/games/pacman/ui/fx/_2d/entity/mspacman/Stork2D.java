@@ -28,7 +28,7 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameEntity2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -45,7 +45,7 @@ public class Stork2D extends GameEntity2D {
 	public Stork2D(Entity stork, GameModel game) {
 		super(game);
 		this.stork = stork;
-		animation = Rendering2D_MsPacMan.get().createStorkFlyingAnimation();
+		animation = Spritesheet_MsPacMan.get().createStorkFlyingAnimation();
 		animation.run();
 	}
 

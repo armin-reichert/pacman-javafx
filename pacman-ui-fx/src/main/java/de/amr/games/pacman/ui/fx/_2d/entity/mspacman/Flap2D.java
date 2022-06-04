@@ -28,7 +28,7 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.mspacman.Flap;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameEntity2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -46,15 +46,15 @@ public class Flap2D extends GameEntity2D {
 	public Flap2D(Flap flap, GameModel game) {
 		super(game);
 		this.flap = flap;
-		animation = Rendering2D_MsPacMan.get().createFlapAnimation();
+		animation = Spritesheet_MsPacMan.get().createFlapAnimation();
 	}
 
 	@Override
 	public void render(GraphicsContext g, Rendering2D r2D) {
 		if (flap.visible) {
 			Rectangle2D sprite = animation.animate();
-			Rendering2D_MsPacMan.get().drawEntity(g, flap, sprite);
-			g.setFont(Rendering2D_MsPacMan.get().getArcadeFont());
+			Spritesheet_MsPacMan.get().drawEntity(g, flap, sprite);
+			g.setFont(Spritesheet_MsPacMan.get().getArcadeFont());
 			g.setFill(Color.rgb(222, 222, 255));
 			g.fillText(String.valueOf(flap.number), flap.position.x + sprite.getWidth() - 25, flap.position.y + 18);
 			g.fillText(flap.text, flap.position.x + sprite.getWidth(), flap.position.y);

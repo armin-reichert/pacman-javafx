@@ -52,7 +52,7 @@ public class Spritesheet {
 		return dirOrder[dir.ordinal()];
 	}
 
-	public Image getImage() {
+	public Image getSourceImage() {
 		return image;
 	}
 

@@ -41,7 +41,7 @@ import javafx.scene.text.Font;
  */
 public interface Rendering2D {
 
-	Spritesheet spritesheet();
+	Spritesheet getSpritesheet();
 
 	Font getArcadeFont();
 
@@ -118,8 +118,8 @@ public interface Rendering2D {
 	 * @param y left upper corner y
 	 */
 	default void drawSprite(GraphicsContext g, Rectangle2D s, double x, double y) {
-		g.drawImage(spritesheet().getImage(), s.getMinX(), s.getMinY(), s.getWidth(), s.getHeight(), x, y, s.getWidth(),
-				s.getHeight());
+		g.drawImage(getSpritesheet().getSourceImage(), s.getMinX(), s.getMinY(), s.getWidth(), s.getHeight(), x, y,
+				s.getWidth(), s.getHeight());
 	}
 
 	/**

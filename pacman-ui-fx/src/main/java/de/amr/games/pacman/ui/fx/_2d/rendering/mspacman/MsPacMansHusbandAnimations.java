@@ -31,7 +31,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.MyPacAnimationSet;
  */
 public class MsPacMansHusbandAnimations extends MyPacAnimationSet {
 
-	public MsPacMansHusbandAnimations(Rendering2D_MsPacMan r2D) {
+	public MsPacMansHusbandAnimations(Spritesheet_MsPacMan r2D) {
 		super(r2D);
 		munching = r2D.createHusbandMunchingAnimations();
 	}

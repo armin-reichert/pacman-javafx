@@ -28,7 +28,7 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameEntity2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -45,7 +45,7 @@ public class BlinkyNaked2D extends GameEntity2D {
 	public BlinkyNaked2D(Ghost blinky, GameModel game) {
 		super(game);
 		this.blinky = blinky;
-		animation = Rendering2D_PacMan.get().createBlinkyNakedAnimation();
+		animation = Spritesheet_PacMan.get().createBlinkyNakedAnimation();
 	}
 
 	@Override

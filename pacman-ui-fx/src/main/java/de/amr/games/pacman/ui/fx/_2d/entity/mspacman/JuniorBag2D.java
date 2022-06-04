@@ -27,7 +27,7 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.mspacman.JuniorBag;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameEntity2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -47,6 +47,6 @@ public class JuniorBag2D extends GameEntity2D {
 	@Override
 	public void render(GraphicsContext g, Rendering2D r2D) {
 		r2D.drawEntity(g, bag,
-				bag.open ? ((Rendering2D_MsPacMan) r2D).getJunior() : ((Rendering2D_MsPacMan) r2D).getBlueBag());
+				bag.open ? ((Spritesheet_MsPacMan) r2D).getJunior() : ((Spritesheet_MsPacMan) r2D).getBlueBag());
 	}
 }

@@ -75,13 +75,13 @@ public class Bonus3D extends Box {
 	}
 
 	public void showSymbol(Bonus bonus) {
-		var texture = r2D.spritesheet().image(r2D.getSymbolSprite(bonus.symbol()));
+		var texture = r2D.getSpritesheet().image(r2D.getSymbolSprite(bonus.symbol()));
 		showRotating(texture, 1.0, Animation.INDEFINITE, 1);
 		setWidth(TS);
 	}
 
 	public void showPoints(Bonus bonus) {
-		var texture = r2D.spritesheet().image(r2D.getBonusValueSprite(bonus.value()));
+		var texture = r2D.getSpritesheet().image(r2D.getBonusValueSprite(bonus.value()));
 		showRotating(texture, 1.0, 5, 2);
 		setWidth(bonus.value() >= 1000 ? TS * 1.25 : TS);
 	}

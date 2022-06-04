@@ -204,7 +204,7 @@ public class PacMan_IntroScene extends GameScene2D {
 	}
 
 	private Rectangle2D ghostLookingRight(int id) {
-		return r2D.spritesheet().r(0, 4 + id);
+		return r2D.getSpritesheet().r(0, 4 + id);
 	}
 
 	private void drawPoints(GraphicsContext g, int tileX, int tileY) {

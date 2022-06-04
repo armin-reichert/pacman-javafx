@@ -27,7 +27,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Rendering2D_PacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -59,7 +59,7 @@ public class GameScore2D extends GameEntity2D {
 			pointsText = "00";
 			levelText = "";
 		}
-		g.setFont(Rendering2D_PacMan.get().getArcadeFont());
+		g.setFont(Spritesheet_PacMan.get().getArcadeFont());
 		g.setFill(titleColor);
 		g.fillText(title, x, y);
 		g.setFill(pointsColor);

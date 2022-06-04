@@ -29,7 +29,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Rendering2D_MsPacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -83,7 +83,7 @@ public class MsPacMan_CreditScene extends GameScene2D {
 		g.fillText("PUSH START BUTTON", t(6), t(16));
 		g.fillText("1 PLAYER ONLY", t(8), t(18));
 		g.fillText("ADDITIONAL    AT 10000", t(2), t(25));
-		Rendering2D_MsPacMan r2DMs = (Rendering2D_MsPacMan) r2D;
+		Spritesheet_MsPacMan r2DMs = (Spritesheet_MsPacMan) r2D;
 		r2D.drawSprite(g, r2DMs.rhs(1, 0), t(13), t(23) + 2);
 		g.setFont(Font.font(r2D.getArcadeFont().getName(), 6));
 		g.fillText("PTS", t(25), t(25));
