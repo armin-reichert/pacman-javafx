@@ -29,6 +29,7 @@ import java.io.IOException;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
@@ -78,13 +79,10 @@ public class PacManGameAppFX extends Application {
 	public void start(Stage stage) throws IOException {
 		log("Starting application...");
 
-		var aspectRatio = (double) ArcadeWorld.TILES_X / (double) ArcadeWorld.TILES_Y;
-		// HACK: I multiply with 0.97 to make the size identical to the Mame emulator.
-		// The aspect ratio should not be applied to the window size but to the canvas size!
-		var width = options.windowHeight * aspectRatio * 0.97;
-		var height = options.windowHeight;
-
-		ui = new GameUI(gameController, stage, width, height);
+		double unscaledWidth = ArcadeWorld.TILES_X * World.TS;
+		double unscaledHeight = ArcadeWorld.TILES_Y * World.TS;
+		double scaling = options.canvasHeight / unscaledHeight;
+		ui = new GameUI(gameController, stage, scaling * unscaledWidth, scaling * unscaledHeight);
 		ui.stage.setFullScreen(options.fullscreen);
 
 		gameController.addListener(ui);

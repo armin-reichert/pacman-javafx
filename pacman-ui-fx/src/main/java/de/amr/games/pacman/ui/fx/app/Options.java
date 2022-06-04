@@ -29,6 +29,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
 
 /**
@@ -44,7 +46,7 @@ class Options {
 	boolean fullscreen = false;
 	boolean muted = false;
 	boolean use3DScenes = true;
-	double windowHeight = 576;
+	double canvasHeight = 2 * ArcadeWorld.TILES_Y * World.TS;
 	GameVariant gameVariant = GameVariant.PACMAN;
 	Perspective perspective = Perspective.CAM_NEAR_PLAYER;
 
@@ -59,7 +61,7 @@ class Options {
 				} else {
 					++i;
 					try {
-						windowHeight = Double.parseDouble(params.get(i));
+						canvasHeight = Double.parseDouble(params.get(i));
 					} catch (NumberFormatException x) {
 						log("!!! Error parsing parameters: '%s' is no legal height value.", params.get(i));
 					}

@@ -83,6 +83,9 @@ public class GameUI extends GameEventAdapter {
 		this.stage = stage;
 		this.infoLayer = new InfoLayer(this);
 
+		// This HACK makes the UI exactly as large as the MAME UI. I did not yet figure out the reason.
+		width = 0.96 * width;
+
 		// first child is placeholder for subscene assigned to current game scene
 		sceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
 		Env.$drawMode3D.addListener(($drawMode, _old, _new) -> updateBackground(currentGameScene));

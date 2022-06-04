@@ -28,7 +28,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.event.GameEventAdapter;
-import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Credit2D;
@@ -60,7 +60,7 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 	protected final SubScene fxSubScene;
 	protected final StackPane root;
 	protected final Canvas canvas;
-	protected final V2i unscaledSize;
+	protected final V2d unscaledSize;
 	protected final double aspectRatio;
 
 	// context
@@ -81,9 +81,9 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 	 */
 	public GameScene2D(GameController gameController) {
 		this.gameController = gameController;
-		this.unscaledSize = new V2i(ArcadeWorld.TILES_X * TS, ArcadeWorld.TILES_Y * TS);
-		this.aspectRatio = (double) unscaledSize.x / unscaledSize.y;
-		this.canvas = new Canvas();
+		this.unscaledSize = new V2d(ArcadeWorld.TILES_X * TS, ArcadeWorld.TILES_Y * TS);
+		this.aspectRatio = unscaledSize.x / unscaledSize.y;
+		this.canvas = new Canvas(1, 1);
 		root = new StackPane(canvas, infoPane);
 		root.setBackground(U.colorBackground(Color.BLACK));
 		fxSubScene = new SubScene(root, unscaledSize.x, unscaledSize.y);

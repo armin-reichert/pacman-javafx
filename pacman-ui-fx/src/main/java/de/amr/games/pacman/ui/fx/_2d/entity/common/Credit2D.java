@@ -49,7 +49,7 @@ public class Credit2D {
 		if (visible) {
 			g.setFont(r2D.getArcadeFont());
 			g.setFill(Color.WHITE);
-			g.fillText("CREDIT  %d".formatted(fnCredit.getAsInt()), x, y);
+			g.fillText("CREDIT  %d".formatted(fnCredit.getAsInt()), x, y + 1);
 		}
 	}
 }
