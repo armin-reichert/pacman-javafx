@@ -23,15 +23,12 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
-import static de.amr.games.pacman.model.common.world.World.HTS;
-
 import java.util.function.Supplier;
 
 import de.amr.games.pacman.lib.TimedSeq;
-import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.actors.Bonus;
+import de.amr.games.pacman.model.common.actors.BonusState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -73,30 +70,17 @@ public class Bonus2D {
 		if (bonus == null) {
 			return;
 		}
-		switch (bonus.state()) {
-		case EDIBLE -> {
+		if (bonus.state() == BonusState.EDIBLE) {
+			var sprite = r2D.getSymbolSprite(bonus.symbol());
 			g.save();
 			if (jumpAnimation != null) {
 				g.translate(0, jumpAnimation.animate());
 			}
-			drawBonusSymbol(g, r2D, bonus);
+			r2D.drawSpriteCenteredOverBBox(g, sprite, bonus.position().x, bonus.position().y);
 			g.restore();
+		} else if (bonus.state() == BonusState.EATEN) {
+			var sprite = r2D.getBonusValueSprite(bonus.value());
+			r2D.drawSpriteCenteredOverBBox(g, sprite, bonus.position().x, bonus.position().y);
 		}
-		case EATEN -> drawBonusValue(g, r2D, bonus);
-		default -> {
-		}
-		}
-	}
-
-	private void drawBonusSymbol(GraphicsContext g, Rendering2D r2D, Bonus bonus) {
-		renderSprite(g, r2D, r2D.getSymbolSprite(bonus.symbol()), bonus.position());
-	}
-
-	private void drawBonusValue(GraphicsContext g, Rendering2D r2D, Bonus bonus) {
-		renderSprite(g, r2D, r2D.getBonusValueSprite(bonus.value()), bonus.position());
-	}
-
-	private void renderSprite(GraphicsContext g, Rendering2D r2D, Rectangle2D sprite, V2d position) {
-		r2D.drawSprite(g, sprite, position.x + HTS - sprite.getWidth() / 2, position.y + HTS - sprite.getHeight() / 2);
 	}
 }
