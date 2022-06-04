@@ -42,7 +42,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
- * Ms. Pac-Man game spritsheet renderer.
+ * Ms. Pac-Man game spritesheet renderer.
  * 
  * @author Armin Reichert
  */
