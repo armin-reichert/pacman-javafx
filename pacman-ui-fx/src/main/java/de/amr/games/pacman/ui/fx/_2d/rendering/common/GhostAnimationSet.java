@@ -37,7 +37,7 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class MyGhostAnimationSet extends SpriteAnimationSet<Ghost, GhostAnimation, Rectangle2D> {
+public class GhostAnimationSet extends SpriteAnimationSet<Ghost, GhostAnimation, Rectangle2D> {
 
 	private SpriteAnimationMap<Direction, Rectangle2D> eyes;
 	private SpriteAnimation<Rectangle2D> flashing;
@@ -45,7 +45,7 @@ public class MyGhostAnimationSet extends SpriteAnimationSet<Ghost, GhostAnimatio
 	private SpriteAnimationMap<Direction, Rectangle2D> color;
 	private SpriteAnimation<Rectangle2D> numbers;
 
-	public MyGhostAnimationSet(int ghostID, Rendering2D r2D) {
+	public GhostAnimationSet(int ghostID, Rendering2D r2D) {
 		eyes = r2D.createGhostEyesAnimation();
 		flashing = r2D.createGhostFlashingAnimation();
 		blue = r2D.createGhostBlueAnimation();

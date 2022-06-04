@@ -27,7 +27,7 @@ import de.amr.games.pacman.lib.SpriteAnimationSet;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.actors.PacAnimation;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.MyPacAnimationSet;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimationSet;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -42,7 +42,7 @@ public class Pac2D extends GameEntity2D {
 	public final Pac pac;
 	public final SpriteAnimationSet<Pac, PacAnimation, Rectangle2D> animations;
 
-	public Pac2D(Pac pac, GameModel game, MyPacAnimationSet animations) {
+	public Pac2D(Pac pac, GameModel game, PacAnimationSet animations) {
 		super(game);
 		this.pac = pac;
 		this.animations = animations;

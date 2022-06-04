@@ -47,8 +47,8 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Maze2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.MyGhostAnimationSet;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.MyPacAnimationSet;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimationSet;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimationSet;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
@@ -145,9 +145,9 @@ public class PlayScene2D extends GameScene2D {
 
 		maze2D = new Maze2D(game, 0, t(3));
 
-		pac2D = new Pac2D(game.pac, game, new MyPacAnimationSet(r2D));
+		pac2D = new Pac2D(game.pac, game, new PacAnimationSet(r2D));
 		for (Ghost ghost : game.ghosts) {
-			ghosts2D[ghost.id] = new Ghost2D(ghost, game, new MyGhostAnimationSet(ghost.id, r2D));
+			ghosts2D[ghost.id] = new Ghost2D(ghost, game, new GhostAnimationSet(ghost.id, r2D));
 		}
 		bonus2D = new Bonus2D(game::bonus);
 		if (game.variant == GameVariant.MS_PACMAN) {
@@ -179,7 +179,7 @@ public class PlayScene2D extends GameScene2D {
 		boolean recovering = game.pac.powerTimer.remaining() <= recoveringTicks;
 		if (recoveringStarts) {
 			for (var ghost2D : ghosts2D) {
-				MyGhostAnimationSet animations = (MyGhostAnimationSet) ghost2D.animations;
+				GhostAnimationSet animations = (GhostAnimationSet) ghost2D.animations;
 				animations.startFlashing(game.level.numFlashes, recoveringTicks);
 			}
 		}
@@ -240,7 +240,7 @@ public class PlayScene2D extends GameScene2D {
 		for (Ghost2D ghost2D : ghosts2D) {
 			ghost2D.visible = ghost2D.ghost.visible;
 			// TODO avoid casting
-			var animations = (MyGhostAnimationSet) ghost2D.animations;
+			var animations = (GhostAnimationSet) ghost2D.animations;
 			animations.ensureAllRunning();
 		}
 		maze2D.getEnergizerAnimation().restart();
