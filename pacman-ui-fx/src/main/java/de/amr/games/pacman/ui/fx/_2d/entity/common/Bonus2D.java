@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import java.util.function.Supplier;
 
-import de.amr.games.pacman.lib.TimedSeq;
+import de.amr.games.pacman.lib.GenericAnimation;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.BonusState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -43,13 +43,13 @@ import javafx.scene.canvas.GraphicsContext;
 public class Bonus2D {
 
 	private final Supplier<Bonus> fnBonus;
-	private TimedSeq<Integer> jumpAnimation;
+	private GenericAnimation<Integer> jumpAnimation;
 
 	public Bonus2D(Supplier<Bonus> fnBonus) {
 		this.fnBonus = fnBonus;
 	}
 
-	public void setJumpAnimation(TimedSeq<Integer> jumpAnimation) {
+	public void setJumpAnimation(GenericAnimation<Integer> jumpAnimation) {
 		this.jumpAnimation = jumpAnimation;
 	}
 

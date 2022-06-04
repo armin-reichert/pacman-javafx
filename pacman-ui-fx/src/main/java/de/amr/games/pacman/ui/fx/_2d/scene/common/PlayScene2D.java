@@ -45,7 +45,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Bonus2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
-import de.amr.games.pacman.ui.fx._2d.entity.common.Maze2D;
+import de.amr.games.pacman.ui.fx._2d.entity.common.World2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimationSet;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimationSet;
@@ -108,7 +108,7 @@ public class PlayScene2D extends GameScene2D {
 		}
 	}
 
-	private Maze2D maze2D;
+	private World2D maze2D;
 	private LivesCounter2D livesCounter2D;
 	private LevelCounter2D levelCounter2D;
 	private Pac2D pac2D;
@@ -142,7 +142,7 @@ public class PlayScene2D extends GameScene2D {
 		levelCounter2D = new LevelCounter2D(game.levelCounter, unscaledSize.x - t(4), unscaledSize.y - t(2));
 		levelCounter2D.visible = hasCredit;
 
-		maze2D = new Maze2D(game, 0, t(3), r2D.createMazeFlashingAnimation(r2D.mazeNumber(game.level.number)));
+		maze2D = new World2D(game, 0, t(3), r2D.createMazeFlashingAnimation(r2D.mazeNumber(game.level.number)));
 
 		pac2D = new Pac2D(game.pac, new PacAnimationSet(r2D));
 		for (Ghost ghost : game.ghosts) {

@@ -27,7 +27,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.lib.SpriteAnimation;
-import de.amr.games.pacman.lib.TimedSeq;
+import de.amr.games.pacman.lib.GenericAnimation;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.DebugDraw;
@@ -38,22 +38,21 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 /**
- * 2D representation of the maze. Implements the flashing animation played on the end of each level.
+ * 2D representation of the world. Implements the flashing animation played on the end of each level.
  * 
  * @author Armin Reichert
  */
-public class Maze2D {
+public class World2D {
 
 	public double x, y;
 	private final GameModel game;
-	private final TimedSeq<Boolean> energizerAnimation;
+	private final GenericAnimation<Boolean> energizerAnimation = GenericAnimation.pulse().frameDuration(10);
 	private SpriteAnimation<Image> flashingAnimation;
 
-	public Maze2D(GameModel game, int x, int y, SpriteAnimation<Image> flashingAnim) {
+	public World2D(GameModel game, int x, int y, SpriteAnimation<Image> flashingAnim) {
 		this.game = game;
 		this.x = x;
 		this.y = y;
-		energizerAnimation = TimedSeq.pulse().frameDuration(10);
 		this.flashingAnimation = flashingAnim;
 	}
 
@@ -62,7 +61,7 @@ public class Maze2D {
 		flashingAnimation.restart();
 	}
 
-	public TimedSeq<Boolean> getEnergizerAnimation() {
+	public GenericAnimation<Boolean> getEnergizerAnimation() {
 		return energizerAnimation;
 	}
 
@@ -91,5 +90,4 @@ public class Maze2D {
 		g.setFill(Color.BLACK);
 		g.fillRect(t(tile.x) + 0.2, t(tile.y) + 0.2, TS - 0.2, TS - 0.2);
 	}
-
 }
