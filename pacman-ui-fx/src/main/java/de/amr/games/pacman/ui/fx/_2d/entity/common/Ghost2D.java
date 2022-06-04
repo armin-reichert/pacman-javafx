@@ -58,8 +58,6 @@ public class Ghost2D {
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
-		if (ghost.visible) {
-			r2D.drawEntity(g, ghost, animations.currentSprite(ghost));
-		}
+		r2D.drawEntity(g, ghost, animations.currentSprite(ghost));
 	}
 }
