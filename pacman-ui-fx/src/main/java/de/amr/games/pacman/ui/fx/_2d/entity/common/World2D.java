@@ -26,8 +26,8 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import de.amr.games.pacman.lib.SpriteAnimation;
 import de.amr.games.pacman.lib.GenericAnimation;
+import de.amr.games.pacman.lib.SpriteAnimation;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.DebugDraw;
@@ -71,6 +71,10 @@ public class World2D {
 		} else {
 			drawMazeWithFood(g, r2D, r2D.mazeNumber(game.level.number));
 		}
+		if (Env.$tilesVisible.get()) {
+			DebugDraw.drawGrid(g);
+			DebugDraw.drawTileBorders(g, game.level.world.tiles().filter(game.level.world::isIntersection), Color.RED);
+		}
 	}
 
 	private void drawMazeWithFood(GraphicsContext g, Rendering2D r2D, int mazeNumber) {
@@ -79,10 +83,6 @@ public class World2D {
 		world.tiles().filter(world::containsEatenFood).forEach(tile -> clearTile(g, tile));
 		if (!energizerAnimation.animate()) { // dark blinking phase
 			world.energizerTiles().forEach(tile -> clearTile(g, tile));
-		}
-		if (Env.$tilesVisible.get()) {
-			DebugDraw.drawGrid(g);
-			DebugDraw.drawTileBorders(g, world.tiles().filter(world::isIntersection), Color.RED);
 		}
 	}
 
