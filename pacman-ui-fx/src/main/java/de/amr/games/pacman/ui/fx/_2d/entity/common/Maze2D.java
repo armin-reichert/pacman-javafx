@@ -47,19 +47,19 @@ public class Maze2D {
 	public double x, y;
 	private final GameModel game;
 	private final TimedSeq<Boolean> energizerAnimation;
-	private SpriteAnimation<Image> flashingAnim;
+	private SpriteAnimation<Image> flashingAnimation;
 
 	public Maze2D(GameModel game, int x, int y, SpriteAnimation<Image> flashingAnim) {
 		this.game = game;
 		this.x = x;
 		this.y = y;
 		energizerAnimation = TimedSeq.pulse().frameDuration(10);
-		this.flashingAnim = flashingAnim;
+		this.flashingAnimation = flashingAnim;
 	}
 
 	public void startFlashing(int numFlashes) {
-		flashingAnim.repetitions(numFlashes);
-		flashingAnim.restart();
+		flashingAnimation.repetitions(numFlashes);
+		flashingAnimation.restart();
 	}
 
 	public TimedSeq<Boolean> getEnergizerAnimation() {
@@ -67,36 +67,29 @@ public class Maze2D {
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
-		int mazeNumber = r2D.mazeNumber(game.level.number);
-		if (flashingAnim.isRunning()) {
-			g.drawImage(flashingAnim.animate(), x, y);
+		if (flashingAnimation.isRunning()) {
+			g.drawImage(flashingAnimation.animate(), x, y);
 		} else {
-			r2D.drawMazeFull(g, mazeNumber, x, y);
-			Color hiddenColor = Color.BLACK;
-			if (!energizerAnimation.animate()) { // dark phase
-				g.setFill(hiddenColor);
-				game.level.world.energizerTiles().forEach(tile -> fillTile(g, tile, hiddenColor));
-			}
-			game.level.world.tiles().filter(game.level.world::containsEatenFood)
-					.forEach(tile -> fillTile(g, tile, hiddenColor));
-			if (Env.$tilesVisible.get()) {
-				DebugDraw.drawTileBorders(g);
-			}
-			if (Env.$tilesVisible.get()) {
-				game.level.world.tiles().filter(game.level.world::isIntersection).forEach(tile -> {
-					strokeTile(g, tile, Color.RED);
-				});
-			}
+			drawMazeWithFood(g, r2D, r2D.mazeNumber(game.level.number));
 		}
 	}
 
-	private void fillTile(GraphicsContext g, V2i tile, Color color) {
-		g.setFill(color);
+	private void drawMazeWithFood(GraphicsContext g, Rendering2D r2D, int mazeNumber) {
+		var world = game.level.world;
+		r2D.drawMazeFull(g, mazeNumber, x, y);
+		world.tiles().filter(world::containsEatenFood).forEach(tile -> clearTile(g, tile));
+		if (!energizerAnimation.animate()) { // dark blinking phase
+			world.energizerTiles().forEach(tile -> clearTile(g, tile));
+		}
+		if (Env.$tilesVisible.get()) {
+			DebugDraw.drawGrid(g);
+			DebugDraw.drawTileBorders(g, world.tiles().filter(world::isIntersection), Color.RED);
+		}
+	}
+
+	private void clearTile(GraphicsContext g, V2i tile) {
+		g.setFill(Color.BLACK);
 		g.fillRect(t(tile.x) + 0.2, t(tile.y) + 0.2, TS - 0.2, TS - 0.2);
 	}
 
-	private void strokeTile(GraphicsContext g, V2i tile, Color color) {
-		g.setStroke(color);
-		g.strokeRect(t(tile.x) + 0.2, t(tile.y) + 0.2, TS - 0.2, TS - 0.2);
-	}
 }

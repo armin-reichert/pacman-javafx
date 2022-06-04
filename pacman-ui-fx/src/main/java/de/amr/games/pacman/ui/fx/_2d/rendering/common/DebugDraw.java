@@ -24,8 +24,12 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
+import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
+import java.util.stream.Stream;
+
+import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -35,7 +39,16 @@ import javafx.scene.paint.Color;
  */
 public class DebugDraw {
 
-	public static void drawTileBorders(GraphicsContext g) {
+	public static void drawTileBorders(GraphicsContext g, Stream<V2i> tiles, Color color) {
+		tiles.forEach(tile -> drawTileBorder(g, tile, color));
+	}
+
+	private static void drawTileBorder(GraphicsContext g, V2i tile, Color color) {
+		g.setStroke(color);
+		g.strokeRect(t(tile.x) + 0.2, t(tile.y) + 0.2, TS - 0.2, TS - 0.2);
+	}
+
+	public static void drawGrid(GraphicsContext g) {
 		g.setStroke(Color.rgb(160, 160, 160, 0.5));
 		g.setLineWidth(1);
 		for (int row = 0; row < ArcadeWorld.TILES_Y; ++row) {
