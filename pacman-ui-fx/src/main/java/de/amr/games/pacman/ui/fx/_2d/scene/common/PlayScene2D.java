@@ -45,8 +45,8 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Bonus2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
-import de.amr.games.pacman.ui.fx._2d.entity.common.World2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
+import de.amr.games.pacman.ui.fx._2d.entity.common.World2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimationSet;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimationSet;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
@@ -58,7 +58,6 @@ import javafx.animation.SequentialTransition;
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Pane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -71,21 +70,20 @@ import javafx.scene.text.TextAlignment;
  */
 public class PlayScene2D extends GameScene2D {
 
-	private class InfoPane extends Pane {
+	private class SceneInfo {
 
 		private Text pacInfo = new Text();
 		private Text[] ghostInfos = new Text[4];
 
-		public InfoPane() {
+		public SceneInfo() {
 			for (int id = 0; id < 4; ++id) {
 				ghostInfos[id] = new Text();
 				ghostInfos[id].setTextAlignment(TextAlignment.CENTER);
 				ghostInfos[id].setFill(Color.WHITE);
-				getChildren().add(ghostInfos[id]);
+				infoPane.getChildren().add(ghostInfos[id]);
 			}
 			pacInfo.setFill(Color.WHITE);
-			getChildren().add(pacInfo);
-			root.getChildren().add(this);
+			infoPane.getChildren().add(pacInfo);
 		}
 
 		public void update() {
@@ -114,11 +112,11 @@ public class PlayScene2D extends GameScene2D {
 	private Pac2D pac2D;
 	private Ghost2D[] ghosts2D = new Ghost2D[4];
 	private Bonus2D bonus2D;
-	private final InfoPane infoPane;
+
+	private final SceneInfo info = new SceneInfo();
 
 	public PlayScene2D(GameController gameController, V2i unscaledSize) {
 		super(gameController, unscaledSize);
-		infoPane = new InfoPane();
 	}
 
 	@Override
@@ -165,10 +163,7 @@ public class PlayScene2D extends GameScene2D {
 		updateAnimations();
 		updateSound();
 		if (GameUI.debug) {
-			infoPane.update();
-			infoPane.setVisible(true);
-		} else {
-			infoPane.setVisible(false);
+			info.update();
 		}
 	}
 

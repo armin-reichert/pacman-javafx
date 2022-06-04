@@ -38,11 +38,13 @@ import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
@@ -70,6 +72,9 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 	protected GameScore2D highScore2D;
 	protected Credit2D credit2D;
 
+	// info pane
+	protected Pane infoPane = new Pane();
+
 	/**
 	 * @param gameController game controller
 	 * @param unscaledSize   logical scene size (number of tiles x tile size)
@@ -79,7 +84,7 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 		this.unscaledSize = unscaledSize;
 		this.aspectRatio = (double) unscaledSize.x / unscaledSize.y;
 		this.canvas = new Canvas();
-		root = new StackPane(canvas);
+		root = new StackPane(canvas, infoPane);
 		root.setBackground(U.colorBackground(Color.BLACK));
 		fxSubScene = new SubScene(root, unscaledSize.x, unscaledSize.y);
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
@@ -138,6 +143,7 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 
 	@Override
 	public final void update() {
+		infoPane.setVisible(GameUI.debug);
 		doUpdate();
 		var g = canvas.getGraphicsContext2D();
 		g.setFill(Color.BLACK);
