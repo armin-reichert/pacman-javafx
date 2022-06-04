@@ -152,11 +152,6 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public void drawMazeBright(GraphicsContext g, int mazeNumber, double x, double y) {
-		g.drawImage(mazeFlashing, x, y);
-	}
-
-	@Override
 	public void drawCopyright(GraphicsContext g, int x, int y) {
 		// t(3), t(32)
 		String text = "\u00A9 1980 MIDWAY MFG. CO.";

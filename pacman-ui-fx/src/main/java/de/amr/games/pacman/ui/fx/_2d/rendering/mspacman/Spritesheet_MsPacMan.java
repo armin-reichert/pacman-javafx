@@ -28,9 +28,9 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.GenericAnimation;
 import de.amr.games.pacman.lib.SpriteAnimation;
 import de.amr.games.pacman.lib.SpriteAnimationMap;
-import de.amr.games.pacman.lib.GenericAnimation;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
@@ -217,11 +217,6 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	@Override
 	public void drawMazeEmpty(GraphicsContext g, int mazeNumber, double x, double y) {
 		drawSprite(g, mazeEmptySprites[mazeNumber - 1], x, y);
-	}
-
-	@Override
-	public void drawMazeBright(GraphicsContext g, int mazeNumber, double x, double y) {
-		g.drawImage(mazeFlashImages[mazeNumber - 1], x, y);
 	}
 
 	@Override

@@ -84,8 +84,6 @@ public interface Rendering2D {
 
 	void drawMazeEmpty(GraphicsContext g, int mazeNumber, double x, double y);
 
-	void drawMazeBright(GraphicsContext g, int mazeNumber, double x, double y);
-
 	// Drawing
 
 	/**
