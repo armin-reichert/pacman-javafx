@@ -29,7 +29,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.DebugDraw;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.animation.Animation.Status;
@@ -87,7 +87,7 @@ public class Maze2D {
 			}
 			level.world.tiles().filter(level.world::containsEatenFood).forEach(tile -> fillTile(g, tile, hiddenColor));
 			if (Env.$tilesVisible.get()) {
-				drawTileBorders(g);
+				DebugDraw.drawTileBorders(g);
 			}
 			if (Env.$tilesVisible.get()) {
 				level.world.tiles().filter(level.world::isIntersection).forEach(tile -> {
@@ -107,20 +107,4 @@ public class Maze2D {
 		g.strokeRect(t(tile.x) + 0.2, t(tile.y) + 0.2, TS - 0.2, TS - 0.2);
 	}
 
-	private void drawTileBorders(GraphicsContext g) {
-		g.setStroke(Color.rgb(160, 160, 160, 0.5));
-		g.setLineWidth(1);
-		for (int row = 0; row < ArcadeWorld.TILES_Y; ++row) {
-			line(g, 0, t(row), t(ArcadeWorld.TILES_X), t(row));
-		}
-		for (int col = 0; col < ArcadeWorld.TILES_X; ++col) {
-			line(g, t(col), 0, t(col), t(ArcadeWorld.TILES_Y));
-		}
-	}
-
-	// WTF: why are lines blurred without this?
-	private void line(GraphicsContext g, double x1, double y1, double x2, double y2) {
-		double offset = 0.5;
-		g.strokeLine(x1 + offset, y1 + offset, x2 + offset, y2 + offset);
-	}
 }
