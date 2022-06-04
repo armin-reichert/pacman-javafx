@@ -52,8 +52,8 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 
 	public static Rendering2D_MsPacMan get() {
 		if (cmonManYouKnowTheThing == null) {
-			cmonManYouKnowTheThing = new Rendering2D_MsPacMan("/mspacman/graphics/sprites.png", 16, Direction.RIGHT,
-					Direction.LEFT, Direction.UP, Direction.DOWN);
+			cmonManYouKnowTheThing = new Rendering2D_MsPacMan("/mspacman/graphics/sprites.png", 16, //
+					Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 		}
 		return cmonManYouKnowTheThing;
 	}
@@ -99,7 +99,7 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 	private final Rectangle2D[] mazeFullSprites;
 	private final Rectangle2D[] mazeEmptySprites;
 	private final Image[] mazeFlashImages;
-	private final Map<Integer, Rectangle2D> symbolSprites;
+	private final Rectangle2D[] symbolSprites;
 	private final Map<Integer, Rectangle2D> bonusValueSprites;
 	private final Map<Integer, Rectangle2D> bountyNumberSprites;
 	private final Font font;
@@ -110,15 +110,14 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 		midwayLogo = U.image("/mspacman/graphics/midway.png");
 
 		//@formatter:off
-		symbolSprites = Map.of(
-			MsPacManGame.CHERRIES,   rhs(3,0),
-			MsPacManGame.STRAWBERRY, rhs(4,0),
-			MsPacManGame.PEACH,      rhs(5,0),
-			MsPacManGame.PRETZEL,    rhs(6,0),
-			MsPacManGame.APPLE,      rhs(7,0),
-			MsPacManGame.PEAR,       rhs(8,0),
-			MsPacManGame.BANANA,     rhs(9,0)
-		);
+		symbolSprites = new Rectangle2D[7];
+		symbolSprites[MsPacManGame.CHERRIES]   = rhs(3,0);
+		symbolSprites[MsPacManGame.STRAWBERRY] = rhs(4,0);
+		symbolSprites[MsPacManGame.PEACH]      = rhs(5,0);
+		symbolSprites[MsPacManGame.PRETZEL]    = rhs(6,0);
+		symbolSprites[MsPacManGame.APPLE]      = rhs(7,0);
+		symbolSprites[MsPacManGame.PEAR]       = rhs(8,0);
+		symbolSprites[MsPacManGame.BANANA]     = rhs(9,0);
 
 		bonusValueSprites = Map.of(
 			 100, rhs(3, 1), 
@@ -238,7 +237,7 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 
 	@Override
 	public Rectangle2D getSymbolSprite(int symbol) {
-		return symbolSprites.get(symbol);
+		return symbolSprites[symbol];
 	}
 
 	/*
