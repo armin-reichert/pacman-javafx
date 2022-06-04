@@ -25,9 +25,8 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.lib.Score;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -38,29 +37,30 @@ import javafx.scene.paint.Color;
  */
 public class GameScore2D {
 
-	public GameModel game;
+	public final Score score;
 	public double x, y;
-	public boolean showHighscore = false;
 	public boolean showPoints = true;
-	public String title = "SCORE";
+	public String title;
 	public Color titleColor = Color.WHITE;
 	public Color pointsColor = Color.WHITE;
 
-	public GameScore2D(GameModel game, double x, double y) {
-		this.game = game;
+	public GameScore2D(Score score, String title, double x, double y) {
+		this.score = score;
+		this.title = title;
 		this.x = x;
 		this.y = y;
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
-		String pointsText = "%02d"
-				.formatted(showHighscore ? game.scoring().hiscore().points : game.scoring().score().points);
-		String levelText = "L" + (showHighscore ? game.scoring().hiscore().levelNumber : game.level.number);
-		if (!showHighscore && !showPoints) {
+		String pointsText, levelText;
+		if (!showPoints) {
 			pointsText = "00";
 			levelText = "";
+		} else {
+			pointsText = "%02d".formatted(score.points);
+			levelText = "L" + score.levelNumber;
 		}
-		g.setFont(Spritesheet_PacMan.get().getArcadeFont());
+		g.setFont(r2D.getArcadeFont());
 		g.setFill(titleColor);
 		g.fillText(title, x, y);
 		g.setFill(pointsColor);

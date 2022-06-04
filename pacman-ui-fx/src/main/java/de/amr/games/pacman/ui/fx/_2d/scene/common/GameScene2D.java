@@ -87,12 +87,8 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 	}
 
 	protected void createCommonParts(GameModel game) {
-		score2D = new GameScore2D(game, t(1), t(1));
-		score2D.title = "SCORE";
-		score2D.showHighscore = false;
-		highScore2D = new GameScore2D(game, t(16), t(1));
-		highScore2D.title = "HIGH SCORE";
-		highScore2D.showHighscore = true;
+		score2D = new GameScore2D(game.scores().gameScore(), "SCORE", t(1), t(1));
+		highScore2D = new GameScore2D(game.scores().hiscore(), "HIGH SCORE", t(16), t(1));
 		credit2D = new Credit2D(gameController::credit, t(2), t(ArcadeWorld.TILES_Y) - 2);
 		credit2D.visible = false;
 	}
