@@ -64,7 +64,7 @@ public class Spritesheet {
 	 * @param r spritesheet region
 	 * @return copy of subimage at spritesheet region
 	 */
-	public Image extractRegion(Rectangle2D r) {
+	public Image image(Rectangle2D r) {
 		return createSubImage((int) r.getMinX(), (int) r.getMinY(), (int) r.getWidth(), (int) r.getHeight());
 	}
 

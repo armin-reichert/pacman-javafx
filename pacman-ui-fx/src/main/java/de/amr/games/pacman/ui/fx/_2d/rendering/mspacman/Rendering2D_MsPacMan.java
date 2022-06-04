@@ -25,8 +25,6 @@ package de.amr.games.pacman.ui.fx._2d.rendering.mspacman;
 
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
@@ -98,9 +96,9 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 
 	private final Spritesheet ss;
 	private final Image midwayLogo;
-	private final List<Rectangle2D> mazeFullSprites;
-	private final List<Rectangle2D> mazeEmptySprites;
-	private final List<Image> mazeFlashImages;
+	private final Rectangle2D[] mazeFullSprites;
+	private final Rectangle2D[] mazeEmptySprites;
+	private final Image[] mazeFlashImages;
 	private final Map<Integer, Rectangle2D> symbolSprites;
 	private final Map<Integer, Rectangle2D> bonusValueSprites;
 	private final Map<Integer, Rectangle2D> bountyNumberSprites;
@@ -141,19 +139,18 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 		//@formatter:on
 
 		int numMazes = 6;
-		mazeFullSprites = new ArrayList<>(numMazes);
-		mazeEmptySprites = new ArrayList<>(numMazes);
-		mazeFlashImages = new ArrayList<>(numMazes);
+		mazeFullSprites = new Rectangle2D[numMazes];
+		mazeEmptySprites = new Rectangle2D[numMazes];
+		mazeFlashImages = new Image[numMazes];
 		for (int mazeIndex = 0; mazeIndex < numMazes; ++mazeIndex) {
-			Rectangle2D mazeFullRegion = new Rectangle2D(0, 248 * mazeIndex, 226, 248);
-			mazeFullSprites.add(mazeFullRegion);
-			Rectangle2D mazeEmptyRegion = new Rectangle2D(226, 248 * mazeIndex, 226, 248);
-			mazeEmptySprites.add(mazeEmptyRegion);
-			Image mazeFlashImage = U.colorsExchanged(ss.extractRegion(mazeEmptyRegion), Map.of( //
+			mazeFullSprites[mazeIndex] = new Rectangle2D(0, 248 * mazeIndex, 226, 248);
+			var mazeEmptyRegion = new Rectangle2D(226, 248 * mazeIndex, 226, 248);
+			mazeEmptySprites[mazeIndex] = mazeEmptyRegion;
+			var mazeFlashImage = U.colorsExchanged(ss.image(mazeEmptyRegion), Map.of( //
 					MAZE_SIDE_COLORS[mazeIndex], Color.WHITE, //
 					MAZE_TOP_COLORS[mazeIndex], Color.BLACK) //
 			);
-			mazeFlashImages.add(mazeFlashImage);
+			mazeFlashImages[mazeIndex] = mazeFlashImage;
 		}
 	}
 
@@ -206,17 +203,17 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 
 	@Override
 	public void drawMazeFull(GraphicsContext g, int mazeNumber, double x, double y) {
-		drawSprite(g, mazeFullSprites.get(mazeNumber - 1), x, y);
+		drawSprite(g, mazeFullSprites[mazeNumber - 1], x, y);
 	}
 
 	@Override
 	public void drawMazeEmpty(GraphicsContext g, int mazeNumber, double x, double y) {
-		drawSprite(g, mazeEmptySprites.get(mazeNumber - 1), x, y);
+		drawSprite(g, mazeEmptySprites[mazeNumber - 1], x, y);
 	}
 
 	@Override
 	public void drawMazeBright(GraphicsContext g, int mazeNumber, double x, double y) {
-		g.drawImage(mazeFlashImages.get(mazeNumber - 1), x, y);
+		g.drawImage(mazeFlashImages[mazeNumber - 1], x, y);
 	}
 
 	@Override
