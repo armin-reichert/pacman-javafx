@@ -136,7 +136,7 @@ public class PlayScene2D extends GameScene2D {
 		SoundManager.get().setStopped(!hasCredit);
 
 		createCommonParts(game);
-		score2D.showPoints = hasCredit;
+		score2D.showScore = hasCredit;
 		credit2D.visible = !hasCredit;
 		livesCounter2D = new LivesCounter2D(game, t(2), t(34));
 		livesCounter2D.visible = hasCredit;

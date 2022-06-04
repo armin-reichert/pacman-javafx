@@ -39,10 +39,11 @@ public class GameScore2D {
 
 	public final Score score;
 	public double x, y;
-	public boolean showPoints = true;
+	public boolean showScore = true;
 	public String title;
 	public Color titleColor = Color.WHITE;
 	public Color pointsColor = Color.WHITE;
+	public Color levelTextColor = Color.LIGHTGRAY;
 
 	public GameScore2D(Score score, String title, double x, double y) {
 		this.score = score;
@@ -52,20 +53,14 @@ public class GameScore2D {
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
-		String pointsText, levelText;
-		if (!showPoints) {
-			pointsText = "00";
-			levelText = "";
-		} else {
-			pointsText = "%02d".formatted(score.points);
-			levelText = "L" + score.levelNumber;
-		}
+		String pointsText = showScore ? "%02d".formatted(score.points) : "00";
+		String levelText = showScore ? "L" + score.levelNumber : "";
 		g.setFont(r2D.getArcadeFont());
 		g.setFill(titleColor);
 		g.fillText(title, x, y);
 		g.setFill(pointsColor);
 		g.fillText("%7s".formatted(pointsText), x, y + t(1));
-		g.setFill(Color.LIGHTGRAY);
+		g.setFill(levelTextColor);
 		g.fillText(levelText, x + t(8), y + t(1));
 	}
 }
