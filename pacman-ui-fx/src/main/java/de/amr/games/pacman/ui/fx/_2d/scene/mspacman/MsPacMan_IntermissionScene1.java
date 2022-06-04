@@ -80,8 +80,8 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 		flap2D = new Flap2D(context.flap);
 		msPacMan2D = new Pac2D(context.msPac, game, new PacAnimationSet(r2D));
 		msPacMansHusband2D = new Pac2D(context.pacMan, game, new MsPacMansHusbandAnimations(Spritesheet_MsPacMan.get()));
-		inky2D = new Ghost2D(context.inky, game, new GhostAnimationSet(Ghost.CYAN_GHOST, r2D));
-		pinky2D = new Ghost2D(context.pinky, game, new GhostAnimationSet(Ghost.PINK_GHOST, r2D));
+		inky2D = new Ghost2D(context.inky, new GhostAnimationSet(Ghost.CYAN_GHOST, r2D));
+		pinky2D = new Ghost2D(context.pinky, new GhostAnimationSet(Ghost.PINK_GHOST, r2D));
 		heart2D = new Heart2D(context.heart);
 	}
 

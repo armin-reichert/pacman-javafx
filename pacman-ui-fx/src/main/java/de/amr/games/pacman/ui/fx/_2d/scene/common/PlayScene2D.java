@@ -147,7 +147,7 @@ public class PlayScene2D extends GameScene2D {
 
 		pac2D = new Pac2D(game.pac, game, new PacAnimationSet(r2D));
 		for (Ghost ghost : game.ghosts) {
-			ghosts2D[ghost.id] = new Ghost2D(ghost, game, new GhostAnimationSet(ghost.id, r2D));
+			ghosts2D[ghost.id] = new Ghost2D(ghost, new GhostAnimationSet(ghost.id, r2D));
 		}
 		bonus2D = new Bonus2D(game::bonus);
 		if (game.variant == GameVariant.MS_PACMAN) {
