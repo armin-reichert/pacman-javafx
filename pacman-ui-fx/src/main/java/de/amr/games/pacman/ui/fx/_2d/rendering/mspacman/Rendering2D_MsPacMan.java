@@ -33,7 +33,6 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.SpriteAnimation;
 import de.amr.games.pacman.lib.SpriteAnimationMap;
 import de.amr.games.pacman.lib.TimedSeq;
-import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
@@ -185,8 +184,7 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 	@Override
 	public void drawCopyright(GraphicsContext g, int x, int y) {
 		// x=t(4), y=t(28)
-		double scale = ArcadeWorld.TILES_Y / midwayLogo.getHeight();
-		g.drawImage(midwayLogo, x, y + 3, scale * midwayLogo.getWidth(), scale * midwayLogo.getHeight());
+		g.drawImage(midwayLogo, x, y + 3, 30, 32);
 		g.setFill(Color.RED);
 		g.setFont(Font.font("Dialog", 11.0));
 		g.fillText("\u00a9", x + t(5), y + t(2) + 2); // (c) symbol
