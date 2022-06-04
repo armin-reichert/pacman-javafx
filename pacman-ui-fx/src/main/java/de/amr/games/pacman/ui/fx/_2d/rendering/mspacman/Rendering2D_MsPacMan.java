@@ -143,7 +143,7 @@ public class Rendering2D_MsPacMan implements Rendering2D {
 		mazeFlashImages = new Image[numMazes];
 		for (int mazeIndex = 0; mazeIndex < numMazes; ++mazeIndex) {
 			mazeFullSprites[mazeIndex] = new Rectangle2D(0, 248 * mazeIndex, 226, 248);
-			var mazeEmptyRegion = new Rectangle2D(226, 248 * mazeIndex, 226, 248);
+			var mazeEmptyRegion = new Rectangle2D(228, 248 * mazeIndex, 226, 248);
 			mazeEmptySprites[mazeIndex] = mazeEmptyRegion;
 			var mazeFlashImage = U.colorsExchanged(ss.image(mazeEmptyRegion), Map.of( //
 					MAZE_SIDE_COLORS[mazeIndex], Color.WHITE, //
