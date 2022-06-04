@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
-import static de.amr.games.pacman.model.common.world.World.t;
-
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.pacman.Intermission2Controller;
 import de.amr.games.pacman.lib.Direction;
@@ -73,7 +71,7 @@ public class PacMan_IntermissionScene2 extends GameScene2D {
 	public void init() {
 		sceneController.init();
 
-		levelCounter2D = new LevelCounter2D(game.levelCounter, unscaledSize.x - t(3), unscaledSize.y - t(2));
+		levelCounter2D = new LevelCounter2D(game.levelCounter);
 
 		pacMan2D = new Pac2D(context.pac, new PacAnimationSet(r2D));
 		blinky2D = new Ghost2D(context.blinky, new GhostAnimationSet(Ghost.RED_GHOST, r2D));

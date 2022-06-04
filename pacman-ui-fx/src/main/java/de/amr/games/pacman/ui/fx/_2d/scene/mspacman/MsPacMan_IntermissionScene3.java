@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
-import static de.amr.games.pacman.model.common.world.World.t;
-
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission3Controller;
 import de.amr.games.pacman.lib.V2i;
@@ -74,7 +72,7 @@ public class MsPacMan_IntermissionScene3 extends GameScene2D {
 	@Override
 	public void init() {
 		sceneController.restartInInitialState(Intermission3Controller.State.FLAP);
-		levelCounter2D = new LevelCounter2D(game.levelCounter, unscaledSize.x - t(3), unscaledSize.y - t(2));
+		levelCounter2D = new LevelCounter2D(game.levelCounter);
 		msPacMan2D = new Pac2D(context.msPacMan, new PacAnimationSet(r2D));
 		msPacMansHusband2D = new Pac2D(context.pacMan, new MsPacMansHusbandAnimations(Spritesheet_MsPacMan.get()));
 		flap2D = new Flap2D(context.flap);

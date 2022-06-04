@@ -140,9 +140,9 @@ public class PlayScene2D extends GameScene2D {
 		createCommonParts(game);
 		score2D.showScore = hasCredit;
 		credit2D.visible = !hasCredit;
-		livesCounter2D = new LivesCounter2D(game, t(2), t(34));
+		livesCounter2D = new LivesCounter2D(game);
 		livesCounter2D.visible = hasCredit;
-		levelCounter2D = new LevelCounter2D(game.levelCounter, unscaledSize.x - t(4), unscaledSize.y - t(2));
+		levelCounter2D = new LevelCounter2D(game.levelCounter);
 		levelCounter2D.visible = hasCredit;
 
 		world2D = new World2D(game, 0, t(3), r2D.createMazeFlashingAnimation(r2D.mazeNumber(game.level.number)));

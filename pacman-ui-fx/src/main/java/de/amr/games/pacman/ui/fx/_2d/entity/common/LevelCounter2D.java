@@ -46,10 +46,10 @@ public class LevelCounter2D {
 	 * @param right_x the RIGHT border x-coordinate of the counter!
 	 * @param y       the y-coordinate
 	 */
-	public LevelCounter2D(LevelCounter levelCounter, double right_x, double y) {
+	public LevelCounter2D(LevelCounter levelCounter) {
 		this.levelCounter = levelCounter;
-		this.right_x = right_x;
-		this.y = y;
+		this.right_x = t(24);
+		this.y = t(34);
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {

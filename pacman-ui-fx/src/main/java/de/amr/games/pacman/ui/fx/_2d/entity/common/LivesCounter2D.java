@@ -44,10 +44,10 @@ public class LivesCounter2D {
 	public double x, y;
 	public int maxLives = 5;
 
-	public LivesCounter2D(GameModel game, int x, int y) {
+	public LivesCounter2D(GameModel game) {
 		this.game = game;
-		this.x = x;
-		this.y = y;
+		x = t(2);
+		y = t(34);
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
