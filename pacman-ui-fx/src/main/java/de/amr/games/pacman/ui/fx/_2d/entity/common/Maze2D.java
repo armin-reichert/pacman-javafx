@@ -28,7 +28,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.lib.TimedSeq;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -46,19 +46,20 @@ import javafx.util.Duration;
  */
 public class Maze2D {
 
-	public final GameModel game;
 	public double x, y;
+	private final GameLevel level;
 	private final TimedSeq<Boolean> energizerAnimation;
 	private final Timeline flashingAnimation;
 	private boolean brightPhase;
 
-	public Maze2D(GameModel game, int x, int y) {
-		this.game = game;
+	public Maze2D(GameLevel level, int x, int y) {
+		this.level = level;
 		this.x = x;
 		this.y = y;
 		energizerAnimation = TimedSeq.pulse().frameDuration(10);
+		// TODO find some simpler solution
 		flashingAnimation = new Timeline(new KeyFrame(Duration.millis(200), e -> brightPhase = !brightPhase));
-		flashingAnimation.setCycleCount(2 * game.level.numFlashes);
+		flashingAnimation.setCycleCount(2 * level.numFlashes);
 	}
 
 	public Timeline getFlashingAnimation() {
@@ -70,7 +71,7 @@ public class Maze2D {
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
-		int mazeNumber = r2D.mazeNumber(game.level.number);
+		int mazeNumber = r2D.mazeNumber(level.number);
 		if (flashingAnimation.getStatus() == Status.RUNNING) {
 			if (brightPhase) {
 				r2D.drawMazeBright(g, mazeNumber, x, y);
@@ -82,15 +83,14 @@ public class Maze2D {
 			Color hiddenColor = Color.BLACK;
 			if (!energizerAnimation.animate()) { // dark phase
 				g.setFill(hiddenColor);
-				game.level.world.energizerTiles().forEach(tile -> fillTile(g, tile, hiddenColor));
+				level.world.energizerTiles().forEach(tile -> fillTile(g, tile, hiddenColor));
 			}
-			game.level.world.tiles().filter(game.level.world::containsEatenFood)
-					.forEach(tile -> fillTile(g, tile, hiddenColor));
+			level.world.tiles().filter(level.world::containsEatenFood).forEach(tile -> fillTile(g, tile, hiddenColor));
 			if (Env.$tilesVisible.get()) {
 				drawTileBorders(g);
 			}
 			if (Env.$tilesVisible.get()) {
-				game.level.world.tiles().filter(game.level.world::isIntersection).forEach(tile -> {
+				level.world.tiles().filter(level.world::isIntersection).forEach(tile -> {
 					strokeTile(g, tile, Color.RED);
 				});
 			}

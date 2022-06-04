@@ -143,7 +143,7 @@ public class PlayScene2D extends GameScene2D {
 		levelCounter2D = new LevelCounter2D(game.levelCounter, unscaledSize.x - t(4), unscaledSize.y - t(2));
 		levelCounter2D.visible = hasCredit;
 
-		maze2D = new Maze2D(game, 0, t(3));
+		maze2D = new Maze2D(game.level, 0, t(3));
 
 		pac2D = new Pac2D(game.pac, new PacAnimationSet(r2D));
 		for (Ghost ghost : game.ghosts) {
