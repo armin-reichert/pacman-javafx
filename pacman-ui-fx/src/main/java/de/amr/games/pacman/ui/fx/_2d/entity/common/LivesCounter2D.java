@@ -30,7 +30,6 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.FontWeight;
 
 /**
@@ -56,12 +55,12 @@ public class LivesCounter2D {
 			for (int i = 0; i < Math.min(game.lives, maxLives); ++i) {
 				r2D.drawSprite(g, r2D.getLifeSprite(), x + t(2 * i), y);
 			}
+			int moreLives = game.lives - maxLives;
 			// show text indicating that more lives are available than displayed
-			if (game.lives > maxLives) {
+			if (moreLives > 0) {
 				g.setFill(Color.YELLOW);
 				g.setFont(Font.font("Serif", FontWeight.BOLD, 8));
-				g.setFontSmoothingType(FontSmoothingType.LCD);
-				g.fillText("+" + (game.lives - maxLives), x + t(10), y + t(1));
+				g.fillText("+" + moreLives, x + t(10), y + t(1));
 			}
 		}
 	}
