@@ -191,7 +191,7 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public SpriteAnimationMap<Direction, Rectangle2D> createPacMunchingAnimations() {
+	public SpriteAnimationMap<Direction, Rectangle2D> createPacMunchingAnimation() {
 		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
 			int d = dirOrder(dir);

@@ -60,7 +60,7 @@ public interface Rendering2D {
 
 	// Animations
 
-	SpriteAnimationMap<Direction, Rectangle2D> createPacMunchingAnimations();
+	SpriteAnimationMap<Direction, Rectangle2D> createPacMunchingAnimation();
 
 	SpriteAnimation<Rectangle2D> createPacDyingAnimation();
 

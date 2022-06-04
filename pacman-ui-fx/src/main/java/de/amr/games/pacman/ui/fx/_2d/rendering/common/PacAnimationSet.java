@@ -44,7 +44,7 @@ public class PacAnimationSet extends SpriteAnimationSet<Pac, PacAnimation, Recta
 	protected SpriteAnimation<Rectangle2D> dying;
 
 	public PacAnimationSet(Rendering2D r2D) {
-		munching = r2D.createPacMunchingAnimations();
+		munching = r2D.createPacMunchingAnimation();
 		dying = r2D.createPacDyingAnimation();
 	}
 
