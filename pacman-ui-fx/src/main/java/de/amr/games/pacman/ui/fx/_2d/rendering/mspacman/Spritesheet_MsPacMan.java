@@ -144,7 +144,7 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 			mazeFullSprites[mazeIndex] = new Rectangle2D(0, 248 * mazeIndex, 226, 248);
 			var mazeEmptyRegion = new Rectangle2D(228, 248 * mazeIndex, 226, 248);
 			mazeEmptySprites[mazeIndex] = mazeEmptyRegion;
-			var mazeFlashImage = U.colorsExchanged(image(mazeEmptyRegion), Map.of( //
+			var mazeFlashImage = U.colorsExchanged(subImage(mazeEmptyRegion), Map.of( //
 					MAZE_SIDE_COLORS[mazeIndex], Color.WHITE, //
 					MAZE_TOP_COLORS[mazeIndex], Color.BLACK) //
 			);

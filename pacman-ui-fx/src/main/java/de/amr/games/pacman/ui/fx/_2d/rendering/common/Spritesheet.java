@@ -36,12 +36,12 @@ import javafx.scene.image.WritableImage;
  */
 public class Spritesheet {
 
-	private final Image image;
+	private final Image source;
 	private final int rasterSize;
 	private final int[] dirOrder = new int[4];
 
 	public Spritesheet(String imagePath, int rasterSize, Direction... dirs) {
-		this.image = U.image(imagePath);
+		this.source = U.image(imagePath);
 		this.rasterSize = rasterSize;
 		for (int i = 0; i < dirs.length; ++i) {
 			dirOrder[dirs[i].ordinal()] = i;
@@ -53,7 +53,7 @@ public class Spritesheet {
 	}
 
 	public Image getSourceImage() {
-		return image;
+		return source;
 	}
 
 	public int getRasterSize() {
@@ -62,10 +62,10 @@ public class Spritesheet {
 
 	/**
 	 * @param r spritesheet region
-	 * @return copy of subimage at spritesheet region
+	 * @return copy(!) of spritesheet region
 	 */
-	public Image image(Rectangle2D r) {
-		return createSubImage((int) r.getMinX(), (int) r.getMinY(), (int) r.getWidth(), (int) r.getHeight());
+	public Image subImage(Rectangle2D r) {
+		return subImage((int) r.getMinX(), (int) r.getMinY(), (int) r.getWidth(), (int) r.getHeight());
 	}
 
 	/**
@@ -73,11 +73,11 @@ public class Spritesheet {
 	 * @param y      region y-coordinate
 	 * @param width  region width
 	 * @param height region height
-	 * @return copy of subimage at spritesheet region
+	 * @return copy(!) of spritesheet region
 	 */
-	public Image createSubImage(int x, int y, int width, int height) {
+	public Image subImage(int x, int y, int width, int height) {
 		WritableImage subImage = new WritableImage(width, height);
-		subImage.getPixelWriter().setPixels(0, 0, width, height, image.getPixelReader(), x, y);
+		subImage.getPixelWriter().setPixels(0, 0, width, height, source.getPixelReader(), x, y);
 		return subImage;
 	}
 

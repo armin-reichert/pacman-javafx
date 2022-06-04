@@ -149,7 +149,7 @@ public class Ghost3D extends Group implements Rendering3D {
 			eyes().setVisible(true);
 		}
 		case NUMBER_CUBE -> {
-			Image texture = r2D.getSpritesheet().image(r2D.getNumberSprite(ghost.bounty));
+			Image texture = r2D.getSpritesheet().subImage(r2D.getNumberSprite(ghost.bounty));
 			PhongMaterial material = new PhongMaterial();
 			material.setBumpMap(texture);
 			material.setDiffuseMap(texture);
