@@ -40,7 +40,6 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimationSet;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -57,7 +56,7 @@ import javafx.scene.text.Font;
 public class PacMan_IntroScene extends GameScene2D {
 
 	private final IntroController sceneController;
-	private final IntroController.Context context;
+	private final IntroController.Context $;
 
 	private Pac2D pacMan2D;
 	private Ghost2D[] ghosts2D;
@@ -65,8 +64,8 @@ public class PacMan_IntroScene extends GameScene2D {
 	public PacMan_IntroScene(GameController gameController) {
 		super(gameController);
 		sceneController = new IntroController(gameController);
-		context = sceneController.context();
 		sceneController.addStateChangeListener(this::onSceneStateChange);
+		$ = sceneController.context();
 	}
 
 	@Override
@@ -75,8 +74,8 @@ public class PacMan_IntroScene extends GameScene2D {
 		createCommonParts(game);
 		score2D.showScore = false;
 		credit2D.visible = true;
-		pacMan2D = new Pac2D(context.pacMan, new PacAnimationSet(r2D));
-		ghosts2D = Stream.of(context.ghosts).map(ghost -> {
+		pacMan2D = new Pac2D($.pacMan, new PacAnimationSet(r2D));
+		ghosts2D = Stream.of($.ghosts).map(ghost -> {
 			Ghost2D ghost2D = new Ghost2D(ghost, new GhostAnimationSet(ghost.id, r2D));
 			return ghost2D;
 		}).toArray(Ghost2D[]::new);
@@ -131,6 +130,8 @@ public class PacMan_IntroScene extends GameScene2D {
 
 	@Override
 	public void doRender(GraphicsContext g) {
+		var time = sceneController.state().timer().tick();
+
 		score2D.render(g, r2D);
 		highScore2D.render(g, r2D);
 		credit2D.render(g, r2D);
@@ -139,33 +140,60 @@ public class PacMan_IntroScene extends GameScene2D {
 		case BEGIN, PRESENTING_GHOSTS -> drawGallery(g);
 		case SHOWING_POINTS -> {
 			drawGallery(g);
-			drawPoints(g, 11, 25);
-			if (sceneController.state().timer().tick() > sec_to_ticks(1)) {
-				drawEnergizer(g);
-				r2D.drawCopyright(g, t(3), t(32));
+			drawPoints(g);
+			if (time > sec_to_ticks(1)) {
+				drawBlinkingEnergizer(g);
+				drawCopyright(g);
 			}
 		}
 		case CHASING_PAC -> {
 			drawGallery(g);
-			drawPoints(g, 11, 25);
-			r2D.drawCopyright(g, t(3), t(32));
-			if (context.fastBlinking.frame()) {
-				drawEnergizer(g);
-			}
-			int offset = sceneController.state().timer().tick() % 5 < 2 ? 0 : -1;
-			drawGuys(g, offset);
+			drawPoints(g);
+			drawCopyright(g);
+			drawBlinkingEnergizer(g);
+			drawGuys(g, time % 5 < 2 ? 0 : -1); // TODO check this
 		}
 		case CHASING_GHOSTS -> {
 			drawGallery(g);
-			drawPoints(g, 11, 25);
-			r2D.drawCopyright(g, t(3), t(32));
+			drawPoints(g);
+			drawCopyright(g);
 			drawGuys(g, 0);
 		}
 		case READY_TO_PLAY -> {
 			drawGallery(g);
+			drawPoints(g);
+			drawCopyright(g);
 		}
-		default -> {
 		}
+	}
+
+	private void drawGallery(GraphicsContext g) {
+		g.setFill(Color.WHITE);
+		g.setFont(r2D.getArcadeFont());
+		g.fillText("CHARACTER", t($.left + 3), t(6));
+		g.fillText("/", t($.left + 13), t(6));
+		g.fillText("NICKNAME", t($.left + 15), t(6));
+		for (int id = 0; id < 4; ++id) {
+			if ($.pictureVisible[id]) {
+				int tileY = 7 + 3 * id;
+				var ghostSprite = r2D.getSpritesheet().r(0, 4 + id);
+				r2D.drawSpriteCenteredOverBBox(g, ghostSprite, t($.left) + 4, t(tileY));
+				if ($.characterVisible[id]) {
+					g.setFill(r2D.getGhostColor(id));
+					g.fillText("-" + $.characters[id], t($.left + 3), t(tileY + 1));
+				}
+				if ($.nicknameVisible[id]) {
+					g.setFill(r2D.getGhostColor(id));
+					g.fillText("\"" + $.nicknames[id] + "\"", t($.left + 14), t(tileY + 1));
+				}
+			}
+		}
+	}
+
+	private void drawBlinkingEnergizer(GraphicsContext g) {
+		if ($.fastBlinking.frame()) {
+			g.setFill(r2D.getFoodColor(1));
+			g.fillOval(t($.left), t(20), TS, TS);
 		}
 	}
 
@@ -180,37 +208,12 @@ public class PacMan_IntroScene extends GameScene2D {
 		pacMan2D.render(g, r2D);
 	}
 
-	private void drawGallery(GraphicsContext g) {
-		g.setFill(Color.WHITE);
-		g.setFont(r2D.getArcadeFont());
-		g.fillText("CHARACTER", t(6), t(6));
-		g.fillText("/", t(16), t(6));
-		g.fillText("NICKNAME", t(18), t(6));
-		for (int id = 0; id < 4; ++id) {
-			if (context.pictureVisible[id]) {
-				int tileY = 7 + 3 * id;
-				r2D.drawSpriteCenteredOverBBox(g, ghostLookingRight(id), t(3), t(tileY));
-				if (context.characterVisible[id]) {
-					g.setFill(r2D.getGhostColor(id));
-					g.fillText("-" + context.characters[id], t(6), t(tileY + 1));
-				}
-				if (context.nicknameVisible[id]) {
-					g.setFill(r2D.getGhostColor(id));
-					g.fillText("\"" + context.nicknames[id] + "\"", t(17), t(tileY + 1));
-				}
-			}
-		}
-	}
-
-	private Rectangle2D ghostLookingRight(int id) {
-		return r2D.getSpritesheet().r(0, 4 + id);
-	}
-
-	private void drawPoints(GraphicsContext g, int tileX, int tileY) {
+	private void drawPoints(GraphicsContext g) {
+		int tileX = $.left + 6, tileY = 25;
 		g.setFill(r2D.getFoodColor(1));
-		g.fillRect(t(tileX) + 6, t(tileY - 1) + 2, 2, 2);
-		if (context.fastBlinking.frame()) {
-			g.fillOval(t(tileX), t(tileY + 1) - 2, 10, 10);
+		g.fillRect(t(tileX) + 4, t(tileY - 1) + 4, 2, 2);
+		if ($.fastBlinking.frame()) {
+			g.fillOval(t(tileX), t(tileY + 1), TS, TS);
 		}
 		g.setFill(Color.WHITE);
 		g.setFont(r2D.getArcadeFont());
@@ -221,8 +224,8 @@ public class PacMan_IntroScene extends GameScene2D {
 		g.fillText("PTS", t(tileX + 5), t(tileY + 2));
 	}
 
-	private void drawEnergizer(GraphicsContext g) {
-		g.setFill(r2D.getFoodColor(1));
-		g.fillOval(t(3), t(20), TS, TS);
+	private void drawCopyright(GraphicsContext g) {
+		r2D.drawCopyright(g, t($.left), t(32));
 	}
+
 }
