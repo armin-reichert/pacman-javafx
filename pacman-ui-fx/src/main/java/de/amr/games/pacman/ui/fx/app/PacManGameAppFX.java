@@ -84,7 +84,7 @@ public class PacManGameAppFX extends Application {
 		double zoom = options.zoom;
 
 		ui = new GameUI(gameController, stage, zoom * unscaledWidth, zoom * unscaledHeight);
-		ui.stage.setFullScreen(options.fullscreen);
+		ui.setFullScreen(options.fullscreen);
 
 		gameController.addListener(ui);
 		gameController.setPlayerControl(new KeyboardPlayerControl(stage));
@@ -98,7 +98,7 @@ public class PacManGameAppFX extends Application {
 		GameLoop.get().start();
 
 		log("Application started.");
-		log("Stage size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s", ui.stage.getWidth(), ui.stage.getHeight(), zoom,
+		log("Stage size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s", ui.getWidth(), ui.getHeight(), zoom,
 				Env.$3D.get(), Env.$perspective.get());
 	}
 }

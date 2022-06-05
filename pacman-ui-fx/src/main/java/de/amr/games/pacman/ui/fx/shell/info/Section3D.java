@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell.info;
 
+import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -47,8 +48,9 @@ public class Section3D extends Section {
 	private CheckBox cbAxesVisible;
 	private CheckBox cbWireframeMode;
 
-	public Section3D(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
-		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
+	public Section3D(GameUI ui, GameController gc, String title, int minLabelWidth, Color textColor, Font textFont,
+			Font labelFont) {
+		super(ui, gc, title, minLabelWidth, textColor, textFont, labelFont);
 		comboPerspective = addComboBox("Perspective", Perspective.values());
 		comboPerspective.setOnAction(e -> Env.$perspective.set(comboPerspective.getValue()));
 		comboResolution = addComboBox("Maze resolution", 1, 2, 4, 8);

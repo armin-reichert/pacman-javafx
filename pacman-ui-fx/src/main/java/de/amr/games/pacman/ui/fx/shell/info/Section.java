@@ -67,9 +67,10 @@ public class Section extends TitledPane {
 	private Font labelFont;
 	private int row;
 
-	public Section(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
+	public Section(GameUI ui, GameController gc, String title, int minLabelWidth, Color textColor, Font textFont,
+			Font labelFont) {
 		this.ui = ui;
-		this.gc = ui.gameController;
+		this.gc = gc;
 		this.minLabelWidth = minLabelWidth;
 		this.textColor = textColor;
 		this.textFont = textFont;

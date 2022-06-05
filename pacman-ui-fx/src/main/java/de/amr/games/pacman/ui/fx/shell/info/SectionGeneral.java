@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell.info;
 
+import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
@@ -56,8 +57,9 @@ public class SectionGeneral extends Section {
 	private Tooltip tooltipStop = new Tooltip("Stop");
 	private Tooltip tooltipStep = new Tooltip("Single Step");
 
-	public SectionGeneral(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
-		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
+	public SectionGeneral(GameUI ui, GameController gc, String title, int minLabelWidth, Color textColor, Font textFont,
+			Font labelFont) {
+		super(ui, gc, title, minLabelWidth, textColor, textFont, labelFont);
 
 		btnsSimulation = addButtonList("Simulation", "Pause", "Step");
 		Button btnPlayPause = btnsSimulation[0], btnStep = btnsSimulation[1];
@@ -85,8 +87,7 @@ public class SectionGeneral extends Section {
 		cbMuted = addCheckBox("Sound muted", ui::toggleSoundMuted);
 		cbUsePlayScene3D = addCheckBox("Use 3D play scene", ui::toggleUse3DScene);
 
-		addInfo("Main scene", () -> String.format("w=%.0f h=%.0f", ui.stage.getScene().getWindow().getWidth(),
-				ui.stage.getScene().getWindow().getHeight()));
+		addInfo("Main scene", () -> String.format("w=%.0f h=%.0f", ui.getMainSceneWidth(), ui.getMainSceneHeight()));
 	}
 
 	@Override

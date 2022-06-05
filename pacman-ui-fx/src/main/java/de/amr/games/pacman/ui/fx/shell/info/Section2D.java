@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell.info;
 
+import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
@@ -38,8 +39,9 @@ import javafx.scene.text.Font;
 public class Section2D extends Section {
 	private CheckBox cbTilesVisible;
 
-	public Section2D(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
-		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
+	public Section2D(GameUI ui, GameController gc, String title, int minLabelWidth, Color textColor, Font textFont,
+			Font labelFont) {
+		super(ui, gc, title, minLabelWidth, textColor, textFont, labelFont);
 		addInfo("Canvas2D", () -> {
 			GameScene2D scene2D = (GameScene2D) ui.getCurrentGameScene();
 			return String.format("w=%.0f h=%.0f", scene2D.getCanvas().getWidth(), scene2D.getCanvas().getHeight());

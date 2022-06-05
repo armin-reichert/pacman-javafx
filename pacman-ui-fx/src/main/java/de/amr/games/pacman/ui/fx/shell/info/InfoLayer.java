@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell.info;
 
+import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -44,23 +45,23 @@ public class InfoLayer extends BorderPane {
 	private Section2D section2D;
 	private SectionKeys sectionKeys;
 
-	public InfoLayer(GameUI ui) {
+	public InfoLayer(GameUI ui, GameController gc) {
 		int minLabelWidth = 160;
 		Color textColor = Color.WHITE;
 		Font textFont = Font.font("Sans", 11);
 		Font labelFont = Font.font("Sans", 11);
 
 		setLeft(leftSide);
-		sectionGeneral = new SectionGeneral(ui, "General", minLabelWidth, textColor, textFont, labelFont);
-		sectionGame = new SectionGame(ui, "Game", minLabelWidth, textColor, textFont, labelFont);
+		sectionGeneral = new SectionGeneral(ui, gc, "General", minLabelWidth, textColor, textFont, labelFont);
+		sectionGame = new SectionGame(ui, gc, "Game", minLabelWidth, textColor, textFont, labelFont);
 		leftSide.getChildren().addAll(sectionGeneral, sectionGame);
 		sectionGeneral.setExpanded(false);
 		sectionGame.setExpanded(true);
 
 		setRight(rightSide);
-		section3D = new Section3D(ui, "3D Settings", minLabelWidth, textColor, textFont, labelFont);
-		section2D = new Section2D(ui, "2D Settings", minLabelWidth, textColor, textFont, labelFont);
-		sectionKeys = new SectionKeys(ui, "Keyboard Shortcuts", minLabelWidth, textColor, textFont, labelFont);
+		section3D = new Section3D(ui, gc, "3D Settings", minLabelWidth, textColor, textFont, labelFont);
+		section2D = new Section2D(ui, gc, "2D Settings", minLabelWidth, textColor, textFont, labelFont);
+		sectionKeys = new SectionKeys(ui, gc, "Keyboard Shortcuts", minLabelWidth, textColor, textFont, labelFont);
 		rightSide.getChildren().addAll(section3D, section2D, sectionKeys);
 		section3D.setExpanded(false);
 		section2D.setExpanded(false);

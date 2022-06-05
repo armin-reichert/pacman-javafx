@@ -76,9 +76,8 @@ public class GameUI extends GameEventAdapter {
 
 	public static final int SCENE_2D = 0, SCENE_3D = 1;
 
-	public final GameController gameController;
-	public final Stage stage;
-
+	private final GameController gameController;
+	private final Stage stage;
 	private final StackPane sceneRoot;
 	private final InfoLayer infoLayer;
 	private GameScene currentGameScene;
@@ -108,7 +107,7 @@ public class GameUI extends GameEventAdapter {
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
 		this.gameController = gameController;
 		this.stage = stage;
-		this.infoLayer = new InfoLayer(this);
+		this.infoLayer = new InfoLayer(this, gameController);
 
 		// first child is placeholder for subscene assigned to current game scene
 		sceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
@@ -129,6 +128,26 @@ public class GameUI extends GameEventAdapter {
 		stage.setOnCloseRequest(e -> GameLoop.get().stop());
 		stage.centerOnScreen();
 		stage.show();
+	}
+
+	public void setFullScreen(boolean fullscreen) {
+		stage.setFullScreen(fullscreen);
+	}
+
+	public double getWidth() {
+		return stage.getWidth();
+	}
+
+	public double getHeight() {
+		return stage.getHeight();
+	}
+
+	public double getMainSceneWidth() {
+		return stage.getScene().getWidth();
+	}
+
+	public double getMainSceneHeight() {
+		return stage.getScene().getHeight();
 	}
 
 	public void defineSceneResizingBehavior(Scene parent) {

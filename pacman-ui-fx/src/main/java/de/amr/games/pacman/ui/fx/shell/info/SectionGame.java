@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx.shell.info;
 
 import static de.amr.games.pacman.lib.TickTimer.ticksToString;
 
+import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
@@ -54,8 +55,9 @@ public class SectionGame extends Section {
 		return String.format("%.2f px/sec", GameModel.BASE_SPEED * fraction);
 	}
 
-	public SectionGame(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
-		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
+	public SectionGame(GameUI ui, GameController gc, String title, int minLabelWidth, Color textColor, Font textFont,
+			Font labelFont) {
+		super(ui, gc, title, minLabelWidth, textColor, textFont, labelFont);
 
 		comboGameVariant = addComboBox("Game Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
 		comboGameVariant.setOnAction(e -> {
