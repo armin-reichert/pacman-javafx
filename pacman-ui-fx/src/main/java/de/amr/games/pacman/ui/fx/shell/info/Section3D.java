@@ -28,6 +28,7 @@ import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
+import de.amr.games.pacman.ui.fx.shell.GlobalActions;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
@@ -62,7 +63,7 @@ public class Section3D extends Section {
 				.addListener(($value, oldValue, newValue) -> Env.$mazeWallHeight.set(newValue.doubleValue()));
 		cbUseFloorTexture = addCheckBox("Maze floor texture", () -> Env.toggle(Env.$useMazeFloorTexture));
 		cbAxesVisible = addCheckBox("Show axes", () -> Env.toggle(Env.$axesVisible));
-		cbWireframeMode = addCheckBox("Wireframe mode", ui::toggleDrawMode);
+		cbWireframeMode = addCheckBox("Wireframe mode", GlobalActions::toggleDrawMode);
 		addInfo("Shift+LEFT / RIGHT", "Camera -X / +X").when(() -> Env.$perspective.get() == Perspective.CAM_TOTAL);
 		addInfo("Shift+PLUS / MINUS", "Camera -Y / +Y").when(() -> Env.$perspective.get() == Perspective.CAM_TOTAL);
 		addInfo("Shift+UP / DOWN", "Camera -Z / +Z")

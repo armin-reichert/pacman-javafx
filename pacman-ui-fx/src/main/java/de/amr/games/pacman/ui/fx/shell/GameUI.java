@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell;
 
 import static de.amr.games.pacman.lib.Logging.log;
-import static de.amr.games.pacman.ui.fx.shell.FlashMessageView.showFlashMessage;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
@@ -51,8 +50,6 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.shell.info.InfoLayer;
-import de.amr.games.pacman.ui.fx.sound.GameSound;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -109,6 +106,9 @@ public class GameUI extends GameEventAdapter {
 		this.stage = stage;
 		this.infoLayer = new InfoLayer(this, gameController);
 
+		GlobalActions.gameController = gameController;
+		GlobalActions.ui = this;
+
 		// first child is placeholder for subscene assigned to current game scene
 		sceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
 
@@ -149,6 +149,10 @@ public class GameUI extends GameEventAdapter {
 
 	public double getMainSceneHeight() {
 		return stage.getScene().getHeight();
+	}
+
+	public InfoLayer getInfoLayer() {
+		return infoLayer;
 	}
 
 	/**
@@ -238,7 +242,7 @@ public class GameUI extends GameEventAdapter {
 		return Env.$3D.get() ? SCENE_3D : SCENE_2D;
 	}
 
-	private void updateGameScene(GameState gameState, boolean forced) {
+	void updateGameScene(GameState gameState, boolean forced) {
 		var fittingGameScene = getFittingScene(gameController.game(), gameController.state(), selectedDimension());
 		if (fittingGameScene == null) {
 			throw new IllegalStateException("No scene found for game state " + gameState);
@@ -271,151 +275,43 @@ public class GameUI extends GameEventAdapter {
 	private void handleKeyPressed(KeyEvent e) {
 		// ALT + key
 		if (Key.pressed(e, Key.ALT, KeyCode.A)) {
-			toggleAutopilot();
+			GlobalActions.toggleAutopilot();
 		} else if (Key.pressed(e, Key.ALT, KeyCode.E)) {
 			gameController.cheatEatAllPellets();
 		} else if (Key.pressed(e, Key.ALT, KeyCode.D)) {
 			Env.toggle(Env.$debugUI);
 		} else if (Key.pressed(e, Key.ALT, KeyCode.I)) {
-			toggleImmunity();
+			GlobalActions.toggleImmunity();
 		} else if (Key.pressed(e, Key.ALT, KeyCode.L)) {
-			addLives(3);
+			GlobalActions.addLives(3);
 		} else if (Key.pressed(e, Key.ALT, KeyCode.M)) {
-			toggleSoundMuted();
+			GlobalActions.toggleSoundMuted();
 		} else if (Key.pressed(e, Key.ALT, KeyCode.N)) {
 			gameController.cheatEnterNextLevel();
 		} else if (Key.pressed(e, Key.ALT, KeyCode.X)) {
 			gameController.cheatKillAllEatableGhosts();
 		} else if (Key.pressed(e, Key.ALT, KeyCode.Z)) {
-			startIntermissionScenesTest();
+			GlobalActions.startIntermissionScenesTest();
 		} else if (Key.pressed(e, Key.ALT, KeyCode.LEFT)) {
-			changePerspective(-1);
+			GlobalActions.changePerspective(-1);
 		} else if (Key.pressed(e, Key.ALT, KeyCode.RIGHT)) {
-			changePerspective(+1);
+			GlobalActions.changePerspective(+1);
 		} else if (Key.pressed(e, Key.ALT, KeyCode.DIGIT3)) {
-			toggleUse3DScene();
+			GlobalActions.toggleUse3DScene();
 		}
 
 		else if (Key.pressed(e, Key.CTRL, KeyCode.I)) {
-			toggleInfoPanelsVisible();
+			GlobalActions.toggleInfoPanelsVisible();
 		}
 
 		else if (Key.pressed(e, KeyCode.Q)) {
-			quitCurrentScene();
+			GlobalActions.quitCurrentScene();
 		} else if (Key.pressed(e, KeyCode.V)) {
-			selectNextGameVariant();
+			GlobalActions.selectNextGameVariant();
 		} else if (Key.pressed(e, KeyCode.F11)) {
 			stage.setFullScreen(true);
 		}
 		currentGameScene.onKeyPressed(e.getCode());
-	}
-
-	public void addCredit() {
-		gameController.addCredit();
-		SoundManager.get().play(GameSound.CREDIT);
-	}
-
-	public void changePerspective(int delta) {
-		if (currentGameScene.is3D()) {
-			Env.$perspective.set(Env.perspectiveShifted(delta));
-			String perspectiveName = Env.message(Env.$perspective.get().name());
-			showFlashMessage(1, Env.message("camera_perspective", perspectiveName));
-		}
-	}
-
-	public void quitCurrentScene() {
-		currentGameScene.end();
-		SoundManager.get().stopAll();
-		gameController.returnToIntro();
-	}
-
-	public void enterLevel(int levelNumber) {
-		if (gameController.state() == GameState.LEVEL_STARTING) {
-			return;
-		}
-		if (gameController.game().level.number == levelNumber) {
-			return;
-		}
-		SoundManager.get().stopAll();
-		if (levelNumber == 1) {
-			gameController.game().reset();
-			gameController.changeState(GameState.READY);
-		} else {
-			// TODO game model should be able to switch directly to any level
-			int start = levelNumber > gameController.game().level.number ? gameController.game().level.number + 1 : 1;
-			for (int n = start; n < levelNumber; ++n) {
-				gameController.game().setLevel(n);
-			}
-			gameController.changeState(GameState.LEVEL_STARTING);
-		}
-	}
-
-	public void addLives(int lives) {
-		if (gameController.isGameRunning()) {
-			gameController.game().lives += lives;
-			showFlashMessage(1, "You have %d lives", gameController.game().lives);
-		}
-	}
-
-	public void startIntermissionScenesTest() {
-		if (gameController.state() == GameState.INTRO) {
-			gameController.startIntermissionTest();
-		}
-	}
-
-	public void toggleInfoPanelsVisible() {
-		Env.toggle(infoLayer.visibleProperty());
-	}
-
-	public void togglePaused() {
-		Env.toggle(Env.$paused);
-		showFlashMessage(1, Env.$paused.get() ? "Paused" : "Resumed");
-		log(Env.$paused.get() ? "Simulation paused." : "Simulation resumed.");
-	}
-
-	public void selectNextGameVariant() {
-		gameController.selectGameVariant(gameController.game().variant.succ());
-	}
-
-	public void toggleAutopilot() {
-		gameController.toggleAutoMoving();
-		String message = Env.message(gameController.isAutoMoving() ? "autopilot_on" : "autopilot_off");
-		showFlashMessage(1, message);
-	}
-
-	public void toggleImmunity() {
-		gameController.togglePlayerImmune();
-		String message = Env.message(gameController.game().playerImmune ? "player_immunity_on" : "player_immunity_off");
-		showFlashMessage(1, message);
-	}
-
-	public void toggleUse3DScene() {
-		Env.toggle(Env.$3D);
-		var game = gameController.game();
-		var state = gameController.state();
-		if (getFittingScene(game, state, SCENE_2D) != getFittingScene(game, state, SCENE_3D)) {
-			updateGameScene(gameController.state(), true);
-			if (currentGameScene instanceof PlayScene2D) {
-				((PlayScene2D) currentGameScene).onSwitchFrom3DScene();
-			} else if (currentGameScene instanceof PlayScene3D) {
-				((PlayScene3D) currentGameScene).onSwitchFrom2DScene();
-			}
-		}
-		showFlashMessage(1, Env.message(Env.$3D.get() ? "use_3D_scene" : "use_2D_scene"));
-	}
-
-	public void toggleDrawMode() {
-		Env.$drawMode3D.set(Env.$drawMode3D.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
-	}
-
-	public void toggleSoundMuted() {
-		if (SoundManager.get().isMuted()) {
-			if (gameController.credit() > 0) {
-				SoundManager.get().setMuted(false);
-			}
-		} else {
-			SoundManager.get().setMuted(true);
-		}
 	}
 
 	// Begin test area ---

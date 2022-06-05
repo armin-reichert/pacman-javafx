@@ -27,6 +27,7 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
+import de.amr.games.pacman.ui.fx.shell.GlobalActions;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.control.Button;
@@ -66,7 +67,7 @@ public class SectionGeneral extends Section {
 
 		btnPlayPause.setText(null);
 		btnPlayPause.setStyle("-fx-background-color: transparent");
-		btnPlayPause.setOnAction(e -> ui.togglePaused());
+		btnPlayPause.setOnAction(e -> GlobalActions.togglePaused());
 
 		btnStep.setGraphic(iconStep);
 		btnStep.setStyle("-fx-background-color: transparent");
@@ -84,8 +85,8 @@ public class SectionGeneral extends Section {
 				GameLoop.get().getTargetFrameRate()));
 		addInfo("Total Ticks", GameLoop.get()::getTotalTicks);
 
-		cbMuted = addCheckBox("Sound muted", ui::toggleSoundMuted);
-		cbUsePlayScene3D = addCheckBox("Use 3D play scene", ui::toggleUse3DScene);
+		cbMuted = addCheckBox("Sound muted", GlobalActions::toggleSoundMuted);
+		cbUsePlayScene3D = addCheckBox("Use 3D play scene", GlobalActions::toggleUse3DScene);
 
 		addInfo("Main scene", () -> String.format("w=%.0f h=%.0f", ui.getMainSceneWidth(), ui.getMainSceneHeight()));
 	}

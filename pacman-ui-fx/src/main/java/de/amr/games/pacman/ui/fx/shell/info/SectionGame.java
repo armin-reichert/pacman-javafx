@@ -30,6 +30,7 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
+import de.amr.games.pacman.ui.fx.shell.GlobalActions;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -68,18 +69,19 @@ public class SectionGame extends Section {
 
 		btnsGameControl = addButtonList("Game", "Start", "Quit", "Next Level");
 		btnsGameControl[0].setOnAction(e -> gc.requestGame());
-		btnsGameControl[1].setOnAction(e -> ui.quitCurrentScene());
+		btnsGameControl[1].setOnAction(e -> GlobalActions.quitCurrentScene());
 		btnsGameControl[2].setOnAction(e -> gc.cheatEnterNextLevel());
 
 		btnsIntermissionTest = addButtonList("Intermission scenes", "Start", "Quit");
-		btnsIntermissionTest[0].setOnAction(e -> ui.startIntermissionScenesTest());
-		btnsIntermissionTest[1].setOnAction(e -> ui.quitCurrentScene());
+		btnsIntermissionTest[0].setOnAction(e -> GlobalActions.startIntermissionScenesTest());
+		btnsIntermissionTest[1].setOnAction(e -> GlobalActions.quitCurrentScene());
 
 		spinnerGameLevel = addSpinner("Level", 1, 100, game().level.number);
-		spinnerGameLevel.valueProperty().addListener(($value, oldValue, newValue) -> ui.enterLevel(newValue.intValue()));
+		spinnerGameLevel.valueProperty()
+				.addListener(($value, oldValue, newValue) -> GlobalActions.enterLevel(newValue.intValue()));
 
-		cbAutopilot = addCheckBox("Autopilot", ui::toggleAutopilot);
-		cbImmunity = addCheckBox("Player immune", ui::toggleImmunity);
+		cbAutopilot = addCheckBox("Autopilot", GlobalActions::toggleAutopilot);
+		cbImmunity = addCheckBox("Player immune", GlobalActions::toggleImmunity);
 
 		addInfo("Game scene", () -> ui.getCurrentGameScene().getClass().getSimpleName());
 		addInfo("", () -> "w=%.0f h=%.0f".formatted(ui.getCurrentGameScene().getFXSubScene().getWidth(),
