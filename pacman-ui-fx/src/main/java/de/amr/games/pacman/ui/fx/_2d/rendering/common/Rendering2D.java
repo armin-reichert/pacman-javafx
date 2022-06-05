@@ -42,8 +42,6 @@ import javafx.scene.text.Font;
  */
 public interface Rendering2D {
 
-//	Spritesheet getSpritesheet();
-
 	Font getArcadeFont();
 
 	Color getGhostColor(int ghostID);
