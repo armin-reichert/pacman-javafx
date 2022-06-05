@@ -140,26 +140,26 @@ public class PacMan_IntroScene extends GameScene2D {
 			drawPoints(g);
 			if (time > sec_to_ticks(1)) {
 				drawBlinkingEnergizer(g);
-				drawCopyright(g);
+				r2D.drawCopyright(g);
 			}
 		}
 		case CHASING_PAC -> {
 			drawGallery(g);
 			drawPoints(g);
-			drawCopyright(g);
+			r2D.drawCopyright(g);
 			drawBlinkingEnergizer(g);
 			drawGuys(g, time % 5 < 2 ? 0 : -1); // TODO check this
 		}
 		case CHASING_GHOSTS -> {
 			drawGallery(g);
 			drawPoints(g);
-			drawCopyright(g);
+			r2D.drawCopyright(g);
 			drawGuys(g, 0);
 		}
 		case READY_TO_PLAY -> {
 			drawGallery(g);
 			drawPoints(g);
-			drawCopyright(g);
+			r2D.drawCopyright(g);
 			drawGuys(g, 0);
 		}
 		}
@@ -228,9 +228,5 @@ public class PacMan_IntroScene extends GameScene2D {
 		g.setFont(Font.font(r2D.getArcadeFont().getName(), 6));
 		g.fillText("PTS", t(tileX + 5), t(tileY));
 		g.fillText("PTS", t(tileX + 5), t(tileY + 2));
-	}
-
-	private void drawCopyright(GraphicsContext g) {
-		r2D.drawCopyright(g, t($.left), t(32));
 	}
 }

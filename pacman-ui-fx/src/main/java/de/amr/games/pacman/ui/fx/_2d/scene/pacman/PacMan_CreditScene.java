@@ -93,6 +93,6 @@ public class PacMan_CreditScene extends GameScene2D {
 		g.setFont(Font.font(r2D.getArcadeFont().getName(), 6));
 		g.fillText("PTS", t(25), t(25));
 
-		r2D.drawCopyright(g, t(3), t(29));
+		r2D.drawCopyright(g);
 	}
 }

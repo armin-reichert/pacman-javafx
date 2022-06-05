@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.rendering.pacman;
 
 import static de.amr.games.pacman.model.common.actors.Ghost.PINK_GHOST;
+import static de.amr.games.pacman.model.common.world.World.t;
 
 import java.util.Map;
 
@@ -151,12 +152,11 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public void drawCopyright(GraphicsContext g, int x, int y) {
-		// t(3), t(32)
+	public void drawCopyright(GraphicsContext g) {
 		String text = "\u00A9 1980 MIDWAY MFG. CO.";
 		g.setFont(getArcadeFont());
 		g.setFill(getGhostColor(PINK_GHOST));
-		g.fillText(text, x, y);
+		g.fillText(text, t(4), t(32));
 	}
 
 	@Override

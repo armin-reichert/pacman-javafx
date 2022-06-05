@@ -130,5 +130,5 @@ public interface Rendering2D {
 	 * @param x left upper corner x
 	 * @param y left upper corner y
 	 */
-	void drawCopyright(GraphicsContext g, int x, int y);
+	void drawCopyright(GraphicsContext g);
 }
