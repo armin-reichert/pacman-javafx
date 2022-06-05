@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx.scene;
 
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_CreditScene;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntermissionScene1;
@@ -47,59 +46,45 @@ import javafx.scene.Scene;
  */
 public class GameScenes {
 
-	public static final int NUM_SCENES = 6;
 	public static final int SCENE_2D = 0, SCENE_3D = 1;
 
-	private final GameScene scenes[][][] = new GameScene[GameVariant.numValues()][NUM_SCENES][2];
-
-	/**
-	 * Creates all game scenes.
-	 * 
-	 * @param parent  the parent scene (main scene)
-	 * @param model3D the used 3D model for the actors
-	 */
-	public GameScenes() {
+	private final GameScene[][] scenes_MrPacMan = {
 		//@formatter:off
-		scenes[0][0][SCENE_2D] = new MsPacMan_IntroScene();
-		scenes[0][0][SCENE_3D] = null;
-		scenes[0][1][SCENE_2D] = new MsPacMan_CreditScene();
-		scenes[0][1][SCENE_3D] = null;
-		scenes[0][2][SCENE_2D] = new MsPacMan_IntermissionScene1();
-		scenes[0][2][SCENE_3D] = null;
-		scenes[0][3][SCENE_2D] = new MsPacMan_IntermissionScene2();
-		scenes[0][3][SCENE_3D] = null;
-		scenes[0][4][SCENE_2D] = new MsPacMan_IntermissionScene3();
-		scenes[0][4][SCENE_3D] = null;
-		scenes[0][5][SCENE_2D] = new PlayScene2D();
-		scenes[0][5][SCENE_3D] = new PlayScene3D();
-		
-		scenes[1][0][SCENE_2D] = new PacMan_IntroScene();
-		scenes[1][0][SCENE_3D] = null;
-		scenes[1][1][SCENE_2D] = new PacMan_CreditScene();
-		scenes[1][1][SCENE_3D] = null;
-		scenes[1][2][SCENE_2D] = new PacMan_IntermissionScene1();
-		scenes[1][2][SCENE_3D] = null;
-		scenes[1][3][SCENE_2D] = new PacMan_IntermissionScene2();
-		scenes[1][3][SCENE_3D] = null;
-		scenes[1][4][SCENE_2D] = new PacMan_IntermissionScene3();
-		scenes[1][4][SCENE_3D] = null;
-		scenes[1][5][SCENE_2D] = new PlayScene2D();
-		scenes[1][5][SCENE_3D] = new PlayScene3D();
+		{ new PacMan_IntroScene(), null },
+		{ new PacMan_CreditScene(), null },
+		{ new PacMan_IntermissionScene1(), null },
+		{ new PacMan_IntermissionScene2(), null },
+		{ new PacMan_IntermissionScene3(), null },
+		{ new PlayScene2D(), new PlayScene3D() },
 		//@formatter:on
-	}
+	};
+
+	private final GameScene[][] scenes_MsPacMan = {
+		//@formatter:off
+		{ new MsPacMan_IntroScene(), null },
+		{ new MsPacMan_CreditScene(), null },
+		{ new MsPacMan_IntermissionScene1(), null },
+		{ new MsPacMan_IntermissionScene2(), null },
+		{ new MsPacMan_IntermissionScene3(), null },
+		{ new PlayScene2D(), new PlayScene3D() },
+		//@formatter:on
+	};
 
 	public void defineResizingBehavior(Scene parent) {
-		for (int variant = 0; variant < GameVariant.numValues(); ++variant) {
-			for (int scene = 0; scene < NUM_SCENES; ++scene) {
-				// 2D scenes adapt to parent scene height keeping aspect ratio
-				GameScene scene2D = scenes[variant][scene][SCENE_2D];
-				parent.heightProperty().addListener(($height, oldHeight, newHeight) -> scene2D.resize(newHeight.doubleValue()));
-				// 3D scenes adapt to parent scene size
-				GameScene scene3D = scenes[variant][scene][SCENE_3D];
-				if (scene3D != null) {
-					scene3D.getFXSubScene().widthProperty().bind(parent.widthProperty());
-					scene3D.getFXSubScene().heightProperty().bind(parent.heightProperty());
-				}
+		defineResizingBehavior(parent, scenes_MsPacMan);
+		defineResizingBehavior(parent, scenes_MrPacMan);
+	}
+
+	public void defineResizingBehavior(Scene parent, GameScene[][] scenes) {
+		for (int scene = 0; scene < 6; ++scene) {
+			// 2D scenes adapt to parent scene height keeping aspect ratio
+			GameScene scene2D = scenes[scene][SCENE_2D];
+			parent.heightProperty().addListener(($height, oldHeight, newHeight) -> scene2D.resize(newHeight.doubleValue()));
+			// 3D scenes adapt to parent scene size
+			GameScene scene3D = scenes[scene][SCENE_3D];
+			if (scene3D != null) {
+				scene3D.getFXSubScene().widthProperty().bind(parent.widthProperty());
+				scene3D.getFXSubScene().heightProperty().bind(parent.heightProperty());
 			}
 		}
 	}
@@ -113,18 +98,20 @@ public class GameScenes {
 	 * @return the game scene that fits the current game state
 	 */
 	public GameScene getFittingScene(GameModel game, GameState gameState, int dimension) {
-		var variantIndex = game.variant.ordinal();
-		int sceneIndex = switch (gameState) {
+		var scenes = switch (game.variant) {
+		case MS_PACMAN -> scenes_MsPacMan;
+		case PACMAN -> scenes_MrPacMan;
+		};
+		var sceneIndex = switch (gameState) {
 		case INTRO -> 0;
 		case CREDIT -> 1;
 		case INTERMISSION -> 1 + game.intermissionNumber(game.level.number);
 		case INTERMISSION_TEST -> 1 + game.intermissionTestNumber;
 		default -> 5;
 		};
-		if (scenes[variantIndex][sceneIndex][dimension] == null) {
-			// no 3D version exists, use 2D version
-			return scenes[variantIndex][sceneIndex][SCENE_2D];
+		if (scenes[sceneIndex][dimension] == null) { // no 3D version exists, use 2D
+			return scenes[sceneIndex][SCENE_2D];
 		}
-		return scenes[variantIndex][sceneIndex][dimension];
+		return scenes[sceneIndex][dimension];
 	}
 }
