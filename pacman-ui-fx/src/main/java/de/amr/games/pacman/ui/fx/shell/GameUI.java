@@ -120,7 +120,8 @@ public class GameUI extends GameEventAdapter {
 
 		Env.$drawMode3D.addListener((x, y, z) -> updateBackground(currentGameScene));
 
-		defineSceneResizingBehavior(mainScene);
+		defineResizingBehavior(mainScene, scenes_MsPacMan);
+		defineResizingBehavior(mainScene, scenes_MrPacMan);
 		updateGameScene(gameController.state(), true);
 
 		stage.setScene(mainScene);
@@ -148,11 +149,6 @@ public class GameUI extends GameEventAdapter {
 
 	public double getMainSceneHeight() {
 		return stage.getScene().getHeight();
-	}
-
-	public void defineSceneResizingBehavior(Scene parent) {
-		defineResizingBehavior(parent, scenes_MsPacMan);
-		defineResizingBehavior(parent, scenes_MrPacMan);
 	}
 
 	public void defineResizingBehavior(Scene parent, GameScene[][] scenes) {
