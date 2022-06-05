@@ -112,8 +112,8 @@ public class GameUI extends GameEventAdapter {
 
 		Env.$drawMode3D.addListener((x, y, z) -> updateSceneBackground(currentGameScene));
 
-		defineResizingBehavior(mainScene, scenes_MsPacMan);
-		defineResizingBehavior(mainScene, scenes_MrPacMan);
+		setResizeHandler(mainScene, scenes_MsPacMan);
+		setResizeHandler(mainScene, scenes_MrPacMan);
 		updateGameScene(gameController.state(), true);
 
 		stage.setScene(mainScene);
@@ -245,7 +245,7 @@ public class GameUI extends GameEventAdapter {
 	 * @param parent parent scene (main scene)
 	 * @param scenes game scenes
 	 */
-	private void defineResizingBehavior(Scene parent, GameScene[][] scenes) {
+	private void setResizeHandler(Scene parent, GameScene[][] scenes) {
 		for (int sceneIndex = 0; sceneIndex < scenes.length; ++sceneIndex) {
 			var scene2D = scenes[sceneIndex][SCENE_2D];
 			parent.heightProperty().addListener(($height, oldHeight, newHeight) -> scene2D.resize(newHeight.doubleValue()));
