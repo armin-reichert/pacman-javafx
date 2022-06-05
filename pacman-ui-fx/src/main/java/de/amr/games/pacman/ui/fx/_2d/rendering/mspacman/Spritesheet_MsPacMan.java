@@ -178,6 +178,16 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
+	public Rectangle2D getPacSprite(Direction dir, Mouth mouth) {
+		int d = dirIndex(dir);
+		return switch (mouth) {
+		case WIDE_OPEN -> rhs(0, d);
+		case OPEN -> rhs(1, d);
+		case CLOSED -> rhs(2, d);
+		};
+	}
+
+	@Override
 	public Rectangle2D getGhostSprite(int ghostID, Direction dir) {
 		return rhs(2 * dirIndex(dir) + 1, 4 + ghostID);
 	}
@@ -280,9 +290,8 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
-			var kicking = new SpriteAnimation<>(rhs(2 * d, 4 + ghostID), rhs(2 * d + 1, 4 + ghostID)).frameDuration(8)
-					.endless();
-			map.put(dir, kicking);
+			var feet = new SpriteAnimation<>(rhs(2 * d, 4 + ghostID), rhs(2 * d + 1, 4 + ghostID)).frameDuration(8).endless();
+			map.put(dir, feet);
 		}
 		return map;
 	}

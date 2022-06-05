@@ -42,6 +42,10 @@ import javafx.scene.text.Font;
  */
 public interface Rendering2D {
 
+	public enum Mouth {
+		CLOSED, OPEN, WIDE_OPEN
+	}
+
 	Font getArcadeFont();
 
 	Color getGhostColor(int ghostID);
@@ -49,6 +53,8 @@ public interface Rendering2D {
 	// Sprites
 
 	Rectangle2D getGhostSprite(int ghostID, Direction dir);
+
+	Rectangle2D getPacSprite(Direction dir, Mouth mouth);
 
 	Rectangle2D getSymbolSprite(int symbol);
 

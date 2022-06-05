@@ -136,6 +136,15 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
+	public Rectangle2D getPacSprite(Direction dir, Mouth mouth) {
+		return switch (mouth) {
+		case CLOSED -> r(2, 0);
+		case OPEN -> r(1, dirIndex(dir));
+		case WIDE_OPEN -> r(0, dirIndex(dir));
+		};
+	}
+
+	@Override
 	public int mazeNumber(int levelNumber) {
 		return 1;
 	}
