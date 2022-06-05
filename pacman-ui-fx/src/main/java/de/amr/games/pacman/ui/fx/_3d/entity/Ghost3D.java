@@ -151,7 +151,7 @@ public class Ghost3D extends Group implements Rendering3D {
 			eyes().setVisible(true);
 		}
 		case NUMBER_CUBE -> {
-			var texture = getGhostValueSprite(ghost.id);
+			var texture = getGhostValueSprite(ghost.bounty);
 			PhongMaterial material = new PhongMaterial();
 			material.setBumpMap(texture);
 			material.setDiffuseMap(texture);
@@ -166,16 +166,16 @@ public class Ghost3D extends Group implements Rendering3D {
 		}
 	}
 
-	private Image getGhostValueSprite(int ghostID) {
+	private Image getGhostValueSprite(int value) {
 		// TODO do not access specific spritesheet from here
 		return switch (gameVariant) {
 		case MS_PACMAN -> {
 			var ss = Spritesheet_MsPacMan.get();
-			yield ss.subImage(ss.getGhostValueSprite(ghostID));
+			yield ss.subImage(ss.getGhostValueSprite(value));
 		}
 		case PACMAN -> {
 			var ss = Spritesheet_PacMan.get();
-			yield ss.subImage(ss.getGhostValueSprite(ghostID));
+			yield ss.subImage(ss.getGhostValueSprite(value));
 		}
 		};
 	}
