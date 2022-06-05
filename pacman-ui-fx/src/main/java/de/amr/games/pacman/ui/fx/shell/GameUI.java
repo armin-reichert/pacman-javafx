@@ -151,13 +151,18 @@ public class GameUI extends GameEventAdapter {
 		return stage.getScene().getHeight();
 	}
 
+	/**
+	 * Defines the resizing behavior of the game scenes. 2D scenes adapt to the parent scene height keeping their aspect
+	 * ratio. 3D scenes adapt to the parent scene size.
+	 * 
+	 * @param parent parent scene (main scene)
+	 * @param scenes game scenes
+	 */
 	public void defineResizingBehavior(Scene parent, GameScene[][] scenes) {
-		for (int scene = 0; scene < scenes.length; ++scene) {
-			// 2D scenes adapt to parent scene height keeping aspect ratio
-			GameScene scene2D = scenes[scene][SCENE_2D];
+		for (int sceneIndex = 0; sceneIndex < scenes.length; ++sceneIndex) {
+			var scene2D = scenes[sceneIndex][SCENE_2D];
 			parent.heightProperty().addListener(($height, oldHeight, newHeight) -> scene2D.resize(newHeight.doubleValue()));
-			// 3D scenes adapt to parent scene size
-			GameScene scene3D = scenes[scene][SCENE_3D];
+			var scene3D = scenes[sceneIndex][SCENE_3D];
 			if (scene3D != null) {
 				scene3D.getFXSubScene().widthProperty().bind(parent.widthProperty());
 				scene3D.getFXSubScene().heightProperty().bind(parent.heightProperty());
