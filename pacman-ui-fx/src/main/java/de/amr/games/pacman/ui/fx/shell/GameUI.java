@@ -118,7 +118,7 @@ public class GameUI extends GameEventAdapter {
 		mainScene.setOnMouseMoved(this::handleMouseMoved);
 		log("Main scene created. Size: %.0f x %.0f", mainScene.getWidth(), mainScene.getHeight());
 
-		Env.$drawMode3D.addListener((x, y, z) -> updateBackground(currentGameScene));
+		Env.$drawMode3D.addListener((x, y, z) -> updateSceneBackground(currentGameScene));
 
 		defineResizingBehavior(mainScene, scenes_MsPacMan);
 		defineResizingBehavior(mainScene, scenes_MrPacMan);
@@ -162,7 +162,7 @@ public class GameUI extends GameEventAdapter {
 	 * @param parent parent scene (main scene)
 	 * @param scenes game scenes
 	 */
-	public void defineResizingBehavior(Scene parent, GameScene[][] scenes) {
+	private void defineResizingBehavior(Scene parent, GameScene[][] scenes) {
 		for (int sceneIndex = 0; sceneIndex < scenes.length; ++sceneIndex) {
 			var scene2D = scenes[sceneIndex][SCENE_2D];
 			parent.heightProperty().addListener(($height, oldHeight, newHeight) -> scene2D.resize(newHeight.doubleValue()));
@@ -238,21 +238,18 @@ public class GameUI extends GameEventAdapter {
 		updateGameScene(e.newGameState, false);
 	}
 
-	private int selectedDimension() {
-		return Env.$3D.get() ? SCENE_3D : SCENE_2D;
-	}
-
 	void updateGameScene(GameState gameState, boolean forced) {
-		var fittingGameScene = getFittingScene(gameController.game(), gameController.state(), selectedDimension());
+		var dimension = Env.$3D.get() ? SCENE_3D : SCENE_2D;
+		var fittingGameScene = getFittingScene(gameController.game(), gameController.state(), dimension);
 		if (fittingGameScene == null) {
-			throw new IllegalStateException("No scene found for game state " + gameState);
+			throw new IllegalStateException("No fitting game scene found for game state " + gameState);
 		}
 		if (fittingGameScene != currentGameScene || forced) {
 			if (currentGameScene != null) {
 				currentGameScene.end();
 			}
 			fittingGameScene.resize(sceneRoot.getHeight());
-			updateBackground(fittingGameScene);
+			updateSceneBackground(fittingGameScene);
 			sceneRoot.getChildren().set(0, fittingGameScene.getFXSubScene());
 			fittingGameScene.setSceneContext(gameController);
 			fittingGameScene.init();
@@ -261,15 +258,11 @@ public class GameUI extends GameEventAdapter {
 		}
 	}
 
-	private void updateBackground(GameScene gameScene) {
+	private void updateSceneBackground(GameScene gameScene) {
 		var bg = gameScene.is3D() //
 				? Env.$drawMode3D.get() == DrawMode.LINE ? U.colorBackground(Color.BLACK) : Wallpapers.get().random()
 				: U.colorBackground(Color.CORNFLOWERBLUE);
 		sceneRoot.setBackground(bg);
-	}
-
-	private void handleMouseClicked(MouseEvent e) {
-		currentGameScene.getFXSubScene().requestFocus();
 	}
 
 	private void handleKeyPressed(KeyEvent e) {
@@ -311,12 +304,18 @@ public class GameUI extends GameEventAdapter {
 		} else if (Key.pressed(e, KeyCode.F11)) {
 			stage.setFullScreen(true);
 		}
+
+		// forward to current game scene
 		currentGameScene.onKeyPressed(e.getCode());
 	}
 
-	// Begin test area ---
+	// Begin test area
 
 	private String lastPicked = "";
+
+	private void handleMouseClicked(MouseEvent e) {
+		currentGameScene.getFXSubScene().requestFocus();
+	}
 
 	private void handleMouseMoved(MouseEvent e) {
 		identifyNode(e.getPickResult().getIntersectedNode());
@@ -339,7 +338,4 @@ public class GameUI extends GameEventAdapter {
 			}
 		}
 	}
-
-	// End test area ---
-
 }
