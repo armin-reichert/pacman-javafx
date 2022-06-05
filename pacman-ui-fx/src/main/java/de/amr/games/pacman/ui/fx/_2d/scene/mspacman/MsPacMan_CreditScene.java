@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
@@ -40,10 +39,6 @@ import javafx.scene.text.Font;
  * @author Armin Reichert
  */
 public class MsPacMan_CreditScene extends GameScene2D {
-
-	public MsPacMan_CreditScene(GameController gameController) {
-		super(gameController);
-	}
 
 	@Override
 	public void init() {

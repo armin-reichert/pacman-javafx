@@ -55,13 +55,14 @@ import javafx.scene.paint.Color;
  */
 public class MsPacMan_IntroScene extends GameScene2D {
 
-	private final IntroController sceneController;
-	private final Context context;
+	private IntroController sceneController;
+	private Context context;
 	private Pac2D msPacMan2D;
 	private Ghost2D[] ghosts2D;
 
-	public MsPacMan_IntroScene(GameController gameController) {
-		super(gameController);
+	@Override
+	public void setSceneContext(GameController gameController) {
+		super.setSceneContext(gameController);
 		sceneController = new IntroController(gameController);
 		sceneController.addStateChangeListener(this::onSceneStateChanged);
 		context = sceneController.context();

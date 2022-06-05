@@ -30,7 +30,6 @@ import static de.amr.games.pacman.ui.fx.util.U.pauseSec;
 
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
@@ -117,10 +116,6 @@ public class PlayScene2D extends GameScene2D {
 	private Bonus2D bonus2D;
 
 	private final SceneInfo info = new SceneInfo();
-
-	public PlayScene2D(GameController gameController) {
-		super(gameController);
-	}
 
 	@Override
 	public void onKeyPressed(KeyCode code) {

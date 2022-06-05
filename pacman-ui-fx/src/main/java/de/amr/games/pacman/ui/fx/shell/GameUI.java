@@ -92,7 +92,7 @@ public class GameUI extends GameEventAdapter {
 
 		Env.$drawMode3D.addListener((x, y, z) -> updateBackground(currentGameScene));
 
-		gameScenes = new GameScenes(gameController);
+		gameScenes = new GameScenes();
 		gameScenes.defineResizingBehavior(mainScene);
 		updateGameScene(gameController.state(), true);
 
@@ -153,7 +153,7 @@ public class GameUI extends GameEventAdapter {
 			newGameScene.resize(sceneRoot.getHeight());
 			updateBackground(newGameScene);
 			sceneRoot.getChildren().set(0, newGameScene.getFXSubScene());
-			newGameScene.setGame(gameController.game());
+			newGameScene.setSceneContext(gameController);
 			newGameScene.init();
 			log("Current scene changed from %s to %s", currentGameScene, newGameScene);
 			currentGameScene = newGameScene;

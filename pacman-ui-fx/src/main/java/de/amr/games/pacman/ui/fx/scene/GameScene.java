@@ -25,8 +25,8 @@ package de.amr.games.pacman.ui.fx.scene;
 
 import static de.amr.games.pacman.lib.Logging.log;
 
+import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.event.GameEventListener;
-import de.amr.games.pacman.model.common.GameModel;
 import javafx.scene.SubScene;
 import javafx.scene.input.KeyCode;
 
@@ -38,9 +38,9 @@ import javafx.scene.input.KeyCode;
 public interface GameScene extends GameEventListener {
 
 	/**
-	 * Sets the scene "context" (game model, rendering, 3D model, sound).
+	 * Sets the scene "context" (game controller, model, rendering, 3D model, sound).
 	 */
-	void setGame(GameModel game);
+	void setSceneContext(GameController gameController);
 
 	/**
 	 * Called before scene is displayed.

@@ -80,7 +80,6 @@ import javafx.scene.transform.Translate;
  */
 public class PlayScene3D extends GameEventAdapter implements GameScene, Rendering3D {
 
-	private final GameController gameController;
 	private final SubScene fxSubScene;
 	private final AmbientLight light = new AmbientLight(Color.GHOSTWHITE);
 	private final Image floorTexture = U.image("/common/escher-texture.jpg");
@@ -90,9 +89,12 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 	private final SimpleBooleanProperty $useMazeFloorTexture = new SimpleBooleanProperty();
 	private final EnumMap<Perspective, PlaySceneCamera> cameras = new EnumMap<>(Perspective.class);
 
+	// scene context
+	private GameController gameController;
 	private GameModel game;
 	private PacManModel3D model3D;
 	private Rendering2D r2D;
+
 	private Pac3D player3D;
 	private Maze3D maze3D;
 	private Ghost3D[] ghosts3D;
@@ -101,9 +103,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 	private LevelCounter3D levelCounter3D;
 	private LivesCounter3D livesCounter3D;
 
-	public PlayScene3D(GameController gc) {
-		this.gameController = gc;
-
+	public PlayScene3D() {
 		cameras.put(Perspective.CAM_DRONE, new Cam_Drone());
 		cameras.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer());
 		cameras.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer());
@@ -133,8 +133,9 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 	}
 
 	@Override
-	public void setGame(GameModel game) {
-		this.game = game;
+	public void setSceneContext(GameController gameController) {
+		this.gameController = gameController;
+		this.game = gameController.game();
 		r2D = switch (game.variant) {
 		case MS_PACMAN -> Spritesheet_MsPacMan.get();
 		case PACMAN -> Spritesheet_PacMan.get();

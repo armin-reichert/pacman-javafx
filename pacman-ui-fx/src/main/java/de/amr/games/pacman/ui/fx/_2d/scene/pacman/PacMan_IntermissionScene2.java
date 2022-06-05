@@ -49,9 +49,8 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class PacMan_IntermissionScene2 extends GameScene2D {
 
-	private final Intermission2Controller sceneController;
-	private final Intermission2Controller.Context context;
-
+	private Intermission2Controller sceneController;
+	private Intermission2Controller.Context context;
 	private LevelCounter2D levelCounter2D;
 	private Pac2D pacMan2D;
 	private Ghost2D blinky2D;
@@ -59,8 +58,9 @@ public class PacMan_IntermissionScene2 extends GameScene2D {
 	private SpriteAnimation<Rectangle2D> blinkyStretchedAnimation;
 	private SpriteAnimation<Rectangle2D> blinkyDamagedAnimation;
 
-	public PacMan_IntermissionScene2(GameController gameController) {
-		super(gameController);
+	@Override
+	public void setSceneContext(GameController gameController) {
+		super.setSceneContext(gameController);
 		sceneController = new Intermission2Controller(gameController);
 		sceneController.playIntermissionSound = () -> SoundManager.get().play(GameSound.INTERMISSION_2);
 		context = sceneController.context();

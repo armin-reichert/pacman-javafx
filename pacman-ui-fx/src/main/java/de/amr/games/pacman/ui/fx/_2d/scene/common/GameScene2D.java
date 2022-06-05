@@ -56,7 +56,8 @@ import javafx.scene.transform.Scale;
  */
 public abstract class GameScene2D extends GameEventAdapter implements GameScene {
 
-	protected final GameController gameController;
+	public static final V2d DEFAULT_SIZE = new V2d(ArcadeWorld.TILES_X * TS, ArcadeWorld.TILES_Y * TS);
+
 	protected final SubScene fxSubScene;
 	protected final StackPane root;
 	protected final Canvas canvas;
@@ -64,6 +65,7 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 	protected final double aspectRatio;
 
 	// context
+	protected GameController gameController;
 	protected GameModel game;
 	protected Rendering2D r2D;
 
@@ -79,9 +81,8 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 	 * @param gameController game controller
 	 * @param unscaledSize   logical scene size (number of tiles x tile size)
 	 */
-	public GameScene2D(GameController gameController) {
-		this.gameController = gameController;
-		this.unscaledSize = new V2d(ArcadeWorld.TILES_X * TS, ArcadeWorld.TILES_Y * TS);
+	public GameScene2D() {
+		this.unscaledSize = DEFAULT_SIZE;
 		this.aspectRatio = unscaledSize.x / unscaledSize.y;
 		this.canvas = new Canvas(1, 1); // will be resized by sub-scene
 		root = new StackPane(canvas, infoPane);
@@ -99,8 +100,9 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 	}
 
 	@Override
-	public void setGame(GameModel game) {
-		this.game = game;
+	public void setSceneContext(GameController gameController) {
+		this.gameController = gameController;
+		this.game = gameController.game();
 		r2D = switch (game.variant) {
 		case MS_PACMAN -> Spritesheet_MsPacMan.get();
 		case PACMAN -> Spritesheet_PacMan.get();

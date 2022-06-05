@@ -51,8 +51,8 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class MsPacMan_IntermissionScene1 extends GameScene2D {
 
-	private final Intermission1Controller sceneController;
-	private final Intermission1Controller.Context context;
+	private Intermission1Controller sceneController;
+	private Intermission1Controller.Context context;
 	private LevelCounter2D levelCounter2D;
 	private Pac2D msPacMan2D;
 	private Pac2D msPacMansHusband2D;
@@ -61,8 +61,9 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 	private Flap2D flap2D;
 	private Heart2D heart2D;
 
-	public MsPacMan_IntermissionScene1(GameController gameController) {
-		super(gameController);
+	@Override
+	public void setSceneContext(GameController gameController) {
+		super.setSceneContext(gameController);
 		sceneController = new Intermission1Controller(gameController);
 		context = sceneController.context();
 		sceneController.playIntermissionSound = () -> SoundManager.get().loop(GameSound.INTERMISSION_1, 1);

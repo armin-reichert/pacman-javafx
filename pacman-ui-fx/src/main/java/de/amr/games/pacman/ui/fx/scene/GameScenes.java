@@ -54,37 +54,36 @@ public class GameScenes {
 	/**
 	 * Creates all game scenes.
 	 * 
-	 * @param parent         the parent scene (main scene)
-	 * @param gameController the game controller
-	 * @param model3D        the used 3D model for the actors
+	 * @param parent  the parent scene (main scene)
+	 * @param model3D the used 3D model for the actors
 	 */
-	public GameScenes(GameController gameController) {
+	public GameScenes() {
 		//@formatter:off
-		scenes[0][0][SCENE_2D] = new MsPacMan_IntroScene(gameController);
+		scenes[0][0][SCENE_2D] = new MsPacMan_IntroScene();
 		scenes[0][0][SCENE_3D] = null;
-		scenes[0][1][SCENE_2D] = new MsPacMan_CreditScene(gameController);
+		scenes[0][1][SCENE_2D] = new MsPacMan_CreditScene();
 		scenes[0][1][SCENE_3D] = null;
-		scenes[0][2][SCENE_2D] = new MsPacMan_IntermissionScene1(gameController);
+		scenes[0][2][SCENE_2D] = new MsPacMan_IntermissionScene1();
 		scenes[0][2][SCENE_3D] = null;
-		scenes[0][3][SCENE_2D] = new MsPacMan_IntermissionScene2(gameController);
+		scenes[0][3][SCENE_2D] = new MsPacMan_IntermissionScene2();
 		scenes[0][3][SCENE_3D] = null;
-		scenes[0][4][SCENE_2D] = new MsPacMan_IntermissionScene3(gameController);
+		scenes[0][4][SCENE_2D] = new MsPacMan_IntermissionScene3();
 		scenes[0][4][SCENE_3D] = null;
-		scenes[0][5][SCENE_2D] = new PlayScene2D(gameController);
-		scenes[0][5][SCENE_3D] = new PlayScene3D(gameController);
+		scenes[0][5][SCENE_2D] = new PlayScene2D();
+		scenes[0][5][SCENE_3D] = new PlayScene3D();
 		
-		scenes[1][0][SCENE_2D] = new PacMan_IntroScene(gameController);
+		scenes[1][0][SCENE_2D] = new PacMan_IntroScene();
 		scenes[1][0][SCENE_3D] = null;
-		scenes[1][1][SCENE_2D] = new PacMan_CreditScene(gameController);
+		scenes[1][1][SCENE_2D] = new PacMan_CreditScene();
 		scenes[1][1][SCENE_3D] = null;
-		scenes[1][2][SCENE_2D] = new PacMan_IntermissionScene1(gameController);
+		scenes[1][2][SCENE_2D] = new PacMan_IntermissionScene1();
 		scenes[1][2][SCENE_3D] = null;
-		scenes[1][3][SCENE_2D] = new PacMan_IntermissionScene2(gameController);
+		scenes[1][3][SCENE_2D] = new PacMan_IntermissionScene2();
 		scenes[1][3][SCENE_3D] = null;
-		scenes[1][4][SCENE_2D] = new PacMan_IntermissionScene3(gameController);
+		scenes[1][4][SCENE_2D] = new PacMan_IntermissionScene3();
 		scenes[1][4][SCENE_3D] = null;
-		scenes[1][5][SCENE_2D] = new PlayScene2D(gameController);
-		scenes[1][5][SCENE_3D] = new PlayScene3D(gameController);
+		scenes[1][5][SCENE_2D] = new PlayScene2D();
+		scenes[1][5][SCENE_3D] = new PlayScene3D();
 		//@formatter:on
 	}
 
