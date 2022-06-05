@@ -38,19 +38,24 @@ import javafx.scene.shape.DrawMode;
 /**
  * @author Armin Reichert
  */
-public class GlobalActions {
+public class Actions {
 
-	static GameController gameController;
-	static GameUI ui;
+	private static GameController theGameController;
+	private static GameUI theUI;
+
+	public static void init(GameController gameController, GameUI ui) {
+		theGameController = gameController;
+		theUI = ui;
+	}
 
 	public static void quitCurrentScene() {
-		ui.getCurrentGameScene().end();
+		theUI.getCurrentGameScene().end();
 		SoundManager.get().stopAll();
-		gameController.returnToIntro();
+		theGameController.returnToIntro();
 	}
 
 	public static void changePerspective(int delta) {
-		if (ui.getCurrentGameScene().is3D()) {
+		if (theUI.getCurrentGameScene().is3D()) {
 			Env.$perspective.set(Env.perspectiveShifted(delta));
 			String perspectiveName = Env.message(Env.$perspective.get().name());
 			showFlashMessage(1, Env.message("camera_perspective", perspectiveName));
@@ -58,41 +63,41 @@ public class GlobalActions {
 	}
 
 	public static void addLives(int lives) {
-		if (gameController.isGameRunning()) {
-			gameController.game().lives += lives;
-			showFlashMessage(1, "You have %d lives", gameController.game().lives);
+		if (theGameController.isGameRunning()) {
+			theGameController.game().lives += lives;
+			showFlashMessage(1, "You have %d lives", theGameController.game().lives);
 		}
 	}
 
 	public static void enterLevel(int levelNumber) {
-		if (gameController.state() == GameState.LEVEL_STARTING) {
+		if (theGameController.state() == GameState.LEVEL_STARTING) {
 			return;
 		}
-		if (gameController.game().level.number == levelNumber) {
+		if (theGameController.game().level.number == levelNumber) {
 			return;
 		}
 		SoundManager.get().stopAll();
 		if (levelNumber == 1) {
-			gameController.game().reset();
-			gameController.changeState(GameState.READY);
+			theGameController.game().reset();
+			theGameController.changeState(GameState.READY);
 		} else {
 			// TODO game model should be able to switch directly to any level
-			int start = levelNumber > gameController.game().level.number ? gameController.game().level.number + 1 : 1;
+			int start = levelNumber > theGameController.game().level.number ? theGameController.game().level.number + 1 : 1;
 			for (int n = start; n < levelNumber; ++n) {
-				gameController.game().setLevel(n);
+				theGameController.game().setLevel(n);
 			}
-			gameController.changeState(GameState.LEVEL_STARTING);
+			theGameController.changeState(GameState.LEVEL_STARTING);
 		}
 	}
 
 	public static void startIntermissionScenesTest() {
-		if (gameController.state() == GameState.INTRO) {
-			gameController.startIntermissionTest();
+		if (theGameController.state() == GameState.INTRO) {
+			theGameController.startIntermissionTest();
 		}
 	}
 
 	public static void toggleInfoPanelsVisible() {
-		Env.toggle(ui.getInfoLayer().visibleProperty());
+		Env.toggle(theUI.getInfoLayer().visibleProperty());
 	}
 
 	public static void togglePaused() {
@@ -102,31 +107,31 @@ public class GlobalActions {
 	}
 
 	public static void selectNextGameVariant() {
-		gameController.selectGameVariant(gameController.game().variant.succ());
+		theGameController.selectGameVariant(theGameController.game().variant.succ());
 	}
 
 	public static void toggleAutopilot() {
-		gameController.toggleAutoMoving();
-		String message = Env.message(gameController.isAutoMoving() ? "autopilot_on" : "autopilot_off");
+		theGameController.toggleAutoMoving();
+		String message = Env.message(theGameController.isAutoMoving() ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(1, message);
 	}
 
 	public static void toggleImmunity() {
-		gameController.togglePlayerImmune();
-		String message = Env.message(gameController.game().playerImmune ? "player_immunity_on" : "player_immunity_off");
+		theGameController.togglePlayerImmune();
+		String message = Env.message(theGameController.game().playerImmune ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(1, message);
 	}
 
 	public static void toggleUse3DScene() {
 		Env.toggle(Env.$3D);
-		var game = gameController.game();
-		var state = gameController.state();
-		if (ui.getFittingScene(game, state, GameUI.SCENE_2D) != ui.getFittingScene(game, state, GameUI.SCENE_3D)) {
-			ui.updateGameScene(gameController.state(), true);
-			if (ui.getCurrentGameScene() instanceof PlayScene2D) {
-				((PlayScene2D) ui.getCurrentGameScene()).onSwitchFrom3DScene();
-			} else if (ui.getCurrentGameScene() instanceof PlayScene3D) {
-				((PlayScene3D) ui.getCurrentGameScene()).onSwitchFrom2DScene();
+		var game = theGameController.game();
+		var state = theGameController.state();
+		if (theUI.getFittingScene(game, state, GameUI.SCENE_2D) != theUI.getFittingScene(game, state, GameUI.SCENE_3D)) {
+			theUI.updateGameScene(theGameController.state(), true);
+			if (theUI.getCurrentGameScene() instanceof PlayScene2D) {
+				((PlayScene2D) theUI.getCurrentGameScene()).onSwitchFrom3DScene();
+			} else if (theUI.getCurrentGameScene() instanceof PlayScene3D) {
+				((PlayScene3D) theUI.getCurrentGameScene()).onSwitchFrom2DScene();
 			}
 		}
 		showFlashMessage(1, Env.message(Env.$3D.get() ? "use_3D_scene" : "use_2D_scene"));
@@ -138,11 +143,23 @@ public class GlobalActions {
 
 	public static void toggleSoundMuted() {
 		if (SoundManager.get().isMuted()) {
-			if (gameController.credit() > 0) {
+			if (theGameController.credit() > 0) {
 				SoundManager.get().setMuted(false);
 			}
 		} else {
 			SoundManager.get().setMuted(true);
 		}
+	}
+
+	public static void cheatEatAllPellets() {
+		theGameController.cheatEatAllPellets();
+	}
+
+	public static void cheatEnterNextLevel() {
+		theGameController.cheatEnterNextLevel();
+	}
+
+	public static void cheatKillAllEatableGhosts() {
+		theGameController.cheatKillAllEatableGhosts();
 	}
 }

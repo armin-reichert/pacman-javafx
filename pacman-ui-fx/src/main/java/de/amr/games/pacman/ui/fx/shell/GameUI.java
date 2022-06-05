@@ -106,8 +106,7 @@ public class GameUI extends GameEventAdapter {
 		this.stage = stage;
 		this.infoLayer = new InfoLayer(this, gameController);
 
-		GlobalActions.gameController = gameController;
-		GlobalActions.ui = this;
+		Actions.init(gameController, this);
 
 		// first child is placeholder for subscene assigned to current game scene
 		sceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
@@ -131,10 +130,6 @@ public class GameUI extends GameEventAdapter {
 		stage.show();
 	}
 
-	public void setFullScreen(boolean fullscreen) {
-		stage.setFullScreen(fullscreen);
-	}
-
 	public double getWidth() {
 		return stage.getWidth();
 	}
@@ -155,23 +150,8 @@ public class GameUI extends GameEventAdapter {
 		return infoLayer;
 	}
 
-	/**
-	 * Defines the resizing behavior of the game scenes. 2D scenes adapt to the parent scene height keeping their aspect
-	 * ratio. 3D scenes adapt to the parent scene size.
-	 * 
-	 * @param parent parent scene (main scene)
-	 * @param scenes game scenes
-	 */
-	private void defineResizingBehavior(Scene parent, GameScene[][] scenes) {
-		for (int sceneIndex = 0; sceneIndex < scenes.length; ++sceneIndex) {
-			var scene2D = scenes[sceneIndex][SCENE_2D];
-			parent.heightProperty().addListener(($height, oldHeight, newHeight) -> scene2D.resize(newHeight.doubleValue()));
-			var scene3D = scenes[sceneIndex][SCENE_3D];
-			if (scene3D != null) {
-				scene3D.getFXSubScene().widthProperty().bind(parent.widthProperty());
-				scene3D.getFXSubScene().heightProperty().bind(parent.heightProperty());
-			}
-		}
+	public GameScene getCurrentGameScene() {
+		return currentGameScene;
 	}
 
 	/**
@@ -200,10 +180,6 @@ public class GameUI extends GameEventAdapter {
 		return scenes[sceneIndex][dimension];
 	}
 
-	public GameScene getCurrentGameScene() {
-		return currentGameScene;
-	}
-
 	/**
 	 * Called on every tick (if simulation is not paused).
 	 */
@@ -211,6 +187,22 @@ public class GameUI extends GameEventAdapter {
 		gameController.update();
 		// game scene is updated *and* rendered such that when simulation is paused it gets redrawn nevertheless
 		currentGameScene.update();
+	}
+
+	@Override
+	public void onGameEvent(GameEvent event) {
+		super.onGameEvent(event);
+		currentGameScene.onGameEvent(event);
+	}
+
+	@Override
+	public void onGameStateChange(GameStateChangeEvent e) {
+		updateGameScene(e.newGameState, false);
+	}
+
+	@Override
+	public void onUIForceUpdate(GameEvent e) {
+		updateGameScene(gameController.state(), true);
 	}
 
 	/**
@@ -222,20 +214,8 @@ public class GameUI extends GameEventAdapter {
 		stage.setTitle(gameController.game().variant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
 	}
 
-	@Override
-	public void onGameEvent(GameEvent event) {
-		super.onGameEvent(event);
-		currentGameScene.onGameEvent(event);
-	}
-
-	@Override
-	public void onUIForceUpdate(GameEvent e) {
-		updateGameScene(gameController.state(), true);
-	}
-
-	@Override
-	public void onGameStateChange(GameStateChangeEvent e) {
-		updateGameScene(e.newGameState, false);
+	public void setFullScreen(boolean fullscreen) {
+		stage.setFullScreen(fullscreen);
 	}
 
 	void updateGameScene(GameState gameState, boolean forced) {
@@ -265,42 +245,61 @@ public class GameUI extends GameEventAdapter {
 		sceneRoot.setBackground(bg);
 	}
 
+	/**
+	 * Defines the resizing behavior of the game scenes. 2D scenes adapt to the parent scene height keeping their aspect
+	 * ratio. 3D scenes adapt to the parent scene size.
+	 * 
+	 * @param parent parent scene (main scene)
+	 * @param scenes game scenes
+	 */
+	private void defineResizingBehavior(Scene parent, GameScene[][] scenes) {
+		for (int sceneIndex = 0; sceneIndex < scenes.length; ++sceneIndex) {
+			var scene2D = scenes[sceneIndex][SCENE_2D];
+			parent.heightProperty().addListener(($height, oldHeight, newHeight) -> scene2D.resize(newHeight.doubleValue()));
+			var scene3D = scenes[sceneIndex][SCENE_3D];
+			if (scene3D != null) {
+				scene3D.getFXSubScene().widthProperty().bind(parent.widthProperty());
+				scene3D.getFXSubScene().heightProperty().bind(parent.heightProperty());
+			}
+		}
+	}
+
 	private void handleKeyPressed(KeyEvent e) {
 		// ALT + key
 		if (Key.pressed(e, Key.ALT, KeyCode.A)) {
-			GlobalActions.toggleAutopilot();
+			Actions.toggleAutopilot();
 		} else if (Key.pressed(e, Key.ALT, KeyCode.E)) {
-			gameController.cheatEatAllPellets();
+			Actions.cheatEatAllPellets();
 		} else if (Key.pressed(e, Key.ALT, KeyCode.D)) {
 			Env.toggle(Env.$debugUI);
 		} else if (Key.pressed(e, Key.ALT, KeyCode.I)) {
-			GlobalActions.toggleImmunity();
+			Actions.toggleImmunity();
 		} else if (Key.pressed(e, Key.ALT, KeyCode.L)) {
-			GlobalActions.addLives(3);
+			Actions.addLives(3);
 		} else if (Key.pressed(e, Key.ALT, KeyCode.M)) {
-			GlobalActions.toggleSoundMuted();
+			Actions.toggleSoundMuted();
 		} else if (Key.pressed(e, Key.ALT, KeyCode.N)) {
-			gameController.cheatEnterNextLevel();
+			Actions.cheatEnterNextLevel();
 		} else if (Key.pressed(e, Key.ALT, KeyCode.X)) {
-			gameController.cheatKillAllEatableGhosts();
+			Actions.cheatKillAllEatableGhosts();
 		} else if (Key.pressed(e, Key.ALT, KeyCode.Z)) {
-			GlobalActions.startIntermissionScenesTest();
+			Actions.startIntermissionScenesTest();
 		} else if (Key.pressed(e, Key.ALT, KeyCode.LEFT)) {
-			GlobalActions.changePerspective(-1);
+			Actions.changePerspective(-1);
 		} else if (Key.pressed(e, Key.ALT, KeyCode.RIGHT)) {
-			GlobalActions.changePerspective(+1);
+			Actions.changePerspective(+1);
 		} else if (Key.pressed(e, Key.ALT, KeyCode.DIGIT3)) {
-			GlobalActions.toggleUse3DScene();
+			Actions.toggleUse3DScene();
 		}
 
 		else if (Key.pressed(e, Key.CTRL, KeyCode.I)) {
-			GlobalActions.toggleInfoPanelsVisible();
+			Actions.toggleInfoPanelsVisible();
 		}
 
 		else if (Key.pressed(e, KeyCode.Q)) {
-			GlobalActions.quitCurrentScene();
+			Actions.quitCurrentScene();
 		} else if (Key.pressed(e, KeyCode.V)) {
-			GlobalActions.selectNextGameVariant();
+			Actions.selectNextGameVariant();
 		} else if (Key.pressed(e, KeyCode.F11)) {
 			stage.setFullScreen(true);
 		}
