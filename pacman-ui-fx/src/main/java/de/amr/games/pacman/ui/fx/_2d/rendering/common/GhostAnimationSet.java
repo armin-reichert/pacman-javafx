@@ -50,8 +50,8 @@ public class GhostAnimationSet extends SpriteAnimationSet<Ghost, GhostAnimation,
 		flashing = r2D.createGhostFlashingAnimation();
 		blue = r2D.createGhostBlueAnimation();
 		color = r2D.createGhostColorAnimation(ghostID);
-		numbers = new SpriteAnimation<>(r2D.getNumberSprite(200), r2D.getNumberSprite(400), r2D.getNumberSprite(800),
-				r2D.getNumberSprite(1600));
+		numbers = new SpriteAnimation<>(r2D.getGhostValueSprite(200), r2D.getGhostValueSprite(400), r2D.getGhostValueSprite(800),
+				r2D.getGhostValueSprite(1600));
 	}
 
 	@Override

@@ -71,7 +71,7 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	private final Image mazeFull, mazeEmpty;
 	private final Map<Integer, Rectangle2D> symbolSprites;
 	private final Map<Integer, Rectangle2D> bonusValueSprites;
-	private final Map<Integer, Rectangle2D> bountyNumberSprites;
+	private final Map<Integer, Rectangle2D> ghostValueSprites;
 	private final Font font;
 
 	private Spritesheet_PacMan() {
@@ -105,7 +105,7 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 			5000, r(3, 12, 3, 1)
 		);
 		
-		bountyNumberSprites = Map.of(
+		ghostValueSprites = Map.of(
 			200,  r(0, 8, 1, 1),
 			400,  r(1, 8, 1, 1),
 			800,  r(2, 8, 1, 1),
@@ -175,8 +175,8 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public Rectangle2D getNumberSprite(int number) {
-		return bountyNumberSprites.get(number);
+	public Rectangle2D getGhostValueSprite(int number) {
+		return ghostValueSprites.get(number);
 	}
 
 	@Override

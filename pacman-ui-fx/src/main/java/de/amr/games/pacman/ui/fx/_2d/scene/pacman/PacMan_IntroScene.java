@@ -195,15 +195,23 @@ public class PacMan_IntroScene extends GameScene2D {
 		}
 	}
 
+	// TODO check this
 	private void drawGuys(GraphicsContext g, int offset) {
-		g.save();
-		g.translate(offset, 0);
-		ghosts2D[1].render(g, r2D);
-		ghosts2D[2].render(g, r2D);
-		g.restore();
-		ghosts2D[0].render(g, r2D);
-		ghosts2D[3].render(g, r2D);
 		pacMan2D.render(g, r2D);
+		if (offset == 0) {
+			ghosts2D[0].render(g, r2D);
+			ghosts2D[1].render(g, r2D);
+			ghosts2D[2].render(g, r2D);
+			ghosts2D[3].render(g, r2D);
+		} else {
+			ghosts2D[0].render(g, r2D);
+			g.save();
+			g.translate(offset, 0);
+			ghosts2D[1].render(g, r2D);
+			ghosts2D[2].render(g, r2D);
+			g.restore();
+			ghosts2D[3].render(g, r2D);
+		}
 	}
 
 	private void drawPoints(GraphicsContext g) {
@@ -225,5 +233,4 @@ public class PacMan_IntroScene extends GameScene2D {
 	private void drawCopyright(GraphicsContext g) {
 		r2D.drawCopyright(g, t($.left), t(32));
 	}
-
 }

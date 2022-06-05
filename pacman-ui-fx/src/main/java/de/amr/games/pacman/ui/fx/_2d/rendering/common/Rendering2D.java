@@ -54,7 +54,7 @@ public interface Rendering2D {
 
 	Rectangle2D getBonusValueSprite(int number);
 
-	Rectangle2D getNumberSprite(int number);
+	Rectangle2D getGhostValueSprite(int number);
 
 	Rectangle2D getLifeSprite();
 

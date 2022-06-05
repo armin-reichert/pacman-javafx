@@ -231,7 +231,7 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public Rectangle2D getNumberSprite(int number) {
+	public Rectangle2D getGhostValueSprite(int number) {
 		return ghostValueSprites.get(number);
 	}
 
