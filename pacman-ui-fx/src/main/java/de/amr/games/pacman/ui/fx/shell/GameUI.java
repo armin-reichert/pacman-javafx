@@ -66,8 +66,6 @@ import javafx.stage.Stage;
  */
 public class GameUI extends GameEventAdapter {
 
-	public static final int MIN_FRAMERATE = 5, MAX_FRAMERATE = 120;
-
 	public static boolean debug;
 
 	public final GameController gameController;
@@ -85,18 +83,20 @@ public class GameUI extends GameEventAdapter {
 
 		// first child is placeholder for subscene assigned to current game scene
 		sceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
-		Env.$drawMode3D.addListener(($drawMode, _old, _new) -> updateBackground(currentGameScene));
 
-		var scene = new Scene(sceneRoot, width, height);
-		scene.setOnKeyPressed(this::handleKeyPressed);
-		scene.setOnMouseClicked(this::handleMouseClicked);
-		scene.setOnMouseMoved(this::handleMouseMoved);
+		var mainScene = new Scene(sceneRoot, width, height);
+		mainScene.setOnKeyPressed(this::handleKeyPressed);
+		mainScene.setOnMouseClicked(this::handleMouseClicked);
+		mainScene.setOnMouseMoved(this::handleMouseMoved);
+		log("Main scene created. Size: %.0f x %.0f", mainScene.getWidth(), mainScene.getHeight());
+
+		Env.$drawMode3D.addListener((x, y, z) -> updateBackground(currentGameScene));
 
 		gameScenes = new GameScenes(gameController);
-		gameScenes.defineResizingBehavior(scene);
+		gameScenes.defineResizingBehavior(mainScene);
 		updateGameScene(gameController.state(), true);
 
-		stage.setScene(scene);
+		stage.setScene(mainScene);
 		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
 		stage.setOnCloseRequest(e -> GameLoop.get().stop());
 		stage.centerOnScreen();

@@ -42,6 +42,9 @@ import javafx.scene.text.Font;
  * @author Armin Reichert
  */
 public class SectionGeneral extends Section {
+
+	public static final int MIN_FRAMERATE = 5, MAX_FRAMERATE = 120;
+
 	private Button[] btnsSimulation;
 	private Slider sliderTargetFPS;
 	private CheckBox cbMuted;
@@ -69,7 +72,7 @@ public class SectionGeneral extends Section {
 		btnStep.setTooltip(tooltipStep);
 		btnStep.setOnAction(e -> GameLoop.get().runSingleStep(true));
 
-		sliderTargetFPS = addSlider("Target Framerate", GameUI.MIN_FRAMERATE, GameUI.MAX_FRAMERATE, 60);
+		sliderTargetFPS = addSlider("Target Framerate", MIN_FRAMERATE, MAX_FRAMERATE, 60);
 		sliderTargetFPS.setShowTickLabels(false);
 		sliderTargetFPS.setShowTickMarks(false);
 		sliderTargetFPS.valueProperty().addListener(($value, oldValue, newValue) -> {

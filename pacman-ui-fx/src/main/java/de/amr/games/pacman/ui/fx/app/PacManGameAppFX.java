@@ -69,7 +69,7 @@ public class PacManGameAppFX extends Application {
 	public void init() throws Exception {
 		log("Initializing application...");
 		options = new Options(getParameters().getUnnamed());
-		Env.$3D.set(options.use3DScenes);
+		Env.$3D.set(options.use3D);
 		Env.$perspective.set(options.perspective);
 		gameController = new GameController(options.gameVariant);
 		log("Application initialized. Game variant: %s", gameController.game().variant);
@@ -81,12 +81,14 @@ public class PacManGameAppFX extends Application {
 
 		double unscaledWidth = ArcadeWorld.TILES_X * World.TS;
 		double unscaledHeight = ArcadeWorld.TILES_Y * World.TS;
-		double scaling = options.canvasHeight / unscaledHeight;
-		ui = new GameUI(gameController, stage, scaling * unscaledWidth, scaling * unscaledHeight);
+		double zoom = options.zoom;
+
+		ui = new GameUI(gameController, stage, zoom * unscaledWidth, zoom * unscaledHeight);
 		ui.stage.setFullScreen(options.fullscreen);
 
 		gameController.addListener(ui);
 		gameController.setPlayerControl(new KeyboardPlayerControl(stage));
+
 		SoundManager.get().setMuted(options.muted);
 
 		GameLoop.get().update = ui::update;
@@ -95,7 +97,8 @@ public class PacManGameAppFX extends Application {
 		GameLoop.get().setTimeMeasured(false);
 		GameLoop.get().start();
 
-		log("Application started. Stage size: w=%.0f h=%.0f, 3D: %s, camera perspective: %s", ui.stage.getWidth(),
-				ui.stage.getHeight(), Env.$3D.get(), Env.$perspective.get());
+		log("Application started.");
+		log("Stage size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s", ui.stage.getWidth(), ui.stage.getHeight(), zoom,
+				Env.$3D.get(), Env.$perspective.get());
 	}
 }

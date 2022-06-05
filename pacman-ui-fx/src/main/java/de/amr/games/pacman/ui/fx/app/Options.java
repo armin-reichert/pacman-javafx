@@ -25,12 +25,9 @@ package de.amr.games.pacman.ui.fx.app;
 
 import static de.amr.games.pacman.lib.Logging.log;
 
-import java.util.Arrays;
 import java.util.List;
 
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
 
 /**
@@ -40,73 +37,87 @@ import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
  */
 class Options {
 
-	static final String[] NAMES = { "-2D", "-3D", "-height", "-fullscreen", "-muted", "-mspacman", "-pacman",
-			"-perspective" };
+	/** Command-line argument names. */
+	static final List<String> NAMES = List.of( //
+			"-2D", "-3D", //
+			"-zoom", // -zoom <double value>
+			"-fullscreen", //
+			"-muted", //
+			"-mspacman", "-pacman", //
+			"-perspective" // see {@link Perspective}
+	);
 
-	boolean fullscreen = false;
-	boolean muted = false;
-	boolean use3DScenes = true;
-	double canvasHeight = 2 * ArcadeWorld.TILES_Y * World.TS;
-	GameVariant gameVariant = GameVariant.PACMAN;
-	Perspective perspective = Perspective.CAM_NEAR_PLAYER;
+	public boolean use3D = true;
+	public double zoom = 2.0;
+	public boolean fullscreen = false;
+	public boolean muted = false;
+	public GameVariant gameVariant = GameVariant.PACMAN;
+	public Perspective perspective = Perspective.CAM_NEAR_PLAYER;
 
-	Options(List<String> params) {
-		List<String> parameterNamesList = Arrays.asList(NAMES);
+	public Options(List<String> args) {
 		int i = 0;
-		while (i < params.size()) {
+		while (i < args.size()) {
 
-			if ("-height".equals(params.get(i))) {
-				if (i + 1 == params.size() || parameterNamesList.contains(params.get(i + 1))) {
-					log("!!! Error parsing parameters: missing height value.");
+			// -zoom <double value>
+			if ("-zoom".equals(args.get(i))) {
+				if (i + 1 == args.size() || NAMES.contains(args.get(i + 1))) {
+					log("!!! Error parsing parameters: missing zoom value.");
 				} else {
 					++i;
 					try {
-						canvasHeight = Double.parseDouble(params.get(i));
+						zoom = Double.parseDouble(args.get(i));
 					} catch (NumberFormatException x) {
-						log("!!! Error parsing parameters: '%s' is no legal height value.", params.get(i));
+						log("!!! Error parsing parameters: '%s' is no legal zoom value.", args.get(i));
 					}
 				}
 			}
 
-			else if ("-fullscreen".equals(params.get(i))) {
+			// -fullscreen
+			else if ("-fullscreen".equals(args.get(i))) {
 				fullscreen = true;
 			}
 
-			else if ("-muted".equals(params.get(i))) {
+			// -muted
+			else if ("-muted".equals(args.get(i))) {
 				muted = true;
 			}
 
-			else if ("-mspacman".equals(params.get(i))) {
+			// -mspacman
+			else if ("-mspacman".equals(args.get(i))) {
 				gameVariant = GameVariant.MS_PACMAN;
 			}
 
-			else if ("-pacman".equals(params.get(i))) {
+			// -pacman
+			else if ("-pacman".equals(args.get(i))) {
 				gameVariant = GameVariant.PACMAN;
 			}
 
-			else if ("-2D".equals(params.get(i))) {
-				use3DScenes = false;
+			// -2D
+			else if ("-2D".equals(args.get(i))) {
+				use3D = false;
 			}
 
-			else if ("-3D".equals(params.get(i))) {
-				use3DScenes = true;
+			// -3D
+			else if ("-3D".equals(args.get(i))) {
+				use3D = true;
 			}
 
-			else if ("-perspective".equals(params.get(i))) {
-				if (i + 1 == params.size() || parameterNamesList.contains(params.get(i + 1))) {
+			// -perspective
+			else if ("-perspective".equals(args.get(i))) {
+				if (i + 1 == args.size() || NAMES.contains(args.get(i + 1))) {
 					log("!!! Error parsing parameters: missing perspective value.");
 				} else {
 					++i;
 					try {
-						perspective = Perspective.valueOf(params.get(i).toUpperCase());
+						perspective = Perspective.valueOf(args.get(i).toUpperCase());
 					} catch (Exception x) {
-						log("!!! Error parsing parameters: '%s' is no legal perspective value.", params.get(i));
+						log("!!! Error parsing parameters: '%s' is no legal perspective value.", args.get(i));
 					}
 				}
 			}
 
 			else {
-				log("!!! Error parsing parameters: Found garbage '%s'", params.get(i));
+				log("!!! Error parsing parameters: Found garbage '%s'", args.get(i));
 			}
 
 			++i;
