@@ -56,7 +56,7 @@ import javafx.scene.transform.Scale;
  */
 public abstract class GameScene2D extends GameEventAdapter implements GameScene {
 
-	public static final V2d DEFAULT_SIZE = new V2d(ArcadeWorld.TILES_X * TS, ArcadeWorld.TILES_Y * TS);
+	public static final V2d DEFAULT_UNSCALED_SIZE = new V2d(ArcadeWorld.TILES_X * TS, ArcadeWorld.TILES_Y * TS);
 
 	protected final SubScene fxSubScene;
 	protected final StackPane root;
@@ -82,7 +82,7 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 	 * @param unscaledSize   logical scene size (number of tiles x tile size)
 	 */
 	public GameScene2D() {
-		this.unscaledSize = DEFAULT_SIZE;
+		this.unscaledSize = DEFAULT_UNSCALED_SIZE;
 		this.aspectRatio = unscaledSize.x / unscaledSize.y;
 		this.canvas = new Canvas(1, 1); // will be resized by sub-scene
 		root = new StackPane(canvas, infoPane);
