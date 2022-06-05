@@ -43,19 +43,15 @@ import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntermissionScene1;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntermissionScene2;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntermissionScene3;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntroScene;
-import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
-import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.shell.info.InfoLayer;
 import de.amr.games.pacman.ui.fx.util.U;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -112,8 +108,6 @@ public class GameUI extends GameEventAdapter {
 		mainSceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
 		mainScene = new Scene(mainSceneRoot, width, height);
 		mainScene.setOnKeyPressed(this::handleKeyPressed);
-		mainScene.setOnMouseClicked(this::handleMouseClicked);
-		mainScene.setOnMouseMoved(this::handleMouseMoved);
 		log("Main scene created. Size: %.0f x %.0f", mainScene.getWidth(), mainScene.getHeight());
 
 		Env.$drawMode3D.addListener((x, y, z) -> updateSceneBackground(currentGameScene));
@@ -180,11 +174,11 @@ public class GameUI extends GameEventAdapter {
 	}
 
 	/**
-	 * Called on every tick (if simulation is not paused).
+	 * Called on every tick (if simulation is not paused). Game scene is updated *and* rendered such that when simulation
+	 * is paused it gets redrawn nevertheless
 	 */
 	public void update() {
 		gameController.update();
-		// game scene is updated *and* rendered such that when simulation is paused it gets redrawn nevertheless
 		currentGameScene.update();
 	}
 
@@ -305,35 +299,5 @@ public class GameUI extends GameEventAdapter {
 
 		// forward to current game scene
 		currentGameScene.onKeyPressed(e.getCode());
-	}
-
-	// Begin test area
-
-	private String lastPicked = "";
-
-	private void handleMouseClicked(MouseEvent e) {
-		currentGameScene.getFXSubScene().requestFocus();
-	}
-
-	private void handleMouseMoved(MouseEvent e) {
-		identifyNode(e.getPickResult().getIntersectedNode());
-	}
-
-	private void identifyNode(Node node) {
-		if (node != null) {
-			String s = String.format("%s", node);
-			Object info = node.getUserData();
-			if (info instanceof Pac3D) {
-				Pac3D pac3D = (Pac3D) info;
-				s = pac3D.identifyNode(node);
-			} else if (info instanceof Ghost3D) {
-				Ghost3D ghost3D = (Ghost3D) info;
-				s = ghost3D.identifyNode(node);
-			}
-			if (!lastPicked.equals(s)) {
-				log(s);
-				lastPicked = s;
-			}
-		}
 	}
 }
