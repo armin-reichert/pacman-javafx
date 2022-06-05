@@ -74,6 +74,10 @@ import javafx.stage.Stage;
  */
 public class GameUI extends GameEventAdapter {
 
+	public static final int SCENE_2D = 0;
+
+	public static final int SCENE_3D = 1;
+
 	public static boolean debug;
 
 	public final GameController gameController;
@@ -82,8 +86,6 @@ public class GameUI extends GameEventAdapter {
 	private final StackPane sceneRoot;
 	private final InfoLayer infoLayer;
 	private GameScene currentGameScene;
-
-	public static final int SCENE_2D = 0, SCENE_3D = 1;
 
 	private final GameScene[][] scenes_MrPacMan = {
 		//@formatter:off
@@ -106,6 +108,32 @@ public class GameUI extends GameEventAdapter {
 		{ new PlayScene2D(), new PlayScene3D() },
 		//@formatter:on
 	};
+
+	public GameUI(GameController gameController, Stage stage, double width, double height) {
+		this.gameController = gameController;
+		this.stage = stage;
+		this.infoLayer = new InfoLayer(this);
+
+		// first child is placeholder for subscene assigned to current game scene
+		sceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
+
+		var mainScene = new Scene(sceneRoot, width, height);
+		mainScene.setOnKeyPressed(this::handleKeyPressed);
+		mainScene.setOnMouseClicked(this::handleMouseClicked);
+		mainScene.setOnMouseMoved(this::handleMouseMoved);
+		log("Main scene created. Size: %.0f x %.0f", mainScene.getWidth(), mainScene.getHeight());
+
+		Env.$drawMode3D.addListener((x, y, z) -> updateBackground(currentGameScene));
+
+		defineSceneResizingBehavior(mainScene);
+		updateGameScene(gameController.state(), true);
+
+		stage.setScene(mainScene);
+		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
+		stage.setOnCloseRequest(e -> GameLoop.get().stop());
+		stage.centerOnScreen();
+		stage.show();
+	}
 
 	public void defineSceneResizingBehavior(Scene parent) {
 		defineResizingBehavior(parent, scenes_MsPacMan);
@@ -150,32 +178,6 @@ public class GameUI extends GameEventAdapter {
 			return scenes[sceneIndex][SCENE_2D];
 		}
 		return scenes[sceneIndex][dimension];
-	}
-
-	public GameUI(GameController gameController, Stage stage, double width, double height) {
-		this.gameController = gameController;
-		this.stage = stage;
-		this.infoLayer = new InfoLayer(this);
-
-		// first child is placeholder for subscene assigned to current game scene
-		sceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
-
-		var mainScene = new Scene(sceneRoot, width, height);
-		mainScene.setOnKeyPressed(this::handleKeyPressed);
-		mainScene.setOnMouseClicked(this::handleMouseClicked);
-		mainScene.setOnMouseMoved(this::handleMouseMoved);
-		log("Main scene created. Size: %.0f x %.0f", mainScene.getWidth(), mainScene.getHeight());
-
-		Env.$drawMode3D.addListener((x, y, z) -> updateBackground(currentGameScene));
-
-		defineSceneResizingBehavior(mainScene);
-		updateGameScene(gameController.state(), true);
-
-		stage.setScene(mainScene);
-		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
-		stage.setOnCloseRequest(e -> GameLoop.get().stop());
-		stage.centerOnScreen();
-		stage.show();
 	}
 
 	public GameScene getCurrentGameScene() {
@@ -250,97 +252,43 @@ public class GameUI extends GameEventAdapter {
 		currentGameScene.getFXSubScene().requestFocus();
 	}
 
-	// Begin test area ---
-
-	private String lastPicked = "";
-
-	private void handleMouseMoved(MouseEvent e) {
-		identifyNode(e.getPickResult().getIntersectedNode());
-	}
-
-	private void identifyNode(Node node) {
-		if (node != null) {
-			String s = String.format("%s", node);
-			Object info = node.getUserData();
-			if (info instanceof Pac3D) {
-				Pac3D pac3D = (Pac3D) info;
-				s = pac3D.identifyNode(node);
-			} else if (info instanceof Ghost3D) {
-				Ghost3D ghost3D = (Ghost3D) info;
-				s = ghost3D.identifyNode(node);
-			}
-			if (!lastPicked.equals(s)) {
-				log(s);
-				lastPicked = s;
-			}
-		}
-	}
-
-	// End test area ---
-
-	public static final byte MOD_NONE = 0x0;
-	public static final byte MOD_ALT = 0x1;
-	public static final byte MOD_CTRL = 0x2;
-	public static final byte MOD_SHIFT = 0x4;
-
-	public static boolean pressed(KeyEvent e, KeyCode code) {
-		return pressed(e, MOD_NONE, code);
-	}
-
-	public static boolean pressed(KeyEvent e, int modfierMask, KeyCode code) {
-		if ((modfierMask & MOD_ALT) != 0 && !e.isAltDown()) {
-			return false;
-		}
-		if ((modfierMask & MOD_CTRL) != 0 && !e.isControlDown()) {
-			return false;
-		}
-		if ((modfierMask & MOD_SHIFT) != 0 && !e.isShiftDown()) {
-			return false;
-		}
-		if (e.getCode() != code) {
-			return false;
-		}
-		e.consume();
-		return true;
-	}
-
 	private void handleKeyPressed(KeyEvent e) {
 		// ALT + key
-		if (pressed(e, MOD_ALT, KeyCode.A)) {
+		if (Key.pressed(e, Key.ALT, KeyCode.A)) {
 			toggleAutopilot();
-		} else if (pressed(e, MOD_ALT, KeyCode.E)) {
+		} else if (Key.pressed(e, Key.ALT, KeyCode.E)) {
 			gameController.cheatEatAllPellets();
-		} else if (pressed(e, MOD_ALT, KeyCode.D)) {
+		} else if (Key.pressed(e, Key.ALT, KeyCode.D)) {
 			debug = !debug;
-		} else if (pressed(e, MOD_ALT, KeyCode.I)) {
+		} else if (Key.pressed(e, Key.ALT, KeyCode.I)) {
 			toggleImmunity();
-		} else if (pressed(e, MOD_ALT, KeyCode.L)) {
+		} else if (Key.pressed(e, Key.ALT, KeyCode.L)) {
 			addLives(3);
-		} else if (pressed(e, MOD_ALT, KeyCode.M)) {
+		} else if (Key.pressed(e, Key.ALT, KeyCode.M)) {
 			toggleSoundMuted();
-		} else if (pressed(e, MOD_ALT, KeyCode.N)) {
+		} else if (Key.pressed(e, Key.ALT, KeyCode.N)) {
 			gameController.cheatEnterNextLevel();
-		} else if (pressed(e, MOD_ALT, KeyCode.X)) {
+		} else if (Key.pressed(e, Key.ALT, KeyCode.X)) {
 			gameController.cheatKillAllEatableGhosts();
-		} else if (pressed(e, MOD_ALT, KeyCode.Z)) {
+		} else if (Key.pressed(e, Key.ALT, KeyCode.Z)) {
 			startIntermissionScenesTest();
-		} else if (pressed(e, MOD_ALT, KeyCode.LEFT)) {
+		} else if (Key.pressed(e, Key.ALT, KeyCode.LEFT)) {
 			changePerspective(-1);
-		} else if (pressed(e, MOD_ALT, KeyCode.RIGHT)) {
+		} else if (Key.pressed(e, Key.ALT, KeyCode.RIGHT)) {
 			changePerspective(+1);
-		} else if (pressed(e, MOD_ALT, KeyCode.DIGIT3)) {
+		} else if (Key.pressed(e, Key.ALT, KeyCode.DIGIT3)) {
 			toggleUse3DScene();
 		}
 
-		else if (pressed(e, MOD_CTRL, KeyCode.I)) {
+		else if (Key.pressed(e, Key.CTRL, KeyCode.I)) {
 			toggleInfoPanelsVisible();
 		}
 
-		else if (pressed(e, KeyCode.Q)) {
+		else if (Key.pressed(e, KeyCode.Q)) {
 			quitCurrentScene();
-		} else if (pressed(e, KeyCode.V)) {
+		} else if (Key.pressed(e, KeyCode.V)) {
 			selectNextGameVariant();
-		} else if (pressed(e, KeyCode.F11)) {
+		} else if (Key.pressed(e, KeyCode.F11)) {
 			stage.setFullScreen(true);
 		}
 		currentGameScene.onKeyPressed(e.getCode());
@@ -453,4 +401,33 @@ public class GameUI extends GameEventAdapter {
 			SoundManager.get().setMuted(true);
 		}
 	}
+
+	// Begin test area ---
+
+	private String lastPicked = "";
+
+	private void handleMouseMoved(MouseEvent e) {
+		identifyNode(e.getPickResult().getIntersectedNode());
+	}
+
+	private void identifyNode(Node node) {
+		if (node != null) {
+			String s = String.format("%s", node);
+			Object info = node.getUserData();
+			if (info instanceof Pac3D) {
+				Pac3D pac3D = (Pac3D) info;
+				s = pac3D.identifyNode(node);
+			} else if (info instanceof Ghost3D) {
+				Ghost3D ghost3D = (Ghost3D) info;
+				s = ghost3D.identifyNode(node);
+			}
+			if (!lastPicked.equals(s)) {
+				log(s);
+				lastPicked = s;
+			}
+		}
+	}
+
+	// End test area ---
+
 }
