@@ -312,7 +312,7 @@ public class PlayScene2D extends GameScene2D {
 			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart(GhostAnimation.COLOR));
 		}
 		case PACMAN_DYING -> {
-			gameController.state().timer().setDurationIndefinite();
+			gameController.state().timer().setIndefinite();
 			gameController.state().timer().start();
 			SoundManager.get().stopAll();
 			pac2D.animations.selectAnimation(PacAnimation.DYING);
@@ -332,7 +332,7 @@ public class PlayScene2D extends GameScene2D {
 			SoundManager.get().play(GameSound.GHOST_EATEN);
 		}
 		case LEVEL_COMPLETE -> {
-			gameController.state().timer().setDurationIndefinite(); // wait until continueGame() is called
+			gameController.state().timer().setIndefinite(); // wait until continueGame() is called
 			SoundManager.get().stopAll();
 			pac2D.animations.reset();
 			// Energizers can still exist if "next level" cheat has been used
@@ -345,7 +345,7 @@ public class PlayScene2D extends GameScene2D {
 			).play();
 		}
 		case LEVEL_STARTING -> {
-			gameController.state().timer().setDurationSeconds(1);
+			gameController.state().timer().setSeconds(1);
 			gameController.state().timer().start();
 		}
 		case GAME_OVER -> {
