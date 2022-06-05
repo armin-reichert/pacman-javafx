@@ -163,6 +163,7 @@ public class PacMan_IntroScene extends GameScene2D {
 			drawGallery(g);
 			drawPoints(g);
 			drawCopyright(g);
+			drawGuys(g, 0);
 		}
 		}
 	}
