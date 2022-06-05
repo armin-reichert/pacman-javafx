@@ -36,9 +36,9 @@ import javafx.scene.image.WritableImage;
  */
 public class Spritesheet {
 
-	private final Image source;
-	private final int rasterSize;
-	private final int[] dirOrder = new int[4];
+	protected final Image source;
+	protected final int rasterSize;
+	protected final int[] dirOrder = new int[4];
 
 	public Spritesheet(String imagePath, int rasterSize, Direction... dirs) {
 		this.source = U.image(imagePath);
@@ -48,7 +48,7 @@ public class Spritesheet {
 		}
 	}
 
-	public int dirOrder(Direction dir) {
+	public int dirIndex(Direction dir) {
 		return dirOrder[dir.ordinal()];
 	}
 

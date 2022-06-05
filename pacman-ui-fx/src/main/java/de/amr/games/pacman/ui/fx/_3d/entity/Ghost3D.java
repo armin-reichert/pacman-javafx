@@ -25,10 +25,12 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.t;
 
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
 import de.amr.games.pacman.ui.fx._3d.animation.ColorFlashingTransition;
 import de.amr.games.pacman.ui.fx._3d.animation.FadeInTransition3D;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
@@ -59,15 +61,15 @@ public class Ghost3D extends Group implements Rendering3D {
 	private final Group bodyParts;
 	private final Box numberCube = new Box(8, 8, 8);
 	private final Motion motion;
-	private final Rendering2D r2D;
+	private final GameVariant gameVariant;
 	private ColorFlashingTransition skinFlashing;
 	private boolean looksFrightened;
 
 	private DisplayMode displayMode;
 
-	public Ghost3D(Ghost ghost, PacManModel3D model3D, Rendering2D r2D) {
+	public Ghost3D(Ghost ghost, PacManModel3D model3D, GameVariant gameVariant) {
+		this.gameVariant = gameVariant;
 		this.ghost = ghost;
-		this.r2D = r2D;
 
 		bodyParts = model3D.createGhost(ghostify(getGhostSkinColor(ghost.id)), getGhostEyeBallColor(),
 				getGhostPupilColor());
@@ -149,7 +151,7 @@ public class Ghost3D extends Group implements Rendering3D {
 			eyes().setVisible(true);
 		}
 		case NUMBER_CUBE -> {
-			Image texture = r2D.getSpritesheet().subImage(r2D.getGhostValueSprite(ghost.bounty));
+			var texture = getGhostValueSprite(ghost.id);
 			PhongMaterial material = new PhongMaterial();
 			material.setBumpMap(texture);
 			material.setDiffuseMap(texture);
@@ -162,6 +164,20 @@ public class Ghost3D extends Group implements Rendering3D {
 			eyes().setVisible(false);
 		}
 		}
+	}
+
+	private Image getGhostValueSprite(int ghostID) {
+		// TODO do not access specific spritesheet from here
+		return switch (gameVariant) {
+		case MS_PACMAN -> {
+			var ss = Spritesheet_MsPacMan.get();
+			yield ss.subImage(ss.getGhostValueSprite(ghostID));
+		}
+		case PACMAN -> {
+			var ss = Spritesheet_PacMan.get();
+			yield ss.subImage(ss.getGhostValueSprite(ghostID));
+		}
+		};
 	}
 
 	public void playFlashingAnimation() {

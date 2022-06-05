@@ -154,8 +154,8 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public Spritesheet getSpritesheet() {
-		return this;
+	public void drawSprite(GraphicsContext g, Rectangle2D s, double x, double y) {
+		g.drawImage(source, s.getMinX(), s.getMinY(), s.getWidth(), s.getHeight(), x, y, s.getWidth(), s.getHeight());
 	}
 
 	/**
@@ -175,6 +175,11 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	@Override
 	public Color getGhostColor(int ghostID) {
 		return GHOST_COLORS[ghostID];
+	}
+
+	@Override
+	public Rectangle2D getGhostSprite(int ghostID, Direction dir) {
+		return rhs(2 * dirIndex(dir) + 1, 4 + ghostID);
 	}
 
 	@Override
@@ -255,7 +260,7 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	public SpriteAnimationMap<Direction, Rectangle2D> createPacMunchingAnimation() {
 		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
-			int d = dirOrder(dir);
+			int d = dirIndex(dir);
 			Rectangle2D wide_open = rhs(0, d), open = rhs(1, d), closed = rhs(2, d);
 			var munching = new SpriteAnimation<>(open, wide_open, open, closed).frameDuration(2).endless();
 			map.put(dir, munching);
@@ -274,7 +279,7 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	public SpriteAnimationMap<Direction, Rectangle2D> createGhostColorAnimation(int ghostID) {
 		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
-			int d = dirOrder(dir);
+			int d = dirIndex(dir);
 			var kicking = new SpriteAnimation<>(rhs(2 * d, 4 + ghostID), rhs(2 * d + 1, 4 + ghostID)).frameDuration(8)
 					.endless();
 			map.put(dir, kicking);
@@ -296,7 +301,7 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	public SpriteAnimationMap<Direction, Rectangle2D> createGhostEyesAnimation() {
 		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
-			int d = dirOrder(dir);
+			int d = dirIndex(dir);
 			map.put(dir, new SpriteAnimation<>(rhs(8 + d, 5)));
 		}
 		return map;
@@ -311,7 +316,7 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	public SpriteAnimationMap<Direction, Rectangle2D> createHusbandMunchingAnimations() {
 		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
-			int d = dirOrder(dir);
+			int d = dirIndex(dir);
 			map.put(dir, new SpriteAnimation<>(rhs(0, 9 + d), rhs(1, 9 + d), rhs(2, 9)).frameDuration(2).endless());
 		}
 		return map;

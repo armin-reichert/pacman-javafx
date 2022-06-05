@@ -29,7 +29,9 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
 import javafx.scene.Group;
@@ -46,12 +48,12 @@ import javafx.util.Duration;
  */
 public class LevelCounter3D extends Group {
 
-	private final Rendering2D r2D;
+	private final GameVariant gameVariant;
 	private final V2d rightPosition;
 
-	public LevelCounter3D(Rendering2D r2D, double x, double y) {
-		this.r2D = r2D;
+	public LevelCounter3D(double x, double y, GameVariant gameVariant) {
 		this.rightPosition = new V2d(x, y);
+		this.gameVariant = gameVariant;
 	}
 
 	public void update(GameModel game) {
@@ -59,7 +61,7 @@ public class LevelCounter3D extends Group {
 		double x = rightPosition.x, y = rightPosition.y;
 		for (int i = 0; i < game.levelCounter.size(); ++i) {
 			int symbol = game.levelCounter.symbol(i);
-			Image symbolImage = r2D.getSpritesheet().subImage(r2D.getSymbolSprite(symbol));
+			var symbolImage = getBonusSymbolImage(symbol);
 			Box cube = createSpinningCube(symbolImage, i % 2 == 0);
 			cube.setTranslateX(x);
 			cube.setTranslateY(y);
@@ -67,6 +69,20 @@ public class LevelCounter3D extends Group {
 			getChildren().add(cube);
 			x -= t(2);
 		}
+	}
+
+	private Image getBonusSymbolImage(int symbol) {
+		// TODO do not access specific spritesheet from here
+		return switch (gameVariant) {
+		case MS_PACMAN -> {
+			var ss = Spritesheet_MsPacMan.get();
+			yield ss.subImage(ss.getSymbolSprite(symbol));
+		}
+		case PACMAN -> {
+			var ss = Spritesheet_PacMan.get();
+			yield ss.subImage(ss.getSymbolSprite(symbol));
+		}
+		};
 	}
 
 	private Box createSpinningCube(Image symbol, boolean forward) {

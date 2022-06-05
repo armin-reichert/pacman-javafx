@@ -164,8 +164,8 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 		maze3D.createFood(game.level.world, r2D.getFoodColor(mazeNumber));
 
 		player3D = new Pac3D(game.level.world, game.pac, model3D);
-		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D)).toArray(Ghost3D[]::new);
-		bonus3D = new Bonus3D(r2D);
+		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, game.variant)).toArray(Ghost3D[]::new);
+		bonus3D = new Bonus3D();
 
 		score3D = new Score3D();
 		score3D.setFont(r2D.getArcadeFont());
@@ -181,7 +181,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 		livesCounter3D.getTransforms().add(new Translate(TS, TS, -HTS));
 		livesCounter3D.setVisible(gameController.credit() > 0);
 
-		levelCounter3D = new LevelCounter3D(r2D, size_x - TS, TS);
+		levelCounter3D = new LevelCounter3D(size_x - TS, TS, game.variant);
 		levelCounter3D.update(game);
 
 		var world3D = new Group(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
@@ -213,6 +213,42 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 		livesCounter3D.update(game.lives);
 		getCamera().update(player3D);
 		updateSound();
+	}
+
+	/**
+	 * @param symbol
+	 * @return
+	 */
+	private Image getBonusSymbolImage(int symbol) {
+		// TODO do not access specific spritesheet from here
+		return switch (game.variant) {
+		case MS_PACMAN -> {
+			var ss = Spritesheet_MsPacMan.get();
+			yield ss.subImage(ss.getSymbolSprite(symbol));
+		}
+		case PACMAN -> {
+			var ss = Spritesheet_PacMan.get();
+			yield ss.subImage(ss.getSymbolSprite(symbol));
+		}
+		};
+	}
+
+	/**
+	 * @param value
+	 * @return
+	 */
+	private Image getBonusValueImage(int value) {
+		// TODO do not access specific spritesheet from here
+		return switch (game.variant) {
+		case MS_PACMAN -> {
+			var ss = Spritesheet_MsPacMan.get();
+			yield ss.subImage(ss.getBonusValueSprite(value));
+		}
+		case PACMAN -> {
+			var ss = Spritesheet_PacMan.get();
+			yield ss.subImage(ss.getBonusValueSprite(value));
+		}
+		};
 	}
 
 	private void updateSound() {
@@ -338,12 +374,12 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 
 	@Override
 	public void onBonusGetsActive(GameEvent e) {
-		bonus3D.showSymbol(game.bonus());
+		bonus3D.showSymbol(game.bonus(), getBonusSymbolImage(game.bonus().symbol()));
 	}
 
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
-		bonus3D.showPoints(game.bonus());
+		bonus3D.showPoints(game.bonus(), getBonusValueImage(game.bonus().value()));
 		if (gameController.credit() > 0) {
 			SoundManager.get().play(GameSound.BONUS_EATEN);
 		}

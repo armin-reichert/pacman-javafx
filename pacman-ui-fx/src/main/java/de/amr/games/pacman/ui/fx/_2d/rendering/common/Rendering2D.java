@@ -42,13 +42,15 @@ import javafx.scene.text.Font;
  */
 public interface Rendering2D {
 
-	Spritesheet getSpritesheet();
+//	Spritesheet getSpritesheet();
 
 	Font getArcadeFont();
 
 	Color getGhostColor(int ghostID);
 
 	// Sprites
+
+	Rectangle2D getGhostSprite(int ghostID, Direction dir);
 
 	Rectangle2D getSymbolSprite(int symbol);
 
@@ -118,10 +120,7 @@ public interface Rendering2D {
 	 * @param x left upper corner x
 	 * @param y left upper corner y
 	 */
-	default void drawSprite(GraphicsContext g, Rectangle2D s, double x, double y) {
-		g.drawImage(getSpritesheet().getSourceImage(), s.getMinX(), s.getMinY(), s.getWidth(), s.getHeight(), x, y,
-				s.getWidth(), s.getHeight());
-	}
+	void drawSprite(GraphicsContext g, Rectangle2D s, double x, double y);
 
 	/**
 	 * Draws the copyright text and image. Used in several scenes so put this here.

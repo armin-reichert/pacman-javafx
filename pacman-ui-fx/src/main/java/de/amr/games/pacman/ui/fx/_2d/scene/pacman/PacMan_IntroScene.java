@@ -32,6 +32,7 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.pacman.IntroController;
 import de.amr.games.pacman.controller.pacman.IntroController.State;
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.actors.GhostAnimation;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
@@ -174,8 +175,7 @@ public class PacMan_IntroScene extends GameScene2D {
 		for (int id = 0; id < 4; ++id) {
 			if ($.pictureVisible[id]) {
 				int tileY = 7 + 3 * id;
-				var ghostSprite = r2D.getSpritesheet().r(0, 4 + id);
-				r2D.drawSpriteCenteredOverBBox(g, ghostSprite, t($.left) + 4, t(tileY));
+				r2D.drawSpriteCenteredOverBBox(g, r2D.getGhostSprite(id, Direction.RIGHT), t($.left) + 4, t(tileY));
 				if ($.characterVisible[id]) {
 					g.setFill(r2D.getGhostColor(id));
 					g.fillText("-" + $.characters[id], t($.left + 3), t(tileY + 1));

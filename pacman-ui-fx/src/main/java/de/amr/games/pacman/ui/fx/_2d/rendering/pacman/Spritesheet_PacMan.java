@@ -116,8 +116,8 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public Spritesheet getSpritesheet() {
-		return this;
+	public void drawSprite(GraphicsContext g, Rectangle2D s, double x, double y) {
+		g.drawImage(source, s.getMinX(), s.getMinY(), s.getWidth(), s.getHeight(), x, y, s.getWidth(), s.getHeight());
 	}
 
 	@Override
@@ -128,6 +128,11 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	@Override
 	public Color getGhostColor(int ghostID) {
 		return GHOST_COLORS[ghostID];
+	}
+
+	@Override
+	public Rectangle2D getGhostSprite(int ghostID, Direction dir) {
+		return r(2 * dirIndex(dir) + 1, 4 + ghostID);
 	}
 
 	@Override
@@ -188,7 +193,7 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	public SpriteAnimationMap<Direction, Rectangle2D> createPacMunchingAnimation() {
 		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
-			int d = dirOrder(dir);
+			int d = dirIndex(dir);
 			Rectangle2D wide_open = r(0, d), open = r(1, d), closed = r(2, 0);
 			SpriteAnimation<Rectangle2D> animation = new SpriteAnimation<>(closed, open, wide_open, open).frameDuration(2)
 					.endless();
@@ -207,7 +212,7 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	public SpriteAnimationMap<Direction, Rectangle2D> createGhostColorAnimation(int ghostID) {
 		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
-			int d = dirOrder(dir);
+			int d = dirIndex(dir);
 			var animation = new SpriteAnimation<>(r(2 * d, 4 + ghostID), r(2 * d + 1, 4 + ghostID)).frameDuration(8)
 					.endless();
 			map.put(dir, animation);
@@ -229,7 +234,7 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	public SpriteAnimationMap<Direction, Rectangle2D> createGhostEyesAnimation() {
 		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
-			int d = dirOrder(dir);
+			int d = dirIndex(dir);
 			map.put(dir, new SpriteAnimation<>(r(8 + d, 5)));
 		}
 		return map;
