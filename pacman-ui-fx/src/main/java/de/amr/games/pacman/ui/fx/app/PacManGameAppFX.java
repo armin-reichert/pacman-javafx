@@ -32,6 +32,7 @@ import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.model.pacman.PacManGame;
+import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.shell.KeyboardPlayerControl;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -88,6 +89,8 @@ public class PacManGameAppFX extends Application {
 
 		gameController.addListener(ui);
 		gameController.setPlayerControl(new KeyboardPlayerControl(stage));
+
+		Actions.init(gameController, ui);
 
 		SoundManager.get().setMuted(options.muted);
 

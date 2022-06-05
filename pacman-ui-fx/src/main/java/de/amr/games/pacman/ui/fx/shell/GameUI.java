@@ -73,10 +73,12 @@ public class GameUI extends GameEventAdapter {
 
 	public static final int SCENE_2D = 0, SCENE_3D = 1;
 
-	private final GameController gameController;
 	private final Stage stage;
-	private final StackPane sceneRoot;
+	private final Scene mainScene;
+	private final StackPane mainSceneRoot;
 	private final InfoLayer infoLayer;
+	private final GameController gameController;
+
 	private GameScene currentGameScene;
 
 	private final GameScene[][] scenes_MrPacMan = {
@@ -104,14 +106,11 @@ public class GameUI extends GameEventAdapter {
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
 		this.gameController = gameController;
 		this.stage = stage;
+
 		this.infoLayer = new InfoLayer(this, gameController);
-
-		Actions.init(gameController, this);
-
 		// first child is placeholder for subscene assigned to current game scene
-		sceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
-
-		var mainScene = new Scene(sceneRoot, width, height);
+		mainSceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
+		mainScene = new Scene(mainSceneRoot, width, height);
 		mainScene.setOnKeyPressed(this::handleKeyPressed);
 		mainScene.setOnMouseClicked(this::handleMouseClicked);
 		mainScene.setOnMouseMoved(this::handleMouseMoved);
@@ -139,11 +138,11 @@ public class GameUI extends GameEventAdapter {
 	}
 
 	public double getMainSceneWidth() {
-		return stage.getScene().getWidth();
+		return mainScene.getWidth();
 	}
 
 	public double getMainSceneHeight() {
-		return stage.getScene().getHeight();
+		return mainScene.getHeight();
 	}
 
 	public InfoLayer getInfoLayer() {
@@ -228,9 +227,9 @@ public class GameUI extends GameEventAdapter {
 			if (currentGameScene != null) {
 				currentGameScene.end();
 			}
-			fittingGameScene.resize(sceneRoot.getHeight());
+			fittingGameScene.resize(mainSceneRoot.getHeight());
 			updateSceneBackground(fittingGameScene);
-			sceneRoot.getChildren().set(0, fittingGameScene.getFXSubScene());
+			mainSceneRoot.getChildren().set(0, fittingGameScene.getFXSubScene());
 			fittingGameScene.setSceneContext(gameController);
 			fittingGameScene.init();
 			log("Current scene changed from %s to %s", currentGameScene, fittingGameScene);
@@ -242,7 +241,7 @@ public class GameUI extends GameEventAdapter {
 		var bg = gameScene.is3D() //
 				? Env.$drawMode3D.get() == DrawMode.LINE ? U.colorBackground(Color.BLACK) : Wallpapers.get().random()
 				: U.colorBackground(Color.CORNFLOWERBLUE);
-		sceneRoot.setBackground(bg);
+		mainSceneRoot.setBackground(bg);
 	}
 
 	/**
