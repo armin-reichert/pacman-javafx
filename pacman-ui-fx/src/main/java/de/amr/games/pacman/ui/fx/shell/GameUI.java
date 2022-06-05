@@ -74,11 +74,7 @@ import javafx.stage.Stage;
  */
 public class GameUI extends GameEventAdapter {
 
-	public static final int SCENE_2D = 0;
-
-	public static final int SCENE_3D = 1;
-
-	public static boolean debug;
+	public static final int SCENE_2D = 0, SCENE_3D = 1;
 
 	public final GameController gameController;
 	public final Stage stage;
@@ -259,7 +255,7 @@ public class GameUI extends GameEventAdapter {
 		} else if (Key.pressed(e, Key.ALT, KeyCode.E)) {
 			gameController.cheatEatAllPellets();
 		} else if (Key.pressed(e, Key.ALT, KeyCode.D)) {
-			debug = !debug;
+			Env.toggle(Env.$debugUI);
 		} else if (Key.pressed(e, Key.ALT, KeyCode.I)) {
 			toggleImmunity();
 		} else if (Key.pressed(e, Key.ALT, KeyCode.L)) {

@@ -48,7 +48,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.World2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimationSet;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimationSet;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
-import de.amr.games.pacman.ui.fx.shell.GameUI;
+import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.Animation;
@@ -158,7 +158,7 @@ public class PlayScene2D extends GameScene2D {
 	protected void doUpdate() {
 		updateAnimations();
 		updateSound();
-		if (GameUI.debug) {
+		if (Env.$debugUI.get()) {
 			info.update();
 		}
 	}

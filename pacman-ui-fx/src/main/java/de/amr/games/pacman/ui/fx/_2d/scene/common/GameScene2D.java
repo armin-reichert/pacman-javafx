@@ -38,7 +38,6 @@ import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.SubScene;
@@ -145,7 +144,7 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 
 	@Override
 	public final void update() {
-		infoPane.setVisible(GameUI.debug);
+		infoPane.setVisible(Env.$debugUI.get());
 		doUpdate();
 		var g = canvas.getGraphicsContext2D();
 		g.setFill(Color.BLACK);
