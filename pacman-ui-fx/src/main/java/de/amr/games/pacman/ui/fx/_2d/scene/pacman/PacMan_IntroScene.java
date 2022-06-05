@@ -175,7 +175,7 @@ public class PacMan_IntroScene extends GameScene2D {
 		for (int id = 0; id < 4; ++id) {
 			if ($.pictureVisible[id]) {
 				int tileY = 7 + 3 * id;
-				r2D.drawSpriteCenteredOverBBox(g, r2D.getGhostSprite(id, Direction.RIGHT), t($.left) + 4, t(tileY));
+				r2D.drawSpriteCenteredOverBox(g, r2D.getGhostSprite(id, Direction.RIGHT), t($.left) + 4, t(tileY));
 				if ($.characterVisible[id]) {
 					g.setFill(r2D.getGhostColor(id));
 					g.fillText("-" + $.characters[id], t($.left + 3), t(tileY + 1));

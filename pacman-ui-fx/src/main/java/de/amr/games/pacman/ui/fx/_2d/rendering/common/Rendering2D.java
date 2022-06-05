@@ -93,7 +93,9 @@ public interface Rendering2D {
 	// Drawing
 
 	/**
-	 * Draws entity sprite centered over its bounding box (one square tile). Respects entity visibility.
+	 * Draws the entity's sprite centered over the entity's collision box. The collision box is a square with left upper
+	 * corner defined by the entity position and side length of one tile size. Respects the current visibility of the
+	 * entity.
 	 * 
 	 * @param g      graphics context
 	 * @param entity entity
@@ -101,17 +103,20 @@ public interface Rendering2D {
 	 */
 	default void drawEntity(GraphicsContext g, Entity entity, Rectangle2D sprite) {
 		if (entity.visible) {
-			drawSpriteCenteredOverBBox(g, sprite, entity.position.x, entity.position.y);
+			drawSpriteCenteredOverBox(g, sprite, entity.position.x, entity.position.y);
 		}
 	}
 
 	/**
+	 * Draws the sprite defined by the given spritesheet region centered of the the one square tile box with left upper
+	 * corner defined by the given coordinates.
+	 * 
 	 * @param g graphics context
-	 * @param s sprite (region in spritesheet)
-	 * @param x left upper corner of entity bounding box (one square tile)
-	 * @param y left upper corner of entity bounding box
+	 * @param s sprite region in spritesheet
+	 * @param x left upper corner of the box (one square tile)
+	 * @param y left upper corner of the box
 	 */
-	default void drawSpriteCenteredOverBBox(GraphicsContext g, Rectangle2D s, double x, double y) {
+	default void drawSpriteCenteredOverBox(GraphicsContext g, Rectangle2D s, double x, double y) {
 		double dx = HTS - s.getWidth() / 2, dy = HTS - s.getHeight() / 2;
 		drawSprite(g, s, x + dx, y + dy);
 	}

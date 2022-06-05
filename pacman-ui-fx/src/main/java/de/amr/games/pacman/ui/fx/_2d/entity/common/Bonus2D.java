@@ -76,11 +76,11 @@ public class Bonus2D {
 			if (jumpAnimation != null) {
 				g.translate(0, jumpAnimation.animate());
 			}
-			r2D.drawSpriteCenteredOverBBox(g, sprite, bonus.position().x, bonus.position().y);
+			r2D.drawSpriteCenteredOverBox(g, sprite, bonus.position().x, bonus.position().y);
 			g.restore();
 		} else if (bonus.state() == BonusState.EATEN) {
 			var sprite = r2D.getBonusValueSprite(bonus.value());
-			r2D.drawSpriteCenteredOverBBox(g, sprite, bonus.position().x, bonus.position().y);
+			r2D.drawSpriteCenteredOverBox(g, sprite, bonus.position().x, bonus.position().y);
 		}
 	}
 }
