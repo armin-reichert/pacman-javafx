@@ -24,8 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell;
 
 import static de.amr.games.pacman.lib.Logging.log;
-import static de.amr.games.pacman.ui.fx.scene.GameScenes.SCENE_2D;
-import static de.amr.games.pacman.ui.fx.scene.GameScenes.SCENE_3D;
 import static de.amr.games.pacman.ui.fx.shell.FlashMessageView.showFlashMessage;
 
 import de.amr.games.pacman.controller.common.GameController;
@@ -33,15 +31,25 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameStateChangeEvent;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
+import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_CreditScene;
+import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntermissionScene1;
+import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntermissionScene2;
+import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntermissionScene3;
+import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntroScene;
+import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_CreditScene;
+import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntermissionScene1;
+import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntermissionScene2;
+import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntermissionScene3;
+import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntroScene;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.scene.GameScenes;
 import de.amr.games.pacman.ui.fx.shell.info.InfoLayer;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -72,9 +80,77 @@ public class GameUI extends GameEventAdapter {
 	public final Stage stage;
 
 	private final StackPane sceneRoot;
-	private final GameScenes gameScenes;
 	private final InfoLayer infoLayer;
 	private GameScene currentGameScene;
+
+	public static final int SCENE_2D = 0, SCENE_3D = 1;
+
+	private final GameScene[][] scenes_MrPacMan = {
+		//@formatter:off
+		{ new PacMan_IntroScene(), null },
+		{ new PacMan_CreditScene(), null },
+		{ new PacMan_IntermissionScene1(), null },
+		{ new PacMan_IntermissionScene2(), null },
+		{ new PacMan_IntermissionScene3(), null },
+		{ new PlayScene2D(), new PlayScene3D() },
+		//@formatter:on
+	};
+
+	private final GameScene[][] scenes_MsPacMan = {
+		//@formatter:off
+		{ new MsPacMan_IntroScene(), null },
+		{ new MsPacMan_CreditScene(), null },
+		{ new MsPacMan_IntermissionScene1(), null },
+		{ new MsPacMan_IntermissionScene2(), null },
+		{ new MsPacMan_IntermissionScene3(), null },
+		{ new PlayScene2D(), new PlayScene3D() },
+		//@formatter:on
+	};
+
+	public void defineSceneResizingBehavior(Scene parent) {
+		defineResizingBehavior(parent, scenes_MsPacMan);
+		defineResizingBehavior(parent, scenes_MrPacMan);
+	}
+
+	public void defineResizingBehavior(Scene parent, GameScene[][] scenes) {
+		for (int scene = 0; scene < 6; ++scene) {
+			// 2D scenes adapt to parent scene height keeping aspect ratio
+			GameScene scene2D = scenes[scene][SCENE_2D];
+			parent.heightProperty().addListener(($height, oldHeight, newHeight) -> scene2D.resize(newHeight.doubleValue()));
+			// 3D scenes adapt to parent scene size
+			GameScene scene3D = scenes[scene][SCENE_3D];
+			if (scene3D != null) {
+				scene3D.getFXSubScene().widthProperty().bind(parent.widthProperty());
+				scene3D.getFXSubScene().heightProperty().bind(parent.heightProperty());
+			}
+		}
+	}
+
+	/**
+	 * Returns the scene that fits the current game state.
+	 *
+	 * @param game      the game model (Pac-Man or Ms. Pac-Man)
+	 * @param gameState the current game state
+	 * @param dimension {@link GameScenes#SCENE_2D} or {@link GameScenes#SCENE_3D}
+	 * @return the game scene that fits the current game state
+	 */
+	public GameScene getFittingScene(GameModel game, GameState gameState, int dimension) {
+		var scenes = switch (game.variant) {
+		case MS_PACMAN -> scenes_MsPacMan;
+		case PACMAN -> scenes_MrPacMan;
+		};
+		var sceneIndex = switch (gameState) {
+		case INTRO -> 0;
+		case CREDIT -> 1;
+		case INTERMISSION -> 1 + game.intermissionNumber(game.level.number);
+		case INTERMISSION_TEST -> 1 + game.intermissionTestNumber;
+		default -> 5;
+		};
+		if (scenes[sceneIndex][dimension] == null) { // no 3D version exists, use 2D
+			return scenes[sceneIndex][SCENE_2D];
+		}
+		return scenes[sceneIndex][dimension];
+	}
 
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
 		this.gameController = gameController;
@@ -92,8 +168,7 @@ public class GameUI extends GameEventAdapter {
 
 		Env.$drawMode3D.addListener((x, y, z) -> updateBackground(currentGameScene));
 
-		gameScenes = new GameScenes();
-		gameScenes.defineResizingBehavior(mainScene);
+		defineSceneResizingBehavior(mainScene);
 		updateGameScene(gameController.state(), true);
 
 		stage.setScene(mainScene);
@@ -142,12 +217,11 @@ public class GameUI extends GameEventAdapter {
 	}
 
 	private int selectedDimension() {
-		return Env.$3D.get() ? GameScenes.SCENE_3D : GameScenes.SCENE_2D;
+		return Env.$3D.get() ? SCENE_3D : SCENE_2D;
 	}
 
 	private void updateGameScene(GameState gameState, boolean forced) {
-		var fittingGameScene = gameScenes.getFittingScene(gameController.game(), gameController.state(),
-				selectedDimension());
+		var fittingGameScene = getFittingScene(gameController.game(), gameController.state(), selectedDimension());
 		if (fittingGameScene == null) {
 			throw new IllegalStateException("No scene found for game state " + gameState);
 		}
@@ -355,7 +429,7 @@ public class GameUI extends GameEventAdapter {
 		Env.toggle(Env.$3D);
 		var game = gameController.game();
 		var state = gameController.state();
-		if (gameScenes.getFittingScene(game, state, SCENE_2D) != gameScenes.getFittingScene(game, state, SCENE_3D)) {
+		if (getFittingScene(game, state, SCENE_2D) != getFittingScene(game, state, SCENE_3D)) {
 			updateGameScene(gameController.state(), true);
 			if (currentGameScene instanceof PlayScene2D) {
 				((PlayScene2D) currentGameScene).onSwitchFrom3DScene();
