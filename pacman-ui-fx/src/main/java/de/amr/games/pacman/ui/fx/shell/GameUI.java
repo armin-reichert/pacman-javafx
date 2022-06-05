@@ -152,7 +152,7 @@ public class GameUI extends GameEventAdapter {
 	}
 
 	public void defineResizingBehavior(Scene parent, GameScene[][] scenes) {
-		for (int scene = 0; scene < 6; ++scene) {
+		for (int scene = 0; scene < scenes.length; ++scene) {
 			// 2D scenes adapt to parent scene height keeping aspect ratio
 			GameScene scene2D = scenes[scene][SCENE_2D];
 			parent.heightProperty().addListener(($height, oldHeight, newHeight) -> scene2D.resize(newHeight.doubleValue()));
