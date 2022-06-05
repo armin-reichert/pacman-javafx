@@ -141,22 +141,27 @@ public class GameUI extends GameEventAdapter {
 		updateGameScene(e.newGameState, false);
 	}
 
+	private int selectedDimension() {
+		return Env.$3D.get() ? GameScenes.SCENE_3D : GameScenes.SCENE_2D;
+	}
+
 	private void updateGameScene(GameState gameState, boolean forced) {
-		var newGameScene = gameScenes.getScene(gameController, Env.$3D.get() ? GameScenes.SCENE_3D : GameScenes.SCENE_2D);
-		if (newGameScene == null) {
+		var fittingGameScene = gameScenes.getFittingScene(gameController.game(), gameController.state(),
+				selectedDimension());
+		if (fittingGameScene == null) {
 			throw new IllegalStateException("No scene found for game state " + gameState);
 		}
-		if (newGameScene != currentGameScene || forced) {
+		if (fittingGameScene != currentGameScene || forced) {
 			if (currentGameScene != null) {
 				currentGameScene.end();
 			}
-			newGameScene.resize(sceneRoot.getHeight());
-			updateBackground(newGameScene);
-			sceneRoot.getChildren().set(0, newGameScene.getFXSubScene());
-			newGameScene.setSceneContext(gameController);
-			newGameScene.init();
-			log("Current scene changed from %s to %s", currentGameScene, newGameScene);
-			currentGameScene = newGameScene;
+			fittingGameScene.resize(sceneRoot.getHeight());
+			updateBackground(fittingGameScene);
+			sceneRoot.getChildren().set(0, fittingGameScene.getFXSubScene());
+			fittingGameScene.setSceneContext(gameController);
+			fittingGameScene.init();
+			log("Current scene changed from %s to %s", currentGameScene, fittingGameScene);
+			currentGameScene = fittingGameScene;
 		}
 	}
 
@@ -348,7 +353,9 @@ public class GameUI extends GameEventAdapter {
 
 	public void toggleUse3DScene() {
 		Env.toggle(Env.$3D);
-		if (gameScenes.getScene(gameController, SCENE_2D) != gameScenes.getScene(gameController, SCENE_3D)) {
+		var game = gameController.game();
+		var state = gameController.state();
+		if (gameScenes.getFittingScene(game, state, SCENE_2D) != gameScenes.getFittingScene(game, state, SCENE_3D)) {
 			updateGameScene(gameController.state(), true);
 			if (currentGameScene instanceof PlayScene2D) {
 				((PlayScene2D) currentGameScene).onSwitchFrom3DScene();

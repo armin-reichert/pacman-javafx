@@ -23,7 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.scene;
 
-import de.amr.games.pacman.controller.common.GameController;
+import de.amr.games.pacman.controller.common.GameState;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_CreditScene;
@@ -106,14 +107,13 @@ public class GameScenes {
 	/**
 	 * Returns the scene that fits the current game state.
 	 *
-	 * @param gameController the game controller
-	 * @param dimension      {@link GameScenes#SCENE_2D} or {@link GameScenes#SCENE_3D}
+	 * @param game      the game model (Pac-Man or Ms. Pac-Man)
+	 * @param gameState the current game state
+	 * @param dimension {@link GameScenes#SCENE_2D} or {@link GameScenes#SCENE_3D}
 	 * @return the game scene that fits the current game state
 	 */
-	public GameScene getScene(GameController gameController, int dimension) {
-		var game = gameController.game();
+	public GameScene getFittingScene(GameModel game, GameState gameState, int dimension) {
 		var variantIndex = game.variant.ordinal();
-		var gameState = gameController.state();
 		int sceneIndex = switch (gameState) {
 		case INTRO -> 0;
 		case CREDIT -> 1;
