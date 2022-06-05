@@ -70,15 +70,14 @@ public class PacMan_IntroScene extends GameScene2D {
 
 	@Override
 	public void init() {
-		sceneController.restartInInitialState(IntroController.State.BEGIN);
+		sceneController.restartInInitialState(IntroController.State.START);
 		createCommonParts(game);
 		score2D.showScore = false;
 		credit2D.visible = true;
 		pacMan2D = new Pac2D($.pacMan, new PacAnimationSet(r2D));
-		ghosts2D = Stream.of($.ghosts).map(ghost -> {
-			Ghost2D ghost2D = new Ghost2D(ghost, new GhostAnimationSet(ghost.id, r2D));
-			return ghost2D;
-		}).toArray(Ghost2D[]::new);
+		ghosts2D = Stream.of($.ghosts)//
+				.map(ghost -> new Ghost2D(ghost, new GhostAnimationSet(ghost.id, r2D)))//
+				.toArray(Ghost2D[]::new);
 	}
 
 	@Override
@@ -88,10 +87,8 @@ public class PacMan_IntroScene extends GameScene2D {
 			SoundManager.get().play(GameSound.CREDIT);
 			gameController.addCredit();
 		}
-		case SPACE, DIGIT1 -> {
-			gameController.requestGame();
-		}
-		default -> { // ignore
+		case SPACE, DIGIT1 -> gameController.requestGame();
+		default -> {
 		}
 		}
 	}
@@ -137,7 +134,7 @@ public class PacMan_IntroScene extends GameScene2D {
 		credit2D.render(g, r2D);
 
 		switch (sceneController.state()) {
-		case BEGIN, PRESENTING_GHOSTS -> drawGallery(g);
+		case START, PRESENTING_GHOSTS -> drawGallery(g);
 		case SHOWING_POINTS -> {
 			drawGallery(g);
 			drawPoints(g);
@@ -192,7 +189,7 @@ public class PacMan_IntroScene extends GameScene2D {
 	}
 
 	private void drawBlinkingEnergizer(GraphicsContext g) {
-		if ($.fastBlinking.frame()) {
+		if ($.blinking.frame()) {
 			g.setFill(r2D.getFoodColor(1));
 			g.fillOval(t($.left), t(20), TS, TS);
 		}
@@ -213,7 +210,7 @@ public class PacMan_IntroScene extends GameScene2D {
 		int tileX = $.left + 6, tileY = 25;
 		g.setFill(r2D.getFoodColor(1));
 		g.fillRect(t(tileX) + 4, t(tileY - 1) + 4, 2, 2);
-		if ($.fastBlinking.frame()) {
+		if ($.blinking.frame()) {
 			g.fillOval(t(tileX), t(tileY + 1), TS, TS);
 		}
 		g.setFill(Color.WHITE);
