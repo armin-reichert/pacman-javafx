@@ -99,12 +99,13 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	private final Image[] mazesBlackWhite;
 	private final Rectangle2D[] symbolSprites;
 	private final Map<Integer, Rectangle2D> bonusValueSprites;
-	private final Map<Integer, Rectangle2D> bountyNumberSprites;
+	private final Map<Integer, Rectangle2D> ghostValueSprites;
 	private final Font font;
 
 	private Spritesheet_MsPacMan() {
 		super("/mspacman/graphics/sprites.png", 16, //
 				Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
+
 		font = U.font("/common/emulogic.ttf", 8);
 		midwayLogo = U.image("/mspacman/graphics/midway.png");
 
@@ -128,7 +129,7 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 			5000, rhs(9, 1)
 		);
 
-		bountyNumberSprites = Map.of(
+		ghostValueSprites = Map.of(
 			 200, rhs(0, 8), 
 			 400, rhs(1, 8), 
 			 800, rhs(2, 8), 
@@ -231,7 +232,7 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 
 	@Override
 	public Rectangle2D getNumberSprite(int number) {
-		return bountyNumberSprites.get(number);
+		return ghostValueSprites.get(number);
 	}
 
 	@Override

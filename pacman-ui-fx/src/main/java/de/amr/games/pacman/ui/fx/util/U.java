@@ -45,13 +45,13 @@ import javafx.util.Duration;
 public class U {
 
 	/**
-	 * @param from from value
-	 * @param to   to value
-	 * @param t    time between 0 and 1
-	 * @return linear interpolation between {@code from} and {@code to} values
+	 * @param value1 value1
+	 * @param value2 value2
+	 * @param t      "time" between 0 and 1
+	 * @return linear interpolation between {@code value1} and {@code value2} values
 	 */
-	public static double lerp(double from, double to, double t) {
-		return (1 - t) * from + t * to;
+	public static double lerp(double value1, double value2, double t) {
+		return (1 - t) * value1 + t * value2;
 	}
 
 	/**
@@ -102,11 +102,11 @@ public class U {
 	}
 
 	public static Font font(String path, double size) {
-		return Font.loadFont(U.class.getResource(path).toString(), size);
+		return Font.loadFont(U.class.getResourceAsStream(path), size);
 	}
 
 	public static Image image(String path) {
-		return new Image(U.class.getResource(path).toString());
+		return new Image(U.class.getResourceAsStream(path));
 	}
 
 	/**
