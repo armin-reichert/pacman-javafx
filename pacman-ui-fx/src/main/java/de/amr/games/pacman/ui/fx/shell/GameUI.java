@@ -125,6 +125,7 @@ public class GameUI extends GameEventAdapter {
 
 		setScenesParent(mainScene);
 		updateGameScene(gameController.state(), true);
+		embedGameScene();
 
 		stage.setScene(mainScene);
 		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
@@ -232,25 +233,30 @@ public class GameUI extends GameEventAdapter {
 	}
 
 	void updateGameScene(GameState gameState, boolean forcedSceneUpdate) {
-		var dimension = Env.$3D.get() ? SCENE_3D : SCENE_2D;
-		var newGameScene = getFittingScene(gameController.game(), gameController.state(), dimension);
+		var dim = Env.$3D.get() ? SCENE_3D : SCENE_2D;
+		var newGameScene = getFittingScene(gameController.game(), gameController.state(), dim);
 		if (newGameScene == null) {
 			throw new IllegalStateException("No fitting game scene found for game state " + gameState);
 		}
-		if (newGameScene != currentGameScene || forcedSceneUpdate) {
-			if (currentGameScene != null) {
-				currentGameScene.end();
-			}
-			log("Current scene changed from %s to %s", currentGameScene, newGameScene);
-			currentGameScene = newGameScene;
-			mainSceneRoot.getChildren().set(0, currentGameScene.getFXSubScene());
-			mainSceneRoot.setBackground(computeMainSceneBackground());
-			if (currentGameScene instanceof GameScene2D) {
-				((GameScene2D) currentGameScene).resize(mainSceneRoot.getHeight());
-			}
-			currentGameScene.setSceneContext(gameController);
-			currentGameScene.init();
+		if (newGameScene == currentGameScene && !forcedSceneUpdate) {
+			return;
 		}
+		if (currentGameScene != null) {
+			currentGameScene.end();
+		}
+		log("Current scene changed from %s to %s", currentGameScene, newGameScene);
+		currentGameScene = newGameScene;
+		embedGameScene();
+		currentGameScene.setSceneContext(gameController);
+		currentGameScene.init();
+	}
+
+	private void embedGameScene() {
+		mainSceneRoot.getChildren().set(0, currentGameScene.getFXSubScene());
+		if (currentGameScene instanceof GameScene2D) {
+			((GameScene2D) currentGameScene).resize(mainScene.getHeight());
+		}
+		mainSceneRoot.setBackground(computeMainSceneBackground());
 	}
 
 	private Background computeMainSceneBackground() {
