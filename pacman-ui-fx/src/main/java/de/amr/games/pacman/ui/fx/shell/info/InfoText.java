@@ -34,7 +34,7 @@ import javafx.scene.text.Text;
  */
 public class InfoText extends Text {
 
-	private Supplier<Boolean> fnEvaluate = () -> true;
+	private Supplier<Boolean> fnAvailable = () -> true;
 	private Supplier<?> fnText = () -> "Value";
 
 	public InfoText(String text) {
@@ -45,13 +45,13 @@ public class InfoText extends Text {
 		this.fnText = fnText;
 	}
 
-	public InfoText when(Supplier<Boolean> fnEvaluate) {
-		this.fnEvaluate = fnEvaluate;
+	public InfoText available(Supplier<Boolean> fnEvaluate) {
+		this.fnAvailable = fnEvaluate;
 		return this;
 	}
 
 	public void update() {
-		if (fnEvaluate.get()) {
+		if (fnAvailable.get()) {
 			setText(String.valueOf(fnText.get()));
 		} else {
 			setText("n/a");

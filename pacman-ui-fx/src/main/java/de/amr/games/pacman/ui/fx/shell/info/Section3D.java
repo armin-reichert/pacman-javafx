@@ -56,7 +56,7 @@ public class Section3D extends Section {
 		comboPerspective.setOnAction(e -> Env.$perspective.set(comboPerspective.getValue()));
 		comboResolution = addComboBox("Maze resolution", 1, 2, 4, 8);
 		addInfo("Camera", () -> ((PlayScene3D) ui.getCurrentGameScene()).getCamera().transformInfo())
-				.when(() -> ui.getCurrentGameScene().is3D());
+				.available(() -> ui.getCurrentGameScene().is3D());
 		comboResolution.setOnAction(e -> Env.$mazeResolution.set(comboResolution.getValue()));
 		sliderWallHeight = addSlider("Maze wall height", 0, 10, 8);
 		sliderWallHeight.valueProperty()
@@ -64,11 +64,11 @@ public class Section3D extends Section {
 		cbUseFloorTexture = addCheckBox("Maze floor texture", () -> Env.toggle(Env.$useMazeFloorTexture));
 		cbAxesVisible = addCheckBox("Show axes", () -> Env.toggle(Env.$axesVisible));
 		cbWireframeMode = addCheckBox("Wireframe mode", Actions::toggleDrawMode);
-		addInfo("Shift+LEFT / RIGHT", "Camera -X / +X").when(() -> Env.$perspective.get() == Perspective.CAM_TOTAL);
-		addInfo("Shift+PLUS / MINUS", "Camera -Y / +Y").when(() -> Env.$perspective.get() == Perspective.CAM_TOTAL);
+		addInfo("Shift+LEFT / RIGHT", "Camera -X / +X").available(() -> Env.$perspective.get() == Perspective.CAM_TOTAL);
+		addInfo("Shift+PLUS / MINUS", "Camera -Y / +Y").available(() -> Env.$perspective.get() == Perspective.CAM_TOTAL);
 		addInfo("Shift+UP / DOWN", "Camera -Z / +Z")
-				.when(() -> Env.$perspective.get() == Perspective.CAM_TOTAL || Env.$perspective.get() == Perspective.CAM_DRONE);
-		addInfo("CTRL+Shift+UP / DOWN", "Camera Rotate X").when(() -> Env.$perspective.get() == Perspective.CAM_TOTAL);
+				.available(() -> Env.$perspective.get() == Perspective.CAM_TOTAL || Env.$perspective.get() == Perspective.CAM_DRONE);
+		addInfo("CTRL+Shift+UP / DOWN", "Camera Rotate X").available(() -> Env.$perspective.get() == Perspective.CAM_TOTAL);
 	}
 
 	@Override

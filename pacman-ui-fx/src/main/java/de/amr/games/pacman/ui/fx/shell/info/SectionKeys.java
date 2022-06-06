@@ -42,18 +42,18 @@ public class SectionKeys extends Section {
 		super(ui, gc, title, minLabelWidth, textColor, textFont, labelFont);
 		addInfo("Ctrl+I", "Info Panels On/Off");
 		addInfo("Alt+A", "Autopilot On/Off");
-		addInfo("Alt+E", "Eat all normal pellets").when(() -> gc.isGameRunning());
+		addInfo("Alt+E", "Eat all normal pellets").available(() -> gc.isGameRunning());
 		addInfo("Alt+I", "Player immunity On/Off");
-		addInfo("Alt+L", "Add 3 player lives").when(() -> gc.isGameRunning());
+		addInfo("Alt+L", "Add 3 player lives").available(() -> gc.isGameRunning());
 		addInfo("Alt+M", "Mute/Unmute");
-		addInfo("Alt+N", "Next Level").when(() -> gc.isGameRunning());
-		addInfo("Alt+X", "Kill hunting ghosts").when(() -> gc.isGameRunning());
-		addInfo("Alt+Z", "Play Intermission Scenes").when(() -> gc.state() == GameState.INTRO);
-		addInfo("Alt+LEFT", () -> Env.perspectiveShifted(-1).name()).when(() -> ui.getCurrentGameScene().is3D());
-		addInfo("Alt+RIGHT", () -> Env.perspectiveShifted(1).name()).when(() -> ui.getCurrentGameScene().is3D());
+		addInfo("Alt+N", "Next Level").available(() -> gc.isGameRunning());
+		addInfo("Alt+X", "Kill hunting ghosts").available(() -> gc.isGameRunning());
+		addInfo("Alt+Z", "Play Intermission Scenes").available(() -> gc.state() == GameState.INTRO);
+		addInfo("Alt+LEFT", () -> Env.perspectiveShifted(-1).name()).available(() -> ui.getCurrentGameScene().is3D());
+		addInfo("Alt+RIGHT", () -> Env.perspectiveShifted(1).name()).available(() -> ui.getCurrentGameScene().is3D());
 		addInfo("Alt+3", "3D Playscene On/Off");
-		addInfo("Q", "Quit Scene").when(() -> gc.state() != GameState.INTRO);
-		addInfo("V", "Switch game variant").when(() -> gc.state() == GameState.INTRO);
+		addInfo("Q", "Quit Scene").available(() -> gc.state() != GameState.INTRO);
+		addInfo("V", "Switch game variant").available(() -> gc.state() == GameState.INTRO);
 		addInfo("5", "Add credit");
 	}
 }
