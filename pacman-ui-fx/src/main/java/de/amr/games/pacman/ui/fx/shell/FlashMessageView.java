@@ -38,6 +38,9 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
+/**
+ * @author Armin Reichert
+ */
 public class FlashMessageView extends VBox {
 
 	private static class FlashMessage {
