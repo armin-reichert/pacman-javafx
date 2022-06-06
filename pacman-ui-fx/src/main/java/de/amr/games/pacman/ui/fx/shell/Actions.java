@@ -156,6 +156,7 @@ public class Actions {
 
 	public static void toggleSoundMuted() {
 		SoundManager.get().setMuted(!SoundManager.get().isMuted());
+		showFlashMessage(SoundManager.get().isMuted() ? "Sound OFF" : "Sound ON");
 	}
 
 	public static void cheatEatAllPellets() {

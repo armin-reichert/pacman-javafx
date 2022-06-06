@@ -48,7 +48,6 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.shell.info.InfoLayer;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -284,7 +283,6 @@ public class GameUI extends GameEventAdapter {
 			Actions.addLives(3);
 		} else if (Key.pressed(Key.ALT, KeyCode.M)) {
 			Actions.toggleSoundMuted();
-			Actions.showFlashMessage(SoundManager.get().isMuted() ? "Sound OFF" : "Sound ON");
 		} else if (Key.pressed(Key.ALT, KeyCode.N)) {
 			Actions.cheatEnterNextLevel();
 		} else if (Key.pressed(KeyCode.P)) {
