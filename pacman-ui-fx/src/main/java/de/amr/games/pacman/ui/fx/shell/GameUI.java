@@ -70,17 +70,6 @@ import javafx.stage.Stage;
 public class GameUI extends GameEventAdapter {
 
 	public static final int SCENE_2D = 0, SCENE_3D = 1;
-
-	private final Stage stage;
-	private final Scene mainScene;
-	private final StackPane mainSceneRoot;
-	private final InfoLayer infoLayer;
-	private final FlashMessageView flashMessageLayer;
-	private final GameController gameController;
-	private final PacController pacController = new PacController(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
-
-	private GameScene currentGameScene;
-
 	private final GameScene[][] scenes_MrPacMan = {
 		//@formatter:off
 		{ new PacMan_IntroScene(), null },
@@ -102,6 +91,16 @@ public class GameUI extends GameEventAdapter {
 		{ new PlayScene2D(), new PlayScene3D() },
 		//@formatter:on
 	};
+
+	private final Stage stage;
+	private final Scene mainScene;
+	private final StackPane mainSceneRoot;
+	private final InfoLayer infoLayer;
+	private final FlashMessageView flashMessageLayer;
+	private final GameController gameController;
+	private final PacController pacController = new PacController(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
+
+	private GameScene currentGameScene;
 
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
 		this.gameController = gameController;
