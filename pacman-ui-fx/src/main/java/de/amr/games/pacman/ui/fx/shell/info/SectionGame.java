@@ -29,8 +29,8 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.shell.Actions;
+import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -107,11 +107,11 @@ public class SectionGame extends Section {
 						game().level.world.tiles().filter(game().level.world::isFoodTile).count(),
 						game().level.world.energizerTiles().count()));
 		addInfo("Ghost speed", () -> fmtSpeed(game().level.ghostSpeed));
-		addInfo("Ghost speed (frightened)", () -> fmtSpeed(game().level.ghostSpeedFrightened));
-		addInfo("Ghost speed (tunnel)", () -> fmtSpeed(game().level.ghostSpeedTunnel));
-		addInfo("Ghost frightened time", () -> String.format("%d sec", game().level.ghostFrightenedSeconds));
+		addInfo("- frightened", () -> fmtSpeed(game().level.ghostSpeedFrightened));
+		addInfo("- in tunnel", () -> fmtSpeed(game().level.ghostSpeedTunnel));
 		addInfo("Pac-Man speed", () -> fmtSpeed(game().level.playerSpeed));
-		addInfo("Pac-Man speed (power)", () -> fmtSpeed(game().level.playerSpeedPowered));
+		addInfo("- empowered", () -> fmtSpeed(game().level.playerSpeedPowered));
+		addInfo("Frightened time", () -> String.format("%d sec", game().level.ghostFrightenedSeconds));
 		addInfo("Maze flashings", () -> game().level.numFlashes);
 	}
 

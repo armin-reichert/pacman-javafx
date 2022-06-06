@@ -27,8 +27,8 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.shell.Actions;
+import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
@@ -64,11 +64,11 @@ public class Section3D extends Section {
 		cbUseFloorTexture = addCheckBox("Maze floor texture", () -> Env.toggle(Env.$useMazeFloorTexture));
 		cbAxesVisible = addCheckBox("Show axes", () -> Env.toggle(Env.$axesVisible));
 		cbWireframeMode = addCheckBox("Wireframe mode", Actions::toggleDrawMode);
-		addInfo("Shift+LEFT / RIGHT", "Camera -X / +X").available(() -> Env.$perspective.get() == Perspective.CAM_TOTAL);
-		addInfo("Shift+PLUS / MINUS", "Camera -Y / +Y").available(() -> Env.$perspective.get() == Perspective.CAM_TOTAL);
-		addInfo("Shift+UP / DOWN", "Camera -Z / +Z")
-				.available(() -> Env.$perspective.get() == Perspective.CAM_TOTAL || Env.$perspective.get() == Perspective.CAM_DRONE);
-		addInfo("CTRL+Shift+UP / DOWN", "Camera Rotate X").available(() -> Env.$perspective.get() == Perspective.CAM_TOTAL);
+		addInfo("Shift+LEFT/RIGHT", "Camera -X / +X").available(() -> Env.$perspective.get() == Perspective.CAM_TOTAL);
+		addInfo("Shift+PLUS/MINUS", "Camera -Y / +Y").available(() -> Env.$perspective.get() == Perspective.CAM_TOTAL);
+		addInfo("Shift+UP/DOWN", "Camera -Z / +Z").available(
+				() -> Env.$perspective.get() == Perspective.CAM_TOTAL || Env.$perspective.get() == Perspective.CAM_DRONE);
+		addInfo("Ctrl+Shift+UP/DOWN", "Camera Rotate X").available(() -> Env.$perspective.get() == Perspective.CAM_TOTAL);
 	}
 
 	@Override

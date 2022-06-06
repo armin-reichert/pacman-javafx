@@ -37,6 +37,8 @@ import javafx.scene.text.Font;
  */
 public class InfoLayer extends BorderPane {
 
+	public static final int COL_MIN_WIDTH = 100;
+
 	private final VBox leftSide = new VBox();
 	private final VBox rightSide = new VBox();
 	private SectionGeneral sectionGeneral;
