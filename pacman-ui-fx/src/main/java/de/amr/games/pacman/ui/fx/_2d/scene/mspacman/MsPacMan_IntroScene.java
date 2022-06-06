@@ -73,7 +73,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 	@Override
 	public void init() {
 		sceneController.restartInInitialState(IntroController.State.BEGIN);
-		createCommonParts(game);
+		createScoresAndCredit(game);
 		score2D.showScore = false;
 		credit2D.visible = true;
 		msPacMan2D = new Pac2D(context.msPacMan, new PacAnimations(r2D));

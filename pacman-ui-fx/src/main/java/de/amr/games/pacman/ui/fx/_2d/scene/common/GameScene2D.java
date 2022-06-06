@@ -56,10 +56,11 @@ import javafx.scene.transform.Scale;
  */
 public abstract class GameScene2D extends GameEventAdapter implements GameScene {
 
+	protected final V2d unscaledSize;
 	protected final SubScene fxSubScene;
 	protected final StackPane root;
 	protected final Canvas canvas;
-	protected final V2d unscaledSize;
+	protected final Pane infoPane;
 
 	// context
 	protected GameController gameController;
@@ -71,27 +72,22 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 	protected GameScore2D highScore2D;
 	protected Credit2D credit2D;
 
-	// info pane
-	protected Pane infoPane = new Pane();
-
-	/**
-	 * @param gameController game controller
-	 * @param unscaledSize   logical scene size (number of tiles x tile size)
-	 */
 	public GameScene2D() {
 		unscaledSize = new V2d(ArcadeWorld.SIZE);
-		canvas = new Canvas(1, 1); // will be resized by sub-scene
-		root = new StackPane(canvas, infoPane);
+		root = new StackPane();
 		root.setBackground(U.colorBackground(Color.BLACK));
 		fxSubScene = new SubScene(root, unscaledSize.x, unscaledSize.y);
+		canvas = new Canvas(1, 1); // will be resized by sub-scene
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
+		infoPane = new Pane();
+		root.getChildren().addAll(canvas, infoPane);
 	}
 
-	protected void createCommonParts(GameModel game) {
+	protected void createScoresAndCredit(GameModel game) {
 		score2D = new GameScore2D(game.scores().gameScore(), "SCORE", t(1), t(1));
 		highScore2D = new GameScore2D(game.scores().hiscore(), "HIGH SCORE", t(16), t(1));
-		credit2D = new Credit2D(gameController::credit, t(2), t(ArcadeWorld.TILES_Y) - 2);
+		credit2D = new Credit2D(gameController::credit, t(2), unscaledSize.y - 2);
 		credit2D.visible = false;
 	}
 
