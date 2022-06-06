@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
-import static de.amr.games.pacman.ui.fx.shell.FlashMessageView.showFlashMessage;
 
 import java.util.EnumMap;
 import java.util.stream.Stream;
@@ -55,6 +54,7 @@ import de.amr.games.pacman.ui.fx._3d.model.GianmarcosModel3D;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.CoordinateAxes;
@@ -393,7 +393,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 
 	@Override
 	public void onPlayerGetsExtraLife(GameEvent e) {
-		showFlashMessage(1.5, Env.message("extra_life"));
+		Actions.showFlashMessage(Env.message("extra_life"));
 		SoundManager.get().play(GameSound.EXTRA_LIFE);
 	}
 
@@ -458,7 +458,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 					getGhostHouseDoorColor(game.variant, mazeNumber));
 			maze3D.createFood(game.level.world, r2D.getFoodColor(mazeNumber));
 			levelCounter3D.update(game);
-			showFlashMessage(1, Env.message("level_starting", game.level.number));
+			Actions.showFlashMessage(Env.message("level_starting", game.level.number));
 			U.pauseSec(3, () -> gameController.state().timer().expire()).play();
 		}
 		case LEVEL_COMPLETE -> {
@@ -468,12 +468,12 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 					U.pauseSec(2.0), //
 					maze3D.createMazeFlashingAnimation(game.level.numFlashes), //
 					U.pauseSec(1.0, () -> game.pac.hide()), //
-					U.pauseSec(0.5, () -> showFlashMessage(2, message)), //
+					U.pauseSec(0.5, () -> Actions.showFlashMessage(2, message)), //
 					U.pauseSec(2.0, () -> gameController.state().timer().expire()) //
 			).play();
 		}
 		case GAME_OVER -> {
-			showFlashMessage(3, Env.GAME_OVER_TALK.next());
+			Actions.showFlashMessage(3, Env.GAME_OVER_TALK.next());
 		}
 		}
 

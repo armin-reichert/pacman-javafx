@@ -73,6 +73,7 @@ public class GameUI extends GameEventAdapter {
 	private final Scene mainScene;
 	private final StackPane mainSceneRoot;
 	private final InfoLayer infoLayer;
+	private final FlashMessageView flashMessageLayer;
 	private final GameController gameController;
 
 	private GameScene currentGameScene;
@@ -103,9 +104,11 @@ public class GameUI extends GameEventAdapter {
 		this.gameController = gameController;
 		this.stage = stage;
 
+		this.flashMessageLayer = new FlashMessageView();
 		this.infoLayer = new InfoLayer(this, gameController);
+
 		// first child is placeholder for subscene assigned to current game scene
-		mainSceneRoot = new StackPane(new Region(), FlashMessageView.get(), infoLayer);
+		mainSceneRoot = new StackPane(new Region(), flashMessageLayer, infoLayer);
 		mainScene = new Scene(mainSceneRoot, width, height);
 		mainScene.setOnKeyPressed(this::handleKeyPressed);
 		log("Main scene created. Size: %.0f x %.0f", mainScene.getWidth(), mainScene.getHeight());
@@ -137,6 +140,10 @@ public class GameUI extends GameEventAdapter {
 
 	public double getMainSceneHeight() {
 		return mainScene.getHeight();
+	}
+
+	public FlashMessageView getFlashMessageView() {
+		return flashMessageLayer;
 	}
 
 	public InfoLayer getInfoLayer() {
@@ -202,7 +209,7 @@ public class GameUI extends GameEventAdapter {
 	 * Called on every tick (also if simulation is paused).
 	 */
 	public void render() {
-		FlashMessageView.get().update();
+		flashMessageLayer.update();
 		infoLayer.update();
 		stage.setTitle(gameController.game().variant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
 	}
@@ -289,7 +296,15 @@ public class GameUI extends GameEventAdapter {
 			Actions.toggleInfoPanelsVisible();
 		}
 
-		else if (Key.pressed(e, KeyCode.Q)) {
+		else if (Key.pressed(e, Key.SHIFT, KeyCode.P)) {
+			if (Env.$paused.get()) {
+				GameLoop.get().runSingleStep(true);
+			}
+		}
+
+		else if (Key.pressed(e, KeyCode.P)) {
+			Actions.togglePaused();
+		} else if (Key.pressed(e, KeyCode.Q)) {
 			Actions.quitCurrentScene();
 		} else if (Key.pressed(e, KeyCode.V)) {
 			Actions.selectNextGameVariant();

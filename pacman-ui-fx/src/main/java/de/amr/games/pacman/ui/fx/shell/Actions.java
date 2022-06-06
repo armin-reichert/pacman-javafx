@@ -25,7 +25,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell;
 
 import static de.amr.games.pacman.lib.Logging.log;
-import static de.amr.games.pacman.ui.fx.shell.FlashMessageView.showFlashMessage;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
@@ -48,6 +47,14 @@ public class Actions {
 		theUI = ui;
 	}
 
+	public static void showFlashMessage(String message, Object... args) {
+		showFlashMessage(1, message, args);
+	}
+
+	public static void showFlashMessage(double seconds, String message, Object... args) {
+		theUI.getFlashMessageView().showMessage(String.format(message, args), seconds);
+	}
+
 	public static void quitCurrentScene() {
 		theUI.getCurrentGameScene().end();
 		SoundManager.get().stopAll();
@@ -58,14 +65,14 @@ public class Actions {
 		if (theUI.getCurrentGameScene().is3D()) {
 			Env.$perspective.set(Env.perspectiveShifted(delta));
 			String perspectiveName = Env.message(Env.$perspective.get().name());
-			showFlashMessage(1, Env.message("camera_perspective", perspectiveName));
+			showFlashMessage(Env.message("camera_perspective", perspectiveName));
 		}
 	}
 
 	public static void addLives(int lives) {
 		if (theGameController.isGameRunning()) {
 			theGameController.game().lives += lives;
-			showFlashMessage(1, "You have %d lives", theGameController.game().lives);
+			showFlashMessage("You have %d lives", theGameController.game().lives);
 		}
 	}
 
@@ -102,7 +109,6 @@ public class Actions {
 
 	public static void togglePaused() {
 		Env.toggle(Env.$paused);
-		showFlashMessage(1, Env.$paused.get() ? "Paused" : "Resumed");
 		log(Env.$paused.get() ? "Simulation paused." : "Simulation resumed.");
 	}
 
@@ -113,13 +119,13 @@ public class Actions {
 	public static void toggleAutopilot() {
 		theGameController.toggleAutoMoving();
 		String message = Env.message(theGameController.isAutoMoving() ? "autopilot_on" : "autopilot_off");
-		showFlashMessage(1, message);
+		showFlashMessage(message);
 	}
 
 	public static void toggleImmunity() {
 		theGameController.togglePlayerImmune();
 		String message = Env.message(theGameController.game().playerImmune ? "player_immunity_on" : "player_immunity_off");
-		showFlashMessage(1, message);
+		showFlashMessage(message);
 	}
 
 	public static void toggleUse3DScene() {
@@ -134,7 +140,7 @@ public class Actions {
 				((PlayScene3D) theUI.getCurrentGameScene()).onSwitchFrom2DScene();
 			}
 		}
-		showFlashMessage(1, Env.message(Env.$3D.get() ? "use_3D_scene" : "use_2D_scene"));
+		showFlashMessage(Env.message(Env.$3D.get() ? "use_3D_scene" : "use_2D_scene"));
 	}
 
 	public static void toggleDrawMode() {
