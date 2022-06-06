@@ -306,6 +306,7 @@ public class PlayScene2D extends GameScene2D {
 			SoundManager.get().stopAll();
 			world2D.getEnergizerAnimation().reset();
 			pac2D.animations.selectAnimation(PacAnimation.MUNCHING);
+			pac2D.animations.selectedAnimation().reset();
 			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart());
 			if (!gameController.isGameRunning()) {
 				SoundManager.get().play(GameSound.GAME_READY);
