@@ -123,7 +123,7 @@ public class GameUI extends GameEventAdapter {
 
 		Env.$drawMode3D.addListener((x, y, z) -> mainSceneRoot.setBackground(computeMainSceneBackground()));
 
-		setScenesParent(mainScene);
+		attachGameScenesToMainScene();
 		updateGameScene(gameController.state(), true);
 		embedCurrentGameScene();
 
@@ -134,10 +134,9 @@ public class GameUI extends GameEventAdapter {
 		stage.show();
 	}
 
-	private void setScenesParent(Scene parent) {
-		Stream.of(scenes_MsPacMan, scenes_PacMan)
-				.forEach(gameScenes -> Stream.of(gameScenes).flatMap(versions -> Stream.of(versions[0], versions[1]))
-						.filter(Objects::nonNull).forEach(gameScene -> gameScene.setParent(parent)));
+	private void attachGameScenesToMainScene() {
+		Stream.of(scenes_MsPacMan, scenes_PacMan).flatMap(Stream::of).flatMap(Stream::of).filter(Objects::nonNull)
+				.forEach(gameScene -> gameScene.setParent(mainScene));
 	}
 
 	public double getWidth() {
