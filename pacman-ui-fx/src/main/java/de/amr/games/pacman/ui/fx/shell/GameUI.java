@@ -116,7 +116,7 @@ public class GameUI extends GameEventAdapter {
 		this.infoLayer = new InfoLayer(this, gameController);
 
 		// first child is placeholder for subscene assigned to current game scene
-		mainSceneRoot = new StackPane(new Region(), flashMessageLayer, infoLayer);
+		mainSceneRoot = new StackPane(new Region(), infoLayer, flashMessageLayer);
 		mainScene = new Scene(mainSceneRoot, width, height);
 		mainScene.setOnKeyPressed(this::processKeyEvent);
 		log("Main scene created. Size: %.0f x %.0f", mainScene.getWidth(), mainScene.getHeight());
