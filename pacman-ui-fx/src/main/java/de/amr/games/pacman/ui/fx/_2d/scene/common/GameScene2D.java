@@ -56,11 +56,11 @@ import javafx.scene.transform.Scale;
  */
 public abstract class GameScene2D extends GameEventAdapter implements GameScene {
 
-	protected final V2d unscaledSize;
-	protected final SubScene fxSubScene;
+	protected final V2d unscaledSize = new V2d(ArcadeWorld.SIZE);
+	protected final Canvas canvas = new Canvas(unscaledSize.x, unscaledSize.y);
+	protected final Pane infoPane = new Pane();
 	protected final StackPane root;
-	protected final Canvas canvas;
-	protected final Pane infoPane;
+	protected final SubScene fxSubScene;
 
 	// context
 	protected GameController gameController;
@@ -73,15 +73,11 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 	protected Credit2D credit2D;
 
 	public GameScene2D() {
-		unscaledSize = new V2d(ArcadeWorld.SIZE);
-		root = new StackPane();
+		root = new StackPane(canvas, infoPane);
 		root.setBackground(U.colorBackground(Color.BLACK));
 		fxSubScene = new SubScene(root, unscaledSize.x, unscaledSize.y);
-		canvas = new Canvas(1, 1); // will be resized by sub-scene
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
-		infoPane = new Pane();
-		root.getChildren().addAll(canvas, infoPane);
 	}
 
 	protected void createScoresAndCredit(GameModel game) {
@@ -115,10 +111,6 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 
 	public Canvas getCanvas() {
 		return canvas;
-	}
-
-	protected double scaling() {
-		return fxSubScene.getHeight() / unscaledSize.y;
 	}
 
 	public void resize(double height) {

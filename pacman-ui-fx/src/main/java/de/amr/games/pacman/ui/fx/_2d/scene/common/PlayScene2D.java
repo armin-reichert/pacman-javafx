@@ -87,6 +87,7 @@ public class PlayScene2D extends GameScene2D {
 		}
 
 		public void update() {
+			double scaling = fxSubScene.getHeight() / unscaledSize.y;
 			for (int id = 0; id < 4; ++id) {
 				var ghost2D = ghosts2D[id];
 				var ghost = ghost2D.ghost;
@@ -97,15 +98,15 @@ public class PlayScene2D extends GameScene2D {
 				var text = "%s\nState: %s\nAnimation: %s".formatted(ghost.name, state, ghost2D.animations.selectedKey());
 				var bounds = ghostInfos[id].getBoundsInLocal();
 				ghostInfos[id].setText(text);
-				ghostInfos[id].setX((ghost.position.x + World.HTS) * scaling() - bounds.getWidth() / 2);
-				ghostInfos[id].setY(ghost.position.y * scaling() - 50);
+				ghostInfos[id].setX((ghost.position.x + World.HTS) * scaling - bounds.getWidth() / 2);
+				ghostInfos[id].setY(ghost.position.y * scaling - 50);
 				ghostInfos[id].setVisible(ghost.visible);
 			}
 			var text = "%s\nAnimation: %s".formatted(game.pac.name, pac2D.animations.selectedKey());
 			var bounds = pacInfo.getBoundsInLocal();
 			pacInfo.setText(text);
-			pacInfo.setX((game.pac.position.x + World.HTS) * scaling() - bounds.getWidth() / 2);
-			pacInfo.setY(game.pac.position.y * scaling() - 30);
+			pacInfo.setX((game.pac.position.x + World.HTS) * scaling - bounds.getWidth() / 2);
+			pacInfo.setY(game.pac.position.y * scaling - 30);
 			pacInfo.setVisible(game.pac.visible);
 		}
 	}
