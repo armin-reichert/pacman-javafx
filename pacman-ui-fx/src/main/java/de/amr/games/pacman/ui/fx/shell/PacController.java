@@ -30,7 +30,7 @@ import de.amr.games.pacman.model.common.actors.Pac;
 import javafx.scene.input.KeyCode;
 
 /**
- * Controls player movement using keys.
+ * Controls Pac-Man using keys.
  * 
  * @author Armin Reichert
  */
