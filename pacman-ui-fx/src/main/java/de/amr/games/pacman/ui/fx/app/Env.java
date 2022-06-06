@@ -45,19 +45,14 @@ import javafx.scene.shape.DrawMode;
  */
 public class Env {
 
-	// UI messages
-
-	public static final ResourceBundle MESSAGES = ResourceBundle.getBundle("/common/messages");
+	public static final ResourceBundle MESSAGES = ResourceBundle.getBundle("/common/texts/messages");
+	public static final RandomEntrySelector<String> CHEAT_TALK = load("/common/texts/cheating_talk");
+	public static final RandomEntrySelector<String> LEVEL_COMPLETE_TALK = load("/common/texts/level_complete_talk");
+	public static final RandomEntrySelector<String> GAME_OVER_TALK = load("/common/texts/game_over_talk");
 
 	public static String message(String pattern, Object... args) {
 		return MessageFormat.format(MESSAGES.getString(pattern), args);
 	}
-
-	// Trash talk
-
-	public static final RandomEntrySelector<String> CHEAT_TALK = load("/common/cheating_talk");
-	public static final RandomEntrySelector<String> LEVEL_COMPLETE_TALK = load("/common/level_complete_talk");
-	public static final RandomEntrySelector<String> GAME_OVER_TALK = load("/common/game_over_talk");
 
 	private static RandomEntrySelector<String> load(String bundleName) {
 		ResourceBundle bundle = ResourceBundle.getBundle(bundleName);
@@ -68,11 +63,11 @@ public class Env {
 
 	public static final BooleanProperty $axesVisible = new SimpleBooleanProperty(false);
 	public static final BooleanProperty $debugUI = new SimpleBooleanProperty(false);
-	public static final ObjectProperty<DrawMode> $drawMode3D = new SimpleObjectProperty<DrawMode>(DrawMode.FILL);
+	public static final ObjectProperty<DrawMode> $drawMode3D = new SimpleObjectProperty<>(DrawMode.FILL);
 	public static final IntegerProperty $mazeResolution = new SimpleIntegerProperty(8);
 	public static final DoubleProperty $mazeWallHeight = new SimpleDoubleProperty(2.0);
 	public static final BooleanProperty $paused = new SimpleBooleanProperty(false);
-	public static final ObjectProperty<Perspective> $perspective = new SimpleObjectProperty<Perspective>(
+	public static final ObjectProperty<Perspective> $perspective = new SimpleObjectProperty<>(
 			Perspective.CAM_NEAR_PLAYER);
 	public static final BooleanProperty $tilesVisible = new SimpleBooleanProperty(false);
 	public static final BooleanProperty $useMazeFloorTexture = new SimpleBooleanProperty(false);
