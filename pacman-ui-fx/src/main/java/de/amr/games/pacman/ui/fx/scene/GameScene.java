@@ -27,6 +27,7 @@ import static de.amr.games.pacman.lib.Logging.log;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.event.GameEventListener;
+import de.amr.games.pacman.ui.fx.shell.Key;
 import javafx.scene.SubScene;
 
 /**
@@ -37,7 +38,7 @@ import javafx.scene.SubScene;
 public interface GameScene extends GameEventListener {
 
 	/**
-	 * Sets the scene "context" (game controller, model, rendering, 3D model, sound).
+	 * Sets the scene "context" (game controller, model, rendering, 3D model, sound). Called before the scene gets active.
 	 */
 	void setSceneContext(GameController gameController);
 
@@ -66,10 +67,15 @@ public interface GameScene extends GameEventListener {
 	SubScene getFXSubScene();
 
 	/**
-	 * @return if this is a 3D scene
+	 * @return if this is a scene with 3D content
 	 */
 	boolean is3D();
 
+	/**
+	 * Called when a key has been pressed.
+	 * 
+	 * @see Key
+	 */
 	default void onKeyPressed() {
 	}
 }
