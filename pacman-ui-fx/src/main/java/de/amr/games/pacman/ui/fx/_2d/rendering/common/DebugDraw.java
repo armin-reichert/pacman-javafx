@@ -64,5 +64,4 @@ public class DebugDraw {
 		double offset = 0.5;
 		g.strokeLine(x1 + offset, y1 + offset, x2 + offset, y2 + offset);
 	}
-
 }

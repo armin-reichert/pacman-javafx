@@ -72,7 +72,6 @@ public class World2D {
 			drawMazeWithFood(g, r2D, r2D.mazeNumber(game.level.number));
 		}
 		if (Env.$tilesVisible.get()) {
-			DebugDraw.drawGrid(g);
 			DebugDraw.drawTileBorders(g, game.level.world.tiles().filter(game.level.world::isIntersection), Color.RED);
 		}
 	}

@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
-import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.common.GameController;
@@ -33,6 +32,7 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Credit2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.DebugDraw;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
@@ -141,29 +141,12 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		doRender(g);
 		if (Env.$tilesVisible.get()) {
-			drawTileBorders(g);
+			DebugDraw.drawGrid(g);
 		}
 	}
 
 	@Override
 	public boolean is3D() {
 		return false;
-	}
-
-	private void drawTileBorders(GraphicsContext g) {
-		g.setStroke(Color.rgb(160, 160, 160, 0.5));
-		g.setLineWidth(0.5);
-		for (int y = 0; y < unscaledSize.y; y += TS) {
-			line(g, 0, y, unscaledSize.x, y);
-		}
-		for (int x = 0; x < unscaledSize.x; x += TS) {
-			line(g, x, 0, x, unscaledSize.y);
-		}
-	}
-
-	// WTF
-	private static void line(GraphicsContext g, double x1, double y1, double x2, double y2) {
-		double offset = 0.5;
-		g.strokeLine(x1 + offset, y1 + offset, x2 + offset, y2 + offset);
 	}
 }
