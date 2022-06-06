@@ -155,13 +155,7 @@ public class Actions {
 	}
 
 	public static void toggleSoundMuted() {
-		if (SoundManager.get().isMuted()) {
-			if (theGameController.credit() > 0) {
-				SoundManager.get().setMuted(false);
-			}
-		} else {
-			SoundManager.get().setMuted(true);
-		}
+		SoundManager.get().setMuted(!SoundManager.get().isMuted());
 	}
 
 	public static void cheatEatAllPellets() {
