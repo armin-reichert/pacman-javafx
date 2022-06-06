@@ -28,7 +28,6 @@ import static de.amr.games.pacman.lib.Logging.log;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.event.GameEventListener;
 import javafx.scene.SubScene;
-import javafx.scene.input.KeyCode;
 
 /**
  * Common interface of all game scenes (2D and 3D).
@@ -78,6 +77,6 @@ public interface GameScene extends GameEventListener {
 	 */
 	boolean is3D();
 
-	default void onKeyPressed(KeyCode key) {
+	default void onKeyPressed() {
 	}
 }

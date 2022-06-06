@@ -24,10 +24,13 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.shell;
 
+import de.amr.games.pacman.lib.Logging;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 /**
+ * Maybe this is total bullshit but it works.
+ * 
  * @author Armin Reichert
  */
 public class Key {
@@ -37,24 +40,58 @@ public class Key {
 	public static final byte CTRL = 0x2;
 	public static final byte SHIFT = 0x4;
 
-	public static boolean pressed(KeyEvent e, KeyCode code) {
-		return pressed(e, NO_MODIFIER, code);
+	private static KeyEvent currentEvent;
+	private static byte currentMask;
+
+	public static void processEvent(KeyEvent e) {
+		if (e.isConsumed()) {
+			return;
+		}
+		currentEvent = e;
+		currentMask = NO_MODIFIER;
+		if (e.isAltDown()) {
+			currentMask |= ALT;
+		}
+		if (e.isControlDown()) {
+			currentMask |= CTRL;
+		}
+		if (e.isShiftDown()) {
+			currentMask |= SHIFT;
+		}
 	}
 
-	public static boolean pressed(KeyEvent e, int modfierMask, KeyCode code) {
-		if ((modfierMask & ALT) != 0 && !e.isAltDown()) {
+	public static boolean pressed(KeyCode code) {
+		return pressed(NO_MODIFIER, code);
+	}
+
+	public static boolean pressed(int modfierMask, KeyCode code) {
+		if (currentEvent.isConsumed()) {
 			return false;
 		}
-		if ((modfierMask & CTRL) != 0 && !e.isControlDown()) {
+		if (currentMask != modfierMask) {
 			return false;
 		}
-		if ((modfierMask & SHIFT) != 0 && !e.isShiftDown()) {
+		if (currentEvent.getCode() != code) {
 			return false;
 		}
-		if (e.getCode() != code) {
-			return false;
-		}
-		e.consume();
+		Logging.log("Key pressed: %s%s", modifierText(currentMask), code);
 		return true;
+	}
+
+	private static String modifierText(byte mask) {
+		if (mask == NO_MODIFIER) {
+			return "(NO MODIFIER) ";
+		}
+		String text = "";
+		if ((mask & ALT) != 0) {
+			text += "ALT";
+		}
+		if ((mask & CTRL) != 0) {
+			text += " CONTROL";
+		}
+		if ((mask & SHIFT) != 0) {
+			text += " SHIFT";
+		}
+		return text + "+";
 	}
 }

@@ -51,7 +51,6 @@ import de.amr.games.pacman.ui.fx.shell.info.InfoLayer;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -110,7 +109,12 @@ public class GameUI extends GameEventAdapter {
 		// first child is placeholder for subscene assigned to current game scene
 		mainSceneRoot = new StackPane(new Region(), flashMessageLayer, infoLayer);
 		mainScene = new Scene(mainSceneRoot, width, height);
-		mainScene.setOnKeyPressed(this::handleKeyPressed);
+		mainScene.setOnKeyPressed(e -> {
+			Key.processEvent(e);
+			this.onKeyPressed();
+			currentGameScene.onKeyPressed();
+			e.consume();
+		});
 		log("Main scene created. Size: %.0f x %.0f", mainScene.getWidth(), mainScene.getHeight());
 
 		Env.$drawMode3D.addListener((x, y, z) -> updateSceneBackground(currentGameScene));
@@ -264,55 +268,43 @@ public class GameUI extends GameEventAdapter {
 		}
 	}
 
-	private void handleKeyPressed(KeyEvent e) {
-		// ALT + key
-		if (Key.pressed(e, Key.ALT, KeyCode.A)) {
+	private void onKeyPressed() {
+		if (Key.pressed(Key.ALT, KeyCode.A)) {
 			Actions.toggleAutopilot();
-		} else if (Key.pressed(e, Key.ALT, KeyCode.E)) {
+		} else if (Key.pressed(Key.ALT, KeyCode.E)) {
 			Actions.cheatEatAllPellets();
-		} else if (Key.pressed(e, Key.ALT, KeyCode.D)) {
+		} else if (Key.pressed(Key.ALT, KeyCode.D)) {
 			Env.toggle(Env.$debugUI);
-		} else if (Key.pressed(e, Key.ALT, KeyCode.I)) {
-			Actions.toggleImmunity();
-		} else if (Key.pressed(e, Key.ALT, KeyCode.L)) {
-			Actions.addLives(3);
-		} else if (Key.pressed(e, Key.ALT, KeyCode.M)) {
-			Actions.toggleSoundMuted();
-		} else if (Key.pressed(e, Key.ALT, KeyCode.N)) {
-			Actions.cheatEnterNextLevel();
-		} else if (Key.pressed(e, Key.ALT, KeyCode.X)) {
-			Actions.cheatKillAllEatableGhosts();
-		} else if (Key.pressed(e, Key.ALT, KeyCode.Z)) {
-			Actions.startIntermissionScenesTest();
-		} else if (Key.pressed(e, Key.ALT, KeyCode.LEFT)) {
-			Actions.changePerspective(-1);
-		} else if (Key.pressed(e, Key.ALT, KeyCode.RIGHT)) {
-			Actions.changePerspective(+1);
-		} else if (Key.pressed(e, Key.ALT, KeyCode.DIGIT3)) {
-			Actions.toggleUse3DScene();
-		}
-
-		else if (Key.pressed(e, Key.CTRL, KeyCode.I)) {
+		} else if (Key.pressed(Key.CTRL, KeyCode.I)) {
 			Actions.toggleInfoPanelsVisible();
-		}
-
-		else if (Key.pressed(e, Key.SHIFT, KeyCode.P)) {
-			if (Env.$paused.get()) {
-				GameLoop.get().runSingleStep(true);
-			}
-		}
-
-		else if (Key.pressed(e, KeyCode.P)) {
+		} else if (Key.pressed(Key.ALT, KeyCode.I)) {
+			Actions.toggleImmunity();
+		} else if (Key.pressed(Key.ALT, KeyCode.L)) {
+			Actions.addLives(3);
+		} else if (Key.pressed(Key.ALT, KeyCode.M)) {
+			Actions.toggleSoundMuted();
+		} else if (Key.pressed(Key.ALT, KeyCode.N)) {
+			Actions.cheatEnterNextLevel();
+		} else if (Key.pressed(KeyCode.P)) {
 			Actions.togglePaused();
-		} else if (Key.pressed(e, KeyCode.Q)) {
+		} else if (Key.pressed(KeyCode.Q)) {
 			Actions.quitCurrentScene();
-		} else if (Key.pressed(e, KeyCode.V)) {
+		} else if (Key.pressed(KeyCode.V)) {
 			Actions.selectNextGameVariant();
-		} else if (Key.pressed(e, KeyCode.F11)) {
+		} else if (Key.pressed(Key.ALT, KeyCode.X)) {
+			Actions.cheatKillAllEatableGhosts();
+		} else if (Key.pressed(Key.ALT, KeyCode.Z)) {
+			Actions.startIntermissionScenesTest();
+		} else if (Key.pressed(Key.ALT, KeyCode.LEFT)) {
+			Actions.changePerspective(-1);
+		} else if (Key.pressed(Key.ALT, KeyCode.RIGHT)) {
+			Actions.changePerspective(+1);
+		} else if (Key.pressed(Key.ALT, KeyCode.DIGIT3)) {
+			Actions.toggleUse3DScene();
+		} else if (Key.pressed(KeyCode.F11)) {
 			stage.setFullScreen(true);
+		} else if (Key.pressed(Key.SHIFT, KeyCode.P)) {
+			Actions.singleStep();
 		}
-
-		// forward to current game scene
-		currentGameScene.onKeyPressed(e.getCode());
 	}
 }

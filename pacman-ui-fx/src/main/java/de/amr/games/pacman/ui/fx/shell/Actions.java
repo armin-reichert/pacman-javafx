@@ -31,6 +31,7 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.shape.DrawMode;
 
@@ -110,6 +111,12 @@ public class Actions {
 	public static void togglePaused() {
 		Env.toggle(Env.$paused);
 		log(Env.$paused.get() ? "Simulation paused." : "Simulation resumed.");
+	}
+
+	public static void singleStep() {
+		if (Env.$paused.get()) {
+			GameLoop.get().runSingleStep(true);
+		}
 	}
 
 	public static void selectNextGameVariant() {

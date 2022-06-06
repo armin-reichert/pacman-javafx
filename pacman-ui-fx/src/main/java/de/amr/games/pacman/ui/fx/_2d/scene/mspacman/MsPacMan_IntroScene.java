@@ -39,6 +39,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimationSet;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimationSet;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
+import de.amr.games.pacman.ui.fx.shell.Key;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.geometry.Rectangle2D;
@@ -80,17 +81,12 @@ public class MsPacMan_IntroScene extends GameScene2D {
 	}
 
 	@Override
-	public void onKeyPressed(KeyCode code) {
-		switch (code) {
-		case DIGIT5 -> {
+	public void onKeyPressed() {
+		if (Key.pressed(KeyCode.DIGIT5)) {
 			SoundManager.get().play(GameSound.CREDIT);
 			gameController.addCredit();
-		}
-		case SPACE, DIGIT1 -> {
+		} else if (Key.pressed(KeyCode.DIGIT1)) {
 			gameController.requestGame();
-		}
-		default -> { // ignore
-		}
 		}
 	}
 

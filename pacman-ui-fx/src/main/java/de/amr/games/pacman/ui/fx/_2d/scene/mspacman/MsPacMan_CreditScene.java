@@ -29,6 +29,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
+import de.amr.games.pacman.ui.fx.shell.Key;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.canvas.GraphicsContext;
@@ -48,18 +49,12 @@ public class MsPacMan_CreditScene extends GameScene2D {
 	}
 
 	@Override
-	public void onKeyPressed(KeyCode code) {
-		switch (code) {
-		case DIGIT5 -> {
+	public void onKeyPressed() {
+		if (Key.pressed(KeyCode.DIGIT5)) {
 			SoundManager.get().play(GameSound.CREDIT);
 			gameController.addCredit();
-		}
-		case SPACE, DIGIT1 -> {
+		} else if (Key.pressed(KeyCode.DIGIT1)) {
 			gameController.requestGame();
-		}
-		default -> {
-			// ignore
-		}
 		}
 	}
 
