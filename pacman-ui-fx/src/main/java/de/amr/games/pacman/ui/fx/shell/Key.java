@@ -92,6 +92,6 @@ public class Key {
 		if ((mask & SHIFT) != 0) {
 			text += " SHIFT";
 		}
-		return text + "+";
+		return (text + "+").trim();
 	}
 }
