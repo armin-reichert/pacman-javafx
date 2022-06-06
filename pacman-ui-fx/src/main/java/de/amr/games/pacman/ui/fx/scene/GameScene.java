@@ -28,6 +28,7 @@ import static de.amr.games.pacman.lib.Logging.log;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.ui.fx.shell.Key;
+import javafx.scene.Scene;
 import javafx.scene.SubScene;
 
 /**
@@ -65,6 +66,13 @@ public interface GameScene extends GameEventListener {
 	 * @return the JavaFX subscene associated with this game scene
 	 */
 	SubScene getFXSubScene();
+
+	/**
+	 * Sets the parent scene. Used to install resize handlers.
+	 * 
+	 * @param parent parent FX scene (main scene of the UI)
+	 */
+	void setParent(Scene parent);
 
 	/**
 	 * @return if this is a scene with 3D content

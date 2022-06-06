@@ -40,6 +40,7 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.U;
+import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -94,6 +95,11 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 		highScore2D = new GameScore2D(game.scores().hiscore(), "HIGH SCORE", t(16), t(1));
 		credit2D = new Credit2D(gameController::credit, t(2), t(ArcadeWorld.TILES_Y) - 2);
 		credit2D.visible = false;
+	}
+
+	@Override
+	public void setParent(Scene parent) {
+		parent.heightProperty().addListener((x, y, height) -> resize(height.doubleValue()));
 	}
 
 	@Override

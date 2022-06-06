@@ -67,6 +67,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
@@ -132,6 +133,12 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 
 	public PlaySceneCamera getCamera() {
 		return (PlaySceneCamera) fxSubScene.getCamera();
+	}
+
+	@Override
+	public void setParent(Scene parent) {
+		fxSubScene.widthProperty().bind(parent.widthProperty());
+		fxSubScene.heightProperty().bind(parent.heightProperty());
 	}
 
 	@Override

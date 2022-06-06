@@ -25,6 +25,9 @@ package de.amr.games.pacman.ui.fx.shell;
 
 import static de.amr.games.pacman.lib.Logging.log;
 
+import java.util.Objects;
+import java.util.stream.Stream;
+
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
@@ -119,8 +122,8 @@ public class GameUI extends GameEventAdapter {
 		log("Main scene created. Size: %.0f x %.0f", mainScene.getWidth(), mainScene.getHeight());
 
 		Env.$drawMode3D.addListener((x, y, z) -> mainSceneRoot.setBackground(computeMainSceneBackground()));
-		setResizeBehavior(mainScene, scenes_MsPacMan);
-		setResizeBehavior(mainScene, scenes_PacMan);
+
+		setScenesParent(mainScene);
 		updateGameScene(gameController.state(), true);
 
 		stage.setScene(mainScene);
@@ -128,6 +131,12 @@ public class GameUI extends GameEventAdapter {
 		stage.setOnCloseRequest(e -> GameLoop.get().stop());
 		stage.centerOnScreen();
 		stage.show();
+	}
+
+	private void setScenesParent(Scene parent) {
+		Stream.of(scenes_MsPacMan, scenes_PacMan)
+				.forEach(gameScenes -> Stream.of(gameScenes).flatMap(versions -> Stream.of(versions[0], versions[1]))
+						.filter(Objects::nonNull).forEach(gameScene -> gameScene.setParent(parent)));
 	}
 
 	public double getWidth() {
@@ -249,25 +258,6 @@ public class GameUI extends GameEventAdapter {
 			return U.colorBackground(Color.CORNFLOWERBLUE);
 		}
 		return Env.$drawMode3D.get() == DrawMode.LINE ? U.colorBackground(Color.BLACK) : Wallpapers.get().random();
-	}
-
-	/**
-	 * Defines the resizing behavior of the game scenes. 2D scenes adapt to the parent scene height keeping their aspect
-	 * ratio. 3D scenes adapt to the parent scene size.
-	 * 
-	 * @param parent parent scene (main scene)
-	 * @param scenes game scenes
-	 */
-	private void setResizeBehavior(Scene parent, GameScene[][] scenes) {
-		for (int sceneIndex = 0; sceneIndex < scenes.length; ++sceneIndex) {
-			var scene2D = (GameScene2D) scenes[sceneIndex][SCENE_2D];
-			parent.heightProperty().addListener(($height, oldHeight, newHeight) -> scene2D.resize(newHeight.doubleValue()));
-			var scene3D = scenes[sceneIndex][SCENE_3D];
-			if (scene3D != null) {
-				scene3D.getFXSubScene().widthProperty().bind(parent.widthProperty());
-				scene3D.getFXSubScene().heightProperty().bind(parent.heightProperty());
-			}
-		}
 	}
 
 	private void processKeyEvent(KeyEvent e) {
