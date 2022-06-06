@@ -52,6 +52,7 @@ import de.amr.games.pacman.ui.fx.shell.info.InfoLayer;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -124,8 +125,7 @@ public class GameUI extends GameEventAdapter {
 		});
 		log("Main scene created. Size: %.0f x %.0f", mainScene.getWidth(), mainScene.getHeight());
 
-		Env.$drawMode3D.addListener((x, y, z) -> updateSceneBackground(currentGameScene));
-
+		Env.$drawMode3D.addListener((x, y, z) -> mainSceneRoot.setBackground(computeMainSceneBackground()));
 		setResizeHandler(mainScene, scenes_MsPacMan);
 		setResizeHandler(mainScene, scenes_MrPacMan);
 		updateGameScene(gameController.state(), true);
@@ -229,33 +229,33 @@ public class GameUI extends GameEventAdapter {
 		stage.setFullScreen(fullscreen);
 	}
 
-	void updateGameScene(GameState gameState, boolean forced) {
+	void updateGameScene(GameState gameState, boolean forcedSceneUpdate) {
 		var dimension = Env.$3D.get() ? SCENE_3D : SCENE_2D;
-		var fittingGameScene = getFittingScene(gameController.game(), gameController.state(), dimension);
-		if (fittingGameScene == null) {
+		var newGameScene = getFittingScene(gameController.game(), gameController.state(), dimension);
+		if (newGameScene == null) {
 			throw new IllegalStateException("No fitting game scene found for game state " + gameState);
 		}
-		if (fittingGameScene != currentGameScene || forced) {
+		if (newGameScene != currentGameScene || forcedSceneUpdate) {
 			if (currentGameScene != null) {
 				currentGameScene.end();
 			}
-			if (fittingGameScene instanceof GameScene2D) {
-				((GameScene2D) fittingGameScene).resize(mainSceneRoot.getHeight());
+			log("Current scene changed from %s to %s", currentGameScene, newGameScene);
+			currentGameScene = newGameScene;
+			mainSceneRoot.getChildren().set(0, currentGameScene.getFXSubScene());
+			mainSceneRoot.setBackground(computeMainSceneBackground());
+			if (currentGameScene instanceof GameScene2D) {
+				((GameScene2D) currentGameScene).resize(mainSceneRoot.getHeight());
 			}
-			updateSceneBackground(fittingGameScene);
-			mainSceneRoot.getChildren().set(0, fittingGameScene.getFXSubScene());
-			fittingGameScene.setSceneContext(gameController);
-			fittingGameScene.init();
-			log("Current scene changed from %s to %s", currentGameScene, fittingGameScene);
-			currentGameScene = fittingGameScene;
+			currentGameScene.setSceneContext(gameController);
+			currentGameScene.init();
 		}
 	}
 
-	private void updateSceneBackground(GameScene gameScene) {
-		var bg = gameScene.is3D() //
-				? Env.$drawMode3D.get() == DrawMode.LINE ? U.colorBackground(Color.BLACK) : Wallpapers.get().random()
-				: U.colorBackground(Color.CORNFLOWERBLUE);
-		mainSceneRoot.setBackground(bg);
+	private Background computeMainSceneBackground() {
+		if (!currentGameScene.is3D()) {
+			return U.colorBackground(Color.CORNFLOWERBLUE);
+		}
+		return Env.$drawMode3D.get() == DrawMode.LINE ? U.colorBackground(Color.BLACK) : Wallpapers.get().random();
 	}
 
 	/**
