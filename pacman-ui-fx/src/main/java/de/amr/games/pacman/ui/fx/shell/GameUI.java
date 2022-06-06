@@ -101,14 +101,12 @@ public class GameUI extends GameEventAdapter {
 		//@formatter:on
 	};
 
-	private final PacController playerController = new PacController(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT,
-			KeyCode.RIGHT);
-
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
 		this.gameController = gameController;
 		this.stage = stage;
 
-		gameController.setPlayerControl(playerController);
+		var pacController = new PacController(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
+		gameController.setPacController(pacController);
 
 		this.flashMessageLayer = new FlashMessageView();
 		this.infoLayer = new InfoLayer(this, gameController);
@@ -119,7 +117,7 @@ public class GameUI extends GameEventAdapter {
 		mainScene.setOnKeyPressed(e -> {
 			Key.processEvent(e);
 			this.onKeyPressed();
-			playerController.onKeyPressed();
+			pacController.onKeyPressed();
 			currentGameScene.onKeyPressed();
 			e.consume();
 		});
