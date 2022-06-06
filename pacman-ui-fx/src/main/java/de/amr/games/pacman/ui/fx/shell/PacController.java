@@ -34,12 +34,12 @@ import javafx.scene.input.KeyCode;
  * 
  * @author Armin Reichert
  */
-public class PlayerController implements Consumer<Pac> {
+public class PacController implements Consumer<Pac> {
 
 	private Direction dir;
 	private final KeyCode codeUp, codeDown, codeLeft, codeRight;
 
-	public PlayerController(KeyCode up, KeyCode down, KeyCode left, KeyCode right) {
+	public PacController(KeyCode up, KeyCode down, KeyCode left, KeyCode right) {
 		this.codeUp = up;
 		this.codeDown = down;
 		this.codeLeft = left;

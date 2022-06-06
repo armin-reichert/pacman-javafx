@@ -99,7 +99,7 @@ public class GameUI extends GameEventAdapter {
 		//@formatter:on
 	};
 
-	private final PlayerController playerController = new PlayerController(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT,
+	private final PacController playerController = new PacController(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT,
 			KeyCode.RIGHT);
 
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
