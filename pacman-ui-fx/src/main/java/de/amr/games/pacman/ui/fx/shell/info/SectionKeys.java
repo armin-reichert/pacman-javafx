@@ -49,8 +49,8 @@ public class SectionKeys extends Section {
 		addInfo("Alt+N", "Next Level").available(() -> gc.isGameRunning());
 		addInfo("Alt+X", "Kill hunting ghosts").available(() -> gc.isGameRunning());
 		addInfo("Alt+Z", "Play Intermission Scenes").available(() -> gc.state() == GameState.INTRO);
-		addInfo("Alt+LEFT", () -> Env.perspectiveShifted(-1).name()).available(() -> ui.getCurrentGameScene().is3D());
-		addInfo("Alt+RIGHT", () -> Env.perspectiveShifted(1).name()).available(() -> ui.getCurrentGameScene().is3D());
+		addInfo("Alt+LEFT", () -> Env.$perspective.get().prev().name()).available(() -> ui.getCurrentGameScene().is3D());
+		addInfo("Alt+RIGHT", () -> Env.$perspective.get().next().name()).available(() -> ui.getCurrentGameScene().is3D());
 		addInfo("Alt+3", "3D Playscene On/Off");
 		addInfo("Q", "Quit Scene").available(() -> gc.state() != GameState.INTRO);
 		addInfo("V", "Switch game variant").available(() -> gc.state() == GameState.INTRO);

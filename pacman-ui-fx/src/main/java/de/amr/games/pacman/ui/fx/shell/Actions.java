@@ -62,14 +62,6 @@ public class Actions {
 		theGameController.returnToIntro();
 	}
 
-	public static void changePerspective(int delta) {
-		if (theUI.getCurrentGameScene().is3D()) {
-			Env.$perspective.set(Env.perspectiveShifted(delta));
-			String perspectiveName = Env.message(Env.$perspective.get().name());
-			showFlashMessage(Env.message("camera_perspective", perspectiveName));
-		}
-	}
-
 	public static void addLives(int lives) {
 		if (theGameController.isGameRunning()) {
 			theGameController.game().lives += lives;
@@ -121,6 +113,23 @@ public class Actions {
 
 	public static void selectNextGameVariant() {
 		theGameController.selectGameVariant(theGameController.game().variant.succ());
+	}
+
+	public static void selectNextPerspective() {
+		if (theUI.getCurrentGameScene().is3D()) {
+			Env.$perspective.set(Env.$perspective.get().next());
+			String perspectiveName = Env.message(Env.$perspective.get().name());
+			showFlashMessage(Env.message("camera_perspective", perspectiveName));
+		}
+	}
+
+	public static void selectPrevPerspective() {
+		if (theUI.getCurrentGameScene().is3D()) {
+			Env.$perspective.set(Env.$perspective.get().prev());
+			String perspectiveName = Env.message(Env.$perspective.get().name());
+			showFlashMessage(Env.message("camera_perspective", perspectiveName));
+		}
+
 	}
 
 	public static void toggleAutopilot() {

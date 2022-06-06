@@ -76,13 +76,4 @@ public class Env {
 	public static void toggle(BooleanProperty bp) {
 		bp.set(!bp.get());
 	}
-
-	public static Perspective perspectiveShifted(int delta) {
-		int n = Perspective.values().length;
-		while (delta < 0) {
-			delta += n;
-		}
-		int i = ($perspective.get().ordinal() + delta) % n;
-		return Perspective.values()[i];
-	}
 }

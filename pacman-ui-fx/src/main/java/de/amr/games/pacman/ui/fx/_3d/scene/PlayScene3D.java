@@ -277,9 +277,9 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 	@Override
 	public void onKeyPressed() {
 		if (Key.pressed(Key.ALT, KeyCode.LEFT)) {
-			Actions.changePerspective(-1);
+			Actions.selectPrevPerspective();
 		} else if (Key.pressed(Key.ALT, KeyCode.RIGHT)) {
-			Actions.changePerspective(+1);
+			Actions.selectNextPerspective();
 		}
 	}
 
