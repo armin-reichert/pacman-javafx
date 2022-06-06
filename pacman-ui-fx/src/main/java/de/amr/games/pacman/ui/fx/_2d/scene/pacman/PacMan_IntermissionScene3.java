@@ -29,7 +29,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.BlinkyNaked2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.BlinkyPatched2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimationSet;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -61,7 +61,7 @@ public class PacMan_IntermissionScene3 extends GameScene2D {
 	public void init() {
 		sceneController.init();
 		levelCounter2D = new LevelCounter2D(game.levelCounter);
-		pacMan2D = new Pac2D(context.pac, new PacAnimationSet(r2D));
+		pacMan2D = new Pac2D(context.pac, new PacAnimations(r2D));
 		blinkyPatched2D = new BlinkyPatched2D(context.blinky);
 		blinkyNaked2D = new BlinkyNaked2D(context.blinky);
 		pacMan2D.animations.restart();

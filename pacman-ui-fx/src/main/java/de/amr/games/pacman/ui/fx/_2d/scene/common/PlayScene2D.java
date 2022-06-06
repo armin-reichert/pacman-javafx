@@ -45,8 +45,8 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.World2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimationSet;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimationSet;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.Actions;
@@ -148,9 +148,9 @@ public class PlayScene2D extends GameScene2D {
 		levelCounter2D = new LevelCounter2D(game.levelCounter);
 		levelCounter2D.visible = hasCredit;
 		world2D = new World2D(game, 0, t(3), r2D.createMazeFlashingAnimation(r2D.mazeNumber(game.level.number)));
-		pac2D = new Pac2D(game.pac, new PacAnimationSet(r2D));
+		pac2D = new Pac2D(game.pac, new PacAnimations(r2D));
 		for (var ghost : game.ghosts) {
-			ghosts2D[ghost.id] = new Ghost2D(ghost, new GhostAnimationSet(ghost.id, r2D));
+			ghosts2D[ghost.id] = new Ghost2D(ghost, new GhostAnimations(ghost.id, r2D));
 		}
 		bonus2D = new Bonus2D(game::bonus);
 		if (game.variant == GameVariant.MS_PACMAN) {
@@ -179,7 +179,7 @@ public class PlayScene2D extends GameScene2D {
 		boolean recovering = game.pac.powerTimer.remaining() <= recoveringTicks;
 		if (recoveringStarts) {
 			for (var ghost2D : ghosts2D) {
-				GhostAnimationSet animations = (GhostAnimationSet) ghost2D.animations;
+				GhostAnimations animations = (GhostAnimations) ghost2D.animations;
 				animations.startFlashing(game.level.numFlashes, recoveringTicks);
 			}
 		}
@@ -238,7 +238,7 @@ public class PlayScene2D extends GameScene2D {
 		pac2D.animations.animation(PacAnimation.MUNCHING).ensureRunning();
 		for (Ghost2D ghost2D : ghosts2D) {
 			// TODO avoid casting
-			var animations = (GhostAnimationSet) ghost2D.animations;
+			var animations = (GhostAnimations) ghost2D.animations;
 			animations.ensureAllRunning();
 		}
 		world2D.getEnergizerAnimation().restart();

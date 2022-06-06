@@ -36,8 +36,8 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.actors.GhostAnimation;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimationSet;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimationSet;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Key;
@@ -77,9 +77,9 @@ public class PacMan_IntroScene extends GameScene2D {
 		createCommonParts(game);
 		score2D.showScore = false;
 		credit2D.visible = true;
-		pacMan2D = new Pac2D($.pacMan, new PacAnimationSet(r2D));
+		pacMan2D = new Pac2D($.pacMan, new PacAnimations(r2D));
 		ghosts2D = Stream.of($.ghosts)//
-				.map(ghost -> new Ghost2D(ghost, new GhostAnimationSet(ghost.id, r2D)))//
+				.map(ghost -> new Ghost2D(ghost, new GhostAnimations(ghost.id, r2D)))//
 				.toArray(Ghost2D[]::new);
 	}
 

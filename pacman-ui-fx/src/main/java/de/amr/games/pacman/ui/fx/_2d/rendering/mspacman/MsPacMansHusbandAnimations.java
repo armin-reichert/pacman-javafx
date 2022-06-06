@@ -24,12 +24,12 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._2d.rendering.mspacman;
 
-import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimationSet;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 
 /**
  * @author Armin Reichert
  */
-public class MsPacMansHusbandAnimations extends PacAnimationSet {
+public class MsPacMansHusbandAnimations extends PacAnimations {
 
 	public MsPacMansHusbandAnimations(Spritesheet_MsPacMan r2D) {
 		super(r2D);

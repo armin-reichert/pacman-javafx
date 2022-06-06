@@ -29,7 +29,7 @@ import de.amr.games.pacman.controller.mspacman.Intermission2Controller.Context;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimationSet;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacMansHusbandAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
@@ -68,7 +68,7 @@ public class MsPacMan_IntermissionScene2 extends GameScene2D {
 		sceneController.restartInInitialState(Intermission2Controller.State.FLAP);
 		levelCounter2D = new LevelCounter2D(game.levelCounter);
 		flap2D = new Flap2D(context.flap);
-		msPacMan2D = new Pac2D(context.msPacMan, new PacAnimationSet(r2D));
+		msPacMan2D = new Pac2D(context.msPacMan, new PacAnimations(r2D));
 		msPacMansHusband2D = new Pac2D(context.pacMan, new MsPacMansHusbandAnimations(Spritesheet_MsPacMan.get()));
 	}
 
