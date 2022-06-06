@@ -23,27 +23,13 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
+import de.amr.games.pacman.lib.EnumMethods;
+
 /**
  * Play scene perspectives.
  * 
  * @author Armin Reichert
  */
-public enum Perspective {
+public enum Perspective implements EnumMethods<Perspective> {
 	CAM_TOTAL, CAM_FOLLOWING_PLAYER, CAM_NEAR_PLAYER, CAM_DRONE;
-
-	public Perspective next() {
-		int next = ordinal() + 1;
-		if (next == values().length) {
-			next = 0;
-		}
-		return values()[next];
-	}
-
-	public Perspective prev() {
-		int prev = ordinal() - 1;
-		if (prev == -1) {
-			prev = values().length - 1;
-		}
-		return values()[prev];
-	}
 }

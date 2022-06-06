@@ -112,7 +112,7 @@ public class Actions {
 	}
 
 	public static void selectNextGameVariant() {
-		theGameController.selectGameVariant(theGameController.game().variant.succ());
+		theGameController.selectGameVariant(theGameController.game().variant.next());
 	}
 
 	public static void selectNextPerspective() {
