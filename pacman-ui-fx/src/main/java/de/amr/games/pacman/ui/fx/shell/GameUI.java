@@ -76,23 +76,23 @@ public class GameUI extends GameEventAdapter {
 
 	private final GameScene[][] scenes_PacMan = {
 		//@formatter:off
-		{ new PacMan_IntroScene(), null },
-		{ new PacMan_CreditScene(), null },
+		{ new PacMan_IntroScene(),         null },
+		{ new PacMan_CreditScene(),        null },
 		{ new PacMan_IntermissionScene1(), null },
 		{ new PacMan_IntermissionScene2(), null },
 		{ new PacMan_IntermissionScene3(), null },
-		{ new PlayScene2D(), new PlayScene3D() },
+		{ new PlayScene2D(),               new PlayScene3D() },
 		//@formatter:on
 	};
 
 	private final GameScene[][] scenes_MsPacMan = {
 		//@formatter:off
-		{ new MsPacMan_IntroScene(), null },
-		{ new MsPacMan_CreditScene(), null },
+		{ new MsPacMan_IntroScene(),         null },
+		{ new MsPacMan_CreditScene(),        null },
 		{ new MsPacMan_IntermissionScene1(), null },
 		{ new MsPacMan_IntermissionScene2(), null },
 		{ new MsPacMan_IntermissionScene3(), null },
-		{ new PlayScene2D(), new PlayScene3D() },
+		{ new PlayScene2D(),                 new PlayScene3D() },
 		//@formatter:on
 	};
 
