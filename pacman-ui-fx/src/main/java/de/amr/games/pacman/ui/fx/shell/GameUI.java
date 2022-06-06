@@ -32,6 +32,7 @@ import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_CreditScene;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntermissionScene1;
@@ -238,7 +239,9 @@ public class GameUI extends GameEventAdapter {
 			if (currentGameScene != null) {
 				currentGameScene.end();
 			}
-			fittingGameScene.resize(mainSceneRoot.getHeight());
+			if (fittingGameScene instanceof GameScene2D) {
+				((GameScene2D) fittingGameScene).resize(mainSceneRoot.getHeight());
+			}
 			updateSceneBackground(fittingGameScene);
 			mainSceneRoot.getChildren().set(0, fittingGameScene.getFXSubScene());
 			fittingGameScene.setSceneContext(gameController);
@@ -264,7 +267,7 @@ public class GameUI extends GameEventAdapter {
 	 */
 	private void setResizeHandler(Scene parent, GameScene[][] scenes) {
 		for (int sceneIndex = 0; sceneIndex < scenes.length; ++sceneIndex) {
-			var scene2D = scenes[sceneIndex][SCENE_2D];
+			var scene2D = (GameScene2D) scenes[sceneIndex][SCENE_2D];
 			parent.heightProperty().addListener(($height, oldHeight, newHeight) -> scene2D.resize(newHeight.doubleValue()));
 			var scene3D = scenes[sceneIndex][SCENE_3D];
 			if (scene3D != null) {

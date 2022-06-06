@@ -66,13 +66,6 @@ public interface GameScene extends GameEventListener {
 	SubScene getFXSubScene();
 
 	/**
-	 * Resizes the associated FX subscene to the given height.
-	 * 
-	 * @param height height in pixels
-	 */
-	void resize(double height);
-
-	/**
 	 * @return if this is a 3D scene
 	 */
 	boolean is3D();

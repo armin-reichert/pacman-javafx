@@ -148,11 +148,6 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 	}
 
 	@Override
-	public void resize(double height) {
-		// data binding does the job
-	}
-
-	@Override
 	public void init() {
 		int size_x = ArcadeWorld.TILES_X * TS, size_y = ArcadeWorld.TILES_Y * TS;
 		maze3D = new Maze3D(size_x, size_y);

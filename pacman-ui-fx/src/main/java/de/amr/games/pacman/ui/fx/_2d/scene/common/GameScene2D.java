@@ -123,7 +123,6 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 		return fxSubScene.getHeight() / unscaledSize.y;
 	}
 
-	@Override
 	public void resize(double height) {
 		double width = aspectRatio * height;
 		double scaling = height / unscaledSize.y;
