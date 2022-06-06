@@ -34,7 +34,6 @@ import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
-import de.amr.games.pacman.ui.fx.shell.KeyboardPlayerControl;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -88,7 +87,6 @@ public class PacManGameAppFX extends Application {
 		ui.setFullScreen(options.fullscreen);
 
 		gameController.addListener(ui);
-		gameController.setPlayerControl(new KeyboardPlayerControl(stage));
 
 		Actions.init(gameController, ui);
 

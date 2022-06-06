@@ -99,9 +99,14 @@ public class GameUI extends GameEventAdapter {
 		//@formatter:on
 	};
 
+	private final PlayerController playerController = new PlayerController(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT,
+			KeyCode.RIGHT);
+
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
 		this.gameController = gameController;
 		this.stage = stage;
+
+		gameController.setPlayerControl(playerController);
 
 		this.flashMessageLayer = new FlashMessageView();
 		this.infoLayer = new InfoLayer(this, gameController);
@@ -112,6 +117,7 @@ public class GameUI extends GameEventAdapter {
 		mainScene.setOnKeyPressed(e -> {
 			Key.processEvent(e);
 			this.onKeyPressed();
+			playerController.onKeyPressed();
 			currentGameScene.onKeyPressed();
 			e.consume();
 		});
