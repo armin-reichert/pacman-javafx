@@ -88,6 +88,8 @@ public class MsPacMan_IntroScene extends GameScene2D {
 			gameController.addCredit();
 		} else if (Key.pressed(KeyCode.DIGIT1)) {
 			gameController.requestGame();
+		} else if (Key.pressed(KeyCode.V)) {
+			Actions.selectNextGameVariant();
 		} else if (Key.pressed(Key.ALT, KeyCode.Z)) {
 			Actions.startIntermissionScenesTest();
 		}

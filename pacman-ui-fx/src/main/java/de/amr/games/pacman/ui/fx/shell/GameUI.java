@@ -70,7 +70,8 @@ import javafx.stage.Stage;
 public class GameUI extends GameEventAdapter {
 
 	public static final int SCENE_2D = 0, SCENE_3D = 1;
-	private final GameScene[][] scenes_MrPacMan = {
+
+	private final GameScene[][] scenes_PacMan = {
 		//@formatter:off
 		{ new PacMan_IntroScene(), null },
 		{ new PacMan_CreditScene(), null },
@@ -118,8 +119,8 @@ public class GameUI extends GameEventAdapter {
 		log("Main scene created. Size: %.0f x %.0f", mainScene.getWidth(), mainScene.getHeight());
 
 		Env.$drawMode3D.addListener((x, y, z) -> mainSceneRoot.setBackground(computeMainSceneBackground()));
-		setResizeHandler(mainScene, scenes_MsPacMan);
-		setResizeHandler(mainScene, scenes_MrPacMan);
+		setResizeBehavior(mainScene, scenes_MsPacMan);
+		setResizeBehavior(mainScene, scenes_PacMan);
 		updateGameScene(gameController.state(), true);
 
 		stage.setScene(mainScene);
@@ -168,7 +169,7 @@ public class GameUI extends GameEventAdapter {
 	public GameScene getFittingScene(GameModel game, GameState gameState, int dimension) {
 		var scenes = switch (game.variant) {
 		case MS_PACMAN -> scenes_MsPacMan;
-		case PACMAN -> scenes_MrPacMan;
+		case PACMAN -> scenes_PacMan;
 		};
 		var sceneIndex = switch (gameState) {
 		case INTRO -> 0;
@@ -257,7 +258,7 @@ public class GameUI extends GameEventAdapter {
 	 * @param parent parent scene (main scene)
 	 * @param scenes game scenes
 	 */
-	private void setResizeHandler(Scene parent, GameScene[][] scenes) {
+	private void setResizeBehavior(Scene parent, GameScene[][] scenes) {
 		for (int sceneIndex = 0; sceneIndex < scenes.length; ++sceneIndex) {
 			var scene2D = (GameScene2D) scenes[sceneIndex][SCENE_2D];
 			parent.heightProperty().addListener(($height, oldHeight, newHeight) -> scene2D.resize(newHeight.doubleValue()));
@@ -294,8 +295,6 @@ public class GameUI extends GameEventAdapter {
 			Actions.singleStep();
 		} else if (Key.pressed(KeyCode.Q)) {
 			Actions.quitCurrentScene();
-		} else if (Key.pressed(KeyCode.V)) {
-			Actions.selectNextGameVariant();
 		} else if (Key.pressed(Key.ALT, KeyCode.DIGIT3)) {
 			Actions.toggleUse3DScene();
 		} else if (Key.pressed(KeyCode.F11)) {
