@@ -52,6 +52,7 @@ import de.amr.games.pacman.ui.fx.shell.info.InfoLayer;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -76,6 +77,7 @@ public class GameUI extends GameEventAdapter {
 	private final InfoLayer infoLayer;
 	private final FlashMessageView flashMessageLayer;
 	private final GameController gameController;
+	private final PacController pacController = new PacController(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 
 	private GameScene currentGameScene;
 
@@ -105,7 +107,6 @@ public class GameUI extends GameEventAdapter {
 		this.gameController = gameController;
 		this.stage = stage;
 
-		var pacController = new PacController(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 		gameController.setPacController(pacController);
 
 		this.flashMessageLayer = new FlashMessageView();
@@ -114,13 +115,7 @@ public class GameUI extends GameEventAdapter {
 		// first child is placeholder for subscene assigned to current game scene
 		mainSceneRoot = new StackPane(new Region(), flashMessageLayer, infoLayer);
 		mainScene = new Scene(mainSceneRoot, width, height);
-		mainScene.setOnKeyPressed(e -> {
-			Key.processEvent(e);
-			this.onKeyPressed();
-			pacController.onKeyPressed();
-			currentGameScene.onKeyPressed();
-			e.consume();
-		});
+		mainScene.setOnKeyPressed(this::processKeyEvent);
 		log("Main scene created. Size: %.0f x %.0f", mainScene.getWidth(), mainScene.getHeight());
 
 		Env.$drawMode3D.addListener((x, y, z) -> mainSceneRoot.setBackground(computeMainSceneBackground()));
@@ -273,6 +268,14 @@ public class GameUI extends GameEventAdapter {
 				scene3D.getFXSubScene().heightProperty().bind(parent.heightProperty());
 			}
 		}
+	}
+
+	private void processKeyEvent(KeyEvent e) {
+		Key.processEvent(e);
+		this.onKeyPressed();
+		pacController.onKeyPressed();
+		currentGameScene.onKeyPressed();
+		e.consume();
 	}
 
 	private void onKeyPressed() {
