@@ -60,7 +60,6 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 	protected final StackPane root;
 	protected final Canvas canvas;
 	protected final V2d unscaledSize;
-	protected final double aspectRatio;
 
 	// context
 	protected GameController gameController;
@@ -80,9 +79,8 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 	 * @param unscaledSize   logical scene size (number of tiles x tile size)
 	 */
 	public GameScene2D() {
-		this.unscaledSize = new V2d(ArcadeWorld.SIZE);
-		this.aspectRatio = unscaledSize.x / unscaledSize.y;
-		this.canvas = new Canvas(1, 1); // will be resized by sub-scene
+		unscaledSize = new V2d(ArcadeWorld.SIZE);
+		canvas = new Canvas(1, 1); // will be resized by sub-scene
 		root = new StackPane(canvas, infoPane);
 		root.setBackground(U.colorBackground(Color.BLACK));
 		fxSubScene = new SubScene(root, unscaledSize.x, unscaledSize.y);
@@ -128,11 +126,12 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 	}
 
 	public void resize(double height) {
+		double aspectRatio = unscaledSize.x / unscaledSize.y;
 		double width = aspectRatio * height;
 		double scaling = height / unscaledSize.y;
+		canvas.getTransforms().setAll(new Scale(scaling, scaling));
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
-		canvas.getTransforms().setAll(new Scale(scaling, scaling));
 	}
 
 	/**
