@@ -49,6 +49,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimationSet;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimationSet;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Key;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -123,6 +124,14 @@ public class PlayScene2D extends GameScene2D {
 		if (Key.pressed(KeyCode.DIGIT5)) {
 			SoundManager.get().play(GameSound.CREDIT);
 			gameController.addCredit();
+		} else if (Key.pressed(Key.ALT, KeyCode.E)) {
+			Actions.cheatEatAllPellets();
+		} else if (Key.pressed(Key.ALT, KeyCode.L)) {
+			Actions.addLives(3);
+		} else if (Key.pressed(Key.ALT, KeyCode.N)) {
+			Actions.cheatEnterNextLevel();
+		} else if (Key.pressed(Key.ALT, KeyCode.X)) {
+			Actions.cheatKillAllEatableGhosts();
 		}
 	}
 

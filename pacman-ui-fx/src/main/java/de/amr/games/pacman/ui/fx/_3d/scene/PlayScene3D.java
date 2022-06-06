@@ -55,6 +55,7 @@ import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.shell.Actions;
+import de.amr.games.pacman.ui.fx.shell.Key;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.CoordinateAxes;
@@ -69,6 +70,7 @@ import javafx.scene.Group;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
@@ -268,6 +270,15 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 		}
 		default -> {
 		}
+		}
+	}
+
+	@Override
+	public void onKeyPressed() {
+		if (Key.pressed(Key.ALT, KeyCode.LEFT)) {
+			Actions.changePerspective(-1);
+		} else if (Key.pressed(Key.ALT, KeyCode.RIGHT)) {
+			Actions.changePerspective(+1);
 		}
 	}
 

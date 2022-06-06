@@ -271,40 +271,26 @@ public class GameUI extends GameEventAdapter {
 	private void onKeyPressed() {
 		if (Key.pressed(Key.ALT, KeyCode.A)) {
 			Actions.toggleAutopilot();
-		} else if (Key.pressed(Key.ALT, KeyCode.E)) {
-			Actions.cheatEatAllPellets();
 		} else if (Key.pressed(Key.ALT, KeyCode.D)) {
 			Env.toggle(Env.$debugUI);
 		} else if (Key.pressed(Key.CTRL, KeyCode.I)) {
 			Actions.toggleInfoPanelsVisible();
 		} else if (Key.pressed(Key.ALT, KeyCode.I)) {
 			Actions.toggleImmunity();
-		} else if (Key.pressed(Key.ALT, KeyCode.L)) {
-			Actions.addLives(3);
 		} else if (Key.pressed(Key.ALT, KeyCode.M)) {
 			Actions.toggleSoundMuted();
-		} else if (Key.pressed(Key.ALT, KeyCode.N)) {
-			Actions.cheatEnterNextLevel();
 		} else if (Key.pressed(KeyCode.P)) {
 			Actions.togglePaused();
+		} else if (Key.pressed(Key.SHIFT, KeyCode.P)) {
+			Actions.singleStep();
 		} else if (Key.pressed(KeyCode.Q)) {
 			Actions.quitCurrentScene();
 		} else if (Key.pressed(KeyCode.V)) {
 			Actions.selectNextGameVariant();
-		} else if (Key.pressed(Key.ALT, KeyCode.X)) {
-			Actions.cheatKillAllEatableGhosts();
-		} else if (Key.pressed(Key.ALT, KeyCode.Z)) {
-			Actions.startIntermissionScenesTest();
-		} else if (Key.pressed(Key.ALT, KeyCode.LEFT)) {
-			Actions.changePerspective(-1);
-		} else if (Key.pressed(Key.ALT, KeyCode.RIGHT)) {
-			Actions.changePerspective(+1);
 		} else if (Key.pressed(Key.ALT, KeyCode.DIGIT3)) {
 			Actions.toggleUse3DScene();
 		} else if (Key.pressed(KeyCode.F11)) {
 			stage.setFullScreen(true);
-		} else if (Key.pressed(Key.SHIFT, KeyCode.P)) {
-			Actions.singleStep();
 		}
 	}
 }

@@ -39,6 +39,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimationSet;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimationSet;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
+import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Key;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -87,6 +88,8 @@ public class MsPacMan_IntroScene extends GameScene2D {
 			gameController.addCredit();
 		} else if (Key.pressed(KeyCode.DIGIT1)) {
 			gameController.requestGame();
+		} else if (Key.pressed(Key.ALT, KeyCode.Z)) {
+			Actions.startIntermissionScenesTest();
 		}
 	}
 
