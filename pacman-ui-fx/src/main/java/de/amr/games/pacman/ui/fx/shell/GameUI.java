@@ -125,7 +125,7 @@ public class GameUI extends GameEventAdapter {
 
 		setScenesParent(mainScene);
 		updateGameScene(gameController.state(), true);
-		embedGameScene();
+		embedCurrentGameScene();
 
 		stage.setScene(mainScene);
 		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
@@ -246,12 +246,12 @@ public class GameUI extends GameEventAdapter {
 		}
 		log("Current scene changed from %s to %s", currentGameScene, newGameScene);
 		currentGameScene = newGameScene;
-		embedGameScene();
+		embedCurrentGameScene();
 		currentGameScene.setSceneContext(gameController);
 		currentGameScene.init();
 	}
 
-	private void embedGameScene() {
+	private void embedCurrentGameScene() {
 		mainSceneRoot.getChildren().set(0, currentGameScene.getFXSubScene());
 		if (currentGameScene instanceof GameScene2D) {
 			((GameScene2D) currentGameScene).resize(mainScene.getHeight());
