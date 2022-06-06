@@ -52,10 +52,10 @@ public class DebugDraw {
 		g.setStroke(Color.rgb(160, 160, 160, 0.5));
 		g.setLineWidth(1);
 		for (int row = 0; row < ArcadeWorld.TILES_Y; ++row) {
-			line(g, 0, t(row), t(ArcadeWorld.TILES_X), t(row));
+			line(g, 0, t(row), ArcadeWorld.SIZE.x, t(row));
 		}
 		for (int col = 0; col < ArcadeWorld.TILES_X; ++col) {
-			line(g, t(col), 0, t(col), t(ArcadeWorld.TILES_Y));
+			line(g, t(col), 0, t(col), ArcadeWorld.SIZE.y);
 		}
 	}
 

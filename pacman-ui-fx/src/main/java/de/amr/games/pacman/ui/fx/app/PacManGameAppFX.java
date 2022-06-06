@@ -29,7 +29,6 @@ import java.io.IOException;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx.shell.Actions;
@@ -78,26 +77,17 @@ public class PacManGameAppFX extends Application {
 	@Override
 	public void start(Stage stage) throws IOException {
 		log("Starting application...");
-
-		double unscaledWidth = ArcadeWorld.TILES_X * World.TS;
-		double unscaledHeight = ArcadeWorld.TILES_Y * World.TS;
 		double zoom = options.zoom;
-
-		ui = new GameUI(gameController, stage, zoom * unscaledWidth, zoom * unscaledHeight);
+		ui = new GameUI(gameController, stage, zoom * ArcadeWorld.SIZE.x, zoom * ArcadeWorld.SIZE.y);
 		ui.setFullScreen(options.fullscreen);
-
 		gameController.addListener(ui);
-
 		Actions.init(gameController, ui);
-
 		SoundManager.get().setMuted(options.muted);
-
 		GameLoop.get().update = ui::update;
 		GameLoop.get().render = ui::render;
 		GameLoop.get().setTargetFrameRate(60);
 		GameLoop.get().setTimeMeasured(false);
 		GameLoop.get().start();
-
 		log("Application started.");
 		log("Stage size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s", ui.getWidth(), ui.getHeight(), zoom,
 				Env.$3D.get(), Env.$perspective.get());

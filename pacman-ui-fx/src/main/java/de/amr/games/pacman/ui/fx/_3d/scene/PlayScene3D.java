@@ -149,8 +149,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 
 	@Override
 	public void init() {
-		int size_x = ArcadeWorld.TILES_X * TS, size_y = ArcadeWorld.TILES_Y * TS;
-		maze3D = new Maze3D(size_x, size_y);
+		maze3D = new Maze3D(ArcadeWorld.SIZE.x, ArcadeWorld.SIZE.y);
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
 		maze3D.$resolution.addListener(this::onMazeResolutionChange);
@@ -179,13 +178,13 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 		livesCounter3D.getTransforms().add(new Translate(TS, TS, -HTS));
 		livesCounter3D.setVisible(gameController.credit() > 0);
 
-		levelCounter3D = new LevelCounter3D(size_x - TS, TS, game.variant);
+		levelCounter3D = new LevelCounter3D(ArcadeWorld.SIZE.x - TS, TS, game.variant);
 		levelCounter3D.update(game);
 
 		var world3D = new Group(maze3D, score3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
 		world3D.getChildren().addAll(ghosts3D);
-		world3D.setTranslateX(-size_x / 2);
-		world3D.setTranslateY(-size_y / 2);
+		world3D.setTranslateX(-ArcadeWorld.SIZE.x / 2);
+		world3D.setTranslateY(-ArcadeWorld.SIZE.y / 2);
 
 		Group root = (Group) fxSubScene.getRoot();
 		root.getChildren().set(0, world3D);
