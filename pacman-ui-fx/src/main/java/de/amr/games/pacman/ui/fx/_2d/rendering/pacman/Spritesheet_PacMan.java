@@ -132,7 +132,7 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 
 	@Override
 	public Rectangle2D getGhostSprite(int ghostID, Direction dir) {
-		return r(2 * dirIndex(dir) + 1, 4 + ghostID);
+		return r(2 * dirIndex(dir), 4 + ghostID);
 	}
 
 	@Override
