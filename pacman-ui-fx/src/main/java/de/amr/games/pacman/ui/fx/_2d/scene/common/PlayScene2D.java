@@ -196,15 +196,13 @@ public class PlayScene2D extends GameScene2D {
 	private void updateAnimations() {
 		long recoveringTicks = sec_to_ticks(2); // TODO not sure about recovering duration
 		boolean recoveringStarts = game.pac.powerTimer.remaining() == recoveringTicks;
-		boolean recovering = game.pac.powerTimer.remaining() <= recoveringTicks;
-		if (recoveringStarts) {
-			for (var ghost2D : ghosts2D) {
-				GhostAnimations animations = (GhostAnimations) ghost2D.animations;
-				animations.startFlashing(game.level.numFlashes, recoveringTicks);
-			}
-		}
 		for (var ghost2D : ghosts2D) {
-			ghost2D.updateAnimation(game.pac.hasPower(), recovering);
+			if (recoveringStarts) {
+				ghost2D.animations.startFlashing(game.level.numFlashes, recoveringTicks);
+			} else {
+				boolean recovering = game.pac.powerTimer.remaining() <= recoveringTicks;
+				ghost2D.updateAnimation(game.pac.hasPower(), recovering);
+			}
 		}
 	}
 
