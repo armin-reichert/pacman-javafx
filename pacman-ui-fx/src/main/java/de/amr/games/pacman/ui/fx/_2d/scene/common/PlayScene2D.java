@@ -83,7 +83,7 @@ public class PlayScene2D extends GameScene2D {
 			infoPane.getChildren().addAll(texts);
 		}
 
-		private String computeGhostInfo(Text text, Ghost2D ghost2D) {
+		private String computeGhostInfo(Ghost2D ghost2D) {
 			var ghost = ghost2D.ghost;
 			String stateText = ghost.state.name();
 			if (ghost.state == GhostState.HUNTING_PAC) {
@@ -92,7 +92,7 @@ public class PlayScene2D extends GameScene2D {
 			return "%s\nState: %s\nAnimation: %s".formatted(ghost.name, stateText, ghost2D.animations.selectedKey());
 		}
 
-		private String computePacInfo(Text text, Pac2D pac2D) {
+		private String computePacInfo(Pac2D pac2D) {
 			return "%s\nAnimation: %s".formatted(game.pac.name, pac2D.animations.selectedKey());
 		}
 
@@ -100,7 +100,7 @@ public class PlayScene2D extends GameScene2D {
 			double scaling = fxSubScene.getHeight() / unscaledSize.y;
 			for (int i = 0; i < texts.length; ++i) {
 				boolean pac = i == texts.length - 1;
-				var infoText = pac ? computePacInfo(texts[i], pac2D) : computeGhostInfo(texts[i], ghosts2D[i]);
+				var infoText = pac ? computePacInfo(pac2D) : computeGhostInfo(ghosts2D[i]);
 				texts[i].setText(infoText);
 				// center info box over guy
 				V2d position = pac ? game.pac.position : ghosts2D[i].ghost.position;
