@@ -196,6 +196,7 @@ public class SoundManager {
 	}
 
 	public void startSiren(int sirenIndex) {
+		stopSirens();
 		var siren = switch (sirenIndex) {
 		case 0 -> GameSound.SIREN_1;
 		case 1 -> GameSound.SIREN_2;
@@ -207,7 +208,7 @@ public class SoundManager {
 		loop(siren, Animation.INDEFINITE);
 	}
 
-	public void ensureStartSiren(int sirenIndex) {
+	public void ensureSirenStarted(int sirenIndex) {
 		if (!sirens().anyMatch(this::isPlaying)) {
 			startSiren(sirenIndex);
 		}

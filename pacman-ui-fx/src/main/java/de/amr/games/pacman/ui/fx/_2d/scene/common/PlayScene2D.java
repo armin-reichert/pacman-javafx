@@ -203,8 +203,7 @@ public class PlayScene2D extends GameScene2D {
 				SoundManager.get().stop(GameSound.PACMAN_MUNCH);
 			}
 			if (game.huntingTimer.tick() == 0) {
-				SoundManager.get().stopSirens();
-				SoundManager.get().startSiren(game.huntingTimer.phase() / 2);
+				SoundManager.get().ensureSirenStarted(game.huntingTimer.phase() / 2);
 			}
 		}
 		default -> {
@@ -253,7 +252,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void onPlayerLosesPower(GameEvent e) {
 		SoundManager.get().stop(GameSound.PACMAN_POWER);
-		SoundManager.get().ensureStartSiren(game.huntingTimer.phase() / 2);
+		SoundManager.get().ensureSirenStarted(game.huntingTimer.phase() / 2);
 	}
 
 	@Override
