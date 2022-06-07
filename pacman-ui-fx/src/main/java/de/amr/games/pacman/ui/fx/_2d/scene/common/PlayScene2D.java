@@ -99,10 +99,12 @@ public class PlayScene2D extends GameScene2D {
 		public void update() {
 			double scaling = fxSubScene.getHeight() / unscaledSize.y;
 			for (int i = 0; i < texts.length; ++i) {
-				var infoText = i < texts.length - 1 ? computeGhostInfo(texts[i], ghosts2D[i]) : computePacInfo(texts[i], pac2D);
-				V2d position = i == texts.length - 1 ? game.pac.position : ghosts2D[i].ghost.position;
-				boolean visible = i == texts.length - 1 ? game.pac.visible : ghosts2D[i].ghost.visible;
+				boolean pac = i == texts.length - 1;
+				var infoText = pac ? computePacInfo(texts[i], pac2D) : computeGhostInfo(texts[i], ghosts2D[i]);
 				texts[i].setText(infoText);
+				// center info box over guy
+				V2d position = pac ? game.pac.position : ghosts2D[i].ghost.position;
+				boolean visible = pac ? game.pac.visible : ghosts2D[i].ghost.visible;
 				var textSize = texts[i].getBoundsInLocal();
 				texts[i].setX((position.x + World.HTS) * scaling - textSize.getWidth() / 2);
 				texts[i].setY(position.y * scaling - textSize.getHeight());
