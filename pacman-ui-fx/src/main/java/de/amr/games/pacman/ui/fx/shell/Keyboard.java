@@ -60,8 +60,8 @@ public class Keyboard {
 		if (e.isShiftDown()) {
 			currentMask |= SHIFT;
 		}
-		handlers.forEach(Runnable::run);
 		e.consume();
+		handlers.forEach(Runnable::run);
 	}
 
 	public static boolean pressed(KeyCode code) {
@@ -69,17 +69,11 @@ public class Keyboard {
 	}
 
 	public static boolean pressed(int modfierMask, KeyCode code) {
-		if (currentEvent.isConsumed()) {
-			return false;
+		if (currentEvent != null && currentEvent.getCode() == code && currentMask == modfierMask) {
+			Logging.log("Key pressed: %s%s", modifierText(currentMask), code);
+			return true;
 		}
-		if (currentMask != modfierMask) {
-			return false;
-		}
-		if (currentEvent.getCode() != code) {
-			return false;
-		}
-		Logging.log("Key pressed: %s%s", modifierText(currentMask), code);
-		return true;
+		return false;
 	}
 
 	private static String modifierText(byte mask) {
