@@ -33,6 +33,7 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
+import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostAnimation;
@@ -69,45 +70,44 @@ import javafx.scene.text.TextAlignment;
  */
 public class PlayScene2D extends GameScene2D {
 
-	private class SceneInfo {
+	private class GuysInfo {
 
-		private Text pacInfo = new Text();
-		private Text[] ghostInfos = new Text[4];
+		private final Text[] texts = new Text[5];
 
-		public SceneInfo() {
-			for (int id = 0; id < 4; ++id) {
-				ghostInfos[id] = new Text();
-				ghostInfos[id].setTextAlignment(TextAlignment.CENTER);
-				ghostInfos[id].setFill(Color.WHITE);
-				infoPane.getChildren().add(ghostInfos[id]);
+		public GuysInfo() {
+			for (int i = 0; i < texts.length; ++i) {
+				texts[i] = new Text();
+				texts[i].setTextAlignment(TextAlignment.CENTER);
+				texts[i].setFill(Color.WHITE);
 			}
-			pacInfo.setFill(Color.WHITE);
-			pacInfo.setTextAlignment(TextAlignment.CENTER);
-			infoPane.getChildren().add(pacInfo);
+			infoPane.getChildren().addAll(texts);
+		}
+
+		private String computeGhostInfo(Text text, Ghost2D ghost2D) {
+			var ghost = ghost2D.ghost;
+			String stateText = ghost.state.name();
+			if (ghost.state == GhostState.HUNTING_PAC) {
+				stateText += game.huntingTimer.chasingPhase() != -1 ? " (Chasing)" : " (Scattering)";
+			}
+			return "%s\nState: %s\nAnimation: %s".formatted(ghost.name, stateText, ghost2D.animations.selectedKey());
+		}
+
+		private String computePacInfo(Text text, Pac2D pac2D) {
+			return "%s\nAnimation: %s".formatted(game.pac.name, pac2D.animations.selectedKey());
 		}
 
 		public void update() {
 			double scaling = fxSubScene.getHeight() / unscaledSize.y;
-			for (int id = 0; id < 4; ++id) {
-				var ghost2D = ghosts2D[id];
-				var ghost = ghost2D.ghost;
-				String state = ghost.state.name();
-				if (ghost.state == GhostState.HUNTING_PAC) {
-					state += game.huntingTimer.chasingPhase() != -1 ? " (Chasing)" : " (Scattering)";
-				}
-				var text = "%s\nState: %s\nAnimation: %s".formatted(ghost.name, state, ghost2D.animations.selectedKey());
-				var bounds = ghostInfos[id].getBoundsInLocal();
-				ghostInfos[id].setText(text);
-				ghostInfos[id].setX((ghost.position.x + World.HTS) * scaling - bounds.getWidth() / 2);
-				ghostInfos[id].setY(ghost.position.y * scaling - 50);
-				ghostInfos[id].setVisible(ghost.visible);
+			for (int i = 0; i < texts.length; ++i) {
+				var infoText = i < texts.length - 1 ? computeGhostInfo(texts[i], ghosts2D[i]) : computePacInfo(texts[i], pac2D);
+				V2d position = i == texts.length - 1 ? game.pac.position : ghosts2D[i].ghost.position;
+				boolean visible = i == texts.length - 1 ? game.pac.visible : ghosts2D[i].ghost.visible;
+				var textSize = texts[i].getBoundsInLocal();
+				texts[i].setText(infoText);
+				texts[i].setX((position.x + World.HTS) * scaling - textSize.getWidth() / 2);
+				texts[i].setY(position.y * scaling - textSize.getHeight());
+				texts[i].setVisible(visible);
 			}
-			var text = "%s\nAnimation: %s".formatted(game.pac.name, pac2D.animations.selectedKey());
-			var bounds = pacInfo.getBoundsInLocal();
-			pacInfo.setText(text);
-			pacInfo.setX((game.pac.position.x + World.HTS) * scaling - bounds.getWidth() / 2);
-			pacInfo.setY(game.pac.position.y * scaling - 30);
-			pacInfo.setVisible(game.pac.visible);
 		}
 	}
 
@@ -118,7 +118,7 @@ public class PlayScene2D extends GameScene2D {
 	private Ghost2D[] ghosts2D = new Ghost2D[4];
 	private Bonus2D bonus2D;
 
-	private final SceneInfo info = new SceneInfo();
+	private final GuysInfo guysInfo = new GuysInfo();
 
 	@Override
 	public void onKeyPressed() {
@@ -170,7 +170,7 @@ public class PlayScene2D extends GameScene2D {
 		updateAnimations();
 		updateSound();
 		if (Env.$debugUI.get()) {
-			info.update();
+			guysInfo.update();
 		}
 	}
 
@@ -236,11 +236,9 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	public void onSwitchFrom3DScene() {
-		pac2D.animations.animation(PacAnimation.MUNCHING).ensureRunning();
+		pac2D.animations.animation(PacAnimation.MUNCHING).restart();
 		for (Ghost2D ghost2D : ghosts2D) {
-			// TODO avoid casting
-			var animations = (GhostAnimations) ghost2D.animations;
-			animations.ensureAllRunning();
+			ghost2D.animations.restart();
 		}
 		world2D.getEnergizerPulse().restart();
 		AudioClip munching = SoundManager.get().getClip(GameSound.PACMAN_MUNCH);
