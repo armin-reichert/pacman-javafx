@@ -34,7 +34,9 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.BonusAnimation;
+import de.amr.games.pacman.model.common.actors.BonusState;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostAnimation;
@@ -72,7 +74,7 @@ public class PlayScene2D extends GameScene2D {
 
 	private class GuysInfo {
 
-		private final Text[] texts = new Text[5];
+		private final Text[] texts = new Text[6];
 
 		public GuysInfo() {
 			for (int i = 0; i < texts.length; ++i) {
@@ -96,6 +98,11 @@ public class PlayScene2D extends GameScene2D {
 			return "%s\nAnimation: %s".formatted(game.pac.name, pac2D.animations.selectedKey());
 		}
 
+		private String computeBonusInfo(Bonus2D bonus2D) {
+			return "%s\nState: %s\nAnimation: %s".formatted(game.bonus().symbol(), game.bonus().state(),
+					bonus2D.animations.selectedKey());
+		}
+
 		private void updateTextView(Text textView, String text, Entity entity) {
 			double scaling = fxSubScene.getHeight() / unscaledSize.y;
 			textView.setText(text);
@@ -105,12 +112,23 @@ public class PlayScene2D extends GameScene2D {
 			textView.setVisible(entity.visible);
 		}
 
+		private void updateTextView(Text textView, String text, Bonus bonus) {
+			double scaling = fxSubScene.getHeight() / unscaledSize.y;
+			textView.setText(text);
+			var textSize = textView.getBoundsInLocal();
+			textView.setX((bonus.position().x + World.HTS) * scaling - textSize.getWidth() / 2);
+			textView.setY(bonus.position().y * scaling - textSize.getHeight());
+			textView.setVisible(bonus.state() != BonusState.INACTIVE);
+		}
+
 		public void update() {
 			for (int i = 0; i < texts.length; ++i) {
-				if (i < texts.length - 1) {
+				if (i < texts.length - 2) {
 					updateTextView(texts[i], computeGhostInfo(ghosts2D[i]), ghosts2D[i].ghost);
-				} else {
+				} else if (i == texts.length - 2) {
 					updateTextView(texts[i], computePacInfo(pac2D), pac2D.pac);
+				} else {
+					updateTextView(texts[i], computeBonusInfo(bonus2D), game.bonus());
 				}
 			}
 		}
