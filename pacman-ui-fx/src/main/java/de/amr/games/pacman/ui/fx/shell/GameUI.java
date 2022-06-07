@@ -126,8 +126,8 @@ public class GameUI extends GameEventAdapter {
 		// Keyboard input handling
 		mainScene.setOnKeyPressed(Keyboard::processEvent);
 		Keyboard.addHandler(this::onKeyPressed);
-		Keyboard.addHandler(pacController::onKeyPressed);
-		Keyboard.addHandler(currentGameScene::onKeyPressed);
+		Keyboard.addHandler(() -> pacController.onKeyPressed());
+		Keyboard.addHandler(() -> currentGameScene.onKeyPressed());
 
 		Env.$drawMode3D.addListener((x, y, z) -> mainSceneRoot.setBackground(computeMainSceneBackground()));
 

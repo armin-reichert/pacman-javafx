@@ -59,8 +59,8 @@ public class Keyboard {
 		if (e.isShiftDown()) {
 			currentMask |= SHIFT;
 		}
-		e.consume();
 		handlers.forEach(Runnable::run);
+		e.consume();
 	}
 
 	public static void addHandler(Runnable handler) {
@@ -77,7 +77,8 @@ public class Keyboard {
 
 	public static boolean pressed(int modfierMask, KeyCode code) {
 		if (currentEvent != null && currentEvent.getCode() == code && currentMask == modfierMask) {
-			Logging.log("Key pressed: %s%s", modifierText(currentMask), code);
+			Logging.log("Key press handled: %s%s", modifierText(currentMask), code);
+			currentEvent.consume();
 			return true;
 		}
 		return false;
