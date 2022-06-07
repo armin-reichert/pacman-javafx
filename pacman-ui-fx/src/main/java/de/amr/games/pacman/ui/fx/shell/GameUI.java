@@ -191,10 +191,8 @@ public class GameUI extends GameEventAdapter {
 		case INTERMISSION_TEST -> 1 + game.intermissionTestNumber;
 		default -> 5;
 		};
-		if (scenes[sceneIndex][dimension] == null) { // no 3D version exists, use 2D
-			return scenes[sceneIndex][SCENE_2D];
-		}
-		return scenes[sceneIndex][dimension];
+		var fittingScene = scenes[sceneIndex][dimension];
+		return fittingScene != null ? fittingScene : scenes[sceneIndex][SCENE_2D]; // use 2D as default
 	}
 
 	/**
