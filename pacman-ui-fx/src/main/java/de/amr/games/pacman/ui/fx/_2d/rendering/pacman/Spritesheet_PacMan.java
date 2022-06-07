@@ -31,7 +31,6 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.SpriteAnimation;
 import de.amr.games.pacman.lib.SpriteAnimationMap;
-import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.U;
@@ -70,8 +69,6 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	private static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
 
 	private final Image mazeFull, mazeEmpty;
-	private final Map<Integer, Rectangle2D> symbolSprites;
-	private final Map<Integer, Rectangle2D> bonusValueSprites;
 	private final Map<Integer, Rectangle2D> ghostValueSprites;
 	private final Font font;
 
@@ -84,28 +81,6 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 		mazeEmpty = U.image("/pacman/graphics/maze_empty.png");
 
 		//@formatter:off
-		symbolSprites = Map.of(
-			PacManGame.CHERRIES,   r(2, 3),
-			PacManGame.STRAWBERRY, r(3, 3),
-			PacManGame.PEACH,      r(4, 3),
-			PacManGame.APPLE,      r(5, 3),
-			PacManGame.GRAPES,     r(6, 3),
-			PacManGame.GALAXIAN,   r(7, 3),
-			PacManGame.BELL,       r(8, 3),
-			PacManGame.KEY,        r(9, 3)
-		);
-
-		bonusValueSprites = Map.of(
-			100,  r(0, 9, 1, 1),
-			300,  r(1, 9, 1, 1),
-			500,  r(2, 9, 1, 1),
-			700,  r(3, 9, 1, 1),
-			1000, r(4, 9, 2, 1), // left-aligned 
-			2000, r(3, 10, 3, 1),
-			3000, r(3, 11, 3, 1),
-			5000, r(3, 12, 3, 1)
-		);
-		
 		ghostValueSprites = Map.of(
 			200,  r(0, 8, 1, 1),
 			400,  r(1, 8, 1, 1),
@@ -187,16 +162,6 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	public Rectangle2D getLifeSprite() {
 		return r(8, 1);
 	}
-
-//	@Override
-//	public Rectangle2D getSymbolSprite(int symbol) {
-//		return symbolSprites.get(symbol);
-//	}
-//	
-//	@Override
-//	public Rectangle2D getBonusValueSprite(int number) {
-//		return bonusValueSprites.get(number);
-//	}
 
 	@Override
 	public Rectangle2D getGhostValueSprite(int number) {

@@ -31,7 +31,6 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.GenericAnimation;
 import de.amr.games.pacman.lib.SpriteAnimation;
 import de.amr.games.pacman.lib.SpriteAnimationMap;
-import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.U;
@@ -97,8 +96,6 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	private final Image[] mazesFull;
 	private final Image[] mazesEmpty;
 	private final Image[] mazesBlackWhite;
-	private final Rectangle2D[] symbolSprites;
-	private final Map<Integer, Rectangle2D> bonusValueSprites;
 	private final Map<Integer, Rectangle2D> ghostValueSprites;
 	private final Font font;
 
@@ -110,25 +107,6 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 		midwayLogo = U.image("/mspacman/graphics/midway.png");
 
 		//@formatter:off
-		symbolSprites = new Rectangle2D[7];
-		symbolSprites[MsPacManGame.CHERRIES]   = rhs(3,0);
-		symbolSprites[MsPacManGame.STRAWBERRY] = rhs(4,0);
-		symbolSprites[MsPacManGame.PEACH]      = rhs(5,0);
-		symbolSprites[MsPacManGame.PRETZEL]    = rhs(6,0);
-		symbolSprites[MsPacManGame.APPLE]      = rhs(7,0);
-		symbolSprites[MsPacManGame.PEAR]       = rhs(8,0);
-		symbolSprites[MsPacManGame.BANANA]     = rhs(9,0);
-
-		bonusValueSprites = Map.of(
-			 100, rhs(3, 1), 
-			 200, rhs(4, 1), 
-			 500, rhs(5, 1), 
-			 700, rhs(6, 1), 
-			1000, rhs(7, 1), 
-			2000, rhs(8, 1),
-			5000, rhs(9, 1)
-		);
-
 		ghostValueSprites = Map.of(
 			 200, rhs(0, 8), 
 			 400, rhs(1, 8), 
@@ -246,16 +224,6 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	public Color getFoodColor(int mazeNumber) {
 		return FOOD_COLORS[mazeNumber - 1];
 	}
-
-//@Override
-//public Rectangle2D getSymbolSprite(int symbol) {
-//	return symbolSprites[symbol];
-//}
-
-//	@Override
-//	public Rectangle2D getBonusValueSprite(int number) {
-//		return bonusValueSprites.get(number);
-//	}
 
 	@Override
 	public Rectangle2D getGhostValueSprite(int number) {
