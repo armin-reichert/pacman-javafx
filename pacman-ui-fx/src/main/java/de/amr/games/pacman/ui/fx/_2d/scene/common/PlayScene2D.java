@@ -47,7 +47,6 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.World2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -327,7 +326,7 @@ public class PlayScene2D extends GameScene2D {
 		case HUNTING -> {
 			world2D.getEnergizerPulse().restart();
 			pac2D.animations.restart();
-			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart(GhostAnimation.COLOR));
+			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart(GhostAnimations.Key.COLOR));
 		}
 		case PACMAN_DYING -> {
 			gameController.state().timer().setIndefinite();

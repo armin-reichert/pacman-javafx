@@ -24,8 +24,8 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations.Key;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -42,16 +42,17 @@ public class Ghost2D {
 	public Ghost2D(Ghost ghost, GhostAnimations animations) {
 		this.ghost = ghost;
 		this.animations = animations;
-		animations.select(GhostAnimation.COLOR);
+		animations.select(GhostAnimations.Key.COLOR);
 	}
 
 	public void updateAnimation(boolean frightened, boolean recovering) {
-		GhostAnimation key = switch (ghost.state) {
-		case DEAD -> ghost.bounty == 0 ? GhostAnimation.EYES : GhostAnimation.VALUE;
-		case ENTERING_HOUSE -> GhostAnimation.EYES;
-		case FRIGHTENED -> recovering ? GhostAnimation.FLASHING : GhostAnimation.BLUE;
-		case HUNTING_PAC, LEAVING_HOUSE -> GhostAnimation.COLOR;
-		case LOCKED -> recovering ? GhostAnimation.FLASHING : frightened ? GhostAnimation.BLUE : GhostAnimation.COLOR;
+		Key key = switch (ghost.state) {
+		case DEAD -> ghost.bounty == 0 ? GhostAnimations.Key.EYES : GhostAnimations.Key.VALUE;
+		case ENTERING_HOUSE -> GhostAnimations.Key.EYES;
+		case FRIGHTENED -> recovering ? GhostAnimations.Key.FLASHING : GhostAnimations.Key.BLUE;
+		case HUNTING_PAC, LEAVING_HOUSE -> GhostAnimations.Key.COLOR;
+		case LOCKED -> recovering ? GhostAnimations.Key.FLASHING
+				: frightened ? GhostAnimations.Key.BLUE : GhostAnimations.Key.COLOR;
 		};
 		animations.select(key);
 	}

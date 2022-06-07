@@ -31,12 +31,17 @@ import de.amr.games.pacman.lib.SpriteAnimation;
 import de.amr.games.pacman.lib.SpriteAnimationMap;
 import de.amr.games.pacman.lib.SpriteAnimationSet;
 import de.amr.games.pacman.model.common.actors.Ghost;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations.Key;
 import javafx.geometry.Rectangle2D;
 
 /**
  * @author Armin Reichert
  */
-public class GhostAnimations extends SpriteAnimationSet<Ghost, GhostAnimation, Rectangle2D> {
+public class GhostAnimations extends SpriteAnimationSet<Ghost, Key, Rectangle2D> {
+
+	public enum Key {
+		COLOR, EYES, VALUE, BLUE, FLASHING;
+	}
 
 	public SpriteAnimationMap<Direction, Rectangle2D> eyes;
 	public SpriteAnimation<Rectangle2D> flashing;
@@ -53,7 +58,7 @@ public class GhostAnimations extends SpriteAnimationSet<Ghost, GhostAnimation, R
 	}
 
 	@Override
-	public ISpriteAnimation animation(GhostAnimation key) {
+	public ISpriteAnimation animation(Key key) {
 		return switch (key) {
 		case EYES -> eyes;
 		case FLASHING -> flashing;

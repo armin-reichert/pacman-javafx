@@ -35,7 +35,6 @@ import de.amr.games.pacman.controller.pacman.IntroController.State;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
@@ -100,7 +99,7 @@ public class PacMan_IntroScene extends GameScene2D {
 	private void onSceneStateChange(State fromState, State toState) {
 		if (fromState == State.CHASING_PAC && toState == State.CHASING_GHOSTS) {
 			for (var ghost2D : ghosts2D) {
-				ghost2D.animations.select(GhostAnimation.BLUE);
+				ghost2D.animations.select(GhostAnimations.Key.BLUE);
 			}
 		}
 	}
@@ -116,13 +115,13 @@ public class PacMan_IntroScene extends GameScene2D {
 		if (sceneController.state() == State.CHASING_GHOSTS) {
 			for (var ghost2D : ghosts2D) {
 				if (ghost2D.ghost.bounty > 0) {
-					ghost2D.animations.select(GhostAnimation.VALUE);
+					ghost2D.animations.select(GhostAnimations.Key.VALUE);
 				} else {
-					ghost2D.animations.select(GhostAnimation.BLUE);
+					ghost2D.animations.select(GhostAnimations.Key.BLUE);
 					if (ghost2D.ghost.velocity.length() == 0) {
-						ghost2D.animations.stop(GhostAnimation.BLUE);
+						ghost2D.animations.stop(GhostAnimations.Key.BLUE);
 					} else {
-						ghost2D.animations.run(GhostAnimation.BLUE);
+						ghost2D.animations.run(GhostAnimations.Key.BLUE);
 					}
 				}
 			}
