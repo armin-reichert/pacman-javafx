@@ -242,7 +242,7 @@ public class PlayScene2D extends GameScene2D {
 			var animations = (GhostAnimations) ghost2D.animations;
 			animations.ensureAllRunning();
 		}
-		world2D.getEnergizerAnimation().restart();
+		world2D.getEnergizerPulse().restart();
 		AudioClip munching = SoundManager.get().getClip(GameSound.PACMAN_MUNCH);
 		if (munching.isPlaying() && game.pac.starvingTicks > 10) {
 			SoundManager.get().stop(GameSound.PACMAN_MUNCH);
@@ -305,7 +305,7 @@ public class PlayScene2D extends GameScene2D {
 		switch (e.newGameState) {
 		case READY -> {
 			SoundManager.get().stopAll();
-			world2D.getEnergizerAnimation().reset();
+			world2D.getEnergizerPulse().reset();
 			pac2D.animations.selectAnimation(PacAnimation.MUNCHING);
 			pac2D.animations.selectedAnimation().reset();
 			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart());
@@ -314,7 +314,7 @@ public class PlayScene2D extends GameScene2D {
 			}
 		}
 		case HUNTING -> {
-			world2D.getEnergizerAnimation().restart();
+			world2D.getEnergizerPulse().restart();
 			pac2D.animations.restart();
 			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart(GhostAnimation.COLOR));
 		}
@@ -343,7 +343,7 @@ public class PlayScene2D extends GameScene2D {
 			SoundManager.get().stopAll();
 			pac2D.animations.reset();
 			// Energizers can still exist if "next level" cheat has been used
-			world2D.getEnergizerAnimation().reset();
+			world2D.getEnergizerPulse().reset();
 			new SequentialTransition( //
 					pauseSec(1, () -> world2D.startFlashing(game.level.numFlashes)), //
 					pauseSec(2.5, () -> {
@@ -356,7 +356,7 @@ public class PlayScene2D extends GameScene2D {
 			gameController.state().timer().start();
 		}
 		case GAME_OVER -> {
-			world2D.getEnergizerAnimation().reset();
+			world2D.getEnergizerPulse().reset();
 			SoundManager.get().stopAll();
 		}
 		default -> {

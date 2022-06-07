@@ -30,6 +30,7 @@ import de.amr.games.pacman.lib.GenericAnimation;
 import de.amr.games.pacman.lib.SpriteAnimation;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.DebugDraw;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -44,16 +45,16 @@ import javafx.scene.paint.Color;
  */
 public class World2D {
 
-	public double x, y;
+	private final GenericAnimation<Boolean> energizerPulse = GenericAnimation.pulse().frameDuration(10);
 	private final GameModel game;
-	private final GenericAnimation<Boolean> energizerAnimation = GenericAnimation.pulse().frameDuration(10);
+	private double x, y;
 	private SpriteAnimation<Image> flashingAnimation;
 
-	public World2D(GameModel game, int x, int y, SpriteAnimation<Image> flashingAnim) {
+	public World2D(GameModel game, int x, int y, SpriteAnimation<Image> flashingAnimation) {
 		this.game = game;
 		this.x = x;
 		this.y = y;
-		this.flashingAnimation = flashingAnim;
+		this.flashingAnimation = flashingAnimation;
 	}
 
 	public void startFlashing(int numFlashes) {
@@ -61,26 +62,30 @@ public class World2D {
 		flashingAnimation.restart();
 	}
 
-	public GenericAnimation<Boolean> getEnergizerAnimation() {
-		return energizerAnimation;
+	public GenericAnimation<Boolean> getEnergizerPulse() {
+		return energizerPulse;
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
 		if (flashingAnimation.isRunning()) {
 			g.drawImage(flashingAnimation.animate(), x, y);
 		} else {
-			drawMazeWithFood(g, r2D, r2D.mazeNumber(game.level.number));
+			drawMazeWithFood(g, r2D);
 		}
 		if (Env.$tilesVisible.get()) {
 			DebugDraw.drawTileBorders(g, game.level.world.tiles().filter(game.level.world::isIntersection), Color.RED);
 		}
 	}
 
-	private void drawMazeWithFood(GraphicsContext g, Rendering2D r2D, int mazeNumber) {
-		var world = game.level.world;
+	private void drawMazeWithFood(GraphicsContext g, Rendering2D r2D) {
+		int mazeNumber = r2D.mazeNumber(game.level.number);
 		g.drawImage(r2D.getMazeFullImage(mazeNumber), x, y);
+		hideEatenFood(g, game.level.world);
+	}
+
+	private void hideEatenFood(GraphicsContext g, World world) {
 		world.tiles().filter(world::containsEatenFood).forEach(tile -> clearTile(g, tile));
-		if (!energizerAnimation.animate()) { // dark blinking phase
+		if (!energizerPulse.animate()) { // dark blinking phase
 			world.energizerTiles().forEach(tile -> clearTile(g, tile));
 		}
 	}
