@@ -339,14 +339,14 @@ public class PlayScene2D extends GameScene2D {
 			SoundManager.get().play(GameSound.GHOST_EATEN);
 		}
 		case LEVEL_COMPLETE -> {
-			gameController.state().timer().setIndefinite(); // wait until continueGame() is called
+			gameController.state().timer().setIndefinite();
 			SoundManager.get().stopAll();
 			pac2D.animations.reset();
 			// Energizers can still exist if "next level" cheat has been used
 			world2D.getEnergizerPulse().reset();
 			new SequentialTransition( //
 					pauseSec(1, () -> world2D.startFlashing(game.level.numFlashes)), //
-					pauseSec(2.5, () -> {
+					pauseSec(2, () -> {
 						gameController.state().timer().expire();
 					}) //
 			).play();
