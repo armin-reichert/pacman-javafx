@@ -23,11 +23,10 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
-import de.amr.games.pacman.lib.SpriteAnimationSet;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimation;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -38,9 +37,9 @@ import javafx.scene.canvas.GraphicsContext;
 public class Ghost2D {
 
 	public final Ghost ghost;
-	public final SpriteAnimationSet<Ghost, GhostAnimation, Rectangle2D> animations;
+	public final GhostAnimations animations;
 
-	public Ghost2D(Ghost ghost, SpriteAnimationSet<Ghost, GhostAnimation, Rectangle2D> animations) {
+	public Ghost2D(Ghost ghost, GhostAnimations animations) {
 		this.ghost = ghost;
 		this.animations = animations;
 		animations.select(GhostAnimation.COLOR);

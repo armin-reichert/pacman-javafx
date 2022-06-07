@@ -38,11 +38,11 @@ import javafx.geometry.Rectangle2D;
  */
 public class GhostAnimations extends SpriteAnimationSet<Ghost, GhostAnimation, Rectangle2D> {
 
-	private SpriteAnimationMap<Direction, Rectangle2D> eyes;
-	private SpriteAnimation<Rectangle2D> flashing;
-	private SpriteAnimation<Rectangle2D> blue;
-	private SpriteAnimationMap<Direction, Rectangle2D> color;
-	private SpriteAnimation<Rectangle2D> values;
+	public SpriteAnimationMap<Direction, Rectangle2D> eyes;
+	public SpriteAnimation<Rectangle2D> flashing;
+	public SpriteAnimation<Rectangle2D> blue;
+	public SpriteAnimationMap<Direction, Rectangle2D> color;
+	public SpriteAnimation<Rectangle2D> values;
 
 	public GhostAnimations(int ghostID, Rendering2D r2D) {
 		eyes = r2D.createGhostEyesAnimation();
