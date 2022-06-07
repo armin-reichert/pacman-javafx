@@ -25,12 +25,10 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
-import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.animation.ColorFlashingTransition;
 import de.amr.games.pacman.ui.fx._3d.animation.FadeInTransition3D;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
@@ -61,14 +59,13 @@ public class Ghost3D extends Group implements Rendering3D {
 	private final Group bodyParts;
 	private final Box numberCube = new Box(8, 8, 8);
 	private final Motion motion;
-	private final GameVariant gameVariant;
 	private ColorFlashingTransition skinFlashing;
 	private boolean looksFrightened;
+	private final Image[] valueImages;
 
 	private DisplayMode displayMode;
 
-	public Ghost3D(Ghost ghost, PacManModel3D model3D, GameVariant gameVariant) {
-		this.gameVariant = gameVariant;
+	public Ghost3D(Ghost ghost, PacManModel3D model3D, Rendering2D r2D) {
 		this.ghost = ghost;
 
 		bodyParts = model3D.createGhost(ghostify(getGhostSkinColor(ghost.id)), getGhostEyeBallColor(),
@@ -82,6 +79,8 @@ public class Ghost3D extends Group implements Rendering3D {
 		eyes().setUserData(this);
 		eyeBalls().setUserData(this);
 		pupils().setUserData(this);
+
+		valueImages = r2D.getAnimationImages(r2D.createGhostValueAnimation());
 	}
 
 	public void reset() {
@@ -151,7 +150,7 @@ public class Ghost3D extends Group implements Rendering3D {
 			eyes().setVisible(true);
 		}
 		case NUMBER_CUBE -> {
-			var texture = getGhostValueSprite(ghost.bounty);
+			var texture = valueImages[numberFrame(ghost.bounty)];
 			PhongMaterial material = new PhongMaterial();
 			material.setBumpMap(texture);
 			material.setDiffuseMap(texture);
@@ -166,17 +165,14 @@ public class Ghost3D extends Group implements Rendering3D {
 		}
 	}
 
-	private Image getGhostValueSprite(int value) {
-		// TODO do not access specific spritesheet from here
-		return switch (gameVariant) {
-		case MS_PACMAN -> {
-			var ss = Spritesheet_MsPacMan.get();
-			yield ss.subImage(ss.getGhostValueSprite(value));
-		}
-		case PACMAN -> {
-			var ss = Spritesheet_PacMan.get();
-			yield ss.subImage(ss.getGhostValueSprite(value));
-		}
+	// TODO do not store bounty value but index at ghost?
+	private int numberFrame(int number) {
+		return switch (number) {
+		case 200 -> 0;
+		case 400 -> 1;
+		case 800 -> 2;
+		case 1600 -> 3;
+		default -> throw new IllegalArgumentException();
 		};
 	}
 

@@ -67,12 +67,6 @@ public interface Rendering2D {
 
 	Rectangle2D getPacSprite(Direction dir, Mouth mouth);
 
-//	Rectangle2D getSymbolSprite(int symbol);
-//
-//	Rectangle2D getBonusValueSprite(int number);
-
-	Rectangle2D getGhostValueSprite(int number);
-
 	Rectangle2D getLifeSprite();
 
 	// Animations
@@ -94,6 +88,8 @@ public interface Rendering2D {
 	SpriteAnimation<Rectangle2D> createBonusSymbolAnimation();
 
 	SpriteAnimation<Rectangle2D> createBonusValueAnimation();
+
+	SpriteAnimation<Rectangle2D> createGhostValueAnimation();
 
 	// Maze
 

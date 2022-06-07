@@ -168,7 +168,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 		maze3D.createFood(game.level.world, r2D.getFoodColor(mazeNumber));
 
 		player3D = new Pac3D(game.level.world, game.pac, model3D);
-		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, game.variant)).toArray(Ghost3D[]::new);
+		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D)).toArray(Ghost3D[]::new);
 		bonus3D = new Bonus3D(r2D);
 
 		score3D = new Score3D();

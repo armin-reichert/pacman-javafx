@@ -69,25 +69,13 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	private static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
 
 	private final Image mazeFull, mazeEmpty;
-	private final Map<Integer, Rectangle2D> ghostValueSprites;
 	private final Font font;
 
 	private Spritesheet_PacMan() {
 		super("/pacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
-
 		font = U.font("/common/emulogic.ttf", 8);
-
 		mazeFull = U.image("/pacman/graphics/maze_full.png");
 		mazeEmpty = U.image("/pacman/graphics/maze_empty.png");
-
-		//@formatter:off
-		ghostValueSprites = Map.of(
-			200,  r(0, 8, 1, 1),
-			400,  r(1, 8, 1, 1),
-			800,  r(2, 8, 1, 1),
-			1600, r(3, 8, 1, 1)
-		);
-		//@formatter:on
 	}
 
 	@Override
@@ -164,11 +152,6 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public Rectangle2D getGhostValueSprite(int number) {
-		return ghostValueSprites.get(number);
-	}
-
-	@Override
 	public SpriteAnimationMap<Direction, Rectangle2D> createPacMunchingAnimation() {
 		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
@@ -228,6 +211,11 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	public SpriteAnimation<Rectangle2D> createBonusValueAnimation() {
 		return new SpriteAnimation<>(r(0, 9, 1, 1), r(1, 9, 1, 1), r(2, 9, 1, 1), r(3, 9, 1, 1), r(4, 9, 2, 1),
 				r(3, 10, 3, 1), r(3, 11, 3, 1), r(3, 12, 3, 1));
+	}
+
+	@Override
+	public SpriteAnimation<Rectangle2D> createGhostValueAnimation() {
+		return new SpriteAnimation<>(r(0, 8, 1, 1), r(1, 8, 1, 1), r(2, 8, 1, 1), r(3, 8, 1, 1));
 	}
 
 	// Pac-Man specific:

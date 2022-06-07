@@ -40,7 +40,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
- * Ms. Pac-Man game spritesheet renderer.
+ * Ms. Pac-Man sprites and animations.
  * 
  * @author Armin Reichert
  */
@@ -95,7 +95,6 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	private final Image[] mazesFull;
 	private final Image[] mazesEmpty;
 	private final Image[] mazesBlackWhite;
-	private final Map<Integer, Rectangle2D> ghostValueSprites;
 	private final Font font;
 
 	private Spritesheet_MsPacMan() {
@@ -104,15 +103,6 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 
 		font = U.font("/common/emulogic.ttf", 8);
 		midwayLogo = U.image("/mspacman/graphics/midway.png");
-
-		//@formatter:off
-		ghostValueSprites = Map.of(
-			 200, rhs(0, 8), 
-			 400, rhs(1, 8), 
-			 800, rhs(2, 8), 
-			1600, rhs(3, 8)
-		);
-		//@formatter:on
 
 		int numMazes = 6;
 		mazesFull = new Image[numMazes];
@@ -130,6 +120,15 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 		}
 	}
 
+	/**
+	 * @param col column
+	 * @param row row
+	 * @return Sprite at given row and column from the right-hand-side of the spritesheet
+	 */
+	public Rectangle2D rhs(int col, int row) {
+		return r(456, 0, col, row, 1, 1);
+	}
+
 	@Override
 	public Image getSpriteImage(Rectangle2D sprite) {
 		return subImage(sprite);
@@ -138,15 +137,6 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	@Override
 	public void drawSprite(GraphicsContext g, Rectangle2D s, double x, double y) {
 		g.drawImage(source, s.getMinX(), s.getMinY(), s.getWidth(), s.getHeight(), x, y, s.getWidth(), s.getHeight());
-	}
-
-	/**
-	 * @param col column
-	 * @param row row
-	 * @return Sprite at given row and column from the right-hand-side of the spritesheet
-	 */
-	public Rectangle2D rhs(int col, int row) {
-		return r(456, 0, col, row, 1, 1);
 	}
 
 	@Override
@@ -225,11 +215,6 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public Rectangle2D getGhostValueSprite(int number) {
-		return ghostValueSprites.get(number);
-	}
-
-	@Override
 	public Rectangle2D getLifeSprite() {
 		return rhs(1, 0);
 	}
@@ -296,6 +281,11 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	@Override
 	public SpriteAnimation<Rectangle2D> createBonusValueAnimation() {
 		return new SpriteAnimation<>(rhs(3, 1), rhs(4, 1), rhs(5, 1), rhs(6, 1), rhs(7, 1), rhs(8, 1), rhs(9, 1));
+	}
+
+	@Override
+	public SpriteAnimation<Rectangle2D> createGhostValueAnimation() {
+		return new SpriteAnimation<>(rhs(0, 8), rhs(1, 8), rhs(2, 8), rhs(3, 8));
 	}
 
 	// Ms. Pac-Man specific:

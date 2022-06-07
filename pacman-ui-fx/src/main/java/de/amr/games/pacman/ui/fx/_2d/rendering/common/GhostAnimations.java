@@ -43,15 +43,14 @@ public class GhostAnimations extends SpriteAnimationSet<Ghost, GhostAnimation, R
 	private SpriteAnimation<Rectangle2D> flashing;
 	private SpriteAnimation<Rectangle2D> blue;
 	private SpriteAnimationMap<Direction, Rectangle2D> color;
-	private SpriteAnimation<Rectangle2D> numbers;
+	private SpriteAnimation<Rectangle2D> values;
 
 	public GhostAnimations(int ghostID, Rendering2D r2D) {
 		eyes = r2D.createGhostEyesAnimation();
 		flashing = r2D.createGhostFlashingAnimation();
 		blue = r2D.createGhostBlueAnimation();
 		color = r2D.createGhostColorAnimation(ghostID);
-		numbers = new SpriteAnimation<>(r2D.getGhostValueSprite(200), r2D.getGhostValueSprite(400), r2D.getGhostValueSprite(800),
-				r2D.getGhostValueSprite(1600));
+		values = r2D.createGhostValueAnimation();
 	}
 
 	@Override
@@ -61,13 +60,13 @@ public class GhostAnimations extends SpriteAnimationSet<Ghost, GhostAnimation, R
 		case FLASHING -> flashing;
 		case BLUE -> blue;
 		case COLOR -> color;
-		case NUMBER -> numbers;
+		case VALUE -> values;
 		};
 	}
 
 	@Override
 	public Stream<ISpriteAnimation> animations() {
-		return Stream.of(eyes, flashing, blue, color, numbers);
+		return Stream.of(eyes, flashing, blue, color, values);
 	}
 
 	public void startFlashing(int numFlashes, long ticksTotal) {
@@ -95,7 +94,7 @@ public class GhostAnimations extends SpriteAnimationSet<Ghost, GhostAnimation, R
 			}
 			yield sprite;
 		}
-		case NUMBER -> numbers.frame(numberFrame(ghost.bounty));
+		case VALUE -> values.frame(numberFrame(ghost.bounty));
 		};
 	}
 
