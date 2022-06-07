@@ -31,12 +31,17 @@ import de.amr.games.pacman.lib.ISpriteAnimation;
 import de.amr.games.pacman.lib.SpriteAnimation;
 import de.amr.games.pacman.lib.SpriteAnimationSet;
 import de.amr.games.pacman.model.common.actors.Bonus;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations.Key;
 import javafx.geometry.Rectangle2D;
 
 /**
  * @author Armin Reichert
  */
-public class BonusAnimations extends SpriteAnimationSet<Bonus, BonusAnimation, Rectangle2D> {
+public class BonusAnimations extends SpriteAnimationSet<Bonus, Key, Rectangle2D> {
+
+	public enum Key {
+		SYMBOL, VALUE;
+	}
 
 	public final SpriteAnimation<Rectangle2D> symbolAnimation;
 	public final SpriteAnimation<Rectangle2D> valueAnimation;
@@ -49,7 +54,7 @@ public class BonusAnimations extends SpriteAnimationSet<Bonus, BonusAnimation, R
 	}
 
 	@Override
-	public ISpriteAnimation animation(BonusAnimation key) {
+	public ISpriteAnimation animation(Key key) {
 		return switch (key) {
 		case SYMBOL -> symbolAnimation;
 		case VALUE -> valueAnimation;

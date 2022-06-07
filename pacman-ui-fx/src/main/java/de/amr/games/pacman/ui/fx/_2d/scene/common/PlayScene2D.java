@@ -46,7 +46,6 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.World2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
@@ -285,7 +284,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void onBonusGetsActive(GameEvent e) {
-		bonus2D.animations.select(BonusAnimation.SYMBOL);
+		bonus2D.animations.select(BonusAnimations.Key.SYMBOL);
 		if (game.variant == GameVariant.MS_PACMAN) {
 			bonus2D.animations.jumpAnimation.restart();
 		}
@@ -294,7 +293,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
 		bonus2D.animations.jumpAnimation.stop();
-		bonus2D.animations.select(BonusAnimation.VALUE);
+		bonus2D.animations.select(BonusAnimations.Key.VALUE);
 		SoundManager.get().play(GameSound.BONUS_EATEN);
 	}
 
