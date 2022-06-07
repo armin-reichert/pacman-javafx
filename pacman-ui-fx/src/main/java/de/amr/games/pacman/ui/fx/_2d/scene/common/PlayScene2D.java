@@ -51,7 +51,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.Actions;
-import de.amr.games.pacman.ui.fx.shell.Key;
+import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.Animation;
@@ -124,16 +124,16 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void onKeyPressed() {
-		if (Key.pressed(KeyCode.DIGIT5)) {
+		if (Keyboard.pressed(KeyCode.DIGIT5)) {
 			SoundManager.get().play(GameSound.CREDIT);
 			gameController.addCredit();
-		} else if (Key.pressed(Key.ALT, KeyCode.E)) {
+		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.E)) {
 			Actions.cheatEatAllPellets();
-		} else if (Key.pressed(Key.ALT, KeyCode.L)) {
+		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.L)) {
 			Actions.addLives(3);
-		} else if (Key.pressed(Key.ALT, KeyCode.N)) {
+		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.N)) {
 			Actions.cheatEnterNextLevel();
-		} else if (Key.pressed(Key.ALT, KeyCode.X)) {
+		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.X)) {
 			Actions.cheatKillAllEatableGhosts();
 		}
 	}

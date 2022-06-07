@@ -48,13 +48,13 @@ public class PacController implements Consumer<Pac> {
 
 	public void onKeyPressed() {
 		dir = null;
-		if (Key.pressed(codeUp)) {
+		if (Keyboard.pressed(codeUp)) {
 			dir = Direction.UP;
-		} else if (Key.pressed(codeDown)) {
+		} else if (Keyboard.pressed(codeDown)) {
 			dir = Direction.DOWN;
-		} else if (Key.pressed(codeLeft)) {
+		} else if (Keyboard.pressed(codeLeft)) {
 			dir = Direction.LEFT;
-		} else if (Key.pressed(codeRight)) {
+		} else if (Keyboard.pressed(codeRight)) {
 			dir = Direction.RIGHT;
 		}
 	}

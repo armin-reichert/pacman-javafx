@@ -55,7 +55,6 @@ import de.amr.games.pacman.ui.fx.shell.info.InfoLayer;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -118,8 +117,13 @@ public class GameUI extends GameEventAdapter {
 		// first child is placeholder for subscene assigned to current game scene
 		mainSceneRoot = new StackPane(new Region(), infoLayer, flashMessageLayer);
 		mainScene = new Scene(mainSceneRoot, width, height);
-		mainScene.setOnKeyPressed(this::processKeyEvent);
 		log("Main scene created. Size: %.0f x %.0f", mainScene.getWidth(), mainScene.getHeight());
+
+		// Keyboard input handling
+		mainScene.setOnKeyPressed(Keyboard::processEvent);
+		Keyboard.handlers.add(this::onKeyPressed);
+		Keyboard.handlers.add(pacController::onKeyPressed);
+		Keyboard.handlers.add(() -> currentGameScene.onKeyPressed());
 
 		Env.$drawMode3D.addListener((x, y, z) -> mainSceneRoot.setBackground(computeMainSceneBackground()));
 
@@ -265,34 +269,26 @@ public class GameUI extends GameEventAdapter {
 		return Env.$drawMode3D.get() == DrawMode.LINE ? U.colorBackground(Color.BLACK) : Wallpapers.get().random();
 	}
 
-	private void processKeyEvent(KeyEvent e) {
-		Key.processEvent(e);
-		this.onKeyPressed();
-		pacController.onKeyPressed();
-		currentGameScene.onKeyPressed();
-		e.consume();
-	}
-
 	private void onKeyPressed() {
-		if (Key.pressed(Key.ALT, KeyCode.A)) {
+		if (Keyboard.pressed(Keyboard.ALT, KeyCode.A)) {
 			Actions.toggleAutopilot();
-		} else if (Key.pressed(Key.ALT, KeyCode.D)) {
+		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.D)) {
 			Env.toggle(Env.$debugUI);
-		} else if (Key.pressed(Key.CTRL, KeyCode.I)) {
+		} else if (Keyboard.pressed(Keyboard.CTRL, KeyCode.I)) {
 			Actions.toggleInfoPanelsVisible();
-		} else if (Key.pressed(Key.ALT, KeyCode.I)) {
+		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.I)) {
 			Actions.toggleImmunity();
-		} else if (Key.pressed(Key.ALT, KeyCode.M)) {
+		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.M)) {
 			Actions.toggleSoundMuted();
-		} else if (Key.pressed(KeyCode.P)) {
+		} else if (Keyboard.pressed(KeyCode.P)) {
 			Actions.togglePaused();
-		} else if (Key.pressed(Key.SHIFT, KeyCode.P)) {
+		} else if (Keyboard.pressed(Keyboard.SHIFT, KeyCode.P)) {
 			Actions.singleStep();
-		} else if (Key.pressed(KeyCode.Q)) {
+		} else if (Keyboard.pressed(KeyCode.Q)) {
 			Actions.quitCurrentScene();
-		} else if (Key.pressed(Key.ALT, KeyCode.DIGIT3)) {
+		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.DIGIT3)) {
 			Actions.toggleUse3DScene();
-		} else if (Key.pressed(KeyCode.F11)) {
+		} else if (Keyboard.pressed(KeyCode.F11)) {
 			stage.setFullScreen(true);
 		}
 	}

@@ -40,7 +40,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.Actions;
-import de.amr.games.pacman.ui.fx.shell.Key;
+import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.canvas.GraphicsContext;
@@ -85,14 +85,14 @@ public class PacMan_IntroScene extends GameScene2D {
 
 	@Override
 	public void onKeyPressed() {
-		if (Key.pressed(KeyCode.DIGIT5)) {
+		if (Keyboard.pressed(KeyCode.DIGIT5)) {
 			SoundManager.get().play(GameSound.CREDIT);
 			gameController.addCredit();
-		} else if (Key.pressed(KeyCode.DIGIT1)) {
+		} else if (Keyboard.pressed(KeyCode.DIGIT1)) {
 			gameController.requestGame();
-		} else if (Key.pressed(KeyCode.V)) {
+		} else if (Keyboard.pressed(KeyCode.V)) {
 			Actions.selectNextGameVariant();
-		} else if (Key.pressed(Key.ALT, KeyCode.Z)) {
+		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.Z)) {
 			Actions.startIntermissionScenesTest();
 		}
 	}

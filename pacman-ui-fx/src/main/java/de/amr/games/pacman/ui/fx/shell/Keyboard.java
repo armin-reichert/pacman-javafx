@@ -24,6 +24,9 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.shell;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.amr.games.pacman.lib.Logging;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -33,15 +36,14 @@ import javafx.scene.input.KeyEvent;
  * 
  * @author Armin Reichert
  */
-public class Key {
+public class Keyboard {
 
-	public static final byte NO_MODIFIER = 0x0;
-	public static final byte ALT = 0x1;
-	public static final byte CTRL = 0x2;
-	public static final byte SHIFT = 0x4;
+	public static final byte NO_MODIFIER = 0x0, ALT = 0x1, CTRL = 0x2, SHIFT = 0x4;
 
 	private static KeyEvent currentEvent;
 	private static byte currentMask;
+
+	public static final List<Runnable> handlers = new ArrayList<>();
 
 	public static void processEvent(KeyEvent e) {
 		if (e.isConsumed()) {
@@ -58,6 +60,8 @@ public class Key {
 		if (e.isShiftDown()) {
 			currentMask |= SHIFT;
 		}
+		handlers.forEach(Runnable::run);
+		e.consume();
 	}
 
 	public static boolean pressed(KeyCode code) {

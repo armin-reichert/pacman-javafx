@@ -27,7 +27,7 @@ import static de.amr.games.pacman.lib.Logging.log;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.event.GameEventListener;
-import de.amr.games.pacman.ui.fx.shell.Key;
+import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 
@@ -82,7 +82,7 @@ public interface GameScene extends GameEventListener {
 	/**
 	 * Called when a key has been pressed.
 	 * 
-	 * @see Key
+	 * @see Keyboard
 	 */
 	default void onKeyPressed() {
 	}

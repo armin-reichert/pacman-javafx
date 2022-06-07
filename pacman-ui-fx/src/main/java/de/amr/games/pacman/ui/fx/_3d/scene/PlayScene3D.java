@@ -55,7 +55,7 @@ import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.shell.Actions;
-import de.amr.games.pacman.ui.fx.shell.Key;
+import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.CoordinateAxes;
@@ -276,9 +276,9 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 
 	@Override
 	public void onKeyPressed() {
-		if (Key.pressed(Key.ALT, KeyCode.LEFT)) {
+		if (Keyboard.pressed(Keyboard.ALT, KeyCode.LEFT)) {
 			Actions.selectPrevPerspective();
-		} else if (Key.pressed(Key.ALT, KeyCode.RIGHT)) {
+		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.RIGHT)) {
 			Actions.selectNextPerspective();
 		}
 	}
