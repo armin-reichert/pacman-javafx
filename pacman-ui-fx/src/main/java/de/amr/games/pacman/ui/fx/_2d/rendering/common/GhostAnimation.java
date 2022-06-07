@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2021-22 Armin Reichert
+Copyright (c) 2022 Armin Reichert
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,33 +20,10 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
- */
-package de.amr.games.pacman.ui.fx._2d.entity.common;
+*/
 
-import de.amr.games.pacman.lib.SpriteAnimationSet;
-import de.amr.games.pacman.model.common.actors.Pac;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimation;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.canvas.GraphicsContext;
+package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
-/**
- * 2D representation of the player (Pac-Man or Ms. Pac-Man).
- * 
- * @author Armin Reichert
- */
-public class Pac2D {
-
-	public final Pac pac;
-	public final SpriteAnimationSet<Pac, PacAnimation, Rectangle2D> animations;
-
-	public Pac2D(Pac pac, SpriteAnimationSet<Pac, PacAnimation, Rectangle2D> animations) {
-		this.pac = pac;
-		this.animations = animations;
-		animations.select(PacAnimation.MUNCHING);
-	}
-
-	public void render(GraphicsContext g, Rendering2D r2D) {
-		r2D.drawEntity(g, pac, animations.currentSprite(pac));
-	}
+public enum GhostAnimation {
+	COLOR, EYES, VALUE, BLUE, FLASHING;
 }

@@ -31,7 +31,6 @@ import de.amr.games.pacman.lib.ISpriteAnimation;
 import de.amr.games.pacman.lib.SpriteAnimation;
 import de.amr.games.pacman.lib.SpriteAnimationSet;
 import de.amr.games.pacman.model.common.actors.Bonus;
-import de.amr.games.pacman.model.common.actors.BonusAnimation;
 import javafx.geometry.Rectangle2D;
 
 /**

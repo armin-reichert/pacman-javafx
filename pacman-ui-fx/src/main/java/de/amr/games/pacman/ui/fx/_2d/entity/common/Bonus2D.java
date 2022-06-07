@@ -26,8 +26,8 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 import java.util.function.Supplier;
 
 import de.amr.games.pacman.model.common.actors.Bonus;
-import de.amr.games.pacman.model.common.actors.BonusAnimation;
 import de.amr.games.pacman.model.common.actors.BonusState;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;

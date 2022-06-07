@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import de.amr.games.pacman.lib.SpriteAnimationSet;
 import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.model.common.actors.GhostAnimation;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
