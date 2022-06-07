@@ -91,16 +91,16 @@ public class PlayScene2D extends GameScene2D {
 			if (ghost.state == GhostState.HUNTING_PAC) {
 				stateText += game.huntingTimer.chasingPhase() != -1 ? " (Chasing)" : " (Scattering)";
 			}
-			return "%s\nState: %s\nAnimation: %s".formatted(ghost.name, stateText, ghost2D.animations.selectedKey());
+			return "%s\nState: %s\nAnimation: %s".formatted(ghost.name, stateText, ghost2D.animations.selected());
 		}
 
 		private String computePacInfo(Pac2D pac2D) {
-			return "%s\nAnimation: %s".formatted(game.pac.name, pac2D.animations.selectedKey());
+			return "%s\nAnimation: %s".formatted(game.pac.name, pac2D.animations.selected());
 		}
 
 		private String computeBonusInfo(Bonus2D bonus2D) {
 			return "%s\nState: %s\nAnimation: %s".formatted(game.bonus().symbol(), game.bonus().state(),
-					bonus2D.animations.selectedKey());
+					bonus2D.animations.selected());
 		}
 
 		private void updateTextView(Text textView, String text, Entity entity) {
@@ -285,7 +285,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void onBonusGetsActive(GameEvent e) {
-		bonus2D.animations.selectAnimation(BonusAnimation.SYMBOL);
+		bonus2D.animations.select(BonusAnimation.SYMBOL);
 		if (game.variant == GameVariant.MS_PACMAN) {
 			bonus2D.animations.jumpAnimation.restart();
 		}
@@ -294,7 +294,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
 		bonus2D.animations.jumpAnimation.stop();
-		bonus2D.animations.selectAnimation(BonusAnimation.VALUE);
+		bonus2D.animations.select(BonusAnimation.VALUE);
 		SoundManager.get().play(GameSound.BONUS_EATEN);
 	}
 
@@ -321,7 +321,7 @@ public class PlayScene2D extends GameScene2D {
 		case READY -> {
 			SoundManager.get().stopAll();
 			world2D.getEnergizerPulse().reset();
-			pac2D.animations.selectAnimation(PacAnimation.MUNCHING);
+			pac2D.animations.select(PacAnimation.MUNCHING);
 			pac2D.animations.selectedAnimation().reset();
 			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart());
 			if (!gameController.isGameRunning()) {
@@ -337,7 +337,7 @@ public class PlayScene2D extends GameScene2D {
 			gameController.state().timer().setIndefinite();
 			gameController.state().timer().start();
 			SoundManager.get().stopAll();
-			pac2D.animations.selectAnimation(PacAnimation.DYING);
+			pac2D.animations.select(PacAnimation.DYING);
 			pac2D.animations.selectedAnimation().stop();
 			new SequentialTransition( //
 					pauseSec(1, () -> game.ghosts().forEach(Ghost::hide)), //

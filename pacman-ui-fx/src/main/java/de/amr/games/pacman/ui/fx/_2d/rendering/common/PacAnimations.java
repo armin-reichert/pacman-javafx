@@ -63,7 +63,7 @@ public class PacAnimations extends SpriteAnimationSet<Pac, PacAnimation, Rectang
 
 	@Override
 	public Rectangle2D currentSprite(Pac pac) {
-		return switch (selectedKey()) {
+		return switch (selected()) {
 		case DYING -> dying.animate();
 		case MUNCHING -> {
 			var munchingToDir = munching.get(pac.moveDir());

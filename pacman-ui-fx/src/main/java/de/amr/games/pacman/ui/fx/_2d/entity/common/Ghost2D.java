@@ -43,7 +43,7 @@ public class Ghost2D {
 	public Ghost2D(Ghost ghost, SpriteAnimationSet<Ghost, GhostAnimation, Rectangle2D> animations) {
 		this.ghost = ghost;
 		this.animations = animations;
-		animations.selectAnimation(GhostAnimation.COLOR);
+		animations.select(GhostAnimation.COLOR);
 	}
 
 	public void updateAnimation(boolean frightened, boolean recovering) {
@@ -54,7 +54,7 @@ public class Ghost2D {
 		case HUNTING_PAC, LEAVING_HOUSE -> GhostAnimation.COLOR;
 		case LOCKED -> recovering ? GhostAnimation.FLASHING : frightened ? GhostAnimation.BLUE : GhostAnimation.COLOR;
 		};
-		animations.selectAnimation(key);
+		animations.select(key);
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {

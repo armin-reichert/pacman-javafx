@@ -83,7 +83,7 @@ public class GhostAnimations extends SpriteAnimationSet<Ghost, GhostAnimation, R
 
 	@Override
 	public Rectangle2D currentSprite(Ghost ghost) {
-		return switch (selectedKey()) {
+		return switch (selected()) {
 		case EYES -> eyes.get(ghost.wishDir()).frame();
 		case FLASHING -> flashing.animate();
 		case BLUE -> blue.animate();
