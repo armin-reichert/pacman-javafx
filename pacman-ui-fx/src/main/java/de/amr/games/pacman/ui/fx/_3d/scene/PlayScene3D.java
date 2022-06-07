@@ -412,7 +412,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 	@Override
 	public void onGhostStartsReturningHome(GameEvent e) {
 		if (gameController.credit() > 0) {
-			SoundManager.get().playIfOff(GameSound.GHOST_RETURNING);
+			SoundManager.get().ensurePlaying(GameSound.GHOST_RETURNING);
 		}
 	}
 

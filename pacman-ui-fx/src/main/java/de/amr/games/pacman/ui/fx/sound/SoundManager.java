@@ -43,100 +43,103 @@ import javafx.scene.media.AudioClip;
  */
 public class SoundManager {
 
-	private static SoundManager it = new SoundManager();
+	private static SoundManager theOne = new SoundManager();
 
 	public static SoundManager get() {
-		return it;
+		return theOne;
 	}
 
-	private Map<GameSound, AudioClip> soundMap_PacMan = new EnumMap<>(GameSound.class);
-	private Map<GameSound, AudioClip> soundMap_MsPacMan = new EnumMap<>(GameSound.class);
-	private Map<GameSound, AudioClip> soundMap = soundMap_PacMan;
+	private final Map<GameSound, AudioClip> clips_PacMan = new EnumMap<>(GameSound.class);
+	private final Map<GameSound, AudioClip> clips_MsPacMan = new EnumMap<>(GameSound.class);
+	private GameVariant variant;
 	private boolean muted;
 	private boolean stopped;
 
-	private void loadMsPacManSounds() {
-		//@formatter:off
-		put(soundMap_MsPacMan, GameSound.CREDIT,          "/mspacman/sound/Coin Credit.mp3");
-		put(soundMap_MsPacMan, GameSound.EXTRA_LIFE,      "/mspacman/sound/Extra Life.mp3");
-		put(soundMap_MsPacMan, GameSound.GAME_READY,      "/mspacman/sound/Start.mp3");
-		put(soundMap_MsPacMan, GameSound.BONUS_EATEN,     "/mspacman/sound/Fruit.mp3");
-		put(soundMap_MsPacMan, GameSound.PACMAN_MUNCH,    "/mspacman/sound/Ms. Pac Man Pill.mp3");
-		put(soundMap_MsPacMan, GameSound.PACMAN_DEATH,    "/mspacman/sound/Died.mp3");
-		put(soundMap_MsPacMan, GameSound.PACMAN_POWER,    "/mspacman/sound/Scared Ghost.mp3");
-		put(soundMap_MsPacMan, GameSound.GHOST_EATEN,     "/mspacman/sound/Ghost.mp3");
-		put(soundMap_MsPacMan, GameSound.GHOST_RETURNING, "/mspacman/sound/Ghost Eyes.mp3");
-		put(soundMap_MsPacMan, GameSound.SIREN_1,         "/mspacman/sound/Ghost Noise 1.mp3");
-		put(soundMap_MsPacMan, GameSound.SIREN_2,         "/mspacman/sound/Ghost Noise 2.mp3");
-		put(soundMap_MsPacMan, GameSound.SIREN_3,         "/mspacman/sound/Ghost Noise 3.mp3");
-		put(soundMap_MsPacMan, GameSound.SIREN_4,         "/mspacman/sound/Ghost Noise 4.mp3");
-		put(soundMap_MsPacMan, GameSound.INTERMISSION_1,  "/mspacman/sound/They Meet Act 1.mp3");
-		put(soundMap_MsPacMan, GameSound.INTERMISSION_2,  "/mspacman/sound/The Chase Act 2.mp3");
-		put(soundMap_MsPacMan, GameSound.INTERMISSION_3,  "/mspacman/sound/Junior Act 3.mp3");
-		//@formatter:on
-		log("Ms. Pac-Man sounds loaded");
+	private SoundManager() {
+		selectGameVariant(GameVariant.PACMAN);
 	}
 
-	private void loadPacManSounds() {
-		//@formatter:off
-		put(soundMap_PacMan, GameSound.CREDIT,          "/pacman/sound/credit.mp3");
-		put(soundMap_PacMan, GameSound.EXTRA_LIFE,      "/pacman/sound/extend.mp3");
-		put(soundMap_PacMan, GameSound.GAME_READY,      "/pacman/sound/game_start.mp3");
-		put(soundMap_PacMan, GameSound.BONUS_EATEN,     "/pacman/sound/eat_fruit.mp3");
-		put(soundMap_PacMan, GameSound.PACMAN_MUNCH,    "/pacman/sound/munch_1.wav");
-		put(soundMap_PacMan, GameSound.PACMAN_DEATH,    "/pacman/sound/pacman_death.wav");
-		put(soundMap_PacMan, GameSound.PACMAN_POWER,    "/pacman/sound/power_pellet.mp3");
-		put(soundMap_PacMan, GameSound.GHOST_EATEN,     "/pacman/sound/eat_ghost.mp3");
-		put(soundMap_PacMan, GameSound.GHOST_RETURNING, "/pacman/sound/retreating.mp3");
-		put(soundMap_PacMan, GameSound.SIREN_1,         "/pacman/sound/siren_1.mp3");
-		put(soundMap_PacMan, GameSound.SIREN_2,         "/pacman/sound/siren_2.mp3");
-		put(soundMap_PacMan, GameSound.SIREN_3,         "/pacman/sound/siren_3.mp3");
-		put(soundMap_PacMan, GameSound.SIREN_4,         "/pacman/sound/siren_4.mp3");
-		put(soundMap_PacMan, GameSound.INTERMISSION_1,  "/pacman/sound/intermission.mp3");
-		put(soundMap_PacMan, GameSound.INTERMISSION_2,  "/pacman/sound/intermission.mp3");
-		put(soundMap_PacMan, GameSound.INTERMISSION_3,  "/pacman/sound/intermission.mp3");
-		//@formatter:on
-		log("Pac-Man sounds loaded");
+	private Map<GameSound, AudioClip> getMsPacManClips() {
+		if (clips_MsPacMan.isEmpty()) {
+			//@formatter:off
+			put(clips_MsPacMan, GameSound.BONUS_EATEN,     "/mspacman/sound/Fruit.mp3");
+			put(clips_MsPacMan, GameSound.CREDIT,          "/mspacman/sound/Coin Credit.mp3");
+			put(clips_MsPacMan, GameSound.EXTRA_LIFE,      "/mspacman/sound/Extra Life.mp3");
+			put(clips_MsPacMan, GameSound.GAME_READY,      "/mspacman/sound/Start.mp3");
+			put(clips_MsPacMan, GameSound.GHOST_EATEN,     "/mspacman/sound/Ghost.mp3");
+			put(clips_MsPacMan, GameSound.GHOST_RETURNING, "/mspacman/sound/Ghost Eyes.mp3");
+			put(clips_MsPacMan, GameSound.INTERMISSION_1,  "/mspacman/sound/They Meet Act 1.mp3");
+			put(clips_MsPacMan, GameSound.INTERMISSION_2,  "/mspacman/sound/The Chase Act 2.mp3");
+			put(clips_MsPacMan, GameSound.INTERMISSION_3,  "/mspacman/sound/Junior Act 3.mp3");
+			put(clips_MsPacMan, GameSound.PACMAN_MUNCH,    "/mspacman/sound/Ms. Pac Man Pill.mp3");
+			put(clips_MsPacMan, GameSound.PACMAN_DEATH,    "/mspacman/sound/Died.mp3");
+			put(clips_MsPacMan, GameSound.PACMAN_POWER,    "/mspacman/sound/Scared Ghost.mp3");
+			put(clips_MsPacMan, GameSound.SIREN_1,         "/mspacman/sound/Ghost Noise 1.mp3");
+			put(clips_MsPacMan, GameSound.SIREN_2,         "/mspacman/sound/Ghost Noise 2.mp3");
+			put(clips_MsPacMan, GameSound.SIREN_3,         "/mspacman/sound/Ghost Noise 3.mp3");
+			put(clips_MsPacMan, GameSound.SIREN_4,         "/mspacman/sound/Ghost Noise 4.mp3");
+			//@formatter:on
+			log("Ms. Pac-Man sounds loaded");
+		}
+		return clips_MsPacMan;
+	}
+
+	private Map<GameSound, AudioClip> getPacManClips() {
+		if (clips_PacMan.isEmpty()) {
+			//@formatter:off
+			put(clips_PacMan, GameSound.BONUS_EATEN,     "/pacman/sound/eat_fruit.mp3");
+			put(clips_PacMan, GameSound.CREDIT,          "/pacman/sound/credit.mp3");
+			put(clips_PacMan, GameSound.EXTRA_LIFE,      "/pacman/sound/extend.mp3");
+			put(clips_PacMan, GameSound.GAME_READY,      "/pacman/sound/game_start.mp3");
+			put(clips_PacMan, GameSound.GHOST_EATEN,     "/pacman/sound/eat_ghost.mp3");
+			put(clips_PacMan, GameSound.GHOST_RETURNING, "/pacman/sound/retreating.mp3");
+			put(clips_PacMan, GameSound.INTERMISSION_1,  "/pacman/sound/intermission.mp3");
+			put(clips_PacMan, GameSound.INTERMISSION_2,  "/pacman/sound/intermission.mp3");
+			put(clips_PacMan, GameSound.INTERMISSION_3,  "/pacman/sound/intermission.mp3");
+			put(clips_PacMan, GameSound.PACMAN_MUNCH,    "/pacman/sound/munch_1.wav");
+			put(clips_PacMan, GameSound.PACMAN_DEATH,    "/pacman/sound/pacman_death.wav");
+			put(clips_PacMan, GameSound.PACMAN_POWER,    "/pacman/sound/power_pellet.mp3");
+			put(clips_PacMan, GameSound.SIREN_1,         "/pacman/sound/siren_1.mp3");
+			put(clips_PacMan, GameSound.SIREN_2,         "/pacman/sound/siren_2.mp3");
+			put(clips_PacMan, GameSound.SIREN_3,         "/pacman/sound/siren_3.mp3");
+			put(clips_PacMan, GameSound.SIREN_4,         "/pacman/sound/siren_4.mp3");
+			//@formatter:on
+			log("Pac-Man sounds loaded");
+		}
+		return clips_PacMan;
 	}
 
 	private void put(Map<GameSound, AudioClip> map, GameSound sound, String path) {
 		URL url = getClass().getResource(path);
-		if (url != null) {
-			map.put(sound, new AudioClip(url.toString()));
-		} else {
+		if (url == null) {
 			throw new RuntimeException("Sound resource does not exist: " + path);
 		}
+		map.put(sound, new AudioClip(url.toString()));
 	}
 
 	public void selectGameVariant(GameVariant variant) {
-		soundMap = switch (variant) {
-		case MS_PACMAN -> {
-			if (soundMap_MsPacMan.isEmpty()) {
-				loadMsPacManSounds();
-			}
-			yield soundMap_MsPacMan;
-		}
-		case PACMAN -> {
-			if (soundMap_PacMan.isEmpty()) {
-				loadPacManSounds();
-			}
-			yield soundMap_PacMan;
-		}
-		default -> throw new IllegalArgumentException();
+		this.variant = variant;
+		clips(); // load clips initially
+	}
+
+	private Map<GameSound, AudioClip> clips() {
+		return switch (variant) {
+		case MS_PACMAN -> getMsPacManClips();
+		case PACMAN -> getPacManClips();
 		};
 	}
 
 	public AudioClip getClip(GameSound sound) {
-		return soundMap.get(sound);
+		return clips().get(sound);
 	}
 
 	public boolean isPlaying(GameSound sound) {
 		return getClip(sound).isPlaying();
 	}
 
-	public void playIfOff(GameSound sound) {
-		if (!getClip(sound).isPlaying()) {
-			loop(sound, 1);
+	public void ensurePlaying(GameSound sound) {
+		if (!isPlaying(sound)) {
+			play(sound);
 		}
 	}
 
@@ -157,7 +160,7 @@ public class SoundManager {
 	}
 
 	public void stopAll() {
-		for (AudioClip clip : soundMap.values()) {
+		for (AudioClip clip : clips().values()) {
 			clip.stop();
 		}
 	}
@@ -182,22 +185,15 @@ public class SoundManager {
 	}
 
 	public void startSiren(int sirenIndex) {
-		if (muted || stopped) {
-			return;
-		}
-		if (sirenIndex < 0 || sirenIndex > 3) {
-			log("Illegal siren index: %d", sirenIndex);
-			return;
-		}
-		var sirenSound = switch (sirenIndex) {
+		var siren = switch (sirenIndex) {
 		case 0 -> GameSound.SIREN_1;
 		case 1 -> GameSound.SIREN_2;
 		case 2 -> GameSound.SIREN_3;
 		case 3 -> GameSound.SIREN_4;
 		default -> throw new IllegalArgumentException("Illegal siren index: " + sirenIndex);
 		};
-		getClip(sirenSound).setVolume(0.2);
-		loop(sirenSound, Animation.INDEFINITE);
+		getClip(siren).setVolume(0.2);
+		loop(siren, Animation.INDEFINITE);
 	}
 
 	public void stopSirens() {
