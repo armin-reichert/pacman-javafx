@@ -34,6 +34,7 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.model.common.actors.BonusAnimation;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostAnimation;
@@ -158,11 +159,7 @@ public class PlayScene2D extends GameScene2D {
 			ghosts2D[ghost.id] = new Ghost2D(ghost, new GhostAnimations(ghost.id, r2D));
 		}
 		bonus2D = new Bonus2D(game::bonus, new BonusAnimations(r2D));
-		if (game.variant == GameVariant.MS_PACMAN) {
-			bonus2D.animations.jumpAnimation.restart();
-		} else {
-			bonus2D.animations.jumpAnimation.stop();
-		}
+		bonus2D.animations.jumpAnimation.reset();
 	}
 
 	@Override
@@ -270,12 +267,16 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void onBonusGetsActive(GameEvent e) {
-		bonus2D.animations.jumpAnimation.restart();
+		bonus2D.animations.selectAnimation(BonusAnimation.SYMBOL);
+		if (game.variant == GameVariant.MS_PACMAN) {
+			bonus2D.animations.jumpAnimation.restart();
+		}
 	}
 
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
 		bonus2D.animations.jumpAnimation.stop();
+		bonus2D.animations.selectAnimation(BonusAnimation.VALUE);
 		SoundManager.get().play(GameSound.BONUS_EATEN);
 	}
 

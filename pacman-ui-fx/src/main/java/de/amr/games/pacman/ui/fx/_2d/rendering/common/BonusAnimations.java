@@ -64,10 +64,9 @@ public class BonusAnimations extends SpriteAnimationSet<Bonus, BonusAnimation, R
 
 	@Override
 	public Rectangle2D currentSprite(Bonus bonus) {
-		return switch (bonus.state()) {
-		case EATEN -> valueAnimation.frame();
-		case EDIBLE -> symbolAnimation.frame();
-		case INACTIVE -> null;
+		return switch (selectedKey) {
+		case SYMBOL -> symbolAnimation.frame();
+		case VALUE -> valueAnimation.frame();
 		};
 	}
 }

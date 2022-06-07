@@ -275,7 +275,7 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 
 	@Override
 	public SpriteAnimation<Rectangle2D> createBonusSymbolAnimation() {
-		return new SpriteAnimation<>(rhs(3, 1), rhs(4, 1), rhs(5, 1), rhs(6, 1), rhs(7, 1), rhs(8, 1), rhs(9, 1));
+		return new SpriteAnimation<>(rhs(3, 0), rhs(4, 0), rhs(5, 0), rhs(6, 0), rhs(7, 0), rhs(8, 0), rhs(9, 0));
 	}
 
 	@Override

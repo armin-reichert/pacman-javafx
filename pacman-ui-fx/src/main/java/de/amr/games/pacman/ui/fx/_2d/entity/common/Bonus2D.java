@@ -26,6 +26,8 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 import java.util.function.Supplier;
 
 import de.amr.games.pacman.model.common.actors.Bonus;
+import de.amr.games.pacman.model.common.actors.BonusAnimation;
+import de.amr.games.pacman.model.common.actors.BonusState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -47,14 +49,22 @@ public class Bonus2D {
 	public Bonus2D(Supplier<Bonus> fnBonus, BonusAnimations animations) {
 		this.fnBonus = fnBonus;
 		this.animations = animations;
+		animations.selectAnimation(BonusAnimation.SYMBOL);
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
 		var bonus = fnBonus.get();
-		if (bonus != null) {
+		if (bonus != null && bonus.state() != BonusState.INACTIVE) {
 			var sprite = animations.currentSprite(bonus);
 			if (sprite != null) {
-				r2D.drawSpriteCenteredOverBox(g, sprite, bonus.position().x, bonus.position().y);
+				if (animations.jumpAnimation.isRunning()) {
+					g.save();
+					g.translate(0, animations.jumpAnimation.animate());
+					r2D.drawSpriteCenteredOverBox(g, sprite, bonus.position().x, bonus.position().y);
+					g.restore();
+				} else {
+					r2D.drawSpriteCenteredOverBox(g, sprite, bonus.position().x, bonus.position().y);
+				}
 			}
 		}
 	}
