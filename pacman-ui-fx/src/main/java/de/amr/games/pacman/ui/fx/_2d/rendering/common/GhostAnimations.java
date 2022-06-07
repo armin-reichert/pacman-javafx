@@ -91,13 +91,7 @@ public class GhostAnimations extends SpriteAnimationSet<Ghost, Key, Rectangle2D>
 		case EYES -> eyes.get(ghost.wishDir()).frame();
 		case FLASHING -> flashing.animate();
 		case BLUE -> blue.animate();
-		case COLOR -> {
-			var sprite = color.get(ghost.wishDir()).frame();
-			if (ghost.velocity.length() > 0) {
-				color.get(ghost.wishDir()).advance();
-			}
-			yield sprite;
-		}
+		case COLOR -> color.get(ghost.wishDir()).animate();
 		case VALUE -> values.frame(frameIndex(ghost.bounty));
 		};
 	}

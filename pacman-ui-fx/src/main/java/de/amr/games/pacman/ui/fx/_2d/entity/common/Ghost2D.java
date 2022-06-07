@@ -55,6 +55,10 @@ public class Ghost2D {
 				: frightened ? GhostAnimations.Key.BLUE : GhostAnimations.Key.COLOR;
 		};
 		animations.select(key);
+		// TODO
+		if (animations.selected() == Key.COLOR && ghost.velocity.length() == 0) {
+			animations.selectedAnimation().stop();
+		}
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
