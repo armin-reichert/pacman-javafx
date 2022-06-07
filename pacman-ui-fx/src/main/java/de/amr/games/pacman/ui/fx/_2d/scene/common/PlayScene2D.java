@@ -49,6 +49,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.World2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.BonusAnimations;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
@@ -150,14 +151,14 @@ public class PlayScene2D extends GameScene2D {
 		credit2D.visible = !hasCredit;
 		livesCounter2D = new LivesCounter2D(game);
 		livesCounter2D.visible = hasCredit;
-		levelCounter2D = new LevelCounter2D(game.levelCounter);
+		levelCounter2D = new LevelCounter2D(game.levelCounter, r2D);
 		levelCounter2D.visible = hasCredit;
 		world2D = new World2D(game, 0, t(3), r2D.createMazeFlashingAnimation(r2D.mazeNumber(game.level.number)));
 		pac2D = new Pac2D(game.pac, new PacAnimations(r2D));
 		for (var ghost : game.ghosts) {
 			ghosts2D[ghost.id] = new Ghost2D(ghost, new GhostAnimations(ghost.id, r2D));
 		}
-		bonus2D = new Bonus2D(game::bonus);
+		bonus2D = new Bonus2D(game::bonus, new BonusAnimations(r2D));
 		if (game.variant == GameVariant.MS_PACMAN) {
 			bonus2D.setJumpAnimation(Spritesheet_MsPacMan.get().createBonusJumpAnimation());
 		}

@@ -50,15 +50,26 @@ public interface Rendering2D {
 
 	Color getGhostColor(int ghostID);
 
+	Image getSpriteImage(Rectangle2D sprite);
+
+	default Image[] getAnimationImages(SpriteAnimation<Rectangle2D> animation) {
+		int n = animation.numFrames();
+		Image[] images = new Image[n];
+		for (int i = 0; i < n; ++i) {
+			images[i] = getSpriteImage(animation.frame(i));
+		}
+		return images;
+	}
+
 	// Sprites
 
 	Rectangle2D getGhostSprite(int ghostID, Direction dir);
 
 	Rectangle2D getPacSprite(Direction dir, Mouth mouth);
 
-	Rectangle2D getSymbolSprite(int symbol);
-
-	Rectangle2D getBonusValueSprite(int number);
+//	Rectangle2D getSymbolSprite(int symbol);
+//
+//	Rectangle2D getBonusValueSprite(int number);
 
 	Rectangle2D getGhostValueSprite(int number);
 
@@ -79,6 +90,10 @@ public interface Rendering2D {
 	SpriteAnimationMap<Direction, Rectangle2D> createGhostEyesAnimation();
 
 	SpriteAnimation<Image> createMazeFlashingAnimation(int mazeNumber);
+
+	SpriteAnimation<Rectangle2D> createBonusSymbolAnimation();
+
+	SpriteAnimation<Rectangle2D> createBonusValueAnimation();
 
 	// Maze
 

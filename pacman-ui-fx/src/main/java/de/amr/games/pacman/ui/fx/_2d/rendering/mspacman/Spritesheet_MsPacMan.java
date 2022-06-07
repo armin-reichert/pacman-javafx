@@ -154,6 +154,11 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
+	public Image getSpriteImage(Rectangle2D sprite) {
+		return subImage(sprite);
+	}
+
+	@Override
 	public void drawSprite(GraphicsContext g, Rectangle2D s, double x, double y) {
 		g.drawImage(source, s.getMinX(), s.getMinY(), s.getWidth(), s.getHeight(), x, y, s.getWidth(), s.getHeight());
 	}
@@ -242,10 +247,15 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 		return FOOD_COLORS[mazeNumber - 1];
 	}
 
-	@Override
-	public Rectangle2D getBonusValueSprite(int number) {
-		return bonusValueSprites.get(number);
-	}
+//@Override
+//public Rectangle2D getSymbolSprite(int symbol) {
+//	return symbolSprites[symbol];
+//}
+
+//	@Override
+//	public Rectangle2D getBonusValueSprite(int number) {
+//		return bonusValueSprites.get(number);
+//	}
 
 	@Override
 	public Rectangle2D getGhostValueSprite(int number) {
@@ -255,11 +265,6 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	@Override
 	public Rectangle2D getLifeSprite() {
 		return rhs(1, 0);
-	}
-
-	@Override
-	public Rectangle2D getSymbolSprite(int symbol) {
-		return symbolSprites[symbol];
 	}
 
 	/*
@@ -314,6 +319,16 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 			map.put(dir, new SpriteAnimation<>(rhs(8 + d, 5)));
 		}
 		return map;
+	}
+
+	@Override
+	public SpriteAnimation<Rectangle2D> createBonusSymbolAnimation() {
+		return new SpriteAnimation<>(rhs(3, 1), rhs(4, 1), rhs(5, 1), rhs(6, 1), rhs(7, 1), rhs(8, 1), rhs(9, 1));
+	}
+
+	@Override
+	public SpriteAnimation<Rectangle2D> createBonusValueAnimation() {
+		return new SpriteAnimation<>(rhs(3, 1), rhs(4, 1), rhs(5, 1), rhs(6, 1), rhs(7, 1), rhs(8, 1), rhs(9, 1));
 	}
 
 	// Ms. Pac-Man specific:

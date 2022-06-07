@@ -29,9 +29,8 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
-import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
 import javafx.scene.Group;
@@ -48,12 +47,18 @@ import javafx.util.Duration;
  */
 public class LevelCounter3D extends Group {
 
-	private final GameVariant gameVariant;
 	private final V2d rightPosition;
+	private final Image[] symbolImages;
 
-	public LevelCounter3D(double x, double y, GameVariant gameVariant) {
+	public LevelCounter3D(double x, double y, Rendering2D r2D) {
 		this.rightPosition = new V2d(x, y);
-		this.gameVariant = gameVariant;
+		var symbolAnimation = r2D.createBonusSymbolAnimation();
+		int n = symbolAnimation.numFrames();
+		symbolImages = new Image[n];
+		for (int i = 0; i < n; ++i) {
+			// TODO provide a method in Rendering2D to get the subimage for a "sprite"
+			symbolImages[i] = ((Spritesheet) r2D).subImage(symbolAnimation.frame(i));
+		}
 	}
 
 	public void update(GameModel game) {
@@ -61,28 +66,13 @@ public class LevelCounter3D extends Group {
 		double x = rightPosition.x, y = rightPosition.y;
 		for (int i = 0; i < game.levelCounter.size(); ++i) {
 			int symbol = game.levelCounter.symbol(i);
-			var symbolImage = getBonusSymbolImage(symbol);
-			Box cube = createSpinningCube(symbolImage, i % 2 == 0);
+			Box cube = createSpinningCube(symbolImages[symbol], i % 2 == 0);
 			cube.setTranslateX(x);
 			cube.setTranslateY(y);
 			cube.setTranslateZ(-HTS);
 			getChildren().add(cube);
 			x -= t(2);
 		}
-	}
-
-	private Image getBonusSymbolImage(int symbol) {
-		// TODO do not access specific spritesheet from here
-		return switch (gameVariant) {
-		case MS_PACMAN -> {
-			var ss = Spritesheet_MsPacMan.get();
-			yield ss.subImage(ss.getSymbolSprite(symbol));
-		}
-		case PACMAN -> {
-			var ss = Spritesheet_PacMan.get();
-			yield ss.subImage(ss.getSymbolSprite(symbol));
-		}
-		};
 	}
 
 	private Box createSpinningCube(Image symbol, boolean forward) {

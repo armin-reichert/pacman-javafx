@@ -25,8 +25,10 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import static de.amr.games.pacman.model.common.world.World.t;
 
+import de.amr.games.pacman.lib.SpriteAnimation;
 import de.amr.games.pacman.model.common.LevelCounter;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -37,6 +39,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class LevelCounter2D {
 
 	private final LevelCounter levelCounter;
+	private final SpriteAnimation<Rectangle2D> symbolAnimation;
 	public boolean visible;
 	public double right_x, y;
 	private double x;
@@ -46,17 +49,19 @@ public class LevelCounter2D {
 	 * @param right_x the RIGHT border x-coordinate of the counter!
 	 * @param y       the y-coordinate
 	 */
-	public LevelCounter2D(LevelCounter levelCounter) {
+	public LevelCounter2D(LevelCounter levelCounter, Rendering2D r2D) {
 		this.levelCounter = levelCounter;
 		this.right_x = t(24);
 		this.y = t(34);
+		this.symbolAnimation = r2D.createBonusSymbolAnimation();
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
 		if (visible) {
 			x = right_x;
 			levelCounter.symbols().forEach(symbol -> {
-				r2D.drawSprite(g, r2D.getSymbolSprite(symbol), x, y);
+				var sprite = symbolAnimation.frame(symbol);
+				r2D.drawSprite(g, sprite, x, y);
 				x -= t(2);
 			});
 		}

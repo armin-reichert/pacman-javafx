@@ -116,6 +116,11 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
+	public Image getSpriteImage(Rectangle2D sprite) {
+		return subImage(sprite);
+	}
+
+	@Override
 	public void drawSprite(GraphicsContext g, Rectangle2D s, double x, double y) {
 		g.drawImage(source, s.getMinX(), s.getMinY(), s.getWidth(), s.getHeight(), x, y, s.getWidth(), s.getHeight());
 	}
@@ -183,19 +188,19 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 		return r(8, 1);
 	}
 
-	@Override
-	public Rectangle2D getBonusValueSprite(int number) {
-		return bonusValueSprites.get(number);
-	}
+//	@Override
+//	public Rectangle2D getSymbolSprite(int symbol) {
+//		return symbolSprites.get(symbol);
+//	}
+//	
+//	@Override
+//	public Rectangle2D getBonusValueSprite(int number) {
+//		return bonusValueSprites.get(number);
+//	}
 
 	@Override
 	public Rectangle2D getGhostValueSprite(int number) {
 		return ghostValueSprites.get(number);
-	}
-
-	@Override
-	public Rectangle2D getSymbolSprite(int symbol) {
-		return symbolSprites.get(symbol);
 	}
 
 	@Override
@@ -247,6 +252,17 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 			map.put(dir, new SpriteAnimation<>(r(8 + d, 5)));
 		}
 		return map;
+	}
+
+	@Override
+	public SpriteAnimation<Rectangle2D> createBonusSymbolAnimation() {
+		return new SpriteAnimation<>(r(2, 3), r(3, 3), r(4, 3), r(5, 3), r(6, 3), r(7, 3), r(8, 3), r(9, 3));
+	}
+
+	@Override
+	public SpriteAnimation<Rectangle2D> createBonusValueAnimation() {
+		return new SpriteAnimation<>(r(0, 9, 1, 1), r(1, 9, 1, 1), r(2, 9, 1, 1), r(3, 9, 1, 1), r(4, 9, 2, 1),
+				r(3, 10, 3, 1), r(3, 11, 3, 1), r(3, 12, 3, 1));
 	}
 
 	// Pac-Man specific:

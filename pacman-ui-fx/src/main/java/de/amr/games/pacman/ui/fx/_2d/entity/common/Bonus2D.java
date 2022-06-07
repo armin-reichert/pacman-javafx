@@ -27,8 +27,8 @@ import java.util.function.Supplier;
 
 import de.amr.games.pacman.lib.GenericAnimation;
 import de.amr.games.pacman.model.common.actors.Bonus;
-import de.amr.games.pacman.model.common.actors.BonusState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.BonusAnimations;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -44,9 +44,11 @@ public class Bonus2D {
 
 	private final Supplier<Bonus> fnBonus;
 	private GenericAnimation<Integer> jumpAnimation;
+	private BonusAnimations animations;
 
-	public Bonus2D(Supplier<Bonus> fnBonus) {
+	public Bonus2D(Supplier<Bonus> fnBonus, BonusAnimations animations) {
 		this.fnBonus = fnBonus;
+		this.animations = animations;
 	}
 
 	public void setJumpAnimation(GenericAnimation<Integer> jumpAnimation) {
@@ -67,20 +69,24 @@ public class Bonus2D {
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
 		var bonus = fnBonus.get();
-		if (bonus == null) {
-			return;
-		}
-		if (bonus.state() == BonusState.EDIBLE) {
-			var sprite = r2D.getSymbolSprite(bonus.symbol());
-			g.save();
-			if (jumpAnimation != null) {
-				g.translate(0, jumpAnimation.animate());
+		if (bonus != null) {
+			var sprite = animations.currentSprite(bonus);
+			if (sprite != null) {
+				r2D.drawSpriteCenteredOverBox(g, sprite, bonus.position().x, bonus.position().y);
 			}
-			r2D.drawSpriteCenteredOverBox(g, sprite, bonus.position().x, bonus.position().y);
-			g.restore();
-		} else if (bonus.state() == BonusState.EATEN) {
-			var sprite = r2D.getBonusValueSprite(bonus.value());
-			r2D.drawSpriteCenteredOverBox(g, sprite, bonus.position().x, bonus.position().y);
 		}
+
+//		if (bonus.state() == BonusState.EDIBLE) {
+//			var sprite = r2D.getSymbolSprite(bonus.symbol());
+//			g.save();
+//			if (jumpAnimation != null) {
+//				g.translate(0, jumpAnimation.animate());
+//			}
+//			r2D.drawSpriteCenteredOverBox(g, sprite, bonus.position().x, bonus.position().y);
+//			g.restore();
+//		} else if (bonus.state() == BonusState.EATEN) {
+//			var sprite = r2D.getBonusValueSprite(bonus.value());
+//			r2D.drawSpriteCenteredOverBox(g, sprite, bonus.position().x, bonus.position().y);
+//		}
 	}
 }
