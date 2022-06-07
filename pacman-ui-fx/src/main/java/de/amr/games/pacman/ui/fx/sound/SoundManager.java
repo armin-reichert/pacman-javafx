@@ -152,6 +152,12 @@ public class SoundManager {
 		loop(sound, 1);
 	}
 
+	public void ensureLoop(GameSound sound, int repetitions) {
+		if (!isPlaying(sound)) {
+			loop(sound, repetitions);
+		}
+	}
+
 	public void loop(GameSound sound, int repetitions) {
 		if (!muted && !stopped) {
 			AudioClip clip = getClip(sound);
@@ -201,12 +207,14 @@ public class SoundManager {
 		loop(siren, Animation.INDEFINITE);
 	}
 
+	public void ensureStartSiren(int sirenIndex) {
+		if (!sirens().anyMatch(this::isPlaying)) {
+			startSiren(sirenIndex);
+		}
+	}
+
 	public void stopSirens() {
 		sirens().forEach(this::stop);
 		log("Siren(s) stopped");
-	}
-
-	public boolean isAnySirenPlaying() {
-		return sirens().anyMatch(this::isPlaying);
 	}
 }

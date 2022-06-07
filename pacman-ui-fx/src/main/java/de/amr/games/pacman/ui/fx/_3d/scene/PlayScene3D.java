@@ -295,12 +295,11 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 		if (gameController.state() == GameState.HUNTING || gameController.state() == GameState.GHOST_DYING) {
 			maze3D.energizerAnimations().forEach(Animation::play);
 		}
-		if (game.pac.hasPower() && !SoundManager.get().getClip(GameSound.PACMAN_POWER).isPlaying()) {
-			SoundManager.get().loop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
+		if (game.pac.hasPower()) {
+			SoundManager.get().ensureLoop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
 		}
-		if (gameController.credit() > 0 && gameController.state() == GameState.HUNTING
-				&& !SoundManager.get().isAnySirenPlaying() && !game.pac.hasPower()) {
-			SoundManager.get().startSiren(0);
+		if (gameController.credit() > 0 && gameController.state() == GameState.HUNTING && !game.pac.hasPower()) {
+			SoundManager.get().ensureStartSiren(0);
 		}
 	}
 

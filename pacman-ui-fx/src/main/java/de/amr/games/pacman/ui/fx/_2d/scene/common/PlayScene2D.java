@@ -58,7 +58,6 @@ import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
-import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -200,7 +199,7 @@ public class PlayScene2D extends GameScene2D {
 		}
 		switch (gameController.state()) {
 		case HUNTING -> {
-			if (SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying() && game.pac.starvingTicks > 10) {
+			if (game.pac.starvingTicks > 10) {
 				SoundManager.get().stop(GameSound.PACMAN_MUNCH);
 			}
 			if (game.huntingTimer.tick() == 0) {
@@ -246,8 +245,7 @@ public class PlayScene2D extends GameScene2D {
 			ghost2D.animations.restart();
 		}
 		world2D.getEnergizerPulse().restart();
-		AudioClip munching = SoundManager.get().getClip(GameSound.PACMAN_MUNCH);
-		if (munching.isPlaying() && game.pac.starvingTicks > 10) {
+		if (game.pac.starvingTicks > 10) {
 			SoundManager.get().stop(GameSound.PACMAN_MUNCH);
 		}
 	}
@@ -255,24 +253,18 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void onPlayerLosesPower(GameEvent e) {
 		SoundManager.get().stop(GameSound.PACMAN_POWER);
-		if (!SoundManager.get().isAnySirenPlaying()) {
-			SoundManager.get().startSiren(game.huntingTimer.phase() / 2);
-		}
+		SoundManager.get().ensureStartSiren(game.huntingTimer.phase() / 2);
 	}
 
 	@Override
 	public void onPlayerGetsPower(GameEvent e) {
 		SoundManager.get().stopSirens();
-		if (!SoundManager.get().getClip(GameSound.PACMAN_POWER).isPlaying()) {
-			SoundManager.get().loop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
-		}
+		SoundManager.get().ensureLoop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
 	}
 
 	@Override
 	public void onPlayerFindsFood(GameEvent e) {
-		if (!SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying()) {
-			SoundManager.get().loop(GameSound.PACMAN_MUNCH, Animation.INDEFINITE);
-		}
+		SoundManager.get().ensureLoop(GameSound.PACMAN_MUNCH, Animation.INDEFINITE);
 	}
 
 	@Override
