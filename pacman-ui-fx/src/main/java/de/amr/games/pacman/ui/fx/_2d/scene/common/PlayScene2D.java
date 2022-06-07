@@ -33,8 +33,8 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
-import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostAnimation;
 import de.amr.games.pacman.model.common.actors.GhostState;
@@ -96,19 +96,22 @@ public class PlayScene2D extends GameScene2D {
 			return "%s\nAnimation: %s".formatted(game.pac.name, pac2D.animations.selectedKey());
 		}
 
-		public void update() {
+		private void updateTextView(Text textView, String text, Entity entity) {
 			double scaling = fxSubScene.getHeight() / unscaledSize.y;
+			textView.setText(text);
+			var textSize = textView.getBoundsInLocal();
+			textView.setX((entity.position.x + World.HTS) * scaling - textSize.getWidth() / 2);
+			textView.setY(entity.position.y * scaling - textSize.getHeight());
+			textView.setVisible(entity.visible);
+		}
+
+		public void update() {
 			for (int i = 0; i < texts.length; ++i) {
-				boolean pac = i == texts.length - 1;
-				var infoText = pac ? computePacInfo(pac2D) : computeGhostInfo(ghosts2D[i]);
-				texts[i].setText(infoText);
-				// center info box over guy
-				V2d position = pac ? game.pac.position : ghosts2D[i].ghost.position;
-				boolean visible = pac ? game.pac.visible : ghosts2D[i].ghost.visible;
-				var textSize = texts[i].getBoundsInLocal();
-				texts[i].setX((position.x + World.HTS) * scaling - textSize.getWidth() / 2);
-				texts[i].setY(position.y * scaling - textSize.getHeight());
-				texts[i].setVisible(visible);
+				if (i < texts.length - 1) {
+					updateTextView(texts[i], computeGhostInfo(ghosts2D[i]), ghosts2D[i].ghost);
+				} else {
+					updateTextView(texts[i], computePacInfo(pac2D), pac2D.pac);
+				}
 			}
 		}
 	}
