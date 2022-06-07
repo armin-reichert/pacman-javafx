@@ -49,7 +49,6 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.World2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.Actions;
@@ -255,7 +254,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	public void onSwitchFrom3DScene() {
-		pac2D.animations.animation(PacAnimation.MUNCHING).restart();
+		pac2D.animations.animation(PacAnimations.Key.MUNCHING).restart();
 		for (Ghost2D ghost2D : ghosts2D) {
 			ghost2D.animations.restart();
 		}
@@ -320,7 +319,7 @@ public class PlayScene2D extends GameScene2D {
 		case READY -> {
 			SoundManager.get().stopAll();
 			world2D.getEnergizerPulse().reset();
-			pac2D.animations.select(PacAnimation.MUNCHING);
+			pac2D.animations.select(PacAnimations.Key.MUNCHING);
 			pac2D.animations.selectedAnimation().reset();
 			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart());
 			if (!gameController.isGameRunning()) {
@@ -336,7 +335,7 @@ public class PlayScene2D extends GameScene2D {
 			gameController.state().timer().setIndefinite();
 			gameController.state().timer().start();
 			SoundManager.get().stopAll();
-			pac2D.animations.select(PacAnimation.DYING);
+			pac2D.animations.select(PacAnimations.Key.DYING);
 			pac2D.animations.selectedAnimation().stop();
 			new SequentialTransition( //
 					pauseSec(1, () -> game.ghosts().forEach(Ghost::hide)), //

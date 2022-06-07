@@ -32,12 +32,17 @@ import de.amr.games.pacman.lib.SpriteAnimation;
 import de.amr.games.pacman.lib.SpriteAnimationMap;
 import de.amr.games.pacman.lib.SpriteAnimationSet;
 import de.amr.games.pacman.model.common.actors.Pac;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations.Key;
 import javafx.geometry.Rectangle2D;
 
 /**
  * @author Armin Reichert
  */
-public class PacAnimations extends SpriteAnimationSet<Pac, PacAnimation, Rectangle2D> {
+public class PacAnimations extends SpriteAnimationSet<Pac, Key, Rectangle2D> {
+
+	public enum Key {
+		MUNCHING, DYING;
+	}
 
 	protected SpriteAnimationMap<Direction, Rectangle2D> munching;
 	protected SpriteAnimation<Rectangle2D> dying;
@@ -48,7 +53,7 @@ public class PacAnimations extends SpriteAnimationSet<Pac, PacAnimation, Rectang
 	}
 
 	@Override
-	public ISpriteAnimation animation(PacAnimation key) {
+	public ISpriteAnimation animation(Key key) {
 		return switch (key) {
 		case DYING -> dying;
 		case MUNCHING -> munching;
