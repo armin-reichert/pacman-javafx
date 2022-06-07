@@ -102,8 +102,8 @@ public class PlayScene2D extends GameScene2D {
 				var infoText = i < texts.length - 1 ? computeGhostInfo(texts[i], ghosts2D[i]) : computePacInfo(texts[i], pac2D);
 				V2d position = i == texts.length - 1 ? game.pac.position : ghosts2D[i].ghost.position;
 				boolean visible = i == texts.length - 1 ? game.pac.visible : ghosts2D[i].ghost.visible;
-				var textSize = texts[i].getBoundsInLocal();
 				texts[i].setText(infoText);
+				var textSize = texts[i].getBoundsInLocal();
 				texts[i].setX((position.x + World.HTS) * scaling - textSize.getWidth() / 2);
 				texts[i].setY(position.y * scaling - textSize.getHeight());
 				texts[i].setVisible(visible);
