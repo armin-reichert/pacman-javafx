@@ -49,7 +49,6 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.World2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
@@ -160,7 +159,9 @@ public class PlayScene2D extends GameScene2D {
 		}
 		bonus2D = new Bonus2D(game::bonus, new BonusAnimations(r2D));
 		if (game.variant == GameVariant.MS_PACMAN) {
-			bonus2D.setJumpAnimation(Spritesheet_MsPacMan.get().createBonusJumpAnimation());
+			bonus2D.animations.jumpAnimation.restart();
+		} else {
+			bonus2D.animations.jumpAnimation.stop();
 		}
 	}
 
@@ -269,12 +270,12 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void onBonusGetsActive(GameEvent e) {
-		bonus2D.startJumping();
+		bonus2D.animations.jumpAnimation.restart();
 	}
 
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
-		bonus2D.stopJumping();
+		bonus2D.animations.jumpAnimation.stop();
 		SoundManager.get().play(GameSound.BONUS_EATEN);
 	}
 

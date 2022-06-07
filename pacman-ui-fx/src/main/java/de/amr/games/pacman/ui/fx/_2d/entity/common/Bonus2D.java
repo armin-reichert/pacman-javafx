@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import java.util.function.Supplier;
 
-import de.amr.games.pacman.lib.GenericAnimation;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -43,28 +42,11 @@ import javafx.scene.canvas.GraphicsContext;
 public class Bonus2D {
 
 	private final Supplier<Bonus> fnBonus;
-	private GenericAnimation<Integer> jumpAnimation;
-	private BonusAnimations animations;
+	public final BonusAnimations animations;
 
 	public Bonus2D(Supplier<Bonus> fnBonus, BonusAnimations animations) {
 		this.fnBonus = fnBonus;
 		this.animations = animations;
-	}
-
-	public void setJumpAnimation(GenericAnimation<Integer> jumpAnimation) {
-		this.jumpAnimation = jumpAnimation;
-	}
-
-	public void startJumping() {
-		if (jumpAnimation != null) {
-			jumpAnimation.restart();
-		}
-	}
-
-	public void stopJumping() {
-		if (jumpAnimation != null) {
-			jumpAnimation.stop();
-		}
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
@@ -75,18 +57,5 @@ public class Bonus2D {
 				r2D.drawSpriteCenteredOverBox(g, sprite, bonus.position().x, bonus.position().y);
 			}
 		}
-
-//		if (bonus.state() == BonusState.EDIBLE) {
-//			var sprite = r2D.getSymbolSprite(bonus.symbol());
-//			g.save();
-//			if (jumpAnimation != null) {
-//				g.translate(0, jumpAnimation.animate());
-//			}
-//			r2D.drawSpriteCenteredOverBox(g, sprite, bonus.position().x, bonus.position().y);
-//			g.restore();
-//		} else if (bonus.state() == BonusState.EATEN) {
-//			var sprite = r2D.getBonusValueSprite(bonus.value());
-//			r2D.drawSpriteCenteredOverBox(g, sprite, bonus.position().x, bonus.position().y);
-//		}
 	}
 }

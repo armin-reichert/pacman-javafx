@@ -28,7 +28,6 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.GenericAnimation;
 import de.amr.games.pacman.lib.SpriteAnimation;
 import de.amr.games.pacman.lib.SpriteAnimationMap;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -300,10 +299,6 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	}
 
 	// Ms. Pac-Man specific:
-
-	public GenericAnimation<Integer> createBonusJumpAnimation() {
-		return GenericAnimation.of(2, -2).frameDuration(10).endless();
-	}
 
 	public SpriteAnimationMap<Direction, Rectangle2D> createHusbandMunchingAnimations() {
 		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(Direction.class);
