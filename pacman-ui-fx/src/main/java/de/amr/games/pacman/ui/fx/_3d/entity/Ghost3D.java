@@ -150,7 +150,7 @@ public class Ghost3D extends Group implements Rendering3D {
 			eyes().setVisible(true);
 		}
 		case NUMBER_CUBE -> {
-			var texture = valueImages[numberFrame(ghost.bounty)];
+			var texture = valueImages[frameIndex(ghost.bounty)];
 			PhongMaterial material = new PhongMaterial();
 			material.setBumpMap(texture);
 			material.setDiffuseMap(texture);
@@ -166,8 +166,8 @@ public class Ghost3D extends Group implements Rendering3D {
 	}
 
 	// TODO do not store bounty value but index at ghost?
-	private int numberFrame(int number) {
-		return switch (number) {
+	private int frameIndex(int ghostValue) {
+		return switch (ghostValue) {
 		case 200 -> 0;
 		case 400 -> 1;
 		case 800 -> 2;
@@ -221,6 +221,6 @@ public class Ghost3D extends Group implements Rendering3D {
 	}
 
 	private Color ghostify(Color color) {
-		return Color.color(color.getRed(), color.getGreen(), color.getBlue(), 0.85);
+		return Color.color(color.getRed(), color.getGreen(), color.getBlue(), 0.90);
 	}
 }
