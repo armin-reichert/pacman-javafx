@@ -94,12 +94,12 @@ public class GhostAnimations extends SpriteAnimationSet<Ghost, GhostAnimation, R
 			}
 			yield sprite;
 		}
-		case VALUE -> values.frame(numberFrame(ghost.bounty));
+		case VALUE -> values.frame(frameIndex(ghost.bounty));
 		};
 	}
 
-	private int numberFrame(int number) {
-		return switch (number) {
+	private int frameIndex(int ghostValue) {
+		return switch (ghostValue) {
 		case 200 -> 0;
 		case 400 -> 1;
 		case 800 -> 2;
