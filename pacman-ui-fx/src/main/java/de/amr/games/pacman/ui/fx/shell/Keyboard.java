@@ -42,8 +42,7 @@ public class Keyboard {
 
 	private static KeyEvent currentEvent;
 	private static byte currentMask;
-
-	public static final List<Runnable> handlers = new ArrayList<>();
+	private static final List<Runnable> handlers = new ArrayList<>();
 
 	public static void processEvent(KeyEvent e) {
 		if (e.isConsumed()) {
@@ -62,6 +61,14 @@ public class Keyboard {
 		}
 		e.consume();
 		handlers.forEach(Runnable::run);
+	}
+
+	public static void addHandler(Runnable handler) {
+		handlers.add(handler);
+	}
+
+	public static void removeHandler(Runnable handler) {
+		handlers.remove(handler);
 	}
 
 	public static boolean pressed(KeyCode code) {

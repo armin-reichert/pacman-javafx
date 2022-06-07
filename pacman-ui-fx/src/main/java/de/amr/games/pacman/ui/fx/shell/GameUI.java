@@ -119,17 +119,17 @@ public class GameUI extends GameEventAdapter {
 		mainScene = new Scene(mainSceneRoot, width, height);
 		log("Main scene created. Size: %.0f x %.0f", mainScene.getWidth(), mainScene.getHeight());
 
-		// Keyboard input handling
-		mainScene.setOnKeyPressed(Keyboard::processEvent);
-		Keyboard.handlers.add(this::onKeyPressed);
-		Keyboard.handlers.add(pacController::onKeyPressed);
-		Keyboard.handlers.add(() -> currentGameScene.onKeyPressed());
-
-		Env.$drawMode3D.addListener((x, y, z) -> mainSceneRoot.setBackground(computeMainSceneBackground()));
-
 		attachGameScenesToMainScene();
 		updateGameScene(gameController.state(), true);
 		embedCurrentGameScene();
+
+		// Keyboard input handling
+		mainScene.setOnKeyPressed(Keyboard::processEvent);
+		Keyboard.addHandler(this::onKeyPressed);
+		Keyboard.addHandler(pacController::onKeyPressed);
+		Keyboard.addHandler(currentGameScene::onKeyPressed);
+
+		Env.$drawMode3D.addListener((x, y, z) -> mainSceneRoot.setBackground(computeMainSceneBackground()));
 
 		stage.setScene(mainScene);
 		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
