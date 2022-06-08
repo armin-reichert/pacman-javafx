@@ -142,10 +142,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void onKeyPressed() {
-		if (Keyboard.pressed(KeyCode.DIGIT5)) {
-			SoundManager.get().play(GameSound.CREDIT);
-			gameController.addCredit();
-		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.E)) {
+		if (Keyboard.pressed(Keyboard.ALT, KeyCode.E)) {
 			Actions.cheatEatAllPellets();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.L)) {
 			Actions.addLives(3);
