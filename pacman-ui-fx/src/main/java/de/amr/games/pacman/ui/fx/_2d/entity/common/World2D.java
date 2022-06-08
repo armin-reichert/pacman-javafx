@@ -45,15 +45,17 @@ import javafx.scene.paint.Color;
 public class World2D {
 
 	private final GenericAnimation<Boolean> energizerPulse = GenericAnimation.pulse(10);
+	private final GenericAnimation<Image> flashingAnimation;
 	private final GameModel game;
 	private double x, y;
-	private GenericAnimation<Image> flashingAnimation;
+	private int mazeNumber;
 
-	public World2D(GameModel game, int x, int y, GenericAnimation<Image> flashingAnimation) {
+	public World2D(GameModel game, Rendering2D r2D) {
 		this.game = game;
-		this.x = x;
-		this.y = y;
-		this.flashingAnimation = flashingAnimation;
+		this.x = t(0);
+		this.y = t(3);
+		this.mazeNumber = r2D.mazeNumber(game.level.number);
+		this.flashingAnimation = r2D.createMazeFlashingAnimation(mazeNumber);
 	}
 
 	public void startFlashing(int numFlashes) {
@@ -61,25 +63,29 @@ public class World2D {
 		flashingAnimation.restart();
 	}
 
-	public GenericAnimation<Boolean> getEnergizerPulse() {
-		return energizerPulse;
+	public void showEnergizersOn() {
+		energizerPulse.reset();
+	}
+
+	public void letEnergizersBlink(boolean blink) {
+		if (blink) {
+			energizerPulse.restart();
+		} else {
+			energizerPulse.stop();
+			energizerPulse.reset();
+		}
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
 		if (flashingAnimation.isRunning()) {
 			g.drawImage(flashingAnimation.animate(), x, y);
 		} else {
-			drawMazeWithFood(g, r2D);
+			g.drawImage(r2D.getMazeFullImage(mazeNumber), x, y);
+			hideEatenFood(g, game.level.world);
 		}
 		if (Env.$tilesVisible.get()) {
 			DebugDraw.drawTileBorders(g, game.level.world.tiles().filter(game.level.world::isIntersection), Color.RED);
 		}
-	}
-
-	private void drawMazeWithFood(GraphicsContext g, Rendering2D r2D) {
-		int mazeNumber = r2D.mazeNumber(game.level.number);
-		g.drawImage(r2D.getMazeFullImage(mazeNumber), x, y);
-		hideEatenFood(g, game.level.world);
 	}
 
 	private void hideEatenFood(GraphicsContext g, World world) {

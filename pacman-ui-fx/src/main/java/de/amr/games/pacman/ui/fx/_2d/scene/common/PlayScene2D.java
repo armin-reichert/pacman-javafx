@@ -204,7 +204,7 @@ public class PlayScene2D extends GameScene2D {
 		livesCounter2D.visible = hasCredit;
 		levelCounter2D = new LevelCounter2D(game.levelCounter, r2D);
 		levelCounter2D.visible = hasCredit;
-		world2D = new World2D(game, 0, t(3), r2D.createMazeFlashingAnimation(r2D.mazeNumber(game.level.number)));
+		world2D = new World2D(game, r2D);
 		pac2D = new Pac2D(game.pac, new PacAnimations(r2D));
 		for (var ghost : game.ghosts) {
 			ghosts2D[ghost.id] = new Ghost2D(ghost, r2D);
@@ -291,7 +291,7 @@ public class PlayScene2D extends GameScene2D {
 		for (Ghost2D ghost2D : ghosts2D) {
 			ghost2D.animations.restart();
 		}
-		world2D.getEnergizerPulse().restart();
+		world2D.letEnergizersBlink(true);
 		if (game.pac.starvingTicks > 10) {
 			SoundManager.get().stop(GameSound.PACMAN_MUNCH);
 		}
@@ -356,7 +356,7 @@ public class PlayScene2D extends GameScene2D {
 		switch (e.newGameState) {
 		case READY -> {
 			SoundManager.get().stopAll();
-			world2D.getEnergizerPulse().reset();
+			world2D.showEnergizersOn();
 			pac2D.animations.select(PacAnimations.Key.ANIM_MUNCHING);
 			pac2D.animations.selectedAnimation().reset();
 			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart());
@@ -365,7 +365,7 @@ public class PlayScene2D extends GameScene2D {
 			}
 		}
 		case HUNTING -> {
-			world2D.getEnergizerPulse().restart();
+			world2D.letEnergizersBlink(true);
 			pac2D.animations.restart();
 			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart(GhostAnimations.Key.ANIM_COLOR));
 		}
@@ -394,7 +394,7 @@ public class PlayScene2D extends GameScene2D {
 			SoundManager.get().stopAll();
 			pac2D.animations.reset();
 			// Energizers can still exist if "next level" cheat has been used
-			world2D.getEnergizerPulse().reset();
+			world2D.showEnergizersOn();
 			new SequentialTransition( //
 					pauseSec(1, () -> world2D.startFlashing(game.level.numFlashes)), //
 					pauseSec(2, () -> {
@@ -407,7 +407,7 @@ public class PlayScene2D extends GameScene2D {
 			gameController.state().timer().start();
 		}
 		case GAME_OVER -> {
-			world2D.getEnergizerPulse().reset();
+			world2D.showEnergizersOn(); // TODO check with MAME
 			SoundManager.get().stopAll();
 		}
 		default -> {
