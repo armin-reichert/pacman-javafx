@@ -115,7 +115,7 @@ public class PlayScene2D extends GameScene2D {
 		}
 
 		private String computeBonusInfo(Bonus2D bonus2D) {
-			return "%s\nState: %s\n%s".formatted(game.bonus().symbol(), game.bonus().state(),
+			return "Symbol: %s\nState: %s\n%s".formatted(game.bonus().symbol(), game.bonus().state(),
 					bonus2D.animations.selectedKey());
 		}
 
