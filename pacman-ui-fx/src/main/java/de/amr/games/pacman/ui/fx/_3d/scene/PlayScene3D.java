@@ -318,7 +318,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 	@Override
 	public void onPlayerStartsLosingPower(GameEvent e) {
 		Stream.of(ghosts3D) //
-				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED)) //
+				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED)) //
 				.forEach(Ghost3D::playFlashingAnimation);
 		if (gameController.credit() > 0) {
 			SoundManager.get().startSiren(0);
