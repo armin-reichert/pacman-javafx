@@ -52,7 +52,7 @@ public class BonusAnimations implements CompositeGenericAnimation<Bonus, Key, Re
 		valueAnimation = r2D.createBonusValueAnimation();
 		jumpAnimation = new GenericAnimation<>(2, -2);
 		jumpAnimation.frameDuration(10);
-		jumpAnimation.endless();
+		jumpAnimation.repeatForever();
 	}
 
 	@Override

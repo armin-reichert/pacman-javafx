@@ -233,7 +233,7 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 			Rectangle2D wide_open = rhs(0, d), open = rhs(1, d), closed = rhs(2, d);
 			var munching = new GenericAnimation<>(open, wide_open, open, closed);
 			munching.frameDuration(2);
-			munching.endless();
+			munching.repeatForever();
 			map.put(dir, munching);
 		}
 		return map;
@@ -255,7 +255,7 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 			int d = dirIndex(dir);
 			var feet = new GenericAnimation<>(rhs(2 * d, 4 + ghostID), rhs(2 * d + 1, 4 + ghostID));
 			feet.frameDuration(8);
-			feet.endless();
+			feet.repeatForever();
 			map.put(dir, feet);
 		}
 		return map;
@@ -265,7 +265,7 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	public GenericAnimation<Rectangle2D> createGhostBlueAnimation() {
 		var animation = new GenericAnimation<>(rhs(8, 4), rhs(9, 4));
 		animation.frameDuration(8);
-		animation.endless();
+		animation.repeatForever();
 		return animation;
 	}
 
@@ -309,7 +309,7 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 			int d = dirIndex(dir);
 			var animation = new GenericAnimation<>(rhs(0, 9 + d), rhs(1, 9 + d), rhs(2, 9));
 			animation.frameDuration(2);
-			animation.endless();
+			animation.repeatForever();
 			map.put(dir, animation);
 		}
 		return map;
@@ -332,7 +332,7 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 				new Rectangle2D(489, 176, 32, 16), //
 				new Rectangle2D(521, 176, 32, 16) //
 		);
-		animation.endless();
+		animation.repeatForever();
 		animation.frameDuration(8);
 		return animation;
 	}

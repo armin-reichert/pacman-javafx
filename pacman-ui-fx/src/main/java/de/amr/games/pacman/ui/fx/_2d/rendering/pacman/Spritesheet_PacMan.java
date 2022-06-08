@@ -161,7 +161,7 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 			Rectangle2D wide_open = r(0, d), open = r(1, d), closed = r(2, 0);
 			var animation = new GenericAnimation<>(closed, open, wide_open, open);
 			animation.frameDuration(2);
-			animation.endless();
+			animation.repeatForever();
 			map.put(dir, animation);
 		}
 		return map;
@@ -182,7 +182,7 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 			int d = dirIndex(dir);
 			var animation = new GenericAnimation<>(r(2 * d, 4 + ghostID), r(2 * d + 1, 4 + ghostID));
 			animation.frameDuration(8);
-			animation.endless();
+			animation.repeatForever();
 			map.put(dir, animation);
 		}
 		return map;
@@ -192,7 +192,7 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	public GenericAnimation<Rectangle2D> createGhostBlueAnimation() {
 		var animation = new GenericAnimation<>(r(8, 4), r(9, 4));
 		animation.frameDuration(8);
-		animation.endless();
+		animation.repeatForever();
 		return animation;
 	}
 
@@ -238,7 +238,7 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	public GenericAnimation<Rectangle2D> createBigPacManMunchingAnimation() {
 		var animation = new GenericAnimation<>(r(2, 1, 2, 2), r(4, 1, 2, 2), r(6, 1, 2, 2));
 		animation.frameDuration(4);
-		animation.endless();
+		animation.repeatForever();
 		return animation;
 	}
 
@@ -253,14 +253,14 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	public GenericAnimation<Rectangle2D> createBlinkyPatchedAnimation() {
 		var animation = new GenericAnimation<>(r(10, 7), r(11, 7));
 		animation.frameDuration(4);
-		animation.endless();
+		animation.repeatForever();
 		return animation;
 	}
 
 	public GenericAnimation<Rectangle2D> createBlinkyNakedAnimation() {
 		var animation = new GenericAnimation<>(r(8, 8, 2, 1), r(10, 8, 2, 1));
 		animation.frameDuration(4);
-		animation.endless();
+		animation.repeatForever();
 		return animation;
 	}
 }

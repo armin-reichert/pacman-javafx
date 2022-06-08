@@ -57,7 +57,7 @@ public class World2D {
 	}
 
 	public void startFlashing(int numFlashes) {
-		flashingAnimation.repetitions(numFlashes);
+		flashingAnimation.repeat(numFlashes);
 		flashingAnimation.restart();
 	}
 
