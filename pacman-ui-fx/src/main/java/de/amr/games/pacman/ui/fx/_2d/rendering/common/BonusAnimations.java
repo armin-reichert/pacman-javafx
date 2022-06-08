@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.lib.animation.AnimationMethods;
+import de.amr.games.pacman.lib.animation.GenericAnimationAPI;
 import de.amr.games.pacman.lib.animation.CompositeGenericAnimation;
 import de.amr.games.pacman.lib.animation.GenericAnimation;
 import de.amr.games.pacman.model.common.actors.Bonus;
@@ -75,7 +75,7 @@ public class BonusAnimations implements CompositeGenericAnimation<Bonus, Key, Re
 	}
 
 	@Override
-	public AnimationMethods animation(Key key) {
+	public GenericAnimationAPI animation(Key key) {
 		return switch (key) {
 		case SYMBOL -> symbolAnimation;
 		case VALUE -> valueAnimation;
@@ -83,7 +83,7 @@ public class BonusAnimations implements CompositeGenericAnimation<Bonus, Key, Re
 	}
 
 	@Override
-	public Stream<AnimationMethods> animations() {
+	public Stream<GenericAnimationAPI> animations() {
 		return Stream.of(symbolAnimation, valueAnimation);
 	}
 
