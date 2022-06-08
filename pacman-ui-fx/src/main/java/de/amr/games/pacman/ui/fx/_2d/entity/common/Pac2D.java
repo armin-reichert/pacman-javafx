@@ -38,6 +38,12 @@ public class Pac2D {
 	public final Pac pac;
 	public final PacAnimations animations;
 
+	public Pac2D(Pac pac, Rendering2D r2D) {
+		this.pac = pac;
+		this.animations = new PacAnimations(r2D);
+		animations.select(PacAnimations.Key.ANIM_MUNCHING);
+	}
+
 	public Pac2D(Pac pac, PacAnimations animations) {
 		this.pac = pac;
 		this.animations = animations;

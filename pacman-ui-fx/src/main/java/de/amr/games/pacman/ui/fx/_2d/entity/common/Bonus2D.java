@@ -45,10 +45,18 @@ public class Bonus2D {
 	private final Supplier<Bonus> fnBonus;
 	public final BonusAnimations animations;
 
-	public Bonus2D(Supplier<Bonus> fnBonus, BonusAnimations animations) {
+	public Bonus2D(Supplier<Bonus> fnBonus, Rendering2D r2D) {
 		this.fnBonus = fnBonus;
-		this.animations = animations;
+		this.animations = new BonusAnimations(r2D);
 		animations.select(BonusAnimations.Key.ANIM_SYMBOL);
+	}
+
+	public void startJumping() {
+		animations.jumpAnimation.restart();
+	}
+
+	public void stopJumping() {
+		animations.jumpAnimation.stop();
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {

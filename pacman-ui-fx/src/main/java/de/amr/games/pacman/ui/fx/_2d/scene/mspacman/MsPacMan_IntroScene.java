@@ -36,7 +36,6 @@ import de.amr.games.pacman.lib.animation.GenericAnimationMap;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.Actions;
@@ -79,8 +78,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		highScore2D.score.visible = false;
 		credit2D.visible = true;
 		msPacMan2D = new Pac2D($.msPacMan, new PacAnimations(r2D));
-		ghosts2D = Stream.of($.ghosts).map(ghost -> new Ghost2D(ghost, new GhostAnimations(ghost.id, r2D)))
-				.toArray(Ghost2D[]::new);
+		ghosts2D = Stream.of($.ghosts).map(ghost -> new Ghost2D(ghost, r2D)).toArray(Ghost2D[]::new);
 	}
 
 	@Override

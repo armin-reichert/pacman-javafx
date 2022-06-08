@@ -80,9 +80,7 @@ public class PacMan_IntroScene extends GameScene2D {
 		highScore2D.score.visible = false;
 		credit2D.visible = false;
 		pacMan2D = new Pac2D($.pacMan, new PacAnimations(r2D));
-		ghosts2D = Stream.of($.ghosts)//
-				.map(ghost -> new Ghost2D(ghost, new GhostAnimations(ghost.id, r2D)))//
-				.toArray(Ghost2D[]::new);
+		ghosts2D = Stream.of($.ghosts).map(ghost -> new Ghost2D(ghost, r2D)).toArray(Ghost2D[]::new);
 	}
 
 	@Override

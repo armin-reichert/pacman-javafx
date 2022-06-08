@@ -130,8 +130,9 @@ public class PlayScene2D extends GameScene2D {
 		}
 
 		private String computeBonusInfo(Bonus2D bonus2D) {
-			return "Symbol: %s\n%s\n%s".formatted(symbolName(game.variant, game.bonus().symbol()), game.bonus().state(),
-					bonus2D.animations.selectedKey());
+			var bonus = game.bonus();
+			var symbolName = bonus.symbol() == -1 ? "" : symbolName(game.variant, bonus.symbol());
+			return "%s\n%s\n%s".formatted(symbolName, game.bonus().state(), bonus2D.animations.selectedKey());
 		}
 
 		private void updateTextView(Text textView, String text, Entity entity) {
@@ -205,10 +206,10 @@ public class PlayScene2D extends GameScene2D {
 		world2D = new World2D(game, 0, t(3), r2D.createMazeFlashingAnimation(r2D.mazeNumber(game.level.number)));
 		pac2D = new Pac2D(game.pac, new PacAnimations(r2D));
 		for (var ghost : game.ghosts) {
-			ghosts2D[ghost.id] = new Ghost2D(ghost, new GhostAnimations(ghost.id, r2D));
+			ghosts2D[ghost.id] = new Ghost2D(ghost, r2D);
 		}
-		bonus2D = new Bonus2D(game::bonus, new BonusAnimations(r2D));
-		bonus2D.animations.jumpAnimation.reset();
+		bonus2D = new Bonus2D(game::bonus, r2D);
+		bonus2D.stopJumping();
 	}
 
 	@Override
@@ -316,13 +317,13 @@ public class PlayScene2D extends GameScene2D {
 	public void onBonusGetsActive(GameEvent e) {
 		bonus2D.animations.select(BonusAnimations.Key.ANIM_SYMBOL);
 		if (game.variant == GameVariant.MS_PACMAN) {
-			bonus2D.animations.jumpAnimation.restart();
+			bonus2D.startJumping();
 		}
 	}
 
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
-		bonus2D.animations.jumpAnimation.stop();
+		bonus2D.stopJumping();
 		bonus2D.animations.select(BonusAnimations.Key.ANIM_VALUE);
 		SoundManager.get().play(GameSound.BONUS_EATEN);
 	}

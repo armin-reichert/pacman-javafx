@@ -39,9 +39,9 @@ public class Ghost2D {
 	public final Ghost ghost;
 	public final GhostAnimations animations;
 
-	public Ghost2D(Ghost ghost, GhostAnimations animations) {
+	public Ghost2D(Ghost ghost, Rendering2D r2D) {
 		this.ghost = ghost;
-		this.animations = animations;
+		this.animations = new GhostAnimations(ghost.id, r2D);
 		animations.select(GhostAnimations.Key.ANIM_COLOR);
 	}
 
