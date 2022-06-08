@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import de.amr.games.pacman.lib.animation.GenericAnimation;
 import de.amr.games.pacman.model.common.actors.Bonus;
-import de.amr.games.pacman.model.common.actors.BonusState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -51,7 +50,7 @@ public class Bonus2D {
 		jumpAnimation.frameDuration(10);
 		jumpAnimation.repeatForever();
 		animations = new BonusAnimations(r2D);
-		animations.select(BonusAnimations.Key.ANIM_SYMBOL);
+		animations.select(BonusAnimations.Key.ANIM_NONE);
 	}
 
 	public void startJumping() {
@@ -63,17 +62,13 @@ public class Bonus2D {
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
-		if (bonus.state() != BonusState.INACTIVE) {
-			var sprite = animations.currentSprite(bonus);
-			if (sprite != null) {
-				if (jumpAnimation.isRunning()) {
-					g.save();
-					g.translate(0, jumpAnimation.animate());
-					r2D.drawSpriteCenteredOverBox(g, sprite, bonus.position().x, bonus.position().y);
-					g.restore();
-				} else {
-					r2D.drawSpriteCenteredOverBox(g, sprite, bonus.position().x, bonus.position().y);
-				}
+		var sprite = animations.currentSprite(bonus);
+		if (sprite != null) {
+			if (jumpAnimation.isRunning()) {
+				int dy = jumpAnimation.animate();
+				r2D.drawSpriteCenteredOverBox(g, sprite, bonus.position().x, bonus.position().y + dy);
+			} else {
+				r2D.drawSpriteCenteredOverBox(g, sprite, bonus.position().x, bonus.position().y);
 			}
 		}
 	}

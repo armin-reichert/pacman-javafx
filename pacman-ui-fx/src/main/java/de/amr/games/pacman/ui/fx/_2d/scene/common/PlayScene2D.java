@@ -52,6 +52,7 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.World2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations.Key;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -326,6 +327,11 @@ public class PlayScene2D extends GameScene2D {
 		bonus2D.stopJumping();
 		bonus2D.animations.select(BonusAnimations.Key.ANIM_VALUE);
 		SoundManager.get().play(GameSound.BONUS_EATEN);
+	}
+
+	@Override
+	public void onBonusExpires(GameEvent e) {
+		bonus2D.animations.select(Key.ANIM_NONE);
 	}
 
 	@Override

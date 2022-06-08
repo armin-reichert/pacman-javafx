@@ -24,6 +24,7 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.animation.CompositeGenericAnimation;
@@ -39,7 +40,7 @@ import javafx.geometry.Rectangle2D;
 public class BonusAnimations implements CompositeGenericAnimation<Bonus, Key, Rectangle2D> {
 
 	public enum Key {
-		ANIM_SYMBOL, ANIM_VALUE;
+		ANIM_NONE, ANIM_SYMBOL, ANIM_VALUE;
 	}
 
 	private Key selectedKey;
@@ -66,13 +67,16 @@ public class BonusAnimations implements CompositeGenericAnimation<Bonus, Key, Re
 
 	@Override
 	public void select(Key key) {
-		selectedKey = key;
-		selectedAnimation().ensureRunning();
+		selectedKey = Objects.requireNonNull(key);
+		if (key != Key.ANIM_NONE) {
+			selectedAnimation().ensureRunning();
+		}
 	}
 
 	@Override
 	public GenericAnimationAPI animation(Key key) {
 		return switch (key) {
+		case ANIM_NONE -> null;
 		case ANIM_SYMBOL -> symbolAnimation;
 		case ANIM_VALUE -> valueAnimation;
 		};
@@ -86,6 +90,7 @@ public class BonusAnimations implements CompositeGenericAnimation<Bonus, Key, Re
 	@Override
 	public Rectangle2D currentSprite(Bonus bonus) {
 		return switch (selectedKey) {
+		case ANIM_NONE -> null;
 		case ANIM_SYMBOL -> symbolAnimation.frame(bonus.symbol());
 		case ANIM_VALUE -> valueAnimation.frame(bonus.symbol());
 		};
