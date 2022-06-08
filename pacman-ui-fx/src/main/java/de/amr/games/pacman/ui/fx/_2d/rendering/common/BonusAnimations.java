@@ -26,10 +26,10 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.lib.GenericAnimation;
-import de.amr.games.pacman.lib.ISpriteAnimation;
-import de.amr.games.pacman.lib.SpriteAnimation;
-import de.amr.games.pacman.lib.SpriteAnimationSet;
+import de.amr.games.pacman.lib.animation.GenericAnimation;
+import de.amr.games.pacman.lib.animation.ISpriteAnimation;
+import de.amr.games.pacman.lib.animation.SpriteAnimation;
+import de.amr.games.pacman.lib.animation.SpriteAnimationSet;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations.Key;
 import javafx.geometry.Rectangle2D;
