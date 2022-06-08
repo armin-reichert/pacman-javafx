@@ -48,7 +48,7 @@ public class Bonus2D {
 	public Bonus2D(Supplier<Bonus> fnBonus, BonusAnimations animations) {
 		this.fnBonus = fnBonus;
 		this.animations = animations;
-		animations.select(BonusAnimations.Key.SYMBOL);
+		animations.select(BonusAnimations.Key.ANIM_SYMBOL);
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {

@@ -39,7 +39,7 @@ import javafx.geometry.Rectangle2D;
 public class BonusAnimations implements CompositeGenericAnimation<Bonus, Key, Rectangle2D> {
 
 	public enum Key {
-		SYMBOL, VALUE;
+		ANIM_SYMBOL, ANIM_VALUE;
 	}
 
 	private Key selectedKey;
@@ -77,8 +77,8 @@ public class BonusAnimations implements CompositeGenericAnimation<Bonus, Key, Re
 	@Override
 	public GenericAnimationAPI animation(Key key) {
 		return switch (key) {
-		case SYMBOL -> symbolAnimation;
-		case VALUE -> valueAnimation;
+		case ANIM_SYMBOL -> symbolAnimation;
+		case ANIM_VALUE -> valueAnimation;
 		};
 	}
 
@@ -90,8 +90,8 @@ public class BonusAnimations implements CompositeGenericAnimation<Bonus, Key, Re
 	@Override
 	public Rectangle2D currentSprite(Bonus bonus) {
 		return switch (selectedKey) {
-		case SYMBOL -> symbolAnimation.frame(bonus.symbol());
-		case VALUE -> valueAnimation.frame(bonus.symbol());
+		case ANIM_SYMBOL -> symbolAnimation.frame(bonus.symbol());
+		case ANIM_VALUE -> valueAnimation.frame(bonus.symbol());
 		};
 	}
 }

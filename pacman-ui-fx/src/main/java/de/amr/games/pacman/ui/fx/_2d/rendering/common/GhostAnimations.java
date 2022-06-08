@@ -40,7 +40,7 @@ import javafx.geometry.Rectangle2D;
 public class GhostAnimations implements CompositeGenericAnimation<Ghost, Key, Rectangle2D> {
 
 	public enum Key {
-		COLOR, EYES, VALUE, BLUE, FLASHING;
+		ANIM_COLOR, ANIM_EYES, ANIM_VALUE, ANIM_BLUE, ANIM_FLASHING;
 	}
 
 	private Key selectedKey;
@@ -72,11 +72,11 @@ public class GhostAnimations implements CompositeGenericAnimation<Ghost, Key, Re
 	@Override
 	public GenericAnimationAPI animation(Key key) {
 		return switch (key) {
-		case EYES -> eyes;
-		case FLASHING -> flashing;
-		case BLUE -> blue;
-		case COLOR -> color;
-		case VALUE -> values;
+		case ANIM_EYES -> eyes;
+		case ANIM_FLASHING -> flashing;
+		case ANIM_BLUE -> blue;
+		case ANIM_COLOR -> color;
+		case ANIM_VALUE -> values;
 		};
 	}
 
@@ -108,11 +108,11 @@ public class GhostAnimations implements CompositeGenericAnimation<Ghost, Key, Re
 	@Override
 	public Rectangle2D currentSprite(Ghost ghost) {
 		return switch (selectedKey) {
-		case EYES -> eyes.get(ghost.wishDir()).frame();
-		case FLASHING -> flashing.animate();
-		case BLUE -> blue.animate();
-		case COLOR -> color.get(ghost.wishDir()).animate();
-		case VALUE -> values.frame(frameIndex(ghost.bounty));
+		case ANIM_EYES -> eyes.get(ghost.wishDir()).frame();
+		case ANIM_FLASHING -> flashing.animate();
+		case ANIM_BLUE -> blue.animate();
+		case ANIM_COLOR -> color.get(ghost.wishDir()).animate();
+		case ANIM_VALUE -> values.frame(frameIndex(ghost.bounty));
 		};
 	}
 

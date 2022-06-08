@@ -41,7 +41,7 @@ import javafx.geometry.Rectangle2D;
 public class PacAnimations implements CompositeGenericAnimation<Pac, Key, Rectangle2D> {
 
 	public enum Key {
-		MUNCHING, DYING;
+		ANIM_MUNCHING, ANIM_DYING;
 	}
 
 	private Key selectedKey;
@@ -76,8 +76,8 @@ public class PacAnimations implements CompositeGenericAnimation<Pac, Key, Rectan
 	@Override
 	public GenericAnimationAPI animation(Key key) {
 		return switch (key) {
-		case DYING -> dying;
-		case MUNCHING -> munching;
+		case ANIM_DYING -> dying;
+		case ANIM_MUNCHING -> munching;
 		};
 	}
 
@@ -89,8 +89,8 @@ public class PacAnimations implements CompositeGenericAnimation<Pac, Key, Rectan
 	@Override
 	public Rectangle2D currentSprite(Pac pac) {
 		return switch (selectedKey) {
-		case DYING -> dying.animate();
-		case MUNCHING -> {
+		case ANIM_DYING -> dying.animate();
+		case ANIM_MUNCHING -> {
 			var munchingToDir = munching.get(pac.moveDir());
 			if (!pac.stuck && pac.velocity.length() > 0) {
 				munchingToDir.advance();

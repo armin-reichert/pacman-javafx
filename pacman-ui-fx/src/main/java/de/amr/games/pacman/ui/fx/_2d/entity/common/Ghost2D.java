@@ -42,21 +42,21 @@ public class Ghost2D {
 	public Ghost2D(Ghost ghost, GhostAnimations animations) {
 		this.ghost = ghost;
 		this.animations = animations;
-		animations.select(GhostAnimations.Key.COLOR);
+		animations.select(GhostAnimations.Key.ANIM_COLOR);
 	}
 
 	public void updateAnimation(boolean frightened, boolean recovering) {
 		Key key = switch (ghost.state) {
-		case DEAD -> ghost.bounty == 0 ? GhostAnimations.Key.EYES : GhostAnimations.Key.VALUE;
-		case ENTERING_HOUSE -> GhostAnimations.Key.EYES;
-		case FRIGHTENED -> recovering ? GhostAnimations.Key.FLASHING : GhostAnimations.Key.BLUE;
-		case HUNTING_PAC, LEAVING_HOUSE -> GhostAnimations.Key.COLOR;
-		case LOCKED -> recovering ? GhostAnimations.Key.FLASHING
-				: frightened ? GhostAnimations.Key.BLUE : GhostAnimations.Key.COLOR;
+		case DEAD -> ghost.bounty == 0 ? GhostAnimations.Key.ANIM_EYES : GhostAnimations.Key.ANIM_VALUE;
+		case ENTERING_HOUSE -> GhostAnimations.Key.ANIM_EYES;
+		case FRIGHTENED -> recovering ? GhostAnimations.Key.ANIM_FLASHING : GhostAnimations.Key.ANIM_BLUE;
+		case HUNTING_PAC, LEAVING_HOUSE -> GhostAnimations.Key.ANIM_COLOR;
+		case LOCKED -> recovering ? GhostAnimations.Key.ANIM_FLASHING
+				: frightened ? GhostAnimations.Key.ANIM_BLUE : GhostAnimations.Key.ANIM_COLOR;
 		};
 		animations.select(key);
 		// TODO
-		if (animations.selectedKey() == Key.COLOR && ghost.velocity.length() == 0) {
+		if (animations.selectedKey() == Key.ANIM_COLOR && ghost.velocity.length() == 0) {
 			animations.selectedAnimation().stop();
 		}
 	}

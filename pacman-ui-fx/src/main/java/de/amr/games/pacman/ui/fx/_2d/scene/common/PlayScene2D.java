@@ -33,6 +33,10 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
+import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.animation.GenericAnimation;
+import de.amr.games.pacman.lib.animation.GenericAnimationAPI;
+import de.amr.games.pacman.lib.animation.GenericAnimationMap;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.BonusState;
@@ -82,21 +86,36 @@ public class PlayScene2D extends GameScene2D {
 			infoPane.getChildren().addAll(texts);
 		}
 
+		private String getAnimationState(GenericAnimationAPI animation, Direction dir) {
+			if (animation instanceof GenericAnimationMap) {
+				@SuppressWarnings("unchecked")
+				var map = (GenericAnimationMap<Direction, ?>) animation;
+				return map.get(dir).isRunning() ? "Running" : "Stopped";
+			} else {
+				var ga = (GenericAnimation<?>) animation;
+				return ga.isRunning() ? "Running" : "Stopped";
+			}
+		}
+
 		private String computeGhostInfo(Ghost2D ghost2D) {
 			var ghost = ghost2D.ghost;
 			String stateText = ghost.state.name();
 			if (ghost.state == GhostState.HUNTING_PAC) {
 				stateText += game.huntingTimer.chasingPhase() != -1 ? " (Chasing)" : " (Scattering)";
 			}
-			return "%s\nState: %s\nAnimation: %s".formatted(ghost.name, stateText, ghost2D.animations.selectedKey());
+			var animKey = ghost2D.animations.selectedKey();
+			var animState = getAnimationState(ghost2D.animations.selectedAnimation(), ghost.wishDir());
+			return "%s\nState: %s\n (%s) %s".formatted(ghost.name, stateText, animState, animKey);
 		}
 
 		private String computePacInfo(Pac2D pac2D) {
-			return "%s\nAnimation: %s".formatted(game.pac.name, pac2D.animations.selectedKey());
+			var animKey = pac2D.animations.selectedKey();
+			var animState = getAnimationState(pac2D.animations.selectedAnimation(), pac2D.pac.moveDir());
+			return "%s\n(%s) %s".formatted(game.pac.name, animState, animKey);
 		}
 
 		private String computeBonusInfo(Bonus2D bonus2D) {
-			return "%s\nState: %s\nAnimation: %s".formatted(game.bonus().symbol(), game.bonus().state(),
+			return "%s\nState: %s\n%s".formatted(game.bonus().symbol(), game.bonus().state(),
 					bonus2D.animations.selectedKey());
 		}
 
@@ -251,7 +270,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	public void onSwitchFrom3DScene() {
-		pac2D.animations.animation(PacAnimations.Key.MUNCHING).restart();
+		pac2D.animations.animation(PacAnimations.Key.ANIM_MUNCHING).restart();
 		for (Ghost2D ghost2D : ghosts2D) {
 			ghost2D.animations.restart();
 		}
@@ -280,7 +299,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void onBonusGetsActive(GameEvent e) {
-		bonus2D.animations.select(BonusAnimations.Key.SYMBOL);
+		bonus2D.animations.select(BonusAnimations.Key.ANIM_SYMBOL);
 		if (game.variant == GameVariant.MS_PACMAN) {
 			bonus2D.animations.jumpAnimation.restart();
 		}
@@ -289,7 +308,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
 		bonus2D.animations.jumpAnimation.stop();
-		bonus2D.animations.select(BonusAnimations.Key.VALUE);
+		bonus2D.animations.select(BonusAnimations.Key.ANIM_VALUE);
 		SoundManager.get().play(GameSound.BONUS_EATEN);
 	}
 
@@ -316,7 +335,7 @@ public class PlayScene2D extends GameScene2D {
 		case READY -> {
 			SoundManager.get().stopAll();
 			world2D.getEnergizerPulse().reset();
-			pac2D.animations.select(PacAnimations.Key.MUNCHING);
+			pac2D.animations.select(PacAnimations.Key.ANIM_MUNCHING);
 			pac2D.animations.selectedAnimation().reset();
 			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart());
 			if (!gameController.isGameRunning()) {
@@ -326,13 +345,13 @@ public class PlayScene2D extends GameScene2D {
 		case HUNTING -> {
 			world2D.getEnergizerPulse().restart();
 			pac2D.animations.restart();
-			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart(GhostAnimations.Key.COLOR));
+			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart(GhostAnimations.Key.ANIM_COLOR));
 		}
 		case PACMAN_DYING -> {
 			gameController.state().timer().setIndefinite();
 			gameController.state().timer().start();
 			SoundManager.get().stopAll();
-			pac2D.animations.select(PacAnimations.Key.DYING);
+			pac2D.animations.select(PacAnimations.Key.ANIM_DYING);
 			pac2D.animations.selectedAnimation().stop();
 			new SequentialTransition( //
 					pauseSec(1, () -> game.ghosts().forEach(Ghost::hide)), //

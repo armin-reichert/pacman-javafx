@@ -41,7 +41,7 @@ public class Pac2D {
 	public Pac2D(Pac pac, PacAnimations animations) {
 		this.pac = pac;
 		this.animations = animations;
-		animations.select(PacAnimations.Key.MUNCHING);
+		animations.select(PacAnimations.Key.ANIM_MUNCHING);
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
