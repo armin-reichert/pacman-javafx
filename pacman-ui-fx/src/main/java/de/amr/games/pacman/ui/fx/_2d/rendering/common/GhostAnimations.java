@@ -26,10 +26,10 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.animation.GenericAnimationAPI;
-import de.amr.games.pacman.lib.animation.GenericAnimation;
-import de.amr.games.pacman.lib.animation.GenericAnimationMap;
 import de.amr.games.pacman.lib.animation.CompositeGenericAnimation;
+import de.amr.games.pacman.lib.animation.GenericAnimation;
+import de.amr.games.pacman.lib.animation.GenericAnimationAPI;
+import de.amr.games.pacman.lib.animation.GenericAnimationMap;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations.Key;
 import javafx.geometry.Rectangle2D;
@@ -83,13 +83,6 @@ public class GhostAnimations implements CompositeGenericAnimation<Ghost, Key, Re
 	@Override
 	public Stream<GenericAnimationAPI> animations() {
 		return Stream.of(eyes, flashing, blue, color, values);
-	}
-
-	public void startFlashing(int numFlashes, long ticksTotal) {
-		long frameTicks = ticksTotal / (numFlashes * flashing.numFrames());
-		flashing.frameDuration(frameTicks);
-		flashing.repeat(numFlashes);
-		flashing.restart();
 	}
 
 	@Override

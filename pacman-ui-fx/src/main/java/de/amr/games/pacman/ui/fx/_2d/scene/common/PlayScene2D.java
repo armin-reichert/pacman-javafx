@@ -231,7 +231,7 @@ public class PlayScene2D extends GameScene2D {
 		boolean recoveringStarts = game.pac.powerTimer.remaining() == recoveringTicks;
 		for (var ghost2D : ghosts2D) {
 			if (recoveringStarts) {
-				ghost2D.animations.startFlashing(game.level.numFlashes, recoveringTicks);
+				ghost2D.startFlashing(game.level.numFlashes, recoveringTicks);
 			} else {
 				boolean recovering = game.pac.powerTimer.remaining() <= recoveringTicks;
 				ghost2D.updateAnimation(game.pac.hasPower(), recovering);

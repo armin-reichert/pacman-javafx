@@ -45,6 +45,13 @@ public class Ghost2D {
 		animations.select(GhostAnimations.Key.ANIM_COLOR);
 	}
 
+	public void startFlashing(int numFlashes, long ticksTotal) {
+		long frameTicks = ticksTotal / (numFlashes * animations.flashing.numFrames());
+		animations.flashing.frameDuration(frameTicks);
+		animations.flashing.repeat(numFlashes);
+		animations.flashing.restart();
+	}
+
 	public void updateAnimation(boolean frightened, boolean recovering) {
 		Key key = switch (ghost.state) {
 		case DEAD -> ghost.bounty == 0 ? GhostAnimations.Key.ANIM_EYES : GhostAnimations.Key.ANIM_VALUE;
