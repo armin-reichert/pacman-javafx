@@ -89,7 +89,7 @@ public class Ghost3D extends Group implements Rendering3D {
 	}
 
 	public void update() {
-		if (ghost.bounty > 0) {
+		if (ghost.killIndex != -1) {
 			enterDisplayMode(DisplayMode.NUMBER_CUBE);
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
 			enterDisplayMode(DisplayMode.EYES_ONLY);
@@ -150,7 +150,7 @@ public class Ghost3D extends Group implements Rendering3D {
 			eyes().setVisible(true);
 		}
 		case NUMBER_CUBE -> {
-			var texture = valueImages[frameIndex(ghost.bounty)];
+			var texture = valueImages[ghost.killIndex];
 			PhongMaterial material = new PhongMaterial();
 			material.setBumpMap(texture);
 			material.setDiffuseMap(texture);
@@ -163,17 +163,6 @@ public class Ghost3D extends Group implements Rendering3D {
 			eyes().setVisible(false);
 		}
 		}
-	}
-
-	// TODO do not store bounty value but index at ghost?
-	private int frameIndex(int ghostValue) {
-		return switch (ghostValue) {
-		case 200 -> 0;
-		case 400 -> 1;
-		case 800 -> 2;
-		case 1600 -> 3;
-		default -> throw new IllegalArgumentException();
-		};
 	}
 
 	public void playFlashingAnimation() {

@@ -105,17 +105,7 @@ public class GhostAnimations implements CompositeGenericAnimation<Ghost, Key, Re
 		case ANIM_FLASHING -> flashing.animate();
 		case ANIM_BLUE -> blue.animate();
 		case ANIM_COLOR -> color.get(ghost.wishDir()).animate();
-		case ANIM_VALUE -> values.frame(frameIndex(ghost.bounty));
-		};
-	}
-
-	private int frameIndex(int ghostValue) {
-		return switch (ghostValue) {
-		case 200 -> 0;
-		case 400 -> 1;
-		case 800 -> 2;
-		case 1600 -> 3;
-		default -> throw new IllegalArgumentException();
+		case ANIM_VALUE -> values.frame(ghost.killIndex);
 		};
 	}
 }

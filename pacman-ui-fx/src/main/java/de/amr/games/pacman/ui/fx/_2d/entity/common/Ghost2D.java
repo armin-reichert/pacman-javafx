@@ -54,7 +54,7 @@ public class Ghost2D {
 
 	public void updateAnimation(boolean frightened, boolean recovering) {
 		Key key = switch (ghost.state) {
-		case DEAD -> ghost.bounty == 0 ? GhostAnimations.Key.ANIM_EYES : GhostAnimations.Key.ANIM_VALUE;
+		case DEAD -> ghost.killIndex == -1 ? GhostAnimations.Key.ANIM_EYES : GhostAnimations.Key.ANIM_VALUE;
 		case ENTERING_HOUSE -> GhostAnimations.Key.ANIM_EYES;
 		case FRIGHTENED -> recovering ? GhostAnimations.Key.ANIM_FLASHING : GhostAnimations.Key.ANIM_BLUE;
 		case HUNTING_PAC, LEAVING_HOUSE -> GhostAnimations.Key.ANIM_COLOR;
