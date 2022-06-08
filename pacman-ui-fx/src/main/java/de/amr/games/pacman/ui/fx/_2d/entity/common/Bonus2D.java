@@ -24,7 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import de.amr.games.pacman.lib.animation.GenericAnimation;
-import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.BonusState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -41,17 +41,17 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class Bonus2D {
 
-	private final GameModel game;
-	public final BonusAnimations animations;
+	private final Bonus bonus;
 	private final GenericAnimation<Integer> jumpAnimation;
+	public final BonusAnimations animations;
 
-	public Bonus2D(GameModel game, Rendering2D r2D) {
-		this.game = game;
-		this.animations = new BonusAnimations(r2D);
-		animations.select(BonusAnimations.Key.ANIM_SYMBOL);
+	public Bonus2D(Bonus bonus, Rendering2D r2D) {
+		this.bonus = bonus;
 		jumpAnimation = new GenericAnimation<>(2, -2);
 		jumpAnimation.frameDuration(10);
 		jumpAnimation.repeatForever();
+		animations = new BonusAnimations(r2D);
+		animations.select(BonusAnimations.Key.ANIM_SYMBOL);
 	}
 
 	public void startJumping() {
@@ -63,8 +63,7 @@ public class Bonus2D {
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
-		var bonus = game.bonus();
-		if (bonus != null && bonus.state() != BonusState.INACTIVE) {
+		if (bonus.state() != BonusState.INACTIVE) {
 			var sprite = animations.currentSprite(bonus);
 			if (sprite != null) {
 				if (jumpAnimation.isRunning()) {

@@ -208,7 +208,7 @@ public class PlayScene2D extends GameScene2D {
 		for (var ghost : game.ghosts) {
 			ghosts2D[ghost.id] = new Ghost2D(ghost, r2D);
 		}
-		bonus2D = new Bonus2D(game, r2D);
+		bonus2D = new Bonus2D(game.bonus(), r2D);
 		bonus2D.stopJumping();
 	}
 
