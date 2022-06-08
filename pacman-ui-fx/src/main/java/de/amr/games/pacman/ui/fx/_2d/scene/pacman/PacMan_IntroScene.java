@@ -111,14 +111,7 @@ public class PacMan_IntroScene extends GameScene2D {
 		sceneController.update();
 		updateAnimations();
 		// TODO better solution
-		if (sceneController.state() == State.START) {
-			if (sceneController.state().timer().tick() == 1) {
-				score2D.score.visible = true;
-				highScore2D.score.visible = true;
-			} else if (sceneController.state().timer().tick() == 2) {
-				credit2D.visible = true;
-			}
-		}
+		credit2D.visible = $.creditVisible;
 	}
 
 	private void updateAnimations() {

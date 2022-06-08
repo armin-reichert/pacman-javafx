@@ -58,7 +58,7 @@ import javafx.scene.paint.Color;
 public class MsPacMan_IntroScene extends GameScene2D {
 
 	private IntroController sceneController;
-	private Context context;
+	private Context $;
 	private Pac2D msPacMan2D;
 	private Ghost2D[] ghosts2D;
 
@@ -67,17 +67,19 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		super.setSceneContext(gameController);
 		sceneController = new IntroController(gameController);
 		sceneController.addStateChangeListener(this::onSceneStateChanged);
-		context = sceneController.context();
+		$ = sceneController.context();
 	}
 
 	@Override
 	public void init() {
-		sceneController.restartInInitialState(IntroController.State.BEGIN);
+		sceneController.restartInInitialState(IntroController.State.START);
 		createScoresAndCredit(game);
 		score2D.showContent = false;
+		score2D.score.visible = false;
+		highScore2D.score.visible = false;
 		credit2D.visible = true;
-		msPacMan2D = new Pac2D(context.msPacMan, new PacAnimations(r2D));
-		ghosts2D = Stream.of(context.ghosts).map(ghost -> new Ghost2D(ghost, new GhostAnimations(ghost.id, r2D)))
+		msPacMan2D = new Pac2D($.msPacMan, new PacAnimations(r2D));
+		ghosts2D = Stream.of($.ghosts).map(ghost -> new Ghost2D(ghost, new GhostAnimations(ghost.id, r2D)))
 				.toArray(Ghost2D[]::new);
 	}
 
@@ -98,6 +100,8 @@ public class MsPacMan_IntroScene extends GameScene2D {
 	@Override
 	public void doUpdate() {
 		sceneController.update();
+		// TODO better solution
+		credit2D.visible = $.creditVisible;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -116,7 +120,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		drawTitle(g);
 		drawLights(g, 32, 16);
 		if (sceneController.state() == State.GHOSTS) {
-			drawGhostText(g, context.ghosts[context.ghostIndex]);
+			drawGhostText(g, $.ghosts[$.ghostIndex]);
 		} else if (sceneController.state() == State.MSPACMAN || sceneController.state() == State.READY_TO_PLAY) {
 			drawMsPacManText(g);
 		}
@@ -129,29 +133,29 @@ public class MsPacMan_IntroScene extends GameScene2D {
 	private void drawTitle(GraphicsContext g) {
 		g.setFont(r2D.getArcadeFont());
 		g.setFill(Color.ORANGE);
-		g.fillText("\"MS PAC-MAN\"", context.titlePosition.x, context.titlePosition.y);
+		g.fillText("\"MS PAC-MAN\"", $.titlePosition.x, $.titlePosition.y);
 	}
 
 	private void drawGhostText(GraphicsContext g, Ghost ghost) {
 		g.setFill(Color.WHITE);
 		g.setFont(r2D.getArcadeFont());
 		if (ghost.id == Ghost.RED_GHOST) {
-			g.fillText("WITH", context.titlePosition.x, context.lightsTopLeft.y + t(3));
+			g.fillText("WITH", $.titlePosition.x, $.lightsTopLeft.y + t(3));
 		}
 		g.setFill(r2D.getGhostColor(ghost.id));
-		g.fillText(ghost.name.toUpperCase(), t(14 - ghost.name.length() / 2), context.lightsTopLeft.y + t(6));
+		g.fillText(ghost.name.toUpperCase(), t(14 - ghost.name.length() / 2), $.lightsTopLeft.y + t(6));
 	}
 
 	private void drawMsPacManText(GraphicsContext g) {
 		g.setFill(Color.WHITE);
 		g.setFont(r2D.getArcadeFont());
-		g.fillText("STARRING", context.titlePosition.x, context.lightsTopLeft.y + t(3));
+		g.fillText("STARRING", $.titlePosition.x, $.lightsTopLeft.y + t(3));
 		g.setFill(Color.YELLOW);
-		g.fillText("MS PAC-MAN", context.titlePosition.x, context.lightsTopLeft.y + t(6));
+		g.fillText("MS PAC-MAN", $.titlePosition.x, $.lightsTopLeft.y + t(6));
 	}
 
 	private void drawLights(GraphicsContext g, int numDotsX, int numDotsY) {
-		long time = context.lightsTimer.tick();
+		long time = $.lightsTimer.tick();
 		int light = (int) (time / 2) % (numDotsX / 2);
 		for (int dot = 0; dot < 2 * (numDotsX + numDotsY); ++dot) {
 			int x = 0, y = 0;
@@ -167,7 +171,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 				y = 2 * (numDotsX + numDotsY) - dot;
 			}
 			g.setFill((dot + light) % (numDotsX / 2) == 0 ? Color.PINK : Color.RED);
-			g.fillRect(context.lightsTopLeft.x + 4 * x, context.lightsTopLeft.y + 4 * y, 2, 2);
+			g.fillRect($.lightsTopLeft.x + 4 * x, $.lightsTopLeft.y + 4 * y, 2, 2);
 		}
 	}
 }

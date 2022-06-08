@@ -212,8 +212,8 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 		player3D.update();
 		Stream.of(ghosts3D).forEach(Ghost3D::update);
 		bonus3D.update(game.bonus());
-		score3D.update(game.scores().gameScore().points, game.level.number, game.scores().hiscore().points,
-				game.scores().hiscore().levelNumber);
+		score3D.update(game.scores().gameScore().points, game.level.number, game.scores().highScore().points,
+				game.scores().highScore().levelNumber);
 		livesCounter3D.update(game.lives);
 		getCamera().update(player3D);
 		updateSound();

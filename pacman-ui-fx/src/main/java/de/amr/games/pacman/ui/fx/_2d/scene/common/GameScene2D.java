@@ -82,7 +82,7 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 
 	protected void createScoresAndCredit(GameModel game) {
 		score2D = new GameScore2D(game.scores().gameScore(), "SCORE");
-		highScore2D = new GameScore2D(game.scores().hiscore(), "HIGH SCORE");
+		highScore2D = new GameScore2D(game.scores().highScore(), "HIGH SCORE");
 		credit2D = new Credit2D(gameController::credit, t(2), unscaledSize.y - 2);
 		credit2D.visible = false;
 	}
