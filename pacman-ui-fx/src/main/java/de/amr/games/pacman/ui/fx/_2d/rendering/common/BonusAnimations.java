@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.animation.AnimationMethods;
 import de.amr.games.pacman.lib.animation.GenericAnimation;
-import de.amr.games.pacman.lib.animation.GenericAnimationCollection;
+import de.amr.games.pacman.lib.animation.CompositeGenericAnimation;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations.Key;
 import javafx.geometry.Rectangle2D;
@@ -36,7 +36,7 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class BonusAnimations implements GenericAnimationCollection<Bonus, Key, Rectangle2D> {
+public class BonusAnimations implements CompositeGenericAnimation<Bonus, Key, Rectangle2D> {
 
 	public enum Key {
 		SYMBOL, VALUE;

@@ -30,7 +30,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.AnimationMethods;
 import de.amr.games.pacman.lib.animation.GenericAnimation;
 import de.amr.games.pacman.lib.animation.GenericAnimationMap;
-import de.amr.games.pacman.lib.animation.GenericAnimationCollection;
+import de.amr.games.pacman.lib.animation.CompositeGenericAnimation;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations.Key;
 import javafx.geometry.Rectangle2D;
@@ -38,7 +38,7 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class PacAnimations implements GenericAnimationCollection<Pac, Key, Rectangle2D> {
+public class PacAnimations implements CompositeGenericAnimation<Pac, Key, Rectangle2D> {
 
 	public enum Key {
 		MUNCHING, DYING;

@@ -29,7 +29,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.AnimationMethods;
 import de.amr.games.pacman.lib.animation.GenericAnimation;
 import de.amr.games.pacman.lib.animation.GenericAnimationMap;
-import de.amr.games.pacman.lib.animation.GenericAnimationCollection;
+import de.amr.games.pacman.lib.animation.CompositeGenericAnimation;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations.Key;
 import javafx.geometry.Rectangle2D;
@@ -37,7 +37,7 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class GhostAnimations implements GenericAnimationCollection<Ghost, Key, Rectangle2D> {
+public class GhostAnimations implements CompositeGenericAnimation<Ghost, Key, Rectangle2D> {
 
 	public enum Key {
 		COLOR, EYES, VALUE, BLUE, FLASHING;
