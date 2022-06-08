@@ -27,8 +27,8 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.animation.AnimationMethods;
-import de.amr.games.pacman.lib.animation.GenericAnimation;
 import de.amr.games.pacman.lib.animation.CompositeGenericAnimation;
+import de.amr.games.pacman.lib.animation.GenericAnimation;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations.Key;
 import javafx.geometry.Rectangle2D;
@@ -50,7 +50,7 @@ public class BonusAnimations implements CompositeGenericAnimation<Bonus, Key, Re
 	public BonusAnimations(Rendering2D r2D) {
 		symbolAnimation = r2D.createBonusSymbolAnimation();
 		valueAnimation = r2D.createBonusValueAnimation();
-		jumpAnimation = GenericAnimation.of(2, -2);
+		jumpAnimation = new GenericAnimation<>(2, -2);
 		jumpAnimation.frameDuration(10);
 		jumpAnimation.endless();
 	}
