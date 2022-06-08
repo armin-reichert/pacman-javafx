@@ -28,7 +28,6 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.lib.animation.GenericAnimation;
-import de.amr.games.pacman.lib.animation.SpriteAnimation;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.DebugDraw;
@@ -45,12 +44,12 @@ import javafx.scene.paint.Color;
  */
 public class World2D {
 
-	private final GenericAnimation<Boolean> energizerPulse = GenericAnimation.pulse().frameDuration(10);
+	private final GenericAnimation<Boolean> energizerPulse = GenericAnimation.pulse(10);
 	private final GameModel game;
 	private double x, y;
-	private SpriteAnimation<Image> flashingAnimation;
+	private GenericAnimation<Image> flashingAnimation;
 
-	public World2D(GameModel game, int x, int y, SpriteAnimation<Image> flashingAnimation) {
+	public World2D(GameModel game, int x, int y, GenericAnimation<Image> flashingAnimation) {
 		this.game = game;
 		this.x = x;
 		this.y = y;

@@ -28,8 +28,8 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.animation.SpriteAnimation;
-import de.amr.games.pacman.lib.animation.SpriteAnimationMap;
+import de.amr.games.pacman.lib.animation.GenericAnimation;
+import de.amr.games.pacman.lib.animation.GenericAnimationMap;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.U;
@@ -189,14 +189,16 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public SpriteAnimation<Image> createMazeFlashingAnimation(int mazeNumber) {
+	public GenericAnimation<Image> createMazeFlashingAnimation(int mazeNumber) {
 		int mazeIndex = mazeNumber - 1;
 		var mazeEmpty = subImage(228, 248 * mazeIndex, 226, 248);
 		var brightImage = U.colorsExchanged(mazeEmpty, Map.of( //
 				MAZE_SIDE_COLORS[mazeIndex], Color.WHITE, //
 				MAZE_TOP_COLORS[mazeIndex], Color.BLACK) //
 		);
-		return new SpriteAnimation<>(brightImage, mazeEmpty).frameDuration(10);
+		var animation = new GenericAnimation<>(brightImage, mazeEmpty);
+		animation.frameDuration(10);
+		return animation;
 	}
 
 	@Override
@@ -224,96 +226,115 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	 */
 
 	@Override
-	public SpriteAnimationMap<Direction, Rectangle2D> createPacMunchingAnimation() {
-		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(Direction.class);
+	public GenericAnimationMap<Direction, Rectangle2D> createPacMunchingAnimation() {
+		GenericAnimationMap<Direction, Rectangle2D> map = new GenericAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			Rectangle2D wide_open = rhs(0, d), open = rhs(1, d), closed = rhs(2, d);
-			var munching = new SpriteAnimation<>(open, wide_open, open, closed).frameDuration(2).endless();
+			var munching = new GenericAnimation<>(open, wide_open, open, closed);
+			munching.frameDuration(2);
+			munching.endless();
 			map.put(dir, munching);
 		}
 		return map;
 	}
 
 	@Override
-	public SpriteAnimation<Rectangle2D> createPacDyingAnimation() {
+	public GenericAnimation<Rectangle2D> createPacDyingAnimation() {
 		Rectangle2D right = rhs(1, 0), left = rhs(1, 1), up = rhs(1, 2), down = rhs(1, 3);
 		// TODO not yet 100% accurate
-		return new SpriteAnimation<>(down, left, up, right, down, left, up, right, down, left, up).frameDuration(8);
+		var animation = new GenericAnimation<>(down, left, up, right, down, left, up, right, down, left, up);
+		animation.frameDuration(8);
+		return animation;
 	}
 
 	@Override
-	public SpriteAnimationMap<Direction, Rectangle2D> createGhostColorAnimation(int ghostID) {
-		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(Direction.class);
+	public GenericAnimationMap<Direction, Rectangle2D> createGhostColorAnimation(int ghostID) {
+		GenericAnimationMap<Direction, Rectangle2D> map = new GenericAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
-			var feet = new SpriteAnimation<>(rhs(2 * d, 4 + ghostID), rhs(2 * d + 1, 4 + ghostID)).frameDuration(8).endless();
+			var feet = new GenericAnimation<>(rhs(2 * d, 4 + ghostID), rhs(2 * d + 1, 4 + ghostID));
+			feet.frameDuration(8);
+			feet.endless();
 			map.put(dir, feet);
 		}
 		return map;
 	}
 
 	@Override
-	public SpriteAnimation<Rectangle2D> createGhostBlueAnimation() {
-		return new SpriteAnimation<>(rhs(8, 4), rhs(9, 4)).frameDuration(8).endless();
+	public GenericAnimation<Rectangle2D> createGhostBlueAnimation() {
+		var animation = new GenericAnimation<>(rhs(8, 4), rhs(9, 4));
+		animation.frameDuration(8);
+		animation.endless();
+		return animation;
 	}
 
 	@Override
-	public SpriteAnimation<Rectangle2D> createGhostFlashingAnimation() {
-		return new SpriteAnimation<>(rhs(8, 4), rhs(9, 4), rhs(10, 4), rhs(11, 4)).frameDuration(4);
+	public GenericAnimation<Rectangle2D> createGhostFlashingAnimation() {
+		var animation = new GenericAnimation<>(rhs(8, 4), rhs(9, 4), rhs(10, 4), rhs(11, 4));
+		animation.frameDuration(4);
+		return animation;
 	}
 
 	@Override
-	public SpriteAnimationMap<Direction, Rectangle2D> createGhostEyesAnimation() {
-		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(Direction.class);
+	public GenericAnimationMap<Direction, Rectangle2D> createGhostEyesAnimation() {
+		GenericAnimationMap<Direction, Rectangle2D> map = new GenericAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
-			map.put(dir, new SpriteAnimation<>(rhs(8 + d, 5)));
+			map.put(dir, new GenericAnimation<>(rhs(8 + d, 5)));
 		}
 		return map;
 	}
 
 	@Override
-	public SpriteAnimation<Rectangle2D> createBonusSymbolAnimation() {
-		return new SpriteAnimation<>(rhs(3, 0), rhs(4, 0), rhs(5, 0), rhs(6, 0), rhs(7, 0), rhs(8, 0), rhs(9, 0));
+	public GenericAnimation<Rectangle2D> createBonusSymbolAnimation() {
+		return new GenericAnimation<>(rhs(3, 0), rhs(4, 0), rhs(5, 0), rhs(6, 0), rhs(7, 0), rhs(8, 0), rhs(9, 0));
 	}
 
 	@Override
-	public SpriteAnimation<Rectangle2D> createBonusValueAnimation() {
-		return new SpriteAnimation<>(rhs(3, 1), rhs(4, 1), rhs(5, 1), rhs(6, 1), rhs(7, 1), rhs(8, 1), rhs(9, 1));
+	public GenericAnimation<Rectangle2D> createBonusValueAnimation() {
+		return new GenericAnimation<>(rhs(3, 1), rhs(4, 1), rhs(5, 1), rhs(6, 1), rhs(7, 1), rhs(8, 1), rhs(9, 1));
 	}
 
 	@Override
-	public SpriteAnimation<Rectangle2D> createGhostValueAnimation() {
-		return new SpriteAnimation<>(rhs(0, 8), rhs(1, 8), rhs(2, 8), rhs(3, 8));
+	public GenericAnimation<Rectangle2D> createGhostValueAnimation() {
+		return new GenericAnimation<>(rhs(0, 8), rhs(1, 8), rhs(2, 8), rhs(3, 8));
 	}
 
 	// Ms. Pac-Man specific:
 
-	public SpriteAnimationMap<Direction, Rectangle2D> createHusbandMunchingAnimations() {
-		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(Direction.class);
+	public GenericAnimationMap<Direction, Rectangle2D> createHusbandMunchingAnimations() {
+		GenericAnimationMap<Direction, Rectangle2D> map = new GenericAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
-			map.put(dir, new SpriteAnimation<>(rhs(0, 9 + d), rhs(1, 9 + d), rhs(2, 9)).frameDuration(2).endless());
+			var animation = new GenericAnimation<>(rhs(0, 9 + d), rhs(1, 9 + d), rhs(2, 9));
+			animation.frameDuration(2);
+			animation.endless();
+			map.put(dir, animation);
 		}
 		return map;
 	}
 
-	public SpriteAnimation<Rectangle2D> createFlapAnimation() {
-		return new SpriteAnimation<>( //
+	public GenericAnimation<Rectangle2D> createFlapAnimation() {
+		var animation = new GenericAnimation<>( //
 				new Rectangle2D(456, 208, 32, 32), //
 				new Rectangle2D(488, 208, 32, 32), //
 				new Rectangle2D(520, 208, 32, 32), //
 				new Rectangle2D(488, 208, 32, 32), //
 				new Rectangle2D(456, 208, 32, 32)//
-		).repetitions(1).frameDuration(4);
+		);
+		animation.frameDuration(4);
+		return animation;
 	}
 
-	public SpriteAnimation<Rectangle2D> createStorkFlyingAnimation() {
-		return new SpriteAnimation<>( //
+	public GenericAnimation<Rectangle2D> createStorkFlyingAnimation() {
+		var animation = new GenericAnimation<>( //
 				new Rectangle2D(489, 176, 32, 16), //
 				new Rectangle2D(521, 176, 32, 16) //
-		).endless().frameDuration(8);
+		);
+		animation.endless();
+		animation.frameDuration(8);
+		return animation;
 	}
 
 	public Rectangle2D getHeart() {

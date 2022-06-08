@@ -26,10 +26,9 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
 import java.util.stream.Stream;
 
+import de.amr.games.pacman.lib.animation.AnimationMethods;
 import de.amr.games.pacman.lib.animation.GenericAnimation;
-import de.amr.games.pacman.lib.animation.ISpriteAnimation;
-import de.amr.games.pacman.lib.animation.SpriteAnimation;
-import de.amr.games.pacman.lib.animation.SpriteAnimationSet;
+import de.amr.games.pacman.lib.animation.GenericAnimationSet;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations.Key;
 import javafx.geometry.Rectangle2D;
@@ -37,24 +36,26 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class BonusAnimations extends SpriteAnimationSet<Bonus, Key, Rectangle2D> {
+public class BonusAnimations extends GenericAnimationSet<Bonus, Key, Rectangle2D> {
 
 	public enum Key {
 		SYMBOL, VALUE;
 	}
 
-	public final SpriteAnimation<Rectangle2D> symbolAnimation;
-	public final SpriteAnimation<Rectangle2D> valueAnimation;
+	public final GenericAnimation<Rectangle2D> symbolAnimation;
+	public final GenericAnimation<Rectangle2D> valueAnimation;
 	public final GenericAnimation<Integer> jumpAnimation;
 
 	public BonusAnimations(Rendering2D r2D) {
 		symbolAnimation = r2D.createBonusSymbolAnimation();
 		valueAnimation = r2D.createBonusValueAnimation();
-		jumpAnimation = GenericAnimation.of(2, -2).frameDuration(10).endless();
+		jumpAnimation = GenericAnimation.of(2, -2);
+		jumpAnimation.frameDuration(10);
+		jumpAnimation.endless();
 	}
 
 	@Override
-	public ISpriteAnimation animation(Key key) {
+	public AnimationMethods animation(Key key) {
 		return switch (key) {
 		case SYMBOL -> symbolAnimation;
 		case VALUE -> valueAnimation;
@@ -62,7 +63,7 @@ public class BonusAnimations extends SpriteAnimationSet<Bonus, Key, Rectangle2D>
 	}
 
 	@Override
-	public Stream<ISpriteAnimation> animations() {
+	public Stream<AnimationMethods> animations() {
 		return Stream.of(symbolAnimation, valueAnimation);
 	}
 

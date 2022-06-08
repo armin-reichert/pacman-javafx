@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.entity.mspacman;
 
-import de.amr.games.pacman.lib.animation.SpriteAnimation;
+import de.amr.games.pacman.lib.animation.GenericAnimation;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
@@ -38,7 +38,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class Stork2D {
 
 	private final Entity stork;
-	private final SpriteAnimation<Rectangle2D> animation;
+	private final GenericAnimation<Rectangle2D> animation;
 
 	public Stork2D(Entity stork) {
 		this.stork = stork;

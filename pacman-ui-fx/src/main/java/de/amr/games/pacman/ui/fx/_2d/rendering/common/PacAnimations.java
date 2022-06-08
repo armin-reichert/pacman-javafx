@@ -27,10 +27,10 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.animation.ISpriteAnimation;
-import de.amr.games.pacman.lib.animation.SpriteAnimation;
-import de.amr.games.pacman.lib.animation.SpriteAnimationMap;
-import de.amr.games.pacman.lib.animation.SpriteAnimationSet;
+import de.amr.games.pacman.lib.animation.AnimationMethods;
+import de.amr.games.pacman.lib.animation.GenericAnimation;
+import de.amr.games.pacman.lib.animation.GenericAnimationMap;
+import de.amr.games.pacman.lib.animation.GenericAnimationSet;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations.Key;
 import javafx.geometry.Rectangle2D;
@@ -38,14 +38,14 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class PacAnimations extends SpriteAnimationSet<Pac, Key, Rectangle2D> {
+public class PacAnimations extends GenericAnimationSet<Pac, Key, Rectangle2D> {
 
 	public enum Key {
 		MUNCHING, DYING;
 	}
 
-	protected SpriteAnimationMap<Direction, Rectangle2D> munching;
-	protected SpriteAnimation<Rectangle2D> dying;
+	protected GenericAnimationMap<Direction, Rectangle2D> munching;
+	protected GenericAnimation<Rectangle2D> dying;
 
 	public PacAnimations(Rendering2D r2D) {
 		munching = r2D.createPacMunchingAnimation();
@@ -53,7 +53,7 @@ public class PacAnimations extends SpriteAnimationSet<Pac, Key, Rectangle2D> {
 	}
 
 	@Override
-	public ISpriteAnimation animation(Key key) {
+	public AnimationMethods animation(Key key) {
 		return switch (key) {
 		case DYING -> dying;
 		case MUNCHING -> munching;
@@ -61,7 +61,7 @@ public class PacAnimations extends SpriteAnimationSet<Pac, Key, Rectangle2D> {
 	}
 
 	@Override
-	public Stream<ISpriteAnimation> animations() {
+	public Stream<AnimationMethods> animations() {
 		return Stream.of(munching, dying);
 	}
 

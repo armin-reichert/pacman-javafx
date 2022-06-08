@@ -26,10 +26,10 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.animation.ISpriteAnimation;
-import de.amr.games.pacman.lib.animation.SpriteAnimation;
-import de.amr.games.pacman.lib.animation.SpriteAnimationMap;
-import de.amr.games.pacman.lib.animation.SpriteAnimationSet;
+import de.amr.games.pacman.lib.animation.AnimationMethods;
+import de.amr.games.pacman.lib.animation.GenericAnimation;
+import de.amr.games.pacman.lib.animation.GenericAnimationMap;
+import de.amr.games.pacman.lib.animation.GenericAnimationSet;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations.Key;
 import javafx.geometry.Rectangle2D;
@@ -37,17 +37,17 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class GhostAnimations extends SpriteAnimationSet<Ghost, Key, Rectangle2D> {
+public class GhostAnimations extends GenericAnimationSet<Ghost, Key, Rectangle2D> {
 
 	public enum Key {
 		COLOR, EYES, VALUE, BLUE, FLASHING;
 	}
 
-	public SpriteAnimationMap<Direction, Rectangle2D> eyes;
-	public SpriteAnimation<Rectangle2D> flashing;
-	public SpriteAnimation<Rectangle2D> blue;
-	public SpriteAnimationMap<Direction, Rectangle2D> color;
-	public SpriteAnimation<Rectangle2D> values;
+	public GenericAnimationMap<Direction, Rectangle2D> eyes;
+	public GenericAnimation<Rectangle2D> flashing;
+	public GenericAnimation<Rectangle2D> blue;
+	public GenericAnimationMap<Direction, Rectangle2D> color;
+	public GenericAnimation<Rectangle2D> values;
 
 	public GhostAnimations(int ghostID, Rendering2D r2D) {
 		eyes = r2D.createGhostEyesAnimation();
@@ -58,7 +58,7 @@ public class GhostAnimations extends SpriteAnimationSet<Ghost, Key, Rectangle2D>
 	}
 
 	@Override
-	public ISpriteAnimation animation(Key key) {
+	public AnimationMethods animation(Key key) {
 		return switch (key) {
 		case EYES -> eyes;
 		case FLASHING -> flashing;
@@ -69,13 +69,15 @@ public class GhostAnimations extends SpriteAnimationSet<Ghost, Key, Rectangle2D>
 	}
 
 	@Override
-	public Stream<ISpriteAnimation> animations() {
+	public Stream<AnimationMethods> animations() {
 		return Stream.of(eyes, flashing, blue, color, values);
 	}
 
 	public void startFlashing(int numFlashes, long ticksTotal) {
 		long frameTicks = ticksTotal / (numFlashes * flashing.numFrames());
-		flashing.frameDuration(frameTicks).repetitions(numFlashes).restart();
+		flashing.frameDuration(frameTicks);
+		flashing.repetitions(numFlashes);
+		flashing.restart();
 	}
 
 	public void ensureAllRunning() {

@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.entity.pacman;
 
-import de.amr.games.pacman.lib.animation.SpriteAnimation;
+import de.amr.games.pacman.lib.animation.GenericAnimation;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
@@ -38,7 +38,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class BlinkyNaked2D {
 
 	private final Ghost blinky;
-	public final SpriteAnimation<Rectangle2D> animation;
+	public final GenericAnimation<Rectangle2D> animation;
 
 	public BlinkyNaked2D(Ghost blinky) {
 		this.blinky = blinky;

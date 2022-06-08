@@ -26,8 +26,8 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.animation.SpriteAnimation;
-import de.amr.games.pacman.lib.animation.SpriteAnimationMap;
+import de.amr.games.pacman.lib.animation.GenericAnimation;
+import de.amr.games.pacman.lib.animation.GenericAnimationMap;
 import de.amr.games.pacman.model.common.actors.Entity;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -52,7 +52,7 @@ public interface Rendering2D {
 
 	Image getSpriteImage(Rectangle2D sprite);
 
-	default Image[] getAnimationImages(SpriteAnimation<Rectangle2D> animation) {
+	default Image[] getAnimationImages(GenericAnimation<Rectangle2D> animation) {
 		int n = animation.numFrames();
 		Image[] images = new Image[n];
 		for (int i = 0; i < n; ++i) {
@@ -71,25 +71,25 @@ public interface Rendering2D {
 
 	// Animations
 
-	SpriteAnimationMap<Direction, Rectangle2D> createPacMunchingAnimation();
+	GenericAnimationMap<Direction, Rectangle2D> createPacMunchingAnimation();
 
-	SpriteAnimation<Rectangle2D> createPacDyingAnimation();
+	GenericAnimation<Rectangle2D> createPacDyingAnimation();
 
-	SpriteAnimationMap<Direction, Rectangle2D> createGhostColorAnimation(int ghostID);
+	GenericAnimationMap<Direction, Rectangle2D> createGhostColorAnimation(int ghostID);
 
-	SpriteAnimation<Rectangle2D> createGhostBlueAnimation();
+	GenericAnimation<Rectangle2D> createGhostBlueAnimation();
 
-	SpriteAnimation<Rectangle2D> createGhostFlashingAnimation();
+	GenericAnimation<Rectangle2D> createGhostFlashingAnimation();
 
-	SpriteAnimationMap<Direction, Rectangle2D> createGhostEyesAnimation();
+	GenericAnimationMap<Direction, Rectangle2D> createGhostEyesAnimation();
 
-	SpriteAnimation<Image> createMazeFlashingAnimation(int mazeNumber);
+	GenericAnimation<Image> createMazeFlashingAnimation(int mazeNumber);
 
-	SpriteAnimation<Rectangle2D> createBonusSymbolAnimation();
+	GenericAnimation<Rectangle2D> createBonusSymbolAnimation();
 
-	SpriteAnimation<Rectangle2D> createBonusValueAnimation();
+	GenericAnimation<Rectangle2D> createBonusValueAnimation();
 
-	SpriteAnimation<Rectangle2D> createGhostValueAnimation();
+	GenericAnimation<Rectangle2D> createGhostValueAnimation();
 
 	// Maze
 
