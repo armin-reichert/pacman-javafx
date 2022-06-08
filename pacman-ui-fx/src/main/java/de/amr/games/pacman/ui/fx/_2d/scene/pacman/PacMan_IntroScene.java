@@ -75,7 +75,9 @@ public class PacMan_IntroScene extends GameScene2D {
 		sceneController.restartInInitialState(IntroController.State.START);
 		createScoresAndCredit(game);
 		score2D.showScore = false;
-		credit2D.visible = true;
+		score2D.visible = false;
+		highScore2D.visible = false;
+		credit2D.visible = false;
 		pacMan2D = new Pac2D($.pacMan, new PacAnimations(r2D));
 		ghosts2D = Stream.of($.ghosts)//
 				.map(ghost -> new Ghost2D(ghost, new GhostAnimations(ghost.id, r2D)))//
@@ -108,6 +110,15 @@ public class PacMan_IntroScene extends GameScene2D {
 	public void doUpdate() {
 		sceneController.update();
 		updateAnimations();
+		// TODO better solution
+		if (sceneController.state() == State.START) {
+			if (sceneController.state().timer().tick() == 1) {
+				score2D.visible = true;
+				highScore2D.visible = true;
+			} else if (sceneController.state().timer().tick() == 2) {
+				credit2D.visible = true;
+			}
+		}
 	}
 
 	private void updateAnimations() {
@@ -169,21 +180,25 @@ public class PacMan_IntroScene extends GameScene2D {
 	}
 
 	private void drawGallery(GraphicsContext g) {
-		g.setFill(Color.WHITE);
-		g.setFont(r2D.getArcadeFont());
-		g.fillText("CHARACTER", t($.left + 3), t(6));
-		g.fillText("/", t($.left + 13), t(6));
-		g.fillText("NICKNAME", t($.left + 15), t(6));
+		if ($.titleVisible) {
+			g.setFill(Color.WHITE);
+			g.setFont(r2D.getArcadeFont());
+			g.fillText("CHARACTER", t($.left + 3), t(6));
+			g.fillText("/", t($.left + 13), t(6));
+			g.fillText("NICKNAME", t($.left + 15), t(6));
+		}
 		for (int id = 0; id < 4; ++id) {
 			if ($.pictureVisible[id]) {
 				int tileY = 7 + 3 * id;
 				r2D.drawSpriteCenteredOverBox(g, r2D.getGhostSprite(id, Direction.RIGHT), t($.left) + 4, t(tileY));
 				if ($.characterVisible[id]) {
 					g.setFill(r2D.getGhostColor(id));
+					g.setFont(r2D.getArcadeFont());
 					g.fillText("-" + $.characters[id], t($.left + 3), t(tileY + 1));
 				}
 				if ($.nicknameVisible[id]) {
 					g.setFill(r2D.getGhostColor(id));
+					g.setFont(r2D.getArcadeFont());
 					g.fillText("\"" + $.nicknames[id] + "\"", t($.left + 14), t(tileY + 1));
 				}
 			}

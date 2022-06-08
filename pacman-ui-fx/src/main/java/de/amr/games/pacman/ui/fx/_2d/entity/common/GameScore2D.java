@@ -39,6 +39,7 @@ public class GameScore2D {
 
 	public final Score score;
 	public double x, y;
+	public boolean visible;
 	public boolean showScore = true;
 	public String title;
 	public Color titleColor = Color.WHITE;
@@ -50,9 +51,13 @@ public class GameScore2D {
 		this.title = title;
 		this.x = x;
 		this.y = y;
+		visible = true;
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
+		if (!visible) {
+			return;
+		}
 		String pointsText = showScore ? "%02d".formatted(score.points) : "00";
 		String levelText = showScore ? "L" + score.levelNumber : "";
 		g.setFont(r2D.getArcadeFont());
