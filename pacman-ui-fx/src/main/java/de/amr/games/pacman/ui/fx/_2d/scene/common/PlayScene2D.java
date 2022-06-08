@@ -28,6 +28,7 @@ import static de.amr.games.pacman.lib.TickTimer.sec_to_ticks;
 import static de.amr.games.pacman.model.common.world.World.t;
 import static de.amr.games.pacman.ui.fx.util.U.pauseSec;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.common.GameState;
@@ -73,6 +74,20 @@ import javafx.scene.text.TextAlignment;
  */
 public class PlayScene2D extends GameScene2D {
 
+	// TODO move elsewhere
+	static final List<String> MS_PAC_MAN_SYMBOL_NAMES = List.of("CHERRIES", "STRAWBERRY", "PEACH", "PRETZE", "APPLE",
+			"PEAR", "BANANA");
+
+	static final List<String> PAC_MAN_SYMBOL_NAMES = List.of("CHERRIES", "STRAWBERRY", "PEACH", "APPLE", "GRAPES",
+			"GALAXIAN", "BELL", "KEY");
+
+	static String symbolName(GameVariant gameVariant, int symbol) {
+		return switch (gameVariant) {
+		case MS_PACMAN -> MS_PAC_MAN_SYMBOL_NAMES.get(symbol);
+		case PACMAN -> PAC_MAN_SYMBOL_NAMES.get(symbol);
+		};
+	}
+
 	private class GuysInfo {
 
 		private final Text[] texts = new Text[6];
@@ -89,11 +104,11 @@ public class PlayScene2D extends GameScene2D {
 		private String getAnimationState(GenericAnimationAPI animation, Direction dir) {
 			if (animation instanceof GenericAnimationMap) {
 				@SuppressWarnings("unchecked")
-				var map = (GenericAnimationMap<Direction, ?>) animation;
-				return map.get(dir).isRunning() ? "Running" : "Stopped";
+				var gam = (GenericAnimationMap<Direction, ?>) animation;
+				return gam.get(dir).isRunning() ? "" : "(Stopped) ";
 			} else {
 				var ga = (GenericAnimation<?>) animation;
-				return ga.isRunning() ? "Running" : "Stopped";
+				return ga.isRunning() ? "" : "(Stopped) ";
 			}
 		}
 
@@ -105,17 +120,17 @@ public class PlayScene2D extends GameScene2D {
 			}
 			var animKey = ghost2D.animations.selectedKey();
 			var animState = getAnimationState(ghost2D.animations.selectedAnimation(), ghost.wishDir());
-			return "%s\nState: %s\n (%s) %s".formatted(ghost.name, stateText, animState, animKey);
+			return "%s\n%s\n %s%s".formatted(ghost.name, stateText, animState, animKey);
 		}
 
 		private String computePacInfo(Pac2D pac2D) {
 			var animKey = pac2D.animations.selectedKey();
 			var animState = getAnimationState(pac2D.animations.selectedAnimation(), pac2D.pac.moveDir());
-			return "%s\n(%s) %s".formatted(game.pac.name, animState, animKey);
+			return "%s\n%s%s".formatted(game.pac.name, animState, animKey);
 		}
 
 		private String computeBonusInfo(Bonus2D bonus2D) {
-			return "Symbol: %s\nState: %s\n%s".formatted(game.bonus().symbol(), game.bonus().state(),
+			return "Symbol: %s\n%s\n%s".formatted(symbolName(game.variant, game.bonus().symbol()), game.bonus().state(),
 					bonus2D.animations.selectedKey());
 		}
 
