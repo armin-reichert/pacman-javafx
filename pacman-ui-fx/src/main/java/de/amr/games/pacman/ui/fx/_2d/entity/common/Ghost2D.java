@@ -56,7 +56,7 @@ public class Ghost2D {
 		};
 		animations.select(key);
 		// TODO
-		if (animations.selected() == Key.COLOR && ghost.velocity.length() == 0) {
+		if (animations.selectedKey() == Key.COLOR && ghost.velocity.length() == 0) {
 			animations.selectedAnimation().stop();
 		}
 	}

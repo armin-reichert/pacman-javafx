@@ -36,12 +36,13 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class BonusAnimations extends GenericAnimationSet<Bonus, Key, Rectangle2D> {
+public class BonusAnimations implements GenericAnimationSet<Bonus, Key, Rectangle2D> {
 
 	public enum Key {
 		SYMBOL, VALUE;
 	}
 
+	private Key selectedKey;
 	public final GenericAnimation<Rectangle2D> symbolAnimation;
 	public final GenericAnimation<Rectangle2D> valueAnimation;
 	public final GenericAnimation<Integer> jumpAnimation;
@@ -52,6 +53,25 @@ public class BonusAnimations extends GenericAnimationSet<Bonus, Key, Rectangle2D
 		jumpAnimation = GenericAnimation.of(2, -2);
 		jumpAnimation.frameDuration(10);
 		jumpAnimation.endless();
+	}
+
+	@Override
+	public void ensureRunning() {
+	}
+
+	@Override
+	public void setFrameIndex(int index) {
+	}
+
+	@Override
+	public Key selectedKey() {
+		return selectedKey;
+	}
+
+	@Override
+	public void select(Key key) {
+		selectedKey = key;
+		selectedAnimation().ensureRunning();
 	}
 
 	@Override

@@ -88,16 +88,16 @@ public class PlayScene2D extends GameScene2D {
 			if (ghost.state == GhostState.HUNTING_PAC) {
 				stateText += game.huntingTimer.chasingPhase() != -1 ? " (Chasing)" : " (Scattering)";
 			}
-			return "%s\nState: %s\nAnimation: %s".formatted(ghost.name, stateText, ghost2D.animations.selected());
+			return "%s\nState: %s\nAnimation: %s".formatted(ghost.name, stateText, ghost2D.animations.selectedKey());
 		}
 
 		private String computePacInfo(Pac2D pac2D) {
-			return "%s\nAnimation: %s".formatted(game.pac.name, pac2D.animations.selected());
+			return "%s\nAnimation: %s".formatted(game.pac.name, pac2D.animations.selectedKey());
 		}
 
 		private String computeBonusInfo(Bonus2D bonus2D) {
 			return "%s\nState: %s\nAnimation: %s".formatted(game.bonus().symbol(), game.bonus().state(),
-					bonus2D.animations.selected());
+					bonus2D.animations.selectedKey());
 		}
 
 		private void updateTextView(Text textView, String text, Entity entity) {

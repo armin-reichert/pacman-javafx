@@ -38,18 +38,39 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class PacAnimations extends GenericAnimationSet<Pac, Key, Rectangle2D> {
+public class PacAnimations implements GenericAnimationSet<Pac, Key, Rectangle2D> {
 
 	public enum Key {
 		MUNCHING, DYING;
 	}
 
+	private Key selectedKey;
 	protected GenericAnimationMap<Direction, Rectangle2D> munching;
 	protected GenericAnimation<Rectangle2D> dying;
 
 	public PacAnimations(Rendering2D r2D) {
 		munching = r2D.createPacMunchingAnimation();
 		dying = r2D.createPacDyingAnimation();
+	}
+
+	@Override
+	public void ensureRunning() {
+		munching.ensureRunning();
+	}
+
+	@Override
+	public void setFrameIndex(int index) {
+	}
+
+	@Override
+	public Key selectedKey() {
+		return selectedKey;
+	}
+
+	@Override
+	public void select(Key key) {
+		selectedKey = key;
+		selectedAnimation().ensureRunning();
 	}
 
 	@Override
@@ -67,7 +88,7 @@ public class PacAnimations extends GenericAnimationSet<Pac, Key, Rectangle2D> {
 
 	@Override
 	public Rectangle2D currentSprite(Pac pac) {
-		return switch (selected()) {
+		return switch (selectedKey) {
 		case DYING -> dying.animate();
 		case MUNCHING -> {
 			var munchingToDir = munching.get(pac.moveDir());

@@ -37,12 +37,13 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class GhostAnimations extends GenericAnimationSet<Ghost, Key, Rectangle2D> {
+public class GhostAnimations implements GenericAnimationSet<Ghost, Key, Rectangle2D> {
 
 	public enum Key {
 		COLOR, EYES, VALUE, BLUE, FLASHING;
 	}
 
+	private Key selectedKey;
 	public GenericAnimationMap<Direction, Rectangle2D> eyes;
 	public GenericAnimation<Rectangle2D> flashing;
 	public GenericAnimation<Rectangle2D> blue;
@@ -55,6 +56,17 @@ public class GhostAnimations extends GenericAnimationSet<Ghost, Key, Rectangle2D
 		blue = r2D.createGhostBlueAnimation();
 		color = r2D.createGhostColorAnimation(ghostID);
 		values = r2D.createGhostValueAnimation();
+	}
+
+	@Override
+	public Key selectedKey() {
+		return selectedKey;
+	}
+
+	@Override
+	public void select(Key key) {
+		selectedKey = key;
+		selectedAnimation().ensureRunning();
 	}
 
 	@Override
@@ -80,7 +92,8 @@ public class GhostAnimations extends GenericAnimationSet<Ghost, Key, Rectangle2D
 		flashing.restart();
 	}
 
-	public void ensureAllRunning() {
+	@Override
+	public void ensureRunning() {
 		eyes.ensureRunning();
 		blue.ensureRunning();
 		flashing.ensureRunning();
@@ -88,8 +101,13 @@ public class GhostAnimations extends GenericAnimationSet<Ghost, Key, Rectangle2D
 	}
 
 	@Override
+	public void setFrameIndex(int index) {
+		// TODO what?
+	}
+
+	@Override
 	public Rectangle2D currentSprite(Ghost ghost) {
-		return switch (selected()) {
+		return switch (selectedKey) {
 		case EYES -> eyes.get(ghost.wishDir()).frame();
 		case FLASHING -> flashing.animate();
 		case BLUE -> blue.animate();
