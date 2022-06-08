@@ -23,9 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
-import java.util.function.Supplier;
-
-import de.amr.games.pacman.model.common.actors.Bonus;
+import de.amr.games.pacman.lib.animation.GenericAnimation;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.BonusState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -42,31 +41,35 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class Bonus2D {
 
-	private final Supplier<Bonus> fnBonus;
+	private final GameModel game;
 	public final BonusAnimations animations;
+	private final GenericAnimation<Integer> jumpAnimation;
 
-	public Bonus2D(Supplier<Bonus> fnBonus, Rendering2D r2D) {
-		this.fnBonus = fnBonus;
+	public Bonus2D(GameModel game, Rendering2D r2D) {
+		this.game = game;
 		this.animations = new BonusAnimations(r2D);
 		animations.select(BonusAnimations.Key.ANIM_SYMBOL);
+		jumpAnimation = new GenericAnimation<>(2, -2);
+		jumpAnimation.frameDuration(10);
+		jumpAnimation.repeatForever();
 	}
 
 	public void startJumping() {
-		animations.jumpAnimation.restart();
+		jumpAnimation.restart();
 	}
 
 	public void stopJumping() {
-		animations.jumpAnimation.stop();
+		jumpAnimation.stop();
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
-		var bonus = fnBonus.get();
+		var bonus = game.bonus();
 		if (bonus != null && bonus.state() != BonusState.INACTIVE) {
 			var sprite = animations.currentSprite(bonus);
 			if (sprite != null) {
-				if (animations.jumpAnimation.isRunning()) {
+				if (jumpAnimation.isRunning()) {
 					g.save();
-					g.translate(0, animations.jumpAnimation.animate());
+					g.translate(0, jumpAnimation.animate());
 					r2D.drawSpriteCenteredOverBox(g, sprite, bonus.position().x, bonus.position().y);
 					g.restore();
 				} else {
