@@ -74,9 +74,9 @@ public class PacMan_IntroScene extends GameScene2D {
 	public void init() {
 		sceneController.restartInInitialState(IntroController.State.START);
 		createScoresAndCredit(game);
-		score2D.showScore = false;
-		score2D.visible = false;
-		highScore2D.visible = false;
+		score2D.showContent = false;
+		score2D.score.visible = false;
+		highScore2D.score.visible = false;
 		credit2D.visible = false;
 		pacMan2D = new Pac2D($.pacMan, new PacAnimations(r2D));
 		ghosts2D = Stream.of($.ghosts)//
@@ -113,8 +113,8 @@ public class PacMan_IntroScene extends GameScene2D {
 		// TODO better solution
 		if (sceneController.state() == State.START) {
 			if (sceneController.state().timer().tick() == 1) {
-				score2D.visible = true;
-				highScore2D.visible = true;
+				score2D.score.visible = true;
+				highScore2D.score.visible = true;
 			} else if (sceneController.state().timer().tick() == 2) {
 				credit2D.visible = true;
 			}

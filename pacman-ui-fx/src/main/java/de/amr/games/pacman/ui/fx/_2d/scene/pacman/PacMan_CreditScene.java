@@ -44,7 +44,7 @@ public class PacMan_CreditScene extends GameScene2D {
 	@Override
 	public void init() {
 		createScoresAndCredit(game);
-		score2D.showScore = false;
+		score2D.showContent = false;
 		credit2D.visible = true;
 	}
 
