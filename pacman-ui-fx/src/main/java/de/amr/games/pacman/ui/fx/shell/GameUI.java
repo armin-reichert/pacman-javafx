@@ -52,6 +52,7 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.shell.info.InfoLayer;
+import de.amr.games.pacman.ui.fx.sound.PlaySceneSounds;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -110,6 +111,8 @@ public class GameUI extends GameEventAdapter {
 		this.stage = stage;
 
 		gameController.setPacController(pacController);
+		PlaySceneSounds.setGameController(gameController);
+		gameController.addListener(this);
 
 		this.flashMessageLayer = new FlashMessageView();
 		this.infoLayer = new InfoLayer(this, gameController);

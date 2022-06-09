@@ -56,9 +56,7 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
-import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.PlaySceneSounds;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.CoordinateAxes;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.animation.Animation;
@@ -200,7 +198,6 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 		setUseMazeFloorTexture($useMazeFloorTexture.get());
 
 		// Sound
-		PlaySceneSounds.setGame(game);
 		PlaySceneSounds.setStopped(!hasCredit);
 	}
 
@@ -343,16 +340,11 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 			maze3D.reset();
 			player3D.reset();
 			Stream.of(ghosts3D).forEach(Ghost3D::reset);
-			SoundManager.get().stopAll();
-			if (gameController.credit() > 0 && !gameController.isGameRunning()) {
-				SoundManager.get().play(GameSound.GAME_READY);
-			}
 		}
 		case HUNTING -> {
 			maze3D.energizerAnimations().forEach(Animation::play);
 		}
 		case PACMAN_DYING -> {
-			SoundManager.get().stopAll();
 			Stream.of(ghosts3D).forEach(Ghost3D::setNormalLook);
 			var killer = game.ghosts().filter(ghost -> ghost.sameTile(game.pac)).findAny().get();
 			var killerColor = r2D.getGhostColor(killer.id);
@@ -361,11 +353,6 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 					player3D.dyingAnimation(killerColor, gameController.credit() == 0), //
 					U.pauseSec(2.0, () -> gameController.state().timer().expire()) //
 			).play();
-		}
-		case GHOST_DYING -> {
-			if (gameController.credit() > 0) {
-				SoundManager.get().play(GameSound.GHOST_EATEN);
-			}
 		}
 		case LEVEL_STARTING -> {
 			// TODO: This is not executed at the *first* level. Maybe I should change the state machine to make a transition

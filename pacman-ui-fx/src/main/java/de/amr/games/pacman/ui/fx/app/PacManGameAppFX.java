@@ -80,7 +80,6 @@ public class PacManGameAppFX extends Application {
 		double zoom = options.zoom;
 		ui = new GameUI(gameController, stage, zoom * ArcadeWorld.SIZE.x, zoom * ArcadeWorld.SIZE.y);
 		ui.setFullScreen(options.fullscreen);
-		gameController.addListener(ui);
 		Actions.init(gameController, ui);
 		SoundManager.get().setMuted(options.muted);
 		GameLoop.get().update = ui::update;

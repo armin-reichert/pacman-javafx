@@ -87,7 +87,6 @@ public class PlayScene2D extends GameScene2D {
 		game.bonus().setAnimations(new BonusAnimations(r2D));
 		game.bonus().setInactive();
 
-		PlaySceneSounds.setGame(game);
 		PlaySceneSounds.setStopped(!hasCredit);
 	}
 
@@ -163,17 +162,12 @@ public class PlayScene2D extends GameScene2D {
 	public void onGameStateChange(GameStateChangeEvent e) {
 		switch (e.newGameState) {
 		case READY -> {
-			SoundManager.get().stopAll();
 			world2D.showEnergizersOn();
-			if (!gameController.isGameRunning()) {
-				SoundManager.get().play(GameSound.GAME_READY);
-			}
 		}
 		case HUNTING -> {
 			world2D.letEnergizersBlink(true);
 		}
 		case PACMAN_DYING -> {
-			SoundManager.get().stopAll();
 			new SequentialTransition( //
 					pauseSec(1, () -> game.ghosts().forEach(Ghost::hide)), //
 					pauseSec(1, () -> {
@@ -184,20 +178,14 @@ public class PlayScene2D extends GameScene2D {
 					pauseSec(1, () -> gameController.state().timer().expire()) // exit game state
 			).play();
 		}
-		case GHOST_DYING -> {
-			SoundManager.get().play(GameSound.GHOST_EATEN);
-		}
 		case LEVEL_COMPLETE -> {
 			gameController.state().timer().setIndefinite();
-			SoundManager.get().stopAll();
 			game.pac.animations().get().reset();
-			// Energizers can still exist if "next level" cheat has been used
+			// Energizers could still remain if "next level" cheat has been used!
 			world2D.showEnergizersOn();
 			new SequentialTransition( //
 					pauseSec(1, () -> world2D.startFlashing(game.level.numFlashes)), //
-					pauseSec(2, () -> {
-						gameController.state().timer().expire();
-					}) //
+					pauseSec(2, () -> gameController.state().timer().expire()) //
 			).play();
 		}
 		case LEVEL_STARTING -> {
@@ -207,7 +195,6 @@ public class PlayScene2D extends GameScene2D {
 		}
 		case GAME_OVER -> {
 			world2D.showEnergizersOn(); // TODO check with MAME
-			SoundManager.get().stopAll();
 		}
 		default -> {
 			log("PlayScene entered game state %s", e.newGameState);

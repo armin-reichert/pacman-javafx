@@ -23,10 +23,12 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.sound;
 
+import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameEventing;
+import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import javafx.animation.Animation;
@@ -38,9 +40,10 @@ public class PlaySceneSounds extends GameEventAdapter {
 
 	private static final PlaySceneSounds theOne = new PlaySceneSounds();
 
-	public static void setGame(GameModel game) {
-		theOne.game = game;
-		SoundManager.get().selectGameVariant(game.variant);
+	public static void setGameController(GameController gameController) {
+		theOne.gameController = gameController;
+		theOne.game = gameController.game();
+		SoundManager.get().selectGameVariant(theOne.game.variant);
 		SoundManager.get().stopAll();
 	}
 
@@ -59,6 +62,7 @@ public class PlaySceneSounds extends GameEventAdapter {
 		}
 	}
 
+	private GameController gameController;
 	private GameModel game;
 
 	private PlaySceneSounds() {
@@ -102,5 +106,33 @@ public class PlaySceneSounds extends GameEventAdapter {
 		if (game.ghosts(GhostState.DEAD).count() == 0) {
 			SoundManager.get().stop(GameSound.GHOST_RETURNING);
 		}
+	}
+
+	@Override
+	public void onGameStateChange(GameStateChangeEvent e) {
+		switch (e.newGameState) {
+		case READY -> {
+			SoundManager.get().stopAll();
+			if (!gameController.isGameRunning()) {
+				SoundManager.get().play(GameSound.GAME_READY);
+			}
+		}
+		case PACMAN_DYING -> {
+			SoundManager.get().stopAll();
+		}
+		case GHOST_DYING -> {
+			SoundManager.get().play(GameSound.GHOST_EATEN);
+		}
+		case LEVEL_COMPLETE -> {
+			SoundManager.get().stopAll();
+		}
+		case GAME_OVER -> {
+			SoundManager.get().stopAll();
+		}
+		default -> {
+			// nope
+		}
+		}
+
 	}
 }
