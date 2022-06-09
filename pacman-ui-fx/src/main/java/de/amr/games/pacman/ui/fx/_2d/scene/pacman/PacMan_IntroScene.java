@@ -35,7 +35,7 @@ import de.amr.games.pacman.controller.pacman.IntroController.State;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.actors.GhostAnimationKey;
 import de.amr.games.pacman.model.common.actors.GhostState;
-import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.Actions;
@@ -59,7 +59,6 @@ public class PacMan_IntroScene extends GameScene2D {
 
 	private IntroController sceneController;
 	private IntroController.Context $;
-	private Ghost2D[] ghosts2D;
 
 	@Override
 	public void setSceneContext(GameController gameController) {
@@ -78,7 +77,7 @@ public class PacMan_IntroScene extends GameScene2D {
 		highScore2D.score.visible = false;
 		credit2D.visible = false;
 		$.pacMan.setAnimations(new PacAnimations(r2D));
-		ghosts2D = Stream.of($.ghosts).map(ghost -> new Ghost2D(ghost, r2D)).toArray(Ghost2D[]::new);
+		Stream.of($.ghosts).forEach(ghost -> ghost.setAnimations(new GhostAnimations(ghost.id, r2D)));
 	}
 
 	@Override
@@ -207,18 +206,17 @@ public class PacMan_IntroScene extends GameScene2D {
 	private void drawGuys(GraphicsContext g, int offset) {
 		r2D.drawPac(g, $.pacMan);
 		if (offset == 0) {
-			ghosts2D[0].render(g, r2D);
-			ghosts2D[1].render(g, r2D);
-			ghosts2D[2].render(g, r2D);
-			ghosts2D[3].render(g, r2D);
+			for (var ghost : $.ghosts) {
+				r2D.drawGhost(g, ghost);
+			}
 		} else {
-			ghosts2D[0].render(g, r2D);
+			r2D.drawGhost(g, $.ghosts[0]);
 			g.save();
 			g.translate(offset, 0);
-			ghosts2D[1].render(g, r2D);
-			ghosts2D[2].render(g, r2D);
+			r2D.drawGhost(g, $.ghosts[1]);
+			r2D.drawGhost(g, $.ghosts[2]);
 			g.restore();
-			ghosts2D[3].render(g, r2D);
+			r2D.drawGhost(g, $.ghosts[3]);
 		}
 	}
 

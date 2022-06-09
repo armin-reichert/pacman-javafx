@@ -29,6 +29,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.GenericAnimationMap;
 import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.model.common.actors.Entity;
+import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -107,6 +108,12 @@ public interface Rendering2D {
 	default void drawPac(GraphicsContext g, Pac pac) {
 		pac.animations().ifPresent(anim -> {
 			drawEntity(g, pac, (Rectangle2D) anim.currentSprite(pac));
+		});
+	}
+
+	default void drawGhost(GraphicsContext g, Ghost ghost) {
+		ghost.animations().ifPresent(anim -> {
+			drawEntity(g, ghost, (Rectangle2D) anim.currentSprite(ghost));
 		});
 	}
 

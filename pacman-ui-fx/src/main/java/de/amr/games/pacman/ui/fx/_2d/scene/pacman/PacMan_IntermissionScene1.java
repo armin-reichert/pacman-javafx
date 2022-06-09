@@ -26,9 +26,9 @@ package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.pacman.Intermission1Controller;
 import de.amr.games.pacman.model.common.actors.GhostAnimationKey;
-import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.BigPacMan2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
@@ -45,7 +45,6 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 	private Intermission1Controller sceneController;
 	private Intermission1Controller.Context context;
 	private LevelCounter2D levelCounter2D;
-	private Ghost2D blinky2D;
 	private BigPacMan2D bigPacMan2D;
 
 	@Override
@@ -61,7 +60,7 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 		sceneController.init();
 		levelCounter2D = new LevelCounter2D(game.levelCounter, r2D);
 		context.pac.setAnimations(new PacAnimations(r2D));
-		blinky2D = new Ghost2D(context.blinky, r2D);
+		context.blinky.setAnimations(new GhostAnimations(context.blinky.id, r2D));
 		bigPacMan2D = new BigPacMan2D(context.pac);
 		bigPacMan2D.startMunching();
 	}
@@ -80,7 +79,7 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 
 	@Override
 	public void doRender(GraphicsContext g) {
-		blinky2D.render(g, r2D);
+		r2D.drawGhost(g, context.blinky);
 		if (sceneController.state() == Intermission1Controller.State.CHASING_PACMAN) {
 			r2D.drawPac(g, context.pac);
 		} else {

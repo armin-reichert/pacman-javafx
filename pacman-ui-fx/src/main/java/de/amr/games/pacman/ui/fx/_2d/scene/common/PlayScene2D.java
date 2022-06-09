@@ -27,8 +27,6 @@ import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.world.World.t;
 import static de.amr.games.pacman.ui.fx.util.U.pauseSec;
 
-import java.util.stream.Stream;
-
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
@@ -50,10 +48,10 @@ import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Bonus2D;
-import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.World2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.Actions;
@@ -167,7 +165,6 @@ public class PlayScene2D extends GameScene2D {
 	private World2D world2D;
 	private LivesCounter2D livesCounter2D;
 	private LevelCounter2D levelCounter2D;
-	private Ghost2D[] ghosts2D = new Ghost2D[4];
 	private Bonus2D bonus2D;
 
 	private final GuysInfo guysInfo = new GuysInfo();
@@ -205,7 +202,7 @@ public class PlayScene2D extends GameScene2D {
 		world2D = new World2D(game, r2D);
 		game.pac.setAnimations(new PacAnimations(r2D));
 		for (var ghost : game.ghosts) {
-			ghosts2D[ghost.id] = new Ghost2D(ghost, r2D);
+			ghost.setAnimations(new GhostAnimations(ghost.id, r2D));
 		}
 		bonus2D = new Bonus2D(game.bonus(), r2D);
 		bonus2D.stopJumping();
@@ -253,7 +250,7 @@ public class PlayScene2D extends GameScene2D {
 		drawGameStateMessage(g);
 		bonus2D.render(g, r2D);
 		r2D.drawPac(g, game.pac);
-		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(g, r2D));
+		game.ghosts().forEach(ghost -> r2D.drawGhost(g, ghost));
 	}
 
 	private void drawGameStateMessage(GraphicsContext g) {

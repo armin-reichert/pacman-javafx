@@ -34,7 +34,7 @@ import de.amr.games.pacman.controller.mspacman.IntroController.State;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.GenericAnimationMap;
 import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.Actions;
@@ -57,7 +57,6 @@ public class MsPacMan_IntroScene extends GameScene2D {
 
 	private IntroController sceneController;
 	private Context $;
-	private Ghost2D[] ghosts2D;
 
 	@Override
 	public void setSceneContext(GameController gameController) {
@@ -76,7 +75,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		highScore2D.score.visible = false;
 		credit2D.visible = true;
 		$.msPacMan.setAnimations(new PacAnimations(r2D));
-		ghosts2D = Stream.of($.ghosts).map(ghost -> new Ghost2D(ghost, r2D)).toArray(Ghost2D[]::new);
+		Stream.of($.ghosts).forEach(ghost -> ghost.setAnimations(new GhostAnimations(ghost.id, r2D)));
 	}
 
 	@Override
@@ -121,7 +120,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		} else if (sceneController.state() == State.MSPACMAN || sceneController.state() == State.READY_TO_PLAY) {
 			drawMsPacManText(g);
 		}
-		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(g, r2D));
+		Stream.of($.ghosts).forEach(ghost -> r2D.drawGhost(g, ghost));
 		r2D.drawPac(g, $.msPacMan);
 		r2D.drawCopyright(g);
 		credit2D.render(g, r2D);
