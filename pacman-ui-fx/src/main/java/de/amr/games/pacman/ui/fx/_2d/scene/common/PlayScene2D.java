@@ -89,10 +89,7 @@ public class PlayScene2D extends GameScene2D {
 			ghost.setAnimations(new GhostAnimations(ghost.id, r2D));
 		}
 		game.bonus().setAnimations(new BonusAnimations(r2D));
-		if (game.bonus() instanceof MovingBonus) {
-			MovingBonus mb = (MovingBonus) game.bonus();
-			mb.stopJumping();
-		}
+		game.bonus().setInactive();
 
 		SoundManager.get().setStopped(!hasCredit);
 	}
@@ -237,12 +234,7 @@ public class PlayScene2D extends GameScene2D {
 			world2D.letEnergizersBlink(true);
 		}
 		case PACMAN_DYING -> {
-			gameController.state().timer().setIndefinite();
-			gameController.state().timer().start();
 			SoundManager.get().stopAll();
-			game.pac.animations().get().select(PacAnimationKey.ANIM_DYING);
-			game.pac.animations().get().selectedAnimation().stop();
-			game.bonus().init();
 			new SequentialTransition( //
 					pauseSec(1, () -> game.ghosts().forEach(Ghost::hide)), //
 					pauseSec(1, () -> {
