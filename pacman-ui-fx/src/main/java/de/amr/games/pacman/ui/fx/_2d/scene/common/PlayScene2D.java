@@ -106,8 +106,7 @@ public class PlayScene2D extends GameScene2D {
 			}
 		}
 
-		private String computeGhostInfo(Ghost2D ghost2D) {
-			var ghost = ghost2D.ghost;
+		private String computeGhostInfo(Ghost ghost) {
 			String stateText = ghost.state.name();
 			if (ghost.state == GhostState.HUNTING_PAC) {
 				stateText += game.huntingTimer.chasingPhase() != -1 ? " (Chasing)" : " (Scattering)";
@@ -150,7 +149,8 @@ public class PlayScene2D extends GameScene2D {
 		public void update() {
 			for (int i = 0; i < texts.length; ++i) {
 				if (i < texts.length - 2) {
-					updateTextView(texts[i], computeGhostInfo(ghosts2D[i]), ghosts2D[i].ghost);
+					var ghost = game.ghosts[i];
+					updateTextView(texts[i], computeGhostInfo(ghost), ghost);
 				} else if (i == texts.length - 2) {
 					updateTextView(texts[i], computePacInfo(game.pac), pac2D.pac);
 				} else {

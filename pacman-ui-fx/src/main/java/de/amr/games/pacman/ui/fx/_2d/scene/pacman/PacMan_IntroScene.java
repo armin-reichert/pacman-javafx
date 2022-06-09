@@ -99,8 +99,9 @@ public class PacMan_IntroScene extends GameScene2D {
 
 	private void onSceneStateChange(State fromState, State toState) {
 		if (fromState == State.CHASING_PAC && toState == State.CHASING_GHOSTS) {
-			for (var ghost2D : ghosts2D) {
-				ghost2D.ghost.animations().get().select(GhostAnimationKey.ANIM_BLUE);
+			for (var ghost : $.ghosts) {
+				// TODO just set state to FRIGHTENED?
+				ghost.animations().get().select(GhostAnimationKey.ANIM_BLUE);
 			}
 		}
 	}
@@ -116,8 +117,7 @@ public class PacMan_IntroScene extends GameScene2D {
 	private void updateAnimations() {
 		// TODO this is not elegant but works
 		if (sceneController.state() == State.CHASING_GHOSTS) {
-			for (var ghost2D : ghosts2D) {
-				var ghost = ghost2D.ghost;
+			for (var ghost : $.ghosts) {
 				ghost.animations().ifPresent(animations -> {
 					if (ghost.state == GhostState.DEAD && ghost.killIndex != -1) {
 						animations.select(GhostAnimationKey.ANIM_VALUE);

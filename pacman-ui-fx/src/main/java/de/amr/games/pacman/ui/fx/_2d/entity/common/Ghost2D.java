@@ -37,7 +37,7 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class Ghost2D {
 
-	public final Ghost ghost;
+	private final Ghost ghost;
 
 	public Ghost2D(Ghost ghost, Rendering2D r2D) {
 		this.ghost = ghost;
