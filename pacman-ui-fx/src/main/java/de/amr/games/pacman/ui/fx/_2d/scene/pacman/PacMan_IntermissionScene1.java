@@ -28,7 +28,6 @@ import de.amr.games.pacman.controller.pacman.Intermission1Controller;
 import de.amr.games.pacman.model.common.actors.GhostAnimationKey;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
-import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.BigPacMan2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
@@ -46,7 +45,6 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 	private Intermission1Controller sceneController;
 	private Intermission1Controller.Context context;
 	private LevelCounter2D levelCounter2D;
-	private Pac2D pacMan2D;
 	private Ghost2D blinky2D;
 	private BigPacMan2D bigPacMan2D;
 
@@ -62,7 +60,7 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 	public void init() {
 		sceneController.init();
 		levelCounter2D = new LevelCounter2D(game.levelCounter, r2D);
-		pacMan2D = new Pac2D(context.pac, new PacAnimations(r2D));
+		context.pac.setAnimations(new PacAnimations(r2D));
 		blinky2D = new Ghost2D(context.blinky, r2D);
 		bigPacMan2D = new BigPacMan2D(context.pac);
 		bigPacMan2D.startMunching();
@@ -84,7 +82,7 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 	public void doRender(GraphicsContext g) {
 		blinky2D.render(g, r2D);
 		if (sceneController.state() == Intermission1Controller.State.CHASING_PACMAN) {
-			pacMan2D.render(g, r2D);
+			r2D.drawPac(g, context.pac);
 		} else {
 			bigPacMan2D.render(g, r2D);
 		}

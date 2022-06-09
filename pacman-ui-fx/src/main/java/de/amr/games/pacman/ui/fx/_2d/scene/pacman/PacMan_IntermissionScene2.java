@@ -31,7 +31,6 @@ import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
-import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.Nail2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
@@ -51,7 +50,6 @@ public class PacMan_IntermissionScene2 extends GameScene2D {
 	private Intermission2Controller sceneController;
 	private Intermission2Controller.Context context;
 	private LevelCounter2D levelCounter2D;
-	private Pac2D pacMan2D;
 	private Ghost2D blinky2D;
 	private Nail2D nail2D;
 	private SingleGenericAnimation<Rectangle2D> blinkyStretchedAnimation;
@@ -70,8 +68,7 @@ public class PacMan_IntermissionScene2 extends GameScene2D {
 		sceneController.init();
 
 		levelCounter2D = new LevelCounter2D(game.levelCounter, r2D);
-
-		pacMan2D = new Pac2D(context.pac, new PacAnimations(r2D));
+		context.pac.setAnimations(new PacAnimations(r2D));
 		blinky2D = new Ghost2D(context.blinky, r2D);
 		nail2D = new Nail2D(context.nail);
 		context.pac.animations().get().restart();
@@ -88,7 +85,7 @@ public class PacMan_IntermissionScene2 extends GameScene2D {
 	@Override
 	public void doRender(GraphicsContext g) {
 		levelCounter2D.render(g, r2D);
-		pacMan2D.render(g, r2D);
+		r2D.drawPac(g, context.pac);
 		nail2D.render(g, r2D);
 		if (sceneController.nailDistance() < 0) {
 			blinky2D.render(g, r2D);

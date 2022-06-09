@@ -31,8 +31,8 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
  */
 public class MsPacMansHusbandAnimations extends PacAnimations {
 
-	public MsPacMansHusbandAnimations(Spritesheet_MsPacMan r2D) {
-		super(r2D);
-		munching = r2D.createHusbandMunchingAnimations();
+	public MsPacMansHusbandAnimations() {
+		super(Spritesheet_MsPacMan.get());
+		munching = Spritesheet_MsPacMan.get().createHusbandMunchingAnimations();
 	}
 }

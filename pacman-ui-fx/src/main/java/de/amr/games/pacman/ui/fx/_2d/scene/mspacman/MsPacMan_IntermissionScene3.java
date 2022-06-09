@@ -26,13 +26,11 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission3Controller;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
-import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.JuniorBag2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Stork2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacMansHusbandAnimations;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -53,8 +51,6 @@ public class MsPacMan_IntermissionScene3 extends GameScene2D {
 	private Intermission3Controller sceneController;
 	private Intermission3Controller.Context context;
 	private LevelCounter2D levelCounter2D;
-	private Pac2D msPacMan2D;
-	private Pac2D msPacMansHusband2D;
 	private Flap2D flap2D;
 	private Stork2D stork2D;
 	private JuniorBag2D bag2D;
@@ -72,8 +68,8 @@ public class MsPacMan_IntermissionScene3 extends GameScene2D {
 	public void init() {
 		sceneController.restartInInitialState(Intermission3Controller.State.FLAP);
 		levelCounter2D = new LevelCounter2D(game.levelCounter, r2D);
-		msPacMan2D = new Pac2D(context.msPacMan, new PacAnimations(r2D));
-		msPacMansHusband2D = new Pac2D(context.pacMan, new MsPacMansHusbandAnimations(Spritesheet_MsPacMan.get()));
+		context.msPacMan.setAnimations(new PacAnimations(r2D));
+		context.pacMan.setAnimations(new MsPacMansHusbandAnimations());
 		flap2D = new Flap2D(context.flap);
 		stork2D = new Stork2D(context.stork);
 		bag2D = new JuniorBag2D(context.bag);
@@ -88,8 +84,8 @@ public class MsPacMan_IntermissionScene3 extends GameScene2D {
 	public void doRender(GraphicsContext g) {
 		levelCounter2D.render(g, r2D);
 		flap2D.render(g, r2D);
-		msPacMan2D.render(g, r2D);
-		msPacMansHusband2D.render(g, r2D);
+		r2D.drawPac(g, context.msPacMan);
+		r2D.drawPac(g, context.pacMan);
 		stork2D.render(g, r2D);
 		bag2D.render(g, r2D);
 	}

@@ -31,7 +31,6 @@ import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Heart2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacMansHusbandAnimations;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -72,7 +71,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 		levelCounter2D = new LevelCounter2D(game.levelCounter, r2D);
 		flap2D = new Flap2D(context.flap);
 		context.msPac.setAnimations(new PacAnimations(r2D));
-		context.pacMan.setAnimations(new MsPacMansHusbandAnimations(Spritesheet_MsPacMan.get()));
+		context.pacMan.setAnimations(new MsPacMansHusbandAnimations());
 		inky2D = new Ghost2D(context.inky, r2D);
 		pinky2D = new Ghost2D(context.pinky, r2D);
 		heart2D = new Heart2D(context.heart);

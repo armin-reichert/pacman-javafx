@@ -35,7 +35,6 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.GenericAnimationMap;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
-import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.Actions;
@@ -58,7 +57,6 @@ public class MsPacMan_IntroScene extends GameScene2D {
 
 	private IntroController sceneController;
 	private Context $;
-	private Pac2D msPacMan2D;
 	private Ghost2D[] ghosts2D;
 
 	@Override
@@ -77,7 +75,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		gameScore2D.score.visible = false;
 		highScore2D.score.visible = false;
 		credit2D.visible = true;
-		msPacMan2D = new Pac2D($.msPacMan, new PacAnimations(r2D));
+		$.msPacMan.setAnimations(new PacAnimations(r2D));
 		ghosts2D = Stream.of($.ghosts).map(ghost -> new Ghost2D(ghost, r2D)).toArray(Ghost2D[]::new);
 	}
 
@@ -107,7 +105,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		if (fromState == State.MSPACMAN && toState == State.READY_TO_PLAY) {
 			// TODO simplify
 			var munching = (GenericAnimationMap<Direction, Rectangle2D>) $.msPacMan.animations().get().selectedAnimation();
-			munching.get(msPacMan2D.pac.moveDir()).setFrameIndex(2);
+			munching.get($.msPacMan.moveDir()).setFrameIndex(2);
 			munching.stop();
 		}
 	}
@@ -124,7 +122,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 			drawMsPacManText(g);
 		}
 		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(g, r2D));
-		msPacMan2D.render(g, r2D);
+		r2D.drawPac(g, $.msPacMan);
 		r2D.drawCopyright(g);
 		credit2D.render(g, r2D);
 	}
