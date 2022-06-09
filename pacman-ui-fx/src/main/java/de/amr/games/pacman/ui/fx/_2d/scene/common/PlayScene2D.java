@@ -36,7 +36,6 @@ import de.amr.games.pacman.lib.animation.GenericAnimationMap;
 import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Bonus;
-import de.amr.games.pacman.model.common.actors.BonusAnimationKey;
 import de.amr.games.pacman.model.common.actors.BonusState;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -45,12 +44,14 @@ import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.actors.PacAnimationKey;
 import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.model.mspacman.MovingBonus;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.model.pacman.PacManGame;
-import de.amr.games.pacman.ui.fx._2d.entity.common.Bonus2D;
+import de.amr.games.pacman.model.pacman.StaticBonus;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.World2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -124,10 +125,13 @@ public class PlayScene2D extends GameScene2D {
 			}
 		}
 
-		private String computeBonusInfo(Bonus2D bonus2D) {
-			var bonus = game.bonus();
+		private String computeBonusInfo(Bonus bonus) {
 			var symbolName = bonus.state() == BonusState.INACTIVE ? "INACTIVE" : bonusName(game.variant, bonus.symbol());
-			return "%s\n%s\n%s".formatted(symbolName, game.bonus().state(), bonus2D.animations.selectedKey());
+			if (bonus.animations().isPresent()) {
+				return "%s\n%s\n%s".formatted(symbolName, game.bonus().state(), bonus.animations().get().selectedKey());
+			} else {
+				return "%s\n%s".formatted(symbolName, game.bonus().state());
+			}
 		}
 
 		private void updateTextView(Text textView, String text, Entity entity) {
@@ -156,7 +160,7 @@ public class PlayScene2D extends GameScene2D {
 				} else if (i == texts.length - 2) {
 					updateTextView(texts[i], computePacInfo(game.pac), game.pac);
 				} else {
-					updateTextView(texts[i], computeBonusInfo(bonus2D), game.bonus());
+					updateTextView(texts[i], computeBonusInfo(game.bonus()), game.bonus());
 				}
 			}
 		}
@@ -165,7 +169,6 @@ public class PlayScene2D extends GameScene2D {
 	private World2D world2D;
 	private LivesCounter2D livesCounter2D;
 	private LevelCounter2D levelCounter2D;
-	private Bonus2D bonus2D;
 
 	private final GuysInfo guysInfo = new GuysInfo();
 
@@ -200,12 +203,16 @@ public class PlayScene2D extends GameScene2D {
 		levelCounter2D.visible = hasCredit;
 
 		world2D = new World2D(game, r2D);
+
 		game.pac.setAnimations(new PacAnimations(r2D));
 		for (var ghost : game.ghosts) {
 			ghost.setAnimations(new GhostAnimations(ghost.id, r2D));
 		}
-		bonus2D = new Bonus2D(game.bonus(), r2D);
-		bonus2D.stopJumping();
+		game.bonus().setAnimations(new BonusAnimations(r2D));
+		if (game.bonus() instanceof MovingBonus) {
+			MovingBonus mb = (MovingBonus) game.bonus();
+			mb.stopJumping();
+		}
 
 		SoundManager.get().setStopped(!hasCredit);
 	}
@@ -248,7 +255,11 @@ public class PlayScene2D extends GameScene2D {
 		credit2D.render(g, r2D);
 		world2D.render(g, r2D);
 		drawGameStateMessage(g);
-		bonus2D.render(g, r2D);
+		if (game.bonus() instanceof MovingBonus) {
+			r2D.drawMovingBonus(g, (MovingBonus) game.bonus());
+		} else {
+			r2D.drawStaticBonus(g, (StaticBonus) game.bonus());
+		}
 		r2D.drawPac(g, game.pac);
 		game.ghosts().forEach(ghost -> r2D.drawGhost(g, ghost));
 	}
@@ -299,22 +310,15 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void onBonusGetsActive(GameEvent e) {
-		bonus2D.animations.select(BonusAnimationKey.ANIM_SYMBOL);
-		if (game.variant == GameVariant.MS_PACMAN) {
-			bonus2D.startJumping();
-		}
 	}
 
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
-		bonus2D.stopJumping();
-		bonus2D.animations.select(BonusAnimationKey.ANIM_VALUE);
 		SoundManager.get().play(GameSound.BONUS_EATEN);
 	}
 
 	@Override
 	public void onBonusExpires(GameEvent e) {
-		bonus2D.animations.select(BonusAnimationKey.ANIM_NONE);
 	}
 
 	@Override
@@ -355,7 +359,7 @@ public class PlayScene2D extends GameScene2D {
 			SoundManager.get().stopAll();
 			game.pac.animations().get().select(PacAnimationKey.ANIM_DYING);
 			game.pac.animations().get().selectedAnimation().stop();
-			bonus2D.animations.select(BonusAnimationKey.ANIM_NONE);
+			game.bonus().init();
 			new SequentialTransition( //
 					pauseSec(1, () -> game.ghosts().forEach(Ghost::hide)), //
 					pauseSec(1, () -> {

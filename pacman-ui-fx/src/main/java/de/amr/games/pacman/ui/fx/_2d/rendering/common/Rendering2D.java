@@ -31,6 +31,8 @@ import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
+import de.amr.games.pacman.model.mspacman.MovingBonus;
+import de.amr.games.pacman.model.pacman.StaticBonus;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -114,6 +116,22 @@ public interface Rendering2D {
 	default void drawGhost(GraphicsContext g, Ghost ghost) {
 		ghost.animations().ifPresent(anim -> {
 			drawEntity(g, ghost, (Rectangle2D) anim.currentSprite(ghost));
+		});
+	}
+
+	default void drawMovingBonus(GraphicsContext g, MovingBonus bonus) {
+		bonus.animations().ifPresent(anim -> {
+			int dy = bonus.dy();
+			g.save();
+			g.translate(0, dy);
+			drawEntity(g, bonus, (Rectangle2D) anim.currentSprite(bonus));
+			g.restore();
+		});
+	}
+
+	default void drawStaticBonus(GraphicsContext g, StaticBonus bonus) {
+		bonus.animations().ifPresent(anim -> {
+			drawEntity(g, bonus, (Rectangle2D) anim.currentSprite(bonus));
 		});
 	}
 

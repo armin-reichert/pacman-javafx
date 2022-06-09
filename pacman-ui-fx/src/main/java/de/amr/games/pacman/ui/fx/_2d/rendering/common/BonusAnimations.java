@@ -46,6 +46,7 @@ public class BonusAnimations implements GenericAnimationCollection<Bonus, BonusA
 	public BonusAnimations(Rendering2D r2D) {
 		symbolAnimation = r2D.createBonusSymbolAnimation();
 		valueAnimation = r2D.createBonusValueAnimation();
+		select(BonusAnimationKey.ANIM_NONE);
 	}
 
 	@Override
@@ -76,7 +77,7 @@ public class BonusAnimations implements GenericAnimationCollection<Bonus, BonusA
 	}
 
 	@Override
-	public Stream<GenericAnimation> animations() {
+	public Stream<GenericAnimation> all() {
 		return Stream.of(symbolAnimation, valueAnimation);
 	}
 
