@@ -111,7 +111,14 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	protected void doUpdate() {
-		updateSound();
+		if (gameController.state() == GameState.HUNTING) {
+			if (game.pac.starvingTicks == 10) {
+				SoundManager.get().stop(GameSound.PACMAN_MUNCH);
+			}
+			if (game.huntingTimer.tick() == 0) {
+				SoundManager.get().ensureSirenStarted(game.huntingTimer.phase() / 2);
+			}
+		}
 		if (Env.$debugUI.get()) {
 			guysInfo.update();
 		}
@@ -121,21 +128,6 @@ public class PlayScene2D extends GameScene2D {
 	public void end() {
 		log("Scene '%s' ended", getClass().getName());
 		SoundManager.get().setStopped(false);
-	}
-
-	private void updateSound() {
-		switch (gameController.state()) {
-		case HUNTING -> {
-			if (game.pac.starvingTicks == 10) {
-				SoundManager.get().stop(GameSound.PACMAN_MUNCH);
-			}
-			if (game.huntingTimer.tick() == 0) {
-				SoundManager.get().ensureSirenStarted(game.huntingTimer.phase() / 2);
-			}
-		}
-		default -> {
-		}
-		}
 	}
 
 	@Override
