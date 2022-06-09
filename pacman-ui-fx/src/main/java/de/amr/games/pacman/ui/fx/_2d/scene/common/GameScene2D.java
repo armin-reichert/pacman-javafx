@@ -38,7 +38,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
+import de.amr.games.pacman.ui.fx.sound.PlaySceneSounds;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
@@ -100,8 +100,7 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 		case MS_PACMAN -> Spritesheet_MsPacMan.get();
 		case PACMAN -> Spritesheet_PacMan.get();
 		};
-		SoundManager.get().stopAll(); // TODO: check this
-		SoundManager.get().selectGameVariant(game.variant);
+		PlaySceneSounds.init();
 	}
 
 	@Override

@@ -86,8 +86,6 @@ public class PlayScene2D extends GameScene2D {
 		}
 		game.bonus().setAnimations(new BonusAnimations(r2D));
 		game.bonus().setInactive();
-
-		PlaySceneSounds.setStopped(!hasCredit);
 	}
 
 	@Override

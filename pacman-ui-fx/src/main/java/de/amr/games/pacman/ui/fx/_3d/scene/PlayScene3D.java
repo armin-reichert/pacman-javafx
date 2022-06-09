@@ -196,9 +196,6 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 
 		setCameraPerspective($perspective.get());
 		setUseMazeFloorTexture($useMazeFloorTexture.get());
-
-		// Sound
-		PlaySceneSounds.setStopped(!hasCredit);
 	}
 
 	@Override

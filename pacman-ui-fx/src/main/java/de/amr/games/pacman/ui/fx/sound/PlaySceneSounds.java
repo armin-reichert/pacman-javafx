@@ -42,9 +42,12 @@ public class PlaySceneSounds extends GameEventAdapter {
 
 	public static void setGameController(GameController gameController) {
 		theOne.gameController = gameController;
-		theOne.game = gameController.game();
+	}
+
+	public static void init() {
+		theOne.game = theOne.gameController.game();
 		SoundManager.get().selectGameVariant(theOne.game.variant);
-		SoundManager.get().stopAll();
+		setStopped(theOne.gameController.credit() == 0);
 	}
 
 	public static void setStopped(boolean stopped) {
