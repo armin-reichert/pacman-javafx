@@ -298,9 +298,6 @@ public class PlayScene2D extends GameScene2D {
 	public void onPlayerGetsPower(GameEvent e) {
 		SoundManager.get().stopSirens();
 		SoundManager.get().ensureLoop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
-		for (var ghost : game.ghosts) {
-			ghost.animations().get().select(GhostAnimationKey.ANIM_BLUE);
-		}
 	}
 
 	@Override
