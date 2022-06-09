@@ -215,22 +215,31 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	protected void doUpdate() {
-		updateAnimations();
+		updateGhostAnimations();
 		updateSound();
 		if (Env.$debugUI.get()) {
 			guysInfo.update();
 		}
 	}
 
-	private void updateAnimations() {
+	private void updateGhostAnimations() {
 		long recoveringTicks = sec_to_ticks(2); // TODO not sure about recovering duration
 		boolean recoveringStarts = game.pac.powerTimer.remaining() == recoveringTicks;
-		for (var ghost2D : ghosts2D) {
-			if (recoveringStarts) {
+		if (recoveringStarts) {
+			for (var ghost2D : ghosts2D) {
 				ghost2D.startFlashing(game.level.numFlashes, recoveringTicks);
-			} else {
-				boolean recovering = game.pac.powerTimer.remaining() <= recoveringTicks;
-				ghost2D.updateAnimation(game.pac.hasPower(), recovering);
+			}
+		}
+		for (var ghost2D : ghosts2D) {
+			var ghost = ghost2D.ghost;
+			if (ghost.is(GhostState.DEAD)) {
+				if (ghost.killIndex == -1) {
+					ghost2D.animations.select(GhostAnimations.Key.ANIM_EYES);
+				} else {
+					ghost2D.animations.select(GhostAnimations.Key.ANIM_VALUE);
+				}
+			} else if (ghost.is(GhostState.LEAVING_HOUSE)) {
+				ghost2D.animations.select(GhostAnimations.Key.ANIM_COLOR);
 			}
 		}
 	}
@@ -295,12 +304,18 @@ public class PlayScene2D extends GameScene2D {
 	public void onPlayerLosesPower(GameEvent e) {
 		SoundManager.get().stop(GameSound.PACMAN_POWER);
 		SoundManager.get().ensureSirenStarted(game.huntingTimer.phase() / 2);
+		for (var ghost2D : ghosts2D) {
+			ghost2D.onFrightenedPhaseEnds();
+		}
 	}
 
 	@Override
 	public void onPlayerGetsPower(GameEvent e) {
 		SoundManager.get().stopSirens();
 		SoundManager.get().ensureLoop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
+		for (var ghost2D : ghosts2D) {
+			ghost2D.animations.select(GhostAnimations.Key.ANIM_BLUE);
+		}
 	}
 
 	@Override
@@ -380,8 +395,10 @@ public class PlayScene2D extends GameScene2D {
 			).play();
 		}
 		case GHOST_DYING -> {
-			game.pac.hide();
 			SoundManager.get().play(GameSound.GHOST_EATEN);
+			for (var ghost2D : ghosts2D) {
+				ghost2D.animations.flashing.stop();
+			}
 		}
 		case LEVEL_COMPLETE -> {
 			gameController.state().timer().setIndefinite();
@@ -408,5 +425,13 @@ public class PlayScene2D extends GameScene2D {
 			log("PlayScene entered game state %s", e.newGameState);
 		}
 		}
+
+		// exit state xyz:
+		if (e.oldGameState == GameState.GHOST_DYING) {
+			for (var ghost2D : ghosts2D) {
+				ghost2D.animations.flashing.run();
+			}
+		}
 	}
+
 }

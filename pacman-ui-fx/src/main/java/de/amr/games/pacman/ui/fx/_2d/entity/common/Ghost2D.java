@@ -50,18 +50,15 @@ public class Ghost2D {
 		animations.flashing.frameDuration(frameTicks);
 		animations.flashing.repeat(numFlashes);
 		animations.flashing.restart();
+		animations.select(GhostAnimations.Key.ANIM_FLASHING);
 	}
 
-	public void updateAnimation(boolean frightened, boolean recovering) {
-		Key key = switch (ghost.state) {
-		case DEAD -> ghost.killIndex == -1 ? GhostAnimations.Key.ANIM_EYES : GhostAnimations.Key.ANIM_VALUE;
-		case ENTERING_HOUSE -> GhostAnimations.Key.ANIM_EYES;
-		case FRIGHTENED -> recovering ? GhostAnimations.Key.ANIM_FLASHING : GhostAnimations.Key.ANIM_BLUE;
-		case HUNTING_PAC, LEAVING_HOUSE -> GhostAnimations.Key.ANIM_COLOR;
-		case LOCKED -> recovering ? GhostAnimations.Key.ANIM_FLASHING
-				: frightened ? GhostAnimations.Key.ANIM_BLUE : GhostAnimations.Key.ANIM_COLOR;
-		};
-		animations.select(key);
+	public void onFrightenedPhaseEnds() {
+		switch (ghost.state) {
+		case HUNTING_PAC, LEAVING_HOUSE, LOCKED -> animations.select(GhostAnimations.Key.ANIM_COLOR);
+		default -> {
+		}
+		}
 		// TODO
 		if (animations.selectedKey() == Key.ANIM_COLOR && ghost.velocity.length() == 0) {
 			animations.selectedAnimation().stop();
