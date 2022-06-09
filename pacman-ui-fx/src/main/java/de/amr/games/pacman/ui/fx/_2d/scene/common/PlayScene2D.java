@@ -223,20 +223,21 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void updateGhostAnimations() {
-		long recoveringTicks = sec_to_ticks(2); // TODO not sure about recovering duration
+		long recoveringTicks = sec_to_ticks(2); // TODO not sure about this
 		boolean recoveringStarts = game.pac.powerTimer.remaining() == recoveringTicks;
+		boolean pacPowerEnds = game.pac.powerTimer.remaining() == 1;
 		for (var ghost2D : ghosts2D) {
-			ghost2D.updateAnimations(recoveringStarts, game.level.numFlashes, recoveringTicks);
+			if (pacPowerEnds) {
+				ghost2D.onFrightenedPhaseEnds();
+			}
+			ghost2D.update(recoveringStarts, game.level.numFlashes, recoveringTicks);
 		}
 	}
 
 	private void updateSound() {
-		if (gameController.credit() == 0) {
-			return;
-		}
 		switch (gameController.state()) {
 		case HUNTING -> {
-			if (game.pac.starvingTicks > 10) {
+			if (game.pac.starvingTicks == 10) {
 				SoundManager.get().stop(GameSound.PACMAN_MUNCH);
 			}
 			if (game.huntingTimer.tick() == 0) {
@@ -290,9 +291,6 @@ public class PlayScene2D extends GameScene2D {
 	public void onPlayerLosesPower(GameEvent e) {
 		SoundManager.get().stop(GameSound.PACMAN_POWER);
 		SoundManager.get().ensureSirenStarted(game.huntingTimer.phase() / 2);
-		for (var ghost2D : ghosts2D) {
-			ghost2D.onFrightenedPhaseEnds();
-		}
 	}
 
 	@Override

@@ -59,7 +59,7 @@ public class Ghost2D {
 		}
 	}
 
-	public void updateAnimations(boolean recoveringStarts, int numFlashes, long recoveringTicks) {
+	public void update(boolean recoveringStarts, int numFlashes, long recoveringTicks) {
 		if (ghost.velocity.length() == 0) {
 			animations.color.stop();
 		} else {
