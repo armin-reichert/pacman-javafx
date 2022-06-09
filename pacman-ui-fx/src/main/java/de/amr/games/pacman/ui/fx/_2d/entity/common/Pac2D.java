@@ -38,10 +38,6 @@ public class Pac2D {
 
 	public final Pac pac;
 
-	public Pac2D(Pac pac, Rendering2D r2D) {
-		this(pac, new PacAnimations(r2D));
-	}
-
 	public Pac2D(Pac pac, PacAnimations animations) {
 		this.pac = pac;
 		pac.setAnimations(animations);

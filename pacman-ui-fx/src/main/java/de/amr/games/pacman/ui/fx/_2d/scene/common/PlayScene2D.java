@@ -62,7 +62,6 @@ import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -253,14 +252,8 @@ public class PlayScene2D extends GameScene2D {
 		world2D.render(g, r2D);
 		drawGameStateMessage(g);
 		bonus2D.render(g, r2D);
-		drawPac(g, game.pac);
+		r2D.drawPac(g, game.pac);
 		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(g, r2D));
-	}
-
-	private void drawPac(GraphicsContext g, Pac pac) {
-		pac.animations().ifPresent(anim -> {
-			r2D.drawEntity(g, pac, (Rectangle2D) anim.currentSprite(pac));
-		});
 	}
 
 	private void drawGameStateMessage(GraphicsContext g) {

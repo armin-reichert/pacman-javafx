@@ -29,6 +29,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.GenericAnimationMap;
 import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.model.common.actors.Entity;
+import de.amr.games.pacman.model.common.actors.Pac;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -102,6 +103,12 @@ public interface Rendering2D {
 	Image getMazeEmptyImage(int mazeNumber);
 
 	// Drawing
+
+	default void drawPac(GraphicsContext g, Pac pac) {
+		pac.animations().ifPresent(anim -> {
+			drawEntity(g, pac, (Rectangle2D) anim.currentSprite(pac));
+		});
+	}
 
 	/**
 	 * Draws the entity's sprite centered over the entity's collision box. The collision box is a square with left upper
