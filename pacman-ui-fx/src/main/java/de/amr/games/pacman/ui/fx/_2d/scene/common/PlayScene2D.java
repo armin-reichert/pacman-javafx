@@ -30,14 +30,11 @@ import static de.amr.games.pacman.ui.fx.util.U.pauseSec;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostAnimationKey;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.actors.PacAnimationKey;
 import de.amr.games.pacman.model.mspacman.MovingBonus;
-import de.amr.games.pacman.model.mspacman.MsPacManGame;
-import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.model.pacman.StaticBonus;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
@@ -63,18 +60,11 @@ import javafx.scene.paint.Color;
  */
 public class PlayScene2D extends GameScene2D {
 
-	static String bonusName(GameVariant gameVariant, int symbol) {
-		return switch (gameVariant) {
-		case MS_PACMAN -> MsPacManGame.BONUS_NAMES[symbol];
-		case PACMAN -> PacManGame.BONUS_NAMES[symbol];
-		};
-	}
+	private final GuysInfo guysInfo = new GuysInfo(infoPane);
 
 	private World2D world2D;
 	private LivesCounter2D livesCounter2D;
 	private LevelCounter2D levelCounter2D;
-
-	private GuysInfo guysInfo = new GuysInfo(infoPane);
 
 	@Override
 	public void onKeyPressed() {
