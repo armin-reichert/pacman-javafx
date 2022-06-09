@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
-import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostAnimationKey;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
@@ -38,58 +37,17 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class Ghost2D {
 
-	public static final long FLASHING_TIME = TickTimer.sec_to_ticks(2); // TODO not sure
-
 	public final Ghost ghost;
 
 	public Ghost2D(Ghost ghost, Rendering2D r2D) {
 		this.ghost = ghost;
-		ghost.animations = new GhostAnimations(ghost.id, r2D);
-		ghost.animations.select(GhostAnimationKey.ANIM_COLOR);
-	}
-
-	public void updateAnimations(boolean startFlashing, boolean stopFlashing, int numFlashes) {
-		// this is to keep feet still when locked
-		if (ghost.velocity.length() == 0) {
-			ghost.animations.animation(GhostAnimationKey.ANIM_COLOR).stop();
-		} else {
-			ghost.animations.animation(GhostAnimationKey.ANIM_COLOR).run();
-		}
-		switch (ghost.state) {
-		case DEAD -> {
-			ghost.animations.select(ghost.killIndex == -1 ? GhostAnimationKey.ANIM_EYES : GhostAnimationKey.ANIM_VALUE);
-		}
-		case FRIGHTENED, LOCKED -> {
-			if (startFlashing) {
-				ghost.startFlashing(numFlashes, FLASHING_TIME);
-			} else if (stopFlashing) {
-				ensureFlashingStopped();
-			}
-		}
-		case LEAVING_HOUSE -> {
-			ghost.animations.select(GhostAnimationKey.ANIM_COLOR);
-		}
-		default -> {
-		}
-		}
+		ghost.setAnimations(new GhostAnimations(ghost.id, r2D));
+		ghost.animations().get().select(GhostAnimationKey.ANIM_COLOR);
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
-		r2D.drawEntity(g, ghost, (Rectangle2D) ghost.animations.currentSprite(ghost));
-	}
-
-//	private void startFlashing(int numFlashes) {
-//		ghost.animations.select(GhostAnimationKey.ANIM_FLASHING);
-//		var flashing = (SingleGenericAnimation<?>) ghost.animations.selectedAnimation();
-//		long frameDuration = FLASHING_TIME / (numFlashes * flashing.numFrames());
-//		flashing.frameDuration(frameDuration);
-//		flashing.repeat(numFlashes);
-//		flashing.restart();
-//	}
-
-	private void ensureFlashingStopped() {
-		if (ghost.animations.selectedKey() == GhostAnimationKey.ANIM_FLASHING) {
-			ghost.animations.select(GhostAnimationKey.ANIM_COLOR);
-		}
+		ghost.animations().ifPresent(animations -> {
+			r2D.drawEntity(g, ghost, (Rectangle2D) animations.currentSprite(ghost));
+		});
 	}
 }

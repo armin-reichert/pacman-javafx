@@ -26,8 +26,8 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.lib.animation.GenericAnimationMap;
+import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.model.common.actors.Entity;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -113,7 +113,7 @@ public interface Rendering2D {
 	 * @param s      entity sprite (region in spritesheet)
 	 */
 	default void drawEntity(GraphicsContext g, Entity entity, Rectangle2D sprite) {
-		if (entity.visible) {
+		if (entity.visible && sprite != null) {
 			drawSpriteCenteredOverBox(g, sprite, entity.position.x, entity.position.y);
 		}
 	}

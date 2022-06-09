@@ -70,7 +70,7 @@ public class PacAnimations implements GenericAnimationCollection<Pac, PacAnimati
 	}
 
 	@Override
-	public GenericAnimation animation(PacAnimationKey key) {
+	public GenericAnimation getByKey(PacAnimationKey key) {
 		return switch (key) {
 		case ANIM_DYING -> dying;
 		case ANIM_MUNCHING -> munching;

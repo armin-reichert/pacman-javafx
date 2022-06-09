@@ -26,10 +26,10 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.animation.GenericAnimationCollection;
-import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.lib.animation.GenericAnimation;
+import de.amr.games.pacman.lib.animation.GenericAnimationCollection;
 import de.amr.games.pacman.lib.animation.GenericAnimationMap;
+import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostAnimationKey;
 import javafx.geometry.Rectangle2D;
@@ -66,7 +66,7 @@ public class GhostAnimations implements GenericAnimationCollection<Ghost, GhostA
 	}
 
 	@Override
-	public GenericAnimation animation(GhostAnimationKey key) {
+	public GenericAnimation getByKey(GhostAnimationKey key) {
 		return switch (key) {
 		case ANIM_EYES -> eyes;
 		case ANIM_FLASHING -> flashing;
@@ -101,7 +101,7 @@ public class GhostAnimations implements GenericAnimationCollection<Ghost, GhostA
 		case ANIM_FLASHING -> flashing.animate();
 		case ANIM_BLUE -> blue.animate();
 		case ANIM_COLOR -> color.get(ghost.wishDir()).animate();
-		case ANIM_VALUE -> values.frame(ghost.killIndex);
+		case ANIM_VALUE -> ghost.killIndex >= 0 ? values.frame(ghost.killIndex) : null;// TODO
 		};
 	}
 }

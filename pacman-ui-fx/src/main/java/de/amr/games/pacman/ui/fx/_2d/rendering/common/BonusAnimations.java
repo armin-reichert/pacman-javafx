@@ -70,7 +70,7 @@ public class BonusAnimations implements GenericAnimationCollection<Bonus, BonusA
 	}
 
 	@Override
-	public GenericAnimation animation(BonusAnimationKey key) {
+	public GenericAnimation getByKey(BonusAnimationKey key) {
 		return switch (key) {
 		case ANIM_NONE -> null;
 		case ANIM_SYMBOL -> symbolAnimation;
