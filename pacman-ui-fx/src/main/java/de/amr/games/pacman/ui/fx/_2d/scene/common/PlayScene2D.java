@@ -306,16 +306,8 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	public void onBonusGetsActive(GameEvent e) {
-	}
-
-	@Override
 	public void onBonusGetsEaten(GameEvent e) {
 		SoundManager.get().play(GameSound.BONUS_EATEN);
-	}
-
-	@Override
-	public void onBonusExpires(GameEvent e) {
 	}
 
 	@Override
@@ -347,8 +339,6 @@ public class PlayScene2D extends GameScene2D {
 		}
 		case HUNTING -> {
 			world2D.letEnergizersBlink(true);
-			game.pac.animations().get().restart();
-			game.ghosts().forEach(ghost -> ghost.animations().get().restart(GhostAnimationKey.ANIM_COLOR));
 		}
 		case PACMAN_DYING -> {
 			gameController.state().timer().setIndefinite();
