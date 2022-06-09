@@ -28,7 +28,6 @@ import static de.amr.games.pacman.lib.TickTimer.sec_to_ticks;
 import static de.amr.games.pacman.model.common.world.World.t;
 import static de.amr.games.pacman.ui.fx.util.U.pauseSec;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.common.GameState;
@@ -45,6 +44,8 @@ import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.model.mspacman.MsPacManGame;
+import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Bonus2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
@@ -75,17 +76,10 @@ import javafx.scene.text.TextAlignment;
  */
 public class PlayScene2D extends GameScene2D {
 
-	// TODO move elsewhere
-	static final List<String> MS_PAC_MAN_SYMBOL_NAMES = List.of("CHERRIES", "STRAWBERRY", "PEACH", "PRETZE", "APPLE",
-			"PEAR", "BANANA");
-
-	static final List<String> PAC_MAN_SYMBOL_NAMES = List.of("CHERRIES", "STRAWBERRY", "PEACH", "APPLE", "GRAPES",
-			"GALAXIAN", "BELL", "KEY");
-
-	static String symbolName(GameVariant gameVariant, int symbol) {
+	static String bonusName(GameVariant gameVariant, int symbol) {
 		return switch (gameVariant) {
-		case MS_PACMAN -> MS_PAC_MAN_SYMBOL_NAMES.get(symbol);
-		case PACMAN -> PAC_MAN_SYMBOL_NAMES.get(symbol);
+		case MS_PACMAN -> MsPacManGame.BONUS_NAMES[symbol];
+		case PACMAN -> PacManGame.BONUS_NAMES[symbol];
 		};
 	}
 
@@ -132,7 +126,7 @@ public class PlayScene2D extends GameScene2D {
 
 		private String computeBonusInfo(Bonus2D bonus2D) {
 			var bonus = game.bonus();
-			var symbolName = bonus.symbol() == -1 ? "" : symbolName(game.variant, bonus.symbol());
+			var symbolName = bonus.state() == BonusState.INACTIVE ? "INACTIVE" : bonusName(game.variant, bonus.symbol());
 			return "%s\n%s\n%s".formatted(symbolName, game.bonus().state(), bonus2D.animations.selectedKey());
 		}
 
