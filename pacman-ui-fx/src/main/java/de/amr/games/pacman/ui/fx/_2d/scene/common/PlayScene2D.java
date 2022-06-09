@@ -225,22 +225,8 @@ public class PlayScene2D extends GameScene2D {
 	private void updateGhostAnimations() {
 		long recoveringTicks = sec_to_ticks(2); // TODO not sure about recovering duration
 		boolean recoveringStarts = game.pac.powerTimer.remaining() == recoveringTicks;
-		if (recoveringStarts) {
-			for (var ghost2D : ghosts2D) {
-				ghost2D.startFlashing(game.level.numFlashes, recoveringTicks);
-			}
-		}
 		for (var ghost2D : ghosts2D) {
-			var ghost = ghost2D.ghost;
-			if (ghost.is(GhostState.DEAD)) {
-				if (ghost.killIndex == -1) {
-					ghost2D.animations.select(GhostAnimations.Key.ANIM_EYES);
-				} else {
-					ghost2D.animations.select(GhostAnimations.Key.ANIM_VALUE);
-				}
-			} else if (ghost.is(GhostState.LEAVING_HOUSE)) {
-				ghost2D.animations.select(GhostAnimations.Key.ANIM_COLOR);
-			}
+			ghost2D.updateAnimations(recoveringStarts, game.level.numFlashes, recoveringTicks);
 		}
 	}
 

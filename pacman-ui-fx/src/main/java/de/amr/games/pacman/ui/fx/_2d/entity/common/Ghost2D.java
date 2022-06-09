@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import de.amr.games.pacman.model.common.actors.Ghost;
+import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations.Key;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -62,6 +63,21 @@ public class Ghost2D {
 		// TODO
 		if (animations.selectedKey() == Key.ANIM_COLOR && ghost.velocity.length() == 0) {
 			animations.selectedAnimation().stop();
+		}
+	}
+
+	public void updateAnimations(boolean recoveringStarts, int numFlashes, long recoveringTicks) {
+		if (recoveringStarts) {
+			startFlashing(numFlashes, recoveringTicks);
+		}
+		if (ghost.is(GhostState.DEAD)) {
+			if (ghost.killIndex == -1) {
+				animations.select(GhostAnimations.Key.ANIM_EYES);
+			} else {
+				animations.select(GhostAnimations.Key.ANIM_VALUE);
+			}
+		} else if (ghost.is(GhostState.LEAVING_HOUSE)) {
+			animations.select(GhostAnimations.Key.ANIM_COLOR);
 		}
 	}
 
