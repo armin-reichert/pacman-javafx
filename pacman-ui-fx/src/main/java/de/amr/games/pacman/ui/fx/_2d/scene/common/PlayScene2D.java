@@ -29,6 +29,7 @@ import static de.amr.games.pacman.ui.fx.util.U.pauseSec;
 
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameStateChangeEvent;
+import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.PacAnimationKey;
 import de.amr.games.pacman.model.mspacman.MovingBonus;
@@ -61,6 +62,7 @@ public class PlayScene2D extends GameScene2D {
 	private World2D world2D;
 	private LivesCounter2D livesCounter2D;
 	private LevelCounter2D levelCounter2D;
+	private final SingleGenericAnimation<Boolean> energizerPulse = SingleGenericAnimation.pulse(10);
 
 	@Override
 	public void init() {
@@ -124,7 +126,7 @@ public class PlayScene2D extends GameScene2D {
 		livesCounter2D.render(g, r2D);
 		levelCounter2D.render(g, r2D);
 		credit2D.render(g, r2D);
-		world2D.render(g, r2D);
+		world2D.render(g, r2D, !energizerPulse.animate());
 		drawGameStateMessage(g);
 		if (game.bonus() instanceof MovingBonus) {
 			r2D.drawMovingBonus(g, (MovingBonus) game.bonus());
@@ -153,17 +155,17 @@ public class PlayScene2D extends GameScene2D {
 		for (var ghost : game.ghosts) {
 			ghost.animations().get().restart();
 		}
-		world2D.letEnergizersBlink(true);
+		letEnergizersBlink(true);
 	}
 
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
 		switch (e.newGameState) {
 		case READY -> {
-			world2D.showEnergizersOn();
+			energizerPulse.reset();
 		}
 		case HUNTING -> {
-			world2D.letEnergizersBlink(true);
+			letEnergizersBlink(true);
 		}
 		case PACMAN_DYING -> {
 			new SequentialTransition( //
@@ -180,7 +182,7 @@ public class PlayScene2D extends GameScene2D {
 			gameController.state().timer().setIndefinite();
 			game.pac.animations().get().reset();
 			// Energizers could still remain if "next level" cheat has been used!
-			world2D.showEnergizersOn();
+			energizerPulse.reset();
 			new SequentialTransition( //
 					pauseSec(1, () -> world2D.startFlashing(game.level.numFlashes)), //
 					pauseSec(2, () -> gameController.state().timer().expire()) //
@@ -192,11 +194,21 @@ public class PlayScene2D extends GameScene2D {
 			gameController.state().timer().start();
 		}
 		case GAME_OVER -> {
-			world2D.showEnergizersOn(); // TODO check with MAME
+			energizerPulse.reset(); // TODO check with MAME
 		}
 		default -> {
 			log("PlayScene entered game state %s", e.newGameState);
 		}
 		}
 	}
+
+	private void letEnergizersBlink(boolean blink) {
+		if (blink) {
+			energizerPulse.restart();
+		} else {
+			energizerPulse.stop();
+			energizerPulse.reset();
+		}
+	}
+
 }

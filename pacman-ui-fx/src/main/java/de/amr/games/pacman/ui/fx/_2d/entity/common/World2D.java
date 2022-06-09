@@ -44,7 +44,6 @@ import javafx.scene.paint.Color;
  */
 public class World2D {
 
-	private final SingleGenericAnimation<Boolean> energizerPulse = SingleGenericAnimation.pulse(10);
 	private final SingleGenericAnimation<Image> flashingAnimation;
 	private final GameModel game;
 	private double x, y;
@@ -63,34 +62,21 @@ public class World2D {
 		flashingAnimation.restart();
 	}
 
-	public void showEnergizersOn() {
-		energizerPulse.reset();
-	}
-
-	public void letEnergizersBlink(boolean blink) {
-		if (blink) {
-			energizerPulse.restart();
-		} else {
-			energizerPulse.stop();
-			energizerPulse.reset();
-		}
-	}
-
-	public void render(GraphicsContext g, Rendering2D r2D) {
+	public void render(GraphicsContext g, Rendering2D r2D, boolean foodHidden) {
 		if (flashingAnimation.isRunning()) {
 			g.drawImage(flashingAnimation.animate(), x, y);
 		} else {
 			g.drawImage(r2D.getMazeFullImage(mazeNumber), x, y);
-			hideEatenFood(g, game.level.world);
+			hideEatenFood(g, game.level.world, foodHidden);
 		}
 		if (Env.$tilesVisible.get()) {
 			DebugDraw.drawTileBorders(g, game.level.world.tiles().filter(game.level.world::isIntersection), Color.RED);
 		}
 	}
 
-	private void hideEatenFood(GraphicsContext g, World world) {
+	private void hideEatenFood(GraphicsContext g, World world, boolean foodHidden) {
 		world.tiles().filter(world::containsEatenFood).forEach(tile -> clearTile(g, tile));
-		if (!energizerPulse.animate()) { // dark blinking phase
+		if (foodHidden) { // dark blinking phase
 			world.energizerTiles().forEach(tile -> clearTile(g, tile));
 		}
 	}
