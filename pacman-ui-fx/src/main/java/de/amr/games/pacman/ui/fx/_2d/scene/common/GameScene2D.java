@@ -121,6 +121,10 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 		fxSubScene.setHeight(height);
 	}
 
+	public double currentScaling() {
+		return fxSubScene.getHeight() / unscaledSize.y;
+	}
+
 	/**
 	 * Updates the scene. Subclasses override this method.
 	 */

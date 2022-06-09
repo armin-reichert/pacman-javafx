@@ -38,7 +38,6 @@ import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.model.pacman.PacManGame;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -55,22 +54,22 @@ public class GuysInfo {
 		};
 	}
 
+	private final PlayScene2D playScene;
 	private GameModel game;
-	private double scaling;
 	private final Text[] texts = new Text[6];
 
-	public GuysInfo(Pane parent) {
+	public GuysInfo(PlayScene2D playScene) {
+		this.playScene = playScene;
 		for (int i = 0; i < texts.length; ++i) {
 			texts[i] = new Text();
 			texts[i].setTextAlignment(TextAlignment.CENTER);
 			texts[i].setFill(Color.WHITE);
 		}
-		parent.getChildren().addAll(texts);
+		playScene.infoPane.getChildren().addAll(texts);
 	}
 
-	public void init(GameModel game, double scaling) {
+	public void init(GameModel game) {
 		this.game = game;
-		this.scaling = scaling;
 	}
 
 	private String getAnimationState(GenericAnimation animation, Direction dir) {
@@ -116,6 +115,7 @@ public class GuysInfo {
 	private void updateTextView(Text textView, String text, Entity entity) {
 		textView.setText(text);
 		var textSize = textView.getBoundsInLocal();
+		var scaling = playScene.currentScaling();
 		textView.setX((entity.position.x + World.HTS) * scaling - textSize.getWidth() / 2);
 		textView.setY(entity.position.y * scaling - textSize.getHeight());
 		textView.setVisible(entity.visible);
@@ -124,6 +124,7 @@ public class GuysInfo {
 	private void updateTextView(Text textView, String text, Bonus bonus) {
 		textView.setText(text);
 		var textSize = textView.getBoundsInLocal();
+		var scaling = playScene.currentScaling();
 		textView.setX((bonus.entity().position.x + World.HTS) * scaling - textSize.getWidth() / 2);
 		textView.setY(bonus.entity().position.y * scaling - textSize.getHeight());
 		textView.setVisible(bonus.state() != BonusState.INACTIVE);

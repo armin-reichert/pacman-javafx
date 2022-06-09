@@ -57,14 +57,14 @@ import javafx.scene.paint.Color;
  */
 public class PlayScene2D extends GameScene2D {
 
-	private final GuysInfo guysInfo = new GuysInfo(infoPane);
+	private final GuysInfo guysInfo = new GuysInfo(this);
 	private World2D world2D;
 	private LivesCounter2D livesCounter2D;
 	private LevelCounter2D levelCounter2D;
 
 	@Override
 	public void init() {
-		guysInfo.init(game, fxSubScene.getHeight() / unscaledSize.y);
+		guysInfo.init(game);
 
 		createScoresAndCredit();
 		boolean hasCredit = gameController.credit() > 0;
