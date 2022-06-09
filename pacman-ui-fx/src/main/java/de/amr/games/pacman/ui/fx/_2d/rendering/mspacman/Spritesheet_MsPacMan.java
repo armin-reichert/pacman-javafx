@@ -28,8 +28,8 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.lib.animation.GenericAnimationMap;
+import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.U;
@@ -227,7 +227,7 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 
 	@Override
 	public GenericAnimationMap<Direction, Rectangle2D> createPacMunchingAnimation() {
-		GenericAnimationMap<Direction, Rectangle2D> map = new GenericAnimationMap<>(Direction.class);
+		GenericAnimationMap<Direction, Rectangle2D> map = new GenericAnimationMap<>(4);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			Rectangle2D wide_open = rhs(0, d), open = rhs(1, d), closed = rhs(2, d);
@@ -250,7 +250,7 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 
 	@Override
 	public GenericAnimationMap<Direction, Rectangle2D> createGhostColorAnimation(int ghostID) {
-		GenericAnimationMap<Direction, Rectangle2D> map = new GenericAnimationMap<>(Direction.class);
+		GenericAnimationMap<Direction, Rectangle2D> map = new GenericAnimationMap<>(4);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			var feet = new SingleGenericAnimation<>(rhs(2 * d, 4 + ghostID), rhs(2 * d + 1, 4 + ghostID));
@@ -278,7 +278,7 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 
 	@Override
 	public GenericAnimationMap<Direction, Rectangle2D> createGhostEyesAnimation() {
-		GenericAnimationMap<Direction, Rectangle2D> map = new GenericAnimationMap<>(Direction.class);
+		GenericAnimationMap<Direction, Rectangle2D> map = new GenericAnimationMap<>(4);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			map.put(dir, new SingleGenericAnimation<>(rhs(8 + d, 5)));
@@ -304,7 +304,7 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	// Ms. Pac-Man specific:
 
 	public GenericAnimationMap<Direction, Rectangle2D> createHusbandMunchingAnimations() {
-		GenericAnimationMap<Direction, Rectangle2D> map = new GenericAnimationMap<>(Direction.class);
+		GenericAnimationMap<Direction, Rectangle2D> map = new GenericAnimationMap<>(4);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			var animation = new SingleGenericAnimation<>(rhs(0, 9 + d), rhs(1, 9 + d), rhs(2, 9));

@@ -29,8 +29,8 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.lib.animation.GenericAnimationMap;
+import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.U;
@@ -155,7 +155,7 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 
 	@Override
 	public GenericAnimationMap<Direction, Rectangle2D> createPacMunchingAnimation() {
-		GenericAnimationMap<Direction, Rectangle2D> map = new GenericAnimationMap<>(Direction.class);
+		GenericAnimationMap<Direction, Rectangle2D> map = new GenericAnimationMap<>(4);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			Rectangle2D wide_open = r(0, d), open = r(1, d), closed = r(2, 0);
@@ -169,15 +169,15 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 
 	@Override
 	public SingleGenericAnimation<Rectangle2D> createPacDyingAnimation() {
-		var animation = new SingleGenericAnimation<>(r(3, 0), r(4, 0), r(5, 0), r(6, 0), r(7, 0), r(8, 0), r(9, 0), r(10, 0),
-				r(11, 0), r(12, 0), r(13, 0));
+		var animation = new SingleGenericAnimation<>(r(3, 0), r(4, 0), r(5, 0), r(6, 0), r(7, 0), r(8, 0), r(9, 0),
+				r(10, 0), r(11, 0), r(12, 0), r(13, 0));
 		animation.frameDuration(8);
 		return animation;
 	}
 
 	@Override
 	public GenericAnimationMap<Direction, Rectangle2D> createGhostColorAnimation(int ghostID) {
-		GenericAnimationMap<Direction, Rectangle2D> map = new GenericAnimationMap<>(Direction.class);
+		GenericAnimationMap<Direction, Rectangle2D> map = new GenericAnimationMap<>(4);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			var animation = new SingleGenericAnimation<>(r(2 * d, 4 + ghostID), r(2 * d + 1, 4 + ghostID));
@@ -205,7 +205,7 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 
 	@Override
 	public GenericAnimationMap<Direction, Rectangle2D> createGhostEyesAnimation() {
-		GenericAnimationMap<Direction, Rectangle2D> map = new GenericAnimationMap<>(Direction.class);
+		GenericAnimationMap<Direction, Rectangle2D> map = new GenericAnimationMap<>(4);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			map.put(dir, new SingleGenericAnimation<>(r(8 + d, 5)));
