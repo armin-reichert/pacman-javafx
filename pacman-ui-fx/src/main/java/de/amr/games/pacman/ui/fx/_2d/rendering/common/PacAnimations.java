@@ -28,23 +28,19 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.GenericAnimation;
-import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
-import de.amr.games.pacman.lib.animation.GenericAnimationMap;
 import de.amr.games.pacman.lib.animation.GenericAnimationCollection;
+import de.amr.games.pacman.lib.animation.GenericAnimationMap;
+import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.model.common.actors.Pac;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations.Key;
+import de.amr.games.pacman.model.common.actors.PacAnimationKey;
 import javafx.geometry.Rectangle2D;
 
 /**
  * @author Armin Reichert
  */
-public class PacAnimations implements GenericAnimationCollection<Pac, Key, Rectangle2D> {
+public class PacAnimations implements GenericAnimationCollection<Pac, PacAnimationKey, Rectangle2D> {
 
-	public enum Key {
-		ANIM_MUNCHING, ANIM_DYING;
-	}
-
-	private Key selectedKey;
+	private PacAnimationKey selectedKey;
 	protected GenericAnimationMap<Direction, Rectangle2D> munching;
 	protected SingleGenericAnimation<Rectangle2D> dying;
 
@@ -63,18 +59,18 @@ public class PacAnimations implements GenericAnimationCollection<Pac, Key, Recta
 	}
 
 	@Override
-	public Key selectedKey() {
+	public PacAnimationKey selectedKey() {
 		return selectedKey;
 	}
 
 	@Override
-	public void select(Key key) {
+	public void select(PacAnimationKey key) {
 		selectedKey = key;
 		selectedAnimation().ensureRunning();
 	}
 
 	@Override
-	public GenericAnimation animation(Key key) {
+	public GenericAnimation animation(PacAnimationKey key) {
 		return switch (key) {
 		case ANIM_DYING -> dying;
 		case ANIM_MUNCHING -> munching;

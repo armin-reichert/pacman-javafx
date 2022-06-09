@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import de.amr.games.pacman.model.common.actors.Pac;
+import de.amr.games.pacman.model.common.actors.PacAnimationKey;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -45,7 +46,7 @@ public class Pac2D {
 	public Pac2D(Pac pac, PacAnimations animations) {
 		this.pac = pac;
 		this.animations = animations;
-		animations.select(PacAnimations.Key.ANIM_MUNCHING);
+		animations.select(PacAnimationKey.ANIM_MUNCHING);
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
