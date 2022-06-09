@@ -26,9 +26,9 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
-import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.BonusState;
+import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
@@ -70,9 +70,9 @@ public class Bonus3D extends Box {
 
 	public void update(Bonus bonus) {
 		if (bonus.state() != BonusState.INACTIVE) {
-			V2d position = bonus.position();
-			setTranslateX(position.x + getWidth() / 2);
-			setTranslateY(position.y + getHeight() / 2);
+			var entity = (Entity) bonus;
+			setTranslateX(entity.position.x + getWidth() / 2);
+			setTranslateY(entity.position.y + getHeight() / 2);
 		}
 	}
 

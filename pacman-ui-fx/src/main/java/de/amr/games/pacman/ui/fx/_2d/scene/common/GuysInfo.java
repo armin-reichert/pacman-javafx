@@ -114,7 +114,6 @@ public class GuysInfo {
 	}
 
 	private void updateTextView(Text textView, String text, Entity entity) {
-//			double scaling = fxSubScene.getHeight() / unscaledSize.y;
 		textView.setText(text);
 		var textSize = textView.getBoundsInLocal();
 		textView.setX((entity.position.x + World.HTS) * scaling - textSize.getWidth() / 2);
@@ -123,11 +122,10 @@ public class GuysInfo {
 	}
 
 	private void updateTextView(Text textView, String text, Bonus bonus) {
-//			double scaling = fxSubScene.getHeight() / unscaledSize.y;
 		textView.setText(text);
 		var textSize = textView.getBoundsInLocal();
-		textView.setX((bonus.position().x + World.HTS) * scaling - textSize.getWidth() / 2);
-		textView.setY(bonus.position().y * scaling - textSize.getHeight());
+		textView.setX((bonus.entity().position.x + World.HTS) * scaling - textSize.getWidth() / 2);
+		textView.setY(bonus.entity().position.y * scaling - textSize.getHeight());
 		textView.setVisible(bonus.state() != BonusState.INACTIVE);
 	}
 

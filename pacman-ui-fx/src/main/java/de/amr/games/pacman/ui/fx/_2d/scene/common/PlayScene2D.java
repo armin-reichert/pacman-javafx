@@ -67,22 +67,6 @@ public class PlayScene2D extends GameScene2D {
 	private LevelCounter2D levelCounter2D;
 
 	@Override
-	public void onKeyPressed() {
-		if (Keyboard.pressed(KeyCode.DIGIT5) && gameController.credit() == 0) {
-			SoundManager.get().play(GameSound.CREDIT);
-			gameController.addCredit();
-		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.E)) {
-			Actions.cheatEatAllPellets();
-		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.L)) {
-			Actions.addLives(3);
-		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.N)) {
-			Actions.cheatEnterNextLevel();
-		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.X)) {
-			Actions.cheatKillAllEatableGhosts();
-		}
-	}
-
-	@Override
 	public void init() {
 		guysInfo.init(game, fxSubScene.getHeight() / unscaledSize.y);
 
@@ -114,9 +98,19 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	public void end() {
-		log("Scene '%s' ended", getClass().getName());
-		SoundManager.get().setStopped(false);
+	public void onKeyPressed() {
+		if (Keyboard.pressed(KeyCode.DIGIT5) && gameController.credit() == 0) {
+			SoundManager.get().play(GameSound.CREDIT);
+			gameController.addCredit();
+		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.E)) {
+			Actions.cheatEatAllPellets();
+		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.L)) {
+			Actions.addLives(3);
+		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.N)) {
+			Actions.cheatEnterNextLevel();
+		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.X)) {
+			Actions.cheatKillAllEatableGhosts();
+		}
 	}
 
 	@Override
@@ -125,6 +119,12 @@ public class PlayScene2D extends GameScene2D {
 		if (Env.$debugUI.get()) {
 			guysInfo.update();
 		}
+	}
+
+	@Override
+	public void end() {
+		log("Scene '%s' ended", getClass().getName());
+		SoundManager.get().setStopped(false);
 	}
 
 	private void updateSound() {
