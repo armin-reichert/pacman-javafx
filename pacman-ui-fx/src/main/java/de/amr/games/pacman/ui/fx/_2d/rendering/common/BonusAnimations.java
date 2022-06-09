@@ -31,19 +31,15 @@ import de.amr.games.pacman.lib.animation.GenericAnimationCollection;
 import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.lib.animation.GenericAnimation;
 import de.amr.games.pacman.model.common.actors.Bonus;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations.Key;
+import de.amr.games.pacman.model.common.actors.BonusAnimationKey;
 import javafx.geometry.Rectangle2D;
 
 /**
  * @author Armin Reichert
  */
-public class BonusAnimations implements GenericAnimationCollection<Bonus, Key, Rectangle2D> {
+public class BonusAnimations implements GenericAnimationCollection<Bonus, BonusAnimationKey, Rectangle2D> {
 
-	public enum Key {
-		ANIM_NONE, ANIM_SYMBOL, ANIM_VALUE;
-	}
-
-	private Key selectedKey;
+	private BonusAnimationKey selectedKey;
 	public final SingleGenericAnimation<Rectangle2D> symbolAnimation;
 	public final SingleGenericAnimation<Rectangle2D> valueAnimation;
 
@@ -61,20 +57,20 @@ public class BonusAnimations implements GenericAnimationCollection<Bonus, Key, R
 	}
 
 	@Override
-	public Key selectedKey() {
+	public BonusAnimationKey selectedKey() {
 		return selectedKey;
 	}
 
 	@Override
-	public void select(Key key) {
+	public void select(BonusAnimationKey key) {
 		selectedKey = Objects.requireNonNull(key);
-		if (key != Key.ANIM_NONE) {
+		if (key != BonusAnimationKey.ANIM_NONE) {
 			selectedAnimation().ensureRunning();
 		}
 	}
 
 	@Override
-	public GenericAnimation animation(Key key) {
+	public GenericAnimation animation(BonusAnimationKey key) {
 		return switch (key) {
 		case ANIM_NONE -> null;
 		case ANIM_SYMBOL -> symbolAnimation;

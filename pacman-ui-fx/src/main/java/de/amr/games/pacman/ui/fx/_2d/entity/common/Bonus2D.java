@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.model.common.actors.Bonus;
+import de.amr.games.pacman.model.common.actors.BonusAnimationKey;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -50,7 +51,7 @@ public class Bonus2D {
 		jumpAnimation.frameDuration(10);
 		jumpAnimation.repeatForever();
 		animations = new BonusAnimations(r2D);
-		animations.select(BonusAnimations.Key.ANIM_NONE);
+		animations.select(BonusAnimationKey.ANIM_NONE);
 	}
 
 	public void startJumping() {

@@ -38,6 +38,7 @@ import de.amr.games.pacman.lib.animation.GenericAnimationMap;
 import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Bonus;
+import de.amr.games.pacman.model.common.actors.BonusAnimationKey;
 import de.amr.games.pacman.model.common.actors.BonusState;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -53,8 +54,6 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.World2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations.Key;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
@@ -309,7 +308,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void onBonusGetsActive(GameEvent e) {
-		bonus2D.animations.select(BonusAnimations.Key.ANIM_SYMBOL);
+		bonus2D.animations.select(BonusAnimationKey.ANIM_SYMBOL);
 		if (game.variant == GameVariant.MS_PACMAN) {
 			bonus2D.startJumping();
 		}
@@ -318,13 +317,13 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
 		bonus2D.stopJumping();
-		bonus2D.animations.select(BonusAnimations.Key.ANIM_VALUE);
+		bonus2D.animations.select(BonusAnimationKey.ANIM_VALUE);
 		SoundManager.get().play(GameSound.BONUS_EATEN);
 	}
 
 	@Override
 	public void onBonusExpires(GameEvent e) {
-		bonus2D.animations.select(Key.ANIM_NONE);
+		bonus2D.animations.select(BonusAnimationKey.ANIM_NONE);
 	}
 
 	@Override
@@ -368,7 +367,7 @@ public class PlayScene2D extends GameScene2D {
 			SoundManager.get().stopAll();
 			pac2D.animations.select(PacAnimationKey.ANIM_DYING);
 			pac2D.animations.selectedAnimation().stop();
-			bonus2D.animations.select(Key.ANIM_NONE);
+			bonus2D.animations.select(BonusAnimationKey.ANIM_NONE);
 			new SequentialTransition( //
 					pauseSec(1, () -> game.ghosts().forEach(Ghost::hide)), //
 					pauseSec(1, () -> {
