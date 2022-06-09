@@ -63,9 +63,10 @@ public class PacMan_IntermissionScene3 extends GameScene2D {
 		levelCounter2D = new LevelCounter2D(game.levelCounter, r2D);
 		pacMan2D = new Pac2D(context.pac, new PacAnimations(r2D));
 		blinkyPatched2D = new BlinkyPatched2D(context.blinky);
+		// TODO fixme
 		blinkyNaked2D = new BlinkyNaked2D(context.blinky);
-		context.pac.animations.restart();
-		blinkyPatched2D.animation.restart();
+		context.pac.animations().get().restart();
+		context.blinky.animations().get().restart();
 		blinkyNaked2D.animation.restart();
 	}
 

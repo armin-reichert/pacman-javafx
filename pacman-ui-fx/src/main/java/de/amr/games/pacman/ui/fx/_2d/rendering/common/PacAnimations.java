@@ -47,6 +47,7 @@ public class PacAnimations implements GenericAnimationCollection<Pac, PacAnimati
 	public PacAnimations(Rendering2D r2D) {
 		munching = r2D.createPacMunchingAnimation();
 		dying = r2D.createPacDyingAnimation();
+		select(PacAnimationKey.ANIM_MUNCHING);
 	}
 
 	@Override

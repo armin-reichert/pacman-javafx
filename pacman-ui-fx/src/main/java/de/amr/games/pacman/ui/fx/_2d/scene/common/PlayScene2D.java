@@ -117,8 +117,8 @@ public class PlayScene2D extends GameScene2D {
 		}
 
 		private String computePacInfo(Pac pac) {
-			var animKey = pac.animations.selectedKey();
-			var animState = getAnimationState(pac.animations.selectedAnimation(), pac.moveDir());
+			var animKey = pac.animations().get().selectedKey();
+			var animState = getAnimationState(pac.animations().get().selectedAnimation(), pac.moveDir());
 			return "%s\n%s%s".formatted(pac.name, animState, animKey);
 		}
 
@@ -267,7 +267,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	public void onSwitchFrom3DScene() {
-		game.pac.animations.getByKey(PacAnimationKey.ANIM_MUNCHING).restart();
+		game.pac.animations().get().getByKey(PacAnimationKey.ANIM_MUNCHING).restart();
 		for (var ghost : game.ghosts) {
 			ghost.animations().get().restart();
 		}
@@ -340,30 +340,27 @@ public class PlayScene2D extends GameScene2D {
 		case READY -> {
 			SoundManager.get().stopAll();
 			world2D.showEnergizersOn();
-			game.pac.animations.select(PacAnimationKey.ANIM_MUNCHING);
-			game.pac.animations.selectedAnimation().reset();
-			game.ghosts().forEach(ghost -> ghost.animations().get().restart());
 			if (!gameController.isGameRunning()) {
 				SoundManager.get().play(GameSound.GAME_READY);
 			}
 		}
 		case HUNTING -> {
 			world2D.letEnergizersBlink(true);
-			game.pac.animations.restart();
+			game.pac.animations().get().restart();
 			game.ghosts().forEach(ghost -> ghost.animations().get().restart(GhostAnimationKey.ANIM_COLOR));
 		}
 		case PACMAN_DYING -> {
 			gameController.state().timer().setIndefinite();
 			gameController.state().timer().start();
 			SoundManager.get().stopAll();
-			game.pac.animations.select(PacAnimationKey.ANIM_DYING);
-			game.pac.animations.selectedAnimation().stop();
+			game.pac.animations().get().select(PacAnimationKey.ANIM_DYING);
+			game.pac.animations().get().selectedAnimation().stop();
 			bonus2D.animations.select(BonusAnimationKey.ANIM_NONE);
 			new SequentialTransition( //
 					pauseSec(1, () -> game.ghosts().forEach(Ghost::hide)), //
 					pauseSec(1, () -> {
 						SoundManager.get().play(GameSound.PACMAN_DEATH);
-						game.pac.animations.selectedAnimation().run();
+						game.pac.animations().get().selectedAnimation().run();
 					}), //
 					pauseSec(2, () -> game.pac.hide()), //
 					pauseSec(1, () -> gameController.state().timer().expire()) // exit game state
@@ -378,7 +375,7 @@ public class PlayScene2D extends GameScene2D {
 		case LEVEL_COMPLETE -> {
 			gameController.state().timer().setIndefinite();
 			SoundManager.get().stopAll();
-			game.pac.animations.reset();
+			game.pac.animations().get().reset();
 			// Energizers can still exist if "next level" cheat has been used
 			world2D.showEnergizersOn();
 			new SequentialTransition( //
