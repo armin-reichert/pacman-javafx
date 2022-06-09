@@ -31,19 +31,15 @@ import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.lib.animation.GenericAnimation;
 import de.amr.games.pacman.lib.animation.GenericAnimationMap;
 import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations.Key;
+import de.amr.games.pacman.model.common.actors.GhostAnimationKey;
 import javafx.geometry.Rectangle2D;
 
 /**
  * @author Armin Reichert
  */
-public class GhostAnimations implements GenericAnimationCollection<Ghost, Key, Rectangle2D> {
+public class GhostAnimations implements GenericAnimationCollection<Ghost, GhostAnimationKey, Rectangle2D> {
 
-	public enum Key {
-		ANIM_COLOR, ANIM_EYES, ANIM_VALUE, ANIM_BLUE, ANIM_FLASHING;
-	}
-
-	private Key selectedKey;
+	private GhostAnimationKey selectedKey;
 	public GenericAnimationMap<Direction, Rectangle2D> eyes;
 	public SingleGenericAnimation<Rectangle2D> flashing;
 	public SingleGenericAnimation<Rectangle2D> blue;
@@ -59,18 +55,18 @@ public class GhostAnimations implements GenericAnimationCollection<Ghost, Key, R
 	}
 
 	@Override
-	public Key selectedKey() {
+	public GhostAnimationKey selectedKey() {
 		return selectedKey;
 	}
 
 	@Override
-	public void select(Key key) {
+	public void select(GhostAnimationKey key) {
 		selectedKey = key;
 		selectedAnimation().ensureRunning();
 	}
 
 	@Override
-	public GenericAnimation animation(Key key) {
+	public GenericAnimation animation(GhostAnimationKey key) {
 		return switch (key) {
 		case ANIM_EYES -> eyes;
 		case ANIM_FLASHING -> flashing;

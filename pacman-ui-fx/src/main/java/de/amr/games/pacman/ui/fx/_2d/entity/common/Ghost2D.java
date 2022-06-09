@@ -25,8 +25,8 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.common.actors.Ghost;
+import de.amr.games.pacman.model.common.actors.GhostAnimationKey;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations.Key;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -45,7 +45,7 @@ public class Ghost2D {
 	public Ghost2D(Ghost ghost, Rendering2D r2D) {
 		this.ghost = ghost;
 		this.animations = new GhostAnimations(ghost.id, r2D);
-		animations.select(GhostAnimations.Key.ANIM_COLOR);
+		animations.select(GhostAnimationKey.ANIM_COLOR);
 	}
 
 	public void updateAnimations(boolean startFlashing, boolean stopFlashing, int numFlashes) {
@@ -57,7 +57,7 @@ public class Ghost2D {
 		}
 		switch (ghost.state) {
 		case DEAD -> {
-			animations.select(ghost.killIndex == -1 ? GhostAnimations.Key.ANIM_EYES : GhostAnimations.Key.ANIM_VALUE);
+			animations.select(ghost.killIndex == -1 ? GhostAnimationKey.ANIM_EYES : GhostAnimationKey.ANIM_VALUE);
 		}
 		case FRIGHTENED, LOCKED -> {
 			if (startFlashing) {
@@ -67,7 +67,7 @@ public class Ghost2D {
 			}
 		}
 		case LEAVING_HOUSE -> {
-			animations.select(GhostAnimations.Key.ANIM_COLOR);
+			animations.select(GhostAnimationKey.ANIM_COLOR);
 		}
 		default -> {
 		}
@@ -83,12 +83,12 @@ public class Ghost2D {
 		animations.flashing.frameDuration(frameDuration);
 		animations.flashing.repeat(numFlashes);
 		animations.flashing.restart();
-		animations.select(GhostAnimations.Key.ANIM_FLASHING);
+		animations.select(GhostAnimationKey.ANIM_FLASHING);
 	}
 
 	private void ensureFlashingStopped() {
-		if (animations.selectedKey() == Key.ANIM_FLASHING) {
-			animations.select(GhostAnimations.Key.ANIM_COLOR);
+		if (animations.selectedKey() == GhostAnimationKey.ANIM_FLASHING) {
+			animations.select(GhostAnimationKey.ANIM_COLOR);
 		}
 	}
 }

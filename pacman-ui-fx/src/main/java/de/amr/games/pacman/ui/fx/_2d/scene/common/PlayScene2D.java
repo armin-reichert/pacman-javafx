@@ -41,6 +41,7 @@ import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.BonusState;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
+import de.amr.games.pacman.model.common.actors.GhostAnimationKey;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.actors.PacAnimationKey;
 import de.amr.games.pacman.model.common.world.World;
@@ -54,7 +55,6 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.World2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations.Key;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
@@ -298,7 +298,7 @@ public class PlayScene2D extends GameScene2D {
 		SoundManager.get().stopSirens();
 		SoundManager.get().ensureLoop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
 		for (var ghost2D : ghosts2D) {
-			ghost2D.animations.select(GhostAnimations.Key.ANIM_BLUE);
+			ghost2D.animations.select(GhostAnimationKey.ANIM_BLUE);
 		}
 	}
 
@@ -360,7 +360,7 @@ public class PlayScene2D extends GameScene2D {
 		case HUNTING -> {
 			world2D.letEnergizersBlink(true);
 			pac2D.animations.restart();
-			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart(GhostAnimations.Key.ANIM_COLOR));
+			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart(GhostAnimationKey.ANIM_COLOR));
 		}
 		case PACMAN_DYING -> {
 			gameController.state().timer().setIndefinite();

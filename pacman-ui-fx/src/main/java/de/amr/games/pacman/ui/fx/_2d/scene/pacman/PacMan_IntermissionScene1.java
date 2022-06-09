@@ -25,11 +25,11 @@ package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.pacman.Intermission1Controller;
+import de.amr.games.pacman.model.common.actors.GhostAnimationKey;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.BigPacMan2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
@@ -72,8 +72,8 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 	public void doUpdate() {
 		sceneController.update();
 		blinky2D.animations.select(switch (context.blinky.state) {
-		case FRIGHTENED -> GhostAnimations.Key.ANIM_BLUE;
-		case HUNTING_PAC -> GhostAnimations.Key.ANIM_COLOR;
+		case FRIGHTENED -> GhostAnimationKey.ANIM_BLUE;
+		case HUNTING_PAC -> GhostAnimationKey.ANIM_COLOR;
 		default -> blinky2D.animations.selectedKey();
 		});
 	}
