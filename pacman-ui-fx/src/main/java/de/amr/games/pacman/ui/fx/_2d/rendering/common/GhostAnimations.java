@@ -63,7 +63,6 @@ public class GhostAnimations implements GenericAnimationCollection<Ghost, GhostA
 	@Override
 	public void select(GhostAnimationKey key) {
 		selectedKey = key;
-		selectedAnimation().ensureRunning();
 	}
 
 	@Override

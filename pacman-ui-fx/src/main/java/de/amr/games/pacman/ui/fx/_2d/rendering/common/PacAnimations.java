@@ -67,7 +67,6 @@ public class PacAnimations implements GenericAnimationCollection<Pac, PacAnimati
 	@Override
 	public void select(PacAnimationKey key) {
 		selectedKey = key;
-		selectedAnimation().ensureRunning();
 	}
 
 	@Override

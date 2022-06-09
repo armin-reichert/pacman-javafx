@@ -53,8 +53,8 @@ import de.amr.games.pacman.ui.fx._2d.entity.common.Bonus2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
-import de.amr.games.pacman.ui.fx._2d.entity.common.Pac2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.World2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
@@ -62,6 +62,7 @@ import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -117,9 +118,13 @@ public class PlayScene2D extends GameScene2D {
 		}
 
 		private String computePacInfo(Pac pac) {
-			var animKey = pac.animations().get().selectedKey();
-			var animState = getAnimationState(pac.animations().get().selectedAnimation(), pac.moveDir());
-			return "%s\n%s%s".formatted(pac.name, animState, animKey);
+			if (pac.animations().isPresent()) {
+				var animKey = pac.animations().get().selectedKey();
+				var animState = getAnimationState(pac.animations().get().selectedAnimation(), pac.moveDir());
+				return "%s\n%s%s".formatted(pac.name, animState, animKey);
+			} else {
+				return "%s\n".formatted(pac.name);
+			}
 		}
 
 		private String computeBonusInfo(Bonus2D bonus2D) {
@@ -152,7 +157,7 @@ public class PlayScene2D extends GameScene2D {
 					var ghost = game.ghosts[i];
 					updateTextView(texts[i], computeGhostInfo(ghost), ghost);
 				} else if (i == texts.length - 2) {
-					updateTextView(texts[i], computePacInfo(game.pac), pac2D.pac);
+					updateTextView(texts[i], computePacInfo(game.pac), game.pac);
 				} else {
 					updateTextView(texts[i], computeBonusInfo(bonus2D), game.bonus());
 				}
@@ -163,7 +168,6 @@ public class PlayScene2D extends GameScene2D {
 	private World2D world2D;
 	private LivesCounter2D livesCounter2D;
 	private LevelCounter2D levelCounter2D;
-	private Pac2D pac2D;
 	private Ghost2D[] ghosts2D = new Ghost2D[4];
 	private Bonus2D bonus2D;
 
@@ -200,7 +204,7 @@ public class PlayScene2D extends GameScene2D {
 		levelCounter2D.visible = hasCredit;
 
 		world2D = new World2D(game, r2D);
-		pac2D = new Pac2D(game.pac, r2D);
+		game.pac.setAnimations(new PacAnimations(r2D));
 		for (var ghost : game.ghosts) {
 			ghosts2D[ghost.id] = new Ghost2D(ghost, r2D);
 		}
@@ -249,8 +253,14 @@ public class PlayScene2D extends GameScene2D {
 		world2D.render(g, r2D);
 		drawGameStateMessage(g);
 		bonus2D.render(g, r2D);
-		pac2D.render(g, r2D);
+		drawPac(g, game.pac);
 		Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.render(g, r2D));
+	}
+
+	private void drawPac(GraphicsContext g, Pac pac) {
+		pac.animations().ifPresent(anim -> {
+			r2D.drawEntity(g, pac, (Rectangle2D) anim.currentSprite(pac));
+		});
 	}
 
 	private void drawGameStateMessage(GraphicsContext g) {

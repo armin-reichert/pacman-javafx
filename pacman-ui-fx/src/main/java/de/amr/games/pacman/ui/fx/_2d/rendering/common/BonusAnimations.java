@@ -27,9 +27,9 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+import de.amr.games.pacman.lib.animation.GenericAnimation;
 import de.amr.games.pacman.lib.animation.GenericAnimationCollection;
 import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
-import de.amr.games.pacman.lib.animation.GenericAnimation;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.BonusAnimationKey;
 import javafx.geometry.Rectangle2D;
@@ -64,9 +64,6 @@ public class BonusAnimations implements GenericAnimationCollection<Bonus, BonusA
 	@Override
 	public void select(BonusAnimationKey key) {
 		selectedKey = Objects.requireNonNull(key);
-		if (key != BonusAnimationKey.ANIM_NONE) {
-			selectedAnimation().ensureRunning();
-		}
 	}
 
 	@Override
