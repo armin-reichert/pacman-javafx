@@ -28,10 +28,8 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import static de.amr.games.pacman.ui.fx.util.U.pauseSec;
 
 import de.amr.games.pacman.controller.common.GameState;
-import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.actors.PacAnimationKey;
 import de.amr.games.pacman.model.mspacman.MovingBonus;
 import de.amr.games.pacman.model.pacman.StaticBonus;
@@ -45,8 +43,8 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
+import de.amr.games.pacman.ui.fx.sound.PlaySceneSoundHandler;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
-import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
@@ -64,6 +62,7 @@ public class PlayScene2D extends GameScene2D {
 	private World2D world2D;
 	private LivesCounter2D livesCounter2D;
 	private LevelCounter2D levelCounter2D;
+	private PlaySceneSoundHandler sounds = new PlaySceneSoundHandler();
 
 	@Override
 	public void init() {
@@ -90,7 +89,8 @@ public class PlayScene2D extends GameScene2D {
 		game.bonus().setAnimations(new BonusAnimations(r2D));
 		game.bonus().setInactive();
 
-		SoundManager.get().setStopped(!hasCredit);
+		sounds.register(game);
+		sounds.setStopped(!hasCredit);
 	}
 
 	@Override
@@ -111,14 +111,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	protected void doUpdate() {
-		if (gameController.state() == GameState.HUNTING) {
-			if (game.pac.starvingTicks == 10) {
-				SoundManager.get().stop(GameSound.PACMAN_MUNCH);
-			}
-			if (game.huntingTimer.tick() == 0) {
-				SoundManager.get().ensureSirenStarted(game.huntingTimer.phase() / 2);
-			}
-		}
+		sounds.update(gameController.state());
 		if (Env.$debugUI.get()) {
 			guysInfo.update();
 		}
@@ -169,45 +162,6 @@ public class PlayScene2D extends GameScene2D {
 		world2D.letEnergizersBlink(true);
 		if (game.pac.starvingTicks > 10) {
 			SoundManager.get().stop(GameSound.PACMAN_MUNCH);
-		}
-	}
-
-	@Override
-	public void onPlayerLosesPower(GameEvent e) {
-		SoundManager.get().stop(GameSound.PACMAN_POWER);
-		SoundManager.get().ensureSirenStarted(game.huntingTimer.phase() / 2);
-	}
-
-	@Override
-	public void onPlayerGetsPower(GameEvent e) {
-		SoundManager.get().stopSirens();
-		SoundManager.get().ensureLoop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
-	}
-
-	@Override
-	public void onPlayerFindsFood(GameEvent e) {
-		SoundManager.get().ensureLoop(GameSound.PACMAN_MUNCH, Animation.INDEFINITE);
-	}
-
-	@Override
-	public void onBonusGetsEaten(GameEvent e) {
-		SoundManager.get().play(GameSound.BONUS_EATEN);
-	}
-
-	@Override
-	public void onPlayerGetsExtraLife(GameEvent e) {
-		SoundManager.get().play(GameSound.EXTRA_LIFE);
-	}
-
-	@Override
-	public void onGhostStartsReturningHome(GameEvent e) {
-		SoundManager.get().ensurePlaying(GameSound.GHOST_RETURNING);
-	}
-
-	@Override
-	public void onGhostEntersHouse(GameEvent e) {
-		if (game.ghosts(GhostState.DEAD).count() == 0) {
-			SoundManager.get().stop(GameSound.GHOST_RETURNING);
 		}
 	}
 

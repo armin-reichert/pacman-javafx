@@ -57,6 +57,7 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
+import de.amr.games.pacman.ui.fx.sound.PlaySceneSoundHandler;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.CoordinateAxes;
 import de.amr.games.pacman.ui.fx.util.U;
@@ -72,7 +73,6 @@ import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
 
@@ -97,6 +97,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 	private GameModel game;
 	private PacManModel3D model3D;
 	private Rendering2D r2D;
+	private PlaySceneSoundHandler sounds = new PlaySceneSoundHandler();
 
 	private Pac3D player3D;
 	private Maze3D maze3D;
@@ -150,12 +151,12 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 		case PACMAN -> Spritesheet_PacMan.get();
 		};
 		model3D = GianmarcosModel3D.get();
-		SoundManager.get().stopAll(); // TODO: check this
-		SoundManager.get().selectGameVariant(game.variant);
 	}
 
 	@Override
 	public void init() {
+		boolean hasCredit = gameController.credit() > 0;
+
 		maze3D = new Maze3D(ArcadeWorld.SIZE.x, ArcadeWorld.SIZE.y);
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
@@ -173,7 +174,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 
 		score3D = new Score3D();
 		score3D.setFont(r2D.getArcadeFont());
-		if (gameController.credit() == 0) {
+		if (!hasCredit) {
 			score3D.setComputeScoreText(false);
 			score3D.txtScore.setFill(Color.RED);
 			score3D.txtScore.setText("GAME OVER!");
@@ -183,7 +184,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 
 		livesCounter3D = new LivesCounter3D(model3D);
 		livesCounter3D.getTransforms().add(new Translate(TS, TS, -HTS));
-		livesCounter3D.setVisible(gameController.credit() > 0);
+		livesCounter3D.setVisible(hasCredit);
 
 		levelCounter3D = new LevelCounter3D(ArcadeWorld.SIZE.x - TS, TS, r2D);
 		levelCounter3D.update(game);
@@ -198,6 +199,10 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 
 		setCameraPerspective($perspective.get());
 		setUseMazeFloorTexture($useMazeFloorTexture.get());
+
+		// Sound
+		sounds.register(game);
+		sounds.setStopped(!hasCredit);
 	}
 
 	@Override
@@ -216,25 +221,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 				game.scores().highScore().levelNumber);
 		livesCounter3D.update(game.lives);
 		getCamera().update(player3D);
-		updateSound();
-	}
-
-	private void updateSound() {
-		if (gameController.credit() == 0) {
-			return;
-		}
-		switch (gameController.state()) {
-		case HUNTING -> {
-			if (SoundManager.get().getClip(GameSound.PACMAN_MUNCH).isPlaying() && game.pac.starvingTicks > 10) {
-				SoundManager.get().stop(GameSound.PACMAN_MUNCH);
-			}
-			if (game.huntingTimer.scatteringPhase() >= 0 && game.huntingTimer.tick() == 0) {
-				SoundManager.get().ensureSirenStarted(game.huntingTimer.scatteringPhase());
-			}
-		}
-		default -> {
-		}
-		}
+		sounds.update(gameController.state());
 	}
 
 	@Override
@@ -306,10 +293,6 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 
 	@Override
 	public void onPlayerGetsPower(GameEvent e) {
-		SoundManager.get().stopSirens();
-		if (gameController.credit() > 0) {
-			SoundManager.get().loop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
-		}
 		Stream.of(ghosts3D) //
 				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
 				.forEach(Ghost3D::setFrightenedLook);
@@ -320,14 +303,10 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 		Stream.of(ghosts3D) //
 				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED)) //
 				.forEach(Ghost3D::playFlashingAnimation);
-		if (gameController.credit() > 0) {
-			SoundManager.get().startSiren(0);
-		}
 	}
 
 	@Override
 	public void onPlayerLosesPower(GameEvent e) {
-		SoundManager.get().stop(GameSound.PACMAN_POWER);
 		Stream.of(ghosts3D).forEach(Ghost3D::setNormalLook);
 	}
 
@@ -340,10 +319,6 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 		} else {
 			V2i tile = e.tile.get();
 			maze3D.foodAt(tile).ifPresent(maze3D::hideFood);
-			AudioClip munching = SoundManager.get().getClip(GameSound.PACMAN_MUNCH);
-			if (!munching.isPlaying() && gameController.credit() > 0) {
-				SoundManager.get().loop(GameSound.PACMAN_MUNCH, Animation.INDEFINITE);
-			}
 		}
 	}
 
@@ -355,34 +330,11 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
 		bonus3D.showPoints(game.bonus());
-		if (gameController.credit() > 0) {
-			SoundManager.get().play(GameSound.BONUS_EATEN);
-		}
 	}
 
 	@Override
 	public void onBonusExpires(GameEvent e) {
 		bonus3D.setVisible(false);
-	}
-
-	@Override
-	public void onPlayerGetsExtraLife(GameEvent e) {
-		Actions.showFlashMessage(Env.message("extra_life"));
-		SoundManager.get().play(GameSound.EXTRA_LIFE);
-	}
-
-	@Override
-	public void onGhostStartsReturningHome(GameEvent e) {
-		if (gameController.credit() > 0) {
-			SoundManager.get().ensurePlaying(GameSound.GHOST_RETURNING);
-		}
-	}
-
-	@Override
-	public void onGhostEntersHouse(GameEvent e) {
-		if (game.ghosts(GhostState.DEAD).count() == 0) {
-			SoundManager.get().stop(GameSound.GHOST_RETURNING);
-		}
 	}
 
 	@Override
