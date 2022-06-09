@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import de.amr.games.pacman.lib.TickTimer;
-import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostAnimationKey;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
@@ -62,7 +61,7 @@ public class Ghost2D {
 		}
 		case FRIGHTENED, LOCKED -> {
 			if (startFlashing) {
-				startFlashing(numFlashes);
+				ghost.startFlashing(numFlashes, FLASHING_TIME);
 			} else if (stopFlashing) {
 				ensureFlashingStopped();
 			}
@@ -79,14 +78,14 @@ public class Ghost2D {
 		r2D.drawEntity(g, ghost, (Rectangle2D) ghost.animations.currentSprite(ghost));
 	}
 
-	private void startFlashing(int numFlashes) {
-		ghost.animations.select(GhostAnimationKey.ANIM_FLASHING);
-		var flashing = (SingleGenericAnimation<?>) ghost.animations.selectedAnimation();
-		long frameDuration = FLASHING_TIME / (numFlashes * flashing.numFrames());
-		flashing.frameDuration(frameDuration);
-		flashing.repeat(numFlashes);
-		flashing.restart();
-	}
+//	private void startFlashing(int numFlashes) {
+//		ghost.animations.select(GhostAnimationKey.ANIM_FLASHING);
+//		var flashing = (SingleGenericAnimation<?>) ghost.animations.selectedAnimation();
+//		long frameDuration = FLASHING_TIME / (numFlashes * flashing.numFrames());
+//		flashing.frameDuration(frameDuration);
+//		flashing.repeat(numFlashes);
+//		flashing.restart();
+//	}
 
 	private void ensureFlashingStopped() {
 		if (ghost.animations.selectedKey() == GhostAnimationKey.ANIM_FLASHING) {
