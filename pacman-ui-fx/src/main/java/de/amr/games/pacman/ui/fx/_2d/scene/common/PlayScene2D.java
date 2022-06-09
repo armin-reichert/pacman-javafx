@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.lib.Logging.log;
-import static de.amr.games.pacman.lib.TickTimer.sec_to_ticks;
 import static de.amr.games.pacman.model.common.world.World.t;
 import static de.amr.games.pacman.ui.fx.util.U.pauseSec;
 
@@ -223,14 +222,11 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void updateGhostAnimations() {
-		long recoveringTicks = sec_to_ticks(2); // TODO not sure about this
-		boolean recoveringStarts = game.pac.powerTimer.remaining() == recoveringTicks;
-		boolean pacPowerEnds = game.pac.powerTimer.remaining() == 1;
+		long powerTicksRemaining = game.pac.powerTimer.remaining();
+		boolean startFlashing = powerTicksRemaining == Ghost2D.FLASHING_TIME;
+		boolean endFlashing = powerTicksRemaining == 1; // TODO check if == 0 works too
 		for (var ghost2D : ghosts2D) {
-			if (pacPowerEnds) {
-				ghost2D.onFrightenedPhaseEnds();
-			}
-			ghost2D.update(recoveringStarts, game.level.numFlashes, recoveringTicks);
+			ghost2D.updateAnimations(startFlashing, endFlashing, game.level.numFlashes);
 		}
 	}
 

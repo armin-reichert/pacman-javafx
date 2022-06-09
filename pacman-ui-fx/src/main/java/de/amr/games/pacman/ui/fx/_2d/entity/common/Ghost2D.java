@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
+import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations.Key;
@@ -36,6 +37,8 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class Ghost2D {
 
+	public static final long FLASHING_TIME = TickTimer.sec_to_ticks(2); // TODO not sure
+
 	public final Ghost ghost;
 	public final GhostAnimations animations;
 
@@ -45,21 +48,8 @@ public class Ghost2D {
 		animations.select(GhostAnimations.Key.ANIM_COLOR);
 	}
 
-	public void startFlashing(int numFlashes, long ticksTotal) {
-		long frameTicks = ticksTotal / (numFlashes * animations.flashing.numFrames());
-		animations.flashing.frameDuration(frameTicks);
-		animations.flashing.repeat(numFlashes);
-		animations.flashing.restart();
-		animations.select(GhostAnimations.Key.ANIM_FLASHING);
-	}
-
-	public void onFrightenedPhaseEnds() {
-		if (animations.selectedKey() == Key.ANIM_FLASHING) {
-			animations.select(GhostAnimations.Key.ANIM_COLOR);
-		}
-	}
-
-	public void update(boolean recoveringStarts, int numFlashes, long recoveringTicks) {
+	public void updateAnimations(boolean startFlashing, boolean stopFlashing, int numFlashes) {
+		// this is to keep feet still when locked
 		if (ghost.velocity.length() == 0) {
 			animations.color.stop();
 		} else {
@@ -67,20 +57,13 @@ public class Ghost2D {
 		}
 		switch (ghost.state) {
 		case DEAD -> {
-			if (ghost.killIndex == -1) {
-				animations.select(GhostAnimations.Key.ANIM_EYES);
-			} else {
-				animations.select(GhostAnimations.Key.ANIM_VALUE);
-			}
+			animations.select(ghost.killIndex == -1 ? GhostAnimations.Key.ANIM_EYES : GhostAnimations.Key.ANIM_VALUE);
 		}
-		case FRIGHTENED -> {
-			if (recoveringStarts) {
-				startFlashing(numFlashes, recoveringTicks);
-			}
-		}
-		case LOCKED -> {
-			if (recoveringStarts) {
-				startFlashing(numFlashes, recoveringTicks);
+		case FRIGHTENED, LOCKED -> {
+			if (startFlashing) {
+				startFlashing(numFlashes);
+			} else if (stopFlashing) {
+				ensureFlashingStopped();
 			}
 		}
 		case LEAVING_HOUSE -> {
@@ -93,5 +76,19 @@ public class Ghost2D {
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
 		r2D.drawEntity(g, ghost, animations.currentSprite(ghost));
+	}
+
+	private void startFlashing(int numFlashes) {
+		long frameDuration = FLASHING_TIME / (numFlashes * animations.flashing.numFrames());
+		animations.flashing.frameDuration(frameDuration);
+		animations.flashing.repeat(numFlashes);
+		animations.flashing.restart();
+		animations.select(GhostAnimations.Key.ANIM_FLASHING);
+	}
+
+	private void ensureFlashingStopped() {
+		if (animations.selectedKey() == Key.ANIM_FLASHING) {
+			animations.select(GhostAnimations.Key.ANIM_COLOR);
+		}
 	}
 }
