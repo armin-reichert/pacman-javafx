@@ -75,7 +75,11 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		highScore2D.score.visible = false;
 		credit2D.visible = true;
 		$.msPacMan.setAnimations(new PacAnimations(r2D));
-		Stream.of($.ghosts).forEach(ghost -> ghost.setAnimations(new GhostAnimations(ghost.id, r2D)));
+		$.msPacMan.animations().get().ensureRunning();
+		Stream.of($.ghosts).forEach(ghost -> {
+			ghost.setAnimations(new GhostAnimations(ghost.id, r2D));
+			ghost.animations().get().ensureRunning();
+		});
 	}
 
 	@Override
