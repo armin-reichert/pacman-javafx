@@ -57,7 +57,7 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
-import de.amr.games.pacman.ui.fx.sound.PlaySceneSoundHandler;
+import de.amr.games.pacman.ui.fx.sound.PlaySceneSounds;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.CoordinateAxes;
 import de.amr.games.pacman.ui.fx.util.U;
@@ -97,7 +97,6 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 	private GameModel game;
 	private PacManModel3D model3D;
 	private Rendering2D r2D;
-	private PlaySceneSoundHandler sounds = new PlaySceneSoundHandler();
 
 	private Pac3D player3D;
 	private Maze3D maze3D;
@@ -201,8 +200,8 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 		setUseMazeFloorTexture($useMazeFloorTexture.get());
 
 		// Sound
-		sounds.register(game);
-		sounds.setStopped(!hasCredit);
+		PlaySceneSounds.setGame(game);
+		PlaySceneSounds.setStopped(!hasCredit);
 	}
 
 	@Override
@@ -221,7 +220,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 				game.scores().highScore().levelNumber);
 		livesCounter3D.update(game.lives);
 		getCamera().update(player3D);
-		sounds.update(gameController.state());
+		PlaySceneSounds.update(gameController.state());
 	}
 
 	@Override
@@ -244,12 +243,6 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 				.forEach(foodNode -> foodNode.setVisible(!game.level.world.containsEatenFood(maze3D.tile(foodNode))));
 		if (gameController.state() == GameState.HUNTING || gameController.state() == GameState.GHOST_DYING) {
 			maze3D.energizerAnimations().forEach(Animation::play);
-		}
-		if (game.pac.hasPower()) {
-			SoundManager.get().ensureLoop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
-		}
-		if (gameController.credit() > 0 && gameController.state() == GameState.HUNTING && !game.pac.hasPower()) {
-			SoundManager.get().ensureSirenStarted(0);
 		}
 	}
 
@@ -407,7 +400,6 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 		if (e.oldGameState == GameState.HUNTING && e.newGameState != GameState.GHOST_DYING) {
 			maze3D.energizerAnimations().forEach(Animation::stop);
 			bonus3D.setVisible(false);
-			SoundManager.get().stopAll();
 		}
 	}
 }

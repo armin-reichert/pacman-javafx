@@ -43,7 +43,7 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
-import de.amr.games.pacman.ui.fx.sound.PlaySceneSoundHandler;
+import de.amr.games.pacman.ui.fx.sound.PlaySceneSounds;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.SequentialTransition;
 import javafx.scene.canvas.GraphicsContext;
@@ -58,11 +58,9 @@ import javafx.scene.paint.Color;
 public class PlayScene2D extends GameScene2D {
 
 	private final GuysInfo guysInfo = new GuysInfo(infoPane);
-
 	private World2D world2D;
 	private LivesCounter2D livesCounter2D;
 	private LevelCounter2D levelCounter2D;
-	private PlaySceneSoundHandler sounds = new PlaySceneSoundHandler();
 
 	@Override
 	public void init() {
@@ -89,8 +87,8 @@ public class PlayScene2D extends GameScene2D {
 		game.bonus().setAnimations(new BonusAnimations(r2D));
 		game.bonus().setInactive();
 
-		sounds.register(game);
-		sounds.setStopped(!hasCredit);
+		PlaySceneSounds.setGame(game);
+		PlaySceneSounds.setStopped(!hasCredit);
 	}
 
 	@Override
@@ -111,7 +109,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	protected void doUpdate() {
-		sounds.update(gameController.state());
+		PlaySceneSounds.update(gameController.state());
 		if (Env.$debugUI.get()) {
 			guysInfo.update();
 		}
@@ -120,7 +118,6 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void end() {
 		log("Scene '%s' ended", getClass().getName());
-		SoundManager.get().setStopped(false);
 	}
 
 	@Override
@@ -160,9 +157,6 @@ public class PlayScene2D extends GameScene2D {
 			ghost.animations().get().restart();
 		}
 		world2D.letEnergizersBlink(true);
-		if (game.pac.starvingTicks > 10) {
-			SoundManager.get().stop(GameSound.PACMAN_MUNCH);
-		}
 	}
 
 	@Override

@@ -34,31 +34,35 @@ import javafx.animation.Animation;
 /**
  * @author Armin Reichert
  */
-public class PlaySceneSoundHandler extends GameEventAdapter {
+public class PlaySceneSounds extends GameEventAdapter {
 
-	private GameModel game;
+	private static final PlaySceneSounds theOne = new PlaySceneSounds();
 
-	public void register(GameModel game) {
-		GameEventing.removeEventListener(this); // TODO
-		GameEventing.addEventListener(this);
-		this.game = game;
+	public static void setGame(GameModel game) {
+		theOne.game = game;
 		SoundManager.get().selectGameVariant(game.variant);
 		SoundManager.get().stopAll();
 	}
 
-	public void setStopped(boolean stopped) {
+	public static void setStopped(boolean stopped) {
 		SoundManager.get().setStopped(stopped);
 	}
 
-	public void update(GameState state) {
+	public static void update(GameState state) {
 		if (state == GameState.HUNTING) {
-			if (game.pac.starvingTicks == 10) {
+			if (theOne.game.pac.starvingTicks == 10) {
 				SoundManager.get().stop(GameSound.PACMAN_MUNCH);
 			}
-			if (game.huntingTimer.tick() == 0) {
-				SoundManager.get().ensureSirenStarted(game.huntingTimer.phase() / 2);
+			if (theOne.game.huntingTimer.tick() == 0) {
+				SoundManager.get().ensureSirenStarted(theOne.game.huntingTimer.phase() / 2);
 			}
 		}
+	}
+
+	private GameModel game;
+
+	private PlaySceneSounds() {
+		GameEventing.addEventListener(this);
 	}
 
 	@Override
