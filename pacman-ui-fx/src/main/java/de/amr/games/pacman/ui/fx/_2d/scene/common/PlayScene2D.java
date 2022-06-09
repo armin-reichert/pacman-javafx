@@ -31,7 +31,6 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.model.common.actors.GhostAnimationKey;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.actors.PacAnimationKey;
 import de.amr.games.pacman.model.mspacman.MovingBonus;
@@ -247,9 +246,6 @@ public class PlayScene2D extends GameScene2D {
 		}
 		case GHOST_DYING -> {
 			SoundManager.get().play(GameSound.GHOST_EATEN);
-			for (var ghost : game.ghosts) {
-				ghost.animations().get().getByKey(GhostAnimationKey.ANIM_FLASHING).stop();
-			}
 		}
 		case LEVEL_COMPLETE -> {
 			gameController.state().timer().setIndefinite();
@@ -265,6 +261,7 @@ public class PlayScene2D extends GameScene2D {
 			).play();
 		}
 		case LEVEL_STARTING -> {
+			// TODO check this
 			gameController.state().timer().setSeconds(1);
 			gameController.state().timer().start();
 		}
