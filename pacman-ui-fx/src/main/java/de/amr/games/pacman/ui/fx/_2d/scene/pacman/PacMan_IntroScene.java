@@ -74,9 +74,9 @@ public class PacMan_IntroScene extends GameScene2D {
 	@Override
 	public void init() {
 		sceneController.restartInInitialState(IntroController.State.START);
-		createScoresAndCredit(game);
-		score2D.showContent = false;
-		score2D.score.visible = false;
+		createScoresAndCredit();
+		gameScore2D.showContent = false;
+		gameScore2D.score.visible = false;
 		highScore2D.score.visible = false;
 		credit2D.visible = false;
 		pacMan2D = new Pac2D($.pacMan, new PacAnimations(r2D));
@@ -133,7 +133,7 @@ public class PacMan_IntroScene extends GameScene2D {
 	public void doRender(GraphicsContext g) {
 		var time = sceneController.state().timer().tick();
 
-		score2D.render(g, r2D);
+		gameScore2D.render(g, r2D);
 		highScore2D.render(g, r2D);
 		credit2D.render(g, r2D);
 

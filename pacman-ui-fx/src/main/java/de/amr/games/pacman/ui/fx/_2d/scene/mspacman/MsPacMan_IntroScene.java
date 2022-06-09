@@ -72,9 +72,9 @@ public class MsPacMan_IntroScene extends GameScene2D {
 	@Override
 	public void init() {
 		sceneController.restartInInitialState(IntroController.State.START);
-		createScoresAndCredit(game);
-		score2D.showContent = false;
-		score2D.score.visible = false;
+		createScoresAndCredit();
+		gameScore2D.showContent = false;
+		gameScore2D.score.visible = false;
 		highScore2D.score.visible = false;
 		credit2D.visible = true;
 		msPacMan2D = new Pac2D($.msPacMan, new PacAnimations(r2D));
@@ -113,7 +113,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 
 	@Override
 	public void doRender(GraphicsContext g) {
-		score2D.render(g, r2D);
+		gameScore2D.render(g, r2D);
 		highScore2D.render(g, r2D);
 		drawTitle(g);
 		drawLights(g, 32, 16);

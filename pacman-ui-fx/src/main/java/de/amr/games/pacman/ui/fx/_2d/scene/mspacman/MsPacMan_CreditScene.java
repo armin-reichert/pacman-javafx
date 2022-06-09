@@ -43,8 +43,8 @@ public class MsPacMan_CreditScene extends GameScene2D {
 
 	@Override
 	public void init() {
-		createScoresAndCredit(game);
-		score2D.showContent = false;
+		createScoresAndCredit();
+		gameScore2D.showContent = false;
 		credit2D.visible = true;
 	}
 
@@ -64,7 +64,7 @@ public class MsPacMan_CreditScene extends GameScene2D {
 
 	@Override
 	protected void doRender(GraphicsContext g) {
-		score2D.render(g, r2D);
+		gameScore2D.render(g, r2D);
 		highScore2D.render(g, r2D);
 		credit2D.render(g, r2D);
 		g.setFont(r2D.getArcadeFont());

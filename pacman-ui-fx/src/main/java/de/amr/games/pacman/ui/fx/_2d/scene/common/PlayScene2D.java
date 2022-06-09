@@ -187,23 +187,27 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void init() {
+		createScoresAndCredit();
 		boolean hasCredit = gameController.credit() > 0;
-		SoundManager.get().setStopped(!hasCredit);
 
-		createScoresAndCredit(game);
-		score2D.showContent = hasCredit;
+		gameScore2D.showContent = hasCredit;
 		credit2D.visible = !hasCredit;
+
 		livesCounter2D = new LivesCounter2D(game);
 		livesCounter2D.visible = hasCredit;
+
 		levelCounter2D = new LevelCounter2D(game.levelCounter, r2D);
 		levelCounter2D.visible = hasCredit;
+
 		world2D = new World2D(game, r2D);
-		pac2D = new Pac2D(game.pac, new PacAnimations(r2D));
+		pac2D = new Pac2D(game.pac, r2D);
 		for (var ghost : game.ghosts) {
 			ghosts2D[ghost.id] = new Ghost2D(ghost, r2D);
 		}
 		bonus2D = new Bonus2D(game.bonus(), r2D);
 		bonus2D.stopJumping();
+
+		SoundManager.get().setStopped(!hasCredit);
 	}
 
 	@Override
@@ -224,7 +228,7 @@ public class PlayScene2D extends GameScene2D {
 	private void updateGhostAnimations() {
 		long powerTicksRemaining = game.pac.powerTimer.remaining();
 		boolean startFlashing = powerTicksRemaining == Ghost2D.FLASHING_TIME;
-		boolean endFlashing = powerTicksRemaining == 1; // TODO check if == 0 works too
+		boolean endFlashing = powerTicksRemaining == 1; // TODO check why == 0 does not work
 		for (var ghost2D : ghosts2D) {
 			ghost2D.updateAnimations(startFlashing, endFlashing, game.level.numFlashes);
 		}
@@ -247,7 +251,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void doRender(GraphicsContext g) {
-		score2D.render(g, r2D);
+		gameScore2D.render(g, r2D);
 		highScore2D.render(g, r2D);
 		livesCounter2D.render(g, r2D);
 		levelCounter2D.render(g, r2D);
@@ -414,5 +418,4 @@ public class PlayScene2D extends GameScene2D {
 			}
 		}
 	}
-
 }

@@ -68,7 +68,7 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 	protected Rendering2D r2D;
 
 	// common parts
-	protected GameScore2D score2D;
+	protected GameScore2D gameScore2D;
 	protected GameScore2D highScore2D;
 	protected Credit2D credit2D;
 
@@ -80,8 +80,8 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
 	}
 
-	protected void createScoresAndCredit(GameModel game) {
-		score2D = new GameScore2D(game.scores().gameScore(), "SCORE");
+	protected void createScoresAndCredit() {
+		gameScore2D = new GameScore2D(game.scores().gameScore(), "SCORE");
 		highScore2D = new GameScore2D(game.scores().highScore(), "HIGH SCORE");
 		credit2D = new Credit2D(gameController::credit, t(2), unscaledSize.y - 2);
 		credit2D.visible = false;
