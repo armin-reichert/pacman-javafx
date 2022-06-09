@@ -27,6 +27,7 @@ import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.actors.PacAnimationKey;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -37,7 +38,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class Pac2D {
 
 	public final Pac pac;
-	public final PacAnimations animations;
+//	public final PacAnimations animations;
 
 	public Pac2D(Pac pac, Rendering2D r2D) {
 		this(pac, new PacAnimations(r2D));
@@ -45,11 +46,11 @@ public class Pac2D {
 
 	public Pac2D(Pac pac, PacAnimations animations) {
 		this.pac = pac;
-		this.animations = animations;
-		animations.select(PacAnimationKey.ANIM_MUNCHING);
+		pac.animations = animations;
+		pac.animations.select(PacAnimationKey.ANIM_MUNCHING);
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
-		r2D.drawEntity(g, pac, animations.currentSprite(pac));
+		r2D.drawEntity(g, pac, (Rectangle2D) pac.animations.currentSprite(pac));
 	}
 }

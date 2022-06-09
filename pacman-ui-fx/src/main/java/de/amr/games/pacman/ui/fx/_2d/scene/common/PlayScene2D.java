@@ -44,6 +44,7 @@ import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostAnimationKey;
 import de.amr.games.pacman.model.common.actors.GhostState;
+import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.actors.PacAnimationKey;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
@@ -116,10 +117,10 @@ public class PlayScene2D extends GameScene2D {
 			return "%s\n%s\n %s%s".formatted(ghost.name, stateText, animState, animKey);
 		}
 
-		private String computePacInfo(Pac2D pac2D) {
-			var animKey = pac2D.animations.selectedKey();
-			var animState = getAnimationState(pac2D.animations.selectedAnimation(), pac2D.pac.moveDir());
-			return "%s\n%s%s".formatted(game.pac.name, animState, animKey);
+		private String computePacInfo(Pac pac) {
+			var animKey = pac.animations.selectedKey();
+			var animState = getAnimationState(pac.animations.selectedAnimation(), pac.moveDir());
+			return "%s\n%s%s".formatted(pac.name, animState, animKey);
 		}
 
 		private String computeBonusInfo(Bonus2D bonus2D) {
@@ -151,7 +152,7 @@ public class PlayScene2D extends GameScene2D {
 				if (i < texts.length - 2) {
 					updateTextView(texts[i], computeGhostInfo(ghosts2D[i]), ghosts2D[i].ghost);
 				} else if (i == texts.length - 2) {
-					updateTextView(texts[i], computePacInfo(pac2D), pac2D.pac);
+					updateTextView(texts[i], computePacInfo(game.pac), pac2D.pac);
 				} else {
 					updateTextView(texts[i], computeBonusInfo(bonus2D), game.bonus());
 				}
@@ -276,7 +277,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	public void onSwitchFrom3DScene() {
-		pac2D.animations.animation(PacAnimationKey.ANIM_MUNCHING).restart();
+		game.pac.animations.animation(PacAnimationKey.ANIM_MUNCHING).restart();
 		for (Ghost2D ghost2D : ghosts2D) {
 			ghost2D.animations.restart();
 		}
@@ -349,8 +350,8 @@ public class PlayScene2D extends GameScene2D {
 		case READY -> {
 			SoundManager.get().stopAll();
 			world2D.showEnergizersOn();
-			pac2D.animations.select(PacAnimationKey.ANIM_MUNCHING);
-			pac2D.animations.selectedAnimation().reset();
+			game.pac.animations.select(PacAnimationKey.ANIM_MUNCHING);
+			game.pac.animations.selectedAnimation().reset();
 			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart());
 			if (!gameController.isGameRunning()) {
 				SoundManager.get().play(GameSound.GAME_READY);
@@ -358,21 +359,21 @@ public class PlayScene2D extends GameScene2D {
 		}
 		case HUNTING -> {
 			world2D.letEnergizersBlink(true);
-			pac2D.animations.restart();
+			game.pac.animations.restart();
 			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart(GhostAnimationKey.ANIM_COLOR));
 		}
 		case PACMAN_DYING -> {
 			gameController.state().timer().setIndefinite();
 			gameController.state().timer().start();
 			SoundManager.get().stopAll();
-			pac2D.animations.select(PacAnimationKey.ANIM_DYING);
-			pac2D.animations.selectedAnimation().stop();
+			game.pac.animations.select(PacAnimationKey.ANIM_DYING);
+			game.pac.animations.selectedAnimation().stop();
 			bonus2D.animations.select(BonusAnimationKey.ANIM_NONE);
 			new SequentialTransition( //
 					pauseSec(1, () -> game.ghosts().forEach(Ghost::hide)), //
 					pauseSec(1, () -> {
 						SoundManager.get().play(GameSound.PACMAN_DEATH);
-						pac2D.animations.selectedAnimation().run();
+						game.pac.animations.selectedAnimation().run();
 					}), //
 					pauseSec(2, () -> game.pac.hide()), //
 					pauseSec(1, () -> gameController.state().timer().expire()) // exit game state
@@ -387,7 +388,7 @@ public class PlayScene2D extends GameScene2D {
 		case LEVEL_COMPLETE -> {
 			gameController.state().timer().setIndefinite();
 			SoundManager.get().stopAll();
-			pac2D.animations.reset();
+			game.pac.animations.reset();
 			// Energizers can still exist if "next level" cheat has been used
 			world2D.showEnergizersOn();
 			new SequentialTransition( //
