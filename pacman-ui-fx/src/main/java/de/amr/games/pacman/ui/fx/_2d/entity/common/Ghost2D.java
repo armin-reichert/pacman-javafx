@@ -24,10 +24,12 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import de.amr.games.pacman.lib.TickTimer;
+import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostAnimationKey;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -40,24 +42,23 @@ public class Ghost2D {
 	public static final long FLASHING_TIME = TickTimer.sec_to_ticks(2); // TODO not sure
 
 	public final Ghost ghost;
-	public final GhostAnimations animations;
 
 	public Ghost2D(Ghost ghost, Rendering2D r2D) {
 		this.ghost = ghost;
-		this.animations = new GhostAnimations(ghost.id, r2D);
-		animations.select(GhostAnimationKey.ANIM_COLOR);
+		ghost.animations = new GhostAnimations(ghost.id, r2D);
+		ghost.animations.select(GhostAnimationKey.ANIM_COLOR);
 	}
 
 	public void updateAnimations(boolean startFlashing, boolean stopFlashing, int numFlashes) {
 		// this is to keep feet still when locked
 		if (ghost.velocity.length() == 0) {
-			animations.color.stop();
+			ghost.animations.animation(GhostAnimationKey.ANIM_COLOR).stop();
 		} else {
-			animations.color.run();
+			ghost.animations.animation(GhostAnimationKey.ANIM_COLOR).run();
 		}
 		switch (ghost.state) {
 		case DEAD -> {
-			animations.select(ghost.killIndex == -1 ? GhostAnimationKey.ANIM_EYES : GhostAnimationKey.ANIM_VALUE);
+			ghost.animations.select(ghost.killIndex == -1 ? GhostAnimationKey.ANIM_EYES : GhostAnimationKey.ANIM_VALUE);
 		}
 		case FRIGHTENED, LOCKED -> {
 			if (startFlashing) {
@@ -67,7 +68,7 @@ public class Ghost2D {
 			}
 		}
 		case LEAVING_HOUSE -> {
-			animations.select(GhostAnimationKey.ANIM_COLOR);
+			ghost.animations.select(GhostAnimationKey.ANIM_COLOR);
 		}
 		default -> {
 		}
@@ -75,20 +76,21 @@ public class Ghost2D {
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
-		r2D.drawEntity(g, ghost, animations.currentSprite(ghost));
+		r2D.drawEntity(g, ghost, (Rectangle2D) ghost.animations.currentSprite(ghost));
 	}
 
 	private void startFlashing(int numFlashes) {
-		long frameDuration = FLASHING_TIME / (numFlashes * animations.flashing.numFrames());
-		animations.flashing.frameDuration(frameDuration);
-		animations.flashing.repeat(numFlashes);
-		animations.flashing.restart();
-		animations.select(GhostAnimationKey.ANIM_FLASHING);
+		ghost.animations.select(GhostAnimationKey.ANIM_FLASHING);
+		var flashing = (SingleGenericAnimation<?>) ghost.animations.selectedAnimation();
+		long frameDuration = FLASHING_TIME / (numFlashes * flashing.numFrames());
+		flashing.frameDuration(frameDuration);
+		flashing.repeat(numFlashes);
+		flashing.restart();
 	}
 
 	private void ensureFlashingStopped() {
-		if (animations.selectedKey() == GhostAnimationKey.ANIM_FLASHING) {
-			animations.select(GhostAnimationKey.ANIM_COLOR);
+		if (ghost.animations.selectedKey() == GhostAnimationKey.ANIM_FLASHING) {
+			ghost.animations.select(GhostAnimationKey.ANIM_COLOR);
 		}
 	}
 }

@@ -112,8 +112,8 @@ public class PlayScene2D extends GameScene2D {
 			if (ghost.state == GhostState.HUNTING_PAC) {
 				stateText += game.huntingTimer.chasingPhase() != -1 ? " (Chasing)" : " (Scattering)";
 			}
-			var animKey = ghost2D.animations.selectedKey();
-			var animState = getAnimationState(ghost2D.animations.selectedAnimation(), ghost.wishDir());
+			var animKey = ghost.animations.selectedKey();
+			var animState = getAnimationState(ghost.animations.selectedAnimation(), ghost.wishDir());
 			return "%s\n%s\n %s%s".formatted(ghost.name, stateText, animState, animKey);
 		}
 
@@ -278,8 +278,8 @@ public class PlayScene2D extends GameScene2D {
 
 	public void onSwitchFrom3DScene() {
 		game.pac.animations.animation(PacAnimationKey.ANIM_MUNCHING).restart();
-		for (Ghost2D ghost2D : ghosts2D) {
-			ghost2D.animations.restart();
+		for (var ghost : game.ghosts) {
+			ghost.animations.restart();
 		}
 		world2D.letEnergizersBlink(true);
 		if (game.pac.starvingTicks > 10) {
@@ -297,8 +297,8 @@ public class PlayScene2D extends GameScene2D {
 	public void onPlayerGetsPower(GameEvent e) {
 		SoundManager.get().stopSirens();
 		SoundManager.get().ensureLoop(GameSound.PACMAN_POWER, Animation.INDEFINITE);
-		for (var ghost2D : ghosts2D) {
-			ghost2D.animations.select(GhostAnimationKey.ANIM_BLUE);
+		for (var ghost : game.ghosts) {
+			ghost.animations.select(GhostAnimationKey.ANIM_BLUE);
 		}
 	}
 
@@ -352,7 +352,7 @@ public class PlayScene2D extends GameScene2D {
 			world2D.showEnergizersOn();
 			game.pac.animations.select(PacAnimationKey.ANIM_MUNCHING);
 			game.pac.animations.selectedAnimation().reset();
-			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart());
+			game.ghosts().forEach(ghost -> ghost.animations.restart());
 			if (!gameController.isGameRunning()) {
 				SoundManager.get().play(GameSound.GAME_READY);
 			}
@@ -360,7 +360,7 @@ public class PlayScene2D extends GameScene2D {
 		case HUNTING -> {
 			world2D.letEnergizersBlink(true);
 			game.pac.animations.restart();
-			Stream.of(ghosts2D).forEach(ghost2D -> ghost2D.animations.restart(GhostAnimationKey.ANIM_COLOR));
+			game.ghosts().forEach(ghost -> ghost.animations.restart(GhostAnimationKey.ANIM_COLOR));
 		}
 		case PACMAN_DYING -> {
 			gameController.state().timer().setIndefinite();
@@ -381,8 +381,8 @@ public class PlayScene2D extends GameScene2D {
 		}
 		case GHOST_DYING -> {
 			SoundManager.get().play(GameSound.GHOST_EATEN);
-			for (var ghost2D : ghosts2D) {
-				ghost2D.animations.flashing.stop();
+			for (var ghost : game.ghosts) {
+				ghost.animations.animation(GhostAnimationKey.ANIM_FLASHING).stop();
 			}
 		}
 		case LEVEL_COMPLETE -> {
@@ -413,8 +413,8 @@ public class PlayScene2D extends GameScene2D {
 
 		// exit state xyz:
 		if (e.oldGameState == GameState.GHOST_DYING) {
-			for (var ghost2D : ghosts2D) {
-				ghost2D.animations.flashing.run();
+			for (var ghost : game.ghosts) {
+				ghost.animations.animation(GhostAnimationKey.ANIM_FLASHING).run();
 			}
 		}
 	}

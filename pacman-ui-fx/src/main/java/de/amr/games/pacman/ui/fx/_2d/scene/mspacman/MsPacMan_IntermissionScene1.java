@@ -87,8 +87,8 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 
 	private void onSceneStateChange(Intermission1Controller.State fromState, Intermission1Controller.State toState) {
 		if (toState == Intermission1Controller.State.IN_HEAVEN) {
-			inky2D.animations.selectedAnimation().stop();
-			pinky2D.animations.selectedAnimation().stop();
+			inky2D.ghost.animations.selectedAnimation().stop();
+			pinky2D.ghost.animations.selectedAnimation().stop();
 		}
 	}
 
