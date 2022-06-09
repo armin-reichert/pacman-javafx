@@ -52,6 +52,7 @@ public class GhostAnimations implements GenericAnimationCollection<Ghost, GhostA
 		blue = r2D.createGhostBlueAnimation();
 		color = r2D.createGhostColorAnimation(ghostID);
 		values = r2D.createGhostValueAnimation();
+		select(GhostAnimationKey.ANIM_COLOR);
 	}
 
 	@Override

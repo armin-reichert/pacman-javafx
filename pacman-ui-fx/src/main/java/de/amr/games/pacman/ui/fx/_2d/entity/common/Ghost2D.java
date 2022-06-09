@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.model.common.actors.GhostAnimationKey;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.geometry.Rectangle2D;
@@ -42,7 +41,6 @@ public class Ghost2D {
 	public Ghost2D(Ghost ghost, Rendering2D r2D) {
 		this.ghost = ghost;
 		ghost.setAnimations(new GhostAnimations(ghost.id, r2D));
-		ghost.animations().get().select(GhostAnimationKey.ANIM_COLOR);
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
