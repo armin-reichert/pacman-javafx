@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.animation.GenericAnimation;
+import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.lib.animation.GenericAnimationMap;
 import de.amr.games.pacman.model.common.actors.Entity;
 import javafx.geometry.Rectangle2D;
@@ -52,7 +52,7 @@ public interface Rendering2D {
 
 	Image getSpriteImage(Rectangle2D sprite);
 
-	default Image[] getAnimationImages(GenericAnimation<Rectangle2D> animation) {
+	default Image[] getAnimationImages(SingleGenericAnimation<Rectangle2D> animation) {
 		int n = animation.numFrames();
 		Image[] images = new Image[n];
 		for (int i = 0; i < n; ++i) {
@@ -73,23 +73,23 @@ public interface Rendering2D {
 
 	GenericAnimationMap<Direction, Rectangle2D> createPacMunchingAnimation();
 
-	GenericAnimation<Rectangle2D> createPacDyingAnimation();
+	SingleGenericAnimation<Rectangle2D> createPacDyingAnimation();
 
 	GenericAnimationMap<Direction, Rectangle2D> createGhostColorAnimation(int ghostID);
 
-	GenericAnimation<Rectangle2D> createGhostBlueAnimation();
+	SingleGenericAnimation<Rectangle2D> createGhostBlueAnimation();
 
-	GenericAnimation<Rectangle2D> createGhostFlashingAnimation();
+	SingleGenericAnimation<Rectangle2D> createGhostFlashingAnimation();
 
 	GenericAnimationMap<Direction, Rectangle2D> createGhostEyesAnimation();
 
-	GenericAnimation<Image> createMazeFlashingAnimation(int mazeNumber);
+	SingleGenericAnimation<Image> createMazeFlashingAnimation(int mazeNumber);
 
-	GenericAnimation<Rectangle2D> createBonusSymbolAnimation();
+	SingleGenericAnimation<Rectangle2D> createBonusSymbolAnimation();
 
-	GenericAnimation<Rectangle2D> createBonusValueAnimation();
+	SingleGenericAnimation<Rectangle2D> createBonusValueAnimation();
 
-	GenericAnimation<Rectangle2D> createGhostValueAnimation();
+	SingleGenericAnimation<Rectangle2D> createGhostValueAnimation();
 
 	// Maze
 

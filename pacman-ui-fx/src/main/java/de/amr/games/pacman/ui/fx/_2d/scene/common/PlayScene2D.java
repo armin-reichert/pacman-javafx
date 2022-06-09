@@ -33,8 +33,8 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.lib.animation.GenericAnimation;
-import de.amr.games.pacman.lib.animation.GenericAnimationAPI;
 import de.amr.games.pacman.lib.animation.GenericAnimationMap;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Bonus;
@@ -95,13 +95,13 @@ public class PlayScene2D extends GameScene2D {
 			infoPane.getChildren().addAll(texts);
 		}
 
-		private String getAnimationState(GenericAnimationAPI animation, Direction dir) {
+		private String getAnimationState(GenericAnimation animation, Direction dir) {
 			if (animation instanceof GenericAnimationMap) {
 				@SuppressWarnings("unchecked")
 				var gam = (GenericAnimationMap<Direction, ?>) animation;
 				return gam.get(dir).isRunning() ? "" : "(Stopped) ";
 			} else {
-				var ga = (GenericAnimation<?>) animation;
+				var ga = (SingleGenericAnimation<?>) animation;
 				return ga.isRunning() ? "" : "(Stopped) ";
 			}
 		}

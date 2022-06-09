@@ -27,9 +27,9 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.lib.animation.CompositeGenericAnimation;
+import de.amr.games.pacman.lib.animation.GenericAnimationCollection;
+import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.lib.animation.GenericAnimation;
-import de.amr.games.pacman.lib.animation.GenericAnimationAPI;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations.Key;
 import javafx.geometry.Rectangle2D;
@@ -37,15 +37,15 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class BonusAnimations implements CompositeGenericAnimation<Bonus, Key, Rectangle2D> {
+public class BonusAnimations implements GenericAnimationCollection<Bonus, Key, Rectangle2D> {
 
 	public enum Key {
 		ANIM_NONE, ANIM_SYMBOL, ANIM_VALUE;
 	}
 
 	private Key selectedKey;
-	public final GenericAnimation<Rectangle2D> symbolAnimation;
-	public final GenericAnimation<Rectangle2D> valueAnimation;
+	public final SingleGenericAnimation<Rectangle2D> symbolAnimation;
+	public final SingleGenericAnimation<Rectangle2D> valueAnimation;
 
 	public BonusAnimations(Rendering2D r2D) {
 		symbolAnimation = r2D.createBonusSymbolAnimation();
@@ -74,7 +74,7 @@ public class BonusAnimations implements CompositeGenericAnimation<Bonus, Key, Re
 	}
 
 	@Override
-	public GenericAnimationAPI animation(Key key) {
+	public GenericAnimation animation(Key key) {
 		return switch (key) {
 		case ANIM_NONE -> null;
 		case ANIM_SYMBOL -> symbolAnimation;
@@ -83,7 +83,7 @@ public class BonusAnimations implements CompositeGenericAnimation<Bonus, Key, Re
 	}
 
 	@Override
-	public Stream<GenericAnimationAPI> animations() {
+	public Stream<GenericAnimation> animations() {
 		return Stream.of(symbolAnimation, valueAnimation);
 	}
 

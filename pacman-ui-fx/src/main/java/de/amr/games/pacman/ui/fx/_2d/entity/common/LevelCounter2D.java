@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import de.amr.games.pacman.lib.animation.GenericAnimation;
+import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.model.common.LevelCounter;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.geometry.Rectangle2D;
@@ -39,7 +39,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class LevelCounter2D {
 
 	private final LevelCounter levelCounter;
-	private final GenericAnimation<Rectangle2D> symbolAnimation;
+	private final SingleGenericAnimation<Rectangle2D> symbolAnimation;
 	public boolean visible;
 	public double right_x, y;
 	private double x;

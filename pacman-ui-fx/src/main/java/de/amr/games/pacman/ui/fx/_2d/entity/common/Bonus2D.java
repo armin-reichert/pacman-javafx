@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
-import de.amr.games.pacman.lib.animation.GenericAnimation;
+import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -41,12 +41,12 @@ import javafx.scene.canvas.GraphicsContext;
 public class Bonus2D {
 
 	private final Bonus bonus;
-	private final GenericAnimation<Integer> jumpAnimation;
+	private final SingleGenericAnimation<Integer> jumpAnimation;
 	public final BonusAnimations animations;
 
 	public Bonus2D(Bonus bonus, Rendering2D r2D) {
 		this.bonus = bonus;
-		jumpAnimation = new GenericAnimation<>(2, -2);
+		jumpAnimation = new SingleGenericAnimation<>(2, -2);
 		jumpAnimation.frameDuration(10);
 		jumpAnimation.repeatForever();
 		animations = new BonusAnimations(r2D);

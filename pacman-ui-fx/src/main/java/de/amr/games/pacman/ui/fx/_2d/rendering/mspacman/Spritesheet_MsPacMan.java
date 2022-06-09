@@ -28,7 +28,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.animation.GenericAnimation;
+import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.lib.animation.GenericAnimationMap;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
@@ -189,14 +189,14 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public GenericAnimation<Image> createMazeFlashingAnimation(int mazeNumber) {
+	public SingleGenericAnimation<Image> createMazeFlashingAnimation(int mazeNumber) {
 		int mazeIndex = mazeNumber - 1;
 		var mazeEmpty = subImage(228, 248 * mazeIndex, 226, 248);
 		var brightImage = U.colorsExchanged(mazeEmpty, Map.of( //
 				MAZE_SIDE_COLORS[mazeIndex], Color.WHITE, //
 				MAZE_TOP_COLORS[mazeIndex], Color.BLACK) //
 		);
-		var animation = new GenericAnimation<>(brightImage, mazeEmpty);
+		var animation = new SingleGenericAnimation<>(brightImage, mazeEmpty);
 		animation.frameDuration(10);
 		return animation;
 	}
@@ -231,7 +231,7 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			Rectangle2D wide_open = rhs(0, d), open = rhs(1, d), closed = rhs(2, d);
-			var munching = new GenericAnimation<>(open, wide_open, open, closed);
+			var munching = new SingleGenericAnimation<>(open, wide_open, open, closed);
 			munching.frameDuration(2);
 			munching.repeatForever();
 			map.put(dir, munching);
@@ -240,10 +240,10 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public GenericAnimation<Rectangle2D> createPacDyingAnimation() {
+	public SingleGenericAnimation<Rectangle2D> createPacDyingAnimation() {
 		Rectangle2D right = rhs(1, 0), left = rhs(1, 1), up = rhs(1, 2), down = rhs(1, 3);
 		// TODO not yet 100% accurate
-		var animation = new GenericAnimation<>(down, left, up, right, down, left, up, right, down, left, up);
+		var animation = new SingleGenericAnimation<>(down, left, up, right, down, left, up, right, down, left, up);
 		animation.frameDuration(8);
 		return animation;
 	}
@@ -253,7 +253,7 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 		GenericAnimationMap<Direction, Rectangle2D> map = new GenericAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
-			var feet = new GenericAnimation<>(rhs(2 * d, 4 + ghostID), rhs(2 * d + 1, 4 + ghostID));
+			var feet = new SingleGenericAnimation<>(rhs(2 * d, 4 + ghostID), rhs(2 * d + 1, 4 + ghostID));
 			feet.frameDuration(8);
 			feet.repeatForever();
 			map.put(dir, feet);
@@ -262,16 +262,16 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public GenericAnimation<Rectangle2D> createGhostBlueAnimation() {
-		var animation = new GenericAnimation<>(rhs(8, 4), rhs(9, 4));
+	public SingleGenericAnimation<Rectangle2D> createGhostBlueAnimation() {
+		var animation = new SingleGenericAnimation<>(rhs(8, 4), rhs(9, 4));
 		animation.frameDuration(8);
 		animation.repeatForever();
 		return animation;
 	}
 
 	@Override
-	public GenericAnimation<Rectangle2D> createGhostFlashingAnimation() {
-		var animation = new GenericAnimation<>(rhs(8, 4), rhs(9, 4), rhs(10, 4), rhs(11, 4));
+	public SingleGenericAnimation<Rectangle2D> createGhostFlashingAnimation() {
+		var animation = new SingleGenericAnimation<>(rhs(8, 4), rhs(9, 4), rhs(10, 4), rhs(11, 4));
 		animation.frameDuration(4);
 		return animation;
 	}
@@ -281,24 +281,24 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 		GenericAnimationMap<Direction, Rectangle2D> map = new GenericAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
-			map.put(dir, new GenericAnimation<>(rhs(8 + d, 5)));
+			map.put(dir, new SingleGenericAnimation<>(rhs(8 + d, 5)));
 		}
 		return map;
 	}
 
 	@Override
-	public GenericAnimation<Rectangle2D> createBonusSymbolAnimation() {
-		return new GenericAnimation<>(rhs(3, 0), rhs(4, 0), rhs(5, 0), rhs(6, 0), rhs(7, 0), rhs(8, 0), rhs(9, 0));
+	public SingleGenericAnimation<Rectangle2D> createBonusSymbolAnimation() {
+		return new SingleGenericAnimation<>(rhs(3, 0), rhs(4, 0), rhs(5, 0), rhs(6, 0), rhs(7, 0), rhs(8, 0), rhs(9, 0));
 	}
 
 	@Override
-	public GenericAnimation<Rectangle2D> createBonusValueAnimation() {
-		return new GenericAnimation<>(rhs(3, 1), rhs(4, 1), rhs(5, 1), rhs(6, 1), rhs(7, 1), rhs(8, 1), rhs(9, 1));
+	public SingleGenericAnimation<Rectangle2D> createBonusValueAnimation() {
+		return new SingleGenericAnimation<>(rhs(3, 1), rhs(4, 1), rhs(5, 1), rhs(6, 1), rhs(7, 1), rhs(8, 1), rhs(9, 1));
 	}
 
 	@Override
-	public GenericAnimation<Rectangle2D> createGhostValueAnimation() {
-		return new GenericAnimation<>(rhs(0, 8), rhs(1, 8), rhs(2, 8), rhs(3, 8));
+	public SingleGenericAnimation<Rectangle2D> createGhostValueAnimation() {
+		return new SingleGenericAnimation<>(rhs(0, 8), rhs(1, 8), rhs(2, 8), rhs(3, 8));
 	}
 
 	// Ms. Pac-Man specific:
@@ -307,7 +307,7 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 		GenericAnimationMap<Direction, Rectangle2D> map = new GenericAnimationMap<>(Direction.class);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
-			var animation = new GenericAnimation<>(rhs(0, 9 + d), rhs(1, 9 + d), rhs(2, 9));
+			var animation = new SingleGenericAnimation<>(rhs(0, 9 + d), rhs(1, 9 + d), rhs(2, 9));
 			animation.frameDuration(2);
 			animation.repeatForever();
 			map.put(dir, animation);
@@ -315,8 +315,8 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 		return map;
 	}
 
-	public GenericAnimation<Rectangle2D> createFlapAnimation() {
-		var animation = new GenericAnimation<>( //
+	public SingleGenericAnimation<Rectangle2D> createFlapAnimation() {
+		var animation = new SingleGenericAnimation<>( //
 				new Rectangle2D(456, 208, 32, 32), //
 				new Rectangle2D(488, 208, 32, 32), //
 				new Rectangle2D(520, 208, 32, 32), //
@@ -327,8 +327,8 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 		return animation;
 	}
 
-	public GenericAnimation<Rectangle2D> createStorkFlyingAnimation() {
-		var animation = new GenericAnimation<>( //
+	public SingleGenericAnimation<Rectangle2D> createStorkFlyingAnimation() {
+		var animation = new SingleGenericAnimation<>( //
 				new Rectangle2D(489, 176, 32, 16), //
 				new Rectangle2D(521, 176, 32, 16) //
 		);

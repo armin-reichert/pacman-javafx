@@ -27,7 +27,7 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.pacman.Intermission2Controller;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2d;
-import de.amr.games.pacman.lib.animation.GenericAnimation;
+import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.entity.common.Ghost2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
@@ -54,8 +54,8 @@ public class PacMan_IntermissionScene2 extends GameScene2D {
 	private Pac2D pacMan2D;
 	private Ghost2D blinky2D;
 	private Nail2D nail2D;
-	private GenericAnimation<Rectangle2D> blinkyStretchedAnimation;
-	private GenericAnimation<Rectangle2D> blinkyDamagedAnimation;
+	private SingleGenericAnimation<Rectangle2D> blinkyStretchedAnimation;
+	private SingleGenericAnimation<Rectangle2D> blinkyDamagedAnimation;
 
 	@Override
 	public void setSceneContext(GameController gameController) {

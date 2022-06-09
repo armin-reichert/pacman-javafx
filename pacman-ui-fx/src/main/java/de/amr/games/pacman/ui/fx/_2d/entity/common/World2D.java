@@ -27,7 +27,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.lib.animation.GenericAnimation;
+import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.DebugDraw;
@@ -44,8 +44,8 @@ import javafx.scene.paint.Color;
  */
 public class World2D {
 
-	private final GenericAnimation<Boolean> energizerPulse = GenericAnimation.pulse(10);
-	private final GenericAnimation<Image> flashingAnimation;
+	private final SingleGenericAnimation<Boolean> energizerPulse = SingleGenericAnimation.pulse(10);
+	private final SingleGenericAnimation<Image> flashingAnimation;
 	private final GameModel game;
 	private double x, y;
 	private int mazeNumber;
