@@ -370,6 +370,7 @@ public class PlayScene2D extends GameScene2D {
 			SoundManager.get().stopAll();
 			pac2D.animations.select(PacAnimations.Key.ANIM_DYING);
 			pac2D.animations.selectedAnimation().stop();
+			bonus2D.animations.select(Key.ANIM_NONE);
 			new SequentialTransition( //
 					pauseSec(1, () -> game.ghosts().forEach(Ghost::hide)), //
 					pauseSec(1, () -> {

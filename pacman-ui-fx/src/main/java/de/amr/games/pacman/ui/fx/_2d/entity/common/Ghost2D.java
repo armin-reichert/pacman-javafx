@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
 import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations.Key;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -55,29 +54,40 @@ public class Ghost2D {
 	}
 
 	public void onFrightenedPhaseEnds() {
-		switch (ghost.state) {
-		case HUNTING_PAC, LEAVING_HOUSE, LOCKED -> animations.select(GhostAnimations.Key.ANIM_COLOR);
-		default -> {
-		}
-		}
-		// TODO
-		if (animations.selectedKey() == Key.ANIM_COLOR && ghost.velocity.length() == 0) {
-			animations.selectedAnimation().stop();
+		if (animations.selectedKey() == Key.ANIM_FLASHING) {
+			animations.select(GhostAnimations.Key.ANIM_COLOR);
 		}
 	}
 
 	public void updateAnimations(boolean recoveringStarts, int numFlashes, long recoveringTicks) {
-		if (recoveringStarts) {
-			startFlashing(numFlashes, recoveringTicks);
+		if (ghost.velocity.length() == 0) {
+			animations.color.stop();
+		} else {
+			animations.color.run();
 		}
-		if (ghost.is(GhostState.DEAD)) {
+		switch (ghost.state) {
+		case DEAD -> {
 			if (ghost.killIndex == -1) {
 				animations.select(GhostAnimations.Key.ANIM_EYES);
 			} else {
 				animations.select(GhostAnimations.Key.ANIM_VALUE);
 			}
-		} else if (ghost.is(GhostState.LEAVING_HOUSE)) {
+		}
+		case FRIGHTENED -> {
+			if (recoveringStarts) {
+				startFlashing(numFlashes, recoveringTicks);
+			}
+		}
+		case LOCKED -> {
+			if (recoveringStarts) {
+				startFlashing(numFlashes, recoveringTicks);
+			}
+		}
+		case LEAVING_HOUSE -> {
 			animations.select(GhostAnimations.Key.ANIM_COLOR);
+		}
+		default -> {
+		}
 		}
 	}
 
