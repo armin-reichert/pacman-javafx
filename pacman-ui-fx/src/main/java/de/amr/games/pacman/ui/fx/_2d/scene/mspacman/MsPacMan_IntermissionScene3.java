@@ -25,14 +25,16 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission3Controller;
+import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.JuniorBag2D;
-import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Stork2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacMansHusbandAnimations;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -50,7 +52,7 @@ public class MsPacMan_IntermissionScene3 extends GameScene2D {
 	private Intermission3Controller sceneController;
 	private Intermission3Controller.Context context;
 	private Flap2D flap2D;
-	private Stork2D stork2D;
+	private SingleGenericAnimation<Rectangle2D> storkAnimation;
 	private JuniorBag2D bag2D;
 
 	@Override
@@ -68,7 +70,8 @@ public class MsPacMan_IntermissionScene3 extends GameScene2D {
 		context.msPacMan.setAnimations(new PacAnimations(r2D));
 		context.pacMan.setAnimations(new MsPacMansHusbandAnimations());
 		flap2D = new Flap2D(context.flap);
-		stork2D = new Stork2D(context.stork);
+		storkAnimation = Spritesheet_MsPacMan.get().createStorkFlyingAnimation();
+		storkAnimation.ensureRunning();
 		bag2D = new JuniorBag2D(context.bag);
 	}
 
@@ -83,7 +86,7 @@ public class MsPacMan_IntermissionScene3 extends GameScene2D {
 		flap2D.render(g, r2D);
 		r2D.drawPac(g, context.msPacMan);
 		r2D.drawPac(g, context.pacMan);
-		stork2D.render(g, r2D);
+		r2D.drawEntity(g, context.stork, storkAnimation.animate());
 		bag2D.render(g, r2D);
 	}
 }
