@@ -342,6 +342,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 			maze3D.energizerAnimations().forEach(Animation::play);
 		}
 		case PACMAN_DYING -> {
+			gameController.state().timer().setIndefinite();
 			Stream.of(ghosts3D).forEach(Ghost3D::setNormalLook);
 			var killer = game.ghosts().filter(ghost -> ghost.sameTile(game.pac)).findAny().get();
 			var killerColor = r2D.getGhostColor(killer.id);

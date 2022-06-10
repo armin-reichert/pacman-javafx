@@ -25,11 +25,9 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.world.World.t;
-import static de.amr.games.pacman.ui.fx.util.U.pauseSec;
 
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameStateChangeEvent;
-import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.mspacman.MovingBonus;
 import de.amr.games.pacman.model.pacman.StaticBonus;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations;
@@ -41,6 +39,7 @@ import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.PlaySceneSounds;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
+import de.amr.games.pacman.ui.fx.util.U;
 import javafx.animation.SequentialTransition;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -138,14 +137,9 @@ public class PlayScene2D extends GameScene2D {
 	public void onGameStateChange(GameStateChangeEvent e) {
 		switch (e.newGameState) {
 		case PACMAN_DYING -> {
-			new SequentialTransition( //
-					pauseSec(1, () -> game.ghosts().forEach(Ghost::hide)), //
-					pauseSec(1, () -> {
-						SoundManager.get().play(GameSound.PACMAN_DEATH);
-						game.pac.animations().get().selectedAnimation().run();
-					}), //
-					pauseSec(2, () -> game.pac.hide()), //
-					pauseSec(1, () -> gameController.state().timer().expire()) // exit game state
+			new SequentialTransition(//
+					U.pauseSec(2, () -> SoundManager.get().play(GameSound.PACMAN_DEATH)), //
+					U.pauseSec(1.5, () -> game.pac.hide())//
 			).play();
 		}
 		case LEVEL_STARTING -> {
