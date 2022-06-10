@@ -29,9 +29,7 @@ import static de.amr.games.pacman.ui.fx.util.U.pauseSec;
 
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameStateChangeEvent;
-import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.model.common.actors.PacAnimationKey;
 import de.amr.games.pacman.model.mspacman.MovingBonus;
 import de.amr.games.pacman.model.pacman.StaticBonus;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations;
@@ -57,14 +55,13 @@ import javafx.scene.paint.Color;
 public class PlayScene2D extends GameScene2D {
 
 	private GuysInfo guysInfo = new GuysInfo(this);
-	private SingleGenericAnimation<Image> mazeFlashingAnimation;
 
 	@Override
 	public void init() {
 		guysInfo.init(game);
 		creditVisible = !hasCredit();
 		game.levelCounter.visible = hasCredit();
-		mazeFlashingAnimation = r2D.createMazeFlashingAnimation(r2D.mazeNumber(game.level.number));
+		game.mazeFlashingAnimation = r2D.createMazeFlashingAnimation(r2D.mazeNumber(game.level.number));
 		game.pac.setAnimations(new PacAnimations(r2D));
 		for (var ghost : game.ghosts) {
 			ghost.setAnimations(new GhostAnimations(ghost.id, r2D));
@@ -111,8 +108,8 @@ public class PlayScene2D extends GameScene2D {
 		}
 		r2D.drawLevelCounter(g, game.levelCounter);
 		r2D.drawCredit(g, gameController.credit(), creditVisible);
-		if (mazeFlashingAnimation.isRunning()) {
-			g.drawImage(mazeFlashingAnimation.animate(), 0, t(3));
+		if (game.mazeFlashingAnimation.isRunning()) {
+			g.drawImage((Image) game.mazeFlashingAnimation.animate(), 0, t(3));
 		} else {
 			r2D.drawWorld(g, game.level.world, r2D.mazeNumber(game.level.number), !game.energizerPulse.animate());
 		}
@@ -130,15 +127,10 @@ public class PlayScene2D extends GameScene2D {
 		game.ghosts().forEach(ghost -> r2D.drawGhost(g, ghost));
 	}
 
-	public void startFlashing(int numFlashes) {
-		mazeFlashingAnimation.repeat(numFlashes);
-		mazeFlashingAnimation.restart();
-	}
-
 	public void onSwitchFrom3DScene() {
-		game.pac.animations().get().getByKey(PacAnimationKey.ANIM_MUNCHING).restart();
+		game.pac.animations().get().ensureRunning();
 		for (var ghost : game.ghosts) {
-			ghost.animations().get().restart();
+			ghost.animations().get().ensureRunning();
 		}
 	}
 
@@ -154,13 +146,6 @@ public class PlayScene2D extends GameScene2D {
 					}), //
 					pauseSec(2, () -> game.pac.hide()), //
 					pauseSec(1, () -> gameController.state().timer().expire()) // exit game state
-			).play();
-		}
-		case LEVEL_COMPLETE -> {
-			game.pac.animations().get().reset();
-			new SequentialTransition( //
-					pauseSec(1, () -> startFlashing(game.level.numFlashes)), //
-					pauseSec(2, () -> gameController.state().timer().expire()) //
 			).play();
 		}
 		case LEVEL_STARTING -> {
