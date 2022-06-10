@@ -30,6 +30,7 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.GenericAnimationMap;
 import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
+import de.amr.games.pacman.model.mspacman.Flap;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.U;
@@ -330,6 +331,17 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 		);
 		animation.frameDuration(4);
 		return animation;
+	}
+
+	public void drawFlap(GraphicsContext g, Flap flap) {
+		if (flap.visible) {
+			Rectangle2D sprite = (Rectangle2D) flap.animation.animate();
+			drawEntity(g, flap, sprite);
+			g.setFont(getArcadeFont());
+			g.setFill(Color.rgb(222, 222, 255));
+			g.fillText(String.valueOf(flap.number), flap.position.x + sprite.getWidth() - 25, flap.position.y + 18);
+			g.fillText(flap.text, flap.position.x + sprite.getWidth(), flap.position.y);
+		}
 	}
 
 	public SingleGenericAnimation<Rectangle2D> createStorkFlyingAnimation() {

@@ -26,9 +26,9 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission2Controller;
 import de.amr.games.pacman.controller.mspacman.Intermission2Controller.Context;
-import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacMansHusbandAnimations;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -46,21 +46,19 @@ public class MsPacMan_IntermissionScene2 extends GameScene2D {
 
 	private Intermission2Controller sceneController;
 	private Context $;
-	private Flap2D flap2D;
 
 	@Override
 	public void setSceneContext(GameController gameController) {
 		super.setSceneContext(gameController);
 		sceneController = new Intermission2Controller(gameController);
 		sceneController.playIntermissionSound = () -> SoundManager.get().play(GameSound.INTERMISSION_2);
-		sceneController.playFlapAnimation = () -> flap2D.playAnimation();
 		$ = sceneController.context();
 	}
 
 	@Override
 	public void init() {
 		sceneController.restartInInitialState(Intermission2Controller.State.FLAP);
-		flap2D = new Flap2D($.flap);
+		$.flap.animation = Spritesheet_MsPacMan.get().createFlapAnimation();
 		$.msPacMan.setAnimations(new PacAnimations(r2D));
 		$.msPacMan.animations().get().ensureRunning();
 		$.pacMan.setAnimations(new MsPacMansHusbandAnimations());
@@ -75,7 +73,7 @@ public class MsPacMan_IntermissionScene2 extends GameScene2D {
 	@Override
 	public void doRender(GraphicsContext g) {
 		r2D.drawLevelCounter(g, game.levelCounter);
-		flap2D.render(g, r2D);
+		Spritesheet_MsPacMan.get().drawFlap(g, $.flap);
 		r2D.drawPac(g, $.msPacMan);
 		r2D.drawPac(g, $.pacMan);
 	}

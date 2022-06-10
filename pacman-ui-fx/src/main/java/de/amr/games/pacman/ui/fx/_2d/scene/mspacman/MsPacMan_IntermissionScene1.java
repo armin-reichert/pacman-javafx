@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission1Controller;
-import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacMansHusbandAnimations;
@@ -48,7 +47,6 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 
 	private Intermission1Controller sceneController;
 	private Intermission1Controller.Context $;
-	private Flap2D flap2D;
 
 	@Override
 	public void setSceneContext(GameController gameController) {
@@ -56,14 +54,13 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 		sceneController = new Intermission1Controller(gameController);
 		$ = sceneController.context();
 		sceneController.playIntermissionSound = () -> SoundManager.get().loop(GameSound.INTERMISSION_1, 1);
-		sceneController.playFlapAnimation = () -> flap2D.playAnimation();
 		sceneController.addStateChangeListener(this::onSceneStateChange);
 	}
 
 	@Override
 	public void init() {
 		sceneController.restartInInitialState(Intermission1Controller.State.FLAP);
-		flap2D = new Flap2D($.flap);
+		$.flap.animation = Spritesheet_MsPacMan.get().createFlapAnimation();
 		$.msPac.setAnimations(new PacAnimations(r2D));
 		$.msPac.animations().get().ensureRunning();
 		$.pacMan.setAnimations(new MsPacMansHusbandAnimations());
@@ -88,12 +85,13 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 
 	@Override
 	public void doRender(GraphicsContext g) {
-		r2D.drawLevelCounter(g, game.levelCounter);
-		flap2D.render(g, r2D);
+		var ss = (Spritesheet_MsPacMan) r2D;
+		ss.drawFlap(g, $.flap);
 		r2D.drawPac(g, $.msPac);
 		r2D.drawPac(g, $.pacMan);
 		r2D.drawGhost(g, $.inky);
 		r2D.drawGhost(g, $.pinky);
 		r2D.drawEntity(g, $.heart, ((Spritesheet_MsPacMan) r2D).getHeart());
+		r2D.drawLevelCounter(g, game.levelCounter);
 	}
 }

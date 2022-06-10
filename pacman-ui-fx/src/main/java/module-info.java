@@ -21,8 +21,8 @@ module de.amr.games.pacman.ui.fx {
 	requires transitive javafx.controls;
 	requires transitive javafx.media;
 	requires transitive de.amr.games.pacman;
-	requires jimObjModelImporterJFX;
 	requires javafx.graphics;
+	requires jimObjModelImporterJFX;
 
 	exports de.amr.games.pacman.ui.fx.app;
 	exports de.amr.games.pacman.ui.fx.scene;
@@ -30,7 +30,6 @@ module de.amr.games.pacman.ui.fx {
 	exports de.amr.games.pacman.ui.fx.shell.info;
 	exports de.amr.games.pacman.ui.fx.sound;
 	exports de.amr.games.pacman.ui.fx.util;
-	exports de.amr.games.pacman.ui.fx._2d.entity.mspacman;
 	exports de.amr.games.pacman.ui.fx._2d.rendering.common;
 	exports de.amr.games.pacman.ui.fx._2d.rendering.mspacman;
 	exports de.amr.games.pacman.ui.fx._2d.rendering.pacman;

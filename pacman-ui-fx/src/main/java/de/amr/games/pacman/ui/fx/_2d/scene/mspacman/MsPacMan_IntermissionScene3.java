@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission3Controller;
 import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
-import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacMansHusbandAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
@@ -49,8 +48,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class MsPacMan_IntermissionScene3 extends GameScene2D {
 
 	private Intermission3Controller sceneController;
-	private Intermission3Controller.Context context;
-	private Flap2D flap2D;
+	private Intermission3Controller.Context $;
 	private SingleGenericAnimation<Rectangle2D> storkAnimation;
 
 	@Override
@@ -58,16 +56,16 @@ public class MsPacMan_IntermissionScene3 extends GameScene2D {
 		super.setSceneContext(gameController);
 		sceneController = new Intermission3Controller(gameController);
 		sceneController.playIntermissionSound = () -> SoundManager.get().play(GameSound.INTERMISSION_3);
-		sceneController.playFlapAnimation = () -> flap2D.playAnimation();
-		context = sceneController.context();
+		$ = sceneController.context();
 	}
 
 	@Override
 	public void init() {
 		sceneController.restartInInitialState(Intermission3Controller.State.FLAP);
-		context.msPacMan.setAnimations(new PacAnimations(r2D));
-		context.pacMan.setAnimations(new MsPacMansHusbandAnimations());
-		flap2D = new Flap2D(context.flap);
+		$.flap.animation = Spritesheet_MsPacMan.get().createFlapAnimation();
+		$.msPacMan.setAnimations(new PacAnimations(r2D));
+		$.pacMan.setAnimations(new MsPacMansHusbandAnimations());
+		$.flap.animation = Spritesheet_MsPacMan.get().createFlapAnimation();
 		storkAnimation = Spritesheet_MsPacMan.get().createStorkFlyingAnimation();
 		storkAnimation.ensureRunning();
 	}
@@ -79,12 +77,12 @@ public class MsPacMan_IntermissionScene3 extends GameScene2D {
 
 	@Override
 	public void doRender(GraphicsContext g) {
-		var ss = ((Spritesheet_MsPacMan) r2D);
+		var ssmp = ((Spritesheet_MsPacMan) r2D);
+		ssmp.drawFlap(g, $.flap);
+		r2D.drawPac(g, $.msPacMan);
+		r2D.drawPac(g, $.pacMan);
+		r2D.drawEntity(g, $.stork, storkAnimation.animate());
+		r2D.drawEntity(g, $.bag, $.bag.open ? ssmp.getJunior() : ssmp.getBlueBag());
 		r2D.drawLevelCounter(g, game.levelCounter);
-		flap2D.render(g, r2D);
-		r2D.drawPac(g, context.msPacMan);
-		r2D.drawPac(g, context.pacMan);
-		r2D.drawEntity(g, context.stork, storkAnimation.animate());
-		r2D.drawEntity(g, context.bag, context.bag.open ? ss.getJunior() : ss.getBlueBag());
 	}
 }
