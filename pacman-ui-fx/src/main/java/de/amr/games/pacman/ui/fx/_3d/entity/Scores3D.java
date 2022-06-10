@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
 
+import de.amr.games.pacman.model.common.GameModel;
 import javafx.scene.Group;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -36,7 +37,7 @@ import javafx.scene.text.Text;
  * 
  * @author Armin Reichert
  */
-public class Score3D extends Group {
+public class Scores3D extends Group {
 
 	public final Text txtScoreTitle;
 	public final Text txtScore;
@@ -48,7 +49,7 @@ public class Score3D extends Group {
 	private Font font;
 	private boolean computeScoreText = true;
 
-	public Score3D() {
+	public Scores3D() {
 		txtScoreTitle = new Text("SCORE");
 		txtScore = new Text();
 		txtHiscoreTitle = new Text("HIGH SCORE");
@@ -72,11 +73,16 @@ public class Score3D extends Group {
 		this.computeScoreText = state;
 	}
 
-	public void update(int score, int levelNumber, int highscore, int highscoreLevelNumber) {
+	public void update(GameModel game) {
+		int gamePoints = game.scores.gameScore.points;
+		int gameLevelNumber = game.level.number;
+		int highscorePoints = game.scores.highScore.points;
+		int highscoreLevelNumber = game.scores.highScore.levelNumber;
+
 		txtScoreTitle.setFill(titleColor);
 		txtScoreTitle.setFont(font);
 		if (computeScoreText) {
-			txtScore.setText(String.format("%7d L%d", score, levelNumber));
+			txtScore.setText(String.format("%7d L%d", gamePoints, gameLevelNumber));
 			txtScore.setFill(Color.YELLOW);
 		}
 		txtScore.setFont(font);
@@ -85,6 +91,6 @@ public class Score3D extends Group {
 		txtHiscoreTitle.setFont(font);
 		txtHiscore.setFill(scoreColor);
 		txtHiscore.setFont(font);
-		txtHiscore.setText(String.format("%7d L%d", highscore, highscoreLevelNumber));
+		txtHiscore.setText(String.format("%7d L%d", highscorePoints, highscoreLevelNumber));
 	}
 }
