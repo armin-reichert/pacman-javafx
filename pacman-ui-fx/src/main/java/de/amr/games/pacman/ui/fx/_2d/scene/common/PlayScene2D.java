@@ -35,7 +35,6 @@ import de.amr.games.pacman.model.common.actors.PacAnimationKey;
 import de.amr.games.pacman.model.mspacman.MovingBonus;
 import de.amr.games.pacman.model.pacman.StaticBonus;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.DebugDraw;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -119,7 +118,7 @@ public class PlayScene2D extends GameScene2D {
 			r2D.drawWorld(g, game.level.world, r2D.mazeNumber(game.level.number), !energizerPulse.animate());
 		}
 		if (Env.$tilesVisible.get()) {
-			DebugDraw.drawTileBorders(g, game.level.world.tiles().filter(game.level.world::isIntersection), Color.RED);
+			r2D.drawTileBorders(g, game.level.world.tiles().filter(game.level.world::isIntersection), Color.RED);
 		}
 		drawGameStateMessage(g);
 		if (game.bonus() instanceof MovingBonus) {

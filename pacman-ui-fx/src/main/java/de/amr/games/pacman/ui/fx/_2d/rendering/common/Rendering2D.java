@@ -27,6 +27,8 @@ import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
+import java.util.stream.Stream;
+
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.lib.animation.GenericAnimationMap;
@@ -37,6 +39,7 @@ import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.actors.Score;
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.MovingBonus;
 import de.amr.games.pacman.model.pacman.StaticBonus;
@@ -253,5 +256,33 @@ public interface Rendering2D {
 	static void clearTile(GraphicsContext g, V2i tile) {
 		g.setFill(Color.BLACK);
 		g.fillRect(t(tile.x) + 0.2, t(tile.y) + 0.2, TS - 0.2, TS - 0.2);
+	}
+
+	// Debug draw functions
+
+	default void drawTileBorders(GraphicsContext g, Stream<V2i> tiles, Color color) {
+		tiles.forEach(tile -> drawTileBorder(g, tile, color));
+	}
+
+	default void drawTileBorder(GraphicsContext g, V2i tile, Color color) {
+		g.setStroke(color);
+		g.strokeRect(t(tile.x) + 0.2, t(tile.y) + 0.2, TS - 0.2, TS - 0.2);
+	}
+
+	default void drawGrid(GraphicsContext g) {
+		g.setStroke(Color.rgb(160, 160, 160, 0.5));
+		g.setLineWidth(1);
+		for (int row = 0; row < ArcadeWorld.TILES_Y; ++row) {
+			line(g, 0, t(row), ArcadeWorld.SIZE.x, t(row));
+		}
+		for (int col = 0; col < ArcadeWorld.TILES_X; ++col) {
+			line(g, t(col), 0, t(col), ArcadeWorld.SIZE.y);
+		}
+	}
+
+	// WTF: why are lines blurred without this?
+	static void line(GraphicsContext g, double x1, double y1, double x2, double y2) {
+		double offset = 0.5;
+		g.strokeLine(x1 + offset, y1 + offset, x2 + offset, y2 + offset);
 	}
 }

@@ -29,7 +29,6 @@ import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.DebugDraw;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
@@ -137,7 +136,7 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		doRender(g);
 		if (Env.$tilesVisible.get()) {
-			DebugDraw.drawGrid(g);
+			r2D.drawGrid(g);
 		}
 	}
 
