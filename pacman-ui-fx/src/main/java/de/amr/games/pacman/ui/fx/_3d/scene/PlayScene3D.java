@@ -212,7 +212,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 		bonus3D.update(game.bonus());
 		score3D.update(game.scores.gameScore.points, game.level.number, game.scores.highScore.points,
 				game.scores.highScore.levelNumber);
-		livesCounter3D.update(game.lives);
+		livesCounter3D.update(gameController.isGameRunning() ? game.lives - 1 : game.lives);
 		getCamera().update(player3D);
 		PlaySceneSounds.update(gameController.state());
 	}
