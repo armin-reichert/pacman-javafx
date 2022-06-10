@@ -90,11 +90,6 @@ public class GhostAnimations implements GenericAnimationCollection<Ghost, GhostA
 	}
 
 	@Override
-	public void setFrameIndex(int index) {
-		// TODO what?
-	}
-
-	@Override
 	public Rectangle2D currentSprite(Ghost ghost) {
 		return switch (selectedKey) {
 		case ANIM_EYES -> eyes.get(ghost.wishDir()).frame();

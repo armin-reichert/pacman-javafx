@@ -56,10 +56,6 @@ public class PacAnimations implements GenericAnimationCollection<Pac, PacAnimati
 	}
 
 	@Override
-	public void setFrameIndex(int index) {
-	}
-
-	@Override
 	public PacAnimationKey selectedKey() {
 		return selectedKey;
 	}

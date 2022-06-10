@@ -31,8 +31,6 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.IntroController;
 import de.amr.games.pacman.controller.mspacman.IntroController.Context;
 import de.amr.games.pacman.controller.mspacman.IntroController.State;
-import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.animation.GenericAnimationMap;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
@@ -41,7 +39,6 @@ import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -62,7 +59,6 @@ public class MsPacMan_IntroScene extends GameScene2D {
 	public void setSceneContext(GameController gameController) {
 		super.setSceneContext(gameController);
 		sceneController = new IntroController(gameController);
-		sceneController.addStateChangeListener(this::onSceneStateChanged);
 		$ = sceneController.context();
 	}
 
@@ -101,16 +97,6 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		sceneController.update();
 		// TODO better solution
 		credit2D.visible = $.creditVisible;
-	}
-
-	@SuppressWarnings("unchecked")
-	private void onSceneStateChanged(State fromState, State toState) {
-		if (fromState == State.MSPACMAN && toState == State.READY_TO_PLAY) {
-			// TODO simplify
-			var munching = (GenericAnimationMap<Direction, Rectangle2D>) $.msPacMan.animations().get().selectedAnimation();
-			munching.get($.msPacMan.moveDir()).setFrameIndex(2);
-			munching.stop();
-		}
 	}
 
 	@Override
