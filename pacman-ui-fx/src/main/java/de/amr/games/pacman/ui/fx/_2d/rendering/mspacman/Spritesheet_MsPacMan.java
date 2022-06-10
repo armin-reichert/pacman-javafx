@@ -30,6 +30,7 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.GenericAnimationMap;
 import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
+import de.amr.games.pacman.lib.animation.StaticGenericAnimation;
 import de.amr.games.pacman.model.mspacman.Flap;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
@@ -293,18 +294,18 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public SingleGenericAnimation<Rectangle2D> createBonusSymbolAnimation() {
-		return new SingleGenericAnimation<>(rhs(3, 0), rhs(4, 0), rhs(5, 0), rhs(6, 0), rhs(7, 0), rhs(8, 0), rhs(9, 0));
+	public StaticGenericAnimation<Rectangle2D> createBonusSymbolAnimation() {
+		return new StaticGenericAnimation<>(rhs(3, 0), rhs(4, 0), rhs(5, 0), rhs(6, 0), rhs(7, 0), rhs(8, 0), rhs(9, 0));
 	}
 
 	@Override
-	public SingleGenericAnimation<Rectangle2D> createBonusValueAnimation() {
-		return new SingleGenericAnimation<>(rhs(3, 1), rhs(4, 1), rhs(5, 1), rhs(6, 1), rhs(7, 1), rhs(8, 1), rhs(9, 1));
+	public StaticGenericAnimation<Rectangle2D> createBonusValueAnimation() {
+		return new StaticGenericAnimation<>(rhs(3, 1), rhs(4, 1), rhs(5, 1), rhs(6, 1), rhs(7, 1), rhs(8, 1), rhs(9, 1));
 	}
 
 	@Override
-	public SingleGenericAnimation<Rectangle2D> createGhostValueAnimation() {
-		return new SingleGenericAnimation<>(rhs(0, 8), rhs(1, 8), rhs(2, 8), rhs(3, 8));
+	public StaticGenericAnimation<Rectangle2D> createGhostValueAnimation() {
+		return new StaticGenericAnimation<>(rhs(0, 8), rhs(1, 8), rhs(2, 8), rhs(3, 8));
 	}
 
 	// Ms. Pac-Man specific:

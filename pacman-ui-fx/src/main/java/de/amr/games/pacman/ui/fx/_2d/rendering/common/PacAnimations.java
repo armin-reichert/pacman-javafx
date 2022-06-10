@@ -51,6 +51,11 @@ public class PacAnimations implements GenericAnimationCollection<Pac, PacAnimati
 	}
 
 	@Override
+	public Rectangle2D frame(int i) {
+		return null;
+	}
+
+	@Override
 	public void ensureRunning() {
 		munching.ensureRunning();
 	}
@@ -66,7 +71,7 @@ public class PacAnimations implements GenericAnimationCollection<Pac, PacAnimati
 	}
 
 	@Override
-	public GenericAnimation getByKey(PacAnimationKey key) {
+	public GenericAnimation<Rectangle2D> getByKey(PacAnimationKey key) {
 		return switch (key) {
 		case ANIM_DYING -> dying;
 		case ANIM_MUNCHING -> munching;
@@ -74,7 +79,7 @@ public class PacAnimations implements GenericAnimationCollection<Pac, PacAnimati
 	}
 
 	@Override
-	public Stream<GenericAnimation> all() {
+	public Stream<GenericAnimation<Rectangle2D>> all() {
 		return Stream.of(munching, dying);
 	}
 

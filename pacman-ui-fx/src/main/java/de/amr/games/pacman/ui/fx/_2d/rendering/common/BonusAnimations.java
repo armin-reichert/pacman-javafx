@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.animation.GenericAnimation;
 import de.amr.games.pacman.lib.animation.GenericAnimationCollection;
-import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
+import de.amr.games.pacman.lib.animation.StaticGenericAnimation;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.BonusAnimationKey;
 import javafx.geometry.Rectangle2D;
@@ -40,13 +40,18 @@ import javafx.geometry.Rectangle2D;
 public class BonusAnimations implements GenericAnimationCollection<Bonus, BonusAnimationKey, Rectangle2D> {
 
 	private BonusAnimationKey selectedKey;
-	public final SingleGenericAnimation<Rectangle2D> symbolAnimation;
-	public final SingleGenericAnimation<Rectangle2D> valueAnimation;
+	public final StaticGenericAnimation<Rectangle2D> symbolAnimation;
+	public final StaticGenericAnimation<Rectangle2D> valueAnimation;
 
 	public BonusAnimations(Rendering2D r2D) {
 		symbolAnimation = r2D.createBonusSymbolAnimation();
 		valueAnimation = r2D.createBonusValueAnimation();
 		select(BonusAnimationKey.ANIM_NONE);
+	}
+
+	@Override
+	public Rectangle2D frame(int i) {
+		return null;
 	}
 
 	@Override
@@ -64,7 +69,7 @@ public class BonusAnimations implements GenericAnimationCollection<Bonus, BonusA
 	}
 
 	@Override
-	public GenericAnimation getByKey(BonusAnimationKey key) {
+	public GenericAnimation<Rectangle2D> getByKey(BonusAnimationKey key) {
 		return switch (key) {
 		case ANIM_NONE -> null;
 		case ANIM_SYMBOL -> symbolAnimation;
@@ -73,7 +78,7 @@ public class BonusAnimations implements GenericAnimationCollection<Bonus, BonusA
 	}
 
 	@Override
-	public Stream<GenericAnimation> all() {
+	public Stream<GenericAnimation<Rectangle2D>> all() {
 		return Stream.of(symbolAnimation, valueAnimation);
 	}
 

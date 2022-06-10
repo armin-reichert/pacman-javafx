@@ -72,7 +72,7 @@ public class GuysInfo {
 		this.game = game;
 	}
 
-	private String getAnimationState(GenericAnimation animation, Direction dir) {
+	private String getAnimationState(GenericAnimation<?> animation, Direction dir) {
 		if (animation instanceof GenericAnimationMap) {
 			@SuppressWarnings("unchecked")
 			var gam = (GenericAnimationMap<Direction, ?>) animation;

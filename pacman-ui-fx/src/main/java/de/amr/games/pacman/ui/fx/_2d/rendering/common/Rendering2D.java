@@ -31,6 +31,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.lib.animation.GenericAnimationMap;
 import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
+import de.amr.games.pacman.lib.animation.StaticGenericAnimation;
 import de.amr.games.pacman.model.common.LevelCounter;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -63,7 +64,7 @@ public interface Rendering2D {
 
 	Image getSpriteImage(Rectangle2D sprite);
 
-	default Image[] getAnimationImages(SingleGenericAnimation<Rectangle2D> animation) {
+	default Image[] getAnimationImages(StaticGenericAnimation<Rectangle2D> animation) {
 		int n = animation.numFrames();
 		Image[] images = new Image[n];
 		for (int i = 0; i < n; ++i) {
@@ -98,11 +99,11 @@ public interface Rendering2D {
 
 	SingleGenericAnimation<Image> createMazeFlashingAnimation(int mazeNumber);
 
-	SingleGenericAnimation<Rectangle2D> createBonusSymbolAnimation();
+	StaticGenericAnimation<Rectangle2D> createBonusSymbolAnimation();
 
-	SingleGenericAnimation<Rectangle2D> createBonusValueAnimation();
+	StaticGenericAnimation<Rectangle2D> createBonusValueAnimation();
 
-	SingleGenericAnimation<Rectangle2D> createGhostValueAnimation();
+	StaticGenericAnimation<Rectangle2D> createGhostValueAnimation();
 
 	// Maze
 

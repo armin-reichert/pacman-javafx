@@ -30,6 +30,7 @@ import de.amr.games.pacman.lib.animation.GenericAnimation;
 import de.amr.games.pacman.lib.animation.GenericAnimationCollection;
 import de.amr.games.pacman.lib.animation.GenericAnimationMap;
 import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
+import de.amr.games.pacman.lib.animation.StaticGenericAnimation;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostAnimationKey;
 import javafx.geometry.Rectangle2D;
@@ -44,7 +45,7 @@ public class GhostAnimations implements GenericAnimationCollection<Ghost, GhostA
 	public SingleGenericAnimation<Rectangle2D> flashing;
 	public SingleGenericAnimation<Rectangle2D> blue;
 	public GenericAnimationMap<Direction, Rectangle2D> color;
-	public SingleGenericAnimation<Rectangle2D> values;
+	public StaticGenericAnimation<Rectangle2D> values;
 
 	public GhostAnimations(int ghostID, Rendering2D r2D) {
 		eyes = r2D.createGhostEyesAnimation();
@@ -53,6 +54,11 @@ public class GhostAnimations implements GenericAnimationCollection<Ghost, GhostA
 		color = r2D.createGhostColorAnimation(ghostID);
 		values = r2D.createGhostValueAnimation();
 		select(GhostAnimationKey.ANIM_COLOR);
+	}
+
+	@Override
+	public Rectangle2D frame(int i) {
+		return null;
 	}
 
 	@Override
@@ -66,7 +72,7 @@ public class GhostAnimations implements GenericAnimationCollection<Ghost, GhostA
 	}
 
 	@Override
-	public GenericAnimation getByKey(GhostAnimationKey key) {
+	public GenericAnimation<Rectangle2D> getByKey(GhostAnimationKey key) {
 		return switch (key) {
 		case ANIM_EYES -> eyes;
 		case ANIM_FLASHING -> flashing;
@@ -77,7 +83,7 @@ public class GhostAnimations implements GenericAnimationCollection<Ghost, GhostA
 	}
 
 	@Override
-	public Stream<GenericAnimation> all() {
+	public Stream<GenericAnimation<Rectangle2D>> all() {
 		return Stream.of(eyes, flashing, blue, color, values);
 	}
 
