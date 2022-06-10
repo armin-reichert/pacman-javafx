@@ -82,7 +82,6 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 	@Override
 	public void setSceneContext(GameController gameController) {
 		var state = gameController.state();
-		var noCredit = gameController.credit() == 0;
 		this.gameController = gameController;
 		this.game = gameController.game();
 		r2D = switch (game.variant) {
@@ -90,12 +89,16 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 		case PACMAN -> Spritesheet_PacMan.get();
 		};
 		SoundManager.get().selectGameVariant(game.variant);
-		SoundManager.get().setStopped(noCredit && state != GameState.INTERMISSION_TEST);
+		SoundManager.get().setStopped(!hasCredit() && state != GameState.INTERMISSION_TEST);
 	}
 
 	@Override
 	public SubScene getFXSubScene() {
 		return fxSubScene;
+	}
+
+	protected boolean hasCredit() {
+		return gameController.credit() > 0;
 	}
 
 	public Canvas getCanvas() {

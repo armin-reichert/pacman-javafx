@@ -60,14 +60,12 @@ public class PlayScene2D extends GameScene2D {
 	private GuysInfo guysInfo = new GuysInfo(this);
 	private SingleGenericAnimation<Boolean> energizerPulse = SingleGenericAnimation.pulse(10);
 	private SingleGenericAnimation<Image> mazeFlashingAnimation;
-	private boolean hasCredit;
 
 	@Override
 	public void init() {
-		hasCredit = gameController.credit() > 0;
 		guysInfo.init(game);
-		creditVisible = !hasCredit;
-		game.levelCounter.visible = hasCredit;
+		creditVisible = !hasCredit();
+		game.levelCounter.visible = hasCredit();
 		mazeFlashingAnimation = r2D.createMazeFlashingAnimation(r2D.mazeNumber(game.level.number));
 		game.pac.setAnimations(new PacAnimations(r2D));
 		for (var ghost : game.ghosts) {
@@ -110,7 +108,7 @@ public class PlayScene2D extends GameScene2D {
 	public void doRender(GraphicsContext g) {
 		r2D.drawScore(g, game.scores.gameScore);
 		r2D.drawScore(g, game.scores.highScore);
-		if (hasCredit) {
+		if (hasCredit()) {
 			r2D.drawLivesCounter(g, gameController.isGameRunning() ? game.lives - 1 : game.lives);
 		}
 		r2D.drawLevelCounter(g, game.levelCounter);
