@@ -165,9 +165,9 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public void drawCopyright(GraphicsContext g) {
+	public void drawCopyright(GraphicsContext g, int tileY) {
 		int x = t(6);
-		int y = t(28);
+		int y = t(tileY - 1);
 		g.drawImage(midwayLogo, x, y + 3, 30, 32);
 		g.setFill(Color.RED);
 		g.setFont(Font.font("Dialog", 11.0));

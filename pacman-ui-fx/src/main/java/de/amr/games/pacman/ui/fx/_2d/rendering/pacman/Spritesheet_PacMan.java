@@ -136,11 +136,11 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public void drawCopyright(GraphicsContext g) {
+	public void drawCopyright(GraphicsContext g, int tileY) {
 		String text = "\u00A9 1980 MIDWAY MFG. CO.";
 		g.setFont(getArcadeFont());
 		g.setFill(getGhostColor(PINK_GHOST));
-		g.fillText(text, t(4), t(32));
+		g.fillText(text, t(4), t(tileY));
 	}
 
 	@Override

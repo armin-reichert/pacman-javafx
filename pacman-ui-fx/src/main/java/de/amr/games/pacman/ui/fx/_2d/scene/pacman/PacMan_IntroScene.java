@@ -144,26 +144,26 @@ public class PacMan_IntroScene extends GameScene2D {
 			drawPoints(g);
 			if (time > sec_to_ticks(1)) {
 				drawBlinkingEnergizer(g);
-				r2D.drawCopyright(g);
+				r2D.drawCopyright(g, 32);
 			}
 		}
 		case CHASING_PAC -> {
 			drawGallery(g);
 			drawPoints(g);
-			r2D.drawCopyright(g);
+			r2D.drawCopyright(g, 32);
 			drawBlinkingEnergizer(g);
 			drawGuys(g, time % 5 < 2 ? 0 : -1); // TODO check this
 		}
 		case CHASING_GHOSTS -> {
 			drawGallery(g);
 			drawPoints(g);
-			r2D.drawCopyright(g);
+			r2D.drawCopyright(g, 32);
 			drawGuys(g, 0);
 		}
 		case READY_TO_PLAY -> {
 			drawGallery(g);
 			drawPoints(g);
-			r2D.drawCopyright(g);
+			r2D.drawCopyright(g, 32);
 			drawGuys(g, 0);
 		}
 		}
