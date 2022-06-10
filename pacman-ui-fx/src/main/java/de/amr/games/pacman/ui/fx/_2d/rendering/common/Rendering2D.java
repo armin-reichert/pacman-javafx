@@ -76,6 +76,8 @@ public interface Rendering2D {
 
 	Rectangle2D getLifeSprite();
 
+	Rectangle2D getSymbolSprite(int symbol);
+
 	// Animations
 
 	GenericAnimationMap<Direction, Rectangle2D> createPacMunchingAnimation();
@@ -208,7 +210,14 @@ public interface Rendering2D {
 		}
 	}
 
-	default void drawLevelCounter(GraphicsContext g, LevelCounter counter) {
-
+	default void drawLevelCounter(GraphicsContext g, LevelCounter levelCounter) {
+		if (levelCounter.visible) {
+			double x = levelCounter.position.x;
+			for (int symbol : levelCounter.symbols) {
+				var sprite = getSymbolSprite(symbol);
+				drawSprite(g, sprite, x, levelCounter.position.y);
+				x -= t(2);
+			}
+		}
 	}
 }

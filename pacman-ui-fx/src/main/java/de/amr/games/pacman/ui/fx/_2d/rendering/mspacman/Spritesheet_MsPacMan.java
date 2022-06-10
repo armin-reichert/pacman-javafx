@@ -165,6 +165,11 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
+	public Rectangle2D getSymbolSprite(int symbol) {
+		return rhs(3 + symbol, 0);
+	}
+
+	@Override
 	public void drawCopyright(GraphicsContext g, int tileY) {
 		int x = t(6);
 		int y = t(tileY - 1);

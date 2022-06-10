@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission2Controller;
 import de.amr.games.pacman.controller.mspacman.Intermission2Controller.Context;
-import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacMansHusbandAnimations;
@@ -47,7 +46,6 @@ public class MsPacMan_IntermissionScene2 extends GameScene2D {
 
 	private Intermission2Controller sceneController;
 	private Context $;
-	private LevelCounter2D levelCounter2D;
 	private Flap2D flap2D;
 
 	@Override
@@ -62,7 +60,6 @@ public class MsPacMan_IntermissionScene2 extends GameScene2D {
 	@Override
 	public void init() {
 		sceneController.restartInInitialState(Intermission2Controller.State.FLAP);
-		levelCounter2D = new LevelCounter2D(game.levelCounter, r2D);
 		flap2D = new Flap2D($.flap);
 		$.msPacMan.setAnimations(new PacAnimations(r2D));
 		$.msPacMan.animations().get().ensureRunning();
@@ -77,7 +74,7 @@ public class MsPacMan_IntermissionScene2 extends GameScene2D {
 
 	@Override
 	public void doRender(GraphicsContext g) {
-		levelCounter2D.render(g, r2D);
+		r2D.drawLevelCounter(g, game.levelCounter);
 		flap2D.render(g, r2D);
 		r2D.drawPac(g, $.msPacMan);
 		r2D.drawPac(g, $.pacMan);

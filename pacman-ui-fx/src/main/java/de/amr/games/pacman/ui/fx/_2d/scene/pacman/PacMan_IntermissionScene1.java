@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.pacman.Intermission1Controller;
 import de.amr.games.pacman.model.common.actors.GhostAnimationKey;
-import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.pacman.BigPacMan2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
@@ -44,7 +43,6 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 
 	private Intermission1Controller sceneController;
 	private Intermission1Controller.Context context;
-	private LevelCounter2D levelCounter2D;
 	private BigPacMan2D bigPacMan2D;
 
 	@Override
@@ -58,7 +56,6 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 	@Override
 	public void init() {
 		sceneController.init();
-		levelCounter2D = new LevelCounter2D(game.levelCounter, r2D);
 		context.pac.setAnimations(new PacAnimations(r2D));
 		context.pac.animations().get().ensureRunning();
 		context.blinky.setAnimations(new GhostAnimations(context.blinky.id, r2D));
@@ -87,6 +84,6 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 		} else {
 			bigPacMan2D.render(g, r2D);
 		}
-		levelCounter2D.render(g, r2D);
+		r2D.drawLevelCounter(g, game.levelCounter);
 	}
 }

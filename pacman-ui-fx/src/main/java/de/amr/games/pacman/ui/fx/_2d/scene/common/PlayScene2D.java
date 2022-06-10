@@ -34,7 +34,6 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.PacAnimationKey;
 import de.amr.games.pacman.model.mspacman.MovingBonus;
 import de.amr.games.pacman.model.pacman.StaticBonus;
-import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LivesCounter2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.World2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations;
@@ -61,7 +60,6 @@ public class PlayScene2D extends GameScene2D {
 	private final GuysInfo guysInfo = new GuysInfo(this);
 	private World2D world2D;
 	private LivesCounter2D livesCounter2D;
-	private LevelCounter2D levelCounter2D;
 	private final SingleGenericAnimation<Boolean> energizerPulse = SingleGenericAnimation.pulse(10);
 
 	@Override
@@ -71,7 +69,6 @@ public class PlayScene2D extends GameScene2D {
 		creditVisible = !hasCredit;
 		livesCounter2D = new LivesCounter2D(game);
 		livesCounter2D.visible = hasCredit;
-		levelCounter2D = new LevelCounter2D(game.levelCounter, r2D);
 		game.levelCounter.visible = hasCredit;
 		world2D = new World2D(game, r2D);
 		game.pac.setAnimations(new PacAnimations(r2D));
@@ -116,7 +113,7 @@ public class PlayScene2D extends GameScene2D {
 		r2D.drawScore(g, game.scores.gameScore);
 		r2D.drawScore(g, game.scores.highScore);
 		livesCounter2D.render(g, r2D);
-		levelCounter2D.render(g, r2D);
+		r2D.drawLevelCounter(g, game.levelCounter);
 		r2D.drawCredit(g, gameController.credit(), creditVisible);
 		world2D.render(g, r2D, !energizerPulse.animate());
 		drawGameStateMessage(g);

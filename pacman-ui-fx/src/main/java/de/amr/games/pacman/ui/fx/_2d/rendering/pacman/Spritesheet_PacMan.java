@@ -113,6 +113,11 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
+	public Rectangle2D getSymbolSprite(int symbol) {
+		return r(2 + symbol, 3);
+	}
+
+	@Override
 	public int mazeNumber(int levelNumber) {
 		return 1;
 	}

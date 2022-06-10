@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.pacman.Intermission3Controller;
 import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
-import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
@@ -44,7 +43,6 @@ public class PacMan_IntermissionScene3 extends GameScene2D {
 
 	private Intermission3Controller sceneController;
 	private Intermission3Controller.Context $;
-	private LevelCounter2D levelCounter2D;
 	private SingleGenericAnimation<Rectangle2D> patchedAnimation, nakedAnimation;
 
 	@Override
@@ -58,7 +56,6 @@ public class PacMan_IntermissionScene3 extends GameScene2D {
 	@Override
 	public void init() {
 		sceneController.init();
-		levelCounter2D = new LevelCounter2D(game.levelCounter, r2D);
 		$.pac.setAnimations(new PacAnimations(r2D));
 		$.pac.animations().get().ensureRunning();
 		patchedAnimation = Spritesheet_PacMan.get().createBlinkyPatchedAnimation();
@@ -74,7 +71,7 @@ public class PacMan_IntermissionScene3 extends GameScene2D {
 
 	@Override
 	public void doRender(GraphicsContext g) {
-		levelCounter2D.render(g, r2D);
+		r2D.drawLevelCounter(g, game.levelCounter);
 		r2D.drawPac(g, $.pac);
 		if (sceneController.state() == Intermission3Controller.State.CHASING) {
 			r2D.drawSpriteCenteredOverBox(g, patchedAnimation.animate(), $.blinky.position.x, $.blinky.position.y);
