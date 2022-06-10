@@ -57,7 +57,6 @@ import javafx.scene.paint.Color;
 public class PlayScene2D extends GameScene2D {
 
 	private GuysInfo guysInfo = new GuysInfo(this);
-	private SingleGenericAnimation<Boolean> energizerPulse = SingleGenericAnimation.pulse(10);
 	private SingleGenericAnimation<Image> mazeFlashingAnimation;
 
 	@Override
@@ -115,7 +114,7 @@ public class PlayScene2D extends GameScene2D {
 		if (mazeFlashingAnimation.isRunning()) {
 			g.drawImage(mazeFlashingAnimation.animate(), 0, t(3));
 		} else {
-			r2D.drawWorld(g, game.level.world, r2D.mazeNumber(game.level.number), !energizerPulse.animate());
+			r2D.drawWorld(g, game.level.world, r2D.mazeNumber(game.level.number), !game.energizerPulse.animate());
 		}
 		if (Env.$tilesVisible.get()) {
 			r2D.drawTileBorders(g, game.level.world.tiles().filter(game.level.world::isIntersection), Color.RED);
@@ -141,18 +140,11 @@ public class PlayScene2D extends GameScene2D {
 		for (var ghost : game.ghosts) {
 			ghost.animations().get().restart();
 		}
-		letEnergizersBlink(true);
 	}
 
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
 		switch (e.newGameState) {
-		case READY -> {
-			energizerPulse.reset();
-		}
-		case HUNTING -> {
-			letEnergizersBlink(true);
-		}
 		case PACMAN_DYING -> {
 			new SequentialTransition( //
 					pauseSec(1, () -> game.ghosts().forEach(Ghost::hide)), //
@@ -165,10 +157,7 @@ public class PlayScene2D extends GameScene2D {
 			).play();
 		}
 		case LEVEL_COMPLETE -> {
-			gameController.state().timer().setIndefinite();
 			game.pac.animations().get().reset();
-			// Energizers could still remain if "next level" cheat has been used!
-			energizerPulse.reset();
 			new SequentialTransition( //
 					pauseSec(1, () -> startFlashing(game.level.numFlashes)), //
 					pauseSec(2, () -> gameController.state().timer().expire()) //
@@ -179,21 +168,9 @@ public class PlayScene2D extends GameScene2D {
 			gameController.state().timer().setSeconds(1);
 			gameController.state().timer().start();
 		}
-		case GAME_OVER -> {
-			energizerPulse.reset(); // TODO check with MAME
-		}
 		default -> {
 			log("PlayScene entered game state %s", e.newGameState);
 		}
-		}
-	}
-
-	private void letEnergizersBlink(boolean blink) {
-		if (blink) {
-			energizerPulse.restart();
-		} else {
-			energizerPulse.stop();
-			energizerPulse.reset();
 		}
 	}
 }
