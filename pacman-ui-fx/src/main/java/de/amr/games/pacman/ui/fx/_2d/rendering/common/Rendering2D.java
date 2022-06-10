@@ -41,6 +41,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 /**
  * Common interface for Pac-Man and Ms. Pac-Man (spritesheet based) rendering.
@@ -218,6 +219,21 @@ public interface Rendering2D {
 				drawSprite(g, sprite, x, levelCounter.position.y);
 				x -= t(2);
 			}
+		}
+	}
+
+	default void drawLivesCounter(GraphicsContext g, int numLives) {
+		int x = t(2), y = t(34);
+		int maxLives = 5;
+		for (int i = 0; i < Math.min(numLives, maxLives); ++i) {
+			drawSprite(g, getLifeSprite(), x + t(2 * i), y);
+		}
+		// text indicating that more lives are available than displayed
+		int excessLives = numLives - maxLives;
+		if (excessLives > 0) {
+			g.setFill(Color.YELLOW);
+			g.setFont(Font.font("Serif", FontWeight.BOLD, 8));
+			g.fillText("+" + excessLives, x + t(10), y + t(1));
 		}
 	}
 }
