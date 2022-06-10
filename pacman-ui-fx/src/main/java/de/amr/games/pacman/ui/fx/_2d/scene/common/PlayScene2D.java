@@ -36,6 +36,7 @@ import de.amr.games.pacman.model.mspacman.MovingBonus;
 import de.amr.games.pacman.model.pacman.StaticBonus;
 import de.amr.games.pacman.ui.fx._2d.entity.common.World2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.DebugDraw;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -67,7 +68,7 @@ public class PlayScene2D extends GameScene2D {
 		guysInfo.init(game);
 		creditVisible = !hasCredit;
 		game.levelCounter.visible = hasCredit;
-		world2D = new World2D(game, r2D);
+		world2D = new World2D(r2D, r2D.mazeNumber(game.level.number));
 		game.pac.setAnimations(new PacAnimations(r2D));
 		for (var ghost : game.ghosts) {
 			ghost.setAnimations(new GhostAnimations(ghost.id, r2D));
@@ -114,7 +115,10 @@ public class PlayScene2D extends GameScene2D {
 		}
 		r2D.drawLevelCounter(g, game.levelCounter);
 		r2D.drawCredit(g, gameController.credit(), creditVisible);
-		world2D.render(g, r2D, !energizerPulse.animate());
+		world2D.render(g, r2D, game.level.world, r2D.mazeNumber(game.level.number), !energizerPulse.animate());
+		if (Env.$tilesVisible.get()) {
+			DebugDraw.drawTileBorders(g, game.level.world.tiles().filter(game.level.world::isIntersection), Color.RED);
+		}
 		drawGameStateMessage(g);
 		if (game.bonus() instanceof MovingBonus) {
 			r2D.drawMovingBonus(g, (MovingBonus) game.bonus());
@@ -198,5 +202,4 @@ public class PlayScene2D extends GameScene2D {
 			energizerPulse.reset();
 		}
 	}
-
 }

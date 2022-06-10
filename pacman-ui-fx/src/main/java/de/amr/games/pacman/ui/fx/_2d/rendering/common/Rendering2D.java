@@ -24,9 +24,11 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
+import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.lib.animation.GenericAnimationMap;
 import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.model.common.LevelCounter;
@@ -34,6 +36,7 @@ import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.actors.Score;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.MovingBonus;
 import de.amr.games.pacman.model.pacman.StaticBonus;
 import javafx.geometry.Rectangle2D;
@@ -235,5 +238,19 @@ public interface Rendering2D {
 			g.setFont(Font.font("Serif", FontWeight.BOLD, 8));
 			g.fillText("+" + excessLives, x + t(10), y + t(1));
 		}
+	}
+
+	default void drawWorld(GraphicsContext g, World world, int mazeNumber, boolean foodHidden) {
+		int x = 0, y = t(3);
+		g.drawImage(getMazeFullImage(mazeNumber), x, y);
+		world.tiles().filter(world::containsEatenFood).forEach(tile -> clearTile(g, tile));
+		if (foodHidden) { // dark blinking phase
+			world.energizerTiles().forEach(tile -> clearTile(g, tile));
+		}
+	}
+
+	static void clearTile(GraphicsContext g, V2i tile) {
+		g.setFill(Color.BLACK);
+		g.fillRect(t(tile.x) + 0.2, t(tile.y) + 0.2, TS - 0.2, TS - 0.2);
 	}
 }

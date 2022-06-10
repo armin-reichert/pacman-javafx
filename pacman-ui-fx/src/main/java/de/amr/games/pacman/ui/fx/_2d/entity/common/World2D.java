@@ -23,19 +23,13 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.entity.common;
 
-import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.DebugDraw;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 
 /**
  * 2D representation of the world. Implements the flashing animation played on the end of each level.
@@ -45,15 +39,8 @@ import javafx.scene.paint.Color;
 public class World2D {
 
 	private final SingleGenericAnimation<Image> flashingAnimation;
-	private final GameModel game;
-	private double x, y;
-	private int mazeNumber;
 
-	public World2D(GameModel game, Rendering2D r2D) {
-		this.game = game;
-		this.x = t(0);
-		this.y = t(3);
-		this.mazeNumber = r2D.mazeNumber(game.level.number);
+	public World2D(Rendering2D r2D, int mazeNumber) {
 		this.flashingAnimation = r2D.createMazeFlashingAnimation(mazeNumber);
 	}
 
@@ -62,27 +49,11 @@ public class World2D {
 		flashingAnimation.restart();
 	}
 
-	public void render(GraphicsContext g, Rendering2D r2D, boolean foodHidden) {
+	public void render(GraphicsContext g, Rendering2D r2D, World world, int mazeNumber, boolean foodHidden) {
 		if (flashingAnimation.isRunning()) {
-			g.drawImage(flashingAnimation.animate(), x, y);
+			g.drawImage(flashingAnimation.animate(), 0, t(3));
 		} else {
-			g.drawImage(r2D.getMazeFullImage(mazeNumber), x, y);
-			hideEatenFood(g, game.level.world, foodHidden);
+			r2D.drawWorld(g, world, mazeNumber, foodHidden);
 		}
-		if (Env.$tilesVisible.get()) {
-			DebugDraw.drawTileBorders(g, game.level.world.tiles().filter(game.level.world::isIntersection), Color.RED);
-		}
-	}
-
-	private void hideEatenFood(GraphicsContext g, World world, boolean foodHidden) {
-		world.tiles().filter(world::containsEatenFood).forEach(tile -> clearTile(g, tile));
-		if (foodHidden) { // dark blinking phase
-			world.energizerTiles().forEach(tile -> clearTile(g, tile));
-		}
-	}
-
-	private void clearTile(GraphicsContext g, V2i tile) {
-		g.setFill(Color.BLACK);
-		g.fillRect(t(tile.x) + 0.2, t(tile.y) + 0.2, TS - 0.2, TS - 0.2);
 	}
 }
