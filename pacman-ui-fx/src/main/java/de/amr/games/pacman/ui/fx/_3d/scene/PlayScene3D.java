@@ -34,7 +34,6 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameStateChangeEvent;
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
@@ -85,7 +84,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 	private final AmbientLight light = new AmbientLight(Color.GHOSTWHITE);
 	private final Image floorTexture = U.image("/common/escher-texture.jpg");
 	private final Color floorColorWithTexture = Color.DARKBLUE;
-	private final Color floorColorNoTexture = Color.rgb(30, 30, 30);
+	private final Color floorColorWithoutTexture = Color.rgb(30, 30, 30);
 	private final SimpleObjectProperty<Perspective> $perspective = new SimpleObjectProperty<>();
 	private final SimpleBooleanProperty $useMazeFloorTexture = new SimpleBooleanProperty();
 	private final EnumMap<Perspective, PlaySceneCamera> cameras = new EnumMap<>(Perspective.class);
@@ -195,7 +194,10 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
 		maze3D.$resolution.addListener(this::onMazeResolutionChange);
-		int mazeNumber = r2D.mazeNumber(game.level.number);
+		buildMazeContent(r2D.mazeNumber(game.level.number));
+	}
+
+	private void buildMazeContent(int mazeNumber) {
 		maze3D.createWallsAndDoors(game.level.world, //
 				getMazeSideColor(game.variant, mazeNumber), //
 				getMazeTopColor(game.variant, mazeNumber), //
@@ -267,13 +269,13 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 		camera.reset();
 	}
 
-	private void setUseMazeFloorTexture(Boolean use) {
-		if (use) {
+	private void setUseMazeFloorTexture(boolean useTexture) {
+		if (useTexture) {
 			maze3D.getFloor().setTexture(floorTexture);
 			maze3D.getFloor().setColor(floorColorWithTexture);
 		} else {
 			maze3D.getFloor().setTexture(null);
-			maze3D.getFloor().setColor(floorColorNoTexture);
+			maze3D.getFloor().setColor(floorColorWithoutTexture);
 		}
 	}
 
@@ -308,8 +310,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 			game.level.world.tiles().filter(game.level.world::containsEatenFood)
 					.forEach(tile -> maze3D.foodAt(tile).ifPresent(maze3D::hideFood));
 		} else {
-			V2i tile = e.tile.get();
-			maze3D.foodAt(tile).ifPresent(maze3D::hideFood);
+			maze3D.foodAt(e.tile.get()).ifPresent(maze3D::hideFood);
 		}
 	}
 
@@ -333,10 +334,11 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 		e.ghost.ifPresent(ghost -> ghosts3D[ghost.id].playRevivalAnimation());
 	}
 
-	@SuppressWarnings("incomplete-switch")
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
 		switch (e.newGameState) {
+		default -> {
+		}
 		case READY -> {
 			maze3D.reset();
 			player3D.reset();
@@ -346,30 +348,25 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 			maze3D.energizerAnimations().forEach(Animation::play);
 		}
 		case PACMAN_DYING -> {
-			gameController.state().timer().setIndefinite();
+			blockGameController();
 			Stream.of(ghosts3D).forEach(Ghost3D::setNormalLook);
 			var killer = game.ghosts().filter(ghost -> ghost.sameTile(game.pac)).findAny().get();
 			var killerColor = r2D.getGhostColor(killer.id);
 			new SequentialTransition( //
 					U.pauseSec(1.0, () -> game.ghosts().forEach(Ghost::hide)), //
 					player3D.dyingAnimation(killerColor, gameController.credit() == 0), //
-					U.pauseSec(2.0, () -> gameController.state().timer().expire()) //
+					U.pauseSec(2.0, () -> unblockGameController()) //
 			).play();
 		}
 		case LEVEL_STARTING -> {
-			// TODO: This is not executed at the *first* level. Maybe I should change the state machine to make a transition
-			// from READY to LEVEL_STARTING when the game starts?
-			int mazeNumber = r2D.mazeNumber(game.level.number);
-			maze3D.createWallsAndDoors(game.level.world, //
-					getMazeSideColor(game.variant, mazeNumber), //
-					getMazeTopColor(game.variant, mazeNumber), //
-					getGhostHouseDoorColor(game.variant, mazeNumber));
-			maze3D.createFood(game.level.world, r2D.getFoodColor(mazeNumber));
+			blockGameController();
+			buildMazeContent(r2D.mazeNumber(game.level.number));
 			levelCounter3D.update(game);
 			Actions.showFlashMessage(Env.message("level_starting", game.level.number));
-			U.pauseSec(3, () -> gameController.state().timer().expire()).play();
+			U.pauseSec(3, () -> unblockGameController()).play();
 		}
 		case LEVEL_COMPLETE -> {
+			blockGameController();
 			Stream.of(ghosts3D).forEach(Ghost3D::setNormalLook);
 			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game.level.number);
 			new SequentialTransition( //
@@ -377,7 +374,7 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 					maze3D.createMazeFlashingAnimation(game.level.numFlashes), //
 					U.pauseSec(1.0, () -> game.pac.hide()), //
 					U.pauseSec(0.5, () -> Actions.showFlashMessage(2, message)), //
-					U.pauseSec(2.0, () -> gameController.state().timer().expire()) //
+					U.pauseSec(2.0, () -> unblockGameController()) //
 			).play();
 		}
 		case GAME_OVER -> {
@@ -390,5 +387,13 @@ public class PlayScene3D extends GameEventAdapter implements GameScene, Renderin
 			maze3D.energizerAnimations().forEach(Animation::stop);
 			bonus3D.setVisible(false);
 		}
+	}
+
+	private void blockGameController() {
+		gameController.state().timer().setIndefinite();
+	}
+
+	private void unblockGameController() {
+		gameController.state().timer().expire();
 	}
 }
