@@ -23,14 +23,11 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
-import static de.amr.games.pacman.model.common.world.World.t;
-
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx._2d.entity.common.Credit2D;
 import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.DebugDraw;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -70,7 +67,7 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 	// common parts
 	protected GameScore2D gameScore2D;
 	protected GameScore2D highScore2D;
-	protected Credit2D credit2D;
+	protected boolean creditVisible;
 
 	public GameScene2D() {
 		root = new StackPane(canvas, infoPane);
@@ -83,8 +80,7 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 	protected void createScoresAndCredit() {
 		gameScore2D = new GameScore2D(game.scores().gameScore(), "SCORE");
 		highScore2D = new GameScore2D(game.scores().highScore(), "HIGH SCORE");
-		credit2D = new Credit2D(gameController::credit, t(2), unscaledSize.y - 2);
-		credit2D.visible = false;
+		creditVisible = false;
 	}
 
 	@Override

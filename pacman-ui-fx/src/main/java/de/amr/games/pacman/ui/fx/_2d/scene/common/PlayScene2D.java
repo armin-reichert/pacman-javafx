@@ -72,7 +72,7 @@ public class PlayScene2D extends GameScene2D {
 		boolean hasCredit = gameController.credit() > 0;
 
 		gameScore2D.showContent = hasCredit;
-		credit2D.visible = !hasCredit;
+		creditVisible = !hasCredit;
 
 		livesCounter2D = new LivesCounter2D(game);
 		livesCounter2D.visible = hasCredit;
@@ -125,7 +125,7 @@ public class PlayScene2D extends GameScene2D {
 		highScore2D.render(g, r2D);
 		livesCounter2D.render(g, r2D);
 		levelCounter2D.render(g, r2D);
-		credit2D.render(g, r2D);
+		r2D.drawCredit(g, gameController.credit(), creditVisible);
 		world2D.render(g, r2D, !energizerPulse.animate());
 		drawGameStateMessage(g);
 		if (game.bonus() instanceof MovingBonus) {

@@ -75,7 +75,7 @@ public class PacMan_IntroScene extends GameScene2D {
 		gameScore2D.showContent = false;
 		gameScore2D.score.visible = false;
 		highScore2D.score.visible = false;
-		credit2D.visible = false;
+		creditVisible = false;
 		$.pacMan.setAnimations(new PacAnimations(r2D));
 		Stream.of($.ghosts).forEach(ghost -> ghost.setAnimations(new GhostAnimations(ghost.id, r2D)));
 	}
@@ -107,8 +107,7 @@ public class PacMan_IntroScene extends GameScene2D {
 	public void doUpdate() {
 		sceneController.update();
 		updateAnimations();
-		// TODO better solution
-		credit2D.visible = $.creditVisible;
+		creditVisible = $.creditVisible;
 	}
 
 	private void updateAnimations() {
@@ -135,7 +134,7 @@ public class PacMan_IntroScene extends GameScene2D {
 
 		gameScore2D.render(g, r2D);
 		highScore2D.render(g, r2D);
-		credit2D.render(g, r2D);
+		r2D.drawCredit(g, gameController.credit(), creditVisible);
 
 		switch (sceneController.state()) {
 		case START, PRESENTING_GHOSTS -> drawGallery(g);

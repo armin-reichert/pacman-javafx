@@ -69,7 +69,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		gameScore2D.showContent = false;
 		gameScore2D.score.visible = false;
 		highScore2D.score.visible = false;
-		credit2D.visible = true;
+		creditVisible = true;
 		$.msPacMan.setAnimations(new PacAnimations(r2D));
 		$.msPacMan.animations().get().ensureRunning();
 		Stream.of($.ghosts).forEach(ghost -> {
@@ -95,8 +95,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 	@Override
 	public void doUpdate() {
 		sceneController.update();
-		// TODO better solution
-		credit2D.visible = $.creditVisible;
+		creditVisible = $.creditVisible;
 	}
 
 	@Override
@@ -113,7 +112,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		Stream.of($.ghosts).forEach(ghost -> r2D.drawGhost(g, ghost));
 		r2D.drawPac(g, $.msPacMan);
 		r2D.drawCopyright(g, 29);
-		credit2D.render(g, r2D);
+		r2D.drawCredit(g, gameController.credit(), creditVisible);
 	}
 
 	private void drawTitle(GraphicsContext g) {

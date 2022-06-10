@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
+import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.GenericAnimationMap;
@@ -182,4 +183,12 @@ public interface Rendering2D {
 	 * @param y left upper corner y
 	 */
 	void drawCopyright(GraphicsContext g, int tileY);
+
+	default void drawCredit(GraphicsContext g, int credit, boolean visible) {
+		if (visible) {
+			g.setFont(getArcadeFont());
+			g.setFill(Color.WHITE);
+			g.fillText("CREDIT  %d".formatted(credit), t(2), t(36) - 1);
+		}
+	}
 }
