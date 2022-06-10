@@ -28,7 +28,6 @@ import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx._2d.entity.common.GameScore2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.DebugDraw;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
@@ -64,9 +63,6 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 	protected GameModel game;
 	protected Rendering2D r2D;
 
-	// common parts
-	protected GameScore2D gameScore2D;
-	protected GameScore2D highScore2D;
 	protected boolean creditVisible;
 
 	public GameScene2D() {
@@ -75,12 +71,6 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 		fxSubScene = new SubScene(root, unscaledSize.x, unscaledSize.y);
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
-	}
-
-	protected void createScoresAndCredit() {
-		gameScore2D = new GameScore2D(game.scores().gameScore(), "SCORE");
-		highScore2D = new GameScore2D(game.scores().highScore(), "HIGH SCORE");
-		creditVisible = false;
 	}
 
 	@Override

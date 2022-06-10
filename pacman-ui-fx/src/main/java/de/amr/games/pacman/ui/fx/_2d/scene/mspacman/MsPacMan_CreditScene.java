@@ -43,9 +43,9 @@ public class MsPacMan_CreditScene extends GameScene2D {
 
 	@Override
 	public void init() {
-		createScoresAndCredit();
-		gameScore2D.showContent = false;
 		creditVisible = true;
+		game.scores().gameScore().showContent = false;
+		game.scores().highScore().showContent = true;
 	}
 
 	@Override
@@ -64,8 +64,8 @@ public class MsPacMan_CreditScene extends GameScene2D {
 
 	@Override
 	protected void doRender(GraphicsContext g) {
-		gameScore2D.render(g, r2D);
-		highScore2D.render(g, r2D);
+		r2D.drawScore(g, game.scores().gameScore());
+		r2D.drawScore(g, game.scores().highScore());
 		r2D.drawCredit(g, gameController.credit(), creditVisible);
 		g.setFont(r2D.getArcadeFont());
 		g.setFill(r2D.getGhostColor(Ghost.ORANGE_GHOST));

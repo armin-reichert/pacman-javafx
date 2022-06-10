@@ -71,10 +71,6 @@ public class PacMan_IntroScene extends GameScene2D {
 	@Override
 	public void init() {
 		sceneController.restartInInitialState(IntroController.State.START);
-		createScoresAndCredit();
-		gameScore2D.showContent = false;
-		gameScore2D.score.visible = false;
-		highScore2D.score.visible = false;
 		creditVisible = false;
 		$.pacMan.setAnimations(new PacAnimations(r2D));
 		Stream.of($.ghosts).forEach(ghost -> ghost.setAnimations(new GhostAnimations(ghost.id, r2D)));
@@ -132,8 +128,8 @@ public class PacMan_IntroScene extends GameScene2D {
 	public void doRender(GraphicsContext g) {
 		var time = sceneController.state().timer().tick();
 
-		gameScore2D.render(g, r2D);
-		highScore2D.render(g, r2D);
+		r2D.drawScore(g, game.scores().gameScore());
+		r2D.drawScore(g, game.scores().highScore());
 		r2D.drawCredit(g, gameController.credit(), creditVisible);
 
 		switch (sceneController.state()) {

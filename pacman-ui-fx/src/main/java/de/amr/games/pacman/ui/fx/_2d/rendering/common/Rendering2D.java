@@ -32,6 +32,7 @@ import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
+import de.amr.games.pacman.model.common.actors.Score;
 import de.amr.games.pacman.model.mspacman.MovingBonus;
 import de.amr.games.pacman.model.pacman.StaticBonus;
 import javafx.geometry.Rectangle2D;
@@ -189,6 +190,20 @@ public interface Rendering2D {
 			g.setFont(getArcadeFont());
 			g.setFill(Color.WHITE);
 			g.fillText("CREDIT  %d".formatted(credit), t(2), t(36) - 1);
+		}
+	}
+
+	default void drawScore(GraphicsContext g, Score score) {
+		if (score.visible) {
+			String pointsText = score.showContent ? "%02d".formatted(score.points) : "00";
+			String levelText = score.showContent ? "L" + score.levelNumber : "";
+			g.setFont(getArcadeFont());
+			g.setFill(Color.WHITE);
+			g.fillText(score.title, score.position.x, score.position.y);
+			g.setFill(Color.WHITE);
+			g.fillText("%7s".formatted(pointsText), score.position.x, score.position.y + t(1));
+			g.setFill(Color.LIGHTGRAY);
+			g.fillText(levelText, score.position.x + t(8), score.position.y + t(1));
 		}
 	}
 }
