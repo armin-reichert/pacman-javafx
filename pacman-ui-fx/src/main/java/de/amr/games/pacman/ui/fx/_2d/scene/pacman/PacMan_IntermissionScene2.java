@@ -68,10 +68,10 @@ public class PacMan_IntermissionScene2 extends GameScene2D {
 
 		levelCounter2D = new LevelCounter2D(game.levelCounter, r2D);
 		context.pac.setAnimations(new PacAnimations(r2D));
+		context.pac.animations().get().ensureRunning();
 		context.blinky.setAnimations(new GhostAnimations(context.blinky.id, r2D));
+		context.blinky.animations().get().ensureRunning();
 		nail2D = new Nail2D(context.nail);
-		context.pac.animations().get().restart();
-		context.blinky.animations().get().restart();
 		blinkyStretchedAnimation = ((Spritesheet_PacMan) r2D).createBlinkyStretchedAnimation();
 		blinkyDamagedAnimation = ((Spritesheet_PacMan) r2D).createBlinkyDamagedAnimation();
 	}

@@ -25,13 +25,14 @@ package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.pacman.Intermission3Controller;
+import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.ui.fx._2d.entity.common.LevelCounter2D;
-import de.amr.games.pacman.ui.fx._2d.entity.pacman.BlinkyNaked2D;
-import de.amr.games.pacman.ui.fx._2d.entity.pacman.BlinkyPatched2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -42,30 +43,28 @@ import javafx.scene.canvas.GraphicsContext;
 public class PacMan_IntermissionScene3 extends GameScene2D {
 
 	private Intermission3Controller sceneController;
-	private Intermission3Controller.Context context;
+	private Intermission3Controller.Context $;
 	private LevelCounter2D levelCounter2D;
-	private BlinkyPatched2D blinkyPatched2D;
-	private BlinkyNaked2D blinkyNaked2D;
+	private SingleGenericAnimation<Rectangle2D> patchedAnimation, nakedAnimation;
 
 	@Override
 	public void setSceneContext(GameController gameController) {
 		super.setSceneContext(gameController);
 		sceneController = new Intermission3Controller(gameController);
 		sceneController.playIntermissionSound = () -> SoundManager.get().loop(GameSound.INTERMISSION_3, 2);
-		context = sceneController.context();
+		$ = sceneController.context();
 	}
 
 	@Override
 	public void init() {
 		sceneController.init();
 		levelCounter2D = new LevelCounter2D(game.levelCounter, r2D);
-		context.pac.setAnimations(new PacAnimations(r2D));
-		blinkyPatched2D = new BlinkyPatched2D(context.blinky);
-		// TODO fixme
-		blinkyNaked2D = new BlinkyNaked2D(context.blinky);
-		context.pac.animations().get().restart();
-		context.blinky.animations().get().restart();
-		blinkyNaked2D.animation.restart();
+		$.pac.setAnimations(new PacAnimations(r2D));
+		$.pac.animations().get().ensureRunning();
+		patchedAnimation = Spritesheet_PacMan.get().createBlinkyPatchedAnimation();
+		patchedAnimation.ensureRunning();
+		nakedAnimation = Spritesheet_PacMan.get().createBlinkyNakedAnimation();
+		nakedAnimation.ensureRunning();
 	}
 
 	@Override
@@ -76,11 +75,11 @@ public class PacMan_IntermissionScene3 extends GameScene2D {
 	@Override
 	public void doRender(GraphicsContext g) {
 		levelCounter2D.render(g, r2D);
-		r2D.drawPac(g, context.pac);
+		r2D.drawPac(g, $.pac);
 		if (sceneController.state() == Intermission3Controller.State.CHASING) {
-			blinkyPatched2D.render(g, r2D);
+			r2D.drawSpriteCenteredOverBox(g, patchedAnimation.animate(), $.blinky.position.x, $.blinky.position.y);
 		} else {
-			blinkyNaked2D.render(g, r2D);
+			r2D.drawSpriteCenteredOverBox(g, nakedAnimation.animate(), $.blinky.position.x, $.blinky.position.y);
 		}
 	}
 }

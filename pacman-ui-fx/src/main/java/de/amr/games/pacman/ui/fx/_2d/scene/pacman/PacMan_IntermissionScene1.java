@@ -60,7 +60,9 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 		sceneController.init();
 		levelCounter2D = new LevelCounter2D(game.levelCounter, r2D);
 		context.pac.setAnimations(new PacAnimations(r2D));
+		context.pac.animations().get().ensureRunning();
 		context.blinky.setAnimations(new GhostAnimations(context.blinky.id, r2D));
+		context.blinky.animations().get().ensureRunning();
 		bigPacMan2D = new BigPacMan2D(context.pac);
 		bigPacMan2D.startMunching();
 	}
