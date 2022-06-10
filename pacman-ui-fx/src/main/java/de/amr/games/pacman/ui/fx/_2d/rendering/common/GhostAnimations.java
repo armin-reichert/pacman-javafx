@@ -38,9 +38,8 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class GhostAnimations implements GenericAnimationCollection<Ghost, GhostAnimationKey, Rectangle2D> {
+public class GhostAnimations extends GenericAnimationCollection<Ghost, GhostAnimationKey, Rectangle2D> {
 
-	private GhostAnimationKey selectedKey;
 	public GenericAnimationMap<Direction, Rectangle2D> eyes;
 	public SingleGenericAnimation<Rectangle2D> flashing;
 	public SingleGenericAnimation<Rectangle2D> blue;
@@ -57,21 +56,6 @@ public class GhostAnimations implements GenericAnimationCollection<Ghost, GhostA
 	}
 
 	@Override
-	public Rectangle2D frame(int i) {
-		return null;
-	}
-
-	@Override
-	public GhostAnimationKey selectedKey() {
-		return selectedKey;
-	}
-
-	@Override
-	public void select(GhostAnimationKey key) {
-		selectedKey = key;
-	}
-
-	@Override
 	public GenericAnimation<Rectangle2D> getByKey(GhostAnimationKey key) {
 		return switch (key) {
 		case ANIM_EYES -> eyes;
@@ -85,14 +69,6 @@ public class GhostAnimations implements GenericAnimationCollection<Ghost, GhostA
 	@Override
 	public Stream<GenericAnimation<Rectangle2D>> all() {
 		return Stream.of(eyes, flashing, blue, color, values);
-	}
-
-	@Override
-	public void ensureRunning() {
-		eyes.ensureRunning();
-		blue.ensureRunning();
-		flashing.ensureRunning();
-		color.ensureRunning();
 	}
 
 	@Override

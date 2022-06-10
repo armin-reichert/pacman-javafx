@@ -38,9 +38,8 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class PacAnimations implements GenericAnimationCollection<Pac, PacAnimationKey, Rectangle2D> {
+public class PacAnimations extends GenericAnimationCollection<Pac, PacAnimationKey, Rectangle2D> {
 
-	private PacAnimationKey selectedKey;
 	protected GenericAnimationMap<Direction, Rectangle2D> munching;
 	protected SingleGenericAnimation<Rectangle2D> dying;
 
@@ -51,23 +50,8 @@ public class PacAnimations implements GenericAnimationCollection<Pac, PacAnimati
 	}
 
 	@Override
-	public Rectangle2D frame(int i) {
-		return null;
-	}
-
-	@Override
 	public void ensureRunning() {
 		munching.ensureRunning();
-	}
-
-	@Override
-	public PacAnimationKey selectedKey() {
-		return selectedKey;
-	}
-
-	@Override
-	public void select(PacAnimationKey key) {
-		selectedKey = key;
 	}
 
 	@Override

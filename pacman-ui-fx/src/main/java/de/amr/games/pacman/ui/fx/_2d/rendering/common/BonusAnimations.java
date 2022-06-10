@@ -24,7 +24,6 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
-import java.util.Objects;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.animation.GenericAnimation;
@@ -37,9 +36,8 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class BonusAnimations implements GenericAnimationCollection<Bonus, BonusAnimationKey, Rectangle2D> {
+public class BonusAnimations extends GenericAnimationCollection<Bonus, BonusAnimationKey, Rectangle2D> {
 
-	private BonusAnimationKey selectedKey;
 	public final StaticGenericAnimation<Rectangle2D> symbolAnimation;
 	public final StaticGenericAnimation<Rectangle2D> valueAnimation;
 
@@ -47,25 +45,6 @@ public class BonusAnimations implements GenericAnimationCollection<Bonus, BonusA
 		symbolAnimation = r2D.createBonusSymbolAnimation();
 		valueAnimation = r2D.createBonusValueAnimation();
 		select(BonusAnimationKey.ANIM_NONE);
-	}
-
-	@Override
-	public Rectangle2D frame(int i) {
-		return null;
-	}
-
-	@Override
-	public void ensureRunning() {
-	}
-
-	@Override
-	public BonusAnimationKey selectedKey() {
-		return selectedKey;
-	}
-
-	@Override
-	public void select(BonusAnimationKey key) {
-		selectedKey = Objects.requireNonNull(key);
 	}
 
 	@Override
