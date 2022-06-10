@@ -29,7 +29,6 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.ui.fx._2d.entity.pacman.Nail2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
@@ -47,8 +46,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class PacMan_IntermissionScene2 extends GameScene2D {
 
 	private Intermission2Controller sceneController;
-	private Intermission2Controller.Context context;
-	private Nail2D nail2D;
+	private Intermission2Controller.Context $;
 	private SingleGenericAnimation<Rectangle2D> blinkyStretchedAnimation;
 	private SingleGenericAnimation<Rectangle2D> blinkyDamagedAnimation;
 
@@ -57,18 +55,17 @@ public class PacMan_IntermissionScene2 extends GameScene2D {
 		super.setSceneContext(gameController);
 		sceneController = new Intermission2Controller(gameController);
 		sceneController.playIntermissionSound = () -> SoundManager.get().play(GameSound.INTERMISSION_2);
-		context = sceneController.context();
+		$ = sceneController.context();
 	}
 
 	@Override
 	public void init() {
 		sceneController.init();
 
-		context.pac.setAnimations(new PacAnimations(r2D));
-		context.pac.animations().get().ensureRunning();
-		context.blinky.setAnimations(new GhostAnimations(context.blinky.id, r2D));
-		context.blinky.animations().get().ensureRunning();
-		nail2D = new Nail2D(context.nail);
+		$.pac.setAnimations(new PacAnimations(r2D));
+		$.pac.animations().get().ensureRunning();
+		$.blinky.setAnimations(new GhostAnimations($.blinky.id, r2D));
+		$.blinky.animations().get().ensureRunning();
 		blinkyStretchedAnimation = ((Spritesheet_PacMan) r2D).createBlinkyStretchedAnimation();
 		blinkyDamagedAnimation = ((Spritesheet_PacMan) r2D).createBlinkyDamagedAnimation();
 	}
@@ -81,12 +78,12 @@ public class PacMan_IntermissionScene2 extends GameScene2D {
 	@Override
 	public void doRender(GraphicsContext g) {
 		r2D.drawLevelCounter(g, game.levelCounter);
-		r2D.drawPac(g, context.pac);
-		nail2D.render(g, r2D);
+		r2D.drawPac(g, $.pac);
+		r2D.drawEntity(g, $.nail, Spritesheet_PacMan.get().getNail());
 		if (sceneController.nailDistance() < 0) {
-			r2D.drawGhost(g, context.blinky);
+			r2D.drawGhost(g, $.blinky);
 		} else {
-			drawBlinkyStretched(context.blinky, context.nail.position, sceneController.nailDistance() / 4);
+			drawBlinkyStretched($.blinky, $.nail.position, sceneController.nailDistance() / 4);
 		}
 	}
 
@@ -95,7 +92,7 @@ public class PacMan_IntermissionScene2 extends GameScene2D {
 		Rectangle2D stretchedDress = blinkyStretchedAnimation.frame(stretching);
 		r2D.drawSprite(g, stretchedDress, (int) (nailPosition.x - 4), (int) (nailPosition.y - 4));
 		if (stretching < 3) {
-			r2D.drawGhost(g, context.blinky);
+			r2D.drawGhost(g, $.blinky);
 		} else {
 			Rectangle2D damagedDress = blinkyDamagedAnimation.frame(blinky.moveDir() == Direction.UP ? 0 : 1);
 			r2D.drawSprite(g, damagedDress, (int) (blinky.position.x - 4), (int) (blinky.position.y - 4));
