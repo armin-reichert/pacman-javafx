@@ -29,6 +29,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import java.util.stream.Stream;
 
+import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.lib.animation.GenericAnimationMap;
@@ -215,6 +216,19 @@ public interface Rendering2D {
 			g.fillText("%7s".formatted(pointsText), score.position.x, score.position.y + t(1));
 			g.setFill(Color.LIGHTGRAY);
 			g.fillText(levelText, score.position.x + t(8), score.position.y + t(1));
+		}
+	}
+
+	default void drawGameStateMessage(GraphicsContext g, GameState state) {
+		if (state == GameState.GAME_OVER) {
+			g.setFont(getArcadeFont());
+			g.setFill(Color.RED);
+			g.fillText("GAME", t(9), t(21));
+			g.fillText("OVER", t(15), t(21));
+		} else if (state == GameState.READY) {
+			g.setFont(getArcadeFont());
+			g.setFill(Color.YELLOW);
+			g.fillText("READY!", t(11), t(21));
 		}
 	}
 

@@ -120,7 +120,8 @@ public class PlayScene2D extends GameScene2D {
 		if (Env.$tilesVisible.get()) {
 			r2D.drawTileBorders(g, game.level.world.tiles().filter(game.level.world::isIntersection), Color.RED);
 		}
-		drawGameStateMessage(g);
+		GameState displayedState = !hasCredit() ? GameState.GAME_OVER : gameController.state();
+		r2D.drawGameStateMessage(g, displayedState);
 		if (game.bonus() instanceof MovingBonus) {
 			r2D.drawMovingBonus(g, (MovingBonus) game.bonus());
 		} else {
@@ -128,19 +129,6 @@ public class PlayScene2D extends GameScene2D {
 		}
 		r2D.drawPac(g, game.pac);
 		game.ghosts().forEach(ghost -> r2D.drawGhost(g, ghost));
-	}
-
-	private void drawGameStateMessage(GraphicsContext g) {
-		if (gameController.state() == GameState.GAME_OVER || gameController.credit() == 0) {
-			g.setFont(r2D.getArcadeFont());
-			g.setFill(Color.RED);
-			g.fillText("GAME", t(9), t(21));
-			g.fillText("OVER", t(15), t(21));
-		} else if (gameController.state() == GameState.READY) {
-			g.setFont(r2D.getArcadeFont());
-			g.setFill(Color.YELLOW);
-			g.fillText("READY!", t(11), t(21));
-		}
 	}
 
 	public void startFlashing(int numFlashes) {
