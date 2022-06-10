@@ -77,9 +77,11 @@ public class GuysInfo {
 			@SuppressWarnings("unchecked")
 			var gam = (GenericAnimationMap<Direction, ?>) animation;
 			return gam.get(dir).isRunning() ? "" : "(Stopped) ";
-		} else {
+		} else if (animation instanceof SingleGenericAnimation) {
 			var ga = (SingleGenericAnimation<?>) animation;
 			return ga.isRunning() ? "" : "(Stopped) ";
+		} else {
+			return "";
 		}
 	}
 
