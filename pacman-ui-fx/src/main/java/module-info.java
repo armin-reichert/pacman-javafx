@@ -30,7 +30,6 @@ module de.amr.games.pacman.ui.fx {
 	exports de.amr.games.pacman.ui.fx.shell.info;
 	exports de.amr.games.pacman.ui.fx.sound;
 	exports de.amr.games.pacman.ui.fx.util;
-	exports de.amr.games.pacman.ui.fx._2d.entity.common;
 	exports de.amr.games.pacman.ui.fx._2d.entity.mspacman;
 	exports de.amr.games.pacman.ui.fx._2d.entity.pacman;
 	exports de.amr.games.pacman.ui.fx._2d.rendering.common;

@@ -34,7 +34,6 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.PacAnimationKey;
 import de.amr.games.pacman.model.mspacman.MovingBonus;
 import de.amr.games.pacman.model.pacman.StaticBonus;
-import de.amr.games.pacman.ui.fx._2d.entity.common.World2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.DebugDraw;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
@@ -47,6 +46,7 @@ import de.amr.games.pacman.ui.fx.sound.PlaySceneSounds;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.animation.SequentialTransition;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 
@@ -57,9 +57,9 @@ import javafx.scene.paint.Color;
  */
 public class PlayScene2D extends GameScene2D {
 
-	private final GuysInfo guysInfo = new GuysInfo(this);
-	private World2D world2D;
-	private final SingleGenericAnimation<Boolean> energizerPulse = SingleGenericAnimation.pulse(10);
+	private GuysInfo guysInfo = new GuysInfo(this);
+	private SingleGenericAnimation<Boolean> energizerPulse = SingleGenericAnimation.pulse(10);
+	private SingleGenericAnimation<Image> mazeFlashingAnimation;
 	private boolean hasCredit;
 
 	@Override
@@ -68,7 +68,7 @@ public class PlayScene2D extends GameScene2D {
 		guysInfo.init(game);
 		creditVisible = !hasCredit;
 		game.levelCounter.visible = hasCredit;
-		world2D = new World2D(r2D, r2D.mazeNumber(game.level.number));
+		mazeFlashingAnimation = r2D.createMazeFlashingAnimation(r2D.mazeNumber(game.level.number));
 		game.pac.setAnimations(new PacAnimations(r2D));
 		for (var ghost : game.ghosts) {
 			ghost.setAnimations(new GhostAnimations(ghost.id, r2D));
@@ -115,7 +115,11 @@ public class PlayScene2D extends GameScene2D {
 		}
 		r2D.drawLevelCounter(g, game.levelCounter);
 		r2D.drawCredit(g, gameController.credit(), creditVisible);
-		world2D.render(g, r2D, game.level.world, r2D.mazeNumber(game.level.number), !energizerPulse.animate());
+		if (mazeFlashingAnimation.isRunning()) {
+			g.drawImage(mazeFlashingAnimation.animate(), 0, t(3));
+		} else {
+			r2D.drawWorld(g, game.level.world, r2D.mazeNumber(game.level.number), !energizerPulse.animate());
+		}
 		if (Env.$tilesVisible.get()) {
 			DebugDraw.drawTileBorders(g, game.level.world.tiles().filter(game.level.world::isIntersection), Color.RED);
 		}
@@ -140,6 +144,11 @@ public class PlayScene2D extends GameScene2D {
 			g.setFill(Color.YELLOW);
 			g.fillText("READY!", t(11), t(21));
 		}
+	}
+
+	public void startFlashing(int numFlashes) {
+		mazeFlashingAnimation.repeat(numFlashes);
+		mazeFlashingAnimation.restart();
 	}
 
 	public void onSwitchFrom3DScene() {
@@ -176,7 +185,7 @@ public class PlayScene2D extends GameScene2D {
 			// Energizers could still remain if "next level" cheat has been used!
 			energizerPulse.reset();
 			new SequentialTransition( //
-					pauseSec(1, () -> world2D.startFlashing(game.level.numFlashes)), //
+					pauseSec(1, () -> startFlashing(game.level.numFlashes)), //
 					pauseSec(2, () -> gameController.state().timer().expire()) //
 			).play();
 		}
