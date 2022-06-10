@@ -48,7 +48,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class MsPacMan_IntermissionScene1 extends GameScene2D {
 
 	private Intermission1Controller sceneController;
-	private Intermission1Controller.Context context;
+	private Intermission1Controller.Context $;
 	private LevelCounter2D levelCounter2D;
 	private Flap2D flap2D;
 	private Heart2D heart2D;
@@ -57,7 +57,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 	public void setSceneContext(GameController gameController) {
 		super.setSceneContext(gameController);
 		sceneController = new Intermission1Controller(gameController);
-		context = sceneController.context();
+		$ = sceneController.context();
 		sceneController.playIntermissionSound = () -> SoundManager.get().loop(GameSound.INTERMISSION_1, 1);
 		sceneController.playFlapAnimation = () -> flap2D.playAnimation();
 		sceneController.addStateChangeListener(this::onSceneStateChange);
@@ -67,12 +67,16 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 	public void init() {
 		sceneController.restartInInitialState(Intermission1Controller.State.FLAP);
 		levelCounter2D = new LevelCounter2D(game.levelCounter, r2D);
-		flap2D = new Flap2D(context.flap);
-		context.msPac.setAnimations(new PacAnimations(r2D));
-		context.pacMan.setAnimations(new MsPacMansHusbandAnimations());
-		context.inky.setAnimations(new GhostAnimations(context.inky.id, r2D));
-		context.pinky.setAnimations(new GhostAnimations(context.pinky.id, r2D));
-		heart2D = new Heart2D(context.heart);
+		flap2D = new Flap2D($.flap);
+		$.msPac.setAnimations(new PacAnimations(r2D));
+		$.msPac.animations().get().ensureRunning();
+		$.pacMan.setAnimations(new MsPacMansHusbandAnimations());
+		$.pacMan.animations().get().ensureRunning();
+		$.inky.setAnimations(new GhostAnimations($.inky.id, r2D));
+		$.inky.animations().get().ensureRunning();
+		$.pinky.setAnimations(new GhostAnimations($.pinky.id, r2D));
+		$.pinky.animations().get().ensureRunning();
+		heart2D = new Heart2D($.heart);
 	}
 
 	@Override
@@ -82,8 +86,8 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 
 	private void onSceneStateChange(Intermission1Controller.State fromState, Intermission1Controller.State toState) {
 		if (toState == Intermission1Controller.State.IN_HEAVEN) {
-			context.inky.animations().get().selectedAnimation().stop();
-			context.pinky.animations().get().selectedAnimation().stop();
+			$.inky.animations().get().selectedAnimation().stop();
+			$.pinky.animations().get().selectedAnimation().stop();
 		}
 	}
 
@@ -91,10 +95,10 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 	public void doRender(GraphicsContext g) {
 		levelCounter2D.render(g, r2D);
 		flap2D.render(g, r2D);
-		r2D.drawPac(g, context.msPac);
-		r2D.drawPac(g, context.pacMan);
-		r2D.drawGhost(g, context.inky);
-		r2D.drawGhost(g, context.pinky);
+		r2D.drawPac(g, $.msPac);
+		r2D.drawPac(g, $.pacMan);
+		r2D.drawGhost(g, $.inky);
+		r2D.drawGhost(g, $.pinky);
 		heart2D.render(g, r2D);
 	}
 }

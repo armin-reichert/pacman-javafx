@@ -44,38 +44,31 @@ public class PlaySceneSounds extends GameEventAdapter {
 		theOne.gameController = gameController;
 	}
 
-	public static void init() {
-		theOne.game = theOne.gameController.game();
-		SoundManager.get().selectGameVariant(theOne.game.variant);
-		setStopped(theOne.gameController.credit() == 0);
-	}
-
-	public static void setStopped(boolean stopped) {
-		SoundManager.get().setStopped(stopped);
-	}
-
 	public static void update(GameState state) {
 		if (state == GameState.HUNTING) {
-			if (theOne.game.pac.starvingTicks == 10) {
+			if (theOne.game().pac.starvingTicks == 10) {
 				SoundManager.get().stop(GameSound.PACMAN_MUNCH);
 			}
-			if (theOne.game.huntingTimer.tick() == 0) {
-				SoundManager.get().ensureSirenStarted(theOne.game.huntingTimer.phase() / 2);
+			if (theOne.game().huntingTimer.tick() == 0) {
+				SoundManager.get().ensureSirenStarted(theOne.game().huntingTimer.phase() / 2);
 			}
 		}
 	}
 
 	private GameController gameController;
-	private GameModel game;
 
 	private PlaySceneSounds() {
 		GameEventing.addEventListener(this);
 	}
 
+	private GameModel game() {
+		return gameController.game();
+	}
+
 	@Override
 	public void onPlayerLosesPower(GameEvent e) {
 		SoundManager.get().stop(GameSound.PACMAN_POWER);
-		SoundManager.get().ensureSirenStarted(game.huntingTimer.phase() / 2);
+		SoundManager.get().ensureSirenStarted(game().huntingTimer.phase() / 2);
 	}
 
 	@Override
@@ -106,7 +99,7 @@ public class PlaySceneSounds extends GameEventAdapter {
 
 	@Override
 	public void onGhostEntersHouse(GameEvent e) {
-		if (game.ghosts(GhostState.DEAD).count() == 0) {
+		if (game().ghosts(GhostState.DEAD).count() == 0) {
 			SoundManager.get().stop(GameSound.GHOST_RETURNING);
 		}
 	}

@@ -46,7 +46,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class MsPacMan_IntermissionScene2 extends GameScene2D {
 
 	private Intermission2Controller sceneController;
-	private Context context;
+	private Context $;
 	private LevelCounter2D levelCounter2D;
 	private Flap2D flap2D;
 
@@ -56,16 +56,18 @@ public class MsPacMan_IntermissionScene2 extends GameScene2D {
 		sceneController = new Intermission2Controller(gameController);
 		sceneController.playIntermissionSound = () -> SoundManager.get().play(GameSound.INTERMISSION_2);
 		sceneController.playFlapAnimation = () -> flap2D.playAnimation();
-		context = sceneController.context();
+		$ = sceneController.context();
 	}
 
 	@Override
 	public void init() {
 		sceneController.restartInInitialState(Intermission2Controller.State.FLAP);
 		levelCounter2D = new LevelCounter2D(game.levelCounter, r2D);
-		flap2D = new Flap2D(context.flap);
-		context.msPacMan.setAnimations(new PacAnimations(r2D));
-		context.pacMan.setAnimations(new MsPacMansHusbandAnimations());
+		flap2D = new Flap2D($.flap);
+		$.msPacMan.setAnimations(new PacAnimations(r2D));
+		$.msPacMan.animations().get().ensureRunning();
+		$.pacMan.setAnimations(new MsPacMansHusbandAnimations());
+		$.pacMan.animations().get().ensureRunning();
 	}
 
 	@Override
@@ -77,7 +79,7 @@ public class MsPacMan_IntermissionScene2 extends GameScene2D {
 	public void doRender(GraphicsContext g) {
 		levelCounter2D.render(g, r2D);
 		flap2D.render(g, r2D);
-		r2D.drawPac(g, context.msPacMan);
-		r2D.drawPac(g, context.pacMan);
+		r2D.drawPac(g, $.msPacMan);
+		r2D.drawPac(g, $.pacMan);
 	}
 }
