@@ -128,8 +128,8 @@ public class PacMan_IntroScene extends GameScene2D {
 	public void doRender(GraphicsContext g) {
 		var time = sceneController.state().timer().tick();
 
-		r2D.drawScore(g, game.scores().gameScore());
-		r2D.drawScore(g, game.scores().highScore());
+		r2D.drawScore(g, game.scores.gameScore());
+		r2D.drawScore(g, game.scores.highScore());
 		r2D.drawCredit(g, gameController.credit(), creditVisible);
 
 		switch (sceneController.state()) {

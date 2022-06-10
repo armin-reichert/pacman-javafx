@@ -44,8 +44,6 @@ public class PacMan_CreditScene extends GameScene2D {
 	@Override
 	public void init() {
 		creditVisible = true;
-		game.scores().gameScore().showContent = false;
-		game.scores().highScore().showContent = true;
 	}
 
 	@Override
@@ -64,8 +62,8 @@ public class PacMan_CreditScene extends GameScene2D {
 
 	@Override
 	protected void doRender(GraphicsContext g) {
-		r2D.drawScore(g, game.scores().gameScore());
-		r2D.drawScore(g, game.scores().highScore());
+		r2D.drawScore(g, game.scores.gameScore());
+		r2D.drawScore(g, game.scores.highScore());
 		r2D.drawCredit(g, gameController.credit(), creditVisible);
 
 		g.setFont(r2D.getArcadeFont());

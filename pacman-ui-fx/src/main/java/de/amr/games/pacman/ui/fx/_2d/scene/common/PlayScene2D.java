@@ -72,10 +72,6 @@ public class PlayScene2D extends GameScene2D {
 
 		creditVisible = !hasCredit;
 
-		// TODO shouldn't this be done in the game controller?
-		game.scores().gameScore().showContent = hasCredit;
-		game.scores().highScore().showContent = true;
-
 		livesCounter2D = new LivesCounter2D(game);
 		livesCounter2D.visible = hasCredit;
 
@@ -123,8 +119,8 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void doRender(GraphicsContext g) {
-		r2D.drawScore(g, game.scores().gameScore());
-		r2D.drawScore(g, game.scores().highScore());
+		r2D.drawScore(g, game.scores.gameScore());
+		r2D.drawScore(g, game.scores.highScore());
 		livesCounter2D.render(g, r2D);
 		levelCounter2D.render(g, r2D);
 		r2D.drawCredit(g, gameController.credit(), creditVisible);
