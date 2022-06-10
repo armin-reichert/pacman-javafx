@@ -29,6 +29,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.GenericAnimationMap;
 import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
+import de.amr.games.pacman.model.common.LevelCounter;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
@@ -205,5 +206,9 @@ public interface Rendering2D {
 			g.setFill(Color.LIGHTGRAY);
 			g.fillText(levelText, score.position.x + t(8), score.position.y + t(1));
 		}
+	}
+
+	default void drawLevelCounter(GraphicsContext g, LevelCounter counter) {
+
 	}
 }

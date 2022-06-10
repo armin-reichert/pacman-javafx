@@ -40,9 +40,6 @@ public class LevelCounter2D {
 
 	private final LevelCounter levelCounter;
 	private final SingleGenericAnimation<Rectangle2D> symbolAnimation;
-	public boolean visible;
-	public double right_x, y;
-	private double x;
 
 	/**
 	 * @param game    the game
@@ -51,19 +48,17 @@ public class LevelCounter2D {
 	 */
 	public LevelCounter2D(LevelCounter levelCounter, Rendering2D r2D) {
 		this.levelCounter = levelCounter;
-		this.right_x = t(24);
-		this.y = t(34);
 		this.symbolAnimation = r2D.createBonusSymbolAnimation();
 	}
 
 	public void render(GraphicsContext g, Rendering2D r2D) {
-		if (visible) {
-			x = right_x;
-			levelCounter.symbols().forEach(symbol -> {
+		if (levelCounter.visible) {
+			double x = levelCounter.position.x;
+			for (int symbol : levelCounter.symbols) {
 				var sprite = symbolAnimation.frame(symbol);
-				r2D.drawSprite(g, sprite, x, y);
+				r2D.drawSprite(g, sprite, x, levelCounter.position.y);
 				x -= t(2);
-			});
+			}
 		}
 	}
 }

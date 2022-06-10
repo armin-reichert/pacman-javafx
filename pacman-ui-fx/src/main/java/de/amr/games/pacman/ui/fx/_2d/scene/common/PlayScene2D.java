@@ -72,7 +72,7 @@ public class PlayScene2D extends GameScene2D {
 		livesCounter2D = new LivesCounter2D(game);
 		livesCounter2D.visible = hasCredit;
 		levelCounter2D = new LevelCounter2D(game.levelCounter, r2D);
-		levelCounter2D.visible = hasCredit;
+		game.levelCounter.visible = hasCredit;
 		world2D = new World2D(game, r2D);
 		game.pac.setAnimations(new PacAnimations(r2D));
 		for (var ghost : game.ghosts) {
