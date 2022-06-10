@@ -119,8 +119,8 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void doRender(GraphicsContext g) {
-		r2D.drawScore(g, game.scores.gameScore());
-		r2D.drawScore(g, game.scores.highScore());
+		r2D.drawScore(g, game.scores.gameScore);
+		r2D.drawScore(g, game.scores.highScore);
 		livesCounter2D.render(g, r2D);
 		levelCounter2D.render(g, r2D);
 		r2D.drawCredit(g, gameController.credit(), creditVisible);
