@@ -25,13 +25,16 @@ package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.pacman.Intermission1Controller;
+import de.amr.games.pacman.controller.pacman.Intermission1Controller.State;
+import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
 import de.amr.games.pacman.model.common.actors.GhostAnimationKey;
-import de.amr.games.pacman.ui.fx._2d.entity.pacman.BigPacMan2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -43,7 +46,7 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 
 	private Intermission1Controller sceneController;
 	private Intermission1Controller.Context context;
-	private BigPacMan2D bigPacMan2D;
+	private SingleGenericAnimation<Rectangle2D> bigPacMunchingAnimation;
 
 	@Override
 	public void setSceneContext(GameController gameController) {
@@ -60,8 +63,8 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 		context.pac.animations().get().ensureRunning();
 		context.blinky.setAnimations(new GhostAnimations(context.blinky.id, r2D));
 		context.blinky.animations().get().ensureRunning();
-		bigPacMan2D = new BigPacMan2D(context.pac);
-		bigPacMan2D.startMunching();
+		bigPacMunchingAnimation = Spritesheet_PacMan.get().createBigPacManMunchingAnimation();
+		bigPacMunchingAnimation.ensureRunning();
 	}
 
 	@Override
@@ -79,11 +82,17 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 	@Override
 	public void doRender(GraphicsContext g) {
 		r2D.drawGhost(g, context.blinky);
-		if (sceneController.state() == Intermission1Controller.State.CHASING_PACMAN) {
+		drawPac(g);
+		r2D.drawLevelCounter(g, game.levelCounter);
+	}
+
+	private void drawPac(GraphicsContext g) {
+		if (sceneController.state() == State.CHASING_PACMAN) {
 			r2D.drawPac(g, context.pac);
 		} else {
-			bigPacMan2D.render(g, r2D);
+			var sprite = bigPacMunchingAnimation.animate();
+			r2D.drawSpriteCenteredOverBox(g, sprite, context.pac.position.x,
+					context.pac.position.y - sprite.getHeight() / 2 + 8);
 		}
-		r2D.drawLevelCounter(g, game.levelCounter);
 	}
 }
