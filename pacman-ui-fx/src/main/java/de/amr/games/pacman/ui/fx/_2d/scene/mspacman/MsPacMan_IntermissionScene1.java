@@ -26,10 +26,10 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission1Controller;
 import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Flap2D;
-import de.amr.games.pacman.ui.fx._2d.entity.mspacman.Heart2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacMansHusbandAnimations;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
@@ -49,7 +49,6 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 	private Intermission1Controller sceneController;
 	private Intermission1Controller.Context $;
 	private Flap2D flap2D;
-	private Heart2D heart2D;
 
 	@Override
 	public void setSceneContext(GameController gameController) {
@@ -73,7 +72,6 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 		$.inky.animations().get().ensureRunning();
 		$.pinky.setAnimations(new GhostAnimations($.pinky.id, r2D));
 		$.pinky.animations().get().ensureRunning();
-		heart2D = new Heart2D($.heart);
 	}
 
 	@Override
@@ -96,6 +94,6 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 		r2D.drawPac(g, $.pacMan);
 		r2D.drawGhost(g, $.inky);
 		r2D.drawGhost(g, $.pinky);
-		heart2D.render(g, r2D);
+		r2D.drawEntity(g, $.heart, ((Spritesheet_MsPacMan) r2D).getHeart());
 	}
 }
