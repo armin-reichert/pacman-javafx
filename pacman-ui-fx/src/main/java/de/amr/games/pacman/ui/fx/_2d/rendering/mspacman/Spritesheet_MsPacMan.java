@@ -28,9 +28,9 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.animation.SimpleThingAnimation;
 import de.amr.games.pacman.lib.animation.ThingAnimationMap;
 import de.amr.games.pacman.lib.animation.ThingList;
-import de.amr.games.pacman.lib.animation.SimpleThingAnimation;
 import de.amr.games.pacman.model.mspacman.Flap;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
@@ -96,12 +96,11 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	private final Image midwayLogo;
 	private final Image[] mazesFull;
 	private final Image[] mazesEmpty;
-	private final Image[] mazesBlackWhite;
+	private final Image[] mazesEmptyBW;
 	private final Font font;
 
 	private Spritesheet_MsPacMan() {
-		super("/mspacman/graphics/sprites.png", 16, //
-				Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
+		super("/mspacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
 		font = U.font("/common/emulogic.ttf", 8);
 		midwayLogo = U.image("/mspacman/graphics/midway.png");
@@ -109,16 +108,12 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 		int numMazes = 6;
 		mazesFull = new Image[numMazes];
 		mazesEmpty = new Image[numMazes];
-		mazesBlackWhite = new Image[numMazes];
-		for (int mazeIndex = 0; mazeIndex < numMazes; ++mazeIndex) {
-			mazesFull[mazeIndex] = subImage(0, 248 * mazeIndex, 226, 248);
-			var empty = subImage(228, 248 * mazeIndex, 226, 248);
-			mazesEmpty[mazeIndex] = empty;
-			var bw = U.colorsExchanged(empty, Map.of( //
-					MAZE_SIDE_COLORS[mazeIndex], Color.WHITE, //
-					MAZE_TOP_COLORS[mazeIndex], Color.BLACK) //
-			);
-			mazesBlackWhite[mazeIndex] = bw;
+		mazesEmptyBW = new Image[numMazes];
+		for (int i = 0; i < numMazes; ++i) {
+			mazesFull[i] = subImage(0, 248 * i, 226, 248);
+			mazesEmpty[i] = subImage(228, 248 * i, 226, 248);
+			mazesEmptyBW[i] = U.colorsExchanged(mazesEmpty[i], //
+					Map.of(MAZE_SIDE_COLORS[i], Color.WHITE, MAZE_TOP_COLORS[i], Color.BLACK));
 		}
 	}
 
