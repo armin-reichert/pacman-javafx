@@ -199,7 +199,6 @@ public class PacMan_IntroScene extends GameScene2D {
 
 	// TODO check this
 	private void drawGuys(GraphicsContext g, int offset) {
-		r2D.drawPac(g, $.pacMan);
 		if (offset == 0) {
 			for (var ghost : $.ghosts) {
 				r2D.drawGhost(g, ghost);
@@ -213,6 +212,7 @@ public class PacMan_IntroScene extends GameScene2D {
 			g.restore();
 			r2D.drawGhost(g, $.ghosts[3]);
 		}
+		r2D.drawPac(g, $.pacMan);
 	}
 
 	private void drawPoints(GraphicsContext g) {
