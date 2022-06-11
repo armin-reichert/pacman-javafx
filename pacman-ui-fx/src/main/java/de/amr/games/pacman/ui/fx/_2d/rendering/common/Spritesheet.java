@@ -86,8 +86,8 @@ public class Spritesheet {
 	 * @param row grid row (y)
 	 * @return region at given coordinates
 	 */
-	public Rectangle2D r(int col, int row) {
-		return r(col, row, 1, 1);
+	public Rectangle2D tile(int col, int row) {
+		return tiles(col, row, 1, 1);
 	}
 
 	/**
@@ -97,8 +97,8 @@ public class Spritesheet {
 	 * @param numRows number of grid rows
 	 * @return region at given grid coordinates
 	 */
-	public Rectangle2D r(int col, int row, int numCols, int numRows) {
-		return r(0, 0, col, row, numCols, numRows);
+	public Rectangle2D tiles(int col, int row, int numCols, int numRows) {
+		return tilesAtOrigin(0, 0, col, row, numCols, numRows);
 	}
 
 	/**
@@ -110,7 +110,21 @@ public class Spritesheet {
 	 * @param numRows number of grid rows
 	 * @return region at given grid coordinates relative to given origin
 	 */
-	public Rectangle2D r(int x, int y, int col, int row, int numCols, int numRows) {
+	public Rectangle2D tilesAtOrigin(int x, int y, int col, int row, int numCols, int numRows) {
 		return new Rectangle2D(x + col * rasterSize, y + row * rasterSize, numCols * rasterSize, numRows * rasterSize);
+	}
+
+	/**
+	 * @param col      grid column (x)
+	 * @param row      grid row (y)
+	 * @param numTiles number of tiles
+	 * @return horizontal stripe of regions at given grid coordinates
+	 */
+	public Rectangle2D[] tilesToRight(int col, int row, int numTiles) {
+		var stripe = new Rectangle2D[numTiles];
+		for (int i = 0; i < numTiles; ++i) {
+			stripe[i] = tile(col + i, row);
+		}
+		return stripe;
 	}
 }

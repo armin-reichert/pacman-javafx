@@ -128,7 +128,7 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	 * @return Sprite at given row and column from the right-hand-side of the spritesheet
 	 */
 	public Rectangle2D rhs(int col, int row) {
-		return r(456, 0, col, row, 1, 1);
+		return tilesAtOrigin(456, 0, col, row, 1, 1);
 	}
 
 	@Override
