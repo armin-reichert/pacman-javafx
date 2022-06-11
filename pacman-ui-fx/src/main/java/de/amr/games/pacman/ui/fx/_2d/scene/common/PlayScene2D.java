@@ -44,7 +44,6 @@ import javafx.animation.SequentialTransition;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.paint.Color;
 
 /**
  * 2D scene displaying the maze and the game play.
@@ -59,7 +58,7 @@ public class PlayScene2D extends GameScene2D {
 	public void init() {
 		guysInfo.init(game);
 		creditVisible = !hasCredit();
-		game.levelCounter.visible = hasCredit();
+		game.levelCounter.visible = !creditVisible;
 		game.mazeFlashingAnimation = r2D.createMazeFlashingAnimation(r2D.mazeNumber(game.level.number));
 		game.pac.setAnimations(new PacAnimations(r2D));
 		for (var ghost : game.ghosts) {
@@ -102,18 +101,14 @@ public class PlayScene2D extends GameScene2D {
 	public void doRender(GraphicsContext g) {
 		r2D.drawScore(g, game.scores.gameScore);
 		r2D.drawScore(g, game.scores.highScore);
-		if (hasCredit()) {
-			r2D.drawLivesCounter(g, gameController.isGameRunning() ? game.lives - 1 : game.lives);
-		}
-		r2D.drawLevelCounter(g, game.levelCounter);
-		r2D.drawCredit(g, gameController.credit(), creditVisible);
+
 		if (game.mazeFlashingAnimation.isRunning()) {
 			g.drawImage((Image) game.mazeFlashingAnimation.animate(), 0, t(3));
 		} else {
 			r2D.drawWorld(g, game.level.world, r2D.mazeNumber(game.level.number), !game.energizerPulse.animate());
 		}
 		if (Env.$tilesVisible.get()) {
-			r2D.drawTileBorders(g, game.level.world.tiles().filter(game.level.world::isIntersection), Color.RED);
+			r2D.drawGrid(g);
 		}
 		GameState displayedState = !hasCredit() ? GameState.GAME_OVER : gameController.state();
 		r2D.drawGameStateMessage(g, displayedState);
@@ -124,6 +119,13 @@ public class PlayScene2D extends GameScene2D {
 		}
 		r2D.drawPac(g, game.pac);
 		game.ghosts().forEach(ghost -> r2D.drawGhost(g, ghost));
+
+		if (creditVisible) {
+			r2D.drawCredit(g, gameController.credit(), true);
+		} else {
+			r2D.drawLivesCounter(g, gameController.isGameRunning() ? game.lives - 1 : game.lives);
+		}
+		r2D.drawLevelCounter(g, game.levelCounter);
 	}
 
 	public void onSwitchFrom3DScene() {

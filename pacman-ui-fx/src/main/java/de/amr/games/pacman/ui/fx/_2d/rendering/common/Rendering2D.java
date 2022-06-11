@@ -28,7 +28,6 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.lib.Direction;
@@ -277,18 +276,9 @@ public interface Rendering2D {
 
 	// Debug draw functions
 
-	default void drawTileBorders(GraphicsContext g, Stream<V2i> tiles, Color color) {
-		tiles.forEach(tile -> drawTileBorder(g, tile, color));
-	}
-
-	default void drawTileBorder(GraphicsContext g, V2i tile, Color color) {
-		g.setStroke(color);
-		g.strokeRect(t(tile.x) + 0.2, t(tile.y) + 0.2, TS - 0.2, TS - 0.2);
-	}
-
 	default void drawGrid(GraphicsContext g) {
-		g.setStroke(Color.rgb(160, 160, 160, 0.5));
-		g.setLineWidth(1);
+		g.setStroke(Color.rgb(160, 160, 160, 1));
+		g.setLineWidth(0.5);
 		for (int row = 0; row < ArcadeWorld.TILES_Y; ++row) {
 			line(g, 0, t(row), ArcadeWorld.SIZE.x, t(row));
 		}
