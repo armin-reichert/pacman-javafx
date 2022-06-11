@@ -36,6 +36,8 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.U;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
@@ -57,6 +59,7 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 	protected final Pane infoPane = new Pane();
 	protected final StackPane root;
 	protected final SubScene fxSubScene;
+	protected final DoubleProperty $scaling = new SimpleDoubleProperty(1);
 
 	// context
 	protected GameController gameController;
@@ -109,12 +112,12 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 		double width = aspectRatio * height;
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
-		double scaling = currentScaling();
-		canvas.getTransforms().setAll(new Scale(scaling, scaling));
+		$scaling.set(fxSubScene.getHeight() / unscaledSize.y);
+		canvas.getTransforms().setAll(new Scale($scaling.get(), $scaling.get()));
 	}
 
 	public double currentScaling() {
-		return fxSubScene.getHeight() / unscaledSize.y;
+		return $scaling.get();
 	}
 
 	/**
