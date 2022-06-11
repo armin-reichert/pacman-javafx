@@ -63,6 +63,8 @@ public interface Rendering2D {
 		CLOSED, OPEN, WIDE_OPEN
 	}
 
+	Image source();
+
 	Font getArcadeFont();
 
 	Color getGhostColor(int ghostID);
@@ -122,16 +124,62 @@ public interface Rendering2D {
 
 	// Drawing
 
+	/**
+	 * Draws sprite (region) using spritesheet.
+	 * 
+	 * @param g      graphics context
+	 * @param sprite sprite (region in spritesheet), may be null
+	 * @param x      left upper corner x
+	 * @param y      left upper corner y
+	 */
+	default void drawSprite(GraphicsContext g, Rectangle2D sprite, double x, double y) {
+		if (sprite != null) {
+			g.drawImage(source(), sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(), x, y,
+					sprite.getWidth(), sprite.getHeight());
+		}
+	}
+
+	/**
+	 * Draws the sprite defined by the given spritesheet region centered of the the one square tile box with left upper
+	 * corner defined by the given coordinates.
+	 * 
+	 * @param g      graphics context
+	 * @param sprite sprite region in spritesheet, my be null
+	 * @param x      left upper corner of the box (one square tile)
+	 * @param y      left upper corner of the box
+	 */
+	default void drawSpriteCenteredOverBox(GraphicsContext g, Rectangle2D sprite, double x, double y) {
+		if (sprite != null) {
+			double dx = HTS - sprite.getWidth() / 2, dy = HTS - sprite.getHeight() / 2;
+			drawSprite(g, sprite, x + dx, y + dy);
+		}
+	}
+
+	/**
+	 * Draws the entity's sprite centered over the entity's collision box. The collision box is a square with left upper
+	 * corner defined by the entity position and side length of one tile size. Respects the current visibility of the
+	 * entity.
+	 * 
+	 * @param g      graphics context
+	 * @param entity entity
+	 * @param s      entity sprite (region in spritesheet), may be null
+	 */
+	default void drawEntity(GraphicsContext g, Entity entity, Rectangle2D sprite) {
+		if (entity.visible) {
+			drawSpriteCenteredOverBox(g, sprite, entity.position.x, entity.position.y);
+		}
+	}
+
 	default void drawPac(GraphicsContext g, Pac pac) {
-		pac.animations().ifPresent(anim -> {
-			drawEntity(g, pac, (Rectangle2D) anim.current(pac));
-		});
+		pac.animations().ifPresent(anim -> drawEntity(g, pac, (Rectangle2D) anim.current(pac)));
 	}
 
 	default void drawGhost(GraphicsContext g, Ghost ghost) {
-		ghost.animations().ifPresent(anim -> {
-			drawEntity(g, ghost, (Rectangle2D) anim.current(ghost));
-		});
+		ghost.animations().ifPresent(anim -> drawEntity(g, ghost, (Rectangle2D) anim.current(ghost)));
+	}
+
+	default void drawStaticBonus(GraphicsContext g, StaticBonus bonus) {
+		bonus.animations().ifPresent(anim -> drawEntity(g, bonus, (Rectangle2D) anim.current(bonus)));
 	}
 
 	default void drawMovingBonus(GraphicsContext g, MovingBonus bonus) {
@@ -143,51 +191,6 @@ public interface Rendering2D {
 			g.restore();
 		});
 	}
-
-	default void drawStaticBonus(GraphicsContext g, StaticBonus bonus) {
-		bonus.animations().ifPresent(anim -> {
-			drawEntity(g, bonus, (Rectangle2D) anim.current(bonus));
-		});
-	}
-
-	/**
-	 * Draws the entity's sprite centered over the entity's collision box. The collision box is a square with left upper
-	 * corner defined by the entity position and side length of one tile size. Respects the current visibility of the
-	 * entity.
-	 * 
-	 * @param g      graphics context
-	 * @param entity entity
-	 * @param s      entity sprite (region in spritesheet)
-	 */
-	default void drawEntity(GraphicsContext g, Entity entity, Rectangle2D sprite) {
-		if (entity.visible && sprite != null) {
-			drawSpriteCenteredOverBox(g, sprite, entity.position.x, entity.position.y);
-		}
-	}
-
-	/**
-	 * Draws the sprite defined by the given spritesheet region centered of the the one square tile box with left upper
-	 * corner defined by the given coordinates.
-	 * 
-	 * @param g graphics context
-	 * @param s sprite region in spritesheet
-	 * @param x left upper corner of the box (one square tile)
-	 * @param y left upper corner of the box
-	 */
-	default void drawSpriteCenteredOverBox(GraphicsContext g, Rectangle2D s, double x, double y) {
-		double dx = HTS - s.getWidth() / 2, dy = HTS - s.getHeight() / 2;
-		drawSprite(g, s, x + dx, y + dy);
-	}
-
-	/**
-	 * Draws sprite (region) using spritesheet.
-	 * 
-	 * @param g graphics context
-	 * @param s sprite (region in spritesheet)
-	 * @param x left upper corner x
-	 * @param y left upper corner y
-	 */
-	void drawSprite(GraphicsContext g, Rectangle2D s, double x, double y);
 
 	/**
 	 * Draws the copyright text and image. Used in several scenes so put this here.

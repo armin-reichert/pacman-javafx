@@ -117,6 +117,11 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 		}
 	}
 
+	@Override
+	public Image source() {
+		return source;
+	}
+
 	/**
 	 * @param col column
 	 * @param row row
@@ -129,11 +134,6 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	@Override
 	public Image getSpriteImage(Rectangle2D sprite) {
 		return subImage(sprite);
-	}
-
-	@Override
-	public void drawSprite(GraphicsContext g, Rectangle2D s, double x, double y) {
-		g.drawImage(source, s.getMinX(), s.getMinY(), s.getWidth(), s.getHeight(), x, y, s.getWidth(), s.getHeight());
 	}
 
 	@Override

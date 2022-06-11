@@ -80,13 +80,13 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public Image getSpriteImage(Rectangle2D sprite) {
-		return subImage(sprite);
+	public Image source() {
+		return source;
 	}
 
 	@Override
-	public void drawSprite(GraphicsContext g, Rectangle2D s, double x, double y) {
-		g.drawImage(source, s.getMinX(), s.getMinY(), s.getWidth(), s.getHeight(), x, y, s.getWidth(), s.getHeight());
+	public Image getSpriteImage(Rectangle2D sprite) {
+		return subImage(sprite);
 	}
 
 	@Override
