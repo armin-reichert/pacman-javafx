@@ -52,7 +52,7 @@ import javafx.scene.transform.Scale;
  * 
  * @author Armin Reichert
  */
-public abstract class GameScene2D extends GameEventAdapter implements GameScene {
+public abstract class GameScene2D implements GameEventAdapter, GameScene {
 
 	protected final V2d unscaledSize = new V2d(ArcadeWorld.SIZE);
 	protected final Canvas canvas = new Canvas(unscaledSize.x, unscaledSize.y);

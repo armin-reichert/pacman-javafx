@@ -78,7 +78,7 @@ import javafx.scene.transform.Translate;
  * 
  * @author Armin Reichert
  */
-public class PlayScene3D extends GameEventAdapter implements GameScene, Rendering3D {
+public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 
 	private final SubScene fxSubScene;
 	private final AmbientLight light = new AmbientLight(Color.GHOSTWHITE);

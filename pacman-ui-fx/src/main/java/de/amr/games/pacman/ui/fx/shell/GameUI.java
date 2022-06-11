@@ -70,7 +70,7 @@ import javafx.stage.Stage;
  * 
  * @author Armin Reichert
  */
-public class GameUI extends GameEventAdapter {
+public class GameUI implements GameEventAdapter {
 
 	public static final int SCENE_2D = 0, SCENE_3D = 1;
 
@@ -209,7 +209,7 @@ public class GameUI extends GameEventAdapter {
 
 	@Override
 	public void onGameEvent(GameEvent event) {
-		super.onGameEvent(event);
+		GameEventAdapter.super.onGameEvent(event);
 		currentGameScene.onGameEvent(event);
 	}
 

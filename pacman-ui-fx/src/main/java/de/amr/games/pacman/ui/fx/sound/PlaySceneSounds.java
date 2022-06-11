@@ -36,7 +36,7 @@ import javafx.animation.Animation;
 /**
  * @author Armin Reichert
  */
-public class PlaySceneSounds extends GameEventAdapter {
+public class PlaySceneSounds implements GameEventAdapter {
 
 	private static final PlaySceneSounds theOne = new PlaySceneSounds();
 
