@@ -121,7 +121,9 @@ public class PacMan_IntroScene extends GameScene2D {
 
 		r2D.drawScore(g, game.scores.gameScore);
 		r2D.drawScore(g, game.scores.highScore);
-		r2D.drawCredit(g, gameController.credit(), creditVisible);
+		if (creditVisible) {
+			r2D.drawCredit(g, gameController.credit());
+		}
 
 		switch (sceneController.state()) {
 		case START, PRESENTING_GHOSTS -> drawGallery(g);

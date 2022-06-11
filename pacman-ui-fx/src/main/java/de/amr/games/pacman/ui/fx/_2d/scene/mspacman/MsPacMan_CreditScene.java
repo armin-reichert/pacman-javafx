@@ -64,7 +64,9 @@ public class MsPacMan_CreditScene extends GameScene2D {
 	protected void doRender(GraphicsContext g) {
 		r2D.drawScore(g, game.scores.gameScore);
 		r2D.drawScore(g, game.scores.highScore);
-		r2D.drawCredit(g, gameController.credit(), creditVisible);
+		if (creditVisible) {
+			r2D.drawCredit(g, gameController.credit());
+		}
 		g.setFont(r2D.getArcadeFont());
 		g.setFill(r2D.getGhostColor(Ghost.ORANGE_GHOST));
 		g.fillText("PUSH START BUTTON", t(6), t(16));

@@ -121,7 +121,7 @@ public class PlayScene2D extends GameScene2D {
 		game.ghosts().forEach(ghost -> r2D.drawGhost(g, ghost));
 
 		if (creditVisible) {
-			r2D.drawCredit(g, gameController.credit(), true);
+			r2D.drawCredit(g, gameController.credit());
 		} else {
 			r2D.drawLivesCounter(g, gameController.isGameRunning() ? game.lives - 1 : game.lives);
 		}

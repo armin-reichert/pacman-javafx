@@ -109,7 +109,9 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		Stream.of($.ghosts).forEach(ghost -> r2D.drawGhost(g, ghost));
 		r2D.drawPac(g, $.msPacMan);
 		r2D.drawCopyright(g, 29);
-		r2D.drawCredit(g, gameController.credit(), creditVisible);
+		if (creditVisible) {
+			r2D.drawCredit(g, gameController.credit());
+		}
 	}
 
 	private void drawTitle(GraphicsContext g) {

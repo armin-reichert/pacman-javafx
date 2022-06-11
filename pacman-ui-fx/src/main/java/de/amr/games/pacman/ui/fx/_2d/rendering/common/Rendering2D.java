@@ -200,12 +200,10 @@ public interface Rendering2D {
 	 */
 	void drawCopyright(GraphicsContext g, int tileY);
 
-	default void drawCredit(GraphicsContext g, int credit, boolean visible) {
-		if (visible) {
-			g.setFont(getArcadeFont());
-			g.setFill(Color.WHITE);
-			g.fillText("CREDIT  %d".formatted(credit), t(2), t(36) - 1);
-		}
+	default void drawCredit(GraphicsContext g, int credit) {
+		g.setFont(getArcadeFont());
+		g.setFill(Color.WHITE);
+		g.fillText("CREDIT  %d".formatted(credit), t(2), t(36) - 1);
 	}
 
 	default void drawScore(GraphicsContext g, Score score) {
