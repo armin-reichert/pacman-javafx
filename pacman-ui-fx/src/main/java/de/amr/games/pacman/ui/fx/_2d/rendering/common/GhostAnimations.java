@@ -51,7 +51,7 @@ public class GhostAnimations extends ThingAnimationCollection<Ghost, GhostAnimat
 		flashing = r2D.createGhostFlashingAnimation();
 		blue = r2D.createGhostBlueAnimation();
 		colorByDir = r2D.createGhostColorAnimation(ghostID);
-		values = r2D.createGhostValueAnimation();
+		values = r2D.createGhostValueList();
 		select(GhostAnimationKey.ANIM_COLOR);
 	}
 

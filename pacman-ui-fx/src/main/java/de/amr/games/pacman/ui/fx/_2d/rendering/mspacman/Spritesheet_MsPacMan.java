@@ -289,17 +289,17 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public ThingList<Rectangle2D> createBonusSymbolAnimation() {
+	public ThingList<Rectangle2D> createBonusSymbolList() {
 		return new ThingList<>(rhs(3, 0), rhs(4, 0), rhs(5, 0), rhs(6, 0), rhs(7, 0), rhs(8, 0), rhs(9, 0));
 	}
 
 	@Override
-	public ThingList<Rectangle2D> createBonusValueAnimation() {
+	public ThingList<Rectangle2D> createBonusValueList() {
 		return new ThingList<>(rhs(3, 1), rhs(4, 1), rhs(5, 1), rhs(6, 1), rhs(7, 1), rhs(8, 1), rhs(9, 1));
 	}
 
 	@Override
-	public ThingList<Rectangle2D> createGhostValueAnimation() {
+	public ThingList<Rectangle2D> createGhostValueList() {
 		return new ThingList<>(rhs(0, 8), rhs(1, 8), rhs(2, 8), rhs(3, 8));
 	}
 

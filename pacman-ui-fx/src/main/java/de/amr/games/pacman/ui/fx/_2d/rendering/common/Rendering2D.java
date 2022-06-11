@@ -105,11 +105,11 @@ public interface Rendering2D {
 
 	SimpleThingAnimation<Image> createMazeFlashingAnimation(int mazeNumber);
 
-	ThingList<Rectangle2D> createBonusSymbolAnimation();
+	ThingList<Rectangle2D> createBonusSymbolList();
 
-	ThingList<Rectangle2D> createBonusValueAnimation();
+	ThingList<Rectangle2D> createBonusValueList();
 
-	ThingList<Rectangle2D> createGhostValueAnimation();
+	ThingList<Rectangle2D> createGhostValueList();
 
 	// Maze
 

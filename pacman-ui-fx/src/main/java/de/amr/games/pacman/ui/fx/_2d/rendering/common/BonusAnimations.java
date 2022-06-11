@@ -42,8 +42,8 @@ public class BonusAnimations extends ThingAnimationCollection<Bonus, BonusAnimat
 	public final ThingList<Rectangle2D> valueAnimation;
 
 	public BonusAnimations(Rendering2D r2D) {
-		symbolAnimation = r2D.createBonusSymbolAnimation();
-		valueAnimation = r2D.createBonusValueAnimation();
+		symbolAnimation = r2D.createBonusSymbolList();
+		valueAnimation = r2D.createBonusValueList();
 		select(BonusAnimationKey.ANIM_NONE);
 	}
 

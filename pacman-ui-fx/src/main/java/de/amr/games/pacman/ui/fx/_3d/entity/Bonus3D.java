@@ -52,8 +52,8 @@ public class Bonus3D extends Box {
 
 	public Bonus3D(Rendering2D r2D) {
 		super(TS, TS, TS);
-		bonusSymbolImages = r2D.getAnimationImages(r2D.createBonusSymbolAnimation());
-		bonusValueImages = r2D.getAnimationImages(r2D.createBonusValueAnimation());
+		bonusSymbolImages = r2D.getAnimationImages(r2D.createBonusSymbolList());
+		bonusValueImages = r2D.getAnimationImages(r2D.createBonusValueList());
 		rotation = new RotateTransition(Duration.INDEFINITE);
 		rotation.setNode(this);
 		rotation.setAxis(Rotate.X_AXIS);
