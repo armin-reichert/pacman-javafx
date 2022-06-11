@@ -27,14 +27,15 @@ import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.lib.animation.SimpleThingAnimation;
 import de.amr.games.pacman.lib.animation.ThingAnimationMap;
 import de.amr.games.pacman.lib.animation.ThingList;
-import de.amr.games.pacman.lib.animation.SimpleThingAnimation;
 import de.amr.games.pacman.model.common.LevelCounter;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -258,18 +259,17 @@ public interface Rendering2D {
 		}
 	}
 
-	default void drawWorld(GraphicsContext g, World world, int mazeNumber, boolean foodHidden) {
+	default void drawWorld(GraphicsContext g, World world, int mazeNumber, boolean energizersDark) {
+		Consumer<V2i> hideTile = tile -> {
+			g.setFill(Color.BLACK);
+			g.fillRect(t(tile.x) + 0.1, t(tile.y) + 0.1, TS - 0.2, TS - 0.2);
+		};
 		int x = 0, y = t(3);
 		g.drawImage(getMazeFullImage(mazeNumber), x, y);
-		world.tiles().filter(world::containsEatenFood).forEach(tile -> clearTile(g, tile));
-		if (foodHidden) { // dark blinking phase
-			world.energizerTiles().forEach(tile -> clearTile(g, tile));
+		world.tiles().filter(world::containsEatenFood).forEach(hideTile::accept);
+		if (energizersDark) {
+			world.energizerTiles().forEach(hideTile::accept);
 		}
-	}
-
-	static void clearTile(GraphicsContext g, V2i tile) {
-		g.setFill(Color.BLACK);
-		g.fillRect(t(tile.x) + 0.2, t(tile.y) + 0.2, TS - 0.2, TS - 0.2);
 	}
 
 	// Debug draw functions
