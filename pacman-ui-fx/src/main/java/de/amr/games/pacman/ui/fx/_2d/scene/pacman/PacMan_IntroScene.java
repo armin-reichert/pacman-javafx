@@ -64,7 +64,6 @@ public class PacMan_IntroScene extends GameScene2D {
 	public void setSceneContext(GameController gameController) {
 		super.setSceneContext(gameController);
 		sceneController = new IntroController(gameController);
-		sceneController.addStateChangeListener(this::onSceneStateChange);
 		$ = sceneController.context();
 	}
 
@@ -87,15 +86,6 @@ public class PacMan_IntroScene extends GameScene2D {
 			Actions.selectNextGameVariant();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.Z)) {
 			Actions.startIntermissionScenesTest();
-		}
-	}
-
-	private void onSceneStateChange(State fromState, State toState) {
-		if (fromState == State.CHASING_PAC && toState == State.CHASING_GHOSTS) {
-			for (var ghost : $.ghosts) {
-				// TODO just set state to FRIGHTENED?
-				ghost.animations().get().select(GhostAnimationKey.ANIM_BLUE);
-			}
 		}
 	}
 
@@ -147,7 +137,7 @@ public class PacMan_IntroScene extends GameScene2D {
 			drawPoints(g);
 			r2D.drawCopyright(g, 32);
 			drawBlinkingEnergizer(g);
-			drawGuys(g, time % 5 < 2 ? 0 : -1); // TODO check this
+			drawGuys(g, flutter(time));
 		}
 		case CHASING_GHOSTS -> {
 			drawGallery(g);
@@ -162,6 +152,11 @@ public class PacMan_IntroScene extends GameScene2D {
 			drawGuys(g, 0);
 		}
 		}
+	}
+
+	// TODO inspect further in MAME what's really going on
+	private int flutter(long time) {
+		return time % 5 < 2 ? 0 : -1;
 	}
 
 	private void drawGallery(GraphicsContext g) {
@@ -197,16 +192,15 @@ public class PacMan_IntroScene extends GameScene2D {
 		}
 	}
 
-	// TODO check this
-	private void drawGuys(GraphicsContext g, int offset) {
-		if (offset == 0) {
+	private void drawGuys(GraphicsContext g, int offset_x) {
+		if (offset_x == 0) {
 			for (var ghost : $.ghosts) {
 				r2D.drawGhost(g, ghost);
 			}
 		} else {
 			r2D.drawGhost(g, $.ghosts[0]);
 			g.save();
-			g.translate(offset, 0);
+			g.translate(offset_x, 0);
 			r2D.drawGhost(g, $.ghosts[1]);
 			r2D.drawGhost(g, $.ghosts[2]);
 			g.restore();
