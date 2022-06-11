@@ -32,9 +32,9 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.lib.animation.GenericAnimationMap;
-import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
-import de.amr.games.pacman.lib.animation.StaticGenericAnimation;
+import de.amr.games.pacman.lib.animation.ThingAnimationMap;
+import de.amr.games.pacman.lib.animation.ThingList;
+import de.amr.games.pacman.lib.animation.SimpleThingAnimation;
 import de.amr.games.pacman.model.common.LevelCounter;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -68,7 +68,7 @@ public interface Rendering2D {
 
 	Image getSpriteImage(Rectangle2D sprite);
 
-	default Image[] getAnimationImages(StaticGenericAnimation<Rectangle2D> animation) {
+	default Image[] getAnimationImages(SimpleThingAnimation<Rectangle2D> animation) {
 		int n = animation.numFrames();
 		Image[] images = new Image[n];
 		for (int i = 0; i < n; ++i) {
@@ -89,25 +89,25 @@ public interface Rendering2D {
 
 	// Animations
 
-	GenericAnimationMap<Direction, Rectangle2D> createPacMunchingAnimation();
+	ThingAnimationMap<Direction, Rectangle2D> createPacMunchingAnimation();
 
-	SingleGenericAnimation<Rectangle2D> createPacDyingAnimation();
+	ThingList<Rectangle2D> createPacDyingAnimation();
 
-	GenericAnimationMap<Direction, Rectangle2D> createGhostColorAnimation(int ghostID);
+	ThingAnimationMap<Direction, Rectangle2D> createGhostColorAnimation(int ghostID);
 
-	SingleGenericAnimation<Rectangle2D> createGhostBlueAnimation();
+	ThingList<Rectangle2D> createGhostBlueAnimation();
 
-	SingleGenericAnimation<Rectangle2D> createGhostFlashingAnimation();
+	ThingList<Rectangle2D> createGhostFlashingAnimation();
 
-	GenericAnimationMap<Direction, Rectangle2D> createGhostEyesAnimation();
+	ThingAnimationMap<Direction, Rectangle2D> createGhostEyesAnimation();
 
-	SingleGenericAnimation<Image> createMazeFlashingAnimation(int mazeNumber);
+	ThingList<Image> createMazeFlashingAnimation(int mazeNumber);
 
-	StaticGenericAnimation<Rectangle2D> createBonusSymbolAnimation();
+	SimpleThingAnimation<Rectangle2D> createBonusSymbolAnimation();
 
-	StaticGenericAnimation<Rectangle2D> createBonusValueAnimation();
+	SimpleThingAnimation<Rectangle2D> createBonusValueAnimation();
 
-	StaticGenericAnimation<Rectangle2D> createGhostValueAnimation();
+	SimpleThingAnimation<Rectangle2D> createGhostValueAnimation();
 
 	// Maze
 
@@ -123,13 +123,13 @@ public interface Rendering2D {
 
 	default void drawPac(GraphicsContext g, Pac pac) {
 		pac.animations().ifPresent(anim -> {
-			drawEntity(g, pac, (Rectangle2D) anim.currentSprite(pac));
+			drawEntity(g, pac, (Rectangle2D) anim.current(pac));
 		});
 	}
 
 	default void drawGhost(GraphicsContext g, Ghost ghost) {
 		ghost.animations().ifPresent(anim -> {
-			drawEntity(g, ghost, (Rectangle2D) anim.currentSprite(ghost));
+			drawEntity(g, ghost, (Rectangle2D) anim.current(ghost));
 		});
 	}
 
@@ -138,14 +138,14 @@ public interface Rendering2D {
 			int dy = bonus.dy();
 			g.save();
 			g.translate(0, dy);
-			drawEntity(g, bonus, (Rectangle2D) anim.currentSprite(bonus));
+			drawEntity(g, bonus, (Rectangle2D) anim.current(bonus));
 			g.restore();
 		});
 	}
 
 	default void drawStaticBonus(GraphicsContext g, StaticBonus bonus) {
 		bonus.animations().ifPresent(anim -> {
-			drawEntity(g, bonus, (Rectangle2D) anim.currentSprite(bonus));
+			drawEntity(g, bonus, (Rectangle2D) anim.current(bonus));
 		});
 	}
 

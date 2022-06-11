@@ -27,10 +27,10 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.animation.GenericAnimation;
-import de.amr.games.pacman.lib.animation.GenericAnimationCollection;
-import de.amr.games.pacman.lib.animation.GenericAnimationMap;
-import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
+import de.amr.games.pacman.lib.animation.ThingAnimation;
+import de.amr.games.pacman.lib.animation.ThingAnimationCollection;
+import de.amr.games.pacman.lib.animation.ThingAnimationMap;
+import de.amr.games.pacman.lib.animation.ThingList;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.actors.PacAnimationKey;
 import javafx.geometry.Rectangle2D;
@@ -38,10 +38,10 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class PacAnimations extends GenericAnimationCollection<Pac, PacAnimationKey, Rectangle2D> {
+public class PacAnimations extends ThingAnimationCollection<Pac, PacAnimationKey, Rectangle2D> {
 
-	protected GenericAnimationMap<Direction, Rectangle2D> munching;
-	protected SingleGenericAnimation<Rectangle2D> dying;
+	protected ThingAnimationMap<Direction, Rectangle2D> munching;
+	protected ThingList<Rectangle2D> dying;
 
 	public PacAnimations(Rendering2D r2D) {
 		munching = r2D.createPacMunchingAnimation();
@@ -55,7 +55,7 @@ public class PacAnimations extends GenericAnimationCollection<Pac, PacAnimationK
 	}
 
 	@Override
-	public GenericAnimation<Rectangle2D> getByKey(PacAnimationKey key) {
+	public ThingAnimation<Rectangle2D> byKey(PacAnimationKey key) {
 		return switch (key) {
 		case ANIM_DYING -> dying;
 		case ANIM_MUNCHING -> munching;
@@ -63,12 +63,12 @@ public class PacAnimations extends GenericAnimationCollection<Pac, PacAnimationK
 	}
 
 	@Override
-	public Stream<GenericAnimation<Rectangle2D>> all() {
+	public Stream<ThingAnimation<Rectangle2D>> all() {
 		return Stream.of(munching, dying);
 	}
 
 	@Override
-	public Rectangle2D currentSprite(Pac pac) {
+	public Rectangle2D current(Pac pac) {
 		return switch (selectedKey) {
 		case ANIM_DYING -> dying.animate();
 		case ANIM_MUNCHING -> {

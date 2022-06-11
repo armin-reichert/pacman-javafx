@@ -26,9 +26,9 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.lib.animation.GenericAnimation;
-import de.amr.games.pacman.lib.animation.GenericAnimationCollection;
-import de.amr.games.pacman.lib.animation.StaticGenericAnimation;
+import de.amr.games.pacman.lib.animation.ThingAnimation;
+import de.amr.games.pacman.lib.animation.ThingAnimationCollection;
+import de.amr.games.pacman.lib.animation.SimpleThingAnimation;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.BonusAnimationKey;
 import javafx.geometry.Rectangle2D;
@@ -36,10 +36,10 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class BonusAnimations extends GenericAnimationCollection<Bonus, BonusAnimationKey, Rectangle2D> {
+public class BonusAnimations extends ThingAnimationCollection<Bonus, BonusAnimationKey, Rectangle2D> {
 
-	public final StaticGenericAnimation<Rectangle2D> symbolAnimation;
-	public final StaticGenericAnimation<Rectangle2D> valueAnimation;
+	public final SimpleThingAnimation<Rectangle2D> symbolAnimation;
+	public final SimpleThingAnimation<Rectangle2D> valueAnimation;
 
 	public BonusAnimations(Rendering2D r2D) {
 		symbolAnimation = r2D.createBonusSymbolAnimation();
@@ -48,7 +48,7 @@ public class BonusAnimations extends GenericAnimationCollection<Bonus, BonusAnim
 	}
 
 	@Override
-	public GenericAnimation<Rectangle2D> getByKey(BonusAnimationKey key) {
+	public ThingAnimation<Rectangle2D> byKey(BonusAnimationKey key) {
 		return switch (key) {
 		case ANIM_NONE -> null;
 		case ANIM_SYMBOL -> symbolAnimation;
@@ -57,12 +57,12 @@ public class BonusAnimations extends GenericAnimationCollection<Bonus, BonusAnim
 	}
 
 	@Override
-	public Stream<GenericAnimation<Rectangle2D>> all() {
+	public Stream<ThingAnimation<Rectangle2D>> all() {
 		return Stream.of(symbolAnimation, valueAnimation);
 	}
 
 	@Override
-	public Rectangle2D currentSprite(Bonus bonus) {
+	public Rectangle2D current(Bonus bonus) {
 		return switch (selectedKey) {
 		case ANIM_NONE -> null;
 		case ANIM_SYMBOL -> symbolAnimation.frame(bonus.symbol());

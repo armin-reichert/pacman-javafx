@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission3Controller;
-import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
+import de.amr.games.pacman.lib.animation.ThingList;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacMansHusbandAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
@@ -49,7 +49,7 @@ public class MsPacMan_IntermissionScene3 extends GameScene2D {
 
 	private Intermission3Controller sceneController;
 	private Intermission3Controller.Context $;
-	private SingleGenericAnimation<Rectangle2D> storkAnimation;
+	private ThingList<Rectangle2D> storkAnimation;
 
 	@Override
 	public void setSceneContext(GameController gameController) {

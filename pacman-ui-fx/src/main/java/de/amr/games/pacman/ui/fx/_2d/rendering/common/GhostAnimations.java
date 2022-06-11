@@ -26,11 +26,11 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.animation.GenericAnimation;
-import de.amr.games.pacman.lib.animation.GenericAnimationCollection;
-import de.amr.games.pacman.lib.animation.GenericAnimationMap;
-import de.amr.games.pacman.lib.animation.SingleGenericAnimation;
-import de.amr.games.pacman.lib.animation.StaticGenericAnimation;
+import de.amr.games.pacman.lib.animation.SimpleThingAnimation;
+import de.amr.games.pacman.lib.animation.ThingAnimation;
+import de.amr.games.pacman.lib.animation.ThingAnimationCollection;
+import de.amr.games.pacman.lib.animation.ThingAnimationMap;
+import de.amr.games.pacman.lib.animation.ThingList;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostAnimationKey;
 import javafx.geometry.Rectangle2D;
@@ -38,47 +38,47 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class GhostAnimations extends GenericAnimationCollection<Ghost, GhostAnimationKey, Rectangle2D> {
+public class GhostAnimations extends ThingAnimationCollection<Ghost, GhostAnimationKey, Rectangle2D> {
 
-	public GenericAnimationMap<Direction, Rectangle2D> eyes;
-	public SingleGenericAnimation<Rectangle2D> flashing;
-	public SingleGenericAnimation<Rectangle2D> blue;
-	public GenericAnimationMap<Direction, Rectangle2D> color;
-	public StaticGenericAnimation<Rectangle2D> values;
+	public ThingAnimationMap<Direction, Rectangle2D> eyesByDir;
+	public ThingList<Rectangle2D> flashing;
+	public ThingList<Rectangle2D> blue;
+	public ThingAnimationMap<Direction, Rectangle2D> colorByDir;
+	public SimpleThingAnimation<Rectangle2D> values;
 
 	public GhostAnimations(int ghostID, Rendering2D r2D) {
-		eyes = r2D.createGhostEyesAnimation();
+		eyesByDir = r2D.createGhostEyesAnimation();
 		flashing = r2D.createGhostFlashingAnimation();
 		blue = r2D.createGhostBlueAnimation();
-		color = r2D.createGhostColorAnimation(ghostID);
+		colorByDir = r2D.createGhostColorAnimation(ghostID);
 		values = r2D.createGhostValueAnimation();
 		select(GhostAnimationKey.ANIM_COLOR);
 	}
 
 	@Override
-	public GenericAnimation<Rectangle2D> getByKey(GhostAnimationKey key) {
+	public ThingAnimation<Rectangle2D> byKey(GhostAnimationKey key) {
 		return switch (key) {
-		case ANIM_EYES -> eyes;
+		case ANIM_EYES -> eyesByDir;
 		case ANIM_FLASHING -> flashing;
 		case ANIM_BLUE -> blue;
-		case ANIM_COLOR -> color;
+		case ANIM_COLOR -> colorByDir;
 		case ANIM_VALUE -> values;
 		};
 	}
 
 	@Override
-	public Stream<GenericAnimation<Rectangle2D>> all() {
-		return Stream.of(eyes, flashing, blue, color, values);
+	public Stream<ThingAnimation<Rectangle2D>> all() {
+		return Stream.of(eyesByDir, flashing, blue, colorByDir, values);
 	}
 
 	@Override
-	public Rectangle2D currentSprite(Ghost ghost) {
+	public Rectangle2D current(Ghost ghost) {
 		return switch (selectedKey) {
-		case ANIM_EYES -> eyes.get(ghost.wishDir()).frame();
+		case ANIM_EYES -> eyesByDir.get(ghost.wishDir()).animate();
 		case ANIM_FLASHING -> flashing.animate();
 		case ANIM_BLUE -> blue.animate();
-		case ANIM_COLOR -> color.get(ghost.wishDir()).animate();
-		case ANIM_VALUE -> ghost.killIndex >= 0 ? values.frame(ghost.killIndex) : null;// TODO
+		case ANIM_COLOR -> colorByDir.get(ghost.wishDir()).animate();
+		case ANIM_VALUE -> ghost.killIndex >= 0 ? values.frame(ghost.killIndex) : null; // TODO check this
 		};
 	}
 }
