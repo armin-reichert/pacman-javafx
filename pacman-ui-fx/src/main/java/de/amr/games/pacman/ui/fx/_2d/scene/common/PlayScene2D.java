@@ -103,7 +103,7 @@ public class PlayScene2D extends GameScene2D {
 		r2D.drawScore(g, game.scores.highScore);
 
 		if (game.mazeFlashingAnimation.isRunning()) {
-			g.drawImage((Image) game.mazeFlashingAnimation.animate(), 0, t(3));
+			g.drawImage((Image) game.mazeFlashingAnimation.frame(), 0, t(3));
 		} else {
 			r2D.drawWorld(g, game.level.world, r2D.mazeNumber(game.level.number), !game.energizerPulse.frame());
 		}
