@@ -24,6 +24,8 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
 import static de.amr.games.pacman.lib.TickTimer.sec_to_ticks;
+import static de.amr.games.pacman.model.common.actors.GhostAnimationKey.ANIM_BLUE;
+import static de.amr.games.pacman.model.common.actors.GhostAnimationKey.ANIM_VALUE;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
@@ -33,7 +35,6 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.pacman.IntroController;
 import de.amr.games.pacman.controller.pacman.IntroController.State;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.model.common.actors.GhostAnimationKey;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
@@ -102,11 +103,11 @@ public class PacMan_IntroScene extends GameScene2D {
 			for (var ghost : $.ghosts) {
 				ghost.animations().ifPresent(animations -> {
 					if (ghost.state == GhostState.DEAD && ghost.killIndex != -1) {
-						animations.select(GhostAnimationKey.ANIM_VALUE);
+						animations.select(ANIM_VALUE);
 					} else {
-						animations.select(GhostAnimationKey.ANIM_BLUE);
+						animations.select(ANIM_BLUE);
 						if (ghost.velocity.length() == 0) {
-							animations.stop(GhostAnimationKey.ANIM_BLUE);
+							animations.stop(ANIM_BLUE);
 						}
 					}
 				});

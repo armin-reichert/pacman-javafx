@@ -45,7 +45,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class PacMan_IntermissionScene1 extends GameScene2D {
 
 	private Intermission1Controller sceneController;
-	private Intermission1Controller.Context context;
+	private Intermission1Controller.Context $;
 	private ThingList<Rectangle2D> bigPacMunchingAnimation;
 
 	@Override
@@ -53,16 +53,16 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 		super.setSceneContext(gameController);
 		sceneController = new Intermission1Controller(gameController);
 		sceneController.playIntermissionSound = () -> SoundManager.get().loop(GameSound.INTERMISSION_1, 2);
-		context = sceneController.context();
+		$ = sceneController.context();
 	}
 
 	@Override
 	public void init() {
 		sceneController.init();
-		context.pac.setAnimations(new PacAnimations(r2D));
-		context.pac.animations().get().ensureRunning();
-		context.blinky.setAnimations(new GhostAnimations(context.blinky.id, r2D));
-		context.blinky.animations().get().ensureRunning();
+		$.pac.setAnimations(new PacAnimations(r2D));
+		$.pac.animations().get().ensureRunning();
+		$.blinky.setAnimations(new GhostAnimations($.blinky.id, r2D));
+		$.blinky.animations().get().ensureRunning();
 		bigPacMunchingAnimation = Spritesheet_PacMan.get().createBigPacManMunchingAnimation();
 		bigPacMunchingAnimation.ensureRunning();
 	}
@@ -70,8 +70,8 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 	@Override
 	public void doUpdate() {
 		sceneController.update();
-		context.blinky.animations().ifPresent(animations -> {
-			animations.select(switch (context.blinky.state) {
+		$.blinky.animations().ifPresent(animations -> {
+			animations.select(switch ($.blinky.state) {
 			case FRIGHTENED -> GhostAnimationKey.ANIM_BLUE;
 			case HUNTING_PAC -> GhostAnimationKey.ANIM_COLOR;
 			default -> animations.selectedKey();
@@ -81,18 +81,18 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 
 	@Override
 	public void doRender(GraphicsContext g) {
-		r2D.drawGhost(g, context.blinky);
+		r2D.drawGhost(g, $.blinky);
 		drawPac(g);
 		r2D.drawLevelCounter(g, game.levelCounter);
 	}
 
 	private void drawPac(GraphicsContext g) {
 		if (sceneController.state() == State.CHASING_PACMAN) {
-			r2D.drawPac(g, context.pac);
+			r2D.drawPac(g, $.pac);
 		} else {
 			var sprite = bigPacMunchingAnimation.animate();
-			r2D.drawSpriteCenteredOverBox(g, sprite, context.pac.position.x,
-					context.pac.position.y - sprite.getHeight() / 2 + 8);
+			r2D.drawSpriteCenteredOverBox(g, sprite, $.pac.position.x,
+					$.pac.position.y - sprite.getHeight() / 2 + 8);
 		}
 	}
 }

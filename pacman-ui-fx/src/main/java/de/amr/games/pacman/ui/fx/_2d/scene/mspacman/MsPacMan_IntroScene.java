@@ -69,8 +69,9 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		$.msPacMan.setAnimations(new PacAnimations(r2D));
 		$.msPacMan.animations().get().ensureRunning();
 		Stream.of($.ghosts).forEach(ghost -> {
-			ghost.setAnimations(new GhostAnimations(ghost.id, r2D));
-			ghost.animations().get().ensureRunning();
+			var animations = new GhostAnimations(ghost.id, r2D);
+			animations.ensureRunning();
+			ghost.setAnimations(animations);
 		});
 	}
 

@@ -71,13 +71,7 @@ public class PacAnimations extends ThingAnimationCollection<Pac, PacAnimationKey
 	public Rectangle2D current(Pac pac) {
 		return switch (selectedKey) {
 		case ANIM_DYING -> dying.animate();
-		case ANIM_MUNCHING -> {
-			var munchingToDir = munching.get(pac.moveDir());
-			if (!pac.stuck && pac.velocity.length() > 0) {
-				munchingToDir.advance();
-			}
-			yield munchingToDir.frame();
-		}
+		case ANIM_MUNCHING -> munching.get(pac.moveDir()).animate();
 		};
 	}
 }
