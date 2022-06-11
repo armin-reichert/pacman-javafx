@@ -41,10 +41,10 @@ import javafx.geometry.Rectangle2D;
 public class GhostAnimations extends ThingAnimationCollection<Ghost, GhostAnimationKey, Rectangle2D> {
 
 	public ThingAnimationMap<Direction, Rectangle2D> eyesByDir;
-	public ThingList<Rectangle2D> flashing;
-	public ThingList<Rectangle2D> blue;
+	public SimpleThingAnimation<Rectangle2D> flashing;
+	public SimpleThingAnimation<Rectangle2D> blue;
 	public ThingAnimationMap<Direction, Rectangle2D> colorByDir;
-	public SimpleThingAnimation<Rectangle2D> values;
+	public ThingList<Rectangle2D> values;
 
 	public GhostAnimations(int ghostID, Rendering2D r2D) {
 		eyesByDir = r2D.createGhostEyesAnimation();

@@ -30,7 +30,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.ThingAnimation;
 import de.amr.games.pacman.lib.animation.ThingAnimationCollection;
 import de.amr.games.pacman.lib.animation.ThingAnimationMap;
-import de.amr.games.pacman.lib.animation.ThingList;
+import de.amr.games.pacman.lib.animation.SimpleThingAnimation;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.actors.PacAnimationKey;
 import javafx.geometry.Rectangle2D;
@@ -41,7 +41,7 @@ import javafx.geometry.Rectangle2D;
 public class PacAnimations extends ThingAnimationCollection<Pac, PacAnimationKey, Rectangle2D> {
 
 	protected ThingAnimationMap<Direction, Rectangle2D> munching;
-	protected ThingList<Rectangle2D> dying;
+	protected SimpleThingAnimation<Rectangle2D> dying;
 
 	public PacAnimations(Rendering2D r2D) {
 		munching = r2D.createPacMunchingAnimation();

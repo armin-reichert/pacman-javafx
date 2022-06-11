@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.ThingAnimation;
 import de.amr.games.pacman.lib.animation.ThingAnimationMap;
-import de.amr.games.pacman.lib.animation.ThingList;
+import de.amr.games.pacman.lib.animation.SimpleThingAnimation;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Bonus;
@@ -77,8 +77,8 @@ public class GuysInfo {
 			@SuppressWarnings("unchecked")
 			var gam = (ThingAnimationMap<Direction, ?>) animation;
 			return gam.get(dir).isRunning() ? "" : "(Stopped) ";
-		} else if (animation instanceof ThingList) {
-			var ga = (ThingList<?>) animation;
+		} else if (animation instanceof SimpleThingAnimation) {
+			var ga = (SimpleThingAnimation<?>) animation;
 			return ga.isRunning() ? "" : "(Stopped) ";
 		} else {
 			return "";

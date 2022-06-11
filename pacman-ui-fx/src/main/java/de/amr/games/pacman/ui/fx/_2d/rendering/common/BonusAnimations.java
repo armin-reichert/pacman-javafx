@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.animation.ThingAnimation;
 import de.amr.games.pacman.lib.animation.ThingAnimationCollection;
-import de.amr.games.pacman.lib.animation.SimpleThingAnimation;
+import de.amr.games.pacman.lib.animation.ThingList;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.BonusAnimationKey;
 import javafx.geometry.Rectangle2D;
@@ -38,8 +38,8 @@ import javafx.geometry.Rectangle2D;
  */
 public class BonusAnimations extends ThingAnimationCollection<Bonus, BonusAnimationKey, Rectangle2D> {
 
-	public final SimpleThingAnimation<Rectangle2D> symbolAnimation;
-	public final SimpleThingAnimation<Rectangle2D> valueAnimation;
+	public final ThingList<Rectangle2D> symbolAnimation;
+	public final ThingList<Rectangle2D> valueAnimation;
 
 	public BonusAnimations(Rendering2D r2D) {
 		symbolAnimation = r2D.createBonusSymbolAnimation();

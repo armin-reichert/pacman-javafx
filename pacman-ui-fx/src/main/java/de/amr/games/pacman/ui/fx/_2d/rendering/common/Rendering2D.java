@@ -70,7 +70,7 @@ public interface Rendering2D {
 
 	Image getSpriteImage(Rectangle2D sprite);
 
-	default Image[] getAnimationImages(SimpleThingAnimation<Rectangle2D> animation) {
+	default Image[] getAnimationImages(ThingList<Rectangle2D> animation) {
 		int n = animation.numFrames();
 		Image[] images = new Image[n];
 		for (int i = 0; i < n; ++i) {
@@ -93,23 +93,23 @@ public interface Rendering2D {
 
 	ThingAnimationMap<Direction, Rectangle2D> createPacMunchingAnimation();
 
-	ThingList<Rectangle2D> createPacDyingAnimation();
+	SimpleThingAnimation<Rectangle2D> createPacDyingAnimation();
 
 	ThingAnimationMap<Direction, Rectangle2D> createGhostColorAnimation(int ghostID);
 
-	ThingList<Rectangle2D> createGhostBlueAnimation();
+	SimpleThingAnimation<Rectangle2D> createGhostBlueAnimation();
 
-	ThingList<Rectangle2D> createGhostFlashingAnimation();
+	SimpleThingAnimation<Rectangle2D> createGhostFlashingAnimation();
 
 	ThingAnimationMap<Direction, Rectangle2D> createGhostEyesAnimation();
 
-	ThingList<Image> createMazeFlashingAnimation(int mazeNumber);
+	SimpleThingAnimation<Image> createMazeFlashingAnimation(int mazeNumber);
 
-	SimpleThingAnimation<Rectangle2D> createBonusSymbolAnimation();
+	ThingList<Rectangle2D> createBonusSymbolAnimation();
 
-	SimpleThingAnimation<Rectangle2D> createBonusValueAnimation();
+	ThingList<Rectangle2D> createBonusValueAnimation();
 
-	SimpleThingAnimation<Rectangle2D> createGhostValueAnimation();
+	ThingList<Rectangle2D> createGhostValueAnimation();
 
 	// Maze
 

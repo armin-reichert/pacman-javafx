@@ -124,9 +124,9 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public ThingList<Image> createMazeFlashingAnimation(int mazeNumber) {
+	public SimpleThingAnimation<Image> createMazeFlashingAnimation(int mazeNumber) {
 		var brightImage = U.colorsExchanged(mazeEmpty, Map.of(MAZE_WALL_COLOR, Color.WHITE));
-		var animation = new ThingList<>(brightImage, mazeEmpty);
+		var animation = new SimpleThingAnimation<>(brightImage, mazeEmpty);
 		animation.frameDuration(10);
 		return animation;
 	}
@@ -165,7 +165,7 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			Rectangle2D wide_open = tile(0, d), open = tile(1, d), closed = tile(2, 0);
-			var animation = new ThingList<>(closed, open, wide_open, open);
+			var animation = new SimpleThingAnimation<>(closed, open, wide_open, open);
 			animation.frameDuration(2);
 			animation.repeatForever();
 			map.put(dir, animation);
@@ -174,8 +174,8 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public ThingList<Rectangle2D> createPacDyingAnimation() {
-		var animation = new ThingList<>(tilesToRight(3, 0, 11));
+	public SimpleThingAnimation<Rectangle2D> createPacDyingAnimation() {
+		var animation = new SimpleThingAnimation<>(tilesToRight(3, 0, 11));
 		animation.frameDuration(8);
 		return animation;
 	}
@@ -185,7 +185,7 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 		ThingAnimationMap<Direction, Rectangle2D> map = new ThingAnimationMap<>(4);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
-			var animation = new ThingList<>(tilesToRight(2 * d, 4 + ghostID, 2));
+			var animation = new SimpleThingAnimation<>(tilesToRight(2 * d, 4 + ghostID, 2));
 			animation.frameDuration(8);
 			animation.repeatForever();
 			map.put(dir, animation);
@@ -194,16 +194,16 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public ThingList<Rectangle2D> createGhostBlueAnimation() {
-		var animation = new ThingList<>(tile(8, 4), tile(9, 4));
+	public SimpleThingAnimation<Rectangle2D> createGhostBlueAnimation() {
+		var animation = new SimpleThingAnimation<>(tile(8, 4), tile(9, 4));
 		animation.frameDuration(8);
 		animation.repeatForever();
 		return animation;
 	}
 
 	@Override
-	public ThingList<Rectangle2D> createGhostFlashingAnimation() {
-		var animation = new ThingList<>(tilesToRight(8, 4, 4));
+	public SimpleThingAnimation<Rectangle2D> createGhostFlashingAnimation() {
+		var animation = new SimpleThingAnimation<>(tilesToRight(8, 4, 4));
 		animation.frameDuration(6);
 		return animation;
 	}
@@ -213,25 +213,25 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 		ThingAnimationMap<Direction, Rectangle2D> map = new ThingAnimationMap<>(4);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
-			map.put(dir, new ThingList<>(tile(8 + d, 5)));
+			map.put(dir, new SimpleThingAnimation<>(tile(8 + d, 5)));
 		}
 		return map;
 	}
 
 	@Override
-	public SimpleThingAnimation<Rectangle2D> createBonusSymbolAnimation() {
-		return new SimpleThingAnimation<>(tilesToRight(2, 3, 8));
+	public ThingList<Rectangle2D> createBonusSymbolAnimation() {
+		return new ThingList<>(tilesToRight(2, 3, 8));
 	}
 
 	@Override
-	public SimpleThingAnimation<Rectangle2D> createBonusValueAnimation() {
-		return new SimpleThingAnimation<>(tile(0, 9), tile(1, 9), tile(2, 9), tile(3, 9), tiles(4, 9, 2, 1),
-				tiles(3, 10, 3, 1), tiles(3, 11, 3, 1), tiles(3, 12, 3, 1));
+	public ThingList<Rectangle2D> createBonusValueAnimation() {
+		return new ThingList<>(tile(0, 9), tile(1, 9), tile(2, 9), tile(3, 9), tiles(4, 9, 2, 1), tiles(3, 10, 3, 1),
+				tiles(3, 11, 3, 1), tiles(3, 12, 3, 1));
 	}
 
 	@Override
-	public SimpleThingAnimation<Rectangle2D> createGhostValueAnimation() {
-		return new SimpleThingAnimation<>(tilesToRight(0, 8, 4));
+	public ThingList<Rectangle2D> createGhostValueAnimation() {
+		return new ThingList<>(tilesToRight(0, 8, 4));
 	}
 
 	// Pac-Man specific:
@@ -240,30 +240,30 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 		return tile(8, 6);
 	}
 
-	public ThingList<Rectangle2D> createBigPacManMunchingAnimation() {
-		var animation = new ThingList<>(tiles(2, 1, 2, 2), tiles(4, 1, 2, 2), tiles(6, 1, 2, 2));
+	public SimpleThingAnimation<Rectangle2D> createBigPacManMunchingAnimation() {
+		var animation = new SimpleThingAnimation<>(tiles(2, 1, 2, 2), tiles(4, 1, 2, 2), tiles(6, 1, 2, 2));
 		animation.frameDuration(4);
 		animation.repeatForever();
 		return animation;
 	}
 
-	public ThingList<Rectangle2D> createBlinkyStretchedAnimation() {
-		return new ThingList<>(tilesToRight(9, 6, 4));
+	public SimpleThingAnimation<Rectangle2D> createBlinkyStretchedAnimation() {
+		return new SimpleThingAnimation<>(tilesToRight(9, 6, 4));
 	}
 
-	public ThingList<Rectangle2D> createBlinkyDamagedAnimation() {
-		return new ThingList<>(tile(8, 7), tile(9, 7));
+	public SimpleThingAnimation<Rectangle2D> createBlinkyDamagedAnimation() {
+		return new SimpleThingAnimation<>(tile(8, 7), tile(9, 7));
 	}
 
-	public ThingList<Rectangle2D> createBlinkyPatchedAnimation() {
-		var animation = new ThingList<>(tile(10, 7), tile(11, 7));
+	public SimpleThingAnimation<Rectangle2D> createBlinkyPatchedAnimation() {
+		var animation = new SimpleThingAnimation<>(tile(10, 7), tile(11, 7));
 		animation.frameDuration(4);
 		animation.repeatForever();
 		return animation;
 	}
 
-	public ThingList<Rectangle2D> createBlinkyNakedAnimation() {
-		var animation = new ThingList<>(tiles(8, 8, 2, 1), tiles(10, 8, 2, 1));
+	public SimpleThingAnimation<Rectangle2D> createBlinkyNakedAnimation() {
+		var animation = new SimpleThingAnimation<>(tiles(8, 8, 2, 1), tiles(10, 8, 2, 1));
 		animation.frameDuration(4);
 		animation.repeatForever();
 		return animation;
