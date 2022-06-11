@@ -107,10 +107,10 @@ public abstract class GameScene2D extends GameEventAdapter implements GameScene 
 	public void resize(double height) {
 		double aspectRatio = unscaledSize.x / unscaledSize.y;
 		double width = aspectRatio * height;
-		double scaling = height / unscaledSize.y;
-		canvas.getTransforms().setAll(new Scale(scaling, scaling));
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
+		double scaling = currentScaling();
+		canvas.getTransforms().setAll(new Scale(scaling, scaling));
 	}
 
 	public double currentScaling() {
