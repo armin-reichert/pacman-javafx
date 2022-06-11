@@ -1,5 +1,5 @@
 /*
-MIT License
+frameMIT License
 
 Copyright (c) 2021-22 Armin Reichert
 
@@ -105,7 +105,7 @@ public class PlayScene2D extends GameScene2D {
 		if (game.mazeFlashingAnimation.isRunning()) {
 			g.drawImage((Image) game.mazeFlashingAnimation.animate(), 0, t(3));
 		} else {
-			r2D.drawWorld(g, game.level.world, r2D.mazeNumber(game.level.number), !game.energizerPulse.animate());
+			r2D.drawWorld(g, game.level.world, r2D.mazeNumber(game.level.number), !game.energizerPulse.frame());
 		}
 		if (Env.$tilesVisible.get()) {
 			r2D.drawGrid(g);
