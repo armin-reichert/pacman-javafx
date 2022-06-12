@@ -28,8 +28,6 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameStateChangeEvent;
-import de.amr.games.pacman.model.mspacman.MovingBonus;
-import de.amr.games.pacman.model.pacman.StaticBonus;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
@@ -105,12 +103,7 @@ public class PlayScene2D extends GameScene2D {
 		r2D.drawGameStateMessage(g, hasCredit() ? gameController.state() : GameState.GAME_OVER);
 		r2D.drawPac(g, game.pac);
 		game.ghosts().forEach(ghost -> r2D.drawGhost(g, ghost));
-		// TODO one render method for both
-		if (game.bonus() instanceof MovingBonus) {
-			r2D.drawMovingBonus(g, (MovingBonus) game.bonus());
-		} else {
-			r2D.drawStaticBonus(g, (StaticBonus) game.bonus());
-		}
+		r2D.drawBonus(g, game.bonus().entity());
 		if (creditVisible) {
 			r2D.drawCredit(g, gameController.credit());
 		} else {

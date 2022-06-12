@@ -177,18 +177,19 @@ public interface Rendering2D {
 		ghost.animations().ifPresent(anim -> drawEntity(g, ghost, (Rectangle2D) anim.current(ghost)));
 	}
 
-	default void drawStaticBonus(GraphicsContext g, StaticBonus bonus) {
-		bonus.animations().ifPresent(anim -> drawEntity(g, bonus, (Rectangle2D) anim.current(bonus)));
-	}
-
-	default void drawMovingBonus(GraphicsContext g, MovingBonus bonus) {
-		bonus.animations().ifPresent(anim -> {
-			int dy = bonus.dy();
-			g.save();
-			g.translate(0, dy);
-			drawEntity(g, bonus, (Rectangle2D) anim.current(bonus));
-			g.restore();
-		});
+	default void drawBonus(GraphicsContext g, Entity bonusEntity) {
+		if (bonusEntity instanceof StaticBonus) {
+			StaticBonus bonus = (StaticBonus) bonusEntity;
+			bonus.animations().ifPresent(anim -> drawEntity(g, bonus, (Rectangle2D) anim.current(bonus)));
+		} else if (bonusEntity instanceof MovingBonus) {
+			MovingBonus bonus = (MovingBonus) bonusEntity;
+			bonus.animations().ifPresent(anim -> {
+				g.save();
+				g.translate(0, bonus.dy());
+				drawEntity(g, bonus, (Rectangle2D) anim.current(bonus));
+				g.restore();
+			});
+		}
 	}
 
 	/**
