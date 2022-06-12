@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission1Controller;
-import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacMansHusbandAnimations;
@@ -52,7 +51,6 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 		super.setSceneContext(gameController);
 		sceneController = new Intermission1Controller(gameController);
 		$ = sceneController.context();
-		sceneController.playIntermissionSound = () -> game.sounds().ifPresent(snd -> snd.loop(GameSound.INTERMISSION_1, 1));
 		sceneController.addStateChangeListener(this::onSceneStateChange);
 	}
 
