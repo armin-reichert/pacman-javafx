@@ -177,6 +177,12 @@ public interface Rendering2D {
 		ghost.animations().ifPresent(anim -> drawEntity(g, ghost, (Rectangle2D) anim.current(ghost)));
 	}
 
+	default void drawGhosts(GraphicsContext g, Ghost[] ghosts) {
+		for (var ghost : ghosts) {
+			drawGhost(g, ghost);
+		}
+	}
+
 	default void drawBonus(GraphicsContext g, Entity bonusEntity) {
 		if (bonusEntity instanceof StaticBonus) {
 			StaticBonus bonus = (StaticBonus) bonusEntity;

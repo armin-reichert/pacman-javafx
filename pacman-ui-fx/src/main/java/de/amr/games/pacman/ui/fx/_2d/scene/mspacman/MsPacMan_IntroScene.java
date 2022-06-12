@@ -106,7 +106,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 		} else if (sceneController.state() == State.MSPACMAN || sceneController.state() == State.READY_TO_PLAY) {
 			drawMsPacManText(g);
 		}
-		Stream.of($.ghosts).forEach(ghost -> r2D.drawGhost(g, ghost));
+		r2D.drawGhosts(g, $.ghosts);
 		r2D.drawPac(g, $.msPacMan);
 		r2D.drawCopyright(g, 29);
 		if (creditVisible) {
