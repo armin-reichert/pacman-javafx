@@ -58,7 +58,7 @@ public class PlayScene2D extends GameScene2D {
 	public void init() {
 		guysInfo.init(game);
 		creditVisible = !hasCredit();
-		game.levelCounter.visible = !creditVisible;
+		game.levelCounter.visible = hasCredit();
 		game.mazeFlashingAnimation = r2D.createMazeFlashingAnimation(r2D.mazeNumber(game.level.number));
 		game.pac.setAnimations(new PacAnimations(r2D));
 		for (var ghost : game.ghosts) {
