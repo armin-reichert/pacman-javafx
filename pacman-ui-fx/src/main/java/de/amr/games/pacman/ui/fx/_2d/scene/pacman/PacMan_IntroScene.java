@@ -107,7 +107,7 @@ public class PacMan_IntroScene extends GameScene2D {
 					} else {
 						animations.select(ANIM_BLUE);
 						if (ghost.velocity.length() == 0) {
-							animations.stop(ANIM_BLUE);
+							animations.byKey(ANIM_BLUE).stop();
 						}
 					}
 				});
