@@ -1,5 +1,5 @@
 /*
-frameMIT License
+MIT License
 
 Copyright (c) 2021-22 Armin Reichert
 
