@@ -201,26 +201,27 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 		setUseMazeFloorTexture($useMazeFloorTexture.get());
 	}
 
-	private void buildMaze3D() {
-		maze3D = new Maze3D(ArcadeWorld.SIZE.x, ArcadeWorld.SIZE.y);
-		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
-		maze3D.$resolution.bind(Env.$mazeResolution);
-		maze3D.$resolution.addListener(this::onMazeResolutionChange);
-		buildMazeContent(r2D.mazeNumber(game.level.number));
-	}
-
-	private void buildMazeContent(int mazeNumber) {
-		maze3D.createWallsAndDoors(game.level.world, //
-				getMazeSideColor(game.variant, mazeNumber), //
-				getMazeTopColor(game.variant, mazeNumber), //
-				getGhostHouseDoorColor(game.variant, mazeNumber));
-		maze3D.createFood(game.level.world, r2D.getFoodColor(mazeNumber));
-	}
-
 	@Override
 	public void end() {
 		// Note: property bindings are garbage collected, no need to explicitly unbind them here
 		maze3D.$resolution.removeListener(this::onMazeResolutionChange);
+	}
+
+	@Override
+	public void onKeyPressed() {
+		if (Keyboard.pressed(Keyboard.ALT, KeyCode.LEFT)) {
+			Actions.selectPrevPerspective();
+		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.RIGHT)) {
+			Actions.selectNextPerspective();
+		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.E)) {
+			Actions.cheatEatAllPellets();
+		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.L)) {
+			Actions.addLives(3);
+		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.N)) {
+			Actions.cheatEnterNextLevel();
+		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.X)) {
+			Actions.cheatKillAllEatableGhosts();
+		}
 	}
 
 	@Override
@@ -233,15 +234,6 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 		livesCounter3D.update(gameController.isGameRunning() ? game.lives - 1 : game.lives);
 		getCamera().update(player3D);
 		sounds.update();
-	}
-
-	@Override
-	public void onKeyPressed() {
-		if (Keyboard.pressed(Keyboard.ALT, KeyCode.LEFT)) {
-			Actions.selectPrevPerspective();
-		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.RIGHT)) {
-			Actions.selectNextPerspective();
-		}
 	}
 
 	public void onSwitchFrom2DScene() {
@@ -408,4 +400,21 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 	private void unblockGameController() {
 		gameController.state().timer().expire();
 	}
+
+	private void buildMaze3D() {
+		maze3D = new Maze3D(ArcadeWorld.SIZE.x, ArcadeWorld.SIZE.y);
+		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
+		maze3D.$resolution.bind(Env.$mazeResolution);
+		maze3D.$resolution.addListener(this::onMazeResolutionChange);
+		buildMazeContent(r2D.mazeNumber(game.level.number));
+	}
+
+	private void buildMazeContent(int mazeNumber) {
+		maze3D.createWallsAndDoors(game.level.world, //
+				getMazeSideColor(game.variant, mazeNumber), //
+				getMazeTopColor(game.variant, mazeNumber), //
+				getGhostHouseDoorColor(game.variant, mazeNumber));
+		maze3D.createFood(game.level.world, r2D.getFoodColor(mazeNumber));
+	}
+
 }

@@ -23,13 +23,11 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
-import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEventing;
-import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
@@ -64,7 +62,7 @@ public class PlayScene2D extends GameScene2D {
 		guysInfo.init(game);
 		creditVisible = !hasCredit();
 		game.levelCounter.visible = hasCredit();
-		game.mazeFlashingAnimation = r2D.createMazeFlashingAnimation(r2D.mazeNumber(game.level.number));
+		game.setMazeFlashingAnimation(r2D.createMazeFlashingAnimation(r2D.mazeNumber(game.level.number)));
 		game.pac.setAnimations(new PacAnimations(r2D));
 		for (var ghost : game.ghosts) {
 			ghost.setAnimations(new GhostAnimations(ghost.id, r2D));
@@ -101,8 +99,8 @@ public class PlayScene2D extends GameScene2D {
 	public void doRender(GraphicsContext g) {
 		r2D.drawScore(g, game.scores.gameScore);
 		r2D.drawScore(g, game.scores.highScore);
-		if (game.mazeFlashingAnimation.isRunning()) {
-			g.drawImage((Image) game.mazeFlashingAnimation.frame(), 0, t(3));
+		if (game.mazeFlashingAnimation().isPresent() && game.mazeFlashingAnimation().get().isRunning()) {
+			g.drawImage((Image) game.mazeFlashingAnimation().get().frame(), 0, t(3));
 		} else {
 			r2D.drawWorld(g, game.level.world, r2D.mazeNumber(game.level.number), !game.energizerPulse.frame());
 		}
@@ -119,20 +117,6 @@ public class PlayScene2D extends GameScene2D {
 			r2D.drawLivesCounter(g, gameController.isGameRunning() ? game.lives - 1 : game.lives);
 		}
 		r2D.drawLevelCounter(g, game.levelCounter);
-	}
-
-	@Override
-	public void onGameStateChange(GameStateChangeEvent e) {
-		switch (e.newGameState) {
-		case LEVEL_STARTING -> {
-			// TODO check this
-			gameController.state().timer().setSeconds(1);
-			gameController.state().timer().start();
-		}
-		default -> {
-			log("PlayScene entered game state %s", e.newGameState);
-		}
-		}
 	}
 
 	public void onSwitchFrom3DScene() {
