@@ -53,11 +53,11 @@ public class LevelCounter3D extends Group {
 	public LevelCounter3D(double x, double y, Rendering2D r2D) {
 		this.rightPosition = new V2d(x, y);
 		var symbolAnimation = r2D.createBonusSymbolList();
-		int n = symbolAnimation.numFrames();
+		int n = symbolAnimation.size();
 		symbolImages = new Image[n];
 		for (int i = 0; i < n; ++i) {
 			// TODO provide a method in Rendering2D to get the subimage for a "sprite"
-			symbolImages[i] = ((Spritesheet) r2D).subImage(symbolAnimation.frame(i));
+			symbolImages[i] = ((Spritesheet) r2D).subImage(symbolAnimation.get(i));
 		}
 	}
 

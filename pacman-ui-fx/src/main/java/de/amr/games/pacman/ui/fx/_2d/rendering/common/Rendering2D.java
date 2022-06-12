@@ -27,6 +27,7 @@ import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import de.amr.games.pacman.controller.common.GameState;
@@ -70,6 +71,15 @@ public interface Rendering2D {
 
 	Image getSpriteImage(Rectangle2D sprite);
 
+	default Image[] getAnimationImages(List<Rectangle2D> animation) {
+		int n = animation.size();
+		Image[] images = new Image[n];
+		for (int i = 0; i < n; ++i) {
+			images[i] = getSpriteImage(animation.get(i));
+		}
+		return images;
+	}
+
 	default Image[] getAnimationImages(ThingList<Rectangle2D> animation) {
 		int n = animation.numFrames();
 		Image[] images = new Image[n];
@@ -105,9 +115,9 @@ public interface Rendering2D {
 
 	SimpleThingAnimation<Image> createMazeFlashingAnimation(int mazeNumber);
 
-	ThingList<Rectangle2D> createBonusSymbolList();
+	List<Rectangle2D> createBonusSymbolList();
 
-	ThingList<Rectangle2D> createBonusValueList();
+	List<Rectangle2D> createBonusValueList();
 
 	ThingList<Rectangle2D> createGhostValueList();
 
@@ -186,15 +196,13 @@ public interface Rendering2D {
 	default void drawBonus(GraphicsContext g, Entity bonusEntity) {
 		if (bonusEntity instanceof StaticBonus) {
 			StaticBonus bonus = (StaticBonus) bonusEntity;
-			bonus.animations().ifPresent(anim -> drawEntity(g, bonus, (Rectangle2D) anim.current(bonus)));
+			drawEntity(g, bonus, (Rectangle2D) bonus.getSprite());
 		} else if (bonusEntity instanceof MovingBonus) {
 			MovingBonus bonus = (MovingBonus) bonusEntity;
-			bonus.animations().ifPresent(anim -> {
-				g.save();
-				g.translate(0, bonus.dy());
-				drawEntity(g, bonus, (Rectangle2D) anim.current(bonus));
-				g.restore();
-			});
+			g.save();
+			g.translate(0, bonus.dy());
+			drawEntity(g, bonus, (Rectangle2D) bonus.getSprite());
+			g.restore();
 		}
 	}
 

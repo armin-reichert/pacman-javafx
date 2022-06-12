@@ -24,9 +24,9 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.animation.SimpleThingAnimation;
 import de.amr.games.pacman.lib.animation.ThingAnimation;
 import de.amr.games.pacman.lib.animation.ThingAnimationMap;
-import de.amr.games.pacman.lib.animation.SimpleThingAnimation;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Bonus;
@@ -107,11 +107,7 @@ public class GuysInfo {
 
 	private String computeBonusInfo(Bonus bonus) {
 		var symbolName = bonus.state() == BonusState.INACTIVE ? "INACTIVE" : bonusName(game.variant, bonus.symbol());
-		if (bonus.animations().isPresent()) {
-			return "%s\n%s\n%s".formatted(symbolName, game.bonus().state(), bonus.animations().get().selectedKey());
-		} else {
-			return "%s\n%s".formatted(symbolName, game.bonus().state());
-		}
+		return "%s\n%s".formatted(symbolName, game.bonus().state());
 	}
 
 	private void updateTextView(Text textView, String text, Entity entity) {

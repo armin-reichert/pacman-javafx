@@ -27,7 +27,6 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.model.common.GameSound;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -56,7 +55,8 @@ public class PlayScene2D extends GameScene2D {
 		for (var ghost : game.ghosts) {
 			ghost.setAnimations(new GhostAnimations(ghost.id, r2D));
 		}
-		game.bonus().setAnimations(new BonusAnimations(r2D));
+		game.bonus().setSymbolList(r2D.createBonusSymbolList());
+		game.bonus().setValueList(r2D.createBonusValueList());
 		game.bonus().setInactive();
 	}
 
