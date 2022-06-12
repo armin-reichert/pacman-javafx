@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.GameModel;
@@ -34,7 +33,6 @@ import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -89,9 +87,6 @@ public abstract class GameScene2D implements GameEventAdapter, GameScene {
 		case MS_PACMAN -> Spritesheet_MsPacMan.get();
 		case PACMAN -> Spritesheet_PacMan.get();
 		};
-		SoundManager.get().selectGameVariant(game.variant);
-		SoundManager.get()
-				.setStopped(gameController.credit() == 0 && gameController.state() != GameState.INTERMISSION_TEST);
 	}
 
 	@Override

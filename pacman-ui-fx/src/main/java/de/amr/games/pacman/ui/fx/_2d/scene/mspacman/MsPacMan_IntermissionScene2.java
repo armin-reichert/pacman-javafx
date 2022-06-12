@@ -31,7 +31,6 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacMansHusbandAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -51,7 +50,7 @@ public class MsPacMan_IntermissionScene2 extends GameScene2D {
 	public void setSceneContext(GameController gameController) {
 		super.setSceneContext(gameController);
 		sceneController = new Intermission2Controller(gameController);
-		sceneController.playIntermissionSound = () -> SoundManager.get().play(GameSound.INTERMISSION_2);
+		sceneController.playIntermissionSound = () -> game.sounds().ifPresent(snd -> snd.play(GameSound.INTERMISSION_2));
 		$ = sceneController.context();
 	}
 

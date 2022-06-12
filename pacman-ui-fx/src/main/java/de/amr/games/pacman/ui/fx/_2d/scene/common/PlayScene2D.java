@@ -33,7 +33,6 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -64,7 +63,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void onKeyPressed() {
 		if (Keyboard.pressed(KeyCode.DIGIT5) && gameController.credit() == 0) {
-			SoundManager.get().play(GameSound.CREDIT);
+			game.sounds().ifPresent(snd -> snd.play(GameSound.CREDIT));
 			gameController.addCredit();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.E)) {
 			Actions.cheatEatAllPellets();

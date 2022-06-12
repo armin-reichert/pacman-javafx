@@ -26,9 +26,8 @@ package de.amr.games.pacman.ui.fx.shell.info;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
-import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.shell.Actions;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
+import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -99,7 +98,7 @@ public class SectionGeneral extends Section {
 		btnsSimulation[1].setDisable(!Env.$paused.get());
 		sliderTargetFPS.setValue(GameLoop.get().getTargetFrameRate());
 		cbMuted.setDisable(gc.credit() == 0);
-		cbMuted.setSelected(SoundManager.get().isMuted());
+		cbMuted.setSelected(false); // TODO implement mute
 		cbUsePlayScene3D.setSelected(Env.$3D.get());
 	}
 }

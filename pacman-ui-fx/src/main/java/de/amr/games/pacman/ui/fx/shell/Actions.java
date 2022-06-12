@@ -32,7 +32,6 @@ import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.shape.DrawMode;
 
 /**
@@ -58,7 +57,7 @@ public class Actions {
 
 	public static void quitCurrentScene() {
 		theUI.getCurrentGameScene().end();
-		SoundManager.get().stopAll();
+		theGameController.game().sounds().ifPresent(snd -> snd.stopAll());
 		theGameController.returnToIntro();
 	}
 
@@ -76,7 +75,7 @@ public class Actions {
 		if (theGameController.game().level.number == levelNumber) {
 			return;
 		}
-		SoundManager.get().stopAll();
+		theGameController.game().sounds().ifPresent(snd -> snd.stopAll());
 		if (levelNumber == 1) {
 			theGameController.game().reset();
 			theGameController.changeState(GameState.READY);
@@ -165,8 +164,8 @@ public class Actions {
 	}
 
 	public static void toggleSoundMuted() {
-		SoundManager.get().setMuted(!SoundManager.get().isMuted());
-		showFlashMessage(SoundManager.get().isMuted() ? "Sound OFF" : "Sound ON");
+		// TODO implement for new sound manager
+//		SoundManager.get().setMuted(!SoundManager.get().isMuted());
 	}
 
 	public static void cheatEatAllPellets() {

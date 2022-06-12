@@ -33,7 +33,6 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -52,7 +51,7 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 	public void setSceneContext(GameController gameController) {
 		super.setSceneContext(gameController);
 		sceneController = new Intermission1Controller(gameController);
-		sceneController.playIntermissionSound = () -> SoundManager.get().loop(GameSound.INTERMISSION_1, 2);
+		sceneController.playIntermissionSound = () -> game.sounds().ifPresent(snd -> snd.loop(GameSound.INTERMISSION_1, 2));
 		$ = sceneController.context();
 	}
 
@@ -91,8 +90,7 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 			r2D.drawPac(g, $.pac);
 		} else {
 			var sprite = bigPacMunchingAnimation.animate();
-			r2D.drawSpriteCenteredOverBox(g, sprite, $.pac.position.x,
-					$.pac.position.y - sprite.getHeight() / 2 + 8);
+			r2D.drawSpriteCenteredOverBox(g, sprite, $.pac.position.x, $.pac.position.y - sprite.getHeight() / 2 + 8);
 		}
 	}
 }

@@ -82,6 +82,7 @@ public class AbstractGameSounds implements GameSounds {
 		}
 	}
 
+	@Override
 	public void loop(GameSound sound, int repetitions) {
 		AudioClip clip = getClip(sound);
 		clip.setCycleCount(repetitions);

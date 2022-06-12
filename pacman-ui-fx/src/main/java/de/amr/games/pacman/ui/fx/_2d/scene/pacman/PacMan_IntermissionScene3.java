@@ -30,7 +30,6 @@ import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -49,7 +48,7 @@ public class PacMan_IntermissionScene3 extends GameScene2D {
 	public void setSceneContext(GameController gameController) {
 		super.setSceneContext(gameController);
 		sceneController = new Intermission3Controller(gameController);
-		sceneController.playIntermissionSound = () -> SoundManager.get().loop(GameSound.INTERMISSION_3, 2);
+		sceneController.playIntermissionSound = () -> game.sounds().ifPresent(snd -> snd.loop(GameSound.INTERMISSION_3, 2));
 		$ = sceneController.context();
 	}
 

@@ -27,12 +27,12 @@ import static de.amr.games.pacman.model.common.world.World.HTS;
 
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameSound;
+import de.amr.games.pacman.model.common.GameSounds;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.FillTransition3D;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
@@ -66,7 +66,9 @@ public class Pac3D extends Group implements Rendering3D {
 
 	private Color skullColorImpaled = Color.GHOSTWHITE;
 
-	public Pac3D(World world, Pac pac, PacManModel3D model3D) {
+	private final GameSounds sounds;
+
+	public Pac3D(World world, Pac pac, PacManModel3D model3D, GameSounds sounds) {
 		this.world = world;
 		this.pac = pac;
 		bodyParts = model3D.createPacMan(getPlayerSkullColor(), getPlayerEyesColor(), getPlayerPalateColor());
@@ -78,6 +80,8 @@ public class Pac3D extends Group implements Rendering3D {
 		skull().setUserData(this);
 		eyes().setUserData(this);
 		palate().setUserData(this);
+
+		this.sounds = sounds;
 	}
 
 	private boolean insideWorld() {
@@ -135,7 +139,7 @@ public class Pac3D extends Group implements Rendering3D {
 
 		Animation spinAndShrink = silent //
 				? new ParallelTransition(spin, shrink) //
-				: new ParallelTransition(spin, shrink, U.pauseSec(0, () -> SoundManager.get().play(GameSound.PACMAN_DEATH)));
+				: new ParallelTransition(spin, shrink, U.pauseSec(0, () -> sounds.play(GameSound.PACMAN_DEATH)));
 
 		return new SequentialTransition( //
 				new FillTransition3D(Duration.seconds(1), skull(), getPlayerSkullColor(), ghostColor), //

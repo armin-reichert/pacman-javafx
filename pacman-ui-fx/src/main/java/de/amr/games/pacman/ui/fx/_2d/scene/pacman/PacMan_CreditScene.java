@@ -30,7 +30,6 @@ import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -49,7 +48,7 @@ public class PacMan_CreditScene extends GameScene2D {
 	@Override
 	public void onKeyPressed() {
 		if (Keyboard.pressed(KeyCode.DIGIT5)) {
-			SoundManager.get().play(GameSound.CREDIT);
+			game.sounds().ifPresent(snd -> snd.play(GameSound.CREDIT));
 			gameController.addCredit();
 		} else if (Keyboard.pressed(KeyCode.DIGIT1)) {
 			gameController.requestGame();

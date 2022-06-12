@@ -55,7 +55,6 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.CoordinateAxes;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.animation.Animation;
@@ -148,9 +147,6 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 		case PACMAN -> Spritesheet_PacMan.get();
 		};
 		model3D = GianmarcosModel3D.get();
-		SoundManager.get().selectGameVariant(game.variant);
-		SoundManager.get()
-				.setStopped(gameController.credit() == 0 && gameController.state() != GameState.INTERMISSION_TEST);
 	}
 
 	@Override
@@ -176,7 +172,7 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 		levelCounter3D = new LevelCounter3D(ArcadeWorld.SIZE.x - TS, TS, r2D);
 		levelCounter3D.update(game);
 
-		player3D = new Pac3D(game.level.world, game.pac, model3D);
+		player3D = new Pac3D(game.level.world, game.pac, model3D, game.sounds().get()); // TODO check
 		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D)).toArray(Ghost3D[]::new);
 		bonus3D = new Bonus3D(r2D);
 

@@ -33,7 +33,6 @@ import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
-import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -81,7 +80,6 @@ public class PacManGameAppFX extends Application {
 		ui = new GameUI(gameController, stage, zoom * ArcadeWorld.SIZE.x, zoom * ArcadeWorld.SIZE.y);
 		ui.setFullScreen(options.fullscreen);
 		Actions.init(gameController, ui);
-		SoundManager.get().setMuted(options.muted);
 		GameLoop.get().update = ui::update;
 		GameLoop.get().render = ui::render;
 		GameLoop.get().setTargetFrameRate(60);
