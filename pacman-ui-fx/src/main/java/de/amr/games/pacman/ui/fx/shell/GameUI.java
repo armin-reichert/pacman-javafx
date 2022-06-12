@@ -34,6 +34,7 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.GameSounds;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
@@ -52,6 +53,8 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.shell.info.InfoLayer;
+import de.amr.games.pacman.ui.fx.sound.MsPacManGameSounds;
+import de.amr.games.pacman.ui.fx.sound.PacManGameSounds;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -112,6 +115,9 @@ public class GameUI implements GameEventAdapter {
 		gameController.setPacController(pacController);
 		gameController.addListener(this);
 
+		gameController.game(GameVariant.MS_PACMAN).setSounds(new MsPacManGameSounds());
+		gameController.game(GameVariant.PACMAN).setSounds(new PacManGameSounds());
+
 		this.flashMessageLayer = new FlashMessageView();
 		this.infoLayer = new InfoLayer(this, gameController);
 
@@ -144,8 +150,18 @@ public class GameUI implements GameEventAdapter {
 		Stream.of(scenes_MsPacMan, scenes_PacMan).flatMap(Stream::of).flatMap(Stream::of).filter(Objects::nonNull)
 				.forEach(gameScene -> {
 					gameScene.setParent(mainScene);
-					gameScene.registerSounds(gameController);
 				});
+	}
+
+	private GameSounds pacManSounds = new PacManGameSounds();
+	private GameSounds msPacManSounds = new MsPacManGameSounds();
+
+	public GameSounds getSounds(GameVariant gameVariant) {
+		return switch (gameVariant) {
+		case MS_PACMAN -> msPacManSounds;
+		case PACMAN -> pacManSounds;
+		default -> throw new IllegalArgumentException("Illegal game variant: " + gameVariant);
+		};
 	}
 
 	public double getWidth() {

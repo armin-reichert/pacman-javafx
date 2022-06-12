@@ -30,6 +30,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.GameVariant;
 import javafx.animation.Animation;
 import javafx.scene.media.AudioClip;

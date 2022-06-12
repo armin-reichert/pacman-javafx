@@ -25,17 +25,14 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
-import de.amr.games.pacman.event.GameEventing;
+import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
-import de.amr.games.pacman.ui.fx.sound.GameSound;
-import de.amr.games.pacman.ui.fx.sound.PlaySceneSounds;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -49,13 +46,6 @@ import javafx.scene.input.KeyCode;
 public class PlayScene2D extends GameScene2D {
 
 	private final GuysInfo guysInfo = new GuysInfo(this);
-	private PlaySceneSounds sounds;
-
-	@Override
-	public void registerSounds(GameController gameController) {
-		sounds = new PlaySceneSounds(gameController);
-		GameEventing.addEventListener(sounds);
-	}
 
 	@Override
 	public void init() {
@@ -89,7 +79,6 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	protected void doUpdate() {
-		sounds.update();
 		if (Env.$debugUI.get()) {
 			guysInfo.update();
 		}
