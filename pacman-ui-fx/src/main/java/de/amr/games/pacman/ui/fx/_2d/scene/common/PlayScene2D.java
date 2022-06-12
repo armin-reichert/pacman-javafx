@@ -39,8 +39,6 @@ import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.PlaySceneSounds;
 import de.amr.games.pacman.ui.fx.sound.SoundManager;
-import de.amr.games.pacman.ui.fx.util.U;
-import javafx.animation.SequentialTransition;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -93,15 +91,9 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	public void end() {
-		log("Scene '%s' ended", getClass().getName());
-	}
-
-	@Override
 	public void doRender(GraphicsContext g) {
 		r2D.drawScore(g, game.scores.gameScore);
 		r2D.drawScore(g, game.scores.highScore);
-
 		if (game.mazeFlashingAnimation.isRunning()) {
 			g.drawImage((Image) game.mazeFlashingAnimation.frame(), 0, t(3));
 		} else {
@@ -110,16 +102,15 @@ public class PlayScene2D extends GameScene2D {
 		if (Env.$tilesVisible.get()) {
 			r2D.drawGrid(g);
 		}
-		GameState displayedState = !hasCredit() ? GameState.GAME_OVER : gameController.state();
-		r2D.drawGameStateMessage(g, displayedState);
+		r2D.drawGameStateMessage(g, hasCredit() ? gameController.state() : GameState.GAME_OVER);
+		r2D.drawPac(g, game.pac);
+		game.ghosts().forEach(ghost -> r2D.drawGhost(g, ghost));
+		// TODO one render method for both
 		if (game.bonus() instanceof MovingBonus) {
 			r2D.drawMovingBonus(g, (MovingBonus) game.bonus());
 		} else {
 			r2D.drawStaticBonus(g, (StaticBonus) game.bonus());
 		}
-		r2D.drawPac(g, game.pac);
-		game.ghosts().forEach(ghost -> r2D.drawGhost(g, ghost));
-
 		if (creditVisible) {
 			r2D.drawCredit(g, gameController.credit());
 		} else {
@@ -128,22 +119,9 @@ public class PlayScene2D extends GameScene2D {
 		r2D.drawLevelCounter(g, game.levelCounter);
 	}
 
-	public void onSwitchFrom3DScene() {
-		game.pac.animations().get().ensureRunning();
-		for (var ghost : game.ghosts) {
-			ghost.animations().get().ensureRunning();
-		}
-	}
-
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
 		switch (e.newGameState) {
-		case PACMAN_DYING -> {
-			new SequentialTransition(//
-					U.pauseSec(2, () -> SoundManager.get().play(GameSound.PACMAN_DEATH)), //
-					U.pauseSec(1.5, () -> game.pac.hide())//
-			).play();
-		}
 		case LEVEL_STARTING -> {
 			// TODO check this
 			gameController.state().timer().setSeconds(1);
@@ -152,6 +130,13 @@ public class PlayScene2D extends GameScene2D {
 		default -> {
 			log("PlayScene entered game state %s", e.newGameState);
 		}
+		}
+	}
+
+	public void onSwitchFrom3DScene() {
+		game.pac.animations().get().ensureRunning();
+		for (var ghost : game.ghosts) {
+			ghost.animations().get().ensureRunning();
 		}
 	}
 }

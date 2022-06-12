@@ -46,11 +46,15 @@ public class PlaySceneSounds implements GameEventAdapter {
 
 	public static void update(GameState state) {
 		if (state == GameState.HUNTING) {
+			if (theOne.game().huntingTimer.tick() == 0) {
+				SoundManager.get().ensureSirenStarted(theOne.game().huntingTimer.phase() / 2);
+			}
 			if (theOne.game().pac.starvingTicks == 10) {
 				SoundManager.get().stop(GameSound.PACMAN_MUNCH);
 			}
-			if (theOne.game().huntingTimer.tick() == 0) {
-				SoundManager.get().ensureSirenStarted(theOne.game().huntingTimer.phase() / 2);
+		} else if (state == GameState.PACMAN_DYING) {
+			if (theOne.gameController.state().timer().atSecond(2)) {
+				SoundManager.get().play(GameSound.PACMAN_DEATH);
 			}
 		}
 	}
