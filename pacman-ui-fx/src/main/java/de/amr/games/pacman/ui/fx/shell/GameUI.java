@@ -133,6 +133,7 @@ public class GameUI implements GameEventAdapter {
 		Env.$drawMode3D.addListener((x, y, z) -> mainSceneRoot.setBackground(computeMainSceneBackground()));
 
 		stage.setScene(mainScene);
+		stage.setMinHeight(327);
 		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
 		stage.setOnCloseRequest(e -> GameLoop.get().stop());
 		stage.centerOnScreen();
