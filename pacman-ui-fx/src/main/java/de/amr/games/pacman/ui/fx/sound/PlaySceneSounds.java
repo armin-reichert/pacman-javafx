@@ -27,7 +27,6 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventAdapter;
-import de.amr.games.pacman.event.GameEventing;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.GhostState;
@@ -38,35 +37,30 @@ import javafx.animation.Animation;
  */
 public class PlaySceneSounds implements GameEventAdapter {
 
-	private static final PlaySceneSounds theOne = new PlaySceneSounds();
+	private final GameController gameController;
 
-	public static void setGameController(GameController gameController) {
-		theOne.gameController = gameController;
-	}
-
-	public static void update(GameState state) {
-		if (state == GameState.HUNTING) {
-			if (theOne.game().huntingTimer.tick() == 0) {
-				SoundManager.get().ensureSirenStarted(theOne.game().huntingTimer.phase() / 2);
-			}
-			if (theOne.game().pac.starvingTicks == 10) {
-				SoundManager.get().stop(GameSound.PACMAN_MUNCH);
-			}
-		} else if (state == GameState.PACMAN_DYING) {
-			if (theOne.gameController.state().timer().atSecond(2)) {
-				SoundManager.get().play(GameSound.PACMAN_DEATH);
-			}
-		}
-	}
-
-	private GameController gameController;
-
-	private PlaySceneSounds() {
-		GameEventing.addEventListener(this);
+	public PlaySceneSounds(GameController gameController) {
+		this.gameController = gameController;
 	}
 
 	private GameModel game() {
 		return gameController.game();
+	}
+
+	public void update() {
+		var state = gameController.state();
+		if (state == GameState.HUNTING) {
+			if (game().huntingTimer.tick() == 0) {
+				SoundManager.get().ensureSirenStarted(game().huntingTimer.phase() / 2);
+			}
+			if (game().pac.starvingTicks == 10) {
+				SoundManager.get().stop(GameSound.PACMAN_MUNCH);
+			}
+		} else if (state == GameState.PACMAN_DYING) {
+			if (gameController.state().timer().atSecond(2)) {
+				SoundManager.get().play(GameSound.PACMAN_DEATH);
+			}
+		}
 	}
 
 	@Override
@@ -133,6 +127,5 @@ public class PlaySceneSounds implements GameEventAdapter {
 			// nope
 		}
 		}
-
 	}
 }

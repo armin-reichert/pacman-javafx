@@ -52,7 +52,6 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.shell.info.InfoLayer;
-import de.amr.games.pacman.ui.fx.sound.PlaySceneSounds;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -111,7 +110,6 @@ public class GameUI implements GameEventAdapter {
 		this.stage = stage;
 
 		gameController.setPacController(pacController);
-		PlaySceneSounds.setGameController(gameController);
 		gameController.addListener(this);
 
 		this.flashMessageLayer = new FlashMessageView();
@@ -122,7 +120,7 @@ public class GameUI implements GameEventAdapter {
 		mainScene = new Scene(mainSceneRoot, width, height);
 		log("Main scene created. Size: %.0f x %.0f", mainScene.getWidth(), mainScene.getHeight());
 
-		attachGameScenesToMainScene();
+		initGameScenes(gameController);
 		updateGameScene(gameController.state(), true);
 		embedCurrentGameScene();
 
@@ -141,9 +139,12 @@ public class GameUI implements GameEventAdapter {
 		stage.show();
 	}
 
-	private void attachGameScenesToMainScene() {
+	private void initGameScenes(GameController gameController) {
 		Stream.of(scenes_MsPacMan, scenes_PacMan).flatMap(Stream::of).flatMap(Stream::of).filter(Objects::nonNull)
-				.forEach(gameScene -> gameScene.setParent(mainScene));
+				.forEach(gameScene -> {
+					gameScene.setParent(mainScene);
+					gameScene.registerSounds(gameController);
+				});
 	}
 
 	public double getWidth() {

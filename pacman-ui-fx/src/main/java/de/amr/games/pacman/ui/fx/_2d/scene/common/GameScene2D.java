@@ -83,7 +83,6 @@ public abstract class GameScene2D implements GameEventAdapter, GameScene {
 
 	@Override
 	public void setSceneContext(GameController gameController) {
-		var state = gameController.state();
 		this.gameController = gameController;
 		this.game = gameController.game();
 		r2D = switch (game.variant) {
@@ -91,7 +90,8 @@ public abstract class GameScene2D implements GameEventAdapter, GameScene {
 		case PACMAN -> Spritesheet_PacMan.get();
 		};
 		SoundManager.get().selectGameVariant(game.variant);
-		SoundManager.get().setStopped(!hasCredit() && state != GameState.INTERMISSION_TEST);
+		SoundManager.get()
+				.setStopped(gameController.credit() == 0 && gameController.state() != GameState.INTERMISSION_TEST);
 	}
 
 	@Override

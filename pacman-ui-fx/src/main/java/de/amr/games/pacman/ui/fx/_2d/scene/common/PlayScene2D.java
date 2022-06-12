@@ -26,7 +26,9 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.world.World.t;
 
+import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
+import de.amr.games.pacman.event.GameEventing;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.BonusAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
@@ -48,7 +50,14 @@ import javafx.scene.input.KeyCode;
  */
 public class PlayScene2D extends GameScene2D {
 
-	private GuysInfo guysInfo = new GuysInfo(this);
+	private final GuysInfo guysInfo = new GuysInfo(this);
+	private PlaySceneSounds sounds;
+
+	@Override
+	public void registerSounds(GameController gameController) {
+		sounds = new PlaySceneSounds(gameController);
+		GameEventing.addEventListener(sounds);
+	}
 
 	@Override
 	public void init() {
@@ -82,7 +91,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	protected void doUpdate() {
-		PlaySceneSounds.update(gameController.state());
+		sounds.update();
 		if (Env.$debugUI.get()) {
 			guysInfo.update();
 		}

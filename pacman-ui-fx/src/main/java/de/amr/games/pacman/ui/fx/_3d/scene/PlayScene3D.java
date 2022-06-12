@@ -33,6 +33,7 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventAdapter;
+import de.amr.games.pacman.event.GameEventing;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -56,6 +57,7 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import de.amr.games.pacman.ui.fx.sound.PlaySceneSounds;
+import de.amr.games.pacman.ui.fx.sound.SoundManager;
 import de.amr.games.pacman.ui.fx.util.CoordinateAxes;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.animation.Animation;
@@ -94,6 +96,7 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 	private GameModel game;
 	private PacManModel3D model3D;
 	private Rendering2D r2D;
+	private PlaySceneSounds sounds;
 
 	private Group root;
 	private Pac3D player3D;
@@ -125,6 +128,12 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 	}
 
 	@Override
+	public void registerSounds(GameController gameController) {
+		sounds = new PlaySceneSounds(gameController);
+		GameEventing.addEventListener(sounds);
+	}
+
+	@Override
 	public SubScene getFXSubScene() {
 		return fxSubScene;
 	}
@@ -148,6 +157,9 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 		case PACMAN -> Spritesheet_PacMan.get();
 		};
 		model3D = GianmarcosModel3D.get();
+		SoundManager.get().selectGameVariant(game.variant);
+		SoundManager.get()
+				.setStopped(gameController.credit() == 0 && gameController.state() != GameState.INTERMISSION_TEST);
 	}
 
 	@Override
@@ -220,7 +232,7 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 		scores3D.update(game);
 		livesCounter3D.update(gameController.isGameRunning() ? game.lives - 1 : game.lives);
 		getCamera().update(player3D);
-		PlaySceneSounds.update(gameController.state());
+		sounds.update();
 	}
 
 	@Override

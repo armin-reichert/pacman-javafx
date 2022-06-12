@@ -43,6 +43,9 @@ public interface GameScene extends GameEventListener {
 	 */
 	void setSceneContext(GameController gameController);
 
+	default void registerSounds(GameController gameController) {
+	}
+
 	/**
 	 * Called before scene is displayed.
 	 */
