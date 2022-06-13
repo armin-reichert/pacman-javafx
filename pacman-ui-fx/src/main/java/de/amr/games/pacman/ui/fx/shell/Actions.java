@@ -58,7 +58,7 @@ public class Actions {
 	public static void quitCurrentScene() {
 		theUI.getCurrentGameScene().end();
 		theGameController.game().sounds().ifPresent(snd -> snd.stopAll());
-		theGameController.returnToIntro();
+		theGameController.restartIntro();
 	}
 
 	public static void addLives(int lives) {
