@@ -32,6 +32,7 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventAdapter;
+import de.amr.games.pacman.event.GameEventing;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameSounds;
@@ -113,7 +114,7 @@ public class GameUI implements GameEventAdapter {
 		this.stage = stage;
 
 		gameController.setPacController(pacController);
-		gameController.addListener(this);
+		GameEventing.addEventListener(this);
 
 		gameController.game(GameVariant.MS_PACMAN).setSounds(new MsPacManGameSounds());
 		gameController.game(GameVariant.PACMAN).setSounds(new PacManGameSounds());
