@@ -43,6 +43,15 @@ import javafx.scene.media.AudioClip;
 public class AbstractGameSounds implements GameSounds {
 
 	protected final Map<GameSound, AudioClip> clips = new EnumMap<>(GameSound.class);
+	protected boolean silent;
+
+	@Override
+	public void setSilent(boolean silent) {
+		this.silent = silent;
+		if (silent) {
+			stopAll();
+		}
+	}
 
 	protected void put(Map<GameSound, AudioClip> map, GameSound sound, String path) {
 		URL url = getClass().getResource(path);
@@ -84,6 +93,9 @@ public class AbstractGameSounds implements GameSounds {
 
 	@Override
 	public void loop(GameSound sound, int repetitions) {
+		if (silent) {
+			return;
+		}
 		AudioClip clip = getClip(sound);
 		clip.setCycleCount(repetitions);
 		clip.play();
