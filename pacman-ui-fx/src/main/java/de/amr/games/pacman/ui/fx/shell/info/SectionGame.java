@@ -73,7 +73,7 @@ public class SectionGame extends Section {
 		btnsGameControl[2].setOnAction(e -> gc.cheatEnterNextLevel());
 
 		btnsIntermissionTest = addButtonList("Intermission scenes", "Start", "Quit");
-		btnsIntermissionTest[0].setOnAction(e -> Actions.startIntermissionScenesTest());
+		btnsIntermissionTest[0].setOnAction(e -> gc.state().startIntermissionTest(gc.game()));
 		btnsIntermissionTest[1].setOnAction(e -> Actions.quitCurrentScene());
 
 		spinnerGameLevel = addSpinner("Level", 1, 100, game().level.number);

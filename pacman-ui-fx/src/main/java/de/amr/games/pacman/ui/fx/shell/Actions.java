@@ -89,12 +89,6 @@ public class Actions {
 		}
 	}
 
-	public static void startIntermissionScenesTest() {
-		if (theGameController.state() == GameState.INTRO) {
-			theGameController.startIntermissionTest();
-		}
-	}
-
 	public static void toggleInfoPanelsVisible() {
 		Env.toggle(theUI.getInfoLayer().visibleProperty());
 	}
