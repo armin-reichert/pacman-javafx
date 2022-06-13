@@ -127,8 +127,8 @@ public class Actions {
 	}
 
 	public static void toggleAutopilot() {
-		theGameController.toggleAutoMoving();
-		String message = Env.message(theGameController.isAutoMoving() ? "autopilot_on" : "autopilot_off");
+		theGameController.game().autoControlled = !theGameController.game().autoControlled;
+		String message = Env.message(theGameController.game().autoControlled ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(message);
 	}
 
