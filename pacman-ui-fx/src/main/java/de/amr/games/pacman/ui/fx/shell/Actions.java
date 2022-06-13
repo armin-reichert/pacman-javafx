@@ -158,8 +158,12 @@ public class Actions {
 	}
 
 	public static void toggleSoundMuted() {
-		// TODO implement for new sound manager
-//		SoundManager.get().setMuted(!SoundManager.get().isMuted());
+		theGameController.game().sounds().ifPresent(snd -> {
+			boolean muted = snd.isMuted();
+			snd.setMuted(!muted);
+			var msg = Env.message(snd.isMuted() ? "sound_off" : "sound_on");
+			showFlashMessage(msg);
+		});
 	}
 
 	public static void cheatEatAllPellets() {

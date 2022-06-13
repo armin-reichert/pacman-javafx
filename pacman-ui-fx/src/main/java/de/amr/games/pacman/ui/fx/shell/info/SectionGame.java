@@ -49,6 +49,7 @@ public class SectionGame extends Section {
 	private Button[] btnsGameControl;
 	private Button[] btnsIntermissionTest;
 	private Spinner<Integer> spinnerGameLevel;
+	private CheckBox cbMuted;
 	private CheckBox cbAutopilot;
 	private CheckBox cbImmunity;
 
@@ -80,6 +81,7 @@ public class SectionGame extends Section {
 		spinnerGameLevel.valueProperty()
 				.addListener(($value, oldValue, newValue) -> Actions.enterLevel(newValue.intValue()));
 
+		cbMuted = addCheckBox("Sound muted", Actions::toggleSoundMuted);
 		cbAutopilot = addCheckBox("Autopilot", Actions::toggleAutopilot);
 		cbImmunity = addCheckBox("Player immune", Actions::toggleImmunity);
 
@@ -145,5 +147,8 @@ public class SectionGame extends Section {
 			spinnerGameLevel.setDisable(
 					gc.state() != GameState.READY && gc.state() != GameState.HUNTING && gc.state() != GameState.LEVEL_STARTING);
 		}
+
+		cbMuted.setDisable(!gc.game().sounds().isPresent());
+		cbMuted.setSelected(gc.game().sounds().isPresent() ? gc.game().sounds().get().isMuted() : false);
 	}
 }

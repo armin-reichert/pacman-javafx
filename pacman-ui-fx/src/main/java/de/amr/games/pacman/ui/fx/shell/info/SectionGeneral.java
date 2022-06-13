@@ -48,7 +48,6 @@ public class SectionGeneral extends Section {
 
 	private Button[] btnsSimulation;
 	private Slider sliderTargetFPS;
-	private CheckBox cbMuted;
 	private CheckBox cbUsePlayScene3D;
 	private ImageView iconPlay = U.imageView("/common/icons/play.png");
 	private ImageView iconStop = U.imageView("/common/icons/stop.png");
@@ -84,7 +83,6 @@ public class SectionGeneral extends Section {
 				GameLoop.get().getTargetFrameRate()));
 		addInfo("Total Ticks", GameLoop.get()::getTotalTicks);
 
-		cbMuted = addCheckBox("Sound muted", Actions::toggleSoundMuted);
 		cbUsePlayScene3D = addCheckBox("Use 3D play scene", Actions::toggleUse3DScene);
 
 		addInfo("Main scene", () -> String.format("w=%.0f h=%.0f", ui.getMainSceneWidth(), ui.getMainSceneHeight()));
@@ -97,8 +95,6 @@ public class SectionGeneral extends Section {
 		btnsSimulation[0].setTooltip(Env.$paused.get() ? tooltipPlay : tooltipStop);
 		btnsSimulation[1].setDisable(!Env.$paused.get());
 		sliderTargetFPS.setValue(GameLoop.get().getTargetFrameRate());
-		cbMuted.setDisable(gc.game().credit() == 0);
-		cbMuted.setSelected(false); // TODO implement mute
 		cbUsePlayScene3D.setSelected(Env.$3D.get());
 	}
 }

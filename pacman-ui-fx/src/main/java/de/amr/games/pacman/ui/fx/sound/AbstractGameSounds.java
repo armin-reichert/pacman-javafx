@@ -44,11 +44,25 @@ public class AbstractGameSounds implements GameSounds {
 
 	protected final Map<GameSound, AudioClip> clips = new EnumMap<>(GameSound.class);
 	protected boolean silent;
+	protected boolean muted;
 
 	@Override
 	public void setSilent(boolean silent) {
 		this.silent = silent;
 		if (silent) {
+			stopAll();
+		}
+	}
+
+	@Override
+	public boolean isMuted() {
+		return muted;
+	}
+
+	@Override
+	public void setMuted(boolean muted) {
+		this.muted = muted;
+		if (muted) {
 			stopAll();
 		}
 	}
@@ -61,7 +75,13 @@ public class AbstractGameSounds implements GameSounds {
 		map.put(sound, new AudioClip(url.toString()));
 	}
 
-	public AudioClip getClip(GameSound sound) {
+	protected void playClip(AudioClip clip) {
+		if (!silent && !muted) {
+			clip.play();
+		}
+	}
+
+	protected AudioClip getClip(GameSound sound) {
 		if (!clips.containsKey(sound)) {
 			throw new RuntimeException("No clip found for " + sound);
 		}
@@ -93,12 +113,9 @@ public class AbstractGameSounds implements GameSounds {
 
 	@Override
 	public void loop(GameSound sound, int repetitions) {
-		if (silent) {
-			return;
-		}
 		AudioClip clip = getClip(sound);
 		clip.setCycleCount(repetitions);
-		clip.play();
+		playClip(clip);
 	}
 
 	@Override
