@@ -151,7 +151,7 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 
 	@Override
 	public void init() {
-		boolean hasCredit = gameController.credit() > 0;
+		boolean hasCredit = game.credit() > 0;
 
 		buildMaze3D();
 
@@ -344,7 +344,7 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 			var killerColor = r2D.getGhostColor(killer.id);
 			new SequentialTransition( //
 					U.pauseSec(1.0, () -> game.ghosts().forEach(Ghost::hide)), //
-					player3D.dyingAnimation(killerColor, gameController.credit() == 0), //
+					player3D.dyingAnimation(killerColor, game.credit() == 0), //
 					U.pauseSec(2.0, () -> unblockGameController()) //
 			).play();
 		}

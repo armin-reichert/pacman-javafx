@@ -99,7 +99,7 @@ public class SectionGame extends Section {
 		addInfo("", () -> "Running:   %d".formatted(gc.game().huntingTimer.tick()));
 		addInfo("", () -> "Remaining: %s".formatted(ticksToString(gc.game().huntingTimer.remaining())));
 
-		addInfo("Credit", () -> "%d".formatted(gc.credit()));
+		addInfo("Credit", () -> "%d".formatted(gc.game().credit()));
 		addInfo("Playing", () -> U.yes_no(gc.game().playing));
 
 		addInfo("Pellets",
@@ -126,7 +126,7 @@ public class SectionGame extends Section {
 		cbImmunity.setSelected(gc.game().isPacImmune);
 
 		// start game
-		btnsGameControl[0].setDisable(gc.credit() == 0 || gc.game().playing);
+		btnsGameControl[0].setDisable(gc.game().credit() == 0 || gc.game().playing);
 		// quit game
 		btnsGameControl[1].setDisable(gc.state() == GameState.INTRO || gc.state() == GameState.INTERMISSION_TEST);
 		// next level

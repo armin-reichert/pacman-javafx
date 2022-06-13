@@ -95,7 +95,7 @@ public abstract class GameScene2D implements GameEventAdapter, GameScene {
 	}
 
 	protected boolean hasCredit() {
-		return gameController.credit() > 0;
+		return gameController.game().credit() > 0;
 	}
 
 	public Canvas getCanvas() {

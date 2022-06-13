@@ -69,7 +69,8 @@ public class PacManGameAppFX extends Application {
 		options = new Options(getParameters().getUnnamed());
 		Env.$3D.set(options.use3D);
 		Env.$perspective.set(options.perspective);
-		gameController = new GameController(options.gameVariant);
+		gameController = new GameController();
+		gameController.selectGame(options.gameVariant);
 		log("Application initialized. Game variant: %s", gameController.game().variant);
 	}
 

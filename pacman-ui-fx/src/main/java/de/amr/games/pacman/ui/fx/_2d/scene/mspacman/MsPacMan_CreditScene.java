@@ -62,7 +62,7 @@ public class MsPacMan_CreditScene extends GameScene2D {
 		r2D.drawScore(g, game.scores.gameScore);
 		r2D.drawScore(g, game.scores.highScore);
 		if (creditVisible) {
-			r2D.drawCredit(g, gameController.credit());
+			r2D.drawCredit(g, game.credit());
 		}
 		g.setFont(r2D.getArcadeFont());
 		g.setFill(r2D.getGhostColor(Ghost.ORANGE_GHOST));
