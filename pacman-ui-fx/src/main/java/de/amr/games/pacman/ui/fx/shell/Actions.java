@@ -164,6 +164,8 @@ public class Actions {
 
 	public static void cheatEatAllPellets() {
 		theGameController.state().cheatEatAllPellets(theGameController.game());
+		var cheatMessage = Env.CHEAT_TALK.next();
+		showFlashMessage(cheatMessage);
 	}
 
 	public static void cheatEnterNextLevel() {
@@ -172,5 +174,7 @@ public class Actions {
 
 	public static void cheatKillAllEatableGhosts() {
 		theGameController.state().cheatKillAllEatableGhosts(theGameController.game());
+		var cheatMessage = Env.CHEAT_TALK.next();
+		showFlashMessage(cheatMessage);
 	}
 }
