@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
@@ -48,8 +47,7 @@ public class PacMan_CreditScene extends GameScene2D {
 	@Override
 	public void onKeyPressed() {
 		if (Keyboard.pressed(KeyCode.DIGIT5)) {
-			game.sounds().ifPresent(snd -> snd.play(GameSound.CREDIT));
-			gameController.addCredit();
+			gameController.state().addCredit(game);
 		} else if (Keyboard.pressed(KeyCode.DIGIT1)) {
 			gameController.requestGame();
 		}

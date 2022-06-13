@@ -31,7 +31,6 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.IntroController;
 import de.amr.games.pacman.controller.mspacman.IntroController.Context;
 import de.amr.games.pacman.controller.mspacman.IntroController.State;
-import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
@@ -77,8 +76,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 	@Override
 	public void onKeyPressed() {
 		if (Keyboard.pressed(KeyCode.DIGIT5)) {
-			game.sounds().ifPresent(snd -> snd.play(GameSound.CREDIT));
-			gameController.addCredit();
+			gameController.state().addCredit(game);
 		} else if (Keyboard.pressed(KeyCode.DIGIT1)) {
 			gameController.requestGame();
 		} else if (Keyboard.pressed(KeyCode.V)) {

@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.common.GameState;
-import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -63,8 +62,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void onKeyPressed() {
 		if (Keyboard.pressed(KeyCode.DIGIT5) && gameController.credit() == 0) {
-			game.sounds().ifPresent(snd -> snd.play(GameSound.CREDIT));
-			gameController.addCredit();
+			gameController.state().addCredit(game);
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.E)) {
 			Actions.cheatEatAllPellets();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.L)) {
