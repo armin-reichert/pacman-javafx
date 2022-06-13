@@ -163,7 +163,7 @@ public class Actions {
 	}
 
 	public static void cheatEatAllPellets() {
-		theGameController.cheatEatAllPellets();
+		theGameController.state().cheatEatAllPellets(theGameController.game());
 	}
 
 	public static void cheatEnterNextLevel() {
