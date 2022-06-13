@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx.shell;
 import java.util.function.Consumer;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.model.common.actors.Pac;
+import de.amr.games.pacman.model.common.actors.Creature;
 import javafx.scene.input.KeyCode;
 
 /**
@@ -34,7 +34,7 @@ import javafx.scene.input.KeyCode;
  * 
  * @author Armin Reichert
  */
-public class PacController implements Consumer<Pac> {
+public class PacController implements Consumer<Creature> {
 
 	private Direction dir;
 	private final KeyCode codeUp, codeDown, codeLeft, codeRight;
@@ -60,7 +60,7 @@ public class PacController implements Consumer<Pac> {
 	}
 
 	@Override
-	public void accept(Pac pac) {
+	public void accept(Creature pac) {
 		if (dir != null) {
 			pac.setWishDir(dir);
 		}
