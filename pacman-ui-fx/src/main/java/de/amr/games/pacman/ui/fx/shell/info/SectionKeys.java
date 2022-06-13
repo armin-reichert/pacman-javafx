@@ -42,12 +42,12 @@ public class SectionKeys extends Section {
 		super(ui, gc, title, minLabelWidth, textColor, textFont, labelFont);
 		addInfo("Ctrl+I", "Info Panels On/Off");
 		addInfo("Alt+A", "Autopilot On/Off");
-		addInfo("Alt+E", "Eat all normal pellets").available(() -> gc.isGameRunning());
+		addInfo("Alt+E", "Eat all normal pellets").available(() -> gc.game().playing);
 		addInfo("Alt+I", "Player immunity On/Off");
-		addInfo("Alt+L", "Add 3 player lives").available(() -> gc.isGameRunning());
+		addInfo("Alt+L", "Add 3 player lives").available(() -> gc.game().playing);
 		addInfo("Alt+M", "Mute/Unmute");
-		addInfo("Alt+N", "Next Level").available(() -> gc.isGameRunning());
-		addInfo("Alt+X", "Kill hunting ghosts").available(() -> gc.isGameRunning());
+		addInfo("Alt+N", "Next Level").available(() -> gc.game().playing);
+		addInfo("Alt+X", "Kill hunting ghosts").available(() -> gc.game().playing);
 		addInfo("Alt+Z", "Play Intermission Scenes").available(() -> gc.state() == GameState.INTRO);
 		addInfo("Alt+LEFT", () -> Env.$perspective.get().prev().name()).available(() -> ui.getCurrentGameScene().is3D());
 		addInfo("Alt+RIGHT", () -> Env.$perspective.get().next().name()).available(() -> ui.getCurrentGameScene().is3D());

@@ -100,7 +100,7 @@ public class SectionGame extends Section {
 		addInfo("", () -> "Remaining: %s".formatted(ticksToString(gc.game().huntingTimer.remaining())));
 
 		addInfo("Credit", () -> "%d".formatted(gc.credit()));
-		addInfo("Playing", () -> U.yes_no(gc.isGameRunning()));
+		addInfo("Playing", () -> U.yes_no(gc.game().playing));
 
 		addInfo("Pellets",
 				() -> String.format("%d of %d (%d energizers)", game().level.world.foodRemaining(),
@@ -120,17 +120,17 @@ public class SectionGame extends Section {
 		super.update();
 
 		comboGameVariant.setValue(gc.game().variant);
-		comboGameVariant.setDisable(gc.isGameRunning());
+		comboGameVariant.setDisable(gc.game().playing);
 
 		cbAutopilot.setSelected(gc.isAutoMoving());
 		cbImmunity.setSelected(gc.game().playerImmune);
 
 		// start game
-		btnsGameControl[0].setDisable(gc.credit() == 0 || gc.isGameRunning());
+		btnsGameControl[0].setDisable(gc.credit() == 0 || gc.game().playing);
 		// quit game
 		btnsGameControl[1].setDisable(gc.state() == GameState.INTRO || gc.state() == GameState.INTERMISSION_TEST);
 		// next level
-		btnsGameControl[2].setDisable(!gc.isGameRunning() || (gc.state() != GameState.HUNTING
+		btnsGameControl[2].setDisable(!gc.game().playing || (gc.state() != GameState.HUNTING
 				&& gc.state() != GameState.READY && gc.state() != GameState.LEVEL_STARTING));
 
 		// start intermission test
@@ -139,7 +139,7 @@ public class SectionGame extends Section {
 		btnsIntermissionTest[1].setDisable(gc.state() != GameState.INTERMISSION_TEST);
 
 		spinnerGameLevel.getValueFactory().setValue(game().level.number);
-		if (!gc.isGameRunning() || gc.state() == GameState.LEVEL_STARTING) {
+		if (!gc.game().playing || gc.state() == GameState.LEVEL_STARTING) {
 			spinnerGameLevel.setDisable(true);
 		} else {
 			spinnerGameLevel.setDisable(

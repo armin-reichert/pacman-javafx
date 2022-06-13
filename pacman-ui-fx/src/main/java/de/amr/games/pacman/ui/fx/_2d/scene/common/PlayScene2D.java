@@ -100,7 +100,7 @@ public class PlayScene2D extends GameScene2D {
 		if (creditVisible) {
 			r2D.drawCredit(g, gameController.credit());
 		} else {
-			r2D.drawLivesCounter(g, gameController.isGameRunning() ? game.lives - 1 : game.lives);
+			r2D.drawLivesCounter(g, game.playing ? game.lives - 1 : game.lives);
 		}
 		r2D.drawLevelCounter(g, game.levelCounter);
 	}

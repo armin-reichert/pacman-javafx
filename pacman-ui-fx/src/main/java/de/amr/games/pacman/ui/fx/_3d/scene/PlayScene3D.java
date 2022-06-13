@@ -218,7 +218,7 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 		Stream.of(ghosts3D).forEach(Ghost3D::update);
 		bonus3D.update(game.bonus());
 		scores3D.update(game);
-		livesCounter3D.update(gameController.isGameRunning() ? game.lives - 1 : game.lives);
+		livesCounter3D.update(game.playing ? game.lives - 1 : game.lives);
 		getCamera().update(player3D);
 	}
 
