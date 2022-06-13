@@ -143,6 +143,7 @@ public class AbstractGameSounds implements GameSounds {
 		};
 		getClip(siren).setVolume(0.2);
 		loop(siren, Animation.INDEFINITE);
+		log("Siren %s started", siren);
 	}
 
 	public Stream<GameSound> sirens() {
@@ -158,7 +159,11 @@ public class AbstractGameSounds implements GameSounds {
 
 	@Override
 	public void stopSirens() {
-		sirens().forEach(this::stop);
-		log("Siren(s) stopped");
+		sirens().forEach(siren -> {
+			if (isPlaying(siren)) {
+				getClip(siren).stop();
+				log("Siren %s stopped", siren);
+			}
+		});
 	}
 }
