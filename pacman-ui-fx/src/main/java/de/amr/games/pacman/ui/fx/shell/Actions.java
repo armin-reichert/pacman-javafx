@@ -106,7 +106,7 @@ public class Actions {
 
 	public static void selectNextGameVariant() {
 		var gameVariant = theGameController.game().variant.next();
-		theGameController.selectGameVariant(gameVariant);
+		theGameController.state().selectGameVariant(gameVariant);
 	}
 
 	public static void selectNextPerspective() {
