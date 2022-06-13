@@ -49,7 +49,7 @@ public class PacMan_CreditScene extends GameScene2D {
 		if (Keyboard.pressed(KeyCode.DIGIT5)) {
 			gameController.state().addCredit(game);
 		} else if (Keyboard.pressed(KeyCode.DIGIT1)) {
-			gameController.requestGame();
+			gameController.state().requestGame(game);
 		}
 	}
 
