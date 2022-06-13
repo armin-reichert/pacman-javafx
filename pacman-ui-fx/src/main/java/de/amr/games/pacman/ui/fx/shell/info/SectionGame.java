@@ -123,7 +123,7 @@ public class SectionGame extends Section {
 		comboGameVariant.setDisable(gc.game().playing);
 
 		cbAutopilot.setSelected(gc.isAutoMoving());
-		cbImmunity.setSelected(gc.game().playerImmune);
+		cbImmunity.setSelected(gc.game().isPacImmune);
 
 		// start game
 		btnsGameControl[0].setDisable(gc.credit() == 0 || gc.game().playing);

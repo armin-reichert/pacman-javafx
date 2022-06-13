@@ -133,8 +133,8 @@ public class Actions {
 	}
 
 	public static void toggleImmunity() {
-		theGameController.togglePlayerImmune();
-		String message = Env.message(theGameController.game().playerImmune ? "player_immunity_on" : "player_immunity_off");
+		theGameController.toggleIsPacImmune();
+		String message = Env.message(theGameController.game().isPacImmune ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(message);
 	}
 
