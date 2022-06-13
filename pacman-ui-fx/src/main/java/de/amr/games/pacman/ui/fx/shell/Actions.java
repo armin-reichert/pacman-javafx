@@ -55,7 +55,7 @@ public class Actions {
 		theUI.getFlashMessageView().showMessage(String.format(message, args), seconds);
 	}
 
-	public static void quitCurrentScene() {
+	public static void restartIntro() {
 		theUI.getCurrentGameScene().end();
 		theGameController.game().sounds().ifPresent(snd -> snd.stopAll());
 		theGameController.restartIntro();

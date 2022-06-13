@@ -305,7 +305,7 @@ public class GameUI implements GameEventAdapter {
 		} else if (Keyboard.pressed(Keyboard.SHIFT, KeyCode.P)) {
 			Actions.singleStep();
 		} else if (Keyboard.pressed(KeyCode.Q)) {
-			Actions.quitCurrentScene();
+			Actions.restartIntro();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.DIGIT3)) {
 			Actions.toggleUse3DScene();
 		} else if (Keyboard.pressed(KeyCode.F11)) {

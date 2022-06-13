@@ -70,12 +70,12 @@ public class SectionGame extends Section {
 
 		btnsGameControl = addButtonList("Game", "Start", "Quit", "Next Level");
 		btnsGameControl[0].setOnAction(e -> gc.state().requestGame(gc.game()));
-		btnsGameControl[1].setOnAction(e -> Actions.quitCurrentScene());
+		btnsGameControl[1].setOnAction(e -> Actions.restartIntro());
 		btnsGameControl[2].setOnAction(e -> gc.state().cheatEnterNextLevel(gc.game()));
 
 		btnsIntermissionTest = addButtonList("Intermission scenes", "Start", "Quit");
 		btnsIntermissionTest[0].setOnAction(e -> gc.state().startIntermissionTest(gc.game()));
-		btnsIntermissionTest[1].setOnAction(e -> Actions.quitCurrentScene());
+		btnsIntermissionTest[1].setOnAction(e -> Actions.restartIntro());
 
 		spinnerGameLevel = addSpinner("Level", 1, 100, game().level.number);
 		spinnerGameLevel.valueProperty()
