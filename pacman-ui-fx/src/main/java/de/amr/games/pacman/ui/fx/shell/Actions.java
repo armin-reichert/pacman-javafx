@@ -167,10 +167,10 @@ public class Actions {
 	}
 
 	public static void cheatEnterNextLevel() {
-		theGameController.cheatEnterNextLevel();
+		theGameController.state().cheatEnterNextLevel(theGameController.game());
 	}
 
 	public static void cheatKillAllEatableGhosts() {
-		theGameController.cheatKillAllEatableGhosts();
+		theGameController.state().cheatKillAllEatableGhosts(theGameController.game());
 	}
 }
