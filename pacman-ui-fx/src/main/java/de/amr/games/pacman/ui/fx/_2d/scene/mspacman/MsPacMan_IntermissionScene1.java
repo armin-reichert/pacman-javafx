@@ -51,7 +51,6 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 		super.setSceneContext(gameController);
 		sceneController = new Intermission1Controller(gameController);
 		$ = sceneController.context();
-		sceneController.addStateChangeListener(this::onSceneStateChange);
 	}
 
 	@Override
@@ -71,13 +70,6 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 	@Override
 	public void doUpdate() {
 		sceneController.update();
-	}
-
-	private void onSceneStateChange(Intermission1Controller.State fromState, Intermission1Controller.State toState) {
-		if (toState == Intermission1Controller.State.IN_HEAVEN) {
-			$.inky.animations().get().selectedAnimation().stop();
-			$.pinky.animations().get().selectedAnimation().stop();
-		}
 	}
 
 	@Override

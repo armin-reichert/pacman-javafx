@@ -35,7 +35,6 @@ import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.GameSounds;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
@@ -152,17 +151,6 @@ public class GameUI implements GameEventAdapter {
 				.forEach(gameScene -> {
 					gameScene.setParent(mainScene);
 				});
-	}
-
-	private GameSounds pacManSounds = new PacManGameSounds();
-	private GameSounds msPacManSounds = new MsPacManGameSounds();
-
-	public GameSounds getSounds(GameVariant gameVariant) {
-		return switch (gameVariant) {
-		case MS_PACMAN -> msPacManSounds;
-		case PACMAN -> pacManSounds;
-		default -> throw new IllegalArgumentException("Illegal game variant: " + gameVariant);
-		};
 	}
 
 	public double getWidth() {
