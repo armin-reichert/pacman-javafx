@@ -35,7 +35,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.lib.animation.SimpleThingAnimation;
 import de.amr.games.pacman.lib.animation.ThingAnimationMap;
-import de.amr.games.pacman.lib.animation.ThingList;
+import de.amr.games.pacman.lib.animation.ThingArray;
 import de.amr.games.pacman.model.common.LevelCounter;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -80,7 +80,7 @@ public interface Rendering2D {
 		return images;
 	}
 
-	default Image[] getAnimationImages(ThingList<Rectangle2D> animation) {
+	default Image[] getAnimationImages(ThingArray<Rectangle2D> animation) {
 		int n = animation.numFrames();
 		Image[] images = new Image[n];
 		for (int i = 0; i < n; ++i) {
@@ -117,7 +117,7 @@ public interface Rendering2D {
 
 	SimpleThingAnimation<Image> createMazeFlashingAnimation(int mazeNumber);
 
-	ThingList<Rectangle2D> createGhostValueList();
+	ThingArray<Rectangle2D> createGhostValueList();
 
 	// Maze
 

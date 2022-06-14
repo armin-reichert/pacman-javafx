@@ -31,7 +31,7 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.SimpleThingAnimation;
 import de.amr.games.pacman.lib.animation.ThingAnimationMap;
-import de.amr.games.pacman.lib.animation.ThingList;
+import de.amr.games.pacman.lib.animation.ThingArray;
 import de.amr.games.pacman.model.mspacman.Flap;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
@@ -298,8 +298,8 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public ThingList<Rectangle2D> createGhostValueList() {
-		return new ThingList<>(rhs(0, 8), rhs(1, 8), rhs(2, 8), rhs(3, 8));
+	public ThingArray<Rectangle2D> createGhostValueList() {
+		return new ThingArray<>(rhs(0, 8), rhs(1, 8), rhs(2, 8), rhs(3, 8));
 	}
 
 	// Ms. Pac-Man specific:

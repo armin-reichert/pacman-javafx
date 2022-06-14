@@ -32,7 +32,7 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.SimpleThingAnimation;
 import de.amr.games.pacman.lib.animation.ThingAnimationMap;
-import de.amr.games.pacman.lib.animation.ThingList;
+import de.amr.games.pacman.lib.animation.ThingArray;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.U;
@@ -228,8 +228,8 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public ThingList<Rectangle2D> createGhostValueList() {
-		return new ThingList<>(tilesToRight(0, 8, 4));
+	public ThingArray<Rectangle2D> createGhostValueList() {
+		return new ThingArray<>(tilesToRight(0, 8, 4));
 	}
 
 	// Pac-Man specific:
