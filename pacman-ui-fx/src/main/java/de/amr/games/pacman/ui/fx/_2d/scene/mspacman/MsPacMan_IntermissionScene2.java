@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission2Controller;
-import de.amr.games.pacman.controller.mspacman.Intermission2Controller.Context;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacMansHusbandAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
@@ -43,7 +42,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class MsPacMan_IntermissionScene2 extends GameScene2D {
 
 	private Intermission2Controller sceneController;
-	private Context $;
+	private Intermission2Controller.Context $;
 
 	@Override
 	public void setSceneContext(GameController gameController) {
@@ -69,9 +68,9 @@ public class MsPacMan_IntermissionScene2 extends GameScene2D {
 
 	@Override
 	public void doRender(GraphicsContext g) {
-		r2D.drawLevelCounter(g, game.levelCounter);
 		Spritesheet_MsPacMan.get().drawFlap(g, $.flap);
 		r2D.drawPac(g, $.msPacMan);
 		r2D.drawPac(g, $.pacMan);
+		r2D.drawLevelCounter(g, game.levelCounter);
 	}
 }

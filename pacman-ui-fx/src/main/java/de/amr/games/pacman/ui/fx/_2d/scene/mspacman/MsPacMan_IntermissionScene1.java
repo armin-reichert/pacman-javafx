@@ -80,7 +80,7 @@ public class MsPacMan_IntermissionScene1 extends GameScene2D {
 		r2D.drawPac(g, $.pacMan);
 		r2D.drawGhost(g, $.inky);
 		r2D.drawGhost(g, $.pinky);
-		r2D.drawEntity(g, $.heart, ((Spritesheet_MsPacMan) r2D).getHeart());
+		r2D.drawEntity(g, $.heart, ss.getHeart());
 		r2D.drawLevelCounter(g, game.levelCounter);
 	}
 }
