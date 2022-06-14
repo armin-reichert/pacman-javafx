@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._2d.rendering.mspacman;
 
 import static de.amr.games.pacman.model.common.world.World.t;
 
+import java.util.EnumMap;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
@@ -234,7 +235,8 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 
 	@Override
 	public ThingAnimationMap<Direction, Rectangle2D> createPacMunchingAnimation() {
-		ThingAnimationMap<Direction, Rectangle2D> map = new ThingAnimationMap<>(4);
+		var enumMap = new EnumMap<Direction, SimpleThingAnimation<Rectangle2D>>(Direction.class);
+		ThingAnimationMap<Direction, Rectangle2D> map = new ThingAnimationMap<>(enumMap);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			Rectangle2D wide_open = rhs(0, d), open = rhs(1, d), closed = rhs(2, d);
@@ -257,7 +259,8 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 
 	@Override
 	public ThingAnimationMap<Direction, Rectangle2D> createGhostColorAnimation(int ghostID) {
-		ThingAnimationMap<Direction, Rectangle2D> map = new ThingAnimationMap<>(4);
+		var enumMap = new EnumMap<Direction, SimpleThingAnimation<Rectangle2D>>(Direction.class);
+		ThingAnimationMap<Direction, Rectangle2D> map = new ThingAnimationMap<>(enumMap);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			var feet = new SimpleThingAnimation<>(rhs(2 * d, 4 + ghostID), rhs(2 * d + 1, 4 + ghostID));
@@ -285,7 +288,8 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 
 	@Override
 	public ThingAnimationMap<Direction, Rectangle2D> createGhostEyesAnimation() {
-		ThingAnimationMap<Direction, Rectangle2D> map = new ThingAnimationMap<>(4);
+		var enumMap = new EnumMap<Direction, SimpleThingAnimation<Rectangle2D>>(Direction.class);
+		ThingAnimationMap<Direction, Rectangle2D> map = new ThingAnimationMap<>(enumMap);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			map.put(dir, new SimpleThingAnimation<>(rhs(8 + d, 5)));

@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.rendering.pacman;
 import static de.amr.games.pacman.model.common.actors.Ghost.PINK_GHOST;
 import static de.amr.games.pacman.model.common.world.World.t;
 
+import java.util.EnumMap;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
@@ -166,7 +167,8 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 
 	@Override
 	public ThingAnimationMap<Direction, Rectangle2D> createPacMunchingAnimation() {
-		ThingAnimationMap<Direction, Rectangle2D> map = new ThingAnimationMap<>(4);
+		var enumMap = new EnumMap<Direction, SimpleThingAnimation<Rectangle2D>>(Direction.class);
+		ThingAnimationMap<Direction, Rectangle2D> map = new ThingAnimationMap<>(enumMap);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			Rectangle2D wide_open = tile(0, d), open = tile(1, d), closed = tile(2, 0);
@@ -187,7 +189,8 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 
 	@Override
 	public ThingAnimationMap<Direction, Rectangle2D> createGhostColorAnimation(int ghostID) {
-		ThingAnimationMap<Direction, Rectangle2D> map = new ThingAnimationMap<>(4);
+		var enumMap = new EnumMap<Direction, SimpleThingAnimation<Rectangle2D>>(Direction.class);
+		ThingAnimationMap<Direction, Rectangle2D> map = new ThingAnimationMap<>(enumMap);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			var animation = new SimpleThingAnimation<>(tilesToRight(2 * d, 4 + ghostID, 2));
@@ -215,7 +218,8 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 
 	@Override
 	public ThingAnimationMap<Direction, Rectangle2D> createGhostEyesAnimation() {
-		ThingAnimationMap<Direction, Rectangle2D> map = new ThingAnimationMap<>(4);
+		var enumMap = new EnumMap<Direction, SimpleThingAnimation<Rectangle2D>>(Direction.class);
+		ThingAnimationMap<Direction, Rectangle2D> map = new ThingAnimationMap<>(enumMap);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			map.put(dir, new SimpleThingAnimation<>(tile(8 + d, 5)));
