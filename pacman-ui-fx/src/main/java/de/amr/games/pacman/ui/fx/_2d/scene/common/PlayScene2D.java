@@ -54,8 +54,6 @@ public class PlayScene2D extends GameScene2D {
 		for (var ghost : game.ghosts) {
 			ghost.setAnimations(new GhostAnimations(ghost.id, r2D));
 		}
-		game.bonus().setSymbolList(r2D.createBonusSymbolList());
-		game.bonus().setValueList(r2D.createBonusValueList());
 		game.bonus().setInactive();
 	}
 

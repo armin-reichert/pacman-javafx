@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx._2d.rendering.pacman;
 import static de.amr.games.pacman.model.common.actors.Ghost.PINK_GHOST;
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import java.util.List;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
@@ -115,8 +114,13 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public Rectangle2D getSymbolSprite(int symbol) {
+	public Rectangle2D getBonusSymbolSprite(int symbol) {
 		return tile(2 + symbol, 3);
+	}
+
+	@Override
+	public Rectangle2D getBonusValueSprite(int symbol) {
+		return symbol <= 3 ? tile(symbol, 9) : symbol == 4 ? tiles(4, 9, 2, 1) : tiles(3, symbol, 3, 1);
 	}
 
 	@Override
@@ -217,17 +221,6 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 			map.put(dir, new SimpleThingAnimation<>(tile(8 + d, 5)));
 		}
 		return map;
-	}
-
-	@Override
-	public List<Rectangle2D> createBonusSymbolList() {
-		return List.of(tilesToRight(2, 3, 8));
-	}
-
-	@Override
-	public List<Rectangle2D> createBonusValueList() {
-		return List.of(tile(0, 9), tile(1, 9), tile(2, 9), tile(3, 9), tiles(4, 9, 2, 1), tiles(3, 10, 3, 1),
-				tiles(3, 11, 3, 1), tiles(3, 12, 3, 1));
 	}
 
 	@Override

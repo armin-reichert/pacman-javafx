@@ -30,7 +30,6 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
 import javafx.scene.Group;
@@ -47,18 +46,12 @@ import javafx.util.Duration;
  */
 public class LevelCounter3D extends Group {
 
+	private final Rendering2D r2D;
 	private final V2d rightPosition;
-	private final Image[] symbolImages;
 
 	public LevelCounter3D(double x, double y, Rendering2D r2D) {
 		this.rightPosition = new V2d(x, y);
-		var symbolAnimation = r2D.createBonusSymbolList();
-		int n = symbolAnimation.size();
-		symbolImages = new Image[n];
-		for (int i = 0; i < n; ++i) {
-			// TODO provide a method in Rendering2D to get the subimage for a "sprite"
-			symbolImages[i] = ((Spritesheet) r2D).subImage(symbolAnimation.get(i));
-		}
+		this.r2D = r2D;
 	}
 
 	public void update(GameModel game) {
@@ -66,7 +59,8 @@ public class LevelCounter3D extends Group {
 		double x = rightPosition.x, y = rightPosition.y;
 		for (int i = 0; i < game.levelCounter.size(); ++i) {
 			int symbol = game.levelCounter.symbol(i);
-			Box cube = createSpinningCube(symbolImages[symbol], i % 2 == 0);
+			var symbolImage = r2D.getSpriteImage(r2D.getBonusSymbolSprite(symbol));
+			Box cube = createSpinningCube(symbolImage, i % 2 == 0);
 			cube.setTranslateX(x);
 			cube.setTranslateY(y);
 			cube.setTranslateZ(-HTS);

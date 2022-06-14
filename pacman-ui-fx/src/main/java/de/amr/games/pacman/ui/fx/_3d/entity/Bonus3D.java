@@ -46,14 +46,12 @@ import javafx.util.Duration;
  */
 public class Bonus3D extends Box {
 
+	private final Rendering2D r2D;
 	private final RotateTransition rotation;
-	private final Image[] bonusSymbolImages;
-	private final Image[] bonusValueImages;
 
 	public Bonus3D(Rendering2D r2D) {
 		super(TS, TS, TS);
-		bonusSymbolImages = r2D.getAnimationImages(r2D.createBonusSymbolList());
-		bonusValueImages = r2D.getAnimationImages(r2D.createBonusValueList());
+		this.r2D = r2D;
 		rotation = new RotateTransition(Duration.INDEFINITE);
 		rotation.setNode(this);
 		rotation.setAxis(Rotate.X_AXIS);
@@ -77,13 +75,13 @@ public class Bonus3D extends Box {
 	}
 
 	public void showSymbol(Bonus bonus) {
-		var texture = bonusSymbolImages[bonus.symbol()];
+		var texture = r2D.getSpriteImage(r2D.getBonusSymbolSprite(bonus.symbol()));
 		showRotating(texture, 1.0, Animation.INDEFINITE, 1);
 		setWidth(TS);
 	}
 
 	public void showPoints(Bonus bonus) {
-		var texture = bonusValueImages[bonus.symbol()];
+		var texture = r2D.getSpriteImage(r2D.getBonusValueSprite(bonus.symbol()));
 		showRotating(texture, 1.0, 5, 2);
 		setWidth(bonus.value() >= 1000 ? TS * 1.25 : TS);
 	}

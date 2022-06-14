@@ -97,7 +97,9 @@ public interface Rendering2D {
 
 	Rectangle2D getLifeSprite();
 
-	Rectangle2D getSymbolSprite(int symbol);
+	Rectangle2D getBonusSymbolSprite(int symbol);
+
+	Rectangle2D getBonusValueSprite(int symbol);
 
 	// Animations
 
@@ -114,10 +116,6 @@ public interface Rendering2D {
 	ThingAnimationMap<Direction, Rectangle2D> createGhostEyesAnimation();
 
 	SimpleThingAnimation<Image> createMazeFlashingAnimation(int mazeNumber);
-
-	List<Rectangle2D> createBonusSymbolList();
-
-	List<Rectangle2D> createBonusValueList();
 
 	ThingList<Rectangle2D> createGhostValueList();
 
@@ -196,12 +194,22 @@ public interface Rendering2D {
 	default void drawBonus(GraphicsContext g, Entity bonusEntity) {
 		if (bonusEntity instanceof StaticBonus) {
 			StaticBonus bonus = (StaticBonus) bonusEntity;
-			drawEntity(g, bonus, (Rectangle2D) bonus.getSprite());
+			var sprite = switch (bonus.state()) {
+			case INACTIVE -> null;
+			case EDIBLE -> getBonusSymbolSprite(bonus.symbol());
+			case EATEN -> getBonusValueSprite(bonus.symbol());
+			};
+			drawEntity(g, bonus, sprite);
 		} else if (bonusEntity instanceof MovingBonus) {
 			MovingBonus bonus = (MovingBonus) bonusEntity;
+			var sprite = switch (bonus.state()) {
+			case INACTIVE -> null;
+			case EDIBLE -> getBonusSymbolSprite(bonus.symbol());
+			case EATEN -> getBonusValueSprite(bonus.symbol());
+			};
 			g.save();
 			g.translate(0, bonus.dy());
-			drawEntity(g, bonus, (Rectangle2D) bonus.getSprite());
+			drawEntity(g, bonus, sprite);
 			g.restore();
 		}
 	}
@@ -252,8 +260,7 @@ public interface Rendering2D {
 		if (levelCounter.visible) {
 			double x = levelCounter.position.x;
 			for (int symbol : levelCounter.symbols) {
-				var sprite = getSymbolSprite(symbol);
-				drawSprite(g, sprite, x, levelCounter.position.y);
+				drawSprite(g, getBonusSymbolSprite(symbol), x, levelCounter.position.y);
 				x -= t(2);
 			}
 		}
