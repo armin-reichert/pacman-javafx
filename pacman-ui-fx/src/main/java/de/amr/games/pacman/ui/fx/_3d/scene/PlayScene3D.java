@@ -380,7 +380,7 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 	}
 
 	private void blockGameController() {
-		gameController.state().timer().setIndefinite();
+		gameController.state().timer().resetIndefinitely();
 	}
 
 	private void unblockGameController() {
