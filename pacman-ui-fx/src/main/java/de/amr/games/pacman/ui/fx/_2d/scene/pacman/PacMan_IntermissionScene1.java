@@ -27,7 +27,6 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.pacman.Intermission1Controller;
 import de.amr.games.pacman.controller.pacman.Intermission1Controller.State;
 import de.amr.games.pacman.lib.animation.SimpleThingAnimation;
-import de.amr.games.pacman.model.common.actors.GhostAnimationKey;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
@@ -67,13 +66,6 @@ public class PacMan_IntermissionScene1 extends GameScene2D {
 	@Override
 	public void doUpdate() {
 		sceneController.update();
-		$.blinky.animations().ifPresent(animations -> {
-			animations.select(switch ($.blinky.state) {
-			case FRIGHTENED -> GhostAnimationKey.ANIM_BLUE;
-			case HUNTING_PAC -> GhostAnimationKey.ANIM_COLOR;
-			default -> animations.selectedKey();
-			});
-		});
 	}
 
 	@Override
