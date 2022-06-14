@@ -79,7 +79,7 @@ public class MsPacMan_IntermissionScene3 extends GameScene2D {
 		r2D.drawPac(g, $.msPacMan);
 		r2D.drawPac(g, $.pacMan);
 		r2D.drawEntity(g, $.stork, storkAnimation.animate());
-		r2D.drawEntity(g, $.bag, $.bag.open ? ssmp.getJunior() : ssmp.getBlueBag());
+		r2D.drawEntity(g, $.bag, $.bagOpen ? ssmp.getJunior() : ssmp.getBlueBag());
 		r2D.drawLevelCounter(g, game.levelCounter);
 	}
 }
