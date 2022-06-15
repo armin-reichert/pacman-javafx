@@ -124,7 +124,7 @@ public class GameUI implements GameEventAdapter {
 		scene = new Scene(sceneRoot, width, height);
 		log("Main scene created. Size: %.0f x %.0f", scene.getWidth(), scene.getHeight());
 
-		initGameScenes(gameController);
+		allGameScenes().forEach(gameScene -> gameScene.setParent(scene));
 		updateGameScene(gameController.state(), true);
 		embedGameScene(currentGameScene, sceneRoot);
 
@@ -145,11 +145,9 @@ public class GameUI implements GameEventAdapter {
 		stage.show();
 	}
 
-	private void initGameScenes(GameController gameController) {
-		Stream.of(scenes_MsPacMan, scenes_PacMan).flatMap(Stream::of).flatMap(Stream::of).filter(Objects::nonNull)
-				.forEach(gameScene -> {
-					gameScene.setParent(scene);
-				});
+	private Stream<GameScene> allGameScenes() {
+		return Stream.concat(Stream.of(scenes_MsPacMan), Stream.of(scenes_PacMan)).flatMap(Stream::of)
+				.filter(Objects::nonNull);
 	}
 
 	public double getWidth() {
