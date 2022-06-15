@@ -31,13 +31,12 @@ import de.amr.games.pacman.lib.animation.ThingAnimation;
 import de.amr.games.pacman.lib.animation.ThingAnimationCollection;
 import de.amr.games.pacman.lib.animation.ThingAnimationMap;
 import de.amr.games.pacman.model.common.actors.Pac;
-import de.amr.games.pacman.model.common.actors.PacAnimationKey;
 import javafx.geometry.Rectangle2D;
 
 /**
  * @author Armin Reichert
  */
-public class PacAnimations extends ThingAnimationCollection<Pac, PacAnimationKey, Rectangle2D> {
+public class PacAnimations extends ThingAnimationCollection<Pac, String, Rectangle2D> {
 
 	protected ThingAnimationMap<Direction, Rectangle2D> munching;
 	protected ThingAnimation<Rectangle2D> dying;
@@ -45,7 +44,7 @@ public class PacAnimations extends ThingAnimationCollection<Pac, PacAnimationKey
 	public PacAnimations(Rendering2D r2D) {
 		munching = r2D.createPacMunchingAnimation();
 		dying = r2D.createPacDyingAnimation();
-		select(PacAnimationKey.ANIM_MUNCHING);
+		select("ANIM_MUNCHING");
 	}
 
 	@Override
@@ -54,10 +53,11 @@ public class PacAnimations extends ThingAnimationCollection<Pac, PacAnimationKey
 	}
 
 	@Override
-	public ThingAnimation<Rectangle2D> byKey(PacAnimationKey key) {
+	public ThingAnimation<Rectangle2D> byKey(String key) {
 		return switch (key) {
-		case ANIM_DYING -> dying;
-		case ANIM_MUNCHING -> munching;
+		case "ANIM_DYING" -> dying;
+		case "ANIM_MUNCHING" -> munching;
+		default -> null;
 		};
 	}
 
@@ -69,8 +69,9 @@ public class PacAnimations extends ThingAnimationCollection<Pac, PacAnimationKey
 	@Override
 	public Rectangle2D current(Pac pac) {
 		return switch (selectedKey) {
-		case ANIM_DYING -> dying.animate();
-		case ANIM_MUNCHING -> munching.get(pac.moveDir()).animate();
+		case "ANIM_DYING" -> dying.animate();
+		case "ANIM_MUNCHING" -> munching.get(pac.moveDir()).animate();
+		default -> null;
 		};
 	}
 }
