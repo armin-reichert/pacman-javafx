@@ -159,7 +159,7 @@ public class Section extends TitledPane {
 
 	public Slider addSlider(String labelText, double min, double max, double value) {
 		Slider slider = new Slider(min, max, value);
-		slider.setMinWidth(InfoView.COL_MIN_WIDTH);
+		slider.setMinWidth(Dashboard.COL_MIN_WIDTH);
 		addRow(labelText, slider);
 		return slider;
 	}

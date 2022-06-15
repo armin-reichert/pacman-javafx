@@ -31,11 +31,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
- * UI layer showing different info sections.
+ * Dashboard with different sections showing info and allowing configuration.
  * 
  * @author Armin Reichert
  */
-public class InfoView extends BorderPane {
+public class Dashboard extends BorderPane {
 
 	public static final int COL_MIN_WIDTH = 100;
 
@@ -47,7 +47,7 @@ public class InfoView extends BorderPane {
 	private Section2D section2D;
 	private SectionKeys sectionKeys;
 
-	public InfoView(GameUI ui, GameController gc) {
+	public Dashboard(GameUI ui, GameController gc) {
 		int minLabelWidth = 120;
 		Color textColor = Color.WHITE;
 		Font textFont = Font.font("Sans", 11);

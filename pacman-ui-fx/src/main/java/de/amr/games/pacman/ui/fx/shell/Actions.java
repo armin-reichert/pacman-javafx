@@ -143,7 +143,7 @@ public class Actions {
 		var game = theGameController.game();
 		var state = theGameController.state();
 		if (theUI.getFittingScene(game, state, GameUI.SCENE_2D) != theUI.getFittingScene(game, state, GameUI.SCENE_3D)) {
-			theUI.updateGameScene(theGameController.state(), true);
+			theUI.updateCurrentGameScene(theGameController.state(), true);
 			if (theUI.getCurrentGameScene() instanceof PlayScene2D) {
 				((PlayScene2D) theUI.getCurrentGameScene()).onSwitchFrom3DScene();
 			} else if (theUI.getCurrentGameScene() instanceof PlayScene3D) {

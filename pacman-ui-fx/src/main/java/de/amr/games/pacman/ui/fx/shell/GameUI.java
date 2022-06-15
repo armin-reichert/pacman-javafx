@@ -51,7 +51,7 @@ import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.shell.info.InfoView;
+import de.amr.games.pacman.ui.fx.shell.info.Dashboard;
 import de.amr.games.pacman.ui.fx.sound.MsPacManGameSounds;
 import de.amr.games.pacman.ui.fx.sound.PacManGameSounds;
 import de.amr.games.pacman.ui.fx.util.U;
@@ -101,7 +101,7 @@ public class GameUI implements GameEventAdapter {
 	private final Stage stage;
 	private final Scene scene;
 	private final StackPane sceneRoot;
-	private final InfoView infoView;
+	private final Dashboard dashboard;
 	private final FlashMessageView flashMessageView;
 
 	private GameScene currentGameScene;
@@ -112,35 +112,34 @@ public class GameUI implements GameEventAdapter {
 
 		GameEvents.addEventListener(this);
 
-		var pacController = new PacController(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
-		gameController.setPacController(pacController);
-		gameController.game(GameVariant.MS_PACMAN).setSounds(new MsPacManGameSounds());
-		gameController.game(GameVariant.PACMAN).setSounds(new PacManGameSounds());
-
-		// UI has 3 layers: game scene, info view, flash message view
+		// UI has 3 layers. From bottom to top: game scene, dashboard, flash message view.
 		flashMessageView = new FlashMessageView();
-		infoView = new InfoView(this, gameController);
-		sceneRoot = new StackPane(new Region() /* placeholder for game scene */, infoView, flashMessageView);
+		dashboard = new Dashboard(this, gameController);
+		sceneRoot = new StackPane(new Region() /* placeholder for game scene */, dashboard, flashMessageView);
+		Env.$drawMode3D.addListener((x, y, z) -> sceneRoot.setBackground(computeMainSceneBackground()));
+
 		scene = new Scene(sceneRoot, width, height);
 		log("Main scene created. Size: %.0f x %.0f", scene.getWidth(), scene.getHeight());
 
+		var pacSteering = new KeyboardPacSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
+		gameController.setPacSteering(pacSteering);
+		gameController.game(GameVariant.MS_PACMAN).setSounds(new MsPacManGameSounds());
+		gameController.game(GameVariant.PACMAN).setSounds(new PacManGameSounds());
 		allGameScenes().forEach(gameScene -> gameScene.setParent(scene));
-		updateGameScene(gameController.state(), true);
-		embedGameScene(currentGameScene, sceneRoot);
 
 		// Keyboard input handling
 		scene.setOnKeyPressed(Keyboard::processEvent);
 		Keyboard.addHandler(this::onKeyPressed);
-		Keyboard.addHandler(() -> pacController.onKeyPressed());
+		Keyboard.addHandler(() -> pacSteering.onKeyPressed());
 		Keyboard.addHandler(() -> currentGameScene.onKeyPressed());
 
-		Env.$drawMode3D.addListener((x, y, z) -> sceneRoot.setBackground(computeMainSceneBackground()));
+		updateCurrentGameScene(gameController.state(), true);
 
-		stage.setScene(scene);
 		stage.setMinHeight(328);
 		stage.setMinWidth(241);
 		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
 		stage.setOnCloseRequest(e -> GameLoop.get().stop());
+		stage.setScene(scene);
 		stage.centerOnScreen();
 		stage.show();
 	}
@@ -170,8 +169,8 @@ public class GameUI implements GameEventAdapter {
 		return flashMessageView;
 	}
 
-	public InfoView getInfoLayer() {
-		return infoView;
+	public Dashboard getInfoLayer() {
+		return dashboard;
 	}
 
 	public GameScene getCurrentGameScene() {
@@ -219,12 +218,12 @@ public class GameUI implements GameEventAdapter {
 
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
-		updateGameScene(e.newGameState, false);
+		updateCurrentGameScene(e.newGameState, false);
 	}
 
 	@Override
 	public void onUIForceUpdate(GameEvent e) {
-		updateGameScene(gameController.state(), true);
+		updateCurrentGameScene(gameController.state(), true);
 	}
 
 	/**
@@ -232,7 +231,7 @@ public class GameUI implements GameEventAdapter {
 	 */
 	public void render() {
 		flashMessageView.update();
-		infoView.update();
+		dashboard.update();
 		stage.setTitle(gameController.game().variant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
 	}
 
@@ -240,7 +239,7 @@ public class GameUI implements GameEventAdapter {
 		stage.setFullScreen(fullscreen);
 	}
 
-	void updateGameScene(GameState gameState, boolean forcedSceneUpdate) {
+	void updateCurrentGameScene(GameState gameState, boolean forcedSceneUpdate) {
 		var dim = Env.$3D.get() ? SCENE_3D : SCENE_2D;
 		var newGameScene = getFittingScene(gameController.game(), gameController.state(), dim);
 		if (newGameScene == null) {
