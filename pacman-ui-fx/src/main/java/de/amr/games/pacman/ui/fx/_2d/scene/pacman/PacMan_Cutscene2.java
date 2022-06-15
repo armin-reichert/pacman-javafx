@@ -58,7 +58,7 @@ public class PacMan_Cutscene2 extends GameScene2D {
 
 	@Override
 	public void init() {
-		frame = 0;
+		frame = -1;
 		initialDelay = 120;
 
 		pac = new Pac("Pac-Man");
@@ -89,13 +89,14 @@ public class PacMan_Cutscene2 extends GameScene2D {
 			--initialDelay;
 			return;
 		}
+		++frame;
 		if (frame == 0) {
 			game.sounds().ifPresent(snd -> snd.play(GameSound.INTERMISSION_1));
 		} else if (frame == 110) {
 			blinky.setAbsSpeed(1.25);
 			blinky.show();
 		} else if (frame == 196) {
-			blinky.setAbsSpeed(1.0 / 7.0);
+			blinky.setAbsSpeed(0.15);
 			stretchedDress = ((Spritesheet_PacMan) r2D).createBlinkyStretchedAnimation();
 			stretchedDress.setFrameIndex(0);
 		} else if (frame == 226) {
@@ -117,7 +118,6 @@ public class PacMan_Cutscene2 extends GameScene2D {
 		}
 		pac.move();
 		blinky.move();
-		++frame;
 	}
 
 	@Override

@@ -58,6 +58,7 @@ public class PacMan_Cutscene1 extends GameScene2D {
 	public void init() {
 		frame = 0;
 		initialDelay = 120;
+
 		pac = new Pac("Pac-Man");
 		pac.setAnimations(new PacAnimations(r2D));
 		pac.animations().get().select(PacAnimationKey.ANIM_MUNCHING);
@@ -66,6 +67,9 @@ public class PacMan_Cutscene1 extends GameScene2D {
 		pac.setMoveDir(Direction.LEFT);
 		pac.setAbsSpeed(1.25);
 		pac.show();
+
+		bigPacAnimation = null;
+
 		blinky = new Ghost(Ghost.RED_GHOST, "Blinky");
 		blinky.setAnimations(new GhostAnimations(Ghost.RED_GHOST, r2D));
 		blinky.animations().get().select(GhostAnimationKey.ANIM_COLOR);
