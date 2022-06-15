@@ -240,7 +240,7 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 
 	public SimpleThingAnimation<Rectangle2D> createBigPacManMunchingAnimation() {
 		var animation = new SimpleThingAnimation<>(tiles(2, 1, 2, 2), tiles(4, 1, 2, 2), tiles(6, 1, 2, 2));
-		animation.frameDuration(4);
+		animation.frameDuration(3);
 		animation.repeatForever();
 		return animation;
 	}
