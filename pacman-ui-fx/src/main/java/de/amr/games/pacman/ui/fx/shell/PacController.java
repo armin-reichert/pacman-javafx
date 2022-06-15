@@ -37,24 +37,24 @@ import javafx.scene.input.KeyCode;
 public class PacController implements Consumer<Creature> {
 
 	private Direction dir;
-	private final KeyCode codeUp, codeDown, codeLeft, codeRight;
+	private final KeyCode up, down, left, right;
 
 	public PacController(KeyCode up, KeyCode down, KeyCode left, KeyCode right) {
-		this.codeUp = up;
-		this.codeDown = down;
-		this.codeLeft = left;
-		this.codeRight = right;
+		this.up = up;
+		this.down = down;
+		this.left = left;
+		this.right = right;
 	}
 
 	public void onKeyPressed() {
 		dir = null;
-		if (Keyboard.pressed(codeUp)) {
+		if (Keyboard.pressed(up)) {
 			dir = Direction.UP;
-		} else if (Keyboard.pressed(codeDown)) {
+		} else if (Keyboard.pressed(down)) {
 			dir = Direction.DOWN;
-		} else if (Keyboard.pressed(codeLeft)) {
+		} else if (Keyboard.pressed(left)) {
 			dir = Direction.LEFT;
-		} else if (Keyboard.pressed(codeRight)) {
+		} else if (Keyboard.pressed(right)) {
 			dir = Direction.RIGHT;
 		}
 	}
