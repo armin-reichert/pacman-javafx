@@ -222,7 +222,7 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 		getCamera().update(player3D);
 	}
 
-	public void onSwitchFrom2DScene() {
+	public void onSwitchFrom2D() {
 		if (game.pac.hasPower()) {
 			Stream.of(ghosts3D) //
 					.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))

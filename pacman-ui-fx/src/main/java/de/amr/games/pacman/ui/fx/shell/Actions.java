@@ -28,8 +28,6 @@ import static de.amr.games.pacman.lib.Logging.log;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
-import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
-import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import javafx.scene.shape.DrawMode;
@@ -139,17 +137,7 @@ public class Actions {
 	}
 
 	public static void toggleUse3DScene() {
-		Env.toggle(Env.$3D);
-		var game = theGameController.game();
-		var state = theGameController.state();
-		if (theUI.findGameScene(game, state, GameUI.SCENE_2D) != theUI.findGameScene(game, state, GameUI.SCENE_3D)) {
-			theUI.updateCurrentGameScene(theGameController.state(), true);
-			if (theUI.getCurrentGameScene() instanceof PlayScene2D) {
-				((PlayScene2D) theUI.getCurrentGameScene()).onSwitchFrom3DScene();
-			} else if (theUI.getCurrentGameScene() instanceof PlayScene3D) {
-				((PlayScene3D) theUI.getCurrentGameScene()).onSwitchFrom2DScene();
-			}
-		}
+		theUI.toggle3D();
 		showFlashMessage(Env.message(Env.$3D.get() ? "use_3D_scene" : "use_2D_scene"));
 	}
 

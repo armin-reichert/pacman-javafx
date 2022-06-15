@@ -239,7 +239,21 @@ public class GameUI implements GameEventAdapter {
 		stage.setFullScreen(fullscreen);
 	}
 
-	void updateCurrentGameScene(GameState gameState, boolean forcedSceneUpdate) {
+	public void toggle3D() {
+		Env.toggle(Env.$3D);
+		var game = gameController.game();
+		var state = gameController.state();
+		if (findGameScene(game, state, SCENE_2D) != findGameScene(game, state, SCENE_3D)) {
+			updateCurrentGameScene(state, true);
+			if (currentGameScene instanceof PlayScene2D) {
+				((PlayScene2D) currentGameScene).onSwitchFrom3D();
+			} else if (currentGameScene instanceof PlayScene3D) {
+				((PlayScene3D) currentGameScene).onSwitchFrom2D();
+			}
+		}
+	}
+
+	private void updateCurrentGameScene(GameState gameState, boolean forcedSceneUpdate) {
 		var dim = Env.$3D.get() ? SCENE_3D : SCENE_2D;
 		var newGameScene = findGameScene(gameController.game(), gameController.state(), dim);
 		if (newGameScene == null) {

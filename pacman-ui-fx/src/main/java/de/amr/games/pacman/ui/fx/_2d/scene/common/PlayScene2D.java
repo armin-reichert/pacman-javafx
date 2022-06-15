@@ -103,7 +103,7 @@ public class PlayScene2D extends GameScene2D {
 		r2D.drawLevelCounter(g, game.levelCounter);
 	}
 
-	public void onSwitchFrom3DScene() {
+	public void onSwitchFrom3D() {
 		game.pac.animations().get().ensureRunning();
 		for (var ghost : game.ghosts) {
 			ghost.animations().get().ensureRunning();
