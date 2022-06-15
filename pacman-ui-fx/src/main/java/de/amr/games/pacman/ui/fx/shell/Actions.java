@@ -90,7 +90,7 @@ public class Actions {
 	}
 
 	public static void toggleInfoPanelsVisible() {
-		Env.toggle(theUI.getInfoLayer().visibleProperty());
+		Env.toggle(theUI.getDashboard().visibleProperty());
 	}
 
 	public static void togglePaused() {
@@ -142,7 +142,7 @@ public class Actions {
 		Env.toggle(Env.$3D);
 		var game = theGameController.game();
 		var state = theGameController.state();
-		if (theUI.getFittingScene(game, state, GameUI.SCENE_2D) != theUI.getFittingScene(game, state, GameUI.SCENE_3D)) {
+		if (theUI.findGameScene(game, state, GameUI.SCENE_2D) != theUI.findGameScene(game, state, GameUI.SCENE_3D)) {
 			theUI.updateCurrentGameScene(theGameController.state(), true);
 			if (theUI.getCurrentGameScene() instanceof PlayScene2D) {
 				((PlayScene2D) theUI.getCurrentGameScene()).onSwitchFrom3DScene();

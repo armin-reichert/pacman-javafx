@@ -139,6 +139,7 @@ public class GameUI implements GameEventAdapter {
 		stage.setMinWidth(241);
 		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
 		stage.setOnCloseRequest(e -> GameLoop.get().stop());
+		stage.setTitle(gameController.game().variant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
 		stage.setScene(scene);
 		stage.centerOnScreen();
 		stage.show();
@@ -169,7 +170,7 @@ public class GameUI implements GameEventAdapter {
 		return flashMessageView;
 	}
 
-	public Dashboard getInfoLayer() {
+	public Dashboard getDashboard() {
 		return dashboard;
 	}
 
@@ -178,14 +179,14 @@ public class GameUI implements GameEventAdapter {
 	}
 
 	/**
-	 * Returns the scene that fits the current game state.
+	 * Returns the game scene that fits the current game state.
 	 *
 	 * @param game      the game model (Pac-Man or Ms. Pac-Man)
 	 * @param gameState the current game state
 	 * @param dimension {@link GameScenes#SCENE_2D} or {@link GameScenes#SCENE_3D}
 	 * @return the game scene that fits the current game state
 	 */
-	public GameScene getFittingScene(GameModel game, GameState gameState, int dimension) {
+	public GameScene findGameScene(GameModel game, GameState gameState, int dimension) {
 		var scenes = switch (game.variant) {
 		case MS_PACMAN -> scenes_MsPacMan;
 		case PACMAN -> scenes_PacMan;
@@ -197,8 +198,8 @@ public class GameUI implements GameEventAdapter {
 		case INTERMISSION_TEST -> 1 + game.intermissionTestNumber;
 		default -> 5;
 		};
-		var fittingScene = scenes[sceneIndex][dimension];
-		return fittingScene != null ? fittingScene : scenes[sceneIndex][SCENE_2D]; // use 2D as default
+		var gameScene = scenes[sceneIndex][dimension];
+		return gameScene != null ? gameScene : scenes[sceneIndex][SCENE_2D]; // use 2D as default
 	}
 
 	/**
@@ -232,7 +233,6 @@ public class GameUI implements GameEventAdapter {
 	public void render() {
 		flashMessageView.update();
 		dashboard.update();
-		stage.setTitle(gameController.game().variant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
 	}
 
 	public void setFullScreen(boolean fullscreen) {
@@ -241,7 +241,7 @@ public class GameUI implements GameEventAdapter {
 
 	void updateCurrentGameScene(GameState gameState, boolean forcedSceneUpdate) {
 		var dim = Env.$3D.get() ? SCENE_3D : SCENE_2D;
-		var newGameScene = getFittingScene(gameController.game(), gameController.state(), dim);
+		var newGameScene = findGameScene(gameController.game(), gameController.state(), dim);
 		if (newGameScene == null) {
 			throw new IllegalStateException("No fitting game scene found for game state " + gameState);
 		}
@@ -251,6 +251,8 @@ public class GameUI implements GameEventAdapter {
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
+		// just here for simplicity
+		stage.setTitle(gameController.game().variant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
 		log("Current scene changed from %s to %s", currentGameScene, newGameScene);
 		currentGameScene = newGameScene;
 		embedGameScene(currentGameScene, sceneRoot);
