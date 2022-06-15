@@ -77,10 +77,10 @@ public class PacMan_IntermissionScene2 extends GameScene2D {
 		r2D.drawLevelCounter(g, game.levelCounter);
 		r2D.drawPac(g, $.pac);
 		r2D.drawEntity(g, $.nail, Spritesheet_PacMan.get().getNail());
-		if (sceneController.nailDistance() < 0) {
+		if (sceneController.context().nailDistance() < 0) {
 			r2D.drawGhost(g, $.blinky);
 		} else {
-			drawBlinkyStretched($.blinky, $.nail.position, sceneController.nailDistance() / 4);
+			drawBlinkyStretched($.blinky, $.nail.position, sceneController.context().nailDistance() / 4);
 		}
 	}
 
