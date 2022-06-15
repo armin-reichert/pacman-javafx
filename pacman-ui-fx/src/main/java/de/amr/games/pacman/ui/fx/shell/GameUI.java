@@ -119,13 +119,13 @@ public class GameUI implements GameEventAdapter {
 		Env.$drawMode3D.addListener((x, y, z) -> sceneRoot.setBackground(computeMainSceneBackground()));
 
 		scene = new Scene(sceneRoot, width, height);
+		allGameScenes().forEach(gameScene -> gameScene.setParent(scene));
 		log("Main scene created. Size: %.0f x %.0f", scene.getWidth(), scene.getHeight());
 
 		var pacSteering = new KeyboardPacSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 		gameController.setPacSteering(pacSteering);
 		gameController.game(GameVariant.MS_PACMAN).setSounds(new MsPacManGameSounds());
 		gameController.game(GameVariant.PACMAN).setSounds(new PacManGameSounds());
-		allGameScenes().forEach(gameScene -> gameScene.setParent(scene));
 
 		// Keyboard input handling
 		scene.setOnKeyPressed(Keyboard::processEvent);
