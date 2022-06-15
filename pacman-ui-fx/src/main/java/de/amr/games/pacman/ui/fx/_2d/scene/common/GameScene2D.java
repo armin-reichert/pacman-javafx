@@ -134,7 +134,7 @@ public abstract class GameScene2D implements GameEventAdapter, GameScene {
 		g.setFill(Color.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		doRender(g);
-		if (Env.$tilesVisible.get()) {
+		if (Env.$debugUI.get()) {
 			r2D.drawGrid(g);
 		}
 	}

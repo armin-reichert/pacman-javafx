@@ -115,10 +115,10 @@ public class PacMan_Cutscene1 extends GameScene2D {
 				g.fillText("Frame %d".formatted(frame), t(3), t(3));
 			}
 		}
-		if (frame <= 400) {
-			r2D.drawPac(g, pac);
-		} else {
+		if (bigPacAnimation != null) {
 			r2D.drawEntity(g, pac, bigPacAnimation.animate());
+		} else {
+			r2D.drawPac(g, pac);
 		}
 		r2D.drawGhost(g, blinky);
 	}

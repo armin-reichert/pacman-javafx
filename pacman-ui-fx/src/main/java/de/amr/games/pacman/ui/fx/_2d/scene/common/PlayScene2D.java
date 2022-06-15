@@ -88,7 +88,7 @@ public class PlayScene2D extends GameScene2D {
 		} else {
 			r2D.drawWorld(g, game.level.world, r2D.mazeNumber(game.level.number), !game.energizerPulse.frame());
 		}
-		if (Env.$tilesVisible.get()) {
+		if (Env.$debugUI.get()) {
 			r2D.drawGrid(g);
 		}
 		r2D.drawGameStateMessage(g, hasCredit() ? gameController.state() : GameState.GAME_OVER);

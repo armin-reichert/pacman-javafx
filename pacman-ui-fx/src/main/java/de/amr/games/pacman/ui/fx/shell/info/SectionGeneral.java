@@ -49,6 +49,7 @@ public class SectionGeneral extends Section {
 	private Button[] btnsSimulation;
 	private Slider sliderTargetFPS;
 	private CheckBox cbUsePlayScene3D;
+	private CheckBox cbDebugUI;
 	private ImageView iconPlay = U.imageView("/common/icons/play.png");
 	private ImageView iconStop = U.imageView("/common/icons/stop.png");
 	private ImageView iconStep = U.imageView("/common/icons/step.png");
@@ -84,7 +85,7 @@ public class SectionGeneral extends Section {
 		addInfo("Total Ticks", GameLoop.get()::getTotalTicks);
 
 		cbUsePlayScene3D = addCheckBox("Use 3D play scene", Actions::toggleUse3DScene);
-
+		cbDebugUI = addCheckBox("Show UI Debug Stuff", () -> Env.toggle(Env.$debugUI));
 		addInfo("Main scene", () -> String.format("w=%.0f h=%.0f", ui.getMainSceneWidth(), ui.getMainSceneHeight()));
 	}
 
@@ -96,5 +97,6 @@ public class SectionGeneral extends Section {
 		btnsSimulation[1].setDisable(!Env.$paused.get());
 		sliderTargetFPS.setValue(GameLoop.get().getTargetFrameRate());
 		cbUsePlayScene3D.setSelected(Env.$3D.get());
+		cbDebugUI.setSelected(Env.$debugUI.get());
 	}
 }
