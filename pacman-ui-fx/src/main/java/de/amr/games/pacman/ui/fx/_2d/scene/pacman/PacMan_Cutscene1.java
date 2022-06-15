@@ -56,7 +56,7 @@ public class PacMan_Cutscene1 extends GameScene2D {
 
 	@Override
 	public void init() {
-		frame = 0;
+		frame = -1;
 		initialDelay = 120;
 
 		pac = new Pac("Pac-Man");
@@ -86,6 +86,7 @@ public class PacMan_Cutscene1 extends GameScene2D {
 			--initialDelay;
 			return;
 		}
+		++frame;
 		if (frame == 0) {
 			game.sounds().ifPresent(snd -> snd.loop(GameSound.INTERMISSION_1, 2));
 		} else if (frame == 260) {
@@ -105,7 +106,6 @@ public class PacMan_Cutscene1 extends GameScene2D {
 		}
 		pac.move();
 		blinky.move();
-		++frame;
 	}
 
 	@Override
