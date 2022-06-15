@@ -74,6 +74,9 @@ public interface GameScene extends GameEventListener {
 	 */
 	void setParent(Scene parent);
 
+	default void resize(double height) {
+	}
+
 	/**
 	 * @return if this is a scene with 3D content
 	 */

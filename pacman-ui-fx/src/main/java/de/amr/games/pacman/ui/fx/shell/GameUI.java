@@ -36,7 +36,6 @@ import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_CreditScene;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntermissionScene1;
@@ -52,7 +51,7 @@ import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.shell.info.InfoLayer;
+import de.amr.games.pacman.ui.fx.shell.info.InfoView;
 import de.amr.games.pacman.ui.fx.sound.MsPacManGameSounds;
 import de.amr.games.pacman.ui.fx.sound.PacManGameSounds;
 import de.amr.games.pacman.ui.fx.util.U;
@@ -98,13 +97,12 @@ public class GameUI implements GameEventAdapter {
 		//@formatter:on
 	};
 
-	private final Stage stage;
-	private final Scene mainScene;
-	private final StackPane mainSceneRoot;
-	private final InfoLayer infoLayer;
-	private final FlashMessageView flashMessageLayer;
 	private final GameController gameController;
-	private final PacController pacController = new PacController(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
+	private final Stage stage;
+	private final Scene scene;
+	private final StackPane sceneRoot;
+	private final InfoView infoView;
+	private final FlashMessageView flashMessageView;
 
 	private GameScene currentGameScene;
 
@@ -112,34 +110,35 @@ public class GameUI implements GameEventAdapter {
 		this.gameController = gameController;
 		this.stage = stage;
 
-		gameController.setPacController(pacController);
 		GameEvents.addEventListener(this);
 
+		var pacController = new PacController(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
+		gameController.setPacController(pacController);
 		gameController.game(GameVariant.MS_PACMAN).setSounds(new MsPacManGameSounds());
 		gameController.game(GameVariant.PACMAN).setSounds(new PacManGameSounds());
 
-		this.flashMessageLayer = new FlashMessageView();
-		this.infoLayer = new InfoLayer(this, gameController);
-
-		// first child is placeholder for subscene assigned to current game scene
-		mainSceneRoot = new StackPane(new Region(), infoLayer, flashMessageLayer);
-		mainScene = new Scene(mainSceneRoot, width, height);
-		log("Main scene created. Size: %.0f x %.0f", mainScene.getWidth(), mainScene.getHeight());
+		// UI has 3 layers: game scene, info view, flash message view
+		flashMessageView = new FlashMessageView();
+		infoView = new InfoView(this, gameController);
+		sceneRoot = new StackPane(new Region() /* placeholder for game scene */, infoView, flashMessageView);
+		scene = new Scene(sceneRoot, width, height);
+		log("Main scene created. Size: %.0f x %.0f", scene.getWidth(), scene.getHeight());
 
 		initGameScenes(gameController);
 		updateGameScene(gameController.state(), true);
-		embedCurrentGameScene();
+		embedGameScene(currentGameScene, sceneRoot);
 
 		// Keyboard input handling
-		mainScene.setOnKeyPressed(Keyboard::processEvent);
+		scene.setOnKeyPressed(Keyboard::processEvent);
 		Keyboard.addHandler(this::onKeyPressed);
 		Keyboard.addHandler(() -> pacController.onKeyPressed());
 		Keyboard.addHandler(() -> currentGameScene.onKeyPressed());
 
-		Env.$drawMode3D.addListener((x, y, z) -> mainSceneRoot.setBackground(computeMainSceneBackground()));
+		Env.$drawMode3D.addListener((x, y, z) -> sceneRoot.setBackground(computeMainSceneBackground()));
 
-		stage.setScene(mainScene);
-		stage.setMinHeight(327);
+		stage.setScene(scene);
+		stage.setMinHeight(328);
+		stage.setMinWidth(241);
 		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
 		stage.setOnCloseRequest(e -> GameLoop.get().stop());
 		stage.centerOnScreen();
@@ -149,7 +148,7 @@ public class GameUI implements GameEventAdapter {
 	private void initGameScenes(GameController gameController) {
 		Stream.of(scenes_MsPacMan, scenes_PacMan).flatMap(Stream::of).flatMap(Stream::of).filter(Objects::nonNull)
 				.forEach(gameScene -> {
-					gameScene.setParent(mainScene);
+					gameScene.setParent(scene);
 				});
 	}
 
@@ -162,19 +161,19 @@ public class GameUI implements GameEventAdapter {
 	}
 
 	public double getMainSceneWidth() {
-		return mainScene.getWidth();
+		return scene.getWidth();
 	}
 
 	public double getMainSceneHeight() {
-		return mainScene.getHeight();
+		return scene.getHeight();
 	}
 
 	public FlashMessageView getFlashMessageView() {
-		return flashMessageLayer;
+		return flashMessageView;
 	}
 
-	public InfoLayer getInfoLayer() {
-		return infoLayer;
+	public InfoView getInfoLayer() {
+		return infoView;
 	}
 
 	public GameScene getCurrentGameScene() {
@@ -234,8 +233,8 @@ public class GameUI implements GameEventAdapter {
 	 * Called on every tick (also if simulation is paused).
 	 */
 	public void render() {
-		flashMessageLayer.update();
-		infoLayer.update();
+		flashMessageView.update();
+		infoView.update();
 		stage.setTitle(gameController.game().variant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
 	}
 
@@ -257,17 +256,15 @@ public class GameUI implements GameEventAdapter {
 		}
 		log("Current scene changed from %s to %s", currentGameScene, newGameScene);
 		currentGameScene = newGameScene;
-		embedCurrentGameScene();
+		embedGameScene(currentGameScene, sceneRoot);
 		currentGameScene.setSceneContext(gameController);
 		currentGameScene.init();
 	}
 
-	private void embedCurrentGameScene() {
-		mainSceneRoot.getChildren().set(0, currentGameScene.getFXSubScene());
-		if (currentGameScene instanceof GameScene2D) {
-			((GameScene2D) currentGameScene).resize(mainScene.getHeight());
-		}
-		mainSceneRoot.setBackground(computeMainSceneBackground());
+	private void embedGameScene(GameScene gameScene, StackPane parent) {
+		parent.getChildren().set(0, gameScene.getFXSubScene());
+		gameScene.resize(parent.getHeight());
+		parent.setBackground(computeMainSceneBackground());
 	}
 
 	private Background computeMainSceneBackground() {

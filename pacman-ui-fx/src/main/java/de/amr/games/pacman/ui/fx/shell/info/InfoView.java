@@ -35,7 +35,7 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public class InfoLayer extends BorderPane {
+public class InfoView extends BorderPane {
 
 	public static final int COL_MIN_WIDTH = 100;
 
@@ -47,7 +47,7 @@ public class InfoLayer extends BorderPane {
 	private Section2D section2D;
 	private SectionKeys sectionKeys;
 
-	public InfoLayer(GameUI ui, GameController gc) {
+	public InfoView(GameUI ui, GameController gc) {
 		int minLabelWidth = 120;
 		Color textColor = Color.WHITE;
 		Font textFont = Font.font("Sans", 11);

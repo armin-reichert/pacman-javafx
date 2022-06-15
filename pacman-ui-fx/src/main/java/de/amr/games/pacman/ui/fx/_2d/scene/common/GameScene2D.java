@@ -102,6 +102,7 @@ public abstract class GameScene2D implements GameEventAdapter, GameScene {
 		return canvas;
 	}
 
+	@Override
 	public void resize(double height) {
 		double aspectRatio = unscaledSize.x / unscaledSize.y;
 		double width = aspectRatio * height;
