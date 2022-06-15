@@ -48,13 +48,13 @@ public class KeyboardPacSteering implements Consumer<Creature> {
 
 	public void onKeyPressed() {
 		dir = null;
-		if (Keyboard.pressed(up)) {
+		if (Keyboard.pressed(up) || Keyboard.pressed(Keyboard.SHIFT, up)) {
 			dir = Direction.UP;
-		} else if (Keyboard.pressed(down)) {
+		} else if (Keyboard.pressed(down) || Keyboard.pressed(Keyboard.SHIFT, down)) {
 			dir = Direction.DOWN;
-		} else if (Keyboard.pressed(left)) {
+		} else if (Keyboard.pressed(left) || Keyboard.pressed(Keyboard.SHIFT, left)) {
 			dir = Direction.LEFT;
-		} else if (Keyboard.pressed(right)) {
+		} else if (Keyboard.pressed(right) || Keyboard.pressed(Keyboard.SHIFT, right)) {
 			dir = Direction.RIGHT;
 		}
 	}

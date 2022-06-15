@@ -92,9 +92,9 @@ public class PlayScene2D extends GameScene2D {
 			r2D.drawGrid(g);
 		}
 		r2D.drawGameStateMessage(g, hasCredit() ? gameController.state() : GameState.GAME_OVER);
+		r2D.drawBonus(g, game.bonus().entity());
 		r2D.drawPac(g, game.pac);
 		r2D.drawGhosts(g, game.ghosts);
-		r2D.drawBonus(g, game.bonus().entity());
 		if (creditVisible) {
 			r2D.drawCredit(g, game.credit());
 		} else {
