@@ -34,7 +34,7 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class GhostAnimations extends Animations<Ghost, String> {
+public class GhostAnimations extends Animations<Ghost> {
 
 	private ThingAnimationMap<Direction, Rectangle2D> eyesByDir;
 	private ThingAnimationMap<Direction, Rectangle2D> colorByDir;

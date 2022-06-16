@@ -35,7 +35,7 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class PacAnimations extends Animations<Pac, String> {
+public class PacAnimations extends Animations<Pac> {
 
 	public PacAnimations(Rendering2D r2D) {
 		animationsByName = new HashMap<>(2);
