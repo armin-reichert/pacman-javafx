@@ -36,17 +36,12 @@ import javafx.geometry.Rectangle2D;
  */
 public class GhostAnimations extends SpriteAnimations<Ghost> {
 
-	private SpriteAnimationMap<Direction, Rectangle2D> eyesByDir;
-	private SpriteAnimationMap<Direction, Rectangle2D> colorByDir;
-
 	public GhostAnimations(int ghostID, Rendering2D r2D) {
-		eyesByDir = r2D.createGhostEyesAnimationMap();
-		colorByDir = r2D.createGhostColorAnimationMap(ghostID);
 		animationsByName = Map.of(//
-				"eyes", eyesByDir, //
+				"eyes", r2D.createGhostEyesAnimationMap(), //
 				"flashing", r2D.createGhostFlashingAnimation(), //
 				"blue", r2D.createGhostBlueAnimation(), //
-				"color", colorByDir, //
+				"color", r2D.createGhostColorAnimationMap(ghostID), //
 				"value", r2D.createGhostValueList());
 		select("color");
 	}
@@ -54,9 +49,14 @@ public class GhostAnimations extends SpriteAnimations<Ghost> {
 	@Override
 	public Rectangle2D current(Ghost ghost) {
 		return switch (selected) {
-		case "eyes" -> eyesByDir.get(ghost.wishDir()).animate();
-		case "color" -> colorByDir.get(ghost.wishDir()).animate();
+		case "eyes" -> castToMap("eyes").get(ghost.wishDir()).animate();
+		case "color" -> castToMap("color").get(ghost.wishDir()).animate();
 		default -> (Rectangle2D) selectedAnimation().animate();
 		};
+	}
+
+	@SuppressWarnings("unchecked")
+	private SpriteAnimationMap<Direction, Rectangle2D> castToMap(String name) {
+		return (SpriteAnimationMap<Direction, Rectangle2D>) byName(name);
 	}
 }
