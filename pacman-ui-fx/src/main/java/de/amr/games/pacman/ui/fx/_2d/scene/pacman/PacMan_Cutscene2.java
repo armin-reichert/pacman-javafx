@@ -70,8 +70,8 @@ public class PacMan_Cutscene2 extends GameScene2D {
 
 		blinky = new Ghost(Ghost.RED_GHOST, "Blinky");
 		blinky.setAnimations(new GhostAnimations(Ghost.RED_GHOST, r2D));
-		blinky.animations().get().select("ANIM_COLOR");
-		blinky.animation("ANIM_COLOR").get().restart();
+		blinky.animations().get().select("ghost-anim-color");
+		blinky.animation("ghost-anim-color").get().restart();
 		blinky.placeAt(v(28, 20), 0, 0);
 		blinky.setBothDirs(Direction.LEFT);
 		blinky.hide();

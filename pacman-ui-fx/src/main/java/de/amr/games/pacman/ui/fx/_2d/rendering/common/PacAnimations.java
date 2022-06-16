@@ -24,6 +24,8 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
+import java.util.HashMap;
+
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.ThingAnimation;
 import de.amr.games.pacman.lib.animation.ThingAnimationCollection;
@@ -40,6 +42,7 @@ public class PacAnimations extends ThingAnimationCollection<Pac, String, Rectang
 	protected ThingAnimation<Rectangle2D> dying;
 
 	public PacAnimations(Rendering2D r2D) {
+		animationsByName = new HashMap<>(2);
 		put("ANIM_DYING", dying = r2D.createPacDyingAnimation());
 		put("ANIM_MUNCHING", munching = r2D.createPacMunchingAnimation());
 		select("ANIM_MUNCHING");
@@ -52,7 +55,7 @@ public class PacAnimations extends ThingAnimationCollection<Pac, String, Rectang
 
 	@Override
 	public Rectangle2D current(Pac pac) {
-		return switch (selectedKey) {
+		return switch (selected) {
 		case "ANIM_DYING" -> dying.animate();
 		case "ANIM_MUNCHING" -> munching.get(pac.moveDir()).animate();
 		default -> null;

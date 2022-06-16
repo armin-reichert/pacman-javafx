@@ -23,6 +23,8 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
+import java.util.HashMap;
+
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.ThingAnimation;
 import de.amr.games.pacman.lib.animation.ThingAnimationCollection;
@@ -42,22 +44,23 @@ public class GhostAnimations extends ThingAnimationCollection<Ghost, String, Rec
 	public ThingAnimation<Rectangle2D> values;
 
 	public GhostAnimations(int ghostID, Rendering2D r2D) {
-		put("ANIM_EYES", eyesByDir = r2D.createGhostEyesAnimation());
-		put("ANIM_FLASHING", flashing = r2D.createGhostFlashingAnimation());
-		put("ANIM_BLUE", blue = r2D.createGhostBlueAnimation());
-		put("ANIM_COLOR", colorByDir = r2D.createGhostColorAnimation(ghostID));
-		put("ANIM_VALUE", values = r2D.createGhostValueList());
-		select("ANIM_COLOR");
+		animationsByName = new HashMap<>(6);
+		put("ghost-anim-eyes", eyesByDir = r2D.createGhostEyesAnimation());
+		put("ghost-anim-flashing", flashing = r2D.createGhostFlashingAnimation());
+		put("ghost-anim-blue", blue = r2D.createGhostBlueAnimation());
+		put("ghost-anim-color", colorByDir = r2D.createGhostColorAnimation(ghostID));
+		put("ghost-anim-value", values = r2D.createGhostValueList());
+		select("ghost-anim-color");
 	}
 
 	@Override
 	public Rectangle2D current(Ghost ghost) {
-		return switch (selectedKey) {
-		case "ANIM_EYES" -> eyesByDir.get(ghost.wishDir()).animate();
-		case "ANIM_FLASHING" -> flashing.animate();
-		case "ANIM_BLUE" -> blue.animate();
-		case "ANIM_COLOR" -> colorByDir.get(ghost.wishDir()).animate();
-		case "ANIM_VALUE" -> ghost.killIndex >= 0 ? values.frame(ghost.killIndex) : null; // TODO check this
+		return switch (selected) {
+		case "ghost-anim-eyes" -> eyesByDir.get(ghost.wishDir()).animate();
+		case "ghost-anim-flashing" -> flashing.animate();
+		case "ghost-anim-blue" -> blue.animate();
+		case "ghost-anim-color" -> colorByDir.get(ghost.wishDir()).animate();
+		case "ghost-anim-value" -> ghost.killIndex >= 0 ? values.frame(ghost.killIndex) : null; // TODO check this
 		default -> null;
 		};
 	}

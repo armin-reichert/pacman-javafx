@@ -90,14 +90,14 @@ public class GuysInfo {
 		if (ghost.state == GhostState.HUNTING_PAC) {
 			stateText += game.huntingTimer.chasingPhase() != -1 ? " (Chasing)" : " (Scattering)";
 		}
-		var animKey = ghost.animations().get().selectedKey();
+		var animKey = ghost.animations().get().selected();
 		var animState = getAnimationState(ghost.animations().get().selectedAnimation(), ghost.wishDir());
 		return "%s\n%s\n %s%s".formatted(ghost.name, stateText, animState, animKey);
 	}
 
 	private String computePacInfo(Pac pac) {
 		if (pac.animations().isPresent()) {
-			var animKey = pac.animations().get().selectedKey();
+			var animKey = pac.animations().get().selected();
 			var animState = getAnimationState(pac.animations().get().selectedAnimation(), pac.moveDir());
 			return "%s\n%s%s".formatted(pac.name, animState, animKey);
 		} else {
