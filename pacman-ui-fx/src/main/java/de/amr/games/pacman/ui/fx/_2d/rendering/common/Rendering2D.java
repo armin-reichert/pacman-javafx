@@ -33,9 +33,9 @@ import java.util.function.Consumer;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.lib.animation.SimpleThingAnimation;
+import de.amr.games.pacman.lib.animation.SimpleAnimation;
 import de.amr.games.pacman.lib.animation.AnimationMap;
-import de.amr.games.pacman.lib.animation.ThingArray;
+import de.amr.games.pacman.lib.animation.SpriteArray;
 import de.amr.games.pacman.model.common.LevelCounter;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -80,7 +80,7 @@ public interface Rendering2D {
 		return images;
 	}
 
-	default Image[] getAnimationImages(ThingArray<Rectangle2D> animation) {
+	default Image[] getAnimationImages(SpriteArray<Rectangle2D> animation) {
 		int n = animation.numFrames();
 		Image[] images = new Image[n];
 		for (int i = 0; i < n; ++i) {
@@ -105,19 +105,19 @@ public interface Rendering2D {
 
 	AnimationMap<Direction, Rectangle2D> createPacMunchingAnimationMap();
 
-	SimpleThingAnimation<Rectangle2D> createPacDyingAnimation();
+	SimpleAnimation<Rectangle2D> createPacDyingAnimation();
 
 	AnimationMap<Direction, Rectangle2D> createGhostColorAnimationMap(int ghostID);
 
-	SimpleThingAnimation<Rectangle2D> createGhostBlueAnimation();
+	SimpleAnimation<Rectangle2D> createGhostBlueAnimation();
 
-	SimpleThingAnimation<Rectangle2D> createGhostFlashingAnimation();
+	SimpleAnimation<Rectangle2D> createGhostFlashingAnimation();
 
 	AnimationMap<Direction, Rectangle2D> createGhostEyesAnimationMap();
 
-	SimpleThingAnimation<Image> createMazeFlashingAnimation(int mazeNumber);
+	SimpleAnimation<Image> createMazeFlashingAnimation(int mazeNumber);
 
-	ThingArray<Rectangle2D> createGhostValueList();
+	SpriteArray<Rectangle2D> createGhostValueList();
 
 	// Maze
 
