@@ -28,7 +28,6 @@ import java.util.HashMap;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.SpriteAnimations;
-import de.amr.games.pacman.lib.animation.SpriteAnimationMap;
 import de.amr.games.pacman.model.common.actors.Pac;
 import javafx.geometry.Rectangle2D;
 
@@ -52,13 +51,8 @@ public class PacAnimations extends SpriteAnimations<Pac> {
 	@Override
 	public Rectangle2D current(Pac pac) {
 		return switch (selected) {
-		case "munching" -> castToMap("munching").get(pac.moveDir()).animate();
+		case "munching" -> super.<Direction, Rectangle2D>castToMap("munching").get(pac.moveDir()).animate();
 		default -> (Rectangle2D) selectedAnimation().animate();
 		};
-	}
-
-	@SuppressWarnings("unchecked")
-	private SpriteAnimationMap<Direction, Rectangle2D> castToMap(String name) {
-		return (SpriteAnimationMap<Direction, Rectangle2D>) byName(name);
 	}
 }
