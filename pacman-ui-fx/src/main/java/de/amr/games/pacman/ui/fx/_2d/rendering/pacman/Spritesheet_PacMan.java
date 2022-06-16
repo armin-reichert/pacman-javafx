@@ -245,12 +245,12 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 		return animation;
 	}
 
-	public SimpleThingAnimation<Rectangle2D> createBlinkyStretchedAnimation() {
-		return new SimpleThingAnimation<>(tilesToRight(9, 6, 4));
+	public ThingArray<Rectangle2D> createBlinkyStretchedAnimation() {
+		return new ThingArray<>(tilesToRight(8, 6, 5));
 	}
 
-	public SimpleThingAnimation<Rectangle2D> createBlinkyDamagedAnimation() {
-		return new SimpleThingAnimation<>(tile(8, 7), tile(9, 7));
+	public ThingArray<Rectangle2D> createBlinkyDamagedAnimation() {
+		return new ThingArray<>(tile(8, 7), tile(9, 7));
 	}
 
 	public SimpleThingAnimation<Rectangle2D> createBlinkyPatchedAnimation() {

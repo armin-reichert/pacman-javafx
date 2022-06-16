@@ -182,7 +182,10 @@ public interface Rendering2D {
 	}
 
 	default void drawGhost(GraphicsContext g, Ghost ghost) {
-		ghost.animations().ifPresent(anim -> drawEntity(g, ghost, (Rectangle2D) anim.current(ghost)));
+		ghost.animations().ifPresent(anim -> {
+			var sprite = (Rectangle2D) anim.current(ghost);
+			drawEntity(g, ghost, sprite);
+		});
 	}
 
 	default void drawGhosts(GraphicsContext g, Ghost[] ghosts) {

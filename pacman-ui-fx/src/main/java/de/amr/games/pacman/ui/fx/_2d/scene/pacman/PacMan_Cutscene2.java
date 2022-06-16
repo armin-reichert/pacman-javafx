@@ -28,7 +28,6 @@ import static de.amr.games.pacman.lib.V2i.v;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.animation.SimpleThingAnimation;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
@@ -50,8 +49,6 @@ public class PacMan_Cutscene2 extends GameScene2D {
 	private int frame;
 	private Pac pac;
 	private Ghost blinky;
-	private Rectangle2D nail;
-	private SimpleThingAnimation<Rectangle2D> stretchedDress;
 
 	@Override
 	public void init() {
@@ -69,16 +66,13 @@ public class PacMan_Cutscene2 extends GameScene2D {
 
 		blinky = new Ghost(Ghost.RED_GHOST, "Blinky");
 		blinky.setAnimations(new GhostAnimations(Ghost.RED_GHOST, r2D));
-		blinky.animations().get().put("ghost-anim-damaged", ((Spritesheet_PacMan) r2D).createBlinkyDamagedAnimation());
+		blinky.animations().get().put("stretched", ((Spritesheet_PacMan) r2D).createBlinkyStretchedAnimation());
+		blinky.animations().get().put("damaged", ((Spritesheet_PacMan) r2D).createBlinkyDamagedAnimation());
 		blinky.animations().get().select("ghost-anim-color");
 		blinky.animation("ghost-anim-color").get().restart();
 		blinky.placeAt(v(28, 20), 0, 0);
 		blinky.setBothDirs(Direction.LEFT);
 		blinky.hide();
-
-		stretchedDress = null;
-		// TODO this somehow belongs to the stretched animation
-		nail = ((Spritesheet_PacMan) r2D).getNail();
 	}
 
 	@Override
@@ -87,6 +81,8 @@ public class PacMan_Cutscene2 extends GameScene2D {
 			--initialDelay;
 			return;
 		}
+		var stretched = blinky.animation("stretched").get();
+		var damaged = blinky.animation("damaged").get();
 		++frame;
 		if (frame == 0) {
 			game.sounds().ifPresent(snd -> snd.play(GameSound.INTERMISSION_1));
@@ -94,22 +90,21 @@ public class PacMan_Cutscene2 extends GameScene2D {
 			blinky.setAbsSpeed(1.25);
 			blinky.show();
 		} else if (frame == 196) {
-			blinky.setAbsSpeed(0.15);
-			stretchedDress = ((Spritesheet_PacMan) r2D).createBlinkyStretchedAnimation();
-			stretchedDress.setFrameIndex(0);
+			blinky.setAbsSpeed(0.17);
+			stretched.setFrameIndex(1);
 		} else if (frame == 226) {
-			stretchedDress.setFrameIndex(1);
+			stretched.setFrameIndex(2);
 		} else if (frame == 248) {
-			stretchedDress.setFrameIndex(2);
 			blinky.setAbsSpeed(0);
 			blinky.animations().get().selectedAnimation().stop();
+			stretched.setFrameIndex(3);
 		} else if (frame == 328) {
-			stretchedDress.setFrameIndex(3);
+			stretched.setFrameIndex(4);
 		} else if (frame == 329) {
-			blinky.animations().get().select("ghost-anim-damaged");
-			blinky.animations().get().selectedAnimation().setFrameIndex(0);
+			blinky.animations().get().select("damaged");
+			damaged.setFrameIndex(0);
 		} else if (frame == 389) {
-			blinky.animations().get().selectedAnimation().setFrameIndex(1);
+			damaged.setFrameIndex(1);
 		} else if (frame == 509) {
 			gameController.state().timer().expire();
 			return;
@@ -129,10 +124,7 @@ public class PacMan_Cutscene2 extends GameScene2D {
 				g.fillText("Frame %d".formatted(frame), t(3), t(3));
 			}
 		}
-		r2D.drawSprite(g, nail, t(14), t(19) + 3);
-		if (stretchedDress != null) {
-			r2D.drawSprite(g, stretchedDress.frame(), t(14), t(19) + 3);
-		}
+		r2D.drawSprite(g, (Rectangle2D) blinky.animation("stretched").get().frame(), t(14), t(19) + 3);
 		r2D.drawGhost(g, blinky);
 		r2D.drawPac(g, pac);
 	}
