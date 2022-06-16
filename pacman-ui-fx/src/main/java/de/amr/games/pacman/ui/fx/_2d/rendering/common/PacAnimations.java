@@ -27,7 +27,6 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 import java.util.HashMap;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.animation.ThingAnimation;
 import de.amr.games.pacman.lib.animation.ThingAnimationCollection;
 import de.amr.games.pacman.lib.animation.ThingAnimationMap;
 import de.amr.games.pacman.model.common.actors.Pac;
@@ -38,27 +37,28 @@ import javafx.geometry.Rectangle2D;
  */
 public class PacAnimations extends ThingAnimationCollection<Pac, String> {
 
-	protected ThingAnimationMap<Direction, Rectangle2D> munching;
-	protected ThingAnimation<Rectangle2D> dying;
-
 	public PacAnimations(Rendering2D r2D) {
 		animationsByName = new HashMap<>(2);
-		put("pac-anim-dying", dying = r2D.createPacDyingAnimation());
-		put("pac-anim-munching", munching = r2D.createPacMunchingAnimationMap());
+		put("pac-anim-dying", r2D.createPacDyingAnimation());
+		put("pac-anim-munching", r2D.createPacMunchingAnimationMap());
 		select("pac-anim-munching");
 	}
 
 	@Override
 	public void ensureRunning() {
-		munching.ensureRunning();
+		byName("pac-anim-munching").ensureRunning();
 	}
 
 	@Override
 	public Rectangle2D current(Pac pac) {
 		return switch (selected) {
-		case "pac-anim-dying" -> dying.animate();
-		case "pac-anim-munching" -> munching.get(pac.moveDir()).animate();
+		case "pac-anim-munching" -> castToMap("pac-anim-munching").get(pac.moveDir()).animate();
 		default -> (Rectangle2D) selectedAnimation().animate();
 		};
+	}
+
+	@SuppressWarnings("unchecked")
+	private ThingAnimationMap<Direction, Rectangle2D> castToMap(String name) {
+		return (ThingAnimationMap<Direction, Rectangle2D>) byName(name);
 	}
 }

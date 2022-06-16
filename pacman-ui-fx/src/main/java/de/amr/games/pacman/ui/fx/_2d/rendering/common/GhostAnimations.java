@@ -36,8 +36,8 @@ import javafx.geometry.Rectangle2D;
  */
 public class GhostAnimations extends ThingAnimationCollection<Ghost, String> {
 
-	public ThingAnimationMap<Direction, Rectangle2D> eyesByDir;
-	public ThingAnimationMap<Direction, Rectangle2D> colorByDir;
+	private ThingAnimationMap<Direction, Rectangle2D> eyesByDir;
+	private ThingAnimationMap<Direction, Rectangle2D> colorByDir;
 
 	public GhostAnimations(int ghostID, Rendering2D r2D) {
 		animationsByName = new HashMap<>(6);
