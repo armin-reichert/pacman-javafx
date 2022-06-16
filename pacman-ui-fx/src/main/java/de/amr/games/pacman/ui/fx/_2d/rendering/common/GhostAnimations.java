@@ -61,7 +61,7 @@ public class GhostAnimations extends ThingAnimationCollection<Ghost, String> {
 		case "ghost-anim-blue" -> blue.animate();
 		case "ghost-anim-color" -> colorByDir.get(ghost.wishDir()).animate();
 		case "ghost-anim-value" -> ghost.killIndex >= 0 ? values.frame(ghost.killIndex) : null; // TODO check this
-		default -> null;
+		default -> (Rectangle2D) selectedAnimation().animate();
 		};
 	}
 }

@@ -52,7 +52,6 @@ public class PacMan_Cutscene2 extends GameScene2D {
 	private Ghost blinky;
 	private Rectangle2D nail;
 	private SimpleThingAnimation<Rectangle2D> stretchedDress;
-	private SimpleThingAnimation<Rectangle2D> damagedBlinky;
 
 	@Override
 	public void init() {
@@ -70,6 +69,7 @@ public class PacMan_Cutscene2 extends GameScene2D {
 
 		blinky = new Ghost(Ghost.RED_GHOST, "Blinky");
 		blinky.setAnimations(new GhostAnimations(Ghost.RED_GHOST, r2D));
+		blinky.animations().get().put("ghost-anim-damaged", ((Spritesheet_PacMan) r2D).createBlinkyDamagedAnimation());
 		blinky.animations().get().select("ghost-anim-color");
 		blinky.animation("ghost-anim-color").get().restart();
 		blinky.placeAt(v(28, 20), 0, 0);
@@ -77,7 +77,7 @@ public class PacMan_Cutscene2 extends GameScene2D {
 		blinky.hide();
 
 		stretchedDress = null;
-		damagedBlinky = null;
+		// TODO this somehow belongs to the stretched animation
 		nail = ((Spritesheet_PacMan) r2D).getNail();
 	}
 
@@ -106,10 +106,10 @@ public class PacMan_Cutscene2 extends GameScene2D {
 		} else if (frame == 328) {
 			stretchedDress.setFrameIndex(3);
 		} else if (frame == 329) {
-			damagedBlinky = ((Spritesheet_PacMan) r2D).createBlinkyDamagedAnimation();
-			damagedBlinky.setFrameIndex(0);
+			blinky.animations().get().select("ghost-anim-damaged");
+			blinky.animations().get().selectedAnimation().setFrameIndex(0);
 		} else if (frame == 389) {
-			damagedBlinky.setFrameIndex(1);
+			blinky.animations().get().selectedAnimation().setFrameIndex(1);
 		} else if (frame == 509) {
 			gameController.state().timer().expire();
 			return;
@@ -133,11 +133,7 @@ public class PacMan_Cutscene2 extends GameScene2D {
 		if (stretchedDress != null) {
 			r2D.drawSprite(g, stretchedDress.frame(), t(14), t(19) + 3);
 		}
-		if (damagedBlinky != null) {
-			r2D.drawSpriteCenteredOverBox(g, damagedBlinky.frame(), blinky.position.x, blinky.position.y);
-		} else {
-			r2D.drawGhost(g, blinky);
-		}
+		r2D.drawGhost(g, blinky);
 		r2D.drawPac(g, pac);
 	}
 }
