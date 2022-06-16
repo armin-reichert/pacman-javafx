@@ -300,19 +300,12 @@ public interface Rendering2D {
 	// Debug draw functions
 
 	default void drawGrid(GraphicsContext g, double scale) {
-		g.setStroke(Color.rgb(220, 220, 220, 0.5));
-		g.setLineWidth(1);
+		g.setStroke(Color.rgb(220, 220, 220, 0.75));
 		for (int row = 0; row < ArcadeWorld.TILES_Y; ++row) {
-			line(g, 0, scale * t(row), scale * ArcadeWorld.SIZE.x, scale * t(row));
+			g.strokeLine(0, scale * t(row), scale * ArcadeWorld.SIZE.x, scale * t(row));
 		}
 		for (int col = 0; col < ArcadeWorld.TILES_X; ++col) {
-			line(g, scale * t(col), 0, scale * t(col), scale * ArcadeWorld.SIZE.y);
+			g.strokeLine(scale * t(col), 0, scale * t(col), scale * ArcadeWorld.SIZE.y);
 		}
-	}
-
-	// WTF: why are lines blurred without this?
-	static void line(GraphicsContext g, double x1, double y1, double x2, double y2) {
-		double offset = 0.5;
-		g.strokeLine(x1 + offset, y1 + offset, x2 + offset, y2 + offset);
 	}
 }
