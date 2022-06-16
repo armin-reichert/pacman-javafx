@@ -72,6 +72,7 @@ public class PacMan_Cutscene2 extends GameScene2D {
 		blinky.animation("ghost-anim-color").get().restart();
 		blinky.placeAt(v(28, 20), 0, 0);
 		blinky.setBothDirs(Direction.LEFT);
+		blinky.setAbsSpeed(0);
 		blinky.hide();
 	}
 
@@ -81,7 +82,7 @@ public class PacMan_Cutscene2 extends GameScene2D {
 			--initialDelay;
 			return;
 		}
-		var stretched = blinky.animation("stretched").get();
+		var stretched = blinky.animation("stretched").orElse(null);
 		var damaged = blinky.animation("damaged").get();
 		++frame;
 		if (frame == 0) {
@@ -105,6 +106,8 @@ public class PacMan_Cutscene2 extends GameScene2D {
 			damaged.setFrameIndex(0);
 		} else if (frame == 389) {
 			damaged.setFrameIndex(1);
+		} else if (frame == 508) {
+			blinky.animations().get().put("stretched", null);
 		} else if (frame == 509) {
 			gameController.state().timer().expire();
 			return;
@@ -124,7 +127,9 @@ public class PacMan_Cutscene2 extends GameScene2D {
 				g.fillText("Frame %d".formatted(frame), t(3), t(3));
 			}
 		}
-		r2D.drawSprite(g, (Rectangle2D) blinky.animation("stretched").get().frame(), t(14), t(19) + 3);
+		blinky.animation("stretched").ifPresent(stretched -> {
+			r2D.drawSprite(g, (Rectangle2D) stretched.frame(), t(14), t(19) + 3);
+		});
 		r2D.drawGhost(g, blinky);
 		r2D.drawPac(g, pac);
 	}
