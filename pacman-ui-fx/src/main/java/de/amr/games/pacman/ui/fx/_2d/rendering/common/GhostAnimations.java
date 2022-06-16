@@ -23,8 +23,6 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
-import java.util.stream.Stream;
-
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.ThingAnimation;
 import de.amr.games.pacman.lib.animation.ThingAnimationCollection;
@@ -44,29 +42,12 @@ public class GhostAnimations extends ThingAnimationCollection<Ghost, String, Rec
 	public ThingAnimation<Rectangle2D> values;
 
 	public GhostAnimations(int ghostID, Rendering2D r2D) {
-		eyesByDir = r2D.createGhostEyesAnimation();
-		flashing = r2D.createGhostFlashingAnimation();
-		blue = r2D.createGhostBlueAnimation();
-		colorByDir = r2D.createGhostColorAnimation(ghostID);
-		values = r2D.createGhostValueList();
+		put("ANIM_EYES", eyesByDir = r2D.createGhostEyesAnimation());
+		put("ANIM_FLASHING", flashing = r2D.createGhostFlashingAnimation());
+		put("ANIM_BLUE", blue = r2D.createGhostBlueAnimation());
+		put("ANIM_COLOR", colorByDir = r2D.createGhostColorAnimation(ghostID));
+		put("ANIM_VALUE", values = r2D.createGhostValueList());
 		select("ANIM_COLOR");
-	}
-
-	@Override
-	public ThingAnimation<Rectangle2D> byKey(String key) {
-		return switch (key) {
-		case "ANIM_EYES" -> eyesByDir;
-		case "ANIM_FLASHING" -> flashing;
-		case "ANIM_BLUE" -> blue;
-		case "ANIM_COLOR" -> colorByDir;
-		case "ANIM_VALUE" -> values;
-		default -> null;
-		};
-	}
-
-	@Override
-	public Stream<ThingAnimation<Rectangle2D>> all() {
-		return Stream.of(eyesByDir, flashing, blue, colorByDir, values);
 	}
 
 	@Override
