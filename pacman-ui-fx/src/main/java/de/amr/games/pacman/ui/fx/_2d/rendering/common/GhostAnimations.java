@@ -41,10 +41,10 @@ public class GhostAnimations extends ThingAnimationCollection<Ghost, String> {
 
 	public GhostAnimations(int ghostID, Rendering2D r2D) {
 		animationsByName = new HashMap<>(6);
-		put("ghost-anim-eyes", eyesByDir = r2D.createGhostEyesAnimation());
+		put("ghost-anim-eyes", eyesByDir = r2D.createGhostEyesAnimationMap());
 		put("ghost-anim-flashing", r2D.createGhostFlashingAnimation());
 		put("ghost-anim-blue", r2D.createGhostBlueAnimation());
-		put("ghost-anim-color", colorByDir = r2D.createGhostColorAnimation(ghostID));
+		put("ghost-anim-color", colorByDir = r2D.createGhostColorAnimationMap(ghostID));
 		put("ghost-anim-value", r2D.createGhostValueList());
 		select("ghost-anim-color");
 	}

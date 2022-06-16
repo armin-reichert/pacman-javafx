@@ -107,13 +107,13 @@ public interface Rendering2D {
 
 	SimpleThingAnimation<Rectangle2D> createPacDyingAnimation();
 
-	ThingAnimationMap<Direction, Rectangle2D> createGhostColorAnimation(int ghostID);
+	ThingAnimationMap<Direction, Rectangle2D> createGhostColorAnimationMap(int ghostID);
 
 	SimpleThingAnimation<Rectangle2D> createGhostBlueAnimation();
 
 	SimpleThingAnimation<Rectangle2D> createGhostFlashingAnimation();
 
-	ThingAnimationMap<Direction, Rectangle2D> createGhostEyesAnimation();
+	ThingAnimationMap<Direction, Rectangle2D> createGhostEyesAnimationMap();
 
 	SimpleThingAnimation<Image> createMazeFlashingAnimation(int mazeNumber);
 
