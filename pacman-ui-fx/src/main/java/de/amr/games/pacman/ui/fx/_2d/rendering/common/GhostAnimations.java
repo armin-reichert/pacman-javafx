@@ -30,13 +30,12 @@ import de.amr.games.pacman.lib.animation.ThingAnimation;
 import de.amr.games.pacman.lib.animation.ThingAnimationCollection;
 import de.amr.games.pacman.lib.animation.ThingAnimationMap;
 import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.model.common.actors.GhostAnimationKey;
 import javafx.geometry.Rectangle2D;
 
 /**
  * @author Armin Reichert
  */
-public class GhostAnimations extends ThingAnimationCollection<Ghost, GhostAnimationKey, Rectangle2D> {
+public class GhostAnimations extends ThingAnimationCollection<Ghost, String, Rectangle2D> {
 
 	public ThingAnimationMap<Direction, Rectangle2D> eyesByDir;
 	public ThingAnimation<Rectangle2D> flashing;
@@ -50,17 +49,18 @@ public class GhostAnimations extends ThingAnimationCollection<Ghost, GhostAnimat
 		blue = r2D.createGhostBlueAnimation();
 		colorByDir = r2D.createGhostColorAnimation(ghostID);
 		values = r2D.createGhostValueList();
-		select(GhostAnimationKey.ANIM_COLOR);
+		select("ANIM_COLOR");
 	}
 
 	@Override
-	public ThingAnimation<Rectangle2D> byKey(GhostAnimationKey key) {
+	public ThingAnimation<Rectangle2D> byKey(String key) {
 		return switch (key) {
-		case ANIM_EYES -> eyesByDir;
-		case ANIM_FLASHING -> flashing;
-		case ANIM_BLUE -> blue;
-		case ANIM_COLOR -> colorByDir;
-		case ANIM_VALUE -> values;
+		case "ANIM_EYES" -> eyesByDir;
+		case "ANIM_FLASHING" -> flashing;
+		case "ANIM_BLUE" -> blue;
+		case "ANIM_COLOR" -> colorByDir;
+		case "ANIM_VALUE" -> values;
+		default -> null;
 		};
 	}
 
@@ -72,11 +72,12 @@ public class GhostAnimations extends ThingAnimationCollection<Ghost, GhostAnimat
 	@Override
 	public Rectangle2D current(Ghost ghost) {
 		return switch (selectedKey) {
-		case ANIM_EYES -> eyesByDir.get(ghost.wishDir()).animate();
-		case ANIM_FLASHING -> flashing.animate();
-		case ANIM_BLUE -> blue.animate();
-		case ANIM_COLOR -> colorByDir.get(ghost.wishDir()).animate();
-		case ANIM_VALUE -> ghost.killIndex >= 0 ? values.frame(ghost.killIndex) : null; // TODO check this
+		case "ANIM_EYES" -> eyesByDir.get(ghost.wishDir()).animate();
+		case "ANIM_FLASHING" -> flashing.animate();
+		case "ANIM_BLUE" -> blue.animate();
+		case "ANIM_COLOR" -> colorByDir.get(ghost.wishDir()).animate();
+		case "ANIM_VALUE" -> ghost.killIndex >= 0 ? values.frame(ghost.killIndex) : null; // TODO check this
+		default -> null;
 		};
 	}
 }

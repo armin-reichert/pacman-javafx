@@ -31,7 +31,6 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.SimpleThingAnimation;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.model.common.actors.GhostAnimationKey;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
@@ -71,8 +70,8 @@ public class PacMan_Cutscene2 extends GameScene2D {
 
 		blinky = new Ghost(Ghost.RED_GHOST, "Blinky");
 		blinky.setAnimations(new GhostAnimations(Ghost.RED_GHOST, r2D));
-		blinky.animations().get().select(GhostAnimationKey.ANIM_COLOR);
-		blinky.animation(GhostAnimationKey.ANIM_COLOR).get().restart();
+		blinky.animations().get().select("ANIM_COLOR");
+		blinky.animation("ANIM_COLOR").get().restart();
 		blinky.placeAt(v(28, 20), 0, 0);
 		blinky.setBothDirs(Direction.LEFT);
 		blinky.hide();
