@@ -57,8 +57,8 @@ public class PacMan_Cutscene2 extends GameScene2D {
 
 		pac = new Pac("Pac-Man");
 		pac.setAnimations(new PacAnimations(r2D));
-		pac.animations().get().select("pac-anim-munching");
-		pac.animation("pac-anim-munching").get().restart();
+		pac.animations().get().select("munching");
+		pac.animation("munching").get().restart();
 		pac.placeAt(v(29, 20), 0, 0);
 		pac.setMoveDir(Direction.LEFT);
 		pac.setAbsSpeed(1.15);

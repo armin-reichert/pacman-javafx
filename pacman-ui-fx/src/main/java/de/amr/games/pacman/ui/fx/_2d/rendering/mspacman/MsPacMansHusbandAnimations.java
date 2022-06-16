@@ -33,6 +33,6 @@ public class MsPacMansHusbandAnimations extends PacAnimations {
 
 	public MsPacMansHusbandAnimations() {
 		super(Spritesheet_MsPacMan.get());
-		put("pac-anim-munching", Spritesheet_MsPacMan.get().createHusbandMunchingAnimations());
+		put("munching", Spritesheet_MsPacMan.get().createHusbandMunchingAnimations());
 	}
 }

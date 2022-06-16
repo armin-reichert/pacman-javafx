@@ -39,20 +39,20 @@ public class PacAnimations extends ThingAnimationCollection<Pac, String> {
 
 	public PacAnimations(Rendering2D r2D) {
 		animationsByName = new HashMap<>(2);
-		put("pac-anim-dying", r2D.createPacDyingAnimation());
-		put("pac-anim-munching", r2D.createPacMunchingAnimationMap());
-		select("pac-anim-munching");
+		put("dying", r2D.createPacDyingAnimation());
+		put("munching", r2D.createPacMunchingAnimationMap());
+		select("munching");
 	}
 
 	@Override
 	public void ensureRunning() {
-		byName("pac-anim-munching").ensureRunning();
+		byName("munching").ensureRunning();
 	}
 
 	@Override
 	public Rectangle2D current(Pac pac) {
 		return switch (selected) {
-		case "pac-anim-munching" -> castToMap("pac-anim-munching").get(pac.moveDir()).animate();
+		case "munching" -> castToMap("munching").get(pac.moveDir()).animate();
 		default -> (Rectangle2D) selectedAnimation().animate();
 		};
 	}
