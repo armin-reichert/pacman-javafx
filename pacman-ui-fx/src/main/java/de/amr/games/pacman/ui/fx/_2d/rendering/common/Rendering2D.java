@@ -300,8 +300,8 @@ public interface Rendering2D {
 	// Debug draw functions
 
 	default void drawGrid(GraphicsContext g, double scale) {
-		g.setStroke(Color.rgb(160, 160, 160, 1));
-		g.setLineWidth(0.5);
+		g.setStroke(Color.rgb(220, 220, 220, 0.5));
+		g.setLineWidth(1);
 		for (int row = 0; row < ArcadeWorld.TILES_Y; ++row) {
 			line(g, 0, scale * t(row), scale * ArcadeWorld.SIZE.x, scale * t(row));
 		}
