@@ -30,8 +30,8 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.animation.SimpleAnimation;
-import de.amr.games.pacman.lib.animation.AnimationMap;
+import de.amr.games.pacman.lib.animation.SingleSpriteAnimation;
+import de.amr.games.pacman.lib.animation.SpriteAnimationMap;
 import de.amr.games.pacman.lib.animation.SpriteArray;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
@@ -130,9 +130,9 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public SimpleAnimation<Image> createMazeFlashingAnimation(int mazeNumber) {
+	public SingleSpriteAnimation<Image> createMazeFlashingAnimation(int mazeNumber) {
 		var brightImage = U.colorsExchanged(mazeEmpty, Map.of(MAZE_WALL_COLOR, Color.WHITE));
-		var animation = new SimpleAnimation<>(brightImage, mazeEmpty);
+		var animation = new SingleSpriteAnimation<>(brightImage, mazeEmpty);
 		animation.frameDuration(10);
 		return animation;
 	}
@@ -166,13 +166,13 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public AnimationMap<Direction, Rectangle2D> createPacMunchingAnimationMap() {
-		var enumMap = new EnumMap<Direction, SimpleAnimation<Rectangle2D>>(Direction.class);
-		AnimationMap<Direction, Rectangle2D> map = new AnimationMap<>(enumMap);
+	public SpriteAnimationMap<Direction, Rectangle2D> createPacMunchingAnimationMap() {
+		var enumMap = new EnumMap<Direction, SingleSpriteAnimation<Rectangle2D>>(Direction.class);
+		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(enumMap);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			Rectangle2D wide_open = tile(0, d), open = tile(1, d), closed = tile(2, 0);
-			var animation = new SimpleAnimation<>(closed, open, wide_open, open);
+			var animation = new SingleSpriteAnimation<>(closed, open, wide_open, open);
 			animation.frameDuration(2);
 			animation.repeatForever();
 			map.put(dir, animation);
@@ -181,19 +181,19 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public SimpleAnimation<Rectangle2D> createPacDyingAnimation() {
-		var animation = new SimpleAnimation<>(tilesToRight(3, 0, 11));
+	public SingleSpriteAnimation<Rectangle2D> createPacDyingAnimation() {
+		var animation = new SingleSpriteAnimation<>(tilesToRight(3, 0, 11));
 		animation.frameDuration(8);
 		return animation;
 	}
 
 	@Override
-	public AnimationMap<Direction, Rectangle2D> createGhostColorAnimationMap(int ghostID) {
-		var enumMap = new EnumMap<Direction, SimpleAnimation<Rectangle2D>>(Direction.class);
-		AnimationMap<Direction, Rectangle2D> map = new AnimationMap<>(enumMap);
+	public SpriteAnimationMap<Direction, Rectangle2D> createGhostColorAnimationMap(int ghostID) {
+		var enumMap = new EnumMap<Direction, SingleSpriteAnimation<Rectangle2D>>(Direction.class);
+		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(enumMap);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
-			var animation = new SimpleAnimation<>(tilesToRight(2 * d, 4 + ghostID, 2));
+			var animation = new SingleSpriteAnimation<>(tilesToRight(2 * d, 4 + ghostID, 2));
 			animation.frameDuration(8);
 			animation.repeatForever();
 			map.put(dir, animation);
@@ -202,27 +202,27 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public SimpleAnimation<Rectangle2D> createGhostBlueAnimation() {
-		var animation = new SimpleAnimation<>(tile(8, 4), tile(9, 4));
+	public SingleSpriteAnimation<Rectangle2D> createGhostBlueAnimation() {
+		var animation = new SingleSpriteAnimation<>(tile(8, 4), tile(9, 4));
 		animation.frameDuration(8);
 		animation.repeatForever();
 		return animation;
 	}
 
 	@Override
-	public SimpleAnimation<Rectangle2D> createGhostFlashingAnimation() {
-		var animation = new SimpleAnimation<>(tilesToRight(8, 4, 4));
+	public SingleSpriteAnimation<Rectangle2D> createGhostFlashingAnimation() {
+		var animation = new SingleSpriteAnimation<>(tilesToRight(8, 4, 4));
 		animation.frameDuration(6);
 		return animation;
 	}
 
 	@Override
-	public AnimationMap<Direction, Rectangle2D> createGhostEyesAnimationMap() {
-		var enumMap = new EnumMap<Direction, SimpleAnimation<Rectangle2D>>(Direction.class);
-		AnimationMap<Direction, Rectangle2D> map = new AnimationMap<>(enumMap);
+	public SpriteAnimationMap<Direction, Rectangle2D> createGhostEyesAnimationMap() {
+		var enumMap = new EnumMap<Direction, SingleSpriteAnimation<Rectangle2D>>(Direction.class);
+		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(enumMap);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
-			map.put(dir, new SimpleAnimation<>(tile(8 + d, 5)));
+			map.put(dir, new SingleSpriteAnimation<>(tile(8 + d, 5)));
 		}
 		return map;
 	}
@@ -238,8 +238,8 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 		return tile(8, 6);
 	}
 
-	public SimpleAnimation<Rectangle2D> createBigPacManMunchingAnimation() {
-		var animation = new SimpleAnimation<>(tiles(2, 1, 2, 2), tiles(4, 1, 2, 2), tiles(6, 1, 2, 2));
+	public SingleSpriteAnimation<Rectangle2D> createBigPacManMunchingAnimation() {
+		var animation = new SingleSpriteAnimation<>(tiles(2, 1, 2, 2), tiles(4, 1, 2, 2), tiles(6, 1, 2, 2));
 		animation.frameDuration(3);
 		animation.repeatForever();
 		return animation;
@@ -253,15 +253,15 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 		return new SpriteArray<>(tile(8, 7), tile(9, 7));
 	}
 
-	public SimpleAnimation<Rectangle2D> createBlinkyPatchedAnimation() {
-		var animation = new SimpleAnimation<>(tile(10, 7), tile(11, 7));
+	public SingleSpriteAnimation<Rectangle2D> createBlinkyPatchedAnimation() {
+		var animation = new SingleSpriteAnimation<>(tile(10, 7), tile(11, 7));
 		animation.frameDuration(4);
 		animation.repeatForever();
 		return animation;
 	}
 
-	public SimpleAnimation<Rectangle2D> createBlinkyNakedAnimation() {
-		var animation = new SimpleAnimation<>(tiles(8, 8, 2, 1), tiles(10, 8, 2, 1));
+	public SingleSpriteAnimation<Rectangle2D> createBlinkyNakedAnimation() {
+		var animation = new SingleSpriteAnimation<>(tiles(8, 8, 2, 1), tiles(10, 8, 2, 1));
 		animation.frameDuration(4);
 		animation.repeatForever();
 		return animation;

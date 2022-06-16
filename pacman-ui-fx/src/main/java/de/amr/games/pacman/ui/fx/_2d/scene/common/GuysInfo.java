@@ -24,9 +24,9 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.animation.SimpleAnimation;
-import de.amr.games.pacman.lib.animation.Animation;
-import de.amr.games.pacman.lib.animation.AnimationMap;
+import de.amr.games.pacman.lib.animation.SingleSpriteAnimation;
+import de.amr.games.pacman.lib.animation.SpriteAnimation;
+import de.amr.games.pacman.lib.animation.SpriteAnimationMap;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Bonus;
@@ -72,13 +72,13 @@ public class GuysInfo {
 		this.game = game;
 	}
 
-	private String getAnimationState(Animation<?> animation, Direction dir) {
-		if (animation instanceof AnimationMap) {
+	private String getAnimationState(SpriteAnimation<?> animation, Direction dir) {
+		if (animation instanceof SpriteAnimationMap) {
 			@SuppressWarnings("unchecked")
-			var gam = (AnimationMap<Direction, ?>) animation;
+			var gam = (SpriteAnimationMap<Direction, ?>) animation;
 			return gam.get(dir).isRunning() ? "" : "(Stopped) ";
-		} else if (animation instanceof SimpleAnimation) {
-			var ga = (SimpleAnimation<?>) animation;
+		} else if (animation instanceof SingleSpriteAnimation) {
+			var ga = (SingleSpriteAnimation<?>) animation;
 			return ga.isRunning() ? "" : "(Stopped) ";
 		} else {
 			return "";
