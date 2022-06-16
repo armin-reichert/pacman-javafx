@@ -45,7 +45,7 @@ import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntroScene;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_CreditScene;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_Cutscene1;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_Cutscene2;
-import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntermissionScene3;
+import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_Cutscene3;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntroScene;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -81,7 +81,7 @@ public class GameUI implements GameEventAdapter {
 		{ new PacMan_CreditScene(),        null },
 		{ new PacMan_Cutscene1(),          null },
 		{ new PacMan_Cutscene2(),          null },
-		{ new PacMan_IntermissionScene3(), null },
+		{ new PacMan_Cutscene3(),          null },
 		{ new PlayScene2D(),               new PlayScene3D() },
 		//@formatter:on
 	};
