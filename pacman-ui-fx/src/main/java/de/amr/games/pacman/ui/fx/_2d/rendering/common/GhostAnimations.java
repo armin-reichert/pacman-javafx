@@ -27,7 +27,7 @@ import java.util.HashMap;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.Animations;
-import de.amr.games.pacman.lib.animation.ThingAnimationMap;
+import de.amr.games.pacman.lib.animation.AnimationMap;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import javafx.geometry.Rectangle2D;
 
@@ -36,8 +36,8 @@ import javafx.geometry.Rectangle2D;
  */
 public class GhostAnimations extends Animations<Ghost> {
 
-	private ThingAnimationMap<Direction, Rectangle2D> eyesByDir;
-	private ThingAnimationMap<Direction, Rectangle2D> colorByDir;
+	private AnimationMap<Direction, Rectangle2D> eyesByDir;
+	private AnimationMap<Direction, Rectangle2D> colorByDir;
 
 	public GhostAnimations(int ghostID, Rendering2D r2D) {
 		animationsByName = new HashMap<>(6);

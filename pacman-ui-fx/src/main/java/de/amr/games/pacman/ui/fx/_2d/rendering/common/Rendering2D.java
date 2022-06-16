@@ -34,7 +34,7 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.lib.animation.SimpleThingAnimation;
-import de.amr.games.pacman.lib.animation.ThingAnimationMap;
+import de.amr.games.pacman.lib.animation.AnimationMap;
 import de.amr.games.pacman.lib.animation.ThingArray;
 import de.amr.games.pacman.model.common.LevelCounter;
 import de.amr.games.pacman.model.common.actors.Entity;
@@ -103,17 +103,17 @@ public interface Rendering2D {
 
 	// Animations
 
-	ThingAnimationMap<Direction, Rectangle2D> createPacMunchingAnimationMap();
+	AnimationMap<Direction, Rectangle2D> createPacMunchingAnimationMap();
 
 	SimpleThingAnimation<Rectangle2D> createPacDyingAnimation();
 
-	ThingAnimationMap<Direction, Rectangle2D> createGhostColorAnimationMap(int ghostID);
+	AnimationMap<Direction, Rectangle2D> createGhostColorAnimationMap(int ghostID);
 
 	SimpleThingAnimation<Rectangle2D> createGhostBlueAnimation();
 
 	SimpleThingAnimation<Rectangle2D> createGhostFlashingAnimation();
 
-	ThingAnimationMap<Direction, Rectangle2D> createGhostEyesAnimationMap();
+	AnimationMap<Direction, Rectangle2D> createGhostEyesAnimationMap();
 
 	SimpleThingAnimation<Image> createMazeFlashingAnimation(int mazeNumber);
 

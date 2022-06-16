@@ -28,7 +28,7 @@ import java.util.HashMap;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.Animations;
-import de.amr.games.pacman.lib.animation.ThingAnimationMap;
+import de.amr.games.pacman.lib.animation.AnimationMap;
 import de.amr.games.pacman.model.common.actors.Pac;
 import javafx.geometry.Rectangle2D;
 
@@ -58,7 +58,7 @@ public class PacAnimations extends Animations<Pac> {
 	}
 
 	@SuppressWarnings("unchecked")
-	private ThingAnimationMap<Direction, Rectangle2D> castToMap(String name) {
-		return (ThingAnimationMap<Direction, Rectangle2D>) byName(name);
+	private AnimationMap<Direction, Rectangle2D> castToMap(String name) {
+		return (AnimationMap<Direction, Rectangle2D>) byName(name);
 	}
 }

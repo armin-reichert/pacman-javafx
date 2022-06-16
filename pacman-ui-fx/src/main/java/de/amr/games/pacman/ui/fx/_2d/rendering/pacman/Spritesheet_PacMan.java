@@ -31,7 +31,7 @@ import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.SimpleThingAnimation;
-import de.amr.games.pacman.lib.animation.ThingAnimationMap;
+import de.amr.games.pacman.lib.animation.AnimationMap;
 import de.amr.games.pacman.lib.animation.ThingArray;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
@@ -166,9 +166,9 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public ThingAnimationMap<Direction, Rectangle2D> createPacMunchingAnimationMap() {
+	public AnimationMap<Direction, Rectangle2D> createPacMunchingAnimationMap() {
 		var enumMap = new EnumMap<Direction, SimpleThingAnimation<Rectangle2D>>(Direction.class);
-		ThingAnimationMap<Direction, Rectangle2D> map = new ThingAnimationMap<>(enumMap);
+		AnimationMap<Direction, Rectangle2D> map = new AnimationMap<>(enumMap);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			Rectangle2D wide_open = tile(0, d), open = tile(1, d), closed = tile(2, 0);
@@ -188,9 +188,9 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public ThingAnimationMap<Direction, Rectangle2D> createGhostColorAnimationMap(int ghostID) {
+	public AnimationMap<Direction, Rectangle2D> createGhostColorAnimationMap(int ghostID) {
 		var enumMap = new EnumMap<Direction, SimpleThingAnimation<Rectangle2D>>(Direction.class);
-		ThingAnimationMap<Direction, Rectangle2D> map = new ThingAnimationMap<>(enumMap);
+		AnimationMap<Direction, Rectangle2D> map = new AnimationMap<>(enumMap);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			var animation = new SimpleThingAnimation<>(tilesToRight(2 * d, 4 + ghostID, 2));
@@ -217,9 +217,9 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public ThingAnimationMap<Direction, Rectangle2D> createGhostEyesAnimationMap() {
+	public AnimationMap<Direction, Rectangle2D> createGhostEyesAnimationMap() {
 		var enumMap = new EnumMap<Direction, SimpleThingAnimation<Rectangle2D>>(Direction.class);
-		ThingAnimationMap<Direction, Rectangle2D> map = new ThingAnimationMap<>(enumMap);
+		AnimationMap<Direction, Rectangle2D> map = new AnimationMap<>(enumMap);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			map.put(dir, new SimpleThingAnimation<>(tile(8 + d, 5)));
