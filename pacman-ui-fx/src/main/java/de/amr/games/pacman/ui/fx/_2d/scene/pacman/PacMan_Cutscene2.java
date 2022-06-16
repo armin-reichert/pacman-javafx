@@ -68,8 +68,8 @@ public class PacMan_Cutscene2 extends GameScene2D {
 		blinky.setAnimations(new GhostAnimations(Ghost.RED_GHOST, r2D));
 		blinky.animations().get().put("stretched", ((Spritesheet_PacMan) r2D).createBlinkyStretchedAnimation());
 		blinky.animations().get().put("damaged", ((Spritesheet_PacMan) r2D).createBlinkyDamagedAnimation());
-		blinky.animations().get().select("ghost-anim-color");
-		blinky.animation("ghost-anim-color").get().restart();
+		blinky.animations().get().select("color");
+		blinky.animation("color").get().restart();
 		blinky.placeAt(v(28, 20), 0, 0);
 		blinky.setBothDirs(Direction.LEFT);
 		blinky.setAbsSpeed(0);

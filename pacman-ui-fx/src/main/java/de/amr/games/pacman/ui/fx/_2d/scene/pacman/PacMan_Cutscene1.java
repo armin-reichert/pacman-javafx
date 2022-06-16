@@ -67,8 +67,8 @@ public class PacMan_Cutscene1 extends GameScene2D {
 
 		blinky = new Ghost(Ghost.RED_GHOST, "Blinky");
 		blinky.setAnimations(new GhostAnimations(Ghost.RED_GHOST, r2D));
-		blinky.animations().get().select("ghost-anim-color");
-		blinky.animation("ghost-anim-color").get().restart();
+		blinky.animations().get().select("color");
+		blinky.animation("color").get().restart();
 		blinky.placeAt(v(32, 20), 0, 0);
 		blinky.setBothDirs(Direction.LEFT);
 		blinky.setAbsSpeed(1.3);
@@ -87,7 +87,7 @@ public class PacMan_Cutscene1 extends GameScene2D {
 		} else if (frame == 260) {
 			blinky.placeAt(v(-2, 20), 4, 0);
 			blinky.setBothDirs(Direction.RIGHT);
-			blinky.animations().get().select("ghost-anim-blue");
+			blinky.animations().get().select("blue");
 			blinky.animations().get().selectedAnimation().restart();
 			blinky.setAbsSpeed(0.75);
 		} else if (frame == 400) {

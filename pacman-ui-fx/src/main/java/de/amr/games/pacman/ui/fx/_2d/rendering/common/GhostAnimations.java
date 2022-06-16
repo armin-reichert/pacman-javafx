@@ -43,19 +43,19 @@ public class GhostAnimations extends SpriteAnimations<Ghost> {
 		eyesByDir = r2D.createGhostEyesAnimationMap();
 		colorByDir = r2D.createGhostColorAnimationMap(ghostID);
 		animationsByName = Map.of(//
-				"ghost-anim-eyes", eyesByDir, //
-				"ghost-anim-flashing", r2D.createGhostFlashingAnimation(), //
-				"ghost-anim-blue", r2D.createGhostBlueAnimation(), //
-				"ghost-anim-color", colorByDir, "ghost-anim-value", //
-				r2D.createGhostValueList());
-		select("ghost-anim-color");
+				"eyes", eyesByDir, //
+				"flashing", r2D.createGhostFlashingAnimation(), //
+				"blue", r2D.createGhostBlueAnimation(), //
+				"color", colorByDir, //
+				"value", r2D.createGhostValueList());
+		select("color");
 	}
 
 	@Override
 	public Rectangle2D current(Ghost ghost) {
 		return switch (selected) {
-		case "ghost-anim-eyes" -> eyesByDir.get(ghost.wishDir()).animate();
-		case "ghost-anim-color" -> colorByDir.get(ghost.wishDir()).animate();
+		case "eyes" -> eyesByDir.get(ghost.wishDir()).animate();
+		case "color" -> colorByDir.get(ghost.wishDir()).animate();
 		default -> (Rectangle2D) selectedAnimation().animate();
 		};
 	}

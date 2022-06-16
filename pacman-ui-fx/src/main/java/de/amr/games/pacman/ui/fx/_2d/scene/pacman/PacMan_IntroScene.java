@@ -100,11 +100,11 @@ public class PacMan_IntroScene extends GameScene2D {
 			for (var ghost : $.ghosts) {
 				ghost.animations().ifPresent(animations -> {
 					if (ghost.state == GhostState.DEAD && ghost.killIndex != -1) {
-						animations.select("ghost-anim-value");
+						animations.select("value");
 					} else {
-						animations.select("ghost-anim-blue");
+						animations.select("blue");
 						if (ghost.velocity.length() == 0) {
-							animations.byName("ghost-anim-blue").stop();
+							animations.byName("blue").stop();
 						}
 					}
 				});
