@@ -83,7 +83,7 @@ public class PacMan_Cutscene2 extends GameScene2D {
 			return;
 		}
 		var stretched = blinky.animation("stretched").orElse(null);
-		var damaged = blinky.animation("damaged").get();
+		var damaged = blinky.animation("damaged").orElse(null);
 		++frame;
 		if (frame == 0) {
 			game.sounds().ifPresent(snd -> snd.play(GameSound.INTERMISSION_1));

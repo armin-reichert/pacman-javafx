@@ -23,7 +23,7 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
-import java.util.Map;
+import java.util.HashMap;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.SpriteAnimationMap;
@@ -37,12 +37,12 @@ import javafx.geometry.Rectangle2D;
 public class GhostAnimations extends SpriteAnimations<Ghost> {
 
 	public GhostAnimations(int ghostID, Rendering2D r2D) {
-		animationsByName = Map.of(//
-				"eyes", r2D.createGhostEyesAnimationMap(), //
-				"flashing", r2D.createGhostFlashingAnimation(), //
-				"blue", r2D.createGhostBlueAnimation(), //
-				"color", r2D.createGhostColorAnimationMap(ghostID), //
-				"value", r2D.createGhostValueList());
+		animationsByName = new HashMap<>();
+		animationsByName.put("eyes", r2D.createGhostEyesAnimationMap());
+		animationsByName.put("flashing", r2D.createGhostFlashingAnimation());
+		animationsByName.put("blue", r2D.createGhostBlueAnimation());
+		animationsByName.put("color", r2D.createGhostColorAnimationMap(ghostID));
+		animationsByName.put("value", r2D.createGhostValueList());
 		select("color");
 	}
 
