@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 import java.util.HashMap;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.animation.ThingAnimation;
 import de.amr.games.pacman.lib.animation.ThingAnimationCollection;
 import de.amr.games.pacman.lib.animation.ThingAnimationMap;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -38,18 +37,15 @@ import javafx.geometry.Rectangle2D;
 public class GhostAnimations extends ThingAnimationCollection<Ghost, String> {
 
 	public ThingAnimationMap<Direction, Rectangle2D> eyesByDir;
-	public ThingAnimation<Rectangle2D> flashing;
-	public ThingAnimation<Rectangle2D> blue;
 	public ThingAnimationMap<Direction, Rectangle2D> colorByDir;
-	public ThingAnimation<Rectangle2D> values;
 
 	public GhostAnimations(int ghostID, Rendering2D r2D) {
 		animationsByName = new HashMap<>(6);
 		put("ghost-anim-eyes", eyesByDir = r2D.createGhostEyesAnimation());
-		put("ghost-anim-flashing", flashing = r2D.createGhostFlashingAnimation());
-		put("ghost-anim-blue", blue = r2D.createGhostBlueAnimation());
+		put("ghost-anim-flashing", r2D.createGhostFlashingAnimation());
+		put("ghost-anim-blue", r2D.createGhostBlueAnimation());
 		put("ghost-anim-color", colorByDir = r2D.createGhostColorAnimation(ghostID));
-		put("ghost-anim-value", values = r2D.createGhostValueList());
+		put("ghost-anim-value", r2D.createGhostValueList());
 		select("ghost-anim-color");
 	}
 
@@ -57,10 +53,7 @@ public class GhostAnimations extends ThingAnimationCollection<Ghost, String> {
 	public Rectangle2D current(Ghost ghost) {
 		return switch (selected) {
 		case "ghost-anim-eyes" -> eyesByDir.get(ghost.wishDir()).animate();
-		case "ghost-anim-flashing" -> flashing.animate();
-		case "ghost-anim-blue" -> blue.animate();
 		case "ghost-anim-color" -> colorByDir.get(ghost.wishDir()).animate();
-		case "ghost-anim-value" -> ghost.killIndex >= 0 ? values.frame(ghost.killIndex) : null; // TODO check this
 		default -> (Rectangle2D) selectedAnimation().animate();
 		};
 	}
