@@ -55,4 +55,5 @@ public class PacAnimations extends SpriteAnimations<Pac> {
 		default -> (Rectangle2D) selectedAnimation().animate();
 		};
 	}
+
 }
