@@ -44,7 +44,7 @@ public class PacAnimations extends ThingAnimationCollection<Pac, String> {
 	public PacAnimations(Rendering2D r2D) {
 		animationsByName = new HashMap<>(2);
 		put("pac-anim-dying", dying = r2D.createPacDyingAnimation());
-		put("pac-anim-munching", munching = r2D.createPacMunchingAnimation());
+		put("pac-anim-munching", munching = r2D.createPacMunchingAnimationMap());
 		select("pac-anim-munching");
 	}
 

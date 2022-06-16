@@ -166,7 +166,7 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public ThingAnimationMap<Direction, Rectangle2D> createPacMunchingAnimation() {
+	public ThingAnimationMap<Direction, Rectangle2D> createPacMunchingAnimationMap() {
 		var enumMap = new EnumMap<Direction, SimpleThingAnimation<Rectangle2D>>(Direction.class);
 		ThingAnimationMap<Direction, Rectangle2D> map = new ThingAnimationMap<>(enumMap);
 		for (var dir : Direction.values()) {

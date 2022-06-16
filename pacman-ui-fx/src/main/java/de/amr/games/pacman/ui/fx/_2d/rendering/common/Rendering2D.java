@@ -103,7 +103,7 @@ public interface Rendering2D {
 
 	// Animations
 
-	ThingAnimationMap<Direction, Rectangle2D> createPacMunchingAnimation();
+	ThingAnimationMap<Direction, Rectangle2D> createPacMunchingAnimationMap();
 
 	SimpleThingAnimation<Rectangle2D> createPacDyingAnimation();
 
