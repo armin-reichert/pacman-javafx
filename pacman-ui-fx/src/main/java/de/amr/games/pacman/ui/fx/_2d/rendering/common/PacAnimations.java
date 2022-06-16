@@ -27,7 +27,7 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 import java.util.HashMap;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.animation.ThingAnimationCollection;
+import de.amr.games.pacman.lib.animation.Animations;
 import de.amr.games.pacman.lib.animation.ThingAnimationMap;
 import de.amr.games.pacman.model.common.actors.Pac;
 import javafx.geometry.Rectangle2D;
@@ -35,7 +35,7 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class PacAnimations extends ThingAnimationCollection<Pac, String> {
+public class PacAnimations extends Animations<Pac, String> {
 
 	public PacAnimations(Rendering2D r2D) {
 		animationsByName = new HashMap<>(2);
