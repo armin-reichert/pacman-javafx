@@ -299,14 +299,14 @@ public interface Rendering2D {
 
 	// Debug draw functions
 
-	default void drawGrid(GraphicsContext g) {
+	default void drawGrid(GraphicsContext g, double scale) {
 		g.setStroke(Color.rgb(160, 160, 160, 1));
 		g.setLineWidth(0.5);
 		for (int row = 0; row < ArcadeWorld.TILES_Y; ++row) {
-			line(g, 0, t(row), ArcadeWorld.SIZE.x, t(row));
+			line(g, 0, scale * t(row), scale * ArcadeWorld.SIZE.x, scale * t(row));
 		}
 		for (int col = 0; col < ArcadeWorld.TILES_X; ++col) {
-			line(g, t(col), 0, t(col), ArcadeWorld.SIZE.y);
+			line(g, scale * t(col), 0, scale * t(col), scale * ArcadeWorld.SIZE.y);
 		}
 	}
 

@@ -66,12 +66,17 @@ public abstract class GameScene2D implements GameEventAdapter, GameScene {
 
 	protected boolean creditVisible;
 
+	private final Canvas overlay = new Canvas();
+
 	public GameScene2D() {
-		root = new StackPane(canvas, infoPane);
+		root = new StackPane(canvas, overlay, infoPane);
 		root.setBackground(U.colorBackground(Color.BLACK));
 		fxSubScene = new SubScene(root, unscaledSize.x, unscaledSize.y);
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
+		overlay.widthProperty().bind(canvas.widthProperty());
+		overlay.heightProperty().bind(canvas.heightProperty());
+		overlay.setMouseTransparent(true);
 	}
 
 	@Override
@@ -131,11 +136,18 @@ public abstract class GameScene2D implements GameEventAdapter, GameScene {
 		infoPane.setVisible(Env.$debugUI.get());
 		doUpdate();
 		var g = canvas.getGraphicsContext2D();
-		g.setFill(Color.BLACK);
-		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		g.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		doRender(g);
-		if (Env.$debugUI.get()) {
-			r2D.drawGrid(g);
+		drawOverlay();
+	}
+
+	private void drawOverlay() {
+		overlay.setVisible(Env.$debugUI.get());
+		if (overlay.isVisible()) {
+			var og = overlay.getGraphicsContext2D();
+			og.clearRect(0, 0, overlay.getWidth(), overlay.getHeight());
+			og.setFill(Color.WHITE);
+			r2D.drawGrid(og, $scaling.doubleValue());
 		}
 	}
 
