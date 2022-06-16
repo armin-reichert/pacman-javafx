@@ -23,11 +23,11 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.animation.SpriteAnimations;
 import de.amr.games.pacman.lib.animation.SpriteAnimationMap;
+import de.amr.games.pacman.lib.animation.SpriteAnimations;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import javafx.geometry.Rectangle2D;
 
@@ -40,12 +40,14 @@ public class GhostAnimations extends SpriteAnimations<Ghost> {
 	private SpriteAnimationMap<Direction, Rectangle2D> colorByDir;
 
 	public GhostAnimations(int ghostID, Rendering2D r2D) {
-		animationsByName = new HashMap<>(6);
-		put("ghost-anim-eyes", eyesByDir = r2D.createGhostEyesAnimationMap());
-		put("ghost-anim-flashing", r2D.createGhostFlashingAnimation());
-		put("ghost-anim-blue", r2D.createGhostBlueAnimation());
-		put("ghost-anim-color", colorByDir = r2D.createGhostColorAnimationMap(ghostID));
-		put("ghost-anim-value", r2D.createGhostValueList());
+		eyesByDir = r2D.createGhostEyesAnimationMap();
+		colorByDir = r2D.createGhostColorAnimationMap(ghostID);
+		animationsByName = Map.of(//
+				"ghost-anim-eyes", eyesByDir, //
+				"ghost-anim-flashing", r2D.createGhostFlashingAnimation(), //
+				"ghost-anim-blue", r2D.createGhostBlueAnimation(), //
+				"ghost-anim-color", colorByDir, "ghost-anim-value", //
+				r2D.createGhostValueList());
 		select("ghost-anim-color");
 	}
 
