@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.Intermission2Controller;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacMansHusbandAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -57,7 +56,8 @@ public class MsPacMan_IntermissionScene2 extends GameScene2D {
 		$.flap.animation = Spritesheet_MsPacMan.get().createFlapAnimation();
 		$.msPacMan.setAnimations(new PacAnimations(r2D));
 		$.msPacMan.animations().get().ensureRunning();
-		$.pacMan.setAnimations(new MsPacMansHusbandAnimations());
+		$.pacMan.setAnimations(new PacAnimations(r2D));
+		$.pacMan.animations().get().put("munching", Spritesheet_MsPacMan.get().createHusbandMunchingAnimations());
 		$.pacMan.animations().get().ensureRunning();
 	}
 
