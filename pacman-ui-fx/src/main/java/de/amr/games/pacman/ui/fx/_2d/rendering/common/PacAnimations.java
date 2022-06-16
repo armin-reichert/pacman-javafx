@@ -36,7 +36,7 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class PacAnimations extends ThingAnimationCollection<Pac, String, Rectangle2D> {
+public class PacAnimations extends ThingAnimationCollection<Pac, String> {
 
 	protected ThingAnimationMap<Direction, Rectangle2D> munching;
 	protected ThingAnimation<Rectangle2D> dying;
@@ -58,7 +58,7 @@ public class PacAnimations extends ThingAnimationCollection<Pac, String, Rectang
 		return switch (selected) {
 		case "pac-anim-dying" -> dying.animate();
 		case "pac-anim-munching" -> munching.get(pac.moveDir()).animate();
-		default -> null;
+		default -> (Rectangle2D) selectedAnimation().animate();
 		};
 	}
 }

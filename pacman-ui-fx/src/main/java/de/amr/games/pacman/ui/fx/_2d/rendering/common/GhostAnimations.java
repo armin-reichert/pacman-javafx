@@ -35,7 +35,7 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class GhostAnimations extends ThingAnimationCollection<Ghost, String, Rectangle2D> {
+public class GhostAnimations extends ThingAnimationCollection<Ghost, String> {
 
 	public ThingAnimationMap<Direction, Rectangle2D> eyesByDir;
 	public ThingAnimation<Rectangle2D> flashing;

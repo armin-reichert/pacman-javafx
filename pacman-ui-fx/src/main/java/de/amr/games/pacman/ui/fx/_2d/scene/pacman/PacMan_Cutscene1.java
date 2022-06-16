@@ -28,7 +28,6 @@ import static de.amr.games.pacman.lib.V2i.v;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.animation.ThingAnimation;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
@@ -37,7 +36,6 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -50,7 +48,6 @@ public class PacMan_Cutscene1 extends GameScene2D {
 	private int frame;
 	private Pac pac;
 	private Ghost blinky;
-	private ThingAnimation<Rectangle2D> bigPacAnimation;
 
 	@Override
 	public void init() {
@@ -59,14 +56,14 @@ public class PacMan_Cutscene1 extends GameScene2D {
 
 		pac = new Pac("Pac-Man");
 		pac.setAnimations(new PacAnimations(r2D));
+		pac.animations().get().put("pac-anim-big", ((Spritesheet_PacMan) r2D).createBigPacManMunchingAnimation());
 		pac.animations().get().select("pac-anim-munching");
 		pac.animation("pac-anim-munching").get().restart();
+
 		pac.placeAt(v(29, 20), 0, 0);
 		pac.setMoveDir(Direction.LEFT);
 		pac.setAbsSpeed(1.25);
 		pac.show();
-
-		bigPacAnimation = null;
 
 		blinky = new Ghost(Ghost.RED_GHOST, "Blinky");
 		blinky.setAnimations(new GhostAnimations(Ghost.RED_GHOST, r2D));
@@ -91,13 +88,13 @@ public class PacMan_Cutscene1 extends GameScene2D {
 			blinky.placeAt(v(-2, 20), 4, 0);
 			blinky.setBothDirs(Direction.RIGHT);
 			blinky.animations().get().select("ghost-anim-blue");
-			blinky.animation("ghost-anim-blue").get().restart();
+			blinky.animations().get().selectedAnimation().restart();
 			blinky.setAbsSpeed(0.75);
 		} else if (frame == 400) {
 			pac.placeAt(v(-3, 19), 0, 0);
 			pac.setMoveDir(Direction.RIGHT);
-			bigPacAnimation = ((Spritesheet_PacMan) r2D).createBigPacManMunchingAnimation();
-			bigPacAnimation.restart();
+			pac.animations().get().select("pac-anim-big");
+			pac.animations().get().selectedAnimation().restart();
 		} else if (frame == 632) {
 			gameController.state().timer().expire();
 			return;
@@ -117,11 +114,7 @@ public class PacMan_Cutscene1 extends GameScene2D {
 				g.fillText("Frame %d".formatted(frame), t(3), t(3));
 			}
 		}
-		if (bigPacAnimation != null) {
-			r2D.drawEntity(g, pac, bigPacAnimation.animate());
-		} else {
-			r2D.drawPac(g, pac);
-		}
+		r2D.drawPac(g, pac);
 		r2D.drawGhost(g, blinky);
 	}
 }
