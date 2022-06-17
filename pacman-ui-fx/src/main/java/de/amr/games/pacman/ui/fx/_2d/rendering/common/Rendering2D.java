@@ -36,6 +36,7 @@ import de.amr.games.pacman.lib.animation.SingleSpriteAnimation;
 import de.amr.games.pacman.lib.animation.SpriteAnimationMap;
 import de.amr.games.pacman.lib.animation.SpriteArray;
 import de.amr.games.pacman.model.common.LevelCounter;
+import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
@@ -43,7 +44,6 @@ import de.amr.games.pacman.model.common.actors.Score;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.MovingBonus;
-import de.amr.games.pacman.model.pacman.StaticBonus;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -156,10 +156,7 @@ public interface Rendering2D {
 	}
 
 	default void drawGhost(GraphicsContext g, Ghost ghost) {
-		ghost.animations().ifPresent(anim -> {
-			var sprite = (Rectangle2D) anim.current(ghost);
-			drawEntity(g, ghost, sprite);
-		});
+		ghost.animations().ifPresent(anim -> drawEntity(g, ghost, (Rectangle2D) anim.current(ghost)));
 	}
 
 	default void drawGhosts(GraphicsContext g, Ghost[] ghosts) {
@@ -168,26 +165,20 @@ public interface Rendering2D {
 		}
 	}
 
-	default void drawBonus(GraphicsContext g, Entity bonusEntity) {
-		if (bonusEntity instanceof StaticBonus) {
-			StaticBonus bonus = (StaticBonus) bonusEntity;
-			var sprite = switch (bonus.state()) {
-			case INACTIVE -> null;
-			case EDIBLE -> getBonusSymbolSprite(bonus.symbol());
-			case EATEN -> getBonusValueSprite(bonus.symbol());
-			};
-			drawEntity(g, bonus, sprite);
-		} else if (bonusEntity instanceof MovingBonus) {
-			MovingBonus bonus = (MovingBonus) bonusEntity;
-			var sprite = switch (bonus.state()) {
-			case INACTIVE -> null;
-			case EDIBLE -> getBonusSymbolSprite(bonus.symbol());
-			case EATEN -> getBonusValueSprite(bonus.symbol());
-			};
+	default void drawBonus(GraphicsContext g, Bonus bonus) {
+		var sprite = switch (bonus.state()) {
+		case INACTIVE -> null;
+		case EDIBLE -> getBonusSymbolSprite(bonus.symbol());
+		case EATEN -> getBonusValueSprite(bonus.symbol());
+		};
+		if (bonus.entity() instanceof MovingBonus) {
+			var movingBonus = (MovingBonus) bonus.entity();
 			g.save();
-			g.translate(0, bonus.dy());
-			drawEntity(g, bonus, sprite);
+			g.translate(0, movingBonus.dy());
+			drawEntity(g, movingBonus, sprite);
 			g.restore();
+		} else {
+			drawEntity(g, bonus.entity(), sprite);
 		}
 	}
 

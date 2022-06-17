@@ -89,7 +89,7 @@ public class PlayScene2D extends GameScene2D {
 			r2D.drawMaze(g, t(0), t(3), game.level.world, game.level.mazeNumber, !game.energizerPulse.frame());
 		}
 		r2D.drawGameStateMessage(g, hasCredit() ? gameController.state() : GameState.GAME_OVER);
-		r2D.drawBonus(g, game.bonus().entity());
+		r2D.drawBonus(g, game.bonus());
 		r2D.drawPac(g, game.pac);
 		r2D.drawGhosts(g, game.ghosts);
 		if (creditVisible) {
