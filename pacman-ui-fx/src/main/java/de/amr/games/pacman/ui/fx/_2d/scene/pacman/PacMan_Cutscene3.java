@@ -74,19 +74,16 @@ public class PacMan_Cutscene3 extends GameScene2D {
 			pac.setMoveDir(Direction.LEFT);
 			pac.setAbsSpeed(1.25);
 			pac.show();
-			pac.animations().get().select("munching");
-			pac.animation("munching").get().restart();
+			pac.selectAnimation("munching");
 			blinky.placeAt(v(35, 20), 0, 0);
 			blinky.setBothDirs(Direction.LEFT);
 			blinky.setAbsSpeed(1.25);
 			blinky.show();
-			blinky.animations().get().select("patched");
-			blinky.animation("patched").get().restart();
+			blinky.selectAnimation("patched");
 		} else if (frame == 296) {
 			blinky.placeAt(v(-1, 20), 0, 0);
 			blinky.setBothDirs(Direction.RIGHT);
-			blinky.animations().get().select("naked");
-			blinky.animations().get().selectedAnimation().restart();
+			blinky.selectAnimation("naked");
 		} else if (frame == 516) {
 			gameController.state().timer().expire();
 			return;
