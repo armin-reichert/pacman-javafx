@@ -52,8 +52,9 @@ public class SectionKeys extends Section {
 		addInfo("Alt+LEFT", () -> Env.$perspective.get().prev().name()).available(() -> ui.getCurrentGameScene().is3D());
 		addInfo("Alt+RIGHT", () -> Env.$perspective.get().next().name()).available(() -> ui.getCurrentGameScene().is3D());
 		addInfo("Alt+3", "3D Playscene On/Off");
-		addInfo("Q", "Quit Scene").available(() -> gc.state() != GameState.INTRO);
-		addInfo("V", "Switch game variant").available(() -> gc.state() == GameState.INTRO);
+		addInfo("Q", "Return to Intro Scene").available(() -> gc.state() != GameState.INTRO);
+		addInfo("V", "Switch Pac-Man / Ms. Pac-Man").available(() -> gc.state() == GameState.INTRO);
+		addInfo("1", "Start Playing (Requires Credit)");
 		addInfo("5", "Add credit");
 	}
 }

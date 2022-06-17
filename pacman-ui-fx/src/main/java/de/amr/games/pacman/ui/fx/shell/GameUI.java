@@ -71,6 +71,7 @@ import javafx.stage.Stage;
 public class GameUI implements GameEventAdapter {
 
 	public static final int SCENE_2D = 0, SCENE_3D = 1;
+	public static final Color SCENE_BACKGROUND_COLOR = Color.CORNFLOWERBLUE;
 
 	private final GameScene[][] scenes_PacMan = {
 		//@formatter:off
@@ -116,7 +117,7 @@ public class GameUI implements GameEventAdapter {
 		dashboard = new Dashboard(this, gameController);
 
 		gameScenePlaceholder = new StackPane();
-		gameScenePlaceholder.setBackground(U.colorBackground(Color.CORNFLOWERBLUE));
+		gameScenePlaceholder.setBackground(U.colorBackground(SCENE_BACKGROUND_COLOR));
 
 		sceneRoot = new StackPane(gameScenePlaceholder, dashboard, flashMessageView);
 
