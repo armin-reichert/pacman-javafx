@@ -31,9 +31,7 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.pacman.IntroController;
-import de.amr.games.pacman.controller.pacman.IntroController.State;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
@@ -90,26 +88,7 @@ public class PacMan_IntroScene extends GameScene2D {
 	@Override
 	public void doUpdate() {
 		sceneController.update();
-		updateAnimations();
 		creditVisible = $.creditVisible;
-	}
-
-	private void updateAnimations() {
-		// TODO this is not elegant but works
-		if (sceneController.state() == State.CHASING_GHOSTS) {
-			for (var ghost : $.ghosts) {
-				ghost.animations().ifPresent(animations -> {
-					if (ghost.state == GhostState.DEAD && ghost.killIndex != -1) {
-						animations.select("value");
-					} else {
-						animations.select("blue");
-						if (ghost.velocity.length() == 0) {
-							animations.byName("blue").stop();
-						}
-					}
-				});
-			}
-		}
 	}
 
 	@Override
