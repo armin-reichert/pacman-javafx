@@ -84,9 +84,9 @@ public class PlayScene2D extends GameScene2D {
 		r2D.drawScore(g, game.scores.gameScore);
 		r2D.drawScore(g, game.scores.highScore);
 		if (game.mazeFlashingAnimation().isPresent() && game.mazeFlashingAnimation().get().isRunning()) {
-			g.drawImage((Image) game.mazeFlashingAnimation().get().frame(), 0, t(3));
+			g.drawImage((Image) game.mazeFlashingAnimation().get().frame(), t(0), t(3));
 		} else {
-			r2D.drawWorld(g, game.level.world, r2D.mazeNumber(game.level.number), !game.energizerPulse.frame());
+			r2D.drawMaze(g, t(0), t(3), game.level.world, r2D.mazeNumber(game.level.number), !game.energizerPulse.frame());
 		}
 		r2D.drawGameStateMessage(g, hasCredit() ? gameController.state() : GameState.GAME_OVER);
 		r2D.drawBonus(g, game.bonus().entity());
