@@ -71,7 +71,7 @@ public class Ghost3D extends Group implements Rendering3D {
 		bodyParts = model3D.createGhost(ghostify(getGhostSkinColor(ghost.id)), getGhostEyeBallColor(),
 				getGhostPupilColor());
 
-		motion = new Motion(ghost, this);
+		motion = new Motion(this);
 		getChildren().addAll(bodyParts, numberCube);
 		reset();
 
@@ -93,10 +93,10 @@ public class Ghost3D extends Group implements Rendering3D {
 			enterDisplayMode(DisplayMode.NUMBER_CUBE);
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
 			enterDisplayMode(DisplayMode.EYES_ONLY);
-			motion.update();
+			motion.update(ghost);
 		} else {
 			enterDisplayMode(DisplayMode.COMPLETE_BODY);
-			motion.update();
+			motion.update(ghost);
 		}
 		boolean insideWorld = 0 <= ghost.position.x && ghost.position.x <= t(ArcadeWorld.TILES_X - 1);
 		bodyParts.setVisible(ghost.visible && insideWorld);

@@ -66,7 +66,7 @@ public class Pac3D extends Group implements Rendering3D {
 		this.world = world;
 		this.pac = pac;
 		bodyParts = model3D.createPacMan(getPacSkullColor(), getPacEyesColor(), getPacPalateColor());
-		motion = new Motion(pac, this);
+		motion = new Motion(this);
 		light.setTranslateZ(-HTS);
 		getChildren().addAll(bodyParts, light);
 		reset();
@@ -102,7 +102,7 @@ public class Pac3D extends Group implements Rendering3D {
 	}
 
 	public void update() {
-		motion.update();
+		motion.update(pac);
 		setVisible(pac.visible && insideWorld());
 	}
 

@@ -26,26 +26,24 @@ public class Motion {
 	};
 	//@formatter:on
 
-	private final Creature guy;
-	private final Node root;
+	private final Node guyNode;
 	private final RotateTransition turningAnimation;
 	private Direction targetDir;
 
 	/**
-	 * @param guy  the creature (model)
-	 * @param root root node of the creature's 3D representation
+	 * @param guy     the creature (model)
+	 * @param guyNode root node of the creature's 3D representation
 	 */
-	public Motion(Creature guy, Node root) {
-		this.guy = guy;
-		this.root = root;
-		turningAnimation = new RotateTransition(Duration.seconds(0.3), root);
+	public Motion(Node guyNode) {
+		this.guyNode = guyNode;
+		turningAnimation = new RotateTransition(Duration.seconds(0.3), guyNode);
 		turningAnimation.setAxis(Rotate.Z_AXIS);
 	}
 
-	public void update() {
-		root.setTranslateX(guy.position.x + HTS);
-		root.setTranslateY(guy.position.y + HTS);
-		root.setTranslateZ(-HTS);
+	public void update(Creature guy) {
+		guyNode.setTranslateX(guy.position.x + HTS);
+		guyNode.setTranslateY(guy.position.y + HTS);
+		guyNode.setTranslateZ(-HTS);
 		if (targetDir != guy.moveDir()) {
 			int[] angles = TURN_ANGLES[index(targetDir)][index(guy.moveDir())];
 			turningAnimation.setFromAngle(angles[0]);
