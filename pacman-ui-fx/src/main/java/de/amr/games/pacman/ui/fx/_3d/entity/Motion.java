@@ -31,8 +31,7 @@ public class Motion {
 	private Direction targetDir;
 
 	/**
-	 * @param guy     the creature (model)
-	 * @param guyNode root node of the creature's 3D representation
+	 * @param guyNode root node of the guy's 3D representation
 	 */
 	public Motion(Node guyNode) {
 		this.guyNode = guyNode;
