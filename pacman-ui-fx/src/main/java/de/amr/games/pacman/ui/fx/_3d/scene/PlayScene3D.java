@@ -83,7 +83,7 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 	private final AmbientLight light = new AmbientLight(Color.GHOSTWHITE);
 	private final Image floorTexture = U.image("/common/escher-texture.jpg");
 	private final Color floorColorWithTexture = Color.DARKBLUE;
-	private final Color floorColorWithoutTexture = Color.rgb(30, 30, 30);
+	private final Color floorColorWithoutTexture = Color.rgb(5, 5, 10);
 	private final SimpleObjectProperty<Perspective> $perspective = new SimpleObjectProperty<>();
 	private final SimpleBooleanProperty $useMazeFloorTexture = new SimpleBooleanProperty();
 	private final EnumMap<Perspective, PlaySceneCamera> cameras = new EnumMap<>(Perspective.class);

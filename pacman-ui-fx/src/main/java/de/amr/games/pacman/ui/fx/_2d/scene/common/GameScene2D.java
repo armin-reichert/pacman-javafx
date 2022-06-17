@@ -33,6 +33,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.util.U;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Scene;
@@ -68,6 +69,8 @@ public abstract class GameScene2D implements GameEventAdapter, GameScene {
 
 	public GameScene2D() {
 		root = new StackPane(canvas, overlayCanvas, infoPane);
+		// without this, an ugly vertical white line appears left of the game scene:
+		root.setBackground(U.colorBackground(Color.BLACK));
 		fxSubScene = new SubScene(root, unscaledSize.x, unscaledSize.y);
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());

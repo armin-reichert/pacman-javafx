@@ -57,11 +57,8 @@ import de.amr.games.pacman.ui.fx.sound.PacManGameSounds;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 
 /**
@@ -101,6 +98,7 @@ public class GameUI implements GameEventAdapter {
 	private final Stage stage;
 	private final Scene scene;
 	private final StackPane sceneRoot;
+	private final StackPane gameScenePlaceholder;
 	private final Dashboard dashboard;
 	private final FlashMessageView flashMessageView;
 
@@ -114,10 +112,13 @@ public class GameUI implements GameEventAdapter {
 
 		// UI has 3 layers. From bottom to top: game scene, dashboard, flash message view.
 		flashMessageView = new FlashMessageView();
+
 		dashboard = new Dashboard(this, gameController);
-		var gameScenePlaceholder = new Region();
+
+		gameScenePlaceholder = new StackPane();
+		gameScenePlaceholder.setBackground(U.colorBackground(Color.CORNFLOWERBLUE));
+
 		sceneRoot = new StackPane(gameScenePlaceholder, dashboard, flashMessageView);
-		Env.$drawMode3D.addListener((x, y, z) -> sceneRoot.setBackground(computeMainSceneBackground()));
 
 		scene = new Scene(sceneRoot, width, height);
 		allGameScenes().forEach(gameScene -> gameScene.setParent(scene));
@@ -270,22 +271,10 @@ public class GameUI implements GameEventAdapter {
 		stage.setTitle(gameController.game().variant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
 		log("Current scene changed from %s to %s", currentGameScene, newGameScene);
 		currentGameScene = newGameScene;
-		embedGameScene(currentGameScene, sceneRoot);
 		currentGameScene.setSceneContext(gameController);
 		currentGameScene.init();
-	}
-
-	private void embedGameScene(GameScene gameScene, StackPane parent) {
-		parent.getChildren().set(0, gameScene.getFXSubScene());
-		gameScene.resize(parent.getHeight());
-		parent.setBackground(computeMainSceneBackground());
-	}
-
-	private Background computeMainSceneBackground() {
-		if (!currentGameScene.is3D()) {
-			return U.colorBackground(Color.CORNFLOWERBLUE);
-		}
-		return Env.$drawMode3D.get() == DrawMode.LINE ? U.colorBackground(Color.BLACK) : Wallpapers.get().random();
+		gameScenePlaceholder.getChildren().setAll(currentGameScene.getFXSubScene());
+		currentGameScene.resize(scene.getHeight());
 	}
 
 	private void onKeyPressed() {

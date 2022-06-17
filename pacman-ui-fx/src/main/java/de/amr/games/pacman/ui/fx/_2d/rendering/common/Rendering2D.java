@@ -250,7 +250,10 @@ public interface Rendering2D {
 	}
 
 	default void drawMaze(GraphicsContext g, int x, int y, World world, int mazeNumber, boolean energizersDark) {
-		Consumer<V2i> clearTile = tile -> g.clearRect(t(tile.x), t(tile.y), TS, TS);
+		Consumer<V2i> clearTile = tile -> {
+			g.setFill(Color.BLACK);
+			g.fillRect(t(tile.x), t(tile.y), TS, TS);
+		};
 		g.drawImage(getMazeFullImage(mazeNumber), x, y);
 		world.tiles().filter(world::containsEatenFood).forEach(clearTile::accept);
 		if (energizersDark) {
