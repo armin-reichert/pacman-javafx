@@ -70,15 +70,6 @@ public interface Rendering2D {
 
 	Image getSpriteImage(Rectangle2D sprite);
 
-	default Image[] getAnimationImages(SpriteArray<Rectangle2D> animation) {
-		int n = animation.numFrames();
-		Image[] images = new Image[n];
-		for (int i = 0; i < n; ++i) {
-			images[i] = getSpriteImage(animation.frame(i));
-		}
-		return images;
-	}
-
 	// Sprites
 
 	Rectangle2D getGhostSprite(int ghostID, Direction dir);

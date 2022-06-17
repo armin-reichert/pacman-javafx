@@ -80,7 +80,7 @@ public class Ghost3D extends Group implements Rendering3D {
 		eyeBalls().setUserData(this);
 		pupils().setUserData(this);
 
-		valueImages = r2D.getAnimationImages(r2D.createGhostValueList());
+		valueImages = r2D.createGhostValueList().frames().map(r2D::getSpriteImage).toArray(Image[]::new);
 	}
 
 	public void reset() {
