@@ -56,17 +56,16 @@ import javafx.util.Duration;
 public class Pac3D extends Group implements Rendering3D {
 
 	private final World world;
-	public final Pac pac;
+	private final Pac pac;
 	private final Group bodyParts;
 	private final Motion motion;
 	private final PointLight light = new PointLight(Color.WHITE);
-
 	private Color skullColorImpaled = Color.GHOSTWHITE;
 
 	public Pac3D(World world, Pac pac, PacManModel3D model3D) {
 		this.world = world;
 		this.pac = pac;
-		bodyParts = model3D.createPacMan(getPlayerSkullColor(), getPlayerEyesColor(), getPlayerPalateColor());
+		bodyParts = model3D.createPacMan(getPacSkullColor(), getPacEyesColor(), getPacPalateColor());
 		motion = new Motion(pac, this);
 		light.setTranslateZ(-HTS);
 		getChildren().addAll(bodyParts, light);
@@ -98,7 +97,7 @@ public class Pac3D extends Group implements Rendering3D {
 		bodyParts.setScaleX(1.05);
 		bodyParts.setScaleY(1.05);
 		bodyParts.setScaleZ(1.05);
-		setShapeColor(skull(), getPlayerSkullColor());
+		setShapeColor(skull(), getPacSkullColor());
 		update();
 	}
 
@@ -131,13 +130,13 @@ public class Pac3D extends Group implements Rendering3D {
 		shrink.setToZ(0);
 
 		return new SequentialTransition( //
-				new FillTransition3D(Duration.seconds(1), skull(), getPlayerSkullColor(), ghostColor), //
+				new FillTransition3D(Duration.seconds(1), skull(), getPacSkullColor(), ghostColor), //
 				new FillTransition3D(Duration.seconds(1), skull(), ghostColor, skullColorImpaled), //
 				new ParallelTransition(spin, shrink));
 	}
 
 	private void setShapeColor(Shape3D shape, Color diffuseColor) {
-		PhongMaterial material = new PhongMaterial(diffuseColor);
+		var material = new PhongMaterial(diffuseColor);
 		material.setSpecularColor(diffuseColor.brighter());
 		shape.setMaterial(material);
 	}
