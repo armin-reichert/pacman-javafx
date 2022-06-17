@@ -33,7 +33,6 @@ import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.util.U;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Scene;
@@ -54,6 +53,7 @@ public abstract class GameScene2D implements GameEventAdapter, GameScene {
 
 	protected final V2d unscaledSize = new V2d(ArcadeWorld.SIZE);
 	protected final Canvas canvas = new Canvas(unscaledSize.x, unscaledSize.y);
+	protected final Canvas overlayCanvas = new Canvas();
 	protected final Pane infoPane = new Pane();
 	protected final StackPane root;
 	protected final SubScene fxSubScene;
@@ -66,17 +66,14 @@ public abstract class GameScene2D implements GameEventAdapter, GameScene {
 
 	protected boolean creditVisible;
 
-	private final Canvas overlay = new Canvas();
-
 	public GameScene2D() {
-		root = new StackPane(canvas, overlay, infoPane);
-		root.setBackground(U.colorBackground(Color.BLACK));
+		root = new StackPane(canvas, overlayCanvas, infoPane);
 		fxSubScene = new SubScene(root, unscaledSize.x, unscaledSize.y);
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
-		overlay.widthProperty().bind(canvas.widthProperty());
-		overlay.heightProperty().bind(canvas.heightProperty());
-		overlay.setMouseTransparent(true);
+		overlayCanvas.widthProperty().bind(canvas.widthProperty());
+		overlayCanvas.heightProperty().bind(canvas.heightProperty());
+		overlayCanvas.setMouseTransparent(true);
 	}
 
 	@Override
@@ -136,16 +133,17 @@ public abstract class GameScene2D implements GameEventAdapter, GameScene {
 		infoPane.setVisible(Env.$debugUI.get());
 		doUpdate();
 		var g = canvas.getGraphicsContext2D();
-		g.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		g.setFill(Color.BLACK);
+		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		doRender(g);
 		drawOverlay();
 	}
 
 	private void drawOverlay() {
-		overlay.setVisible(Env.$debugUI.get());
-		if (overlay.isVisible()) {
-			var og = overlay.getGraphicsContext2D();
-			og.clearRect(0, 0, overlay.getWidth(), overlay.getHeight());
+		overlayCanvas.setVisible(Env.$debugUI.get());
+		if (overlayCanvas.isVisible()) {
+			var og = overlayCanvas.getGraphicsContext2D();
+			og.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());
 			r2D.drawTileBorders(og, $scaling.doubleValue());
 		}
 	}

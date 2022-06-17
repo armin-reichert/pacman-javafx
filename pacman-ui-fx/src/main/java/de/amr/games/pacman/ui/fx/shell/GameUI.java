@@ -115,7 +115,8 @@ public class GameUI implements GameEventAdapter {
 		// UI has 3 layers. From bottom to top: game scene, dashboard, flash message view.
 		flashMessageView = new FlashMessageView();
 		dashboard = new Dashboard(this, gameController);
-		sceneRoot = new StackPane(new Region() /* placeholder for game scene */, dashboard, flashMessageView);
+		var gameScenePlaceholder = new Region();
+		sceneRoot = new StackPane(gameScenePlaceholder, dashboard, flashMessageView);
 		Env.$drawMode3D.addListener((x, y, z) -> sceneRoot.setBackground(computeMainSceneBackground()));
 
 		scene = new Scene(sceneRoot, width, height);
