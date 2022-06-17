@@ -51,7 +51,7 @@ import javafx.util.Duration;
  */
 public class Ghost3D extends Group implements Rendering3D {
 
-	private enum AnimationMode {
+	enum AnimationMode {
 		COLORED_BODY, EYES_ONLY, NUMBER_CUBE;
 	}
 
@@ -69,7 +69,7 @@ public class Ghost3D extends Group implements Rendering3D {
 			return numberCube;
 		}
 
-		public void update() {
+		public void updateNumber() {
 			var texture = valueImages[ghost.killIndex];
 			var material = new PhongMaterial();
 			material.setBumpMap(texture);
@@ -189,22 +189,31 @@ public class Ghost3D extends Group implements Rendering3D {
 		update();
 	}
 
+	private AnimationMode suitableAnimationMode() {
+		if (ghost.is(GhostState.DEAD) && ghost.killIndex != -1) {
+			return AnimationMode.NUMBER_CUBE;
+		}
+		if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
+			return AnimationMode.EYES_ONLY;
+		}
+		return AnimationMode.COLORED_BODY;
+	}
+
 	public void update() {
-		if (ghost.killIndex != -1) {
-			enterDisplayMode(AnimationMode.NUMBER_CUBE);
-		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
-			enterDisplayMode(AnimationMode.EYES_ONLY);
+		var suitableMode = suitableAnimationMode();
+		if (animationMode != suitableMode) {
+			changeDisplayMode(suitableMode);
+		}
+		switch (suitableMode) {
+		case COLORED_BODY, EYES_ONLY -> {
 			coloredBodyAnimation.update();
-		} else {
-			enterDisplayMode(AnimationMode.COLORED_BODY);
-			coloredBodyAnimation.update();
+		}
+		case NUMBER_CUBE -> {
+		}
 		}
 	}
 
-	private void enterDisplayMode(AnimationMode animationMode) {
-		if (this.animationMode == animationMode) {
-			return;
-		}
+	private void changeDisplayMode(AnimationMode animationMode) {
 		this.animationMode = animationMode;
 		switch (animationMode) {
 		case COLORED_BODY -> {
@@ -216,7 +225,7 @@ public class Ghost3D extends Group implements Rendering3D {
 			getChildren().setAll(coloredBodyAnimation.getRoot());
 		}
 		case NUMBER_CUBE -> {
-			numberCubeAnimation.update();
+			numberCubeAnimation.updateNumber();
 			getChildren().setAll(numberCubeAnimation.getRoot());
 		}
 		}
