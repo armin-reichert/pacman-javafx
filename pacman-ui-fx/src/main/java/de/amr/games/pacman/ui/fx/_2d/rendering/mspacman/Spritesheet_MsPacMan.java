@@ -148,16 +148,6 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public Rectangle2D getPacSprite(Direction dir, Mouth mouth) {
-		int d = dirIndex(dir);
-		return switch (mouth) {
-		case WIDE_OPEN -> rhs(0, d);
-		case OPEN -> rhs(1, d);
-		case CLOSED -> rhs(2, d);
-		};
-	}
-
-	@Override
 	public Rectangle2D getGhostSprite(int ghostID, Direction dir) {
 		return rhs(2 * dirIndex(dir) + 1, 4 + ghostID);
 	}

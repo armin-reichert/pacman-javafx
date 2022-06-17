@@ -106,15 +106,6 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public Rectangle2D getPacSprite(Direction dir, Mouth mouth) {
-		return switch (mouth) {
-		case CLOSED -> tile(2, 0);
-		case OPEN -> tile(1, dirIndex(dir));
-		case WIDE_OPEN -> tile(0, dirIndex(dir));
-		};
-	}
-
-	@Override
 	public Rectangle2D getBonusSymbolSprite(int symbol) {
 		return tile(2 + symbol, 3);
 	}

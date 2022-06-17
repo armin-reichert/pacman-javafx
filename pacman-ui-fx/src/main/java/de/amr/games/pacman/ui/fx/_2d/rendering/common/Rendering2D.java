@@ -58,23 +58,20 @@ import javafx.scene.text.FontWeight;
  */
 public interface Rendering2D {
 
-	public enum Mouth {
-		CLOSED, OPEN, WIDE_OPEN
-	}
-
+	/**
+	 * @return spritesheet source image
+	 */
 	Image source();
+
+	Image getSpriteImage(Rectangle2D sprite);
 
 	Font getArcadeFont();
 
 	Color getGhostColor(int ghostID);
 
-	Image getSpriteImage(Rectangle2D sprite);
-
 	// Sprites
 
 	Rectangle2D getGhostSprite(int ghostID, Direction dir);
-
-	Rectangle2D getPacSprite(Direction dir, Mouth mouth);
 
 	Rectangle2D getLifeSprite();
 
