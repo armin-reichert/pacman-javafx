@@ -166,9 +166,9 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	public void drawCopyright(GraphicsContext g, int tileY) {
 		int x = t(6);
 		int y = t(tileY - 1);
-		g.drawImage(midwayLogo, x, y + 3, 30, 32);
+		g.drawImage(midwayLogo, x, y + 2, t(4) - 2, t(4));
 		g.setFill(Color.RED);
-		g.setFont(Font.font("Dialog", 11.0));
+		g.setFont(Font.font("Dialog", 11));
 		g.fillText("\u00a9", x + t(5), y + t(2) + 2); // (c) symbol
 		g.setFont(getArcadeFont());
 		g.fillText("MIDWAY MFG CO", x + t(7), y + t(2));
@@ -210,16 +210,16 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	@Override
 	public SpriteAnimationMap<Direction, Rectangle2D> createPacMunchingAnimationMap() {
 		var enumMap = new EnumMap<Direction, SingleSpriteAnimation<Rectangle2D>>(Direction.class);
-		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(enumMap);
+		var animationByDir = new SpriteAnimationMap<>(enumMap);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			Rectangle2D wide_open = rhs(0, d), open = rhs(1, d), closed = rhs(2, d);
 			var munching = new SingleSpriteAnimation<>(open, wide_open, open, closed);
 			munching.frameDuration(2);
 			munching.repeatForever();
-			map.put(dir, munching);
+			animationByDir.put(dir, munching);
 		}
-		return map;
+		return animationByDir;
 	}
 
 	@Override
@@ -234,15 +234,15 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	@Override
 	public SpriteAnimationMap<Direction, Rectangle2D> createGhostColorAnimationMap(int ghostID) {
 		var enumMap = new EnumMap<Direction, SingleSpriteAnimation<Rectangle2D>>(Direction.class);
-		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(enumMap);
+		var animationByDir = new SpriteAnimationMap<>(enumMap);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
-			var feet = new SingleSpriteAnimation<>(rhs(2 * d, 4 + ghostID), rhs(2 * d + 1, 4 + ghostID));
-			feet.frameDuration(8);
-			feet.repeatForever();
-			map.put(dir, feet);
+			var animation = new SingleSpriteAnimation<>(rhs(2 * d, 4 + ghostID), rhs(2 * d + 1, 4 + ghostID));
+			animation.frameDuration(8);
+			animation.repeatForever();
+			animationByDir.put(dir, animation);
 		}
-		return map;
+		return animationByDir;
 	}
 
 	@Override
@@ -263,12 +263,12 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	@Override
 	public SpriteAnimationMap<Direction, Rectangle2D> createGhostEyesAnimationMap() {
 		var enumMap = new EnumMap<Direction, SingleSpriteAnimation<Rectangle2D>>(Direction.class);
-		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(enumMap);
+		var animationByDir = new SpriteAnimationMap<>(enumMap);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
-			map.put(dir, new SingleSpriteAnimation<>(rhs(8 + d, 5)));
+			animationByDir.put(dir, new SingleSpriteAnimation<>(rhs(8 + d, 5)));
 		}
-		return map;
+		return animationByDir;
 	}
 
 	@Override
@@ -278,19 +278,20 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 
 	// Ms. Pac-Man specific:
 
-	public SpriteAnimationMap<Direction, Rectangle2D> createHusbandMunchingAnimations() {
-		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(4);
+	public SpriteAnimationMap<Direction, Rectangle2D> createPac_Man_MunchingAnimationMap() {
+		var animationByDir = new SpriteAnimationMap<Direction, Rectangle2D>(4);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			var animation = new SingleSpriteAnimation<>(rhs(0, 9 + d), rhs(1, 9 + d), rhs(2, 9));
 			animation.frameDuration(2);
 			animation.repeatForever();
-			map.put(dir, animation);
+			animationByDir.put(dir, animation);
 		}
-		return map;
+		return animationByDir;
 	}
 
 	public SingleSpriteAnimation<Rectangle2D> createFlapAnimation() {
+		// TODO this is not 100% accurate yet
 		var animation = new SingleSpriteAnimation<>( //
 				new Rectangle2D(456, 208, 32, 32), //
 				new Rectangle2D(488, 208, 32, 32), //

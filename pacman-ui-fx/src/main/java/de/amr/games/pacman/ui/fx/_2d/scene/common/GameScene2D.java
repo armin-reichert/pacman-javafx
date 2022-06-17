@@ -146,7 +146,7 @@ public abstract class GameScene2D implements GameEventAdapter, GameScene {
 		if (overlay.isVisible()) {
 			var og = overlay.getGraphicsContext2D();
 			og.clearRect(0, 0, overlay.getWidth(), overlay.getHeight());
-			r2D.drawGrid(og, $scaling.doubleValue());
+			r2D.drawTileBorders(og, $scaling.doubleValue());
 		}
 	}
 

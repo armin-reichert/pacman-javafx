@@ -67,17 +67,17 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	};
 	//@formatter:on
 
-	private static final Color MAZE_WALL_COLOR = Color.rgb(33, 33, 255);
-	private static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
+	static final Color MAZE_WALL_COLOR = Color.rgb(33, 33, 255);
+	static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
 
 	private final Image mazeFull, mazeEmpty;
 	private final Font font;
 
 	private Spritesheet_PacMan() {
 		super("/pacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
-		font = U.font("/common/emulogic.ttf", 8);
 		mazeFull = U.image("/pacman/graphics/maze_full.png");
 		mazeEmpty = U.image("/pacman/graphics/maze_empty.png");
+		font = U.font("/common/emulogic.ttf", 8);
 	}
 
 	@Override
@@ -117,8 +117,8 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 
 	@Override
 	public SingleSpriteAnimation<Image> createMazeFlashingAnimation(int mazeNumber) {
-		var brightImage = U.colorsExchanged(mazeEmpty, Map.of(MAZE_WALL_COLOR, Color.WHITE));
-		var animation = new SingleSpriteAnimation<>(brightImage, mazeEmpty);
+		var mazeBright = U.colorsExchanged(mazeEmpty, Map.of(MAZE_WALL_COLOR, Color.WHITE));
+		var animation = new SingleSpriteAnimation<>(mazeBright, mazeEmpty);
 		animation.frameDuration(10);
 		return animation;
 	}
@@ -149,16 +149,16 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	@Override
 	public SpriteAnimationMap<Direction, Rectangle2D> createPacMunchingAnimationMap() {
 		var enumMap = new EnumMap<Direction, SingleSpriteAnimation<Rectangle2D>>(Direction.class);
-		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(enumMap);
+		var animationByDir = new SpriteAnimationMap<>(enumMap);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			Rectangle2D wide_open = tile(0, d), open = tile(1, d), closed = tile(2, 0);
 			var animation = new SingleSpriteAnimation<>(closed, open, wide_open, open);
 			animation.frameDuration(2);
 			animation.repeatForever();
-			map.put(dir, animation);
+			animationByDir.put(dir, animation);
 		}
-		return map;
+		return animationByDir;
 	}
 
 	@Override
@@ -171,15 +171,15 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	@Override
 	public SpriteAnimationMap<Direction, Rectangle2D> createGhostColorAnimationMap(int ghostID) {
 		var enumMap = new EnumMap<Direction, SingleSpriteAnimation<Rectangle2D>>(Direction.class);
-		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(enumMap);
+		var animationByDir = new SpriteAnimationMap<>(enumMap);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			var animation = new SingleSpriteAnimation<>(tilesToRight(2 * d, 4 + ghostID, 2));
 			animation.frameDuration(8);
 			animation.repeatForever();
-			map.put(dir, animation);
+			animationByDir.put(dir, animation);
 		}
-		return map;
+		return animationByDir;
 	}
 
 	@Override
@@ -200,12 +200,12 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	@Override
 	public SpriteAnimationMap<Direction, Rectangle2D> createGhostEyesAnimationMap() {
 		var enumMap = new EnumMap<Direction, SingleSpriteAnimation<Rectangle2D>>(Direction.class);
-		SpriteAnimationMap<Direction, Rectangle2D> map = new SpriteAnimationMap<>(enumMap);
+		SpriteAnimationMap<Direction, Rectangle2D> animationByDir = new SpriteAnimationMap<>(enumMap);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
-			map.put(dir, new SingleSpriteAnimation<>(tile(8 + d, 5)));
+			animationByDir.put(dir, new SingleSpriteAnimation<>(tile(8 + d, 5)));
 		}
-		return map;
+		return animationByDir;
 	}
 
 	@Override
@@ -214,10 +214,6 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	// Pac-Man specific:
-
-	public Rectangle2D getNail() {
-		return tile(8, 6);
-	}
 
 	public SingleSpriteAnimation<Rectangle2D> createBigPacManMunchingAnimation() {
 		var animation = new SingleSpriteAnimation<>(tiles(2, 1, 2, 2), tiles(4, 1, 2, 2), tiles(6, 1, 2, 2));

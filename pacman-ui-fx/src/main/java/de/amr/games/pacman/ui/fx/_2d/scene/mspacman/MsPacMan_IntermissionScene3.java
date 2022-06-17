@@ -61,7 +61,7 @@ public class MsPacMan_IntermissionScene3 extends GameScene2D {
 		$.flap.animation = Spritesheet_MsPacMan.get().createFlapAnimation();
 		$.msPacMan.setAnimations(new PacAnimations(r2D));
 		$.pacMan.setAnimations(new PacAnimations(r2D));
-		$.pacMan.animations().get().put("munching", Spritesheet_MsPacMan.get().createHusbandMunchingAnimations());
+		$.pacMan.animations().get().put("munching", Spritesheet_MsPacMan.get().createPac_Man_MunchingAnimationMap());
 		$.flap.animation = Spritesheet_MsPacMan.get().createFlapAnimation();
 		storkAnimation = Spritesheet_MsPacMan.get().createStorkFlyingAnimation();
 		storkAnimation.ensureRunning();

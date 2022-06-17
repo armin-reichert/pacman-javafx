@@ -57,7 +57,7 @@ public class MsPacMan_IntermissionScene2 extends GameScene2D {
 		$.msPacMan.setAnimations(new PacAnimations(r2D));
 		$.msPacMan.animations().get().ensureRunning();
 		$.pacMan.setAnimations(new PacAnimations(r2D));
-		$.pacMan.animations().get().put("munching", Spritesheet_MsPacMan.get().createHusbandMunchingAnimations());
+		$.pacMan.animations().get().put("munching", Spritesheet_MsPacMan.get().createPac_Man_MunchingAnimationMap());
 		$.pacMan.animations().get().ensureRunning();
 	}
 

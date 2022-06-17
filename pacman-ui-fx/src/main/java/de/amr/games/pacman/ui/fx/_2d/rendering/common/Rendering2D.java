@@ -49,6 +49,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 
 /**
@@ -185,9 +186,8 @@ public interface Rendering2D {
 	/**
 	 * Draws the copyright text and image. Used in several scenes so put this here.
 	 * 
-	 * @param g graphics context
-	 * @param x left upper corner x
-	 * @param y left upper corner y
+	 * @param g     graphics context
+	 * @param tileY vertical tile position
 	 */
 	void drawCopyright(GraphicsContext g, int tileY);
 
@@ -199,12 +199,11 @@ public interface Rendering2D {
 
 	default void drawScore(GraphicsContext g, Score score) {
 		if (score.visible) {
-			String pointsText = score.showContent ? "%02d".formatted(score.points) : "00";
+			String pointsText = "%02d".formatted(score.showContent ? score.points : 0);
 			String levelText = score.showContent ? "L" + score.levelNumber : "";
 			g.setFont(getArcadeFont());
 			g.setFill(Color.WHITE);
 			g.fillText(score.title, score.position.x, score.position.y);
-			g.setFill(Color.WHITE);
 			g.fillText("%7s".formatted(pointsText), score.position.x, score.position.y + t(1));
 			g.setFill(Color.LIGHTGRAY);
 			g.fillText(levelText, score.position.x + t(8), score.position.y + t(1));
@@ -215,12 +214,13 @@ public interface Rendering2D {
 		if (state == GameState.GAME_OVER) {
 			g.setFont(getArcadeFont());
 			g.setFill(Color.RED);
-			g.fillText("GAME", t(9), t(21));
-			g.fillText("OVER", t(15), t(21));
+			g.fillText("GAME  OVER", t(9), t(21));
 		} else if (state == GameState.READY) {
 			g.setFont(getArcadeFont());
 			g.setFill(Color.YELLOW);
-			g.fillText("READY!", t(11), t(21));
+			g.fillText("READY", t(11), t(21));
+			g.setFont(Font.font(getArcadeFont().getFamily(), FontPosture.ITALIC, TS));
+			g.fillText("!", t(16), t(21));
 		}
 	}
 
@@ -235,7 +235,7 @@ public interface Rendering2D {
 	}
 
 	default void drawLivesCounter(GraphicsContext g, int numLives) {
-		int x = t(2), y = t(34);
+		int x = t(2), y = t(ArcadeWorld.TILES_Y - 2);
 		int maxLives = 5;
 		for (int i = 0; i < Math.min(numLives, maxLives); ++i) {
 			drawSprite(g, getLifeSprite(), x + t(2 * i), y);
@@ -258,14 +258,12 @@ public interface Rendering2D {
 		}
 	}
 
-	// Debug draw functions
-
-	default void drawGrid(GraphicsContext g, double scale) {
+	default void drawTileBorders(GraphicsContext g, double scale) {
 		g.setStroke(Color.rgb(220, 220, 220, 0.75));
-		for (int row = 0; row < ArcadeWorld.TILES_Y; ++row) {
+		for (int row = 0; row <= ArcadeWorld.TILES_Y; ++row) {
 			g.strokeLine(0, scale * t(row), scale * ArcadeWorld.SIZE.x, scale * t(row));
 		}
-		for (int col = 0; col < ArcadeWorld.TILES_X; ++col) {
+		for (int col = 0; col <= ArcadeWorld.TILES_X; ++col) {
 			g.strokeLine(scale * t(col), 0, scale * t(col), scale * ArcadeWorld.SIZE.y);
 		}
 	}
