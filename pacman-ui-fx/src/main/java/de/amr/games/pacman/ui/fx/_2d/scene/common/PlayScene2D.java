@@ -49,7 +49,7 @@ public class PlayScene2D extends GameScene2D {
 		guysInfo.init(game);
 		creditVisible = !hasCredit();
 		game.levelCounter.visible = hasCredit();
-		game.setMazeFlashingAnimation(r2D.createMazeFlashingAnimation(r2D.mazeNumber(game.level.number)));
+		game.setMazeFlashingAnimation(r2D.createMazeFlashingAnimation(game.level.mazeNumber));
 		game.pac.setAnimations(new PacAnimations(r2D));
 		for (var ghost : game.ghosts) {
 			ghost.setAnimations(new GhostAnimations(ghost.id, r2D));
@@ -86,7 +86,7 @@ public class PlayScene2D extends GameScene2D {
 		if (game.mazeFlashingAnimation().isPresent() && game.mazeFlashingAnimation().get().isRunning()) {
 			g.drawImage((Image) game.mazeFlashingAnimation().get().frame(), t(0), t(3));
 		} else {
-			r2D.drawMaze(g, t(0), t(3), game.level.world, r2D.mazeNumber(game.level.number), !game.energizerPulse.frame());
+			r2D.drawMaze(g, t(0), t(3), game.level.world, game.level.mazeNumber, !game.energizerPulse.frame());
 		}
 		r2D.drawGameStateMessage(g, hasCredit() ? gameController.state() : GameState.GAME_OVER);
 		r2D.drawBonus(g, game.bonus().entity());

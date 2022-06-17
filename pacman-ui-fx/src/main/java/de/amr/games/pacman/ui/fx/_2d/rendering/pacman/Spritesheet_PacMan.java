@@ -125,11 +125,6 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public int mazeNumber(int levelNumber) {
-		return 1;
-	}
-
-	@Override
 	public SingleSpriteAnimation<Image> createMazeFlashingAnimation(int mazeNumber) {
 		var brightImage = U.colorsExchanged(mazeEmpty, Map.of(MAZE_WALL_COLOR, Color.WHITE));
 		var animation = new SingleSpriteAnimation<>(brightImage, mazeEmpty);

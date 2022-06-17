@@ -111,8 +111,6 @@ public interface Rendering2D {
 
 	// Maze
 
-	int mazeNumber(int levelNumber);
-
 	Color getFoodColor(int mazeNumber);
 
 	Image getMazeFullImage(int mazeNumber);

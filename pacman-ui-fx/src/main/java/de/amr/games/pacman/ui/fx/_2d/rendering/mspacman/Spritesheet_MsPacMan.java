@@ -186,17 +186,6 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public int mazeNumber(int levelNumber) {
-		return switch (levelNumber) {
-		case 1, 2 -> 1;
-		case 3, 4, 5 -> 2;
-		case 6, 7, 8, 9 -> 3;
-		case 10, 11, 12, 13 -> 4;
-		default -> (levelNumber - 14) % 8 < 4 ? 5 : 6;
-		};
-	}
-
-	@Override
 	public SingleSpriteAnimation<Image> createMazeFlashingAnimation(int mazeNumber) {
 		int mazeIndex = mazeNumber - 1;
 		var mazeEmpty = subImage(228, 248 * mazeIndex, 226, 248);

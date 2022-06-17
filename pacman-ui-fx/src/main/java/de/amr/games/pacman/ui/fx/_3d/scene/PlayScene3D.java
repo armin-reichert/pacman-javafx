@@ -238,11 +238,10 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 
 	private void onMazeResolutionChange(ObservableValue<? extends Number> property, Number oldValue, Number newValue) {
 		if (!oldValue.equals(newValue)) {
-			int mazeNumber = r2D.mazeNumber(game.level.number);
 			maze3D.createWallsAndDoors(game.level.world, //
-					getMazeSideColor(game.variant, mazeNumber), //
-					getMazeTopColor(game.variant, mazeNumber), //
-					getGhostHouseDoorColor(game.variant, mazeNumber));
+					getMazeSideColor(game.variant, game.level.mazeNumber), //
+					getMazeTopColor(game.variant, game.level.mazeNumber), //
+					getGhostHouseDoorColor(game.variant, game.level.mazeNumber));
 		}
 	}
 
@@ -350,7 +349,7 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 		}
 		case LEVEL_STARTING -> {
 			blockGameController();
-			buildMazeContent(r2D.mazeNumber(game.level.number));
+			buildMazeContent(game.level.mazeNumber);
 			levelCounter3D.update(game);
 			Actions.showFlashMessage(Env.message("level_starting", game.level.number));
 			U.pauseSec(3, () -> unblockGameController()).play();
@@ -392,7 +391,7 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
 		maze3D.$resolution.addListener(this::onMazeResolutionChange);
-		buildMazeContent(r2D.mazeNumber(game.level.number));
+		buildMazeContent(game.level.mazeNumber);
 	}
 
 	private void buildMazeContent(int mazeNumber) {
