@@ -35,7 +35,6 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -172,7 +171,7 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 		levelCounter3D = new LevelCounter3D(ArcadeWorld.SIZE.x - TS, TS, r2D);
 		levelCounter3D.update(game);
 
-		player3D = new Pac3D(game.level.world, game.pac, model3D, game.sounds().get()); // TODO check
+		player3D = new Pac3D(game.level.world, game.pac, model3D);
 		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, model3D, r2D)).toArray(Ghost3D[]::new);
 		bonus3D = new Bonus3D(r2D);
 
@@ -342,7 +341,6 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 			var killer = game.ghosts().filter(ghost -> ghost.sameTile(game.pac)).findAny().get();
 			var killerColor = r2D.getGhostColor(killer.id);
 			new SequentialTransition( //
-					U.pauseSec(1.0, () -> game.ghosts().forEach(Ghost::hide)), //
 					player3D.dyingAnimation(killerColor, game.credit == 0), //
 					U.pauseSec(2.0, () -> unblockGameController()) //
 			).play();

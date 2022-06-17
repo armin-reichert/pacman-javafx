@@ -26,14 +26,11 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameSound;
-import de.amr.games.pacman.model.common.GameSounds;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.FillTransition3D;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
-import de.amr.games.pacman.ui.fx.util.U;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.animation.RotateTransition;
@@ -66,9 +63,7 @@ public class Pac3D extends Group implements Rendering3D {
 
 	private Color skullColorImpaled = Color.GHOSTWHITE;
 
-	private final GameSounds sounds;
-
-	public Pac3D(World world, Pac pac, PacManModel3D model3D, GameSounds sounds) {
+	public Pac3D(World world, Pac pac, PacManModel3D model3D) {
 		this.world = world;
 		this.pac = pac;
 		bodyParts = model3D.createPacMan(getPlayerSkullColor(), getPlayerEyesColor(), getPlayerPalateColor());
@@ -80,8 +75,6 @@ public class Pac3D extends Group implements Rendering3D {
 		skull().setUserData(this);
 		eyes().setUserData(this);
 		palate().setUserData(this);
-
-		this.sounds = sounds;
 	}
 
 	private boolean insideWorld() {
@@ -137,14 +130,10 @@ public class Pac3D extends Group implements Rendering3D {
 		shrink.setToY(0);
 		shrink.setToZ(0);
 
-		Animation spinAndShrink = silent //
-				? new ParallelTransition(spin, shrink) //
-				: new ParallelTransition(spin, shrink, U.pauseSec(0, () -> sounds.play(GameSound.PACMAN_DEATH)));
-
 		return new SequentialTransition( //
 				new FillTransition3D(Duration.seconds(1), skull(), getPlayerSkullColor(), ghostColor), //
 				new FillTransition3D(Duration.seconds(1), skull(), ghostColor, skullColorImpaled), //
-				spinAndShrink);
+				new ParallelTransition(spin, shrink));
 	}
 
 	private void setShapeColor(Shape3D shape, Color diffuseColor) {
