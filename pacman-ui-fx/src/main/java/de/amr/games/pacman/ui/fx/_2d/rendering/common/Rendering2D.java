@@ -27,7 +27,6 @@ import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 import de.amr.games.pacman.controller.common.GameState;
@@ -70,15 +69,6 @@ public interface Rendering2D {
 	Color getGhostColor(int ghostID);
 
 	Image getSpriteImage(Rectangle2D sprite);
-
-	default Image[] getAnimationImages(List<Rectangle2D> animation) {
-		int n = animation.size();
-		Image[] images = new Image[n];
-		for (int i = 0; i < n; ++i) {
-			images[i] = getSpriteImage(animation.get(i));
-		}
-		return images;
-	}
 
 	default Image[] getAnimationImages(SpriteArray<Rectangle2D> animation) {
 		int n = animation.numFrames();
@@ -126,8 +116,6 @@ public interface Rendering2D {
 	Color getFoodColor(int mazeNumber);
 
 	Image getMazeFullImage(int mazeNumber);
-
-	Image getMazeEmptyImage(int mazeNumber);
 
 	// Drawing
 

@@ -143,11 +143,6 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public Image getMazeEmptyImage(int mazeNumber) {
-		return mazeEmpty;
-	}
-
-	@Override
 	public void drawCopyright(GraphicsContext g, int tileY) {
 		String text = "\u00A9 1980 MIDWAY MFG. CO.";
 		g.setFont(getArcadeFont());

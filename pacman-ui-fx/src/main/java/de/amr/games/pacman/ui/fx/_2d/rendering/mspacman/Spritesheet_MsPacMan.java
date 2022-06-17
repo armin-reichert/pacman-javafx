@@ -215,11 +215,6 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public Image getMazeEmptyImage(int mazeNumber) {
-		return mazesEmpty[mazeNumber - 1];
-	}
-
-	@Override
 	public Color getFoodColor(int mazeNumber) {
 		return FOOD_COLORS[mazeNumber - 1];
 	}
