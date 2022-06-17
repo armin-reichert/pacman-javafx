@@ -86,13 +86,14 @@ public class GuysInfo {
 	}
 
 	private String computeGhostInfo(Ghost ghost) {
-		String stateText = ghost.state.name();
+		String name = ghost.id == Ghost.RED_GHOST && ghost.elroy > 0 ? "Elroy " + ghost.elroy : ghost.name;
+		var stateText = ghost.state.name();
 		if (ghost.state == GhostState.HUNTING_PAC) {
 			stateText += game.huntingTimer.chasingPhase() != -1 ? " (Chasing)" : " (Scattering)";
 		}
 		var animKey = ghost.animations().get().selected();
 		var animState = getAnimationState(ghost.animations().get().selectedAnimation(), ghost.wishDir());
-		return "%s\n%s\n %s%s".formatted(ghost.name, stateText, animState, animKey);
+		return "%s\n%s\n %s%s".formatted(name, stateText, animState, animKey);
 	}
 
 	private String computePacInfo(Pac pac) {
