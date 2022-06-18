@@ -91,7 +91,6 @@ public class Ghost3D extends Group implements Rendering3D {
 		private final Shape3D eyeBalls;
 		private final Motion motion;
 		private final ColorFlashingTransition flashingAnimation;
-		private boolean frightened;
 
 		public BodyAnimation(PacManModel3D model3D) {
 			motion = new Motion(Ghost3D.this); // TODO check this
@@ -138,7 +137,6 @@ public class Ghost3D extends Group implements Rendering3D {
 
 		public void setFrightened(boolean frightened) {
 			ensureFlashingAnimationStopped();
-			this.frightened = frightened;
 			if (frightened) {
 				setShapeColor(skin, ghostify(getGhostSkinColorFrightened()));
 				setShapeColor(eyeBalls, getGhostEyeBallColorFrightened());
@@ -182,6 +180,10 @@ public class Ghost3D extends Group implements Rendering3D {
 		bodyAnimation.move();
 	}
 
+	public AnimationMode getAnimationMode() {
+		return animationMode;
+	}
+
 	public void setAnimationMode(AnimationMode animationMode) {
 		if (this.animationMode != animationMode) {
 			this.animationMode = animationMode;
@@ -210,10 +212,6 @@ public class Ghost3D extends Group implements Rendering3D {
 			}
 			}
 		}
-	}
-
-	public boolean isLookingFrightened() {
-		return bodyAnimation.frightened;
 	}
 
 	public void playFlashingAnimation() {

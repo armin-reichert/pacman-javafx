@@ -241,7 +241,6 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 		if (game.pac.hasPower()) {
 			Stream.of(ghosts3D) //
 					.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
-					.filter(ghost3D -> !ghost3D.isLookingFrightened()) //
 					.forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.FRIGHTENED));
 		}
 		maze3D.foodNodes()
