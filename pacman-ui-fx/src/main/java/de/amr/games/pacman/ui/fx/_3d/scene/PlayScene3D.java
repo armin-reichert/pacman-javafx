@@ -32,7 +32,6 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
-import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -78,7 +77,7 @@ import javafx.scene.transform.Translate;
  * 
  * @author Armin Reichert
  */
-public class PlayScene3D implements GameEventAdapter, GameScene {
+public class PlayScene3D implements GameScene {
 
 	private final SubScene fxSubScene;
 	private final AmbientLight light = new AmbientLight(Color.GHOSTWHITE);

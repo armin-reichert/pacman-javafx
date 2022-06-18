@@ -32,8 +32,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 /**
- * Maybe this is total bullshit but it works.
- * 
  * @author Armin Reichert
  */
 public class Keyboard {

@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
@@ -50,7 +49,7 @@ import javafx.scene.transform.Scale;
  * 
  * @author Armin Reichert
  */
-public abstract class GameScene2D implements GameEventAdapter, GameScene {
+public abstract class GameScene2D implements GameScene {
 
 	protected final V2d unscaledSize = new V2d(ArcadeWorld.SIZE);
 	protected final Canvas canvas = new Canvas(unscaledSize.x, unscaledSize.y);

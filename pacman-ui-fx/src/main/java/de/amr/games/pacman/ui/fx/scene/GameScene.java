@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx.scene;
 import static de.amr.games.pacman.lib.Logging.log;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.event.GameEventListener;
+import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
@@ -36,15 +36,17 @@ import javafx.scene.SubScene;
  * 
  * @author Armin Reichert
  */
-public interface GameScene extends GameEventListener {
+public interface GameScene extends GameEventAdapter {
 
 	/**
-	 * Sets the scene "context" (game controller, model, rendering, 3D model, sound). Called before the scene gets active.
+	 * Sets the scene context (game controller/model, 2D rendering, 3D model, sound).
+	 * <p>
+	 * This method is called before the scene's init method.
 	 */
 	void setSceneContext(GameController gameController);
 
 	/**
-	 * Called before scene is displayed.
+	 * Called when the scene becomes the current one.
 	 */
 	default void init() {
 		log("Scene '%s' init", getClass().getName());
@@ -56,7 +58,7 @@ public interface GameScene extends GameEventListener {
 	void update();
 
 	/**
-	 * Called before scene ends.
+	 * Called when the scene is replaced by another one.
 	 */
 	default void end() {
 		log("Scene '%s' end", getClass().getName());
@@ -74,6 +76,11 @@ public interface GameScene extends GameEventListener {
 	 */
 	void setParent(Scene parent);
 
+	/**
+	 * Resizes the scene to the given height.
+	 * 
+	 * @param height new height
+	 */
 	default void resize(double height) {
 	}
 
@@ -83,9 +90,7 @@ public interface GameScene extends GameEventListener {
 	boolean is3D();
 
 	/**
-	 * Called when a key has been pressed.
-	 * 
-	 * @see Keyboard
+	 * Called when a key has been pressed. The keyboard state can be queried using the {@link Keyboard} class.
 	 */
 	default void onKeyPressed() {
 	}
