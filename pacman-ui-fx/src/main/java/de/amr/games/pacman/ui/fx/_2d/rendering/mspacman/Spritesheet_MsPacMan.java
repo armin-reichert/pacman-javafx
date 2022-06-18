@@ -148,6 +148,11 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
+	public Color getFoodColor(int mazeNumber) {
+		return FOOD_COLORS[mazeNumber - 1];
+	}
+
+	@Override
 	public Rectangle2D getGhostSprite(int ghostID, Direction dir) {
 		return rhs(2 * dirIndex(dir) + 1, 4 + ghostID);
 	}
@@ -163,6 +168,28 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
+	public Image getMazeFullImage(int mazeNumber) {
+		return mazesFull[mazeNumber - 1];
+	}
+
+	@Override
+	public Rectangle2D getLifeSprite() {
+		return rhs(1, 0);
+	}
+
+	public Rectangle2D getHeart() {
+		return rhs(2, 10);
+	}
+
+	public Rectangle2D getBlueBag() {
+		return new Rectangle2D(488, 199, 8, 8);
+	}
+
+	public Rectangle2D getJunior() {
+		return new Rectangle2D(509, 200, 8, 8);
+	}
+
+	@Override
 	public void drawCopyright(GraphicsContext g, int tileY) {
 		int x = t(6);
 		int y = t(tileY - 1);
@@ -173,6 +200,17 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 		g.setFont(getArcadeFont());
 		g.fillText("MIDWAY MFG CO", x + t(7), y + t(2));
 		g.fillText("1980/1981", x + t(8), y + t(4));
+	}
+
+	public void drawFlap(GraphicsContext g, Flap flap) {
+		if (flap.visible) {
+			Rectangle2D sprite = (Rectangle2D) flap.animation.animate();
+			drawEntity(g, flap, sprite);
+			g.setFont(getArcadeFont());
+			g.setFill(Color.rgb(222, 222, 255));
+			g.fillText(String.valueOf(flap.number), flap.position.x + sprite.getWidth() - 25, flap.position.y + 18);
+			g.fillText(flap.text, flap.position.x + sprite.getWidth(), flap.position.y);
+		}
 	}
 
 	@Override
@@ -187,25 +225,6 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 		animation.frameDuration(10);
 		return animation;
 	}
-
-	@Override
-	public Image getMazeFullImage(int mazeNumber) {
-		return mazesFull[mazeNumber - 1];
-	}
-
-	@Override
-	public Color getFoodColor(int mazeNumber) {
-		return FOOD_COLORS[mazeNumber - 1];
-	}
-
-	@Override
-	public Rectangle2D getLifeSprite() {
-		return rhs(1, 0);
-	}
-
-	/*
-	 * Animations.
-	 */
 
 	@Override
 	public SpriteAnimationMap<Direction, Rectangle2D> createPacMunchingAnimationMap() {
@@ -303,17 +322,6 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 		return animation;
 	}
 
-	public void drawFlap(GraphicsContext g, Flap flap) {
-		if (flap.visible) {
-			Rectangle2D sprite = (Rectangle2D) flap.animation.animate();
-			drawEntity(g, flap, sprite);
-			g.setFont(getArcadeFont());
-			g.setFill(Color.rgb(222, 222, 255));
-			g.fillText(String.valueOf(flap.number), flap.position.x + sprite.getWidth() - 25, flap.position.y + 18);
-			g.fillText(flap.text, flap.position.x + sprite.getWidth(), flap.position.y);
-		}
-	}
-
 	public SingleSpriteAnimation<Rectangle2D> createStorkFlyingAnimation() {
 		var animation = new SingleSpriteAnimation<>( //
 				new Rectangle2D(489, 176, 32, 16), //
@@ -322,17 +330,5 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 		animation.repeatForever();
 		animation.frameDuration(8);
 		return animation;
-	}
-
-	public Rectangle2D getHeart() {
-		return rhs(2, 10);
-	}
-
-	public Rectangle2D getJunior() {
-		return new Rectangle2D(509, 200, 8, 8);
-	}
-
-	public Rectangle2D getBlueBag() {
-		return new Rectangle2D(488, 199, 8, 8);
 	}
 }
