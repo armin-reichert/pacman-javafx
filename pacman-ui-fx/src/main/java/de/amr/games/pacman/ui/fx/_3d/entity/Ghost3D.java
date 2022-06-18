@@ -59,7 +59,7 @@ public class Ghost3D extends Group implements Rendering3D {
 		COLORED, FRIGHTENED, EYES_ONLY, NUMBER_CUBE;
 	}
 
-	public class NumberCubeAnimation {
+	public static class NumberCubeAnimation {
 
 		private final Box numberCube;
 		private final Image[] valueImages;
@@ -82,8 +82,9 @@ public class Ghost3D extends Group implements Rendering3D {
 		}
 	}
 
-	public class BodyAnimation {
+	public static class BodyAnimation implements Rendering3D {
 
+		private final int ghostID;
 		private final Group root;
 		private final Shape3D skin;
 		private final Group eyes;
@@ -91,22 +92,25 @@ public class Ghost3D extends Group implements Rendering3D {
 		private final Shape3D eyeBalls;
 		private final Motion motion;
 		private final ColorFlashingTransition flashingAnimation;
+		private final FadeInTransition3D revivalAnimation;
 
-		public BodyAnimation(PacManModel3D model3D) {
-			motion = new Motion(Ghost3D.this); // TODO check this
-			root = model3D.createGhost(ghostify(getGhostSkinColor(ghost.id)), getGhostEyeBallColor(), getGhostPupilColor());
+		public BodyAnimation(PacManModel3D model3D, int ghostID) {
+			this.ghostID = ghostID;
+			root = model3D.createGhost(ghostify(getGhostSkinColor(ghostID)), getGhostEyeBallColor(), getGhostPupilColor());
 			skin = (Shape3D) root.getChildren().get(0);
 			eyes = (Group) root.getChildren().get(1);
 			eyePupils = (Shape3D) eyes.getChildren().get(0);
 			eyeBalls = (Shape3D) eyes.getChildren().get(1);
 			flashingAnimation = new ColorFlashingTransition(getGhostSkinColorFrightened(), getGhostSkinColorFrightened2());
+			revivalAnimation = new FadeInTransition3D(Duration.seconds(1.5), skin, ghostify(getGhostSkinColor(ghostID)));
+			motion = new Motion(root); // TODO check this
 		}
 
 		public Node getRoot() {
 			return root;
 		}
 
-		public void move() {
+		public void move(Ghost ghost) {
 			motion.update(ghost);
 			boolean insideWorld = 0 <= ghost.position.x && ghost.position.x <= t(ArcadeWorld.TILES_X - 1);
 			root.setVisible(ghost.visible && insideWorld);
@@ -129,12 +133,6 @@ public class Ghost3D extends Group implements Rendering3D {
 			}
 		}
 
-		public void playRevivalAnimation() {
-			var animation = new FadeInTransition3D(Duration.seconds(1.5), skin, ghostify(getGhostSkinColor(ghost.id)));
-			animation.setOnFinished(e -> setAnimationMode(AnimationMode.COLORED));
-			animation.playFromStart();
-		}
-
 		public void setFrightened(boolean frightened) {
 			ensureFlashingAnimationStopped();
 			if (frightened) {
@@ -142,7 +140,7 @@ public class Ghost3D extends Group implements Rendering3D {
 				setShapeColor(eyeBalls, getGhostEyeBallColorFrightened());
 				setShapeColor(eyePupils, getGhostPupilColorFrightened());
 			} else {
-				setShapeColor(skin, ghostify(getGhostSkinColor(ghost.id)));
+				setShapeColor(skin, ghostify(getGhostSkinColor(ghostID)));
 				setShapeColor(eyeBalls, getGhostEyeBallColor());
 				setShapeColor(eyePupils, getGhostPupilColor());
 			}
@@ -167,7 +165,7 @@ public class Ghost3D extends Group implements Rendering3D {
 	public Ghost3D(Ghost ghost, PacManModel3D model3D, Rendering2D r2D) {
 		this.ghost = ghost;
 		numberCubeAnimation = new NumberCubeAnimation(r2D);
-		bodyAnimation = new BodyAnimation(model3D);
+		bodyAnimation = new BodyAnimation(model3D, ghost.id);
 		setAnimationMode(AnimationMode.COLORED);
 	}
 
@@ -177,7 +175,7 @@ public class Ghost3D extends Group implements Rendering3D {
 	}
 
 	public void update() {
-		bodyAnimation.move();
+		bodyAnimation.move(ghost);
 	}
 
 	public AnimationMode getAnimationMode() {
@@ -219,6 +217,7 @@ public class Ghost3D extends Group implements Rendering3D {
 	}
 
 	public void playRevivalAnimation() {
-		bodyAnimation.playRevivalAnimation();
+		bodyAnimation.revivalAnimation.setOnFinished(e -> setAnimationMode(AnimationMode.COLORED));
+		bodyAnimation.revivalAnimation.playFromStart();
 	}
 }
