@@ -56,7 +56,7 @@ import javafx.util.Duration;
 public class Ghost3D extends Group implements Rendering3D {
 
 	public enum AnimationMode {
-		BODY, EYES_ONLY, NUMBER_CUBE;
+		COLORED, FRIGHTENED, FLASHING, EYES_ONLY, NUMBER_CUBE;
 	}
 
 	public class NumberCubeAnimation {
@@ -79,9 +79,6 @@ public class Ghost3D extends Group implements Rendering3D {
 			material.setBumpMap(texture);
 			material.setDiffuseMap(texture);
 			numberCube.setMaterial(material);
-			// rotate such that number appears in right orientation
-			setRotationAxis(Rotate.X_AXIS);
-			setRotate(0);
 		}
 	}
 
@@ -89,8 +86,8 @@ public class Ghost3D extends Group implements Rendering3D {
 
 		private Group root;
 		private final Motion motion;
-		private boolean looksFrightened;
-		private ColorFlashingTransition skinFlashing;
+		private boolean frightened;
+		private ColorFlashingTransition flashing;
 
 		public BodyAnimation(PacManModel3D model3D) {
 			root = model3D.createGhost(ghostify(getGhostSkinColor(ghost.id)), getGhostEyeBallColor(), getGhostPupilColor());
@@ -131,37 +128,36 @@ public class Ghost3D extends Group implements Rendering3D {
 		}
 
 		public void playFlashingAnimation() {
-			skinFlashing = new ColorFlashingTransition(getGhostSkinColorFrightened(), getGhostSkinColorFrightened2());
-			skin().setMaterial(skinFlashing.getMaterial());
-			skinFlashing.playFromStart();
+			flashing = new ColorFlashingTransition(getGhostSkinColorFrightened(), getGhostSkinColorFrightened2());
+			skin().setMaterial(flashing.getMaterial());
+			flashing.playFromStart();
 		}
 
 		public void stopFlashingAnimation() {
-			if (skinFlashing != null) {
-				skinFlashing.stop();
+			if (flashing != null) {
+				flashing.stop();
 			}
 		}
 
 		public void playRevivalAnimation() {
 			var animation = new FadeInTransition3D(Duration.seconds(1.5), skin(), ghostify(getGhostSkinColor(ghost.id)));
-			animation.setOnFinished(e -> setNormalLook());
+			animation.setOnFinished(e -> setAnimationMode(AnimationMode.COLORED));
 			animation.playFromStart();
 		}
 
-		public void setNormalLook() {
+		public void setFrightened(boolean frightened) {
 			stopFlashingAnimation();
-			setShapeColor(skin(), ghostify(getGhostSkinColor(ghost.id)));
-			setShapeColor(eyeBalls(), getGhostEyeBallColor());
-			setShapeColor(pupils(), getGhostPupilColor());
-			looksFrightened = false;
-		}
+			this.frightened = frightened;
+			if (frightened) {
+				setShapeColor(skin(), ghostify(getGhostSkinColorFrightened()));
+				setShapeColor(eyeBalls(), getGhostEyeBallColorFrightened());
+				setShapeColor(pupils(), getGhostPupilColorFrightened());
+			} else {
+				setShapeColor(skin(), ghostify(getGhostSkinColor(ghost.id)));
+				setShapeColor(eyeBalls(), getGhostEyeBallColor());
+				setShapeColor(pupils(), getGhostPupilColor());
 
-		public void setFrightenedLook() {
-			stopFlashingAnimation();
-			setShapeColor(skin(), ghostify(getGhostSkinColorFrightened()));
-			setShapeColor(eyeBalls(), getGhostEyeBallColorFrightened());
-			setShapeColor(pupils(), getGhostPupilColorFrightened());
-			looksFrightened = true;
+			}
 		}
 
 		private void setShapeColor(Shape3D shape, Color diffuseColor) {
@@ -189,7 +185,7 @@ public class Ghost3D extends Group implements Rendering3D {
 	}
 
 	public void reset() {
-		bodyAnimation.setNormalLook();
+		bodyAnimation.setFrightened(false);
 		update();
 	}
 
@@ -200,7 +196,7 @@ public class Ghost3D extends Group implements Rendering3D {
 		if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
 			return AnimationMode.EYES_ONLY;
 		}
-		return AnimationMode.BODY;
+		return AnimationMode.COLORED;
 	}
 
 	public void update() {
@@ -208,8 +204,8 @@ public class Ghost3D extends Group implements Rendering3D {
 		if (animationMode != suitableMode) {
 			setAnimationMode(suitableMode);
 		}
-		switch (suitableMode) {
-		case BODY, EYES_ONLY -> {
+		switch (animationMode) {
+		case COLORED, FRIGHTENED, FLASHING, EYES_ONLY -> {
 			bodyAnimation.move();
 		}
 		case NUMBER_CUBE -> {
@@ -217,34 +213,40 @@ public class Ghost3D extends Group implements Rendering3D {
 		}
 	}
 
-	private void setAnimationMode(AnimationMode animationMode) {
+	public void setAnimationMode(AnimationMode animationMode) {
 		this.animationMode = animationMode;
 		switch (animationMode) {
-		case BODY -> {
+		case COLORED -> {
 			bodyAnimation.setShowSkin(true);
+			getChildren().setAll(bodyAnimation.getRoot());
+		}
+		case FRIGHTENED -> {
+			bodyAnimation.setShowSkin(true);
+			bodyAnimation.setFrightened(true);
+			getChildren().setAll(bodyAnimation.getRoot());
+		}
+		case FLASHING -> {
+			bodyAnimation.setShowSkin(true);
+			bodyAnimation.setFrightened(true);
 			getChildren().setAll(bodyAnimation.getRoot());
 		}
 		case EYES_ONLY -> {
 			bodyAnimation.setShowSkin(false);
+			bodyAnimation.setFrightened(false);
 			getChildren().setAll(bodyAnimation.getRoot());
 		}
 		case NUMBER_CUBE -> {
 			numberCubeAnimation.setNumber(ghost.killIndex);
+			// rotate such that number appears in right orientation
+			setRotationAxis(Rotate.X_AXIS);
+			setRotate(0);
 			getChildren().setAll(numberCubeAnimation.getRoot());
 		}
 		}
 	}
 
-	public void setNormalLook() {
-		bodyAnimation.setNormalLook();
-	}
-
 	public boolean isLookingFrightened() {
-		return bodyAnimation.looksFrightened;
-	}
-
-	public void setFrightenedLook() {
-		bodyAnimation.setFrightenedLook();
+		return bodyAnimation.frightened;
 	}
 
 	public void playFlashingAnimation() {

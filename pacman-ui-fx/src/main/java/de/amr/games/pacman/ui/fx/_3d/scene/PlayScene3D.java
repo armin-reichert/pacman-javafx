@@ -43,6 +43,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
+import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D.AnimationMode;
 import de.amr.games.pacman.ui.fx._3d.entity.LevelCounter3D;
 import de.amr.games.pacman.ui.fx._3d.entity.LivesCounter3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Maze3D;
@@ -226,7 +227,7 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 			Stream.of(ghosts3D) //
 					.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
 					.filter(ghost3D -> !ghost3D.isLookingFrightened()) //
-					.forEach(Ghost3D::setFrightenedLook);
+					.forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.FRIGHTENED));
 		}
 		maze3D.foodNodes()
 				.forEach(foodNode -> foodNode.setVisible(!game.level.world.containsEatenFood(maze3D.tile(foodNode))));
@@ -276,7 +277,7 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 	public void onPlayerGetsPower(GameEvent e) {
 		Stream.of(ghosts3D) //
 				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED) || ghost3D.ghost.is(GhostState.LOCKED))
-				.forEach(Ghost3D::setFrightenedLook);
+				.forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.FRIGHTENED));
 	}
 
 	@Override
@@ -288,7 +289,7 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 
 	@Override
 	public void onPlayerLosesPower(GameEvent e) {
-		Stream.of(ghosts3D).forEach(Ghost3D::setNormalLook);
+		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.COLORED));
 	}
 
 	@Override
@@ -337,7 +338,7 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 		}
 		case PACMAN_DYING -> {
 			blockGameController();
-			Stream.of(ghosts3D).forEach(Ghost3D::setNormalLook);
+			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.COLORED));
 			var killer = game.ghosts().filter(ghost -> ghost.sameTile(game.pac)).findAny().get();
 			var killerColor = r2D.getGhostColor(killer.id);
 			new SequentialTransition( //
@@ -354,7 +355,7 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 		}
 		case LEVEL_COMPLETE -> {
 			blockGameController();
-			Stream.of(ghosts3D).forEach(Ghost3D::setNormalLook);
+			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.COLORED));
 			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", game.level.number);
 			new SequentialTransition( //
 					U.pauseSec(2.0), //
