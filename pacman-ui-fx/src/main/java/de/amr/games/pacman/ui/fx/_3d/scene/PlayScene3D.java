@@ -35,6 +35,7 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -215,11 +216,25 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 	public void update() {
 		maze3D.update(game);
 		player3D.update();
-		Stream.of(ghosts3D).forEach(Ghost3D::update);
+		Stream.of(game.ghosts).forEach(this::updateGhost3D);
 		bonus3D.update(game.bonus());
 		scores3D.update(game);
 		livesCounter3D.update(game.playing ? game.lives - 1 : game.lives);
 		getCamera().update(player3D);
+	}
+
+	private void updateGhost3D(Ghost ghost) {
+		var ghost3D = ghosts3D[ghost.id];
+		if (ghost.killIndex != -1) {
+			ghost3D.setAnimationMode(AnimationMode.NUMBER_CUBE);
+		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
+			ghost3D.setAnimationMode(AnimationMode.EYES_ONLY);
+		} else if (game.pac.hasPower()) {
+			ghost3D.setAnimationMode(AnimationMode.FRIGHTENED);
+		} else {
+			ghost3D.setAnimationMode(AnimationMode.COLORED);
+		}
+		ghost3D.update();
 	}
 
 	public void onSwitchFrom2D() {
@@ -331,7 +346,7 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 		case READY -> {
 			maze3D.reset();
 			player3D.reset();
-			Stream.of(ghosts3D).forEach(Ghost3D::reset);
+			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.reset());
 		}
 		case HUNTING -> {
 			maze3D.energizerAnimations().forEach(Animation::play);
