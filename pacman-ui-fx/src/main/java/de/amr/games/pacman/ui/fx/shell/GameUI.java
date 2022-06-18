@@ -25,36 +25,22 @@ package de.amr.games.pacman.ui.fx.shell;
 
 import static de.amr.games.pacman.lib.Logging.log;
 
-import java.util.Objects;
-import java.util.stream.Stream;
-
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
-import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_CreditScene;
-import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntermissionScene1;
-import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntermissionScene2;
-import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntermissionScene3;
-import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntroScene;
-import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_CreditScene;
-import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_Cutscene1;
-import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_Cutscene2;
-import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_Cutscene3;
-import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntroScene;
 import de.amr.games.pacman.ui.fx._3d.model.GianmarcosModel3D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
+import de.amr.games.pacman.ui.fx.scene.SceneManager;
 import de.amr.games.pacman.ui.fx.shell.info.Dashboard;
 import de.amr.games.pacman.ui.fx.sound.MsPacManGameSounds;
 import de.amr.games.pacman.ui.fx.sound.PacManGameSounds;
@@ -75,30 +61,7 @@ import javafx.stage.Stage;
  */
 public class GameUI implements GameEventAdapter {
 
-	public static final int SCENE_2D = 0, SCENE_3D = 1;
 	public static final Color SCENE_BACKGROUND_COLOR = Color.CORNFLOWERBLUE;
-
-	private final GameScene[][] scenes_PacMan = {
-		//@formatter:off
-		{ new PacMan_IntroScene(),         null },
-		{ new PacMan_CreditScene(),        null },
-		{ new PacMan_Cutscene1(),          null },
-		{ new PacMan_Cutscene2(),          null },
-		{ new PacMan_Cutscene3(),          null },
-		{ new PlayScene2D(),               new PlayScene3D() },
-		//@formatter:on
-	};
-
-	private final GameScene[][] scenes_MsPacMan = {
-		//@formatter:off
-		{ new MsPacMan_IntroScene(),         null },
-		{ new MsPacMan_CreditScene(),        null },
-		{ new MsPacMan_IntermissionScene1(), null },
-		{ new MsPacMan_IntermissionScene2(), null },
-		{ new MsPacMan_IntermissionScene3(), null },
-		{ new PlayScene2D(),                 new PlayScene3D() },
-		//@formatter:on
-	};
 
 	private final GameController gameController;
 	private final Stage stage;
@@ -131,7 +94,7 @@ public class GameUI implements GameEventAdapter {
 		sceneRoot = new StackPane(gameScenePlaceholder, dashboard, flashMessageView);
 
 		scene = new Scene(sceneRoot, width, height);
-		allGameScenes().forEach(gameScene -> gameScene.setParent(scene));
+		SceneManager.allGameScenes().forEach(gameScene -> gameScene.setParent(scene));
 		log("Main scene created. Size: %.0f x %.0f", scene.getWidth(), scene.getHeight());
 
 		var pacSteering = new KeyboardPacSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
@@ -145,7 +108,7 @@ public class GameUI implements GameEventAdapter {
 		Keyboard.addHandler(() -> pacSteering.onKeyPressed());
 		Keyboard.addHandler(() -> currentGameScene.onKeyPressed());
 
-		updateCurrentGameScene(gameController.state(), true);
+		updateCurrentGameScene(true);
 
 		stage.setMinHeight(328);
 		stage.setMinWidth(241);
@@ -155,11 +118,6 @@ public class GameUI implements GameEventAdapter {
 		stage.setScene(scene);
 		stage.centerOnScreen();
 		stage.show();
-	}
-
-	private Stream<GameScene> allGameScenes() {
-		return Stream.concat(Stream.of(scenes_MsPacMan), Stream.of(scenes_PacMan)).flatMap(Stream::of)
-				.filter(Objects::nonNull);
 	}
 
 	public double getWidth() {
@@ -191,30 +149,6 @@ public class GameUI implements GameEventAdapter {
 	}
 
 	/**
-	 * Returns the game scene that fits the current game state.
-	 *
-	 * @param game      the game model (Pac-Man or Ms. Pac-Man)
-	 * @param gameState the current game state
-	 * @param dimension {@link GameScenes#SCENE_2D} or {@link GameScenes#SCENE_3D}
-	 * @return the game scene that fits the current game state
-	 */
-	public GameScene findGameScene(GameModel game, GameState gameState, int dimension) {
-		var scenes = switch (game.variant) {
-		case MS_PACMAN -> scenes_MsPacMan;
-		case PACMAN -> scenes_PacMan;
-		};
-		var sceneIndex = switch (gameState) {
-		case INTRO -> 0;
-		case CREDIT -> 1;
-		case INTERMISSION -> 1 + game.intermissionNumber(game.level.number);
-		case INTERMISSION_TEST -> 1 + game.intermissionTestNumber;
-		default -> 5;
-		};
-		var gameScene = scenes[sceneIndex][dimension];
-		return gameScene != null ? gameScene : scenes[sceneIndex][SCENE_2D]; // use 2D as default
-	}
-
-	/**
 	 * Called on every tick (if simulation is not paused). Game scene is updated *and* rendered such that when simulation
 	 * is paused it gets redrawn nevertheless
 	 */
@@ -231,12 +165,12 @@ public class GameUI implements GameEventAdapter {
 
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
-		updateCurrentGameScene(e.newGameState, false);
+		updateCurrentGameScene(false);
 	}
 
 	@Override
 	public void onUIForceUpdate(GameEvent e) {
-		updateCurrentGameScene(gameController.state(), true);
+		updateCurrentGameScene(true);
 	}
 
 	/**
@@ -252,11 +186,11 @@ public class GameUI implements GameEventAdapter {
 	}
 
 	public void toggle3D() {
-		Env.toggle(Env.$3D);
 		var game = gameController.game();
 		var state = gameController.state();
-		if (findGameScene(game, state, SCENE_2D) != findGameScene(game, state, SCENE_3D)) {
-			updateCurrentGameScene(state, true);
+		Env.toggle(Env.$3D);
+		if (SceneManager.sceneExistsInBothDimensions(game, state)) {
+			updateCurrentGameScene(true);
 			if (currentGameScene instanceof PlayScene2D) {
 				((PlayScene2D) currentGameScene).onSwitchFrom3D();
 			} else if (currentGameScene instanceof PlayScene3D) {
@@ -265,11 +199,13 @@ public class GameUI implements GameEventAdapter {
 		}
 	}
 
-	private void updateCurrentGameScene(GameState gameState, boolean forcedSceneUpdate) {
-		var dim = Env.$3D.get() ? SCENE_3D : SCENE_2D;
-		var newGameScene = findGameScene(gameController.game(), gameController.state(), dim);
+	private void updateCurrentGameScene(boolean forcedSceneUpdate) {
+		var game = gameController.game();
+		var state = gameController.state();
+		var dimension = Env.$3D.get() ? SceneManager.SCENE_3D : SceneManager.SCENE_2D;
+		var newGameScene = SceneManager.findGameScene(game, state, dimension);
 		if (newGameScene == null) {
-			throw new IllegalStateException("No fitting game scene found for game state " + gameState);
+			throw new IllegalStateException("No fitting game scene found for game state " + state);
 		}
 		if (newGameScene == currentGameScene && !forcedSceneUpdate) {
 			return;
