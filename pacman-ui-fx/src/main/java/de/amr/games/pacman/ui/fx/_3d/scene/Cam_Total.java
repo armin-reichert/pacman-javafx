@@ -28,7 +28,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
 
-public class Cam_Total extends PlaySceneCamera {
+public class Cam_Total extends GameSceneCamera {
 
 	@Override
 	public String toString() {

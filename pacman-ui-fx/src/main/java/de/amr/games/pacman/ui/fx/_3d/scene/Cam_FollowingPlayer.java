@@ -29,7 +29,7 @@ import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
 
-public class Cam_FollowingPlayer extends PlaySceneCamera {
+public class Cam_FollowingPlayer extends GameSceneCamera {
 
 	private double speed = 0.03;
 

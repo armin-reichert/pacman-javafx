@@ -43,4 +43,8 @@ public class SceneContext {
 	public GameState gameState() {
 		return gameController.state();
 	}
+
+	public boolean hasCredit() {
+		return game.credit > 0;
+	}
 }

@@ -53,6 +53,11 @@ public abstract class GameScene3D implements GameScene {
 	}
 
 	@Override
+	public boolean is3D() {
+		return true;
+	}
+
+	@Override
 	public void setSceneContext(SceneContext context) {
 		$ = context;
 	}
@@ -66,5 +71,13 @@ public abstract class GameScene3D implements GameScene {
 	public void setParent(Scene parent) {
 		fxSubScene.widthProperty().bind(parent.widthProperty());
 		fxSubScene.heightProperty().bind(parent.heightProperty());
+	}
+
+	protected void blockGameController() {
+		$.gameState().timer().resetIndefinitely();
+	}
+
+	protected void unblockGameController() {
+		$.gameState().timer().expire();
 	}
 }

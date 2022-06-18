@@ -70,7 +70,7 @@ public class PlayScene3D extends GameScene3D {
 	private final Color floorColorWithoutTexture = Color.rgb(5, 5, 10);
 	private final SimpleObjectProperty<Perspective> $perspective = new SimpleObjectProperty<>();
 	private final SimpleBooleanProperty $useMazeFloorTexture = new SimpleBooleanProperty();
-	private final EnumMap<Perspective, PlaySceneCamera> cameras = new EnumMap<>(Perspective.class);
+	private final EnumMap<Perspective, GameSceneCamera> cameras = new EnumMap<>(Perspective.class);
 
 	private Pac3D player3D;
 	private Maze3D maze3D;
@@ -95,33 +95,30 @@ public class PlayScene3D extends GameScene3D {
 		$useMazeFloorTexture.addListener(($useMazeFloorTexture, oldValue, newValue) -> setUseMazeFloorTexture(newValue));
 	}
 
-	public PlaySceneCamera getCamera() {
-		return (PlaySceneCamera) fxSubScene.getCamera();
+	public GameSceneCamera getCamera() {
+		return (GameSceneCamera) fxSubScene.getCamera();
 	}
 
 	@Override
 	public void init() {
-		boolean hasCredit = $.game.credit > 0;
-
-		buildMaze3D();
-
 		scores3D = new Scores3D();
-		scores3D.setFont($.r2D.getArcadeFont());
-		if (!hasCredit) {
+		if ($.hasCredit()) {
+			scores3D.setComputeScoreText(true);
+		} else {
 			scores3D.setComputeScoreText(false);
 			scores3D.txtScore.setFill(Color.RED);
 			scores3D.txtScore.setText("GAME OVER!");
-		} else {
-			scores3D.setComputeScoreText(true);
 		}
+		scores3D.setFont($.r2D.getArcadeFont());
 
 		livesCounter3D = new LivesCounter3D($.model3D);
 		livesCounter3D.getTransforms().add(new Translate(TS, TS, -HTS));
-		livesCounter3D.setVisible(hasCredit);
+		livesCounter3D.setVisible($.hasCredit());
 
 		levelCounter3D = new LevelCounter3D(ArcadeWorld.SIZE.x - TS, TS, $.r2D);
 		levelCounter3D.update($.game);
 
+		buildMaze3D();
 		player3D = new Pac3D($.game.level.world, $.game.pac, $.model3D);
 		ghosts3D = $.game.ghosts().map(ghost -> new Ghost3D(ghost, $.model3D, $.r2D)).toArray(Ghost3D[]::new);
 		bonus3D = new Bonus3D($.r2D);
@@ -132,6 +129,19 @@ public class PlayScene3D extends GameScene3D {
 
 		setPerspective($perspective.get());
 		setUseMazeFloorTexture($useMazeFloorTexture.get());
+	}
+
+	private void setPerspective(Perspective perspective) {
+		var camera = cameras.get(perspective);
+		fxSubScene.setCamera(camera);
+		fxSubScene.setOnKeyPressed(camera::onKeyPressed);
+		fxSubScene.requestFocus();
+		if (scores3D != null) {
+			// keep the score in plain sight
+			scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
+			scores3D.rotateProperty().bind(camera.rotateProperty());
+		}
+		camera.reset();
 	}
 
 	@Override
@@ -204,32 +214,16 @@ public class PlayScene3D extends GameScene3D {
 		}
 	}
 
-	private void setPerspective(Perspective perspective) {
-		var camera = cameras.get(perspective);
-		fxSubScene.setCamera(camera);
-		fxSubScene.setOnKeyPressed(camera::onKeyPressed);
-		fxSubScene.requestFocus();
-		if (scores3D != null) {
-			// keep the score in plain sight
-			scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
-			scores3D.rotateProperty().bind(camera.rotateProperty());
-		}
-		camera.reset();
-	}
-
 	private void setUseMazeFloorTexture(boolean useTexture) {
-		if (useTexture) {
-			maze3D.getFloor().setTexture(floorTexture);
-			maze3D.getFloor().setColor(floorColorWithTexture);
-		} else {
-			maze3D.getFloor().setTexture(null);
-			maze3D.getFloor().setColor(floorColorWithoutTexture);
+		if (maze3D != null) {
+			if (useTexture) {
+				maze3D.getFloor().setTexture(floorTexture);
+				maze3D.getFloor().setColor(floorColorWithTexture);
+			} else {
+				maze3D.getFloor().setTexture(null);
+				maze3D.getFloor().setColor(floorColorWithoutTexture);
+			}
 		}
-	}
-
-	@Override
-	public boolean is3D() {
-		return true;
 	}
 
 	@Override
@@ -334,14 +328,6 @@ public class PlayScene3D extends GameScene3D {
 			maze3D.energizerAnimations().forEach(Animation::stop);
 			bonus3D.setVisible(false);
 		}
-	}
-
-	private void blockGameController() {
-		$.gameState().timer().resetIndefinitely();
-	}
-
-	private void unblockGameController() {
-		$.gameState().timer().expire();
 	}
 
 	private void buildMaze3D() {
