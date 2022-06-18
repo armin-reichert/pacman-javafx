@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
@@ -33,6 +35,7 @@ import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Translate;
 
 /**
  * @author Armin Reichert
@@ -47,7 +50,9 @@ public abstract class GameScene3D implements GameScene {
 	protected SceneContext $;
 
 	public GameScene3D() {
-		sceneRoot.getChildren().setAll(sceneContent, axes, light);
+		Translate translate = new Translate(-ArcadeWorld.TILES_X * World.HTS, -ArcadeWorld.TILES_Y * World.HTS);
+		sceneContent.getTransforms().add(translate);
+		sceneRoot.getChildren().setAll(sceneContent, light, axes);
 		fxSubScene = new SubScene(sceneRoot, 100, 100, true, SceneAntialiasing.BALANCED);
 		axes.visibleProperty().bind(Env.$axesVisible);
 	}

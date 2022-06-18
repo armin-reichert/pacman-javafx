@@ -72,8 +72,8 @@ public class PlayScene3D extends GameScene3D {
 	private final SimpleBooleanProperty $useMazeFloorTexture = new SimpleBooleanProperty();
 	private final EnumMap<Perspective, GameSceneCamera> cameras = new EnumMap<>(Perspective.class);
 
-	private Pac3D player3D;
 	private Maze3D maze3D;
+	private Pac3D player3D;
 	private Ghost3D[] ghosts3D;
 	private Bonus3D bonus3D;
 	private Scores3D scores3D;
@@ -85,9 +85,6 @@ public class PlayScene3D extends GameScene3D {
 		cameras.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer());
 		cameras.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer());
 		cameras.put(Perspective.CAM_TOTAL, new Cam_Total());
-
-		sceneRoot.setTranslateX(-ArcadeWorld.SIZE.x / 2);
-		sceneRoot.setTranslateY(-ArcadeWorld.SIZE.y / 2);
 
 		$perspective.bind(Env.$perspective);
 		$perspective.addListener(($perspective, oldPerspective, newPerspective) -> setPerspective(newPerspective));
