@@ -67,7 +67,7 @@ public interface Rendering3D {
 	 * @param mazeNumber  the 1-based maze number
 	 * @return color of pellets in this maze
 	 */
-	default Color getMazeFoodColor(GameVariant gameVariant, int mazeNumber) {
+	static Color getMazeFoodColor(GameVariant gameVariant, int mazeNumber) {
 		return switch (gameVariant) {
 		case MS_PACMAN -> FOOD_COLORS[mazeNumber - 1];
 		case PACMAN -> Color.rgb(254, 189, 180);
@@ -78,7 +78,7 @@ public interface Rendering3D {
 	 * @param mazeNumber the 1-based maze number
 	 * @return color of maze walls on top (3D) or inside (2D)
 	 */
-	default Color getMazeTopColor(GameVariant gameVariant, int mazeNumber) {
+	static Color getMazeTopColor(GameVariant gameVariant, int mazeNumber) {
 		return switch (gameVariant) {
 		case MS_PACMAN -> MAZE_TOP_COLORS[mazeNumber - 1];
 		case PACMAN -> Color.AZURE;
@@ -90,7 +90,7 @@ public interface Rendering3D {
 	 * @param mazeNumber  the 1-based maze number
 	 * @return color of maze walls on side (3D) or outside (2D)
 	 */
-	default Color getMazeSideColor(GameVariant gameVariant, int mazeNumber) {
+	static Color getMazeSideColor(GameVariant gameVariant, int mazeNumber) {
 		return switch (gameVariant) {
 		case MS_PACMAN -> MAZE_SIDE_COLORS[mazeNumber - 1];
 		case PACMAN -> Color.rgb(33, 33, 255);
@@ -102,22 +102,22 @@ public interface Rendering3D {
 	 * @param mazeNumber  the 1-based maze number
 	 * @return color of ghosthouse doors in this maze
 	 */
-	default Color getGhostHouseDoorColor(GameVariant gameVariant, int mazeNumber) {
+	static Color getGhostHouseDoorColor(GameVariant gameVariant, int mazeNumber) {
 		return switch (gameVariant) {
 		case MS_PACMAN -> Color.rgb(255, 183, 255);
 		case PACMAN -> Color.rgb(252, 181, 255);
 		};
 	}
 
-	default Color getPacSkullColor() {
+	static Color getPacSkullColor() {
 		return Color.YELLOW;
 	}
 
-	default Color getPacEyesColor() {
+	static Color getPacEyesColor() {
 		return Color.rgb(33, 33, 33);
 	}
 
-	default Color getPacPalateColor() {
+	static Color getPacPalateColor() {
 		return Color.CORAL;
 	}
 
@@ -125,7 +125,7 @@ public interface Rendering3D {
 	 * @param ghostID 0=Blinky, 1=Pinky, 2=Inky, 3=Clyde/Sue
 	 * @return color of ghost
 	 */
-	default Color getGhostSkinColor(int ghostID) {
+	static Color getGhostSkinColor(int ghostID) {
 		return switch (ghostID) {
 		case Ghost.RED_GHOST -> Color.RED;
 		case Ghost.PINK_GHOST -> Color.rgb(252, 181, 255);
@@ -135,27 +135,27 @@ public interface Rendering3D {
 		};
 	}
 
-	default Color getGhostSkinColorFrightened() {
+	static Color getGhostSkinColorFrightened() {
 		return Color.rgb(33, 33, 255);
 	}
 
-	default Color getGhostSkinColorFrightened2() {
+	static Color getGhostSkinColorFrightened2() {
 		return Color.rgb(224, 221, 255);
 	}
 
-	default Color getGhostEyeBallColor() {
+	static Color getGhostEyeBallColor() {
 		return Color.GHOSTWHITE;
 	}
 
-	default Color getGhostEyeBallColorFrightened() {
+	static Color getGhostEyeBallColorFrightened() {
 		return Color.rgb(245, 189, 180);
 	}
 
-	default Color getGhostPupilColor() {
+	static Color getGhostPupilColor() {
 		return Color.rgb(33, 33, 255);
 	}
 
-	default Color getGhostPupilColorFrightened() {
+	static Color getGhostPupilColorFrightened() {
 		return Color.RED;
 	}
 }

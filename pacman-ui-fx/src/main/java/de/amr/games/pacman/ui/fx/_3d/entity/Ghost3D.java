@@ -55,7 +55,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class Ghost3D extends Group implements Rendering3D {
+public class Ghost3D extends Group {
 
 	public enum AnimationMode {
 		COLORED, FRIGHTENED, EYES, NUMBER;
@@ -84,7 +84,7 @@ public class Ghost3D extends Group implements Rendering3D {
 		}
 	}
 
-	public static class BodyAnimation implements Rendering3D {
+	public static class BodyAnimation {
 
 		private final int ghostID;
 		private final Group root;
@@ -97,13 +97,19 @@ public class Ghost3D extends Group implements Rendering3D {
 
 		public BodyAnimation(PacManModel3D model3D, int ghostID) {
 			this.ghostID = ghostID;
-			root = model3D.createGhost(ghostify(getGhostSkinColor(ghostID)), getGhostEyeBallColor(), getGhostPupilColor());
+			root = model3D.createGhost(//
+					faded(Rendering3D.getGhostSkinColor(ghostID)), //
+					Rendering3D.getGhostEyeBallColor(), //
+					Rendering3D.getGhostPupilColor());
 			skin = (Shape3D) root.getChildren().get(0);
 			eyes = (Group) root.getChildren().get(1);
 			eyePupils = (Shape3D) eyes.getChildren().get(0);
 			eyeBalls = (Shape3D) eyes.getChildren().get(1);
-			flashingAnimation = new ColorFlashingTransition(getGhostSkinColorFrightened(), getGhostSkinColorFrightened2());
-			revivalAnimation = new FadeInTransition3D(Duration.seconds(1.5), skin, ghostify(getGhostSkinColor(ghostID)));
+			flashingAnimation = new ColorFlashingTransition(//
+					Rendering3D.getGhostSkinColorFrightened(), //
+					Rendering3D.getGhostSkinColorFrightened2());
+			revivalAnimation = new FadeInTransition3D(Duration.seconds(1.5), skin,
+					faded(Rendering3D.getGhostSkinColor(ghostID)));
 		}
 
 		public Node getRoot() {
@@ -130,13 +136,13 @@ public class Ghost3D extends Group implements Rendering3D {
 		public void setFrightened(boolean frightened) {
 			ensureFlashingAnimationStopped();
 			if (frightened) {
-				setShapeColor(skin, ghostify(getGhostSkinColorFrightened()));
-				setShapeColor(eyeBalls, getGhostEyeBallColorFrightened());
-				setShapeColor(eyePupils, getGhostPupilColorFrightened());
+				setShapeColor(skin, faded(Rendering3D.getGhostSkinColorFrightened()));
+				setShapeColor(eyeBalls, Rendering3D.getGhostEyeBallColorFrightened());
+				setShapeColor(eyePupils, Rendering3D.getGhostPupilColorFrightened());
 			} else {
-				setShapeColor(skin, ghostify(getGhostSkinColor(ghostID)));
-				setShapeColor(eyeBalls, getGhostEyeBallColor());
-				setShapeColor(eyePupils, getGhostPupilColor());
+				setShapeColor(skin, faded(Rendering3D.getGhostSkinColor(ghostID)));
+				setShapeColor(eyeBalls, Rendering3D.getGhostEyeBallColor());
+				setShapeColor(eyePupils, Rendering3D.getGhostPupilColor());
 			}
 		}
 
@@ -146,7 +152,7 @@ public class Ghost3D extends Group implements Rendering3D {
 			shape.setMaterial(material);
 		}
 
-		private Color ghostify(Color color) {
+		private Color faded(Color color) {
 			return Color.color(color.getRed(), color.getGreen(), color.getBlue(), 0.90);
 		}
 	}

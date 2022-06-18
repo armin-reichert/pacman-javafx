@@ -78,7 +78,7 @@ import javafx.scene.transform.Translate;
  * 
  * @author Armin Reichert
  */
-public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
+public class PlayScene3D implements GameEventAdapter, GameScene {
 
 	private final SubScene fxSubScene;
 	private final AmbientLight light = new AmbientLight(Color.GHOSTWHITE);
@@ -253,9 +253,9 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 	private void onMazeResolutionChange(ObservableValue<? extends Number> property, Number oldValue, Number newValue) {
 		if (!oldValue.equals(newValue)) {
 			maze3D.createWallsAndDoors(game.level.world, //
-					getMazeSideColor(game.variant, game.level.mazeNumber), //
-					getMazeTopColor(game.variant, game.level.mazeNumber), //
-					getGhostHouseDoorColor(game.variant, game.level.mazeNumber));
+					Rendering3D.getMazeSideColor(game.variant, game.level.mazeNumber), //
+					Rendering3D.getMazeTopColor(game.variant, game.level.mazeNumber), //
+					Rendering3D.getGhostHouseDoorColor(game.variant, game.level.mazeNumber));
 		}
 	}
 
@@ -409,10 +409,9 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 
 	private void buildMazeContent(int mazeNumber) {
 		maze3D.createWallsAndDoors(game.level.world, //
-				getMazeSideColor(game.variant, mazeNumber), //
-				getMazeTopColor(game.variant, mazeNumber), //
-				getGhostHouseDoorColor(game.variant, mazeNumber));
+				Rendering3D.getMazeSideColor(game.variant, mazeNumber), //
+				Rendering3D.getMazeTopColor(game.variant, mazeNumber), //
+				Rendering3D.getGhostHouseDoorColor(game.variant, mazeNumber));
 		maze3D.createFood(game.level.world, r2D.getFoodColor(mazeNumber));
 	}
-
 }

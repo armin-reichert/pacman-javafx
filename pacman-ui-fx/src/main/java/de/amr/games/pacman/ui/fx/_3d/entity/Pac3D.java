@@ -53,7 +53,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class Pac3D extends Group implements Rendering3D {
+public class Pac3D extends Group {
 
 	private final World world;
 	private final Pac pac;
@@ -65,7 +65,8 @@ public class Pac3D extends Group implements Rendering3D {
 	public Pac3D(World world, Pac pac, PacManModel3D model3D) {
 		this.world = world;
 		this.pac = pac;
-		bodyParts = model3D.createPacMan(getPacSkullColor(), getPacEyesColor(), getPacPalateColor());
+		bodyParts = model3D.createPacMan(Rendering3D.getPacSkullColor(), Rendering3D.getPacEyesColor(),
+				Rendering3D.getPacPalateColor());
 		motion = new Motion(this);
 		light.setTranslateZ(-HTS);
 		getChildren().addAll(bodyParts, light);
@@ -97,7 +98,7 @@ public class Pac3D extends Group implements Rendering3D {
 		bodyParts.setScaleX(1.05);
 		bodyParts.setScaleY(1.05);
 		bodyParts.setScaleZ(1.05);
-		setShapeColor(skull(), getPacSkullColor());
+		setShapeColor(skull(), Rendering3D.getPacSkullColor());
 		update();
 	}
 
@@ -130,7 +131,7 @@ public class Pac3D extends Group implements Rendering3D {
 		shrink.setToZ(0);
 
 		return new SequentialTransition( //
-				new FillTransition3D(Duration.seconds(1), skull(), getPacSkullColor(), ghostColor), //
+				new FillTransition3D(Duration.seconds(1), skull(), Rendering3D.getPacSkullColor(), ghostColor), //
 				new FillTransition3D(Duration.seconds(1), skull(), ghostColor, skullColorImpaled), //
 				new ParallelTransition(spin, shrink));
 	}
