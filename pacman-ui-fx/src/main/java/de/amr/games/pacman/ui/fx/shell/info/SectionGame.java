@@ -29,6 +29,7 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.U;
@@ -88,6 +89,10 @@ public class SectionGame extends Section {
 		cbAutopilot = addCheckBox("Autopilot", Actions::toggleAutopilot);
 		cbImmunity = addCheckBox("Player immune", Actions::toggleImmunity);
 
+		addInfo("Canvas2D", () -> {
+			GameScene2D scene2D = (GameScene2D) ui.getCurrentGameScene();
+			return String.format("w=%.0f h=%.0f", scene2D.getCanvas().getWidth(), scene2D.getCanvas().getHeight());
+		}).available(() -> !ui.getCurrentGameScene().is3D());
 		addInfo("Game scene", () -> ui.getCurrentGameScene().getClass().getSimpleName());
 		addInfo("", () -> "w=%.0f h=%.0f".formatted(ui.getCurrentGameScene().getFXSubScene().getWidth(),
 				ui.getCurrentGameScene().getFXSubScene().getHeight()));

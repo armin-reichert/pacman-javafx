@@ -44,7 +44,6 @@ public class Dashboard extends BorderPane {
 	private SectionGeneral sectionGeneral;
 	private SectionGame sectionGame;
 	private Section3D section3D;
-	private Section2D section2D;
 	private SectionKeys sectionKeys;
 
 	public Dashboard(GameUI ui, GameController gc) {
@@ -62,11 +61,9 @@ public class Dashboard extends BorderPane {
 
 		setRight(rightSide);
 		section3D = new Section3D(ui, gc, "3D Settings", minLabelWidth, textColor, textFont, labelFont);
-		section2D = new Section2D(ui, gc, "2D Settings", minLabelWidth, textColor, textFont, labelFont);
 		sectionKeys = new SectionKeys(ui, gc, "Keyboard Shortcuts", minLabelWidth, textColor, textFont, labelFont);
-		rightSide.getChildren().addAll(section3D, section2D, sectionKeys);
+		rightSide.getChildren().addAll(section3D, sectionKeys);
 		section3D.setExpanded(false);
-		section2D.setExpanded(false);
 		sectionKeys.setExpanded(true);
 
 		setVisible(false);
@@ -77,6 +74,5 @@ public class Dashboard extends BorderPane {
 		sectionGeneral.update();
 		sectionKeys.update();
 		section3D.update();
-		section2D.update();
 	}
 }
