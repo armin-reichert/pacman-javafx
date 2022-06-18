@@ -105,7 +105,7 @@ public class PlayScene3D extends GameScene3D {
 		maze3D.$resolution.addListener(this::onMazeResolutionChange);
 		buildMazeContent($.game.level.mazeNumber);
 
-		player3D = new Pac3D($.game.level.world, $.game.pac, $.model3D);
+		player3D = new Pac3D($.game.pac, $.model3D);
 		ghosts3D = $.game.ghosts().map(ghost -> new Ghost3D(ghost, $.model3D, $.r2D)).toArray(Ghost3D[]::new);
 		bonus3D = new Bonus3D($.r2D);
 

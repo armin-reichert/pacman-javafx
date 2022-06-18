@@ -28,7 +28,6 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.FillTransition3D;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
@@ -55,7 +54,6 @@ import javafx.util.Duration;
  */
 public class Pac3D extends Group {
 
-	private final World world;
 	private final Pac pac;
 	private final Group bodyParts;
 	private final Shape3D skull;
@@ -64,8 +62,7 @@ public class Pac3D extends Group {
 	private final PointLight light = new PointLight(Color.WHITE);
 	private Color skullColorImpaled = Color.GHOSTWHITE;
 
-	public Pac3D(World world, Pac pac, PacManModel3D model3D) {
-		this.world = world;
+	public Pac3D(Pac pac, PacManModel3D model3D) {
 		this.pac = pac;
 		bodyParts = model3D.createPacMan(Rendering3D.getPacSkullColor(), Rendering3D.getPacEyesColor(),
 				Rendering3D.getPacPalateColor());
