@@ -45,11 +45,12 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 /**
- * 3D representation of a ghost. A ghost is displayed in one of 3 modes:
+ * 3D representation of a ghost. A ghost is displayed in one of 4 modes:
  * <ul>
- * <li>as a full ghost with colored skin and eyes,
- * <li>as eyes only,
- * <li>as a number cube indicating the value of the dead ghost.
+ * <li>complete ghost with colored skin and eyes,
+ * <li>complete ghost with blue skin, maybe flashing, and eyes,
+ * <li>eyes only,
+ * <li>number cube indicating the value of the dead ghost.
  * </ul>
  * 
  * @author Armin Reichert
