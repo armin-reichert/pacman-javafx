@@ -75,6 +75,7 @@ public class PlayScene3D extends GameScene3D {
 	private final SimpleBooleanProperty $useMazeFloorTexture = new SimpleBooleanProperty();
 	private final EnumMap<Perspective, PlaySceneCamera> cameras = new EnumMap<>(Perspective.class);
 
+	private Group content = new Group();
 	private Pac3D player3D;
 	private Maze3D maze3D;
 	private Ghost3D[] ghosts3D;
@@ -89,6 +90,8 @@ public class PlayScene3D extends GameScene3D {
 		cameras.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer());
 		cameras.put(Perspective.CAM_TOTAL, new Cam_Total());
 
+		content.setTranslateX(-ArcadeWorld.SIZE.x / 2);
+		content.setTranslateY(-ArcadeWorld.SIZE.y / 2);
 		// first child is placeholder for scene content (world3D)
 		sceneRoot.getChildren().setAll(new Group(), axes, light);
 
@@ -129,12 +132,10 @@ public class PlayScene3D extends GameScene3D {
 		ghosts3D = $.game.ghosts().map(ghost -> new Ghost3D(ghost, $.model3D, $.r2D)).toArray(Ghost3D[]::new);
 		bonus3D = new Bonus3D($.r2D);
 
-		var world3D = new Group();
-		world3D.setTranslateX(-ArcadeWorld.SIZE.x / 2);
-		world3D.setTranslateY(-ArcadeWorld.SIZE.y / 2);
-		world3D.getChildren().addAll(maze3D, scores3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
-		world3D.getChildren().addAll(ghosts3D);
-		embedContent(world3D);
+		content.getChildren().clear();
+		content.getChildren().addAll(maze3D, scores3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
+		content.getChildren().addAll(ghosts3D);
+		embedContent(content);
 
 		setCameraPerspective($perspective.get());
 		setUseMazeFloorTexture($useMazeFloorTexture.get());
