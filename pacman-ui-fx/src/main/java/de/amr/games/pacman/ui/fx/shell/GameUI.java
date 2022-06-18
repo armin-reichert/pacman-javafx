@@ -36,6 +36,8 @@ import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_CreditScene;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntermissionScene1;
@@ -47,10 +49,12 @@ import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_Cutscene1;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_Cutscene2;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_Cutscene3;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntroScene;
+import de.amr.games.pacman.ui.fx._3d.model.GianmarcosModel3D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.shell.info.Dashboard;
 import de.amr.games.pacman.ui.fx.sound.MsPacManGameSounds;
 import de.amr.games.pacman.ui.fx.sound.PacManGameSounds;
@@ -272,10 +276,22 @@ public class GameUI implements GameEventAdapter {
 		stage.setTitle(gameController.game().variant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
 		log("Current scene changed from %s to %s", currentGameScene, newGameScene);
 		currentGameScene = newGameScene;
-		currentGameScene.setSceneContext(gameController);
+		currentGameScene.setSceneContext(createSceneContext());
 		currentGameScene.init();
 		gameScenePlaceholder.getChildren().setAll(currentGameScene.getFXSubScene());
 		currentGameScene.resize(scene.getHeight());
+	}
+
+	private SceneContext createSceneContext() {
+		var context = new SceneContext();
+		context.gameController = gameController;
+		context.game = gameController.game();
+		context.r2D = switch (context.game.variant) {
+		case MS_PACMAN -> Spritesheet_MsPacMan.get();
+		case PACMAN -> Spritesheet_PacMan.get();
+		};
+		context.model3D = GianmarcosModel3D.get();
+		return context;
 	}
 
 	private void onKeyPressed() {

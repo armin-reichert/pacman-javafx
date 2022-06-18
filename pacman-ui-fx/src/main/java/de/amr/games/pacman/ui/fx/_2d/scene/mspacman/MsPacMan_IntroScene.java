@@ -27,7 +27,6 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.IntroController;
 import de.amr.games.pacman.controller.mspacman.IntroController.Context;
 import de.amr.games.pacman.controller.mspacman.IntroController.State;
@@ -35,6 +34,7 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
+import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import javafx.scene.canvas.GraphicsContext;
@@ -51,23 +51,23 @@ import javafx.scene.paint.Color;
 public class MsPacMan_IntroScene extends GameScene2D {
 
 	private IntroController sceneController;
-	private Context $;
+	private Context icc;
 
 	@Override
-	public void setSceneContext(GameController gameController) {
-		super.setSceneContext(gameController);
-		sceneController = new IntroController(gameController);
-		$ = sceneController.context();
+	public void setSceneContext(SceneContext sceneContext) {
+		super.setSceneContext(sceneContext);
+		sceneController = new IntroController(sceneContext.gameController);
+		icc = sceneController.context();
 	}
 
 	@Override
 	public void init() {
 		sceneController.restartInInitialState(IntroController.State.START);
 		creditVisible = true;
-		$.msPacMan.setAnimations(new PacAnimations(r2D));
-		$.msPacMan.animations().get().ensureRunning();
-		Stream.of($.ghosts).forEach(ghost -> {
-			var animations = new GhostAnimations(ghost.id, r2D);
+		icc.msPacMan.setAnimations(new PacAnimations($.r2D));
+		icc.msPacMan.animations().get().ensureRunning();
+		Stream.of(icc.ghosts).forEach(ghost -> {
+			var animations = new GhostAnimations(ghost.id, $.r2D);
 			animations.ensureRunning();
 			ghost.setAnimations(animations);
 		});
@@ -76,67 +76,67 @@ public class MsPacMan_IntroScene extends GameScene2D {
 	@Override
 	public void onKeyPressed() {
 		if (Keyboard.pressed(KeyCode.DIGIT5)) {
-			gameController.state().addCredit(game);
+			$.gameState().addCredit($.game);
 		} else if (Keyboard.pressed(KeyCode.DIGIT1)) {
-			gameController.state().requestGame(game);
+			$.gameState().requestGame($.game);
 		} else if (Keyboard.pressed(KeyCode.V)) {
 			Actions.selectNextGameVariant();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.Z)) {
-			gameController.state().startIntermissionTest(game);
+			$.gameState().startIntermissionTest($.game);
 		}
 	}
 
 	@Override
 	public void doUpdate() {
 		sceneController.update();
-		creditVisible = $.creditVisible;
+		creditVisible = icc.creditVisible;
 	}
 
 	@Override
 	public void doRender(GraphicsContext g) {
-		r2D.drawScore(g, game.scores.gameScore);
-		r2D.drawScore(g, game.scores.highScore);
+		$.r2D.drawScore(g, $.game.scores.gameScore);
+		$.r2D.drawScore(g, $.game.scores.highScore);
 		drawTitle(g);
 		drawLights(g, 32, 16);
 		if (sceneController.state() == State.GHOSTS) {
-			drawGhostText(g, $.ghosts[$.ghostIndex]);
+			drawGhostText(g, icc.ghosts[icc.ghostIndex]);
 		} else if (sceneController.state() == State.MSPACMAN || sceneController.state() == State.READY_TO_PLAY) {
 			drawMsPacManText(g);
 		}
-		r2D.drawGhosts(g, $.ghosts);
-		r2D.drawPac(g, $.msPacMan);
-		r2D.drawCopyright(g, 29);
+		$.r2D.drawGhosts(g, icc.ghosts);
+		$.r2D.drawPac(g, icc.msPacMan);
+		$.r2D.drawCopyright(g, 29);
 		if (creditVisible) {
-			r2D.drawCredit(g, game.credit);
+			$.r2D.drawCredit(g, $.game.credit);
 		}
 	}
 
 	private void drawTitle(GraphicsContext g) {
-		g.setFont(r2D.getArcadeFont());
+		g.setFont($.r2D.getArcadeFont());
 		g.setFill(Color.ORANGE);
-		g.fillText("\"MS PAC-MAN\"", $.titlePosition.x, $.titlePosition.y);
+		g.fillText("\"MS PAC-MAN\"", icc.titlePosition.x, icc.titlePosition.y);
 	}
 
 	private void drawGhostText(GraphicsContext g, Ghost ghost) {
 		g.setFill(Color.WHITE);
-		g.setFont(r2D.getArcadeFont());
+		g.setFont($.r2D.getArcadeFont());
 		if (ghost.id == Ghost.RED_GHOST) {
-			g.fillText("WITH", $.titlePosition.x, $.lightsTopLeft.y + t(3));
+			g.fillText("WITH", icc.titlePosition.x, icc.lightsTopLeft.y + t(3));
 		}
-		g.setFill(r2D.getGhostColor(ghost.id));
-		g.fillText(ghost.name.toUpperCase(), t(14 - ghost.name.length() / 2), $.lightsTopLeft.y + t(6));
+		g.setFill($.r2D.getGhostColor(ghost.id));
+		g.fillText(ghost.name.toUpperCase(), t(14 - ghost.name.length() / 2), icc.lightsTopLeft.y + t(6));
 	}
 
 	private void drawMsPacManText(GraphicsContext g) {
 		g.setFill(Color.WHITE);
-		g.setFont(r2D.getArcadeFont());
-		g.fillText("STARRING", $.titlePosition.x, $.lightsTopLeft.y + t(3));
+		g.setFont($.r2D.getArcadeFont());
+		g.fillText("STARRING", icc.titlePosition.x, icc.lightsTopLeft.y + t(3));
 		g.setFill(Color.YELLOW);
-		g.fillText("MS PAC-MAN", $.titlePosition.x, $.lightsTopLeft.y + t(6));
+		g.fillText("MS PAC-MAN", icc.titlePosition.x, icc.lightsTopLeft.y + t(6));
 	}
 
 	private void drawLights(GraphicsContext g, int numDotsX, int numDotsY) {
-		long time = $.lightsTimer.tick();
+		long time = icc.lightsTimer.tick();
 		int light = (int) (time / 2) % (numDotsX / 2);
 		for (int dot = 0; dot < 2 * (numDotsX + numDotsY); ++dot) {
 			int x = 0, y = 0;
@@ -152,7 +152,7 @@ public class MsPacMan_IntroScene extends GameScene2D {
 				y = 2 * (numDotsX + numDotsY) - dot;
 			}
 			g.setFill((dot + light) % (numDotsX / 2) == 0 ? Color.PINK : Color.RED);
-			g.fillRect($.lightsTopLeft.x + 4 * x, $.lightsTopLeft.y + 4 * y, 2, 2);
+			g.fillRect(icc.lightsTopLeft.x + 4 * x, icc.lightsTopLeft.y + 4 * y, 2, 2);
 		}
 	}
 }

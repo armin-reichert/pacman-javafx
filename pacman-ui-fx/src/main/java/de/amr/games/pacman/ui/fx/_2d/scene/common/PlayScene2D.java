@@ -46,21 +46,21 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void init() {
-		guysInfo.init(game);
+		guysInfo.init($.game);
 		creditVisible = !hasCredit();
-		game.levelCounter.visible = hasCredit();
-		game.setMazeFlashingAnimation(r2D.createMazeFlashingAnimation(game.level.mazeNumber));
-		game.pac.setAnimations(new PacAnimations(r2D));
-		for (var ghost : game.ghosts) {
-			ghost.setAnimations(new GhostAnimations(ghost.id, r2D));
+		$.game.levelCounter.visible = hasCredit();
+		$.game.setMazeFlashingAnimation($.r2D.createMazeFlashingAnimation($.game.level.mazeNumber));
+		$.game.pac.setAnimations(new PacAnimations($.r2D));
+		for (var ghost : $.game.ghosts) {
+			ghost.setAnimations(new GhostAnimations(ghost.id, $.r2D));
 		}
-		game.bonus().setInactive();
+		$.game.bonus().setInactive();
 	}
 
 	@Override
 	public void onKeyPressed() {
-		if (Keyboard.pressed(KeyCode.DIGIT5) && game.credit == 0) {
-			gameController.state().addCredit(game);
+		if (Keyboard.pressed(KeyCode.DIGIT5) && $.game.credit == 0) {
+			$.gameState().addCredit($.game);
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.E)) {
 			Actions.cheatEatAllPellets();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.L)) {
@@ -81,28 +81,28 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void doRender(GraphicsContext g) {
-		r2D.drawScore(g, game.scores.gameScore);
-		r2D.drawScore(g, game.scores.highScore);
-		if (game.mazeFlashingAnimation().isPresent() && game.mazeFlashingAnimation().get().isRunning()) {
-			g.drawImage((Image) game.mazeFlashingAnimation().get().frame(), t(0), t(3));
+		$.r2D.drawScore(g, $.game.scores.gameScore);
+		$.r2D.drawScore(g, $.game.scores.highScore);
+		if ($.game.mazeFlashingAnimation().isPresent() && $.game.mazeFlashingAnimation().get().isRunning()) {
+			g.drawImage((Image) $.game.mazeFlashingAnimation().get().frame(), t(0), t(3));
 		} else {
-			r2D.drawMaze(g, t(0), t(3), game.level.world, game.level.mazeNumber, !game.energizerPulse.frame());
+			$.r2D.drawMaze(g, t(0), t(3), $.game.level.world, $.game.level.mazeNumber, !$.game.energizerPulse.frame());
 		}
-		r2D.drawGameStateMessage(g, hasCredit() ? gameController.state() : GameState.GAME_OVER);
-		r2D.drawBonus(g, game.bonus());
-		r2D.drawPac(g, game.pac);
-		r2D.drawGhosts(g, game.ghosts);
+		$.r2D.drawGameStateMessage(g, hasCredit() ? $.gameState() : GameState.GAME_OVER);
+		$.r2D.drawBonus(g, $.game.bonus());
+		$.r2D.drawPac(g, $.game.pac);
+		$.r2D.drawGhosts(g, $.game.ghosts);
 		if (creditVisible) {
-			r2D.drawCredit(g, game.credit);
+			$.r2D.drawCredit(g, $.game.credit);
 		} else {
-			r2D.drawLivesCounter(g, game.playing ? game.lives - 1 : game.lives);
+			$.r2D.drawLivesCounter(g, $.game.playing ? $.game.lives - 1 : $.game.lives);
 		}
-		r2D.drawLevelCounter(g, game.levelCounter);
+		$.r2D.drawLevelCounter(g, $.game.levelCounter);
 	}
 
 	public void onSwitchFrom3D() {
-		game.pac.animations().get().ensureRunning();
-		for (var ghost : game.ghosts) {
+		$.game.pac.animations().get().ensureRunning();
+		for (var ghost : $.game.ghosts) {
 			ghost.animations().get().ensureRunning();
 		}
 	}

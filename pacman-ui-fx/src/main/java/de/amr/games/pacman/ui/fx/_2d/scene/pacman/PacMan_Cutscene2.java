@@ -56,7 +56,7 @@ public class PacMan_Cutscene2 extends GameScene2D {
 		initialDelay = 120;
 
 		pac = new Pac("Pac-Man");
-		pac.setAnimations(new PacAnimations(r2D));
+		pac.setAnimations(new PacAnimations($.r2D));
 		pac.animations().get().select("munching");
 		pac.animation("munching").get().restart();
 		pac.placeAt(v(29, 20), 0, 0);
@@ -65,9 +65,9 @@ public class PacMan_Cutscene2 extends GameScene2D {
 		pac.show();
 
 		blinky = new Ghost(Ghost.RED_GHOST, "Blinky");
-		blinky.setAnimations(new GhostAnimations(Ghost.RED_GHOST, r2D));
-		blinky.animations().get().put("stretched", ((Spritesheet_PacMan) r2D).createBlinkyStretchedAnimation());
-		blinky.animations().get().put("damaged", ((Spritesheet_PacMan) r2D).createBlinkyDamagedAnimation());
+		blinky.setAnimations(new GhostAnimations(Ghost.RED_GHOST, $.r2D));
+		blinky.animations().get().put("stretched", ((Spritesheet_PacMan) $.r2D).createBlinkyStretchedAnimation());
+		blinky.animations().get().put("damaged", ((Spritesheet_PacMan) $.r2D).createBlinkyDamagedAnimation());
 		blinky.animations().get().select("color");
 		blinky.animation("color").get().restart();
 		blinky.placeAt(v(28, 20), 0, 0);
@@ -86,7 +86,7 @@ public class PacMan_Cutscene2 extends GameScene2D {
 		var damaged = blinky.animation("damaged").orElse(null);
 		++frame;
 		if (frame == 0) {
-			game.sounds().ifPresent(snd -> snd.play(GameSound.INTERMISSION_1));
+			$.game.sounds().ifPresent(snd -> snd.play(GameSound.INTERMISSION_1));
 		} else if (frame == 110) {
 			blinky.setAbsSpeed(1.25);
 			blinky.show();
@@ -109,7 +109,7 @@ public class PacMan_Cutscene2 extends GameScene2D {
 		} else if (frame == 508) {
 			blinky.animations().get().put("stretched", null);
 		} else if (frame == 509) {
-			gameController.state().timer().expire();
+			$.gameState().timer().expire();
 			return;
 		}
 		pac.move();
@@ -119,7 +119,7 @@ public class PacMan_Cutscene2 extends GameScene2D {
 	@Override
 	protected void doRender(GraphicsContext g) {
 		if (Env.$debugUI.get()) {
-			g.setFont(r2D.getArcadeFont());
+			g.setFont($.r2D.getArcadeFont());
 			g.setFill(Color.WHITE);
 			if (initialDelay > 0) {
 				g.fillText("Wait %d".formatted(initialDelay), t(3), t(3));
@@ -128,9 +128,9 @@ public class PacMan_Cutscene2 extends GameScene2D {
 			}
 		}
 		blinky.animation("stretched").ifPresent(stretched -> {
-			r2D.drawSprite(g, (Rectangle2D) stretched.frame(), t(14), t(19) + 3);
+			$.r2D.drawSprite(g, (Rectangle2D) stretched.frame(), t(14), t(19) + 3);
 		});
-		r2D.drawGhost(g, blinky);
-		r2D.drawPac(g, pac);
+		$.r2D.drawGhost(g, blinky);
+		$.r2D.drawPac(g, pac);
 	}
 }

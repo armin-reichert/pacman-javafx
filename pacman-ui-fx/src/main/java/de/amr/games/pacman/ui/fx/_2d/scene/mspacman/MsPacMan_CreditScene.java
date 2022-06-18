@@ -47,9 +47,9 @@ public class MsPacMan_CreditScene extends GameScene2D {
 	@Override
 	public void onKeyPressed() {
 		if (Keyboard.pressed(KeyCode.DIGIT5)) {
-			gameController.state().addCredit(game);
+			$.gameState().addCredit($.game);
 		} else if (Keyboard.pressed(KeyCode.DIGIT1)) {
-			gameController.state().requestGame(game);
+			$.gameState().requestGame($.game);
 		}
 	}
 
@@ -59,20 +59,20 @@ public class MsPacMan_CreditScene extends GameScene2D {
 
 	@Override
 	protected void doRender(GraphicsContext g) {
-		r2D.drawScore(g, game.scores.gameScore);
-		r2D.drawScore(g, game.scores.highScore);
+		$.r2D.drawScore(g, $.game.scores.gameScore);
+		$.r2D.drawScore(g, $.game.scores.highScore);
 		if (creditVisible) {
-			r2D.drawCredit(g, game.credit);
+			$.r2D.drawCredit(g, $.game.credit);
 		}
-		g.setFont(r2D.getArcadeFont());
-		g.setFill(r2D.getGhostColor(Ghost.ORANGE_GHOST));
+		g.setFont($.r2D.getArcadeFont());
+		g.setFill($.r2D.getGhostColor(Ghost.ORANGE_GHOST));
 		g.fillText("PUSH START BUTTON", t(6), t(16));
 		g.fillText("1 PLAYER ONLY", t(8), t(18));
 		g.fillText("ADDITIONAL    AT 10000", t(2), t(25));
-		Spritesheet_MsPacMan r2DMs = (Spritesheet_MsPacMan) r2D;
-		r2D.drawSprite(g, r2DMs.rhs(1, 0), t(13), t(23) + 2);
-		g.setFont(Font.font(r2D.getArcadeFont().getName(), 6));
+		Spritesheet_MsPacMan r2DMs = (Spritesheet_MsPacMan) $.r2D;
+		$.r2D.drawSprite(g, r2DMs.rhs(1, 0), t(13), t(23) + 2);
+		g.setFont(Font.font($.r2D.getArcadeFont().getName(), 6));
 		g.fillText("PTS", t(25), t(25));
-		r2D.drawCopyright(g, 29);
+		$.r2D.drawCopyright(g, 29);
 	}
 }

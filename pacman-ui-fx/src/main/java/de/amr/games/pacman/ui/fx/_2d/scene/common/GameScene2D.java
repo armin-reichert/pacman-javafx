@@ -23,15 +23,11 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
-import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.lib.V2d;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
-import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -59,11 +55,7 @@ public abstract class GameScene2D implements GameScene {
 	protected final SubScene fxSubScene;
 	protected final DoubleProperty $scaling = new SimpleDoubleProperty(1);
 
-	// context
-	protected GameController gameController;
-	protected GameModel game;
-	protected Rendering2D r2D;
-
+	protected SceneContext $;
 	protected boolean creditVisible;
 
 	public GameScene2D() {
@@ -84,13 +76,8 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	@Override
-	public void setSceneContext(GameController gameController) {
-		this.gameController = gameController;
-		this.game = gameController.game();
-		r2D = switch (game.variant) {
-		case MS_PACMAN -> Spritesheet_MsPacMan.get();
-		case PACMAN -> Spritesheet_PacMan.get();
-		};
+	public void setSceneContext(SceneContext context) {
+		$ = context;
 	}
 
 	@Override
@@ -99,7 +86,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected boolean hasCredit() {
-		return gameController.game().credit > 0;
+		return $.gameController.game().credit > 0;
 	}
 
 	public Canvas getCanvas() {
@@ -146,7 +133,7 @@ public abstract class GameScene2D implements GameScene {
 		if (overlayCanvas.isVisible()) {
 			var og = overlayCanvas.getGraphicsContext2D();
 			og.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());
-			r2D.drawTileBorders(og, $scaling.doubleValue());
+			$.r2D.drawTileBorders(og, $scaling.doubleValue());
 		}
 	}
 

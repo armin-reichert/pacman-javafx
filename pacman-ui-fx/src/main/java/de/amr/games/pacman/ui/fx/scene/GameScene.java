@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx.scene;
 
 import static de.amr.games.pacman.lib.Logging.log;
 
-import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import javafx.scene.Scene;
@@ -43,7 +42,7 @@ public interface GameScene extends GameEventAdapter {
 	 * <p>
 	 * This method is called before the scene's init method.
 	 */
-	void setSceneContext(GameController gameController);
+	void setSceneContext(SceneContext context);
 
 	/**
 	 * Called when the scene becomes the current one.

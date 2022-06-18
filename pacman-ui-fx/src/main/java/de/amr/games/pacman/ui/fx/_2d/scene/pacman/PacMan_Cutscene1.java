@@ -55,8 +55,8 @@ public class PacMan_Cutscene1 extends GameScene2D {
 		initialDelay = 120;
 
 		pac = new Pac("Pac-Man");
-		pac.setAnimations(new PacAnimations(r2D));
-		pac.animations().get().put("big", ((Spritesheet_PacMan) r2D).createBigPacManMunchingAnimation());
+		pac.setAnimations(new PacAnimations($.r2D));
+		pac.animations().get().put("big", ((Spritesheet_PacMan) $.r2D).createBigPacManMunchingAnimation());
 		pac.selectAnimation("munching");
 
 		pac.placeAt(v(29, 20), 0, 0);
@@ -65,7 +65,7 @@ public class PacMan_Cutscene1 extends GameScene2D {
 		pac.show();
 
 		blinky = new Ghost(Ghost.RED_GHOST, "Blinky");
-		blinky.setAnimations(new GhostAnimations(Ghost.RED_GHOST, r2D));
+		blinky.setAnimations(new GhostAnimations(Ghost.RED_GHOST, $.r2D));
 		blinky.animations().get().select("color");
 		blinky.animation("color").get().restart();
 		blinky.placeAt(v(32, 20), 0, 0);
@@ -82,7 +82,7 @@ public class PacMan_Cutscene1 extends GameScene2D {
 		}
 		++frame;
 		if (frame == 0) {
-			game.sounds().ifPresent(snd -> snd.loop(GameSound.INTERMISSION_1, 2));
+			$.game.sounds().ifPresent(snd -> snd.loop(GameSound.INTERMISSION_1, 2));
 		} else if (frame == 260) {
 			blinky.placeAt(v(-2, 20), 4, 0);
 			blinky.setBothDirs(Direction.RIGHT);
@@ -95,7 +95,7 @@ public class PacMan_Cutscene1 extends GameScene2D {
 			pac.animations().get().select("big");
 			pac.animations().get().selectedAnimation().restart();
 		} else if (frame == 632) {
-			gameController.state().timer().expire();
+			$.gameState().timer().expire();
 			return;
 		}
 		pac.move();
@@ -105,7 +105,7 @@ public class PacMan_Cutscene1 extends GameScene2D {
 	@Override
 	protected void doRender(GraphicsContext g) {
 		if (Env.$debugUI.get()) {
-			g.setFont(r2D.getArcadeFont());
+			g.setFont($.r2D.getArcadeFont());
 			g.setFill(Color.WHITE);
 			if (initialDelay > 0) {
 				g.fillText("Wait %d".formatted(initialDelay), t(3), t(3));
@@ -113,7 +113,7 @@ public class PacMan_Cutscene1 extends GameScene2D {
 				g.fillText("Frame %d".formatted(frame), t(3), t(3));
 			}
 		}
-		r2D.drawPac(g, pac);
-		r2D.drawGhost(g, blinky);
+		$.r2D.drawPac(g, pac);
+		$.r2D.drawGhost(g, blinky);
 	}
 }
