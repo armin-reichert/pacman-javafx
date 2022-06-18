@@ -32,6 +32,7 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
+import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
@@ -65,12 +66,14 @@ import javafx.scene.transform.Translate;
  */
 public class PlayScene3D extends GameScene3D {
 
-	private final Image floorTexture = U.image("/common/escher-texture.jpg");
-	private final Color floorColorWithTexture = Color.DARKBLUE;
-	private final Color floorColorWithoutTexture = Color.rgb(5, 5, 10);
+	private final V2d unscaledSize = new V2d(ArcadeWorld.TILES_X * TS, ArcadeWorld.TILES_Y * TS);
 	private final SimpleObjectProperty<Perspective> $perspective = new SimpleObjectProperty<>();
 	private final SimpleBooleanProperty $useMazeFloorTexture = new SimpleBooleanProperty();
 	private final EnumMap<Perspective, GameSceneCamera> cameras = new EnumMap<>(Perspective.class);
+
+	private final Image floorTexture = U.image("/common/escher-texture.jpg");
+	private final Color floorColorWithTexture = Color.DARKBLUE;
+	private final Color floorColorWithoutTexture = Color.rgb(5, 5, 10);
 
 	private Maze3D maze3D;
 	private Pac3D player3D;
@@ -81,13 +84,7 @@ public class PlayScene3D extends GameScene3D {
 	private LivesCounter3D livesCounter3D;
 
 	public PlayScene3D() {
-		cameras.put(Perspective.CAM_DRONE, new Cam_Drone());
-		cameras.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer());
-		cameras.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer());
-		cameras.put(Perspective.CAM_TOTAL, new Cam_Total());
-
-		$perspective.bind(Env.$perspective);
-		$perspective.addListener(($perspective, oldPerspective, newPerspective) -> setPerspective(newPerspective));
+		createPerspectives();
 		$useMazeFloorTexture.bind(Env.$useMazeFloorTexture);
 		$useMazeFloorTexture.addListener(($useMazeFloorTexture, oldValue, newValue) -> setUseMazeFloorTexture(newValue));
 	}
@@ -108,10 +105,15 @@ public class PlayScene3D extends GameScene3D {
 		livesCounter3D.getTransforms().add(new Translate(TS, TS, -HTS));
 		livesCounter3D.setVisible($.hasCredit());
 
-		levelCounter3D = new LevelCounter3D(ArcadeWorld.SIZE.x - TS, TS, $.r2D);
+		levelCounter3D = new LevelCounter3D(unscaledSize.x - TS, TS, $.r2D);
 		levelCounter3D.update($.game);
 
-		buildMaze3D();
+		maze3D = new Maze3D(unscaledSize.x, unscaledSize.y);
+		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
+		maze3D.$resolution.bind(Env.$mazeResolution);
+		maze3D.$resolution.addListener(this::onMazeResolutionChange);
+		buildMazeContent($.game.level.mazeNumber);
+
 		player3D = new Pac3D($.game.level.world, $.game.pac, $.model3D);
 		ghosts3D = $.game.ghosts().map(ghost -> new Ghost3D(ghost, $.model3D, $.r2D)).toArray(Ghost3D[]::new);
 		bonus3D = new Bonus3D($.r2D);
@@ -124,15 +126,24 @@ public class PlayScene3D extends GameScene3D {
 		setUseMazeFloorTexture($useMazeFloorTexture.get());
 	}
 
-	private void setPerspective(Perspective perspective) {
-		var camera = cameras.get(perspective);
+	private void createPerspectives() {
+		cameras.put(Perspective.CAM_DRONE, new Cam_Drone());
+		cameras.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer());
+		cameras.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer());
+		cameras.put(Perspective.CAM_TOTAL, new Cam_Total());
+		$perspective.bind(Env.$perspective);
+		$perspective.addListener(($perspective, oldPerspective, newPerspective) -> setPerspective(newPerspective));
+	}
+
+	private void setPerspective(Perspective psp) {
+		var camera = cameras.get(psp);
+		camera.reset();
+		setCamera(camera);
 		if (scores3D != null) {
 			// keep the score in plain sight
 			scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
 			scores3D.rotateProperty().bind(camera.rotateProperty());
 		}
-		camera.reset();
-		setCamera(camera);
 	}
 
 	@Override
@@ -319,14 +330,6 @@ public class PlayScene3D extends GameScene3D {
 			maze3D.energizerAnimations().forEach(Animation::stop);
 			bonus3D.setVisible(false);
 		}
-	}
-
-	private void buildMaze3D() {
-		maze3D = new Maze3D(ArcadeWorld.SIZE.x, ArcadeWorld.SIZE.y);
-		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
-		maze3D.$resolution.bind(Env.$mazeResolution);
-		maze3D.$resolution.addListener(this::onMazeResolutionChange);
-		buildMazeContent($.game.level.mazeNumber);
 	}
 
 	private void buildMazeContent(int mazeNumber) {
