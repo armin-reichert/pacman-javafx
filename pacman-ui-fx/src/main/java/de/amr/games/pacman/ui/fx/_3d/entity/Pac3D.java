@@ -24,9 +24,10 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
+import static de.amr.games.pacman.model.common.world.World.t;
 
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.actors.Pac;
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.FillTransition3D;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
@@ -75,11 +76,6 @@ public class Pac3D extends Group {
 		reset();
 	}
 
-	private boolean insideWorld() {
-		V2i tile = pac.tile();
-		return 0 <= tile.x && tile.x < world.numCols() && 0 <= tile.y && tile.y < world.numRows();
-	}
-
 	public void reset() {
 		bodyParts.setScaleX(1.05);
 		bodyParts.setScaleY(1.05);
@@ -90,7 +86,8 @@ public class Pac3D extends Group {
 
 	public void update() {
 		motion.update(pac);
-		setVisible(pac.visible && insideWorld());
+		boolean insideWorld = 0 <= pac.position.x && pac.position.x <= t(ArcadeWorld.TILES_X - 1);
+		setVisible(pac.visible && insideWorld);
 	}
 
 	public Animation dyingAnimation(Color ghostColor, boolean silent) {
