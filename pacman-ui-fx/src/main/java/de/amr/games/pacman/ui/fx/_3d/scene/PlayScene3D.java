@@ -92,10 +92,6 @@ public class PlayScene3D extends GameScene3D {
 		$useMazeFloorTexture.addListener(($useMazeFloorTexture, oldValue, newValue) -> setUseMazeFloorTexture(newValue));
 	}
 
-	public GameSceneCamera getCamera() {
-		return (GameSceneCamera) fxSubScene.getCamera();
-	}
-
 	@Override
 	public void init() {
 		scores3D = new Scores3D();

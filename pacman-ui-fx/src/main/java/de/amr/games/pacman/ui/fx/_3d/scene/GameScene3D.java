@@ -42,19 +42,17 @@ import javafx.scene.transform.Translate;
  */
 public abstract class GameScene3D implements GameScene {
 
-	protected final Group sceneRoot = new Group();
+	private final SubScene fxSubScene;
 	protected final Group sceneContent = new Group();
-	protected final SubScene fxSubScene;
-	protected final AmbientLight light = new AmbientLight(Color.GHOSTWHITE);
-	protected final CoordinateAxes axes = new CoordinateAxes(1000);
 	protected SceneContext $;
 
 	public GameScene3D() {
-		Translate translate = new Translate(-ArcadeWorld.TILES_X * World.HTS, -ArcadeWorld.TILES_Y * World.HTS);
-		sceneContent.getTransforms().add(translate);
-		sceneRoot.getChildren().setAll(sceneContent, light, axes);
-		fxSubScene = new SubScene(sceneRoot, 100, 100, true, SceneAntialiasing.BALANCED);
+		var contentTranslate = new Translate(-ArcadeWorld.TILES_X * World.HTS, -ArcadeWorld.TILES_Y * World.HTS);
+		sceneContent.getTransforms().add(contentTranslate);
+		var axes = new CoordinateAxes(1000);
 		axes.visibleProperty().bind(Env.$axesVisible);
+		var sceneRoot = new Group(sceneContent, new AmbientLight(Color.GHOSTWHITE), axes);
+		fxSubScene = new SubScene(sceneRoot, 100, 100, true, SceneAntialiasing.BALANCED);
 	}
 
 	@Override
@@ -78,7 +76,11 @@ public abstract class GameScene3D implements GameScene {
 		fxSubScene.heightProperty().bind(parent.heightProperty());
 	}
 
-	protected void setCamera(GameSceneCamera camera) {
+	public GameSceneCamera getCamera() {
+		return (GameSceneCamera) fxSubScene.getCamera();
+	}
+
+	public void setCamera(GameSceneCamera camera) {
 		fxSubScene.setCamera(camera);
 		fxSubScene.setOnKeyPressed(camera::onKeyPressed);
 		fxSubScene.requestFocus();
