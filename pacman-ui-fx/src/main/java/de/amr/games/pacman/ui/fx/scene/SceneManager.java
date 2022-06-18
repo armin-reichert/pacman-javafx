@@ -101,6 +101,6 @@ public class SceneManager {
 	}
 
 	public static boolean sceneExistsInBothDimensions(GameModel game, GameState state) {
-		return findGameScene(game, state, SceneManager.SCENE_2D) != findGameScene(game, state, SceneManager.SCENE_3D);
+		return findGameScene(game, state, SCENE_2D) != findGameScene(game, state, SCENE_3D);
 	}
 }
