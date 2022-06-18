@@ -90,7 +90,7 @@ public class PlayScene3D extends GameScene3D {
 		sceneRoot.setTranslateY(-ArcadeWorld.SIZE.y / 2);
 
 		$perspective.bind(Env.$perspective);
-		$perspective.addListener(($perspective, oldPerspective, newPerspective) -> setCameraPerspective(newPerspective));
+		$perspective.addListener(($perspective, oldPerspective, newPerspective) -> setPerspective(newPerspective));
 		$useMazeFloorTexture.bind(Env.$useMazeFloorTexture);
 		$useMazeFloorTexture.addListener(($useMazeFloorTexture, oldValue, newValue) -> setUseMazeFloorTexture(newValue));
 	}
@@ -130,7 +130,7 @@ public class PlayScene3D extends GameScene3D {
 		sceneContent.getChildren().addAll(maze3D, scores3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
 		sceneContent.getChildren().addAll(ghosts3D);
 
-		setCameraPerspective($perspective.get());
+		setPerspective($perspective.get());
 		setUseMazeFloorTexture($useMazeFloorTexture.get());
 	}
 
@@ -204,7 +204,7 @@ public class PlayScene3D extends GameScene3D {
 		}
 	}
 
-	private void setCameraPerspective(Perspective perspective) {
+	private void setPerspective(Perspective perspective) {
 		var camera = cameras.get(perspective);
 		fxSubScene.setCamera(camera);
 		fxSubScene.setOnKeyPressed(camera::onKeyPressed);
