@@ -33,6 +33,7 @@ import de.amr.games.pacman.ui.fx._3d.animation.FadeInTransition3D;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import javafx.animation.Animation.Status;
+import javafx.animation.SequentialTransition;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -56,15 +57,15 @@ import javafx.util.Duration;
 public class Ghost3D extends Group implements Rendering3D {
 
 	public enum AnimationMode {
-		COLORED, FRIGHTENED, EYES_ONLY, NUMBER_CUBE;
+		COLORED, FRIGHTENED, EYES, NUMBER;
 	}
 
-	public static class NumberCubeAnimation {
+	public static class NumberAnimation {
 
 		private final Box numberCube;
 		private final Image[] valueImages;
 
-		public NumberCubeAnimation(Rendering2D r2D) {
+		public NumberAnimation(Rendering2D r2D) {
 			numberCube = new Box(8, 8, 8);
 			valueImages = r2D.createGhostValueList().frames().map(r2D::getSpriteImage).toArray(Image[]::new);
 		}
@@ -151,13 +152,13 @@ public class Ghost3D extends Group implements Rendering3D {
 
 	public final Ghost ghost;
 	private final Motion motion;
-	private final NumberCubeAnimation numberCubeAnimation;
+	private final NumberAnimation numberAnimation;
 	private final BodyAnimation bodyAnimation;
 	private AnimationMode animationMode;
 
 	public Ghost3D(Ghost ghost, PacManModel3D model3D, Rendering2D r2D) {
 		this.ghost = ghost;
-		numberCubeAnimation = new NumberCubeAnimation(r2D);
+		numberAnimation = new NumberAnimation(r2D);
 		bodyAnimation = new BodyAnimation(model3D, ghost.id);
 		motion = new Motion(this);
 		setAnimationMode(AnimationMode.COLORED);
@@ -192,17 +193,17 @@ public class Ghost3D extends Group implements Rendering3D {
 				bodyAnimation.setFrightened(true);
 				getChildren().setAll(bodyAnimation.getRoot());
 			}
-			case EYES_ONLY -> {
+			case EYES -> {
 				bodyAnimation.setShowBody(false);
 				bodyAnimation.setFrightened(false);
 				getChildren().setAll(bodyAnimation.getRoot());
 			}
-			case NUMBER_CUBE -> {
-				numberCubeAnimation.setNumber(ghost.killIndex);
+			case NUMBER -> {
+				numberAnimation.setNumber(ghost.killIndex);
 				// rotate node such that number can be read from left to right
 				setRotationAxis(Rotate.X_AXIS);
 				setRotate(0);
-				getChildren().setAll(numberCubeAnimation.getRoot());
+				getChildren().setAll(numberAnimation.getRoot());
 			}
 			}
 		}
@@ -213,7 +214,8 @@ public class Ghost3D extends Group implements Rendering3D {
 	}
 
 	public void playRevivalAnimation() {
-		bodyAnimation.revivalAnimation.setOnFinished(e -> setAnimationMode(AnimationMode.COLORED));
-		bodyAnimation.revivalAnimation.playFromStart();
+		var animation = new SequentialTransition(bodyAnimation.revivalAnimation);
+		animation.setOnFinished(e -> setAnimationMode(AnimationMode.COLORED));
+		animation.playFromStart();
 	}
 }

@@ -226,9 +226,9 @@ public class PlayScene3D implements GameEventAdapter, GameScene, Rendering3D {
 	private void updateGhost3D(Ghost ghost) {
 		var ghost3D = ghosts3D[ghost.id];
 		if (ghost.killIndex != -1) {
-			ghost3D.setAnimationMode(AnimationMode.NUMBER_CUBE);
+			ghost3D.setAnimationMode(AnimationMode.NUMBER);
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
-			ghost3D.setAnimationMode(AnimationMode.EYES_ONLY);
+			ghost3D.setAnimationMode(AnimationMode.EYES);
 		} else if (game.pac.hasPower() && !ghost.is(GhostState.LEAVING_HOUSE)) {
 			ghost3D.setAnimationMode(AnimationMode.FRIGHTENED);
 		} else {
