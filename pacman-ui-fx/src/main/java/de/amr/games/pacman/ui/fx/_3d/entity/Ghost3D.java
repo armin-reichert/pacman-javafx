@@ -90,7 +90,6 @@ public class Ghost3D extends Group implements Rendering3D {
 		private final Group eyes;
 		private final Shape3D eyePupils;
 		private final Shape3D eyeBalls;
-		private final Motion motion;
 		private final ColorFlashingTransition flashingAnimation;
 		private final FadeInTransition3D revivalAnimation;
 
@@ -103,17 +102,10 @@ public class Ghost3D extends Group implements Rendering3D {
 			eyeBalls = (Shape3D) eyes.getChildren().get(1);
 			flashingAnimation = new ColorFlashingTransition(getGhostSkinColorFrightened(), getGhostSkinColorFrightened2());
 			revivalAnimation = new FadeInTransition3D(Duration.seconds(1.5), skin, ghostify(getGhostSkinColor(ghostID)));
-			motion = new Motion(root); // TODO check this
 		}
 
 		public Node getRoot() {
 			return root;
-		}
-
-		public void move(Ghost ghost) {
-			motion.update(ghost);
-			boolean insideWorld = 0 <= ghost.position.x && ghost.position.x <= t(ArcadeWorld.TILES_X - 1);
-			root.setVisible(ghost.visible && insideWorld);
 		}
 
 		public void setShowBody(boolean showSkin) {
@@ -158,6 +150,7 @@ public class Ghost3D extends Group implements Rendering3D {
 	}
 
 	public final Ghost ghost;
+	private final Motion motion;
 	private final NumberCubeAnimation numberCubeAnimation;
 	private final BodyAnimation bodyAnimation;
 	private AnimationMode animationMode;
@@ -166,6 +159,7 @@ public class Ghost3D extends Group implements Rendering3D {
 		this.ghost = ghost;
 		numberCubeAnimation = new NumberCubeAnimation(r2D);
 		bodyAnimation = new BodyAnimation(model3D, ghost.id);
+		motion = new Motion(this);
 		setAnimationMode(AnimationMode.COLORED);
 	}
 
@@ -175,7 +169,9 @@ public class Ghost3D extends Group implements Rendering3D {
 	}
 
 	public void update() {
-		bodyAnimation.move(ghost);
+		motion.update(ghost);
+		boolean insideWorld = 0 <= ghost.position.x && ghost.position.x <= t(ArcadeWorld.TILES_X - 1);
+		setVisible(ghost.visible && insideWorld);
 	}
 
 	public AnimationMode getAnimationMode() {
