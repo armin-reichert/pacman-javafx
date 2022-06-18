@@ -53,8 +53,6 @@ import javafx.animation.SequentialTransition;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.AmbientLight;
-import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -67,7 +65,6 @@ import javafx.scene.transform.Translate;
  */
 public class PlayScene3D extends GameScene3D {
 
-	private final AmbientLight light = new AmbientLight(Color.GHOSTWHITE);
 	private final Image floorTexture = U.image("/common/escher-texture.jpg");
 	private final Color floorColorWithTexture = Color.DARKBLUE;
 	private final Color floorColorWithoutTexture = Color.rgb(5, 5, 10);
@@ -75,7 +72,6 @@ public class PlayScene3D extends GameScene3D {
 	private final SimpleBooleanProperty $useMazeFloorTexture = new SimpleBooleanProperty();
 	private final EnumMap<Perspective, PlaySceneCamera> cameras = new EnumMap<>(Perspective.class);
 
-	private Group content = new Group();
 	private Pac3D player3D;
 	private Maze3D maze3D;
 	private Ghost3D[] ghosts3D;
@@ -90,10 +86,8 @@ public class PlayScene3D extends GameScene3D {
 		cameras.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer());
 		cameras.put(Perspective.CAM_TOTAL, new Cam_Total());
 
-		content.setTranslateX(-ArcadeWorld.SIZE.x / 2);
-		content.setTranslateY(-ArcadeWorld.SIZE.y / 2);
-		// first child is placeholder for scene content (world3D)
-		sceneRoot.getChildren().setAll(new Group(), axes, light);
+		sceneRoot.setTranslateX(-ArcadeWorld.SIZE.x / 2);
+		sceneRoot.setTranslateY(-ArcadeWorld.SIZE.y / 2);
 
 		$perspective.bind(Env.$perspective);
 		$perspective.addListener(($perspective, oldPerspective, newPerspective) -> setCameraPerspective(newPerspective));
@@ -132,10 +126,9 @@ public class PlayScene3D extends GameScene3D {
 		ghosts3D = $.game.ghosts().map(ghost -> new Ghost3D(ghost, $.model3D, $.r2D)).toArray(Ghost3D[]::new);
 		bonus3D = new Bonus3D($.r2D);
 
-		content.getChildren().clear();
-		content.getChildren().addAll(maze3D, scores3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
-		content.getChildren().addAll(ghosts3D);
-		embedContent(content);
+		sceneContent.getChildren().clear();
+		sceneContent.getChildren().addAll(maze3D, scores3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
+		sceneContent.getChildren().addAll(ghosts3D);
 
 		setCameraPerspective($perspective.get());
 		setUseMazeFloorTexture($useMazeFloorTexture.get());

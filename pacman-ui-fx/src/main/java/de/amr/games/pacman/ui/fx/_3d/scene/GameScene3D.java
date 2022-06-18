@@ -27,11 +27,12 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.util.CoordinateAxes;
+import javafx.scene.AmbientLight;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
+import javafx.scene.paint.Color;
 
 /**
  * @author Armin Reichert
@@ -39,11 +40,14 @@ import javafx.scene.SubScene;
 public abstract class GameScene3D implements GameScene {
 
 	protected final Group sceneRoot = new Group();
+	protected final Group sceneContent = new Group();
 	protected final SubScene fxSubScene;
+	protected final AmbientLight light = new AmbientLight(Color.GHOSTWHITE);
 	protected final CoordinateAxes axes = new CoordinateAxes(1000);
 	protected SceneContext $;
 
 	public GameScene3D() {
+		sceneRoot.getChildren().setAll(sceneContent, axes, light);
 		fxSubScene = new SubScene(sceneRoot, 100, 100, true, SceneAntialiasing.BALANCED);
 		axes.visibleProperty().bind(Env.$axesVisible);
 	}
@@ -63,9 +67,4 @@ public abstract class GameScene3D implements GameScene {
 		fxSubScene.widthProperty().bind(parent.widthProperty());
 		fxSubScene.heightProperty().bind(parent.heightProperty());
 	}
-
-	protected void embedContent(Node content) {
-		sceneRoot.getChildren().set(0, content);
-	}
-
 }
