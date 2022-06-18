@@ -116,6 +116,14 @@ public class PlayScene3D extends GameScene3D {
 		setPerspective($perspective.get());
 	}
 
+	private void buildMazeContent(int mazeNumber) {
+		maze3D.createWallsAndDoors($.game.level.world, //
+				Rendering3D.getMazeSideColor($.game.variant, mazeNumber), //
+				Rendering3D.getMazeTopColor($.game.variant, mazeNumber), //
+				Rendering3D.getGhostHouseDoorColor($.game.variant, mazeNumber));
+		maze3D.createFood($.game.level.world, $.r2D.getFoodColor(mazeNumber));
+	}
+
 	private void createPerspectives() {
 		cameras.put(Perspective.CAM_DRONE, new Cam_Drone());
 		cameras.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer());
@@ -308,13 +316,5 @@ public class PlayScene3D extends GameScene3D {
 			maze3D.energizerAnimations().forEach(Animation::stop);
 			bonus3D.setVisible(false);
 		}
-	}
-
-	private void buildMazeContent(int mazeNumber) {
-		maze3D.createWallsAndDoors($.game.level.world, //
-				Rendering3D.getMazeSideColor($.game.variant, mazeNumber), //
-				Rendering3D.getMazeTopColor($.game.variant, mazeNumber), //
-				Rendering3D.getGhostHouseDoorColor($.game.variant, mazeNumber));
-		maze3D.createFood($.game.level.world, $.r2D.getFoodColor(mazeNumber));
 	}
 }

@@ -63,6 +63,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 
 /**
@@ -122,6 +123,10 @@ public class GameUI implements GameEventAdapter {
 
 		gameScenePlaceholder = new StackPane();
 		gameScenePlaceholder.setBackground(U.colorBackground(SCENE_BACKGROUND_COLOR));
+		Env.$drawMode3D.addListener((x, y, mode) -> {
+			gameScenePlaceholder
+					.setBackground(U.colorBackground(mode == DrawMode.FILL ? SCENE_BACKGROUND_COLOR : Color.BLACK));
+		});
 
 		sceneRoot = new StackPane(gameScenePlaceholder, dashboard, flashMessageView);
 

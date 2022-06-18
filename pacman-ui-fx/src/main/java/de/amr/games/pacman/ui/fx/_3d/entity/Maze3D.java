@@ -79,7 +79,6 @@ public class Maze3D extends Group {
 		floor = new MazeFloor3D(mazeWidth - 1, mazeHeight - 1, 0.01);
 		floor.showSolid(Color.rgb(5, 5, 10));
 		floor.getTransforms().add(new Translate(0.5 * floor.getWidth(), 0.5 * floor.getHeight(), 0.5 * floor.getDepth()));
-		getChildren().addAll(floor, wallsGroup, doorsGroup, foodGroup);
 		Env.$useMazeFloorTexture.addListener((x, y, b) -> {
 			if (b.booleanValue()) {
 				floor.showTextured(U.image("/common/escher-texture.jpg"), Color.DARKBLUE);
@@ -87,6 +86,7 @@ public class Maze3D extends Group {
 				floor.showSolid(Color.rgb(5, 5, 10));
 			}
 		});
+		getChildren().addAll(floor, wallsGroup, doorsGroup, foodGroup);
 	}
 
 	public void reset() {
