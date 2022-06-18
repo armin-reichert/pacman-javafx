@@ -51,7 +51,6 @@ import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -65,7 +64,6 @@ import javafx.scene.transform.Translate;
 public class PlayScene3D extends GameScene3D {
 
 	private final V2d unscaledSize = new V2d(ArcadeWorld.TILES_X * TS, ArcadeWorld.TILES_Y * TS);
-	private final SimpleObjectProperty<Perspective> $perspective = new SimpleObjectProperty<>();
 	private final EnumMap<Perspective, GameSceneCamera> cameras = new EnumMap<>(Perspective.class);
 
 	private Maze3D maze3D;
@@ -113,7 +111,7 @@ public class PlayScene3D extends GameScene3D {
 		sceneContent.getChildren().addAll(maze3D, scores3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
 		sceneContent.getChildren().addAll(ghosts3D);
 
-		setPerspective($perspective.get());
+		setPerspective(Env.$perspective.get());
 	}
 
 	private void buildMazeContent(int mazeNumber) {
@@ -129,8 +127,7 @@ public class PlayScene3D extends GameScene3D {
 		cameras.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer());
 		cameras.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer());
 		cameras.put(Perspective.CAM_TOTAL, new Cam_Total());
-		$perspective.bind(Env.$perspective);
-		$perspective.addListener(($perspective, oldPerspective, newPerspective) -> setPerspective(newPerspective));
+		Env.$perspective.addListener(($perspective, oldPerspective, newPerspective) -> setPerspective(newPerspective));
 	}
 
 	private void setPerspective(Perspective psp) {
