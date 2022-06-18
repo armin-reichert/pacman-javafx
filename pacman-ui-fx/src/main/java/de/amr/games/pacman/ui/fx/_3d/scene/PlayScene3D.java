@@ -203,12 +203,10 @@ public class PlayScene3D extends GameScene3D {
 	}
 
 	private void onMazeResolutionChange(ObservableValue<? extends Number> property, Number oldValue, Number newValue) {
-		if (!oldValue.equals(newValue)) {
-			maze3D.createWallsAndDoors($.game.level.world, //
-					Rendering3D.getMazeSideColor($.game.variant, $.game.level.mazeNumber), //
-					Rendering3D.getMazeTopColor($.game.variant, $.game.level.mazeNumber), //
-					Rendering3D.getGhostHouseDoorColor($.game.variant, $.game.level.mazeNumber));
-		}
+		maze3D.createWallsAndDoors($.game.level.world, //
+				Rendering3D.getMazeSideColor($.game.variant, $.game.level.mazeNumber), //
+				Rendering3D.getMazeTopColor($.game.variant, $.game.level.mazeNumber), //
+				Rendering3D.getGhostHouseDoorColor($.game.variant, $.game.level.mazeNumber));
 	}
 
 	@Override
