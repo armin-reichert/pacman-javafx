@@ -23,8 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
-import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import javafx.beans.property.DoubleProperty;
+import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.input.KeyEvent;
 
@@ -48,9 +48,12 @@ public abstract class GameSceneCamera extends PerspectiveCamera {
 				getRotate());
 	}
 
-	public abstract void reset();
+	public void reset() {
+	}
 
-	public abstract void update(Pac3D player3D);
+	public void update(Node target) {
+	}
 
-	public abstract void onKeyPressed(KeyEvent e);
+	public void onKeyPressed(KeyEvent e) {
+	}
 }

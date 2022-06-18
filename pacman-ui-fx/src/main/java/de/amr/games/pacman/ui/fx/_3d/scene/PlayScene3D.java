@@ -133,15 +133,13 @@ public class PlayScene3D extends GameScene3D {
 
 	private void setPerspective(Perspective perspective) {
 		var camera = cameras.get(perspective);
-		fxSubScene.setCamera(camera);
-		fxSubScene.setOnKeyPressed(camera::onKeyPressed);
-		fxSubScene.requestFocus();
 		if (scores3D != null) {
 			// keep the score in plain sight
 			scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
 			scores3D.rotateProperty().bind(camera.rotateProperty());
 		}
 		camera.reset();
+		setCamera(camera);
 	}
 
 	@Override

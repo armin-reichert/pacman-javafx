@@ -73,6 +73,12 @@ public abstract class GameScene3D implements GameScene {
 		fxSubScene.heightProperty().bind(parent.heightProperty());
 	}
 
+	protected void setCamera(GameSceneCamera camera) {
+		fxSubScene.setCamera(camera);
+		fxSubScene.setOnKeyPressed(camera::onKeyPressed);
+		fxSubScene.requestFocus();
+	}
+
 	protected void blockGameController() {
 		$.gameState().timer().resetIndefinitely();
 	}

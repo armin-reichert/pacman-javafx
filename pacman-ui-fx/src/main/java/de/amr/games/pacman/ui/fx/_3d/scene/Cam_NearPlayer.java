@@ -25,8 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 
 import static de.amr.games.pacman.ui.fx.util.U.lerp;
 
-import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 
 public class Cam_NearPlayer extends GameSceneCamera {
@@ -48,12 +47,8 @@ public class Cam_NearPlayer extends GameSceneCamera {
 	}
 
 	@Override
-	public void update(Pac3D player3D) {
-		setTranslateX(lerp(getTranslateX(), player3D.getTranslateX() - 110, speed));
-		setTranslateY(lerp(getTranslateY(), player3D.getTranslateY(), speed));
-	}
-
-	@Override
-	public void onKeyPressed(KeyEvent e) {
+	public void update(Node target) {
+		setTranslateX(lerp(getTranslateX(), target.getTranslateX() - 110, speed));
+		setTranslateY(lerp(getTranslateY(), target.getTranslateY(), speed));
 	}
 }

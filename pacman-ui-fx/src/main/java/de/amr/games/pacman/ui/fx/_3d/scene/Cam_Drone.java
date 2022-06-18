@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 
 import static de.amr.games.pacman.ui.fx.util.U.lerp;
 
-import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
+import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
@@ -51,9 +51,9 @@ public class Cam_Drone extends GameSceneCamera {
 	}
 
 	@Override
-	public void update(Pac3D player3D) {
-		setTranslateX(lerp(getTranslateX(), player3D.getTranslateX() - 100, speed));
-		setTranslateY(lerp(getTranslateY(), player3D.getTranslateY() - 150, speed));
+	public void update(Node target) {
+		setTranslateX(lerp(getTranslateX(), target.getTranslateX() - 100, speed));
+		setTranslateY(lerp(getTranslateY(), target.getTranslateY() - 150, speed));
 	}
 
 	@SuppressWarnings("incomplete-switch")

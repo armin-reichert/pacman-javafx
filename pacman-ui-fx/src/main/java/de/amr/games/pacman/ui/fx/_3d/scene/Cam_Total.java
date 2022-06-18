@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
-import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
@@ -44,10 +43,6 @@ public class Cam_Total extends GameSceneCamera {
 		setTranslateX(0);
 		setTranslateY(320);
 		setTranslateZ(-260);
-	}
-
-	@Override
-	public void update(Pac3D player3D) {
 	}
 
 	@SuppressWarnings("incomplete-switch")
