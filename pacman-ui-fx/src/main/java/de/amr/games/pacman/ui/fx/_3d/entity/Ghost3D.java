@@ -44,18 +44,22 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 /**
- * 3D representation of a ghost. A ghost is displayed in one of 3 modes: as a full ghost, as eyes only or as a bonus
- * symbol indicating the bounty paid for killing the ghost.
+ * 3D representation of a ghost. A ghost is displayed in one of 3 modes:
+ * <ul>
+ * <li>as a full ghost with colored skin and eyes,
+ * <li>as eyes only,
+ * <li>as a number cube indicating the value of the dead ghost.
+ * </ul>
  * 
  * @author Armin Reichert
  */
 public class Ghost3D extends Group implements Rendering3D {
 
-	enum AnimationMode {
-		COLORED_BODY, EYES_ONLY, NUMBER_CUBE;
+	public enum AnimationMode {
+		BODY, EYES_ONLY, NUMBER_CUBE;
 	}
 
-	class NumberCubeAnimation {
+	public class NumberCubeAnimation {
 
 		private final Box numberCube;
 		private final Image[] valueImages;
@@ -69,8 +73,8 @@ public class Ghost3D extends Group implements Rendering3D {
 			return numberCube;
 		}
 
-		public void updateNumber() {
-			var texture = valueImages[ghost.killIndex];
+		public void setNumber(int number) {
+			var texture = valueImages[number];
 			var material = new PhongMaterial();
 			material.setBumpMap(texture);
 			material.setDiffuseMap(texture);
@@ -81,14 +85,14 @@ public class Ghost3D extends Group implements Rendering3D {
 		}
 	}
 
-	class ColoredBodyAnimation {
+	public class BodyAnimation {
 
 		private Group root;
 		private final Motion motion;
 		private boolean looksFrightened;
 		private ColorFlashingTransition skinFlashing;
 
-		public ColoredBodyAnimation(PacManModel3D model3D) {
+		public BodyAnimation(PacManModel3D model3D) {
 			root = model3D.createGhost(ghostify(getGhostSkinColor(ghost.id)), getGhostEyeBallColor(), getGhostPupilColor());
 			motion = new Motion(Ghost3D.this);
 		}
@@ -116,14 +120,14 @@ public class Ghost3D extends Group implements Rendering3D {
 			return root;
 		}
 
-		public void update() {
+		public void move() {
 			motion.update(ghost);
 			boolean insideWorld = 0 <= ghost.position.x && ghost.position.x <= t(ArcadeWorld.TILES_X - 1);
 			root.setVisible(ghost.visible && insideWorld);
 		}
 
 		public void setShowSkin(boolean showSkin) {
-			coloredBodyAnimation.skin().setVisible(showSkin);
+			bodyAnimation.skin().setVisible(showSkin);
 		}
 
 		public void playFlashingAnimation() {
@@ -174,18 +178,18 @@ public class Ghost3D extends Group implements Rendering3D {
 
 	public final Ghost ghost;
 	private final NumberCubeAnimation numberCubeAnimation;
-	private final ColoredBodyAnimation coloredBodyAnimation;
+	private final BodyAnimation bodyAnimation;
 	private AnimationMode animationMode;
 
 	public Ghost3D(Ghost ghost, PacManModel3D model3D, Rendering2D r2D) {
 		this.ghost = ghost;
 		numberCubeAnimation = new NumberCubeAnimation(r2D);
-		coloredBodyAnimation = new ColoredBodyAnimation(model3D);
+		bodyAnimation = new BodyAnimation(model3D);
 		reset();
 	}
 
 	public void reset() {
-		coloredBodyAnimation.setNormalLook();
+		bodyAnimation.setNormalLook();
 		update();
 	}
 
@@ -196,58 +200,58 @@ public class Ghost3D extends Group implements Rendering3D {
 		if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
 			return AnimationMode.EYES_ONLY;
 		}
-		return AnimationMode.COLORED_BODY;
+		return AnimationMode.BODY;
 	}
 
 	public void update() {
 		var suitableMode = suitableAnimationMode();
 		if (animationMode != suitableMode) {
-			changeDisplayMode(suitableMode);
+			setAnimationMode(suitableMode);
 		}
 		switch (suitableMode) {
-		case COLORED_BODY, EYES_ONLY -> {
-			coloredBodyAnimation.update();
+		case BODY, EYES_ONLY -> {
+			bodyAnimation.move();
 		}
 		case NUMBER_CUBE -> {
 		}
 		}
 	}
 
-	private void changeDisplayMode(AnimationMode animationMode) {
+	private void setAnimationMode(AnimationMode animationMode) {
 		this.animationMode = animationMode;
 		switch (animationMode) {
-		case COLORED_BODY -> {
-			coloredBodyAnimation.setShowSkin(true);
-			getChildren().setAll(coloredBodyAnimation.getRoot());
+		case BODY -> {
+			bodyAnimation.setShowSkin(true);
+			getChildren().setAll(bodyAnimation.getRoot());
 		}
 		case EYES_ONLY -> {
-			coloredBodyAnimation.setShowSkin(false);
-			getChildren().setAll(coloredBodyAnimation.getRoot());
+			bodyAnimation.setShowSkin(false);
+			getChildren().setAll(bodyAnimation.getRoot());
 		}
 		case NUMBER_CUBE -> {
-			numberCubeAnimation.updateNumber();
+			numberCubeAnimation.setNumber(ghost.killIndex);
 			getChildren().setAll(numberCubeAnimation.getRoot());
 		}
 		}
 	}
 
 	public void setNormalLook() {
-		coloredBodyAnimation.setNormalLook();
+		bodyAnimation.setNormalLook();
 	}
 
 	public boolean isLookingFrightened() {
-		return coloredBodyAnimation.looksFrightened;
+		return bodyAnimation.looksFrightened;
 	}
 
 	public void setFrightenedLook() {
-		coloredBodyAnimation.setFrightenedLook();
+		bodyAnimation.setFrightenedLook();
 	}
 
 	public void playFlashingAnimation() {
-		coloredBodyAnimation.playFlashingAnimation();
+		bodyAnimation.playFlashingAnimation();
 	}
 
 	public void playRevivalAnimation() {
-		coloredBodyAnimation.playRevivalAnimation();
+		bodyAnimation.playRevivalAnimation();
 	}
 }
