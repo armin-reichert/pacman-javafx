@@ -51,10 +51,8 @@ import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
@@ -68,12 +66,7 @@ public class PlayScene3D extends GameScene3D {
 
 	private final V2d unscaledSize = new V2d(ArcadeWorld.TILES_X * TS, ArcadeWorld.TILES_Y * TS);
 	private final SimpleObjectProperty<Perspective> $perspective = new SimpleObjectProperty<>();
-	private final SimpleBooleanProperty $useMazeFloorTexture = new SimpleBooleanProperty();
 	private final EnumMap<Perspective, GameSceneCamera> cameras = new EnumMap<>(Perspective.class);
-
-	private final Image floorTexture = U.image("/common/escher-texture.jpg");
-	private final Color floorColorWithTexture = Color.DARKBLUE;
-	private final Color floorColorWithoutTexture = Color.rgb(5, 5, 10);
 
 	private Maze3D maze3D;
 	private Pac3D player3D;
@@ -85,8 +78,6 @@ public class PlayScene3D extends GameScene3D {
 
 	public PlayScene3D() {
 		createPerspectives();
-		$useMazeFloorTexture.bind(Env.$useMazeFloorTexture);
-		$useMazeFloorTexture.addListener(($useMazeFloorTexture, oldValue, newValue) -> setUseMazeFloorTexture(newValue));
 	}
 
 	@Override
@@ -123,7 +114,6 @@ public class PlayScene3D extends GameScene3D {
 		sceneContent.getChildren().addAll(ghosts3D);
 
 		setPerspective($perspective.get());
-		setUseMazeFloorTexture($useMazeFloorTexture.get());
 	}
 
 	private void createPerspectives() {
@@ -213,18 +203,6 @@ public class PlayScene3D extends GameScene3D {
 					Rendering3D.getMazeSideColor($.game.variant, $.game.level.mazeNumber), //
 					Rendering3D.getMazeTopColor($.game.variant, $.game.level.mazeNumber), //
 					Rendering3D.getGhostHouseDoorColor($.game.variant, $.game.level.mazeNumber));
-		}
-	}
-
-	private void setUseMazeFloorTexture(boolean useTexture) {
-		if (maze3D != null) {
-			if (useTexture) {
-				maze3D.getFloor().setTexture(floorTexture);
-				maze3D.getFloor().setColor(floorColorWithTexture);
-			} else {
-				maze3D.getFloor().setTexture(null);
-				maze3D.getFloor().setColor(floorColorWithoutTexture);
-			}
 		}
 	}
 

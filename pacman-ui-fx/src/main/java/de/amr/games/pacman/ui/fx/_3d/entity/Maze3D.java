@@ -35,6 +35,7 @@ import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.RaiseAndLowerWallAnimation;
 import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.util.U;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.DoubleProperty;
@@ -63,7 +64,7 @@ public class Maze3D extends Group {
 	private final Group doorsGroup = new Group();
 	private final Group foodGroup = new Group();
 
-	private final MazeFloor3D floor;
+	private MazeFloor3D floor;
 
 	private final double energizerRadius = 3.0;
 	private final double pelletRadius = 1.0;
@@ -76,9 +77,16 @@ public class Maze3D extends Group {
 	 */
 	public Maze3D(double mazeWidth, double mazeHeight) {
 		floor = new MazeFloor3D(mazeWidth - 1, mazeHeight - 1, 0.01);
-		floor.setColor(Color.BLUE);
+		floor.showSolid(Color.rgb(5, 5, 10));
 		floor.getTransforms().add(new Translate(0.5 * floor.getWidth(), 0.5 * floor.getHeight(), 0.5 * floor.getDepth()));
 		getChildren().addAll(floor, wallsGroup, doorsGroup, foodGroup);
+		Env.$useMazeFloorTexture.addListener((x, y, b) -> {
+			if (b.booleanValue()) {
+				floor.showTextured(U.image("/common/escher-texture.jpg"), Color.DARKBLUE);
+			} else {
+				floor.showSolid(Color.rgb(5, 5, 10));
+			}
+		});
 	}
 
 	public void reset() {

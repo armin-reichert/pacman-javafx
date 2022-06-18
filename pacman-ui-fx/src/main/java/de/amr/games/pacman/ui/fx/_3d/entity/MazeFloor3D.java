@@ -37,19 +37,24 @@ import javafx.scene.shape.Box;
 public class MazeFloor3D extends Box {
 
 	private final PhongMaterial material = new PhongMaterial();
+	private Color solidColor;
 
 	public MazeFloor3D(double width, double height, double depth) {
 		super(width, height, depth);
 		setMaterial(material);
 		drawModeProperty().bind(Env.$drawMode3D);
+		showSolid(Color.BLACK);
 	}
 
-	public void setColor(Color color) {
-		material.setDiffuseColor(color);
-		material.setSpecularColor(color.brighter());
+	public void showSolid(Color color) {
+		this.solidColor = color;
+		material.setDiffuseColor(solidColor);
+		material.setSpecularColor(solidColor.brighter());
 	}
 
-	public void setTexture(Image texture) {
+	public void showTextured(Image texture, Color textureBackground) {
+		material.setDiffuseColor(textureBackground);
+		material.setSpecularColor(textureBackground.brighter());
 		material.setDiffuseMap(texture);
 	}
 }
