@@ -37,7 +37,6 @@ import javafx.animation.RotateTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -58,6 +57,8 @@ public class Pac3D extends Group {
 	private final World world;
 	private final Pac pac;
 	private final Group bodyParts;
+	private final Shape3D skull;
+
 	private final Motion motion;
 	private final PointLight light = new PointLight(Color.WHITE);
 	private Color skullColorImpaled = Color.GHOSTWHITE;
@@ -67,14 +68,11 @@ public class Pac3D extends Group {
 		this.pac = pac;
 		bodyParts = model3D.createPacMan(Rendering3D.getPacSkullColor(), Rendering3D.getPacEyesColor(),
 				Rendering3D.getPacPalateColor());
+		skull = (Shape3D) bodyParts.getChildren().get(0);
 		motion = new Motion(this);
 		light.setTranslateZ(-HTS);
 		getChildren().addAll(bodyParts, light);
 		reset();
-		// only for testing
-		skull().setUserData(this);
-		eyes().setUserData(this);
-		palate().setUserData(this);
 	}
 
 	private boolean insideWorld() {
@@ -82,41 +80,17 @@ public class Pac3D extends Group {
 		return 0 <= tile.x && tile.x < world.numCols() && 0 <= tile.y && tile.y < world.numRows();
 	}
 
-	public String identifyNode(Node node) {
-		if (node == eyes()) {
-			return String.format("eyes of %s", pac);
-		} else if (node == palate()) {
-			return String.format("palate of %s", pac);
-		} else if (node == skull()) {
-			return String.format("skull of %s", pac);
-		} else {
-			return String.format("part of %s", pac);
-		}
-	}
-
 	public void reset() {
 		bodyParts.setScaleX(1.05);
 		bodyParts.setScaleY(1.05);
 		bodyParts.setScaleZ(1.05);
-		setShapeColor(skull(), Rendering3D.getPacSkullColor());
+		setShapeColor(skull, Rendering3D.getPacSkullColor());
 		update();
 	}
 
 	public void update() {
 		motion.update(pac);
 		setVisible(pac.visible && insideWorld());
-	}
-
-	public Shape3D skull() {
-		return (Shape3D) bodyParts.getChildren().get(0);
-	}
-
-	public Shape3D eyes() {
-		return (Shape3D) bodyParts.getChildren().get(1);
-	}
-
-	public Shape3D palate() {
-		return (Shape3D) bodyParts.getChildren().get(2);
 	}
 
 	public Animation dyingAnimation(Color ghostColor, boolean silent) {
@@ -131,8 +105,8 @@ public class Pac3D extends Group {
 		shrink.setToZ(0);
 
 		return new SequentialTransition( //
-				new FillTransition3D(Duration.seconds(1), skull(), Rendering3D.getPacSkullColor(), ghostColor), //
-				new FillTransition3D(Duration.seconds(1), skull(), ghostColor, skullColorImpaled), //
+				new FillTransition3D(Duration.seconds(1), skull, Rendering3D.getPacSkullColor(), ghostColor), //
+				new FillTransition3D(Duration.seconds(1), skull, ghostColor, skullColorImpaled), //
 				new ParallelTransition(spin, shrink));
 	}
 
