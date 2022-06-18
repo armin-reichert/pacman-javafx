@@ -87,7 +87,7 @@ public class Ghost3D extends Group implements Rendering3D {
 		private Group root;
 		private final Motion motion;
 		private boolean frightened;
-		private ColorFlashingTransition flashing;
+		private ColorFlashingTransition flashingAnimation;
 
 		public BodyAnimation(PacManModel3D model3D) {
 			root = model3D.createGhost(ghostify(getGhostSkinColor(ghost.id)), getGhostEyeBallColor(), getGhostPupilColor());
@@ -128,14 +128,14 @@ public class Ghost3D extends Group implements Rendering3D {
 		}
 
 		public void playFlashingAnimation() {
-			flashing = new ColorFlashingTransition(getGhostSkinColorFrightened(), getGhostSkinColorFrightened2());
-			skin().setMaterial(flashing.getMaterial());
-			flashing.playFromStart();
+			flashingAnimation = new ColorFlashingTransition(getGhostSkinColorFrightened(), getGhostSkinColorFrightened2());
+			skin().setMaterial(flashingAnimation.getMaterial());
+			flashingAnimation.playFromStart();
 		}
 
 		public void stopFlashingAnimation() {
-			if (flashing != null) {
-				flashing.stop();
+			if (flashingAnimation != null) {
+				flashingAnimation.stop();
 			}
 		}
 
