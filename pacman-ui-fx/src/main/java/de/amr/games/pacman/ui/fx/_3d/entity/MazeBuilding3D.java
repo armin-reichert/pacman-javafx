@@ -111,19 +111,11 @@ public class MazeBuilding3D {
 	}
 
 	public void erect(Color wallBaseColor, Color wallTopColor, Color doorColor) {
-		createWallsAndDoors(wallBaseColor, wallTopColor, doorColor);
-		resolution.addListener((obs, oldVal, newVal) -> createWallsAndDoors(wallBaseColor, wallTopColor, doorColor));
+		createWalls(wallBaseColor, wallTopColor);
+		createDoors(doorColor);
 	}
 
-	/**
-	 * Creates the walls and doors according to the current resolution.
-	 * 
-	 * @param world         the game world
-	 * @param wallBaseColor color of wall at base
-	 * @param wallTopColor  color of wall at top
-	 * @param doorColor     door color
-	 */
-	private void createWallsAndDoors(Color wallBaseColor, Color wallTopColor, Color doorColor) {
+	private void createWalls(Color wallBaseColor, Color wallTopColor) {
 		WallProperties wp = new WallProperties();
 		wp.baseMaterial = new PhongMaterial(wallBaseColor);
 		wp.baseMaterial.setSpecularColor(wallBaseColor.brighter());
@@ -135,14 +127,15 @@ public class MazeBuilding3D {
 		addHorizontalWalls(floorPlan, wallsGroup, wp);
 		addVerticalWalls(floorPlan, wallsGroup, wp);
 		addCorners(floorPlan, wallsGroup, wp);
+		log("Built 3D maze (resolution=%d, wall height=%.2f)", resolution.get(), wallHeight.get());
+	}
 
+	private void createDoors(Color doorColor) {
 		var leftDoor = new Door3D(world.ghostHouse().doorTileLeft(), true, doorColor);
 		leftDoor.doorHeight.bind(wallHeight);
 		var rightDoor = new Door3D(world.ghostHouse().doorTileRight(), false, doorColor);
 		rightDoor.doorHeight.bind(wallHeight);
 		doorsGroup.getChildren().setAll(leftDoor.getNode(), rightDoor.getNode());
-
-		log("Built 3D maze (resolution=%d, wall height=%.2f)", resolution.get(), wallHeight.get());
 	}
 
 	private void addHorizontalWalls(FloorPlan floorPlan, Group wallsGroup, WallProperties wp) {
