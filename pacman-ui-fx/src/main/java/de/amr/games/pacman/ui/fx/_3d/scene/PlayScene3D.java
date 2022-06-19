@@ -79,6 +79,8 @@ public class PlayScene3D extends GameScene3D {
 
 	@Override
 	public void init() {
+		sceneContent.getChildren().clear();
+
 		scores3D = new Scores3D();
 		scores3D.setFont($.r2D.getArcadeFont());
 		if ($.hasCredit()) {
@@ -96,21 +98,21 @@ public class PlayScene3D extends GameScene3D {
 		levelCounter3D = new LevelCounter3D(unscaledSize.x - TS, TS, $.r2D);
 		levelCounter3D.update($.game);
 
-		createMaze3D();
+		maze3D = createMaze3D();
 
 		player3D = new Pac3D($.game.pac, $.model3D);
 		ghosts3D = $.game.ghosts().map(ghost -> new Ghost3D(ghost, $.model3D, $.r2D)).toArray(Ghost3D[]::new);
 		bonus3D = new Bonus3D();
 
-		sceneContent.getChildren().clear();
-		sceneContent.getChildren().addAll(maze3D, scores3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
+		sceneContent.getChildren().add(maze3D); // must be first child because it is exchanged!
+		sceneContent.getChildren().addAll(scores3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
 		sceneContent.getChildren().addAll(ghosts3D);
 
 		setPerspective(Env.$perspective.get());
 	}
 
-	public void createMaze3D() {
-		maze3D = new Maze3D($.game.variant, $.game.level.world, $.game.level.mazeNumber, unscaledSize,
+	public Maze3D createMaze3D() {
+		var maze3D = new Maze3D($.game.variant, $.game.level.world, $.game.level.mazeNumber, unscaledSize,
 				$.r2D.getFoodColor($.game.level.mazeNumber));
 
 		maze3D.mazeBuilding.setFloorSolidColor(Color.rgb(5, 5, 10));
@@ -120,6 +122,7 @@ public class PlayScene3D extends GameScene3D {
 		maze3D.mazeBuilding.wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.mazeBuilding.resolution.bind(Env.$mazeResolution);
 		maze3D.mazeBuilding.floorHasTexture.bind(Env.$mazeFloorHasTexture);
+		return maze3D;
 	}
 
 	private void createPerspectives() {
@@ -266,7 +269,8 @@ public class PlayScene3D extends GameScene3D {
 		}
 		case LEVEL_STARTING -> {
 			blockGameController();
-			createMaze3D();
+			maze3D = createMaze3D();
+			sceneContent.getChildren().set(0, maze3D);
 			levelCounter3D.update($.game);
 			Actions.showFlashMessage(Talk.message("level_starting", $.game.level.number));
 			U.pauseSec(3, this::unblockGameController).play();
