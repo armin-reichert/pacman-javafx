@@ -47,7 +47,11 @@ import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
  */
 public class SceneManager {
 
-	public static final int SCENE_2D = 0, SCENE_3D = 1;
+	private SceneManager() {
+	}
+
+	public static final int SCENE_2D = 0;
+	public static final int SCENE_3D = 1;
 
 	private static final GameScene[][] SCENES_PACMAN = {
 			//@formatter:off

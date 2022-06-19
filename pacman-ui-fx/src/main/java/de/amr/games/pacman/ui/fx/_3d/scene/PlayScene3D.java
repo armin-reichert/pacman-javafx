@@ -238,8 +238,6 @@ public class PlayScene3D extends GameScene3D {
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
 		switch (e.newGameState) {
-		default -> {
-		}
 		case READY -> {
 			maze3D.reset();
 			player3D.reset();
@@ -251,12 +249,12 @@ public class PlayScene3D extends GameScene3D {
 		case PACMAN_DYING -> {
 			blockGameController();
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.COLORED));
-			var killer = $.game.ghosts().filter(ghost -> ghost.sameTile($.game.pac)).findAny().get();
-			var killerColor = $.r2D.getGhostColor(killer.id);
-			new SequentialTransition( //
-					player3D.dyingAnimation(killerColor), //
-					U.pauseSec(2.0, () -> unblockGameController()) //
-			).play();
+			$.game.ghosts().filter(ghost -> ghost.sameTile($.game.pac)).findAny().ifPresent(killer -> {
+				new SequentialTransition( //
+						player3D.dyingAnimation($.r2D.getGhostColor(killer.id)), //
+						U.pauseSec(2.0, () -> unblockGameController()) //
+				).play();
+			});
 		}
 		case LEVEL_STARTING -> {
 			blockGameController();
@@ -280,6 +278,8 @@ public class PlayScene3D extends GameScene3D {
 		}
 		case GAME_OVER -> {
 			Actions.showFlashMessage(3, Env.GAME_OVER_TALK.next());
+		}
+		default -> { // ignore
 		}
 		}
 

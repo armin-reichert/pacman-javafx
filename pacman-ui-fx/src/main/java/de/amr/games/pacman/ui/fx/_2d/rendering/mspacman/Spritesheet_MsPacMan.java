@@ -232,7 +232,9 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 		var animationByDir = new SpriteAnimationMap<>(enumMap);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
-			Rectangle2D wide_open = rhs(0, d), open = rhs(1, d), closed = rhs(2, d);
+			var wide_open = rhs(0, d);
+			var open = rhs(1, d);
+			var closed = rhs(2, d);
 			var munching = new SingleSpriteAnimation<>(open, wide_open, open, closed);
 			munching.frameDuration(2);
 			munching.repeatForever();
@@ -243,7 +245,10 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 
 	@Override
 	public SingleSpriteAnimation<Rectangle2D> createPacDyingAnimation() {
-		Rectangle2D right = rhs(1, 0), left = rhs(1, 1), up = rhs(1, 2), down = rhs(1, 3);
+		var right = rhs(1, 0);
+		var left = rhs(1, 1);
+		var up = rhs(1, 2);
+		var down = rhs(1, 3);
 		// TODO not yet 100% accurate
 		var animation = new SingleSpriteAnimation<>(down, left, up, right, down, left, up, right, down, left, up);
 		animation.frameDuration(8);

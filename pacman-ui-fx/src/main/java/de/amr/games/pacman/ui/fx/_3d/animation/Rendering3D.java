@@ -31,10 +31,13 @@ import javafx.scene.paint.Color;
 /**
  * @author Armin Reichert
  */
-public interface Rendering3D {
+public class Rendering3D {
+
+	private Rendering3D() {
+	}
 
 	//@formatter:off
-	static final Color[] MAZE_TOP_COLORS = { 
+	public static final Color[] MAZE_TOP_COLORS = { 
 		Color.rgb(255, 183, 174), 
 		Color.rgb(71, 183, 255), 
 		Color.rgb(222, 151, 81), 
@@ -43,7 +46,7 @@ public interface Rendering3D {
 		Color.rgb(255, 183, 174), 
 	};
 
-	static final Color[] MAZE_SIDE_COLORS = { 
+	public static final Color[] MAZE_SIDE_COLORS = { 
 		Color.rgb(255, 0, 0), 
 		Color.rgb(222, 222, 255), 
 		Color.rgb(222, 222, 255), 
@@ -52,7 +55,7 @@ public interface Rendering3D {
 		Color.rgb(255, 0, 0), 
 	};
 	
-	static final Color[] FOOD_COLORS = {
+	public static final Color[] FOOD_COLORS = {
 		Color.rgb(222, 222, 255),
 		Color.rgb(255, 255, 0),
 		Color.rgb(255, 0, 0),
@@ -67,7 +70,7 @@ public interface Rendering3D {
 	 * @param mazeNumber  the 1-based maze number
 	 * @return color of pellets in this maze
 	 */
-	static Color getMazeFoodColor(GameVariant gameVariant, int mazeNumber) {
+	public static Color getMazeFoodColor(GameVariant gameVariant, int mazeNumber) {
 		return switch (gameVariant) {
 		case MS_PACMAN -> FOOD_COLORS[mazeNumber - 1];
 		case PACMAN -> Color.rgb(254, 189, 180);
@@ -78,7 +81,7 @@ public interface Rendering3D {
 	 * @param mazeNumber the 1-based maze number
 	 * @return color of maze walls on top (3D) or inside (2D)
 	 */
-	static Color getMazeTopColor(GameVariant gameVariant, int mazeNumber) {
+	public static Color getMazeTopColor(GameVariant gameVariant, int mazeNumber) {
 		return switch (gameVariant) {
 		case MS_PACMAN -> MAZE_TOP_COLORS[mazeNumber - 1];
 		case PACMAN -> Color.AZURE;
@@ -90,7 +93,7 @@ public interface Rendering3D {
 	 * @param mazeNumber  the 1-based maze number
 	 * @return color of maze walls on side (3D) or outside (2D)
 	 */
-	static Color getMazeSideColor(GameVariant gameVariant, int mazeNumber) {
+	public static Color getMazeSideColor(GameVariant gameVariant, int mazeNumber) {
 		return switch (gameVariant) {
 		case MS_PACMAN -> MAZE_SIDE_COLORS[mazeNumber - 1];
 		case PACMAN -> Color.rgb(33, 33, 255);
@@ -102,22 +105,22 @@ public interface Rendering3D {
 	 * @param mazeNumber  the 1-based maze number
 	 * @return color of ghosthouse doors in this maze
 	 */
-	static Color getGhostHouseDoorColor(GameVariant gameVariant, int mazeNumber) {
+	public static Color getGhostHouseDoorColor(GameVariant gameVariant, int mazeNumber) {
 		return switch (gameVariant) {
 		case MS_PACMAN -> Color.rgb(255, 183, 255);
 		case PACMAN -> Color.rgb(252, 181, 255);
 		};
 	}
 
-	static Color getPacSkullColor() {
+	public static Color getPacSkullColor() {
 		return Color.YELLOW;
 	}
 
-	static Color getPacEyesColor() {
+	public static Color getPacEyesColor() {
 		return Color.rgb(33, 33, 33);
 	}
 
-	static Color getPacPalateColor() {
+	public static Color getPacPalateColor() {
 		return Color.CORAL;
 	}
 
@@ -125,7 +128,7 @@ public interface Rendering3D {
 	 * @param ghostID 0=Blinky, 1=Pinky, 2=Inky, 3=Clyde/Sue
 	 * @return color of ghost
 	 */
-	static Color getGhostSkinColor(int ghostID) {
+	public static Color getGhostSkinColor(int ghostID) {
 		return switch (ghostID) {
 		case Ghost.RED_GHOST -> Color.RED;
 		case Ghost.PINK_GHOST -> Color.rgb(252, 181, 255);
@@ -135,27 +138,27 @@ public interface Rendering3D {
 		};
 	}
 
-	static Color getGhostSkinColorFrightened() {
+	public static Color getGhostSkinColorFrightened() {
 		return Color.rgb(33, 33, 255);
 	}
 
-	static Color getGhostSkinColorFrightened2() {
+	public static Color getGhostSkinColorFrightened2() {
 		return Color.rgb(224, 221, 255);
 	}
 
-	static Color getGhostEyeBallColor() {
+	public static Color getGhostEyeBallColor() {
 		return Color.GHOSTWHITE;
 	}
 
-	static Color getGhostEyeBallColorFrightened() {
+	public static Color getGhostEyeBallColorFrightened() {
 		return Color.rgb(245, 189, 180);
 	}
 
-	static Color getGhostPupilColor() {
+	public static Color getGhostPupilColor() {
 		return Color.rgb(33, 33, 255);
 	}
 
-	static Color getGhostPupilColorFrightened() {
+	public static Color getGhostPupilColorFrightened() {
 		return Color.RED;
 	}
 }

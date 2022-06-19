@@ -70,7 +70,8 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	static final Color MAZE_WALL_COLOR = Color.rgb(33, 33, 255);
 	static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
 
-	private final Image mazeFull, mazeEmpty;
+	private final Image mazeFull;
+	private final Image mazeEmpty;
 	private final Font font;
 
 	private Spritesheet_PacMan() {

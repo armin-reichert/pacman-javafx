@@ -187,7 +187,8 @@ public class PacMan_IntroScene extends GameScene2D {
 	}
 
 	private void drawPoints(GraphicsContext g) {
-		int tileX = icc.left + 6, tileY = 25;
+		int tileX = icc.left + 6;
+		int tileY = 25;
 		g.setFill($.r2D.getFoodColor(1));
 		g.fillRect(t(tileX) + 4, t(tileY - 1) + 4, 2, 2);
 		if (icc.blinking.frame()) {

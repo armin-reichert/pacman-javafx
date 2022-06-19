@@ -132,7 +132,8 @@ public interface Rendering2D {
 	 */
 	default void drawSpriteCenteredOverBox(GraphicsContext g, Rectangle2D sprite, double x, double y) {
 		if (sprite != null) {
-			double dx = HTS - sprite.getWidth() / 2, dy = HTS - sprite.getHeight() / 2;
+			double dx = HTS - sprite.getWidth() / 2;
+			double dy = HTS - sprite.getHeight() / 2;
 			drawSprite(g, sprite, x + dx, y + dy);
 		}
 	}
@@ -235,7 +236,8 @@ public interface Rendering2D {
 	}
 
 	default void drawLivesCounter(GraphicsContext g, int numLives) {
-		int x = t(2), y = t(ArcadeWorld.TILES_Y - 2);
+		int x = t(2);
+		int y = t(ArcadeWorld.TILES_Y - 2);
 		int maxLives = 5;
 		for (int i = 0; i < Math.min(numLives, maxLives); ++i) {
 			drawSprite(g, getLifeSprite(), x + t(2 * i), y);

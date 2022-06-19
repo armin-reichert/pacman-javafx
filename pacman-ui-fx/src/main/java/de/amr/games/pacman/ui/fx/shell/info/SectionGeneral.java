@@ -44,7 +44,8 @@ import javafx.scene.text.Font;
  */
 public class SectionGeneral extends Section {
 
-	public static final int MIN_FRAMERATE = 5, MAX_FRAMERATE = 120;
+	public static final int MIN_FRAMERATE = 5;
+	public static final int MAX_FRAMERATE = 120;
 
 	private Button[] btnsSimulation;
 	private Slider sliderTargetFPS;
@@ -62,7 +63,8 @@ public class SectionGeneral extends Section {
 		super(ui, gc, title, minLabelWidth, textColor, textFont, labelFont);
 
 		btnsSimulation = addButtonList("Simulation", "Pause", "Step");
-		Button btnPlayPause = btnsSimulation[0], btnStep = btnsSimulation[1];
+		Button btnPlayPause = btnsSimulation[0];
+		Button btnStep = btnsSimulation[1];
 
 		btnPlayPause.setText(null);
 		btnPlayPause.setStyle("-fx-background-color: transparent");
@@ -77,9 +79,8 @@ public class SectionGeneral extends Section {
 		sliderTargetFPS = addSlider("Target Framerate", MIN_FRAMERATE, MAX_FRAMERATE, 60);
 		sliderTargetFPS.setShowTickLabels(false);
 		sliderTargetFPS.setShowTickMarks(false);
-		sliderTargetFPS.valueProperty().addListener(($value, oldValue, newValue) -> {
-			GameLoop.get().setTargetFrameRate(newValue.intValue());
-		});
+		sliderTargetFPS.valueProperty()
+				.addListener((obs, oldValue, newValue) -> GameLoop.get().setTargetFrameRate(newValue.intValue()));
 		addInfo("", () -> String.format("Current: %d Hz (Target: %d Hz)", GameLoop.get().getFPS(),
 				GameLoop.get().getTargetFrameRate()));
 		addInfo("Total Ticks", GameLoop.get()::getTotalTicks);
