@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import static de.amr.games.pacman.model.common.actors.GhostState.DEAD;
-import static de.amr.games.pacman.model.common.actors.GhostState.ENTERING_HOUSE;
 import static de.amr.games.pacman.model.common.actors.GhostState.LEAVING_HOUSE;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
@@ -36,9 +34,11 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Ghost;
+import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.RaiseAndLowerWallAnimation;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
+import de.amr.games.pacman.ui.fx.util.U;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.scene.Group;
@@ -97,7 +97,7 @@ public class Maze3D extends Group {
 		mazeBuilding.doors().forEach(door3D -> {
 			boolean ghostApproaching = game.ghosts() //
 					.filter(ghost -> ghost.visible) //
-					.filter(ghost -> ghost.is(DEAD) || ghost.is(ENTERING_HOUSE) || ghost.is(LEAVING_HOUSE)) //
+					.filter(ghost -> U.oneOf(ghost.state, GhostState.DEAD, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)) //
 					.anyMatch(ghost -> isGhostNearDoor(ghost, door3D));
 			door3D.setOpen(ghostApproaching);
 		});
