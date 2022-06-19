@@ -28,6 +28,7 @@ import static de.amr.games.pacman.lib.V2i.v;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.animation.SpriteAnimation;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
@@ -45,31 +46,41 @@ import javafx.scene.paint.Color;
  */
 public class PacManCutscene2 extends GameScene2D {
 
+	private static final String DAMAGED = "damaged";
+
 	private int initialDelay;
 	private int frame;
 	private Pac pac;
 	private Ghost blinky;
+	private SpriteAnimation<Rectangle2D> stretchedDressAnimation;
+	private SpriteAnimation<Rectangle2D> damagedAnimation;
 
 	@Override
 	public void init() {
 		frame = -1;
 		initialDelay = 120;
 
+		var pacAnimations = new PacAnimations($.r2D);
+		pacAnimations.select(PacAnimations.MUNCHING);
+		pacAnimations.byName(PacAnimations.MUNCHING).restart();
+
 		pac = new Pac("Pac-Man");
-		pac.setAnimations(new PacAnimations($.r2D));
-		pac.animations().get().select("munching");
-		pac.animation("munching").get().restart();
+		pac.setAnimations(pacAnimations);
 		pac.placeAt(v(29, 20), 0, 0);
 		pac.setMoveDir(Direction.LEFT);
 		pac.setAbsSpeed(1.15);
 		pac.show();
 
+		stretchedDressAnimation = ((SpritesheetPacMan) $.r2D).createBlinkyStretchedAnimation();
+
+		var blinkyAnimations = new GhostAnimations(Ghost.RED_GHOST, $.r2D);
+		damagedAnimation = ((SpritesheetPacMan) $.r2D).createBlinkyDamagedAnimation();
+		blinkyAnimations.put(DAMAGED, damagedAnimation);
+		blinkyAnimations.select(GhostAnimations.COLOR);
+		blinkyAnimations.byName(GhostAnimations.COLOR).restart();
+
 		blinky = new Ghost(Ghost.RED_GHOST, "Blinky");
-		blinky.setAnimations(new GhostAnimations(Ghost.RED_GHOST, $.r2D));
-		blinky.animations().get().put("stretched", ((SpritesheetPacMan) $.r2D).createBlinkyStretchedAnimation());
-		blinky.animations().get().put("damaged", ((SpritesheetPacMan) $.r2D).createBlinkyDamagedAnimation());
-		blinky.animations().get().select("color");
-		blinky.animation("color").get().restart();
+		blinky.setAnimations(blinkyAnimations);
 		blinky.placeAt(v(28, 20), 0, 0);
 		blinky.setBothDirs(Direction.LEFT);
 		blinky.setAbsSpeed(0);
@@ -82,8 +93,6 @@ public class PacManCutscene2 extends GameScene2D {
 			--initialDelay;
 			return;
 		}
-		var stretched = blinky.animation("stretched").orElse(null);
-		var damaged = blinky.animation("damaged").orElse(null);
 		++frame;
 		if (frame == 0) {
 			$.game.sounds().ifPresent(snd -> snd.play(GameSound.INTERMISSION_1));
@@ -92,22 +101,22 @@ public class PacManCutscene2 extends GameScene2D {
 			blinky.show();
 		} else if (frame == 196) {
 			blinky.setAbsSpeed(0.17);
-			stretched.setFrameIndex(1);
+			stretchedDressAnimation.setFrameIndex(1);
 		} else if (frame == 226) {
-			stretched.setFrameIndex(2);
+			stretchedDressAnimation.setFrameIndex(2);
 		} else if (frame == 248) {
 			blinky.setAbsSpeed(0);
 			blinky.animations().get().selectedAnimation().stop();
-			stretched.setFrameIndex(3);
+			stretchedDressAnimation.setFrameIndex(3);
 		} else if (frame == 328) {
-			stretched.setFrameIndex(4);
+			stretchedDressAnimation.setFrameIndex(4);
 		} else if (frame == 329) {
-			blinky.animations().get().select("damaged");
-			damaged.setFrameIndex(0);
+			blinky.animations().get().select(DAMAGED);
+			damagedAnimation.setFrameIndex(0);
 		} else if (frame == 389) {
-			damaged.setFrameIndex(1);
+			damagedAnimation.setFrameIndex(1);
 		} else if (frame == 508) {
-			blinky.animations().get().put("stretched", null);
+			stretchedDressAnimation = null;
 		} else if (frame == 509) {
 			$.gameState().timer().expire();
 			return;
@@ -127,8 +136,9 @@ public class PacManCutscene2 extends GameScene2D {
 				g.fillText("Frame %d".formatted(frame), t(3), t(3));
 			}
 		}
-		blinky.animation("stretched")
-				.ifPresent(stretched -> $.r2D.drawSprite(g, (Rectangle2D) stretched.frame(), t(14), t(19) + 3.0));
+		if (stretchedDressAnimation != null) {
+			$.r2D.drawSprite(g, stretchedDressAnimation.frame(), t(14), t(19) + 3.0);
+		}
 		$.r2D.drawGhost(g, blinky);
 		$.r2D.drawPac(g, pac);
 	}
