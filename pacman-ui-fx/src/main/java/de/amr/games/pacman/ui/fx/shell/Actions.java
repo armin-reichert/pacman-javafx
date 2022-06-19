@@ -28,6 +28,7 @@ import static de.amr.games.pacman.lib.Logging.log;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
+import de.amr.games.pacman.model.common.GameSounds;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import javafx.scene.shape.DrawMode;
@@ -36,6 +37,9 @@ import javafx.scene.shape.DrawMode;
  * @author Armin Reichert
  */
 public class Actions {
+
+	private Actions() {
+	}
 
 	private static GameController theGameController;
 	private static GameUI theUI;
@@ -55,7 +59,7 @@ public class Actions {
 
 	public static void restartIntro() {
 		theUI.getCurrentGameScene().end();
-		theGameController.game().sounds().ifPresent(snd -> snd.stopAll());
+		theGameController.game().sounds().ifPresent(GameSounds::stopAll);
 		theGameController.restartIntro();
 	}
 

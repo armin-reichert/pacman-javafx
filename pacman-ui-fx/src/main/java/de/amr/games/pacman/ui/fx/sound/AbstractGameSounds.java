@@ -70,7 +70,7 @@ public class AbstractGameSounds implements GameSounds {
 	protected void put(Map<GameSound, AudioClip> map, GameSound sound, String path) {
 		URL url = getClass().getResource(path);
 		if (url == null) {
-			throw new RuntimeException("Sound resource does not exist: " + path);
+			throw new SoundException("Sound resource does not exist for path '%s'", path);
 		}
 		map.put(sound, new AudioClip(url.toString()));
 	}
@@ -83,7 +83,7 @@ public class AbstractGameSounds implements GameSounds {
 
 	protected AudioClip getClip(GameSound sound) {
 		if (!clips.containsKey(sound)) {
-			throw new RuntimeException("No clip found for " + sound);
+			throw new SoundException("No clip found for sound %s", sound);
 		}
 		return clips.get(sound);
 	}
@@ -152,7 +152,7 @@ public class AbstractGameSounds implements GameSounds {
 
 	@Override
 	public void ensureSirenStarted(int sirenIndex) {
-		if (!sirens().anyMatch(this::isPlaying)) {
+		if (sirens().noneMatch(this::isPlaying)) {
 			startSiren(sirenIndex);
 		}
 	}

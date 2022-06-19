@@ -56,16 +56,13 @@ public class Cam_Drone extends GameSceneCamera {
 		setTranslateY(lerp(getTranslateY(), target.getTranslateY() - 150, speed));
 	}
 
-	@SuppressWarnings("incomplete-switch")
 	@Override
 	public void onKeyPressed(KeyEvent e) {
-		KeyCode key = e.getCode();
-		boolean control = e.isControlDown(), shift = e.isShiftDown();
-		if (!control && shift) {
-			switch (key) {
-			case UP -> change(translateZProperty(), -10);
-			case DOWN -> change(translateZProperty(), 10);
-			}
+		boolean modifierOk = e.isShiftDown() && !e.isControlDown();
+		if (e.getCode() == KeyCode.UP && modifierOk) {
+			change(translateZProperty(), -10);
+		} else if (e.getCode() == KeyCode.DOWN && modifierOk) {
+			change(translateZProperty(), 10);
 		}
 	}
 }

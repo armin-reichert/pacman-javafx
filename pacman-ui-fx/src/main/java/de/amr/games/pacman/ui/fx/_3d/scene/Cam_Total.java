@@ -45,7 +45,6 @@ public class Cam_Total extends GameSceneCamera {
 		setTranslateZ(-260);
 	}
 
-	@SuppressWarnings("incomplete-switch")
 	@Override
 	public void onKeyPressed(KeyEvent e) {
 		KeyCode key = e.getCode();
@@ -58,6 +57,8 @@ public class Cam_Total extends GameSceneCamera {
 			case PLUS -> change(translateYProperty(), +10);
 			case UP -> change(translateZProperty(), -10);
 			case DOWN -> change(translateZProperty(), 10);
+			default -> {
+			}
 			}
 		} else if (control && shift) {
 			switch (key) {
@@ -68,6 +69,8 @@ public class Cam_Total extends GameSceneCamera {
 			case DOWN -> {
 				setRotationAxis(Rotate.X_AXIS);
 				setRotate((getRotate() + 1 + 360) % 360);
+			}
+			default -> {
 			}
 			}
 		}
