@@ -56,7 +56,7 @@ public class Maze3D extends Group {
 	private static final double ENERGIZER_RADIUS = 3.0;
 	private static final double PELLET_RADIUS = 1.0;
 
-	public final MazeBuilding mazeBuilding = new MazeBuilding();
+	public final MazeBuilding3D mazeBuilding = new MazeBuilding3D();
 
 	private final MazeFloor3D floor;
 	private final Group wallsGroup = new Group();

@@ -41,7 +41,7 @@ import javafx.scene.shape.Box;
 /**
  * @author Armin Reichert
  */
-public class MazeBuilding {
+public class MazeBuilding3D {
 
 	public static class WallProperties {
 		double brickSize;
