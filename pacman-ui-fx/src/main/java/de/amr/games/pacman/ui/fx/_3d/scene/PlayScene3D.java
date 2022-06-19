@@ -258,8 +258,10 @@ public class PlayScene3D extends GameScene3D {
 		}
 		case LEVEL_STARTING -> {
 			blockGameController();
-			maze3D.build($.game.variant, $.game.level.world, $.game.level.mazeNumber,
+			maze3D = new Maze3D($.game.variant, $.game.level.world, $.game.level.mazeNumber, unscaledSize,
 					$.r2D.getFoodColor($.game.level.mazeNumber));
+			maze3D.mazeBuilding.wallHeight.bind(Env.$mazeWallHeight);
+			maze3D.mazeBuilding.resolution.bind(Env.$mazeResolution);
 			levelCounter3D.update($.game);
 			Actions.showFlashMessage(Talk.message("level_starting", $.game.level.number));
 			U.pauseSec(3, this::unblockGameController).play();

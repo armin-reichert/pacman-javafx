@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import static de.amr.games.pacman.lib.Logging.log;
-
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -35,15 +33,12 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.RaiseAndLowerWallAnimation;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
-import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.util.U;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 /**
@@ -56,12 +51,8 @@ public class Maze3D extends Group {
 	private static final double ENERGIZER_RADIUS = 3.0;
 	private static final double PELLET_RADIUS = 1.0;
 
-	public final MazeBuilding3D mazeBuilding = new MazeBuilding3D();
-
-	private final MazeFloor3D floor;
-	private final Group wallsGroup = new Group();
-	private final Group doorsGroup = new Group();
 	private final Group foodGroup = new Group();
+	public MazeBuilding3D mazeBuilding;
 
 	/**
 	 * Creates the 3D-maze base structure (without walls, doors, food).
@@ -73,31 +64,20 @@ public class Maze3D extends Group {
 	 * @param foodColor    food color in this maze
 	 */
 	public Maze3D(GameVariant gameVariant, World world, int mazeNumber, V2d unscaledSize, Color foodColor) {
-		floor = new MazeFloor3D(unscaledSize.x - 1, unscaledSize.y - 1, 0.01);
-		floor.showSolid(Color.rgb(5, 5, 10));
-		floor.getTransforms().add(new Translate(0.5 * floor.getWidth(), 0.5 * floor.getHeight(), 0.5 * floor.getDepth()));
-		build(gameVariant, world, mazeNumber, foodColor);
-		Env.$useMazeFloorTexture.addListener((obs, oldVal, newVal) -> {
-			if (newVal.booleanValue()) {
-				floor.showTextured(U.image("/common/escher-texture.jpg"), Color.DARKBLUE);
-			} else {
-				floor.showSolid(Color.rgb(5, 5, 10));
-			}
-		});
-		mazeBuilding.resolution.addListener((obs, oldVal, newVal) -> createWallsAndDoors(world, //
-				Rendering3D.getMazeSideColor(gameVariant, mazeNumber), //
-				Rendering3D.getMazeTopColor(gameVariant, mazeNumber), //
-				Rendering3D.getGhostHouseDoorColor(gameVariant))//
-		);
-		getChildren().addAll(floor, wallsGroup, doorsGroup, foodGroup);
-	}
-
-	public void build(GameVariant gameVariant, World world, int mazeNumber, Color foodColor) {
-		createWallsAndDoors(world, //
+		mazeBuilding = new MazeBuilding3D(unscaledSize);
+		mazeBuilding.build(world, //
 				Rendering3D.getMazeSideColor(gameVariant, mazeNumber), //
 				Rendering3D.getMazeTopColor(gameVariant, mazeNumber), //
 				Rendering3D.getGhostHouseDoorColor(gameVariant));
 		createFood(world, foodColor);
+//		Env.$useMazeFloorTexture.addListener((obs, oldVal, newVal) -> {
+//			if (newVal.booleanValue()) {
+//				floor.showTextured(U.image("/common/escher-texture.jpg"), Color.DARKBLUE);
+//			} else {
+//				floor.showSolid(Color.rgb(5, 5, 10));
+//			}
+//		});
+		getChildren().addAll(mazeBuilding.getRoot(), foodGroup);
 	}
 
 	public void reset() {
@@ -110,15 +90,7 @@ public class Maze3D extends Group {
 	}
 
 	public void update(GameModel game) {
-		doors().forEach(door -> door.update(game));
-	}
-
-	public MazeFloor3D getFloor() {
-		return floor;
-	}
-
-	public Stream<Door3D> doors() {
-		return doorsGroup.getChildren().stream().map(Door3D.class::cast);
+		mazeBuilding.doors().forEach(door -> door.update(game));
 	}
 
 	public Stream<Node> foodNodes() {
@@ -143,23 +115,6 @@ public class Maze3D extends Group {
 			var energizer = (Energizer3D) foodNode;
 			energizer.animation.stop();
 		}
-	}
-
-	/**
-	 * Creates the walls and doors according to the current resolution.
-	 * 
-	 * @param world         the game world
-	 * @param wallBaseColor color of wall at base
-	 * @param wallTopColor  color of wall at top
-	 * @param doorColor     door color
-	 */
-	public void createWallsAndDoors(World world, Color wallBaseColor, Color wallTopColor, Color doorColor) {
-		mazeBuilding.buildWalls(world, wallsGroup, wallBaseColor, wallTopColor);
-		var leftDoor = new Door3D(world.ghostHouse().doorTileLeft(), true, doorColor);
-		var rightDoor = new Door3D(world.ghostHouse().doorTileRight(), false, doorColor);
-		doorsGroup.getChildren().setAll(leftDoor, rightDoor);
-		log("Built 3D maze (resolution=%d, wall height=%.2f)", mazeBuilding.resolution.get(),
-				mazeBuilding.wallHeight.get());
 	}
 
 	/**

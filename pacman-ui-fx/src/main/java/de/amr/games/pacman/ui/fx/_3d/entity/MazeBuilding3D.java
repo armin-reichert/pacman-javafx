@@ -24,8 +24,12 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.lib.Logging.log;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
+import java.util.stream.Stream;
+
+import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -37,6 +41,7 @@ import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.transform.Translate;
 
 /**
  * @author Armin Reichert
@@ -49,10 +54,43 @@ public class MazeBuilding3D {
 		PhongMaterial topMaterial;
 	}
 
-	public DoubleProperty wallHeight = new SimpleDoubleProperty(1.0);
-	public IntegerProperty resolution = new SimpleIntegerProperty(8);
+	public final DoubleProperty wallHeight = new SimpleDoubleProperty(1.0);
+	public final IntegerProperty resolution = new SimpleIntegerProperty(8);
 
-	public void buildWalls(World world, Group wallsGroup, Color wallBaseColor, Color wallTopColor) {
+	private final Group root = new Group();
+	private final Group wallsGroup = new Group();
+	private final Group doorsGroup = new Group();
+
+	public MazeBuilding3D(V2d unscaledSize) {
+		var floor = new MazeFloor3D(unscaledSize.x - 1, unscaledSize.y - 1, 0.01);
+		floor.showSolid(Color.rgb(5, 5, 10));
+		floor.getTransforms().add(new Translate(0.5 * floor.getWidth(), 0.5 * floor.getHeight(), 0.5 * floor.getDepth()));
+		root.getChildren().add(floor);
+		root.getChildren().addAll(wallsGroup, doorsGroup);
+	}
+
+	public Group getRoot() {
+		return root;
+	}
+
+	public Stream<Door3D> doors() {
+		return doorsGroup.getChildren().stream().map(Door3D.class::cast);
+	}
+
+	public void build(World world, Color wallBaseColor, Color wallTopColor, Color doorColor) {
+		createWallsAndDoors(world, wallBaseColor, wallTopColor, doorColor);
+		resolution.addListener((obs, oldVal, newVal) -> createWallsAndDoors(world, wallBaseColor, wallTopColor, doorColor));
+	}
+
+	/**
+	 * Creates the walls and doors according to the current resolution.
+	 * 
+	 * @param world         the game world
+	 * @param wallBaseColor color of wall at base
+	 * @param wallTopColor  color of wall at top
+	 * @param doorColor     door color
+	 */
+	private void createWallsAndDoors(World world, Color wallBaseColor, Color wallTopColor, Color doorColor) {
 		var floorPlan = new FloorPlan(resolution.get(), world);
 		WallProperties wp = new WallProperties();
 		wp.baseMaterial = new PhongMaterial(wallBaseColor);
@@ -63,6 +101,12 @@ public class MazeBuilding3D {
 		addHorizontalWalls(floorPlan, wallsGroup, wp);
 		addVerticalWalls(floorPlan, wallsGroup, wp);
 		addCorners(floorPlan, wallsGroup, wp);
+
+		var leftDoor = new Door3D(world.ghostHouse().doorTileLeft(), true, doorColor);
+		var rightDoor = new Door3D(world.ghostHouse().doorTileRight(), false, doorColor);
+		doorsGroup.getChildren().setAll(leftDoor, rightDoor);
+
+		log("Built 3D maze (resolution=%d, wall height=%.2f)", resolution.get(), wallHeight.get());
 	}
 
 	private void addHorizontalWalls(FloorPlan floorPlan, Group wallsGroup, WallProperties wp) {
