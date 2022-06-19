@@ -53,7 +53,6 @@ import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
-import javafx.scene.transform.Translate;
 
 /**
  * 3D play scene with sound and animations.
@@ -92,11 +91,14 @@ public class PlayScene3D extends GameScene3D {
 		}
 
 		livesCounter3D = new LivesCounter3D($.model3D);
-		livesCounter3D.getTransforms().add(new Translate(TS, TS, -HTS));
+		livesCounter3D.setTranslateX(TS);
+		livesCounter3D.setTranslateY(TS);
+		livesCounter3D.setTranslateZ(-HTS);
 		livesCounter3D.setVisible($.hasCredit());
 
-		levelCounter3D = new LevelCounter3D(unscaledSize.x - TS, TS, $.r2D);
-		levelCounter3D.update($.game);
+		levelCounter3D = new LevelCounter3D(symbol -> $.r2D.getSpriteImage($.r2D.getBonusSymbolSprite(symbol)));
+		levelCounter3D.setRightPosition(unscaledSize.x - TS, TS);
+		levelCounter3D.update($.game.levelCounter);
 
 		maze3D = createMaze3D();
 
@@ -271,7 +273,7 @@ public class PlayScene3D extends GameScene3D {
 			blockGameController();
 			maze3D = createMaze3D();
 			sceneContent.getChildren().set(0, maze3D);
-			levelCounter3D.update($.game);
+			levelCounter3D.update($.game.levelCounter);
 			Actions.showFlashMessage(Talk.message("level_starting", $.game.level.number));
 			U.pauseSec(3, this::unblockGameController).play();
 		}

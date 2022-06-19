@@ -27,9 +27,10 @@ import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
+import java.util.function.Function;
+
 import de.amr.games.pacman.lib.V2d;
-import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.model.common.LevelCounter;
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
 import javafx.scene.Group;
@@ -46,24 +47,25 @@ import javafx.util.Duration;
  */
 public class LevelCounter3D extends Group {
 
-	private final Rendering2D r2D;
-	private final V2d rightPosition;
+	private final Function<Integer, Image> fnSymbolImage;
+	private V2d rightPosition = V2d.NULL;
 
-	public LevelCounter3D(double x, double y, Rendering2D r2D) {
-		this.rightPosition = new V2d(x, y);
-		this.r2D = r2D;
+	public LevelCounter3D(Function<Integer, Image> fnSymbolImage) {
+		this.fnSymbolImage = fnSymbolImage;
 	}
 
-	public void update(GameModel game) {
+	public void setRightPosition(double rightX, double rightY) {
+		this.rightPosition = new V2d(rightX, rightY);
+	}
+
+	public void update(LevelCounter levelCounter) {
 		getChildren().clear();
 		double x = rightPosition.x;
-		double y = rightPosition.y;
-		for (int i = 0; i < game.levelCounter.size(); ++i) {
-			int symbol = game.levelCounter.symbol(i);
-			var symbolImage = r2D.getSpriteImage(r2D.getBonusSymbolSprite(symbol));
-			Box cube = createSpinningCube(symbolImage, i % 2 == 0);
+		for (int i = 0; i < levelCounter.size(); ++i) {
+			int symbol = levelCounter.symbol(i);
+			Box cube = createSpinningCube(fnSymbolImage.apply(symbol), i % 2 == 0);
 			cube.setTranslateX(x);
-			cube.setTranslateY(y);
+			cube.setTranslateY(rightPosition.y);
 			cube.setTranslateZ(-HTS);
 			getChildren().add(cube);
 			x -= t(2);
