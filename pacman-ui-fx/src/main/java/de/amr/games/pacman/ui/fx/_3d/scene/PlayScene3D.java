@@ -98,8 +98,9 @@ public class PlayScene3D extends GameScene3D {
 
 		maze3D = new Maze3D($.game.variant, $.game.level.world, $.game.level.mazeNumber, unscaledSize,
 				$.r2D.getFoodColor($.game.level.mazeNumber));
-		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
-		maze3D.$resolution.bind(Env.$mazeResolution);
+
+		maze3D.mazeBuilding.wallHeight.bind(Env.$mazeWallHeight);
+		maze3D.mazeBuilding.resolution.bind(Env.$mazeResolution);
 
 		player3D = new Pac3D($.game.pac, $.model3D);
 		ghosts3D = $.game.ghosts().map(ghost -> new Ghost3D(ghost, $.model3D, $.r2D)).toArray(Ghost3D[]::new);

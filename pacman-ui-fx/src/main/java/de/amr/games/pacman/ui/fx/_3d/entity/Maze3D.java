@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.lib.Logging.log;
-import static de.amr.games.pacman.model.common.world.World.TS;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -33,19 +32,13 @@ import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.RaiseAndLowerWallAnimation;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
-import de.amr.games.pacman.ui.fx._3d.entity.WallBuilder.WallProperties;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
@@ -60,18 +53,15 @@ import javafx.util.Duration;
  */
 public class Maze3D extends Group {
 
-	public final DoubleProperty $wallHeight = new SimpleDoubleProperty(2.0);
-	public final IntegerProperty $resolution = new SimpleIntegerProperty(8);
-
 	private static final double ENERGIZER_RADIUS = 3.0;
 	private static final double PELLET_RADIUS = 1.0;
 
+	public final MazeBuilding mazeBuilding = new MazeBuilding();
+
+	private final MazeFloor3D floor;
 	private final Group wallsGroup = new Group();
 	private final Group doorsGroup = new Group();
 	private final Group foodGroup = new Group();
-
-	private MazeFloor3D floor;
-	private final WallBuilder wallBuilder = new WallBuilder($wallHeight);
 
 	/**
 	 * Creates the 3D-maze base structure (without walls, doors, food).
@@ -94,7 +84,7 @@ public class Maze3D extends Group {
 				floor.showSolid(Color.rgb(5, 5, 10));
 			}
 		});
-		$resolution.addListener((obs, oldVal, newVal) -> createWallsAndDoors(world, //
+		mazeBuilding.resolution.addListener((obs, oldVal, newVal) -> createWallsAndDoors(world, //
 				Rendering3D.getMazeSideColor(gameVariant, mazeNumber), //
 				Rendering3D.getMazeTopColor(gameVariant, mazeNumber), //
 				Rendering3D.getGhostHouseDoorColor(gameVariant))//
@@ -161,19 +151,15 @@ public class Maze3D extends Group {
 	 * @param world         the game world
 	 * @param wallBaseColor color of wall at base
 	 * @param wallTopColor  color of wall at top
+	 * @param doorColor     door color
 	 */
 	public void createWallsAndDoors(World world, Color wallBaseColor, Color wallTopColor, Color doorColor) {
-		var floorPlan = new FloorPlan($resolution.get(), world);
-		WallProperties wp = new WallProperties();
-		wp.baseMaterial = new PhongMaterial(wallBaseColor);
-		wp.baseMaterial.setSpecularColor(wallBaseColor.brighter());
-		wp.topMaterial = new PhongMaterial(wallTopColor);
-		wp.brickSize = TS / $resolution.get();
-		wallBuilder.buildWalls(floorPlan, wallsGroup, wp);
+		mazeBuilding.buildWalls(world, wallsGroup, wallBaseColor, wallTopColor);
 		var leftDoor = new Door3D(world.ghostHouse().doorTileLeft(), true, doorColor);
 		var rightDoor = new Door3D(world.ghostHouse().doorTileRight(), false, doorColor);
 		doorsGroup.getChildren().setAll(leftDoor, rightDoor);
-		log("Built 3D maze (resolution=%d, wall height=%.2f)", $resolution.get(), $wallHeight.get());
+		log("Built 3D maze (resolution=%d, wall height=%.2f)", mazeBuilding.resolution.get(),
+				mazeBuilding.wallHeight.get());
 	}
 
 	/**
@@ -200,5 +186,4 @@ public class Maze3D extends Group {
 	public Animation createMazeFlashingAnimation(int times) {
 		return times > 0 ? new RaiseAndLowerWallAnimation(times) : new PauseTransition(Duration.seconds(1));
 	}
-
 }

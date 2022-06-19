@@ -24,17 +24,24 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.model.common.world.World.TS;
+
 import de.amr.games.pacman.model.common.world.FloorPlan;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Group;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 
 /**
  * @author Armin Reichert
  */
-public class WallBuilder {
+public class MazeBuilding {
 
 	public static class WallProperties {
 		double brickSize;
@@ -42,13 +49,16 @@ public class WallBuilder {
 		PhongMaterial topMaterial;
 	}
 
-	private DoubleProperty $wallHeight;
+	public DoubleProperty wallHeight = new SimpleDoubleProperty(1.0);
+	public IntegerProperty resolution = new SimpleIntegerProperty(8);
 
-	public WallBuilder(DoubleProperty $wallHeight) {
-		this.$wallHeight = $wallHeight;
-	}
-
-	public void buildWalls(FloorPlan floorPlan, Group wallsGroup, WallProperties wp) {
+	public void buildWalls(World world, Group wallsGroup, Color wallBaseColor, Color wallTopColor) {
+		var floorPlan = new FloorPlan(resolution.get(), world);
+		WallProperties wp = new WallProperties();
+		wp.baseMaterial = new PhongMaterial(wallBaseColor);
+		wp.baseMaterial.setSpecularColor(wallBaseColor.brighter());
+		wp.topMaterial = new PhongMaterial(wallTopColor);
+		wp.brickSize = TS / resolution.get();
 		wallsGroup.getChildren().clear();
 		addHorizontalWalls(floorPlan, wallsGroup, wp);
 		addVerticalWalls(floorPlan, wallsGroup, wp);
@@ -135,16 +145,16 @@ public class WallBuilder {
 	 * @param wp         wall properties
 	 */
 	private void addWall(Group wallsGroup, int x, int y, int numBricksX, int numBricksY, WallProperties wp) {
-		Box base = new Box(numBricksX * wp.brickSize, numBricksY * wp.brickSize, $wallHeight.get());
-		base.depthProperty().bind($wallHeight);
+		Box base = new Box(numBricksX * wp.brickSize, numBricksY * wp.brickSize, wallHeight.get());
+		base.depthProperty().bind(wallHeight);
 		base.setMaterial(wp.baseMaterial);
-		base.translateZProperty().bind($wallHeight.multiply(-0.5));
+		base.translateZProperty().bind(wallHeight.multiply(-0.5));
 		base.drawModeProperty().bind(Env.$drawMode3D);
 
 		double topHeight = 0.5;
 		Box top = new Box(numBricksX * wp.brickSize, numBricksY * wp.brickSize, topHeight);
 		top.setMaterial(wp.topMaterial);
-		top.translateZProperty().bind(base.translateZProperty().subtract($wallHeight.add(topHeight + 0.1).multiply(0.5)));
+		top.translateZProperty().bind(base.translateZProperty().subtract(wallHeight.add(topHeight + 0.1).multiply(0.5)));
 		top.drawModeProperty().bind(Env.$drawMode3D);
 
 		Group wall = new Group(base, top);
