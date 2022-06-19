@@ -57,8 +57,10 @@ public class PacManCutscene3 extends GameScene2D {
 		pac.setAnimations(new PacAnimations($.r2D));
 		blinky = new Ghost(Ghost.RED_GHOST, "Blinky");
 		blinky.setAnimations(new GhostAnimations(Ghost.RED_GHOST, $.r2D));
-		blinky.animations().get().put("patched", SpritesheetPacMan.get().createBlinkyPatchedAnimation());
-		blinky.animations().get().put("naked", SpritesheetPacMan.get().createBlinkyNakedAnimation());
+		blinky.animations().ifPresent(animations -> {
+			animations.put("patched", SpritesheetPacMan.get().createBlinkyPatchedAnimation());
+			animations.put("naked", SpritesheetPacMan.get().createBlinkyNakedAnimation());
+		});
 	}
 
 	@Override

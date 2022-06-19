@@ -101,7 +101,8 @@ public class PacManIntroScene extends GameScene2D {
 		}
 
 		switch (sceneController.state()) {
-		case START, PRESENTING_GHOSTS -> drawGallery(g);
+		case START -> drawGallery(g);
+		case PRESENTING_GHOSTS -> drawGallery(g);
 		case SHOWING_POINTS -> {
 			drawGallery(g);
 			drawPoints(g);
@@ -132,7 +133,7 @@ public class PacManIntroScene extends GameScene2D {
 		}
 	}
 
-	// TODO inspect further in MAME what's really going on
+	// TODO inspect in MAME what's really going on
 	private int flutter(long time) {
 		return time % 5 < 2 ? 0 : -1;
 	}
