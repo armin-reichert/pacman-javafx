@@ -54,7 +54,7 @@ public class Door3D {
 	private final V2d centerPosition;
 
 	public Door3D(V2i tile, boolean leftWing, Color color) {
-		box = new Box(TS - 1.0, 1.0, HTS);
+		box = new Box(TS - 1.0, 1.0, doorHeight.get());
 		box.setUserData(this);
 		box.depthProperty().bind(doorHeight.add(2));
 		box.setMaterial(new PhongMaterial(color));
