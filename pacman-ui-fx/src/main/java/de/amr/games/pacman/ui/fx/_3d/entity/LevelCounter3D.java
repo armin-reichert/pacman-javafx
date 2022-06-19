@@ -56,7 +56,8 @@ public class LevelCounter3D extends Group {
 
 	public void update(GameModel game) {
 		getChildren().clear();
-		double x = rightPosition.x, y = rightPosition.y;
+		double x = rightPosition.x;
+		double y = rightPosition.y;
 		for (int i = 0; i < game.levelCounter.size(); ++i) {
 			int symbol = game.levelCounter.symbol(i);
 			var symbolImage = r2D.getSpriteImage(r2D.getBonusSymbolSprite(symbol));

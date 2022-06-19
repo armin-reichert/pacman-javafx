@@ -86,10 +86,8 @@ public class GameUI implements GameEventAdapter {
 
 		gameScenePlaceholder = new StackPane();
 		gameScenePlaceholder.setBackground(U.colorBackground(SCENE_BACKGROUND_COLOR));
-		Env.$drawMode3D.addListener((x, y, mode) -> {
-			gameScenePlaceholder
-					.setBackground(U.colorBackground(mode == DrawMode.FILL ? SCENE_BACKGROUND_COLOR : Color.BLACK));
-		});
+		Env.$drawMode3D.addListener((x, y, mode) -> gameScenePlaceholder
+				.setBackground(U.colorBackground(mode == DrawMode.FILL ? SCENE_BACKGROUND_COLOR : Color.BLACK)));
 
 		sceneRoot = new StackPane(gameScenePlaceholder, dashboard, flashMessageView);
 
@@ -105,7 +103,7 @@ public class GameUI implements GameEventAdapter {
 		// Keyboard input handling
 		scene.setOnKeyPressed(Keyboard::processEvent);
 		Keyboard.addHandler(this::onKeyPressed);
-		Keyboard.addHandler(() -> pacSteering.onKeyPressed());
+		Keyboard.addHandler(pacSteering::onKeyPressed);
 		Keyboard.addHandler(() -> currentGameScene.onKeyPressed());
 
 		updateCurrentGameScene(true);

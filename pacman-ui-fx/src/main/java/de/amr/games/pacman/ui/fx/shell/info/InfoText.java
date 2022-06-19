@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell.info;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import javafx.scene.text.Text;
@@ -34,7 +35,7 @@ import javafx.scene.text.Text;
  */
 public class InfoText extends Text {
 
-	private Supplier<Boolean> fnAvailable = () -> true;
+	private BooleanSupplier fnAvailable = () -> true;
 	private Supplier<?> fnText = () -> "Value";
 
 	public InfoText(String text) {
@@ -45,13 +46,13 @@ public class InfoText extends Text {
 		this.fnText = fnText;
 	}
 
-	public InfoText available(Supplier<Boolean> fnEvaluate) {
+	public InfoText available(BooleanSupplier fnEvaluate) {
 		this.fnAvailable = fnEvaluate;
 		return this;
 	}
 
 	public void update() {
-		if (fnAvailable.get()) {
+		if (fnAvailable.getAsBoolean()) {
 			setText(String.valueOf(fnText.get()));
 		} else {
 			setText("n/a");

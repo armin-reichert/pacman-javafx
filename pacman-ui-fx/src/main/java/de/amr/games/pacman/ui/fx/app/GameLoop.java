@@ -124,10 +124,10 @@ public class GameLoop {
 
 	private void run(Runnable phase, String message) {
 		if (timeMeasured) {
-			double start_ns = System.nanoTime();
+			double startNanos = System.nanoTime();
 			phase.run();
-			double duration_ns = System.nanoTime() - start_ns;
-			log(message, duration_ns / 1e6);
+			double durationNanos = System.nanoTime() - startNanos;
+			log(message, durationNanos / 1e6);
 		} else {
 			phase.run();
 		}

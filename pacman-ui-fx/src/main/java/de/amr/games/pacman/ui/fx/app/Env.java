@@ -45,6 +45,9 @@ import javafx.scene.shape.DrawMode;
  */
 public class Env {
 
+	private Env() {
+	}
+
 	public static final ResourceBundle MESSAGES = ResourceBundle.getBundle("/common/texts/messages");
 	public static final RandomEntrySelector<String> CHEAT_TALK = load("/common/texts/cheating_talk");
 	public static final RandomEntrySelector<String> LEVEL_COMPLETE_TALK = load("/common/texts/level_complete_talk");

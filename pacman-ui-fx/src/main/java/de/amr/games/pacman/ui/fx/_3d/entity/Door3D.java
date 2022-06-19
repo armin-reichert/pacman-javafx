@@ -48,12 +48,12 @@ public class Door3D extends Box {
 	private final boolean leftWing;
 
 	public Door3D(V2i tile, boolean leftWing, Color color) {
-		super(TS - 1, 1, HTS);
+		super(TS - 1.0, 1.0, HTS);
 		this.leftWing = leftWing;
 		setMaterial(new PhongMaterial(color));
-		setTranslateX(tile.x * TS + HTS);
-		setTranslateY(tile.y * TS + HTS);
-		setTranslateZ(-HTS / 2);
+		setTranslateX((double) tile.x * TS + HTS);
+		setTranslateY((double) tile.y * TS + HTS);
+		setTranslateZ(-HTS / 2.0);
 		drawModeProperty().bind(Env.$drawMode3D);
 	}
 

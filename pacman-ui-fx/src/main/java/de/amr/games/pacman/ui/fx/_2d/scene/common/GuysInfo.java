@@ -72,7 +72,7 @@ public class GuysInfo {
 		this.game = game;
 	}
 
-	private String getAnimationState(SpriteAnimation<?> animation, Direction dir) {
+	private String fmtAnimationState(SpriteAnimation<?> animation, Direction dir) {
 		if (animation instanceof SpriteAnimationMap) {
 			@SuppressWarnings("unchecked")
 			var gam = (SpriteAnimationMap<Direction, ?>) animation;
@@ -85,30 +85,34 @@ public class GuysInfo {
 		}
 	}
 
-	private String computeGhostInfo(Ghost ghost) {
+	private String fmtGhostInfo(Ghost ghost) {
 		String name = ghost.id == Ghost.RED_GHOST && ghost.elroy > 0 ? "Elroy " + ghost.elroy : ghost.name;
 		var stateText = ghost.state.name();
 		if (ghost.state == GhostState.HUNTING_PAC) {
 			stateText += game.huntingTimer.chasingPhase() != -1 ? " (Chasing)" : " (Scattering)";
 		}
-		var animKey = ghost.animations().get().selected();
-		var animState = getAnimationState(ghost.animations().get().selectedAnimation(), ghost.wishDir());
-		return "%s\n%s\n %s%s".formatted(name, stateText, animState, animKey);
-	}
-
-	private String computePacInfo(Pac pac) {
-		if (pac.animations().isPresent()) {
-			var animKey = pac.animations().get().selected();
-			var animState = getAnimationState(pac.animations().get().selectedAnimation(), pac.moveDir());
-			return "%s\n%s%s".formatted(pac.name, animState, animKey);
+		if (ghost.animations().isPresent()) {
+			var ghostAnim = ghost.animations().get();
+			var animState = fmtAnimationState(ghostAnim.selectedAnimation(), ghost.wishDir());
+			return "%s%n%s%n %s%s".formatted(name, stateText, animState, ghostAnim.selected());
 		} else {
-			return "%s\n".formatted(pac.name);
+			return "%s%n%s%n".formatted(name, stateText);
 		}
 	}
 
-	private String computeBonusInfo(Bonus bonus) {
+	private String fmtPacInfo(Pac pac) {
+		if (pac.animations().isPresent()) {
+			var pacAnim = pac.animations().get();
+			var animState = fmtAnimationState(pacAnim.selectedAnimation(), pac.moveDir());
+			return "%s%n%s%s".formatted(pac.name, animState, pacAnim.selected());
+		} else {
+			return "%s%n".formatted(pac.name);
+		}
+	}
+
+	private String fmtBonusInfo(Bonus bonus) {
 		var symbolName = bonus.state() == BonusState.INACTIVE ? "INACTIVE" : bonusName(game.variant, bonus.symbol());
-		return "%s\n%s".formatted(symbolName, game.bonus().state());
+		return "%s%n%s".formatted(symbolName, game.bonus().state());
 	}
 
 	private void updateTextView(Text textView, String text, Entity entity) {
@@ -133,11 +137,11 @@ public class GuysInfo {
 		for (int i = 0; i < texts.length; ++i) {
 			if (i < texts.length - 2) {
 				var ghost = game.ghosts[i];
-				updateTextView(texts[i], computeGhostInfo(ghost), ghost);
+				updateTextView(texts[i], fmtGhostInfo(ghost), ghost);
 			} else if (i == texts.length - 2) {
-				updateTextView(texts[i], computePacInfo(game.pac), game.pac);
+				updateTextView(texts[i], fmtPacInfo(game.pac), game.pac);
 			} else {
-				updateTextView(texts[i], computeBonusInfo(game.bonus()), game.bonus());
+				updateTextView(texts[i], fmtBonusInfo(game.bonus()), game.bonus());
 			}
 		}
 	}

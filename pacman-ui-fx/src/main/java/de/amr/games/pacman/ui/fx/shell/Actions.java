@@ -77,7 +77,7 @@ public class Actions {
 		if (theGameController.game().level.number == levelNumber) {
 			return;
 		}
-		theGameController.game().sounds().ifPresent(snd -> snd.stopAll());
+		theGameController.game().sounds().ifPresent(GameSounds::stopAll);
 		if (levelNumber == 1) {
 			theGameController.game().reset();
 			theGameController.changeState(GameState.READY);

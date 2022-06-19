@@ -36,7 +36,13 @@ import javafx.scene.input.KeyEvent;
  */
 public class Keyboard {
 
-	public static final byte NO_MODIFIER = 0x0, ALT = 0x1, CTRL = 0x2, SHIFT = 0x4;
+	private Keyboard() {
+	}
+
+	public static final byte NO_MODIFIER = 0x0;
+	public static final byte ALT = 0x1;
+	public static final byte CTRL = 0x2;
+	public static final byte SHIFT = 0x4;
 
 	private static KeyEvent currentEvent;
 	private static byte currentMask;

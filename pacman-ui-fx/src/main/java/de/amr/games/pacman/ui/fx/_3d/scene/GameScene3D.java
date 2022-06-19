@@ -46,8 +46,9 @@ public abstract class GameScene3D implements GameScene {
 	protected final Group sceneContent = new Group();
 	protected SceneContext $;
 
-	public GameScene3D() {
-		var contentTranslate = new Translate(-ArcadeWorld.TILES_X * World.HTS, -ArcadeWorld.TILES_Y * World.HTS);
+	protected GameScene3D() {
+		var contentTranslate = new Translate((double) -ArcadeWorld.TILES_X * World.HTS,
+				(double) -ArcadeWorld.TILES_Y * World.HTS);
 		sceneContent.getTransforms().add(contentTranslate);
 		var axes = new CoordinateAxes(1000);
 		axes.visibleProperty().bind(Env.$axesVisible);

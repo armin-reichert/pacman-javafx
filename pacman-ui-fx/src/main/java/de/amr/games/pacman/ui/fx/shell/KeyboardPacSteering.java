@@ -37,7 +37,10 @@ import javafx.scene.input.KeyCode;
 public class KeyboardPacSteering implements Consumer<Creature> {
 
 	private Direction dir;
-	private final KeyCode up, down, left, right;
+	private final KeyCode up;
+	private final KeyCode down;
+	private final KeyCode left;
+	private final KeyCode right;
 
 	public KeyboardPacSteering(KeyCode up, KeyCode down, KeyCode left, KeyCode right) {
 		this.up = up;

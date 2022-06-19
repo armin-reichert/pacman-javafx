@@ -58,7 +58,7 @@ public abstract class GameScene2D implements GameScene {
 	protected SceneContext $;
 	protected boolean creditVisible;
 
-	public GameScene2D() {
+	protected GameScene2D() {
 		root = new StackPane(canvas, overlayCanvas, infoPane);
 		// without this, an ugly vertical white line appears left of the game scene:
 		root.setBackground(U.colorBackground(Color.BLACK));
