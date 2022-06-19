@@ -45,8 +45,8 @@ import javafx.util.Duration;
  */
 public class U {
 
-	public static boolean anyOf(Object value, Object... alternatives) {
-		return Stream.of(alternatives).anyMatch(alternative -> value.equals(alternative));
+	public static boolean oneOf(Object value, Object... alternatives) {
+		return Stream.of(alternatives).anyMatch(value::equals);
 	}
 
 	/**
