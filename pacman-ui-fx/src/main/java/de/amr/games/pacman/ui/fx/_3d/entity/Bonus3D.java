@@ -58,16 +58,14 @@ public class Bonus3D extends Box {
 
 	public void showSymbol(Bonus bonus, Rendering2D r2D) {
 		setTexture(r2D.getSpriteImage(r2D.getBonusSymbolSprite(bonus.symbol())));
-		rotateBox(1.0, Animation.INDEFINITE, 1);
+		rotate(1, Animation.INDEFINITE, 1);
 		setWidth(TS);
-		setVisible(true);
 	}
 
 	public void showPoints(Bonus bonus, Rendering2D r2D) {
 		setTexture(r2D.getSpriteImage(r2D.getBonusValueSprite(bonus.symbol())));
-		rotateBox(1.0, 5, 2);
+		rotate(1, 5, 2);
 		setWidth(bonus.value() >= 1000 ? TS * 1.25 : TS);
-		setVisible(true);
 	}
 
 	private void setTexture(Image texture) {
@@ -77,7 +75,7 @@ public class Bonus3D extends Box {
 		setMaterial(skin);
 	}
 
-	private void rotateBox(double seconds, int cycleCount, int rate) {
+	private void rotate(double seconds, int cycleCount, int rate) {
 		var rot = new RotateTransition(Duration.seconds(seconds), this);
 		rot.setAxis(Rotate.X_AXIS);
 		rot.setFromAngle(0);
