@@ -41,7 +41,7 @@ import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D.AnimationMode;
 import de.amr.games.pacman.ui.fx._3d.entity.LevelCounter3D;
 import de.amr.games.pacman.ui.fx._3d.entity.LivesCounter3D;
-import de.amr.games.pacman.ui.fx._3d.entity.Maze3D;
+import de.amr.games.pacman.ui.fx._3d.entity.World3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Scores3D;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -64,8 +64,8 @@ public class PlayScene3D extends GameScene3D {
 	private final V2d unscaledSize = new V2d(ArcadeWorld.TILES_X * TS, ArcadeWorld.TILES_Y * TS);
 	private final EnumMap<Perspective, GameSceneCamera> cameras = new EnumMap<>(Perspective.class);
 
-	private Maze3D maze3D;
-	private Pac3D player3D;
+	private World3D world3D;
+	private Pac3D pac3D;
 	private Ghost3D[] ghosts3D;
 	private Bonus3D bonus3D;
 	private Scores3D scores3D;
@@ -100,31 +100,31 @@ public class PlayScene3D extends GameScene3D {
 		levelCounter3D.setRightPosition(unscaledSize.x - TS, TS);
 		levelCounter3D.update($.game.levelCounter);
 
-		maze3D = createMaze3D();
+		world3D = createWorld3D();
 
-		player3D = new Pac3D($.game.pac, $.model3D);
+		pac3D = new Pac3D($.game.pac, $.model3D);
 		ghosts3D = $.game.ghosts().map(ghost -> new Ghost3D(ghost, $.model3D, $.r2D)).toArray(Ghost3D[]::new);
 		bonus3D = new Bonus3D();
 
-		sceneContent.getChildren().add(maze3D); // must be first child because it is exchanged!
-		sceneContent.getChildren().addAll(scores3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
+		sceneContent.getChildren().add(world3D); // must be first child because it is exchanged!
+		sceneContent.getChildren().addAll(scores3D, livesCounter3D, levelCounter3D, pac3D, bonus3D);
 		sceneContent.getChildren().addAll(ghosts3D);
 
 		setPerspective(Env.$perspective.get());
 	}
 
-	public Maze3D createMaze3D() {
-		var maze3D = new Maze3D($.game.variant, $.game.level.world, $.game.level.mazeNumber, unscaledSize,
+	public World3D createWorld3D() {
+		var world3D = new World3D($.game.variant, $.game.level.world, $.game.level.mazeNumber, unscaledSize,
 				$.r2D.getFoodColor($.game.level.mazeNumber));
 
-		maze3D.mazeBuilding.setFloorSolidColor(Color.rgb(5, 5, 10));
-		maze3D.mazeBuilding.setFloorTexture(U.image("/common/escher-texture.jpg"));
-		maze3D.mazeBuilding.setFloorTextureColor(Color.rgb(51, 0, 102));
+		world3D.maze.setFloorSolidColor(Color.rgb(5, 5, 10));
+		world3D.maze.setFloorTexture(U.image("/common/escher-texture.jpg"));
+		world3D.maze.setFloorTextureColor(Color.rgb(51, 0, 102));
 
-		maze3D.mazeBuilding.wallHeight.bind(Env.$mazeWallHeight);
-		maze3D.mazeBuilding.resolution.bind(Env.$mazeResolution);
-		maze3D.mazeBuilding.floorHasTexture.bind(Env.$mazeFloorHasTexture);
-		return maze3D;
+		world3D.maze.wallHeight.bind(Env.$mazeWallHeight);
+		world3D.maze.resolution.bind(Env.$mazeResolution);
+		world3D.maze.floorHasTexture.bind(Env.$mazeFloorHasTexture);
+		return world3D;
 	}
 
 	private void createPerspectives() {
@@ -165,13 +165,13 @@ public class PlayScene3D extends GameScene3D {
 
 	@Override
 	public void update() {
-		maze3D.update($.game);
-		player3D.update();
+		world3D.update($.game);
+		pac3D.update();
 		Stream.of($.game.ghosts).forEach(this::updateGhost3D);
 		bonus3D.update($.game.bonus());
 		scores3D.update($.game);
 		livesCounter3D.update($.game.playing ? $.game.lives - 1 : $.game.lives);
-		getCamera().update(player3D);
+		getCamera().update(pac3D);
 	}
 
 	private void updateGhost3D(Ghost ghost) {
@@ -194,9 +194,9 @@ public class PlayScene3D extends GameScene3D {
 					.filter(ghost3D -> U.oneOf(ghost3D.ghost.state, GhostState.FRIGHTENED, GhostState.LOCKED))
 					.forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.FRIGHTENED));
 		}
-		maze3D.validateFoodNodes();
+		world3D.validateFoodNodes();
 		if (U.oneOf($.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) {
-			maze3D.energizerAnimations().forEach(Animation::play);
+			world3D.energizerAnimations().forEach(Animation::play);
 		}
 	}
 
@@ -224,9 +224,9 @@ public class PlayScene3D extends GameScene3D {
 		// when cheat "eat all pellets" is used, no tile is present
 		if (!e.tile.isPresent()) {
 			$.game.level.world.tiles().filter($.game.level.world::containsEatenFood)
-					.forEach(tile -> maze3D.foodAt(tile).ifPresent(maze3D::hideFood));
+					.forEach(tile -> world3D.foodAt(tile).ifPresent(world3D::hideFood));
 		} else {
-			maze3D.foodAt(e.tile.get()).ifPresent(maze3D::hideFood);
+			world3D.foodAt(e.tile.get()).ifPresent(world3D::hideFood);
 		}
 	}
 
@@ -254,25 +254,25 @@ public class PlayScene3D extends GameScene3D {
 	public void onGameStateChange(GameStateChangeEvent e) {
 		switch (e.newGameState) {
 		case READY -> {
-			maze3D.reset();
-			player3D.reset();
+			world3D.reset();
+			pac3D.reset();
 			Stream.of(ghosts3D).forEach(Ghost3D::reset);
 		}
-		case HUNTING -> maze3D.energizerAnimations().forEach(Animation::play);
+		case HUNTING -> world3D.energizerAnimations().forEach(Animation::play);
 		case PACMAN_DYING -> {
 			blockGameController();
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.COLORED));
 			$.game.ghosts().filter(ghost -> ghost.sameTile($.game.pac)).findAny().ifPresent(killer -> {
 				new SequentialTransition( //
-						player3D.dyingAnimation($.r2D.getGhostColor(killer.id)), //
+						pac3D.dyingAnimation($.r2D.getGhostColor(killer.id)), //
 						U.pauseSec(2.0, this::unblockGameController) //
 				).play();
 			});
 		}
 		case LEVEL_STARTING -> {
 			blockGameController();
-			maze3D = createMaze3D();
-			sceneContent.getChildren().set(0, maze3D);
+			world3D = createWorld3D();
+			sceneContent.getChildren().set(0, world3D);
 			levelCounter3D.update($.game.levelCounter);
 			Actions.showFlashMessage(Talk.message("level_starting", $.game.level.number));
 			U.pauseSec(3, this::unblockGameController).play();
@@ -283,7 +283,7 @@ public class PlayScene3D extends GameScene3D {
 			var message = Talk.LEVEL_COMPLETE_TALK.next() + "\n\n" + Talk.message("level_complete", $.game.level.number);
 			new SequentialTransition( //
 					U.pauseSec(2.0), //
-					maze3D.createMazeFlashingAnimation($.game.level.numFlashes), //
+					world3D.createMazeFlashingAnimation($.game.level.numFlashes), //
 					U.pauseSec(1.0, $.game.pac::hide), //
 					U.pauseSec(0.5, () -> Actions.showFlashMessage(2, message)), //
 					U.pauseSec(2.0, this::unblockGameController) //
@@ -298,7 +298,7 @@ public class PlayScene3D extends GameScene3D {
 
 		// exit HUNTING
 		if (e.oldGameState == GameState.HUNTING && e.newGameState != GameState.GHOST_DYING) {
-			maze3D.energizerAnimations().forEach(Animation::stop);
+			world3D.energizerAnimations().forEach(Animation::stop);
 			bonus3D.setVisible(false);
 		}
 	}
