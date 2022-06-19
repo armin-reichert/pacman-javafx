@@ -65,7 +65,15 @@ public class Maze3D extends Group {
 				Rendering3D.getMazeSideColor(gameVariant, mazeNumber), //
 				Rendering3D.getMazeTopColor(gameVariant, mazeNumber), //
 				Rendering3D.getGhostHouseDoorColor(gameVariant));
-		createFood(world, foodColor);
+
+		var material = new PhongMaterial(foodColor);
+		world.tiles() //
+				.filter(world::isFoodTile) //
+				.map(tile -> world.isEnergizerTile(tile) //
+						? new Energizer3D(tile, material, ENERGIZER_RADIUS)
+						: new Pellet3D(tile, material, PELLET_RADIUS))
+				.forEach(foodGroup.getChildren()::add);
+
 		getChildren().addAll(mazeBuilding.getRoot(), foodGroup);
 	}
 
@@ -104,23 +112,6 @@ public class Maze3D extends Group {
 			var energizer = (Energizer3D) foodNode;
 			energizer.animation.stop();
 		}
-	}
-
-	/**
-	 * Creates the pellets/food and the energizer animations.
-	 * 
-	 * @param world       the game world
-	 * @param pelletColor color of pellets
-	 */
-	public void createFood(World world, Color pelletColor) {
-		var material = new PhongMaterial(pelletColor);
-		foodGroup.getChildren().clear();
-		world.tiles() //
-				.filter(world::isFoodTile) //
-				.map(tile -> world.isEnergizerTile(tile) //
-						? new Energizer3D(tile, material, ENERGIZER_RADIUS)
-						: new Pellet3D(tile, material, PELLET_RADIUS))
-				.forEach(foodGroup.getChildren()::add);
 	}
 
 	public Stream<Animation> energizerAnimations() {
