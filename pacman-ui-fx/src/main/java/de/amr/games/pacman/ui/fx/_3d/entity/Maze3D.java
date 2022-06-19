@@ -235,36 +235,24 @@ public class Maze3D extends Group {
 	}
 
 	private void addWalls(FloorPlan floorPlan, double brickSize, PhongMaterial baseMaterial, PhongMaterial topMaterial) {
+		addHorizontalWalls(floorPlan, brickSize, baseMaterial, topMaterial);
+		addVerticalWalls(floorPlan, brickSize, baseMaterial, topMaterial);
+		addCorners(floorPlan, brickSize, baseMaterial, topMaterial);
+	}
 
-		// horizontal
-		for (int y = 0; y < floorPlan.sizeY(); ++y) {
-			int leftX = -1;
-			int sizeX = 0;
-			for (int x = 0; x < floorPlan.sizeX(); ++x) {
-				if (floorPlan.get(x, y) == FloorPlan.HWALL) {
-					if (leftX == -1) {
-						leftX = x;
-						sizeX = 1;
-					} else {
-						sizeX++;
-					}
-				} else {
-					if (leftX != -1) {
-						addWall(leftX, y, sizeX, 1, brickSize, baseMaterial, topMaterial);
-						leftX = -1;
-					}
+	private void addCorners(FloorPlan floorPlan, double brickSize, PhongMaterial baseMaterial,
+			PhongMaterial topMaterial) {
+		for (int x = 0; x < floorPlan.sizeX(); ++x) {
+			for (int y = 0; y < floorPlan.sizeY(); ++y) {
+				if (floorPlan.get(x, y) == FloorPlan.CORNER) {
+					addWall(x, y, 1, 1, brickSize, baseMaterial, topMaterial);
 				}
-				if (x == floorPlan.sizeX() - 1 && leftX != -1) {
-					addWall(leftX, y, sizeX, 1, brickSize, baseMaterial, topMaterial);
-					leftX = -1;
-				}
-			}
-			if (y == floorPlan.sizeY() - 1 && leftX != -1) {
-				addWall(leftX, y, sizeX, 1, brickSize, baseMaterial, topMaterial);
 			}
 		}
+	}
 
-		// vertical
+	private void addVerticalWalls(FloorPlan floorPlan, double brickSize, PhongMaterial baseMaterial,
+			PhongMaterial topMaterial) {
 		for (int x = 0; x < floorPlan.sizeX(); ++x) {
 			int topY = -1;
 			int sizeY = 0;
@@ -291,13 +279,34 @@ public class Maze3D extends Group {
 				addWall(x, topY, 1, sizeY, brickSize, baseMaterial, topMaterial);
 			}
 		}
+	}
 
-		// corners
-		for (int x = 0; x < floorPlan.sizeX(); ++x) {
-			for (int y = 0; y < floorPlan.sizeY(); ++y) {
-				if (floorPlan.get(x, y) == FloorPlan.CORNER) {
-					addWall(x, y, 1, 1, brickSize, baseMaterial, topMaterial);
+	private void addHorizontalWalls(FloorPlan floorPlan, double brickSize, PhongMaterial baseMaterial,
+			PhongMaterial topMaterial) {
+		for (int y = 0; y < floorPlan.sizeY(); ++y) {
+			int leftX = -1;
+			int sizeX = 0;
+			for (int x = 0; x < floorPlan.sizeX(); ++x) {
+				if (floorPlan.get(x, y) == FloorPlan.HWALL) {
+					if (leftX == -1) {
+						leftX = x;
+						sizeX = 1;
+					} else {
+						sizeX++;
+					}
+				} else {
+					if (leftX != -1) {
+						addWall(leftX, y, sizeX, 1, brickSize, baseMaterial, topMaterial);
+						leftX = -1;
+					}
 				}
+				if (x == floorPlan.sizeX() - 1 && leftX != -1) {
+					addWall(leftX, y, sizeX, 1, brickSize, baseMaterial, topMaterial);
+					leftX = -1;
+				}
+			}
+			if (y == floorPlan.sizeY() - 1 && leftX != -1) {
+				addWall(leftX, y, sizeX, 1, brickSize, baseMaterial, topMaterial);
 			}
 		}
 	}
