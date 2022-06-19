@@ -45,7 +45,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.transform.Translate;
 
 /**
  * 3D-model for a maze. Creates walls/doors using information from the floor plan.
@@ -75,7 +74,9 @@ public class MazeBuilding3D {
 	public MazeBuilding3D(V2d unscaledSize) {
 		var floor = new MazeFloor3D(unscaledSize.x - 1, unscaledSize.y - 1, 0.01);
 		floor.showSolid(Color.rgb(5, 5, 10));
-		floor.getTransforms().add(new Translate(0.5 * floor.getWidth(), 0.5 * floor.getHeight(), 0.5 * floor.getDepth()));
+		floor.setTranslateX(0.5 * floor.getWidth());
+		floor.setTranslateY(0.5 * floor.getHeight());
+		floor.setTranslateZ(0.5 * floor.getDepth());
 		floorHasTexture.addListener((obs, oldVal, newVal) -> {
 			if (newVal.booleanValue()) {
 				floor.showTextured(floorTexture, floorTextureColor);
@@ -83,7 +84,6 @@ public class MazeBuilding3D {
 				floor.showSolid(floorSolidColor);
 			}
 		});
-
 		root.getChildren().add(floor);
 		root.getChildren().addAll(wallsGroup, doorsGroup);
 	}
