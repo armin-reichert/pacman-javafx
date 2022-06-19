@@ -114,6 +114,11 @@ public class Maze3D extends Group {
 		}
 	}
 
+	public void validateFoodNodes(World world) {
+		foodNodes().forEach(foodNode -> foodNode.setVisible(!world.containsEatenFood(tile(foodNode))));
+
+	}
+
 	public Stream<Animation> energizerAnimations() {
 		return energizers().map(energizer -> energizer.animation);
 	}
