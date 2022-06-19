@@ -31,6 +31,7 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.model.common.GameSounds;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
+import de.amr.games.pacman.ui.fx.app.Talk;
 import javafx.scene.shape.DrawMode;
 
 /**
@@ -114,35 +115,35 @@ public class Actions {
 	public static void selectNextPerspective() {
 		if (theUI.getCurrentGameScene().is3D()) {
 			Env.$perspective.set(Env.$perspective.get().next());
-			String perspectiveName = Env.message(Env.$perspective.get().name());
-			showFlashMessage(Env.message("camera_perspective", perspectiveName));
+			String perspectiveName = Talk.message(Env.$perspective.get().name());
+			showFlashMessage(Talk.message("camera_perspective", perspectiveName));
 		}
 	}
 
 	public static void selectPrevPerspective() {
 		if (theUI.getCurrentGameScene().is3D()) {
 			Env.$perspective.set(Env.$perspective.get().prev());
-			String perspectiveName = Env.message(Env.$perspective.get().name());
-			showFlashMessage(Env.message("camera_perspective", perspectiveName));
+			String perspectiveName = Talk.message(Env.$perspective.get().name());
+			showFlashMessage(Talk.message("camera_perspective", perspectiveName));
 		}
 
 	}
 
 	public static void toggleAutopilot() {
 		theGameController.game().autoControlled = !theGameController.game().autoControlled;
-		String message = Env.message(theGameController.game().autoControlled ? "autopilot_on" : "autopilot_off");
+		String message = Talk.message(theGameController.game().autoControlled ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(message);
 	}
 
 	public static void toggleImmunity() {
 		theGameController.games().forEach(game -> game.isPacImmune = !game.isPacImmune);
-		String message = Env.message(theGameController.game().isPacImmune ? "player_immunity_on" : "player_immunity_off");
+		String message = Talk.message(theGameController.game().isPacImmune ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(message);
 	}
 
 	public static void toggleUse3DScene() {
 		theUI.toggle3D();
-		showFlashMessage(Env.message(Env.$3D.get() ? "use_3D_scene" : "use_2D_scene"));
+		showFlashMessage(Talk.message(Env.$3D.get() ? "use_3D_scene" : "use_2D_scene"));
 	}
 
 	public static void toggleDrawMode() {
@@ -153,14 +154,14 @@ public class Actions {
 		theGameController.game().sounds().ifPresent(snd -> {
 			boolean muted = snd.isMuted();
 			snd.setMuted(!muted);
-			var msg = Env.message(snd.isMuted() ? "sound_off" : "sound_on");
+			var msg = Talk.message(snd.isMuted() ? "sound_off" : "sound_on");
 			showFlashMessage(msg);
 		});
 	}
 
 	public static void cheatEatAllPellets() {
 		theGameController.state().cheatEatAllPellets(theGameController.game());
-		var cheatMessage = Env.CHEAT_TALK.next();
+		var cheatMessage = Talk.CHEAT_TALK.next();
 		showFlashMessage(cheatMessage);
 	}
 
@@ -170,7 +171,7 @@ public class Actions {
 
 	public static void cheatKillAllEatableGhosts() {
 		theGameController.state().cheatKillAllEatableGhosts(theGameController.game());
-		var cheatMessage = Env.CHEAT_TALK.next();
+		var cheatMessage = Talk.CHEAT_TALK.next();
 		showFlashMessage(cheatMessage);
 	}
 }

@@ -45,6 +45,7 @@ import de.amr.games.pacman.ui.fx._3d.entity.Maze3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Scores3D;
 import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.app.Talk;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import de.amr.games.pacman.ui.fx.util.U;
@@ -241,11 +242,9 @@ public class PlayScene3D extends GameScene3D {
 		case READY -> {
 			maze3D.reset();
 			player3D.reset();
-			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.reset());
+			Stream.of(ghosts3D).forEach(Ghost3D::reset);
 		}
-		case HUNTING -> {
-			maze3D.energizerAnimations().forEach(Animation::play);
-		}
+		case HUNTING -> maze3D.energizerAnimations().forEach(Animation::play);
 		case PACMAN_DYING -> {
 			blockGameController();
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.COLORED));
@@ -261,13 +260,13 @@ public class PlayScene3D extends GameScene3D {
 			maze3D.build($.game.variant, $.game.level.world, $.game.level.mazeNumber,
 					$.r2D.getFoodColor($.game.level.mazeNumber));
 			levelCounter3D.update($.game);
-			Actions.showFlashMessage(Env.message("level_starting", $.game.level.number));
+			Actions.showFlashMessage(Talk.message("level_starting", $.game.level.number));
 			U.pauseSec(3, () -> unblockGameController()).play();
 		}
 		case LEVEL_COMPLETE -> {
 			blockGameController();
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.COLORED));
-			var message = Env.LEVEL_COMPLETE_TALK.next() + "\n\n" + Env.message("level_complete", $.game.level.number);
+			var message = Talk.LEVEL_COMPLETE_TALK.next() + "\n\n" + Talk.message("level_complete", $.game.level.number);
 			new SequentialTransition( //
 					U.pauseSec(2.0), //
 					maze3D.createMazeFlashingAnimation($.game.level.numFlashes), //
@@ -277,7 +276,7 @@ public class PlayScene3D extends GameScene3D {
 			).play();
 		}
 		case GAME_OVER -> {
-			Actions.showFlashMessage(3, Env.GAME_OVER_TALK.next());
+			Actions.showFlashMessage(3, Talk.GAME_OVER_TALK.next());
 		}
 		default -> { // ignore
 		}
