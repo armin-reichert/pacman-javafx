@@ -117,13 +117,13 @@ public class PlayScene3D extends GameScene3D {
 		var world3D = new World3D($.game.variant, $.game.level.world, $.game.level.mazeNumber, unscaledSize,
 				$.r2D.getFoodColor($.game.level.mazeNumber));
 
-		world3D.maze.setFloorSolidColor(Color.rgb(5, 5, 10));
-		world3D.maze.setFloorTexture(U.image("/common/escher-texture.jpg"));
-		world3D.maze.setFloorTextureColor(Color.rgb(51, 0, 102));
+		world3D.maze3D.setFloorSolidColor(Color.rgb(5, 5, 10));
+		world3D.maze3D.setFloorTexture(U.image("/common/escher-texture.jpg"));
+		world3D.maze3D.setFloorTextureColor(Color.rgb(51, 0, 102));
 
-		world3D.maze.wallHeight.bind(Env.$mazeWallHeight);
-		world3D.maze.resolution.bind(Env.$mazeResolution);
-		world3D.maze.floorHasTexture.bind(Env.$mazeFloorHasTexture);
+		world3D.maze3D.wallHeight.bind(Env.$mazeWallHeight);
+		world3D.maze3D.resolution.bind(Env.$mazeResolution);
+		world3D.maze3D.floorHasTexture.bind(Env.$mazeFloorHasTexture);
 		return world3D;
 	}
 

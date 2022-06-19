@@ -52,7 +52,7 @@ import javafx.util.Duration;
  */
 public class World3D extends Group {
 
-	public final Maze3D maze;
+	public final Maze3D maze3D;
 	private final World world;
 	private final Group foodGroup = new Group();
 
@@ -65,13 +65,13 @@ public class World3D extends Group {
 	 */
 	public World3D(GameVariant gameVariant, World world, int mazeNumber, V2d unscaledSize, Color foodColor) {
 		this.world = world;
-		maze = new Maze3D(unscaledSize, world);
+		maze3D = new Maze3D(unscaledSize, world);
 		var wallSideColor = Rendering3D.getMazeSideColor(gameVariant, mazeNumber);
 		var wallTopColor = Rendering3D.getMazeTopColor(gameVariant, mazeNumber);
 		var doorColor = Rendering3D.getGhostHouseDoorColor(gameVariant);
-		maze.erect(wallSideColor, wallTopColor, doorColor);
-		maze.resolution
-				.addListener((obs, oldVal, newVal) -> maze.erect(wallSideColor, wallTopColor, doorColor));
+		maze3D.erect(wallSideColor, wallTopColor, doorColor);
+		maze3D.resolution
+				.addListener((obs, oldVal, newVal) -> maze3D.erect(wallSideColor, wallTopColor, doorColor));
 
 		var meatBall = new PhongMaterial(foodColor);
 		world.tiles() //
@@ -81,7 +81,7 @@ public class World3D extends Group {
 						: new Pellet3D(tile, meatBall, 1.0))
 				.forEach(foodGroup.getChildren()::add);
 
-		getChildren().addAll(maze.getRoot(), foodGroup);
+		getChildren().addAll(maze3D.getRoot(), foodGroup);
 	}
 
 	public void reset() {
@@ -94,7 +94,7 @@ public class World3D extends Group {
 	}
 
 	public void update(GameModel game) {
-		maze.doors().forEach(door3D -> {
+		maze3D.doors().forEach(door3D -> {
 			boolean ghostApproaching = game.ghosts() //
 					.filter(ghost -> ghost.visible) //
 					.filter(ghost -> U.oneOf(ghost.state, GhostState.DEAD, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)) //
