@@ -66,12 +66,12 @@ public class Maze3D extends Group {
 				Rendering3D.getMazeTopColor(gameVariant, mazeNumber), //
 				Rendering3D.getGhostHouseDoorColor(gameVariant));
 
-		var material = new PhongMaterial(foodColor);
+		var foodMaterial = new PhongMaterial(foodColor);
 		world.tiles() //
 				.filter(world::isFoodTile) //
 				.map(tile -> world.isEnergizerTile(tile) //
-						? new Energizer3D(tile, material, ENERGIZER_RADIUS)
-						: new Pellet3D(tile, material, PELLET_RADIUS))
+						? new Energizer3D(tile, foodMaterial, ENERGIZER_RADIUS)
+						: new Pellet3D(tile, foodMaterial, PELLET_RADIUS))
 				.forEach(foodGroup.getChildren()::add);
 
 		getChildren().addAll(mazeBuilding.getRoot(), foodGroup);
@@ -110,17 +110,16 @@ public class Maze3D extends Group {
 		foodNode.setVisible(false);
 		if (foodNode instanceof Energizer3D) {
 			var energizer = (Energizer3D) foodNode;
-			energizer.animation.stop();
+			energizer.animation().stop();
 		}
 	}
 
 	public void validateFoodNodes(World world) {
 		foodNodes().forEach(foodNode -> foodNode.setVisible(!world.containsEatenFood(tile(foodNode))));
-
 	}
 
 	public Stream<Animation> energizerAnimations() {
-		return energizers().map(energizer -> energizer.animation);
+		return energizers().map(Energizer3D::animation);
 	}
 
 	public Animation createMazeFlashingAnimation(int times) {

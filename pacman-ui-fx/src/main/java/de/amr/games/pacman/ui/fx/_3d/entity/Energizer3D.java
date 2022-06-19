@@ -37,7 +37,7 @@ import javafx.util.Duration;
  */
 public class Energizer3D extends Pellet3D {
 
-	public final ScaleTransition animation;
+	private final ScaleTransition animation;
 
 	public Energizer3D(V2i tile, PhongMaterial material, double radius) {
 		super(tile, material, radius);
@@ -50,6 +50,10 @@ public class Energizer3D extends Pellet3D {
 		animation.setToX(0.1);
 		animation.setToY(0.1);
 		animation.setToZ(0.1);
+	}
+
+	public Animation animation() {
+		return animation;
 	}
 
 	@Override
