@@ -112,10 +112,10 @@ public class PlayScene3D extends GameScene3D {
 	}
 
 	private void createPerspectives() {
-		cameras.put(Perspective.CAM_DRONE, new Cam_Drone());
-		cameras.put(Perspective.CAM_FOLLOWING_PLAYER, new Cam_FollowingPlayer());
-		cameras.put(Perspective.CAM_NEAR_PLAYER, new Cam_NearPlayer());
-		cameras.put(Perspective.CAM_TOTAL, new Cam_Total());
+		cameras.put(Perspective.CAM_DRONE, new CamDrone());
+		cameras.put(Perspective.CAM_FOLLOWING_PLAYER, new CamFollowingPlayer());
+		cameras.put(Perspective.CAM_NEAR_PLAYER, new CamNearPlayer());
+		cameras.put(Perspective.CAM_TOTAL, new CamTotal());
 		Env.$perspective.addListener(($perspective, oldPerspective, newPerspective) -> setPerspective(newPerspective));
 	}
 

@@ -28,7 +28,7 @@ import static de.amr.games.pacman.ui.fx.util.U.lerp;
 import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 
-public class Cam_NearPlayer extends GameSceneCamera {
+public class CamNearPlayer extends GameSceneCamera {
 
 	private double speed = 0.02;
 

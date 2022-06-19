@@ -30,7 +30,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
 
-public class Cam_Drone extends GameSceneCamera {
+public class CamDrone extends GameSceneCamera {
 
 	private double speed = 0.005;
 

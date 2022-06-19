@@ -23,18 +23,15 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
-import static de.amr.games.pacman.ui.fx.util.U.lerp;
-
-import javafx.scene.Node;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
 
-public class Cam_FollowingPlayer extends GameSceneCamera {
-
-	private double speed = 0.03;
+public class CamTotal extends GameSceneCamera {
 
 	@Override
 	public String toString() {
-		return "Following Player";
+		return "Total";
 	}
 
 	@Override
@@ -42,13 +39,40 @@ public class Cam_FollowingPlayer extends GameSceneCamera {
 		setNearClip(0.1);
 		setFarClip(10000.0);
 		setRotationAxis(Rotate.X_AXIS);
-		setRotate(60);
-		setTranslateZ(-160);
+		setRotate(49);
+		setTranslateX(0);
+		setTranslateY(320);
+		setTranslateZ(-260);
 	}
 
 	@Override
-	public void update(Node target) {
-		setTranslateX(lerp(getTranslateX(), target.getTranslateX() - 100, speed));
-		setTranslateY(lerp(getTranslateY(), target.getTranslateY() + 60, speed));
+	public void onKeyPressed(KeyEvent e) {
+		KeyCode key = e.getCode();
+		boolean control = e.isControlDown(), shift = e.isShiftDown();
+		if (!control && shift) {
+			switch (key) {
+			case LEFT -> change(translateXProperty(), -10);
+			case RIGHT -> change(translateXProperty(), +10);
+			case MINUS -> change(translateYProperty(), -10);
+			case PLUS -> change(translateYProperty(), +10);
+			case UP -> change(translateZProperty(), -10);
+			case DOWN -> change(translateZProperty(), 10);
+			default -> {
+			}
+			}
+		} else if (control && shift) {
+			switch (key) {
+			case UP -> {
+				setRotationAxis(Rotate.X_AXIS);
+				setRotate((getRotate() - 1 + 360) % 360);
+			}
+			case DOWN -> {
+				setRotationAxis(Rotate.X_AXIS);
+				setRotate((getRotate() + 1 + 360) % 360);
+			}
+			default -> {
+			}
+			}
+		}
 	}
 }
