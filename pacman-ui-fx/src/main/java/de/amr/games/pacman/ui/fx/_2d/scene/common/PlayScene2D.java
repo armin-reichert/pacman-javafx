@@ -26,6 +26,8 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.common.GameState;
+import de.amr.games.pacman.lib.animation.SpriteAnimations;
+import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -83,8 +85,9 @@ public class PlayScene2D extends GameScene2D {
 	public void doRender(GraphicsContext g) {
 		$.r2D.drawScore(g, $.game.scores.gameScore);
 		$.r2D.drawScore(g, $.game.scores.highScore);
-		if ($.game.mazeFlashingAnimation().isPresent() && $.game.mazeFlashingAnimation().get().isRunning()) {
-			g.drawImage((Image) $.game.mazeFlashingAnimation().get().frame(), t(0), t(3));
+		var flashingAnimation = $.game.mazeFlashingAnimation();
+		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
+			g.drawImage((Image) flashingAnimation.get().frame(), t(0), t(3));
 		} else {
 			$.r2D.drawMaze(g, t(0), t(3), $.game.level.world, $.game.level.mazeNumber, !$.game.energizerPulse.frame());
 		}
@@ -101,9 +104,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	public void onSwitchFrom3D() {
-		$.game.pac.animations().get().ensureRunning();
-		for (var ghost : $.game.ghosts) {
-			ghost.animations().get().ensureRunning();
-		}
+		$.game.pac.animations().ifPresent(SpriteAnimations::ensureRunning);
+		$.game.ghosts().map(Ghost::animations).forEach(anim -> anim.ifPresent(SpriteAnimations::ensureRunning));
 	}
 }

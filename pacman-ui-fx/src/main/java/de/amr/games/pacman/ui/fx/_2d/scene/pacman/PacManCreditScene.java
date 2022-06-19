@@ -55,6 +55,7 @@ public class PacManCreditScene extends GameScene2D {
 
 	@Override
 	protected void doUpdate() {
+		// nothing to do
 	}
 
 	@Override

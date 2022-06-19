@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import de.amr.games.pacman.controller.mspacman.Intermission2Controller;
+import de.amr.games.pacman.lib.animation.SpriteAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.SpritesheetMsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
@@ -55,10 +56,12 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 		sceneController.restartInInitialState(Intermission2Controller.State.FLAP);
 		icc.flap.animation = SpritesheetMsPacMan.get().createFlapAnimation();
 		icc.msPacMan.setAnimations(new PacAnimations($.r2D));
-		icc.msPacMan.animations().get().ensureRunning();
+		icc.msPacMan.animations().ifPresent(SpriteAnimations::ensureRunning);
 		icc.pacMan.setAnimations(new PacAnimations($.r2D));
-		icc.pacMan.animations().get().put("munching", SpritesheetMsPacMan.get().createPacManMunchingAnimationMap());
-		icc.pacMan.animations().get().ensureRunning();
+		icc.pacMan.animations().ifPresent(animations -> {
+			animations.put(PacAnimations.MUNCHING, SpritesheetMsPacMan.get().createPacManMunchingAnimationMap());
+			animations.ensureRunning();
+		});
 	}
 
 	@Override
