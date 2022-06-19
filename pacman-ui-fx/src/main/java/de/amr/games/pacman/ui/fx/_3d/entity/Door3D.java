@@ -23,16 +23,11 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import static de.amr.games.pacman.model.common.actors.GhostState.DEAD;
-import static de.amr.games.pacman.model.common.actors.GhostState.ENTERING_HOUSE;
-import static de.amr.games.pacman.model.common.actors.GhostState.LEAVING_HOUSE;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -66,20 +61,15 @@ public class Door3D {
 		centerPosition = new V2d(centerX, tile.y * TS);
 	}
 
+	public V2d getCenterPosition() {
+		return centerPosition;
+	}
+
 	public Node getNode() {
 		return box;
 	}
 
-	public void update(GameModel game) {
-		boolean ghostApproaching = game.ghosts() //
-				.filter(ghost -> ghost.visible) //
-				.filter(ghost -> ghost.is(DEAD) || ghost.is(ENTERING_HOUSE) || ghost.is(LEAVING_HOUSE)) //
-				.anyMatch(this::isGhostNear);
-		box.setVisible(!ghostApproaching);
-	}
-
-	private boolean isGhostNear(Ghost ghost) {
-		double threshold = ghost.is(LEAVING_HOUSE) ? TS : 3 * TS;
-		return ghost.position.euclideanDistance(centerPosition) <= threshold;
+	public void setOpen(boolean open) {
+		box.setVisible(!open);
 	}
 }

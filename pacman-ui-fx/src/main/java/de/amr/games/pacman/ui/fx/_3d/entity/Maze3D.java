@@ -23,6 +23,11 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.model.common.actors.GhostState.DEAD;
+import static de.amr.games.pacman.model.common.actors.GhostState.ENTERING_HOUSE;
+import static de.amr.games.pacman.model.common.actors.GhostState.LEAVING_HOUSE;
+import static de.amr.games.pacman.model.common.world.World.TS;
+
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -30,6 +35,7 @@ import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.RaiseAndLowerWallAnimation;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
@@ -86,7 +92,18 @@ public class Maze3D extends Group {
 	}
 
 	public void update(GameModel game) {
-		mazeBuilding.doors().forEach(door -> door.update(game));
+		mazeBuilding.doors().forEach(door3D -> {
+			boolean ghostApproaching = game.ghosts() //
+					.filter(ghost -> ghost.visible) //
+					.filter(ghost -> ghost.is(DEAD) || ghost.is(ENTERING_HOUSE) || ghost.is(LEAVING_HOUSE)) //
+					.anyMatch(ghost -> isGhostNearDoor(ghost, door3D));
+			door3D.setOpen(ghostApproaching);
+		});
+	}
+
+	private boolean isGhostNearDoor(Ghost ghost, Door3D door3D) {
+		double threshold = ghost.is(LEAVING_HOUSE) ? TS : 3 * TS;
+		return ghost.position.euclideanDistance(door3D.getCenterPosition()) <= threshold;
 	}
 
 	public Animation createMazeFlashingAnimation(int times) {
