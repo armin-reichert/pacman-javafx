@@ -156,17 +156,17 @@ public class MazeBuilding3D {
 					}
 				} else {
 					if (leftX != -1) {
-						addWall(wallsGroup, leftX, y, sizeX, 1, wp);
+						addWall(leftX, y, sizeX, 1, wp);
 						leftX = -1;
 					}
 				}
 				if (x == floorPlan.sizeX() - 1 && leftX != -1) {
-					addWall(wallsGroup, leftX, y, sizeX, 1, wp);
+					addWall(leftX, y, sizeX, 1, wp);
 					leftX = -1;
 				}
 			}
 			if (y == floorPlan.sizeY() - 1 && leftX != -1) {
-				addWall(wallsGroup, leftX, y, sizeX, 1, wp);
+				addWall(leftX, y, sizeX, 1, wp);
 			}
 		}
 	}
@@ -185,17 +185,17 @@ public class MazeBuilding3D {
 					}
 				} else {
 					if (topY != -1) {
-						addWall(wallsGroup, x, topY, 1, sizeY, wp);
+						addWall(x, topY, 1, sizeY, wp);
 						topY = -1;
 					}
 				}
 				if (y == floorPlan.sizeY() - 1 && topY != -1) {
-					addWall(wallsGroup, x, topY, 1, sizeY, wp);
+					addWall(x, topY, 1, sizeY, wp);
 					topY = -1;
 				}
 			}
 			if (x == floorPlan.sizeX() - 1 && topY != -1) {
-				addWall(wallsGroup, x, topY, 1, sizeY, wp);
+				addWall(x, topY, 1, sizeY, wp);
 			}
 		}
 	}
@@ -204,7 +204,7 @@ public class MazeBuilding3D {
 		for (int x = 0; x < floorPlan.sizeX(); ++x) {
 			for (int y = 0; y < floorPlan.sizeY(); ++y) {
 				if (floorPlan.get(x, y) == FloorPlan.CORNER) {
-					addWall(wallsGroup, x, y, 1, 1, wp);
+					addWall(x, y, 1, 1, wp);
 				}
 			}
 		}
@@ -214,14 +214,13 @@ public class MazeBuilding3D {
 	 * Adds a wall at given position. A wall consists of a base and a top part which can have different color and
 	 * material.
 	 * 
-	 * @param wallsGroup group where walls are added to
 	 * @param x          x-coordinate of top-left brick
 	 * @param y          y-coordinate of top-left brick
 	 * @param numBricksX number of bricks in x-direction
 	 * @param numBricksY number of bricks in y-direction
 	 * @param wp         wall properties
 	 */
-	private void addWall(Group wallsGroup, int x, int y, int numBricksX, int numBricksY, WallProperties wp) {
+	private void addWall(int x, int y, int numBricksX, int numBricksY, WallProperties wp) {
 		Box base = new Box(numBricksX * wp.brickSize, numBricksY * wp.brickSize, wallHeight.get());
 		base.depthProperty().bind(wallHeight);
 		base.setMaterial(wp.baseMaterial);
