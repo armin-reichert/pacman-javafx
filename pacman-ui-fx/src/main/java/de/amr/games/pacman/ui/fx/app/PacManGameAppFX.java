@@ -88,6 +88,6 @@ public class PacManGameAppFX extends Application {
 		GameLoop.get().start();
 		log("Application started.");
 		log("UI size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s", ui.getWidth(), ui.getHeight(), zoom,
-				U.on_off(Env.$3D.get()), Env.$perspective.get());
+				U.onOff(Env.$3D.get()), Env.$perspective.get());
 	}
 }

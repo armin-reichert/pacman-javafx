@@ -232,10 +232,10 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 		var animationByDir = new SpriteAnimationMap<>(enumMap);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
-			var wide_open = rhs(0, d);
+			var wideOpen = rhs(0, d);
 			var open = rhs(1, d);
 			var closed = rhs(2, d);
-			var munching = new SingleSpriteAnimation<>(open, wide_open, open, closed);
+			var munching = new SingleSpriteAnimation<>(open, wideOpen, open, closed);
 			munching.frameDuration(2);
 			munching.repeatForever();
 			animationByDir.put(dir, munching);
@@ -302,7 +302,7 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 
 	// Ms. Pac-Man specific:
 
-	public SpriteAnimationMap<Direction, Rectangle2D> createPac_Man_MunchingAnimationMap() {
+	public SpriteAnimationMap<Direction, Rectangle2D> createPacManMunchingAnimationMap() {
 		var animationByDir = new SpriteAnimationMap<Direction, Rectangle2D>(4);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);

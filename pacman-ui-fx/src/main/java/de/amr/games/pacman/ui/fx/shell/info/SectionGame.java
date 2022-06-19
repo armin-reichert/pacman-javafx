@@ -80,10 +80,9 @@ public class SectionGame extends Section {
 		btnsIntermissionTest[1].setOnAction(e -> Actions.restartIntro());
 
 		spinnerGameLevel = addSpinner("Level", 1, 100, game().level.number);
-		spinnerGameLevel.valueProperty()
-				.addListener(($value, oldValue, newValue) -> Actions.enterLevel(newValue.intValue()));
+		spinnerGameLevel.valueProperty().addListener((obs, oldVal, newVal) -> Actions.enterLevel(newVal.intValue()));
 		spinnerGameCredit = addSpinner("Credit", 0, 50, game().credit);
-		spinnerGameCredit.valueProperty().addListener(($value, oldValue, newValue) -> game().credit = newValue.intValue());
+		spinnerGameCredit.valueProperty().addListener((obs, oldVal, newVal) -> game().credit = newVal.intValue());
 
 		cbMuted = addCheckBox("Sound muted", Actions::toggleSoundMuted);
 		cbAutopilot = addCheckBox("Autopilot", Actions::toggleAutopilot);
@@ -110,7 +109,7 @@ public class SectionGame extends Section {
 		addInfo("", () -> "Remaining: %s".formatted(ticksToString(gc.game().huntingTimer.remaining())));
 
 		addInfo("Credit", () -> "%d".formatted(gc.game().credit));
-		addInfo("Playing", () -> U.yes_no(gc.game().playing));
+		addInfo("Playing", () -> U.yesNo(gc.game().playing));
 
 		addInfo("Pellets",
 				() -> String.format("%d of %d (%d energizers)", game().level.world.foodRemaining(),

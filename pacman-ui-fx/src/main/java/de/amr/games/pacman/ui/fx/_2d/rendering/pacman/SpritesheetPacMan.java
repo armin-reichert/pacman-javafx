@@ -153,8 +153,8 @@ public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
 		var animationByDir = new SpriteAnimationMap<>(enumMap);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
-			Rectangle2D wide_open = tile(0, d), open = tile(1, d), closed = tile(2, 0);
-			var animation = new SingleSpriteAnimation<>(closed, open, wide_open, open);
+			Rectangle2D wideOpen = tile(0, d), open = tile(1, d), closed = tile(2, 0);
+			var animation = new SingleSpriteAnimation<>(closed, open, wideOpen, open);
 			animation.frameDuration(2);
 			animation.repeatForever();
 			animationByDir.put(dir, animation);

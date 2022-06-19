@@ -117,7 +117,7 @@ public class PlayScene3D extends GameScene3D {
 		cameras.put(Perspective.CAM_FOLLOWING_PLAYER, new CamFollowingPlayer());
 		cameras.put(Perspective.CAM_NEAR_PLAYER, new CamNearPlayer());
 		cameras.put(Perspective.CAM_TOTAL, new CamTotal());
-		Env.$perspective.addListener(($perspective, oldPerspective, newPerspective) -> setPerspective(newPerspective));
+		Env.$perspective.addListener((obs, oldVal, newVal) -> setPerspective(newVal));
 	}
 
 	private void setPerspective(Perspective psp) {

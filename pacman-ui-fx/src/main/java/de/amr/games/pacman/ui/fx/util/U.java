@@ -148,11 +148,11 @@ public class U {
 		return new ImageView(image(path));
 	}
 
-	public static String yes_no(boolean b) {
+	public static String yesNo(boolean b) {
 		return b ? "YES" : "NO";
 	}
 
-	public static String on_off(boolean b) {
+	public static String onOff(boolean b) {
 		return b ? "ON" : "OFF";
 	}
 }
