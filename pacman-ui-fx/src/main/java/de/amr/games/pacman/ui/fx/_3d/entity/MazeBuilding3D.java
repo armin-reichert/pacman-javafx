@@ -40,6 +40,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -104,7 +105,7 @@ public class MazeBuilding3D {
 	}
 
 	public Stream<Door3D> doors() {
-		return doorsGroup.getChildren().stream().map(Door3D.class::cast);
+		return doorsGroup.getChildren().stream().map(Node::getUserData).map(Door3D.class::cast);
 	}
 
 	public void erect(World world, Color wallBaseColor, Color wallTopColor, Color doorColor) {
@@ -133,8 +134,10 @@ public class MazeBuilding3D {
 		addCorners(floorPlan, wallsGroup, wp);
 
 		var leftDoor = new Door3D(world.ghostHouse().doorTileLeft(), true, doorColor);
+		leftDoor.doorHeight.bind(wallHeight);
 		var rightDoor = new Door3D(world.ghostHouse().doorTileRight(), false, doorColor);
-		doorsGroup.getChildren().setAll(leftDoor, rightDoor);
+		rightDoor.doorHeight.bind(wallHeight);
+		doorsGroup.getChildren().setAll(leftDoor.getNode(), rightDoor.getNode());
 
 		log("Built 3D maze (resolution=%d, wall height=%.2f)", resolution.get(), wallHeight.get());
 	}

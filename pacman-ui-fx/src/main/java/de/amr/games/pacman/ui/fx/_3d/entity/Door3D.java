@@ -34,6 +34,9 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx.app.Env;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -43,18 +46,28 @@ import javafx.scene.shape.Box;
  * 
  * @author Armin Reichert
  */
-public class Door3D extends Box {
+public class Door3D {
 
-	private final boolean leftWing;
+	public final DoubleProperty doorHeight = new SimpleDoubleProperty(HTS);
+
+	private final Box box;
+	private final V2d centerPosition;
 
 	public Door3D(V2i tile, boolean leftWing, Color color) {
-		super(TS - 1.0, 1.0, HTS);
-		this.leftWing = leftWing;
-		setMaterial(new PhongMaterial(color));
-		setTranslateX((double) tile.x * TS + HTS);
-		setTranslateY((double) tile.y * TS + HTS);
-		setTranslateZ(-HTS / 2.0);
-		drawModeProperty().bind(Env.$drawMode3D);
+		box = new Box(TS - 1.0, 1.0, HTS);
+		box.setUserData(this);
+		box.depthProperty().bind(doorHeight.add(2));
+		box.setMaterial(new PhongMaterial(color));
+		box.setTranslateX((double) tile.x * TS + HTS);
+		box.setTranslateY((double) tile.y * TS + HTS);
+		box.translateZProperty().bind(doorHeight.divide(-2.0).subtract(0.5));
+		box.drawModeProperty().bind(Env.$drawMode3D);
+		var centerX = leftWing ? (tile.x + 1) * TS : (tile.x - 1) * TS;
+		centerPosition = new V2d(centerX, tile.y * TS);
+	}
+
+	public Node getNode() {
+		return box;
 	}
 
 	public void update(GameModel game) {
@@ -62,12 +75,11 @@ public class Door3D extends Box {
 				.filter(ghost -> ghost.visible) //
 				.filter(ghost -> ghost.is(DEAD) || ghost.is(ENTERING_HOUSE) || ghost.is(LEAVING_HOUSE)) //
 				.anyMatch(this::isGhostNear);
-		setVisible(!ghostApproaching);
+		box.setVisible(!ghostApproaching);
 	}
 
 	private boolean isGhostNear(Ghost ghost) {
-		V2d center = new V2d(getTranslateX(), getTranslateY()).plus(leftWing ? getWidth() / 2 : -getWidth() / 2, 0);
 		double threshold = ghost.is(LEAVING_HOUSE) ? TS : 3 * TS;
-		return ghost.position.euclideanDistance(center) <= threshold;
+		return ghost.position.euclideanDistance(centerPosition) <= threshold;
 	}
 }
