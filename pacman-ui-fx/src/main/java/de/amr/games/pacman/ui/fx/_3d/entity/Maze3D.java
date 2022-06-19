@@ -31,9 +31,11 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.RaiseAndLowerWallAnimation;
+import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.animation.Animation;
@@ -72,19 +74,28 @@ public class Maze3D extends Group {
 	/**
 	 * Creates the 3D-maze base structure (without walls, doors, food).
 	 * 
-	 * @param mazeWidth  maze width in units
-	 * @param mazeHeight maze height in units
+	 * @param gameVariant the game variant
+	 * @param world       the world
+	 * @param mazeNumber  the maze number (1..6)
+	 * @param mazeWidth   maze width in units
+	 * @param mazeHeight  maze height in units
 	 */
-	public Maze3D(double mazeWidth, double mazeHeight) {
+	public Maze3D(GameVariant gameVariant, World world, int mazeNumber, double mazeWidth, double mazeHeight) {
 		floor = new MazeFloor3D(mazeWidth - 1, mazeHeight - 1, 0.01);
 		floor.showSolid(Color.rgb(5, 5, 10));
 		floor.getTransforms().add(new Translate(0.5 * floor.getWidth(), 0.5 * floor.getHeight(), 0.5 * floor.getDepth()));
-		Env.$useMazeFloorTexture.addListener((x, y, b) -> {
-			if (b.booleanValue()) {
+		Env.$useMazeFloorTexture.addListener((obs, old_val, new_val) -> {
+			if (new_val.booleanValue()) {
 				floor.showTextured(U.image("/common/escher-texture.jpg"), Color.DARKBLUE);
 			} else {
 				floor.showSolid(Color.rgb(5, 5, 10));
 			}
+		});
+		$resolution.addListener((obs, old_val, new_val) -> {
+			createWallsAndDoors(world, //
+					Rendering3D.getMazeSideColor(gameVariant, mazeNumber), //
+					Rendering3D.getMazeTopColor(gameVariant, mazeNumber), //
+					Rendering3D.getGhostHouseDoorColor(gameVariant, mazeNumber));
 		});
 		getChildren().addAll(floor, wallsGroup, doorsGroup, foodGroup);
 	}

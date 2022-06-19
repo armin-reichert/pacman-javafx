@@ -51,7 +51,6 @@ import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
@@ -81,6 +80,7 @@ public class PlayScene3D extends GameScene3D {
 	@Override
 	public void init() {
 		scores3D = new Scores3D();
+		scores3D.setFont($.r2D.getArcadeFont());
 		if ($.hasCredit()) {
 			scores3D.setComputeScoreText(true);
 		} else {
@@ -88,7 +88,6 @@ public class PlayScene3D extends GameScene3D {
 			scores3D.txtScore.setFill(Color.RED);
 			scores3D.txtScore.setText("GAME OVER!");
 		}
-		scores3D.setFont($.r2D.getArcadeFont());
 
 		livesCounter3D = new LivesCounter3D($.model3D);
 		livesCounter3D.getTransforms().add(new Translate(TS, TS, -HTS));
@@ -97,10 +96,9 @@ public class PlayScene3D extends GameScene3D {
 		levelCounter3D = new LevelCounter3D(unscaledSize.x - TS, TS, $.r2D);
 		levelCounter3D.update($.game);
 
-		maze3D = new Maze3D(unscaledSize.x, unscaledSize.y);
+		maze3D = new Maze3D($.game.variant, $.game.level.world, $.game.level.mazeNumber, unscaledSize.x, unscaledSize.y);
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
-		maze3D.$resolution.addListener(this::onMazeResolutionChange);
 		buildMazeContent($.game.level.mazeNumber);
 
 		player3D = new Pac3D($.game.pac, $.model3D);
@@ -139,12 +137,6 @@ public class PlayScene3D extends GameScene3D {
 			scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
 			scores3D.rotateProperty().bind(camera.rotateProperty());
 		}
-	}
-
-	@Override
-	public void end() {
-		// Note: property bindings are garbage collected, no need to explicitly unbind them here
-		maze3D.$resolution.removeListener(this::onMazeResolutionChange);
 	}
 
 	@Override
@@ -200,13 +192,6 @@ public class PlayScene3D extends GameScene3D {
 		if ($.gameState() == GameState.HUNTING || $.gameState() == GameState.GHOST_DYING) {
 			maze3D.energizerAnimations().forEach(Animation::play);
 		}
-	}
-
-	private void onMazeResolutionChange(ObservableValue<? extends Number> property, Number oldValue, Number newValue) {
-		maze3D.createWallsAndDoors($.game.level.world, //
-				Rendering3D.getMazeSideColor($.game.variant, $.game.level.mazeNumber), //
-				Rendering3D.getMazeTopColor($.game.variant, $.game.level.mazeNumber), //
-				Rendering3D.getGhostHouseDoorColor($.game.variant, $.game.level.mazeNumber));
 	}
 
 	@Override
