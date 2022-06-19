@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.util;
 
 import java.util.Map;
+import java.util.stream.Stream;
 
 import javafx.animation.PauseTransition;
 import javafx.scene.image.Image;
@@ -43,6 +44,10 @@ import javafx.util.Duration;
  * @author Armin Reichert
  */
 public class U {
+
+	public static boolean anyOf(Object value, Object... alternatives) {
+		return Stream.of(alternatives).anyMatch(alternative -> value.equals(alternative));
+	}
 
 	/**
 	 * @param value1 value1
