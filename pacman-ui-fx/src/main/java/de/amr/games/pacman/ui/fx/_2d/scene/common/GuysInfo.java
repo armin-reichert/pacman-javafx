@@ -91,23 +91,22 @@ public class GuysInfo {
 		if (ghost.state == GhostState.HUNTING_PAC) {
 			stateText += game.huntingTimer.chasingPhase() != -1 ? " (Chasing)" : " (Scattering)";
 		}
-		if (ghost.animations().isPresent()) {
-			var ghostAnim = ghost.animations().get();
-			var animState = fmtAnimationState(ghostAnim.selectedAnimation(), ghost.wishDir());
-			return "%s%n%s%n %s%s".formatted(name, stateText, animState, ghostAnim.selected());
+		var ghostAnims = ghost.animations();
+		if (ghostAnims.isPresent()) {
+			var animState = fmtAnimationState(ghostAnims.get().selectedAnimation(), ghost.wishDir());
+			return "%s%n%s%n %s%s".formatted(name, stateText, animState, ghostAnims.get().selected());
 		} else {
 			return "%s%n%s%n".formatted(name, stateText);
 		}
 	}
 
 	private String fmtPacInfo(Pac pac) {
-		if (pac.animations().isPresent()) {
-			var pacAnim = pac.animations().get();
-			var animState = fmtAnimationState(pacAnim.selectedAnimation(), pac.moveDir());
-			return "%s%n%s%s".formatted(pac.name, animState, pacAnim.selected());
-		} else {
-			return "%s%n".formatted(pac.name);
+		var pacAnims = pac.animations();
+		if (pacAnims.isPresent()) {
+			var animState = fmtAnimationState(pacAnims.get().selectedAnimation(), pac.moveDir());
+			return "%s%n%s%s".formatted(pac.name, animState, pacAnims.get().selected());
 		}
+		return "%s%n".formatted(pac.name);
 	}
 
 	private String fmtBonusInfo(Bonus bonus) {
