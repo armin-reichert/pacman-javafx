@@ -60,6 +60,12 @@ import javafx.util.Duration;
  */
 public class Maze3D extends Group {
 
+	private static class WallProperties {
+		double brickSize;
+		PhongMaterial baseMaterial;
+		PhongMaterial topMaterial;
+	}
+
 	public final DoubleProperty $wallHeight = new SimpleDoubleProperty(2.0);
 	public final IntegerProperty $resolution = new SimpleIntegerProperty(8);
 
@@ -162,13 +168,14 @@ public class Maze3D extends Group {
 	 * @param wallTopColor  color of wall at top
 	 */
 	public void createWallsAndDoors(World world, Color wallBaseColor, Color wallTopColor, Color doorColor) {
-		var baseMaterial = new PhongMaterial(wallBaseColor);
-		baseMaterial.setSpecularColor(wallBaseColor.brighter());
-		var topMaterial = new PhongMaterial(wallTopColor);
 		var floorPlan = new FloorPlan($resolution.get(), world);
-		var brickSize = TS / $resolution.get();
+		WallProperties wp = new WallProperties();
+		wp.baseMaterial = new PhongMaterial(wallBaseColor);
+		wp.baseMaterial.setSpecularColor(wallBaseColor.brighter());
+		wp.topMaterial = new PhongMaterial(wallTopColor);
+		wp.brickSize = TS / $resolution.get();
 		wallsGroup.getChildren().clear();
-		addWalls(floorPlan, brickSize, baseMaterial, topMaterial);
+		addWalls(floorPlan, wp);
 		var leftDoor = new Door3D(world.ghostHouse().doorTileLeft(), true, doorColor);
 		var rightDoor = new Door3D(world.ghostHouse().doorTileRight(), false, doorColor);
 		doorsGroup.getChildren().setAll(leftDoor, rightDoor);
@@ -204,55 +211,49 @@ public class Maze3D extends Group {
 	 * Adds a wall at given position. A wall consists of a base and a top part which can have different color and
 	 * material.
 	 * 
-	 * @param x            x-coordinate of top-left brick
-	 * @param y            y-coordinate of top-left brick
-	 * @param numBricksX   number of bricks in x-direction
-	 * @param numBricksY   number of bricks in y-direction
-	 * @param brickSize    size of a single brick
-	 * @param baseMaterial material used for wall base
-	 * @param topMaterial  material used for wall top
+	 * @param x          x-coordinate of top-left brick
+	 * @param y          y-coordinate of top-left brick
+	 * @param numBricksX number of bricks in x-direction
+	 * @param numBricksY number of bricks in y-direction
+	 * @param wp         wall properties
 	 */
-	private void addWall(int x, int y, int numBricksX, int numBricksY, double brickSize, PhongMaterial baseMaterial,
-			PhongMaterial topMaterial) {
-
-		Box base = new Box(numBricksX * brickSize, numBricksY * brickSize, $wallHeight.get());
+	private void addWall(int x, int y, int numBricksX, int numBricksY, WallProperties wp) {
+		Box base = new Box(numBricksX * wp.brickSize, numBricksY * wp.brickSize, $wallHeight.get());
 		base.depthProperty().bind($wallHeight);
-		base.setMaterial(baseMaterial);
+		base.setMaterial(wp.baseMaterial);
 		base.translateZProperty().bind($wallHeight.multiply(-0.5));
 		base.drawModeProperty().bind(Env.$drawMode3D);
 
 		double topHeight = 0.5;
-		Box top = new Box(numBricksX * brickSize, numBricksY * brickSize, topHeight);
-		top.setMaterial(topMaterial);
+		Box top = new Box(numBricksX * wp.brickSize, numBricksY * wp.brickSize, topHeight);
+		top.setMaterial(wp.topMaterial);
 		top.translateZProperty().bind(base.translateZProperty().subtract($wallHeight.add(topHeight + 0.1).multiply(0.5)));
 		top.drawModeProperty().bind(Env.$drawMode3D);
 
 		Group wall = new Group(base, top);
-		wall.setTranslateX((x + 0.5 * numBricksX) * brickSize);
-		wall.setTranslateY((y + 0.5 * numBricksY) * brickSize);
+		wall.setTranslateX((x + 0.5 * numBricksX) * wp.brickSize);
+		wall.setTranslateY((y + 0.5 * numBricksY) * wp.brickSize);
 
 		wallsGroup.getChildren().add(wall);
 	}
 
-	private void addWalls(FloorPlan floorPlan, double brickSize, PhongMaterial baseMaterial, PhongMaterial topMaterial) {
-		addHorizontalWalls(floorPlan, brickSize, baseMaterial, topMaterial);
-		addVerticalWalls(floorPlan, brickSize, baseMaterial, topMaterial);
-		addCorners(floorPlan, brickSize, baseMaterial, topMaterial);
+	private void addWalls(FloorPlan floorPlan, WallProperties wp) {
+		addHorizontalWalls(floorPlan, wp);
+		addVerticalWalls(floorPlan, wp);
+		addCorners(floorPlan, wp);
 	}
 
-	private void addCorners(FloorPlan floorPlan, double brickSize, PhongMaterial baseMaterial,
-			PhongMaterial topMaterial) {
+	private void addCorners(FloorPlan floorPlan, WallProperties wp) {
 		for (int x = 0; x < floorPlan.sizeX(); ++x) {
 			for (int y = 0; y < floorPlan.sizeY(); ++y) {
 				if (floorPlan.get(x, y) == FloorPlan.CORNER) {
-					addWall(x, y, 1, 1, brickSize, baseMaterial, topMaterial);
+					addWall(x, y, 1, 1, wp);
 				}
 			}
 		}
 	}
 
-	private void addVerticalWalls(FloorPlan floorPlan, double brickSize, PhongMaterial baseMaterial,
-			PhongMaterial topMaterial) {
+	private void addVerticalWalls(FloorPlan floorPlan, WallProperties wp) {
 		for (int x = 0; x < floorPlan.sizeX(); ++x) {
 			int topY = -1;
 			int sizeY = 0;
@@ -266,23 +267,22 @@ public class Maze3D extends Group {
 					}
 				} else {
 					if (topY != -1) {
-						addWall(x, topY, 1, sizeY, brickSize, baseMaterial, topMaterial);
+						addWall(x, topY, 1, sizeY, wp);
 						topY = -1;
 					}
 				}
 				if (y == floorPlan.sizeY() - 1 && topY != -1) {
-					addWall(x, topY, 1, sizeY, brickSize, baseMaterial, topMaterial);
+					addWall(x, topY, 1, sizeY, wp);
 					topY = -1;
 				}
 			}
 			if (x == floorPlan.sizeX() - 1 && topY != -1) {
-				addWall(x, topY, 1, sizeY, brickSize, baseMaterial, topMaterial);
+				addWall(x, topY, 1, sizeY, wp);
 			}
 		}
 	}
 
-	private void addHorizontalWalls(FloorPlan floorPlan, double brickSize, PhongMaterial baseMaterial,
-			PhongMaterial topMaterial) {
+	private void addHorizontalWalls(FloorPlan floorPlan, WallProperties wp) {
 		for (int y = 0; y < floorPlan.sizeY(); ++y) {
 			int leftX = -1;
 			int sizeX = 0;
@@ -296,17 +296,17 @@ public class Maze3D extends Group {
 					}
 				} else {
 					if (leftX != -1) {
-						addWall(leftX, y, sizeX, 1, brickSize, baseMaterial, topMaterial);
+						addWall(leftX, y, sizeX, 1, wp);
 						leftX = -1;
 					}
 				}
 				if (x == floorPlan.sizeX() - 1 && leftX != -1) {
-					addWall(leftX, y, sizeX, 1, brickSize, baseMaterial, topMaterial);
+					addWall(leftX, y, sizeX, 1, wp);
 					leftX = -1;
 				}
 			}
 			if (y == floorPlan.sizeY() - 1 && leftX != -1) {
-				addWall(leftX, y, sizeX, 1, brickSize, baseMaterial, topMaterial);
+				addWall(leftX, y, sizeX, 1, wp);
 			}
 		}
 	}
