@@ -46,11 +46,9 @@ import javafx.util.Duration;
  */
 public class Maze3D extends Group {
 
-	private static final double ENERGIZER_RADIUS = 3.0;
-	private static final double PELLET_RADIUS = 1.0;
-
+	public final MazeBuilding3D mazeBuilding;
+	private final World world;
 	private final Group foodGroup = new Group();
-	public MazeBuilding3D mazeBuilding;
 
 	/**
 	 * @param gameVariant  the game variant
@@ -60,18 +58,19 @@ public class Maze3D extends Group {
 	 * @param foodColor    food color in this maze
 	 */
 	public Maze3D(GameVariant gameVariant, World world, int mazeNumber, V2d unscaledSize, Color foodColor) {
+		this.world = world;
 		mazeBuilding = new MazeBuilding3D(unscaledSize);
-		mazeBuilding.build(world, //
+		mazeBuilding.erect(world, //
 				Rendering3D.getMazeSideColor(gameVariant, mazeNumber), //
 				Rendering3D.getMazeTopColor(gameVariant, mazeNumber), //
 				Rendering3D.getGhostHouseDoorColor(gameVariant));
 
-		var foodMaterial = new PhongMaterial(foodColor);
+		var meatBall = new PhongMaterial(foodColor);
 		world.tiles() //
 				.filter(world::isFoodTile) //
 				.map(tile -> world.isEnergizerTile(tile) //
-						? new Energizer3D(tile, foodMaterial, ENERGIZER_RADIUS)
-						: new Pellet3D(tile, foodMaterial, PELLET_RADIUS))
+						? new Energizer3D(tile, meatBall, 3.0)
+						: new Pellet3D(tile, meatBall, 1.0))
 				.forEach(foodGroup.getChildren()::add);
 
 		getChildren().addAll(mazeBuilding.getRoot(), foodGroup);
@@ -90,20 +89,16 @@ public class Maze3D extends Group {
 		mazeBuilding.doors().forEach(door -> door.update(game));
 	}
 
-	public Stream<Node> foodNodes() {
-		return foodGroup.getChildren().stream();
+	public Animation createMazeFlashingAnimation(int times) {
+		return times > 0 ? new RaiseAndLowerWallAnimation(times) : new PauseTransition(Duration.seconds(1));
+	}
+
+	public Stream<Animation> energizerAnimations() {
+		return energizers().map(Energizer3D::animation);
 	}
 
 	public Optional<Node> foodAt(V2i tile) {
 		return foodNodes().filter(food -> tile(food).equals(tile)).findFirst();
-	}
-
-	public V2i tile(Node foodNode) {
-		return (V2i) foodNode.getUserData();
-	}
-
-	public Stream<Energizer3D> energizers() {
-		return foodNodes().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
 	}
 
 	public void hideFood(Node foodNode) {
@@ -114,15 +109,19 @@ public class Maze3D extends Group {
 		}
 	}
 
-	public void validateFoodNodes(World world) {
+	public void validateFoodNodes() {
 		foodNodes().forEach(foodNode -> foodNode.setVisible(!world.containsEatenFood(tile(foodNode))));
 	}
 
-	public Stream<Animation> energizerAnimations() {
-		return energizers().map(Energizer3D::animation);
+	private Stream<Node> foodNodes() {
+		return foodGroup.getChildren().stream();
 	}
 
-	public Animation createMazeFlashingAnimation(int times) {
-		return times > 0 ? new RaiseAndLowerWallAnimation(times) : new PauseTransition(Duration.seconds(1));
+	private V2i tile(Node foodNode) {
+		return (V2i) foodNode.getUserData();
+	}
+
+	private Stream<Energizer3D> energizers() {
+		return foodNodes().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
 	}
 }

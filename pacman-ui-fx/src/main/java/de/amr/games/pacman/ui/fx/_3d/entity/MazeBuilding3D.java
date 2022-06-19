@@ -107,7 +107,7 @@ public class MazeBuilding3D {
 		return doorsGroup.getChildren().stream().map(Door3D.class::cast);
 	}
 
-	public void build(World world, Color wallBaseColor, Color wallTopColor, Color doorColor) {
+	public void erect(World world, Color wallBaseColor, Color wallTopColor, Color doorColor) {
 		createWallsAndDoors(world, wallBaseColor, wallTopColor, doorColor);
 		resolution.addListener((obs, oldVal, newVal) -> createWallsAndDoors(world, wallBaseColor, wallTopColor, doorColor));
 	}
