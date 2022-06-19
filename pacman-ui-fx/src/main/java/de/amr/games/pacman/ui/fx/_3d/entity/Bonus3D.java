@@ -28,7 +28,6 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.BonusState;
-import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
@@ -46,55 +45,41 @@ import javafx.util.Duration;
  */
 public class Bonus3D extends Box {
 
-	private final Rendering2D r2D;
-	private final RotateTransition rotation;
-
-	public Bonus3D(Rendering2D r2D) {
+	public Bonus3D() {
 		super(TS, TS, TS);
-		this.r2D = r2D;
-		rotation = new RotateTransition(Duration.INDEFINITE);
-		rotation.setNode(this);
-		rotation.setAxis(Rotate.X_AXIS);
-		rotation.setByAngle(360);
-		// Not sure if this is really needed:
-		visibleProperty().addListener(($visible, oldValue, newValue) -> {
-			if (newValue.booleanValue() == false) {
-				rotation.stop();
-			}
-		});
 		setTranslateZ(-HTS);
-		setVisible(false);
 	}
 
 	public void update(Bonus bonus) {
-		if (bonus.state() != BonusState.INACTIVE) {
-			var entity = (Entity) bonus;
-			setTranslateX(entity.position.x + getWidth() / 2);
-			setTranslateY(entity.position.y + getHeight() / 2);
-		}
+		setTranslateX(bonus.entity().position.x + getWidth() / 2);
+		setTranslateY(bonus.entity().position.y + getHeight() / 2);
+		setVisible(bonus.state() != BonusState.INACTIVE);
 	}
 
-	public void showSymbol(Bonus bonus) {
+	public void showSymbol(Bonus bonus, Rendering2D r2D) {
 		var texture = r2D.getSpriteImage(r2D.getBonusSymbolSprite(bonus.symbol()));
-		showRotating(texture, 1.0, Animation.INDEFINITE, 1);
+		rotateBox(texture, 1.0, Animation.INDEFINITE, 1);
 		setWidth(TS);
+		setVisible(true);
 	}
 
-	public void showPoints(Bonus bonus) {
+	public void showPoints(Bonus bonus, Rendering2D r2D) {
 		var texture = r2D.getSpriteImage(r2D.getBonusValueSprite(bonus.symbol()));
-		showRotating(texture, 1.0, 5, 2);
+		rotateBox(texture, 1.0, 5, 2);
 		setWidth(bonus.value() >= 1000 ? TS * 1.25 : TS);
+		setVisible(true);
 	}
 
-	private void showRotating(Image texture, double seconds, int cycleCount, int rate) {
+	private void rotateBox(Image texture, double seconds, int cycleCount, int rate) {
 		var skin = new PhongMaterial(Color.WHITE);
 		skin.setBumpMap(texture);
 		skin.setDiffuseMap(texture);
 		setMaterial(skin);
-		rotation.setDuration(Duration.seconds(seconds));
-		rotation.setCycleCount(cycleCount);
-		rotation.setRate(rate);
-		rotation.play();
-		setVisible(true);
+		var rot = new RotateTransition(Duration.seconds(seconds), this);
+		rot.setAxis(Rotate.X_AXIS);
+		rot.setByAngle(360);
+		rot.setCycleCount(cycleCount);
+		rot.setRate(rate);
+		rot.play();
 	}
 }

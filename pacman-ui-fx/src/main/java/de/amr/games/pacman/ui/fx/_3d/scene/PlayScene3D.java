@@ -102,7 +102,7 @@ public class PlayScene3D extends GameScene3D {
 
 		player3D = new Pac3D($.game.pac, $.model3D);
 		ghosts3D = $.game.ghosts().map(ghost -> new Ghost3D(ghost, $.model3D, $.r2D)).toArray(Ghost3D[]::new);
-		bonus3D = new Bonus3D($.r2D);
+		bonus3D = new Bonus3D();
 
 		sceneContent.getChildren().clear();
 		sceneContent.getChildren().addAll(maze3D, scores3D, livesCounter3D, levelCounter3D, player3D, bonus3D);
@@ -217,12 +217,12 @@ public class PlayScene3D extends GameScene3D {
 
 	@Override
 	public void onBonusGetsActive(GameEvent e) {
-		bonus3D.showSymbol($.game.bonus());
+		bonus3D.showSymbol($.game.bonus(), $.r2D);
 	}
 
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
-		bonus3D.showPoints($.game.bonus());
+		bonus3D.showPoints($.game.bonus(), $.r2D);
 	}
 
 	@Override
