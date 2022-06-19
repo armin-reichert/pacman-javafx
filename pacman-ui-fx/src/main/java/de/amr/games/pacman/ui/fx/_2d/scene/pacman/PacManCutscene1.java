@@ -56,9 +56,9 @@ public class PacManCutscene1 extends GameScene2D {
 
 		pac = new Pac("Pac-Man");
 		pac.setAnimations(new PacAnimations($.r2D));
-		pac.animations().get().put("big", ((SpritesheetPacMan) $.r2D).createBigPacManMunchingAnimation());
-		pac.selectAnimation("munching");
-
+		var big = ((SpritesheetPacMan) $.r2D).createBigPacManMunchingAnimation();
+		pac.animations().ifPresent(animations -> animations.put("big", big));
+		pac.selectAnimation(PacAnimations.MUNCHING);
 		pac.placeAt(v(29, 20), 0, 0);
 		pac.setMoveDir(Direction.LEFT);
 		pac.setAbsSpeed(1.25);
@@ -66,8 +66,10 @@ public class PacManCutscene1 extends GameScene2D {
 
 		blinky = new Ghost(Ghost.RED_GHOST, "Blinky");
 		blinky.setAnimations(new GhostAnimations(Ghost.RED_GHOST, $.r2D));
-		blinky.animations().get().select("color");
-		blinky.animation("color").get().restart();
+		blinky.animations().ifPresent(animations -> {
+			animations.select(GhostAnimations.COLOR);
+			animations.byName(GhostAnimations.COLOR).restart();
+		});
 		blinky.placeAt(v(32, 20), 0, 0);
 		blinky.setBothDirs(Direction.LEFT);
 		blinky.setAbsSpeed(1.3);
@@ -86,14 +88,18 @@ public class PacManCutscene1 extends GameScene2D {
 		} else if (frame == 260) {
 			blinky.placeAt(v(-2, 20), 4, 0);
 			blinky.setBothDirs(Direction.RIGHT);
-			blinky.animations().get().select("blue");
-			blinky.animations().get().selectedAnimation().restart();
+			blinky.animations().ifPresent(animations -> {
+				animations.select("blue");
+				animations.selectedAnimation().restart();
+			});
 			blinky.setAbsSpeed(0.75);
 		} else if (frame == 400) {
 			pac.placeAt(v(-3, 19), 0, 0);
 			pac.setMoveDir(Direction.RIGHT);
-			pac.animations().get().select("big");
-			pac.animations().get().selectedAnimation().restart();
+			pac.animations().ifPresent(animations -> {
+				animations.select("big");
+				animations.selectedAnimation().restart();
+			});
 		} else if (frame == 632) {
 			$.gameState().timer().expire();
 			return;

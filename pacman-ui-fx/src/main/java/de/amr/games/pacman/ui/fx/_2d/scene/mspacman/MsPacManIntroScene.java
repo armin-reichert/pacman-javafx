@@ -30,6 +30,7 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.controller.mspacman.IntroController;
 import de.amr.games.pacman.controller.mspacman.IntroController.Context;
 import de.amr.games.pacman.controller.mspacman.IntroController.State;
+import de.amr.games.pacman.lib.animation.SpriteAnimations;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
@@ -65,7 +66,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		sceneController.restartInInitialState(IntroController.State.START);
 		creditVisible = true;
 		icc.msPacMan.setAnimations(new PacAnimations($.r2D));
-		icc.msPacMan.animations().get().ensureRunning();
+		icc.msPacMan.animations().ifPresent(SpriteAnimations::ensureRunning);
 		Stream.of(icc.ghosts).forEach(ghost -> {
 			var animations = new GhostAnimations(ghost.id, $.r2D);
 			animations.ensureRunning();
