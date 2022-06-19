@@ -30,15 +30,15 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
-import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_CreditScene;
-import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntermissionScene1;
-import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntermissionScene2;
-import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntermissionScene3;
+import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacManCreditScene;
+import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacManIntermissionScene1;
+import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacManIntermissionScene2;
+import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacManIntermissionScene3;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntroScene;
-import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_CreditScene;
-import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_Cutscene1;
-import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_Cutscene2;
-import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_Cutscene3;
+import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCreditScene;
+import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene1;
+import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene2;
+import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene3;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntroScene;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 
@@ -52,10 +52,10 @@ public class SceneManager {
 	private static final GameScene[][] SCENES_PACMAN = {
 			//@formatter:off
 			{ new PacMan_IntroScene(),         null },
-			{ new PacMan_CreditScene(),        null },
-			{ new PacMan_Cutscene1(),          null },
-			{ new PacMan_Cutscene2(),          null },
-			{ new PacMan_Cutscene3(),          null },
+			{ new PacManCreditScene(),        null },
+			{ new PacManCutscene1(),          null },
+			{ new PacManCutscene2(),          null },
+			{ new PacManCutscene3(),          null },
 			{ new PlayScene2D(),               new PlayScene3D() },
 			//@formatter:on
 	};
@@ -63,10 +63,10 @@ public class SceneManager {
 	private static final GameScene[][] SCENES_MS_PACMAN = {
 			//@formatter:off
 			{ new MsPacMan_IntroScene(),         null },
-			{ new MsPacMan_CreditScene(),        null },
-			{ new MsPacMan_IntermissionScene1(), null },
-			{ new MsPacMan_IntermissionScene2(), null },
-			{ new MsPacMan_IntermissionScene3(), null },
+			{ new MsPacManCreditScene(),        null },
+			{ new MsPacManIntermissionScene1(), null },
+			{ new MsPacManIntermissionScene2(), null },
+			{ new MsPacManIntermissionScene3(), null },
 			{ new PlayScene2D(),                 new PlayScene3D() },
 			//@formatter:on
 	};

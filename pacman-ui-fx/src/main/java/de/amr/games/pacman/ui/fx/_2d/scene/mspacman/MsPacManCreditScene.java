@@ -22,22 +22,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.amr.games.pacman.ui.fx._2d.scene.pacman;
+package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.model.common.actors.Ghost;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
  * @author Armin Reichert
  */
-public class PacMan_CreditScene extends GameScene2D {
+public class MsPacManCreditScene extends GameScene2D {
 
 	@Override
 	public void init() {
@@ -55,6 +55,7 @@ public class PacMan_CreditScene extends GameScene2D {
 
 	@Override
 	protected void doUpdate() {
+		// nothing to update
 	}
 
 	@Override
@@ -66,19 +67,13 @@ public class PacMan_CreditScene extends GameScene2D {
 		}
 		g.setFont($.r2D.getArcadeFont());
 		g.setFill($.r2D.getGhostColor(Ghost.ORANGE_GHOST));
-		g.fillText("PUSH START BUTTON", t(6), t(17));
-
-		g.setFont($.r2D.getArcadeFont());
-		g.setFill($.r2D.getGhostColor(Ghost.CYAN_GHOST));
-		g.fillText("1 PLAYER ONLY", t(8), t(21));
-
-		g.setFont($.r2D.getArcadeFont());
-		g.setFill(Color.rgb(255, 184, 174));
-		g.fillText("BONUS PAC-MAN FOR 10000", t(1), t(25));
-
+		g.fillText("PUSH START BUTTON", t(6), t(16));
+		g.fillText("1 PLAYER ONLY", t(8), t(18));
+		g.fillText("ADDITIONAL    AT 10000", t(2), t(25));
+		Spritesheet_MsPacMan ssmp = (Spritesheet_MsPacMan) $.r2D;
+		$.r2D.drawSprite(g, ssmp.rhs(1, 0), t(13), t(23) + 2.0);
 		g.setFont(Font.font($.r2D.getArcadeFont().getName(), 6));
 		g.fillText("PTS", t(25), t(25));
-
 		$.r2D.drawCopyright(g, 29);
 	}
 }

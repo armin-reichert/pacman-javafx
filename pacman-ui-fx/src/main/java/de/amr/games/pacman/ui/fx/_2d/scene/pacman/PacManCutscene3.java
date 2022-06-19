@@ -42,7 +42,7 @@ import javafx.scene.paint.Color;
 /**
  * @author Armin Reichert
  */
-public class PacMan_Cutscene3 extends GameScene2D {
+public class PacManCutscene3 extends GameScene2D {
 
 	private int initialDelay;
 	private int frame;
