@@ -254,7 +254,7 @@ public class PlayScene3D extends GameScene3D {
 			var killer = $.game.ghosts().filter(ghost -> ghost.sameTile($.game.pac)).findAny().get();
 			var killerColor = $.r2D.getGhostColor(killer.id);
 			new SequentialTransition( //
-					player3D.dyingAnimation(killerColor, $.game.credit == 0), //
+					player3D.dyingAnimation(killerColor), //
 					U.pauseSec(2.0, () -> unblockGameController()) //
 			).play();
 		}

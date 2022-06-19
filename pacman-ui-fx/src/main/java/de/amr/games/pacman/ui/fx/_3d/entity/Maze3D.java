@@ -63,14 +63,14 @@ public class Maze3D extends Group {
 	public final DoubleProperty $wallHeight = new SimpleDoubleProperty(2.0);
 	public final IntegerProperty $resolution = new SimpleIntegerProperty(8);
 
+	private static final double ENERGIZER_RADIUS = 3.0;
+	private static final double PELLET_RADIUS = 1.0;
+
 	private final Group wallsGroup = new Group();
 	private final Group doorsGroup = new Group();
 	private final Group foodGroup = new Group();
 
 	private MazeFloor3D floor;
-
-	private final double energizerRadius = 3.0;
-	private final double pelletRadius = 1.0;
 
 	/**
 	 * Creates the 3D-maze base structure (without walls, doors, food).
@@ -86,19 +86,18 @@ public class Maze3D extends Group {
 		floor.showSolid(Color.rgb(5, 5, 10));
 		floor.getTransforms().add(new Translate(0.5 * floor.getWidth(), 0.5 * floor.getHeight(), 0.5 * floor.getDepth()));
 		build(gameVariant, world, mazeNumber, foodColor);
-		Env.$useMazeFloorTexture.addListener((obs, old_val, new_val) -> {
-			if (new_val.booleanValue()) {
+		Env.$useMazeFloorTexture.addListener((obs, oldVal, newVal) -> {
+			if (newVal.booleanValue()) {
 				floor.showTextured(U.image("/common/escher-texture.jpg"), Color.DARKBLUE);
 			} else {
 				floor.showSolid(Color.rgb(5, 5, 10));
 			}
 		});
-		$resolution.addListener((obs, old_val, new_val) -> {
-			createWallsAndDoors(world, //
-					Rendering3D.getMazeSideColor(gameVariant, mazeNumber), //
-					Rendering3D.getMazeTopColor(gameVariant, mazeNumber), //
-					Rendering3D.getGhostHouseDoorColor(gameVariant, mazeNumber));
-		});
+		$resolution.addListener((obs, oldVal, newVal) -> createWallsAndDoors(world, //
+				Rendering3D.getMazeSideColor(gameVariant, mazeNumber), //
+				Rendering3D.getMazeTopColor(gameVariant, mazeNumber), //
+				Rendering3D.getGhostHouseDoorColor(gameVariant, mazeNumber))//
+		);
 		getChildren().addAll(floor, wallsGroup, doorsGroup, foodGroup);
 	}
 
@@ -149,8 +148,8 @@ public class Maze3D extends Group {
 
 	public void hideFood(Node foodNode) {
 		foodNode.setVisible(false);
-		if (Energizer3D.class.isInstance(foodNode)) {
-			Energizer3D energizer = (Energizer3D) foodNode;
+		if (foodNode instanceof Energizer3D) {
+			var energizer = (Energizer3D) foodNode;
 			energizer.animation.stop();
 		}
 	}
@@ -169,7 +168,7 @@ public class Maze3D extends Group {
 		var floorPlan = new FloorPlan($resolution.get(), world);
 		var brickSize = TS / $resolution.get();
 		wallsGroup.getChildren().clear();
-		addWalls(floorPlan, world, brickSize, baseMaterial, topMaterial);
+		addWalls(floorPlan, brickSize, baseMaterial, topMaterial);
 		var leftDoor = new Door3D(world.ghostHouse().doorTileLeft(), true, doorColor);
 		var rightDoor = new Door3D(world.ghostHouse().doorTileRight(), false, doorColor);
 		doorsGroup.getChildren().setAll(leftDoor, rightDoor);
@@ -188,8 +187,8 @@ public class Maze3D extends Group {
 		world.tiles() //
 				.filter(world::isFoodTile) //
 				.map(tile -> world.isEnergizerTile(tile) //
-						? new Energizer3D(tile, material, energizerRadius)
-						: new Pellet3D(tile, material, pelletRadius))
+						? new Energizer3D(tile, material, ENERGIZER_RADIUS)
+						: new Pellet3D(tile, material, PELLET_RADIUS))
 				.forEach(foodGroup.getChildren()::add);
 	}
 
@@ -235,8 +234,7 @@ public class Maze3D extends Group {
 		wallsGroup.getChildren().add(wall);
 	}
 
-	private void addWalls(FloorPlan floorPlan, World world, double brickSize, PhongMaterial baseMaterial,
-			PhongMaterial topMaterial) {
+	private void addWalls(FloorPlan floorPlan, double brickSize, PhongMaterial baseMaterial, PhongMaterial topMaterial) {
 
 		// horizontal
 		for (int y = 0; y < floorPlan.sizeY(); ++y) {

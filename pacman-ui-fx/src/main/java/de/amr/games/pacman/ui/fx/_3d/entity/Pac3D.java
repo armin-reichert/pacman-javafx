@@ -87,7 +87,7 @@ public class Pac3D extends Group {
 		setVisible(pac.visible && insideWorld);
 	}
 
-	public Animation dyingAnimation(Color ghostColor, boolean silent) {
+	public Animation dyingAnimation(Color ghostColor) {
 		var spin = new RotateTransition(Duration.seconds(0.2), bodyParts);
 		spin.setAxis(Rotate.Z_AXIS);
 		spin.setByAngle(360);

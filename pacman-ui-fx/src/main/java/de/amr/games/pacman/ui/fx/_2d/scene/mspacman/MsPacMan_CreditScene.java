@@ -55,6 +55,7 @@ public class MsPacMan_CreditScene extends GameScene2D {
 
 	@Override
 	protected void doUpdate() {
+		// nothing to update
 	}
 
 	@Override
@@ -69,8 +70,8 @@ public class MsPacMan_CreditScene extends GameScene2D {
 		g.fillText("PUSH START BUTTON", t(6), t(16));
 		g.fillText("1 PLAYER ONLY", t(8), t(18));
 		g.fillText("ADDITIONAL    AT 10000", t(2), t(25));
-		Spritesheet_MsPacMan r2DMs = (Spritesheet_MsPacMan) $.r2D;
-		$.r2D.drawSprite(g, r2DMs.rhs(1, 0), t(13), t(23) + 2);
+		Spritesheet_MsPacMan ssmp = (Spritesheet_MsPacMan) $.r2D;
+		$.r2D.drawSprite(g, ssmp.rhs(1, 0), t(13), t(23) + 2.0);
 		g.setFont(Font.font($.r2D.getArcadeFont().getName(), 6));
 		g.fillText("PTS", t(25), t(25));
 		$.r2D.drawCopyright(g, 29);

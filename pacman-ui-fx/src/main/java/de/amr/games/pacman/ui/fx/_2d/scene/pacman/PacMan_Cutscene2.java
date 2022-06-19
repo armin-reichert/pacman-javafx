@@ -127,9 +127,8 @@ public class PacMan_Cutscene2 extends GameScene2D {
 				g.fillText("Frame %d".formatted(frame), t(3), t(3));
 			}
 		}
-		blinky.animation("stretched").ifPresent(stretched -> {
-			$.r2D.drawSprite(g, (Rectangle2D) stretched.frame(), t(14), t(19) + 3);
-		});
+		blinky.animation("stretched")
+				.ifPresent(stretched -> $.r2D.drawSprite(g, (Rectangle2D) stretched.frame(), t(14), t(19) + 3.0));
 		$.r2D.drawGhost(g, blinky);
 		$.r2D.drawPac(g, pac);
 	}
