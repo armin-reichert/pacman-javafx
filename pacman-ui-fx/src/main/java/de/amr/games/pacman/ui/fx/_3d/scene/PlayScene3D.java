@@ -96,7 +96,7 @@ public class PlayScene3D extends GameScene3D {
 		levelCounter3D = new LevelCounter3D(unscaledSize.x - TS, TS, $.r2D);
 		levelCounter3D.update($.game);
 
-		maze3D = new Maze3D($.game.variant, $.game.level.world, $.game.level.mazeNumber, unscaledSize.x, unscaledSize.y);
+		maze3D = new Maze3D($.game.variant, $.game.level.world, $.game.level.mazeNumber, unscaledSize);
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
 		buildMazeContent($.game.level.mazeNumber);

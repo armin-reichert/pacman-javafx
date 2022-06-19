@@ -29,6 +29,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
@@ -74,14 +75,13 @@ public class Maze3D extends Group {
 	/**
 	 * Creates the 3D-maze base structure (without walls, doors, food).
 	 * 
-	 * @param gameVariant the game variant
-	 * @param world       the world
-	 * @param mazeNumber  the maze number (1..6)
-	 * @param mazeWidth   maze width in units
-	 * @param mazeHeight  maze height in units
+	 * @param gameVariant  the game variant
+	 * @param world        the world
+	 * @param mazeNumber   the maze number (1..6)
+	 * @param unscaledSize unscaled size
 	 */
-	public Maze3D(GameVariant gameVariant, World world, int mazeNumber, double mazeWidth, double mazeHeight) {
-		floor = new MazeFloor3D(mazeWidth - 1, mazeHeight - 1, 0.01);
+	public Maze3D(GameVariant gameVariant, World world, int mazeNumber, V2d unscaledSize) {
+		floor = new MazeFloor3D(unscaledSize.x - 1, unscaledSize.y - 1, 0.01);
 		floor.showSolid(Color.rgb(5, 5, 10));
 		floor.getTransforms().add(new Translate(0.5 * floor.getWidth(), 0.5 * floor.getHeight(), 0.5 * floor.getDepth()));
 		Env.$useMazeFloorTexture.addListener((obs, old_val, new_val) -> {
