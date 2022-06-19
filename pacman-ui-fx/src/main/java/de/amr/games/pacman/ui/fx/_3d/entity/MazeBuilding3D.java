@@ -63,6 +63,8 @@ public class MazeBuilding3D {
 	public final IntegerProperty resolution = new SimpleIntegerProperty(8);
 	public final BooleanProperty floorHasTexture = new SimpleBooleanProperty(false);
 
+	private final World world;
+	private final FloorPlan floorPlan;
 	private final Group root = new Group();
 	private final Group wallsGroup = new Group();
 	private final Group doorsGroup = new Group();
@@ -71,7 +73,9 @@ public class MazeBuilding3D {
 	private Color floorTextureColor = Color.BLUE;
 	private Color floorSolidColor = Color.GREEN;
 
-	public MazeBuilding3D(V2d unscaledSize) {
+	public MazeBuilding3D(V2d unscaledSize, World world) {
+		this.world = world;
+		floorPlan = new FloorPlan(resolution.get(), world);
 		var floor = new MazeFloor3D(unscaledSize.x - 1, unscaledSize.y - 1, 0.01);
 		floor.showSolid(Color.rgb(5, 5, 10));
 		floor.setTranslateX(0.5 * floor.getWidth());
@@ -108,9 +112,9 @@ public class MazeBuilding3D {
 		return doorsGroup.getChildren().stream().map(Node::getUserData).map(Door3D.class::cast);
 	}
 
-	public void erect(World world, Color wallBaseColor, Color wallTopColor, Color doorColor) {
-		createWallsAndDoors(world, wallBaseColor, wallTopColor, doorColor);
-		resolution.addListener((obs, oldVal, newVal) -> createWallsAndDoors(world, wallBaseColor, wallTopColor, doorColor));
+	public void erect(Color wallBaseColor, Color wallTopColor, Color doorColor) {
+		createWallsAndDoors(wallBaseColor, wallTopColor, doorColor);
+		resolution.addListener((obs, oldVal, newVal) -> createWallsAndDoors(wallBaseColor, wallTopColor, doorColor));
 	}
 
 	/**
@@ -121,13 +125,13 @@ public class MazeBuilding3D {
 	 * @param wallTopColor  color of wall at top
 	 * @param doorColor     door color
 	 */
-	private void createWallsAndDoors(World world, Color wallBaseColor, Color wallTopColor, Color doorColor) {
-		var floorPlan = new FloorPlan(resolution.get(), world);
+	private void createWallsAndDoors(Color wallBaseColor, Color wallTopColor, Color doorColor) {
 		WallProperties wp = new WallProperties();
 		wp.baseMaterial = new PhongMaterial(wallBaseColor);
 		wp.baseMaterial.setSpecularColor(wallBaseColor.brighter());
 		wp.topMaterial = new PhongMaterial(wallTopColor);
 		wp.brickSize = TS / resolution.get();
+
 		wallsGroup.getChildren().clear();
 		addHorizontalWalls(floorPlan, wallsGroup, wp);
 		addVerticalWalls(floorPlan, wallsGroup, wp);
