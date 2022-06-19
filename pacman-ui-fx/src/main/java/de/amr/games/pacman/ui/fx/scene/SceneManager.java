@@ -34,12 +34,12 @@ import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacManCreditScene;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacManIntermissionScene1;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacManIntermissionScene2;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacManIntermissionScene3;
-import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacMan_IntroScene;
+import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacManIntroScene;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCreditScene;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene1;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene2;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene3;
-import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacMan_IntroScene;
+import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManIntroScene;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 
 /**
@@ -55,7 +55,7 @@ public class SceneManager {
 
 	private static final GameScene[][] SCENES_PACMAN = {
 			//@formatter:off
-			{ new PacMan_IntroScene(),         null },
+			{ new PacManIntroScene(),         null },
 			{ new PacManCreditScene(),        null },
 			{ new PacManCutscene1(),          null },
 			{ new PacManCutscene2(),          null },
@@ -66,7 +66,7 @@ public class SceneManager {
 
 	private static final GameScene[][] SCENES_MS_PACMAN = {
 			//@formatter:off
-			{ new MsPacMan_IntroScene(),         null },
+			{ new MsPacManIntroScene(),         null },
 			{ new MsPacManCreditScene(),        null },
 			{ new MsPacManIntermissionScene1(), null },
 			{ new MsPacManIntermissionScene2(), null },

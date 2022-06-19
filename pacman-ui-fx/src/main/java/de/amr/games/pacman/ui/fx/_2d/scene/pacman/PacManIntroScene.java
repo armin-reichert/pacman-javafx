@@ -50,7 +50,7 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public class PacMan_IntroScene extends GameScene2D {
+public class PacManIntroScene extends GameScene2D {
 
 	private IntroController sceneController;
 	private IntroController.Context icc;
@@ -165,19 +165,19 @@ public class PacMan_IntroScene extends GameScene2D {
 	}
 
 	private void drawBlinkingEnergizer(GraphicsContext g) {
-		if (icc.blinking.frame()) {
+		if (Boolean.TRUE.equals(icc.blinking.frame())) {
 			g.setFill($.r2D.getFoodColor(1));
 			g.fillOval(t(icc.left), t(20), TS, TS);
 		}
 	}
 
-	private void drawGuys(GraphicsContext g, int offset_x) {
-		if (offset_x == 0) {
+	private void drawGuys(GraphicsContext g, int offsetX) {
+		if (offsetX == 0) {
 			$.r2D.drawGhosts(g, icc.ghosts);
 		} else {
 			$.r2D.drawGhost(g, icc.ghosts[0]);
 			g.save();
-			g.translate(offset_x, 0);
+			g.translate(offsetX, 0);
 			$.r2D.drawGhost(g, icc.ghosts[1]);
 			$.r2D.drawGhost(g, icc.ghosts[2]);
 			g.restore();
@@ -190,8 +190,8 @@ public class PacMan_IntroScene extends GameScene2D {
 		int tileX = icc.left + 6;
 		int tileY = 25;
 		g.setFill($.r2D.getFoodColor(1));
-		g.fillRect(t(tileX) + 4, t(tileY - 1) + 4, 2, 2);
-		if (icc.blinking.frame()) {
+		g.fillRect(t(tileX) + 4.0, t(tileY - 1) + 4.0, 2, 2);
+		if (Boolean.TRUE.equals(icc.blinking.frame())) {
 			g.fillOval(t(tileX), t(tileY + 1), TS, TS);
 		}
 		g.setFill(Color.WHITE);

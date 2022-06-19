@@ -48,7 +48,7 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class MsPacMan_IntroScene extends GameScene2D {
+public class MsPacManIntroScene extends GameScene2D {
 
 	private IntroController sceneController;
 	private Context icc;
