@@ -79,11 +79,13 @@ public class Maze3D extends Group {
 	 * @param world        the world
 	 * @param mazeNumber   the maze number (1..6)
 	 * @param unscaledSize unscaled size
+	 * @param foodColor    food color in this maze
 	 */
-	public Maze3D(GameVariant gameVariant, World world, int mazeNumber, V2d unscaledSize) {
+	public Maze3D(GameVariant gameVariant, World world, int mazeNumber, V2d unscaledSize, Color foodColor) {
 		floor = new MazeFloor3D(unscaledSize.x - 1, unscaledSize.y - 1, 0.01);
 		floor.showSolid(Color.rgb(5, 5, 10));
 		floor.getTransforms().add(new Translate(0.5 * floor.getWidth(), 0.5 * floor.getHeight(), 0.5 * floor.getDepth()));
+		build(gameVariant, world, mazeNumber, foodColor);
 		Env.$useMazeFloorTexture.addListener((obs, old_val, new_val) -> {
 			if (new_val.booleanValue()) {
 				floor.showTextured(U.image("/common/escher-texture.jpg"), Color.DARKBLUE);
@@ -98,6 +100,14 @@ public class Maze3D extends Group {
 					Rendering3D.getGhostHouseDoorColor(gameVariant, mazeNumber));
 		});
 		getChildren().addAll(floor, wallsGroup, doorsGroup, foodGroup);
+	}
+
+	public void build(GameVariant gameVariant, World world, int mazeNumber, Color foodColor) {
+		createWallsAndDoors(world, //
+				Rendering3D.getMazeSideColor(gameVariant, mazeNumber), //
+				Rendering3D.getMazeTopColor(gameVariant, mazeNumber), //
+				Rendering3D.getGhostHouseDoorColor(gameVariant, mazeNumber));
+		createFood(world, foodColor);
 	}
 
 	public void reset() {

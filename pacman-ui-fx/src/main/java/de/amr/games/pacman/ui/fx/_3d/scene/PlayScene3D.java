@@ -36,7 +36,6 @@ import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D.AnimationMode;
@@ -96,10 +95,10 @@ public class PlayScene3D extends GameScene3D {
 		levelCounter3D = new LevelCounter3D(unscaledSize.x - TS, TS, $.r2D);
 		levelCounter3D.update($.game);
 
-		maze3D = new Maze3D($.game.variant, $.game.level.world, $.game.level.mazeNumber, unscaledSize);
+		maze3D = new Maze3D($.game.variant, $.game.level.world, $.game.level.mazeNumber, unscaledSize,
+				$.r2D.getFoodColor($.game.level.mazeNumber));
 		maze3D.$wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.$resolution.bind(Env.$mazeResolution);
-		buildMazeContent($.game.level.mazeNumber);
 
 		player3D = new Pac3D($.game.pac, $.model3D);
 		ghosts3D = $.game.ghosts().map(ghost -> new Ghost3D(ghost, $.model3D, $.r2D)).toArray(Ghost3D[]::new);
@@ -110,14 +109,6 @@ public class PlayScene3D extends GameScene3D {
 		sceneContent.getChildren().addAll(ghosts3D);
 
 		setPerspective(Env.$perspective.get());
-	}
-
-	private void buildMazeContent(int mazeNumber) {
-		maze3D.createWallsAndDoors($.game.level.world, //
-				Rendering3D.getMazeSideColor($.game.variant, mazeNumber), //
-				Rendering3D.getMazeTopColor($.game.variant, mazeNumber), //
-				Rendering3D.getGhostHouseDoorColor($.game.variant, mazeNumber));
-		maze3D.createFood($.game.level.world, $.r2D.getFoodColor(mazeNumber));
 	}
 
 	private void createPerspectives() {
@@ -269,7 +260,8 @@ public class PlayScene3D extends GameScene3D {
 		}
 		case LEVEL_STARTING -> {
 			blockGameController();
-			buildMazeContent($.game.level.mazeNumber);
+			maze3D.build($.game.variant, $.game.level.world, $.game.level.mazeNumber,
+					$.r2D.getFoodColor($.game.level.mazeNumber));
 			levelCounter3D.update($.game);
 			Actions.showFlashMessage(Env.message("level_starting", $.game.level.number));
 			U.pauseSec(3, () -> unblockGameController()).play();
