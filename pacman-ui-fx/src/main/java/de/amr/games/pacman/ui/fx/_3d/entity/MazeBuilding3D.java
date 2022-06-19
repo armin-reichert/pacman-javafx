@@ -33,7 +33,6 @@ import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.util.U;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -41,6 +40,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Group;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -67,15 +67,19 @@ public class MazeBuilding3D {
 	private final Group wallsGroup = new Group();
 	private final Group doorsGroup = new Group();
 
+	private Image floorTexture;
+	private Color floorTextureColor = Color.BLUE;
+	private Color floorSolidColor = Color.GREEN;
+
 	public MazeBuilding3D(V2d unscaledSize) {
 		var floor = new MazeFloor3D(unscaledSize.x - 1, unscaledSize.y - 1, 0.01);
 		floor.showSolid(Color.rgb(5, 5, 10));
 		floor.getTransforms().add(new Translate(0.5 * floor.getWidth(), 0.5 * floor.getHeight(), 0.5 * floor.getDepth()));
 		floorHasTexture.addListener((obs, oldVal, newVal) -> {
 			if (newVal.booleanValue()) {
-				floor.showTextured(U.image("/common/escher-texture.jpg"), Color.DARKBLUE);
+				floor.showTextured(floorTexture, floorTextureColor);
 			} else {
-				floor.showSolid(Color.rgb(5, 5, 10));
+				floor.showSolid(floorSolidColor);
 			}
 		});
 
@@ -85,6 +89,18 @@ public class MazeBuilding3D {
 
 	public Group getRoot() {
 		return root;
+	}
+
+	public void setFloorSolidColor(Color floorSolidColor) {
+		this.floorSolidColor = floorSolidColor;
+	}
+
+	public void setFloorTexture(Image floorTexture) {
+		this.floorTexture = floorTexture;
+	}
+
+	public void setFloorTextureColor(Color floorTextureColor) {
+		this.floorTextureColor = floorTextureColor;
 	}
 
 	public Stream<Door3D> doors() {

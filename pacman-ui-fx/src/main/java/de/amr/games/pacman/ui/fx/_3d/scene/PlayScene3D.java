@@ -112,6 +112,11 @@ public class PlayScene3D extends GameScene3D {
 	public void createMaze3D() {
 		maze3D = new Maze3D($.game.variant, $.game.level.world, $.game.level.mazeNumber, unscaledSize,
 				$.r2D.getFoodColor($.game.level.mazeNumber));
+
+		maze3D.mazeBuilding.setFloorSolidColor(Color.rgb(5, 5, 10));
+		maze3D.mazeBuilding.setFloorTexture(U.image("/common/escher-texture.jpg"));
+		maze3D.mazeBuilding.setFloorTextureColor(Color.rgb(51, 0, 102));
+
 		maze3D.mazeBuilding.wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.mazeBuilding.resolution.bind(Env.$mazeResolution);
 		maze3D.mazeBuilding.floorHasTexture.bind(Env.$mazeFloorHasTexture);

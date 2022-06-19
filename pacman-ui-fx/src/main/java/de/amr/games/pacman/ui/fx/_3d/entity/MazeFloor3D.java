@@ -51,8 +51,10 @@ public class MazeFloor3D extends Box {
 	}
 
 	public void showTextured(Image texture, Color textureBackground) {
-		material.setDiffuseColor(textureBackground);
-		material.setSpecularColor(textureBackground.brighter());
-		material.setDiffuseMap(texture);
+		if (texture != null) {
+			material.setDiffuseColor(textureBackground);
+			material.setSpecularColor(textureBackground.brighter());
+			material.setDiffuseMap(texture);
+		}
 	}
 }
