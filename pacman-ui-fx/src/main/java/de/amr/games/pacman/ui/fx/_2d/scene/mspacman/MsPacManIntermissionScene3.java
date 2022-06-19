@@ -46,7 +46,7 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 
 	private Intermission3Controller sceneController;
 	private Intermission3Controller.Context icc;
-	private SingleSpriteAnimation<Rectangle2D> storkAnimation;
+	private SingleSpriteAnimation<Rectangle2D> storkAnim;
 
 	@Override
 	public void setSceneContext(SceneContext sceneContext) {
@@ -61,10 +61,11 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 		icc.flap.animation = SpritesheetMsPacMan.get().createFlapAnimation();
 		icc.msPacMan.setAnimations(new PacAnimations($.r2D));
 		icc.pacMan.setAnimations(new PacAnimations($.r2D));
-		icc.pacMan.animations().get().put("munching", SpritesheetMsPacMan.get().createPacManMunchingAnimationMap());
+		var munchingAnimMap = SpritesheetMsPacMan.get().createPacManMunchingAnimationMap();
+		icc.pacMan.animations().ifPresent(anims -> anims.put(PacAnimations.MUNCHING, munchingAnimMap));
 		icc.flap.animation = SpritesheetMsPacMan.get().createFlapAnimation();
-		storkAnimation = SpritesheetMsPacMan.get().createStorkFlyingAnimation();
-		storkAnimation.ensureRunning();
+		storkAnim = SpritesheetMsPacMan.get().createStorkFlyingAnimation();
+		storkAnim.ensureRunning();
 	}
 
 	@Override
@@ -78,7 +79,7 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 		ssmp.drawFlap(g, icc.flap);
 		$.r2D.drawPac(g, icc.msPacMan);
 		$.r2D.drawPac(g, icc.pacMan);
-		$.r2D.drawEntity(g, icc.stork, storkAnimation.animate());
+		$.r2D.drawEntity(g, icc.stork, storkAnim.animate());
 		$.r2D.drawEntity(g, icc.bag, icc.bagOpen ? ssmp.getJunior() : ssmp.getBlueBag());
 		$.r2D.drawLevelCounter(g, $.game.levelCounter);
 	}
