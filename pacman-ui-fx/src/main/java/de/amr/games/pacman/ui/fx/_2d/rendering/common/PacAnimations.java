@@ -36,24 +36,26 @@ import javafx.geometry.Rectangle2D;
  */
 public class PacAnimations extends SpriteAnimations<Pac> {
 
+	public static final String DYING = "dying";
+	public static final String MUNCHING = "munching";
+
 	public PacAnimations(Rendering2D r2D) {
 		animationsByName = new HashMap<>(2);
-		put("dying", r2D.createPacDyingAnimation());
-		put("munching", r2D.createPacMunchingAnimationMap());
-		select("munching");
+		put(DYING, r2D.createPacDyingAnimation());
+		put(MUNCHING, r2D.createPacMunchingAnimationMap());
+		select(MUNCHING);
 	}
 
 	@Override
 	public void ensureRunning() {
-		byName("munching").ensureRunning();
+		byName(MUNCHING).ensureRunning();
 	}
 
 	@Override
 	public Rectangle2D current(Pac pac) {
 		return switch (selected) {
-		case "munching" -> super.<Direction, Rectangle2D>castToMap("munching").get(pac.moveDir()).animate();
+		case MUNCHING -> super.<Direction, Rectangle2D>castToMap(MUNCHING).get(pac.moveDir()).animate();
 		default -> (Rectangle2D) selectedAnimation().animate();
 		};
 	}
-
 }

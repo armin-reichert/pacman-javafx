@@ -36,21 +36,27 @@ import javafx.geometry.Rectangle2D;
  */
 public class GhostAnimations extends SpriteAnimations<Ghost> {
 
+	public static final String BLUE = "blue";
+	public static final String COLOR = "color";
+	public static final String EYES = "eyes";
+	public static final String FLASHING = "flashing";
+	public static final String VALUE = "value";
+
 	public GhostAnimations(int ghostID, Rendering2D r2D) {
 		animationsByName = new HashMap<>();
-		animationsByName.put("eyes", r2D.createGhostEyesAnimationMap());
-		animationsByName.put("flashing", r2D.createGhostFlashingAnimation());
-		animationsByName.put("blue", r2D.createGhostBlueAnimation());
-		animationsByName.put("color", r2D.createGhostColorAnimationMap(ghostID));
-		animationsByName.put("value", r2D.createGhostValueList());
-		select("color");
+		animationsByName.put(BLUE, r2D.createGhostBlueAnimation());
+		animationsByName.put(EYES, r2D.createGhostEyesAnimationMap());
+		animationsByName.put(FLASHING, r2D.createGhostFlashingAnimation());
+		animationsByName.put(COLOR, r2D.createGhostColorAnimationMap(ghostID));
+		animationsByName.put(VALUE, r2D.createGhostValueList());
+		select(COLOR);
 	}
 
 	@Override
 	public Rectangle2D current(Ghost ghost) {
 		return (Rectangle2D) switch (selected) {
-		case "eyes" -> toMap("eyes").get(ghost.wishDir()).animate();
-		case "color" -> toMap("color").get(ghost.wishDir()).animate();
+		case EYES -> toMap(EYES).get(ghost.wishDir()).animate();
+		case COLOR -> toMap(COLOR).get(ghost.wishDir()).animate();
 		default -> selectedAnimation().animate();
 		};
 	}

@@ -48,7 +48,8 @@ public class CamTotal extends GameSceneCamera {
 	@Override
 	public void onKeyPressed(KeyEvent e) {
 		KeyCode key = e.getCode();
-		boolean control = e.isControlDown(), shift = e.isShiftDown();
+		boolean control = e.isControlDown();
+		boolean shift = e.isShiftDown();
 		if (!control && shift) {
 			switch (key) {
 			case LEFT -> change(translateXProperty(), -10);
@@ -57,7 +58,7 @@ public class CamTotal extends GameSceneCamera {
 			case PLUS -> change(translateYProperty(), +10);
 			case UP -> change(translateZProperty(), -10);
 			case DOWN -> change(translateZProperty(), 10);
-			default -> {
+			default -> { // ignore
 			}
 			}
 		} else if (control && shift) {
@@ -70,7 +71,7 @@ public class CamTotal extends GameSceneCamera {
 				setRotationAxis(Rotate.X_AXIS);
 				setRotate((getRotate() + 1 + 360) % 360);
 			}
-			default -> {
+			default -> { // ignore
 			}
 			}
 		}
