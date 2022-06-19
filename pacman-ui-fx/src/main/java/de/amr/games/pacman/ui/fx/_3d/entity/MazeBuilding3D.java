@@ -64,7 +64,6 @@ public class MazeBuilding3D {
 	public final BooleanProperty floorHasTexture = new SimpleBooleanProperty(false);
 
 	private final World world;
-	private final FloorPlan floorPlan;
 	private final Group root = new Group();
 	private final Group wallsGroup = new Group();
 	private final Group doorsGroup = new Group();
@@ -75,7 +74,6 @@ public class MazeBuilding3D {
 
 	public MazeBuilding3D(V2d unscaledSize, World world) {
 		this.world = world;
-		floorPlan = new FloorPlan(resolution.get(), world);
 		var floor = new MazeFloor3D(unscaledSize.x - 1, unscaledSize.y - 1, 0.01);
 		floor.showSolid(Color.rgb(5, 5, 10));
 		floor.setTranslateX(0.5 * floor.getWidth());
@@ -132,6 +130,7 @@ public class MazeBuilding3D {
 		wp.topMaterial = new PhongMaterial(wallTopColor);
 		wp.brickSize = TS / resolution.get();
 
+		var floorPlan = new FloorPlan(resolution.get(), world);
 		wallsGroup.getChildren().clear();
 		addHorizontalWalls(floorPlan, wallsGroup, wp);
 		addVerticalWalls(floorPlan, wallsGroup, wp);
