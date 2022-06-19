@@ -49,9 +49,6 @@ import javafx.scene.text.Font;
 /**
  * Section for displaying UI info or editors for configuring the UI.
  * 
- * <p>
- * TODO: use style sheet
- * 
  * @author Armin Reichert
  */
 public class Section extends TitledPane {

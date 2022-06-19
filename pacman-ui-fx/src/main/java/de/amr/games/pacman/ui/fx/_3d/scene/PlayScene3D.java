@@ -251,7 +251,7 @@ public class PlayScene3D extends GameScene3D {
 			$.game.ghosts().filter(ghost -> ghost.sameTile($.game.pac)).findAny().ifPresent(killer -> {
 				new SequentialTransition( //
 						player3D.dyingAnimation($.r2D.getGhostColor(killer.id)), //
-						U.pauseSec(2.0, () -> unblockGameController()) //
+						U.pauseSec(2.0, this::unblockGameController) //
 				).play();
 			});
 		}
@@ -261,7 +261,7 @@ public class PlayScene3D extends GameScene3D {
 					$.r2D.getFoodColor($.game.level.mazeNumber));
 			levelCounter3D.update($.game);
 			Actions.showFlashMessage(Talk.message("level_starting", $.game.level.number));
-			U.pauseSec(3, () -> unblockGameController()).play();
+			U.pauseSec(3, this::unblockGameController).play();
 		}
 		case LEVEL_COMPLETE -> {
 			blockGameController();
@@ -270,9 +270,9 @@ public class PlayScene3D extends GameScene3D {
 			new SequentialTransition( //
 					U.pauseSec(2.0), //
 					maze3D.createMazeFlashingAnimation($.game.level.numFlashes), //
-					U.pauseSec(1.0, () -> $.game.pac.hide()), //
+					U.pauseSec(1.0, $.game.pac::hide), //
 					U.pauseSec(0.5, () -> Actions.showFlashMessage(2, message)), //
-					U.pauseSec(2.0, () -> unblockGameController()) //
+					U.pauseSec(2.0, this::unblockGameController) //
 			).play();
 		}
 		case GAME_OVER -> {

@@ -17,7 +17,6 @@ import javafx.util.Duration;
 public class Motion {
 
 	//@formatter:off
-	//TODO there must be a more elegant way to do this
 	private static final int[][][] TURN_ANGLES = {
 		{ {  0, 0}, {  0, 180}, {  0, 90}, {  0, -90} }, // LEFT
 		{ {180, 0}, {180, 180}, {180, 90}, {180, 270} }, // RIGHT
