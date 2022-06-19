@@ -33,7 +33,7 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
-import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.SpritesheetPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.geometry.Rectangle2D;
@@ -66,8 +66,8 @@ public class PacManCutscene2 extends GameScene2D {
 
 		blinky = new Ghost(Ghost.RED_GHOST, "Blinky");
 		blinky.setAnimations(new GhostAnimations(Ghost.RED_GHOST, $.r2D));
-		blinky.animations().get().put("stretched", ((Spritesheet_PacMan) $.r2D).createBlinkyStretchedAnimation());
-		blinky.animations().get().put("damaged", ((Spritesheet_PacMan) $.r2D).createBlinkyDamagedAnimation());
+		blinky.animations().get().put("stretched", ((SpritesheetPacMan) $.r2D).createBlinkyStretchedAnimation());
+		blinky.animations().get().put("damaged", ((SpritesheetPacMan) $.r2D).createBlinkyDamagedAnimation());
 		blinky.animations().get().select("color");
 		blinky.animation("color").get().restart();
 		blinky.placeAt(v(28, 20), 0, 0);

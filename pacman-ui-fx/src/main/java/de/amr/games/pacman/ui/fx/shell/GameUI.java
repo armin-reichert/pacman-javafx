@@ -31,8 +31,8 @@ import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
-import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.SpritesheetMsPacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.SpritesheetPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.model.GianmarcosModel3D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
@@ -226,8 +226,8 @@ public class GameUI implements GameEventAdapter {
 		context.gameController = gameController;
 		context.game = gameController.game();
 		context.r2D = switch (context.game.variant) {
-		case MS_PACMAN -> Spritesheet_MsPacMan.get();
-		case PACMAN -> Spritesheet_PacMan.get();
+		case MS_PACMAN -> SpritesheetMsPacMan.get();
+		case PACMAN -> SpritesheetPacMan.get();
 		};
 		context.model3D = GianmarcosModel3D.get();
 		return context;

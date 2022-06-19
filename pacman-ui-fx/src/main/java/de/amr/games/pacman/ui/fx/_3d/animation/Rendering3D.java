@@ -37,7 +37,7 @@ public class Rendering3D {
 	}
 
 	//@formatter:off
-	public static final Color[] MAZE_TOP_COLORS = { 
+	private static final Color[] MAZE_TOP_COLORS = { 
 		Color.rgb(255, 183, 174), 
 		Color.rgb(71, 183, 255), 
 		Color.rgb(222, 151, 81), 
@@ -46,7 +46,7 @@ public class Rendering3D {
 		Color.rgb(255, 183, 174), 
 	};
 
-	public static final Color[] MAZE_SIDE_COLORS = { 
+	private static final Color[] MAZE_SIDE_COLORS = { 
 		Color.rgb(255, 0, 0), 
 		Color.rgb(222, 222, 255), 
 		Color.rgb(222, 222, 255), 
@@ -55,7 +55,7 @@ public class Rendering3D {
 		Color.rgb(255, 0, 0), 
 	};
 	
-	public static final Color[] FOOD_COLORS = {
+	private static final Color[] FOOD_COLORS = {
 		Color.rgb(222, 222, 255),
 		Color.rgb(255, 255, 0),
 		Color.rgb(255, 0, 0),

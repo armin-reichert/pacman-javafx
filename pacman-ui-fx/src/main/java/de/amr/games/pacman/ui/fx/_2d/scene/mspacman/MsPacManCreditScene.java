@@ -27,7 +27,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.Spritesheet_MsPacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.SpritesheetMsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import javafx.scene.canvas.GraphicsContext;
@@ -70,7 +70,7 @@ public class MsPacManCreditScene extends GameScene2D {
 		g.fillText("PUSH START BUTTON", t(6), t(16));
 		g.fillText("1 PLAYER ONLY", t(8), t(18));
 		g.fillText("ADDITIONAL    AT 10000", t(2), t(25));
-		Spritesheet_MsPacMan ssmp = (Spritesheet_MsPacMan) $.r2D;
+		SpritesheetMsPacMan ssmp = (SpritesheetMsPacMan) $.r2D;
 		$.r2D.drawSprite(g, ssmp.rhs(1, 0), t(13), t(23) + 2.0);
 		g.setFont(Font.font($.r2D.getArcadeFont().getName(), 6));
 		g.fillText("PTS", t(25), t(25));

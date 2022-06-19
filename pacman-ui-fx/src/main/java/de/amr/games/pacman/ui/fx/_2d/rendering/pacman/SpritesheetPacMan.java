@@ -47,13 +47,13 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
+public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
 
-	private static Spritesheet_PacMan cmonManYouKnowTheThing;
+	private static SpritesheetPacMan cmonManYouKnowTheThing;
 
-	public static Spritesheet_PacMan get() {
+	public static SpritesheetPacMan get() {
 		if (cmonManYouKnowTheThing == null) {
-			cmonManYouKnowTheThing = new Spritesheet_PacMan();
+			cmonManYouKnowTheThing = new SpritesheetPacMan();
 		}
 		return cmonManYouKnowTheThing;
 	}
@@ -74,7 +74,7 @@ public class Spritesheet_PacMan extends Spritesheet implements Rendering2D {
 	private final Image mazeEmpty;
 	private final Font font;
 
-	private Spritesheet_PacMan() {
+	private SpritesheetPacMan() {
 		super("/pacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 		mazeFull = U.image("/pacman/graphics/maze_full.png");
 		mazeEmpty = U.image("/pacman/graphics/maze_empty.png");

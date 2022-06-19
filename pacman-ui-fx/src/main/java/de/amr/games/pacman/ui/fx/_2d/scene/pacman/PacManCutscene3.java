@@ -33,7 +33,7 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
-import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.SpritesheetPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.scene.canvas.GraphicsContext;
@@ -57,8 +57,8 @@ public class PacManCutscene3 extends GameScene2D {
 		pac.setAnimations(new PacAnimations($.r2D));
 		blinky = new Ghost(Ghost.RED_GHOST, "Blinky");
 		blinky.setAnimations(new GhostAnimations(Ghost.RED_GHOST, $.r2D));
-		blinky.animations().get().put("patched", Spritesheet_PacMan.get().createBlinkyPatchedAnimation());
-		blinky.animations().get().put("naked", Spritesheet_PacMan.get().createBlinkyNakedAnimation());
+		blinky.animations().get().put("patched", SpritesheetPacMan.get().createBlinkyPatchedAnimation());
+		blinky.animations().get().put("naked", SpritesheetPacMan.get().createBlinkyNakedAnimation());
 	}
 
 	@Override

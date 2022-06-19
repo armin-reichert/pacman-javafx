@@ -33,7 +33,7 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
-import de.amr.games.pacman.ui.fx._2d.rendering.pacman.Spritesheet_PacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.SpritesheetPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.scene.canvas.GraphicsContext;
@@ -56,7 +56,7 @@ public class PacManCutscene1 extends GameScene2D {
 
 		pac = new Pac("Pac-Man");
 		pac.setAnimations(new PacAnimations($.r2D));
-		pac.animations().get().put("big", ((Spritesheet_PacMan) $.r2D).createBigPacManMunchingAnimation());
+		pac.animations().get().put("big", ((SpritesheetPacMan) $.r2D).createBigPacManMunchingAnimation());
 		pac.selectAnimation("munching");
 
 		pac.placeAt(v(29, 20), 0, 0);

@@ -47,13 +47,13 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
+public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 
-	private static Spritesheet_MsPacMan cmonManYouKnowTheThing;
+	private static SpritesheetMsPacMan cmonManYouKnowTheThing;
 
-	public static Spritesheet_MsPacMan get() {
+	public static SpritesheetMsPacMan get() {
 		if (cmonManYouKnowTheThing == null) {
-			cmonManYouKnowTheThing = new Spritesheet_MsPacMan();
+			cmonManYouKnowTheThing = new SpritesheetMsPacMan();
 		}
 		return cmonManYouKnowTheThing;
 	}
@@ -100,7 +100,7 @@ public class Spritesheet_MsPacMan extends Spritesheet implements Rendering2D {
 	private final Image[] mazesEmptyBW;
 	private final Font font;
 
-	private Spritesheet_MsPacMan() {
+	private SpritesheetMsPacMan() {
 		super("/mspacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
 		font = U.font("/common/emulogic.ttf", 8);
