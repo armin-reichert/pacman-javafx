@@ -26,6 +26,8 @@ package de.amr.games.pacman.ui.fx.app;
 import static de.amr.games.pacman.lib.Logging.log;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
@@ -38,12 +40,13 @@ import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
 class Options {
 
 	/** Command-line argument names. */
-	static final List<String> NAMES = List.of( //
+	private static final List<String> PARAMETER_NAMES = List.of( //
 			"-2D", "-3D", //
 			"-zoom", // -zoom <double value>
 			"-fullscreen", //
 			"-muted", //
-			"-mspacman", "-pacman", //
+			"-mspacman", //
+			"-pacman", //
 			"-perspective" // see {@link Perspective}
 	);
 
@@ -54,72 +57,66 @@ class Options {
 	public GameVariant gameVariant = GameVariant.PACMAN;
 	public Perspective perspective = Perspective.CAM_NEAR_PLAYER;
 
+	private int i;
+
+	private <T> Optional<T> match1(List<String> args, String name, Function<String, T> fnConvert) {
+		if (name.equals(args.get(i))) {
+			if (i + 1 == args.size() || PARAMETER_NAMES.contains(args.get(i + 1))) {
+				log("!!! Error: missing value for parameter '%s'.", name);
+			} else {
+				++i;
+				try {
+					T value = fnConvert.apply(args.get(i));
+					log("Found parameter %s = %s", name, value);
+					return Optional.ofNullable(value);
+				} catch (Exception x) {
+					log("!!! Error: '%s' is no legal value for parameter '%s'.", args.get(i), name);
+				}
+			}
+		}
+		return Optional.empty();
+	}
+
+	private <T> Optional<T> match0(List<String> args, String name, Function<String, T> fnConvert) {
+		if (name.equals(args.get(i))) {
+			log("Found parameter %s", name);
+			try {
+				T value = fnConvert.apply(name);
+				return Optional.ofNullable(value);
+			} catch (Exception x) {
+				log("!!! Error: '%s' is no legal parameter.", name);
+			}
+		}
+		return Optional.empty();
+	}
+
+	private Optional<Boolean> match0(List<String> args, String name) {
+		if (name.equals(args.get(i))) {
+			log("Found parameter %s", name);
+			return Optional.of(true);
+		}
+		return Optional.empty();
+	}
+
+	private static GameVariant convertGameVariant(String s) {
+		return switch (s) {
+		case "-mspacman" -> GameVariant.MS_PACMAN;
+		case "-pacman" -> GameVariant.PACMAN;
+		default -> null;
+		};
+	}
+
 	public Options(List<String> args) {
-		int i = 0;
+		i = 0;
 		while (i < args.size()) {
-
-			// -zoom <double value>
-			if ("-zoom".equals(args.get(i))) {
-				if (i + 1 == args.size() || NAMES.contains(args.get(i + 1))) {
-					log("!!! Error parsing parameters: missing zoom value.");
-				} else {
-					++i;
-					try {
-						zoom = Double.parseDouble(args.get(i));
-					} catch (NumberFormatException x) {
-						log("!!! Error parsing parameters: '%s' is no legal zoom value.", args.get(i));
-					}
-				}
-			}
-
-			// -fullscreen
-			else if ("-fullscreen".equals(args.get(i))) {
-				fullscreen = true;
-			}
-
-			// -muted
-			else if ("-muted".equals(args.get(i))) {
-				muted = true;
-			}
-
-			// -mspacman
-			else if ("-mspacman".equals(args.get(i))) {
-				gameVariant = GameVariant.MS_PACMAN;
-			}
-
-			// -pacman
-			else if ("-pacman".equals(args.get(i))) {
-				gameVariant = GameVariant.PACMAN;
-			}
-
-			// -2D
-			else if ("-2D".equals(args.get(i))) {
-				use3D = false;
-			}
-
-			// -3D
-			else if ("-3D".equals(args.get(i))) {
-				use3D = true;
-			}
-
-			// -perspective
-			else if ("-perspective".equals(args.get(i))) {
-				if (i + 1 == args.size() || NAMES.contains(args.get(i + 1))) {
-					log("!!! Error parsing parameters: missing perspective value.");
-				} else {
-					++i;
-					try {
-						perspective = Perspective.valueOf(args.get(i).toUpperCase());
-					} catch (Exception x) {
-						log("!!! Error parsing parameters: '%s' is no legal perspective value.", args.get(i));
-					}
-				}
-			}
-
-			else {
-				log("!!! Error parsing parameters: Found garbage '%s'", args.get(i));
-			}
-
+			match1(args, "-zoom", Double::valueOf).ifPresent(value -> zoom = value);
+			match0(args, "-fullscreen").ifPresent(value -> fullscreen = value);
+			match0(args, "-muted").ifPresent(value -> muted = value);
+			match0(args, "-mspacman", Options::convertGameVariant).ifPresent(value -> gameVariant = value);
+			match0(args, "-pacman", Options::convertGameVariant).ifPresent(value -> gameVariant = value);
+			match0(args, "-2D").ifPresent(value -> use3D = false);
+			match0(args, "-3D").ifPresent(value -> use3D = true);
+			match1(args, "-perspective", Perspective::valueOf).ifPresent(value -> perspective = value);
 			++i;
 		}
 	}
