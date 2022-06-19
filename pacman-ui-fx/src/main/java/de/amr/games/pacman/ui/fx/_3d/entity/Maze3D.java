@@ -96,7 +96,7 @@ public class Maze3D extends Group {
 		$resolution.addListener((obs, oldVal, newVal) -> createWallsAndDoors(world, //
 				Rendering3D.getMazeSideColor(gameVariant, mazeNumber), //
 				Rendering3D.getMazeTopColor(gameVariant, mazeNumber), //
-				Rendering3D.getGhostHouseDoorColor(gameVariant, mazeNumber))//
+				Rendering3D.getGhostHouseDoorColor(gameVariant))//
 		);
 		getChildren().addAll(floor, wallsGroup, doorsGroup, foodGroup);
 	}
@@ -105,7 +105,7 @@ public class Maze3D extends Group {
 		createWallsAndDoors(world, //
 				Rendering3D.getMazeSideColor(gameVariant, mazeNumber), //
 				Rendering3D.getMazeTopColor(gameVariant, mazeNumber), //
-				Rendering3D.getGhostHouseDoorColor(gameVariant, mazeNumber));
+				Rendering3D.getGhostHouseDoorColor(gameVariant));
 		createFood(world, foodColor);
 	}
 
@@ -261,7 +261,6 @@ public class Maze3D extends Group {
 			}
 			if (y == floorPlan.sizeY() - 1 && leftX != -1) {
 				addWall(leftX, y, sizeX, 1, brickSize, baseMaterial, topMaterial);
-				leftX = -1;
 			}
 		}
 
@@ -290,7 +289,6 @@ public class Maze3D extends Group {
 			}
 			if (x == floorPlan.sizeX() - 1 && topY != -1) {
 				addWall(x, topY, 1, sizeY, brickSize, baseMaterial, topMaterial);
-				topY = -1;
 			}
 		}
 

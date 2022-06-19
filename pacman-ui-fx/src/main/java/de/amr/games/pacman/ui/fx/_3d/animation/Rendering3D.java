@@ -102,10 +102,9 @@ public class Rendering3D {
 
 	/**
 	 * @param gameVariant game variant
-	 * @param mazeNumber  the 1-based maze number
 	 * @return color of ghosthouse doors in this maze
 	 */
-	public static Color getGhostHouseDoorColor(GameVariant gameVariant, int mazeNumber) {
+	public static Color getGhostHouseDoorColor(GameVariant gameVariant) {
 		return switch (gameVariant) {
 		case MS_PACMAN -> Color.rgb(255, 183, 255);
 		case PACMAN -> Color.rgb(252, 181, 255);

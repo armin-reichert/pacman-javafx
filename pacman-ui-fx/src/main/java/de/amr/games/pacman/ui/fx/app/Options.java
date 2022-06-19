@@ -39,16 +39,19 @@ import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
  */
 class Options {
 
-	/** Command-line argument names. */
-	private static final List<String> PARAMETER_NAMES = List.of( //
-			"-2D", "-3D", //
-			"-zoom", // -zoom <double value>
-			"-fullscreen", //
-			"-muted", //
-			"-mspacman", //
-			"-pacman", //
-			"-perspective" // see {@link Perspective}
-	);
+	//@formatter:off
+	private static final String OPT_2D          = "-2D";
+	private static final String OPT_3D          = "-3D";
+	private static final String OPT_FULLSCREEN  = "-fullscreen";
+	private static final String OPT_MSPACMAN    = "-mspacman";
+	private static final String OPT_MUTED       = "-muted";
+	private static final String OPT_PACMAN      = "-pacman";
+	private static final String OPT_PERSPECTIVE = "-perspective";
+	private static final String OPT_ZOOM        = "-zoom";
+	//@formatter:on
+
+	private static final List<String> ALL_OPTIONS = List.of(OPT_2D, OPT_3D, OPT_FULLSCREEN, OPT_MSPACMAN, OPT_MUTED,
+			OPT_PACMAN, OPT_PERSPECTIVE, OPT_ZOOM);
 
 	public boolean use3D = true;
 	public double zoom = 2.0;
@@ -61,7 +64,7 @@ class Options {
 
 	private <T> Optional<T> match1(List<String> args, String name, Function<String, T> fnConvert) {
 		if (name.equals(args.get(i))) {
-			if (i + 1 == args.size() || PARAMETER_NAMES.contains(args.get(i + 1))) {
+			if (i + 1 == args.size() || ALL_OPTIONS.contains(args.get(i + 1))) {
 				log("!!! Error: missing value for parameter '%s'.", name);
 			} else {
 				++i;
@@ -100,8 +103,8 @@ class Options {
 
 	private static GameVariant convertGameVariant(String s) {
 		return switch (s) {
-		case "-mspacman" -> GameVariant.MS_PACMAN;
-		case "-pacman" -> GameVariant.PACMAN;
+		case OPT_MSPACMAN -> GameVariant.MS_PACMAN;
+		case OPT_PACMAN -> GameVariant.PACMAN;
 		default -> null;
 		};
 	}
@@ -109,14 +112,14 @@ class Options {
 	public Options(List<String> args) {
 		i = 0;
 		while (i < args.size()) {
-			match1(args, "-zoom", Double::valueOf).ifPresent(value -> zoom = value);
-			match0(args, "-fullscreen").ifPresent(value -> fullscreen = value);
-			match0(args, "-muted").ifPresent(value -> muted = value);
-			match0(args, "-mspacman", Options::convertGameVariant).ifPresent(value -> gameVariant = value);
-			match0(args, "-pacman", Options::convertGameVariant).ifPresent(value -> gameVariant = value);
-			match0(args, "-2D").ifPresent(value -> use3D = false);
-			match0(args, "-3D").ifPresent(value -> use3D = true);
-			match1(args, "-perspective", Perspective::valueOf).ifPresent(value -> perspective = value);
+			match0(args, OPT_2D).ifPresent(value -> use3D = false);
+			match0(args, OPT_3D).ifPresent(value -> use3D = true);
+			match0(args, OPT_FULLSCREEN).ifPresent(value -> fullscreen = value);
+			match0(args, OPT_MSPACMAN, Options::convertGameVariant).ifPresent(value -> gameVariant = value);
+			match0(args, OPT_MUTED).ifPresent(value -> muted = value);
+			match0(args, OPT_PACMAN, Options::convertGameVariant).ifPresent(value -> gameVariant = value);
+			match1(args, OPT_PERSPECTIVE, Perspective::valueOf).ifPresent(value -> perspective = value);
+			match1(args, OPT_ZOOM, Double::valueOf).ifPresent(value -> zoom = value);
 			++i;
 		}
 	}

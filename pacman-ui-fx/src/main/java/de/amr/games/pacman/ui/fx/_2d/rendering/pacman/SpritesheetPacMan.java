@@ -113,7 +113,10 @@ public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
 
 	@Override
 	public Rectangle2D getBonusValueSprite(int symbol) {
-		return symbol <= 3 ? tile(symbol, 9) : symbol == 4 ? tiles(4, 9, 2, 1) : tiles(3, symbol, 3, 1);
+		if (symbol <= 3) {
+			return tile(symbol, 9);
+		}
+		return symbol == 4 ? tiles(4, 9, 2, 1) : tiles(3, symbol, 3, 1);
 	}
 
 	@Override
