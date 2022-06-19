@@ -54,7 +54,7 @@ public class Env {
 	public static final BooleanProperty $paused = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<Perspective> $perspective = new SimpleObjectProperty<>(
 			Perspective.CAM_NEAR_PLAYER);
-	public static final BooleanProperty $useMazeFloorTexture = new SimpleBooleanProperty(false);
+	public static final BooleanProperty $mazeFloorHasTexture = new SimpleBooleanProperty(false);
 	public static final BooleanProperty $3D = new SimpleBooleanProperty(true);
 
 	public static void toggle(BooleanProperty bp) {

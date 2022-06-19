@@ -33,8 +33,11 @@ import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.util.U;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Group;
@@ -44,6 +47,8 @@ import javafx.scene.shape.Box;
 import javafx.scene.transform.Translate;
 
 /**
+ * 3D-model for a maze. Creates walls/doors using information from the floor plan.
+ * 
  * @author Armin Reichert
  */
 public class MazeBuilding3D {
@@ -56,6 +61,7 @@ public class MazeBuilding3D {
 
 	public final DoubleProperty wallHeight = new SimpleDoubleProperty(1.0);
 	public final IntegerProperty resolution = new SimpleIntegerProperty(8);
+	public final BooleanProperty floorHasTexture = new SimpleBooleanProperty(false);
 
 	private final Group root = new Group();
 	private final Group wallsGroup = new Group();
@@ -65,6 +71,14 @@ public class MazeBuilding3D {
 		var floor = new MazeFloor3D(unscaledSize.x - 1, unscaledSize.y - 1, 0.01);
 		floor.showSolid(Color.rgb(5, 5, 10));
 		floor.getTransforms().add(new Translate(0.5 * floor.getWidth(), 0.5 * floor.getHeight(), 0.5 * floor.getDepth()));
+		floorHasTexture.addListener((obs, oldVal, newVal) -> {
+			if (newVal.booleanValue()) {
+				floor.showTextured(U.image("/common/escher-texture.jpg"), Color.DARKBLUE);
+			} else {
+				floor.showSolid(Color.rgb(5, 5, 10));
+			}
+		});
+
 		root.getChildren().add(floor);
 		root.getChildren().addAll(wallsGroup, doorsGroup);
 	}

@@ -42,8 +42,6 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
 
 /**
- * 3D-model for a maze. Creates walls/doors using information from the floor plan.
- * 
  * @author Armin Reichert
  */
 public class Maze3D extends Group {
@@ -55,8 +53,6 @@ public class Maze3D extends Group {
 	public MazeBuilding3D mazeBuilding;
 
 	/**
-	 * Creates the 3D-maze base structure (without walls, doors, food).
-	 * 
 	 * @param gameVariant  the game variant
 	 * @param world        the world
 	 * @param mazeNumber   the maze number (1..6)
@@ -70,13 +66,6 @@ public class Maze3D extends Group {
 				Rendering3D.getMazeTopColor(gameVariant, mazeNumber), //
 				Rendering3D.getGhostHouseDoorColor(gameVariant));
 		createFood(world, foodColor);
-//		Env.$useMazeFloorTexture.addListener((obs, oldVal, newVal) -> {
-//			if (newVal.booleanValue()) {
-//				floor.showTextured(U.image("/common/escher-texture.jpg"), Color.DARKBLUE);
-//			} else {
-//				floor.showSolid(Color.rgb(5, 5, 10));
-//			}
-//		});
 		getChildren().addAll(mazeBuilding.getRoot(), foodGroup);
 	}
 

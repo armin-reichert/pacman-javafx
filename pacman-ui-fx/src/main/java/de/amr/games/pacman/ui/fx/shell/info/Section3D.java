@@ -61,7 +61,7 @@ public class Section3D extends Section {
 		sliderWallHeight = addSlider("Maze wall height", 0, 10, 8);
 		sliderWallHeight.valueProperty()
 				.addListener((obs, oldVal, newVal) -> Env.$mazeWallHeight.set(newVal.doubleValue()));
-		cbUseFloorTexture = addCheckBox("Maze floor texture", () -> Env.toggle(Env.$useMazeFloorTexture));
+		cbUseFloorTexture = addCheckBox("Maze floor texture", () -> Env.toggle(Env.$mazeFloorHasTexture));
 		cbAxesVisible = addCheckBox("Show axes", () -> Env.toggle(Env.$axesVisible));
 		cbWireframeMode = addCheckBox("Wireframe mode", Actions::toggleDrawMode);
 		addInfo("Shift+LEFT/RIGHT", "Camera -X / +X").available(() -> Env.$perspective.get() == Perspective.CAM_TOTAL);
@@ -80,7 +80,7 @@ public class Section3D extends Section {
 		comboResolution.setDisable(!ui.getCurrentGameScene().is3D());
 		sliderWallHeight.setValue(Env.$mazeWallHeight.get());
 		sliderWallHeight.setDisable(!ui.getCurrentGameScene().is3D());
-		cbUseFloorTexture.setSelected(Env.$useMazeFloorTexture.get());
+		cbUseFloorTexture.setSelected(Env.$mazeFloorHasTexture.get());
 		cbUseFloorTexture.setDisable(!ui.getCurrentGameScene().is3D());
 		cbAxesVisible.setSelected(Env.$axesVisible.get());
 		cbAxesVisible.setDisable(!ui.getCurrentGameScene().is3D());

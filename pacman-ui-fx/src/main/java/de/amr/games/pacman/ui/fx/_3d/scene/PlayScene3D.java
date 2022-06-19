@@ -96,11 +96,7 @@ public class PlayScene3D extends GameScene3D {
 		levelCounter3D = new LevelCounter3D(unscaledSize.x - TS, TS, $.r2D);
 		levelCounter3D.update($.game);
 
-		maze3D = new Maze3D($.game.variant, $.game.level.world, $.game.level.mazeNumber, unscaledSize,
-				$.r2D.getFoodColor($.game.level.mazeNumber));
-
-		maze3D.mazeBuilding.wallHeight.bind(Env.$mazeWallHeight);
-		maze3D.mazeBuilding.resolution.bind(Env.$mazeResolution);
+		createMaze3D();
 
 		player3D = new Pac3D($.game.pac, $.model3D);
 		ghosts3D = $.game.ghosts().map(ghost -> new Ghost3D(ghost, $.model3D, $.r2D)).toArray(Ghost3D[]::new);
@@ -111,6 +107,14 @@ public class PlayScene3D extends GameScene3D {
 		sceneContent.getChildren().addAll(ghosts3D);
 
 		setPerspective(Env.$perspective.get());
+	}
+
+	public void createMaze3D() {
+		maze3D = new Maze3D($.game.variant, $.game.level.world, $.game.level.mazeNumber, unscaledSize,
+				$.r2D.getFoodColor($.game.level.mazeNumber));
+		maze3D.mazeBuilding.wallHeight.bind(Env.$mazeWallHeight);
+		maze3D.mazeBuilding.resolution.bind(Env.$mazeResolution);
+		maze3D.mazeBuilding.floorHasTexture.bind(Env.$mazeFloorHasTexture);
 	}
 
 	private void createPerspectives() {
@@ -258,10 +262,7 @@ public class PlayScene3D extends GameScene3D {
 		}
 		case LEVEL_STARTING -> {
 			blockGameController();
-			maze3D = new Maze3D($.game.variant, $.game.level.world, $.game.level.mazeNumber, unscaledSize,
-					$.r2D.getFoodColor($.game.level.mazeNumber));
-			maze3D.mazeBuilding.wallHeight.bind(Env.$mazeWallHeight);
-			maze3D.mazeBuilding.resolution.bind(Env.$mazeResolution);
+			createMaze3D();
 			levelCounter3D.update($.game);
 			Actions.showFlashMessage(Talk.message("level_starting", $.game.level.number));
 			U.pauseSec(3, this::unblockGameController).play();
