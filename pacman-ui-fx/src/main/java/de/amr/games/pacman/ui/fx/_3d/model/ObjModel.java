@@ -23,19 +23,17 @@ public class ObjModel {
 	public Map<String, PhongMaterial> materials = Collections.emptyMap();
 
 	public ObjModel(URL url) {
-		ObjModelImporter importer = new ObjModelImporter();
 		if (url == null) {
-			log("Loading 3D model failed: could not access resource from URL '%s'", url);
-			throw new RuntimeException("3D model loading failed");
+			throw new PacManModel3DException("3D model loading via URL failed: URL is null");
 		}
+		ObjModelImporter importer = new ObjModelImporter();
 		try {
 			importer.read(url);
 			meshViews = importer.getNamedMeshViews();
 			materials = importer.getNamedMaterials();
-			log("Loading 3D model '%s' succeeded", url);
+			log("Loading 3D model from URL '%s' succeeded", url);
 		} catch (ImportException e) {
-			log("Loading 3D model '%s' failed", url);
-			throw new RuntimeException("3D model loading failed", e);
+			throw new PacManModel3DException("Loading 3D model from URL '%s' failed: %s", url, e.getMessage());
 		} finally {
 			importer.close();
 		}
