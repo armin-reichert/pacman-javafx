@@ -124,9 +124,9 @@ public class Maze3D {
 
 		var floorPlan = new FloorPlan(resolution.get(), world);
 		wallsGroup.getChildren().clear();
-		addHorizontalWalls(floorPlan, wallsGroup, wp);
-		addVerticalWalls(floorPlan, wallsGroup, wp);
-		addCorners(floorPlan, wallsGroup, wp);
+		addHorizontalWalls(floorPlan, wp);
+		addVerticalWalls(floorPlan, wp);
+		addCorners(floorPlan, wp);
 		log("Built 3D maze (resolution=%d, wall height=%.2f)", resolution.get(), wallHeight.get());
 	}
 
@@ -138,7 +138,7 @@ public class Maze3D {
 		doorsGroup.getChildren().setAll(leftDoor.getNode(), rightDoor.getNode());
 	}
 
-	private void addHorizontalWalls(FloorPlan floorPlan, Group wallsGroup, WallProperties wp) {
+	private void addHorizontalWalls(FloorPlan floorPlan, WallProperties wp) {
 		for (int y = 0; y < floorPlan.sizeY(); ++y) {
 			int leftX = -1;
 			int sizeX = 0;
@@ -167,7 +167,7 @@ public class Maze3D {
 		}
 	}
 
-	private void addVerticalWalls(FloorPlan floorPlan, Group wallsGroup, WallProperties wp) {
+	private void addVerticalWalls(FloorPlan floorPlan, WallProperties wp) {
 		for (int x = 0; x < floorPlan.sizeX(); ++x) {
 			int topY = -1;
 			int sizeY = 0;
@@ -196,7 +196,7 @@ public class Maze3D {
 		}
 	}
 
-	private void addCorners(FloorPlan floorPlan, Group wallsGroup, WallProperties wp) {
+	private void addCorners(FloorPlan floorPlan, WallProperties wp) {
 		for (int x = 0; x < floorPlan.sizeX(); ++x) {
 			for (int y = 0; y < floorPlan.sizeY(); ++y) {
 				if (floorPlan.get(x, y) == FloorPlan.CORNER) {

@@ -97,7 +97,7 @@ public class PlayScene3D extends GameScene3D {
 		levelCounter3D.setRightPosition(($.game.level.world.numCols() - 1) * TS, TS);
 		levelCounter3D.update($.game.levelCounter);
 
-		world3D = createWorld3D();
+		createWorld3D();
 
 		pac3D = new Pac3D($.game.pac, $.model3D);
 		ghosts3D = $.game.ghosts().map(ghost -> new Ghost3D(ghost, $.model3D, $.r2D)).toArray(Ghost3D[]::new);
@@ -110,18 +110,15 @@ public class PlayScene3D extends GameScene3D {
 		setPerspective(Env.$perspective.get());
 	}
 
-	public World3D createWorld3D() {
-		var world3D = new World3D($.game.variant, $.game.level.world, $.game.level.mazeNumber,
-				$.r2D.getFoodColor($.game.level.mazeNumber));
-
-		world3D.maze3D.setFloorSolidColor(Color.rgb(5, 5, 10));
-		world3D.maze3D.setFloorTexture(U.image("/common/escher-texture.jpg"));
-		world3D.maze3D.setFloorTextureColor(Color.rgb(51, 0, 102));
-
-		world3D.maze3D.wallHeight.bind(Env.$mazeWallHeight);
-		world3D.maze3D.resolution.bind(Env.$mazeResolution);
-		world3D.maze3D.floorHasTexture.bind(Env.$mazeFloorHasTexture);
-		return world3D;
+	public void createWorld3D() {
+		world3D = new World3D($.game.variant, $.game.level.world, $.game.level.mazeNumber);
+		var maze3D = world3D.getMaze3D();
+		maze3D.setFloorSolidColor(Color.rgb(5, 5, 10));
+		maze3D.setFloorTexture(U.image("/common/escher-texture.jpg"));
+		maze3D.setFloorTextureColor(Color.rgb(51, 0, 102));
+		maze3D.wallHeight.bind(Env.$mazeWallHeight);
+		maze3D.resolution.bind(Env.$mazeResolution);
+		maze3D.floorHasTexture.bind(Env.$mazeFloorHasTexture);
 	}
 
 	private void createPerspectives() {
@@ -268,7 +265,7 @@ public class PlayScene3D extends GameScene3D {
 		}
 		case LEVEL_STARTING -> {
 			blockGameController();
-			world3D = createWorld3D();
+			createWorld3D();
 			sceneContent.getChildren().set(0, world3D);
 			levelCounter3D.update($.game.levelCounter);
 			Actions.showFlashMessage(Talk.message("level_starting", $.game.level.number));
