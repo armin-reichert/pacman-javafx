@@ -77,18 +77,14 @@ public class Mason {
 		details.brickSize = TS / floorPlan.getResolution();
 		details.doorColor = doorColor;
 
-		createWalls(floorPlan, details);
-		createDoors(world, details);
-	}
-
-	private void createWalls(FloorPlan floorPlan, BuildingDetails details) {
+		addCorners(floorPlan, details);
 		addHorizontalWalls(floorPlan, details);
 		addVerticalWalls(floorPlan, details);
-		addCorners(floorPlan, details);
+		addDoors(world, details);
 		Logging.log("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), details.wallHeight.get());
 	}
 
-	private void createDoors(World world, BuildingDetails details) {
+	private void addDoors(World world, BuildingDetails details) {
 		var leftDoor = new Door3D(world.ghostHouse().doorTileLeft(), true, details.doorColor);
 		leftDoor.doorHeight.bind(details.wallHeight);
 		var rightDoor = new Door3D(world.ghostHouse().doorTileRight(), false, details.doorColor);
