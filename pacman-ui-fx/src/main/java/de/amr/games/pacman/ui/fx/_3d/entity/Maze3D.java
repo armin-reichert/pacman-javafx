@@ -25,16 +25,21 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.lib.Logging.log;
+import static de.amr.games.pacman.model.common.actors.GhostState.LEAVING_HOUSE;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.model.common.actors.Ghost;
+import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.RaiseAndLowerWallAnimation;
 import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.util.U;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.BooleanProperty;
@@ -136,6 +141,25 @@ public class Maze3D {
 			node.setScaleY(1.0);
 			node.setScaleZ(1.0);
 		});
+	}
+
+	public void updateDoorState(Stream<Ghost> ghosts) {
+		doors().findFirst().ifPresent(firstDoor3D -> {
+			var centerPosition = firstDoor3D.getCenterPosition();
+			boolean openDoors = isAnyGhostGettingAccess(ghosts, centerPosition);
+			doors().forEach(door3D -> door3D.setOpen(openDoors));
+		});
+	}
+
+	private boolean isAnyGhostGettingAccess(Stream<Ghost> ghosts, V2d centerPosition) {
+		return ghosts //
+				.filter(ghost -> ghost.visible) //
+				.filter(ghost -> U.oneOf(ghost.state, GhostState.DEAD, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)) //
+				.anyMatch(ghost -> isGhostGettingAccess(ghost, centerPosition));
+	}
+
+	private boolean isGhostGettingAccess(Ghost ghost, V2d doorCenter) {
+		return ghost.position.euclideanDistance(doorCenter) <= (ghost.is(LEAVING_HOUSE) ? TS : 3 * TS);
 	}
 
 	private void createWalls(Color wallBaseColor, Color wallTopColor) {
