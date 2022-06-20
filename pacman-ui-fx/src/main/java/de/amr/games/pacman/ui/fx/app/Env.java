@@ -54,7 +54,7 @@ public class Env {
 	public static final ObjectProperty<Perspective> perspective = new SimpleObjectProperty<>(Perspective.CAM_NEAR_PLAYER);
 	public static final BooleanProperty use3D = new SimpleBooleanProperty(true);
 
-	public static void toggle(BooleanProperty bp) {
-		bp.set(!bp.get());
+	public static void toggle(BooleanProperty booleanPrpoperty) {
+		booleanPrpoperty.set(!booleanPrpoperty.get());
 	}
 }
