@@ -53,7 +53,7 @@ public abstract class GameScene2D implements GameScene {
 	protected final Pane infoPane = new Pane();
 	protected final StackPane root;
 	protected final SubScene fxSubScene;
-	protected final DoubleProperty $scaling = new SimpleDoubleProperty(1);
+	protected final DoubleProperty scaling = new SimpleDoubleProperty(1);
 
 	protected SceneContext $;
 	protected boolean creditVisible;
@@ -99,12 +99,12 @@ public abstract class GameScene2D implements GameScene {
 		double width = aspectRatio * height;
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
-		$scaling.set(fxSubScene.getHeight() / unscaledSize.y);
-		canvas.getTransforms().setAll(new Scale($scaling.get(), $scaling.get()));
+		scaling.set(fxSubScene.getHeight() / unscaledSize.y);
+		canvas.getTransforms().setAll(new Scale(scaling.get(), scaling.get()));
 	}
 
 	public double currentScaling() {
-		return $scaling.get();
+		return scaling.get();
 	}
 
 	/**
@@ -133,7 +133,7 @@ public abstract class GameScene2D implements GameScene {
 		if (overlayCanvas.isVisible()) {
 			var og = overlayCanvas.getGraphicsContext2D();
 			og.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());
-			$.r2D.drawTileBorders(og, $scaling.doubleValue());
+			$.r2D.drawTileBorders(og, scaling.doubleValue());
 		}
 	}
 
