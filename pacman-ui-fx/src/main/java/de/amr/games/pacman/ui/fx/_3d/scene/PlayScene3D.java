@@ -68,7 +68,7 @@ public class PlayScene3D extends GameScene3D {
 	@Override
 	public void init() {
 		sceneContent.getChildren().clear();
-		createWorld3D();
+		world3D = new World3D($.game, $.model3D, $.r2D);
 		// must be at fixed child position it is exchanged when new level starts!
 		sceneContent.getChildren().add(world3D.getRoot());
 		pac3D = new Pac3D($.game.pac, $.model3D);
@@ -78,10 +78,6 @@ public class PlayScene3D extends GameScene3D {
 		bonus3D = new Bonus3D();
 		sceneContent.getChildren().add(bonus3D);
 		setPerspective(Env.perspective.get());
-	}
-
-	public void createWorld3D() {
-		world3D = new World3D($.game, $.model3D, $.r2D);
 	}
 
 	private void createCameras() {
@@ -233,7 +229,7 @@ public class PlayScene3D extends GameScene3D {
 		}
 		case LEVEL_STARTING -> {
 			blockGameController();
-			createWorld3D();
+			world3D = new World3D($.game, $.model3D, $.r2D);
 			sceneContent.getChildren().set(0, world3D.getRoot());
 			Actions.showFlashMessage(Talk.message("level_starting", $.game.level.number));
 			U.pauseSec(3, this::unblockGameController).play();
