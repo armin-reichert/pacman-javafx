@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.scene;
 
 import java.util.EnumMap;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.common.GameState;
@@ -53,7 +54,7 @@ import javafx.scene.paint.Color;
  */
 public class PlayScene3D extends GameScene3D {
 
-	private final EnumMap<Perspective, GameSceneCamera> cameras = new EnumMap<>(Perspective.class);
+	private final Map<Perspective, GameSceneCamera> cameraMap = new EnumMap<>(Perspective.class);
 
 	private World3D world3D;
 	private Pac3D pac3D;
@@ -61,7 +62,8 @@ public class PlayScene3D extends GameScene3D {
 	private Bonus3D bonus3D;
 
 	public PlayScene3D() {
-		createPerspectives();
+		createCameras();
+		Env.$perspective.addListener((obs, oldVal, newVal) -> setPerspective(newVal));
 	}
 
 	@Override
@@ -90,21 +92,23 @@ public class PlayScene3D extends GameScene3D {
 		maze3D.floorHasTexture.bind(Env.$mazeFloorHasTexture);
 	}
 
-	private void createPerspectives() {
-		cameras.put(Perspective.CAM_DRONE, new CamDrone());
-		cameras.put(Perspective.CAM_FOLLOWING_PLAYER, new CamFollowingPlayer());
-		cameras.put(Perspective.CAM_NEAR_PLAYER, new CamNearPlayer());
-		cameras.put(Perspective.CAM_TOTAL, new CamTotal());
-		Env.$perspective.addListener((obs, oldVal, newVal) -> setPerspective(newVal));
+	private void createCameras() {
+		cameraMap.put(Perspective.CAM_DRONE, new CamDrone());
+		cameraMap.put(Perspective.CAM_FOLLOWING_PLAYER, new CamFollowingPlayer());
+		cameraMap.put(Perspective.CAM_NEAR_PLAYER, new CamNearPlayer());
+		cameraMap.put(Perspective.CAM_TOTAL, new CamTotal());
 	}
 
 	private void setPerspective(Perspective psp) {
-		var camera = cameras.get(psp);
+		var camera = cameraMap.get(psp);
 		camera.reset();
 		setCamera(camera);
+		keepScoresInPlainSight(camera);
+	}
+
+	private void keepScoresInPlainSight(GameSceneCamera camera) {
 		var scores3D = world3D.getScores3D();
 		if (scores3D != null) {
-			// keep the score in plain sight
 			scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
 			scores3D.rotateProperty().bind(camera.rotateProperty());
 		}
