@@ -60,13 +60,6 @@ import javafx.util.Duration;
  */
 public class Maze3D {
 
-	public static class WallProperties {
-		DoubleProperty wallHeight;
-		double brickSize;
-		PhongMaterial baseMaterial;
-		PhongMaterial topMaterial;
-	}
-
 	public final DoubleProperty wallHeight = new SimpleDoubleProperty(1.0);
 	public final IntegerProperty resolution = new SimpleIntegerProperty(8);
 	public final BooleanProperty floorHasTexture = new SimpleBooleanProperty(false);
