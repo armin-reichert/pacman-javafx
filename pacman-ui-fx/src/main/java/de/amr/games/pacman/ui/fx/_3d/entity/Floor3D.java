@@ -50,10 +50,10 @@ public class Floor3D {
 	public Floor3D(double width, double height, double depth) {
 		root = new Box(width, height, depth);
 		root.drawModeProperty().bind(Env.drawMode3D);
-		texture.addListener((x, y, newTexture) -> update());
-		textureColor.addListener((x, y, newColor) -> update());
-		solidColor.addListener((x, y, newColor) -> update());
-		textureVisible.addListener((x, y, visible) -> update());
+		texture.addListener((x, y, z) -> update());
+		textureColor.addListener((x, y, z) -> update());
+		solidColor.addListener((x, y, z) -> update());
+		textureVisible.addListener((x, y, z) -> update());
 		update();
 	}
 
