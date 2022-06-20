@@ -73,9 +73,9 @@ public class Maze3D {
 		public Color foodColor;
 	}
 
+	public final BooleanProperty mazeFloorVisible = new SimpleBooleanProperty();
 	public final IntegerProperty resolution = new SimpleIntegerProperty(8);
 	public final DoubleProperty wallHeight = new SimpleDoubleProperty(1.0);
-	public final BooleanProperty floorTextureVisible = new SimpleBooleanProperty(false);
 
 	private final World world;
 	private final Group root = new Group();
@@ -83,12 +83,20 @@ public class Maze3D {
 	private final Group doorsGroup = new Group();
 	private final Group foodGroup = new Group();
 
+	private Floor3D floor;
+
 	public Maze3D(World world, MazeStyle style) {
 		this.world = world;
 		root.getChildren().addAll(foundationGroup, doorsGroup, foodGroup);
 		build(style);
 		addFood(world, style.foodColor);
 		resolution.addListener((obs, oldVal, newVal) -> build(style));
+		mazeFloorVisible.bind(Env.mazeFloorHasTexture);
+		mazeFloorVisible.addListener((x, y, visible) -> {
+			if (floor != null) {
+				floor.setTextureVisible(visible);
+			}
+		});
 	}
 
 	public World getWorld() {
@@ -211,14 +219,12 @@ public class Maze3D {
 		double width = (double) world.numCols() * TS;
 		double height = (double) world.numRows() * TS;
 		double depth = 0.05;
-		var floor = new Floor3D(width - 1, height - 1, depth);
+		floor = new Floor3D(width - 1, height - 1, depth);
 		floor.getRoot().setTranslateX(0.5 * width);
 		floor.getRoot().setTranslateY(0.5 * height);
 		floor.getRoot().setTranslateZ(0.5 * depth);
-		floor.textureVisible.bind(floorTextureVisible);
-		floor.texture.set(details.mazeStyle.floorTexture);
-		floor.textureColor.set(details.mazeStyle.floorTextureColor);
-		floor.solidColor.set(details.mazeStyle.floorSolidColor);
+		floor.setTexture(details.mazeStyle.floorTexture);
+		floor.setColor(details.mazeStyle.floorTextureColor);
 		foundationGroup.getChildren().add(floor.getRoot());
 	}
 

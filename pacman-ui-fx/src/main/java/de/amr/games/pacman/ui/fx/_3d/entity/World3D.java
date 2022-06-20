@@ -70,7 +70,6 @@ public class World3D {
 		mazeStyle.floorTextureColor = Color.rgb(51, 0, 102);
 
 		maze3D = new Maze3D(game.level.world, mazeStyle);
-		maze3D.floorTextureVisible.bind(Env.mazeFloorHasTexture);
 		maze3D.resolution.bind(Env.mazeResolution);
 		maze3D.wallHeight.bind(Env.mazeWallHeight);
 		root.getChildren().add(maze3D.getRoot());

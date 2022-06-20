@@ -24,10 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.entity;
 
 import de.amr.games.pacman.ui.fx.app.Env;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -40,20 +36,14 @@ import javafx.scene.shape.Box;
  */
 public class Floor3D {
 
-	public final BooleanProperty textureVisible = new SimpleBooleanProperty(false);
-	public final ObjectProperty<Image> texture = new SimpleObjectProperty<>(null);
-	public final ObjectProperty<Color> textureColor = new SimpleObjectProperty<>(Color.BLACK);
-	public final ObjectProperty<Color> solidColor = new SimpleObjectProperty<>(Color.GREEN);
-
+	private boolean textureVisible;
+	private Image texture;
+	private Color color;
 	private final Box root;
 
 	public Floor3D(double width, double height, double depth) {
 		root = new Box(width, height, depth);
 		root.drawModeProperty().bind(Env.drawMode3D);
-		texture.addListener((x, y, z) -> update());
-		textureColor.addListener((x, y, z) -> update());
-		solidColor.addListener((x, y, z) -> update());
-		textureVisible.addListener((x, y, z) -> update());
 		update();
 	}
 
@@ -61,26 +51,44 @@ public class Floor3D {
 		return root;
 	}
 
-	private void update() {
-		if (textureVisible.get()) {
-			displayTexture();
+	public void setTextureVisible(boolean textureVisible) {
+		this.textureVisible = textureVisible;
+		update();
+	}
+
+	public void setTexture(Image texture) {
+		this.texture = texture;
+		update();
+	}
+
+	public Image getTexture() {
+		return texture;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
+		update();
+	}
+
+	public Color getColor() {
+		return color;
+	}
+
+	public void update() {
+		root.setMaterial(createMaterial());
+	}
+
+	private PhongMaterial createMaterial() {
+		var mat = new PhongMaterial();
+		if (color != null) {
+			mat.setDiffuseColor(color);
+			mat.setSpecularColor(color.brighter());
 		} else {
-			displaySolid();
+			mat.setDiffuseColor(Color.BLACK);
 		}
-	}
-
-	private void displayTexture() {
-		var material = new PhongMaterial();
-		material.setDiffuseColor(textureColor.get());
-		material.setSpecularColor(textureColor.get().brighter());
-		material.setDiffuseMap(texture.get());
-		root.setMaterial(material);
-	}
-
-	private void displaySolid() {
-		var material = new PhongMaterial();
-		material.setDiffuseColor(solidColor.get());
-		material.setSpecularColor(solidColor.get().brighter());
-		root.setMaterial(material);
+		if (texture != null && textureVisible) {
+			mat.setDiffuseMap(texture);
+		}
+		return mat;
 	}
 }
