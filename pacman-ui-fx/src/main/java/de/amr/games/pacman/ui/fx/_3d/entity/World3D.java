@@ -35,6 +35,7 @@ import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.Group;
+import javafx.scene.paint.Color;
 
 /**
  * @author Armin Reichert
@@ -42,10 +43,23 @@ import javafx.scene.Group;
 public class World3D extends Group {
 
 	private final Maze3D maze3D;
+	private final Scores3D scores3D;
 	private final LevelCounter3D levelCounter3D;
 	private final LivesCounter3D livesCounter3D;
 
 	public World3D(GameModel game, PacManModel3D model3D, Rendering2D r2D) {
+
+		scores3D = new Scores3D();
+		scores3D.setFont(r2D.getArcadeFont());
+		if (game.credit > 0) {
+			scores3D.setComputeScoreText(true);
+		} else {
+			scores3D.setComputeScoreText(false);
+			scores3D.txtScore.setFill(Color.RED);
+			scores3D.txtScore.setText("GAME OVER!");
+		}
+		getChildren().add(scores3D);
+
 		var wallSideColor = Rendering3D.getMazeSideColor(game.variant, game.level.mazeNumber);
 		var wallTopColor = Rendering3D.getMazeTopColor(game.variant, game.level.mazeNumber);
 		var doorColor = Rendering3D.getGhostHouseDoorColor(game.variant);
@@ -64,7 +78,10 @@ public class World3D extends Group {
 		livesCounter3D.setTranslateZ(-HTS);
 		livesCounter3D.setVisible(game.credit > 0);
 		getChildren().add(livesCounter3D);
+	}
 
+	public Scores3D getScores3D() {
+		return scores3D;
 	}
 
 	public Maze3D getMaze3D() {
@@ -72,6 +89,7 @@ public class World3D extends Group {
 	}
 
 	public void update(GameModel game) {
+		scores3D.update(game);
 		maze3D.doors().forEach(door3D -> {
 			boolean ghostApproaching = game.ghosts() //
 					.filter(ghost -> ghost.visible) //

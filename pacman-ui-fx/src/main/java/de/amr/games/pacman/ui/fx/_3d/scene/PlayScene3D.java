@@ -35,7 +35,6 @@ import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D.AnimationMode;
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
-import de.amr.games.pacman.ui.fx._3d.entity.Scores3D;
 import de.amr.games.pacman.ui.fx._3d.entity.World3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.Talk;
@@ -60,7 +59,6 @@ public class PlayScene3D extends GameScene3D {
 	private Pac3D pac3D;
 	private Ghost3D[] ghosts3D;
 	private Bonus3D bonus3D;
-	private Scores3D scores3D;
 
 	public PlayScene3D() {
 		createPerspectives();
@@ -69,27 +67,14 @@ public class PlayScene3D extends GameScene3D {
 	@Override
 	public void init() {
 		sceneContent.getChildren().clear();
-
-		scores3D = new Scores3D();
-		scores3D.setFont($.r2D.getArcadeFont());
-		if ($.hasCredit()) {
-			scores3D.setComputeScoreText(true);
-		} else {
-			scores3D.setComputeScoreText(false);
-			scores3D.txtScore.setFill(Color.RED);
-			scores3D.txtScore.setText("GAME OVER!");
-		}
-
 		createWorld3D();
-
+		sceneContent.getChildren().add(world3D); // must be first child because it is exchanged when new level starts!
 		pac3D = new Pac3D($.game.pac, $.model3D);
+		sceneContent.getChildren().add(pac3D);
 		ghosts3D = $.game.ghosts().map(ghost -> new Ghost3D(ghost, $.model3D, $.r2D)).toArray(Ghost3D[]::new);
-		bonus3D = new Bonus3D();
-
-		sceneContent.getChildren().add(world3D); // must be first child because it is exchanged!
-		sceneContent.getChildren().addAll(scores3D, pac3D, bonus3D);
 		sceneContent.getChildren().addAll(ghosts3D);
-
+		bonus3D = new Bonus3D();
+		sceneContent.getChildren().add(bonus3D);
 		setPerspective(Env.$perspective.get());
 	}
 
@@ -116,6 +101,7 @@ public class PlayScene3D extends GameScene3D {
 		var camera = cameras.get(psp);
 		camera.reset();
 		setCamera(camera);
+		var scores3D = world3D.getScores3D();
 		if (scores3D != null) {
 			// keep the score in plain sight
 			scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
@@ -146,7 +132,6 @@ public class PlayScene3D extends GameScene3D {
 		pac3D.update();
 		Stream.of($.game.ghosts).forEach(this::updateGhost3D);
 		bonus3D.update($.game.bonus());
-		scores3D.update($.game);
 		getCamera().update(pac3D);
 	}
 
