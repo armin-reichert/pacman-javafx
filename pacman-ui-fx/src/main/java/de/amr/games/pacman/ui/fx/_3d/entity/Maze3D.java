@@ -91,7 +91,6 @@ public class Maze3D {
 		build(style);
 		addFood(world, style.foodColor);
 		resolution.addListener((obs, oldVal, newVal) -> build(style));
-		floor.textureVisible.bind(floorTextureVisible);
 	}
 
 	public World getWorld() {
@@ -218,6 +217,7 @@ public class Maze3D {
 		floor.getRoot().setTranslateX(0.5 * width);
 		floor.getRoot().setTranslateY(0.5 * height);
 		floor.getRoot().setTranslateZ(0.5 * depth);
+		floor.textureVisible.bind(floorTextureVisible);
 		floor.texture.set(details.mazeStyle.floorTexture);
 		floor.textureColor.set(details.mazeStyle.floorTextureColor);
 		floor.solidColor.set(details.mazeStyle.floorSolidColor);
