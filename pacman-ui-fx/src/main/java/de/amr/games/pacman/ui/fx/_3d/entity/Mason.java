@@ -58,7 +58,7 @@ public class Mason {
 		this.doorsGroup = doorsGroup;
 	}
 
-	public void erectBuilding(World world, int resolution, DoubleProperty wallHeight, MazeStyle features,
+	public void erectBuilding(World world, int resolution, DoubleProperty wallHeight, MazeStyle style,
 			boolean floorTextureVisible) {
 		foundationGroup.getChildren().clear();
 
@@ -69,19 +69,19 @@ public class Mason {
 		floor.setTranslateY(0.5 * floor.getHeight());
 		floor.setTranslateZ(0.5 * floor.getDepth());
 		if (floorTextureVisible) {
-			floor.showTextured(features.floorTexture, features.floorTextureColor);
+			floor.showTextured(style.floorTexture, style.floorTextureColor);
 		} else {
-			floor.showSolid(features.floorSolidColor);
+			floor.showSolid(style.floorSolidColor);
 		}
 		foundationGroup.getChildren().add(floor);
 
 		BuildDetails details = new BuildDetails();
 		details.wallHeight = wallHeight;
-		details.baseMaterial = new PhongMaterial(features.wallSideColor);
-		details.baseMaterial.setSpecularColor(features.wallSideColor.brighter());
-		details.topMaterial = new PhongMaterial(features.wallTopColor);
+		details.baseMaterial = new PhongMaterial(style.wallSideColor);
+		details.baseMaterial.setSpecularColor(style.wallSideColor.brighter());
+		details.topMaterial = new PhongMaterial(style.wallTopColor);
 		details.brickSize = TS / floorPlan.getResolution();
-		details.doorColor = features.doorColor;
+		details.doorColor = style.doorColor;
 
 		addCorners(floorPlan, details);
 		addHorizontalWalls(floorPlan, details);
@@ -90,15 +90,15 @@ public class Mason {
 		Logging.log("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), details.wallHeight.get());
 	}
 
-	private void addDoors(World world, BuildDetails buildInstr) {
-		var leftDoor = new Door3D(world.ghostHouse().doorTileLeft(), true, buildInstr.doorColor);
-		leftDoor.doorHeight.bind(buildInstr.wallHeight);
-		var rightDoor = new Door3D(world.ghostHouse().doorTileRight(), false, buildInstr.doorColor);
-		rightDoor.doorHeight.bind(buildInstr.wallHeight);
+	private void addDoors(World world, BuildDetails details) {
+		var leftDoor = new Door3D(world.ghostHouse().doorTileLeft(), true, details.doorColor);
+		leftDoor.doorHeight.bind(details.wallHeight);
+		var rightDoor = new Door3D(world.ghostHouse().doorTileRight(), false, details.doorColor);
+		rightDoor.doorHeight.bind(details.wallHeight);
 		doorsGroup.getChildren().setAll(leftDoor.getNode(), rightDoor.getNode());
 	}
 
-	private void addHorizontalWalls(FloorPlan floorPlan, BuildDetails buildInstr) {
+	private void addHorizontalWalls(FloorPlan floorPlan, BuildDetails details) {
 		for (int y = 0; y < floorPlan.sizeY(); ++y) {
 			int leftX = -1;
 			int sizeX = 0;
@@ -112,22 +112,22 @@ public class Mason {
 					}
 				} else {
 					if (leftX != -1) {
-						addWall(leftX, y, sizeX, 1, buildInstr);
+						addWall(leftX, y, sizeX, 1, details);
 						leftX = -1;
 					}
 				}
 				if (x == floorPlan.sizeX() - 1 && leftX != -1) {
-					addWall(leftX, y, sizeX, 1, buildInstr);
+					addWall(leftX, y, sizeX, 1, details);
 					leftX = -1;
 				}
 			}
 			if (y == floorPlan.sizeY() - 1 && leftX != -1) {
-				addWall(leftX, y, sizeX, 1, buildInstr);
+				addWall(leftX, y, sizeX, 1, details);
 			}
 		}
 	}
 
-	private void addVerticalWalls(FloorPlan floorPlan, BuildDetails buildInstr) {
+	private void addVerticalWalls(FloorPlan floorPlan, BuildDetails details) {
 		for (int x = 0; x < floorPlan.sizeX(); ++x) {
 			int topY = -1;
 			int sizeY = 0;
@@ -141,26 +141,26 @@ public class Mason {
 					}
 				} else {
 					if (topY != -1) {
-						addWall(x, topY, 1, sizeY, buildInstr);
+						addWall(x, topY, 1, sizeY, details);
 						topY = -1;
 					}
 				}
 				if (y == floorPlan.sizeY() - 1 && topY != -1) {
-					addWall(x, topY, 1, sizeY, buildInstr);
+					addWall(x, topY, 1, sizeY, details);
 					topY = -1;
 				}
 			}
 			if (x == floorPlan.sizeX() - 1 && topY != -1) {
-				addWall(x, topY, 1, sizeY, buildInstr);
+				addWall(x, topY, 1, sizeY, details);
 			}
 		}
 	}
 
-	private void addCorners(FloorPlan floorPlan, BuildDetails buildInstr) {
+	private void addCorners(FloorPlan floorPlan, BuildDetails details) {
 		for (int x = 0; x < floorPlan.sizeX(); ++x) {
 			for (int y = 0; y < floorPlan.sizeY(); ++y) {
 				if (floorPlan.get(x, y) == FloorPlan.CORNER) {
-					addWall(x, y, 1, 1, buildInstr);
+					addWall(x, y, 1, 1, details);
 				}
 			}
 		}
@@ -174,7 +174,7 @@ public class Mason {
 	 * @param y          y-coordinate of top-left brick
 	 * @param numBricksX number of bricks in x-direction
 	 * @param numBricksY number of bricks in y-direction
-	 * @param details    buildInstr for building stuff
+	 * @param details    details for building stuff
 	 */
 	private void addWall(int x, int y, int numBricksX, int numBricksY, BuildDetails details) {
 		Box base = new Box(numBricksX * details.brickSize, numBricksY * details.brickSize, details.wallHeight.get());
