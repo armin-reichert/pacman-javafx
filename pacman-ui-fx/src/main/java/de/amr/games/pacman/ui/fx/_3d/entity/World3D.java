@@ -60,17 +60,16 @@ public class World3D {
 		}
 		root.getChildren().add(scores3D);
 
-		var style = new MazeStyle();
+		var mazeStyle = new MazeStyle();
+		mazeStyle.wallSideColor = Rendering3D.getMazeSideColor(game.variant, game.level.mazeNumber);
+		mazeStyle.wallTopColor = Rendering3D.getMazeTopColor(game.variant, game.level.mazeNumber);
+		mazeStyle.doorColor = Rendering3D.getGhostHouseDoorColor(game.variant);
+		mazeStyle.foodColor = Rendering3D.getMazeFoodColor(game.variant, game.level.mazeNumber);
+		mazeStyle.floorSolidColor = Color.rgb(5, 5, 10);
+		mazeStyle.floorTexture = U.image("/common/escher-texture.jpg");
+		mazeStyle.floorTextureColor = Color.rgb(51, 0, 102);
 
-		style.wallSideColor = Rendering3D.getMazeSideColor(game.variant, game.level.mazeNumber);
-		style.wallTopColor = Rendering3D.getMazeTopColor(game.variant, game.level.mazeNumber);
-		style.doorColor = Rendering3D.getGhostHouseDoorColor(game.variant);
-		style.foodColor = Rendering3D.getMazeFoodColor(game.variant, game.level.mazeNumber);
-		style.floorSolidColor = Color.rgb(5, 5, 10);
-		style.floorTexture = U.image("/common/escher-texture.jpg");
-		style.floorTextureColor = Color.rgb(51, 0, 102);
-
-		maze3D = new Maze3D(game.level.world, style);
+		maze3D = new Maze3D(game.level.world, mazeStyle);
 		maze3D.floorTextureVisible.bind(Env.mazeFloorHasTexture);
 		maze3D.resolution.bind(Env.mazeResolution);
 		maze3D.wallHeight.bind(Env.mazeWallHeight);
