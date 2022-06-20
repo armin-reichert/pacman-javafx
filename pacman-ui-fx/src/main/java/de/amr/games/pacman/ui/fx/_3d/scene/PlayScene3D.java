@@ -87,11 +87,10 @@ public class PlayScene3D extends GameScene3D {
 		maze3D.setFloorSolidColor(Color.rgb(5, 5, 10));
 		maze3D.setFloorTexture(U.image("/common/escher-texture.jpg"));
 		maze3D.setFloorTextureColor(Color.rgb(51, 0, 102));
+		maze3D.getFloor().showSolid(maze3D.getFloorSolidColor());
 		maze3D.wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.resolution.bind(Env.$mazeResolution);
 		maze3D.floorHasTexture.bind(Env.$mazeFloorHasTexture);
-		maze3D.getFloor().showSolid(maze3D.getFloorSolidColor());
-
 	}
 
 	private void createCameras() {
