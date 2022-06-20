@@ -60,6 +60,16 @@ import javafx.util.Duration;
  */
 public class Maze3D {
 
+	public static class FeatureList {
+		DoubleProperty wallHeight;
+		Color wallSideColor;
+		Color wallTopColor;
+		Color doorColor;
+		Image floorTexture;
+		Color floorTextureColor;
+		Color floorSolidColor;
+	}
+
 	public final DoubleProperty wallHeight = new SimpleDoubleProperty(1.0);
 	public final IntegerProperty resolution = new SimpleIntegerProperty(8);
 	public final BooleanProperty floorHasTexture = new SimpleBooleanProperty(false);
@@ -77,10 +87,12 @@ public class Maze3D {
 	public Maze3D(World world, Color wallSideColor, Color wallTopColor, Color doorColor, Color foodColor) {
 		this.world = world;
 		root.getChildren().addAll(foundationGroup, doorsGroup, foodGroup);
-		letsBuildIt(wallSideColor, wallTopColor, doorColor);
+		var mason = new Mason(foundationGroup, doorsGroup);
+		letMasonDoItsWork(mason, resolution.get(), wallSideColor, wallTopColor, doorColor);
 		addFood(world, foodColor);
 
-		resolution.addListener((obs, oldVal, newVal) -> letsBuildIt(wallSideColor, wallTopColor, doorColor));
+		resolution.addListener(
+				(obs, oldVal, newVal) -> letMasonDoItsWork(mason, newVal.intValue(), wallSideColor, wallTopColor, doorColor));
 		floorHasTexture.addListener((obs, oldVal, newVal) -> {
 			if (newVal.booleanValue()) {
 				getFloor().showTextured(floorTexture, floorTextureColor);
@@ -90,10 +102,22 @@ public class Maze3D {
 		});
 	}
 
-	private void letsBuildIt(Color wallSideColor, Color wallTopColor, Color doorColor) {
-		var floorPlan = new FloorPlan(resolution.get(), world);
-		Mason mason = new Mason(foundationGroup, doorsGroup);
-		mason.erectBuilding(floorPlan, world, wallHeight, wallSideColor, wallTopColor, doorColor);
+	private void letMasonDoItsWork(Mason mason, int resolution, Color wallSideColor, Color wallTopColor,
+			Color doorColor) {
+
+		var features = new FeatureList();
+		features.doorColor = doorColor;
+		features.floorSolidColor = floorSolidColor;
+		features.floorTexture = floorTexture;
+		features.floorTextureColor = floorTextureColor;
+		features.wallHeight = wallHeight;
+		features.wallSideColor = wallSideColor;
+		features.wallTopColor = wallTopColor;
+
+		var floorPlan = new FloorPlan(resolution, world);
+		mason.erectBuilding(floorPlan, world, features);
+
+		// TODO move to Mason
 		if (floorHasTexture.get()) {
 			getFloor().showTextured(floorTexture, floorTextureColor);
 		} else {
