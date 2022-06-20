@@ -233,28 +233,28 @@ public class Maze3D {
 	private void addHorizontalWalls(FloorPlan floorPlan, BuildDetails details) {
 		for (int y = 0; y < floorPlan.sizeY(); ++y) {
 			int leftX = -1;
-			int sizeX = 0;
+			int numBricks = 0;
 			for (int x = 0; x < floorPlan.sizeX(); ++x) {
 				if (floorPlan.get(x, y) == FloorPlan.HWALL) {
-					if (leftX == -1) {
-						leftX = x;
-						sizeX = 1;
+					if (numBricks > 0) {
+						numBricks++;
 					} else {
-						sizeX++;
+						leftX = x;
+						numBricks = 1;
 					}
 				} else {
-					if (leftX != -1) {
-						addWall(leftX, y, sizeX, 1, details);
-						leftX = -1;
+					if (numBricks > 0) {
+						addWall(leftX, y, numBricks, 1, details);
+						numBricks = 0;
 					}
 				}
-				if (x == floorPlan.sizeX() - 1 && leftX != -1) {
-					addWall(leftX, y, sizeX, 1, details);
-					leftX = -1;
+				if (numBricks > 0 && x == floorPlan.sizeX() - 1) {
+					addWall(leftX, y, numBricks, 1, details);
+					numBricks = 0;
 				}
 			}
-			if (y == floorPlan.sizeY() - 1 && leftX != -1) {
-				addWall(leftX, y, sizeX, 1, details);
+			if (numBricks > 0 && y == floorPlan.sizeY() - 1) {
+				addWall(leftX, y, numBricks, 1, details);
 			}
 		}
 	}
@@ -262,28 +262,28 @@ public class Maze3D {
 	private void addVerticalWalls(FloorPlan floorPlan, BuildDetails details) {
 		for (int x = 0; x < floorPlan.sizeX(); ++x) {
 			int topY = -1;
-			int sizeY = 0;
+			int numBricks = 0;
 			for (int y = 0; y < floorPlan.sizeY(); ++y) {
 				if (floorPlan.get(x, y) == FloorPlan.VWALL) {
-					if (topY == -1) {
-						topY = y;
-						sizeY = 1;
+					if (numBricks > 0) {
+						numBricks++;
 					} else {
-						sizeY++;
+						topY = y;
+						numBricks = 1;
 					}
 				} else {
-					if (topY != -1) {
-						addWall(x, topY, 1, sizeY, details);
-						topY = -1;
+					if (numBricks > 0) {
+						addWall(x, topY, 1, numBricks, details);
+						numBricks = 0;
 					}
 				}
-				if (y == floorPlan.sizeY() - 1 && topY != -1) {
-					addWall(x, topY, 1, sizeY, details);
-					topY = -1;
+				if (numBricks > 0 && y == floorPlan.sizeY() - 1) {
+					addWall(x, topY, 1, numBricks, details);
+					numBricks = 0;
 				}
 			}
-			if (x == floorPlan.sizeX() - 1 && topY != -1) {
-				addWall(x, topY, 1, sizeY, details);
+			if (numBricks > 0 && x == floorPlan.sizeX() - 1) {
+				addWall(x, topY, 1, numBricks, details);
 			}
 		}
 	}
