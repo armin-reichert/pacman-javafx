@@ -83,8 +83,6 @@ public class Maze3D {
 	private final Group doorsGroup = new Group();
 	private final Group foodGroup = new Group();
 
-	private Floor3D floor;
-
 	public Maze3D(World world, MazeStyle style) {
 		this.world = world;
 		root.getChildren().addAll(foundationGroup, doorsGroup, foodGroup);
@@ -196,7 +194,7 @@ public class Maze3D {
 		details.baseMaterial = new PhongMaterial(mazeStyle.wallSideColor);
 		details.baseMaterial.setSpecularColor(mazeStyle.wallSideColor.brighter());
 		details.topMaterial = new PhongMaterial(mazeStyle.wallTopColor);
-		details.brickSize = TS / floorPlan.getResolution();
+		details.brickSize = (double) TS / floorPlan.getResolution();
 
 		foundationGroup.getChildren().clear();
 
@@ -210,10 +208,10 @@ public class Maze3D {
 	}
 
 	private void addFloor(BuildDetails details) {
-		double width = world.numCols() * TS;
-		double height = world.numRows() * TS;
+		double width = (double) world.numCols() * TS;
+		double height = (double) world.numRows() * TS;
 		double depth = 0.05;
-		floor = new Floor3D(width - 1, height - 1, depth);
+		var floor = new Floor3D(width - 1, height - 1, depth);
 		floor.getRoot().setTranslateX(0.5 * width);
 		floor.getRoot().setTranslateY(0.5 * height);
 		floor.getRoot().setTranslateZ(0.5 * depth);
