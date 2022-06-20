@@ -63,7 +63,7 @@ public class Dashboard extends BorderPane {
 		section3D = new Section3D(ui, gc, "3D Settings", minLabelWidth, textColor, textFont, labelFont);
 		sectionKeys = new SectionKeys(ui, gc, "Keyboard Shortcuts", minLabelWidth, textColor, textFont, labelFont);
 		rightSide.getChildren().addAll(section3D, sectionKeys);
-		section3D.setExpanded(false);
+		section3D.setExpanded(true);
 		sectionKeys.setExpanded(true);
 
 		setVisible(false);

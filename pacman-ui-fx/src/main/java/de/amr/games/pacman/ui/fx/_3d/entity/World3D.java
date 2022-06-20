@@ -71,10 +71,9 @@ public class World3D {
 		style.floorTextureColor = Color.rgb(51, 0, 102);
 
 		maze3D = new Maze3D(game.level.world, style);
-		maze3D.floorHasTexture.bind(Env.mazeFloorHasTexture);
+		maze3D.floorTextureVisible.bind(Env.mazeFloorHasTexture);
 		maze3D.resolution.bind(Env.mazeResolution);
 		maze3D.wallHeight.bind(Env.mazeWallHeight);
-		maze3D.getFloor().showSolid(maze3D.getStyle().floorSolidColor);
 		root.getChildren().add(maze3D.getRoot());
 
 		levelCounter3D = new LevelCounter3D(symbol -> r2D.getSpriteImage(r2D.getBonusSymbolSprite(symbol)));

@@ -31,9 +31,7 @@ import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.entity.Maze3D.MazeStyle;
 import de.amr.games.pacman.ui.fx.app.Env;
-import javafx.beans.property.DoubleProperty;
 import javafx.scene.Group;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 
@@ -43,61 +41,53 @@ import javafx.scene.shape.Box;
 public class Mason {
 
 	private static class BuildDetails {
-		DoubleProperty wallHeight;
 		double brickSize;
 		PhongMaterial baseMaterial;
 		PhongMaterial topMaterial;
-		Color doorColor;
+		MazeStyle mazeStyle;
 	}
 
-	private final Maze3D maze3D;
+	public static void erectBuilding(Maze3D maze3D, World world, MazeStyle mazeStyle) {
+		var floorPlan = new FloorPlan(maze3D.resolution.get(), world);
 
-	public Mason(Maze3D maze3D) {
-		this.maze3D = maze3D;
-	}
-
-	public void erectBuilding(World world, int resolution, DoubleProperty wallHeight, MazeStyle style,
-			boolean floorTextureVisible) {
-
+		var details = new BuildDetails();
+		details.mazeStyle = mazeStyle;
+		details.baseMaterial = new PhongMaterial(mazeStyle.wallSideColor);
+		details.baseMaterial.setSpecularColor(mazeStyle.wallSideColor.brighter());
+		details.topMaterial = new PhongMaterial(mazeStyle.wallTopColor);
+		details.brickSize = TS / floorPlan.getResolution();
 		maze3D.foundationGroup.getChildren().clear();
 
-		var floorPlan = new FloorPlan(resolution, world);
+		Mason mason = new Mason();
+		mason.addFloor(maze3D, world, details);
+		mason.addCorners(maze3D, floorPlan, details);
+		mason.addHorizontalWalls(maze3D, floorPlan, details);
+		mason.addVerticalWalls(maze3D, floorPlan, details);
+		mason.addDoors(maze3D, world, details);
 
+		Logging.log("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), maze3D.wallHeight.get());
+	}
+
+	private void addFloor(Maze3D maze3D, World world, BuildDetails details) {
 		var floor = new MazeFloor3D(world.numCols() * TS - 1, world.numRows() * TS - 1, 0.01);
 		floor.setTranslateX(0.5 * floor.getWidth());
 		floor.setTranslateY(0.5 * floor.getHeight());
 		floor.setTranslateZ(0.5 * floor.getDepth());
-		if (floorTextureVisible) {
-			floor.showTextured(style.floorTexture, style.floorTextureColor);
-		} else {
-			floor.showSolid(style.floorSolidColor);
-		}
+		floor.texture.set(details.mazeStyle.floorTexture);
+		floor.textureColor.set(details.mazeStyle.floorTextureColor);
+		floor.solidColor.set(details.mazeStyle.floorSolidColor);
 		maze3D.foundationGroup.getChildren().add(floor);
-
-		BuildDetails details = new BuildDetails();
-		details.wallHeight = wallHeight;
-		details.baseMaterial = new PhongMaterial(style.wallSideColor);
-		details.baseMaterial.setSpecularColor(style.wallSideColor.brighter());
-		details.topMaterial = new PhongMaterial(style.wallTopColor);
-		details.brickSize = TS / floorPlan.getResolution();
-		details.doorColor = style.doorColor;
-
-		addCorners(floorPlan, details);
-		addHorizontalWalls(floorPlan, details);
-		addVerticalWalls(floorPlan, details);
-		addDoors(world, details);
-		Logging.log("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), details.wallHeight.get());
 	}
 
-	private void addDoors(World world, BuildDetails details) {
-		var leftDoor = new Door3D(world.ghostHouse().doorTileLeft(), true, details.doorColor);
-		leftDoor.doorHeight.bind(details.wallHeight);
-		var rightDoor = new Door3D(world.ghostHouse().doorTileRight(), false, details.doorColor);
-		rightDoor.doorHeight.bind(details.wallHeight);
+	private void addDoors(Maze3D maze3D, World world, BuildDetails details) {
+		var leftDoor = new Door3D(world.ghostHouse().doorTileLeft(), true, details.mazeStyle.doorColor);
+		leftDoor.doorHeight.bind(maze3D.wallHeight);
+		var rightDoor = new Door3D(world.ghostHouse().doorTileRight(), false, details.mazeStyle.doorColor);
+		rightDoor.doorHeight.bind(maze3D.wallHeight);
 		maze3D.doorsGroup.getChildren().setAll(leftDoor.getNode(), rightDoor.getNode());
 	}
 
-	private void addHorizontalWalls(FloorPlan floorPlan, BuildDetails details) {
+	private void addHorizontalWalls(Maze3D maze3D, FloorPlan floorPlan, BuildDetails details) {
 		for (int y = 0; y < floorPlan.sizeY(); ++y) {
 			int leftX = -1;
 			int sizeX = 0;
@@ -111,22 +101,22 @@ public class Mason {
 					}
 				} else {
 					if (leftX != -1) {
-						addWall(leftX, y, sizeX, 1, details);
+						addWall(maze3D, leftX, y, sizeX, 1, details);
 						leftX = -1;
 					}
 				}
 				if (x == floorPlan.sizeX() - 1 && leftX != -1) {
-					addWall(leftX, y, sizeX, 1, details);
+					addWall(maze3D, leftX, y, sizeX, 1, details);
 					leftX = -1;
 				}
 			}
 			if (y == floorPlan.sizeY() - 1 && leftX != -1) {
-				addWall(leftX, y, sizeX, 1, details);
+				addWall(maze3D, leftX, y, sizeX, 1, details);
 			}
 		}
 	}
 
-	private void addVerticalWalls(FloorPlan floorPlan, BuildDetails details) {
+	private void addVerticalWalls(Maze3D maze3D, FloorPlan floorPlan, BuildDetails details) {
 		for (int x = 0; x < floorPlan.sizeX(); ++x) {
 			int topY = -1;
 			int sizeY = 0;
@@ -140,26 +130,26 @@ public class Mason {
 					}
 				} else {
 					if (topY != -1) {
-						addWall(x, topY, 1, sizeY, details);
+						addWall(maze3D, x, topY, 1, sizeY, details);
 						topY = -1;
 					}
 				}
 				if (y == floorPlan.sizeY() - 1 && topY != -1) {
-					addWall(x, topY, 1, sizeY, details);
+					addWall(maze3D, x, topY, 1, sizeY, details);
 					topY = -1;
 				}
 			}
 			if (x == floorPlan.sizeX() - 1 && topY != -1) {
-				addWall(x, topY, 1, sizeY, details);
+				addWall(maze3D, x, topY, 1, sizeY, details);
 			}
 		}
 	}
 
-	private void addCorners(FloorPlan floorPlan, BuildDetails details) {
+	private void addCorners(Maze3D maze3D, FloorPlan floorPlan, BuildDetails details) {
 		for (int x = 0; x < floorPlan.sizeX(); ++x) {
 			for (int y = 0; y < floorPlan.sizeY(); ++y) {
 				if (floorPlan.get(x, y) == FloorPlan.CORNER) {
-					addWall(x, y, 1, 1, details);
+					addWall(maze3D, x, y, 1, 1, details);
 				}
 			}
 		}
@@ -169,24 +159,25 @@ public class Mason {
 	 * Adds a wall at given position. A wall consists of a base and a top part which can have different color and
 	 * material.
 	 * 
+	 * @param maze3D     the maze
 	 * @param x          x-coordinate of top-left brick
 	 * @param y          y-coordinate of top-left brick
 	 * @param numBricksX number of bricks in x-direction
 	 * @param numBricksY number of bricks in y-direction
 	 * @param details    details for building stuff
 	 */
-	private void addWall(int x, int y, int numBricksX, int numBricksY, BuildDetails details) {
-		Box base = new Box(numBricksX * details.brickSize, numBricksY * details.brickSize, details.wallHeight.get());
-		base.depthProperty().bind(details.wallHeight);
+	private void addWall(Maze3D maze3D, int x, int y, int numBricksX, int numBricksY, BuildDetails details) {
+		Box base = new Box(numBricksX * details.brickSize, numBricksY * details.brickSize, maze3D.wallHeight.get());
+		base.depthProperty().bind(maze3D.wallHeight);
 		base.setMaterial(details.baseMaterial);
-		base.translateZProperty().bind(details.wallHeight.multiply(-0.5));
+		base.translateZProperty().bind(maze3D.wallHeight.multiply(-0.5));
 		base.drawModeProperty().bind(Env.drawMode3D);
 
 		double topHeight = 0.5;
 		Box top = new Box(numBricksX * details.brickSize, numBricksY * details.brickSize, topHeight);
 		top.setMaterial(details.topMaterial);
 		top.translateZProperty()
-				.bind(base.translateZProperty().subtract(details.wallHeight.add(topHeight + 0.1).multiply(0.5)));
+				.bind(base.translateZProperty().subtract(maze3D.wallHeight.add(topHeight + 0.1).multiply(0.5)));
 		top.drawModeProperty().bind(Env.drawMode3D);
 
 		Group wall = new Group(base, top);

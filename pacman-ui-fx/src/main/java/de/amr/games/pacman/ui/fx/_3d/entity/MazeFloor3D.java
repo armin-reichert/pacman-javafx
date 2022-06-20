@@ -24,6 +24,10 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.entity;
 
 import de.amr.games.pacman.ui.fx.app.Env;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -36,25 +40,41 @@ import javafx.scene.shape.Box;
  */
 public class MazeFloor3D extends Box {
 
-	private final PhongMaterial material = new PhongMaterial();
+	public final BooleanProperty textureVisible = new SimpleBooleanProperty(false);
+	public final ObjectProperty<Image> texture = new SimpleObjectProperty<>(null);
+	public final ObjectProperty<Color> textureColor = new SimpleObjectProperty<>(Color.BLACK);
+	public final ObjectProperty<Color> solidColor = new SimpleObjectProperty<>(Color.GREEN);
 
 	public MazeFloor3D(double width, double height, double depth) {
 		super(width, height, depth);
-		setMaterial(material);
 		drawModeProperty().bind(Env.drawMode3D);
-		showSolid(Color.BLACK);
+		texture.addListener((x, y, newTexture) -> update());
+		textureColor.addListener((x, y, newColor) -> update());
+		solidColor.addListener((x, y, newColor) -> update());
+		textureVisible.addListener((x, y, visible) -> update());
+		updateTexture();
 	}
 
-	public void showSolid(Color color) {
-		material.setDiffuseColor(color);
-		material.setSpecularColor(color.brighter());
-	}
-
-	public void showTextured(Image texture, Color textureBackground) {
-		if (texture != null) {
-			material.setDiffuseColor(textureBackground);
-			material.setSpecularColor(textureBackground.brighter());
-			material.setDiffuseMap(texture);
+	private void update() {
+		if (textureVisible.get()) {
+			updateTexture();
+		} else {
+			updateSolid();
 		}
+	}
+
+	private void updateTexture() {
+		var material = new PhongMaterial();
+		material.setDiffuseColor(textureColor.get());
+		material.setSpecularColor(textureColor.get().brighter());
+		material.setDiffuseMap(texture.get());
+		setMaterial(material);
+	}
+
+	private void updateSolid() {
+		var material = new PhongMaterial();
+		material.setDiffuseColor(solidColor.get());
+		material.setSpecularColor(solidColor.get().brighter());
+		setMaterial(material);
 	}
 }

@@ -71,7 +71,7 @@ public class Maze3D {
 
 	public final IntegerProperty resolution = new SimpleIntegerProperty(8);
 	public final DoubleProperty wallHeight = new SimpleDoubleProperty(1.0);
-	public final BooleanProperty floorHasTexture = new SimpleBooleanProperty(false);
+	public final BooleanProperty floorTextureVisible = new SimpleBooleanProperty(false);
 
 	// package access for mason
 	final World world;
@@ -86,25 +86,16 @@ public class Maze3D {
 		this.world = world;
 		this.style = style;
 		root.getChildren().addAll(foundationGroup, doorsGroup, foodGroup);
-		var mason = new Mason(this);
-		letMasonDoItsWork(mason, style);
+		Mason.erectBuilding(this, world, style);
 		addFood(world, style.foodColor);
-		resolution.addListener((obs, oldVal, newVal) -> letMasonDoItsWork(mason, style));
-		floorHasTexture.addListener((obs, oldVal, newVal) -> {
-			if (newVal.booleanValue()) {
-				getFloor().showTextured(style.floorTexture, style.floorTextureColor);
-			} else {
-				getFloor().showSolid(style.floorSolidColor);
-			}
-		});
+
+		resolution.addListener((obs, oldVal, newVal) -> Mason.erectBuilding(this, world, style));
+		MazeFloor3D floor = (MazeFloor3D) foundationGroup.getChildren().get(0);
+		floor.textureVisible.bind(floorTextureVisible);
 	}
 
-	private void letMasonDoItsWork(Mason mason, MazeStyle features) {
-		mason.erectBuilding(world, resolution.get(), wallHeight, features, floorHasTexture.get());
-	}
-
-	public MazeFloor3D getFloor() {
-		return (MazeFloor3D) foundationGroup.getChildren().get(0);
+	public World getWorld() {
+		return world;
 	}
 
 	public Group getRoot() {

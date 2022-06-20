@@ -82,10 +82,6 @@ public class PlayScene3D extends GameScene3D {
 
 	public void createWorld3D() {
 		world3D = new World3D($.game, $.model3D, $.r2D);
-		var maze3D = world3D.getMaze3D();
-		maze3D.wallHeight.bind(Env.mazeWallHeight);
-		maze3D.resolution.bind(Env.mazeResolution);
-		maze3D.floorHasTexture.bind(Env.mazeFloorHasTexture);
 	}
 
 	private void createCameras() {
