@@ -200,8 +200,8 @@ public class Maze3D {
 
 		addFloor(details);
 		addCorners(floorPlan, details);
-		addHorizontalWalls(floorPlan, details);
-		addVerticalWalls(floorPlan, details);
+		scanHorizontal(floorPlan, details);
+		scanVertical(floorPlan, details);
 		addDoors(details);
 
 		Logging.log("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeight.get());
@@ -230,7 +230,7 @@ public class Maze3D {
 		doorsGroup.getChildren().setAll(leftDoor.getNode(), rightDoor.getNode());
 	}
 
-	private void addHorizontalWalls(FloorPlan floorPlan, BuildDetails details) {
+	private void scanHorizontal(FloorPlan floorPlan, BuildDetails details) {
 		for (int y = 0; y < floorPlan.sizeY(); ++y) {
 			int wallStart = -1;
 			int wallSize = 0;
@@ -255,7 +255,7 @@ public class Maze3D {
 		}
 	}
 
-	private void addVerticalWalls(FloorPlan floorPlan, BuildDetails details) {
+	private void scanVertical(FloorPlan floorPlan, BuildDetails details) {
 		for (int x = 0; x < floorPlan.sizeX(); ++x) {
 			int wallStart = -1;
 			int wallSize = 0;
