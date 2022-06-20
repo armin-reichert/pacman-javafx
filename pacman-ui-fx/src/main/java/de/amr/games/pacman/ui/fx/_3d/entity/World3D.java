@@ -26,34 +26,21 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import static de.amr.games.pacman.model.common.actors.GhostState.LEAVING_HOUSE;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
-import java.util.Optional;
-import java.util.stream.Stream;
-
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.ui.fx._3d.animation.RaiseAndLowerWallAnimation;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx.util.U;
-import javafx.animation.Animation;
-import javafx.animation.PauseTransition;
 import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.util.Duration;
 
 /**
  * @author Armin Reichert
  */
 public class World3D extends Group {
 
-	private final World world;
 	private final Maze3D maze3D;
-	private final Group foodGroup = new Group();
 
 	/**
 	 * @param gameVariant the game variant
@@ -61,37 +48,16 @@ public class World3D extends Group {
 	 * @param mazeNumber  the maze number (1..6)
 	 */
 	public World3D(GameVariant gameVariant, World world, int mazeNumber) {
-		this.world = world;
 		var wallSideColor = Rendering3D.getMazeSideColor(gameVariant, mazeNumber);
 		var wallTopColor = Rendering3D.getMazeTopColor(gameVariant, mazeNumber);
 		var doorColor = Rendering3D.getGhostHouseDoorColor(gameVariant);
-		maze3D = new Maze3D(world, wallSideColor, wallTopColor, doorColor);
-		getChildren().addAll(maze3D.getRoot(), foodGroup);
 		var foodColor = Rendering3D.getMazeFoodColor(gameVariant, mazeNumber);
-		addFood(world, foodColor);
+		maze3D = new Maze3D(world, wallSideColor, wallTopColor, doorColor, foodColor);
+		getChildren().addAll(maze3D.getRoot());
 	}
 
 	public Maze3D getMaze3D() {
 		return maze3D;
-	}
-
-	private void addFood(World world, Color foodColor) {
-		var meatBall = new PhongMaterial(foodColor);
-		world.tiles() //
-				.filter(world::isFoodTile) //
-				.map(tile -> world.isEnergizerTile(tile) //
-						? new Energizer3D(tile, meatBall, 3.0)
-						: new Pellet3D(tile, meatBall, 1.0))
-				.forEach(foodGroup.getChildren()::add);
-	}
-
-	public void reset() {
-		energizerAnimations().forEach(Animation::stop);
-		energizers().forEach(node -> {
-			node.setScaleX(1.0);
-			node.setScaleY(1.0);
-			node.setScaleZ(1.0);
-		});
 	}
 
 	public void update(GameModel game) {
@@ -109,39 +75,4 @@ public class World3D extends Group {
 		return ghost.position.euclideanDistance(door3D.getCenterPosition()) <= threshold;
 	}
 
-	public Animation createMazeFlashingAnimation(int times) {
-		return times > 0 ? new RaiseAndLowerWallAnimation(times) : new PauseTransition(Duration.seconds(1));
-	}
-
-	public Stream<Animation> energizerAnimations() {
-		return energizers().map(Energizer3D::animation);
-	}
-
-	public Optional<Node> foodAt(V2i tile) {
-		return foodNodes().filter(food -> tile(food).equals(tile)).findFirst();
-	}
-
-	public void hideFood(Node foodNode) {
-		foodNode.setVisible(false);
-		if (foodNode instanceof Energizer3D) {
-			var energizer = (Energizer3D) foodNode;
-			energizer.animation().stop();
-		}
-	}
-
-	public void validateFoodNodes() {
-		foodNodes().forEach(foodNode -> foodNode.setVisible(!world.containsEatenFood(tile(foodNode))));
-	}
-
-	private Stream<Node> foodNodes() {
-		return foodGroup.getChildren().stream();
-	}
-
-	private V2i tile(Node foodNode) {
-		return (V2i) foodNode.getUserData();
-	}
-
-	private Stream<Energizer3D> energizers() {
-		return foodNodes().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
-	}
 }

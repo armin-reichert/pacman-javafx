@@ -183,14 +183,15 @@ public class PlayScene3D extends GameScene3D {
 	}
 
 	public void onSwitchFrom2D() {
+		var maze3D = world3D.getMaze3D();
 		if ($.game.pac.hasPower()) {
 			Stream.of(ghosts3D) //
 					.filter(ghost3D -> U.oneOf(ghost3D.ghost.state, GhostState.FRIGHTENED, GhostState.LOCKED))
 					.forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.FRIGHTENED));
 		}
-		world3D.validateFoodNodes();
+		maze3D.validateFoodNodes();
 		if (U.oneOf($.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) {
-			world3D.energizerAnimations().forEach(Animation::play);
+			maze3D.energizerAnimations().forEach(Animation::play);
 		}
 	}
 
@@ -215,12 +216,13 @@ public class PlayScene3D extends GameScene3D {
 
 	@Override
 	public void onPlayerFindsFood(GameEvent e) {
+		var maze3D = world3D.getMaze3D();
 		// when cheat "eat all pellets" is used, no tile is present
 		if (!e.tile.isPresent()) {
 			$.game.level.world.tiles().filter($.game.level.world::containsEatenFood)
-					.forEach(tile -> world3D.foodAt(tile).ifPresent(world3D::hideFood));
+					.forEach(tile -> maze3D.foodAt(tile).ifPresent(maze3D::hideFood));
 		} else {
-			world3D.foodAt(e.tile.get()).ifPresent(world3D::hideFood);
+			maze3D.foodAt(e.tile.get()).ifPresent(maze3D::hideFood);
 		}
 	}
 
@@ -246,13 +248,14 @@ public class PlayScene3D extends GameScene3D {
 
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
+		var maze3D = world3D.getMaze3D();
 		switch (e.newGameState) {
 		case READY -> {
-			world3D.reset();
+			maze3D.reset();
 			pac3D.reset();
 			Stream.of(ghosts3D).forEach(Ghost3D::reset);
 		}
-		case HUNTING -> world3D.energizerAnimations().forEach(Animation::play);
+		case HUNTING -> maze3D.energizerAnimations().forEach(Animation::play);
 		case PACMAN_DYING -> {
 			blockGameController();
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.COLORED));
@@ -276,7 +279,7 @@ public class PlayScene3D extends GameScene3D {
 			var message = Talk.LEVEL_COMPLETE_TALK.next() + "\n\n" + Talk.message("level_complete", $.game.level.number);
 			new SequentialTransition( //
 					U.pauseSec(2.0), //
-					world3D.createMazeFlashingAnimation($.game.level.numFlashes), //
+					maze3D.createMazeFlashingAnimation($.game.level.numFlashes), //
 					U.pauseSec(1.0, $.game.pac::hide), //
 					U.pauseSec(0.5, () -> Actions.showFlashMessage(2, message)), //
 					U.pauseSec(2.0, this::unblockGameController) //
@@ -289,7 +292,7 @@ public class PlayScene3D extends GameScene3D {
 
 		// exit HUNTING
 		if (e.oldGameState == GameState.HUNTING && e.newGameState != GameState.GHOST_DYING) {
-			world3D.energizerAnimations().forEach(Animation::stop);
+			maze3D.energizerAnimations().forEach(Animation::stop);
 			bonus3D.setVisible(false);
 		}
 	}
