@@ -256,12 +256,11 @@ public class PlayScene3D extends GameScene3D {
 		case PACMAN_DYING -> {
 			blockGameController();
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.COLORED));
-			$.game.ghosts().filter(ghost -> ghost.sameTile($.game.pac)).findAny().ifPresent(killer -> {
-				new SequentialTransition( //
-						pac3D.dyingAnimation($.r2D.getGhostColor(killer.id)), //
-						U.pauseSec(2.0, this::unblockGameController) //
-				).play();
-			});
+			$.game.ghosts().filter(ghost -> ghost.sameTile($.game.pac)).findAny()
+					.ifPresent(killer -> new SequentialTransition( //
+							pac3D.dyingAnimation($.r2D.getGhostColor(killer.id)), //
+							U.pauseSec(2.0, this::unblockGameController) //
+					).play());
 		}
 		case LEVEL_STARTING -> {
 			blockGameController();
@@ -283,9 +282,7 @@ public class PlayScene3D extends GameScene3D {
 					U.pauseSec(2.0, this::unblockGameController) //
 			).play();
 		}
-		case GAME_OVER -> {
-			Actions.showFlashMessage(3, Talk.GAME_OVER_TALK.next());
-		}
+		case GAME_OVER -> Actions.showFlashMessage(3, Talk.GAME_OVER_TALK.next());
 		default -> { // ignore
 		}
 		}
