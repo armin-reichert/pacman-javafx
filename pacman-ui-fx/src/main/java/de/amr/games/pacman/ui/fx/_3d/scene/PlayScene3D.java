@@ -23,9 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
-import static de.amr.games.pacman.model.common.world.World.HTS;
-import static de.amr.games.pacman.model.common.world.World.TS;
-
 import java.util.EnumMap;
 import java.util.stream.Stream;
 
@@ -37,7 +34,6 @@ import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D.AnimationMode;
-import de.amr.games.pacman.ui.fx._3d.entity.LivesCounter3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Scores3D;
 import de.amr.games.pacman.ui.fx._3d.entity.World3D;
@@ -65,7 +61,6 @@ public class PlayScene3D extends GameScene3D {
 	private Ghost3D[] ghosts3D;
 	private Bonus3D bonus3D;
 	private Scores3D scores3D;
-	private LivesCounter3D livesCounter3D;
 
 	public PlayScene3D() {
 		createPerspectives();
@@ -85,12 +80,6 @@ public class PlayScene3D extends GameScene3D {
 			scores3D.txtScore.setText("GAME OVER!");
 		}
 
-		livesCounter3D = new LivesCounter3D($.model3D);
-		livesCounter3D.setTranslateX(TS);
-		livesCounter3D.setTranslateY(TS);
-		livesCounter3D.setTranslateZ(-HTS);
-		livesCounter3D.setVisible($.hasCredit());
-
 		createWorld3D();
 
 		pac3D = new Pac3D($.game.pac, $.model3D);
@@ -98,14 +87,14 @@ public class PlayScene3D extends GameScene3D {
 		bonus3D = new Bonus3D();
 
 		sceneContent.getChildren().add(world3D); // must be first child because it is exchanged!
-		sceneContent.getChildren().addAll(scores3D, livesCounter3D, pac3D, bonus3D);
+		sceneContent.getChildren().addAll(scores3D, pac3D, bonus3D);
 		sceneContent.getChildren().addAll(ghosts3D);
 
 		setPerspective(Env.$perspective.get());
 	}
 
 	public void createWorld3D() {
-		world3D = new World3D($.game, $.r2D);
+		world3D = new World3D($.game, $.model3D, $.r2D);
 		var maze3D = world3D.getMaze3D();
 		maze3D.setFloorSolidColor(Color.rgb(5, 5, 10));
 		maze3D.setFloorTexture(U.image("/common/escher-texture.jpg"));
@@ -158,7 +147,6 @@ public class PlayScene3D extends GameScene3D {
 		Stream.of($.game.ghosts).forEach(this::updateGhost3D);
 		bonus3D.update($.game.bonus());
 		scores3D.update($.game);
-		livesCounter3D.update($.game.playing ? $.game.lives - 1 : $.game.lives);
 		getCamera().update(pac3D);
 	}
 

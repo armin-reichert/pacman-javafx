@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.actors.GhostState.LEAVING_HOUSE;
+import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
 import de.amr.games.pacman.model.common.GameModel;
@@ -31,6 +32,7 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
+import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.Group;
 
@@ -41,8 +43,9 @@ public class World3D extends Group {
 
 	private final Maze3D maze3D;
 	private final LevelCounter3D levelCounter3D;
+	private final LivesCounter3D livesCounter3D;
 
-	public World3D(GameModel game, Rendering2D r2D) {
+	public World3D(GameModel game, PacManModel3D model3D, Rendering2D r2D) {
 		var wallSideColor = Rendering3D.getMazeSideColor(game.variant, game.level.mazeNumber);
 		var wallTopColor = Rendering3D.getMazeTopColor(game.variant, game.level.mazeNumber);
 		var doorColor = Rendering3D.getGhostHouseDoorColor(game.variant);
@@ -54,6 +57,14 @@ public class World3D extends Group {
 		levelCounter3D.setRightPosition((game.level.world.numCols() - 1) * TS, TS);
 		levelCounter3D.update(game.levelCounter);
 		getChildren().add(levelCounter3D);
+
+		livesCounter3D = new LivesCounter3D(model3D);
+		livesCounter3D.setTranslateX(TS);
+		livesCounter3D.setTranslateY(TS);
+		livesCounter3D.setTranslateZ(-HTS);
+		livesCounter3D.setVisible(game.credit > 0);
+		getChildren().add(livesCounter3D);
+
 	}
 
 	public Maze3D getMaze3D() {
@@ -68,7 +79,7 @@ public class World3D extends Group {
 					.anyMatch(ghost -> isGhostNearDoor(ghost, door3D));
 			door3D.setOpen(ghostApproaching);
 		});
-
+		livesCounter3D.update(game.playing ? game.lives - 1 : game.lives);
 	}
 
 	private boolean isGhostNearDoor(Ghost ghost, Door3D door3D) {
