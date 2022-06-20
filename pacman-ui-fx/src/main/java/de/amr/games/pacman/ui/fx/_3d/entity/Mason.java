@@ -42,7 +42,7 @@ import javafx.scene.shape.Box;
  */
 public class Mason {
 
-	private static class BuildingDetails {
+	private static class BuildDetails {
 		DoubleProperty wallHeight;
 		double brickSize;
 		PhongMaterial baseMaterial;
@@ -75,7 +75,7 @@ public class Mason {
 		}
 		foundationGroup.getChildren().add(floor);
 
-		BuildingDetails details = new BuildingDetails();
+		BuildDetails details = new BuildDetails();
 		details.wallHeight = wallHeight;
 		details.baseMaterial = new PhongMaterial(features.wallSideColor);
 		details.baseMaterial.setSpecularColor(features.wallSideColor.brighter());
@@ -90,15 +90,15 @@ public class Mason {
 		Logging.log("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), details.wallHeight.get());
 	}
 
-	private void addDoors(World world, BuildingDetails details) {
-		var leftDoor = new Door3D(world.ghostHouse().doorTileLeft(), true, details.doorColor);
-		leftDoor.doorHeight.bind(details.wallHeight);
-		var rightDoor = new Door3D(world.ghostHouse().doorTileRight(), false, details.doorColor);
-		rightDoor.doorHeight.bind(details.wallHeight);
+	private void addDoors(World world, BuildDetails buildInstr) {
+		var leftDoor = new Door3D(world.ghostHouse().doorTileLeft(), true, buildInstr.doorColor);
+		leftDoor.doorHeight.bind(buildInstr.wallHeight);
+		var rightDoor = new Door3D(world.ghostHouse().doorTileRight(), false, buildInstr.doorColor);
+		rightDoor.doorHeight.bind(buildInstr.wallHeight);
 		doorsGroup.getChildren().setAll(leftDoor.getNode(), rightDoor.getNode());
 	}
 
-	private void addHorizontalWalls(FloorPlan floorPlan, BuildingDetails details) {
+	private void addHorizontalWalls(FloorPlan floorPlan, BuildDetails buildInstr) {
 		for (int y = 0; y < floorPlan.sizeY(); ++y) {
 			int leftX = -1;
 			int sizeX = 0;
@@ -112,22 +112,22 @@ public class Mason {
 					}
 				} else {
 					if (leftX != -1) {
-						addWall(leftX, y, sizeX, 1, details);
+						addWall(leftX, y, sizeX, 1, buildInstr);
 						leftX = -1;
 					}
 				}
 				if (x == floorPlan.sizeX() - 1 && leftX != -1) {
-					addWall(leftX, y, sizeX, 1, details);
+					addWall(leftX, y, sizeX, 1, buildInstr);
 					leftX = -1;
 				}
 			}
 			if (y == floorPlan.sizeY() - 1 && leftX != -1) {
-				addWall(leftX, y, sizeX, 1, details);
+				addWall(leftX, y, sizeX, 1, buildInstr);
 			}
 		}
 	}
 
-	private void addVerticalWalls(FloorPlan floorPlan, BuildingDetails details) {
+	private void addVerticalWalls(FloorPlan floorPlan, BuildDetails buildInstr) {
 		for (int x = 0; x < floorPlan.sizeX(); ++x) {
 			int topY = -1;
 			int sizeY = 0;
@@ -141,26 +141,26 @@ public class Mason {
 					}
 				} else {
 					if (topY != -1) {
-						addWall(x, topY, 1, sizeY, details);
+						addWall(x, topY, 1, sizeY, buildInstr);
 						topY = -1;
 					}
 				}
 				if (y == floorPlan.sizeY() - 1 && topY != -1) {
-					addWall(x, topY, 1, sizeY, details);
+					addWall(x, topY, 1, sizeY, buildInstr);
 					topY = -1;
 				}
 			}
 			if (x == floorPlan.sizeX() - 1 && topY != -1) {
-				addWall(x, topY, 1, sizeY, details);
+				addWall(x, topY, 1, sizeY, buildInstr);
 			}
 		}
 	}
 
-	private void addCorners(FloorPlan floorPlan, BuildingDetails details) {
+	private void addCorners(FloorPlan floorPlan, BuildDetails buildInstr) {
 		for (int x = 0; x < floorPlan.sizeX(); ++x) {
 			for (int y = 0; y < floorPlan.sizeY(); ++y) {
 				if (floorPlan.get(x, y) == FloorPlan.CORNER) {
-					addWall(x, y, 1, 1, details);
+					addWall(x, y, 1, 1, buildInstr);
 				}
 			}
 		}
@@ -174,9 +174,9 @@ public class Mason {
 	 * @param y          y-coordinate of top-left brick
 	 * @param numBricksX number of bricks in x-direction
 	 * @param numBricksY number of bricks in y-direction
-	 * @param details    details for building stuff
+	 * @param details    buildInstr for building stuff
 	 */
-	private void addWall(int x, int y, int numBricksX, int numBricksY, BuildingDetails details) {
+	private void addWall(int x, int y, int numBricksX, int numBricksY, BuildDetails details) {
 		Box base = new Box(numBricksX * details.brickSize, numBricksY * details.brickSize, details.wallHeight.get());
 		base.depthProperty().bind(details.wallHeight);
 		base.setMaterial(details.baseMaterial);
