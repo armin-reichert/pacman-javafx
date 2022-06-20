@@ -71,7 +71,7 @@ public class Maze3D {
 	private Color floorTextureColor = Color.BLUE;
 	private Color floorSolidColor = Color.GREEN;
 
-	public Maze3D(World world) {
+	public Maze3D(World world, Color wallSideColor, Color wallTopColor, Color doorColor) {
 		this.world = world;
 		var floor = new MazeFloor3D(world.numCols() * TS - 1, world.numRows() * TS - 1, 0.01);
 		floor.showSolid(Color.rgb(5, 5, 10));
@@ -85,8 +85,9 @@ public class Maze3D {
 				floor.showSolid(floorSolidColor);
 			}
 		});
-		root.getChildren().add(floor);
-		root.getChildren().addAll(wallsGroup, doorsGroup);
+		resolution.addListener((obs, oldVal, newVal) -> erect(wallSideColor, wallTopColor, doorColor));
+		root.getChildren().addAll(floor, wallsGroup, doorsGroup);
+		erect(wallSideColor, wallTopColor, doorColor);
 	}
 
 	public Group getRoot() {

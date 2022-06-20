@@ -63,12 +63,10 @@ public class World3D extends Group {
 	 */
 	public World3D(GameVariant gameVariant, World world, int mazeNumber, Color foodColor) {
 		this.world = world;
-		maze3D = new Maze3D(world);
 		var wallSideColor = Rendering3D.getMazeSideColor(gameVariant, mazeNumber);
 		var wallTopColor = Rendering3D.getMazeTopColor(gameVariant, mazeNumber);
 		var doorColor = Rendering3D.getGhostHouseDoorColor(gameVariant);
-		maze3D.erect(wallSideColor, wallTopColor, doorColor);
-		maze3D.resolution.addListener((obs, oldVal, newVal) -> maze3D.erect(wallSideColor, wallTopColor, doorColor));
+		maze3D = new Maze3D(world, wallSideColor, wallTopColor, doorColor);
 
 		var meatBall = new PhongMaterial(foodColor);
 		world.tiles() //
