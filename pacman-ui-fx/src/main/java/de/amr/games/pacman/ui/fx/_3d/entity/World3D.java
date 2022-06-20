@@ -27,10 +27,9 @@ import static de.amr.games.pacman.model.common.actors.GhostState.LEAVING_HOUSE;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
-import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.scene.Group;
@@ -41,19 +40,20 @@ import javafx.scene.Group;
 public class World3D extends Group {
 
 	private final Maze3D maze3D;
+	private final LevelCounter3D levelCounter3D;
 
-	/**
-	 * @param gameVariant the game variant
-	 * @param world       the world
-	 * @param mazeNumber  the maze number (1..6)
-	 */
-	public World3D(GameVariant gameVariant, World world, int mazeNumber) {
-		var wallSideColor = Rendering3D.getMazeSideColor(gameVariant, mazeNumber);
-		var wallTopColor = Rendering3D.getMazeTopColor(gameVariant, mazeNumber);
-		var doorColor = Rendering3D.getGhostHouseDoorColor(gameVariant);
-		var foodColor = Rendering3D.getMazeFoodColor(gameVariant, mazeNumber);
-		maze3D = new Maze3D(world, wallSideColor, wallTopColor, doorColor, foodColor);
-		getChildren().addAll(maze3D.getRoot());
+	public World3D(GameModel game, Rendering2D r2D) {
+		var wallSideColor = Rendering3D.getMazeSideColor(game.variant, game.level.mazeNumber);
+		var wallTopColor = Rendering3D.getMazeTopColor(game.variant, game.level.mazeNumber);
+		var doorColor = Rendering3D.getGhostHouseDoorColor(game.variant);
+		var foodColor = Rendering3D.getMazeFoodColor(game.variant, game.level.mazeNumber);
+		maze3D = new Maze3D(game.level.world, wallSideColor, wallTopColor, doorColor, foodColor);
+		getChildren().add(maze3D.getRoot());
+
+		levelCounter3D = new LevelCounter3D(symbol -> r2D.getSpriteImage(r2D.getBonusSymbolSprite(symbol)));
+		levelCounter3D.setRightPosition((game.level.world.numCols() - 1) * TS, TS);
+		levelCounter3D.update(game.levelCounter);
+		getChildren().add(levelCounter3D);
 	}
 
 	public Maze3D getMaze3D() {
@@ -68,6 +68,7 @@ public class World3D extends Group {
 					.anyMatch(ghost -> isGhostNearDoor(ghost, door3D));
 			door3D.setOpen(ghostApproaching);
 		});
+
 	}
 
 	private boolean isGhostNearDoor(Ghost ghost, Door3D door3D) {

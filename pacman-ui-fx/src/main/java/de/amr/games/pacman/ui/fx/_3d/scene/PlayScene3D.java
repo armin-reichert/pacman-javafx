@@ -37,7 +37,6 @@ import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D.AnimationMode;
-import de.amr.games.pacman.ui.fx._3d.entity.LevelCounter3D;
 import de.amr.games.pacman.ui.fx._3d.entity.LivesCounter3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Scores3D;
@@ -66,7 +65,6 @@ public class PlayScene3D extends GameScene3D {
 	private Ghost3D[] ghosts3D;
 	private Bonus3D bonus3D;
 	private Scores3D scores3D;
-	private LevelCounter3D levelCounter3D;
 	private LivesCounter3D livesCounter3D;
 
 	public PlayScene3D() {
@@ -93,10 +91,6 @@ public class PlayScene3D extends GameScene3D {
 		livesCounter3D.setTranslateZ(-HTS);
 		livesCounter3D.setVisible($.hasCredit());
 
-		levelCounter3D = new LevelCounter3D(symbol -> $.r2D.getSpriteImage($.r2D.getBonusSymbolSprite(symbol)));
-		levelCounter3D.setRightPosition(($.game.level.world.numCols() - 1) * TS, TS);
-		levelCounter3D.update($.game.levelCounter);
-
 		createWorld3D();
 
 		pac3D = new Pac3D($.game.pac, $.model3D);
@@ -104,14 +98,14 @@ public class PlayScene3D extends GameScene3D {
 		bonus3D = new Bonus3D();
 
 		sceneContent.getChildren().add(world3D); // must be first child because it is exchanged!
-		sceneContent.getChildren().addAll(scores3D, livesCounter3D, levelCounter3D, pac3D, bonus3D);
+		sceneContent.getChildren().addAll(scores3D, livesCounter3D, pac3D, bonus3D);
 		sceneContent.getChildren().addAll(ghosts3D);
 
 		setPerspective(Env.$perspective.get());
 	}
 
 	public void createWorld3D() {
-		world3D = new World3D($.game.variant, $.game.level.world, $.game.level.mazeNumber);
+		world3D = new World3D($.game, $.r2D);
 		var maze3D = world3D.getMaze3D();
 		maze3D.setFloorSolidColor(Color.rgb(5, 5, 10));
 		maze3D.setFloorTexture(U.image("/common/escher-texture.jpg"));
@@ -269,7 +263,6 @@ public class PlayScene3D extends GameScene3D {
 			blockGameController();
 			createWorld3D();
 			sceneContent.getChildren().set(0, world3D);
-			levelCounter3D.update($.game.levelCounter);
 			Actions.showFlashMessage(Talk.message("level_starting", $.game.level.number));
 			U.pauseSec(3, this::unblockGameController).play();
 		}
