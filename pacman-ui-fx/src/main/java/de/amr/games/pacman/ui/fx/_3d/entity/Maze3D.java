@@ -73,18 +73,20 @@ public class Maze3D {
 	public final DoubleProperty wallHeight = new SimpleDoubleProperty(1.0);
 	public final BooleanProperty floorHasTexture = new SimpleBooleanProperty(false);
 
-	private final World world;
-	private final Group root = new Group();
-	private final Group foundationGroup = new Group();
-	private final Group doorsGroup = new Group();
-	private final Group foodGroup = new Group();
+	// package access for mason
+	final World world;
+	final Group root = new Group();
+	final Group foundationGroup = new Group();
+	final Group doorsGroup = new Group();
+	final Group foodGroup = new Group();
+
 	private final MazeStyle style;
 
 	public Maze3D(World world, MazeStyle style) {
 		this.world = world;
 		this.style = style;
 		root.getChildren().addAll(foundationGroup, doorsGroup, foodGroup);
-		var mason = new Mason(foundationGroup, doorsGroup);
+		var mason = new Mason(this);
 		letMasonDoItsWork(mason, style);
 		addFood(world, style.foodColor);
 		resolution.addListener((obs, oldVal, newVal) -> letMasonDoItsWork(mason, style));

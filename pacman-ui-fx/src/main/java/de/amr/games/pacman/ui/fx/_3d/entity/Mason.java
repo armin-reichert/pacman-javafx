@@ -50,17 +50,16 @@ public class Mason {
 		Color doorColor;
 	}
 
-	private final Group foundationGroup;
-	private final Group doorsGroup;
+	private final Maze3D maze3D;
 
-	public Mason(Group foundationGroup, Group doorsGroup) {
-		this.foundationGroup = foundationGroup;
-		this.doorsGroup = doorsGroup;
+	public Mason(Maze3D maze3D) {
+		this.maze3D = maze3D;
 	}
 
 	public void erectBuilding(World world, int resolution, DoubleProperty wallHeight, MazeStyle style,
 			boolean floorTextureVisible) {
-		foundationGroup.getChildren().clear();
+
+		maze3D.foundationGroup.getChildren().clear();
 
 		var floorPlan = new FloorPlan(resolution, world);
 
@@ -73,7 +72,7 @@ public class Mason {
 		} else {
 			floor.showSolid(style.floorSolidColor);
 		}
-		foundationGroup.getChildren().add(floor);
+		maze3D.foundationGroup.getChildren().add(floor);
 
 		BuildDetails details = new BuildDetails();
 		details.wallHeight = wallHeight;
@@ -95,7 +94,7 @@ public class Mason {
 		leftDoor.doorHeight.bind(details.wallHeight);
 		var rightDoor = new Door3D(world.ghostHouse().doorTileRight(), false, details.doorColor);
 		rightDoor.doorHeight.bind(details.wallHeight);
-		doorsGroup.getChildren().setAll(leftDoor.getNode(), rightDoor.getNode());
+		maze3D.doorsGroup.getChildren().setAll(leftDoor.getNode(), rightDoor.getNode());
 	}
 
 	private void addHorizontalWalls(FloorPlan floorPlan, BuildDetails details) {
@@ -194,6 +193,6 @@ public class Mason {
 		wall.setTranslateX((x + 0.5 * numBricksX) * details.brickSize);
 		wall.setTranslateY((y + 0.5 * numBricksY) * details.brickSize);
 
-		foundationGroup.getChildren().add(wall);
+		maze3D.foundationGroup.getChildren().add(wall);
 	}
 }
