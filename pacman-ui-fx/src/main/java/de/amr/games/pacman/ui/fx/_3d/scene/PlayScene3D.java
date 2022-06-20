@@ -32,18 +32,16 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
-import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
-import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D.AnimationMode;
 import de.amr.games.pacman.ui.fx._3d.entity.LevelCounter3D;
 import de.amr.games.pacman.ui.fx._3d.entity.LivesCounter3D;
-import de.amr.games.pacman.ui.fx._3d.entity.World3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Scores3D;
+import de.amr.games.pacman.ui.fx._3d.entity.World3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.Talk;
 import de.amr.games.pacman.ui.fx.shell.Actions;
@@ -61,7 +59,6 @@ import javafx.scene.paint.Color;
  */
 public class PlayScene3D extends GameScene3D {
 
-	private final V2d unscaledSize = new V2d(ArcadeWorld.TILES_X * TS, ArcadeWorld.TILES_Y * TS);
 	private final EnumMap<Perspective, GameSceneCamera> cameras = new EnumMap<>(Perspective.class);
 
 	private World3D world3D;
@@ -97,7 +94,7 @@ public class PlayScene3D extends GameScene3D {
 		livesCounter3D.setVisible($.hasCredit());
 
 		levelCounter3D = new LevelCounter3D(symbol -> $.r2D.getSpriteImage($.r2D.getBonusSymbolSprite(symbol)));
-		levelCounter3D.setRightPosition(unscaledSize.x - TS, TS);
+		levelCounter3D.setRightPosition(($.game.level.world.numCols() - 1) * TS, TS);
 		levelCounter3D.update($.game.levelCounter);
 
 		world3D = createWorld3D();
@@ -114,7 +111,7 @@ public class PlayScene3D extends GameScene3D {
 	}
 
 	public World3D createWorld3D() {
-		var world3D = new World3D($.game.variant, $.game.level.world, $.game.level.mazeNumber, unscaledSize,
+		var world3D = new World3D($.game.variant, $.game.level.world, $.game.level.mazeNumber,
 				$.r2D.getFoodColor($.game.level.mazeNumber));
 
 		world3D.maze3D.setFloorSolidColor(Color.rgb(5, 5, 10));

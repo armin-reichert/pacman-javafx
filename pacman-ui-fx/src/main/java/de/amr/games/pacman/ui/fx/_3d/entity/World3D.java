@@ -29,7 +29,6 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
@@ -57,21 +56,19 @@ public class World3D extends Group {
 	private final Group foodGroup = new Group();
 
 	/**
-	 * @param gameVariant  the game variant
-	 * @param world        the world
-	 * @param mazeNumber   the maze number (1..6)
-	 * @param unscaledSize unscaled size
-	 * @param foodColor    food color in this maze
+	 * @param gameVariant the game variant
+	 * @param world       the world
+	 * @param mazeNumber  the maze number (1..6)
+	 * @param foodColor   food color in this maze
 	 */
-	public World3D(GameVariant gameVariant, World world, int mazeNumber, V2d unscaledSize, Color foodColor) {
+	public World3D(GameVariant gameVariant, World world, int mazeNumber, Color foodColor) {
 		this.world = world;
-		maze3D = new Maze3D(unscaledSize, world);
+		maze3D = new Maze3D(world);
 		var wallSideColor = Rendering3D.getMazeSideColor(gameVariant, mazeNumber);
 		var wallTopColor = Rendering3D.getMazeTopColor(gameVariant, mazeNumber);
 		var doorColor = Rendering3D.getGhostHouseDoorColor(gameVariant);
 		maze3D.erect(wallSideColor, wallTopColor, doorColor);
-		maze3D.resolution
-				.addListener((obs, oldVal, newVal) -> maze3D.erect(wallSideColor, wallTopColor, doorColor));
+		maze3D.resolution.addListener((obs, oldVal, newVal) -> maze3D.erect(wallSideColor, wallTopColor, doorColor));
 
 		var meatBall = new PhongMaterial(foodColor);
 		world.tiles() //

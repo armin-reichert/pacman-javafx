@@ -29,7 +29,6 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -72,9 +71,9 @@ public class Maze3D {
 	private Color floorTextureColor = Color.BLUE;
 	private Color floorSolidColor = Color.GREEN;
 
-	public Maze3D(V2d unscaledSize, World world) {
+	public Maze3D(World world) {
 		this.world = world;
-		var floor = new MazeFloor3D(unscaledSize.x - 1, unscaledSize.y - 1, 0.01);
+		var floor = new MazeFloor3D(world.numCols() * TS - 1, world.numRows() * TS - 1, 0.01);
 		floor.showSolid(Color.rgb(5, 5, 10));
 		floor.setTranslateX(0.5 * floor.getWidth());
 		floor.setTranslateY(0.5 * floor.getHeight());
