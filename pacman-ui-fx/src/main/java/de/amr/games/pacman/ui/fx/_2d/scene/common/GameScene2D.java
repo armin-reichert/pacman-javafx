@@ -119,7 +119,7 @@ public abstract class GameScene2D implements GameScene {
 
 	@Override
 	public final void update() {
-		infoPane.setVisible(Env.$debugUI.get());
+		infoPane.setVisible(Env.debugUI.get());
 		doUpdate();
 		var g = canvas.getGraphicsContext2D();
 		g.setFill(Color.BLACK);
@@ -129,7 +129,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	private void drawOverlay() {
-		overlayCanvas.setVisible(Env.$debugUI.get());
+		overlayCanvas.setVisible(Env.debugUI.get());
 		if (overlayCanvas.isVisible()) {
 			var og = overlayCanvas.getGraphicsContext2D();
 			og.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());

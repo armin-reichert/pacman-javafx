@@ -86,18 +86,18 @@ public class SectionGeneral extends Section {
 		addInfo("Total Ticks", GameLoop.get()::getTotalTicks);
 
 		cbUsePlayScene3D = addCheckBox("Use 3D play scene", Actions::toggleUse3DScene);
-		cbDebugUI = addCheckBox("Show UI Debug Stuff", () -> Env.toggle(Env.$debugUI));
+		cbDebugUI = addCheckBox("Show UI Debug Stuff", () -> Env.toggle(Env.debugUI));
 		addInfo("Main scene", () -> String.format("w=%.0f h=%.0f", ui.getMainSceneWidth(), ui.getMainSceneHeight()));
 	}
 
 	@Override
 	public void update() {
 		super.update();
-		btnsSimulation[0].setGraphic(Env.$paused.get() ? iconPlay : iconStop);
-		btnsSimulation[0].setTooltip(Env.$paused.get() ? tooltipPlay : tooltipStop);
-		btnsSimulation[1].setDisable(!Env.$paused.get());
+		btnsSimulation[0].setGraphic(Env.paused.get() ? iconPlay : iconStop);
+		btnsSimulation[0].setTooltip(Env.paused.get() ? tooltipPlay : tooltipStop);
+		btnsSimulation[1].setDisable(!Env.paused.get());
 		sliderTargetFPS.setValue(GameLoop.get().getTargetFrameRate());
-		cbUsePlayScene3D.setSelected(Env.$3D.get());
-		cbDebugUI.setSelected(Env.$debugUI.get());
+		cbUsePlayScene3D.setSelected(Env.use3D.get());
+		cbDebugUI.setSelected(Env.debugUI.get());
 	}
 }

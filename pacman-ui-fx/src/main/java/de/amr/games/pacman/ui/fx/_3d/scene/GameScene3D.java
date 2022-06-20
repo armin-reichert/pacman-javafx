@@ -51,7 +51,7 @@ public abstract class GameScene3D implements GameScene {
 				(double) -ArcadeWorld.TILES_Y * World.HTS);
 		sceneContent.getTransforms().add(contentTranslate);
 		var axes = new CoordinateAxes(1000);
-		axes.visibleProperty().bind(Env.$axesVisible);
+		axes.visibleProperty().bind(Env.axesVisible);
 		var sceneRoot = new Group(sceneContent, new AmbientLight(Color.GHOSTWHITE), axes);
 		fxSubScene = new SubScene(sceneRoot, 100, 100, true, SceneAntialiasing.BALANCED);
 	}

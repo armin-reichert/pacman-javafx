@@ -62,7 +62,7 @@ public class PlayScene3D extends GameScene3D {
 
 	public PlayScene3D() {
 		createCameras();
-		Env.$perspective.addListener((obs, oldVal, newVal) -> setPerspective(newVal));
+		Env.perspective.addListener((obs, oldVal, newVal) -> setPerspective(newVal));
 	}
 
 	@Override
@@ -77,15 +77,15 @@ public class PlayScene3D extends GameScene3D {
 		sceneContent.getChildren().addAll(ghosts3D);
 		bonus3D = new Bonus3D();
 		sceneContent.getChildren().add(bonus3D);
-		setPerspective(Env.$perspective.get());
+		setPerspective(Env.perspective.get());
 	}
 
 	public void createWorld3D() {
 		world3D = new World3D($.game, $.model3D, $.r2D);
 		var maze3D = world3D.getMaze3D();
-		maze3D.wallHeight.bind(Env.$mazeWallHeight);
-		maze3D.resolution.bind(Env.$mazeResolution);
-		maze3D.floorHasTexture.bind(Env.$mazeFloorHasTexture);
+		maze3D.wallHeight.bind(Env.mazeWallHeight);
+		maze3D.resolution.bind(Env.mazeResolution);
+		maze3D.floorHasTexture.bind(Env.mazeFloorHasTexture);
 	}
 
 	private void createCameras() {

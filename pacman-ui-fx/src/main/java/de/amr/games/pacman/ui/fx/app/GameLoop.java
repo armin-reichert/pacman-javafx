@@ -85,7 +85,7 @@ public class GameLoop {
 		Duration frameDuration = Duration.millis(1000d / targetFrameRate);
 		animation = new Timeline(targetFrameRate);
 		animation.setCycleCount(Animation.INDEFINITE);
-		animation.getKeyFrames().add(new KeyFrame(frameDuration, e -> runSingleStep(!Env.$paused.get())));
+		animation.getKeyFrames().add(new KeyFrame(frameDuration, e -> runSingleStep(!Env.paused.get())));
 		if (restart) {
 			animation.play();
 		}

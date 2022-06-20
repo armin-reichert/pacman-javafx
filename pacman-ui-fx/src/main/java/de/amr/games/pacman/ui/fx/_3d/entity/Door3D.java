@@ -56,7 +56,7 @@ public class Door3D {
 		box.setTranslateX((double) tile.x * TS + HTS);
 		box.setTranslateY((double) tile.y * TS + HTS);
 		box.translateZProperty().bind(doorHeight.divide(-2.0).subtract(0.5));
-		box.drawModeProperty().bind(Env.$drawMode3D);
+		box.drawModeProperty().bind(Env.drawMode3D);
 		var centerX = leftWing ? (tile.x + 1) * TS : (tile.x - 1) * TS;
 		centerPosition = new V2d(centerX, tile.y * TS);
 	}

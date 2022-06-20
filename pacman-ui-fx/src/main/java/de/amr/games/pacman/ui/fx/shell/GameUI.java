@@ -86,7 +86,7 @@ public class GameUI implements GameEventAdapter {
 
 		gameScenePlaceholder = new StackPane();
 		gameScenePlaceholder.setBackground(U.colorBackground(SCENE_BACKGROUND_COLOR));
-		Env.$drawMode3D.addListener((x, y, mode) -> gameScenePlaceholder
+		Env.drawMode3D.addListener((x, y, mode) -> gameScenePlaceholder
 				.setBackground(U.colorBackground(mode == DrawMode.FILL ? SCENE_BACKGROUND_COLOR : Color.BLACK)));
 
 		sceneRoot = new StackPane(gameScenePlaceholder, dashboard, flashMessageView);
@@ -186,7 +186,7 @@ public class GameUI implements GameEventAdapter {
 	public void toggle3D() {
 		var game = gameController.game();
 		var state = gameController.state();
-		Env.toggle(Env.$3D);
+		Env.toggle(Env.use3D);
 		if (SceneManager.sceneExistsInBothDimensions(game, state)) {
 			updateCurrentGameScene(true);
 			if (currentGameScene instanceof PlayScene2D) {
@@ -200,7 +200,7 @@ public class GameUI implements GameEventAdapter {
 	private void updateCurrentGameScene(boolean forcedSceneUpdate) {
 		var game = gameController.game();
 		var state = gameController.state();
-		var dimension = Env.$3D.get() ? SceneManager.SCENE_3D : SceneManager.SCENE_2D;
+		var dimension = Env.use3D.get() ? SceneManager.SCENE_3D : SceneManager.SCENE_2D;
 		var newGameScene = SceneManager.findGameScene(game, state, dimension);
 		if (newGameScene == null) {
 			throw new IllegalStateException("No fitting game scene found for game state " + state);
@@ -237,7 +237,7 @@ public class GameUI implements GameEventAdapter {
 		if (Keyboard.pressed(Keyboard.ALT, KeyCode.A)) {
 			Actions.toggleAutopilot();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.D)) {
-			Env.toggle(Env.$debugUI);
+			Env.toggle(Env.debugUI);
 		} else if (Keyboard.pressed(Keyboard.CTRL, KeyCode.I)) {
 			Actions.toggleInfoPanelsVisible();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.I)) {

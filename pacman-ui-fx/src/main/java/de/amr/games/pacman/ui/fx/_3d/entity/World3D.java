@@ -31,13 +31,8 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Maze3D.MazeStyle;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
+import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.U;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 
@@ -45,10 +40,6 @@ import javafx.scene.paint.Color;
  * @author Armin Reichert
  */
 public class World3D {
-
-	public final DoubleProperty mazeWallHeight = new SimpleDoubleProperty(1.0);
-	public final IntegerProperty mazeResolution = new SimpleIntegerProperty(8);
-	public final BooleanProperty mazeFloorHasTexture = new SimpleBooleanProperty(false);
 
 	private final Group root = new Group();
 	private final Maze3D maze3D;
@@ -80,9 +71,9 @@ public class World3D {
 		style.floorTextureColor = Color.rgb(51, 0, 102);
 
 		maze3D = new Maze3D(game.level.world, style);
-		maze3D.floorHasTexture.bind(mazeFloorHasTexture);
-		maze3D.resolution.bind(mazeResolution);
-		maze3D.wallHeight.bind(mazeWallHeight);
+		maze3D.floorHasTexture.bind(Env.mazeFloorHasTexture);
+		maze3D.resolution.bind(Env.mazeResolution);
+		maze3D.wallHeight.bind(Env.mazeWallHeight);
 		maze3D.getFloor().showSolid(maze3D.getStyle().floorSolidColor);
 		root.getChildren().add(maze3D.getRoot());
 

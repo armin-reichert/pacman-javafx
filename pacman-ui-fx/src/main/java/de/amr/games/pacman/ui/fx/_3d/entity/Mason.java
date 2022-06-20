@@ -181,14 +181,14 @@ public class Mason {
 		base.depthProperty().bind(details.wallHeight);
 		base.setMaterial(details.baseMaterial);
 		base.translateZProperty().bind(details.wallHeight.multiply(-0.5));
-		base.drawModeProperty().bind(Env.$drawMode3D);
+		base.drawModeProperty().bind(Env.drawMode3D);
 
 		double topHeight = 0.5;
 		Box top = new Box(numBricksX * details.brickSize, numBricksY * details.brickSize, topHeight);
 		top.setMaterial(details.topMaterial);
 		top.translateZProperty()
 				.bind(base.translateZProperty().subtract(details.wallHeight.add(topHeight + 0.1).multiply(0.5)));
-		top.drawModeProperty().bind(Env.$drawMode3D);
+		top.drawModeProperty().bind(Env.drawMode3D);
 
 		Group wall = new Group(base, top);
 		wall.setTranslateX((x + 0.5 * numBricksX) * details.brickSize);

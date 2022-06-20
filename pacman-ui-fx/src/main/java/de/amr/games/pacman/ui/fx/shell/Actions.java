@@ -97,12 +97,12 @@ public class Actions {
 	}
 
 	public static void togglePaused() {
-		Env.toggle(Env.$paused);
-		log(Env.$paused.get() ? "Simulation paused." : "Simulation resumed.");
+		Env.toggle(Env.paused);
+		log(Env.paused.get() ? "Simulation paused." : "Simulation resumed.");
 	}
 
 	public static void singleStep() {
-		if (Env.$paused.get()) {
+		if (Env.paused.get()) {
 			GameLoop.get().runSingleStep(true);
 		}
 	}
@@ -114,16 +114,16 @@ public class Actions {
 
 	public static void selectNextPerspective() {
 		if (theUI.getCurrentGameScene().is3D()) {
-			Env.$perspective.set(Env.$perspective.get().next());
-			String perspectiveName = Talk.message(Env.$perspective.get().name());
+			Env.perspective.set(Env.perspective.get().next());
+			String perspectiveName = Talk.message(Env.perspective.get().name());
 			showFlashMessage(Talk.message("camera_perspective", perspectiveName));
 		}
 	}
 
 	public static void selectPrevPerspective() {
 		if (theUI.getCurrentGameScene().is3D()) {
-			Env.$perspective.set(Env.$perspective.get().prev());
-			String perspectiveName = Talk.message(Env.$perspective.get().name());
+			Env.perspective.set(Env.perspective.get().prev());
+			String perspectiveName = Talk.message(Env.perspective.get().name());
 			showFlashMessage(Talk.message("camera_perspective", perspectiveName));
 		}
 
@@ -143,11 +143,11 @@ public class Actions {
 
 	public static void toggleUse3DScene() {
 		theUI.toggle3D();
-		showFlashMessage(Talk.message(Env.$3D.get() ? "use_3D_scene" : "use_2D_scene"));
+		showFlashMessage(Talk.message(Env.use3D.get() ? "use_3D_scene" : "use_2D_scene"));
 	}
 
 	public static void toggleDrawMode() {
-		Env.$drawMode3D.set(Env.$drawMode3D.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+		Env.drawMode3D.set(Env.drawMode3D.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 	}
 
 	public static void toggleSoundMuted() {

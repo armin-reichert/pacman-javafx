@@ -96,7 +96,7 @@ public class PacManCutscene3 extends GameScene2D {
 
 	@Override
 	protected void doRender(GraphicsContext g) {
-		if (Env.$debugUI.get()) {
+		if (Env.debugUI.get()) {
 			g.setFont($.r2D.getArcadeFont());
 			g.setFill(Color.WHITE);
 			if (initialDelay > 0) {

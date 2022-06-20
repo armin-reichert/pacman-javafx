@@ -44,18 +44,15 @@ public class Env {
 	private Env() {
 	}
 
-	// Public properties
-
-	public static final BooleanProperty $axesVisible = new SimpleBooleanProperty(false);
-	public static final BooleanProperty $debugUI = new SimpleBooleanProperty(false);
-	public static final ObjectProperty<DrawMode> $drawMode3D = new SimpleObjectProperty<>(DrawMode.FILL);
-	public static final IntegerProperty $mazeResolution = new SimpleIntegerProperty(8);
-	public static final DoubleProperty $mazeWallHeight = new SimpleDoubleProperty(2.0);
-	public static final BooleanProperty $paused = new SimpleBooleanProperty(false);
-	public static final ObjectProperty<Perspective> $perspective = new SimpleObjectProperty<>(
-			Perspective.CAM_NEAR_PLAYER);
-	public static final BooleanProperty $mazeFloorHasTexture = new SimpleBooleanProperty(false);
-	public static final BooleanProperty $3D = new SimpleBooleanProperty(true);
+	public static final BooleanProperty axesVisible = new SimpleBooleanProperty(false);
+	public static final BooleanProperty debugUI = new SimpleBooleanProperty(false);
+	public static final ObjectProperty<DrawMode> drawMode3D = new SimpleObjectProperty<>(DrawMode.FILL);
+	public static final BooleanProperty mazeFloorHasTexture = new SimpleBooleanProperty(false);
+	public static final IntegerProperty mazeResolution = new SimpleIntegerProperty(8);
+	public static final DoubleProperty mazeWallHeight = new SimpleDoubleProperty(2.0);
+	public static final BooleanProperty paused = new SimpleBooleanProperty(false);
+	public static final ObjectProperty<Perspective> perspective = new SimpleObjectProperty<>(Perspective.CAM_NEAR_PLAYER);
+	public static final BooleanProperty use3D = new SimpleBooleanProperty(true);
 
 	public static void toggle(BooleanProperty bp) {
 		bp.set(!bp.get());

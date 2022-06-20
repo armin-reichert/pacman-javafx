@@ -76,7 +76,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	protected void doUpdate() {
-		if (Env.$debugUI.get()) {
+		if (Env.debugUI.get()) {
 			guysInfo.update();
 		}
 	}

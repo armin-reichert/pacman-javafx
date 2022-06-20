@@ -74,7 +74,7 @@ public class GianmarcosModel3D implements PacManModel3D {
 		eyes.setMaterial(new PhongMaterial(eyesColor));
 		palate.setMaterial(new PhongMaterial(palateColor));
 
-		bindDrawMode(Env.$drawMode3D, skull, eyes, palate);
+		bindDrawMode(Env.drawMode3D, skull, eyes, palate);
 
 		return pacman;
 	}
@@ -95,7 +95,7 @@ public class GianmarcosModel3D implements PacManModel3D {
 		centerOverOrigin(skin, eyes);
 		scale(ghost, 8);
 		ghost.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-		bindDrawMode(Env.$drawMode3D, skin, eyeBalls, pupils);
+		bindDrawMode(Env.drawMode3D, skin, eyeBalls, pupils);
 		return ghost;
 	}
 }

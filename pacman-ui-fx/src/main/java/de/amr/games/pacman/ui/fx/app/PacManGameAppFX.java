@@ -67,8 +67,8 @@ public class PacManGameAppFX extends Application {
 	public void init() throws Exception {
 		log("Initializing application...");
 		options = new Options(getParameters().getUnnamed());
-		Env.$3D.set(options.use3D);
-		Env.$perspective.set(options.perspective);
+		Env.use3D.set(options.use3D);
+		Env.perspective.set(options.perspective);
 		gameController = new GameController();
 		gameController.selectGame(options.gameVariant);
 		log("Application initialized. Game variant: %s", gameController.game().variant);
@@ -88,6 +88,6 @@ public class PacManGameAppFX extends Application {
 		GameLoop.get().start();
 		log("Application started.");
 		log("UI size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s", ui.getWidth(), ui.getHeight(), zoom,
-				U.onOff(Env.$3D.get()), Env.$perspective.get());
+				U.onOff(Env.use3D.get()), Env.perspective.get());
 	}
 }

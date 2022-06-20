@@ -41,7 +41,7 @@ public class MazeFloor3D extends Box {
 	public MazeFloor3D(double width, double height, double depth) {
 		super(width, height, depth);
 		setMaterial(material);
-		drawModeProperty().bind(Env.$drawMode3D);
+		drawModeProperty().bind(Env.drawMode3D);
 		showSolid(Color.BLACK);
 	}
 
