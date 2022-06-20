@@ -34,47 +34,53 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 
 /**
- * Floor of the maze.
+ * Floor of a building.
  * 
  * @author Armin Reichert
  */
-public class MazeFloor3D extends Box {
+public class Floor3D {
 
 	public final BooleanProperty textureVisible = new SimpleBooleanProperty(false);
 	public final ObjectProperty<Image> texture = new SimpleObjectProperty<>(null);
 	public final ObjectProperty<Color> textureColor = new SimpleObjectProperty<>(Color.BLACK);
 	public final ObjectProperty<Color> solidColor = new SimpleObjectProperty<>(Color.GREEN);
 
-	public MazeFloor3D(double width, double height, double depth) {
-		super(width, height, depth);
-		drawModeProperty().bind(Env.drawMode3D);
+	private final Box root;
+
+	public Floor3D(double width, double height, double depth) {
+		root = new Box(width, height, depth);
+		root.drawModeProperty().bind(Env.drawMode3D);
 		texture.addListener((x, y, newTexture) -> update());
 		textureColor.addListener((x, y, newColor) -> update());
 		solidColor.addListener((x, y, newColor) -> update());
 		textureVisible.addListener((x, y, visible) -> update());
-		updateTexture();
+		update();
+	}
+
+	public Box getRoot() {
+		return root;
 	}
 
 	private void update() {
 		if (textureVisible.get()) {
-			updateTexture();
+			displayTexture();
 		} else {
-			updateSolid();
+			displaySolid();
 		}
 	}
 
-	private void updateTexture() {
+	private void displayTexture() {
 		var material = new PhongMaterial();
 		material.setDiffuseColor(textureColor.get());
 		material.setSpecularColor(textureColor.get().brighter());
 		material.setDiffuseMap(texture.get());
-		setMaterial(material);
+		root.setMaterial(material);
 	}
 
-	private void updateSolid() {
+	private void displaySolid() {
 		var material = new PhongMaterial();
 		material.setDiffuseColor(solidColor.get());
 		material.setSpecularColor(solidColor.get().brighter());
-		setMaterial(material);
+		root.setMaterial(material);
 	}
 }
