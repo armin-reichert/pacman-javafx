@@ -42,25 +42,25 @@ import javafx.scene.shape.Box;
  */
 public class Mason {
 
-	private final Group wallsGroup;
+	private final Group foundationGroup;
 	private final Group doorsGroup;
 
-	public Mason(Group wallsGroup, Group doorsGroup) {
-		this.wallsGroup = wallsGroup;
+	public Mason(Group foundationGroup, Group doorsGroup) {
+		this.foundationGroup = foundationGroup;
 		this.doorsGroup = doorsGroup;
 	}
 
 	public void erectBuilding(FloorPlan floorPlan, World world, DoubleProperty wallHeight, Color wallBaseColor,
 			Color wallTopColor, Color doorColor) {
 
-		wallsGroup.getChildren().clear();
+		foundationGroup.getChildren().clear();
 
 		var floor = new MazeFloor3D(world.numCols() * TS - 1, world.numRows() * TS - 1, 0.01);
 		floor.showSolid(Color.rgb(5, 5, 10));
 		floor.setTranslateX(0.5 * floor.getWidth());
 		floor.setTranslateY(0.5 * floor.getHeight());
 		floor.setTranslateZ(0.5 * floor.getDepth());
-		wallsGroup.getChildren().add(floor);
+		foundationGroup.getChildren().add(floor);
 
 		createWalls(floorPlan, wallHeight, wallBaseColor, wallTopColor);
 		createDoors(world, wallHeight, doorColor);
@@ -183,6 +183,6 @@ public class Mason {
 		wall.setTranslateX((x + 0.5 * numBricksX) * wp.brickSize);
 		wall.setTranslateY((y + 0.5 * numBricksY) * wp.brickSize);
 
-		wallsGroup.getChildren().add(wall);
+		foundationGroup.getChildren().add(wall);
 	}
 }

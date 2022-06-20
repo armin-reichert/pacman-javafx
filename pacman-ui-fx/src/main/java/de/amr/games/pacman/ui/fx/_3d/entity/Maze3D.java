@@ -73,7 +73,7 @@ public class Maze3D {
 
 	private final World world;
 	private final Group root = new Group();
-	private final Group wallsGroup = new Group();
+	private final Group foundationGroup = new Group();
 	private final Group doorsGroup = new Group();
 	private final Group foodGroup = new Group();
 
@@ -83,7 +83,7 @@ public class Maze3D {
 
 	public Maze3D(World world, Color wallSideColor, Color wallTopColor, Color doorColor, Color foodColor) {
 		this.world = world;
-		root.getChildren().addAll(wallsGroup, doorsGroup, foodGroup);
+		root.getChildren().addAll(foundationGroup, doorsGroup, foodGroup);
 		letsBuildIt(wallSideColor, wallTopColor, doorColor);
 		addFood(world, foodColor);
 
@@ -99,7 +99,7 @@ public class Maze3D {
 
 	private void letsBuildIt(Color wallSideColor, Color wallTopColor, Color doorColor) {
 		var floorPlan = new FloorPlan(resolution.get(), world);
-		Mason mason = new Mason(wallsGroup, doorsGroup);
+		Mason mason = new Mason(foundationGroup, doorsGroup);
 		mason.erectBuilding(floorPlan, world, wallHeight, wallSideColor, wallTopColor, doorColor);
 		if (floorHasTexture.get()) {
 			getFloor().showTextured(floorTexture, floorTextureColor);
@@ -109,7 +109,7 @@ public class Maze3D {
 	}
 
 	public MazeFloor3D getFloor() {
-		return (MazeFloor3D) wallsGroup.getChildren().get(0);
+		return (MazeFloor3D) foundationGroup.getChildren().get(0);
 	}
 
 	public Group getRoot() {
