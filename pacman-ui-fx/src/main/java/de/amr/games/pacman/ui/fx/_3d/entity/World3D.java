@@ -40,8 +40,9 @@ import javafx.scene.paint.Color;
 /**
  * @author Armin Reichert
  */
-public class World3D extends Group {
+public class World3D {
 
+	private final Group root = new Group();
 	private final Maze3D maze3D;
 	private final Scores3D scores3D;
 	private final LevelCounter3D levelCounter3D;
@@ -58,26 +59,30 @@ public class World3D extends Group {
 			scores3D.txtScore.setFill(Color.RED);
 			scores3D.txtScore.setText("GAME OVER!");
 		}
-		getChildren().add(scores3D);
+		root.getChildren().add(scores3D);
 
 		var wallSideColor = Rendering3D.getMazeSideColor(game.variant, game.level.mazeNumber);
 		var wallTopColor = Rendering3D.getMazeTopColor(game.variant, game.level.mazeNumber);
 		var doorColor = Rendering3D.getGhostHouseDoorColor(game.variant);
 		var foodColor = Rendering3D.getMazeFoodColor(game.variant, game.level.mazeNumber);
 		maze3D = new Maze3D(game.level.world, wallSideColor, wallTopColor, doorColor, foodColor);
-		getChildren().add(maze3D.getRoot());
+		root.getChildren().add(maze3D.getRoot());
 
 		levelCounter3D = new LevelCounter3D(symbol -> r2D.getSpriteImage(r2D.getBonusSymbolSprite(symbol)));
 		levelCounter3D.setRightPosition((game.level.world.numCols() - 1) * TS, TS);
 		levelCounter3D.update(game.levelCounter);
-		getChildren().add(levelCounter3D);
+		root.getChildren().add(levelCounter3D);
 
 		livesCounter3D = new LivesCounter3D(model3D);
 		livesCounter3D.setTranslateX(TS);
 		livesCounter3D.setTranslateY(TS);
 		livesCounter3D.setTranslateZ(-HTS);
 		livesCounter3D.setVisible(game.credit > 0);
-		getChildren().add(livesCounter3D);
+		root.getChildren().add(livesCounter3D);
+	}
+
+	public Group getRoot() {
+		return root;
 	}
 
 	public Scores3D getScores3D() {
