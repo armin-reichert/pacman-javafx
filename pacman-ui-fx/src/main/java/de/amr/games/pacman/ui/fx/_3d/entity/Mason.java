@@ -29,7 +29,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.ui.fx._3d.entity.Maze3D.FeatureList;
+import de.amr.games.pacman.ui.fx._3d.entity.Maze3D.MazeStyle;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.Group;
@@ -58,18 +58,25 @@ public class Mason {
 		this.doorsGroup = doorsGroup;
 	}
 
-	public void erectBuilding(FloorPlan floorPlan, World world, FeatureList features) {
+	public void erectBuilding(World world, int resolution, DoubleProperty wallHeight, MazeStyle features,
+			boolean floorTextureVisible) {
 		foundationGroup.getChildren().clear();
 
+		var floorPlan = new FloorPlan(resolution, world);
+
 		var floor = new MazeFloor3D(world.numCols() * TS - 1, world.numRows() * TS - 1, 0.01);
-		floor.showSolid(Color.rgb(5, 5, 10));
 		floor.setTranslateX(0.5 * floor.getWidth());
 		floor.setTranslateY(0.5 * floor.getHeight());
 		floor.setTranslateZ(0.5 * floor.getDepth());
+		if (floorTextureVisible) {
+			floor.showTextured(features.floorTexture, features.floorTextureColor);
+		} else {
+			floor.showSolid(features.floorSolidColor);
+		}
 		foundationGroup.getChildren().add(floor);
 
 		BuildingDetails details = new BuildingDetails();
-		details.wallHeight = features.wallHeight;
+		details.wallHeight = wallHeight;
 		details.baseMaterial = new PhongMaterial(features.wallSideColor);
 		details.baseMaterial.setSpecularColor(features.wallSideColor.brighter());
 		details.topMaterial = new PhongMaterial(features.wallTopColor);

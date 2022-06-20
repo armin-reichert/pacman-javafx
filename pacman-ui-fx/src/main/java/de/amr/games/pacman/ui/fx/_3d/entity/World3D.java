@@ -29,7 +29,15 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
+import de.amr.games.pacman.ui.fx._3d.entity.Maze3D.MazeStyle;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
+import de.amr.games.pacman.ui.fx.util.U;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 
@@ -37,6 +45,10 @@ import javafx.scene.paint.Color;
  * @author Armin Reichert
  */
 public class World3D {
+
+	public final DoubleProperty mazeWallHeight = new SimpleDoubleProperty(1.0);
+	public final IntegerProperty mazeResolution = new SimpleIntegerProperty(8);
+	public final BooleanProperty mazeFloorHasTexture = new SimpleBooleanProperty(false);
 
 	private final Group root = new Group();
 	private final Maze3D maze3D;
@@ -57,11 +69,21 @@ public class World3D {
 		}
 		root.getChildren().add(scores3D);
 
-		var wallSideColor = Rendering3D.getMazeSideColor(game.variant, game.level.mazeNumber);
-		var wallTopColor = Rendering3D.getMazeTopColor(game.variant, game.level.mazeNumber);
-		var doorColor = Rendering3D.getGhostHouseDoorColor(game.variant);
-		var foodColor = Rendering3D.getMazeFoodColor(game.variant, game.level.mazeNumber);
-		maze3D = new Maze3D(game.level.world, wallSideColor, wallTopColor, doorColor, foodColor);
+		var style = new MazeStyle();
+
+		style.wallSideColor = Rendering3D.getMazeSideColor(game.variant, game.level.mazeNumber);
+		style.wallTopColor = Rendering3D.getMazeTopColor(game.variant, game.level.mazeNumber);
+		style.doorColor = Rendering3D.getGhostHouseDoorColor(game.variant);
+		style.foodColor = Rendering3D.getMazeFoodColor(game.variant, game.level.mazeNumber);
+		style.floorSolidColor = Color.rgb(5, 5, 10);
+		style.floorTexture = U.image("/common/escher-texture.jpg");
+		style.floorTextureColor = Color.rgb(51, 0, 102);
+
+		maze3D = new Maze3D(game.level.world, style);
+		maze3D.floorHasTexture.bind(mazeFloorHasTexture);
+		maze3D.resolution.bind(mazeResolution);
+		maze3D.wallHeight.bind(mazeWallHeight);
+		maze3D.getFloor().showSolid(maze3D.getStyle().floorSolidColor);
 		root.getChildren().add(maze3D.getRoot());
 
 		levelCounter3D = new LevelCounter3D(symbol -> r2D.getSpriteImage(r2D.getBonusSymbolSprite(symbol)));

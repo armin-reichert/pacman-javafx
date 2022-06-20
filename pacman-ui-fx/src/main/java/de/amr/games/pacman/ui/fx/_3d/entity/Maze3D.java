@@ -34,7 +34,6 @@ import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
-import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.RaiseAndLowerWallAnimation;
 import de.amr.games.pacman.ui.fx.util.U;
@@ -60,18 +59,18 @@ import javafx.util.Duration;
  */
 public class Maze3D {
 
-	public static class FeatureList {
-		DoubleProperty wallHeight;
-		Color wallSideColor;
-		Color wallTopColor;
-		Color doorColor;
-		Image floorTexture;
-		Color floorTextureColor;
-		Color floorSolidColor;
+	public static class MazeStyle {
+		public Color wallSideColor;
+		public Color wallTopColor;
+		public Color doorColor;
+		public Image floorTexture;
+		public Color floorTextureColor;
+		public Color floorSolidColor;
+		public Color foodColor;
 	}
 
-	public final DoubleProperty wallHeight = new SimpleDoubleProperty(1.0);
 	public final IntegerProperty resolution = new SimpleIntegerProperty(8);
+	public final DoubleProperty wallHeight = new SimpleDoubleProperty(1.0);
 	public final BooleanProperty floorHasTexture = new SimpleBooleanProperty(false);
 
 	private final World world;
@@ -79,50 +78,27 @@ public class Maze3D {
 	private final Group foundationGroup = new Group();
 	private final Group doorsGroup = new Group();
 	private final Group foodGroup = new Group();
+	private final MazeStyle style;
 
-	private Image floorTexture;
-	private Color floorTextureColor = Color.BLUE;
-	private Color floorSolidColor = Color.GREEN;
-
-	public Maze3D(World world, Color wallSideColor, Color wallTopColor, Color doorColor, Color foodColor) {
+	public Maze3D(World world, MazeStyle style) {
 		this.world = world;
+		this.style = style;
 		root.getChildren().addAll(foundationGroup, doorsGroup, foodGroup);
 		var mason = new Mason(foundationGroup, doorsGroup);
-		letMasonDoItsWork(mason, resolution.get(), wallSideColor, wallTopColor, doorColor);
-		addFood(world, foodColor);
-
-		resolution.addListener(
-				(obs, oldVal, newVal) -> letMasonDoItsWork(mason, newVal.intValue(), wallSideColor, wallTopColor, doorColor));
+		letMasonDoItsWork(mason, style);
+		addFood(world, style.foodColor);
+		resolution.addListener((obs, oldVal, newVal) -> letMasonDoItsWork(mason, style));
 		floorHasTexture.addListener((obs, oldVal, newVal) -> {
 			if (newVal.booleanValue()) {
-				getFloor().showTextured(floorTexture, floorTextureColor);
+				getFloor().showTextured(style.floorTexture, style.floorTextureColor);
 			} else {
-				getFloor().showSolid(floorSolidColor);
+				getFloor().showSolid(style.floorSolidColor);
 			}
 		});
 	}
 
-	private void letMasonDoItsWork(Mason mason, int resolution, Color wallSideColor, Color wallTopColor,
-			Color doorColor) {
-
-		var features = new FeatureList();
-		features.doorColor = doorColor;
-		features.floorSolidColor = floorSolidColor;
-		features.floorTexture = floorTexture;
-		features.floorTextureColor = floorTextureColor;
-		features.wallHeight = wallHeight;
-		features.wallSideColor = wallSideColor;
-		features.wallTopColor = wallTopColor;
-
-		var floorPlan = new FloorPlan(resolution, world);
-		mason.erectBuilding(floorPlan, world, features);
-
-		// TODO move to Mason
-		if (floorHasTexture.get()) {
-			getFloor().showTextured(floorTexture, floorTextureColor);
-		} else {
-			getFloor().showSolid(floorSolidColor);
-		}
+	private void letMasonDoItsWork(Mason mason, MazeStyle features) {
+		mason.erectBuilding(world, resolution.get(), wallHeight, features, floorHasTexture.get());
 	}
 
 	public MazeFloor3D getFloor() {
@@ -133,28 +109,8 @@ public class Maze3D {
 		return root;
 	}
 
-	public Color getFloorSolidColor() {
-		return floorSolidColor;
-	}
-
-	public void setFloorSolidColor(Color floorSolidColor) {
-		this.floorSolidColor = floorSolidColor;
-	}
-
-	public Image getFloorTexture() {
-		return floorTexture;
-	}
-
-	public void setFloorTexture(Image floorTexture) {
-		this.floorTexture = floorTexture;
-	}
-
-	public Color getFloorTextureColor() {
-		return floorTextureColor;
-	}
-
-	public void setFloorTextureColor(Color floorTextureColor) {
-		this.floorTextureColor = floorTextureColor;
+	public MazeStyle getStyle() {
+		return style;
 	}
 
 	public Stream<Door3D> doors() {
