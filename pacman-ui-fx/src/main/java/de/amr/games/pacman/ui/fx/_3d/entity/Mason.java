@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
 
+import de.amr.games.pacman.lib.Logging;
 import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.entity.Maze3D.WallProperties;
@@ -43,21 +44,29 @@ public class Mason {
 
 	private final Group wallsGroup;
 	private final Group doorsGroup;
-	private final FloorPlan floorPlan;
 
-	public Mason(FloorPlan floorPlan, Group wallsGroup, Group doorsGroup) {
-		this.floorPlan = floorPlan;
+	public Mason(Group wallsGroup, Group doorsGroup) {
 		this.wallsGroup = wallsGroup;
 		this.doorsGroup = doorsGroup;
 	}
 
-	public void erectBuilding(World world, DoubleProperty wallHeight, Color wallBaseColor, Color wallTopColor,
-			Color doorColor) {
-		createWalls(wallHeight, wallBaseColor, wallTopColor);
+	public void erectBuilding(FloorPlan floorPlan, World world, DoubleProperty wallHeight, Color wallBaseColor,
+			Color wallTopColor, Color doorColor) {
+
+		wallsGroup.getChildren().clear();
+
+		var floor = new MazeFloor3D(world.numCols() * TS - 1, world.numRows() * TS - 1, 0.01);
+		floor.showSolid(Color.rgb(5, 5, 10));
+		floor.setTranslateX(0.5 * floor.getWidth());
+		floor.setTranslateY(0.5 * floor.getHeight());
+		floor.setTranslateZ(0.5 * floor.getDepth());
+		wallsGroup.getChildren().add(floor);
+
+		createWalls(floorPlan, wallHeight, wallBaseColor, wallTopColor);
 		createDoors(world, wallHeight, doorColor);
 	}
 
-	private void createWalls(DoubleProperty wallHeight, Color wallBaseColor, Color wallTopColor) {
+	private void createWalls(FloorPlan floorPlan, DoubleProperty wallHeight, Color wallBaseColor, Color wallTopColor) {
 		WallProperties wp = new WallProperties();
 		wp.wallHeight = wallHeight;
 		wp.baseMaterial = new PhongMaterial(wallBaseColor);
@@ -65,11 +74,10 @@ public class Mason {
 		wp.topMaterial = new PhongMaterial(wallTopColor);
 		wp.brickSize = TS / floorPlan.getResolution();
 
-		wallsGroup.getChildren().clear();
 		addHorizontalWalls(floorPlan, wp);
 		addVerticalWalls(floorPlan, wp);
 		addCorners(floorPlan, wp);
-//		log("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeight.get());
+		Logging.log("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeight.get());
 	}
 
 	private void createDoors(World world, DoubleProperty wallHeight, Color doorColor) {
@@ -177,5 +185,4 @@ public class Mason {
 
 		wallsGroup.getChildren().add(wall);
 	}
-
 }

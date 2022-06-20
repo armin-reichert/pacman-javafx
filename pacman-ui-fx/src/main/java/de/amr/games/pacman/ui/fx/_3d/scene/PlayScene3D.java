@@ -90,6 +90,8 @@ public class PlayScene3D extends GameScene3D {
 		maze3D.wallHeight.bind(Env.$mazeWallHeight);
 		maze3D.resolution.bind(Env.$mazeResolution);
 		maze3D.floorHasTexture.bind(Env.$mazeFloorHasTexture);
+		maze3D.getFloor().showSolid(maze3D.getFloorSolidColor());
+
 	}
 
 	private void createCameras() {
@@ -107,10 +109,12 @@ public class PlayScene3D extends GameScene3D {
 	}
 
 	private void keepScoresInPlainSight(GameSceneCamera camera) {
-		var scores3D = world3D.getScores3D();
-		if (scores3D != null) {
-			scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
-			scores3D.rotateProperty().bind(camera.rotateProperty());
+		if (world3D != null) {
+			var scores3D = world3D.getScores3D();
+			if (scores3D != null) {
+				scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
+				scores3D.rotateProperty().bind(camera.rotateProperty());
+			}
 		}
 	}
 

@@ -83,42 +83,57 @@ public class Maze3D {
 
 	public Maze3D(World world, Color wallSideColor, Color wallTopColor, Color doorColor, Color foodColor) {
 		this.world = world;
-		var floor = new MazeFloor3D(world.numCols() * TS - 1, world.numRows() * TS - 1, 0.01);
-		floor.showSolid(Color.rgb(5, 5, 10));
-		floor.setTranslateX(0.5 * floor.getWidth());
-		floor.setTranslateY(0.5 * floor.getHeight());
-		floor.setTranslateZ(0.5 * floor.getDepth());
-		floorHasTexture.addListener((obs, oldVal, newVal) -> {
-			if (newVal.booleanValue()) {
-				floor.showTextured(floorTexture, floorTextureColor);
-			} else {
-				floor.showSolid(floorSolidColor);
-			}
-		});
-		root.getChildren().addAll(floor, wallsGroup, doorsGroup, foodGroup);
-
-		var floorPlan = new FloorPlan(resolution.get(), world);
-		new Mason(floorPlan, wallsGroup, doorsGroup).erectBuilding(world, wallHeight, wallSideColor, wallTopColor,
-				doorColor);
-
+		root.getChildren().addAll(wallsGroup, doorsGroup, foodGroup);
+		letsBuildIt(wallSideColor, wallTopColor, doorColor);
 		addFood(world, foodColor);
 
-		resolution.addListener((obs, oldVal, newVal) -> {
-			Mason m = new Mason(new FloorPlan(newVal.intValue(), world), wallsGroup, doorsGroup);
-			m.erectBuilding(world, wallHeight, wallSideColor, wallTopColor, doorColor);
+		resolution.addListener((obs, oldVal, newVal) -> letsBuildIt(wallSideColor, wallTopColor, doorColor));
+		floorHasTexture.addListener((obs, oldVal, newVal) -> {
+			if (newVal.booleanValue()) {
+				getFloor().showTextured(floorTexture, floorTextureColor);
+			} else {
+				getFloor().showSolid(floorSolidColor);
+			}
 		});
+	}
+
+	private void letsBuildIt(Color wallSideColor, Color wallTopColor, Color doorColor) {
+		var floorPlan = new FloorPlan(resolution.get(), world);
+		Mason mason = new Mason(wallsGroup, doorsGroup);
+		mason.erectBuilding(floorPlan, world, wallHeight, wallSideColor, wallTopColor, doorColor);
+		if (floorHasTexture.get()) {
+			getFloor().showTextured(floorTexture, floorTextureColor);
+		} else {
+			getFloor().showSolid(floorSolidColor);
+		}
+	}
+
+	public MazeFloor3D getFloor() {
+		return (MazeFloor3D) wallsGroup.getChildren().get(0);
 	}
 
 	public Group getRoot() {
 		return root;
 	}
 
+	public Color getFloorSolidColor() {
+		return floorSolidColor;
+	}
+
 	public void setFloorSolidColor(Color floorSolidColor) {
 		this.floorSolidColor = floorSolidColor;
 	}
 
+	public Image getFloorTexture() {
+		return floorTexture;
+	}
+
 	public void setFloorTexture(Image floorTexture) {
 		this.floorTexture = floorTexture;
+	}
+
+	public Color getFloorTextureColor() {
+		return floorTextureColor;
 	}
 
 	public void setFloorTextureColor(Color floorTextureColor) {
