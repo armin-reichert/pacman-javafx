@@ -91,10 +91,6 @@ public class PlayScene3D extends GameScene3D {
 		var camera = cameraMap.get(psp);
 		camera.reset();
 		setCamera(camera);
-		keepScoresInPlainSight(camera);
-	}
-
-	private void keepScoresInPlainSight(GameSceneCamera camera) {
 		if (world3D != null) {
 			var scores3D = world3D.getScores3D();
 			if (scores3D != null) {
