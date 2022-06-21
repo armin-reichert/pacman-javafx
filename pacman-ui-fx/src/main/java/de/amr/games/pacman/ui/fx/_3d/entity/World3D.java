@@ -65,14 +65,20 @@ public class World3D {
 		mazeStyle.wallTopColor = Rendering3D.getMazeTopColor(game.variant, game.level.mazeNumber);
 		mazeStyle.doorColor = Rendering3D.getGhostHouseDoorColor(game.variant);
 		mazeStyle.foodColor = Rendering3D.getMazeFoodColor(game.variant, game.level.mazeNumber);
-		mazeStyle.floorSolidColor = Color.rgb(5, 5, 10);
-		mazeStyle.floorTexture = U.image("/common/escher-texture.jpg");
-		mazeStyle.floorTextureColor = Color.rgb(51, 0, 102);
 
 		maze3D = new Maze3D(game.level.world, mazeStyle);
+		maze3D.setFloorTexture(U.image("/common/escher-texture.jpg"), Color.rgb(51, 0, 102));
 		maze3D.resolution.bind(Env.mazeResolution);
 		maze3D.wallHeight.bind(Env.mazeWallHeight);
 		root.getChildren().add(maze3D.getRoot());
+		Env.mazeFloorHasTexture.set(true);
+		Env.mazeFloorHasTexture.addListener((x, y, newVal) -> {
+			if (newVal.booleanValue()) {
+				maze3D.setFloorTexture(U.image("/common/escher-texture.jpg"), Color.rgb(51, 0, 102));
+			} else {
+				maze3D.setFloorTexture(null, Color.rgb(51, 0, 102));
+			}
+		});
 
 		levelCounter3D = new LevelCounter3D(symbol -> r2D.getSpriteImage(r2D.getBonusSymbolSprite(symbol)));
 		levelCounter3D.setRightPosition((game.level.world.numCols() - 1) * TS, TS);

@@ -42,10 +42,8 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.U;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Group;
@@ -67,36 +65,52 @@ public class Maze3D {
 		public Color wallSideColor;
 		public Color wallTopColor;
 		public Color doorColor;
-		public Image floorTexture;
-		public Color floorTextureColor;
-		public Color floorSolidColor;
 		public Color foodColor;
 	}
 
-	public final BooleanProperty mazeFloorVisible = new SimpleBooleanProperty();
 	public final IntegerProperty resolution = new SimpleIntegerProperty(8);
 	public final DoubleProperty wallHeight = new SimpleDoubleProperty(1.0);
 
 	private final World world;
 	private final Group root = new Group();
 	private final Group foundationGroup = new Group();
+	private final Group wallsGroup = new Group();
 	private final Group doorsGroup = new Group();
 	private final Group foodGroup = new Group();
 
-	private Floor3D floor;
-
 	public Maze3D(World world, MazeStyle style) {
 		this.world = world;
-		root.getChildren().addAll(foundationGroup, doorsGroup, foodGroup);
+		root.getChildren().addAll(foundationGroup, foodGroup);
+		foundationGroup.getChildren().addAll(createFloor(), wallsGroup, doorsGroup);
 		build(style);
 		addFood(world, style.foodColor);
 		resolution.addListener((obs, oldVal, newVal) -> build(style));
-		mazeFloorVisible.bind(Env.mazeFloorHasTexture);
-		mazeFloorVisible.addListener((x, y, visible) -> {
-			if (floor != null) {
-				floor.setTextureVisible(visible);
-			}
-		});
+	}
+
+	private Node createFloor() {
+		double width = (double) world.numCols() * TS;
+		double height = (double) world.numRows() * TS;
+		double depth = 0.05;
+		var floor = new Box(width - 1, height - 1, depth);
+		floor.setTranslateX(0.5 * width);
+		floor.setTranslateY(0.5 * height);
+		floor.setTranslateZ(0.5 * depth);
+		floor.drawModeProperty().bind(Env.drawMode3D);
+		return floor;
+	}
+
+	private Box getFloor() {
+		return (Box) foundationGroup.getChildren().get(0);
+	}
+
+	public void setFloorTexture(Image texture, Color color) {
+		var mat = new PhongMaterial();
+		mat.setDiffuseColor(color);
+		mat.setSpecularColor(color.brighter());
+		if (texture != null) {
+			mat.setDiffuseMap(texture);
+		}
+		getFloor().setMaterial(mat);
 	}
 
 	public World getWorld() {
@@ -204,28 +218,15 @@ public class Maze3D {
 		details.topMaterial = new PhongMaterial(mazeStyle.wallTopColor);
 		details.brickSize = (double) TS / floorPlan.getResolution();
 
-		foundationGroup.getChildren().clear();
-
-		addFloor(details);
+		wallsGroup.getChildren().clear();
 		addCorners(floorPlan, details);
 		scanHorizontal(floorPlan, details);
 		scanVertical(floorPlan, details);
+
+		doorsGroup.getChildren().clear();
 		addDoors(details);
 
 		Logging.log("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeight.get());
-	}
-
-	private void addFloor(BuildDetails details) {
-		double width = (double) world.numCols() * TS;
-		double height = (double) world.numRows() * TS;
-		double depth = 0.05;
-		floor = new Floor3D(width - 1, height - 1, depth);
-		floor.getRoot().setTranslateX(0.5 * width);
-		floor.getRoot().setTranslateY(0.5 * height);
-		floor.getRoot().setTranslateZ(0.5 * depth);
-		floor.setTexture(details.mazeStyle.floorTexture);
-		floor.setColor(details.mazeStyle.floorTextureColor);
-		foundationGroup.getChildren().add(floor.getRoot());
 	}
 
 	private void addDoors(BuildDetails details) {
@@ -324,6 +325,6 @@ public class Maze3D {
 		wall.setTranslateX((x + 0.5 * numBricksX) * details.brickSize);
 		wall.setTranslateY((y + 0.5 * numBricksY) * details.brickSize);
 
-		foundationGroup.getChildren().add(wall);
+		wallsGroup.getChildren().add(wall);
 	}
 }
