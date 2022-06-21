@@ -243,11 +243,9 @@ public class Maze3D extends Group {
 						wallStart = x;
 						wallSize = 1;
 					}
-				} else {
-					if (wallSize > 0) {
-						addWall(wallStart, y, wallSize, 1, wallData);
-						wallSize = 0;
-					}
+				} else if (wallSize > 0) {
+					addWall(wallStart, y, wallSize, 1, wallData);
+					wallSize = 0;
 				}
 			}
 			if (wallSize > 0 && y == floorPlan.sizeY() - 1) {
@@ -268,11 +266,9 @@ public class Maze3D extends Group {
 						wallStart = y;
 						wallSize = 1;
 					}
-				} else {
-					if (wallSize > 0) {
-						addWall(x, wallStart, 1, wallSize, wallData);
-						wallSize = 0;
-					}
+				} else if (wallSize > 0) {
+					addWall(x, wallStart, 1, wallSize, wallData);
+					wallSize = 0;
 				}
 			}
 			if (wallSize > 0 && x == floorPlan.sizeX() - 1) {
