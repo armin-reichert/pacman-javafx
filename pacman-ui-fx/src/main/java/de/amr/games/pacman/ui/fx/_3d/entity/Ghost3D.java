@@ -55,7 +55,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class Ghost3D extends Group {
+public class Ghost3D {
 
 	public enum AnimationMode {
 		COLORED, FRIGHTENED, EYES, NUMBER;
@@ -158,6 +158,7 @@ public class Ghost3D extends Group {
 	}
 
 	public final Ghost ghost;
+	private final Group root = new Group();
 	private final Motion motion;
 	private final NumberAnimation numberAnimation;
 	private final BodyAnimation bodyAnimation;
@@ -167,8 +168,12 @@ public class Ghost3D extends Group {
 		this.ghost = ghost;
 		numberAnimation = new NumberAnimation(r2D);
 		bodyAnimation = new BodyAnimation(model3D, ghost.id);
-		motion = new Motion(this);
+		motion = new Motion(root);
 		setAnimationMode(AnimationMode.COLORED);
+	}
+
+	public Node getRoot() {
+		return root;
 	}
 
 	public void reset() {
@@ -179,7 +184,7 @@ public class Ghost3D extends Group {
 	public void update() {
 		motion.update(ghost);
 		boolean insideWorld = 0 <= ghost.position.x && ghost.position.x <= t(ArcadeWorld.TILES_X - 1);
-		setVisible(ghost.visible && insideWorld);
+		root.setVisible(ghost.visible && insideWorld);
 	}
 
 	public AnimationMode getAnimationMode() {
@@ -193,24 +198,24 @@ public class Ghost3D extends Group {
 			case COLORED -> {
 				bodyAnimation.setShowBody(true);
 				bodyAnimation.setFrightened(false);
-				getChildren().setAll(bodyAnimation.getRoot());
+				root.getChildren().setAll(bodyAnimation.getRoot());
 			}
 			case FRIGHTENED -> {
 				bodyAnimation.setShowBody(true);
 				bodyAnimation.setFrightened(true);
-				getChildren().setAll(bodyAnimation.getRoot());
+				root.getChildren().setAll(bodyAnimation.getRoot());
 			}
 			case EYES -> {
 				bodyAnimation.setShowBody(false);
 				bodyAnimation.setFrightened(false);
-				getChildren().setAll(bodyAnimation.getRoot());
+				root.getChildren().setAll(bodyAnimation.getRoot());
 			}
 			case NUMBER -> {
 				numberAnimation.setNumber(ghost.killIndex);
 				// rotate node such that number can be read from left to right
-				setRotationAxis(Rotate.X_AXIS);
-				setRotate(0);
-				getChildren().setAll(numberAnimation.getRoot());
+				root.setRotationAxis(Rotate.X_AXIS);
+				root.setRotate(0);
+				root.getChildren().setAll(numberAnimation.getRoot());
 			}
 			}
 		}

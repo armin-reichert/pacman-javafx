@@ -65,7 +65,7 @@ public class Door3D {
 		return centerPosition;
 	}
 
-	public Node getNode() {
+	public Node getRoot() {
 		return box;
 	}
 

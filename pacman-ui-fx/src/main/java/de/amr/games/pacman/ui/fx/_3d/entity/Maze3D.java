@@ -234,7 +234,7 @@ public class Maze3D {
 		leftDoor.doorHeight.bind(wallHeight);
 		var rightDoor = new Door3D(world.ghostHouse().doorTileRight(), false, details.mazeStyle.doorColor);
 		rightDoor.doorHeight.bind(wallHeight);
-		doorsGroup.getChildren().setAll(leftDoor.getNode(), rightDoor.getNode());
+		doorsGroup.getChildren().setAll(leftDoor.getRoot(), rightDoor.getRoot());
 	}
 
 	private void scanHorizontal(FloorPlan floorPlan, BuildDetails details) {
