@@ -24,10 +24,10 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
-import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.FillTransition3D;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
@@ -83,26 +83,26 @@ public class Pac3D extends Group {
 
 	public void update() {
 		motion.update(pac);
-		updateVisualAppearance();
+		updateAppearance();
 	}
 
-	private void updateVisualAppearance() {
+	private void updateAppearance() {
 		double x = pac.position.x;
 		double leftEdge = 0;
-		double rightEdge = t(ArcadeWorld.TILES_X);
+		double rightEdge = ArcadeWorld.TILES_X * World.TS;
 		boolean nearEdge = x < leftEdge + 2 || x > rightEdge - 8;
 		boolean outside = x < leftEdge - 4 || x > rightEdge - 4;
+		Color normalColor = Rendering3D.getPacSkullColor();
+		setShapeColor(skull, normalColor);
 		if (outside) {
 			setVisible(true);
 			setOpacity(0.5);
 		} else {
-			setOpacity(1);
 			setVisible(pac.visible);
-			var color = Rendering3D.getPacSkullColor();
+			setOpacity(1);
 			if (nearEdge) {
-				color = Color.color(color.getRed(), color.getGreen(), color.getBlue(), 0.1);
+				setShapeColor(skull, Color.color(normalColor.getRed(), normalColor.getGreen(), normalColor.getBlue(), 0.1));
 			}
-			setShapeColor(skull, color);
 		}
 	}
 

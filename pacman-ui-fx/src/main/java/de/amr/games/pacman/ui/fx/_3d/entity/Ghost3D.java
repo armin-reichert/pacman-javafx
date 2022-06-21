@@ -23,10 +23,9 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import static de.amr.games.pacman.model.common.world.World.t;
-
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.animation.ColorFlashingTransition;
 import de.amr.games.pacman.ui.fx._3d.animation.FadeInTransition3D;
@@ -183,8 +182,21 @@ public class Ghost3D {
 
 	public void update() {
 		motion.update(ghost);
-		boolean insideWorld = 0 <= ghost.position.x && ghost.position.x <= t(ArcadeWorld.TILES_X - 1);
-		root.setVisible(ghost.visible && insideWorld);
+		updateAppearance();
+	}
+
+	private void updateAppearance() {
+		double x = ghost.position.x;
+		double leftEdge = 0;
+		double rightEdge = ArcadeWorld.TILES_X * World.TS;
+		boolean outside = x < leftEdge - 4 || x > rightEdge - 4;
+		if (outside) {
+			root.setVisible(true);
+			root.setOpacity(0.5);
+		} else {
+			root.setVisible(ghost.visible);
+			root.setOpacity(1);
+		}
 	}
 
 	public AnimationMode getAnimationMode() {
