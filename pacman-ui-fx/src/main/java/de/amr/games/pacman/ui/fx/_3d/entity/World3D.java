@@ -39,16 +39,14 @@ import javafx.scene.paint.Color;
 /**
  * @author Armin Reichert
  */
-public class World3D {
+public class World3D extends Group {
 
-	private final Group root = new Group();
 	private final Maze3D maze3D;
 	private final Scores3D scores3D;
 	private final LevelCounter3D levelCounter3D;
 	private final LivesCounter3D livesCounter3D;
 
 	public World3D(GameModel game, PacManModel3D model3D, Rendering2D r2D) {
-
 		scores3D = new Scores3D();
 		scores3D.setFont(r2D.getArcadeFont());
 		if (game.credit > 0) {
@@ -58,7 +56,7 @@ public class World3D {
 			scores3D.txtScore.setFill(Color.RED);
 			scores3D.txtScore.setText("GAME OVER!");
 		}
-		root.getChildren().add(scores3D.getRoot());
+		getChildren().add(scores3D.getRoot());
 
 		var mazeStyle = new MazeStyle();
 		mazeStyle.wallSideColor = Rendering3D.getMazeSideColor(game.variant, game.level.mazeNumber);
@@ -70,7 +68,7 @@ public class World3D {
 		maze3D.setFloorTexture(U.image("/common/escher-texture.jpg"), Color.rgb(51, 0, 102));
 		maze3D.resolution.bind(Env.mazeResolution);
 		maze3D.wallHeight.bind(Env.mazeWallHeight);
-		root.getChildren().add(maze3D.getRoot());
+		getChildren().add(maze3D);
 		Env.mazeFloorHasTexture.set(true);
 		Env.mazeFloorHasTexture.addListener((x, y, newVal) -> {
 			if (newVal.booleanValue()) {
@@ -83,18 +81,14 @@ public class World3D {
 		levelCounter3D = new LevelCounter3D(symbol -> r2D.getSpriteImage(r2D.getBonusSymbolSprite(symbol)));
 		levelCounter3D.setRightPosition((game.level.world.numCols() - 1) * TS, TS);
 		levelCounter3D.update(game.levelCounter);
-		root.getChildren().add(levelCounter3D);
+		getChildren().add(levelCounter3D);
 
 		livesCounter3D = new LivesCounter3D(model3D);
 		livesCounter3D.setTranslateX(TS);
 		livesCounter3D.setTranslateY(TS);
 		livesCounter3D.setTranslateZ(-HTS);
 		livesCounter3D.setVisible(game.credit > 0);
-		root.getChildren().add(livesCounter3D);
-	}
-
-	public Group getRoot() {
-		return root;
+		getChildren().add(livesCounter3D);
 	}
 
 	public Scores3D getScores3D() {

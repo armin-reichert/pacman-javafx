@@ -59,7 +59,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class Maze3D {
+public class Maze3D extends Group {
 
 	public static class MazeStyle {
 		public Color wallSideColor;
@@ -72,7 +72,6 @@ public class Maze3D {
 	public final DoubleProperty wallHeight = new SimpleDoubleProperty(1.0);
 
 	private final World world;
-	private final Group root = new Group();
 	private final Group foundationGroup = new Group();
 	private final Group wallsGroup = new Group();
 	private final Group doorsGroup = new Group();
@@ -80,7 +79,7 @@ public class Maze3D {
 
 	public Maze3D(World world, MazeStyle style) {
 		this.world = world;
-		root.getChildren().addAll(foundationGroup, foodGroup);
+		getChildren().addAll(foundationGroup, foodGroup);
 		foundationGroup.getChildren().addAll(createFloor(), wallsGroup, doorsGroup);
 		build(style);
 		addFood(world, style.foodColor);
@@ -115,10 +114,6 @@ public class Maze3D {
 
 	public World getWorld() {
 		return world;
-	}
-
-	public Group getRoot() {
-		return root;
 	}
 
 	public Stream<Door3D> doors() {
