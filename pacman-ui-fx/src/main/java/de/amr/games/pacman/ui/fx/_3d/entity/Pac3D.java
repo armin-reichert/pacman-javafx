@@ -58,7 +58,7 @@ public class Pac3D extends Group {
 	private final Group bodyParts;
 	private final Shape3D skull;
 
-	private final Motion motion;
+	private final Motion motion = new Motion();
 	private final PointLight light = new PointLight(Color.WHITE);
 	private Color skullColorImpaled = Color.GHOSTWHITE;
 
@@ -67,7 +67,6 @@ public class Pac3D extends Group {
 		bodyParts = model3D.createPacMan(Rendering3D.getPacSkullColor(), Rendering3D.getPacEyesColor(),
 				Rendering3D.getPacPalateColor());
 		skull = (Shape3D) bodyParts.getChildren().get(0);
-		motion = new Motion(this);
 		light.setTranslateZ(-HTS);
 		getChildren().addAll(bodyParts, light);
 		reset();
@@ -82,7 +81,7 @@ public class Pac3D extends Group {
 	}
 
 	public void update() {
-		motion.update(pac);
+		motion.update(pac, this);
 		updateAppearance();
 	}
 

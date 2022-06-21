@@ -25,25 +25,19 @@ public class Motion {
 	};
 	//@formatter:on
 
-	private final Node guyNode;
-	private final RotateTransition turningAnimation;
+	private RotateTransition turningAnimation;
 	private Direction targetDir;
 
-	/**
-	 * @param guyNode root node of the guy's 3D representation
-	 */
-	public Motion(Node guyNode) {
-		this.guyNode = guyNode;
-		turningAnimation = new RotateTransition(Duration.seconds(0.3), guyNode);
-		turningAnimation.setAxis(Rotate.Z_AXIS);
-	}
-
-	public void update(Creature guy) {
+	public void update(Creature guy, Node guyNode) {
 		guyNode.setTranslateX(guy.position.x + HTS);
 		guyNode.setTranslateY(guy.position.y + HTS);
 		guyNode.setTranslateZ(-HTS);
 		if (targetDir != guy.moveDir()) {
 			int[] angles = TURN_ANGLES[index(targetDir)][index(guy.moveDir())];
+			if (turningAnimation == null) {
+				turningAnimation = new RotateTransition(Duration.seconds(0.3), guyNode);
+				turningAnimation.setAxis(Rotate.Z_AXIS);
+			}
 			turningAnimation.setFromAngle(angles[0]);
 			turningAnimation.setToAngle(angles[1]);
 			turningAnimation.playFromStart();

@@ -158,7 +158,7 @@ public class Ghost3D {
 
 	public final Ghost ghost;
 	private final Group root = new Group();
-	private final Motion motion;
+	private final Motion motion = new Motion();
 	private final NumberAnimation numberAnimation;
 	private final BodyAnimation bodyAnimation;
 	private AnimationMode animationMode;
@@ -167,7 +167,6 @@ public class Ghost3D {
 		this.ghost = ghost;
 		numberAnimation = new NumberAnimation(r2D);
 		bodyAnimation = new BodyAnimation(model3D, ghost.id);
-		motion = new Motion(root);
 		setAnimationMode(AnimationMode.COLORED);
 	}
 
@@ -181,7 +180,7 @@ public class Ghost3D {
 	}
 
 	public void update() {
-		motion.update(ghost);
+		motion.update(ghost, root);
 		updateAppearance();
 	}
 
