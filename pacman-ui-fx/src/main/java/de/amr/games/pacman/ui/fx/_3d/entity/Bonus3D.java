@@ -31,7 +31,6 @@ import de.amr.games.pacman.model.common.actors.BonusState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -44,46 +43,40 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class Bonus3D {
-
-	private final Box box;
+public class Bonus3D extends Box {
 
 	public Bonus3D() {
-		box = new Box(TS, TS, TS);
-		box.setTranslateZ(-HTS);
-	}
-
-	public Node getRoot() {
-		return box;
+		super(TS, TS, TS);
+		setTranslateZ(-HTS);
 	}
 
 	public void update(Bonus bonus) {
-		box.setTranslateX(bonus.entity().position.x + box.getWidth() / 2);
-		box.setTranslateY(bonus.entity().position.y + box.getHeight() / 2);
-		box.setVisible(bonus.state() != BonusState.INACTIVE);
+		setTranslateX(bonus.entity().position.x + getWidth() / 2);
+		setTranslateY(bonus.entity().position.y + getHeight() / 2);
+		setVisible(bonus.state() != BonusState.INACTIVE);
 	}
 
 	public void showSymbol(Bonus bonus, Rendering2D r2D) {
 		setTexture(r2D.getSpriteImage(r2D.getBonusSymbolSprite(bonus.symbol())));
 		rotate(1, Animation.INDEFINITE, 1);
-		box.setWidth(TS);
+		setWidth(TS);
 	}
 
 	public void showPoints(Bonus bonus, Rendering2D r2D) {
 		setTexture(r2D.getSpriteImage(r2D.getBonusValueSprite(bonus.symbol())));
 		rotate(1, 5, 2);
-		box.setWidth(bonus.value() >= 1000 ? TS * 1.25 : TS);
+		setWidth(bonus.value() >= 1000 ? TS * 1.25 : TS);
 	}
 
 	private void setTexture(Image texture) {
 		var skin = new PhongMaterial(Color.WHITE);
 		skin.setBumpMap(texture);
 		skin.setDiffuseMap(texture);
-		box.setMaterial(skin);
+		setMaterial(skin);
 	}
 
 	private void rotate(double seconds, int cycleCount, int rate) {
-		var rot = new RotateTransition(Duration.seconds(seconds), box);
+		var rot = new RotateTransition(Duration.seconds(seconds), this);
 		rot.setAxis(Rotate.X_AXIS);
 		rot.setFromAngle(0);
 		rot.setToAngle(360);

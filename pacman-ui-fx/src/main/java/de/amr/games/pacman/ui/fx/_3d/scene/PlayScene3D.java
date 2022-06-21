@@ -76,7 +76,7 @@ public class PlayScene3D extends GameScene3D {
 		ghosts3D = $.game.ghosts().map(ghost -> new Ghost3D(ghost, $.model3D, $.r2D)).toArray(Ghost3D[]::new);
 		Stream.of(ghosts3D).map(Ghost3D::getRoot).forEach(sceneContent.getChildren()::add);
 		bonus3D = new Bonus3D();
-		sceneContent.getChildren().add(bonus3D.getRoot());
+		sceneContent.getChildren().add(bonus3D);
 		setPerspective(Env.perspective.get());
 	}
 
@@ -196,7 +196,7 @@ public class PlayScene3D extends GameScene3D {
 
 	@Override
 	public void onBonusExpires(GameEvent e) {
-		bonus3D.getRoot().setVisible(false);
+		bonus3D.setVisible(false);
 	}
 
 	@Override
@@ -250,7 +250,7 @@ public class PlayScene3D extends GameScene3D {
 		// exit HUNTING
 		if (e.oldGameState == GameState.HUNTING && e.newGameState != GameState.GHOST_DYING) {
 			maze3D.energizerAnimations().forEach(Animation::stop);
-			bonus3D.getRoot().setVisible(false);
+			bonus3D.setVisible(false);
 		}
 	}
 }
