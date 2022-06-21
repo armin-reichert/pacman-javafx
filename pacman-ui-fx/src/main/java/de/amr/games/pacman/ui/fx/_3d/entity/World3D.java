@@ -86,11 +86,11 @@ public class World3D {
 		root.getChildren().add(levelCounter3D);
 
 		livesCounter3D = new LivesCounter3D(model3D);
-		livesCounter3D.getRoot().setTranslateX(TS);
-		livesCounter3D.getRoot().setTranslateY(TS);
-		livesCounter3D.getRoot().setTranslateZ(-HTS);
-		livesCounter3D.getRoot().setVisible(game.credit > 0);
-		root.getChildren().add(livesCounter3D.getRoot());
+		livesCounter3D.setTranslateX(TS);
+		livesCounter3D.setTranslateY(TS);
+		livesCounter3D.setTranslateZ(-HTS);
+		livesCounter3D.setVisible(game.credit > 0);
+		root.getChildren().add(livesCounter3D);
 	}
 
 	public Group getRoot() {

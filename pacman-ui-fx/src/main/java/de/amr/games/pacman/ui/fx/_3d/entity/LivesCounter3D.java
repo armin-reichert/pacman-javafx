@@ -35,28 +35,22 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class LivesCounter3D {
+public class LivesCounter3D extends Group {
 
 	static final int MAX_LIVES_DISPLAYED = 5;
-
-	private final Group root = new Group();
 
 	public LivesCounter3D(PacManModel3D model3D) {
 		for (int i = 0; i < MAX_LIVES_DISPLAYED; ++i) {
 			Node indicator = model3D.createPacMan(Color.YELLOW, Color.rgb(60, 60, 60), Color.rgb(60, 60, 60));
 			indicator.setTranslateX(2.0 * i * TS);
-			root.getChildren().add(indicator);
+			getChildren().add(indicator);
 		}
 		update(MAX_LIVES_DISPLAYED); // show all
 	}
 
-	public Group getRoot() {
-		return root;
-	}
-
 	public void update(int numLives) {
 		for (int i = 0; i < MAX_LIVES_DISPLAYED; ++i) {
-			root.getChildren().get(i).setVisible(i < numLives);
+			getChildren().get(i).setVisible(i < numLives);
 		}
 	}
 }
