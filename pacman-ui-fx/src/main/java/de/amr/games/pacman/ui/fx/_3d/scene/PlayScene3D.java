@@ -74,7 +74,7 @@ public class PlayScene3D extends GameScene3D {
 		pac3D = new Pac3D($.game.pac, $.model3D);
 		sceneContent.getChildren().add(pac3D);
 		ghosts3D = $.game.ghosts().map(ghost -> new Ghost3D(ghost, $.model3D, $.r2D)).toArray(Ghost3D[]::new);
-		Stream.of(ghosts3D).map(Ghost3D::getRoot).forEach(sceneContent.getChildren()::add);
+		Stream.of(ghosts3D).forEach(sceneContent.getChildren()::add);
 		bonus3D = new Bonus3D();
 		sceneContent.getChildren().add(bonus3D);
 		setPerspective(Env.perspective.get());
