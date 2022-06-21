@@ -68,6 +68,14 @@ public class Maze3D extends Group {
 		public Color foodColor;
 	}
 
+	// -------------
+
+	private static class WallData {
+		double brickSize;
+		PhongMaterial baseMaterial;
+		PhongMaterial topMaterial;
+	}
+
 	public final IntegerProperty resolution = new SimpleIntegerProperty(8);
 	public final DoubleProperty wallHeight = new SimpleDoubleProperty(1.0);
 
@@ -100,6 +108,28 @@ public class Maze3D extends Group {
 
 	private Box getFloor() {
 		return (Box) foundationGroup.getChildren().get(0);
+	}
+
+	public void build(MazeStyle mazeStyle) {
+		var floorPlan = new FloorPlan(resolution.get(), world);
+
+		var wallData = new WallData();
+		wallData.baseMaterial = new PhongMaterial(mazeStyle.wallSideColor);
+		wallData.baseMaterial.setSpecularColor(mazeStyle.wallSideColor.brighter());
+		wallData.topMaterial = new PhongMaterial(mazeStyle.wallTopColor);
+		wallData.brickSize = (double) TS / floorPlan.getResolution();
+
+		wallsGroup.getChildren().clear();
+		addCorners(floorPlan, wallData);
+		addHorizontalWalls(floorPlan, wallData);
+		addVerticalWalls(floorPlan, wallData);
+
+		doorsGroup.getChildren().clear();
+		var leftDoor = createDoor(world.ghostHouse().doorTileLeft(), mazeStyle.doorColor);
+		var rightDoor = createDoor(world.ghostHouse().doorTileRight(), mazeStyle.doorColor);
+		doorsGroup.getChildren().setAll(leftDoor, rightDoor);
+
+		Logging.log("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeight.get());
 	}
 
 	public void setFloorTexture(Image texture, Color color) {
@@ -193,45 +223,15 @@ public class Maze3D extends Group {
 		return foodNodes().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
 	}
 
-	// -------------
+	// -------------------------------------------------------------------------------------------
 
-	private static class BuildDetails {
-		double brickSize;
-		PhongMaterial baseMaterial;
-		PhongMaterial topMaterial;
-		MazeStyle mazeStyle;
+	private Door3D createDoor(V2i tile, Color color) {
+		var door = new Door3D(tile, color);
+		door.doorHeight.bind(wallHeight);
+		return door;
 	}
 
-	public void build(MazeStyle mazeStyle) {
-		var floorPlan = new FloorPlan(resolution.get(), world);
-
-		var details = new BuildDetails();
-		details.mazeStyle = mazeStyle;
-		details.baseMaterial = new PhongMaterial(mazeStyle.wallSideColor);
-		details.baseMaterial.setSpecularColor(mazeStyle.wallSideColor.brighter());
-		details.topMaterial = new PhongMaterial(mazeStyle.wallTopColor);
-		details.brickSize = (double) TS / floorPlan.getResolution();
-
-		wallsGroup.getChildren().clear();
-		addCorners(floorPlan, details);
-		scanHorizontal(floorPlan, details);
-		scanVertical(floorPlan, details);
-
-		doorsGroup.getChildren().clear();
-		addDoors(details);
-
-		Logging.log("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeight.get());
-	}
-
-	private void addDoors(BuildDetails details) {
-		var leftDoor = new Door3D(world.ghostHouse().doorTileLeft(), details.mazeStyle.doorColor);
-		leftDoor.doorHeight.bind(wallHeight);
-		var rightDoor = new Door3D(world.ghostHouse().doorTileRight(), details.mazeStyle.doorColor);
-		rightDoor.doorHeight.bind(wallHeight);
-		doorsGroup.getChildren().setAll(leftDoor, rightDoor);
-	}
-
-	private void scanHorizontal(FloorPlan floorPlan, BuildDetails details) {
+	private void addHorizontalWalls(FloorPlan floorPlan, WallData wallData) {
 		for (int y = 0; y < floorPlan.sizeY(); ++y) {
 			int wallStart = -1;
 			int wallSize = 0;
@@ -245,18 +245,18 @@ public class Maze3D extends Group {
 					}
 				} else {
 					if (wallSize > 0) {
-						addWall(wallStart, y, wallSize, 1, details);
+						addWall(wallStart, y, wallSize, 1, wallData);
 						wallSize = 0;
 					}
 				}
 			}
 			if (wallSize > 0 && y == floorPlan.sizeY() - 1) {
-				addWall(wallStart, y, wallSize, 1, details);
+				addWall(wallStart, y, wallSize, 1, wallData);
 			}
 		}
 	}
 
-	private void scanVertical(FloorPlan floorPlan, BuildDetails details) {
+	private void addVerticalWalls(FloorPlan floorPlan, WallData wallData) {
 		for (int x = 0; x < floorPlan.sizeX(); ++x) {
 			int wallStart = -1;
 			int wallSize = 0;
@@ -270,22 +270,22 @@ public class Maze3D extends Group {
 					}
 				} else {
 					if (wallSize > 0) {
-						addWall(x, wallStart, 1, wallSize, details);
+						addWall(x, wallStart, 1, wallSize, wallData);
 						wallSize = 0;
 					}
 				}
 			}
 			if (wallSize > 0 && x == floorPlan.sizeX() - 1) {
-				addWall(x, wallStart, 1, wallSize, details);
+				addWall(x, wallStart, 1, wallSize, wallData);
 			}
 		}
 	}
 
-	private void addCorners(FloorPlan floorPlan, BuildDetails details) {
+	private void addCorners(FloorPlan floorPlan, WallData wallData) {
 		for (int x = 0; x < floorPlan.sizeX(); ++x) {
 			for (int y = 0; y < floorPlan.sizeY(); ++y) {
 				if (floorPlan.get(x, y) == FloorPlan.CORNER) {
-					addWall(x, y, 1, 1, details);
+					addWall(x, y, 1, 1, wallData);
 				}
 			}
 		}
@@ -300,24 +300,24 @@ public class Maze3D extends Group {
 	 * @param y          y-coordinate of top-left brick
 	 * @param numBricksX number of bricks in x-direction
 	 * @param numBricksY number of bricks in y-direction
-	 * @param details    details for building stuff
+	 * @param wallData   data on how walls look like
 	 */
-	private void addWall(int x, int y, int numBricksX, int numBricksY, BuildDetails details) {
-		Box base = new Box(numBricksX * details.brickSize, numBricksY * details.brickSize, wallHeight.get());
+	private void addWall(int x, int y, int numBricksX, int numBricksY, WallData wallData) {
+		Box base = new Box(numBricksX * wallData.brickSize, numBricksY * wallData.brickSize, wallHeight.get());
 		base.depthProperty().bind(wallHeight);
-		base.setMaterial(details.baseMaterial);
+		base.setMaterial(wallData.baseMaterial);
 		base.translateZProperty().bind(wallHeight.multiply(-0.5));
 		base.drawModeProperty().bind(Env.drawMode3D);
 
 		double topHeight = 0.5;
-		Box top = new Box(numBricksX * details.brickSize, numBricksY * details.brickSize, topHeight);
-		top.setMaterial(details.topMaterial);
+		Box top = new Box(numBricksX * wallData.brickSize, numBricksY * wallData.brickSize, topHeight);
+		top.setMaterial(wallData.topMaterial);
 		top.translateZProperty().bind(base.translateZProperty().subtract(wallHeight.add(topHeight + 0.1).multiply(0.5)));
 		top.drawModeProperty().bind(Env.drawMode3D);
 
 		Group wall = new Group(base, top);
-		wall.setTranslateX((x + 0.5 * numBricksX) * details.brickSize);
-		wall.setTranslateY((y + 0.5 * numBricksY) * details.brickSize);
+		wall.setTranslateX((x + 0.5 * numBricksX) * wallData.brickSize);
+		wall.setTranslateY((y + 0.5 * numBricksY) * wallData.brickSize);
 
 		wallsGroup.getChildren().add(wall);
 	}
