@@ -94,8 +94,8 @@ public class PlayScene3D extends GameScene3D {
 		if (world3D != null) {
 			var scores3D = world3D.getScores3D();
 			if (scores3D != null) {
-				scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
-				scores3D.rotateProperty().bind(camera.rotateProperty());
+				scores3D.getRoot().rotationAxisProperty().bind(camera.rotationAxisProperty());
+				scores3D.getRoot().rotateProperty().bind(camera.rotateProperty());
 			}
 		}
 	}

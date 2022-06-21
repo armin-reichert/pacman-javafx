@@ -37,7 +37,9 @@ import javafx.scene.text.Text;
  * 
  * @author Armin Reichert
  */
-public class Scores3D extends Group {
+public class Scores3D {
+
+	private final Group root = new Group();
 
 	public final Text txtScoreTitle;
 	public final Text txtScore;
@@ -62,7 +64,11 @@ public class Scores3D extends Group {
 		grid.add(txtScore, 0, 1);
 		grid.add(txtHiscoreTitle, 1, 0);
 		grid.add(txtHiscore, 1, 1);
-		getChildren().add(grid);
+		root.getChildren().add(grid);
+	}
+
+	public Group getRoot() {
+		return root;
 	}
 
 	public void setFont(Font font) {

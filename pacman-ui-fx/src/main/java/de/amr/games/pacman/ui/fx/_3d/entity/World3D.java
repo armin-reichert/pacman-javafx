@@ -58,7 +58,7 @@ public class World3D {
 			scores3D.txtScore.setFill(Color.RED);
 			scores3D.txtScore.setText("GAME OVER!");
 		}
-		root.getChildren().add(scores3D);
+		root.getChildren().add(scores3D.getRoot());
 
 		var mazeStyle = new MazeStyle();
 		mazeStyle.wallSideColor = Rendering3D.getMazeSideColor(game.variant, game.level.mazeNumber);
