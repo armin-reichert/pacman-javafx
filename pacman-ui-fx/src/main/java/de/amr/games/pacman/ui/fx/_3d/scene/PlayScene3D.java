@@ -35,14 +35,14 @@ import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D.AnimationMode;
+import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
+import de.amr.games.pacman.ui.fx._3d.entity.World3D;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamDrone;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamFollowingPlayer;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamNearPlayer;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamTotal;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.GameSceneCamera;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
-import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
-import de.amr.games.pacman.ui.fx._3d.entity.World3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.Talk;
 import de.amr.games.pacman.ui.fx.shell.Actions;
@@ -67,7 +67,10 @@ public class PlayScene3D extends GameScene3D {
 	private Bonus3D bonus3D;
 
 	public PlayScene3D() {
-		createCameras();
+		cameraMap.put(Perspective.CAM_DRONE, new CamDrone());
+		cameraMap.put(Perspective.CAM_FOLLOWING_PLAYER, new CamFollowingPlayer());
+		cameraMap.put(Perspective.CAM_NEAR_PLAYER, new CamNearPlayer());
+		cameraMap.put(Perspective.CAM_TOTAL, new CamTotal());
 		Env.perspective.addListener((obs, oldVal, newVal) -> setPerspective(newVal));
 	}
 
@@ -84,13 +87,6 @@ public class PlayScene3D extends GameScene3D {
 		bonus3D = new Bonus3D();
 		sceneContent.getChildren().add(bonus3D);
 		setPerspective(Env.perspective.get());
-	}
-
-	private void createCameras() {
-		cameraMap.put(Perspective.CAM_DRONE, new CamDrone());
-		cameraMap.put(Perspective.CAM_FOLLOWING_PLAYER, new CamFollowingPlayer());
-		cameraMap.put(Perspective.CAM_NEAR_PLAYER, new CamNearPlayer());
-		cameraMap.put(Perspective.CAM_TOTAL, new CamTotal());
 	}
 
 	private void setPerspective(Perspective psp) {
