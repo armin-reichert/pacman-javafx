@@ -21,17 +21,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx._3d.scene;
+package de.amr.games.pacman.ui.fx._3d.scene.cams;
 
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+import static de.amr.games.pacman.ui.fx.util.U.lerp;
+
+import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 
-public class CamTotal extends GameSceneCamera {
+public class CamFollowingPlayer extends GameSceneCamera {
+
+	private double speed = 0.03;
 
 	@Override
 	public String toString() {
-		return "Total";
+		return "Following Player";
 	}
 
 	@Override
@@ -39,41 +42,13 @@ public class CamTotal extends GameSceneCamera {
 		setNearClip(0.1);
 		setFarClip(10000.0);
 		setRotationAxis(Rotate.X_AXIS);
-		setRotate(49);
-		setTranslateX(0);
-		setTranslateY(320);
-		setTranslateZ(-260);
+		setRotate(60);
+		setTranslateZ(-160);
 	}
 
 	@Override
-	public void onKeyPressed(KeyEvent e) {
-		KeyCode key = e.getCode();
-		boolean control = e.isControlDown();
-		boolean shift = e.isShiftDown();
-		if (!control && shift) {
-			switch (key) {
-			case LEFT -> change(translateXProperty(), -10);
-			case RIGHT -> change(translateXProperty(), +10);
-			case MINUS -> change(translateYProperty(), -10);
-			case PLUS -> change(translateYProperty(), +10);
-			case UP -> change(translateZProperty(), -10);
-			case DOWN -> change(translateZProperty(), 10);
-			default -> { // ignore
-			}
-			}
-		} else if (control && shift) {
-			switch (key) {
-			case UP -> {
-				setRotationAxis(Rotate.X_AXIS);
-				setRotate((getRotate() - 1 + 360) % 360);
-			}
-			case DOWN -> {
-				setRotationAxis(Rotate.X_AXIS);
-				setRotate((getRotate() + 1 + 360) % 360);
-			}
-			default -> { // ignore
-			}
-			}
-		}
+	public void update(Node target) {
+		setTranslateX(lerp(getTranslateX(), target.getTranslateX() - 100, speed));
+		setTranslateY(lerp(getTranslateY(), target.getTranslateY() + 60, speed));
 	}
 }

@@ -21,39 +21,48 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx._3d.scene;
+package de.amr.games.pacman.ui.fx._3d.scene.cams;
 
-import javafx.beans.property.DoubleProperty;
+import static de.amr.games.pacman.ui.fx.util.U.lerp;
+
 import javafx.scene.Node;
-import javafx.scene.PerspectiveCamera;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.transform.Rotate;
 
-/**
- * Cameras for the 3D play scene.
- * 
- * @author Armin Reichert
- */
-public abstract class GameSceneCamera extends PerspectiveCamera {
+public class CamDrone extends GameSceneCamera {
 
-	public static void change(DoubleProperty property, double delta) {
-		property.set(property.get() + delta);
+	private double speed = 0.005;
+
+	@Override
+	public String toString() {
+		return "Drone";
 	}
 
-	protected GameSceneCamera() {
-		super(true);
-	}
-
-	public String transformInfo() {
-		return String.format("x=%.0f y=%.0f z=%.0f rot=%.0f", getTranslateX(), getTranslateY(), getTranslateZ(),
-				getRotate());
-	}
-
+	@Override
 	public void reset() {
+		setNearClip(0.1);
+		setFarClip(10000.0);
+		setRotationAxis(Rotate.X_AXIS);
+		setRotate(0);
+		setTranslateX(0);
+		setTranslateY(0);
+		setTranslateZ(-400);
 	}
 
+	@Override
 	public void update(Node target) {
+		setTranslateX(lerp(getTranslateX(), target.getTranslateX() - 100, speed));
+		setTranslateY(lerp(getTranslateY(), target.getTranslateY() - 150, speed));
 	}
 
+	@Override
 	public void onKeyPressed(KeyEvent e) {
+		boolean modifierOk = e.isShiftDown() && !e.isControlDown();
+		if (e.getCode() == KeyCode.UP && modifierOk) {
+			change(translateZProperty(), -10);
+		} else if (e.getCode() == KeyCode.DOWN && modifierOk) {
+			change(translateZProperty(), 10);
+		}
 	}
 }

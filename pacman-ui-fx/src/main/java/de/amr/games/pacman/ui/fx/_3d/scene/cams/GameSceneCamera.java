@@ -21,34 +21,39 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx._3d.scene;
+package de.amr.games.pacman.ui.fx._3d.scene.cams;
 
-import static de.amr.games.pacman.ui.fx.util.U.lerp;
-
+import javafx.beans.property.DoubleProperty;
 import javafx.scene.Node;
-import javafx.scene.transform.Rotate;
+import javafx.scene.PerspectiveCamera;
+import javafx.scene.input.KeyEvent;
 
-public class CamNearPlayer extends GameSceneCamera {
+/**
+ * Cameras for the 3D play scene.
+ * 
+ * @author Armin Reichert
+ */
+public abstract class GameSceneCamera extends PerspectiveCamera {
 
-	private double speed = 0.02;
-
-	@Override
-	public String toString() {
-		return "Near Player";
+	public static void change(DoubleProperty property, double delta) {
+		property.set(property.get() + delta);
 	}
 
-	@Override
+	protected GameSceneCamera() {
+		super(true);
+	}
+
+	public String transformInfo() {
+		return String.format("x=%.0f y=%.0f z=%.0f rot=%.0f", getTranslateX(), getTranslateY(), getTranslateZ(),
+				getRotate());
+	}
+
 	public void reset() {
-		setNearClip(0.1);
-		setFarClip(10000.0);
-		setRotationAxis(Rotate.X_AXIS);
-		setRotate(80);
-		setTranslateZ(-40);
 	}
 
-	@Override
 	public void update(Node target) {
-		setTranslateX(lerp(getTranslateX(), target.getTranslateX() - 110, speed));
-		setTranslateY(lerp(getTranslateY(), target.getTranslateY(), speed));
+	}
+
+	public void onKeyPressed(KeyEvent e) {
 	}
 }

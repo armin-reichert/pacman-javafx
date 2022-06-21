@@ -30,7 +30,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
+import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
 
 /**
  * Options for the game application.

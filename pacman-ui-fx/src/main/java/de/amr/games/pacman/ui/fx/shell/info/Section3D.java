@@ -24,8 +24,8 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell.info;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
+import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.GameUI;

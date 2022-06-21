@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.app;
 
-import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
+import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;

@@ -21,22 +21,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx._3d.scene;
+package de.amr.games.pacman.ui.fx._3d.scene.cams;
 
 import static de.amr.games.pacman.ui.fx.util.U.lerp;
 
 import javafx.scene.Node;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
 
-public class CamDrone extends GameSceneCamera {
+public class CamNearPlayer extends GameSceneCamera {
 
-	private double speed = 0.005;
+	private double speed = 0.02;
 
 	@Override
 	public String toString() {
-		return "Drone";
+		return "Near Player";
 	}
 
 	@Override
@@ -44,25 +42,13 @@ public class CamDrone extends GameSceneCamera {
 		setNearClip(0.1);
 		setFarClip(10000.0);
 		setRotationAxis(Rotate.X_AXIS);
-		setRotate(0);
-		setTranslateX(0);
-		setTranslateY(0);
-		setTranslateZ(-400);
+		setRotate(80);
+		setTranslateZ(-40);
 	}
 
 	@Override
 	public void update(Node target) {
-		setTranslateX(lerp(getTranslateX(), target.getTranslateX() - 100, speed));
-		setTranslateY(lerp(getTranslateY(), target.getTranslateY() - 150, speed));
-	}
-
-	@Override
-	public void onKeyPressed(KeyEvent e) {
-		boolean modifierOk = e.isShiftDown() && !e.isControlDown();
-		if (e.getCode() == KeyCode.UP && modifierOk) {
-			change(translateZProperty(), -10);
-		} else if (e.getCode() == KeyCode.DOWN && modifierOk) {
-			change(translateZProperty(), 10);
-		}
+		setTranslateX(lerp(getTranslateX(), target.getTranslateX() - 110, speed));
+		setTranslateY(lerp(getTranslateY(), target.getTranslateY(), speed));
 	}
 }
