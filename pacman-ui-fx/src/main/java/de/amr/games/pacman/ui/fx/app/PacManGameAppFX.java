@@ -78,7 +78,7 @@ public class PacManGameAppFX extends Application {
 	public void start(Stage stage) throws IOException {
 		log("Starting application...");
 		double zoom = options.zoom;
-		var ui = new GameUI(gameController, stage, zoom * ArcadeWorld.SIZE.x, zoom * ArcadeWorld.SIZE.y);
+		var ui = new GameUI(gameController, stage, zoom * ArcadeWorld.MODELSIZE.x, zoom * ArcadeWorld.MODELSIZE.y);
 		ui.setFullScreen(options.fullscreen);
 		Actions.init(gameController, ui);
 		GameLoop.get().update = ui::update;

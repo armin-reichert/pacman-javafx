@@ -266,10 +266,10 @@ public interface Rendering2D {
 	default void drawTileBorders(GraphicsContext g, double scale) {
 		g.setStroke(Color.rgb(220, 220, 220, 0.75));
 		for (int row = 0; row <= ArcadeWorld.TILES_Y; ++row) {
-			g.strokeLine(0, scale * t(row), scale * ArcadeWorld.SIZE.x, scale * t(row));
+			g.strokeLine(0, scale * t(row), scale * ArcadeWorld.MODELSIZE.x, scale * t(row));
 		}
 		for (int col = 0; col <= ArcadeWorld.TILES_X; ++col) {
-			g.strokeLine(scale * t(col), 0, scale * t(col), scale * ArcadeWorld.SIZE.y);
+			g.strokeLine(scale * t(col), 0, scale * t(col), scale * ArcadeWorld.MODELSIZE.y);
 		}
 	}
 }

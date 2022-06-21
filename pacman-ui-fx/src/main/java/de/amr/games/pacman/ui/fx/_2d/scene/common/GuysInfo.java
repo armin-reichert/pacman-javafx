@@ -49,8 +49,8 @@ public class GuysInfo {
 
 	private static String bonusName(GameVariant gameVariant, int symbol) {
 		return switch (gameVariant) {
-		case MS_PACMAN -> MsPacManGame.BONUS_NAMES[symbol];
-		case PACMAN -> PacManGame.BONUS_NAMES[symbol];
+		case MS_PACMAN -> MsPacManGame.bonusName(symbol);
+		case PACMAN -> PacManGame.bonusName(symbol);
 		};
 	}
 
