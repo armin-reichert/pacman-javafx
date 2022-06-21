@@ -30,7 +30,6 @@ import de.amr.games.pacman.model.common.GameSound;
 
 /**
  * @author Armin Reichert
- *
  */
 public class PacManGameSounds extends AbstractGameSounds {
 
@@ -43,8 +42,6 @@ public class PacManGameSounds extends AbstractGameSounds {
 		put(clips, GameSound.GHOST_EATEN,     "/pacman/sound/eat_ghost.mp3");
 		put(clips, GameSound.GHOST_RETURNING, "/pacman/sound/retreating.mp3");
 		put(clips, GameSound.INTERMISSION_1,  "/pacman/sound/intermission.mp3");
-		put(clips, GameSound.INTERMISSION_2,  "/pacman/sound/intermission.mp3");
-		put(clips, GameSound.INTERMISSION_3,  "/pacman/sound/intermission.mp3");
 		put(clips, GameSound.PACMAN_MUNCH,    "/pacman/sound/munch_1.wav");
 		put(clips, GameSound.PACMAN_DEATH,    "/pacman/sound/pacman_death.wav");
 		put(clips, GameSound.PACMAN_POWER,    "/pacman/sound/power_pellet.mp3");
