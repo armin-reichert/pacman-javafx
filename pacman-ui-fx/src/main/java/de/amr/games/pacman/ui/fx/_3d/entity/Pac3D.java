@@ -83,8 +83,27 @@ public class Pac3D extends Group {
 
 	public void update() {
 		motion.update(pac);
-		boolean insideWorld = 0 <= pac.position.x && pac.position.x <= t(ArcadeWorld.TILES_X - 1);
-		setVisible(pac.visible && insideWorld);
+		updateVisualAppearance();
+	}
+
+	private void updateVisualAppearance() {
+		double x = pac.position.x;
+		double leftEdge = 0;
+		double rightEdge = t(ArcadeWorld.TILES_X);
+		boolean nearEdge = x < leftEdge + 2 || x > rightEdge - 8;
+		boolean outside = x < leftEdge - 4 || x > rightEdge - 4;
+		if (outside) {
+			setVisible(true);
+			setOpacity(0.5);
+		} else {
+			setOpacity(1);
+			setVisible(pac.visible);
+			var color = Rendering3D.getPacSkullColor();
+			if (nearEdge) {
+				color = Color.color(color.getRed(), color.getGreen(), color.getBlue(), 0.1);
+			}
+			setShapeColor(skull, color);
+		}
 	}
 
 	public Animation dyingAnimation(Color ghostColor) {
