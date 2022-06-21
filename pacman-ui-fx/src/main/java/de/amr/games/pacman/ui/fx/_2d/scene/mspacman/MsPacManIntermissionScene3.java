@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import de.amr.games.pacman.controller.mspacman.Intermission3Controller;
 import de.amr.games.pacman.lib.animation.SingleSpriteAnimation;
+import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.SpritesheetMsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
@@ -62,7 +63,7 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 		icc.msPacMan.setAnimations(new PacAnimations($.r2D));
 		icc.pacMan.setAnimations(new PacAnimations($.r2D));
 		var munchingAnimMap = SpritesheetMsPacMan.get().createPacManMunchingAnimationMap();
-		icc.pacMan.animations().ifPresent(anims -> anims.put(PacAnimations.MUNCHING, munchingAnimMap));
+		icc.pacMan.animations().ifPresent(anims -> anims.put(AnimKeys.PAC_MUNCHING, munchingAnimMap));
 		icc.flap.animation = SpritesheetMsPacMan.get().createFlapAnimation();
 		storkAnim = SpritesheetMsPacMan.get().createStorkFlyingAnimation();
 		storkAnim.ensureRunning();

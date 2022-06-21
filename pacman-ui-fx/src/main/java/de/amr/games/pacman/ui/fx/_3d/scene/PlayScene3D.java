@@ -123,7 +123,7 @@ public class PlayScene3D extends GameScene3D {
 	public void update() {
 		world3D.update($.game);
 		pac3D.update();
-		Stream.of($.game.ghosts).forEach(this::updateGhost3D);
+		Stream.of($.game.theGhosts).forEach(this::updateGhost3D);
 		bonus3D.update($.game.bonus());
 		getCamera().update(pac3D);
 	}

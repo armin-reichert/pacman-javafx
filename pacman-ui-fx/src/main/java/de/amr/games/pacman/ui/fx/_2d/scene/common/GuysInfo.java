@@ -135,7 +135,7 @@ public class GuysInfo {
 	public void update() {
 		for (int i = 0; i < texts.length; ++i) {
 			if (i < texts.length - 2) {
-				var ghost = game.ghosts[i];
+				var ghost = game.theGhosts[i];
 				updateTextView(texts[i], fmtGhostInfo(ghost), ghost);
 			} else if (i == texts.length - 2) {
 				updateTextView(texts[i], fmtPacInfo(game.pac), game.pac);

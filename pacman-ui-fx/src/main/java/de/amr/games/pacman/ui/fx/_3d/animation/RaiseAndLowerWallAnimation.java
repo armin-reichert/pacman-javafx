@@ -28,7 +28,7 @@ import javafx.animation.Transition;
 import javafx.util.Duration;
 
 /**
- * Animates the wall height of the maze. Used as maze "flashing" in 3D play scene.
+ * Animates the wall height of the maze. Used as maze flashing animation in 3D play scene.
  * 
  * @author Armin Reichert
  */

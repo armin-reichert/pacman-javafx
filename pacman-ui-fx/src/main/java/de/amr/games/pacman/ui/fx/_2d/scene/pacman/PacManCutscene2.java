@@ -30,6 +30,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.SpriteAnimation;
 import de.amr.games.pacman.model.common.GameSound;
+import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
@@ -61,8 +62,8 @@ public class PacManCutscene2 extends GameScene2D {
 		initialDelay = 120;
 
 		var pacAnimations = new PacAnimations($.r2D);
-		pacAnimations.select(PacAnimations.MUNCHING);
-		pacAnimations.byName(PacAnimations.MUNCHING).restart();
+		pacAnimations.select(AnimKeys.PAC_MUNCHING);
+		pacAnimations.byName(AnimKeys.PAC_MUNCHING).restart();
 
 		pac = new Pac("Pac-Man");
 		pac.setAnimations(pacAnimations);
@@ -76,8 +77,8 @@ public class PacManCutscene2 extends GameScene2D {
 		var blinkyAnimations = new GhostAnimations(Ghost.RED_GHOST, $.r2D);
 		damagedAnimation = ((SpritesheetPacMan) $.r2D).createBlinkyDamagedAnimation();
 		blinkyAnimations.put(DAMAGED, damagedAnimation);
-		blinkyAnimations.select(GhostAnimations.COLOR);
-		blinkyAnimations.byName(GhostAnimations.COLOR).restart();
+		blinkyAnimations.select(AnimKeys.GHOST_COLOR);
+		blinkyAnimations.byName(AnimKeys.GHOST_COLOR).restart();
 
 		blinky = new Ghost(Ghost.RED_GHOST, "Blinky");
 		blinky.setAnimations(blinkyAnimations);

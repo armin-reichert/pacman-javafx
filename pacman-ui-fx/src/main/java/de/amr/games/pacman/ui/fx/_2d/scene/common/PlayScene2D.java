@@ -53,7 +53,7 @@ public class PlayScene2D extends GameScene2D {
 		$.game.levelCounter.visible = hasCredit();
 		$.game.setMazeFlashingAnimation($.r2D.createMazeFlashingAnimation($.game.level.mazeNumber));
 		$.game.pac.setAnimations(new PacAnimations($.r2D));
-		for (var ghost : $.game.ghosts) {
+		for (var ghost : $.game.theGhosts) {
 			ghost.setAnimations(new GhostAnimations(ghost.id, $.r2D));
 		}
 		$.game.bonus().setInactive();
@@ -94,7 +94,7 @@ public class PlayScene2D extends GameScene2D {
 		$.r2D.drawGameStateMessage(g, hasCredit() ? $.gameState() : GameState.GAME_OVER);
 		$.r2D.drawBonus(g, $.game.bonus());
 		$.r2D.drawPac(g, $.game.pac);
-		$.r2D.drawGhosts(g, $.game.ghosts);
+		$.r2D.drawGhosts(g, $.game.theGhosts);
 		if (creditVisible) {
 			$.r2D.drawCredit(g, $.game.credit);
 		} else {

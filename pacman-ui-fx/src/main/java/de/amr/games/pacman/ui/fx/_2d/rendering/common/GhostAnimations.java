@@ -28,6 +28,7 @@ import java.util.HashMap;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.SpriteAnimationMap;
 import de.amr.games.pacman.lib.animation.SpriteAnimations;
+import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import javafx.geometry.Rectangle2D;
 
@@ -36,27 +37,21 @@ import javafx.geometry.Rectangle2D;
  */
 public class GhostAnimations extends SpriteAnimations<Ghost> {
 
-	public static final String BLUE = "blue";
-	public static final String COLOR = "color";
-	public static final String EYES = "eyes";
-	public static final String FLASHING = "flashing";
-	public static final String VALUE = "value";
-
 	public GhostAnimations(int ghostID, Rendering2D r2D) {
 		animationsByName = new HashMap<>();
-		animationsByName.put(BLUE, r2D.createGhostBlueAnimation());
-		animationsByName.put(EYES, r2D.createGhostEyesAnimationMap());
-		animationsByName.put(FLASHING, r2D.createGhostFlashingAnimation());
-		animationsByName.put(COLOR, r2D.createGhostColorAnimationMap(ghostID));
-		animationsByName.put(VALUE, r2D.createGhostValueList());
-		select(COLOR);
+		animationsByName.put(AnimKeys.GHOST_BLUE, r2D.createGhostBlueAnimation());
+		animationsByName.put(AnimKeys.GHOST_EYES, r2D.createGhostEyesAnimationMap());
+		animationsByName.put(AnimKeys.GHOST_FLASHING, r2D.createGhostFlashingAnimation());
+		animationsByName.put(AnimKeys.GHOST_COLOR, r2D.createGhostColorAnimationMap(ghostID));
+		animationsByName.put(AnimKeys.GHOST_VALUE, r2D.createGhostValueList());
+		select(AnimKeys.GHOST_COLOR);
 	}
 
 	@Override
 	public Rectangle2D current(Ghost ghost) {
 		return (Rectangle2D) switch (selected) {
-		case EYES -> toMap(EYES).get(ghost.wishDir()).animate();
-		case COLOR -> toMap(COLOR).get(ghost.wishDir()).animate();
+		case AnimKeys.GHOST_EYES -> toMap(AnimKeys.GHOST_EYES).get(ghost.wishDir()).animate();
+		case AnimKeys.GHOST_COLOR -> toMap(AnimKeys.GHOST_COLOR).get(ghost.wishDir()).animate();
 		default -> selectedAnimation().animate();
 		};
 	}

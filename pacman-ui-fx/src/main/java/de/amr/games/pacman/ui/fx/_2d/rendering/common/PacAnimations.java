@@ -28,6 +28,7 @@ import java.util.HashMap;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.SpriteAnimations;
+import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Pac;
 import javafx.geometry.Rectangle2D;
 
@@ -36,25 +37,23 @@ import javafx.geometry.Rectangle2D;
  */
 public class PacAnimations extends SpriteAnimations<Pac> {
 
-	public static final String DYING = "dying";
-	public static final String MUNCHING = "munching";
-
 	public PacAnimations(Rendering2D r2D) {
 		animationsByName = new HashMap<>(2);
-		put(DYING, r2D.createPacDyingAnimation());
-		put(MUNCHING, r2D.createPacMunchingAnimationMap());
-		select(MUNCHING);
+		put(AnimKeys.PAC_DYING, r2D.createPacDyingAnimation());
+		put(AnimKeys.PAC_MUNCHING, r2D.createPacMunchingAnimationMap());
+		select(AnimKeys.PAC_MUNCHING);
 	}
 
 	@Override
 	public void ensureRunning() {
-		byName(MUNCHING).ensureRunning();
+		byName(AnimKeys.PAC_MUNCHING).ensureRunning();
 	}
 
 	@Override
 	public Rectangle2D current(Pac pac) {
 		return switch (selected) {
-		case MUNCHING -> super.<Direction, Rectangle2D>castToMap(MUNCHING).get(pac.moveDir()).animate();
+		case AnimKeys.PAC_MUNCHING -> super.<Direction, Rectangle2D>castToMap(AnimKeys.PAC_MUNCHING).get(pac.moveDir())
+				.animate();
 		default -> (Rectangle2D) selectedAnimation().animate();
 		};
 	}

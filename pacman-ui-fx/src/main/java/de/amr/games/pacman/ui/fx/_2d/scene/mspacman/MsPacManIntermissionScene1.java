@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import de.amr.games.pacman.controller.mspacman.Intermission1Controller;
 import de.amr.games.pacman.lib.animation.SpriteAnimations;
+import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.SpritesheetMsPacMan;
@@ -61,7 +62,7 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 		icc.msPac.animations().ifPresent(SpriteAnimations::ensureRunning);
 		icc.pacMan.setAnimations(new PacAnimations($.r2D));
 		icc.pacMan.animations().ifPresent(animations -> {
-			animations.put("munching", SpritesheetMsPacMan.get().createPacManMunchingAnimationMap());
+			animations.put(AnimKeys.PAC_MUNCHING, SpritesheetMsPacMan.get().createPacManMunchingAnimationMap());
 			animations.ensureRunning();
 		});
 		icc.inky.setAnimations(new GhostAnimations(icc.inky.id, $.r2D));

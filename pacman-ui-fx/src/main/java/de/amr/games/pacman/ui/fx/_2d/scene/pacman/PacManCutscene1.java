@@ -29,6 +29,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.GameSound;
+import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
@@ -58,7 +59,7 @@ public class PacManCutscene1 extends GameScene2D {
 		pac.setAnimations(new PacAnimations($.r2D));
 		var big = ((SpritesheetPacMan) $.r2D).createBigPacManMunchingAnimation();
 		pac.animations().ifPresent(animations -> animations.put("big", big));
-		pac.selectAnimation(PacAnimations.MUNCHING);
+		pac.selectAnimation(AnimKeys.PAC_MUNCHING);
 		pac.placeAt(v(29, 20), 0, 0);
 		pac.setMoveDir(Direction.LEFT);
 		pac.setAbsSpeed(1.25);
@@ -67,8 +68,8 @@ public class PacManCutscene1 extends GameScene2D {
 		blinky = new Ghost(Ghost.RED_GHOST, "Blinky");
 		blinky.setAnimations(new GhostAnimations(Ghost.RED_GHOST, $.r2D));
 		blinky.animations().ifPresent(animations -> {
-			animations.select(GhostAnimations.COLOR);
-			animations.byName(GhostAnimations.COLOR).restart();
+			animations.select(AnimKeys.GHOST_COLOR);
+			animations.byName(AnimKeys.GHOST_COLOR).restart();
 		});
 		blinky.placeAt(v(32, 20), 0, 0);
 		blinky.setBothDirs(Direction.LEFT);
@@ -89,7 +90,7 @@ public class PacManCutscene1 extends GameScene2D {
 			blinky.placeAt(v(-2, 20), 4, 0);
 			blinky.setBothDirs(Direction.RIGHT);
 			blinky.animations().ifPresent(animations -> {
-				animations.select("blue");
+				animations.select(AnimKeys.GHOST_BLUE);
 				animations.selectedAnimation().restart();
 			});
 			blinky.setAbsSpeed(0.75);
