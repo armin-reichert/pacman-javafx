@@ -107,7 +107,7 @@ public class World3D {
 
 	public void update(GameModel game) {
 		scores3D.update(game);
-		maze3D.updateDoorState(game.ghosts());
+		maze3D.updateDoorState(game.ghosts(), game.level.world.ghostHouse().doorsCenter());
 		livesCounter3D.update(game.playing ? game.lives - 1 : game.lives);
 	}
 }

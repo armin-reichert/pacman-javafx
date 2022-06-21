@@ -138,10 +138,9 @@ public class Maze3D {
 		});
 	}
 
-	public void updateDoorState(Stream<Ghost> ghosts) {
+	public void updateDoorState(Stream<Ghost> ghosts, V2d doorsCenter) {
 		doors().findFirst().ifPresent(firstDoor3D -> {
-			var centerPosition = firstDoor3D.getCenterPosition();
-			boolean openDoors = isAnyGhostGettingAccess(ghosts, centerPosition);
+			boolean openDoors = isAnyGhostGettingAccess(ghosts, doorsCenter);
 			doors().forEach(door3D -> door3D.setOpen(openDoors));
 		});
 	}
@@ -230,11 +229,11 @@ public class Maze3D {
 	}
 
 	private void addDoors(BuildDetails details) {
-		var leftDoor = new Door3D(world.ghostHouse().doorTileLeft(), true, details.mazeStyle.doorColor);
+		var leftDoor = new Door3D(world.ghostHouse().doorTileLeft(), details.mazeStyle.doorColor);
 		leftDoor.doorHeight.bind(wallHeight);
-		var rightDoor = new Door3D(world.ghostHouse().doorTileRight(), false, details.mazeStyle.doorColor);
+		var rightDoor = new Door3D(world.ghostHouse().doorTileRight(), details.mazeStyle.doorColor);
 		rightDoor.doorHeight.bind(wallHeight);
-		doorsGroup.getChildren().setAll(leftDoor.getRoot(), rightDoor.getRoot());
+		doorsGroup.getChildren().setAll(leftDoor, rightDoor);
 	}
 
 	private void scanHorizontal(FloorPlan floorPlan, BuildDetails details) {
