@@ -35,7 +35,7 @@ import de.amr.games.pacman.lib.animation.SpriteArray;
 import de.amr.games.pacman.model.mspacman.Flap;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
-import de.amr.games.pacman.ui.fx.util.U;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -103,8 +103,8 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 	private SpritesheetMsPacMan() {
 		super("/mspacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
-		font = U.font("/common/emulogic.ttf", 8);
-		midwayLogo = U.image("/mspacman/graphics/midway.png");
+		font = Ufx.font("/common/emulogic.ttf", 8);
+		midwayLogo = Ufx.image("/mspacman/graphics/midway.png");
 
 		int numMazes = 6;
 		mazesFull = new Image[numMazes];
@@ -113,7 +113,7 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 		for (int i = 0; i < numMazes; ++i) {
 			mazesFull[i] = subImage(0, 248 * i, 226, 248);
 			mazesEmpty[i] = subImage(228, 248 * i, 226, 248);
-			mazesEmptyBW[i] = U.colorsExchanged(mazesEmpty[i], //
+			mazesEmptyBW[i] = Ufx.colorsExchanged(mazesEmpty[i], //
 					Map.of(MAZE_SIDE_COLORS[i], Color.WHITE, MAZE_TOP_COLORS[i], Color.BLACK));
 		}
 	}
@@ -217,7 +217,7 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 	public SingleSpriteAnimation<Image> createMazeFlashingAnimation(int mazeNumber) {
 		int mazeIndex = mazeNumber - 1;
 		var mazeEmpty = subImage(228, 248 * mazeIndex, 226, 248);
-		var brightImage = U.colorsExchanged(mazeEmpty, Map.of( //
+		var brightImage = Ufx.colorsExchanged(mazeEmpty, Map.of( //
 				MAZE_SIDE_COLORS[mazeIndex], Color.WHITE, //
 				MAZE_TOP_COLORS[mazeIndex], Color.BLACK) //
 		);

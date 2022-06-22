@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene.cams;
 
-import static de.amr.games.pacman.ui.fx.util.U.lerp;
+import static de.amr.games.pacman.lib.U.lerp;
 
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;

@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.util;
 
 import java.util.Map;
-import java.util.stream.Stream;
 
 import javafx.animation.PauseTransition;
 import javafx.scene.image.Image;
@@ -43,57 +42,9 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class U {
+public class Ufx {
 
-	private U() {
-	}
-
-	public static boolean oneOf(Object value, Object... alternatives) {
-		return Stream.of(alternatives).anyMatch(value::equals);
-	}
-
-	/**
-	 * @param value1 value1
-	 * @param value2 value2
-	 * @param t      "time" between 0 and 1
-	 * @return linear interpolation between {@code value1} and {@code value2} values
-	 */
-	public static double lerp(double value1, double value2, double t) {
-		return (1 - t) * value1 + t * value2;
-	}
-
-	/**
-	 * @param value some value
-	 * @param min   lower bound of interval
-	 * @param max   upper bound of interval
-	 * @return the value if inside the interval, the lower bound if the value is smaller, the upper bound if the value is
-	 *         larger
-	 */
-	public static double clamp(double value, double min, double max) {
-		if (value < min) {
-			return min;
-		}
-		if (value > max) {
-			return max;
-		}
-		return value;
-	}
-
-	/**
-	 * @param value some value
-	 * @param min   lower bound of interval
-	 * @param max   upper bound of interval
-	 * @return the value if inside the interval, the lower bound if the value is smaller, the upper bound if the value is
-	 *         larger
-	 */
-	public static int clamp(int value, int min, int max) {
-		if (value < min) {
-			return min;
-		}
-		if (value > max) {
-			return max;
-		}
-		return value;
+	private Ufx() {
 	}
 
 	/**
@@ -122,11 +73,11 @@ public class U {
 	}
 
 	public static Font font(String path, double size) {
-		return Font.loadFont(U.class.getResourceAsStream(path), size);
+		return Font.loadFont(Ufx.class.getResourceAsStream(path), size);
 	}
 
 	public static Image image(String path) {
-		return new Image(U.class.getResourceAsStream(path));
+		return new Image(Ufx.class.getResourceAsStream(path));
 	}
 
 	/**

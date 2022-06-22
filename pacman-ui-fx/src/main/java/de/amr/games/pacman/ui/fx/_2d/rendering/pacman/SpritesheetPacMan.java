@@ -35,7 +35,7 @@ import de.amr.games.pacman.lib.animation.SpriteAnimationMap;
 import de.amr.games.pacman.lib.animation.SpriteArray;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
-import de.amr.games.pacman.ui.fx.util.U;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -76,9 +76,9 @@ public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
 
 	private SpritesheetPacMan() {
 		super("/pacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
-		mazeFull = U.image("/pacman/graphics/maze_full.png");
-		mazeEmpty = U.image("/pacman/graphics/maze_empty.png");
-		font = U.font("/common/emulogic.ttf", 8);
+		mazeFull = Ufx.image("/pacman/graphics/maze_full.png");
+		mazeEmpty = Ufx.image("/pacman/graphics/maze_empty.png");
+		font = Ufx.font("/common/emulogic.ttf", 8);
 	}
 
 	@Override
@@ -121,7 +121,7 @@ public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
 
 	@Override
 	public SingleSpriteAnimation<Image> createMazeFlashingAnimation(int mazeNumber) {
-		var mazeBright = U.colorsExchanged(mazeEmpty, Map.of(MAZE_WALL_COLOR, Color.WHITE));
+		var mazeBright = Ufx.colorsExchanged(mazeEmpty, Map.of(MAZE_WALL_COLOR, Color.WHITE));
 		var animation = new SingleSpriteAnimation<>(mazeBright, mazeEmpty);
 		animation.frameDuration(10);
 		return animation;

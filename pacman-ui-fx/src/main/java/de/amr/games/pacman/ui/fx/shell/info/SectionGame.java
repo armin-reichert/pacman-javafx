@@ -32,7 +32,7 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
-import de.amr.games.pacman.ui.fx.util.U;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -109,7 +109,7 @@ public class SectionGame extends Section {
 		addInfo("", () -> "Remaining: %s".formatted(ticksToString(gc.game().huntingTimer.remaining())));
 
 		addInfo("Credit", () -> "%d".formatted(gc.game().credit));
-		addInfo("Playing", () -> U.yesNo(gc.game().playing));
+		addInfo("Playing", () -> Ufx.yesNo(gc.game().playing));
 
 		addInfo("Pellets",
 				() -> String.format("%d of %d (%d energizers)", game().level.world.foodRemaining(),

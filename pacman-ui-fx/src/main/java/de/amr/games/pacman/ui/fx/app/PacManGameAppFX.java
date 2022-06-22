@@ -34,7 +34,7 @@ import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
-import de.amr.games.pacman.ui.fx.util.U;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -91,6 +91,6 @@ public class PacManGameAppFX extends Application {
 		GameLoop.get().start();
 		logger.info("Application started.");
 		logger.info(() -> "UI size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s".formatted(ui.getWidth(),
-				ui.getHeight(), zoom, U.onOff(Env.use3D.get()), Env.perspective.get()));
+				ui.getHeight(), zoom, Ufx.onOff(Env.use3D.get()), Env.perspective.get()));
 	}
 }

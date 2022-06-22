@@ -45,7 +45,7 @@ import de.amr.games.pacman.ui.fx.scene.SceneManager;
 import de.amr.games.pacman.ui.fx.shell.info.Dashboard;
 import de.amr.games.pacman.ui.fx.sound.MsPacManGameSounds;
 import de.amr.games.pacman.ui.fx.sound.PacManGameSounds;
-import de.amr.games.pacman.ui.fx.util.U;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
@@ -88,9 +88,9 @@ public class GameUI implements GameEventAdapter {
 		dashboard = new Dashboard(this, gameController);
 
 		gameScenePlaceholder = new StackPane();
-		gameScenePlaceholder.setBackground(U.colorBackground(SCENE_BACKGROUND_COLOR));
+		gameScenePlaceholder.setBackground(Ufx.colorBackground(SCENE_BACKGROUND_COLOR));
 		Env.drawMode3D.addListener((x, y, mode) -> gameScenePlaceholder
-				.setBackground(U.colorBackground(mode == DrawMode.FILL ? SCENE_BACKGROUND_COLOR : Color.BLACK)));
+				.setBackground(Ufx.colorBackground(mode == DrawMode.FILL ? SCENE_BACKGROUND_COLOR : Color.BLACK)));
 
 		sceneRoot = new StackPane(gameScenePlaceholder, dashboard, flashMessageView);
 
@@ -113,7 +113,7 @@ public class GameUI implements GameEventAdapter {
 
 		stage.setMinHeight(328);
 		stage.setMinWidth(241);
-		stage.getIcons().add(U.image("/pacman/graphics/pacman.png"));
+		stage.getIcons().add(Ufx.image("/pacman/graphics/pacman.png"));
 		stage.setOnCloseRequest(e -> GameLoop.get().stop());
 		stage.setTitle(gameController.game().variant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
 		stage.setScene(scene);

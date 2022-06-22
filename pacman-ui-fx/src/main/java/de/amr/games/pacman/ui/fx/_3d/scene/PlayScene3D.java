@@ -30,6 +30,7 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
+import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
@@ -46,7 +47,7 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.Talk;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
-import de.amr.games.pacman.ui.fx.util.U;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.scene.input.KeyCode;
@@ -207,7 +208,7 @@ public class PlayScene3D extends GameScene3D {
 			$.game.ghosts().filter(ghost -> ghost.sameTile($.game.pac)).findAny()
 					.ifPresent(killer -> new SequentialTransition( //
 							pac3D.dyingAnimation($.r2D.getGhostColor(killer.id)), //
-							U.pauseSec(2.0, this::unblockGameController) //
+							Ufx.pauseSec(2.0, this::unblockGameController) //
 					).play());
 		}
 		case LEVEL_STARTING -> {
@@ -216,18 +217,18 @@ public class PlayScene3D extends GameScene3D {
 			content().set(0, world3D);
 			setPerspective(Env.perspective.get());
 			Actions.showFlashMessage(Talk.message("level_starting", $.game.level.number));
-			U.pauseSec(3, this::unblockGameController).play();
+			Ufx.pauseSec(3, this::unblockGameController).play();
 		}
 		case LEVEL_COMPLETE -> {
 			blockGameController();
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.COLORED));
 			var message = Talk.LEVEL_COMPLETE_TALK.next() + "\n\n" + Talk.message("level_complete", $.game.level.number);
 			new SequentialTransition( //
-					U.pauseSec(2.0), //
+					Ufx.pauseSec(2.0), //
 					maze3D.createMazeFlashingAnimation($.game.level.numFlashes), //
-					U.pauseSec(1.0, $.game.pac::hide), //
-					U.pauseSec(0.5, () -> Actions.showFlashMessage(2, message)), //
-					U.pauseSec(2.0, this::unblockGameController) //
+					Ufx.pauseSec(1.0, $.game.pac::hide), //
+					Ufx.pauseSec(0.5, () -> Actions.showFlashMessage(2, message)), //
+					Ufx.pauseSec(2.0, this::unblockGameController) //
 			).play();
 		}
 		case GAME_OVER -> Actions.showFlashMessage(3, Talk.GAME_OVER_TALK.next());
