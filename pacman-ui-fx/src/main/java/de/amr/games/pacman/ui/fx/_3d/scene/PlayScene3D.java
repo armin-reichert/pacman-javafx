@@ -76,16 +76,16 @@ public class PlayScene3D extends GameScene3D {
 
 	@Override
 	public void init() {
-		sceneContent.getChildren().clear();
+		content().clear();
 		world3D = new World3D($.game, $.model3D, $.r2D);
 		// must be at fixed child position it is exchanged when new level starts!
-		sceneContent.getChildren().add(world3D);
+		content().add(world3D);
 		pac3D = new Pac3D($.game.pac, $.model3D);
-		sceneContent.getChildren().add(pac3D);
+		content().add(pac3D);
 		ghosts3D = $.game.ghosts().map(ghost -> new Ghost3D(ghost, $.model3D, $.r2D)).toArray(Ghost3D[]::new);
-		Stream.of(ghosts3D).forEach(sceneContent.getChildren()::add);
+		Stream.of(ghosts3D).forEach(content()::add);
 		bonus3D = new Bonus3D();
-		sceneContent.getChildren().add(bonus3D);
+		content().add(bonus3D);
 		setPerspective(Env.perspective.get());
 	}
 
@@ -228,7 +228,7 @@ public class PlayScene3D extends GameScene3D {
 		case LEVEL_STARTING -> {
 			blockGameController();
 			world3D = new World3D($.game, $.model3D, $.r2D);
-			sceneContent.getChildren().set(0, world3D);
+			content().set(0, world3D);
 			setPerspective(Env.perspective.get());
 			Actions.showFlashMessage(Talk.message("level_starting", $.game.level.number));
 			U.pauseSec(3, this::unblockGameController).play();

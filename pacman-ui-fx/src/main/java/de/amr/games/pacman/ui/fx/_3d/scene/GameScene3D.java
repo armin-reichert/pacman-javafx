@@ -30,8 +30,10 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.util.CoordinateAxes;
+import javafx.collections.ObservableList;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
@@ -44,17 +46,21 @@ import javafx.scene.transform.Translate;
 public abstract class GameScene3D implements GameScene {
 
 	private final SubScene fxSubScene;
-	protected final Group sceneContent = new Group();
+	private final Group contentRoot = new Group();
 	protected SceneContext $;
 
 	protected GameScene3D() {
 		var contentTranslate = new Translate((double) -ArcadeWorld.TILES_X * World.HTS,
 				(double) -ArcadeWorld.TILES_Y * World.HTS);
-		sceneContent.getTransforms().add(contentTranslate);
+		contentRoot.getTransforms().add(contentTranslate);
 		var axes = new CoordinateAxes(1000);
 		axes.visibleProperty().bind(Env.axesVisible);
-		var sceneRoot = new Group(sceneContent, new AmbientLight(Color.GHOSTWHITE), axes);
+		var sceneRoot = new Group(contentRoot, new AmbientLight(Color.GHOSTWHITE), axes);
 		fxSubScene = new SubScene(sceneRoot, 100, 100, true, SceneAntialiasing.BALANCED);
+	}
+
+	protected ObservableList<Node> content() {
+		return contentRoot.getChildren();
 	}
 
 	@Override
