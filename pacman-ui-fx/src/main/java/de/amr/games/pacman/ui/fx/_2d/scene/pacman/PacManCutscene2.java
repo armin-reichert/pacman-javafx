@@ -53,8 +53,8 @@ public class PacManCutscene2 extends GameScene2D {
 	private int frame;
 	private Pac pac;
 	private Ghost blinky;
-	private SpriteAnimation<Rectangle2D> stretchedDressAnimation;
-	private SpriteAnimation<Rectangle2D> damagedAnimation;
+	private SpriteAnimation stretchedDressAnimation;
+	private SpriteAnimation damagedAnimation;
 
 	@Override
 	public void init() {
@@ -138,7 +138,7 @@ public class PacManCutscene2 extends GameScene2D {
 			}
 		}
 		if (stretchedDressAnimation != null) {
-			$.r2D.drawSprite(g, stretchedDressAnimation.frame(), t(14), t(19) + 3.0);
+			$.r2D.drawSprite(g, (Rectangle2D) stretchedDressAnimation.frame(), t(14), t(19) + 3.0);
 		}
 		$.r2D.drawGhost(g, blinky);
 		$.r2D.drawPac(g, pac);

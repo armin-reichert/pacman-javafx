@@ -72,7 +72,7 @@ public class GuysInfo {
 		this.game = game;
 	}
 
-	private String fmtAnimationState(SpriteAnimation<?> animation, Direction dir) {
+	private String fmtAnimationState(SpriteAnimation animation, Direction dir) {
 		if (animation instanceof SpriteAnimationMap) {
 			@SuppressWarnings("unchecked")
 			var gam = (SpriteAnimationMap<Direction, ?>) animation;
