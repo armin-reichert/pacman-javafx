@@ -42,8 +42,6 @@ class Options extends OptionParser {
 	private static final String OPT_FULLSCREEN       = "-fullscreen";
 	private static final String OPT_MUTED            = "-muted";
 	private static final String OPT_PERSPECTIVE      = "-perspective";
-	private static final String OPT_VARIANT_MSPACMAN = "-mspacman";
-	private static final String OPT_VARIANT_PACMAN   = "-pacman";
 	private static final String OPT_ZOOM             = "-zoom";
 	//@formatter:on
 
@@ -71,19 +69,11 @@ class Options extends OptionParser {
 			option0(args, OPT_3D).ifPresent(value -> use3D = true);
 			option0(args, OPT_FULLSCREEN).ifPresent(value -> fullscreen = value);
 			option0(args, OPT_MUTED).ifPresent(value -> muted = value);
-			option0(args, OPT_VARIANT_MSPACMAN, Options::convertGameVariant).ifPresent(value -> gameVariant = value);
-			option0(args, OPT_VARIANT_PACMAN, Options::convertGameVariant).ifPresent(value -> gameVariant = value);
+			option0(args, OPT_VARIANT_MSPACMAN, OptionParser::convertGameVariant).ifPresent(value -> gameVariant = value);
+			option0(args, OPT_VARIANT_PACMAN, OptionParser::convertGameVariant).ifPresent(value -> gameVariant = value);
 			option1(args, OPT_PERSPECTIVE, Perspective::valueOf).ifPresent(value -> perspective = value);
 			option1(args, OPT_ZOOM, Double::valueOf).ifPresent(value -> zoom = value);
 			++i;
 		}
-	}
-
-	private static GameVariant convertGameVariant(String s) {
-		return switch (s) {
-		case OPT_VARIANT_MSPACMAN -> GameVariant.MS_PACMAN;
-		case OPT_VARIANT_PACMAN -> GameVariant.PACMAN;
-		default -> null;
-		};
 	}
 }
