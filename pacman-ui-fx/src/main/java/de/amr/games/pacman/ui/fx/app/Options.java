@@ -60,8 +60,6 @@ class Options extends OptionParser {
 	public GameVariant gameVariant = GameVariant.PACMAN;
 	public Perspective perspective = Perspective.NEAR_PLAYER;
 
-	private int i;
-
 	public Options(List<String> args) {
 		i = 0;
 		while (i < args.size()) {
