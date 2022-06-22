@@ -78,7 +78,7 @@ public class PlayScene3D extends GameScene3D {
 	public void init() {
 		content().clear();
 		world3D = new World3D($.game, $.model3D, $.r2D);
-		// must be at fixed child position it is exchanged when new level starts!
+		// put first, exchanged when new level starts
 		content().add(world3D);
 		pac3D = new Pac3D($.game.pac, $.model3D);
 		content().add(pac3D);
@@ -102,7 +102,9 @@ public class PlayScene3D extends GameScene3D {
 
 	@Override
 	public void onKeyPressed() {
-		if (Keyboard.pressed(Keyboard.ALT, KeyCode.LEFT)) {
+		if (Keyboard.pressed(KeyCode.DIGIT5) && $.game.credit == 0) {
+			$.gameState().addCredit($.game);
+		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.LEFT)) {
 			Actions.selectPrevPerspective();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.RIGHT)) {
 			Actions.selectNextPerspective();
