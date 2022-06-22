@@ -23,11 +23,12 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.app;
 
-import static de.amr.games.pacman.lib.Logging.log;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
@@ -38,6 +39,8 @@ import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
  * @author Armin Reichert
  */
 class Options {
+
+	private static final Logger logger = LogManager.getFormatterLogger();
 
 	//@formatter:off
 	private static final String OPT_2D               = "-2D";
@@ -80,15 +83,15 @@ class Options {
 	private <T> Optional<T> option1(List<String> args, String name, Function<String, T> fnConvert) {
 		if (name.equals(args.get(i))) {
 			if (i + 1 == args.size() || ALL_OPTIONS.contains(args.get(i + 1))) {
-				log("!!! Error: missing value for parameter '%s'.", name);
+				logger.error("!!! Error: missing value for parameter '%s'.", name);
 			} else {
 				++i;
 				try {
 					T value = fnConvert.apply(args.get(i));
-					log("Found parameter %s = %s", name, value);
+					logger.info("Found parameter %s = %s", name, value);
 					return Optional.ofNullable(value);
 				} catch (Exception x) {
-					log("!!! Error: '%s' is no legal value for parameter '%s'.", args.get(i), name);
+					logger.error("!!! Error: '%s' is no legal value for parameter '%s'.", args.get(i), name);
 				}
 			}
 		}
@@ -97,12 +100,12 @@ class Options {
 
 	private <T> Optional<T> option0(List<String> args, String name, Function<String, T> fnConvert) {
 		if (name.equals(args.get(i))) {
-			log("Found parameter %s", name);
+			logger.info("Found parameter %s", name);
 			try {
 				T value = fnConvert.apply(name);
 				return Optional.ofNullable(value);
 			} catch (Exception x) {
-				log("!!! Error: '%s' is no legal parameter.", name);
+				logger.error("!!! Error: '%s' is no legal parameter.", name);
 			}
 		}
 		return Optional.empty();
@@ -110,7 +113,7 @@ class Options {
 
 	private Optional<Boolean> option0(List<String> args, String name) {
 		if (name.equals(args.get(i))) {
-			log("Found parameter %s", name);
+			logger.info("Found parameter %s", name);
 			return Optional.of(true);
 		}
 		return Optional.empty();

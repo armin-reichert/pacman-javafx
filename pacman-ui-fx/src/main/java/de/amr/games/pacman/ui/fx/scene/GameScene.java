@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.scene;
 
-import static de.amr.games.pacman.lib.Logging.log;
-
 import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import javafx.scene.Scene;
@@ -48,7 +46,7 @@ public interface GameScene extends GameEventAdapter {
 	 * Called when the scene becomes the current one.
 	 */
 	default void init() {
-		log("Scene '%s' init", getClass().getName());
+		// empty default
 	}
 
 	/**
@@ -60,7 +58,7 @@ public interface GameScene extends GameEventAdapter {
 	 * Called when the scene is replaced by another one.
 	 */
 	default void end() {
-		log("Scene '%s' end", getClass().getName());
+		// empty default
 	}
 
 	/**

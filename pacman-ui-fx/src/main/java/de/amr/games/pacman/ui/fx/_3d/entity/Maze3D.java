@@ -30,7 +30,9 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.lib.Logging;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -60,6 +62,8 @@ import javafx.util.Duration;
  * @author Armin Reichert
  */
 public class Maze3D extends Group {
+
+	private static final Logger logger = LogManager.getFormatterLogger();
 
 	public static class MazeStyle {
 		public Color wallSideColor;
@@ -129,7 +133,7 @@ public class Maze3D extends Group {
 		var rightDoor = createDoor(world.ghostHouse().doorTileRight(), mazeStyle.doorColor);
 		doorsGroup.getChildren().setAll(leftDoor, rightDoor);
 
-		Logging.log("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeight.get());
+		logger.info("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeight.get());
 	}
 
 	public void setFloorTexture(Image texture, Color color) {

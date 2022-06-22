@@ -23,7 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.app;
 
-import static de.amr.games.pacman.lib.Logging.log;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -36,6 +37,8 @@ import javafx.util.Duration;
  * @author Armin Reichert
  */
 public class GameLoop {
+
+	private static final Logger logger = LogManager.getFormatterLogger();
 
 	private static final GameLoop it = new GameLoop();
 
@@ -63,12 +66,12 @@ public class GameLoop {
 
 	public void start() {
 		animation.play();
-		log("Game loop started. Target frame rate: %d", targetFrameRate);
+		logger.info("Game loop started. Target frame rate: %d", targetFrameRate);
 	}
 
 	public void stop() {
 		animation.stop();
-		log("Game loop stopped");
+		logger.info("Game loop stopped");
 	}
 
 	public int getTargetFrameRate() {
@@ -127,7 +130,7 @@ public class GameLoop {
 			double startNanos = System.nanoTime();
 			phase.run();
 			double durationNanos = System.nanoTime() - startNanos;
-			log(message, durationNanos / 1e6);
+			logger.info(message, durationNanos / 1e6);
 		} else {
 			phase.run();
 		}

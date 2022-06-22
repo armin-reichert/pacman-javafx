@@ -24,8 +24,6 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.sound;
 
-import static de.amr.games.pacman.lib.Logging.log;
-
 import de.amr.games.pacman.model.common.GameSound;
 
 /**
@@ -53,6 +51,5 @@ public class MsPacManGameSounds extends AbstractGameSounds {
 		put(clips, GameSound.SIREN_3,         "/mspacman/sound/Ghost Noise 3.mp3");
 		put(clips, GameSound.SIREN_4,         "/mspacman/sound/Ghost Noise 4.mp3");
 		//@formatter:on
-		log("Ms. Pac-Man audio clips loaded");
 	}
 }

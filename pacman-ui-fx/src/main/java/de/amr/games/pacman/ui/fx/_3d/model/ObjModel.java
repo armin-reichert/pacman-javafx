@@ -1,10 +1,11 @@
 package de.amr.games.pacman.ui.fx._3d.model;
 
-import static de.amr.games.pacman.lib.Logging.log;
-
 import java.net.URL;
 import java.util.Collections;
 import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
@@ -19,6 +20,8 @@ import javafx.scene.shape.MeshView;
  */
 public class ObjModel {
 
+	private static final Logger logger = LogManager.getFormatterLogger();
+
 	public Map<String, MeshView> meshViews = Collections.emptyMap();
 	public Map<String, PhongMaterial> materials = Collections.emptyMap();
 
@@ -31,7 +34,7 @@ public class ObjModel {
 			importer.read(url);
 			meshViews = importer.getNamedMeshViews();
 			materials = importer.getNamedMaterials();
-			log("Loading 3D model from URL '%s' succeeded", url);
+			logger.info("Loading 3D model from URL '%s' succeeded", url);
 		} catch (ImportException e) {
 			throw new PacManModel3DException("Loading 3D model from URL '%s' failed: %s", url, e.getMessage());
 		} finally {

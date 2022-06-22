@@ -24,8 +24,6 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.shell;
 
-import static de.amr.games.pacman.lib.Logging.log;
-
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.model.common.GameSounds;
@@ -98,7 +96,6 @@ public class Actions {
 
 	public static void togglePaused() {
 		Env.toggle(Env.paused);
-		log(Env.paused.get() ? "Simulation paused." : "Simulation resumed.");
 	}
 
 	public static void singleStep() {

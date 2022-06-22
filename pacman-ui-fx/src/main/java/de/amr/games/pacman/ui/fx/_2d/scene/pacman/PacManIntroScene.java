@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
-import static de.amr.games.pacman.lib.TickTimer.sec_to_ticks;
+import static de.amr.games.pacman.lib.TickTimer.secToTicks;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
@@ -106,7 +106,7 @@ public class PacManIntroScene extends GameScene2D {
 		case SHOWING_POINTS -> {
 			drawGallery(g);
 			drawPoints(g);
-			if (time > sec_to_ticks(1)) {
+			if (time > secToTicks(1)) {
 				drawBlinkingEnergizer(g);
 				$.r2D.drawCopyright(g, 32);
 			}

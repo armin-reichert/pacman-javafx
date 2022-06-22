@@ -23,7 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell;
 
-import static de.amr.games.pacman.lib.Logging.log;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.event.GameEvent;
@@ -61,6 +62,8 @@ import javafx.stage.Stage;
  */
 public class GameUI implements GameEventAdapter {
 
+	private static final Logger logger = LogManager.getFormatterLogger();
+
 	public static final Color SCENE_BACKGROUND_COLOR = Color.CORNFLOWERBLUE;
 
 	private final GameController gameController;
@@ -93,7 +96,7 @@ public class GameUI implements GameEventAdapter {
 
 		scene = new Scene(sceneRoot, width, height);
 		SceneManager.allGameScenes().forEach(gameScene -> gameScene.setParent(scene));
-		log("Main scene created. Size: %.0f x %.0f", scene.getWidth(), scene.getHeight());
+		logger.info("Main scene created. Size: %.0f x %.0f", scene.getWidth(), scene.getHeight());
 
 		var pacSteering = new KeyboardPacSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 		gameController.setPacSteering(pacSteering);
@@ -213,7 +216,7 @@ public class GameUI implements GameEventAdapter {
 		}
 		// just here for simplicity
 		stage.setTitle(gameController.game().variant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
-		log("Current scene changed from %s to %s", currentGameScene, newGameScene);
+		logger.info("Current scene changed from %s to %s", currentGameScene, newGameScene);
 		currentGameScene = newGameScene;
 		currentGameScene.setSceneContext(createSceneContext());
 		currentGameScene.init();

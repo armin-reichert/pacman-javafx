@@ -24,12 +24,13 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.sound;
 
-import static de.amr.games.pacman.lib.Logging.log;
-
 import java.net.URL;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.stream.Stream;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.GameSounds;
@@ -41,6 +42,8 @@ import javafx.scene.media.AudioClip;
  *
  */
 public class AbstractGameSounds implements GameSounds {
+
+	private static final Logger logger = LogManager.getFormatterLogger();
 
 	protected final Map<GameSound, AudioClip> clips = new EnumMap<>(GameSound.class);
 	protected boolean silent;
@@ -143,7 +146,7 @@ public class AbstractGameSounds implements GameSounds {
 		};
 		getClip(siren).setVolume(0.2);
 		loop(siren, Animation.INDEFINITE);
-		log("Siren %s started", siren);
+		logger.info("Siren %s started", siren);
 	}
 
 	public Stream<GameSound> sirens() {
@@ -162,7 +165,7 @@ public class AbstractGameSounds implements GameSounds {
 		sirens().forEach(siren -> {
 			if (isPlaying(siren)) {
 				getClip(siren).stop();
-				log("Siren %s stopped", siren);
+				logger.info("Siren %s stopped", siren);
 			}
 		});
 	}

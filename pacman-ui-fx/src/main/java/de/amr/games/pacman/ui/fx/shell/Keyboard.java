@@ -27,7 +27,9 @@ package de.amr.games.pacman.ui.fx.shell;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.amr.games.pacman.lib.Logging;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
@@ -35,6 +37,8 @@ import javafx.scene.input.KeyEvent;
  * @author Armin Reichert
  */
 public class Keyboard {
+
+	private static final Logger logger = LogManager.getFormatterLogger();
 
 	private Keyboard() {
 	}
@@ -81,7 +85,7 @@ public class Keyboard {
 
 	public static boolean pressed(int modfierMask, KeyCode code) {
 		if (currentEvent != null && currentEvent.getCode() == code && currentMask == modfierMask) {
-			Logging.log("Key press handled: %s%s", modifierText(currentMask), code);
+			logger.info("Key press handled: %s%s", modifierText(currentMask), code);
 			currentEvent.consume();
 			return true;
 		}

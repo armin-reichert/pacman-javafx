@@ -23,9 +23,10 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.app;
 
-import static de.amr.games.pacman.lib.Logging.log;
-
 import java.io.IOException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
@@ -56,6 +57,8 @@ import javafx.stage.Stage;
  */
 public class PacManGameAppFX extends Application {
 
+	private static final Logger logger = LogManager.getFormatterLogger();
+
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -65,18 +68,18 @@ public class PacManGameAppFX extends Application {
 
 	@Override
 	public void init() throws Exception {
-		log("Initializing application...");
+		logger.info("Initializing application...");
 		options = new Options(getParameters().getUnnamed());
 		Env.use3D.set(options.use3D);
 		Env.perspective.set(options.perspective);
 		gameController = new GameController();
 		gameController.selectGame(options.gameVariant);
-		log("Application initialized. Game variant: %s", gameController.game().variant);
+		logger.info("Application initialized. Game variant: %s", gameController.game().variant);
 	}
 
 	@Override
 	public void start(Stage stage) throws IOException {
-		log("Starting application...");
+		logger.info("Starting application...");
 		double zoom = options.zoom;
 		var ui = new GameUI(gameController, stage, zoom * ArcadeWorld.MODELSIZE.x, zoom * ArcadeWorld.MODELSIZE.y);
 		ui.setFullScreen(options.fullscreen);
@@ -86,8 +89,8 @@ public class PacManGameAppFX extends Application {
 		GameLoop.get().setTargetFrameRate(60);
 		GameLoop.get().setTimeMeasured(false);
 		GameLoop.get().start();
-		log("Application started.");
-		log("UI size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s", ui.getWidth(), ui.getHeight(), zoom,
+		logger.info("Application started.");
+		logger.info("UI size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s", ui.getWidth(), ui.getHeight(), zoom,
 				U.onOff(Env.use3D.get()), Env.perspective.get());
 	}
 }
