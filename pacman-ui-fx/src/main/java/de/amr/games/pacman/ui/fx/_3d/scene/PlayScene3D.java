@@ -229,6 +229,7 @@ public class PlayScene3D extends GameScene3D {
 			blockGameController();
 			world3D = new World3D($.game, $.model3D, $.r2D);
 			sceneContent.getChildren().set(0, world3D);
+			setPerspective(Env.perspective.get());
 			Actions.showFlashMessage(Talk.message("level_starting", $.game.level.number));
 			U.pauseSec(3, this::unblockGameController).play();
 		}
