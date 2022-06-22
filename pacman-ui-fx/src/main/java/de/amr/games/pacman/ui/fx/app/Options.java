@@ -37,20 +37,20 @@ import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
 class Options extends OptionParser {
 
 	//@formatter:off
-	private static final String OPT_2D               = "-2D";
-	private static final String OPT_3D               = "-3D";
-	private static final String OPT_FULLSCREEN       = "-fullscreen";
-	private static final String OPT_MUTED            = "-muted";
-	private static final String OPT_PERSPECTIVE      = "-perspective";
-	private static final String OPT_ZOOM             = "-zoom";
+	private static final String OPT_2D          = "-2D";
+	private static final String OPT_3D          = "-3D";
+	private static final String OPT_FULLSCREEN  = "-fullscreen";
+	private static final String OPT_MUTED       = "-muted";
+	private static final String OPT_PERSPECTIVE = "-perspective";
+	private static final String OPT_ZOOM        = "-zoom";
 	//@formatter:on
 
-	private List<String> optionNames = List.of(OPT_2D, OPT_3D, OPT_FULLSCREEN, OPT_MUTED, OPT_PERSPECTIVE,
+	private static final List<String> OPTION_NAMES = List.of(OPT_2D, OPT_3D, OPT_FULLSCREEN, OPT_MUTED, OPT_PERSPECTIVE,
 			OPT_VARIANT_MSPACMAN, OPT_VARIANT_PACMAN, OPT_ZOOM);
 
 	@Override
 	protected List<String> options() {
-		return optionNames;
+		return OPTION_NAMES;
 	}
 
 	public boolean use3D = true;
@@ -63,14 +63,14 @@ class Options extends OptionParser {
 	public Options(List<String> args) {
 		i = 0;
 		while (i < args.size()) {
-			option0(args, OPT_2D).ifPresent(value -> use3D = false);
-			option0(args, OPT_3D).ifPresent(value -> use3D = true);
-			option0(args, OPT_FULLSCREEN).ifPresent(value -> fullscreen = value);
-			option0(args, OPT_MUTED).ifPresent(value -> muted = value);
-			option0(args, OPT_VARIANT_MSPACMAN, OptionParser::convertGameVariant).ifPresent(value -> gameVariant = value);
-			option0(args, OPT_VARIANT_PACMAN, OptionParser::convertGameVariant).ifPresent(value -> gameVariant = value);
-			option1(args, OPT_PERSPECTIVE, Perspective::valueOf).ifPresent(value -> perspective = value);
-			option1(args, OPT_ZOOM, Double::valueOf).ifPresent(value -> zoom = value);
+			use3D = optBoolean(args, OPT_2D).orElse(use3D);
+			use3D = optBoolean(args, OPT_3D).orElse(use3D);
+			fullscreen = optBoolean(args, OPT_FULLSCREEN).orElse(fullscreen);
+			muted = optBoolean(args, OPT_MUTED).orElse(muted);
+			gameVariant = optName(args, OPT_VARIANT_MSPACMAN, OptionParser::convertGameVariant).orElse(gameVariant);
+			gameVariant = optName(args, OPT_VARIANT_PACMAN, OptionParser::convertGameVariant).orElse(gameVariant);
+			perspective = optNameValue(args, OPT_PERSPECTIVE, Perspective::valueOf).orElse(perspective);
+			zoom = optNameValue(args, OPT_ZOOM, Double::valueOf).orElse(zoom);
 			++i;
 		}
 	}
