@@ -56,7 +56,7 @@ public class World3D extends Group {
 			scores3D.txtScore.setFill(Color.RED);
 			scores3D.txtScore.setText("GAME OVER!");
 		}
-		getChildren().add(scores3D.getRoot());
+		getChildren().add(scores3D);
 
 		var mazeStyle = new MazeStyle();
 		mazeStyle.wallSideColor = Rendering3D.getMazeSideColor(game.variant, game.level.mazeNumber);

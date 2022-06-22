@@ -89,16 +89,14 @@ public class PlayScene3D extends GameScene3D {
 		setPerspective(Env.perspective.get());
 	}
 
-	private void setPerspective(Perspective psp) {
-		var camera = cameraMap.get(psp);
+	public void setPerspective(Perspective perspective) {
+		var camera = cameraMap.get(perspective);
 		camera.reset();
 		setCamera(camera);
-		if (world3D != null) {
+		if (world3D != null && world3D.getScores3D() != null) {
 			var scores3D = world3D.getScores3D();
-			if (scores3D != null) {
-				scores3D.getRoot().rotationAxisProperty().bind(camera.rotationAxisProperty());
-				scores3D.getRoot().rotateProperty().bind(camera.rotateProperty());
-			}
+			scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
+			scores3D.rotateProperty().bind(camera.rotateProperty());
 		}
 	}
 
