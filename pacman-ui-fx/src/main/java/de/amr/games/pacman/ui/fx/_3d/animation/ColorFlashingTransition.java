@@ -54,9 +54,11 @@ public class ColorFlashingTransition extends Transition {
 
 	@Override
 	protected void interpolate(double t) {
-		double r = U.lerp(colorStart.getRed(), colorEnd.getRed(), t);
-		double g = U.lerp(colorStart.getGreen(), colorEnd.getGreen(), t);
-		double b = U.lerp(colorStart.getBlue(), colorEnd.getBlue(), t);
-		material.setDiffuseColor(Color.color(r, g, b));
+		if (t <= 0.25 || t >= 0.75) {
+			double r = U.lerp(colorStart.getRed(), colorEnd.getRed(), t);
+			double g = U.lerp(colorStart.getGreen(), colorEnd.getGreen(), t);
+			double b = U.lerp(colorStart.getBlue(), colorEnd.getBlue(), t);
+			material.setDiffuseColor(Color.color(r, g, b));
+		}
 	}
 }
