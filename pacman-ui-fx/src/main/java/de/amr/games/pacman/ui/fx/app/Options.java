@@ -61,7 +61,7 @@ class Options {
 	public boolean fullscreen = false;
 	public boolean muted = false;
 	public GameVariant gameVariant = GameVariant.PACMAN;
-	public Perspective perspective = Perspective.CAM_NEAR_PLAYER;
+	public Perspective perspective = Perspective.NEAR_PLAYER;
 
 	private int i;
 

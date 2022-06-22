@@ -67,10 +67,10 @@ public class PlayScene3D extends GameScene3D {
 	private Bonus3D bonus3D;
 
 	public PlayScene3D() {
-		cameraMap.put(Perspective.CAM_DRONE, new CamDrone());
-		cameraMap.put(Perspective.CAM_FOLLOWING_PLAYER, new CamFollowingPlayer());
-		cameraMap.put(Perspective.CAM_NEAR_PLAYER, new CamNearPlayer());
-		cameraMap.put(Perspective.CAM_TOTAL, new CamTotal());
+		cameraMap.put(Perspective.DRONE, new CamDrone());
+		cameraMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
+		cameraMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
+		cameraMap.put(Perspective.TOTAL, new CamTotal());
 		Env.perspective.addListener((obs, oldVal, newVal) -> setPerspective(newVal));
 	}
 

@@ -31,5 +31,5 @@ import de.amr.games.pacman.lib.EnumMethods;
  * @author Armin Reichert
  */
 public enum Perspective implements EnumMethods<Perspective> {
-	CAM_TOTAL, CAM_FOLLOWING_PLAYER, CAM_NEAR_PLAYER, CAM_DRONE;
+	TOTAL, FOLLOWING_PLAYER, NEAR_PLAYER, DRONE;
 }

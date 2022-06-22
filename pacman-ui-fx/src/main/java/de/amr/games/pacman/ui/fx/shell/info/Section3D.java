@@ -64,11 +64,11 @@ public class Section3D extends Section {
 		cbUseFloorTexture = addCheckBox("Maze floor texture", () -> Env.toggle(Env.mazeFloorHasTexture));
 		cbAxesVisible = addCheckBox("Show axes", () -> Env.toggle(Env.axesVisible));
 		cbWireframeMode = addCheckBox("Wireframe mode", Actions::toggleDrawMode);
-		addInfo("Shift+LEFT/RIGHT", "Camera -X / +X").available(() -> Env.perspective.get() == Perspective.CAM_TOTAL);
-		addInfo("Shift+PLUS/MINUS", "Camera -Y / +Y").available(() -> Env.perspective.get() == Perspective.CAM_TOTAL);
+		addInfo("Shift+LEFT/RIGHT", "Camera -X / +X").available(() -> Env.perspective.get() == Perspective.TOTAL);
+		addInfo("Shift+PLUS/MINUS", "Camera -Y / +Y").available(() -> Env.perspective.get() == Perspective.TOTAL);
 		addInfo("Shift+UP/DOWN", "Camera -Z / +Z").available(
-				() -> Env.perspective.get() == Perspective.CAM_TOTAL || Env.perspective.get() == Perspective.CAM_DRONE);
-		addInfo("Ctrl+Shift+UP/DOWN", "Camera Rotate X").available(() -> Env.perspective.get() == Perspective.CAM_TOTAL);
+				() -> Env.perspective.get() == Perspective.TOTAL || Env.perspective.get() == Perspective.DRONE);
+		addInfo("Ctrl+Shift+UP/DOWN", "Camera Rotate X").available(() -> Env.perspective.get() == Perspective.TOTAL);
 	}
 
 	@Override
