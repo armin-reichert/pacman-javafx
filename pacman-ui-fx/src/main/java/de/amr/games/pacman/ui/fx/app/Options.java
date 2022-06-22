@@ -24,12 +24,8 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.app;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import de.amr.games.pacman.lib.OptionParser;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
 
@@ -38,9 +34,7 @@ import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
  * 
  * @author Armin Reichert
  */
-class Options {
-
-	private static final Logger logger = LogManager.getFormatterLogger();
+class Options extends OptionParser {
 
 	//@formatter:off
 	private static final String OPT_2D               = "-2D";
@@ -53,8 +47,13 @@ class Options {
 	private static final String OPT_ZOOM             = "-zoom";
 	//@formatter:on
 
-	private static final List<String> ALL_OPTIONS = List.of(OPT_2D, OPT_3D, OPT_FULLSCREEN, OPT_MUTED, OPT_PERSPECTIVE,
+	private List<String> optionNames = List.of(OPT_2D, OPT_3D, OPT_FULLSCREEN, OPT_MUTED, OPT_PERSPECTIVE,
 			OPT_VARIANT_MSPACMAN, OPT_VARIANT_PACMAN, OPT_ZOOM);
+
+	@Override
+	protected List<String> options() {
+		return optionNames;
+	}
 
 	public boolean use3D = true;
 	public double zoom = 2.0;
@@ -78,45 +77,6 @@ class Options {
 			option1(args, OPT_ZOOM, Double::valueOf).ifPresent(value -> zoom = value);
 			++i;
 		}
-	}
-
-	private <T> Optional<T> option1(List<String> args, String name, Function<String, T> fnConvert) {
-		if (name.equals(args.get(i))) {
-			if (i + 1 == args.size() || ALL_OPTIONS.contains(args.get(i + 1))) {
-				logger.error("!!! Error: missing value for parameter '%s'.", name);
-			} else {
-				++i;
-				try {
-					T value = fnConvert.apply(args.get(i));
-					logger.info("Found parameter %s = %s", name, value);
-					return Optional.ofNullable(value);
-				} catch (Exception x) {
-					logger.error("!!! Error: '%s' is no legal value for parameter '%s'.", args.get(i), name);
-				}
-			}
-		}
-		return Optional.empty();
-	}
-
-	private <T> Optional<T> option0(List<String> args, String name, Function<String, T> fnConvert) {
-		if (name.equals(args.get(i))) {
-			logger.info("Found parameter %s", name);
-			try {
-				T value = fnConvert.apply(name);
-				return Optional.ofNullable(value);
-			} catch (Exception x) {
-				logger.error("!!! Error: '%s' is no legal parameter.", name);
-			}
-		}
-		return Optional.empty();
-	}
-
-	private Optional<Boolean> option0(List<String> args, String name) {
-		if (name.equals(args.get(i))) {
-			logger.info("Found parameter %s", name);
-			return Optional.of(true);
-		}
-		return Optional.empty();
 	}
 
 	private static GameVariant convertGameVariant(String s) {
