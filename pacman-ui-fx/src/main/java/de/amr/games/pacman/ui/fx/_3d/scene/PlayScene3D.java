@@ -30,7 +30,6 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
-import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
@@ -123,23 +122,9 @@ public class PlayScene3D extends GameScene3D {
 	public void update() {
 		world3D.update($.game);
 		pac3D.update();
-		Stream.of($.game.theGhosts).forEach(this::updateGhost3D);
+		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update($.game));
 		bonus3D.update($.game.bonus());
 		getCamera().update(pac3D);
-	}
-
-	private void updateGhost3D(Ghost ghost) {
-		var ghost3D = ghosts3D[ghost.id];
-		if (ghost.killIndex != -1) {
-			ghost3D.setAnimationMode(AnimationMode.NUMBER);
-		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
-			ghost3D.setAnimationMode(AnimationMode.EYES);
-		} else if ($.game.pac.hasPower() && !ghost.is(GhostState.LEAVING_HOUSE)) {
-			ghost3D.setAnimationMode(AnimationMode.FRIGHTENED);
-		} else {
-			ghost3D.setAnimationMode(AnimationMode.COLORED);
-		}
-		ghost3D.update();
 	}
 
 	public void onSwitchFrom2D() {
@@ -213,7 +198,7 @@ public class PlayScene3D extends GameScene3D {
 		case READY -> {
 			maze3D.reset();
 			pac3D.reset();
-			Stream.of(ghosts3D).forEach(Ghost3D::reset);
+			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.reset($.game));
 		}
 		case HUNTING -> maze3D.energizerAnimations().forEach(Animation::play);
 		case PACMAN_DYING -> {

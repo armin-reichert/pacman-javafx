@@ -23,7 +23,9 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
+import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -169,17 +171,26 @@ public class Ghost3D extends Group {
 		setAnimationMode(AnimationMode.COLORED);
 	}
 
-	public void reset() {
+	public void reset(GameModel game) {
 		setAnimationMode(AnimationMode.COLORED);
-		update();
+		update(game);
 	}
 
-	public void update() {
+	public void update(GameModel game) {
+		if (ghost.killIndex != -1) {
+			setAnimationMode(AnimationMode.NUMBER);
+		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
+			setAnimationMode(AnimationMode.EYES);
+		} else if (game.pac.hasPower() && !ghost.is(GhostState.LEAVING_HOUSE)) {
+			setAnimationMode(AnimationMode.FRIGHTENED);
+		} else {
+			setAnimationMode(AnimationMode.COLORED);
+		}
 		motion.update(ghost, this);
-		updateAppearance();
+		updateVisualAppearance();
 	}
 
-	private void updateAppearance() {
+	private void updateVisualAppearance() {
 		double x = ghost.position.x;
 		double leftEdge = 0;
 		double rightEdge = ArcadeWorld.TILES_X * World.TS;
