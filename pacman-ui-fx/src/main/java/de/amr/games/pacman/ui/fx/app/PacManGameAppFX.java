@@ -63,13 +63,13 @@ public class PacManGameAppFX extends Application {
 
 	private static final Logger logger = LogManager.getFormatterLogger();
 
-	static final Option<Boolean> OPT_3D = new Option<>("-3D", false, Boolean::valueOf);
-	static final Option<Boolean> OPT_FULLSCREEN = new Option<>("-fullscreen", false, Boolean::valueOf);
-	static final Option<Boolean> OPT_MUTED = new Option<>("-muted", false, Boolean::valueOf);
+	static final Option<Boolean> OPT_3D = new Option.BooleanOption("-3D", false);
+	static final Option<Boolean> OPT_FULLSCREEN = new Option.BooleanOption("-fullscreen", false);
+	static final Option<Boolean> OPT_MUTED = new Option.BooleanOption("-muted", false);
 	static final Option<Perspective> OPT_PERSPECTIVE = new Option<>("-perspective", Perspective.NEAR_PLAYER,
 			Perspective::valueOf);
 	static final Option<GameVariant> OPT_VARIANT = new Option<>("-variant", GameVariant.PACMAN, GameVariant::valueOf);
-	static final Option<Double> OPT_ZOOM = new Option<>("-zoom", 2.0, Double::valueOf);
+	static final Option<Double> OPT_ZOOM = new Option.DoubleOption("-zoom", 2.0);
 
 	public static void main(String[] args) {
 		launch(args);
