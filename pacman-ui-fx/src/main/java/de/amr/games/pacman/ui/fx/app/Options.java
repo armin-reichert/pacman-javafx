@@ -45,14 +45,6 @@ class Options extends OptionParser {
 	private static final String OPT_ZOOM        = "-zoom";
 	//@formatter:on
 
-	private static final List<String> OPTION_NAMES = List.of(OPT_2D, OPT_3D, OPT_FULLSCREEN, OPT_MUTED, OPT_PERSPECTIVE,
-			OPT_VARIANT_MSPACMAN, OPT_VARIANT_PACMAN, OPT_ZOOM);
-
-	@Override
-	protected List<String> options() {
-		return OPTION_NAMES;
-	}
-
 	public boolean use3D = true;
 	public double zoom = 2.0;
 	public boolean fullscreen = false;
@@ -61,17 +53,17 @@ class Options extends OptionParser {
 	public Perspective perspective = Perspective.NEAR_PLAYER;
 
 	public Options(List<String> args) {
-		i = 0;
-		while (i < args.size()) {
-			use3D = optBoolean(args, OPT_2D).orElse(use3D);
-			use3D = optBoolean(args, OPT_3D).orElse(use3D);
-			fullscreen = optBoolean(args, OPT_FULLSCREEN).orElse(fullscreen);
-			muted = optBoolean(args, OPT_MUTED).orElse(muted);
-			gameVariant = optName(args, OPT_VARIANT_MSPACMAN, OptionParser::convertGameVariant).orElse(gameVariant);
-			gameVariant = optName(args, OPT_VARIANT_PACMAN, OptionParser::convertGameVariant).orElse(gameVariant);
-			perspective = optNameValue(args, OPT_PERSPECTIVE, Perspective::valueOf).orElse(perspective);
-			zoom = optNameValue(args, OPT_ZOOM, Double::valueOf).orElse(zoom);
-			++i;
+		super(List.of(OPT_2D, OPT_3D, OPT_FULLSCREEN, OPT_MUTED, OPT_PERSPECTIVE, OPT_VARIANT_MSPACMAN, OPT_VARIANT_PACMAN,
+				OPT_ZOOM), args);
+		while (hasMoreArgs()) {
+			use3D = parseBoolean(OPT_2D).orElse(use3D);
+			use3D = parseBoolean(OPT_3D).orElse(use3D);
+			fullscreen = parseBoolean(OPT_FULLSCREEN).orElse(fullscreen);
+			muted = parseBoolean(OPT_MUTED).orElse(muted);
+			gameVariant = parseName(OPT_VARIANT_MSPACMAN, OptionParser::convertGameVariant).orElse(gameVariant);
+			gameVariant = parseName(OPT_VARIANT_PACMAN, OptionParser::convertGameVariant).orElse(gameVariant);
+			perspective = parseNameValue(OPT_PERSPECTIVE, Perspective::valueOf).orElse(perspective);
+			zoom = parseNameValue(OPT_ZOOM, Double::valueOf).orElse(zoom);
 		}
 	}
 }
