@@ -36,12 +36,22 @@ import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
  */
 class Options extends OptionParser {
 
+	public static GameVariant convertGameVariant(String s) {
+		return switch (s) {
+		case OPT_VARIANT_MSPACMAN -> GameVariant.MS_PACMAN;
+		case OPT_VARIANT_PACMAN -> GameVariant.PACMAN;
+		default -> null;
+		};
+	}
+
 	//@formatter:off
 	private static final String OPT_2D          = "-2D";
 	private static final String OPT_3D          = "-3D";
 	private static final String OPT_FULLSCREEN  = "-fullscreen";
 	private static final String OPT_MUTED       = "-muted";
 	private static final String OPT_PERSPECTIVE = "-perspective";
+	public static final String OPT_VARIANT_MSPACMAN = "-mspacman";
+	public static final String OPT_VARIANT_PACMAN   = "-pacman";
 	private static final String OPT_ZOOM        = "-zoom";
 	//@formatter:on
 
@@ -60,8 +70,8 @@ class Options extends OptionParser {
 			use3D = parseBoolean(OPT_3D).orElse(use3D);
 			fullscreen = parseBoolean(OPT_FULLSCREEN).orElse(fullscreen);
 			muted = parseBoolean(OPT_MUTED).orElse(muted);
-			gameVariant = parseName(OPT_VARIANT_MSPACMAN, OptionParser::convertGameVariant).orElse(gameVariant);
-			gameVariant = parseName(OPT_VARIANT_PACMAN, OptionParser::convertGameVariant).orElse(gameVariant);
+			gameVariant = parseName(OPT_VARIANT_MSPACMAN, Options::convertGameVariant).orElse(gameVariant);
+			gameVariant = parseName(OPT_VARIANT_PACMAN, Options::convertGameVariant).orElse(gameVariant);
 			perspective = parseNameValue(OPT_PERSPECTIVE, Perspective::valueOf).orElse(perspective);
 			zoom = parseNameValue(OPT_ZOOM, Double::valueOf).orElse(zoom);
 		}
