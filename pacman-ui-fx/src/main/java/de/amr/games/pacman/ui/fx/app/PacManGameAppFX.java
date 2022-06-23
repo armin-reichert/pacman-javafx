@@ -29,9 +29,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
+import de.amr.games.pacman.lib.Option;
+import de.amr.games.pacman.lib.OptionParser;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.model.pacman.PacManGame;
+import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -59,6 +63,14 @@ public class PacManGameAppFX extends Application {
 
 	private static final Logger logger = LogManager.getFormatterLogger();
 
+	static final Option<Boolean> OPT_3D = new Option<>("-3D", false, Boolean::valueOf);
+	static final Option<Boolean> OPT_FULLSCREEN = new Option<>("-fullscreen", false, Boolean::valueOf);
+	static final Option<Boolean> OPT_MUTED = new Option<>("-muted", false, Boolean::valueOf);
+	static final Option<Perspective> OPT_PERSPECTIVE = new Option<>("-perspective", Perspective.NEAR_PLAYER,
+			Perspective::valueOf);
+	static final Option<GameVariant> OPT_VARIANT = new Option<>("-variant", GameVariant.PACMAN, GameVariant::valueOf);
+	static final Option<Double> OPT_ZOOM = new Option<>("-zoom", 2.0, Double::valueOf);
+
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -68,19 +80,20 @@ public class PacManGameAppFX extends Application {
 	@Override
 	public void init() throws Exception {
 		logger.info("Initializing application...");
-		Options.parse(getParameters().getUnnamed());
-		Env.use3D.set(Options.OPT_3D.getValue());
-		Env.perspective.set(Options.OPT_PERSPECTIVE.getValue());
+		new OptionParser(OPT_3D, OPT_FULLSCREEN, OPT_MUTED, OPT_PERSPECTIVE, OPT_VARIANT, OPT_ZOOM)
+				.parse(getParameters().getUnnamed().toArray(String[]::new));
+		Env.use3D.set(OPT_3D.getValue());
+		Env.perspective.set(OPT_PERSPECTIVE.getValue());
 		gameController = new GameController();
-		gameController.selectGame(Options.OPT_VARIANT.getValue());
+		gameController.selectGame(OPT_VARIANT.getValue());
 		logger.info("Application initialized. Game variant: %s", gameController.game().variant);
 	}
 
 	@Override
 	public void start(Stage stage) throws IOException {
 		logger.info("Starting application...");
-		var zoom = Options.OPT_ZOOM.getValue();
-		var fullscreen = Options.OPT_FULLSCREEN.getValue();
+		var zoom = OPT_ZOOM.getValue();
+		var fullscreen = OPT_FULLSCREEN.getValue();
 		var ui = new GameUI(gameController, stage, zoom * ArcadeWorld.MODELSIZE.x, zoom * ArcadeWorld.MODELSIZE.y);
 		ui.setFullScreen(fullscreen);
 		Actions.init(gameController, ui);
