@@ -81,7 +81,7 @@ public class PacManGameAppFX extends Application {
 	public void init() throws Exception {
 		logger.info("Initializing application...");
 		new OptionParser(OPT_3D, OPT_FULLSCREEN, OPT_MUTED, OPT_PERSPECTIVE, OPT_VARIANT, OPT_ZOOM)
-				.parse(getParameters().getUnnamed().toArray(String[]::new));
+				.parse(getParameters().getUnnamed());
 		Env.use3D.set(OPT_3D.getValue());
 		Env.perspective.set(OPT_PERSPECTIVE.getValue());
 		gameController = new GameController();
