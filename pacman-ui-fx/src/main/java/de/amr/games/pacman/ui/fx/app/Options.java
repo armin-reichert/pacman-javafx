@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx.app;
 
 import java.util.List;
 
+import de.amr.games.pacman.lib.Option;
 import de.amr.games.pacman.lib.OptionParser;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
@@ -34,46 +35,29 @@ import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
  * 
  * @author Armin Reichert
  */
-class Options extends OptionParser {
+class Options {
 
-	public static GameVariant convertGameVariant(String s) {
-		return switch (s) {
-		case OPT_VARIANT_MSPACMAN -> GameVariant.MS_PACMAN;
-		case OPT_VARIANT_PACMAN -> GameVariant.PACMAN;
-		default -> null;
-		};
+	private Options() {
 	}
 
-	//@formatter:off
-	private static final String OPT_2D          = "-2D";
-	private static final String OPT_3D          = "-3D";
-	private static final String OPT_FULLSCREEN  = "-fullscreen";
-	private static final String OPT_MUTED       = "-muted";
-	private static final String OPT_PERSPECTIVE = "-perspective";
-	public static final String OPT_VARIANT_MSPACMAN = "-mspacman";
-	public static final String OPT_VARIANT_PACMAN   = "-pacman";
-	private static final String OPT_ZOOM        = "-zoom";
-	//@formatter:on
+	static final Option<Boolean> OPT_3D = new Option<>("-3D", false, Boolean::valueOf);
+	static final Option<Boolean> OPT_FULLSCREEN = new Option<>("-fullscreen", false, Boolean::valueOf);
+	static final Option<Boolean> OPT_MUTED = new Option<>("-muted", false, Boolean::valueOf);
+	static final Option<Perspective> OPT_PERSPECTIVE = new Option<>("-perspective", Perspective.NEAR_PLAYER,
+			Perspective::valueOf);
+	static final Option<GameVariant> OPT_VARIANT = new Option<>("-variant", GameVariant.PACMAN, GameVariant::valueOf);
+	static final Option<Double> OPT_ZOOM = new Option<>("-zoom", 2.0, Double::valueOf);
 
-	public boolean use3D = true;
-	public double zoom = 2.0;
-	public boolean fullscreen = false;
-	public boolean muted = false;
-	public GameVariant gameVariant = GameVariant.PACMAN;
-	public Perspective perspective = Perspective.NEAR_PLAYER;
-
-	public Options(List<String> args) {
-		super(List.of(OPT_2D, OPT_3D, OPT_FULLSCREEN, OPT_MUTED, OPT_PERSPECTIVE, OPT_VARIANT_MSPACMAN, OPT_VARIANT_PACMAN,
-				OPT_ZOOM), args);
-		while (hasMoreArgs()) {
-			use3D = parseBoolean(OPT_2D).orElse(use3D);
-			use3D = parseBoolean(OPT_3D).orElse(use3D);
-			fullscreen = parseBoolean(OPT_FULLSCREEN).orElse(fullscreen);
-			muted = parseBoolean(OPT_MUTED).orElse(muted);
-			gameVariant = parseName(OPT_VARIANT_MSPACMAN, Options::convertGameVariant).orElse(gameVariant);
-			gameVariant = parseName(OPT_VARIANT_PACMAN, Options::convertGameVariant).orElse(gameVariant);
-			perspective = parseNameValue(OPT_PERSPECTIVE, Perspective::valueOf).orElse(perspective);
-			zoom = parseNameValue(OPT_ZOOM, Double::valueOf).orElse(zoom);
+	public static void parse(List<String> args) {
+		var parser = new OptionParser(List.of(OPT_3D, OPT_FULLSCREEN, OPT_MUTED, OPT_PERSPECTIVE, OPT_VARIANT, OPT_ZOOM),
+				args);
+		while (parser.hasMoreArgs()) {
+			parser.parseValue(OPT_3D);
+			parser.parseValue(OPT_FULLSCREEN);
+			parser.parseValue(OPT_MUTED);
+			parser.parseValue(OPT_VARIANT);
+			parser.parseValue(OPT_PERSPECTIVE);
+			parser.parseValue(OPT_ZOOM);
 		}
 	}
 }

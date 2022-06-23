@@ -63,26 +63,26 @@ public class PacManGameAppFX extends Application {
 		launch(args);
 	}
 
-	private Options options;
 	private GameController gameController;
 
 	@Override
 	public void init() throws Exception {
 		logger.info("Initializing application...");
-		options = new Options(getParameters().getUnnamed());
-		Env.use3D.set(options.use3D);
-		Env.perspective.set(options.perspective);
+		Options.parse(getParameters().getUnnamed());
+		Env.use3D.set(Options.OPT_3D.getValue());
+		Env.perspective.set(Options.OPT_PERSPECTIVE.getValue());
 		gameController = new GameController();
-		gameController.selectGame(options.gameVariant);
+		gameController.selectGame(Options.OPT_VARIANT.getValue());
 		logger.info("Application initialized. Game variant: %s", gameController.game().variant);
 	}
 
 	@Override
 	public void start(Stage stage) throws IOException {
 		logger.info("Starting application...");
-		double zoom = options.zoom;
+		var zoom = Options.OPT_ZOOM.getValue();
+		var fullscreen = Options.OPT_FULLSCREEN.getValue();
 		var ui = new GameUI(gameController, stage, zoom * ArcadeWorld.MODELSIZE.x, zoom * ArcadeWorld.MODELSIZE.y);
-		ui.setFullScreen(options.fullscreen);
+		ui.setFullScreen(fullscreen);
 		Actions.init(gameController, ui);
 		GameLoop.get().update = ui::update;
 		GameLoop.get().render = ui::render;
