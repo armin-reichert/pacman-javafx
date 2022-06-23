@@ -23,6 +23,10 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.app;
 
+import static de.amr.games.pacman.lib.Option.booleanOption;
+import static de.amr.games.pacman.lib.Option.doubleOption;
+import static de.amr.games.pacman.lib.Option.option;
+
 import java.io.IOException;
 
 import org.apache.logging.log4j.LogManager;
@@ -63,13 +67,12 @@ public class PacManGameAppFX extends Application {
 
 	private static final Logger logger = LogManager.getFormatterLogger();
 
-	static final Option<Boolean> OPT_3D = new Option.BooleanOption("-3D", false);
-	static final Option<Boolean> OPT_FULLSCREEN = new Option.BooleanOption("-fullscreen", false);
-	static final Option<Boolean> OPT_MUTED = new Option.BooleanOption("-muted", false);
-	static final Option<Perspective> OPT_PERSPECTIVE = new Option<>("-perspective", Perspective.NEAR_PLAYER,
-			Perspective::valueOf);
-	static final Option<GameVariant> OPT_VARIANT = new Option<>("-variant", GameVariant.PACMAN, GameVariant::valueOf);
-	static final Option<Double> OPT_ZOOM = new Option.DoubleOption("-zoom", 2.0);
+	static final Option<Boolean> OPT_3D = booleanOption("-3D", false);
+	static final Option<Boolean> OPT_FULLSCREEN = booleanOption("-fullscreen", false);
+	static final Option<Boolean> OPT_MUTED = booleanOption("-muted", false);
+	static final Option<Perspective> OPT_PERSPECTIVE = option("-psp", Perspective.NEAR_PLAYER, Perspective::valueOf);
+	static final Option<GameVariant> OPT_VARIANT = option("-variant", GameVariant.PACMAN, GameVariant::valueOf);
+	static final Option<Double> OPT_ZOOM = doubleOption("-zoom", 2.0);
 
 	public static void main(String[] args) {
 		launch(args);
