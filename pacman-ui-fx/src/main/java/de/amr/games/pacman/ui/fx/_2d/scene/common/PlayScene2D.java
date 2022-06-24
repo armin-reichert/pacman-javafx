@@ -28,6 +28,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.lib.animation.SpriteAnimations;
 import de.amr.games.pacman.model.common.actors.Ghost;
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -51,7 +52,8 @@ public class PlayScene2D extends GameScene2D {
 		guysInfo.init($.game);
 		creditVisible = !hasCredit();
 		$.game.levelCounter.visible = hasCredit();
-		$.game.setMazeFlashingAnimation($.r2D.createMazeFlashingAnimation($.game.level.mazeNumber));
+		var world = (ArcadeWorld) $.game.world();
+		world.setFlashingAnimation($.r2D.createMazeFlashingAnimation($.game.level.mazeNumber));
 		$.game.pac.setAnimations(new PacAnimations($.r2D));
 		for (var ghost : $.game.theGhosts) {
 			ghost.setAnimations(new GhostAnimations(ghost.id, $.r2D));
@@ -85,7 +87,8 @@ public class PlayScene2D extends GameScene2D {
 	public void doRender(GraphicsContext g) {
 		$.r2D.drawScore(g, $.game.scores.gameScore);
 		$.r2D.drawScore(g, $.game.scores.highScore);
-		var flashingAnimation = $.game.mazeFlashingAnimation();
+		var world = (ArcadeWorld) $.game.world();
+		var flashingAnimation = world.flashingAnimation();
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			g.drawImage((Image) flashingAnimation.get().frame(), t(0), t(3));
 		} else {
