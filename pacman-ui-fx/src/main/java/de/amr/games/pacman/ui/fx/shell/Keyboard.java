@@ -85,7 +85,7 @@ public class Keyboard {
 
 	public static boolean pressed(int modfierMask, KeyCode code) {
 		if (currentEvent != null && currentEvent.getCode() == code && currentMask == modfierMask) {
-			logger.info(() -> "Key press handled: %s%s".formatted(modifierText(currentMask), code));
+			logger.trace(() -> "Key press handled: %s%s".formatted(modifierText(currentMask), code));
 			currentEvent.consume();
 			return true;
 		}
