@@ -132,7 +132,7 @@ public class PlayScene3D extends GameScene3D {
 		var maze3D = world3D.getMaze3D();
 		if ($.game.pac.hasPower()) {
 			Stream.of(ghosts3D) //
-					.filter(ghost3D -> U.oneOf(ghost3D.ghost.state, GhostState.FRIGHTENED, GhostState.LOCKED))
+					.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED, GhostState.LOCKED))
 					.forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.FRIGHTENED));
 		}
 		maze3D.validateFoodNodes();
@@ -144,14 +144,14 @@ public class PlayScene3D extends GameScene3D {
 	@Override
 	public void onPlayerGetsPower(GameEvent e) {
 		Stream.of(ghosts3D) //
-				.filter(ghost3D -> U.oneOf(ghost3D.ghost.state, GhostState.FRIGHTENED, GhostState.LOCKED))
+				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED, GhostState.LOCKED))
 				.forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.FRIGHTENED));
 	}
 
 	@Override
 	public void onPlayerStartsLosingPower(GameEvent e) {
 		Stream.of(ghosts3D) //
-				.filter(ghost3D -> U.oneOf(ghost3D.ghost.state, GhostState.FRIGHTENED, GhostState.LOCKED))
+				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED, GhostState.LOCKED))
 				.forEach(Ghost3D::playFlashingAnimation);
 	}
 

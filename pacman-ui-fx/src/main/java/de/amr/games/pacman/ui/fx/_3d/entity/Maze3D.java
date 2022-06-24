@@ -33,7 +33,6 @@ import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -179,7 +178,7 @@ public class Maze3D extends Group {
 	private boolean isAnyGhostGettingAccess(Stream<Ghost> ghosts, V2d centerPosition) {
 		return ghosts //
 				.filter(ghost -> ghost.visible) //
-				.filter(ghost -> U.oneOf(ghost.state, GhostState.DEAD, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)) //
+				.filter(ghost -> ghost.is(GhostState.DEAD, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)) //
 				.anyMatch(ghost -> isGhostGettingAccess(ghost, centerPosition));
 	}
 
