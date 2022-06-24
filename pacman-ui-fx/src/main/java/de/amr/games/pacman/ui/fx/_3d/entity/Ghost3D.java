@@ -181,7 +181,7 @@ public class Ghost3D extends Group {
 			setAnimationMode(AnimationMode.NUMBER);
 		} else if (ghost.is(GhostState.DEAD) || ghost.is(GhostState.ENTERING_HOUSE)) {
 			setAnimationMode(AnimationMode.EYES);
-		} else if (game.pac.hasPower() && !ghost.is(GhostState.LEAVING_HOUSE)) {
+		} else if (game.powerTimer.isRunning() && !ghost.is(GhostState.LEAVING_HOUSE)) {
 			setAnimationMode(AnimationMode.FRIGHTENED);
 		} else {
 			setAnimationMode(AnimationMode.COLORED);

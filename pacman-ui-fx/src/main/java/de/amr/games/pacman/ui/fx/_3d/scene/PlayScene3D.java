@@ -130,7 +130,7 @@ public class PlayScene3D extends GameScene3D {
 
 	public void onSwitchFrom2D() {
 		var maze3D = world3D.getMaze3D();
-		if ($.game.pac.hasPower()) {
+		if ($.game.powerTimer.isRunning()) {
 			Stream.of(ghosts3D) //
 					.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED, GhostState.LOCKED))
 					.forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.FRIGHTENED));
