@@ -114,21 +114,21 @@ public class PacManIntroScene extends GameScene2D {
 		case CHASING_PAC -> {
 			drawGallery(g);
 			drawPoints(g);
-			$.r2D.drawCopyright(g, 32);
 			drawBlinkingEnergizer(g);
 			drawGuys(g, flutter(time));
+			$.r2D.drawCopyright(g, 32);
 		}
 		case CHASING_GHOSTS -> {
 			drawGallery(g);
 			drawPoints(g);
-			$.r2D.drawCopyright(g, 32);
 			drawGuys(g, 0);
+			$.r2D.drawCopyright(g, 32);
 		}
 		case READY_TO_PLAY -> {
 			drawGallery(g);
 			drawPoints(g);
-			$.r2D.drawCopyright(g, 32);
 			drawGuys(g, 0);
+			$.r2D.drawCopyright(g, 32);
 		}
 		}
 	}

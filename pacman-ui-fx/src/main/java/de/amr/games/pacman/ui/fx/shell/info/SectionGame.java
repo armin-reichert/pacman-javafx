@@ -102,7 +102,7 @@ public class SectionGame extends Section {
 
 		addInfo("Hunting timer",
 				() -> "%s #%d%s".formatted(gc.game().huntingTimer.phaseName(),
-						gc.game().huntingTimer.scatteringPhase() != -1 ? gc.game().huntingTimer.scatteringPhase()
+						gc.game().huntingTimer.inScatterPhase() ? gc.game().huntingTimer.scatterPhase()
 								: gc.game().huntingTimer.chasingPhase(),
 						gc.game().huntingTimer.isStopped() ? " STOPPED" : ""));
 		addInfo("", () -> "Running:   %d".formatted(gc.game().huntingTimer.tick()));

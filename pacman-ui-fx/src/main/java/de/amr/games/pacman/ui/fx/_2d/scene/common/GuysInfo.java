@@ -89,7 +89,7 @@ public class GuysInfo {
 		String name = ghost.id == Ghost.RED_GHOST && ghost.elroy > 0 ? "Elroy " + ghost.elroy : ghost.name;
 		var stateText = ghost.getState().name();
 		if (ghost.is(GhostState.HUNTING_PAC)) {
-			stateText += game.huntingTimer.chasingPhase() != -1 ? " (Chasing)" : " (Scattering)";
+			stateText += game.huntingTimer.inChasingPhase() ? " (Chasing)" : " (Scattering)";
 		}
 		var ghostAnims = ghost.animations();
 		if (ghostAnims.isPresent()) {
