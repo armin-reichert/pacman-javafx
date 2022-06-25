@@ -25,8 +25,9 @@ package de.amr.games.pacman.ui.fx._3d.animation;
 
 import de.amr.games.pacman.lib.U;
 import javafx.animation.Transition;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
 
 /**
@@ -38,18 +39,19 @@ public class ColorFlashingTransition extends Transition {
 
 	private final Color colorStart;
 	private final Color colorEnd;
-	private final PhongMaterial material = new PhongMaterial();
+	public final ObjectProperty<Color> colorProperty = new SimpleObjectProperty<>();
 
 	public ColorFlashingTransition(Color colorStart, Color colorEnd) {
 		this.colorStart = colorStart;
 		this.colorEnd = colorEnd;
+		colorProperty.set(colorStart);
 		setCycleCount(INDEFINITE);
 		setCycleDuration(Duration.seconds(0.2));
 		setAutoReverse(true);
 	}
 
-	public PhongMaterial getMaterial() {
-		return material;
+	public Color getColor() {
+		return colorProperty.get();
 	}
 
 	@Override
@@ -58,7 +60,7 @@ public class ColorFlashingTransition extends Transition {
 			double r = U.lerp(colorStart.getRed(), colorEnd.getRed(), t);
 			double g = U.lerp(colorStart.getGreen(), colorEnd.getGreen(), t);
 			double b = U.lerp(colorStart.getBlue(), colorEnd.getBlue(), t);
-			material.setDiffuseColor(Color.color(r, g, b));
+			colorProperty.set(Color.color(r, g, b));
 		}
 	}
 }

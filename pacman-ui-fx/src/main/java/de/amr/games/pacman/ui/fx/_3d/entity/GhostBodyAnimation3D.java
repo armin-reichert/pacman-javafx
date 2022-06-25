@@ -110,7 +110,7 @@ public class GhostBodyAnimation3D {
 
 	public void playFlashingAnimation() {
 		if (flashingAnimation.getStatus() != Status.RUNNING) {
-			model3D.ghostSkin(ghostGroup).setMaterial(flashingAnimation.getMaterial());
+			skinColorProperty.bind(flashingAnimation.colorProperty);
 			flashingAnimation.playFromStart();
 		}
 	}
@@ -118,6 +118,7 @@ public class GhostBodyAnimation3D {
 	public void ensureFlashingAnimationStopped() {
 		if (flashingAnimation.getStatus() == Status.RUNNING) {
 			flashingAnimation.stop();
+			skinColorProperty.unbind();
 		}
 	}
 
