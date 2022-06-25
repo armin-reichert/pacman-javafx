@@ -26,7 +26,7 @@ public class ObjModel {
 
 	public ObjModel(URL url) {
 		if (url == null) {
-			throw new PacManModel3DException("OBJ model cannot be created: URL is null");
+			throw new Model3DException("OBJ model cannot be created: URL is null");
 		}
 		ObjModelImporter importer = new ObjModelImporter();
 		try {
@@ -35,7 +35,7 @@ public class ObjModel {
 			materials = importer.getNamedMaterials();
 			logger.info("Loading 3D model from URL '%s' succeeded", url);
 		} catch (ImportException e) {
-			throw new PacManModel3DException("Loading 3D model from URL '%s' failed: %s", url, e.getMessage());
+			throw new Model3DException("Loading 3D model from URL '%s' failed: %s", url, e.getMessage());
 		} finally {
 			importer.close();
 		}

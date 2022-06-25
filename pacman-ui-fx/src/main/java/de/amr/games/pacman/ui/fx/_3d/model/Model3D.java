@@ -32,23 +32,24 @@ import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
+import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 
 /**
- * The original 3D-model has been provided by Gianmarco Cavallaccio (https://www.artstation.com/gianmart). I extracted
- * the meshes for Pac-Man and a ghost into separate obj files.
+ * This is a part of the model created by Gianmarco Cavallaccio (https://www.artstation.com/gianmart). I extracted the
+ * meshes for Pac-Man and a ghost into separate obj files.
  * 
  * @author Armin Reichert
  */
-public class GianmarcosModel3D implements PacModel3D {
+public class Model3D {
 
-	private static GianmarcosModel3D instance;
+	private static Model3D instance;
 
-	public static GianmarcosModel3D get() {
+	public static Model3D get() {
 		if (instance == null) {
-			instance = new GianmarcosModel3D();
+			instance = new Model3D();
 		}
 		return instance;
 	}
@@ -66,13 +67,12 @@ public class GianmarcosModel3D implements PacModel3D {
 	private ObjModel pacManModel;
 	private ObjModel ghostModel;
 
-	private GianmarcosModel3D() {
+	private Model3D() {
 		pacManModel = new ObjModel(getClass().getResource("/common/gianmarco/pacman.obj"));
 		ghostModel = new ObjModel(getClass().getResource("/common/gianmarco/ghost.obj"));
 	}
 
-	@Override
-	public Group createPacMan(Color skullColor, Color eyesColor, Color palateColor) {
+	public Group createPac(Color skullColor, Color eyesColor, Color palateColor) {
 		MeshView skull = pacManModel.createMeshView("Sphere_yellow_packman");
 		skull.setMaterial(new PhongMaterial(skullColor));
 
@@ -96,7 +96,18 @@ public class GianmarcosModel3D implements PacModel3D {
 		return pacman;
 	}
 
-	@Override
+	public Shape3D pacSkull(Group pac) {
+		return (Shape3D) pac.getChildren().get(0);
+	}
+
+	public Shape3D pacEyes(Group pac) {
+		return (Shape3D) pac.getChildren().get(1);
+	}
+
+	public Shape3D pacPalate(Group pac) {
+		return (Shape3D) pac.getChildren().get(2);
+	}
+
 	public Group createGhost(Color skinColor, Color eyeBallColor, Color pupilColor) {
 		MeshView skin = ghostModel.createMeshView("Sphere.004_Sphere.034_light_blue_ghost");
 		skin.setMaterial(new PhongMaterial(skinColor));
@@ -121,4 +132,21 @@ public class GianmarcosModel3D implements PacModel3D {
 
 		return ghost;
 	}
+
+	public Shape3D ghostSkin(Group ghost) {
+		return (Shape3D) ghost.getChildren().get(0);
+	}
+
+	public Group ghostEyes(Group ghost) {
+		return (Group) ghost.getChildren().get(1);
+	}
+
+	public Shape3D ghostEyesPupils(Group ghost) {
+		return (Shape3D) ghostEyes(ghost).getChildren().get(2);
+	}
+
+	public Shape3D ghostEyesBalls(Group ghost) {
+		return (Shape3D) ghostEyes(ghost).getChildren().get(1);
+	}
+
 }

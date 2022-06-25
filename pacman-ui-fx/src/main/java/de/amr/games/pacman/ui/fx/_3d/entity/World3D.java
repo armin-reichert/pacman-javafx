@@ -30,7 +30,7 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Maze3D.MazeStyle;
-import de.amr.games.pacman.ui.fx._3d.model.PacModel3D;
+import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Group;
@@ -46,7 +46,7 @@ public class World3D extends Group {
 	private final LevelCounter3D levelCounter3D;
 	private final LivesCounter3D livesCounter3D;
 
-	public World3D(GameModel game, PacModel3D model3D, Rendering2D r2D) {
+	public World3D(GameModel game, Model3D model3D, Rendering2D r2D) {
 		scores3D = new Scores3D();
 		scores3D.setFont(r2D.getArcadeFont());
 		if (game.credit > 0) {

@@ -28,7 +28,7 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx._3d.model.PacModel3D;
+import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 
 /**
  * @author Armin Reichert
@@ -38,7 +38,7 @@ public class SceneContext {
 	public GameController gameController;
 	public GameModel game;
 	public Rendering2D r2D;
-	public PacModel3D model3D;
+	public Model3D model3D;
 
 	public GameState gameState() {
 		return gameController.state();

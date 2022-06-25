@@ -26,11 +26,10 @@ package de.amr.games.pacman.ui.fx._3d.model;
 
 /**
  * @author Armin Reichert
- *
  */
-public class PacManModel3DException extends RuntimeException {
+public class Model3DException extends RuntimeException {
 
-	public PacManModel3DException(String message, Object... args) {
+	public Model3DException(String message, Object... args) {
 		super(message.formatted(args));
 	}
 }
