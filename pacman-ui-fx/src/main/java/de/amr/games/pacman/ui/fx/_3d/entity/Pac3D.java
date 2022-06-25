@@ -88,6 +88,8 @@ public class Pac3D extends Group {
 		pacGroup.setScaleY(1.0);
 		pacGroup.setScaleZ(1.0);
 		update(world);
+		// without this, the initial color is not always correct. Why?
+		skull().setMaterial(skullMaterial);
 	}
 
 	public void update(World world) {
