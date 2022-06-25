@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
-import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
@@ -56,10 +55,10 @@ public class Ghost3D extends Group {
 	private final GhostBodyAnimation3D bodyAnimation;
 	private AnimationMode animationMode;
 
-	public Ghost3D(Ghost ghost, Model3D model3D, Rendering2D r2D) {
+	public Ghost3D(World world, Ghost ghost, Model3D model3D, Rendering2D r2D) {
 		this.ghost = ghost;
 		numberAnimation = new GhostValueAnimation3D(r2D);
-		bodyAnimation = new GhostBodyAnimation3D(model3D, ghost.id);
+		bodyAnimation = new GhostBodyAnimation3D(model3D, world, ghost);
 		setAnimationMode(AnimationMode.COLORED);
 	}
 
@@ -79,20 +78,9 @@ public class Ghost3D extends Group {
 			setAnimationMode(AnimationMode.COLORED);
 		}
 		motion.update(ghost, this);
-		updateVisualAppearance(game.world());
-	}
-
-	private void updateVisualAppearance(World world) {
-		double x = ghost.position.x;
-		double leftEdge = 0;
-		double rightEdge = ArcadeWorld.TILES_X * World.TS;
-		boolean outside = x < leftEdge - 4 || x > rightEdge - 4;
-		if (outside) {
-			setVisible(true);
-			setOpacity(0.5);
-		} else {
-			setVisible(ghost.visible);
-			setOpacity(1);
+		if (animationMode == AnimationMode.COLORED
+				|| animationMode == AnimationMode.FRIGHTENED && !bodyAnimation.isFlashing()) {
+			bodyAnimation.update();
 		}
 	}
 

@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import de.amr.games.pacman.model.common.actors.Ghost;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.ColorFlashingTransition;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
@@ -41,7 +43,8 @@ import javafx.scene.shape.Shape3D;
  */
 public class GhostBodyAnimation3D {
 
-	private final int ghostID;
+	private final World world;
+	private final Ghost ghost;
 	private final Model3D model3D;
 	private final Group ghostGroup;
 	private final ColorFlashingTransition flashingAnimation;
@@ -55,12 +58,17 @@ public class GhostBodyAnimation3D {
 	private final ObjectProperty<Color> eyePupilsColorProperty = new SimpleObjectProperty<>();
 	private final PhongMaterial eyePupilsMaterial = new PhongMaterial();
 
-	public GhostBodyAnimation3D(Model3D model3D, int ghostID) {
+	private final PortalApproachAnimation portalApproachAnimation;
+
+	private boolean frightened;
+
+	public GhostBodyAnimation3D(Model3D model3D, World world, Ghost ghost) {
 		this.model3D = model3D;
-		this.ghostID = ghostID;
+		this.world = world;
+		this.ghost = ghost;
 
 		ghostGroup = model3D.createGhost(//
-				faded(Rendering3D.getGhostSkinColor(ghostID)), //
+				faded(Rendering3D.getGhostSkinColor(ghost.id)), //
 				Rendering3D.getGhostEyeBallColor(), //
 				Rendering3D.getGhostPupilColor());
 
@@ -71,7 +79,7 @@ public class GhostBodyAnimation3D {
 		skinMaterial.diffuseColorProperty().bind(skinColorProperty);
 		skinMaterial.specularColorProperty()
 				.bind(Bindings.createObjectBinding(() -> skinColorProperty.get().brighter(), skinColorProperty));
-		skinColorProperty.set(faded(Rendering3D.getGhostSkinColor(ghostID)));
+		skinColorProperty.set(faded(Rendering3D.getGhostSkinColor(ghost.id)));
 
 		eyeBallsMaterial.diffuseColorProperty().bind(eyeBallsColorProperty);
 		eyeBallsMaterial.specularColorProperty()
@@ -86,6 +94,13 @@ public class GhostBodyAnimation3D {
 		skin().setMaterial(skinMaterial);
 		eyeBalls().setMaterial(eyeBallsMaterial);
 		eyePupils().setMaterial(eyePupilsMaterial);
+
+		portalApproachAnimation = new PortalApproachAnimation(skinColorProperty,
+				() -> frightened ? Rendering3D.getGhostSkinColorFrightened() : faded(Rendering3D.getGhostSkinColor(ghost.id)));
+	}
+
+	public void update() {
+		portalApproachAnimation.update(ghostGroup, ghost, world);
 	}
 
 	private Shape3D skin() {
@@ -108,6 +123,10 @@ public class GhostBodyAnimation3D {
 		model3D.ghostSkin(ghostGroup).setVisible(showSkin);
 	}
 
+	public boolean isFlashing() {
+		return flashingAnimation.getStatus() == Status.RUNNING;
+	}
+
 	public void playFlashingAnimation() {
 		if (flashingAnimation.getStatus() != Status.RUNNING) {
 			skinColorProperty.bind(flashingAnimation.colorProperty);
@@ -123,13 +142,14 @@ public class GhostBodyAnimation3D {
 	}
 
 	public void setFrightened(boolean frightened) {
+		this.frightened = frightened;
 		ensureFlashingAnimationStopped();
 		if (frightened) {
 			skinColorProperty.set(faded(Rendering3D.getGhostSkinColorFrightened()));
 			eyeBallsColorProperty.set(Rendering3D.getGhostEyeBallColorFrightened());
 			eyePupilsColorProperty.set(Rendering3D.getGhostPupilColorFrightened());
 		} else {
-			skinColorProperty.set(faded(Rendering3D.getGhostSkinColor(ghostID)));
+			skinColorProperty.set(faded(Rendering3D.getGhostSkinColor(ghost.id)));
 			eyeBallsColorProperty.set(Rendering3D.getGhostEyeBallColor());
 			eyePupilsColorProperty.set(Rendering3D.getGhostPupilColor());
 		}

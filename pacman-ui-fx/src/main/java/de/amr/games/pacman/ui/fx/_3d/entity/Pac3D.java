@@ -23,11 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import de.amr.games.pacman.lib.U;
-import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.FillTransition3D;
@@ -58,20 +53,18 @@ import javafx.util.Duration;
  */
 public class Pac3D extends Group {
 
-	private final Logger logger = LogManager.getFormatterLogger();
-
 	private final Pac pac;
 	private final Model3D model3D;
 	private final Group pacGroup;
 	private final Motion motion = new Motion();
-	private final Color normalSkullColor;
 	private final ObjectProperty<Color> skullColorProperty = new SimpleObjectProperty<>();
+	private final ObjectProperty<Color> normalSkullColorProperty = new SimpleObjectProperty<>();
 	private final PhongMaterial skullMaterial = new PhongMaterial();
+	private final PortalApproachAnimation portalApproachAnimation;
 
 	public Pac3D(Pac pac, Model3D model3D, Color skullColor, Color eyesColor, Color palateColor) {
 		this.pac = pac;
 		this.model3D = model3D;
-		normalSkullColor = skullColor;
 		skullColorProperty.set(skullColor);
 		skullMaterial.diffuseColorProperty().bind(skullColorProperty);
 		skullMaterial.specularColorProperty()
@@ -81,6 +74,8 @@ public class Pac3D extends Group {
 		var light = new PointLight(Color.WHITE);
 		light.setTranslateZ(-8);
 		getChildren().addAll(pacGroup, light);
+		normalSkullColorProperty.set(skullColor);
+		portalApproachAnimation = new PortalApproachAnimation(skullColorProperty, normalSkullColorProperty::get);
 	}
 
 	private Shape3D skull() {
@@ -96,46 +91,7 @@ public class Pac3D extends Group {
 
 	public void update(World world) {
 		motion.update(pac, this);
-		updateAppearance(world);
-	}
-
-	private void updateAppearance(World world) {
-		skullColorProperty.set(normalSkullColor);
-		setVisible(pac.visible);
-		setOpacity(1);
-		if (outsideWorld(world)) {
-			setVisible(true);
-			skullColorProperty.set((Color.color(0.1, 0.1, 0.1, 0.2)));
-		} else {
-			double fadeStart = 32.0;
-			double dist = distFromNearestPortal(world);
-			if (dist <= fadeStart) { // fade into shadow
-				setVisible(true);
-				double opacity = U.lerp(0.2, 1, dist / fadeStart);
-				logger.info("Distance from portal: %.2f Opacity: %.2f", dist, opacity);
-				skullColorProperty.set(Color.color(normalSkullColor.getRed() * opacity, normalSkullColor.getGreen() * opacity,
-						normalSkullColor.getBlue() * opacity, opacity));
-			}
-		}
-		skull().setMaterial(skullMaterial);
-	}
-
-	private double distFromNearestPortal(World world) {
-		double minDist = Double.MAX_VALUE;
-		for (var portal : world.portals()) {
-			var left = new V2d(portal.left).scaled(World.TS);
-			var right = new V2d(portal.right).scaled(World.TS);
-			var dist = Math.min(pac.position.euclideanDistance(left), pac.position.euclideanDistance(right));
-			if (dist < minDist) {
-				minDist = dist;
-			}
-		}
-		return minDist;
-	}
-
-	private boolean outsideWorld(World world) {
-		double centerX = pac.position.x + World.HTS;
-		return centerX < 0 || centerX > world.numCols() * World.TS;
+		portalApproachAnimation.update(this, pac, world);
 	}
 
 	public Animation dyingAnimation(Color ghostColor) {
@@ -150,7 +106,7 @@ public class Pac3D extends Group {
 		shrink.setToZ(0);
 
 		return new SequentialTransition( //
-				new FillTransition3D(Duration.seconds(1), skull(), normalSkullColor, ghostColor), //
+				new FillTransition3D(Duration.seconds(1), skull(), normalSkullColorProperty.get(), ghostColor), //
 				new FillTransition3D(Duration.seconds(1), skull(), ghostColor, Color.GHOSTWHITE), //
 				new ParallelTransition(spin, shrink));
 	}
