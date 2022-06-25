@@ -41,7 +41,6 @@ import javafx.scene.shape.Shape3D;
  */
 public class GhostBodyAnimation {
 
-	private final World world;
 	private final Ghost ghost;
 	private final Model3D model3D;
 	private final Group ghostGroup;
@@ -60,9 +59,8 @@ public class GhostBodyAnimation {
 
 	private boolean frightened;
 
-	public GhostBodyAnimation(Model3D model3D, World world, Ghost ghost) {
+	public GhostBodyAnimation(Model3D model3D, Ghost ghost) {
 		this.model3D = model3D;
-		this.world = world;
 		this.ghost = ghost;
 
 		ghostGroup = model3D.createGhost(//
@@ -97,7 +95,7 @@ public class GhostBodyAnimation {
 				() -> frightened ? Rendering3D.getGhostSkinColorFrightened() : faded(Rendering3D.getGhostSkinColor(ghost.id)));
 	}
 
-	public void update() {
+	public void update(World world) {
 		portalApproachAnimation.update(ghostGroup, ghost, world);
 	}
 

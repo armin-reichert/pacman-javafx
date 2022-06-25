@@ -60,7 +60,7 @@ public class Ghost3D extends Group {
 	public Ghost3D(World world, Ghost ghost, Model3D model3D, Rendering2D r2D) {
 		this.ghost = ghost;
 		numberAnimation = new GhostValueAnimation(r2D);
-		bodyAnimation = new GhostBodyAnimation(model3D, world, ghost);
+		bodyAnimation = new GhostBodyAnimation(model3D, ghost);
 		setAnimationMode(AnimationMode.COLORED);
 	}
 
@@ -82,7 +82,7 @@ public class Ghost3D extends Group {
 		motion.update(ghost, this);
 		if (animationMode == AnimationMode.COLORED
 				|| animationMode == AnimationMode.FRIGHTENED && !bodyAnimation.isFlashing()) {
-			bodyAnimation.update();
+			bodyAnimation.update(game.world());
 		}
 	}
 
