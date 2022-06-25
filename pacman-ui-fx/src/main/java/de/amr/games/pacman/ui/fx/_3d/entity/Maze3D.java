@@ -205,11 +205,13 @@ public class Maze3D extends Group {
 	}
 
 	public void hideFood(Node foodNode) {
-		foodNode.setVisible(false);
+		var delay = new PauseTransition(Duration.seconds(4 * 1 / 60.0));
+		delay.setOnFinished(e -> foodNode.setVisible(false));
 		if (foodNode instanceof Energizer3D) {
 			var energizer = (Energizer3D) foodNode;
 			energizer.animation().stop();
 		}
+		delay.play();
 	}
 
 	public void validateFoodNodes() {

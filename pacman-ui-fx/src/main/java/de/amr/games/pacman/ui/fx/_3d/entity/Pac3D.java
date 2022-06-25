@@ -66,13 +66,13 @@ public class Pac3D extends Group {
 	private final Motion motion = new Motion();
 	private final Color normalSkullColor;
 	private final ObjectProperty<Color> skullColorProperty = new SimpleObjectProperty<>();
+	private final PhongMaterial skullMaterial = new PhongMaterial();
 
 	public Pac3D(Pac pac, Model3D model3D, Color skullColor, Color eyesColor, Color palateColor) {
 		this.pac = pac;
 		this.model3D = model3D;
 		normalSkullColor = skullColor;
 		skullColorProperty.set(skullColor);
-		var skullMaterial = new PhongMaterial();
 		skullMaterial.diffuseColorProperty().bind(skullColorProperty);
 		skullMaterial.specularColorProperty()
 				.bind(Bindings.createObjectBinding(() -> skullColorProperty.get().brighter(), skullColorProperty));
@@ -91,7 +91,6 @@ public class Pac3D extends Group {
 		pacGroup.setScaleX(1.0);
 		pacGroup.setScaleY(1.0);
 		pacGroup.setScaleZ(1.0);
-		skullColorProperty.set(normalSkullColor);
 		update(world);
 	}
 
@@ -118,6 +117,7 @@ public class Pac3D extends Group {
 						normalSkullColor.getBlue() * opacity, opacity));
 			}
 		}
+		skull().setMaterial(skullMaterial);
 	}
 
 	private double distFromNearestPortal(World world) {

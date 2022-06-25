@@ -165,8 +165,8 @@ public class PlayScene3D extends GameScene3D {
 	@Override
 	public void onPlayerFindsFood(GameEvent e) {
 		var maze3D = world3D.getMaze3D();
-		// when cheat "eat all pellets" is used, no tile is present
-		if (!e.tile.isPresent()) {
+		if (e.tile.isEmpty()) {
+			// when cheat "eat all pellets" is used, no tile is present in the event
 			$.game.level.world.tiles().filter($.game.level.world::containsEatenFood)
 					.forEach(tile -> maze3D.foodAt(tile).ifPresent(maze3D::hideFood));
 		} else {
