@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.animation;
 
-import de.amr.games.pacman.lib.U;
 import javafx.animation.Transition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -31,15 +30,14 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 /**
- * Let's the material's color flash.
- * 
  * @author Armin Reichert
  */
 public class ColorFlashingTransition extends Transition {
 
+	public final ObjectProperty<Color> colorProperty = new SimpleObjectProperty<>();
+
 	private final Color colorStart;
 	private final Color colorEnd;
-	public final ObjectProperty<Color> colorProperty = new SimpleObjectProperty<>();
 
 	public ColorFlashingTransition(Color colorStart, Color colorEnd) {
 		this.colorStart = colorStart;
@@ -56,11 +54,8 @@ public class ColorFlashingTransition extends Transition {
 
 	@Override
 	protected void interpolate(double t) {
-		if (t <= 0.25 || t >= 0.75) {
-			double r = U.lerp(colorStart.getRed(), colorEnd.getRed(), t);
-			double g = U.lerp(colorStart.getGreen(), colorEnd.getGreen(), t);
-			double b = U.lerp(colorStart.getBlue(), colorEnd.getBlue(), t);
-			colorProperty.set(Color.color(r, g, b));
+		if (t <= 0.25 || t >= 0.75) { // TODO check this
+			colorProperty.set(colorStart.interpolate(colorEnd, t));
 		}
 	}
 }
