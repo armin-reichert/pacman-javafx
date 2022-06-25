@@ -79,10 +79,10 @@ public class Ghost3D extends Group {
 			setAnimationMode(AnimationMode.COLORED);
 		}
 		motion.update(ghost, this);
-		updateVisualAppearance();
+		updateVisualAppearance(game.world());
 	}
 
-	private void updateVisualAppearance() {
+	private void updateVisualAppearance(World world) {
 		double x = ghost.position.x;
 		double leftEdge = 0;
 		double rightEdge = ArcadeWorld.TILES_X * World.TS;

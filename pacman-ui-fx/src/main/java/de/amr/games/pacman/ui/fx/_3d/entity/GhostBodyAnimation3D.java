@@ -27,6 +27,9 @@ import de.amr.games.pacman.ui.fx._3d.animation.ColorFlashingTransition;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import javafx.animation.Animation.Status;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
@@ -38,21 +41,63 @@ import javafx.scene.shape.Shape3D;
  */
 public class GhostBodyAnimation3D {
 
-	private final Model3D model3D;
 	private final int ghostID;
+	private final Model3D model3D;
 	private final Group ghostGroup;
 	private final ColorFlashingTransition flashingAnimation;
+
+	private final ObjectProperty<Color> skinColorProperty = new SimpleObjectProperty<>();
+	private final PhongMaterial skinMaterial = new PhongMaterial();
+
+	private final ObjectProperty<Color> eyeBallsColorProperty = new SimpleObjectProperty<>();
+	private final PhongMaterial eyeBallsMaterial = new PhongMaterial();
+
+	private final ObjectProperty<Color> eyePupilsColorProperty = new SimpleObjectProperty<>();
+	private final PhongMaterial eyePupilsMaterial = new PhongMaterial();
 
 	public GhostBodyAnimation3D(Model3D model3D, int ghostID) {
 		this.model3D = model3D;
 		this.ghostID = ghostID;
+
 		ghostGroup = model3D.createGhost(//
 				faded(Rendering3D.getGhostSkinColor(ghostID)), //
 				Rendering3D.getGhostEyeBallColor(), //
 				Rendering3D.getGhostPupilColor());
+
 		flashingAnimation = new ColorFlashingTransition(//
 				Rendering3D.getGhostSkinColorFrightened(), //
 				Rendering3D.getGhostSkinColorFrightened2());
+
+		skinMaterial.diffuseColorProperty().bind(skinColorProperty);
+		skinMaterial.specularColorProperty()
+				.bind(Bindings.createObjectBinding(() -> skinColorProperty.get().brighter(), skinColorProperty));
+		skinColorProperty.set(faded(Rendering3D.getGhostSkinColor(ghostID)));
+
+		eyeBallsMaterial.diffuseColorProperty().bind(eyeBallsColorProperty);
+		eyeBallsMaterial.specularColorProperty()
+				.bind(Bindings.createObjectBinding(() -> eyeBallsColorProperty.get().brighter(), eyeBallsColorProperty));
+		eyeBallsColorProperty.set(Rendering3D.getGhostEyeBallColor());
+
+		eyePupilsMaterial.diffuseColorProperty().bind(eyePupilsColorProperty);
+		eyePupilsMaterial.specularColorProperty()
+				.bind(Bindings.createObjectBinding(() -> eyePupilsColorProperty.get().brighter(), eyePupilsColorProperty));
+		eyePupilsColorProperty.set(Rendering3D.getGhostPupilColor());
+
+		skin().setMaterial(skinMaterial);
+		eyeBalls().setMaterial(eyeBallsMaterial);
+		eyePupils().setMaterial(eyePupilsMaterial);
+	}
+
+	private Shape3D skin() {
+		return model3D.ghostSkin(ghostGroup);
+	}
+
+	private Shape3D eyeBalls() {
+		return model3D.ghostEyeBalls(ghostGroup);
+	}
+
+	private Shape3D eyePupils() {
+		return model3D.ghostEyePupils(ghostGroup);
 	}
 
 	public Node getRoot() {
@@ -79,20 +124,17 @@ public class GhostBodyAnimation3D {
 	public void setFrightened(boolean frightened) {
 		ensureFlashingAnimationStopped();
 		if (frightened) {
-			setShapeColor(model3D.ghostSkin(ghostGroup), faded(Rendering3D.getGhostSkinColorFrightened()));
-			setShapeColor(model3D.ghostEyesBalls(ghostGroup), Rendering3D.getGhostEyeBallColorFrightened());
-			setShapeColor(model3D.ghostEyesPupils(ghostGroup), Rendering3D.getGhostPupilColorFrightened());
+			skinColorProperty.set(faded(Rendering3D.getGhostSkinColorFrightened()));
+			eyeBallsColorProperty.set(Rendering3D.getGhostEyeBallColorFrightened());
+			eyePupilsColorProperty.set(Rendering3D.getGhostPupilColorFrightened());
 		} else {
-			setShapeColor(model3D.ghostSkin(ghostGroup), faded(Rendering3D.getGhostSkinColor(ghostID)));
-			setShapeColor(model3D.ghostEyesBalls(ghostGroup), Rendering3D.getGhostEyeBallColor());
-			setShapeColor(model3D.ghostEyesPupils(ghostGroup), Rendering3D.getGhostPupilColor());
+			skinColorProperty.set(faded(Rendering3D.getGhostSkinColor(ghostID)));
+			eyeBallsColorProperty.set(Rendering3D.getGhostEyeBallColor());
+			eyePupilsColorProperty.set(Rendering3D.getGhostPupilColor());
 		}
-	}
-
-	private void setShapeColor(Shape3D shape, Color diffuseColor) {
-		var material = new PhongMaterial(diffuseColor);
-		material.setSpecularColor(diffuseColor.brighter());
-		shape.setMaterial(material);
+		skin().setMaterial(skinMaterial);
+		eyeBalls().setMaterial(eyeBallsMaterial);
+		eyePupils().setMaterial(eyePupilsMaterial);
 	}
 
 	private Color faded(Color color) {
