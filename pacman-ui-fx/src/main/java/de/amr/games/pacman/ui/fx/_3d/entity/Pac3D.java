@@ -23,13 +23,10 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import static de.amr.games.pacman.model.common.world.World.HTS;
-
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.FillTransition3D;
-import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
@@ -40,7 +37,6 @@ import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -55,56 +51,59 @@ import javafx.util.Duration;
 public class Pac3D extends Group {
 
 	private final Pac pac;
-
 	private final PacManModel3D model3D;
 	private final Group modelRoot;
-
 	private final Motion motion = new Motion();
-	private final PointLight light = new PointLight(Color.WHITE);
-	private Color skullColorImpaled = Color.GHOSTWHITE;
+	private final Color skullColor;
 
-	public Pac3D(Pac pac, PacManModel3D model3D) {
+	public Pac3D(Pac pac, PacManModel3D model3D, Color skullColor, Color eyesColor, Color palateColor) {
 		this.pac = pac;
 		this.model3D = model3D;
-		modelRoot = model3D.createPacMan(Rendering3D.getPacSkullColor(), Rendering3D.getPacEyesColor(),
-				Rendering3D.getPacPalateColor());
-		light.setTranslateZ(-HTS);
+		this.skullColor = skullColor;
+		modelRoot = model3D.createPacMan(skullColor, eyesColor, palateColor);
+		var light = new PointLight(Color.WHITE);
+		light.setTranslateZ(-8);
 		getChildren().addAll(modelRoot, light);
-		reset();
 	}
 
 	public void reset() {
-		modelRoot.setScaleX(1.05);
-		modelRoot.setScaleY(1.05);
-		modelRoot.setScaleZ(1.05);
-		setShapeColor(model3D.skull(modelRoot), Rendering3D.getPacSkullColor());
+		modelRoot.setScaleX(1.0);
+		modelRoot.setScaleY(1.0);
+		modelRoot.setScaleZ(1.0);
 		update();
 	}
 
 	public void update() {
 		motion.update(pac, this);
-		updateAppearance();
-	}
-
-	private void updateAppearance() {
-		double x = pac.position.x;
+		double centerX = pac.position.x + World.HTS;
 		double leftEdge = 0;
 		double rightEdge = ArcadeWorld.TILES_X * World.TS;
-		boolean nearEdge = x < leftEdge + 2 || x > rightEdge - 8;
-		boolean outside = x < leftEdge - 4 || x > rightEdge - 4;
-		Color normalColor = Rendering3D.getPacSkullColor();
-		setShapeColor(model3D.skull(modelRoot), normalColor);
-		if (outside) {
+		double distFromEdge = Math.min(centerX - leftEdge, rightEdge - centerX);
+		boolean outsideWorld = centerX < leftEdge || centerX > rightEdge;
+		updateAppearance(outsideWorld, distFromEdge);
+	}
+
+	private void updateAppearance(boolean outsideWorld, double distFromEdge) {
+		model3D.skull(modelRoot).setMaterial(createMaterial(skullColor));
+		if (outsideWorld) {
+			// show as shadow
 			setVisible(true);
 			setOpacity(0.5);
 		} else {
 			setVisible(pac.visible);
 			setOpacity(1);
-			if (nearEdge) {
-				setShapeColor(model3D.skull(modelRoot),
-						Color.color(normalColor.getRed(), normalColor.getGreen(), normalColor.getBlue(), 0.1));
+			if (distFromEdge < 8) {
+				// fade
+				Color transparent = Color.color(skullColor.getRed(), skullColor.getGreen(), skullColor.getBlue(), 0.1);
+				model3D.skull(modelRoot).setMaterial(createMaterial(transparent));
 			}
 		}
+	}
+
+	private PhongMaterial createMaterial(Color diffuseColor) {
+		var material = new PhongMaterial(diffuseColor);
+		material.setSpecularColor(diffuseColor.brighter());
+		return material;
 	}
 
 	public Animation dyingAnimation(Color ghostColor) {
@@ -119,14 +118,8 @@ public class Pac3D extends Group {
 		shrink.setToZ(0);
 
 		return new SequentialTransition( //
-				new FillTransition3D(Duration.seconds(1), model3D.skull(modelRoot), Rendering3D.getPacSkullColor(), ghostColor), //
-				new FillTransition3D(Duration.seconds(1), model3D.skull(modelRoot), ghostColor, skullColorImpaled), //
+				new FillTransition3D(Duration.seconds(1), model3D.skull(modelRoot), skullColor, ghostColor), //
+				new FillTransition3D(Duration.seconds(1), model3D.skull(modelRoot), ghostColor, Color.GHOSTWHITE), //
 				new ParallelTransition(spin, shrink));
-	}
-
-	private void setShapeColor(Shape3D shape, Color diffuseColor) {
-		var material = new PhongMaterial(diffuseColor);
-		material.setSpecularColor(diffuseColor.brighter());
-		shape.setMaterial(material);
 	}
 }

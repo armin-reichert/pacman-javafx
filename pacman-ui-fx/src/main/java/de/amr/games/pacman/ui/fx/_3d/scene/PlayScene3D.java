@@ -32,6 +32,7 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.actors.GhostState;
+import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D.AnimationMode;
@@ -80,7 +81,8 @@ public class PlayScene3D extends GameScene3D {
 		world3D = new World3D($.game, $.model3D, $.r2D);
 		// put first, exchanged when new level starts
 		content().add(world3D);
-		pac3D = new Pac3D($.game.pac, $.model3D);
+		pac3D = new Pac3D($.game.pac, $.model3D, Rendering3D.getPacSkullColor(), Rendering3D.getPacEyesColor(),
+				Rendering3D.getPacPalateColor());
 		content().add(pac3D);
 		ghosts3D = $.game.ghosts().map(ghost -> new Ghost3D(ghost, $.model3D, $.r2D)).toArray(Ghost3D[]::new);
 		Stream.of(ghosts3D).forEach(content()::add);
