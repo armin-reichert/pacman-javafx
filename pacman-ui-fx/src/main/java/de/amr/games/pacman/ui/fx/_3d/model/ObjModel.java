@@ -1,7 +1,6 @@
 package de.amr.games.pacman.ui.fx._3d.model;
 
 import java.net.URL;
-import java.util.Collections;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -22,12 +21,12 @@ public class ObjModel {
 
 	private static final Logger logger = LogManager.getFormatterLogger();
 
-	public Map<String, MeshView> meshViews = Collections.emptyMap();
-	public Map<String, PhongMaterial> materials = Collections.emptyMap();
+	private Map<String, MeshView> meshViews;
+	private Map<String, PhongMaterial> materials;
 
 	public ObjModel(URL url) {
 		if (url == null) {
-			throw new PacManModel3DException("3D model loading via URL failed: URL is null");
+			throw new PacManModel3DException("OBJ model cannot be created: URL is null");
 		}
 		ObjModelImporter importer = new ObjModelImporter();
 		try {

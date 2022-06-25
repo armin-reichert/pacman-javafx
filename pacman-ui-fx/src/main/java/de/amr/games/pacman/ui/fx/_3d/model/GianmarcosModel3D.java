@@ -23,16 +23,19 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.model;
 
-import static de.amr.games.pacman.ui.fx._3d.model.PacManModel3D.bindDrawMode;
-import static de.amr.games.pacman.ui.fx._3d.model.PacManModel3D.centerOverOrigin;
 import static de.amr.games.pacman.ui.fx._3d.model.PacManModel3D.scale;
 
+import java.util.stream.Stream;
+
 import de.amr.games.pacman.ui.fx.app.Env;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 
 /**
  * The original 3D-model has been provided by Gianmarco Cavallaccio (https://www.artstation.com/gianmart). I extracted
@@ -51,6 +54,13 @@ public class GianmarcosModel3D implements PacManModel3D {
 		return instance;
 	}
 
+	public static Translate centerOverOrigin(Node node) {
+		Bounds bounds = node.getBoundsInLocal();
+		Translate t = new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
+		node.getTransforms().add(t);
+		return t;
+	}
+
 	private ObjModel pacManModel;
 	private ObjModel ghostModel;
 
@@ -62,19 +72,23 @@ public class GianmarcosModel3D implements PacManModel3D {
 	@Override
 	public Group createPacMan(Color skullColor, Color eyesColor, Color palateColor) {
 		MeshView skull = pacManModel.createMeshView("Sphere_yellow_packman");
-		MeshView eyes = pacManModel.createMeshView("Sphere.008_Sphere.010_grey_wall");
-		MeshView palate = pacManModel.createMeshView("Sphere_grey_wall");
-		Group pacman = new Group(skull, eyes, palate);
-
-		centerOverOrigin(skull, eyes, palate);
-		scale(pacman, 8);
-		pacman.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-
 		skull.setMaterial(new PhongMaterial(skullColor));
+
+		MeshView eyes = pacManModel.createMeshView("Sphere.008_Sphere.010_grey_wall");
 		eyes.setMaterial(new PhongMaterial(eyesColor));
+
+		MeshView palate = pacManModel.createMeshView("Sphere_grey_wall");
 		palate.setMaterial(new PhongMaterial(palateColor));
 
-		bindDrawMode(Env.drawMode3D, skull, eyes, palate);
+		Translate t = centerOverOrigin(skull);
+		eyes.getTransforms().add(t);
+		palate.getTransforms().add(t);
+
+		Stream.of(skull, eyes, palate).forEach(meshView -> meshView.drawModeProperty().bind(Env.drawMode3D));
+
+		Group pacman = new Group(skull, eyes, palate);
+		scale(pacman, 8);
+		pacman.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 
 		return pacman;
 	}
@@ -90,12 +104,17 @@ public class GianmarcosModel3D implements PacManModel3D {
 		MeshView pupils = ghostModel.createMeshView("Sphere.010_Sphere.039_grey_wall");
 		pupils.setMaterial(new PhongMaterial(pupilColor));
 
+		Stream.of(skin, eyeBalls, pupils).forEach(meshView -> meshView.drawModeProperty().bind(Env.drawMode3D));
+
 		Group eyes = new Group(pupils, eyeBalls);
+
 		Group ghost = new Group(skin, eyes);
-		centerOverOrigin(skin, eyes);
-		scale(ghost, 8);
 		ghost.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-		bindDrawMode(Env.drawMode3D, skin, eyeBalls, pupils);
+		scale(ghost, 8);
+
+		Translate t = centerOverOrigin(skin);
+		eyes.getTransforms().add(t);
+
 		return ghost;
 	}
 }
