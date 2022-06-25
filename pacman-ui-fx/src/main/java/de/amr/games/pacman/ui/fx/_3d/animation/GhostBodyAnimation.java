@@ -72,20 +72,20 @@ public class GhostBodyAnimation {
 				Rendering3D.getGhostSkinColorFrightened(), //
 				Rendering3D.getGhostSkinColorFrightened2());
 
+		skinColorProperty.set(faded(Rendering3D.getGhostSkinColor(ghost.id)));
 		skinMaterial.diffuseColorProperty().bind(skinColorProperty);
 		skinMaterial.specularColorProperty()
 				.bind(Bindings.createObjectBinding(() -> skinColorProperty.get().brighter(), skinColorProperty));
-		skinColorProperty.set(faded(Rendering3D.getGhostSkinColor(ghost.id)));
 
+		eyeBallsColorProperty.set(Rendering3D.getGhostEyeBallColor());
 		eyeBallsMaterial.diffuseColorProperty().bind(eyeBallsColorProperty);
 		eyeBallsMaterial.specularColorProperty()
 				.bind(Bindings.createObjectBinding(() -> eyeBallsColorProperty.get().brighter(), eyeBallsColorProperty));
-		eyeBallsColorProperty.set(Rendering3D.getGhostEyeBallColor());
 
+		eyePupilsColorProperty.set(Rendering3D.getGhostPupilColor());
 		eyePupilsMaterial.diffuseColorProperty().bind(eyePupilsColorProperty);
 		eyePupilsMaterial.specularColorProperty()
 				.bind(Bindings.createObjectBinding(() -> eyePupilsColorProperty.get().brighter(), eyePupilsColorProperty));
-		eyePupilsColorProperty.set(Rendering3D.getGhostPupilColor());
 
 		skin().setMaterial(skinMaterial);
 		eyeBalls().setMaterial(eyeBallsMaterial);

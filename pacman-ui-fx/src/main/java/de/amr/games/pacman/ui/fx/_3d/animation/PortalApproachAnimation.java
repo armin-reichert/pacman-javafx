@@ -64,7 +64,7 @@ public class PortalApproachAnimation {
 			if (dist <= fadeStart) { // fade into shadow
 				node.setVisible(true);
 				double opacity = U.lerp(0.2, 1, dist / fadeStart);
-				logger.info("Distance from portal: %.2f Opacity: %.2f", dist, opacity);
+				logger.trace("Distance from portal: %.2f Opacity: %.2f", dist, opacity);
 				colorProperty.set(Color.color(baseColor.get().getRed() * opacity, baseColor.get().getGreen() * opacity,
 						baseColor.get().getBlue() * opacity, opacity));
 			}

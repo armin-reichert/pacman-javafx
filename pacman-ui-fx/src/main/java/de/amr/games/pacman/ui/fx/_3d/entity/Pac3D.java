@@ -72,7 +72,7 @@ public class Pac3D extends Group {
 				.bind(Bindings.createObjectBinding(() -> skullColorProperty.get().brighter(), skullColorProperty));
 		pacGroup = model3D.createPac(skullColor, eyesColor, palateColor);
 		skull().setMaterial(skullMaterial);
-		var light = new PointLight(Color.WHITE);
+		var light = new PointLight(Color.GHOSTWHITE);
 		light.setTranslateZ(-8);
 		getChildren().addAll(pacGroup, light);
 		normalSkullColorProperty.set(skullColor);

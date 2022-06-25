@@ -65,7 +65,8 @@ public class World3D extends Group {
 		mazeStyle.foodColor = Rendering3D.getMazeFoodColor(game.variant, game.level.mazeNumber);
 
 		maze3D = new Maze3D(game.level.world, mazeStyle);
-		maze3D.setFloorTexture(Ufx.image("/common/escher-texture.jpg"), Color.rgb(51, 0, 102));
+//		maze3D.setFloorTexture(Ufx.image("/common/escher-texture.jpg"), Color.rgb(51, 0, 102));
+		maze3D.setFloorTexture(Ufx.image("/common/penrose-tiling.jpg"), Color.rgb(10, 10, 60));
 		maze3D.resolution.bind(Env.mazeResolution);
 		maze3D.wallHeight.bind(Env.mazeWallHeight);
 		getChildren().add(maze3D);
