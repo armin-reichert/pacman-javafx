@@ -124,7 +124,7 @@ public class PlayScene3D extends GameScene3D {
 	@Override
 	public void update() {
 		world3D.update($.game);
-		pac3D.update();
+		pac3D.update($.game.world());
 		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update($.game));
 		bonus3D.update($.game.bonus());
 		getCamera().update(pac3D);
@@ -200,7 +200,7 @@ public class PlayScene3D extends GameScene3D {
 		switch (e.newGameState) {
 		case READY -> {
 			maze3D.reset();
-			pac3D.reset();
+			pac3D.reset($.game.world());
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.reset($.game));
 		}
 		case HUNTING -> maze3D.energizerAnimations().forEach(Animation::play);

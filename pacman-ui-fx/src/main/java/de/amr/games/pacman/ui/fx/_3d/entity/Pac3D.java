@@ -27,8 +27,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.lib.U;
+import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.actors.Pac;
-import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.FillTransition3D;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
@@ -87,29 +87,29 @@ public class Pac3D extends Group {
 		return model3D.pacSkull(pacGroup);
 	}
 
-	public void reset() {
+	public void reset(World world) {
 		pacGroup.setScaleX(1.0);
 		pacGroup.setScaleY(1.0);
 		pacGroup.setScaleZ(1.0);
 		skullColorProperty.set(normalSkullColor);
-		update();
+		update(world);
 	}
 
-	public void update() {
+	public void update(World world) {
 		motion.update(pac, this);
-		updateAppearance();
+		updateAppearance(world);
 	}
 
-	private void updateAppearance() {
+	private void updateAppearance(World world) {
 		skullColorProperty.set(normalSkullColor);
 		setVisible(pac.visible);
 		setOpacity(1);
-		if (outsideWorld()) {
+		if (outsideWorld(world)) {
 			setVisible(true);
 			skullColorProperty.set((Color.color(0.1, 0.1, 0.1, 0.2)));
 		} else {
 			double fadeStart = 32.0;
-			double dist = distFromPortal();
+			double dist = distFromNearestPortal(world);
 			if (dist <= fadeStart) { // fade into shadow
 				setVisible(true);
 				double opacity = U.lerp(0.2, 1, dist / fadeStart);
@@ -120,18 +120,22 @@ public class Pac3D extends Group {
 		}
 	}
 
-	private double distFromPortal() {
-		double centerX = pac.position.x + World.HTS;
-		double rightEdge = ArcadeWorld.TILES_X * World.TS;
-		if (centerX < 0 || centerX > rightEdge) {
-			return 0;
+	private double distFromNearestPortal(World world) {
+		double minDist = Double.MAX_VALUE;
+		for (var portal : world.portals()) {
+			var left = new V2d(portal.left).scaled(World.TS);
+			var right = new V2d(portal.right).scaled(World.TS);
+			var dist = Math.min(pac.position.euclideanDistance(left), pac.position.euclideanDistance(right));
+			if (dist < minDist) {
+				minDist = dist;
+			}
 		}
-		return Math.abs(Math.min(centerX, rightEdge - centerX));
+		return minDist;
 	}
 
-	private boolean outsideWorld() {
+	private boolean outsideWorld(World world) {
 		double centerX = pac.position.x + World.HTS;
-		return centerX < 0 || centerX > ArcadeWorld.TILES_X * World.TS;
+		return centerX < 0 || centerX > world.numCols() * World.TS;
 	}
 
 	public Animation dyingAnimation(Color ghostColor) {

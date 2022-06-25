@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.model;
 
 import java.util.stream.Stream;
 
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
@@ -90,7 +91,7 @@ public class Model3D {
 		Stream.of(skull, eyes, palate).forEach(meshView -> meshView.drawModeProperty().bind(Env.drawMode3D));
 
 		Group pacman = new Group(skull, eyes, palate);
-		pacman.getTransforms().add(scaled(pacman, 8));
+		pacman.getTransforms().add(scaled(pacman, 8.5));
 		pacman.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 
 		return pacman;
@@ -124,7 +125,7 @@ public class Model3D {
 
 		Group ghost = new Group(skin, eyes);
 		ghost.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-		ghost.getTransforms().add(scaled(ghost, 8));
+		ghost.getTransforms().add(scaled(ghost, World.TS));
 
 		Translate centered = centeredOverOrigin(skin);
 		skin.getTransforms().add(centered);
