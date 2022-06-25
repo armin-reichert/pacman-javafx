@@ -74,13 +74,38 @@ public class Maze3D extends Group {
 		public Color foodColor;
 	}
 
-	// -------------
-
 	private static class WallData {
 		double brickSize;
 		double height;
 		PhongMaterial baseMaterial;
 		PhongMaterial topMaterial;
+	}
+
+	private static class FoodFadeOutTransition extends Transition {
+
+		private Shape3D foodShape;
+		private PhongMaterial foodMaterial;
+		private Color foodColor;
+
+		public FoodFadeOutTransition(Shape3D foodShape, Color foodColor) {
+			setCycleDuration(Duration.seconds(0.6));
+			setOnFinished(e -> foodShape.setVisible(false));
+			setInterpolator(Interpolator.EASE_BOTH);
+			this.foodShape = foodShape;
+			this.foodColor = foodColor;
+			foodMaterial = new PhongMaterial(foodColor);
+			foodShape.setMaterial(foodMaterial);
+		}
+
+		@Override
+		protected void interpolate(double t) {
+			var color = foodColor.interpolate(Color.LIGHTGREY, t);
+			foodMaterial.setDiffuseColor(color);
+			foodMaterial.setSpecularColor(color.brighter());
+			foodShape.setScaleX((1 - t));
+			foodShape.setScaleY((1 - t));
+			foodShape.setScaleZ((1 - t));
+		}
 	}
 
 	public final IntegerProperty resolution = new SimpleIntegerProperty(8);
@@ -209,35 +234,14 @@ public class Maze3D extends Group {
 		return foodShapes().filter(food -> tile(food).equals(tile)).findFirst();
 	}
 
-	public void hideFood(Shape3D foodNode) {
-		if (foodNode instanceof Energizer3D) {
-			var energizer = (Energizer3D) foodNode;
+	public void hideFood(Shape3D foodShape) {
+		if (foodShape instanceof Energizer3D) {
+			var energizer = (Energizer3D) foodShape;
 			energizer.animation().stop();
-			foodNode.setVisible(false);
+			foodShape.setVisible(false);
 			return;
 		}
-
-		var material = new PhongMaterial(mazeStyle.foodColor);
-		material.setSpecularColor(mazeStyle.foodColor.brighter());
-		var fade = new Transition() {
-			{
-				setCycleDuration(Duration.seconds(0.6));
-				setOnFinished(e -> foodNode.setVisible(false));
-				setInterpolator(Interpolator.EASE_BOTH);
-			}
-
-			@Override
-			protected void interpolate(double t) {
-				var color = mazeStyle.foodColor.interpolate(Color.LIGHTGREY, t);
-				material.setDiffuseColor(color);
-				material.setSpecularColor(color.brighter());
-				foodNode.setMaterial(material);
-				foodNode.setScaleX((1 - t));
-				foodNode.setScaleY((1 - t));
-				foodNode.setScaleZ((1 - t));
-			}
-		};
-		fade.play();
+		new FoodFadeOutTransition(foodShape, mazeStyle.foodColor).play();
 	}
 
 	public void validateFoodShapes() {
