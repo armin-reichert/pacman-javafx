@@ -81,13 +81,13 @@ public class Maze3D extends Group {
 		PhongMaterial topMaterial;
 	}
 
-	private static class FoodFadeOutTransition extends Transition {
+	private static class FoodDisappearTransition extends Transition {
 
 		private Shape3D foodShape;
 		private PhongMaterial foodMaterial;
 		private Color foodColor;
 
-		public FoodFadeOutTransition(Shape3D foodShape, Color foodColor) {
+		public FoodDisappearTransition(Shape3D foodShape, Color foodColor) {
 			setCycleDuration(Duration.seconds(0.6));
 			setOnFinished(e -> foodShape.setVisible(false));
 			setInterpolator(Interpolator.EASE_BOTH);
@@ -241,7 +241,7 @@ public class Maze3D extends Group {
 			foodShape.setVisible(false);
 			return;
 		}
-		new FoodFadeOutTransition(foodShape, mazeStyle.foodColor).play();
+		new FoodDisappearTransition(foodShape, mazeStyle.foodColor).play();
 	}
 
 	public void validateFoodShapes() {
