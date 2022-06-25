@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.animation;
 
+import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -46,6 +47,7 @@ public class ColorFlashingTransition extends Transition {
 		setCycleCount(INDEFINITE);
 		setCycleDuration(Duration.seconds(0.2));
 		setAutoReverse(true);
+		setInterpolator(Interpolator.EASE_BOTH);
 	}
 
 	public Color getColor() {
@@ -54,8 +56,6 @@ public class ColorFlashingTransition extends Transition {
 
 	@Override
 	protected void interpolate(double t) {
-		if (t <= 0.25 || t >= 0.75) { // TODO check this
-			colorProperty.set(colorStart.interpolate(colorEnd, t));
-		}
+		colorProperty.set(colorStart.interpolate(colorEnd, t));
 	}
 }
