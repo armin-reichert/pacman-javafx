@@ -86,22 +86,8 @@ public class Pac3D extends Group {
 		modelRoot.setScaleX(1.0);
 		modelRoot.setScaleY(1.0);
 		modelRoot.setScaleZ(1.0);
+		skullColorProperty.set(normalSkullColor);
 		update();
-	}
-
-	private double distFromPortal() {
-		double centerX = pac.position.x + World.HTS;
-		double leftEdge = 0;
-		double rightEdge = ArcadeWorld.TILES_X * World.TS;
-		if (centerX < leftEdge || centerX > rightEdge) {
-			return 0;
-		}
-		return Math.abs(Math.min(centerX - leftEdge, rightEdge - centerX));
-	}
-
-	private boolean outsideWorld() {
-		double centerX = pac.position.x + World.HTS;
-		return centerX < 0 || centerX > ArcadeWorld.TILES_X * World.TS;
 	}
 
 	public void update() {
@@ -115,19 +101,32 @@ public class Pac3D extends Group {
 		setOpacity(1);
 		if (outsideWorld()) {
 			setVisible(true);
-			skullColorProperty.set((Color.color(0, 0, 0, 0.2)));
+			skullColorProperty.set((Color.color(0.1, 0.1, 0.1, 0.2)));
 		} else {
-			// TODO fixme
 			double fadeStart = 32.0;
 			double dist = distFromPortal();
-			if (dist < fadeStart) { // fade into shadow
+			if (dist <= fadeStart) { // fade into shadow
 				setVisible(true);
-				double opacity = U.lerp(1, 0.2, dist / fadeStart);
-				logger.info("Opacity: %f", opacity);
-				skullColorProperty.set(
-						Color.color(normalSkullColor.getRed(), normalSkullColor.getGreen(), normalSkullColor.getBlue(), opacity));
+				double opacity = U.lerp(0.2, 1, dist / fadeStart);
+				logger.info("Distance from portal: %.2f Opacity: %.2f", dist, opacity);
+				skullColorProperty.set(Color.color(normalSkullColor.getRed() * opacity, normalSkullColor.getGreen() * opacity,
+						normalSkullColor.getBlue() * opacity, opacity));
 			}
 		}
+	}
+
+	private double distFromPortal() {
+		double centerX = pac.position.x + World.HTS;
+		double rightEdge = ArcadeWorld.TILES_X * World.TS;
+		if (centerX < 0 || centerX > rightEdge) {
+			return 0;
+		}
+		return Math.abs(Math.min(centerX, rightEdge - centerX));
+	}
+
+	private boolean outsideWorld() {
+		double centerX = pac.position.x + World.HTS;
+		return centerX < 0 || centerX > ArcadeWorld.TILES_X * World.TS;
 	}
 
 	public Animation dyingAnimation(Color ghostColor) {
