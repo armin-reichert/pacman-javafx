@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.model;
 
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.MeshView;
 
 /**
  * Pac-Man 3D model factory.
@@ -37,6 +38,18 @@ public interface PacManModel3D {
 	 * @return transformation group for Pac-Man
 	 */
 	Group createPacMan(Color skullColor, Color eyesColor, Color palateColor);
+
+	default MeshView skull(Group pac) {
+		return (MeshView) pac.getChildren().get(0);
+	}
+
+	default MeshView eyes(Group pac) {
+		return (MeshView) pac.getChildren().get(1);
+	}
+
+	default MeshView palate(Group pac) {
+		return (MeshView) pac.getChildren().get(2);
+	}
 
 	/**
 	 * @return transformation group for a ghost

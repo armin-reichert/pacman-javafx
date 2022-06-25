@@ -55,8 +55,9 @@ import javafx.util.Duration;
 public class Pac3D extends Group {
 
 	private final Pac pac;
-	private final Group bodyParts;
-	private final Shape3D skull;
+
+	private final PacManModel3D model3D;
+	private final Group modelRoot;
 
 	private final Motion motion = new Motion();
 	private final PointLight light = new PointLight(Color.WHITE);
@@ -64,19 +65,19 @@ public class Pac3D extends Group {
 
 	public Pac3D(Pac pac, PacManModel3D model3D) {
 		this.pac = pac;
-		bodyParts = model3D.createPacMan(Rendering3D.getPacSkullColor(), Rendering3D.getPacEyesColor(),
+		this.model3D = model3D;
+		modelRoot = model3D.createPacMan(Rendering3D.getPacSkullColor(), Rendering3D.getPacEyesColor(),
 				Rendering3D.getPacPalateColor());
-		skull = (Shape3D) bodyParts.getChildren().get(0);
 		light.setTranslateZ(-HTS);
-		getChildren().addAll(bodyParts, light);
+		getChildren().addAll(modelRoot, light);
 		reset();
 	}
 
 	public void reset() {
-		bodyParts.setScaleX(1.05);
-		bodyParts.setScaleY(1.05);
-		bodyParts.setScaleZ(1.05);
-		setShapeColor(skull, Rendering3D.getPacSkullColor());
+		modelRoot.setScaleX(1.05);
+		modelRoot.setScaleY(1.05);
+		modelRoot.setScaleZ(1.05);
+		setShapeColor(model3D.skull(modelRoot), Rendering3D.getPacSkullColor());
 		update();
 	}
 
@@ -92,7 +93,7 @@ public class Pac3D extends Group {
 		boolean nearEdge = x < leftEdge + 2 || x > rightEdge - 8;
 		boolean outside = x < leftEdge - 4 || x > rightEdge - 4;
 		Color normalColor = Rendering3D.getPacSkullColor();
-		setShapeColor(skull, normalColor);
+		setShapeColor(model3D.skull(modelRoot), normalColor);
 		if (outside) {
 			setVisible(true);
 			setOpacity(0.5);
@@ -100,25 +101,26 @@ public class Pac3D extends Group {
 			setVisible(pac.visible);
 			setOpacity(1);
 			if (nearEdge) {
-				setShapeColor(skull, Color.color(normalColor.getRed(), normalColor.getGreen(), normalColor.getBlue(), 0.1));
+				setShapeColor(model3D.skull(modelRoot),
+						Color.color(normalColor.getRed(), normalColor.getGreen(), normalColor.getBlue(), 0.1));
 			}
 		}
 	}
 
 	public Animation dyingAnimation(Color ghostColor) {
-		var spin = new RotateTransition(Duration.seconds(0.2), bodyParts);
+		var spin = new RotateTransition(Duration.seconds(0.2), modelRoot);
 		spin.setAxis(Rotate.Z_AXIS);
 		spin.setByAngle(360);
 		spin.setCycleCount(10);
 
-		var shrink = new ScaleTransition(Duration.seconds(2), bodyParts);
+		var shrink = new ScaleTransition(Duration.seconds(2), modelRoot);
 		shrink.setToX(0);
 		shrink.setToY(0);
 		shrink.setToZ(0);
 
 		return new SequentialTransition( //
-				new FillTransition3D(Duration.seconds(1), skull, Rendering3D.getPacSkullColor(), ghostColor), //
-				new FillTransition3D(Duration.seconds(1), skull, ghostColor, skullColorImpaled), //
+				new FillTransition3D(Duration.seconds(1), model3D.skull(modelRoot), Rendering3D.getPacSkullColor(), ghostColor), //
+				new FillTransition3D(Duration.seconds(1), model3D.skull(modelRoot), ghostColor, skullColorImpaled), //
 				new ParallelTransition(spin, shrink));
 	}
 
