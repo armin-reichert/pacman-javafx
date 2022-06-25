@@ -23,11 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.model;
 
-import javafx.geometry.Bounds;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.paint.Color;
-import javafx.scene.transform.Scale;
 
 /**
  * Pac-Man 3D model factory.
@@ -45,12 +42,4 @@ public interface PacManModel3D {
 	 * @return transformation group for a ghost
 	 */
 	Group createGhost(Color skinColor, Color eyeBallColor, Color pupilColor);
-
-	public static void scale(Node node, double size) {
-		Bounds bounds = node.getBoundsInLocal();
-		double s1 = size / bounds.getWidth();
-		double s2 = size / bounds.getHeight();
-		double s3 = size / bounds.getDepth();
-		node.getTransforms().add(new Scale(s1, s2, s3));
-	}
 }

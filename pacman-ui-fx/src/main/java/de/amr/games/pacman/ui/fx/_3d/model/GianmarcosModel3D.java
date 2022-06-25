@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.model;
 
-import static de.amr.games.pacman.ui.fx._3d.model.PacManModel3D.scale;
-
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -35,6 +33,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 
 /**
@@ -54,11 +53,14 @@ public class GianmarcosModel3D implements PacManModel3D {
 		return instance;
 	}
 
-	public static Translate centerOverOrigin(Node node) {
+	private static Translate centeredOverOrigin(Node node) {
 		Bounds bounds = node.getBoundsInLocal();
-		Translate t = new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
-		node.getTransforms().add(t);
-		return t;
+		return new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
+	}
+
+	private static Scale scaled(Node node, double size) {
+		Bounds bounds = node.getBoundsInLocal();
+		return new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
 	}
 
 	private ObjModel pacManModel;
@@ -80,14 +82,15 @@ public class GianmarcosModel3D implements PacManModel3D {
 		MeshView palate = pacManModel.createMeshView("Sphere_grey_wall");
 		palate.setMaterial(new PhongMaterial(palateColor));
 
-		Translate t = centerOverOrigin(skull);
-		eyes.getTransforms().add(t);
-		palate.getTransforms().add(t);
+		Translate centered = centeredOverOrigin(skull);
+		skull.getTransforms().add(centered);
+		eyes.getTransforms().add(centered);
+		palate.getTransforms().add(centered);
 
 		Stream.of(skull, eyes, palate).forEach(meshView -> meshView.drawModeProperty().bind(Env.drawMode3D));
 
 		Group pacman = new Group(skull, eyes, palate);
-		scale(pacman, 8);
+		pacman.getTransforms().add(scaled(pacman, 8));
 		pacman.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 
 		return pacman;
@@ -110,10 +113,11 @@ public class GianmarcosModel3D implements PacManModel3D {
 
 		Group ghost = new Group(skin, eyes);
 		ghost.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-		scale(ghost, 8);
+		ghost.getTransforms().add(scaled(ghost, 8));
 
-		Translate t = centerOverOrigin(skin);
-		eyes.getTransforms().add(t);
+		Translate centered = centeredOverOrigin(skin);
+		skin.getTransforms().add(centered);
+		eyes.getTransforms().add(centered);
 
 		return ghost;
 	}
