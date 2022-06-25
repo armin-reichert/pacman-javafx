@@ -126,16 +126,18 @@ public class GhostBodyAnimation {
 	}
 
 	public void playFlashingAnimation() {
-		if (flashingAnimation.getStatus() != Status.RUNNING) {
+		if (!isFlashing()) {
 			skinColorProperty.bind(flashingAnimation.colorProperty);
+			skin().setMaterial(skinMaterial);
 			flashingAnimation.playFromStart();
 		}
 	}
 
 	public void ensureFlashingAnimationStopped() {
-		if (flashingAnimation.getStatus() == Status.RUNNING) {
-			flashingAnimation.stop();
+		if (isFlashing()) {
 			skinColorProperty.unbind();
+			skin().setMaterial(skinMaterial);
+			flashingAnimation.stop();
 		}
 	}
 
