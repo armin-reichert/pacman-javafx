@@ -29,21 +29,10 @@ import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx._3d.animation.ColorFlashingTransition;
-import de.amr.games.pacman.ui.fx._3d.animation.FadeInTransition3D;
-import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
-import javafx.animation.Animation.Status;
 import javafx.animation.SequentialTransition;
 import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
-import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
-import javafx.util.Duration;
 
 /**
  * 3D representation of a ghost. A ghost is displayed in one of 4 modes:
@@ -62,114 +51,16 @@ public class Ghost3D extends Group {
 		COLORED, FRIGHTENED, EYES, NUMBER;
 	}
 
-	public static class NumberAnimation {
-
-		private final Box numberCube;
-		private final Image[] valueImages;
-
-		public NumberAnimation(Rendering2D r2D) {
-			numberCube = new Box(8, 8, 8);
-			valueImages = r2D.createGhostValueList().frames().map(r2D::getSpriteImage).toArray(Image[]::new);
-		}
-
-		public Node getRoot() {
-			return numberCube;
-		}
-
-		public void setNumber(int number) {
-			var texture = valueImages[number];
-			var material = new PhongMaterial();
-			material.setBumpMap(texture);
-			material.setDiffuseMap(texture);
-			numberCube.setMaterial(material);
-		}
-	}
-
-	public static class BodyAnimation {
-
-		private final int ghostID;
-		private final Group root;
-		private final Shape3D skin;
-		private final Group eyes;
-		private final Shape3D eyePupils;
-		private final Shape3D eyeBalls;
-		private final ColorFlashingTransition flashingAnimation;
-		private final FadeInTransition3D revivalAnimation;
-
-		public BodyAnimation(Model3D model3D, int ghostID) {
-			this.ghostID = ghostID;
-			root = model3D.createGhost(//
-					faded(Rendering3D.getGhostSkinColor(ghostID)), //
-					Rendering3D.getGhostEyeBallColor(), //
-					Rendering3D.getGhostPupilColor());
-			skin = (Shape3D) root.getChildren().get(0);
-			eyes = (Group) root.getChildren().get(1);
-			eyePupils = (Shape3D) eyes.getChildren().get(0);
-			eyeBalls = (Shape3D) eyes.getChildren().get(1);
-			flashingAnimation = new ColorFlashingTransition(//
-					Rendering3D.getGhostSkinColorFrightened(), //
-					Rendering3D.getGhostSkinColorFrightened2());
-			revivalAnimation = new FadeInTransition3D(Duration.seconds(1.5), skin,
-					faded(Rendering3D.getGhostSkinColor(ghostID)));
-		}
-
-		public Node getRoot() {
-			return root;
-		}
-
-		public void setShowBody(boolean showSkin) {
-			skin.setVisible(showSkin);
-		}
-
-		public void playFlashingAnimation() {
-			if (flashingAnimation.getStatus() != Status.RUNNING) {
-				skin.setMaterial(flashingAnimation.getMaterial());
-				flashingAnimation.playFromStart();
-			}
-		}
-
-		public void ensureFlashingAnimationStopped() {
-			if (flashingAnimation.getStatus() == Status.RUNNING) {
-				flashingAnimation.stop();
-			}
-		}
-
-		public void setFrightened(boolean frightened) {
-			ensureFlashingAnimationStopped();
-			if (frightened) {
-				setShapeColor(skin, faded(Rendering3D.getGhostSkinColorFrightened()));
-				setShapeColor(eyeBalls, Rendering3D.getGhostEyeBallColorFrightened());
-				setShapeColor(eyePupils, Rendering3D.getGhostPupilColorFrightened());
-			} else {
-				setShapeColor(skin, faded(Rendering3D.getGhostSkinColor(ghostID)));
-				setShapeColor(eyeBalls, Rendering3D.getGhostEyeBallColor());
-				setShapeColor(eyePupils, Rendering3D.getGhostPupilColor());
-			}
-		}
-
-		private void setShapeColor(Shape3D shape, Color diffuseColor) {
-			var material = new PhongMaterial(diffuseColor);
-			material.setSpecularColor(diffuseColor.brighter());
-			shape.setMaterial(material);
-		}
-
-		private Color faded(Color color) {
-			return Color.color(color.getRed(), color.getGreen(), color.getBlue(), 0.90);
-		}
-	}
-
 	public final Ghost ghost;
-	private final Model3D model3D;
 	private final Motion motion = new Motion();
-	private final NumberAnimation numberAnimation;
-	private final BodyAnimation bodyAnimation;
+	private final GhostValueAnimation3D numberAnimation;
+	private final GhostBodyAnimation3D bodyAnimation;
 	private AnimationMode animationMode;
 
 	public Ghost3D(Ghost ghost, Model3D model3D, Rendering2D r2D) {
 		this.ghost = ghost;
-		this.model3D = model3D;
-		numberAnimation = new NumberAnimation(r2D);
-		bodyAnimation = new BodyAnimation(model3D, ghost.id);
+		numberAnimation = new GhostValueAnimation3D(r2D);
+		bodyAnimation = new GhostBodyAnimation3D(model3D, ghost.id);
 		setAnimationMode(AnimationMode.COLORED);
 	}
 

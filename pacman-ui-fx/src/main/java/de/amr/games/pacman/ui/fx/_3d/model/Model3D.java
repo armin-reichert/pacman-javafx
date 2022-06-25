@@ -143,7 +143,7 @@ public class Model3D {
 	}
 
 	public Shape3D ghostEyesPupils(Group ghost) {
-		return (Shape3D) ghostEyes(ghost).getChildren().get(2);
+		return (Shape3D) ghostEyes(ghost).getChildren().get(0);
 	}
 
 	public Shape3D ghostEyesBalls(Group ghost) {
