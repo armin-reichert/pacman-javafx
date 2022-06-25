@@ -30,7 +30,6 @@ import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
-import javafx.animation.SequentialTransition;
 import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
 
@@ -133,11 +132,5 @@ public class Ghost3D extends Group {
 
 	public void playFlashingAnimation() {
 		bodyAnimation.playFlashingAnimation();
-	}
-
-	public void playRevivalAnimation() {
-		var animation = new SequentialTransition(bodyAnimation.revivalAnimation);
-		animation.setOnFinished(e -> setAnimationMode(AnimationMode.COLORED));
-		animation.playFromStart();
 	}
 }

@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.entity;
 
 import de.amr.games.pacman.ui.fx._3d.animation.ColorFlashingTransition;
-import de.amr.games.pacman.ui.fx._3d.animation.FadeInTransition3D;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import javafx.animation.Animation.Status;
@@ -33,7 +32,6 @@ import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Shape3D;
-import javafx.util.Duration;
 
 /**
  * @author Armin Reichert
@@ -44,7 +42,6 @@ public class GhostBodyAnimation3D {
 	private final int ghostID;
 	private final Group ghostGroup;
 	private final ColorFlashingTransition flashingAnimation;
-	final FadeInTransition3D revivalAnimation;
 
 	public GhostBodyAnimation3D(Model3D model3D, int ghostID) {
 		this.model3D = model3D;
@@ -56,8 +53,6 @@ public class GhostBodyAnimation3D {
 		flashingAnimation = new ColorFlashingTransition(//
 				Rendering3D.getGhostSkinColorFrightened(), //
 				Rendering3D.getGhostSkinColorFrightened2());
-		revivalAnimation = new FadeInTransition3D(Duration.seconds(1.5), model3D.ghostSkin(ghostGroup),
-				faded(Rendering3D.getGhostSkinColor(ghostID)));
 	}
 
 	public Node getRoot() {

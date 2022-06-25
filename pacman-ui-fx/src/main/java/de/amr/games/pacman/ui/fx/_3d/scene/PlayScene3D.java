@@ -190,11 +190,6 @@ public class PlayScene3D extends GameScene3D {
 	}
 
 	@Override
-	public void onGhostStartsLeavingHouse(GameEvent e) {
-		e.ghost.ifPresent(ghost -> ghosts3D[ghost.id].playRevivalAnimation());
-	}
-
-	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
 		var maze3D = world3D.getMaze3D();
 		switch (e.newGameState) {
