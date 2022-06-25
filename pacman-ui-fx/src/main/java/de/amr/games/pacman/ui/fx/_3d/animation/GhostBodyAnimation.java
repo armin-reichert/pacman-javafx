@@ -21,12 +21,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx._3d.entity;
+package de.amr.games.pacman.ui.fx._3d.animation;
 
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.ui.fx._3d.animation.ColorFlashingTransition;
-import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import javafx.animation.Animation.Status;
 import javafx.beans.binding.Bindings;
@@ -41,7 +39,7 @@ import javafx.scene.shape.Shape3D;
 /**
  * @author Armin Reichert
  */
-public class GhostBodyAnimation3D {
+public class GhostBodyAnimation {
 
 	private final World world;
 	private final Ghost ghost;
@@ -62,7 +60,7 @@ public class GhostBodyAnimation3D {
 
 	private boolean frightened;
 
-	public GhostBodyAnimation3D(Model3D model3D, World world, Ghost ghost) {
+	public GhostBodyAnimation(Model3D model3D, World world, Ghost ghost) {
 		this.model3D = model3D;
 		this.world = world;
 		this.ghost = ghost;

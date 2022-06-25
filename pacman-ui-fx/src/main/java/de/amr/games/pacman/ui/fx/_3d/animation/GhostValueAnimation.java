@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx._3d.entity;
+package de.amr.games.pacman.ui.fx._3d.animation;
 
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.Node;
@@ -32,12 +32,12 @@ import javafx.scene.shape.Box;
 /**
  * @author Armin Reichert
  */
-public class GhostValueAnimation3D {
+public class GhostValueAnimation {
 
 	private final Box numberCube;
 	private final Image[] valueImages;
 
-	public GhostValueAnimation3D(Rendering2D r2D) {
+	public GhostValueAnimation(Rendering2D r2D) {
 		numberCube = new Box(8, 8, 8);
 		valueImages = r2D.createGhostValueList().frames().map(r2D::getSpriteImage).toArray(Image[]::new);
 	}
