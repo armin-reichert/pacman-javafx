@@ -42,7 +42,9 @@ import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.RaiseAndLowerWallAnimation;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.animation.Animation;
+import javafx.animation.Interpolator;
 import javafx.animation.PauseTransition;
+import javafx.animation.Transition;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -53,6 +55,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.Shape3D;
 import javafx.util.Duration;
 
 /**
@@ -88,14 +91,16 @@ public class Maze3D extends Group {
 	private final Group wallsGroup = new Group();
 	private final Group doorsGroup = new Group();
 	private final Group foodGroup = new Group();
+	private final MazeStyle mazeStyle;
 
-	public Maze3D(World world, MazeStyle style) {
+	public Maze3D(World world, MazeStyle mazeStyle) {
 		this.world = world;
+		this.mazeStyle = mazeStyle;
 		getChildren().addAll(foundationGroup, foodGroup);
 		foundationGroup.getChildren().addAll(createFloor(), wallsGroup, doorsGroup);
-		build(style);
-		addFood(world, style.foodColor);
-		resolution.addListener((obs, oldVal, newVal) -> build(style));
+		build(mazeStyle);
+		addFood(world, mazeStyle.foodColor);
+		resolution.addListener((obs, oldVal, newVal) -> build(mazeStyle));
 	}
 
 	private Node createFloor() {
@@ -200,26 +205,47 @@ public class Maze3D extends Group {
 		return energizers().map(Energizer3D::animation);
 	}
 
-	public Optional<Node> foodAt(V2i tile) {
-		return foodNodes().filter(food -> tile(food).equals(tile)).findFirst();
+	public Optional<Shape3D> foodAt(V2i tile) {
+		return foodShapes().filter(food -> tile(food).equals(tile)).findFirst();
 	}
 
-	public void hideFood(Node foodNode) {
-		var delay = new PauseTransition(Duration.seconds(4 * 1 / 60.0));
-		delay.setOnFinished(e -> foodNode.setVisible(false));
+	public void hideFood(Shape3D foodNode) {
 		if (foodNode instanceof Energizer3D) {
 			var energizer = (Energizer3D) foodNode;
 			energizer.animation().stop();
+			foodNode.setVisible(false);
+			return;
 		}
-		delay.play();
+
+		var material = new PhongMaterial(mazeStyle.foodColor);
+		material.setSpecularColor(mazeStyle.foodColor.brighter());
+		var fade = new Transition() {
+			{
+				setCycleDuration(Duration.seconds(0.6));
+				setOnFinished(e -> foodNode.setVisible(false));
+				setInterpolator(Interpolator.EASE_BOTH);
+			}
+
+			@Override
+			protected void interpolate(double t) {
+				var color = mazeStyle.foodColor.interpolate(Color.LIGHTGREY, t);
+				material.setDiffuseColor(color);
+				material.setSpecularColor(color.brighter());
+				foodNode.setMaterial(material);
+				foodNode.setScaleX((1 - t));
+				foodNode.setScaleY((1 - t));
+				foodNode.setScaleZ((1 - t));
+			}
+		};
+		fade.play();
 	}
 
-	public void validateFoodNodes() {
-		foodNodes().forEach(foodNode -> foodNode.setVisible(!world.containsEatenFood(tile(foodNode))));
+	public void validateFoodShapes() {
+		foodShapes().forEach(food -> food.setVisible(!world.containsEatenFood(tile(food))));
 	}
 
-	private Stream<Node> foodNodes() {
-		return foodGroup.getChildren().stream();
+	private Stream<Shape3D> foodShapes() {
+		return foodGroup.getChildren().stream().map(Shape3D.class::cast);
 	}
 
 	private V2i tile(Node foodNode) {
@@ -227,7 +253,7 @@ public class Maze3D extends Group {
 	}
 
 	private Stream<Energizer3D> energizers() {
-		return foodNodes().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
+		return foodShapes().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
 	}
 
 	// -------------------------------------------------------------------------------------------

@@ -137,7 +137,7 @@ public class PlayScene3D extends GameScene3D {
 					.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED, GhostState.LOCKED))
 					.forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.FRIGHTENED));
 		}
-		maze3D.validateFoodNodes();
+		maze3D.validateFoodShapes();
 		if (U.oneOf($.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) {
 			maze3D.energizerAnimations().forEach(Animation::play);
 		}
