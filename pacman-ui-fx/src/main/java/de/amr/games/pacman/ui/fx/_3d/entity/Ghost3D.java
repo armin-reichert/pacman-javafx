@@ -32,7 +32,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.animation.ColorFlashingTransition;
 import de.amr.games.pacman.ui.fx._3d.animation.FadeInTransition3D;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
-import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
+import de.amr.games.pacman.ui.fx._3d.model.PacModel3D;
 import javafx.animation.Animation.Status;
 import javafx.animation.SequentialTransition;
 import javafx.scene.Group;
@@ -96,7 +96,7 @@ public class Ghost3D extends Group {
 		private final ColorFlashingTransition flashingAnimation;
 		private final FadeInTransition3D revivalAnimation;
 
-		public BodyAnimation(PacManModel3D model3D, int ghostID) {
+		public BodyAnimation(PacModel3D model3D, int ghostID) {
 			this.ghostID = ghostID;
 			root = model3D.createGhost(//
 					faded(Rendering3D.getGhostSkinColor(ghostID)), //
@@ -164,7 +164,7 @@ public class Ghost3D extends Group {
 	private final BodyAnimation bodyAnimation;
 	private AnimationMode animationMode;
 
-	public Ghost3D(Ghost ghost, PacManModel3D model3D, Rendering2D r2D) {
+	public Ghost3D(Ghost ghost, PacModel3D model3D, Rendering2D r2D) {
 		this.ghost = ghost;
 		numberAnimation = new NumberAnimation(r2D);
 		bodyAnimation = new BodyAnimation(model3D, ghost.id);

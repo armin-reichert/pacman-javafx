@@ -32,7 +32,7 @@ import javafx.scene.shape.MeshView;
  * 
  * @author Armin Reichert
  */
-public interface PacManModel3D {
+public interface PacModel3D {
 
 	/**
 	 * @return transformation group for Pac-Man

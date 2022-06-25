@@ -23,16 +23,23 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.FillTransition3D;
-import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
+import de.amr.games.pacman.ui.fx._3d.model.PacModel3D;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
@@ -44,23 +51,32 @@ import javafx.util.Duration;
  * 3D-representation of Pac-Man or Ms. Pac-Man.
  * 
  * <p>
- * TODO: Specific 3D-model for Ms. Pac-Man, mouth animation
+ * Missing: Specific 3D-model for Ms. Pac-Man, mouth animation...
  * 
  * @author Armin Reichert
  */
 public class Pac3D extends Group {
 
+	private final Logger logger = LogManager.getFormatterLogger();
+
 	private final Pac pac;
-	private final PacManModel3D model3D;
+	private final PacModel3D model3D;
 	private final Group modelRoot;
 	private final Motion motion = new Motion();
-	private final Color skullColor;
+	private final Color normalSkullColor;
+	private final ObjectProperty<Color> skullColorProperty = new SimpleObjectProperty<>();
 
-	public Pac3D(Pac pac, PacManModel3D model3D, Color skullColor, Color eyesColor, Color palateColor) {
+	public Pac3D(Pac pac, PacModel3D model3D, Color skullColor, Color eyesColor, Color palateColor) {
 		this.pac = pac;
 		this.model3D = model3D;
-		this.skullColor = skullColor;
+		normalSkullColor = skullColor;
+		skullColorProperty.set(skullColor);
+		var skullMaterial = new PhongMaterial();
+		skullMaterial.diffuseColorProperty().bind(skullColorProperty);
+		skullMaterial.specularColorProperty()
+				.bind(Bindings.createObjectBinding(() -> skullColorProperty.get().brighter(), skullColorProperty));
 		modelRoot = model3D.createPacMan(skullColor, eyesColor, palateColor);
+		model3D.skull(modelRoot).setMaterial(skullMaterial);
 		var light = new PointLight(Color.WHITE);
 		light.setTranslateZ(-8);
 		getChildren().addAll(modelRoot, light);
@@ -73,37 +89,45 @@ public class Pac3D extends Group {
 		update();
 	}
 
-	public void update() {
-		motion.update(pac, this);
+	private double distFromPortal() {
 		double centerX = pac.position.x + World.HTS;
 		double leftEdge = 0;
 		double rightEdge = ArcadeWorld.TILES_X * World.TS;
-		double distFromEdge = Math.min(centerX - leftEdge, rightEdge - centerX);
-		boolean outsideWorld = centerX < leftEdge || centerX > rightEdge;
-		updateAppearance(outsideWorld, distFromEdge);
+		if (centerX < leftEdge || centerX > rightEdge) {
+			return 0;
+		}
+		return Math.abs(Math.min(centerX - leftEdge, rightEdge - centerX));
 	}
 
-	private void updateAppearance(boolean outsideWorld, double distFromEdge) {
-		model3D.skull(modelRoot).setMaterial(createMaterial(skullColor));
-		if (outsideWorld) {
-			// show as shadow
+	private boolean outsideWorld() {
+		double centerX = pac.position.x + World.HTS;
+		return centerX < 0 || centerX > ArcadeWorld.TILES_X * World.TS;
+	}
+
+	public void update() {
+		motion.update(pac, this);
+		updateAppearance();
+	}
+
+	private void updateAppearance() {
+		skullColorProperty.set(normalSkullColor);
+		setVisible(pac.visible);
+		setOpacity(1);
+		if (outsideWorld()) {
 			setVisible(true);
-			setOpacity(0.5);
+			skullColorProperty.set((Color.color(0, 0, 0, 0.2)));
 		} else {
-			setVisible(pac.visible);
-			setOpacity(1);
-			if (distFromEdge < 8) {
-				// fade
-				Color transparent = Color.color(skullColor.getRed(), skullColor.getGreen(), skullColor.getBlue(), 0.1);
-				model3D.skull(modelRoot).setMaterial(createMaterial(transparent));
+			// TODO fixme
+			double fadeStart = 32.0;
+			double dist = distFromPortal();
+			if (dist < fadeStart) { // fade into shadow
+				setVisible(true);
+				double opacity = U.lerp(1, 0.2, dist / fadeStart);
+				logger.info("Opacity: %f", opacity);
+				skullColorProperty.set(
+						Color.color(normalSkullColor.getRed(), normalSkullColor.getGreen(), normalSkullColor.getBlue(), opacity));
 			}
 		}
-	}
-
-	private PhongMaterial createMaterial(Color diffuseColor) {
-		var material = new PhongMaterial(diffuseColor);
-		material.setSpecularColor(diffuseColor.brighter());
-		return material;
 	}
 
 	public Animation dyingAnimation(Color ghostColor) {
@@ -118,7 +142,7 @@ public class Pac3D extends Group {
 		shrink.setToZ(0);
 
 		return new SequentialTransition( //
-				new FillTransition3D(Duration.seconds(1), model3D.skull(modelRoot), skullColor, ghostColor), //
+				new FillTransition3D(Duration.seconds(1), model3D.skull(modelRoot), normalSkullColor, ghostColor), //
 				new FillTransition3D(Duration.seconds(1), model3D.skull(modelRoot), ghostColor, Color.GHOSTWHITE), //
 				new ParallelTransition(spin, shrink));
 	}

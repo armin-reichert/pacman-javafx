@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
 
-import de.amr.games.pacman.ui.fx._3d.model.PacManModel3D;
+import de.amr.games.pacman.ui.fx._3d.model.PacModel3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
@@ -39,7 +39,7 @@ public class LivesCounter3D extends Group {
 
 	static final int MAX_LIVES_DISPLAYED = 5;
 
-	public LivesCounter3D(PacManModel3D model3D) {
+	public LivesCounter3D(PacModel3D model3D) {
 		for (int i = 0; i < MAX_LIVES_DISPLAYED; ++i) {
 			Node indicator = model3D.createPacMan(Color.YELLOW, Color.rgb(60, 60, 60), Color.rgb(60, 60, 60));
 			indicator.setTranslateX(2.0 * i * TS);

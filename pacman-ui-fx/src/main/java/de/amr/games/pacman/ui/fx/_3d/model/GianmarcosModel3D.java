@@ -42,7 +42,7 @@ import javafx.scene.transform.Translate;
  * 
  * @author Armin Reichert
  */
-public class GianmarcosModel3D implements PacManModel3D {
+public class GianmarcosModel3D implements PacModel3D {
 
 	private static GianmarcosModel3D instance;
 
