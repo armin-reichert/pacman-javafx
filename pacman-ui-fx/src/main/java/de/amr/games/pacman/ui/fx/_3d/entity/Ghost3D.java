@@ -63,11 +63,9 @@ public class Ghost3D extends Group {
 		this.ghost = ghost;
 		valueAnimation = new GhostValueAnimation(r2D);
 		bodyAnimation = new GhostBodyAnimation(ghost, model3D);
-		setAnimationMode(AnimationMode.COLORED);
 	}
 
 	public void reset(GameModel game) {
-		setAnimationMode(AnimationMode.COLORED);
 		update(game);
 	}
 
@@ -90,7 +88,7 @@ public class Ghost3D extends Group {
 		return animationMode;
 	}
 
-	public void setAnimationMode(AnimationMode animationMode) {
+	private void setAnimationMode(AnimationMode animationMode) {
 		if (this.animationMode != animationMode) {
 			this.animationMode = animationMode;
 			switch (animationMode) {

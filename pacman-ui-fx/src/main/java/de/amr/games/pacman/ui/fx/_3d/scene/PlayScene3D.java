@@ -31,11 +31,9 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.U;
-import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
-import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D.AnimationMode;
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import de.amr.games.pacman.ui.fx._3d.entity.World3D;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamDrone;
@@ -132,34 +130,10 @@ public class PlayScene3D extends GameScene3D {
 
 	public void onSwitchFrom2D() {
 		var maze3D = world3D.getMaze3D();
-		if ($.game.powerTimer.isRunning()) {
-			Stream.of(ghosts3D) //
-					.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED, GhostState.LOCKED))
-					.forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.BLUE));
-		}
 		maze3D.validateFoodShapes();
 		if (U.oneOf($.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) {
 			maze3D.energizerAnimations().forEach(Animation::play);
 		}
-	}
-
-	@Override
-	public void onPlayerGetsPower(GameEvent e) {
-		Stream.of(ghosts3D) //
-				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED, GhostState.LOCKED))
-				.forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.BLUE));
-	}
-
-	@Override
-	public void onPlayerStartsLosingPower(GameEvent e) {
-//		Stream.of(ghosts3D) //
-//				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED, GhostState.LOCKED))
-//				.forEach(Ghost3D::playFlashingAnimation);
-	}
-
-	@Override
-	public void onPlayerLosesPower(GameEvent e) {
-		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.COLORED));
 	}
 
 	@Override
@@ -201,7 +175,6 @@ public class PlayScene3D extends GameScene3D {
 		case HUNTING -> maze3D.energizerAnimations().forEach(Animation::play);
 		case PACMAN_DYING -> {
 			blockGameController();
-			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.COLORED));
 			$.game.ghosts().filter(ghost -> ghost.sameTile($.game.pac)).findAny()
 					.ifPresent(killer -> new SequentialTransition( //
 							pac3D.createDyingAnimation($.r2D.getGhostColor(killer.id)), //
@@ -218,8 +191,7 @@ public class PlayScene3D extends GameScene3D {
 		}
 		case LEVEL_COMPLETE -> {
 			blockGameController();
-			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.COLORED));
-			var message = Talk.LEVEL_COMPLETE_TALK.next() + "\n\n" + Talk.message("level_complete", $.game.level.number);
+			var message = Talk.LEVEL_COMPLETE_TALK.next() + "%n%n" + Talk.message("level_complete", $.game.level.number);
 			new SequentialTransition( //
 					Ufx.pauseSec(2.0), //
 					maze3D.createMazeFlashingAnimation($.game.level.numFlashes), //
