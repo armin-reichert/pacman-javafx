@@ -86,7 +86,7 @@ public class GhostBodyAnimation {
 		portalAppearance.update(root3D, ghost, world);
 	}
 
-	private Shape3D dress() {
+	public Shape3D dress() {
 		return model3D.ghostDress(root3D);
 	}
 
@@ -100,10 +100,6 @@ public class GhostBodyAnimation {
 
 	public Node getRoot() {
 		return root3D;
-	}
-
-	public void showDress(boolean show) {
-		model3D.ghostDress(root3D).setVisible(show);
 	}
 
 	public boolean isFlashing() {

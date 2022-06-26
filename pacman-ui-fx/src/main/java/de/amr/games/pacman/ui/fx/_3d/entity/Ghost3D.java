@@ -91,30 +91,30 @@ public class Ghost3D extends Group {
 			this.animationMode = animationMode;
 			switch (animationMode) {
 			case COLORED -> {
-				body.showDress(true);
+				body.dress().setVisible(true);
 				body.setColored();
 				body.ensureFlashingAnimationStopped();
 				getChildren().setAll(body.getRoot());
 			}
 			case BLUE -> {
-				body.showDress(true);
+				body.dress().setVisible(true);
 				body.setBlue();
 				body.ensureFlashingAnimationStopped();
 				getChildren().setAll(body.getRoot());
 			}
 			case FLASHING -> {
-				body.showDress(true);
+				body.dress().setVisible(true);
 				body.setBlue();
 				body.ensureFlashingAnimationRunning();
 				getChildren().setAll(body.getRoot());
 			}
 			case EYES -> {
-				body.showDress(false);
+				body.dress().setVisible(false);
 				body.ensureFlashingAnimationStopped();
 				getChildren().setAll(body.getRoot());
 			}
 			case NUMBER -> {
-				value.setNumber(ghost.killIndex);
+				value.selectNumberAtIndex(ghost.killIndex);
 				// rotate node such that number can be read from left to right
 				setRotationAxis(Rotate.X_AXIS);
 				setRotate(0);

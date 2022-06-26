@@ -34,23 +34,23 @@ import javafx.scene.shape.Box;
  */
 public class GhostValueAnimation {
 
-	private final Box numberCube;
+	private final Box cube;
 	private final Image[] valueImages;
 
 	public GhostValueAnimation(Rendering2D r2D) {
-		numberCube = new Box(8, 8, 8);
+		cube = new Box(8, 8, 8);
 		valueImages = r2D.createGhostValueList().frames().map(r2D::getSpriteImage).toArray(Image[]::new);
 	}
 
 	public Node getRoot() {
-		return numberCube;
+		return cube;
 	}
 
-	public void setNumber(int number) {
-		var texture = valueImages[number];
+	public void selectNumberAtIndex(int index) {
+		var texture = valueImages[index];
 		var material = new PhongMaterial();
 		material.setBumpMap(texture);
 		material.setDiffuseMap(texture);
-		numberCube.setMaterial(material);
+		cube.setMaterial(material);
 	}
 }
