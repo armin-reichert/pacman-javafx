@@ -74,16 +74,12 @@ public class Pac3D extends Group {
 		faceMaterial.diffuseColorProperty().bind(pyFaceColor);
 		faceMaterial.specularColorProperty()
 				.bind(Bindings.createObjectBinding(() -> pyFaceColor.get().brighter(), pyFaceColor));
-		skull().setMaterial(faceMaterial);
+		face().setMaterial(faceMaterial);
 		var light = new PointLight(Color.GHOSTWHITE);
 		light.setTranslateZ(-8);
 		getChildren().addAll(root3D, light);
 		fnNormalFaceColor = () -> faceColor;
 		portalAppearance = new PortalAppearance(pyFaceColor, fnNormalFaceColor);
-	}
-
-	private Shape3D skull() {
-		return model3D.pacFace(root3D);
 	}
 
 	public void reset(World world) {
@@ -92,7 +88,7 @@ public class Pac3D extends Group {
 		root3D.setScaleZ(1.0);
 		update(world);
 		// without this, the initial color is not always correct. Why?
-		skull().setMaterial(faceMaterial);
+		face().setMaterial(faceMaterial);
 	}
 
 	public void update(World world) {
@@ -107,13 +103,17 @@ public class Pac3D extends Group {
 		spin.setCycleCount(10);
 
 		var shrink = new ScaleTransition(Duration.seconds(2), root3D);
-		shrink.setToX(0);
-		shrink.setToY(0);
-		shrink.setToZ(0);
+		shrink.setToX(0.1);
+		shrink.setToY(0.1);
+		shrink.setToZ(0.1);
 
 		return new SequentialTransition( //
-				new FillTransition3D(Duration.seconds(1), skull(), fnNormalFaceColor.get(), ghostColor), //
-				new FillTransition3D(Duration.seconds(1), skull(), ghostColor, Color.GHOSTWHITE), //
+				new FillTransition3D(Duration.seconds(1), face(), fnNormalFaceColor.get(), ghostColor), //
+				new FillTransition3D(Duration.seconds(1), face(), ghostColor, Color.GHOSTWHITE), //
 				new ParallelTransition(spin, shrink));
+	}
+
+	private Shape3D face() {
+		return model3D.pacFace(root3D);
 	}
 }
