@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import java.util.function.Supplier;
-
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.FillTransition3D;
@@ -63,24 +61,24 @@ public class Pac3D extends Group {
 	private final Group root3D;
 	private final Motion motion;
 	private final ObjectProperty<Color> pyFaceColor;
-	private final Supplier<Color> fnNormalFaceColor;
+	private final Color normalFaceColor;
 	private final PhongMaterial faceMaterial;
 	private final PortalAppearance portalAppearance;
 
 	public Pac3D(Pac pac, Model3D model3D, Color faceColor, Color eyesColor, Color palateColor) {
 		this.pac = pac;
 		this.model3D = model3D;
-		root3D = model3D.createPac(faceColor, eyesColor, palateColor);
+		normalFaceColor = faceColor;
 		pyFaceColor = new SimpleObjectProperty<>(faceColor);
 		faceMaterial = new PhongMaterial();
 		Ufx.bindMaterialColor(faceMaterial, pyFaceColor);
+		root3D = model3D.createPac(faceColor, eyesColor, palateColor);
 		face().setMaterial(faceMaterial);
 		var light = new PointLight(Color.GHOSTWHITE);
 		light.setTranslateZ(-6);
 		getChildren().addAll(root3D, light);
-		fnNormalFaceColor = () -> faceColor;
 		motion = new Motion();
-		portalAppearance = new PortalAppearance(pyFaceColor, fnNormalFaceColor);
+		portalAppearance = new PortalAppearance(pyFaceColor, () -> normalFaceColor);
 	}
 
 	public void reset(World world) {
@@ -105,8 +103,8 @@ public class Pac3D extends Group {
 	public Animation createDyingAnimation(Color ghostColor) {
 
 		var colorChangingTime = Duration.seconds(2);
-		var poisened = new FillTransition3D(colorChangingTime.multiply(0.8), face(), fnNormalFaceColor.get(), ghostColor);
-		var impaling = new FillTransition3D(colorChangingTime.multiply(0.2), face(), ghostColor, Color.GHOSTWHITE);
+		var poisened = new FillTransition3D(colorChangingTime.multiply(0.9), face(), normalFaceColor, ghostColor);
+		var impaling = new FillTransition3D(colorChangingTime.multiply(0.1), face(), ghostColor, Color.GHOSTWHITE);
 
 		var collapsingTime = Duration.seconds(1.8);
 		var numSpins = 10;
