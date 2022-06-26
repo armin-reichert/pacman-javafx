@@ -28,6 +28,13 @@ public class Motion {
 	private RotateTransition turningAnimation;
 	private Direction targetDir;
 
+	public void reset(Creature guy, Node guyNode) {
+		guyNode.setTranslateX(guy.position.x + HTS);
+		guyNode.setTranslateY(guy.position.y + HTS);
+		guyNode.setTranslateZ(-HTS);
+		turningAnimation = null;
+	}
+
 	public void update(Creature guy, Node guyNode) {
 		guyNode.setTranslateX(guy.position.x + HTS);
 		guyNode.setTranslateY(guy.position.y + HTS);

@@ -67,6 +67,7 @@ public class Ghost3D extends Group {
 
 	public void reset(GameModel game) {
 		update(game);
+		motion.reset(ghost, this);
 	}
 
 	public void update(GameModel game) {

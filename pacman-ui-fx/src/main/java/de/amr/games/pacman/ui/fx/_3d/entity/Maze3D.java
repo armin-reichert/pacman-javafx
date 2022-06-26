@@ -81,25 +81,25 @@ public class Maze3D extends Group {
 		PhongMaterial topMaterial;
 	}
 
-	private static class FoodDisappearTransition extends Transition {
+	private static class FoodEatenAnimation extends Transition {
 
-		private Shape3D foodShape;
-		private PhongMaterial foodMaterial;
-		private Color foodColor;
+		private final Shape3D foodShape;
+		private final PhongMaterial foodMaterial;
+		private final Color foodColor;
 
-		public FoodDisappearTransition(Shape3D foodShape, Color foodColor) {
-			setCycleDuration(Duration.seconds(0.6));
-			setOnFinished(e -> foodShape.setVisible(false));
-			setInterpolator(Interpolator.EASE_BOTH);
+		public FoodEatenAnimation(Shape3D foodShape, Color foodColor) {
 			this.foodShape = foodShape;
 			this.foodColor = foodColor;
 			foodMaterial = new PhongMaterial(foodColor);
 			foodShape.setMaterial(foodMaterial);
+			setCycleDuration(Duration.seconds(0.5));
+			setOnFinished(e -> foodShape.setVisible(false));
+			setInterpolator(Interpolator.EASE_BOTH);
 		}
 
 		@Override
 		protected void interpolate(double t) {
-			var color = foodColor.interpolate(Color.LIGHTGREY, t);
+			var color = foodColor.interpolate(foodColor.grayscale(), t);
 			foodMaterial.setDiffuseColor(color);
 			foodMaterial.setSpecularColor(color.brighter());
 			foodShape.setScaleX((1 - t));
@@ -241,7 +241,7 @@ public class Maze3D extends Group {
 			foodShape.setVisible(false);
 			return;
 		}
-		new FoodDisappearTransition(foodShape, mazeStyle.foodColor).play();
+		new FoodEatenAnimation(foodShape, mazeStyle.foodColor).play();
 	}
 
 	public void validateFoodShapes() {
