@@ -61,8 +61,7 @@ public class GhostBodyAnimation {
 
 		root3D = model3D.createGhost(dressColor, eyeBallColor, pupilColor);
 
-		flashingAnimation = new ColorFlashing(//
-				Rendering3D.getGhostBlueDressColor(), //
+		flashingAnimation = new ColorFlashing(Rendering3D.getGhostBlueDressColor(),
 				Rendering3D.getGhostFlashingDressColor());
 
 		pyDressColor.set(dressColor);
