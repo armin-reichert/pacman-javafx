@@ -104,7 +104,7 @@ public class Pac3D extends Group {
 	 * @param ghostColor color of ghost that killed Pac-Man
 	 * @return dying animation (must not be longer than time reserved by game controller which is 5 seconds!)
 	 */
-	public Animation dyingAnimation(Color ghostColor) {
+	public Animation createDyingAnimation(Color ghostColor) {
 
 		var colorChangingTime = Duration.seconds(2);
 		var poisened = new FillTransition3D(colorChangingTime.multiply(0.8), face(), fnNormalFaceColor.get(), ghostColor);

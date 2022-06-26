@@ -204,7 +204,7 @@ public class PlayScene3D extends GameScene3D {
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.COLORED));
 			$.game.ghosts().filter(ghost -> ghost.sameTile($.game.pac)).findAny()
 					.ifPresent(killer -> new SequentialTransition( //
-							pac3D.dyingAnimation($.r2D.getGhostColor(killer.id)), //
+							pac3D.createDyingAnimation($.r2D.getGhostColor(killer.id)), //
 							Ufx.pauseSec(2.0, this::unblockGameController) //
 					).play());
 		}
