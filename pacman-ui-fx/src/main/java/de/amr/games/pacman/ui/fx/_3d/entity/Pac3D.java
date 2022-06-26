@@ -59,7 +59,7 @@ public class Pac3D extends Group {
 	private final Pac pac;
 	private final Model3D model3D;
 	private final Group root3D;
-	private final Motion motion = new Motion();
+	private final Motion motion;
 	private final ObjectProperty<Color> pyFaceColor;
 	private final Supplier<Color> fnNormalFaceColor;
 	private final PhongMaterial faceMaterial;
@@ -76,9 +76,10 @@ public class Pac3D extends Group {
 				.bind(Bindings.createObjectBinding(() -> pyFaceColor.get().brighter(), pyFaceColor));
 		face().setMaterial(faceMaterial);
 		var light = new PointLight(Color.GHOSTWHITE);
-		light.setTranslateZ(-8);
+		light.setTranslateZ(-6);
 		getChildren().addAll(root3D, light);
 		fnNormalFaceColor = () -> faceColor;
+		motion = new Motion();
 		portalAppearance = new PortalAppearance(pyFaceColor, fnNormalFaceColor);
 	}
 
@@ -108,8 +109,8 @@ public class Pac3D extends Group {
 		shrink.setToZ(0.1);
 
 		return new SequentialTransition( //
-				new FillTransition3D(Duration.seconds(1), face(), fnNormalFaceColor.get(), ghostColor), //
-				new FillTransition3D(Duration.seconds(1), face(), ghostColor, Color.GHOSTWHITE), //
+				new FillTransition3D(Duration.seconds(1), face(), fnNormalFaceColor.get(), ghostColor), // poisened
+				new FillTransition3D(Duration.seconds(1), face(), ghostColor, Color.GHOSTWHITE), // impaling
 				new ParallelTransition(spin, shrink));
 	}
 

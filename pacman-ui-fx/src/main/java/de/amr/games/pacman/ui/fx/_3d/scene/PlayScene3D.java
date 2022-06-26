@@ -84,8 +84,7 @@ public class PlayScene3D extends GameScene3D {
 		pac3D = new Pac3D($.game.pac, $.model3D, Rendering3D.getPacSkullColor(), Rendering3D.getPacEyesColor(),
 				Rendering3D.getPacPalateColor());
 		content().add(pac3D);
-		ghosts3D = $.game.ghosts().map(ghost -> new Ghost3D($.game.world(), ghost, $.model3D, $.r2D))
-				.toArray(Ghost3D[]::new);
+		ghosts3D = $.game.ghosts().map(ghost -> new Ghost3D(ghost, $.model3D, $.r2D)).toArray(Ghost3D[]::new);
 		Stream.of(ghosts3D).forEach(content()::add);
 		bonus3D = new Bonus3D();
 		content().add(bonus3D);
@@ -136,7 +135,7 @@ public class PlayScene3D extends GameScene3D {
 		if ($.game.powerTimer.isRunning()) {
 			Stream.of(ghosts3D) //
 					.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED, GhostState.LOCKED))
-					.forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.FRIGHTENED));
+					.forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.BLUE));
 		}
 		maze3D.validateFoodShapes();
 		if (U.oneOf($.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) {
@@ -148,14 +147,14 @@ public class PlayScene3D extends GameScene3D {
 	public void onPlayerGetsPower(GameEvent e) {
 		Stream.of(ghosts3D) //
 				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED, GhostState.LOCKED))
-				.forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.FRIGHTENED));
+				.forEach(ghost3D -> ghost3D.setAnimationMode(AnimationMode.BLUE));
 	}
 
 	@Override
 	public void onPlayerStartsLosingPower(GameEvent e) {
-		Stream.of(ghosts3D) //
-				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED, GhostState.LOCKED))
-				.forEach(Ghost3D::playFlashingAnimation);
+//		Stream.of(ghosts3D) //
+//				.filter(ghost3D -> ghost3D.ghost.is(GhostState.FRIGHTENED, GhostState.LOCKED))
+//				.forEach(Ghost3D::playFlashingAnimation);
 	}
 
 	@Override

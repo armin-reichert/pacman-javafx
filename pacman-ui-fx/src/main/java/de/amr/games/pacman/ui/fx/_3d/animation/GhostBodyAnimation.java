@@ -57,8 +57,6 @@ public class GhostBodyAnimation {
 
 	private final PortalAppearance portalApproachAnimation;
 
-	private boolean frightened;
-
 	public GhostBodyAnimation(Model3D model3D, Ghost ghost) {
 		this.model3D = model3D;
 		this.ghost = ghost;
@@ -92,7 +90,7 @@ public class GhostBodyAnimation {
 		eyePupils().setMaterial(eyePupilsMaterial);
 
 		portalApproachAnimation = new PortalAppearance(skinColorProperty,
-				() -> frightened ? Rendering3D.getGhostSkinColorFrightened() : faded(Rendering3D.getGhostSkinColor(ghost.id)));
+				() -> faded(Rendering3D.getGhostSkinColor(ghost.id)));
 	}
 
 	public void update(World world) {
@@ -123,7 +121,7 @@ public class GhostBodyAnimation {
 		return flashingAnimation.getStatus() == Status.RUNNING;
 	}
 
-	public void playFlashingAnimation() {
+	public void ensureFlashingAnimationRunning() {
 		if (!isFlashing()) {
 			skinColorProperty.bind(flashingAnimation.colorProperty);
 			skin().setMaterial(skinMaterial);
@@ -139,18 +137,23 @@ public class GhostBodyAnimation {
 		}
 	}
 
-	public void setFrightened(boolean frightened) {
-		this.frightened = frightened;
-		ensureFlashingAnimationStopped();
-		if (frightened) {
-			skinColorProperty.set(faded(Rendering3D.getGhostSkinColorFrightened()));
-			eyeBallsColorProperty.set(Rendering3D.getGhostEyeBallColorFrightened());
-			eyePupilsColorProperty.set(Rendering3D.getGhostPupilColorFrightened());
-		} else {
-			skinColorProperty.set(faded(Rendering3D.getGhostSkinColor(ghost.id)));
-			eyeBallsColorProperty.set(Rendering3D.getGhostEyeBallColor());
-			eyePupilsColorProperty.set(Rendering3D.getGhostPupilColor());
-		}
+	public void setBlue() {
+		skinColorProperty.unbind();
+
+		skinColorProperty.set(faded(Rendering3D.getGhostSkinColorFrightened()));
+		eyeBallsColorProperty.set(Rendering3D.getGhostEyeBallColorFrightened());
+		eyePupilsColorProperty.set(Rendering3D.getGhostPupilColorFrightened());
+		skin().setMaterial(skinMaterial);
+		eyeBalls().setMaterial(eyeBallsMaterial);
+		eyePupils().setMaterial(eyePupilsMaterial);
+	}
+
+	public void setColored() {
+		skinColorProperty.unbind();
+
+		skinColorProperty.set(faded(Rendering3D.getGhostSkinColor(ghost.id)));
+		eyeBallsColorProperty.set(Rendering3D.getGhostEyeBallColor());
+		eyePupilsColorProperty.set(Rendering3D.getGhostPupilColor());
 		skin().setMaterial(skinMaterial);
 		eyeBalls().setMaterial(eyeBallsMaterial);
 		eyePupils().setMaterial(eyePupilsMaterial);
