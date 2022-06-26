@@ -137,11 +137,11 @@ public class Rendering3D {
 		};
 	}
 
-	public static Color getGhostBlueDressColor() {
+	public static Color getGhostDressColorBlue() {
 		return Color.rgb(33, 33, 255);
 	}
 
-	public static Color getGhostFlashingDressColor() {
+	public static Color getGhostDressColorFlashing() {
 		return Color.rgb(224, 221, 255);
 	}
 
@@ -153,11 +153,15 @@ public class Rendering3D {
 		return Color.rgb(245, 189, 180);
 	}
 
-	public static Color getGhostPupilColor() {
+	public static Color getGhostPupilColorBlue() {
 		return Color.rgb(33, 33, 255);
 	}
 
-	public static Color getGhostPupilColorFrightened() {
+	public static Color getGhostPupilColorPink() {
+		return Color.rgb(252, 187, 179);
+	}
+
+	public static Color getGhostPupilColorRed() {
 		return Color.RED;
 	}
 }

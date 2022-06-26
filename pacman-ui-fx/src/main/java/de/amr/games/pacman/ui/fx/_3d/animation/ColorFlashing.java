@@ -46,7 +46,7 @@ public class ColorFlashing extends Transition {
 		setCycleCount(INDEFINITE);
 		setCycleDuration(Duration.seconds(0.2));
 		setAutoReverse(true);
-		setInterpolator(Interpolator.EASE_BOTH);
+		setInterpolator(Interpolator.EASE_OUT);
 		pyColor.set(startColor);
 	}
 

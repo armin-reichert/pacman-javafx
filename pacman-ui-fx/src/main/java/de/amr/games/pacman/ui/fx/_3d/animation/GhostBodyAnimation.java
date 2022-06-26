@@ -28,6 +28,7 @@ import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation.Status;
+import javafx.animation.ParallelTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
@@ -44,25 +45,29 @@ public class GhostBodyAnimation {
 	private final Ghost ghost;
 	private final Model3D model3D;
 	private final Group root3D;
-	private final ColorFlashing flashingAnimation;
+	private final ColorFlashing dressFlashing;
+	private final ColorFlashing pupilsFlashing;
 	private final PortalAppearance portalAppearance;
 
 	private final ObjectProperty<Color> pyDressColor = new SimpleObjectProperty<>();
 	private final ObjectProperty<Color> pyEyeBallsColor = new SimpleObjectProperty<>();
 	private final ObjectProperty<Color> pyEyePupilsColor = new SimpleObjectProperty<>();
 
+	private ParallelTransition flashing;
+
 	public GhostBodyAnimation(Ghost ghost, Model3D model3D) {
 		this.ghost = ghost;
 		this.model3D = model3D;
 
-		var dressColor = faded(Rendering3D.getGhostDressColor(ghost.id));
+		var dressColor = Rendering3D.getGhostDressColor(ghost.id);
 		var eyeBallColor = Rendering3D.getGhostEyeBallColor();
-		var pupilColor = Rendering3D.getGhostPupilColor();
+		var pupilColor = Rendering3D.getGhostPupilColorBlue();
 
 		root3D = model3D.createGhost(dressColor, eyeBallColor, pupilColor);
 
-		flashingAnimation = new ColorFlashing(Rendering3D.getGhostBlueDressColor(),
-				Rendering3D.getGhostFlashingDressColor());
+		dressFlashing = new ColorFlashing(Rendering3D.getGhostDressColorBlue(),
+				Rendering3D.getGhostDressColorFlashing());
+		pupilsFlashing = new ColorFlashing(Rendering3D.getGhostPupilColorPink(), Rendering3D.getGhostPupilColorRed());
 
 		pyDressColor.set(dressColor);
 		var dressMaterial = new PhongMaterial();
@@ -74,12 +79,12 @@ public class GhostBodyAnimation {
 		Ufx.bindMaterialColor(eyeBallsMaterial, pyEyeBallsColor);
 		eyeBalls().setMaterial(eyeBallsMaterial);
 
-		pyEyePupilsColor.set(Rendering3D.getGhostPupilColor());
+		pyEyePupilsColor.set(Rendering3D.getGhostPupilColorBlue());
 		var eyePupilsMaterial = new PhongMaterial();
 		Ufx.bindMaterialColor(eyePupilsMaterial, pyEyePupilsColor);
 		eyePupils().setMaterial(eyePupilsMaterial);
 
-		portalAppearance = new PortalAppearance(pyDressColor, () -> faded(Rendering3D.getGhostDressColor(ghost.id)));
+		portalAppearance = new PortalAppearance(pyDressColor, () -> Rendering3D.getGhostDressColor(ghost.id));
 	}
 
 	public void update(World world) {
@@ -103,38 +108,43 @@ public class GhostBodyAnimation {
 	}
 
 	public boolean isFlashing() {
-		return flashingAnimation.getStatus() == Status.RUNNING;
+		return flashing != null && flashing.getStatus() == Status.RUNNING;
 	}
 
 	public void ensureFlashingAnimationRunning() {
+		if (flashing == null) {
+			flashing = new ParallelTransition(dressFlashing, pupilsFlashing);
+
+		}
 		if (!isFlashing()) {
-			pyDressColor.bind(flashingAnimation.pyColor);
-			flashingAnimation.playFromStart();
+			pyDressColor.bind(dressFlashing.pyColor);
+			pyEyePupilsColor.bind(pupilsFlashing.pyColor);
+			flashing.playFromStart();
 		}
 	}
 
 	public void ensureFlashingAnimationStopped() {
 		if (isFlashing()) {
 			pyDressColor.unbind();
-			flashingAnimation.stop();
+			pyEyePupilsColor.unbind();
+			flashing.stop();
+			flashing = null;
 		}
 	}
 
 	public void setBlue() {
 		pyDressColor.unbind();
-		pyDressColor.set(faded(Rendering3D.getGhostBlueDressColor()));
+		pyEyePupilsColor.unbind();
+		pyDressColor.set(Rendering3D.getGhostDressColorBlue());
 		pyEyeBallsColor.set(Rendering3D.getGhostEyeBallColorFrightened());
-		pyEyePupilsColor.set(Rendering3D.getGhostPupilColorFrightened());
+		pyEyePupilsColor.set(Rendering3D.getGhostPupilColorRed());
 	}
 
 	public void setColored() {
 		pyDressColor.unbind();
-		pyDressColor.set(faded(Rendering3D.getGhostDressColor(ghost.id)));
+		pyEyePupilsColor.unbind();
+		pyDressColor.set(Rendering3D.getGhostDressColor(ghost.id));
 		pyEyeBallsColor.set(Rendering3D.getGhostEyeBallColor());
-		pyEyePupilsColor.set(Rendering3D.getGhostPupilColor());
-	}
-
-	private Color faded(Color color) {
-		return Color.color(color.getRed(), color.getGreen(), color.getBlue(), 0.95);
+		pyEyePupilsColor.set(Rendering3D.getGhostPupilColorBlue());
 	}
 }
