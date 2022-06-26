@@ -67,17 +67,17 @@ public class GhostBodyAnimation {
 
 		pyDressColor.set(dressColor);
 		var dressMaterial = new PhongMaterial();
-		Ufx.bind(dressMaterial, pyDressColor);
+		Ufx.bindMaterialColor(dressMaterial, pyDressColor);
 		dress().setMaterial(dressMaterial);
 
 		pyEyeBallsColor.set(Rendering3D.getGhostEyeBallColor());
 		var eyeBallsMaterial = new PhongMaterial();
-		Ufx.bind(eyeBallsMaterial, pyEyeBallsColor);
+		Ufx.bindMaterialColor(eyeBallsMaterial, pyEyeBallsColor);
 		eyeBalls().setMaterial(eyeBallsMaterial);
 
 		pyEyePupilsColor.set(Rendering3D.getGhostPupilColor());
 		var eyePupilsMaterial = new PhongMaterial();
-		Ufx.bind(eyePupilsMaterial, pyEyePupilsColor);
+		Ufx.bindMaterialColor(eyePupilsMaterial, pyEyePupilsColor);
 		eyePupils().setMaterial(eyePupilsMaterial);
 
 		portalAppearance = new PortalAppearance(pyDressColor, () -> faded(Rendering3D.getGhostDressColor(ghost.id)));

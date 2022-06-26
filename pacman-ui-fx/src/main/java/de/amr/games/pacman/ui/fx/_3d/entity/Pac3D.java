@@ -30,6 +30,7 @@ import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.FillTransition3D;
 import de.amr.games.pacman.ui.fx._3d.animation.PortalAppearance;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -37,7 +38,6 @@ import javafx.animation.RotateTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
@@ -73,9 +73,7 @@ public class Pac3D extends Group {
 		root3D = model3D.createPac(faceColor, eyesColor, palateColor);
 		pyFaceColor = new SimpleObjectProperty<>(faceColor);
 		faceMaterial = new PhongMaterial();
-		faceMaterial.diffuseColorProperty().bind(pyFaceColor);
-		faceMaterial.specularColorProperty()
-				.bind(Bindings.createObjectBinding(() -> pyFaceColor.get().brighter(), pyFaceColor));
+		Ufx.bindMaterialColor(faceMaterial, pyFaceColor);
 		face().setMaterial(faceMaterial);
 		var light = new PointLight(Color.GHOSTWHITE);
 		light.setTranslateZ(-6);

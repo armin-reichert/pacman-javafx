@@ -50,7 +50,7 @@ public class Ufx {
 	private Ufx() {
 	}
 
-	public static void bind(PhongMaterial mat, ObjectProperty<Color> pyColor) {
+	public static void bindMaterialColor(PhongMaterial mat, ObjectProperty<Color> pyColor) {
 		mat.diffuseColorProperty().bind(pyColor);
 		mat.specularColorProperty().bind(Bindings.createObjectBinding(() -> pyColor.get().brighter(), pyColor));
 	}
