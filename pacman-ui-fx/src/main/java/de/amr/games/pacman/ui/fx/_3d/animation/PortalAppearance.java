@@ -39,14 +39,14 @@ import javafx.scene.paint.Color;
 /**
  * @author Armin Reichert
  */
-public class PortalApproachAnimation {
+public class PortalAppearance {
 
 	private final Logger logger = LogManager.getFormatterLogger();
 
 	private final ObjectProperty<Color> colorProperty;
 	private final Supplier<Color> baseColor;
 
-	public PortalApproachAnimation(ObjectProperty<Color> colorProperty, Supplier<Color> baseColor) {
+	public PortalAppearance(ObjectProperty<Color> colorProperty, Supplier<Color> baseColor) {
 		this.colorProperty = colorProperty;
 		this.baseColor = baseColor;
 	}

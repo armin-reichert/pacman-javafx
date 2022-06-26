@@ -23,10 +23,12 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import java.util.function.Supplier;
+
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.FillTransition3D;
-import de.amr.games.pacman.ui.fx._3d.animation.PortalApproachAnimation;
+import de.amr.games.pacman.ui.fx._3d.animation.PortalAppearance;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
@@ -56,60 +58,61 @@ public class Pac3D extends Group {
 
 	private final Pac pac;
 	private final Model3D model3D;
-	private final Group pacGroup;
+	private final Group root3D;
 	private final Motion motion = new Motion();
-	private final ObjectProperty<Color> skullColorProperty = new SimpleObjectProperty<>();
-	private final ObjectProperty<Color> normalSkullColorProperty = new SimpleObjectProperty<>();
-	private final PhongMaterial skullMaterial = new PhongMaterial();
-	private final PortalApproachAnimation portalApproachAnimation;
+	private final ObjectProperty<Color> pyFaceColor;
+	private final Supplier<Color> fnNormalFaceColor;
+	private final PhongMaterial faceMaterial;
+	private final PortalAppearance portalAppearance;
 
-	public Pac3D(Pac pac, Model3D model3D, Color skullColor, Color eyesColor, Color palateColor) {
+	public Pac3D(Pac pac, Model3D model3D, Color faceColor, Color eyesColor, Color palateColor) {
 		this.pac = pac;
 		this.model3D = model3D;
-		skullColorProperty.set(skullColor);
-		skullMaterial.diffuseColorProperty().bind(skullColorProperty);
-		skullMaterial.specularColorProperty()
-				.bind(Bindings.createObjectBinding(() -> skullColorProperty.get().brighter(), skullColorProperty));
-		pacGroup = model3D.createPac(skullColor, eyesColor, palateColor);
-		skull().setMaterial(skullMaterial);
+		root3D = model3D.createPac(faceColor, eyesColor, palateColor);
+		pyFaceColor = new SimpleObjectProperty<>(faceColor);
+		faceMaterial = new PhongMaterial();
+		faceMaterial.diffuseColorProperty().bind(pyFaceColor);
+		faceMaterial.specularColorProperty()
+				.bind(Bindings.createObjectBinding(() -> pyFaceColor.get().brighter(), pyFaceColor));
+		skull().setMaterial(faceMaterial);
 		var light = new PointLight(Color.GHOSTWHITE);
 		light.setTranslateZ(-8);
-		getChildren().addAll(pacGroup, light);
-		normalSkullColorProperty.set(skullColor);
-		portalApproachAnimation = new PortalApproachAnimation(skullColorProperty, normalSkullColorProperty::get);
+		getChildren().addAll(root3D, light);
+		fnNormalFaceColor = () -> faceColor;
+		portalAppearance = new PortalAppearance(pyFaceColor, fnNormalFaceColor);
 	}
 
 	private Shape3D skull() {
-		return model3D.pacSkull(pacGroup);
+		return model3D.pacSkull(root3D);
 	}
 
 	public void reset(World world) {
-		pacGroup.setScaleX(1.0);
-		pacGroup.setScaleY(1.0);
-		pacGroup.setScaleZ(1.0);
+		root3D.setScaleX(1.0);
+		root3D.setScaleY(1.0);
+		root3D.setScaleZ(1.0);
 		update(world);
 		// without this, the initial color is not always correct. Why?
-		skull().setMaterial(skullMaterial);
+		skull().setMaterial(faceMaterial);
 	}
 
 	public void update(World world) {
 		motion.update(pac, this);
-		portalApproachAnimation.update(this, pac, world);
+		portalAppearance.update(this, pac, world);
 	}
 
 	public Animation dyingAnimation(Color ghostColor) {
-		var spin = new RotateTransition(Duration.seconds(0.2), pacGroup);
+		var spin = new RotateTransition(Duration.seconds(0.2), root3D);
 		spin.setAxis(Rotate.Z_AXIS);
 		spin.setByAngle(360);
 		spin.setCycleCount(10);
 
-		var shrink = new ScaleTransition(Duration.seconds(2), pacGroup);
+		var shrink = new ScaleTransition(Duration.seconds(2), root3D);
 		shrink.setToX(0);
 		shrink.setToY(0);
 		shrink.setToZ(0);
 
 		return new SequentialTransition( //
-				new FillTransition3D(Duration.seconds(1), skull(), normalSkullColorProperty.get(), ghostColor), //
+				new FillTransition3D(Duration.seconds(1), skull(), fnNormalFaceColor.get(), ghostColor), //
 				new FillTransition3D(Duration.seconds(1), skull(), ghostColor, Color.GHOSTWHITE), //
 				new ParallelTransition(spin, shrink));
 	}

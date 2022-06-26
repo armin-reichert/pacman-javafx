@@ -55,7 +55,7 @@ public class Model3D {
 		return instance;
 	}
 
-	private static Translate centeredOverOrigin(Node node) {
+	private static Translate centerOverOrigin(Node node) {
 		Bounds bounds = node.getBoundsInLocal();
 		return new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
 	}
@@ -73,28 +73,27 @@ public class Model3D {
 		ghostModel = new ObjModel(getClass().getResource("/common/gianmarco/ghost.obj"));
 	}
 
-	public Group createPac(Color skullColor, Color eyesColor, Color palateColor) {
-		MeshView skull = pacManModel.createMeshView("Sphere_yellow_packman");
-		skull.setMaterial(new PhongMaterial(skullColor));
+	public Group createPac(Color faceColor, Color eyesColor, Color palateColor) {
+		var face = pacManModel.createMeshView("Sphere_yellow_packman");
+		face.setMaterial(new PhongMaterial(faceColor));
 
-		MeshView eyes = pacManModel.createMeshView("Sphere.008_Sphere.010_grey_wall");
+		var eyes = pacManModel.createMeshView("Sphere.008_Sphere.010_grey_wall");
 		eyes.setMaterial(new PhongMaterial(eyesColor));
 
-		MeshView palate = pacManModel.createMeshView("Sphere_grey_wall");
+		var palate = pacManModel.createMeshView("Sphere_grey_wall");
 		palate.setMaterial(new PhongMaterial(palateColor));
 
-		Translate centered = centeredOverOrigin(skull);
-		skull.getTransforms().add(centered);
-		eyes.getTransforms().add(centered);
-		palate.getTransforms().add(centered);
+		var center = centerOverOrigin(face);
+		Stream.of(face, eyes, palate).forEach(meshView -> {
+			meshView.getTransforms().add(center);
+			meshView.drawModeProperty().bind(Env.drawMode3D);
+		});
 
-		Stream.of(skull, eyes, palate).forEach(meshView -> meshView.drawModeProperty().bind(Env.drawMode3D));
+		var root3D = new Group(face, eyes, palate);
+		root3D.getTransforms().add(scaled(root3D, 8.5));
+		root3D.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 
-		Group pacman = new Group(skull, eyes, palate);
-		pacman.getTransforms().add(scaled(pacman, 8.5));
-		pacman.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-
-		return pacman;
+		return root3D;
 	}
 
 	public Shape3D pacSkull(Group pac) {
@@ -127,7 +126,7 @@ public class Model3D {
 		ghost.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 		ghost.getTransforms().add(scaled(ghost, World.TS));
 
-		Translate centered = centeredOverOrigin(skin);
+		Translate centered = centerOverOrigin(skin);
 		skin.getTransforms().add(centered);
 		eyes.getTransforms().add(centered);
 

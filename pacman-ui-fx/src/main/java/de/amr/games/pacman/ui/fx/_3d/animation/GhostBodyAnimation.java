@@ -55,7 +55,7 @@ public class GhostBodyAnimation {
 	private final ObjectProperty<Color> eyePupilsColorProperty = new SimpleObjectProperty<>();
 	private final PhongMaterial eyePupilsMaterial = new PhongMaterial();
 
-	private final PortalApproachAnimation portalApproachAnimation;
+	private final PortalAppearance portalApproachAnimation;
 
 	private boolean frightened;
 
@@ -91,7 +91,7 @@ public class GhostBodyAnimation {
 		eyeBalls().setMaterial(eyeBallsMaterial);
 		eyePupils().setMaterial(eyePupilsMaterial);
 
-		portalApproachAnimation = new PortalApproachAnimation(skinColorProperty,
+		portalApproachAnimation = new PortalAppearance(skinColorProperty,
 				() -> frightened ? Rendering3D.getGhostSkinColorFrightened() : faded(Rendering3D.getGhostSkinColor(ghost.id)));
 	}
 
