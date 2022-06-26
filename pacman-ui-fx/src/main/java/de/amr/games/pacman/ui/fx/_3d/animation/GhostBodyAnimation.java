@@ -100,7 +100,7 @@ public class GhostBodyAnimation {
 	}
 
 	private Shape3D skin() {
-		return model3D.ghostSkin(ghostGroup);
+		return model3D.ghostDress(ghostGroup);
 	}
 
 	private Shape3D eyeBalls() {
@@ -116,7 +116,7 @@ public class GhostBodyAnimation {
 	}
 
 	public void setShowBody(boolean showSkin) {
-		model3D.ghostSkin(ghostGroup).setVisible(showSkin);
+		model3D.ghostDress(ghostGroup).setVisible(showSkin);
 	}
 
 	public boolean isFlashing() {

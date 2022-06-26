@@ -32,27 +32,28 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 
 /**
- * This is a part of the model created by Gianmarco Cavallaccio (https://www.artstation.com/gianmart). I extracted the
- * meshes for Pac-Man and a ghost into separate obj files.
+ * This uses part of a Blender model created by Gianmarco Cavallaccio (https://www.artstation.com/gianmart).
+ * <p>
+ * 
+ * One mesh for Pac-Man and one for a ghost are sufficient because their appearance is managed programmatically.
  * 
  * @author Armin Reichert
  */
 public class Model3D {
 
-	private static Model3D instance;
+	private static Model3D theThing;
 
 	public static Model3D get() {
-		if (instance == null) {
-			instance = new Model3D();
+		if (theThing == null) {
+			theThing = new Model3D();
 		}
-		return instance;
+		return theThing;
 	}
 
 	private static Translate centerOverOrigin(Node node) {
@@ -60,7 +61,7 @@ public class Model3D {
 		return new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
 	}
 
-	private static Scale scaled(Node node, double size) {
+	private static Scale scale(Node node, double size) {
 		Bounds bounds = node.getBoundsInLocal();
 		return new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
 	}
@@ -90,13 +91,13 @@ public class Model3D {
 		});
 
 		var root3D = new Group(face, eyes, palate);
-		root3D.getTransforms().add(scaled(root3D, 8.5));
+		root3D.getTransforms().add(scale(root3D, 8.5));
 		root3D.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 
 		return root3D;
 	}
 
-	public Shape3D pacSkull(Group pac) {
+	public Shape3D pacFace(Group pac) {
 		return (Shape3D) pac.getChildren().get(0);
 	}
 
@@ -108,32 +109,32 @@ public class Model3D {
 		return (Shape3D) pac.getChildren().get(2);
 	}
 
-	public Group createGhost(Color skinColor, Color eyeBallColor, Color pupilColor) {
-		MeshView skin = ghostModel.createMeshView("Sphere.004_Sphere.034_light_blue_ghost");
-		skin.setMaterial(new PhongMaterial(skinColor));
+	public Group createGhost(Color dressColor, Color eyeBallColor, Color pupilColor) {
+		var dress = ghostModel.createMeshView("Sphere.004_Sphere.034_light_blue_ghost");
+		dress.setMaterial(new PhongMaterial(dressColor));
 
-		MeshView eyeBalls = ghostModel.createMeshView("Sphere.009_Sphere.036_white");
+		var eyeBalls = ghostModel.createMeshView("Sphere.009_Sphere.036_white");
 		eyeBalls.setMaterial(new PhongMaterial(eyeBallColor));
 
-		MeshView pupils = ghostModel.createMeshView("Sphere.010_Sphere.039_grey_wall");
+		var pupils = ghostModel.createMeshView("Sphere.010_Sphere.039_grey_wall");
 		pupils.setMaterial(new PhongMaterial(pupilColor));
 
-		Stream.of(skin, eyeBalls, pupils).forEach(meshView -> meshView.drawModeProperty().bind(Env.drawMode3D));
+		Stream.of(dress, eyeBalls, pupils).forEach(meshView -> meshView.drawModeProperty().bind(Env.drawMode3D));
 
-		Group eyes = new Group(pupils, eyeBalls);
+		var center = centerOverOrigin(dress);
+		dress.getTransforms().add(center);
 
-		Group ghost = new Group(skin, eyes);
+		var eyes = new Group(pupils, eyeBalls);
+		eyes.getTransforms().add(center);
+
+		var ghost = new Group(dress, eyes);
 		ghost.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-		ghost.getTransforms().add(scaled(ghost, World.TS));
-
-		Translate centered = centerOverOrigin(skin);
-		skin.getTransforms().add(centered);
-		eyes.getTransforms().add(centered);
+		ghost.getTransforms().add(scale(ghost, World.TS));
 
 		return ghost;
 	}
 
-	public Shape3D ghostSkin(Group ghost) {
+	public Shape3D ghostDress(Group ghost) {
 		return (Shape3D) ghost.getChildren().get(0);
 	}
 
@@ -148,5 +149,4 @@ public class Model3D {
 	public Shape3D ghostEyeBalls(Group ghost) {
 		return (Shape3D) ghostEyes(ghost).getChildren().get(1);
 	}
-
 }

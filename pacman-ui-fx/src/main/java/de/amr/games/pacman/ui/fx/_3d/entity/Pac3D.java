@@ -83,7 +83,7 @@ public class Pac3D extends Group {
 	}
 
 	private Shape3D skull() {
-		return model3D.pacSkull(root3D);
+		return model3D.pacFace(root3D);
 	}
 
 	public void reset(World world) {
