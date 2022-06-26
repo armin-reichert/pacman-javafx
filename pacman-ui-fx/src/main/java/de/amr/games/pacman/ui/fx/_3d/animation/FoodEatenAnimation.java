@@ -39,7 +39,6 @@ import javafx.util.Duration;
 public class FoodEatenAnimation extends Transition {
 
 	private final Shape3D foodShape;
-	private final PhongMaterial foodMaterial;
 	private final Random rnd = new Random();
 
 	private double scaleFactor;
@@ -49,15 +48,16 @@ public class FoodEatenAnimation extends Transition {
 		this.foodShape = foodShape;
 		scaleFactor = 0.25 + 0.25 * rnd.nextDouble();
 		maxHeight = -3 - 60 * rnd.nextDouble();
-		foodMaterial = new PhongMaterial(foodColor);
-		foodMaterial.setDiffuseColor(foodColor.grayscale());
-		foodShape.setMaterial(foodMaterial);
+		foodShape.setMaterial(new PhongMaterial(foodColor.grayscale()));
 		setCycleDuration(Duration.seconds(0.75));
+		setInterpolator(Interpolator.EASE_BOTH);
 		setOnFinished(e -> {
 			foodShape.setVisible(false);
 			foodShape.setTranslateZ(-3);
+			foodShape.setScaleX(1.0);
+			foodShape.setScaleY(1.0);
+			foodShape.setScaleZ(1.0);
 		});
-		setInterpolator(Interpolator.EASE_BOTH);
 	}
 
 	@Override
