@@ -22,7 +22,7 @@ public class FoodEatenAnimation extends Transition {
 	public FoodEatenAnimation(Shape3D foodShape, Color foodColor) {
 		this.foodShape = foodShape;
 		scaleFactor = 0.25 + 0.25 * rnd.nextDouble();
-		maxHeight = -3 - 100 * rnd.nextDouble();
+		maxHeight = -3 - 60 * rnd.nextDouble();
 		foodMaterial = new PhongMaterial(foodColor);
 		foodMaterial.setDiffuseColor(foodColor.grayscale());
 		foodShape.setMaterial(foodMaterial);
