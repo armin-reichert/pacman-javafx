@@ -39,12 +39,11 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.ui.fx._3d.animation.FoodEatenAnimation;
 import de.amr.games.pacman.ui.fx._3d.animation.RaiseAndLowerWallAnimation;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.animation.Animation;
-import javafx.animation.Interpolator;
 import javafx.animation.PauseTransition;
-import javafx.animation.Transition;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -79,33 +78,6 @@ public class Maze3D extends Group {
 		double height;
 		PhongMaterial baseMaterial;
 		PhongMaterial topMaterial;
-	}
-
-	private static class FoodEatenAnimation extends Transition {
-
-		private final Shape3D foodShape;
-		private final PhongMaterial foodMaterial;
-		private final Color foodColor;
-
-		public FoodEatenAnimation(Shape3D foodShape, Color foodColor) {
-			this.foodShape = foodShape;
-			this.foodColor = foodColor;
-			foodMaterial = new PhongMaterial(foodColor);
-			foodShape.setMaterial(foodMaterial);
-			setCycleDuration(Duration.seconds(0.5));
-			setOnFinished(e -> foodShape.setVisible(false));
-			setInterpolator(Interpolator.EASE_BOTH);
-		}
-
-		@Override
-		protected void interpolate(double t) {
-			var color = foodColor.interpolate(foodColor.grayscale(), t);
-			foodMaterial.setDiffuseColor(color);
-			foodMaterial.setSpecularColor(color.brighter());
-			foodShape.setScaleX((1 - t));
-			foodShape.setScaleY((1 - t));
-			foodShape.setScaleZ((1 - t));
-		}
 	}
 
 	public final IntegerProperty resolution = new SimpleIntegerProperty(8);
