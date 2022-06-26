@@ -127,7 +127,7 @@ public class Rendering3D {
 	 * @param ghostID 0=Blinky, 1=Pinky, 2=Inky, 3=Clyde/Sue
 	 * @return color of ghost
 	 */
-	public static Color getGhostSkinColor(int ghostID) {
+	public static Color getGhostDressColor(int ghostID) {
 		return switch (ghostID) {
 		case Ghost.RED_GHOST -> Color.RED;
 		case Ghost.PINK_GHOST -> Color.rgb(252, 181, 255);
@@ -137,11 +137,11 @@ public class Rendering3D {
 		};
 	}
 
-	public static Color getGhostSkinColorFrightened() {
+	public static Color getGhostBlueDressColor() {
 		return Color.rgb(33, 33, 255);
 	}
 
-	public static Color getGhostSkinColorFrightened2() {
+	public static Color getGhostFlashingDressColor() {
 		return Color.rgb(224, 221, 255);
 	}
 

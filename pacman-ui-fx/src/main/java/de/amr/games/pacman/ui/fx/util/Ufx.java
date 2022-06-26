@@ -26,6 +26,8 @@ package de.amr.games.pacman.ui.fx.util;
 import java.util.Map;
 
 import javafx.animation.PauseTransition;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
@@ -34,6 +36,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
@@ -45,6 +48,11 @@ import javafx.util.Duration;
 public class Ufx {
 
 	private Ufx() {
+	}
+
+	public static void bind(PhongMaterial mat, ObjectProperty<Color> pyColor) {
+		mat.diffuseColorProperty().bind(pyColor);
+		mat.specularColorProperty().bind(Bindings.createObjectBinding(() -> pyColor.get().brighter(), pyColor));
 	}
 
 	/**

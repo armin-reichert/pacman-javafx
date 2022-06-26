@@ -62,7 +62,7 @@ public class Ghost3D extends Group {
 	public Ghost3D(Ghost ghost, Model3D model3D, Rendering2D r2D) {
 		this.ghost = ghost;
 		valueAnimation = new GhostValueAnimation(r2D);
-		bodyAnimation = new GhostBodyAnimation(model3D, ghost);
+		bodyAnimation = new GhostBodyAnimation(ghost, model3D);
 		setAnimationMode(AnimationMode.COLORED);
 	}
 
@@ -76,7 +76,8 @@ public class Ghost3D extends Group {
 			setAnimationMode(AnimationMode.NUMBER);
 		} else if (ghost.is(GhostState.DEAD, GhostState.ENTERING_HOUSE)) {
 			setAnimationMode(AnimationMode.EYES);
-		} else if (game.powerTimer.isRunning() && ghost.is(GhostState.LOCKED, GhostState.FRIGHTENED)) {
+		} else if (game.powerTimer.isRunning()
+				&& ghost.is(GhostState.LOCKED, GhostState.LEAVING_HOUSE, GhostState.FRIGHTENED)) {
 			setAnimationMode(game.isPacPowerFading() ? AnimationMode.FLASHING : AnimationMode.BLUE);
 		} else {
 			setAnimationMode(AnimationMode.COLORED);
@@ -94,24 +95,24 @@ public class Ghost3D extends Group {
 			this.animationMode = animationMode;
 			switch (animationMode) {
 			case COLORED -> {
-				bodyAnimation.setShowBody(true);
+				bodyAnimation.showDress(true);
 				bodyAnimation.setColored();
 				getChildren().setAll(bodyAnimation.getRoot());
 			}
 			case BLUE -> {
-				bodyAnimation.setShowBody(true);
+				bodyAnimation.showDress(true);
 				bodyAnimation.setBlue();
 				bodyAnimation.ensureFlashingAnimationStopped();
 				getChildren().setAll(bodyAnimation.getRoot());
 			}
 			case FLASHING -> {
-				bodyAnimation.setShowBody(true);
+				bodyAnimation.showDress(true);
 				bodyAnimation.setBlue();
 				bodyAnimation.ensureFlashingAnimationRunning();
 				getChildren().setAll(bodyAnimation.getRoot());
 			}
 			case EYES -> {
-				bodyAnimation.setShowBody(false);
+				bodyAnimation.showDress(false);
 				getChildren().setAll(bodyAnimation.getRoot());
 			}
 			case NUMBER -> {

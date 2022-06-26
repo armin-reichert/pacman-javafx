@@ -33,29 +33,29 @@ import javafx.util.Duration;
 /**
  * @author Armin Reichert
  */
-public class ColorFlashingTransition extends Transition {
+public class ColorFlashing extends Transition {
 
-	public final ObjectProperty<Color> colorProperty = new SimpleObjectProperty<>();
+	public final ObjectProperty<Color> pyColor = new SimpleObjectProperty<>();
 
-	private final Color colorStart;
-	private final Color colorEnd;
+	private final Color startColor;
+	private final Color endColor;
 
-	public ColorFlashingTransition(Color colorStart, Color colorEnd) {
-		this.colorStart = colorStart;
-		this.colorEnd = colorEnd;
-		colorProperty.set(colorStart);
+	public ColorFlashing(Color startColor, Color endColor) {
+		this.startColor = startColor;
+		this.endColor = endColor;
 		setCycleCount(INDEFINITE);
 		setCycleDuration(Duration.seconds(0.2));
 		setAutoReverse(true);
 		setInterpolator(Interpolator.EASE_BOTH);
+		pyColor.set(startColor);
 	}
 
 	public Color getColor() {
-		return colorProperty.get();
+		return pyColor.get();
 	}
 
 	@Override
 	protected void interpolate(double t) {
-		colorProperty.set(colorStart.interpolate(colorEnd, t));
+		pyColor.set(startColor.interpolate(endColor, t));
 	}
 }

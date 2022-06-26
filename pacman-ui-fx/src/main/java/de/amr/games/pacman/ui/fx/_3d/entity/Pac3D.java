@@ -31,10 +31,12 @@ import de.amr.games.pacman.ui.fx._3d.animation.FillTransition3D;
 import de.amr.games.pacman.ui.fx._3d.animation.PortalAppearance;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import javafx.animation.Animation;
+import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
+import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -87,6 +89,7 @@ public class Pac3D extends Group {
 		root3D.setScaleX(1.0);
 		root3D.setScaleY(1.0);
 		root3D.setScaleZ(1.0);
+		root3D.setTranslateZ(0);
 		update(world);
 		// without this, the initial color is not always correct. Why?
 		face().setMaterial(faceMaterial);
@@ -97,21 +100,35 @@ public class Pac3D extends Group {
 		portalAppearance.update(this, pac, world);
 	}
 
+	/**
+	 * @param ghostColor color of ghost that killed Pac-Man
+	 * @return dying animation (must not be longer than time reserved by game controller which is 5 seconds!)
+	 */
 	public Animation dyingAnimation(Color ghostColor) {
-		var spin = new RotateTransition(Duration.seconds(0.2), root3D);
-		spin.setAxis(Rotate.Z_AXIS);
-		spin.setByAngle(360);
-		spin.setCycleCount(10);
 
-		var shrink = new ScaleTransition(Duration.seconds(2), root3D);
-		shrink.setToX(0.1);
-		shrink.setToY(0.1);
-		shrink.setToZ(0.1);
+		var colorChangingTime = Duration.seconds(2);
+		var poisened = new FillTransition3D(colorChangingTime.multiply(0.8), face(), fnNormalFaceColor.get(), ghostColor);
+		var impaling = new FillTransition3D(colorChangingTime.multiply(0.2), face(), ghostColor, Color.GHOSTWHITE);
 
-		return new SequentialTransition( //
-				new FillTransition3D(Duration.seconds(1), face(), fnNormalFaceColor.get(), ghostColor), // poisened
-				new FillTransition3D(Duration.seconds(1), face(), ghostColor, Color.GHOSTWHITE), // impaling
-				new ParallelTransition(spin, shrink));
+		var collapsingTime = Duration.seconds(1.8);
+		var numSpins = 10;
+
+		var spinning = new RotateTransition(collapsingTime.divide(numSpins), root3D);
+		spinning.setAxis(Rotate.Z_AXIS);
+		spinning.setByAngle(360);
+		spinning.setCycleCount(numSpins);
+		spinning.setInterpolator(Interpolator.EASE_OUT);
+
+		var shrinking = new ScaleTransition(collapsingTime, root3D);
+		shrinking.setToX(0.8);
+		shrinking.setToY(0.8);
+		shrinking.setToZ(0.0);
+
+		var sinking = new TranslateTransition(collapsingTime, root3D);
+		sinking.setFromZ(0);
+		sinking.setToZ(World.HTS);
+
+		return new SequentialTransition(poisened, impaling, new ParallelTransition(spinning, shrinking, sinking));
 	}
 
 	private Shape3D face() {
