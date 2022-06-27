@@ -46,8 +46,10 @@ import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -82,6 +84,7 @@ public class Maze3D extends Group {
 
 	public final IntegerProperty resolution = new SimpleIntegerProperty(8);
 	public final DoubleProperty wallHeight = new SimpleDoubleProperty(1.0);
+	public final ObjectProperty<Image> floorTexture = new SimpleObjectProperty<>();
 
 	private final World world;
 	private final Group foundationGroup = new Group();
@@ -99,6 +102,7 @@ public class Maze3D extends Group {
 		build(mazeStyle);
 		addFood(world, mazeStyle.foodColor);
 		resolution.addListener((obs, oldVal, newVal) -> build(mazeStyle));
+		floorTexture.addListener((obs, oldVal, newVal) -> updateFloorTexture(newVal));
 	}
 
 	private Node createFloor() {
@@ -140,7 +144,8 @@ public class Maze3D extends Group {
 		logger.info("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallData.height);
 	}
 
-	public void setFloorTexture(Image texture, Color color) {
+	private void updateFloorTexture(Image texture) {
+		var color = Color.rgb(10, 10, 70); // TODO property
 		var mat = new PhongMaterial();
 		mat.setDiffuseColor(color);
 		mat.setSpecularColor(color.brighter());

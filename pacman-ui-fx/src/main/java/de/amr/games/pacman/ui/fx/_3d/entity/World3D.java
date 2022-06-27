@@ -33,6 +33,7 @@ import de.amr.games.pacman.ui.fx._3d.entity.Maze3D.MazeStyle;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.beans.binding.Bindings;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 
@@ -65,19 +66,11 @@ public class World3D extends Group {
 		mazeStyle.foodColor = Rendering3D.getMazeFoodColor(game.variant, game.level.mazeNumber);
 
 		maze3D = new Maze3D(game.level.world, mazeStyle);
-//		maze3D.setFloorTexture(Ufx.image("/common/escher-texture.jpg"), Color.rgb(51, 0, 102));
-		maze3D.setFloorTexture(Ufx.image("/common/penrose-tiling.jpg"), Color.rgb(10, 10, 60));
+		maze3D.floorTexture.bind(Bindings
+				.createObjectBinding(() -> Ufx.image(Env.FLOOR_TEXTURE_PATH + Env.floorTexture.get()), Env.floorTexture));
 		maze3D.resolution.bind(Env.mazeResolution);
 		maze3D.wallHeight.bind(Env.mazeWallHeight);
 		getChildren().add(maze3D);
-		Env.mazeFloorHasTexture.set(true);
-		Env.mazeFloorHasTexture.addListener((x, y, newVal) -> {
-			if (newVal.booleanValue()) {
-				maze3D.setFloorTexture(Ufx.image("/common/escher-texture.jpg"), Color.rgb(51, 0, 102));
-			} else {
-				maze3D.setFloorTexture(null, Color.rgb(51, 0, 102));
-			}
-		});
 
 		levelCounter3D = new LevelCounter3D(symbol -> r2D.getSpriteImage(r2D.getBonusSymbolSprite(symbol)));
 		levelCounter3D.setRightPosition((game.level.world.numCols() - 1) * TS, TS);

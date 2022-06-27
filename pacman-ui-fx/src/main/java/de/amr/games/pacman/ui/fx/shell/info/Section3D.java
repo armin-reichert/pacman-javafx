@@ -45,7 +45,7 @@ public class Section3D extends Section {
 	private ComboBox<Perspective> comboPerspective;
 	private ComboBox<Integer> comboResolution;
 	private Slider sliderWallHeight;
-	private CheckBox cbUseFloorTexture;
+	private ComboBox<String> comboFloorTexture;
 	private CheckBox cbAxesVisible;
 	private CheckBox cbWireframeMode;
 
@@ -59,15 +59,15 @@ public class Section3D extends Section {
 				.available(() -> ui.getCurrentGameScene().is3D());
 		comboResolution.setOnAction(e -> Env.mazeResolution.set(comboResolution.getValue()));
 		sliderWallHeight = addSlider("Maze wall height", 0, 10, 8);
-		sliderWallHeight.valueProperty()
-				.addListener((obs, oldVal, newVal) -> Env.mazeWallHeight.set(newVal.doubleValue()));
-		cbUseFloorTexture = addCheckBox("Maze floor texture", () -> Env.toggle(Env.mazeFloorHasTexture));
+		sliderWallHeight.valueProperty().addListener((obs, oldVal, newVal) -> Env.mazeWallHeight.set(newVal.doubleValue()));
+		comboFloorTexture = addComboBox("Maze floor texture", Env.FLOOR_TEXTURES);
+		comboFloorTexture.setOnAction(e -> Env.floorTexture.set(comboFloorTexture.getValue()));
 		cbAxesVisible = addCheckBox("Show axes", () -> Env.toggle(Env.axesVisible));
 		cbWireframeMode = addCheckBox("Wireframe mode", Actions::toggleDrawMode);
 		addInfo("Shift+LEFT/RIGHT", "Camera -X / +X").available(() -> Env.perspective.get() == Perspective.TOTAL);
 		addInfo("Shift+PLUS/MINUS", "Camera -Y / +Y").available(() -> Env.perspective.get() == Perspective.TOTAL);
-		addInfo("Shift+UP/DOWN", "Camera -Z / +Z").available(
-				() -> Env.perspective.get() == Perspective.TOTAL || Env.perspective.get() == Perspective.DRONE);
+		addInfo("Shift+UP/DOWN", "Camera -Z / +Z")
+				.available(() -> Env.perspective.get() == Perspective.TOTAL || Env.perspective.get() == Perspective.DRONE);
 		addInfo("Ctrl+Shift+UP/DOWN", "Camera Rotate X").available(() -> Env.perspective.get() == Perspective.TOTAL);
 	}
 
@@ -80,8 +80,8 @@ public class Section3D extends Section {
 		comboResolution.setDisable(!ui.getCurrentGameScene().is3D());
 		sliderWallHeight.setValue(Env.mazeWallHeight.get());
 		sliderWallHeight.setDisable(!ui.getCurrentGameScene().is3D());
-		cbUseFloorTexture.setSelected(Env.mazeFloorHasTexture.get());
-		cbUseFloorTexture.setDisable(!ui.getCurrentGameScene().is3D());
+		comboFloorTexture.setValue(Env.floorTexture.get());
+		comboFloorTexture.setDisable(!ui.getCurrentGameScene().is3D());
 		cbAxesVisible.setSelected(Env.axesVisible.get());
 		cbAxesVisible.setDisable(!ui.getCurrentGameScene().is3D());
 		cbWireframeMode.setSelected(Env.drawMode3D.get() == DrawMode.LINE);

@@ -96,7 +96,11 @@ public class Ufx {
 	}
 
 	public static Image image(String path) {
-		return new Image(Ufx.class.getResourceAsStream(path));
+		var is = Ufx.class.getResourceAsStream(path);
+		if (is == null) {
+			throw new IllegalArgumentException("No image at path: " + path);
+		}
+		return new Image(is);
 	}
 
 	/**
