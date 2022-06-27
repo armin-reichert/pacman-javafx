@@ -71,8 +71,7 @@ public class Ghost3D extends Group {
 
 	public void update(GameModel game) {
 		var newMode = switch (ghost.getState()) {
-		case LOCKED -> game.powerTimer.isRunning() ? frightenedMode(game) : Mode.COLORED_DRESS;
-		case LEAVING_HOUSE -> game.powerTimer.isRunning() ? frightenedMode(game) : Mode.COLORED_DRESS;
+		case LOCKED, LEAVING_HOUSE -> game.powerTimer.isRunning() ? frightenedMode(game) : Mode.COLORED_DRESS;
 		case FRIGHTENED -> frightenedMode(game);
 		case ENTERING_HOUSE -> Mode.EYES;
 		case DEAD -> ghost.killIndex >= 0 ? Mode.NUMBER : Mode.EYES;
@@ -94,24 +93,13 @@ public class Ghost3D extends Group {
 		mode = newMode;
 		getChildren().setAll(newMode == Mode.NUMBER ? value.getRoot() : body.getRoot());
 		switch (newMode) {
-		case COLORED_DRESS -> {
-			body.dress().setVisible(true);
-			body.setColored();
-			body.ensureNotFlashing();
-		}
-		case BLUE_DRESS -> {
-			body.dress().setVisible(true);
-			body.setBlue();
-			body.ensureNotFlashing();
-		}
+		case COLORED_DRESS -> body.wearColoredDress();
+		case BLUE_DRESS -> body.wearBlueDress();
 		case FLASHING_DRESS -> {
-			body.dress().setVisible(true);
-			body.setBlue();
+			body.wearBlueDress();
 			body.ensureFlashing(game.level.numFlashes);
 		}
-		case EYES -> {
-			body.dress().setVisible(false);
-		}
+		case EYES -> body.dress().setVisible(false);
 		case NUMBER -> {
 			value.selectNumberAtIndex(ghost.killIndex);
 			// rotate node such that number can be read from left to right
