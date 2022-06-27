@@ -65,7 +65,7 @@ public class Bonus3D extends Box {
 	public void showPoints(Bonus bonus, Rendering2D r2D) {
 		setTexture(r2D.getSpriteImage(r2D.getBonusValueSprite(bonus.symbol())));
 		rotate(1, 5, 2);
-		setWidth(bonus.value() >= 1000 ? TS * 1.25 : TS);
+		setWidth(bonus.value() >= 1000 ? TS * 2 : TS);
 	}
 
 	private void setTexture(Image texture) {

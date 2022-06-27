@@ -116,7 +116,7 @@ public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
 		if (symbol <= 3) {
 			return tile(symbol, 9);
 		}
-		return symbol == 4 ? tiles(4, 9, 2, 1) : tiles(3, symbol, 3, 1);
+		return symbol == 4 ? tiles(4, 9, 2, 1) : tiles(3, 5 + symbol, 3, 1);
 	}
 
 	@Override
