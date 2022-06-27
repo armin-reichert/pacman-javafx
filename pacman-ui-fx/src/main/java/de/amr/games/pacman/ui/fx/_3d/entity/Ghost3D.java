@@ -29,7 +29,7 @@ import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.animation.GhostBodyAnimation;
 import de.amr.games.pacman.ui.fx._3d.animation.GhostValueAnimation;
-import de.amr.games.pacman.ui.fx._3d.animation.Motion;
+import de.amr.games.pacman.ui.fx._3d.animation.MotionAnimation;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
@@ -56,7 +56,7 @@ public class Ghost3D extends Group {
 
 	public final Ghost ghost;
 
-	private final Motion motion = new Motion();
+	private final MotionAnimation motion;
 	private final GhostValueAnimation value;
 	private final GhostBodyAnimation body;
 	private AnimationMode animationMode;
@@ -65,11 +65,13 @@ public class Ghost3D extends Group {
 		this.ghost = ghost;
 		value = new GhostValueAnimation(r2D);
 		body = new GhostBodyAnimation(ghost, model3D);
+		motion = new MotionAnimation(ghost, this);
+
 	}
 
 	public void reset(GameModel game) {
 		update(game);
-		motion.reset(ghost, this);
+		motion.reset();
 	}
 
 	public void update(GameModel game) {
@@ -84,7 +86,7 @@ public class Ghost3D extends Group {
 			setAnimationMode(AnimationMode.COLORED);
 			body.update(game.world());
 		}
-		motion.update(ghost, this);
+		motion.update();
 	}
 
 	private void setAnimationMode(AnimationMode animationMode) {

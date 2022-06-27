@@ -4,6 +4,7 @@ import static de.amr.games.pacman.model.common.world.World.HTS;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.actors.Creature;
+import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
@@ -14,7 +15,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class Motion {
+public class MotionAnimation {
 
 	//@formatter:off
 	private static final int[][][] TURN_ANGLES = {
@@ -25,34 +26,7 @@ public class Motion {
 	};
 	//@formatter:on
 
-	private RotateTransition turningAnimation;
-	private Direction targetDir;
-
-	public void reset(Creature guy, Node guyNode) {
-		guyNode.setTranslateX(guy.position.x + HTS);
-		guyNode.setTranslateY(guy.position.y + HTS);
-		guyNode.setTranslateZ(-HTS);
-		turningAnimation = null;
-	}
-
-	public void update(Creature guy, Node guyNode) {
-		guyNode.setTranslateX(guy.position.x + HTS);
-		guyNode.setTranslateY(guy.position.y + HTS);
-		guyNode.setTranslateZ(-HTS);
-		if (targetDir != guy.moveDir()) {
-			int[] angles = TURN_ANGLES[index(targetDir)][index(guy.moveDir())];
-			if (turningAnimation == null) {
-				turningAnimation = new RotateTransition(Duration.seconds(0.3), guyNode);
-				turningAnimation.setAxis(Rotate.Z_AXIS);
-			}
-			turningAnimation.setFromAngle(angles[0]);
-			turningAnimation.setToAngle(angles[1]);
-			turningAnimation.playFromStart();
-			targetDir = guy.moveDir();
-		}
-	}
-
-	private int index(Direction dir) {
+	private static int index(Direction dir) {
 		if (dir == null) {
 			return 0;
 		}
@@ -62,5 +36,35 @@ public class Motion {
 		case UP -> 2;
 		case DOWN -> 3;
 		};
+	}
+
+	private final Creature guy;
+	private final Node node;
+	private Direction targetDir;
+
+	public MotionAnimation(Creature guy, Node node) {
+		this.guy = guy;
+		this.node = node;
+	}
+
+	public void reset() {
+		targetDir = guy.moveDir();
+		update();
+	}
+
+	public void update() {
+		node.setTranslateX(guy.position.x + HTS);
+		node.setTranslateY(guy.position.y + HTS);
+		node.setTranslateZ(-HTS);
+		if (targetDir != guy.moveDir()) {
+			int[] angles = TURN_ANGLES[index(targetDir)][index(guy.moveDir())];
+			var turningAnimation = new RotateTransition(Duration.seconds(0.3), node);
+			turningAnimation.setAxis(Rotate.Z_AXIS);
+			turningAnimation.setInterpolator(Interpolator.EASE_BOTH);
+			turningAnimation.setFromAngle(angles[0]);
+			turningAnimation.setToAngle(angles[1]);
+			turningAnimation.playFromStart();
+			targetDir = guy.moveDir();
+		}
 	}
 }
