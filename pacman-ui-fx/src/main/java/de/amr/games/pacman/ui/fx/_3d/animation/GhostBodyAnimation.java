@@ -48,9 +48,9 @@ public class GhostBodyAnimation {
 	private final ColorFlashing pupilsFlashing;
 	private final MotionAnimation motion;
 
-	private final ObjectProperty<Color> pyDressColor = new SimpleObjectProperty<>();
-	private final ObjectProperty<Color> pyEyeBallsColor = new SimpleObjectProperty<>();
-	private final ObjectProperty<Color> pyEyePupilsColor = new SimpleObjectProperty<>();
+	private final ObjectProperty<Color> pyDressColor;
+	private final ObjectProperty<Color> pyEyeBallsColor;
+	private final ObjectProperty<Color> pyEyePupilsColor;
 
 	private ParallelTransition flashing;
 
@@ -68,17 +68,17 @@ public class GhostBodyAnimation {
 		dressFlashing = new ColorFlashing(Rendering3D.getGhostDressColorBlue(), Rendering3D.getGhostDressColorFlashing());
 		pupilsFlashing = new ColorFlashing(Rendering3D.getGhostPupilColorPink(), Rendering3D.getGhostPupilColorRed());
 
-		pyDressColor.set(dressColor);
+		pyDressColor = new SimpleObjectProperty<>(dressColor);
 		var dressMaterial = new PhongMaterial();
 		Ufx.bindMaterialColor(dressMaterial, pyDressColor);
 		dress().setMaterial(dressMaterial);
 
-		pyEyeBallsColor.set(Rendering3D.getGhostEyeBallColor());
+		pyEyeBallsColor = new SimpleObjectProperty<>(Rendering3D.getGhostEyeBallColor());
 		var eyeBallsMaterial = new PhongMaterial();
 		Ufx.bindMaterialColor(eyeBallsMaterial, pyEyeBallsColor);
 		eyeBalls().setMaterial(eyeBallsMaterial);
 
-		pyEyePupilsColor.set(Rendering3D.getGhostPupilColorBlue());
+		pyEyePupilsColor = new SimpleObjectProperty<>(Rendering3D.getGhostPupilColorBlue());
 		var eyePupilsMaterial = new PhongMaterial();
 		Ufx.bindMaterialColor(eyePupilsMaterial, pyEyePupilsColor);
 		eyePupils().setMaterial(eyePupilsMaterial);
@@ -115,7 +115,6 @@ public class GhostBodyAnimation {
 	public void ensureFlashingAnimationRunning() {
 		if (flashing == null) {
 			flashing = new ParallelTransition(dressFlashing, pupilsFlashing);
-
 		}
 		if (!isFlashing()) {
 			pyDressColor.bind(dressFlashing.pyColor);
