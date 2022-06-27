@@ -44,8 +44,7 @@ public class GhostBodyAnimation {
 	private final Ghost ghost;
 	private final Model3D model3D;
 	private final Group root3D;
-	private final ColorFlashing dressFlashing;
-	private final ColorFlashing pupilsFlashing;
+
 	private final MotionAnimation motion;
 
 	private final ObjectProperty<Color> pyDressColor;
@@ -53,6 +52,8 @@ public class GhostBodyAnimation {
 	private final ObjectProperty<Color> pyEyePupilsColor;
 
 	private ParallelTransition flashing;
+	private ColorFlashing dressFlashing;
+	private ColorFlashing pupilsFlashing;
 
 	public GhostBodyAnimation(Ghost ghost, Model3D model3D, MotionAnimation motion) {
 		this.ghost = ghost;
@@ -64,9 +65,6 @@ public class GhostBodyAnimation {
 		var pupilColor = Rendering3D.getGhostPupilColorBlue();
 
 		root3D = model3D.createGhost(dressColor, eyeBallColor, pupilColor);
-
-		dressFlashing = new ColorFlashing(Rendering3D.getGhostDressColorBlue(), Rendering3D.getGhostDressColorFlashing());
-		pupilsFlashing = new ColorFlashing(Rendering3D.getGhostPupilColorPink(), Rendering3D.getGhostPupilColorRed());
 
 		pyDressColor = new SimpleObjectProperty<>(dressColor);
 		var dressMaterial = new PhongMaterial();
@@ -82,6 +80,12 @@ public class GhostBodyAnimation {
 		var eyePupilsMaterial = new PhongMaterial();
 		Ufx.bindMaterialColor(eyePupilsMaterial, pyEyePupilsColor);
 		eyePupils().setMaterial(eyePupilsMaterial);
+	}
+
+	private void createFlashing() {
+		dressFlashing = new ColorFlashing(Rendering3D.getGhostDressColorBlue(), Rendering3D.getGhostDressColorFlashing());
+		pupilsFlashing = new ColorFlashing(Rendering3D.getGhostPupilColorPink(), Rendering3D.getGhostPupilColorRed());
+		flashing = new ParallelTransition(dressFlashing, pupilsFlashing);
 	}
 
 	public void reset() {
@@ -110,7 +114,7 @@ public class GhostBodyAnimation {
 
 	public void ensureFlashingAnimationRunning() {
 		if (flashing == null) {
-			flashing = new ParallelTransition(dressFlashing, pupilsFlashing);
+			createFlashing();
 		}
 		if (flashing.getStatus() != Status.RUNNING) {
 			pyDressColor.bind(dressFlashing.pyColor);
@@ -120,7 +124,7 @@ public class GhostBodyAnimation {
 	}
 
 	public void ensureFlashingAnimationStopped() {
-		if (flashing.getStatus() == Status.RUNNING) {
+		if (flashing != null && flashing.getStatus() == Status.RUNNING) {
 			pyDressColor.unbind();
 			pyEyePupilsColor.unbind();
 			flashing.stop();
