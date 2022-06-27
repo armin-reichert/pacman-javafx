@@ -52,6 +52,9 @@ public class PortalAppearance {
 	}
 
 	public void update(Node node, Creature guy, World world) {
+		if (colorProperty.isBound()) {
+			return;
+		}
 		colorProperty.set(baseColor.get());
 		node.setVisible(guy.visible);
 		node.setOpacity(1);

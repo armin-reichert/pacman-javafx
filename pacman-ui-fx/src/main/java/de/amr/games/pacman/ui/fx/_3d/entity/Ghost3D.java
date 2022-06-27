@@ -56,7 +56,6 @@ public class Ghost3D extends Group {
 
 	public final Ghost ghost;
 
-	private final MotionAnimation motion;
 	private final GhostValueAnimation value;
 	private final GhostBodyAnimation body;
 	private AnimationMode animationMode;
@@ -64,29 +63,28 @@ public class Ghost3D extends Group {
 	public Ghost3D(Ghost ghost, Model3D model3D, Rendering2D r2D) {
 		this.ghost = ghost;
 		value = new GhostValueAnimation(r2D);
-		body = new GhostBodyAnimation(ghost, model3D);
-		motion = new MotionAnimation(ghost, this);
-
+		body = new GhostBodyAnimation(ghost, model3D, new MotionAnimation(ghost, this));
 	}
 
 	public void reset(GameModel game) {
 		update(game);
-		motion.reset();
+		body.reset();
 	}
 
 	public void update(GameModel game) {
 		if (ghost.killIndex != -1) {
 			setAnimationMode(AnimationMode.NUMBER);
-		} else if (ghost.is(GhostState.DEAD, GhostState.ENTERING_HOUSE)) {
+			return;
+		}
+		if (ghost.is(GhostState.DEAD, GhostState.ENTERING_HOUSE)) {
 			setAnimationMode(AnimationMode.EYES);
 		} else if (game.powerTimer.isRunning()
 				&& ghost.is(GhostState.LOCKED, GhostState.LEAVING_HOUSE, GhostState.FRIGHTENED)) {
 			setAnimationMode(game.isPacPowerFading() ? AnimationMode.FLASHING : AnimationMode.BLUE);
 		} else {
 			setAnimationMode(AnimationMode.COLORED);
-			body.update(game.world());
 		}
-		motion.update();
+		body.update();
 	}
 
 	private void setAnimationMode(AnimationMode animationMode) {

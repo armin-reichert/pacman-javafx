@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.animation;
 
 import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation.Status;
@@ -47,7 +46,7 @@ public class GhostBodyAnimation {
 	private final Group root3D;
 	private final ColorFlashing dressFlashing;
 	private final ColorFlashing pupilsFlashing;
-	private final PortalAppearance portalAppearance;
+	private final MotionAnimation motion;
 
 	private final ObjectProperty<Color> pyDressColor = new SimpleObjectProperty<>();
 	private final ObjectProperty<Color> pyEyeBallsColor = new SimpleObjectProperty<>();
@@ -55,9 +54,10 @@ public class GhostBodyAnimation {
 
 	private ParallelTransition flashing;
 
-	public GhostBodyAnimation(Ghost ghost, Model3D model3D) {
+	public GhostBodyAnimation(Ghost ghost, Model3D model3D, MotionAnimation motion) {
 		this.ghost = ghost;
 		this.model3D = model3D;
+		this.motion = motion;
 
 		var dressColor = Rendering3D.getGhostDressColor(ghost.id);
 		var eyeBallColor = Rendering3D.getGhostEyeBallColor();
@@ -65,8 +65,7 @@ public class GhostBodyAnimation {
 
 		root3D = model3D.createGhost(dressColor, eyeBallColor, pupilColor);
 
-		dressFlashing = new ColorFlashing(Rendering3D.getGhostDressColorBlue(),
-				Rendering3D.getGhostDressColorFlashing());
+		dressFlashing = new ColorFlashing(Rendering3D.getGhostDressColorBlue(), Rendering3D.getGhostDressColorFlashing());
 		pupilsFlashing = new ColorFlashing(Rendering3D.getGhostPupilColorPink(), Rendering3D.getGhostPupilColorRed());
 
 		pyDressColor.set(dressColor);
@@ -83,12 +82,14 @@ public class GhostBodyAnimation {
 		var eyePupilsMaterial = new PhongMaterial();
 		Ufx.bindMaterialColor(eyePupilsMaterial, pyEyePupilsColor);
 		eyePupils().setMaterial(eyePupilsMaterial);
-
-		portalAppearance = new PortalAppearance(pyDressColor, () -> Rendering3D.getGhostDressColor(ghost.id));
 	}
 
-	public void update(World world) {
-		portalAppearance.update(root3D, ghost, world);
+	public void reset() {
+		motion.reset();
+	}
+
+	public void update() {
+		motion.update();
 	}
 
 	public Shape3D dress() {
