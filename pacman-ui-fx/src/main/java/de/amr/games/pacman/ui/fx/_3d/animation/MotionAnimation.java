@@ -59,12 +59,12 @@ public class MotionAnimation {
 		node.setTranslateZ(-HTS);
 		if (targetDir != guy.moveDir()) {
 			int[] angles = TURN_ANGLES[index(targetDir)][index(guy.moveDir())];
-			var turningAnimation = new RotateTransition(Duration.seconds(0.3), node);
-			turningAnimation.setAxis(Rotate.Z_AXIS);
-			turningAnimation.setInterpolator(Interpolator.EASE_BOTH);
-			turningAnimation.setFromAngle(angles[0]);
-			turningAnimation.setToAngle(angles[1]);
-			turningAnimation.playFromStart();
+			var turning = new RotateTransition(Duration.seconds(0.3), node);
+			turning.setAxis(Rotate.Z_AXIS);
+			turning.setInterpolator(Interpolator.EASE_BOTH);
+			turning.setFromAngle(angles[0]);
+			turning.setToAngle(angles[1]);
+			turning.playFromStart();
 			targetDir = guy.moveDir();
 		}
 	}
