@@ -53,6 +53,7 @@ public class MotionAnimation {
 	}
 
 	public void update() {
+		node.setVisible(guy.visible);
 		node.setTranslateX(guy.position.x + HTS);
 		node.setTranslateY(guy.position.y + HTS);
 		node.setTranslateZ(-HTS);
