@@ -43,27 +43,34 @@ public class PortalAppearance {
 
 	private final Logger logger = LogManager.getFormatterLogger();
 
+	private final Creature guy;
+	private final World world;
+	private final Node node;
 	private final ObjectProperty<Color> colorProperty;
 	private final Supplier<Color> baseColor;
 
-	public PortalAppearance(ObjectProperty<Color> colorProperty, Supplier<Color> baseColor) {
+	public PortalAppearance(Creature guy, World world, Node node, ObjectProperty<Color> colorProperty,
+			Supplier<Color> baseColor) {
+		this.guy = guy;
+		this.world = world;
+		this.node = node;
 		this.colorProperty = colorProperty;
 		this.baseColor = baseColor;
 	}
 
-	public void update(Node node, Creature guy, World world) {
+	public void update() {
 		if (colorProperty.isBound()) {
 			return;
 		}
 		colorProperty.set(baseColor.get());
 		node.setVisible(guy.visible);
 		node.setOpacity(1);
-		if (outsideWorld(guy, world)) {
+		if (outsideWorld()) {
 			node.setVisible(true);
 			colorProperty.set((Color.color(0.1, 0.1, 0.1, 0.2)));
 		} else {
 			double fadeStart = 32.0;
-			double dist = distFromNearestPortal(guy, world);
+			double dist = distFromNearestPortal();
 			if (dist <= fadeStart) { // fade into shadow
 				node.setVisible(true);
 				double opacity = U.lerp(0.2, 1, dist / fadeStart);
@@ -74,7 +81,7 @@ public class PortalAppearance {
 		}
 	}
 
-	private double distFromNearestPortal(Creature guy, World world) {
+	private double distFromNearestPortal() {
 		double minDist = Double.MAX_VALUE;
 		for (var portal : world.portals()) {
 			var left = new V2d(portal.left).scaled(World.TS);
@@ -87,7 +94,7 @@ public class PortalAppearance {
 		return minDist;
 	}
 
-	private boolean outsideWorld(Creature guy, World world) {
+	private boolean outsideWorld() {
 		double centerX = guy.position.x + World.HTS;
 		return centerX < 0 || centerX > world.numCols() * World.TS;
 	}

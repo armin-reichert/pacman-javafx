@@ -57,7 +57,6 @@ import javafx.util.Duration;
  */
 public class Pac3D extends Group {
 
-	private final Pac pac;
 	private final Model3D model3D;
 	private final Group root3D;
 	private final MotionAnimation motion;
@@ -66,8 +65,7 @@ public class Pac3D extends Group {
 	private final PhongMaterial faceMaterial;
 	private final PortalAppearance portalAppearance;
 
-	public Pac3D(Pac pac, Model3D model3D, Color faceColor, Color eyesColor, Color palateColor) {
-		this.pac = pac;
+	public Pac3D(Pac pac, World world, Model3D model3D, Color faceColor, Color eyesColor, Color palateColor) {
 		this.model3D = model3D;
 		normalFaceColor = faceColor;
 		pyFaceColor = new SimpleObjectProperty<>(faceColor);
@@ -79,7 +77,7 @@ public class Pac3D extends Group {
 		light.setTranslateZ(-6);
 		getChildren().addAll(root3D, light);
 		motion = new MotionAnimation(pac, this);
-		portalAppearance = new PortalAppearance(pyFaceColor, () -> normalFaceColor);
+		portalAppearance = new PortalAppearance(pac, world, root3D, pyFaceColor, () -> normalFaceColor);
 	}
 
 	public void reset(World world) {
@@ -95,7 +93,7 @@ public class Pac3D extends Group {
 
 	public void update(World world) {
 		motion.update();
-		portalAppearance.update(this, pac, world);
+		portalAppearance.update();
 	}
 
 	/**
