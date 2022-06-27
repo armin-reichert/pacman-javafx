@@ -108,15 +108,11 @@ public class GhostBodyAnimation {
 		return root3D;
 	}
 
-	public boolean isFlashing() {
-		return flashing != null && flashing.getStatus() == Status.RUNNING;
-	}
-
 	public void ensureFlashingAnimationRunning() {
 		if (flashing == null) {
 			flashing = new ParallelTransition(dressFlashing, pupilsFlashing);
 		}
-		if (!isFlashing()) {
+		if (flashing.getStatus() != Status.RUNNING) {
 			pyDressColor.bind(dressFlashing.pyColor);
 			pyEyePupilsColor.bind(pupilsFlashing.pyColor);
 			flashing.playFromStart();
@@ -124,7 +120,7 @@ public class GhostBodyAnimation {
 	}
 
 	public void ensureFlashingAnimationStopped() {
-		if (isFlashing()) {
+		if (flashing.getStatus() == Status.RUNNING) {
 			pyDressColor.unbind();
 			pyEyePupilsColor.unbind();
 			flashing.stop();
