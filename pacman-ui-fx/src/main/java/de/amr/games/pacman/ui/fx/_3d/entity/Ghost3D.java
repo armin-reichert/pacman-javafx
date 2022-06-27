@@ -29,6 +29,7 @@ import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.animation.GhostBodyAnimation;
 import de.amr.games.pacman.ui.fx._3d.animation.GhostValueAnimation;
+import de.amr.games.pacman.ui.fx._3d.animation.Motion;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import javafx.scene.Group;
 import javafx.scene.transform.Rotate;

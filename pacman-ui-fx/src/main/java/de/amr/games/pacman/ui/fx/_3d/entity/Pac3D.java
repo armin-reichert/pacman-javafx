@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.FillTransition3D;
+import de.amr.games.pacman.ui.fx._3d.animation.Motion;
 import de.amr.games.pacman.ui.fx._3d.animation.PortalAppearance;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import de.amr.games.pacman.ui.fx.util.Ufx;
