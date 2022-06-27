@@ -199,10 +199,6 @@ public class Maze3D extends Group {
 				.forEach(foodGroup.getChildren()::add);
 	}
 
-//	public Stream<Animation> energizerAnimations() {
-//		return energizers().map(Energizer3D::animation);
-//	}
-
 	public Optional<Shape3D> foodAt(V2i tile) {
 		return foodShapes().filter(food -> tile(food).equals(tile)).findFirst();
 	}
@@ -225,7 +221,7 @@ public class Maze3D extends Group {
 	}
 
 	private Stream<Shape3D> foodShapes() {
-		return foodGroup.getChildren().stream().map(Shape3D.class::cast);
+		return foodGroup.getChildren().stream().filter(Shape3D.class::isInstance).map(Shape3D.class::cast);
 	}
 
 	private V2i tile(Node foodNode) {
