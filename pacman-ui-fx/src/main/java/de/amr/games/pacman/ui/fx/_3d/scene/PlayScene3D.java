@@ -142,9 +142,9 @@ public class PlayScene3D extends GameScene3D {
 		if (e.tile.isEmpty()) {
 			// when cheat "eat all pellets" is used, no tile is present in the event
 			$.game.level.world.tiles().filter($.game.level.world::containsEatenFood)
-					.forEach(tile -> maze3D.foodAt(tile).ifPresent(maze3D::hideFood));
+					.forEach(tile -> maze3D.foodAt(tile).ifPresent(maze3D::eatFood));
 		} else {
-			maze3D.foodAt(e.tile.get()).ifPresent(maze3D::hideFood);
+			maze3D.foodAt(e.tile.get()).ifPresent(maze3D::eatFood);
 		}
 	}
 

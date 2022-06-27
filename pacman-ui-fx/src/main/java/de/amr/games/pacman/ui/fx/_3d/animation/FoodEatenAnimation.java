@@ -26,11 +26,15 @@ package de.amr.games.pacman.ui.fx._3d.animation;
 import java.util.Random;
 
 import de.amr.games.pacman.lib.U;
+import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
+import javafx.geometry.Point3D;
+import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Shape3D;
+import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
 
 /**
@@ -38,34 +42,51 @@ import javafx.util.Duration;
  */
 public class FoodEatenAnimation extends Transition {
 
-	private final Shape3D foodShape;
 	private final Random rnd = new Random();
+	private final Shape3D[] p;
+	private final Point3D[] v;
 
-	private double scaleFactor;
-	private double maxHeight;
+	private int rndFrom(int left, int right) {
+		return left + rnd.nextInt(right - left);
+	}
 
-	public FoodEatenAnimation(Shape3D foodShape, Color foodColor) {
-		this.foodShape = foodShape;
-		scaleFactor = 0.25 + 0.25 * rnd.nextDouble();
-		maxHeight = -3 - 60 * rnd.nextDouble();
-		foodShape.setMaterial(new PhongMaterial(foodColor.grayscale()));
-		setCycleDuration(Duration.seconds(0.75));
-		setInterpolator(Interpolator.EASE_BOTH);
-		setOnFinished(e -> {
-			foodShape.setVisible(false);
-			foodShape.setTranslateZ(-3);
-			foodShape.setScaleX(1.0);
-			foodShape.setScaleY(1.0);
-			foodShape.setScaleZ(1.0);
-		});
+	private double rndFrom(double left, double right) {
+		return U.lerp(left, right, rnd.nextDouble());
+	}
+
+	public FoodEatenAnimation(Group parent, Shape3D foodShape, Color foodColor) {
+		boolean energizer = foodShape instanceof Energizer3D;
+		double duration = energizer ? rndFrom(1.0, 2.0) : rndFrom(0.5, 1.0);
+		int numParticles = energizer ? rndFrom(5, 30) : rndFrom(2, 10);
+		p = new Shape3D[numParticles];
+		v = new Point3D[numParticles];
+		for (int i = 0; i < numParticles; ++i) {
+			p[i] = newParticle(foodShape, energizer, foodColor.grayscale());
+			v[i] = new Point3D(rndFrom(0.05, 0.25), rndFrom(0.05, 0.25), -rndFrom(0.5, 2.0));
+		}
+		parent.getChildren().addAll(p);
+		setCycleDuration(Duration.seconds(duration));
+		setInterpolator(Interpolator.EASE_OUT);
+		setOnFinished(e -> parent.getChildren().removeAll(p));
+	}
+
+	private Shape3D newParticle(Shape3D foodShape, boolean energizer, Color color) {
+		double r = energizer ? rndFrom(0.1, 1.0) : rndFrom(0.1, 0.4);
+		var particle = new Sphere(r);
+		particle.setMaterial(new PhongMaterial(color));
+		particle.setTranslateX(foodShape.getTranslateX());
+		particle.setTranslateY(foodShape.getTranslateY());
+		particle.setTranslateZ(foodShape.getTranslateZ());
+		return particle;
 	}
 
 	@Override
 	protected void interpolate(double t) {
-		var scale = (1 - t) * scaleFactor;
-		foodShape.setScaleX(scale);
-		foodShape.setScaleY(scale);
-		foodShape.setScaleZ(scale);
-		foodShape.setTranslateZ(U.lerp(-3, maxHeight, t));
+		for (int i = 0; i < p.length; ++i) {
+			var particle = p[i];
+			particle.setTranslateX(particle.getTranslateX() + v[i].getX());
+			particle.setTranslateY(particle.getTranslateY() + v[i].getY());
+			particle.setTranslateZ(particle.getTranslateZ() + v[i].getZ());
+		}
 	}
 }

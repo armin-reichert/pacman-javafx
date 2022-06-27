@@ -89,12 +89,13 @@ public class Maze3D extends Group {
 	private final Group wallsGroup = new Group();
 	private final Group doorsGroup = new Group();
 	private final Group foodGroup = new Group();
+	private final Group particleGroup = new Group();
 	private final MazeStyle mazeStyle;
 
 	public Maze3D(World world, MazeStyle mazeStyle) {
 		this.world = world;
 		this.mazeStyle = mazeStyle;
-		getChildren().addAll(foundationGroup, foodGroup);
+		getChildren().addAll(foundationGroup, foodGroup, particleGroup);
 		foundationGroup.getChildren().addAll(createFloor(), wallsGroup, doorsGroup);
 		build(mazeStyle);
 		addFood(world, mazeStyle.foodColor);
@@ -207,15 +208,14 @@ public class Maze3D extends Group {
 		return foodShapes().filter(food -> tile(food).equals(tile)).findFirst();
 	}
 
-	public void hideFood(Shape3D foodShape) {
+	public void eatFood(Shape3D foodShape) {
+		foodShape.setVisible(false);
 		if (foodShape instanceof Energizer3D) {
 			var energizer = (Energizer3D) foodShape;
 			energizer.animation().stop();
-			foodShape.setVisible(false);
-		} else if (rnd.nextDouble() < 0.5) {
-			new FoodEatenAnimation(foodShape, mazeStyle.foodColor).play();
-		} else {
-			foodShape.setVisible(false);
+			new FoodEatenAnimation(particleGroup, foodShape, mazeStyle.foodColor).play();
+		} else if (rnd.nextDouble() < 0.25) {
+			new FoodEatenAnimation(particleGroup, foodShape, mazeStyle.foodColor).play();
 		}
 	}
 
