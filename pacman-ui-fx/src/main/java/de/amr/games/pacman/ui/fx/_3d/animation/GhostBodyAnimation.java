@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.animation;
 
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -82,9 +83,12 @@ public class GhostBodyAnimation {
 		eyePupils().setMaterial(eyePupilsMaterial);
 	}
 
-	private void createFlashing() {
-		dressFlashing = new ColorFlashing(Rendering3D.getGhostDressColorBlue(), Rendering3D.getGhostDressColorFlashing());
-		pupilsFlashing = new ColorFlashing(Rendering3D.getGhostPupilColorPink(), Rendering3D.getGhostPupilColorRed());
+	private void createFlashing(int numFlashes) {
+		var seconds = GameModel.PAC_POWER_FADING_TICKS / (2 * 60.0); // 2 animation cycles = 1 flashing
+		dressFlashing = new ColorFlashing(Rendering3D.getGhostDressColorBlue(), Rendering3D.getGhostDressColorFlashing(),
+				seconds, numFlashes);
+		pupilsFlashing = new ColorFlashing(Rendering3D.getGhostPupilColorPink(), Rendering3D.getGhostPupilColorRed(),
+				seconds, numFlashes);
 		flashing = new ParallelTransition(dressFlashing, pupilsFlashing);
 	}
 
@@ -112,9 +116,9 @@ public class GhostBodyAnimation {
 		return root3D;
 	}
 
-	public void ensureFlashingAnimationRunning() {
+	public void ensureFlashingAnimationRunning(int numFlashes) {
 		if (flashing == null) {
-			createFlashing();
+			createFlashing(numFlashes);
 		}
 		if (flashing.getStatus() != Status.RUNNING) {
 			pyDressColor.bind(dressFlashing.pyColor);

@@ -40,14 +40,14 @@ public class ColorFlashing extends Transition {
 	private final Color startColor;
 	private final Color endColor;
 
-	public ColorFlashing(Color startColor, Color endColor) {
+	public ColorFlashing(Color startColor, Color endColor, double seconds, int numFlashes) {
 		this.startColor = startColor;
 		this.endColor = endColor;
+		pyColor.set(startColor);
 		setCycleCount(INDEFINITE);
-		setCycleDuration(Duration.seconds(0.2));
+		setCycleDuration(Duration.seconds(seconds / numFlashes));
 		setAutoReverse(true);
 		setInterpolator(Interpolator.EASE_OUT);
-		pyColor.set(startColor);
 	}
 
 	public Color getColor() {

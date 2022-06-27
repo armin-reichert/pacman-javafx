@@ -73,21 +73,21 @@ public class Ghost3D extends Group {
 
 	public void update(GameModel game) {
 		if (ghost.killIndex != -1) {
-			setAnimationMode(AnimationMode.NUMBER);
+			setAnimationMode(game, AnimationMode.NUMBER);
 			return;
 		}
 		if (ghost.is(GhostState.DEAD, GhostState.ENTERING_HOUSE)) {
-			setAnimationMode(AnimationMode.EYES);
+			setAnimationMode(game, AnimationMode.EYES);
 		} else if (game.powerTimer.isRunning()
 				&& ghost.is(GhostState.LOCKED, GhostState.LEAVING_HOUSE, GhostState.FRIGHTENED)) {
-			setAnimationMode(game.isPacPowerFading() ? AnimationMode.FLASHING : AnimationMode.BLUE);
+			setAnimationMode(game, game.isPacPowerFading() ? AnimationMode.FLASHING : AnimationMode.BLUE);
 		} else {
-			setAnimationMode(AnimationMode.COLORED);
+			setAnimationMode(game, AnimationMode.COLORED);
 		}
 		body.update();
 	}
 
-	private void setAnimationMode(AnimationMode animationMode) {
+	private void setAnimationMode(GameModel game, AnimationMode animationMode) {
 		if (this.animationMode != animationMode) {
 			this.animationMode = animationMode;
 			switch (animationMode) {
@@ -105,7 +105,7 @@ public class Ghost3D extends Group {
 			case FLASHING -> {
 				body.dress().setVisible(true);
 				body.setBlue();
-				body.ensureFlashingAnimationRunning();
+				body.ensureFlashingAnimationRunning(game.level.numFlashes);
 				getChildren().setAll(body.getRoot());
 			}
 			case EYES -> {
