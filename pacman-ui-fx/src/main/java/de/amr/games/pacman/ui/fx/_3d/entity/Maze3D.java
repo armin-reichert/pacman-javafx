@@ -215,7 +215,7 @@ public class Maze3D extends Group {
 			playAnimation = true;
 		}
 		if (playAnimation) {
-			new FoodEatenAnimation(particleGroup, foodShape, mazeStyle.foodColor).play();
+			new FoodEatenAnimation(world, particleGroup, foodShape, mazeStyle.foodColor).play();
 		}
 		foodShape.setVisible(false);
 	}

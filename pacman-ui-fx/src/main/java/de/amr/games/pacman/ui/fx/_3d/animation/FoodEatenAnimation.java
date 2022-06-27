@@ -23,7 +23,6 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._3d.animation;
 
-import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -42,54 +41,53 @@ import javafx.util.Duration;
 public class FoodEatenAnimation extends Transition {
 
 	private static final Point3D GRAVITY = new Point3D(0, 0, 0.09);
-	private final Shape3D[] p;
-	private Point3D[] v;
 
-	public FoodEatenAnimation(Group parent, Shape3D foodShape, Color foodColor) {
+	private final World world;
+	private final Shape3D[] particles;
+	private Point3D[] velocities;
+
+	public FoodEatenAnimation(World world, Group parent, Shape3D foodShape, Color foodColor) {
+		this.world = world;
 		boolean energizer = foodShape instanceof Energizer3D;
 		int numParticles = energizer ? Ufx.randomInt(20, 50) : Ufx.randomInt(4, 8);
-		p = new Shape3D[numParticles];
-		v = new Point3D[numParticles];
+		particles = new Shape3D[numParticles];
+		velocities = new Point3D[numParticles];
 		var color = Color.gray(0.4, 0.25);
 		var material = new PhongMaterial(color);
 		for (int i = 0; i < numParticles; ++i) {
-			p[i] = newParticle(foodShape, energizer, material);
-			v[i] = new Point3D(Ufx.randomDouble(0.05, 0.25), Ufx.randomDouble(0.05, 0.25), -Ufx.randomDouble(0.5, 4.0));
+			particles[i] = newParticle(foodShape, energizer, material);
+			velocities[i] = new Point3D(Ufx.randomDouble(0.05, 0.25), Ufx.randomDouble(0.05, 0.25),
+					-Ufx.randomDouble(0.25, 3.0));
 		}
-		parent.getChildren().addAll(p);
+		parent.getChildren().addAll(particles);
 		setCycleDuration(Duration.seconds(1.5));
-		setOnFinished(e -> parent.getChildren().removeAll(p));
+		setOnFinished(e -> parent.getChildren().removeAll(particles));
 	}
 
 	private Shape3D newParticle(Shape3D foodShape, boolean energizer, PhongMaterial material) {
 		double r = energizer ? Ufx.randomDouble(0.1, 1.0) : Ufx.randomDouble(0.1, 0.4);
-		var particle = new Sphere(r);
-		particle.setMaterial(material);
-		particle.setTranslateX(foodShape.getTranslateX());
-		particle.setTranslateY(foodShape.getTranslateY());
-		particle.setTranslateZ(foodShape.getTranslateZ());
-		return particle;
+		var p = new Sphere(r);
+		p.setMaterial(material);
+		p.setTranslateX(foodShape.getTranslateX());
+		p.setTranslateY(foodShape.getTranslateY());
+		p.setTranslateZ(foodShape.getTranslateZ());
+		return p;
 	}
 
 	@Override
 	protected void interpolate(double t) {
-		for (int i = 0; i < p.length; ++i) {
-			var particle = p[i];
-			if (v[i].getZ() > 0 && particle.getTranslateZ() >= -0.5 && insideMaze(particle)) {
-				// has fallen to ground
-				particle.setScaleZ(0.01);
-				v[i] = Point3D.ZERO;
+		for (int i = 0; i < particles.length; ++i) {
+			var p = particles[i];
+			if (p.getTranslateZ() >= -0.5 // reached floor
+					&& world.insideMap(p.getTranslateX(), p.getTranslateY())) {
+				p.setScaleZ(0.01);
+				velocities[i] = Point3D.ZERO;
 			} else {
-				particle.setTranslateX(particle.getTranslateX() + v[i].getX());
-				particle.setTranslateY(particle.getTranslateY() + v[i].getY());
-				particle.setTranslateZ(particle.getTranslateZ() + v[i].getZ());
-				v[i] = v[i].add(GRAVITY);
+				p.setTranslateX(p.getTranslateX() + velocities[i].getX());
+				p.setTranslateY(p.getTranslateY() + velocities[i].getY());
+				p.setTranslateZ(p.getTranslateZ() + velocities[i].getZ());
+				velocities[i] = velocities[i].add(GRAVITY);
 			}
 		}
-	}
-
-	private boolean insideMaze(Shape3D particle) {
-		return 0 <= particle.getTranslateX() && particle.getTranslateX() <= ArcadeWorld.TILES_X * World.TS
-				&& 0 <= particle.getTranslateY() && particle.getTranslateY() <= ArcadeWorld.TILES_Y * World.TS;
 	}
 }
