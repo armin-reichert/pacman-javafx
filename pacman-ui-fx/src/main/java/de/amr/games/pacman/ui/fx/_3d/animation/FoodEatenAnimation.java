@@ -51,7 +51,7 @@ public class FoodEatenAnimation extends Transition {
 		var material = new PhongMaterial(foodColor.grayscale());
 		for (int i = 0; i < numParticles; ++i) {
 			p[i] = newParticle(foodShape, energizer, material);
-			v[i] = new Point3D(Ufx.rndFrom(0.05, 0.25), Ufx.rndFrom(0.05, 0.25), -Ufx.rndFrom(0.5, 2.0));
+			v[i] = new Point3D(Ufx.rndFrom(0.05, 0.25), Ufx.rndFrom(0.05, 0.25), -Ufx.rndFrom(0.5, 4.0));
 		}
 		parent.getChildren().addAll(p);
 		setCycleDuration(Duration.seconds(seconds));

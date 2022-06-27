@@ -214,7 +214,7 @@ public class Maze3D extends Group {
 			var energizer = (Energizer3D) foodShape;
 			energizer.animation().stop();
 			new FoodEatenAnimation(particleGroup, foodShape, mazeStyle.foodColor).play();
-		} else if (rnd.nextDouble() < 0.25) {
+		} else if (rnd.nextDouble() < 0.66) {
 			new FoodEatenAnimation(particleGroup, foodShape, mazeStyle.foodColor).play();
 		}
 	}
