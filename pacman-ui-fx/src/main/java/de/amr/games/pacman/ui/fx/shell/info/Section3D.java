@@ -30,6 +30,7 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.paint.Color;
@@ -46,6 +47,7 @@ public class Section3D extends Section {
 	private ComboBox<Integer> comboResolution;
 	private Slider sliderWallHeight;
 	private ComboBox<String> comboFloorTexture;
+	private ColorPicker pickerFloorColor;
 	private CheckBox cbAxesVisible;
 	private CheckBox cbWireframeMode;
 
@@ -60,8 +62,10 @@ public class Section3D extends Section {
 		comboResolution.setOnAction(e -> Env.mazeResolution.set(comboResolution.getValue()));
 		sliderWallHeight = addSlider("Maze wall height", 0, 10, 8);
 		sliderWallHeight.valueProperty().addListener((obs, oldVal, newVal) -> Env.mazeWallHeight.set(newVal.doubleValue()));
-		comboFloorTexture = addComboBox("Maze floor texture", Env.FLOOR_TEXTURES);
+		comboFloorTexture = addComboBox("Floor texture", Env.FLOOR_TEXTURES);
 		comboFloorTexture.setOnAction(e -> Env.floorTexture.set(comboFloorTexture.getValue()));
+		pickerFloorColor = addColorPicker("Floor color", Env.floorColor.get());
+		pickerFloorColor.setOnAction(e -> Env.floorColor.set(pickerFloorColor.getValue()));
 		cbAxesVisible = addCheckBox("Show axes", () -> Env.toggle(Env.axesVisible));
 		cbWireframeMode = addCheckBox("Wireframe mode", Actions::toggleDrawMode);
 		addInfo("Shift+LEFT/RIGHT", "Camera -X / +X").available(() -> Env.perspective.get() == Perspective.TOTAL);

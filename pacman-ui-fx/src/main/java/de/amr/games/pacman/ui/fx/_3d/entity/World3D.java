@@ -66,8 +66,13 @@ public class World3D extends Group {
 		mazeStyle.foodColor = Rendering3D.getMazeFoodColor(game.variant, game.level.mazeNumber);
 
 		maze3D = new Maze3D(game.level.world, mazeStyle);
-		maze3D.floorTexture.bind(Bindings
-				.createObjectBinding(() -> Ufx.image(Env.FLOOR_TEXTURE_PATH + Env.floorTexture.get()), Env.floorTexture));
+		maze3D.floorTexture.bind(Bindings.createObjectBinding(() -> {
+			if ("none".equals(Env.floorTexture.get())) {
+				return null;
+			}
+			return Ufx.image(Env.FLOOR_TEXTURE_PATH + Env.floorTexture.get());
+		}, Env.floorTexture));
+		maze3D.floorColor.bind(Env.floorColor);
 		maze3D.resolution.bind(Env.mazeResolution);
 		maze3D.wallHeight.bind(Env.mazeWallHeight);
 		getChildren().add(maze3D);

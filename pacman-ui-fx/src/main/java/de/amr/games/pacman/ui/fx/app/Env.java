@@ -34,6 +34,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 
 /**
@@ -47,12 +48,13 @@ public class Env {
 	}
 
 	public static final String FLOOR_TEXTURE_PATH = "/common/";
-	public static final String[] FLOOR_TEXTURES = { "penrose-tiling.jpg", "escher-texture.jpg" };
+	public static final String[] FLOOR_TEXTURES = { "none", "penrose-tiling.jpg", "escher-texture.jpg" };
 
 	public static final BooleanProperty axesVisible = new SimpleBooleanProperty(false);
 	public static final BooleanProperty debugUI = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<DrawMode> drawMode3D = new SimpleObjectProperty<>(DrawMode.FILL);
 	public static final StringProperty floorTexture = new SimpleStringProperty(FLOOR_TEXTURES[0]);
+	public static final ObjectProperty<Color> floorColor = new SimpleObjectProperty<>(Color.rgb(10, 10, 70));
 	public static final IntegerProperty mazeResolution = new SimpleIntegerProperty(8);
 	public static final DoubleProperty mazeWallHeight = new SimpleDoubleProperty(2.0);
 	public static final BooleanProperty paused = new SimpleBooleanProperty(false);

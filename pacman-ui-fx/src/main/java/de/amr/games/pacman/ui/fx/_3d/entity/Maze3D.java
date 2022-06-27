@@ -85,6 +85,7 @@ public class Maze3D extends Group {
 	public final IntegerProperty resolution = new SimpleIntegerProperty(8);
 	public final DoubleProperty wallHeight = new SimpleDoubleProperty(1.0);
 	public final ObjectProperty<Image> floorTexture = new SimpleObjectProperty<>();
+	public final ObjectProperty<Color> floorColor = new SimpleObjectProperty<>();
 
 	private final World world;
 	private final Group foundationGroup = new Group();
@@ -102,7 +103,8 @@ public class Maze3D extends Group {
 		build(mazeStyle);
 		addFood(world, mazeStyle.foodColor);
 		resolution.addListener((obs, oldVal, newVal) -> build(mazeStyle));
-		floorTexture.addListener((obs, oldVal, newVal) -> updateFloorTexture(newVal));
+		floorTexture.addListener((obs, oldVal, newVal) -> updateFloorTexture());
+		floorColor.addListener((obs, oldVal, newVal) -> updateFloorTexture());
 	}
 
 	private Node createFloor() {
@@ -144,15 +146,16 @@ public class Maze3D extends Group {
 		logger.info("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallData.height);
 	}
 
-	private void updateFloorTexture(Image texture) {
-		var color = Color.rgb(10, 10, 70); // TODO property
-		var mat = new PhongMaterial();
-		mat.setDiffuseColor(color);
-		mat.setSpecularColor(color.brighter());
-		if (texture != null) {
-			mat.setDiffuseMap(texture);
+	private void updateFloorTexture() {
+		var texture = floorTexture.get();
+		var color = floorColor.get();
+		var material = new PhongMaterial();
+		if (color != null) {
+			material.setDiffuseColor(color);
+			material.setSpecularColor(color.brighter());
 		}
-		getFloor().setMaterial(mat);
+		material.setDiffuseMap(texture);
+		getFloor().setMaterial(material);
 	}
 
 	public World getWorld() {

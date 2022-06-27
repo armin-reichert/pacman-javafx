@@ -36,6 +36,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -148,6 +149,12 @@ public class Section extends TitledPane {
 		combo.setStyle(style(textFont));
 		addRow(labelText, combo);
 		return combo;
+	}
+
+	public ColorPicker addColorPicker(String labelText, Color color) {
+		var colorPicker = new ColorPicker(color);
+		addRow(labelText, colorPicker);
+		return colorPicker;
 	}
 
 	private static String style(Font font) {
