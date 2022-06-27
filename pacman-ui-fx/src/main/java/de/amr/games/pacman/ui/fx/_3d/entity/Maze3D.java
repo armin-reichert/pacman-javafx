@@ -42,6 +42,7 @@ import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.FoodEatenAnimation;
 import de.amr.games.pacman.ui.fx._3d.animation.RaiseAndLowerWallAnimation;
 import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.DoubleProperty;
@@ -209,14 +210,16 @@ public class Maze3D extends Group {
 	}
 
 	public void eatFood(Shape3D foodShape) {
-		foodShape.setVisible(false);
+		boolean playAnimation = Ufx.rnd.nextDouble() < 0.4; // 40%
 		if (foodShape instanceof Energizer3D) {
 			var energizer = (Energizer3D) foodShape;
 			energizer.animation().stop();
-			new FoodEatenAnimation(particleGroup, foodShape, mazeStyle.foodColor).play();
-		} else if (rnd.nextDouble() < 0.66) {
+			playAnimation = true;
+		}
+		if (playAnimation) {
 			new FoodEatenAnimation(particleGroup, foodShape, mazeStyle.foodColor).play();
 		}
+		foodShape.setVisible(false);
 	}
 
 	public void validateFoodShapes() {
