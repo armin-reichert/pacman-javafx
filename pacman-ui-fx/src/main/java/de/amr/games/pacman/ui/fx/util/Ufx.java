@@ -53,11 +53,11 @@ public class Ufx {
 	private Ufx() {
 	}
 
-	public static int rndFrom(int left, int right) {
+	public static int randomInt(int left, int right) {
 		return left + rnd.nextInt(right - left);
 	}
 
-	public static double rndFrom(double left, double right) {
+	public static double randomDouble(double left, double right) {
 		return left + rnd.nextDouble() * (right - left);
 	}
 

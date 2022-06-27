@@ -44,13 +44,13 @@ public class FoodEatenAnimation extends Transition {
 
 	public FoodEatenAnimation(Group parent, Shape3D foodShape, Color foodColor) {
 		boolean energizer = foodShape instanceof Energizer3D;
-		int numParticles = energizer ? Ufx.rndFrom(10, 20) : Ufx.rndFrom(2, 10);
+		int numParticles = energizer ? Ufx.randomInt(10, 20) : Ufx.randomInt(4, 8);
 		p = new Shape3D[numParticles];
 		v = new Point3D[numParticles];
 		var material = new PhongMaterial(foodColor.grayscale());
 		for (int i = 0; i < numParticles; ++i) {
 			p[i] = newParticle(foodShape, energizer, material);
-			v[i] = new Point3D(Ufx.rndFrom(0.05, 0.25), Ufx.rndFrom(0.05, 0.25), -Ufx.rndFrom(0.5, 4.0));
+			v[i] = new Point3D(Ufx.randomDouble(0.05, 0.25), Ufx.randomDouble(0.05, 0.25), -Ufx.randomDouble(0.5, 4.0));
 		}
 		parent.getChildren().addAll(p);
 		setCycleDuration(Duration.seconds(1.5));
@@ -58,7 +58,7 @@ public class FoodEatenAnimation extends Transition {
 	}
 
 	private Shape3D newParticle(Shape3D foodShape, boolean energizer, PhongMaterial material) {
-		double r = energizer ? Ufx.rndFrom(0.1, 1.0) : Ufx.rndFrom(0.1, 0.4);
+		double r = energizer ? Ufx.randomDouble(0.1, 1.0) : Ufx.randomDouble(0.1, 0.4);
 		var particle = new Sphere(r);
 		particle.setMaterial(material);
 		particle.setTranslateX(foodShape.getTranslateX());
