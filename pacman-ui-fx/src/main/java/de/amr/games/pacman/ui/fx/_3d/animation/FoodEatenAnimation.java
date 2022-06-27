@@ -23,6 +23,8 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._3d.animation;
 
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Transition;
@@ -39,15 +41,17 @@ import javafx.util.Duration;
  */
 public class FoodEatenAnimation extends Transition {
 
+	private static final Point3D GRAVITY = new Point3D(0, 0, 0.09);
 	private final Shape3D[] p;
-	private final Point3D[] v;
+	private Point3D[] v;
 
 	public FoodEatenAnimation(Group parent, Shape3D foodShape, Color foodColor) {
 		boolean energizer = foodShape instanceof Energizer3D;
-		int numParticles = energizer ? Ufx.randomInt(10, 20) : Ufx.randomInt(4, 8);
+		int numParticles = energizer ? Ufx.randomInt(20, 50) : Ufx.randomInt(4, 8);
 		p = new Shape3D[numParticles];
 		v = new Point3D[numParticles];
-		var material = new PhongMaterial(foodColor.grayscale());
+		var color = Color.gray(0.4, 0.25);
+		var material = new PhongMaterial(color);
 		for (int i = 0; i < numParticles; ++i) {
 			p[i] = newParticle(foodShape, energizer, material);
 			v[i] = new Point3D(Ufx.randomDouble(0.05, 0.25), Ufx.randomDouble(0.05, 0.25), -Ufx.randomDouble(0.5, 4.0));
@@ -71,9 +75,21 @@ public class FoodEatenAnimation extends Transition {
 	protected void interpolate(double t) {
 		for (int i = 0; i < p.length; ++i) {
 			var particle = p[i];
-			particle.setTranslateX(particle.getTranslateX() + v[i].getX());
-			particle.setTranslateY(particle.getTranslateY() + v[i].getY());
-			particle.setTranslateZ(particle.getTranslateZ() + v[i].getZ());
+			if (v[i].getZ() > 0 && particle.getTranslateZ() >= -0.5 && insideMaze(particle)) {
+				// has fallen to ground
+				particle.setScaleZ(0.01);
+				v[i] = Point3D.ZERO;
+			} else {
+				particle.setTranslateX(particle.getTranslateX() + v[i].getX());
+				particle.setTranslateY(particle.getTranslateY() + v[i].getY());
+				particle.setTranslateZ(particle.getTranslateZ() + v[i].getZ());
+				v[i] = v[i].add(GRAVITY);
+			}
 		}
+	}
+
+	private boolean insideMaze(Shape3D particle) {
+		return 0 <= particle.getTranslateX() && particle.getTranslateX() <= ArcadeWorld.TILES_X * World.TS
+				&& 0 <= particle.getTranslateY() && particle.getTranslateY() <= ArcadeWorld.TILES_Y * World.TS;
 	}
 }

@@ -208,7 +208,7 @@ public class Maze3D extends Group {
 	}
 
 	public void eatFood(Shape3D foodShape) {
-		boolean playAnimation = Ufx.rnd.nextDouble() < 0.4; // 40%
+		boolean playAnimation = Ufx.rnd.nextDouble() < 0.66;
 		if (foodShape instanceof Energizer3D) {
 			var energizer = (Energizer3D) foodShape;
 			energizer.animation().stop();
