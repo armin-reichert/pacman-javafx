@@ -51,11 +51,10 @@ import javafx.scene.transform.Rotate;
 public class Ghost3D extends Group {
 
 	private enum AnimationMode {
-		COLORED, BLUE, FLASHING, EYES, NUMBER;
+		COLORED_DRESS, BLUE_DRESS, FLASHING_DRESS, EYES, NUMBER;
 	}
 
-	public final Ghost ghost;
-
+	private final Ghost ghost;
 	private final GhostValueAnimation value;
 	private final GhostBodyAnimation body;
 	private AnimationMode animationMode;
@@ -80,45 +79,41 @@ public class Ghost3D extends Group {
 			setAnimationMode(game, AnimationMode.EYES);
 		} else if (game.powerTimer.isRunning()
 				&& ghost.is(GhostState.LOCKED, GhostState.LEAVING_HOUSE, GhostState.FRIGHTENED)) {
-			setAnimationMode(game, game.isPacPowerFading() ? AnimationMode.FLASHING : AnimationMode.BLUE);
+			setAnimationMode(game, game.isPacPowerFading() ? AnimationMode.FLASHING_DRESS : AnimationMode.BLUE_DRESS);
 		} else {
-			setAnimationMode(game, AnimationMode.COLORED);
+			setAnimationMode(game, AnimationMode.COLORED_DRESS);
 		}
 		body.update();
 	}
 
-	private void setAnimationMode(GameModel game, AnimationMode animationMode) {
-		if (this.animationMode != animationMode) {
-			this.animationMode = animationMode;
-			switch (animationMode) {
-			case COLORED -> {
+	private void setAnimationMode(GameModel game, AnimationMode newMode) {
+		if (animationMode != newMode) {
+			animationMode = newMode;
+			getChildren().setAll(newMode == AnimationMode.NUMBER ? value.getRoot() : body.getRoot());
+			switch (newMode) {
+			case COLORED_DRESS -> {
 				body.dress().setVisible(true);
 				body.setColored();
-				body.ensureFlashingAnimationStopped();
-				getChildren().setAll(body.getRoot());
+				body.ensureNotFlashing();
 			}
-			case BLUE -> {
+			case BLUE_DRESS -> {
 				body.dress().setVisible(true);
 				body.setBlue();
-				getChildren().setAll(body.getRoot());
+				body.ensureNotFlashing();
 			}
-			case FLASHING -> {
+			case FLASHING_DRESS -> {
 				body.dress().setVisible(true);
 				body.setBlue();
-				body.ensureFlashingAnimationRunning(game.level.numFlashes);
-				getChildren().setAll(body.getRoot());
+				body.ensureFlashing(game.level.numFlashes);
 			}
 			case EYES -> {
 				body.dress().setVisible(false);
-				body.ensureFlashingAnimationStopped();
-				getChildren().setAll(body.getRoot());
 			}
 			case NUMBER -> {
 				value.selectNumberAtIndex(ghost.killIndex);
 				// rotate node such that number can be read from left to right
 				setRotationAxis(Rotate.X_AXIS);
 				setRotate(0);
-				getChildren().setAll(value.getRoot());
 			}
 			}
 		}

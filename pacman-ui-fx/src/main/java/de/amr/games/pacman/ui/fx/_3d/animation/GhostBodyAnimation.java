@@ -116,7 +116,7 @@ public class GhostBodyAnimation {
 		return root3D;
 	}
 
-	public void ensureFlashingAnimationRunning(int numFlashes) {
+	public void ensureFlashing(int numFlashes) {
 		if (flashing == null) {
 			createFlashing(numFlashes);
 		}
@@ -127,7 +127,7 @@ public class GhostBodyAnimation {
 		}
 	}
 
-	public void ensureFlashingAnimationStopped() {
+	public void ensureNotFlashing() {
 		if (flashing != null && flashing.getStatus() == Status.RUNNING) {
 			pyDressColor.unbind();
 			pyEyePupilsColor.unbind();
@@ -137,14 +137,14 @@ public class GhostBodyAnimation {
 	}
 
 	public void setBlue() {
-		ensureFlashingAnimationStopped();
+		ensureNotFlashing();
 		pyDressColor.set(Rendering3D.getGhostDressColorBlue());
 		pyEyeBallsColor.set(Rendering3D.getGhostEyeBallColorFrightened());
 		pyEyePupilsColor.set(Rendering3D.getGhostPupilColorRed());
 	}
 
 	public void setColored() {
-		ensureFlashingAnimationStopped();
+		ensureNotFlashing();
 		pyDressColor.set(Rendering3D.getGhostDressColor(ghost.id));
 		pyEyeBallsColor.set(Rendering3D.getGhostEyeBallColor());
 		pyEyePupilsColor.set(Rendering3D.getGhostPupilColorBlue());
