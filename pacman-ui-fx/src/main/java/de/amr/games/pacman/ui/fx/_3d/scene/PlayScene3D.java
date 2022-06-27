@@ -33,6 +33,7 @@ import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
+import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import de.amr.games.pacman.ui.fx._3d.entity.World3D;
@@ -47,7 +48,6 @@ import de.amr.games.pacman.ui.fx.app.Talk;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.scene.input.KeyCode;
 
@@ -132,7 +132,7 @@ public class PlayScene3D extends GameScene3D {
 		var maze3D = world3D.getMaze3D();
 		maze3D.validateFoodShapes();
 		if (U.oneOf($.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) {
-			maze3D.energizerAnimations().forEach(Animation::play);
+			maze3D.energizers().forEach(Energizer3D::startBlinking);
 		}
 	}
 
@@ -172,7 +172,7 @@ public class PlayScene3D extends GameScene3D {
 			pac3D.reset($.game.world());
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.reset($.game));
 		}
-		case HUNTING -> maze3D.energizerAnimations().forEach(Animation::play);
+		case HUNTING -> maze3D.energizers().forEach(Energizer3D::startBlinking);
 		case PACMAN_DYING -> {
 			blockGameController();
 			$.game.ghosts().filter(ghost -> ghost.sameTile($.game.pac)).findAny()
@@ -207,7 +207,7 @@ public class PlayScene3D extends GameScene3D {
 
 		// exit HUNTING
 		if (e.oldGameState == GameState.HUNTING && e.newGameState != GameState.GHOST_DYING) {
-			maze3D.energizerAnimations().forEach(Animation::stop);
+			maze3D.energizers().forEach(Energizer3D::stopBlinking);
 			bonus3D.setVisible(false);
 		}
 	}

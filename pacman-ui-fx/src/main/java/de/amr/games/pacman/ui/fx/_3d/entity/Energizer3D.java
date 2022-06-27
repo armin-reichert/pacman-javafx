@@ -52,8 +52,12 @@ public class Energizer3D extends Pellet3D {
 		animation.setToZ(0.1);
 	}
 
-	public Animation animation() {
-		return animation;
+	public void startBlinking() {
+		animation.playFromStart();
+	}
+
+	public void stopBlinking() {
+		animation.stop();
 	}
 
 	@Override

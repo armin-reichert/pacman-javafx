@@ -163,11 +163,11 @@ public class Maze3D extends Group {
 	}
 
 	public void reset() {
-		energizerAnimations().forEach(Animation::stop);
-		energizers().forEach(node -> {
-			node.setScaleX(1.0);
-			node.setScaleY(1.0);
-			node.setScaleZ(1.0);
+		energizers().forEach(e3D -> {
+			e3D.setScaleX(1.0);
+			e3D.setScaleY(1.0);
+			e3D.setScaleZ(1.0);
+			e3D.stopBlinking();
 		});
 	}
 
@@ -199,9 +199,9 @@ public class Maze3D extends Group {
 				.forEach(foodGroup.getChildren()::add);
 	}
 
-	public Stream<Animation> energizerAnimations() {
-		return energizers().map(Energizer3D::animation);
-	}
+//	public Stream<Animation> energizerAnimations() {
+//		return energizers().map(Energizer3D::animation);
+//	}
 
 	public Optional<Shape3D> foodAt(V2i tile) {
 		return foodShapes().filter(food -> tile(food).equals(tile)).findFirst();
@@ -211,7 +211,7 @@ public class Maze3D extends Group {
 		boolean playAnimation = Ufx.rnd.nextDouble() < 0.66;
 		if (foodShape instanceof Energizer3D) {
 			var energizer = (Energizer3D) foodShape;
-			energizer.animation().stop();
+			energizer.stopBlinking();
 			playAnimation = true;
 		}
 		if (playAnimation) {
@@ -232,7 +232,7 @@ public class Maze3D extends Group {
 		return (V2i) foodNode.getUserData();
 	}
 
-	private Stream<Energizer3D> energizers() {
+	public Stream<Energizer3D> energizers() {
 		return foodShapes().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
 	}
 
