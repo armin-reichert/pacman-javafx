@@ -27,7 +27,6 @@ import static de.amr.games.pacman.model.common.actors.GhostState.LEAVING_HOUSE;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
 import java.util.Optional;
-import java.util.Random;
 import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
@@ -84,7 +83,6 @@ public class Maze3D extends Group {
 	public final IntegerProperty resolution = new SimpleIntegerProperty(8);
 	public final DoubleProperty wallHeight = new SimpleDoubleProperty(1.0);
 
-	private final Random rnd = new Random();
 	private final World world;
 	private final Group foundationGroup = new Group();
 	private final Group wallsGroup = new Group();
