@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.util;
 
 import java.util.Map;
+import java.util.Random;
 
 import javafx.animation.PauseTransition;
 import javafx.beans.binding.Bindings;
@@ -47,7 +48,17 @@ import javafx.util.Duration;
  */
 public class Ufx {
 
+	public static final Random rnd = new Random();
+
 	private Ufx() {
+	}
+
+	public static int rndFrom(int left, int right) {
+		return left + rnd.nextInt(right - left);
+	}
+
+	public static double rndFrom(double left, double right) {
+		return left + rnd.nextDouble() * (right - left);
 	}
 
 	public static void bindMaterialColor(PhongMaterial mat, ObjectProperty<Color> pyColor) {

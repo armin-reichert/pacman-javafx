@@ -23,10 +23,8 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._3d.animation;
 
-import java.util.Random;
-
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
-import javafx.animation.Interpolator;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Transition;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
@@ -41,38 +39,29 @@ import javafx.util.Duration;
  */
 public class FoodEatenAnimation extends Transition {
 
-	private final Random rnd = new Random();
 	private final Shape3D[] p;
 	private final Point3D[] v;
 
-	private int rndFrom(int left, int right) {
-		return left + rnd.nextInt(right - left);
-	}
-
-	private double rndFrom(double left, double right) {
-		return left + rnd.nextDouble() * (right - left);
-	}
-
 	public FoodEatenAnimation(Group parent, Shape3D foodShape, Color foodColor) {
 		boolean energizer = foodShape instanceof Energizer3D;
-		double duration = energizer ? rndFrom(1.0, 2.0) : rndFrom(0.5, 1.0);
-		int numParticles = energizer ? rndFrom(5, 30) : rndFrom(2, 10);
+		double seconds = energizer ? Ufx.rndFrom(1.0, 2.0) : Ufx.rndFrom(0.5, 1.0);
+		int numParticles = energizer ? Ufx.rndFrom(10, 20) : Ufx.rndFrom(2, 10);
 		p = new Shape3D[numParticles];
 		v = new Point3D[numParticles];
+		var material = new PhongMaterial(foodColor.grayscale());
 		for (int i = 0; i < numParticles; ++i) {
-			p[i] = newParticle(foodShape, energizer, foodColor.grayscale());
-			v[i] = new Point3D(rndFrom(0.05, 0.25), rndFrom(0.05, 0.25), -rndFrom(0.5, 2.0));
+			p[i] = newParticle(foodShape, energizer, material);
+			v[i] = new Point3D(Ufx.rndFrom(0.05, 0.25), Ufx.rndFrom(0.05, 0.25), -Ufx.rndFrom(0.5, 2.0));
 		}
 		parent.getChildren().addAll(p);
-		setCycleDuration(Duration.seconds(duration));
-		setInterpolator(Interpolator.EASE_OUT);
+		setCycleDuration(Duration.seconds(seconds));
 		setOnFinished(e -> parent.getChildren().removeAll(p));
 	}
 
-	private Shape3D newParticle(Shape3D foodShape, boolean energizer, Color color) {
-		double r = energizer ? rndFrom(0.1, 1.0) : rndFrom(0.1, 0.4);
+	private Shape3D newParticle(Shape3D foodShape, boolean energizer, PhongMaterial material) {
+		double r = energizer ? Ufx.rndFrom(0.1, 1.0) : Ufx.rndFrom(0.1, 0.4);
 		var particle = new Sphere(r);
-		particle.setMaterial(new PhongMaterial(color));
+		particle.setMaterial(material);
 		particle.setTranslateX(foodShape.getTranslateX());
 		particle.setTranslateY(foodShape.getTranslateY());
 		particle.setTranslateZ(foodShape.getTranslateZ());
