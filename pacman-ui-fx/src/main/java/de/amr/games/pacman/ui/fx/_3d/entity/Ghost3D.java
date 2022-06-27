@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.animation.GhostBodyAnimation;
 import de.amr.games.pacman.ui.fx._3d.animation.GhostValueAnimation;
@@ -50,14 +49,14 @@ import javafx.scene.transform.Rotate;
  */
 public class Ghost3D extends Group {
 
-	private enum AnimationMode {
+	private enum Mode {
 		COLORED_DRESS, BLUE_DRESS, FLASHING_DRESS, EYES, NUMBER;
 	}
 
 	private final Ghost ghost;
 	private final GhostValueAnimation value;
 	private final GhostBodyAnimation body;
-	private AnimationMode animationMode;
+	private Mode mode;
 
 	public Ghost3D(Ghost ghost, Model3D model3D, Rendering2D r2D) {
 		this.ghost = ghost;
@@ -71,51 +70,54 @@ public class Ghost3D extends Group {
 	}
 
 	public void update(GameModel game) {
-		if (ghost.killIndex != -1) {
-			setAnimationMode(game, AnimationMode.NUMBER);
-			return;
+		var newMode = switch (ghost.getState()) {
+		case LOCKED -> game.powerTimer.isRunning() ? frightenedMode(game) : Mode.COLORED_DRESS;
+		case LEAVING_HOUSE -> game.powerTimer.isRunning() ? frightenedMode(game) : Mode.COLORED_DRESS;
+		case FRIGHTENED -> frightenedMode(game);
+		case ENTERING_HOUSE -> Mode.EYES;
+		case DEAD -> ghost.killIndex >= 0 ? Mode.NUMBER : Mode.EYES;
+		default -> Mode.COLORED_DRESS;
+		};
+		if (mode != newMode) {
+			setMode(game, newMode);
 		}
-		if (ghost.is(GhostState.DEAD, GhostState.ENTERING_HOUSE)) {
-			setAnimationMode(game, AnimationMode.EYES);
-		} else if (game.powerTimer.isRunning()
-				&& ghost.is(GhostState.LOCKED, GhostState.LEAVING_HOUSE, GhostState.FRIGHTENED)) {
-			setAnimationMode(game, game.isPacPowerFading() ? AnimationMode.FLASHING_DRESS : AnimationMode.BLUE_DRESS);
-		} else {
-			setAnimationMode(game, AnimationMode.COLORED_DRESS);
+		if (mode != Mode.NUMBER) {
+			body.update();
 		}
-		body.update();
 	}
 
-	private void setAnimationMode(GameModel game, AnimationMode newMode) {
-		if (animationMode != newMode) {
-			animationMode = newMode;
-			getChildren().setAll(newMode == AnimationMode.NUMBER ? value.getRoot() : body.getRoot());
-			switch (newMode) {
-			case COLORED_DRESS -> {
-				body.dress().setVisible(true);
-				body.setColored();
-				body.ensureNotFlashing();
-			}
-			case BLUE_DRESS -> {
-				body.dress().setVisible(true);
-				body.setBlue();
-				body.ensureNotFlashing();
-			}
-			case FLASHING_DRESS -> {
-				body.dress().setVisible(true);
-				body.setBlue();
-				body.ensureFlashing(game.level.numFlashes);
-			}
-			case EYES -> {
-				body.dress().setVisible(false);
-			}
-			case NUMBER -> {
-				value.selectNumberAtIndex(ghost.killIndex);
-				// rotate node such that number can be read from left to right
-				setRotationAxis(Rotate.X_AXIS);
-				setRotate(0);
-			}
-			}
+	private Mode frightenedMode(GameModel game) {
+		return game.isPacPowerFading() ? Mode.FLASHING_DRESS : Mode.BLUE_DRESS;
+	}
+
+	private void setMode(GameModel game, Mode newMode) {
+		mode = newMode;
+		getChildren().setAll(newMode == Mode.NUMBER ? value.getRoot() : body.getRoot());
+		switch (newMode) {
+		case COLORED_DRESS -> {
+			body.dress().setVisible(true);
+			body.setColored();
+			body.ensureNotFlashing();
+		}
+		case BLUE_DRESS -> {
+			body.dress().setVisible(true);
+			body.setBlue();
+			body.ensureNotFlashing();
+		}
+		case FLASHING_DRESS -> {
+			body.dress().setVisible(true);
+			body.setBlue();
+			body.ensureFlashing(game.level.numFlashes);
+		}
+		case EYES -> {
+			body.dress().setVisible(false);
+		}
+		case NUMBER -> {
+			value.selectNumberAtIndex(ghost.killIndex);
+			// rotate node such that number can be read from left to right
+			setRotationAxis(Rotate.X_AXIS);
+			setRotate(0);
+		}
 		}
 	}
 }
