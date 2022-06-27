@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx._3d.animation;
 
 import java.util.Random;
 
-import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
@@ -51,7 +50,7 @@ public class FoodEatenAnimation extends Transition {
 	}
 
 	private double rndFrom(double left, double right) {
-		return U.lerp(left, right, rnd.nextDouble());
+		return left + rnd.nextDouble() * (right - left);
 	}
 
 	public FoodEatenAnimation(Group parent, Shape3D foodShape, Color foodColor) {
