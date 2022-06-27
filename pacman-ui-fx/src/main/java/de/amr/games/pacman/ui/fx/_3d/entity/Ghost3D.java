@@ -94,11 +94,8 @@ public class Ghost3D extends Group {
 		getChildren().setAll(newMode == Mode.NUMBER ? value.getRoot() : body.getRoot());
 		switch (newMode) {
 		case COLORED_DRESS -> body.wearColoredDress();
-		case BLUE_DRESS -> body.wearBlueDress();
-		case FLASHING_DRESS -> {
-			body.wearBlueDress();
-			body.ensureFlashing(game.level.numFlashes);
-		}
+		case BLUE_DRESS -> body.wearBlueDress(0);
+		case FLASHING_DRESS -> body.wearBlueDress(game.level.numFlashes);
 		case EYES -> body.dress().setVisible(false);
 		case NUMBER -> {
 			value.selectNumberAtIndex(ghost.killIndex);
