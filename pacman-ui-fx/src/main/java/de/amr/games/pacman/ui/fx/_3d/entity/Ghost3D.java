@@ -100,7 +100,6 @@ public class Ghost3D extends Group {
 			case BLUE -> {
 				body.dress().setVisible(true);
 				body.setBlue();
-				body.ensureFlashingAnimationStopped();
 				getChildren().setAll(body.getRoot());
 			}
 			case FLASHING -> {
@@ -119,7 +118,6 @@ public class Ghost3D extends Group {
 				// rotate node such that number can be read from left to right
 				setRotationAxis(Rotate.X_AXIS);
 				setRotate(0);
-				body.ensureFlashingAnimationStopped();
 				getChildren().setAll(value.getRoot());
 			}
 			}

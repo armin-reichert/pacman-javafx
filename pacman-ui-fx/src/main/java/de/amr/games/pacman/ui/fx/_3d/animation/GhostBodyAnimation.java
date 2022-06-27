@@ -133,16 +133,14 @@ public class GhostBodyAnimation {
 	}
 
 	public void setBlue() {
-		pyDressColor.unbind();
-		pyEyePupilsColor.unbind();
+		ensureFlashingAnimationStopped();
 		pyDressColor.set(Rendering3D.getGhostDressColorBlue());
 		pyEyeBallsColor.set(Rendering3D.getGhostEyeBallColorFrightened());
 		pyEyePupilsColor.set(Rendering3D.getGhostPupilColorRed());
 	}
 
 	public void setColored() {
-		pyDressColor.unbind();
-		pyEyePupilsColor.unbind();
+		ensureFlashingAnimationStopped();
 		pyDressColor.set(Rendering3D.getGhostDressColor(ghost.id));
 		pyEyeBallsColor.set(Rendering3D.getGhostEyeBallColor());
 		pyEyePupilsColor.set(Rendering3D.getGhostPupilColorBlue());
