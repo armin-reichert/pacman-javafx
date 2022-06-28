@@ -84,7 +84,6 @@ public class FoodEatenAnimation extends Transition {
 	@Override
 	protected void interpolate(double t) {
 		double dt = t == 0 ? 0 : t - tt;
-		logger.info("dt=%f", dt);
 		for (int i = 0; i < particle.length; ++i) {
 			var p = particle[i];
 			if (p.getTranslateZ() >= -0.5 // reached floor
