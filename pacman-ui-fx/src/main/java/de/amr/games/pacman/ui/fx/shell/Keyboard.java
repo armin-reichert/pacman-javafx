@@ -52,6 +52,11 @@ public class Keyboard {
 	private static byte currentMask;
 	private static final List<Runnable> handlers = new ArrayList<>();
 
+	public static void clear() {
+		currentEvent = null;
+		currentMask = 0;
+	}
+
 	public static void processEvent(KeyEvent e) {
 		if (e.isConsumed()) {
 			return;
