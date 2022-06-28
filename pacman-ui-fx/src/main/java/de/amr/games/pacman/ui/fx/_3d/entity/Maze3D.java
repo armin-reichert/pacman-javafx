@@ -42,8 +42,10 @@ import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.FoodEatenAnimation;
 import de.amr.games.pacman.ui.fx._3d.animation.RaiseAndLowerWallAnimation;
 import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
+import javafx.animation.SequentialTransition;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -67,6 +69,8 @@ import javafx.util.Duration;
 public class Maze3D extends Group {
 
 	private static final Logger logger = LogManager.getFormatterLogger();
+
+	public static final double FLOOR_THICKNESS = 0.1;
 
 	public static class MazeStyle {
 		public Color wallSideColor;
@@ -114,7 +118,7 @@ public class Maze3D extends Group {
 	private Node createFloor() {
 		double width = (double) world.numCols() * TS;
 		double height = (double) world.numRows() * TS;
-		double depth = 0.05;
+		double depth = FLOOR_THICKNESS;
 		var floor = new Box(width - 1, height - 1, depth);
 		floor.setTranslateX(0.5 * width);
 		floor.setTranslateY(0.5 * height);
@@ -216,17 +220,21 @@ public class Maze3D extends Group {
 	}
 
 	public void eatFood(Shape3D foodShape) {
-		boolean playAnimation = U.rnd.nextDouble() < 0.75;
+		boolean playAnimation = U.rnd.nextDouble() < 0.75; // for 75% of the pellets
 		if (foodShape instanceof Energizer3D) {
 			var energizer = (Energizer3D) foodShape;
 			energizer.stopBlinking();
 			playAnimation = true;
 		}
-		foodShape.setVisible(false);
+		// delay hiding of pellet for some milliseconds because in case the player approaches the pellet from the right, the
+		// pellet disappears too early (same-tile-collision in game model is too simple)
+		var hideFoodDelayed = Ufx.pauseSec(0.05, () -> foodShape.setVisible(false));
 		if (playAnimation) {
-			var animation = new FoodEatenAnimation(world, particleGroup, foodShape, mazeStyle.foodColor);
-			animation.setDelay(Duration.millis(100));
+			var animation = new SequentialTransition(hideFoodDelayed, //
+					new FoodEatenAnimation(world, particleGroup, foodShape, mazeStyle.foodColor));
 			animation.play();
+		} else {
+			hideFoodDelayed.play();
 		}
 	}
 
