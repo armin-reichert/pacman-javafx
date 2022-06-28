@@ -49,7 +49,6 @@ public class Env {
 	private Env() {
 	}
 
-	public static final String FLOOR_TEXTURE_PATH = "/common/";
 	public static final List<String> FLOOR_TEXTURES = List.of("none", "penrose-tiling.jpg", "escher-texture.jpg");
 
 	public static final BooleanProperty axesVisible = new SimpleBooleanProperty(false);
