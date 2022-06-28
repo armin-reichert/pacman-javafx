@@ -6,7 +6,9 @@
 	<artifactId>pacman-ui-fx</artifactId>
 	<version>1.0</version>
 	<properties>
+	<javafx.version>15.0.1</javafx.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<main.class>de.amr.games.pacman.ui.fx.app.PacManGameAppFX</main.class>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -22,12 +24,12 @@
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-media</artifactId>
-			<version>15.0.1</version>
+			<version>${javafx.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
-			<version>15.0.1</version>
+			<version>${javafx.version}</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -45,7 +47,7 @@
 				<artifactId>javafx-maven-plugin</artifactId>
 				<version>0.0.6</version>
 				<configuration>
-					<mainClass>de.amr.games.pacman.ui.fx.app.PacManGameAppFX</mainClass>
+					<mainClass>${main.class}</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>
