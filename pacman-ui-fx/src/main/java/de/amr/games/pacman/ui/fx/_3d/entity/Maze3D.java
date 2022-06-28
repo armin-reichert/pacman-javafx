@@ -101,11 +101,9 @@ public class Maze3D extends Group {
 	private final Group doorsGroup = new Group();
 	private final Group foodGroup = new Group();
 	private final Group particleGroup = new Group();
-	private final MazeStyle mazeStyle;
 
 	public Maze3D(World world, MazeStyle mazeStyle) {
 		this.world = world;
-		this.mazeStyle = mazeStyle;
 		getChildren().addAll(foundationGroup, foodGroup, particleGroup);
 		foundationGroup.getChildren().addAll(createFloor(), wallsGroup, doorsGroup);
 		build(mazeStyle);
@@ -206,12 +204,14 @@ public class Maze3D extends Group {
 	}
 
 	private void addFood(World world, Color foodColor) {
-		var meatBall = new PhongMaterial(foodColor);
+		foodGroup.getChildren().clear();
+		particleGroup.getChildren().clear();
+		var material = new PhongMaterial(foodColor);
 		world.tiles() //
 				.filter(world::isFoodTile) //
 				.map(tile -> world.isEnergizerTile(tile) //
-						? new Energizer3D(tile, meatBall, 3.0)
-						: new Pellet3D(tile, meatBall, 1.0))
+						? new Energizer3D(tile, material, 3.0)
+						: new Pellet3D(tile, material, 1.0))
 				.forEach(foodGroup.getChildren()::add);
 	}
 
@@ -231,7 +231,7 @@ public class Maze3D extends Group {
 		var hideFoodDelayed = Ufx.pauseSec(0.05, () -> foodShape.setVisible(false));
 		if (playAnimation) {
 			var animation = new SequentialTransition(hideFoodDelayed, //
-					new FoodEatenAnimation(world, particleGroup, foodShape, mazeStyle.foodColor));
+					new FoodEatenAnimation(world, particleGroup, foodShape));
 			animation.play();
 		} else {
 			hideFoodDelayed.play();

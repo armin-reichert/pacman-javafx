@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.app;
 
+import java.util.List;
+
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -48,13 +50,13 @@ public class Env {
 	}
 
 	public static final String FLOOR_TEXTURE_PATH = "/common/";
-	public static final String[] FLOOR_TEXTURES = { "none", "penrose-tiling.jpg", "escher-texture.jpg" };
+	public static final List<String> FLOOR_TEXTURES = List.of("none", "penrose-tiling.jpg", "escher-texture.jpg");
 
 	public static final BooleanProperty axesVisible = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<Color> bgColor = new SimpleObjectProperty<>(Color.CORNFLOWERBLUE);
 	public static final BooleanProperty debugUI = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<DrawMode> drawMode3D = new SimpleObjectProperty<>(DrawMode.FILL);
-	public static final StringProperty floorTexture = new SimpleStringProperty(FLOOR_TEXTURES[0]);
+	public static final StringProperty floorTexture = new SimpleStringProperty(FLOOR_TEXTURES.get(0));
 	public static final ObjectProperty<Color> floorColor = new SimpleObjectProperty<>(Color.rgb(10, 10, 70));
 	public static final IntegerProperty mazeResolution = new SimpleIntegerProperty(8);
 	public static final DoubleProperty mazeWallHeight = new SimpleDoubleProperty(2.0);
@@ -62,7 +64,7 @@ public class Env {
 	public static final ObjectProperty<Perspective> perspective = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
 	public static final BooleanProperty use3D = new SimpleBooleanProperty(true);
 
-	public static void toggle(BooleanProperty booleanPrpoperty) {
-		booleanPrpoperty.set(!booleanPrpoperty.get());
+	public static void toggle(BooleanProperty booleanProperty) {
+		booleanProperty.set(!booleanProperty.get());
 	}
 }

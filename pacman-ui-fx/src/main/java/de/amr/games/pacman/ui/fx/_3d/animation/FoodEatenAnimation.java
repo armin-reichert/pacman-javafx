@@ -50,55 +50,54 @@ public class FoodEatenAnimation extends Transition {
 	private static final Point3D GRAVITY = new Point3D(0, 0, 0.09);
 
 	private final World world;
-	private final Shape3D[] particle;
-	private Point3D[] velocity;
+	private Shape3D[] particles;
+	private Point3D[] velocities;
+	private double tt;
 
-	public FoodEatenAnimation(World world, Group parent, Shape3D foodShape, Color foodColor) {
+	public FoodEatenAnimation(World world, Group parent, Shape3D pellet) {
 		this.world = world;
-		boolean energizer = foodShape instanceof Energizer3D;
-		int numParticles = energizer ? U.randomInt(10, 30) : U.randomInt(4, 8);
-		particle = new Shape3D[numParticles];
-		velocity = new Point3D[numParticles];
-		var color = Color.gray(0.4, 0.25);
-		var material = new PhongMaterial(color);
-		for (int i = 0; i < numParticles; ++i) {
-			particle[i] = newParticle(foodShape, energizer, material);
-			velocity[i] = new Point3D(U.randomDouble(0.05, 0.25), U.randomDouble(0.05, 0.25), -U.randomDouble(0.25, 4.0));
-		}
-		parent.getChildren().addAll(particle);
+		createParticles(pellet);
+		parent.getChildren().addAll(particles);
 		setCycleDuration(Duration.seconds(1.5));
 		setInterpolator(Interpolator.EASE_OUT);
-		setOnFinished(e -> parent.getChildren().removeAll(particle));
+		setOnFinished(e -> parent.getChildren().removeAll(particles));
 	}
 
-	private Shape3D newParticle(Shape3D foodShape, boolean energizer, PhongMaterial material) {
-		double r = energizer ? U.randomDouble(0.1, 1.0) : U.randomDouble(0.1, 0.4);
-		var p = new Sphere(r);
-		p.setMaterial(material);
-		p.setTranslateX(foodShape.getTranslateX());
-		p.setTranslateY(foodShape.getTranslateY());
-		p.setTranslateZ(foodShape.getTranslateZ());
-		return p;
+	private void createParticles(Shape3D pellet) {
+		var energizer = pellet instanceof Energizer3D;
+		var numParticles = energizer ? U.randomInt(10, 25) : U.randomInt(4, 8);
+		var color = Color.gray(0.4, 0.25);
+		var material = new PhongMaterial(color);
+		particles = new Shape3D[numParticles];
+		velocities = new Point3D[numParticles];
+		for (int i = 0; i < numParticles; ++i) {
+			var r = energizer ? U.randomDouble(0.1, 1.0) : U.randomDouble(0.1, 0.4);
+			var particle = new Sphere(r);
+			particle.setMaterial(material);
+			particle.setTranslateX(pellet.getTranslateX());
+			particle.setTranslateY(pellet.getTranslateY());
+			particle.setTranslateZ(-World.TS);
+			particles[i] = particle;
+			velocities[i] = new Point3D(U.randomDouble(0.05, 0.25), U.randomDouble(0.05, 0.25), -U.randomDouble(0.25, 4.0));
+		}
 	}
 
 	@Override
 	protected void interpolate(double t) {
 		double dt = t == 0 ? 0 : t - tt;
-		for (int i = 0; i < particle.length; ++i) {
-			var p = particle[i];
+		for (int i = 0; i < particles.length; ++i) {
+			var p = particles[i];
 			if (p.getTranslateZ() >= -0.5 // reached floor
 					&& world.insideMap(p.getTranslateX(), p.getTranslateY())) {
 				p.setScaleZ(0.01);
-				velocity[i] = Point3D.ZERO;
+				velocities[i] = Point3D.ZERO;
 			} else {
-				p.setTranslateX(p.getTranslateX() + velocity[i].getX());
-				p.setTranslateY(p.getTranslateY() + velocity[i].getY());
-				p.setTranslateZ(p.getTranslateZ() + velocity[i].getZ());
-				velocity[i] = velocity[i].add(GRAVITY.multiply(60.0 * dt));
+				p.setTranslateX(p.getTranslateX() + velocities[i].getX());
+				p.setTranslateY(p.getTranslateY() + velocities[i].getY());
+				p.setTranslateZ(p.getTranslateZ() + velocities[i].getZ());
+				velocities[i] = velocities[i].add(GRAVITY.multiply(60.0 * dt));
 			}
 		}
 		tt = t;
 	}
-
-	private double tt;
 }

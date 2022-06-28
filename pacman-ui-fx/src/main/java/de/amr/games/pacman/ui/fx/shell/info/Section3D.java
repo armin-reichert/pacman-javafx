@@ -63,7 +63,7 @@ public class Section3D extends Section {
 		comboResolution.setOnAction(e -> Env.mazeResolution.set(comboResolution.getValue()));
 		sliderWallHeight = addSlider("Maze wall height", 0, 10, 8);
 		sliderWallHeight.valueProperty().addListener((obs, oldVal, newVal) -> Env.mazeWallHeight.set(newVal.doubleValue()));
-		comboFloorTexture = addComboBox("Floor texture", Env.FLOOR_TEXTURES);
+		comboFloorTexture = addComboBox("Floor texture", Env.FLOOR_TEXTURES.toArray(String[]::new));
 		comboFloorTexture.setOnAction(e -> Env.floorTexture.set(comboFloorTexture.getValue()));
 		pickerFloorColor = addColorPicker("Floor color", Env.floorColor.get());
 		pickerFloorColor.setOnAction(e -> Env.floorColor.set(pickerFloorColor.getValue()));
