@@ -43,8 +43,10 @@ public class Dashboard extends BorderPane {
 	public static final Font LABEL_FONT = Font.font("Tahoma", 12);
 	public static final Font TEXT_FONT = Font.font("Tahoma", 12);
 
+	// BorderPane:
 	private final VBox leftSide = new VBox();
 	private final VBox rightSide = new VBox();
+
 	private final SectionGeneral sectionGeneral;
 	private final SectionGame sectionGame;
 	private final Section3D section3D;
@@ -56,16 +58,15 @@ public class Dashboard extends BorderPane {
 		section3D = new Section3D(ui, gc, "3D Settings", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
 		sectionKeys = new SectionKeys(ui, gc, "Keyboard Shortcuts", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
 
-		leftSide.getChildren().addAll(sectionGeneral, sectionGame);
-		setLeft(leftSide);
-
-		rightSide.getChildren().addAll(section3D, sectionKeys);
-		setRight(rightSide);
-
 		sectionGeneral.setExpanded(false);
 		sectionGame.setExpanded(false);
 		section3D.setExpanded(false);
-		sectionKeys.setExpanded(false);
+		sectionKeys.setExpanded(true);
+
+		leftSide.getChildren().addAll(sectionGeneral, sectionGame, section3D);
+		rightSide.getChildren().addAll(sectionKeys);
+		setLeft(leftSide);
+		setRight(rightSide);
 
 		setVisible(false);
 	}

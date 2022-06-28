@@ -29,10 +29,8 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
-import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -63,7 +61,7 @@ public class SectionGame extends Section {
 			Font labelFont) {
 		super(ui, gc, title, minLabelWidth, textColor, textFont, labelFont);
 
-		comboGameVariant = addComboBox("Game Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
+		comboGameVariant = addComboBox("Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
 		comboGameVariant.setOnAction(e -> {
 			if (comboGameVariant.getValue() != gc.game().variant) {
 				gc.state().selectGameVariant(comboGameVariant.getValue());
@@ -88,10 +86,6 @@ public class SectionGame extends Section {
 		cbAutopilot = addCheckBox("Autopilot", Actions::toggleAutopilot);
 		cbImmunity = addCheckBox("Player immune", Actions::toggleImmunity);
 
-		addInfo("Canvas2D", () -> {
-			GameScene2D scene2D = (GameScene2D) ui.getCurrentGameScene();
-			return String.format("w=%.0f h=%.0f", scene2D.getCanvas().getWidth(), scene2D.getCanvas().getHeight());
-		}).available(() -> !ui.getCurrentGameScene().is3D());
 		addInfo("Game scene", () -> ui.getCurrentGameScene().getClass().getSimpleName());
 		addInfo("", () -> "w=%.0f h=%.0f".formatted(ui.getCurrentGameScene().getFXSubScene().getWidth(),
 				ui.getCurrentGameScene().getFXSubScene().getHeight()));
@@ -100,16 +94,13 @@ public class SectionGame extends Section {
 				gc.state().timer().isStopped() ? " (STOPPED)" : ""));
 		addInfo("", () -> "Remaining: %s".formatted(ticksToString(gc.state().timer().remaining())));
 
-		addInfo("Hunting timer",
+		addInfo("Hunting Phase",
 				() -> "%s #%d%s".formatted(gc.game().huntingTimer.phaseName(),
 						gc.game().huntingTimer.inScatterPhase() ? gc.game().huntingTimer.scatterPhase()
 								: gc.game().huntingTimer.chasingPhase(),
 						gc.game().huntingTimer.isStopped() ? " STOPPED" : ""));
 		addInfo("", () -> "Running:   %d".formatted(gc.game().huntingTimer.tick()));
 		addInfo("", () -> "Remaining: %s".formatted(ticksToString(gc.game().huntingTimer.remaining())));
-
-		addInfo("Credit", () -> "%d".formatted(gc.game().credit));
-		addInfo("Playing", () -> Ufx.yesNo(gc.game().playing));
 
 		addInfo("Pellets",
 				() -> String.format("%d of %d (%d energizers)", game().level.world.foodRemaining(),
