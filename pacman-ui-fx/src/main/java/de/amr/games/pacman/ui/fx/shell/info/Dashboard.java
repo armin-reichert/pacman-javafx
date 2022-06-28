@@ -37,34 +37,35 @@ import javafx.scene.text.Font;
  */
 public class Dashboard extends BorderPane {
 
-	public static final int COL_MIN_WIDTH = 100;
+	public static final int MIN_COL_WIDTH = 100;
+	public static final int MIN_LABEL_WIDTH = 120;
+	public static final Color TEXT_COLOR = Color.WHITE;
+	public static final Font LABEL_FONT = Font.font("Tahoma", 12);
+	public static final Font TEXT_FONT = Font.font("Tahoma", 12);
 
 	private final VBox leftSide = new VBox();
 	private final VBox rightSide = new VBox();
-	private SectionGeneral sectionGeneral;
-	private SectionGame sectionGame;
-	private Section3D section3D;
-	private SectionKeys sectionKeys;
+	private final SectionGeneral sectionGeneral;
+	private final SectionGame sectionGame;
+	private final Section3D section3D;
+	private final SectionKeys sectionKeys;
 
 	public Dashboard(GameUI ui, GameController gc) {
-		int minLabelWidth = 120;
-		Color textColor = Color.WHITE;
-		Font textFont = Font.font("Sans", 11);
-		Font labelFont = Font.font("Sans", 11);
+		sectionGeneral = new SectionGeneral(ui, gc, "General", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
+		sectionGame = new SectionGame(ui, gc, "Game", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
+		section3D = new Section3D(ui, gc, "3D Settings", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
+		sectionKeys = new SectionKeys(ui, gc, "Keyboard Shortcuts", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
 
-		setLeft(leftSide);
-		sectionGeneral = new SectionGeneral(ui, gc, "General", minLabelWidth, textColor, textFont, labelFont);
-		sectionGame = new SectionGame(ui, gc, "Game", minLabelWidth, textColor, textFont, labelFont);
 		leftSide.getChildren().addAll(sectionGeneral, sectionGame);
-		sectionGeneral.setExpanded(false);
-		sectionGame.setExpanded(true);
+		setLeft(leftSide);
 
-		setRight(rightSide);
-		section3D = new Section3D(ui, gc, "3D Settings", minLabelWidth, textColor, textFont, labelFont);
-		sectionKeys = new SectionKeys(ui, gc, "Keyboard Shortcuts", minLabelWidth, textColor, textFont, labelFont);
 		rightSide.getChildren().addAll(section3D, sectionKeys);
-		section3D.setExpanded(true);
-		sectionKeys.setExpanded(true);
+		setRight(rightSide);
+
+		sectionGeneral.setExpanded(false);
+		sectionGame.setExpanded(false);
+		section3D.setExpanded(false);
+		sectionKeys.setExpanded(false);
 
 		setVisible(false);
 	}
