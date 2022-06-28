@@ -32,6 +32,7 @@ import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -41,7 +42,6 @@ import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.FoodEatenAnimation;
 import de.amr.games.pacman.ui.fx._3d.animation.RaiseAndLowerWallAnimation;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.DoubleProperty;
@@ -212,18 +212,18 @@ public class Maze3D extends Group {
 	}
 
 	public void eatFood(Shape3D foodShape) {
-		boolean playAnimation = Ufx.rnd.nextDouble() < 0.66;
+		boolean playAnimation = U.rnd.nextDouble() < 0.75;
 		if (foodShape instanceof Energizer3D) {
 			var energizer = (Energizer3D) foodShape;
 			energizer.stopBlinking();
 			playAnimation = true;
 		}
+		foodShape.setVisible(false);
 		if (playAnimation) {
 			var animation = new FoodEatenAnimation(world, particleGroup, foodShape, mazeStyle.foodColor);
 			animation.setDelay(Duration.millis(100));
 			animation.play();
 		}
-		foodShape.setVisible(false);
 	}
 
 	public void validateFoodShapes() {
