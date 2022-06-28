@@ -29,7 +29,7 @@ import de.amr.games.pacman.ui.fx._3d.scene.cams.GameSceneCamera;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
-import de.amr.games.pacman.ui.fx.util.CoordinateAxes;
+import de.amr.games.pacman.ui.fx.util.CoordSystem;
 import javafx.collections.ObservableList;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
@@ -47,16 +47,21 @@ public abstract class GameScene3D implements GameScene {
 
 	private final SubScene fxSubScene;
 	private final Group contentRoot = new Group();
-	protected SceneContext $;
+	protected double width;
+	protected double height;
+	protected SceneContext ctx;
+
+	protected GameScene3D(double width, double height) {
+		contentRoot.getTransforms().add(new Translate(-width / 2, -height / 2));
+		var coords = new CoordSystem(1000);
+		coords.visibleProperty().bind(Env.axesVisible);
+		var light = new AmbientLight(Color.GHOSTWHITE);
+		var fxSceneRoot = new Group(contentRoot, coords, light);
+		fxSubScene = new SubScene(fxSceneRoot, 100, 100, true, SceneAntialiasing.BALANCED);
+	}
 
 	protected GameScene3D() {
-		var contentTranslate = new Translate((double) -ArcadeWorld.TILES_X * World.HTS,
-				(double) -ArcadeWorld.TILES_Y * World.HTS);
-		contentRoot.getTransforms().add(contentTranslate);
-		var axes = new CoordinateAxes(1000);
-		axes.visibleProperty().bind(Env.axesVisible);
-		var sceneRoot = new Group(contentRoot, new AmbientLight(Color.GHOSTWHITE), axes);
-		fxSubScene = new SubScene(sceneRoot, 100, 100, true, SceneAntialiasing.BALANCED);
+		this(ArcadeWorld.TILES_X * World.TS, ArcadeWorld.TILES_Y * World.TS);
 	}
 
 	protected ObservableList<Node> content() {
@@ -69,8 +74,8 @@ public abstract class GameScene3D implements GameScene {
 	}
 
 	@Override
-	public void setSceneContext(SceneContext context) {
-		$ = context;
+	public void setSceneContext(SceneContext ctx) {
+		this.ctx = ctx;
 	}
 
 	@Override
@@ -95,10 +100,10 @@ public abstract class GameScene3D implements GameScene {
 	}
 
 	protected void blockGameController() {
-		$.gameState().timer().resetIndefinitely();
+		ctx.gameState().timer().resetIndefinitely();
 	}
 
 	protected void unblockGameController() {
-		$.gameState().timer().expire();
+		ctx.gameState().timer().expire();
 	}
 }

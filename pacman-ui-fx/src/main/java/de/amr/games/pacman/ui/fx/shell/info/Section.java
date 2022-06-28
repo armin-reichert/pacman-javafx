@@ -79,7 +79,7 @@ public class Section extends TitledPane {
 		setContent(content);
 		content.setBackground(Ufx.colorBackground(new Color(0.2, 0.2, 0.4, 0.8)));
 		content.setHgap(4);
-		content.setVgap(2);
+		content.setVgap(3);
 		content.setPadding(new Insets(5));
 	}
 
