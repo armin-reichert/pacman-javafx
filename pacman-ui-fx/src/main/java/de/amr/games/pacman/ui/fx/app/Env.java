@@ -51,6 +51,7 @@ public class Env {
 	public static final String[] FLOOR_TEXTURES = { "none", "penrose-tiling.jpg", "escher-texture.jpg" };
 
 	public static final BooleanProperty axesVisible = new SimpleBooleanProperty(false);
+	public static final ObjectProperty<Color> bgColor = new SimpleObjectProperty<>(Color.CORNFLOWERBLUE);
 	public static final BooleanProperty debugUI = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<DrawMode> drawMode3D = new SimpleObjectProperty<>(DrawMode.FILL);
 	public static final StringProperty floorTexture = new SimpleStringProperty(FLOOR_TEXTURES[0]);

@@ -46,6 +46,7 @@ public class Section3D extends Section {
 	private ComboBox<Perspective> comboPerspective;
 	private ComboBox<Integer> comboResolution;
 	private Slider sliderWallHeight;
+	private ColorPicker pickerBgColor;
 	private ComboBox<String> comboFloorTexture;
 	private ColorPicker pickerFloorColor;
 	private CheckBox cbAxesVisible;
@@ -66,6 +67,8 @@ public class Section3D extends Section {
 		comboFloorTexture.setOnAction(e -> Env.floorTexture.set(comboFloorTexture.getValue()));
 		pickerFloorColor = addColorPicker("Floor color", Env.floorColor.get());
 		pickerFloorColor.setOnAction(e -> Env.floorColor.set(pickerFloorColor.getValue()));
+		pickerBgColor = addColorPicker("Background color", Env.bgColor.get());
+		pickerBgColor.setOnAction(e -> Env.bgColor.set(pickerBgColor.getValue()));
 		cbAxesVisible = addCheckBox("Show axes", () -> Env.toggle(Env.axesVisible));
 		cbWireframeMode = addCheckBox("Wireframe mode", Actions::toggleDrawMode);
 		addInfo("Shift+LEFT/RIGHT", "Camera -X / +X").available(() -> Env.perspective.get() == Perspective.TOTAL);

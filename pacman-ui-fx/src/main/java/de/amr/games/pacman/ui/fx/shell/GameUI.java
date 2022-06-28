@@ -64,8 +64,6 @@ public class GameUI implements GameEventAdapter {
 
 	private static final Logger logger = LogManager.getFormatterLogger();
 
-	public static final Color SCENE_BACKGROUND_COLOR = Color.CORNFLOWERBLUE;
-
 	private final GameController gameController;
 	private final Stage stage;
 	private final Scene scene;
@@ -88,9 +86,9 @@ public class GameUI implements GameEventAdapter {
 		dashboard = new Dashboard(this, gameController);
 
 		gameScenePlaceholder = new StackPane();
-		gameScenePlaceholder.setBackground(Ufx.colorBackground(SCENE_BACKGROUND_COLOR));
-		Env.drawMode3D.addListener((x, y, mode) -> gameScenePlaceholder
-				.setBackground(Ufx.colorBackground(mode == DrawMode.FILL ? SCENE_BACKGROUND_COLOR : Color.BLACK)));
+		Env.drawMode3D.addListener((x, y, z) -> updateBackground());
+		Env.bgColor.addListener((x, y, z) -> updateBackground());
+		updateBackground();
 
 		sceneRoot = new StackPane(gameScenePlaceholder, dashboard, flashMessageView);
 
@@ -119,6 +117,12 @@ public class GameUI implements GameEventAdapter {
 		stage.setScene(scene);
 		stage.centerOnScreen();
 		stage.show();
+	}
+
+	private void updateBackground() {
+		var mode = Env.drawMode3D.get();
+		var bgColor = Env.bgColor.get();
+		gameScenePlaceholder.setBackground(Ufx.colorBackground(mode == DrawMode.FILL ? bgColor : Color.BLACK));
 	}
 
 	public double getWidth() {
