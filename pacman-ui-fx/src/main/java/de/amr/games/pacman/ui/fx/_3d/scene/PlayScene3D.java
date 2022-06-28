@@ -35,6 +35,7 @@ import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
+import de.amr.games.pacman.ui.fx._3d.entity.Maze3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import de.amr.games.pacman.ui.fx._3d.entity.World3D;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamDrone;
@@ -130,8 +131,9 @@ public class PlayScene3D extends GameScene3D {
 	}
 
 	public void onSwitchFrom2D() {
+		var world = ctx.game.world();
 		var maze3D = world3D.getMaze3D();
-		maze3D.validateFoodShapes();
+		maze3D.foodShapes().forEach(shape3D -> shape3D.setVisible(!world.containsEatenFood(Maze3D.tile(shape3D))));
 		if (U.oneOf(ctx.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) {
 			maze3D.energizers().forEach(Energizer3D::startBlinking);
 		}

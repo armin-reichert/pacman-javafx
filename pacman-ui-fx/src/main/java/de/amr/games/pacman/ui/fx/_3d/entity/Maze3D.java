@@ -82,6 +82,10 @@ public class Maze3D extends Group {
 		PhongMaterial topMaterial;
 	}
 
+	public static V2i tile(Node foodNode) {
+		return (V2i) foodNode.getUserData();
+	}
+
 	public final IntegerProperty resolution = new SimpleIntegerProperty(8);
 	public final DoubleProperty wallHeight = new SimpleDoubleProperty(1.0);
 	public final ObjectProperty<Image> floorTexture = new SimpleObjectProperty<>();
@@ -226,16 +230,8 @@ public class Maze3D extends Group {
 		}
 	}
 
-	public void validateFoodShapes() {
-		foodShapes().forEach(food -> food.setVisible(!world.containsEatenFood(tile(food))));
-	}
-
-	private Stream<Shape3D> foodShapes() {
+	public Stream<Shape3D> foodShapes() {
 		return foodGroup.getChildren().stream().filter(Shape3D.class::isInstance).map(Shape3D.class::cast);
-	}
-
-	private V2i tile(Node foodNode) {
-		return (V2i) foodNode.getUserData();
 	}
 
 	public Stream<Energizer3D> energizers() {
