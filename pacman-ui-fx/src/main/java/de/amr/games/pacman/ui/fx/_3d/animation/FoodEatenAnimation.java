@@ -44,6 +44,7 @@ import javafx.util.Duration;
  */
 public class FoodEatenAnimation extends Transition {
 
+	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getFormatterLogger();
 
 	private static final Point3D GRAVITY = new Point3D(0, 0, 0.09);
