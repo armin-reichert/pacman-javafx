@@ -78,7 +78,7 @@ public class FoodEatenAnimation extends Transition {
 			particle.setTranslateY(pellet.getTranslateY());
 			particle.setTranslateZ(-World.TS);
 			particles[i] = particle;
-			velocities[i] = new Point3D(U.randomDouble(0.05, 0.25), U.randomDouble(0.05, 0.25), -U.randomDouble(0.25, 4.0));
+			velocities[i] = new Point3D(U.randomDouble(0.05, 0.25), U.randomDouble(0.05, 0.25), -U.randomDouble(0.25, 2.0));
 		}
 	}
 
