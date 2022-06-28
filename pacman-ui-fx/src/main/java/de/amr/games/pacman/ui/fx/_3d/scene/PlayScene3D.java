@@ -81,6 +81,7 @@ public class PlayScene3D extends GameScene3D {
 		content().add(world3D);
 		pac3D = new Pac3D($.game.pac, $.game.world(), $.model3D, Rendering3D.getPacSkullColor(),
 				Rendering3D.getPacEyesColor(), Rendering3D.getPacPalateColor());
+		pac3D.reset($.game.world());
 		content().add(pac3D);
 		ghosts3D = $.game.ghosts().map(ghost -> new Ghost3D(ghost, $.model3D, $.r2D)).toArray(Ghost3D[]::new);
 		Stream.of(ghosts3D).forEach(content()::add);
