@@ -23,9 +23,13 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._3d.animation;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
@@ -40,28 +44,31 @@ import javafx.util.Duration;
  */
 public class FoodEatenAnimation extends Transition {
 
+	private static final Logger logger = LogManager.getFormatterLogger();
+
 	private static final Point3D GRAVITY = new Point3D(0, 0, 0.09);
 
 	private final World world;
-	private final Shape3D[] particles;
-	private Point3D[] velocities;
+	private final Shape3D[] particle;
+	private Point3D[] velocity;
 
 	public FoodEatenAnimation(World world, Group parent, Shape3D foodShape, Color foodColor) {
 		this.world = world;
 		boolean energizer = foodShape instanceof Energizer3D;
-		int numParticles = energizer ? Ufx.randomInt(20, 50) : Ufx.randomInt(4, 8);
-		particles = new Shape3D[numParticles];
-		velocities = new Point3D[numParticles];
+		int numParticles = energizer ? Ufx.randomInt(10, 30) : Ufx.randomInt(4, 8);
+		particle = new Shape3D[numParticles];
+		velocity = new Point3D[numParticles];
 		var color = Color.gray(0.4, 0.25);
 		var material = new PhongMaterial(color);
 		for (int i = 0; i < numParticles; ++i) {
-			particles[i] = newParticle(foodShape, energizer, material);
-			velocities[i] = new Point3D(Ufx.randomDouble(0.05, 0.25), Ufx.randomDouble(0.05, 0.25),
-					-Ufx.randomDouble(0.25, 3.0));
+			particle[i] = newParticle(foodShape, energizer, material);
+			velocity[i] = new Point3D(Ufx.randomDouble(0.05, 0.25), Ufx.randomDouble(0.05, 0.25),
+					-Ufx.randomDouble(0.25, 4.0));
 		}
-		parent.getChildren().addAll(particles);
+		parent.getChildren().addAll(particle);
 		setCycleDuration(Duration.seconds(1.5));
-		setOnFinished(e -> parent.getChildren().removeAll(particles));
+		setInterpolator(Interpolator.EASE_OUT);
+		setOnFinished(e -> parent.getChildren().removeAll(particle));
 	}
 
 	private Shape3D newParticle(Shape3D foodShape, boolean energizer, PhongMaterial material) {
@@ -76,18 +83,23 @@ public class FoodEatenAnimation extends Transition {
 
 	@Override
 	protected void interpolate(double t) {
-		for (int i = 0; i < particles.length; ++i) {
-			var p = particles[i];
+		double dt = t == 0 ? 0 : t - tt;
+		logger.info("dt=%f", dt);
+		for (int i = 0; i < particle.length; ++i) {
+			var p = particle[i];
 			if (p.getTranslateZ() >= -0.5 // reached floor
 					&& world.insideMap(p.getTranslateX(), p.getTranslateY())) {
 				p.setScaleZ(0.01);
-				velocities[i] = Point3D.ZERO;
+				velocity[i] = Point3D.ZERO;
 			} else {
-				p.setTranslateX(p.getTranslateX() + velocities[i].getX());
-				p.setTranslateY(p.getTranslateY() + velocities[i].getY());
-				p.setTranslateZ(p.getTranslateZ() + velocities[i].getZ());
-				velocities[i] = velocities[i].add(GRAVITY);
+				p.setTranslateX(p.getTranslateX() + velocity[i].getX());
+				p.setTranslateY(p.getTranslateY() + velocity[i].getY());
+				p.setTranslateZ(p.getTranslateZ() + velocity[i].getZ());
+				velocity[i] = velocity[i].add(GRAVITY.multiply(60.0 * dt));
 			}
 		}
+		tt = t;
 	}
+
+	private double tt;
 }
