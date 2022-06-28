@@ -48,23 +48,27 @@ public class Dashboard extends BorderPane {
 	private final VBox rightSide = new VBox();
 
 	private final SectionGeneral sectionGeneral;
-	private final SectionGame sectionGame;
+	private final SectionGameControl sectionGameControl;
+	private final SectionGameInfo sectionGameInfo;
 	private final Section3D section3D;
 	private final SectionKeys sectionKeys;
 
 	public Dashboard(GameUI ui, GameController gc) {
 		sectionGeneral = new SectionGeneral(ui, gc, "General", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
-		sectionGame = new SectionGame(ui, gc, "Game", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
+		sectionGameControl = new SectionGameControl(ui, gc, "Game Control", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT,
+				LABEL_FONT);
+		sectionGameInfo = new SectionGameInfo(ui, gc, "Game Info", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
 		section3D = new Section3D(ui, gc, "3D Settings", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
 		sectionKeys = new SectionKeys(ui, gc, "Keyboard Shortcuts", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
 
 		sectionGeneral.setExpanded(false);
-		sectionGame.setExpanded(false);
+		sectionGameControl.setExpanded(false);
+		sectionGameInfo.setExpanded(false);
 		section3D.setExpanded(false);
 		sectionKeys.setExpanded(true);
 
-		leftSide.getChildren().addAll(sectionGeneral, sectionGame, section3D);
-		rightSide.getChildren().addAll(sectionKeys);
+		leftSide.getChildren().addAll(sectionGameControl, sectionGameInfo, section3D);
+		rightSide.getChildren().addAll(sectionGeneral, sectionKeys);
 		setLeft(leftSide);
 		setRight(rightSide);
 
@@ -72,7 +76,8 @@ public class Dashboard extends BorderPane {
 	}
 
 	public void update() {
-		sectionGame.update();
+		sectionGameControl.update();
+		sectionGameInfo.update();
 		sectionGeneral.update();
 		sectionKeys.update();
 		section3D.update();

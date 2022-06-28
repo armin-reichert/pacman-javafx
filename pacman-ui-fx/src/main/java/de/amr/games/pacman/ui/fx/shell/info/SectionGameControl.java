@@ -23,11 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell.info;
 
-import static de.amr.games.pacman.lib.TickTimer.ticksToString;
-
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
@@ -43,7 +40,7 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public class SectionGame extends Section {
+public class SectionGameControl extends Section {
 	private ComboBox<GameVariant> comboGameVariant;
 	private Button[] btnsGameControl;
 	private Button[] btnsIntermissionTest;
@@ -53,12 +50,8 @@ public class SectionGame extends Section {
 	private CheckBox cbAutopilot;
 	private CheckBox cbImmunity;
 
-	private static String fmtSpeed(float fraction) {
-		return String.format("%.2f px/sec", GameModel.BASE_SPEED * fraction);
-	}
-
-	public SectionGame(GameUI ui, GameController gc, String title, int minLabelWidth, Color textColor, Font textFont,
-			Font labelFont) {
+	public SectionGameControl(GameUI ui, GameController gc, String title, int minLabelWidth, Color textColor,
+			Font textFont, Font labelFont) {
 		super(ui, gc, title, minLabelWidth, textColor, textFont, labelFont);
 
 		comboGameVariant = addComboBox("Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
@@ -86,33 +79,6 @@ public class SectionGame extends Section {
 		cbAutopilot = addCheckBox("Autopilot", Actions::toggleAutopilot);
 		cbImmunity = addCheckBox("Player immune", Actions::toggleImmunity);
 
-		addInfo("Game scene", () -> ui.getCurrentGameScene().getClass().getSimpleName());
-		addInfo("", () -> "w=%.0f h=%.0f".formatted(ui.getCurrentGameScene().getFXSubScene().getWidth(),
-				ui.getCurrentGameScene().getFXSubScene().getHeight()));
-		addInfo("Game State", () -> "%s".formatted(gc.state()));
-		addInfo("", () -> "Running:   %s%s".formatted(gc.state().timer().tick(),
-				gc.state().timer().isStopped() ? " (STOPPED)" : ""));
-		addInfo("", () -> "Remaining: %s".formatted(ticksToString(gc.state().timer().remaining())));
-
-		addInfo("Hunting Phase",
-				() -> "%s #%d%s".formatted(gc.game().huntingTimer.phaseName(),
-						gc.game().huntingTimer.inScatterPhase() ? gc.game().huntingTimer.scatterPhase()
-								: gc.game().huntingTimer.chasingPhase(),
-						gc.game().huntingTimer.isStopped() ? " STOPPED" : ""));
-		addInfo("", () -> "Running:   %d".formatted(gc.game().huntingTimer.tick()));
-		addInfo("", () -> "Remaining: %s".formatted(ticksToString(gc.game().huntingTimer.remaining())));
-
-		addInfo("Pellets",
-				() -> String.format("%d of %d (%d energizers)", game().level.world.foodRemaining(),
-						game().level.world.tiles().filter(game().level.world::isFoodTile).count(),
-						game().level.world.energizerTiles().count()));
-		addInfo("Ghost speed", () -> fmtSpeed(game().level.ghostSpeed));
-		addInfo("- frightened", () -> fmtSpeed(game().level.ghostSpeedFrightened));
-		addInfo("- in tunnel", () -> fmtSpeed(game().level.ghostSpeedTunnel));
-		addInfo("Pac-Man speed", () -> fmtSpeed(game().level.playerSpeed));
-		addInfo("- empowered", () -> fmtSpeed(game().level.playerSpeedPowered));
-		addInfo("Frightened time", () -> String.format("%d sec", game().level.ghostFrightenedSeconds));
-		addInfo("Maze flashings", () -> game().level.numFlashes);
 	}
 
 	@Override
