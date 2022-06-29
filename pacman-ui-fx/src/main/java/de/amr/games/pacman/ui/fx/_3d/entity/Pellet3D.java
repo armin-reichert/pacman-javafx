@@ -40,15 +40,10 @@ import javafx.scene.shape.Sphere;
  */
 public class Pellet3D extends Sphere {
 
-	private class UserData {
-		private V2i tile;
-		private Animation animation;
-	}
+	private Animation animation;
 
 	public Pellet3D(V2i tile, PhongMaterial material, double radius) {
-		var data = new UserData();
-		data.tile = tile;
-		setUserData(data);
+		setUserData(tile);
 		setMaterial(material);
 		setRadius(radius);
 		setTranslateX(tile.x * TS + HTS);
@@ -57,18 +52,15 @@ public class Pellet3D extends Sphere {
 	}
 
 	public V2i tile() {
-		var data = (UserData) getUserData();
-		return data.tile;
+		return (V2i) getUserData();
 	}
 
 	public Optional<Animation> getEatenAnimation() {
-		var data = (UserData) getUserData();
-		return Optional.ofNullable(data.animation);
+		return Optional.ofNullable(animation);
 	}
 
 	public void setEatenAnimation(Animation animation) {
-		var data = (UserData) getUserData();
-		data.animation = animation;
+		this.animation = animation;
 	}
 
 	@Override
