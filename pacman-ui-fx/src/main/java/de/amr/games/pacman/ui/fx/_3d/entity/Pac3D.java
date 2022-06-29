@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.ui.fx._3d.animation.FillTransition3D;
+import de.amr.games.pacman.ui.fx._3d.animation.ColorChangeTransition;
 import de.amr.games.pacman.ui.fx._3d.animation.MotionAnimation;
 import de.amr.games.pacman.ui.fx._3d.animation.PortalAppearance;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
@@ -102,9 +102,12 @@ public class Pac3D extends Group {
 	 */
 	public Animation createDyingAnimation(Color ghostColor) {
 
-		var colorChangingTime = Duration.seconds(2);
-		var poisened = new FillTransition3D(colorChangingTime.multiply(0.9), face(), normalFaceColor, ghostColor);
-		var impaling = new FillTransition3D(colorChangingTime.multiply(0.1), face(), ghostColor, Color.GHOSTWHITE);
+		var poisened = new ColorChangeTransition(Duration.seconds(1.5), normalFaceColor, ghostColor, pyFaceColor,
+				() -> face().setMaterial(faceMaterial));
+		var impaling = new ColorChangeTransition(Duration.seconds(0.5), ghostColor, Color.GHOSTWHITE, pyFaceColor,
+				() -> face().setMaterial(faceMaterial));
+
+		var faceColorChange = new SequentialTransition(poisened, impaling);
 
 		var collapsingTime = Duration.seconds(1.8);
 		var numSpins = 10;
@@ -124,7 +127,9 @@ public class Pac3D extends Group {
 		sinking.setFromZ(0);
 		sinking.setToZ(World.HTS);
 
-		return new SequentialTransition(poisened, impaling, new ParallelTransition(spinning, shrinking, sinking));
+		return new SequentialTransition( //
+				faceColorChange, //
+				new ParallelTransition(spinning, shrinking, sinking));
 	}
 
 	private Shape3D face() {

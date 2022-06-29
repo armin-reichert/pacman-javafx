@@ -23,37 +23,37 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.animation;
 
-import javafx.animation.FillTransition;
 import javafx.animation.Transition;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Shape3D;
 import javafx.util.Duration;
 
 /**
- * Kind of a {@link FillTransition} for 3D shapes.
- * 
  * @author Armin Reichert
  */
-public class FillTransition3D extends Transition {
+public class ColorChangeTransition extends Transition {
 
-	private final Shape3D shape;
-	private final PhongMaterial material;
 	private Color fromColor;
 	private Color toColor;
+	private final ObjectProperty<Color> pyColor;
+	private Runnable callback;
 
-	public FillTransition3D(Duration duration, Shape3D shape, Color fromColor, Color toColor) {
-		this.shape = shape;
+	public ColorChangeTransition(Duration duration, Color fromColor, Color toColor, ObjectProperty<Color> pyTargetColor,
+			Runnable callback) {
 		this.fromColor = fromColor;
 		this.toColor = toColor;
-		this.material = new PhongMaterial(fromColor);
+		this.callback = callback;
+		pyColor = new SimpleObjectProperty<>(fromColor);
+		pyTargetColor.bind(pyColor);
+		setOnFinished(e -> pyTargetColor.unbind());
 		setCycleCount(1);
 		setCycleDuration(duration);
 	}
 
 	@Override
 	protected void interpolate(double t) {
-		material.setDiffuseColor(fromColor.interpolate(toColor, t));
-		shape.setMaterial(material);
+		pyColor.setValue(fromColor.interpolate(toColor, t));
+		callback.run();
 	}
 }
