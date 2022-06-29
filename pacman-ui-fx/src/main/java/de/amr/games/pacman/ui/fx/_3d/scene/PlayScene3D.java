@@ -177,12 +177,15 @@ public class PlayScene3D extends GameScene3D {
 		}
 		case HUNTING -> maze3D.energizers().forEach(Energizer3D::startBlinking);
 		case PACMAN_DYING -> {
-			blockGameController();
-			ctx.game.ghosts().filter(ghost -> ghost.sameTile(ctx.game.pac)).findAny()
-					.ifPresent(killer -> new SequentialTransition( //
-							pac3D.createDyingAnimation(ctx.r2D.getGhostColor(killer.id)), //
-							Ufx.pauseSec(2.0, this::unblockGameController) //
-					).play());
+			var killer = ctx.game.ghosts().filter(ghost -> ghost.sameTile(ctx.game.pac)).findAny();
+			if (killer.isPresent()) {
+				var color = ctx.r2D.getGhostColor(killer.get().id);
+				var animation = new SequentialTransition( //
+						Ufx.pauseSec(0.0, this::blockGameController), //
+						pac3D.createDyingAnimation(color), //
+						Ufx.pauseSec(2.0, this::unblockGameController));
+				animation.play();
+			}
 		}
 		case LEVEL_STARTING -> {
 			blockGameController();
