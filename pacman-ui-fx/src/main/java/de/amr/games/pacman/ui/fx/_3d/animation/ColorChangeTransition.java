@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx._3d.animation;
 
 import javafx.animation.Transition;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
@@ -36,24 +35,18 @@ public class ColorChangeTransition extends Transition {
 
 	private Color fromColor;
 	private Color toColor;
-	private final ObjectProperty<Color> pyColor;
-	private Runnable callback;
+	private final ObjectProperty<Color> pyTargetColor;
 
-	public ColorChangeTransition(Duration duration, Color fromColor, Color toColor, ObjectProperty<Color> pyTargetColor,
-			Runnable callback) {
+	public ColorChangeTransition(Duration duration, Color fromColor, Color toColor, ObjectProperty<Color> pyTargetColor) {
 		this.fromColor = fromColor;
 		this.toColor = toColor;
-		this.callback = callback;
-		pyColor = new SimpleObjectProperty<>(fromColor);
-		pyTargetColor.bind(pyColor);
-		setOnFinished(e -> pyTargetColor.unbind());
+		this.pyTargetColor = pyTargetColor;
 		setCycleCount(1);
 		setCycleDuration(duration);
 	}
 
 	@Override
 	protected void interpolate(double t) {
-		pyColor.setValue(fromColor.interpolate(toColor, t));
-		callback.run();
+		pyTargetColor.setValue(fromColor.interpolate(toColor, t));
 	}
 }

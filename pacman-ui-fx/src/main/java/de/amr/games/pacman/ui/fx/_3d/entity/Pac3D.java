@@ -101,16 +101,11 @@ public class Pac3D extends Group {
 	 * @return dying animation (must not be longer than time reserved by game controller which is 5 seconds!)
 	 */
 	public Animation createDyingAnimation(Color ghostColor) {
-
-		var poisened = new ColorChangeTransition(Duration.seconds(1.5), normalFaceColor, ghostColor, pyFaceColor,
-				() -> face().setMaterial(faceMaterial));
-		var impaling = new ColorChangeTransition(Duration.seconds(0.5), ghostColor, Color.GHOSTWHITE, pyFaceColor,
-				() -> face().setMaterial(faceMaterial));
-
-		var faceColorChange = new SequentialTransition(poisened, impaling);
-
-		var collapsingTime = Duration.seconds(1.8);
+		var collapsingTime = Duration.seconds(2.0);
 		var numSpins = 10;
+
+		var poisened = new ColorChangeTransition(Duration.seconds(1.0), normalFaceColor, ghostColor, pyFaceColor);
+		var impaling = new ColorChangeTransition(collapsingTime, ghostColor, Color.GHOSTWHITE, pyFaceColor);
 
 		var spinning = new RotateTransition(collapsingTime.divide(numSpins), root3D);
 		spinning.setAxis(Rotate.Z_AXIS);
@@ -128,8 +123,9 @@ public class Pac3D extends Group {
 		sinking.setToZ(World.HTS);
 
 		return new SequentialTransition( //
-				faceColorChange, //
-				new ParallelTransition(spinning, shrinking, sinking));
+				Ufx.pauseSec(1.0), //
+				poisened, //
+				new ParallelTransition(impaling, spinning, shrinking, sinking));
 	}
 
 	private Shape3D face() {
