@@ -43,7 +43,7 @@ public class SquirtingAnimation extends Transition {
 
 	private final World world;
 	private Sphere[] drops;
-	private Point3D[] velocities;
+	private Point3D[] veloc;
 
 	public SquirtingAnimation(World world, Group parent, Shape3D pellet) {
 		this.world = world;
@@ -58,7 +58,7 @@ public class SquirtingAnimation extends Transition {
 		var color = Color.gray(0.4, 0.25);
 		var material = new PhongMaterial(color);
 		drops = new Sphere[numDrops];
-		velocities = new Point3D[numDrops];
+		veloc = new Point3D[numDrops];
 		for (int i = 0; i < numDrops; ++i) {
 			var r = bigSquirt ? U.randomDouble(0.1, 1.0) : U.randomDouble(0.1, 0.5);
 			var drop = new Sphere(r);
@@ -68,7 +68,7 @@ public class SquirtingAnimation extends Transition {
 			drop.setTranslateZ(-World.TS);
 			drop.setVisible(false);
 			drops[i] = drop;
-			velocities[i] = new Point3D(U.randomDouble(0.05, 0.25), U.randomDouble(0.05, 0.25), -U.randomDouble(1.0, 4.0));
+			veloc[i] = new Point3D(U.randomDouble(0.05, 0.25), U.randomDouble(0.05, 0.25), -U.randomDouble(1.0, 4.0));
 		}
 	}
 
@@ -79,13 +79,13 @@ public class SquirtingAnimation extends Transition {
 			if (drop.getTranslateZ() >= -0.5 // reached floor
 					&& world.insideMap(drop.getTranslateX(), drop.getTranslateY())) {
 				drop.setScaleZ(0.01);
-				velocities[i] = Point3D.ZERO;
+				veloc[i] = Point3D.ZERO;
 			} else {
 				drop.setVisible(true);
-				drop.setTranslateX(drop.getTranslateX() + velocities[i].getX());
-				drop.setTranslateY(drop.getTranslateY() + velocities[i].getY());
-				drop.setTranslateZ(drop.getTranslateZ() + velocities[i].getZ());
-				velocities[i] = velocities[i].add(GRAVITY);
+				drop.setTranslateX(drop.getTranslateX() + veloc[i].getX());
+				drop.setTranslateY(drop.getTranslateY() + veloc[i].getY());
+				drop.setTranslateZ(drop.getTranslateZ() + veloc[i].getZ());
+				veloc[i] = veloc[i].add(GRAVITY);
 			}
 		}
 	}
