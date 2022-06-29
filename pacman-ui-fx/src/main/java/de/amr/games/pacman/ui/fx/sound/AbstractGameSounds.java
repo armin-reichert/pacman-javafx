@@ -32,8 +32,8 @@ import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.amr.games.pacman.controller.common.GameSounds;
 import de.amr.games.pacman.model.common.GameSound;
-import de.amr.games.pacman.model.common.GameSounds;
 import javafx.animation.Animation;
 import javafx.scene.media.AudioClip;
 

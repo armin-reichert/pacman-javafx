@@ -27,11 +27,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
+import de.amr.games.pacman.controller.common.GameSounds;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
-import de.amr.games.pacman.model.common.GameSounds;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.SpritesheetMsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.SpritesheetPacMan;

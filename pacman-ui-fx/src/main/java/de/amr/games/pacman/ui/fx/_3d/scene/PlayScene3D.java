@@ -153,6 +153,11 @@ public class PlayScene3D extends GameScene3D {
 	}
 
 	@Override
+	public void onPlayerGetsExtraLife(GameEvent e) {
+		ctx.gameController.sounds().ifPresent(snd -> snd.play(GameSound.EXTRA_LIFE));
+	}
+
+	@Override
 	public void onBonusGetsActive(GameEvent e) {
 		bonus3D.showSymbol(ctx.r2D);
 	}

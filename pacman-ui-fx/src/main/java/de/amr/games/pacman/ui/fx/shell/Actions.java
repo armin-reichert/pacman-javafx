@@ -25,8 +25,8 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell;
 
 import de.amr.games.pacman.controller.common.GameController;
+import de.amr.games.pacman.controller.common.GameSounds;
 import de.amr.games.pacman.controller.common.GameState;
-import de.amr.games.pacman.model.common.GameSounds;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.app.Talk;

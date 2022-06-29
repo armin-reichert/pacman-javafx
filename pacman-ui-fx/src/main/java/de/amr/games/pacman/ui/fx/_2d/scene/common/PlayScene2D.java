@@ -118,4 +118,9 @@ public class PlayScene2D extends GameScene2D {
 	public void onBonusGetsEaten(GameEvent e) {
 		ctx.gameController.sounds().ifPresent(snd -> snd.play(GameSound.BONUS_EATEN));
 	}
+
+	@Override
+	public void onPlayerGetsExtraLife(GameEvent e) {
+		ctx.gameController.sounds().ifPresent(snd -> snd.play(GameSound.EXTRA_LIFE));
+	}
 }
