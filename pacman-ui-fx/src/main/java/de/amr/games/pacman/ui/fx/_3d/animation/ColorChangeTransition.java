@@ -33,8 +33,8 @@ import javafx.util.Duration;
  */
 public class ColorChangeTransition extends Transition {
 
-	private Color fromColor;
-	private Color toColor;
+	private final Color fromColor;
+	private final Color toColor;
 	private final ObjectProperty<Color> pyTargetColor;
 
 	public ColorChangeTransition(Duration duration, Color fromColor, Color toColor, ObjectProperty<Color> pyTargetColor) {
