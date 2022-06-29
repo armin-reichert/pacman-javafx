@@ -32,15 +32,14 @@ import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.ui.fx._3d.animation.FoodEatenAnimation;
 import de.amr.games.pacman.ui.fx._3d.animation.RaiseAndLowerWallAnimation;
+import de.amr.games.pacman.ui.fx._3d.animation.SquirtingAnimation;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
@@ -58,7 +57,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.Shape3D;
 import javafx.util.Duration;
 
 /**
@@ -84,10 +82,6 @@ public class Maze3D extends Group {
 		double height;
 		PhongMaterial baseMaterial;
 		PhongMaterial topMaterial;
-	}
-
-	public static V2i tile(Node foodNode) {
-		return (V2i) foodNode.getUserData();
 	}
 
 	public final IntegerProperty resolution = new SimpleIntegerProperty(8);
@@ -177,11 +171,11 @@ public class Maze3D extends Group {
 	}
 
 	public void reset() {
-		energizers().forEach(e3D -> {
+		energizers3D().forEach(e3D -> {
 			e3D.setScaleX(1.0);
 			e3D.setScaleY(1.0);
 			e3D.setScaleZ(1.0);
-			e3D.stopBlinking();
+			e3D.stopPumping();
 		});
 	}
 
@@ -207,43 +201,57 @@ public class Maze3D extends Group {
 		foodGroup.getChildren().clear();
 		particleGroup.getChildren().clear();
 		var material = new PhongMaterial(foodColor);
+		var blueMaterial = new PhongMaterial(Color.CORNFLOWERBLUE);
 		world.tiles() //
 				.filter(world::isFoodTile) //
-				.map(tile -> world.isEnergizerTile(tile) //
-						? new Energizer3D(tile, material, 3.0)
-						: new Pellet3D(tile, material, 1.0))
-				.forEach(foodGroup.getChildren()::add);
+				.map(tile -> {
+					if (world.isEnergizerTile(tile)) {
+						var energizer3D = new Energizer3D(tile, material, 3.0);
+						energizer3D.setEatenAnimation(new SquirtingAnimation(world, particleGroup, energizer3D));
+						return energizer3D;
+					} else {
+						var bluePill = tile.neighbors().filter(world::isWall).count() == 0;
+						if (bluePill) {
+							var pellet3D = new Pellet3D(tile, blueMaterial, 1.5);
+							pellet3D.setEatenAnimation(new SquirtingAnimation(world, particleGroup, pellet3D));
+							return pellet3D;
+						} else {
+							var pellet3D = new Pellet3D(tile, material, 1.0);
+							return pellet3D;
+						}
+					}
+				}).forEach(foodGroup.getChildren()::add);
 	}
 
-	public Optional<Shape3D> foodAt(V2i tile) {
-		return foodShapes().filter(food -> tile(food).equals(tile)).findFirst();
+	public Optional<Pellet3D> foodAt(V2i tile) {
+		return pellets3D().filter(pellet3D -> pellet3D.tile().equals(tile)).findFirst();
 	}
 
-	public void eatFood(Shape3D foodShape) {
-		boolean playAnimation = U.rnd.nextDouble() < 0.75; // for 75% of the pellets
-		if (foodShape instanceof Energizer3D) {
-			var energizer = (Energizer3D) foodShape;
-			energizer.stopBlinking();
-			playAnimation = true;
+	public void eatFood(Pellet3D pellet3D) {
+		if (pellet3D instanceof Energizer3D) {
+			var energizer = (Energizer3D) pellet3D;
+			energizer.stopPumping();
 		}
-		// delay hiding of pellet for some milliseconds because in case the player approaches the pellet from the right, the
-		// pellet disappears too early (same-tile-collision in game model is too simple)
-		var hideFoodDelayed = Ufx.pauseSec(0.05, () -> foodShape.setVisible(false));
-		if (playAnimation) {
-			var animation = new SequentialTransition(hideFoodDelayed, //
-					new FoodEatenAnimation(world, particleGroup, foodShape));
-			animation.play();
+		// Delay hiding of pellet for some milliseconds because in case the player approaches the pellet from the right,
+		// the pellet disappears too early (collision by same tile in game model is too simplistic).
+		var delayHiding = Ufx.pauseSec(0.05, () -> pellet3D.setVisible(false));
+		var eatenAnimation = pellet3D.getEatenAnimation();
+		if (eatenAnimation.isPresent()) {
+			new SequentialTransition(delayHiding, eatenAnimation.get()).play();
 		} else {
-			hideFoodDelayed.play();
+			delayHiding.play();
 		}
 	}
 
-	public Stream<Shape3D> foodShapes() {
-		return foodGroup.getChildren().stream().filter(Shape3D.class::isInstance).map(Shape3D.class::cast);
+	/**
+	 * @return all 3D pellets, including energizers
+	 */
+	public Stream<Pellet3D> pellets3D() {
+		return foodGroup.getChildren().stream().filter(Pellet3D.class::isInstance).map(Pellet3D.class::cast);
 	}
 
-	public Stream<Energizer3D> energizers() {
-		return foodShapes().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
+	public Stream<Energizer3D> energizers3D() {
+		return pellets3D().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
 	}
 
 	// -------------------------------------------------------------------------------------------

@@ -37,32 +37,31 @@ import javafx.util.Duration;
  */
 public class Energizer3D extends Pellet3D {
 
-	private final ScaleTransition animation;
+	private final ScaleTransition pumping;
 
 	public Energizer3D(V2i tile, PhongMaterial material, double radius) {
 		super(tile, material, radius);
-		animation = new ScaleTransition(Duration.seconds(1.0 / 6), this);
-		animation.setAutoReverse(true);
-		animation.setCycleCount(Animation.INDEFINITE);
-		animation.setFromX(1.0);
-		animation.setFromY(1.0);
-		animation.setFromZ(1.0);
-		animation.setToX(0.1);
-		animation.setToY(0.1);
-		animation.setToZ(0.1);
+		pumping = new ScaleTransition(Duration.seconds(1.0 / 6), this);
+		pumping.setAutoReverse(true);
+		pumping.setCycleCount(Animation.INDEFINITE);
+		pumping.setFromX(1.0);
+		pumping.setFromY(1.0);
+		pumping.setFromZ(1.0);
+		pumping.setToX(0.1);
+		pumping.setToY(0.1);
+		pumping.setToZ(0.1);
 	}
 
-	public void startBlinking() {
-		animation.playFromStart();
+	public void startPumping() {
+		pumping.playFromStart();
 	}
 
-	public void stopBlinking() {
-		animation.stop();
+	public void stopPumping() {
+		pumping.stop();
 	}
 
 	@Override
 	public String toString() {
-		return String.format("[Energizer, tile; %s, animation running: %s]", tile(),
-				animation.getStatus() == Status.RUNNING);
+		return String.format("[Energizer, tile; %s, animation running: %s]", tile(), pumping.getStatus() == Status.RUNNING);
 	}
 }

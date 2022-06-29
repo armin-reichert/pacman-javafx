@@ -26,7 +26,10 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
+import java.util.Optional;
+
 import de.amr.games.pacman.lib.V2i;
+import javafx.animation.Animation;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
 
@@ -37,8 +40,15 @@ import javafx.scene.shape.Sphere;
  */
 public class Pellet3D extends Sphere {
 
+	private class UserData {
+		private V2i tile;
+		private Animation animation;
+	}
+
 	public Pellet3D(V2i tile, PhongMaterial material, double radius) {
-		setUserData(tile);
+		var data = new UserData();
+		data.tile = tile;
+		setUserData(data);
 		setMaterial(material);
 		setRadius(radius);
 		setTranslateX(tile.x * TS + HTS);
@@ -47,7 +57,18 @@ public class Pellet3D extends Sphere {
 	}
 
 	public V2i tile() {
-		return (V2i) getUserData();
+		var data = (UserData) getUserData();
+		return data.tile;
+	}
+
+	public Optional<Animation> getEatenAnimation() {
+		var data = (UserData) getUserData();
+		return Optional.ofNullable(data.animation);
+	}
+
+	public void setEatenAnimation(Animation animation) {
+		var data = (UserData) getUserData();
+		data.animation = animation;
 	}
 
 	@Override
