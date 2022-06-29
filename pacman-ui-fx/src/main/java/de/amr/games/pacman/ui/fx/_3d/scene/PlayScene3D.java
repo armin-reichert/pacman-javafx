@@ -31,6 +31,7 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.U;
+import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
@@ -159,6 +160,7 @@ public class PlayScene3D extends GameScene3D {
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
 		bonus3D.showPoints(ctx.r2D);
+		ctx.gameController.sounds().ifPresent(snd -> snd.play(GameSound.BONUS_EATEN));
 	}
 
 	@Override
