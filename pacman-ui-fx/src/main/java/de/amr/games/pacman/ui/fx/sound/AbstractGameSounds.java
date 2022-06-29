@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.amr.games.pacman.controller.common.GameSounds;
+import de.amr.games.pacman.controller.common.GameSoundController;
 import de.amr.games.pacman.model.common.GameSound;
 import javafx.animation.Animation;
 import javafx.scene.media.AudioClip;
@@ -41,7 +41,7 @@ import javafx.scene.media.AudioClip;
  * @author Armin Reichert
  *
  */
-public class AbstractGameSounds implements GameSounds {
+public class AbstractGameSounds implements GameSoundController {
 
 	private static final Logger logger = LogManager.getFormatterLogger();
 

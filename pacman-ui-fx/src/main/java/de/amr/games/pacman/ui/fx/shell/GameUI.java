@@ -27,7 +27,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.controller.common.GameSounds;
+import de.amr.games.pacman.controller.common.GameSoundController;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameEvents;
@@ -65,8 +65,8 @@ public class GameUI implements GameEventAdapter {
 
 	private static final Logger logger = LogManager.getFormatterLogger();
 
-	private static final GameSounds PACMAN_SOUNDS = new PacManGameSounds();
-	private static final GameSounds MS_PACMAN_SOUNDS = new MsPacManGameSounds();
+	private static final GameSoundController PACMAN_SOUNDS = new PacManGameSounds();
+	private static final GameSoundController MS_PACMAN_SOUNDS = new MsPacManGameSounds();
 
 	private final GameController gameController;
 	private final Stage stage;

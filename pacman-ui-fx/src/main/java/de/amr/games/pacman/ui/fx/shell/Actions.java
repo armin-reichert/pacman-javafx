@@ -25,7 +25,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.controller.common.GameSounds;
+import de.amr.games.pacman.controller.common.GameSoundController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
@@ -58,7 +58,7 @@ public class Actions {
 
 	public static void restartIntro() {
 		theUI.getCurrentGameScene().end();
-		theGameController.sounds().ifPresent(GameSounds::stopAll);
+		theGameController.sounds().ifPresent(GameSoundController::stopAll);
 		theGameController.restartIntro();
 	}
 
@@ -76,7 +76,7 @@ public class Actions {
 		if (theGameController.game().level.number == levelNumber) {
 			return;
 		}
-		theGameController.sounds().ifPresent(GameSounds::stopAll);
+		theGameController.sounds().ifPresent(GameSoundController::stopAll);
 		if (levelNumber == 1) {
 			theGameController.game().reset();
 			theGameController.changeState(GameState.READY);
