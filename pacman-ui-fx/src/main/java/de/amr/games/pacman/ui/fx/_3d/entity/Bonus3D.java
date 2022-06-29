@@ -45,27 +45,30 @@ import javafx.util.Duration;
  */
 public class Bonus3D extends Box {
 
-	public Bonus3D() {
+	private final Bonus bonus;
+
+	public Bonus3D(Bonus bonus) {
 		super(TS, TS, TS);
+		this.bonus = bonus;
 		setTranslateZ(-HTS);
 	}
 
-	public void update(Bonus bonus) {
+	public void update() {
 		setTranslateX(bonus.entity().position.x + getWidth() / 2);
 		setTranslateY(bonus.entity().position.y + getHeight() / 2);
 		setVisible(bonus.state() != BonusState.INACTIVE);
 	}
 
-	public void showSymbol(Bonus bonus, Rendering2D r2D) {
+	public void showSymbol(Rendering2D r2D) {
 		setTexture(r2D.getSpriteImage(r2D.getBonusSymbolSprite(bonus.symbol())));
-		rotate(1, Animation.INDEFINITE, 1);
 		setWidth(TS);
+		rotate(1, Animation.INDEFINITE, 1);
 	}
 
-	public void showPoints(Bonus bonus, Rendering2D r2D) {
+	public void showPoints(Rendering2D r2D) {
 		setTexture(r2D.getSpriteImage(r2D.getBonusValueSprite(bonus.symbol())));
-		rotate(1, 5, 2);
 		setWidth(bonus.value() >= 1000 ? TS * 2 : TS);
+		rotate(1, 5, 2);
 	}
 
 	private void setTexture(Image texture) {

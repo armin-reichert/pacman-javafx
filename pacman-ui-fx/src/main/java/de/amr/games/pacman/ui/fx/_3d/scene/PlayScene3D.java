@@ -86,7 +86,7 @@ public class PlayScene3D extends GameScene3D {
 		content().add(pac3D);
 		ghosts3D = ctx.game.ghosts().map(ghost -> new Ghost3D(ghost, ctx.model3D, ctx.r2D)).toArray(Ghost3D[]::new);
 		Stream.of(ghosts3D).forEach(content()::add);
-		bonus3D = new Bonus3D();
+		bonus3D = new Bonus3D(ctx.game.bonus());
 		content().add(bonus3D);
 		setPerspective(Env.perspective.get());
 	}
@@ -126,7 +126,7 @@ public class PlayScene3D extends GameScene3D {
 		world3D.update(ctx.game);
 		pac3D.update(ctx.game.world());
 		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(ctx.game));
-		bonus3D.update(ctx.game.bonus());
+		bonus3D.update();
 		getCamera().update(pac3D);
 	}
 
@@ -153,12 +153,12 @@ public class PlayScene3D extends GameScene3D {
 
 	@Override
 	public void onBonusGetsActive(GameEvent e) {
-		bonus3D.showSymbol(ctx.game.bonus(), ctx.r2D);
+		bonus3D.showSymbol(ctx.r2D);
 	}
 
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
-		bonus3D.showPoints(ctx.game.bonus(), ctx.r2D);
+		bonus3D.showPoints(ctx.r2D);
 	}
 
 	@Override
