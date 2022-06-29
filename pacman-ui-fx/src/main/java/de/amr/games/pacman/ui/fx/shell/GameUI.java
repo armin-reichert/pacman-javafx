@@ -31,6 +31,7 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
+import de.amr.games.pacman.model.common.GameSounds;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.SpritesheetMsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.SpritesheetPacMan;
@@ -63,6 +64,9 @@ import javafx.stage.Stage;
 public class GameUI implements GameEventAdapter {
 
 	private static final Logger logger = LogManager.getFormatterLogger();
+
+	private static final GameSounds PACMAN_SOUNDS = new PacManGameSounds();
+	private static final GameSounds MS_PACMAN_SOUNDS = new MsPacManGameSounds();
 
 	private final GameController gameController;
 	private final Stage stage;
@@ -98,8 +102,6 @@ public class GameUI implements GameEventAdapter {
 
 		var pacSteering = new KeyboardPacSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 		gameController.setPacSteering(pacSteering);
-		gameController.game(GameVariant.MS_PACMAN).setSounds(new MsPacManGameSounds());
-		gameController.game(GameVariant.PACMAN).setSounds(new PacManGameSounds());
 
 		// Keyboard input handling
 		scene.setOnKeyPressed(Keyboard::processEvent);
@@ -237,6 +239,11 @@ public class GameUI implements GameEventAdapter {
 		case PACMAN -> SpritesheetPacMan.get();
 		};
 		context.model3D = Model3D.get();
+		var sounds = switch (context.game.variant) {
+		case MS_PACMAN -> MS_PACMAN_SOUNDS;
+		case PACMAN -> PACMAN_SOUNDS;
+		};
+		gameController.setSounds(sounds);
 		return context;
 	}
 

@@ -58,16 +58,16 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 	public void init() {
 		sceneController.restartInInitialState(Intermission1Controller.State.FLAP);
 		icc.flap.animation = SpritesheetMsPacMan.get().createFlapAnimation();
-		icc.msPac.setAnimations(new PacAnimations($.r2D));
+		icc.msPac.setAnimations(new PacAnimations(ctx.r2D));
 		icc.msPac.animations().ifPresent(SpriteAnimations::ensureRunning);
-		icc.pacMan.setAnimations(new PacAnimations($.r2D));
+		icc.pacMan.setAnimations(new PacAnimations(ctx.r2D));
 		icc.pacMan.animations().ifPresent(animations -> {
 			animations.put(AnimKeys.PAC_MUNCHING, SpritesheetMsPacMan.get().createPacManMunchingAnimationMap());
 			animations.ensureRunning();
 		});
-		icc.inky.setAnimations(new GhostAnimations(icc.inky.id, $.r2D));
+		icc.inky.setAnimations(new GhostAnimations(icc.inky.id, ctx.r2D));
 		icc.inky.animations().ifPresent(SpriteAnimations::ensureRunning);
-		icc.pinky.setAnimations(new GhostAnimations(icc.pinky.id, $.r2D));
+		icc.pinky.setAnimations(new GhostAnimations(icc.pinky.id, ctx.r2D));
 		icc.pinky.animations().ifPresent(SpriteAnimations::ensureRunning);
 	}
 
@@ -78,13 +78,13 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 
 	@Override
 	public void doRender(GraphicsContext g) {
-		var ss = (SpritesheetMsPacMan) $.r2D;
+		var ss = (SpritesheetMsPacMan) ctx.r2D;
 		ss.drawFlap(g, icc.flap);
-		$.r2D.drawPac(g, icc.msPac);
-		$.r2D.drawPac(g, icc.pacMan);
-		$.r2D.drawGhost(g, icc.inky);
-		$.r2D.drawGhost(g, icc.pinky);
-		$.r2D.drawEntity(g, icc.heart, ss.getHeart());
-		$.r2D.drawLevelCounter(g, $.game.levelCounter);
+		ctx.r2D.drawPac(g, icc.msPac);
+		ctx.r2D.drawPac(g, icc.pacMan);
+		ctx.r2D.drawGhost(g, icc.inky);
+		ctx.r2D.drawGhost(g, icc.pinky);
+		ctx.r2D.drawEntity(g, icc.heart, ss.getHeart());
+		ctx.r2D.drawLevelCounter(g, ctx.game.levelCounter);
 	}
 }

@@ -65,10 +65,10 @@ public class MsPacManIntroScene extends GameScene2D {
 	public void init() {
 		sceneController.restartInInitialState(IntroController.State.START);
 		creditVisible = true;
-		icc.msPacMan.setAnimations(new PacAnimations($.r2D));
+		icc.msPacMan.setAnimations(new PacAnimations(ctx.r2D));
 		icc.msPacMan.animations().ifPresent(SpriteAnimations::ensureRunning);
 		Stream.of(icc.ghosts).forEach(ghost -> {
-			var animations = new GhostAnimations(ghost.id, $.r2D);
+			var animations = new GhostAnimations(ghost.id, ctx.r2D);
 			animations.ensureRunning();
 			ghost.setAnimations(animations);
 		});
@@ -77,13 +77,13 @@ public class MsPacManIntroScene extends GameScene2D {
 	@Override
 	public void onKeyPressed() {
 		if (Keyboard.pressed(KeyCode.DIGIT5)) {
-			$.gameState().addCredit($.game);
+			ctx.gameState().addCredit(ctx.game);
 		} else if (Keyboard.pressed(KeyCode.DIGIT1)) {
-			$.gameState().requestGame($.game);
+			ctx.gameState().requestGame(ctx.game);
 		} else if (Keyboard.pressed(KeyCode.V)) {
 			Actions.selectNextGameVariant();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.Z)) {
-			$.gameState().startIntermissionTest($.game);
+			ctx.gameState().startIntermissionTest(ctx.game);
 		}
 	}
 
@@ -95,8 +95,8 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	@Override
 	public void doRender(GraphicsContext g) {
-		$.r2D.drawScore(g, $.game.scores.gameScore);
-		$.r2D.drawScore(g, $.game.scores.highScore);
+		ctx.r2D.drawScore(g, ctx.game.scores.gameScore);
+		ctx.r2D.drawScore(g, ctx.game.scores.highScore);
 		drawTitle(g);
 		drawLights(g, 32, 16);
 		if (sceneController.state() == State.GHOSTS) {
@@ -104,33 +104,33 @@ public class MsPacManIntroScene extends GameScene2D {
 		} else if (sceneController.state() == State.MSPACMAN || sceneController.state() == State.READY_TO_PLAY) {
 			drawMsPacManText(g);
 		}
-		$.r2D.drawGhosts(g, icc.ghosts);
-		$.r2D.drawPac(g, icc.msPacMan);
-		$.r2D.drawCopyright(g, 29);
+		ctx.r2D.drawGhosts(g, icc.ghosts);
+		ctx.r2D.drawPac(g, icc.msPacMan);
+		ctx.r2D.drawCopyright(g, 29);
 		if (creditVisible) {
-			$.r2D.drawCredit(g, $.game.credit);
+			ctx.r2D.drawCredit(g, ctx.game.credit);
 		}
 	}
 
 	private void drawTitle(GraphicsContext g) {
-		g.setFont($.r2D.getArcadeFont());
+		g.setFont(ctx.r2D.getArcadeFont());
 		g.setFill(Color.ORANGE);
 		g.fillText("\"MS PAC-MAN\"", icc.titlePosition.x, icc.titlePosition.y);
 	}
 
 	private void drawGhostText(GraphicsContext g, Ghost ghost) {
 		g.setFill(Color.WHITE);
-		g.setFont($.r2D.getArcadeFont());
+		g.setFont(ctx.r2D.getArcadeFont());
 		if (ghost.id == Ghost.RED_GHOST) {
 			g.fillText("WITH", icc.titlePosition.x, icc.lightsTopLeft.y + t(3));
 		}
-		g.setFill($.r2D.getGhostColor(ghost.id));
+		g.setFill(ctx.r2D.getGhostColor(ghost.id));
 		g.fillText(ghost.name.toUpperCase(), t(14 - ghost.name.length() / 2), icc.lightsTopLeft.y + t(6));
 	}
 
 	private void drawMsPacManText(GraphicsContext g) {
 		g.setFill(Color.WHITE);
-		g.setFont($.r2D.getArcadeFont());
+		g.setFont(ctx.r2D.getArcadeFont());
 		g.fillText("STARRING", icc.titlePosition.x, icc.lightsTopLeft.y + t(3));
 		g.setFill(Color.YELLOW);
 		g.fillText("MS PAC-MAN", icc.titlePosition.x, icc.lightsTopLeft.y + t(6));

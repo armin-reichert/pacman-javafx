@@ -60,8 +60,8 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 	public void init() {
 		sceneController.restartInInitialState(Intermission3Controller.State.FLAP);
 		icc.flap.animation = SpritesheetMsPacMan.get().createFlapAnimation();
-		icc.msPacMan.setAnimations(new PacAnimations($.r2D));
-		icc.pacMan.setAnimations(new PacAnimations($.r2D));
+		icc.msPacMan.setAnimations(new PacAnimations(ctx.r2D));
+		icc.pacMan.setAnimations(new PacAnimations(ctx.r2D));
 		var munchingAnimMap = SpritesheetMsPacMan.get().createPacManMunchingAnimationMap();
 		icc.pacMan.animations().ifPresent(anims -> anims.put(AnimKeys.PAC_MUNCHING, munchingAnimMap));
 		icc.flap.animation = SpritesheetMsPacMan.get().createFlapAnimation();
@@ -76,12 +76,12 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 
 	@Override
 	public void doRender(GraphicsContext g) {
-		var ssmp = ((SpritesheetMsPacMan) $.r2D);
+		var ssmp = ((SpritesheetMsPacMan) ctx.r2D);
 		ssmp.drawFlap(g, icc.flap);
-		$.r2D.drawPac(g, icc.msPacMan);
-		$.r2D.drawPac(g, icc.pacMan);
-		$.r2D.drawEntity(g, icc.stork, storkAnim.animate());
-		$.r2D.drawEntity(g, icc.bag, icc.bagOpen ? ssmp.getJunior() : ssmp.getBlueBag());
-		$.r2D.drawLevelCounter(g, $.game.levelCounter);
+		ctx.r2D.drawPac(g, icc.msPacMan);
+		ctx.r2D.drawPac(g, icc.pacMan);
+		ctx.r2D.drawEntity(g, icc.stork, storkAnim.animate());
+		ctx.r2D.drawEntity(g, icc.bag, icc.bagOpen ? ssmp.getJunior() : ssmp.getBlueBag());
+		ctx.r2D.drawLevelCounter(g, ctx.game.levelCounter);
 	}
 }

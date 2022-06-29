@@ -56,9 +56,9 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 	public void init() {
 		sceneController.restartInInitialState(Intermission2Controller.State.FLAP);
 		icc.flap.animation = SpritesheetMsPacMan.get().createFlapAnimation();
-		icc.msPacMan.setAnimations(new PacAnimations($.r2D));
+		icc.msPacMan.setAnimations(new PacAnimations(ctx.r2D));
 		icc.msPacMan.animations().ifPresent(SpriteAnimations::ensureRunning);
-		icc.pacMan.setAnimations(new PacAnimations($.r2D));
+		icc.pacMan.setAnimations(new PacAnimations(ctx.r2D));
 		icc.pacMan.animations().ifPresent(animations -> {
 			animations.put(AnimKeys.PAC_MUNCHING, SpritesheetMsPacMan.get().createPacManMunchingAnimationMap());
 			animations.ensureRunning();
@@ -73,8 +73,8 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 	@Override
 	public void doRender(GraphicsContext g) {
 		SpritesheetMsPacMan.get().drawFlap(g, icc.flap);
-		$.r2D.drawPac(g, icc.msPacMan);
-		$.r2D.drawPac(g, icc.pacMan);
-		$.r2D.drawLevelCounter(g, $.game.levelCounter);
+		ctx.r2D.drawPac(g, icc.msPacMan);
+		ctx.r2D.drawPac(g, icc.pacMan);
+		ctx.r2D.drawLevelCounter(g, ctx.game.levelCounter);
 	}
 }

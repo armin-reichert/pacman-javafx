@@ -177,7 +177,7 @@ public class PlayScene3D extends GameScene3D {
 		}
 		case HUNTING -> maze3D.energizers().forEach(Energizer3D::startBlinking);
 		case PACMAN_DYING -> {
-			var killer = ctx.game.ghosts().filter(ghost -> ghost.sameTile(ctx.game.pac)).findAny();
+			var killer = ctx.game.ghosts().filter(ctx.game.pac::sameTile).findAny();
 			if (killer.isPresent()) {
 				var color = ctx.r2D.getGhostColor(killer.get().id);
 				var animation = new SequentialTransition( //

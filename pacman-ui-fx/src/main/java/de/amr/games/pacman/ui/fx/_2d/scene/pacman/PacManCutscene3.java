@@ -55,9 +55,9 @@ public class PacManCutscene3 extends GameScene2D {
 		frame = -1;
 		initialDelay = 120;
 		pac = new Pac("Pac-Man");
-		pac.setAnimations(new PacAnimations($.r2D));
+		pac.setAnimations(new PacAnimations(ctx.r2D));
 		blinky = new Ghost(Ghost.RED_GHOST, "Blinky");
-		blinky.setAnimations(new GhostAnimations(Ghost.RED_GHOST, $.r2D));
+		blinky.setAnimations(new GhostAnimations(Ghost.RED_GHOST, ctx.r2D));
 		blinky.animations().ifPresent(animations -> {
 			animations.put("patched", SpritesheetPacMan.get().createBlinkyPatchedAnimation());
 			animations.put("naked", SpritesheetPacMan.get().createBlinkyNakedAnimation());
@@ -72,7 +72,7 @@ public class PacManCutscene3 extends GameScene2D {
 		}
 		++frame;
 		if (frame == 0) {
-			$.game.sounds().ifPresent(snd -> snd.loop(GameSound.INTERMISSION_1, 2));
+			ctx.gameController.sounds().ifPresent(snd -> snd.loop(GameSound.INTERMISSION_1, 2));
 			pac.placeAt(v(29, 20), 0, 0);
 			pac.setMoveDir(Direction.LEFT);
 			pac.setAbsSpeed(1.25);
@@ -88,7 +88,7 @@ public class PacManCutscene3 extends GameScene2D {
 			blinky.setBothDirs(Direction.RIGHT);
 			blinky.selectAnimation("naked");
 		} else if (frame == 516) {
-			$.gameState().timer().expire();
+			ctx.gameState().timer().expire();
 			return;
 		}
 		pac.move();
@@ -98,7 +98,7 @@ public class PacManCutscene3 extends GameScene2D {
 	@Override
 	protected void doRender(GraphicsContext g) {
 		if (Env.debugUI.get()) {
-			g.setFont($.r2D.getArcadeFont());
+			g.setFont(ctx.r2D.getArcadeFont());
 			g.setFill(Color.WHITE);
 			if (initialDelay > 0) {
 				g.fillText("Wait %d".formatted(initialDelay), t(3), t(3));
@@ -106,7 +106,7 @@ public class PacManCutscene3 extends GameScene2D {
 				g.fillText("Frame %d".formatted(frame), t(3), t(3));
 			}
 		}
-		$.r2D.drawPac(g, pac);
-		$.r2D.drawGhost(g, blinky);
+		ctx.r2D.drawPac(g, pac);
+		ctx.r2D.drawGhost(g, blinky);
 	}
 }

@@ -55,7 +55,7 @@ public abstract class GameScene2D implements GameScene {
 	protected final SubScene fxSubScene;
 	protected final DoubleProperty scaling = new SimpleDoubleProperty(1);
 
-	protected SceneContext $;
+	protected SceneContext ctx;
 	protected boolean creditVisible;
 
 	protected GameScene2D() {
@@ -77,7 +77,7 @@ public abstract class GameScene2D implements GameScene {
 
 	@Override
 	public void setSceneContext(SceneContext context) {
-		$ = context;
+		ctx = context;
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected boolean hasCredit() {
-		return $.gameController.game().credit > 0;
+		return ctx.gameController.game().credit > 0;
 	}
 
 	public Canvas getCanvas() {
@@ -133,7 +133,7 @@ public abstract class GameScene2D implements GameScene {
 		if (overlayCanvas.isVisible()) {
 			var og = overlayCanvas.getGraphicsContext2D();
 			og.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());
-			$.r2D.drawTileBorders(og, scaling.doubleValue());
+			ctx.r2D.drawTileBorders(og, scaling.doubleValue());
 		}
 	}
 

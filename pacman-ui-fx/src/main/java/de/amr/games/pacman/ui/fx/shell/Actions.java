@@ -58,7 +58,7 @@ public class Actions {
 
 	public static void restartIntro() {
 		theUI.getCurrentGameScene().end();
-		theGameController.game().sounds().ifPresent(GameSounds::stopAll);
+		theGameController.sounds().ifPresent(GameSounds::stopAll);
 		theGameController.restartIntro();
 	}
 
@@ -76,7 +76,7 @@ public class Actions {
 		if (theGameController.game().level.number == levelNumber) {
 			return;
 		}
-		theGameController.game().sounds().ifPresent(GameSounds::stopAll);
+		theGameController.sounds().ifPresent(GameSounds::stopAll);
 		if (levelNumber == 1) {
 			theGameController.game().reset();
 			theGameController.changeState(GameState.READY);
@@ -148,7 +148,7 @@ public class Actions {
 	}
 
 	public static void toggleSoundMuted() {
-		theGameController.game().sounds().ifPresent(snd -> {
+		theGameController.sounds().ifPresent(snd -> {
 			boolean muted = snd.isMuted();
 			snd.setMuted(!muted);
 			var msg = Talk.message(snd.isMuted() ? "sound_off" : "sound_on");
