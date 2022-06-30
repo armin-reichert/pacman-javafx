@@ -24,31 +24,28 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.app;
 
-import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
 import de.amr.games.pacman.ui.fx.util.RandomEntrySelector;
 
 /**
  * @author Armin Reichert
- *
  */
 public class Talk {
 
 	private Talk() {
 	}
 
-	public static final ResourceBundle MESSAGES = ResourceBundle.getBundle("/de/amr/games/pacman/common/texts/messages");
+	public static final ResourceBundle MESSAGES = ResourceBundle.getBundle(Env.getResourcePath("texts/messages"));
 
 	public static String message(String pattern, Object... args) {
-		return MessageFormat.format(MESSAGES.getString(pattern), args);
+		return MESSAGES.getString(pattern).formatted(args);
 	}
 
-	public static final RandomEntrySelector<String> CHEAT_TALK = load("/de/amr/games/pacman/common/texts/cheating_talk");
+	public static final RandomEntrySelector<String> CHEAT_TALK = load(Env.getResourcePath("texts/cheating_talk"));
 	public static final RandomEntrySelector<String> LEVEL_COMPLETE_TALK = load(
-			"/de/amr/games/pacman/common/texts/level_complete_talk");
-	public static final RandomEntrySelector<String> GAME_OVER_TALK = load(
-			"/de/amr/games/pacman/common/texts/game_over_talk");
+			Env.getResourcePath("texts/level_complete_talk"));
+	public static final RandomEntrySelector<String> GAME_OVER_TALK = load(Env.getResourcePath("texts/game_over_talk"));
 
 	private static RandomEntrySelector<String> load(String bundleName) {
 		ResourceBundle bundle = ResourceBundle.getBundle(bundleName);

@@ -19,6 +19,38 @@
   ]},
   "bundles":[
     {
+      "name":"/de/amr/games/pacman/common/texts/cheating_talk",
+      "locales":[
+        "", 
+        "de", 
+        "und"
+      ]
+    }, 
+    {
+      "name":"/de/amr/games/pacman/common/texts/game_over_talk",
+      "locales":[
+        "", 
+        "de", 
+        "und"
+      ]
+    }, 
+    {
+      "name":"/de/amr/games/pacman/common/texts/level_complete_talk",
+      "locales":[
+        "", 
+        "de", 
+        "und"
+      ]
+    }, 
+    {
+      "name":"/de/amr/games/pacman/common/texts/messages",
+      "locales":[
+        "", 
+        "de", 
+        "und"
+      ]
+    }, 
+    {
       "name":"com.sun.javafx.tk.quantum.QuantumMessagesBundle",
       "locales":[
         "", 

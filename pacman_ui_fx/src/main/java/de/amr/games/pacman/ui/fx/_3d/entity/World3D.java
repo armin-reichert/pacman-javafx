@@ -67,9 +67,8 @@ public class World3D extends Group {
 
 		maze3D = new Maze3D(game.variant, game.level.world, mazeStyle);
 		maze3D.squirting.bind(Env.squirting);
-		maze3D.floorTexture.bind(Bindings.createObjectBinding(
-				() -> "none".equals(Env.floorTexture.get()) ? null : Ufx.image("/common/" + Env.floorTexture.get()),
-				Env.floorTexture));
+		maze3D.floorTexture.bind(Bindings.createObjectBinding(() -> "none".equals(Env.floorTexture.get()) ? null
+				: Ufx.image(Env.getResourcePath("graphics/" + Env.floorTexture.get())), Env.floorTexture));
 		maze3D.floorColor.bind(Env.floorColor);
 		maze3D.resolution.bind(Env.mazeResolution);
 		maze3D.wallHeight.bind(Env.mazeWallHeight);
