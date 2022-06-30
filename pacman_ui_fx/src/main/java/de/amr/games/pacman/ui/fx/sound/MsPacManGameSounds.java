@@ -24,7 +24,10 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.sound;
 
+import java.util.Map;
+
 import de.amr.games.pacman.model.common.GameSound;
+import javafx.scene.media.AudioClip;
 
 /**
  * @author Armin Reichert
@@ -32,24 +35,28 @@ import de.amr.games.pacman.model.common.GameSound;
  */
 public class MsPacManGameSounds extends AbstractGameSounds {
 
+	private void put(Map<GameSound, AudioClip> map, GameSound sound, String path) {
+		super.put(map, sound, getClass().getResource(path));
+	}
+
 	public MsPacManGameSounds() {
 		//@formatter:off
-		put(clips, GameSound.BONUS_EATEN,     "/de/amr/games/pacman/mspacman/sound/Fruit.mp3");
-		put(clips, GameSound.CREDIT,          "/de/amr/games/pacman/mspacman/sound/Coin Credit.mp3");
-		put(clips, GameSound.EXTRA_LIFE,      "/de/amr/games/pacman/mspacman/sound/Extra Life.mp3");
-		put(clips, GameSound.GAME_READY,      "/de/amr/games/pacman/mspacman/sound/Start.mp3");
-		put(clips, GameSound.GHOST_EATEN,     "/de/amr/games/pacman/mspacman/sound/Ghost.mp3");
-		put(clips, GameSound.GHOST_RETURNING, "/de/amr/games/pacman/mspacman/sound/Ghost Eyes.mp3");
-		put(clips, GameSound.INTERMISSION_1,  "/de/amr/games/pacman/mspacman/sound/They Meet Act 1.mp3");
-		put(clips, GameSound.INTERMISSION_2,  "/de/amr/games/pacman/mspacman/sound/The Chase Act 2.mp3");
-		put(clips, GameSound.INTERMISSION_3,  "/de/amr/games/pacman/mspacman/sound/Junior Act 3.mp3");
-		put(clips, GameSound.PACMAN_MUNCH,    "/de/amr/games/pacman/mspacman/sound/Ms. Pac Man Pill.mp3");
-		put(clips, GameSound.PACMAN_DEATH,    "/de/amr/games/pacman/mspacman/sound/Died.mp3");
-		put(clips, GameSound.PACMAN_POWER,    "/de/amr/games/pacman/mspacman/sound/Scared Ghost.mp3");
-		put(clips, GameSound.SIREN_1,         "/de/amr/games/pacman/mspacman/sound/Ghost Noise 1.mp3");
-		put(clips, GameSound.SIREN_2,         "/de/amr/games/pacman/mspacman/sound/Ghost Noise 2.mp3");
-		put(clips, GameSound.SIREN_3,         "/de/amr/games/pacman/mspacman/sound/Ghost Noise 3.mp3");
-		put(clips, GameSound.SIREN_4,         "/de/amr/games/pacman/mspacman/sound/Ghost Noise 4.mp3");
+		put(clips, GameSound.BONUS_EATEN,     "mspacman/Fruit.mp3");
+		put(clips, GameSound.CREDIT,          "mspacman/Coin Credit.mp3");
+		put(clips, GameSound.EXTRA_LIFE,      "mspacman/Extra Life.mp3");
+		put(clips, GameSound.GAME_READY,      "mspacman/Start.mp3");
+		put(clips, GameSound.GHOST_EATEN,     "mspacman/Ghost.mp3");
+		put(clips, GameSound.GHOST_RETURNING, "mspacman/Ghost Eyes.mp3");
+		put(clips, GameSound.INTERMISSION_1,  "mspacman/They Meet Act 1.mp3");
+		put(clips, GameSound.INTERMISSION_2,  "mspacman/The Chase Act 2.mp3");
+		put(clips, GameSound.INTERMISSION_3,  "mspacman/Junior Act 3.mp3");
+		put(clips, GameSound.PACMAN_MUNCH,    "mspacman/Ms. Pac Man Pill.mp3");
+		put(clips, GameSound.PACMAN_DEATH,    "mspacman/Died.mp3");
+		put(clips, GameSound.PACMAN_POWER,    "mspacman/Scared Ghost.mp3");
+		put(clips, GameSound.SIREN_1,         "mspacman/Ghost Noise 1.mp3");
+		put(clips, GameSound.SIREN_2,         "mspacman/Ghost Noise 2.mp3");
+		put(clips, GameSound.SIREN_3,         "mspacman/Ghost Noise 3.mp3");
+		put(clips, GameSound.SIREN_4,         "mspacman/Ghost Noise 4.mp3");
 		//@formatter:on
 	}
 }

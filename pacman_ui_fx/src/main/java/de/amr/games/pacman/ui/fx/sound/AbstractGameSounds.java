@@ -70,12 +70,12 @@ public class AbstractGameSounds implements GameSoundController {
 		}
 	}
 
-	protected void put(Map<GameSound, AudioClip> map, GameSound sound, String path) {
-		URL url = getClass().getResource(path);
-		if (url == null) {
-			throw new SoundException("Sound resource does not exist for path '%s'", path);
+	protected void put(Map<GameSound, AudioClip> map, GameSound sound, URL url) {
+		try {
+			map.put(sound, new AudioClip(url.toString()));
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		map.put(sound, new AudioClip(url.toString()));
 	}
 
 	protected void playClip(AudioClip clip) {
