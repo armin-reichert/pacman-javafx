@@ -46,7 +46,7 @@ public class GhostBodyAnimation {
 	private final Model3D model3D;
 	private final Group root3D;
 
-	private final MotionAnimation motion;
+	private final CreatureMotionAnimation motion;
 
 	private final ObjectProperty<Color> pyDressColor;
 	private final ObjectProperty<Color> pyEyeBallsColor;
@@ -56,7 +56,7 @@ public class GhostBodyAnimation {
 	private ColorFlashing dressFlashing;
 	private ColorFlashing pupilsFlashing;
 
-	public GhostBodyAnimation(Ghost ghost, Model3D model3D, MotionAnimation motion) {
+	public GhostBodyAnimation(Ghost ghost, Model3D model3D, CreatureMotionAnimation motion) {
 		this.ghost = ghost;
 		this.model3D = model3D;
 		this.motion = motion;

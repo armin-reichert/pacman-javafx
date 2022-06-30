@@ -15,7 +15,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class MotionAnimation {
+public class CreatureMotionAnimation {
 
 	//@formatter:off
 	private static final int[][][] TURN_ANGLES = {
@@ -42,7 +42,7 @@ public class MotionAnimation {
 	private final Node node;
 	private Direction targetDir;
 
-	public MotionAnimation(Creature guy, Node node) {
+	public CreatureMotionAnimation(Creature guy, Node node) {
 		this.guy = guy;
 		this.node = node;
 	}

@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.ColorChangeTransition;
-import de.amr.games.pacman.ui.fx._3d.animation.MotionAnimation;
+import de.amr.games.pacman.ui.fx._3d.animation.CreatureMotionAnimation;
 import de.amr.games.pacman.ui.fx._3d.animation.PortalAppearance;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -59,7 +59,7 @@ public class Pac3D extends Group {
 
 	private final Model3D model3D;
 	private final Group root3D;
-	private final MotionAnimation motion;
+	private final CreatureMotionAnimation motion;
 	private final ObjectProperty<Color> pyFaceColor;
 	private final Color normalFaceColor;
 	private final PhongMaterial faceMaterial;
@@ -76,7 +76,7 @@ public class Pac3D extends Group {
 		var light = new PointLight(Color.GHOSTWHITE);
 		light.setTranslateZ(-6);
 		getChildren().addAll(root3D, light);
-		motion = new MotionAnimation(pac, this);
+		motion = new CreatureMotionAnimation(pac, this);
 		portalAppearance = new PortalAppearance(pac, world, root3D, pyFaceColor, () -> normalFaceColor);
 	}
 
