@@ -1,0 +1,80 @@
+/*
+MIT License
+
+Copyright (c) 2022 Armin Reichert
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
+package de.amr.games.pacman.ui.fx._3d.animation;
+
+import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.animation.Animation;
+import javafx.animation.Interpolator;
+import javafx.animation.ParallelTransition;
+import javafx.animation.RotateTransition;
+import javafx.animation.ScaleTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.TranslateTransition;
+import javafx.beans.property.ObjectProperty;
+import javafx.scene.Node;
+import javafx.scene.paint.Color;
+import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
+
+/**
+ * @author Armin Reichert
+ */
+public class PacDyingAnimation {
+
+	private final Animation animation;
+
+	public PacDyingAnimation(Node root3D, ObjectProperty<Color> pyFaceColor, Color normalFaceColor, Color ghostColor) {
+		var collapsingTime = Duration.seconds(2.0);
+		var numSpins = 10;
+
+		var poisened = new ColorChangeTransition(Duration.seconds(1.0), normalFaceColor, ghostColor, pyFaceColor);
+		var impaling = new ColorChangeTransition(collapsingTime, ghostColor, Color.GHOSTWHITE, pyFaceColor);
+
+		var spinning = new RotateTransition(collapsingTime.divide(numSpins), root3D);
+		spinning.setAxis(Rotate.Z_AXIS);
+		spinning.setByAngle(360);
+		spinning.setCycleCount(numSpins);
+		spinning.setInterpolator(Interpolator.EASE_OUT);
+
+		var shrinking = new ScaleTransition(collapsingTime, root3D);
+		shrinking.setToX(0.8);
+		shrinking.setToY(0.8);
+		shrinking.setToZ(0.0);
+
+		var sinking = new TranslateTransition(collapsingTime, root3D);
+		sinking.setFromZ(0);
+		sinking.setToZ(World.HTS);
+
+		animation = new SequentialTransition( //
+				Ufx.pauseSec(1.0), //
+				poisened, //
+				new ParallelTransition(impaling, spinning, shrinking, sinking));
+	}
+
+	public Animation getAnimation() {
+		return animation;
+	}
+}

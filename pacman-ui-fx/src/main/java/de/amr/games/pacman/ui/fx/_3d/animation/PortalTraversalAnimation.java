@@ -39,7 +39,7 @@ import javafx.scene.paint.Color;
 /**
  * @author Armin Reichert
  */
-public class PortalAppearance {
+public class PortalTraversalAnimation {
 
 	private final Logger logger = LogManager.getFormatterLogger();
 
@@ -49,7 +49,7 @@ public class PortalAppearance {
 	private final ObjectProperty<Color> colorProperty;
 	private final Supplier<Color> baseColor;
 
-	public PortalAppearance(Creature guy, World world, Node node, ObjectProperty<Color> colorProperty,
+	public PortalTraversalAnimation(Creature guy, World world, Node node, ObjectProperty<Color> colorProperty,
 			Supplier<Color> baseColor) {
 		this.guy = guy;
 		this.world = world;

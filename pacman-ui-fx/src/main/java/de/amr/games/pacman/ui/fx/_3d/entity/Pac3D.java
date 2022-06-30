@@ -25,18 +25,12 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.ui.fx._3d.animation.ColorChangeTransition;
 import de.amr.games.pacman.ui.fx._3d.animation.CreatureMotionAnimation;
-import de.amr.games.pacman.ui.fx._3d.animation.PortalAppearance;
+import de.amr.games.pacman.ui.fx._3d.animation.PacDyingAnimation;
+import de.amr.games.pacman.ui.fx._3d.animation.PortalTraversalAnimation;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
-import javafx.animation.Interpolator;
-import javafx.animation.ParallelTransition;
-import javafx.animation.RotateTransition;
-import javafx.animation.ScaleTransition;
-import javafx.animation.SequentialTransition;
-import javafx.animation.TranslateTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
@@ -44,8 +38,6 @@ import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Shape3D;
-import javafx.scene.transform.Rotate;
-import javafx.util.Duration;
 
 /**
  * 3D-representation of Pac-Man or Ms. Pac-Man.
@@ -60,10 +52,10 @@ public class Pac3D extends Group {
 	private final Model3D model3D;
 	private final Group root3D;
 	private final CreatureMotionAnimation motion;
+	private final PortalTraversalAnimation portalTraversal;
 	private final ObjectProperty<Color> pyFaceColor;
 	private final Color normalFaceColor;
 	private final PhongMaterial faceMaterial;
-	private final PortalAppearance portalAppearance;
 
 	public Pac3D(Pac pac, World world, Model3D model3D, Color faceColor, Color eyesColor, Color palateColor) {
 		this.model3D = model3D;
@@ -77,7 +69,7 @@ public class Pac3D extends Group {
 		light.setTranslateZ(-6);
 		getChildren().addAll(root3D, light);
 		motion = new CreatureMotionAnimation(pac, this);
-		portalAppearance = new PortalAppearance(pac, world, root3D, pyFaceColor, () -> normalFaceColor);
+		portalTraversal = new PortalTraversalAnimation(pac, world, root3D, pyFaceColor, () -> normalFaceColor);
 	}
 
 	public void reset(World world) {
@@ -93,39 +85,15 @@ public class Pac3D extends Group {
 
 	public void update(World world) {
 		motion.update();
-		portalAppearance.update();
+		portalTraversal.update();
 	}
 
 	/**
-	 * @param ghostColor color of ghost that killed Pac-Man
+	 * @param killingGhostColor color of ghost that killed Pac-Man
 	 * @return dying animation (must not be longer than time reserved by game controller which is 5 seconds!)
 	 */
-	public Animation createDyingAnimation(Color ghostColor) {
-		var collapsingTime = Duration.seconds(2.0);
-		var numSpins = 10;
-
-		var poisened = new ColorChangeTransition(Duration.seconds(1.0), normalFaceColor, ghostColor, pyFaceColor);
-		var impaling = new ColorChangeTransition(collapsingTime, ghostColor, Color.GHOSTWHITE, pyFaceColor);
-
-		var spinning = new RotateTransition(collapsingTime.divide(numSpins), root3D);
-		spinning.setAxis(Rotate.Z_AXIS);
-		spinning.setByAngle(360);
-		spinning.setCycleCount(numSpins);
-		spinning.setInterpolator(Interpolator.EASE_OUT);
-
-		var shrinking = new ScaleTransition(collapsingTime, root3D);
-		shrinking.setToX(0.8);
-		shrinking.setToY(0.8);
-		shrinking.setToZ(0.0);
-
-		var sinking = new TranslateTransition(collapsingTime, root3D);
-		sinking.setFromZ(0);
-		sinking.setToZ(World.HTS);
-
-		return new SequentialTransition( //
-				Ufx.pauseSec(1.0), //
-				poisened, //
-				new ParallelTransition(impaling, spinning, shrinking, sinking));
+	public Animation createDyingAnimation(Color killingGhostColor) {
+		return new PacDyingAnimation(root3D, pyFaceColor, normalFaceColor, killingGhostColor).getAnimation();
 	}
 
 	private Shape3D face() {
