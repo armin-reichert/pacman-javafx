@@ -28,9 +28,9 @@ import de.amr.games.pacman.model.common.world.World;
 import javafx.animation.Transition;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
 
@@ -45,7 +45,7 @@ public class SquirtingAnimation extends Transition {
 	private Sphere[] drops;
 	private Point3D[] veloc;
 
-	public SquirtingAnimation(World world, Group parent, Shape3D pellet) {
+	public SquirtingAnimation(World world, Group parent, Node pellet) {
 		this.world = world;
 		createDrops(pellet, true);
 		parent.getChildren().addAll(drops);
@@ -53,7 +53,7 @@ public class SquirtingAnimation extends Transition {
 		setOnFinished(e -> parent.getChildren().removeAll(drops));
 	}
 
-	private void createDrops(Shape3D pellet, boolean bigSquirt) {
+	private void createDrops(Node pellet, boolean bigSquirt) {
 		var numDrops = bigSquirt ? U.randomInt(20, 30) : U.randomInt(4, 8);
 		var color = Color.gray(0.4, 0.25);
 		var material = new PhongMaterial(color);
@@ -65,7 +65,7 @@ public class SquirtingAnimation extends Transition {
 			drop.setMaterial(material);
 			drop.setTranslateX(pellet.getTranslateX());
 			drop.setTranslateY(pellet.getTranslateY());
-			drop.setTranslateZ(-World.TS);
+			drop.setTranslateZ(-World.HTS);
 			drop.setVisible(false);
 			drops[i] = drop;
 			veloc[i] = new Point3D(U.randomDouble(0.05, 0.25), U.randomDouble(0.05, 0.25), -U.randomDouble(1.0, 4.0));
