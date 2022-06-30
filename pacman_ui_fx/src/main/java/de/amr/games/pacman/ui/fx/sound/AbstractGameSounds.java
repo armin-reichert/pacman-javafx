@@ -74,7 +74,7 @@ public class AbstractGameSounds implements GameSoundController {
 		try {
 			map.put(sound, new AudioClip(url.toString()));
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Game sound %s not loaded", url);
 		}
 	}
 

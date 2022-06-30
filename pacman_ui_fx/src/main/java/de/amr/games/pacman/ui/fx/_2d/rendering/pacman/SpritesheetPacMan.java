@@ -35,6 +35,7 @@ import de.amr.games.pacman.lib.animation.SpriteAnimationMap;
 import de.amr.games.pacman.lib.animation.SpriteArray;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
+import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -75,11 +76,11 @@ public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
 	private final Font font;
 
 	private SpritesheetPacMan() {
-		super("/de/amr/games/pacman/pacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP,
+		super(Env.getResourcePath("graphics/pacman/sprites.png"), 16, Direction.RIGHT, Direction.LEFT, Direction.UP,
 				Direction.DOWN);
-		mazeFull = Ufx.image("/de/amr/games/pacman/pacman/graphics/maze_full.png");
-		mazeEmpty = Ufx.image("/de/amr/games/pacman/pacman/graphics/maze_empty.png");
-		font = Ufx.font("/de/amr/games/pacman/common/emulogic.ttf", 8);
+		mazeFull = Ufx.image(Env.getResourcePath("graphics/pacman/maze_full.png"));
+		mazeEmpty = Ufx.image(Env.getResourcePath("graphics/pacman/maze_empty.png"));
+		font = Ufx.font(Env.getResourcePath("fonts/emulogic.ttf"), 8);
 	}
 
 	@Override

@@ -113,7 +113,7 @@ public class GameUI implements GameEventAdapter {
 
 		stage.setMinHeight(328);
 		stage.setMinWidth(241);
-		stage.getIcons().add(Ufx.image("/de/amr/games/pacman/pacman/graphics/pacman.png"));
+		stage.getIcons().add(Ufx.image(Env.getResourcePath("graphics/pacman/pacman.png")));
 		stage.setOnCloseRequest(e -> GameLoop.get().stop());
 		stage.setTitle(gameController.game().variant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
 		stage.setScene(scene);
