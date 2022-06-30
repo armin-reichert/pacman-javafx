@@ -61,6 +61,7 @@ public class Env {
 	public static final DoubleProperty mazeWallHeight = new SimpleDoubleProperty(2.0);
 	public static final BooleanProperty paused = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<Perspective> perspective = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
+	public static final BooleanProperty squirting = new SimpleBooleanProperty(false);
 	public static final BooleanProperty use3D = new SimpleBooleanProperty(true);
 
 	public static void toggle(BooleanProperty booleanProperty) {

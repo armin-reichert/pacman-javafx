@@ -45,9 +45,11 @@ import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -88,6 +90,7 @@ public class Maze3D extends Group {
 	public final DoubleProperty wallHeight = new SimpleDoubleProperty(1.0);
 	public final ObjectProperty<Image> floorTexture = new SimpleObjectProperty<>();
 	public final ObjectProperty<Color> floorColor = new SimpleObjectProperty<>();
+	public final BooleanProperty squirting = new SimpleBooleanProperty(false);
 
 	private final World world;
 	private final Group foundationGroup = new Group();
@@ -101,7 +104,7 @@ public class Maze3D extends Group {
 		getChildren().addAll(foundationGroup, foodGroup, particleGroup);
 		foundationGroup.getChildren().addAll(createFloor(), wallsGroup, doorsGroup);
 		build(mazeStyle);
-		addFood(world, mazeStyle.foodColor);
+		addFood(mazeStyle);
 		resolution.addListener((obs, oldVal, newVal) -> build(mazeStyle));
 		floorTexture.addListener((obs, oldVal, newVal) -> updateFloorTexture());
 		floorColor.addListener((obs, oldVal, newVal) -> updateFloorTexture());
@@ -197,37 +200,53 @@ public class Maze3D extends Group {
 		return ghost.position.euclideanDistance(doorCenter) <= (ghost.is(LEAVING_HOUSE) ? TS : 3 * TS);
 	}
 
-	private void addFood(World world, Color foodColor) {
+	private void addFood(MazeStyle mazeStyle) {
 		foodGroup.getChildren().clear();
 		particleGroup.getChildren().clear();
-		var material = new PhongMaterial(foodColor);
+		if (squirting.get()) {
+			createSquirtingPellets(mazeStyle.foodColor);
+		} else {
+			createStandardPellets(mazeStyle.foodColor);
+		}
+	}
+
+	private void createSquirtingPellets(Color pelletColor) {
+		var pelletMaterial = new PhongMaterial(pelletColor);
 		var blueMaterial = new PhongMaterial(Color.CORNFLOWERBLUE);
 		world.tiles() //
 				.filter(world::isFoodTile) //
 				.map(tile -> {
 					if (world.isEnergizerTile(tile)) {
-						var energizer3D = new Energizer3D(tile, material, 3.0);
+						var energizer3D = new Energizer3D(tile, pelletMaterial, 3.0);
 						energizer3D.setEatenAnimation(new SquirtingAnimation(world, particleGroup, energizer3D));
 						return energizer3D;
 					} else {
-						var bluePill = tile.neighbors().filter(world::isWall).count() == 0;
-						if (bluePill) {
+						if (tile.neighbors().filter(world::isWall).count() == 0) {
 							var pellet3D = new Pellet3D(tile, blueMaterial, 1.5);
 							pellet3D.setEatenAnimation(new SquirtingAnimation(world, particleGroup, pellet3D));
 							return pellet3D;
 						} else {
-							var pellet3D = new Pellet3D(tile, material, 1.0);
-							return pellet3D;
+							return new Pellet3D(tile, pelletMaterial, 1.0);
 						}
 					}
 				}).forEach(foodGroup.getChildren()::add);
 	}
 
-	public Optional<Pellet3D> foodAt(V2i tile) {
+	private void createStandardPellets(Color pelletColor) {
+		var pelletMaterial = new PhongMaterial(pelletColor);
+		world.tiles()//
+				.filter(world::isFoodTile)//
+				.map(tile -> world.isEnergizerTile(tile)//
+						? new Energizer3D(tile, pelletMaterial, 3.0)//
+						: new Pellet3D(tile, pelletMaterial, 1.0))//
+				.forEach(foodGroup.getChildren()::add);
+	}
+
+	public Optional<Pellet3D> pelletAt(V2i tile) {
 		return pellets3D().filter(pellet3D -> pellet3D.tile().equals(tile)).findFirst();
 	}
 
-	public void eatFood(Pellet3D pellet3D) {
+	public void eatPellet(Pellet3D pellet3D) {
 		if (pellet3D instanceof Energizer3D) {
 			var energizer = (Energizer3D) pellet3D;
 			energizer.stopPumping();
