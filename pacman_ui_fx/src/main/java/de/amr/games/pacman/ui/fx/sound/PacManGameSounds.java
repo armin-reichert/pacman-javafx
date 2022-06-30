@@ -24,37 +24,33 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.sound;
 
-import java.util.Map;
-
 import de.amr.games.pacman.model.common.GameSound;
-import javafx.scene.media.AudioClip;
 
 /**
  * @author Armin Reichert
  */
 public class PacManGameSounds extends AbstractGameSounds {
 
-	private void put(Map<GameSound, AudioClip> map, GameSound sound, String path) {
-		var url = getClass().getResource(path);
-		super.put(map, sound, url);
+	private void add(GameSound sound, String path) {
+		putClip(clips, sound, getClass().getResource(path));
 	}
 
 	public PacManGameSounds() {
 		//@formatter:off
-		put(clips, GameSound.BONUS_EATEN,     "pacman/eat_fruit.mp3");
-		put(clips, GameSound.CREDIT,          "pacman/credit.mp3");
-		put(clips, GameSound.EXTRA_LIFE,      "pacman/extend.mp3");
-		put(clips, GameSound.GAME_READY,      "pacman/game_start.mp3");
-		put(clips, GameSound.GHOST_EATEN,     "pacman/eat_ghost.mp3");
-		put(clips, GameSound.GHOST_RETURNING, "pacman/retreating.mp3");
-		put(clips, GameSound.INTERMISSION_1,  "pacman/intermission.mp3");
-		put(clips, GameSound.PACMAN_MUNCH,    "pacman/munch_1.wav");
-		put(clips, GameSound.PACMAN_DEATH,    "pacman/pacman_death.wav");
-		put(clips, GameSound.PACMAN_POWER,    "pacman/power_pellet.mp3");
-		put(clips, GameSound.SIREN_1,         "pacman/siren_1.mp3");
-		put(clips, GameSound.SIREN_2,         "pacman/siren_2.mp3");
-		put(clips, GameSound.SIREN_3,         "pacman/siren_3.mp3");
-		put(clips, GameSound.SIREN_4,         "pacman/siren_4.mp3");
+		add(GameSound.BONUS_EATEN,     "pacman/eat_fruit.mp3");
+		add(GameSound.CREDIT,          "pacman/credit.mp3");
+		add(GameSound.EXTRA_LIFE,      "pacman/extend.mp3");
+		add(GameSound.GAME_READY,      "pacman/game_start.mp3");
+		add(GameSound.GHOST_EATEN,     "pacman/eat_ghost.mp3");
+		add(GameSound.GHOST_RETURNING, "pacman/retreating.mp3");
+		add(GameSound.INTERMISSION_1,  "pacman/intermission.mp3");
+		add(GameSound.PACMAN_MUNCH,    "pacman/munch_1.wav");
+		add(GameSound.PACMAN_DEATH,    "pacman/pacman_death.wav");
+		add(GameSound.PACMAN_POWER,    "pacman/power_pellet.mp3");
+		add(GameSound.SIREN_1,         "pacman/siren_1.mp3");
+		add(GameSound.SIREN_2,         "pacman/siren_2.mp3");
+		add(GameSound.SIREN_3,         "pacman/siren_3.mp3");
+		add(GameSound.SIREN_4,         "pacman/siren_4.mp3");
 		//@formatter:on
 	}
 }

@@ -70,7 +70,7 @@ public class AbstractGameSounds implements GameSoundController {
 		}
 	}
 
-	protected void put(Map<GameSound, AudioClip> map, GameSound sound, URL url) {
+	protected void putClip(Map<GameSound, AudioClip> map, GameSound sound, URL url) {
 		try {
 			map.put(sound, new AudioClip(url.toString()));
 		} catch (Exception e) {
