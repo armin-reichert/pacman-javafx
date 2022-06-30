@@ -75,10 +75,11 @@ public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
 	private final Font font;
 
 	private SpritesheetPacMan() {
-		super("/pacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
-		mazeFull = Ufx.image("/pacman/graphics/maze_full.png");
-		mazeEmpty = Ufx.image("/pacman/graphics/maze_empty.png");
-		font = Ufx.font("/common/emulogic.ttf", 8);
+		super("/de/amr/games/pacman/pacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP,
+				Direction.DOWN);
+		mazeFull = Ufx.image("/de/amr/games/pacman/pacman/graphics/maze_full.png");
+		mazeEmpty = Ufx.image("/de/amr/games/pacman/pacman/graphics/maze_empty.png");
+		font = Ufx.font("/de/amr/games/pacman/common/emulogic.ttf", 8);
 	}
 
 	@Override

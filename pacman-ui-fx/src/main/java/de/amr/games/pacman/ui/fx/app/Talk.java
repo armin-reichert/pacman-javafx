@@ -38,15 +38,17 @@ public class Talk {
 	private Talk() {
 	}
 
-	public static final ResourceBundle MESSAGES = ResourceBundle.getBundle("/common/texts/messages");
+	public static final ResourceBundle MESSAGES = ResourceBundle.getBundle("/de/amr/games/pacman/common/texts/messages");
 
 	public static String message(String pattern, Object... args) {
 		return MessageFormat.format(MESSAGES.getString(pattern), args);
 	}
 
-	public static final RandomEntrySelector<String> CHEAT_TALK = load("/common/texts/cheating_talk");
-	public static final RandomEntrySelector<String> LEVEL_COMPLETE_TALK = load("/common/texts/level_complete_talk");
-	public static final RandomEntrySelector<String> GAME_OVER_TALK = load("/common/texts/game_over_talk");
+	public static final RandomEntrySelector<String> CHEAT_TALK = load("/de/amr/games/pacman/common/texts/cheating_talk");
+	public static final RandomEntrySelector<String> LEVEL_COMPLETE_TALK = load(
+			"/de/amr/games/pacman/common/texts/level_complete_talk");
+	public static final RandomEntrySelector<String> GAME_OVER_TALK = load(
+			"/de/amr/games/pacman/common/texts/game_over_talk");
 
 	private static RandomEntrySelector<String> load(String bundleName) {
 		ResourceBundle bundle = ResourceBundle.getBundle(bundleName);

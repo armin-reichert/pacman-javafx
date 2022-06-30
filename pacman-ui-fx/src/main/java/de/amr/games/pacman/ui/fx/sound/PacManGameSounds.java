@@ -33,20 +33,20 @@ public class PacManGameSounds extends AbstractGameSounds {
 
 	public PacManGameSounds() {
 		//@formatter:off
-		put(clips, GameSound.BONUS_EATEN,     "/pacman/sound/eat_fruit.mp3");
-		put(clips, GameSound.CREDIT,          "/pacman/sound/credit.mp3");
-		put(clips, GameSound.EXTRA_LIFE,      "/pacman/sound/extend.mp3");
-		put(clips, GameSound.GAME_READY,      "/pacman/sound/game_start.mp3");
-		put(clips, GameSound.GHOST_EATEN,     "/pacman/sound/eat_ghost.mp3");
-		put(clips, GameSound.GHOST_RETURNING, "/pacman/sound/retreating.mp3");
-		put(clips, GameSound.INTERMISSION_1,  "/pacman/sound/intermission.mp3");
-		put(clips, GameSound.PACMAN_MUNCH,    "/pacman/sound/munch_1.wav");
-		put(clips, GameSound.PACMAN_DEATH,    "/pacman/sound/pacman_death.wav");
-		put(clips, GameSound.PACMAN_POWER,    "/pacman/sound/power_pellet.mp3");
-		put(clips, GameSound.SIREN_1,         "/pacman/sound/siren_1.mp3");
-		put(clips, GameSound.SIREN_2,         "/pacman/sound/siren_2.mp3");
-		put(clips, GameSound.SIREN_3,         "/pacman/sound/siren_3.mp3");
-		put(clips, GameSound.SIREN_4,         "/pacman/sound/siren_4.mp3");
+		put(clips, GameSound.BONUS_EATEN,     "/de/amr/games/pacman/pacman/sound/eat_fruit.mp3");
+		put(clips, GameSound.CREDIT,          "/de/amr/games/pacman/pacman/sound/credit.mp3");
+		put(clips, GameSound.EXTRA_LIFE,      "/de/amr/games/pacman/pacman/sound/extend.mp3");
+		put(clips, GameSound.GAME_READY,      "/de/amr/games/pacman/pacman/sound/game_start.mp3");
+		put(clips, GameSound.GHOST_EATEN,     "/de/amr/games/pacman/pacman/sound/eat_ghost.mp3");
+		put(clips, GameSound.GHOST_RETURNING, "/de/amr/games/pacman/pacman/sound/retreating.mp3");
+		put(clips, GameSound.INTERMISSION_1,  "/de/amr/games/pacman/pacman/sound/intermission.mp3");
+		put(clips, GameSound.PACMAN_MUNCH,    "/de/amr/games/pacman/pacman/sound/munch_1.wav");
+		put(clips, GameSound.PACMAN_DEATH,    "/de/amr/games/pacman/pacman/sound/pacman_death.wav");
+		put(clips, GameSound.PACMAN_POWER,    "/de/amr/games/pacman/pacman/sound/power_pellet.mp3");
+		put(clips, GameSound.SIREN_1,         "/de/amr/games/pacman/pacman/sound/siren_1.mp3");
+		put(clips, GameSound.SIREN_2,         "/de/amr/games/pacman/pacman/sound/siren_2.mp3");
+		put(clips, GameSound.SIREN_3,         "/de/amr/games/pacman/pacman/sound/siren_3.mp3");
+		put(clips, GameSound.SIREN_4,         "/de/amr/games/pacman/pacman/sound/siren_4.mp3");
 		//@formatter:on
 	}
 }

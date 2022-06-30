@@ -70,8 +70,8 @@ public class Model3D {
 	private ObjModel ghostModel;
 
 	private Model3D() {
-		pacManModel = new ObjModel(getClass().getResource("/common/gianmarco/pacman.obj"));
-		ghostModel = new ObjModel(getClass().getResource("/common/gianmarco/ghost.obj"));
+		pacManModel = new ObjModel(getClass().getResource("/de/amr/games/pacman/common/gianmarco/pacman.obj"));
+		ghostModel = new ObjModel(getClass().getResource("/de/amr/games/pacman/common/gianmarco/ghost.obj"));
 	}
 
 	public Group createPac(Color faceColor, Color eyesColor, Color palateColor) {

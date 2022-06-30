@@ -101,10 +101,11 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 	private final Font font;
 
 	private SpritesheetMsPacMan() {
-		super("/mspacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
+		super("/de/amr/games/pacman/mspacman/graphics/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP,
+				Direction.DOWN);
 
-		font = Ufx.font("/common/emulogic.ttf", 8);
-		midwayLogo = Ufx.image("/mspacman/graphics/midway.png");
+		font = Ufx.font("/de/amr/games/pacman/common/emulogic.ttf", 8);
+		midwayLogo = Ufx.image("/de/amr/games/pacman/mspacman/graphics/midway.png");
 
 		int numMazes = 6;
 		mazesFull = new Image[numMazes];
