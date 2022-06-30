@@ -39,8 +39,8 @@ public class Energizer3D extends Pellet3D {
 
 	private final ScaleTransition pumping;
 
-	public Energizer3D(V2i tile, PhongMaterial material, double radius) {
-		super(tile, material, radius);
+	public Energizer3D(V2i tile, PhongMaterial material) {
+		super(tile, material, 3.0);
 		pumping = new ScaleTransition(Duration.seconds(1.0 / 6), this);
 		pumping.setAutoReverse(true);
 		pumping.setCycleCount(Animation.INDEFINITE);

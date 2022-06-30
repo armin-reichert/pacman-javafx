@@ -63,9 +63,10 @@ public class World3D extends Group {
 		mazeStyle.wallSideColor = Rendering3D.getMazeSideColor(game.variant, game.level.mazeNumber);
 		mazeStyle.wallTopColor = Rendering3D.getMazeTopColor(game.variant, game.level.mazeNumber);
 		mazeStyle.doorColor = Rendering3D.getGhostHouseDoorColor(game.variant);
-		mazeStyle.foodColor = Rendering3D.getMazeFoodColor(game.variant, game.level.mazeNumber);
+		mazeStyle.pelletColor = Rendering3D.getMazeFoodColor(game.variant, game.level.mazeNumber);
 
-		maze3D = new Maze3D(game.level.world, mazeStyle);
+		maze3D = new Maze3D(game.variant, game.level.world, mazeStyle);
+		maze3D.squirting.bind(Env.squirting);
 		maze3D.floorTexture.bind(Bindings.createObjectBinding(
 				() -> "none".equals(Env.floorTexture.get()) ? null : Ufx.image("/common/" + Env.floorTexture.get()),
 				Env.floorTexture));

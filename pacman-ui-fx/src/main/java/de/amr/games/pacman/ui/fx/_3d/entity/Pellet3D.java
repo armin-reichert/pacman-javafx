@@ -42,6 +42,10 @@ public class Pellet3D extends Sphere {
 
 	private Animation animation;
 
+	public Pellet3D(V2i tile, PhongMaterial material) {
+		this(tile, material, 1.0);
+	}
+
 	public Pellet3D(V2i tile, PhongMaterial material, double radius) {
 		setUserData(tile);
 		setMaterial(material);

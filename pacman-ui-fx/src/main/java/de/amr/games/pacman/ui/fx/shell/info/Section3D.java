@@ -44,6 +44,7 @@ import javafx.scene.text.Font;
  */
 public class Section3D extends Section {
 	private ComboBox<Perspective> comboPerspective;
+	private CheckBox cbSquirting;
 	private ComboBox<Integer> comboResolution;
 	private Slider sliderWallHeight;
 	private ColorPicker pickerBgColor;
@@ -57,6 +58,7 @@ public class Section3D extends Section {
 		super(ui, gc, title, minLabelWidth, textColor, textFont, labelFont);
 		comboPerspective = addComboBox("Perspective", Perspective.values());
 		comboPerspective.setOnAction(e -> Env.perspective.set(comboPerspective.getValue()));
+		cbSquirting = addCheckBox("Squirting", () -> Env.toggle(Env.squirting));
 		comboResolution = addComboBox("Maze resolution", 1, 2, 4, 8);
 		addInfo("Camera", () -> ((PlayScene3D) ui.getCurrentGameScene()).getCamera().transformInfo())
 				.available(() -> ui.getCurrentGameScene().is3D());
@@ -83,6 +85,7 @@ public class Section3D extends Section {
 		super.update();
 		comboPerspective.setValue(Env.perspective.get());
 		comboPerspective.setDisable(!ui.getCurrentGameScene().is3D());
+		cbSquirting.setSelected(Env.squirting.get());
 		comboResolution.setValue(Env.mazeResolution.get());
 		comboResolution.setDisable(!ui.getCurrentGameScene().is3D());
 		sliderWallHeight.setValue(Env.mazeWallHeight.get());
