@@ -53,9 +53,9 @@ public class CreatureMotionAnimation {
 	}
 
 	public void update() {
-		node.setVisible(guy.visible);
-		node.setTranslateX(guy.position.x + HTS);
-		node.setTranslateY(guy.position.y + HTS);
+		node.setVisible(guy.isVisible());
+		node.setTranslateX(guy.getPosition().x + HTS);
+		node.setTranslateY(guy.getPosition().y + HTS);
 		node.setTranslateZ(-HTS);
 		if (targetDir != guy.moveDir()) {
 			int[] angles = TURN_ANGLES[index(targetDir)][index(guy.moveDir())];

@@ -118,17 +118,17 @@ public class GuysInfo {
 		textView.setText(text);
 		var textSize = textView.getBoundsInLocal();
 		var scaling = playScene.currentScaling();
-		textView.setX((entity.position.x + World.HTS) * scaling - textSize.getWidth() / 2);
-		textView.setY(entity.position.y * scaling - textSize.getHeight());
-		textView.setVisible(entity.visible);
+		textView.setX((entity.getPosition().x + World.HTS) * scaling - textSize.getWidth() / 2);
+		textView.setY(entity.getPosition().y * scaling - textSize.getHeight());
+		textView.setVisible(entity.isVisible());
 	}
 
 	private void updateTextView(Text textView, String text, Bonus bonus) {
 		textView.setText(text);
 		var textSize = textView.getBoundsInLocal();
 		var scaling = playScene.currentScaling();
-		textView.setX((bonus.entity().position.x + World.HTS) * scaling - textSize.getWidth() / 2);
-		textView.setY(bonus.entity().position.y * scaling - textSize.getHeight());
+		textView.setX((bonus.entity().getPosition().x + World.HTS) * scaling - textSize.getWidth() / 2);
+		textView.setY(bonus.entity().getPosition().y * scaling - textSize.getHeight());
 		textView.setVisible(bonus.state() != BonusState.INACTIVE);
 	}
 

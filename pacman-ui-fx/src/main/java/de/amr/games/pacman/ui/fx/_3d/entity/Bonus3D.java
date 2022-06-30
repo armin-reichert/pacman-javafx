@@ -54,8 +54,8 @@ public class Bonus3D extends Box {
 	}
 
 	public void update() {
-		setTranslateX(bonus.entity().position.x + getWidth() / 2);
-		setTranslateY(bonus.entity().position.y + getHeight() / 2);
+		setTranslateX(bonus.entity().getPosition().x + getWidth() / 2);
+		setTranslateY(bonus.entity().getPosition().y + getHeight() / 2);
 		setVisible(bonus.state() != BonusState.INACTIVE);
 	}
 

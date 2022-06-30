@@ -63,7 +63,7 @@ public class PortalTraversalAnimation {
 			return;
 		}
 		colorProperty.set(baseColor.get());
-		node.setVisible(guy.visible);
+		node.setVisible(guy.isVisible());
 		node.setOpacity(1);
 		if (outsideWorld()) {
 			node.setVisible(true);
@@ -86,7 +86,7 @@ public class PortalTraversalAnimation {
 		for (var portal : world.portals()) {
 			var left = new V2d(portal.left).scaled(World.TS);
 			var right = new V2d(portal.right).scaled(World.TS);
-			var dist = Math.min(guy.position.euclideanDistance(left), guy.position.euclideanDistance(right));
+			var dist = Math.min(guy.getPosition().euclideanDistance(left), guy.getPosition().euclideanDistance(right));
 			if (dist < minDist) {
 				minDist = dist;
 			}
@@ -95,7 +95,7 @@ public class PortalTraversalAnimation {
 	}
 
 	private boolean outsideWorld() {
-		double centerX = guy.position.x + World.HTS;
+		double centerX = guy.getPosition().x + World.HTS;
 		return centerX < 0 || centerX > world.numCols() * World.TS;
 	}
 }

@@ -203,13 +203,13 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 	}
 
 	public void drawFlap(GraphicsContext g, Flap flap) {
-		if (flap.visible) {
+		if (flap.isVisible()) {
 			Rectangle2D sprite = (Rectangle2D) flap.animation.animate();
 			drawEntity(g, flap, sprite);
 			g.setFont(getArcadeFont());
 			g.setFill(Color.rgb(222, 222, 255));
-			g.fillText(String.valueOf(flap.number), flap.position.x + sprite.getWidth() - 25, flap.position.y + 18);
-			g.fillText(flap.text, flap.position.x + sprite.getWidth(), flap.position.y);
+			g.fillText(String.valueOf(flap.number), flap.getPosition().x + sprite.getWidth() - 25, flap.getPosition().y + 18);
+			g.fillText(flap.text, flap.getPosition().x + sprite.getWidth(), flap.getPosition().y);
 		}
 	}
 

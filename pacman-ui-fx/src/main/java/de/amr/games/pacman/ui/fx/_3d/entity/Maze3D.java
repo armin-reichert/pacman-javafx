@@ -196,13 +196,13 @@ public class Maze3D extends Group {
 
 	private boolean isAnyGhostGettingAccess(Stream<Ghost> ghosts, V2d centerPosition) {
 		return ghosts //
-				.filter(ghost -> ghost.visible) //
+				.filter(Ghost::isVisible) //
 				.filter(ghost -> ghost.is(GhostState.DEAD, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)) //
 				.anyMatch(ghost -> isGhostGettingAccess(ghost, centerPosition));
 	}
 
 	private boolean isGhostGettingAccess(Ghost ghost, V2d doorCenter) {
-		return ghost.position.euclideanDistance(doorCenter) <= (ghost.is(LEAVING_HOUSE) ? TS : 3 * TS);
+		return ghost.getPosition().euclideanDistance(doorCenter) <= (ghost.is(LEAVING_HOUSE) ? TS : 3 * TS);
 	}
 
 	private void updateSquirting(MazeStyle mazeStyle) {

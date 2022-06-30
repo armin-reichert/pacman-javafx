@@ -53,7 +53,7 @@ public class PlayScene2D extends GameScene2D {
 	public void init() {
 		guysInfo.init(ctx.game);
 		creditVisible = !hasCredit();
-		ctx.game.levelCounter.visible = hasCredit();
+		ctx.game.levelCounter.setVisible(hasCredit());
 		var world = (ArcadeWorld) ctx.game.world();
 		world.setFlashingAnimation(ctx.r2D.createMazeFlashingAnimation(ctx.game.level.mazeNumber));
 		ctx.game.pac.setAnimations(new PacAnimations(ctx.r2D));
