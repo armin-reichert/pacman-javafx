@@ -43,6 +43,7 @@ import javafx.scene.text.Font;
  */
 public class ModuleResource {
 
+	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getFormatterLogger();
 
 	private ModuleResource() {
@@ -77,11 +78,11 @@ public class ModuleResource {
 		return new Background(new BackgroundFill(color, null, null));
 	}
 
-	public static Background imageBackground(String path) {
-		return new Background(new BackgroundImage(image(path), null, null, null, null));
+	public static Background imageBackground(String relPath) {
+		return new Background(new BackgroundImage(image(relPath), null, null, null, null));
 	}
 
-	public static ImageView imageView(String path) {
-		return new ImageView(image(path));
+	public static ImageView imageView(String relPath) {
+		return new ImageView(image(relPath));
 	}
 }
