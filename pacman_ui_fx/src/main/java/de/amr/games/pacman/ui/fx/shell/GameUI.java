@@ -48,6 +48,7 @@ import de.amr.games.pacman.ui.fx.sound.MsPacManGameSounds;
 import de.amr.games.pacman.ui.fx.sound.PacManGameSounds;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -67,6 +68,7 @@ public class GameUI implements GameEventAdapter {
 
 	private static final GameSoundController PACMAN_SOUNDS = new PacManGameSounds();
 	private static final GameSoundController MS_PACMAN_SOUNDS = new MsPacManGameSounds();
+	private static final Image APP_ICON = Ufx.image(Env.getResourcePath("icons/pacman.png"));
 
 	private final GameController gameController;
 	private final Stage stage;
@@ -113,7 +115,7 @@ public class GameUI implements GameEventAdapter {
 
 		stage.setMinHeight(328);
 		stage.setMinWidth(241);
-		stage.getIcons().add(Ufx.image(Env.getResourcePath("graphics/pacman/pacman.png")));
+		stage.getIcons().add(APP_ICON);
 		stage.setOnCloseRequest(e -> GameLoop.get().stop());
 		stage.setTitle(gameController.game().variant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
 		stage.setScene(scene);

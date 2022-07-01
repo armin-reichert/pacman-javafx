@@ -51,9 +51,9 @@ public class SectionGeneral extends Section {
 	private Slider sliderTargetFPS;
 	private CheckBox cbUsePlayScene3D;
 	private CheckBox cbDebugUI;
-	private ImageView iconPlay = Ufx.imageView("/de/amr/games/pacman/common/icons/play.png");
-	private ImageView iconStop = Ufx.imageView("/de/amr/games/pacman/common/icons/stop.png");
-	private ImageView iconStep = Ufx.imageView("/de/amr/games/pacman/common/icons/step.png");
+	private ImageView iconPlay = Ufx.imageView(Env.getResourcePath("icons/play.png"));
+	private ImageView iconStop = Ufx.imageView(Env.getResourcePath("icons/stop.png"));
+	private ImageView iconStep = Ufx.imageView(Env.getResourcePath("icons/step.png"));
 	private Tooltip tooltipPlay = new Tooltip("Play");
 	private Tooltip tooltipStop = new Tooltip("Stop");
 	private Tooltip tooltipStep = new Tooltip("Single Step");
