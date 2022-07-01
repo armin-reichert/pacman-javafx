@@ -16,9 +16,9 @@ Then
 ```
 cd interactivemesh
 mvn install:install-file -Dfile=jars/jimObjModelImporterJFX.jar -DpomFile=pom.xml
-cd ..\pacman-ui-fx
+cd ..\pacman_ui_fx
 mvn clean install
-cd ..\pacman-ui-fx-deploy
+cd ..\tentackle
 mvn clean install
 ```
 
@@ -26,7 +26,7 @@ or just run `build.bat`.
 
 ## How to run
 
-The `pacman-ui-fx-deploy\target` directory now contains a zip file `pacman-javafx-1.0-jlink.zip`. 
+The `tentackle\target` directory now contains a zip file `pacman-javafx-tentackle-1.0-jlink.zip`. 
 
 Extract this file and start the application by executing the file `run.cmd` inside the `bin` folder.  
 
