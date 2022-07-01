@@ -8,7 +8,7 @@
 	<properties>
 		<javafx.version>15.0.1</javafx.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<main.class>de.amr.games.pacman.ui.fx.app.PacManGameAppFX</main.class>
+		<mainClass>de.amr.games.pacman.ui.fx.app.PacManGameAppFX</mainClass>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -47,7 +47,7 @@
 				<artifactId>javafx-maven-plugin</artifactId>
 				<version>0.0.6</version>
 				<configuration>
-					<mainClass>${main.class}</mainClass>
+					<mainClass>${mainClass}</mainClass>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -56,7 +56,7 @@
 				<version>1.0.14</version>
 				<configuration>
 					<target>${gluonfx.target}</target>
-					<mainClass>${main.class}</mainClass>
+					<mainClass>${mainClass}</mainClass>
 					<bundlesList>
 						<list>
 							de.amr.games.pacman.ui.fx.texts.messages
