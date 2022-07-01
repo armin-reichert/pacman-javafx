@@ -40,5 +40,7 @@ module de.amr.games.pacman.ui.fx {
 	exports de.amr.games.pacman.ui.fx._3d.scene;
 	exports de.amr.games.pacman.ui.fx._3d.scene.cams;
 
+	// Grant access to module resources
 	opens de.amr.games.pacman.ui.fx.sound;
+	opens de.amr.games.pacman.ui.fx.texts;
 }
