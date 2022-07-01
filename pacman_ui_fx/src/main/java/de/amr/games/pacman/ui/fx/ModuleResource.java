@@ -63,7 +63,7 @@ public class ModuleResource {
 		if (url != null) {
 			return url;
 		}
-		throw new MissingResourceException("No resource found for path", "", path);
+		throw new MissingResourceException("No resource found for path '%s'", "", path);
 	}
 
 	public static Font font(String relPath, double size) {
