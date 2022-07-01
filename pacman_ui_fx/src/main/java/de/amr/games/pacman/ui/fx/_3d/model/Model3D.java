@@ -25,6 +25,9 @@ package de.amr.games.pacman.ui.fx._3d.model;
 
 import java.util.stream.Stream;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.geometry.Bounds;
@@ -47,6 +50,8 @@ import javafx.scene.transform.Translate;
  */
 public class Model3D {
 
+	private static final Logger logger = LogManager.getFormatterLogger();
+
 	private static Model3D theThing;
 
 	public static Model3D get() {
@@ -66,22 +71,26 @@ public class Model3D {
 		return new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
 	}
 
-	private ObjModel pacManModel;
+	private ObjModel pacModel;
 	private ObjModel ghostModel;
 
 	private Model3D() {
-		pacManModel = new ObjModel(getClass().getResource("/de/amr/games/pacman/common/gianmarco/pacman.obj"));
-		ghostModel = new ObjModel(getClass().getResource("/de/amr/games/pacman/common/gianmarco/ghost.obj"));
+		var pacModelURL = getClass().getResource(Env.getResourcePath("model3D/pacman.obj"));
+		logger.info("Pac-Man 3D model URL: %s", pacModelURL);
+		pacModel = new ObjModel(pacModelURL);
+		var ghostModelURL = getClass().getResource(Env.getResourcePath("model3D/ghost.obj"));
+		logger.info("Ghost 3D model URL: %s", ghostModelURL);
+		ghostModel = new ObjModel(ghostModelURL);
 	}
 
 	public Group createPac(Color faceColor, Color eyesColor, Color palateColor) {
-		var face = pacManModel.createMeshView("Sphere_yellow_packman");
+		var face = pacModel.createMeshView("Sphere_yellow_packman");
 		face.setMaterial(new PhongMaterial(faceColor));
 
-		var eyes = pacManModel.createMeshView("Sphere.008_Sphere.010_grey_wall");
+		var eyes = pacModel.createMeshView("Sphere.008_Sphere.010_grey_wall");
 		eyes.setMaterial(new PhongMaterial(eyesColor));
 
-		var palate = pacManModel.createMeshView("Sphere_grey_wall");
+		var palate = pacModel.createMeshView("Sphere_grey_wall");
 		palate.setMaterial(new PhongMaterial(palateColor));
 
 		var center = centerOverOrigin(face);
