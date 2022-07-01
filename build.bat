@@ -5,6 +5,6 @@ popd
 pushd pacman_ui_fx
 call mvn clean install
 popd
-pushd pacman-ui-fx-deploy
+pushd tentackle
 call mvn clean install
 popd
