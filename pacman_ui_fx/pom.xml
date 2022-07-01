@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.amr.games.pacman.ui.fx</groupId>
 	<artifactId>pacman_ui_fx</artifactId>
@@ -55,8 +57,14 @@
 				<configuration>
 					<target>${gluonfx.target}</target>
 					<mainClass>${main.class}</mainClass>
-					<bundlesList>de.amr.games.pacman.ui.fx.texts.messages</bundlesList>
-					<resourcesList></resourcesList>
+					<bundlesList>
+						<list>
+							de.amr.games.pacman.ui.fx.texts.messages
+						</list>
+					</bundlesList>
+					<resourcesList>
+						<list>mp3</list>
+					</resourcesList>
 				</configuration>
 			</plugin>
 		</plugins>
