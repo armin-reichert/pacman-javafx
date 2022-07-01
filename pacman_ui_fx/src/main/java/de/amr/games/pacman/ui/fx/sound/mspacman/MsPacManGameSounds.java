@@ -29,7 +29,6 @@ import de.amr.games.pacman.ui.fx.sound.AbstractGameSounds;
 
 /**
  * @author Armin Reichert
- *
  */
 public class MsPacManGameSounds extends AbstractGameSounds {
 

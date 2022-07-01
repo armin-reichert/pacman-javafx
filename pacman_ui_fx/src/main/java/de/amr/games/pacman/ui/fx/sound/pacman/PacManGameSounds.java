@@ -34,6 +34,7 @@ public class PacManGameSounds extends AbstractGameSounds {
 
 	public PacManGameSounds() {
 		//@formatter:off
+		add(GameSound.PACMAN_DEATH,    "sound/pacman/pacman_death.wav");
 		add(GameSound.BONUS_EATEN,     "sound/pacman/eat_fruit.mp3");
 		add(GameSound.CREDIT,          "sound/pacman/credit.mp3");
 		add(GameSound.EXTRA_LIFE,      "sound/pacman/extend.mp3");
@@ -42,7 +43,6 @@ public class PacManGameSounds extends AbstractGameSounds {
 		add(GameSound.GHOST_RETURNING, "sound/pacman/retreating.mp3");
 		add(GameSound.INTERMISSION_1,  "sound/pacman/intermission.mp3");
 		add(GameSound.PACMAN_MUNCH,    "sound/pacman/munch_1.wav");
-		add(GameSound.PACMAN_DEATH,    "sound/pacman/pacman_death.wav");
 		add(GameSound.PACMAN_POWER,    "sound/pacman/power_pellet.mp3");
 		add(GameSound.SIREN_1,         "sound/pacman/siren_1.mp3");
 		add(GameSound.SIREN_2,         "sound/pacman/siren_2.mp3");

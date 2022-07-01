@@ -43,8 +43,6 @@ import javafx.scene.text.Font;
  */
 public class Resources {
 
-	private static final String MODULE_NAME = "de.amr.games.pacman.ui.fx";
-
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getFormatterLogger();
 
