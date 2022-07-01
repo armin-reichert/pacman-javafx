@@ -59,12 +59,12 @@ Cheats:
 
 ## How it looks
 
-![Play Scene](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/pacman-maze.png)
+![Play Scene](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman_ui_fx/doc/pacman-maze.png)
 
-![Info Panel](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/left-info-panel.png)
+![Info Panel](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman_ui_fx/doc/left-info-panel.png)
 
-![Info Panel](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/right-info-panel.png)
+![Info Panel](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman_ui_fx/doc/right-info-panel.png)
 
 YouTube:
 
-[![YouTube](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/thumbnail.jpg)](https://youtu.be/-ANLq4mMn3Q)
+[![YouTube](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman_ui_fx/doc/thumbnail.jpg)](https://youtu.be/-ANLq4mMn3Q)
