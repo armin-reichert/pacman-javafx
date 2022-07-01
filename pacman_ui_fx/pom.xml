@@ -45,6 +45,7 @@
 				<artifactId>javafx-maven-plugin</artifactId>
 				<version>0.0.6</version>
 				<configuration>
+					<mainModule>de.amr.games.pacman.ui.fx</mainModule>
 					<mainClass>${main.class}</mainClass>
 				</configuration>
 			</plugin>
@@ -54,6 +55,7 @@
 				<version>1.0.14</version>
 				<configuration>
 					<target>${gluonfx.target}</target>
+					<mainModule>de.amr.games.pacman.ui.fx</mainModule>
 					<mainClass>${main.class}</mainClass>
 				</configuration>
 			</plugin>
