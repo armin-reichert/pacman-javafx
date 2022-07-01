@@ -29,7 +29,7 @@ import de.amr.games.pacman.controller.common.GameSoundController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
-import de.amr.games.pacman.ui.fx.app.Texts;
+import de.amr.games.pacman.ui.fx.texts.Texts;
 import javafx.scene.shape.DrawMode;
 
 /**

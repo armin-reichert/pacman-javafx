@@ -27,7 +27,7 @@ import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.ui.fx.ModuleResource;
+import de.amr.games.pacman.ui.fx.Resources;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Maze3D.MazeStyle;
@@ -68,7 +68,7 @@ public class World3D extends Group {
 		maze3D = new Maze3D(game.variant, game.level.world, mazeStyle);
 		maze3D.squirting.bind(Env.squirting);
 		maze3D.floorTexture.bind(Bindings.createObjectBinding(
-				() -> "none".equals(Env.floorTexture.get()) ? null : ModuleResource.image("graphics/" + Env.floorTexture.get()),
+				() -> "none".equals(Env.floorTexture.get()) ? null : Resources.image("graphics/" + Env.floorTexture.get()),
 				Env.floorTexture));
 		maze3D.floorColor.bind(Env.floorColor);
 		maze3D.resolution.bind(Env.mazeResolution);

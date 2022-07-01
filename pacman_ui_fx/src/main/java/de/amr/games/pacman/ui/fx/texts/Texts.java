@@ -22,11 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.amr.games.pacman.ui.fx.app;
+package de.amr.games.pacman.ui.fx.texts;
 
 import java.util.ResourceBundle;
 
-import de.amr.games.pacman.ui.fx.ModuleResource;
+import de.amr.games.pacman.ui.fx.Resources;
 import de.amr.games.pacman.ui.fx.util.EntryPicker;
 
 /**
@@ -37,7 +37,7 @@ public class Texts {
 	private Texts() {
 	}
 
-	public static final ResourceBundle MESSAGES = ResourceBundle.getBundle(ModuleResource.path("texts/messages"));
+	public static final ResourceBundle MESSAGES = ResourceBundle.getBundle(Resources.path("texts/messages"));
 
 	public static String message(String pattern, Object... args) {
 		return MESSAGES.getString(pattern).formatted(args);

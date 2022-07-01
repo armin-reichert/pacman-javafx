@@ -24,7 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell.info;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.ui.fx.ModuleResource;
+import de.amr.games.pacman.ui.fx.Resources;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.shell.Actions;
@@ -51,9 +51,9 @@ public class SectionGeneral extends Section {
 	private Slider sliderTargetFPS;
 	private CheckBox cbUsePlayScene3D;
 	private CheckBox cbDebugUI;
-	private ImageView iconPlay = ModuleResource.imageView("icons/play.png");
-	private ImageView iconStop = ModuleResource.imageView("icons/stop.png");
-	private ImageView iconStep = ModuleResource.imageView("icons/step.png");
+	private ImageView iconPlay = Resources.imageView("icons/play.png");
+	private ImageView iconStop = Resources.imageView("icons/stop.png");
+	private ImageView iconStep = Resources.imageView("icons/step.png");
 	private Tooltip tooltipPlay = new Tooltip("Play");
 	private Tooltip tooltipStop = new Tooltip("Stop");
 	private Tooltip tooltipStep = new Tooltip("Single Step");

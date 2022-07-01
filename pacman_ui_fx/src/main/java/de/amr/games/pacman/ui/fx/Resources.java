@@ -41,14 +41,14 @@ import javafx.scene.text.Font;
 /**
  * @author Armin Reichert
  */
-public class ModuleResource {
+public class Resources {
 
 	private static final String MODULE_NAME = "de.amr.games.pacman.ui.fx";
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getFormatterLogger();
 
-	private ModuleResource() {
+	private Resources() {
 	}
 
 	public static String path(String relPath) {
@@ -61,7 +61,7 @@ public class ModuleResource {
 
 	public static URL url(String relPath) {
 		var path = path(relPath);
-		var url = ModuleResource.class.getResource(path);
+		var url = Resources.class.getResource(path);
 		if (url != null) {
 			return url;
 		}
