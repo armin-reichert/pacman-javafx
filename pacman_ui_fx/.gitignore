@@ -1,6 +1,7 @@
 /bin/
 /target/
 /.settings/
+/src/main/resources/META-INF
 
 # Compiled class file
 *.class
