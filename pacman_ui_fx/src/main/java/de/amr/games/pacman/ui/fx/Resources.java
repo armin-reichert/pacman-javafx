@@ -25,7 +25,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx;
 
 import java.net.URL;
-import java.util.MissingResourceException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -63,7 +62,8 @@ public class Resources {
 		if (url != null) {
 			return url;
 		}
-		throw new MissingResourceException("No resource found for path '%s'".formatted(path), "", path);
+		logger.error("No resource found for path '%s'", path);
+		return null;
 	}
 
 	public static Font font(String relPath, double size) {
