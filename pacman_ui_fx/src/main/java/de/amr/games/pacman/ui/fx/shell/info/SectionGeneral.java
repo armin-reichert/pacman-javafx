@@ -24,11 +24,11 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell.info;
 
 import de.amr.games.pacman.controller.common.GameController;
+import de.amr.games.pacman.ui.fx.ModuleResource;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
-import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
@@ -51,9 +51,9 @@ public class SectionGeneral extends Section {
 	private Slider sliderTargetFPS;
 	private CheckBox cbUsePlayScene3D;
 	private CheckBox cbDebugUI;
-	private ImageView iconPlay = Ufx.imageView(Env.getResourcePath("icons/play.png"));
-	private ImageView iconStop = Ufx.imageView(Env.getResourcePath("icons/stop.png"));
-	private ImageView iconStep = Ufx.imageView(Env.getResourcePath("icons/step.png"));
+	private ImageView iconPlay = ModuleResource.imageView("icons/play.png");
+	private ImageView iconStop = ModuleResource.imageView("icons/stop.png");
+	private ImageView iconStep = ModuleResource.imageView("icons/step.png");
 	private Tooltip tooltipPlay = new Tooltip("Play");
 	private Tooltip tooltipStop = new Tooltip("Stop");
 	private Tooltip tooltipStep = new Tooltip("Single Step");

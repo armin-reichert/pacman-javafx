@@ -26,7 +26,8 @@ package de.amr.games.pacman.ui.fx.app;
 
 import java.util.ResourceBundle;
 
-import de.amr.games.pacman.ui.fx.util.RandomEntrySelector;
+import de.amr.games.pacman.ui.fx.ModuleResource;
+import de.amr.games.pacman.ui.fx.util.EntryPicker;
 
 /**
  * @author Armin Reichert
@@ -36,19 +37,19 @@ public class Talk {
 	private Talk() {
 	}
 
-	public static final ResourceBundle MESSAGES = ResourceBundle.getBundle(Env.getResourcePath("texts/messages"));
+	public static final ResourceBundle MESSAGES = ResourceBundle.getBundle(ModuleResource.path("texts/messages"));
 
 	public static String message(String pattern, Object... args) {
 		return MESSAGES.getString(pattern).formatted(args);
 	}
 
-	public static final RandomEntrySelector<String> CHEAT_TALK = load(Env.getResourcePath("texts/cheating_talk"));
-	public static final RandomEntrySelector<String> LEVEL_COMPLETE_TALK = load(
-			Env.getResourcePath("texts/level_complete_talk"));
-	public static final RandomEntrySelector<String> GAME_OVER_TALK = load(Env.getResourcePath("texts/game_over_talk"));
+	public static final EntryPicker<String> CHEAT_TALK = createEntryPicker("texts/cheating_talk");
+	public static final EntryPicker<String> LEVEL_COMPLETE_TALK = createEntryPicker("texts/level_complete_talk");
+	public static final EntryPicker<String> GAME_OVER_TALK = createEntryPicker("texts/game_over_talk");
 
-	private static RandomEntrySelector<String> load(String bundleName) {
-		ResourceBundle bundle = ResourceBundle.getBundle(bundleName);
-		return new RandomEntrySelector<>(bundle.keySet().stream().sorted().map(bundle::getString).toArray(String[]::new));
+	private static EntryPicker<String> createEntryPicker(String relPathToBundle) {
+		var bundlePath = ModuleResource.path(relPathToBundle);
+		var bundle = ResourceBundle.getBundle(bundlePath);
+		return new EntryPicker<>(bundle.keySet().stream().sorted().map(bundle::getString).toArray(String[]::new));
 	}
 }

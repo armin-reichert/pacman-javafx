@@ -29,15 +29,10 @@ import javafx.animation.PauseTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BackgroundImage;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 /**
@@ -80,18 +75,6 @@ public class Ufx {
 		return p;
 	}
 
-	public static Font font(String path, double size) {
-		return Font.loadFont(Ufx.class.getResourceAsStream(path), size);
-	}
-
-	public static Image image(String path) {
-		var is = Ufx.class.getResourceAsStream(path);
-		if (is == null) {
-			throw new IllegalArgumentException("No image at path: " + path);
-		}
-		return new Image(is);
-	}
-
 	/**
 	 * @param source    source image
 	 * @param exchanges map of color exchanges
@@ -109,17 +92,5 @@ public class Ufx {
 			}
 		}
 		return result;
-	}
-
-	public static Background colorBackground(Color color) {
-		return new Background(new BackgroundFill(color, null, null));
-	}
-
-	public static Background imageBackground(String path) {
-		return new Background(new BackgroundImage(image(path), null, null, null, null));
-	}
-
-	public static ImageView imageView(String path) {
-		return new ImageView(image(path));
 	}
 }

@@ -32,28 +32,24 @@ import de.amr.games.pacman.model.common.GameSound;
  */
 public class MsPacManGameSounds extends AbstractGameSounds {
 
-	private void add(GameSound sound, String path) {
-		putClip(clips, sound, getClass().getResource(path));
-	}
-
 	public MsPacManGameSounds() {
 		//@formatter:off
-		add(GameSound.BONUS_EATEN,     "mspacman/Fruit.mp3");
-		add(GameSound.CREDIT,          "mspacman/Coin Credit.mp3");
-		add(GameSound.EXTRA_LIFE,      "mspacman/Extra Life.mp3");
-		add(GameSound.GAME_READY,      "mspacman/Start.mp3");
-		add(GameSound.GHOST_EATEN,     "mspacman/Ghost.mp3");
-		add(GameSound.GHOST_RETURNING, "mspacman/Ghost Eyes.mp3");
-		add(GameSound.INTERMISSION_1,  "mspacman/They Meet Act 1.mp3");
-		add(GameSound.INTERMISSION_2,  "mspacman/The Chase Act 2.mp3");
-		add(GameSound.INTERMISSION_3,  "mspacman/Junior Act 3.mp3");
-		add(GameSound.PACMAN_MUNCH,    "mspacman/Ms. Pac Man Pill.mp3");
-		add(GameSound.PACMAN_DEATH,    "mspacman/Died.mp3");
-		add(GameSound.PACMAN_POWER,    "mspacman/Scared Ghost.mp3");
-		add(GameSound.SIREN_1,         "mspacman/Ghost Noise 1.mp3");
-		add(GameSound.SIREN_2,         "mspacman/Ghost Noise 2.mp3");
-		add(GameSound.SIREN_3,         "mspacman/Ghost Noise 3.mp3");
-		add(GameSound.SIREN_4,         "mspacman/Ghost Noise 4.mp3");
+		add(GameSound.BONUS_EATEN,     "sound/mspacman/Fruit.mp3");
+		add(GameSound.CREDIT,          "sound/mspacman/Coin Credit.mp3");
+		add(GameSound.EXTRA_LIFE,      "sound/mspacman/Extra Life.mp3");
+		add(GameSound.GAME_READY,      "sound/mspacman/Start.mp3");
+		add(GameSound.GHOST_EATEN,     "sound/mspacman/Ghost.mp3");
+		add(GameSound.GHOST_RETURNING, "sound/mspacman/Ghost Eyes.mp3");
+		add(GameSound.INTERMISSION_1,  "sound/mspacman/They Meet Act 1.mp3");
+		add(GameSound.INTERMISSION_2,  "sound/mspacman/The Chase Act 2.mp3");
+		add(GameSound.INTERMISSION_3,  "sound/mspacman/Junior Act 3.mp3");
+		add(GameSound.PACMAN_MUNCH,    "sound/mspacman/Ms. Pac Man Pill.mp3");
+		add(GameSound.PACMAN_DEATH,    "sound/mspacman/Died.mp3");
+		add(GameSound.PACMAN_POWER,    "sound/mspacman/Scared Ghost.mp3");
+		add(GameSound.SIREN_1,         "sound/mspacman/Ghost Noise 1.mp3");
+		add(GameSound.SIREN_2,         "sound/mspacman/Ghost Noise 2.mp3");
+		add(GameSound.SIREN_3,         "sound/mspacman/Ghost Noise 3.mp3");
+		add(GameSound.SIREN_4,         "sound/mspacman/Ghost Noise 4.mp3");
 		//@formatter:on
 	}
 }

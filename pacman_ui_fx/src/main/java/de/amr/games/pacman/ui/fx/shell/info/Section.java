@@ -29,8 +29,8 @@ import java.util.function.Supplier;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.ui.fx.ModuleResource;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
-import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -77,7 +77,7 @@ public class Section extends TitledPane {
 		setFocusTraversable(false);
 		setText(title);
 		setContent(content);
-		content.setBackground(Ufx.colorBackground(new Color(0.2, 0.2, 0.4, 0.8)));
+		content.setBackground(ModuleResource.colorBackground(new Color(0.2, 0.2, 0.4, 0.8)));
 		content.setHgap(4);
 		content.setVgap(3);
 		content.setPadding(new Insets(5));

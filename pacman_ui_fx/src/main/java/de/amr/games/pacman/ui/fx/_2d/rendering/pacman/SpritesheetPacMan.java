@@ -33,9 +33,9 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.SingleSpriteAnimation;
 import de.amr.games.pacman.lib.animation.SpriteAnimationMap;
 import de.amr.games.pacman.lib.animation.SpriteArray;
+import de.amr.games.pacman.ui.fx.ModuleResource;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
-import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -76,11 +76,10 @@ public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
 	private final Font font;
 
 	private SpritesheetPacMan() {
-		super(Env.getResourcePath("graphics/pacman/sprites.png"), 16, Direction.RIGHT, Direction.LEFT, Direction.UP,
-				Direction.DOWN);
-		mazeFull = Ufx.image(Env.getResourcePath("graphics/pacman/maze_full.png"));
-		mazeEmpty = Ufx.image(Env.getResourcePath("graphics/pacman/maze_empty.png"));
-		font = Ufx.font(Env.getResourcePath("fonts/emulogic.ttf"), 8);
+		super("graphics/pacman/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
+		mazeFull = ModuleResource.image("graphics/pacman/maze_full.png");
+		mazeEmpty = ModuleResource.image("graphics/pacman/maze_empty.png");
+		font = ModuleResource.font("fonts/emulogic.ttf", 8);
 	}
 
 	@Override

@@ -24,7 +24,6 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.sound;
 
-import java.net.URL;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -34,6 +33,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameSoundController;
 import de.amr.games.pacman.model.common.GameSound;
+import de.amr.games.pacman.ui.fx.ModuleResource;
 import javafx.animation.Animation;
 import javafx.scene.media.AudioClip;
 
@@ -70,11 +70,16 @@ public class AbstractGameSounds implements GameSoundController {
 		}
 	}
 
-	protected void putClip(Map<GameSound, AudioClip> map, GameSound sound, URL url) {
+	protected void add(GameSound sound, String path) {
+		var urlStr = ModuleResource.urlString(path);
+		if (urlStr == null) {
+			logger.error("Game sound %s not loaded: resource '%s' not found", sound, path);
+			return;
+		}
 		try {
-			map.put(sound, new AudioClip(url.toString()));
+			clips.put(sound, new AudioClip(urlStr));
 		} catch (Exception e) {
-			logger.error("Game sound %s not loaded", url);
+			logger.error("Game sound %s not loaded: %s", sound, e.getMessage());
 		}
 	}
 

@@ -25,10 +25,10 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.ui.fx.ModuleResource;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
-import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Scene;
@@ -61,7 +61,7 @@ public abstract class GameScene2D implements GameScene {
 	protected GameScene2D() {
 		root = new StackPane(canvas, overlayCanvas, infoPane);
 		// without this, an ugly vertical white line appears left of the game scene:
-		root.setBackground(Ufx.colorBackground(Color.BLACK));
+		root.setBackground(ModuleResource.colorBackground(Color.BLACK));
 		fxSubScene = new SubScene(root, unscaledSize.x, unscaledSize.y);
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());

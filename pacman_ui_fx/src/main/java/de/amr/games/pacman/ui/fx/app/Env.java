@@ -49,10 +49,6 @@ public class Env {
 	private Env() {
 	}
 
-	public static String getResourcePath(String relativePath) {
-		return "/de/amr/games/pacman/ui/fx/" + relativePath;
-	}
-
 	public static final List<String> FLOOR_TEXTURES = List.of("none", "penrose-tiling.jpg", "escher-texture.jpg");
 
 	public static final BooleanProperty axesVisible = new SimpleBooleanProperty(false);
