@@ -158,7 +158,7 @@ public class Actions {
 
 	public static void cheatEatAllPellets() {
 		theGameController.state().cheatEatAllPellets(theGameController.game());
-		var cheatMessage = Talk.CHEAT_TALK.next();
+		var cheatMessage = Talk.TALK_CHEATING.next();
 		showFlashMessage(cheatMessage);
 	}
 
@@ -168,7 +168,7 @@ public class Actions {
 
 	public static void cheatKillAllEatableGhosts() {
 		theGameController.state().cheatKillAllEatableGhosts(theGameController.game());
-		var cheatMessage = Talk.CHEAT_TALK.next();
+		var cheatMessage = Talk.TALK_CHEATING.next();
 		showFlashMessage(cheatMessage);
 	}
 }

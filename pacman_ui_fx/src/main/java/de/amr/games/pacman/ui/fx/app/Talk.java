@@ -43,13 +43,15 @@ public class Talk {
 		return MESSAGES.getString(pattern).formatted(args);
 	}
 
-	public static final EntryPicker<String> CHEAT_TALK = createEntryPicker("texts/cheating_talk");
-	public static final EntryPicker<String> LEVEL_COMPLETE_TALK = createEntryPicker("texts/level_complete_talk");
-	public static final EntryPicker<String> GAME_OVER_TALK = createEntryPicker("texts/game_over_talk");
+	public static final EntryPicker<String> TALK_CHEATING = createEntryPicker("cheating");
+	public static final EntryPicker<String> TALK_LEVEL_COMPLETE = createEntryPicker("level.complete");
+	public static final EntryPicker<String> TALK_GAME_OVER = createEntryPicker("game.over");
 
-	private static EntryPicker<String> createEntryPicker(String relPathToBundle) {
-		var bundlePath = ModuleResource.path(relPathToBundle);
-		var bundle = ResourceBundle.getBundle(bundlePath);
-		return new EntryPicker<>(bundle.keySet().stream().sorted().map(bundle::getString).toArray(String[]::new));
+	private static EntryPicker<String> createEntryPicker(String prefix) {
+		return new EntryPicker<>(MESSAGES.keySet().stream()//
+				.filter(key -> key.startsWith(prefix))//
+				.sorted()//
+				.map(MESSAGES::getString)//
+				.toArray(String[]::new));
 	}
 }

@@ -203,7 +203,7 @@ public class PlayScene3D extends GameScene3D {
 		}
 		case LEVEL_COMPLETE -> {
 			blockGameController();
-			var message = Talk.LEVEL_COMPLETE_TALK.next() + "%n%n" + Talk.message("level_complete", ctx.game.level.number);
+			var message = Talk.TALK_LEVEL_COMPLETE.next() + "%n%n" + Talk.message("level_complete", ctx.game.level.number);
 			new SequentialTransition( //
 					Ufx.pauseSec(2.0), //
 					maze3D.createMazeFlashingAnimation(ctx.game.level.numFlashes), //
@@ -212,7 +212,7 @@ public class PlayScene3D extends GameScene3D {
 					Ufx.pauseSec(2.0, this::unblockGameController) //
 			).play();
 		}
-		case GAME_OVER -> Actions.showFlashMessage(3, Talk.GAME_OVER_TALK.next());
+		case GAME_OVER -> Actions.showFlashMessage(3, Talk.TALK_GAME_OVER.next());
 		default -> { // ignore
 		}
 		}
