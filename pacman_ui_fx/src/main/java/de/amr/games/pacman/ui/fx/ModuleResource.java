@@ -43,6 +43,8 @@ import javafx.scene.text.Font;
  */
 public class ModuleResource {
 
+	private static final String MODULE_NAME = "de.amr.games.pacman.ui.fx";
+
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getFormatterLogger();
 
@@ -63,7 +65,7 @@ public class ModuleResource {
 		if (url != null) {
 			return url;
 		}
-		throw new MissingResourceException("No resource found for path '%s'", "", path);
+		throw new MissingResourceException("No resource found for path '%s'".formatted(path), "", path);
 	}
 
 	public static Font font(String relPath, double size) {

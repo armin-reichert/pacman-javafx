@@ -22,9 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.amr.games.pacman.ui.fx.sound;
+package de.amr.games.pacman.ui.fx.sound.mspacman;
 
 import de.amr.games.pacman.model.common.GameSound;
+import de.amr.games.pacman.ui.fx.sound.AbstractGameSounds;
 
 /**
  * @author Armin Reichert
