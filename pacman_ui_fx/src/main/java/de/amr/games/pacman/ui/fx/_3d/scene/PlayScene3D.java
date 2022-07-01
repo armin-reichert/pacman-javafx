@@ -45,7 +45,7 @@ import de.amr.games.pacman.ui.fx._3d.scene.cams.CamTotal;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.GameSceneCamera;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.app.Talk;
+import de.amr.games.pacman.ui.fx.app.Texts;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -198,12 +198,12 @@ public class PlayScene3D extends GameScene3D {
 			world3D = new World3D(ctx.game, ctx.model3D, ctx.r2D);
 			content().set(0, world3D);
 			setPerspective(Env.perspective.get());
-			Actions.showFlashMessage(Talk.message("level_starting", ctx.game.level.number));
+			Actions.showFlashMessage(Texts.message("level_starting", ctx.game.level.number));
 			Ufx.pauseSec(3, this::unblockGameController).play();
 		}
 		case LEVEL_COMPLETE -> {
 			blockGameController();
-			var message = Talk.TALK_LEVEL_COMPLETE.next() + "%n%n" + Talk.message("level_complete", ctx.game.level.number);
+			var message = Texts.TALK_LEVEL_COMPLETE.next() + "%n%n" + Texts.message("level_complete", ctx.game.level.number);
 			new SequentialTransition( //
 					Ufx.pauseSec(2.0), //
 					maze3D.createMazeFlashingAnimation(ctx.game.level.numFlashes), //
@@ -212,7 +212,7 @@ public class PlayScene3D extends GameScene3D {
 					Ufx.pauseSec(2.0, this::unblockGameController) //
 			).play();
 		}
-		case GAME_OVER -> Actions.showFlashMessage(3, Talk.TALK_GAME_OVER.next());
+		case GAME_OVER -> Actions.showFlashMessage(3, Texts.TALK_GAME_OVER.next());
 		default -> { // ignore
 		}
 		}

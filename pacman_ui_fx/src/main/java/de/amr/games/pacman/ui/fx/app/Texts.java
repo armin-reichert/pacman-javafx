@@ -32,9 +32,9 @@ import de.amr.games.pacman.ui.fx.util.EntryPicker;
 /**
  * @author Armin Reichert
  */
-public class Talk {
+public class Texts {
 
-	private Talk() {
+	private Texts() {
 	}
 
 	public static final ResourceBundle MESSAGES = ResourceBundle.getBundle(ModuleResource.path("texts/messages"));
