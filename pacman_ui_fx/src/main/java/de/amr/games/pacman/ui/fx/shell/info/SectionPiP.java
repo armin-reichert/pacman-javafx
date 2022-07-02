@@ -89,7 +89,7 @@ public class SectionPiP extends Section {
 			var g = canvas.getGraphicsContext2D();
 			g.setFill(Color.BLACK);
 			g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-			pipScene.doRender(pipScene.getCanvas().getGraphicsContext2D());
+			pipScene.doRender(g);
 		} else {
 			pipSceneContainer.setVisible(false);
 			hint.setVisible(true);
