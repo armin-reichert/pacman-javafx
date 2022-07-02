@@ -1,8 +1,12 @@
 {
   "resources":{
   "includes":[
-	{"pattern": ".*\\.mp3$"},
-	{"pattern": ".*\\.wav$"},
+    {
+      "pattern":".*\\.mp3$"
+    }, 
+    {
+      "pattern":".*\\.wav$"
+    }, 
     {
       "pattern":"\\QMETA-INF/org/apache/logging/log4j/core/config/plugins/Log4j2Plugins.dat\\E"
     }, 
@@ -34,6 +38,13 @@
         "", 
         "de", 
         "und"
+      ]
+    }, 
+    {
+      "name":"de.amr.games.pacman.ui.fx.texts.messages",
+      "locales":[
+        "", 
+        "de"
       ]
     }
   ]
