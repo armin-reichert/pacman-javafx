@@ -51,9 +51,9 @@ public class SectionGeneral extends Section {
 	private Slider sliderTargetFPS;
 	private CheckBox cbUsePlayScene3D;
 	private CheckBox cbDebugUI;
-	private ImageView iconPlay = Resources.imageView("icons/play.png");
-	private ImageView iconStop = Resources.imageView("icons/stop.png");
-	private ImageView iconStep = Resources.imageView("icons/step.png");
+	private ImageView iconPlay = new ImageView(Resources.image("icons/play.png"));
+	private ImageView iconStop = new ImageView(Resources.image("icons/stop.png"));
+	private ImageView iconStep = new ImageView(Resources.image("icons/step.png"));
 	private Tooltip tooltipPlay = new Tooltip("Play");
 	private Tooltip tooltipStop = new Tooltip("Stop");
 	private Tooltip tooltipStep = new Tooltip("Single Step");

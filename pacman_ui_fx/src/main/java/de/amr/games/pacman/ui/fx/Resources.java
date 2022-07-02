@@ -31,7 +31,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
@@ -80,9 +79,5 @@ public class Resources {
 
 	public static Background imageBackground(String relPath) {
 		return new Background(new BackgroundImage(image(relPath), null, null, null, null));
-	}
-
-	public static ImageView imageView(String relPath) {
-		return new ImageView(image(relPath));
 	}
 }
