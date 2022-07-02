@@ -116,7 +116,7 @@ public class GameUI implements GameEventAdapter {
 		updateCurrentGameScene(true);
 
 		var introMessage = new PauseTransition(Duration.seconds(10));
-		introMessage.setOnFinished(e -> Actions.playSound(Actions.SOUND_PRESS_KEY_TO_START));
+		introMessage.setOnFinished(e -> Actions.playVoiceMessage(Actions.SOUND_PRESS_KEY_TO_START));
 		introMessage.play();
 
 		stage.setMinHeight(328);

@@ -29,6 +29,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.SpritesheetMsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
+import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
@@ -49,7 +50,7 @@ public class MsPacManCreditScene extends GameScene2D {
 		if (Keyboard.pressed(KeyCode.DIGIT5)) {
 			ctx.gameState().addCredit(ctx.game);
 		} else if (Keyboard.pressed(KeyCode.DIGIT1)) {
-			ctx.gameState().requestGame(ctx.game);
+			Actions.startGame();
 		}
 	}
 

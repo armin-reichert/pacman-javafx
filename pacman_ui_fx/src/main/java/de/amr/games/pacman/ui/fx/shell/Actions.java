@@ -52,14 +52,20 @@ public class Actions {
 
 	private static AudioClip currentVoiceMessage;
 
-	public static void playSound(String soundFileName) {
+	public static void playVoiceMessage(String messageFileName) {
 		if (currentVoiceMessage != null && currentVoiceMessage.isPlaying()) {
 			return;
 		}
-		var url = Resources.urlFromRelPath("sound/" + soundFileName);
+		var url = Resources.urlFromRelPath("sound/common/" + messageFileName);
 		if (url != null) {
 			currentVoiceMessage = new AudioClip(url.toExternalForm());
 			currentVoiceMessage.play();
+		}
+	}
+
+	public static void stopVoiceMessage() {
+		if (currentVoiceMessage != null) {
+			currentVoiceMessage.stop();
 		}
 	}
 
@@ -79,12 +85,19 @@ public class Actions {
 		theUI.getFlashMessageView().showMessage(String.format(message, args), seconds);
 	}
 
+	public static void startGame() {
+		if (theGameController.game().credit > 0) {
+			stopVoiceMessage();
+			theGameController.state().requestGame(theGameController.game());
+		}
+	}
+
 	public static void restartIntro() {
 		theUI.getCurrentGameScene().end();
 		theGameController.sounds().ifPresent(GameSoundController::stopAll);
 		theGameController.restartIntro();
-		var hint = new PauseTransition(Duration.seconds(1));
-		hint.setOnFinished(e -> playSound(SOUND_PRESS_KEY_TO_START));
+		var hint = new PauseTransition(Duration.seconds(3));
+		hint.setOnFinished(e -> playVoiceMessage(SOUND_PRESS_KEY_TO_START));
 		hint.play();
 	}
 
@@ -157,7 +170,7 @@ public class Actions {
 		var on = theGameController.game().autoControlled;
 		String message = Texts.message(on ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(message);
-		playSound(on ? SOUND_AUTOPILOT_ON : SOUND_AUTOPILOT_OFF);
+		playVoiceMessage(on ? SOUND_AUTOPILOT_ON : SOUND_AUTOPILOT_OFF);
 	}
 
 	public static void toggleImmunity() {
@@ -165,7 +178,7 @@ public class Actions {
 		var on = theGameController.game().isPacImmune;
 		String message = Texts.message(on ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(message);
-		playSound(on ? SOUND_IMMUNITY_ON : SOUND_IMMUNITY_OFF);
+		playVoiceMessage(on ? SOUND_IMMUNITY_ON : SOUND_IMMUNITY_OFF);
 	}
 
 	public static void toggleUse3DScene() {
