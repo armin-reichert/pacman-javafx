@@ -65,6 +65,8 @@ Cheats:
 
 ![Info Panel](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman_ui_fx/doc/right-info-panel.png)
 
+![Info Panel](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman_ui_fx/doc/3D-info-panel.png)
+
 YouTube:
 
 [![YouTube](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman_ui_fx/doc/thumbnail.jpg)](https://youtu.be/-ANLq4mMn3Q)
