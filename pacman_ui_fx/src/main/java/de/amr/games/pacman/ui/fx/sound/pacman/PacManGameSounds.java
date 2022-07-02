@@ -24,6 +24,9 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.sound.pacman;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.ui.fx.sound.AbstractGameSounds;
 
@@ -32,22 +35,25 @@ import de.amr.games.pacman.ui.fx.sound.AbstractGameSounds;
  */
 public class PacManGameSounds extends AbstractGameSounds {
 
+	private static final Logger logger = LogManager.getFormatterLogger();
+
 	public PacManGameSounds() {
 		//@formatter:off
-		add(GameSound.PACMAN_DEATH,    "sound/pacman/pacman_death.wav");
-		add(GameSound.BONUS_EATEN,     "sound/pacman/eat_fruit.mp3");
-		add(GameSound.CREDIT,          "sound/pacman/credit.mp3");
-		add(GameSound.EXTRA_LIFE,      "sound/pacman/extend.mp3");
-		add(GameSound.GAME_READY,      "sound/pacman/game_start.mp3");
-		add(GameSound.GHOST_EATEN,     "sound/pacman/eat_ghost.mp3");
-		add(GameSound.GHOST_RETURNING, "sound/pacman/retreating.mp3");
-		add(GameSound.INTERMISSION_1,  "sound/pacman/intermission.mp3");
-		add(GameSound.PACMAN_MUNCH,    "sound/pacman/munch_1.wav");
-		add(GameSound.PACMAN_POWER,    "sound/pacman/power_pellet.mp3");
-		add(GameSound.SIREN_1,         "sound/pacman/siren_1.mp3");
-		add(GameSound.SIREN_2,         "sound/pacman/siren_2.mp3");
-		add(GameSound.SIREN_3,         "sound/pacman/siren_3.mp3");
-		add(GameSound.SIREN_4,         "sound/pacman/siren_4.mp3");
+		load(GameSound.PACMAN_DEATH,    "sound/pacman/pacman_death.wav");
+		load(GameSound.BONUS_EATEN,     "sound/pacman/eat_fruit.mp3");
+		load(GameSound.CREDIT,          "sound/pacman/credit.mp3");
+		load(GameSound.EXTRA_LIFE,      "sound/pacman/extend.mp3");
+		load(GameSound.GAME_READY,      "sound/pacman/game_start.mp3");
+		load(GameSound.GHOST_EATEN,     "sound/pacman/eat_ghost.mp3");
+		load(GameSound.GHOST_RETURNING, "sound/pacman/retreating.mp3");
+		load(GameSound.INTERMISSION_1,  "sound/pacman/intermission.mp3");
+		load(GameSound.PACMAN_MUNCH,    "sound/pacman/munch_1.wav");
+		load(GameSound.PACMAN_POWER,    "sound/pacman/power_pellet.mp3");
+		load(GameSound.SIREN_1,         "sound/pacman/siren_1.mp3");
+		load(GameSound.SIREN_2,         "sound/pacman/siren_2.mp3");
+		load(GameSound.SIREN_3,         "sound/pacman/siren_3.mp3");
+		load(GameSound.SIREN_4,         "sound/pacman/siren_4.mp3");
 		//@formatter:on
+		logger.info("Pac-Man game sounds loaded");
 	}
 }

@@ -24,6 +24,9 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.sound.mspacman;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.ui.fx.sound.AbstractGameSounds;
 
@@ -32,24 +35,27 @@ import de.amr.games.pacman.ui.fx.sound.AbstractGameSounds;
  */
 public class MsPacManGameSounds extends AbstractGameSounds {
 
+	private static final Logger logger = LogManager.getFormatterLogger();
+
 	public MsPacManGameSounds() {
 		//@formatter:off
-		add(GameSound.BONUS_EATEN,     "sound/mspacman/Fruit.mp3");
-		add(GameSound.CREDIT,          "sound/mspacman/Coin Credit.mp3");
-		add(GameSound.EXTRA_LIFE,      "sound/mspacman/Extra Life.mp3");
-		add(GameSound.GAME_READY,      "sound/mspacman/Start.mp3");
-		add(GameSound.GHOST_EATEN,     "sound/mspacman/Ghost.mp3");
-		add(GameSound.GHOST_RETURNING, "sound/mspacman/Ghost Eyes.mp3");
-		add(GameSound.INTERMISSION_1,  "sound/mspacman/They Meet Act 1.mp3");
-		add(GameSound.INTERMISSION_2,  "sound/mspacman/The Chase Act 2.mp3");
-		add(GameSound.INTERMISSION_3,  "sound/mspacman/Junior Act 3.mp3");
-		add(GameSound.PACMAN_MUNCH,    "sound/mspacman/Ms. Pac Man Pill.mp3");
-		add(GameSound.PACMAN_DEATH,    "sound/mspacman/Died.mp3");
-		add(GameSound.PACMAN_POWER,    "sound/mspacman/Scared Ghost.mp3");
-		add(GameSound.SIREN_1,         "sound/mspacman/Ghost Noise 1.mp3");
-		add(GameSound.SIREN_2,         "sound/mspacman/Ghost Noise 2.mp3");
-		add(GameSound.SIREN_3,         "sound/mspacman/Ghost Noise 3.mp3");
-		add(GameSound.SIREN_4,         "sound/mspacman/Ghost Noise 4.mp3");
+		load(GameSound.BONUS_EATEN,     "sound/mspacman/Fruit.mp3");
+		load(GameSound.CREDIT,          "sound/mspacman/Coin Credit.mp3");
+		load(GameSound.EXTRA_LIFE,      "sound/mspacman/Extra Life.mp3");
+		load(GameSound.GAME_READY,      "sound/mspacman/Start.mp3");
+		load(GameSound.GHOST_EATEN,     "sound/mspacman/Ghost.mp3");
+		load(GameSound.GHOST_RETURNING, "sound/mspacman/Ghost Eyes.mp3");
+		load(GameSound.INTERMISSION_1,  "sound/mspacman/They Meet Act 1.mp3");
+		load(GameSound.INTERMISSION_2,  "sound/mspacman/The Chase Act 2.mp3");
+		load(GameSound.INTERMISSION_3,  "sound/mspacman/Junior Act 3.mp3");
+		load(GameSound.PACMAN_MUNCH,    "sound/mspacman/Ms. Pac Man Pill.mp3");
+		load(GameSound.PACMAN_DEATH,    "sound/mspacman/Died.mp3");
+		load(GameSound.PACMAN_POWER,    "sound/mspacman/Scared Ghost.mp3");
+		load(GameSound.SIREN_1,         "sound/mspacman/Ghost Noise 1.mp3");
+		load(GameSound.SIREN_2,         "sound/mspacman/Ghost Noise 2.mp3");
+		load(GameSound.SIREN_3,         "sound/mspacman/Ghost Noise 3.mp3");
+		load(GameSound.SIREN_4,         "sound/mspacman/Ghost Noise 4.mp3");
 		//@formatter:on
+		logger.info("Ms. Pac-Man game sounds loaded");
 	}
 }
