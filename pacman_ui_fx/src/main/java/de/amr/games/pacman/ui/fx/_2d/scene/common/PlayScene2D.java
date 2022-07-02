@@ -79,7 +79,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	protected void doUpdate() {
+	public void doUpdate() {
 		if (Env.debugUI.get()) {
 			guysInfo.update();
 		}

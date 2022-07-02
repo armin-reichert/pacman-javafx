@@ -87,6 +87,9 @@ public class Section extends TitledPane {
 		return gc.game();
 	}
 
+	public void init() {
+	}
+
 	public void update() {
 		infoTexts.forEach(InfoText::update);
 	}

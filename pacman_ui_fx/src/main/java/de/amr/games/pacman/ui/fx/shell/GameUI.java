@@ -115,7 +115,7 @@ public class GameUI implements GameEventAdapter {
 
 		updateCurrentGameScene(true);
 
-		var introMessage = new PauseTransition(Duration.seconds(10));
+		var introMessage = new PauseTransition(Duration.seconds(3));
 		introMessage.setOnFinished(e -> Actions.playVoiceMessage(Actions.SOUND_PRESS_KEY_TO_START));
 		introMessage.play();
 
@@ -141,6 +141,10 @@ public class GameUI implements GameEventAdapter {
 
 	public double getHeight() {
 		return stage.getHeight();
+	}
+
+	public Scene getScene() {
+		return scene;
 	}
 
 	public double getMainSceneWidth() {
@@ -181,6 +185,7 @@ public class GameUI implements GameEventAdapter {
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
 		updateCurrentGameScene(false);
+		dashboard.init();
 	}
 
 	@Override
@@ -238,7 +243,7 @@ public class GameUI implements GameEventAdapter {
 		currentGameScene.resize(scene.getHeight());
 	}
 
-	private SceneContext createSceneContext() {
+	public SceneContext createSceneContext() {
 		var context = new SceneContext();
 		context.gameController = gameController;
 		context.game = gameController.game();

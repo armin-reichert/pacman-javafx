@@ -79,7 +79,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		if (Keyboard.pressed(KeyCode.DIGIT5)) {
 			ctx.gameState().addCredit(ctx.game);
 		} else if (Keyboard.pressed(KeyCode.DIGIT1)) {
-			ctx.gameState().requestGame(ctx.game);
+			Actions.startGame();
 		} else if (Keyboard.pressed(KeyCode.V)) {
 			Actions.selectNextGameVariant();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.Z)) {

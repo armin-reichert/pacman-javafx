@@ -52,6 +52,7 @@ public class Dashboard extends BorderPane {
 	private final SectionGameInfo sectionGameInfo;
 	private final Section3D section3D;
 	private final SectionKeys sectionKeys;
+	private final Section sectionPiP;
 
 	public Dashboard(GameUI ui, GameController gc) {
 		sectionGeneral = new SectionGeneral(ui, gc, "General", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
@@ -60,19 +61,26 @@ public class Dashboard extends BorderPane {
 		sectionGameInfo = new SectionGameInfo(ui, gc, "Game Info", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
 		section3D = new Section3D(ui, gc, "3D Settings", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
 		sectionKeys = new SectionKeys(ui, gc, "Keyboard Shortcuts", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
+		sectionPiP = new SectionPiP(ui, gc, "Picture-In-Picture", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT,
+				LABEL_FONT);
 
 		sectionGeneral.setExpanded(false);
 		sectionGameControl.setExpanded(false);
 		sectionGameInfo.setExpanded(true);
 		section3D.setExpanded(false);
-		sectionKeys.setExpanded(true);
+		sectionKeys.setExpanded(false);
+		sectionPiP.setExpanded(true);
 
-		leftSide.getChildren().addAll(sectionGeneral, sectionGameControl, section3D);
-		rightSide.getChildren().addAll(sectionGameInfo, sectionKeys);
+		leftSide.getChildren().addAll(sectionGeneral, sectionGameControl, section3D, sectionKeys);
+		rightSide.getChildren().addAll(sectionPiP, sectionGameInfo);
 		setLeft(leftSide);
 		setRight(rightSide);
 
 		setVisible(false);
+	}
+
+	public void init() {
+		sectionPiP.init();
 	}
 
 	public void update() {
@@ -81,5 +89,6 @@ public class Dashboard extends BorderPane {
 		sectionGeneral.update();
 		sectionKeys.update();
 		section3D.update();
+		sectionPiP.update();
 	}
 }

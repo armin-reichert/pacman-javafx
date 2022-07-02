@@ -54,7 +54,7 @@ public class SectionKeys extends Section {
 		addInfo("Alt+3", "3D Playscene On/Off");
 		addInfo("Q", "Return to Intro Scene").available(() -> gc.state() != GameState.INTRO);
 		addInfo("V", "Switch Pac-Man / Ms. Pac-Man").available(() -> gc.state() == GameState.INTRO);
-		addInfo("1", "Start Playing (Requires Credit)");
+		addInfo("1", "Start Playing (Credit?)");
 		addInfo("5", "Add credit");
 	}
 }
