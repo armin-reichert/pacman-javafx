@@ -63,12 +63,12 @@ public class Dashboard extends BorderPane {
 
 		sectionGeneral.setExpanded(false);
 		sectionGameControl.setExpanded(false);
-		sectionGameInfo.setExpanded(false);
+		sectionGameInfo.setExpanded(true);
 		section3D.setExpanded(false);
 		sectionKeys.setExpanded(true);
 
-		leftSide.getChildren().addAll(sectionGameControl, sectionGameInfo, section3D);
-		rightSide.getChildren().addAll(sectionGeneral, sectionKeys);
+		leftSide.getChildren().addAll(sectionGeneral, sectionGameControl, section3D);
+		rightSide.getChildren().addAll(sectionGameInfo, sectionKeys);
 		setLeft(leftSide);
 		setRight(rightSide);
 
