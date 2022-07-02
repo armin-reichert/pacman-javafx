@@ -53,7 +53,7 @@ public class Resources {
 		return "/de/amr/games/pacman/ui/fx/" + relPath;
 	}
 
-	public static String urlString(String relPath) {
+	public static String urlStringFromRelPath(String relPath) {
 		return url(relPath).toExternalForm();
 	}
 
@@ -67,11 +67,11 @@ public class Resources {
 	}
 
 	public static Font font(String relPath, double size) {
-		return Font.loadFont(urlString(relPath), size);
+		return Font.loadFont(urlStringFromRelPath(relPath), size);
 	}
 
 	public static Image image(String relPath) {
-		return new Image(urlString(relPath));
+		return new Image(urlStringFromRelPath(relPath));
 	}
 
 	public static Background colorBackground(Color color) {
