@@ -44,21 +44,21 @@ import javafx.scene.transform.Scale;
  */
 public class SectionPiP extends Section {
 
-	private StackPane root = new StackPane();
-	private Pane embeddedSceneContainer = new Pane();
-	private GameScene2D embeddedScene;
-	private Text hint = new Text();
-	private double w = 260.0;
-	private double h = w * 1.35;
+	private final StackPane root = new StackPane();
+	private final Pane pipSceneContainer = new Pane();
+	private final Text hint = new Text();
+	private final double w = 260.0;
+	private final double h = w * 1.35;
+	private GameScene2D pipScene;
 
 	public SectionPiP(GameUI ui, GameController gc, String title, int minLabelWidth, Color textColor, Font textFont,
 			Font labelFont) {
 		super(ui, gc, title, minLabelWidth, textColor, textFont, labelFont);
 		content.add(root, 0, 0, 2, 1);
 		root.setBackground(Ufx.colorBackground(Color.BLACK));
-		root.getChildren().setAll(embeddedSceneContainer, hint);
-		embeddedSceneContainer.setMinWidth(w);
-		embeddedSceneContainer.setMinHeight(h);
+		root.getChildren().setAll(pipSceneContainer, hint);
+		pipSceneContainer.setMinWidth(w);
+		pipSceneContainer.setMinHeight(h);
 		hint.setFont(Font.font("Sans", FontWeight.EXTRA_BOLD, 20.0));
 		hint.setFill(Color.WHITE);
 		hint.setText("Nothing to see here");
@@ -67,31 +67,31 @@ public class SectionPiP extends Section {
 	@Override
 	public void init() {
 		if (ui.getCurrentGameScene() instanceof PlayScene3D) {
-			embeddedScene = new PlayScene2D();
-			embeddedScene.setSceneContext(ui.createSceneContext());
-			embeddedScene.init();
-			var subScene = embeddedScene.getFXSubScene();
+			pipScene = new PlayScene2D();
+			var subScene = pipScene.getFXSubScene();
 			subScene.setWidth(w);
 			subScene.setHeight(h);
-			embeddedSceneContainer.getChildren().setAll(subScene);
-			embeddedScene.getCanvas().widthProperty().bind(subScene.widthProperty());
-			embeddedScene.getCanvas().heightProperty().bind(subScene.heightProperty());
-			embeddedScene.getCanvas().getTransforms().setAll(new Scale(1.2, 1.2));
+			pipScene.getCanvas().widthProperty().bind(subScene.widthProperty());
+			pipScene.getCanvas().heightProperty().bind(subScene.heightProperty());
+			pipScene.getCanvas().getTransforms().setAll(new Scale(1.2, 1.2));
+			pipScene.setSceneContext(ui.createSceneContext());
+			pipScene.init();
+			pipSceneContainer.getChildren().setAll(subScene);
 		}
 	}
 
 	@Override
 	public void update() {
-		if (embeddedScene != null && ui.getCurrentGameScene() instanceof PlayScene3D) {
-			embeddedSceneContainer.setVisible(true);
+		if (pipScene != null && ui.getCurrentGameScene() instanceof PlayScene3D) {
+			pipSceneContainer.setVisible(true);
 			hint.setVisible(false);
-			var canvas = embeddedScene.getCanvas();
+			var canvas = pipScene.getCanvas();
 			var g = canvas.getGraphicsContext2D();
 			g.setFill(Color.BLACK);
 			g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-			embeddedScene.doRender(embeddedScene.getCanvas().getGraphicsContext2D());
+			pipScene.doRender(pipScene.getCanvas().getGraphicsContext2D());
 		} else {
-			embeddedSceneContainer.setVisible(false);
+			pipSceneContainer.setVisible(false);
 			hint.setVisible(true);
 		}
 	}
