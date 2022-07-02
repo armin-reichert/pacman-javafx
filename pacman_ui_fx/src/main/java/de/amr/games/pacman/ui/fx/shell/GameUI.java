@@ -261,7 +261,7 @@ public class GameUI implements GameEventAdapter {
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.D)) {
 			Env.toggle(Env.debugUI);
 		} else if (Keyboard.pressed(Keyboard.CTRL, KeyCode.I)) {
-			Actions.toggleInfoPanelsVisible();
+			Actions.toggleDashboardVisible();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.I)) {
 			Actions.toggleImmunity();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.M)) {
@@ -274,6 +274,8 @@ public class GameUI implements GameEventAdapter {
 			Actions.restartIntro();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.DIGIT3)) {
 			Actions.toggleUse3DScene();
+		} else if (Keyboard.pressed(KeyCode.F1)) {
+			Actions.toggleDashboardVisible();
 		} else if (Keyboard.pressed(KeyCode.F11)) {
 			stage.setFullScreen(true);
 		}

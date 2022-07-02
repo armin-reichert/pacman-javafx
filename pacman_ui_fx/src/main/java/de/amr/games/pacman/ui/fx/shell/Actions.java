@@ -116,7 +116,7 @@ public class Actions {
 		}
 	}
 
-	public static void toggleInfoPanelsVisible() {
+	public static void toggleDashboardVisible() {
 		Env.toggle(theUI.getDashboard().visibleProperty());
 	}
 
