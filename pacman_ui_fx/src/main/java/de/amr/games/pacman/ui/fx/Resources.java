@@ -45,9 +45,9 @@ public class Resources {
 
 	public static URL url(String absPath) {
 		var url = Resources.class.getResource(absPath);
-		if (url != null) {
-			return url;
+		if (url == null) {
+			throw new MissingResourceException("Missing resource, path=" + absPath, "", absPath);
 		}
-		throw new MissingResourceException("Missing resource, path=" + absPath, "", absPath);
+		return url;
 	}
 }
