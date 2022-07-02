@@ -59,7 +59,7 @@ public class PacManCreditScene extends GameScene2D {
 	}
 
 	@Override
-	protected void doRender(GraphicsContext g) {
+	public void doRender(GraphicsContext g) {
 		ctx.r2D.drawScore(g, ctx.game.scores.gameScore);
 		ctx.r2D.drawScore(g, ctx.game.scores.highScore);
 		if (creditVisible) {

@@ -26,10 +26,15 @@ package de.amr.games.pacman.ui.fx.shell.info;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
+import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
+import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Scale;
 
 /**
@@ -39,34 +44,56 @@ import javafx.scene.transform.Scale;
  */
 public class SectionPiP extends Section {
 
-	private StackPane embeddedSceneContainer = new StackPane();
+	private StackPane root = new StackPane();
+	private Pane embeddedSceneContainer = new Pane();
 	private GameScene2D embeddedScene;
+	private Text hint = new Text();
+	private double w = 260.0;
+	private double h = w * 1.35;
 
 	public SectionPiP(GameUI ui, GameController gc, String title, int minLabelWidth, Color textColor, Font textFont,
 			Font labelFont) {
 		super(ui, gc, title, minLabelWidth, textColor, textFont, labelFont);
-		content.add(embeddedSceneContainer, 0, 0, 2, 1);
+		content.add(root, 0, 0, 2, 1);
+		root.setBackground(Ufx.colorBackground(Color.BLACK));
+		root.getChildren().setAll(embeddedSceneContainer, hint);
+		embeddedSceneContainer.setMinWidth(w);
+		embeddedSceneContainer.setMinHeight(h);
+		hint.setFont(Font.font("Sans", FontWeight.EXTRA_BOLD, 20.0));
+		hint.setFill(Color.WHITE);
+		hint.setText("Nothing to see here");
 	}
 
 	@Override
 	public void init() {
-		embeddedScene = new PlayScene2D();
-		var subScene = embeddedScene.getFXSubScene();
-		embeddedSceneContainer.getChildren().setAll(subScene);
-		subScene.setWidth(260.0);
-		subScene.setHeight(subScene.getWidth() * 1.35);
-		embeddedScene.getCanvas().widthProperty().bind(subScene.widthProperty());
-		embeddedScene.getCanvas().heightProperty().bind(subScene.heightProperty());
-		var scale = 1.2;
-		embeddedScene.getCanvas().getTransforms().setAll(new Scale(scale, scale));
-		embeddedScene.setSceneContext(ui.createSceneContext());
-		embeddedScene.init();
+		if (ui.getCurrentGameScene() instanceof PlayScene3D) {
+			embeddedScene = new PlayScene2D();
+			var subScene = embeddedScene.getFXSubScene();
+			embeddedSceneContainer.getChildren().setAll(subScene);
+			subScene.setWidth(w);
+			subScene.setHeight(h);
+			embeddedScene.getCanvas().widthProperty().bind(subScene.widthProperty());
+			embeddedScene.getCanvas().heightProperty().bind(subScene.heightProperty());
+			var scale = 1.2;
+			embeddedScene.getCanvas().getTransforms().setAll(new Scale(scale, scale));
+			embeddedScene.setSceneContext(ui.createSceneContext());
+			embeddedScene.init();
+		}
 	}
 
 	@Override
 	public void update() {
-		if (embeddedScene != null) {
-			embeddedScene.update();
+		if (embeddedScene != null && ui.getCurrentGameScene() instanceof PlayScene3D) {
+			embeddedSceneContainer.setVisible(true);
+			hint.setVisible(false);
+			var canvas = embeddedScene.getCanvas();
+			var g = canvas.getGraphicsContext2D();
+			g.setFill(Color.BLACK);
+			g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+			embeddedScene.doRender(embeddedScene.getCanvas().getGraphicsContext2D());
+		} else {
+			embeddedSceneContainer.setVisible(false);
+			hint.setVisible(true);
 		}
 	}
 }

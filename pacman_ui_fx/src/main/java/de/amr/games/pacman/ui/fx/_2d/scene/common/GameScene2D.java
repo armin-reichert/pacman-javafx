@@ -120,7 +120,7 @@ public abstract class GameScene2D implements GameScene {
 	/**
 	 * Renders the scene content. Subclasses override this method.
 	 */
-	protected abstract void doRender(GraphicsContext g);
+	public abstract void doRender(GraphicsContext g);
 
 	@Override
 	public final void update() {
