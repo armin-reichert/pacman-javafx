@@ -77,13 +77,13 @@ public class Pac3D extends Group {
 		root3D.setScaleY(1.0);
 		root3D.setScaleZ(1.0);
 		root3D.setTranslateZ(0);
-		update(world);
+		update();
 		// without this, the initial color is not always correct. Why?
 		face().setMaterial(faceMaterial);
 		motion.reset();
 	}
 
-	public void update(World world) {
+	public void update() {
 		motion.update();
 		portalTraversal.update();
 	}
