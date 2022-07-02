@@ -1,8 +1,8 @@
-# JavaFX Pac-Man and Ms. Pac-Man
+# A JavaFX UI (2D + 3D) for Pac-Man and Ms. Pac-Man
 
 A JavaFX user interface for my UI-agnostic [Pac-Man / Ms. Pac-Man game](https://github.com/armin-reichert/pacman-basic) implementations. Both games can be played in 2D and 3D.
 
-Unfortunately, I have no animated 3D-model yet. The Pac-Man and ghost models used in this implementation have been generously provided by Gianmarco Cavallaccio (https://www.artstation.com/gianmart). Cudos to you, Gianmarco! 
+Unfortunately, I have no *animated* 3D model yet. The Pac-Man and ghost models used here have been generously provided by Gianmarco Cavallaccio (https://www.artstation.com/gianmart). Cudos to you, Gianmarco! 
 
 ## How to build
 
