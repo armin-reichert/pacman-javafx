@@ -33,7 +33,6 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.SingleSpriteAnimation;
 import de.amr.games.pacman.lib.animation.SpriteAnimationMap;
 import de.amr.games.pacman.lib.animation.SpriteArray;
-import de.amr.games.pacman.ui.fx.Resources;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -77,9 +76,9 @@ public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
 
 	private SpritesheetPacMan() {
 		super("graphics/pacman/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
-		mazeFull = Resources.image("graphics/pacman/maze_full.png");
-		mazeEmpty = Resources.image("graphics/pacman/maze_empty.png");
-		font = Resources.font("fonts/emulogic.ttf", 8);
+		mazeFull = Ufx.image("graphics/pacman/maze_full.png");
+		mazeEmpty = Ufx.image("graphics/pacman/maze_empty.png");
+		font = Ufx.font("fonts/emulogic.ttf", 8);
 	}
 
 	@Override

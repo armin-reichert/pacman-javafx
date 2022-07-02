@@ -33,7 +33,6 @@ import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.ui.fx.Resources;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.SpritesheetMsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.SpritesheetPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
@@ -47,6 +46,7 @@ import de.amr.games.pacman.ui.fx.scene.SceneManager;
 import de.amr.games.pacman.ui.fx.shell.info.Dashboard;
 import de.amr.games.pacman.ui.fx.sound.mspacman.MsPacManGameSounds;
 import de.amr.games.pacman.ui.fx.sound.pacman.PacManGameSounds;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -68,7 +68,7 @@ public class GameUI implements GameEventAdapter {
 
 	private static final GameSoundController PACMAN_SOUNDS = new PacManGameSounds();
 	private static final GameSoundController MS_PACMAN_SOUNDS = new MsPacManGameSounds();
-	private static final Image APP_ICON = Resources.image("icons/pacman.png");
+	private static final Image APP_ICON = Ufx.image("icons/pacman.png");
 
 	private final GameController gameController;
 	private final Stage stage;
@@ -126,7 +126,7 @@ public class GameUI implements GameEventAdapter {
 	private void updateBackground() {
 		var mode = Env.drawMode3D.get();
 		var bgColor = Env.bgColor.get();
-		gameScenePlaceholder.setBackground(Resources.colorBackground(mode == DrawMode.FILL ? bgColor : Color.BLACK));
+		gameScenePlaceholder.setBackground(Ufx.colorBackground(mode == DrawMode.FILL ? bgColor : Color.BLACK));
 	}
 
 	public double getWidth() {

@@ -30,13 +30,6 @@ import java.util.MissingResourceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-
 /**
  * @author Armin Reichert
  */
@@ -63,21 +56,5 @@ public class Resources {
 			return url;
 		}
 		throw new MissingResourceException("Missing resource, path=" + absPath, "", absPath);
-	}
-
-	public static Font font(String relPath, double size) {
-		return Font.loadFont(urlStringFromRelPath(relPath), size);
-	}
-
-	public static Image image(String relPath) {
-		return new Image(urlStringFromRelPath(relPath));
-	}
-
-	public static Background colorBackground(Color color) {
-		return new Background(new BackgroundFill(color, null, null));
-	}
-
-	public static Background imageBackground(String relPath) {
-		return new Background(new BackgroundImage(image(relPath), null, null, null, null));
 	}
 }

@@ -33,7 +33,6 @@ import de.amr.games.pacman.lib.animation.SingleSpriteAnimation;
 import de.amr.games.pacman.lib.animation.SpriteAnimationMap;
 import de.amr.games.pacman.lib.animation.SpriteArray;
 import de.amr.games.pacman.model.mspacman.Flap;
-import de.amr.games.pacman.ui.fx.Resources;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -104,8 +103,8 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 	private SpritesheetMsPacMan() {
 		super("graphics/mspacman/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
-		font = Resources.font("fonts/emulogic.ttf", 8);
-		midwayLogo = Resources.image("graphics/mspacman/midway.png");
+		font = Ufx.font("fonts/emulogic.ttf", 8);
+		midwayLogo = Ufx.image("graphics/mspacman/midway.png");
 
 		int numMazes = 6;
 		mazesFull = new Image[numMazes];

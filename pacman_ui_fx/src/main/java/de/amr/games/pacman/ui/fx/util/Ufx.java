@@ -25,14 +25,19 @@ package de.amr.games.pacman.ui.fx.util;
 
 import java.util.Map;
 
+import de.amr.games.pacman.ui.fx.Resources;
 import javafx.animation.PauseTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BackgroundImage;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 /**
@@ -92,5 +97,21 @@ public class Ufx {
 			}
 		}
 		return result;
+	}
+
+	public static Background colorBackground(Color color) {
+		return new Background(new BackgroundFill(color, null, null));
+	}
+
+	public static Background imageBackground(String relPath) {
+		return new Background(new BackgroundImage(Ufx.image(relPath), null, null, null, null));
+	}
+
+	public static Font font(String relPath, double size) {
+		return Font.loadFont(Resources.urlStringFromRelPath(relPath), size);
+	}
+
+	public static Image image(String relPath) {
+		return new Image(Resources.urlStringFromRelPath(relPath));
 	}
 }
