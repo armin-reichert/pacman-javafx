@@ -71,14 +71,15 @@ public class AbstractGameSounds implements GameSoundController {
 	}
 
 	protected void load(GameSound sound, String relPath) {
-		var absPath = Resources.absPath(relPath);
-		var urlStr = Resources.urlStringFromRelPath(relPath);
-		if (urlStr == null) {
+		var url = Resources.urlFromRelPath(relPath);
+		if (url == null) {
+			var absPath = Resources.absPath(relPath);
 			logger.error("Game sound %s not loaded: resource '%s' not found", sound, absPath);
 			return;
 		}
+		var urlStr = url.toExternalForm();
+		logger.trace("Try loading clip from '%s'", urlStr);
 		try {
-			logger.trace("Try loading clip from '%s'", urlStr);
 			clips.put(sound, new AudioClip(urlStr));
 			logger.trace("ok");
 		} catch (Exception e) {

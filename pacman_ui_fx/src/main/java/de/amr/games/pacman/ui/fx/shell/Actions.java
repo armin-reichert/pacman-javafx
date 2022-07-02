@@ -51,8 +51,10 @@ public class Actions {
 	public static final String SOUND_IMMUNITY_ON = "immunity-on.mp3";
 
 	public static void playSound(String soundFileName) {
-		var url = Resources.urlStringFromRelPath("sound/" + soundFileName);
-		new AudioClip(url).play();
+		var url = Resources.urlFromRelPath("sound/" + soundFileName);
+		if (url != null) {
+			new AudioClip(url.toExternalForm()).play();
+		}
 	}
 
 	private static GameController theGameController;

@@ -25,6 +25,9 @@ package de.amr.games.pacman.ui.fx.util;
 
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.amr.games.pacman.ui.fx.Resources;
 import javafx.animation.PauseTransition;
 import javafx.beans.binding.Bindings;
@@ -49,6 +52,8 @@ public class Ufx {
 
 	private Ufx() {
 	}
+
+	private static final Logger logger = LogManager.getFormatterLogger();
 
 	public static void bindMaterialColor(PhongMaterial mat, ObjectProperty<Color> pyColor) {
 		mat.diffuseColorProperty().bind(pyColor);
@@ -108,10 +113,25 @@ public class Ufx {
 	}
 
 	public static Font font(String relPath, double size) {
-		return Font.loadFont(Resources.urlStringFromRelPath(relPath), size);
+		var url = Resources.urlFromRelPath(relPath);
+		if (url == null) {
+			logger.error(() -> "Font at '%s' not found".formatted(Resources.absPath(relPath)));
+			return Font.font(Font.getDefault().getFamily(), size);
+		}
+		var font = Font.loadFont(url.toExternalForm(), size);
+		if (font == null) {
+			logger.error(() -> "Font at '%s' not loaded".formatted(Resources.absPath(relPath)));
+			return Font.font(Font.getDefault().getFamily(), size);
+		}
+		return font;
 	}
 
 	public static Image image(String relPath) {
-		return new Image(Resources.urlStringFromRelPath(relPath));
+		var url = Resources.urlFromRelPath(relPath);
+		if (url == null) {
+			logger.error(() -> "No image found at path '%s'".formatted(Resources.absPath(relPath)));
+			return null;
+		}
+		return new Image(url.toExternalForm());
 	}
 }

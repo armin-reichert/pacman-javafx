@@ -27,16 +27,10 @@ package de.amr.games.pacman.ui.fx;
 import java.net.URL;
 import java.util.MissingResourceException;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 /**
  * @author Armin Reichert
  */
 public class Resources {
-
-	@SuppressWarnings("unused")
-	private static final Logger logger = LogManager.getFormatterLogger();
 
 	private Resources() {
 	}
@@ -45,16 +39,11 @@ public class Resources {
 		return "/de/amr/games/pacman/ui/fx/" + relPath;
 	}
 
-	public static String urlString(String absPath) {
-		return url(absPath).toExternalForm();
+	public static URL urlFromRelPath(String relPath) {
+		return url(absPath(relPath));
 	}
 
-	public static String urlStringFromRelPath(String relPath) {
-		return url(relPath).toExternalForm();
-	}
-
-	public static URL url(String relPath) {
-		var absPath = absPath(relPath);
+	public static URL url(String absPath) {
 		var url = Resources.class.getResource(absPath);
 		if (url != null) {
 			return url;
