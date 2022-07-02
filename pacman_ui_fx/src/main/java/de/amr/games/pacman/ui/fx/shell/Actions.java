@@ -50,10 +50,16 @@ public class Actions {
 	public static final String SOUND_IMMUNITY_OFF = "immunity-off.mp3";
 	public static final String SOUND_IMMUNITY_ON = "immunity-on.mp3";
 
+	private static AudioClip currentVoiceMessage;
+
 	public static void playSound(String soundFileName) {
+		if (currentVoiceMessage != null && currentVoiceMessage.isPlaying()) {
+			return;
+		}
 		var url = Resources.urlFromRelPath("sound/" + soundFileName);
 		if (url != null) {
-			new AudioClip(url.toExternalForm()).play();
+			currentVoiceMessage = new AudioClip(url.toExternalForm());
+			currentVoiceMessage.play();
 		}
 	}
 
