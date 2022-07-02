@@ -27,10 +27,14 @@ package de.amr.games.pacman.ui.fx.shell;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameSoundController;
 import de.amr.games.pacman.controller.common.GameState;
+import de.amr.games.pacman.ui.fx.Resources;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.texts.Texts;
+import javafx.animation.PauseTransition;
+import javafx.scene.media.AudioClip;
 import javafx.scene.shape.DrawMode;
+import javafx.util.Duration;
 
 /**
  * @author Armin Reichert
@@ -38,6 +42,17 @@ import javafx.scene.shape.DrawMode;
 public class Actions {
 
 	private Actions() {
+	}
+
+	public static final String SOUND_PRESS_KEY_TO_START = "press-key.mp3";
+	public static final String SOUND_AUTOPILOT_OFF = "autopilot-off.mp3";
+	public static final String SOUND_AUTOPILOT_ON = "autopilot-on.mp3";
+	public static final String SOUND_IMMUNITY_OFF = "immunity-off.mp3";
+	public static final String SOUND_IMMUNITY_ON = "immunity-on.mp3";
+
+	public static void playSound(String soundFileName) {
+		var url = Resources.urlStringFromRelPath("sound/" + soundFileName);
+		new AudioClip(url).play();
 	}
 
 	private static GameController theGameController;
@@ -60,6 +75,9 @@ public class Actions {
 		theUI.getCurrentGameScene().end();
 		theGameController.sounds().ifPresent(GameSoundController::stopAll);
 		theGameController.restartIntro();
+		var hint = new PauseTransition(Duration.seconds(1));
+		hint.setOnFinished(e -> playSound(SOUND_PRESS_KEY_TO_START));
+		hint.play();
 	}
 
 	public static void addLives(int lives) {
@@ -128,14 +146,18 @@ public class Actions {
 
 	public static void toggleAutopilot() {
 		theGameController.game().autoControlled = !theGameController.game().autoControlled;
-		String message = Texts.message(theGameController.game().autoControlled ? "autopilot_on" : "autopilot_off");
+		var on = theGameController.game().autoControlled;
+		String message = Texts.message(on ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(message);
+		playSound(on ? SOUND_AUTOPILOT_ON : SOUND_AUTOPILOT_OFF);
 	}
 
 	public static void toggleImmunity() {
 		theGameController.games().forEach(game -> game.isPacImmune = !game.isPacImmune);
-		String message = Texts.message(theGameController.game().isPacImmune ? "player_immunity_on" : "player_immunity_off");
+		var on = theGameController.game().isPacImmune;
+		String message = Texts.message(on ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(message);
+		playSound(on ? SOUND_IMMUNITY_ON : SOUND_IMMUNITY_OFF);
 	}
 
 	public static void toggleUse3DScene() {

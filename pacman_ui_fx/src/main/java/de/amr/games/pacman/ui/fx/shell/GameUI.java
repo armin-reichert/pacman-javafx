@@ -47,6 +47,7 @@ import de.amr.games.pacman.ui.fx.shell.info.Dashboard;
 import de.amr.games.pacman.ui.fx.sound.mspacman.MsPacManGameSounds;
 import de.amr.games.pacman.ui.fx.sound.pacman.PacManGameSounds;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.animation.PauseTransition;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -54,6 +55,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  * JavaFX UI for Pac-Man / Ms. Pac-Man game.
@@ -112,6 +114,10 @@ public class GameUI implements GameEventAdapter {
 		Keyboard.addHandler(() -> currentGameScene.onKeyPressed());
 
 		updateCurrentGameScene(true);
+
+		var introMessage = new PauseTransition(Duration.seconds(10));
+		introMessage.setOnFinished(e -> Actions.playSound(Actions.SOUND_PRESS_KEY_TO_START));
+		introMessage.play();
 
 		stage.setMinHeight(328);
 		stage.setMinWidth(241);

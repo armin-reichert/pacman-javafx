@@ -45,6 +45,10 @@ public class Resources {
 		return "/de/amr/games/pacman/ui/fx/" + relPath;
 	}
 
+	public static String urlString(String absPath) {
+		return url(absPath).toExternalForm();
+	}
+
 	public static String urlStringFromRelPath(String relPath) {
 		return url(relPath).toExternalForm();
 	}
