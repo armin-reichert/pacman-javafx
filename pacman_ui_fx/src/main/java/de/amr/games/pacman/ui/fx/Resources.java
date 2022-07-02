@@ -49,7 +49,7 @@ public class Resources {
 	private Resources() {
 	}
 
-	public static String path(String relPath) {
+	public static String absPath(String relPath) {
 		return "/de/amr/games/pacman/ui/fx/" + relPath;
 	}
 
@@ -58,13 +58,12 @@ public class Resources {
 	}
 
 	public static URL url(String relPath) {
-		var path = path(relPath);
-		var url = Resources.class.getResource(path);
+		var absPath = absPath(relPath);
+		var url = Resources.class.getResource(absPath);
 		if (url != null) {
 			return url;
 		}
-		logger.error("No resource found for path '%s'", path);
-		throw new MissingResourceException("Missing resource, path=" + path, "", path);
+		throw new MissingResourceException("Missing resource, path=" + absPath, "", absPath);
 	}
 
 	public static Font font(String relPath, double size) {
