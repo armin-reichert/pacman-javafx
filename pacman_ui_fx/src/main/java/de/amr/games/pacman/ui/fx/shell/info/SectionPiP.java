@@ -68,16 +68,15 @@ public class SectionPiP extends Section {
 	public void init() {
 		if (ui.getCurrentGameScene() instanceof PlayScene3D) {
 			embeddedScene = new PlayScene2D();
-			var subScene = embeddedScene.getFXSubScene();
-			embeddedSceneContainer.getChildren().setAll(subScene);
-			subScene.setWidth(w);
-			subScene.setHeight(h);
-			embeddedScene.getCanvas().widthProperty().bind(subScene.widthProperty());
-			embeddedScene.getCanvas().heightProperty().bind(subScene.heightProperty());
-			var scale = 1.2;
-			embeddedScene.getCanvas().getTransforms().setAll(new Scale(scale, scale));
 			embeddedScene.setSceneContext(ui.createSceneContext());
 			embeddedScene.init();
+			var subScene = embeddedScene.getFXSubScene();
+			subScene.setWidth(w);
+			subScene.setHeight(h);
+			embeddedSceneContainer.getChildren().setAll(subScene);
+			embeddedScene.getCanvas().widthProperty().bind(subScene.widthProperty());
+			embeddedScene.getCanvas().heightProperty().bind(subScene.heightProperty());
+			embeddedScene.getCanvas().getTransforms().setAll(new Scale(1.2, 1.2));
 		}
 	}
 
