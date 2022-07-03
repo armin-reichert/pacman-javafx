@@ -67,6 +67,7 @@ public abstract class GameScene2D implements GameScene {
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
 		overlayCanvas.widthProperty().bind(canvas.widthProperty());
 		overlayCanvas.heightProperty().bind(canvas.heightProperty());
+		overlayCanvas.visibleProperty().bind(Env.debugUI);
 		overlayCanvas.setMouseTransparent(true);
 	}
 
@@ -96,6 +97,10 @@ public abstract class GameScene2D implements GameScene {
 
 	public Canvas getCanvas() {
 		return canvas;
+	}
+
+	public Canvas getOverlayCanvas() {
+		return overlayCanvas;
 	}
 
 	@Override
@@ -134,7 +139,6 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	private void drawOverlay() {
-		overlayCanvas.setVisible(Env.debugUI.get());
 		if (overlayCanvas.isVisible()) {
 			var og = overlayCanvas.getGraphicsContext2D();
 			og.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());

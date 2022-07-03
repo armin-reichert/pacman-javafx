@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell.info;
 
-import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
@@ -37,7 +36,7 @@ import javafx.scene.text.Text;
 import javafx.scene.transform.Scale;
 
 /**
- * Picture-In-Picture view.
+ * Picture-In-Picture view. Displays 2D game scene when 3D game scene is active.
  * 
  * @author Armin Reichert
  */
@@ -45,48 +44,46 @@ public class PiPView extends StackPane {
 
 	private final GameUI ui;
 	private final Pane sceneContainer = new Pane();
+	private final PlayScene2D playScene2D;
 	private final Text hint = new Text();
 	private double scale = 1.0;
 	private double width = 28 * 8 * scale;
 	private double height = 36 * 8 * scale;
-	private GameScene2D pipScene;
 
 	public PiPView(GameUI ui) {
 		this.ui = ui;
-		setBackground(Ufx.colorBackground(Color.BLACK));
-		getChildren().setAll(sceneContainer, hint);
+		playScene2D = new PlayScene2D(false);
+		var subScene = playScene2D.getFXSubScene();
+		subScene.setFocusTraversable(false);
+		subScene.setWidth(width);
+		subScene.setHeight(height);
+		playScene2D.getCanvas().widthProperty().bind(subScene.widthProperty());
+		playScene2D.getCanvas().heightProperty().bind(subScene.heightProperty());
+		playScene2D.getCanvas().getTransforms().setAll(new Scale(scale, scale));
+		playScene2D.getOverlayCanvas().visibleProperty().unbind();
+		playScene2D.getOverlayCanvas().setVisible(false);
 		sceneContainer.setMinWidth(width);
 		sceneContainer.setMinHeight(height);
+		sceneContainer.getChildren().setAll(subScene);
 		hint.setFont(Font.font("Sans", FontWeight.EXTRA_BOLD, 20.0));
 		hint.setFill(Color.WHITE);
 		hint.setText("3D play scene inactive");
+		setBackground(Ufx.colorBackground(Color.BLACK));
+		getChildren().setAll(sceneContainer, hint);
 	}
 
 	public void init() {
 		if (ui.getCurrentGameScene() instanceof PlayScene3D) {
-			pipScene = new PlayScene2D(false);
-			var subScene = pipScene.getFXSubScene();
-			subScene.setFocusTraversable(false);
-			subScene.setWidth(width);
-			subScene.setHeight(height);
-			pipScene.getCanvas().widthProperty().bind(subScene.widthProperty());
-			pipScene.getCanvas().heightProperty().bind(subScene.heightProperty());
-			pipScene.getCanvas().getTransforms().setAll(new Scale(scale, scale));
-			pipScene.setSceneContext(ui.getSceneContext());
-			pipScene.init();
-			sceneContainer.getChildren().setAll(subScene);
+			playScene2D.setSceneContext(ui.getSceneContext());
+			playScene2D.init();
 		}
 	}
 
 	public void update() {
-		if (pipScene != null && ui.getCurrentGameScene() instanceof PlayScene3D) {
+		if (ui.getCurrentGameScene() instanceof PlayScene3D) {
+			playScene2D.update();
 			sceneContainer.setVisible(true);
 			hint.setVisible(false);
-			var canvas = pipScene.getCanvas();
-			var g = canvas.getGraphicsContext2D();
-			g.setFill(Color.BLACK);
-			g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-			pipScene.doRender(g);
 		} else {
 			sceneContainer.setVisible(false);
 			hint.setVisible(true);
