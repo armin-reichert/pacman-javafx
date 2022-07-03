@@ -57,11 +57,12 @@ public class Env {
 	public static final ObjectProperty<DrawMode> drawMode3D = new SimpleObjectProperty<>(DrawMode.FILL);
 	public static final StringProperty floorTexture = new SimpleStringProperty(FLOOR_TEXTURES.get(0));
 	public static final ObjectProperty<Color> floorColor = new SimpleObjectProperty<>(Color.rgb(10, 10, 70));
-	public static final IntegerProperty mazeResolution = new SimpleIntegerProperty(8);
+	public static final IntegerProperty mazeResolution = new SimpleIntegerProperty(4);
 	public static final DoubleProperty mazeWallHeight = new SimpleDoubleProperty(2.0);
 	public static final BooleanProperty paused = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<Perspective> perspective = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
 	public static final BooleanProperty pipVisible = new SimpleBooleanProperty(false);
+	public static final DoubleProperty pipOpacity = new SimpleDoubleProperty(0.66);
 	public static final BooleanProperty squirting = new SimpleBooleanProperty(false);
 	public static final BooleanProperty use3D = new SimpleBooleanProperty(true);
 

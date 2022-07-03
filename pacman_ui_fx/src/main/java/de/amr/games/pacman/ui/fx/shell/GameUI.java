@@ -101,6 +101,7 @@ public class GameUI implements GameEventAdapter {
 		dashboard = new Dashboard(this, gameController);
 		pipView = new PiPView(this);
 		pipView.visibleProperty().bind(Env.pipVisible);
+		pipView.opacityProperty().bind(Env.pipOpacity);
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(new VBox(pipView));
 

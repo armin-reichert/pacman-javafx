@@ -57,6 +57,7 @@ public class SectionGeneral extends Section {
 	private Tooltip tooltipPlay = new Tooltip("Play");
 	private Tooltip tooltipStop = new Tooltip("Stop");
 	private Tooltip tooltipStep = new Tooltip("Single Step");
+	private Slider sliderPiPOpacity;
 
 	public SectionGeneral(GameUI ui, GameController gc, String title, int minLabelWidth, Color textColor, Font textFont,
 			Font labelFont) {
@@ -81,13 +82,20 @@ public class SectionGeneral extends Section {
 		sliderTargetFPS.setShowTickMarks(false);
 		sliderTargetFPS.valueProperty()
 				.addListener((obs, oldValue, newValue) -> GameLoop.get().setTargetFrameRate(newValue.intValue()));
+
 		addInfo("", () -> String.format("Current: %d Hz (Target: %d Hz)", GameLoop.get().getFPS(),
 				GameLoop.get().getTargetFrameRate()));
 		addInfo("Total Ticks", GameLoop.get()::getTotalTicks);
 
+		sliderPiPOpacity = addSlider("PiP Opacity", 0.0, 1.0, Env.pipOpacity.get());
+		sliderPiPOpacity.setShowTickLabels(false);
+		sliderPiPOpacity.setShowTickMarks(false);
+		sliderPiPOpacity.valueProperty()
+				.addListener((obs, oldValue, newValue) -> Env.pipOpacity.set(newValue.doubleValue()));
+
+		addInfo("Main scene", () -> String.format("w=%.0f h=%.0f", ui.getMainSceneWidth(), ui.getMainSceneHeight()));
 		cbUsePlayScene3D = addCheckBox("Use 3D play scene", Actions::toggleUse3DScene);
 		cbDebugUI = addCheckBox("Show UI Debug Stuff", () -> Env.toggle(Env.debugUI));
-		addInfo("Main scene", () -> String.format("w=%.0f h=%.0f", ui.getMainSceneWidth(), ui.getMainSceneHeight()));
 	}
 
 	@Override
@@ -97,6 +105,7 @@ public class SectionGeneral extends Section {
 		btnsSimulation[0].setTooltip(Env.paused.get() ? tooltipPlay : tooltipStop);
 		btnsSimulation[1].setDisable(!Env.paused.get());
 		sliderTargetFPS.setValue(GameLoop.get().getTargetFrameRate());
+		sliderPiPOpacity.setValue(Env.pipOpacity.get());
 		cbUsePlayScene3D.setSelected(Env.use3D.get());
 		cbDebugUI.setSelected(Env.debugUI.get());
 	}
