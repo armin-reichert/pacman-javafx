@@ -74,7 +74,7 @@ public class SectionPiP extends Section {
 			pipScene.getCanvas().widthProperty().bind(subScene.widthProperty());
 			pipScene.getCanvas().heightProperty().bind(subScene.heightProperty());
 			pipScene.getCanvas().getTransforms().setAll(new Scale(1.2, 1.2));
-			pipScene.setSceneContext(ui.createSceneContext());
+			pipScene.setSceneContext(ui.getSceneContext());
 			pipScene.init();
 			pipSceneContainer.getChildren().setAll(subScene);
 		}

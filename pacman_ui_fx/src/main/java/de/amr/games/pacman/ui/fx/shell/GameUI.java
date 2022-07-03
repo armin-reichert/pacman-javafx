@@ -33,6 +33,9 @@ import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.SpritesheetMsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.SpritesheetPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
@@ -79,7 +82,7 @@ public class GameUI implements GameEventAdapter {
 	private final StackPane gameScenePlaceholder;
 	private final Dashboard dashboard;
 	private final FlashMessageView flashMessageView;
-
+	private final SceneContext sceneContext;
 	private GameScene currentGameScene;
 
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
@@ -107,17 +110,18 @@ public class GameUI implements GameEventAdapter {
 		var pacSteering = new KeyboardPacSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 		gameController.setPacSteering(pacSteering);
 
-		// Keyboard input handling
-		scene.setOnKeyPressed(Keyboard::processEvent);
-		Keyboard.addHandler(this::onKeyPressed);
-		Keyboard.addHandler(pacSteering::onKeyPressed);
-		Keyboard.addHandler(() -> currentGameScene.onKeyPressed());
-
+		sceneContext = new SceneContext();
+		sceneContext.gameController = gameController;
 		updateCurrentGameScene(true);
 
 		var introMessage = new PauseTransition(Duration.seconds(3));
 		introMessage.setOnFinished(e -> Actions.playVoiceMessage(Actions.SOUND_PRESS_KEY_TO_START));
 		introMessage.play();
+
+		scene.setOnKeyPressed(Keyboard::processEvent);
+		Keyboard.addHandler(this::onKeyPressed);
+		Keyboard.addHandler(pacSteering::onKeyPressed);
+		Keyboard.addHandler(() -> currentGameScene.onKeyPressed());
 
 		stage.setMinHeight(328);
 		stage.setMinWidth(241);
@@ -237,27 +241,38 @@ public class GameUI implements GameEventAdapter {
 		stage.setTitle(gameController.game().variant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
 		logger.info("Current scene changed from %s to %s", currentGameScene, newGameScene);
 		currentGameScene = newGameScene;
-		currentGameScene.setSceneContext(createSceneContext());
+		updateSceneContext();
+		currentGameScene.setSceneContext(sceneContext);
 		currentGameScene.init();
 		gameScenePlaceholder.getChildren().setAll(currentGameScene.getFXSubScene());
 		currentGameScene.resize(scene.getHeight());
 	}
 
-	public SceneContext createSceneContext() {
-		var context = new SceneContext();
-		context.gameController = gameController;
-		context.game = gameController.game();
-		context.r2D = switch (context.game.variant) {
+	public SceneContext getSceneContext() {
+		return sceneContext;
+	}
+
+	private void updateSceneContext() {
+		sceneContext.game = gameController.game();
+		sceneContext.r2D = switch (sceneContext.game.variant) {
 		case MS_PACMAN -> SpritesheetMsPacMan.get();
 		case PACMAN -> SpritesheetPacMan.get();
 		};
-		context.model3D = Model3D.get();
-		var sounds = switch (context.game.variant) {
+		sceneContext.model3D = Model3D.get();
+		var sounds = switch (sceneContext.game.variant) {
 		case MS_PACMAN -> MS_PACMAN_SOUNDS;
 		case PACMAN -> PACMAN_SOUNDS;
 		};
 		gameController.setSounds(sounds);
-		return context;
+
+		var world = (ArcadeWorld) sceneContext.game.world();
+		world.setFlashingAnimation(sceneContext.r2D.createMazeFlashingAnimation(sceneContext.game.level.mazeNumber));
+		sceneContext.game.pac.setAnimations(new PacAnimations(sceneContext.r2D));
+		for (var ghost : sceneContext.game.theGhosts) {
+			ghost.setAnimations(new GhostAnimations(ghost.id, sceneContext.r2D));
+		}
+		logger.info("Scene context updated. Game variant: %s, Rendering2D: %s", sceneContext.game.variant,
+				sceneContext.r2D);
 	}
 
 	private void onKeyPressed() {

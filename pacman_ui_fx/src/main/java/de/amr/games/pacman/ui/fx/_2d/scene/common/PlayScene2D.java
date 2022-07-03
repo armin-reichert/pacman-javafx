@@ -31,8 +31,6 @@ import de.amr.games.pacman.lib.animation.SpriteAnimations;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
@@ -54,12 +52,6 @@ public class PlayScene2D extends GameScene2D {
 		guysInfo.init(ctx.game);
 		creditVisible = !hasCredit();
 		ctx.game.levelCounter.setVisible(hasCredit());
-		var world = (ArcadeWorld) ctx.game.world();
-		world.setFlashingAnimation(ctx.r2D.createMazeFlashingAnimation(ctx.game.level.mazeNumber));
-		ctx.game.pac.setAnimations(new PacAnimations(ctx.r2D));
-		for (var ghost : ctx.game.theGhosts) {
-			ghost.setAnimations(new GhostAnimations(ghost.id, ctx.r2D));
-		}
 		ctx.game.bonus().setInactive();
 	}
 
