@@ -64,8 +64,9 @@ public class PiPView extends StackPane {
 
 	public void init() {
 		if (ui.getCurrentGameScene() instanceof PlayScene3D) {
-			pipScene = new PlayScene2D();
+			pipScene = new PlayScene2D(false);
 			var subScene = pipScene.getFXSubScene();
+			subScene.setFocusTraversable(false);
 			subScene.setWidth(width);
 			subScene.setHeight(height);
 			pipScene.getCanvas().widthProperty().bind(subScene.widthProperty());

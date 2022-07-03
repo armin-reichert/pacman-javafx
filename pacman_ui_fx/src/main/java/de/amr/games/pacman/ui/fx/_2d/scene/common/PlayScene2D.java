@@ -45,11 +45,23 @@ import javafx.scene.input.KeyCode;
  */
 public class PlayScene2D extends GameScene2D {
 
-	private final GuysInfo guysInfo = new GuysInfo(this);
+	private GuysInfo infoLayer;
+
+	public PlayScene2D() {
+		this(true);
+	}
+
+	public PlayScene2D(boolean withInfo) {
+		if (withInfo) {
+			infoLayer = new GuysInfo(this);
+		}
+	}
 
 	@Override
 	public void init() {
-		guysInfo.init(ctx.game);
+		if (infoLayer != null) {
+			infoLayer.init(ctx.game);
+		}
 		creditVisible = !hasCredit();
 		ctx.game.levelCounter.setVisible(hasCredit());
 		ctx.game.bonus().setInactive();
@@ -72,8 +84,8 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void doUpdate() {
-		if (Env.debugUI.get()) {
-			guysInfo.update();
+		if (infoLayer != null && Env.debugUI.get()) {
+			infoLayer.update();
 		}
 	}
 
