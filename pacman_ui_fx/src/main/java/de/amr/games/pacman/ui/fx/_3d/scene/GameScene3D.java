@@ -105,10 +105,10 @@ public abstract class GameScene3D implements GameScene {
 	}
 
 	protected void blockGameController() {
-		ctx.gameState().timer().resetIndefinitely();
+		ctx.state().timer().resetIndefinitely();
 	}
 
 	protected void unblockGameController() {
-		ctx.gameState().timer().expire();
+		ctx.state().timer().expire();
 	}
 }

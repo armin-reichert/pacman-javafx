@@ -75,6 +75,6 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 		SpritesheetMsPacMan.get().drawFlap(g, icc.flap);
 		ctx.r2D.drawPac(g, icc.msPacMan);
 		ctx.r2D.drawPac(g, icc.pacMan);
-		ctx.r2D.drawLevelCounter(g, ctx.game.levelCounter);
+		ctx.r2D.drawLevelCounter(g, ctx.game().levelCounter);
 	}
 }

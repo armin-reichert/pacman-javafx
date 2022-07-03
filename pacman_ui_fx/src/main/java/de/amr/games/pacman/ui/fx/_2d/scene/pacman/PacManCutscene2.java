@@ -119,7 +119,7 @@ public class PacManCutscene2 extends GameScene2D {
 		} else if (frame == 508) {
 			stretchedDressAnimation = null;
 		} else if (frame == 509) {
-			ctx.gameState().timer().expire();
+			ctx.state().timer().expire();
 			return;
 		}
 		pac.move();

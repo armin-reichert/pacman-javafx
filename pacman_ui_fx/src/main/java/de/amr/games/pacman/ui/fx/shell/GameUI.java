@@ -115,8 +115,7 @@ public class GameUI implements GameEventAdapter {
 		var pacSteering = new KeyboardPacSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 		gameController.setPacSteering(pacSteering);
 
-		sceneContext = new SceneContext();
-		sceneContext.gameController = gameController;
+		sceneContext = new SceneContext(gameController);
 		updateCurrentGameScene(true);
 
 		var introMessage = new PauseTransition(Duration.seconds(2));
@@ -269,7 +268,6 @@ public class GameUI implements GameEventAdapter {
 		};
 		var model3D = Model3D.get(); // no game variant-specific 3D models yet
 
-		sceneContext.game = game;
 		sceneContext.r2D = r2D;
 		sceneContext.model3D = model3D;
 

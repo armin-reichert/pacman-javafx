@@ -35,16 +35,23 @@ import de.amr.games.pacman.ui.fx._3d.model.Model3D;
  */
 public class SceneContext {
 
-	public GameController gameController;
-	public GameModel game;
+	public final GameController gameController;
 	public Rendering2D r2D;
 	public Model3D model3D;
 
-	public GameState gameState() {
+	public SceneContext(GameController gameController) {
+		this.gameController = gameController;
+	}
+
+	public GameModel game() {
+		return gameController.game();
+	}
+
+	public GameState state() {
 		return gameController.state();
 	}
 
 	public boolean hasCredit() {
-		return game.credit > 0;
+		return game().credit > 0;
 	}
 }

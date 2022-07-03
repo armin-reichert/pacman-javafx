@@ -102,7 +102,7 @@ public class PacManCutscene1 extends GameScene2D {
 				animations.selectedAnimation().restart();
 			});
 		} else if (frame == 632) {
-			ctx.gameState().timer().expire();
+			ctx.state().timer().expire();
 			return;
 		}
 		pac.move();

@@ -60,17 +60,17 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void init() {
 		if (infoLayer != null) {
-			infoLayer.init(ctx.game);
+			infoLayer.init(ctx.game());
 		}
 		creditVisible = !hasCredit();
-		ctx.game.levelCounter.setVisible(hasCredit());
-		ctx.game.bonus().setInactive();
+		ctx.game().levelCounter.setVisible(hasCredit());
+		ctx.game().bonus().setInactive();
 	}
 
 	@Override
 	public void onKeyPressed() {
-		if (Keyboard.pressed(KeyCode.DIGIT5) && ctx.game.credit == 0) {
-			ctx.gameState().addCredit(ctx.game);
+		if (Keyboard.pressed(KeyCode.DIGIT5) && ctx.game().credit == 0) {
+			ctx.state().addCredit(ctx.game());
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.E)) {
 			Actions.cheatEatAllPellets();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.L)) {
@@ -91,31 +91,31 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void doRender(GraphicsContext g) {
-		ctx.r2D.drawScore(g, ctx.game.scores.gameScore);
-		ctx.r2D.drawScore(g, ctx.game.scores.highScore);
-		var world = (ArcadeWorld) ctx.game.world();
+		ctx.r2D.drawScore(g, ctx.game().scores.gameScore);
+		ctx.r2D.drawScore(g, ctx.game().scores.highScore);
+		var world = (ArcadeWorld) ctx.game().world();
 		var flashingAnimation = world.flashingAnimation();
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			g.drawImage((Image) flashingAnimation.get().frame(), t(0), t(3));
 		} else {
-			ctx.r2D.drawMaze(g, t(0), t(3), ctx.game.level.world, ctx.game.level.mazeNumber,
-					!ctx.game.energizerPulse.frame());
+			ctx.r2D.drawMaze(g, t(0), t(3), ctx.game().level.world, ctx.game().level.mazeNumber,
+					!ctx.game().energizerPulse.frame());
 		}
-		ctx.r2D.drawGameStateMessage(g, hasCredit() ? ctx.gameState() : GameState.GAME_OVER);
-		ctx.r2D.drawBonus(g, ctx.game.bonus());
-		ctx.r2D.drawPac(g, ctx.game.pac);
-		ctx.r2D.drawGhosts(g, ctx.game.theGhosts);
+		ctx.r2D.drawGameStateMessage(g, hasCredit() ? ctx.state() : GameState.GAME_OVER);
+		ctx.r2D.drawBonus(g, ctx.game().bonus());
+		ctx.r2D.drawPac(g, ctx.game().pac);
+		ctx.r2D.drawGhosts(g, ctx.game().theGhosts);
 		if (creditVisible) {
-			ctx.r2D.drawCredit(g, ctx.game.credit);
+			ctx.r2D.drawCredit(g, ctx.game().credit);
 		} else {
-			ctx.r2D.drawLivesCounter(g, ctx.game.playing ? ctx.game.lives - 1 : ctx.game.lives);
+			ctx.r2D.drawLivesCounter(g, ctx.game().playing ? ctx.game().lives - 1 : ctx.game().lives);
 		}
-		ctx.r2D.drawLevelCounter(g, ctx.game.levelCounter);
+		ctx.r2D.drawLevelCounter(g, ctx.game().levelCounter);
 	}
 
 	public void onSwitchFrom3D() {
-		ctx.game.pac.animations().ifPresent(SpriteAnimations::ensureRunning);
-		ctx.game.ghosts().map(Ghost::animations).forEach(anim -> anim.ifPresent(SpriteAnimations::ensureRunning));
+		ctx.game().pac.animations().ifPresent(SpriteAnimations::ensureRunning);
+		ctx.game().ghosts().map(Ghost::animations).forEach(anim -> anim.ifPresent(SpriteAnimations::ensureRunning));
 	}
 
 	@Override

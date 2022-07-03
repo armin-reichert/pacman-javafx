@@ -48,7 +48,7 @@ public class MsPacManCreditScene extends GameScene2D {
 	@Override
 	public void onKeyPressed() {
 		if (Keyboard.pressed(KeyCode.DIGIT5)) {
-			ctx.gameState().addCredit(ctx.game);
+			ctx.state().addCredit(ctx.game());
 		} else if (Keyboard.pressed(KeyCode.DIGIT1)) {
 			Actions.startGame();
 		}
@@ -61,10 +61,10 @@ public class MsPacManCreditScene extends GameScene2D {
 
 	@Override
 	public void doRender(GraphicsContext g) {
-		ctx.r2D.drawScore(g, ctx.game.scores.gameScore);
-		ctx.r2D.drawScore(g, ctx.game.scores.highScore);
+		ctx.r2D.drawScore(g, ctx.game().scores.gameScore);
+		ctx.r2D.drawScore(g, ctx.game().scores.highScore);
 		if (creditVisible) {
-			ctx.r2D.drawCredit(g, ctx.game.credit);
+			ctx.r2D.drawCredit(g, ctx.game().credit);
 		}
 		g.setFont(ctx.r2D.getArcadeFont());
 		g.setFill(ctx.r2D.getGhostColor(Ghost.ORANGE_GHOST));

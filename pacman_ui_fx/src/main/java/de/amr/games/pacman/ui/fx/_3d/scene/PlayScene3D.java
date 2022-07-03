@@ -77,16 +77,16 @@ public class PlayScene3D extends GameScene3D {
 	@Override
 	public void init() {
 		content().clear();
-		world3D = new World3D(ctx.game, ctx.model3D, ctx.r2D);
+		world3D = new World3D(ctx.game(), ctx.model3D, ctx.r2D);
 		// put first, exchanged when new level starts
 		content().add(world3D);
-		pac3D = new Pac3D(ctx.game.pac, ctx.game.world(), ctx.model3D, Rendering3D.getPacSkullColor(),
+		pac3D = new Pac3D(ctx.game().pac, ctx.game().world(), ctx.model3D, Rendering3D.getPacSkullColor(),
 				Rendering3D.getPacEyesColor(), Rendering3D.getPacPalateColor());
-		pac3D.reset(ctx.game.world());
+		pac3D.reset(ctx.game().world());
 		content().add(pac3D);
-		ghosts3D = ctx.game.ghosts().map(ghost -> new Ghost3D(ghost, ctx.model3D, ctx.r2D)).toArray(Ghost3D[]::new);
+		ghosts3D = ctx.game().ghosts().map(ghost -> new Ghost3D(ghost, ctx.model3D, ctx.r2D)).toArray(Ghost3D[]::new);
 		Stream.of(ghosts3D).forEach(content()::add);
-		bonus3D = new Bonus3D(ctx.game.bonus());
+		bonus3D = new Bonus3D(ctx.game().bonus());
 		content().add(bonus3D);
 		setPerspective(Env.perspective.get());
 	}
@@ -104,8 +104,8 @@ public class PlayScene3D extends GameScene3D {
 
 	@Override
 	public void onKeyPressed() {
-		if (Keyboard.pressed(KeyCode.DIGIT5) && ctx.game.credit == 0) {
-			ctx.gameState().addCredit(ctx.game);
+		if (Keyboard.pressed(KeyCode.DIGIT5) && ctx.game().credit == 0) {
+			ctx.state().addCredit(ctx.game());
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.LEFT)) {
 			Actions.selectPrevPerspective();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.RIGHT)) {
@@ -123,18 +123,18 @@ public class PlayScene3D extends GameScene3D {
 
 	@Override
 	public void update() {
-		world3D.update(ctx.game);
+		world3D.update(ctx.game());
 		pac3D.update();
-		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(ctx.game));
+		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(ctx.game()));
 		bonus3D.update();
 		getCamera().update(pac3D);
 	}
 
 	public void onSwitchFrom2D() {
-		var world = ctx.game.world();
+		var world = ctx.game().world();
 		var maze3D = world3D.getMaze3D();
 		maze3D.pellets3D().forEach(shape3D -> shape3D.setVisible(!world.containsEatenFood(shape3D.tile())));
-		if (U.oneOf(ctx.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) {
+		if (U.oneOf(ctx.state(), GameState.HUNTING, GameState.GHOST_DYING)) {
 			maze3D.energizers3D().forEach(Energizer3D::startPumping);
 		}
 	}
@@ -144,7 +144,7 @@ public class PlayScene3D extends GameScene3D {
 		var maze3D = world3D.getMaze3D();
 		if (e.tile.isEmpty()) {
 			// when cheat "eat all pellets" is used, no tile is present in the event
-			ctx.game.level.world.tiles().filter(ctx.game.level.world::containsEatenFood)
+			ctx.game().level.world.tiles().filter(ctx.game().level.world::containsEatenFood)
 					.forEach(tile -> maze3D.pelletAt(tile).ifPresent(maze3D::eatPellet));
 		} else {
 			maze3D.pelletAt(e.tile.get()).ifPresent(maze3D::eatPellet);
@@ -178,12 +178,12 @@ public class PlayScene3D extends GameScene3D {
 		switch (e.newGameState) {
 		case READY -> {
 			maze3D.reset();
-			pac3D.reset(ctx.game.world());
-			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.reset(ctx.game));
+			pac3D.reset(ctx.game().world());
+			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.reset(ctx.game()));
 		}
 		case HUNTING -> maze3D.energizers3D().forEach(Energizer3D::startPumping);
 		case PACMAN_DYING -> {
-			var killer = ctx.game.ghosts().filter(ctx.game.pac::sameTile).findAny();
+			var killer = ctx.game().ghosts().filter(ctx.game().pac::sameTile).findAny();
 			if (killer.isPresent()) {
 				var color = ctx.r2D.getGhostColor(killer.get().id);
 				var animation = new SequentialTransition( //
@@ -195,19 +195,20 @@ public class PlayScene3D extends GameScene3D {
 		}
 		case LEVEL_STARTING -> {
 			blockGameController();
-			world3D = new World3D(ctx.game, ctx.model3D, ctx.r2D);
+			world3D = new World3D(ctx.game(), ctx.model3D, ctx.r2D);
 			content().set(0, world3D);
 			setPerspective(Env.perspective.get());
-			Actions.showFlashMessage(Texts.message("level_starting", ctx.game.level.number));
+			Actions.showFlashMessage(Texts.message("level_starting", ctx.game().level.number));
 			Ufx.pauseSec(3, this::unblockGameController).play();
 		}
 		case LEVEL_COMPLETE -> {
 			blockGameController();
-			var message = Texts.TALK_LEVEL_COMPLETE.next() + "%n%n" + Texts.message("level_complete", ctx.game.level.number);
+			var message = Texts.TALK_LEVEL_COMPLETE.next() + "%n%n"
+					+ Texts.message("level_complete", ctx.game().level.number);
 			new SequentialTransition( //
 					Ufx.pauseSec(2.0), //
-					maze3D.createMazeFlashingAnimation(ctx.game.level.numFlashes), //
-					Ufx.pauseSec(1.0, ctx.game.pac::hide), //
+					maze3D.createMazeFlashingAnimation(ctx.game().level.numFlashes), //
+					Ufx.pauseSec(1.0, ctx.game().pac::hide), //
 					Ufx.pauseSec(0.5, () -> Actions.showFlashMessage(2, message)), //
 					Ufx.pauseSec(2.0, this::unblockGameController) //
 			).play();

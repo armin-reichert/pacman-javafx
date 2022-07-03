@@ -88,7 +88,7 @@ public class PacManCutscene3 extends GameScene2D {
 			blinky.setBothDirs(Direction.RIGHT);
 			blinky.selectAnimation("naked");
 		} else if (frame == 516) {
-			ctx.gameState().timer().expire();
+			ctx.state().timer().expire();
 			return;
 		}
 		pac.move();

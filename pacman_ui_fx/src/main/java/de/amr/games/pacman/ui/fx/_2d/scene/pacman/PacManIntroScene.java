@@ -73,14 +73,14 @@ public class PacManIntroScene extends GameScene2D {
 	@Override
 	public void onKeyPressed() {
 		if (Keyboard.pressed(KeyCode.DIGIT5)) {
-			ctx.gameState().addCredit(ctx.game);
+			ctx.state().addCredit(ctx.game());
 		} else if (Keyboard.pressed(KeyCode.DIGIT1)) {
 			Actions.startGame();
 		} else if (Keyboard.pressed(KeyCode.V)) {
 			Actions.selectNextGameVariant();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.Z)) {
-			ctx.game.intermissionTestNumber = 1;
-			ctx.gameState().startIntermissionTest(ctx.game);
+			ctx.game().intermissionTestNumber = 1;
+			ctx.state().startIntermissionTest(ctx.game());
 		}
 	}
 
@@ -94,10 +94,10 @@ public class PacManIntroScene extends GameScene2D {
 	public void doRender(GraphicsContext g) {
 		var time = sceneController.state().timer().tick();
 
-		ctx.r2D.drawScore(g, ctx.game.scores.gameScore);
-		ctx.r2D.drawScore(g, ctx.game.scores.highScore);
+		ctx.r2D.drawScore(g, ctx.game().scores.gameScore);
+		ctx.r2D.drawScore(g, ctx.game().scores.highScore);
 		if (creditVisible) {
-			ctx.r2D.drawCredit(g, ctx.game.credit);
+			ctx.r2D.drawCredit(g, ctx.game().credit);
 		}
 
 		switch (sceneController.state()) {
