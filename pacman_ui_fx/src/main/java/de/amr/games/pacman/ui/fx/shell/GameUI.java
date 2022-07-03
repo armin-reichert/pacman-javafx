@@ -73,10 +73,9 @@ public class GameUI implements GameEventAdapter {
 	private final StackPane gameScenePlaceholder;
 	private final Dashboard dashboard;
 	private final FlashMessageView flashMessageView;
+	private final PiPView pipView;
 	private final SceneManager sceneManager;
 	private GameScene currentGameScene;
-
-	private PiPView pipView;
 
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
 		this.gameController = gameController;
@@ -84,36 +83,33 @@ public class GameUI implements GameEventAdapter {
 		this.sceneManager = new SceneManager(gameController);
 		GameEvents.addEventListener(this);
 
-		var overlayPane = new BorderPane();
 		flashMessageView = new FlashMessageView();
 		dashboard = new Dashboard(this, gameController);
 		pipView = new PiPView(this);
 		pipView.visibleProperty().bind(Env.pipVisible);
 		pipView.opacityProperty().bind(Env.pipOpacity);
+		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(new VBox(pipView));
-
 		gameScenePlaceholder = new StackPane();
+		sceneRoot = new StackPane(gameScenePlaceholder, overlayPane, flashMessageView);
+		scene = new Scene(sceneRoot, width, height);
+		scene.setOnKeyPressed(Keyboard::processEvent);
+		logger.info("Main scene created. Size: %.0f x %.0f", scene.getWidth(), scene.getHeight());
+		SceneManager.allGameScenes().forEach(gameScene -> gameScene.setParent(scene));
+		updateCurrentGameScene(true);
+
+		updateBackground();
 		Env.drawMode3D.addListener((x, y, z) -> updateBackground());
 		Env.bgColor.addListener((x, y, z) -> updateBackground());
-		updateBackground();
-
-		sceneRoot = new StackPane(gameScenePlaceholder, overlayPane, flashMessageView);
-
-		scene = new Scene(sceneRoot, width, height);
-		SceneManager.allGameScenes().forEach(gameScene -> gameScene.setParent(scene));
-		logger.info("Main scene created. Size: %.0f x %.0f", scene.getWidth(), scene.getHeight());
 
 		var pacSteering = new KeyboardPacSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 		gameController.setPacSteering(pacSteering);
-
-		updateCurrentGameScene(true);
 
 		var introMessage = new PauseTransition(Duration.seconds(2));
 		introMessage.setOnFinished(e -> Actions.playVoiceMessage(Actions.SOUND_PRESS_KEY_TO_START));
 		introMessage.play();
 
-		scene.setOnKeyPressed(Keyboard::processEvent);
 		Keyboard.addHandler(this::onKeyPressed);
 		Keyboard.addHandler(pacSteering::onKeyPressed);
 		Keyboard.addHandler(() -> currentGameScene.onKeyPressed());
