@@ -49,22 +49,20 @@ public class GameSounds implements GameSoundController {
 
 	static {
 		//@formatter:off
-		PACMAN_SOUNDS.load(GameSound.BONUS_EATEN,     "sound/mspacman/Fruit.mp3");
-		PACMAN_SOUNDS.load(GameSound.CREDIT,          "sound/mspacman/Coin Credit.mp3");
-		PACMAN_SOUNDS.load(GameSound.EXTRA_LIFE,      "sound/mspacman/Extra Life.mp3");
-		PACMAN_SOUNDS.load(GameSound.GAME_READY,      "sound/mspacman/Start.mp3");
-		PACMAN_SOUNDS.load(GameSound.GHOST_EATEN,     "sound/mspacman/Ghost.mp3");
-		PACMAN_SOUNDS.load(GameSound.GHOST_RETURNING, "sound/mspacman/Ghost Eyes.mp3");
-		PACMAN_SOUNDS.load(GameSound.INTERMISSION_1,  "sound/mspacman/They Meet Act 1.mp3");
-		PACMAN_SOUNDS.load(GameSound.INTERMISSION_2,  "sound/mspacman/The Chase Act 2.mp3");
-		PACMAN_SOUNDS.load(GameSound.INTERMISSION_3,  "sound/mspacman/Junior Act 3.mp3");
-		PACMAN_SOUNDS.load(GameSound.PACMAN_MUNCH,    "sound/mspacman/Ms. Pac Man Pill.mp3");
-		PACMAN_SOUNDS.load(GameSound.PACMAN_DEATH,    "sound/mspacman/Died.mp3");
-		PACMAN_SOUNDS.load(GameSound.PACMAN_POWER,    "sound/mspacman/Scared Ghost.mp3");
-		PACMAN_SOUNDS.load(GameSound.SIREN_1,         "sound/mspacman/Ghost Noise 1.mp3");
-		PACMAN_SOUNDS.load(GameSound.SIREN_2,         "sound/mspacman/Ghost Noise 2.mp3");
-		PACMAN_SOUNDS.load(GameSound.SIREN_3,         "sound/mspacman/Ghost Noise 3.mp3");
-		PACMAN_SOUNDS.load(GameSound.SIREN_4,         "sound/mspacman/Ghost Noise 4.mp3");
+		PACMAN_SOUNDS.load(GameSound.BONUS_EATEN,        "sound/pacman/eat_fruit.mp3");
+		PACMAN_SOUNDS.load(GameSound.CREDIT,             "sound/pacman/credit.mp3");
+		PACMAN_SOUNDS.load(GameSound.EXTRA_LIFE,         "sound/pacman/extend.mp3");
+		PACMAN_SOUNDS.load(GameSound.GAME_READY,         "sound/pacman/game_start.mp3");
+		PACMAN_SOUNDS.load(GameSound.GHOST_EATEN,        "sound/pacman/eat_ghost.mp3");
+		PACMAN_SOUNDS.load(GameSound.GHOST_RETURNING,    "sound/pacman/retreating.mp3");
+		PACMAN_SOUNDS.load(GameSound.INTERMISSION_1,     "sound/pacman/intermission.mp3");
+		PACMAN_SOUNDS.load(GameSound.PACMAN_DEATH,       "sound/pacman/pacman_death.wav");
+		PACMAN_SOUNDS.load(GameSound.PACMAN_MUNCH,       "sound/pacman/munch_1.wav");
+		PACMAN_SOUNDS.load(GameSound.PACMAN_POWER,       "sound/pacman/power_pellet.mp3");
+		PACMAN_SOUNDS.load(GameSound.SIREN_1,            "sound/pacman/siren_1.mp3");
+		PACMAN_SOUNDS.load(GameSound.SIREN_2,            "sound/pacman/siren_2.mp3");
+		PACMAN_SOUNDS.load(GameSound.SIREN_3,            "sound/pacman/siren_3.mp3");
+		PACMAN_SOUNDS.load(GameSound.SIREN_4,            "sound/pacman/siren_4.mp3");
 		logger.info("Ms. Pac-Man game sounds loaded");
 		
 		MS_PACMAN_SOUNDS.load(GameSound.BONUS_EATEN,     "sound/mspacman/Fruit.mp3");
@@ -76,8 +74,8 @@ public class GameSounds implements GameSoundController {
 		MS_PACMAN_SOUNDS.load(GameSound.INTERMISSION_1,  "sound/mspacman/They Meet Act 1.mp3");
 		MS_PACMAN_SOUNDS.load(GameSound.INTERMISSION_2,  "sound/mspacman/The Chase Act 2.mp3");
 		MS_PACMAN_SOUNDS.load(GameSound.INTERMISSION_3,  "sound/mspacman/Junior Act 3.mp3");
-		MS_PACMAN_SOUNDS.load(GameSound.PACMAN_MUNCH,    "sound/mspacman/Ms. Pac Man Pill.mp3");
 		MS_PACMAN_SOUNDS.load(GameSound.PACMAN_DEATH,    "sound/mspacman/Died.mp3");
+		MS_PACMAN_SOUNDS.load(GameSound.PACMAN_MUNCH,    "sound/mspacman/Ms. Pac Man Pill.mp3");
 		MS_PACMAN_SOUNDS.load(GameSound.PACMAN_POWER,    "sound/mspacman/Scared Ghost.mp3");
 		MS_PACMAN_SOUNDS.load(GameSound.SIREN_1,         "sound/mspacman/Ghost Noise 1.mp3");
 		MS_PACMAN_SOUNDS.load(GameSound.SIREN_2,         "sound/mspacman/Ghost Noise 2.mp3");
