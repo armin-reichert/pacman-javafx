@@ -81,6 +81,7 @@ public class Section extends TitledPane {
 		content.setHgap(4);
 		content.setVgap(3);
 		content.setPadding(new Insets(5));
+		setExpanded(false);
 	}
 
 	protected GameModel game() {

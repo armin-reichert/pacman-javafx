@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell.info;
 
+import java.util.stream.Stream;
+
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.scene.layout.BorderPane;
@@ -44,51 +46,39 @@ public class Dashboard extends BorderPane {
 	public static final Font TEXT_FONT = Font.font("Tahoma", 12);
 
 	// BorderPane:
-	private final VBox leftSide = new VBox();
-	private final VBox rightSide = new VBox();
+	private final VBox lhs = new VBox();
+	private final VBox rhs = new VBox();
 
-	private final SectionGeneral sectionGeneral;
-	private final SectionGameControl sectionGameControl;
-	private final SectionGameInfo sectionGameInfo;
-	private final Section3D section3D;
-	private final SectionKeys sectionKeys;
-	private final Section sectionPiP;
+	public final Section secGeneral;
+	public final Section secGameControl;
+	public final Section secGameInfo;
+	public final Section sec3D;
+	public final Section secKeys;
+	public final Section secPiP;
 
 	public Dashboard(GameUI ui, GameController gc) {
-		sectionGeneral = new SectionGeneral(ui, gc, "General", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
-		sectionGameControl = new SectionGameControl(ui, gc, "Game Control", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT,
-				LABEL_FONT);
-		sectionGameInfo = new SectionGameInfo(ui, gc, "Game Info", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
-		section3D = new Section3D(ui, gc, "3D Settings", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
-		sectionKeys = new SectionKeys(ui, gc, "Keyboard Shortcuts", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
-		sectionPiP = new SectionPiP(ui, gc, "Picture-In-Picture", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT,
-				LABEL_FONT);
-
-		sectionGeneral.setExpanded(false);
-		sectionGameControl.setExpanded(false);
-		sectionGameInfo.setExpanded(true);
-		section3D.setExpanded(false);
-		sectionKeys.setExpanded(false);
-		sectionPiP.setExpanded(true);
-
-		leftSide.getChildren().addAll(sectionGeneral, sectionGameControl, section3D, sectionKeys);
-		rightSide.getChildren().addAll(sectionPiP, sectionGameInfo);
-		setLeft(leftSide);
-		setRight(rightSide);
-
+		secGeneral = new SectionGeneral(ui, gc, "General", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
+		secGameControl = new SectionGameControl(ui, gc, "Game Control", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
+		secGameInfo = new SectionGameInfo(ui, gc, "Game Info", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
+		sec3D = new Section3D(ui, gc, "3D Settings", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
+		secKeys = new SectionKeys(ui, gc, "Keyboard Shortcuts", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
+		secPiP = new SectionPiP(ui, gc, "Picture-In-Picture", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
+		lhs.getChildren().addAll(secGeneral, secGameControl, sec3D, secKeys);
+		rhs.getChildren().addAll(secPiP, secGameInfo);
+		setLeft(lhs);
+		setRight(rhs);
 		setVisible(false);
 	}
 
+	public Stream<Section> sections() {
+		return Stream.of(secGeneral, secGameControl, secGameInfo, sec3D, secKeys, secPiP);
+	}
+
 	public void init() {
-		sectionPiP.init();
+		sections().forEach(Section::init);
 	}
 
 	public void update() {
-		sectionGameControl.update();
-		sectionGameInfo.update();
-		sectionGeneral.update();
-		sectionKeys.update();
-		section3D.update();
-		sectionPiP.update();
+		sections().forEach(Section::update);
 	}
 }

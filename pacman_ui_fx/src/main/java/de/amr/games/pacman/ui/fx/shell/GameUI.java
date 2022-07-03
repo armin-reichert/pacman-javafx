@@ -218,6 +218,8 @@ public class GameUI implements GameEventAdapter {
 			if (currentGameScene instanceof PlayScene2D) {
 				((PlayScene2D) currentGameScene).onSwitchFrom3D();
 			} else if (currentGameScene instanceof PlayScene3D) {
+				dashboard.secPiP.init();
+				dashboard.secPiP.update();
 				((PlayScene3D) currentGameScene).onSwitchFrom2D();
 			}
 		}

@@ -61,7 +61,7 @@ public class SectionPiP extends Section {
 		pipSceneContainer.setMinHeight(h);
 		hint.setFont(Font.font("Sans", FontWeight.EXTRA_BOLD, 20.0));
 		hint.setFill(Color.WHITE);
-		hint.setText("Nothing to see here");
+		hint.setText("3D play scene inactive");
 	}
 
 	@Override
