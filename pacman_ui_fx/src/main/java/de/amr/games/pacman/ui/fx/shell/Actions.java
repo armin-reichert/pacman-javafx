@@ -28,6 +28,8 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameSoundController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.ui.fx.Resources;
+import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
+import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.texts.Texts;
@@ -182,8 +184,18 @@ public class Actions {
 	}
 
 	public static void toggleUse3DScene() {
-		theUI.toggle3D();
+		Env.toggle(Env.use3D);
 		showFlashMessage(Texts.message(Env.use3D.get() ? "use_3D_scene" : "use_2D_scene"));
+		if (theUI.getSceneManager().sceneExistsInBothDimensions()) {
+			theUI.updateCurrentGameScene(true);
+			if (theUI.getCurrentGameScene() instanceof PlayScene2D playScene2D) {
+				playScene2D.onSwitchFrom3D();
+			} else if (theUI.getCurrentGameScene() instanceof PlayScene3D playScene3D) {
+				playScene3D.onSwitchFrom2D();
+				theUI.getSceneManager().initializeScene(theUI.getPipView().getGameScene());
+				theUI.getPipView().update();
+			}
+		}
 	}
 
 	public static void toggleDrawMode() {

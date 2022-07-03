@@ -32,8 +32,6 @@ import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
-import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -166,6 +164,10 @@ public class GameUI implements GameEventAdapter {
 		return dashboard;
 	}
 
+	public PiPView getPipView() {
+		return pipView;
+	}
+
 	public GameScene getCurrentGameScene() {
 		return currentGameScene;
 	}
@@ -204,21 +206,7 @@ public class GameUI implements GameEventAdapter {
 		pipView.update();
 	}
 
-	public void toggle3D() {
-		Env.toggle(Env.use3D);
-		if (sceneManager.sceneExistsInBothDimensions()) {
-			updateCurrentGameScene(true);
-			if (currentGameScene instanceof PlayScene2D playScene2D) {
-				playScene2D.onSwitchFrom3D();
-			} else if (currentGameScene instanceof PlayScene3D playScene3D) {
-				sceneManager.initializeScene(pipView.getGameScene());
-				pipView.update();
-				playScene3D.onSwitchFrom2D();
-			}
-		}
-	}
-
-	private void updateCurrentGameScene(boolean forcedUpdate) {
+	public void updateCurrentGameScene(boolean forcedUpdate) {
 		var dimension = Env.use3D.get() ? SceneManager.SCENE_3D : SceneManager.SCENE_2D;
 		var newGameScene = sceneManager.findGameScene(dimension);
 		if (newGameScene == null) {
