@@ -262,26 +262,28 @@ public class GameUI implements GameEventAdapter {
 	}
 
 	private void updateSceneContext() {
-		sceneContext.game = gameController.game();
-		sceneContext.r2D = switch (sceneContext.game.variant) {
+		var game = gameController.game();
+		var r2D = switch (game.variant) {
 		case MS_PACMAN -> SpritesheetMsPacMan.get();
 		case PACMAN -> SpritesheetPacMan.get();
 		};
-		sceneContext.model3D = Model3D.get();
-		var sounds = switch (sceneContext.game.variant) {
+		var sounds = switch (game.variant) {
 		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
 		case PACMAN -> GameSounds.PACMAN_SOUNDS;
 		};
+		var model3D = Model3D.get(); // no game variant-specific 3D models yet
+
+		sceneContext.game = game;
+		sceneContext.r2D = r2D;
+		sceneContext.model3D = model3D;
+
 		gameController.setSounds(sounds);
 
-		var world = (ArcadeWorld) sceneContext.game.world();
-		world.setFlashingAnimation(sceneContext.r2D.createMazeFlashingAnimation(sceneContext.game.level.mazeNumber));
-		sceneContext.game.pac.setAnimations(new PacAnimations(sceneContext.r2D));
-		for (var ghost : sceneContext.game.theGhosts) {
-			ghost.setAnimations(new GhostAnimations(ghost.id, sceneContext.r2D));
-		}
-		logger.info("Scene context updated. Game variant: %s, Rendering2D: %s", sceneContext.game.variant,
-				sceneContext.r2D);
+		var world = (ArcadeWorld) game.world();
+		world.setFlashingAnimation(r2D.createMazeFlashingAnimation(game.level.mazeNumber));
+		game.pac.setAnimations(new PacAnimations(r2D));
+		game.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimations(ghost.id, r2D)));
+		logger.info("Scene context updated. Game variant: %s, Rendering2D: %s", game.variant, r2D);
 	}
 
 	private void onKeyPressed() {
