@@ -27,8 +27,15 @@ package de.amr.games.pacman.ui.fx.scene;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.controller.common.GameState;
-import de.amr.games.pacman.model.common.GameModel;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import de.amr.games.pacman.controller.common.GameController;
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.SpritesheetMsPacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.SpritesheetPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacManCreditScene;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacManIntermissionScene1;
@@ -40,15 +47,16 @@ import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene1;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene2;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene3;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManIntroScene;
+import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
+import de.amr.games.pacman.ui.fx.sound.GameSounds;
 
 /**
  * @author Armin Reichert
  */
 public class SceneManager {
 
-	private SceneManager() {
-	}
+	private static final Logger logger = LogManager.getFormatterLogger();
 
 	public static final int SCENE_2D = 0;
 	public static final int SCENE_3D = 1;
@@ -80,20 +88,59 @@ public class SceneManager {
 				.filter(Objects::nonNull);
 	}
 
+	private final GameController gameController;
+	private final SceneContext context;
+
+	public SceneManager(GameController gameController) {
+		this.gameController = gameController;
+		context = new SceneContext(gameController);
+	}
+
+	public SceneContext getContext() {
+		return context;
+	}
+
+	public void initializeScene(GameScene scene) {
+		scene.setSceneContext(context);
+
+		var game = gameController.game();
+		var r2D = switch (game.variant) {
+		case MS_PACMAN -> SpritesheetMsPacMan.get();
+		case PACMAN -> SpritesheetPacMan.get();
+		};
+		var sounds = switch (game.variant) {
+		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
+		case PACMAN -> GameSounds.PACMAN_SOUNDS;
+		};
+		var model3D = Model3D.get(); // no game variant-specific 3D models yet
+
+		context.r2D = r2D;
+		context.model3D = model3D;
+
+		gameController.setSounds(sounds);
+
+		var world = (ArcadeWorld) game.world();
+		world.setFlashingAnimation(r2D.createMazeFlashingAnimation(game.level.mazeNumber));
+		game.pac.setAnimations(new PacAnimations(r2D));
+		game.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimations(ghost.id, r2D)));
+		scene.init();
+		logger.info("Scene '%s' initialized. Game variant: %s, Rendering2D: %s", scene, game.variant, r2D);
+	}
+
 	/**
 	 * Returns the game scene that fits the current game state.
 	 *
-	 * @param game      the game model (Pac-Man or Ms. Pac-Man)
-	 * @param gameState the current game state
 	 * @param dimension {@link GameScenes#SCENE_2D} or {@link GameScenes#SCENE_3D}
 	 * @return the game scene that fits the current game state
 	 */
-	public static GameScene findGameScene(GameModel game, GameState gameState, int dimension) {
+	public GameScene findGameScene(int dimension) {
+		var game = gameController.game();
+		var state = gameController.state();
 		var scenes = switch (game.variant) {
 		case MS_PACMAN -> SCENES_MS_PACMAN;
 		case PACMAN -> SCENES_PACMAN;
 		};
-		var sceneIndex = switch (gameState) {
+		var sceneIndex = switch (state) {
 		case INTRO -> 0;
 		case CREDIT -> 1;
 		case INTERMISSION -> 1 + game.intermissionNumber(game.level.number);
@@ -104,7 +151,7 @@ public class SceneManager {
 		return gameScene != null ? gameScene : scenes[sceneIndex][SCENE_2D]; // use 2D as default
 	}
 
-	public static boolean sceneExistsInBothDimensions(GameModel game, GameState state) {
-		return findGameScene(game, state, SCENE_2D) != findGameScene(game, state, SCENE_3D);
+	public boolean sceneExistsInBothDimensions() {
+		return findGameScene(SCENE_2D) != findGameScene(SCENE_3D);
 	}
 }

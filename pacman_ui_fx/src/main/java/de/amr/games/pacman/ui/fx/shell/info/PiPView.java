@@ -44,7 +44,7 @@ public class PiPView extends StackPane {
 
 	private final GameUI ui;
 	private final Pane sceneContainer = new Pane();
-	private final PlayScene2D playScene2D;
+	private final PlayScene2D gameScene;
 	private final Text hint = new Text();
 	private double scale = 1.0;
 	private double width = 28 * 8 * scale;
@@ -52,16 +52,16 @@ public class PiPView extends StackPane {
 
 	public PiPView(GameUI ui) {
 		this.ui = ui;
-		playScene2D = new PlayScene2D(false);
-		var subScene = playScene2D.getFXSubScene();
+		gameScene = new PlayScene2D(false);
+		var subScene = gameScene.getFXSubScene();
 		subScene.setFocusTraversable(false);
 		subScene.setWidth(width);
 		subScene.setHeight(height);
-		playScene2D.getCanvas().widthProperty().bind(subScene.widthProperty());
-		playScene2D.getCanvas().heightProperty().bind(subScene.heightProperty());
-		playScene2D.getCanvas().getTransforms().setAll(new Scale(scale, scale));
-		playScene2D.getOverlayCanvas().visibleProperty().unbind();
-		playScene2D.getOverlayCanvas().setVisible(false);
+		gameScene.getCanvas().widthProperty().bind(subScene.widthProperty());
+		gameScene.getCanvas().heightProperty().bind(subScene.heightProperty());
+		gameScene.getCanvas().getTransforms().setAll(new Scale(scale, scale));
+		gameScene.getOverlayCanvas().visibleProperty().unbind();
+		gameScene.getOverlayCanvas().setVisible(false);
 		sceneContainer.setMinWidth(width);
 		sceneContainer.setMinHeight(height);
 		sceneContainer.getChildren().setAll(subScene);
@@ -72,16 +72,13 @@ public class PiPView extends StackPane {
 		getChildren().setAll(sceneContainer, hint);
 	}
 
-	public void init() {
-		if (ui.getCurrentGameScene() instanceof PlayScene3D) {
-			playScene2D.setSceneContext(ui.getSceneContext());
-			playScene2D.init();
-		}
+	public PlayScene2D getGameScene() {
+		return gameScene;
 	}
 
 	public void update() {
 		if (ui.getCurrentGameScene() instanceof PlayScene3D) {
-			playScene2D.update();
+			gameScene.update();
 			sceneContainer.setVisible(true);
 			hint.setVisible(false);
 		} else {

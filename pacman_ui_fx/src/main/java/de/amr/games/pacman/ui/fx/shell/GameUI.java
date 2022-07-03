@@ -32,22 +32,14 @@ import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.SpritesheetMsPacMan;
-import de.amr.games.pacman.ui.fx._2d.rendering.pacman.SpritesheetPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
-import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.scene.SceneManager;
 import de.amr.games.pacman.ui.fx.shell.info.Dashboard;
 import de.amr.games.pacman.ui.fx.shell.info.PiPView;
-import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.PauseTransition;
 import javafx.scene.Scene;
@@ -81,7 +73,7 @@ public class GameUI implements GameEventAdapter {
 	private final StackPane gameScenePlaceholder;
 	private final Dashboard dashboard;
 	private final FlashMessageView flashMessageView;
-	private final SceneContext sceneContext;
+	private final SceneManager sceneManager;
 	private GameScene currentGameScene;
 
 	private PiPView pipView;
@@ -89,7 +81,7 @@ public class GameUI implements GameEventAdapter {
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
 		this.gameController = gameController;
 		this.stage = stage;
-
+		this.sceneManager = new SceneManager(gameController);
 		GameEvents.addEventListener(this);
 
 		var overlayPane = new BorderPane();
@@ -115,7 +107,6 @@ public class GameUI implements GameEventAdapter {
 		var pacSteering = new KeyboardPacSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 		gameController.setPacSteering(pacSteering);
 
-		sceneContext = new SceneContext(gameController);
 		updateCurrentGameScene(true);
 
 		var introMessage = new PauseTransition(Duration.seconds(2));
@@ -141,6 +132,10 @@ public class GameUI implements GameEventAdapter {
 		var mode = Env.drawMode3D.get();
 		var bgColor = Env.bgColor.get();
 		gameScenePlaceholder.setBackground(Ufx.colorBackground(mode == DrawMode.FILL ? bgColor : Color.BLACK));
+	}
+
+	public SceneManager getSceneManager() {
+		return sceneManager;
 	}
 
 	public double getWidth() {
@@ -210,74 +205,39 @@ public class GameUI implements GameEventAdapter {
 	}
 
 	public void toggle3D() {
-		var game = gameController.game();
-		var state = gameController.state();
 		Env.toggle(Env.use3D);
-		if (SceneManager.sceneExistsInBothDimensions(game, state)) {
+		if (sceneManager.sceneExistsInBothDimensions()) {
 			updateCurrentGameScene(true);
 			if (currentGameScene instanceof PlayScene2D playScene2D) {
 				playScene2D.onSwitchFrom3D();
 			} else if (currentGameScene instanceof PlayScene3D playScene3D) {
-				pipView.init();
+				sceneManager.initializeScene(pipView.getGameScene());
 				pipView.update();
 				playScene3D.onSwitchFrom2D();
 			}
 		}
 	}
 
-	private void updateCurrentGameScene(boolean forcedSceneUpdate) {
-		var game = gameController.game();
-		var state = gameController.state();
+	private void updateCurrentGameScene(boolean forcedUpdate) {
 		var dimension = Env.use3D.get() ? SceneManager.SCENE_3D : SceneManager.SCENE_2D;
-		var newGameScene = SceneManager.findGameScene(game, state, dimension);
+		var newGameScene = sceneManager.findGameScene(dimension);
 		if (newGameScene == null) {
-			throw new IllegalStateException("No fitting game scene found for game state " + state);
+			throw new IllegalStateException("No fitting game scene found for game state " + gameController.state());
 		}
-		if (newGameScene == currentGameScene && !forcedSceneUpdate) {
+		if (newGameScene == currentGameScene && !forcedUpdate) {
 			return;
 		}
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
-		// just here for simplicity
-		stage.setTitle(gameController.game().variant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
-		logger.info("Current scene changed from %s to %s", currentGameScene, newGameScene);
 		currentGameScene = newGameScene;
-		updateSceneContext();
-		currentGameScene.setSceneContext(sceneContext);
-		currentGameScene.init();
+		sceneManager.initializeScene(currentGameScene);
 		gameScenePlaceholder.getChildren().setAll(currentGameScene.getFXSubScene());
 		currentGameScene.resize(scene.getHeight());
 
-		pipView.init();
-	}
-
-	public SceneContext getSceneContext() {
-		return sceneContext;
-	}
-
-	private void updateSceneContext() {
-		var game = gameController.game();
-		var r2D = switch (game.variant) {
-		case MS_PACMAN -> SpritesheetMsPacMan.get();
-		case PACMAN -> SpritesheetPacMan.get();
-		};
-		var sounds = switch (game.variant) {
-		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
-		case PACMAN -> GameSounds.PACMAN_SOUNDS;
-		};
-		var model3D = Model3D.get(); // no game variant-specific 3D models yet
-
-		sceneContext.r2D = r2D;
-		sceneContext.model3D = model3D;
-
-		gameController.setSounds(sounds);
-
-		var world = (ArcadeWorld) game.world();
-		world.setFlashingAnimation(r2D.createMazeFlashingAnimation(game.level.mazeNumber));
-		game.pac.setAnimations(new PacAnimations(r2D));
-		game.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimations(ghost.id, r2D)));
-		logger.info("Scene context updated. Game variant: %s, Rendering2D: %s", game.variant, r2D);
+		sceneManager.initializeScene(pipView.getGameScene());
+		stage.setTitle(gameController.game().variant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
+		logger.info("Current scene changed from %s to %s", currentGameScene, newGameScene);
 	}
 
 	private void onKeyPressed() {
