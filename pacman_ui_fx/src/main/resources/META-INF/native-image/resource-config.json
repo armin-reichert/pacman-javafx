@@ -36,7 +36,8 @@
       "name":"com/sun/glass/ui/win/themes",
       "locales":[
         "", 
-        "de"
+        "de", 
+        "und"
       ]
     }, 
     {
@@ -50,6 +51,7 @@
     {
       "name":"de.amr.games.pacman.ui.fx.texts.messages",
       "locales":[
+        "", 
         "de", 
         "und"
       ]
