@@ -41,7 +41,6 @@ import de.amr.games.pacman.ui.fx.scene.SceneManager;
 import de.amr.games.pacman.ui.fx.shell.info.Dashboard;
 import de.amr.games.pacman.ui.fx.shell.info.PiPView;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import javafx.animation.PauseTransition;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -51,7 +50,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 /**
  * JavaFX UI for Pac-Man / Ms. Pac-Man game.
@@ -109,10 +107,6 @@ public class GameUI implements GameEventAdapter {
 
 		updateCurrentGameScene(true);
 
-		var introMessage = new PauseTransition(Duration.seconds(2));
-		introMessage.setOnFinished(e -> Actions.playVoiceMessage(Actions.SOUND_PRESS_KEY_TO_START));
-		introMessage.play();
-
 		scene.setOnKeyPressed(Keyboard::processEvent);
 		Keyboard.addHandler(this::onKeyPressed);
 		Keyboard.addHandler(pacSteering::onKeyPressed);
@@ -126,6 +120,8 @@ public class GameUI implements GameEventAdapter {
 		stage.setScene(scene);
 		stage.centerOnScreen();
 		stage.show();
+
+		Ufx.pauseSec(2, () -> Actions.playVoiceMessage(Actions.SOUND_PRESS_KEY_TO_START)).play();
 	}
 
 	private void updateBackground() {
@@ -208,7 +204,7 @@ public class GameUI implements GameEventAdapter {
 		pipView.update();
 	}
 
-	void updateCurrentGameScene(boolean forcedUpdate) {
+	private void updateCurrentGameScene(boolean forcedUpdate) {
 		var dimension = Env.use3D.get() ? SceneManager.SCENE_3D : SceneManager.SCENE_2D;
 		var newGameScene = sceneManager.findGameScene(dimension);
 		if (newGameScene == currentGameScene && !forcedUpdate) {
