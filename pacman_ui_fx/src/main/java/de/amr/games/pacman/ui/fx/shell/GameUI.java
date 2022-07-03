@@ -198,7 +198,6 @@ public class GameUI implements GameEventAdapter {
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
 		updateCurrentGameScene(false);
-		dashboard.init();
 	}
 
 	@Override

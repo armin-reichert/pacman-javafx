@@ -88,9 +88,6 @@ public class Section extends TitledPane {
 		return gc.game();
 	}
 
-	public void init() {
-	}
-
 	public void update() {
 		infoTexts.forEach(InfoText::update);
 	}
@@ -161,10 +158,6 @@ public class Section extends TitledPane {
 		return colorPicker;
 	}
 
-	private static String style(Font font) {
-		return String.format("-fx-font: %.0fpx \"%s\";", font.getSize(), font.getFamily());
-	}
-
 	public Slider addSlider(String labelText, double min, double max, double value) {
 		Slider slider = new Slider(min, max, value);
 		slider.setMinWidth(Dashboard.MIN_COL_WIDTH);
@@ -177,5 +170,9 @@ public class Section extends TitledPane {
 		spinner.setStyle(style(textFont));
 		addRow(labelText, spinner);
 		return spinner;
+	}
+
+	private static String style(Font font) {
+		return String.format("-fx-font: %.0fpx \"%s\";", font.getSize(), font.getFamily());
 	}
 }

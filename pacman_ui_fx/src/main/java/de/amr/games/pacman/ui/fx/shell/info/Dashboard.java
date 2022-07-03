@@ -71,10 +71,6 @@ public class Dashboard extends BorderPane {
 		return Stream.of(secGeneral, secGameControl, secGameInfo, sec3D, secKeys);
 	}
 
-	public void init() {
-		sections().forEach(Section::init);
-	}
-
 	public void update() {
 		sections().forEach(Section::update);
 	}
