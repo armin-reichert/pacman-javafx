@@ -39,11 +39,53 @@ import javafx.scene.media.AudioClip;
 
 /**
  * @author Armin Reichert
- *
  */
-public class AbstractGameSounds implements GameSoundController {
+public class GameSounds implements GameSoundController {
 
 	private static final Logger logger = LogManager.getFormatterLogger();
+
+	public static final GameSounds MS_PACMAN_SOUNDS = new GameSounds();
+	public static final GameSounds PACMAN_SOUNDS = new GameSounds();
+
+	static {
+		//@formatter:off
+		PACMAN_SOUNDS.load(GameSound.BONUS_EATEN,     "sound/mspacman/Fruit.mp3");
+		PACMAN_SOUNDS.load(GameSound.CREDIT,          "sound/mspacman/Coin Credit.mp3");
+		PACMAN_SOUNDS.load(GameSound.EXTRA_LIFE,      "sound/mspacman/Extra Life.mp3");
+		PACMAN_SOUNDS.load(GameSound.GAME_READY,      "sound/mspacman/Start.mp3");
+		PACMAN_SOUNDS.load(GameSound.GHOST_EATEN,     "sound/mspacman/Ghost.mp3");
+		PACMAN_SOUNDS.load(GameSound.GHOST_RETURNING, "sound/mspacman/Ghost Eyes.mp3");
+		PACMAN_SOUNDS.load(GameSound.INTERMISSION_1,  "sound/mspacman/They Meet Act 1.mp3");
+		PACMAN_SOUNDS.load(GameSound.INTERMISSION_2,  "sound/mspacman/The Chase Act 2.mp3");
+		PACMAN_SOUNDS.load(GameSound.INTERMISSION_3,  "sound/mspacman/Junior Act 3.mp3");
+		PACMAN_SOUNDS.load(GameSound.PACMAN_MUNCH,    "sound/mspacman/Ms. Pac Man Pill.mp3");
+		PACMAN_SOUNDS.load(GameSound.PACMAN_DEATH,    "sound/mspacman/Died.mp3");
+		PACMAN_SOUNDS.load(GameSound.PACMAN_POWER,    "sound/mspacman/Scared Ghost.mp3");
+		PACMAN_SOUNDS.load(GameSound.SIREN_1,         "sound/mspacman/Ghost Noise 1.mp3");
+		PACMAN_SOUNDS.load(GameSound.SIREN_2,         "sound/mspacman/Ghost Noise 2.mp3");
+		PACMAN_SOUNDS.load(GameSound.SIREN_3,         "sound/mspacman/Ghost Noise 3.mp3");
+		PACMAN_SOUNDS.load(GameSound.SIREN_4,         "sound/mspacman/Ghost Noise 4.mp3");
+		logger.info("Ms. Pac-Man game sounds loaded");
+		
+		MS_PACMAN_SOUNDS.load(GameSound.BONUS_EATEN,     "sound/mspacman/Fruit.mp3");
+		MS_PACMAN_SOUNDS.load(GameSound.CREDIT,          "sound/mspacman/Coin Credit.mp3");
+		MS_PACMAN_SOUNDS.load(GameSound.EXTRA_LIFE,      "sound/mspacman/Extra Life.mp3");
+		MS_PACMAN_SOUNDS.load(GameSound.GAME_READY,      "sound/mspacman/Start.mp3");
+		MS_PACMAN_SOUNDS.load(GameSound.GHOST_EATEN,     "sound/mspacman/Ghost.mp3");
+		MS_PACMAN_SOUNDS.load(GameSound.GHOST_RETURNING, "sound/mspacman/Ghost Eyes.mp3");
+		MS_PACMAN_SOUNDS.load(GameSound.INTERMISSION_1,  "sound/mspacman/They Meet Act 1.mp3");
+		MS_PACMAN_SOUNDS.load(GameSound.INTERMISSION_2,  "sound/mspacman/The Chase Act 2.mp3");
+		MS_PACMAN_SOUNDS.load(GameSound.INTERMISSION_3,  "sound/mspacman/Junior Act 3.mp3");
+		MS_PACMAN_SOUNDS.load(GameSound.PACMAN_MUNCH,    "sound/mspacman/Ms. Pac Man Pill.mp3");
+		MS_PACMAN_SOUNDS.load(GameSound.PACMAN_DEATH,    "sound/mspacman/Died.mp3");
+		MS_PACMAN_SOUNDS.load(GameSound.PACMAN_POWER,    "sound/mspacman/Scared Ghost.mp3");
+		MS_PACMAN_SOUNDS.load(GameSound.SIREN_1,         "sound/mspacman/Ghost Noise 1.mp3");
+		MS_PACMAN_SOUNDS.load(GameSound.SIREN_2,         "sound/mspacman/Ghost Noise 2.mp3");
+		MS_PACMAN_SOUNDS.load(GameSound.SIREN_3,         "sound/mspacman/Ghost Noise 3.mp3");
+		MS_PACMAN_SOUNDS.load(GameSound.SIREN_4,         "sound/mspacman/Ghost Noise 4.mp3");
+		logger.info("Ms. Pac-Man game sounds loaded");
+		//@formatter:on
+	}
 
 	protected final Map<GameSound, AudioClip> clips = new EnumMap<>(GameSound.class);
 	protected boolean silent;

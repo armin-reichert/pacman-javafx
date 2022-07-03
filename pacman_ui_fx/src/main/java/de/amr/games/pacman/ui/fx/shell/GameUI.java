@@ -27,7 +27,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.controller.common.GameSoundController;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameEvents;
@@ -48,8 +47,7 @@ import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.scene.SceneManager;
 import de.amr.games.pacman.ui.fx.shell.info.Dashboard;
 import de.amr.games.pacman.ui.fx.shell.info.PiPView;
-import de.amr.games.pacman.ui.fx.sound.mspacman.MsPacManGameSounds;
-import de.amr.games.pacman.ui.fx.sound.pacman.PacManGameSounds;
+import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.PauseTransition;
 import javafx.scene.Scene;
@@ -74,8 +72,6 @@ public class GameUI implements GameEventAdapter {
 
 	private static final Logger logger = LogManager.getFormatterLogger();
 
-	private static final GameSoundController PACMAN_SOUNDS = new PacManGameSounds();
-	private static final GameSoundController MS_PACMAN_SOUNDS = new MsPacManGameSounds();
 	private static final Image APP_ICON = Ufx.image("icons/pacman.png");
 
 	private final GameController gameController;
@@ -123,7 +119,7 @@ public class GameUI implements GameEventAdapter {
 		sceneContext.gameController = gameController;
 		updateCurrentGameScene(true);
 
-		var introMessage = new PauseTransition(Duration.seconds(3));
+		var introMessage = new PauseTransition(Duration.seconds(2));
 		introMessage.setOnFinished(e -> Actions.playVoiceMessage(Actions.SOUND_PRESS_KEY_TO_START));
 		introMessage.play();
 
@@ -273,8 +269,8 @@ public class GameUI implements GameEventAdapter {
 		};
 		sceneContext.model3D = Model3D.get();
 		var sounds = switch (sceneContext.game.variant) {
-		case MS_PACMAN -> MS_PACMAN_SOUNDS;
-		case PACMAN -> PACMAN_SOUNDS;
+		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
+		case PACMAN -> GameSounds.PACMAN_SOUNDS;
 		};
 		gameController.setSounds(sounds);
 
