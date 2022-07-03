@@ -98,7 +98,7 @@ public class SceneManager {
 		return context;
 	}
 
-	public void initializeScene(GameScene scene) {
+	public void initGameScene(GameScene scene) {
 		scene.setSceneContext(context);
 
 		var game = context.gameController.game();

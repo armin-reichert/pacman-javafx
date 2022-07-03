@@ -214,11 +214,11 @@ public class GameUI implements GameEventAdapter {
 			currentGameScene.end();
 		}
 		currentGameScene = newGameScene;
-		sceneManager.initializeScene(currentGameScene);
+		sceneManager.initGameScene(currentGameScene);
 		gameScenePlaceholder.getChildren().setAll(currentGameScene.getFXSubScene());
 		currentGameScene.resize(scene.getHeight());
 
-		sceneManager.initializeScene(pipView.getGameScene());
+		sceneManager.initGameScene(pipView.getGameScene());
 		stage.setTitle(gameController.game().variant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
 		logger.info("Current scene changed from %s to %s", currentGameScene, newGameScene);
 	}
@@ -229,7 +229,7 @@ public class GameUI implements GameEventAdapter {
 			playScene2D.onSwitchFrom3D();
 		} else if (getCurrentGameScene() instanceof PlayScene3D playScene3D) {
 			playScene3D.onSwitchFrom2D();
-			getSceneManager().initializeScene(getPipView().getGameScene());
+			getSceneManager().initGameScene(getPipView().getGameScene());
 			getPipView().update();
 		}
 	}
