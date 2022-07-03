@@ -33,6 +33,13 @@
       ]
     }, 
     {
+      "name":"com/sun/glass/ui/win/themes",
+      "locales":[
+        "", 
+        "de"
+      ]
+    }, 
+    {
       "name":"com/sun/javafx/scene/control/skin/resources/controls",
       "locales":[
         "", 
@@ -43,7 +50,6 @@
     {
       "name":"de.amr.games.pacman.ui.fx.texts.messages",
       "locales":[
-        "", 
         "de", 
         "und"
       ]

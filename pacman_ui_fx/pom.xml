@@ -6,7 +6,9 @@
 	<artifactId>pacman_ui_fx</artifactId>
 	<version>1.0</version>
 	<properties>
-		<javafx.version>15.0.1</javafx.version>
+		<javafx.version>17.0.2</javafx.version>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mainClass>de.amr.games.pacman.ui.fx.app.PacManGameAppFX</mainClass>
 	</properties>
@@ -38,9 +40,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>
-				<configuration>
-					<release>15</release>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.openjfx</groupId>
