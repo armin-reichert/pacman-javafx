@@ -211,9 +211,6 @@ public class GameUI implements GameEventAdapter {
 	void updateCurrentGameScene(boolean forcedUpdate) {
 		var dimension = Env.use3D.get() ? SceneManager.SCENE_3D : SceneManager.SCENE_2D;
 		var newGameScene = sceneManager.findGameScene(dimension);
-		if (newGameScene == null) {
-			throw new IllegalStateException("No fitting game scene found for game state " + gameController.state());
-		}
 		if (newGameScene == currentGameScene && !forcedUpdate) {
 			return;
 		}

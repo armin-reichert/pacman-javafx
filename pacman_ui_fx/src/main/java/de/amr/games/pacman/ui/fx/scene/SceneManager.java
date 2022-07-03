@@ -146,7 +146,14 @@ public class SceneManager {
 		default -> 5;
 		};
 		var gameScene = scenes[sceneIndex][dimension];
-		return gameScene != null ? gameScene : scenes[sceneIndex][SCENE_2D]; // use 2D as default
+		if (gameScene != null) {
+			return gameScene;
+		}
+		var defaultScene = scenes[sceneIndex][SCENE_2D];
+		if (defaultScene != null) {
+			return defaultScene;
+		}
+		throw new IllegalStateException("No fitting game scene found for game state " + context.gameController.state());
 	}
 
 	public boolean sceneExistsInBothDimensions() {
