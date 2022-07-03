@@ -46,15 +46,14 @@ public class Dashboard extends BorderPane {
 	public static final Font TEXT_FONT = Font.font("Tahoma", 12);
 
 	// BorderPane:
-	private final VBox lhs = new VBox();
-	private final VBox rhs = new VBox();
+	public final VBox lhs = new VBox();
+	public final VBox rhs = new VBox();
 
 	public final Section secGeneral;
 	public final Section secGameControl;
 	public final Section secGameInfo;
 	public final Section sec3D;
 	public final Section secKeys;
-	public final Section secPiP;
 
 	public Dashboard(GameUI ui, GameController gc) {
 		secGeneral = new SectionGeneral(ui, gc, "General", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
@@ -62,16 +61,14 @@ public class Dashboard extends BorderPane {
 		secGameInfo = new SectionGameInfo(ui, gc, "Game Info", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
 		sec3D = new Section3D(ui, gc, "3D Settings", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
 		secKeys = new SectionKeys(ui, gc, "Keyboard Shortcuts", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
-		secPiP = new SectionPiP(ui, gc, "Picture-In-Picture", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
-		lhs.getChildren().addAll(secGeneral, secGameControl, sec3D, secKeys);
-		rhs.getChildren().addAll(secPiP, secGameInfo);
+		lhs.getChildren().addAll(secGeneral, secGameControl, secGameInfo, sec3D, secKeys);
 		setLeft(lhs);
 		setRight(rhs);
 		setVisible(false);
 	}
 
 	public Stream<Section> sections() {
-		return Stream.of(secGeneral, secGameControl, secGameInfo, sec3D, secKeys, secPiP);
+		return Stream.of(secGeneral, secGameControl, secGameInfo, sec3D, secKeys);
 	}
 
 	public void init() {

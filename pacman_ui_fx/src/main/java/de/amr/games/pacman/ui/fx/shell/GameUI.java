@@ -47,6 +47,7 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.scene.SceneManager;
 import de.amr.games.pacman.ui.fx.shell.info.Dashboard;
+import de.amr.games.pacman.ui.fx.shell.info.PiPView;
 import de.amr.games.pacman.ui.fx.sound.mspacman.MsPacManGameSounds;
 import de.amr.games.pacman.ui.fx.sound.pacman.PacManGameSounds;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -54,7 +55,9 @@ import javafx.animation.PauseTransition;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
@@ -85,23 +88,28 @@ public class GameUI implements GameEventAdapter {
 	private final SceneContext sceneContext;
 	private GameScene currentGameScene;
 
+	private PiPView pipView;
+
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
 		this.gameController = gameController;
 		this.stage = stage;
 
 		GameEvents.addEventListener(this);
 
-		// UI has 3 layers. From bottom to top: game scene, dashboard, flash message view.
+		var overlayPane = new BorderPane();
 		flashMessageView = new FlashMessageView();
-
 		dashboard = new Dashboard(this, gameController);
+		pipView = new PiPView(this);
+		pipView.visibleProperty().bind(Env.pipVisible);
+		overlayPane.setLeft(dashboard);
+		overlayPane.setRight(new VBox(pipView));
 
 		gameScenePlaceholder = new StackPane();
 		Env.drawMode3D.addListener((x, y, z) -> updateBackground());
 		Env.bgColor.addListener((x, y, z) -> updateBackground());
 		updateBackground();
 
-		sceneRoot = new StackPane(gameScenePlaceholder, dashboard, flashMessageView);
+		sceneRoot = new StackPane(gameScenePlaceholder, overlayPane, flashMessageView);
 
 		scene = new Scene(sceneRoot, width, height);
 		SceneManager.allGameScenes().forEach(gameScene -> gameScene.setParent(scene));
@@ -203,6 +211,7 @@ public class GameUI implements GameEventAdapter {
 	public void render() {
 		flashMessageView.update();
 		dashboard.update();
+		pipView.update();
 	}
 
 	public void setFullScreen(boolean fullscreen) {
@@ -218,8 +227,8 @@ public class GameUI implements GameEventAdapter {
 			if (currentGameScene instanceof PlayScene2D) {
 				((PlayScene2D) currentGameScene).onSwitchFrom3D();
 			} else if (currentGameScene instanceof PlayScene3D) {
-				dashboard.secPiP.init();
-				dashboard.secPiP.update();
+				pipView.init();
+				pipView.update();
 				((PlayScene3D) currentGameScene).onSwitchFrom2D();
 			}
 		}
@@ -248,6 +257,8 @@ public class GameUI implements GameEventAdapter {
 		currentGameScene.init();
 		gameScenePlaceholder.getChildren().setAll(currentGameScene.getFXSubScene());
 		currentGameScene.resize(scene.getHeight());
+
+		pipView.init();
 	}
 
 	public SceneContext getSceneContext() {
@@ -298,6 +309,8 @@ public class GameUI implements GameEventAdapter {
 			Actions.toggleUse3DScene();
 		} else if (Keyboard.pressed(KeyCode.F1)) {
 			Actions.toggleDashboardVisible();
+		} else if (Keyboard.pressed(KeyCode.F2)) {
+			Env.toggle(Env.pipVisible);
 		} else if (Keyboard.pressed(KeyCode.F11)) {
 			stage.setFullScreen(true);
 		}
