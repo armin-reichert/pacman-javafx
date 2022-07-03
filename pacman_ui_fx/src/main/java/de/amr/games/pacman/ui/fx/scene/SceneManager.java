@@ -88,11 +88,9 @@ public class SceneManager {
 				.filter(Objects::nonNull);
 	}
 
-	private final GameController gameController;
 	private final SceneContext context;
 
 	public SceneManager(GameController gameController) {
-		this.gameController = gameController;
 		context = new SceneContext(gameController);
 	}
 
@@ -103,7 +101,7 @@ public class SceneManager {
 	public void initializeScene(GameScene scene) {
 		scene.setSceneContext(context);
 
-		var game = gameController.game();
+		var game = context.gameController.game();
 		var r2D = switch (game.variant) {
 		case MS_PACMAN -> SpritesheetMsPacMan.get();
 		case PACMAN -> SpritesheetPacMan.get();
@@ -117,7 +115,7 @@ public class SceneManager {
 		context.r2D = r2D;
 		context.model3D = model3D;
 
-		gameController.setSounds(sounds);
+		context.gameController.setSounds(sounds);
 
 		var world = (ArcadeWorld) game.world();
 		world.setFlashingAnimation(r2D.createMazeFlashingAnimation(game.level.mazeNumber));
@@ -134,8 +132,8 @@ public class SceneManager {
 	 * @return the game scene that fits the current game state
 	 */
 	public GameScene findGameScene(int dimension) {
-		var game = gameController.game();
-		var state = gameController.state();
+		var game = context.gameController.game();
+		var state = context.gameController.state();
 		var scenes = switch (game.variant) {
 		case MS_PACMAN -> SCENES_MS_PACMAN;
 		case PACMAN -> SCENES_PACMAN;
