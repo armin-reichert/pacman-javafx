@@ -32,6 +32,8 @@ import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
+import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -206,7 +208,7 @@ public class GameUI implements GameEventAdapter {
 		pipView.update();
 	}
 
-	public void updateCurrentGameScene(boolean forcedUpdate) {
+	void updateCurrentGameScene(boolean forcedUpdate) {
 		var dimension = Env.use3D.get() ? SceneManager.SCENE_3D : SceneManager.SCENE_2D;
 		var newGameScene = sceneManager.findGameScene(dimension);
 		if (newGameScene == null) {
@@ -226,6 +228,17 @@ public class GameUI implements GameEventAdapter {
 		sceneManager.initializeScene(pipView.getGameScene());
 		stage.setTitle(gameController.game().variant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
 		logger.info("Current scene changed from %s to %s", currentGameScene, newGameScene);
+	}
+
+	void onChangeDimension() {
+		updateCurrentGameScene(true);
+		if (getCurrentGameScene() instanceof PlayScene2D playScene2D) {
+			playScene2D.onSwitchFrom3D();
+		} else if (getCurrentGameScene() instanceof PlayScene3D playScene3D) {
+			playScene3D.onSwitchFrom2D();
+			getSceneManager().initializeScene(getPipView().getGameScene());
+			getPipView().update();
+		}
 	}
 
 	private void onKeyPressed() {
