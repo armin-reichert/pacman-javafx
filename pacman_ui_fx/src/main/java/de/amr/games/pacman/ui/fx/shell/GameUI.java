@@ -220,12 +220,12 @@ public class GameUI implements GameEventAdapter {
 		Env.toggle(Env.use3D);
 		if (SceneManager.sceneExistsInBothDimensions(game, state)) {
 			updateCurrentGameScene(true);
-			if (currentGameScene instanceof PlayScene2D) {
-				((PlayScene2D) currentGameScene).onSwitchFrom3D();
-			} else if (currentGameScene instanceof PlayScene3D) {
+			if (currentGameScene instanceof PlayScene2D playScene2D) {
+				playScene2D.onSwitchFrom3D();
+			} else if (currentGameScene instanceof PlayScene3D playScene3D) {
 				pipView.init();
 				pipView.update();
-				((PlayScene3D) currentGameScene).onSwitchFrom2D();
+				playScene3D.onSwitchFrom2D();
 			}
 		}
 	}
