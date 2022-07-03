@@ -184,7 +184,7 @@ public class Actions {
 	public static void toggleUse3DScene() {
 		if (theUI.getSceneManager().sceneExistsInBothDimensions()) {
 			Env.toggle(Env.use3D);
-			theUI.onChangeDimension();
+			theUI.on2D3DChange();
 			showFlashMessage(Texts.message(Env.use3D.get() ? "use_3D_scene" : "use_2D_scene"));
 		}
 	}

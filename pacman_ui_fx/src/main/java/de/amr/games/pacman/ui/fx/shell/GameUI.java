@@ -220,24 +220,24 @@ public class GameUI implements GameEventAdapter {
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
-		currentGameScene = newGameScene;
-		sceneManager.initializeScene(currentGameScene);
-		gameScenePlaceholder.getChildren().setAll(currentGameScene.getFXSubScene());
-		currentGameScene.resize(scene.getHeight());
-
+		newGameScene.resize(scene.getHeight());
+		gameScenePlaceholder.getChildren().setAll(newGameScene.getFXSubScene());
+		sceneManager.initializeScene(newGameScene);
 		sceneManager.initializeScene(pipView.getGameScene());
-		stage.setTitle(gameController.game().variant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
 		logger.info("Current scene changed from %s to %s", currentGameScene, newGameScene);
+		currentGameScene = newGameScene;
+		// does not really belong here
+		stage.setTitle(gameController.game().variant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
 	}
 
-	void onChangeDimension() {
+	void on2D3DChange() {
 		updateCurrentGameScene(true);
-		if (getCurrentGameScene() instanceof PlayScene2D playScene2D) {
+		if (currentGameScene instanceof PlayScene2D playScene2D) {
 			playScene2D.onSwitchFrom3D();
-		} else if (getCurrentGameScene() instanceof PlayScene3D playScene3D) {
+		} else if (currentGameScene instanceof PlayScene3D playScene3D) {
 			playScene3D.onSwitchFrom2D();
-			getSceneManager().initializeScene(getPipView().getGameScene());
-			getPipView().update();
+			sceneManager.initializeScene(pipView.getGameScene());
+			pipView.update();
 		}
 	}
 
