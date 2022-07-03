@@ -210,10 +210,6 @@ public class GameUI implements GameEventAdapter {
 		pipView.update();
 	}
 
-	public void setFullScreen(boolean fullscreen) {
-		stage.setFullScreen(fullscreen);
-	}
-
 	public void toggle3D() {
 		var game = gameController.game();
 		var state = gameController.state();
