@@ -44,7 +44,8 @@
       "name":"de.amr.games.pacman.ui.fx.texts.messages",
       "locales":[
         "", 
-        "de"
+        "de", 
+        "und"
       ]
     }
   ]
