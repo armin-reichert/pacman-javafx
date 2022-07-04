@@ -57,6 +57,7 @@ public class SectionGeneral extends Section {
 	private Tooltip tooltipPlay = new Tooltip("Play");
 	private Tooltip tooltipStop = new Tooltip("Stop");
 	private Tooltip tooltipStep = new Tooltip("Single Step");
+	private Slider sliderPiPSceneHeight;
 	private Slider sliderPiPOpacity;
 
 	public SectionGeneral(GameUI ui, GameController gc, String title, int minLabelWidth, Color textColor, Font textFont,
@@ -87,7 +88,13 @@ public class SectionGeneral extends Section {
 				GameLoop.get().getTargetFrameRate()));
 		addInfo("Total Ticks", GameLoop.get()::getTotalTicks);
 
-		sliderPiPOpacity = addSlider("PiP Opacity", 0.0, 1.0, Env.pipOpacity.get());
+		sliderPiPSceneHeight = addSlider("PiP Size", 1.0 * 288, 2.0 * 288, Env.pipSceneHeight.get());
+		sliderPiPSceneHeight.setShowTickLabels(false);
+		sliderPiPSceneHeight.setShowTickMarks(false);
+		sliderPiPSceneHeight.valueProperty()
+				.addListener((obs, oldValue, newValue) -> Env.pipSceneHeight.set(newValue.doubleValue()));
+
+		sliderPiPOpacity = addSlider("PiP Transparency", 0.0, 1.0, Env.pipOpacity.get());
 		sliderPiPOpacity.setShowTickLabels(false);
 		sliderPiPOpacity.setShowTickMarks(false);
 		sliderPiPOpacity.valueProperty()
@@ -105,6 +112,7 @@ public class SectionGeneral extends Section {
 		btnsSimulation[0].setTooltip(Env.paused.get() ? tooltipPlay : tooltipStop);
 		btnsSimulation[1].setDisable(!Env.paused.get());
 		sliderTargetFPS.setValue(GameLoop.get().getTargetFrameRate());
+		sliderPiPSceneHeight.setValue(Env.pipSceneHeight.get());
 		sliderPiPOpacity.setValue(Env.pipOpacity.get());
 		cbUsePlayScene3D.setSelected(Env.use3D.get());
 		cbDebugUI.setSelected(Env.debugUI.get());

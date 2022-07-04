@@ -25,6 +25,8 @@ package de.amr.games.pacman.ui.fx.app;
 
 import java.util.List;
 
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -61,6 +63,7 @@ public class Env {
 	public static final DoubleProperty mazeWallHeight = new SimpleDoubleProperty(2.0);
 	public static final BooleanProperty paused = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<Perspective> perspective = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
+	public static final DoubleProperty pipSceneHeight = new SimpleDoubleProperty(ArcadeWorld.TILES_Y * World.TS);
 	public static final BooleanProperty pipVisible = new SimpleBooleanProperty(false);
 	public static final DoubleProperty pipOpacity = new SimpleDoubleProperty(0.66);
 	public static final BooleanProperty squirting = new SimpleBooleanProperty(false);

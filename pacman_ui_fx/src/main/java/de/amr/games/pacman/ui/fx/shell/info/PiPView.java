@@ -25,6 +25,8 @@ package de.amr.games.pacman.ui.fx.shell.info;
 
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
@@ -35,14 +37,16 @@ import javafx.scene.paint.Color;
  */
 public class PiPView extends StackPane {
 
+	public DoubleProperty pySceneHeight = new SimpleDoubleProperty();
 	private final PlayScene2D playScene2D;
 
-	public PiPView(double height) {
+	public PiPView() {
 		playScene2D = new PlayScene2D(false);
-		playScene2D.resize(height);
+		playScene2D.resize(pySceneHeight.doubleValue());
 		playScene2D.getFXSubScene().setFocusTraversable(false);
 		getChildren().add(playScene2D.getFXSubScene());
 		setBackground(Ufx.colorBackground(Color.BLACK));
+		pySceneHeight.addListener((x, y, h) -> playScene2D.resize(h.doubleValue()));
 	}
 
 	public PlayScene2D getPlayScene2D() {
