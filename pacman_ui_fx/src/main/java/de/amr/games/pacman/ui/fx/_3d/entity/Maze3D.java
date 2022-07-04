@@ -88,7 +88,7 @@ public class Maze3D extends Group {
 		PhongMaterial topMaterial;
 	}
 
-	public final IntegerProperty resolution = new SimpleIntegerProperty(8);
+	public final IntegerProperty resolution = new SimpleIntegerProperty(4);
 	public final DoubleProperty wallHeight = new SimpleDoubleProperty(1.0);
 	public final ObjectProperty<Image> floorTexture = new SimpleObjectProperty<>();
 	public final ObjectProperty<Color> floorColor = new SimpleObjectProperty<>();
