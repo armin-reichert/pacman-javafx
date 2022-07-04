@@ -129,6 +129,10 @@ public class Actions {
 		}
 	}
 
+	public static void togglePipViewVisible() {
+		Env.toggle(Env.pipVisible);
+	}
+
 	public static void toggleDashboardVisible() {
 		Env.toggle(theUI.getDashboard().visibleProperty());
 	}

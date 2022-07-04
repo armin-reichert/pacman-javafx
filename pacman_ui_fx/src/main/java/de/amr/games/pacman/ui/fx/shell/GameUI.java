@@ -262,7 +262,7 @@ public class GameUI implements GameEventAdapter {
 		} else if (Keyboard.pressed(KeyCode.F1)) {
 			Actions.toggleDashboardVisible();
 		} else if (Keyboard.pressed(KeyCode.F2)) {
-			Env.toggle(Env.pipVisible);
+			Actions.togglePipViewVisible();
 		} else if (Keyboard.pressed(KeyCode.F11)) {
 			stage.setFullScreen(true);
 		}
