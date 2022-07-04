@@ -153,7 +153,9 @@ public class SceneManager {
 		return Optional.ofNullable(gameScene);
 	}
 
-	public boolean sceneExistsInBothDimensions() {
-		return !findGameScene(SCENE_2D).equals(findGameScene(SCENE_3D));
+	public boolean hasSceneInBothDimensions() {
+		var scene2D = findGameScene(SCENE_2D);
+		var scene3D = findGameScene(SCENE_3D);
+		return scene2D.isPresent() && scene3D.isPresent() && !scene2D.equals(scene3D);
 	}
 }
