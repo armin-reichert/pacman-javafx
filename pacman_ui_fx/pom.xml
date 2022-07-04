@@ -1,6 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.amr.games.pacman.ui.fx</groupId>
 	<artifactId>pacman_ui_fx</artifactId>
@@ -61,13 +59,38 @@
 							de.amr.games.pacman.ui.fx.texts.messages
 						</list>
 					</bundlesList>
-					<resourcesList>
-					</resourcesList>
+					<resourcesList></resourcesList>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
-	<organization>
-		<name>armin.reichert@web.de</name>
-	</organization>
+	<profiles>
+		<profile>
+			<id>desktop</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<client.target>host</client.target>
+			</properties>
+		</profile>
+		<profile>
+			<id>android</id>
+			<properties>
+				<client.target>android</client.target>
+			</properties>
+		</profile>
+		<profile>
+			<id>ios</id>
+			<properties>
+				<client.target>ios</client.target>
+			</properties>
+		</profile>
+		<profile>
+			<id>web</id>
+			<properties>
+				<client.target>web</client.target>
+			</properties>
+		</profile>
+	</profiles>
 </project>

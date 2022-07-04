@@ -45,7 +45,7 @@ public class GameSounds implements GameSoundController {
 
 	private static final Logger logger = LogManager.getFormatterLogger();
 
-	public static boolean SOUND_DISABLED = false;
+	public static boolean SOUND_DISABLED = true;
 
 	public static final GameSounds NO_SOUNDS = new GameSounds();
 	public static final GameSounds MS_PACMAN_SOUNDS = new GameSounds();

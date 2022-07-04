@@ -75,7 +75,7 @@ public class PacManGameAppFX extends Application {
 	static final Option<Double> OPT_ZOOM = doubleOption("-zoom", 2.0);
 
 	public static void main(String[] args) {
-		launch(args);
+		launch(PacManGameAppFX.class, args);
 	}
 
 	private GameController gameController;
