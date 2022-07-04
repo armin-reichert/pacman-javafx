@@ -65,10 +65,10 @@ public class MsPacManIntroScene extends GameScene2D {
 	public void init() {
 		sceneController.restartInInitialState(IntroController.State.START);
 		creditVisible = true;
-		icc.msPacMan.setAnimations(new PacAnimations(ctx.r2D));
+		icc.msPacMan.setAnimations(new PacAnimations(icc.msPacMan, ctx.r2D));
 		icc.msPacMan.animations().ifPresent(SpriteAnimations::ensureRunning);
 		Stream.of(icc.ghosts).forEach(ghost -> {
-			var animations = new GhostAnimations(ghost.id, ctx.r2D);
+			var animations = new GhostAnimations(ghost, ctx.r2D);
 			animations.ensureRunning();
 			ghost.setAnimations(animations);
 		});

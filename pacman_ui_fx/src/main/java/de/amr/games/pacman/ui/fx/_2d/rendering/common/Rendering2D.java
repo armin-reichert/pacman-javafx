@@ -33,7 +33,6 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.lib.animation.SingleSpriteAnimation;
-import de.amr.games.pacman.lib.animation.SpriteAnimationMap;
 import de.amr.games.pacman.lib.animation.SpriteArray;
 import de.amr.games.pacman.model.common.LevelCounter;
 import de.amr.games.pacman.model.common.actors.Bonus;
@@ -82,17 +81,17 @@ public interface Rendering2D {
 
 	// Animations
 
-	SpriteAnimationMap<Direction, Rectangle2D> createPacMunchingAnimationMap();
+	DirectionAnimationMap createPacMunchingAnimationMap(Pac pac);
 
 	SingleSpriteAnimation<Rectangle2D> createPacDyingAnimation();
 
-	SpriteAnimationMap<Direction, Rectangle2D> createGhostColorAnimationMap(int ghostID);
+	DirectionAnimationMap createGhostColorAnimationMap(Ghost ghost);
 
 	SingleSpriteAnimation<Rectangle2D> createGhostBlueAnimation();
 
 	SingleSpriteAnimation<Rectangle2D> createGhostFlashingAnimation();
 
-	SpriteAnimationMap<Direction, Rectangle2D> createGhostEyesAnimationMap();
+	DirectionAnimationMap createGhostEyesAnimationMap(Ghost ghost);
 
 	SingleSpriteAnimation<Image> createMazeFlashingAnimation(int mazeNumber);
 
@@ -173,8 +172,7 @@ public interface Rendering2D {
 		case EDIBLE -> getBonusSymbolSprite(bonus.symbol());
 		case EATEN -> getBonusValueSprite(bonus.symbol());
 		};
-		if (bonus.entity() instanceof MovingBonus) {
-			var movingBonus = (MovingBonus) bonus.entity();
+		if (bonus.entity() instanceof MovingBonus movingBonus) {
 			g.save();
 			g.translate(0, movingBonus.dy());
 			drawEntity(g, movingBonus, sprite);

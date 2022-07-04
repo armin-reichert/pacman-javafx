@@ -61,31 +61,32 @@ public class PacManCutscene2 extends GameScene2D {
 		frame = -1;
 		initialDelay = 120;
 
-		var pacAnimations = new PacAnimations(ctx.r2D);
-		pacAnimations.select(AnimKeys.PAC_MUNCHING);
-		pacAnimations.byName(AnimKeys.PAC_MUNCHING).restart();
-
 		pac = new Pac("Pac-Man");
-		pac.setAnimations(pacAnimations);
 		pac.placeAt(v(29, 20), 0, 0);
 		pac.setMoveDir(Direction.LEFT);
 		pac.setAbsSpeed(1.15);
 		pac.show();
 
+		var pacAnimations = new PacAnimations(pac, ctx.r2D);
+		pacAnimations.select(AnimKeys.PAC_MUNCHING);
+		pacAnimations.byName(AnimKeys.PAC_MUNCHING).restart();
+		pac.setAnimations(pacAnimations);
+
 		stretchedDressAnimation = ((SpritesheetPacMan) ctx.r2D).createBlinkyStretchedAnimation();
 
-		var blinkyAnimations = new GhostAnimations(Ghost.RED_GHOST, ctx.r2D);
-		damagedAnimation = ((SpritesheetPacMan) ctx.r2D).createBlinkyDamagedAnimation();
-		blinkyAnimations.put(DAMAGED, damagedAnimation);
-		blinkyAnimations.select(AnimKeys.GHOST_COLOR);
-		blinkyAnimations.byName(AnimKeys.GHOST_COLOR).restart();
-
 		blinky = new Ghost(Ghost.RED_GHOST, "Blinky");
-		blinky.setAnimations(blinkyAnimations);
 		blinky.placeAt(v(28, 20), 0, 0);
 		blinky.setBothDirs(Direction.LEFT);
 		blinky.setAbsSpeed(0);
 		blinky.hide();
+
+		var blinkyAnimations = new GhostAnimations(blinky, ctx.r2D);
+		damagedAnimation = ((SpritesheetPacMan) ctx.r2D).createBlinkyDamagedAnimation();
+		blinkyAnimations.put(DAMAGED, damagedAnimation);
+		blinkyAnimations.select(AnimKeys.GHOST_COLOR);
+		blinkyAnimations.byName(AnimKeys.GHOST_COLOR).restart();
+		blinky.setAnimations(blinkyAnimations);
+
 	}
 
 	@Override

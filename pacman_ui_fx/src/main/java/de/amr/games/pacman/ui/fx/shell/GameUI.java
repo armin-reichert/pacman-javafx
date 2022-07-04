@@ -207,7 +207,7 @@ public class GameUI implements GameEventAdapter {
 	public void render() {
 		flashMessageView.update();
 		dashboard.update();
-		pipView.getPlayScene2D().update();
+		pipView.getPlayScene2D().repaint();
 	}
 
 	private void updateCurrentGameScene(boolean forcedUpdate) {
