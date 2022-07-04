@@ -107,7 +107,7 @@ public class SceneManager {
 		case MS_PACMAN -> SpritesheetMsPacMan.get();
 		case PACMAN -> SpritesheetPacMan.get();
 		};
-		var sounds = switch (game.variant) {
+		var sounds = GameSounds.SOUND_DISABLED ? GameSounds.NO_SOUNDS : switch (game.variant) {
 		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
 		case PACMAN -> GameSounds.PACMAN_SOUNDS;
 		};

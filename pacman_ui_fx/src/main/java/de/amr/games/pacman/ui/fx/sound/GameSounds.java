@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx.sound;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
@@ -44,6 +45,9 @@ public class GameSounds implements GameSoundController {
 
 	private static final Logger logger = LogManager.getFormatterLogger();
 
+	public static boolean SOUND_DISABLED = false;
+
+	public static final GameSounds NO_SOUNDS = new GameSounds();
 	public static final GameSounds MS_PACMAN_SOUNDS = new GameSounds();
 	public static final GameSounds PACMAN_SOUNDS = new GameSounds();
 
@@ -111,6 +115,9 @@ public class GameSounds implements GameSoundController {
 	}
 
 	protected void load(GameSound sound, String relPath) {
+		if (SOUND_DISABLED) {
+			return;
+		}
 		var url = Resources.urlFromRelPath(relPath);
 		if (url == null) {
 			var absPath = Resources.absPath(relPath);
@@ -133,16 +140,13 @@ public class GameSounds implements GameSoundController {
 		}
 	}
 
-	protected AudioClip getClip(GameSound sound) {
-		if (!clips.containsKey(sound)) {
-			throw new SoundException("No clip found for sound %s", sound);
-		}
-		return clips.get(sound);
+	protected Optional<AudioClip> getClip(GameSound sound) {
+		return Optional.ofNullable(clips.get(sound));
 	}
 
 	@Override
 	public boolean isPlaying(GameSound sound) {
-		return getClip(sound).isPlaying();
+		return getClip(sound).map(AudioClip::isPlaying).orElse(false);
 	}
 
 	@Override
@@ -166,14 +170,15 @@ public class GameSounds implements GameSoundController {
 
 	@Override
 	public void loop(GameSound sound, int repetitions) {
-		AudioClip clip = getClip(sound);
-		clip.setCycleCount(repetitions);
-		playClip(clip);
+		getClip(sound).ifPresent(clip -> {
+			clip.setCycleCount(repetitions);
+			playClip(clip);
+		});
 	}
 
 	@Override
 	public void stop(GameSound sound) {
-		getClip(sound).stop();
+		getClip(sound).ifPresent(AudioClip::stop);
 	}
 
 	@Override
@@ -195,7 +200,7 @@ public class GameSounds implements GameSoundController {
 		case 3 -> GameSound.SIREN_4;
 		default -> throw new IllegalArgumentException("Illegal siren index: " + sirenIndex);
 		};
-		getClip(siren).setVolume(0.2);
+		getClip(siren).ifPresent(clip -> clip.setVolume(0.2));
 		loop(siren, Animation.INDEFINITE);
 		logger.trace("Siren %s started", siren);
 	}
@@ -216,7 +221,7 @@ public class GameSounds implements GameSoundController {
 	public void stopSirens() {
 		sirens().forEach(siren -> {
 			if (isPlaying(siren)) {
-				getClip(siren).stop();
+				getClip(siren).ifPresent(AudioClip::stop);
 				logger.trace("Siren %s stopped", siren);
 			}
 		});

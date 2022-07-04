@@ -24,12 +24,16 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.shell;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameSoundController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.ui.fx.Resources;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
+import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.texts.Texts;
 import javafx.animation.PauseTransition;
 import javafx.scene.media.AudioClip;
@@ -44,6 +48,8 @@ public class Actions {
 	private Actions() {
 	}
 
+	private static final Logger logger = LogManager.getFormatterLogger();
+
 	public static final String SOUND_PRESS_KEY_TO_START = "press-key.mp3";
 	public static final String SOUND_AUTOPILOT_OFF = "autopilot-off.mp3";
 	public static final String SOUND_AUTOPILOT_ON = "autopilot-on.mp3";
@@ -53,13 +59,20 @@ public class Actions {
 	private static AudioClip currentVoiceMessage;
 
 	public static void playVoiceMessage(String messageFileName) {
+		if (GameSounds.SOUND_DISABLED) {
+			return;
+		}
 		if (currentVoiceMessage != null && currentVoiceMessage.isPlaying()) {
 			return;
 		}
 		var url = Resources.urlFromRelPath("sound/common/" + messageFileName);
 		if (url != null) {
-			currentVoiceMessage = new AudioClip(url.toExternalForm());
-			currentVoiceMessage.play();
+			try {
+				currentVoiceMessage = new AudioClip(url.toExternalForm());
+				currentVoiceMessage.play();
+			} catch (Exception e) {
+				logger.error("Could not play voice message '%s'", messageFileName);
+			}
 		}
 	}
 
