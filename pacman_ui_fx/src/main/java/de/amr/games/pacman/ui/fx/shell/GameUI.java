@@ -235,9 +235,8 @@ public class GameUI implements GameEventAdapter {
 			playScene2D.onSwitchFrom3D();
 		} else if (currentGameScene instanceof PlayScene3D playScene3D) {
 			playScene3D.onSwitchFrom2D();
-			sceneManager.initializeScene(pipView.getPlayScene2D(), false);
-			pipView.getPlayScene2D().update();
 		}
+		pipView.getPlayScene2D().update();
 	}
 
 	private void onKeyPressed() {
