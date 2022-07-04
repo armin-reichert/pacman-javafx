@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell.info;
 
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.layout.StackPane;
@@ -30,7 +32,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 
 /**
- * Picture-In-Picture view. Displays 2D game scene when 3D game scene is active.
+ * Picture-In-Picture view. Displays 2D game scene in mniature view.
  * 
  * @author Armin Reichert
  */
@@ -40,8 +42,8 @@ public class PiPView extends StackPane {
 
 	public PiPView(double scale) {
 		playScene2D = new PlayScene2D(false);
-		var width = 28 * 8 * scale;
-		var height = 36 * 8 * scale;
+		var width = ArcadeWorld.TILES_X * World.TS * scale;
+		var height = ArcadeWorld.TILES_Y * World.TS * scale;
 		var subScene = playScene2D.getFXSubScene();
 		subScene.setFocusTraversable(false);
 		subScene.setWidth(width);
@@ -49,19 +51,11 @@ public class PiPView extends StackPane {
 		playScene2D.getCanvas().widthProperty().bind(subScene.widthProperty());
 		playScene2D.getCanvas().heightProperty().bind(subScene.heightProperty());
 		playScene2D.getCanvas().getTransforms().setAll(new Scale(scale, scale));
-		playScene2D.getOverlayCanvas().visibleProperty().unbind();
-		playScene2D.getOverlayCanvas().setVisible(false);
-		setMinWidth(width);
-		setMinHeight(height);
 		getChildren().add(subScene);
 		setBackground(Ufx.colorBackground(Color.BLACK));
 	}
 
-	public PlayScene2D getGameScene() {
+	public PlayScene2D getPlayScene2D() {
 		return playScene2D;
-	}
-
-	public void update() {
-		playScene2D.update();
 	}
 }

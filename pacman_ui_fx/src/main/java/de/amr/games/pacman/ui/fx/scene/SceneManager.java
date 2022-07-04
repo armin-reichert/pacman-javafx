@@ -25,6 +25,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.scene;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
@@ -131,7 +132,7 @@ public class SceneManager {
 	 * @param dimension {@link GameScenes#SCENE_2D} or {@link GameScenes#SCENE_3D}
 	 * @return the game scene that fits the current game state
 	 */
-	public GameScene findGameScene(int dimension) {
+	public Optional<GameScene> findGameScene(int dimension) {
 		var game = context.gameController.game();
 		var state = context.gameController.state();
 		var scenes = switch (game.variant) {
@@ -146,10 +147,13 @@ public class SceneManager {
 		default -> 5;
 		};
 		var gameScene = scenes[sceneIndex][dimension];
-		return gameScene != null ? gameScene : scenes[sceneIndex][SCENE_2D]; // use 2D as default
+		if (gameScene == null) {
+			gameScene = scenes[sceneIndex][SCENE_2D]; // use 2D as default:
+		}
+		return Optional.ofNullable(gameScene);
 	}
 
 	public boolean sceneExistsInBothDimensions() {
-		return findGameScene(SCENE_2D) != findGameScene(SCENE_3D);
+		return !findGameScene(SCENE_2D).equals(findGameScene(SCENE_3D));
 	}
 }

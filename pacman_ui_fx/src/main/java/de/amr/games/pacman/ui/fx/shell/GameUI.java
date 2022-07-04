@@ -110,6 +110,9 @@ public class GameUI implements GameEventAdapter {
 		introMessage.setOnFinished(e -> Actions.playVoiceMessage(Actions.SOUND_PRESS_KEY_TO_START));
 		introMessage.play();
 
+		updateCurrentGameScene(true);
+
+		scene.setOnKeyPressed(Keyboard::processEvent);
 		Keyboard.addHandler(this::onKeyPressed);
 		Keyboard.addHandler(pacSteering::onKeyPressed);
 		Keyboard.addHandler(() -> currentGameScene.onKeyPressed());
@@ -122,6 +125,8 @@ public class GameUI implements GameEventAdapter {
 		stage.setScene(scene);
 		stage.centerOnScreen();
 		stage.show();
+
+		Ufx.pauseSec(2, () -> Actions.playVoiceMessage(Actions.SOUND_PRESS_KEY_TO_START)).play();
 	}
 
 	private void updateBackground() {
@@ -201,28 +206,26 @@ public class GameUI implements GameEventAdapter {
 	public void render() {
 		flashMessageView.update();
 		dashboard.update();
-		pipView.update();
+		pipView.getPlayScene2D().update();
 	}
 
-	void updateCurrentGameScene(boolean forcedUpdate) {
-		var dimension = Env.use3D.get() ? SceneManager.SCENE_3D : SceneManager.SCENE_2D;
-		var newGameScene = sceneManager.findGameScene(dimension);
-		if (newGameScene == null) {
-			throw new IllegalStateException("No fitting game scene found for game state " + gameController.state());
-		}
+	private void updateCurrentGameScene(boolean forcedUpdate) {
+		int dimension = Env.use3D.get() ? SceneManager.SCENE_3D : SceneManager.SCENE_2D;
+		GameScene newGameScene = sceneManager.findGameScene(dimension).orElseThrow(
+				() -> new IllegalStateException("No game scene found. Game state: %s".formatted(gameController.state())));
 		if (newGameScene == currentGameScene && !forcedUpdate) {
-			return;
+			return; // keep game scene
 		}
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
+		sceneManager.initializeScene(newGameScene);
+		sceneManager.initializeScene(pipView.getPlayScene2D());
 		newGameScene.resize(scene.getHeight());
 		gameScenePlaceholder.getChildren().setAll(newGameScene.getFXSubScene());
-		sceneManager.initializeScene(newGameScene);
-		sceneManager.initializeScene(pipView.getGameScene());
 		logger.info("Current scene changed from %s to %s", currentGameScene, newGameScene);
 		currentGameScene = newGameScene;
-		// does not really belong here
+		// does not really belong here, but...
 		stage.setTitle(gameController.game().variant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
 	}
 
@@ -232,8 +235,8 @@ public class GameUI implements GameEventAdapter {
 			playScene2D.onSwitchFrom3D();
 		} else if (currentGameScene instanceof PlayScene3D playScene3D) {
 			playScene3D.onSwitchFrom2D();
-			sceneManager.initializeScene(pipView.getGameScene());
-			pipView.update();
+			sceneManager.initializeScene(pipView.getPlayScene2D());
+			pipView.getPlayScene2D().update();
 		}
 	}
 

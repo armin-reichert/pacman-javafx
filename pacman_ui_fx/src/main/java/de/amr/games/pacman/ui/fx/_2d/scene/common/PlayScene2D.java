@@ -51,9 +51,12 @@ public class PlayScene2D extends GameScene2D {
 		this(true);
 	}
 
-	public PlayScene2D(boolean withInfo) {
-		if (withInfo) {
+	public PlayScene2D(boolean overlayEnabled) {
+		if (overlayEnabled) {
 			infoLayer = new GuysInfo(this);
+		} else {
+			overlayCanvas.visibleProperty().unbind();
+			overlayCanvas.setVisible(false);
 		}
 	}
 
