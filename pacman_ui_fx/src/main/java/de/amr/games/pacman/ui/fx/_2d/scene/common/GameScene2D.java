@@ -91,10 +91,6 @@ public abstract class GameScene2D implements GameScene {
 		return fxSubScene;
 	}
 
-	protected boolean hasCredit() {
-		return ctx.gameController.game().credit > 0;
-	}
-
 	public Canvas getCanvas() {
 		return canvas;
 	}

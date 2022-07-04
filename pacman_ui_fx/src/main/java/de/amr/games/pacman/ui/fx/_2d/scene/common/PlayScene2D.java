@@ -51,8 +51,8 @@ public class PlayScene2D extends GameScene2D {
 		this(true);
 	}
 
-	public PlayScene2D(boolean overlayEnabled) {
-		if (overlayEnabled) {
+	public PlayScene2D(boolean withInfo) {
+		if (withInfo) {
 			infoLayer = new GuysInfo(this);
 		} else {
 			overlayCanvas.visibleProperty().unbind();
@@ -65,8 +65,8 @@ public class PlayScene2D extends GameScene2D {
 		if (infoLayer != null) {
 			infoLayer.init(ctx.game());
 		}
-		creditVisible = !hasCredit();
-		ctx.game().levelCounter.setVisible(hasCredit());
+		creditVisible = !ctx.hasCredit(); // show credit only if it is zero
+		ctx.game().levelCounter.setVisible(!creditVisible);
 		ctx.game().bonus().setInactive();
 	}
 
@@ -104,7 +104,7 @@ public class PlayScene2D extends GameScene2D {
 			ctx.r2D.drawMaze(g, t(0), t(3), ctx.game().level.world, ctx.game().level.mazeNumber,
 					!ctx.game().energizerPulse.frame());
 		}
-		ctx.r2D.drawGameStateMessage(g, hasCredit() ? ctx.state() : GameState.GAME_OVER);
+		ctx.r2D.drawGameStateMessage(g, ctx.hasCredit() ? ctx.state() : GameState.GAME_OVER);
 		ctx.r2D.drawBonus(g, ctx.game().bonus());
 		ctx.r2D.drawPac(g, ctx.game().pac);
 		ctx.r2D.drawGhosts(g, ctx.game().theGhosts);
