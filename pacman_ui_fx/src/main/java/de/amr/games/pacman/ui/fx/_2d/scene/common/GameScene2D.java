@@ -99,6 +99,10 @@ public abstract class GameScene2D implements GameScene {
 		return overlayCanvas;
 	}
 
+	public V2d getUnscaledSize() {
+		return unscaledSize;
+	}
+
 	@Override
 	public void resize(double height) {
 		double aspectRatio = unscaledSize.x / unscaledSize.y;

@@ -32,6 +32,8 @@ import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -85,7 +87,7 @@ public class GameUI implements GameEventAdapter {
 
 		flashMessageView = new FlashMessageView();
 		dashboard = new Dashboard(this, gameController);
-		pipView = new PiPView(1.0);
+		pipView = new PiPView(ArcadeWorld.TILES_Y * World.TS * 1.0);
 		pipView.visibleProperty().bind(Env.pipVisible);
 		pipView.opacityProperty().bind(Env.pipOpacity);
 		var overlayPane = new BorderPane();
