@@ -24,15 +24,9 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell.info;
 
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
-import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
-import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.scene.transform.Scale;
 
 /**
@@ -42,48 +36,32 @@ import javafx.scene.transform.Scale;
  */
 public class PiPView extends StackPane {
 
-	private final GameUI ui;
-	private final Pane sceneContainer = new Pane();
-	private final PlayScene2D gameScene;
-	private final Text hint = new Text();
-	private double scale = 1.0;
-	private double width = 28 * 8 * scale;
-	private double height = 36 * 8 * scale;
+	private final PlayScene2D playScene2D;
 
-	public PiPView(GameUI ui) {
-		this.ui = ui;
-		gameScene = new PlayScene2D(false);
-		var subScene = gameScene.getFXSubScene();
+	public PiPView(double scale) {
+		playScene2D = new PlayScene2D(false);
+		var width = 28 * 8 * scale;
+		var height = 36 * 8 * scale;
+		var subScene = playScene2D.getFXSubScene();
 		subScene.setFocusTraversable(false);
 		subScene.setWidth(width);
 		subScene.setHeight(height);
-		gameScene.getCanvas().widthProperty().bind(subScene.widthProperty());
-		gameScene.getCanvas().heightProperty().bind(subScene.heightProperty());
-		gameScene.getCanvas().getTransforms().setAll(new Scale(scale, scale));
-		gameScene.getOverlayCanvas().visibleProperty().unbind();
-		gameScene.getOverlayCanvas().setVisible(false);
-		sceneContainer.setMinWidth(width);
-		sceneContainer.setMinHeight(height);
-		sceneContainer.getChildren().setAll(subScene);
-		hint.setFont(Font.font("Sans", FontWeight.EXTRA_BOLD, 20.0));
-		hint.setFill(Color.WHITE);
-		hint.setText("3D play scene inactive");
+		playScene2D.getCanvas().widthProperty().bind(subScene.widthProperty());
+		playScene2D.getCanvas().heightProperty().bind(subScene.heightProperty());
+		playScene2D.getCanvas().getTransforms().setAll(new Scale(scale, scale));
+		playScene2D.getOverlayCanvas().visibleProperty().unbind();
+		playScene2D.getOverlayCanvas().setVisible(false);
+		setMinWidth(width);
+		setMinHeight(height);
+		getChildren().add(subScene);
 		setBackground(Ufx.colorBackground(Color.BLACK));
-		getChildren().setAll(sceneContainer, hint);
 	}
 
 	public PlayScene2D getGameScene() {
-		return gameScene;
+		return playScene2D;
 	}
 
 	public void update() {
-		if (ui.getCurrentGameScene() instanceof PlayScene3D) {
-			gameScene.update();
-			sceneContainer.setVisible(true);
-			hint.setVisible(false);
-		} else {
-			sceneContainer.setVisible(false);
-			hint.setVisible(true);
-		}
+		playScene2D.update();
 	}
 }

@@ -85,7 +85,7 @@ public class GameUI implements GameEventAdapter {
 
 		flashMessageView = new FlashMessageView();
 		dashboard = new Dashboard(this, gameController);
-		pipView = new PiPView(this);
+		pipView = new PiPView(1.0);
 		pipView.visibleProperty().bind(Env.pipVisible);
 		pipView.opacityProperty().bind(Env.pipOpacity);
 		var overlayPane = new BorderPane();
