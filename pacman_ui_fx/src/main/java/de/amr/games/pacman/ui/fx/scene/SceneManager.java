@@ -99,7 +99,7 @@ public class SceneManager {
 		return context;
 	}
 
-	public void initializeScene(GameScene scene) {
+	public void initializeScene(GameScene scene, boolean createAnimations) {
 		scene.setSceneContext(context);
 
 		var game = context.gameController.game();
@@ -118,10 +118,13 @@ public class SceneManager {
 
 		context.gameController.setSounds(sounds);
 
-		var world = (ArcadeWorld) game.world();
-		world.setFlashingAnimation(r2D.createMazeFlashingAnimation(game.level.mazeNumber));
-		game.pac.setAnimations(new PacAnimations(r2D));
-		game.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimations(ghost.id, r2D)));
+		if (createAnimations) {
+			var world = (ArcadeWorld) game.world();
+			world.setFlashingAnimation(r2D.createMazeFlashingAnimation(game.level.mazeNumber));
+			game.pac.setAnimations(new PacAnimations(r2D));
+			game.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimations(ghost.id, r2D)));
+		}
+
 		scene.init();
 		logger.info("Scene '%s' initialized. Game variant: %s, Rendering2D: %s", scene, game.variant, r2D);
 	}

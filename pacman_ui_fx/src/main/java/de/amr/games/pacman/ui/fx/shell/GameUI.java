@@ -219,8 +219,8 @@ public class GameUI implements GameEventAdapter {
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
-		sceneManager.initializeScene(newGameScene);
-		sceneManager.initializeScene(pipView.getPlayScene2D());
+		sceneManager.initializeScene(newGameScene, true);
+		sceneManager.initializeScene(pipView.getPlayScene2D(), false);
 		newGameScene.resize(scene.getHeight());
 		gameScenePlaceholder.getChildren().setAll(newGameScene.getFXSubScene());
 		logger.info("Current scene changed from %s to %s", currentGameScene, newGameScene);
@@ -235,7 +235,7 @@ public class GameUI implements GameEventAdapter {
 			playScene2D.onSwitchFrom3D();
 		} else if (currentGameScene instanceof PlayScene3D playScene3D) {
 			playScene3D.onSwitchFrom2D();
-			sceneManager.initializeScene(pipView.getPlayScene2D());
+			sceneManager.initializeScene(pipView.getPlayScene2D(), false);
 			pipView.getPlayScene2D().update();
 		}
 	}
