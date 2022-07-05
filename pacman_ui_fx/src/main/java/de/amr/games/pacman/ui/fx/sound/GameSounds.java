@@ -45,58 +45,68 @@ public class GameSounds implements GameSoundController {
 
 	private static final Logger logger = LogManager.getFormatterLogger();
 
-	public static final boolean SOUND_DISABLED = false;
+	public static final boolean SOUND_DISABLED = true;
 
-	public static final GameSounds NO_SOUNDS = new GameSounds();
-	public static final GameSounds MS_PACMAN_SOUNDS = new GameSounds();
-	public static final GameSounds PACMAN_SOUNDS = new GameSounds();
-
+	private static final Map<GameSound, String> PACMAN_MAP = new EnumMap<>(GameSound.class);
 	static {
 		//@formatter:off
-		PACMAN_SOUNDS.load(GameSound.BONUS_EATEN,        "sound/pacman/eat_fruit.mp3");
-		PACMAN_SOUNDS.load(GameSound.CREDIT,             "sound/pacman/credit.mp3");
-		PACMAN_SOUNDS.load(GameSound.EXTRA_LIFE,         "sound/pacman/extend.mp3");
-		PACMAN_SOUNDS.load(GameSound.GAME_READY,         "sound/pacman/game_start.mp3");
-		PACMAN_SOUNDS.load(GameSound.GHOST_EATEN,        "sound/pacman/eat_ghost.mp3");
-		PACMAN_SOUNDS.load(GameSound.GHOST_RETURNING,    "sound/pacman/retreating.mp3");
-		PACMAN_SOUNDS.load(GameSound.INTERMISSION_1,     "sound/pacman/intermission.mp3");
-		PACMAN_SOUNDS.load(GameSound.PACMAN_DEATH,       "sound/pacman/pacman_death.wav");
-		PACMAN_SOUNDS.load(GameSound.PACMAN_MUNCH,       "sound/pacman/munch_1.wav");
-		PACMAN_SOUNDS.load(GameSound.PACMAN_POWER,       "sound/pacman/power_pellet.mp3");
-		PACMAN_SOUNDS.load(GameSound.SIREN_1,            "sound/pacman/siren_1.mp3");
-		PACMAN_SOUNDS.load(GameSound.SIREN_2,            "sound/pacman/siren_2.mp3");
-		PACMAN_SOUNDS.load(GameSound.SIREN_3,            "sound/pacman/siren_3.mp3");
-		PACMAN_SOUNDS.load(GameSound.SIREN_4,            "sound/pacman/siren_4.mp3");
-		logger.info("Ms. Pac-Man game sounds loaded");
-		
-		MS_PACMAN_SOUNDS.load(GameSound.BONUS_EATEN,     "sound/mspacman/Fruit.mp3");
-		MS_PACMAN_SOUNDS.load(GameSound.CREDIT,          "sound/mspacman/Coin Credit.mp3");
-		MS_PACMAN_SOUNDS.load(GameSound.EXTRA_LIFE,      "sound/mspacman/Extra Life.mp3");
-		MS_PACMAN_SOUNDS.load(GameSound.GAME_READY,      "sound/mspacman/Start.mp3");
-		MS_PACMAN_SOUNDS.load(GameSound.GHOST_EATEN,     "sound/mspacman/Ghost.mp3");
-		MS_PACMAN_SOUNDS.load(GameSound.GHOST_RETURNING, "sound/mspacman/Ghost Eyes.mp3");
-		MS_PACMAN_SOUNDS.load(GameSound.INTERMISSION_1,  "sound/mspacman/They Meet Act 1.mp3");
-		MS_PACMAN_SOUNDS.load(GameSound.INTERMISSION_2,  "sound/mspacman/The Chase Act 2.mp3");
-		MS_PACMAN_SOUNDS.load(GameSound.INTERMISSION_3,  "sound/mspacman/Junior Act 3.mp3");
-		MS_PACMAN_SOUNDS.load(GameSound.PACMAN_DEATH,    "sound/mspacman/Died.mp3");
-		MS_PACMAN_SOUNDS.load(GameSound.PACMAN_MUNCH,    "sound/mspacman/Ms. Pac Man Pill.mp3");
-		MS_PACMAN_SOUNDS.load(GameSound.PACMAN_POWER,    "sound/mspacman/Scared Ghost.mp3");
-		MS_PACMAN_SOUNDS.load(GameSound.SIREN_1,         "sound/mspacman/Ghost Noise 1.mp3");
-		MS_PACMAN_SOUNDS.load(GameSound.SIREN_2,         "sound/mspacman/Ghost Noise 2.mp3");
-		MS_PACMAN_SOUNDS.load(GameSound.SIREN_3,         "sound/mspacman/Ghost Noise 3.mp3");
-		MS_PACMAN_SOUNDS.load(GameSound.SIREN_4,         "sound/mspacman/Ghost Noise 4.mp3");
-		logger.info("Ms. Pac-Man game sounds loaded");
+		PACMAN_MAP.put(GameSound.BONUS_EATEN,        "sound/pacman/eat_fruit.mp3");
+		PACMAN_MAP.put(GameSound.CREDIT,             "sound/pacman/credit.mp3");
+		PACMAN_MAP.put(GameSound.EXTRA_LIFE,         "sound/pacman/extend.mp3");
+		PACMAN_MAP.put(GameSound.GAME_READY,         "sound/pacman/game_start.mp3");
+		PACMAN_MAP.put(GameSound.GHOST_EATEN,        "sound/pacman/eat_ghost.mp3");
+		PACMAN_MAP.put(GameSound.GHOST_RETURNING,    "sound/pacman/retreating.mp3");
+		PACMAN_MAP.put(GameSound.INTERMISSION_1,     "sound/pacman/intermission.mp3");
+		PACMAN_MAP.put(GameSound.PACMAN_DEATH,       "sound/pacman/pacman_death.wav");
+		PACMAN_MAP.put(GameSound.PACMAN_MUNCH,       "sound/pacman/munch_1.wav");
+		PACMAN_MAP.put(GameSound.PACMAN_POWER,       "sound/pacman/power_pellet.mp3");
+		PACMAN_MAP.put(GameSound.SIREN_1,            "sound/pacman/siren_1.mp3");
+		PACMAN_MAP.put(GameSound.SIREN_2,            "sound/pacman/siren_2.mp3");
+		PACMAN_MAP.put(GameSound.SIREN_3,            "sound/pacman/siren_3.mp3");
+		PACMAN_MAP.put(GameSound.SIREN_4,            "sound/pacman/siren_4.mp3");
 		//@formatter:on
 	}
 
-	protected final Map<GameSound, AudioClip> clips = new EnumMap<>(GameSound.class);
-	protected boolean silent;
-	protected boolean muted;
+	private static final Map<GameSound, String> MS_PACMAN_MAP = new EnumMap<>(GameSound.class);
+	static {
+		//@formatter:off
+		MS_PACMAN_MAP.put(GameSound.BONUS_EATEN,     "sound/mspacman/Fruit.mp3");
+		MS_PACMAN_MAP.put(GameSound.CREDIT,          "sound/mspacman/Coin Credit.mp3");
+		MS_PACMAN_MAP.put(GameSound.EXTRA_LIFE,      "sound/mspacman/Extra Life.mp3");
+		MS_PACMAN_MAP.put(GameSound.GAME_READY,      "sound/mspacman/Start.mp3");
+		MS_PACMAN_MAP.put(GameSound.GHOST_EATEN,     "sound/mspacman/Ghost.mp3");
+		MS_PACMAN_MAP.put(GameSound.GHOST_RETURNING, "sound/mspacman/Ghost Eyes.mp3");
+		MS_PACMAN_MAP.put(GameSound.INTERMISSION_1,  "sound/mspacman/They Meet Act 1.mp3");
+		MS_PACMAN_MAP.put(GameSound.INTERMISSION_2,  "sound/mspacman/The Chase Act 2.mp3");
+		MS_PACMAN_MAP.put(GameSound.INTERMISSION_3,  "sound/mspacman/Junior Act 3.mp3");
+		MS_PACMAN_MAP.put(GameSound.PACMAN_DEATH,    "sound/mspacman/Died.mp3");
+		MS_PACMAN_MAP.put(GameSound.PACMAN_MUNCH,    "sound/mspacman/Ms. Pac Man Pill.mp3");
+		MS_PACMAN_MAP.put(GameSound.PACMAN_POWER,    "sound/mspacman/Scared Ghost.mp3");
+		MS_PACMAN_MAP.put(GameSound.SIREN_1,         "sound/mspacman/Ghost Noise 1.mp3");
+		MS_PACMAN_MAP.put(GameSound.SIREN_2,         "sound/mspacman/Ghost Noise 2.mp3");
+		MS_PACMAN_MAP.put(GameSound.SIREN_3,         "sound/mspacman/Ghost Noise 3.mp3");
+		MS_PACMAN_MAP.put(GameSound.SIREN_4,         "sound/mspacman/Ghost Noise 4.mp3");
+		//@formatter:on
+	}
 
-	protected void load(GameSound sound, String relPath) {
+	public static final GameSounds NO_SOUNDS = new GameSounds("Nothing", Map.of());
+	public static final GameSounds MS_PACMAN_SOUNDS = new GameSounds("Ms. Pac-Man", MS_PACMAN_MAP);
+	public static final GameSounds PACMAN_SOUNDS = new GameSounds("Pac-Man", PACMAN_MAP);
+
+	private final Map<GameSound, AudioClip> clips = new EnumMap<>(GameSound.class);
+	private boolean silent;
+	private boolean muted;
+
+	public GameSounds(String mapName, Map<GameSound, String> relPathMap) {
 		if (SOUND_DISABLED) {
-			return;
+			logger.info("Sound map '%s' not loaded (sound is disabled)", mapName);
+		} else {
+			relPathMap.forEach(this::load);
+			logger.info("Sound map '%s' loaded", mapName);
 		}
+	}
+
+	private void load(GameSound sound, String relPath) {
 		var url = Resources.urlFromRelPath(relPath);
 		if (url == null) {
 			var absPath = Resources.absPath(relPath);
@@ -113,11 +123,11 @@ public class GameSounds implements GameSoundController {
 		}
 	}
 
-	protected Optional<AudioClip> getClip(GameSound sound) {
+	public Optional<AudioClip> getClip(GameSound sound) {
 		return Optional.ofNullable(clips.get(sound));
 	}
 
-	protected void playClip(AudioClip clip) {
+	private void playClip(AudioClip clip) {
 		if (!silent && !muted) {
 			clip.play();
 		}
