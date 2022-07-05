@@ -35,7 +35,7 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.app.GameLoop;
+import de.amr.games.pacman.ui.fx.app.PacManGameAppFX;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneManager;
 import de.amr.games.pacman.ui.fx.shell.info.Dashboard;
@@ -121,7 +121,7 @@ public class GameUI implements GameEventAdapter {
 		stage.setMinHeight(328);
 		stage.setMinWidth(241);
 		stage.getIcons().add(APP_ICON);
-		stage.setOnCloseRequest(e -> GameLoop.get().stop());
+		stage.setOnCloseRequest(e -> PacManGameAppFX.GAME_LOOP.stop());
 		stage.setTitle(gameController.game().variant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
 		stage.setScene(scene);
 		stage.centerOnScreen();

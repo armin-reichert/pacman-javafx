@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx.shell.info;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.app.GameLoop;
+import de.amr.games.pacman.ui.fx.app.PacManGameAppFX;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -76,17 +76,17 @@ public class SectionGeneral extends Section {
 		btnStep.setStyle("-fx-background-color: transparent");
 		btnStep.setText(null);
 		btnStep.setTooltip(tooltipStep);
-		btnStep.setOnAction(e -> GameLoop.get().runSingleStep(true));
+		btnStep.setOnAction(e -> PacManGameAppFX.GAME_LOOP.runSingleStep(true));
 
 		sliderTargetFPS = addSlider("Target Framerate", MIN_FRAMERATE, MAX_FRAMERATE, 60);
 		sliderTargetFPS.setShowTickLabels(false);
 		sliderTargetFPS.setShowTickMarks(false);
 		sliderTargetFPS.valueProperty()
-				.addListener((obs, oldValue, newValue) -> GameLoop.get().setTargetFrameRate(newValue.intValue()));
+				.addListener((obs, oldValue, newValue) -> PacManGameAppFX.GAME_LOOP.setTargetFramerate(newValue.intValue()));
 
-		addInfo("", () -> String.format("Current: %d Hz (Target: %d Hz)", GameLoop.get().getFPS(),
-				GameLoop.get().getTargetFrameRate()));
-		addInfo("Total Ticks", GameLoop.get()::getTotalTicks);
+		addInfo("", () -> String.format("Current: %d Hz (Target: %d Hz)", PacManGameAppFX.GAME_LOOP.getFPS(),
+				PacManGameAppFX.GAME_LOOP.getTargetFramerate()));
+		addInfo("Total Ticks", PacManGameAppFX.GAME_LOOP::getTotalTicks);
 
 		sliderPiPSceneHeight = addSlider("PiP Size", 1.0 * 288, 2.0 * 288, Env.pipSceneHeight.get());
 		sliderPiPSceneHeight.setShowTickLabels(false);
@@ -111,7 +111,7 @@ public class SectionGeneral extends Section {
 		btnsSimulation[0].setGraphic(Env.paused.get() ? iconPlay : iconStop);
 		btnsSimulation[0].setTooltip(Env.paused.get() ? tooltipPlay : tooltipStop);
 		btnsSimulation[1].setDisable(!Env.paused.get());
-		sliderTargetFPS.setValue(GameLoop.get().getTargetFrameRate());
+		sliderTargetFPS.setValue(PacManGameAppFX.GAME_LOOP.getTargetFramerate());
 		sliderPiPSceneHeight.setValue(Env.pipSceneHeight.get());
 		sliderPiPOpacity.setValue(Env.pipOpacity.get());
 		cbUsePlayScene3D.setSelected(Env.use3D.get());

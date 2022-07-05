@@ -40,58 +40,52 @@ public class GameLoop {
 
 	private static final Logger logger = LogManager.getFormatterLogger();
 
-	private static final GameLoop it = new GameLoop();
-
-	public static GameLoop get() {
-		return it;
-	}
-
 	public Runnable update = () -> {
 	};
 
 	public Runnable render = () -> {
 	};
 
-	private Timeline animation;
+	private Timeline clock;
 	private int totalTicks;
 	private int fps;
-	private int targetFrameRate;
+	private int targetFramerate;
 	private long fpsCountStartTime;
 	private int frames;
 	private boolean timeMeasured;
 
-	private GameLoop() {
-		setTargetFrameRate(60);
+	public GameLoop(int targetFramerate) {
+		setTargetFramerate(targetFramerate);
+	}
+
+	public void setTargetFramerate(int fps) {
+		targetFramerate = fps;
+		boolean restart = false;
+		if (clock != null) {
+			clock.stop();
+			restart = true;
+		}
+		Duration frameDuration = Duration.millis(1000d / targetFramerate);
+		clock = new Timeline(targetFramerate);
+		clock.setCycleCount(Animation.INDEFINITE);
+		clock.getKeyFrames().add(new KeyFrame(frameDuration, e -> runSingleStep(!Env.paused.get())));
+		if (restart) {
+			clock.play();
+		}
 	}
 
 	public void start() {
-		animation.play();
-		logger.info("Game loop started. Target frame rate: %d", targetFrameRate);
+		clock.play();
+		logger.info("Game loop started. Target frame rate: %d", targetFramerate);
 	}
 
 	public void stop() {
-		animation.stop();
+		clock.stop();
 		logger.info("Game loop stopped");
 	}
 
-	public int getTargetFrameRate() {
-		return targetFrameRate;
-	}
-
-	public void setTargetFrameRate(int fps) {
-		targetFrameRate = fps;
-		boolean restart = false;
-		if (animation != null) {
-			animation.stop();
-			restart = true;
-		}
-		Duration frameDuration = Duration.millis(1000d / targetFrameRate);
-		animation = new Timeline(targetFrameRate);
-		animation.setCycleCount(Animation.INDEFINITE);
-		animation.getKeyFrames().add(new KeyFrame(frameDuration, e -> runSingleStep(!Env.paused.get())));
-		if (restart) {
-			animation.play();
-		}
+	public int getTargetFramerate() {
+		return targetFramerate;
 	}
 
 	public int getTotalTicks() {
