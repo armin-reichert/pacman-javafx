@@ -28,7 +28,7 @@ import static de.amr.games.pacman.lib.V2i.v;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.animation.SpriteAnimation;
+import de.amr.games.pacman.lib.animation.EntityAnimation;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -53,8 +53,8 @@ public class PacManCutscene2 extends GameScene2D {
 	private int frame;
 	private Pac pac;
 	private Ghost blinky;
-	private SpriteAnimation stretchedDressAnimation;
-	private SpriteAnimation damagedAnimation;
+	private EntityAnimation stretchedDressAnimation;
+	private EntityAnimation damagedAnimation;
 
 	@Override
 	public void init() {

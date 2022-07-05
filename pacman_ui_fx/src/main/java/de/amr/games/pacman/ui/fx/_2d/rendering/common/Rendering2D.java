@@ -33,11 +33,11 @@ import java.util.function.Consumer;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.lib.animation.DirectionAnimationMap;
-import de.amr.games.pacman.lib.animation.SingleSpriteAnimation;
-import de.amr.games.pacman.lib.animation.SpriteAnimation;
-import de.amr.games.pacman.lib.animation.SpriteAnimations;
-import de.amr.games.pacman.lib.animation.SpriteArray;
+import de.amr.games.pacman.lib.animation.EntityAnimationByDirection;
+import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
+import de.amr.games.pacman.lib.animation.EntityAnimation;
+import de.amr.games.pacman.lib.animation.EntityAnimations;
+import de.amr.games.pacman.lib.animation.FixedEntityAnimation;
 import de.amr.games.pacman.model.common.LevelCounter;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Entity;
@@ -85,21 +85,21 @@ public interface Rendering2D {
 
 	// Animations
 
-	DirectionAnimationMap createPacMunchingAnimationMap(Pac pac);
+	EntityAnimationByDirection createPacMunchingAnimationMap(Pac pac);
 
-	SingleSpriteAnimation<Rectangle2D> createPacDyingAnimation();
+	SingleEntityAnimation<Rectangle2D> createPacDyingAnimation();
 
-	DirectionAnimationMap createGhostColorAnimationMap(Ghost ghost);
+	EntityAnimationByDirection createGhostColorAnimationMap(Ghost ghost);
 
-	SingleSpriteAnimation<Rectangle2D> createGhostBlueAnimation();
+	SingleEntityAnimation<Rectangle2D> createGhostBlueAnimation();
 
-	SingleSpriteAnimation<Rectangle2D> createGhostFlashingAnimation();
+	SingleEntityAnimation<Rectangle2D> createGhostFlashingAnimation();
 
-	DirectionAnimationMap createGhostEyesAnimationMap(Ghost ghost);
+	EntityAnimationByDirection createGhostEyesAnimationMap(Ghost ghost);
 
-	SingleSpriteAnimation<Image> createMazeFlashingAnimation(int mazeNumber);
+	SingleEntityAnimation<Image> createMazeFlashingAnimation(int mazeNumber);
 
-	SpriteArray<Rectangle2D> createGhostValueList();
+	FixedEntityAnimation<Rectangle2D> createGhostValueList();
 
 	// Maze
 
@@ -156,8 +156,8 @@ public interface Rendering2D {
 		}
 	}
 
-	static Optional<Rectangle2D> currentFrame(Optional<SpriteAnimations> anims) {
-		return anims.map(SpriteAnimations::selectedAnimation).map(SpriteAnimation::frame).map(Rectangle2D.class::cast);
+	static Optional<Rectangle2D> currentFrame(Optional<EntityAnimations> anims) {
+		return anims.map(EntityAnimations::selectedAnimation).map(EntityAnimation::frame).map(Rectangle2D.class::cast);
 	}
 
 	default void drawPac(GraphicsContext g, Pac pac) {

@@ -26,14 +26,14 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
 import java.util.HashMap;
 
-import de.amr.games.pacman.lib.animation.SpriteAnimations;
+import de.amr.games.pacman.lib.animation.EntityAnimations;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Pac;
 
 /**
  * @author Armin Reichert
  */
-public class PacAnimations extends SpriteAnimations {
+public class PacAnimations extends EntityAnimations {
 
 	public PacAnimations(Pac pac, Rendering2D r2D) {
 		animationsByName = new HashMap<>(2);

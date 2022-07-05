@@ -24,7 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import de.amr.games.pacman.controller.mspacman.Intermission3Controller;
-import de.amr.games.pacman.lib.animation.SingleSpriteAnimation;
+import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.SpritesheetMsPacMan;
@@ -47,7 +47,7 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 
 	private Intermission3Controller sceneController;
 	private Intermission3Controller.Context icc;
-	private SingleSpriteAnimation<Rectangle2D> storkAnim;
+	private SingleEntityAnimation<Rectangle2D> storkAnim;
 
 	@Override
 	public void setSceneContext(SceneContext sceneContext) {

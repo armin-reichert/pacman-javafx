@@ -24,7 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import de.amr.games.pacman.controller.mspacman.Intermission2Controller;
-import de.amr.games.pacman.lib.animation.SpriteAnimations;
+import de.amr.games.pacman.lib.animation.EntityAnimations;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.SpritesheetMsPacMan;
@@ -57,7 +57,7 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 		sceneController.restartInInitialState(Intermission2Controller.State.FLAP);
 		icc.flap.animation = SpritesheetMsPacMan.get().createFlapAnimation();
 		icc.msPacMan.setAnimations(new PacAnimations(icc.msPacMan, ctx.r2D));
-		icc.msPacMan.animations().ifPresent(SpriteAnimations::ensureRunning);
+		icc.msPacMan.animations().ifPresent(EntityAnimations::ensureRunning);
 		icc.pacMan.setAnimations(new PacAnimations(icc.pacMan, ctx.r2D));
 		icc.pacMan.animations().ifPresent(animations -> {
 			var munching = SpritesheetMsPacMan.get().createPacManMunchingAnimationMap(icc.pacMan);

@@ -27,7 +27,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
-import de.amr.games.pacman.lib.animation.SpriteAnimations;
+import de.amr.games.pacman.lib.animation.EntityAnimations;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
@@ -117,8 +117,8 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	public void onSwitchFrom3D() {
-		ctx.game().pac.animations().ifPresent(SpriteAnimations::ensureRunning);
-		ctx.game().ghosts().map(Ghost::animations).forEach(anim -> anim.ifPresent(SpriteAnimations::ensureRunning));
+		ctx.game().pac.animations().ifPresent(EntityAnimations::ensureRunning);
+		ctx.game().ghosts().map(Ghost::animations).forEach(anim -> anim.ifPresent(EntityAnimations::ensureRunning));
 	}
 
 	@Override
