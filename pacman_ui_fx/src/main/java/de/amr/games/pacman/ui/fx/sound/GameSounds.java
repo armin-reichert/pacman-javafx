@@ -45,7 +45,7 @@ public class GameSounds implements GameSoundController {
 
 	private static final Logger logger = LogManager.getFormatterLogger();
 
-	public static boolean SOUND_DISABLED = true;
+	public static final boolean SOUND_DISABLED = false;
 
 	public static final GameSounds NO_SOUNDS = new GameSounds();
 	public static final GameSounds MS_PACMAN_SOUNDS = new GameSounds();
@@ -93,6 +93,36 @@ public class GameSounds implements GameSoundController {
 	protected boolean silent;
 	protected boolean muted;
 
+	protected void load(GameSound sound, String relPath) {
+		if (SOUND_DISABLED) {
+			return;
+		}
+		var url = Resources.urlFromRelPath(relPath);
+		if (url == null) {
+			var absPath = Resources.absPath(relPath);
+			logger.error("Game sound %s not loaded: resource '%s' not found", sound, absPath);
+			return;
+		}
+		var urlStr = url.toExternalForm();
+		try {
+			logger.trace("Try loading audio clip %s from URL '%s'", sound, urlStr);
+			clips.put(sound, new AudioClip(urlStr));
+			logger.trace("ok");
+		} catch (Exception e) {
+			logger.error("failed: %s", e.getMessage());
+		}
+	}
+
+	protected Optional<AudioClip> getClip(GameSound sound) {
+		return Optional.ofNullable(clips.get(sound));
+	}
+
+	protected void playClip(AudioClip clip) {
+		if (!silent && !muted) {
+			clip.play();
+		}
+	}
+
 	@Override
 	public void setSilent(boolean silent) {
 		this.silent = silent;
@@ -112,36 +142,6 @@ public class GameSounds implements GameSoundController {
 		if (muted) {
 			stopAll();
 		}
-	}
-
-	protected void load(GameSound sound, String relPath) {
-		if (SOUND_DISABLED) {
-			return;
-		}
-		var url = Resources.urlFromRelPath(relPath);
-		if (url == null) {
-			var absPath = Resources.absPath(relPath);
-			logger.error("Game sound %s not loaded: resource '%s' not found", sound, absPath);
-			return;
-		}
-		var urlStr = url.toExternalForm();
-		logger.trace("Try loading clip from '%s'", urlStr);
-		try {
-			clips.put(sound, new AudioClip(urlStr));
-			logger.trace("ok");
-		} catch (Exception e) {
-			logger.error("Game sound %s not loaded: %s", sound, e.getMessage());
-		}
-	}
-
-	protected void playClip(AudioClip clip) {
-		if (!silent && !muted) {
-			clip.play();
-		}
-	}
-
-	protected Optional<AudioClip> getClip(GameSound sound) {
-		return Optional.ofNullable(clips.get(sound));
 	}
 
 	@Override
@@ -187,8 +187,6 @@ public class GameSounds implements GameSoundController {
 			clip.stop();
 		}
 	}
-
-	// -----------------
 
 	@Override
 	public void startSiren(int sirenIndex) {
