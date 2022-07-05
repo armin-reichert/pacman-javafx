@@ -62,7 +62,7 @@ public class PacManCutscene2 extends GameScene2D {
 		initialDelay = 120;
 
 		pac = new Pac("Pac-Man");
-		pac.placeAt(v(29, 20), 0, 0);
+		pac.placeAtTile(v(29, 20), 0, 0);
 		pac.setMoveDir(Direction.LEFT);
 		pac.setAbsSpeed(1.15);
 		pac.show();
@@ -75,7 +75,7 @@ public class PacManCutscene2 extends GameScene2D {
 		stretchedDressAnimation = ((SpritesheetPacMan) ctx.r2D).createBlinkyStretchedAnimation();
 
 		blinky = new Ghost(Ghost.RED_GHOST, "Blinky");
-		blinky.placeAt(v(28, 20), 0, 0);
+		blinky.placeAtTile(v(28, 20), 0, 0);
 		blinky.setBothDirs(Direction.LEFT);
 		blinky.setAbsSpeed(0);
 		blinky.hide();
