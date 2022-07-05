@@ -32,7 +32,7 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 /**
  * @author Armin Reichert
  */
-public class GhostAnimations extends SpriteAnimations<Ghost> {
+public class GhostAnimations extends SpriteAnimations {
 
 	public GhostAnimations(Ghost ghost, Rendering2D r2D) {
 		animationsByName = new HashMap<>();

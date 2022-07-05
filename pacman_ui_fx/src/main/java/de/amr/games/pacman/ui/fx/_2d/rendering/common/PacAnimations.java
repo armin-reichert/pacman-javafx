@@ -33,7 +33,7 @@ import de.amr.games.pacman.model.common.actors.Pac;
 /**
  * @author Armin Reichert
  */
-public class PacAnimations extends SpriteAnimations<Pac> {
+public class PacAnimations extends SpriteAnimations {
 
 	public PacAnimations(Pac pac, Rendering2D r2D) {
 		animationsByName = new HashMap<>(2);

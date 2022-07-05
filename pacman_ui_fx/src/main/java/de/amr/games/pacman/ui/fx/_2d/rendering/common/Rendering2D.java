@@ -156,7 +156,7 @@ public interface Rendering2D {
 		}
 	}
 
-	static <E> Optional<Rectangle2D> currentFrame(Optional<SpriteAnimations<E>> anims) {
+	static Optional<Rectangle2D> currentFrame(Optional<SpriteAnimations> anims) {
 		return anims.map(SpriteAnimations::selectedAnimation).map(SpriteAnimation::frame).map(Rectangle2D.class::cast);
 	}
 
