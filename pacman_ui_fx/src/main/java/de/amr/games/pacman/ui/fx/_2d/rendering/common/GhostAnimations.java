@@ -37,12 +37,12 @@ import javafx.geometry.Rectangle2D;
  */
 public class GhostAnimations extends SpriteAnimations<Ghost> {
 
-	public GhostAnimations(int ghostID, Rendering2D r2D) {
+	public GhostAnimations(Ghost ghost, Rendering2D r2D) {
 		animationsByName = new HashMap<>();
 		animationsByName.put(AnimKeys.GHOST_BLUE, r2D.createGhostBlueAnimation());
-		animationsByName.put(AnimKeys.GHOST_EYES, r2D.createGhostEyesAnimationMap());
+		animationsByName.put(AnimKeys.GHOST_EYES, r2D.createGhostEyesAnimationMap(ghost));
 		animationsByName.put(AnimKeys.GHOST_FLASHING, r2D.createGhostFlashingAnimation());
-		animationsByName.put(AnimKeys.GHOST_COLOR, r2D.createGhostColorAnimationMap(ghostID));
+		animationsByName.put(AnimKeys.GHOST_COLOR, r2D.createGhostColorAnimationMap(ghost));
 		animationsByName.put(AnimKeys.GHOST_VALUE, r2D.createGhostValueList());
 		select(AnimKeys.GHOST_COLOR);
 	}
@@ -50,9 +50,9 @@ public class GhostAnimations extends SpriteAnimations<Ghost> {
 	@Override
 	public Rectangle2D current(Ghost ghost) {
 		return (Rectangle2D) switch (selected) {
-		case AnimKeys.GHOST_EYES -> toMap(AnimKeys.GHOST_EYES).get(ghost.wishDir()).animate();
-		case AnimKeys.GHOST_COLOR -> toMap(AnimKeys.GHOST_COLOR).get(ghost.wishDir()).animate();
-		default -> selectedAnimation().animate();
+		case AnimKeys.GHOST_EYES -> toMap(AnimKeys.GHOST_EYES).get(ghost.wishDir()).frame();
+		case AnimKeys.GHOST_COLOR -> toMap(AnimKeys.GHOST_COLOR).get(ghost.wishDir()).frame();
+		default -> selectedAnimation().frame();
 		};
 	}
 

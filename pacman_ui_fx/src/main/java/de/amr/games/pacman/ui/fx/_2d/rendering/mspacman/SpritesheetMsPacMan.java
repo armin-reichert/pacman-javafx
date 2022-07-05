@@ -25,14 +25,16 @@ package de.amr.games.pacman.ui.fx._2d.rendering.mspacman;
 
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import java.util.EnumMap;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.SingleSpriteAnimation;
 import de.amr.games.pacman.lib.animation.SpriteAnimationMap;
 import de.amr.games.pacman.lib.animation.SpriteArray;
+import de.amr.games.pacman.model.common.actors.Ghost;
+import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.mspacman.Flap;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.DirectionAnimationMap;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -227,9 +229,8 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public SpriteAnimationMap<Direction, Rectangle2D> createPacMunchingAnimationMap() {
-		var enumMap = new EnumMap<Direction, SingleSpriteAnimation<Rectangle2D>>(Direction.class);
-		var animationByDir = new SpriteAnimationMap<>(enumMap);
+	public DirectionAnimationMap createPacMunchingAnimationMap(Pac pac) {
+		var animationByDir = new DirectionAnimationMap(pac::moveDir);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			var wideOpen = rhs(0, d);
@@ -256,12 +257,11 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public SpriteAnimationMap<Direction, Rectangle2D> createGhostColorAnimationMap(int ghostID) {
-		var enumMap = new EnumMap<Direction, SingleSpriteAnimation<Rectangle2D>>(Direction.class);
-		var animationByDir = new SpriteAnimationMap<>(enumMap);
+	public DirectionAnimationMap createGhostColorAnimationMap(Ghost ghost) {
+		var animationByDir = new DirectionAnimationMap(ghost::wishDir);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
-			var animation = new SingleSpriteAnimation<>(rhs(2 * d, 4 + ghostID), rhs(2 * d + 1, 4 + ghostID));
+			var animation = new SingleSpriteAnimation<>(rhs(2 * d, 4 + ghost.id), rhs(2 * d + 1, 4 + ghost.id));
 			animation.frameDuration(8);
 			animation.repeatForever();
 			animationByDir.put(dir, animation);
@@ -285,9 +285,8 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 	}
 
 	@Override
-	public SpriteAnimationMap<Direction, Rectangle2D> createGhostEyesAnimationMap() {
-		var enumMap = new EnumMap<Direction, SingleSpriteAnimation<Rectangle2D>>(Direction.class);
-		var animationByDir = new SpriteAnimationMap<>(enumMap);
+	public DirectionAnimationMap createGhostEyesAnimationMap(Ghost ghost) {
+		var animationByDir = new DirectionAnimationMap(ghost::wishDir);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			animationByDir.put(dir, new SingleSpriteAnimation<>(rhs(8 + d, 5)));

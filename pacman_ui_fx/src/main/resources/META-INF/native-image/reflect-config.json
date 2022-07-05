@@ -61,6 +61,9 @@
   "methods":[{"name":"getResource","parameterTypes":["java.lang.String"] }]
 },
 {
+  "name":"com.sun.javafx.tk.quantum.OverlayWarning"
+},
+{
   "name":"com.sun.javafx.tk.quantum.QuantumToolkit",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -133,6 +136,10 @@
 },
 {
   "name":"com.sun.prism.shader.FillPgram_LinearGradient_PAD_Loader",
+  "methods":[{"name":"loadShader","parameterTypes":["com.sun.prism.ps.ShaderFactory","java.io.InputStream"] }]
+},
+{
+  "name":"com.sun.prism.shader.FillRoundRect_Color_Loader",
   "methods":[{"name":"loadShader","parameterTypes":["com.sun.prism.ps.ShaderFactory","java.io.InputStream"] }]
 },
 {

@@ -131,11 +131,15 @@ public abstract class GameScene2D implements GameScene {
 	public final void update() {
 		infoPane.setVisible(Env.debugUI.get());
 		doUpdate();
+		repaint();
+		drawOverlay();
+	}
+
+	public void repaint() {
 		var g = canvas.getGraphicsContext2D();
 		g.setFill(Color.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		doRender(g);
-		drawOverlay();
 	}
 
 	private void drawOverlay() {

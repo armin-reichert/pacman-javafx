@@ -60,8 +60,8 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 	public void init() {
 		sceneController.restartInInitialState(Intermission3Controller.State.FLAP);
 		icc.flap.animation = SpritesheetMsPacMan.get().createFlapAnimation();
-		icc.msPacMan.setAnimations(new PacAnimations(ctx.r2D));
-		icc.pacMan.setAnimations(new PacAnimations(ctx.r2D));
+		icc.msPacMan.setAnimations(new PacAnimations(icc.msPacMan, ctx.r2D));
+		icc.pacMan.setAnimations(new PacAnimations(icc.pacMan, ctx.r2D));
 		var munchingAnimMap = SpritesheetMsPacMan.get().createPacManMunchingAnimationMap();
 		icc.pacMan.animations().ifPresent(anims -> anims.put(AnimKeys.PAC_MUNCHING, munchingAnimMap));
 		icc.flap.animation = SpritesheetMsPacMan.get().createFlapAnimation();

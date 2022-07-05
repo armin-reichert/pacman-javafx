@@ -66,8 +66,8 @@ public class PacManIntroScene extends GameScene2D {
 	public void init() {
 		sceneController.restartInInitialState(IntroController.State.START);
 		creditVisible = false;
-		icc.pacMan.setAnimations(new PacAnimations(ctx.r2D));
-		Stream.of(icc.ghosts).forEach(ghost -> ghost.setAnimations(new GhostAnimations(ghost.id, ctx.r2D)));
+		icc.pacMan.setAnimations(new PacAnimations(icc.pacMan, ctx.r2D));
+		Stream.of(icc.ghosts).forEach(ghost -> ghost.setAnimations(new GhostAnimations(ghost, ctx.r2D)));
 	}
 
 	@Override
