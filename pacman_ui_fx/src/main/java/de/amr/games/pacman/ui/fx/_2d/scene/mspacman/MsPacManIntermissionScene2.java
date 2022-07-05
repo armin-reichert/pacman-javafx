@@ -60,7 +60,8 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 		icc.msPacMan.animations().ifPresent(SpriteAnimations::ensureRunning);
 		icc.pacMan.setAnimations(new PacAnimations(icc.pacMan, ctx.r2D));
 		icc.pacMan.animations().ifPresent(animations -> {
-			animations.put(AnimKeys.PAC_MUNCHING, SpritesheetMsPacMan.get().createPacManMunchingAnimationMap());
+			var munching = SpritesheetMsPacMan.get().createPacManMunchingAnimationMap(icc.pacMan);
+			animations.put(AnimKeys.PAC_MUNCHING, munching);
 			animations.ensureRunning();
 		});
 	}

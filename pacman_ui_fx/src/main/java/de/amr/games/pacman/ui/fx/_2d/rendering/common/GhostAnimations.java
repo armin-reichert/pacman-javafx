@@ -25,8 +25,6 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
 import java.util.HashMap;
 
-import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.animation.SpriteAnimationMap;
 import de.amr.games.pacman.lib.animation.SpriteAnimations;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -49,14 +47,6 @@ public class GhostAnimations extends SpriteAnimations<Ghost> {
 
 	@Override
 	public Rectangle2D current(Ghost ghost) {
-		return (Rectangle2D) switch (selected) {
-		case AnimKeys.GHOST_EYES -> toMap(AnimKeys.GHOST_EYES).get(ghost.wishDir()).frame();
-		case AnimKeys.GHOST_COLOR -> toMap(AnimKeys.GHOST_COLOR).get(ghost.wishDir()).frame();
-		default -> selectedAnimation().frame();
-		};
-	}
-
-	private SpriteAnimationMap<Direction, Rectangle2D> toMap(String name) {
-		return super.<Direction, Rectangle2D>castToMap(name);
+		return (Rectangle2D) selectedAnimation().frame();
 	}
 }

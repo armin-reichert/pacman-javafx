@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
 import java.util.HashMap;
 
-import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.SpriteAnimations;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Pac;
@@ -51,10 +50,6 @@ public class PacAnimations extends SpriteAnimations<Pac> {
 
 	@Override
 	public Rectangle2D current(Pac pac) {
-		return switch (selected) {
-		case AnimKeys.PAC_MUNCHING -> super.<Direction, Rectangle2D>castToMap(AnimKeys.PAC_MUNCHING).get(pac.moveDir())
-				.frame();
-		default -> (Rectangle2D) selectedAnimation().frame();
-		};
+		return (Rectangle2D) selectedAnimation().frame();
 	}
 }

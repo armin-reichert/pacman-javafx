@@ -28,13 +28,12 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.animation.DirectionAnimationMap;
 import de.amr.games.pacman.lib.animation.SingleSpriteAnimation;
-import de.amr.games.pacman.lib.animation.SpriteAnimationMap;
 import de.amr.games.pacman.lib.animation.SpriteArray;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.mspacman.Flap;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.DirectionAnimationMap;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -301,8 +300,8 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 
 	// Ms. Pac-Man specific:
 
-	public SpriteAnimationMap<Direction, Rectangle2D> createPacManMunchingAnimationMap() {
-		var animationByDir = new SpriteAnimationMap<Direction, Rectangle2D>(4);
+	public DirectionAnimationMap createPacManMunchingAnimationMap(Pac pac) {
+		var animationByDir = new DirectionAnimationMap(pac::moveDir);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			var animation = new SingleSpriteAnimation<>(rhs(0, 9 + d), rhs(1, 9 + d), rhs(2, 9));
