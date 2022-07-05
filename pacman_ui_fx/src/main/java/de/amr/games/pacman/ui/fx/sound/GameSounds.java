@@ -45,7 +45,7 @@ public class GameSounds implements GameSoundController {
 
 	private static final Logger logger = LogManager.getFormatterLogger();
 
-	public static final boolean SOUND_DISABLED = true;
+	public static final boolean SOUND_DISABLED = false;
 
 	private static final Map<GameSound, String> PACMAN_MAP = new EnumMap<>(GameSound.class);
 	static {
