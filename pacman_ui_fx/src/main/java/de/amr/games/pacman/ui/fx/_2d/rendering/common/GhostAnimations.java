@@ -23,8 +23,6 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
-import java.util.HashMap;
-
 import de.amr.games.pacman.lib.animation.EntityAnimations;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -35,7 +33,7 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 public class GhostAnimations extends EntityAnimations {
 
 	public GhostAnimations(Ghost ghost, Rendering2D r2D) {
-		animationsByName = new HashMap<>();
+		super(5);
 		animationsByName.put(AnimKeys.GHOST_BLUE, r2D.createGhostBlueAnimation());
 		animationsByName.put(AnimKeys.GHOST_EYES, r2D.createGhostEyesAnimationMap(ghost));
 		animationsByName.put(AnimKeys.GHOST_FLASHING, r2D.createGhostFlashingAnimation());

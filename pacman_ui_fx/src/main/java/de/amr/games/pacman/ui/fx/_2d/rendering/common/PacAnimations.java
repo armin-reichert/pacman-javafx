@@ -24,8 +24,6 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
-import java.util.HashMap;
-
 import de.amr.games.pacman.lib.animation.EntityAnimations;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Pac;
@@ -36,7 +34,7 @@ import de.amr.games.pacman.model.common.actors.Pac;
 public class PacAnimations extends EntityAnimations {
 
 	public PacAnimations(Pac pac, Rendering2D r2D) {
-		animationsByName = new HashMap<>(2);
+		super(2);
 		put(AnimKeys.PAC_DYING, r2D.createPacDyingAnimation());
 		put(AnimKeys.PAC_MUNCHING, r2D.createPacMunchingAnimationMap(pac));
 		select(AnimKeys.PAC_MUNCHING);
