@@ -27,6 +27,7 @@ import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import de.amr.games.pacman.controller.common.GameState;
@@ -34,6 +35,8 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.lib.animation.DirectionAnimationMap;
 import de.amr.games.pacman.lib.animation.SingleSpriteAnimation;
+import de.amr.games.pacman.lib.animation.SpriteAnimation;
+import de.amr.games.pacman.lib.animation.SpriteAnimations;
 import de.amr.games.pacman.lib.animation.SpriteArray;
 import de.amr.games.pacman.model.common.LevelCounter;
 import de.amr.games.pacman.model.common.actors.Bonus;
@@ -153,12 +156,16 @@ public interface Rendering2D {
 		}
 	}
 
+	static <E> Optional<Rectangle2D> currentFrame(Optional<SpriteAnimations<E>> anims) {
+		return anims.map(SpriteAnimations::selectedAnimation).map(SpriteAnimation::frame).map(Rectangle2D.class::cast);
+	}
+
 	default void drawPac(GraphicsContext g, Pac pac) {
-		pac.animations().ifPresent(anim -> drawEntity(g, pac, (Rectangle2D) anim.current(pac)));
+		currentFrame(pac.animations()).ifPresent(frame -> drawEntity(g, pac, frame));
 	}
 
 	default void drawGhost(GraphicsContext g, Ghost ghost) {
-		ghost.animations().ifPresent(anim -> drawEntity(g, ghost, (Rectangle2D) anim.current(ghost)));
+		currentFrame(ghost.animations()).ifPresent(frame -> drawEntity(g, ghost, frame));
 	}
 
 	default void drawGhosts(GraphicsContext g, Ghost[] ghosts) {

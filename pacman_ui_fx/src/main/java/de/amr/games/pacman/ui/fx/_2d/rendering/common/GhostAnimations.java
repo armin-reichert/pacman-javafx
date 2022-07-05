@@ -28,7 +28,6 @@ import java.util.HashMap;
 import de.amr.games.pacman.lib.animation.SpriteAnimations;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Ghost;
-import javafx.geometry.Rectangle2D;
 
 /**
  * @author Armin Reichert
@@ -43,10 +42,5 @@ public class GhostAnimations extends SpriteAnimations<Ghost> {
 		animationsByName.put(AnimKeys.GHOST_COLOR, r2D.createGhostColorAnimationMap(ghost));
 		animationsByName.put(AnimKeys.GHOST_VALUE, r2D.createGhostValueList());
 		select(AnimKeys.GHOST_COLOR);
-	}
-
-	@Override
-	public Rectangle2D current(Ghost ghost) {
-		return (Rectangle2D) selectedAnimation().frame();
 	}
 }

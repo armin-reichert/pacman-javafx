@@ -29,7 +29,6 @@ import java.util.HashMap;
 import de.amr.games.pacman.lib.animation.SpriteAnimations;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Pac;
-import javafx.geometry.Rectangle2D;
 
 /**
  * @author Armin Reichert
@@ -46,10 +45,5 @@ public class PacAnimations extends SpriteAnimations<Pac> {
 	@Override
 	public void ensureRunning() {
 		byName(AnimKeys.PAC_MUNCHING).ensureRunning();
-	}
-
-	@Override
-	public Rectangle2D current(Pac pac) {
-		return (Rectangle2D) selectedAnimation().frame();
 	}
 }
