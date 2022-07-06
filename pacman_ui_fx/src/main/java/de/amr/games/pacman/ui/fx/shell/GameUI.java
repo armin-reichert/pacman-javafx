@@ -39,7 +39,6 @@ import de.amr.games.pacman.ui.fx.app.PacManGameAppFX;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneManager;
 import de.amr.games.pacman.ui.fx.shell.info.Dashboard;
-import de.amr.games.pacman.ui.fx.shell.info.PiPView;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.PauseTransition;
 import javafx.scene.Scene;

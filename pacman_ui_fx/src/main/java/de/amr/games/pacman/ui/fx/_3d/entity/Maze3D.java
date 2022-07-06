@@ -147,8 +147,8 @@ public class Maze3D extends Group {
 		addVerticalWalls(floorPlan, wallData);
 
 		doorsGroup.getChildren().clear();
-		var leftDoor = createDoor(world.ghostHouse().doorTileLeft(), mazeStyle.doorColor);
-		var rightDoor = createDoor(world.ghostHouse().doorTileRight(), mazeStyle.doorColor);
+		var leftDoor = createDoor(world.ghostHouse().doorLeftTile(), mazeStyle.doorColor);
+		var rightDoor = createDoor(world.ghostHouse().doorRightTile(), mazeStyle.doorColor);
 		doorsGroup.getChildren().setAll(leftDoor, rightDoor);
 
 		logger.info("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallData.height);

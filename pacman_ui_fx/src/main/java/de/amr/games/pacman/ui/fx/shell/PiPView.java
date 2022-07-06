@@ -21,12 +21,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx.shell.info;
+package de.amr.games.pacman.ui.fx.shell;
 
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
@@ -37,6 +38,7 @@ import javafx.scene.paint.Color;
  */
 public class PiPView extends StackPane {
 
+	private static final Image DEFUNCT_IMAGE = Ufx.image("graphics/stoerung.jpg");
 	public DoubleProperty pySceneHeight = new SimpleDoubleProperty();
 	private final PlayScene2D playScene2D;
 
@@ -56,10 +58,14 @@ public class PiPView extends StackPane {
 	public void render(boolean drawScene) {
 		var canvas = playScene2D.getCanvas();
 		var g = canvas.getGraphicsContext2D();
+		var w = canvas.getWidth();
+		var h = canvas.getHeight();
 		g.setFill(Color.BLACK);
-		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		g.fillRect(0, 0, w, h);
 		if (drawScene) {
 			playScene2D.doRender(g);
+		} else {
+			g.drawImage(DEFUNCT_IMAGE, 0, 0, 224, 288);
 		}
 	}
 }
