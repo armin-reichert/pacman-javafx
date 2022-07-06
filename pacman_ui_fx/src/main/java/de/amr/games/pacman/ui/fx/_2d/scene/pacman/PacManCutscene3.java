@@ -55,10 +55,10 @@ public class PacManCutscene3 extends GameScene2D {
 		frame = -1;
 		initialDelay = 120;
 		pac = new Pac("Pac-Man");
-		pac.setAnimations(new PacAnimations(pac, ctx.r2D));
+		pac.setAnimationSet(new PacAnimations(pac, ctx.r2D));
 		blinky = new Ghost(Ghost.RED_GHOST, "Blinky");
-		blinky.setAnimations(new GhostAnimations(blinky, ctx.r2D));
-		blinky.animations().ifPresent(animations -> {
+		blinky.setAnimationSet(new GhostAnimations(blinky, ctx.r2D));
+		blinky.animationSet().ifPresent(animations -> {
 			animations.put("patched", SpritesheetPacMan.get().createBlinkyPatchedAnimation());
 			animations.put("naked", SpritesheetPacMan.get().createBlinkyNakedAnimation());
 		});
@@ -77,24 +77,24 @@ public class PacManCutscene3 extends GameScene2D {
 			pac.setMoveDir(Direction.LEFT);
 			pac.setAbsSpeed(1.25);
 			pac.show();
-			pac.selectAnimation(AnimKeys.PAC_MUNCHING);
+			pac.setAnimation(AnimKeys.PAC_MUNCHING);
 			blinky.placeAtTile(v(35, 20), 0, 0);
 			blinky.setBothDirs(Direction.LEFT);
 			blinky.setAbsSpeed(1.25);
 			blinky.show();
-			blinky.selectAnimation("patched");
+			blinky.setAnimation("patched");
 		} else if (frame == 296) {
 			blinky.placeAtTile(v(-1, 20), 0, 0);
 			blinky.setBothDirs(Direction.RIGHT);
-			blinky.selectAnimation("naked");
+			blinky.setAnimation("naked");
 		} else if (frame == 516) {
 			ctx.state().timer().expire();
 			return;
 		}
 		pac.move();
-		pac.animate();
+		pac.advance();
 		blinky.move();
-		blinky.animate();
+		blinky.advance();
 	}
 
 	@Override

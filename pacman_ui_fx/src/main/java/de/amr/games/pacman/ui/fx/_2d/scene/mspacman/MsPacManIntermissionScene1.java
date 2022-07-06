@@ -24,7 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import de.amr.games.pacman.controller.mspacman.Intermission1Controller;
-import de.amr.games.pacman.lib.animation.EntityAnimations;
+import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
@@ -58,18 +58,18 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 	public void init() {
 		sceneController.restartInInitialState(Intermission1Controller.State.FLAP);
 		icc.flap.animation = SpritesheetMsPacMan.get().createFlapAnimation();
-		icc.msPac.setAnimations(new PacAnimations(icc.msPac, ctx.r2D));
-		icc.msPac.animations().ifPresent(EntityAnimations::ensureRunning);
-		icc.pacMan.setAnimations(new PacAnimations(icc.pacMan, ctx.r2D));
-		icc.pacMan.animations().ifPresent(animations -> {
+		icc.msPac.setAnimationSet(new PacAnimations(icc.msPac, ctx.r2D));
+		icc.msPac.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
+		icc.pacMan.setAnimationSet(new PacAnimations(icc.pacMan, ctx.r2D));
+		icc.pacMan.animationSet().ifPresent(animations -> {
 			var munching = SpritesheetMsPacMan.get().createPacManMunchingAnimationMap(icc.pacMan);
 			animations.put(AnimKeys.PAC_MUNCHING, munching);
 			animations.ensureRunning();
 		});
-		icc.inky.setAnimations(new GhostAnimations(icc.inky, ctx.r2D));
-		icc.inky.animations().ifPresent(EntityAnimations::ensureRunning);
-		icc.pinky.setAnimations(new GhostAnimations(icc.pinky, ctx.r2D));
-		icc.pinky.animations().ifPresent(EntityAnimations::ensureRunning);
+		icc.inky.setAnimationSet(new GhostAnimations(icc.inky, ctx.r2D));
+		icc.inky.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
+		icc.pinky.setAnimationSet(new GhostAnimations(icc.pinky, ctx.r2D));
+		icc.pinky.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
 	}
 
 	@Override

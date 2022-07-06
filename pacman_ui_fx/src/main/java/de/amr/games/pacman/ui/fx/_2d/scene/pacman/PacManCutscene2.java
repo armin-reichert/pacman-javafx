@@ -70,7 +70,7 @@ public class PacManCutscene2 extends GameScene2D {
 		var pacAnimations = new PacAnimations(pac, ctx.r2D);
 		pacAnimations.select(AnimKeys.PAC_MUNCHING);
 		pacAnimations.byName(AnimKeys.PAC_MUNCHING).restart();
-		pac.setAnimations(pacAnimations);
+		pac.setAnimationSet(pacAnimations);
 
 		stretchedDressAnimation = ((SpritesheetPacMan) ctx.r2D).createBlinkyStretchedAnimation();
 
@@ -85,7 +85,7 @@ public class PacManCutscene2 extends GameScene2D {
 		blinkyAnimations.put(DAMAGED, damagedAnimation);
 		blinkyAnimations.select(AnimKeys.GHOST_COLOR);
 		blinkyAnimations.byName(AnimKeys.GHOST_COLOR).restart();
-		blinky.setAnimations(blinkyAnimations);
+		blinky.setAnimationSet(blinkyAnimations);
 
 	}
 
@@ -108,12 +108,12 @@ public class PacManCutscene2 extends GameScene2D {
 			stretchedDressAnimation.setFrameIndex(2);
 		} else if (frame == 248) {
 			blinky.setAbsSpeed(0);
-			blinky.animations().ifPresent(animations -> animations.selectedAnimation().stop());
+			blinky.animationSet().ifPresent(animations -> animations.selectedAnimation().stop());
 			stretchedDressAnimation.setFrameIndex(3);
 		} else if (frame == 328) {
 			stretchedDressAnimation.setFrameIndex(4);
 		} else if (frame == 329) {
-			blinky.animations().ifPresent(animations -> animations.select(DAMAGED));
+			blinky.animationSet().ifPresent(animations -> animations.select(DAMAGED));
 			damagedAnimation.setFrameIndex(0);
 		} else if (frame == 389) {
 			damagedAnimation.setFrameIndex(1);
@@ -124,9 +124,9 @@ public class PacManCutscene2 extends GameScene2D {
 			return;
 		}
 		pac.move();
-		pac.animate();
+		pac.advance();
 		blinky.move();
-		blinky.animate();
+		blinky.advance();
 	}
 
 	@Override

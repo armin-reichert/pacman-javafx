@@ -88,7 +88,7 @@ public class GuysInfo {
 		if (ghost.is(GhostState.HUNTING_PAC)) {
 			stateText += game.huntingTimer.inChasingPhase() ? " (Chasing)" : " (Scattering)";
 		}
-		var ghostAnims = ghost.animations();
+		var ghostAnims = ghost.animationSet();
 		if (ghostAnims.isPresent()) {
 			var animState = fmtAnimationState(ghostAnims.get().selectedAnimation(), ghost.wishDir());
 			return "%s%n%s%n %s%s".formatted(name, stateText, animState, ghostAnims.get().selected());
@@ -98,7 +98,7 @@ public class GuysInfo {
 	}
 
 	private String fmtPacInfo(Pac pac) {
-		var pacAnims = pac.animations();
+		var pacAnims = pac.animationSet();
 		if (pacAnims.isPresent()) {
 			var animState = fmtAnimationState(pacAnims.get().selectedAnimation(), pac.moveDir());
 			return "%s%n%s%s".formatted(pac.name, animState, pacAnims.get().selected());

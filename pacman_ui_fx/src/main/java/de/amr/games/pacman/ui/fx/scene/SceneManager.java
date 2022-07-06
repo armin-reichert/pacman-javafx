@@ -121,8 +121,8 @@ public class SceneManager {
 		if (createAnimations) {
 			var world = (ArcadeWorld) game.world();
 			world.setFlashingAnimation(r2D.createMazeFlashingAnimation(game.level.mazeNumber));
-			game.pac.setAnimations(new PacAnimations(game.pac, r2D));
-			game.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimations(ghost, r2D)));
+			game.pac.setAnimationSet(new PacAnimations(game.pac, r2D));
+			game.ghosts().forEach(ghost -> ghost.setAnimationSet(new GhostAnimations(ghost, r2D)));
 		}
 
 		scene.init();

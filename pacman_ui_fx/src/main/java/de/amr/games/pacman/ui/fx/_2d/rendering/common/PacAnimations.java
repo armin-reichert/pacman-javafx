@@ -24,14 +24,14 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
-import de.amr.games.pacman.lib.animation.EntityAnimations;
+import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Pac;
 
 /**
  * @author Armin Reichert
  */
-public class PacAnimations extends EntityAnimations {
+public class PacAnimations extends EntityAnimationSet {
 
 	public PacAnimations(Pac pac, Rendering2D r2D) {
 		super(2);

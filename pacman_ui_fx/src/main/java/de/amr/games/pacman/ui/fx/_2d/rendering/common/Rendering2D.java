@@ -36,7 +36,7 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.lib.animation.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
 import de.amr.games.pacman.lib.animation.EntityAnimation;
-import de.amr.games.pacman.lib.animation.EntityAnimations;
+import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.lib.animation.FixedEntityAnimation;
 import de.amr.games.pacman.model.common.LevelCounter;
 import de.amr.games.pacman.model.common.actors.Bonus;
@@ -156,16 +156,16 @@ public interface Rendering2D {
 		}
 	}
 
-	static Optional<Rectangle2D> currentFrame(Optional<EntityAnimations> anims) {
-		return anims.map(EntityAnimations::selectedAnimation).map(EntityAnimation::frame).map(Rectangle2D.class::cast);
+	static Optional<Rectangle2D> currentFrame(Optional<EntityAnimationSet> anims) {
+		return anims.map(EntityAnimationSet::selectedAnimation).map(EntityAnimation::frame).map(Rectangle2D.class::cast);
 	}
 
 	default void drawPac(GraphicsContext g, Pac pac) {
-		currentFrame(pac.animations()).ifPresent(frame -> drawEntity(g, pac, frame));
+		currentFrame(pac.animationSet()).ifPresent(frame -> drawEntity(g, pac, frame));
 	}
 
 	default void drawGhost(GraphicsContext g, Ghost ghost) {
-		currentFrame(ghost.animations()).ifPresent(frame -> drawEntity(g, ghost, frame));
+		currentFrame(ghost.animationSet()).ifPresent(frame -> drawEntity(g, ghost, frame));
 	}
 
 	default void drawGhosts(GraphicsContext g, Ghost[] ghosts) {
