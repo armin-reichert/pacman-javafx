@@ -30,8 +30,8 @@ import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.EntityAnimationByDirection;
-import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
 import de.amr.games.pacman.lib.animation.FixedEntityAnimation;
+import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -139,7 +139,7 @@ public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
 
 	@Override
 	public void drawCopyright(GraphicsContext g, int tileY) {
-		String text = "\u00A9 1980 MIDWAY MFG. CO.";
+		String text = "\u00A9 1980 MIDWAY MFG.CO.";
 		g.setFont(getArcadeFont());
 		g.setFill(getGhostColor(PINK_GHOST));
 		g.fillText(text, t(4), t(tileY));
