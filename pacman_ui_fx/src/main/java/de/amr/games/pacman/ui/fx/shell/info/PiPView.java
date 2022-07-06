@@ -52,4 +52,14 @@ public class PiPView extends StackPane {
 	public PlayScene2D getPlayScene2D() {
 		return playScene2D;
 	}
+
+	public void render(boolean drawScene) {
+		var canvas = playScene2D.getCanvas();
+		var g = canvas.getGraphicsContext2D();
+		g.setFill(Color.BLACK);
+		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		if (drawScene) {
+			playScene2D.doRender(g);
+		}
+	}
 }
