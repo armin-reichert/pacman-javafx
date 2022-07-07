@@ -55,7 +55,13 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 	@Override
 	public void init() {
 		sceneController.restartInInitialState(Intermission2Controller.State.FLAP);
-		icc.flap.animation = SpritesheetMsPacMan.get().createFlapAnimation();
+		var flapAnimationSet = new EntityAnimationSet(1) {
+			{
+				put("flap", SpritesheetMsPacMan.get().createFlapAnimation());
+				select("flap");
+			}
+		};
+		icc.flap.setAnimationSet(flapAnimationSet);
 		icc.msPacMan.setAnimationSet(new PacAnimations(icc.msPacMan, ctx.r2D));
 		icc.msPacMan.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
 		icc.pacMan.setAnimationSet(new PacAnimations(icc.pacMan, ctx.r2D));

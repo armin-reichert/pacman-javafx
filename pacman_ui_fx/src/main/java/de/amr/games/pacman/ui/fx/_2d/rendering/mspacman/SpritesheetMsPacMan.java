@@ -28,9 +28,10 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.animation.EntityAnimation;
 import de.amr.games.pacman.lib.animation.EntityAnimationByDirection;
-import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
 import de.amr.games.pacman.lib.animation.FixedEntityAnimation;
+import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.mspacman.Flap;
@@ -205,12 +206,15 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 
 	public void drawFlap(GraphicsContext g, Flap flap) {
 		if (flap.isVisible()) {
-			Rectangle2D sprite = (Rectangle2D) flap.animation.animate();
-			drawEntity(g, flap, sprite);
-			g.setFont(getArcadeFont());
-			g.setFill(Color.rgb(222, 222, 255));
-			g.fillText(String.valueOf(flap.number), flap.getPosition().x + sprite.getWidth() - 25, flap.getPosition().y + 18);
-			g.fillText(flap.text, flap.getPosition().x + sprite.getWidth(), flap.getPosition().y);
+			flap.animation().map(EntityAnimation::animate).ifPresent(spriteObj -> {
+				var sprite = (Rectangle2D) spriteObj;
+				drawEntity(g, flap, sprite);
+				g.setFont(getArcadeFont());
+				g.setFill(Color.rgb(222, 222, 255));
+				g.fillText(String.valueOf(flap.number), flap.getPosition().x + sprite.getWidth() - 25,
+						flap.getPosition().y + 18);
+				g.fillText(flap.text, flap.getPosition().x + sprite.getWidth(), flap.getPosition().y);
+			});
 		}
 	}
 

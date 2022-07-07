@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import de.amr.games.pacman.controller.mspacman.Intermission3Controller;
+import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
@@ -59,12 +60,17 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 	@Override
 	public void init() {
 		sceneController.restartInInitialState(Intermission3Controller.State.FLAP);
-		icc.flap.animation = SpritesheetMsPacMan.get().createFlapAnimation();
+		var flapAnimationSet = new EntityAnimationSet(1) {
+			{
+				put("flap", SpritesheetMsPacMan.get().createFlapAnimation());
+				select("flap");
+			}
+		};
+		icc.flap.setAnimationSet(flapAnimationSet);
 		icc.msPacMan.setAnimationSet(new PacAnimations(icc.msPacMan, ctx.r2D));
 		icc.pacMan.setAnimationSet(new PacAnimations(icc.pacMan, ctx.r2D));
 		var munching = SpritesheetMsPacMan.get().createPacManMunchingAnimationMap(icc.pacMan);
 		icc.pacMan.animationSet().ifPresent(anims -> anims.put(AnimKeys.PAC_MUNCHING, munching));
-		icc.flap.animation = SpritesheetMsPacMan.get().createFlapAnimation();
 		storkAnim = SpritesheetMsPacMan.get().createStorkFlyingAnimation();
 		storkAnim.ensureRunning();
 	}
