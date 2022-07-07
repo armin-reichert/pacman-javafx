@@ -103,8 +103,9 @@ public class PacManGameAppFX extends Application {
 		var ui = new GameUI(gameController, stage, zoom * ArcadeWorld.MODELSIZE.x, zoom * ArcadeWorld.MODELSIZE.y);
 		stage.setFullScreen(fullscreen);
 		Actions.init(gameController, ui);
-		GAME_LOOP.update = ui::update;
-		GAME_LOOP.render = ui::render;
+		GAME_LOOP.setUpdateTask(ui::update);
+		GAME_LOOP.setRenderTask(ui::render);
+		GAME_LOOP.pyPaused.bind(Env.paused);
 		GAME_LOOP.start();
 		logger.info(() -> "Application started. UI size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s"
 				.formatted(ui.getWidth(), ui.getHeight(), zoom, U.onOff(Env.use3D.get()), Env.perspective.get()));

@@ -23,16 +23,20 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.app;
 
+import java.util.Objects;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.util.Duration;
 
 /**
- * Game loop with configurable frame rate.
+ * Game loop with modifiable frame rate.
  * 
  * @author Armin Reichert
  */
@@ -40,18 +44,20 @@ public class GameLoop {
 
 	private static final Logger logger = LogManager.getFormatterLogger();
 
-	public Runnable update = () -> {
+	public final BooleanProperty pyPaused = new SimpleBooleanProperty(false);
+
+	private Runnable updateTask = () -> {
 	};
 
-	public Runnable render = () -> {
+	private Runnable renderTask = () -> {
 	};
 
 	private Timeline clock;
-	private int totalTicks;
-	private int fps;
+	private long totalTicks;
+	private long fps;
 	private int targetFramerate;
 	private long fpsCountStartTime;
-	private int frames;
+	private long frames;
 	private boolean timeMeasured;
 
 	public GameLoop(int targetFramerate) {
@@ -66,12 +72,23 @@ public class GameLoop {
 			restart = true;
 		}
 		Duration frameDuration = Duration.millis(1000d / targetFramerate);
-		clock = new Timeline(targetFramerate);
+		clock = new Timeline(targetFramerate, new KeyFrame(frameDuration, e -> makeOneStep(!isPaused())));
 		clock.setCycleCount(Animation.INDEFINITE);
-		clock.getKeyFrames().add(new KeyFrame(frameDuration, e -> runSingleStep(!Env.paused.get())));
 		if (restart) {
 			clock.play();
 		}
+	}
+
+	public void setUpdateTask(Runnable updateTask) {
+		this.updateTask = Objects.requireNonNull(updateTask);
+	}
+
+	public void setRenderTask(Runnable renderTask) {
+		this.renderTask = Objects.requireNonNull(renderTask);
+	}
+
+	public boolean isPaused() {
+		return pyPaused.get();
 	}
 
 	public void start() {
@@ -88,11 +105,11 @@ public class GameLoop {
 		return targetFramerate;
 	}
 
-	public int getTotalTicks() {
+	public long getTotalTicks() {
 		return totalTicks;
 	}
 
-	public int getFPS() {
+	public long getFPS() {
 		return fps;
 	}
 
@@ -100,23 +117,15 @@ public class GameLoop {
 		this.timeMeasured = timeMeasured;
 	}
 
-	public void runSingleStep(boolean updateEnabled) {
-		long now = System.nanoTime();
+	public void makeOneStep(boolean updateEnabled) {
+		long tickTime = System.nanoTime();
 		if (updateEnabled) {
-			run(update, "Update phase: %f milliseconds");
+			run(updateTask, "Update phase: %f milliseconds");
 		}
-		run(render, "Render phase: %f milliseconds");
-		computeFrameRate(now);
-	}
-
-	private void computeFrameRate(long now) {
+		run(renderTask, "Render phase: %f milliseconds");
 		totalTicks++;
 		++frames;
-		if (now - fpsCountStartTime > 1e9) {
-			fps = frames;
-			frames = 0;
-			fpsCountStartTime = now;
-		}
+		computeFrameRate(tickTime);
 	}
 
 	private void run(Runnable phase, String message) {
@@ -127,6 +136,14 @@ public class GameLoop {
 			logger.info(message, durationNanos / 1e6);
 		} else {
 			phase.run();
+		}
+	}
+
+	private void computeFrameRate(long time) {
+		if (time - fpsCountStartTime > 1e9) {
+			fps = frames;
+			frames = 0;
+			fpsCountStartTime = time;
 		}
 	}
 }

@@ -156,7 +156,7 @@ public class Actions {
 
 	public static void singleStep() {
 		if (Env.paused.get()) {
-			PacManGameAppFX.GAME_LOOP.runSingleStep(true);
+			PacManGameAppFX.GAME_LOOP.makeOneStep(true);
 		}
 	}
 

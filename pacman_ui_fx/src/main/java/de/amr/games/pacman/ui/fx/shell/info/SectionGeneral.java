@@ -76,7 +76,7 @@ public class SectionGeneral extends Section {
 		btnStep.setStyle("-fx-background-color: transparent");
 		btnStep.setText(null);
 		btnStep.setTooltip(tooltipStep);
-		btnStep.setOnAction(e -> PacManGameAppFX.GAME_LOOP.runSingleStep(true));
+		btnStep.setOnAction(e -> PacManGameAppFX.GAME_LOOP.makeOneStep(true));
 
 		sliderTargetFPS = addSlider("Target Framerate", MIN_FRAMERATE, MAX_FRAMERATE, 60);
 		sliderTargetFPS.setShowTickLabels(false);
