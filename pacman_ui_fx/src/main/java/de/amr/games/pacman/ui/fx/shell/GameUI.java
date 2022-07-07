@@ -27,6 +27,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
+import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameEvents;
@@ -40,7 +41,6 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneManager;
 import de.amr.games.pacman.ui.fx.shell.info.Dashboard;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import javafx.animation.PauseTransition;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -50,7 +50,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 /**
  * JavaFX UI for Pac-Man / Ms. Pac-Man game.
@@ -106,9 +105,11 @@ public class GameUI implements GameEventAdapter {
 		var pacSteering = new KeyboardPacSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 		gameController.setPacSteering(pacSteering);
 
-		var introMessage = new PauseTransition(Duration.seconds(2));
-		introMessage.setOnFinished(e -> Actions.playVoiceMessage(Actions.SOUND_PRESS_KEY_TO_START));
-		introMessage.play();
+		Ufx.pauseSec(10, () -> {
+			if (gameController.state() == GameState.INTRO) {
+				Actions.playVoiceMessage(Actions.SOUND_PRESS_KEY_TO_START);
+			}
+		}).play();
 
 		updateCurrentGameScene(true);
 
@@ -125,8 +126,6 @@ public class GameUI implements GameEventAdapter {
 		stage.setScene(scene);
 		stage.centerOnScreen();
 		stage.show();
-
-		Ufx.pauseSec(2, () -> Actions.playVoiceMessage(Actions.SOUND_PRESS_KEY_TO_START)).play();
 	}
 
 	private void updateBackground() {
