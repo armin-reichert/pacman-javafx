@@ -152,6 +152,7 @@ public class Actions {
 
 	public static void togglePaused() {
 		Env.toggle(Env.paused);
+		theGameController.sounds().ifPresent(snd -> snd.setSilent(Env.paused.get()));
 	}
 
 	public static void singleStep() {
