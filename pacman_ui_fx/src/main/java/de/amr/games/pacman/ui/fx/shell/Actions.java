@@ -50,13 +50,20 @@ public class Actions {
 
 	private static final Logger logger = LogManager.getFormatterLogger();
 
-	public static final String SOUND_PRESS_KEY_TO_START = "press-key.mp3";
-	public static final String SOUND_AUTOPILOT_OFF = "autopilot-off.mp3";
-	public static final String SOUND_AUTOPILOT_ON = "autopilot-on.mp3";
-	public static final String SOUND_IMMUNITY_OFF = "immunity-off.mp3";
-	public static final String SOUND_IMMUNITY_ON = "immunity-on.mp3";
+	private static final String VM_HELP = "press-key.mp3";
+	private static final String VM_AUTOPILOT_OFF = "autopilot-off.mp3";
+	private static final String VM_AUTOPILOT_ON = "autopilot-on.mp3";
+	private static final String VM_IMMUNITY_OFF = "immunity-off.mp3";
+	private static final String VM_IMMUNITY_ON = "immunity-on.mp3";
 
+	private static GameController theGameController;
+	private static GameUI theUI;
 	private static AudioClip currentVoiceMessage;
+
+	public static void init(GameController gameController, GameUI ui) {
+		theGameController = gameController;
+		theUI = ui;
+	}
 
 	public static void playVoiceMessage(String messageFileName) {
 		if (GameSounds.SOUND_DISABLED) {
@@ -82,12 +89,8 @@ public class Actions {
 		}
 	}
 
-	private static GameController theGameController;
-	private static GameUI theUI;
-
-	public static void init(GameController gameController, GameUI ui) {
-		theGameController = gameController;
-		theUI = ui;
+	public static void playHelpVoiceMessage() {
+		playVoiceMessage(VM_HELP);
 	}
 
 	public static void showFlashMessage(String message, Object... args) {
@@ -110,7 +113,7 @@ public class Actions {
 		theGameController.sounds().ifPresent(GameSoundController::stopAll);
 		theGameController.restartIntro();
 		var hint = new PauseTransition(Duration.seconds(3));
-		hint.setOnFinished(e -> playVoiceMessage(SOUND_PRESS_KEY_TO_START));
+		hint.setOnFinished(e -> playVoiceMessage(VM_HELP));
 		hint.play();
 	}
 
@@ -188,7 +191,7 @@ public class Actions {
 		var on = theGameController.game().autoControlled;
 		String message = Texts.message(on ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(message);
-		playVoiceMessage(on ? SOUND_AUTOPILOT_ON : SOUND_AUTOPILOT_OFF);
+		playVoiceMessage(on ? VM_AUTOPILOT_ON : VM_AUTOPILOT_OFF);
 	}
 
 	public static void toggleImmunity() {
@@ -196,7 +199,7 @@ public class Actions {
 		var on = theGameController.game().isPacImmune;
 		String message = Texts.message(on ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(message);
-		playVoiceMessage(on ? SOUND_IMMUNITY_ON : SOUND_IMMUNITY_OFF);
+		playVoiceMessage(on ? VM_IMMUNITY_ON : VM_IMMUNITY_OFF);
 	}
 
 	public static void toggleUse3DScene() {

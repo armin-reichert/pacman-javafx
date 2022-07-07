@@ -107,7 +107,7 @@ public class GameUI implements GameEventAdapter {
 
 		Ufx.pauseSec(10, () -> {
 			if (gameController.state() == GameState.INTRO) {
-				Actions.playVoiceMessage(Actions.SOUND_PRESS_KEY_TO_START);
+				Actions.playHelpVoiceMessage();
 			}
 		}).play();
 
