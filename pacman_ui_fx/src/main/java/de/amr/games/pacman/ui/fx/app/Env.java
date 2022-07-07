@@ -68,6 +68,7 @@ public class Env {
 	public static final DoubleProperty pipOpacity = new SimpleDoubleProperty(0.66);
 	public static final BooleanProperty squirting = new SimpleBooleanProperty(false);
 	public static final IntegerProperty targetFramerate = new SimpleIntegerProperty(60);
+	public static final BooleanProperty timeMeasured = new SimpleBooleanProperty(false);
 	public static final BooleanProperty use3D = new SimpleBooleanProperty(true);
 
 	public static void toggle(BooleanProperty booleanProperty) {

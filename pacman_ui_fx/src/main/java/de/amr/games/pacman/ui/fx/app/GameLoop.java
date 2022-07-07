@@ -48,13 +48,13 @@ public class GameLoop {
 
 	public final IntegerProperty pyTargetFramerate = new SimpleIntegerProperty(60);
 	public final BooleanProperty pyPaused = new SimpleBooleanProperty(false);
+	public final BooleanProperty pyMeasured = new SimpleBooleanProperty(false);
 
 	private Timeline clock;
 	private long totalTicks;
 	private long fps;
 	private long fpsCountStartTime;
 	private long frames;
-	private boolean timeMeasured;
 	private Runnable updateTask = () -> {
 	};
 	private Runnable renderTask = () -> {
@@ -118,8 +118,8 @@ public class GameLoop {
 		return fps;
 	}
 
-	public void setTimeMeasured(boolean timeMeasured) {
-		this.timeMeasured = timeMeasured;
+	public void setTimeMeasured(boolean measured) {
+		pyMeasured.set(measured);
 	}
 
 	public void makeOneStep(boolean updateEnabled) {
@@ -134,7 +134,7 @@ public class GameLoop {
 	}
 
 	private void run(Runnable phase, String message) {
-		if (timeMeasured) {
+		if (pyMeasured.get()) {
 			double startNanos = System.nanoTime();
 			phase.run();
 			double durationNanos = System.nanoTime() - startNanos;

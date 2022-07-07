@@ -51,6 +51,7 @@ public class SectionGeneral extends Section {
 	private Slider sliderTargetFPS;
 	private CheckBox cbUsePlayScene3D;
 	private CheckBox cbDebugUI;
+	private CheckBox cbTimeMeasured;
 	private ImageView iconPlay = new ImageView(Ufx.image("icons/play.png"));
 	private ImageView iconStop = new ImageView(Ufx.image("icons/stop.png"));
 	private ImageView iconStep = new ImageView(Ufx.image("icons/step.png"));
@@ -103,6 +104,7 @@ public class SectionGeneral extends Section {
 		addInfo("Main scene", () -> String.format("w=%.0f h=%.0f", ui.getMainSceneWidth(), ui.getMainSceneHeight()));
 		cbUsePlayScene3D = addCheckBox("Use 3D play scene", Actions::toggleUse3DScene);
 		cbDebugUI = addCheckBox("Show UI Debug Stuff", () -> Env.toggle(Env.debugUI));
+		cbTimeMeasured = addCheckBox("Measure time", () -> Env.toggle(Env.timeMeasured));
 	}
 
 	@Override
@@ -115,6 +117,7 @@ public class SectionGeneral extends Section {
 		sliderPiPSceneHeight.setValue(Env.pipSceneHeight.get());
 		sliderPiPOpacity.setValue(Env.pipOpacity.get());
 		cbUsePlayScene3D.setSelected(Env.use3D.get());
+		cbTimeMeasured.setSelected(Env.timeMeasured.get());
 		cbDebugUI.setSelected(Env.debugUI.get());
 	}
 }
