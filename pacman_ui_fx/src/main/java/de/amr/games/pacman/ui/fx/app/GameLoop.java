@@ -32,7 +32,9 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.util.Duration;
 
 /**
@@ -44,39 +46,46 @@ public class GameLoop {
 
 	private static final Logger logger = LogManager.getFormatterLogger();
 
+	public final IntegerProperty pyTargetFramerate = new SimpleIntegerProperty(60);
 	public final BooleanProperty pyPaused = new SimpleBooleanProperty(false);
-
-	private Runnable updateTask = () -> {
-	};
-
-	private Runnable renderTask = () -> {
-	};
 
 	private Timeline clock;
 	private long totalTicks;
 	private long fps;
-	private int targetFramerate;
 	private long fpsCountStartTime;
 	private long frames;
 	private boolean timeMeasured;
+	private Runnable updateTask = () -> {
+	};
+	private Runnable renderTask = () -> {
+	};
 
 	public GameLoop(int targetFramerate) {
-		setTargetFramerate(targetFramerate);
+		pyTargetFramerate.set(targetFramerate);
+		pyTargetFramerate.addListener((x, y, newFramerate) -> updateClock(newFramerate.intValue()));
+		updateClock(targetFramerate);
 	}
 
-	public void setTargetFramerate(int fps) {
-		targetFramerate = fps;
+	private void updateClock(int fps) {
 		boolean restart = false;
 		if (clock != null) {
 			clock.stop();
 			restart = true;
 		}
-		Duration frameDuration = Duration.millis(1000d / targetFramerate);
-		clock = new Timeline(targetFramerate, new KeyFrame(frameDuration, e -> makeOneStep(!isPaused())));
+		Duration frameDuration = Duration.millis(1000d / fps);
+		clock = new Timeline(fps, new KeyFrame(frameDuration, e -> makeOneStep(!isPaused())));
 		clock.setCycleCount(Animation.INDEFINITE);
 		if (restart) {
 			clock.play();
 		}
+	}
+
+	public void setTargetFramerate(int fps) {
+		pyTargetFramerate.set(fps);
+	}
+
+	public int getTargetFramerate() {
+		return pyTargetFramerate.get();
 	}
 
 	public void setUpdateTask(Runnable updateTask) {
@@ -93,16 +102,12 @@ public class GameLoop {
 
 	public void start() {
 		clock.play();
-		logger.info("Game loop started. Target frame rate: %d", targetFramerate);
+		logger.info("Game loop started. Target frame rate: %d", getTargetFramerate());
 	}
 
 	public void stop() {
 		clock.stop();
 		logger.info("Game loop stopped");
-	}
-
-	public int getTargetFramerate() {
-		return targetFramerate;
 	}
 
 	public long getTotalTicks() {

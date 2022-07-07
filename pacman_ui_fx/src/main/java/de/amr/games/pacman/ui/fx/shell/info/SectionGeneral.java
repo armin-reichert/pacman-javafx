@@ -82,9 +82,9 @@ public class SectionGeneral extends Section {
 		sliderTargetFPS.setShowTickLabels(false);
 		sliderTargetFPS.setShowTickMarks(false);
 		sliderTargetFPS.valueProperty()
-				.addListener((obs, oldValue, newValue) -> PacManGameAppFX.GAME_LOOP.setTargetFramerate(newValue.intValue()));
+				.addListener((obs, oldValue, newValue) -> Env.targetFramerate.set(newValue.intValue()));
 
-		addInfo("", () -> String.format("Current: %d Hz (Target: %d Hz)", PacManGameAppFX.GAME_LOOP.getFPS(),
+		addInfo("", () -> String.format("%d Hz (Target: %d Hz)", PacManGameAppFX.GAME_LOOP.getFPS(),
 				PacManGameAppFX.GAME_LOOP.getTargetFramerate()));
 		addInfo("Total Ticks", PacManGameAppFX.GAME_LOOP::getTotalTicks);
 
@@ -111,7 +111,7 @@ public class SectionGeneral extends Section {
 		btnsSimulation[0].setGraphic(Env.paused.get() ? iconPlay : iconStop);
 		btnsSimulation[0].setTooltip(Env.paused.get() ? tooltipPlay : tooltipStop);
 		btnsSimulation[1].setDisable(!Env.paused.get());
-		sliderTargetFPS.setValue(PacManGameAppFX.GAME_LOOP.getTargetFramerate());
+		sliderTargetFPS.setValue(Env.targetFramerate.get());
 		sliderPiPSceneHeight.setValue(Env.pipSceneHeight.get());
 		sliderPiPOpacity.setValue(Env.pipOpacity.get());
 		cbUsePlayScene3D.setSelected(Env.use3D.get());

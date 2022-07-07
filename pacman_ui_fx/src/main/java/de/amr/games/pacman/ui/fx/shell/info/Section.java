@@ -42,6 +42,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TitledPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -158,9 +159,14 @@ public class Section extends TitledPane {
 		return colorPicker;
 	}
 
-	public Slider addSlider(String labelText, double min, double max, double value) {
-		Slider slider = new Slider(min, max, value);
+	public Slider addSlider(String labelText, double min, double max, double initialValue) {
+		Slider slider = new Slider(min, max, initialValue);
 		slider.setMinWidth(Dashboard.MIN_COL_WIDTH);
+		slider.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+			if (e.getClickCount() == 2) {
+				slider.setValue(initialValue);
+			}
+		});
 		addRow(labelText, slider);
 		return slider;
 	}

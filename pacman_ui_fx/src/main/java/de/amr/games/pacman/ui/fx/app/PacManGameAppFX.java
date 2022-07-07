@@ -106,6 +106,7 @@ public class PacManGameAppFX extends Application {
 		GAME_LOOP.setUpdateTask(ui::update);
 		GAME_LOOP.setRenderTask(ui::render);
 		GAME_LOOP.pyPaused.bind(Env.paused);
+		GAME_LOOP.pyTargetFramerate.bind(Env.targetFramerate);
 		GAME_LOOP.start();
 		logger.info(() -> "Application started. UI size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s"
 				.formatted(ui.getWidth(), ui.getHeight(), zoom, U.onOff(Env.use3D.get()), Env.perspective.get()));
