@@ -38,6 +38,7 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
+import de.amr.games.pacman.model.common.world.ArcadeGhostHouse;
 import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.RaiseAndLowerWallAnimation;
@@ -146,10 +147,8 @@ public class Maze3D extends Group {
 		addHorizontalWalls(floorPlan, wallData);
 		addVerticalWalls(floorPlan, wallData);
 
-		doorsGroup.getChildren().clear();
-		var leftDoor = createDoor(world.ghostHouse().doorLeftTile(), mazeStyle.doorColor);
-		var rightDoor = createDoor(world.ghostHouse().doorRightTile(), mazeStyle.doorColor);
-		doorsGroup.getChildren().setAll(leftDoor, rightDoor);
+		doorsGroup.getChildren()
+				.setAll(world.ghostHouse().doorTiles().map(doorTile -> createDoor(doorTile, mazeStyle.doorColor)).toList());
 
 		logger.info("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallData.height);
 	}
@@ -187,11 +186,12 @@ public class Maze3D extends Group {
 		});
 	}
 
-	public void updateDoorState(Stream<Ghost> ghosts, V2d doorsCenter) {
-		doors().findFirst().ifPresent(firstDoor3D -> {
-			boolean openDoors = isAnyGhostGettingAccess(ghosts, doorsCenter);
-			doors().forEach(door3D -> door3D.setOpen(openDoors));
-		});
+	// should be generalized to work with any ghost house
+	public void updateDoorState(Stream<Ghost> ghosts) {
+		if (world.ghostHouse() instanceof ArcadeGhostHouse arcadeHouse) {
+			boolean accessGranted = isAnyGhostGettingAccess(ghosts, arcadeHouse.doorsCenterPosition());
+			doors().forEach(door3D -> door3D.setOpen(accessGranted));
+		}
 	}
 
 	private boolean isAnyGhostGettingAccess(Stream<Ghost> ghosts, V2d centerPosition) {
