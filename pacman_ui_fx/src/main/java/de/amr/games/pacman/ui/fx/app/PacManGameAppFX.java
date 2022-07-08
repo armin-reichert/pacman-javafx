@@ -84,8 +84,8 @@ public class PacManGameAppFX extends Application {
 	@Override
 	public void init() throws Exception {
 		logger.info("Initializing application...");
-		var parser = new OptionParser(opt3D, optFullscreen, optMuted, optPerspective, optVariant, optZoom);
-		parser.parse(getParameters().getUnnamed());
+		new OptionParser(opt3D, optFullscreen, optMuted, optPerspective, optVariant, optZoom)
+				.parse(getParameters().getUnnamed());
 		Env.use3D.set(opt3D.getValue());
 		Env.perspective.set(optPerspective.getValue());
 		gameController.selectGame(optVariant.getValue());
@@ -95,9 +95,8 @@ public class PacManGameAppFX extends Application {
 	@Override
 	public void start(Stage stage) throws IOException {
 		logger.info("Starting application...");
+		stage.setFullScreen(optFullscreen.getValue());
 		var zoom = optZoom.getValue();
-		var fullscreen = optFullscreen.getValue();
-		stage.setFullScreen(fullscreen);
 		var ui = new GameUI(gameController, stage, zoom * ArcadeWorld.SIZE.x, zoom * ArcadeWorld.SIZE.y);
 		logger.info(() -> "UI size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s".formatted(stage.getWidth(),
 				stage.getHeight(), zoom, U.onOff(Env.use3D.get()), Env.perspective.get()));
