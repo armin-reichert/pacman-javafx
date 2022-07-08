@@ -23,17 +23,19 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
-import static de.amr.games.pacman.lib.TickTimer.secToTicks;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
+import java.util.Random;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.pacman.IntroController;
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.SpritesheetPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.shell.Actions;
@@ -91,12 +93,22 @@ public class PacManIntroScene extends GameScene2D {
 		creditVisible = icc.creditVisible;
 	}
 
+	private boolean between(double secLeft, double secRight, double tick) {
+		return TickTimer.secToTicks(secLeft) <= tick && tick < TickTimer.secToTicks(secRight);
+	}
+
 	@Override
 	public void doRender(GraphicsContext g) {
-		var time = sceneController.state().timer().tick();
+		var tick = sceneController.state().timer().tick();
 		switch (sceneController.state()) {
 		case WARMUP -> {
-			drawGrid(g);
+			if (between(1.0, 2.0, tick)) {
+				drawHexCodes(g, tick);
+			} else if (between(2.0, 3.0, tick)) {
+				drawRandomSprites(g, tick);
+			} else if (between(3.0, 4.0, tick)) {
+				drawGrid(g);
+			}
 		}
 		case START -> {
 			drawScoresAndCredit(g);
@@ -110,7 +122,7 @@ public class PacManIntroScene extends GameScene2D {
 			drawScoresAndCredit(g);
 			drawGallery(g);
 			drawPoints(g);
-			if (time > secToTicks(1)) {
+			if (tick > TickTimer.secToTicks(1)) {
 				drawBlinkingEnergizer(g);
 				ctx.r2D.drawCopyright(g, 32);
 			}
@@ -120,7 +132,7 @@ public class PacManIntroScene extends GameScene2D {
 			drawGallery(g);
 			drawPoints(g);
 			drawBlinkingEnergizer(g);
-			drawGuys(g, flutter(time));
+			drawGuys(g, flutter(tick));
 			ctx.r2D.drawCopyright(g, 32);
 		}
 		case CHASING_GHOSTS -> {
@@ -151,6 +163,30 @@ public class PacManIntroScene extends GameScene2D {
 	// TODO inspect in MAME what's really going on
 	private int flutter(long time) {
 		return time % 5 < 2 ? 0 : -1;
+	}
+
+	private Random rnd = new Random();
+
+	private void drawHexCodes(GraphicsContext g, long tick) {
+		g.setFill(Color.LIGHTGRAY);
+		g.setFont(SpritesheetPacMan.get().getArcadeFont());
+		for (int row = 0; row < ArcadeWorld.TILES_Y; ++row) {
+			for (int col = 0; col < ArcadeWorld.TILES_X; ++col) {
+				var hexCode = Integer.toHexString(rnd.nextInt(16));
+				g.fillText(hexCode, col * 8, row * 8 + 8);
+			}
+		}
+	}
+
+	private void drawRandomSprites(GraphicsContext g, long tick) {
+		for (int row = 0; row < ArcadeWorld.TILES_Y / 2; ++row) {
+			for (int col = 0; col < ArcadeWorld.TILES_X / 2; ++col) {
+				var x = rnd.nextInt(14);
+				var y = rnd.nextInt(10);
+				var sprite = SpritesheetPacMan.get().subImage(x * 16, y * 16 + 8, 16, 16);
+				g.drawImage(sprite, col * 2 * TS, row * 2 * TS);
+			}
+		}
 	}
 
 	private void drawGrid(GraphicsContext g) {
