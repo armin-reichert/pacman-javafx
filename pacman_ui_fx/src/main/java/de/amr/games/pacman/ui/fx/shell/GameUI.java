@@ -65,59 +65,35 @@ public class GameUI implements GameEventAdapter {
 	private static final Image APP_ICON = Ufx.image("icons/pacman.png");
 
 	private final GameController gameController;
+	private final KeyboardPacSteering pacController;
 	private final Stage stage;
 	private final Scene scene;
-	private final StackPane sceneRoot;
-	private final StackPane gameScenePlaceholder;
-	private final Dashboard dashboard;
-	private final FlashMessageView flashMessageView;
-	private final PiPView pipView;
 	private final SceneManager sceneManager;
+	private final StackPane sceneRoot = new StackPane();
+	private final StackPane gameScenePlaceholder = new StackPane();
+	private final Dashboard dashboard = new Dashboard();
+	private final FlashMessageView flashMessageView = new FlashMessageView();
+	private final PiPView pipView = new PiPView();
+
 	private GameScene currentGameScene;
 
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
 		this.gameController = gameController;
 		this.stage = stage;
-		this.sceneManager = new SceneManager(gameController);
-		GameEvents.addEventListener(this);
-
-		flashMessageView = new FlashMessageView();
-		dashboard = new Dashboard(this, gameController);
-		pipView = new PiPView();
-		pipView.pySceneHeight.bind(Env.pipSceneHeight);
-		pipView.visibleProperty().bind(Env.pipVisible);
-		pipView.opacityProperty().bind(Env.pipOpacity);
-		var overlayPane = new BorderPane();
-		overlayPane.setLeft(dashboard);
-		overlayPane.setRight(new VBox(pipView));
-		gameScenePlaceholder = new StackPane();
-		sceneRoot = new StackPane(gameScenePlaceholder, overlayPane, flashMessageView);
+		this.pacController = new KeyboardPacSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
+		gameController.setPacSteering(pacController);
+		sceneManager = new SceneManager(gameController);
 		scene = new Scene(sceneRoot, width, height);
-		scene.setOnKeyPressed(Keyboard::processEvent);
-		logger.info("Main scene created. Size: %.0f x %.0f", scene.getWidth(), scene.getHeight());
 		SceneManager.allGameScenes().forEach(gameScene -> gameScene.setParent(scene));
 		updateCurrentGameScene(true);
-
 		updateBackground();
+		logger.info("Main scene created. Size: %.0f x %.0f", scene.getWidth(), scene.getHeight());
+		createLayout(gameController);
+		GameEvents.addEventListener(this);
 		Env.drawMode3D.addListener((x, y, z) -> updateBackground());
 		Env.bgColor.addListener((x, y, z) -> updateBackground());
-
-		var pacSteering = new KeyboardPacSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
-		gameController.setPacSteering(pacSteering);
-
-		Ufx.pauseSec(10, () -> {
-			if (gameController.state() == GameState.INTRO) {
-				Actions.playHelpVoiceMessage();
-			}
-		}).play();
-
+		initKeyboardHandling();
 		updateCurrentGameScene(true);
-
-		scene.setOnKeyPressed(Keyboard::processEvent);
-		Keyboard.addHandler(this::onKeyPressed);
-		Keyboard.addHandler(pacSteering::onKeyPressed);
-		Keyboard.addHandler(() -> currentGameScene.onKeyPressed());
-
 		stage.setMinHeight(328);
 		stage.setMinWidth(241);
 		stage.getIcons().add(APP_ICON);
@@ -126,6 +102,29 @@ public class GameUI implements GameEventAdapter {
 		stage.setScene(scene);
 		stage.centerOnScreen();
 		stage.show();
+		Ufx.pauseSec(10, () -> {
+			if (gameController.state() == GameState.INTRO) {
+				Actions.playHelpVoiceMessage();
+			}
+		}).play();
+	}
+
+	private void createLayout(GameController gameController) {
+		dashboard.build(this, gameController);
+		pipView.pySceneHeight.bind(Env.pipSceneHeight);
+		pipView.visibleProperty().bind(Env.pipVisible);
+		pipView.opacityProperty().bind(Env.pipOpacity);
+		var overlayPane = new BorderPane();
+		overlayPane.setLeft(dashboard);
+		overlayPane.setRight(new VBox(pipView));
+		sceneRoot.getChildren().addAll(gameScenePlaceholder, overlayPane, flashMessageView);
+	}
+
+	private void initKeyboardHandling() {
+		scene.setOnKeyPressed(Keyboard::processEvent);
+		Keyboard.addHandler(this::onKeyPressed);
+		Keyboard.addHandler(pacController::onKeyPressed);
+		Keyboard.addHandler(() -> currentGameScene.onKeyPressed());
 	}
 
 	private void updateBackground() {

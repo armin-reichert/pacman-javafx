@@ -49,13 +49,13 @@ public class Dashboard extends BorderPane {
 	public final VBox lhs = new VBox();
 	public final VBox rhs = new VBox();
 
-	public final Section secGeneral;
-	public final Section secGameControl;
-	public final Section secGameInfo;
-	public final Section sec3D;
-	public final Section secKeys;
+	private Section secGeneral;
+	private Section secGameControl;
+	private Section secGameInfo;
+	private Section sec3D;
+	private Section secKeys;
 
-	public Dashboard(GameUI ui, GameController gc) {
+	public void build(GameUI ui, GameController gc) {
 		secGeneral = new SectionGeneral(ui, gc, "General", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
 		secGameControl = new SectionGameControl(ui, gc, "Game Control", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
 		secGameInfo = new SectionGameInfo(ui, gc, "Game Info", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
