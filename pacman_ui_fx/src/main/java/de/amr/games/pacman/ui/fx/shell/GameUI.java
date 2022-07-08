@@ -86,7 +86,8 @@ public class GameUI implements GameEventAdapter {
 
 		scene = new Scene(sceneRoot, width, height);
 		sceneManager = new SceneManager(gameController);
-		sceneManager.allGameScenes().forEach(gameScene -> gameScene.setParent(scene));
+		sceneManager.allGameScenes()
+				.forEach(gameScene -> gameScene.initResizing(scene.widthProperty(), scene.heightProperty()));
 		updateCurrentGameScene(true);
 		logger.info("Main scene created. Size: %.0f x %.0f", scene.getWidth(), scene.getHeight());
 

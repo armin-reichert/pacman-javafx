@@ -29,9 +29,9 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.beans.binding.DoubleExpression;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -72,8 +72,8 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	@Override
-	public void setParent(Scene parent) {
-		parent.heightProperty().addListener((x, y, height) -> resize(height.doubleValue()));
+	public void initResizing(DoubleExpression width, DoubleExpression height) {
+		height.addListener((x, y, h) -> resize(h.doubleValue()));
 	}
 
 	@Override

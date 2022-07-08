@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx.scene;
 
 import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
-import javafx.scene.Scene;
+import javafx.beans.binding.DoubleExpression;
 import javafx.scene.SubScene;
 
 /**
@@ -71,12 +71,7 @@ public interface GameScene extends GameEventAdapter {
 	 */
 	SubScene getFXSubScene();
 
-	/**
-	 * Sets the parent scene. Used to install resize handlers.
-	 * 
-	 * @param parent parent FX scene (main scene of the UI)
-	 */
-	void setParent(Scene parent);
+	void initResizing(DoubleExpression width, DoubleExpression height);
 
 	/**
 	 * Resizes the scene to the given height.

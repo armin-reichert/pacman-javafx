@@ -30,11 +30,11 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.util.CoordSystem;
+import javafx.beans.binding.DoubleExpression;
 import javafx.collections.ObservableList;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.paint.Color;
@@ -89,9 +89,9 @@ public abstract class GameScene3D implements GameScene {
 	}
 
 	@Override
-	public void setParent(Scene parent) {
-		fxSubScene.widthProperty().bind(parent.widthProperty());
-		fxSubScene.heightProperty().bind(parent.heightProperty());
+	public void initResizing(DoubleExpression width, DoubleExpression height) {
+		fxSubScene.widthProperty().bind(width);
+		fxSubScene.heightProperty().bind(height);
 	}
 
 	public GameSceneCamera getCamera() {
