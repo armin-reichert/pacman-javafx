@@ -26,16 +26,13 @@ package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import java.util.Random;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.pacman.IntroController;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TickTimer;
-import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
-import de.amr.games.pacman.ui.fx._2d.rendering.pacman.SpritesheetPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.shell.Actions;
@@ -67,7 +64,7 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	public void init() {
-		sceneController.restartInInitialState(IntroController.State.WARMUP);
+		sceneController.restartInInitialState(IntroController.State.START);
 		creditVisible = false;
 		icc.pacMan.setAnimationSet(new PacAnimations(icc.pacMan, ctx.r2D));
 		Stream.of(icc.ghosts).forEach(ghost -> ghost.setAnimationSet(new GhostAnimations(ghost, ctx.r2D)));
@@ -93,23 +90,10 @@ public class PacManIntroScene extends GameScene2D {
 		creditVisible = icc.creditVisible;
 	}
 
-	private boolean between(double secLeft, double secRight, double tick) {
-		return TickTimer.secToTicks(secLeft) <= tick && tick < TickTimer.secToTicks(secRight);
-	}
-
 	@Override
 	public void doRender(GraphicsContext g) {
 		var tick = sceneController.state().timer().tick();
 		switch (sceneController.state()) {
-		case WARMUP -> {
-			if (between(1.0, 2.0, tick)) {
-				drawHexCodes(g, tick);
-			} else if (between(2.0, 3.0, tick)) {
-				drawRandomSprites(g, tick);
-			} else if (between(3.0, 4.0, tick)) {
-				drawGrid(g);
-			}
-		}
 		case START -> {
 			drawScoresAndCredit(g);
 			drawGallery(g);
@@ -163,41 +147,6 @@ public class PacManIntroScene extends GameScene2D {
 	// TODO inspect in MAME what's really going on
 	private int flutter(long time) {
 		return time % 5 < 2 ? 0 : -1;
-	}
-
-	private Random rnd = new Random();
-
-	private void drawHexCodes(GraphicsContext g, long tick) {
-		g.setFill(Color.LIGHTGRAY);
-		g.setFont(SpritesheetPacMan.get().getArcadeFont());
-		for (int row = 0; row < ArcadeWorld.TILES_Y; ++row) {
-			for (int col = 0; col < ArcadeWorld.TILES_X; ++col) {
-				var hexCode = Integer.toHexString(rnd.nextInt(16));
-				g.fillText(hexCode, col * 8, row * 8 + 8);
-			}
-		}
-	}
-
-	private void drawRandomSprites(GraphicsContext g, long tick) {
-		for (int row = 0; row < ArcadeWorld.TILES_Y / 2; ++row) {
-			for (int col = 0; col < ArcadeWorld.TILES_X / 2; ++col) {
-				var x = rnd.nextInt(14);
-				var y = rnd.nextInt(10);
-				var sprite = SpritesheetPacMan.get().subImage(x * 16, y * 16 + 8, 16, 16);
-				g.drawImage(sprite, col * 2 * TS, row * 2 * TS);
-			}
-		}
-	}
-
-	private void drawGrid(GraphicsContext g) {
-		g.setStroke(Color.LIGHTGRAY);
-		g.setLineWidth(2.0);
-		for (int row = 0; row < ArcadeWorld.TILES_Y / 2; ++row) {
-			g.strokeLine(0, row * 2 * TS, ArcadeWorld.TILES_X * TS, row * 2 * TS);
-		}
-		for (int col = 0; col < ArcadeWorld.TILES_X / 2; ++col) {
-			g.strokeLine(col * 2 * TS, 0, col * 2 * TS, ArcadeWorld.TILES_Y * TS);
-		}
 	}
 
 	private void drawGallery(GraphicsContext g) {

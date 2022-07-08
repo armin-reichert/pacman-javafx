@@ -37,6 +37,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.SpritesheetMsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.SpritesheetPacMan;
+import de.amr.games.pacman.ui.fx._2d.scene.common.BootScene;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacManCreditScene;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacManIntermissionScene1;
@@ -63,25 +64,27 @@ public class SceneManager {
 	public static final int SCENE_3D = 1;
 
 	private static final GameScene[][] SCENES_PACMAN = {
-			//@formatter:off
-			{ new PacManIntroScene(),         null },
-			{ new PacManCreditScene(),        null },
-			{ new PacManCutscene1(),          null },
-			{ new PacManCutscene2(),          null },
-			{ new PacManCutscene3(),          null },
-			{ new PlayScene2D(),               new PlayScene3D() },
-			//@formatter:on
+		//@formatter:off
+		{ new BootScene(),                null },
+		{ new PacManIntroScene(),         null },
+		{ new PacManCreditScene(),        null },
+		{ new PacManCutscene1(),          null },
+		{ new PacManCutscene2(),          null },
+		{ new PacManCutscene3(),          null },
+		{ new PlayScene2D(),              new PlayScene3D() },
+		//@formatter:on
 	};
 
 	private static final GameScene[][] SCENES_MS_PACMAN = {
-			//@formatter:off
-			{ new MsPacManIntroScene(),         null },
-			{ new MsPacManCreditScene(),        null },
-			{ new MsPacManIntermissionScene1(), null },
-			{ new MsPacManIntermissionScene2(), null },
-			{ new MsPacManIntermissionScene3(), null },
-			{ new PlayScene2D(),                 new PlayScene3D() },
-			//@formatter:on
+		//@formatter:off
+		{ new BootScene(),                  null },
+		{ new MsPacManIntroScene(),         null },
+		{ new MsPacManCreditScene(),        null },
+		{ new MsPacManIntermissionScene1(), null },
+		{ new MsPacManIntermissionScene2(), null },
+		{ new MsPacManIntermissionScene3(), null },
+		{ new PlayScene2D(),                new PlayScene3D() },
+		//@formatter:on
 	};
 
 	private final SceneContext context;
@@ -143,11 +146,12 @@ public class SceneManager {
 		case PACMAN -> SCENES_PACMAN;
 		};
 		var sceneIndex = switch (state) {
-		case INTRO -> 0;
-		case CREDIT -> 1;
-		case INTERMISSION -> 1 + game.intermissionNumber(game.level.number);
-		case INTERMISSION_TEST -> 1 + game.intermissionTestNumber;
-		default -> 5;
+		case BOOT -> 0;
+		case INTRO -> 1;
+		case CREDIT -> 2;
+		case INTERMISSION -> 2 + game.intermissionNumber(game.level.number);
+		case INTERMISSION_TEST -> 2 + game.intermissionTestNumber;
+		default -> 6;
 		};
 		var gameScene = scenes[sceneIndex][dimension];
 		if (gameScene == null) {
