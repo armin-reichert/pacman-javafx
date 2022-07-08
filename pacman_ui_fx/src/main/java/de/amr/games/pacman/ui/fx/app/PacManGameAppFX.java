@@ -98,7 +98,7 @@ public class PacManGameAppFX extends Application {
 		var zoom = optZoom.getValue();
 		var fullscreen = optFullscreen.getValue();
 		stage.setFullScreen(fullscreen);
-		var ui = new GameUI(gameController, stage, zoom * ArcadeWorld.MODELSIZE.x, zoom * ArcadeWorld.MODELSIZE.y);
+		var ui = new GameUI(gameController, stage, zoom * ArcadeWorld.SIZE.x, zoom * ArcadeWorld.SIZE.y);
 		logger.info(() -> "UI size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s".formatted(stage.getWidth(),
 				stage.getHeight(), zoom, U.onOff(Env.use3D.get()), Env.perspective.get()));
 		ui.startGameLoop();
