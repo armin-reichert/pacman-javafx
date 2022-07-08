@@ -89,9 +89,9 @@ public class GameSounds implements GameSoundController {
 		//@formatter:on
 	}
 
-	public static final GameSounds NO_SOUNDS = new GameSounds("Nothing", Map.of());
-	public static final GameSounds MS_PACMAN_SOUNDS = new GameSounds("Ms. Pac-Man", MS_PACMAN_MAP);
-	public static final GameSounds PACMAN_SOUNDS = new GameSounds("Pac-Man", PACMAN_MAP);
+	public static final GameSounds NO_SOUNDS = new GameSounds("No Sounds", Map.of());
+	public static final GameSounds MS_PACMAN_SOUNDS = new GameSounds("Ms. Pac-Man Sounds", MS_PACMAN_MAP);
+	public static final GameSounds PACMAN_SOUNDS = new GameSounds("Pac-Man Sounds", PACMAN_MAP);
 
 	private final Map<GameSound, AudioClip> clips = new EnumMap<>(GameSound.class);
 	private boolean silent;
@@ -99,10 +99,10 @@ public class GameSounds implements GameSoundController {
 
 	public GameSounds(String mapName, Map<GameSound, String> relPathMap) {
 		if (SOUND_DISABLED) {
-			logger.info("Sound map '%s' not loaded (sound is disabled)", mapName);
+			logger.info("Sounds '%s' not loaded (sound is disabled)", mapName);
 		} else {
 			relPathMap.forEach(this::load);
-			logger.info("Sound map '%s' loaded", mapName);
+			logger.info("Sounds '%s' loaded", mapName);
 		}
 	}
 
@@ -115,9 +115,8 @@ public class GameSounds implements GameSoundController {
 		}
 		var urlStr = url.toExternalForm();
 		try {
-			logger.trace("Try loading audio clip %s from URL '%s'", sound, urlStr);
+			logger.trace("Loading audio clip %s from URL '%s'", sound, urlStr);
 			clips.put(sound, new AudioClip(urlStr));
-			logger.trace("ok");
 		} catch (Exception e) {
 			logger.error("failed: %s", e.getMessage());
 		}

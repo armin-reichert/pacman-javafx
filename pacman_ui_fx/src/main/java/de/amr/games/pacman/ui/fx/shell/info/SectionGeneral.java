@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx.shell.info;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.app.PacManGameAppFX;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -77,7 +76,7 @@ public class SectionGeneral extends Section {
 		btnStep.setStyle("-fx-background-color: transparent");
 		btnStep.setText(null);
 		btnStep.setTooltip(tooltipStep);
-		btnStep.setOnAction(e -> PacManGameAppFX.GAME_LOOP.makeOneStep(true));
+		btnStep.setOnAction(e -> ui.gameLoop.makeOneStep(true));
 
 		sliderTargetFPS = addSlider("Target Framerate", MIN_FRAMERATE, MAX_FRAMERATE, 60);
 		sliderTargetFPS.setShowTickLabels(false);
@@ -85,9 +84,8 @@ public class SectionGeneral extends Section {
 		sliderTargetFPS.valueProperty()
 				.addListener((obs, oldValue, newValue) -> Env.targetFramerate.set(newValue.intValue()));
 
-		addInfo("", () -> String.format("%d Hz (Target: %d Hz)", PacManGameAppFX.GAME_LOOP.getFPS(),
-				PacManGameAppFX.GAME_LOOP.getTargetFramerate()));
-		addInfo("Total Ticks", PacManGameAppFX.GAME_LOOP::getTotalTicks);
+		addInfo("", () -> String.format("%d Hz (Target: %d Hz)", ui.gameLoop.getFPS(), ui.gameLoop.getTargetFramerate()));
+		addInfo("Total Ticks", ui.gameLoop::getTotalTicks);
 
 		sliderPiPSceneHeight = addSlider("PiP Size", 1.0 * 288, 2.0 * 288, Env.pipSceneHeight.get());
 		sliderPiPSceneHeight.setShowTickLabels(false);

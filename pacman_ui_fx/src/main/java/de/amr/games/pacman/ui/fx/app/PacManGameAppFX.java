@@ -70,8 +70,6 @@ public class PacManGameAppFX extends Application {
 
 	private static final Logger logger = LogManager.getFormatterLogger();
 
-	public static final GameLoop GAME_LOOP = new GameLoop(60);
-
 	//@formatter:off
 	static Option<Boolean>     opt3D = booleanOption("-3D", false);
 	static Option<Boolean>     optFullscreen = booleanOption("-fullscreen", false);
@@ -99,20 +97,10 @@ public class PacManGameAppFX extends Application {
 		logger.info("Starting application...");
 		var zoom = optZoom.getValue();
 		var fullscreen = optFullscreen.getValue();
-		stage.setOnCloseRequest(e -> GAME_LOOP.stop());
 		stage.setFullScreen(fullscreen);
 		var ui = new GameUI(gameController, stage, zoom * ArcadeWorld.MODELSIZE.x, zoom * ArcadeWorld.MODELSIZE.y);
-		startGameLoop(ui);
-		logger.info(() -> "Application started. UI size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s"
-				.formatted(stage.getWidth(), stage.getHeight(), zoom, U.onOff(Env.use3D.get()), Env.perspective.get()));
-	}
-
-	private void startGameLoop(GameUI ui) {
-		GAME_LOOP.setUpdateTask(ui::update);
-		GAME_LOOP.setRenderTask(ui::render);
-		GAME_LOOP.pyPaused.bind(Env.paused);
-		GAME_LOOP.pyTargetFramerate.bind(Env.targetFramerate);
-		GAME_LOOP.pyMeasured.bind(Env.timeMeasured);
-		GAME_LOOP.start();
+		logger.info(() -> "UI size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s".formatted(stage.getWidth(),
+				stage.getHeight(), zoom, U.onOff(Env.use3D.get()), Env.perspective.get()));
+		ui.startGameLoop();
 	}
 }

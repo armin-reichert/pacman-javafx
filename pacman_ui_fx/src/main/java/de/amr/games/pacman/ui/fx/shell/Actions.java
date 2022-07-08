@@ -32,7 +32,6 @@ import de.amr.games.pacman.controller.common.GameSoundController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.ui.fx.Resources;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.app.PacManGameAppFX;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.texts.Texts;
 import javafx.animation.PauseTransition;
@@ -160,7 +159,7 @@ public class Actions {
 
 	public static void singleStep() {
 		if (Env.paused.get()) {
-			PacManGameAppFX.GAME_LOOP.makeOneStep(true);
+			theUI.gameLoop.makeOneStep(true);
 		}
 	}
 

@@ -36,6 +36,7 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneManager;
 import de.amr.games.pacman.ui.fx.shell.info.Dashboard;
@@ -62,6 +63,8 @@ public class GameUI implements GameEventAdapter {
 	private static final Logger logger = LogManager.getFormatterLogger();
 
 	private static final Image APP_ICON = Ufx.image("icons/pacman.png");
+
+	public final GameLoop gameLoop = new GameLoop(60);
 
 	private final GameController gameController;
 	private final KeyboardPacSteering pacController;
@@ -95,6 +98,7 @@ public class GameUI implements GameEventAdapter {
 		initKeyboardHandling();
 		updateCurrentGameScene(true);
 
+		stage.setOnCloseRequest(e -> gameLoop.stop());
 		stage.setScene(mainScene);
 		stage.setMinHeight(328);
 		stage.setMinWidth(241);
@@ -103,6 +107,15 @@ public class GameUI implements GameEventAdapter {
 		stage.show();
 
 		playVoiceMessageAfterSeconds(10);
+	}
+
+	public void startGameLoop() {
+		gameLoop.setUpdateTask(this::update);
+		gameLoop.setRenderTask(this::render);
+		gameLoop.pyPaused.bind(Env.paused);
+		gameLoop.pyTargetFramerate.bind(Env.targetFramerate);
+		gameLoop.pyMeasured.bind(Env.timeMeasured);
+		gameLoop.start();
 	}
 
 	private void createLayout() {
