@@ -41,7 +41,6 @@ import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
-import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -100,16 +99,20 @@ public class PacManGameAppFX extends Application {
 		logger.info("Starting application...");
 		var zoom = optZoom.getValue();
 		var fullscreen = optFullscreen.getValue();
-		var ui = new GameUI(gameController, stage, zoom * ArcadeWorld.MODELSIZE.x, zoom * ArcadeWorld.MODELSIZE.y);
+		stage.setOnCloseRequest(e -> GAME_LOOP.stop());
 		stage.setFullScreen(fullscreen);
-		Actions.init(gameController, ui);
+		var ui = new GameUI(gameController, stage, zoom * ArcadeWorld.MODELSIZE.x, zoom * ArcadeWorld.MODELSIZE.y);
+		startGameLoop(ui);
+		logger.info(() -> "Application started. UI size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s"
+				.formatted(stage.getWidth(), stage.getHeight(), zoom, U.onOff(Env.use3D.get()), Env.perspective.get()));
+	}
+
+	private void startGameLoop(GameUI ui) {
 		GAME_LOOP.setUpdateTask(ui::update);
 		GAME_LOOP.setRenderTask(ui::render);
 		GAME_LOOP.pyPaused.bind(Env.paused);
 		GAME_LOOP.pyTargetFramerate.bind(Env.targetFramerate);
 		GAME_LOOP.pyMeasured.bind(Env.timeMeasured);
 		GAME_LOOP.start();
-		logger.info(() -> "Application started. UI size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s".formatted(
-				ui.getStage().getWidth(), ui.getStage().getHeight(), zoom, U.onOff(Env.use3D.get()), Env.perspective.get()));
 	}
 }
