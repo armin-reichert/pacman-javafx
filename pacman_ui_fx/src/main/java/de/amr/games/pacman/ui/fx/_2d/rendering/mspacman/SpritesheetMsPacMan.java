@@ -236,11 +236,11 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 		var animationByDir = new EntityAnimationByDirection(pac::moveDir);
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
-			var wideOpen = rhs(0, d);
-			var open = rhs(1, d);
+			var wide = rhs(0, d);
+			var middle = rhs(1, d);
 			var closed = rhs(2, d);
-			var munching = new SingleEntityAnimation<>(open, wideOpen, open, closed);
-			munching.frameDuration(2);
+			var munching = new SingleEntityAnimation<>(middle, middle, wide, wide, middle, middle, middle, closed, closed);
+			munching.frameDuration(1);
 			munching.repeatForever();
 			animationByDir.put(dir, munching);
 		}
