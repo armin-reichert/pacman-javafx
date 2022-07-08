@@ -84,11 +84,6 @@ public class SceneManager {
 			//@formatter:on
 	};
 
-	public static Stream<GameScene> allGameScenes() {
-		return Stream.concat(Stream.of(SCENES_MS_PACMAN), Stream.of(SCENES_PACMAN)).flatMap(Stream::of)
-				.filter(Objects::nonNull);
-	}
-
 	private final SceneContext context;
 
 	public SceneManager(GameController gameController) {
@@ -97,6 +92,11 @@ public class SceneManager {
 
 	public SceneContext getContext() {
 		return context;
+	}
+
+	public Stream<GameScene> allGameScenes() {
+		return Stream.concat(Stream.of(SCENES_MS_PACMAN), Stream.of(SCENES_PACMAN)).flatMap(Stream::of)
+				.filter(Objects::nonNull);
 	}
 
 	public void initializeScene(GameScene scene, boolean createAnimations) {

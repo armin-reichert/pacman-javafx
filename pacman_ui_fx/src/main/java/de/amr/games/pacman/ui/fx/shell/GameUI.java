@@ -78,22 +78,21 @@ public class GameUI implements GameEventAdapter {
 	private GameScene currentGameScene;
 
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
+		GameEvents.addEventListener(this);
 		this.gameController = gameController;
 		this.stage = stage;
 		this.pacController = new KeyboardPacSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 		gameController.setPacSteering(pacController);
-		sceneManager = new SceneManager(gameController);
+
 		scene = new Scene(sceneRoot, width, height);
-		SceneManager.allGameScenes().forEach(gameScene -> gameScene.setParent(scene));
+		sceneManager = new SceneManager(gameController);
+		sceneManager.allGameScenes().forEach(gameScene -> gameScene.setParent(scene));
 		updateCurrentGameScene(true);
-		updateBackground();
 		logger.info("Main scene created. Size: %.0f x %.0f", scene.getWidth(), scene.getHeight());
-		createLayout(gameController);
-		GameEvents.addEventListener(this);
-		Env.drawMode3D.addListener((x, y, z) -> updateBackground());
-		Env.bgColor.addListener((x, y, z) -> updateBackground());
+
+		createLayout();
 		initKeyboardHandling();
-		updateCurrentGameScene(true);
+
 		stage.setMinHeight(328);
 		stage.setMinWidth(241);
 		stage.getIcons().add(APP_ICON);
@@ -102,6 +101,7 @@ public class GameUI implements GameEventAdapter {
 		stage.setScene(scene);
 		stage.centerOnScreen();
 		stage.show();
+
 		Ufx.pauseSec(10, () -> {
 			if (gameController.state() == GameState.INTRO) {
 				Actions.playHelpVoiceMessage();
@@ -109,7 +109,7 @@ public class GameUI implements GameEventAdapter {
 		}).play();
 	}
 
-	private void createLayout(GameController gameController) {
+	private void createLayout() {
 		dashboard.build(this, gameController);
 		pipView.pySceneHeight.bind(Env.pipSceneHeight);
 		pipView.visibleProperty().bind(Env.pipVisible);
@@ -118,6 +118,9 @@ public class GameUI implements GameEventAdapter {
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(new VBox(pipView));
 		sceneRoot.getChildren().addAll(gameScenePlaceholder, overlayPane, flashMessageView);
+		updateBackground();
+		Env.drawMode3D.addListener((x, y, z) -> updateBackground());
+		Env.bgColor.addListener((x, y, z) -> updateBackground());
 	}
 
 	private void initKeyboardHandling() {
