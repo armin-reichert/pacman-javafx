@@ -33,11 +33,11 @@ import java.util.function.Consumer;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.lib.animation.EntityAnimationByDirection;
-import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
 import de.amr.games.pacman.lib.animation.EntityAnimation;
+import de.amr.games.pacman.lib.animation.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.lib.animation.FixedEntityAnimation;
+import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
 import de.amr.games.pacman.model.common.LevelCounter;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Entity;
@@ -206,7 +206,7 @@ public interface Rendering2D {
 
 	default void drawScore(GraphicsContext g, Score score) {
 		if (score.isVisible()) {
-			String pointsText = "%02d".formatted(score.showContent ? score.points : 0);
+			String pointsText = score.showContent ? "%02d".formatted(score.points) : "00";
 			String levelText = score.showContent ? "L" + score.levelNumber : "";
 			g.setFont(getArcadeFont());
 			g.setFill(Color.WHITE);
