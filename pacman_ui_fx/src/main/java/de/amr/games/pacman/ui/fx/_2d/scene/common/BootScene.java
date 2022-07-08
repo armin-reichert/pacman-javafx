@@ -28,6 +28,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 
 import java.util.Random;
 
+import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.SpritesheetPacMan;
@@ -39,20 +40,17 @@ import javafx.scene.paint.Color;
  */
 public class BootScene extends GameScene2D {
 
-	private Random rnd = new Random();
-
-	public BootScene() {
-	}
+	private final Random rnd = new Random();
 
 	@Override
 	protected void doUpdate() {
+		// nothing to update
 	}
 
 	@Override
 	public void doRender(GraphicsContext g) {
 		var tick = ctx.state().timer().tick();
-		switch (ctx.state()) {
-		case BOOT -> {
+		if (ctx.state() == GameState.BOOT) {
 			if (between(1.0, 2.0, tick)) {
 				drawHexCodes(g, tick);
 			} else if (between(2.0, 3.0, tick)) {
@@ -60,10 +58,6 @@ public class BootScene extends GameScene2D {
 			} else if (between(3.0, 4.0, tick)) {
 				drawGrid(g);
 			}
-		}
-		default -> {
-			// nothing to do
-		}
 		}
 	}
 
