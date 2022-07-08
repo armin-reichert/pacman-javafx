@@ -31,6 +31,7 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.pacman.IntroController;
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
@@ -64,7 +65,7 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	public void init() {
-		sceneController.restartInInitialState(IntroController.State.START);
+		sceneController.restartInInitialState(IntroController.State.WARMUP);
 		creditVisible = false;
 		icc.pacMan.setAnimationSet(new PacAnimations(icc.pacMan, ctx.r2D));
 		Stream.of(icc.ghosts).forEach(ghost -> ghost.setAnimationSet(new GhostAnimations(ghost, ctx.r2D)));
@@ -93,17 +94,20 @@ public class PacManIntroScene extends GameScene2D {
 	@Override
 	public void doRender(GraphicsContext g) {
 		var time = sceneController.state().timer().tick();
-
-		ctx.r2D.drawScore(g, ctx.game().scores.gameScore);
-		ctx.r2D.drawScore(g, ctx.game().scores.highScore);
-		if (creditVisible) {
-			ctx.r2D.drawCredit(g, ctx.game().credit);
-		}
-
 		switch (sceneController.state()) {
-		case START -> drawGallery(g);
-		case PRESENTING_GHOSTS -> drawGallery(g);
+		case WARMUP -> {
+			drawGrid(g);
+		}
+		case START -> {
+			drawScoresAndCredit(g);
+			drawGallery(g);
+		}
+		case PRESENTING_GHOSTS -> {
+			drawScoresAndCredit(g);
+			drawGallery(g);
+		}
 		case SHOWING_POINTS -> {
+			drawScoresAndCredit(g);
 			drawGallery(g);
 			drawPoints(g);
 			if (time > secToTicks(1)) {
@@ -112,6 +116,7 @@ public class PacManIntroScene extends GameScene2D {
 			}
 		}
 		case CHASING_PAC -> {
+			drawScoresAndCredit(g);
 			drawGallery(g);
 			drawPoints(g);
 			drawBlinkingEnergizer(g);
@@ -119,12 +124,14 @@ public class PacManIntroScene extends GameScene2D {
 			ctx.r2D.drawCopyright(g, 32);
 		}
 		case CHASING_GHOSTS -> {
+			drawScoresAndCredit(g);
 			drawGallery(g);
 			drawPoints(g);
 			drawGuys(g, 0);
 			ctx.r2D.drawCopyright(g, 32);
 		}
 		case READY_TO_PLAY -> {
+			drawScoresAndCredit(g);
 			drawGallery(g);
 			drawPoints(g);
 			drawGuys(g, 0);
@@ -133,9 +140,28 @@ public class PacManIntroScene extends GameScene2D {
 		}
 	}
 
+	private void drawScoresAndCredit(GraphicsContext g) {
+		ctx.r2D.drawScore(g, ctx.game().scores.gameScore);
+		ctx.r2D.drawScore(g, ctx.game().scores.highScore);
+		if (creditVisible) {
+			ctx.r2D.drawCredit(g, ctx.game().credit);
+		}
+	}
+
 	// TODO inspect in MAME what's really going on
 	private int flutter(long time) {
 		return time % 5 < 2 ? 0 : -1;
+	}
+
+	private void drawGrid(GraphicsContext g) {
+		g.setStroke(Color.LIGHTGRAY);
+		g.setLineWidth(2.0);
+		for (int row = 0; row < ArcadeWorld.TILES_Y / 2; ++row) {
+			g.strokeLine(0, row * 2 * TS, ArcadeWorld.TILES_X * TS, row * 2 * TS);
+		}
+		for (int col = 0; col < ArcadeWorld.TILES_X / 2; ++col) {
+			g.strokeLine(col * 2 * TS, 0, col * 2 * TS, ArcadeWorld.TILES_Y * TS);
+		}
 	}
 
 	private void drawGallery(GraphicsContext g) {
