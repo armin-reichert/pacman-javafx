@@ -128,7 +128,7 @@ public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
 	public SingleEntityAnimation<Image> createMazeFlashingAnimation(int mazeNumber) {
 		var mazeBright = Ufx.colorsExchanged(mazeEmpty, Map.of(MAZE_WALL_COLOR, Color.WHITE));
 		var animation = new SingleEntityAnimation<>(mazeBright, mazeEmpty);
-		animation.frameDuration(10);
+		animation.setFrameDuration(10);
 		return animation;
 	}
 
@@ -164,7 +164,7 @@ public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
 			var middle = tile(1, d);
 			var closed = tile(2, 0);
 			var animation = new SingleEntityAnimation<>(closed, closed, middle, middle, wide, wide, middle, middle, closed);
-			animation.frameDuration(1);
+			animation.setFrameDuration(1);
 			animation.repeatForever();
 			animationByDir.put(dir, animation);
 		}
@@ -174,7 +174,7 @@ public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
 	@Override
 	public SingleEntityAnimation<Rectangle2D> createPacDyingAnimation() {
 		var animation = new SingleEntityAnimation<>(tilesToRight(3, 0, 11));
-		animation.frameDuration(8);
+		animation.setFrameDuration(8);
 		return animation;
 	}
 
@@ -184,7 +184,7 @@ public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			var animation = new SingleEntityAnimation<>(tilesToRight(2 * d, 4 + ghost.id, 2));
-			animation.frameDuration(8);
+			animation.setFrameDuration(8);
 			animation.repeatForever();
 			animationByDir.put(dir, animation);
 		}
@@ -194,7 +194,7 @@ public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
 	@Override
 	public SingleEntityAnimation<Rectangle2D> createGhostBlueAnimation() {
 		var animation = new SingleEntityAnimation<>(tile(8, 4), tile(9, 4));
-		animation.frameDuration(8);
+		animation.setFrameDuration(8);
 		animation.repeatForever();
 		return animation;
 	}
@@ -202,7 +202,7 @@ public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
 	@Override
 	public SingleEntityAnimation<Rectangle2D> createGhostFlashingAnimation() {
 		var animation = new SingleEntityAnimation<>(tilesToRight(8, 4, 4));
-		animation.frameDuration(6);
+		animation.setFrameDuration(6);
 		return animation;
 	}
 
@@ -225,7 +225,7 @@ public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
 
 	public SingleEntityAnimation<Rectangle2D> createBigPacManMunchingAnimation() {
 		var animation = new SingleEntityAnimation<>(tiles(2, 1, 2, 2), tiles(4, 1, 2, 2), tiles(6, 1, 2, 2));
-		animation.frameDuration(3);
+		animation.setFrameDuration(3);
 		animation.repeatForever();
 		return animation;
 	}
@@ -240,14 +240,14 @@ public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
 
 	public SingleEntityAnimation<Rectangle2D> createBlinkyPatchedAnimation() {
 		var animation = new SingleEntityAnimation<>(tile(10, 7), tile(11, 7));
-		animation.frameDuration(4);
+		animation.setFrameDuration(4);
 		animation.repeatForever();
 		return animation;
 	}
 
 	public SingleEntityAnimation<Rectangle2D> createBlinkyNakedAnimation() {
 		var animation = new SingleEntityAnimation<>(tiles(8, 8, 2, 1), tiles(10, 8, 2, 1));
-		animation.frameDuration(4);
+		animation.setFrameDuration(4);
 		animation.repeatForever();
 		return animation;
 	}

@@ -227,7 +227,7 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 				MAZE_TOP_COLORS[mazeIndex], Color.BLACK) //
 		);
 		var animation = new SingleEntityAnimation<>(brightImage, mazeEmpty);
-		animation.frameDuration(10);
+		animation.setFrameDuration(10);
 		return animation;
 	}
 
@@ -240,7 +240,7 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 			var middle = rhs(1, d);
 			var closed = rhs(2, d);
 			var munching = new SingleEntityAnimation<>(middle, middle, wide, wide, middle, middle, middle, closed, closed);
-			munching.frameDuration(1);
+			munching.setFrameDuration(1);
 			munching.repeatForever();
 			animationByDir.put(dir, munching);
 		}
@@ -255,7 +255,7 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 		var down = rhs(1, 3);
 		// TODO not yet 100% accurate
 		var animation = new SingleEntityAnimation<>(down, left, up, right, down, left, up, right, down, left, up);
-		animation.frameDuration(8);
+		animation.setFrameDuration(8);
 		return animation;
 	}
 
@@ -265,7 +265,7 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			var animation = new SingleEntityAnimation<>(rhs(2 * d, 4 + ghost.id), rhs(2 * d + 1, 4 + ghost.id));
-			animation.frameDuration(8);
+			animation.setFrameDuration(8);
 			animation.repeatForever();
 			animationByDir.put(dir, animation);
 		}
@@ -275,7 +275,7 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 	@Override
 	public SingleEntityAnimation<Rectangle2D> createGhostBlueAnimation() {
 		var animation = new SingleEntityAnimation<>(rhs(8, 4), rhs(9, 4));
-		animation.frameDuration(8);
+		animation.setFrameDuration(8);
 		animation.repeatForever();
 		return animation;
 	}
@@ -283,7 +283,7 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 	@Override
 	public SingleEntityAnimation<Rectangle2D> createGhostFlashingAnimation() {
 		var animation = new SingleEntityAnimation<>(rhs(8, 4), rhs(9, 4), rhs(10, 4), rhs(11, 4));
-		animation.frameDuration(4);
+		animation.setFrameDuration(4);
 		return animation;
 	}
 
@@ -309,7 +309,7 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 		for (var dir : Direction.values()) {
 			int d = dirIndex(dir);
 			var animation = new SingleEntityAnimation<>(rhs(0, 9 + d), rhs(1, 9 + d), rhs(2, 9));
-			animation.frameDuration(2);
+			animation.setFrameDuration(2);
 			animation.repeatForever();
 			animationByDir.put(dir, animation);
 		}
@@ -325,7 +325,7 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 				new Rectangle2D(488, 208, 32, 32), //
 				new Rectangle2D(456, 208, 32, 32)//
 		);
-		animation.frameDuration(4);
+		animation.setFrameDuration(4);
 		return animation;
 	}
 
@@ -335,7 +335,7 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 				new Rectangle2D(521, 176, 32, 16) //
 		);
 		animation.repeatForever();
-		animation.frameDuration(8);
+		animation.setFrameDuration(8);
 		return animation;
 	}
 }
