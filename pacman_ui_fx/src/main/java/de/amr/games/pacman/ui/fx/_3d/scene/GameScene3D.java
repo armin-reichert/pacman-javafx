@@ -89,7 +89,7 @@ public abstract class GameScene3D implements GameScene {
 	}
 
 	@Override
-	public void initResizing(DoubleExpression width, DoubleExpression height) {
+	public void setResizeBehavior(DoubleExpression width, DoubleExpression height) {
 		fxSubScene.widthProperty().bind(width);
 		fxSubScene.heightProperty().bind(height);
 	}

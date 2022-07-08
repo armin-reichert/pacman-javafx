@@ -72,7 +72,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	@Override
-	public void initResizing(DoubleExpression width, DoubleExpression height) {
+	public void setResizeBehavior(DoubleExpression width, DoubleExpression height) {
 		height.addListener((x, y, h) -> resize(h.doubleValue()));
 	}
 

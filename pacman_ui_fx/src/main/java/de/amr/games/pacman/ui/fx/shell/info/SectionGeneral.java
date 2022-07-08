@@ -101,7 +101,8 @@ public class SectionGeneral extends Section {
 		sliderPiPOpacity.valueProperty()
 				.addListener((obs, oldValue, newValue) -> Env.pipOpacity.set(newValue.doubleValue()));
 
-		addInfo("Main scene", () -> String.format("w=%.0f h=%.0f", ui.getMainSceneWidth(), ui.getMainSceneHeight()));
+		addInfo("Main scene",
+				() -> String.format("w=%.0f h=%.0f", ui.getMainScene().getWidth(), ui.getMainScene().getHeight()));
 		cbUsePlayScene3D = addCheckBox("Use 3D play scene", Actions::toggleUse3DScene);
 		cbDebugUI = addCheckBox("Show UI Debug Stuff", () -> Env.toggle(Env.debugUI));
 		cbTimeMeasured = addCheckBox("Measure time", () -> Env.toggle(Env.timeMeasured));

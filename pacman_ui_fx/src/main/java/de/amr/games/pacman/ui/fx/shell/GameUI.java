@@ -67,7 +67,7 @@ public class GameUI implements GameEventAdapter {
 	private final GameController gameController;
 	private final KeyboardPacSteering pacController;
 	private final Stage stage;
-	private final Scene scene;
+	private final Scene mainScene;
 	private final SceneManager sceneManager;
 	private final StackPane sceneRoot = new StackPane();
 	private final StackPane gameScenePlaceholder = new StackPane();
@@ -84,30 +84,27 @@ public class GameUI implements GameEventAdapter {
 		this.pacController = new KeyboardPacSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 		gameController.setPacSteering(pacController);
 
-		scene = new Scene(sceneRoot, width, height);
+		mainScene = new Scene(sceneRoot, width, height);
+		logger.info("Main scene created. Size: %.0f x %.0f", mainScene.getWidth(), mainScene.getHeight());
+
 		sceneManager = new SceneManager(gameController);
 		sceneManager.allGameScenes()
-				.forEach(gameScene -> gameScene.initResizing(scene.widthProperty(), scene.heightProperty()));
-		updateCurrentGameScene(true);
-		logger.info("Main scene created. Size: %.0f x %.0f", scene.getWidth(), scene.getHeight());
+				.forEach(gameScene -> gameScene.setResizeBehavior(mainScene.widthProperty(), mainScene.heightProperty()));
 
 		createLayout();
 		initKeyboardHandling();
+		updateCurrentGameScene(true);
 
+		stage.setScene(mainScene);
 		stage.setMinHeight(328);
 		stage.setMinWidth(241);
 		stage.getIcons().add(APP_ICON);
 		stage.setOnCloseRequest(e -> PacManGameAppFX.GAME_LOOP.stop());
 		stage.setTitle(gameController.game().variant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
-		stage.setScene(scene);
 		stage.centerOnScreen();
 		stage.show();
 
-		Ufx.pauseSec(10, () -> {
-			if (gameController.state() == GameState.INTRO) {
-				Actions.playHelpVoiceMessage();
-			}
-		}).play();
+		playVoiceMessageAfterSeconds(10);
 	}
 
 	private void createLayout() {
@@ -125,7 +122,7 @@ public class GameUI implements GameEventAdapter {
 	}
 
 	private void initKeyboardHandling() {
-		scene.setOnKeyPressed(Keyboard::processEvent);
+		mainScene.setOnKeyPressed(Keyboard::processEvent);
 		Keyboard.addHandler(this::onKeyPressed);
 		Keyboard.addHandler(pacController::onKeyPressed);
 		Keyboard.addHandler(() -> currentGameScene.onKeyPressed());
@@ -137,28 +134,24 @@ public class GameUI implements GameEventAdapter {
 		gameScenePlaceholder.setBackground(Ufx.colorBackground(mode == DrawMode.FILL ? bgColor : Color.BLACK));
 	}
 
+	private void playVoiceMessageAfterSeconds(double seconds) {
+		Ufx.pauseSec(seconds, () -> {
+			if (gameController.state() == GameState.INTRO) {
+				Actions.playHelpVoiceMessage();
+			}
+		}).play();
+	}
+
 	public SceneManager getSceneManager() {
 		return sceneManager;
 	}
 
-	public double getWidth() {
-		return stage.getWidth();
+	public Stage getStage() {
+		return stage;
 	}
 
-	public double getHeight() {
-		return stage.getHeight();
-	}
-
-	public Scene getScene() {
-		return scene;
-	}
-
-	public double getMainSceneWidth() {
-		return scene.getWidth();
-	}
-
-	public double getMainSceneHeight() {
-		return scene.getHeight();
+	public Scene getMainScene() {
+		return mainScene;
 	}
 
 	public FlashMessageView getFlashMessageView() {
@@ -223,7 +216,7 @@ public class GameUI implements GameEventAdapter {
 		}
 		sceneManager.initializeScene(newGameScene, true);
 		sceneManager.initializeScene(pipView.getPlayScene2D(), false);
-		newGameScene.resize(scene.getHeight());
+		newGameScene.resize(mainScene.getHeight());
 		gameScenePlaceholder.getChildren().setAll(newGameScene.getFXSubScene());
 		logger.info("Current scene changed from %s to %s", currentGameScene, newGameScene);
 		currentGameScene = newGameScene;
