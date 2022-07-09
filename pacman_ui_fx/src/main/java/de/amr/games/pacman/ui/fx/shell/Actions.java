@@ -34,6 +34,7 @@ import de.amr.games.pacman.ui.fx.Resources;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.texts.Texts;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.PauseTransition;
 import javafx.scene.media.AudioClip;
 import javafx.scene.shape.DrawMode;
@@ -80,6 +81,10 @@ public class Actions {
 				logger.error("Could not play voice message '%s'", messageFileName);
 			}
 		}
+	}
+
+	public static void playHelpMessageAfterSeconds(double seconds) {
+		Ufx.pauseSec(seconds, Actions::playHelpVoiceMessage).play();
 	}
 
 	public static void stopVoiceMessage() {

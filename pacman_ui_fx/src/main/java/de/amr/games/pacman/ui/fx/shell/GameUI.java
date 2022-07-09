@@ -27,7 +27,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameEvents;
@@ -105,8 +104,6 @@ public class GameUI implements GameEventAdapter {
 		stage.getIcons().add(APP_ICON);
 		stage.centerOnScreen();
 		stage.show();
-
-		playVoiceMessageAfterSeconds(10);
 	}
 
 	public void startGameLoop() {
@@ -143,14 +140,6 @@ public class GameUI implements GameEventAdapter {
 		var mode = Env.drawMode3D.get();
 		var bgColor = Env.bgColor.get();
 		gameScenePlaceholder.setBackground(Ufx.colorBackground(mode == DrawMode.FILL ? bgColor : Color.BLACK));
-	}
-
-	private void playVoiceMessageAfterSeconds(double seconds) {
-		Ufx.pauseSec(seconds, () -> {
-			if (gameController.state() == GameState.INTRO) {
-				Actions.playHelpVoiceMessage();
-			}
-		}).play();
 	}
 
 	public SceneManager getSceneManager() {

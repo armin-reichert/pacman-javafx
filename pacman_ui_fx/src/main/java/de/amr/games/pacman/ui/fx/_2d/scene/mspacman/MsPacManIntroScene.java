@@ -72,6 +72,7 @@ public class MsPacManIntroScene extends GameScene2D {
 			animations.ensureRunning();
 			ghost.setAnimationSet(animations);
 		});
+		Actions.playHelpMessageAfterSeconds(3);
 	}
 
 	@Override
