@@ -104,7 +104,7 @@ public class PlayScene3D extends GameScene3D {
 
 	@Override
 	public void onKeyPressed() {
-		if (Keyboard.pressed(KeyCode.DIGIT5) && ctx.game().credit == 0) {
+		if (Keyboard.pressed(KeyCode.DIGIT5) && !ctx.game().hasCredit()) {
 			ctx.state().addCredit(ctx.game());
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.LEFT)) {
 			Actions.selectPrevPerspective();

@@ -63,7 +63,7 @@ public class PacManCreditScene extends GameScene2D {
 		ctx.r2D.drawScore(g, ctx.game().scores.gameScore);
 		ctx.r2D.drawScore(g, ctx.game().scores.highScore);
 		if (creditVisible) {
-			ctx.r2D.drawCredit(g, ctx.game().credit);
+			ctx.r2D.drawCredit(g, ctx.game().getCredit());
 		}
 		g.setFont(ctx.r2D.getArcadeFont());
 		g.setFill(ctx.r2D.getGhostColor(Ghost.ORANGE_GHOST));

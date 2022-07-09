@@ -108,7 +108,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		ctx.r2D.drawPac(g, icc.msPacMan);
 		ctx.r2D.drawCopyright(g, 29);
 		if (creditVisible) {
-			ctx.r2D.drawCredit(g, ctx.game().credit);
+			ctx.r2D.drawCredit(g, ctx.game().getCredit());
 		}
 	}
 

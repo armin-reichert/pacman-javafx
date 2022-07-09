@@ -101,7 +101,7 @@ public class Actions {
 	}
 
 	public static void startGame() {
-		if (theGameController.game().credit > 0) {
+		if (theGameController.game().hasCredit()) {
 			stopVoiceMessage();
 			theGameController.state().requestGame(theGameController.game());
 		}

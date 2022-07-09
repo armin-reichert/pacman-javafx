@@ -72,7 +72,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void onKeyPressed() {
-		if (Keyboard.pressed(KeyCode.DIGIT5) && ctx.game().credit == 0) {
+		if (Keyboard.pressed(KeyCode.DIGIT5) && !ctx.game().hasCredit()) {
 			ctx.state().addCredit(ctx.game());
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.E)) {
 			Actions.cheatEatAllPellets();
@@ -109,7 +109,7 @@ public class PlayScene2D extends GameScene2D {
 		ctx.r2D.drawPac(g, ctx.game().pac);
 		ctx.r2D.drawGhosts(g, ctx.game().theGhosts);
 		if (creditVisible) {
-			ctx.r2D.drawCredit(g, ctx.game().credit);
+			ctx.r2D.drawCredit(g, ctx.game().getCredit());
 		} else {
 			ctx.r2D.drawLivesCounter(g, ctx.game().playing ? ctx.game().lives - 1 : ctx.game().lives);
 		}

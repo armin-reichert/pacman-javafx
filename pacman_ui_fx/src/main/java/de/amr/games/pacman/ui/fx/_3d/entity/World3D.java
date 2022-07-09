@@ -50,7 +50,7 @@ public class World3D extends Group {
 	public World3D(GameModel game, Model3D model3D, Rendering2D r2D) {
 		scores3D = new Scores3D();
 		scores3D.setFont(r2D.getArcadeFont());
-		if (game.credit > 0) {
+		if (game.hasCredit()) {
 			scores3D.setComputeScoreText(true);
 		} else {
 			scores3D.setComputeScoreText(false);
@@ -84,7 +84,7 @@ public class World3D extends Group {
 		livesCounter3D.setTranslateX(TS);
 		livesCounter3D.setTranslateY(TS);
 		livesCounter3D.setTranslateZ(-HTS);
-		livesCounter3D.setVisible(game.credit > 0);
+		livesCounter3D.setVisible(game.hasCredit());
 		getChildren().add(livesCounter3D);
 	}
 

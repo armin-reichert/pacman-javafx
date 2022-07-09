@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx.shell.info;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
@@ -72,8 +73,8 @@ public class SectionGameControl extends Section {
 
 		spinnerGameLevel = addSpinner("Level", 1, 100, game().level.number);
 		spinnerGameLevel.valueProperty().addListener((obs, oldVal, newVal) -> Actions.enterLevel(newVal.intValue()));
-		spinnerGameCredit = addSpinner("Credit", 0, 50, game().credit);
-		spinnerGameCredit.valueProperty().addListener((obs, oldVal, newVal) -> game().credit = newVal.intValue());
+		spinnerGameCredit = addSpinner("Credit", 0, GameModel.MAX_CREDIT, game().getCredit());
+		spinnerGameCredit.valueProperty().addListener((obs, oldVal, newVal) -> game().setCredit(newVal.intValue()));
 
 		cbMuted = addCheckBox("Sound muted", Actions::toggleSoundMuted);
 		cbAutopilot = addCheckBox("Autopilot", Actions::toggleAutopilot);
@@ -92,7 +93,7 @@ public class SectionGameControl extends Section {
 		cbImmunity.setSelected(gc.game().isPacImmune);
 
 		// start game
-		btnsGameControl[0].setDisable(gc.game().credit == 0 || gc.game().playing);
+		btnsGameControl[0].setDisable(!gc.game().hasCredit() || gc.game().playing);
 		// quit game
 		btnsGameControl[1].setDisable(gc.state() == GameState.INTRO || gc.state() == GameState.INTERMISSION_TEST);
 		// next level
@@ -112,7 +113,7 @@ public class SectionGameControl extends Section {
 					gc.state() != GameState.READY && gc.state() != GameState.HUNTING && gc.state() != GameState.LEVEL_STARTING);
 		}
 
-		spinnerGameCredit.getValueFactory().setValue(game().credit);
+		spinnerGameCredit.getValueFactory().setValue(game().getCredit());
 
 		var sounds = gc.sounds();
 		if (sounds.isPresent()) {

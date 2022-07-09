@@ -52,6 +52,6 @@ public class SceneContext {
 	}
 
 	public boolean hasCredit() {
-		return game().credit > 0;
+		return game().hasCredit();
 	}
 }

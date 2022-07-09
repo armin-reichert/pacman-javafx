@@ -140,7 +140,7 @@ public class PacManIntroScene extends GameScene2D {
 		ctx.r2D.drawScore(g, ctx.game().scores.gameScore);
 		ctx.r2D.drawScore(g, ctx.game().scores.highScore);
 		if (creditVisible) {
-			ctx.r2D.drawCredit(g, ctx.game().credit);
+			ctx.r2D.drawCredit(g, ctx.game().getCredit());
 		}
 	}
 
