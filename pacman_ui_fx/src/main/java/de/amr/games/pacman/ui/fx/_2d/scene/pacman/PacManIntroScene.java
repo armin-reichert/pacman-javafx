@@ -92,7 +92,7 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	@Override
-	public void doRender(GraphicsContext g) {
+	public void drawSceneContent() {
 		var tick = sceneController.state().timer().tick();
 		switch (sceneController.state()) {
 		case START -> {

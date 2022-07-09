@@ -95,7 +95,7 @@ public class MsPacManIntroScene extends GameScene2D {
 	}
 
 	@Override
-	public void doRender(GraphicsContext g) {
+	public void drawSceneContent() {
 		ctx.r2D.drawScore(g, ctx.game().scores.gameScore);
 		ctx.r2D.drawScore(g, ctx.game().scores.highScore);
 		drawTitle(g);

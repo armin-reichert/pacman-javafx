@@ -31,7 +31,6 @@ import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.SpritesheetMsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Font;
 
@@ -60,7 +59,7 @@ public class MsPacManCreditScene extends GameScene2D {
 	}
 
 	@Override
-	public void doRender(GraphicsContext g) {
+	public void drawSceneContent() {
 		ctx.r2D.drawScore(g, ctx.game().scores.gameScore);
 		ctx.r2D.drawScore(g, ctx.game().scores.highScore);
 		if (creditVisible) {

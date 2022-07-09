@@ -29,7 +29,6 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -59,7 +58,7 @@ public class PacManCreditScene extends GameScene2D {
 	}
 
 	@Override
-	public void doRender(GraphicsContext g) {
+	public void drawSceneContent() {
 		ctx.r2D.drawScore(g, ctx.game().scores.gameScore);
 		ctx.r2D.drawScore(g, ctx.game().scores.highScore);
 		if (creditVisible) {

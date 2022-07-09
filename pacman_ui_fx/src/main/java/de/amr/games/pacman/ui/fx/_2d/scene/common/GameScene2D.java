@@ -49,6 +49,7 @@ public abstract class GameScene2D implements GameScene {
 
 	protected final V2d unscaledSize = new V2d(ArcadeWorld.WORLD_SIZE);
 	protected final Canvas canvas = new Canvas(unscaledSize.x, unscaledSize.y);
+	protected final GraphicsContext g = canvas.getGraphicsContext2D();
 	protected final Canvas overlayCanvas = new Canvas();
 	protected final Pane infoPane = new Pane();
 	protected final StackPane root;
@@ -74,6 +75,11 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	@Override
+	public boolean is3D() {
+		return false;
+	}
+
+	@Override
 	public void setResizeBehavior(DoubleExpression width, DoubleExpression height) {
 		height.addListener((x, y, h) -> resize(h.doubleValue()));
 	}
@@ -93,7 +99,7 @@ public abstract class GameScene2D implements GameScene {
 		return fxSubScene;
 	}
 
-	public Canvas getCanvas() {
+	public Canvas getGameSceneCanvas() {
 		return canvas;
 	}
 
@@ -127,28 +133,27 @@ public abstract class GameScene2D implements GameScene {
 	/**
 	 * Renders the scene content. Subclasses override this method.
 	 */
-	public abstract void doRender(GraphicsContext g);
+	public abstract void drawSceneContent();
 
 	@Override
 	public final void updateAndRender() {
 		doUpdate();
+		clearSceneContent();
+		drawSceneContent();
+		drawTransparentOverlayCanvas();
+	}
+
+	private void clearSceneContent() {
 		var g = canvas.getGraphicsContext2D();
 		g.setFill(Color.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		doRender(g);
-		drawOverlay();
 	}
 
-	private void drawOverlay() {
+	private void drawTransparentOverlayCanvas() {
 		if (overlayCanvas.isVisible()) {
 			var og = overlayCanvas.getGraphicsContext2D();
 			og.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());
 			ctx.r2D.drawTileBorders(og, scaling.doubleValue());
 		}
-	}
-
-	@Override
-	public boolean is3D() {
-		return false;
 	}
 }

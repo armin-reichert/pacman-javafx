@@ -120,7 +120,7 @@ public class GameUI implements GameEventAdapter {
 
 	private void createLayout() {
 		dashboard.build(this, gameController);
-		pipView.pySceneHeight.bind(Env.pipSceneHeight);
+		pipView.sceneHeightPy.bind(Env.pipSceneHeight);
 		pipView.visibleProperty().bind(Env.pipVisible);
 		pipView.opacityProperty().bind(Env.pipOpacity);
 		var overlayPane = new BorderPane();
@@ -195,7 +195,7 @@ public class GameUI implements GameEventAdapter {
 	public void render() {
 		flashMessageView.update();
 		dashboard.update();
-		pipView.render(currentGameScene instanceof PlayScene2D || currentGameScene instanceof PlayScene3D);
+		pipView.drawContent(currentGameScene instanceof PlayScene2D || currentGameScene instanceof PlayScene3D);
 	}
 
 	private void updateCurrentGameScene(boolean forcedUpdate) {

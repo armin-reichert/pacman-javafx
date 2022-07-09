@@ -30,7 +30,6 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.SpritesheetMsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
-import javafx.scene.canvas.GraphicsContext;
 
 /**
  * Intermission scene 2: "The chase".
@@ -78,7 +77,7 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 	}
 
 	@Override
-	public void doRender(GraphicsContext g) {
+	public void drawSceneContent() {
 		SpritesheetMsPacMan.get().drawFlap(g, icc.flap);
 		ctx.r2D.drawPac(g, icc.msPacMan);
 		ctx.r2D.drawPac(g, icc.pacMan);

@@ -39,7 +39,6 @@ import de.amr.games.pacman.ui.fx._2d.rendering.pacman.SpritesheetPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 /**
@@ -130,7 +129,7 @@ public class PacManCutscene2 extends GameScene2D {
 	}
 
 	@Override
-	public void doRender(GraphicsContext g) {
+	public void drawSceneContent() {
 		if (Env.debugUI.get()) {
 			g.setFont(ctx.r2D.getArcadeFont());
 			g.setFill(Color.WHITE);
