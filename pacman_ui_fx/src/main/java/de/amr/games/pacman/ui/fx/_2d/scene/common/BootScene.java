@@ -99,6 +99,9 @@ public class BootScene extends GameScene2D {
 
 	private void drawRandomSprites(GraphicsContext g) {
 		for (int row = 0; row < ArcadeWorld.TILES_Y / 2; ++row) {
+			if (rnd.nextInt(100) < 33) {
+				continue;
+			}
 			for (int col = 0; col < ArcadeWorld.TILES_X / 2; ++col) {
 				var x = rnd.nextInt(14);
 				var y = rnd.nextInt(10);
