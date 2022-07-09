@@ -32,8 +32,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.lib.TickTimer;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.SpritesheetMsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.SpritesheetPacMan;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -70,7 +73,7 @@ public class BootScene extends GameScene2D {
 		} else if (between(2.0, 3.0, tick) && tick % 6 == 0) {
 			clearBuffer();
 			drawRandomSprites(g);
-		} else if (tick == TickTimer.secToTicks(3.0) + 1) {
+		} else if (tick == TickTimer.secToTicks(3.0)) {
 			clearBuffer();
 			drawGrid(g);
 		}
@@ -98,15 +101,16 @@ public class BootScene extends GameScene2D {
 	}
 
 	private void drawRandomSprites(GraphicsContext g) {
+		var sheet = ctx.game().variant == GameVariant.MS_PACMAN ? SpritesheetMsPacMan.get() : SpritesheetPacMan.get();
+		var sheetWidth = sheet.getSourceImage().getWidth();
+		var sheetHeight = sheet.getSourceImage().getHeight();
 		for (int row = 0; row < ArcadeWorld.TILES_Y / 2; ++row) {
-			if (rnd.nextInt(100) < 33) {
+			if (rnd.nextInt(100) < 25) {
 				continue;
 			}
 			for (int col = 0; col < ArcadeWorld.TILES_X / 2; ++col) {
-				var x = rnd.nextInt(14);
-				var y = rnd.nextInt(10);
-				var sprite = SpritesheetPacMan.get().subImage(x * 16, y * 16 + 8, 16, 16);
-				g.drawImage(sprite, col * 2 * TS, row * 2 * TS);
+				var rect = new Rectangle2D(rnd.nextDouble(sheetWidth), rnd.nextDouble(sheetHeight), 16, 16);
+				sheet.drawSprite(g, rect, 16 * col, 16 * row);
 			}
 		}
 		logger.trace("Random sprites");
