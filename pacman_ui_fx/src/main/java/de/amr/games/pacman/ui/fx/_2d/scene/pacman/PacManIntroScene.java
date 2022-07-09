@@ -72,6 +72,11 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	@Override
+	public void end() {
+		Actions.stopVoiceMessage();
+	}
+
+	@Override
 	public void onKeyPressed() {
 		if (Keyboard.pressed(KeyCode.DIGIT5)) {
 			ctx.state().addCredit(ctx.game());
