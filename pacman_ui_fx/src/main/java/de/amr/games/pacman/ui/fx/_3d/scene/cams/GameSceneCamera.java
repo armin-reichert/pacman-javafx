@@ -35,7 +35,7 @@ import javafx.scene.input.KeyEvent;
  */
 public abstract class GameSceneCamera extends PerspectiveCamera {
 
-	public static void change(DoubleProperty property, double delta) {
+	public static void changeBy(DoubleProperty property, double delta) {
 		property.set(property.get() + delta);
 	}
 

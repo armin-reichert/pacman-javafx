@@ -48,9 +48,9 @@ public class GhostBodyAnimation {
 
 	private final CreatureMotionAnimation motion;
 
-	private final ObjectProperty<Color> pyDressColor;
-	private final ObjectProperty<Color> pyEyeBallsColor;
-	private final ObjectProperty<Color> pyEyePupilsColor;
+	private final ObjectProperty<Color> dressColorPy;
+	private final ObjectProperty<Color> eyeBallsColorPy;
+	private final ObjectProperty<Color> eyePupilsColorPy;
 
 	private ParallelTransition flashing;
 	private ColorFlashing dressFlashing;
@@ -67,19 +67,19 @@ public class GhostBodyAnimation {
 
 		root3D = model3D.createGhost(dressColor, eyeBallColor, pupilColor);
 
-		pyDressColor = new SimpleObjectProperty<>(dressColor);
+		dressColorPy = new SimpleObjectProperty<>(dressColor);
 		var dressMaterial = new PhongMaterial();
-		Ufx.bindMaterialColor(dressMaterial, pyDressColor);
+		Ufx.bindMaterialColor(dressMaterial, dressColorPy);
 		dress().setMaterial(dressMaterial);
 
-		pyEyeBallsColor = new SimpleObjectProperty<>(Rendering3D.getGhostEyeBallColor());
+		eyeBallsColorPy = new SimpleObjectProperty<>(Rendering3D.getGhostEyeBallColor());
 		var eyeBallsMaterial = new PhongMaterial();
-		Ufx.bindMaterialColor(eyeBallsMaterial, pyEyeBallsColor);
+		Ufx.bindMaterialColor(eyeBallsMaterial, eyeBallsColorPy);
 		eyeBalls().setMaterial(eyeBallsMaterial);
 
-		pyEyePupilsColor = new SimpleObjectProperty<>(Rendering3D.getGhostPupilColorBlue());
+		eyePupilsColorPy = new SimpleObjectProperty<>(Rendering3D.getGhostPupilColorBlue());
 		var eyePupilsMaterial = new PhongMaterial();
-		Ufx.bindMaterialColor(eyePupilsMaterial, pyEyePupilsColor);
+		Ufx.bindMaterialColor(eyePupilsMaterial, eyePupilsColorPy);
 		eyePupils().setMaterial(eyePupilsMaterial);
 	}
 
@@ -135,27 +135,27 @@ public class GhostBodyAnimation {
 	public void wearBlueDress(int numFlashes) {
 		if (numFlashes > 0) {
 			ensureFlashingPlaying(numFlashes);
-			pyDressColor.bind(dressFlashing.pyColor);
-			pyEyePupilsColor.bind(pupilsFlashing.pyColor);
-			pyEyeBallsColor.set(Rendering3D.getGhostEyeBallColorFrightened());
+			dressColorPy.bind(dressFlashing.colorPy);
+			eyePupilsColorPy.bind(pupilsFlashing.colorPy);
+			eyeBallsColorPy.set(Rendering3D.getGhostEyeBallColorFrightened());
 		} else {
 			ensureFlashingStopped();
-			pyDressColor.unbind();
-			pyEyePupilsColor.unbind();
-			pyDressColor.set(Rendering3D.getGhostDressColorBlue());
-			pyEyePupilsColor.set(Rendering3D.getGhostPupilColorRed());
-			pyEyeBallsColor.set(Rendering3D.getGhostEyeBallColorFrightened());
+			dressColorPy.unbind();
+			eyePupilsColorPy.unbind();
+			dressColorPy.set(Rendering3D.getGhostDressColorBlue());
+			eyePupilsColorPy.set(Rendering3D.getGhostPupilColorRed());
+			eyeBallsColorPy.set(Rendering3D.getGhostEyeBallColorFrightened());
 		}
 		dress().setVisible(true);
 	}
 
 	public void wearColoredDress() {
-		pyDressColor.unbind();
-		pyEyePupilsColor.unbind();
+		dressColorPy.unbind();
+		eyePupilsColorPy.unbind();
 		ensureFlashingStopped();
-		pyDressColor.set(Rendering3D.getGhostDressColor(ghost.id));
-		pyEyeBallsColor.set(Rendering3D.getGhostEyeBallColor());
-		pyEyePupilsColor.set(Rendering3D.getGhostPupilColorBlue());
+		dressColorPy.set(Rendering3D.getGhostDressColor(ghost.id));
+		eyeBallsColorPy.set(Rendering3D.getGhostEyeBallColor());
+		eyePupilsColorPy.set(Rendering3D.getGhostPupilColorBlue());
 		dress().setVisible(true);
 	}
 }

@@ -35,18 +35,18 @@ public class ColorChangeTransition extends Transition {
 
 	private final Color fromColor;
 	private final Color toColor;
-	private final ObjectProperty<Color> pyTargetColor;
+	private final ObjectProperty<Color> targetColorPy;
 
-	public ColorChangeTransition(Duration duration, Color fromColor, Color toColor, ObjectProperty<Color> pyTargetColor) {
+	public ColorChangeTransition(Duration duration, Color fromColor, Color toColor, ObjectProperty<Color> targetColorPy) {
 		this.fromColor = fromColor;
 		this.toColor = toColor;
-		this.pyTargetColor = pyTargetColor;
+		this.targetColorPy = targetColorPy;
 		setCycleCount(1);
 		setCycleDuration(duration);
 	}
 
 	@Override
 	protected void interpolate(double t) {
-		pyTargetColor.setValue(fromColor.interpolate(toColor, t));
+		targetColorPy.setValue(fromColor.interpolate(toColor, t));
 	}
 }

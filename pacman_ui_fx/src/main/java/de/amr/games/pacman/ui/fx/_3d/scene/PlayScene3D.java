@@ -71,7 +71,7 @@ public class PlayScene3D extends GameScene3D {
 		cameraMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
 		cameraMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
 		cameraMap.put(Perspective.TOTAL, new CamTotal());
-		Env.perspective.addListener((obs, oldVal, newVal) -> setPerspective(newVal));
+		Env.perspectivePy.addListener((obs, oldVal, newVal) -> setPerspective(newVal));
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class PlayScene3D extends GameScene3D {
 		Stream.of(ghosts3D).forEach(content()::add);
 		bonus3D = new Bonus3D(ctx.game().bonus());
 		content().add(bonus3D);
-		setPerspective(Env.perspective.get());
+		setPerspective(Env.perspectivePy.get());
 	}
 
 	public void setPerspective(Perspective perspective) {
@@ -197,7 +197,7 @@ public class PlayScene3D extends GameScene3D {
 			blockGameController();
 			world3D = new World3D(ctx.game(), ctx.model3D, ctx.r2D);
 			content().set(0, world3D);
-			setPerspective(Env.perspective.get());
+			setPerspective(Env.perspectivePy.get());
 			Actions.showFlashMessage(Texts.message("level_starting", ctx.game().level.number));
 			Ufx.pauseSec(3, this::unblockGameController).play();
 		}

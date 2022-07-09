@@ -46,28 +46,28 @@ public class PortalTraversalAnimation {
 	private final Creature guy;
 	private final World world;
 	private final Node node;
-	private final ObjectProperty<Color> colorProperty;
+	private final ObjectProperty<Color> colorPy;
 	private final Supplier<Color> baseColor;
 
-	public PortalTraversalAnimation(Creature guy, World world, Node node, ObjectProperty<Color> colorProperty,
+	public PortalTraversalAnimation(Creature guy, World world, Node node, ObjectProperty<Color> colorPy,
 			Supplier<Color> baseColor) {
 		this.guy = guy;
 		this.world = world;
 		this.node = node;
-		this.colorProperty = colorProperty;
+		this.colorPy = colorPy;
 		this.baseColor = baseColor;
 	}
 
 	public void update() {
-		if (colorProperty.isBound()) {
+		if (colorPy.isBound()) {
 			return;
 		}
-		colorProperty.set(baseColor.get());
+		colorPy.set(baseColor.get());
 		node.setVisible(guy.isVisible());
 		node.setOpacity(1);
 		if (outsideWorld()) {
 			node.setVisible(true);
-			colorProperty.set((Color.color(0.1, 0.1, 0.1, 0.2)));
+			colorPy.set((Color.color(0.1, 0.1, 0.1, 0.2)));
 		} else {
 			double fadeStart = 32.0;
 			double dist = distFromNearestPortal();
@@ -75,7 +75,7 @@ public class PortalTraversalAnimation {
 				node.setVisible(true);
 				double opacity = U.lerp(0.2, 1, dist / fadeStart);
 				logger.trace("Distance from portal: %.2f Opacity: %.2f", dist, opacity);
-				colorProperty.set(Color.color(baseColor.get().getRed() * opacity, baseColor.get().getGreen() * opacity,
+				colorPy.set(Color.color(baseColor.get().getRed() * opacity, baseColor.get().getGreen() * opacity,
 						baseColor.get().getBlue() * opacity, opacity));
 			}
 		}

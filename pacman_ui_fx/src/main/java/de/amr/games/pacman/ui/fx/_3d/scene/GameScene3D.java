@@ -54,7 +54,7 @@ public abstract class GameScene3D implements GameScene {
 	protected GameScene3D(double width, double height) {
 		contentRoot.getTransforms().add(new Translate(-width / 2, -height / 2));
 		var coords = new CoordSystem(1000);
-		coords.visibleProperty().bind(Env.axesVisible);
+		coords.visibleProperty().bind(Env.axesVisiblePy);
 		var light = new AmbientLight(Color.GHOSTWHITE);
 		var fxSceneRoot = new Group(contentRoot, coords, light);
 		fxSubScene = new SubScene(fxSceneRoot, 100, 100, true, SceneAntialiasing.BALANCED);

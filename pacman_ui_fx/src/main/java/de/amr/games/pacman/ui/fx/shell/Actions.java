@@ -150,7 +150,7 @@ public class Actions {
 	}
 
 	public static void togglePipViewVisible() {
-		Env.toggle(Env.pipVisible);
+		Env.toggle(Env.pipVisiblePy);
 	}
 
 	public static void toggleDashboardVisible() {
@@ -158,12 +158,12 @@ public class Actions {
 	}
 
 	public static void togglePaused() {
-		Env.toggle(Env.paused);
-		theGameController.sounds().ifPresent(snd -> snd.setSilent(Env.paused.get()));
+		Env.toggle(Env.pausedPy);
+		theGameController.sounds().ifPresent(snd -> snd.setSilent(Env.pausedPy.get()));
 	}
 
 	public static void singleStep() {
-		if (Env.paused.get()) {
+		if (Env.pausedPy.get()) {
 			theUI.gameLoop.makeOneStep(true);
 		}
 	}
@@ -175,16 +175,16 @@ public class Actions {
 
 	public static void selectNextPerspective() {
 		if (theUI.getCurrentGameScene().is3D()) {
-			Env.perspective.set(Env.perspective.get().next());
-			String perspectiveName = Texts.message(Env.perspective.get().name());
+			Env.perspectivePy.set(Env.perspectivePy.get().next());
+			String perspectiveName = Texts.message(Env.perspectivePy.get().name());
 			showFlashMessage(Texts.message("camera_perspective", perspectiveName));
 		}
 	}
 
 	public static void selectPrevPerspective() {
 		if (theUI.getCurrentGameScene().is3D()) {
-			Env.perspective.set(Env.perspective.get().prev());
-			String perspectiveName = Texts.message(Env.perspective.get().name());
+			Env.perspectivePy.set(Env.perspectivePy.get().prev());
+			String perspectiveName = Texts.message(Env.perspectivePy.get().name());
 			showFlashMessage(Texts.message("camera_perspective", perspectiveName));
 		}
 
@@ -207,16 +207,16 @@ public class Actions {
 	}
 
 	public static void toggleUse3DScene() {
-		Env.toggle(Env.use3D);
+		Env.toggle(Env.use3DScenePy);
 		if (theUI.getSceneManager().hasSceneInBothDimensions()) {
 			theUI.on2D3DChange();
 		} else {
-			showFlashMessage(Texts.message(Env.use3D.get() ? "use_3D_scene" : "use_2D_scene"));
+			showFlashMessage(Texts.message(Env.use3DScenePy.get() ? "use_3D_scene" : "use_2D_scene"));
 		}
 	}
 
 	public static void toggleDrawMode() {
-		Env.drawMode3D.set(Env.drawMode3D.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+		Env.drawMode3DPy.set(Env.drawMode3DPy.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 	}
 
 	public static void toggleSoundMuted() {

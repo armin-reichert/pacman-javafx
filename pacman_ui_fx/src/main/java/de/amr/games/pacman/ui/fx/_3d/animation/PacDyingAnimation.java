@@ -46,12 +46,12 @@ public class PacDyingAnimation {
 
 	private final Animation animation;
 
-	public PacDyingAnimation(Node root3D, ObjectProperty<Color> pyFaceColor, Color normalFaceColor, Color ghostColor) {
+	public PacDyingAnimation(Node root3D, ObjectProperty<Color> faceColorPy, Color normalFaceColor, Color ghostColor) {
 		var collapsingTime = Duration.seconds(2.0);
 		var numSpins = 10;
 
-		var poisened = new ColorChangeTransition(Duration.seconds(1.0), normalFaceColor, ghostColor, pyFaceColor);
-		var impaling = new ColorChangeTransition(collapsingTime, ghostColor, Color.GHOSTWHITE, pyFaceColor);
+		var poisened = new ColorChangeTransition(Duration.seconds(1.0), normalFaceColor, ghostColor, faceColorPy);
+		var impaling = new ColorChangeTransition(collapsingTime, ghostColor, Color.GHOSTWHITE, faceColorPy);
 
 		var spinning = new RotateTransition(collapsingTime.divide(numSpins), root3D);
 		spinning.setAxis(Rotate.Z_AXIS);

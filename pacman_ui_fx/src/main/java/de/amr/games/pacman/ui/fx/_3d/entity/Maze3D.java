@@ -89,11 +89,11 @@ public class Maze3D extends Group {
 		PhongMaterial topMaterial;
 	}
 
-	public final IntegerProperty resolution = new SimpleIntegerProperty(4);
-	public final DoubleProperty wallHeight = new SimpleDoubleProperty(1.0);
-	public final ObjectProperty<Image> floorTexture = new SimpleObjectProperty<>();
-	public final ObjectProperty<Color> floorColor = new SimpleObjectProperty<>();
-	public final BooleanProperty squirting = new SimpleBooleanProperty(false);
+	public final IntegerProperty resolutionPy = new SimpleIntegerProperty(4);
+	public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(1.0);
+	public final ObjectProperty<Image> floorTexturePy = new SimpleObjectProperty<>();
+	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>();
+	public final BooleanProperty squirtingPy = new SimpleBooleanProperty(false);
 
 	private final GameVariant gameVariant;
 	private final World world;
@@ -110,10 +110,10 @@ public class Maze3D extends Group {
 		foundationGroup.getChildren().addAll(createFloor(), wallsGroup, doorsGroup);
 		build(mazeStyle);
 		addFood(mazeStyle);
-		squirting.addListener((obs, oldVal, newVal) -> updateSquirting(mazeStyle));
-		resolution.addListener((obs, oldVal, newVal) -> build(mazeStyle));
-		floorTexture.addListener((obs, oldVal, newVal) -> updateFloorTexture());
-		floorColor.addListener((obs, oldVal, newVal) -> updateFloorTexture());
+		squirtingPy.addListener((obs, oldVal, newVal) -> updateSquirting(mazeStyle));
+		resolutionPy.addListener((obs, oldVal, newVal) -> build(mazeStyle));
+		floorTexturePy.addListener((obs, oldVal, newVal) -> updateFloorTexture());
+		floorColorPy.addListener((obs, oldVal, newVal) -> updateFloorTexture());
 	}
 
 	private Node createFloor() {
@@ -124,7 +124,7 @@ public class Maze3D extends Group {
 		floor.setTranslateX(0.5 * width);
 		floor.setTranslateY(0.5 * height);
 		floor.setTranslateZ(0.5 * depth);
-		floor.drawModeProperty().bind(Env.drawMode3D);
+		floor.drawModeProperty().bind(Env.drawMode3DPy);
 		return floor;
 	}
 
@@ -133,14 +133,14 @@ public class Maze3D extends Group {
 	}
 
 	public void build(MazeStyle mazeStyle) {
-		var floorPlan = new FloorPlan(resolution.get(), world);
+		var floorPlan = new FloorPlan(resolutionPy.get(), world);
 
 		var wallData = new WallData();
 		wallData.baseMaterial = new PhongMaterial(mazeStyle.wallSideColor);
 		wallData.baseMaterial.setSpecularColor(mazeStyle.wallSideColor.brighter());
 		wallData.topMaterial = new PhongMaterial(mazeStyle.wallTopColor);
 		wallData.brickSize = (double) TS / floorPlan.getResolution();
-		wallData.height = wallHeight.get();
+		wallData.height = wallHeightPy.get();
 
 		wallsGroup.getChildren().clear();
 		addCorners(floorPlan, wallData);
@@ -154,8 +154,8 @@ public class Maze3D extends Group {
 	}
 
 	private void updateFloorTexture() {
-		var texture = floorTexture.get();
-		var color = floorColor.get();
+		var texture = floorTexturePy.get();
+		var color = floorColorPy.get();
 		var material = new PhongMaterial();
 		if (color != null) {
 			material.setDiffuseColor(color);
@@ -212,7 +212,7 @@ public class Maze3D extends Group {
 	private void addFood(MazeStyle mazeStyle) {
 		foodGroup.getChildren().clear();
 		particleGroup.getChildren().clear();
-		if (squirting.get()) {
+		if (squirtingPy.get()) {
 			createSquirtingPellets(mazeStyle);
 		} else {
 			createStandardPellets(mazeStyle.pelletColor);
@@ -288,7 +288,7 @@ public class Maze3D extends Group {
 
 	private Door3D createDoor(V2i tile, Color color) {
 		var door = new Door3D(tile, color);
-		door.doorHeight.bind(wallHeight);
+		door.doorHeightPy.bind(wallHeightPy);
 		return door;
 	}
 
@@ -362,19 +362,19 @@ public class Maze3D extends Group {
 		Box base = new Box();
 		base.setWidth(numBricksX * data.brickSize);
 		base.setHeight(numBricksY * data.brickSize);
-		base.depthProperty().bind(wallHeight);
-		base.translateZProperty().bind(wallHeight.multiply(-0.5));
+		base.depthProperty().bind(wallHeightPy);
+		base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
 		base.setMaterial(data.baseMaterial);
-		base.drawModeProperty().bind(Env.drawMode3D);
+		base.drawModeProperty().bind(Env.drawMode3DPy);
 
 		double topHeight = 0.1;
 		Box top = new Box();
 		top.setWidth(numBricksX * data.brickSize);
 		top.setHeight(numBricksY * data.brickSize);
 		top.setDepth(topHeight);
-		top.translateZProperty().bind(base.translateZProperty().subtract(wallHeight.add(topHeight + 0.1).multiply(0.5)));
+		top.translateZProperty().bind(base.translateZProperty().subtract(wallHeightPy.add(topHeight + 0.1).multiply(0.5)));
 		top.setMaterial(data.topMaterial);
-		top.drawModeProperty().bind(Env.drawMode3D);
+		top.drawModeProperty().bind(Env.drawMode3DPy);
 
 		var wall = new Group(base, top);
 		wall.setTranslateX((x + 0.5 * numBricksX) * data.brickSize);

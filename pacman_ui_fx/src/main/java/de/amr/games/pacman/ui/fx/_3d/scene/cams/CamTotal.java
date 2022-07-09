@@ -55,12 +55,12 @@ public class CamTotal extends GameSceneCamera {
 		boolean shift = e.isShiftDown();
 		if (!control && shift) {
 			switch (key) {
-			case LEFT -> change(translateXProperty(), -10);
-			case RIGHT -> change(translateXProperty(), +10);
-			case MINUS -> change(translateYProperty(), -10);
-			case PLUS -> change(translateYProperty(), +10);
-			case UP -> change(translateZProperty(), -10);
-			case DOWN -> change(translateZProperty(), 10);
+			case LEFT -> changeBy(translateXProperty(), -10);
+			case RIGHT -> changeBy(translateXProperty(), +10);
+			case MINUS -> changeBy(translateYProperty(), -10);
+			case PLUS -> changeBy(translateYProperty(), +10);
+			case UP -> changeBy(translateZProperty(), -10);
+			case DOWN -> changeBy(translateZProperty(), 10);
 			default -> { // ignore
 			}
 			}

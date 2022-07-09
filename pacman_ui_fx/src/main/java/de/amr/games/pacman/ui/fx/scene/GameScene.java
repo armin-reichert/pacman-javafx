@@ -71,6 +71,12 @@ public interface GameScene extends GameEventAdapter {
 	 */
 	SubScene getFXSubScene();
 
+	/**
+	 * Defines the resizing behavior.
+	 * 
+	 * @param width  width property of scene container
+	 * @param height height property of scene container
+	 */
 	void setResizeBehavior(DoubleExpression width, DoubleExpression height);
 
 	/**

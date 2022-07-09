@@ -112,24 +112,24 @@ public class GameUI implements GameEventAdapter {
 			currentGameScene.updateAndRender();
 		});
 		gameLoop.setRenderTask(this::render);
-		gameLoop.pyPaused.bind(Env.paused);
-		gameLoop.pyTargetFramerate.bind(Env.targetFramerate);
-		gameLoop.pyMeasured.bind(Env.timeMeasured);
+		gameLoop.pausedPy.bind(Env.pausedPy);
+		gameLoop.targetFrameratePy.bind(Env.targetFrameratePy);
+		gameLoop.measuredPy.bind(Env.timeMeasuredPy);
 		gameLoop.start();
 	}
 
 	private void createLayout() {
 		dashboard.build(this, gameController);
-		pipView.sceneHeightPy.bind(Env.pipSceneHeight);
-		pipView.visibleProperty().bind(Env.pipVisible);
-		pipView.opacityProperty().bind(Env.pipOpacity);
+		pipView.sceneHeightPy.bind(Env.pipSceneHeightPy);
+		pipView.visibleProperty().bind(Env.pipVisiblePy);
+		pipView.opacityProperty().bind(Env.pipOpacityPy);
 		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(new VBox(pipView));
 		sceneRoot.getChildren().addAll(gameScenePlaceholder, overlayPane, flashMessageView);
 		updateBackground();
-		Env.drawMode3D.addListener((x, y, z) -> updateBackground());
-		Env.bgColor.addListener((x, y, z) -> updateBackground());
+		Env.drawMode3DPy.addListener((x, y, z) -> updateBackground());
+		Env.bgColorPy.addListener((x, y, z) -> updateBackground());
 	}
 
 	private void initKeyboardHandling() {
@@ -140,8 +140,8 @@ public class GameUI implements GameEventAdapter {
 	}
 
 	private void updateBackground() {
-		var mode = Env.drawMode3D.get();
-		var bgColor = Env.bgColor.get();
+		var mode = Env.drawMode3DPy.get();
+		var bgColor = Env.bgColorPy.get();
 		gameScenePlaceholder.setBackground(Ufx.colorBackground(mode == DrawMode.FILL ? bgColor : Color.BLACK));
 	}
 
@@ -199,7 +199,7 @@ public class GameUI implements GameEventAdapter {
 	}
 
 	private void updateCurrentGameScene(boolean forcedUpdate) {
-		int dimension = Env.use3D.get() ? SceneManager.SCENE_3D : SceneManager.SCENE_2D;
+		int dimension = Env.use3DScenePy.get() ? SceneManager.SCENE_3D : SceneManager.SCENE_2D;
 		GameScene newGameScene = sceneManager.findGameScene(dimension).orElseThrow(
 				() -> new IllegalStateException("No game scene found. Game state: %s".formatted(gameController.state())));
 		if (newGameScene == currentGameScene && !forcedUpdate) {
@@ -231,7 +231,7 @@ public class GameUI implements GameEventAdapter {
 		if (Keyboard.pressed(Keyboard.ALT, KeyCode.A)) {
 			Actions.toggleAutopilot();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.D)) {
-			Env.toggle(Env.debugUI);
+			Env.toggle(Env.debugUIPy);
 		} else if (Keyboard.pressed(Keyboard.CTRL, KeyCode.I)) {
 			Actions.toggleDashboardVisible();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.I)) {

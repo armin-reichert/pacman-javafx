@@ -53,23 +53,23 @@ public class Pac3D extends Group {
 	private final Group root3D;
 	private final CreatureMotionAnimation motion;
 	private final PortalTraversalAnimation portalTraversal;
-	private final ObjectProperty<Color> pyFaceColor;
+	private final ObjectProperty<Color> faceColorPy;
 	private final Color normalFaceColor;
 	private final PhongMaterial faceMaterial;
 
 	public Pac3D(Pac pac, World world, Model3D model3D, Color faceColor, Color eyesColor, Color palateColor) {
 		this.model3D = model3D;
 		normalFaceColor = faceColor;
-		pyFaceColor = new SimpleObjectProperty<>(faceColor);
+		faceColorPy = new SimpleObjectProperty<>(faceColor);
 		faceMaterial = new PhongMaterial();
-		Ufx.bindMaterialColor(faceMaterial, pyFaceColor);
+		Ufx.bindMaterialColor(faceMaterial, faceColorPy);
 		root3D = model3D.createPac(faceColor, eyesColor, palateColor);
 		face().setMaterial(faceMaterial);
 		var light = new PointLight(Color.GHOSTWHITE);
 		light.setTranslateZ(-6);
 		getChildren().addAll(root3D, light);
 		motion = new CreatureMotionAnimation(pac, this);
-		portalTraversal = new PortalTraversalAnimation(pac, world, root3D, pyFaceColor, () -> normalFaceColor);
+		portalTraversal = new PortalTraversalAnimation(pac, world, root3D, faceColorPy, () -> normalFaceColor);
 	}
 
 	public void reset(World world) {
@@ -93,7 +93,7 @@ public class Pac3D extends Group {
 	 * @return dying animation (must not be longer than time reserved by game controller which is 5 seconds!)
 	 */
 	public Animation createDyingAnimation(Color killingGhostColor) {
-		return new PacDyingAnimation(root3D, pyFaceColor, normalFaceColor, killingGhostColor).getAnimation();
+		return new PacDyingAnimation(root3D, faceColorPy, normalFaceColor, killingGhostColor).getAnimation();
 	}
 
 	private Shape3D face() {

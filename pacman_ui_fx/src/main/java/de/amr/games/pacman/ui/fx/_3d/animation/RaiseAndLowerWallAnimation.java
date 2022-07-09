@@ -45,8 +45,8 @@ public class RaiseAndLowerWallAnimation extends Transition {
 	@Override
 	protected void interpolate(double t) {
 		if (t == 0) {
-			wallStartHeight = Env.mazeWallHeight.get();
+			wallStartHeight = Env.mazeWallHeightPy.get();
 		}
-		Env.mazeWallHeight.set(Math.cos(t * Math.PI / 2) * wallStartHeight);
+		Env.mazeWallHeightPy.set(Math.cos(t * Math.PI / 2) * wallStartHeight);
 	}
 }

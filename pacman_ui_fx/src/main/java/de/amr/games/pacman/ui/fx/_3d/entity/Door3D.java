@@ -41,19 +41,19 @@ import javafx.scene.shape.Box;
  */
 public class Door3D extends Box {
 
-	public final DoubleProperty doorHeight = new SimpleDoubleProperty(HTS);
+	public final DoubleProperty doorHeightPy = new SimpleDoubleProperty(HTS);
 
 	public Door3D(V2i tile, Color color) {
 		super();
 		setWidth(TS - 1.0);
 		setHeight(1.0);
-		depthProperty().bind(doorHeight.add(2));
+		depthProperty().bind(doorHeightPy.add(2));
 		setUserData(this); // to access this from scene graph node
 		setMaterial(new PhongMaterial(color));
 		setTranslateX((double) tile.x * TS + HTS);
 		setTranslateY((double) tile.y * TS + HTS);
-		translateZProperty().bind(doorHeight.divide(-2.0).subtract(0.5));
-		drawModeProperty().bind(Env.drawMode3D);
+		translateZProperty().bind(doorHeightPy.divide(-2.0).subtract(0.5));
+		drawModeProperty().bind(Env.drawMode3DPy);
 	}
 
 	public void setOpen(boolean open) {

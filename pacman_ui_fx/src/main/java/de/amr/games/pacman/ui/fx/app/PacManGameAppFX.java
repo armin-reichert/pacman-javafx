@@ -86,8 +86,8 @@ public class PacManGameAppFX extends Application {
 		logger.info("Initializing application...");
 		new OptionParser(opt3D, optFullscreen, optMuted, optPerspective, optVariant, optZoom)
 				.parse(getParameters().getUnnamed());
-		Env.use3D.set(opt3D.getValue());
-		Env.perspective.set(optPerspective.getValue());
+		Env.use3DScenePy.set(opt3D.getValue());
+		Env.perspectivePy.set(optPerspective.getValue());
 		gameController.selectGame(optVariant.getValue());
 		logger.info("Application initialized. Game variant: %s", gameController.game().variant);
 	}
@@ -99,7 +99,7 @@ public class PacManGameAppFX extends Application {
 		var zoom = optZoom.getValue();
 		var ui = new GameUI(gameController, stage, zoom * ArcadeWorld.WORLD_SIZE.x, zoom * ArcadeWorld.WORLD_SIZE.y);
 		logger.info(() -> "UI size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s".formatted(stage.getWidth(),
-				stage.getHeight(), zoom, U.onOff(Env.use3D.get()), Env.perspective.get()));
+				stage.getHeight(), zoom, U.onOff(Env.use3DScenePy.get()), Env.perspectivePy.get()));
 		ui.startGameLoop();
 	}
 }

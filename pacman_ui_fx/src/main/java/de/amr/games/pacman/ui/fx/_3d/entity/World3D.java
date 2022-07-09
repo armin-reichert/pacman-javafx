@@ -66,13 +66,13 @@ public class World3D extends Group {
 		mazeStyle.pelletColor = Rendering3D.getMazeFoodColor(game.variant, game.level.mazeNumber);
 
 		maze3D = new Maze3D(game.variant, game.level.world, mazeStyle);
-		maze3D.squirting.bind(Env.squirting);
-		maze3D.floorTexture.bind(Bindings.createObjectBinding(
-				() -> "none".equals(Env.floorTexture.get()) ? null : Ufx.image("graphics/" + Env.floorTexture.get()),
-				Env.floorTexture));
-		maze3D.floorColor.bind(Env.floorColor);
-		maze3D.resolution.bind(Env.mazeResolution);
-		maze3D.wallHeight.bind(Env.mazeWallHeight);
+		maze3D.squirtingPy.bind(Env.squirtingPy);
+		maze3D.floorTexturePy.bind(Bindings.createObjectBinding(
+				() -> "none".equals(Env.floorTexturePy.get()) ? null : Ufx.image("graphics/" + Env.floorTexturePy.get()),
+				Env.floorTexturePy));
+		maze3D.floorColorPy.bind(Env.floorColorPy);
+		maze3D.resolutionPy.bind(Env.mazeResolutionPy);
+		maze3D.wallHeightPy.bind(Env.mazeWallHeightPy);
 		getChildren().add(maze3D);
 
 		levelCounter3D = new LevelCounter3D(symbol -> r2D.getSpriteImage(r2D.getBonusSymbolSprite(symbol)));

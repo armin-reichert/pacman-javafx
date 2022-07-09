@@ -46,9 +46,9 @@ public class GameLoop {
 
 	private static final Logger logger = LogManager.getFormatterLogger();
 
-	public final IntegerProperty pyTargetFramerate = new SimpleIntegerProperty(60);
-	public final BooleanProperty pyPaused = new SimpleBooleanProperty(false);
-	public final BooleanProperty pyMeasured = new SimpleBooleanProperty(false);
+	public final IntegerProperty targetFrameratePy = new SimpleIntegerProperty(60);
+	public final BooleanProperty pausedPy = new SimpleBooleanProperty(false);
+	public final BooleanProperty measuredPy = new SimpleBooleanProperty(false);
 
 	private Timeline clock;
 	private long totalTicks;
@@ -61,8 +61,8 @@ public class GameLoop {
 	};
 
 	public GameLoop(int targetFramerate) {
-		pyTargetFramerate.set(targetFramerate);
-		pyTargetFramerate.addListener((x, y, newFramerate) -> updateClock(newFramerate.intValue()));
+		targetFrameratePy.set(targetFramerate);
+		targetFrameratePy.addListener((x, y, newFramerate) -> updateClock(newFramerate.intValue()));
 		updateClock(targetFramerate);
 	}
 
@@ -81,11 +81,11 @@ public class GameLoop {
 	}
 
 	public void setTargetFramerate(int fps) {
-		pyTargetFramerate.set(fps);
+		targetFrameratePy.set(fps);
 	}
 
 	public int getTargetFramerate() {
-		return pyTargetFramerate.get();
+		return targetFrameratePy.get();
 	}
 
 	public void setUpdateTask(Runnable updateTask) {
@@ -97,7 +97,7 @@ public class GameLoop {
 	}
 
 	public boolean isPaused() {
-		return pyPaused.get();
+		return pausedPy.get();
 	}
 
 	public void start() {
@@ -119,7 +119,7 @@ public class GameLoop {
 	}
 
 	public void setTimeMeasured(boolean measured) {
-		pyMeasured.set(measured);
+		measuredPy.set(measured);
 	}
 
 	public void makeOneStep(boolean updateEnabled) {
@@ -134,7 +134,7 @@ public class GameLoop {
 	}
 
 	private void run(Runnable phase, String message) {
-		if (pyMeasured.get()) {
+		if (measuredPy.get()) {
 			double startNanos = System.nanoTime();
 			phase.run();
 			double durationNanos = System.nanoTime() - startNanos;

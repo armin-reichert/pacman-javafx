@@ -54,7 +54,7 @@ public abstract class GameScene2D implements GameScene {
 	protected final Pane infoPane = new Pane();
 	protected final StackPane root;
 	protected final SubScene fxSubScene;
-	protected final DoubleProperty scaling = new SimpleDoubleProperty(1);
+	protected final DoubleProperty scalingPy = new SimpleDoubleProperty(1);
 
 	protected SceneContext ctx;
 	protected boolean creditVisible;
@@ -68,10 +68,10 @@ public abstract class GameScene2D implements GameScene {
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
 		overlayCanvas.widthProperty().bind(canvas.widthProperty());
 		overlayCanvas.heightProperty().bind(canvas.heightProperty());
-		overlayCanvas.visibleProperty().bind(Env.debugUI);
+		overlayCanvas.visibleProperty().bind(Env.debugUIPy);
 		overlayCanvas.setMouseTransparent(true);
-		infoPane.setVisible(Env.debugUI.get());
-		infoPane.visibleProperty().bind(Env.debugUI);
+		infoPane.setVisible(Env.debugUIPy.get());
+		infoPane.visibleProperty().bind(Env.debugUIPy);
 	}
 
 	@Override
@@ -117,12 +117,12 @@ public abstract class GameScene2D implements GameScene {
 		double width = aspectRatio * height;
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
-		scaling.set(fxSubScene.getHeight() / unscaledSize.y);
-		canvas.getTransforms().setAll(new Scale(scaling.get(), scaling.get()));
+		scalingPy.set(fxSubScene.getHeight() / unscaledSize.y);
+		canvas.getTransforms().setAll(new Scale(scalingPy.get(), scalingPy.get()));
 	}
 
 	public double currentScaling() {
-		return scaling.get();
+		return scalingPy.get();
 	}
 
 	/**
@@ -153,7 +153,7 @@ public abstract class GameScene2D implements GameScene {
 		if (overlayCanvas.isVisible()) {
 			var og = overlayCanvas.getGraphicsContext2D();
 			og.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());
-			ctx.r2D.drawTileBorders(og, scaling.doubleValue());
+			ctx.r2D.drawTileBorders(og, scalingPy.doubleValue());
 		}
 	}
 }

@@ -86,7 +86,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void doUpdate() {
-		if (infoLayer != null && Env.debugUI.get()) {
+		if (infoLayer != null && Env.debugUIPy.get()) {
 			infoLayer.update();
 		}
 	}

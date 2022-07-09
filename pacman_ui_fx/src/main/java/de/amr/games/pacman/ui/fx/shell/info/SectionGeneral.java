@@ -82,41 +82,41 @@ public class SectionGeneral extends Section {
 		sliderTargetFPS.setShowTickLabels(false);
 		sliderTargetFPS.setShowTickMarks(false);
 		sliderTargetFPS.valueProperty()
-				.addListener((obs, oldValue, newValue) -> Env.targetFramerate.set(newValue.intValue()));
+				.addListener((obs, oldValue, newValue) -> Env.targetFrameratePy.set(newValue.intValue()));
 
 		addInfo("", () -> String.format("%d Hz (Target: %d Hz)", ui.gameLoop.getFPS(), ui.gameLoop.getTargetFramerate()));
 		addInfo("Total Ticks", ui.gameLoop::getTotalTicks);
 
-		sliderPiPSceneHeight = addSlider("PiP Size", 1.0 * 288, 2.0 * 288, Env.pipSceneHeight.get());
+		sliderPiPSceneHeight = addSlider("PiP Size", 1.0 * 288, 2.0 * 288, Env.pipSceneHeightPy.get());
 		sliderPiPSceneHeight.setShowTickLabels(false);
 		sliderPiPSceneHeight.setShowTickMarks(false);
 		sliderPiPSceneHeight.valueProperty()
-				.addListener((obs, oldValue, newValue) -> Env.pipSceneHeight.set(newValue.doubleValue()));
+				.addListener((obs, oldValue, newValue) -> Env.pipSceneHeightPy.set(newValue.doubleValue()));
 
-		sliderPiPOpacity = addSlider("PiP Transparency", 0.0, 1.0, Env.pipOpacity.get());
+		sliderPiPOpacity = addSlider("PiP Transparency", 0.0, 1.0, Env.pipOpacityPy.get());
 		sliderPiPOpacity.setShowTickLabels(false);
 		sliderPiPOpacity.setShowTickMarks(false);
 		sliderPiPOpacity.valueProperty()
-				.addListener((obs, oldValue, newValue) -> Env.pipOpacity.set(newValue.doubleValue()));
+				.addListener((obs, oldValue, newValue) -> Env.pipOpacityPy.set(newValue.doubleValue()));
 
 		addInfo("Main scene",
 				() -> String.format("w=%.0f h=%.0f", ui.getMainScene().getWidth(), ui.getMainScene().getHeight()));
 		cbUsePlayScene3D = addCheckBox("Use 3D play scene", Actions::toggleUse3DScene);
-		cbDebugUI = addCheckBox("Show UI Debug Stuff", () -> Env.toggle(Env.debugUI));
-		cbTimeMeasured = addCheckBox("Measure time", () -> Env.toggle(Env.timeMeasured));
+		cbDebugUI = addCheckBox("Show UI Debug Stuff", () -> Env.toggle(Env.debugUIPy));
+		cbTimeMeasured = addCheckBox("Measure time", () -> Env.toggle(Env.timeMeasuredPy));
 	}
 
 	@Override
 	public void update() {
 		super.update();
-		btnsSimulation[0].setGraphic(Env.paused.get() ? iconPlay : iconStop);
-		btnsSimulation[0].setTooltip(Env.paused.get() ? tooltipPlay : tooltipStop);
-		btnsSimulation[1].setDisable(!Env.paused.get());
-		sliderTargetFPS.setValue(Env.targetFramerate.get());
-		sliderPiPSceneHeight.setValue(Env.pipSceneHeight.get());
-		sliderPiPOpacity.setValue(Env.pipOpacity.get());
-		cbUsePlayScene3D.setSelected(Env.use3D.get());
-		cbTimeMeasured.setSelected(Env.timeMeasured.get());
-		cbDebugUI.setSelected(Env.debugUI.get());
+		btnsSimulation[0].setGraphic(Env.pausedPy.get() ? iconPlay : iconStop);
+		btnsSimulation[0].setTooltip(Env.pausedPy.get() ? tooltipPlay : tooltipStop);
+		btnsSimulation[1].setDisable(!Env.pausedPy.get());
+		sliderTargetFPS.setValue(Env.targetFrameratePy.get());
+		sliderPiPSceneHeight.setValue(Env.pipSceneHeightPy.get());
+		sliderPiPOpacity.setValue(Env.pipOpacityPy.get());
+		cbUsePlayScene3D.setSelected(Env.use3DScenePy.get());
+		cbTimeMeasured.setSelected(Env.timeMeasuredPy.get());
+		cbDebugUI.setSelected(Env.debugUIPy.get());
 	}
 }
