@@ -24,6 +24,7 @@ module de.amr.games.pacman.ui.fx {
 	requires javafx.graphics;
 	requires jimObjModelImporterJFX;
 	requires org.apache.logging.log4j;
+	requires com.gluonhq.attach.audio;
 
 	exports de.amr.games.pacman.ui.fx.app;
 	exports de.amr.games.pacman.ui.fx.scene;

@@ -32,6 +32,8 @@ import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.gluonhq.attach.audio.AudioService;
+
 import de.amr.games.pacman.controller.common.GameSoundController;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.ui.fx.Resources;
@@ -97,7 +99,16 @@ public class GameSounds implements GameSoundController {
 	private boolean silent;
 	private boolean muted;
 
+	private final AudioService audioService;
+
 	public GameSounds(String mapName, Map<GameSound, String> relPathMap) {
+		audioService = AudioService.create().orElse(null);
+		if (audioService != null) {
+			logger.info("Gluon Attach Audio Service created");
+		} else {
+			logger.error("Gluon Attach Audio Service not created");
+		}
+
 		if (SOUND_DISABLED) {
 			logger.info("Sounds '%s' not loaded (sound is disabled)", mapName);
 		} else {
@@ -115,7 +126,12 @@ public class GameSounds implements GameSoundController {
 		}
 		var urlStr = url.toExternalForm();
 		try {
-			logger.trace("Loading audio clip %s from URL '%s'", sound, urlStr);
+			if (audioService != null) {
+				audioService.loadSound(url).ifPresent(audio -> {
+					logger.info("Gluon Attach audio object '%s' got loaded", audio);
+				});
+			}
+			logger.trace("Loading JavaFX audio clip (key=%s) from URL '%s'", sound, urlStr);
 			clips.put(sound, new AudioClip(urlStr));
 		} catch (Exception e) {
 			logger.error("failed: %s", e.getMessage());

@@ -10,6 +10,7 @@
 		<maven.compiler.target>17</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mainClass>de.amr.games.pacman.ui.fx.app.PacManGameAppFX</mainClass>
+		<attach.version>4.0.14</attach.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -31,6 +32,11 @@
 			<groupId>com.interactivemesh</groupId>
 			<artifactId>jimObjModelImporterJFX</artifactId>
 			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gluonhq.attach</groupId>
+			<artifactId>audio</artifactId>
+			<version>${attach.version}</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -55,12 +61,18 @@
 				<configuration>
 					<target>${gluonfx.target}</target>
 					<mainClass>${mainClass}</mainClass>
+					<attachList>
+						<list>audio</list>
+					</attachList>
 					<bundlesList>
 						<list>
 							de.amr.games.pacman.ui.fx.texts.messages
 						</list>
 					</bundlesList>
-					<resourcesList></resourcesList>
+					<resourcesList>
+						<item>.*/*.wav$</item>
+						<item>.*/*.mp3$</item>
+					</resourcesList>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -73,18 +85,6 @@
 			</activation>
 			<properties>
 				<client.target>host</client.target>
-			</properties>
-		</profile>
-		<profile>
-			<id>android</id>
-			<properties>
-				<client.target>android</client.target>
-			</properties>
-		</profile>
-		<profile>
-			<id>ios</id>
-			<properties>
-				<client.target>ios</client.target>
 			</properties>
 		</profile>
 		<profile>
