@@ -99,6 +99,6 @@ public class World3D extends Group {
 	public void update(GameModel game) {
 		scores3D.update(game);
 		maze3D.updateDoorState(game.ghosts());
-		livesCounter3D.update(game.playing ? game.lives - 1 : game.lives);
+		livesCounter3D.update(game.livesDisplayed);
 	}
 }
