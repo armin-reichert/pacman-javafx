@@ -208,8 +208,12 @@ public class GameUI implements GameEventAdapter {
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
-		sceneManager.initializeScene(newGameScene, true);
-		sceneManager.initializeScene(pipView.getPlayScene2D(), false);
+
+		sceneManager.updateSceneContext(pipView.getPlayScene2D());
+		pipView.getPlayScene2D().init();
+
+		sceneManager.updateSceneContext(newGameScene);
+		newGameScene.init();
 		newGameScene.resize(mainScene.getHeight());
 		gameScenePlaceholder.getChildren().setAll(newGameScene.getFXSubScene());
 		logger.info("Current scene changed from %s to %s", currentGameScene, newGameScene);

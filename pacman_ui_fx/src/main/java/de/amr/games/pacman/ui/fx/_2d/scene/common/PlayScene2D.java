@@ -31,7 +31,10 @@ import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import javafx.scene.image.Image;
@@ -57,6 +60,18 @@ public class PlayScene2D extends GameScene2D {
 			overlayCanvas.visibleProperty().unbind();
 			overlayCanvas.setVisible(false);
 		}
+	}
+
+	@Override
+	public void setSceneContext(SceneContext context) {
+		super.setSceneContext(context);
+		var game = ctx.game();
+		var world = (ArcadeWorld) game.world();
+		world.setFlashingAnimation(ctx.r2D.createMazeFlashingAnimation(game.level.mazeNumber));
+		game.pac.setAnimationSet(new PacAnimations(game.pac, ctx.r2D));
+		game.ghosts().forEach(ghost -> {
+			ghost.setAnimationSet(new GhostAnimations(ghost, ctx.r2D));
+		});
 	}
 
 	@Override

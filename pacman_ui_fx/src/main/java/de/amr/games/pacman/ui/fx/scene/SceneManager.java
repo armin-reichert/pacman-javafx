@@ -32,9 +32,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.SpritesheetMsPacMan;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.SpritesheetPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.BootScene;
@@ -102,9 +99,7 @@ public class SceneManager {
 				.filter(Objects::nonNull);
 	}
 
-	public void initializeScene(GameScene scene, boolean createAnimations) {
-		scene.setSceneContext(context);
-
+	public void updateSceneContext(GameScene scene) {
 		var game = context.gameController.game();
 		var r2D = switch (game.variant) {
 		case MS_PACMAN -> SpritesheetMsPacMan.get();
@@ -115,20 +110,10 @@ public class SceneManager {
 		case PACMAN -> GameSounds.PACMAN_SOUNDS;
 		};
 		var model3D = Model3D.get(); // no game variant-specific 3D models yet
-
 		context.r2D = r2D;
 		context.model3D = model3D;
-
 		context.gameController.setSounds(sounds);
-
-		if (createAnimations) {
-			var world = (ArcadeWorld) game.world();
-			world.setFlashingAnimation(r2D.createMazeFlashingAnimation(game.level.mazeNumber));
-			game.pac.setAnimationSet(new PacAnimations(game.pac, r2D));
-			game.ghosts().forEach(ghost -> ghost.setAnimationSet(new GhostAnimations(ghost, r2D)));
-		}
-
-		scene.init();
+		scene.setSceneContext(context);
 		logger.info("Scene '%s' initialized. Game variant: %s, Rendering2D: %s", scene, game.variant, r2D);
 	}
 
