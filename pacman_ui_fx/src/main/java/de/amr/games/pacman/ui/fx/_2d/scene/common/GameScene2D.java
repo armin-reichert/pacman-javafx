@@ -69,6 +69,8 @@ public abstract class GameScene2D implements GameScene {
 		overlayCanvas.heightProperty().bind(canvas.heightProperty());
 		overlayCanvas.visibleProperty().bind(Env.debugUI);
 		overlayCanvas.setMouseTransparent(true);
+		infoPane.setVisible(Env.debugUI.get());
+		infoPane.visibleProperty().bind(Env.debugUI);
 	}
 
 	@Override
@@ -128,18 +130,13 @@ public abstract class GameScene2D implements GameScene {
 	public abstract void doRender(GraphicsContext g);
 
 	@Override
-	public final void update() {
-		infoPane.setVisible(Env.debugUI.get());
+	public final void updateAndRender() {
 		doUpdate();
-		render();
-		drawOverlay();
-	}
-
-	public void render() {
 		var g = canvas.getGraphicsContext2D();
 		g.setFill(Color.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		doRender(g);
+		drawOverlay();
 	}
 
 	private void drawOverlay() {

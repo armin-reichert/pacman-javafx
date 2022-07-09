@@ -122,7 +122,7 @@ public class PlayScene3D extends GameScene3D {
 	}
 
 	@Override
-	public void update() {
+	public void updateAndRender() {
 		world3D.update(ctx.game());
 		pac3D.update();
 		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(ctx.game()));

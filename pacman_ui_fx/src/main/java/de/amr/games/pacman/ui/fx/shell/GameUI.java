@@ -107,7 +107,10 @@ public class GameUI implements GameEventAdapter {
 	}
 
 	public void startGameLoop() {
-		gameLoop.setUpdateTask(this::update);
+		gameLoop.setUpdateTask(() -> {
+			gameController.update();
+			currentGameScene.updateAndRender();
+		});
 		gameLoop.setRenderTask(this::render);
 		gameLoop.pyPaused.bind(Env.paused);
 		gameLoop.pyTargetFramerate.bind(Env.targetFramerate);
@@ -168,15 +171,6 @@ public class GameUI implements GameEventAdapter {
 
 	public GameScene getCurrentGameScene() {
 		return currentGameScene;
-	}
-
-	/**
-	 * Called on every tick (if simulation is not paused). Game scene is updated *and* rendered such that when simulation
-	 * is paused it gets redrawn nevertheless
-	 */
-	public void update() {
-		gameController.update();
-		currentGameScene.update();
 	}
 
 	@Override

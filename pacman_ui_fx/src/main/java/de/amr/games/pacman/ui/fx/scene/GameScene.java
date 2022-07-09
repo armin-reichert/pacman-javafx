@@ -57,7 +57,7 @@ public interface GameScene extends GameEventAdapter {
 	/**
 	 * Called on every tick.
 	 */
-	void update();
+	void updateAndRender();
 
 	/**
 	 * Called when the scene is replaced by another one.
