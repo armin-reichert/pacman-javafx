@@ -241,15 +241,18 @@ public interface Rendering2D {
 		}
 	}
 
-	default void drawLivesCounter(GraphicsContext g, int numLives) {
+	default void drawLivesCounter(GraphicsContext g, int numLivesDisplayed) {
+		if (numLivesDisplayed <= 0) {
+			return;
+		}
 		int x = t(2);
 		int y = t(ArcadeWorld.TILES_Y - 2);
 		int maxLives = 5;
-		for (int i = 0; i < Math.min(numLives, maxLives); ++i) {
+		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
 			drawSprite(g, getLifeSprite(), x + t(2 * i), y);
 		}
 		// text indicating that more lives are available than displayed
-		int excessLives = numLives - maxLives;
+		int excessLives = numLivesDisplayed - maxLives;
 		if (excessLives > 0) {
 			g.setFill(Color.YELLOW);
 			g.setFont(Font.font("Serif", FontWeight.BOLD, 8));

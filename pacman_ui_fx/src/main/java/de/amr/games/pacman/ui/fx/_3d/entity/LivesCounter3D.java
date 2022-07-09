@@ -48,9 +48,11 @@ public class LivesCounter3D extends Group {
 		update(MAX_LIVES_DISPLAYED); // show all
 	}
 
-	public void update(int numLives) {
-		for (int i = 0; i < MAX_LIVES_DISPLAYED; ++i) {
-			getChildren().get(i).setVisible(i < numLives);
+	public void update(int numLivesDisplayed) {
+		if (numLivesDisplayed >= 0) {
+			for (int i = 0; i < MAX_LIVES_DISPLAYED; ++i) {
+				getChildren().get(i).setVisible(i < numLivesDisplayed);
+			}
 		}
 	}
 }

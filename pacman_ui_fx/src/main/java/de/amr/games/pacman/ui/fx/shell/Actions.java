@@ -119,7 +119,6 @@ public class Actions {
 	public static void addLives(int lives) {
 		if (theGameController.game().playing) {
 			theGameController.game().lives += lives;
-			theGameController.game().livesDisplayed += lives;
 			showFlashMessage("You have %d lives", theGameController.game().lives);
 		}
 	}
