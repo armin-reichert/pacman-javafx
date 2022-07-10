@@ -96,15 +96,17 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		ctx.r2D.drawScore(g, ctx.game().scores.gameScore);
-		ctx.r2D.drawScore(g, ctx.game().scores.highScore);
-		var world = (ArcadeWorld) ctx.game().world();
-		var flashingAnimation = world.flashingAnimation();
-		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
-			g.drawImage((Image) flashingAnimation.get().frame(), t(0), t(3));
+		ctx.r2D.drawScore(g, ctx.scores().gameScore);
+		ctx.r2D.drawScore(g, ctx.scores().highScore);
+		if (ctx.world() instanceof ArcadeWorld arcadeWorld) {
+			var flashing = arcadeWorld.flashingAnimation();
+			if (flashing.isPresent() && flashing.get().isRunning()) {
+				g.drawImage((Image) flashing.get().frame(), t(0), t(3));
+			} else {
+				drawMaze();
+			}
 		} else {
-			ctx.r2D.drawMaze(g, t(0), t(3), ctx.game().level.world, ctx.game().level.mazeNumber,
-					!ctx.game().energizerPulse.frame());
+			drawMaze();
 		}
 		ctx.r2D.drawGameStateMessage(g, ctx.hasCredit() ? ctx.state() : GameState.GAME_OVER);
 		ctx.r2D.drawBonus(g, ctx.game().bonus());
@@ -117,6 +119,10 @@ public class PlayScene2D extends GameScene2D {
 			ctx.r2D.drawLivesCounter(g, livesDisplayed);
 		}
 		ctx.r2D.drawLevelCounter(g, ctx.game().levelCounter);
+	}
+
+	private void drawMaze() {
+		ctx.r2D.drawMaze(g, t(0), t(3), ctx.world(), ctx.level().mazeNumber, !ctx.game().energizerPulse.frame());
 	}
 
 	public void onSwitchFrom3D() {

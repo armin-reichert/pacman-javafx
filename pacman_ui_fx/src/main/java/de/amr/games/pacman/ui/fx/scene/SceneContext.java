@@ -26,8 +26,11 @@ package de.amr.games.pacman.ui.fx.scene;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
+import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.GameScores;
 import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 
@@ -52,8 +55,20 @@ public class SceneContext {
 		return gameController.game();
 	}
 
+	public GameLevel level() {
+		return game().level;
+	}
+
 	public GameState state() {
 		return gameController.state();
+	}
+
+	public World world() {
+		return game().world();
+	}
+
+	public GameScores scores() {
+		return game().scores;
 	}
 
 	public boolean hasCredit() {
