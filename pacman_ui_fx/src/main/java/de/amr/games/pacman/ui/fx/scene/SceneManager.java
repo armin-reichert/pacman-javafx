@@ -173,10 +173,11 @@ public class SceneManager {
 		case INTERMISSION_TEST -> 2 + game.intermissionTestNumber;
 		default -> 6;
 		};
-		return Optional.of(Optional.ofNullable(scenes[index][dimension]).orElse(scenes[index][SCENE_2D]));
+		var wantedScene = Optional.ofNullable(scenes[index][dimension]);
+		return Optional.ofNullable(wantedScene.orElse(scenes[index][SCENE_2D]));
 	}
 
-	public boolean hasSceneInBothDimensions() {
+	public boolean hasScenesForBothDimensions() {
 		var scene2D = findGameScene(SCENE_2D);
 		var scene3D = findGameScene(SCENE_3D);
 		return scene2D.isPresent() && scene3D.isPresent() && !scene2D.equals(scene3D);
