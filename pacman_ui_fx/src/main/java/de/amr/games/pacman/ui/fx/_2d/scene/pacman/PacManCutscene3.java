@@ -98,7 +98,7 @@ public class PacManCutscene3 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		if (Env.debugUIPy.get()) {
+		if (Env.showDebugInfoPy.get()) {
 			g.setFont(ctx.r2D.getArcadeFont());
 			g.setFill(Color.WHITE);
 			if (initialDelay > 0) {

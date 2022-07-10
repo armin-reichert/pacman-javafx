@@ -60,12 +60,10 @@ import javafx.stage.Stage;
  */
 public class GameUI implements GameEventAdapter {
 
-	private static final Logger logger = LogManager.getFormatterLogger();
-
+	private static final Logger LOGGER = LogManager.getFormatterLogger();
 	private static final Image APP_ICON = Ufx.image("icons/pacman.png");
 
-	public final GameLoop gameLoop = new GameLoop(60);
-
+	private final GameLoop gameLoop = new GameLoop(60);
 	private final GameController gameController;
 	private final Stage stage;
 	private final Scene mainScene;
@@ -87,7 +85,7 @@ public class GameUI implements GameEventAdapter {
 		this.mainScene = new Scene(sceneRoot, width, height);
 		this.sceneManager = new SceneManager(gameController, mainScene);
 
-		logger.info("Main scene created. Size: %.0f x %.0f", mainScene.getWidth(), mainScene.getHeight());
+		LOGGER.info("Main scene created. Size: %.0f x %.0f", mainScene.getWidth(), mainScene.getHeight());
 
 		createLayout();
 		initKeyboardHandling();
@@ -113,6 +111,10 @@ public class GameUI implements GameEventAdapter {
 			Keyboard.addHandler(keySteering::onKeyPressed);
 		}
 		gameController.setPacSteering(pacSteering);
+	}
+
+	public GameLoop getGameLoop() {
+		return gameLoop;
 	}
 
 	public void startGameLoop() {
@@ -174,7 +176,7 @@ public class GameUI implements GameEventAdapter {
 		if (Keyboard.pressed(Keyboard.ALT, KeyCode.A)) {
 			Actions.toggleAutopilot();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.D)) {
-			Env.toggle(Env.debugUIPy);
+			Env.toggle(Env.showDebugInfoPy);
 		} else if (Keyboard.pressed(Keyboard.CTRL, KeyCode.I)) {
 			Actions.toggleDashboardVisible();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.I)) {

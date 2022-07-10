@@ -165,7 +165,7 @@ public class Actions {
 
 	public static void singleStep() {
 		if (Env.pausedPy.get()) {
-			theUI.gameLoop.makeOneStep(true);
+			theUI.getGameLoop().makeOneStep(true);
 		}
 	}
 

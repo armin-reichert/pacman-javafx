@@ -55,17 +55,17 @@ public class Env {
 
 	public static final BooleanProperty axesVisiblePy = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<Color> bgColorPy = new SimpleObjectProperty<>(Color.CORNFLOWERBLUE);
-	public static final BooleanProperty debugUIPy = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<DrawMode> drawMode3DPy = new SimpleObjectProperty<>(DrawMode.FILL);
-	public static final StringProperty floorTexturePy = new SimpleStringProperty(FLOOR_TEXTURES.get(0));
 	public static final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(Color.rgb(10, 10, 70));
+	public static final StringProperty floorTexturePy = new SimpleStringProperty(FLOOR_TEXTURES.get(0));
 	public static final IntegerProperty mazeResolutionPy = new SimpleIntegerProperty(4);
 	public static final DoubleProperty mazeWallHeightPy = new SimpleDoubleProperty(2.0);
 	public static final BooleanProperty pausedPy = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
+	public static final DoubleProperty pipOpacityPy = new SimpleDoubleProperty(0.66);
 	public static final DoubleProperty pipSceneHeightPy = new SimpleDoubleProperty(ArcadeWorld.TILES_Y * World.TS);
 	public static final BooleanProperty pipVisiblePy = new SimpleBooleanProperty(false);
-	public static final DoubleProperty pipOpacityPy = new SimpleDoubleProperty(0.66);
+	public static final BooleanProperty showDebugInfoPy = new SimpleBooleanProperty(false);
 	public static final BooleanProperty squirtingPy = new SimpleBooleanProperty(false);
 	public static final IntegerProperty targetFrameratePy = new SimpleIntegerProperty(60);
 	public static final BooleanProperty timeMeasuredPy = new SimpleBooleanProperty(false);

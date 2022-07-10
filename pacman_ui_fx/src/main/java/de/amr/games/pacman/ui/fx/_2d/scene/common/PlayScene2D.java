@@ -89,7 +89,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void doUpdate() {
-		if (Env.debugUIPy.get()) {
+		if (Env.showDebugInfoPy.get()) {
 			infoLayer.update();
 		}
 	}

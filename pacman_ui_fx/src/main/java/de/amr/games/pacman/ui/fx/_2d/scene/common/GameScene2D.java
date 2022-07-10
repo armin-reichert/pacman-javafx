@@ -68,10 +68,10 @@ public abstract class GameScene2D implements GameScene {
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
 		overlayCanvas.widthProperty().bind(canvas.widthProperty());
 		overlayCanvas.heightProperty().bind(canvas.heightProperty());
-		overlayCanvas.visibleProperty().bind(Env.debugUIPy);
+		overlayCanvas.visibleProperty().bind(Env.showDebugInfoPy);
 		overlayCanvas.setMouseTransparent(true);
-		infoPane.setVisible(Env.debugUIPy.get());
-		infoPane.visibleProperty().bind(Env.debugUIPy);
+		infoPane.setVisible(Env.showDebugInfoPy.get());
+		infoPane.visibleProperty().bind(Env.showDebugInfoPy);
 	}
 
 	@Override

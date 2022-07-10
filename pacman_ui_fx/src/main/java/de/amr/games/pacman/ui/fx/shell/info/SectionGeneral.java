@@ -76,7 +76,7 @@ public class SectionGeneral extends Section {
 		btnStep.setStyle("-fx-background-color: transparent");
 		btnStep.setText(null);
 		btnStep.setTooltip(tooltipStep);
-		btnStep.setOnAction(e -> ui.gameLoop.makeOneStep(true));
+		btnStep.setOnAction(e -> ui.getGameLoop().makeOneStep(true));
 
 		sliderTargetFPS = addSlider("Target Framerate", MIN_FRAMERATE, MAX_FRAMERATE, 60);
 		sliderTargetFPS.setShowTickLabels(false);
@@ -84,8 +84,9 @@ public class SectionGeneral extends Section {
 		sliderTargetFPS.valueProperty()
 				.addListener((obs, oldValue, newValue) -> Env.targetFrameratePy.set(newValue.intValue()));
 
-		addInfo("", () -> String.format("%d Hz (Target: %d Hz)", ui.gameLoop.getFPS(), ui.gameLoop.getTargetFramerate()));
-		addInfo("Total Ticks", ui.gameLoop::getTotalTicks);
+		addInfo("",
+				() -> String.format("%d Hz (Target: %d Hz)", ui.getGameLoop().getFPS(), ui.getGameLoop().getTargetFramerate()));
+		addInfo("Total Ticks", ui.getGameLoop()::getTotalTicks);
 
 		sliderPiPSceneHeight = addSlider("PiP Size", 1.0 * 288, 2.0 * 288, Env.pipSceneHeightPy.get());
 		sliderPiPSceneHeight.setShowTickLabels(false);
@@ -102,7 +103,7 @@ public class SectionGeneral extends Section {
 		addInfo("Main scene",
 				() -> String.format("w=%.0f h=%.0f", ui.getMainScene().getWidth(), ui.getMainScene().getHeight()));
 		cbUsePlayScene3D = addCheckBox("Use 3D play scene", Actions::toggleUse3DScene);
-		cbDebugUI = addCheckBox("Show UI Debug Stuff", () -> Env.toggle(Env.debugUIPy));
+		cbDebugUI = addCheckBox("Show UI Debug Stuff", () -> Env.toggle(Env.showDebugInfoPy));
 		cbTimeMeasured = addCheckBox("Measure time", () -> Env.toggle(Env.timeMeasuredPy));
 	}
 
@@ -117,6 +118,6 @@ public class SectionGeneral extends Section {
 		sliderPiPOpacity.setValue(Env.pipOpacityPy.get());
 		cbUsePlayScene3D.setSelected(Env.use3DScenePy.get());
 		cbTimeMeasured.setSelected(Env.timeMeasuredPy.get());
-		cbDebugUI.setSelected(Env.debugUIPy.get());
+		cbDebugUI.setSelected(Env.showDebugInfoPy.get());
 	}
 }
