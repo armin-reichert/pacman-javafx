@@ -90,6 +90,9 @@ public class GameUI implements GameEventAdapter {
 		createLayout();
 		initKeyboardHandling();
 		updateGameScene(true);
+		updateBackground();
+		Env.drawMode3DPy.addListener((x, y, z) -> updateBackground());
+		Env.bgColorPy.addListener((x, y, z) -> updateBackground());
 
 		stage.setOnCloseRequest(e -> gameLoop.stop());
 		stage.setScene(mainScene);
@@ -146,9 +149,6 @@ public class GameUI implements GameEventAdapter {
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(new VBox(pipView));
 		sceneRoot.getChildren().addAll(gameSceneParent, overlayPane, flashMessageView);
-		updateBackground();
-		Env.drawMode3DPy.addListener((x, y, z) -> updateBackground());
-		Env.bgColorPy.addListener((x, y, z) -> updateBackground());
 	}
 
 	private void initKeyboardHandling() {
