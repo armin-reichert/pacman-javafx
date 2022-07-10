@@ -31,12 +31,10 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
-import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneManager;
 import de.amr.games.pacman.ui.fx.shell.info.Dashboard;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -76,8 +74,6 @@ public class GameUI implements GameEventAdapter {
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final PiPView pipView = new PiPView();
 
-	private GameScene currentGameScene;
-
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
 		GameEvents.addEventListener(this);
 		Actions.init(gameController, this);
@@ -95,12 +91,13 @@ public class GameUI implements GameEventAdapter {
 
 		createLayout();
 		initKeyboardHandling();
-		updateCurrentGameScene(true);
+		updateGameScene(true);
 
 		stage.setOnCloseRequest(e -> gameLoop.stop());
 		stage.setScene(mainScene);
 		stage.setMinHeight(328);
 		stage.setMinWidth(241);
+		stage.setTitle("Pac-Man / Ms. Pac-Man");
 		stage.getIcons().add(APP_ICON);
 		stage.centerOnScreen();
 		stage.show();
@@ -109,7 +106,7 @@ public class GameUI implements GameEventAdapter {
 	public void startGameLoop() {
 		gameLoop.setUpdateTask(() -> {
 			gameController.update();
-			currentGameScene.updateAndRender();
+			sceneManager.getCurrentGameScene().updateAndRender();
 		});
 		gameLoop.setRenderTask(this::render);
 		gameLoop.pausedPy.bind(Env.pausedPy);
@@ -136,7 +133,7 @@ public class GameUI implements GameEventAdapter {
 		mainScene.setOnKeyPressed(Keyboard::processEvent);
 		Keyboard.addHandler(this::onKeyPressed);
 		Keyboard.addHandler(pacController::onKeyPressed);
-		Keyboard.addHandler(() -> currentGameScene.onKeyPressed());
+		Keyboard.addHandler(() -> sceneManager.getCurrentGameScene().onKeyPressed());
 	}
 
 	private void updateBackground() {
@@ -169,25 +166,21 @@ public class GameUI implements GameEventAdapter {
 		return pipView;
 	}
 
-	public GameScene getCurrentGameScene() {
-		return currentGameScene;
-	}
-
 	@Override
 	public void onGameEvent(GameEvent event) {
 		GameEventAdapter.super.onGameEvent(event);
 		// game scenes are not directly registered as game event handlers
-		currentGameScene.onGameEvent(event);
+		sceneManager.getCurrentGameScene().onGameEvent(event);
 	}
 
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
-		updateCurrentGameScene(false);
+		updateGameScene(false);
 	}
 
 	@Override
 	public void onUIForceUpdate(GameEvent e) {
-		updateCurrentGameScene(true);
+		updateGameScene(true);
 	}
 
 	/**
@@ -196,41 +189,25 @@ public class GameUI implements GameEventAdapter {
 	public void render() {
 		flashMessageView.update();
 		dashboard.update();
-		pipView.drawContent(currentGameScene instanceof PlayScene2D || currentGameScene instanceof PlayScene3D);
+		var currentScene = sceneManager.getCurrentGameScene();
+		pipView.drawContent(currentScene instanceof PlayScene2D || currentScene instanceof PlayScene3D);
 	}
 
-	private void updateCurrentGameScene(boolean forcedUpdate) {
-		int dimension = Env.use3DScenePy.get() ? SceneManager.SCENE_3D : SceneManager.SCENE_2D;
-		GameScene newGameScene = sceneManager.findGameScene(dimension).orElse(null);
-		if (newGameScene == null) {
-			throw new IllegalStateException("No game scene found. Game state: %s".formatted(gameController.state()));
-		}
-		if (newGameScene == currentGameScene && !forcedUpdate) {
-			return; // keep game scene
-		}
-		if (currentGameScene != null) {
-			currentGameScene.end();
-		}
-		sceneManager.updateSceneContext(newGameScene);
-		newGameScene.init();
-		newGameScene.resize(mainScene.getHeight());
-		gameScenePlaceholder.getChildren().setAll(newGameScene.getFXSubScene());
-		logger.info("Current scene changed from %s to %s", currentGameScene, newGameScene);
-		currentGameScene = newGameScene;
+	private void updateGameScene(boolean forced) {
+		sceneManager.updateCurrentGameScene(forced);
+		sceneManager.getCurrentGameScene().resize(mainScene.getHeight());
+		gameScenePlaceholder.getChildren().setAll(sceneManager.getCurrentGameScene().getFXSubScene());
 
-		// picture-in-picture view
+		// picture-in-picture view. Rethink this.
 		sceneManager.updateSceneContext(pipView.getPlayScene2D());
 		pipView.getPlayScene2D().init();
-
-		// does not really belong here, but...
-		stage.setTitle(gameController.game().variant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
 	}
 
 	void on2D3DChange() {
-		updateCurrentGameScene(true);
-		if (currentGameScene instanceof PlayScene2D playScene2D) {
+		updateGameScene(true);
+		if (sceneManager.getCurrentGameScene() instanceof PlayScene2D playScene2D) {
 			playScene2D.onSwitchFrom3D();
-		} else if (currentGameScene instanceof PlayScene3D playScene3D) {
+		} else if (sceneManager.getCurrentGameScene() instanceof PlayScene3D playScene3D) {
 			playScene3D.onSwitchFrom2D();
 		}
 	}

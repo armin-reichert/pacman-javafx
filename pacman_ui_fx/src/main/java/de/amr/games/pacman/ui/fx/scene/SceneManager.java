@@ -48,6 +48,7 @@ import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene3;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManIntroScene;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
+import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 
 /**
@@ -85,6 +86,7 @@ public class SceneManager {
 	};
 
 	private final SceneContext context;
+	private GameScene currentGameScene;
 
 	public SceneManager(GameController gameController) {
 		context = new SceneContext(gameController);
@@ -92,6 +94,10 @@ public class SceneManager {
 
 	public SceneContext getContext() {
 		return context;
+	}
+
+	public GameScene getCurrentGameScene() {
+		return currentGameScene;
 	}
 
 	public Stream<GameScene> allGameScenes() {
@@ -149,5 +155,24 @@ public class SceneManager {
 		var scene2D = findGameScene(SCENE_2D);
 		var scene3D = findGameScene(SCENE_3D);
 		return scene2D.isPresent() && scene3D.isPresent() && !scene2D.equals(scene3D);
+	}
+
+	public void updateCurrentGameScene(boolean forcedUpdate) {
+		int dimension = Env.use3DScenePy.get() ? SceneManager.SCENE_3D : SceneManager.SCENE_2D;
+		GameScene newGameScene = findGameScene(dimension).orElse(null);
+		if (newGameScene == null) {
+			throw new IllegalStateException("No game scene found.");
+		}
+		if (newGameScene == currentGameScene && !forcedUpdate) {
+			return; // keep game scene
+		}
+		if (currentGameScene != null) {
+			currentGameScene.end();
+		}
+		updateSceneContext(newGameScene);
+		newGameScene.init();
+
+		logger.info("Current scene changed from %s to %s", currentGameScene, newGameScene);
+		currentGameScene = newGameScene;
 	}
 }

@@ -29,6 +29,7 @@ import java.util.function.Supplier;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.collections.FXCollections;
@@ -87,6 +88,10 @@ public class Section extends TitledPane {
 
 	protected GameModel game() {
 		return gc.game();
+	}
+
+	protected GameScene gameScene() {
+		return ui.getSceneManager().getCurrentGameScene();
 	}
 
 	public void update() {

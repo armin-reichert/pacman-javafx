@@ -113,7 +113,7 @@ public class Actions {
 	}
 
 	public static void restartIntro() {
-		theUI.getCurrentGameScene().end();
+		theUI.getSceneManager().getCurrentGameScene().end();
 		theGameController.sounds().ifPresent(GameSoundController::stopAll);
 		theGameController.restartIntro();
 		var hint = new PauseTransition(Duration.seconds(3));
@@ -175,7 +175,7 @@ public class Actions {
 	}
 
 	public static void selectNextPerspective() {
-		if (theUI.getCurrentGameScene().is3D()) {
+		if (theUI.getSceneManager().getCurrentGameScene().is3D()) {
 			Env.perspectivePy.set(Env.perspectivePy.get().next());
 			String perspectiveName = Texts.message(Env.perspectivePy.get().name());
 			showFlashMessage(Texts.message("camera_perspective", perspectiveName));
@@ -183,7 +183,7 @@ public class Actions {
 	}
 
 	public static void selectPrevPerspective() {
-		if (theUI.getCurrentGameScene().is3D()) {
+		if (theUI.getSceneManager().getCurrentGameScene().is3D()) {
 			Env.perspectivePy.set(Env.perspectivePy.get().prev());
 			String perspectiveName = Texts.message(Env.perspectivePy.get().name());
 			showFlashMessage(Texts.message("camera_perspective", perspectiveName));

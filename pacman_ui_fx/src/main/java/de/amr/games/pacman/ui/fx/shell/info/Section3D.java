@@ -43,6 +43,7 @@ import javafx.scene.text.Font;
  * @author Armin Reichert
  */
 public class Section3D extends Section {
+
 	private ComboBox<Perspective> comboPerspective;
 	private CheckBox cbSquirting;
 	private ComboBox<Integer> comboResolution;
@@ -60,11 +61,13 @@ public class Section3D extends Section {
 		comboPerspective.setOnAction(e -> Env.perspectivePy.set(comboPerspective.getValue()));
 		cbSquirting = addCheckBox("Squirting", () -> Env.toggle(Env.squirtingPy));
 		comboResolution = addComboBox("Maze resolution", 1, 2, 4, 8);
-		addInfo("Camera", () -> ((PlayScene3D) ui.getCurrentGameScene()).getCamera().transformInfo())
-				.available(() -> ui.getCurrentGameScene().is3D());
+		addInfo("Camera",
+				() -> (gameScene() instanceof PlayScene3D playScene3D) ? playScene3D.getCamera().transformInfo() : "")
+						.available(() -> gameScene().is3D());
 		comboResolution.setOnAction(e -> Env.mazeResolutionPy.set(comboResolution.getValue()));
 		sliderWallHeight = addSlider("Maze wall height", 0, 10, 8);
-		sliderWallHeight.valueProperty().addListener((obs, oldVal, newVal) -> Env.mazeWallHeightPy.set(newVal.doubleValue()));
+		sliderWallHeight.valueProperty()
+				.addListener((obs, oldVal, newVal) -> Env.mazeWallHeightPy.set(newVal.doubleValue()));
 		comboFloorTexture = addComboBox("Floor texture", Env.FLOOR_TEXTURES.toArray(String[]::new));
 		comboFloorTexture.setOnAction(e -> Env.floorTexturePy.set(comboFloorTexture.getValue()));
 		pickerFloorColor = addColorPicker("Floor color", Env.floorColorPy.get());
@@ -84,17 +87,17 @@ public class Section3D extends Section {
 	public void update() {
 		super.update();
 		comboPerspective.setValue(Env.perspectivePy.get());
-		comboPerspective.setDisable(!ui.getCurrentGameScene().is3D());
+		comboPerspective.setDisable(!gameScene().is3D());
 		cbSquirting.setSelected(Env.squirtingPy.get());
 		comboResolution.setValue(Env.mazeResolutionPy.get());
-		comboResolution.setDisable(!ui.getCurrentGameScene().is3D());
+		comboResolution.setDisable(!gameScene().is3D());
 		sliderWallHeight.setValue(Env.mazeWallHeightPy.get());
-		sliderWallHeight.setDisable(!ui.getCurrentGameScene().is3D());
+		sliderWallHeight.setDisable(!gameScene().is3D());
 		comboFloorTexture.setValue(Env.floorTexturePy.get());
-		comboFloorTexture.setDisable(!ui.getCurrentGameScene().is3D());
+		comboFloorTexture.setDisable(!gameScene().is3D());
 		cbAxesVisible.setSelected(Env.axesVisiblePy.get());
-		cbAxesVisible.setDisable(!ui.getCurrentGameScene().is3D());
+		cbAxesVisible.setDisable(!gameScene().is3D());
 		cbWireframeMode.setSelected(Env.drawMode3DPy.get() == DrawMode.LINE);
-		cbWireframeMode.setDisable(!ui.getCurrentGameScene().is3D());
+		cbWireframeMode.setDisable(!gameScene().is3D());
 	}
 }

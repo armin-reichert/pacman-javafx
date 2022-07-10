@@ -45,9 +45,9 @@ public class SectionGameInfo extends Section {
 	public SectionGameInfo(GameUI ui, GameController gc, String title, int minLabelWidth, Color textColor, Font textFont,
 			Font labelFont) {
 		super(ui, gc, title, minLabelWidth, textColor, textFont, labelFont);
-		addInfo("Game scene", () -> ui.getCurrentGameScene().getClass().getSimpleName());
-		addInfo("", () -> "w=%.0f h=%.0f".formatted(ui.getCurrentGameScene().getFXSubScene().getWidth(),
-				ui.getCurrentGameScene().getFXSubScene().getHeight()));
+		addInfo("Game scene", () -> gameScene().getClass().getSimpleName());
+		addInfo("", () -> "w=%.0f h=%.0f".formatted(gameScene().getFXSubScene().getWidth(),
+				gameScene().getFXSubScene().getHeight()));
 		addInfo("Game State", () -> "%s".formatted(gc.state()));
 		addInfo("", () -> "Running:   %s%s".formatted(gc.state().timer().tick(),
 				gc.state().timer().isStopped() ? " (STOPPED)" : ""));
