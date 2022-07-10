@@ -75,6 +75,7 @@ public class GameUI implements GameEventAdapter {
 	private final Dashboard dashboard = new Dashboard();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final PiPView pipView = new PiPView();
+
 	private Steering pacSteering;
 
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
@@ -127,6 +128,13 @@ public class GameUI implements GameEventAdapter {
 		gameLoop.start();
 	}
 
+	private void render() {
+		flashMessageView.update();
+		dashboard.update();
+		var currentScene = sceneManager.getCurrentGameScene();
+		pipView.drawContent(currentScene instanceof PlayScene2D || currentScene instanceof PlayScene3D);
+	}
+
 	private void createLayout() {
 		dashboard.build(this, gameController);
 		pipView.setEmbeddedGameScene(new PlayScene2D());
@@ -152,6 +160,52 @@ public class GameUI implements GameEventAdapter {
 		var mode = Env.drawMode3DPy.get();
 		var bgColor = Env.bgColorPy.get();
 		gameSceneParent.setBackground(Ufx.colorBackground(mode == DrawMode.FILL ? bgColor : Color.BLACK));
+	}
+
+	private void updateGameScene(boolean forced) {
+		boolean sceneChanged = sceneManager.selectGameScene(forced);
+		if (sceneChanged) {
+			gameSceneParent.getChildren().setAll(sceneManager.getCurrentGameScene().getFXSubScene());
+			sceneManager.getCurrentGameScene().resize(mainScene.getHeight());
+			pipView.refresh(sceneManager);
+		}
+	}
+
+	private void onKeyPressed() {
+		if (Keyboard.pressed(Keyboard.ALT, KeyCode.A)) {
+			Actions.toggleAutopilot();
+		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.D)) {
+			Env.toggle(Env.debugUIPy);
+		} else if (Keyboard.pressed(Keyboard.CTRL, KeyCode.I)) {
+			Actions.toggleDashboardVisible();
+		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.I)) {
+			Actions.toggleImmunity();
+		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.M)) {
+			Actions.toggleSoundMuted();
+		} else if (Keyboard.pressed(KeyCode.P)) {
+			Actions.togglePaused();
+		} else if (Keyboard.pressed(Keyboard.SHIFT, KeyCode.P)) {
+			Actions.singleStep();
+		} else if (Keyboard.pressed(KeyCode.Q)) {
+			Actions.restartIntro();
+		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.DIGIT3)) {
+			Actions.toggleUse3DScene();
+		} else if (Keyboard.pressed(KeyCode.F1)) {
+			Actions.toggleDashboardVisible();
+		} else if (Keyboard.pressed(KeyCode.F2)) {
+			Actions.togglePipViewVisible();
+		} else if (Keyboard.pressed(KeyCode.F11)) {
+			stage.setFullScreen(true);
+		}
+	}
+
+	void on2D3DChange() {
+		updateGameScene(true);
+		if (sceneManager.getCurrentGameScene() instanceof PlayScene2D playScene2D) {
+			playScene2D.onSwitchFrom3D();
+		} else if (sceneManager.getCurrentGameScene() instanceof PlayScene3D playScene3D) {
+			playScene3D.onSwitchFrom2D();
+		}
 	}
 
 	public SceneManager getSceneManager() {
@@ -193,61 +247,5 @@ public class GameUI implements GameEventAdapter {
 	@Override
 	public void onUIForceUpdate(GameEvent e) {
 		updateGameScene(true);
-	}
-
-	/**
-	 * Called on every tick (also if simulation is paused).
-	 */
-	public void render() {
-		flashMessageView.update();
-		dashboard.update();
-		var currentScene = sceneManager.getCurrentGameScene();
-		pipView.drawContent(currentScene instanceof PlayScene2D || currentScene instanceof PlayScene3D);
-	}
-
-	private void updateGameScene(boolean forced) {
-		boolean sceneChanged = sceneManager.selectGameScene(forced);
-		if (sceneChanged) {
-			gameSceneParent.getChildren().setAll(sceneManager.getCurrentGameScene().getFXSubScene());
-			sceneManager.getCurrentGameScene().resize(mainScene.getHeight());
-			pipView.refresh(sceneManager);
-		}
-	}
-
-	void on2D3DChange() {
-		updateGameScene(true);
-		if (sceneManager.getCurrentGameScene() instanceof PlayScene2D playScene2D) {
-			playScene2D.onSwitchFrom3D();
-		} else if (sceneManager.getCurrentGameScene() instanceof PlayScene3D playScene3D) {
-			playScene3D.onSwitchFrom2D();
-		}
-	}
-
-	private void onKeyPressed() {
-		if (Keyboard.pressed(Keyboard.ALT, KeyCode.A)) {
-			Actions.toggleAutopilot();
-		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.D)) {
-			Env.toggle(Env.debugUIPy);
-		} else if (Keyboard.pressed(Keyboard.CTRL, KeyCode.I)) {
-			Actions.toggleDashboardVisible();
-		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.I)) {
-			Actions.toggleImmunity();
-		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.M)) {
-			Actions.toggleSoundMuted();
-		} else if (Keyboard.pressed(KeyCode.P)) {
-			Actions.togglePaused();
-		} else if (Keyboard.pressed(Keyboard.SHIFT, KeyCode.P)) {
-			Actions.singleStep();
-		} else if (Keyboard.pressed(KeyCode.Q)) {
-			Actions.restartIntro();
-		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.DIGIT3)) {
-			Actions.toggleUse3DScene();
-		} else if (Keyboard.pressed(KeyCode.F1)) {
-			Actions.toggleDashboardVisible();
-		} else if (Keyboard.pressed(KeyCode.F2)) {
-			Actions.togglePipViewVisible();
-		} else if (Keyboard.pressed(KeyCode.F11)) {
-			stage.setFullScreen(true);
-		}
 	}
 }
