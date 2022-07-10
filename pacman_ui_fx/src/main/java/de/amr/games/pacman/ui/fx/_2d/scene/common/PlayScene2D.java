@@ -25,6 +25,9 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.model.common.world.World.t;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.animation.EntityAnimationSet;
@@ -47,38 +50,23 @@ import javafx.scene.input.KeyCode;
  */
 public class PlayScene2D extends GameScene2D {
 
-	private GuysInfo infoLayer;
-
-	public PlayScene2D() {
-		this(true);
-	}
-
-	public PlayScene2D(boolean withInfo) {
-		if (withInfo) {
-			infoLayer = new GuysInfo(this);
-		} else {
-			overlayCanvas.visibleProperty().unbind();
-			overlayCanvas.setVisible(false);
-		}
-	}
+	private static final Logger logger = LogManager.getFormatterLogger();
+	private final GuysInfo infoLayer = new GuysInfo(this);
 
 	@Override
 	public void setSceneContext(SceneContext context) {
 		super.setSceneContext(context);
 		var game = ctx.game();
-		var world = (ArcadeWorld) game.world();
-		world.setFlashingAnimation(ctx.r2D.createMazeFlashingAnimation(game.level.mazeNumber));
+		var arcadeWorld = (ArcadeWorld) game.world();
+		arcadeWorld.setFlashingAnimation(ctx.r2D.createMazeFlashingAnimation(game.level.mazeNumber));
 		game.pac.setAnimationSet(new PacAnimations(game.pac, ctx.r2D));
-		game.ghosts().forEach(ghost -> {
-			ghost.setAnimationSet(new GhostAnimations(ghost, ctx.r2D));
-		});
+		game.ghosts().forEach(ghost -> ghost.setAnimationSet(new GhostAnimations(ghost, ctx.r2D)));
+		logger.info("Recreated animations for 5maze, Pac-Man and the ghosts.");
 	}
 
 	@Override
 	public void init() {
-		if (infoLayer != null) {
-			infoLayer.init(ctx.game());
-		}
+		infoLayer.init(ctx.game());
 		creditVisible = !ctx.hasCredit(); // show credit only if it is zero
 		ctx.game().levelCounter.setVisible(!creditVisible);
 		ctx.game().bonus().setInactive();
@@ -101,7 +89,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void doUpdate() {
-		if (infoLayer != null && Env.debugUIPy.get()) {
+		if (Env.debugUIPy.get()) {
 			infoLayer.update();
 		}
 	}

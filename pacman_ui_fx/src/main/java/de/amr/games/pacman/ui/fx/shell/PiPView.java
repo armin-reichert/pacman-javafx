@@ -47,7 +47,7 @@ public class PiPView extends StackPane {
 	private final GraphicsContext g;
 
 	public PiPView() {
-		playScene2D = new PlayScene2D(false);
+		playScene2D = new PlayScene2D();
 		playScene2D.resize(sceneHeightPy.doubleValue());
 		playScene2D.getFXSubScene().setFocusTraversable(false);
 		g = playScene2D.getGameSceneCanvas().getGraphicsContext2D();
