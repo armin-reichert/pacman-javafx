@@ -14,9 +14,9 @@ build.bat
 ```
 
 This script 
-- runs a Maven build of the pacman-core project,
+- runs a Maven build of the pacman-core project (game logic and model),
 - creates a Maven artifact wrapping the jar file of the OBJ file importer (http://www.interactivemesh.org/models/jfx3dimporter.html), 
-- runs a Maven build of the pacman-ui-fx project,
+- runs a Maven build of the pacman_ui_fx project (user interface),
 - runs the Tentackle packager to create a deployable zip file containing the application and all Java runtime components. 
 
 ## How to run
