@@ -176,6 +176,7 @@ public class GameUI implements GameEventAdapter {
 	@Override
 	public void onGameEvent(GameEvent event) {
 		GameEventAdapter.super.onGameEvent(event);
+		// game scenes are not directly registered as game event handlers
 		currentGameScene.onGameEvent(event);
 	}
 
@@ -200,24 +201,27 @@ public class GameUI implements GameEventAdapter {
 
 	private void updateCurrentGameScene(boolean forcedUpdate) {
 		int dimension = Env.use3DScenePy.get() ? SceneManager.SCENE_3D : SceneManager.SCENE_2D;
-		GameScene newGameScene = sceneManager.findGameScene(dimension).orElseThrow(
-				() -> new IllegalStateException("No game scene found. Game state: %s".formatted(gameController.state())));
+		GameScene newGameScene = sceneManager.findGameScene(dimension).orElse(null);
+		if (newGameScene == null) {
+			throw new IllegalStateException("No game scene found. Game state: %s".formatted(gameController.state()));
+		}
 		if (newGameScene == currentGameScene && !forcedUpdate) {
 			return; // keep game scene
 		}
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
-
-		sceneManager.updateSceneContext(pipView.getPlayScene2D());
-		pipView.getPlayScene2D().init();
-
 		sceneManager.updateSceneContext(newGameScene);
 		newGameScene.init();
 		newGameScene.resize(mainScene.getHeight());
 		gameScenePlaceholder.getChildren().setAll(newGameScene.getFXSubScene());
 		logger.info("Current scene changed from %s to %s", currentGameScene, newGameScene);
 		currentGameScene = newGameScene;
+
+		// picture-in-picture view
+		sceneManager.updateSceneContext(pipView.getPlayScene2D());
+		pipView.getPlayScene2D().init();
+
 		// does not really belong here, but...
 		stage.setTitle(gameController.game().variant == GameVariant.PACMAN ? "Pac-Man" : "Ms. Pac-Man");
 	}
