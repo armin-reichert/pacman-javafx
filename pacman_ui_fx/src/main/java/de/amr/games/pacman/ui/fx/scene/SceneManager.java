@@ -104,15 +104,17 @@ public class SceneManager {
 	/**
 	 * @param forced if {@code true} the scene is reloaded (end + update context + init) even if no scene change would be
 	 *               required for the current game state
+	 * 
+	 * @return {@code true} if the current scene changed
 	 */
-	public void selectGameScene(boolean forced) {
+	public boolean selectGameScene(boolean forced) {
 		int dimension = Env.use3DScenePy.get() ? SceneManager.SCENE_3D : SceneManager.SCENE_2D;
 		GameScene nextGameScene = findGameScene(dimension).orElse(null);
 		if (nextGameScene == null) {
 			throw new IllegalStateException("No game scene found.");
 		}
 		if (nextGameScene == currentGameScene && !forced) {
-			return; // game scene is up-to-date
+			return false; // game scene is up-to-date
 		}
 		if (currentGameScene != null) {
 			currentGameScene.end();
@@ -122,7 +124,9 @@ public class SceneManager {
 		if (currentGameScene != nextGameScene) {
 			logger.info("Current scene changed from %s to %s", currentGameScene, nextGameScene);
 			currentGameScene = nextGameScene;
+			return true;
 		}
+		return false;
 	}
 
 	public void updateSceneContext(GameScene scene) {

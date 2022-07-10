@@ -194,13 +194,14 @@ public class GameUI implements GameEventAdapter {
 	}
 
 	private void updateGameScene(boolean forced) {
-		sceneManager.selectGameScene(forced);
+		boolean sceneChanged = sceneManager.selectGameScene(forced);
 		sceneManager.getCurrentGameScene().resize(mainScene.getHeight());
 		gameScenePlaceholder.getChildren().setAll(sceneManager.getCurrentGameScene().getFXSubScene());
-
-		// picture-in-picture view. Rethink this.
-		sceneManager.updateSceneContext(pipView.getPlayScene2D());
-		pipView.getPlayScene2D().init();
+		if (sceneChanged) {
+			// TODO Rethink this.
+			sceneManager.updateSceneContext(pipView.getPlayScene2D());
+			pipView.getPlayScene2D().init();
+		}
 	}
 
 	void on2D3DChange() {
