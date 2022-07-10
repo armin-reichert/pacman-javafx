@@ -50,6 +50,7 @@ import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
+import javafx.scene.Scene;
 
 /**
  * @author Armin Reichert
@@ -181,5 +182,10 @@ public class SceneManager {
 		var scene2D = findGameScene(SCENE_2D);
 		var scene3D = findGameScene(SCENE_3D);
 		return scene2D.isPresent() && scene3D.isPresent() && !scene2D.equals(scene3D);
+	}
+
+	public void defineResizingBehavior(Scene parentScene) {
+		allGameScenes()
+				.forEach(gameScene -> gameScene.setResizeBehavior(parentScene.widthProperty(), parentScene.heightProperty()));
 	}
 }

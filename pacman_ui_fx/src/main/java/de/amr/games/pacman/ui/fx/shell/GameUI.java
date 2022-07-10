@@ -23,10 +23,13 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell;
 
+import java.util.Objects;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
+import de.amr.games.pacman.controller.common.Steering;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameEvents;
@@ -64,7 +67,6 @@ public class GameUI implements GameEventAdapter {
 	public final GameLoop gameLoop = new GameLoop(60);
 
 	private final GameController gameController;
-	private final KeyboardPacSteering pacController;
 	private final Stage stage;
 	private final Scene mainScene;
 	private final SceneManager sceneManager;
@@ -73,21 +75,19 @@ public class GameUI implements GameEventAdapter {
 	private final Dashboard dashboard = new Dashboard();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final PiPView pipView = new PiPView();
+	private Steering pacSteering;
 
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
 		GameEvents.addEventListener(this);
 		Actions.init(gameController, this);
+
 		this.gameController = gameController;
 		this.stage = stage;
-		this.pacController = new KeyboardPacSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
-		gameController.setPacSteering(pacController);
+		this.mainScene = new Scene(sceneRoot, width, height);
+		this.sceneManager = new SceneManager(gameController);
+		sceneManager.defineResizingBehavior(mainScene);
 
-		mainScene = new Scene(sceneRoot, width, height);
 		logger.info("Main scene created. Size: %.0f x %.0f", mainScene.getWidth(), mainScene.getHeight());
-
-		sceneManager = new SceneManager(gameController);
-		sceneManager.allGameScenes()
-				.forEach(gameScene -> gameScene.setResizeBehavior(mainScene.widthProperty(), mainScene.heightProperty()));
 
 		createLayout();
 		initKeyboardHandling();
@@ -101,6 +101,18 @@ public class GameUI implements GameEventAdapter {
 		stage.getIcons().add(APP_ICON);
 		stage.centerOnScreen();
 		stage.show();
+	}
+
+	public void setPacSteering(Steering steering) {
+		Objects.requireNonNull(steering);
+		if (pacSteering instanceof KeyboardSteering keySteering) {
+			Keyboard.removeHandler(keySteering::onKeyPressed);
+		}
+		pacSteering = steering;
+		if (steering instanceof KeyboardSteering keySteering) {
+			Keyboard.addHandler(keySteering::onKeyPressed);
+		}
+		gameController.setPacSteering(pacSteering);
 	}
 
 	public void startGameLoop() {
@@ -133,7 +145,6 @@ public class GameUI implements GameEventAdapter {
 	private void initKeyboardHandling() {
 		mainScene.setOnKeyPressed(Keyboard::processEvent);
 		Keyboard.addHandler(this::onKeyPressed);
-		Keyboard.addHandler(pacController::onKeyPressed);
 		Keyboard.addHandler(() -> sceneManager.getCurrentGameScene().onKeyPressed());
 	}
 

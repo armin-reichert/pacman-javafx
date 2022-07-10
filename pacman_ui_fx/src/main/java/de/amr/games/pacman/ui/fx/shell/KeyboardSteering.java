@@ -23,18 +23,17 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell;
 
-import java.util.function.Consumer;
-
+import de.amr.games.pacman.controller.common.Steering;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.actors.Creature;
 import javafx.scene.input.KeyCode;
 
 /**
- * Controls Pac-Man using keys.
+ * Controls Pac-Man using specified keys.
  * 
  * @author Armin Reichert
  */
-public class KeyboardPacSteering implements Consumer<Creature> {
+public class KeyboardSteering implements Steering {
 
 	private Direction dir;
 	private final KeyCode up;
@@ -42,7 +41,7 @@ public class KeyboardPacSteering implements Consumer<Creature> {
 	private final KeyCode left;
 	private final KeyCode right;
 
-	public KeyboardPacSteering(KeyCode up, KeyCode down, KeyCode left, KeyCode right) {
+	public KeyboardSteering(KeyCode up, KeyCode down, KeyCode left, KeyCode right) {
 		this.up = up;
 		this.down = down;
 		this.left = left;
@@ -63,7 +62,7 @@ public class KeyboardPacSteering implements Consumer<Creature> {
 	}
 
 	@Override
-	public void accept(Creature pac) {
+	public void steer(Creature pac) {
 		if (dir != null) {
 			pac.setWishDir(dir);
 		}
