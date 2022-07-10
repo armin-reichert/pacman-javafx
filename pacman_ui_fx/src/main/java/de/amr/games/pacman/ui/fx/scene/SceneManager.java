@@ -101,6 +101,30 @@ public class SceneManager {
 				.filter(Objects::nonNull);
 	}
 
+	/**
+	 * @param forced if {@code true} the scene is reloaded (end + update context + init) even if no scene change would be
+	 *               required for the current game state
+	 */
+	public void selectGameScene(boolean forced) {
+		int dimension = Env.use3DScenePy.get() ? SceneManager.SCENE_3D : SceneManager.SCENE_2D;
+		GameScene nextGameScene = findGameScene(dimension).orElse(null);
+		if (nextGameScene == null) {
+			throw new IllegalStateException("No game scene found.");
+		}
+		if (nextGameScene == currentGameScene && !forced) {
+			return; // game scene is up-to-date
+		}
+		if (currentGameScene != null) {
+			currentGameScene.end();
+		}
+		updateSceneContext(nextGameScene);
+		nextGameScene.init();
+		if (currentGameScene != nextGameScene) {
+			logger.info("Current scene changed from %s to %s", currentGameScene, nextGameScene);
+			currentGameScene = nextGameScene;
+		}
+	}
+
 	public void updateSceneContext(GameScene scene) {
 		var context = new SceneContext(gameController);
 		context.r2D = switch (context.gameVariant()) {
@@ -149,24 +173,5 @@ public class SceneManager {
 		var scene2D = findGameScene(SCENE_2D);
 		var scene3D = findGameScene(SCENE_3D);
 		return scene2D.isPresent() && scene3D.isPresent() && !scene2D.equals(scene3D);
-	}
-
-	public void updateCurrentGameScene(boolean forcedUpdate) {
-		int dimension = Env.use3DScenePy.get() ? SceneManager.SCENE_3D : SceneManager.SCENE_2D;
-		GameScene newGameScene = findGameScene(dimension).orElse(null);
-		if (newGameScene == null) {
-			throw new IllegalStateException("No game scene found.");
-		}
-		if (newGameScene == currentGameScene && !forcedUpdate) {
-			return; // keep game scene
-		}
-		if (currentGameScene != null) {
-			currentGameScene.end();
-		}
-		updateSceneContext(newGameScene);
-		newGameScene.init();
-
-		logger.info("Current scene changed from %s to %s", currentGameScene, newGameScene);
-		currentGameScene = newGameScene;
 	}
 }

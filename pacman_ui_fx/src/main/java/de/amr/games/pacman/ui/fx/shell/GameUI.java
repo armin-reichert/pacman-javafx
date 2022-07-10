@@ -194,7 +194,7 @@ public class GameUI implements GameEventAdapter {
 	}
 
 	private void updateGameScene(boolean forced) {
-		sceneManager.updateCurrentGameScene(forced);
+		sceneManager.selectGameScene(forced);
 		sceneManager.getCurrentGameScene().resize(mainScene.getHeight());
 		gameScenePlaceholder.getChildren().setAll(sceneManager.getCurrentGameScene().getFXSubScene());
 
