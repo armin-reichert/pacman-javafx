@@ -165,7 +165,7 @@ public class SceneManager {
 		case MS_PACMAN -> SCENES_MS_PACMAN;
 		case PACMAN -> SCENES_PACMAN;
 		};
-		var sceneIndex = switch (state) {
+		var index = switch (state) {
 		case BOOT -> 0;
 		case INTRO -> 1;
 		case CREDIT -> 2;
@@ -173,11 +173,7 @@ public class SceneManager {
 		case INTERMISSION_TEST -> 2 + game.intermissionTestNumber;
 		default -> 6;
 		};
-		var gameScene = scenes[sceneIndex][dimension];
-		if (gameScene == null) {
-			gameScene = scenes[sceneIndex][SCENE_2D]; // use 2D as default:
-		}
-		return Optional.ofNullable(gameScene);
+		return Optional.of(Optional.ofNullable(scenes[index][dimension]).orElse(scenes[index][SCENE_2D]));
 	}
 
 	public boolean hasSceneInBothDimensions() {
