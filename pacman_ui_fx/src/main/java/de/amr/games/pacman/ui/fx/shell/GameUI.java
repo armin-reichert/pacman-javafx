@@ -69,7 +69,7 @@ public class GameUI implements GameEventAdapter {
 	private final Scene mainScene;
 	private final SceneManager sceneManager;
 	private final StackPane sceneRoot = new StackPane();
-	private final StackPane gameScenePlaceholder = new StackPane();
+	private final StackPane gameSceneParent = new StackPane();
 	private final Dashboard dashboard = new Dashboard();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final PiPView pipView = new PiPView();
@@ -124,7 +124,7 @@ public class GameUI implements GameEventAdapter {
 		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(new VBox(pipView));
-		sceneRoot.getChildren().addAll(gameScenePlaceholder, overlayPane, flashMessageView);
+		sceneRoot.getChildren().addAll(gameSceneParent, overlayPane, flashMessageView);
 		updateBackground();
 		Env.drawMode3DPy.addListener((x, y, z) -> updateBackground());
 		Env.bgColorPy.addListener((x, y, z) -> updateBackground());
@@ -140,7 +140,7 @@ public class GameUI implements GameEventAdapter {
 	private void updateBackground() {
 		var mode = Env.drawMode3DPy.get();
 		var bgColor = Env.bgColorPy.get();
-		gameScenePlaceholder.setBackground(Ufx.colorBackground(mode == DrawMode.FILL ? bgColor : Color.BLACK));
+		gameSceneParent.setBackground(Ufx.colorBackground(mode == DrawMode.FILL ? bgColor : Color.BLACK));
 	}
 
 	public SceneManager getSceneManager() {
@@ -196,9 +196,9 @@ public class GameUI implements GameEventAdapter {
 
 	private void updateGameScene(boolean forced) {
 		boolean sceneChanged = sceneManager.selectGameScene(forced);
-		sceneManager.getCurrentGameScene().resize(mainScene.getHeight());
-		gameScenePlaceholder.getChildren().setAll(sceneManager.getCurrentGameScene().getFXSubScene());
 		if (sceneChanged) {
+			gameSceneParent.getChildren().setAll(sceneManager.getCurrentGameScene().getFXSubScene());
+			sceneManager.getCurrentGameScene().resize(mainScene.getHeight());
 			pipView.refresh(sceneManager);
 		}
 	}

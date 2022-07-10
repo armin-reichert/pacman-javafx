@@ -102,6 +102,10 @@ public class SceneManager {
 	}
 
 	/**
+	 * Finds the game scene that applies to the current game state. If a new scene is selected, the old scene's
+	 * {@link GameScene#end()} method is called, the new scene's context is updated and its {@link GameScene#init()}
+	 * method is called.
+	 * 
 	 * @param forced if {@code true} the scene is reloaded (end + update context + init) even if no scene change would be
 	 *               required for the current game state
 	 * 
