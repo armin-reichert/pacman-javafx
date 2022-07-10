@@ -50,11 +50,11 @@ public class Actions {
 
 	private static final Logger logger = LogManager.getFormatterLogger();
 
-	private static final String VM_HELP = "press-key.mp3";
-	private static final String VM_AUTOPILOT_OFF = "autopilot-off.mp3";
-	private static final String VM_AUTOPILOT_ON = "autopilot-on.mp3";
-	private static final String VM_IMMUNITY_OFF = "immunity-off.mp3";
-	private static final String VM_IMMUNITY_ON = "immunity-on.mp3";
+	private static final String VM_HELP = "sound/common/press-key.mp3";
+	private static final String VM_AUTOPILOT_OFF = "sound/common/autopilot-off.mp3";
+	private static final String VM_AUTOPILOT_ON = "sound/common/autopilot-on.mp3";
+	private static final String VM_IMMUNITY_OFF = "sound/common/immunity-off.mp3";
+	private static final String VM_IMMUNITY_ON = "sound/common/immunity-on.mp3";
 
 	private static GameController theGameController;
 	private static GameUI theUI;
@@ -65,20 +65,20 @@ public class Actions {
 		theUI = ui;
 	}
 
-	public static void playVoiceMessage(String messageFileName) {
+	public static void playVoiceMessage(String messageFileRelPath) {
 		if (GameSounds.SOUND_DISABLED) {
 			return;
 		}
 		if (currentVoiceMessage != null && currentVoiceMessage.isPlaying()) {
 			return;
 		}
-		var url = Resources.urlFromRelPath("sound/common/" + messageFileName);
+		var url = Resources.urlFromRelPath(messageFileRelPath);
 		if (url != null) {
 			try {
 				currentVoiceMessage = new AudioClip(url.toExternalForm());
 				currentVoiceMessage.play();
 			} catch (Exception e) {
-				logger.error("Could not play voice message '%s'", messageFileName);
+				logger.error("Could not play voice message '%s'", messageFileRelPath);
 			}
 		}
 	}
