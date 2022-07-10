@@ -89,8 +89,10 @@ public class SceneManager {
 	private final GameController gameController;
 	private GameScene currentGameScene;
 
-	public SceneManager(GameController gameController) {
+	public SceneManager(GameController gameController, Scene mainScene) {
 		this.gameController = gameController;
+		allGameScenes()
+				.forEach(gameScene -> gameScene.setResizeBehavior(mainScene.widthProperty(), mainScene.heightProperty()));
 	}
 
 	public GameScene getCurrentGameScene() {
@@ -182,10 +184,5 @@ public class SceneManager {
 		var scene2D = findGameScene(SCENE_2D);
 		var scene3D = findGameScene(SCENE_3D);
 		return scene2D.isPresent() && scene3D.isPresent() && !scene2D.equals(scene3D);
-	}
-
-	public void defineResizingBehavior(Scene parentScene) {
-		allGameScenes()
-				.forEach(gameScene -> gameScene.setResizeBehavior(parentScene.widthProperty(), parentScene.heightProperty()));
 	}
 }

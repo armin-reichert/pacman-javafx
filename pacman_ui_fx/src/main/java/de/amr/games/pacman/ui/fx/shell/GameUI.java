@@ -85,8 +85,7 @@ public class GameUI implements GameEventAdapter {
 		this.gameController = gameController;
 		this.stage = stage;
 		this.mainScene = new Scene(sceneRoot, width, height);
-		this.sceneManager = new SceneManager(gameController);
-		sceneManager.defineResizingBehavior(mainScene);
+		this.sceneManager = new SceneManager(gameController, mainScene);
 
 		logger.info("Main scene created. Size: %.0f x %.0f", mainScene.getWidth(), mainScene.getHeight());
 
