@@ -117,6 +117,7 @@ public class GameUI implements GameEventAdapter {
 
 	private void createLayout() {
 		dashboard.build(this, gameController);
+		pipView.setEmbeddedGameScene(new PlayScene2D());
 		pipView.sceneHeightPy.bind(Env.pipSceneHeightPy);
 		pipView.visibleProperty().bind(Env.pipVisiblePy);
 		pipView.opacityProperty().bind(Env.pipOpacityPy);
@@ -198,9 +199,7 @@ public class GameUI implements GameEventAdapter {
 		sceneManager.getCurrentGameScene().resize(mainScene.getHeight());
 		gameScenePlaceholder.getChildren().setAll(sceneManager.getCurrentGameScene().getFXSubScene());
 		if (sceneChanged) {
-			// TODO Rethink this.
-			sceneManager.updateSceneContext(pipView.getPlayScene2D());
-			pipView.getPlayScene2D().init();
+			pipView.refresh(sceneManager);
 		}
 	}
 

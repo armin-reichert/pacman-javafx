@@ -23,52 +23,56 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell;
 
-import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
+import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
+import de.amr.games.pacman.ui.fx.scene.SceneManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 /**
- * Picture-In-Picture view. Displays 2D game scene in mniature view.
+ * Picture-In-Picture view. Displays an embedded 2D game scene.
  * 
  * @author Armin Reichert
  */
 public class PiPView extends StackPane {
 
-	private static final Image DEFUNCT_IMAGE = Ufx.image("graphics/stoerung.jpg");
+	private static final Image PLACEHOLDER = Ufx.image("graphics/stoerung.jpg");
 
-	public DoubleProperty sceneHeightPy = new SimpleDoubleProperty();
+	public final DoubleProperty sceneHeightPy = new SimpleDoubleProperty();
 
-	private final PlayScene2D playScene2D;
-	private final GraphicsContext g;
+	private GameScene2D gameScene;
 
-	public PiPView() {
-		playScene2D = new PlayScene2D();
-		playScene2D.resize(sceneHeightPy.doubleValue());
-		playScene2D.getFXSubScene().setFocusTraversable(false);
-		g = playScene2D.getGameSceneCanvas().getGraphicsContext2D();
-		getChildren().add(playScene2D.getFXSubScene());
+	public void setEmbeddedGameScene(GameScene2D gameScene) {
+		this.gameScene = gameScene;
+		gameScene.resize(sceneHeightPy.doubleValue());
+		gameScene.getFXSubScene().setFocusTraversable(false);
+		getChildren().add(gameScene.getFXSubScene());
 		setBackground(Ufx.colorBackground(Color.BLACK));
-		sceneHeightPy.addListener((x, y, h) -> playScene2D.resize(h.doubleValue()));
+		sceneHeightPy.addListener((x, y, h) -> gameScene.resize(h.doubleValue()));
 	}
 
-	public PlayScene2D getPlayScene2D() {
-		return playScene2D;
+	public void refresh(SceneManager sceneManager) {
+		if (gameScene != null) {
+			sceneManager.updateSceneContext(gameScene);
+			gameScene.init();
+		}
 	}
 
-	public void drawContent(boolean drawSceneContent) {
-		var width = g.getCanvas().getWidth();
-		var height = g.getCanvas().getHeight();
-		g.setFill(Color.BLACK);
-		g.fillRect(0, 0, width, height);
-		if (drawSceneContent) {
-			playScene2D.drawSceneContent();
-		} else {
-			g.drawImage(DEFUNCT_IMAGE, 0, 0, 224, 288);
+	public void drawContent(boolean drawIt) {
+		if (gameScene != null) {
+			var g = gameScene.getGameSceneCanvas().getGraphicsContext2D();
+			var width = g.getCanvas().getWidth();
+			var height = g.getCanvas().getHeight();
+			g.setFill(Color.BLACK);
+			g.fillRect(0, 0, width, height);
+			if (drawIt) {
+				gameScene.drawSceneContent();
+			} else {
+				g.drawImage(PLACEHOLDER, 0, 0, 224, 288);
+			}
 		}
 	}
 }
