@@ -109,18 +109,18 @@ public class SceneManager {
 	 * {@link GameScene#end()} method is called, the new scene's context is updated and its {@link GameScene#init()}
 	 * method is called.
 	 * 
-	 * @param forced if {@code true} the scene is reloaded (end + update context + init) even if no scene change would be
+	 * @param forceReload if {@code true} the scene is reloaded (end + update context + init) even if no scene change would be
 	 *               required for the current game state
 	 * 
 	 * @return {@code true} if the current scene changed
 	 */
-	public boolean selectGameScene(boolean forced) {
+	public boolean selectGameScene(boolean forceReload) {
 		int dimension = Env.use3DScenePy.get() ? SceneManager.SCENE_3D : SceneManager.SCENE_2D;
 		GameScene nextGameScene = findGameScene(dimension).orElse(null);
 		if (nextGameScene == null) {
 			throw new IllegalStateException("No game scene found.");
 		}
-		if (nextGameScene == currentGameScene && !forced) {
+		if (nextGameScene == currentGameScene && !forceReload) {
 			return false; // game scene is up-to-date
 		}
 		if (currentGameScene != null) {
