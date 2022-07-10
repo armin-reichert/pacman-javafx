@@ -4,33 +4,26 @@ A JavaFX user interface for my UI-agnostic [Pac-Man / Ms. Pac-Man game](https://
 
 Unfortunately, I have no *animated* 3D model yet. The Pac-Man and ghost models used here have been generously provided by Gianmarco Cavallaccio (https://www.artstation.com/gianmart). Cudos to you, Gianmarco! 
 
-## How to build
+## How to build (Windows)
 
-First, build the Maven project [pacman-basic](https://github.com/armin-reichert/pacman-basic) with
+Clone also repository [pacman-basic](https://github.com/armin-reichert/pacman-basic). Then
 
 ```
-mvn clean install
+cd whatever\path\to\git\pacman-javafx 
+build.bat
 ```
 
-Then
-```
-cd interactivemesh
-mvn install:install-file -Dfile=jars/jimObjModelImporterJFX.jar -DpomFile=pom.xml
-cd ..\pacman_ui_fx
-mvn clean install
-cd ..\tentackle
-mvn clean install
-```
-
-or just run `build.bat`.
+This script 
+- runs a Maven build of the pacman-core project (game logic and model),
+- creates a Maven artifact wrapping the jar file of the OBJ file importer (http://www.interactivemesh.org/models/jfx3dimporter.html), 
+- runs a Maven build of the pacman_ui_fx project (user interface),
+- runs the [Tentackle](https://tentackle.org/static-content/sitedocs/tentackle/latest/tentackle-jlink-maven-plugin/summary.html) packager to create a deployable zip file containing the application and all Java runtime components. 
 
 ## How to run
 
-The `tentackle\target` directory now contains a zip file `pacman-javafx-tentackle-1.0-jlink.zip`. 
+The `tentackle\target` directory now contains a zip file `pacman-javafx-tentackle-1.0-jlink.zip`. Extract this file, open directory `bin`, start the application by executing the batch file `run.cmd`. Yes, this is a pain in the ass, but I haven't yet found a way to create e.g. a Windows .exe file. Gluon FX was my hope, but it seems that in the native Windows app created with Gluon, sound cannot be played. See https://stackoverflow.com/questions/72814285/gluon-fx-native-window-app-fails-no-glib-lite-in-java-library-path.  
 
-Extract this file and start the application by executing the file `run.cmd` inside the `bin` folder.  
-
-In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases) you find exactly this zip file.
+In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases) you find exactly the zip file mentioned above.
 
 ## How to use
 
