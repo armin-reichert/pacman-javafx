@@ -27,6 +27,7 @@ package de.amr.games.pacman.ui.fx.scene;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 
@@ -41,6 +42,10 @@ public class SceneContext {
 
 	public SceneContext(GameController gameController) {
 		this.gameController = gameController;
+	}
+
+	public GameVariant gameVariant() {
+		return game().variant;
 	}
 
 	public GameModel game() {

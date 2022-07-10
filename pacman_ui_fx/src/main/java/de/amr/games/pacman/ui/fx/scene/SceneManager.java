@@ -85,15 +85,11 @@ public class SceneManager {
 		//@formatter:on
 	};
 
-	private final SceneContext context;
+	private final GameController gameController;
 	private GameScene currentGameScene;
 
 	public SceneManager(GameController gameController) {
-		context = new SceneContext(gameController);
-	}
-
-	public SceneContext getContext() {
-		return context;
+		this.gameController = gameController;
 	}
 
 	public GameScene getCurrentGameScene() {
@@ -106,21 +102,19 @@ public class SceneManager {
 	}
 
 	public void updateSceneContext(GameScene scene) {
-		var game = context.gameController.game();
-		var r2D = switch (game.variant) {
+		var context = new SceneContext(gameController);
+		context.r2D = switch (context.gameVariant()) {
 		case MS_PACMAN -> SpritesheetMsPacMan.get();
 		case PACMAN -> SpritesheetPacMan.get();
 		};
-		var sounds = GameSounds.SOUND_DISABLED ? GameSounds.NO_SOUNDS : switch (game.variant) {
+		context.model3D = Model3D.get(); // no game variant-specific 3D models yet
+		var sounds = GameSounds.SOUND_DISABLED ? GameSounds.NO_SOUNDS : switch (context.gameVariant()) {
 		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
 		case PACMAN -> GameSounds.PACMAN_SOUNDS;
 		};
-		var model3D = Model3D.get(); // no game variant-specific 3D models yet
-		context.r2D = r2D;
-		context.model3D = model3D;
-		context.gameController.setSounds(sounds);
+		gameController.setSounds(sounds);
 		scene.setSceneContext(context);
-		logger.info("Scene '%s' initialized. Game variant: %s, Rendering2D: %s", scene, game.variant, r2D);
+		logger.info("Scene context updated for '%s'.", scene);
 	}
 
 	/**
@@ -129,9 +123,9 @@ public class SceneManager {
 	 * @param dimension {@link GameScenes#SCENE_2D} or {@link GameScenes#SCENE_3D}
 	 * @return the game scene that fits the current game state
 	 */
-	public Optional<GameScene> findGameScene(int dimension) {
-		var game = context.gameController.game();
-		var state = context.gameController.state();
+	private Optional<GameScene> findGameScene(int dimension) {
+		var game = gameController.game();
+		var state = gameController.state();
 		var scenes = switch (game.variant) {
 		case MS_PACMAN -> SCENES_MS_PACMAN;
 		case PACMAN -> SCENES_PACMAN;
