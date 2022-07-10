@@ -14,11 +14,6 @@
 	</properties>
 	<dependencies>
 		<dependency>
-			<groupId>de.amr.games.pacman</groupId>
-			<artifactId>pacman-core</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-media</artifactId>
 			<version>${javafx.version}</version>
@@ -29,14 +24,19 @@
 			<version>${javafx.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.interactivemesh</groupId>
-			<artifactId>jimObjModelImporterJFX</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
 			<groupId>com.gluonhq.attach</groupId>
 			<artifactId>audio</artifactId>
 			<version>${attach.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>de.amr.games.pacman</groupId>
+			<artifactId>pacman-core</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+		<groupId>com.interactivemesh</groupId>
+		<artifactId>objimporter</artifactId>
+		<version>1.0</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -77,21 +77,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<profiles>
-		<profile>
-			<id>desktop</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<properties>
-				<client.target>host</client.target>
-			</properties>
-		</profile>
-		<profile>
-			<id>web</id>
-			<properties>
-				<client.target>web</client.target>
-			</properties>
-		</profile>
-	</profiles>
 </project>

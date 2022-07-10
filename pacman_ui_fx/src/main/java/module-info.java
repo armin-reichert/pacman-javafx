@@ -20,10 +20,13 @@ module de.amr.games.pacman.ui.fx {
 
 	requires transitive javafx.controls;
 	requires transitive javafx.media;
-	requires transitive de.amr.games.pacman;
 	requires javafx.graphics;
-	requires jimObjModelImporterJFX;
 	requires org.apache.logging.log4j;
+	requires transitive de.amr.games.pacman;
+//	requires com.interactivemesh.jfx;
+	requires objimporter;
+
+	// remove this:
 	requires com.gluonhq.attach.audio;
 
 	exports de.amr.games.pacman.ui.fx.app;

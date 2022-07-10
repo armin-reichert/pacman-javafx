@@ -3,9 +3,13 @@
 	<groupId>de.amr.games.pacman.ui.fx</groupId>
 	<artifactId>pacman-javafx-tentackle</artifactId>
 	<version>1.0</version>
+
 	<properties>
+		<mainClass>de.amr.games.pacman.ui.fx.app.PacManGameAppFX</mainClass>
+		<mainModule>de.amr.games.pacman.ui.fx</mainModule>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+
 	<packaging>jlink</packaging>
 	<dependencies>
 		<dependency>
@@ -17,21 +21,13 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
-				<configuration>
-					<release>17</release>
-				</configuration>
-			</plugin>
-			<plugin>
 				<groupId>org.tentackle</groupId>
 				<artifactId>tentackle-jlink-maven-plugin</artifactId>
 				<version>11.7.4.0</version>
 				<extensions>true</extensions>
 				<configuration>
-					<mainModule>de.amr.games.pacman.ui.fx</mainModule>
-					<mainClass>de.amr.games.pacman.ui.fx.app.PacManGameAppFX</mainClass>
+					<mainModule>${mainModule}</mainModule>
+					<mainClass>${mainClass}</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>
