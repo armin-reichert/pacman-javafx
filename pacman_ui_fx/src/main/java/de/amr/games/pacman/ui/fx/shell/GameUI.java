@@ -74,7 +74,7 @@ public class GameUI implements GameEventAdapter {
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final PiPView pipView = new PiPView();
 
-	private Steering pacSteering;
+	private Steering currentSteering;
 
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
 		GameEvents.addEventListener(this);
@@ -93,8 +93,8 @@ public class GameUI implements GameEventAdapter {
 
 		stage.setOnCloseRequest(e -> gameLoop.stop());
 		stage.setScene(mainScene);
-		stage.setMinHeight(328);
 		stage.setMinWidth(241);
+		stage.setMinHeight(328);
 		stage.setTitle("Pac-Man / Ms. Pac-Man");
 		stage.getIcons().add(APP_ICON);
 		stage.centerOnScreen();
@@ -103,14 +103,14 @@ public class GameUI implements GameEventAdapter {
 
 	public void setPacSteering(Steering steering) {
 		Objects.requireNonNull(steering);
-		if (pacSteering instanceof KeyboardSteering keySteering) {
+		if (currentSteering instanceof KeyboardSteering keySteering) {
 			Keyboard.removeHandler(keySteering::onKeyPressed);
 		}
-		pacSteering = steering;
+		currentSteering = steering;
 		if (steering instanceof KeyboardSteering keySteering) {
 			Keyboard.addHandler(keySteering::onKeyPressed);
 		}
-		gameController.setPacSteering(pacSteering);
+		gameController.setPacSteering(currentSteering);
 	}
 
 	public GameLoop getGameLoop() {
@@ -163,13 +163,30 @@ public class GameUI implements GameEventAdapter {
 		gameSceneParent.setBackground(Ufx.colorBackground(mode == DrawMode.FILL ? bgColor : Color.BLACK));
 	}
 
-	private void updateGameScene(boolean forced) {
-		boolean sceneChanged = sceneManager.selectGameScene(forced);
+	private void updateGameScene(boolean forcedReload) {
+		boolean sceneChanged = sceneManager.selectGameScene(forcedReload);
 		if (sceneChanged) {
 			gameSceneParent.getChildren().setAll(sceneManager.getCurrentGameScene().getFXSubScene());
 			sceneManager.getCurrentGameScene().resize(mainScene.getHeight());
 			pipView.refresh(sceneManager);
 		}
+	}
+
+	@Override
+	public void onGameEvent(GameEvent event) {
+		GameEventAdapter.super.onGameEvent(event);
+		// game scenes are not directly registered as game event handlers
+		sceneManager.getCurrentGameScene().onGameEvent(event);
+	}
+
+	@Override
+	public void onGameStateChange(GameStateChangeEvent e) {
+		updateGameScene(false);
+	}
+
+	@Override
+	public void onUIForceUpdate(GameEvent e) {
+		updateGameScene(true);
 	}
 
 	private void onKeyPressed() {
@@ -231,22 +248,5 @@ public class GameUI implements GameEventAdapter {
 
 	public PiPView getPipView() {
 		return pipView;
-	}
-
-	@Override
-	public void onGameEvent(GameEvent event) {
-		GameEventAdapter.super.onGameEvent(event);
-		// game scenes are not directly registered as game event handlers
-		sceneManager.getCurrentGameScene().onGameEvent(event);
-	}
-
-	@Override
-	public void onGameStateChange(GameStateChangeEvent e) {
-		updateGameScene(false);
-	}
-
-	@Override
-	public void onUIForceUpdate(GameEvent e) {
-		updateGameScene(true);
 	}
 }
