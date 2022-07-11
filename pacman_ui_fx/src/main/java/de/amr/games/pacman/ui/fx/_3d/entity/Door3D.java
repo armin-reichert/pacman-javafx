@@ -53,7 +53,7 @@ public class Door3D extends Box {
 		setTranslateX((double) tile.x * TS + HTS);
 		setTranslateY((double) tile.y * TS + HTS);
 		translateZProperty().bind(doorHeightPy.divide(-2.0).subtract(0.5));
-		drawModeProperty().bind(Env.drawMode3DPy);
+		drawModeProperty().bind(Env.drawModePy);
 	}
 
 	public void setOpen(boolean open) {

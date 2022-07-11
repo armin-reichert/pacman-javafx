@@ -58,7 +58,7 @@ public class Env {
 
 	public static final BooleanProperty axesVisiblePy = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<Color> bgColorPy = new SimpleObjectProperty<>(Color.CORNFLOWERBLUE);
-	public static final ObjectProperty<DrawMode> drawMode3DPy = new SimpleObjectProperty<>(DrawMode.FILL);
+	public static final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(DrawMode.FILL);
 	public static final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(Color.rgb(10, 10, 70));
 	public static final StringProperty floorTexturePy = new SimpleStringProperty(FLOOR_TEXTURES.get(0));
 	public static final IntegerProperty mazeResolutionPy = new SimpleIntegerProperty(4);

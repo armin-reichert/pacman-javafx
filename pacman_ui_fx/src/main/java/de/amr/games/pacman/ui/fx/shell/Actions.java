@@ -216,7 +216,7 @@ public class Actions {
 	}
 
 	public static void toggleDrawMode() {
-		Env.drawMode3DPy.set(Env.drawMode3DPy.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+		Env.drawModePy.set(Env.drawModePy.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 	}
 
 	public static void toggleSoundMuted() {

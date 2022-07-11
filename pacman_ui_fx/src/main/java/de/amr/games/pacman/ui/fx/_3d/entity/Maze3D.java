@@ -124,7 +124,7 @@ public class Maze3D extends Group {
 		floor.setTranslateX(0.5 * width);
 		floor.setTranslateY(0.5 * height);
 		floor.setTranslateZ(0.5 * depth);
-		floor.drawModeProperty().bind(Env.drawMode3DPy);
+		floor.drawModeProperty().bind(Env.drawModePy);
 		return floor;
 	}
 
@@ -365,7 +365,7 @@ public class Maze3D extends Group {
 		base.depthProperty().bind(wallHeightPy);
 		base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
 		base.setMaterial(data.baseMaterial);
-		base.drawModeProperty().bind(Env.drawMode3DPy);
+		base.drawModeProperty().bind(Env.drawModePy);
 
 		double topHeight = 0.1;
 		Box top = new Box();
@@ -374,7 +374,7 @@ public class Maze3D extends Group {
 		top.setDepth(topHeight);
 		top.translateZProperty().bind(base.translateZProperty().subtract(wallHeightPy.add(topHeight + 0.1).multiply(0.5)));
 		top.setMaterial(data.topMaterial);
-		top.drawModeProperty().bind(Env.drawMode3DPy);
+		top.drawModeProperty().bind(Env.drawModePy);
 
 		var wall = new Group(base, top);
 		wall.setTranslateX((x + 0.5 * numBricksX) * data.brickSize);

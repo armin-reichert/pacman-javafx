@@ -97,7 +97,7 @@ public class Section3D extends Section {
 		comboFloorTexture.setDisable(!gameScene().is3D());
 		cbAxesVisible.setSelected(Env.axesVisiblePy.get());
 		cbAxesVisible.setDisable(!gameScene().is3D());
-		cbWireframeMode.setSelected(Env.drawMode3DPy.get() == DrawMode.LINE);
+		cbWireframeMode.setSelected(Env.drawModePy.get() == DrawMode.LINE);
 		cbWireframeMode.setDisable(!gameScene().is3D());
 	}
 }

@@ -97,7 +97,7 @@ public class Model3D {
 		var center = centerOverOrigin(face);
 		Stream.of(face, eyes, palate).forEach(meshView -> {
 			meshView.getTransforms().add(center);
-			meshView.drawModeProperty().bind(Env.drawMode3DPy);
+			meshView.drawModeProperty().bind(Env.drawModePy);
 		});
 
 		var root3D = new Group(face, eyes, palate);
@@ -129,7 +129,7 @@ public class Model3D {
 		var pupils = ghostModel.createMeshView("Sphere.010_Sphere.039_grey_wall");
 		pupils.setMaterial(new PhongMaterial(pupilColor));
 
-		Stream.of(dress, eyeBalls, pupils).forEach(meshView -> meshView.drawModeProperty().bind(Env.drawMode3DPy));
+		Stream.of(dress, eyeBalls, pupils).forEach(meshView -> meshView.drawModeProperty().bind(Env.drawModePy));
 
 		var center = centerOverOrigin(dress);
 		dress.getTransforms().add(center);

@@ -90,8 +90,7 @@ public class GameUI implements GameEventAdapter {
 
 		initKeyboardHandling();
 		updateGameScene(true);
-		updateBackground();
-		Env.drawMode3DPy.addListener((x, y, z) -> updateBackground());
+		Env.drawModePy.addListener((x, y, z) -> updateBackground());
 		Env.bgColorPy.addListener((x, y, z) -> updateBackground());
 
 		stage.setOnCloseRequest(e -> gameLoop.stop());
@@ -162,7 +161,7 @@ public class GameUI implements GameEventAdapter {
 	}
 
 	private void updateBackground() {
-		var mode = Env.drawMode3DPy.get();
+		var mode = Env.drawModePy.get();
 		var bgColor = Env.bgColorPy.get();
 		gameSceneParent.setBackground(Ufx.colorBackground(mode == DrawMode.FILL ? bgColor : Color.BLACK));
 	}
@@ -173,6 +172,7 @@ public class GameUI implements GameEventAdapter {
 			gameSceneParent.getChildren().setAll(sceneManager.getCurrentGameScene().getFXSubScene());
 			sceneManager.getCurrentGameScene().resize(mainScene.getHeight());
 			pipView.refresh(sceneManager);
+			updateBackground();
 		}
 	}
 
