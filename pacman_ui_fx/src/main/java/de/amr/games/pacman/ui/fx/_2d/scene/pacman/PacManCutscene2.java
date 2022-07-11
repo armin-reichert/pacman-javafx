@@ -96,7 +96,7 @@ public class PacManCutscene2 extends GameScene2D {
 		}
 		++frame;
 		if (frame == 0) {
-			ctx.gameController.sounds().ifPresent(snd -> snd.play(GameSound.INTERMISSION_1));
+			ctx.gameController.sounds().play(GameSound.INTERMISSION_1);
 		} else if (frame == 110) {
 			blinky.setAbsSpeed(1.25);
 			blinky.show();

@@ -84,7 +84,7 @@ public class PacManCutscene1 extends GameScene2D {
 		}
 		++frame;
 		if (frame == 0) {
-			ctx.gameController.sounds().ifPresent(snd -> snd.loop(GameSound.INTERMISSION_1, 2));
+			ctx.gameController.sounds().loop(GameSound.INTERMISSION_1, 2);
 		} else if (frame == 260) {
 			blinky.placeAtTile(v(-2, 20), 4, 0);
 			blinky.setBothDirs(Direction.RIGHT);

@@ -28,7 +28,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.controller.common.GameSoundController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.ui.fx.Resources;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -113,7 +112,7 @@ public class Actions {
 
 	public static void restartIntro() {
 		theUI.getSceneManager().getCurrentGameScene().end();
-		theGameController.sounds().ifPresent(GameSoundController::stopAll);
+		theGameController.sounds().stopAll();
 		theGameController.restartIntro();
 		var hint = new PauseTransition(Duration.seconds(3));
 		hint.setOnFinished(e -> playVoiceMessage(VM_HELP));
@@ -134,7 +133,7 @@ public class Actions {
 		if (theGameController.game().level.number == levelNumber) {
 			return;
 		}
-		theGameController.sounds().ifPresent(GameSoundController::stopAll);
+		theGameController.sounds().stopAll();
 		if (levelNumber == 1) {
 			theGameController.game().reset();
 			theGameController.game().setLevel(levelNumber);
@@ -159,7 +158,7 @@ public class Actions {
 
 	public static void togglePaused() {
 		Env.toggle(Env.pausedPy);
-		theGameController.sounds().ifPresent(snd -> snd.setSilent(Env.pausedPy.get()));
+		theGameController.sounds().setSilent(Env.pausedPy.get());
 	}
 
 	public static void singleStep() {
@@ -220,12 +219,11 @@ public class Actions {
 	}
 
 	public static void toggleSoundMuted() {
-		theGameController.sounds().ifPresent(snd -> {
-			boolean muted = snd.isMuted();
-			snd.setMuted(!muted);
-			var msg = Texts.message(snd.isMuted() ? "sound_off" : "sound_on");
-			showFlashMessage(msg);
-		});
+		var snd = theGameController.sounds();
+		boolean wasMuted = snd.isMuted();
+		snd.setMuted(!wasMuted);
+		var msg = Texts.message(snd.isMuted() ? "sound_off" : "sound_on");
+		showFlashMessage(msg);
 	}
 
 	public static void cheatEatAllPellets() {

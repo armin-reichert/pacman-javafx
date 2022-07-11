@@ -153,7 +153,7 @@ public class PlayScene3D extends GameScene3D {
 
 	@Override
 	public void onPlayerGetsExtraLife(GameEvent e) {
-		ctx.gameController.sounds().ifPresent(snd -> snd.play(GameSound.EXTRA_LIFE));
+		ctx.gameController.sounds().play(GameSound.EXTRA_LIFE);
 	}
 
 	@Override
@@ -164,7 +164,7 @@ public class PlayScene3D extends GameScene3D {
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
 		bonus3D.showPoints(ctx.r2D);
-		ctx.gameController.sounds().ifPresent(snd -> snd.play(GameSound.BONUS_EATEN));
+		ctx.gameController.sounds().play(GameSound.BONUS_EATEN);
 	}
 
 	@Override

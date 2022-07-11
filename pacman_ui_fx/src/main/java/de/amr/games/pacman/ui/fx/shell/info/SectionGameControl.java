@@ -115,12 +115,7 @@ public class SectionGameControl extends Section {
 
 		spinnerGameCredit.getValueFactory().setValue(game().getCredit());
 
-		var sounds = gc.sounds();
-		if (sounds.isPresent()) {
-			cbMuted.setDisable(false);
-			cbMuted.setSelected(sounds.get().isMuted());
-		} else {
-			cbMuted.setDisable(true);
-		}
+		cbMuted.setDisable(false);
+		cbMuted.setSelected(gc.sounds().isMuted());
 	}
 }
