@@ -50,34 +50,29 @@ public class BootScene extends GameScene2D {
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
 	private final Random rnd = new Random();
-	private Canvas buffer;
+	private final Canvas buffer;
+	private final GraphicsContext bg;
+
+	public BootScene() {
+		buffer = new Canvas(unscaledSize.x, unscaledSize.y);
+		bg = buffer.getGraphicsContext2D();
+	}
 
 	@Override
 	public void init() {
-		buffer = new Canvas((int) unscaledSize.x, (int) unscaledSize.y);
 		clearBuffer();
 		Actions.playHelpMessageAfterSeconds(1);
 	}
 
-	private void clearBuffer() {
-		var g = buffer.getGraphicsContext2D();
-		g.setFill(Color.BLACK);
-		g.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());
-	}
-
 	@Override
 	protected void update() {
-		var g = buffer.getGraphicsContext2D();
 		var tick = ctx.state().timer().tick();
-		if (between(1.0, 2.0, tick) && tick % 6 == 0) {
-			clearBuffer();
-			drawToBufferHexCodes(g);
-		} else if (between(2.0, 3.0, tick) && tick % 6 == 0) {
-			clearBuffer();
-			drawToBufferRandomSprites(g);
-		} else if (tick == TickTimer.secToTicks(3.0)) {
-			clearBuffer();
-			drawToBufferGrid(g);
+		if (betweenSec(0.5, 2.0, tick) && tick % 5 == 0) {
+			drawRandomHexCodesIntoBuffer(bg);
+		} else if (betweenSec(2.0, 4.0, tick) && tick % 10 == 0) {
+			drawRandomSpritesIntoBuffer(bg);
+		} else if (tick == TickTimer.secToTicks(4.0)) {
+			drawGridIntoBuffer(bg);
 		}
 	}
 
@@ -86,11 +81,17 @@ public class BootScene extends GameScene2D {
 		g.drawImage(buffer.snapshot(null, null), 0, 0);
 	}
 
-	private boolean between(double secLeft, double secRight, double tick) {
+	private void clearBuffer() {
+		bg.setFill(Color.BLACK);
+		bg.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());
+	}
+
+	private boolean betweenSec(double secLeft, double secRight, double tick) {
 		return TickTimer.secToTicks(secLeft) <= tick && tick < TickTimer.secToTicks(secRight);
 	}
 
-	private void drawToBufferHexCodes(GraphicsContext g) {
+	private void drawRandomHexCodesIntoBuffer(GraphicsContext g) {
+		clearBuffer();
 		g.setFill(Color.LIGHTGRAY);
 		g.setFont(SpritesheetPacMan.get().getArcadeFont());
 		for (int row = 0; row < ArcadeWorld.TILES_Y; ++row) {
@@ -102,27 +103,30 @@ public class BootScene extends GameScene2D {
 		LOGGER.trace("Hex codes");
 	}
 
-	private void drawToBufferRandomSprites(GraphicsContext g) {
-		var sheet = ctx.game().variant == GameVariant.MS_PACMAN ? SpritesheetMsPacMan.get() : SpritesheetPacMan.get();
+	private void drawRandomSpritesIntoBuffer(GraphicsContext g) {
+		clearBuffer();
+		var sheet = ctx.gameVariant() == GameVariant.MS_PACMAN ? SpritesheetMsPacMan.get() : SpritesheetPacMan.get();
 		var sheetWidth = sheet.getSourceImage().getWidth();
 		var sheetHeight = sheet.getSourceImage().getHeight();
+		var cellSize = 16;
 		var numRows = ArcadeWorld.TILES_Y / 2;
 		var numCols = ArcadeWorld.TILES_X / 2;
 		for (int row = 0; row < numRows; ++row) {
 			if (rnd.nextInt(100) < 10) {
 				continue;
 			}
-			var r1 = new Rectangle2D(rnd.nextDouble(sheetWidth), rnd.nextDouble(sheetHeight), 16, 16);
-			var r2 = new Rectangle2D(rnd.nextDouble(sheetWidth), rnd.nextDouble(sheetHeight), 16, 16);
+			var r1 = new Rectangle2D(rnd.nextDouble(sheetWidth), rnd.nextDouble(sheetHeight), cellSize, cellSize);
+			var r2 = new Rectangle2D(rnd.nextDouble(sheetWidth), rnd.nextDouble(sheetHeight), cellSize, cellSize);
 			var split = numCols / 3 + rnd.nextInt(numCols / 3);
 			for (int col = 0; col < numCols; ++col) {
-				sheet.drawSprite(g, col < split ? r1 : r2, 16 * col, 16 * row);
+				sheet.drawSprite(g, col < split ? r1 : r2, cellSize * col, cellSize * row);
 			}
 		}
 		LOGGER.trace("Random sprites");
 	}
 
-	private void drawToBufferGrid(GraphicsContext g) {
+	private void drawGridIntoBuffer(GraphicsContext g) {
+		clearBuffer();
 		g.setStroke(Color.LIGHTGRAY);
 		g.setLineWidth(2.0);
 		for (int row = 0; row < ArcadeWorld.TILES_Y / 2; ++row) {

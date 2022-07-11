@@ -47,9 +47,9 @@ import javafx.scene.transform.Scale;
  */
 public abstract class GameScene2D implements GameScene {
 
-	protected final V2d unscaledSize = new V2d(ArcadeWorld.WORLD_SIZE);
-	protected final Canvas canvas = new Canvas(unscaledSize.x, unscaledSize.y);
-	protected final GraphicsContext g = canvas.getGraphicsContext2D();
+	protected final V2d unscaledSize;
+	protected final Canvas canvas;
+	protected final GraphicsContext g;
 	protected final Canvas overlayCanvas = new Canvas();
 	protected final Pane infoPane = new Pane();
 	protected final StackPane root;
@@ -59,19 +59,26 @@ public abstract class GameScene2D implements GameScene {
 	protected SceneContext ctx;
 	protected boolean creditVisible;
 
-	protected GameScene2D() {
+	protected GameScene2D(V2d size) {
+		unscaledSize = size;
+		canvas = new Canvas(unscaledSize.x, unscaledSize.y);
+		g = canvas.getGraphicsContext2D();
 		root = new StackPane(canvas, overlayCanvas, infoPane);
 		// without this, an ugly vertical white line appears left of the game scene:
 		root.setBackground(Ufx.colorBackground(Color.BLACK));
 		fxSubScene = new SubScene(root, unscaledSize.x, unscaledSize.y);
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
-		overlayCanvas.widthProperty().bind(canvas.widthProperty());
-		overlayCanvas.heightProperty().bind(canvas.heightProperty());
+		overlayCanvas.widthProperty().bind(fxSubScene.widthProperty());
+		overlayCanvas.heightProperty().bind(fxSubScene.heightProperty());
 		overlayCanvas.visibleProperty().bind(Env.showDebugInfoPy);
 		overlayCanvas.setMouseTransparent(true);
 		infoPane.setVisible(Env.showDebugInfoPy.get());
 		infoPane.visibleProperty().bind(Env.showDebugInfoPy);
+	}
+
+	protected GameScene2D() {
+		this(new V2d(ArcadeWorld.WORLD_SIZE));
 	}
 
 	@Override
@@ -113,19 +120,24 @@ public abstract class GameScene2D implements GameScene {
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
 		scalingPy.set(fxSubScene.getHeight() / unscaledSize.y);
-		canvas.getTransforms().setAll(new Scale(scalingPy.get(), scalingPy.get()));
+		canvas.getTransforms().setAll(new Scale(getScaling(), getScaling()));
 	}
 
-	public double currentScaling() {
+	public double getScaling() {
 		return scalingPy.get();
 	}
 
 	@Override
 	public final void updateAndRender() {
 		update();
-		clearSceneContent();
+		g.setFill(Color.BLACK);
+		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		drawSceneContent();
-		drawOverlayCanvas();
+		if (overlayCanvas.isVisible()) {
+			var og = overlayCanvas.getGraphicsContext2D();
+			og.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());
+			ctx.r2D.drawTileBorders(og, getScaling());
+		}
 	}
 
 	/**
@@ -138,18 +150,5 @@ public abstract class GameScene2D implements GameScene {
 	 * Draws the scene content. Subclasses override this method.
 	 */
 	public void drawSceneContent() {
-	}
-
-	private void clearSceneContent() {
-		g.setFill(Color.BLACK);
-		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-	}
-
-	private void drawOverlayCanvas() {
-		if (overlayCanvas.isVisible()) {
-			var og = overlayCanvas.getGraphicsContext2D();
-			og.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());
-			ctx.r2D.drawTileBorders(og, currentScaling());
-		}
 	}
 }

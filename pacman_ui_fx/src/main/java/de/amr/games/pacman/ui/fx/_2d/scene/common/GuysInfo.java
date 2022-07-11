@@ -114,7 +114,7 @@ public class GuysInfo {
 	private void updateTextView(Text textView, String text, Entity entity) {
 		textView.setText(text);
 		var textSize = textView.getBoundsInLocal();
-		var scaling = playScene.currentScaling();
+		var scaling = playScene.getScaling();
 		textView.setX((entity.getPosition().x + World.HTS) * scaling - textSize.getWidth() / 2);
 		textView.setY(entity.getPosition().y * scaling - textSize.getHeight());
 		textView.setVisible(entity.isVisible());
@@ -123,7 +123,7 @@ public class GuysInfo {
 	private void updateTextView(Text textView, String text, Bonus bonus) {
 		textView.setText(text);
 		var textSize = textView.getBoundsInLocal();
-		var scaling = playScene.currentScaling();
+		var scaling = playScene.getScaling();
 		textView.setX((bonus.entity().getPosition().x + World.HTS) * scaling - textSize.getWidth() / 2);
 		textView.setY(bonus.entity().getPosition().y * scaling - textSize.getHeight());
 		textView.setVisible(bonus.state() != BonusState.INACTIVE);
