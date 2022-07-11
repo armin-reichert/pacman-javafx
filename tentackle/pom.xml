@@ -11,13 +11,6 @@
 	</properties>
 
 	<packaging>jlink</packaging>
-	<dependencies>
-		<dependency>
-			<groupId>de.amr.games.pacman.ui.fx</groupId>
-			<artifactId>pacman_ui_fx</artifactId>
-			<version>1.0</version>
-		</dependency>
-	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
@@ -32,4 +25,11 @@
 			</plugin>
 		</plugins>
 	</build>
+	<dependencies>
+		<dependency>
+			<groupId>de.amr.games.pacman.ui.fx</groupId>
+			<artifactId>pacman_ui_fx</artifactId>
+			<version>1.0</version>
+		</dependency>
+	</dependencies>
 </project>
