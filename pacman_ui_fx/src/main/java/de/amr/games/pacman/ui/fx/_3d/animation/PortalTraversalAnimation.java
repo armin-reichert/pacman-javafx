@@ -41,7 +41,7 @@ import javafx.scene.paint.Color;
  */
 public class PortalTraversalAnimation {
 
-	private final Logger LOGGER = LogManager.getFormatterLogger();
+	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
 	private final Creature guy;
 	private final World world;
@@ -67,7 +67,7 @@ public class PortalTraversalAnimation {
 		node.setOpacity(1);
 		if (outsideWorld()) {
 			node.setVisible(true);
-			colorPy.set((Color.color(0.1, 0.1, 0.1, 0.2)));
+			colorPy.set((Color.color(0.1, 0.1, 0.1, 0.05)));
 		} else {
 			double fadeStart = 32.0;
 			double dist = distFromNearestPortal();
