@@ -52,7 +52,7 @@ public class Env {
 	}
 
 	// this flag disables sound support completely. Used for testing Gluon native app which has no sound support yet.
-	public static final boolean SOUND_DISABLED_FOR_GLUON_NATIVE_APP = true;
+	public static final boolean SOUND_DISABLED = false;
 
 	public static final List<String> FLOOR_TEXTURES = List.of("none", "penrose-tiling.jpg", "escher-texture.jpg");
 

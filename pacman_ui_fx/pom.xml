@@ -10,7 +10,6 @@
 		<maven.compiler.target>17</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mainClass>de.amr.games.pacman.ui.fx.app.PacManGameAppFX</mainClass>
-		<attach.version>4.0.14</attach.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -22,11 +21,6 @@
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
 			<version>${javafx.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gluonhq.attach</groupId>
-			<artifactId>audio</artifactId>
-			<version>${attach.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.amr.games.pacman</groupId>
@@ -61,9 +55,6 @@
 				<configuration>
 					<target>${gluonfx.target}</target>
 					<mainClass>${mainClass}</mainClass>
-					<attachList>
-						<list>audio</list>
-					</attachList>
 					<bundlesList>
 						<list>
 							de.amr.games.pacman.ui.fx.texts.messages

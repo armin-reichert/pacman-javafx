@@ -143,7 +143,7 @@ public class SceneManager {
 		case PACMAN -> SpritesheetPacMan.get();
 		};
 		context.model3D = Model3D.get(); // no game variant-specific 3D models yet
-		var sounds = Env.SOUND_DISABLED_FOR_GLUON_NATIVE_APP ? GameSounds.NO_SOUNDS : switch (context.gameVariant()) {
+		var sounds = Env.SOUND_DISABLED ? GameSounds.NO_SOUNDS : switch (context.gameVariant()) {
 		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
 		case PACMAN -> GameSounds.PACMAN_SOUNDS;
 		};

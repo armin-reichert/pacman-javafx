@@ -65,7 +65,7 @@ public class Actions {
 	}
 
 	public static void playVoiceMessage(String messageFileRelPath) {
-		if (Env.SOUND_DISABLED_FOR_GLUON_NATIVE_APP) {
+		if (Env.SOUND_DISABLED) {
 			return;
 		}
 		if (currentVoiceMessage != null && currentVoiceMessage.isPlaying()) {
