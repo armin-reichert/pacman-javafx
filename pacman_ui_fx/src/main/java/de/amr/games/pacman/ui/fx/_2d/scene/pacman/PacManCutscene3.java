@@ -64,7 +64,7 @@ public class PacManCutscene3 extends GameScene2D {
 	}
 
 	@Override
-	protected void doUpdate() {
+	protected void update() {
 		if (initialDelay > 0) {
 			--initialDelay;
 			return;

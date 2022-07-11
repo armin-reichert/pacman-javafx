@@ -75,7 +75,7 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 	}
 
 	@Override
-	public void doUpdate() {
+	public void update() {
 		sceneController.update();
 	}
 

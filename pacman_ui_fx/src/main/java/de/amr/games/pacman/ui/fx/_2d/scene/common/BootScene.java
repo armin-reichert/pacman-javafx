@@ -66,18 +66,18 @@ public class BootScene extends GameScene2D {
 	}
 
 	@Override
-	protected void doUpdate() {
+	protected void update() {
 		var g = buffer.getGraphicsContext2D();
 		var tick = ctx.state().timer().tick();
 		if (between(1.0, 2.0, tick) && tick % 6 == 0) {
 			clearBuffer();
-			drawHexCodes(g);
+			drawToBufferHexCodes(g);
 		} else if (between(2.0, 3.0, tick) && tick % 6 == 0) {
 			clearBuffer();
-			drawRandomSprites(g);
+			drawToBufferRandomSprites(g);
 		} else if (tick == TickTimer.secToTicks(3.0)) {
 			clearBuffer();
-			drawGrid(g);
+			drawToBufferGrid(g);
 		}
 	}
 
@@ -90,7 +90,7 @@ public class BootScene extends GameScene2D {
 		return TickTimer.secToTicks(secLeft) <= tick && tick < TickTimer.secToTicks(secRight);
 	}
 
-	private void drawHexCodes(GraphicsContext g) {
+	private void drawToBufferHexCodes(GraphicsContext g) {
 		g.setFill(Color.LIGHTGRAY);
 		g.setFont(SpritesheetPacMan.get().getArcadeFont());
 		for (int row = 0; row < ArcadeWorld.TILES_Y; ++row) {
@@ -102,7 +102,7 @@ public class BootScene extends GameScene2D {
 		LOGGER.trace("Hex codes");
 	}
 
-	private void drawRandomSprites(GraphicsContext g) {
+	private void drawToBufferRandomSprites(GraphicsContext g) {
 		var sheet = ctx.game().variant == GameVariant.MS_PACMAN ? SpritesheetMsPacMan.get() : SpritesheetPacMan.get();
 		var sheetWidth = sheet.getSourceImage().getWidth();
 		var sheetHeight = sheet.getSourceImage().getHeight();
@@ -122,7 +122,7 @@ public class BootScene extends GameScene2D {
 		LOGGER.trace("Random sprites");
 	}
 
-	private void drawGrid(GraphicsContext g) {
+	private void drawToBufferGrid(GraphicsContext g) {
 		g.setStroke(Color.LIGHTGRAY);
 		g.setLineWidth(2.0);
 		for (int row = 0; row < ArcadeWorld.TILES_Y / 2; ++row) {

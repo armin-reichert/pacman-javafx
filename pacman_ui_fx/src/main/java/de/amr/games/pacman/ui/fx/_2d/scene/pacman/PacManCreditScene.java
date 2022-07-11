@@ -53,11 +53,6 @@ public class PacManCreditScene extends GameScene2D {
 	}
 
 	@Override
-	protected void doUpdate() {
-		// nothing to do
-	}
-
-	@Override
 	public void drawSceneContent() {
 		ctx.r2D.drawScore(g, ctx.game().scores.gameScore);
 		ctx.r2D.drawScore(g, ctx.game().scores.highScore);

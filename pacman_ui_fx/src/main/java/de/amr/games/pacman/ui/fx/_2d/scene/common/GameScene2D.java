@@ -125,22 +125,24 @@ public abstract class GameScene2D implements GameScene {
 		return scalingPy.get();
 	}
 
+	@Override
+	public final void updateAndRender() {
+		update();
+		clearSceneContent();
+		drawSceneContent();
+		drawOverlayCanvas();
+	}
+
 	/**
 	 * Updates the scene. Subclasses override this method.
 	 */
-	protected abstract void doUpdate();
+	protected void update() {
+	}
 
 	/**
-	 * Renders the scene content. Subclasses override this method.
+	 * Draws the scene content. Subclasses override this method.
 	 */
-	public abstract void drawSceneContent();
-
-	@Override
-	public final void updateAndRender() {
-		doUpdate();
-		clearSceneContent();
-		drawSceneContent();
-		drawTransparentOverlayCanvas();
+	public void drawSceneContent() {
 	}
 
 	private void clearSceneContent() {
@@ -149,7 +151,7 @@ public abstract class GameScene2D implements GameScene {
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	}
 
-	private void drawTransparentOverlayCanvas() {
+	private void drawOverlayCanvas() {
 		if (overlayCanvas.isVisible()) {
 			var og = overlayCanvas.getGraphicsContext2D();
 			og.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());

@@ -93,7 +93,7 @@ public class MsPacManIntroScene extends GameScene2D {
 	}
 
 	@Override
-	public void doUpdate() {
+	public void update() {
 		sceneController.update();
 		creditVisible = icc.creditVisible;
 	}

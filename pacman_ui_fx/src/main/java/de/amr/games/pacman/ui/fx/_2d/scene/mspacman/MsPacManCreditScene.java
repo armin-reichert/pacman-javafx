@@ -54,11 +54,6 @@ public class MsPacManCreditScene extends GameScene2D {
 	}
 
 	@Override
-	protected void doUpdate() {
-		// nothing to update
-	}
-
-	@Override
 	public void drawSceneContent() {
 		ctx.r2D.drawScore(g, ctx.game().scores.gameScore);
 		ctx.r2D.drawScore(g, ctx.game().scores.highScore);
