@@ -39,9 +39,12 @@ import javafx.scene.text.Font;
  */
 public class PacManCreditScene extends GameScene2D {
 
+	private Font arcade6;
+
 	@Override
 	public void init() {
 		creditVisible = true;
+		arcade6 = Font.font(ctx.r2D.getArcadeFont().getName(), 6);
 	}
 
 	@Override
@@ -55,8 +58,8 @@ public class PacManCreditScene extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		ctx.r2D.drawScore(g, ctx.game().scores.gameScore);
-		ctx.r2D.drawScore(g, ctx.game().scores.highScore);
+		ctx.r2D.drawScore(g, ctx.scores().gameScore);
+		ctx.r2D.drawScore(g, ctx.scores().highScore);
 		if (creditVisible) {
 			ctx.r2D.drawCredit(g, ctx.game().getCredit());
 		}
@@ -72,7 +75,7 @@ public class PacManCreditScene extends GameScene2D {
 		g.setFill(Color.rgb(255, 184, 174));
 		g.fillText("BONUS PAC-MAN FOR 10000", t(1), t(25));
 
-		g.setFont(Font.font(ctx.r2D.getArcadeFont().getName(), 6));
+		g.setFont(arcade6);
 		g.fillText("PTS", t(25), t(25));
 
 		ctx.r2D.drawCopyright(g, 29);

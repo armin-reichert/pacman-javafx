@@ -58,16 +58,17 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 
 	@Override
 	public void init() {
+		var ssMsPacMan = (SpritesheetMsPacMan) ctx.r2D;
 		sceneController.restartInInitialState(Intermission3Controller.State.FLAP);
 		var flapAnimationSet = new EntityAnimationSet(1);
-		flapAnimationSet.put("flap", SpritesheetMsPacMan.get().createFlapAnimation());
+		flapAnimationSet.put("flap", ssMsPacMan.createFlapAnimation());
 		flapAnimationSet.select("flap");
 		icc.flap.setAnimationSet(flapAnimationSet);
 		icc.msPacMan.setAnimationSet(new PacAnimations(icc.msPacMan, ctx.r2D));
 		icc.pacMan.setAnimationSet(new PacAnimations(icc.pacMan, ctx.r2D));
-		var munching = SpritesheetMsPacMan.get().createPacManMunchingAnimationMap(icc.pacMan);
+		var munching = ssMsPacMan.createPacManMunchingAnimationMap(icc.pacMan);
 		icc.pacMan.animationSet().ifPresent(anims -> anims.put(AnimKeys.PAC_MUNCHING, munching));
-		storkAnim = SpritesheetMsPacMan.get().createStorkFlyingAnimation();
+		storkAnim = ssMsPacMan.createStorkFlyingAnimation();
 		storkAnim.ensureRunning();
 	}
 
@@ -78,12 +79,12 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		var ssmp = ((SpritesheetMsPacMan) ctx.r2D);
-		ssmp.drawFlap(g, icc.flap);
+		var ssMsPacMan = (SpritesheetMsPacMan) ctx.r2D;
+		ssMsPacMan.drawFlap(g, icc.flap);
 		ctx.r2D.drawPac(g, icc.msPacMan);
 		ctx.r2D.drawPac(g, icc.pacMan);
 		ctx.r2D.drawEntity(g, icc.stork, storkAnim.animate());
-		ctx.r2D.drawEntity(g, icc.bag, icc.bagOpen ? ssmp.getJunior() : ssmp.getBlueBag());
+		ctx.r2D.drawEntity(g, icc.bag, icc.bagOpen ? ssMsPacMan.getJunior() : ssMsPacMan.getBlueBag());
 		ctx.r2D.drawLevelCounter(g, ctx.game().levelCounter);
 	}
 }

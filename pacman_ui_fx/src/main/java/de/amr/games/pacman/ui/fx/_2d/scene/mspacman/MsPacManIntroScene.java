@@ -100,8 +100,8 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		ctx.r2D.drawScore(g, ctx.game().scores.gameScore);
-		ctx.r2D.drawScore(g, ctx.game().scores.highScore);
+		ctx.r2D.drawScore(g, ctx.scores().gameScore);
+		ctx.r2D.drawScore(g, ctx.scores().highScore);
 		drawTitle(g);
 		drawLights(g, 32, 16);
 		if (sceneController.state() == State.GHOSTS) {
