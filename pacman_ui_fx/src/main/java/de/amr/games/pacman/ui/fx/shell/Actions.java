@@ -32,7 +32,6 @@ import de.amr.games.pacman.controller.common.GameSoundController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.ui.fx.Resources;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.texts.Texts;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.PauseTransition;
@@ -66,7 +65,7 @@ public class Actions {
 	}
 
 	public static void playVoiceMessage(String messageFileRelPath) {
-		if (GameSounds.SOUND_DISABLED) {
+		if (Env.SOUND_DISABLED_FOR_GLUON_NATIVE_APP) {
 			return;
 		}
 		if (currentVoiceMessage != null && currentVoiceMessage.isPlaying()) {

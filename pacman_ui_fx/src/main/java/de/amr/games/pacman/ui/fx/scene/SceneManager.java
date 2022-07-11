@@ -109,8 +109,8 @@ public class SceneManager {
 	 * {@link GameScene#end()} method is called, the new scene's context is updated and its {@link GameScene#init()}
 	 * method is called.
 	 * 
-	 * @param forceReload if {@code true} the scene is reloaded (end + update context + init) even if no scene change would be
-	 *               required for the current game state
+	 * @param forceReload if {@code true} the scene is reloaded (end + update context + init) even if no scene change
+	 *                    would be required for the current game state
 	 * 
 	 * @return {@code true} if the current scene changed
 	 */
@@ -143,7 +143,7 @@ public class SceneManager {
 		case PACMAN -> SpritesheetPacMan.get();
 		};
 		context.model3D = Model3D.get(); // no game variant-specific 3D models yet
-		var sounds = GameSounds.SOUND_DISABLED ? GameSounds.NO_SOUNDS : switch (context.gameVariant()) {
+		var sounds = Env.SOUND_DISABLED_FOR_GLUON_NATIVE_APP ? GameSounds.NO_SOUNDS : switch (context.gameVariant()) {
 		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
 		case PACMAN -> GameSounds.PACMAN_SOUNDS;
 		};

@@ -37,6 +37,7 @@ import com.gluonhq.attach.audio.AudioService;
 import de.amr.games.pacman.controller.common.GameSoundController;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.ui.fx.Resources;
+import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.animation.Animation;
 import javafx.scene.media.AudioClip;
 
@@ -46,8 +47,6 @@ import javafx.scene.media.AudioClip;
 public class GameSounds implements GameSoundController {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
-
-	public static final boolean SOUND_DISABLED = true;
 
 	private static final Map<GameSound, String> PACMAN_MAP = new EnumMap<>(GameSound.class);
 	static {
@@ -109,7 +108,7 @@ public class GameSounds implements GameSoundController {
 			LOGGER.error("Gluon Attach Audio Service not created");
 		}
 
-		if (SOUND_DISABLED) {
+		if (Env.SOUND_DISABLED_FOR_GLUON_NATIVE_APP) {
 			LOGGER.info("Sounds '%s' not loaded (sound is disabled)", mapName);
 		} else {
 			relPathMap.forEach(this::load);
