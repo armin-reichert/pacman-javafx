@@ -27,6 +27,7 @@ import de.amr.games.pacman.controller.common.Steering;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.actors.Creature;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 /**
  * Controls Pac-Man using specified keys.
@@ -48,15 +49,18 @@ public class KeyboardSteering implements Steering {
 		this.right = right;
 	}
 
-	public void onKeyPressed() {
+	public void onKeyPressed(KeyEvent e) {
+		boolean noModifier = !(e.isAltDown() || e.isControlDown() || e.isShiftDown());
+		boolean shiftOnly = e.isShiftDown() && !e.isAltDown() && !e.isControlDown();
+		var code = e.getCode();
 		dir = null;
-		if (Keyboard.pressed(up) || Keyboard.pressed(Keyboard.SHIFT, up)) {
+		if (code == up && (noModifier || shiftOnly)) {
 			dir = Direction.UP;
-		} else if (Keyboard.pressed(down) || Keyboard.pressed(Keyboard.SHIFT, down)) {
+		} else if (code == down && (noModifier || shiftOnly)) {
 			dir = Direction.DOWN;
-		} else if (Keyboard.pressed(left) || Keyboard.pressed(Keyboard.SHIFT, left)) {
+		} else if (code == left && (noModifier || shiftOnly)) {
 			dir = Direction.LEFT;
-		} else if (Keyboard.pressed(right) || Keyboard.pressed(Keyboard.SHIFT, right)) {
+		} else if (code == right && (noModifier || shiftOnly)) {
 			dir = Direction.RIGHT;
 		}
 	}

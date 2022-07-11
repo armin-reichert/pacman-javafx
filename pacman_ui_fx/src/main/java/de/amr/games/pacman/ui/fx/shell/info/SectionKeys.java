@@ -42,6 +42,7 @@ public class SectionKeys extends Section {
 		super(ui, gc, title, minLabelWidth, textColor, textFont, labelFont);
 		addInfo("F1", "Dashboard On/Off");
 		addInfo("F2", "PiP View On/Off");
+		addInfo("SHIFT+Cursor", "Steer player if dashboard visible");
 		addInfo("Alt+A", "Autopilot On/Off");
 		addInfo("Alt+E", "Eat all normal pellets").available(() -> gc.game().playing);
 		addInfo("Alt+I", "Player immunity On/Off");

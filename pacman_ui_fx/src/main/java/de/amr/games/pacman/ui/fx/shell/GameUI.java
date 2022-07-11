@@ -45,6 +45,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -122,11 +123,11 @@ public class GameUI implements GameEventAdapter {
 	public void setPacSteering(Steering steering) {
 		Objects.requireNonNull(steering);
 		if (currentSteering instanceof KeyboardSteering keySteering) {
-			Keyboard.removeHandler(keySteering::onKeyPressed);
+			mainScene.removeEventHandler(KeyEvent.KEY_PRESSED, keySteering::onKeyPressed);
 		}
 		currentSteering = steering;
 		if (steering instanceof KeyboardSteering keySteering) {
-			Keyboard.addHandler(keySteering::onKeyPressed);
+			mainScene.addEventHandler(KeyEvent.KEY_PRESSED, keySteering::onKeyPressed);
 		}
 		gameController.setPacSteering(currentSteering);
 	}
