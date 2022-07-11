@@ -106,13 +106,17 @@ public class BootScene extends GameScene2D {
 		var sheet = ctx.game().variant == GameVariant.MS_PACMAN ? SpritesheetMsPacMan.get() : SpritesheetPacMan.get();
 		var sheetWidth = sheet.getSourceImage().getWidth();
 		var sheetHeight = sheet.getSourceImage().getHeight();
-		for (int row = 0; row < ArcadeWorld.TILES_Y / 2; ++row) {
-			if (rnd.nextInt(100) < 25) {
+		var numRows = ArcadeWorld.TILES_Y / 2;
+		var numCols = ArcadeWorld.TILES_X / 2;
+		for (int row = 0; row < numRows; ++row) {
+			if (rnd.nextInt(100) < 10) {
 				continue;
 			}
-			for (int col = 0; col < ArcadeWorld.TILES_X / 2; ++col) {
-				var rect = new Rectangle2D(rnd.nextDouble(sheetWidth), rnd.nextDouble(sheetHeight), 16, 16);
-				sheet.drawSprite(g, rect, 16 * col, 16 * row);
+			var r1 = new Rectangle2D(rnd.nextDouble(sheetWidth), rnd.nextDouble(sheetHeight), 16, 16);
+			var r2 = new Rectangle2D(rnd.nextDouble(sheetWidth), rnd.nextDouble(sheetHeight), 16, 16);
+			var split = numCols / 3 + rnd.nextInt(numCols / 3);
+			for (int col = 0; col < numCols; ++col) {
+				sheet.drawSprite(g, col < split ? r1 : r2, 16 * col, 16 * row);
 			}
 		}
 		LOGGER.trace("Random sprites");
