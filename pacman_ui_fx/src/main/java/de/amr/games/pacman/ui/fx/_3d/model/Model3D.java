@@ -51,7 +51,7 @@ import javafx.scene.transform.Translate;
  */
 public class Model3D {
 
-	private static final Logger logger = LogManager.getFormatterLogger();
+	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
 	private static Model3D theThing;
 
@@ -77,10 +77,10 @@ public class Model3D {
 
 	private Model3D() {
 		var pacModelURL = Resources.url("model3D/pacman.obj");
-		logger.info("Pac-Man 3D model URL: %s", pacModelURL);
+		LOGGER.info("Pac-Man 3D model URL: %s", pacModelURL);
 		pacModel = new ObjModel(pacModelURL);
 		var ghostModelURL = Resources.url("model3D/ghost.obj");
-		logger.info("Ghost 3D model URL: %s", ghostModelURL);
+		LOGGER.info("Ghost 3D model URL: %s", ghostModelURL);
 		ghostModel = new ObjModel(ghostModelURL);
 	}
 

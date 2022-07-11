@@ -70,7 +70,7 @@ public class PacManGameAppFX extends Application {
 		launch(PacManGameAppFX.class, args);
 	}
 
-	private static final Logger logger = LogManager.getFormatterLogger();
+	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
 	//@formatter:off
 	static Option<Boolean>     opt3D = booleanOption("-3D", false);
@@ -85,23 +85,23 @@ public class PacManGameAppFX extends Application {
 
 	@Override
 	public void init() throws Exception {
-		logger.info("Initializing application...");
+		LOGGER.info("Initializing application...");
 		new OptionParser(opt3D, optFullscreen, optMuted, optPerspective, optVariant, optZoom)
 				.parse(getParameters().getUnnamed());
 		Env.use3DScenePy.set(opt3D.getValue());
 		Env.perspectivePy.set(optPerspective.getValue());
 		gameController.selectGame(optVariant.getValue());
-		logger.info("Application initialized. Game variant: %s", gameController.game().variant);
+		LOGGER.info("Application initialized. Game variant: %s", gameController.game().variant);
 	}
 
 	@Override
 	public void start(Stage stage) throws IOException {
-		logger.info("Starting application...");
+		LOGGER.info("Starting application...");
 		stage.setFullScreen(optFullscreen.getValue());
 		var zoom = optZoom.getValue();
 		var ui = new GameUI(gameController, stage, zoom * ArcadeWorld.WORLD_SIZE.x, zoom * ArcadeWorld.WORLD_SIZE.y);
 		ui.setPacSteering(new KeyboardSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT));
-		logger.info(() -> "UI size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s".formatted(stage.getWidth(),
+		LOGGER.info(() -> "UI size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s".formatted(stage.getWidth(),
 				stage.getHeight(), zoom, U.onOff(Env.use3DScenePy.get()), Env.perspectivePy.get()));
 		ui.startGameLoop();
 	}

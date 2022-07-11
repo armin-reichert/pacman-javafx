@@ -47,7 +47,7 @@ import javafx.scene.paint.Color;
  */
 public class BootScene extends GameScene2D {
 
-	private static final Logger logger = LogManager.getFormatterLogger();
+	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
 	private final Random rnd = new Random();
 	private Canvas buffer;
@@ -99,7 +99,7 @@ public class BootScene extends GameScene2D {
 				g.fillText(hexCode, col * 8, row * 8 + 8);
 			}
 		}
-		logger.trace("Hex codes");
+		LOGGER.trace("Hex codes");
 	}
 
 	private void drawRandomSprites(GraphicsContext g) {
@@ -115,7 +115,7 @@ public class BootScene extends GameScene2D {
 				sheet.drawSprite(g, rect, 16 * col, 16 * row);
 			}
 		}
-		logger.trace("Random sprites");
+		LOGGER.trace("Random sprites");
 	}
 
 	private void drawGrid(GraphicsContext g) {
@@ -127,6 +127,6 @@ public class BootScene extends GameScene2D {
 		for (int col = 0; col < ArcadeWorld.TILES_X / 2; ++col) {
 			g.strokeLine(col * 2 * TS, 0, col * 2 * TS, ArcadeWorld.TILES_Y * TS);
 		}
-		logger.trace("Grid");
+		LOGGER.trace("Grid");
 	}
 }

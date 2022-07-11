@@ -48,7 +48,7 @@ public class Actions {
 	private Actions() {
 	}
 
-	private static final Logger logger = LogManager.getFormatterLogger();
+	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
 	private static final String VM_HELP = "sound/common/press-key.mp3";
 	private static final String VM_AUTOPILOT_OFF = "sound/common/autopilot-off.mp3";
@@ -78,7 +78,7 @@ public class Actions {
 				currentVoiceMessage = new AudioClip(url.toExternalForm());
 				currentVoiceMessage.play();
 			} catch (Exception e) {
-				logger.error("Could not play voice message '%s'", messageFileRelPath);
+				LOGGER.error("Could not play voice message '%s'", messageFileRelPath);
 			}
 		}
 	}

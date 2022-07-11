@@ -38,7 +38,7 @@ import javafx.scene.input.KeyEvent;
  */
 public class Keyboard {
 
-	private static final Logger logger = LogManager.getFormatterLogger();
+	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
 	private Keyboard() {
 	}
@@ -90,7 +90,7 @@ public class Keyboard {
 
 	public static boolean pressed(int modfierMask, KeyCode code) {
 		if (currentEvent != null && currentEvent.getCode() == code && currentMask == modfierMask) {
-			logger.trace(() -> "Key press handled: %s%s".formatted(modifierText(currentMask), code));
+			LOGGER.trace(() -> "Key press handled: %s%s".formatted(modifierText(currentMask), code));
 			currentEvent.consume();
 			return true;
 		}

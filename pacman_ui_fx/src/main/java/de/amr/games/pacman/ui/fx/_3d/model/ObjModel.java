@@ -19,7 +19,7 @@ import javafx.scene.shape.MeshView;
  */
 public class ObjModel {
 
-	private static final Logger logger = LogManager.getFormatterLogger();
+	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
 	private Map<String, MeshView> meshViews;
 	private Map<String, PhongMaterial> materials;
@@ -33,7 +33,7 @@ public class ObjModel {
 			importer.read(url);
 			meshViews = importer.getNamedMeshViews();
 			materials = importer.getNamedMaterials();
-			logger.info("Loading 3D model from URL '%s' succeeded", url);
+			LOGGER.info("Loading 3D model from URL '%s' succeeded", url);
 		} catch (ImportException e) {
 			throw new Model3DException("Loading 3D model from URL '%s' failed: %s", url, e.getMessage());
 		} finally {

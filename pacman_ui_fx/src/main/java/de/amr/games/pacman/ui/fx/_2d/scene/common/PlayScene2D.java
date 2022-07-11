@@ -50,7 +50,7 @@ import javafx.scene.input.KeyCode;
  */
 public class PlayScene2D extends GameScene2D {
 
-	private static final Logger logger = LogManager.getFormatterLogger();
+	private static final Logger LOGGER = LogManager.getFormatterLogger();
 	private final GuysInfo infoLayer = new GuysInfo(this);
 
 	@Override
@@ -61,7 +61,7 @@ public class PlayScene2D extends GameScene2D {
 		arcadeWorld.setFlashingAnimation(ctx.r2D.createMazeFlashingAnimation(game.level.mazeNumber));
 		game.pac.setAnimationSet(new PacAnimations(game.pac, ctx.r2D));
 		game.ghosts().forEach(ghost -> ghost.setAnimationSet(new GhostAnimations(ghost, ctx.r2D)));
-		logger.info("Recreated animations for 5maze, Pac-Man and the ghosts.");
+		LOGGER.info("Recreated animations for 5maze, Pac-Man and the ghosts.");
 	}
 
 	@Override

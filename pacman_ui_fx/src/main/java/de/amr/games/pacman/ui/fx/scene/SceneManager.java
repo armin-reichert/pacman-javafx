@@ -57,7 +57,7 @@ import javafx.scene.Scene;
  */
 public class SceneManager {
 
-	private static final Logger logger = LogManager.getFormatterLogger();
+	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
 	public static final int SCENE_2D = 0;
 	public static final int SCENE_3D = 1;
@@ -129,7 +129,7 @@ public class SceneManager {
 		updateSceneContext(nextGameScene);
 		nextGameScene.init();
 		if (currentGameScene != nextGameScene) {
-			logger.info("Current scene changed from %s to %s", currentGameScene, nextGameScene);
+			LOGGER.info("Current scene changed from %s to %s", currentGameScene, nextGameScene);
 			currentGameScene = nextGameScene;
 			return true;
 		}
@@ -149,7 +149,7 @@ public class SceneManager {
 		};
 		gameController.setSounds(sounds);
 		scene.setSceneContext(context);
-		logger.info("Scene context updated for '%s'.", scene);
+		LOGGER.info("Scene context updated for '%s'.", scene);
 	}
 
 	/**

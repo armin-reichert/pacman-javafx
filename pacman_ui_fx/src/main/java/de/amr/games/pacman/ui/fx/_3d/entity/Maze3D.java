@@ -71,7 +71,7 @@ import javafx.util.Duration;
  */
 public class Maze3D extends Group {
 
-	private static final Logger logger = LogManager.getFormatterLogger();
+	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
 	public static final double FLOOR_THICKNESS = 0.1;
 
@@ -150,7 +150,7 @@ public class Maze3D extends Group {
 		doorsGroup.getChildren()
 				.setAll(world.ghostHouse().doorTiles().map(doorTile -> createDoor(doorTile, mazeStyle.doorColor)).toList());
 
-		logger.info("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallData.height);
+		LOGGER.info("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallData.height);
 	}
 
 	private void updateFloorTexture() {

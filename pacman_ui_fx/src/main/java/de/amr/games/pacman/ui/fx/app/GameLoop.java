@@ -44,7 +44,7 @@ import javafx.util.Duration;
  */
 public class GameLoop {
 
-	private static final Logger logger = LogManager.getFormatterLogger();
+	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
 	public final IntegerProperty targetFrameratePy = new SimpleIntegerProperty(60);
 	public final BooleanProperty pausedPy = new SimpleBooleanProperty(false);
@@ -102,12 +102,12 @@ public class GameLoop {
 
 	public void start() {
 		clock.play();
-		logger.info("Game loop started. Target frame rate: %d", getTargetFramerate());
+		LOGGER.info("Game loop started. Target frame rate: %d", getTargetFramerate());
 	}
 
 	public void stop() {
 		clock.stop();
-		logger.info("Game loop stopped");
+		LOGGER.info("Game loop stopped");
 	}
 
 	public long getTotalTicks() {
@@ -138,7 +138,7 @@ public class GameLoop {
 			double startNanos = System.nanoTime();
 			phase.run();
 			double durationNanos = System.nanoTime() - startNanos;
-			logger.info(message, durationNanos / 1e6);
+			LOGGER.info(message, durationNanos / 1e6);
 		} else {
 			phase.run();
 		}

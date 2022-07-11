@@ -45,9 +45,9 @@ import javafx.scene.media.AudioClip;
  */
 public class GameSounds implements GameSoundController {
 
-	private static final Logger logger = LogManager.getFormatterLogger();
+	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
-	public static final boolean SOUND_DISABLED = false;
+	public static final boolean SOUND_DISABLED = true;
 
 	private static final Map<GameSound, String> PACMAN_MAP = new EnumMap<>(GameSound.class);
 	static {
@@ -104,16 +104,16 @@ public class GameSounds implements GameSoundController {
 	public GameSounds(String mapName, Map<GameSound, String> relPathMap) {
 		audioService = AudioService.create().orElse(null);
 		if (audioService != null) {
-			logger.info("Gluon Attach Audio Service created");
+			LOGGER.info("Gluon Attach Audio Service created");
 		} else {
-			logger.error("Gluon Attach Audio Service not created");
+			LOGGER.error("Gluon Attach Audio Service not created");
 		}
 
 		if (SOUND_DISABLED) {
-			logger.info("Sounds '%s' not loaded (sound is disabled)", mapName);
+			LOGGER.info("Sounds '%s' not loaded (sound is disabled)", mapName);
 		} else {
 			relPathMap.forEach(this::load);
-			logger.info("Sounds '%s' loaded", mapName);
+			LOGGER.info("Sounds '%s' loaded", mapName);
 		}
 	}
 
@@ -121,20 +121,20 @@ public class GameSounds implements GameSoundController {
 		var url = Resources.urlFromRelPath(relPath);
 		if (url == null) {
 			var absPath = Resources.absPath(relPath);
-			logger.error("Game sound %s not loaded: resource '%s' not found", sound, absPath);
+			LOGGER.error("Game sound %s not loaded: resource '%s' not found", sound, absPath);
 			return;
 		}
 		var urlStr = url.toExternalForm();
 		try {
 			if (audioService != null) {
 				audioService.loadSound(url).ifPresent(audio -> {
-					logger.info("Gluon Attach audio object '%s' got loaded", audio);
+					LOGGER.info("Gluon Attach audio object '%s' got loaded", audio);
 				});
 			}
-			logger.trace("Loading JavaFX audio clip (key=%s) from URL '%s'", sound, urlStr);
+			LOGGER.trace("Loading JavaFX audio clip (key=%s) from URL '%s'", sound, urlStr);
 			clips.put(sound, new AudioClip(urlStr));
 		} catch (Exception e) {
-			logger.error("failed: %s", e.getMessage());
+			LOGGER.error("failed: %s", e.getMessage());
 		}
 	}
 
@@ -225,7 +225,7 @@ public class GameSounds implements GameSoundController {
 		};
 		getClip(siren).ifPresent(clip -> clip.setVolume(0.2));
 		loop(siren, Animation.INDEFINITE);
-		logger.trace("Siren %s started", siren);
+		LOGGER.trace("Siren %s started", siren);
 	}
 
 	@Override
@@ -245,7 +245,7 @@ public class GameSounds implements GameSoundController {
 		sirens().forEach(siren -> {
 			if (isPlaying(siren)) {
 				getClip(siren).ifPresent(AudioClip::stop);
-				logger.trace("Siren %s stopped", siren);
+				LOGGER.trace("Siren %s stopped", siren);
 			}
 		});
 	}

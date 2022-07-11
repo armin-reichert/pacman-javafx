@@ -53,7 +53,7 @@ public class Ufx {
 	private Ufx() {
 	}
 
-	private static final Logger logger = LogManager.getFormatterLogger();
+	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
 	public static void bindMaterialColor(PhongMaterial mat, ObjectProperty<Color> pyColor) {
 		mat.diffuseColorProperty().bind(pyColor);
@@ -115,12 +115,12 @@ public class Ufx {
 	public static Font font(String relPath, double size) {
 		var url = Resources.urlFromRelPath(relPath);
 		if (url == null) {
-			logger.error(() -> "Font at '%s' not found".formatted(Resources.absPath(relPath)));
+			LOGGER.error(() -> "Font at '%s' not found".formatted(Resources.absPath(relPath)));
 			return Font.font(Font.getDefault().getFamily(), size);
 		}
 		var font = Font.loadFont(url.toExternalForm(), size);
 		if (font == null) {
-			logger.error(() -> "Font at '%s' not loaded".formatted(Resources.absPath(relPath)));
+			LOGGER.error(() -> "Font at '%s' not loaded".formatted(Resources.absPath(relPath)));
 			return Font.font(Font.getDefault().getFamily(), size);
 		}
 		return font;
@@ -129,7 +129,7 @@ public class Ufx {
 	public static Image image(String relPath) {
 		var url = Resources.urlFromRelPath(relPath);
 		if (url == null) {
-			logger.error(() -> "No image found at path '%s'".formatted(Resources.absPath(relPath)));
+			LOGGER.error(() -> "No image found at path '%s'".formatted(Resources.absPath(relPath)));
 			return null;
 		}
 		return new Image(url.toExternalForm());
