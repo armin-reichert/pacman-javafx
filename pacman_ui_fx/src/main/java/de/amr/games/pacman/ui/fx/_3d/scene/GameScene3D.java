@@ -74,11 +74,6 @@ public abstract class GameScene3D implements GameScene {
 	}
 
 	@Override
-	public SceneContext getSceneContext() {
-		return ctx;
-	}
-
-	@Override
 	public void setSceneContext(SceneContext ctx) {
 		this.ctx = ctx;
 	}

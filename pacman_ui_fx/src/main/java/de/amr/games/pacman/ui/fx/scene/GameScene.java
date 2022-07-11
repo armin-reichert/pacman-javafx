@@ -36,11 +36,6 @@ import javafx.scene.SubScene;
 public interface GameScene extends GameEventAdapter {
 
 	/**
-	 * @return the current scene context
-	 */
-	SceneContext getSceneContext();
-
-	/**
 	 * Sets the scene context (game controller/model, 2D rendering, 3D model, sound).
 	 * <p>
 	 * This method is called before the scene's init method.

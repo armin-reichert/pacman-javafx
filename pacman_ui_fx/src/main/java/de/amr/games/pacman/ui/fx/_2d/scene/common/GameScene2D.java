@@ -85,11 +85,6 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	@Override
-	public SceneContext getSceneContext() {
-		return ctx;
-	}
-
-	@Override
 	public void setSceneContext(SceneContext context) {
 		ctx = context;
 	}
@@ -146,7 +141,6 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	private void clearSceneContent() {
-		var g = canvas.getGraphicsContext2D();
 		g.setFill(Color.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	}
@@ -155,7 +149,7 @@ public abstract class GameScene2D implements GameScene {
 		if (overlayCanvas.isVisible()) {
 			var og = overlayCanvas.getGraphicsContext2D();
 			og.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());
-			ctx.r2D.drawTileBorders(og, scalingPy.doubleValue());
+			ctx.r2D.drawTileBorders(og, currentScaling());
 		}
 	}
 }
