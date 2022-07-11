@@ -41,6 +41,7 @@ import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.scene.SceneManager;
 import de.amr.games.pacman.ui.fx.shell.info.Dashboard;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -68,26 +69,25 @@ public class GameUI implements GameEventAdapter {
 	private final Stage stage;
 	private final Scene mainScene;
 	private final SceneManager sceneManager;
-	private final StackPane sceneRoot = new StackPane();
-	private final StackPane gameSceneParent = new StackPane();
-	private final Dashboard dashboard = new Dashboard();
-	private final FlashMessageView flashMessageView = new FlashMessageView();
-	private final PiPView pipView = new PiPView();
+
+	private StackPane gameSceneParent;
+	private Dashboard dashboard;
+	private FlashMessageView flashMessageView;
+	private PiPView pipView;
 
 	private Steering currentSteering;
 
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
+		this.gameController = gameController;
+		this.stage = stage;
+
 		GameEvents.addEventListener(this);
 		Actions.init(gameController, this);
 
-		this.gameController = gameController;
-		this.stage = stage;
-		this.mainScene = new Scene(sceneRoot, width, height);
-		this.sceneManager = new SceneManager(gameController, mainScene);
-
+		mainScene = new Scene(createSceneContent(), width, height);
+		sceneManager = new SceneManager(gameController, mainScene);
 		LOGGER.info("Main scene created. Size: %.0f x %.0f", mainScene.getWidth(), mainScene.getHeight());
 
-		createLayout();
 		initKeyboardHandling();
 		updateGameScene(true);
 		updateBackground();
@@ -102,6 +102,22 @@ public class GameUI implements GameEventAdapter {
 		stage.getIcons().add(APP_ICON);
 		stage.centerOnScreen();
 		stage.show();
+	}
+
+	private Parent createSceneContent() {
+		gameSceneParent = new StackPane();
+		dashboard = new Dashboard();
+		dashboard.build(this, gameController);
+		pipView = new PiPView();
+		pipView.setEmbeddedGameScene(new PlayScene2D());
+		pipView.sceneHeightPy.bind(Env.pipSceneHeightPy);
+		pipView.visibleProperty().bind(Env.pipVisiblePy);
+		pipView.opacityProperty().bind(Env.pipOpacityPy);
+		var overlayPane = new BorderPane();
+		overlayPane.setLeft(dashboard);
+		overlayPane.setRight(new VBox(pipView));
+		flashMessageView = new FlashMessageView();
+		return new StackPane(gameSceneParent, overlayPane, flashMessageView);
 	}
 
 	public void setPacSteering(Steering steering) {
@@ -137,18 +153,6 @@ public class GameUI implements GameEventAdapter {
 		dashboard.update();
 		var currentScene = sceneManager.getCurrentGameScene();
 		pipView.drawContent(currentScene instanceof PlayScene2D || currentScene instanceof PlayScene3D);
-	}
-
-	private void createLayout() {
-		dashboard.build(this, gameController);
-		pipView.setEmbeddedGameScene(new PlayScene2D());
-		pipView.sceneHeightPy.bind(Env.pipSceneHeightPy);
-		pipView.visibleProperty().bind(Env.pipVisiblePy);
-		pipView.opacityProperty().bind(Env.pipOpacityPy);
-		var overlayPane = new BorderPane();
-		overlayPane.setLeft(dashboard);
-		overlayPane.setRight(new VBox(pipView));
-		sceneRoot.getChildren().addAll(gameSceneParent, overlayPane, flashMessageView);
 	}
 
 	private void initKeyboardHandling() {
