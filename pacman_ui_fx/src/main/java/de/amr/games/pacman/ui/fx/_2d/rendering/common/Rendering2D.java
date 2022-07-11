@@ -273,7 +273,8 @@ public interface Rendering2D {
 	}
 
 	default void drawTileBorders(GraphicsContext g, double scale) {
-		g.setStroke(Color.rgb(220, 220, 220, 0.75));
+		g.setStroke(Color.GRAY);
+		g.setLineWidth(0.5);
 		for (int row = 0; row <= ArcadeWorld.TILES_Y; ++row) {
 			g.strokeLine(0, scale * t(row), scale * ArcadeWorld.WORLD_SIZE.x, scale * t(row));
 		}
