@@ -126,14 +126,17 @@ public class BootScene extends GameScene2D {
 	}
 
 	private void drawGridIntoBuffer(GraphicsContext g) {
+		var cellSize = 16;
+		var numRows = ArcadeWorld.TILES_Y / 2;
+		var numCols = ArcadeWorld.TILES_X / 2;
 		clearBuffer();
 		g.setStroke(Color.LIGHTGRAY);
 		g.setLineWidth(2.0);
-		for (int row = 0; row < ArcadeWorld.TILES_Y / 2; ++row) {
-			g.strokeLine(0, row * 2 * TS, ArcadeWorld.TILES_X * TS, row * 2 * TS);
+		for (int row = 0; row < numRows; ++row) {
+			g.strokeLine(0, row * cellSize, ArcadeWorld.TILES_X * TS, row * cellSize);
 		}
-		for (int col = 0; col < ArcadeWorld.TILES_X / 2; ++col) {
-			g.strokeLine(col * 2 * TS, 0, col * 2 * TS, ArcadeWorld.TILES_Y * TS);
+		for (int col = 0; col < numCols; ++col) {
+			g.strokeLine(col * cellSize, 0, col * cellSize, ArcadeWorld.TILES_Y * TS);
 		}
 		LOGGER.trace("Grid");
 	}
