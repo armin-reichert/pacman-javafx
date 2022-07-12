@@ -72,7 +72,7 @@ public class Pac3D extends Group {
 		portalTraversal = new PortalTraversalAnimation(pac, world, root3D, faceColorPy, () -> normalFaceColor);
 	}
 
-	public void reset(World world) {
+	public void reset() {
 		root3D.setScaleX(1.0);
 		root3D.setScaleY(1.0);
 		root3D.setScaleZ(1.0);
